@@ -1,7 +1,7 @@
 /* Supplier entries: recorded procurement, source notices and funding cross-links.
    No dependencies but the shared formats; the host router owns mounting and calls destroy on departure. */
 import { shortDate, shortMoney } from "./format.js";
-import { mountSupplierGrowth, supplierDonations } from "./supplier-growth.js?v=18fa811de4";
+import { mountSupplierGrowth, supplierDonations } from "./supplier-growth.js?v=11edae4da5";
 import { associationHTML } from "./growth-modules.js?v=097cceba9a";
 import { partyUrl } from "./canonical-urls.js?v=225d5915ea";
 const esc = (value) => String(value ?? "").replace(/[&<>"']/g, (char) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[char]);
@@ -153,7 +153,7 @@ export function contractHTML(contract, ids) {
   return `<details class="supplier-contract"><summary><span><strong>${esc(contract.title || "Untitled contract")}</strong><small>${esc(contract.supplier || contract.agency || "Agency not recorded")} · ${esc(when)}</small></span><b>${currency(contract.amount)}</b></summary>${contract.description ? `<p class="supplier-contract-description">${esc(contract.description)}</p>` : ""}<dl><dt>${contract.supplier_id ? "Supplier" : "Awarding agency"}</dt><dd>${counterpart}</dd><dt>Contract reference</dt><dd>${esc(contract.id)}</dd><dt>Start date</dt><dd>${esc(date(contract.start_date))}</dd><dt>End date</dt><dd>${esc(date(contract.end_date))}</dd><dt>Published</dt><dd>${esc(date(contract.published))}</dd><dt>Procurement method</dt><dd>${esc(contract.procurement_method || "Not recorded")}</dd></dl>${url ? `<a href="${esc(url)}" target="_blank" rel="noopener noreferrer">${contract.link_scope === "source_register" ? `Find ${esc(contract.id)} on AusTender` : "Open the source notice"}<span class="visually-hidden"> (opens in a new tab)</span></a>` : '<p class="fineprint">No direct source URL is recorded. Use the contract reference to find the notice on <a href="https://www.tenders.gov.au/" target="_blank" rel="noopener noreferrer">AusTender</a>.</p>'}${Number(contract.notices) > 1 ? `<p class="fineprint">${number(contract.notices)} source notices are associated with this contract.</p>` : ""}</details>`;
 }
 
-async function renderProfile(root, profile, meta, helpers, life) {
+async function renderProfile(root, profile, meta, helpers, life, suppliers) {
   const ids = await agencyIds(life.signal);
   if (!life.alive()) return;
   const agencies = [...(profile.agencies || [])].sort((a, b) => Number(b.total) - Number(a.total));
@@ -171,7 +171,7 @@ async function renderProfile(root, profile, meta, helpers, life) {
       <section class="supplier-taxcharity" hidden></section>
       <section><details><summary>Identity and coverage</summary><dl class="supplier-identity">${sourceUrl(profile.identity?.abn_url) ? `<dt>Business register</dt><dd><a href="${esc(sourceUrl(profile.identity.abn_url))}" target="_blank" rel="noopener noreferrer">Check the ABN record</a></dd>` : ""}${profile.identity?.legal_name ? `<dt>Legal name</dt><dd>${esc(profile.identity.legal_name)}</dd>` : ""}${profile.identity?.method ? `<dt>Records grouped by</dt><dd>${esc(identityMethod(profile.identity.method))}</dd>` : ""}${profile.identity?.status ? `<dt>ABN status</dt><dd>${esc(profile.identity.status === "ACT" ? "Active" : profile.identity.status === "CAN" ? "Cancelled" : profile.identity.status)}</dd>` : ""}</dl>${(profile.aliases || []).length > 1 ? `<details><summary>Names in the source records</summary><ul>${profile.aliases.map((name) => `<li>${esc(name)}</li>`).join("")}</ul></details>` : ""}<ul class="supplier-caveats">${(profile.caveats || []).map((caveat) => `<li>${esc(caveat)}</li>`).join("")}</ul>${coverageHTML(meta)}</details></section>
     </aside></div></div>`;
-  mountSupplierGrowth(root.querySelector(".supplier-growth"), profile, meta, life);
+  mountSupplierGrowth(root.querySelector(".supplier-growth"), profile, meta, life, suppliers);
   import('/agencies.js?v=p4g-20261010').then(({ mountProcurementPreview }) => {
     if (life.alive()) return mountProcurementPreview(root.querySelector('.supplier-agency-map'), profile, 'supplier', life);
   }).catch(() => {
@@ -245,7 +245,7 @@ export function mountSupplierProfile(root, idOrName, helpers = {}) {
       if (!life.alive()) return;
       const profile = shard.profiles?.[entry.id];
       if (!profile || !Array.isArray(profile.contracts)) throw new Error("This supplier profile is not available in the current export.");
-      await renderProfile(root, profile, directory.meta, helpers, life);
+      await renderProfile(root, profile, directory.meta, helpers, life, directory.suppliers);
     } catch (error) { if (life.alive()) failure(root, load, error.message); }
   }
   load();

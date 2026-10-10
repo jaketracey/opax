@@ -41,6 +41,18 @@ const profile = (overrides = {}) => ({ id, name: 'Acme Pty Ltd', abn: '123456789
   contracts: [{ id: 'CN1', title: 'Example award', agency: 'Agency', amount: 100, start_date: '2025-01-01' }], donor_links: [], caveats: [], ...overrides });
 const response = (data) => ({ ok: true, json: async () => data });
 
+test('supplier modules reuse the already loaded publication directory without another request',async()=>{
+  const suppliers=[entry(),entry({id:second,name:'Published second supplier'})];
+  let authority;const calls=[];
+  const context=setup(async url=>{calls.push(url);return response(url==='/suppliers.json'?{suppliers}:url==='/agencies.json'?{agencies:[]}:{profiles:{[id]:profile()}})});
+  context.mountSupplierGrowth=(_root,_profile,_meta,_life,rows)=>{authority=rows};
+  const handle=context.mountSupplierProfile(node(),id,{});
+  await tick();
+  assert.equal(authority,suppliers);
+  assert.deepEqual(calls,['/suppliers.json','/suppliers/01.json','/agencies.json']);
+  handle.destroy();
+});
+
 test('profile resolves a unique source alias or established funding lookup to a stable identity', async () => {
   for (const name of [' acme source name ', 'ACME FUNDING']) {
     const calls = []; let canonical;

@@ -89,10 +89,10 @@ test('supplier scroll fetches one bounded agency summary, never grants shards or
  globalThis.fetch=async url=>{calls.push(url);assert.match(url,/^\/growth\/agencies\/[a-f0-9]+\.json$/);return {ok:true,json:async()=>({agency:{name:'Agency',suppliers:[{id:'other',name:'Other',total:1}]},grants:[],meta:{}})}};
  const root={dataset:{},innerHTML:''};
  try{
-  await mountSupplierGrowth(root,{id:'me',agencies:[{name:'Agency',total:1}]},{},{alive:()=>true,cleanup(){}});
+  await mountSupplierGrowth(root,{id:'me',agencies:[{name:'Agency',total:1}]},{},{alive:()=>true,cleanup(){}},[{id:'other',name:'Published Other',profile_path:'/suppliers/01.json'}]);
   assert.equal(calls.length,0);trigger([{isIntersecting:true}]);
   for(let i=0;i<20&&!root.dataset.recordsReady;i++)await new Promise(resolve=>setTimeout(resolve,5));
-  assert.equal(calls.length,1);assert.equal(root.dataset.recordsReady,'true');
+  assert.equal(calls.length,1);assert.equal(root.dataset.recordsReady,'true');assert.match(root.innerHTML,/Published Other/);
  }finally{globalThis.fetch=prior;globalThis.IntersectionObserver=priorObserver}
 });
 test('published growth assets are bounded and the small donor index excludes individuals',()=>{

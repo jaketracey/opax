@@ -1584,7 +1584,7 @@ async function openSupplierPage(name, params, manageFocus) {
   body.classList.remove("subject-person", "subject-party");
   body.innerHTML = '<p role="status">Loading suppliers…</p>';
   try {
-    const module = await import("/suppliers.js?v=4cf6f291a2");
+    const module = await import("/suppliers.js?v=bd2bf8c64a");
     if (generation !== supplierPageGeneration) return;
     const helpers = {
       params,

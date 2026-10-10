@@ -4,7 +4,7 @@ import {join,resolve} from 'node:path';
 import {pathToFileURL,fileURLToPath} from 'node:url';
 import {sponsorPerson} from '../portal/public/sponsor-person.js';
 import {sponsorSummaryPath,growthSummaryPath,normalisedName} from '../portal/public/growth-modules.js';
-import {agencyGrants} from '../portal/public/supplier-growth.js';
+import {agencyGrants,publishedSupplierIndex,publishedAgencySuppliers} from '../portal/public/supplier-growth.js';
 import {isOrganisationDonor} from '../portal/public/donor-entity.js';
 export const SUMMARY_BUDGET = 24_000;
 export async function buildGrowth(root=fileURLToPath(new URL('../portal/public',import.meta.url))) {
@@ -18,7 +18,14 @@ export async function buildGrowth(root=fileURLToPath(new URL('../portal/public',
   if(bytes>budget)throw new Error(`Growth summary exceeds ${budget} bytes: ${path}`);
   await writeFile(join(root,path.replace(/^\//,'')),json);sizes.push({path,bytes});
  };
- const [index,roster,money,agencies]=await Promise.all(['bills/index.json','parliamentarians.json','graph/money.json','agencies.json'].map(read));
+ const [index,roster,money,agencies,supplierDirectory]=await Promise.all(['bills/index.json','parliamentarians.json','graph/money.json','agencies.json','suppliers.json'].map(read));
+ const publishedSuppliers=publishedSupplierIndex(supplierDirectory.suppliers);
+ // The crawl builder requires these same published directory entries to have profiles.
+ const supplierShards=new Map();
+ for(const entry of publishedSuppliers.values()) {
+  if(!supplierShards.has(entry.profile_path))supplierShards.set(entry.profile_path,await read(entry.profile_path.replace(/^\//,'')));
+  if(!supplierShards.get(entry.profile_path).profiles?.[entry.id])throw new Error('Published supplier profile is missing: '+entry.id);
+ }
  const donors=(money.nodes || []).filter(n=>n.kind==='donor' && isOrganisationDonor(n)).map(n=>{
   const donor=Object.fromEntries(['id','label','kind','abn'].filter(k=>n[k]!=null).map(k=>[k,n[k]]));
   // Preserve the minimum evidence main's classifier needs, without copying every alias.
@@ -58,8 +65,7 @@ export async function buildGrowth(root=fileURLToPath(new URL('../portal/public',
  for(const entry of agencies.agencies){
   const agency=await read(entry.profile_path.replace(/^\//,''));
   const grants=agencyGrants(shards,agency.name);
-  const suppliers=[...(agency.suppliers || [])].sort((a,b)=>Number(b.total)-Number(a.total)).slice(0,6)
-   .map(s=>({id:s.id,name:s.name,total:s.total}));
+  const suppliers=publishedAgencySuppliers(agency,publishedSuppliers).sort((a,b)=>Number(b.total)-Number(a.total)).slice(0,6);
   await write(await growthSummaryPath('agencies',normalisedName(agency.name)),{agency:{id:agency.id,name:agency.name,suppliers},grants,meta:{generated:grantMeta.generated,coverage:grantMeta.coverage,source_url:grantMeta.source_url},contracts_updated:agencies.meta?.generated_at || ''});
  }
  console.log(JSON.stringify({files:sizes.length,largest:Math.max(...sizes.map(s=>s.bytes)),donorIndexBytes:sizes[0].bytes}));

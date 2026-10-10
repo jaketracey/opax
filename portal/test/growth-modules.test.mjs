@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import {runInNewContext} from 'node:vm';
 import {personQuestions,billQuestions,askBlockHTML,questionsHTML,latestBillVotes,recentSittingSpeeches,exactOrganisationDonors,donationRegisterHTML,otherSponsorBills,askPageType,noDivisionsHeading,ASSOCIATION_NOTE} from '../public/growth-modules.js';
-import {agencySuppliers,agencyGrants,agencyGrantsHTML} from '../public/supplier-growth.js';
+import {agencySuppliers,publishedSupplierIndex,agencyGrants,agencyGrantsHTML} from '../public/supplier-growth.js';
 import {cleanEvent} from '../analytics/privacy.mjs';
 const read = f=>readFileSync(new URL(f,import.meta.url),'utf8');
 const app=read('../public/app.js');
@@ -114,7 +114,8 @@ test('other bills use the shared sponsor-person identity rule, with no surname g
  assert.deepEqual(otherSponsorBills({...bill,sponsor:'Gee'},[{...bill,key:'two'}],roster),[]);
 });
 test('agency suppliers exclude this supplier; grants rank exact agency awards once and exclude individuals',()=>{
- assert.deepEqual(agencySuppliers({suppliers:[{id:'me',total:20},{id:'other',total:10}]},'me').map(s=>s.id),['other']);
+ const published=publishedSupplierIndex([{id:'me',name:'Me',profile_path:'/suppliers/me.json'},{id:'other',name:'Other',profile_path:'/suppliers/other.json'}]);
+ assert.deepEqual(agencySuppliers({suppliers:[{id:'me',total:20},{id:'other',total:10}]},'me',published).map(s=>s.id),['other']);
  const grants=[{id:'GA1',ag:'Agency',v:100},{id:'GA2',ag:'Other agency',v:1000}];
  const rows=agencyGrants([{org:{id:'abn:12345678901',n:'Org',k:'company',grants},person:{id:'person',k:'individual',grants:[{id:'GA3',ag:'Agency',v:2000}]}}],'Agency');
  assert.deepEqual(rows.map(r=>r.id),['GA1']);
