@@ -145,7 +145,7 @@
       "preset": "@preset/opax-pro",
       "model_id": "deepseek/deepseek-v4-pro-0813"
     },
-    "enrichment": "Codex subscription workers; automatic provider summaries disabled"
+    "enrichment": "Cloudflare Workers AI (opax-enrich): summaries and topic labels use @cf/qwen/qwen3-30b-a3b-fp8, with @cf/openai/gpt-oss-120b escalation"
   },
   "known_defects": [
     "openaustralia-derived texts: roughly a quarter contain missing-space concatenation artefacts ('toSenator'); verify wording against the official record before quoting.",

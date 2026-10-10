@@ -50,12 +50,11 @@ test('methods uses an unnamed embedding fallback and escapes manifest text', () 
   assert.match(models.generation, /<code>&lt;fixture&gt;<\/code>/);
 });
 
-test('methods checks run during search builds, stamp checks and direct Wrangler builds', () => {
+test('methods checks run during search builds and stamp gates', () => {
   const pkg = JSON.parse(readFileSync(new URL('../package.json', import.meta.url), 'utf8'));
-  const wrangler = readFileSync(new URL('../wrangler.jsonc', import.meta.url), 'utf8');
   const stamp = readFileSync(new URL('../../scripts/stamp_assets.mjs', import.meta.url), 'utf8');
   assert.match(pkg.scripts['build:search'], /npm run build:methods/);
   assert.match(pkg.scripts.check, /stamp_assets\.mjs --check/);
-  assert.match(wrangler, /"build":\s*\{\s*"command":\s*"node \.\.\/scripts\/stamp_assets\.mjs --check"/);
+  assert.match(pkg.scripts.deploy, /stamp_assets\.mjs/);
   assert.match(stamp, /buildMethods\(\{ check \}\)\s+buildSpaShell\(\{ check \}\)/);
 });

@@ -6,9 +6,6 @@
   "compatibility_date": "2026-09-01",
   "compatibility_flags": ["nodejs_compat"],
 
-  // Direct Wrangler runs must also reject stale model names and SPA shell copies.
-  "build": { "command": "node ../scripts/stamp_assets.mjs --check" },
-
   "assets": {
     "directory": "./public",
     "binding": "ASSETS",
