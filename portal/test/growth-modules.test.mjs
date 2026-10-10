@@ -162,13 +162,19 @@ test('person sections are reused once, and money/vote pairings carry the associa
  assert.equal((region.match(/renderPersonVotes\(/g)||[]).length,1);
  assert.equal((region.match(/renderPersonInterests\(/g)||[]).length,1);
  assert.equal((region.match(/renderPersonSpeeches\(speechSpeaker/g)||[]).length,1);
+ // The association line stands only beside a money pairing, once per pairing
+ // block: never under votes alone, the register's own list, or pay.
  const votesCode=app.slice(app.indexOf('async function renderPersonVotes'),app.indexOf('async function renderPersonTopics'));
- assert.match(votesCode,/Latest bills they voted on<\/h3>\n    \$\{growthModules.associationHTML\(\)\}/);
+ assert.doesNotMatch(votesCode,/associationHTML/);
  const interestCode=app.slice(app.indexOf('async function renderPersonInterests'),app.indexOf('let interestsTiesPromise'));
+ assert.equal((interestCode.match(/associationHTML/g)||[]).length,1);
  assert.match(interestCode,/Disclosed money records<\/h3>\n      \$\{growthModules.associationHTML\(\)\}/);
- assert.match(interestCode,/\$\{growthModules.associationHTML\(\)\}\n    \$\{sourceLineHTML/);
- assert.match(region,/Party disclosures, not this person’s finances[\s\S]*growthModules.associationHTML/);
- assert.match(region,/#person-pay, #person-expenses/);
+ const payStart=app.indexOf('async function renderPersonPay');
+ const payCode=app.slice(payStart,app.indexOf('\n}\n',payStart));
+ assert.doesNotMatch(payCode,/associationHTML/);
+ assert.equal((region.match(/associationHTML/g)||[]).length,1);
+ assert.match(region,/Party disclosures, not this person’s finances\.<\/p>\$\{growthModules.associationHTML\(\)\}/);
+ assert.doesNotMatch(region,/#person-pay, #person-expenses/);
 });
 test('suggested questions are plain links, and the bill module asks about the bill',()=>{
  const html=askBlockHTML({name,pageType:'person',seed:'',questions:['What interests has Alex Example declared?']});

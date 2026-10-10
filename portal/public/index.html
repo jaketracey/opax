@@ -60,7 +60,7 @@
 <!-- fonts:end -->
 <!-- ?v= is content-hash stamped by scripts/stamp_assets.mjs (npm run deploy),
      which is what lets _headers serve these two immutable. -->
-<link rel="stylesheet" href="/style.css?v=18c4261f75">
+<link rel="stylesheet" href="/style.css?v=93733c2d8a">
 <link rel="stylesheet" href="/ui-controls.css?v=f8011bf298">
 <link rel="stylesheet" href="/ui-source.css?v=4f396d8cfc">
 <link rel="stylesheet" href="/voice.css?v=a10938b91d">
@@ -675,8 +675,6 @@
               <button type="button" id="search-read-passages" aria-pressed="true" class="ui-button">Passages</button>
               <button type="button" id="search-read-briefs" aria-pressed="false" class="ui-button">Briefs</button>
             </div>
-            <!-- With Briefs on, the list's one machine label. -->
-            <details class="ui-pop ui-machine search-briefs-label" id="search-briefs-label" hidden><summary><span class="ui-machine-glyph" aria-hidden="true">✦</span>Machine-written</summary><div class="ui-sheet"><p>Briefs are written by a model from each record. A brief is not part of the record: open the record to read it. A row with no brief shows the record’s own text.</p></div></details>
           </div>
           <div id="search-sort-picker" class="search-sort-picker">
             <input id="search-sort" type="hidden" value="relevance">
@@ -835,7 +833,7 @@
     <!-- ============================== DOC ============================== -->
     <section id="panel-doc" class="panel" hidden aria-label="Document from the record">
       <div class="doc-head">
-        <h2 id="doc-title" tabindex="-1"></h2>
+        <h1 id="doc-title" tabindex="-1"></h1>
         <p id="doc-topic" class="doc-topic" hidden></p>
         <p id="doc-meta" class="doc-meta"></p>
         <nav id="doc-topics" class="doc-topics" aria-label="Topics this speech is labelled with" hidden></nav>
@@ -2055,10 +2053,10 @@
 <!-- defer: never block the parser (Lighthouse counted this as render-blocking).
      Deferred scripts still run before DOMContentLoaded, so nothing changes for
      app.js's boot. ?v= is content-hash stamped by scripts/stamp_assets.mjs. -->
-<script src="/spa-shell.js?v=c0db091a6d" defer></script>
+<script src="/spa-shell.js?v=d28b1d2444" defer></script>
 <script src="/navigation.js?v=f86ae6aef6" defer></script>
 <script src="/quick-search.js?v=206914f32d" defer></script>
 <script src="/ui-source.js?v=5e7b751ca0" defer></script>
-<script src="/app.js?v=bac040d88b" defer></script>
+<script src="/app.js?v=a0b2d5975e" defer></script>
 </body>
 </html>

@@ -38,7 +38,7 @@ test('switching modes keeps the summary identical, including partial or absent b
     render();
     const summary = elements['search-brief-status'].textContent;
     const n = Object.keys(briefs).length;
-    assert.match(summary, new RegExp(`^${n} ${n === 1 ? 'has a brief' : 'have briefs'};`));
+    assert.match(summary, new RegExp(`^${n} ${n === 1 ? 'has a machine-written brief' : 'have machine-written briefs'};`));
     for (const mode of ['briefs', 'passages', 'briefs']) {
       context.searchReadMode = mode;
       render();
