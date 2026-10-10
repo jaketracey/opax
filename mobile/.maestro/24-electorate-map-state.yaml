@@ -10,6 +10,13 @@ name: 24 State district from the device location, with the manual chooser kept
       location: unset
 - tapOn:
     id: tab-your-mp
+# At AX5 the federal location block pushes the field below the fold.
+- scrollUntilVisible:
+    element:
+      id: seat-search
+    centerElement: true
+    speed: 20
+    timeout: 60000
 - tapOn:
     id: seat-search
 - inputText: Maribyrnong
@@ -32,9 +39,20 @@ name: 24 State district from the device location, with the manual chooser kept
 - extendedWaitUntil:
     visible: Choose your state electorate
     timeout: 15000
-- assertVisible:
-    id: seat-search
 - takeScreenshot: ${EVIDENCE}/24-state-chooser
+- scrollUntilVisible:
+    element:
+      id: seat-search
+    centerElement: true
+    speed: 20
+    timeout: 60000
+- scrollUntilVisible:
+    element:
+      id: state-use-my-location
+    direction: UP
+    centerElement: true
+    speed: 20
+    timeout: 60000
 - tapOn:
     id: state-use-my-location
 - extendedWaitUntil:

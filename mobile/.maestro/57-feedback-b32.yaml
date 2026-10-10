@@ -60,11 +60,26 @@ name: 57 TestFlight build 32 feedback - Search focus, Browse, directory labels a
 - assertNotVisible: .*Formerly LIB.*
 - assertNotVisible: .*Formerly Liberal.*
 - takeScreenshot: ${EVIDENCE}/57-directory-hockey
+# At AX5 the row is taller than the screen: return to the field first.
+- scrollUntilVisible:
+    element:
+      id: directory-search
+    direction: UP
+    centerElement: true
+    speed: 20
+    timeout: 60000
 - tapOn:
     id: directory-search
 - eraseText: 20
 - hideKeyboard
 # ALUtpHq6: Sitting members only, beside Voting record and Portrait.
+- scrollUntilVisible:
+    element:
+      id: directory-filters
+    direction: UP
+    centerElement: true
+    speed: 20
+    timeout: 60000
 - tapOn:
     id: directory-filters
 - scrollUntilVisible:
@@ -82,29 +97,37 @@ name: 57 TestFlight build 32 feedback - Search focus, Browse, directory labels a
       id: directory-count
     timeout: 30000
 - takeScreenshot: ${EVIDENCE}/57-directory-sitting-only
-# ANGYQm3w: Bill Shorten's page links his votes and Labor's receipts.
+# ANGYQm3w: Bill Shorten's page links his votes and Labor's receipts. The
+# tester opened it from Parliamentarians (Search's People results keep only
+# members of the dated release, which he is not). A relaunch clears filters.
 - launchApp
 - tapOn:
     id: tab-search
 - scrollUntilVisible:
     element:
-      id: search-input
-    direction: UP
+      id: search-browse-person
     centerElement: true
     speed: 20
     timeout: 60000
 - tapOn:
-    id: search-input
+    id: search-browse-person
+- extendedWaitUntil:
+    visible:
+      id: directory-count
+    timeout: 30000
+- tapOn:
+    id: directory-search
 - inputText: Bill Shorten
 - pressKey: Enter
 - scrollUntilVisible:
     element:
-      id: search-result-bill-shorten
+      id: directory-person-bill-shorten
+    visibilityPercentage: 10
     centerElement: true
     speed: 20
-    timeout: 120000
+    timeout: 60000
 - tapOn:
-    id: search-result-bill-shorten
+    id: directory-person-bill-shorten
 - extendedWaitUntil:
     visible:
       id: person-screen-title

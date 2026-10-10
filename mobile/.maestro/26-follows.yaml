@@ -95,15 +95,17 @@ name: 26 Follow a member, a bill and an electorate; Today shows what changed
     timeout: 15000
 - takeScreenshot: ${EVIDENCE}/26-person-following
 
-# An electorate, from the member's seat row ("Grayndler electorate, House
-# of Representatives, …").
+# An electorate, from the member's seat row ("Member for Grayndler, House
+# of Representatives, …" since pass 3B), by its test ID.
 - scrollUntilVisible:
     element:
-      text: Grayndler electorate.*
+      id: person-electorate
+      text: Member for Grayndler.*
     timeout: 90000
     centerElement: true
     speed: 20
-- tapOn: Grayndler electorate.*
+- tapOn:
+    id: person-electorate
 - extendedWaitUntil:
     visible:
       id: electorate-name
@@ -354,10 +356,12 @@ name: 26 Follow a member, a bill and an electorate; Today shows what changed
     id: today-following-electorate-el_5d600e7f6dca5b72ae04d686
 - takeScreenshot: ${EVIDENCE}/26-after-relaunch
 
-# Unfollow all from Today's Manage follows.
+# Unfollow all from Today's Manage follows: the action sits in the section's
+# heading, above the row just centred.
 - scrollUntilVisible:
     element:
       id: today-following-manage
+    direction: UP
     timeout: 90000
     centerElement: true
     speed: 20

@@ -1,0 +1,75 @@
+appId: au.com.opax.app
+name: 57b iPad - build 32 feedback, Search focus, directory labels and filter, a former member's records
+---
+# iPad only (OPAX QA iPad 13). As in journey 53, taps miss under iPadOS 26
+# Windowed Apps, so set Full-Screen Apps first and restore Windowed Apps.
+- runFlow: support/ipad-full-screen-apps.yaml
+- launchApp:
+    clearState: true
+    permissions: {}
+- extendedWaitUntil:
+    visible:
+      id: today-screen
+    timeout: 90000
+# Idle Search: no placeholder rows; a short tap focuses the field each time.
+- openLink: opax://search
+- extendedWaitUntil:
+    visible:
+      id: search-split-empty
+    timeout: 60000
+- assertNotVisible:
+    id: search-suggestions-loading
+- repeat:
+    times: 20
+    commands:
+      - tapOn:
+          id: search-input
+      - inputText: Albanese
+      - assertVisible:
+          id: search-input
+          text: ^Albanese$
+      - eraseText: 12
+- takeScreenshot: ${EVIDENCE}/57b-search
+# The directory names its order; Hockey reads the party he sat for.
+- openLink: opax://directory?kind=person
+- extendedWaitUntil:
+    visible:
+      id: directory-count
+    timeout: 60000
+- assertVisible: .*Sitting first, then most speeches.*
+- tapOn:
+    id: directory-search
+- inputText: Joe Hockey
+- pressKey: Enter
+- extendedWaitUntil:
+    visible:
+      id: directory-person-joe-hockey
+    timeout: 30000
+- assertNotVisible: .*Formerly LIB.*
+- assertNotVisible: .*Formerly Liberal.*
+- takeScreenshot: ${EVIDENCE}/57b-directory-hockey
+# Shorten's record in the pane: Labor's receipts and his divisions.
+- tapOn:
+    id: directory-search
+- eraseText: 20
+- inputText: Bill Shorten
+- pressKey: Enter
+- extendedWaitUntil:
+    visible:
+      id: directory-person-bill-shorten
+    timeout: 30000
+- tapOn:
+    id: directory-person-bill-shorten
+- extendedWaitUntil:
+    visible:
+      id: person-screen-title
+    timeout: 30000
+- assertVisible:
+    id: person-former
+- scrollUntilVisible:
+    element: Labor party receipts
+    centerElement: true
+    speed: 20
+    timeout: 120000
+- takeScreenshot: ${EVIDENCE}/57b-shorten
+- runFlow: support/ipad-windowed-apps.yaml
