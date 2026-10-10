@@ -5,11 +5,11 @@
  *
  * Donor nodes carry no entity type and no ABN, only a label, aliases and an
  * industry tag, and individuals are often tagged with a sector (a person
- * tagged media or fossil fuels). So the industry never counts. Organisation evidence is a
- * legal-form or organisation word as a whole token, or an ABN/ACN, in the
- * label or an alias; or the unions tag, since a union is an organisation by
- * definition, unless its label reads as a personal name. Everything else is
- * treated as an individual: a bare company name ("Visy") fails closed.
+ * tagged media or fossil fuels). So the industry never counts, not even unions.
+ * Organisation evidence is a legal-form or organisation word or phrase as whole
+ * tokens in the label or an alias, a trailing "Co", or a single-token acronym
+ * ("CFMEU"). An ABN/ACN is not evidence: sole traders have ABNs. Everything else
+ * is treated as an individual: a bare company name ("Visy") fails closed.
  *
  * Shared by the Worker (src/) and the build scripts (scripts/build_*_catalog.mjs);
  * test/donor-entity.test.mjs and test/donor-privacy.test.mjs. */
@@ -19,22 +19,20 @@ const ORGANISATION_WORDS = [
   'co-operative', 'cooperative', 'co-op', 'association', 'union', 'unions', 'federation', 'council', 'trust',
   'foundation', 'institute', 'society', 'club', 'clubs', 'party', 'committee', 'fund', 'holdings', 'group',
   'partners', 'llp', 'bank', 'authority', 'chamber', 'alliance', 'network', 'services', 'enterprises', 'industries',
-  'lawyers', 'university', 'college', 'guild',
+  'lawyers', 'university', 'college', 'guild', 'trades\\s+hall',
 ]
 const ORGANISATION_WORD = new RegExp(`(?:^|[^a-z0-9])(?:${ORGANISATION_WORDS.join('|')})(?=$|[^a-z0-9])`, 'i')
 // "& Co" or "Pastoral Co" as the last word; "Co" elsewhere is too often part of a name.
 const TRAILING_CO = /(?:^|[^a-z0-9])co\.?\s*$/i
-// "ABN 12 345 678 901", an 11-digit ABN or a 9-digit ACN, spaced or not.
-const REGISTRATION = /\b(?:ABN|ACN)\b|(?:^|\D)(?:\d{2} ?\d{3} ?\d{3} ?\d{3}|\d{3} ?\d{3} ?\d{3})(?!\d)/i
-// "Mrs Jane Citizen AO" or "Citizen, Jane".
-const PERSONAL_NAME = /^\s*(?:mr|mrs|ms|miss|mx|dr|prof|professor|sir|dame|hon|the hon)\.?\s|^\s*[a-z'’-]+,\s*[a-z'’. -]+$/i
+// A single all-capitals token such as "CFMEU" or "SDA". "JOHN SMITH" has two tokens and is not one.
+const ACRONYM = /^[A-Z]{2,7}$/
 
 /** @param {{label?: string, aliases?: string[] | null, industry?: string | null} | null | undefined} node */
 export function isOrganisationDonor(node) {
   if (!node || typeof node.label !== 'string' || !node.label.trim()) return false
   const names = [node.label, ...(Array.isArray(node.aliases) ? node.aliases : [])].filter(n => typeof n === 'string')
-  if (names.some(n => ORGANISATION_WORD.test(n) || TRAILING_CO.test(n) || REGISTRATION.test(n))) return true
-  return node.industry === 'unions' && !PERSONAL_NAME.test(node.label)
+  if (names.some(n => ORGANISATION_WORD.test(n) || TRAILING_CO.test(n))) return true
+  return names.some(n => ACRONYM.test(n.trim()))
 }
 
 /** A money graph in which every donor failing isOrganisationDonor is renamed

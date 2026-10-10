@@ -9,6 +9,7 @@ import { missingEntitySlug } from './crawl-hygiene'
 import { normalizePassage, passageWindow } from './passage-text'
 import { instrumentPage, instrumentReader } from './instruments'
 import { auditPage, auditReader } from './audit'
+import { hubPage } from './hubs'
 import { AUDIT_ID } from '../public/audit.js'
 import { runIndexNow, INDEXNOW_CRON } from './indexnow'
 import { type MoneyFacts, moneyOverviewPrompt, verifiedOverview } from './ask-money-overview'
@@ -3184,6 +3185,7 @@ const STATIC_PAGES: Record<string, { title: string; description: string; query?:
 }
 
 type SeoRoute =
+  | { kind: 'hub'; hub: 'sitting' | 'estimates'; id: string | null }
   | { kind: 'instruments'; id: string | null }
   | { kind: 'audit'; id: string | null }
   | { kind: 'static'; page: keyof typeof STATIC_PAGES }
@@ -3236,6 +3238,8 @@ const GRANT_RECIPIENT_ID_RE = /^(?:abn:\d{11}|name:[a-z0-9 .&'()-]{2,120}|person
 /** Route table for real paths. Trailing slashes tolerated, never canonical. */
 function matchSeoRoute(url: URL): SeoRoute | null {
   const path = url.pathname.replace(/\/+$/, '') || '/'
+  if (path === '/sitting' || path.startsWith('/sitting/')) return {kind:'hub',hub:'sitting',id:path === '/sitting' ? null : path.slice('/sitting/'.length)}
+  if (path === '/estimates' || path.startsWith('/estimates/')) return {kind:'hub',hub:'estimates',id:path === '/estimates' ? null : path.slice('/estimates/'.length)}
   if (path === '/audit') return { kind: 'audit', id: null }
   if (path.startsWith('/audit/') && !/^\/audit\/(?:manifest|index|ready|reports-\d+)\.json$/.test(path)) {
     try { return { kind: 'audit', id: decodeURIComponent(path.slice('/audit/'.length)) } }
@@ -3738,6 +3742,11 @@ async function buildRouteMeta(route: SeoRoute, url: URL, request: Request, env: 
   })
 
   switch (route.kind) {
+    case 'hub': {
+      const people = route.hub === 'sitting' && route.id ? await loadPeople(env) : null
+      const page = await hubPage(route.hub,route.id,<T>(path: string) => assetJson<T>(env,path),people?.people || [],people?.slugOf || new Map())
+      return base({title:page.title+' · OPAX',description:page.description,prerender:page.html,jsonLd:page.jsonLd,status:page.status})
+    }
     case 'audit': return base({ ...await auditPage(route.id, url, auditReader(env.ASSETS), prerenderBlock),
       ...(route.id && AUDIT_ID.test(route.id) ? { canonical: `${SITE_ORIGIN}/audit/${route.id}` } : {}) })
     case 'instruments': return base(await instrumentPage(route.id, url, instrumentReader(env.ASSETS), prerenderBlock))
@@ -4148,6 +4157,10 @@ async function canonicalRoutePath(url: URL, env: Env): Promise<string> {
   }
   const candidate=new URL(url); candidate.pathname=path
   const route=matchSeoRoute(candidate)
+  if(route?.kind==='hub') {
+    const hubs=await assetJson<{pages:{path:string}[]}>(env,'/hubs/index.json').catch(()=>null)
+    if(hubs?.pages.some(page=>page.path===path)) return path
+  }
   if(route?.kind==='static' || route?.kind==='index' || route?.kind==='topics') return path
   if(route?.kind==='topic' && TOPIC_NAMES[route.slug]) return path
   if(route?.kind==='report' && (await loadReports(env).catch(()=>null))?.bySlug.has(route.slug)) return path
@@ -4184,7 +4197,7 @@ async function pageAliasRedirect(request: Request, url: URL, env: Env): Promise<
     if(destination.searchParams.has('ask')) {destination.searchParams.set('q',destination.searchParams.get('ask') || '');destination.searchParams.delete('ask');}
   }
   const location=destination.href
-  return new Response(null,{status:host ? 308 : 301,headers:{location,'cache-control':'public, max-age=86400','referrer-policy':'no-referrer',...(['/ask','/search'].includes(path) && url.search ? {'x-robots-tag':'noindex'} : {})}})
+  return new Response(null,{status:host && matchSeoRoute(destination)?.kind !== 'hub' ? 308 : 301,headers:{location,'cache-control':'public, max-age=86400','referrer-policy':'no-referrer',...(['/ask','/search'].includes(path) && url.search ? {'x-robots-tag':'noindex'} : {})}})
 }
 /** slug -> name for every person with a slug: how app.js writes and reads the addresses. */
 async function apiPersonSlugs(env: Env): Promise<Response> {
@@ -4817,6 +4830,10 @@ async function serveSeoPage(route: SeoRoute, url: URL, request: Request, env: En
         for(const [rel,href] of [['prev',meta.prev],['next',meta.next]]) if(href) el.append(`<link rel="${rel}" href="${escHtml(href)}">`,{html:true})
       },
     })
+  if (route.kind === 'hub') rewriter.on('script[src]', { element(el) {
+    if (/\/(app|spa-entry|spa-shell)\.js(?:\?|$)/.test(el.getAttribute('src') || '')) el.remove()
+  } }).on('head', { element(el) { el.append('<link rel="stylesheet" href="/hubs.css">',{html:true}) } })
+    .on('p#stats', { element(el) { el.remove() } })
   if (route.kind === 'instruments' || route.kind === 'audit') rewriter.on('script[src]', { element(el) {
     if (/\/(app|spa-entry|spa-shell)\.js(?:\?|$)/.test(el.getAttribute('src') || '')) el.remove()
   } }).on('a[href^="/subject/person"]', { element(el) { el.remove() } })

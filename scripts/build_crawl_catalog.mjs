@@ -73,6 +73,9 @@ OPAX code is AGPL-3.0. Source data retains its own terms: parliamentary material
 - [Parties](${ORIGIN}/subject/party): \`/subject/party/{slug}\`; disclosed funding and parliamentary records.
 - [Electorates](${ORIGIN}/subject/electorate): \`/subject/electorate/{slug}\`; jurisdiction-specific seat records.
 - [Bills](${ORIGIN}/bills): \`/bill/{bill-key}\`; stages, original bill text and linked divisions.
+- [Sitting weeks](${ORIGIN}/sitting): Sitting dates, introduced bills, divisions and sourced Senate cut-off dates.
+- [12–15 October sitting week](${ORIGIN}/sitting/2026-10-12): Calendar and published records for this period.
+- [Supplementary Budget Estimates](${ORIGIN}/estimates/2026-10): 26–29 October 2026; committee dates, portfolio agencies and recent contract and grant awards. Portfolio lists are not confirmed appearances while programs remain unpublished. No donor records.
 ${catalogueComplete(instruments) ? '- [Federal legislative instruments](' + ORIGIN + '/instruments): \`/instrument/{frl-id}\`; metadata only, with dates and links to authoritative FRL versions. No model summaries or person entities.\n' : ''}
 ${auditComplete(audit) ? '- [Queensland audit reports](' + ORIGIN + '/audit): \`/audit/{report-id}\`; report index and numbered HTML recommendations, QAO source text under CC BY 4.0 with State of Queensland attribution. Per-report exceptions withhold bodies. PDF bodies, entity responses and the app surface are phase 2.\n' : ''}
 - [Divisions and source records](${ORIGIN}/ask): \`/doc/division-{division-key}\` for votes; \`/doc/{resource-slug}\` for speeches and other source records.
@@ -127,6 +130,7 @@ export async function buildCrawl(root) {
     read('parliamentarians.json'), read('electorates/manifest.json'), read('bills/index.json'), read('suppliers.json'), read('agencies.json'), read('reports/index.json'), read('corpus.json'), read('votes.json'), optional('graph/campaigners.json')
   ]);
   const [seats, seatPeople] = await Promise.all([read(seatManifest.index_url), read(seatManifest.people_url)]);
+  const hubs = await optional('hubs/index.json');
   const people = [...roster.people];
   const known = new Set(people.flatMap(p => [p.name,...splitSpeakers(p)].map(personNameKey)));
   for (const p of seatPeople.people) {
@@ -150,6 +154,11 @@ export async function buildCrawl(root) {
     groups[type].push({path,lastmod,...(priority != null ? {priority} : {})});
   };
   const snapshot = new Map();
+  if (hubs) {
+    groups.hubs = hubs.pages;
+    fallbacks.hubs = 0;
+    for (const page of hubs.pages) snapshot.set(page.path,hash(page.path.startsWith('/estimates/') ? await read(`hubs/estimates-${page.path.split('/').at(-1)}.json`) : page.path === '/sitting' ? hubs : hubs.weeks.find(w => page.path === `/sitting/${w.start}`)));
+  }
   const instruments = await optional('instruments/manifest.json').catch(() => null);
   addInstrumentDiscovery(groups, instruments);
   if(groups.instruments) {

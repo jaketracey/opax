@@ -1,0 +1,15 @@
+{
+  "bills": [
+    {"key":"au-federal-house","jurisdiction":"federal","title":"House Bill","introduced":"2026-10-12","originating_house":"representatives","sponsor":"FARUQI, Sen Mehreen","sponsor_person_id":"10912","summary":{"sentences":["A model summary."],"generated_at":"2026-10-13T04:00:00Z"},"divisions":[{"key":"federal-senate-example","title":"The 2D division title"}]},
+    {"key":"au-federal-senate","jurisdiction":"federal","title":"Senate Bill","introduced":"2026-10-14","originating_house":"senate","key_dates":[{"date":"2026-10-12","stage":"second_reading"}]},
+    {"key":"au-federal-earlier","jurisdiction":"federal","title":"Earlier Bill","introduced":"2026-09-30","originating_house":"representatives","key_dates":[{"date":"2026-10-12","stage":"second_reading"}]},
+    {"key":"nsw-bill","jurisdiction":"nsw","title":"State Bill","introduced":"2026-10-12","originating_house":"representatives"},
+    {"key":"au-federal-later","jurisdiction":"federal","title":"Later Bill","introduced":"2026-10-16","originating_house":"representatives"}
+  ],
+  "divisions": [
+    {"key":"federal-senate-example","slug":"division-federal-senate-example","jurisdiction":"federal","house":"senate","date":"2026-10-14","name":"Fallback title","title":"The 2D division title","result":"affirmative","ayes":40,"noes":20},
+    {"key":"federal-reps-example","slug":"division-federal-reps-example","jurisdiction":"federal","house":"representatives","date":"2026-10-15","name":"House division","result":"negative","ayes":50,"noes":80},
+    {"key":"nsw-la-example","slug":"division-nsw-la-example","jurisdiction":"nsw","house":"representatives","date":"2026-10-15"},
+    {"key":"federal-earlier","slug":"division-federal-earlier","jurisdiction":"federal","house":"senate","date":"2026-10-11"}
+  ]
+}

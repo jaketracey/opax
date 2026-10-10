@@ -160,7 +160,7 @@ const ownUrl = (html, path) => entities(html).replaceAll(path, '');
 const locs = name => [...readFileSync(at(`crawl/sitemaps/${name}`), 'utf8').matchAll(/<loc>https:\/\/opax\.com\.au([^<]+)<\/loc>/g)].map(m => decode(m[1]));
 const sitemapFiles = readdirSync(at('crawl/sitemaps'));
 
-test('every server-rendered person, party, money, campaigner and supplier page names no withheld donor', async t => {
+test('every server-rendered person, party, money, hub, campaigner and supplier page names no withheld donor', async t => {
   let interestMentions = 0;
   const people = sitemapFiles.filter(f => f.startsWith('people-')).flatMap(locs);
   assert.ok(people.length > 1000);
@@ -172,6 +172,8 @@ test('every server-rendered person, party, money, campaigner and supplier page n
     next = (await (await fetchWorker(path)).text()).includes(`<link rel="next" href="/subject/${dir}?page=${page + 1}"`);
   }
   const suppliers = real('suppliers.json').suppliers.map(s => `/subject/supplier/${s.id}`);
+  // Sitting-week and estimates hubs, when the export carries them.
+  money.push(...sitemapFiles.filter(f => f.startsWith('hubs-')).flatMap(locs));
   let personDonorBlocks = 0;
   for (const path of [...people, ...parties, ...money, ...suppliers]) {
     const response = await fetchWorker(path);

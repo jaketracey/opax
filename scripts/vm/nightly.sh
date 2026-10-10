@@ -59,6 +59,9 @@
 #   OPAX_WEEKLY_REFRESH   periodic script (default scripts/weekly_refresh.sh)
 #   OPAX_BILL_PARLIAMENT  current federal parliament (default 48)
 #   OPAX_BILLS_TIMEOUT    combined bill fetch/full-export limit (default 20m, plus 60s kill grace)
+#   OPAX_EVIDENCE_TIMEOUT combined evidence export/audit/install limit (default 20m, plus 60s kill grace)
+#   OPAX_EVIDENCE_READINESS_TIMEOUT input probe limit (default 60s, plus 5s kill grace; timeout waits)
+#   OPAX_EVIDENCE_SOURCE / LAYERS / PLACES / DECISIONS / ADDITIONAL  matching read-only SQLite inputs
 #   OPAX_TEST_GATE        0 = do not run the portal test suite against the new data before committing
 #   OPAX_BOT_NAME / OPAX_BOT_EMAIL   commit identity
 
@@ -156,6 +159,7 @@ PYEOF
 }
 
 finish() {
+  if declare -F evidence_abort >/dev/null; then evidence_abort; fi
   rm -f "$MARK"
   local rc=0
   if [ "${#FAILURES[@]}" -gt 0 ]; then
@@ -170,7 +174,16 @@ finish() {
   fi
   exit "$rc"
 }
-trap 'if [ "$?" -ne 0 ] && [ "${#FAILURES[@]}" -eq 0 ]; then fail "nightly.sh died unexpectedly (see the log)"; finish; fi' EXIT
+nightly_exit() {
+  local rc=$?
+  if declare -F evidence_abort >/dev/null; then evidence_abort; fi
+  if [ "$rc" -ne 0 ] && [ "${#FAILURES[@]}" -eq 0 ]; then
+    fail "nightly.sh died unexpectedly (see the log)"
+    finish
+  fi
+}
+trap nightly_exit EXIT
+trap 'fail "nightly interrupted"; finish' TERM INT
 
 # ---- preflight -------------------------------------------------------------------------
 [ -x "$PY" ] || { fail "$PY missing: run scripts/vm/bootstrap.sh"; finish; }
@@ -233,6 +246,7 @@ run_completed() {
 revert() {
   local p
   for p in "$@"; do [ "$p" != portal/public/bills ] || BILLS_REFRESH_OK=0; done
+  for p in "$@"; do [ "$p" != portal/public/evidence ] || EVIDENCE_REFRESH_OK=0; done
   git checkout -q HEAD -- "$@"; git clean -fdq -- "$@" 2>/dev/null || true
 }
 revert_group() { local g=$1; local paths; read -ra paths <<<"${GROUP_PATHS[$g]}"; revert "${paths[@]}"; }
@@ -305,6 +319,11 @@ fi
 . "$REPO/scripts/vm/bills_refresh.sh"
 bills_refresh
 
+# ---- 2d. evidence: weekly/catch-up export from matching read-only sidecars ----------------------
+# shellcheck source=scripts/vm/evidence_refresh.sh
+. "$REPO/scripts/vm/evidence_refresh.sh"
+evidence_refresh
+
 # ---- 3. bills: put the speech briefs back, prove no brief or bill was lost ------------------------
 bills_fill_and_verify
 
@@ -348,10 +367,10 @@ done
 if [ "${OPAX_TEST_GATE:-1}" != 0 ]; then
   gate_groups=()
   for group in "${DATA_GROUPS[@]}"; do
-    case $group in corpus|wrangler|bills|votes) continue ;; esac
+    case $group in corpus|wrangler|bills|votes|evidence) continue ;; esac
     group_changed "$group" && gate_groups+=("$group")
   done
-  for group in votes bills; do group_changed "$group" && gate_groups+=("$group"); done
+  for group in votes bills evidence; do group_changed "$group" && gate_groups+=("$group"); done
   if [ "${#gate_groups[@]}" -gt 0 ]; then
     NODE="${OPAX_NODE:-node}"; NPM="${OPAX_NPM:-npm}"
     if [ -f "$REPO/portal/package-lock.json" ] && [ -d "$REPO/portal/node_modules" ] \
@@ -382,6 +401,7 @@ if [ "${OPAX_TEST_GATE:-1}" != 0 ]; then
           local g=$1 paths
           read -ra paths <<<"${GROUP_PATHS[$g]}"
           [ "$g" != bills ] || BILLS_GATE_BACKUP_OK=$BILLS_REFRESH_OK
+          [ "$g" != evidence ] || EVIDENCE_GATE_BACKUP_OK=$EVIDENCE_REFRESH_OK
           tar cf "$BK/$g.tar" -- "${paths[@]}" 2>/dev/null || true
         }
         restore_group() {
@@ -391,6 +411,7 @@ if [ "${OPAX_TEST_GATE:-1}" != 0 ]; then
           if tar xf "$BK/$g.tar" 2>/dev/null; then
             # A trial rollback was innocent: restore acceptance with the files.
             [ "$g" != bills ] || BILLS_REFRESH_OK=$BILLS_GATE_BACKUP_OK
+            [ "$g" != evidence ] || EVIDENCE_REFRESH_OK=$EVIDENCE_GATE_BACKUP_OK
           else
             fail "cannot restore test backup for $g"
           fi
@@ -476,6 +497,7 @@ else
 fi
 
 bills_summary || { fail "cannot summarize retained bills"; finish; }
+evidence_summary
 
 # ---- 6. commit -----------------------------------------------------------------------------------------------
 # Re-read HEAD after sync/validation; stage whole published directory roots,
@@ -498,15 +520,20 @@ if git diff --cached --quiet; then
     log "no data changes tonight (and checked_at is fresh): nothing to commit, push or deploy"
     DEPLOY="not needed (no changes)"
     bills_refresh_complete
+    evidence_refresh_complete
     finish
   fi
 else
   parts=(); changed_groups=()
   [ -n "$RESULT_SUMMARY" ] && [ "$KB_CHANGED" = true ] && parts+=("$RESULT_SUMMARY")
   [ "$KB_CHANGED" = true ] || parts+=("$BILLS_SUMMARY")
+  if ! git diff --cached --quiet -- portal/public/evidence; then
+    [ "$KB_CHANGED" = true ] || parts+=("$EVIDENCE_SUMMARY")
+    changed_groups+=(evidence)
+  fi
   git diff --cached --quiet -- portal/public/votes.json || parts+=("votes.json")
   for group in "${DATA_GROUPS[@]}"; do
-    case $group in bills|votes|corpus|wrangler) continue ;; esac
+    case $group in bills|evidence|votes|corpus|wrangler) continue ;; esac
     read -ra gpaths <<<"${GROUP_PATHS[$group]}"
     git diff --cached --quiet -- "${gpaths[@]}" || { changed_groups+=("$group"); parts+=("$group"); }
   done
@@ -522,6 +549,7 @@ else
   log "committed: $subject"
 fi
 bills_refresh_complete
+evidence_refresh_complete
 COMMIT_SHA=$(git rev-parse --short HEAD)
 
 # ---- 7. push (the push starts the deploy) --------------------------------------------------------------------

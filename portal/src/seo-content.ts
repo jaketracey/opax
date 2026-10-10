@@ -1,5 +1,6 @@
 import { personUrl, partyUrl } from '../public/canonical-urls.js'
 import {sponsorPerson} from '../public/sponsor-person.js'
+import {currentSittingPath, sydneyDay} from '../public/hubs-data.js'
 import {isOrganisationDonor, donorPrivacyIndex, donorNameWithheld, foldDonorName, MONEY_GRAPHS} from '../public/donor-entity.js'
 import {renderDivisionMarkdown, divisionPlain, billNoteRepair, billStripTitle, billStripStage} from '../public/division-markdown.js'
 /** Crawlable answers from the same static projections the application reads.
@@ -235,7 +236,10 @@ export async function renderDirectory(dir: string, url: URL, read: ReadAsset, pe
   }
   if (dir==='bills') {
     const data = await read<{bills:Bill[]}>('/bills/index.json')
-    return paginate(url,data.bills.map(b=>({href:`/bill/${b.key}`,label:b.short_title || b.title,detail:human(b.status || '')})),'Bills','Australian parliamentary bills: recorded stages, sponsors, divisions and machine-written summaries where available.')
+    const hubs = await read<{weeks:{start:string;end:string}[]}>('/hubs/index.json')
+    const content = paginate(url,data.bills.map(b=>({href:`/bill/${b.key}`,label:b.short_title || b.title,detail:human(b.status || '')})),'Bills','Australian parliamentary bills: recorded stages, sponsors, divisions and machine-written summaries where available.')
+    content.html = content.html.replace('</h1>',`</h1><p>${link(currentSittingPath(hubs.weeks,sydneyDay()),'This sitting week')}</p>`)
+    return content
   }
   if (dir==='grants') {
     const jurisdictions = url.searchParams.get('jur') === 'qld' ? ['qld'] : url.searchParams.get('jur') === 'federal' ? ['federal'] : ['federal','qld']
