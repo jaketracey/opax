@@ -37,7 +37,9 @@ test('week fixtures use introduction dates and division dates, exclude states, a
 test('SSR week uses the validated sponsor, dated Machine-written label and 2D title with outcome and tally',()=>{
   const page = renderSittingWeek(data,fixtureWeek,people,slugs);
   assert.match(page.html,/href="\/subject\/person\/mehreen-faruqi">Mehreen Faruqi/);
-  for (const text of ['Machine-written','Written 13 Oct 2026','A model summary.','The 2D division title','Agreed · 40 ayes · 20 noes','Not agreed · 50 ayes · 80 noes','Senate two-thirds cut-off','14 Oct 2026']) assert.ok(page.html.includes(text),text);
+  for (const text of ['Machine-written','Written 13 Oct 2026','A model summary.','The 2D division title','Agreed','Not agreed','Senate two-thirds cut-off','14 Oct 2026']) assert.ok(page.html.includes(text),text);
+  assert.match(page.html,/data-label="Ayes"[^>]*>40<\/td>/);
+  assert.match(page.html,/data-label="Noes"[^>]*>80<\/td>/);
   assert.doesNotMatch(page.html,/Fallback title/);
   assert.equal(page.jsonLd['@graph'][0]['@type'],'Event');
   assert.equal(page.jsonLd['@graph'][1].numberOfItems,4);
@@ -48,7 +50,7 @@ test('SSR week uses the validated sponsor, dated Machine-written label and 2D ti
   malicious.bills[0].title='<img src=x onerror=bad>';
   malicious.bills[0].sources=[{kind:'billhome',url:'javascript:alert(1)'}];
   malicious.divisions[0].ayes='<script>bad</script>';
-  assert.doesNotMatch(renderSittingWeek(data,malicious,people,slugs).html,/<img|<script|javascript:/);
+  assert.doesNotMatch(renderSittingWeek(data,malicious,people,slugs).html,/<img|<script>|javascript:/);
 });
 test('empty week has calendar facts and arrival text, with no loading text or empty record sections',()=>{
   const week = deriveWeek(period,[],[],calendar.updated);

@@ -7,6 +7,7 @@ import * as modules from '../public/growth-modules.js';
 import {supplierRecordsHTML,agencyGrantsHTML,publishedSupplierIndex} from '../public/supplier-growth.js';
 import {sourceLineHTML} from '../public/labels.js';
 import * as divisionMarkdown from '../public/division-markdown.js';
+import * as voteTables from '../public/vote-tables.js';
 const app=readFileSync(new URL('../public/app.js',import.meta.url),'utf8');
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const decode=s=>s.replace(/&amp;/g,'&').replace(/&quot;/g,'"').replace(/&#39;/g,"'").replace(/&lt;/g,'<').replace(/&gt;/g,'>');
@@ -30,7 +31,7 @@ export async function* moduleOutputs(root,withheld,readAsset) {
  // belong to the published roster, so use the fixture file as that authority.
  const roster=JSON.parse(readFileSync(join(root,'parliamentarians.json'),'utf8'));
  const localModules={...modules,loadModulePrivacy:async(kind,id)=>modules.approvedModulePrivacy(await read(await modules.growthSummaryPath('privacy/'+kind,id)))};
- const context={growthModules:localModules,esc,safeUrl:v=>v || '',fmtDate:v=>v || '',fmtMoney:String,industryLabel:String,partyDotHTML:()=>'',
+ const context={growthModules:localModules,voteTables:{...voteTables,mountVoteTables(){}},esc,safeUrl:v=>v || '',fmtDate:v=>v || '',fmtMoney:String,industryLabel:String,partyDotHTML:()=>'',
   sourceLineHTML,entityHrefAttr:href=>`href="${esc(href)}"`,subjectHash:(kind,name)=>`/subject/${kind}/${encodeURIComponent(name)}`,fetch:fetchAsset,currentSubjectKey:'fixture',
   document:{createElement:()=>({dataset:{},isConnected:true,remove(){},querySelectorAll:()=>[]})},searchHash:q=>'/ask?view=search&'+new URLSearchParams({q}),STATE_NAMES:{},billQuestion:v=>v,
   machineLabelHTML:({note=''})=>`<span>${esc(note)}</span>`,partyChipHTML:esc,

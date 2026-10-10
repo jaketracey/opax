@@ -1,0 +1,23 @@
+/* Lane presentation; shared controls and responsive cards belong to DT-core. */
+.vote-table { color: var(--ink); font: var(--type-body); }
+.vote-table > .dt { width: 100%; border-collapse: collapse; }
+.vote-table > .dt caption { text-align: start; font: var(--type-heading); margin-block-end: var(--space-heading); }
+.vote-table > .dt th, .vote-table > .dt td { padding: var(--space-row) var(--space-tight); border-block-end: var(--border-hairline) solid var(--divider-subtle); vertical-align: top; }
+.vote-table > .dt td { font-variant-numeric: tabular-nums; }
+.vote-table > .dt [data-align="end"] { text-align: end; }
+.vote-table .dt [data-primary] { font: var(--type-subheading); }
+.vote-table .dt [data-primary] a { color: var(--votes-ink); }
+.vote-table .dt-root button[aria-pressed="true"] { color: var(--votes-ink); background: var(--votes-wash); border-color: var(--votes-ink); }
+.vote-table .dt-root :is(button, summary, input, select, a):focus-visible { outline-color: var(--votes-ink); }
+/* Status labels use the section's single votes accent. */
+.vote-table .ui-status { color: var(--ink-soft); background: var(--paper-sunken); }
+.vote-table .ui-status[data-tone="done"] { color: var(--votes-ink); background: var(--votes-wash); }
+@media (max-width: 599px) {
+  .vote-table > .dt thead { display: none; }
+  .vote-table > .dt tbody, .vote-table > .dt tr, .vote-table > .dt td { display: block; }
+  .vote-table > .dt tr { margin-block-end: var(--space-block); border-block-end: var(--border-hairline) solid var(--divider-subtle); padding-block: var(--space-row); }
+  .vote-table > .dt td { border: none; padding: var(--space-line) var(--space-tight); }
+  .vote-table > .dt td:not([data-primary])::before { content: attr(data-label) ": "; font: var(--type-label); color: var(--ink-soft); }
+  .vote-table > .dt [data-align="end"] { text-align: start; }
+  .vote-table > .dt [data-prominent] { font: var(--type-heading); }
+}

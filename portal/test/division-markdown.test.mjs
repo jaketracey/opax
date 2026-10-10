@@ -57,16 +57,20 @@ test('SPA shares the SSR renderer and retains title/stage stripping and sentence
  const parts=c.billQuestionParts(fake,{title:'Example Bill'});
  assert.equal(parts.head,'A sufficiently long first sentence about the motion.');assert.match(c.billNoteHTML(parts.note),/<blockquote>/);
 });
-test('bill and nightly-exported division SSR contain formatted fixture without raw Markdown',()=>{
- for(const html of [renderBillAnswer(bill,[],new Map()).html,renderDivisionAnswer(read('divisions/division-federal-senate-10178.json'),[],new Map()).html]){
+test('bill tables link to the division whose SSR retains the formatted question',()=>{
+ const billHTML=renderBillAnswer(bill,[],new Map()).html;
+ assert.match(billHTML,/href="\/doc\/division-federal-senate-10178"/);
+ assert.doesNotMatch(billHTML,/###|&gt; |<blockquote>/);
+ for(const html of [renderDivisionAnswer(read('divisions/division-federal-senate-10178.json'),[],new Map()).html]){
   assert.doesNotMatch(html,/###|&gt; /);assert.match(html,/<blockquote>/);
   assert.match(html,/<strong>What is the bill&#39;s main idea\?<\/strong>/);
   assert.match(html,/The majority voted against/);assert.equal((html.match(/<h1\b/g)||[]).length,1);
  }
 });
-test('MP vote questions use the same renderer when supplied',async()=>{
- const data={'1':{name:'Example Member',jurisdiction:'federal',for:[{name:'Example Bill',date:'2026-04-01',question:division.question}],against:[]}};
+test('MP vote tables link to the question instead of repeating its Markdown',async()=>{
+ const data={'1':{name:'Example Member',jurisdiction:'federal',for:[{name:'Example Bill',date:'2026-04-01',division_slug:'division-fixture',question:division.question}],against:[]}};
  const read=async path=>{if(path==='/votes.json')return data;throw Error('No fixture');};
  const html=(await renderPersonAnswer({pid:'1',name:'Example Member',states:[],chambers:['senate']},read,new Map())).html;
- assert.match(html,/<blockquote>/);assert.doesNotMatch(html,/###|&gt; /);
+ assert.match(html,/href="\/doc\/division-fixture">Example Bill/);
+ assert.doesNotMatch(html,/###|&gt; |<blockquote>/);
 });

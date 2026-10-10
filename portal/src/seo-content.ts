@@ -2,7 +2,9 @@ import { personUrl, partyUrl } from '../public/canonical-urls.js'
 import {sponsorPerson} from '../public/sponsor-person.js'
 import {currentSittingPath, sydneyDay} from '../public/hubs-data.js'
 import {isOrganisationDonor, donorPrivacyIndex, donorNameWithheld, foldDonorName, MONEY_GRAPHS, withheldPhrases, namesWithheldPhrase} from '../public/donor-entity.js'
-import {renderDivisionMarkdown, divisionPlain, billNoteRepair, billStripTitle, billStripStage} from '../public/division-markdown.js'
+import {renderDivisionMarkdown, divisionPlain} from '../public/division-markdown.js'
+import {divisionTableConfig, voteTableConfig, divisionRows, votingRows, voteTablePage, voteTableHTML} from '../public/vote-tables.js'
+import type {Query} from '../public/datatable.js'
 /** Crawlable answers from the same static projections the application reads.
  * All lists are bounded; source strings and URLs cross one escaping boundary. */
 export type ReadAsset = <T>(path: string) => Promise<T>
@@ -131,7 +133,7 @@ async function withheldCheckFrom(read: ReadAsset): Promise<WithheldCheck> {
   return check
 }
 
-export async function renderPersonAnswer(p: Person, read: ReadAsset, slugs: Map<string,string>, profileUrl?: string, withheld?: WithheldCheck): Promise<RenderedContent> {
+export async function renderPersonAnswer(p: Person, read: ReadAsset, slugs: Map<string,string>, profileUrl?: string, withheld?: WithheldCheck, tableQuery: Query = {}): Promise<RenderedContent> {
   const [voteData, interests, seats, bills, sponsored, recentData] = await Promise.all([
     optional<Record<string, Votes | Record<string,string[]>>>(read,'/votes.json'),
     optional<{people: Record<string,unknown>; _by_name: Record<string,string>}>(read,'/interests/index.json'),
@@ -158,10 +160,13 @@ export async function renderPersonAnswer(p: Person, read: ReadAsset, slugs: Map<
       ? keys.flatMap(k=> { const r=recentData.people?.[k]; return r && fold(r.name)===fold(p.name) && Array.isArray(r.recent) ? r.recent : [] }) : []
     const hasRecent = recent.length>0
     const votes = (hasRecent ? recent : records.flatMap(r=>[...(r.for || []).map(v=>({...v,vote:'For the bill'})),...(r.against || []).map(v=>({...v,vote:'Against the bill'}))]))
-      .sort((a,b)=>String(b.date || '').localeCompare(String(a.date || ''))).slice(0,10)
+      .filter(v=>!withheld?.(v.title || v.name || '', v.question || ''))
+      .sort((a,b)=>String(b.date || '').localeCompare(String(a.date || '')))
     if (votes.length) {
-      body += `<h2>${hasRecent ? (votes.length===10 ? 'Last 10 recorded votes' : 'Recorded votes') : 'Latest exported bill votes'}</h2>`
-      body += `<ol>${votes.map(v=>`<li>${v.division_slug ? link(`/doc/${v.division_slug}`,divisionPlain(v.title || v.name || 'Division')) : link(v.source_url || `/ask?view=search&q=${encodeURIComponent(v.name || v.title || '')}`,divisionPlain(v.name || v.title || 'Division'))} — ${escapeHtml(v.date)}, ${escapeHtml(v.stage || '')}: ${escapeHtml(v.vote)}${v.question ? `<div class="division-markdown">${renderDivisionMarkdown(v.question)}</div>` : ''}${original(v.source_url)}</li>`).join('')}</ol>`
+      const config = voteTableConfig(p.pid || personHref(p,slugs).split('/').at(-1)!, hasRecent ? 'Recorded votes' : 'Latest exported bill votes')
+      config.id += '-ssr'
+      body += voteTableHTML(config,voteTablePage(votingRows(votes,bills?.bills || []),config,tableQuery))
+      body += '<p>This list covers votes available in the published export. Only formal divisions leave a per-member record. Party position is shown only when the vote source records it.</p>'
       body += `<p>Source: ${hasRecent ? link('/seo/recent-votes.json','OPAX recorded-vote export') : `${link('/votes.json','OPAX bill-vote export')} (They Vote For You and state Hansard)`}.</p>`
     }
     const id = p.pid && interests?.people[p.pid] ? p.pid : interests?._by_name[fold(p.name)]
@@ -205,7 +210,7 @@ export async function renderPersonAnswer(p: Person, read: ReadAsset, slugs: Map<
 export function sponsorFor(b: Bill, people: Person[]): Person | null {
   return b.sponsor ? sponsorPerson(b.sponsor, b.sponsor_person_id, people) : null
 }
-export function renderBillAnswer(b: Bill, people: Person[], slugs: Map<string,string>, related: Bill[] = []): RenderedContent {
+export function renderBillAnswer(b: Bill, people: Person[], slugs: Map<string,string>, related: Bill[] = [], tableQuery: Query = {}): RenderedContent {
   const title = b.short_title || b.title
   const sponsor = sponsorFor(b,people)
   const party = b.sponsor_party || sponsor?.party
@@ -213,8 +218,7 @@ export function renderBillAnswer(b: Bill, people: Person[], slugs: Map<string,st
   const description = `${human(b.status || 'Status not recorded')}${b.status_as_of ? `, as at ${b.status_as_of}` : ''}. ${b.portfolio ? `${b.portfolio} portfolio.` : ''}`
   let body = `<dl><dt>Sponsor</dt><dd>${sponsor ? link(personHref(sponsor,slugs),sponsor.name) : escapeHtml(b.sponsor || 'Not recorded')}</dd>${party ? `<dt>Sponsor's recorded party</dt><dd>${link(partyUrl(party),party)}</dd>` : ''}<dt>Portfolio</dt><dd>${escapeHtml(b.portfolio || 'Not recorded')}</dd></dl>`
   if (b.key_dates?.length) body += `<h2>Recorded stages</h2><ul>${b.key_dates.map(d=>`<li>${escapeHtml(stageLabel(d.stage))} — ${escapeHtml(d.date)} (${escapeHtml(chamber(d.house))})${original(d.url)}</li>`).join('')}</ul>`
-  body += '<h2>Divisions</h2>'
-  const divisions = (b.divisions || []).map(d=>({...d,question:billStripStage(billStripTitle(billNoteRepair(d.question),b),d.stage)}))
+  const divisions = b.divisions || []
   const divisionSlot = '<!--bill-divisions-->'
   body += divisionSlot
 
@@ -227,15 +231,11 @@ export function renderBillAnswer(b: Bill, people: Person[], slugs: Map<string,st
   }
   body += `<p>Stage dates describe the parliamentary progress recorded by the source. They do not establish when provisions commence. A bill before parliament is a proposal; its text can change before passage. Division totals describe the recorded question on that date. A procedural division does not necessarily establish support for every provision of a bill. Check the official bill text and explanatory memorandum for the wording.</p><p>${link(`/bills/${b.key}.json`,'Bill data export')} · ${link('/bills','Browse bills')} · ${link('/ask','Ask about the parliamentary record')} · ${link('/methods','Sources and methods')}</p>`
   body += `<h2>Sources</h2>${(b.sources || []).map(s=>`<p>${escapeHtml(human(s.kind))}</p>${original(s.url)}`).join('')}`
-  const rows = divisions.map(d => billDivision(d,people,slugs,false))
-  const block = () => rows.length ? `<ul>${rows.join('')}</ul>` : '<p>No divisions recorded. Most questions are decided on the voices; this does not establish that a bill was unopposed.</p>'
+  const config = divisionTableConfig({bill:b.key})
+  config.id += '-ssr'
+  const rows = divisionRows(divisions,true)
+  const block = () => rows.length ? voteTableHTML(config,voteTablePage(rows,config,tableQuery)) : '<h2>Divisions</h2><p>No divisions recorded. Most questions are decided on the voices; this does not establish that a bill was unopposed.</p>'
   const output = () => answerBlock(title,description,body.replace(divisionSlot,block()))
-  // Whole member lists are expanded only when the complete page stays in budget.
-  const recent = divisions.map((d,i)=>({d,i})).sort((a,b)=>String(b.d.date || '').localeCompare(String(a.d.date || ''))).slice(0,3)
-  for (const {d,i} of recent) {
-    const compact=rows[i]; rows[i]=billDivision(d,people,slugs,true)
-    if (!billBodyFits(output())) rows[i]=compact
-  }
   let html=output()
   if (!billBodyFits(html)) html=answerBlock(title,description,`<p>This record exceeds the page display limit. Stages, division tallies and model attribution are available in the ${link(`/bills/${b.key}.json`,'complete bill export')}.</p>`)
   return {html}
@@ -245,12 +245,6 @@ export const BILL_MAX_BODY_BYTES = 80_000
 export const internalLinkCount = (html: string) => (html.match(/<a\b[^>]*href="(?:\/(?!\/)|https:\/\/opax\.com\.au\/)/g) || []).length
 // Leave room for the shell's navigation/footer links in the 300-link page ceiling.
 const billBodyFits = (html: string) => internalLinkCount(html)<=BILL_MAX_INTERNAL_LINKS-70 && new TextEncoder().encode(html).length<=BILL_MAX_BODY_BYTES
-function billDivision(d: Division, people: Person[], slugs: Map<string,string>, full: boolean): string {
-  const href=`/doc/${d.key.startsWith('division-') ? d.key : `division-${d.key}`}`
-  const question=full ? renderDivisionMarkdown(String(d.question || '').slice(0,1500)) : escapeHtml(divisionPlain(d.question || '').slice(0,300))
-  return `<li${full ? ' data-full-members=""' : ''}>${link(href,d.stage || 'Division')}<div class="division-markdown">${question}</div> — ${escapeHtml(d.date)}, ${escapeHtml(chamber(d.house))}: ${escapeHtml(d.outcome || d.result || 'Result not recorded')}, ayes ${escapeHtml(d.ayes ?? 'not recorded')}, noes ${escapeHtml(d.noes ?? 'not recorded')}${original(d.source_url || d.url)}${divisionVotes(d,people,slugs,full,false)}${full ? '' : `<p>${link(href,'All recorded members on the division page')}</p>`}</li>`
-}
-
 function divisionVotes(d: Division, people: Person[], slugs: Map<string,string>, full=true, partyLinks=true): string {
   const members=d.members || []
   const parties=d.party_tallies || [...new Set(members.filter(m=>m.party).map(m=>m.party!))].map(party=>({party,votes:Object.fromEntries([...new Set(members.filter(m=>m.party===party).map(m=>m.vote))].map(vote=>[vote,members.filter(m=>m.party===party && m.vote===vote).length]))}))

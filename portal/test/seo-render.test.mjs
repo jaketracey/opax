@@ -54,14 +54,14 @@ test('recent-vote answers only use the separate OPAX export and omit an empty vo
   const rows=Array.from({length:10},(_,i)=>({title:`Recorded question ${i}`,date:'2026-09-01',vote:'aye',division_slug:`division-example-${i}`,source_url:`https://example.test/${i}`}));
   const assets={'/votes.json':{_names:{},'123':{name:p.name,recent:rows,for:[],against:[]}},'/seo/recent-votes.json':{_meta:{schema:1,source:'opax-parli-db',coverage:'recorded'},people:{'123':{name:p.name,recent:rows}}}};
   const readFixture=async path=>{if(path in assets)return assets[path];throw Error('Missing');};
-  assert.match((await renderPersonAnswer(p,readFixture,new Map())).html,/Last 10 recorded votes/);
+  assert.match((await renderPersonAnswer(p,readFixture,new Map())).html,/<caption>Recorded votes<\/caption>/);
   assets['/seo/recent-votes.json']._meta.source='manual-tvfy-sample';
   const empty=(await renderPersonAnswer(p,readFixture,new Map())).html;
   assert.doesNotMatch(empty,/Last 10 recorded votes|Latest exported bill votes|No per-member votes|Recorded question/);
 });
 test('raw bill includes summary attribution, stages, sponsor/portfolio, divisions and source links',async()=>{
   const html=await get('/bill/au-federal-r7534');const graph=checkHtml(html);
-  const bill=await read('/bills/au-federal-r7534.json');assert.ok(html.includes(escapeHtml(bill.portfolio)));assert.ok(html.includes(escapeHtml(bill.summary.attribution)));assert.ok(html.includes(escapeHtml(bill.summary.sentences[0])));assert.ok(html.includes('ayes 11, noes 24'));assert.match(html,/href="\/doc\/division-federal-senate-10701"/);assert.ok(graph.some(n=>n['@type']==='Legislation'&&n.legislationIdentifier===bill.key&&n.creativeWorkStatus));
+  const bill=await read('/bills/au-federal-r7534.json');assert.ok(html.includes(escapeHtml(bill.portfolio)));assert.ok(html.includes(escapeHtml(bill.summary.attribution)));assert.ok(html.includes(escapeHtml(bill.summary.sentences[0])));assert.match(html,/data-label="Ayes"[^>]*>11<\/td>/);assert.match(html,/data-label="Noes"[^>]*>24<\/td>/);assert.match(html,/href="\/doc\/division-federal-senate-10701"/);assert.ok(graph.some(n=>n['@type']==='Legislation'&&n.legislationIdentifier===bill.key&&n.creativeWorkStatus));
   const sponsored=await get('/bill/au-federal-s1517');assert.match(sponsored,/href="\/subject\/person\/david-pocock"/);
 });
 test('raw division names and links every recorded member, with question/date/tally/bills',async()=>{
@@ -86,8 +86,8 @@ test('sample HTML stays bounded and boot assets preserve the original app panel 
 
 // The nightly exports division JSON; the Worker must format its question as
 // well as the same record embedded in a bill's crawlable answer.
-test('reported TVFY bill and division routes render Markdown blocks from local exports',async()=>{
-  for(const path of ['/bill/au-federal-s1488','/doc/division-federal-senate-10178']) {
+test('reported TVFY division routes render Markdown blocks from local exports',async()=>{
+  for(const path of ['/doc/division-federal-senate-10178']) {
     const html=await get(path);checkHtml(html);
     const answer=html.match(/<section id="prerender"[\s\S]*?<\/section>/)[0];
     assert.doesNotMatch(answer,/###|&gt; /);
@@ -161,16 +161,26 @@ test('page aliases, including combined www/path aliases, redirect once to an exp
   }
 });
 
-test('bill SSR renders all exported members, dated party votes and related bills',async()=>{
+test('bill SSR links dated divisions to their member records and preserves related bills',async()=>{
   const html=await get('/bill/au-federal-r7534');
-  const division=await read('/divisions/division-federal-senate-10701.json');
-  for(const m of division.members) assert.ok(html.includes(escapeHtml(m.name)),m.name);
-  assert.match(html,/How each party voted/);
+  assert.match(html,/data-vote-table/);
+  assert.match(html,/href="\/doc\/division-federal-senate-10701"/);
+  assert.match(html,/Limitation of debate, 19 Aug 2026/);
   const bill=await get('/bill/au-federal-r7537');
   for(const fact of ['Andrew Gee','Independent Members','Introduced','Second reading','Written by a model','2026-09-07','Other bills from this sponsor']) assert.ok(bill.includes(fact),fact);
   assert.match(bill,/href="\/subject\/person\/andrew-gee"/);
   assert.match(bill,/href="\/bill\/au-federal-r7450"/);
   assert.doesNotMatch(await get('/subject/person/bruce-baird'),/Died \d/);
+});
+
+test('division and voting table URL state is noindex with a clean canonical',async()=>{
+  for(const path of ['/bill/au-federal-r7534?dv.q=reading','/subject/person/david-pocock?vr.f.vote=Aye','/sitting/2026-09-14?dv.sort=date:asc']) {
+    const response=await worker.fetch(new Request(origin+path),env,{waitUntil(){}});
+    assert.equal(response.headers.get('x-robots-tag'),'noindex');
+    const html=await response.text();
+    assert.match(html,/<meta name="robots" content="noindex">/);
+    assert.ok(html.includes(`rel="canonical" href="${origin+path.split('?')[0]}"`));
+  }
 });
 
 test('supplier SSR carries agency facts, contract references and related suppliers without individual donor links',async()=>{

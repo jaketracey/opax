@@ -1,0 +1,10 @@
+import type {Column, DataTableConfig, Page, Query, Row} from './datatable.js';
+export const divisionColumns: Column[];
+export const voteColumns: Column[];
+export function divisionTableConfig(params?: Record<string,string>, caption?: string, pageType?: string): DataTableConfig;
+export function voteTableConfig(person: string, caption?: string): DataTableConfig;
+export function divisionRows(divisions?: object[], deduplicate?: boolean): Row[];
+export function votingRows(votes?: object[], bills?: object[]): Row[];
+export function voteTablePage(rows: Row[], config: DataTableConfig, query?: Query): Page;
+export function voteTableHTML(config: DataTableConfig, page: Page): string;
+export function mountVoteTables(root?: Element | Document): void;
