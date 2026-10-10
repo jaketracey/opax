@@ -67,6 +67,7 @@ import { renderOgPng, renderOgJpeg, type OgFont } from './og-render'
 import * as storyRender from './og-render'
 import { personRole, personTitle, roleLine, billTitle } from './seo-titles'
 import { answerBlock, associationCaveat, crumbsHTML, type Crumb, renderPersonAnswer, renderBillAnswer, renderDivisionAnswer, renderDirectory, renderSupplierAnswer, renderMoneyAnswer, type Division, type ReadAsset } from './seo-content'
+import {renderMoneyConnectionsTable} from './money-connections-table'
 import { buildSchemaGraph, type PersonSchemaIdentity } from './seo-schema'
 import { photoFor, storyFrames, validStory, STORY_VERSION as STORY_SLIDES_VERSION, type PhotoCatalogue, type StoryFormat } from './story'
 
@@ -4012,6 +4013,7 @@ async function buildMeta(route: SeoRoute, url: URL, request: Request, env: Env, 
       if(content) meta.prerender=content.html
     } else if(route.kind==='static' && ['money','connections','explore'].includes(route.page)) {
       meta.prerender=(await renderMoneyAnswer(meta.title.replace(/ · OPAX$/,''),read).catch(()=>null))?.html || answerBlock(meta.title.replace(/ · OPAX$/,''),meta.description)
+      if(route.page==='money')meta.prerender+=await renderMoneyConnectionsTable(url,read).catch(()=> '')
     } else {
       const directory=route.kind==='index' ? route.dir : route.kind==='topics' ? 'topic' : route.kind==='static' && route.page==='bills' ? 'bills' : route.kind==='static' && route.page==='money/grants' && !url.searchParams.has('program') && !url.searchParams.has('open') && !url.searchParams.has('largest') ? 'grants' : null
       if(directory){
@@ -4892,6 +4894,7 @@ async function serveSeoPage(route: SeoRoute, url: URL, request: Request, env: En
   ])
   if (!shell.ok) return shell
   const noindex = meta.noindex || meta.status >= 400 || (['/ask', '/search'].includes(url.pathname.replace(/\/+$/, '')) && Boolean(url.search))
+    || (url.pathname.replace(/\/+$/, '') === '/money' && [...url.searchParams.keys()].some(key => key.startsWith('c.')))
   // Election coverage names unavailable grants, but renders no financial records.
   // Its renderer owns any future caveat alongside an actual political money pairing.
   if (!(route.kind === 'hub' && route.hub === 'vic-election'))
@@ -4923,6 +4926,7 @@ async function serveSeoPage(route: SeoRoute, url: URL, request: Request, env: En
     })
     .on('head', {
       element(el) {
+        if(route.kind==='static' && route.page==='money')el.append('<link rel="stylesheet" href="/money-connections.css?v=dt-money-1">', { html: true })
         if (noindex) el.append('<meta name="robots" content="noindex">', { html: true })
         for(const [rel,href] of [['prev',meta.prev],['next',meta.next]]) if(href) el.append(`<link rel="${rel}" href="${escHtml(href)}">`,{html:true})
       },

@@ -17,8 +17,10 @@ import {personIndex} from '../src/person-slug.ts';
 import {buildCrawl} from '../../scripts/build_crawl_catalog.mjs';
 import {buildGrowth} from '../../scripts/build_growth_modules.mjs';
 import {moduleOutputs} from './growth-module-harness.mjs';
-import {applyQuery, dataTableHTML, mountDataTable, toCSV} from '../public/datatable.js';
+import {moneyConnectionsConfig, cleanMoneyConnectionsParams, cleanMoneyConnectionsQuery} from '../public/money-connections.js';
+import {applyQuery, dataTableHTML, mountDataTable, toCSV, parseQuery, serializeQuery} from '../public/datatable.js';
 import {tableHarness} from './datatable-harness.mjs';
+import {previewApplyQuery, previewFilteredRows, previewCSV, previewParseQuery, previewSerializeQuery} from '../public/money-connections-preview.js';
 
 const pub = new URL('../public/', import.meta.url).pathname;
 const real = path => JSON.parse(readFileSync(join(pub, path), 'utf8'));
@@ -195,6 +197,71 @@ const ownUrl = (html, path) => entities(html).replaceAll(path, '');
 test('the fixture individuals are withheld and the fixture organisation is not', () => {
   for (const label of fixtureLabels) assert.ok(donorNameWithheld(index, label) && known.includes(label) && checked.includes(label), `fixture ${[...fixtureLabels].indexOf(label)}`);
   assert.equal(donorNameWithheld(index, FIXTURE_ORGANISATION), false);
+});
+
+test('money connection tables withhold donors in rows, facets, CSV and URL state', () => {
+  const privacyGraph={nodes:graphs.flatMap(g=>g.nodes),edges:[]};
+  for(const [i,graph] of graphs.entries()) {
+    const config=moneyConnectionsConfig(graph);
+    const publicNodes=new Set(graph.nodes.filter(n=>n.kind!=='donor' || isOrganisationDonor(n)).map(n=>n.id));
+    const publicEdges=graph.edges.filter(e=>publicNodes.has(e.source) && publicNodes.has(e.target));
+    assert.equal(config.rows.length,publicEdges.length,`money table ${i}: public connections`);
+    assert.equal(config.privacy,'donors');assert.equal(config.urlKey,'c');assert.equal(config.source,undefined);
+    for(const row of config.rows)assert.ok(publicNodes.has(row.entityId) && publicNodes.has(row.focusId),`money table ${i}: public row identity`);
+    const page=applyQuery(config.rows,config,{}),preview=previewApplyQuery(config.rows,config,{});
+    for(const [surface,text] of Object.entries({rows:JSON.stringify(config.rows),html:dataTableHTML(config,page),
+      facets:JSON.stringify(preview.facets),coreFacets:JSON.stringify(page.facets || {}),csv:toCSV(config.rows,config),previewCSV:previewCSV(config.rows,config)}))assertClean(`money table ${i} ${surface}`,text);
+    // Exercise type, sender and recipient facets, and a filtered export larger
+    // than a page. Labels and ids for private probes come only from the export.
+    const sample=config.rows[0];assert.ok(sample,`money table ${i}: public sample`);
+    const query={filters:{type:[sample.type]},sort:{key:'value',dir:'desc'},page:2};
+    const filtered=previewFilteredRows(config.rows,config,query);
+    assert.equal(filtered.length,config.rows.filter(r=>r.type===sample.type).length);
+    assertClean(`money table ${i} filtered CSV`,previewCSV(filtered,config));
+    const params=new URLSearchParams(previewSerializeQuery(query));params.set('type','contracts');
+    const safe=cleanMoneyConnectionsParams(params,graph);
+    assert.equal(safe.params.get('type'),'contracts');assert.equal(safe.blocked,false);
+    assert.deepEqual(previewParseQuery(safe.params).filters,query.filters);
+    assertClean(`money table ${i} public URL`,safe.params.toString());
+    // A query remains private when the table belongs to another jurisdiction.
+    const crossJurisdiction=[];
+    for(const name of checked) {
+      const params=new URLSearchParams({'c.q':name,'c.f.from':name,'c.f.to':name});
+      crossJurisdiction.push(cleanMoneyConnectionsParams(params,privacyGraph).params.toString());
+    }
+    assertClean(`money table ${i} cross-jurisdiction URL state`,crossJurisdiction.join('\n'));
+    for(const [j,node] of graph.nodes.filter(n=>n.kind==='donor' && !isOrganisationDonor(n)).entries()) {
+      for(const name of [node.label,node.id,...(node.aliases || [])]) {
+        const probes=new URLSearchParams({type:'contracts',min:'1000000','c.q':name,'c.f.from':name,'c.f.to':name,'c.unknown':name});
+        const clean=cleanMoneyConnectionsParams(probes,graph);
+        assertClean(`money table ${i} private URL probe ${j}`,clean.params.toString());
+        assertClean(`money table ${i} parsed URL probe ${j}`,JSON.stringify(parseQuery(clean.params,'c')));
+        assertClean(`money table ${i} serialized URL probe ${j}`,serializeQuery(parseQuery(clean.params,'c'),'c'));
+      }
+      const clean=cleanMoneyConnectionsQuery({q:node.label,filters:{from:[node.label]}},graph);
+      assert.equal(clean.blocked,true,`money table ${i} private query ${j}: refused`);
+      assertClean(`money table ${i} refused query ${j}`,JSON.stringify(clean.query));
+      assert.equal(previewApplyQuery([],config,clean.query).total,0);
+    }
+  }
+});
+
+test('money tables render a public first page and table URL state stays out of the canonical', async () => {
+  for(const query of ['', '?type=contracts&min=1000000', '?type=grants&from=2020&to=2024&cpi=1&c.sort=value:desc']) {
+    const response=await fetchWorker('/money'+query),html=await response.text();
+    assert.match(html,/<table[^>]*id="money-connections"/);
+    assert.match(html,/<caption>Connections matching the map filters<\/caption>/);
+    assert.match(html,/<tbody><tr>/);
+    assert.match(html,/<link rel="canonical" href="https:\/\/opax.com.au\/money"/);
+    assertClean('money first-page HTML',rendered(html));
+    assert.equal(response.headers.get('x-robots-tag'),query.includes('c.')?'noindex':'all');
+  }
+  const withheld=graphs[0].nodes.find(n=>n.kind==='donor' && !isOrganisationDonor(n));
+  const response=await fetchWorker('/money?c.q='+encodeURIComponent(withheld.label));
+  const html=await response.text();
+  assertClean('money withheld table query HTML',rendered(html));
+  assert.match(html,/<tbody><\/tbody>/);
+  assert.equal(response.headers.get('x-robots-tag'),'noindex');
 });
 
 test('anonymising keeps every donor group and its totals: duplicated source ids never merge', () => {

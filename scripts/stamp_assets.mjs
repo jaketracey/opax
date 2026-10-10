@@ -132,6 +132,9 @@ export const MODULE_STAMPS = [
   ['supplier-growth.js', 'growth-modules.js'], ['supplier-growth.js', 'labels.js'],
 
   ['canonical-urls.js', 'person-paths.js'],
+  ['money-connections.js', 'donor-entity.js'], ['money-connections.js', 'canonical-urls.js'],
+  ['money-connections-preview.js', 'money-connections.js'],
+  ['map-research.js', 'money-connections.js'], ['map-research.js', 'money-connections-preview.js'],
   ['ballot.js', 'canonical-urls.js'],
   ['electorates.js', 'canonical-urls.js'],
   ['evidence.js', 'canonical-urls.js'],
@@ -152,6 +155,7 @@ export const MODULE_STAMPS = [
   ['app.js', 'canonical-urls.js'], ['app.js', 'growth-modules.js'], ['app.js', 'suppliers.js'],
   ['app.js', 'labels.js'], ['app.js', 'electorates.js'], ['app.js', 'division-markdown.js'], ['app.js', 'quiz.js'], ['app.js', 'timemachine.js'],
   ['app.js', 'money-map.js'], ['app.js', 'explain.js'], ['app.js', 'grant-recipient.js'],
+  ['app.js', 'map-research.js'],
   // The Explore tools and the loaders, restyled on tokens in pass 4G.
   ['app.js', 'ballot.js'], ['app.js', 'grants.js'], ['app.js', 'ledger.js'], ['app.js', 'matrix.js'], ['app.js', 'wordsdollars.js'],
   ['app.js', 'thenvsnow.js'], ['app.js', 'statemap.js'], ['app.js', 'stages.js'], ['app.js', 'wombat.js'],
