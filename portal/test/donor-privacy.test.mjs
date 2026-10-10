@@ -344,6 +344,50 @@ test('a subject route never repeats a name it does not hold, and real names stil
   t.diagnostic(`${names.length} names (${fictional.length} fictional) on 7 subject kinds: ${unknown} generic 404s, ${withheldPages} withheld pages, ${redirects} redirects to a real record by id, no name repeated`);
 });
 
+test('a card for a subject the page would not show is refused before any cache read, for every card kind', async t => {
+  // Every /og/ cache key answers with a stale card naming its subject; reads are counted.
+  const realCaches = globalThis.caches;
+  let reads = 0;
+  globalThis.caches = {default: {async match(request) { reads++; return new URL(request.url).pathname.startsWith('/og/') ? new Response('{"title":"STALE CARD"}', {headers: {'content-type': 'image/png', 'x-opax-og': 'stale'}}) : undefined; }, async put() {}}};
+  try {
+    const withheldName = checked.find(label => /\S\s+\S/.test(label) && !fixtureLabels.has(label));
+    const withheldDonor = withheldLabels.find(label => !fixtureLabels.has(label) && donorNodes.some(n => n.label === label));
+    const fictional = 'Quentin Fixtureperson';
+    const refused = {
+      person: [withheldName, fictional].map(n => `/subject/person/${encodeURIComponent(n)}`),
+      party: [withheldName, 'Fictional Fixture Party'].map(n => `/subject/party/${encodeURIComponent(n)}`),
+      donor: [withheldDonor, fictional, 'Fictional Example Pty Ltd'].map(n => `/subject/donor/${encodeURIComponent(n)}`),
+      campaigner: [withheldName, 'Fictional Example Pty Ltd'].map(n => `/subject/campaigner/${encodeURIComponent(n)}`),
+      supplier: [withheldName, 'Fictional Example Pty Ltd', 's-0000000000000000fixture'].map(n => `/subject/supplier/${encodeURIComponent(n)}`),
+      agency: [withheldName, 'a-0000000000000000fixture'].map(n => `/subject/agency/${encodeURIComponent(n)}`),
+      electorate: [withheldName, 'fixtureville'].map(n => `/subject/electorate/${encodeURIComponent(n)}`),
+      'grant recipient': [`name:${withheldName.toLowerCase().replace(/[^a-z0-9 .&'()-]/g, '')}`, `person:${fictional.toLowerCase()}`, 'abn:00000000000'].map(id => `/money/grants/federal/recipient/${encodeURIComponent(id)}`),
+      topic: ['/subject/topic/not-a-fixture-topic'],
+    };
+    let checkedCards = 0;
+    for (const [kind, paths] of Object.entries(refused)) for (const path of paths) for (const ext of ['png', 'jpg']) {
+      const before = reads;
+      const response = await fetchWorker(`/og${path}.${ext}`);
+      const body = await response.text();
+      assert.equal(reads, before, `${kind} card read the cache (${ext})`);
+      assert.ok(response.headers.get('x-opax-og') !== 'stale' && !body.includes('STALE'), `${kind} card replayed a stale entry (${ext})`);
+      if (ext === 'jpg') assert.equal(response.status, 404, `${kind} jpg card`);
+      checkedCards++;
+    }
+    // A subject the page shows still reads, and here replays, its cached card.
+    const electorates = real(real('electorates/manifest.json').index_url.replace(/^\//, '')).electorates;
+    const shown = [`/subject/person/${personIndex(rosterPeople).slugOf.get(roster[0].name)}`, partyUrl(topParty.label), `/subject/donor/${encodeURIComponent(FIXTURE_ORGANISATION)}`,
+      `/subject/supplier/${real('suppliers.json').suppliers[0].id}`, `/subject/agency/${real('agencies.json').agencies[0].id}`, electorates[0].url, '/subject/topic/housing'];
+    for (const path of shown) {
+      const before = reads;
+      const response = await fetchWorker(`/og${path}.png`);
+      assert.equal(reads, before + 1, `${path.split('/')[2]} card skipped the cache`);
+      assert.equal(response.headers.get('x-opax-og'), 'stale');
+    }
+    t.diagnostic(`${checkedCards} refused card requests across ${Object.keys(refused).length} kinds, none read the seeded cache; ${shown.length} shown subjects replayed it`);
+  } finally { globalThis.caches = realCaches; }
+});
+
 test('the Victorian election hub names no withheld donor', async t => {
   env.VIC_ELECTION_HUB_ENABLED = 'true';
   try {

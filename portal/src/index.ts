@@ -5064,17 +5064,19 @@ async function serveStorySlide(url: URL, request: Request, env: Env, ctx: Execut
   }
 }
 
-/** A share card is never drawn, or replayed, for a subject OPAX does not hold (the
- * name is whatever was typed) or a withheld donor (or a campaigner under one's name). */
-async function withheldCard(pagePath: string, env: Env): Promise<boolean> {
-  let route: SeoRoute | null = null
-  try { route = matchSeoRoute(new URL(`${SITE_ORIGIN}${pagePath}`)) } catch { return false }
-  if (route?.kind !== 'subject') return false
-  if (route.dir === 'person') { const people = await loadPeople(env).catch(() => null); return !people || !personAt(people, route.name) }
-  if (route.dir === 'party') return !(await partyFor(route.name, env)).label
-  if (route.dir === 'donor') return !(await donorKnown(route.name, env)) || donorWithheld(env.ASSETS, route.name)
-  if (route.dir === 'campaigner') { const data = await loadCampaigners(env).catch(() => null); return !data?.byFold.get(foldName(route.name)) || namesWithheldDonor(env.ASSETS, route.name) }
-  return false
+/**
+ * Route kinds whose path names a subject, by a typed name or an id: person,
+ * party, donor, campaigner, supplier, agency and electorate pages, grant
+ * recipients and topics. Their card is drawn only for a subject the page itself
+ * would show (a 200 with a card, indexable), and that is checked before any
+ * cache read: a card cached before a subject was withheld, or one for a name no
+ * record holds, is never replayed.
+ */
+const NAMED_CARD_ROUTES = new Set<SeoRoute['kind']>(['subject', 'grant-recipient', 'topic'])
+async function cardRefused(route: SeoRoute | null, pageUrl: URL, request: Request, env: Env, ctx: ExecutionContext): Promise<boolean> {
+  if (!route || !NAMED_CARD_ROUTES.has(route.kind)) return false
+  const meta = await buildRouteMeta(route, pageUrl, request, env, ctx).catch(() => null)
+  return !meta || meta.status !== 200 || !meta.card || meta.noindex === true
 }
 
 async function serveOgImage(url: URL, request: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
@@ -5095,8 +5097,12 @@ async function serveOgImage(url: URL, request: Request, env: Env, ctx: Execution
   for (const [k, v] of cardQuery) variants.set(k, v)
   if (portrait) variants.set('format', format)
   const cacheKey = cacheRequest('og', `${encodeURIComponent(env.CACHE_EPOCH)}/${OG_VERSION}/${m[2]}${pagePath}?${variants}`)
-  // Checked before the cache, so a card drawn before a donor was withheld is never replayed.
-  if (await withheldCard(pagePath, env)) return jpeg ? new Response('No card available', { status: 404 }) : ogFallback(env, request)
+  const pageUrl = new URL(`${SITE_ORIGIN}${pagePath}`)
+  for (const [k, v] of cardQuery) pageUrl.searchParams.set(k, v)
+  let route: SeoRoute | null = null
+  try { route = pagePath === '/home' ? null : matchSeoRoute(pageUrl) } catch { route = null }
+  // Before the cache: a subject the page would not show gets no card, drawn or replayed.
+  if (await cardRefused(route, pageUrl, request, env, ctx)) return jpeg ? new Response('No card available', { status: 404 }) : ogFallback(env, request)
   if (!cacheBypass(request, url)) {
     const hit = await caches.default.match(cacheKey)
     if (hit) return withCacheStatus(request.method === 'HEAD' ? new Response(null, hit) : hit, 'HIT')
@@ -5109,9 +5115,6 @@ async function serveOgImage(url: URL, request: Request, env: Env, ctx: Execution
     if (pagePath === '/home') {
       spec = homeCard()
     } else {
-      const pageUrl = new URL(`${SITE_ORIGIN}${pagePath}`)
-      for (const [k, v] of cardQuery) pageUrl.searchParams.set(k, v)
-      const route = matchSeoRoute(pageUrl)
       if (route) {
         const meta = await buildMeta(route, pageUrl, request, env, ctx)
         if (meta.status !== 404) spec = meta.card ?? null
