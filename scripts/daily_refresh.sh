@@ -244,8 +244,12 @@ PYEOF
   else
     log "[arag_sync] SKIP: $STATE missing or implausible; refusing --full without a checkpoint"
   fi
-  run_step tvfy_refresh "SELECT COUNT(*) FROM divisions WHERE state='federal'" \
-    "$PY" -m parli.ingest.tvfy_refresh
+  # The reviewed nightly owns the federal sitting-day/weekly acquisition and
+  # legacy -> ext_ projection. Standalone daily runs retain their old behaviour.
+  if [ "${OPAX_FEDERAL_VOTES_MANAGED:-0}" != 1 ]; then
+    run_step tvfy_refresh "SELECT COUNT(*) FROM divisions WHERE state='federal'" \
+      "$PY" -m parli.ingest.tvfy_refresh
+  fi
   # division documents for the KB (409 = already there): the state ones just loaded, then the federal ones
   # tvfy_refresh brought in (legacy tables)
   run_step votes_kb_ext "" \

@@ -589,10 +589,25 @@ Thursday's introductions on Friday morning. Sundays also run the weekly refresh.
 | 16–19 Nov 2026 | 17, 18, 19, 20 Nov | 16 Nov skipped |
 | 23–26 Nov 2026 | 24, 25, 26, 27 Nov | 23 Nov skipped |
 
-There is no APH calendar request. Before the 2027 sittings, extend `SITTING_RANGES` with the **actual sitting
-dates**, not the following mornings: the scheduler subtracts one Sydney calendar day itself, including
+There is no APH calendar request. Before the 2027 sittings, extend `scripts/hubs/sitting-2026.json` with the **actual sitting
+dates** (set `refresh_bills` for the shared bill/division refresh cadence), not the following mornings: the scheduler subtracts one Sydney calendar day itself, including
 across daylight saving changes. Unlisted dates retain the Sunday cadence. Catch-up overrides these skips.
 `OPAX_NIGHTLY_SKIP_REFRESH=1` skips acquisition while the existing fill/verify publication half still runs.
+
+Federal divisions now share this exact calendar through `scripts/vm/divisions_guard.py` and
+`scripts/vm/divisions_refresh.sh`. The reviewed refresh fetches TVFY, maps the legacy federal
+tables into `ext_divisions` / `ext_votes`, and retains mobile `votes.json` schema 1 before the
+existing web division/SEO exports. It has a 20-minute budget, automatic one-time catch-up from
+20 August, loss guards, keep-if-unchanged, rollback and retry markers outside git.
+Division rollback also restores each bill's `divisions` list and its index count to HEAD,
+retaining independent bill updates. Validation and permanent portal-gate rollbacks restore
+these dependencies before the final publication guard and summaries. The final guard
+refuses a bill relationship or SEO entry pointing to an unpublished division page.
+TVFY office markers (`PRES`, `DPRES`, `SPK`, `DSPK`, `CWM`, etc.) are missing party
+evidence; dated membership may supply the affiliation, otherwise it stays unknown. No separate
+box scheduler or new dependency is needed. Source publication may arrive later than the
+following-morning check; use the actual coverage date in sitting hubs. Diagnosis, rollout and
+source-delay limits are in [the federal divisions report](../reports/2026-10-10-federal-divisions-gap.md).
 
 The guard compares the working export with HEAD's index and bill files. It refuses a smaller count,
 duplicate/inconsistent index keys, missing indexed files, a changed file identity, any absent old index key
