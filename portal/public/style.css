@@ -1777,6 +1777,7 @@ a.barrow-name:hover { color: var(--bronze-ink); }
 /* ---- document page ------------------------------------------------------ */
 
 #panel-doc h2 { font: 700 clamp(1.55rem, 2.8vw, 2.1rem)/1.2 var(--serif); margin: 0.15rem 0 0.35rem; max-width: 68ch; }
+#panel-doc #doc-title { margin: var(--space-line) 0 var(--space-tight); max-width: var(--size-readable); }
 .doc-topic { font: italic 400 1.0625rem/1.45 var(--serif); color: var(--ink-soft); margin: 0 0 0.4rem; max-width: 68ch; }
 .doc-meta { color: var(--ink-soft); font-size: 0.875rem; margin: 0; }
 .doc-meta .party { vertical-align: 1px; }
@@ -2181,6 +2182,9 @@ a.ency-name:hover, a.ency-name:focus-visible {
 /* ---- subject entries (the encyclopedia) --------------------------------- */
 
 .subject-head h2 { font: 700 clamp(1.75rem, 3.5vw, 2.6rem)/1.15 var(--serif); margin: 0.2rem 0 0.3rem; }
+/* The page's one visible title is its h1 (the prerendered h1 is hidden once
+   the app runs); the title role comes from #subject-title / #bill-title. */
+.subject-head h1 { margin: var(--space-line) 0; }
 /* With a portrait, the header reads as a byline card on wider screens: the
    photo at left spans the name and the tag line. Pages without a portrait
    (donors, parties, people we have no photo for) keep the stacked layout. */
@@ -2190,7 +2194,7 @@ a.ency-name:hover, a.ency-name:focus-visible {
     column-gap: 1.4rem; align-items: center; margin: 0.3rem 0 1.1rem;
   }
   .subject-head:has(.subject-portrait) .subject-portrait { grid-row: 1 / span 2; margin: 0; }
-  .subject-head:has(.subject-portrait) h2 { align-self: end; margin: 0; }
+  .subject-head:has(.subject-portrait) :is(h1, h2) { align-self: end; margin: 0; }
   .subject-head:has(.subject-portrait) .subject-tag { align-self: start; margin: 0.4rem 0 0; }
 }
 .subject-tag { color: var(--ink-soft); font-size: 0.9375rem; margin: 0 0 1rem; display: flex; align-items: center; gap: 0.6rem; flex-wrap: wrap; }
@@ -2485,32 +2489,27 @@ a.ency-name:hover, a.ency-name:focus-visible {
   .pay-row { grid-template-columns: minmax(0, 1fr) auto; }
   .pay-when { grid-column: 1 / -1; }
 }
-.expense-comparison { margin-top: var(--space-5); max-width: 920px; }
-.expense-comparison .subject-section-title { margin: 0 0 var(--space-3); }
-.expense-rows { display: flex; flex-direction: column; gap: 0.55rem; }
+.expense-lead { margin: var(--space-line) 0 var(--space-block); }
+/* By category: a subheading inside the expenses section, a key line, then one
+   row a category. The row is the target: its category button covers it. */
+.expense-comparison { margin-top: var(--space-group); max-width: 920px; overflow-x: clip; }
+.expense-comparison-title { margin: 0; font: var(--type-subheading); color: var(--ink); }
+.expense-key { margin: var(--space-line) 0 var(--space-heading); font: var(--type-fine); color: var(--ink-soft); }
+/* One grid for every row (subgrid), so the tracks line up whatever the figures' widths. */
+.expense-rows { display: grid; grid-template-columns: minmax(8rem, 30%) minmax(0, 1fr) auto; column-gap: var(--space-heading); }
 .expense-row {
-  display: grid; grid-template-columns: minmax(8rem, 30%) minmax(0, 1fr) auto;
-  grid-template-areas: "name track value"; gap: 0.45rem 0.75rem; align-items: center;
-  font-size: 0.8125rem;
+  position: relative; grid-column: 1 / -1; display: grid; grid-template-columns: subgrid; row-gap: var(--space-line); align-items: center;
+  min-height: var(--size-target); padding-block: var(--space-line); font: var(--type-fine);
 }
-.expense-name {
-  grid-area: name; min-width: 0; overflow: hidden; text-overflow: ellipsis;
-  white-space: nowrap; color: var(--ink); font-weight: 500;
-}
-.expense-track { grid-area: track; position: relative; height: 8px; background: var(--paper-sunken); border-radius: 4px; }
-.expense-bar { position: absolute; inset: 0 auto 0 0; background: var(--bronze); border-radius: 4px; }
-.expense-median { position: absolute; top: -3px; width: 2px; height: 14px; margin-left: -1px; background: var(--ink); }
-.expense-median em {
-  position: absolute; left: 5px; top: -2px; color: var(--ink-faint);
-  font: 500 0.625rem/1 var(--sans); font-style: normal; white-space: nowrap;
-}
-/* A median near the end of the track labels itself on its left, so the word
-   never runs past the track and widens the page on a phone. */
-.expense-median-end em { left: auto; right: 5px; }
-.expense-comparison { overflow-x: clip; }
-.expense-value { grid-area: value; text-align: right; color: var(--ink-soft); font-variant-numeric: tabular-nums; line-height: 1.3; white-space: nowrap; }
-.expense-value b { color: var(--ink); }
-.expense-value small { display: inline; margin-left: 0.4rem; color: var(--ink-faint); font-size: 0.75rem; }
+.expense-name { grid-column: 1; min-width: 0; color: var(--ink); font: var(--type-label); }
+.expense-name.barrow-term { font: var(--type-label); white-space: normal; overflow: visible; }
+.expense-name.barrow-term::after { content: ""; position: absolute; inset: 0; }
+.expense-track { grid-column: 2; grid-row: 1; position: relative; height: var(--space-tight); background: var(--paper-sunken); border-radius: var(--radius-sm); }
+.expense-bar { position: absolute; inset: 0 auto 0 0; background: var(--bronze); border-radius: var(--radius-sm); }
+.expense-median { position: absolute; top: calc(var(--space-line) * -1); bottom: calc(var(--space-line) * -1); width: var(--border-focus); margin-left: calc(var(--border-hairline) * -1); background: var(--ink); }
+.expense-value { grid-column: 3; grid-row: 1; text-align: right; color: var(--ink-soft); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.expense-value b { color: var(--ink); font: var(--type-label); }
+.expense-value small { display: inline; margin-left: var(--space-tight); color: var(--ink-soft); font: var(--type-fine); }
 @media (max-width: 600px) {
   .tie-declaration { grid-template-columns: 1fr; gap: 0.1rem; }
   .tie-declaration .interests-holder { padding-top: 0; }
@@ -2529,9 +2528,12 @@ a.ency-name:hover, a.ency-name:focus-visible {
   .receipts-legend { gap: 0.35rem 0.7rem; }
   .balance-row { grid-template-columns: 3.7rem minmax(0, 1fr) minmax(0, 1fr); }
   .balance-label { display: none; }
-  .expense-row { grid-template-columns: minmax(0, 1fr) auto; grid-template-areas: "name value" "track track"; }
-  .expense-value small { display: block; margin: 0; }
-  .expense-name.barrow-term { min-height: 44px; display: flex; align-items: center; }
+  /* A phone stacks the name over its figures, so no category is cut short. */
+  .expense-rows { grid-template-columns: minmax(0, 1fr); }
+  .expense-row { padding-block: var(--space-tight); }
+  .expense-row > * { grid-column: 1; }
+  .expense-value { grid-row: 2; text-align: left; white-space: normal; }
+  .expense-track { grid-row: 3; }
 }
 .quiet-toggle {
   display: inline-flex; flex: 0 0 auto; border: 1px solid var(--line-strong);
@@ -2681,7 +2683,11 @@ a.ency-name:hover, a.ency-name:focus-visible {
    source line (pass 4G). */
 .division-bills { list-style: none; margin: 0 0 var(--space-block); padding: 0; }
 .division-bills li + li { border-top: var(--border-hairline) solid var(--divider-subtle); }
-.division-bills a { display: flex; align-items: center; min-height: var(--size-target); font: var(--type-strong); }
+.division-bills a { display: flex; align-items: center; min-height: var(--size-target); font: var(--type-subheading); }
+/* A division's page has one signature rule, the masthead's: under its head a
+   plain section divider. */
+#panel-doc:has(.division-view) .doc-rule { height: 0; background: none; border-top: var(--border-hairline) solid var(--divider-default); }
+.division-names .ui-party { margin-left: var(--space-line); }
 .division-view { max-width: 52rem; }
 .division-block + .division-block, .division-view > .division-question { margin-top: var(--space-section); padding-top: var(--space-block); border-top: var(--border-hairline) solid var(--divider-default); }
 .division-view .subject-section-title { font: var(--type-heading); margin: 0 0 var(--space-heading); }
@@ -3031,7 +3037,7 @@ mark.privacy-confirm {
   display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: var(--space-4) var(--space-6);
   align-items: end; margin: 0 0 var(--space-6); max-width: 1120px;
 }
-#panel-subject .topic-index-head h2 { margin: 0; }
+#panel-subject .topic-index-head h1 { margin: 0; }
 #panel-subject .topic-index-lede { margin: var(--space-3) 0 0; max-width: 60ch; font: 400 1.0625rem/1.65 var(--serif); color: var(--ink-soft); }
 #panel-subject .topic-index-head .subject-tag { margin: 0; align-items: end; gap: var(--space-6); flex-wrap: nowrap; }
 #panel-subject .topic-index-stat { display: grid; gap: var(--space-1); text-align: right; font: 400 .8125rem/1.3 var(--sans); color: var(--ink-faint); white-space: nowrap; }
@@ -3312,7 +3318,7 @@ mark.privacy-confirm {
     align-items: start; row-gap: 0;
   }
   .subject-person .subject-head:has(.subject-portrait) .subject-portrait { grid-area: portrait; grid-row: 1 / -1; align-self: start; }
-  .subject-person .subject-head:has(.subject-portrait) h2 { grid-area: title; align-self: center; }
+  .subject-person .subject-head:has(.subject-portrait) h1 { grid-area: title; align-self: center; }
   .subject-person .subject-head:has(.subject-portrait) .subject-tag { grid-area: meta; }
   .subject-person .subject-head:has(.subject-portrait) > .ui-source { grid-area: source; }
   .subject-person .subject-head:has(.subject-portrait) > .person-caveat { grid-area: caveat; }
@@ -3339,7 +3345,6 @@ mark.privacy-confirm {
   min-height: var(--size-target); padding: 0.25rem 0; color: var(--ink); text-decoration: none;
 }
 .entry-rail-label { font: var(--type-strong); }
-.entry-rail-figure { font: var(--type-metadata); color: var(--ink-soft); font-variant-numeric: tabular-nums; white-space: nowrap; }
 .entry-rail-list a:hover .entry-rail-label { text-decoration: underline; text-decoration-color: var(--bronze-rule); text-underline-offset: 3px; }
 .entry-rail-list a:focus-visible { outline: var(--border-focus) solid var(--bronze-ink); outline-offset: 2px; }
 .entry-rail-credit { margin: var(--space-block) 0 0; font: var(--type-fine); color: var(--ink-soft); overflow-wrap: anywhere; }
@@ -3350,15 +3355,12 @@ mark.privacy-confirm {
 .entry-facts dt { font: var(--type-fine); color: var(--ink-soft); }
 .entry-facts dd { margin: 0; font: var(--type-body); font-variant-numeric: tabular-nums; }
 /* Narrower than the two columns, the rail sits under the head as a strip of
-   figures, each a way into its block. */
+   block names, each a way into its block. */
 @media (max-width: 900px) {
   :is(.subject-person, .subject-party) .subject-grid { margin-top: var(--space-group); }
-  .infobox.entry-rail { position: static; border-top: 0; padding-top: 0; min-height: 3.5rem; }
+  .infobox.entry-rail { position: static; border-top: 0; padding-top: 0; min-height: var(--size-target); }
   .entry-rail-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(9rem, 1fr)); column-gap: 1rem; }
   .entry-rail-list li, .entry-rail-list li + li { border-top: var(--border-hairline) solid var(--divider-subtle); }
-  .entry-rail-list a { flex-direction: column-reverse; align-items: flex-start; justify-content: center; gap: 0; min-height: 3.5rem; }
-  .entry-rail-figure { font: 600 1.125rem/1.3 var(--serif); color: var(--ink); }
-  .entry-rail-label { font: var(--type-fine); color: var(--ink-soft); }
 }
 
 /* ---- blocks: a top rule each (principle 2), and a 28px accent mark where an
@@ -3383,13 +3385,15 @@ mark.privacy-confirm {
 .person-section-head { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-tight) var(--space-heading); margin-bottom: var(--space-heading); }
 .subject-person #subject-sections .person-section-head .subject-section-title { margin: 0; }
 .subject-person .votes-lede { margin: var(--space-tight) 0 0; font: var(--type-metadata); color: var(--ink-soft); }
-/* The party's money, a row in the money block with its caveat beside it. */
+/* The party's money, a link row under the money block with its one caveat
+   line and the association line, both set as fine print. */
 .person-party-money {
-  display: flex; flex-wrap: wrap; align-items: baseline; gap: 0.25rem 0.75rem;
-  margin: var(--space-block) 0 0; padding-top: var(--space-row); border-top: var(--border-hairline) solid var(--divider-subtle);
+  margin: var(--space-group) 0 0; padding-top: var(--space-row); border-top: var(--border-hairline) solid var(--divider-subtle);
 }
-.person-party-money a { display: inline-flex; align-items: center; min-height: var(--size-target); font: var(--type-strong); color: var(--navy); }
-.person-party-money span { font: var(--type-fine); color: var(--ink-soft); }
+.person-party-money a { display: flex; align-items: center; width: fit-content; min-height: var(--size-target); font: var(--type-strong); color: var(--navy); }
+.person-party-money p { margin: 0; max-width: 68ch; font: var(--type-fine); color: var(--ink-soft); }
+/* Charts sit on the section's paper, never in a box (principle 2). */
+.subject-person #subject-sections .chart { padding: 0; border: 0; border-radius: 0; background: none; margin-top: var(--space-group); }
 .subject-person .person-topics { margin-top: 0; }
 /* Eight topic rows have a stable place from their loading bars through the
    chart, empty result or timeout. Lower records can paint immediately. */
@@ -3670,7 +3674,6 @@ body:has(#search-options-pop[open]) { overflow: hidden; }
 /* Passages and Briefs: the shared pill segmented control (ui-controls.css),
    drawn as it is everywhere; with Briefs on, the list's machine label beside it. */
 #panel-search #search-readbar { gap: var(--space-tight); }
-#panel-search #search-briefs-label[hidden] { display: none; }
 /* Stacked pager: the numbers on their own row, Previous and Next as a pair of
    equal tap targets beneath them. Wide, it returns to one row (below). */
 #panel-search #search-pager { grid-template-columns: 1fr 1fr; row-gap: 14px; column-gap: 10px; }
@@ -3711,6 +3714,8 @@ body:has(#search-options-pop[open]) { overflow: hidden; }
 #panel-search .search-results-main { min-width: 0; }
 #panel-search #search-results > li { padding: 20px 0; border-top: 1px solid var(--line); }
 #panel-search .search-result-heading { margin: 2px 0 0; font: var(--type-subheading); }
+/* A catalog row whose text a model wrote: its machine label above that text. */
+#panel-search .search-result-machine { margin: var(--space-line) 0 0; }
 #panel-search .result-title { display: inline-block; min-height: 44px; color: var(--ink); text-decoration: none; overflow-wrap: anywhere; }
 #panel-search .result-title:hover { color: var(--bronze-ink); text-decoration: underline; }
 #panel-search .result-meta { display: block; margin: 0; font: 400 .8125rem/1.8 var(--sans); color: var(--ink-soft); }
@@ -4265,7 +4270,6 @@ html[data-panel="chat"] footer { display: none; }
 }
 .bill-changes li::marker { color: var(--bronze); }
 .bill-affected { margin: 0; font: 400 0.9375rem/1.6 var(--sans); color: var(--ink); }
-.bill-summary-empty .status { margin-top: 0; }
 
 /* ---- the timeline: a hairline ruler ------------------------------------- */
 
@@ -4535,9 +4539,6 @@ a.bill-division-q:hover { color: var(--bronze-ink); }
 .bill-split-bars .bill-split-bar-track + .bill-split-bar-track { margin-top: 2px; }
 .bill-split-bar-track > i.bill-bar-aye { background: var(--bronze); }
 .bill-split-bar-track > i.bill-bar-no { background: var(--ink-faint); }
-/* The stage stands in as a division's name when the record left no motion;
-   set it apart from a real question so the two are never confused. */
-.bill-division-unnamed .bill-division-q { font-style: normal; color: var(--ink-soft); }
 
 /* ---- loop 3 ------------------------------------------------------------- */
 
@@ -4596,6 +4597,8 @@ a.bill-division-q:hover { color: var(--bronze-ink); }
   .party-bill-div .party-bill-bars { grid-column: 2; grid-row: 1 / span 2; margin-top: 0; align-self: center; }
   .party-bill-div .party-bill-n { grid-column: 2; grid-row: 3; margin-top: 0.3rem; text-align: right; }
 }
+/* Same-stage, same-day divisions folded into one line: it takes the row's width. */
+.party-bill-folded .result-meta { grid-column: 1 / -1; }
 
 /* The far end of a stage's span, on its own line: the date column is six
    characters wide and a range set inline came apart at the dash. */

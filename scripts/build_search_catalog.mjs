@@ -122,7 +122,7 @@ async function main() {
  for(const file of await files('bills')) {
   if(file==='index.json')continue;
   const b=await read('bills/'+file), summary=b.summary;
-  add('bill:'+b.key,'bill',b.short_title||b.title,'/bill/'+encodeURIComponent(b.key),[b.status?.replaceAll('_',' '),b.portfolio,summary?.sentences?.join(' '),summary?.affected].filter(Boolean).join('. '),{aliases:[b.title,...(b.aliases||[])].join(' '),date:b.introduced,state:b.jurisdiction,parties:[b.sponsor_party||''],speakers:[b.sponsor||''],source:summary?'Bill register · automated summary':'Bill register'});
+  add('bill:'+b.key,'bill',b.short_title||b.title,'/bill/'+encodeURIComponent(b.key),[b.status?.replaceAll('_',' '),b.portfolio,summary?.sentences?.join(' '),summary?.affected].filter(Boolean).join('. '),{aliases:[b.title,...(b.aliases||[])].join(' '),date:b.introduced,state:b.jurisdiction,parties:[b.sponsor_party||''],speakers:[b.sponsor||''],source:'Bill register',...(summary?{machine:true}:{})});
  }
  const interestIndex = await read('interests/index.json');
  const speakerNames = new Set((await read('speakers.json')).map(([name]) => name));

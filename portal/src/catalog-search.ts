@@ -3,6 +3,8 @@ export const CATALOG_KINDS = new Set(['person','party','donor','agency','supplie
 export interface CatalogRecord {
   kind: string; title: string; href: string; snippet: string; slug: string; resource: string
   date?: string | null; dateLabel?: string; source?: string; url?: string; record_id?: string; score?: number; sort_date?: string
+  /** The snippet carries model-written text (a bill's summary sentences). */
+  machine?: boolean
 }
 type Meta = [string, number, number, string, string, string, string]
 interface Manifest { version: string; count: number; counts: Record<string,number>; coverage: string; recordShardSize: number }

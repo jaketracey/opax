@@ -19,7 +19,7 @@ async function render(name, personId, data = expenses, photoMap = photos, overri
   const context = {
     currentSubjectKey: 'person:' + name, expensesData: data, photoMap,
     loadExpenses: async () => {}, loadPhotoMap: async () => {}, loadExpenseDefs: async () => {},
-    getExpenseBenchmarks: () => null, safeUrl: url => url, esc: value => String(value), fmtDate: value => String(value),
+    getExpenseBenchmarks: () => null, safeUrl: url => url, esc: value => String(value), fmtDate: value => String(value), quarterEnd: value => String(value),
     fmtMoney: value => '$' + value, columnChart: rows => JSON.stringify(rows), IPEA_NOTE: '',
     $: () => null, sourceLineHTML: uiLabels.sourceLineHTML,
     ...overrides,
