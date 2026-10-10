@@ -145,16 +145,17 @@ test('page aliases, including combined www/path aliases, redirect once to an exp
     ['/division/division-federal-representatives-10266/','/doc/division-federal-representatives-10266'],
     ['/doc/federal-representatives-10266','/doc/division-federal-representatives-10266'],
     ['/money/','/money'],['/map/','/map'],['/community/','/community'],['/map.html','/map'],['/connections.html','/connections'],['/community.html','/community'],
+    ...(await read('/hubs/index.json')).pages.map(p=>[p.path+'/',p.path]),
   ];
   for(const [path,target] of cases) for(const host of ['opax.com.au','www.opax.com.au']) for(const method of ['GET','HEAD']) {
     const response=await worker.fetch(new Request(`https://${host}${path}`,{method}),env,{waitUntil(){}});
-    assert.equal(response.status,host.startsWith('www.')?308:301,path);
+    assert.equal(response.status,host.startsWith('www.') && !/^\/(sitting|estimates)(\/|$)/.test(target)?308:301,path);
     assert.equal(response.headers.get('location'),origin+target,path);
     const landed=await worker.fetch(new Request(response.headers.get('location'),{method}),env,{waitUntil(){}});
     assert.equal(landed.status,200,path);
     if(method==='GET') assert.ok((await landed.text()).includes(`rel="canonical" href="${origin+target}"`),path);
   }
-  for(const path of ['/bill/AU-FEDERAL-NONEXISTENT','/division/federal-representatives-99999999','/subject/person/null']) {
+  for(const path of ['/bill/AU-FEDERAL-NONEXISTENT','/division/federal-representatives-99999999','/subject/person/null','/sitting/2026-10-13/','/estimates/unknown/']) {
     const r=await worker.fetch(new Request(origin+path),env,{waitUntil(){}});
     assert.equal(r.status,404,path);assert.equal(r.headers.get('location'),null,path);
   }

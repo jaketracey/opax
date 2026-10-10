@@ -12,6 +12,7 @@ from parli.ingest.votes_ingest import read_legacy
 from parli.ingest.tvfy_bill_links import official_ref, plan_links, project
 from scripts.vm.mobile_votes_contract import validate_votes
 from scripts.vm.test_divisions_refresh import mobile
+from scripts.export_division_pages import database_projection, party_tallies
 
 
 def fixture():
@@ -81,6 +82,61 @@ class AffiliationTests(unittest.TestCase):
                              ('1', '2026-09-18', 'Liberal', 'federal')])
         (self.cache / '1.json').write_text(json.dumps(detail(1, '2026-09-17', 'Greens')))
         self.assertTrue(all(v.party is None for v in read_legacy(self.db, None, None)[1]))
+
+    def test_office_markers_use_dated_membership_even_in_stored_facts(self):
+        self.db.execute("INSERT INTO speeches VALUES ('1','2026-09-17','Labor','federal')")
+        for marker in ("PRES", "DPRES", "SPK", "DSPK", "CWM", "DCWM", "APRES", "ASPK",
+                       "TPRES", "TSPK", "TCWM", "SDSPK", "Deputy Speaker",
+                       "Chairman of Ways and Means", " acting president "):
+            with self.subTest(marker=marker):
+                raw = detail(2, '2026-09-17', marker)
+                self.assertEqual(F.source_parties(raw), {})
+                self.db.execute(F.DDL)
+                self.db.execute("INSERT OR REPLACE INTO tvfy_vote_parties VALUES (2,'1','2026-09-17','senate','aye',?)", (marker,))
+                (self.cache / '2.json').write_text(json.dumps(raw))
+                self.assertEqual(read_legacy(self.db, '2026-09-17', None)[1][0].party, 'Labor')
+                T.store_detail(self.db, 2, raw, {'1'})
+                self.assertEqual(self.db.execute('SELECT COUNT(*) FROM tvfy_vote_parties').fetchone()[0], 0)
+
+    def test_complete_cached_office_marker_cannot_resurrect_an_older_stored_party(self):
+        T.store_detail(self.db, 2, detail(2, '2026-09-17', 'Greens'), {'1'})
+        self.db.execute("INSERT INTO speeches VALUES ('1','2026-09-17','Labor','federal')")
+        (self.cache / '2.json').write_text(json.dumps(detail(2, '2026-09-17', 'PRES')))
+        self.assertEqual(read_legacy(self.db, '2026-09-17', None)[1][0].party, 'Labor')
+
+    def test_office_marker_without_dated_party_stays_unknown(self):
+        self.db.executemany('INSERT INTO speeches VALUES (?,?,?,?)',
+                            [('1','2026-09-17','PRES','federal'), ('1','2026-09-18','Labor','federal')])
+        raw = detail(2, '2026-09-17', 'Greens'); raw['votes'][0]['party'] = 'PRES'
+        T.store_detail(self.db, 2, raw, {'1'})
+        self.assertIsNone(read_legacy(self.db, '2026-09-17', None)[1][0].party)
+
+    def test_division_10765_presiding_officer_tally_has_no_fictitious_parties(self):
+        self.db.executescript('''
+          UPDATE divisions SET division_id=10765,date='2026-09-14',aye_votes=2,no_votes=1 WHERE division_id=2;
+          UPDATE votes SET division_id=10765 WHERE division_id=2;
+          INSERT INTO members VALUES ('2','Sam','Deputy','Sam Deputy','Greens',NULL,'senate','federal','Greens','Greens');
+          INSERT INTO members VALUES ('3','Lee','Member','Lee Member','Liberal',NULL,'senate','federal','Liberal','Liberal');
+          INSERT INTO votes VALUES (10765,'2','no'),(10765,'3','aye');
+          INSERT INTO speeches VALUES ('1','2026-09-14','Labor','federal'),('1','2026-09-14','PRES','federal'),
+                                      ('2','2026-09-14','Liberal','federal');
+          CREATE TABLE ext_divisions (id TEXT,name TEXT,question TEXT,date TEXT,house TEXT,jurisdiction TEXT,
+                                      ayes_count INT,noes_count INT,result TEXT,source_url TEXT);
+          CREATE TABLE ext_votes (division_id TEXT,person_id TEXT,person_name TEXT,vote TEXT,party TEXT);
+          INSERT INTO ext_divisions VALUES ('federal-senate-10765','Question','Question','2026-09-14','senate',
+                                            'federal',2,1,'affirmative','https://example.test/10765');
+        ''')
+        raw = detail(10765, '2026-09-14', 'PRES'); raw.update(aye_votes=2, no_votes=1)
+        raw['votes'] += [{'vote':'no','member':{'person':{'id':2},'party':'DPRES'}},
+                         {'vote':'aye','member':{'person':{'id':3},'party':'Liberal Party'}}]
+        (self.cache / '10765.json').write_text(json.dumps(raw))
+        _, votes = read_legacy(self.db, '2026-09-14', None)
+        self.db.executemany('INSERT INTO ext_votes VALUES (?,?,?,?,?)',
+                            [(v.division_id,v.person_id,v.person_name,v.vote,v.party) for v in votes])
+        tally = party_tallies(database_projection(self.db, {})['federal-senate-10765'])
+        self.assertEqual(tally['party_tallies'], [{'party':'Labor','votes':{'aye':1}},
+                                                 {'party':'Liberal','votes':{'aye':1,'no':1}}])
+        self.assertEqual((tally['recorded_ayes'], tally['recorded_noes'], tally['unknown_party_count']), (2,1,0))
 
 
 class BillLinkTests(unittest.TestCase):

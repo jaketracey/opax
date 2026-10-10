@@ -11,7 +11,7 @@ import sys
 
 # Use the very same sitting days and Sydney timezone as the bill refresh.
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from bills_guard import cadence
+from bills_guard import BILLS, cadence, projection, read_head
 from mobile_votes_contract import validate_votes
 
 VOTES = "portal/public/votes.json"
@@ -62,6 +62,34 @@ def index_keys(index: dict) -> set[str]:
     return keys
 
 
+def restore_bill_links() -> str:
+    """Restore the division relationship field, retaining other bill updates.
+
+    The bill index carries the relationship count too. HEAD is the same
+    accepted snapshot used by the division rollback; no DB is touched.
+    """
+    _, old_docs = projection(read_head())
+    index_path = Path(BILLS) / "index.json"
+    index = json.loads(index_path.read_text())
+    changed = 0
+    for row in index["bills"]:
+        path = Path(BILLS) / f"{row['key']}.json"
+        doc = json.loads(path.read_text())
+        prior = old_docs.get(row["key"], {})
+        if doc.get("divisions", []) != prior.get("divisions", []):
+            if "divisions" in prior or row["key"] not in old_docs:
+                doc["divisions"] = prior.get("divisions", [])
+            else:
+                doc.pop("divisions", None)
+            path.write_text(json.dumps(doc, ensure_ascii=False, indent=1) + "\n")
+            changed += 1
+        if "divisions" in row:
+            row["divisions"] = len(prior.get("divisions", []))
+    if changed or index != json.loads(index_path.read_text()):
+        index_path.write_text(json.dumps(index, ensure_ascii=False, indent=1) + "\n")
+    return f"bill division relationships restored in {changed} bill(s)"
+
+
 def check(votes_only: bool = False) -> str:
     votes_guard(head(VOTES), json.loads(Path(VOTES).read_text()))
     if votes_only:
@@ -82,6 +110,10 @@ def check(votes_only: bool = False) -> str:
     for person in recent.get("people", {}).values():
         if any(row["division_slug"] not in slugs for row in person["recent"]):
             raise ValueError("SEO recent vote points to an unpublished division")
+    for row in json.loads(Path(f"{BILLS}/index.json").read_text())["bills"]:
+        bill = json.loads(Path(f"{BILLS}/{row['key']}.json").read_text())
+        if any(d["key"] not in new_keys for d in bill.get("divisions", [])):
+            raise ValueError("bill relationship points to an unpublished division")
     federal = [r for r in new["divisions"] if r["key"].startswith("federal-")]
     return f"divisions: {len(new_keys - old_keys)} new; federal latest {max((r['date'] for r in federal), default='unavailable')}"
 
@@ -92,9 +124,10 @@ def main() -> int:
     ap.add_argument("--since-date")
     ap.add_argument("--catch-up", action="store_true")
     ap.add_argument("--votes-only", action="store_true")
+    ap.add_argument("--restore-bill-links", action="store_true")
     args = ap.parse_args()
     try:
-        result = cadence(args.date, args.catch_up) if args.date else since(args.since_date, args.catch_up) \
+        result = restore_bill_links() if args.restore_bill_links else cadence(args.date, args.catch_up) if args.date else since(args.since_date, args.catch_up) \
             if args.since_date else check(args.votes_only)
         print(result)
         return 0

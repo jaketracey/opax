@@ -46,6 +46,8 @@ new_sandbox() {
   for f in scripts/vm/nightly.sh scripts/vm/run-nightly.sh scripts/vm/poweroff-if-idle.sh scripts/vm/validate_data.py scripts/vm/data_groups.sh scripts/export_bills.py scripts/roster_identity.py \
            scripts/vm/bills_refresh.sh scripts/vm/bills_guard.py scripts/vm/keep_if_unchanged.py \
            scripts/vm/divisions_refresh.sh scripts/vm/divisions_guard.py scripts/vm/mobile_votes_contract.py \
+           scripts/hubs/sitting-2026.json \
+           scripts/vm/evidence_refresh.sh scripts/vm/evidence_guard.py scripts/vm/evidence_inputs.py \
            scripts/bills_registry/bills_stages.py \
            scripts/export_division_pages.py scripts/export_recent_votes.py scripts/export_votes.py \
            scripts/verify_bill_briefs.py scripts/update_corpus_manifest.py scripts/bump_cache_epoch.py \
@@ -63,7 +65,23 @@ new_sandbox() {
   fi
   # Acquisition is stubbed: fake_refresh below already writes the bill fixtures.
   # The focused bills suite exercises the real fetch/export wrapper with stubs.
-  printf '#!/usr/bin/env bash\n[ "$OPAX_SYNC_KB" = 0 ] || exit 1\nprintf "acquire\\n" >> "$HOME/bills.calls"\n' > "$seed/scripts/refresh_bills.sh"
+  cat > "$seed/scripts/refresh_bills.sh" <<'BREOF'
+#!/usr/bin/env bash
+[ "$OPAX_SYNC_KB" = 0 ] || exit 1
+printf 'acquire\n' >> "$HOME/bills.calls"
+# Exact relationship added by the post-division full bill export.
+if [ "${FAKE_DIVISIONS_MODE:-ok}" = new_division ]; then
+  python3 - <<'PYEOF'
+import json
+p='portal/public/bills/au-federal-t1.json'; d=json.load(open(p))
+d['divisions'].append({'key':'federal-senate-2','date':'2026-09-02','house':'senate',
+ 'question':'New question','ayes':1,'noes':0,'outcome':'affirmative','url':'https://example.test/new'})
+open(p,'w').write(json.dumps(d,ensure_ascii=False,indent=1)+'\n')
+p='portal/public/bills/index.json'; d=json.load(open(p));d['bills'][0]['divisions']=2
+open(p,'w').write(json.dumps(d,ensure_ascii=False,indent=1)+'\n')
+PYEOF
+fi
+BREOF
   # Real acquisition is never run by this suite. Operation records have no
   # process arguments or credentials; the focused suite covers the wrapper.
   cat > "$seed/scripts/refresh_divisions.sh" <<'DREOF'
@@ -96,17 +114,23 @@ PYEOF
   ;;
 esac
 DREOF
+  cp "$SRC/tests/fixtures/evidence-nightly/export_stub.py" "$seed/scripts/export_evidence_layers.py"
+  cp "$SRC/tests/fixtures/evidence-nightly/audit_stub.py" "$seed/scripts/audit_evidence_export.py"
+  python3 "$SRC/tests/fixtures/evidence-nightly/seed.py" "$seed/portal/public/evidence"
   mkdir -p "$seed/portal/public/bills"
   python3 - "$seed" <<'PYEOF'
 import importlib.util, json, pathlib, sys
 seed = sys.argv[1]
 def bill(n, briefs):
     return {"key": f"au-federal-t{n}", "title": f"Test Bill {n}", "status": "introduced", "status_as_of": "2026-09-01",
+            "divisions": [{'key':'federal-senate-1','date':'2026-09-01','house':'senate',
+                           'question':'Fixture question','ayes':1,'noes':0,'outcome':'affirmative',
+                           'url':'https://example.test/division'}] if n == 1 else [],
             "speeches": [{"slug": f"s{n}-{i}", "speaker": "A", "date": "2026-09-01", "state": "NSW", "brief": b}
                          for i, b in enumerate(briefs)]}
 docs = [bill(1, ["Brief 1-0", "Brief 1-1"]), bill(2, ["Brief 2-0"]), bill(3, [])]
 rows = [{"key": d["key"], "title": d["title"], "parliament": 48, "introduced": "2026-08-01", "status": "introduced",
-         "status_as_of": d["status_as_of"], "speeches": len(d["speeches"])} for d in docs]
+         "status_as_of": d["status_as_of"], "speeches": len(d["speeches"]), "divisions": len(d["divisions"])} for d in docs]
 for d in docs:
     open(f"{seed}/portal/public/bills/{d['key']}.json", "w").write(json.dumps(d, ensure_ascii=False, indent=1) + "\n")
 index = {"generated_at": "2026-09-21T12:00:00+00:00", "count": len(rows), "meta": {"mode": "registry"}, "bills": rows}
@@ -132,6 +156,7 @@ PYEOF
   REPO="$HOME/opax"; git clone -q "$ORIGIN" "$REPO"
   mkdir -p "$REPO/.venv/bin"; ln -s "$(command -v python3)" "$REPO/.venv/bin/python"
   # state the preflight looks for
+  python3 "$SRC/tests/fixtures/evidence-nightly/inputs.py" "$HOME/.cache/autoresearch"
   python3 - "$HOME/.cache/autoresearch/parli.db" <<'PYEOF'
 import sqlite3, sys
 with sqlite3.connect(sys.argv[1]) as db:
@@ -856,8 +881,81 @@ new_sandbox s28c
 roster_stub
 FAKE_ROSTER_RC=1 nightly
 check "a reconciliation failure is visible and retried next night" bash -c "[ '$NRC' -eq 1 ] && git --git-dir='$ORIGIN' show nightly-status:status.json | grep -q 'roster-profile reconciliation failed; retry next night'"
+echo "== 29. evidence catch-up, Sunday cadence, safe holds and final test attribution"
+new_sandbox evidence_catchup
+OPAX_TODAY=2026-10-10 EVIDENCE_TEST_MODE=ok nightly
+check "Saturday catch-up exports/audits and commits evidence" bash -c "[ '$NRC' -eq 0 ] && git --git-dir='$ORIGIN' show main:portal/public/evidence/aa.json | grep -q 'members interjecting' && grep -qx audit '$HOME/evidence.calls'"
+check "committed evidence consumes catch-up and keeps initialized outside git" bash -c "[ ! -f '$HOME/.cache/autoresearch/pipeline/evidence-refresh-v1.pending' ] && [ -f '$HOME/.cache/autoresearch/pipeline/evidence-refresh-v1.initialized' ]"
+check "evidence delta summary reaches status and commit" bash -c "git --git-dir='$ORIGIN' show nightly-status:status.json | grep -q 'evidence: 1 changed shards, 1 records with text changed, 2 cleaned fields' && git --git-dir='$ORIGIN' log -1 --format=%s main | grep -q 'evidence: 1 changed shards'"
+rm "$HOME/evidence.calls"
+OPAX_TODAY=2026-10-12 EVIDENCE_TEST_MODE=ok nightly
+check "initialized weekday skips export" test ! -f "$HOME/evidence.calls"
+OPAX_TODAY=2026-10-11 EVIDENCE_TEST_MODE=stamps nightly
+check "Sunday runs export/audit without a catch-up marker" grep -q 'evidence export (weekly)' "$SB/nightly.out"
+check "timestamp-only evidence stays byte-identical" bash -c "git -C '$REPO' diff --quiet HEAD -- portal/public/evidence && ! git --git-dir='$ORIGIN' diff --name-only main~1 main | grep -q '^portal/public/evidence/'"
+
+for evidence_mode in export_fail audit_fail partial_failure timeout record_shrink shard_shrink entity_vanish excerpt_vanish budget incomplete malformed; do
+  new_sandbox "evidence_$evidence_mode"
+  evidence_limit=20m
+  [ "$evidence_mode" != timeout ] || evidence_limit=0.2s
+  OPAX_TODAY=2026-10-10 OPAX_EVIDENCE_TIMEOUT="$evidence_limit" EVIDENCE_TEST_MODE="$evidence_mode" nightly
+  check "$evidence_mode holds all evidence and cleans new shards" bash -c "[ '$NRC' -eq 1 ] && git --git-dir='$ORIGIN' diff --quiet main~1 main -- portal/public/evidence && [ ! -f '$REPO/portal/public/evidence/cc.json' ]"
+  check "$evidence_mode preserves catch-up and publishes the rest" bash -c "[ -f '$HOME/.cache/autoresearch/pipeline/evidence-refresh-v1.pending' ] && git --git-dir='$ORIGIN' show main:portal/public/votes.json | grep -q 'New Member' && git --git-dir='$ORIGIN' show nightly-status:status.json | grep -q 'evidence export/audit/guard/install failed'"
+done
+
+new_sandbox evidence_missing
+rm "$HOME/.cache/autoresearch/evidence-places.sqlite"
+OPAX_TODAY=2026-10-10 nightly
+check "missing sidecars keep the night green and skip export/staging" bash -c "[ '$NRC' -eq 0 ] && [ ! -f '$HOME/evidence.calls' ] && ! find '$HOME/.cache/autoresearch/pipeline' -maxdepth 1 -name 'evidence-stage.*' | grep -q . && git -C '$REPO' diff --quiet HEAD -- portal/public/evidence"
+check "one evidence warning names missing files and status says waiting" bash -c "[ \$(grep -c 'WARN: evidence:' '$SB/nightly.out') -eq 1 ] && git --git-dir='$ORIGIN' show nightly-status:status.json | python3 -c 'import json,sys; d=json.load(sys.stdin); assert d[\"status\"]==\"ok\" and not d[\"failures\"] and \"evidence: waiting for inputs (missing:\" in d[\"summary\"] and \"evidence-places.sqlite\" in d[\"summary\"]'"
+check "waiting retains catch-up and publishes the rest" bash -c "[ -f '$HOME/.cache/autoresearch/pipeline/evidence-refresh-v1.pending' ] && git --git-dir='$ORIGIN' show main:portal/public/votes.json | grep -q 'New Member'"
+OPAX_TODAY=2026-10-10 nightly
+check "missing inputs on the next night still succeed without exporting" bash -c "[ '$NRC' -eq 0 ] && [ ! -f '$HOME/evidence.calls' ] && [ -f '$HOME/.cache/autoresearch/pipeline/evidence-refresh-v1.pending' ] && [ \$(grep -c 'WARN: evidence:' '$SB/nightly.out') -eq 1 ]"
+
+new_sandbox evidence_mismatch
+python3 - "$HOME/.cache/autoresearch/parli.db" <<'PYEOF'
+import sqlite3, sys
+with sqlite3.connect(sys.argv[1]) as db:
+    db.execute('INSERT INTO speeches VALUES(2)')
+PYEOF
+OPAX_TODAY=2026-10-10 nightly
+check "mismatched coverage keeps the night green without export" bash -c "[ '$NRC' -eq 0 ] && [ ! -f '$HOME/evidence.calls' ] && [ -f '$HOME/.cache/autoresearch/pipeline/evidence-refresh-v1.pending' ] && [ \$(grep -c 'WARN: evidence:' '$SB/nightly.out') -eq 1 ]"
+check "mismatch names sidecars in the successful status summary" bash -c "git --git-dir='$ORIGIN' show nightly-status:status.json | python3 -c 'import json,sys; d=json.load(sys.stdin); assert d[\"status\"]==\"ok\" and \"waiting for inputs (mismatch:\" in d[\"summary\"] and \"evidence-layers-full.sqlite\" in d[\"summary\"] and \"evidence-additional-mentions.sqlite\" in d[\"summary\"]'"
+
+new_sandbox evidence_probe_timeout
+cp "$SRC/tests/fixtures/evidence-nightly/slow_probe.py" "$REPO/scripts/vm/evidence_inputs.py"
+OPAX_TODAY=2026-10-10 OPAX_EVIDENCE_READINESS_TIMEOUT=0.2s nightly
+check "slow readiness is cut off once; the night stays green without export/staging" bash -c "[ '$NRC' -eq 0 ] && [ \$(wc -l < '$HOME/evidence-probe.calls') -eq 1 ] && grep -qx probe '$HOME/evidence-probe.calls' && [ ! -f '$HOME/evidence.calls' ] && ! find '$HOME/.cache/autoresearch/pipeline' -maxdepth 1 -name 'evidence-stage.*' | grep -q . && git -C '$REPO' diff --quiet HEAD -- portal/public/evidence"
+check "probe timeout emits one warning, retains catch-up and later groups publish" bash -c "[ \$(grep -c 'WARN: evidence:' '$SB/nightly.out') -eq 1 ] && [ -f '$HOME/.cache/autoresearch/pipeline/evidence-refresh-v1.pending' ] && grep -q 'refreshing static division pages' '$SB/nightly.out' && git --git-dir='$ORIGIN' show main:portal/public/votes.json | grep -q 'New Member' && git --git-dir='$ORIGIN' show main:portal/public/divisions/index.json | grep -q federal-senate-1"
+check "probe timeout is waiting in successful status, with no failed steps" bash -c "git --git-dir='$ORIGIN' show nightly-status:status.json | python3 -c 'import json,sys; d=json.load(sys.stdin); assert d[\"status\"]==\"ok\" and not d[\"failures\"] and \"evidence: waiting for inputs (readiness probe timed out after 0.2s)\" in d[\"summary\"]'"
+
+for evidence_skip in OPAX_NIGHTLY_SKIP_REFRESH OPAX_NIGHTLY_SKIP_PERIODIC; do
+  new_sandbox "evidence_$evidence_skip"
+  touch "$HOME/.cache/autoresearch/pipeline/evidence-refresh-v1.pending"
+  env "$evidence_skip=1" OPAX_NIGHTLY_NO_PUSH=1 OPAX_TODAY=2026-10-11 bash "$REPO/scripts/vm/nightly.sh" >"$SB/nightly.out" 2>&1
+  check "$evidence_skip preserves pending and makes no evidence calls" bash -c "[ -f '$HOME/.cache/autoresearch/pipeline/evidence-refresh-v1.pending' ] && [ ! -f '$HOME/evidence.calls' ]"
+done
+
+new_sandbox evidence_gate
+mkdir -p "$REPO/portal/node_modules" "$REPO/portal/test"
+OPAX_TODAY=2026-10-10 EVIDENCE_TEST_MODE=ok FAKE_NODE_RED_WHILE_CHANGED=portal/public/evidence/aa.json nightly
+check "evidence test regression reverts only evidence and retains catch-up" bash -c "[ '$NRC' -eq 1 ] && git --git-dir='$ORIGIN' diff --quiet main~1 main -- portal/public/evidence && [ -f '$HOME/.cache/autoresearch/pipeline/evidence-refresh-v1.pending' ] && git --git-dir='$ORIGIN' show main:portal/public/votes.json | grep -q 'New Member'"
+check "rollback summary reports zero cleaned fields" bash -c "git --git-dir='$ORIGIN' show nightly-status:status.json | grep -q 'evidence: 0 changed shards, 0 records with text changed, 0 cleaned fields'"
+
+new_sandbox evidence_gate_restore
+mkdir -p "$REPO/portal/node_modules" "$REPO/portal/test"
+OPAX_TODAY=2026-10-10 OPAX_FORCE_GROUPS=weekly EVIDENCE_TEST_MODE=ok FAKE_NODE_RED_WHILE_ANY_CHANGED="portal/public/speakers.json portal/public/votes.json" nightly
+check "innocent trial rollback restores evidence acceptance and consumes catch-up" bash -c "[ '$NRC' -eq 1 ] && git --git-dir='$ORIGIN' show main:portal/public/evidence/aa.json | grep -q 'members interjecting' && [ ! -f '$HOME/.cache/autoresearch/pipeline/evidence-refresh-v1.pending' ]"
+
+new_sandbox evidence_commit_failure
+printf '#!/bin/sh\nexit 1\n' > "$REPO/.git/hooks/pre-commit"
+chmod +x "$REPO/.git/hooks/pre-commit"
+OPAX_TODAY=2026-10-10 EVIDENCE_TEST_MODE=ok nightly
+check "failed commit restores evidence including the index and retains catch-up" bash -c "[ '$NRC' -eq 1 ] && git -C '$REPO' diff --quiet HEAD -- portal/public/evidence && [ -f '$HOME/.cache/autoresearch/pipeline/evidence-refresh-v1.pending' ]"
+check "failed commit status reports no retained evidence changes" grep -q 'evidence: 0 changed shards, 0 records with text changed, 0 cleaned fields' "$HOME/.cache/autoresearch/pipeline/nightly-last.json"
+
 echo
-echo "== 29. federal divisions: catch-up, failure holds, cadence and gate retries"
+echo "== 30. federal divisions: catch-up, failure holds, cadence and gate retries"
 new_sandbox s29catchup
 OPAX_TODAY=2026-10-10 nightly
 check "first run catches up on a non-sitting Saturday" test "$(wc -l < "$HOME/divisions.calls")" -eq 1
@@ -888,7 +986,7 @@ mkdir -p "$REPO/portal/node_modules" "$REPO/portal/test"
 OPAX_FORCE_GROUPS=weekly FAKE_NODE_RED_WHILE_CHANGED=portal/public/bills/au-federal-t1.json nightly
 check "innocent vote trials restore acceptance and consume catch-up" test ! -e "$HOME/.cache/autoresearch/pipeline/divisions-refresh-v1.pending"
 
-echo "== 30. SEO cannot outlive a failed or rolled-back division projection"
+echo "== 31. SEO cannot outlive a failed or rolled-back division projection"
 new_sandbox s30links
 touch "$HOME/.cache/autoresearch/pipeline/bills-refresh-v1.initialized"
 OPAX_TODAY=2026-10-10 nightly
@@ -903,12 +1001,25 @@ git -C "$REPO" push -q origin HEAD:main
 FAKE_DIVISIONS_MODE=new_division nightly
 check "failed page exporter holds SEO byte-for-byte despite newer DB votes" bash -c "[ '$NRC' -eq 1 ] && git --git-dir='$ORIGIN' diff --quiet main~1 main -- portal/public/divisions portal/public/seo/recent-votes.json"
 check "dependent SEO exporter is explicitly skipped" bash -c "grep -q 'SEO recent votes skipped' '$SB/nightly.out'"
+check "failed division pages restore bill relationships and index counts as one bundle" python3 - "$ORIGIN" <<'PYEOF'
+import json, subprocess, sys
+origin=sys.argv[1]
+def published(path):
+    return json.loads(subprocess.check_output(['git', '--git-dir='+origin, 'show', 'main:'+path]))
+bill=published('portal/public/bills/au-federal-t1.json')
+assert [d['key'] for d in bill['divisions']] == ['federal-senate-1']
+index=published('portal/public/bills/index.json')
+assert next(r for r in index['bills'] if r['key']==bill['key'])['divisions'] == 1
+assert bill['status_as_of'] == '2026-09-28'
+assert all(d['key'] in {r['key'] for r in published('portal/public/divisions/index.json')['divisions']} for d in bill['divisions'])
+PYEOF
 check "export failure retains catch-up and lets bills continue" bash -c "[ -f '$HOME/.cache/autoresearch/pipeline/divisions-refresh-v1.pending' ] && git --git-dir='$ORIGIN' show main:portal/public/bills/au-federal-t1.json | grep -q 2026-09-28"
 new_sandbox s30gate
 mkdir -p "$REPO/portal/node_modules" "$REPO/portal/test"
 FAKE_DIVISIONS_MODE=new_division FAKE_NODE_RED_WHILE_CHANGED=portal/public/divisions/index.json nightly
 check "later portal rollback also restores dependent SEO bytes" bash -c "[ '$NRC' -eq 1 ] && git --git-dir='$ORIGIN' diff --quiet main~1 main -- portal/public/divisions portal/public/seo/recent-votes.json"
 check "division gate rollback keeps the catch-up marker" test -e "$HOME/.cache/autoresearch/pipeline/divisions-refresh-v1.pending"
+check "rolled-back pages also hold bill relationships" bash -c "! git --git-dir='$ORIGIN' show main:portal/public/bills/au-federal-t1.json | grep -q federal-senate-2"
 new_sandbox s30validation
 python3 - <<PYEOF
 from pathlib import Path
@@ -922,11 +1033,17 @@ git -C "$REPO" commit -qm 'fixture: reject division validation'
 git -C "$REPO" push -q origin HEAD:main
 FAKE_DIVISIONS_MODE=new_division nightly
 check "validation rollback restores SEO before the portal gate" bash -c "[ '$NRC' -eq 1 ] && git --git-dir='$ORIGIN' diff --quiet main~1 main -- portal/public/divisions portal/public/seo/recent-votes.json"
+check "rolled-back pages also hold bill relationships" bash -c "! git --git-dir='$ORIGIN' show main:portal/public/bills/au-federal-t1.json | grep -q federal-senate-2"
 new_sandbox s30innocent
 mkdir -p "$REPO/portal/node_modules" "$REPO/portal/test"
 FAKE_DIVISIONS_MODE=new_division FAKE_NODE_RED_WHILE_CHANGED=portal/public/bills/au-federal-t1.json nightly
 check "innocent division trial retains both new pages and SEO" bash -c "git --git-dir='$ORIGIN' show main:portal/public/divisions/index.json | grep -q federal-senate-2 && git --git-dir='$ORIGIN' show main:portal/public/seo/recent-votes.json | grep -q federal-senate-2"
 check "innocent division trial consumes catch-up" test ! -e "$HOME/.cache/autoresearch/pipeline/divisions-refresh-v1.pending"
+
+new_sandbox division_links_innocent
+mkdir -p "$REPO/portal/node_modules" "$REPO/portal/test"
+FAKE_DIVISIONS_MODE=new_division EVIDENCE_TEST_MODE=ok FAKE_NODE_RED_WHILE_CHANGED=portal/public/evidence/aa.json nightly
+check "innocent division trials restore bill links with the accepted pages" bash -c "[ '$NRC' -eq 1 ] && git --git-dir='$ORIGIN' show main:portal/public/bills/au-federal-t1.json | grep -q federal-senate-2 && git --git-dir='$ORIGIN' show main:portal/public/divisions/index.json | grep -q federal-senate-2 && [ ! -f '$HOME/.cache/autoresearch/pipeline/divisions-refresh-v1.pending' ]"
 
 echo "passed $PASS, failed $FAILN"
 [ "$FAILN" -eq 0 ]

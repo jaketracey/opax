@@ -93,7 +93,7 @@ timezone conversion and actual sitting-day ranges:
 - **Sunday weekly** otherwise; unlisted future dates keep this fallback.
 
 The existing box start schedule is 03:15 Australia/Sydney. Extend the single
-calendar in `bills_guard.py` before 2027 sittings. There is no calendar network
+calendar in `scripts/hubs/sitting-2026.json` (read by `bills_guard.py`) before 2027 sittings. There is no calendar network
 request or extra scheduler.
 
 On the first acquisition-enabled run, the wrapper creates
@@ -160,7 +160,8 @@ All four review findings are addressed in the code and isolated regressions:
   party. Future detail acquisition persists these vote-date facts separately;
   old fetched rows use complete, identity/date/chamber-checked raw detail caches.
   A read-only catch-up projection of all 72 later divisions / 5,159 votes finds
-  source affiliations for every vote, with zero unknown parties. Dated fallback
+  a non-empty source party field for every vote. Round 2 corrects that count:
+  42 fields are office markers, so they provide no affiliation evidence. Dated fallback
   is queried only when source party is absent, avoiding a whole-history scan.
   Missing affiliation can use an unambiguous federal Hansard membership
   observation on that exact division date. Earlier or later observations and
@@ -221,3 +222,60 @@ Final gates:
 | `npm run build:search` and full portal Node suite | Build passed; 1,110 passed, 0 failed with the loopback setting above |
 | `bash -n` for nightly, wrappers, daily/weekly and the harness | Passed |
 | `git diff --check` | Passed |
+
+
+## Review round 2
+
+Merged fetched `origin/main` (tip `04617966`), including evidence refresh `2bf7f549`
+and hubs `04617966`. All nine conflict hunks preserve both refresh groups' revert
+flags, gate backups/restores, summaries and completion hooks, plus evidence's
+abort/commit-failure handling and both fixture sets. Bills and divisions now read
+main's single `scripts/hubs/sitting-2026.json`; isolated fixtures copy that file.
+Evidence continuation assertions use the valid schema-1 identity fixture.
+
+The division bundle's rollback restores the bill relationship field and its index
+count to HEAD along with division pages and SEO. It keeps independent bill updates
+(status, speeches, briefs, stages). Dependencies are restored again after permanent
+validation or portal-gate rollback, before the final guard and bill summary. If
+relationship restoration fails, the whole bills group is restored. The final
+publication guard refuses any bill target outside the accepted division index.
+The harness reproduces the failed exporter with a newer DB division
+`federal-senate-2`, verifies the bill's old relationships/count and newer status,
+and covers validation/gate rollback and innocent trial restoration.
+
+Office markers are missing affiliation, in source detail, old persisted facts and
+dated fallback observations. Complete-detail persistence replaces prior facts so
+a previously stored marker cannot survive a corrected detail. Unit tests cover
+`PRES`, `DPRES`, `SPK`, `DSPK`, `CWM` and related roles, no dated fallback, and a
+presiding-officer division's projected party tally.
+
+Read-only cached catch-up diagnosis confirmed **42 marker votes: 35 PRES and
+7 DPRES**. This desktop snapshot has no usable same-day membership observations
+for those 42, so the corrected projection keeps them unknown. Division **10765**
+(14 September) loses fictitious PRES/DPRES tallies and gains two unknown
+members; its 21 Labor and 13 Liberal votes retain their source affiliations.
+No DB/cache, KB, refresh box or production writes or diagnostic network requests
+were performed. Only isolated test fixture DBs are writable.
+
+Round 2 final gates:
+
+| Gate | Result |
+| --- | --- |
+| `bash scripts/vm/test_nightly.sh` (three full runs) | **298 passed, 0 failed in each run** |
+| Python (`pytest -q tests scripts parli/tests`) | **1,037 passed; 15,314 subtests passed** |
+| Focused division/bill/SEO review regressions | **61 passed; 131 subtests passed** |
+| `cd portal && npm run build:search` | passed, including hubs and crawl catalog |
+| `node --test test/*.test.mjs` | **1,124 passed, 0 failed** |
+| `bash -n` (nightly, harness, groups and refresh wrappers) | passed |
+| Working and staged `git diff --check` | passed |
+
+The final three harness runs cover **nine simulated push races**, all green;
+fixture bytecode prevention and isolated import checks from round 1 are retained.
+The extra innocent-division/evidence-culprit scenario initially omitted the
+fixture's evidence-change mode; its setup was corrected and verified independently
+before the final three full runs. The final broad Python run includes the complete
+cached-detail/old-party regression. Portal integration tests use the previously
+documented IPv6 loopback workaround (`OPAX_TEST_HOST=::1` plus the temporary
+Miniflare import hook), without changing repository sources or assertions.
+Harness remotes are isolated local bare repositories; no real push or deploy
+was performed. No box-side scheduler, dependency or second calendar is required.

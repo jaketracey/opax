@@ -148,7 +148,7 @@ mkdir -p "$PIPE"
 log(){ printf '%s\n' "$*"; }
 run(){ "$@"; }
 fail(){ printf 'FAIL: %s\n' "$*"; }
-revert(){ DIVISIONS_REFRESH_OK=0; git checkout -q HEAD -- "$@"; git clean -fdq -- "$@"; }
+revert(){ DIVISIONS_REFRESH_OK=0; DIVISIONS_PAGES_ROLLED_BACK=1; git checkout -q HEAD -- "$@"; git clean -fdq -- "$@"; }
 . scripts/vm/divisions_refresh.sh
 divisions_refresh
 divisions_verify
@@ -163,12 +163,15 @@ class WrapperTests(unittest.TestCase):
         self.home = self.root / "home"; self.home.mkdir()
         self.calls = self.root / "calls"
         for name in ("scripts/refresh_divisions.sh", "scripts/vm/divisions_refresh.sh", "scripts/vm/divisions_guard.py",
-                     "scripts/vm/bills_guard.py", "scripts/vm/mobile_votes_contract.py", "scripts/vm/keep_if_unchanged.py", "scripts/bills_registry/bills_stages.py"):
+                     "scripts/hubs/sitting-2026.json", "scripts/vm/bills_guard.py", "scripts/vm/mobile_votes_contract.py", "scripts/vm/keep_if_unchanged.py", "scripts/bills_registry/bills_stages.py"):
             dest = self.root / name; dest.parent.mkdir(parents=True, exist_ok=True)
             shutil.copyfile(ROOT / name, dest)
         for name in ("parli/ingest/tvfy_refresh.py", "parli/ingest/votes_ingest.py", "parli/ingest/tvfy_bill_links.py", "scripts/export_votes.py"):
             dest = self.root / name; dest.parent.mkdir(parents=True, exist_ok=True); dest.write_text(STUB)
         public = self.root / "portal/public"; (public / "divisions").mkdir(parents=True); (public / "seo").mkdir()
+        (public / "bills").mkdir()
+        (public / "bills/index.json").write_text(json.dumps({"count":1, "bills":[{"key":"fixture","divisions":0}]}))
+        (public / "bills/fixture.json").write_text(json.dumps({"key":"fixture","divisions":[]}))
         (public / "votes.json").write_text(json.dumps(mobile()))
         (public / "divisions/index.json").write_text(json.dumps({"count": 1, "divisions": [
             {"key": "federal-senate-1", "slug": "division-federal-senate-1", "date": "2026-08-20"}]}))
@@ -185,7 +188,7 @@ class WrapperTests(unittest.TestCase):
                "OPAX_DIVISIONS_TIMEOUT": "0.1s" if mode == "timeout" else "10s"}
         result = subprocess.run(["bash"], input=HARNESS, cwd=self.root, env=env, text=True, capture_output=True)
         self.assertEqual(result.returncode, 0, "refresh harness failed")
-        return result.stdout
+        return result.stdout + result.stderr
 
     def pending(self):
         return (self.home / ".cache/autoresearch/pipeline/divisions-refresh-v1.pending").exists()
@@ -210,6 +213,25 @@ class WrapperTests(unittest.TestCase):
         path = self.root / "portal/public/votes.json"; original = path.read_bytes()
         self.run_refresh("unchanged")
         self.assertEqual(path.read_bytes(), original)
+
+    def test_bill_links_and_counts_rollback_while_other_bill_updates_continue(self):
+        bill = self.root / 'portal/public/bills/fixture.json'
+        index = self.root / 'portal/public/bills/index.json'
+        bill.write_text(json.dumps({'key':'fixture','status_as_of':'2026-09-17',
+                                    'divisions':[{'key':'federal-senate-2'}]}))
+        doc = json.loads(index.read_text()); doc['bills'][0]['divisions'] = 1
+        index.write_text(json.dumps(doc))
+        self.assertIn('FAIL:', self.run_refresh('dangling_seo'))
+        self.assertEqual(json.loads(bill.read_text()), {'key':'fixture','status_as_of':'2026-09-17','divisions':[]})
+        self.assertEqual(json.loads(index.read_text())['bills'][0]['divisions'], 0)
+        self.assertTrue(self.pending())
+
+    def test_final_guard_refuses_bill_link_to_unpublished_division(self):
+        bill = self.root / 'portal/public/bills/fixture.json'
+        bill.write_text(json.dumps({'key':'fixture','divisions':[{'key':'federal-senate-2'}]}))
+        self.assertIn('bill relationship points to an unpublished division', self.run_refresh())
+        self.assertEqual(json.loads(bill.read_text())['divisions'], [])
+        self.assertTrue(self.pending())
 
     def test_interrupted_commit_keeps_pending(self):
         self.run_refresh(complete=False)

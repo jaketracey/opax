@@ -8,6 +8,7 @@ DIVISIONS_INITIALIZED="$PIPE/divisions-refresh-v1.initialized"
 
 divisions_revert() {
   revert portal/public/votes.json portal/public/divisions portal/public/seo/recent-votes.json
+  divisions_restore_dependencies
 }
 
 divisions_refresh() {
@@ -68,10 +69,16 @@ divisions_refresh_complete() {
 }
 
 divisions_restore_dependencies() {
-  # Gate trials can revert divisions after SEO has already been generated.
-  # Restore that dependent group before the final guard/commit too.
+  # Restore the published relationships as part of the division rollback.
+  # Repeat after validation/gate decisions: bills may export after a failed
+  # acquisition, and an innocent gate trial must restore its own backup first.
   if [ "${DIVISIONS_PAGES_ROLLED_BACK:-0}" = 1 ]; then
     revert portal/public/seo/recent-votes.json
+    if ! run "$PY" scripts/vm/divisions_guard.py --restore-bill-links ||
+        ! run "$PY" scripts/vm/keep_if_unchanged.py --sweep portal/public/bills; then
+      fail "cannot restore bill division relationships; bills restored to HEAD"
+      revert portal/public/bills
+    fi
     log "SEO recent votes restored: published divisions were rolled back"
   fi
 }

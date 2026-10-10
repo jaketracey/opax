@@ -54,5 +54,6 @@ portal/public/search-catalog/*/
 
 # Generated alongside search; deployed from the published export snapshots.
 portal/public/crawl/
+portal/public/hubs/
 # Local SEO HTML snapshots, CDP measurements and Wrangler state.
 portal/private/
