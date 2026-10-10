@@ -1,0 +1,114 @@
+appId: au.com.opax.app
+name: 39 Android Topics A–Z, topic, stats and Methods
+---
+- launchApp:
+    clearState: true
+# Topics A–Z is a row on Reports, which Today's tile opens.
+- scrollUntilVisible:
+    element:
+      id: today-reports
+    direction: DOWN
+    timeout: 300000
+    centerElement: true
+- tapOn:
+    id: today-reports
+- scrollUntilVisible:
+    element:
+      id: reports-topics
+    direction: DOWN
+    timeout: 300000
+    centerElement: true
+- tapOn:
+    id: reports-topics
+- assertVisible:
+    id: topics-screen
+- takeScreenshot: ${EVIDENCE}/39-topics
+- scrollUntilVisible:
+    element:
+      id: topic-open-gambling
+    direction: DOWN
+    timeout: 300000
+    visibilityPercentage: 10
+    centerElement: true
+- takeScreenshot: ${EVIDENCE}/39-topic-row
+- tapOn:
+    id: topic-open-gambling
+- assertVisible:
+    id: topic-screen
+- takeScreenshot: ${EVIDENCE}/39-topic
+- scrollUntilVisible:
+    element:
+      text: Who speaks on it, by party
+    direction: DOWN
+    timeout: 300000
+    visibilityPercentage: 10
+    centerElement: true
+- takeScreenshot: ${EVIDENCE}/39-parties
+- scrollUntilVisible:
+    element:
+      text: Which parliament argues it
+    direction: DOWN
+    timeout: 300000
+    visibilityPercentage: 10
+    centerElement: true
+- takeScreenshot: ${EVIDENCE}/39-parliaments
+- scrollUntilVisible:
+    element:
+      text: The money beside the words
+    direction: DOWN
+    timeout: 300000
+    visibilityPercentage: 10
+    centerElement: true
+- takeScreenshot: ${EVIDENCE}/39-money
+- scrollUntilVisible:
+    element:
+      text: The share over time
+    direction: DOWN
+    timeout: 300000
+    visibilityPercentage: 10
+    centerElement: true
+- takeScreenshot: ${EVIDENCE}/39-decades
+- scrollUntilVisible:
+    element:
+      text: The arc of this debate
+    direction: DOWN
+    timeout: 300000
+    centerElement: true
+- takeScreenshot: ${EVIDENCE}/39-arc
+# Android's bar shows no back title: Back leaves the long, paginated speech
+# window for Topics A–Z.
+- pressKey: Back
+- extendedWaitUntil:
+    visible:
+      id: topics-screen
+    timeout: 30000
+- scrollUntilVisible:
+    element:
+      id: topics-stats
+    direction: DOWN
+    timeout: 300000
+    centerElement: true
+- tapOn:
+    id: topics-stats
+- assertVisible:
+    id: stats-screen
+- takeScreenshot: ${EVIDENCE}/39-stats
+- scrollUntilVisible:
+    element:
+      id: stats-methods
+    direction: DOWN
+    timeout: 300000
+    centerElement: true
+- tapOn:
+    id: stats-methods
+- assertVisible:
+    id: methods-screen
+- takeScreenshot: ${EVIDENCE}/39-methods
+- scrollUntilVisible:
+    element:
+      id: methods-8
+    direction: DOWN
+    timeout: 300000
+    visibilityPercentage: 10
+    centerElement: true
+- takeScreenshot: ${EVIDENCE}/39-how-to-cite

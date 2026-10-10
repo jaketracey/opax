@@ -1,0 +1,54 @@
+appId: au.com.opax.app
+name: Android High contrast text against the stronger text roles
+---
+# e2e-android-device.sh turns the system setting on around this flow
+# (OPAX_ANDROID_HIGH_CONTRAST=1) and always turns it off again.
+- launchApp:
+    permissions: {}
+- tapOn:
+    id: tab-today
+- scrollUntilVisible:
+    element:
+      id: today-screen-message
+    direction: UP
+    timeout: 90000
+- extendedWaitUntil:
+    visible:
+      id: today-edition-head
+    timeout: 180000
+- waitForAnimationToEnd:
+    timeout: 5000
+- takeScreenshot: ${EVIDENCE}/hc-today
+- openLink: opax://bill/au-federal-r7534
+- extendedWaitUntil:
+    visible:
+      id: bill-title
+    timeout: 30000
+- waitForAnimationToEnd:
+    timeout: 5000
+- takeScreenshot: ${EVIDENCE}/hc-bill
+- openLink: opax://person/anthony-albanese
+- extendedWaitUntil:
+    visible:
+      id: person-screen-title
+    timeout: 30000
+- waitForAnimationToEnd:
+    timeout: 5000
+- takeScreenshot: ${EVIDENCE}/hc-profile
+- openLink: opax://reports
+- extendedWaitUntil:
+    visible:
+      id: reports-screen
+    timeout: 30000
+- waitForAnimationToEnd:
+    timeout: 5000
+- takeScreenshot: ${EVIDENCE}/hc-reports
+- tapOn:
+    id: tab-ask
+- extendedWaitUntil:
+    visible:
+      id: ask-screen
+    timeout: 180000
+- waitForAnimationToEnd:
+    timeout: 5000
+- takeScreenshot: ${EVIDENCE}/hc-ask

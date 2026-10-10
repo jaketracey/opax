@@ -6,7 +6,7 @@ cd "$(dirname "$0")/.."
 source scripts/qa-env.sh
 source scripts/qa-lock.sh
 source scripts/qa-java.sh
-AVD=${1:?Usage: e2e-android.sh OPAX_Pixel_API36|OPAX_API34 [01 02 03 07 08 13 25 32]}; shift
+AVD=${1:?Usage: e2e-android.sh OPAX_Pixel_API36|OPAX_API34 [01 02 03 07 08 13 25 26 32 38 39 40]}; shift
 case "$AVD" in OPAX_Pixel_API36|OPAX_API34) ;; *) echo 'Use an OPAX Android device' >&2; exit 2 ;; esac
 configure_java
 export EXPO_NO_TELEMETRY=1 MAESTRO_CLI_NO_ANALYTICS=true MAESTRO_CLI_ANALYSIS_NOTIFICATION_DISABLED=true

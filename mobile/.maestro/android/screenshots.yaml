@@ -66,6 +66,51 @@ name: Android tab and key-screen captures at the requested font scale
 - waitForAnimationToEnd:
     timeout: 5000
 - takeScreenshot: ${EVIDENCE}/tab-search
+# Pass 3D's results (one count line, rows titled by the record) and the kind
+# list, which Android raises as a bottom sheet (pass 4F).
+- longPressOn:
+    id: search-input
+- inputText: Don Farrell
+- hideKeyboard
+- scrollUntilVisible:
+    element:
+      id: search-kind-menu
+    direction: UP
+    visibilityPercentage: 10
+    speed: 40
+    timeout: 90000
+- tapOn:
+    id: search-kind-menu
+- extendedWaitUntil:
+    visible:
+      id: search-kind-option-records
+    timeout: 30000
+- waitForAnimationToEnd:
+    timeout: 5000
+- takeScreenshot: ${EVIDENCE}/search-kind-sheet
+- tapOn:
+    id: search-kind-option-records
+- extendedWaitUntil:
+    notVisible:
+      id: search-kind-sheet
+    timeout: 30000
+- scrollUntilVisible:
+    element:
+      id: search-submit
+    visibilityPercentage: 10
+    speed: 40
+    timeout: 90000
+- tapOn:
+    id: search-submit
+- scrollUntilVisible:
+    element:
+      id: records-count
+    visibilityPercentage: 10
+    speed: 40
+    timeout: 90000
+- waitForAnimationToEnd:
+    timeout: 5000
+- takeScreenshot: ${EVIDENCE}/search-passages
 - tapOn:
     id: tab-ask
 - extendedWaitUntil:
@@ -98,6 +143,38 @@ name: Android tab and key-screen captures at the requested font scale
 - waitForAnimationToEnd:
     timeout: 5000
 - takeScreenshot: ${EVIDENCE}/tab-today
+- scrollUntilVisible:
+    element:
+      id: today-explore
+    visibilityPercentage: 10
+    speed: 40
+    timeout: 180000
+- waitForAnimationToEnd:
+    timeout: 5000
+- takeScreenshot: ${EVIDENCE}/today-explore
+- scrollUntilVisible:
+    element:
+      id: today-sources
+    centerElement: true
+    speed: 40
+    timeout: 180000
+- waitForAnimationToEnd:
+    timeout: 5000
+- takeScreenshot: ${EVIDENCE}/today-foot
+- tapOn:
+    id: today-sources
+- extendedWaitUntil:
+    visible:
+      id: today-sources-sheet-done
+    timeout: 30000
+- waitForAnimationToEnd:
+    timeout: 5000
+- takeScreenshot: ${EVIDENCE}/today-sources-sheet
+- pressKey: Back
+- extendedWaitUntil:
+    notVisible:
+      id: today-sources-sheet-done
+    timeout: 30000
 - openLink: opax://person/anthony-albanese
 - extendedWaitUntil:
     visible:
@@ -122,6 +199,55 @@ name: Android tab and key-screen captures at the requested font scale
 - waitForAnimationToEnd:
     timeout: 5000
 - takeScreenshot: ${EVIDENCE}/bill
+- scrollUntilVisible:
+    element:
+      id: bill-more
+    centerElement: true
+    speed: 40
+    timeout: 90000
+- tapOn:
+    id: bill-more
+- extendedWaitUntil:
+    visible:
+      id: android-menu
+    timeout: 30000
+- waitForAnimationToEnd:
+    timeout: 5000
+- takeScreenshot: ${EVIDENCE}/bill-more-menu
+- pressKey: Back
+- extendedWaitUntil:
+    notVisible:
+      id: android-menu
+    timeout: 30000
+- scrollUntilVisible:
+    element:
+      id: bill-source
+    centerElement: true
+    speed: 40
+    timeout: 90000
+- tapOn:
+    id: bill-source
+- extendedWaitUntil:
+    visible:
+      id: bill-source-sheet-done
+    timeout: 30000
+- waitForAnimationToEnd:
+    timeout: 5000
+- takeScreenshot: ${EVIDENCE}/bill-source-sheet
+- pressKey: Back
+- extendedWaitUntil:
+    notVisible:
+      id: bill-source-sheet-done
+    timeout: 30000
+- scrollUntilVisible:
+    element:
+      id: bill-division-0-outcome
+    centerElement: true
+    speed: 40
+    timeout: 180000
+- waitForAnimationToEnd:
+    timeout: 5000
+- takeScreenshot: ${EVIDENCE}/bill-divisions
 - openLink: opax://doc/speech-1205524
 - extendedWaitUntil:
     visible:
@@ -182,6 +308,29 @@ name: Android tab and key-screen captures at the requested font scale
 - pressKey: Back
 - assertNotVisible:
     id: money-as-at-sheet
+- openLink: opax://reports
+- extendedWaitUntil:
+    visible:
+      id: reports-screen
+    timeout: 30000
+- waitForAnimationToEnd:
+    timeout: 5000
+- takeScreenshot: ${EVIDENCE}/reports-list
+- scrollUntilVisible:
+    element:
+      id: report-open-gambling
+    centerElement: true
+    speed: 40
+    timeout: 180000
+- tapOn:
+    id: report-open-gambling
+- extendedWaitUntil:
+    visible:
+      id: report-title
+    timeout: 30000
+- waitForAnimationToEnd:
+    timeout: 5000
+- takeScreenshot: ${EVIDENCE}/report
 - openLink: opax://account
 - extendedWaitUntil:
     visible:
