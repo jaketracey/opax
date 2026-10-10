@@ -10,7 +10,7 @@ name: 22 Account sign-in by emailed code, sign-out and deletion
     permissions: {}
 - tapOn: Account and about
 - extendedWaitUntil:
-    visible: 'Not signed in\. An account is only needed to talk to OPAX\.'
+    visible: 'Not signed in\. Sign in to talk to OPAX\. Public records stay open without an account\.'
     timeout: 15000
 - takeScreenshot: ${EVIDENCE}/22-signed-out
 - scrollUntilVisible:

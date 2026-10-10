@@ -4,6 +4,13 @@ const { productionVoiceEnabled } = require('./plugins/voiceProduction');
 const variant = process.env.OPAX_VARIANT ?? 'development';
 const androidBuild = process.env.OPAX_TARGET_PLATFORM === 'android';
 const voiceEnabled = productionVoiceEnabled(variant);
+// Community is not in production (the 1.0 App Store build). An e2e build with
+// OPAX_HIDE_COMMUNITY=1 leaves it out the same way, so the simulator can show
+// the production Today and Account against the local fixture.
+const hideCommunity = process.env.OPAX_HIDE_COMMUNITY ?? '0';
+if (!['0', '1'].includes(hideCommunity))
+  throw new Error('OPAX_HIDE_COMMUNITY must be 0 or 1');
+const communityHidden = variant === 'production' || hideCommunity === '1';
 const config = getDefaultConfig(__dirname);
 const inheritedResolver = config.resolver.resolveRequest;
 // Modules with a production stub beside them: the e2e drawn-line probe, the
@@ -19,6 +26,7 @@ const productionStubs = [
 const voiceEntries = ['account', 'talk'].map((feature) =>
   path.join(__dirname, `src/features/${feature}/entry`),
 );
+const communityEntry = path.join(__dirname, 'src/features/community/entry');
 config.resolver.resolveRequest = (context, moduleName, platform) => {
   const target = moduleName.startsWith('.')
     ? path
@@ -27,6 +35,8 @@ config.resolver.resolveRequest = (context, moduleName, platform) => {
     : null;
   if (platform === 'android' && target === voiceEntries[0])
     return { type: 'sourceFile', filePath: `${target}.android.tsx` };
+  if (communityHidden && target === communityEntry)
+    return { type: 'sourceFile', filePath: `${target}.production.ts` };
   if (process.env.OPAX_VARIANT === 'production' && target !== null) {
     if (productionStubs.includes(target))
       return { type: 'sourceFile', filePath: `${target}.production.ts` };
@@ -46,7 +56,7 @@ const accountSignIn = [
   /[/\\]src[/\\]app[/\\]account[/\\](?:sign-in|delete)\.tsx$/,
   /[/\\]src[/\\]features[/\\]account[/\\](?!entry\.production\.ts$).*/,
 ];
-config.cacheVersion = `opax-${variant}-voice-${voiceEnabled ? 'on' : 'off'}${androidBuild ? '-android' : ''}`;
+config.cacheVersion = `opax-${variant}-voice-${voiceEnabled ? 'on' : 'off'}${communityHidden ? '-community-off' : ''}${androidBuild ? '-android' : ''}`;
 const existing = config.resolver.blockList;
 config.resolver.blockList = [
   ...(androidBuild
@@ -68,6 +78,9 @@ config.resolver.blockList = [
     ? productionBlockList.filter((rule) =>
         /voice-bridge-test|test-screens/.test(rule.source),
       )
+    : []),
+  ...(communityHidden && process.env.OPAX_VARIANT !== 'production'
+    ? productionBlockList.filter((rule) => /community/.test(rule.source))
     : []),
 ];
 module.exports = config;

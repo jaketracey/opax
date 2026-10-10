@@ -93,11 +93,11 @@ const config: ExpoConfig = {
     },
     buildNumber,
     deploymentTarget: '18.4',
-    // iPad (TestFlight builds from ios/app; the App Store 1.0 build on
-    // ios/release-1.0 stays iPhone-only). With requireFullScreen false, Expo
-    // writes all four UISupportedInterfaceOrientations~ipad, so Split View,
-    // Slide Over and Stage Manager windows are allowed. The iPhone keeps its
-    // own orientation list (`orientation: 'default'`) unchanged.
+    // iPhone and iPad, in TestFlight and in the App Store 1.0 build. With
+    // requireFullScreen false, Expo writes all four
+    // UISupportedInterfaceOrientations~ipad, so Split View, Slide Over and
+    // Stage Manager windows are allowed. The iPhone keeps its own
+    // orientation list (`orientation: 'default'`) unchanged.
     supportsTablet: true,
     requireFullScreen: false,
     privacyManifests: {

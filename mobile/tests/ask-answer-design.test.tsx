@@ -10,7 +10,8 @@ import {
 } from '../src/design/primitives';
 import { showMenu } from '../src/design/menu';
 import { shareRecord } from '../src/navigation/share';
-import { AnswerView } from '../src/features/ask/AnswerView';
+import { AnswerView, reportThanks } from '../src/features/ask/AnswerView';
+import { reportAnswer, reportAnswerUrl } from '../src/voice/report-answer';
 import { AnswerSources } from '../src/features/ask/AnswerSources';
 import type { Source, Turn } from '../src/features/ask/model';
 
@@ -20,6 +21,10 @@ jest.mock('../src/api/runtime', () => ({}));
 jest.mock('../src/design/menu', () => ({ showMenu: jest.fn() }));
 jest.mock('../src/navigation/share', () => ({
   shareRecord: jest.fn().mockResolvedValue(undefined),
+}));
+jest.mock('../src/voice/report-answer', () => ({
+  ...jest.requireActual('../src/voice/report-answer'),
+  reportAnswer: jest.fn().mockResolvedValue(undefined),
 }));
 jest.mock('../src/design/accessibility', () => ({
   ...jest.requireActual('../src/design/accessibility'),
@@ -106,18 +111,20 @@ test('the utility rows become one source line and ⋯', () => {
     'Retrieved records',
     'Dates in the record',
     'Share answer',
+    'Report this answer',
     'Start a new conversation',
   ])
     expect(text()).not.toContain(old);
   // One line: the date viewed and the records behind the answer.
   expect(text()).toMatch(/Viewed \d{1,2} \w{3} \d{4} · /);
   expect(text()).toContain('3 records');
-  // ⋯ offers Share answer, then the conversation's own actions.
+  // ⋯ offers Share and Report, then the conversation's own actions.
   act(() => byId('ask-answer-more').props.onPress());
   const [title, actions] = jest.mocked(showMenu).mock.calls.at(-1)!;
   expect(title).toBe('This answer');
   expect(actions.map((a) => a.title)).toEqual([
     'Share answer',
+    'Report this answer',
     'Start a new conversation',
   ]);
   act(() => actions[0]!.onPress());
@@ -152,9 +159,67 @@ test('the source line opens the sources: cited, also retrieved, dates and notes'
   expect(words.match(/View original/g)).toHaveLength(3);
 });
 
-test('while a question runs, ⋯ offers only Share answer', () => {
+test('while a question runs, ⋯ offers only Share and Report', () => {
   const { byId } = draw([]);
   act(() => byId('ask-answer-more').props.onPress());
   const [, actions] = jest.mocked(showMenu).mock.calls.at(-1)!;
-  expect(actions.map((a) => a.title)).toEqual(['Share answer']);
+  expect(actions.map((a) => a.title)).toEqual([
+    'Share answer',
+    'Report this answer',
+  ]);
+});
+
+// Guideline 5.1.2(i) and Talk parity: every answer can be reported, by
+// Talk's own path (src/voice/report-answer.ts): OPAX's support page in the
+// in-app browser. No answer text, question, account or model call goes with
+// it; the support page asks the reader for the question and the wrong words.
+test('Report this answer opens Talk’s support page, then thanks the reader', async () => {
+  const fetch = jest.fn();
+  global.fetch = fetch as unknown as typeof global.fetch;
+  const { text, byId } = draw();
+  expect(text()).not.toContain(reportThanks);
+  act(() => byId('ask-answer-more').props.onPress());
+  const [, actions] = jest.mocked(showMenu).mock.calls.at(-1)!;
+  await act(async () =>
+    actions.find((a) => a.title === 'Report this answer')!.onPress(),
+  );
+  expect(reportAnswer).toHaveBeenCalledTimes(1);
+  expect(reportAnswer).toHaveBeenCalledWith(null);
+  expect(text()).toContain('Thanks. We’ll look at this answer.');
+  expect(fetch).not.toHaveBeenCalled();
+  // The page it opens: the published support page, with nothing appended.
+  expect(new URL(reportAnswerUrl(null, true)).pathname).toBe('/support');
+  expect(new URL(reportAnswerUrl(null, true)).search).toBe('');
+});
+
+test('a report that cannot open is not thanked', async () => {
+  const onReport = jest.fn().mockRejectedValue(new Error('No browser'));
+  let renderer!: TestRenderer.ReactTestRenderer;
+  act(() => {
+    renderer = TestRenderer.create(
+      <AnswerView
+        turn={turn}
+        question={question}
+        people={new Map()}
+        onReport={onReport}
+      />,
+    );
+  });
+  act(() =>
+    renderer.root
+      .find(
+        (n) =>
+          n.props.testID === 'ask-answer-more' &&
+          typeof n.props.onPress === 'function',
+      )
+      .props.onPress(),
+  );
+  const [, actions] = jest.mocked(showMenu).mock.calls.at(-1)!;
+  await act(async () => {
+    actions.find((a) => a.title === 'Report this answer')!.onPress();
+  });
+  expect(onReport).toHaveBeenCalledWith(null);
+  expect(
+    renderer.root.findAll((n) => n.props.testID === 'ask-report-thanks'),
+  ).toHaveLength(0);
 });

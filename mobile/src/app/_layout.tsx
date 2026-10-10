@@ -26,6 +26,7 @@ import {
 import { WelcomeTour } from '../onboarding/WelcomeTour';
 import { isPad } from '../design/adaptive';
 import { KeyboardShortcuts } from '../navigation/KeyboardShortcuts';
+import { communityHome } from '../features/community/entry';
 import {
   presentSourceDestination,
   sourceDestination,
@@ -106,7 +107,17 @@ export default function Layout() {
               options={{ ...sheet, title: 'Talk to OPAX' }}
             />
           </Stack.Protected>
-          <Stack.Screen name="community" options={{ ...sheet, presentation: 'fullScreenModal', headerShown: false }} />
+          {communityHome ? (
+            // Not in production 1.0: metro.config.js leaves the route out.
+            <Stack.Screen
+              name="community"
+              options={{
+                ...sheet,
+                presentation: 'fullScreenModal',
+                headerShown: false,
+              }}
+            />
+          ) : null}
           <Stack.Screen
             name="account"
             options={{ ...sheet, headerShown: false }}

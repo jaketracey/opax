@@ -101,12 +101,23 @@ test('privacy merges existing required reasons without declaring on-device locat
   });
   expect(manifest.NSPrivacyAccessedAPITypes).toEqual(reasons);
   expect(manifest.NSPrivacyTracking).toBe(false);
-  expect(manifest.NSPrivacyCollectedDataTypes).toHaveLength(7);
+  // The 1.0 App Privacy label (release/1.0/app-privacy.json, Community
+  // hidden): IP addresses are Diagnostics, and there are no messages.
   expect(
     manifest.NSPrivacyCollectedDataTypes.map(
       (entry) => entry.NSPrivacyCollectedDataType,
     ),
-  ).toContain('NSPrivacyCollectedDataTypeOtherDataTypes');
+  ).toEqual(
+    [
+      'EmailAddress',
+      'UserID',
+      'AudioData',
+      'OtherUserContent',
+      'ProductInteraction',
+      'SearchHistory',
+      'OtherDiagnosticData',
+    ].map((type) => `NSPrivacyCollectedDataType${type}`),
+  );
   for (const entry of manifest.NSPrivacyCollectedDataTypes) {
     expect(entry.NSPrivacyCollectedDataTypeLinked).toBe(true);
     expect(entry.NSPrivacyCollectedDataTypeTracking).toBe(false);

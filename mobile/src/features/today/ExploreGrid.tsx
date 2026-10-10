@@ -15,6 +15,7 @@ import {
   moneyRoute,
   recentRecordsRoute,
 } from '../../navigation/routes';
+import { communityHome } from '../community/entry';
 
 interface Tile {
   title: string;
@@ -29,6 +30,7 @@ interface Tile {
 
 // Static ways in: each screen loads its own export when it opens, so Today
 // reads nothing for them. The test IDs are the ones the journeys know.
+// Community has a tile only in builds that ship it (not production 1.0).
 const tiles: readonly Tile[] = [
   {
     title: 'Leads',
@@ -63,14 +65,18 @@ const tiles: readonly Tile[] = [
     route: { pathname: '/reports' },
     testID: 'today-reports',
   },
-  {
-    title: 'Community',
-    detail: 'Questions and sources worth following',
-    icon: 'bubble.left.and.bubble.right',
-    hint: 'Opens Community',
-    route: '/community/home',
-    testID: 'today-community',
-  },
+  ...(communityHome
+    ? [
+        {
+          title: 'Community',
+          detail: 'Questions and sources worth following',
+          icon: 'bubble.left.and.bubble.right',
+          hint: 'Opens Community',
+          route: communityHome,
+          testID: 'today-community',
+        } satisfies Tile,
+      ]
+    : []),
   {
     title: 'Explore',
     detail: 'Play with the parliamentary record',

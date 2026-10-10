@@ -21,6 +21,11 @@ jest.mock('../src/api/runtime', () => ({
     bills: jest.fn(),
   },
 }));
+// These readers agreed to Ask's consent already (ask-consent.test.tsx).
+jest.mock('../src/features/ask/consent', () => ({
+  askConsentGiven: jest.fn().mockResolvedValue(true),
+  giveAskConsent: jest.fn().mockResolvedValue(undefined),
+}));
 jest.mock('../src/features/account/store', () => ({
   useAccount: () => ({ status: { signedIn: true } }),
   accountSnapshot: () => ({ status: { signedIn: true } }),

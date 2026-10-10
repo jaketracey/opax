@@ -1,4 +1,4 @@
-import { communityRequestAllowed } from '../features/community/policy';
+import { communityRequestAllowed } from '../features/community/entry';
 import { isPeoplePaidPath } from '../features/people/policy';
 import {
   isExplorePaidPath,

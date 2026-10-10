@@ -1,6 +1,18 @@
 # Native Community (build 7, K2–K8)
 
-Community is opened from Account or Today. It has its own member search and
+Community is opened from Account or Today, in development and e2e builds.
+
+**Not in production 1.0.** The App Store build leaves Community on the web, so
+OPAX keeps its 13+ rating in Australia, where Social Media rates 16+
+(`release/1.0/age-rating.json`, variant `communityHidden`). Metro resolves
+`entry.ts`, the only module the rest of the app imports from here, to
+`entry.production.ts`, and `scripts/production-block-list.json` keeps this
+folder and `src/app/community` out of the bundle. Today and Account show no
+entry, `opax://community` links open Today, and the release verifier refuses a
+production bundle carrying Community strings. An e2e build made with
+`OPAX_HIDE_COMMUNITY=1` does the same, to check those screens on a simulator.
+The session clears itself on account changes (`account/session-change.ts`);
+Ask's conversation sync is separate and stays. It has its own member search and
 member routes; it never merges community profiles into record search or resolves
 community IDs through the parliamentary people catalog.
 

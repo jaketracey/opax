@@ -1,5 +1,10 @@
 import { useEffect, useRef, useState } from 'react';
-import { StyleSheet, View, findNodeHandle } from 'react-native';
+import {
+  AccessibilityInfo,
+  StyleSheet,
+  View,
+  findNodeHandle,
+} from 'react-native';
 import { router } from 'expo-router';
 import { webOrigin } from '../../design/environment';
 import {
@@ -21,6 +26,7 @@ import { formatDate } from '../../design/format';
 import { fromWebPath, personRoute } from '../../navigation/routes';
 import { openSource, sourceUrl } from '../../navigation/external';
 import { shareRecord } from '../../navigation/share';
+import { reportAnswer } from '../../voice/report-answer';
 import { CachedPortrait } from '../CachedPortrait';
 import { useAskPane } from './SourcesPane';
 import { AnswerSources } from './AnswerSources';
@@ -36,6 +42,8 @@ export const machineNote =
   'Written by a model from the retrieved passages; not the record.';
 export const moneyNote =
   'Opax calculated these totals from selected public disclosure records. Open a source to explore the supporting funding records. Receipts include more than gifts, and this selection does not cover every donor.';
+/** Shown once a report has been handed to the support page. */
+export const reportThanks = 'Thanks. We’ll look at this answer.';
 export const payNote =
   'Opax worked these salaries out from the Remuneration Tribunal’s determinations and the Parliamentary Handbook’s record of who held each post. They are entitlements, not payslips, and leave out allowances, expenses and superannuation.';
 export function openAnswerLink(path: string) {
@@ -186,6 +194,7 @@ export function AnswerView({
   people,
   index,
   actions = [],
+  onReport = reportAnswer,
 }: {
   turn: Turn;
   question: Turn;
@@ -194,6 +203,8 @@ export function AnswerView({
   index?: number;
   /** The conversation's own actions, offered under the answer's ⋯. */
   actions?: readonly MenuAction[];
+  /** Talk's report: OPAX's support page, never the answer's words. */
+  onReport?: (recordPath: null) => void | Promise<void>;
 }) {
   // iPad regular width: sources open in the pane beside the conversation.
   const pane = useAskPane();
@@ -207,6 +218,7 @@ export function AnswerView({
   const go = (href: string, title: string) =>
     pane ? pane.open(href, title) : openAnswerLink(href);
   const [sourcesOpen, setSourcesOpen] = useState(false);
+  const [reported, setReported] = useState(false);
   const data = turn.result || {
       answer: turn.text,
       sources: turn.sources || [],
@@ -243,6 +255,19 @@ export function AnswerView({
         options: question.options || turn.options || { ...defaultOptions },
       },
     });
+  // The same path as Talk's report (src/voice/report-answer.ts): the support
+  // page asks for the question and the wrong words, so no answer text, model
+  // call or account travels with it. It names no record: the report is about
+  // the answer, not one of its sources.
+  const report = async () => {
+    try {
+      await onReport(null);
+    } catch {
+      return; // Not handed over: no thanks.
+    }
+    setReported(true);
+    AccessibilityInfo.announceForAccessibility(reportThanks);
+  };
   const body = (
     <Group testID="ask-answer">
       {kind ? (
@@ -347,7 +372,8 @@ export function AnswerView({
         </Section>
       ) : null}
       {/* One source line and ⋯: the sources, passages, dates and notes are
-          behind the line; Share and the conversation's actions under ⋯. */}
+          behind the line; Share, Report and the conversation's actions
+          under ⋯. */}
       <View style={[styles.foot, stacked ? styles.footStacked : null]}>
         <SourceAffordance
           glyph="doc.text"
@@ -371,13 +397,22 @@ export function AnswerView({
             onPress={() =>
               showMenu(
                 'This answer',
-                [{ title: 'Share answer', onPress: share }, ...actions],
+                [
+                  { title: 'Share answer', onPress: share },
+                  { title: 'Report this answer', onPress: () => void report() },
+                  ...actions,
+                ],
                 findNodeHandle(more.current) ?? undefined,
               )
             }
           />
         </View>
       </View>
+      {reported ? (
+        <Text wordSafe variant="metadata" testID="ask-report-thanks">
+          {reportThanks}
+        </Text>
+      ) : null}
       {sourcesOpen ? (
         <AnswerSources
           question={question.askedAs || question.text}

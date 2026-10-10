@@ -21,6 +21,7 @@ name: 30 Ask progress over a production-paced stream, a stages-only wait and an 
 - tapOn:
     id: ask-submit
     enabled: true
+- runFlow: support/ask-consent.yaml
 # Taps settle for seconds, so wait on states with wide windows, not on a
 # particular early stage (the stage-by-stage order is covered in Jest).
 - extendedWaitUntil:

@@ -54,6 +54,8 @@ import { useReduceMotion } from '../../design/accessibility';
 import { useHeaderBottom } from '../../design/useHeaderBottom';
 import { AskProgress } from './AskProgress';
 import { AskSheet } from './AskSheet';
+import { AskConsent } from './AskConsent';
+import { askConsentGiven, giveAskConsent } from './consent';
 import { accountSnapshot, useAccount } from '../account/store';
 import { AnswerView } from './AnswerView';
 import type { MenuAction } from '../../design/menu';
@@ -116,7 +118,12 @@ export default function AskScreen() {
     [syncBusy, setSyncBusy] = useState(false),
     [syncNotice, setSyncNotice] = useState(''),
     [accountSynced, setAccountSynced] = useState(false),
-    [retryQuestion, setRetryQuestion] = useState('');
+    [retryQuestion, setRetryQuestion] = useState(''),
+    // A question held for consent: sent on Continue, dropped on Not now.
+    [consenting, setConsenting] = useState<{
+      question: string;
+      carry?: Followup;
+    } | null>(null);
   // Cmd-N on iPad (src/navigation/KeyboardShortcuts.tsx) focuses the question.
   const questionInput = useRef<TextInput>(null);
   useFocusRequest('ask', questionInput);
@@ -259,6 +266,13 @@ export default function AskScreen() {
   }
   async function submit(question = draft, carry?: Followup) {
     if (s.busy || !question.trim()) return;
+    // Nothing leaves the device until the reader agrees, once (consent.ts).
+    // The composer, a builder sentence or a sample keeps its question.
+    if (!(await askConsentGiven())) {
+      Keyboard.dismiss();
+      setConsenting({ question, ...(carry ? { carry } : {}) });
+      return;
+    }
     setInputError('');
     if (s.options.speaker) {
       try {
@@ -398,7 +412,7 @@ export default function AskScreen() {
     void loadNames();
     setOptionsOpen(true);
   }
-  // Under each answer's ⋯, after Share answer; none while a question runs.
+  // Under each answer's ⋯, after Share and Report; none while a question runs.
   const conversationActions: MenuAction[] = s.busy
     ? []
     : [
@@ -706,6 +720,18 @@ export default function AskScreen() {
       ) : (
         conversation
       )}
+      {consenting ? (
+        <AskConsent
+          onAgree={() => {
+            const held = consenting;
+            setConsenting(null);
+            // Held for this launch at once; a failed save asks again later.
+            void giveAskConsent().catch(() => undefined);
+            void submit(held.question, held.carry);
+          }}
+          onDecline={() => setConsenting(null)}
+        />
+      ) : null}
       {optionsOpen ? (
         <Options
           value={s.options}

@@ -10,5 +10,7 @@
   "[/\\\\]src[/\\\\]app[/\\\\]source-destination\\.tsx$",
   "[/\\\\]modules[/\\\\]opax-voice[/\\\\]scripts[/\\\\].*",
   "[/\\\\]src[/\\\\]features[/\\\\]people[/\\\\]party-timing\\.e2e\\.ts$",
-  "[/\\\\]src[/\\\\]app[/\\\\]money-map-spike\\.tsx$"
+  "[/\\\\]src[/\\\\]app[/\\\\]money-map-spike\\.tsx$",
+  "[/\\\\]src[/\\\\]app[/\\\\]community[/\\\\].*",
+  "[/\\\\]src[/\\\\]features[/\\\\]community[/\\\\](?!entry\\.production\\.ts$).*"
 ]

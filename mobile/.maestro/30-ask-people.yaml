@@ -20,6 +20,7 @@ name: 30 People in this answer shows each verified portrait and leaves people wi
 - tapOn:
     id: ask-submit
     enabled: true
+- runFlow: support/ask-consent.yaml
 - scrollUntilVisible:
     element:
       id: ask-people-card
