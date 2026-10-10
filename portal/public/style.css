@@ -2767,6 +2767,9 @@ footer a { color: var(--on-navy); text-decoration-color: var(--bronze-bright); }
 footer a:hover { color: var(--bronze-bright); }
 /* Same navy-band rule as the header: ledger bronze vanishes against navy. */
 footer :focus-visible { outline-color: var(--bronze-bright); }
+/* The corpus line arrives with the app (or home.js); until then, and on
+   pages without either, it takes no room rather than drawing a bare "…". */
+footer #stats:empty { display: none; }
 
 /* ---- section rhythm on entry and report pages --------------------------- */
 /* An entry page is a stack of sections, each a bronze kicker over a hairline
@@ -5691,8 +5694,9 @@ h3, #panel-methods h3, #panel-expenses h3 {
    page does not draw. */
 
 /* The launcher is a header icon, never a pill floating over the page (design
-   review §4, web chrome). app.js puts it beside search; it shows where the band
-   carries the menu button (360 to 800px), below. Wider, the masthead's Ask link
+   review §4, web chrome). app.js puts it beside search (navigation.js draws it
+   as a link to /ask on pages without the app); it shows where the band
+   carries the menu button (360 to 960px), below. Wider, the masthead's Ask link
    leads to the question page and page actions open the dock; narrower than
    360px the band has no room and the menu holds Ask. */
 .chat-launcher { display: none; }
@@ -5855,7 +5859,7 @@ html[data-chat="docked"] #panel-chat .chat-composer {
   html[data-chat="docked"] #panel-chat .chat-composer { padding: 10px 16px max(12px, env(safe-area-inset-bottom)); }
 }
 /* At 360px the band's row is full: the wordmark gives up 8px of its gap. */
-@media (min-width: 360px) and (max-width: 800px) {
+@media (min-width: 360px) and (max-width: 960px) {
   .site-header .chat-launcher:not([hidden]) {
     display: flex; align-items: center; justify-content: center; flex: 0 0 var(--size-target);
     width: var(--size-target); height: var(--size-target); margin: 0 0 0 auto; padding: 10px;
@@ -5922,7 +5926,10 @@ html[data-panel="search"] .research-app main.compact .hero-intro { display: bloc
   .site-header .nav-list { gap: 15px; }
   .site-header .nav-link { font-size: 13px; }
 }
-@media (max-width: 800px) {
+/* The full row (eight sections once Instruments joins at runtime) needs about
+   900px beside the logo and search; below 960 the band carries the menu. Keep
+   in step with COMPACT_NAV in navigation.js and the chat launcher's range. */
+@media (max-width: 960px) {
   .site-header .masthead-nav { display: none; }
   .site-header .nav-toggle { display: inline-flex; margin-left: auto; }
 }
@@ -5935,7 +5942,7 @@ html[data-panel="search"] .research-app main.compact .hero-intro { display: bloc
 .header-search-panel .mast-search.ui-input-wrap { display: flex; margin: 0; width: 100%; }
 .header-search-panel .mast-sugg { width: calc(100% + 28px); top: calc(100% + 16px); right: -14px; }
 .site-header .masthead { gap: 20px; }
-@media (max-width: 800px) {
+@media (max-width: 960px) {
   .site-header .nav-toggle { margin-left: 0; }
   .site-header .header-search-toggle { margin-left: auto; }
 }

@@ -49,6 +49,8 @@
     if (/^\/(about|methods|stats|expenses|privacy|support)/.test(path)) return 'about';
     return 'research';
   };
+  // From this width the band draws the section row; narrower, the menu button (style.css, masthead).
+  const FULL_NAV = '(min-width: 961px)';
   const esc = s => String(s).replaceAll('&','&amp;').replaceAll('"','&quot;').replaceAll('<','&lt;');
   // Contracts and the connections directory are not split by jurisdiction.
   const oneJurisdiction = new Set(['/discover', '/connections']);
@@ -169,7 +171,7 @@
         searchToggle?.setAttribute("aria-expanded", "true");
       });
       drawer.addEventListener("close", () => {
-        if (!matchMedia("(min-width: 801px)").matches) opener.focus({ preventScroll: true });
+        if (!matchMedia(FULL_NAV).matches) opener.focus({ preventScroll: true });
         toggle.setAttribute("aria-expanded", "false");
         searchToggle?.setAttribute("aria-expanded", "false");
       });
@@ -196,7 +198,7 @@
       });
       // Growing past the mobile breakpoint with the drawer open would strand a
       // modal over a page that now shows the full nav.
-      window.matchMedia("(min-width: 801px)").addEventListener("change", (e) => {
+      window.matchMedia(FULL_NAV).addEventListener("change", (e) => {
         if (e.matches && drawer.open) drawer.close();
       });
     }
@@ -245,4 +247,12 @@
     for (const link of document.querySelectorAll('a[href="/instruments"]')) link.setAttribute('aria-current', 'page');
   }
   for (const node of document.querySelectorAll('[data-money-navigation]')) node.innerHTML = moneyNav(location.pathname, new URLSearchParams(location.search).get('jur'));
+  // The band's Ask icon on pages the app does not run on (sitting weeks,
+  // estimates, audit, instruments, community, not found): the same icon, as a
+  // link to the Ask page, where the app pages open the docked conversation.
+  // Not on the home page, whose first block is the question box.
+  if (location.pathname !== '/' && !document.querySelector('script[src^="/app.js"]')) {
+    document.getElementById('chat-launcher')?.remove();
+    document.getElementById('header-search-open')?.insertAdjacentHTML('beforebegin', '<a class="chat-launcher" href="/ask"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 15a2 2 0 0 1-2 2H8l-4 4V5a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2Z"/><path d="M8.5 9.5h7M8.5 12.5h4"/></svg><span>Ask OPAX</span></a>');
+  }
 })();

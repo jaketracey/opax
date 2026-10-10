@@ -315,8 +315,16 @@ test('the Ask launcher is a header icon, never a pill floating over the page', (
   assert.ok(launcherRules.length > 0);
   for (const [, sel, body] of launcherRules) assert.doesNotMatch(body, /position:\s*fixed|box-shadow:\s*0/, sel.trim());
   assert.match(style, /\n\.chat-launcher \{ display: none; \}/);
-  const band = style.slice(style.indexOf('@media (min-width: 360px) and (max-width: 800px) {\n  .site-header .chat-launcher'));
-  assert.match(band, /^@media \(min-width: 360px\) and \(max-width: 800px\) \{\n  \.site-header \.chat-launcher:not\(\[hidden\]\) \{\s*display: flex/);
+  // It shows exactly where the band carries the menu button: below 961px (navigation.js FULL_NAV).
+  const band = style.slice(style.indexOf('@media (min-width: 360px) and (max-width: 960px) {\n  .site-header .chat-launcher'));
+  assert.match(band, /^@media \(min-width: 360px\) and \(max-width: 960px\) \{\n  \.site-header \.chat-launcher:not\(\[hidden\]\) \{\s*display: flex/);
+  assert.match(style, /@media \(max-width: 960px\) \{\n  \.site-header \.masthead-nav \{ display: none; \}/);
+  const nav = read('navigation.js');
+  assert.match(nav, /const FULL_NAV = '\(min-width: 961px\)';/);
+  assert.doesNotMatch(nav, /801px/);
+  // Pages the app never runs on draw the same icon as a link to the Ask page, never on home.
+  assert.match(nav, /location\.pathname !== '\/' && !document\.querySelector\('script\[src\^="\/app\.js"\]'\)/);
+  assert.match(nav, /<a class="chat-launcher" href="\/ask"><svg[^`']*<span>Ask OPAX<\/span><\/a>/);
   assert.doesNotMatch(style + app, /assistant-ready/);
   assert.match(app, /\$\("header-search-open"\)\.before\(\$\("chat-launcher"\)\);/);
   assert.doesNotMatch(app, /home\.after\(launcher\)/);
