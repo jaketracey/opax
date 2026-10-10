@@ -25,6 +25,10 @@ export interface WriteCondition {
   // Present only for a conditional 304; an absent ETag cannot validate a body.
   revalidatedETag?: string;
 }
+// Catalog search (/api/search-all) pages stay in memory. Document search
+// (/api/search and /api/search-summary) is cached on disk with the catalogs,
+// in the app's own Caches folder: its query words are in those URLs. Nothing
+// here leaves the device.
 const isSearch = (url: string) =>
   url.split('?')[0]!.endsWith('/api/search-all');
 const bucket = (url: string) => (isSearch(url) ? 'search' : 'catalog');
@@ -51,8 +55,8 @@ export class CatalogCache {
       .readIndex()
       .catch(() => [])
       .then(async (index) => {
-        // Remove search pages written by older builds, including query URLs
-        // in their index. Only public catalogs remain on disk.
+        // Remove catalog search pages written by older builds, including
+        // query URLs in their index. Catalogs and document searches remain.
         const catalogs = index.filter(
           (item) => item.bucket !== 'search' && !isSearch(item.url),
         );
@@ -126,7 +130,8 @@ export class CatalogCache {
     if (!(await this.loadIndex()).some((entry) => entry.url === url)) return;
     return this.readCatalog(url);
   }
-  // Serialized compare-and-write; search queries and bodies stay in memory. A caller
+  // Serialized compare-and-write; catalog search queries and bodies stay in
+  // memory, everything else (document search too) goes to disk. A caller
   // receives the retained entry when its response loses a validation/date race.
   put(entry: CacheEntry, condition?: WriteCondition): Promise<CacheEntry> {
     const task = this.queue.then(async () => {
