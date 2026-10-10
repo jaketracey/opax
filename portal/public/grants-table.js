@@ -1,8 +1,8 @@
 import {dataTableHTML, mountDataTable, parseQuery, serializeQuery} from './datatable.js';
 import {isOrganisationDonor} from './donor-entity.js?v=2b8d45a50d';
-import {isOrganisationRecipient} from './recipient-privacy.js?v=491d974ab2';
+import {isOrganisationRecipient} from './recipient-privacy.js?v=ac68efe771';
 
-export const GRANTS_COVERAGE = 'Preview: selected published awards from GrantConnect. Values are commitments, not payments. Organisation recipients only.';
+export const GRANTS_COVERAGE = 'Preview: selected published awards from GrantConnect. Values are commitments, not payments. Only organisations are named.';
 export const GRANTS_SEARCH_KEYS = ['recipient', 'program', 'agency'];
 
 /** @returns {import('./datatable.js').DataTableConfig} */
@@ -12,6 +12,7 @@ export function grantsTableConfig(params = new URLSearchParams()) {
     id: 'grants', caption: 'Awards', pageType: 'grants', urlKey: 't',
     source: {endpoint: '/api/table/grants', params: jur === 'federal' || jur === 'qld' ? {jur} : {}},
     privacy: 'donors', pageSize: 50, defaultSort: {key: 'value', dir: 'desc'},
+    rowPrivacyCheck: isOrganisationRecipient,
     privacyCheck: async text => {
       try {
         const response = await fetch('/api/table/grants/privacy', {method: 'POST', headers: {'content-type': 'application/json'}, body: JSON.stringify({text})});

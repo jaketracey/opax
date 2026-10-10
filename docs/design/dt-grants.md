@@ -8,13 +8,13 @@ The six displayed fields are `recipient`, `program`, `agency`, `value`, `date`
 and `electorate`. `value` is an exact numeric Australian-dollar award commitment;
 `date` is the start date, falling back to the approval date. Recipient links
 require `recipientAvailable`, checked against the index and recipient shard.
-Unavailable destinations return null. `recipientKind` and `recipientABNType`
+Unavailable destinations return null. `recipientKind`, `recipientABNType` and their evidence arrays
 retain the metadata needed for privacy checks; source types are checked before
 joining so a conflicting individual/sole-trader type cannot be overwritten.
 
 `recipient-privacy.js` mirrors the app's `features/money-public/privacy.ts`:
-entity kinds and ABN types override labels. The frozen donor contract also
-requires organisation evidence in the public donor node. The server builds its
+entity kinds and ABN types override labels. The optional core `rowPrivacyCheck` hook applies that same typed policy to
+HTML and CSV, alongside the shared text validation hook. The server builds its
 rejection index from every federal grant recipient and alias, source recipient
 types, and the donor graphs. It checks all returned fields, including program,
 agency, IDs and link metadata. Name-only withheld queries return zero rows.

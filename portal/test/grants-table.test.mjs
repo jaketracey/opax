@@ -29,6 +29,7 @@ test('recipient source types override organisation-looking labels and preserve p
   for (const override of [{k: 'person'}, {k: 'individual'}, {k: 'sole trader'}, {kind: 'people'}, {k: 'sole proprietor'}, {abr: {etype: 'IND'}}, {abr: {type: 'Individual'}}, {abnType: 'Sole Trader'}, {id: 'person:fixture-recipient'}]) assert.equal(isOrganisationRecipient({...recipient, ...override}), false);
   assert.equal(isOrganisationRecipient(recipient), true);
   assert.equal(isOrganisationRecipient({n: 'fixture-recipient', k: 'company'}), true);
+  assert.equal(isOrganisationRecipient({n: 'fixture-recipient', k: 'co-operative'}), true);
   assert.equal(isOrganisationRecipient({n: 'fixture-recipient', abr: {etype: 'PRV'}}), true);
   assert.equal(isOrganisationRecipient({n: 'fixture-recipient', k: 'other'}), false);
 });
@@ -113,4 +114,24 @@ test('neutral recipient totals keep only counts and value in HTML and CSV', () =
     assert.ok(text.includes('1234.56'));
     assert.ok(!text.includes('fixture-secret'));
   }
+});
+
+test('the real core applies recipient types to HTML and CSV without label-only evidence', () => {
+  const organisation = {id: 'fixture-organisation-award', recipient: 'fixture-organisation', recipientKind: 'company', recipientABNType: 'PRV', value: 10000, donor: {label: 'fixture-organisation'}};
+  const privateRows = [{recipientKind: 'person'}, {recipientKind: 'sole trader'}, {recipientABNType: 'IND'}, {recipientKinds: ['company', 'person']}].map((override, i) => ({...organisation, id: `fixture-private-${i}`, recipient: `fixture-private-${i} Pty Ltd`, ...override}));
+  const config = {...grantsTableConfig(), privacyCheck: () => true};
+  for (const output of [toCSV([organisation, ...privateRows], config), dataTableHTML(config, {rows: [organisation, ...privateRows], total: 5, page: 1, pageSize: 50})]) {
+    assert.ok(output.includes('fixture-organisation'));
+    assert.ok(!output.includes('fixture-private'));
+  }
+});
+
+test('value bars keep one full-result scale across server pages', () => {
+  const publicRows = rows.map(row => ({...row, donor: {label: row.recipient}}));
+  const config = {...grantsTableConfig(), privacyCheck: () => true};
+  const html = [1, 2].map(page => dataTableHTML(config, queryGrantFixture(publicRows, {page, pageSize: 1}).page));
+  const scales = html.map(text => text.match(/<small class="dt-scale">([^<]+)<\/small>/)?.[1]);
+  assert.ok(scales[0]);assert.equal(scales[0], scales[1]);
+  assert.ok(html[0].includes('--dt-bar:100%'));
+  assert.ok(html[1].includes('--dt-bar:20%'));
 });

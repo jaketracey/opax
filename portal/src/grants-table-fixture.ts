@@ -3,11 +3,11 @@
 import {dataTableHTML, toCSV, type Page, type Query, type Row} from '../public/datatable.js'
 import {grantsTableConfig, GRANTS_SEARCH_KEYS} from '../public/grants-table.js'
 import {isOrganisationRecipient} from '../public/recipient-privacy.js'
-import {MONEY_GRAPHS, isOrganisationDonor, withheldPhrases, namesWithheldPhrase, donorPrivacyIndex, foldDonorName} from '../public/donor-entity.js'
+import {MONEY_GRAPHS, withheldPhrases, namesWithheldPhrase, donorPrivacyIndex, foldDonorName} from '../public/donor-entity.js'
 
 type Read = <T>(path: string) => Promise<T>
 type Graph = {nodes: {label: string; kind: string; aliases?: string[] | null}[]}
-type Recipient = {id: string; n: string; k?: string; sh?: number; aliases?: string[]; abr?: {etype?: string; type?: string}; abnType?: string; kind?: string}
+type Recipient = {id: string; n: string; k?: string; sh?: number; aliases?: string[]; abr?: {etype?: string; type?: string}; abnType?: string; abn_type?: string; kind?: string; entityKind?: string; entity_kind?: string}
 type Award = Recipient & {rid: string; rn: string; v: number; s?: string; a?: string; el?: string}
 type Program = {n: string; ag: string; grants: Award[]}
 type Fixture = {rows: Row[]; withheld: (...values: unknown[]) => boolean}
@@ -78,8 +78,17 @@ async function buildGrantFixtureRows(read: Read): Promise<Fixture> {
   const details = new Map(shards.flatMap(shard => Object.values(shard).map(r => [r.id, r] as const)))
   const recipients = new Map(index.recipients.map(r => [r.id, r]))
   const candidates = [...index.recipients, ...details.values(), ...programs.flatMap(p => p.grants.map(g => ({...g, id: g.rid, n: g.rn})))]
+  const identities = new Map<string, Recipient[]>()
+  for (const recipient of candidates) identities.set(recipient.id, [...(identities.get(recipient.id) || []), recipient])
+  const evidence = new Map([...identities].map(([id, records]) => [id, {
+    id,
+    recipientKinds: records.flatMap(r => [r.k, r.kind, r.entityKind, r.entity_kind]).filter((v): v is string => typeof v === 'string'),
+    recipientABNTypes: records.flatMap(r => [r.abr?.etype, r.abr?.type, r.abnType, r.abn_type]).filter((v): v is string => typeof v === 'string'),
+  }]))
+  // Combine positive evidence without discarding any contradictory private type.
+  const publicIdentities = new Set([...identities].filter(([id, records]) => records.some(r => isOrganisationRecipient({...evidence.get(id), n: r.n}))).map(([id]) => id))
   const phrase = (value: unknown) => foldDonorName(value).replace(/[^a-z0-9]+/g, ' ').trim()
-  const rejected = new Set(candidates.filter(r => !isOrganisationRecipient(r)).flatMap(r => [r.n, ...(r.aliases || [])]).flatMap(name => {
+  const rejected = new Set(candidates.filter(r => !publicIdentities.has(r.id)).flatMap(r => [r.n, ...(r.aliases || [])]).flatMap(name => {
     const inverted = /^([^,]+),\s*([^,]+)$/.exec(name)
     return [name, ...(inverted ? [`${inverted[2]} ${inverted[1]}`] : [])].map(phrase).filter(Boolean)
   }))
@@ -95,11 +104,13 @@ async function buildGrantFixtureRows(read: Read): Promise<Fixture> {
     const summary = recipients.get(g.rid), detail = details.get(g.rid)
     const omit = () => {if (Number.isFinite(g.v)) hidden.push({id: g.rid, value: g.v}); return []}
     // Do not overwrite contradictory source types when joining metadata.
-    if (![{...g, id: g.rid, n: g.rn}, summary, detail].filter(Boolean).every(r => isOrganisationRecipient(r)) || !isOrganisationDonor({label: g.rn, aliases: detail?.aliases})) return omit()
+    if (!publicIdentities.has(g.rid)) return omit()
     const row = {
       id: g.id, recipient: g.rn, recipientId: g.rid, jurisdiction: 'federal',
       recipientKind: detail?.k || summary?.k || g.k || g.kind,
       recipientABNType: detail?.abr?.etype || detail?.abr?.type || g.abr?.etype || g.abr?.type || g.abnType || null,
+      recipientKinds: evidence.get(g.rid)?.recipientKinds,
+      recipientABNTypes: evidence.get(g.rid)?.recipientABNTypes,
       recipientAvailable: Boolean(summary && detail && !withheld(summary.n, detail.n)),
       program: program.n, agency: program.ag, value: g.v,
       date: g.s || g.a || null, electorate: g.el || 'Not recorded',
