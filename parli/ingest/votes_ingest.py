@@ -47,6 +47,7 @@ import sqlite3
 import statistics
 import sys
 import time
+from collections import Counter
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
 from typing import Iterable, Optional
@@ -170,6 +171,16 @@ def merge_sources(parts: list[tuple[list[Division], list[Vote]]]) -> tuple[list[
             by_id[d.id] = d
             votes_by[d.id] = fresh.get(d.id, [])
     return list(by_id.values()), votes_by
+
+
+def guard_ext_refresh(old_divisions, old_votes, divisions, votes) -> None:
+    """Check the entire requested window before replacing any chamber-day."""
+    missing = {d.id for d in old_divisions} - {d.id for d in divisions}
+    before = Counter((v.division_id, v.person_id or v.person_name, v.vote) for v in old_votes)
+    after = Counter((v.division_id, v.person_id or v.person_name, v.vote) for v in votes)
+    if missing or before - after:
+        raise ValueError(f"Federal mapping refused: {len(missing)} divisions and "
+                         f"{sum((before - after).values())} recorded votes would vanish")
 
 
 # ---------------------------------------------------------------------------
@@ -430,6 +441,7 @@ def main() -> None:
     ap.add_argument("--load-ext-only", action="store_true",
                     help="--from-legacy: write the mapped divisions/votes into ext_divisions / ext_votes "
                          "in --db (per chamber-day replace, like votes_state --load) and push nothing")
+    ap.add_argument("--strict-ext", action="store_true", help="refuse division/vote loss before any ext_ replacement")
     args = ap.parse_args()
 
     load_dotenv()
@@ -446,7 +458,12 @@ def main() -> None:
         from parli.ingest.votes_state import load_ext
         db = sqlite3.connect(f"file:{Path(args.db).expanduser()}?mode=ro", uri=True)
         db.row_factory = sqlite3.Row
+        db.execute("PRAGMA query_only=ON")
+        db.execute("BEGIN")
         divisions, votes = read_legacy(db, args.since, None)
+        if args.strict_ext:
+            previous = read_ext(db, "federal", args.since, None)
+            guard_ext_refresh(*previous, divisions, votes)
         db.close()
         log(f"[load-ext] {len(divisions)} federal divisions / {len(votes)} votes -> ext_ tables in {args.db}")
         writer = ExtWriter(db_path=args.db, dry_run=args.dry_run)

@@ -150,8 +150,8 @@ def get(path: str, params: dict) -> object:
                 back = max(back, 60.0)
             log(f"  HTTP {e.code} on {path}; sleeping {back:.0f}s (attempt {attempt + 1}/5)")
             time.sleep(back)
-        except Exception as e:  # noqa: BLE001 - network hiccups, JSON truncation
-            log(f"  {type(e).__name__} on {path}: {e}; sleeping {10 * (attempt + 1)}s (attempt {attempt + 1}/5)")
+        except Exception as e:  # noqa: BLE001 - never log a credential-bearing URL
+            log(f"  {type(e).__name__} on {path}; sleeping {10 * (attempt + 1)}s (attempt {attempt + 1}/5)")
             time.sleep(10.0 * (attempt + 1))
     raise TvfyError(f"gave up on {path}")
 
@@ -211,10 +211,12 @@ def fetch_window(house: str, s: date, e: date, out: list) -> int:
     the endpoint returns its 100-row cap. Returns the number of requests made."""
     data = get("divisions.json", {"house": house, "start_date": s.isoformat(), "end_date": e.isoformat()})
     if not isinstance(data, list):
-        return 1
+        raise TvfyError("division list unavailable or malformed")
     if len(data) >= LIST_CAP and e > s:
         mid = s + (e - s) // 2
         return 1 + fetch_window(house, s, mid, out) + fetch_window(house, mid + timedelta(days=1), e, out)
+    if len(data) >= LIST_CAP:
+        raise TvfyError("single-day list reached the source cap; completeness unknown")
     out.extend(data)
     return 1
 
@@ -239,11 +241,11 @@ def upsert_listed(db: sqlite3.Connection, house: str, rows: list) -> int:
     return inserted
 
 
-def phase_list(db: sqlite3.Connection, since: date, relist: bool) -> None:
+def phase_list(db: sqlite3.Connection, since: date, relist: bool) -> int:
     state = load_state()
     today = date.today()
     settled_before = today - timedelta(days=SETTLED_DAYS)
-    listed = inserted = requests = 0
+    listed = inserted = requests = failed = 0
     t0 = time.time()
     for s, e in month_windows(since, today):
         ym = s.strftime("%Y-%m")
@@ -255,6 +257,7 @@ def phase_list(db: sqlite3.Connection, since: date, relist: bool) -> None:
             try:
                 requests += fetch_window(house, s, e, rows)
             except TvfyError as ex:
+                failed += 1
                 log(f"[list] {ym} {house}: {ex}; will retry next run")
                 continue
             n_new = upsert_listed(db, house, rows)
@@ -272,6 +275,7 @@ def phase_list(db: sqlite3.Connection, since: date, relist: bool) -> None:
     save_state(state)
     total = db.execute("SELECT COUNT(*) FROM divisions WHERE COALESCE(state,'federal')='federal'").fetchone()[0]
     log(f"[list] done: {listed} listed, {inserted} new rows, {requests} requests; federal divisions now {total}")
+    return failed
 
 
 # ---------------------------------------------------------------------------
@@ -327,7 +331,7 @@ def store_detail(db: sqlite3.Connection, div_id: int, d: dict, known_members: se
     return votes_in, members_in
 
 
-def phase_detail(db: sqlite3.Connection, limit: int | None) -> None:
+def phase_detail(db: sqlite3.Connection, limit: int | None, strict: bool = False) -> int:
     pending = [r[0] for r in db.execute(
         "SELECT division_id FROM divisions WHERE COALESCE(state,'federal')='federal' "
         "AND division_id NOT IN (SELECT division_id FROM division_votes_fetched) "
@@ -350,9 +354,16 @@ def phase_detail(db: sqlite3.Connection, limit: int | None) -> None:
             continue
         if d is None:
             missing += 1
+            if strict:
+                log(f"  division {div_id}: detail unavailable; will retry next run")
+                continue
             db.execute("INSERT OR IGNORE INTO division_votes_fetched (division_id) VALUES (?)", (div_id,))
             commit(db)
             log(f"  division {div_id}: 404, marked fetched")
+            continue
+        if strict and not complete_detail(d, div_id):
+            failed += 1
+            log(f"  division {div_id}: incomplete or inconsistent detail; will retry next run")
             continue
         cache_file.write_text(json.dumps(d))
         v, m = store_detail(db, div_id, d, known_members)
@@ -371,6 +382,29 @@ def phase_detail(db: sqlite3.Connection, limit: int | None) -> None:
     n_bills = db.execute("SELECT COUNT(*) FROM division_bills").fetchone()[0]
     log(f"[detail] done: +{votes_total} votes (table {n_votes}), +{members_total} members, {n_bills} division-bill links, "
         f"{n_fetched} divisions fetched, {failed} failed (retry with --detail-only), {missing} 404")
+    return failed + missing
+
+
+def complete_detail(d: object, div_id: int) -> bool:
+    """A reviewed refresh must not mark a partial response permanently fetched."""
+    if not isinstance(d, dict) or d.get("id") != div_id or d.get("house") not in HOUSES \
+            or not d.get("date") or not isinstance(d.get("votes"), list):
+        return False
+    people = set()
+    counts = {"aye": 0, "no": 0}
+    for v in d["votes"]:
+        if not isinstance(v, dict) or not isinstance(v.get("member"), dict):
+            return False
+        m = v["member"]
+        pid = (m.get("person") or {}).get("id") or m.get("id")
+        if pid is None or str(pid) in people:
+            return False
+        people.add(str(pid))
+        value = vote_value(v.get("vote"))
+        if value in counts:
+            counts[value] += 1
+    return all(type(d.get(field)) is int and d[field] == counts[value]
+               for field, value in (("aye_votes", "aye"), ("no_votes", "no")))
 
 
 def main() -> None:
@@ -381,16 +415,20 @@ def main() -> None:
     ap.add_argument("--detail-only", action="store_true")
     ap.add_argument("--relist", action="store_true", help="ignore the months-done state and re-list everything")
     ap.add_argument("--limit", type=int, default=None, help="cap the number of detail fetches (smoke runs)")
+    ap.add_argument("--strict", action="store_true", help="fail on incomplete acquisition; retry unavailable details")
     args = ap.parse_args()
 
     db = connect(Path(args.db).expanduser())
     log(f"tvfy_refresh: db={args.db} key=env/.env "
         f"cache={CACHE}")
+    failed = 0
     if not args.detail_only:
-        phase_list(db, date.fromisoformat(args.since), args.relist)
+        failed += phase_list(db, date.fromisoformat(args.since), args.relist)
     if not args.list_only:
-        phase_detail(db, args.limit)
+        failed += phase_detail(db, args.limit, strict=args.strict)
     db.close()
+    if args.strict and failed:
+        raise SystemExit("Federal division acquisition incomplete; retain published exports and retry")
 
 
 if __name__ == "__main__":

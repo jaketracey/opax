@@ -232,7 +232,10 @@ run_completed() {
 # git helpers for putting a group of data files back to what HEAD has
 revert() {
   local p
-  for p in "$@"; do [ "$p" != portal/public/bills ] || BILLS_REFRESH_OK=0; done
+  for p in "$@"; do
+    [ "$p" != portal/public/bills ] || BILLS_REFRESH_OK=0
+    case "$p" in portal/public/votes.json|portal/public/divisions|portal/public/seo/recent-votes.json) DIVISIONS_REFRESH_OK=0 ;; esac
+  done
   git checkout -q HEAD -- "$@"; git clean -fdq -- "$@" 2>/dev/null || true
 }
 revert_group() { local g=$1; local paths; read -ra paths <<<"${GROUP_PATHS[$g]}"; revert "${paths[@]}"; }
@@ -244,7 +247,7 @@ if [ "${OPAX_NIGHTLY_SKIP_REFRESH:-0}" = 1 ] || [ "${OPAX_NIGHTLY_SKIP_DAILY:-0}
 else
   REFRESH="${OPAX_DAILY_REFRESH:-$REPO/scripts/daily_refresh.sh}"
   log "running $REFRESH (KB sync on)"
-  OPAX_SYNC_KB=1 OPAX_ENSURE_INDEXES=1 OPAX_ALLOW_FAIL="${OPAX_ALLOW_FAIL:-sa,act_members}" OPAX_SYNC_GATE="${OPAX_SYNC_GATE:-link_speakers,classify,committee_fetch,committee_resolve}" \
+  OPAX_FEDERAL_VOTES_MANAGED=1 OPAX_SYNC_KB=1 OPAX_ENSURE_INDEXES=1 OPAX_ALLOW_FAIL="${OPAX_ALLOW_FAIL:-sa,act_members}" OPAX_SYNC_GATE="${OPAX_SYNC_GATE:-link_speakers,classify,committee_fetch,committee_resolve}" \
     run "$REFRESH"
   rc=$?
   # daily_refresh.sh exits 0 without doing anything when its own lock is held (and logs that), so prove that it
@@ -308,23 +311,31 @@ bills_refresh
 # ---- 3. bills: put the speech briefs back, prove no brief or bill was lost ------------------------
 bills_fill_and_verify
 
+# Federal TVFY acquisition and the missing legacy -> ext_ projection, before
+# exporting the web views. This owns its cadence independently of KB sync.
+# shellcheck source=scripts/vm/divisions_refresh.sh
+. "$REPO/scripts/vm/divisions_refresh.sh"
+divisions_refresh
+
 # ---- 3b. Worker-only vote/division projections from the refreshed OPAX DB -------------------------
 # After bill verification so division backlinks use the retained, publishable bills.
 # Both exporters read one read-only DB snapshot; neither alters mobile votes.json.
-if [ "${OPAX_NIGHTLY_SKIP_REFRESH:-0}" != 1 ]; then
+if [ "${OPAX_NIGHTLY_SKIP_REFRESH:-0}" != 1 ] && [ "$DIVISIONS_ACQUISITION_FAILED" != 1 ]; then
   log "refreshing static division pages and separate SEO recent votes"
   if ! run "$PY" scripts/export_division_pages.py; then
-    revert_group divisions
+    if [ "${DIVISIONS_REFRESH_OK:-0}" = 1 ]; then divisions_revert; else revert_group divisions; fi
     fail "division export failed; pinned division pages reverted to HEAD"
   else
     retained=$("$PY" -c 'import json; print(json.load(open("portal/public/divisions/index.json"))["coverage"]["retained_count"])')
     [ "$retained" = 0 ] || warn "division export retained $retained pinned records; explicit coverage flags identify degraded source coverage"
   fi
   if ! run "$PY" scripts/export_recent_votes.py; then
-    revert_group seovotes
+    if [ "${DIVISIONS_REFRESH_OK:-0}" = 1 ]; then divisions_revert; else revert_group seovotes; fi
     fail "SEO recent-vote export failed; previous separate export kept"
   fi
 fi
+
+divisions_verify
 
 # ---- 4. validate what will be committed ----------------------------------------------------------
 # bills and votes are checked every night; every periodic group only when `git status` shows its files changed.
@@ -382,6 +393,7 @@ if [ "${OPAX_TEST_GATE:-1}" != 0 ]; then
           local g=$1 paths
           read -ra paths <<<"${GROUP_PATHS[$g]}"
           [ "$g" != bills ] || BILLS_GATE_BACKUP_OK=$BILLS_REFRESH_OK
+          case "$g" in votes|divisions|seovotes) DIVISIONS_GATE_BACKUP_OK=$DIVISIONS_REFRESH_OK ;; esac
           tar cf "$BK/$g.tar" -- "${paths[@]}" 2>/dev/null || true
         }
         restore_group() {
@@ -391,6 +403,7 @@ if [ "${OPAX_TEST_GATE:-1}" != 0 ]; then
           if tar xf "$BK/$g.tar" 2>/dev/null; then
             # A trial rollback was innocent: restore acceptance with the files.
             [ "$g" != bills ] || BILLS_REFRESH_OK=$BILLS_GATE_BACKUP_OK
+            case "$g" in votes|divisions|seovotes) DIVISIONS_REFRESH_OK=$DIVISIONS_GATE_BACKUP_OK ;; esac
           else
             fail "cannot restore test backup for $g"
           fi
@@ -476,6 +489,7 @@ else
 fi
 
 bills_summary || { fail "cannot summarize retained bills"; finish; }
+divisions_summary || { fail "cannot summarize retained divisions"; finish; }
 
 # ---- 6. commit -----------------------------------------------------------------------------------------------
 # Re-read HEAD after sync/validation; stage whole published directory roots,
@@ -498,6 +512,7 @@ if git diff --cached --quiet; then
     log "no data changes tonight (and checked_at is fresh): nothing to commit, push or deploy"
     DEPLOY="not needed (no changes)"
     bills_refresh_complete
+    divisions_refresh_complete
     finish
   fi
 else
@@ -522,6 +537,7 @@ else
   log "committed: $subject"
 fi
 bills_refresh_complete
+divisions_refresh_complete
 COMMIT_SHA=$(git rev-parse --short HEAD)
 
 # ---- 7. push (the push starts the deploy) --------------------------------------------------------------------

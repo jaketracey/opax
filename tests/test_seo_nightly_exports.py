@@ -43,6 +43,8 @@ class NightlySEOTests(unittest.TestCase):
         block = '# ---- 3b.' + block
         setup = '''set -u
         PY=python3
+        DIVISIONS_ACQUISITION_FAILED=0
+        divisions_verify(){ :; }
         log(){ :; }
         run(){ "$@"; }
         revert_group(){ echo "REVERT:$1"; }

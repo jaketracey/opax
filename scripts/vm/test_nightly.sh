@@ -41,6 +41,7 @@ new_sandbox() {
   # Bills imports roster_identity, which in turn imports parli.ingest.speaker_names.
   for f in scripts/vm/nightly.sh scripts/vm/run-nightly.sh scripts/vm/poweroff-if-idle.sh scripts/vm/validate_data.py scripts/vm/data_groups.sh scripts/export_bills.py scripts/roster_identity.py \
            scripts/vm/bills_refresh.sh scripts/vm/bills_guard.py scripts/vm/keep_if_unchanged.py \
+           scripts/vm/divisions_refresh.sh scripts/vm/divisions_guard.py \
            scripts/bills_registry/bills_stages.py \
            scripts/export_division_pages.py scripts/export_recent_votes.py scripts/export_votes.py \
            scripts/verify_bill_briefs.py scripts/update_corpus_manifest.py scripts/bump_cache_epoch.py \
@@ -59,6 +60,25 @@ new_sandbox() {
   # Acquisition is stubbed: fake_refresh below already writes the bill fixtures.
   # The focused bills suite exercises the real fetch/export wrapper with stubs.
   printf '#!/usr/bin/env bash\n[ "$OPAX_SYNC_KB" = 0 ]\n' > "$seed/scripts/refresh_bills.sh"
+  # Real acquisition is never run by this suite. Operation records have no
+  # process arguments or credentials; the focused suite covers the wrapper.
+  cat > "$seed/scripts/refresh_divisions.sh" <<'DREOF'
+#!/usr/bin/env bash
+[ "$OPAX_SYNC_KB" = 0 ] || exit 1
+printf 'acquire\n' >> "$HOME/divisions.calls"
+case ${FAKE_DIVISIONS_MODE:-ok} in
+  fail) printf '{}\n' > portal/public/votes.json; exit 1 ;;
+  timeout) sleep 10 ;;
+  shrink) printf '{"_meta":{"schema":1}}\n' > portal/public/votes.json ;;
+  vanish) python3 - <<'PYEOF'
+import json
+p='portal/public/divisions/index.json'
+d=json.load(open(p));d['divisions'][0]['key']='federal-senate-99';d['divisions'][0]['slug']='division-federal-senate-99'
+open(p,'w').write(json.dumps(d))
+PYEOF
+  ;;
+esac
+DREOF
   mkdir -p "$seed/portal/public/bills"
   python3 - "$seed" <<'PYEOF'
 import importlib.util, json, pathlib, sys
@@ -813,5 +833,36 @@ roster_stub
 FAKE_ROSTER_RC=1 nightly
 check "a reconciliation failure is visible and retried next night" bash -c "[ '$NRC' -eq 1 ] && git --git-dir='$ORIGIN' show nightly-status:status.json | grep -q 'roster-profile reconciliation failed; retry next night'"
 echo
+echo "== 29. federal divisions: catch-up, failure holds, cadence and gate retries"
+new_sandbox s29catchup
+OPAX_TODAY=2026-10-10 nightly
+check "first run catches up on a non-sitting Saturday" test "$(wc -l < "$HOME/divisions.calls")" -eq 1
+check "successful catch-up removes pending and preserves initialization" bash -c "[ '$NRC' -eq 0 ] && [ ! -e '$HOME/.cache/autoresearch/pipeline/divisions-refresh-v1.pending' ] && [ -f '$HOME/.cache/autoresearch/pipeline/divisions-refresh-v1.initialized' ]"
+OPAX_TODAY=2026-10-12 nightly
+check "Monday before the sitting day finishes skips acquisition" test "$(wc -l < "$HOME/divisions.calls")" -eq 1
+OPAX_TODAY=2026-10-13 nightly
+check "Tuesday morning acquires Monday's sitting" test "$(wc -l < "$HOME/divisions.calls")" -eq 2
+OPAX_TODAY=2026-10-16 nightly
+check "Friday morning acquires Thursday's sitting" test "$(wc -l < "$HOME/divisions.calls")" -eq 3
+OPAX_TODAY=2026-10-18 nightly
+check "Sunday acquires outside the sitting week" test "$(wc -l < "$HOME/divisions.calls")" -eq 4
+for mode in fail shrink vanish timeout; do
+  new_sandbox "s29$mode"
+  FAKE_DIVISIONS_MODE=$mode OPAX_DIVISIONS_TIMEOUT=0.1s nightly
+  check "$mode holds failed vote exports and retains catch-up" bash -c "[ '$NRC' -eq 1 ] && [ -f '$HOME/.cache/autoresearch/pipeline/divisions-refresh-v1.pending' ] && ! git --git-dir='$ORIGIN' show main:portal/public/votes.json | grep -q '\"new\"'"
+  check "$mode allows bills and corpus to continue" bash -c "git --git-dir='$ORIGIN' show main:portal/public/bills/au-federal-t1.json | grep -q 2026-09-28 && git --git-dir='$ORIGIN' show main:portal/public/corpus.json | grep -q '$TODAY'"
+done
+new_sandbox s29publishonly
+OPAX_NIGHTLY_SKIP_REFRESH=1 nightly
+check "publish-only does not acquire or initialize catch-up" bash -c "[ ! -e '$HOME/divisions.calls' ] && [ ! -e '$HOME/.cache/autoresearch/pipeline/divisions-refresh-v1.initialized' ]"
+new_sandbox s29gate
+mkdir -p "$REPO/portal/node_modules" "$REPO/portal/test"
+FAKE_NODE_RED_WHILE_CHANGED=portal/public/votes.json nightly
+check "a votes portal-gate rollback retains federal catch-up" bash -c "[ '$NRC' -eq 1 ] && [ -f '$HOME/.cache/autoresearch/pipeline/divisions-refresh-v1.pending' ]"
+new_sandbox s29innocent
+mkdir -p "$REPO/portal/node_modules" "$REPO/portal/test"
+OPAX_FORCE_GROUPS=weekly FAKE_NODE_RED_WHILE_CHANGED=portal/public/bills/au-federal-t1.json nightly
+check "innocent vote trials restore acceptance and consume catch-up" test ! -e "$HOME/.cache/autoresearch/pipeline/divisions-refresh-v1.pending"
+
 echo "passed $PASS, failed $FAILN"
 [ "$FAILN" -eq 0 ]
