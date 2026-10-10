@@ -47,7 +47,7 @@
   //   npx wrangler secret put ARAG_KB_TOKEN
   //   npx wrangler secret put ARAG_KB_ID
   "vars": {
-    "VIC_ELECTION_HUB_ENABLED": "false",
+    "VIC_ELECTION_HUB_ENABLED": "true",
     // Raising this floor deliberately requires older native builds to update.
     "APP_MINIMUM_VERSION": "0.0.0",
     "VOICE_ENABLED": "true",
