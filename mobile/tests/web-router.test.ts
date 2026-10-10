@@ -84,7 +84,7 @@ function guardFrom(source: string): Guard {
   const module = { exports: {} as { forbiddenOpaxRoute: Guard } };
   const stubs: Record<string, unknown> = {
     './routes': { searchRouteFromWebPath: () => null },
-    '../features/community/routes': jest.requireActual('../src/features/community/routes'),
+    '../features/community/entry': jest.requireActual('../src/features/community/entry'),
     'react-native': {},
     'expo-router': { router: {} },
     'expo-web-browser': {},

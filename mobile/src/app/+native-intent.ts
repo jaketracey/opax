@@ -1,4 +1,9 @@
-/** Shared directory routes belong to Search, including cold incoming links. */
+import { communityHome } from '../features/community/entry';
+
+/**
+ * Shared directory routes belong to Search, including cold incoming links.
+ * In builds without Community (production 1.0) its links open Today.
+ */
 export function redirectSystemPath({
   path,
 }: {
@@ -14,6 +19,7 @@ export function redirectSystemPath({
     if (route === '/directory' || route === '/directory/') {
       return `/(tabs)/(search)/directory${url.search}${url.hash}`;
     }
+    if (!communityHome && /^\/community(?:\/|$)/.test(route)) return '/';
   } catch {
     // Leave malformed and unrelated links to the router's existing handling.
   }

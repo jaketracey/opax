@@ -1,0 +1,53 @@
+appId: au.com.opax.app
+name: Community hidden, as in the 1.0 App Store build - Today and Account offer no Community, and its links open Today
+---
+# Run by path on an e2e build made with OPAX_HIDE_COMMUNITY=1 (metro.config.js),
+# which leaves Community out as production does. A standard e2e build keeps
+# Community for journeys 50 and 51, so this flow is not numbered.
+- launchApp:
+    permissions:
+      all: unset
+    clearState: true
+- extendedWaitUntil:
+    notVisible:
+      id: launch-handoff
+    timeout: 30000
+- assertVisible:
+    id: today-screen
+- scrollUntilVisible:
+    element:
+      id: today-explore
+    timeout: 90000
+- scrollUntilVisible:
+    element:
+      id: today-records-open
+    visibilityPercentage: 100
+    timeout: 90000
+- assertVisible:
+    id: today-reports
+- assertNotVisible:
+    id: today-community
+- takeScreenshot: ${EVIDENCE}/release-today-explore
+- tapOn: Account and about
+- extendedWaitUntil:
+    visible: 'Not signed in\. Sign in to talk to OPAX\. Public records stay open without an account\.'
+    timeout: 15000
+- scrollUntilVisible:
+    element:
+      id: account-replay-tour
+    timeout: 30000
+- assertVisible:
+    id: account-about
+- assertNotVisible:
+    id: account-community
+- takeScreenshot: ${EVIDENCE}/release-account
+# A Community link opens Today, not a Community screen.
+- stopApp
+- openLink: opax://community/home
+- extendedWaitUntil:
+    visible:
+      id: today-screen
+    timeout: 30000
+- assertNotVisible:
+    id: community-home
+- takeScreenshot: ${EVIDENCE}/release-community-link

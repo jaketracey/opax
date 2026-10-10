@@ -2,6 +2,7 @@ import { useSyncExternalStore } from 'react';
 import native from '../../../modules/opax-voice';
 import { communityRequestAllowed } from './policy';
 import { decodeCommunity, object, type CommunityData } from './model';
+import { onAccountSessionChange } from '../account/session-change';
 const cache = new Map<string, Promise<CommunityData>>();
 const listeners = new Set<() => void>();
 let revision = 0,
@@ -29,6 +30,8 @@ export function clearCommunity(sessionRefused = false) {
   ownLists.clear();
   communityChanged();
 }
+// Every account session change clears it: sign-in, sign-out, deletion, 401.
+onAccountSessionChange(() => clearCommunity());
 export const hasAgreed = () => agreed;
 export function agreeGuidelines() {
   agreed = true;

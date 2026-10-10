@@ -1,4 +1,4 @@
-import { communityFromWebPath } from '../features/community/routes';
+import { communityFromWebPath } from '../features/community/entry';
 import { moneyFromWebPath } from '../features/money-public/routes';
 import { startPartyTiming } from '../features/people/party-timing';
 import { partySlug } from '../design/party';

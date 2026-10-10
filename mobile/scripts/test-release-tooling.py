@@ -740,6 +740,23 @@ class BundleAttackTests(unittest.TestCase):
         bundle = hermes_bundle(storage, [packed(storage, b"shipping")])
         self.assertEqual(verify.verify_no_e2e_launch_flags(bundle), 1)
 
+    def test_community_is_refused_in_production_string_entries(self):
+        for marker in (b"Your display name and bio are public", b"Community route refused",
+                       b"./community/[view].tsx"):
+            for entry in (marker, b"prefix " + marker + b"."):
+                with self.subTest(marker=marker, entry=entry):
+                    bundle = hermes_bundle(entry, [packed(entry, entry)])
+                    with self.assertRaisesRegex(ReleaseError, "no Community"):
+                        verify.verify_no_community(bundle)
+            with self.subTest(plain=marker), self.assertRaises(ReleaseError):
+                verify.verify_no_community(b"plain JS " + marker)
+        # Shared words stay: the Account row's ID and "Community" as a word.
+        storage = b"account-communityCommunity"
+        bundle = hermes_bundle(storage, [packed(storage, b"account-community"), packed(storage, b"Community")])
+        self.assertEqual(verify.verify_no_community(bundle), 2)
+        with self.assertRaises(ReleaseError):
+            verify.verify_no_community(bundle[:-1])
+
     def test_source_preview_ids_are_refused_in_production_string_entries(self):
         self.assertIn(b"source-destination-ok", [i.encode() for i in verify.E2E_SOURCE_PREVIEW_IDS])
         for marker in (b"source-destination-url", b"source-destination-scroll", b"source-destination-ok"):

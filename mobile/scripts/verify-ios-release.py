@@ -317,6 +317,19 @@ def verify_no_source_preview_ids(body):
     return count
 
 
+# Strings only Community draws, throws or routes by (src/features/community,
+# src/app/community). The 1.0 App Store build leaves Community on the web
+# (release/1.0 age rating, communityHidden) and Metro blocks both folders.
+COMMUNITY_MARKERS = ("Your display name and bio are public", "Community route refused", "./community/[view].tsx")
+
+
+def verify_no_community(body):
+    found, count = markers_in_entries(body, COMMUNITY_MARKERS)
+    require(not found, "no Community screens, session or route in production JS" +
+            (f" (found {', '.join(found)})" if found else ""))
+    return count
+
+
 def bundle_route_keys(body, routes):
     """Route keys are compared as whole strings: Hermes string-table entries, or
     whole tokens for plain JS. Hermes packs and overlaps its string storage, so
@@ -655,6 +668,8 @@ def verify_app(app, args):
     check(True, "no e2e source preview test IDs in production Hermes string entries")
     verify_no_e2e_launch_flags(bundle)
     check(True, "no e2e launch arguments in production Hermes string entries")
+    verify_no_community(bundle)
+    check(True, "no Community screens, session or route in production Hermes string entries")
     route_keys = bundle_route_keys(bundle, Path("src/app"))
     check(True, "every shipping Expo route key is present in shipped JS")
     check(True, "no unshipped, development or workbench route keys in shipped JS")
@@ -735,8 +750,11 @@ def main():
         parser.add_argument("--bundle-only", type=Path, required=True)
         args = parser.parse_args()
         try:
-            verify_voice_bundle(args.bundle_only.read_bytes(), production_voice_enabled())
+            body = args.bundle_only.read_bytes()
+            verify_voice_bundle(body, production_voice_enabled())
             print("PASS production voice bundle policy")
+            verify_no_community(body)
+            print("PASS production bundle has no Community")
         except (ReleaseError, OSError, ValueError) as error:
             raise SystemExit(str(error))
         return

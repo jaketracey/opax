@@ -46,3 +46,20 @@ export function assertNoE2ELaunchFlags(body: Buffer) {
       `Production bundle contains an e2e launch argument: ${marker}`,
     );
 }
+
+/**
+ * Community stays on the web in the 1.0 App Store build: strings only its
+ * screens, session and route carry (src/features/community, src/app/community).
+ */
+export const COMMUNITY_MARKERS = [
+  'Your display name and bio are public',
+  'Community route refused',
+  './community/[view].tsx',
+] as const;
+export function assertNoCommunity(body: Buffer) {
+  for (const marker of COMMUNITY_MARKERS)
+    assert(
+      !body.includes(Buffer.from(marker)),
+      `Production bundle contains Community: ${marker}`,
+    );
+}

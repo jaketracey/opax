@@ -9,6 +9,7 @@ import { scanSwift } from './swift-boundary';
 import { scanNative } from './native-boundary';
 import { policy, productionVoiceEnabled } from '../plugins/voiceProduction';
 import {
+  assertNoCommunity,
   assertNoE2ELaunchFlags,
   assertNoFixtureOrigin,
   assertNoVoiceFixtures,
@@ -253,6 +254,7 @@ if (productionIndex !== -1) {
     );
     assertNoVoiceFixtures(body, productionVoice);
     assertNoE2ELaunchFlags(body);
+    assertNoCommunity(body);
     execFileSync(
       'python3',
       ['scripts/verify-ios-release.py', '--bundle-only', path],
@@ -289,7 +291,7 @@ if (productionIndex !== -1) {
       { stdio: 'inherit' },
     );
   console.log(
-    'PASS production embedded JS: no fixture/loopback origin or workbench; shipped route/origin/redirect guards present',
+    'PASS production embedded JS: no fixture/loopback origin, workbench or Community; shipped route/origin/redirect guards present',
   );
 }
 if (appIndex !== -1) {
