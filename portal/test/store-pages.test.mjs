@@ -11,15 +11,18 @@ const html = readFileSync(new URL('../public/index.html', import.meta.url), 'utf
 const panel = (name) => html.match(new RegExp(`<section id="panel-${name}"[^>]*>([\\s\\S]*?)</section>`))[1];
 const text = (s) => s.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ');
 
-test('the privacy page lists exactly the eight App Store label types, in label order', () => {
+test('the privacy page lists exactly the seven App Store label types, in label order', () => {
   const list = panel('privacy').match(/<ul class="about-list" id="privacy-app-data">([\s\S]*?)<\/ul>/)[1];
   const named = [...list.matchAll(/<li><strong>([^<]+)<\/strong>/g)].map((m) => m[1]);
-  assert.deepEqual(named, ['Email Address', 'User ID', 'Emails or Text Messages', 'Audio Data',
+  assert.deepEqual(named, ['Email Address', 'User ID', 'Audio Data',
     'Other User Content', 'Product Interaction', 'Search History', 'Other Diagnostic Data']);
+  assert.doesNotMatch(list.replace(/<a [^>]*>[^<]*<\/a>/g, ''), /Emails or Text Messages|community|discussions|direct messages/i, 'Community data is web-only in the 1.0 app');
   const body = text(panel('privacy'));
   for (const fact of ['None of it is used to track you', 'counts every kind as connected to your identity',
     'no analytics, no advertising and no tracking', 'Cloudflare, ElevenLabs, Progress Agentic RAG and OpenRouter',
-    'An account holds up to 50', 'Your location is never sent', 'Last updated 10 October 2026'])
+    'An account holds up to 50', 'Your location is never sent', 'Last updated 10 October 2026',
+    'Community is on the website only', 'Before your first question is sent, Ask asks your permission',
+    'nothing is sent until you agree', 'After an answer, Report this answer opens the support page'])
     assert.ok(body.includes(fact), fact);
 });
 

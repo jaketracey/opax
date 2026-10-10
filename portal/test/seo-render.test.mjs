@@ -303,7 +303,7 @@ test('an address nothing answers gets the site page, noindex, with a way on; a m
   }
 });
 test('/privacy and /support are served whole, from their panels, with canonical links',async()=>{
-  const types=['Email Address','User ID','Emails or Text Messages','Audio Data','Other User Content','Product Interaction','Search History','Other Diagnostic Data'];
+  const types=['Email Address','User ID','Audio Data','Other User Content','Product Interaction','Search History','Other Diagnostic Data'];
   for(const [path,name,facts] of [['/privacy','privacy',['What OPAX collects and who receives it','id="privacy-app"','id="privacy-deletion"','id="voice"','privacy@opax.com.au','Noice Pty Ltd',...types]],['/support','support',['Help with OPAX','id="support-contact"','id="support-report"','id="support-delete"','support@opax.com.au','8-digit deletion code']]]){
     const html=await get(path);checkHtml(html);
     assert.match(html,new RegExp(`<link rel="canonical" href="https://opax\\.com\\.au${path}"`),path);
