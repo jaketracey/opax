@@ -570,8 +570,8 @@ function CommunityPage() {
             This community helps people understand the public record.
           </Text>
         </Section>
-        {guidelines.map(([heading, body]) => (
-          <Section key={heading} title={heading}>
+        {guidelines.map(([title, body]) => (
+          <Section key={title} title={title}>
             <Text wordSafe>{body}</Text>
           </Section>
         ))}

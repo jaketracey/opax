@@ -301,15 +301,24 @@ function OriginalsLine({
   testID,
 }: {
   links: readonly DatasetLink[];
-  /** Names a pair of originals ("Photo source and licence"). */
+  /** Names two or more originals ("Photo source and licence"). */
   label?: string;
   testID?: string;
 }) {
   const anchor = useRef<View>(null);
-  const unique = links.filter(
+  // Creative Commons still publishes some licence links as http; they are
+  // served over https, as the category licence above is read.
+  const secure = links.map((link) => ({
+    ...link,
+    url: link.url.replace(
+      /^http:\/\/creativecommons\.org\//,
+      'https://creativecommons.org/',
+    ),
+  }));
+  const unique = secure.filter(
     (link, index) =>
       link.url.startsWith('https://') &&
-      links.findIndex((other) => other.url === link.url) === index,
+      secure.findIndex((other) => other.url === link.url) === index,
   );
   const [first] = unique;
   if (!first) return null;
@@ -319,10 +328,9 @@ function OriginalsLine({
     <View ref={anchor} collapsable={false} style={styles.line}>
       <SourceLine
         label={
-          label ??
-          (several
-            ? `${first.label} and ${unique.length - 1} more`
-            : first.label)
+          several
+            ? (label ?? `${first.label} and ${unique.length - 1} more`)
+            : first.label
         }
         accessibilityLabel={
           several

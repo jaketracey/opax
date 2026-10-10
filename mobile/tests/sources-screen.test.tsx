@@ -212,7 +212,7 @@ test('one original opens at once; several are listed by name', async () => {
   await act(async () => r.unmount());
 });
 
-test('the screen ends without a drawn end line, and a Commons credit is one line', async () => {
+test('the screen ends without a drawn end line, and a Commons credit is one line to its originals', async () => {
   let r!: TestRenderer.ReactTestRenderer;
   await act(async () => {
     r = TestRenderer.create(<SourcesScreen />);
@@ -221,9 +221,23 @@ test('the screen ends without a drawn end line, and a Commons credit is one line
   expect(
     r.root.findAllByProps({ testID: 'sources-end' }).length,
   ).toBeGreaterThan(0);
-  const credit = r.root.findByProps({ testID: 'sources-portrait-sheena-watt' });
-  expect(credit.findAllByType(SourceLine).map((n) => n.props.label)).toEqual([
-    'Photo source and licence',
+  // A Commons credit is one line to its photo source and its licence (an
+  // http Creative Commons link is opened over https).
+  const credit = r.root.findByProps({
+    testID: 'sources-portrait-sheena-watt',
+  });
+  const line = credit.findAllByType(SourceLine);
+  expect(line.map((n) => n.props.label)).toEqual(['Photo source and licence']);
+  await act(async () => line[0]!.props.onPress());
+  const [, actions] = jest.mocked(showMenu).mock.calls.at(-1)!;
+  expect(actions.map((action) => action.title)).toEqual([
+    'Photo source',
+    'Licence',
   ]);
+  actions[1]!.onPress();
+  expect(openSource).toHaveBeenLastCalledWith(
+    commons.licenceURL.replace(/^http:/, 'https:'),
+    'Licence',
+  );
   await act(async () => r.unmount());
 });
