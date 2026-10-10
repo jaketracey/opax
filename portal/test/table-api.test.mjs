@@ -1,284 +1,68 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {mkdtemp, readFile, readdir, rm, writeFile} from 'node:fs/promises';
-import {join} from 'node:path';
-import {tmpdir} from 'node:os';
-import {TABLE_DATASETS} from '../public/table-datasets.js';
-import {MONEY_GRAPHS, isOrganisationDonor, withheldPhrases, namesWithheldPhrase} from '../public/donor-entity.js';
-import {tablePrivacyCheck} from '../src/table-privacy.mjs';
+import {readFile} from 'node:fs/promises';
+import {TABLE_DATASETS} from '../src/table-datasets.mjs';
 import {tableApi} from '../src/table-api.ts';
-import {buildTableIndexes, interestTableRows, TABLE_BUDGET} from '../../scripts/build_table_indexes.mjs';
-import {loadWorker, offline} from './worker-harness.mjs';
+import {tableDatabase} from './table-d1-harness.mjs';
+import {registerServerCSVContract} from './datatable-endpoint-contract.mjs';
 
-const pub = new URL('../public/', import.meta.url).pathname;
-const root = await mkdtemp(join(tmpdir(), 'opax-table-api-'));
-test.after(() => rm(root, {recursive: true, force: true}));
-function entries(config, count = 260) {
-  return Array.from({length: count}, (_, i) => {
-    const row = Object.fromEntries(config.columns.map(c => [c.key,
-      c.type === 'category' ? `Group ${i % 2}` : c.type === 'date' ? '2024-01-01' : c.type === 'year' ? 2000 + i : ['count', 'money'].includes(c.type) ? i + 0.25 : `Record ${i}`]));
-    row.id = `item-${i}`;
-    const primary = config.columns.find(c => c.type === 'text' && c.key !== 'id');
-    row[primary.key] = i === 3 ? 'Needle record' : `Record ${i}`;
-    if (config === TABLE_DATASETS['money-connections'] || config === TABLE_DATASETS['party-money']) {
-      row.from += ' Services Pty Ltd'; row.type = 'receipts';
-      return {row, donors: [{label: row.from, aliases: []}]};
-    }
-    return {row};
-  });
-}
-const datasets = Object.fromEntries(Object.entries(TABLE_DATASETS).map(([name, config]) => [name, entries(config)]));
-const built = await buildTableIndexes(root, datasets);
-const paths = [];
-const pending = [];
-const cacheEntries = new Map();
-globalThis.caches = {default: {async match(req) { return cacheEntries.get(req.url)?.clone(); }, async put(req, response) { cacheEntries.set(req.url, response); }}};
-const env = {CACHE_EPOCH: 'fixture', ASSETS: {async fetch(req) {
-  const path = new URL(req.url).pathname;
-  paths.push(path);
-  if (MONEY_GRAPHS.includes(path)) return Response.json({nodes: []});
-  try { return new Response(await readFile(join(root, path.slice(1)))); }
-  catch { return new Response('missing', {status: 404}); }
-}}};
-const ctx = {waitUntil(promise) {pending.push(promise);}};
-const call = (name, query = '', init) => tableApi(new Request(`https://opax.com.au/api/table/${name}${query ? '?' + query : ''}`, init), env, ctx);
-const uncached = () => {cacheEntries.clear(); paths.length = 0;};
-
-for (const [name, config] of Object.entries(TABLE_DATASETS)) test(`${name}: paging, sorts, search, categorical and numeric facets, CSV and page cap`, async () => {
-  uncached();
-  const numeric = config.columns.find(c => ['money', 'count', 'year'].includes(c.type));
-  const category = config.columns.find(c => c.type === 'category' && c.key !== 'type');
-  const firstResponse = await call(name, `sort=${numeric.key}:asc&pageSize=2`);
-  assert.equal(firstResponse.status, 200);
-  const first = await firstResponse.json();
-  assert.equal(first.total, 260);
-  assert.equal(first.page, 1);
-  assert.deepEqual(first.rows.map(r => r.id), ['item-0', 'item-1']);
-  assert.deepEqual(first.facets[category.key], [{value: 'Group 0', count: 130}, {value: 'Group 1', count: 130}]);
-  assert.deepEqual(first.facets[numeric.key], {min: datasets[name][0].row[numeric.key], max: datasets[name][259].row[numeric.key]});
-  const second = await (await call(name, `sort=${numeric.key}:asc&pageSize=2&page=2`)).json();
-  assert.deepEqual(second.rows.map(r => r.id), ['item-2', 'item-3']);
-  const desc = await (await call(name, `sort=${numeric.key}:desc&pageSize=2`)).json();
-  assert.deepEqual(desc.rows.map(r => r.id), ['item-259', 'item-258']);
-  const cap = await (await call(name, 'pageSize=99999&page=99999')).json();
-  assert.equal(cap.pageSize, 200);
-  assert.equal(cap.page, 2);
-  assert.equal(cap.rows.length, 60);
-  const filter = new URLSearchParams({[`f.${category.key}`]: 'Group 1', [`f.${numeric.key}.min`]: String(datasets[name][2].row[numeric.key]), [`f.${numeric.key}.max`]: String(datasets[name][5].row[numeric.key]), sort: `${numeric.key}:asc`});
-  const filtered = await (await call(name, filter.toString())).json();
-  assert.equal(filtered.total, 2);
-  assert.deepEqual(filtered.rows.map(r => r.id), ['item-3', 'item-5']);
-  assert.deepEqual(filtered.facets[category.key], [{value: 'Group 1', count: 2}]);
-  const found = await (await call(name, 'q=NEED&pageSize=1')).json();
-  assert.equal(found.total, 1, 'free text supports partial terms and case folding');
-  assert.equal(found.rows[0].id, 'item-3');
-  const textSort = config.columns.find(c => c.type === 'text' && c.key !== 'id');
-  const sortedText = await (await call(name, `sort=${textSort.key}:asc&pageSize=1`)).json();
-  assert.equal(sortedText.rows[0].id, 'item-3');
-  const csvResponse = await call(name, `format=csv&${filter}&pageSize=1&page=2`);
-  assert.equal(csvResponse.status, 200);
-  assert.match(csvResponse.headers.get('content-type'), /^text\/csv/);
-  const csv = await csvResponse.text();
-  assert.equal(csv.split('\r\n').filter(Boolean).length, 3, 'exports the entire filtered set');
-  assert.ok(csv.includes('"' + datasets[name][3].row[numeric.key] + '"'), 'exact unformatted numeric value');
-  assert.equal(csvResponse.headers.get('x-table-exported'), '2');
-  const empty = await (await call(name, 'q=absentterm')).json();
-  assert.equal(empty.total, 0);
-  assert.deepEqual(empty.rows, []);
-  assert.equal(empty.page, 1);
-  const unknown = await (await call(name, `f.${category.key}=__proto__`)).json();
-  assert.equal(unknown.total, 0, 'unknown category values cannot use inherited properties');
+const rows=Object.fromEntries(Object.entries(TABLE_DATASETS).map(([name,c])=>[name,Array.from({length:260},(_,i)=>({row:Object.fromEntries(c.columns.map(col=>[col.key,col.key==='id' ? 'item-'+i : ['money','count'].includes(col.type) ? i+0.25 : col.type==='year' ? 2000+i : col.type==='category' ? (['portfolios','sectors','entities'].includes(col.key) ? ['Group '+i%2] : 'Group '+i%2) : col.type==='date' ? '2024-01-01' : col.key==='abn' ? '' : i===3 ? 'Needle record' : 'Record '+i]))}))]));
+const local=await tableDatabase({datasets:rows});test.after(()=>local.close());
+const env={TABLE_DB:local.db,CACHE_EPOCH:'test'};
+const fetchTable=(name,query='',init)=>tableApi(new Request('https://opax.com.au/api/table/'+name+'?'+query,init),env);
+for(const [name,config]of Object.entries(TABLE_DATASETS))test(name+': paging, sorting, facets, CSV and caps',async()=>{
+  let r=await fetchTable(name,'page=2&pageSize=200');assert.equal(r.status,200);let page=await r.json();assert.equal(page.total,260);assert.equal(page.rows.length,60);assert.equal(page.page,2);
+  const numeric=config.columns.find(c=>['money','count','year'].includes(c.type));
+  r=await fetchTable(name,'sort='+numeric.key+':asc&pageSize=999');page=await r.json();assert.equal(page.rows.length,200);assert.equal(page.rows[0][numeric.key],numeric.type==='year' ? 2000 : 0.25);
+  assert.deepEqual(page.facets[numeric.key],numeric.type==='year' ? {min:2000,max:2259} : {min:0.25,max:259.25});
+  const cat=config.columns.find(c=>c.type==='category');assert.equal(page.facets[cat.key].length,2);assert.equal(page.facets[cat.key][0].count,130);
+  r=await fetchTable(name,'q=needle');page=await r.json();assert.equal(page.total,1);assert.equal(page.rows[0].id,'item-3');assert.equal(r.headers.get('x-robots-tag'),'noindex');
+  const filter=new URLSearchParams({['f.'+cat.key]:JSON.stringify(['Group 0']),['f.'+numeric.key]:JSON.stringify(numeric.type==='year' ? {min:2010,max:2020} : {min:10,max:20})});
+  r=await fetchTable(name,filter);page=await r.json();assert.equal(page.total,numeric.type==='year' ? 6 : 5);assert.ok(page.rows.every(row=>[row[cat.key]].flat().includes('Group 0')&&row[numeric.key]>=(numeric.type==='year' ? 2010 : 10)&&row[numeric.key]<=(numeric.type==='year' ? 2020 : 20)));
+  r=await fetchTable(name,'format=csv');const csv=await r.text();assert.equal(r.headers.get('x-table-exported'),'260');assert.equal(r.headers.get('x-table-truncated'),'false');assert.equal(csv.split('\r\n').length,262);assert.ok(csv.includes(numeric.type==='year' ? '2000' : '0.25'));
 });
-
-test('normalized queries share an edge cache key, CSV ignores paging, and conditional GET works', async () => {
-  uncached();
-  const a = await call('votes', 'pageSize=2&q=%20RECORD%20&f.party=Group+1&f.party=Group+0&f.party=Group+1');
-  assert.equal(a.status, 200);
-  await Promise.all(pending.splice(0));
-  const previous = paths.length;
-  const b = await call('votes', 'f.party=Group+0&f.party=Group+1&q=record&pageSize=2&page=1&sort=divisions_total:desc');
-  assert.equal(b.headers.get('etag'), a.headers.get('etag'));
-  assert.equal(paths.length, previous, 'cache hit does not re-read data');
-  const conditional = await call('votes', 'f.party=Group+1&f.party=Group+0&q=record&pageSize=2', {headers: {'if-none-match': a.headers.get('etag')}});
-  assert.equal(conditional.status, 304);
-  assert.equal(await conditional.text(), '');
-  const prefixed = await call('votes', 't.q=record&t.pageSize=2&t.f.party=Group+0&t.f.party=Group+1');
-  assert.equal(prefixed.headers.get('etag'), a.headers.get('etag'));
-  const csvA = await call('votes', 'format=csv&page=1&pageSize=1');
-  const csvB = await call('votes', 'page=99&pageSize=200&format=csv');
-  assert.equal(csvA.headers.get('etag'), csvB.headers.get('etag'));
-  assert.match(a.headers.get('cache-control'), /max-age=60/);
+test('bad dataset is 404; invalid state and methods return fixed JSON errors',async()=>{
+  assert.equal((await fetchTable('bad-dataset')).status,404);
+  for(const q of ['page=0','sort=not-a-column:desc','f.amount.min=4','f.amount=%5B%224%22%5D','format=bad','f.agency=literal','q=a&q=b'])assert.equal((await fetchTable('contracts',q)).status,400,q);
+  const response=await fetchTable('contracts','',{method:'POST'});assert.equal(response.status,405);assert.deepEqual(await response.json(),{error:'method_not_allowed'});
 });
-
-test('requests use index postings and fetch only page shards', async () => {
-  uncached();
-  assert.equal((await call('votes', 'q=needle&pageSize=1')).status, 200);
-  assert.equal(paths.filter(p => /\/rows-/.test(p)).length, 1);
-  assert.ok(paths.some(p => /\/terms-/.test(p)));
-  assert.ok(paths.every(p => p.startsWith('/table-index/')));
-  uncached();
-  assert.equal((await call('grants', 'pageSize=1')).status, 200);
-  assert.ok(paths.some(p => p.endsWith('/summary.json')));
-  assert.ok(paths.every(p => !p.endsWith('/index.json') && !p.includes('/terms-')), 'unfiltered pages use the small facet summary');
+test('canonical state uses JSON filters, normalises order and supports conditional caching',async()=>{
+  const a=await fetchTable('contracts',new URLSearchParams({'f.amount':'{"max":100,"min":10}',q:' NEEDLE '}));
+  const b=await fetchTable('contracts',new URLSearchParams({q:'needle','f.amount':'{"min":10,"max":100}'}));assert.equal(a.headers.get('etag'),b.headers.get('etag'));
+  const cached=await fetchTable('contracts',new URLSearchParams({q:'needle','f.amount':'{"min":10,"max":100}'}),{headers:{'if-none-match':b.headers.get('etag')}});assert.equal(cached.status,304);assert.equal(cached.headers.get('x-robots-tag'),'noindex');
 });
-
-test('CSV parts share the normalized cache key and a missing part regenerates the export', async () => {
-  uncached();
-  const first = await call('votes', 'format=csv&pageSize=1');
-  const expected = await first.text();
-  await Promise.all(pending.splice(0));
-  const previous = paths.length;
-  const hit = await call('votes', 'page=99&format=csv&pageSize=200');
-  assert.equal(await hit.text(), expected);
-  assert.equal(paths.length, previous, 'cached CSV does not re-read row shards');
-  const part = [...cacheEntries.keys()].find(key => key.includes('__csvPart='));
-  assert.ok(part);
-  cacheEntries.delete(part);
-  const repaired = await call('votes', 'format=csv');
-  assert.equal(repaired.status, 200);
-  assert.equal(await repaired.text(), expected);
-  assert.ok(paths.length > previous, 'an evicted part uses a fresh complete export');
-});
-
-test('category values round-trip exactly through facets, URL state and CSV', async () => {
-  const facetRoot = await mkdtemp(join(tmpdir(), 'opax-table-facet-'));
-  const value = 'Group\u00a01 🌱 ';
-  try {
-    const rows = entries(TABLE_DATASETS.grants, 3);
-    for (const entry of rows) entry.row.agency = value;
-    await buildTableIndexes(facetRoot, {grants: rows});
-    const facetEnv = {ASSETS: {async fetch(req) {
-      const path = new URL(req.url).pathname;
-      return MONEY_GRAPHS.includes(path) ? Response.json({nodes: []}) : new Response(await readFile(join(facetRoot, path.slice(1))));
-    }}};
-    const query = new URLSearchParams({'f.agency': value});
-    const response = await tableApi(new Request('https://opax.com.au/api/table/grants?' + query), facetEnv, ctx);
-    assert.equal(response.status, 200);
-    const page = await response.json();
-    assert.equal(page.total, 3);
-    assert.deepEqual(page.facets.agency, [{value, count: 3}]);
-    assert.equal(new URL(response.headers.get('content-location'), 'https://opax.com.au').searchParams.get('f.agency'), value);
-    const download = await tableApi(new Request('https://opax.com.au/api/table/grants?' + query + '&format=csv'), facetEnv, ctx);
-    assert.ok((await download.text()).includes('"' + value + '"'));
-  } finally {await rm(facetRoot, {recursive: true, force: true});}
-});
-
-test('repeated pages, filtered queries and exports leave shared asset snapshots unchanged', async () => {
-  uncached();
-  const snapshots = new Map();
-  const sharedEnv = {ASSETS: {async fetch(req) {
-    const path = new URL(req.url).pathname;
-    if (!snapshots.has(path)) snapshots.set(path, MONEY_GRAPHS.includes(path) ? {nodes: []} : JSON.parse(await readFile(join(root, path.slice(1)), 'utf8')));
-    const response = Response.json(snapshots.get(path));
-    response.json = async () => snapshots.get(path);
-    return response;
-  }}};
-  const request = query => tableApi(new Request('https://opax.com.au/api/table/grants?' + query), sharedEnv, ctx);
-  const expected = JSON.stringify((await (await request('pageSize=2')).json()).rows);
-  const csv = await request('format=csv');
-  assert.equal(csv.status, 200);
-  assert.ok((await csv.text()).split('\r\n')[1].startsWith('"item-259",'));
-  uncached();
-  assert.equal(JSON.stringify((await (await request('pageSize=2')).json()).rows), expected);
-  for (let i = 0; i < 2; i++) {
-    uncached();
-    const page = await (await request('f.agency=Group+1')).json();
-    assert.equal(page.total, 130);
-    assert.equal(page.rows[0].id, 'item-259');
+test('core serializer and D1 API integrate with category and range state',async()=>{
+  // Exercise core query exports without replacing its public module.
+  // At merge it is present at ../public/datatable.js; this branch still has the stub.
+  let module=await readFile(process.env.DT_CORE_MODULE_PATH || new URL('../public/datatable.js',import.meta.url),'utf8');
+  if(module.includes('STUB'))module=await readFile(new URL('./fixtures/core-query.mjs',import.meta.url),'utf8');
+  module=module.replace(/from '\.\/donor-entity\.js[^']*'/,"from '"+new URL('../public/donor-entity.js',import.meta.url).href+"'").replace("from './format.js'","from '"+new URL('../public/format.js',import.meta.url).href+"'");
+  const core=await import('data:text/javascript;base64,'+Buffer.from(module).toString('base64'));
+  for(const prefix of [undefined,'t']){
+    const query={filters:{jurisdiction:['Group 0'],amount:{min:10,max:20}},sort:{key:'amount',dir:'asc'},pageSize:2,page:2};
+    const response=await fetchTable('contracts',core.serializeQuery(query,prefix));assert.equal(response.status,200);
+    const page=await response.json();assert.equal(page.total,5);assert.deepEqual(page.rows.map(r=>r.amount),[14.25,16.25]);
   }
 });
-
-test('unknown datasets, unsupported methods, invalid queries and asset failures return detail-free JSON', async () => {
-  assert.equal((await call('missing')).status, 404);
-  const method = await call('votes', '', {method: 'POST'});
-  assert.equal(method.status, 405);
-  assert.equal(method.headers.get('allow'), 'GET');
-  for (const query of ['page=0', 'page=-1', 'page=1.2', 'pageSize=0', 'sort=absent:asc', 'sort=name:sideways', 'f.absent=x', 'f.ayes.min=NaN', 'f.ayes.min=3&f.ayes.max=1', 'format=json', 'q=a&q=b', 't.q=a&page=1', 'f.party.min=1']) {
-    const response = await call('votes', query);
-    assert.equal(response.status, 400, query);
-    assert.deepEqual(await response.json(), {error: 'invalid_query'});
-    assert.equal(response.headers.get('cache-control'), 'no-store');
-  }
-  const response = await tableApi(new Request('https://opax.com.au/api/table/votes'), {ASSETS: {fetch() {throw new Error('private implementation detail');}}}, ctx);
-  assert.equal(response.status, 503);
-  assert.deepEqual(await response.json(), {error: 'unavailable'});
+test('facet computation is bounded even with more than 100 distinct values',async()=>{
+  await local.db.batch(Array.from({length:110},(_,i)=>local.db.prepare('INSERT INTO table_contracts_facets (key,value,rowid) VALUES (?,?,?)').bind('agency','Facet '+i,i+1)));
+  const page=await(await fetchTable('contracts')).json();assert.equal(page.facets.agency.length,100);
+});
+test('core-sized category arrays use bounded SQL bindings',async()=>{
+  const values=Array.from({length:100},(_,i)=>'Group '+i);
+  const response=await fetchTable('contracts',new URLSearchParams({'f.agency':JSON.stringify(values),'f.jurisdiction':JSON.stringify(values)}));
+  assert.equal(response.status,200);assert.equal((await response.json()).total,260);
+});
+test('CSV cap is visible in the downloaded content and response headers',async()=>{
+  await local.db.prepare("WITH RECURSIVE n(x) AS (SELECT 261 UNION ALL SELECT x+1 FROM n WHERE x<50100) INSERT INTO table_votes (rowid,id,name,ayes,search) SELECT x,'cap-'||x,'Record',x,'Record' FROM n").run();
+  const response=await fetchTable('votes','format=csv&sort=ayes:asc');assert.equal(response.headers.get('x-table-total'),'50100');assert.equal(response.headers.get('x-table-exported'),'50000');assert.equal(response.headers.get('x-table-truncated'),'true');
+  const csv=await response.text();assert.ok(csv.endsWith('"Showing the first 50,000 of 50,100 rows"'+','.repeat(TABLE_DATASETS.votes.columns.length-1)+'\r\n'));assert.equal(csv.split('\r\n').length,50003);
 });
 
-test('CSV quotes commas, embedded quotes and newlines, preserving exact numeric values', async () => {
-  const {tableCSV} = await import('../src/table-api.ts');
-  const value = 'Quoted "record", with\na newline, café and a 🌱';
-  const csv = tableCSV([{title: value, amount: 123456789.125}], [{key: 'title', label: 'Title', type: 'text'}, {key: 'amount', label: 'Value', type: 'money'}]);
-  assert.equal(csv, '"Title","Value"\r\n"Quoted ""record"", with\na newline, café and a 🌱","123456789.125"\r\n');
-});
-
-test('CSV exports stop at 50,000 rows and report the full filtered total', async () => {
-  const largeRoot = await mkdtemp(join(tmpdir(), 'opax-table-cap-'));
-  try {
-    await buildTableIndexes(largeRoot, {votes: entries(TABLE_DATASETS.votes, 50_001)});
-    const largeEnv = {ASSETS: {async fetch(req) {return new Response(await readFile(join(largeRoot, new URL(req.url).pathname.slice(1))));}}};
-    const response = await tableApi(new Request('https://opax.com.au/api/table/votes?format=csv'), largeEnv, ctx);
-    assert.equal(response.status, 200);
-    assert.equal(response.headers.get('x-table-total'), '50001');
-    assert.equal(response.headers.get('x-table-exported'), '50000');
-    assert.equal((await response.text()).split('\r\n').filter(Boolean).length, 50_001);
-  } finally {await rm(largeRoot, {recursive: true, force: true});}
-});
-
-test('server refuses a row with withheld donor evidence even in a corrupted generated shard', async () => {
-  uncached();
-  const graph = JSON.parse(await readFile(join(pub, 'graph/money.json'), 'utf8'));
-  const withheld = graph.nodes.find(n => n.kind === 'donor' && !isOrganisationDonor(n));
-  const path = join(root, built.datasets['party-money'].path.slice(1), 'rows-0.json');
-  const original = await readFile(path, 'utf8');
-  const shard = JSON.parse(original);
-  shard.rows[259].donors = [{label: withheld.label, aliases: withheld.aliases}];
-  await writeFile(path, JSON.stringify(shard));
-  try {
-    const response = await call('party-money', 'pageSize=1');
-    assert.equal(response.status, 503);
-    assert.deepEqual(await response.json(), {error: 'unavailable'});
-  } finally {await writeFile(path, original);}
-});
-
-test('indexed privacy checks preserve the shared policy for derived donor labels, aliases and organization spans', async () => {
-  const graphs = await Promise.all(MONEY_GRAPHS.map(async path => JSON.parse(await readFile(join(pub, path.slice(1)), 'utf8'))));
-  const phrases = withheldPhrases(graphs, []), check = tablePrivacyCheck(phrases);
-  const labels = graphs.flatMap(graph => graph.nodes.filter(n => n.kind === 'donor').flatMap(n => [n.label, ...(n.aliases || [])]));
-  for (const [i, label] of labels.entries()) for (const value of [label, 'donor ' + label, 'Records for ' + label]) assert.equal(check(value), namesWithheldPhrase(phrases, value), `derived phrase ${i}`);
-});
-
-test('interest entries preserve public register roles when the same members appear in the money graphs', async () => {
-  const graphs = await Promise.all(MONEY_GRAPHS.map(async path => JSON.parse(await readFile(join(pub, path.slice(1)), 'utf8'))));
-  const donorContext = tablePrivacyCheck(withheldPhrases(graphs, []));
-  const entries = await interestTableRows(pub, graphs);
-  let registers = 0;
-  for (const file of (await readdir(join(pub, 'interests'))).filter(f => f.endsWith('.json') && !['index.json', 'recent.json', 'ties-by-donor.json'].includes(f))) {
-    const register = JSON.parse(await readFile(join(pub, 'interests', file), 'utf8'));
-    if (!donorContext('donor ' + register.name)) continue;
-    assert.ok(entries.some(entry => entry.row.id.startsWith(file.slice(0, -5) + ':')), `public register role ${registers}`);
-    registers++;
-  }
-  assert.ok(registers > 0);
-});
-
-test('the real Worker routes tables locally before general and staging API dispatch', async () => {
-  const restore = offline();
-  try {
-    const worker = await loadWorker(new URL('../src/index.ts', import.meta.url).pathname, pub);
-    worker.env.STAGING_API = {fetch() {throw new Error('staging proxy must not run');}};
-    const response = await worker.fetch('/api/table/missing');
-    assert.equal(response.status, 404);
-    assert.deepEqual(await response.json(), {error: 'not_found'});
-    assert.ok(response.headers.has('content-security-policy'));
-  } finally {restore();}
-});
-
-test('the build reports asset totals within its additive budget', async () => {
-  assert.ok(built.files <= TABLE_BUDGET.files);
-  assert.ok(built.bytes <= TABLE_BUDGET.bytes);
-  assert.ok(built.indexFiles > 10);
-  assert.ok(built.indexBytes < built.bytes);
-  const saved = JSON.parse(await readFile(join(root, 'table-index/manifest.json'), 'utf8'));
-  assert.equal(saved.files, built.files);
-  assert.equal(saved.bytes, built.bytes);
+let coreCSV;
+registerServerCSVContract(test,{
+  name:'D1 table endpoint',
+  note:'"Showing the first 50,000 of 50,001 rows"'+','.repeat(TABLE_DATASETS.votes.columns.length-1),
+  seed:async records=>{coreCSV=await tableDatabase({datasets:{votes:records.map(row=>({row:{id:row.id,name:row.name,ayes:row.amount}}))}});},
+  request:async search=>{try{return await tableApi(new Request('https://opax.com.au/api/table/votes'+search),{TABLE_DB:coreCSV.db});}finally{test.after(()=>coreCSV.close());}},
 });

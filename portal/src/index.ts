@@ -5607,6 +5607,7 @@ export default {
       : new Response('Not found', { status: 404 })
     const isApi = url.pathname.startsWith('/api/')
     const communityResponse = (response: Response) => { const secured = withSecurityHeaders(response, url); if (env.STAGING_API) secured.headers.set('x-robots-tag', 'noindex, nofollow'); return secured }
+    if (url.pathname === '/table-index' || url.pathname.startsWith('/table-index/')) return communityResponse(new Response(null, {status:404,headers:{'cache-control':'no-store','x-robots-tag':'noindex'}}))
     if (url.pathname.startsWith('/api/table/')) return communityResponse(await tableApi(request, env, ctx))
     // Public app adapters use this Worker's journal/assets, before any staging
     // proxy or general retrieval dispatch. No composition callback is supplied.
