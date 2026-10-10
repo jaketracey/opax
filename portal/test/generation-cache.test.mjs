@@ -57,12 +57,16 @@ test('failed responses, account responses and oversized generations never enter 
  await f.flush();assert.equal(f.shared.size,0);
 });
 const index=readFileSync(new URL('../src/index.ts',import.meta.url),'utf8');
-const routeCode=ts.transpileModule(index.slice(index.indexOf('async function apiAsk('),index.indexOf('/** A short overview grounded')), {compilerOptions:{target:ts.ScriptTarget.ES2022}}).outputText;
+const source=ts.createSourceFile('index.ts',index,ts.ScriptTarget.ES2022,true);
+const handler=source.statements.find(statement=>ts.isFunctionDeclaration(statement) && statement.name?.text==='apiAsk');
+assert.ok(handler,'the actual Ask handler is present');
+const routeCode=ts.transpileModule(handler.getText(source), {compilerOptions:{target:ts.ScriptTarget.ES2022}}).outputText;
 test('Ask checks shared cache before quota, while conversations and explicit refresh bypass it',async()=>{
  let cacheReads=0,quota=0;
  const api=runInNewContext(routeCode+';apiAsk', {URL,Request,Response,AbortSignal,Date,
   // The donor privacy check and model budget are exercised in donor-privacy.test.mjs and model-budget.test.mjs.
   questionNamesWithheldDonor: async () => false, readerTurns: () => [], withheldDonorAnswer: () => ({}), MODEL_BUDGET_HEADER: 'x-opax-model-budget', modelBudgetBusy: () => new Response(null, { status: 503 }), 
+  isPersonOverviewCandidate:()=>false,isPersonRecentCandidate:()=>false,isPersonRecentIntent:()=>false,
   rankedMoneyAnswer: async () => null, paidAnswer: async () => null, standaloneQuestion: async () => null, withAskedAs:p=>p, needsAskPeople:()=>false,resolveAskScope:input=>({input}),askCacheInput:input=>input.context?.length?null:'public',
   cacheRequest:()=>key(),sha256Hex:async()=>'',cacheBypass:(r,u)=>u.searchParams.get('nocache')==='1',
   readGenerationCache:async()=>{cacheReads++;return Response.json({answer:'Cached'})},

@@ -119,7 +119,7 @@ function route(rewriteResult) {
     rankedMoneyAnswer: async () => null, paidAnswer: async () => null, clarifyPayload,
     standaloneQuestion: async () => rewriteResult,
     rateLimited: async () => { seen.limiter++; return null; },
-    needsAskPeople: () => false, resolveAskScope: (input) => ({ input, scope: {} }), isPersonOverviewIntent: () => false, isPersonRecentIntent: () => false,
+    needsAskPeople: () => false, resolveAskScope: (input) => ({ input, scope: {} }), isPersonOverviewCandidate: () => false, isPersonOverviewIntent: () => false, isPersonRecentCandidate: () => false, isPersonRecentIntent: () => false,
     askCacheInput: () => null, cacheBypass: () => false, json: (d, status = 200) => Response.json(d, { status }),
     retrieveAskRecords: async () => { seen.retrieval++; throw new Error('stop after retrieval'); },
     kbFetch: async () => { seen.generation++; throw new Error('no generation in this test'); },

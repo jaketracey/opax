@@ -68,6 +68,8 @@ try{
   await page.evaluate(()=>document.fonts.ready);
   await page.evaluate(()=>scrollTo(0,0));
   assert.equal(await page.locator('.chat-turn-answer .chat-next-btn').count(),4);
+  assert.equal(await page.locator('.chat-turn-answer > .ui-machine').count(),1);
+  assert.equal(await page.locator('#chat-person-context .ui-machine-pill').count(),1);
   assert.equal(await page.locator('.chat-turn-answer .chat-next h3').count(),0);
   const panel=await page.locator('#chat-person-context').evaluate(el=>({display:getComputedStyle(el).display,width:el.getBoundingClientRect().width}));
   assert.equal(panel.display,width===390?'none':'block');

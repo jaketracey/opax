@@ -9,6 +9,23 @@ export const speeches=Array.from({length:1649},(_,i)=>{
 });
 export const bills=[{key:'au-federal-example-2026',title:'Example Scrutiny Bill 2026',introduced:'2026-06-01',sponsor:speaker,speech_dates:['2026-09-01']}];
 export const catalogueCounts=Object.fromEntries(themes.map(([slug])=>[slug,speeches.filter(s=>s.topics.includes(slug)).length]));
+// Resource-only catalogue contract, including its real 200-resource page cap.
+// A field predicate must produce 422, even nested inside not/and/or.
+export function validCatalogueRequest(body){
+ const expression=body.filter_expression;
+ const allowed=new Set(['resource','label','origin_collaborator','created','modified','status','origin_tag','origin_path','origin_source','resource_mimetype','language']);
+ const valid=node=>{
+  if(!node || typeof node!=='object' || Array.isArray(node))return false;
+  if(node.and || node.or){const list=node.and || node.or;return Object.keys(node).length===1 && Array.isArray(list) && list.length>0 && list.every(valid)}
+  if(node.not)return Object.keys(node).length===1 && valid(node.not);
+  if(!allowed.has(node.prop))return false;
+  if(node.prop==='label')return typeof node.labelset==='string';
+  if(node.prop==='origin_collaborator')return typeof node.collaborator==='string';
+  return true;
+ };
+ return !!expression?.resource && Object.keys(expression).length===1 && valid(expression.resource) &&
+  Number.isInteger(body.page_size) && body.page_size>=0 && body.page_size<=200;
+}
 export function resource(s){return {slug:s.slug,title:s.title,origin:{collaborators:[s.speaker],url:'https://www.aph.gov.au/fixture-record'},extra:{metadata:{date:s.date,person_id:'11010'}},
  usermetadata:{classifications:[{labelset:'kind',label:'speech'},{labelset:'state',label:s.state},{labelset:'chamber',label:s.chamber},{labelset:'party',label:'Greens'}]},
  computedmetadata:{field_classifications:[{classifications:s.topics.map(label=>({labelset:'topic',label}))}]},

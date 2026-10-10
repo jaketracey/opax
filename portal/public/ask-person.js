@@ -1,3 +1,5 @@
+import {machineLabelHTML} from './labels.js?v=804befe8de';
+
 // Suggestions use only this answer and its public-record context. No model call.
 export function personFollowups(answer, sources = [], context, safe = () => false) {
   if (!context?.name || !answer?.trim() || !safe(answer, context.name)) return [];
@@ -51,7 +53,11 @@ export function renderPersonContext(slot, context, {portrait = '', partyDot, saf
   }
   if (context.electorate) slot.appendChild(node('p', context.electorate, 'ask-person-seat'));
   slot.appendChild(node('p', `${Number(context.speeches).toLocaleString()} speeches in the record`, 'ask-person-count'));
-  slot.appendChild(node('h3', 'Top topics'));
+  const topicsHeading = node('h3', 'Top topics');
+  const machine = node('span');
+  machine.innerHTML = machineLabelHTML({pill:true});
+  topicsHeading.appendChild(machine);
+  slot.appendChild(topicsHeading);
   const list = node('ul');
   for (const topic of context.topics || []) {
     if (!safe(topic.name)) continue;

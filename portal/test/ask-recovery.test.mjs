@@ -41,7 +41,7 @@ function harness(responses, env = {}) {
     questionNamesWithheldDonor: async () => false, readerTurns: () => [], withheldDonorAnswer: () => ({}), MODEL_BUDGET_HEADER: 'x-opax-model-budget', modelBudgetBusy: () => new Response(null, { status: 503 }), 
     rankedMoneyAnswer: async () => null, paidAnswer: async () => null, standaloneQuestion: async () => null, needsAskPeople: () => false, resolveAskScope: input => ({ input, scope: {} }),
     askCacheInput: () => null, cacheBypass: () => false, rateLimited: async () => null,
-    isPersonOverviewIntent: () => false, isPersonRecentIntent: () => false, overviewPayload: async payload => ({...payload,is_overview_intent:false}),
+    isPersonOverviewCandidate: () => false, isPersonOverviewIntent: () => false, isPersonRecentCandidate: () => false, isPersonRecentIntent: () => false, overviewPayload: async payload => ({...payload,is_overview_intent:false}),
     retrieveAskRecords: async () => ({ records: [], coverage: '', total: 0 }),
     buildAskBody: input => ({ query: input.question, citations: 'llm_footnotes', prompt: { user: 'Answer {question} from {context}. ' + helpers.FOOTNOTE_INSTRUCTIONS } }),
     json: (data, status = 200) => new Response(JSON.stringify(data), { status }), withCacheStatus: r => r,

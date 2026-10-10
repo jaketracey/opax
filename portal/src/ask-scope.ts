@@ -1,7 +1,7 @@
 import type { RecordQuestion } from './ask-records'
 import { isMoneyRanking } from './ask-money'
 import { isPositionDurationQuestion } from './position-evidence'
-import { overviewSubject } from './ask-person-overview'
+import { overviewSubject, isPersonOverviewCandidate } from './ask-person-overview'
 
 // Infer only an unambiguous political cohort, not arbitrary mentions of
 // independence (courts, inquiries, schools) or a comparison between parties.
@@ -94,7 +94,7 @@ function namedFollowUp(question: string, people: readonly {name:string}[]): {spe
 
 export function needsAskPeople(input: RecordQuestion): boolean {
   if (input.speaker || (input.kind && !['all', 'speech'].includes(input.kind))) return false
-  return /\b(?:talk about|speak about|views|overview|summary|summari[sz]e|topics|themes)\b/i.test(input.question || '') || !!namedPositionRequest(input.question || '') || !!stanceRequest(input.question || '') ||
+  return isPersonOverviewCandidate(input.question || '') || /\b(?:talk about|speak about|views|overview|summary|summari[sz]e|topics|themes)\b/i.test(input.question || '') || !!namedPositionRequest(input.question || '') || !!stanceRequest(input.question || '') ||
     REFERENTIAL.test((input.question || '').trim()) || ALL_YEARS_FOLLOWUP.test((input.question || '').trim()) || ELIGIBILITY_FOLLOWUP.test((input.question || '').trim())
 }
 

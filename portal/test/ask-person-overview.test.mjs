@@ -8,6 +8,8 @@ import {runInNewContext} from 'node:vm';
 
 const bundle=await build({entryPoints:[new URL('../src/ask-person-overview.ts',import.meta.url).pathname],bundle:true,write:false,format:'esm',platform:'node'});
 const {overviewSubject,isPersonOverviewIntent,buildPersonOverview,OVERVIEW_CAPS,OVERVIEW_INSTRUCTIONS}=await import('data:text/javascript;base64,'+Buffer.from(bundle.outputFiles[0].text).toString('base64'));
+const deadlines=await build({entryPoints:[new URL('../src/ask-deadline.ts',import.meta.url).pathname],bundle:true,write:false,format:'esm',platform:'node'});
+const {AskDeadline,AskPackCache}=await import('data:text/javascript;base64,'+Buffer.from(deadlines.outputFiles[0].text).toString('base64'));
 const people=[{name:'Example Member'},{name:'Other Member'}];
 const subject={name:'Example Member',party:'Greens',representation:[{electorate:'New South Wales'}]};
 const profile='/subject/person/example-member';
@@ -25,7 +27,7 @@ function evidence(total=600) {
  const rows=Array.from({length:total},(_,i)=>({slug:'speech-'+(i+1),resource:'r'+i,title:'Recorded parliamentary speech '+(i+1),speaker:subject.name,date:i===total-1?'2026-10-09':i<30?'2026-05-01':'2019-03-01',topics:[i<360?'housing':i<540?'climate-environment':'defence-security'],state:'federal',chamber:'senate'}));
  const calls={catalogue:[],find:[],original:[]};
  const deps={
-  catalogue:async page=>{calls.catalogue.push(page);return {total,counts:{housing:360,'climate-environment':180,'defence-security':60},speeches:rows.slice(page*200,(page+1)*200)}},
+  catalogue:async page=>{calls.catalogue.push(page);return {total,counts:{housing:360,'climate-environment':180,'defence-security':60},speeches:rows.slice(page*OVERVIEW_CAPS.page_size,(page+1)*OVERVIEW_CAPS.page_size)}},
   find:async theme=>{calls.find.push(theme);return rows.filter(s=>s.topics.includes(theme)).slice(0,2)},
   original:async (s,theme)=>{calls.original.push(s.slug);return `I argued for action on ${theme || 'housing'} and outlined the parliamentary proposal in detail. I called for scrutiny of the legislation and its recorded effects.\n\nSenator Other: This later reply must not be attributed to the indexed speaker.`},
   bills:async()=>[{key:'au-federal-example',title:'Example Bill 2026',introduced:'2026-04-01',sponsor:subject.name},{key:'au-federal-related',title:'Related Bill 2026',introduced:'2026-02-01',speech_dates:['2026-09-01']},{key:'au-federal-unrelated',title:'Unrelated Bill',introduced:'2026-10-01',sponsor:'Other Member'}],
@@ -49,9 +51,35 @@ test('the pack uses whole-record facets, metadata dates, export bill links and t
 
 test('incomplete metadata keeps whole-record counts and never invents recent totals or a latest speech',async()=>{
  const {deps,calls}=evidence(5000);const pack=await buildPersonOverview(subject,'2026-10-10',profile,deps);
- assert.equal(calls.catalogue.length,20);assert.equal(pack.context.complete,false);assert.equal(pack.context.topics[0].recent_count,null);
+ assert.equal(calls.catalogue.length,10);assert.equal(pack.context.complete,false);assert.equal(pack.context.topics[0].recent_count,null);
  assert.ok(!pack.records.records.some(r=>r.source==='Hansard · recent speech'));
  await assert.rejects(buildPersonOverview(subject,'2026-10-10',profile,deps,true),/incomplete/);
+});
+
+test('enumeration, date and classification completeness are independent and fail closed for recent claims',async()=>{
+ for(const patch of [{date:''},{date:'2026-02-30'},{topics:[]},{topics:['unrecognised-topic']}]){
+  const {deps,rows}=evidence();Object.assign(rows[0],patch);
+  const pack=await buildPersonOverview(subject,'2026-10-10',profile,deps);
+  assert.equal(pack.context.enumeration_complete,true);assert.equal(pack.context.complete,false);
+  assert.equal(pack.context.dates_complete,!Object.hasOwn(patch,'date'));assert.equal(pack.context.classifications_complete,!Object.hasOwn(patch,'topics'));
+  assert.ok(pack.context.topics.every(t=>t.recent_count===null));assert.ok(!pack.records.records.some(r=>r.source==='Hansard · recent speech'));
+  assert.equal(JSON.parse(pack.records.records[0].snippet).complete,false);
+ }
+});
+
+test('a per-call timeout and client cancellation stop outstanding work under the shared deadline',async()=>{
+ const deadline=new AskDeadline(120);let stopped=0;
+ const slow=signal=>new Promise((resolve,reject)=>{const timer=setTimeout(resolve,1000);signal.addEventListener('abort',()=>{clearTimeout(timer);stopped++;reject(signal.reason)},{once:true})});
+ const start=performance.now();await assert.rejects(deadline.run(slow,30),/deadline/);assert.equal(stopped,1);assert.ok(performance.now()-start<200);
+ const running=deadline.run(slow);deadline.cancel();await assert.rejects(running);assert.equal(stopped,2);deadline.dispose();
+ const parent=new AbortController(),child=new AskDeadline(1000,parent.signal);const pending=child.run(slow);parent.abort();await assert.rejects(pending);assert.equal(stopped,3);child.dispose();
+});
+
+test('the pack cache caps keys at 500, evicts the least recently used key and expires entries',()=>{
+ const cache=new AskPackCache(500,100);
+ for(let i=0;i<500;i++)cache.set('key-'+i,i,0);
+ assert.equal(cache.get('key-0',1),0);cache.set('key-500',500,1);assert.equal(cache.size,500);
+ assert.equal(cache.get('key-1',1),undefined);assert.equal(cache.get('key-0',1),0);assert.equal(cache.get('key-0',101),undefined);
 });
 
 test('withheld text, another speaker and duplicate sources cannot enter the pack',async()=>{
@@ -87,6 +115,7 @@ test('the context panel shows public identity, count, topics and record links us
   assert.equal(slot.hidden,false);assert.match(textOf(slot),/Example Member.*Greens.*New South Wales.*600 speeches.*Top topics.*Housing.*360/);
   const nav=slot.children.find(n=>n.tag==='nav');assert.deepEqual(nav.children.map(n=>n.href),[profile,profile+'#subject-votes','/declared?person=Example+Member']);
   assert.equal(slot.children[0].children[0].src,'/photos/11010.webp');
+  assert.match(slot.children.find(n=>n.tag==='h3').children[0].innerHTML,/ui-machine-pill.*Machine-written/);
   renderPersonContext(slot,context,{safe:()=>false});assert.equal(slot.hidden,true);assert.equal(slot.children.length,0);
  } finally {globalThis.document=previous}
  const css=readFileSync(new URL('../public/style.css',import.meta.url),'utf8');assert.match(css,/@media \(min-width: 1000px\)/);assert.match(css,/\.ask-person-context \{ display: none; \}/);
