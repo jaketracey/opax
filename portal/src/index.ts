@@ -10,6 +10,8 @@ import { normalizePassage, passageWindow } from './passage-text'
 import { instrumentPage, instrumentReader } from './instruments'
 import { auditPage, auditReader } from './audit'
 import { hubPage } from './hubs'
+import { vicElectionPage, type VicElection } from './vic-election'
+import { vicElectionEnabled, vicElectionPublicationPath, vicElectionDiscovery, vicElectionLlms, VIC_ELECTION_ASSET, VIC_ELECTION_SITEMAP } from '../public/vic-election.js'
 import { AUDIT_ID } from '../public/audit.js'
 import { runIndexNow, INDEXNOW_CRON } from './indexnow'
 import { type MoneyFacts, moneyOverviewPrompt, verifiedOverview } from './ask-money-overview'
@@ -3235,7 +3237,7 @@ const STATIC_PAGES: Record<string, { title: string; description: string; query?:
 }
 
 type SeoRoute =
-  | { kind: 'hub'; hub: 'sitting' | 'estimates'; id: string | null }
+  | { kind: 'hub'; hub: 'sitting' | 'estimates' | 'vic-election'; id: string | null }
   | { kind: 'instruments'; id: string | null }
   | { kind: 'audit'; id: string | null }
   | { kind: 'static'; page: keyof typeof STATIC_PAGES }
@@ -3289,6 +3291,7 @@ const GRANT_RECIPIENT_ID_RE = /^(?:abn:\d{11}|name:[a-z0-9 .&'()-]{2,120}|person
 function matchSeoRoute(url: URL): SeoRoute | null {
   const path = url.pathname.replace(/\/+$/, '') || '/'
   if (path === '/sitting' || path.startsWith('/sitting/')) return {kind:'hub',hub:'sitting',id:path === '/sitting' ? null : path.slice('/sitting/'.length)}
+  if (path === '/vic-election-2026' || path.startsWith('/vic-election-2026/')) return {kind:'hub',hub:'vic-election',id:path === '/vic-election-2026' ? null : path.slice('/vic-election-2026/'.length)}
   if (path === '/estimates' || path.startsWith('/estimates/')) return {kind:'hub',hub:'estimates',id:path === '/estimates' ? null : path.slice('/estimates/'.length)}
   if (path === '/audit') return { kind: 'audit', id: null }
   if (path.startsWith('/audit/') && !/^\/audit\/(?:manifest|index|ready|reports-\d+)\.json$/.test(path)) {
@@ -3793,8 +3796,12 @@ async function buildRouteMeta(route: SeoRoute, url: URL, request: Request, env: 
 
   switch (route.kind) {
     case 'hub': {
+      if (route.hub === 'vic-election') {
+        const page = await vicElectionPage(route.id,<T>(path: string) => assetJson<T>(env,path),env)
+        return base({title:page.title+' · OPAX',description:page.description,prerender:page.html,jsonLd:page.jsonLd,status:page.status})
+      }
       const people = route.hub === 'sitting' && route.id ? await loadPeople(env) : null
-      const page = await hubPage(route.hub,route.id,<T>(path: string) => assetJson<T>(env,path),people?.people || [],people?.slugOf || new Map())
+      const page = await hubPage(route.hub,route.id,<T>(path: string) => assetJson<T>(env,path),people?.people || [],people?.slugOf || new Map(),undefined,env)
       return base({title:page.title+' · OPAX',description:page.description,prerender:page.html,jsonLd:page.jsonLd,status:page.status})
     }
     case 'audit': return base({ ...await auditPage(route.id, url, auditReader(env.ASSETS), prerenderBlock),
@@ -4210,6 +4217,11 @@ async function canonicalRoutePath(url: URL, env: Env): Promise<string> {
   const candidate=new URL(url); candidate.pathname=path
   const route=matchSeoRoute(candidate)
   if(route?.kind==='hub') {
+    if(route.hub === 'vic-election') {
+      if (!vicElectionEnabled(env.VIC_ELECTION_HUB_ENABLED)) return url.pathname
+      const election = await assetJson<VicElection>(env,VIC_ELECTION_ASSET).catch(()=>null)
+      return election?.pages.some(page=>page.path === path) ? path : url.pathname
+    }
     const hubs=await assetJson<{pages:{path:string}[]}>(env,'/hubs/index.json').catch(()=>null)
     if(hubs?.pages.some(page=>page.path===path)) return path
   }
@@ -4845,8 +4857,11 @@ async function serveSeoPage(route: SeoRoute, url: URL, request: Request, env: En
   ])
   if (!shell.ok) return shell
   const noindex = meta.noindex || meta.status === 404 || (['/ask', '/search'].includes(url.pathname.replace(/\/+$/, '')) && Boolean(url.search))
+  // Election coverage names unavailable grants, but renders no financial records.
+  // Its renderer owns any future caveat alongside an actual political money pairing.
+  if (!(route.kind === 'hub' && route.hub === 'vic-election'))
+    meta.prerender=associationCaveat(meta.prerender || '',`${meta.description} ${meta.prerender || ''}`)
   // JSON-LD sits in a <script>: keep "</script>" from ever appearing in it.
-  meta.prerender=associationCaveat(meta.prerender || '',`${meta.description} ${meta.prerender || ''}`)
   const ld = meta.jsonLd ? JSON.stringify(meta.jsonLd).replace(/</g, '\\u003c') : null
   // The share image is drawn per route (see "Share images" below); a page
   // with nothing to draw, or nothing to find, shares the home card.
@@ -5107,15 +5122,28 @@ function robotsTxt(): Response {
 /** Generated from the published exports by build:crawl; each child is bounded. */
 async function sitemapXml(env: Env, path = '/sitemap.xml'): Promise<Response> {
   if (path !== '/sitemap.xml' && !/^\/sitemaps\/[a-z-]+-[1-9]\d*\.xml$/.test(path)) return new Response('Not found', { status: 404, headers: { 'x-robots-tag': 'noindex' } })
+  const enabled = vicElectionEnabled(env.VIC_ELECTION_HUB_ENABLED)
+  const headers = {'content-type':'application/xml; charset=utf-8','cache-control':'public, max-age=3600'}
+  if (path.startsWith('/sitemaps/vic-election-')) {
+    if (!enabled || path !== VIC_ELECTION_SITEMAP) return new Response('Not found',{status:404,headers:{'x-robots-tag':'noindex'}})
+    const data = await assetJson<VicElection>(env,VIC_ELECTION_ASSET)
+    const rows = vicElectionDiscovery(data,true)['vic-election']
+    return new Response(`<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">${rows.map(p=>`<url><loc>${SITE_ORIGIN}${escHtml(p.path)}</loc><lastmod>${escHtml(p.lastmod)}</lastmod></url>`).join('')}</urlset>`,{headers})
+  }
   const asset = await env.ASSETS.fetch(new Request(`${SITE_ORIGIN}/crawl${path}`))
   if (!asset.ok) return new Response('Sitemap unavailable', { status: 503, headers: { 'cache-control': 'no-store' } })
-  return new Response(asset.body, { headers: { 'content-type': 'application/xml; charset=utf-8', 'cache-control': 'public, max-age=3600' } })
+  if (enabled && path === '/sitemap.xml') {
+    const data = await assetJson<VicElection>(env,VIC_ELECTION_ASSET)
+    const body = (await asset.text()).replace('</sitemapindex>',`<sitemap><loc>${SITE_ORIGIN}${VIC_ELECTION_SITEMAP}</loc><lastmod>${escHtml(data.updated)}</lastmod></sitemap></sitemapindex>`)
+    return new Response(body,{headers})
+  }
+  return new Response(asset.body, { headers })
 }
 
 async function llmsTxt(env: Env): Promise<Response> {
   const asset = await env.ASSETS.fetch(new Request(`${SITE_ORIGIN}/crawl/llms.txt`))
   if (!asset.ok) return new Response('Corpus guide unavailable', { status: 503, headers: { 'cache-control': 'no-store' } })
-  return new Response(asset.body, { headers: { 'content-type': 'text/plain; charset=utf-8', 'cache-control': 'public, max-age=3600' } })
+  return new Response(vicElectionEnabled(env.VIC_ELECTION_HUB_ENABLED) ? (await asset.text()) + '\n' + vicElectionLlms : asset.body, { headers: { 'content-type': 'text/plain; charset=utf-8', 'cache-control': 'public, max-age=3600' } })
 }
 
 
@@ -5508,6 +5536,8 @@ function personTopicsFor(name: string, env: Env): Promise<Response> {
 export default {
   async fetch(request, env, ctx): Promise<Response> {
     const url = new URL(request.url)
+    if (!vicElectionEnabled(env.VIC_ELECTION_HUB_ENABLED) && vicElectionPublicationPath(url.pathname))
+      return withSecurityHeaders(new Response(request.method === 'HEAD' ? null : 'Not found', {status:404,headers:{'x-robots-tag':'noindex','cache-control':'no-store','content-type':'text/plain; charset=utf-8'}}), url)
     const canonical = await pageAliasRedirect(request, url, env)
     if (canonical) return canonical
     // Scraper fleets (see network-block.ts) are refused before any paid route runs.

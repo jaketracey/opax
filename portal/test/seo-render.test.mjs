@@ -254,3 +254,17 @@ test('all SSR body types use factual relationship wording and pair political mon
   for(const c of campaigners){const html=await get('/subject/campaigner/'+encodeURIComponent(c.name));const body=html.match(/<section id="prerender"[\s\S]*?<\/section>/)[0];assert.doesNotMatch(body,/linked to/i,c.name);assert.equal(associationCaveat(body,body),body,c.name);}
   for(const path of samples){const body=(await get(path)).match(/<section id="prerender"[\s\S]*?<\/section>/)[0];assert.doesNotMatch(body,/linked to/i,path);assert.match(body,/An association does not prove influence\./,path);}
 });
+
+test('association caveat requires a rendered money pairing, not an election coverage gap',async()=>{
+  const election=await read('/hubs/vic-election-2026.json');
+  for(const {path} of election.pages){
+    const r=await worker.fetch(new Request(origin+path),{...env,VIC_ELECTION_HUB_ENABLED:'true'},{});
+    assert.equal(r.status,200,path);const html=await r.text();
+    assert.match(html,/<h2>Grants by state electorate<\/h2><p>Not available\./,path);
+    assert.doesNotMatch(html,/An association does not prove influence/,path);
+  }
+  const person=await get('/subject/person/anthony-albanese');
+  const body=person.match(/<section id="prerender"[\s\S]*?<\/section>/)[0];
+  assert.match(body,/<h1>Anthony Albanese<\/h1>/);
+  assert.match(body,/<h2>Donors to their party<\/h2>[\s\S]*An association does not prove influence\.[\s\S]*\$[\d,]+/);
+});
