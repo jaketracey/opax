@@ -1,4 +1,5 @@
 import { phoneCopy } from '../design/phone-copy';
+import { voiceLinked } from '../voice/linked';
 import { useState, type ReactNode } from 'react';
 import { Alert, Image, Platform, StyleSheet, View } from 'react-native';
 import { router } from 'expo-router';
@@ -600,9 +601,7 @@ export default function Workbench() {
           explanation="Written by a model from the explanatory memorandum; not the record."
           testID="wb-machine"
         />
-        <MachineLabel
-          explanation="An automated summary written by a model; not the record."
-        />
+        <MachineLabel explanation="An automated summary written by a model; not the record." />
       </Block>
 
       <Block id="steps" title="Previous and next">
@@ -678,12 +677,12 @@ export default function Workbench() {
               })
             }
           />
-          {Platform.OS === 'android' ? null : (
+          {voiceLinked ? (
             <Button
               label="Open the Talk sheet"
               onPress={() => router.push('/talk')}
             />
-          )}
+          ) : null}
         </Group>
       </Block>
       {Platform.OS === 'android' ? null : (

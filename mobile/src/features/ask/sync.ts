@@ -1,6 +1,6 @@
 import { phoneCopy } from '../../design/phone-copy';
 import native from '../../../modules/opax-voice';
-import { Platform } from 'react-native';
+import { voiceLinked } from '../../voice/linked';
 import {
   decodeRemoteChat,
   decodeRemoteIndex,
@@ -53,7 +53,7 @@ export async function syncSubmittedChat(
   c: Chat,
   status?: { signedIn?: boolean; accountHeld?: boolean } | null,
 ) {
-  if (Platform.OS === 'android') return;
+  if (!voiceLinked) return;
   if (status && !status.signedIn && !status.accountHeld) return;
   try {
     await pushChat(c);

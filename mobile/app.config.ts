@@ -11,7 +11,8 @@ type Variant = 'development' | 'e2e' | 'production';
 const variant = (process.env.OPAX_VARIANT ?? 'development') as Variant;
 // Explicit for native Android builds; the iOS invocation keeps its config.
 const androidBuild = process.env.OPAX_TARGET_PLATFORM === 'android';
-const productionVoice = !androidBuild && productionVoiceEnabled(variant);
+// One switch for both platforms: Android 1.0 ships Talk and accounts too.
+const productionVoice = productionVoiceEnabled(variant);
 const buildNumber = process.env.OPAX_BUILD_NUMBER ?? '1';
 if (!/^[1-9][0-9]*$/.test(buildNumber)) {
   throw new Error('OPAX_BUILD_NUMBER must be a positive integer');
@@ -73,8 +74,11 @@ const config: ExpoConfig = {
       monochromeImage: './assets/icon/android-monochrome.png',
     },
     permissions: ['ACCESS_COARSE_LOCATION', 'ACCESS_FINE_LOCATION'],
+    // The OpaxVoice module declares RECORD_AUDIO. As iOS embeds its purpose
+    // string, only a production voice build keeps it: e2e uses the synthetic
+    // input and development never opens the hardware microphone.
     blockedPermissions: [
-      'android.permission.RECORD_AUDIO',
+      ...(productionVoice ? [] : ['android.permission.RECORD_AUDIO']),
       'android.permission.CAMERA',
       'android.permission.ACCESS_BACKGROUND_LOCATION',
       'android.permission.FOREGROUND_SERVICE',

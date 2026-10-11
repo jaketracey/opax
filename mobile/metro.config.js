@@ -33,8 +33,6 @@ config.resolver.resolveRequest = (context, moduleName, platform) => {
         .resolve(path.dirname(context.originModulePath), moduleName)
         .replace(/\.[jt]sx?$/, '')
     : null;
-  if (platform === 'android' && target === voiceEntries[0])
-    return { type: 'sourceFile', filePath: `${target}.android.tsx` };
   if (communityHidden && target === communityEntry)
     return { type: 'sourceFile', filePath: `${target}.production.ts` };
   if (process.env.OPAX_VARIANT === 'production' && target !== null) {
@@ -58,16 +56,14 @@ const accountSignIn = [
 ];
 config.cacheVersion = `opax-${variant}-voice-${voiceEnabled ? 'on' : 'off'}${communityHidden ? '-community-off' : ''}${androidBuild ? '-android' : ''}`;
 const existing = config.resolver.blockList;
+// Android bundles Talk, sign-in and deletion as iOS does; the app offers
+// them only when its OpaxVoice module is linked (src/voice/linked.ts).
 config.resolver.blockList = [
-  ...(androidBuild
+  ...(androidBuild && !['production', 'e2e'].includes(variant)
     ? [
-        /[/\\]src[/\\]app[/\\](?:talk|voice-bridge-test)\.tsx$/,
-        /[/\\]src[/\\]app[/\\]account[/\\](?:sign-in|delete)\.tsx$/,
         // Development excludes test-screens below; exclude this importing
         // route too. E2e keeps its existing GL fixture screen.
-        ...(!['production', 'e2e'].includes(variant)
-          ? [/[/\\]src[/\\]app[/\\]money-map-spike\.tsx$/]
-          : []),
+        /[/\\]src[/\\]app[/\\]money-map-spike\.tsx$/,
       ]
     : []),
   ...(Array.isArray(existing) ? existing : existing ? [existing] : []),

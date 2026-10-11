@@ -5,12 +5,24 @@ import * as voice from '../../voice';
 import type { EndReason, VoiceFailure, VoiceSnapshot } from '../../voice';
 import * as uiBridge from './bridge';
 import {
+  asksForMicrophone,
+  microphoneBlocked,
+  microphoneGranted,
+  requestMicrophone,
+} from '../../voice/microphone';
+import {
   applyEvent,
   emptySnapshot,
   eventKeys,
   isCallActive,
   recoverSnapshot,
 } from './model';
+
+/**
+ * Android's microphone step before a call (src/voice/README.md): the
+ * rationale before the system dialog, or how the last request ended.
+ */
+export type MicrophoneStep = 'rationale' | 'denied' | 'blocked' | null;
 
 export function useTalk() {
   const [snapshot, setSnapshot] = useState<VoiceSnapshot>(emptySnapshot);
@@ -20,7 +32,11 @@ export function useTalk() {
   const [error, setError] = useState<VoiceFailure | null>(null);
   const [terminal, setTerminal] = useState<EndReason | null>(null);
   const [busy, setBusy] = useState(false);
+  const [microphone, setMicrophone] = useState<MicrophoneStep>(null);
   const dispatching = useRef(false);
+  // Android pauses the app behind the permission dialog and resumes it before
+  // the answer arrives; that round trip is not a visit away from the call.
+  const askingMicrophone = useRef(false);
   const mounted = useRef(false);
   const focusGeneration = useRef(0);
   const sequence = useRef(0);
@@ -67,6 +83,7 @@ export function useTalk() {
       dispatching.current = false;
       setBusy(false);
       setConsentLoaded(false);
+      setMicrophone(null);
       const generation = ++focusGeneration.current;
       const unsubscribe = voice.subscribe((event) => {
         if (!mounted.current || generation !== focusGeneration.current) return;
@@ -103,12 +120,15 @@ export function useTalk() {
   );
   useEffect(() => {
     const subscription = AppState.addEventListener('change', (state) => {
-      if (!mounted.current) return;
+      if (!mounted.current || askingMicrophone.current) return;
       if (state === 'background') void uiBridge.background();
       if (state === 'active')
         void (async () => {
           await refresh();
           await recover();
+          // Back from Settings: access turned on clears the refusal.
+          if (asksForMicrophone() && (await microphoneGranted()))
+            setMicrophone((step) => (step === 'rationale' ? step : null));
         })();
       // A brief inactive state (Control Centre) leaves the call alone.
     });
@@ -127,14 +147,50 @@ export function useTalk() {
     }
     return result;
   }
+  // Native repeats fresh status before permission/reservation. On Android the
+  // microphone is asked here first, so `start()` only checks it (README.md).
+  async function begin() {
+    setTerminal(null);
+    setError(null);
+    if (asksForMicrophone()) {
+      const generation = focusGeneration.current;
+      const granted = await microphoneGranted();
+      if (!mounted.current || generation !== focusGeneration.current) return;
+      if (!granted) {
+        setMicrophone(microphoneBlocked() ? 'blocked' : 'rationale');
+        return;
+      }
+      setMicrophone(null);
+    }
+    await run(voice.start);
+  }
   async function start() {
     if (!consent || !consentLoaded) {
       setError('consentRequired');
       return;
     }
-    setTerminal(null);
-    setError(null);
-    await run(voice.start); // Native repeats fresh status before permission/reservation.
+    await begin();
+  }
+  /** The rationale's Continue: the system dialog, then the call if allowed. */
+  async function allowMicrophone() {
+    if (askingMicrophone.current || dispatching.current) return;
+    const generation = focusGeneration.current;
+    askingMicrophone.current = true;
+    setBusy(true);
+    const access = await requestMicrophone();
+    askingMicrophone.current = false;
+    if (!mounted.current || generation !== focusGeneration.current) return;
+    setBusy(false);
+    if (access === 'granted') {
+      setMicrophone(null);
+      if (AppState.currentState !== 'background') await run(voice.start);
+      return;
+    }
+    setMicrophone(access);
+    // The dialog held back the return-to-app refresh; read status now.
+    await refresh();
+    if (mounted.current && generation === focusGeneration.current)
+      await recover();
   }
   async function changeConsent(granted: boolean) {
     const generation = focusGeneration.current;
@@ -150,9 +206,7 @@ export function useTalk() {
   async function agreeAndStart() {
     if (await changeConsent(true)) {
       if (!mounted.current || AppState.currentState === 'background') return;
-      setTerminal(null);
-      setError(null);
-      await run(voice.start);
+      await begin();
     }
   }
   return {
@@ -162,8 +216,11 @@ export function useTalk() {
     error,
     terminal,
     busy,
+    microphone,
     active: isCallActive(snapshot.state),
     start,
+    allowMicrophone,
+    declineMicrophone: () => setMicrophone(null),
     refresh,
     changeConsent,
     agreeAndStart,

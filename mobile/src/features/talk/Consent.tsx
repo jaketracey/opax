@@ -1,8 +1,10 @@
 import { phoneCopy } from '../../design/phone-copy';
-import { StyleSheet, View } from 'react-native';
+import { useEffect, useRef } from 'react';
+import { AccessibilityInfo, Platform, StyleSheet, View } from 'react-native';
 import { Button, Heading, LinkRow, Text } from '../../design/primitives';
 import { rhythm } from '../../design/tokens';
 import { openOnWeb } from '../../navigation/external';
+import { microphoneCopy } from './model';
 
 /** One line before every call (App Review 5.1.2(i) and honest AI output). */
 export function VoiceDisclosure() {
@@ -34,7 +36,7 @@ export function Consent({
 }) {
   return (
     <View style={styles.consent} testID="talk-consent">
-      <Heading level={2}>Before you talk</Heading>
+      <PanelHeading>Before you talk</PanelHeading>
       <Text wordSafe>
         Your voice and the conversation go to ElevenLabs, OPAX’s voice provider,
         so it can answer you.
@@ -77,6 +79,74 @@ export function Consent({
           onPress={onDecline}
         />
       </View>
+    </View>
+  );
+}
+
+/**
+ * Android's microphone rationale, after consent and before the system
+ * dialog: the iOS purpose string, which Android's dialog has no room for.
+ */
+export function MicrophoneRationale({
+  busy,
+  onContinue,
+  onDecline,
+}: {
+  busy: boolean;
+  onContinue: () => void;
+  onDecline: () => void;
+}) {
+  return (
+    <View style={styles.consent} testID="talk-microphone">
+      <PanelHeading>{microphoneCopy.heading}</PanelHeading>
+      <Text wordSafe testID="talk-microphone-purpose">
+        {microphoneCopy.purpose}
+      </Text>
+      <Text wordSafe variant="metadata">
+        {microphoneCopy.next}
+      </Text>
+      <View style={styles.actions}>
+        <Button
+          label={microphoneCopy.continue}
+          testID="talk-microphone-continue"
+          variant="primary"
+          size="large"
+          fullWidth
+          disabled={busy}
+          onPress={onContinue}
+        />
+        <Button
+          label={microphoneCopy.notNow}
+          testID="talk-microphone-not-now"
+          variant="quiet"
+          fullWidth
+          onPress={onDecline}
+        />
+      </View>
+    </View>
+  );
+}
+
+/**
+ * A panel's heading. The panel replaces Start, so on Android TalkBack is
+ * moved to it rather than left on a control that has gone; VoiceOver keeps
+ * the released iOS behaviour.
+ */
+function PanelHeading({ children }: { children: string }) {
+  const heading = useRef<View>(null);
+  useEffect(() => {
+    if (Platform.OS === 'android' && heading.current)
+      AccessibilityInfo.sendAccessibilityEvent(heading.current, 'focus');
+  }, []);
+  if (Platform.OS !== 'android') return <Heading level={2}>{children}</Heading>;
+  return (
+    <View
+      ref={heading}
+      accessible
+      accessibilityRole="header"
+      accessibilityLabel={children}
+    >
+      <Heading level={2}>{children}</Heading>
     </View>
   );
 }
