@@ -6,6 +6,7 @@ import {
   FlatList,
   RefreshControl,
   StyleSheet,
+  View,
   useWindowDimensions,
 } from 'react-native';
 import { Stack } from 'expo-router';
@@ -22,9 +23,10 @@ import {
   ChoiceChips,
   SourceLine,
   Text,
+  type SourceCitation,
   type SourceOriginal,
 } from '../../design/primitives';
-import type { DateInput } from '../../design/format';
+import { formatDate, sourceName, type DateInput } from '../../design/format';
 import { colors, layout, rhythm } from '../../design/tokens';
 import { shareHeaderItem } from '../../navigation/share';
 import type { decodeMeta } from './data';
@@ -40,6 +42,65 @@ export function MoneyHeader({ title, path }: { title: string; path: string }) {
   );
 }
 type Notes = readonly (string | null | undefined | false)[];
+
+// The registers behind public money, by their publishers' short names (design
+// pass 5, P2-5): the line says "AusTender", the sheet the full title, and
+// neither says how the export was built ("Latest contract notice per
+// amendment lineage"; the caveats say it in plain words).
+const registers: [RegExp, SourceCitation][] = [
+  [
+    /^AusTender\b/i,
+    { label: 'AusTender', title: 'AusTender, Department of Finance' },
+  ],
+  [
+    /^GrantConnect\b/i,
+    {
+      label: 'GrantConnect',
+      title: 'GrantConnect grant awards, Department of Finance',
+    },
+  ],
+  [
+    /^(QLD|Queensland) Government Investment Portal\b/i,
+    {
+      label: 'Queensland Government Investment Portal',
+      title: 'Queensland Government Investment Portal (data.qld.gov.au)',
+    },
+  ],
+  [
+    /^Centre for Public Integrity\b/i,
+    {
+      label: 'Centre for Public Integrity',
+      title: 'Centre for Public Integrity, Table 3',
+    },
+  ],
+  [
+    /^AEC seat status\b/i,
+    { label: 'AEC seat status', title: 'AEC seat status, 2025 election' },
+  ],
+];
+/** A money export's raw source as `{ label, title }` for a SourceLine. */
+export function moneyCitation(raw: string): SourceCitation {
+  const text = raw.trim();
+  const known = registers.find(([pattern]) => pattern.test(text));
+  return known ? known[1] : sourceName(text);
+}
+/** The short publisher name for a row's source and its original's label. */
+export const moneyRegister = (raw: string) => moneyCitation(raw).label;
+
+const isoDate = /\b(\d{4}-\d{2}-\d{2})\b/g;
+/**
+ * An export's note with its ISO dates read as dates ("awards published 30
+ * Mar 2011 to 1 May 2028"), as the date rule asks (design pass 5, P3-12).
+ */
+export function readableDates<T extends string | null | undefined | false>(
+  note: T,
+): T {
+  return (
+    typeof note === 'string'
+      ? note.replace(isoDate, (iso) => formatDate(iso, 'short') || iso)
+      : note
+  ) as T;
+}
 /** A whole-screen catalog record's saved state, for the source line. */
 type Saved = { stale: boolean; savedAt: number | null } | null | undefined;
 
@@ -70,13 +131,17 @@ export function MetaSource({
     <SourceLine
       title={title}
       asOf={meta.asOf}
-      citation={meta.source}
+      citation={[moneyCitation(meta.source)]}
       savedAt={record?.stale ? record.savedAt : null}
       originals={
         originals ??
-        (meta.sourceUrl ? [{ label: meta.source, url: meta.sourceUrl }] : [])
+        (meta.sourceUrl
+          ? [{ label: moneyRegister(meta.source), url: meta.sourceUrl }]
+          : [])
       }
-      notes={[meta.coverage, meta.threshold, ...meta.caveats, ...notes]}
+      notes={[meta.coverage, meta.threshold, ...meta.caveats, ...notes].map(
+        readableDates,
+      )}
       licence={meta.licence}
       testID={testID}
     />
@@ -108,8 +173,9 @@ export function RowSource({
   organisation?: { name: string; path: string } | null;
   testID?: string;
 }) {
+  const name = moneyCitation(register);
   const originals: SourceOriginal[] = [
-    ...(url ? [{ label: register, url, record: record ?? undefined }] : []),
+    ...(url ? [{ label: name.label, url, record: record ?? undefined }] : []),
     ...(organisation
       ? [
           {
@@ -125,10 +191,10 @@ export function RowSource({
       title="This record"
       dateLabel={null}
       asOf={asOf}
-      citation={register}
+      citation={[name]}
       coverage={record}
       originals={originals}
-      notes={notes}
+      notes={notes?.map(readableDates)}
       testID={testID}
     />
   );
@@ -160,6 +226,7 @@ export function MoneyList<T>({
   render,
   header,
   footer,
+  sourceLine,
   refreshing,
   refresh,
   id,
@@ -170,6 +237,12 @@ export function MoneyList<T>({
   render: (row: T, index: number) => ReactNode;
   header: ReactNode;
   footer?: ReactNode;
+  /**
+   * The list's one source line, at the foot of its first page (design pass
+   * 5, P3-9): under the first rows, or at the list's end when it is short
+   * or empty. Never above the list.
+   */
+  sourceLine?: ReactNode;
   refreshing: boolean;
   refresh: () => void;
   id: string;
@@ -183,6 +256,7 @@ export function MoneyList<T>({
     minItemWidth: 320 * Math.min(Math.max(fontScale, 1), 2),
   });
   useRefreshCommand(refresh, refreshing);
+  const sourceAt = sourceLine ? sourceIndex(rows.length, count) : -1;
   return (
     <SidebarSafe style={styles.screen}>
       <FlatList
@@ -214,6 +288,9 @@ export function MoneyList<T>({
         }
         ListFooterComponent={
           <Group>
+            {sourceLine && sourceAt < 0 && loaded ? (
+              <View testID={`${id}-source-foot`}>{sourceLine}</View>
+            ) : null}
             {footer}
             <Text wordSafe variant="fine" testID={`${id}-end`}>
               End of record
@@ -231,11 +308,26 @@ export function MoneyList<T>({
           >
             {render(item, index)}
             <Divider variant="subtle" />
+            {index === sourceAt ? (
+              <View testID={`${id}-source-foot`}>{sourceLine}</View>
+            ) : null}
           </Group>
         )}
       />
     </SidebarSafe>
   );
+}
+/** A list's first page: ten rows, or ten rows of a grid. */
+export const FIRST_PAGE = 10;
+/**
+ * The row the list's source line follows: the last row of the first page,
+ * in the first column of a grid (so it reads under the page, not beside
+ * it), or -1 for an empty list, whose foot holds the line instead.
+ */
+export function sourceIndex(rows: number, columns = 1): number {
+  if (!rows) return -1;
+  const last = Math.min(FIRST_PAGE * columns, rows) - 1;
+  return last - (last % columns);
 }
 export function ResultCount({
   count,

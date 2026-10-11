@@ -378,31 +378,32 @@ export function leadFor(signal: DiscoverySignal): LeadView | null {
 }
 
 /**
- * The figures a lead's card shows. A concentration's title and sentence
+ * The one figure a lead's card shows (design pass 5, P2-13): the export's
+ * first money figure, in its own words. A concentration's title and sentence
  * already state its share, so its card shows the largest value; a company in
- * both shows its two money flows together, since either alone would read as
- * the whole story. In the export's own order and words.
+ * both shows its first flow, and its sentence and comparison give the other.
+ * Every figure is on the comparison.
  */
-export function leadFigures(lead: Pick<LeadView, 'category' | 'metrics'>) {
-  const money = lead.metrics.filter((metric) => metric.format === 'currency');
-  const shown = money.slice(
-    0,
-    lead.category === 'donor_contract_overlap' ? 2 : 1,
+export function leadFigure(lead: Pick<LeadView, 'metrics'>) {
+  return (
+    lead.metrics.find((metric) => metric.format === 'currency') ??
+    lead.metrics[0] ??
+    null
   );
-  return shown.length ? shown : lead.metrics.slice(0, 1);
 }
 
 /**
- * The one caveat a lead's card draws: the export's first, in its words
- * ("Matching names are not verified legal identities; …"). Every caveat is
- * in the card's source sheet and on the comparison.
+ * The card's way into its sheet: "Evidence (2)", read as "Evidence, 2
+ * example records". With no example records the sheet still holds every
+ * caveat.
  */
-export const leadCaveat = (lead: Pick<LeadView, 'caveats'>) =>
-  lead.caveats[0] ?? null;
-
-/** "2 example records", the card's source line. */
-export const exampleRecords = (count: number) =>
-  `${formatCount(count)} example ${count === 1 ? 'record' : 'records'}`;
+export function evidenceLink(count: number): { text: string; spoken: string } {
+  if (!count) return { text: 'Caveats', spoken: 'Caveats' };
+  return {
+    text: `Evidence (${formatCount(count)})`,
+    spoken: `Evidence, ${formatCount(count)} example ${count === 1 ? 'record' : 'records'}`,
+  };
+}
 
 export type LeadFilter = 'all' | LeadCategory;
 export type LeadSort = 'value' | 'share';

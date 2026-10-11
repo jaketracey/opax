@@ -30,6 +30,7 @@ import {
   ResultCount,
   RowSource,
   Title,
+  moneyRegister,
 } from './parts';
 export default function Program() {
   const {
@@ -149,7 +150,7 @@ export default function Program() {
                     ...(data.index.meta.sourceUrl
                       ? [
                           {
-                            label: data.index.meta.source,
+                            label: moneyRegister(data.index.meta.source),
                             url: data.index.meta.sourceUrl,
                           },
                         ]
@@ -230,7 +231,7 @@ export default function Program() {
               >
                 {g.name}
               </Text>
-              <Text wordSafe variant="strong" tabular>
+              <Text wordSafe variant="strong" tabular tone="moneyInk">
                 {formatMoneyCompact(g.value)}
               </Text>
               {g.kind === 'grant' ? (

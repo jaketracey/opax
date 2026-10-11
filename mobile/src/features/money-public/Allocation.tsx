@@ -23,10 +23,37 @@ import {
   MoneyList,
   ResultCount,
   Title,
+  moneyCitation,
+  readableDates,
 } from './parts';
 
 const MERIT =
   'A difference in funding does not establish that a project lacked merit. The government describes this program as delivering election commitments. Assessment scores and unsuccessful applications would be needed to test merit.';
+/**
+ * The state filter (design pass 5, P2-15): one choice among peers as chips,
+ * never a raw code to type. Values are the export's delivery-state codes.
+ */
+export const STATE_CHOICES = [
+  ['all', 'All', 'allocation-state-all'],
+  ['NSW', 'NSW', 'allocation-state-nsw'],
+  ['VIC', 'Vic', 'allocation-state-vic'],
+  ['QLD', 'Qld', 'allocation-state-qld'],
+  ['WA', 'WA', 'allocation-state-wa'],
+  ['SA', 'SA', 'allocation-state-sa'],
+  ['TAS', 'Tas', 'allocation-state-tas'],
+  ['ACT', 'ACT', 'allocation-state-act'],
+  ['NT', 'NT', 'allocation-state-nt'],
+] as const;
+export type StateChoice = (typeof STATE_CHOICES)[number][0];
+/** A record in the chosen state; "all" keeps every record. */
+export const inState = (
+  record: string | null | undefined,
+  state: StateChoice,
+) => state === 'all' || (record ?? '').trim().toUpperCase() === state;
+const INVITATIONS = {
+  label: 'Departmental invitation list',
+  title: 'The department’s invitation list, November 2025',
+};
 const EARLIER =
   'The earlier-grants view is a selection of sourced project examples from other programs, not a complete national or state total. Its year field uses each notice’s original publication year, with the latest known award value. It does not reconstruct the record as it stood that year.';
 export default function Allocation() {
@@ -48,7 +75,7 @@ export default function Allocation() {
     data = status.record?.data;
   const [stage, setStage] = useState('awards'),
     [query, setQuery] = useState(''),
-    [state, setState] = useState(''),
+    [state, setState] = useState<StateChoice>('all'),
     [through, setThrough] = useState(''),
     [seat, setSeat] = useState(''),
     [comparison, setComparison] = useState(false),
@@ -62,7 +89,7 @@ export default function Allocation() {
           : (data?.allocation.awards ?? [])
       ).filter(
         (p) =>
-          (!state || p.state.toLowerCase() === state.trim().toLowerCase()) &&
+          inState(p.state, state) &&
           [p.id, p.title]
             .join(' ')
             .toLowerCase()
@@ -87,12 +114,10 @@ export default function Allocation() {
       : stage === 'invitations'
         ? data?.allocation.invitationsAsOf
         : data?.allocation.asOf;
+  // Short publisher names on the line (design pass 5, P2-5); the earlier
+  // grants' venue checks are OPAX's own work, said in the notes.
   const source =
-    stage === 'history'
-      ? 'GrantConnect; verified historical grant venues'
-      : stage === 'invitations'
-        ? 'Departmental invitation list'
-        : 'GrantConnect';
+    stage === 'invitations' ? INVITATIONS : moneyCitation('GrantConnect');
   return (
     <>
       <MoneyHeader
@@ -128,30 +153,11 @@ export default function Allocation() {
               ]}
             />
             {data ? (
-              <Group gap={rhythm.tight}>
-                <Text wordSafe variant="fine" testID="allocation-caveat">
-                  {stage === 'history'
-                    ? 'Selected examples at their latest award values; not payments made that year.'
-                    : 'Invitations and awards are separate snapshots: never add them together.'}
-                </Text>
-                <SourceLine
-                  title="About community funding"
-                  asOf={date ?? null}
-                  citation={source}
-                  savedAt={status.record?.stale ? status.record.savedAt : null}
-                  notes={[
-                    MERIT,
-                    EARLIER,
-                    ...data.locations.methodology,
-                    ...(stage === 'history'
-                      ? data.history.methodology.filter(
-                          (m) => !m.includes('© OpenStreetMap'),
-                        )
-                      : []),
-                  ]}
-                  testID="allocation-source"
-                />
-              </Group>
+              <Text wordSafe variant="fine" testID="allocation-caveat">
+                {stage === 'history'
+                  ? 'Selected examples at their latest award values; not payments made that year.'
+                  : 'Invitations and awards are separate snapshots: never add them together.'}
+              </Text>
             ) : null}
             <Field
               label="Find a project"
@@ -160,12 +166,16 @@ export default function Allocation() {
               onChangeText={setQuery}
               returnKeyType="done"
             />
-            <Field
-              label="State or territory code (blank for all)"
-              value={state}
-              onChangeText={setState}
-              returnKeyType="done"
-            />
+            <Group gap={rhythm.tight}>
+              <Text variant="label" accessibilityRole="header">
+                State or territory
+              </Text>
+              <MoneyChoices
+                value={state}
+                onChange={setState}
+                options={STATE_CHOICES}
+              />
+            </Group>
             {stage === 'history' ? (
               <Field
                 label="Show grants published by the end of year (blank for all years)"
@@ -208,7 +218,7 @@ export default function Allocation() {
                   <SourceLine
                     title="About the seat comparison"
                     asOf={data.allocation.asOf}
-                    citation="Centre for Public Integrity, Table 3"
+                    citation={[moneyCitation('Centre for Public Integrity')]}
                     originals={
                       data.allocation.sources.cpi
                         ? [
@@ -261,7 +271,7 @@ export default function Allocation() {
                   <SourceLine
                     title="About election margins"
                     asOf={data.allocation.asOf}
-                    citation="AEC seat status, 2025 election"
+                    citation={[moneyCitation('AEC seat status')]}
                     originals={
                       data.allocation.sources.aec
                         ? [
@@ -286,6 +296,27 @@ export default function Allocation() {
             />
           </>
         }
+        sourceLine={
+          data ? (
+            <SourceLine
+              title="About community funding"
+              asOf={date ?? null}
+              citation={[source]}
+              savedAt={status.record?.stale ? status.record.savedAt : null}
+              notes={[
+                MERIT,
+                EARLIER,
+                ...data.locations.methodology,
+                ...(stage === 'history'
+                  ? data.history.methodology.filter(
+                      (m) => !m.includes('© OpenStreetMap'),
+                    )
+                  : []),
+              ].map(readableDates)}
+              testID="allocation-source"
+            />
+          ) : null
+        }
         render={(r, i) => {
           const location =
             stage === 'history'
@@ -305,7 +336,7 @@ export default function Allocation() {
               >
                 {location?.title ?? r.title}
               </Text>
-              <Text wordSafe variant="strong" tabular>
+              <Text wordSafe variant="strong" tabular tone="moneyInk">
                 {formatMoneyCompact(r.value)}
               </Text>
               <Text wordSafe variant="metadata">
@@ -324,11 +355,11 @@ export default function Allocation() {
                 title="This record"
                 dateLabel={null}
                 asOf={date ?? null}
-                citation={source}
+                citation={[source]}
                 coverage={r.id}
                 originals={[
                   ...(r.sourceUrl
-                    ? [{ label: source, url: r.sourceUrl, record: r.id }]
+                    ? [{ label: source.label, url: r.sourceUrl, record: r.id }]
                     : []),
                   ...(location?.sites ?? []).map((site) => ({
                     label: 'Project location evidence',

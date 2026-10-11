@@ -75,16 +75,6 @@ export default function Discover() {
               label="Loading Discover"
               testID="discover-status"
             />
-            {data ? (
-              <SourceLine
-                title="About Discover"
-                asOf={data.generated_at}
-                citation={['AEC annual returns', 'AusTender']}
-                savedAt={status.record?.stale ? status.record.savedAt : null}
-                notes={data.methodology}
-                testID="discover-sources"
-              />
-            ) : null}
             <MoneyChoices
               value={category}
               onChange={setCategory}
@@ -112,6 +102,18 @@ export default function Discover() {
               noun={categoryOption(category).toLowerCase()}
             />
           </>
+        }
+        sourceLine={
+          data ? (
+            <SourceLine
+              title="About Discover"
+              asOf={data.generated_at}
+              citation={['AEC annual returns', 'AusTender']}
+              savedAt={status.record?.stale ? status.record.savedAt : null}
+              notes={data.methodology}
+              testID="discover-sources"
+            />
+          ) : null
         }
         render={(s, i) => {
           const evidence = s.evidence.flatMap((e) =>

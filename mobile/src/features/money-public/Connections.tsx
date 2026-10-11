@@ -23,6 +23,12 @@ import {
   ResultCount,
   Title,
 } from './parts';
+// OPAX's own collection of public records, said in plain words: each
+// excerpt's line names its own publisher.
+const CONNECTIONS_CITATION = {
+  label: 'Public records',
+  title: 'Public records collected by OPAX; each excerpt names its own source',
+};
 export default function Connections() {
   const load = useCallback(
       (refresh: boolean) => money.connections(refresh),
@@ -83,16 +89,6 @@ export default function Connections() {
               label="Loading programs and places"
               testID="connections-status"
             />
-            {data ? (
-              <SourceLine
-                title="About programs and places"
-                asOf={data.asOf}
-                citation="OPAX collected source corpus"
-                savedAt={status.record?.stale ? status.record.savedAt : null}
-                notes={[data.note]}
-                testID="connections-source"
-              />
-            ) : null}
             <Field
               label="Find a program, place or organisation"
               testID="connections-search"
@@ -113,6 +109,18 @@ export default function Connections() {
             />
             <ResultCount count={data ? rows.length : null} noun="connections" />
           </>
+        }
+        sourceLine={
+          data ? (
+            <SourceLine
+              title="About programs and places"
+              asOf={data.asOf}
+              citation={[CONNECTIONS_CITATION]}
+              savedAt={status.record?.stale ? status.record.savedAt : null}
+              notes={[data.note]}
+              testID="connections-source"
+            />
+          ) : null
         }
         render={(r) =>
           r.kind === 'organisation' ? (

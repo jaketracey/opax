@@ -186,19 +186,28 @@ test('grants: the total, the donor overlap in one sentence and one source line',
   await act(async () => r.unmount());
 });
 
-test('largest grants: one dated line for the month, then one source per award', async () => {
+test('largest grants: one source per award, and the month’s dated line at the foot of the first page', async () => {
   const r = await render(Largest);
   const sources = r.root.findAllByType(SourceLine);
-  expect(sources[0]!.props.testID).toBe('largest-source');
-  expect(sources[0]!.props.asOf).toBeTruthy();
-  const rows = sources.slice(1);
+  // Design pass 5, P3-9: the list's source line follows its first rows.
+  const rows = sources.filter((s) =>
+    /^largest-source-\d+$/.test(s.props.testID),
+  );
   expect(rows.length).toBeGreaterThan(0);
+  expect(sources[0]!.props.testID).toBe('largest-source-0');
   rows.forEach((row, i) => {
     expect(row.props.testID).toBe(`largest-source-${i}`);
     // The month's line dates the list; a row names its register and record.
     expect(row.props.dateLabel).toBeNull();
-    expect(row.props.citation).toBe('GrantConnect');
+    expect(row.props.citation).toEqual([
+      expect.objectContaining({ label: 'GrantConnect' }),
+    ]);
   });
+  const list = sources.find((s) => s.props.testID === 'largest-source');
+  if (list) {
+    expect(list.props.asOf).toBeTruthy();
+    expect(sources.indexOf(list)).toBeGreaterThan(0);
+  }
   await act(async () => r.unmount());
 });
 

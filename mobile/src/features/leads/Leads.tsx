@@ -47,8 +47,8 @@ const sorts: readonly Segment<LeadSort>[] = [
  * Leads (P1): every signal in /discovery.json as a card that opens its
  * comparison. The lede says what a lead is, and one source line under it
  * dates the export and holds its methodology. Each card keeps its title,
- * figure, sentence, first caveat and a source line to its example records
- * and every caveat. "All leads" keeps the export's order.
+ * one figure, one sentence and "Evidence (n) ›" to its example records and
+ * every caveat (design pass 5, P2-13). "All leads" keeps the export's order.
  */
 export default function Leads() {
   const load = useCallback(

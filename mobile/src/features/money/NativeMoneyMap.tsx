@@ -20,7 +20,7 @@ import {
   useAccessibilitySize,
   useReduceMotionSetting,
 } from '../../design/primitives';
-import { colors, spacing } from '../../design/tokens';
+import { colors, rhythm, spacing } from '../../design/tokens';
 import type { MoneyGraph } from './data';
 import { NativeMoneyScene, type ProjectedLabel } from './NativeMoneyScene';
 import { isE2E } from '../../design/environment';
@@ -278,6 +278,21 @@ export function NativeMoneyMap({
       ),
     [focus],
   );
+  const fit = (
+    <Button
+      label="Fit map"
+      variant="quiet"
+      size="compact"
+      disabled={error}
+      onPress={() => engine.current?.focus(null)}
+      testID="money-fit"
+    />
+  );
+  // On a regular-width window the scene is wide and "Fit map" under it sat
+  // in the far corner (design pass 5, P3-17): it is anchored to the scene's
+  // top right instead, a sibling over the canvas so its touches never reach
+  // the scene's gestures. On an iPhone it stays under the scene.
+  const anchored = adaptive.regular && !error;
   return (
     <Group gap={spacing.s3}>
       {error ? (
@@ -296,59 +311,67 @@ export function NativeMoneyMap({
           />
         </Group>
       ) : (
-        <GestureDetector gesture={gesture}>
-          <View
-            testID={probe}
-            accessible
-            accessibilityRole="image"
-            accessibilityLabel="Three dimensional money map. Drag with one finger to orbit, pinch to zoom, tap a node for its record. The list gives the same recorded figures."
-            style={[
-              styles.canvas,
-              adaptive.regular ? { height: canvasHeight } : null,
-            ]}
-            onLayout={(event) => {
-              const { width, height } = event.nativeEvent.layout;
-              setSize((previous) =>
-                previous.width === width && previous.height === height
-                  ? previous
-                  : { width, height },
-              );
-            }}
-          >
-            {size.width > 0 ? (
-              <GLView
-                key={generation}
-                style={styles.gl}
-                msaaSamples={0}
-                onContextCreate={context}
-                accessible={false}
-                accessibilityElementsHidden
-                importantForAccessibility="no-hide-descendants"
-              />
-            ) : null}
-            {!accessibilitySize ? (
-              <MoneyMapLabels
-                groups={labelGroups}
-                parties={labelParties}
-                labels={labels}
-                width={size.width}
-              />
-            ) : null}
-          </View>
-        </GestureDetector>
+        <View style={styles.stage}>
+          <GestureDetector gesture={gesture}>
+            <View
+              testID={probe}
+              accessible
+              accessibilityRole="image"
+              accessibilityLabel="Three dimensional money map. Drag with one finger to orbit, pinch to zoom, tap a node for its record. The list gives the same recorded figures."
+              style={[
+                styles.canvas,
+                adaptive.regular ? { height: canvasHeight } : null,
+              ]}
+              onLayout={(event) => {
+                const { width, height } = event.nativeEvent.layout;
+                setSize((previous) =>
+                  previous.width === width && previous.height === height
+                    ? previous
+                    : { width, height },
+                );
+              }}
+            >
+              {size.width > 0 ? (
+                <GLView
+                  key={generation}
+                  style={styles.gl}
+                  msaaSamples={0}
+                  onContextCreate={context}
+                  accessible={false}
+                  accessibilityElementsHidden
+                  importantForAccessibility="no-hide-descendants"
+                />
+              ) : null}
+              {!accessibilitySize ? (
+                <MoneyMapLabels
+                  groups={labelGroups}
+                  parties={labelParties}
+                  labels={labels}
+                  width={size.width}
+                />
+              ) : null}
+            </View>
+          </GestureDetector>
+          {anchored ? (
+            <View style={styles.fitAnchor} testID="money-fit-anchor">
+              {fit}
+            </View>
+          ) : null}
+        </View>
       )}
-      <Button
-        label="Fit map"
-        variant="quiet"
-        size="compact"
-        disabled={error}
-        onPress={() => engine.current?.focus(null)}
-        testID="money-fit"
-      />
+      {anchored ? null : fit}
     </Group>
   );
 }
 const styles = StyleSheet.create({
   canvas: { height: 350, backgroundColor: colors.paper, overflow: 'hidden' },
   gl: { flex: 1 },
+  stage: { position: 'relative' },
+  fitAnchor: {
+    position: 'absolute',
+    top: rhythm.tight,
+    right: rhythm.tight,
+    backgroundColor: colors.paper,
+    borderRadius: rhythm.line,
+  },
 });
