@@ -270,8 +270,13 @@ android/src/voiceProduction/ production release: the opax.com.au origin and the 
   needs no key), clear the local state and then report `unavailable`. iOS's WhenUnlocked restriction has no exact
   equivalent here (`setUnlockedDeviceRequired` misbehaves on some devices), so the
   key is usable while the device is locked.
-- **Transport.** OkHttp with no cookie jar, cache, redirects or silent retries,
-  15-second timeouts, and a policy check on the `HttpUrl` actually sent.
+- **Transport.** OkHttp with no cookie jar, cache or redirects, 15-second
+  timeouts, and a policy check on the `HttpUrl` actually sent. OkHttp's own
+  retry is off, as it can resend a POST. The one retry is URLSession's (Apple
+  QA1941): a GET or HEAD whose reused connection failed before any response
+  headers is sent once more at once, so a connection the server closed while
+  idle never surfaces as "could not be reached". Never a POST, a timeout, a
+  fresh connection's failure or a cancellation, and never twice.
   `TransportGuard` is the test and e2e host guard (Swift's `VoiceTestSafety`
   for HTTP).
 - **Call half.** `VoiceCallController` implements `VoiceCore` and is the only

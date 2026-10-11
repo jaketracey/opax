@@ -3,17 +3,24 @@
 package au.com.opax.voice
 
 import java.io.IOException
+import java.io.InterruptedIOException
+import java.net.InetSocketAddress
+import java.net.Proxy
 import java.util.concurrent.TimeUnit
 import kotlin.coroutines.cancellation.CancellationException
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.NonCancellable
+import kotlinx.coroutines.currentCoroutineContext
+import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.withContext
 import okhttp3.Call
 import okhttp3.Callback
+import okhttp3.Connection
 import okhttp3.CookieJar
+import okhttp3.EventListener
 import okhttp3.HttpUrl
 import okhttp3.HttpUrl.Companion.toHttpUrl
 import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
@@ -532,16 +539,34 @@ class VoiceHttpClient(
 }
 
 /**
- * The platform session: no cookie jar or cache, no redirects (HTTP or
- * WebSocket handshake, same origin included) and no silent retries.
+ * The platform session: no cookie jar or cache and no redirects (HTTP or
+ * WebSocket handshake, same origin included). OkHttp's own retry stays off,
+ * because it can resend a POST. The one retry is URLSession's, as iOS gets it
+ * (Apple QA1941): a GET or HEAD whose reused connection failed before any
+ * response headers arrived, as when the server closed it while idle, is sent
+ * once more at once. Never a POST, never after a timeout, a fresh
+ * connection's failure or a cancellation, and never twice. The relay socket
+ * has no retry.
  */
 class OkHttpTransport(private val policy: RoutePolicy = RoutePolicy()) : HttpTransport {
   internal val client: OkHttpClient = configuration()
 
+  /** VoiceHttpClient sees one outcome, as from URLSession. */
   override suspend fun send(request: Request): HttpResponse {
+    val first = Attempt()
+    try {
+      return attempt(request, first)
+    } catch (error: IOException) {
+      if (!first.retryable(request.method, error)) throw error
+    }
+    currentCoroutineContext().ensureActive()
+    return attempt(request, Attempt())
+  }
+
+  private suspend fun attempt(request: Request, attempt: Attempt): HttpResponse {
     TransportGuard.check(request.url)
     if (!policy.permits(request.url, request.method)) throw VoiceException(VoiceFailure.forbidden)
-    val call = client.newCall(request)
+    val call = client.newCall(request.newBuilder().tag(Attempt::class.java, attempt).build())
     return suspendCancellableCoroutine { continuation ->
       continuation.invokeOnCancellation { call.cancel() }
       call.enqueue(object : Callback {
@@ -570,8 +595,30 @@ class OkHttpTransport(private val policy: RoutePolicy = RoutePolicy()) : HttpTra
     return HttpResponse(response.code, headers, body)
   }
 
+  /** What one call's connection did, recorded by OkHttp's event listener on its threads. */
+  internal class Attempt {
+    @Volatile var connected = false
+    @Volatile var reused = false
+    @Volatile var headers = false
+    @Volatile var canceled = false
+
+    fun retryable(method: String, error: IOException) =
+      method in idempotent && error !is InterruptedIOException && reused && !headers && !canceled
+  }
+
+  private class AttemptListener(private val attempt: Attempt) : EventListener() {
+    override fun connectStart(call: Call, inetSocketAddress: InetSocketAddress, proxy: Proxy) {
+      attempt.connected = true
+    }
+    override fun connectionAcquired(call: Call, connection: Connection) { attempt.reused = !attempt.connected }
+    override fun responseHeadersStart(call: Call) { attempt.headers = true }
+    override fun canceled(call: Call) { attempt.canceled = true }
+  }
+
   companion object {
     private const val MAX_TRANSPORT_BYTES = 8 * 1024 * 1024
+    // URLSession's own retry covers idempotent requests only; POST never.
+    private val idempotent = setOf("GET", "HEAD")
 
     internal fun configuration(): OkHttpClient = OkHttpClient.Builder()
       .cookieJar(CookieJar.NO_COOKIES)
@@ -579,6 +626,8 @@ class OkHttpTransport(private val policy: RoutePolicy = RoutePolicy()) : HttpTra
       .followRedirects(false)
       .followSslRedirects(false)
       .retryOnConnectionFailure(false)
+      // Only transport calls carry an Attempt; the relay socket records nothing.
+      .eventListenerFactory { call -> call.request().tag(Attempt::class.java)?.let(::AttemptListener) ?: EventListener.NONE }
       .connectTimeout(15, TimeUnit.SECONDS)
       .readTimeout(15, TimeUnit.SECONDS)
       .writeTimeout(15, TimeUnit.SECONDS)
