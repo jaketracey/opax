@@ -20,7 +20,7 @@ for (const source of sourceLabels) for (const scenario of scenarios) {
   if(scenario==='quota') return new Error('quota 4006');
   return good;
  });
- const {deps,d1,raw}=makeDeps({kb,ai,env:{WRITE_MODE:'live',DAILY_NEURON_BUDGET:'100',STEADY_NEURON_BUDGET:'100'}});
+ const {deps,d1,raw}=makeDeps({kb,ai,env:{HISTORIC_HOLD:'true',WRITE_MODE:'live',DAILY_NEURON_BUDGET:'100',STEADY_NEURON_BUDGET:'100'}});
  const tasks=source==='media_release'?['release_summary']:['speech_summary','speech_topics'];
  await enqueue(d1,tasks.map(task=>({rid:'r1',task,priority:0})),1);
  if(scenario==='no-text') kb.resources.get('r1').texts.body='Moved.';
@@ -33,7 +33,7 @@ for (const source of sourceLabels) for (const scenario of scenarios) {
   if(scenario==='flush-full-read-failure') kb.getResource=async()=>{throw new (await load('src/kb.ts')).KbBackpressure('full-read backpressure',429)};
  }
  const stats=await runTick(deps); delete stats.ms; delete stats.skippedShort; delete stats.rejectedNames;
- const q=rows(raw,'SELECT * FROM queue');q.forEach(r=>{delete r.names_rejected;delete r.terminal_reason;delete r.historic});
+ const q=rows(raw,'SELECT * FROM queue');q.forEach(r=>{delete r.names_rejected;delete r.terminal_reason;delete r.historic;delete r.historic_released});
  const state=rows(raw,"SELECT key,value FROM state WHERE key != 'last_tick' ORDER BY key");
  const spent=rows(raw,'SELECT * FROM spend ORDER BY day,model');
  const modelHash=createHash('sha256').update(JSON.stringify(ai.calls)).digest('hex');

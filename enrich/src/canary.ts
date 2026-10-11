@@ -130,7 +130,7 @@ export async function runCanary(d: CanaryDeps, rids: string[]): Promise<{ result
     const result: CanaryRidResult = { rid, status: 'skipped', writes: [] }
     results.push(result)
     const { results: rows } = await d.db
-      .prepare("SELECT * FROM queue WHERE rid = ? AND status = 'done' AND outcome IN ('dry', 'unwritten') AND result IS NOT NULL")
+      .prepare("SELECT * FROM queue WHERE rid = ? AND status = 'done' AND terminal_reason IS NULL AND outcome IN ('dry', 'unwritten') AND result IS NOT NULL")
       .bind(rid)
       .all<QueueRow>()
     if (rows.length === 0) {

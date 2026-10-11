@@ -1,7 +1,7 @@
 {
   // opax-enrich: a standalone Worker that enriches the OPAX knowledge box with Workers AI
   // (speech briefs, topic labels, press-release briefs). It replaces the subscription
-  // Codex/Claude workers. Runs on a one-minute cron; only GET /status is served.
+  // Codex/Claude workers. Runs on a one-minute cron; admin routes require a bearer token.
   "name": "opax-enrich",
   "main": "src/index.ts",
   "compatibility_date": "2026-09-01",
@@ -40,6 +40,8 @@
     // "dry" runs the model and records results in D1 but writes NOTHING to the knowledge box.
     // "live" writes. Only the exact string "live" writes.
     "WRITE_MODE": "live",
+    // Historic speeches await the batch path; only explicit admin releases reach the live queue.
+    "HISTORIC_HOLD": "true",
     // First discovery run starts here (the queue de-duplicates on (rid, task)).
     "DISCOVERY_START": "2026-09-20T00:00:00Z"
   }

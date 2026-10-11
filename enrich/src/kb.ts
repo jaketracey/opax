@@ -49,6 +49,7 @@ export interface KbResource {
 export interface CatalogRow {
   rid: string
   created: string | null
+  usermetadata?: KbResource['usermetadata']
 }
 
 export interface CatalogPage {
@@ -157,8 +158,8 @@ export class Kb implements KbApi {
       page_number: page,
       sort: { field: 'created', order: 'asc' },
     }, false, CATALOG_TIMEOUT_MS)
-    const resources = (r?.resources ?? {}) as Record<string, { created?: string }>
-    const rows = Object.entries(resources).map(([rid, v]) => ({ rid, created: typeof v?.created === 'string' ? v.created : null }))
+    const resources = (r?.resources ?? {}) as Record<string, KbResource>
+    const rows = Object.entries(resources).map(([rid, v]) => ({ rid, created: typeof v?.created === 'string' ? v.created : null, usermetadata: v.usermetadata }))
     return { rows, hasNext: Boolean(r?.fulltext?.next_page) && rows.length > 0 }
   }
 }

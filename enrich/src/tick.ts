@@ -9,6 +9,7 @@ import {
   finishRows,
   getState,
   hasBackfill,
+  holdHistoricStatement,
   isSummaryTask,
   logError,
   logRejection,
@@ -190,6 +191,7 @@ export async function runTick(d: TickDeps): Promise<TickStats> {
         startIso: d.cfg.discoveryStart,
         maxPages: d.cfg.discoveryMaxPages,
         overlapS: d.cfg.discoveryOverlapS,
+        historicHold: d.cfg.historicHold,
         maxMs: d.cfg.discoveryMaxMs,
         clock: d.now,
       })
@@ -283,6 +285,13 @@ async function processRid(d: TickDeps, ctl: Ctl, day: string, rid: string, rows:
   const texts = resource.data?.texts
   const text = pickText(texts)
   const historic = isHistoricSpeech(resource)
+  // Also catch pending work left by a previous deployment or a manual seed.
+  // Explicitly released tasks retain permission to use the live model.
+  if (d.cfg.historicHold && historic && rows.some(row => row.historic_released !== 1)) {
+    await d.db.batch([holdHistoricStatement(d.db, [rid], d.now())])
+    rows = rows.filter(row => row.historic_released === 1)
+    if (!rows.length) return
+  }
   const words = wordCount(text)
   const briefPresent = existingSummary(texts) !== ''
   const topicsPresent = hasTopicLabels(resource)
@@ -440,6 +449,11 @@ async function flush(d: TickDeps, ctl: Ctl, stats: TickStats): Promise<void> {
   for (const row of rows) byRid.set(row.rid, [...(byRid.get(row.rid) ?? []), row])
   await pool([...byRid.entries()], d.cfg.concurrency, async ([rid, group]) => {
     if (!mayContinue(d, ctl)) return
+    if (d.cfg.historicHold && group.some(row => row.historic === 1 && row.historic_released !== 1)) {
+      await d.db.batch([holdHistoricStatement(d.db, [rid], d.now())])
+      group = group.filter(row => row.historic_released === 1)
+      if (!group.length) return
+    }
     const updates: RowUpdate[] = []
     for (const row of group) {
       if (ctl.stop) return
