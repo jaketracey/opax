@@ -1,19 +1,19 @@
-import {MONEY_GRAPHS,withheldPhrases,namesWithheldPhrase} from '../public/donor-entity.js'
+import {compileHashedIdentityCheck} from './table-identity-hashes.mjs'
 
 const indices = new WeakMap<Fetcher, Promise<(text: string) => boolean>>()
-/** Shared graph index, independent of client rows. In donor tables there are no
- * office-holder exemptions: a donor search must not reflect a withheld name. */
+/** Complete build-time registry: donor, recipient and supplier identities.
+ * Only hashes are served; anonymised graphs cannot reconstruct this index. */
 export async function tablePrivacyCheck(assets: Fetcher): Promise<(text: string) => boolean> {
   let pending = indices.get(assets)
   if (!pending) {
-    pending = Promise.all(MONEY_GRAPHS.map(async path => {
-      const response = await assets.fetch(new Request(`https://opax.com.au${path}`))
+    pending = (async () => {
+      const response = await assets.fetch(new Request('https://opax.com.au/table-private-identities.json'))
       if (!response.ok) throw new Error('Privacy index unavailable')
-      return response.json() as Promise<{nodes: {label: string; kind: string; aliases?: string[] | null}[]}>
-    })).then(graphs => {
-      const phrases = withheldPhrases(graphs, [])
-      return (text: string) => !namesWithheldPhrase(phrases, `donor receipts ${text}`)
-    }).catch(() => {indices.delete(assets); return () => false})
+      const registry = await response.json() as {version:number;identities:{hash:string;words:number}[];strippedLengths:number[]}
+      if(registry.version!==1 || !Array.isArray(registry.strippedLengths) || !registry.strippedLengths.length || registry.strippedLengths.some(n=>!Number.isSafeInteger(n)||n<4))throw new Error('Privacy index unavailable')
+      const blocked=compileHashedIdentityCheck(registry.identities,registry.strippedLengths)
+      return (text: string) => !blocked(text)
+    })().catch(() => {indices.delete(assets); return () => false})
     indices.set(assets, pending)
   }
   return pending

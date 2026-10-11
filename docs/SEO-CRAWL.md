@@ -53,7 +53,7 @@ The available `parliamentarians.json` and electorate member export contain no de
 
 ### Googlebot measurements
 
-Words and internal `<a>` links are counted inside the raw `<section id="prerender">`, before JavaScript, using local Wrangler and `curl -A Googlebot`. Each row returned 200. Canonicals are absolute `https://opax.com.au` plus the path below, exactly once before and after; `/map` had no canonical before and has one afterwards.
+Words and internal `<a>` links are counted inside the raw `<section id="prerender">`, before JavaScript, using local Wrangler and the shared OPAX agent (loaded from `scripts/lib/http.sh`). Each row returned 200. Canonicals are absolute `https://opax.com.au` plus the path below, exactly once before and after; `/map` had no canonical before and has one afterwards.
 
 | Page/path | Words before → after | Links before → after |
 |---|---:|---:|
@@ -118,7 +118,7 @@ uv run --frozen --with pytest python -m pytest tests -q # from repo root
 unshare -rn sh -c 'ip link set lo up; npx wrangler dev --local --port 8787 --var INDEXNOW_ENABLED:false --var INDEXNOW_DRY_RUN:true'
 ```
 
-Inside that same namespace, GET the measurement paths with `curl -A Googlebot`; count the prerender block and inspect the canonical. Check `/subject/person/Bruce%20Baird`, `/sitemap.xml` and `/sitemaps/bills-1.xml`. Wrangler rewrites the configured upstream host and matching `Location` headers: to verify `www`, run a separate local session with `--local-upstream www.opax.com.au`, then curl with `-H 'Host: www.opax.com.au'`. `/money`, the Bruce name plus trailing slash and an uppercase bill key plus trailing slash must each return one 308 to the HTTPS apex canonical. The combined `/map/` and `/community/` forms do the same; their apex slash aliases use 301. Do not follow that redirect onto production; fetch the canonical path through the apex local session instead. Apex name/path redirects return 301 (Wrangler may display the equivalent localhost location).
+Inside that same namespace, GET the measurement paths with the shared OPAX agent (loaded from `scripts/lib/http.sh`); count the prerender block and inspect the canonical. Check `/subject/person/Bruce%20Baird`, `/sitemap.xml` and `/sitemaps/bills-1.xml`. Wrangler rewrites the configured upstream host and matching `Location` headers: to verify `www`, run a separate local session with `--local-upstream www.opax.com.au`, then curl with `-H 'Host: www.opax.com.au'`. `/money`, the Bruce name plus trailing slash and an uppercase bill key plus trailing slash must each return one 308 to the HTTPS apex canonical. The combined `/map/` and `/community/` forms do the same; their apex slash aliases use 301. Do not follow that redirect onto production; fetch the canonical path through the apex local session instead. Apex name/path redirects return 301 (Wrangler may display the equivalent localhost location).
 
 `www` discovery requests (`/sitemap.xml`, `/sitemaps/*.xml`, `/robots.txt`, `/llms.txt`) use one host-level **301** to the apex, combining a trailing-slash correction where needed. Apex files serve directly with 200. This follows Google’s [permanent redirect guidance](https://developers.google.com/search/docs/crawling-indexing/301-redirects); Google also [follows HTTP redirects for robots.txt](https://developers.google.com/crawling/docs/robots-txt/robots-txt-spec). The same direct-response and one-hop table checks cover GET and HEAD.
 

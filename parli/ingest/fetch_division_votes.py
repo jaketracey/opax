@@ -12,6 +12,8 @@ Usage:
     python parli/ingest/fetch_division_votes.py
 """
 
+from parli.ingest import http as source_http
+
 import json
 import sqlite3
 import sys
@@ -71,11 +73,11 @@ def get_pending_division_ids(db):
 def fetch_division_detail(division_id):
     """Fetch division detail from API. Returns parsed JSON or None."""
     url = f"{API_BASE}/divisions/{division_id}.json?key={urllib.parse.quote(API_KEY, safe='')}"
-    req = urllib.request.Request(url, headers={"User-Agent": "ParliIntel/1.0"})
+    req = source_http.Request(url, headers={"User-Agent": source_http.USER_AGENT})
 
     for attempt in range(MAX_RETRIES):
         try:
-            resp = urllib.request.urlopen(req, timeout=30)
+            resp = source_http.urlopen(req, timeout=30)
             return json.loads(resp.read())
         except urllib.error.HTTPError as e:
             if e.code == 404:

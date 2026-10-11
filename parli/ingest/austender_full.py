@@ -20,6 +20,8 @@ walked newest first so a partial load already covers the years that matter.
 """
 from __future__ import annotations
 
+from parli.ingest import http as source_http
+
 import argparse
 import json
 import os
@@ -32,7 +34,7 @@ import urllib.request
 from datetime import date, datetime, timedelta, timezone
 
 SOURCE = "austender_ocds"
-UA = "OPAX research (https://opax.com.au; contact jake.tracey@noice.work)"
+UA = source_http.USER_AGENT
 API = "https://api.tenders.gov.au/ocds/findByDates/contractPublished/{d}T00:00:00Z/{d}T23:59:59Z"
 PAUSE = 0.25          # between requests
 RETRIES = 6
@@ -74,10 +76,10 @@ def now_iso():
 
 
 def get_json(url: str) -> dict:
-    req = urllib.request.Request(url, headers={"User-Agent": UA, "Accept": "application/json"})
+    req = source_http.Request(url, headers={"User-Agent": source_http.USER_AGENT, "Accept": "application/json"})
     for attempt in range(RETRIES):
         try:
-            with urllib.request.urlopen(req, timeout=120) as resp:
+            with source_http.urlopen(req, timeout=120) as resp:
                 return json.load(resp)
         except urllib.error.HTTPError as e:
             if e.code == 400:

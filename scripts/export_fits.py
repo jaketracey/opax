@@ -48,6 +48,10 @@ Matching, so the numbers can be defended:
    export carries that sentence in meta so the client can print it.
 """
 
+import sys as _donor_sys
+from pathlib import Path as _DonorPath
+_donor_sys.path.insert(0, str(_DonorPath(__file__).resolve().parents[1]))
+from scripts.donor_public import public_donor_data
 import os
 import argparse
 import json
@@ -322,7 +326,7 @@ def main():
         "by_entity": by_entity,
         "people": people,
     }
-    text = json.dumps(out, ensure_ascii=False, separators=(",", ":"))
+    text = json.dumps(public_donor_data(out), ensure_ascii=False, separators=(",", ":"))
     if args.out == "-":
         sys.stdout.write(text)
     else:

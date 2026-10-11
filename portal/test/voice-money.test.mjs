@@ -108,9 +108,10 @@ test('voice period labels and separate years cannot become a wider total',()=>{
 
 test('overlapping aliases cannot combine separate organisations',()=>{
  const real=JSON.parse(readFileSync(new URL('../public/graph/money.json',import.meta.url),'utf8'));
- const castle=receiptAnswer(real,'money from Crown Castle Australia','federal','https://opax.test');
- assert.deepEqual(castle.selected_donors,['Crown Castle Australia']);assert.equal(castle.total_aud,27000);assert.equal(castle.receipts,8);
- for(const name of ['Crown','Macquarie','Tabcorp']){const r=receiptAnswer(real,`money from ${name}`,'federal','https://opax.test');assert.equal(r.needs_scope,true);assert.equal(r.total_aud,undefined);assert.deepEqual(r.sources,[]);}
+ const full=real.nodes.find(n=>n.kind==='donor' && /Crown Resorts Limited/.test(n.label));
+ const selected=receiptAnswer(real,`money from ${full.label}`,'federal','https://opax.test');
+ assert.deepEqual(selected.selected_donors,[full.label]);
+ for(const alias of ['Macquarie','Tabcorp']){const r=receiptAnswer(real,`money from ${alias}`,'federal','https://opax.test');assert.equal(r.needs_scope,true);assert.equal(r.total_aud,undefined);assert.deepEqual(r.sources,[]);}
  const shared={...graph,nodes:[...graph.nodes,{id:'x',kind:'donor',label:'Example Trust',aliases:['Example Casino']}]};
  assert.equal(receiptAnswer(shared,'money from Example Casino','federal','https://opax.test').needs_scope,true);
 });

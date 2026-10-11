@@ -128,7 +128,7 @@ export function receiptJurisdiction(query:string): string | null {
  * donor name may explain one of them ("The Federal Group in Tasmania").
  * Check only named, supported regions and require the remaining words to
  * identify that same graph. Never merge jurisdictions or guess from totals.
- * Every answer, tool and choice list reads the graph with individual donors
+ * Every answer, tool and choice list reads the graph with unconfirmed donors
  * withheld (public/donor-entity.js): a name typed by the reader is not matched. */
 export async function receiptGraphForQuestion(query:string, load:(file:string)=>Promise<ReceiptGraph|null>, state?:string) {
   const direct=state || receiptJurisdiction(query)

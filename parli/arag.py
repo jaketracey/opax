@@ -30,6 +30,7 @@ from dataclasses import dataclass
 from typing import Any, Optional
 
 import requests
+from parli.ingest.http import honest_headers
 
 DEFAULT_ZONE = "aws-ap-southeast-2-1"
 
@@ -96,7 +97,7 @@ def _request(
     while True:
         try:
             res = requests.request(
-                method, url, headers=headers,
+                method, url, headers=honest_headers(headers),
                 json=body if body is not None else None,
                 timeout=timeout,
             )

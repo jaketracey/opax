@@ -2,6 +2,7 @@ import { readFile, readdir, mkdir, writeFile, rm } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
 import { resolve, join } from 'node:path';
 import { createHash } from 'node:crypto';
+import {containsWithheldLookupPhrase} from '../portal/src/donor-sanitise.mjs';
 import { normalize, tokens, bucket } from '../portal/src/catalog-query.mjs';
 import { personNameKey, personUrl } from '../portal/public/canonical-urls.js';
 import { recordPathIndex } from '../portal/public/record-paths.js';
@@ -80,7 +81,7 @@ async function main() {
  const roster = await read('parliamentarians.json');
  const identity=personIndex(roster.people); canonicalPeople=identity.slugOf; canonicalAliases=new Map([...identity.byFold].map(([name,p])=>[name,identity.slugOf.get(p.name)]));
  for(const p of roster.people) add('person:'+p.name,'person',p.full||p.name,personHref(p.name),`${p.party_now||p.party||''}. ${(p.states||[]).join(', ')}. ${personSpeechCount(p)}${p.representation?.length?' Recorded representation: '+p.representation.map(r=>`${r.electorate}${r.state?', '+r.state:''}, ${r.jurisdiction}, ${r.chamber}`).join('; ')+'. Roster affiliations may include past seats and do not establish current tenure.':''}`,{aliases:p.name,from:p.first,to:p.last,state:p.states,parties:[p.party_now||p.party||''],speakers:[p.name],source:'Parliamentarian directory',dateLabel:p.speech_scope?'':(p.speech_count_basis?'Transcript years: ':'')+period(p.first,p.last)});
- // Individual donors stay out of search entities: public/donor-entity.js.
+ // Unconfirmed donors stay out of search entities: public/donor-entity.js.
  const moneyGraphs=await Promise.all(['money.json','money.qld.json','money.vic.json','money.tas.json'].map(file=>read('graph/'+file)));
  const donorIndex=donorPrivacyIndex(moneyGraphs);
  const withheld=name=>donorIndex.withheld.has(foldDonorName(name));
@@ -186,12 +187,18 @@ async function main() {
    `${r.report_label}. Tabled date: ${r.tabled_date}. ${[...r.sectors,...r.entities].join('; ')}.`,
    {date:r.tabled_date,state:'qld',source:'Queensland Audit Office',url:r.canonical_url,record_id:r.id});
  }
+ // Rebuild postings from sanitised document tokens; block contained aliases before
+ // both release hashing and writing; unrelated record IDs stay intact.
+ const registry=JSON.parse(await readFile(new URL('../portal/src/donor-withheld.json',import.meta.url),'utf8'));
+ const publicTerm=term=>!containsWithheldLookupPhrase(term,registry);
+ for(const doc of docs){doc.titleTokens=doc.titleTokens.filter(publicTerm);doc.bodyTokens=doc.bodyTokens.filter(publicTerm);}
  const meta=docs.map(d=>d.meta), postings=Array.from({length:64},()=>Object.create(null));
  for(const [id,d] of docs.entries()) {
   const weights=new Map(d.bodyTokens.map(t=>[t,1])); for(const t of d.titleTokens)weights.set(t,8);
   for(const [term,weight] of weights){const p=postings[bucket(term)];(p[term]??=[]).push(id,weight);}
  }
- const version=createHash('sha256').update(JSON.stringify(docs.map(d=>[d.record,d.meta,d.titleTokens,d.bodyTokens]))).digest('hex').slice(0,16);
+ const publicPaths=recordPathIndex(docs.map(d=>d.key.includes(':grant-recipient:')?{...d.record,owner:true}:d.record)).map(shard=>Object.fromEntries(Object.entries(shard).filter(([path])=>!containsWithheldLookupPhrase(path,registry))));
+ const version=createHash('sha256').update(JSON.stringify([docs.map(d=>[d.record,d.meta,d.titleTokens,d.bodyTokens]),publicPaths])).digest('hex').slice(0,16);
  const output=join(root,'search-catalog'); await mkdir(output,{recursive:true});
  // This directory contains generated search assets only.
  for(const name of await readdir(output))await rm(join(output,name),{recursive:true,force:true});
@@ -203,7 +210,7 @@ async function main() {
  // /support names a reported record only when its path is exactly one of these (portal/public/record-paths.js).
  // A grant recipient's own record owns its page; the award records only link to it.
  // Support reports use the same canonical addresses as search links.
- for(const [i,shard] of recordPathIndex(docs.map(d=>d.key.includes(':grant-recipient:')?{...d.record,owner:true}:d.record)).entries())await put('paths-'+i+'.json',shard);
+ for(const [i,shard]of publicPaths.entries())await put('paths-'+i+'.json',shard);
  const manifest={version,count:docs.length,counts,recordShardSize:256,coverage:'Searches the records and profiles published on OPAX. Map connections, expense totals and recipient profiles are aggregates and may overlap individual records. Published grant and interest detail exports are samples of their source registers; document search returns a ranked retrieval window.'};
  await writeFile(join(output,'manifest.json'),JSON.stringify(manifest));
  console.log(JSON.stringify(manifest,null,2));

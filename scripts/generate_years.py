@@ -33,6 +33,15 @@ Uses ARAG_* from .env for the ask. Voices go through https://opax.com.au so
 the tally is byte-for-byte the endpoint the dialog itself calls.
 """
 
+import sys as _donor_sys
+from pathlib import Path as _DonorPath
+_donor_sys.path.insert(0, str(_DonorPath(__file__).resolve().parents[1]))
+from scripts.donor_public import public_donor_data
+import sys as _http_sys
+from pathlib import Path as _HttpPath
+_http_sys.path.insert(0, str(_HttpPath(__file__).resolve().parents[1]))
+from parli.ingest import http as source_http
+
 import json
 import re
 import sys
@@ -213,8 +222,8 @@ def ask_year(kb: KbClient, year: int, labels: list[str]) -> dict:
 def search(q: str, year: int) -> dict:
     # `per` matters: without it the Worker pages the window at 20 rows.
     params = urllib.parse.urlencode({"q": q, "from": year, "to": year, "top_k": PROBE_TOPK, "per": PROBE_TOPK})
-    req = urllib.request.Request(f"{SEARCH_BASE}?{params}", headers={"user-agent": "opax-generate-years/1"})
-    with urllib.request.urlopen(req, timeout=90) as r:
+    req = source_http.Request(f"{SEARCH_BASE}?{params}", headers={"user-agent": source_http.USER_AGENT})
+    with source_http.urlopen(req, timeout=90) as r:
         return json.load(r)
 
 
@@ -376,7 +385,7 @@ def main() -> None:
         record["generated_at"] = datetime.now(timezone.utc).isoformat(timespec="seconds")
         if counters:
             record["corpus_resources"] = counters.get("resources")
-        (OUT_DIR / f"{y}.json").write_text(json.dumps(record, indent=1, ensure_ascii=False))
+        (OUT_DIR / f"{y}.json").write_text(json.dumps(public_donor_data(record), indent=1, ensure_ascii=False))
 
     write_index()
     if total_in or total_out:

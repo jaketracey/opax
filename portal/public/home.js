@@ -1,5 +1,8 @@
+import {donorNameWithheld,loadDonorViewIndex} from './donor-views.js?v=55a8bd3ae0';
+let donorPrivacy={organisations:new Set(),withheld:new Set()};
+loadDonorViewIndex().then(index=>{donorPrivacy=index});
 import { personUrl, partyUrl } from './canonical-urls.js?v=225d5915ea';
-import { hydrateCollections, hydrateLatest, industryGroups, mapSourceHTML, mapSpan } from '/home-data.js?v=5e5596d0f8';
+import { hydrateCollections, hydrateLatest, industryGroups, mapSourceHTML, mapSpan } from '/home-data.js?v=838bc65b68';
 
 // The homepage and research workspace have separate document lifecycles.
 const legacyRoute = location.href.split('#')[1] || '';
@@ -458,7 +461,7 @@ async function mount() {
     const span = mapSpan(graph.meta);
     if (span) $("hp-map-span").textContent = span;
     const { mountMoneyMap } = await import(
-      "/money-map.js?v=224ab013ee"
+      "/money-map.js?v=ca923f4f2e"
     );
     if (disposed) return;
     root.replaceChildren();
@@ -538,14 +541,14 @@ async function headerSuggestions(q) {
   const read = async url => { const response = await fetch(url); if (!response.ok) throw Error('Unavailable'); return response.json(); };
   headerReferences ??= Promise.allSettled([
     read('/speakers.json'), read('/graph/money.json'), read('/reports/index.json'),
-    import('/electorates.js?v=044baa0c8c').then(async module => ({...await module.loadIndex(), jurisdictions:module.JURISDICTIONS})),
+    import('/electorates.js?v=f60dff0a4b').then(async module => ({...await module.loadIndex(), jurisdictions:module.JURISDICTIONS})),
   ]);
   const [speakers, money, reports, electorates] = (await headerReferences).map(result => result.status === 'fulfilled' ? result.value : null);
   for (const e of (electorates?.electorates || []).filter(e => contains(e.name)).slice(0,3)) out.push({label:e.name, type:`${electorates.jurisdictions[e.jurisdiction]} electorate`, href:e.url});
   const names = (Array.isArray(speakers) ? speakers : speakers?.speakers || speakers?.names || []).map(row => Array.isArray(row) ? row[0] : row);
   for (const name of names.filter(contains).slice(0,4)) out.push({label:name, type:'Speaker', href:personUrl(name)});
   for (const [slug, name] of TOPICS.filter(([, name]) => contains(name)).slice(0,3)) out.push({label:name, type:'Topic', href:'/subject/topic/' + slug});
-  for (const node of (money?.nodes || []).filter(n => contains(n.label)).slice(0,3)) out.push({label:node.label, type:node.kind === 'party' ? 'Party' : 'Donor', href:node.kind === 'party' ? partyUrl(node.label) : '/subject/donor/' + encodeURIComponent(node.label)});
+  for (const node of (money?.nodes || []).filter(n => contains(n.label) && (n.kind !== 'donor' || !donorNameWithheld(donorPrivacy,n.label))).slice(0,3)) out.push({label:node.label, type:node.kind === 'party' ? 'Party' : 'Donor', href:node.kind === 'party' ? partyUrl(node.label) : '/subject/donor/' + encodeURIComponent(node.label)});
   for (const report of (reports?.reports || []).filter(r => contains(r.title)).slice(0,2)) out.push({label:report.title + ' report', type:'Report', href:'/reports/' + report.slug});
   return out;
 }

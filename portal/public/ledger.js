@@ -1,3 +1,5 @@
+import {donorPrivacyIndex,donorNameWithheld} from './donor-entity.js?v=ebb2c972d5';
+import {isUnnamedAggregate,donorAggregateDetail,unnamedDonorLabel,loadDonorViewIndex} from './donor-views.js?v=55a8bd3ae0';
 import {subjectUrl} from './canonical-urls.js?v=225d5915ea';
 import { filterMoneyEdges } from "./money-records.js?v=ia-ux-20260908-2";
 /**
@@ -486,6 +488,7 @@ function dotLabel (colour, node) {
 }
 
 function subjectLink (kind, label) {
+  if(kind==='donor' && isUnnamedAggregate(label)) return donorAggregateDetail(label,document)
   const a = el('a', null, label)
   a.href = subjectUrl(kind,label)
   return a
@@ -525,6 +528,7 @@ export function mountLedger (container, opts = {}) {
 
   let flows = []                   // joined edge rows, set once data lands
   let loadedData = null
+  let privacy = {organisations:new Set(),withheld:new Set()}
   let editGroup = null
   let pendingUserLoad = false
   let meta = {}                    // the loaded file's meta block (state files describe themselves)
@@ -662,9 +666,13 @@ export function mountLedger (container, opts = {}) {
 
   function computeRows () {
     const passing = filterFlows(flows, state)
+    const hidden=passing.filter(r=>donorNameWithheld(privacy,r.donor));
+    const visible=passing.filter(r=>!donorNameWithheld(privacy,r.donor));
     const rows = state.view === 'flows'
-      ? passing.filter((r) => r.total >= state.min)
-      : aggregateDonors(passing).filter((d) => d.total >= state.min)
+      ? visible.filter((r) => r.total >= state.min)
+      : aggregateDonors(visible).filter((d) => d.total >= state.min)
+    if(hidden.length){const combined=aggregateDonors(hidden.map(r=>({...r,donorId:'donor:not-named'})))[0];
+      rows.push({...hidden[0],...combined,donor:unnamedDonorLabel(loadedData.nodes.filter(n=>n.kind==='donor'&&hidden.some(r=>r.donorId===n.id)).length),industry:'withheld',party:'All selected parties',partyColour:'var(--party-oth)'});}
     const sort = state.sort[state.view]
     return { flowCount: passing.length, rows: sortRows(rows, sort.key, sort.dir) }
   }
@@ -1089,7 +1097,7 @@ export function mountLedger (container, opts = {}) {
   async function fetchData (jur) {
     if (cache.has(jur)) return cache.get(jur)
     const url = JURISDICTIONS[jur].file
-    const res = await fetch(url, { signal: aborter.signal })
+    const res = await fetch(url, { signal: aborter.signal, cache:"no-cache" })
     if (!res.ok) throw new Error(`${url} → ${res.status}`)
     const data = await res.json()
     cache.set(jur, data)
@@ -1126,7 +1134,8 @@ export function mountLedger (container, opts = {}) {
     statusEl.textContent = 'Loading the ledger…'
     tableEl.hidden = true
     try {
-      const data = await fetchData(state.jur)
+      const [data,index] = await Promise.all([fetchData(state.jur),loadDonorViewIndex()])
+      privacy=index
       if (token !== loadSeq) return
       loading = false
       loadedData = data
@@ -1156,6 +1165,8 @@ export function mountLedger (container, opts = {}) {
           minEl.value = String(state.min)
         }
       }
+      const focus=data.nodes.find(n=>n.id===state.focusDonorId);
+      if(focus?.kind==='donor'&&donorNameWithheld(privacy,focus.label)){paramError='This donor is not named in OPAX.';state.focusDonorId='';state.focusDonor='';}
       populateSelects(data)
       renderFineprint(data)
       statusEl.hidden = true

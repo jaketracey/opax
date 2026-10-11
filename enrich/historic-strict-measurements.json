@@ -1,0 +1,167 @@
+{
+  "schema": 1,
+  "method": "Whole-term novelty guard on cleaned initial offline Haiku summaries, with each full staged unit as source support; no model or OPAX network calls. Deterministic category triage of every unsupported round-three term.",
+  "limitations": "The 200-unit sample is not random T1. Likely-personal includes conservatively unmatched proper terms; no terms are emitted. Sentence-deletion retries are measured only when an independent valid brief remains. Missing simulations cannot establish an overall terminal rate. Withheld-source controls deliberately test novel additions.",
+  "inputs": {
+    "briefFile": "haiku-initial-200.jsonl",
+    "sha256": "bbe95d82b5a1c1998967ab45681c16bf39f01aebe3d90a9b066ee061bd2e4f86",
+    "pilotFile": "pilot-2000.jsonl",
+    "pilotSha256": "c70064bc1485bae07ed2b82069645a4d92bb35e7bc7deb37c9091f46acf86b44",
+    "pilotUnits": 2000,
+    "matchedSources": 200
+  },
+  "originalGuard": {
+    "tested": 200,
+    "rejected": 69,
+    "rate": 0.345,
+    "termOccurrences": 92,
+    "uniqueTerms": 61,
+    "categories": {
+      "acronym": {
+        "occurrences": 1,
+        "unique": 1,
+        "briefs": 1
+      },
+      "office": {
+        "occurrences": 4,
+        "unique": 4,
+        "briefs": 4
+      },
+      "countryDemonymNationality": {
+        "occurrences": 1,
+        "unique": 1,
+        "briefs": 1
+      },
+      "institutionProgram": {
+        "occurrences": 6,
+        "unique": 5,
+        "briefs": 6
+      },
+      "dictionaryAlone": {
+        "occurrences": 46,
+        "unique": 16,
+        "briefs": 41
+      },
+      "style": {
+        "occurrences": 13,
+        "unique": 13,
+        "briefs": 10
+      },
+      "likelyPersonalName": {
+        "occurrences": 21,
+        "unique": 21,
+        "briefs": 21
+      }
+    }
+  },
+  "haiku": {
+    "tested": 200,
+    "rejected": 36,
+    "rate": 0.18,
+    "rows": 200,
+    "excluded": 0,
+    "missingSource": 0,
+    "aboveFifteenPercent": true
+  },
+  "simulatedRetry": {
+    "eligible": 0,
+    "accepted": 0,
+    "rejected": 0,
+    "notMeaningful": 36,
+    "conditionalRate": null,
+    "overallTerminalRate": null
+  },
+  "controls": {
+    "tested": 8135,
+    "rejected": 29,
+    "rate": 0.0035648432698217577,
+    "sourceSupport": "full own unit",
+    "sourceWithheld": {
+      "tested": 8135,
+      "rejected": 2060,
+      "rate": 0.25322679778733864
+    },
+    "originalCleanOccurrences": 8126,
+    "malformedReplaced": 9,
+    "correctedSpans": 58,
+    "byCategory": {
+      "placesElectorates": {
+        "supported": {
+          "tested": 4545,
+          "rejected": 15,
+          "rate": 0.0033003300330033004
+        },
+        "withheld": {
+          "tested": 4545,
+          "rejected": 1052,
+          "rate": 0.23146314631463147
+        }
+      },
+      "parties": {
+        "supported": {
+          "tested": 685,
+          "rejected": 0,
+          "rate": 0
+        },
+        "withheld": {
+          "tested": 685,
+          "rejected": 0,
+          "rate": 0
+        }
+      },
+      "titles": {
+        "supported": {
+          "tested": 1956,
+          "rejected": 0,
+          "rate": 0
+        },
+        "withheld": {
+          "tested": 1956,
+          "rejected": 63,
+          "rate": 0.032208588957055216
+        }
+      },
+      "laws": {
+        "supported": {
+          "tested": 943,
+          "rejected": 14,
+          "rate": 0.014846235418875928
+        },
+        "withheld": {
+          "tested": 943,
+          "rejected": 939,
+          "rate": 0.9957582184517497
+        }
+      },
+      "organisations": {
+        "supported": {
+          "tested": 6,
+          "rejected": 0,
+          "rate": 0
+        },
+        "withheld": {
+          "tested": 6,
+          "rejected": 6,
+          "rate": 1
+        }
+      }
+    }
+  },
+  "reviewProbes": {
+    "novelInventedTerms": {
+      "tested": 11,
+      "rejected": 11,
+      "rate": 1
+    },
+    "placesAndOrganisationsWithheld": {
+      "tested": 14,
+      "rejected": 13,
+      "rate": 0.9285714285714286
+    },
+    "placesAndOrganisationsSupported": {
+      "tested": 14,
+      "rejected": 0,
+      "rate": 0
+    }
+  }
+}

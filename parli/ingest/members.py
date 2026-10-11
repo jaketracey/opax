@@ -1,3 +1,5 @@
+
+from parli.ingest import http as source_http
 import os
 """
 parli.ingest.members — Fetch and store MP/Senator data.
@@ -27,8 +29,8 @@ API_BASE = "https://www.openaustralia.org.au/api/"
 API_KEY = os.environ.get("OPENAUSTRALIA_API_KEY", "")  # public OpenAustralia key
 RATE_LIMIT = 1.0
 
-SESSION = requests.Session()
-SESSION.headers.update({"User-Agent": "ParliIntel/1.0"})
+SESSION = source_http.Session()
+SESSION.headers.update({"User-Agent": source_http.USER_AGENT})
 
 # ── Party name normalization ────────────────────────────────────────────────
 

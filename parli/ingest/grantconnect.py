@@ -49,6 +49,8 @@ windows in range.
 
 from __future__ import annotations
 
+from parli.ingest import http as source_http
+
 import argparse
 import datetime as dt
 import re
@@ -69,7 +71,7 @@ BASE = "https://www.grants.gov.au"
 # GrantConnect answers 403 to anything that does not look like a browser (the
 # project's plain research UA included); the compatible-token form passes and
 # still names the project and a contact.
-UA = "Mozilla/5.0 (compatible; OPAX research; +https://opax.com.au; contact jake.tracey@noice.work)"
+UA = source_http.USER_AGENT
 MANDATORY_FROM = dt.date(2017, 12, 31)
 # GrantConnect went live in 2017 and holds a few earlier voluntary records; start
 # the walk on the first of that year so nothing before the mandatory date is lost.

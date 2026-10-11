@@ -1,10 +1,12 @@
-import {isOrganisationDonor} from './donor-entity.js?v=2b8d45a50d';
-import {parseQuery, serializeQuery} from './datatable.js?v=793882f55b';
+import {isOrganisationDonor} from './donor-entity.js?v=ebb2c972d5';
+import {applyQuery} from './datatable.js?v=d10539039f';
 import {subjectUrl} from './canonical-urls.js?v=225d5915ea';
 import {moneyFlowType, filterMoneyEdges, readMoneyFilters} from './money-records.js?v=ia-ux-20260908-2';
 
+import {queryValues} from './datatable-query.js?v=6dd55aab38';
+import {createTablePrivacyValidator} from './datatable-privacy.js?v=de6469a26a';
+
 const labels={receipts:'Political receipts',contracts:'Contract values',grants:'Grant awards'};
-const keys=new Set(['type','from','to','value','records','years','receipts','contracts','grants']);
 export function filterMoneyConnectionView(graph,params) {
   const focus=params.get('focus');
   return {...graph,edges:filterMoneyEdges(graph,readMoneyFilters(params)).filter(e=>!focus || e.source===focus || e.target===focus)};
@@ -12,7 +14,7 @@ export function filterMoneyConnectionView(graph,params) {
 
 /** Build only public rows, before the shared core can derive facets or exports.
  * Years are display ranges, so use the contract's text type (no new formatter).
- * @returns {import('./datatable.js?v=793882f55b').DataTableConfig} */
+ * @returns {import('./datatable.js?v=d10539039f').DataTableConfig} */
 export function moneyConnectionsConfig(graph, privacyCheck) {
   const nodes=new Map(graph.nodes.map(n=>[n.id,n]));
   const rows=[], hidden=new Set(), totals={receipts:0,contracts:0,grants:0};
@@ -24,13 +26,21 @@ export function moneyConnectionsConfig(graph, privacyCheck) {
     types.add(type);
     const donors=[from,to].filter(n=>n.kind==='donor');
     const withheld=donors.filter(n=>/^donor:withheld-/.test(n.id) || !isOrganisationDonor(n));
-    if(withheld.length){for(const node of withheld)hidden.add(node.id);totals[type]+=edge.total;hiddenRecords+=edge.count;continue;}
     const entity=to;
-    rows.push({type:labels[type],from:from.label,to:to.label,value:edge.total,records:edge.count,
+    const row={type:labels[type],from:from.label,to:to.label,value:edge.total,records:edge.count,
       years:edge.firstYear?edge.firstYear===edge.lastYear?String(edge.firstYear):`${edge.firstYear}–${edge.lastYear || edge.firstYear}`:'Undated',
       donorEndpoints:donors.map(n=>isOrganisationDonor({label:n.label})?{label:n.label}:{label:n.label,aliases:n.aliases || []}),
       receipts:type==='receipts'?edge.total:undefined,contracts:type==='contracts'?edge.total:undefined,grants:type==='grants'?edge.total:undefined,
-      focusId:String(graph.nodes.indexOf(entity))});
+      focusId:String(graph.nodes.indexOf(entity))};
+    // Delegate the whole-row/scalar decision to the core, including recipients
+    // and suppliers in the complete financial registry. Use it for totals too.
+    const policy={id:'money-policy',pageType:'money',caption:'',privacy:'donors',privacyCheck:privacyCheck || (()=>true),columns:[],rows:[row]};
+    if(withheld.length || applyQuery([row],policy,{}).total !== 1){
+      const identities=withheld.length?withheld:[from,to].filter(n=>privacyCheck?.(n.label) !== true);
+      for(const node of identities.length?identities:[to])hidden.add(node.id);
+      totals[type]+=edge.total;hiddenRecords+=edge.count;continue;
+    }
+    rows.push(row);
   }
   if(hidden.size)rows.push({aggregate:{kind:'individual-donors',count:hidden.size,label:'Donors not named'},
     value:types.size===1?totals[[...types][0]]:undefined,records:hiddenRecords,...totals});
@@ -56,19 +66,14 @@ export function moneyConnectionsConfig(graph, privacyCheck) {
     export:{filename:'opax-map-connections.csv'}};
 }
 
-/** Use the shared server index; never derive or publish a browser name index. */
-export function cleanMoneyConnectionsParams(params, privacyCheck) {
-  const clean=new URLSearchParams(params), raw=parseQuery(params,'c');
-  const result=cleanMoneyConnectionsQuery(raw,privacyCheck);
-  for(const key of [...clean.keys()])if(key.startsWith('c.'))clean.delete(key);
-  for(const [key,value] of new URLSearchParams(serializeQuery(result.query,'c')))clean.set(key,value);
-  let blocked=result.blocked;
-  for(const key of ['q','focus'])if(clean.has(key) && privacyCheck(clean.get(key)) !== true){clean.delete(key);blocked=true;}
-  return {params:clean,blocked};
-}
-export function cleanMoneyConnectionsQuery(query, privacyCheck) {
-  const safe=value=>{try{return privacyCheck(value) === true;}catch{return false;}};
-  const blocked=Boolean(query.q && !safe(query.q)) || Object.values(query.filters || {}).some(v=>Array.isArray(v) && v.some(value=>!safe(value)));
-  const filters=Object.fromEntries(Object.entries(query.filters || {}).filter(([key])=>keys.has(key)).map(([key,value])=>[key,Array.isArray(value)?value.filter(safe):value]).filter(([,value])=>!Array.isArray(value) || value.length));
-  return {query:{...query,q:query.q && safe(query.q)?query.q.slice(0,200):undefined,filters},blocked};
+/** Resolve the core's shared validation before building rows and their aggregate.
+ * The browser never constructs a second registry or identity predicate. */
+export async function prepareMoneyConnectionsConfig(graph, validator=createTablePrivacyValidator({fetch:(...args)=>globalThis.fetch(...args)})) {
+  const candidates=moneyConnectionsConfig(graph,()=>true);
+  await validator.permitSet(candidates.rows.flatMap(row=>[JSON.stringify(row),...queryValues(row)]));
+  const config=moneyConnectionsConfig(graph,validator.approved);
+  // The neutral aggregate introduces new totals. Validate them through the same
+  // transport during hydration rather than mistaking uncached values for rejects.
+  config.privacyCheck=validator.permit;
+  return config;
 }

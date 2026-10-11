@@ -396,3 +396,129 @@ incomplete footnote syntax; the final `done` contains verified ranges. The
 its mapping and Opax retries once with legacy citations. See the
 [feature review](operations/2026-09-08-progress-rag-features.md) for live format
 findings, compatibility details and the broader release inventory.
+
+## Whole-person overviews (10 October 2026)
+
+`ask-person-overview.ts` recognises broad, roster-resolved requests such as
+“What has X said in parliament?”, “What does X talk about?”, “X's views”,
+“Summarise X's speeches”, “X's positions”, “X's speeches”, “What has X talked
+about?” and “What topics does X discuss?”. The roster-loading gate shares the
+parser's candidate grammar. Matching uses an
+exact public roster name and a complete question pattern. A topic, date window,
+comparison or hypothetical stays on its existing answer path. Explicit scope
+controls still win. The conversation rewrite and “Understood as” are unchanged;
+intent detection happens after that rewrite and normal scope resolution.
+
+These first answers use the ordinary `buildAskBody` generation preset, 1,800
+output tokens and `llm_footnotes`, with the existing citation normalization,
+quotation verification and bounded recovery. They receive a cited evidence pack
+in `extra_context` (ordinary `USER_CONTEXT_n` IDs). The prompt asks for about
+300 words: 3–5 counted themes, recent speeches and bills with dates, then one or
+two verbatim quotes. It forbids editorialising, party-based inference, attribution
+of other speaking turns, and inferring sponsorship or votes from a bill speech.
+The overview stream emits a fixed `searching` status before roster loading,
+cache checks or retrieval. It holds answer deltas until final verification and
+the withheld-name check, then emits the usual `done` payload, including when
+the aggregate fails and ordinary Ask retrieval supplies the answer. Cache keys
+retire the previous prompt pipeline version.
+
+`OVERVIEW_RETRIEVAL_MS` is one cancellable 4,000ms deadline for pack preparation
+and retrieval; each call has `OVERVIEW_CALL_MS` = 1,200ms beneath it. Abort signals
+reach catalogue, find and original-resource fetches, including response-body
+reads. Catalogue pages, theme searches and the peer facet share a pool of five
+connections; originals are deduplicated and consumed through the same bounded
+parallelism. Timeout, schema rejection or another pack error cancels the remaining
+work and falls back to `retrieveAskRecords` and ordinary Ask generation. Pack
+failure never returns a 503. `OVERVIEW_FIRST_ANSWER_MS` bounds the whole first
+answer to 20,000ms, including generation and verification. Citation/quote recovery
+gets at most `OVERVIEW_VERIFICATION_MS` = 2,000ms within the remaining allowance;
+it cannot restart the clock. The same first-answer budget reaches the conversation
+rewrite fetch and its response-body read (with the existing nine-second per-call
+timeout clipped to the remaining budget). Reader cancellation or deadline expiry
+aborts that call; cancellation is checked before retrieval can continue. Client
+cancellation stops pending rewrite, retrieval and generation. The existing model, output token cap and citation/quote rules remain.
+
+The pack is assembled from:
+
+- A speaker-filtered `/catalog` with topic facets and metadata pages of 200
+  resources, capped at 10 pages / 2,000 speeches (the catalogue contract caps
+  page size at 200). It uses a **resource-only** filter; field exclusions remain
+  on `/find`. Facets give whole-record totals
+  and top topic counts. Metadata dates give the rolling year ending at the
+  exported corpus snapshot and the two most recent dated speeches. Catalogue
+  `created` is index time and is never used for this. Counts overlap because
+  speeches can carry several topic labels. `enumeration_complete`, `dates_complete`
+  and `classifications_complete` are tracked separately. A missing/invalid date or
+  missing/unrecognised topic classification keeps whole-record facets but omits
+  rolling-year counts and “latest” claims, even with full slug enumeration.
+  Split identities have house/service checks against metadata dates and require
+  all three completeness checks for their counts.
+- Up to five theme-filtered **keyword-only** `/find` passes (`top_k: 10`,
+  `features: ['keyword']`, `reranker: 'noop'`), up to two originals per
+  theme, read through the existing resource cache. Only the indexed speaker's
+  first speaking turn passes `positionEvidence`; no ministerial replies enter
+  the pack. The two recent originals bring the total to at most 12 reads.
+- `/growth/person-bills/<name-hash>.json`, built by `build:growth` from the complete
+  published bill exports: exact speaker links and resolved public sponsors,
+  introduction dates and up to three linked speech dates. Twelve candidate bills
+  per person are exported; the pack retains the two most recent relevant bills.
+  This projection contains no summaries, donors or donation fields.
+- One topic-filtered collaborator facet for an optional comparison member,
+  accepted only if they resolve to another public roster member.
+
+Evidence text is capped at 24,000 characters, with each ordinary context record
+still capped at 1,800 characters. The pack uses a ten-minute **per-Worker-isolate
+LRU**, capped at **500 keys**, keyed by corpus epoch, pipeline version and
+person/scope and the SA full-text policy flag. Pack entries no longer create Cache API keys; eviction and expiry
+are application-controlled. Existing originals retain their
+one-hour cache; successful first answers retain the seven-day generation cache.
+On a cold pack, the request maximum falls from 38 extra upstream calls to **28**:
+10 catalogue pages, five keyword finds, one peer facet and at most 12 originals.
+The deadline often stops earlier; a warm pack makes none of these calls.
+The previous five hybrid/predict finds requested **five query-embedding plus five
+predictive-rerank operations** outside the BYOK answer-generation budget. They
+are now keyword/noop finds with **zero additional embedding/rerank operations**.
+That is five extra inference-using requests reduced to zero for the theme pack.
+Main's SA safeguard now performs a generation-disabled Ask preflight: SA evidence
+then goes to Predict with explicit capped context; non-SA uses the normal Ask
+after that preflight (two retrieval requests). Both paths keep one BYOK generation,
+with the existing main semantic query and reranking plus bounded recoveries.
+The pack adds no generation call; added context increases answer input tokens.
+This counts requested inference operations, not measured account charges:
+[Progress consumption](https://docs.rag.progress.cloud/docs/rag/advanced/consumption/)
+distinguishes normalized platform tokens from customer-key tokens, and catalogue
+and original reads still consume platform requests even though they add no model
+inference. Conversation rewriting retains its existing separate call.
+Person chips are deterministic and add no generation cost; other answer follow-ups
+keep their existing model and evidence checks. A latest-speech chip uses the same
+cached metadata pack to select the most recent dated original, rather than a
+nearest-chunk search.
+
+All newly exposed evidence, bill projection text, comparison names, finished
+answers and source previews pass the withheld-name detector backed by
+`donor-entity.js`. The panel is a server-created public person projection; the
+model cannot supply its identity fields. The chat keeps 2–4 full-question chips
+on their individual answer, without a heading. Vote and comparison chips clear
+the speech filter for that request. The desktop panel uses the existing portrait
+map, party dot and design tokens, and is hidden below 1,000px and in the dock.
+The generated overview and the panel's machine-classified top topics use the
+shared Machine label from `labels.js`.
+
+The overview applies main's `saEvidenceRecord` helper to each selected SA speech
+before `recordContext` serialises it for generation. The 120-word cap includes the
+speaker/date/topic prefix. SA source-only and chamber-only classifications also
+retain their provenance; state, chamber and the official source URL remain
+in both model context and citation sources. Original resource provenance fills gaps
+in catalogue metadata. SA quotations without an official Parliament URL are withheld;
+`SA_HANSARD_FULL_TEXT=true` follows main's explicit bypass. Main's generation-context,
+conversation, cache-hit, stream-event and public display guards remain in place.
+
+Offline verification is in `test/ask-person-overview.test.mjs` and
+`test/ask-person-route.test.mjs`, with shared synthetic record/model fixtures.
+`test/ask-first-answer-browser.mjs` captures the real `/chat` UI at 390, 1280 and
+1440 pixels, intercepting every API request and rejecting all external traffic.
+Run it under the local-server network namespace, with `OPAX_PLAYWRIGHT_MODULE`
+and `OPAX_BROWSER_EXECUTABLE` pointing to the local installed browser tools.
+Artifacts go to `portal/private/ask-first-answer/`. Slow (1s per upstream call),
+failing and delayed-verification stubs record first-byte/answer timings in
+`review-timings.json`; catalogue fixtures reject forbidden predicates with 422.

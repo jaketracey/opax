@@ -7,6 +7,7 @@ import { build } from 'esbuild';
 import { instrumentCrawlEntries, addInstrumentDiscovery, llmsText, sitemapFiles } from '../../scripts/build_crawl_catalog.mjs';
 import { catalogueComplete, reconciledCounts, filterInstruments, unpack } from '../public/instruments.js';
 import { instrumentPage, instrumentReader } from '../src/instruments.ts';
+import { shortDate } from '../public/format.js';
 
 const root = new URL('../public/', import.meta.url);
 // Every FRL response is an offline fixture, independently of local acquisition state.
@@ -83,7 +84,7 @@ test('an evidenced bounded plain gap is public only as a small directory note', 
   const m=await read('/instruments/manifest.json');
   assert.equal(catalogueComplete(m),true); assert.equal(reconciledCounts(m),true);
   const directory=await instrumentPage(null,new URL('https://opax.com.au/instruments'),read,block);
-  assert.equal(directory.status,200);assert.match(directory.prerender,/FRL listed 2,001; 1 could not be retrieved from its API/);
+  assert.equal(directory.status,200);assert.match(directory.prerender,/The Register listed 2,001 titles; 1 could not be retrieved from its API/);
   const detail=await instrumentPage(records[0].id,new URL('https://opax.com.au/instrument/'+records[0].id),read,block);
   assert.equal(detail.status,200); assert.doesNotMatch(detail.prerender,/could not be retrieved|unresolved_gap|gap_pages/);
   const sitemap=instrumentCrawlEntries(m); assert.equal(sitemap.length,2000);
@@ -96,14 +97,21 @@ test('detail has SSR facts, exact date labels, licence and authoritative version
   const r = unpack(json(manifest.chunks[manifest.lookup[id]].path).records.find(v => unpack(v,manifest.schemas,manifest.strings).source.id===id),manifest.schemas,manifest.strings).source;
   const result=await instrumentPage(id,new URL('https://opax.com.au/instrument/'+id),read,block);
   assert.equal(result.status,200);assert.match(result.prerender,/id="prerender"/);
-  for(const label of ['Made','Registered','Commenced','Status','Portfolio','Type']) assert.ok(result.prerender.includes(`<dt>${label}</dt>`));
+  for(const label of ['Registered','Commenced']) assert.ok(result.prerender.includes(`<dt>${label}</dt>`));
+  // Status, type and making date are the one meta line under the title, in words and short dates.
+  const meta=result.prerender.match(/<\/h1><p>(.*?)<\/p>/)[1];
+  assert.match(meta,/^In force · /);assert.doesNotMatch(meta,/InForce|\d{4}-\d{2}-\d{2}/);
+  if(r.makingDate) assert.ok(meta.endsWith(`Made ${shortDate(r.makingDate)}`));
+  for(const label of ['Made','Status','Type']) assert.ok(!result.prerender.includes(`<dt>${label}</dt>`),label);
+  assert.doesNotMatch(result.prerender,/Not supplied|<footer|fineprint|instrument-attribution/);
   assert.ok(result.prerender.includes(r.name.replaceAll('&','&amp;').replaceAll('<','&lt;')));
-  assert.match(result.prerender,/Authoritative text — Federal Register of Legislation/);
+  assert.match(result.prerender,/Authoritative text on the Federal Register of Legislation ↗/);
   assert.ok(result.prerender.includes('https://www.legislation.gov.au/'+id+'/'));
   assert.match(result.prerender,/https:\/\/creativecommons.org\/licenses\/by\/4.0\//);
   assert.match(result.prerender,/OPAX shows metadata only/);
   assert.doesNotMatch(result.prerender,/\/subject\/person\//);
-  if(!r.commencementDate) assert.match(result.prerender,/<dt>Commenced<\/dt><dd>Not supplied<\/dd>/);
+  if(!r.commencementDate) assert.match(result.prerender,/<dt>Commenced<\/dt><dd>Not recorded on the Register<\/dd>/);
+  assert.equal((result.prerender.match(/class="ui-pop ui-source"/g)||[]).length,1);
 });
 
 test('instruments sitemap contains ids only and its type count/lastmod equal the export', () => {
@@ -214,12 +222,12 @@ test('parsed catalogue is reused per isolate and failed reads can recover', asyn
   available=true; assert.equal((await recovering('/instruments/manifest.json')).count,1);
 });
 
-test('source block is verbatim, OPAX fields separate, authoritative link unique and licence accurate', async () => {
+test('source block is verbatim, OPAX fields left out, authoritative link unique and licence accurate', async () => {
   const result=await instrumentPage('F2026L00001',new URL('https://opax.com.au/instrument/F2026L00001'),read,block);
   assert.equal((result.prerender.match(/href="https:\/\/www.legislation.gov.au\/F2026L00001\/latest"/g)||[]).length,1);
-  const source=result.prerender.match(/All exported source metadata<\/summary><pre>(.*?)<\/pre>/s)[1];
+  const source=result.prerender.match(/Source metadata<\/summary><pre>(.*?)<\/pre>/s)[1];
   assert.doesNotMatch(source,/canonical_url|_opax_metadata|commencementDate/);
-  assert.match(result.prerender,/OPAX-derived fields/);
+  assert.doesNotMatch(result.prerender,/OPAX-derived fields/);
   assert.deepEqual(unpack(json(manifest.chunks[0].path).records[0],manifest.schemas,manifest.strings).source,fixture.titles[0]);
   const licence=readFileSync(new URL('index.html',root),'utf8');
   assert.doesNotMatch(licence,/current\/latest\s+version metadata selected/);

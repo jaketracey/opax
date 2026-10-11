@@ -66,7 +66,7 @@ for (const renderer of ['subjectMentions','renderPartyMentions']) test(`${render
   const slot = {isConnected:true,innerHTML:''};
   const container = {appendChild(){},insertAdjacentHTML(){}};
   const api = runInNewContext(code+';({subjectMentions,renderPartyMentions})', {
-    currentSubjectKey:'mentions',URL,URLSearchParams,datedAffiliationParty,splitPerson,
+    excerptNoticeHTML:()=>'',currentSubjectKey:'mentions',URL,URLSearchParams,datedAffiliationParty,splitPerson,
     api:async()=>({results:structuredClone(results)}),loadParliamentarians:async()=>roster,
     document:{createElement:()=>slot},esc:s=>String(s??''),displayTitle:r=>r.slug,
     metaHTML:r=>{metadata.push({slug:r.slug,party:r.party});return String(r.party??'');},

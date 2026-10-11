@@ -23,6 +23,8 @@ Usage:
     python -m parli.ingest.vic_parliament --max-days 10        # limit days
 """
 
+from parli.ingest import http as source_http
+
 import argparse
 import hashlib
 import re
@@ -66,9 +68,9 @@ SPEAKER_ELECTORATE_RE = re.compile(r"^(.+?)\s*\(([^)]+)\)\s*(?:\((\d{1,2}:\d{2})
 BATCH_SIZE = 500
 REQUEST_DELAY = 0.15  # seconds between page fetches
 
-SESSION = requests.Session()
+SESSION = source_http.Session()
 SESSION.headers.update({
-    "User-Agent": "OPAX-VicHansardIngestor/1.0 (opax.com.au; research)",
+    "User-Agent": source_http.USER_AGENT,
     "Accept": "text/html,application/json",
 })
 

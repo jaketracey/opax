@@ -105,7 +105,7 @@ test('MCP search and connection tools give one fixed reply to a query naming a w
  const send=async(name,args)=>{const r=await communityMcp(new Request('https://opax.test/mcp',{method:'POST',headers:{authorization:'Bearer '+token,accept:'application/json, text/event-stream','content-type':'application/json'},body:JSON.stringify({jsonrpc:'2.0',id:3,method:'tools/call',params:{name,arguments:args}})}),f.env,async path=>{reads.push(path);return Response.json({results:[]})});assert.equal(r.status,200);return (await r.json()).result};
  for(const [name,args] of [['search_records',{query:'Quentin Fixtureman donations'}],['search_records',{query:'how much did quentin  FIXTUREMAN give',kind:'speech'}],['find_connections',{query:'Quentin Fixtureman'}]]){
   const out=await send(name,args);
-  assert.deepEqual(JSON.parse(out.content[0].text),{answer:"OPAX doesn't name individual donors. Party-level totals are on the party's page."});
+  assert.deepEqual(JSON.parse(out.content[0].text),{answer:"This donor is not named in OPAX. Party-level totals are on the party's page."});
   assert.doesNotMatch(out.content[0].text,/fixtureman/i);
  }
  assert.deepEqual(reads,[],'no search ran for a withheld name');

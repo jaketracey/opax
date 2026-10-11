@@ -130,8 +130,8 @@ export function namedDonors(html) {
   return [...block.matchAll(/href="\/subject\/donor\/([^"]+)"/g)].map(m => decodeURIComponent(unescape(m[1])));
 }
 
-export async function buildCrawl(root) {
-  const read = async p => JSON.parse(await readFile(join(root,p.replace(/^\//,'')), 'utf8'));
+export async function buildCrawl(root, {read: sourceRead} = {}) {
+  const read = async p => sourceRead ? sourceRead(p) : JSON.parse(await readFile(join(root,p.replace(/^\//,'')), 'utf8'));
   const optional = async p => { try { return await read(p); } catch (e) { if (e.code === 'ENOENT') return null; throw e; } };
   const [roster, seatManifest, bills, suppliers, agencies, reports, corpus, votes, campaigners] = await Promise.all([
     read('parliamentarians.json'), read('electorates/manifest.json'), read('bills/index.json'), read('suppliers.json'), read('agencies.json'), read('reports/index.json'), read('corpus.json'), read('votes.json'), optional('graph/campaigners.json')
@@ -208,7 +208,7 @@ export async function buildCrawl(root) {
     snapshot.set(path,hash({...base,...(named.length ? {donors:named} : {}),...(html.includes(INTEREST_OMITTED_MARK) ? {interestsWithheld:true} : {})}));
   }
   const partyLabels = new Map(), donors = new Map();
-  // Individual donors stay out of the sitemap, as individual grant recipients do.
+  // Unconfirmed donors stay out of the sitemap, as individual grant recipients do.
   // The industry tag does not say who is a person: public/donor-entity.js.
   const donorIndex = donorPrivacyIndex((await Promise.all(['money.json','money.qld.json','money.vic.json','money.tas.json'].map(name => optional(`graph/${name}`)))).filter(Boolean));
   for (const name of ['money.json','money.qld.json','money.vic.json']) {

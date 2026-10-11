@@ -4,7 +4,7 @@ Every OPAX web table is built on this contract: the core (`portal/public/datatab
 
 ## Modules
 - `portal/public/datatable.js`: an ES module shared by the Worker (SSR) and the browser.
-  - **Exports:** `dataTableHTML(config, page)`, `mountDataTable(el, config)`, `applyQuery(rows, config, query)`, `toCSV(rows, config)`, `parseQuery(urlSearchParams, urlKey)`, `serializeQuery(query, urlKey)` and `formatCell(value, column)`.
+  - **Exports:** `dataTableHTML(config, page, requestURL?)`, `guardTableURL(config, requestURL)`, `mountDataTable(el, config)`, `applyQuery(rows, config, query)`, `toCSV(rows, config)`, `parseQuery(urlSearchParams, urlKey)`, `serializeQuery(query, urlKey)` and `formatCell(value, column)`.
 - `portal/public/datatable.d.ts`: the types below.
 - `portal/public/datatable.css`: the styles, on the design-system tokens only (no raw values, no uppercase).
 
@@ -82,11 +82,37 @@ The shared derived test, `portal/test/donor-privacy.test.mjs`, covers every tabl
 
 ## Additive privacy and endpoint notes (review follow-up)
 
-- `DataTableConfig.privacyCheck?` accepts `(text: string) => boolean | Promise<boolean>`; true means safe against the shared withheld index, independently of table rows. SSR and `applyQuery` require a synchronous predicate; absent or asynchronous validation fails closed for searches. Worker renderers use `await tablePrivacyCheck(env.ASSETS)` from `src/table-privacy.ts`, which derives the shared graph index using `withheldPhrases` with no donor-context office-holder exemptions. Browser hydration defaults to the read-only, no-store `POST /api/table/privacy` validator and waits before reflecting state. Do not send the index or withheld names to the browser. A custom validator must use that same shared index; an organisation-only input is insufficient.
-- A row may optionally carry `aggregate: {kind: 'individual-donors', count: number}`. Counts must be nonnegative safe integers. For this neutral aggregate the core generates `Individual donors (N)` in the primary/name column and keeps only configured numeric counts/totals; it removes identifying fields, aliases, IDs, categories and links/actions. Money rollouts must emit this shape, rather than a donor-shaped text label, to retain anonymous totals in HTML and CSV.
-- An omitted `urlKey` uses unprefixed `q`, `f.<facet>`, `sort`, `page` and `pageSize`, with the same popstate/canonical/noindex behavior. Only recognized table parameters are removed; unrelated parameters survive.
+- `DataTableConfig.privacyCheck?` accepts `(text: string) => boolean | Promise<boolean>`; true means safe against the shared withheld index, independently of table rows. SSR and `applyQuery` require a synchronous predicate; absent or asynchronous validation fails closed for rows and searches. Worker renderers use `await tablePrivacyCheck(env.ASSETS)` from `src/table-privacy.ts`, which reads the complete hash-only `/table-private-identities.json` registry generated before identities are lost to publication, with no donor-context office-holder exemptions. Browser hydration defaults to the read-only, no-store `POST /api/table/privacy` validator and waits before reflecting state. The served registry contains SHA-256 hashes, word counts and compact-form length metadata only; never serve raw identities. A custom validator must use that same shared index; an organisation-only input is insufficient.
+- A row may optionally carry `aggregate: {kind: 'individual-donors', count: number}`. Counts must be nonnegative safe integers. For this neutral aggregate the core generates `Donors not named (N)` in the primary/name column and keeps only configured numeric counts/totals; it removes identifying fields, aliases, IDs, categories and links/actions. Money rollouts must emit this shape, rather than a donor-shaped text label, to retain anonymous totals in HTML and CSV. Only the aggregate’s detail disclosure includes: "OPAX names organisations only. Donors it can't confirm are organisations are counted here, not named."
+- An omitted `urlKey` uses unprefixed `q`, `f.<facet>`, `sort`, `page` and `pageSize`, with the same popstate/canonical/noindex behavior. Safe unrelated parameters survive, including repeated unrelated parameters.
+- Raw query validation precedes parsing. Every decoded key and value occurrence is checked, including unknown keys, unknown filter keys, unprefixed keys and repeated values. JSON scalar values and object keys are also checked. Any private input rejects the entire table: zero rows, disabled export, no echo in HTML, live text, links or URL. Each offending pair is removed synchronously; async browser validation temporarily removes unapproved pairs before the first paint and restores only safe pairs after validation. Initial hydration, popstate and export all use this guard.
+- Repeated table keys are rejected, even when all values are safe: `q`, `sort`, `page`, `pageSize` and any `f.*`, both unprefixed and in the table's namespace. All occurrences of a repeated table key are removed. The API returns a fixed `400 invalid_query` with no CSV; the core shows zero rows and disables export. Parsing never chooses a first or last repeated value.
+- SSR callers pass their request `URL` to `dataTableHTML(config, page, requestURL)`, or call `guardTableURL(config, requestURL)` before parsing. The guard mutates that URL to remove offending pairs; canonical and any request-derived links must use this cleaned URL. Its returned `query` is empty on rejection. SSR uses a synchronous shared registry predicate; the core also guards query parameters in primary and action links before rendering them.
 - Server CSV cap is an endpoint boundary obligation. With 50,001 matching rows, return exactly the first 50,000 data records, then the separate final CSV record `# Export truncated at 50,000 rows.`, and the response header `x-table-export-truncated: true`. The core announces a fixed truncation message after the download. dt-api must register `registerServerCSVContract` from `portal/test/datatable-endpoint-contract.mjs` with its real handler and seeded dataset before server rollouts; the core's reference endpoint test cannot certify dt-api.
 - Every rollout registers `registerTablePrivacy` from `portal/test/datatable-privacy.mjs` in its local Chrome gate. The registration names its actual public input module, table host, secondary facet and server example/endpoint. The hook derives withheld values at run time and asserts public client input, server responses, actual downloaded files, URL state, rendered and accessible text, and analytics in both modes. Core registration lives in `portal/test/datatable-browser.mjs`.
 
 - Connection rows may carry optional `donorEndpoints: {label: string, aliases?: string[] | null}[]`. The privacy adapter checks every donor endpoint with `isOrganisationDonor`; an explicit empty array means the connection has no donor endpoints. Omission keeps the existing donor-row adapter. Only public donor endpoints belong in this metadata.
 - Aggregate metadata may optionally set `label: 'Donors not named'`; the core generates `Donors not named (N)` and applies the same field stripping and link suppression. Money connections use one aggregate row. When multiple record types are in the map view, their amounts occupy separate money columns; they are never added into a combined value.
+
+## Server CSV continuation (11 Oct 2026, additive clarification)
+
+The 50,000-row limit remains the ceiling for one filtered export. Each CSV
+response contains at most 10,000 data rows; `format=csv&page=1` starts that
+export, and `page=2` through `page=5` continue it. CSV page size is fixed and
+independent of the JSON `pageSize`. `Link` headers provide `rel="next"` and
+`rel="prev"` URLs preserving the filters and sort. Each partial CSV includes a
+trailer record showing its row range, the full matching count, the 50,000-row
+ceiling when applicable, and the next export URL when available.
+
+`X-Table-Total`, `X-Table-Exported`, `X-Table-Page`, `X-Table-Truncated` and
+`X-Table-Export-Note` describe the current CSV. `X-Table-Export-Truncated` is
+true only when the matching set exceeds the logical 50,000-row export ceiling,
+so clients announcing that ceiling continue to report it accurately.
+Money dataset responses omit `Content-Location`; decoded queries containing
+withheld identities produce empty results with no echoed state or continuation
+links. No fields in the shared TypeScript contract change.
+
+- All derived UI uses rows that pass the same whole-row privacy check: chips, facets, counts, bars, SSR, accessible attributes and CSV. Unvalidated `config.rows` never supplies constant chips; rejected views have no derived chips. Browser checks validate every row and scalar before approving it.
+- Identity checks retain the existing word hashes and add NFKC, case-folded letters-and-digits forms in the `stripped:v1:` hash domain. Minimum compact length is 4. Forms of length 4 or 5 require alphanumeric token boundaries; forms of length 6 or more also match substrings of the separator-stripped input.
+
+- Optional `initialRejected: boolean` carries a prior shared raw-URL guard rejection into SSR and hydration. It suppresses rows, derived controls and export until Clear all; the source rows remain available for recovery.

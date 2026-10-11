@@ -21,6 +21,8 @@ Usage:
     python -m parli.ingest.state_donations --qld-pages 10       # Limit QLD pages (for testing)
 """
 
+from parli.ingest import http as source_http
+
 import argparse
 import csv
 import io
@@ -37,10 +39,9 @@ CACHE_DIR = Path("~/.cache/autoresearch/donations/state").expanduser()
 QLD_EDS_BASE = "https://disclosures.ecq.qld.gov.au"
 QLD_EDS_MAP = f"{QLD_EDS_BASE}/Map"
 
-SESSION = requests.Session()
+SESSION = source_http.Session()
 SESSION.headers.update({
-    "User-Agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 "
-                  "(KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36",
+    "User-Agent": source_http.USER_AGENT,
     "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
     "Accept-Language": "en-AU,en;q=0.9",
 })
@@ -157,6 +158,7 @@ def _parse_qld_page(html: str) -> list[dict]:
     return gifts
 
 
+@source_http.preserve_on_refusal
 def scrape_qld_ecq(db, max_pages: int = 0, delay: float = 1.0) -> int:
     """Scrape all gifts from QLD ECQ Electronic Disclosure System.
 

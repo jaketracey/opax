@@ -2,13 +2,13 @@ import {subjectUrl} from './canonical-urls.js?v=225d5915ea';
 /* Homepage adapters: source exports, never editorial selections. Each block's
    figures carry the date of the export they came from, in its source line. */
 import {shortDate} from './format.js';
-import {partyLabelHTML, statusLabelHTML, sourceLineHTML} from './labels.js?v=804befe8de';
+import {partyLabelHTML, statusLabelHTML, sourceLineHTML} from './labels.js?v=c6bf994ef7';
 const esc = value => String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const count = value => Number(value).toLocaleString('en-AU');
 const date = value => shortDate(String(value).slice(0,10));
 const jur = value => ({federal:'Federal',nsw:'New South Wales',vic:'Victoria',qld:'Queensland',sa:'South Australia',act:'ACT'}[value] || value);
 const href = (kind, name) => subjectUrl(kind,name);
-const read = async (url, init) => { const response = await fetch(url, init); if (!response.ok) throw Error('Data unavailable'); return response.json(); };
+const read = async (url, init) => { const response = await fetch(url, {cache:"no-cache",...init}); if (!response.ok) throw Error('Data unavailable'); return response.json(); };
 // who-is-who files revalidate on every load (app.js loadPhotoMap says why)
 const IDENTITY = { cache: 'no-cache' };
 export function newest(items, key, limit) {

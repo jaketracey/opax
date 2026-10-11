@@ -1,3 +1,4 @@
+import sourceIdentity from '../../parli/ingest/user-agent.json' with { type: 'json' }
 // A small client for the OPAX knowledge box (Progress Agentic RAG, Nuclia-style REST).
 // Same zone, base URL and service-account header the production Worker uses
 // (portal/src/index.ts kbFetch); same endpoints as parli/arag.py and the Codex
@@ -48,6 +49,7 @@ export interface KbResource {
 export interface CatalogRow {
   rid: string
   created: string | null
+  usermetadata?: KbResource['usermetadata']
 }
 
 export interface CatalogPage {
@@ -60,7 +62,7 @@ export interface KbApi {
   /** The resource with its text values, or null when it does not exist (404). */
   getResource(rid: string): Promise<KbResource | null>
   /** The resource's basic view (classifications) without text values, or null on 404. */
-  getBasic(rid: string): Promise<KbResource | null>
+  getBasic(rid: string, timeoutMs?: number): Promise<KbResource | null>
   /** Everything the box will show for a resource (basic, values, origin, extra, relations, errors), or null on 404. */
   getEverything(rid: string): Promise<unknown | null>
   /** The current body of the machine-brief field ('' when absent). */
@@ -72,6 +74,8 @@ export interface KbApi {
 }
 
 const TIMEOUT_MS = 30_000
+/** Classification-only reads must leave time for unrelated live work. */
+export const HOLD_METADATA_TIMEOUT_MS = 5_000
 /** The catalog is only discovery: a slow answer is abandoned and retried next tick. */
 const CATALOG_TIMEOUT_MS = 20_000
 
@@ -84,7 +88,7 @@ export class Kb implements KbApi {
     // Not `fetch` itself: a bare reference called as a method throws "Illegal invocation" in Workers.
     this.fetcher = fetcher ?? ((input, init) => fetch(input, init))
     this.base = `https://${env.ARAG_ZONE}.rag.progress.cloud/api/v1/kb/${env.ARAG_KB_ID}`
-    this.headers = { 'content-type': 'application/json', 'x-nuclia-serviceaccount': `Bearer ${env.ARAG_KB_TOKEN}` }
+    this.headers = { 'user-agent': sourceIdentity.user_agent, 'content-type': 'application/json', 'x-nuclia-serviceaccount': `Bearer ${env.ARAG_KB_TOKEN}` }
   }
 
   private async call(method: string, path: string, body?: unknown, allow404 = false, timeoutMs = TIMEOUT_MS): Promise<any> {
@@ -117,8 +121,13 @@ export class Kb implements KbApi {
     return this.call('GET', `/resource/${rid}?show=basic&show=values&show=origin&show=extra&show=relations&show=errors`, undefined, true)
   }
 
-  getBasic(rid: string): Promise<KbResource | null> {
-    return this.call('GET', `/resource/${rid}?show=basic`, undefined, true)
+  getBasic(rid: string, timeoutMs = TIMEOUT_MS): Promise<KbResource | null> {
+    return this.call('GET', `/resource/${rid}?show=basic`, undefined, true, timeoutMs)
+  }
+
+  /** Admin reconciliation resolves only successful push-log slugs. */
+  getBySlug(slug: string): Promise<KbResource | null> {
+    return this.call('GET', `/slug/${encodeURIComponent(slug)}?show=basic`, undefined, true)
   }
 
   async getSummaryBody(rid: string): Promise<string> {
@@ -151,8 +160,8 @@ export class Kb implements KbApi {
       page_number: page,
       sort: { field: 'created', order: 'asc' },
     }, false, CATALOG_TIMEOUT_MS)
-    const resources = (r?.resources ?? {}) as Record<string, { created?: string }>
-    const rows = Object.entries(resources).map(([rid, v]) => ({ rid, created: typeof v?.created === 'string' ? v.created : null }))
+    const resources = (r?.resources ?? {}) as Record<string, KbResource>
+    const rows = Object.entries(resources).map(([rid, v]) => ({ rid, created: typeof v?.created === 'string' ? v.created : null, usermetadata: v.usermetadata }))
     return { rows, hasNext: Boolean(r?.fulltext?.next_page) && rows.length > 0 }
   }
 }

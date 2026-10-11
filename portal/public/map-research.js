@@ -1,15 +1,18 @@
 import { readMoneyFilters } from './money-records.js?v=ia-ux-20260908-2';
-import {dataTableHTML, mountDataTable, applyQuery} from './datatable.js?v=793882f55b';
-import {moneyConnectionsConfig} from './money-connections.js?v=c3276f152d';
+import {mountDataTable, guardTableURL} from './datatable.js?v=d10539039f';
+import {prepareMoneyConnectionsConfig} from './money-connections.js?v=d59200a690';
+import {createTablePrivacyValidator} from './datatable-privacy.js?v=de6469a26a';
+import {rawQueryValues} from './datatable-query.js?v=6dd55aab38';
 const esc = value => String(value ?? '').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 export async function mountMapResearch(container, data, options = {}) {
-  const permit=options.privacyCheck || (async text=>{
-    try{const response=await fetch('/api/table/privacy',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({text})});return response.ok && (await response.json()).safe === true;}catch{return false;}
-  });
-  const initial=new URLSearchParams(location.search);
-  let rejectedQuery=false;
-  if(initial.get('q') && !await permit(initial.get('q'))){initial.delete('q');rejectedQuery=true;history.replaceState(history.state,'',location.pathname+(initial.size?'?'+initial:'')+location.hash);}
-  let current=data,filters=readMoneyFilters(initial),tableHandle,timer,destroyed=false,inputRevision=0;
+  const validator=createTablePrivacyValidator({privacyCheck:options.privacyCheck,fetch:(...args)=>fetch(...args)}),permit=validator.permit;
+  const initialURL=new URL(location.href);
+  await validator.permitSet([...rawQueryValues(initialURL.searchParams)]);
+  const guarded=guardTableURL({id:'money-connections',caption:'',pageType:'money',privacy:'donors',privacyCheck:validator.approved,urlKey:'c',columns:[]},initialURL);
+  const initial=guarded.url.searchParams;
+  let rejectedQuery=guarded.rejected;
+  history.replaceState(history.state,'',guarded.url);
+  let current=data,filters=readMoneyFilters(initial),tableHandle,timer,destroyed=false,inputRevision=0,tableRevision=0;
   const partyOptions = data.nodes.filter(n=>n.kind==='party').sort((a,b)=>a.label.localeCompare(b.label));
   const industries = [...new Set(data.nodes.filter(n=>n.kind==='donor').map(n=>n.group).filter(Boolean))].sort();
   const resultsHost = options.resultsContainer || container;
@@ -30,20 +33,22 @@ export async function mountMapResearch(container, data, options = {}) {
     const count = [filters.query, filters.type && filters.type !== 'all', filters.industry, filters.party, filters.min].filter(Boolean).length;
     filterPanel.querySelector('summary').textContent = count ? `Filters (${count})` : 'Filters';
   }
-  function renderRows(){
+  async function renderRows(){
+    const version=++tableRevision,view=current;
     tableHandle?.destroy();tableHandle=null;
-    const config=moneyConnectionsConfig(current);
-    if(rejectedQuery)config.rows=[];
+    const config=await prepareMoneyConnectionsConfig(view,validator);
+    if(destroyed || version !== tableRevision)return;
+    config.initialRejected=rejectedQuery;
+    recordButton.textContent=`List (${rejectedQuery?0:config.rows.length.toLocaleString('en-AU')})`;
     // The core validates its own URL/search state against the shared server index.
     // SSR-like paint has no search echo while asynchronous validation is pending.
-    tableHost.innerHTML=dataTableHTML(config,applyQuery(config.rows,config,{}));
+    tableHost.innerHTML='';
     tableHandle=mountDataTable(tableHost,config);
   }
   function update(graph, nextFilters, years){
     if(destroyed)return;
     current=graph; filters={...nextFilters};controls();
     period.textContent=years?`${years.from}–${years.to}${years.cpi?' · Inflation adjusted':' · Nominal values'}`:'Available years';
-    recordButton.textContent = `List (${moneyConnectionsConfig(graph).rows.length.toLocaleString('en-AU')})`;
     renderRows();
   }
   async function apply(){

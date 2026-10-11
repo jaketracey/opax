@@ -58,6 +58,11 @@ Method, so the numbers can be defended:
    every disclosed row; external_total is what the lists summarise.
 """
 
+try:
+    from scripts.donor_public import public_donor_data
+except ModuleNotFoundError:
+    from donor_public import public_donor_data
+
 import os
 import json
 import re
@@ -417,7 +422,7 @@ def main():
         "minister_resolution": dict(stats),
     }
     out = {"meta": meta, "donors": donors_out, "ministers": minister_out, "aliases": aliases}
-    text = json.dumps(out, ensure_ascii=False, separators=(",", ":"))
+    text = json.dumps(public_donor_data(out), ensure_ascii=False, separators=(",", ":"))
     sys.stdout.write(text + "\n")
 
     log(f"donors in map {len(donor_labels)}; skipped as generic {len(skipped_generic)}: {skipped_generic}")

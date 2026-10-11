@@ -1,0 +1,4 @@
+<people>
+ <person id="uk.org.publicwhip/person/101" latestname="Alex Example"><office id="uk.org.publicwhip/lord/1"/></person>
+ <person id="uk.org.publicwhip/person/102" latestname="Sam Fixture"><office id="uk.org.publicwhip/lord/2"/></person>
+</people>

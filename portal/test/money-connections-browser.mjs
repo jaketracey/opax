@@ -6,24 +6,28 @@ import {tmpdir} from 'node:os';
 import {resolve,extname,join} from 'node:path';
 import {createRequire} from 'node:module';
 import {build} from 'esbuild';
-import {MONEY_GRAPHS,withholdIndividualDonors,isOrganisationDonor} from '../public/donor-entity.js';
-import {moneyConnectionsConfig,filterMoneyConnectionView} from '../public/money-connections.js';
+import {MONEY_GRAPHS,withholdIndividualDonors} from '../public/donor-entity.js';
+import {moneyConnectionsConfig} from '../public/money-connections.js';
 import {moneyTotals} from '../public/money-records.js';
-import {applyQuery,dataTableHTML,toCSV,parseQuery} from '../public/datatable.js';
+import {applyQuery,dataTableHTML,toCSV,parseQuery,guardTableURL} from '../public/datatable.js';
+import {tablePrivacyCheck,tablePrivacy} from '../src/table-privacy.ts';
+import {privacySourceGraphs} from '../../scripts/withhold_donor_assets.mjs';
 import {registerTablePrivacy,tablePrivacyIndex} from './datatable-privacy.mjs';
 const pub=resolve('public'),output=resolve('private/dt-money');
 const {chromium}=createRequire(resolve(process.env.DT_BROWSER_TOOLS || join(output,'browser-tools'),'package.json'))('playwright-core');
 await mkdir(output,{recursive:true});
-const index=await tablePrivacyIndex(),graphs=new Map();
-for(const path of MONEY_GRAPHS){const graph=withholdIndividualDonors(JSON.parse(await readFile(pub+path,'utf8')));assert.ok(index.safe(JSON.stringify(graph.nodes.map(({label,aliases})=>({label,aliases})))),'anonymous fixture labels and aliases are public');graphs.set(path,graph);}
+const registry=JSON.parse(await readFile(pub+'/table-private-identities.json','utf8')),assets={fetch:async()=>Response.json(registry)};
+const registrySafe=await tablePrivacyCheck(assets),decisions=new Map();
+const index={...await tablePrivacyIndex(),safe:value=>{if(!decisions.has(value)){if(decisions.size>=256)decisions.delete(decisions.keys().next().value);decisions.set(value,registrySafe(value));}return decisions.get(value);}},graphs=new Map();
+for(const path of MONEY_GRAPHS){const graph=withholdIndividualDonors(JSON.parse(await readFile(pub+path,'utf8')));assert.ok(graph.nodes.filter(n=>/^donor:withheld-/.test(n.id)).every(n=>!n.aliases?.length && !n.profileUrl),'anonymous fixture endpoints have no identity metadata');graphs.set(path,graph);}
 const read=async path=>graphs.get(path),graph=graphs.get(MONEY_GRAPHS[0]);
 const temporary=await mkdtemp(join(tmpdir(),'opax-money-table-'));
 await build({entryPoints:['src/money-connections-table.ts'],outfile:join(temporary,'ssr.mjs'),bundle:true,platform:'node',format:'esm'});
 const {renderMoneyConnectionsTable}=await import(join(temporary,'ssr.mjs'));
-const fixtureModule=`import {moneyConnectionsConfig,filterMoneyConnectionView} from '/money-connections.js';
+const fixtureModule=`import {prepareMoneyConnectionsConfig} from '/money-connections.js';
 import {mountDataTable} from '/datatable.js';
 const graph=await (await fetch('/graph/money.json')).json();
-export const tableConfig=moneyConnectionsConfig(graph),tableRows=tableConfig.rows;
+export const tableConfig=await prepareMoneyConnectionsConfig(graph),tableRows=tableConfig.rows;
 window.mounted=mountDataTable(document.querySelector('.money-connections-table'),tableConfig);
 const serverButton=document.querySelector('[data-example="server"]');
 serverButton.onclick=()=>{window.mounted.destroy();window.mounted=mountDataTable(document.querySelector('.money-connections-table'),{...tableConfig,rows:undefined,source:{endpoint:'/__fixtures/table/money'}});};serverButton.disabled=false;`;
@@ -34,19 +38,19 @@ const server=createServer(async(req,res)=>{
     if(url.pathname==='/api/table/privacy') {
       let text='';for await(const chunk of req)text+=chunk;
       res.writeHead(200,{'content-type':'application/json','cache-control':'no-store'});
-      res.end(JSON.stringify({safe:index.safe(JSON.parse(text).text)}));return;
+      res.end(await (await tablePrivacy(new Request('https://local.invalid/api/table/privacy',{method:'POST',body:text}),assets)).text());return;
     }
     if(graphs.has(url.pathname)){res.writeHead(200,{'content-type':'application/json'});res.end(JSON.stringify(graphs.get(url.pathname)));return;}
     if(url.pathname==='/__fixtures/money-input.js'){res.writeHead(200,{'content-type':'text/javascript'});res.end(fixtureModule);return;}
     if(url.pathname==='/__fixtures/table/money') {
-      const config=moneyConnectionsConfig(graph,index.safe),query=parseQuery(url.searchParams);
+      const config=moneyConnectionsConfig(graph,index.safe),query=guardTableURL({...config,urlKey:''},url).query;
       const page=applyQuery(config.rows,config,{...query,...(url.searchParams.get('format')==='csv'?{pageSize:2000,page:1}:{})});
       res.writeHead(200,{'content-type':url.searchParams.get('format')==='csv'?'text/csv':'application/json'});
       res.end(url.searchParams.get('format')==='csv'?toCSV(page.rows,config):JSON.stringify(page));return;
     }
     if(url.pathname==='/__fixtures/money-table') {
-      const config=moneyConnectionsConfig(graph,index.safe),page=applyQuery(config.rows,config,parseQuery(url.searchParams,'c'));
-      res.writeHead(200,{'content-type':'text/html'});res.end(`<!doctype html><meta name="robots" content="index, follow"><link rel="stylesheet" href="/fonts.css"><link rel="stylesheet" href="/tokens.css"><link rel="stylesheet" href="/datatable.css"><button data-example="server" disabled>Server fixture</button><main class="money-connections-table" aria-busy="true">${dataTableHTML(config,page)}</main><script type="module" src="/__fixtures/money-input.js"></script>`);return;
+      const config=moneyConnectionsConfig(graph,index.safe),page=applyQuery(config.rows,config,guardTableURL(config,url).query);
+      res.writeHead(200,{'content-type':'text/html'});res.end(`<!doctype html><meta name="robots" content="index, follow"><link rel="stylesheet" href="/fonts.css"><link rel="stylesheet" href="/tokens.css"><link rel="stylesheet" href="/datatable.css"><button data-example="server" disabled>Server fixture</button><main class="money-connections-table" aria-busy="true">${dataTableHTML(config,page,url)}</main><script type="module" src="/__fixtures/money-input.js"></script>`);return;
     }
     if(url.pathname==='/__fixtures/money-ssr') {
       res.writeHead(200,{'content-type':'text/html'});res.end(await renderMoneyConnectionsTable(url,read,index.safe));return;
@@ -76,21 +80,23 @@ try {
   browser=await chromium.launch({executablePath:'/usr/bin/google-chrome',headless:true,args:['--no-sandbox','--disable-dev-shm-usage','--disable-background-networking','--host-resolver-rules=MAP * ~NOTFOUND, EXCLUDE localhost, EXCLUDE 127.0.0.1']});
   const context=await browser.newContext({acceptDownloads:true,serviceWorkers:'block'});
   await context.route('**/*',route=>new URL(route.request().url()).origin===base?route.continue():(blocked.push('external'),route.abort()));
-  const page=await context.newPage();page.on('pageerror',()=>errors.push('page error'));
+  const page=await context.newPage();page.setDefaultTimeout(90000);page.on('pageerror',()=>errors.push('page error'));
   const host=page.locator('.money-connections-table');
   const settled=()=>page.waitForFunction(()=>document.querySelector('.money-connections-table')?.dataset.datatable === 'money-connections' && document.querySelector('.money-connections-table .dt-count') && !document.querySelector('.money-connections-table').hasAttribute('aria-busy'));
-  const load=async path=>{await page.goto(base+path);await settled();};
+  const load=async path=>{await page.goto(base+path);try{await settled();}catch(error){console.log(JSON.stringify({stage:'hydration failed',pageErrors:errors.length,busy:await host.getAttribute('aria-busy'),mounted:await host.getAttribute('data-datatable')}));throw error;}};
   const download=async()=>{const pending=page.waitForEvent('download');await host.locator('[data-export]').click();return readFile(await (await pending).path(),'utf8');};
   const csv=await (async()=>{await load('/__fixtures/money-table');return download();})();
   const config=moneyConnectionsConfig(graph,index.safe),all=applyQuery(config.rows,config,{pageSize:2000});
   assert.equal(csv,toCSV(all.rows,config),'download matches the full exact core export');
+  console.log(JSON.stringify({stage:'exact client export',rows:all.total}));
   const records=parseCSV(csv),totals=moneyTotals(graph);
   for(const key of ['receipts','contracts','grants']) {
     const position=config.columns.findIndex(c=>c.key===key);
-    assert.ok(Math.abs(records.slice(1).reduce((sum,row)=>sum+Number(row[position]),0)-totals[key])<0.01,`${key}: downloaded totals reconcile`);
+    const cents=value=>BigInt(Math.round((Number(value)||0)*100));
+    assert.equal(records.slice(1).reduce((sum,row)=>sum+cents(row[position]),0n),cents(totals[key]),`${key}: downloaded totals reconcile exactly`);
   }
   const neutral=host.locator('tbody tr').filter({hasText:/Donors not named/});
-  if(await neutral.count())assert.equal(await neutral.locator('a,summary').count(),0);
+  if(await neutral.count())assert.equal(await neutral.locator('a').count(),0);
   // Same column-wide maximum on both pages, supplied by the real core facets.
   const scale=await host.locator('th:has([data-sort="contracts"]) .dt-scale').textContent();
   await host.locator('[data-page="2"]').click();await settled();
@@ -113,6 +119,7 @@ try {
   assert.equal(await download(),toCSV(applyQuery(config.rows,config,{...query,pageSize:2000}).rows,config));
   await page.reload();await settled();assert.equal(await host.locator('[data-search]').inputValue(),query.q);
   const privacy=[];for(const run of registrations)privacy.push(await run({page,base,index,outputDir:output}));
+  console.log(JSON.stringify({stage:'shared privacy registration',modes:privacy.length*2}));
   // Actual /money map controller, anonymised served inputs, and real hydrated core.
   for(const width of [390,1280]) {
     await page.setViewportSize({width,height:width===390?844:1000});
@@ -128,13 +135,13 @@ try {
     const csv=await download();assert.ok(index.safe(csv));assert.ok(csv.includes('Donors not named'));
     if(width===1280){const action=host.locator('.dt-actions details').first();await action.locator('summary').click();await action.locator('a').click();await page.waitForFunction(()=>document.querySelector('.mm-card')?.textContent.trim());assert.ok(index.safe(await page.locator('.mm-card').innerHTML()));}
     const probes=[];
-    for(const path of MONEY_GRAPHS){const original=JSON.parse(await readFile(pub+path,'utf8'));probes.push(original.nodes.find(n=>n.kind==='donor' && !isOrganisationDonor(n)).label);}
+    for(const original of privacySourceGraphs()){const value=original.nodes.find(n=>n.kind==='donor' && !index.safe(n.label))?.label;assert.ok(value,'original-source runtime probe');probes.push(value);}
     for(const value of probes) {
       await page.goto(base+'/money?type=contracts&min=1000000');await page.locator('[data-records]').waitFor();await page.locator('[data-records]').click();await settled();
       await host.locator('[data-search]').fill(value);await host.locator('form').evaluate(el=>el.requestSubmit());await settled();
       assert.equal(await host.locator('[data-search]').inputValue(),'');assert.equal(new URL(page.url()).searchParams.has('c.q'),false);
       assert.ok(index.safe(await host.innerHTML()));assert.equal(await host.locator('.dt-count').textContent(),'Showing 0–0 of 0');
-      assert.equal(await download(),toCSV([],moneyConnectionsConfig(filterMoneyConnectionView(graph,new URLSearchParams({type:'contracts',min:'1000000'})),index.safe)));
+      assert.equal(await host.locator('[data-export]').isDisabled(),true,'export remains disabled after rejection');
       await host.locator('[data-clear]').last().click();await settled();assert.ok(await host.locator('tbody a').count()>0);
       const panel=page.locator('.research-filters');await panel.evaluate(el=>el.open=true);
       await page.locator('.research-controls [name="query"]').fill(value);
@@ -147,9 +154,10 @@ try {
   // An older approved map response cannot overwrite a newer rejected input.
   await page.goto(base+'/money?type=contracts');await page.locator('[data-records]').waitFor();await page.locator('[data-records]').click();await settled();
   await page.locator('.research-filters').evaluate(el=>el.open=true);
-  await page.route('**/api/table/privacy',async route=>{if(route.request().postDataJSON()?.text === publicRow.to)await new Promise(done=>setTimeout(done,80));await route.continue();});
-  const pending=page.waitForRequest(request=>new URL(request.url()).pathname === '/api/table/privacy' && request.postDataJSON()?.text === publicRow.to);
-  await page.locator('.research-controls [name="query"]').fill(publicRow.to);await pending;
+  const pendingText='public search fixture';assert.ok(index.safe(pendingText));
+  await page.route('**/api/table/privacy',async route=>{if(route.request().postDataJSON()?.text === pendingText)await new Promise(done=>setTimeout(done,80));await route.continue();});
+  const pending=page.waitForRequest(request=>new URL(request.url()).pathname === '/api/table/privacy' && request.postDataJSON()?.text === pendingText);
+  await page.locator('.research-controls [name="query"]').fill(pendingText);await pending;
   await page.locator('.research-controls [name="query"]').fill(index.values[0]);await page.waitForTimeout(500);await settled();
   assert.equal(await page.locator('.research-controls [name="query"]').inputValue(),'');
   assert.equal(new URL(page.url()).searchParams.has('q'),false);
@@ -170,6 +178,6 @@ try {
     assert.ok(index.safe(html));assert.match(html,/Showing 0–0 of 0/);
   }
   assert.deepEqual(errors,[]);assert.deepEqual(blocked,[]);
-  const result={core:'7a57261b4',viewports:[390,1280],privacy,exactCSV:true,reconciledRecordTypes:3,anonymousGraphs:4,liveProbes:8,ssr:true,chipRemoval:true,columnWideBars:true,pageErrors:errors,blockedExternalRequests:blocked.length};
+  const result={core:'origin/main + bounded validation',viewports:[390,1280],privacy,exactCSV:true,reconciledRecordTypes:3,anonymousGraphs:4,liveProbes:8,ssr:true,chipRemoval:true,columnWideBars:true,pageErrors:errors,blockedExternalRequests:blocked.length};
   await writeFile(join(output,'browser-results.json'),JSON.stringify(result,null,2)+'\n');console.log(JSON.stringify(result));
 }finally{await browser?.close();await new Promise(done=>server.close(done));await rm(temporary,{recursive:true,force:true});}

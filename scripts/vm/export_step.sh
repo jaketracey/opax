@@ -21,12 +21,20 @@ case "$mode" in
     tmp=$(mktemp "${TMPDIR:-/tmp}/export.XXXXXX")
     trap 'rm -f "$tmp"' EXIT
     "$@" > "$tmp"
+    if [[ "$dest" == portal/public/* && "$dest" != portal/public/votes.json ]]; then
+      node scripts/withhold_donor_assets.mjs --stdin --file "$dest" < "$tmp" > "$tmp.safe"
+      mv "$tmp.safe" "$tmp"
+    fi
     "$PY" scripts/vm/keep_if_unchanged.py "$dest" "$tmp"
     ;;
   file)
     dest=$1; tmp=$2; shift 2
     rm -f "$tmp"
     "$@"
+    if [[ "$dest" == portal/public/* && "$dest" != portal/public/votes.json ]]; then
+      node scripts/withhold_donor_assets.mjs --stdin --file "$dest" < "$tmp" > "$tmp.safe"
+      mv "$tmp.safe" "$tmp"
+    fi
     "$PY" scripts/vm/keep_if_unchanged.py "$dest" "$tmp"
     ;;
   dir)
@@ -41,6 +49,7 @@ case "$mode" in
       git clean -fdq -- "${dirs[@]}" 2>/dev/null || true
       exit "$rc"
     fi
+    node scripts/withhold_donor_assets.mjs >/dev/null
     "$PY" scripts/vm/keep_if_unchanged.py --sweep "${dirs[@]}"
     ;;
   *) echo "usage: export_step.sh json|file|dir ..." >&2; exit 64 ;;

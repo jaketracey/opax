@@ -27,6 +27,11 @@ collide. Everything is resumable; nothing is ever deleted from the box.
 """
 from __future__ import annotations
 
+import sys as _http_sys
+from pathlib import Path as _HttpPath
+_http_sys.path.insert(0, str(_HttpPath(__file__).resolve().parents[1]))
+from parli.ingest import http as source_http
+
 import argparse
 import fcntl
 import json
@@ -91,9 +96,9 @@ class Kb:
         try:
             time.sleep(PACE_S)
             for attempt in range(tries):
-                req = urllib.request.Request(self.base + path, data=data, headers=self.headers, method=method)
+                req = source_http.Request(self.base + path, data=data, headers=self.headers, method=method)
                 try:
-                    with urllib.request.urlopen(req, timeout=90) as r:
+                    with source_http.urlopen(req, timeout=90) as r:
                         raw = r.read()
                         return json.loads(raw) if raw else {}
                 except urllib.error.HTTPError as err:
