@@ -15,59 +15,105 @@
     "method": "Review harness against a fresh local origin/main archive; original fields, model calls and KB requests included."
   },
   "guardAudit": {
-    "method": "Strict capitalised-term novelty guard; no model is called. Test full pilot text and clipped model input against each unit own full text, plus independently selected references with source support withheld.",
+    "method": "Whole-term novelty guard with permitted vocabulary categories; no model is called.",
     "limitation": "Withheld-source references deliberately test novel additions and are not false positives under this rule. Real offline Haiku brief rejection is reported separately in historic-strict-measurements.json.",
     "promptSha256": "44029ec22e9b37b0bf6cdd383b499e62be187f085ec38fb432043f49c4c02b30",
     "unitsTested": 2000,
     "ownTextFired": 0,
     "ownTextRate": 0,
-    "clippedTextFired": 8,
+    "clippedTextFired": 7,
     "nonPersonControls": {
-      "references": 8135,
-      "fired": 3276,
+      "tested": 8135,
+      "rejected": 29,
+      "rate": 0.0035648432698217577,
+      "sourceSupport": "full own unit",
+      "sourceWithheld": {
+        "tested": 8135,
+        "rejected": 2060,
+        "rate": 0.25322679778733864
+      },
       "originalCleanOccurrences": 8126,
+      "malformedReplaced": 9,
       "correctedSpans": 58,
-      "malformedOrAmbiguousFragmentsReplaced": 9,
-      "replacementMethod": "Replace malformed fragments with the first independently selected additional gazetteer/organisation occurrences in pilot order; no guard-dependent filtering.",
-      "rate": 0.4027043638598648,
-      "affectedUnits": 987,
       "byCategory": {
         "placesElectorates": {
-          "references": 4545,
-          "fired": 1489,
-          "rate": 0.3276127612761276,
-          "affectedUnits": 399
+          "supported": {
+            "tested": 4545,
+            "rejected": 15,
+            "rate": 0.0033003300330033004
+          },
+          "withheld": {
+            "tested": 4545,
+            "rejected": 1052,
+            "rate": 0.23146314631463147
+          }
         },
         "parties": {
-          "references": 685,
-          "fired": 0,
-          "rate": 0,
-          "affectedUnits": 0
+          "supported": {
+            "tested": 685,
+            "rejected": 0,
+            "rate": 0
+          },
+          "withheld": {
+            "tested": 685,
+            "rejected": 0,
+            "rate": 0
+          }
         },
         "titles": {
-          "references": 1956,
-          "fired": 838,
-          "rate": 0.4284253578732106,
-          "affectedUnits": 621
+          "supported": {
+            "tested": 1956,
+            "rejected": 0,
+            "rate": 0
+          },
+          "withheld": {
+            "tested": 1956,
+            "rejected": 63,
+            "rate": 0.032208588957055216
+          }
         },
         "laws": {
-          "references": 943,
-          "fired": 943,
-          "rate": 1,
-          "affectedUnits": 273
+          "supported": {
+            "tested": 943,
+            "rejected": 14,
+            "rate": 0.014846235418875928
+          },
+          "withheld": {
+            "tested": 943,
+            "rejected": 939,
+            "rate": 0.9957582184517497
+          }
         },
         "organisations": {
-          "references": 6,
-          "fired": 6,
-          "rate": 1,
-          "affectedUnits": 4
+          "supported": {
+            "tested": 6,
+            "rejected": 0,
+            "rate": 0
+          },
+          "withheld": {
+            "tested": 6,
+            "rejected": 6,
+            "rate": 1
+          }
         }
       }
     },
     "reviewExamples": {
-      "references": 9,
-      "fired": 9,
-      "rate": 1
+      "novelInventedTerms": {
+        "tested": 11,
+        "rejected": 11,
+        "rate": 1
+      },
+      "placesAndOrganisationsWithheld": {
+        "tested": 14,
+        "rejected": 13,
+        "rate": 0.9285714285714286
+      },
+      "placesAndOrganisationsSupported": {
+        "tested": 14,
+        "rejected": 0,
+        "rate": 0
+      }
     }
   },
   "roster": {
@@ -85,14 +131,66 @@
   },
   "strictness": {
     "report": "historic-strict-measurements.json",
-    "haiku": {
+    "originalGuard": {
       "tested": 200,
       "rejected": 69,
       "rate": 0.345,
+      "termOccurrences": 92,
+      "uniqueTerms": 61,
+      "categories": {
+        "acronym": {
+          "occurrences": 1,
+          "unique": 1,
+          "briefs": 1
+        },
+        "office": {
+          "occurrences": 4,
+          "unique": 4,
+          "briefs": 4
+        },
+        "countryDemonymNationality": {
+          "occurrences": 1,
+          "unique": 1,
+          "briefs": 1
+        },
+        "institutionProgram": {
+          "occurrences": 6,
+          "unique": 5,
+          "briefs": 6
+        },
+        "dictionaryAlone": {
+          "occurrences": 46,
+          "unique": 16,
+          "briefs": 41
+        },
+        "style": {
+          "occurrences": 13,
+          "unique": 13,
+          "briefs": 10
+        },
+        "likelyPersonalName": {
+          "occurrences": 21,
+          "unique": 21,
+          "briefs": 21
+        }
+      }
+    },
+    "haiku": {
+      "tested": 200,
+      "rejected": 36,
+      "rate": 0.18,
       "rows": 200,
       "excluded": 0,
       "missingSource": 0,
       "aboveFifteenPercent": true
+    },
+    "simulatedRetry": {
+      "eligible": 0,
+      "accepted": 0,
+      "rejected": 0,
+      "notMeaningful": 36,
+      "conditionalRate": null,
+      "overallTerminalRate": null
     }
   }
 }

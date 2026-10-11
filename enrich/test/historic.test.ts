@@ -182,10 +182,10 @@ test('seven round-two probes reject novel street, river and bare surname terms o
   }
 })
 
-test('additional places and organisations pass only when the unit mentions them', () => {
+test('additional places and organisations require support except gazetteered countries and territories', () => {
   for (const reference of ['New Caledonia', 'Bureau of Meteorology', 'New Delhi', 'Rio de Janeiro', 'Kings Cross']) {
     const summary = `Reported concerns about ${reference} and regional services.`
-    assert.equal(hasNewPersonalName(summary, ''), true)
+    assert.equal(hasNewPersonalName(summary, ''), reference !== 'New Caledonia')
     assert.equal(hasNewPersonalName(summary, `Discussed ${reference.toLowerCase()} in the proceeding.`), false)
   }
 })
@@ -195,8 +195,8 @@ test('capitalised terms include sentence-initial novelty, all positions and maxi
   assert.deepEqual(capitalisedTerms('Thanked ZELARA-QUENWICK and O\'Vaelquist.'), ['ZELARA-QUENWICK', "O'Vaelquist"])
   assert.equal(hasNewPersonalName('Vaelquist supported housing services.', ''), true)
   assert.equal(hasNewPersonalName('Reported concerns. Asked about housing services.', ''), false)
-  assert.equal(hasNewPersonalName('Reported concerns that Asked about housing services.', ''), true)
-  assert.equal(hasNewPersonalName('Supported services in New Caledonia.', ''), true)
+  assert.equal(hasNewPersonalName('Reported concerns that Asked about housing services.', ''), false)
+  assert.equal(hasNewPersonalName('Supported services in New Caledonia.', ''), false)
   assert.equal(hasNewPersonalName('Mr Quenwick said services needed support.', ''), true)
   assert.equal(hasNewPersonalName('Reported concerns about ＺＥＬＡＲＡ　ＱＵＥＮＷＩＣＫ.', 'zelara quenwick attended.'), false)
   assert.equal(hasNewPersonalName("Reported concerns about O'Vaelquist–Quenwick.", 'oʼvaelquist-quenwick attended.'), false)

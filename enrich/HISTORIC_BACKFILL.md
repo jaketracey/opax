@@ -7,24 +7,33 @@ input: **under 200**, rather than 200 or fewer. Both queue tasks finish with `st
 `terminal_reason=skipped-short` before generation, including one-word procedural records. Nothing is removed from the KB.
 
 The historic summary validator guards against **novel capitalised terms**, without trying
-to recognise personal names. It tokenises capitalised words and maximal runs joined by
-spaces, hyphens, apostrophes or `of/de/la/van`. Sentence-initial terms are also checked,
-except a small list of common English words and the existing prompt's action verbs.
-Each whole candidate must occur in the full unit text, the parliamentary roster, or the
-closed, reviewed `NON_PERSON_TERMS` list in `src/validate.ts`. Matching uses NFKC,
-case folding, apostrophe/hyphen normalisation and whitespace normalisation.
+to recognise every personal name. It tokenises capitalised words and maximal runs joined
+by spaces, hyphens, apostrophes or `of/de/la/van`; `for/the` preserve office wording and
+`and` joins only for declared office/country wording. Each whole candidate must occur in
+the full unit text, the parliamentary roster or a permitted whole-term category. NFKC,
+case, apostrophes, hyphens, whitespace and grammatical possessives are normalised.
+Sentence-initial words are checked except the small common-word/action-verb list.
 
-The non-person list covers Australian states/territories and their capital cities,
-Parliament/House/Senate/Commonwealth/Australia, parties, months/weekdays and common
-parliamentary offices and institutional words. It applies only to the whole candidate:
-`Government Quenwick` and `Government Department` cannot inherit an exemption from
-`Government`. There are no street, geography, organisation, electorate or law-title
-exemptions. Added places and organisations, including New Caledonia and Bureau of
-Meteorology, need their own unit-text support. Conservative rejection is intentional;
-the unit remains indexed and readable without its machine brief.
+Permitted categories are the original small non-person list, whole acronyms of two to
+six capitals, declared parliamentary/ministerial offices, gazetteered countries and
+nationalities, and dictionary words **standing alone**. No word inside a longer candidate
+can excuse an unknown token. Multiword dictionary phrases require their own source,
+roster or declared whole-phrase support. Arbitrary streets, rivers, institutions and
+programs have no structural exemption. New Caledonia now passes as a gazetteered
+territory; Bureau of Meteorology and other undeclared institutions still need source text.
+See `HISTORIC_VOCABULARY.md` for sources, licences and asset selection.
+
+**Accepted residual:** a surname that is also an ordinary dictionary word can pass when
+used alone. Compound names or names attached to dictionary words/offices still fail.
+Short uppercase tokens accepted as acronyms are also ambiguous. Conservative rejection
+of other unsupported terms remains intentional; the unit stays indexed and readable.
 
 A novelty failure discards the summary and permits one corrective escalation with the
-instruction **"use only names that appear in the speech"**. The
+instruction **"use only names that appear in the speech"**. The normal corrective request
+also lists every offending term and asks for a meaningful rewrite without them. Terms
+remain transient model input: they never enter complaints, logs, samples or D1 rows.
+If a budget/deadline/outage interrupts generation, the next tick retains the single
+corrective allowance but uses the generic instruction, because terms are not persisted. The
 `names_rejected` queue flag preserves that allowance across budget/deadline interruptions
 and outages. A completed corrective response that still fails validation finishes as
 `status=done, terminal_reason=rejected-names`. Accepted topics can finish independently.
@@ -75,41 +84,57 @@ and senate 1993–2005. The pilot samples those files and is excluded from the T
 
 ## Strictness measurement
 
-The offline bake-off contains **200 real Haiku briefs** in
-`/home/jake/opax-staging/federation/bakeoff/haiku-200.jsonl`. Every brief was matched to
-its full unit in the staged pilot and passed through the Worker's deterministic cleanup
-before checking the strict guard. No briefs were missing, empty, refused or excluded.
-**69/200 (34.5%) would be rejected by the guard. This exceeds the 15% threshold; the
-rule has not been loosened.** This measures existing first-attempt outputs, rather than
-terminal rejections after a corrective escalation. The sample is not a random T1 sample,
-so its rate should not be treated as a precise T1 forecast.
+The original **200 real Haiku briefs** are pinned to
+`/home/jake/opax-staging/federation/bakeoff/haiku-initial-200.jsonl`, SHA256
+`bbe95d82b5a1c1998967ab45681c16bf39f01aebe3d90a9b066ee061bd2e4f86`.
+The lane's mutable `haiku-200.jsonl` now includes subsequent lane retries, so it is not
+used for this comparison. Each initial brief is matched to its full staged pilot unit
+and receives the Worker's deterministic cleanup. All 200 remain in the denominator.
 
-The seven new invented probes and four earlier probes all reject: **11/11**. Fourteen
-review place/organisation references (the nine earlier examples plus New Caledonia,
-Bureau of Meteorology, New Delhi, Rio de Janeiro and Kings Cross) reject without source
-support and all pass with source support.
+The round-three guard rejects **69/200 (34.5%)**, comprising **92 term occurrences and
+61 unique terms**. The offline deterministic triage assigns every term as follows:
 
-The fixed pilot reference sample retains **8,135 controls** (8,126 clean original spans
-plus nine deterministic replacements; 58 spans corrected). Used as briefs, **31/8,135
-(0.3811%)** reject with full source support, and **3,276/8,135 (40.2704%)** reject with
-source support withheld. The latter is the cost of prohibiting novel additions, not a
-false-positive rate under this policy. Fragment selection and normalised whole-term
-matching also limit what the supported control rate establishes. Complete pilot text
-checked as its own brief rejects **0/2,000**; clipped model text rejects **8/2,000 (0.4%)**.
-
-| Reference controls | References | Source supported rejects | Source withheld rejects |
+| Category | Occurrences | Unique terms | Affected briefs |
 | --- | ---: | ---: | ---: |
-| Places/electorates | 4,545 | 18 | 1,489 |
-| Parties | 685 | 0 | 0 |
-| Ministerial titles | 1,956 | 0 | 838 |
-| Bills/acts | 943 | 13 | 943 |
-| Additional organisations | 6 | 0 | 6 |
+| Acronym / initialism | 1 | 1 | 1 |
+| Office / title | 4 | 4 | 4 |
+| Country / demonym / nationality | 1 | 1 | 1 |
+| Institution / program | 6 | 5 | 6 |
+| Dictionary word alone | 46 | 16 | 41 |
+| Capitalisation style | 13 | 13 | 10 |
+| Likely personal / conservatively unmatched proper term | 21 | 21 | 21 |
 
-`historic-strict-measurements.json` contains aggregate results and input hashes;
-`historic-review-measurements.json` retains migration/differential evidence alongside
-updated guard and roster counts. Neither report contains people, speech text, briefs,
-selected terms or prompts. The live combined prompt remains byte-identical to its golden
-fixture, SHA256 `44029ec22e9b37b0bf6cdd383b499e62be187f085ec38fb432043f49c4c02b30`.
+Affected-brief counts overlap. Classification checks whole declared offices/geography,
+institution/program endings, lexical dictionary membership and dictionary-only styling
+phrases outside personal contexts. Unmatched proper terms enter the likely-personal
+category conservatively; these are triage categories rather than human-labelled name
+precision. Classification never grants guard exemptions, and no terms are emitted.
+
+The new guard rejects **36/200 (18%)** on the same first-attempt outputs, accepting 33
+previously rejected briefs. **The under-15% first-attempt target was not reached.** Further
+permitting arbitrary multiword dictionary phrases or undeclared institutions/programs
+would exceed the permitted categories, so this is the best safe measured point retained.
+All seven recent and four earlier invented-name probes still reject: **11/11**.
+
+The offline retry simulation removes sentences containing offending terms only when an
+independent brief remains and passes existing validation. **None of these 36 rejections
+has a meaningful remainder.** Accordingly, only the first-attempt rate is reported;
+there is **no defensible after-retry/terminal estimate**, and the under-5% terminal target
+is unverified. No model retry was called. A stubbed generation test confirms that the
+corrective request lists offending terms, accepts a rewritten role-based brief, and
+keeps diagnostics redacted. Existing tests preserve the single escalation and terminal
+`rejected-names` behavior across interruptions.
+
+The fixed 8,135 reference controls reject **29 (0.3565%)** with source support and
+**2,060 (25.3227%)** with source withheld. Source-withheld rejections test novelty, rather
+than false positives. Full pilot text as its own brief rejects **0/2,000**; clipped input
+rejects **7/2,000 (0.35%)**. New Caledonia's gazetteer admission is intentional; the other
+13 added place/institution examples still reject without source and all 14 pass with it.
+
+The aggregate results and hashes are in `historic-strict-measurements.json` and
+`historic-review-measurements.json`. The 200-unit sample is not a random T1 sample.
+The live golden prompt remains SHA256
+`44029ec22e9b37b0bf6cdd383b499e62be187f085ec38fb432043f49c4c02b30`.
 
 ## Neuron estimate
 
@@ -129,7 +154,8 @@ to need both tasks. Tokenizer/schema framing and nightly spend are excluded.
 | Primary calls all reach 4,000 output tokens | 22,640,742 | 15.09 | 16 |
 
 Escalation scenarios use the same output-token assumption; their rates are illustrative,
-not measured. Ordinary validator retries and concurrent nightly spending can add days.
+not measured. The new variable-length offending-term retry suffix is not included in
+these illustrative escalation inputs. Ordinary validator retries and concurrent nightly spending can add days.
 At the existing steady budget of 150,000/day, the baseline would require 33.52 budget days.
 
 ## Reproduce locally
@@ -189,7 +215,8 @@ historic metadata columns and counters are excluded. **0 differences** were obse
    `historic DEFAULT 0`. There is no row copy, table rewrite, CHECK change or index rebuild.
    The original worker remains compatible while the migration goes first.
 2. Deploy **opax-enrich** from `enrich/` using its existing `wrangler.jsonc`. Wrangler includes
-   `src/historic-names.json` in the Worker bundle. Existing bindings, secrets, budgets, cron
+   `src/historic-names.json`, `src/historic-words.json`, `src/historic-geography.json`
+   and `src/historic-offices.json` in the Worker bundle. Existing bindings, secrets, budgets, cron
    and live mode apply. No app or portal deployment is needed. Deploy before pushing T1.
 3. After pushing historic resources, reconcile the successful slugs from the JSONL push log.
    Set `T1_PUSH_LOG` to that log's absolute path, `OPAX_ENRICH_URL` to the deployed Worker URL,
@@ -224,6 +251,7 @@ row hashes and table/index root pages were identical before and after. Old-worke
 claim and finish statements succeeded against the migrated schema. Timing is local evidence,
 not a production latency guarantee.
 
-Validation: 162 tests, TypeScript and Worker deploy dry run. No production KB, Workers AI,
+Validation: 167 tests, TypeScript and Worker deploy dry run; the 143-case live-source
+differential again has zero differences. No production KB, Workers AI,
 remote D1 calls, push or deployment were performed. Repository changes are confined to
 `enrich/`; the staged aggregate report was refreshed in place.

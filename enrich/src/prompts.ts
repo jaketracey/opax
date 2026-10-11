@@ -74,7 +74,7 @@ export function buildRecordMessage(record: PromptRecord): string {
 }
 
 /** The user message: the record, plus (on a retry) the validator's complaints. */
-export function buildUserPrompt(record: PromptRecord, complaints: readonly string[] = []): string {
+export function buildUserPrompt(record: PromptRecord, complaints: readonly string[] = [], offendingTerms: readonly string[] = []): string {
   let prompt = buildRecordMessage(record)
   if (complaints.length) {
     // codex_enrichment_loop.main(): the validator's complaints go back with the retry.
@@ -82,12 +82,17 @@ export function buildUserPrompt(record: PromptRecord, complaints: readonly strin
       '\n\nThe previous attempt failed these checks. Rewrite every value and return the complete object:\n- ' +
       complaints.slice(0, 20).join('\n- ')
   }
+  if (record.historic && offendingTerms.length) {
+    // Transient model input only: never add these terms to stored complaints or logs.
+    prompt += '\n\nThe previous brief contained these unsupported terms: ' + JSON.stringify(offendingTerms)
+      + '. Rewrite the brief without them; use only names that appear in the speech. Describe private individuals by role and keep the brief meaningful.'
+  }
   return prompt
 }
 
-export function buildMessages(record: PromptRecord, tasks: readonly Task[], complaints: readonly string[] = []) {
+export function buildMessages(record: PromptRecord, tasks: readonly Task[], complaints: readonly string[] = [], offendingTerms: readonly string[] = []) {
   return [
     { role: 'system', content: buildSystemPrompt(tasks, record.historic) },
-    { role: 'user', content: buildUserPrompt(record, complaints) },
+    { role: 'user', content: buildUserPrompt(record, complaints, offendingTerms) },
   ]
 }

@@ -6,7 +6,7 @@
 import { neuronsFor } from './budget.ts'
 import { extractJsonObject, readModelReply } from './extract.ts'
 import { buildMessages, type PromptRecord, type Task } from './prompts.ts'
-import { NAMES_PROBLEM, cleanupSummary, validateSummary, validateTopics } from './validate.ts'
+import { NAMES_PROBLEM, cleanupSummary, unsupportedHistoricTerms, validateSummary, validateTopics } from './validate.ts'
 import { TOPIC_SLUGS } from './topics.ts'
 import type { AiLike } from './env.ts'
 
@@ -120,6 +120,9 @@ export async function generate(opts: GenerateOptions): Promise<Generation> {
   for (const t of tasks) results[t] = { rejected: 0, model: opts.primaryModel, neurons: 0, complaints: [], namesRejected: t === 'summary' && !!record.historic && !!opts.priorNamesRejected, terminalNames: false }
 
   let complaints: string[] = opts.priorNamesRejected && record.historic ? [`summary: ${NAMES_PROBLEM}`] : []
+  // Offending terms stay in memory for the corrective prompt. Persist only the
+  // generic complaint and retry allowance; historic samples are always redacted.
+  let offendingTerms: string[] = []
   let outstanding: Task[] = [...tasks]
 
   // A name failure on the last ordinary attempt still gets its one corrective escalation.
@@ -127,7 +130,7 @@ export async function generate(opts: GenerateOptions): Promise<Generation> {
     if (!opts.mayContinue()) return { results, incomplete: true }
     const namesRetry = outstanding.includes('summary') && !!results.summary?.namesRejected
     const model = namesRetry ? opts.escalationModel : models[attempt]
-    const messages = buildMessages(record, outstanding, complaints)
+    const messages = buildMessages(record, outstanding, complaints, namesRetry ? offendingTerms : [])
     const body = requestBody(model, messages, opts.maxTokens, outstanding)
 
     let response: unknown
@@ -173,7 +176,10 @@ export async function generate(opts: GenerateOptions): Promise<Generation> {
           else {
             failed.push('summary')
             next.push(...problems.map((p) => `summary: ${p}`))
-            if (problems.includes(NAMES_PROBLEM)) results.summary!.namesRejected = true
+            if (problems.includes(NAMES_PROBLEM)) {
+              results.summary!.namesRejected = true
+              offendingTerms = unsupportedHistoricTerms(cleaned as string, record.nameText ?? record.text)
+            }
           }
         } else {
           const verdict = validateTopics(parsed.topics)
@@ -193,7 +199,7 @@ export async function generate(opts: GenerateOptions): Promise<Generation> {
         r.rejected += 1
         r.complaints = next
         if (t === 'summary' && namesRetry) r.terminalNames = true
-        await opts.onReject?.({ task: t, model, attempt: attempt + 1, reasons: next.filter((c) => !c.includes(':') || c.startsWith(`${t}:`)), sample: reply.text })
+        await opts.onReject?.({ task: t, model, attempt: attempt + 1, reasons: next.filter((c) => !c.includes(':') || c.startsWith(`${t}:`)), sample: record.historic ? '' : reply.text })
       }
     }
     outstanding = failed.filter((t) => !results[t]!.terminalNames && (attempt < MAX_ATTEMPTS - 1 || (t === 'summary' && results[t]!.namesRejected)))
