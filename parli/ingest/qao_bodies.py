@@ -392,8 +392,9 @@ def stage(snapshot, checkpoint, out, kb_out):
         row['pdf'] = rights_review(row, doc)
         row['responses'], row['body_units'], row['extraction_holds'] = [], [], []
         for rec in row['recommendations']: rec['provenance'] = 'html'
-        if row['pdf']['status'] == 'held':
-            row['licence'].update(status='exception', body_skipped=True, exceptions=row['pdf']['reasons'])
+        # The HTML page and PDF are separate grants. The page's two original
+        # exceptions still hold its text; PDF terms hold PDF-derived units only.
+        if row['licence']['body_skipped']:
             row['recommendations'], row['entities'] = [], []
         if row['pdf']['status'] == 'ready':
             row['responses'], response_start, response_holds = extract_responses(row, doc['pages'])
@@ -420,6 +421,7 @@ def stage(snapshot, checkpoint, out, kb_out):
     payload = ''.join(json.dumps(r, ensure_ascii=False, separators=(',', ':')) + '\n' for r in kb).encode()
     tmp = kb_out.with_suffix('.tmp'); tmp.write_bytes(payload); tmp.replace(kb_out)
     counts = {'reports': len(rows), 'listed': snapshot['listed'], 'bodies': sum(r['pdf']['status'] == 'ready' for r in rows),
+              'html_recommendations': sum(r.get('provenance','html') == 'html' for row in rows for r in row['recommendations']),
               'held': [{'id': r['id'], 'reasons': r['pdf']['reasons']} for r in rows if r['pdf']['status'] == 'held'],
               'pdf_recommendations': sum(r.get('provenance','html') != 'html' for row in rows for r in row['recommendations']),
               'responses': sum(len(r['responses']) for r in rows), 'kb_units': len(kb), 'kb_bytes': len(payload),

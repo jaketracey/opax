@@ -60,7 +60,7 @@ test('audit detail has numbered verbatim QAO text, one dated meta line, SourceLi
  assert.equal((page.prerender.match(/In the Queensland Audit Office’s words/g)||[]).length,1);
  assert.match(page.prerender,/href="\/subject\/agency\/health"/);
  assert.equal((page.prerender.match(/class="ui-pop ui-source"/g)||[]).length,1);
- assert.match(page.prerender,/Updated 10 Oct 2026 · <span class="ui-source-name">Queensland Audit Office<\/span>/);
+ assert.match(page.prerender,/Updated 10 Oct 2026 · <span class="ui-source-name">Source: Queensland Audit Office report page, CC BY 4.0<\/span>/);
  assert.match(page.prerender,/class="ui-sheet-licence"><a href="https:\/\/creativecommons.org\/licenses\/by\/4.0\/">CC BY 4.0<\/a>/);
  assert.match(page.prerender,/Read the report on qao.qld.gov.au ↗/);assert.doesNotMatch(page.prerender,/class="ui-button"/);
  for(const href of [fixture.reports[0].canonical_url,fixture.reports[0].pdf_url,'https://creativecommons.org/licenses/by/4.0/']) assert.ok(page.prerender.includes(`href="${href}"`));

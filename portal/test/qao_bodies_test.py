@@ -55,17 +55,23 @@ class Tests(unittest.TestCase):
         (root/(row['id']+'.json')).write_text(json.dumps(doc))
         return stage(snap,root,root/'bodies.json',root/'kb/qao-bodies.jsonl')
 
-    def test_rights_hold_overrides_html_and_pdf_bodies(self):
+    def test_pdf_rights_hold_keeps_separately_licensed_html_recommendations(self):
         row,doc,snap=fixture();snap['reports'][0]['recommendations']=[{'number':1,'text':'Source HTML advice','html':'','addressed_to':None,'source_text':"QAO's text"}]
         doc['pages'][1]=page(2,[('© The State of Queensland (Queensland Audit Office) 2000.\nCreative Commons Attribution-Non-Commercial-No Derivatives (CC BY-NC-ND) 4.0 International licence.',60,140)])
         data,counts=self.staged(doc,snap);r=data['reports'][0]
-        self.assertIn('pdf_restrictive_licence',r['pdf']['reasons']);self.assertTrue(r['licence']['body_skipped'])
-        self.assertEqual(r['recommendations'],[]);self.assertEqual(r['responses'],[]);self.assertEqual(counts['kb_units'],0)
+        self.assertIn('pdf_restrictive_licence',r['pdf']['reasons']);self.assertFalse(r['licence']['body_skipped'])
+        self.assertEqual(r['recommendations'][0]['text'],'Source HTML advice');self.assertEqual(r['recommendations'][0]['provenance'],'html')
+        self.assertEqual(r['responses'],[]);self.assertEqual(counts['kb_units'],0);self.assertEqual(counts['html_recommendations'],1)
+        payloads,manifest=plan_export(data);self.assertEqual(manifest['recommendations'],1);self.assertEqual(manifest['bodies'],0)
+        r['recommendations'][0]['provenance']='pdf p.4';r['recommendations'][0]['page']=4
+        with self.assertRaises(Held):plan_export(data)
         self.assertEqual(r['pdf']['sha256'],'a'*64)
 
     def test_existing_rights_hold_is_never_cleared(self):
         row,doc,snap=fixture();snap['reports'][0]['licence']['body_skipped']=True
+        snap['reports'][0]['recommendations']=[{'number':1,'text':'Fixture held advice','html':'','addressed_to':None,'source_text':"QAO's text"}]
         data,_=self.staged(doc,snap);self.assertIn('phase1_rights_hold',data['reports'][0]['pdf']['reasons'])
+        self.assertEqual(data['reports'][0]['recommendations'],[])
 
     def test_third_party_notice_holds_entire_body(self):
         row,doc,_=fixture();doc['pages'][4]['blocks'].append({'text':'Image credit: an external rights owner; reproduced with permission.','bbox':[60,300,500,330]})

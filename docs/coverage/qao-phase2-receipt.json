@@ -1,11 +1,10 @@
 {
   "schema": 1,
-  "generated_at": "2026-10-11T22:35:27.871235+00:00",
+  "generated_at": "2026-10-11T23:16:27.908305+00:00",
   "reports": 296,
   "listed": 296,
   "bodies": 0,
   "recommendations_added_from_pdfs": 0,
-  "html_recommendations_held": 647,
   "response_records": 0,
   "kb_units": 0,
   "kb_bytes": 0,
@@ -59721,7 +59720,7 @@
     },
     "after": {
       "files": 6,
-      "bytes": 1714381
+      "bytes": 2259431
     },
     "audit_sitemap": {
       "files": 1,
@@ -59731,7 +59730,11 @@
       "files": 150,
       "bytes": 30000000
     },
-    "title_privacy_filtered": 1
+    "title_privacy_filtered": 1,
+    "projection_before": {
+      "files": 6,
+      "bytes": 1714381
+    }
   },
   "votes": {
     "byte_identical": true,
@@ -59790,5 +59793,66 @@
     "temporary_pdf_bytes_deleted": 1380997428,
     "retained_text_receipts": 296,
     "retained_text_receipt_bytes": 74499238
+  },
+  "html_recommendations_live": 647,
+  "html_recommendation_reports": 100,
+  "html_page_holds": 2,
+  "projection_update": {
+    "decision_date": "2026-10-12",
+    "source": "HTML report pages under the separate website CC BY 4.0 grant",
+    "provenance": "html",
+    "pdf_holds_unchanged": true,
+    "pdf_links_unchanged": true,
+    "new_source_requests": 0,
+    "recommendation_privacy_filtered": 0,
+    "title_privacy_filtered": 1,
+    "validation": {
+      "node": {
+        "passed": 1417,
+        "failed": 0,
+        "seconds": 691.36
+      },
+      "audit_targeted": {
+        "passed": 20,
+        "failed": 0
+      },
+      "body_loader": {
+        "passed": 28,
+        "failed": 0
+      },
+      "phase1_loader": {
+        "passed": 14,
+        "failed": 0
+      },
+      "weekly": {
+        "passed": 3,
+        "failed": 0
+      },
+      "validators": {
+        "passed": 66,
+        "skipped": 1,
+        "failed": 0
+      },
+      "typescript": true,
+      "npm_check": true,
+      "build_release": true,
+      "build_release_staging": true,
+      "local_worker": {
+        "directory": 200,
+        "html_recommendations_detail": 200,
+        "original_page_hold_detail": 200,
+        "pdf_terms_visible": true,
+        "pdf_body_held": true,
+        "bad_id": 404,
+        "noindex": true,
+        "source_lines_per_page": 1
+      },
+      "privacy": {
+        "files": 313,
+        "donor_identity_files": 0,
+        "person_fields": 0,
+        "signatory_fields": 0
+      }
+    }
   }
 }

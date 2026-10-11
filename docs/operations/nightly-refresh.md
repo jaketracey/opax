@@ -984,7 +984,8 @@ are tracked in HEAD. It stays inert on phase-1 main until this lane is merged.
 After successful HTML acquisition, `qao_bodies --quiet-hours --with-html-run` verifies the
 live listing, fetches newly tabled full PDFs, and reuses hash-checked local text
 receipts. It reads document imprints and third-party notices before any body
-projection; restrictive PDF terms override the general website grant. Existing
+projection; document terms govern PDF material. HTML recommendations retain the
+separate report-page CC BY 4.0 grant and original two page exceptions. Existing
 rights holds remain held. There is no OCR, model, database or remote KB client.
 Any missing report, empty catalogue, source refusal, challenge, incomplete
 acquisition or body-stage failure preserves the last accepted export. The
@@ -1004,8 +1005,9 @@ uses only a boolean. `validate_data.py audit` checks phase 1 or 2, the
 identity, source pages and permitted fields. `export_step.sh dir` retains its
 keep-if-unchanged behavior. The group owns only `portal/public/audit`.
 The exporter applies the shared donor publication boundary before writing assets.
-Filtered metadata titles are marked and link to QAO's original; verbatim body
-text is held if that boundary would change it.
+Filtered metadata titles and HTML recommendation text are marked. PDF donor-text
+holds stay local to PDF material; they do not suppress cleared HTML pages.
+PDF source text stays held if the boundary would change it.
 
 Full PDFs are temporary files in ignored `staging/pdfs/`. Text receipts remain
 in `scripts/state/qao/pdf-text/`, with document and extracted-text SHA-256s.

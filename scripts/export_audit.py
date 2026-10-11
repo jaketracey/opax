@@ -128,13 +128,14 @@ def plan_export(snapshot, agencies=()):
                     "Generic recommendation addressees remain source text, not audited entities. No person entities or joins."]}
     if snapshot.get('phase') == 2:
         manifest.update(bodies=sum(r['pdf']['status'] == 'ready' for r in rows),
+                        html_recommendations=sum(rec.get('provenance','html') == 'html' for r in rows for rec in r['recommendations']),
                         pdf_recommendations=sum(rec.get('provenance','html') != 'html' for r in rows for rec in r['recommendations']),
                         responses=sum(len(r.get('responses', [])) for r in rows),
                         pdf_holds=[{'id':r['id'], 'reasons':r['pdf']['reasons']} for r in rows if r['pdf']['status'] == 'held'],
                         recommendation_mismatches=snapshot.get('recommendation_mismatches', []),
                         recommendation_compared_reports=snapshot.get('recommendation_compared_reports', 0))
-        manifest['attribution'].update(changes='Report metadata arranged into a catalogue. Recommendations and entity responses reproduce source text, with text-layer layout simplified. Each PDF unit retains its PDF page reference. No model summaries.',
-                                       exceptions='HTML pages and PDF imprint and third-party notices checked per report. Uncleared PDF bodies and pages without usable text layers are held. Images and logos are excluded.')
+        manifest['attribution'].update(changes='Report metadata arranged into a catalogue. HTML recommendations reproduce the report pages under their CC BY 4.0 grant, with formatting simplified and html provenance. PDF-derived text retains its PDF page reference. No model summaries.',
+                                       exceptions='HTML page exceptions and PDF imprint and third-party notices are reviewed separately. The two original page exceptions remain held. Document-level terms and unusable text layers hold PDF bodies and responses; they do not override the separate HTML page grant. Images and logos are excluded.')
         manifest['limitations'] = ['PDF bodies are staged locally for KB review; no KB publication by this loader.',
                                   'Unparsed recommendation sections and unattributed response pages are recorded in per-report extraction holds.',
                                   'Signatories remain only inside verbatim response text. No person entities, fields or joins.']
@@ -165,8 +166,12 @@ def export(snapshot_path, out):
     manifest = projected['manifest.json']
     for chunk in manifest['chunks']: chunk['bytes'] = len(encoded(projected[Path(chunk['path']).name]))
     manifest['title_privacy_filtered'] = sum(bool(r.get('title_privacy_filtered')) for r in projected['index.json']['records'])
+    manifest['recommendation_privacy_filtered'] = sum(bool(rec.get('privacy_filtered')) for chunk in manifest['chunks']
+        for row in projected[Path(chunk['path']).name]['records'] for rec in row['recommendations'])
     if manifest['title_privacy_filtered']:
         manifest['attribution']['changes'] += ' Titles filtered under OPAX donor privacy rules are marked; the original title remains on QAO.'
+    if manifest['recommendation_privacy_filtered']:
+        manifest['attribution']['changes'] += ' HTML recommendations filtered under OPAX donor privacy rules are marked.'
     payloads = {name:encoded(body) for name,body in projected.items()}
     check_budget(payloads)
     out.mkdir(parents=True, exist_ok=True)

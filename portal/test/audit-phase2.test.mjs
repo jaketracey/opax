@@ -1,6 +1,7 @@
 import {test} from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync,readdirSync} from 'node:fs';
+import {spawnSync} from 'node:child_process';
 import {auditPage} from '../src/audit.ts';
 import {auditComplete,filterAudit} from '../public/audit.js';
 const root=new URL('./fixtures/audit-phase2-export/',import.meta.url);
@@ -65,4 +66,43 @@ test('filtered metadata title is marked while the authoritative report link stay
  const p=await auditPage(id,new URL('https://opax.com.au/audit/'+id),async path=>path.includes('reports-')?{records:[row]}:read(path),block);
  assert.match(p.prerender,/title has been filtered under OPAX/);
  assert.ok(p.prerender.includes(`href="${row.canonical_url}"`));
+});
+
+test('HTML recommendations stay live beside held PDF terms and the report page source line',async()=>{
+ for(const [licence,term] of [['CC BY-NC-ND 4.0','CC BY-NC-ND 4.0'],['Prior written permission required',"reuse needs QAO&#39;s written permission"],['Uncleared document notice; no document grant accepted','reuse grant unverified']]){
+  const row=structuredClone(JSON.parse(files['reports-1.json']).records[0]);row.pdf.status='held';row.pdf.reasons=['pdf_restrictive_licence'];row.pdf.document_licence=licence;
+  row.licence.body_skipped=false;row.responses_path=undefined;row.response_count=0;
+  row.recommendations=[{number:1,text:'Fixture HTML advice.',html:'<p>Fixture HTML advice.</p>',source_text:"QAO's text",provenance:'html',addressed_to:null}];
+  const seen=[];const page=await auditPage(id,new URL('https://opax.com.au/audit/'+id),async path=>{seen.push(path);return path.includes('reports-')?{records:[row]}:read(path);},block);
+  assert.equal(page.status,200);assert.match(page.prerender,/Fixture HTML advice/);assert.match(page.prerender,/Source: html/);
+  assert.match(page.prerender,/Source: Queensland Audit Office report page, CC BY 4.0/);
+  assert.ok(page.prerender.includes(`Full report (PDF)</a>: ${term}`));assert.match(page.prerender,/PDF body held; its full text is not reproduced here/);
+  assert.ok(!seen.some(path=>path.includes('responses-')));assert.equal((page.prerender.match(/class="ui-pop ui-source"/g)||[]).length,1);
+ }
+});
+
+test('accepted catalogue restores all phase 1 HTML recommendations while preserving every PDF hold',()=>{
+ const publicRoot=new URL('../public/audit/',import.meta.url),manifest=JSON.parse(readFileSync(new URL('manifest.json',publicRoot)));
+ const rows=manifest.chunks.flatMap(chunk=>JSON.parse(readFileSync(new URL(chunk.path.replace('/audit/',''),publicRoot))).records);
+ assert.equal(manifest.count,296);assert.equal(manifest.html_recommendations,647);assert.equal(manifest.recommendations,647);
+ assert.equal(rows.reduce((n,row)=>n+row.recommendations.length,0),647);assert.ok(rows.every(row=>row.recommendations.every(rec=>rec.provenance==='html')));
+ assert.equal(rows.filter(row=>row.licence.body_skipped).length,2);assert.ok(rows.every(row=>row.pdf.status==='held'));
+ assert.equal(manifest.bodies,0);assert.equal(manifest.responses,0);assert.equal(manifest.pdf_recommendations,0);
+});
+
+test('publication boundary filters HTML identities while refusing altered PDF source text',async()=>{
+ const {readPublicationContext,privacySourceGraphs,privacySourceDonorRecords,sanitiseDonorAsset}=await import('../../scripts/withhold_donor_assets.mjs');
+ const {isOrganisationDonor}=await import('../public/donor-entity.js');
+ const context=readPublicationContext();
+ const candidates=[...privacySourceDonorRecords(),...privacySourceGraphs().flatMap(graph=>graph.nodes)];
+ const donor=candidates.find(row=>row.kind==='donor'&&!isOrganisationDonor(row)&&row.label&&!/name withheld/i.test(row.label)
+  &&sanitiseDonorAsset({title:`Donation by ${row.label}`},context).title!==`Donation by ${row.label}`);
+ assert.ok(Boolean(donor),'Runtime privacy source contains a withheld identity');
+ const raw=`A donation by ${donor.label}.`,script=new URL('../../scripts/qao_publication_boundary.mjs',import.meta.url).pathname;
+ const run=provenance=>spawnSync(process.execPath,[script],{input:JSON.stringify({'reports-1.json':{records:[{title:'Fixture audit',recommendations:[{number:1,text:raw,html:`<p>${raw}</p>`,provenance}]}]}}),encoding:'utf8'});
+ const html=run('html');assert.equal(html.status,0,'HTML follows the shared publication boundary');
+ const rec=JSON.parse(html.stdout)['reports-1.json'].records[0].recommendations[0];assert.equal(rec.provenance,'html');assert.equal(rec.privacy_filtered,true);
+ assert.ok(!html.stdout.includes(donor.label),'Output contains no withheld identity');
+ const pdf=run('pdf p.4');assert.ok(pdf.status!==0,'Changed PDF source text remains held');
+ assert.ok(!pdf.stderr.includes(donor.label),'Diagnostics contain no withheld identity');
 });

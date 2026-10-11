@@ -5,9 +5,10 @@ orchestrator owns merge and promotion. This lane makes no push, deploy,
 production D1/KB/Cloudflare/refresh-box change or `parli.db` write.
 This is the historical phase-1 receipt: **partial, report index + HTML
 recommendations**. The [phase-2 document review](qao-phase2.md) supersedes its
-body-publication assumptions: all 296 report bodies are now held in this
-worktree, including the 647 previously exported HTML recommendations. The
-phase-1 live catalogue is unchanged until orchestrator review and merge.
+PDF-publication assumptions: all 296 PDF bodies are held in this worktree.
+The 647 HTML recommendations remain available under their separate report-page
+CC BY 4.0 grant, with the original two page exceptions retained. The phase-1
+live catalogue is unchanged until orchestrator review and merge.
 
 The [QAO index](https://www.qao.qld.gov.au/reports-resources/reports-parliament)
 advertised 30 pages. All **296 unique reports / 296 listed** reconcile, with
