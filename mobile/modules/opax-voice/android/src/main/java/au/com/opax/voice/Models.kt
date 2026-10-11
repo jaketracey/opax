@@ -25,7 +25,7 @@ enum class EndReason {
 }
 
 /** Swift's `throw VoiceFailure.x`. The message is the case name: never server or credential content. */
-class VoiceException(val failure: VoiceFailure) : Exception(failure.name) {
+open class VoiceException(val failure: VoiceFailure) : Exception(failure.name) {
   override fun equals(other: Any?) = other is VoiceException && other.failure == failure
   override fun hashCode() = failure.hashCode()
 }
@@ -33,7 +33,7 @@ class VoiceException(val failure: VoiceFailure) : Exception(failure.name) {
 /** Swift's DecodingError: a malformed body. Carries no content. */
 class DecodingException : Exception("Invalid response")
 
-data class TranscriptTurn(val role: Role, val id: Int, val text: String) {
+data class TranscriptTurn(val role: Role, val id: Long, val text: String) {
   enum class Role { user, agent }
 }
 /** A validated OPAX record path, never a signed URL. */

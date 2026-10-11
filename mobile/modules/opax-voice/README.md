@@ -236,7 +236,7 @@ android/src/main/java/au/com/opax/voice/
   CommunityPolicy.kt   the reviewed community methods and query parameters
   StoredVoiceConsent.kt consent, denied unless an explicit grant is stored
   VoiceBridgeValue.kt  explicit projection of every bridge value and event
-  VoiceController.kt   VoiceCore (the bridge's contract), AccountVoiceCore, the bridge controller
+  VoiceController.kt   VoiceCore (the bridge's contract) and the bridge controller
   OpaxVoiceModule.kt   the Expo module
   CallController.kt    VoiceCallController: the call lifecycle, back-pressure, polling, cap (call half)
   Relay.kt             the convai socket on OkHttp, client messages, provider events, strict JSON reader
@@ -253,7 +253,10 @@ android/src/voiceProduction/ production release: the opax.com.au origin and the 
   and `OPAX_FIXTURE_PORT`, as the iOS pods do. The app's e2e build type uses this
   library's release variant compiled from `voiceTest`; e2e talks only to
   `http://10.0.2.2:<port>` (the emulator's host loopback) with in-memory
-  credentials. Development builds use production, as iOS DEBUG does. The
+  credentials, and only on the emulator: iOS compiles its loopback for the
+  simulator alone, so on a physical phone, where 10.0.2.2 is a local-network
+  address, the e2e module refuses every voice request. Development builds use
+  production, as iOS DEBUG does. The
   production switch embeds `voice-production-policy.json`'s routes and consent
   default, and the module refuses to start unless they match `AuthRoute`.
 - **Credential.** AES-256-GCM under a non-exportable Android Keystore key, no user
@@ -262,20 +265,23 @@ android/src/voiceProduction/ production release: the opax.com.au origin and the 
   `res/xml/opax_voice_*_rules.xml` exclude from cloud backup and device transfer.
   The manifest merges both rules into the app. An item that cannot be decrypted
   (lost key, restored copy, other origin) reads as signed out and is removed; a
-  Keystore error is `unavailable`. iOS's WhenUnlocked restriction has no exact
+  Keystore error is `unavailable`. Sign-out and deletion keep iOS's order, and
+  when the store cannot read or compare its item they still remove it (removal
+  needs no key), clear the local state and then report `unavailable`. iOS's WhenUnlocked restriction has no exact
   equivalent here (`setUnlockedDeviceRequired` misbehaves on some devices), so the
   key is usable while the device is locked.
 - **Transport.** OkHttp with no cookie jar, cache, redirects or silent retries,
   15-second timeouts, and a policy check on the `HttpUrl` actually sent.
   `TransportGuard` is the test and e2e host guard (Swift's `VoiceTestSafety`
   for HTTP).
-- **Call half.** `VoiceCallController` implements `VoiceCore` and is the core
-  `VoiceController.create` builds; `AccountVoiceCore` remains for the account
-  tests. One serial dispatcher plays the Swift actor (calls interleave only at
+- **Call half.** `VoiceCallController` implements `VoiceCore` and is the only
+  core: `VoiceController.create` builds it, and the account tests drive its
+  status, sign-out and deletion paths. One serial dispatcher plays the Swift actor (calls interleave only at
   suspension points); teardown runs to completion even when it cancels its
   caller, as iOS's fresh Task does. Formats and chunks match iOS exactly: PCM16
   little-endian or mu-law at 8, 16, 22.05, 24, 44.1 or 48 kHz from the metadata,
-  25 ms fractional chunks (`ChunkCadence`), two seconds of send back-pressure,
+  25 ms fractional chunks (`ChunkCadence`), 64-bit event IDs (Swift's `Int`),
+  two seconds of send back-pressure,
   thirty seconds scheduled plus thirty in backlog for playback. The monthly
   allowance comes only from server status: Start is refused at zero, the relay's
   deadline close ends the call, fresh status names the reason, and the countdown
@@ -288,7 +294,9 @@ android/src/voiceProduction/ production release: the opax.com.au origin and the 
   buffer callbacks). The session takes transient audio focus,
   `MODE_IN_COMMUNICATION`, and routes to a headset when connected, else the
   speaker; losing focus (a phone call) is an interruption and ends the call, as
-  does backgrounding. No foreground service.
+  does backgrounding: the last started activity stopping. A pause alone (a
+  dialog, split screen, a share sheet) ends nothing, and the bridge's
+  `background()` acts only when no activity is started. No foreground service.
 - **Microphone.** JS asks for `RECORD_AUDIO` after stored consent and calls
   `start()` once granted; native only checks the grant, after fresh status and
   consent, and never shows UI. Only the production voice switch checks it and

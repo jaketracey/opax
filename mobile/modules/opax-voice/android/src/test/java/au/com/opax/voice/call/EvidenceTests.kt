@@ -33,16 +33,16 @@ class EvidenceTests : SafeVoiceTest() {
   @Test fun markdownCorrectionsAndAllCaps() {
     val model = EvidenceModel()
     for (index in 0 until 81) {
-      model.add(TranscriptTurn(TranscriptTurn.Role.agent, index, "[Fixture](/doc/$index) [Reject](https://example.org)"), correction = false)
+      model.add(TranscriptTurn(TranscriptTurn.Role.agent, index.toLong(), "[Fixture](/doc/$index) [Reject](https://example.org)"), correction = false)
     }
     assertEquals(80, model.turns.size)
-    assertEquals(1, model.turns.first().id)
+    assertEquals(1L, model.turns.first().id)
     assertEquals(12, model.sources.size)
     model.add(TranscriptTurn(TranscriptTurn.Role.agent, 80, "x".repeat(13000)), correction = true)
     assertEquals(80, model.turns.size)
     assertEquals(12000, model.turns.last().text.length)
     model.add(TranscriptTurn(TranscriptTurn.Role.agent, -1, "Correct last"), correction = true)
-    assertEquals(80, model.turns.last().id)
+    assertEquals(80L, model.turns.last().id)
     assertEquals("Correct last", model.turns.last().text)
   }
 

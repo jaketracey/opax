@@ -8,12 +8,12 @@ internal class EvidenceModel {
     private set
   var sources: List<VoiceSource> = emptyList()
     private set
-  private var serial = 0
+  private var serial = 0L
 
   fun add(turn: TranscriptTurn, correction: Boolean) {
     var turn = turn.copy(text = prefix(turn.text, 12000))
     if (turn.text.isBlank()) return
-    if (turn.id == -1) {
+    if (turn.id == -1L) {
       val prior = if (correction) turns.lastOrNull { it.role == TranscriptTurn.Role.agent } else null
       turn = if (prior != null) turn.copy(id = prior.id) else { serial += 1; turn.copy(id = -serial - 1) }
     }

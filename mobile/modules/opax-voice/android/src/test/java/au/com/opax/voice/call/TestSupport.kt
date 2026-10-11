@@ -444,6 +444,8 @@ class Rig private constructor(
     fun make(
       relays: RelayFactory? = null, port: Int = 8901, timing: CallTiming = CallTiming(),
       clock: VoiceClock = SystemVoiceClock, storedConsent: VoiceConsent? = null, engines: VoiceEngineFactory? = null,
+      /** The Android lifecycle, as VoiceController.create shares it with the bridge; the fake by default. */
+      androidLifecycle: VoiceLifecycle? = null,
     ): Rig {
       val http = FixtureHttp(port)
       val store = InMemoryCredentialStore()
@@ -456,7 +458,7 @@ class Rig private constructor(
       val consent = FakeConsent()
       val lifecycle = FakeLifecycle()
       val controller = VoiceCallController(
-        client, relays ?: relay, engines ?: engine, permission, storedConsent ?: consent, session, lifecycle, clock, timing,
+        client, relays ?: relay, engines ?: engine, permission, storedConsent ?: consent, session, androidLifecycle ?: lifecycle, clock, timing,
       )
       val recorder = EventRecorder()
       val recording = CoroutineScope(Dispatchers.Default).launch { controller.events.collect { recorder.record(it) } }

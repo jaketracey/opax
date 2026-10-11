@@ -252,12 +252,39 @@ class VoiceHttpClient(
     if (sent == null) return
     // Keep this one credential blocked even if Keystore deletion fails.
     synchronized(lock) { if (sent !in revokedCredentials) revokedCredentials.add(sent) }
-    store.clearIfMatching(sent)
+    stored { store.clearIfMatching(sent) }
+  }
+
+  /** Store calls, with the store's own failures told apart from the server's. */
+  private inline fun <T> stored(block: () -> T): T = try {
+    block()
+  } catch (fault: CredentialStoreFault) {
+    throw fault
+  } catch (_: Exception) {
+    throw CredentialStoreFault()
+  }
+
+  /**
+   * Logout and deletion end the session on this device even when the store
+   * cannot read or compare its item, and so can never send it again: the
+   * sent credential stays blocked and the unreadable item is removed (removal
+   * needs no key). The caller then reports the fault.
+   */
+  private fun discardUnreadable(sent: SessionCredential?) {
+    if (sent != null) synchronized(lock) { if (sent !in revokedCredentials) revokedCredentials.add(sent) }
+    runCatching { store.clear() }
+  }
+
+  /** iOS's order first; a store fault on the way still clears what it can. */
+  private inline fun <T> endingSession(sent: () -> SessionCredential?, block: () -> T): T = try {
+    block()
+  } catch (fault: CredentialStoreFault) {
+    discardUnreadable(sent()); throw fault
   }
 
   private fun credential(): SessionCredential? {
     if (store is KeystoreCredentialStore && store.origin != policy.originString) throw VoiceException(VoiceFailure.forbidden)
-    val value = store.read() ?: return null
+    val value = stored { store.read() } ?: return null
     // A stale read/response must never remove a newer revocation block.
     if (revoked(value)) return null
     if (value.expiresAt <= clock.now()) {
@@ -396,10 +423,11 @@ class VoiceHttpClient(
   suspend fun deleteAccount(challengeId: String, code: String): AccountDeletion = io {
     // Let the Worker apply its generic proof/admission failure to every shape.
     val body = JSONObject().put("challenge_id", challengeId).put("code", code).toString().toByteArray()
-    val (response, sent) = perform(AuthRoute.deleteAccount, body)
+    // An unreadable credential cannot authenticate the deletion; it is still removed from this device.
+    val (response, sent) = endingSession({ null }) { perform(AuthRoute.deleteAccount, body) }
     val result = AccountDeletion.decode(response.body)
     if (!result.deleted || !result.signedOut) throw VoiceException(VoiceFailure.invalidResponse)
-    clearCredential(sent)
+    endingSession({ sent }) { clearCredential(sent) }
     result
   }
 
@@ -421,13 +449,15 @@ class VoiceHttpClient(
   }
 
   suspend fun logout(everywhere: Boolean = false): Unit = io {
-    val prepared = prepare(AuthRoute.logout, JSONObject().put("everywhere", everywhere).toString().toByteArray())
+    val body = JSONObject().put("everywhere", everywhere).toString().toByteArray()
+    // An unreadable credential cannot be sent or revoked; it is still removed from this device.
+    val prepared = endingSession({ null }) { prepare(AuthRoute.logout, body) }
     try {
       execute(prepared, AuthRoute.logout)
     } catch (error: Exception) {
-      clearCredential(prepared.credential); throw error
+      endingSession({ prepared.credential }) { clearCredential(prepared.credential) }; throw error
     }
-    clearCredential(prepared.credential)
+    endingSession({ prepared.credential }) { clearCredential(prepared.credential) }
   }
 
   internal suspend fun start(): Reservation = io {

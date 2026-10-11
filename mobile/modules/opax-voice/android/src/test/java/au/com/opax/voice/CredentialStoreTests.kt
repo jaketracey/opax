@@ -4,6 +4,7 @@ import android.content.Context
 import android.security.keystore.KeyProperties
 import androidx.test.core.app.ApplicationProvider
 import java.util.Properties
+import java.util.UUID
 import java.util.concurrent.CyclicBarrier
 import java.util.concurrent.atomic.AtomicInteger
 import javax.crypto.KeyGenerator
@@ -136,6 +137,60 @@ class CredentialStoreTests : SafeVoiceTestCase() {
       server.setResponse(AuthRoute.deleteAccount, deletionResponse("deleteSuccess"))
       client.deleteAccount("c".repeat(43), "00001234")
       assertNull(store.read()); assertTrue(preferences().all.isEmpty())
+    }
+  }
+
+  /**
+   * Review P2-7: a Keystore fault that never clears. Sign-out and deletion keep
+   * iOS's order; the unreadable item still leaves this device (removal needs no
+   * key), the local state is cleared, and the fault is reported.
+   */
+  @Test fun aKeystoreFaultThatNeverClearsStillEndsTheSessionOnThisDevice() = runBlocking {
+    fun bridge(rig: Rig) = VoiceController(rig.core, rig.client, StoredVoiceConsent(context, "consent-" + UUID.randomUUID()))
+    val unavailable = mapOf("ok" to false, "error" to "unavailable")
+    // Sign-out with the item unreadable from the start: it cannot be sent or revoked.
+    var keys = SoftwareKeys()
+    Rig.make(store = { KeystoreCredentialStore(context, it, keys) }).use { rig ->
+      val voice = bridge(rig)
+      rig.core.refreshStatus(); assertEquals(true, rig.core.snapshot().status?.signedIn)
+      keys.fail = true
+      assertEquals(unavailable, voice.logout())
+      assertEquals(0, rig.server.count(AuthRoute.logout))
+      assertTrue(preferences().all.isEmpty())
+      // Signed out from here, with no cookie on the next read.
+      assertEquals(false, rig.core.snapshot().status?.signedIn)
+      assertNull(rig.server.requests.last().header("Cookie"))
+    }
+    // Sign-out where the fault starts after the Worker revoked the session.
+    keys = SoftwareKeys()
+    Rig.make(store = { KeystoreCredentialStore(context, it, keys) }).use { rig ->
+      val voice = bridge(rig)
+      rig.server.handler = { request -> if (request.route == AuthRoute.logout) keys.fail = true; null }
+      assertEquals(unavailable, voice.logout())
+      assertEquals(listOf("__Host-opax_session=$fixtureToken"), rig.server.requests.first { it.route == AuthRoute.logout }.headers("Cookie"))
+      assertTrue(preferences().all.isEmpty())
+    }
+    // Deletion with the item unreadable: no deletion request, the item and the
+    // call's evidence and status cleared, then a fresh signed-out read.
+    keys = SoftwareKeys()
+    Rig.make(store = { KeystoreCredentialStore(context, it, keys) }).use { rig ->
+      val voice = bridge(rig)
+      rig.core.refreshStatus()
+      rig.server.setResponse(AuthRoute.deleteAccount, deletionResponse("deleteSuccess"))
+      keys.fail = true
+      assertEquals(unavailable, voice.deleteAccount("c".repeat(43), "00001234"))
+      assertEquals(0, rig.server.count(AuthRoute.deleteAccount))
+      assertTrue(preferences().all.isEmpty())
+      eventually { VoiceEvent.Transcript(emptyList()) in rig.recorder.items && VoiceEvent.Sources(emptyList()) in rig.recorder.items }
+      assertEquals(false, rig.core.snapshot().status?.signedIn)
+    }
+    // A transient fault on an ordinary read still keeps the item (unchanged).
+    keys = SoftwareKeys()
+    Rig.make(store = { KeystoreCredentialStore(context, it, keys) }).use { rig ->
+      keys.fail = true
+      assertEquals(VoiceFailure.unavailable, assertThrows<VoiceException> { runBlocking { rig.client.status() } }.failure)
+      keys.fail = false
+      assertNotNull(rig.store.read())
     }
   }
 

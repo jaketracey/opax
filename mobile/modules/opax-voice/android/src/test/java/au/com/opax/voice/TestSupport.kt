@@ -17,6 +17,12 @@ import kotlinx.coroutines.cancel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
+import au.com.opax.voice.call.FakeAudioEngine
+import au.com.opax.voice.call.FakeConsent
+import au.com.opax.voice.call.FakeLifecycle
+import au.com.opax.voice.call.FakePermission
+import au.com.opax.voice.call.FakeSession
+import au.com.opax.voice.call.InMemoryRelay
 import okhttp3.HttpUrl
 import okio.Buffer
 import org.json.JSONArray
@@ -317,11 +323,16 @@ class EventRecorder(core: VoiceCore) {
   fun cancel() = scope.cancel()
 }
 
+/**
+ * The account rig: the shipping [VoiceCallController] over real loopback HTTP.
+ * Its call collaborators are the call tests' fakes; consent is denied unless a
+ * test passes its own, so nothing here reserves a call.
+ */
 class Rig private constructor(
   val server: FixtureServer,
-  val store: InMemoryCredentialStore,
+  val store: CredentialStore,
   val client: VoiceHttpClient,
-  val core: AccountVoiceCore,
+  val core: VoiceCallController,
   val recorder: EventRecorder,
 ) : Closeable {
   val policy get() = client.policy
@@ -331,14 +342,22 @@ class Rig private constructor(
   }
 
   companion object {
-    fun make(clock: VoiceClock = SystemVoiceClock, timing: StatusPollTiming = StatusPollTiming()): Rig {
+    fun make(
+      clock: VoiceClock = SystemVoiceClock,
+      timing: CallTiming = CallTiming(),
+      consent: VoiceConsent = FakeConsent().apply { granted = false },
+      /** The credential store for the fixture's origin; in memory by default. */
+      store: (RoutePolicy) -> CredentialStore = { InMemoryCredentialStore() },
+    ): Rig {
       val server = FixtureServer()
-      val store = InMemoryCredentialStore()
-      store.write(SessionCredential(fixtureToken, System.currentTimeMillis() / 1000.0 + 100))
       val policy = RoutePolicy.loopback(server.port)
-      val client = VoiceHttpClient(policy, store, OkHttpTransport(policy), clock)
-      val core = AccountVoiceCore(client, clock, timing)
-      return Rig(server, store, client, core, EventRecorder(core))
+      val credentials = store(policy)
+      credentials.write(SessionCredential(fixtureToken, System.currentTimeMillis() / 1000.0 + 100))
+      val client = VoiceHttpClient(policy, credentials, OkHttpTransport(policy), clock)
+      val core = VoiceCallController(
+        client, InMemoryRelay(), FakeAudioEngine(), FakePermission(), consent, FakeSession(), FakeLifecycle(), clock, timing,
+      )
+      return Rig(server, credentials, client, core, EventRecorder(core))
     }
   }
 }

@@ -1,6 +1,7 @@
 package au.com.opax.voice
 
 import android.content.Context
+import android.os.Build
 import okhttp3.HttpUrl
 
 /** Debug and e2e builds (iOS `DEBUG || OPAX_VOICE_E2E`). Never compiled into a production release. */
@@ -15,11 +16,23 @@ internal object VoiceVariant {
     // A missing/mismatched configuration cannot fall back to production.
     check(port in 8900..8999) { "Missing e2e voice configuration" }
     val policy = RoutePolicy.loopback(port, E2E_HOST)
-    TransportGuard.installed = TransportGuard { url ->
-      if (url.host != policy.origin.host) throw VoiceException(VoiceFailure.forbidden)
-    }
+    TransportGuard.installed = e2eGuard(policy, runningOnEmulator())
     return policy
   }
+
+  /**
+   * iOS compiles its e2e loopback for the simulator only
+   * (`targetEnvironment(simulator)`). Android cannot tell at compile time, so
+   * the e2e APK checks where it runs: on a physical phone 10.0.2.2 is an
+   * ordinary local-network address, and neither the synthetic sign-in nor its
+   * session may go there. Every voice request is refused instead.
+   */
+  internal fun e2eGuard(policy: RoutePolicy, emulator: Boolean) = TransportGuard { url ->
+    if (!emulator || url.host != policy.origin.host) throw VoiceException(VoiceFailure.forbidden)
+  }
+
+  /** The emulator's virtual boards: QEMU's "ranchu" and the older "goldfish". No phone reports either. */
+  internal fun runningOnEmulator(hardware: String = Build.HARDWARE) = hardware == "ranchu" || hardware == "goldfish"
 
   /** The e2e fixture injects in-memory credentials, as the iOS e2e pod does. */
   fun store(context: Context, policy: RoutePolicy): CredentialStore =

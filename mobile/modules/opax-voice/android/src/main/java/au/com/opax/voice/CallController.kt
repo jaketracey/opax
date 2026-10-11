@@ -64,7 +64,7 @@ class VoiceCallController(
   private var lifecycleJob: Job? = null
   private var playbackJob: Job? = null
   private var playbackDrainJob: Job? = null
-  private class PlaybackChunk(val bytes: ByteArray, val id: Int, val samples: Int)
+  private class PlaybackChunk(val bytes: ByteArray, val id: Long, val samples: Int)
   private var playbackBacklog = BoundedQueue<PlaybackChunk>(480000)
   private var playbackInFlight = 0
   private var playbackEpoch = 0
@@ -92,7 +92,7 @@ class VoiceCallController(
   private var muted = false
   private var mode: CallMode? = null
   private var reason: EndReason? = null
-  private var interruptionId = 0
+  private var interruptionId = 0L
   private var evidence = EvidenceModel()
   private var remaining = 0
   private val endWaiters = mutableListOf<CompletableDeferred<Unit>>()
@@ -193,7 +193,7 @@ class VoiceCallController(
     pollJob?.cancel()
     pollJob = null
     evidence = EvidenceModel()
-    interruptionId = 0
+    interruptionId = 0L
     muted = false
     mode = null
     playbackEpoch += 1
@@ -385,7 +385,7 @@ class VoiceCallController(
     }
   }
 
-  private fun enqueuePlayback(bytes: ByteArray, id: Int, format: AudioFormat, attempt: Int) {
+  private fun enqueuePlayback(bytes: ByteArray, id: Long, format: AudioFormat, attempt: Int) {
     val stride = if (format.codec == AudioFormat.Codec.pcm) 2 else 1
     if (bytes.size % stride != 0) return
     val samples = bytes.size / stride
@@ -589,6 +589,15 @@ class VoiceCallController(
       result
     } catch (error: Throwable) {
       if (error is CancellationException) throw error
+      if (error is CredentialStoreFault) {
+        // The unreadable session is gone from this device (VoiceHttpClient):
+        // clear the local state as a deletion does, then report the fault.
+        evidence = EvidenceModel()
+        clearStatus()
+        emit(VoiceEvent.Transcript(emptyList()))
+        emit(VoiceEvent.Sources(emptyList()))
+        runCatching { refreshOnActor() }
+      }
       throw VoiceException(voiceFailure(error))
     }
   }

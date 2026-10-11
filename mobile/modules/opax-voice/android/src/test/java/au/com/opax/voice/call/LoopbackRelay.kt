@@ -42,7 +42,7 @@ class LoopbackRelay(private val scenario: Scenario = Scenario.Conversation) {
     val audioSizes: List<Int> = emptyList(),
     val audioTimes: List<Double> = emptyList(),
     val allAudioSilent: Boolean = true,
-    val pongIds: List<Int> = emptyList(),
+    val pongIds: List<Long> = emptyList(),
     val peers: List<String> = emptyList(),
   )
 

@@ -20,7 +20,7 @@ class LoopbackCallTests : SafeVoiceTest() {
     val (server, rig) = fixture()
     rig.controller.start()
     eventually { rig.controller.state == CallState.live }
-    eventually { server.snapshot().pongIds == listOf(42) }
+    eventually { server.snapshot().pongIds == listOf(42L) }
     repeat(4) {
       rig.engine.feed(CaptureBuffer(FloatArray(400), 16000))
       delay(25)

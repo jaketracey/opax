@@ -3,6 +3,7 @@ package au.com.opax.voice
 import androidx.test.core.app.ApplicationProvider
 import java.io.Serializable
 import kotlinx.coroutines.runBlocking
+import okhttp3.HttpUrl.Companion.toHttpUrl
 import okhttp3.Request
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
@@ -189,7 +190,7 @@ class ReviewRegressionTests : SafeVoiceTestCase() {
     }
     for (expired in listOf(false, true)) {
       val clock = StepClock()
-      Rig.make(clock = clock, timing = StatusPollTiming(pollMaxInterval = 30.0, pollMaxAttempts = 4)).use { rig ->
+      Rig.make(clock = clock, timing = CallTiming(pollMaxInterval = 30.0, pollMaxAttempts = 4)).use { rig ->
         rig.store.write(SessionCredential(fixtureToken, distantFuture))
         val body = parse(signedStatus(active = "reserved")).toMutableMap()
         body["active_session"] = (body["active_session"] as Map<*, *>).toMutableMap()
@@ -316,5 +317,48 @@ class ProductionVoiceTests : SafeVoiceTestCase() {
     val embedded = VoiceController.embeddedProductionConfiguration()
     assertEquals(BuildConfig.OPAX_VOICE_PRODUCTION, embedded["OPAXProductionVoiceEnabled"])
     assertEquals(BuildConfig.OPAX_VOICE_PRODUCTION, RoutePolicy.productionConfigurationMatches(embedded))
+  }
+
+  /**
+   * Review P2-6, as iOS's `targetEnvironment(simulator)`: the e2e loopback works
+   * on the emulator only. On a phone 10.0.2.2 is a local-network address, so
+   * neither the synthetic sign-in nor its session may reach it.
+   */
+  @Test fun e2eLoopbackIsEmulatorOnly() = runBlocking {
+    assertTrue(VoiceVariant.runningOnEmulator("ranchu")); assertTrue(VoiceVariant.runningOnEmulator("goldfish"))
+    for (board in listOf("qcom", "tensor", "exynos990", "mt6789", "robolectric", "")) {
+      assertFalse(board, VoiceVariant.runningOnEmulator(board))
+    }
+    assertFalse(VoiceVariant.runningOnEmulator()) // Robolectric reports its own board
+    val policy = RoutePolicy.loopback(8953, VoiceVariant.E2E_HOST)
+    val fixture = "http://10.0.2.2:8953/api/voice/status".toHttpUrl()
+    VoiceVariant.e2eGuard(policy, emulator = true).validate(fixture)
+    assertEquals(VoiceFailure.forbidden, assertThrows<VoiceException> {
+      VoiceVariant.e2eGuard(policy, emulator = true).validate("https://opax.com.au/api/voice/status".toHttpUrl())
+    }.failure)
+    val phone = VoiceVariant.e2eGuard(policy, emulator = false)
+    assertEquals(VoiceFailure.forbidden, assertThrows<VoiceException> { phone.validate(fixture) }.failure)
+    // The real client under the phone's guard: nothing is sent and nothing stored.
+    val sent = mutableListOf<Request>()
+    val store = InMemoryCredentialStore()
+    val client = VoiceHttpClient(policy, store, HttpTransport { request: Request ->
+      TransportGuard.check(request.url)
+      synchronized(sent) { sent += request }
+      HttpResponse(200, body = json(mapOf("sent" to true, "challenge_id" to "fixture-challenge")))
+    })
+    val previous = TransportGuard.installed
+    TransportGuard.installed = phone // stricter than the suite's guard: it refuses every host
+    try {
+      for (call in listOf<suspend () -> Unit>(
+        { client.requestCode("synthetic@example.invalid") },
+        { client.consumeCode("fixture-challenge", "12345678") },
+        { client.status() },
+      )) {
+        assertEquals(VoiceFailure.forbidden, assertThrows<VoiceException> { runBlocking { call() } }.failure)
+      }
+    } finally {
+      TransportGuard.installed = previous
+    }
+    assertTrue(sent.isEmpty()); assertNull(store.read())
   }
 }

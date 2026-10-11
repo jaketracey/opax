@@ -51,7 +51,7 @@ fun interface RelayFactory {
 internal sealed interface ClientMessage {
   data object Initiation : ClientMessage
   class Audio(val bytes: ByteArray) : ClientMessage
-  class Pong(val id: Int) : ClientMessage
+  class Pong(val id: Long) : ClientMessage
   data object Activity : ClientMessage
   class Message(val text: String) : ClientMessage
   class ContextualUpdate(val text: String) : ClientMessage
@@ -253,7 +253,8 @@ internal sealed interface JsonValue {
 
   operator fun get(key: String): JsonValue = (this as? Obj)?.values?.get(key) ?: Null
   val string get() = (this as? Str)?.value
-  val int get() = (this as? Num)?.value?.takeIf { it in Int.MIN_VALUE..Int.MAX_VALUE }?.toInt()
+  /** Swift's 64-bit Int: event IDs are never narrowed, so a large ping ID is answered, not refused. */
+  val int get() = (this as? Num)?.value
 
   companion object {
     fun parse(text: String): JsonValue = JsonReader(text).document()
@@ -423,9 +424,9 @@ private class JsonReader(private val text: String) {
 
 internal sealed interface ProviderEvent {
   data class Metadata(val input: AudioFormat, val output: AudioFormat) : ProviderEvent
-  data class Ping(val id: Int) : ProviderEvent
-  class Audio(val bytes: ByteArray, val id: Int) : ProviderEvent
-  data class Interruption(val id: Int) : ProviderEvent
+  data class Ping(val id: Long) : ProviderEvent
+  class Audio(val bytes: ByteArray, val id: Long) : ProviderEvent
+  data class Interruption(val id: Long) : ProviderEvent
   data class Transcript(val turn: TranscriptTurn, val correction: Boolean) : ProviderEvent
   class Tool(val json: JsonValue, val endsCall: Boolean) : ProviderEvent
   data object Deadline : ProviderEvent

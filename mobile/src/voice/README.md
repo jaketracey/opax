@@ -133,8 +133,15 @@ after a rationale, and native only checks.
 6. **The dialog pauses the activity.** React Native reports `background`, then
    `active` on resume, before the request's promise resolves. Talk ignores
    AppState while its request is pending, so neither `background()` nor a status
-   refresh is sent for that round trip; native must not rely on either. A real
-   background during a call still calls `background()`, as on iOS.
+   refresh is sent for that round trip; native must not rely on either.
+7. **On Android, `background` means a pause.** React Native's Android AppState
+   reports `background` on every pause, not only a real background: a dialog,
+   split screen on Android 7 to 9, a translucent activity such as a share
+   sheet. Talk still calls `background()` on it, with no Android branch, and
+   native decides: `background()` acts only when no activity of the app is
+   started, and the module ends the call itself when the last activity stops.
+   So a pause never ends a call; Home, Recents and screen-off do, as a real
+   background does on iOS.
 
 ## Silent bridge workbench
 

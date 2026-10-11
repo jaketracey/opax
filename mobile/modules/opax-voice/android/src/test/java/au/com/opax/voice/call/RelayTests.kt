@@ -107,7 +107,7 @@ class RelayTests : SafeVoiceTest() {
     assertTrue("send returned before the upgrade", System.nanoTime() - started >= 300_000_000)
     for (index in 1..3) {
       val frame = socket.receive() as RelayMessage.Data
-      assertEquals(ProviderEvent.Ping(index), ProviderEvent.decode(frame.bytes))
+      assertEquals(ProviderEvent.Ping(index.toLong()), ProviderEvent.decode(frame.bytes))
     }
     assertEquals(RelayMessage.Closed(RelayClose(1000, "Your free voice time has finished")), socket.receive())
     assertEquals(listOf("""{"type":"conversation_initiation_client_data"}"""), synchronized(opened) { opened.toList() })

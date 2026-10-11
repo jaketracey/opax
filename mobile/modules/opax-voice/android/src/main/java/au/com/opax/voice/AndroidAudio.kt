@@ -172,6 +172,7 @@ internal class PlaybackWriter(private val sink: PcmSink) {
   private var flushedAt = 0L
   private val blocks = ArrayDeque<Pair<Long, Float>>() // (end frame, loudness) of written slices
   private var running = true
+  private var released = false // The sink is never touched once released.
   @Volatile var failed = false
     private set
   private val thread = Thread(::writeLoop, "opax-voice-playback").apply { start() }
@@ -182,16 +183,21 @@ internal class PlaybackWriter(private val sink: PcmSink) {
     ready.signalAll()
   }
 
-  fun queued(): Int = lock.withLock { pendingSamples + maxOf(0L, written - played()).toInt() }
+  fun queued(): Int = lock.withLock { if (released) 0 else pendingSamples + maxOf(0L, written - played()).toInt() }
 
   /** What the listener hears now: the slice at the play head, not the newest write. */
   fun level(): Float = lock.withLock {
-    val head = played()
-    while (blocks.isNotEmpty() && blocks.first().first <= head) blocks.removeFirst()
-    blocks.firstOrNull()?.second ?: 0f
+    if (released) {
+      0f
+    } else {
+      val head = played()
+      while (blocks.isNotEmpty() && blocks.first().first <= head) blocks.removeFirst()
+      blocks.firstOrNull()?.second ?: 0f
+    }
   }
 
-  fun flush() = lock.withLock {
+  fun flush(): Unit = lock.withLock {
+    if (released) return@withLock
     pending.clear()
     offset = 0
     pendingSamples = 0
@@ -210,7 +216,14 @@ internal class PlaybackWriter(private val sink: PcmSink) {
       ready.signalAll()
     }
     thread.join(1000)
-    sink.release()
+    // Under the lock: the meter and drain polls read the play head under it, so
+    // none can reach a released AudioTrack (which throws IllegalStateException).
+    lock.withLock {
+      if (!released) {
+        released = true
+        sink.release()
+      }
+    }
   }
 
   private fun played() = sink.playedFrames() - flushedAt
@@ -316,7 +329,8 @@ internal class AndroidVoiceEngine(private val onMediaReset: () -> Unit) : VoiceA
         if (AutomaticGainControl.isAvailable()) AutomaticGainControl.create(session) else null,
       ).onEach { runCatching { it.enabled = true } }
       val ring = CaptureRing(rate, 1)
-      candidate.startRecording()
+      // A refusal can throw rather than leave the state unchanged; both release below.
+      runCatching { candidate.startRecording() }
       if (candidate.recordingState != AudioRecord.RECORDSTATE_RECORDING) {
         effects.forEach { it.release() }
         effects = emptyList()
@@ -595,7 +609,16 @@ class AndroidVoiceAudioSession(
 class AndroidVoiceLifecycle : VoiceLifecycle {
   private val channel = Channel<LifecycleEvent>(32, BufferOverflow.DROP_OLDEST)
   override val events: Flow<LifecycleEvent> = channel.receiveAsFlow()
-  private var started = 0 // main thread only
+  @Volatile private var started = 0 // written on the main thread only
+  @Volatile private var observing = false
+
+  /**
+   * No activity of the app is started: a real background. React Native's
+   * AppState says "background" on every pause, so the bridge's background()
+   * asks this first. Before observation starts nothing is known, and it fails
+   * safe: the call ends, as on iOS.
+   */
+  val inBackground: Boolean get() = !observing || started == 0
 
   /**
    * Background is the last visible activity stopping, as UIApplication's
@@ -622,8 +645,12 @@ class AndroidVoiceLifecycle : VoiceLifecycle {
   /** Call on the main thread; [visible] counts the activity already started. */
   fun observe(application: Application, visible: Boolean) {
     started = if (visible) 1 else 0
+    observing = true
     application.registerActivityLifecycleCallbacks(activities)
   }
 
-  fun stopObserving(application: Application) { application.unregisterActivityLifecycleCallbacks(activities) }
+  fun stopObserving(application: Application) {
+    observing = false
+    application.unregisterActivityLifecycleCallbacks(activities)
+  }
 }

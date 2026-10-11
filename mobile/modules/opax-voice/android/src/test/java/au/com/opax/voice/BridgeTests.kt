@@ -58,10 +58,15 @@ class VoiceBridgeValueTests : SafeVoiceTestCase() {
   }
 }
 
-/** The Expo bridge: names, value shapes, the unwired call half, consent, sign-out and deletion. */
+/** The Expo bridge over the shipping controller: names, value shapes, consent, sign-out and deletion. */
 class BridgeTests : SafeVoiceTestCase() {
   private val context: Context get() = ApplicationProvider.getApplicationContext()
-  private fun controller(rig: Rig) = VoiceController(rig.core, rig.client, StoredVoiceConsent(context, "consent-" + UUID.randomUUID()))
+
+  /** As VoiceController.create wires it: one stored consent for the bridge and the core. */
+  private fun bridged(block: suspend (Rig, VoiceController) -> Unit) = runBlocking {
+    val consent = StoredVoiceConsent(context, "consent-" + UUID.randomUUID())
+    Rig.make(consent = consent).use { rig -> block(rig, VoiceController(rig.core, rig.client, consent)) }
+  }
   @Suppress("UNCHECKED_CAST")
   private fun value(result: Map<String, Any?>): Map<String, Any?> {
     assertEquals(result.toString(), true, result["ok"]); assertEquals(setOf("ok", "value"), result.keys)
@@ -81,10 +86,9 @@ class BridgeTests : SafeVoiceTestCase() {
     assertTrue(definition.syncFunctions.isEmpty())
   }
 
-  @Test fun everyAccountMethodReturnsTheIosShape() = runBlocking {
-    Rig.make().use { rig ->
+  @Test fun everyAccountMethodReturnsTheIosShape() = bridged { rig, voice ->
+    run {
       rig.server.handler = { request -> if (request.path == "/api/community/chats") HttpResponse(200, body = "{\"chats\":[]}".toByteArray()) else null }
-      val voice = controller(rig)
       assertEquals(statusKeys, value(voice.status()).keys)
       val snapshot = value(voice.snapshot())
       assertEquals(setOf("state", "reason", "mode", "playback", "remaining", "transcript", "sources", "status"), snapshot.keys)
@@ -104,9 +108,8 @@ class BridgeTests : SafeVoiceTestCase() {
     }
   }
 
-  @Test fun failuresCarryOnlyTheTypedErrorNeverServerProse() = runBlocking {
-    Rig.make().use { rig ->
-      val voice = controller(rig)
+  @Test fun failuresCarryOnlyTheTypedErrorNeverServerProse() = bridged { rig, voice ->
+    run {
       assertEquals(mapOf("ok" to false, "error" to "invalidResponse"), voice.consumeCode("fixture", "123"))
       assertEquals(mapOf("ok" to false, "error" to "forbidden"), voice.communityRequest("/api/ask", "GET", null))
       assertEquals(mapOf("ok" to false, "error" to "forbidden"), voice.chatRequest("/api/community/chats", "POST", "{}"))
@@ -119,24 +122,27 @@ class BridgeTests : SafeVoiceTestCase() {
     }
   }
 
-  /** iOS VoiceController's call methods: commands acknowledge dispatch; only sendText reports a failure. */
-  @Test fun callMethodsReturnTheIosShapes() = runBlocking {
-    Rig.make().use { rig ->
-      val voice = controller(rig)
-      assertEquals(mapOf("ok" to false, "error" to "callOpen"), voice.sendText("Synthetic"))
-      assertEquals(mapOf("ok" to true, "value" to null), voice.mute(true))
-      assertEquals(mapOf("ok" to true, "value" to null), voice.end())
-      assertEquals(Unit, voice.discardEvidence())
-      assertEquals(Unit, voice.background())
-      assertEquals(mapOf("ok" to true, "value" to null), voice.start())
-      assertEquals(0, rig.server.requests.size)
-    }
+  /**
+   * iOS VoiceController's call methods: commands acknowledge dispatch; only
+   * sendText reports a failure. Without stored consent, Start reads status,
+   * ends in a consent refusal with its fresh status read, and reserves nothing.
+   */
+  @Test fun callMethodsReturnTheIosShapes() = bridged { rig, voice ->
+    assertEquals(mapOf("ok" to false, "error" to "callOpen"), voice.sendText("Synthetic"))
+    assertEquals(mapOf("ok" to true, "value" to null), voice.mute(true))
+    assertEquals(mapOf("ok" to true, "value" to null), voice.end())
+    assertEquals(Unit, voice.discardEvidence())
+    assertEquals(Unit, voice.background())
+    assertEquals(0, rig.server.requests.size)
+    assertEquals(mapOf("ok" to true, "value" to null), voice.start())
+    eventually { rig.recorder.hasError(VoiceFailure.consentRequired) }
+    assertEquals(setOf(AuthRoute.voiceStatus.path), rig.server.requests.map { it.path }.toSet())
+    assertEquals(0, rig.server.count(AuthRoute.voiceStart))
   }
 
   /** Swift testStoredWithdrawalBlocksTheNextCall..., adapted: no live call yet, so withdrawal ends the ready core. */
-  @Test fun consentStartsDeniedAndWithdrawalEndsTheCore() = runBlocking {
-    Rig.make().use { rig ->
-      val voice = controller(rig)
+  @Test fun consentStartsDeniedAndWithdrawalEndsTheCore() = bridged { rig, voice ->
+    run {
       assertFalse(voice.consent())
       voice.setConsent(true); assertTrue(voice.consent())
       voice.status()
@@ -147,9 +153,8 @@ class BridgeTests : SafeVoiceTestCase() {
     }
   }
 
-  @Test fun logoutThroughTheBridgeClearsTheCredentialAndRefreshes() = runBlocking {
-    Rig.make().use { rig ->
-      val voice = controller(rig)
+  @Test fun logoutThroughTheBridgeClearsTheCredentialAndRefreshes() = bridged { rig, voice ->
+    run {
       assertEquals(mapOf("ok" to true, "value" to null), voice.logout())
       assertNull(rig.store.read())
       val snapshot = value(voice.snapshot())

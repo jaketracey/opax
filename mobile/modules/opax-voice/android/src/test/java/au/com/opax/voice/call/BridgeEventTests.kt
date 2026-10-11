@@ -23,7 +23,7 @@ class BridgeEventTests {
     assertEquals(mapOf("type" to "remainingTime", "seconds" to 42), VoiceBridgeValue.event(VoiceEvent.RemainingTime(42)))
     assertEquals(mapOf("type" to "error", "error" to "queueOverflow"), VoiceBridgeValue.event(VoiceEvent.Error(VoiceFailure.queueOverflow)))
     assertEquals(
-      mapOf("type" to "transcript", "turns" to listOf(mapOf("role" to "agent", "id" to 1, "text" to "Synthetic"))),
+      mapOf("type" to "transcript", "turns" to listOf(mapOf("role" to "agent", "id" to 1L, "text" to "Synthetic"))),
       VoiceBridgeValue.event(VoiceEvent.Transcript(listOf(TranscriptTurn(TranscriptTurn.Role.agent, 1, "Synthetic")))),
     )
     assertEquals(

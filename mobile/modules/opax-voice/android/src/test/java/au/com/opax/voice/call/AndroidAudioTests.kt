@@ -7,6 +7,10 @@ import android.app.Activity
 import android.media.AudioManager
 import android.os.Looper
 import android.view.WindowManager
+import java.util.UUID
+import java.util.concurrent.atomic.AtomicBoolean
+import java.util.concurrent.atomic.AtomicInteger
+import java.util.concurrent.atomic.AtomicReference
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
@@ -14,6 +18,7 @@ import kotlinx.coroutines.withTimeout
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNotNull
+import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
 import org.junit.Assert.fail
 import org.junit.Test
@@ -143,6 +148,105 @@ class AndroidAudioTests : SafeVoiceTest() {
     activity.stop()
     assertEquals(2, events.size)
     collecting.cancel()
+  }
+
+  /**
+   * Review P2-1. React Native's Android AppState says "background" on every
+   * pause, and Talk then calls background(). A pause (a dialog, split screen, a
+   * share sheet) must not end the call; the last activity stopping does.
+   */
+  @Test fun aPauseNeverEndsALiveCallARealBackgroundDoes() = test {
+    val activity = Robolectric.buildActivity(Activity::class.java).setup()
+    val lifecycle = AndroidVoiceLifecycle()
+    lifecycle.observe(context, visible = true)
+    val rig = Rig.make(androidLifecycle = lifecycle)
+    val voice = VoiceController(rig.controller, rig.client, StoredVoiceConsent(context, "consent-" + UUID.randomUUID()), lifecycle)
+    try {
+      rig.live()
+      activity.pause()
+      assertFalse(lifecycle.inBackground)
+      voice.background()
+      assertEquals(CallState.live, rig.controller.state)
+      activity.resume()
+      // Home: JS hears the pause first, then the stop ends the call natively.
+      activity.pause()
+      voice.background()
+      assertEquals(CallState.live, rig.controller.state)
+      activity.stop()
+      assertTrue(lifecycle.inBackground)
+      eventually { rig.controller.state == CallState.ended }
+      assertEquals(EndReason.background, rig.controller.snapshot().reason)
+      voice.background() // the late bridge call changes nothing
+      assertEquals(CallState.ended, rig.controller.state)
+    } finally {
+      lifecycle.stopObserving(context)
+      rig.close()
+    }
+  }
+
+  @Test fun theBridgeEndsTheCallWhenNoActivityIsStarted() = test {
+    val lifecycle = AndroidVoiceLifecycle()
+    lifecycle.observe(context, visible = false)
+    val rig = Rig.make(androidLifecycle = lifecycle)
+    val voice = VoiceController(rig.controller, rig.client, StoredVoiceConsent(context, "consent-" + UUID.randomUUID()), lifecycle)
+    try {
+      rig.live()
+      assertTrue(lifecycle.inBackground)
+      voice.background()
+      eventually { rig.controller.state == CallState.ended }
+      assertEquals(EndReason.background, rig.controller.snapshot().reason)
+      // Before the module observes anything, the bridge fails safe and acts, as on iOS.
+      assertTrue(AndroidVoiceLifecycle().inBackground)
+    } finally {
+      lifecycle.stopObserving(context)
+      rig.close()
+    }
+  }
+
+  /** As AudioTrack: any call on a released track throws IllegalStateException. */
+  private class TrackLikeSink : PcmSink {
+    @Volatile var released = false
+    private fun live() = check(!released) { "released track" }
+    override fun write(samples: ShortArray, offset: Int, count: Int): Int { live(); return count }
+    override fun playedFrames(): Long { live(); return 0 }
+    override fun flush() = live()
+    override fun release() { live(); released = true }
+  }
+
+  /**
+   * Review P2-2. A rebuild releases the AudioTrack while the controller's meter
+   * and drain polls keep reading the play head; none may reach the released track.
+   */
+  @Test fun playbackWriterNeverTouchesAReleasedTrack() = test {
+    val sink = TrackLikeSink()
+    val writer = PlaybackWriter(sink)
+    writer.enqueue(FloatArray(1600) { 0.25f })
+    writer.release()
+    assertTrue(sink.released)
+    assertEquals(0f, writer.level())
+    assertEquals(0, writer.queued())
+    writer.flush()
+    writer.release()
+    repeat(200) { round ->
+      val track = TrackLikeSink()
+      val racing = PlaybackWriter(track)
+      racing.enqueue(FloatArray(800) { 0.5f })
+      val failure = AtomicReference<Throwable?>(null)
+      val stop = AtomicBoolean(false)
+      val polls = AtomicInteger()
+      val meter = Thread {
+        while (!stop.get()) {
+          try { racing.level(); racing.queued() } catch (error: Throwable) { failure.compareAndSet(null, error) }
+          polls.incrementAndGet()
+        }
+      }.apply { start() }
+      racing.release()
+      val after = polls.get()
+      eventually { polls.get() > after + 20 }
+      stop.set(true); meter.join()
+      assertTrue(track.released)
+      assertNull("round $round", failure.get())
+    }
   }
 
   /** A playback device that presents frames only when the test says so. */

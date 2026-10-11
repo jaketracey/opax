@@ -39,12 +39,19 @@ class SessionCredential(internal val token: String, internal val expiresAt: Doub
 }
 
 interface CredentialStore {
+  /** Throws when the store itself fails, such as a Keystore fault; a missing item is null. */
   fun read(): SessionCredential?
   fun write(credential: SessionCredential)
   fun clear()
   /** Atomic within the store; stale requests must never delete a newer sign-in. */
   fun clearIfMatching(credential: SessionCredential): Boolean
 }
+
+/**
+ * The store could not read or compare its item (a Keystore fault), as opposed
+ * to any server answer. Reported as `unavailable`, as before.
+ */
+internal class CredentialStoreFault : VoiceException(VoiceFailure.unavailable)
 
 /** Where the store's AES key lives. Production: a non-exportable Android Keystore key. */
 internal interface CredentialKeys {

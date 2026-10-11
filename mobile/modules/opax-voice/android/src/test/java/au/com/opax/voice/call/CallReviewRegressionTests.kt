@@ -302,4 +302,20 @@ class CallProductionVoiceTests : SafeVoiceTest() {
     assertEquals(1, rig.http.count(AuthRoute.voiceStart))
     rig.close()
   }
+
+  /** Review P2-5: event IDs are Swift's 64-bit Int. A ping above 2^31 is answered, not a policy end. */
+  @Test fun largeEventIdsAreAnsweredNotRefused() = test {
+    val large = (1L shl 40) + 7
+    assertEquals(ProviderEvent.Ping(large), ProviderEvent.decode(json(mapOf("type" to "ping", "ping_event" to mapOf("event_id" to large)))))
+    assertEquals("""{"event_id":$large,"type":"pong"}""", ClientMessage.Pong(large).data().decodeToString())
+    val rig = Rig.make()
+    rig.live()
+    rig.relay.enqueue(json(mapOf("type" to "ping", "ping_event" to mapOf("event_id" to large))))
+    eventually { rig.relay.messages.any { "\"event_id\":$large" in it.decodeToString() } }
+    rig.relay.enqueue(json(mapOf("type" to "agent_response", "agent_response_event" to mapOf("event_id" to large, "agent_response" to "Synthetic answer"))))
+    eventually { rig.controller.snapshot().transcript.any { it.id == large } }
+    assertEquals(CallState.live, rig.controller.state)
+    assertFalse(rig.recorder.hasError(VoiceFailure.policy))
+    rig.close()
+  }
 }
