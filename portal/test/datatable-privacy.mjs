@@ -118,8 +118,9 @@ export function registerTablePrivacy(registry, rollout) {
           responses.length=0;await page.evaluate(()=>{window.privacyServerResponses=[];});
           assert.equal(new URL(page.url()).searchParams.get('campaign'),'fixture');
           assert.equal(await host.locator('.dt-count').textContent(),'Showing 0–0 of 0');
-          await page.evaluate(({r})=>{ const url=new URL(location.href),key=r.urlKey ? r.urlKey+'.' : '';url.searchParams.delete(key+'q');url.searchParams.delete(key+'f.'+r.facet);history.replaceState(null,'',url);dispatchEvent(new PopStateEvent('popstate')); },{r:browserRollout});
+          await page.evaluate(({r})=>{ const url=new URL(location.href),key=r.urlKey ? r.urlKey+'.' : '';url.searchParams.delete(key+'q');url.searchParams.delete(key+'f.'+r.facet);url.searchParams.delete(key+'f.'+(r.rangeFacet || r.facet));history.replaceState(null,'',url);dispatchEvent(new PopStateEvent('popstate')); },{r:browserRollout});
           await page.waitForFunction(host=>document.querySelector(host)?.querySelector('.dt-count') && !document.querySelector(host).hasAttribute('aria-busy'),rollout.host);
+          assert.equal(await host.locator('[data-export]').isDisabled(),false,`${rollout.id}: clearing each probe restores export`);
         }
         if(++probes%10===0)console.log(JSON.stringify({table:rollout.id,probes}));
       }
