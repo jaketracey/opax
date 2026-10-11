@@ -84,6 +84,8 @@ class BridgeTests : SafeVoiceTestCase() {
     assertEquals(methods, definition.asyncFunctions.keys - setOf("startObserving", "stopObserving"))
     assertEquals(listOf("onVoiceEvent", "onVoiceLevel"), definition.eventsDefinition!!.names.toList())
     assertTrue(definition.syncFunctions.isEmpty())
+    // Review P3-1: true only in an e2e build on the emulator; unit tests are neither.
+    assertEquals(mapOf("e2eOnEmulator" to false), definition.constantsProvider())
   }
 
   @Test fun everyAccountMethodReturnsTheIosShape() = bridged { rig, voice ->

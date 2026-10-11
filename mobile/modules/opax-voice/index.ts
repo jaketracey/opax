@@ -23,5 +23,7 @@ export type NativeVoice = {
     name: 'onVoiceEvent' | 'onVoiceLevel',
     listener: (value: unknown) => void,
   ): { remove(): void };
+  /** Android e2e builds: true only on the emulator, whose host alias the fixture origin uses. */
+  readonly e2eOnEmulator?: boolean;
 };
 export default requireOptionalNativeModule<NativeVoice>('OpaxVoice');

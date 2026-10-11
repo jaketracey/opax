@@ -2,6 +2,7 @@ package au.com.opax.voice
 
 import android.app.Activity
 import android.content.Context
+import android.os.Build
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
 
@@ -131,4 +132,15 @@ internal class VoiceController(
       "OPAXVoiceAllowedRoutes" to BuildConfig.OPAX_VOICE_ALLOWED_ROUTES.split(",").filter { it.isNotEmpty() },
     )
   }
+}
+
+/**
+ * Whether this is the Android emulator: QEMU's "ranchu" board or the older
+ * "goldfish". No phone reports either. The e2e build talks to the emulator's
+ * host alias, 10.0.2.2, which on a phone is an ordinary local-network address,
+ * so its voice guard and its JS runtime (the module's `e2eOnEmulator`) refuse
+ * that origin anywhere else, as iOS compiles its loopback for the simulator only.
+ */
+internal object Emulator {
+  fun running(hardware: String = Build.HARDWARE) = hardware == "ranchu" || hardware == "goldfish"
 }

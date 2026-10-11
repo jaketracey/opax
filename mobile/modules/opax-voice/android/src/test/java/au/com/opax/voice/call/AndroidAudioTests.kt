@@ -203,6 +203,37 @@ class AndroidAudioTests : SafeVoiceTest() {
     }
   }
 
+  /**
+   * Run 3 plan: the e2e session takes audio focus without touching the mode,
+   * route or audio, so an incoming phone call on the emulator interrupts an e2e
+   * call as it does a production one.
+   */
+  @Test fun theE2eSessionTakesFocusSoAPhoneCallInterrupts() = test {
+    val lifecycle = AndroidVoiceLifecycle()
+    val session = DebugSilentAudioSession(context, lifecycle)
+    session.activate()
+    assertEquals(AudioManager.MODE_NORMAL, audioManager.mode)
+    val request = shadowOf(audioManager).lastAudioFocusRequest
+    assertNotNull(request)
+    assertEquals(AudioManager.AUDIOFOCUS_GAIN_TRANSIENT, request.durationHint)
+    request.listener.onAudioFocusChange(AudioManager.AUDIOFOCUS_LOSS_TRANSIENT)
+    shadowOf(Looper.getMainLooper()).idle()
+    assertEquals(LifecycleEvent.interruptionBegan, withTimeout(1000) { lifecycle.events.first() })
+    session.deactivate()
+    assertNotNull(shadowOf(audioManager).lastAbandonedAudioFocusRequest)
+    assertEquals(AudioManager.MODE_NORMAL, audioManager.mode)
+    // Refused focus (a call already ringing) fails the start, as in production.
+    shadowOf(audioManager).setNextFocusRequestResponse(AudioManager.AUDIOFOCUS_REQUEST_FAILED)
+    try {
+      DebugSilentAudioSession(context, lifecycle).activate()
+      fail("Refused focus must fail the start")
+    } catch (error: VoiceException) {
+      assertEquals(VoiceFailure.audio, error.failure)
+    }
+    // Without a context (the call tests) it holds nothing.
+    DebugSilentAudioSession().activate()
+  }
+
   /** As AudioTrack: any call on a released track throws IllegalStateException. */
   private class TrackLikeSink : PcmSink {
     @Volatile var released = false

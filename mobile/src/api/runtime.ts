@@ -4,6 +4,7 @@ import { yearPictureKeyPattern, yearPicturePath } from './year-picture-policy';
 import { PeoplePortraits } from './people-portraits';
 import Constants from 'expo-constants';
 import { Platform } from 'react-native';
+import native from '../../modules/opax-voice';
 import { ApiClient } from './client';
 import { CatalogCache } from './cache';
 import { DiskStore } from './disk-store';
@@ -36,6 +37,15 @@ if (
       : origin.protocol !== 'https:'
 )
   throw new Error('API origin does not match the build variant');
+// The Android e2e origin is the emulator's host alias. On a phone 10.0.2.2 is
+// an ordinary local-network address, so catalog, Search and Ask requests stay
+// off it, as the voice module's e2e guard does (OpaxVoice reports the board).
+if (
+  extra.variant === 'e2e' &&
+  Platform.OS === 'android' &&
+  native?.e2eOnEmulator !== true
+)
+  throw new Error('The e2e build runs on the Android emulator only');
 export const isE2E = extra.variant === 'e2e';
 setCatalogDiagnostics(isE2E);
 export const apiClient = new ApiClient({

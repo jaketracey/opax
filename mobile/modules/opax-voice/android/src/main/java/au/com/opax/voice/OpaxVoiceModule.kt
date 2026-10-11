@@ -24,6 +24,8 @@ class OpaxVoiceModule : Module() {
   override fun definition() = ModuleDefinition {
     Name("OpaxVoice")
     Events("onVoiceEvent", "onVoiceLevel")
+    // E2e builds only: the JS runtime refuses the emulator's host alias off it.
+    Constants("e2eOnEmulator" to (BuildConfig.OPAX_VOICE_E2E && Emulator.running()))
 
     OnCreate {
       val context = appContext.reactContext ?: throw Exceptions.ReactContextLost()

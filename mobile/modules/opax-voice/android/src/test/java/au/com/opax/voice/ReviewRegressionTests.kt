@@ -325,11 +325,11 @@ class ProductionVoiceTests : SafeVoiceTestCase() {
    * neither the synthetic sign-in nor its session may reach it.
    */
   @Test fun e2eLoopbackIsEmulatorOnly() = runBlocking {
-    assertTrue(VoiceVariant.runningOnEmulator("ranchu")); assertTrue(VoiceVariant.runningOnEmulator("goldfish"))
+    assertTrue(Emulator.running("ranchu")); assertTrue(Emulator.running("goldfish"))
     for (board in listOf("qcom", "tensor", "exynos990", "mt6789", "robolectric", "")) {
-      assertFalse(board, VoiceVariant.runningOnEmulator(board))
+      assertFalse(board, Emulator.running(board))
     }
-    assertFalse(VoiceVariant.runningOnEmulator()) // Robolectric reports its own board
+    assertFalse(Emulator.running()) // Robolectric reports its own board
     val policy = RoutePolicy.loopback(8953, VoiceVariant.E2E_HOST)
     val fixture = "http://10.0.2.2:8953/api/voice/status".toHttpUrl()
     VoiceVariant.e2eGuard(policy, emulator = true).validate(fixture)
