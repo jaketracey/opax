@@ -229,7 +229,10 @@ at every priority. `/status` exposes boolean `historicHold` and integer `heldRow
 Canary receives the hold switch and checks source labels from its existing before
 snapshot. Every saved-result flush reads basic metadata before its first write;
 neither `historic=0` nor `force=1` grants permission. Missing kind/source labels or
-failed reads defer the write. Historic rows require `historic_released=1` to proceed.
+failed reads defer only that resource's write. Classification reads have a five-second
+timeout, never set global KB backoff, and preserve a live processing window after
+failure. The saved result stays unchanged for the next tick; other saved and pending
+rows continue. Historic rows require `historic_released=1` to proceed.
 The same check runs before generation, covering stale claims, validator and transient
 retries, name escalation, forced generation and admin requeues. The worker backfills
 `historic=1` only for observed unfinished historic tasks; completed pilot rows stay
@@ -296,7 +299,7 @@ row hashes and table/index root pages were identical before and after. Old-worke
 claim and finish statements succeeded against the migrated schema. Timing is local evidence,
 not a production latency guarantee.
 
-Hold validation: **205 tests**, TypeScript and Worker deploy dry run pass. The
+Hold validation: **211 tests**, TypeScript and Worker deploy dry run pass. The
 classified-source differential described above has **0/143** differences with the hold
 enabled and **0/154** with it disabled. The 0003 test preserves original rows and index roots and accepts
 old-worker enqueue/claim/finish statements. An additional offline run of the old

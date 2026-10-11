@@ -8,7 +8,7 @@ import { runCanary } from '../src/canary.ts'
 import { claimRids, enqueue, finishRows, getState, hasBackfill, unwrittenRows } from '../src/db.ts'
 import { discover } from '../src/discover.ts'
 import { readConfig, type Env } from '../src/env.ts'
-import { Kb } from '../src/kb.ts'
+import { HOLD_METADATA_TIMEOUT_MS, Kb } from '../src/kb.ts'
 import { reconcileHistoric, releaseHistoric } from '../src/reconcile.ts'
 import { buildStatus } from '../src/status.ts'
 import { runTick } from '../src/tick.ts'
@@ -388,4 +388,80 @@ test('admin requeue of a legacy saved historic result cannot bypass the model ho
   assert.equal(ai.calls.length, 0)
   assert.deepEqual(kb.writes(), [])
   assert.ok(rows(raw, 'SELECT * FROM queue').every(row => row.terminal_reason === 'historic-held' && row.historic_released === 0))
+})
+
+for (const failure of ['503', '429', 'timeout', 'error']) {
+  test(`classification read ${failure} defers only its saved summary while live rows keep processing over three ticks`, async () => {
+    const kb = new FakeKb()
+    kb.add(rid, { texts: { body: speechText() } }) // saved vic_hansard result, healthy except for basic reads
+    let clock = Date.parse('2026-09-28T12:00:00Z')
+    const ai = new FakeAi(() => JSON.stringify({ summary: GOOD_SUMMARY, topics: [] }))
+    const { deps, d1, raw } = makeDeps({ kb, ai, now: () => clock, env: { HISTORIC_HOLD: 'true', WRITE_MODE: 'live', CONCURRENCY: '1', TICK_SOFT_MS: '5000' } })
+    await enqueue(d1, [{ rid, task: 'speech_summary', priority: 100 }], 1)
+    await finishRows(d1, [{ rid, task: 'speech_summary', status: 'done', outcome: 'unwritten', result: GOOD_SUMMARY }], 2)
+    const before = rows(raw, 'SELECT * FROM queue WHERE rid = ?', rid)
+    const basic = kb.getBasic.bind(kb)
+    let reads = 0
+    kb.getBasic = async (id: string, timeoutMs?: number) => {
+      if (id !== rid) return basic(id)
+      reads++
+      assert.equal(timeoutMs, HOLD_METADATA_TIMEOUT_MS)
+      if (failure === 'timeout') {
+        clock += HOLD_METADATA_TIMEOUT_MS // Exhausts the original soft deadline.
+        throw new DOMException('metadata read timed out', 'TimeoutError')
+      }
+      if (failure === 'error') throw new Error('injected classification read failure')
+      throw new KbBackpressure('metadata read unavailable', Number(failure), 300)
+    }
+    for (let i = 0; i < 3; i++) {
+      const liveRid = String(i + 1).repeat(32)
+      kb.add(liveRid, { texts: { body: speechText() } })
+      await enqueue(d1, [{ rid: liveRid, task: 'speech_summary', priority: 100 }], clock)
+      const stats = await runTick(deps)
+      assert.equal(stats.claimed, 1)
+      assert.equal(stats.written, 1)
+      assert.equal(stats.stop, null)
+      assert.equal(kb.resources.get(liveRid)!.texts['da-summary-t-body'], GOOD_SUMMARY)
+      assert.equal(await getState(d1, 'kb_backoff_until'), null)
+      assert.deepEqual(rows(raw, 'SELECT * FROM queue WHERE rid = ?', rid), before)
+      assert.ok(!kb.writes().some(call => call.endsWith(rid)))
+      clock += 60_000
+    }
+    assert.equal(reads, 3)
+    assert.equal(ai.calls.length, 3)
+    assert.equal(rows(raw, "SELECT COUNT(*) AS n FROM errors WHERE kind='historic-hold-metadata'")[0].n, 3)
+  })
+}
+
+test('a failed classification does not prevent another saved summary from flushing', async () => {
+  const kb = new FakeKb()
+  const healthyRid = 'b'.repeat(32)
+  for (const id of [rid, healthyRid]) kb.add(id, { texts: { body: speechText() } })
+  const { deps, d1, raw } = makeDeps({ kb, ai: new FakeAi(() => { throw new Error('saved work reached model') }), env: { HISTORIC_HOLD: 'true', WRITE_MODE: 'live', CONCURRENCY: '1' } })
+  await enqueue(d1, [rid, healthyRid].map(id => ({ rid: id, task: 'speech_summary', priority: 100 })), 1)
+  await finishRows(d1, [rid, healthyRid].map(id => ({ rid: id, task: 'speech_summary', status: 'done', outcome: 'unwritten', result: GOOD_SUMMARY })), 2)
+  const basic = kb.getBasic.bind(kb)
+  kb.getBasic = async id => { if (id === rid) throw new KbBackpressure('metadata read unavailable', 503); return basic(id) }
+  const stats = await runTick(deps)
+  assert.equal(stats.flushed, 1)
+  assert.equal(stats.stop, null)
+  assert.equal(kb.resources.get(healthyRid)!.texts['da-summary-t-body'], GOOD_SUMMARY)
+  assert.equal(rows(raw, 'SELECT outcome FROM queue WHERE rid=?', rid)[0].outcome, 'unwritten')
+  assert.equal(await getState(d1, 'kb_backoff_until'), null)
+})
+
+test('basic metadata reads obey their supplied timeout and abort the fetch', async () => {
+  let aborted = false
+  const client = new Kb({ ARAG_ZONE: 'example', ARAG_KB_ID: 'invented', ARAG_KB_TOKEN: 'invented' }, async (_input, init) => {
+    return new Promise<Response>((_resolve, reject) => {
+      const watchdog = setTimeout(() => reject(new Error('metadata request did not abort')), 250)
+      init!.signal!.addEventListener('abort', () => {
+        aborted = true
+        clearTimeout(watchdog)
+        reject(init!.signal!.reason)
+      }, { once: true })
+    })
+  })
+  await assert.rejects(client.getBasic(rid, 5), KbBackpressure)
+  assert.equal(aborted, true)
 })

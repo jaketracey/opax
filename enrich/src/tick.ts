@@ -27,7 +27,7 @@ import type { AiLike, Config } from './env.ts'
 import { MAX_ATTEMPTS, generate, type Generation } from './generate.ts'
 import { isHistoricSpeech, skipHistoricShort } from './historic.ts'
 import { eligibleHistoricRows } from './hold.ts'
-import { KbBackpressure, KbHttpError, type KbApi, type KbResource } from './kb.ts'
+import { HOLD_METADATA_TIMEOUT_MS, KbBackpressure, KbHttpError, type KbApi, type KbResource } from './kb.ts'
 import type { PromptRecord, Task } from './prompts.ts'
 import { clip, existingSummary, pickText, wordCount } from './text.ts'
 import { RejectedNames, UnsafeWrite, writeItem, type WriteItem, type WriteOutcome } from './write.ts'
@@ -451,13 +451,15 @@ async function flush(d: TickDeps, ctl: Ctl, stats: TickStats): Promise<void> {
     let classifiedHistoric: boolean | undefined
     if (d.cfg.historicHold) {
       try {
-        const basic = await d.kb.getBasic(rid)
+        const basic = await d.kb.getBasic(rid, HOLD_METADATA_TIMEOUT_MS)
         group = await eligibleHistoricRows(d.db, group, basic, d.now)
         if (!group.length) return
         classifiedHistoric = isHistoricSpeech(basic!)
-      } catch (err) {
-        if (err instanceof KbBackpressure) await backoffKb(d, ctl, err)
-        else await logError(d.db, d.now(), 'historic-hold-metadata', 'saved result source could not be classified; write deferred', rid)
+      } catch {
+        // Classification is a gate for this resource only. Never turn its read
+        // failure into a KB write outage or let it exhaust live processing time.
+        ctl.deadline = Math.max(ctl.deadline, d.now() + d.cfg.tickSoftMs)
+        await logError(d.db, d.now(), 'historic-hold-metadata', 'saved result source could not be classified; write deferred', rid)
         return
       }
     }
