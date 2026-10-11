@@ -84,22 +84,16 @@ test('audit detail preserves alphabetic source markers and leaves unpublished nu
  const unsafe=await render(record);assert.doesNotMatch(unsafe.prerender,/onclick|Changed\./);assert.ok(unsafe.prerender.includes('Keep Jane Citizen’s redaction.'));
 });
 
-test('saved QAO bullets and alphabetic lists survive the accepted export and detail rendering',async()=> {
- const actualRead=async path=>JSON.parse(readFileSync(new URL(path.slice(1),publicRoot)));
- const actualManifest=await actualRead('/audit/manifest.json');
- for(const id of ['qao-2021-22-2','qao-2022-23-14','qao-2021-22-17']) {
-  const data=await actualRead(actualManifest.chunks[actualManifest.lookup[id]].path);
-  const record=data.records.find(row=>row.id===id);
-  const page=await auditPage(id,new URL('https://opax.com.au/audit/'+id),actualRead,block);
-  assert.equal(page.status,200);
-  if(id==='qao-2021-22-2') for(const rec of record.recommendations.slice(0,2)) {
-   assert.match(rec.html,/<ul style="list-style-type:disc">/);assert.doesNotMatch(rec.html,/<ol/);
-   assert.ok(page.prerender.includes(rec.html));
-  }
-  else {
-   const alphabetic=record.recommendations.filter(rec=>rec.html.includes('<ol type="a">'));
-   assert.ok(alphabetic.length>0);for(const rec of alphabetic)assert.ok(page.prerender.includes(rec.html));
-  }
+test('QAO bullet and alphabetic fixture layouts retain their exported markers',async()=> {
+ // Synthetic words exercise the accepted source layouts without adding held text.
+ for(const list of ['<ul style="list-style-type:disc"><li>Fixture subpoint.</li></ul>',
+     '<ol type="a"><li>Fixture subpoint.</li></ol>']) {
+  const record=structuredClone(fixture.reports[0]);
+  record.recommendations[0].html='<p>Fixture recommendation.</p>'+list;
+  record.recommendations[0].text='Fixture recommendation. Fixture subpoint.';
+  const page=await auditPage(record.id,new URL('https://opax.com.au/audit/'+record.id),async path=>path.includes('reports-')?{records:[record]}:read(path),block);
+  assert.equal(page.status,200);assert.ok(page.prerender.includes(record.recommendations[0].html));
+  if(list.startsWith('<ul'))assert.doesNotMatch(record.recommendations[0].html,/<ol/);
  }
 });
 
@@ -146,8 +140,8 @@ test('audit Worker routes give bad/unknown ids a 404 and noindex without externa
 
 test('accepted worktree audit assets reconcile their live sitemap, counts and budget',()=> {
  // Run only after acquisition/export, independently of the offline parser tests.
- const names=readdirSync(new URL('audit/',publicRoot));assert.ok(names.length<=40);
- const size=names.reduce((n,name)=>n+readFileSync(new URL('audit/'+name,publicRoot)).byteLength,0);assert.ok(size<=10_000_000);
+ const names=readdirSync(new URL('audit/',publicRoot));assert.ok(names.length<=150);
+ const size=names.reduce((n,name)=>n+readFileSync(new URL('audit/'+name,publicRoot)).byteLength,0);assert.ok(size<=30_000_000);
  const actual=JSON.parse(readFileSync(new URL('audit/manifest.json',publicRoot)));
  assert.equal(auditCrawlEntries(actual).length,actual.count);
  const crawl=JSON.parse(readFileSync(new URL('crawl/manifest.json',publicRoot)));

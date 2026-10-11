@@ -92,8 +92,8 @@ class Tests(unittest.TestCase):
         guard_count(98, 98, 100)
         for args in [(0,0,0), (97,97,100), (3,4,0)]:
             with self.assertRaises(Held): guard_count(*args)
-        with self.assertRaises(Held): check_budget({str(i): b'x' for i in range(41)})
-        with self.assertRaises(Held): check_budget({'large': b'x' * 10_000_001})
+        with self.assertRaises(Held): check_budget({str(i): b'x' for i in range(151)})
+        with self.assertRaises(Held): check_budget({'large': b'x' * 30_000_001})
         with self.assertRaises(Held): parse_index('<html>empty</html>', INDEX)
         root = self.temp(); out = root / 'snapshot.json'
         out.write_text('{"count":100,"keep":"last good snapshot"}')

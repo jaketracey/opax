@@ -551,26 +551,41 @@ def check_audit(directory=None, compare_head=True) -> list[str]:
         ready = json.loads((directory / "ready.json").read_text())
         old = head_bytes("portal/public/audit/manifest.json") if compare_head else None
         guard_count(manifest["count"], manifest["listed"], json.loads(old)["count"] if old else 0)
-        if manifest.get("complete") is not True or manifest.get("phase") != 1: return ["audit catalogue incomplete"]
+        if manifest.get("complete") is not True or manifest.get("phase") not in (1,2): return ["audit catalogue incomplete"]
         if ready != {"complete": True, "count": manifest["count"], "listed": manifest["listed"], "export_date": manifest["generated_at"][:10]}:
             return ["audit readiness receipt mismatch"]
         check_budget({p.name: p.read_bytes() for p in directory.iterdir() if p.is_file()})
-        seen, recommendations, exceptions = set(), 0, []
+        seen, recommendations, exceptions, response_count, body_count = set(), 0, [], 0, 0
         for i, chunk in enumerate(manifest["chunks"]):
             name = Path(chunk["path"]).name
             if not re.fullmatch(r"reports-\d+\.json", name) or chunk["path"] != "/audit/" + name: return ["unsafe audit chunk path"]
             rows = json.loads((directory / name).read_text())["records"]
             if len(rows) != chunk["count"] or (directory / name).stat().st_size != chunk["bytes"]: return ["audit chunk receipt mismatch"]
             for row in rows:
+                if manifest['phase'] == 2:
+                    body_count += row['pdf']['status'] == 'ready'
+                    response_path = row.get('responses_path')
+                    responses = []
+                    if response_path:
+                        if response_path != f"/audit/responses-{row['id']}.json": return ['unsafe response chunk path']
+                        data = json.loads((directory / Path(response_path).name).read_text())
+                        if data['report_id'] != row['id']: return ['response report identity mismatch']
+                        responses = data['records']
+                    if len(responses) != row['response_count'] or bool(responses) != row['has_responses']: return ['response counts mismatch']
+                    response_count += len(responses)
+                    row = {**row, 'responses': responses}
                 validate_record(row)
                 if row["id"] in seen or manifest["lookup"].get(row["id"]) != i: return ["audit identity mismatch"]
                 if any(not re.fullmatch(r"/subject/agency/[^/?#]+", href) for href in row.get("entity_links", {}).values()): return ["audit has non-agency links"]
                 seen.add(row["id"]); recommendations += len(row["recommendations"])
                 if row["licence"]["body_skipped"]: exceptions.append(row["id"])
                 projected = {k: row[k] for k in ("id", "number", "year", "report_label", "title", "tabled_date", "sectors", "entities", "canonical_url")}
+                if manifest['phase'] == 2: projected['has_responses'] = row.get('has_responses',False)
+                if row.get('title_privacy_filtered'): projected['title_privacy_filtered'] = True
                 if projected not in index: return ["audit index does not match detail"]
         if len(index) != manifest["count"] or len(seen) != manifest["count"] or set(manifest["lookup"]) != seen: return ["audit counts do not reconcile"]
         if recommendations != manifest["recommendations"] or exceptions != manifest["licence_exceptions"]: return ["audit licence/recommendation counts mismatch"]
+        if manifest['phase'] == 2 and (response_count != manifest['responses'] or body_count != manifest['bodies']): return ['audit body/response counts mismatch']
         if manifest["attribution"]["licence_url"] != "https://creativecommons.org/licenses/by/4.0/" or "State of Queensland" not in manifest["attribution"]["copyright_notice"]: return ["QAO attribution missing"]
         return []
     except (OSError, ValueError, KeyError, TypeError, IndexError) as error:

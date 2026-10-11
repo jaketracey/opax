@@ -3,7 +3,11 @@
 The accepted catalogue is staged locally on `web/qao-audit-reports`. The
 orchestrator owns merge and promotion. This lane makes no push, deploy,
 production D1/KB/Cloudflare/refresh-box change or `parli.db` write.
-Coverage remains **partial: report index + HTML recommendations**.
+This is the historical phase-1 receipt: **partial, report index + HTML
+recommendations**. The [phase-2 document review](qao-phase2.md) supersedes its
+body-publication assumptions: all 296 report bodies are now held in this
+worktree, including the 647 previously exported HTML recommendations. The
+phase-1 live catalogue is unchanged until orchestrator review and merge.
 
 The [QAO index](https://www.qao.qld.gov.au/reports-resources/reports-parliament)
 advertised 30 pages. All **296 unique reports / 296 listed** reconcile, with
@@ -126,7 +130,8 @@ against HEAD and uses the keep-if-unchanged export sweep. Operational wiring is
 documented in [nightly refresh](../operations/nightly-refresh.md).
 
 Phase 2 acquires licence-reviewed PDF bodies, retaining document hashes,
-original wording, page references, redactions and OCR confidence. It extracts
+original wording, page references and redactions. It uses published PDF text
+layers only, with no OCR or model calls. It extracts
 auditees and recommendations absent from HTML without reconstructing withheld
 material. Entity responses remain separate source records, attributed to their
 public body and linked to the relevant recommendation only where the source
