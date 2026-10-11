@@ -6016,7 +6016,7 @@ html[data-panel="search"] .research-app main.compact .hero-intro { display: bloc
 .division-markdown a:hover { color: var(--bronze-ink); border-color: var(--bronze-rule); }
 
 /* Landing modules use the view's bronze accent and the shared controls. */
-.growth-ask { margin: 0 0 var(--space-section); padding: var(--space-block) 0; border-block: var(--border-hairline) solid var(--divider-default); }
+.growth-ask { margin: var(--space-group) 0 var(--space-section); padding: var(--space-block) 0; border-block: var(--border-hairline) solid var(--divider-default); }
 .growth-ask h3 { margin: 0 0 var(--space-heading); font: var(--type-subheading); }
 .growth-ask-form { display: flex; align-items: start; gap: var(--space-tight); }
 .growth-ask-form .ui-input { flex: 1; min-width: 0; font: var(--type-body); resize: vertical; white-space: pre-wrap; overflow-wrap: normal; word-break: normal; }

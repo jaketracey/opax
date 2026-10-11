@@ -359,6 +359,10 @@ test('every web header has a named home link with only the hidden Australia and 
   assert.doesNotMatch(standalone, /site-wordmark|>OPAX</);
 });
 
+test('the Ask block rule never touches the page actions above it', () => {
+  assert.match(style, /\n\.growth-ask \{ margin: var\(--space-group\) 0 var\(--space-section\);/);
+});
+
 test('the compact band keeps the mark left and its icons together on the right', () => {
   const band = style.slice(style.indexOf('@media (max-width: 960px) {\n  .site-header .masthead { justify-content: flex-start;'));
   assert.match(band, /^@media \(max-width: 960px\) \{\n  \.site-header \.masthead \{ justify-content: flex-start; gap: var\(--space-tight\); \}/);
