@@ -30,6 +30,7 @@ import { readFileSync, writeFileSync, mkdirSync, readdirSync, unlinkSync } from 
 import { dirname, join, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { buildSpaShell } from './build_spa_shell.mjs'
+import { buildMethods } from './build_methods.mjs'
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..')
 const PUBLIC = join(ROOT, 'portal', 'public')
@@ -145,7 +146,7 @@ export const MODULE_STAMPS = [
   ['money-journeys.js', 'canonical-urls.js'],
   ['quiz.js', 'canonical-urls.js'],
   ['suppliers.js', 'canonical-urls.js'], ['suppliers.js', 'labels.js'], ['suppliers.js', 'supplier-growth.js'], ['agencies.js', 'suppliers.js'],
-  ['timemachine.js', 'canonical-urls.js'],
+  ['timemachine.js', 'canonical-urls.js'], ['timemachine.js', 'labels.js'],
   // The money map's bundle names its chunks by content, so an importer holding
   // an old money-map.js would ask for chunks the build has removed.
   ['map-page.js', 'money-map.js'], ['agencies.js', 'money-map.js'], ['suppliers.js', 'money-map.js'],
@@ -154,6 +155,7 @@ export const MODULE_STAMPS = [
   ['app.js','donor-views.js'], ['app.js','map-research.js'],
   ['app.js', 'canonical-urls.js'], ['app.js', 'growth-modules.js'], ['app.js', 'suppliers.js'],
   ['app.js', 'labels.js'], ['app.js', 'electorates.js'], ['app.js', 'division-markdown.js'], ['app.js', 'quiz.js'], ['app.js', 'timemachine.js'],
+  ['app.js', 'sa-hansard.js'],
   ['app.js', 'money-map.js'], ['app.js', 'explain.js'], ['app.js', 'grant-recipient.js'],
   // The Explore tools and the loaders, restyled on tokens in pass 4G.
   ['app.js', 'ballot.js'], ['app.js', 'grants.js'], ['app.js', 'ledger.js'], ['app.js', 'matrix.js'], ['app.js', 'wordsdollars.js'],
@@ -202,6 +204,7 @@ function syncHomeChrome(html, shell) {
 }
 
 function stamp({ check }) {
+  buildMethods({ check })
   buildSpaShell({ check })
   // Modules first: their stamps change app.js and home.js, which are hashed below.
   const staleModules = stampModules({ check })

@@ -186,6 +186,11 @@ async function main() {
    `${r.report_label}. Tabled date: ${r.tabled_date}. ${[...r.sectors,...r.entities].join('; ')}.`,
    {date:r.tabled_date,state:'qld',source:'Queensland Audit Office',url:r.canonical_url,record_id:r.id});
  }
+ // Postings are public dictionaries too. Filter exact withheld aliases before
+ // both release hashing and writing; unrelated record IDs stay intact.
+ const registry=JSON.parse(await readFile(new URL('../portal/src/donor-withheld.json',import.meta.url),'utf8'));
+ const publicTerm=term=>{const entry=registry.names[createHash('sha256').update(foldDonorName(term)).digest('hex')];return !entry || entry.exempt || entry.sourceKnown===false;};
+ for(const doc of docs){doc.titleTokens=doc.titleTokens.filter(publicTerm);doc.bodyTokens=doc.bodyTokens.filter(publicTerm);}
  const meta=docs.map(d=>d.meta), postings=Array.from({length:64},()=>Object.create(null));
  for(const [id,d] of docs.entries()) {
   const weights=new Map(d.bodyTokens.map(t=>[t,1])); for(const t of d.titleTokens)weights.set(t,8);

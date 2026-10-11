@@ -63,7 +63,7 @@ export function publicationContext(graphs, officeHolders=[], prior={names:{},ids
   numbers.set(n.id,Number(ids[key].id.split('-').at(-1)));
   for(const label of [n.label,...n.aliases || []]) if(label){
    if(index.organisations.has(foldDonorName(label)) || isOrganisationDonor({label:label.toLowerCase()})){delete names[hash(foldDonorName(label))];continue;}
-   names[hash(foldDonorName(label))]={...ids[key],exempt:exempt.has(foldDonorName(label))};if(!exempt.has(foldDonorName(label)) && /\S\s+\S/.test(label))replacements.set(label,ids[key].label)
+   names[hash(foldDonorName(label))]={...ids[key],sourceKnown:true,exempt:exempt.has(foldDonorName(label))};if(!exempt.has(foldDonorName(label)) && /\S\s+\S/.test(label))replacements.set(label,ids[key].label)
   };
  }
  const phrases=new Map();
@@ -88,8 +88,8 @@ export function sanitiseDonorAsset(value,context) {
  const donorLabel=label=>{
   if(/^Donor \d+ \(name withheld\)$/.test(label))return label;
   const key=hash(foldDonorName(label));
-  const knownAlias=registry.names[key] && !context.index.organisations.has(foldDonorName(label)) && !isOrganisationDonor({label:label.toLowerCase()});
-  if(!knownAlias && !donorNameWithheld(context.index,label))return label;if(!registry.names[key]){const n=1+Math.max(0,...Object.values(registry.ids).map(v=>Number(v.id.split('-').at(-1))));const entry={id:`donor:withheld-${n}`,label:`Donor ${n} (name withheld)`,exempt:false};registry.names[key]=entry;registry.ids[hash('donor:'+foldDonorName(label))]=entry;}return registry.names[key].label;
+  const knownAlias=registry.names[key]?.sourceKnown!==false && registry.names[key] && !context.index.organisations.has(foldDonorName(label)) && !isOrganisationDonor({label:label.toLowerCase()});
+  if(!knownAlias && !donorNameWithheld(context.index,label))return label;if(!registry.names[key]){const n=1+Math.max(0,...Object.values(registry.ids).map(v=>Number(v.id.split('-').at(-1))));const entry={id:`donor:withheld-${n}`,label:`Donor ${n} (name withheld)`,sourceKnown:false,exempt:false};registry.names[key]=entry;registry.ids[hash('donor:'+foldDonorName(label))]=entry;}return registry.names[key].label;
  };
 
  const string=(s,donor=false)=>{
@@ -119,11 +119,11 @@ export function sanitiseDonorAsset(value,context) {
    if(nameLookupField(k)&&v&&typeof v==='object'&&!Array.isArray(v)){out[k]=Object.fromEntries(Object.entries(v).map(([label,row])=>[label,typeof row==='string'?row:visit(row)]));continue;}
    // Field names are schema, not identity. Only name-keyed dictionaries may
    // replace keys; native node/edge/access fields stay byte-for-byte named.
-   const key=identityKeys || /^(?:donor|person|name):/.test(k)?string(k,donor):k;
-   out[key]=visit(v,hidden || ['name','label','n'].includes(k) && /[a-z]/i.test(String(v)) && !registry.names[hash(foldDonorName(String(v)))]?.exempt || k==='donors' || k==='top_donors' || k==='donor' || k==='donor_label' || k==='aliases',false,recordReferenceField(k));
+   const key=identityKeys || /^donor:/.test(k)?string(k,donor):k;
+   out[key]=visit(v,donor || hidden || ['name','label','n'].includes(k) && /[a-z]/i.test(String(v)) && !registry.names[hash(foldDonorName(String(v)))]?.exempt || k==='donors' || k==='top_donors' || k==='donor' || k==='donor_label' || k==='donor_links' || k==='aliases',false,recordReferenceField(k));
   }
   const entities=publicLookupEntities(out);
-  for(const k of Object.keys(out))if(nameLookupField(k)&&out[k]&&typeof out[k]==='object'&&!Array.isArray(out[k]))out[k]=rebuildPublicLookup(out[k],registry,entities);
+  for(const k of Object.keys(out))if(nameLookupField(k)&&out[k]&&typeof out[k]==='object'&&!Array.isArray(out[k]))out[k]=rebuildPublicLookup(out[k],registry,entities,true);
   return rebuildPublicLookup(out,registry,entities);
  };
  const compactDonor=v=>{

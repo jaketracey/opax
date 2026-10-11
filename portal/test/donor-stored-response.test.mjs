@@ -27,6 +27,16 @@ test('safe JSON and non-JSON responses keep their existing response contract',as
  for(const response of [Response.json({status:'ready',amount:1},{headers:{etag:'safe-etag'}}),new Response('image-bytes',{headers:{'content-type':'image/png'}})])assert.equal(await sanitiseStoredResponse(response),response);
 });
 
+test('combined public guards preserve event streams without reading or buffering them',async()=>{
+ const bundled=await build({entryPoints:[new URL('../src/sa-hansard.ts',import.meta.url).pathname],bundle:true,platform:'node',format:'esm',write:false});
+ const {saPublicResponse}=await import('data:text/javascript;base64,'+Buffer.from(bundled.outputFiles[0].text).toString('base64'));
+ let reads=0;const body=new ReadableStream({pull(){reads++;}},{highWaterMark:0});
+ const response=new Response(body,{headers:{'content-type':'text/event-stream','x-stream-fixture':'preserved'}});
+ const read=async()=>{throw Error('Stream guard must not retrieve records')};
+ const result=await sanitiseStoredResponse(await saPublicResponse(await sanitiseStoredResponse(response),'false',read));
+ assert.equal(result,response);assert.equal(result.body,response.body);assert.equal(reads,0);assert.equal(result.headers.get('x-stream-fixture'),'preserved');await body.cancel();
+});
+
 test('public community prose is withheld while member identity fields remain intact',async()=>{
  const compiled=await build({entryPoints:[new URL('../src/community-public-content.ts',import.meta.url).pathname],bundle:true,platform:'node',format:'esm',write:false});
  const {publicCommunityContent}=await import('data:text/javascript;base64,'+Buffer.from(compiled.outputFiles[0].text).toString('base64'));

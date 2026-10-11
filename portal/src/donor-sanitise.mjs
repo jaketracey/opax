@@ -6,6 +6,10 @@ const hashMemo=new Map();
 const hash=s=>{if(hashMemo.has(s))return hashMemo.get(s);const value=createHash('sha256').update(s).digest('hex');if(s.length<=256){if(hashMemo.size>=4096)hashMemo.delete(hashMemo.keys().next().value);hashMemo.set(s,value)}return value};
 const fold=s=>String(s).normalize('NFKC').replace(/[‘’ʼ`]/g,"'").replace(/\s+/g,' ').trim().toLowerCase();
 const compiled=new WeakMap(),organisationSets=new WeakMap();
+function registeredOrganisation(value,registry){
+ let organisations=organisationSets.get(registry);if(!organisations){organisations=new Set(registry.organisations||[]);organisationSets.set(registry,organisations);}
+ return organisations.has(hash(String(value).normalize('NFKC').toLowerCase().replace(/[^a-z0-9]+/g,' ').trim()));
+}
 function phrases(registry){
  let byFirst=compiled.get(registry);if(byFirst)return byFirst;
  const groups=new Map();
@@ -16,13 +20,12 @@ function phrases(registry){
  compiled.set(registry,byFirst);return byFirst;
 }
 export function withholdDonorText(value,registry,donor=false){
- const id=registry.ids[hash(value)];if(id)return id.id;
- let organisations=organisationSets.get(registry);if(!organisations){organisations=new Set(registry.organisations||[]);organisationSets.set(registry,organisations);}
  // Exact registered organisation identities are evidence from the index, not
  // guesses from words following a withheld phrase in a narrative. Registered
  // full organisation spans are recognised the same way in compound labels.
- if(organisations.has(hash(value.normalize('NFKC').toLowerCase().replace(/[^a-z0-9]+/g,' ').trim())))return value;
- const exact=registry.names[hash(fold(value))];if(exact&&(donor||!exact.exempt))return exact.label;
+ if(registeredOrganisation(value,registry))return value;
+ const id=registry.ids[hash(value)];if(id)return id.id;
+ const exact=registry.names[hash(fold(value))];if(exact&&(donor||!exact.exempt&&exact.sourceKnown!==false))return exact.label;
  let text=value.replace(/(\/subject\/donor\/)([^\s"<>?#]+)/g,(_,prefix,segment)=>{
   let label;try{label=decodeURIComponent(segment)}catch{return prefix+segment}
   const entry=registry.names[hash(fold(label))];return entry?prefix+encodeURIComponent(entry.label):prefix+segment;
@@ -42,11 +45,11 @@ export function withholdDonorText(value,registry,donor=false){
 // other records keep their IDs even when an ID contains a withheld phrase.
 export const recordReferenceField = key => /^(?:id|key|pid|record|resource|subject|href|url|path|page)$/.test(key) || /(?:_id|Id|_key|Key|_url)$/.test(key);
 export const nameLookupField = key => /^(?:_?by_name|names|aliases|alias_map|by_entity)$/.test(key);
-export function rebuildPublicLookup(value,registry,entities){
+export function rebuildPublicLookup(value,registry,entities,nameKeys=false){
  const out={};
  for(const [key,row]of Object.entries(value)){
   const entry=registry.names[hash(fold(key))];let publicKey=key;
-  if(entry&&!entry.exempt){
+  if(entry&&!entry.exempt&&(entry.sourceKnown!==false||nameKeys)){
    const refs=Array.isArray(row)?row:typeof row==='string'?[row]:[];
    const entity=refs.map(id=>entities?.get(String(id))).find(Boolean);
    const label=entity?.label || entity?.name || entry.label;
@@ -76,8 +79,10 @@ export function withholdStoredDonors(value,registry){
   if(!x || typeof x!=='object')return x;
   if(x.kind==='grant'&&typeof x.href==='string'&&typeof x.resource==='string'&&!x.subject)return grantVisit(x);
   const out={};
-  const hidden=x.kind==='donor' && (registry.ids[hash(x.id || '')] || /^donor:withheld-/.test(x.id || ''));
+  const hidden=x.kind==='donor' && !registeredOrganisation(x.label||x.name||'',registry) && (registry.ids[hash(x.id || '')] || /^donor:withheld-/.test(x.id || ''));
   for(const[k,v]of Object.entries(x)){
+   if(hidden&&k==='id'){out[k]=registry.ids[hash(v)]?.id||v;continue;}
+   if(hidden&&k==='label'&&registry.ids[hash(x.id||'')]){out[k]=registry.ids[hash(x.id)].label;continue;}
    if(hidden&&k==='profileUrl')continue;
    if(hidden&&k==='aliases'){out[k]=[];continue;}
    if(['recipient','rn','rid','recipientId','recipient_id','recipient_label'].includes(k)){out[k]=v;continue;}
@@ -94,10 +99,10 @@ export function withholdStoredDonors(value,registry){
    }
    if(k==='donors'&&v&&typeof v==='object'&&!Array.isArray(v)){out[k]=Object.fromEntries(Object.entries(v).map(([label,row])=>[withholdDonorText(label,registry,true),visit(row)]));continue;}
    if(nameLookupField(k)&&v&&typeof v==='object'&&!Array.isArray(v)){out[k]=Object.fromEntries(Object.entries(v).map(([label,row])=>[label,typeof row==='string'?row:visit(row)]));continue;}
-   out[k]=visit(v,donor||x.kind==='donor'||['donor','donor_label','top_donors','aliases'].includes(k),recordReferenceField(k));
+   out[k]=visit(v,donor||x.kind==='donor'||['donor','donor_label','donor_links','top_donors','aliases'].includes(k),recordReferenceField(k));
   }
   const entities=publicLookupEntities(out);
-  for(const k of Object.keys(out))if(nameLookupField(k)&&out[k]&&typeof out[k]==='object'&&!Array.isArray(out[k]))out[k]=rebuildPublicLookup(out[k],registry,entities);
+  for(const k of Object.keys(out))if(nameLookupField(k)&&out[k]&&typeof out[k]==='object'&&!Array.isArray(out[k]))out[k]=rebuildPublicLookup(out[k],registry,entities,true);
   return rebuildPublicLookup(out,registry,entities);
  };return visit(value);
 }

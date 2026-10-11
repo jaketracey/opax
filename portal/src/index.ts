@@ -1,5 +1,8 @@
 import {sanitiseStoredResponse} from './donor-stored-response'
 import {sanitiseStoredDonors} from './donor-hashes.mjs'
+import { SA_EXCERPT_LABEL, isSaHansard, saFullText, saOfficialUrl } from '../public/sa-hansard.js'
+import { saPublicResponse, saEventPayload } from './sa-hansard'
+import { saEvidenceText, saEvidenceRecord, saGenerationResponse, saConversationInput } from './sa-evidence'
 import { divisionPlain } from '../public/division-markdown.js'
 import { runSocialPublication, socialStatus, socialEngagement, publicationCopy, previewPublication, todayRedirect, CHANNELS, type Channel } from './social-publication'
 import { positionEvidence, positionProposalQuote, positionEligibilityQuotes, positionCostQuote, isPositionEligibilityQuestion, isPositionCostQuestion, isPositionDetailQuestion, positionPointSupported, normalizePositionDraft } from './position-evidence'
@@ -67,7 +70,7 @@ import { renderOgPng, renderOgJpeg, type OgFont } from './og-render'
 // The story renderer is reached through the namespace: tests stub './og-render' with the two card renderers only.
 import * as storyRender from './og-render'
 import { personRole, personTitle, roleLine, billTitle } from './seo-titles'
-import { answerBlock, associationCaveat, crumbsHTML, type Crumb, renderPersonAnswer, renderBillAnswer, renderDivisionAnswer, renderDirectory, renderSupplierAnswer, renderMoneyAnswer, type Division, type ReadAsset } from './seo-content'
+import { answerBlock, associationCaveat, crumbsHTML, panelPrerender, SERVER_PANELS, type Crumb, renderPersonAnswer, renderBillAnswer, renderDivisionAnswer, renderDirectory, renderSupplierAnswer, renderMoneyAnswer, type Division, type ReadAsset } from './seo-content'
 import { buildSchemaGraph, type PersonSchemaIdentity } from './seo-schema'
 import { photoFor, storyFrames, validStory, STORY_VERSION as STORY_SLIDES_VERSION, type PhotoCatalogue, type StoryFormat } from './story'
 
@@ -217,15 +220,31 @@ async function kbFetch(
   init?: { method?: string; body?: unknown; headers?: Record<string, string>; signal?: AbortSignal },
 ): Promise<Response> {
   if (path.startsWith('/ask') && await modelBudgetSpent(env)) return modelBudgetResponse()
-  return fetch(`${ragBase(env)}${path}`, {
+  const call = (target: string, body: unknown = init?.body, headers = init?.headers) => fetch(`${ragBase(env)}${target}`, {
     method: init?.method ?? (init?.body === undefined ? 'GET' : 'POST'),
     headers: {
       'content-type': 'application/json',
       'x-nuclia-serviceaccount': `Bearer ${env.ARAG_KB_TOKEN}`,
-      ...init?.headers,
+      ...headers,
     },
-    body: init?.body === undefined ? undefined : JSON.stringify(init.body),
+    body: body === undefined ? undefined : JSON.stringify(body),
     signal: init?.signal,
+  })
+  if (path === '/ask' && init?.body && typeof init.body === 'object') return saGenerationResponse(init.body as Record<string,unknown>, env.SA_HANSARD_FULL_TEXT, (target, body, stream) => {
+    const headers = {...init.headers}
+    if (stream) { delete headers['x-synchronous']; headers.accept = 'application/x-ndjson' }
+    else { headers['x-synchronous'] = 'true'; headers.accept = 'application/json' }
+    return call(target,body,headers)
+  }, init.headers?.accept === 'application/x-ndjson' && init.headers?.['x-synchronous'] !== 'true')
+  return call(path)
+}
+
+/** Protect source payloads before SSE encoding; deltas and points are untouched. */
+function saSendData(event: string, data: unknown, env: Env, ctx: ExecutionContext): Promise<unknown> {
+  return saEventPayload(event, data, env.SA_HANSARD_FULL_TEXT, async slug => {
+    const url = new URL(`/api/resource/${slug}`, SITE_ORIGIN)
+    const response = await apiResource(new Request(url), url, slug, env, ctx)
+    return response.ok ? await response.json() as Record<string,unknown> : null
   })
 }
 
@@ -691,7 +710,8 @@ async function searchWindow(
       organisation: typeof meta.witness_organisation === 'string' ? meta.witness_organisation : null,
       // Divisions carry their date on origin.created rather than in metadata.
       date: (meta.date as string) ?? (resource.origin as { created?: string } | undefined)?.created?.slice(0, 10) ?? null,
-      url: resource.origin?.url || null, // official record, for exports/citations
+      url: resource.origin?.url || null,
+      ...((label(resource, 'state') === 'sa' || label(resource, 'source') === 'sa_hansard') && typeof meta.source_url === 'string' ? {source_url:meta.source_url} : {}), // official record, for exports/citations
       snippet: windowed,
       // BASIC already includes resource and computed field classifications.
       // Reuse them; never fetch each result separately just to draw its chips.
@@ -989,7 +1009,8 @@ function askPayload(answer: AskAnswer, records: AskRecords = { records: [], cove
         state: label(r, 'state'),
         chamber: label(r, 'chamber'),
         date: (meta.date as string) ?? null,
-        url: r.origin?.url || null, // official record, for exports/citations
+        url: r.origin?.url || null,
+        ...((label(r, 'state') === 'sa' || label(r, 'source') === 'sa_hansard') && typeof meta.source_url === 'string' ? {source_url:meta.source_url} : {}), // official record, for exports/citations
         // Metadata extension is model context, not part of the quoted record.
         snippet: passageWindow(normalizePassage((citedText || bestText).replace(/\n+DOCUMENT CLASSIFICATION LABELS:[\s\S]*$/, ''))),
         cited: citedIds.has(rid),
@@ -1257,7 +1278,7 @@ async function moneyOverview(facts: MoneyFacts, env: Env, ctx: ExecutionContext,
 }
 
 async function apiAsk(request: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
-  const rawInput = ((await request.json().catch(() => ({}))) ?? {}) as AskInput
+  const rawInput = saConversationInput(((await request.json().catch(() => ({}))) ?? {}) as Record<string,unknown>, env.SA_HANSARD_FULL_TEXT) as AskInput
   // Phase durations go out as a Server-Timing header on synchronous answers,
   // so a slow ask can be split into our work and the platform's from outside.
   const marks: [string, number][] = [['start', Date.now()]]
@@ -1346,7 +1367,14 @@ async function apiAsk(request: Request, env: Env, ctx: ExecutionContext): Promis
   const bypass = cacheBypass(request, url)
   if (cacheKey && !bypass) {
     const hit = await readGenerationCache(env, ctx, cacheKey)
-    if (hit) return wantStream ? replayCachedAsk(hit, ctx) : withCacheStatus(await sanitiseStoredResponse(hit), 'HIT', false)
+    if (hit) {
+      const safe = await saPublicResponse(await sanitiseStoredResponse(hit), env.SA_HANSARD_FULL_TEXT, async slug => {
+        const resourceUrl=new URL('/api/resource/'+slug,url)
+        const response=await apiResource(new Request(resourceUrl),resourceUrl,slug,env,ctx)
+        return response.ok ? await response.json() as Record<string,unknown> : null
+      })
+      return wantStream ? replayCachedAsk(await sanitiseStoredResponse(safe), ctx) : withCacheStatus(await sanitiseStoredResponse(safe), 'HIT', false)
+    }
   }
   const status: CacheStatus = bypass ? 'BYPASS' : 'MISS'
   const limited = conversation ? null : await rateLimited(env.ASK_LIMITER, request)
@@ -1485,7 +1513,7 @@ async function documentedPositionAnswer(input: AskInput, body: Record<string, un
     if (!response.ok) throw new Error('Original speech unavailable')
     const original = await response.json() as {speaker?:string;text?:string}
     if (original.speaker !== scope.speaker || typeof original.text !== 'string') return null
-    const snippet = positionEvidence(original.text,query)
+    const snippet = positionEvidence(saEvidenceText({...original,...row},original.text,env.SA_HANSARD_FULL_TEXT,query),query)
     return snippet ? {...row,href:'/doc/'+row.slug,snippet,cited:false} : null
   }))
   const sources = reads.flatMap(r => r.status === 'fulfilled' && r.value ? [r.value] : [])
@@ -1596,7 +1624,7 @@ function positionExcerptsAnswer(payload: AskPayload, query: string): AskPayload 
 
 /** Recover a position with exact source excerpts, rather than inventing citation IDs. */
 async function recoverPositionAnswer(payload: AskPayload, body: Record<string,unknown>, env: Env, progress?: SseSend): Promise<AskPayload | null> {
-  const sourceRows = payload.sources.filter((s): s is Record<string,unknown> => !!s && typeof s === 'object')
+  const sourceRows = payload.sources.filter((s): s is Record<string,unknown> => !!s && typeof s === 'object').map(row => saEvidenceRecord(row,env.SA_HANSARD_FULL_TEXT,String(body.query || '')))
   const sources = summarySources(sourceRows, 6000)
   if (!sources.length) return null
   const query = String(body.query || '')
@@ -1707,7 +1735,7 @@ async function apiSearchSummary(request: Request, url: URL, env: Env, ctx: Execu
   const response = await apiUnifiedSearch(request, searchUrl, env, ctx)
   if (!response.ok) return response
   const results = await response.json() as {results: Record<string, unknown>[]; index_version?: string; warnings?: string[]}
-  const sources = summarySources(results.results || [])
+  const sources = summarySources((results.results || []).map(row => saEvidenceRecord(row,env.SA_HANSARD_FULL_TEXT,searchUrl.searchParams.get('q') || '')))
   if (!sources.length) return json({status:'empty', points:[], sources:[]})
   const query = (searchUrl.searchParams.get('q') || '').trim()
   const filters = Object.fromEntries(['kind','mode','speaker','party','state','topic','from','to'].map(k => [k, searchUrl.searchParams.get(k) || '']))
@@ -1730,7 +1758,7 @@ async function apiSearchSummary(request: Request, url: URL, env: Env, ctx: Execu
     const { readable, writable } = new TransformStream<Uint8Array, Uint8Array>()
     const writer = writable.getWriter()
     const encoder = new TextEncoder()
-    const send = (event: string, data: unknown): Promise<void> => writer.write(encoder.encode(`event: ${event}\ndata: ${JSON.stringify(data)}\n\n`))
+    const send = async (event: string, data: unknown): Promise<void> => writer.write(encoder.encode(`event: ${event}\ndata: ${JSON.stringify(await saSendData(event,data,env,ctx))}\n\n`))
     ctx.waitUntil((async () => {
       try {
         const validator = summaryPointValidator(sources)
@@ -1778,10 +1806,9 @@ async function apiSearchSummary(request: Request, url: URL, env: Env, ctx: Execu
 /** One streamed platform generation for the overview: answer text chunks go to
  * `onText` as they arrive; the whole answer comes back for the final parse. */
 async function streamSummaryAnswer(env: Env, body: Record<string, unknown>, onText: (text: string) => Promise<void>, signal: AbortSignal): Promise<string> {
-  const res = await modelBudgetSpent(env) ? modelBudgetResponse() : await fetch(`${ragBase(env)}/ask`, {
-    method: 'POST',
-    headers: { 'content-type': 'application/json', accept: 'application/x-ndjson', 'x-nuclia-serviceaccount': `Bearer ${env.ARAG_KB_TOKEN}` },
-    body: JSON.stringify(body),
+  const res = await kbFetch(env,'/ask',{
+    headers: { accept: 'application/x-ndjson' },
+    body,
     signal,
   })
   if (!res.ok || !res.body) throw new Error(`summary failed (${res.status})`)
@@ -1892,14 +1919,12 @@ async function streamAskOnce(
   signal: AbortSignal,
   onProgress?: () => void,
 ): Promise<AskAnswer> {
-  const res = await modelBudgetSpent(env) ? modelBudgetResponse() : await fetch(`${ragBase(env)}/ask`, {
-    method: 'POST',
+  const res = await kbFetch(env, '/ask', {
     headers: {
       'content-type': 'application/json',
       accept: 'application/x-ndjson',
-      'x-nuclia-serviceaccount': `Bearer ${env.ARAG_KB_TOKEN}`,
     },
-    body: JSON.stringify(body),
+    body,
     signal,
   })
   if (!res.ok || !res.body) throw new Error(`ask failed (${res.status})`)
@@ -2043,7 +2068,7 @@ function apiAskStream(
   const send: SseSend = async (event, data) => {
     if (clientGone) return
     try {
-      await writer.write(encoder.encode(`event: ${event}\ndata: ${JSON.stringify(data)}\n\n`))
+      await writer.write(encoder.encode(`event: ${event}\ndata: ${JSON.stringify(await saSendData(event,data,env,ctx))}\n\n`))
     } catch {
       // The reader left (a newer question aborted this one): stop paying
       // the platform for words nobody will see.
@@ -2139,7 +2164,7 @@ function streamPositionAnswer(
   const send: SseSend = async (event, data) => {
     if (clientGone) return
     try {
-      await writer.write(encoder.encode(`event: ${event}\ndata: ${JSON.stringify(data)}\n\n`))
+      await writer.write(encoder.encode(`event: ${event}\ndata: ${JSON.stringify(await saSendData(event,data,env,ctx))}\n\n`))
     } catch {
       clientGone = true
     }
@@ -2330,13 +2355,18 @@ async function apiFollowups(request: Request, env: Env, ctx: ExecutionContext): 
   const { question, answer, passages } = ((await request.json().catch(() => ({}))) ?? {}) as {
     question?: string
     answer?: string
-    passages?: { title?: string; text?: string }[]
+    passages?: Record<string,unknown>[]
   }
   // Always 200 with a possibly-empty list: follow-ups are an extra, never an error.
   if (!question?.trim() || !answer?.trim()) return json({ questions: [] })
   // Never suggest a next question about a withheld donor (src/donor-index.ts).
   if (await questionNamesWithheldDonor(env.ASSETS, question, answer)) return json({ questions: [] })
-  const clean = (Array.isArray(passages) ? passages : [])
+  const inputPassages = (Array.isArray(passages) ? passages : []).filter(p => p && typeof p === 'object' && !Array.isArray(p))
+  const restricted = inputPassages.some(p => isSaHansard(p) || (!p.kind && !p.source && !p.state && !p.labels))
+  // Older clients may send a previous answer containing full source quotations.
+  const priorAnswer = restricted ? saEvidenceText({},answer,env.SA_HANSARD_FULL_TEXT,'',true) : answer
+  const clean = inputPassages
+    .map(p => saEvidenceRecord(p,env.SA_HANSARD_FULL_TEXT,question, !p.kind && !p.source && !p.state && !p.labels))
     .map((p) => ({
       title: String(p?.title ?? '').slice(0, 300),
       text: String(p?.text ?? '').slice(0, 4000),
@@ -2373,7 +2403,7 @@ async function apiFollowups(request: Request, env: Env, ctx: ExecutionContext): 
     `QUESTION ALREADY ASKED: ${clipText(question, 500)}`,
     '',
     'ANSWER ALREADY GIVEN (do not ask for anything it already states):',
-    clipText(answer, FOLLOWUP_ANSWER_BUDGET),
+    clipText(priorAnswer, FOLLOWUP_ANSWER_BUDGET),
     '',
     '--- RETRIEVED PASSAGES (the only source a follow-up may draw on) ---',
     context,
@@ -3234,7 +3264,7 @@ const STATIC_PAGES: Record<string, { title: string; description: string; query?:
   },
   privacy: {
     title: 'Privacy · OPAX',
-    description: 'What the OPAX website and iPhone app collect, which companies receive it, how long it is kept, what voice sends to ElevenLabs and how to delete your account.',
+    description: 'What the OPAX website and iPhone and iPad app collect, which companies receive it, how long it is kept, what voice sends to ElevenLabs and how to delete your account.',
   },
 }
 
@@ -3788,6 +3818,12 @@ const publisher = { '@type': 'Organization', name: 'OPAX', url: SITE_ORIGIN, log
 
 // --- per-route metadata -------------------------------------------------------
 
+/** A policy page's panel from the shell, as its server-rendered text (panelPrerender). */
+async function serverPanel(env: Env, name: string): Promise<string | null> {
+  const shell = await env.ASSETS.fetch(new Request(`${SITE_ORIGIN}/`))
+  return shell.ok ? panelPrerender(await shell.text(), name) : null
+}
+
 async function buildRouteMeta(route: SeoRoute, url: URL, request: Request, env: Env, ctx: ExecutionContext): Promise<PageMeta> {
   const base = (over: Partial<PageMeta>): PageMeta => ({
     title: SITE_TITLE,
@@ -3804,7 +3840,7 @@ async function buildRouteMeta(route: SeoRoute, url: URL, request: Request, env: 
     case 'hub': {
       if (route.hub === 'vic-election') {
         const page = await vicElectionPage(route.id,<T>(path: string) => assetJson<T>(env,path),env)
-        return base({title:page.title+' · OPAX',description:page.description,prerender:page.html,jsonLd:page.jsonLd,status:page.status})
+        return base({title:page.title+' · OPAX',description:page.description,prerender:page.html,jsonLd:page.jsonLd,status:page.status,card:'card' in page ? page.card : null})
       }
       const people = route.hub === 'sitting' && route.id ? await loadPeople(env) : null
       const page = await hubPage(route.hub,route.id,<T>(path: string) => assetJson<T>(env,path),people?.people || [],people?.slugOf || new Map(),undefined,env)
@@ -3843,10 +3879,14 @@ async function buildRouteMeta(route: SeoRoute, url: URL, request: Request, env: 
           card: { kicker: 'Search the record', title: 'Search the record', lines: ['Speeches matching this query, with speaker, party, date and a link to the official source for each.'] },
         })
       }
+      // /privacy and /support are served whole: the policy text a store reviewer,
+      // a crawler or a reader without scripts sees is the panel's own.
+      const prerender = SERVER_PANELS.has(route.page) ? await serverPanel(env, route.page) : null
       return base({
         title: page.title,
         description: page.description,
         canonical,
+        prerender,
         jsonLd: { '@context': 'https://schema.org', '@type': 'WebPage', name: page.title, description: page.description, url: canonical, isPartOf: { '@type': 'WebSite', name: 'OPAX', url: SITE_ORIGIN } },
         // Ask and Search share the research workspace, separate from the homepage.
         card: route.page === 'ask' && !researchSearch ? homeCard() : { kicker: 'OPAX', title: page.title.replace(/ · OPAX$/, ''), lines: [page.description] },
@@ -4839,6 +4879,7 @@ async function docMeta(slug: string, url: URL, request: Request, env: Env, ctx: 
   const witness = isWitness({ speaker_type: r.labels.speaker_type, chamber: r.labels.chamber,
     person_id: typeof r.metadata.person_id === 'string' || typeof r.metadata.person_id === 'number' ? r.metadata.person_id : null })
   const portraitId = r.speaker && !isUnattributed(r) && !witness ? photoIdFor(photos, r.speaker) : null
+  const saRestricted = isSaHansard(r) && !saFullText(env.SA_HANSARD_FULL_TEXT)
   const recordOf = `the official ${r.labels.state === 'federal' ? 'federal' : (r.labels.state ?? '').toUpperCase()} parliamentary record`
   const words = typeof r.metadata.word_count === 'number' ? `${num(r.metadata.word_count)} words` : 'a speech'
   const description = clip(
@@ -4865,6 +4906,7 @@ async function docMeta(slug: string, url: URL, request: Request, env: Env, ctx: 
       // The KB's title for a speech is "speaker, date", which the card already
       // says: the second line is the summary when the record has one, else the length.
       lines: [[r.labels.party, chamber].filter(Boolean).join(' · '), r.summary?.trim() || `${words[0].toUpperCase()}${words.slice(1)} from ${recordOf}.`],
+      ...(saRestricted ? {sourceNotice:{label:SA_EXCERPT_LABEL,url:saOfficialUrl(r)}} : {}),
       dot: partyColour(moneyData, r.labels.party),
       portraitId,
       credit: await creditLine(env, portraitId),
@@ -4896,7 +4938,8 @@ async function serveSeoPage(route: SeoRoute, url: URL, request: Request, env: En
   const noindex = meta.noindex || meta.status >= 400 || (['/ask', '/search'].includes(url.pathname.replace(/\/+$/, '')) && Boolean(url.search))
   // Election coverage names unavailable grants, but renders no financial records.
   // Its renderer owns any future caveat alongside an actual political money pairing.
-  if (!(route.kind === 'hub' && route.hub === 'vic-election'))
+  // The policy pages (privacy, support) name no association between records.
+  if (!(route.kind === 'hub' && route.hub === 'vic-election') && !(route.kind === 'static' && SERVER_PANELS.has(route.page)))
     meta.prerender=associationCaveat(meta.prerender || '',`${meta.description} ${meta.prerender || ''}`)
   // JSON-LD sits in a <script>: keep "</script>" from ever appearing in it.
   const ld = meta.jsonLd ? JSON.stringify(meta.jsonLd).replace(/</g, '\\u003c') : null
@@ -5094,6 +5137,8 @@ async function serveStorySlide(url: URL, request: Request, env: Env, ctx: Execut
  */
 const NAMED_CARD_ROUTES = new Set<SeoRoute['kind']>(['subject', 'grant-recipient', 'topic'])
 async function cardRefused(route: SeoRoute | null, pageUrl: URL, request: Request, env: Env, ctx: ExecutionContext): Promise<boolean> {
+  // Check the election gate before replaying a card cached while publication was enabled.
+  if (route?.kind === 'hub' && route.hub === 'vic-election' && !vicElectionEnabled(env.VIC_ELECTION_HUB_ENABLED)) return true
   if (!route || !NAMED_CARD_ROUTES.has(route.kind)) return false
   const meta = await buildRouteMeta(route, pageUrl, request, env, ctx).catch(() => null)
   return !meta || meta.status !== 200 || !meta.card || meta.noindex === true
@@ -5116,7 +5161,7 @@ async function serveOgImage(url: URL, request: Request, env: Env, ctx: Execution
   const variants = new URLSearchParams()
   for (const [k, v] of cardQuery) variants.set(k, v)
   if (portrait) variants.set('format', format)
-  const cacheKey = cacheRequest('og', `${encodeURIComponent(env.CACHE_EPOCH)}/${OG_VERSION}/${m[2]}${pagePath}?${variants}`)
+  const cacheKey = cacheRequest('og', `${encodeURIComponent(env.CACHE_EPOCH)}/sa-full-${saFullText(env.SA_HANSARD_FULL_TEXT)}/${OG_VERSION}/${m[2]}${pagePath}?${variants}`)
   const pageUrl = new URL(`${SITE_ORIGIN}${pagePath}`)
   for (const [k, v] of cardQuery) pageUrl.searchParams.set(k, v)
   let route: SeoRoute | null = null
@@ -5190,7 +5235,8 @@ async function sitemapXml(env: Env, path = '/sitemap.xml'): Promise<Response> {
 async function llmsTxt(env: Env): Promise<Response> {
   const asset = await env.ASSETS.fetch(new Request(`${SITE_ORIGIN}/crawl/llms.txt`))
   if (!asset.ok) return new Response('Corpus guide unavailable', { status: 503, headers: { 'cache-control': 'no-store' } })
-  return new Response(vicElectionEnabled(env.VIC_ELECTION_HUB_ENABLED) ? (await asset.text()) + '\n' + vicElectionLlms : asset.body, { headers: { 'content-type': 'text/plain; charset=utf-8', 'cache-control': 'public, max-age=3600' } })
+  const policy = saFullText(env.SA_HANSARD_FULL_TEXT) ? '' : `\nSouth Australian Hansard: ${SA_EXCERPT_LABEL} /api/resource and MCP read_record provide at most 120 words per record, with its official source_url. Machine summaries are OPAX text.\n`
+  return new Response((await asset.text()) + policy + (vicElectionEnabled(env.VIC_ELECTION_HUB_ENABLED) ? '\n' + vicElectionLlms : ''), { headers: { 'content-type': 'text/plain; charset=utf-8', 'cache-control': 'public, max-age=3600' } })
 }
 
 
@@ -5594,6 +5640,14 @@ function personTopicsFor(name: string, env: Env): Promise<Response> {
 export default {
   async fetch(request, env, ctx): Promise<Response> {
     const url = new URL(request.url)
+    const display = (response: Response, target = url) => {
+      if (!/^\/api\/(?:resource\/[^/]+|search|search-all|search-summary|ask)$/.test(target.pathname) && !/^\/reports\/[^/]+\.json$/.test(target.pathname)) return Promise.resolve(response)
+      return sanitiseStoredResponse(response).then(safe => saPublicResponse(safe, env.SA_HANSARD_FULL_TEXT, async slug => {
+        const sourceUrl = new URL(`/api/resource/${slug}`, url)
+        const result = await apiResource(new Request(sourceUrl), sourceUrl, slug, env, ctx)
+        return result.ok ? await result.json() as Record<string, unknown> : null
+      }, target.searchParams.get('q') || '')).then(sanitiseStoredResponse)
+    }
     if (!vicElectionEnabled(env.VIC_ELECTION_HUB_ENABLED) && vicElectionPublicationPath(url.pathname))
       return withSecurityHeaders(new Response(request.method === 'HEAD' ? null : 'Not found', {status:404,headers:{'x-robots-tag':'noindex','cache-control':'no-store','content-type':'text/plain; charset=utf-8'}}), url)
     const canonical = await pageAliasRedirect(request, url, env)
@@ -5609,6 +5663,7 @@ export default {
       : new Response('Not found', { status: 404 })
     const isApi = url.pathname.startsWith('/api/')
     const communityResponse = (response: Response) => { const secured = withSecurityHeaders(response, url); if (env.STAGING_API) secured.headers.set('x-robots-tag', 'noindex, nofollow'); return secured }
+    if (url.pathname === '/api/display-policy' && request.method === 'GET') return communityResponse(new Response(JSON.stringify({SA_HANSARD_FULL_TEXT:saFullText(env.SA_HANSARD_FULL_TEXT) ? 'true' : 'false'}), {headers:{'content-type':'application/json','cache-control':'no-store'}}))
     // Public app adapters use this Worker's journal/assets, before any staging
     // proxy or general retrieval dispatch. No composition callback is supplied.
     if (url.pathname.startsWith('/api/app/v1/edition/')) return communityResponse(await appEdition(request, env))
@@ -5635,20 +5690,20 @@ export default {
     if (url.pathname.startsWith('/api/voice/')) return communityResponse(await voiceRoute(request, env, ctx, async path => {
       const target = new URL(path, env.COMMUNITY_ORIGIN)
       const local = new Request(target, { headers: { 'cf-connecting-ip': 'voice-tools' } })
-      if (target.pathname === '/api/search-all') return apiUnifiedSearch(local, target, env, ctx)
-      if (env.STAGING_API) return env.STAGING_API.fetch(local)
-      return route(local, target, env, ctx)
+      if (target.pathname === '/api/search-all') return display(await apiUnifiedSearch(local, target, env, ctx), target)
+      if (env.STAGING_API) return display(await env.STAGING_API.fetch(local), target)
+      return display(await route(local, target, env, ctx), target)
     }))
     if (url.pathname === '/mcp') return communityResponse(await communityMcp(request, env, async path => {
       const target = new URL(path, env.COMMUNITY_ORIGIN)
       const local = new Request(target, { headers: { 'cf-connecting-ip': request.headers.get('cf-connecting-ip') || 'mcp' } })
-      if (target.pathname === '/api/search-all') return apiUnifiedSearch(local, target, env, ctx)
-      if (env.STAGING_API) return env.STAGING_API.fetch(local)
-      return route(local, target, env, ctx)
+      if (target.pathname === '/api/search-all') return display(await apiUnifiedSearch(local, target, env, ctx), target)
+      if (env.STAGING_API) return display(await env.STAGING_API.fetch(local), target)
+      return display(await route(local, target, env, ctx), target)
     }))
     if (url.pathname === '/api/search-all' && request.method === 'GET') {
       try {
-        const response = withSecurityHeaders(await apiUnifiedSearch(request, url, env, ctx), url)
+        const response = withSecurityHeaders(await display(await apiUnifiedSearch(request, url, env, ctx)), url)
         if (env.STAGING_API) response.headers.set('x-robots-tag', 'noindex, nofollow')
         return response
       } catch {
@@ -5668,7 +5723,7 @@ export default {
         if (matchSeoRoute(url)) assetUrl.pathname = '/'
         response = await env.ASSETS.fetch(new Request(assetUrl, request))
       }
-      const preview = withSecurityHeaders(response, url)
+      const preview = withSecurityHeaders(await display(response), url)
       preview.headers.set('x-robots-tag', 'noindex, nofollow')
       return preview
     }
@@ -5685,7 +5740,7 @@ export default {
         )
         return withSecurityHeaders(new Response(null, got), url)
       }
-      return withSecurityHeaders(await route(request, url, env, ctx), url)
+      return withSecurityHeaders(await display(await route(request, url, env, ctx)), url)
     } catch (err) {
       // The detail goes to the log, never to the client: upstream error text
       // can carry request echoes and internal identifiers.

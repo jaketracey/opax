@@ -404,8 +404,9 @@ test('newly composed editions are withheld before journal writes',async()=>{
  const n=graphs.flatMap(g=>g.nodes).find(n=>n.kind==='donor'&&donorNameWithheld(index,n.label)&&!registry.names[createHash('sha256').update(foldDonorName(n.label)).digest('hex')]?.exempt);assert.ok(n);
  const h=harness({FACEBOOK_POST_ENABLED:'false',INSTAGRAM_POST_ENABLED:'false'});try{
   h.sqlite.exec('DELETE FROM social_editions');h.env.ASSETS.fetch=async req=>new URL(req.url).pathname==='/parliamentarians.json'?Response.json({people:[{name:n.label,current:true,speeches:250,representation:[{jurisdiction:'federal'}]}]}):Response.json({});
-  const composed=await previewPublication(h.env,post.date,async()=>Response.json({}),'politician');assert.ok(composed);assert.ok(!JSON.stringify(composed).toLowerCase().includes(n.label.toLowerCase()),'composed identity remains');
+  const prose=edition=>JSON.stringify({title:edition.title,text:edition.text,caption:edition.caption});
+  const composed=await previewPublication(h.env,post.date,async()=>Response.json({}),'politician');assert.ok(composed);assert.ok(!prose(composed).toLowerCase().includes(n.label.toLowerCase()),'composed prose retains identity');
   await runSocialPublication(h.env,{now,date:post.date,kind:'politician',channels:['x'],personTopics:async()=>Response.json({}),fetchImpl:h.fetchImpl,sourceResponse:async()=>new Response(null,{status:503})});
-  const stored=h.sqlite.prepare('SELECT post_json FROM social_editions').get();assert.ok(stored);assert.ok(!stored.post_json.toLowerCase().includes(n.label.toLowerCase()),'journal write retains identity');
+  const stored=h.sqlite.prepare('SELECT post_json FROM social_editions').get();assert.ok(stored);const edition=JSON.parse(stored.post_json);assert.ok(!prose(edition).toLowerCase().includes(n.label.toLowerCase()),'journal prose retains identity');assert.ok(edition.subject===composed.subject,'non-donor record reference changed');
  }finally{h.sqlite.close()}
 });

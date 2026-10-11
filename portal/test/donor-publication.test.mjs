@@ -20,8 +20,10 @@ const fields=o=>Object.entries(o).map(([k,v])=>`${k}:${shape(v)}`).sort().join('
 // than relying only on the publication transformation being idempotent.
 const blocked=new Set([...privacySourceDonorRecords().filter(n=>donorNameWithheld(index,n.label)).flatMap(n=>[n.label,...n.aliases||[]]),...original.flatMap(g=>g.nodes.filter(n=>n.kind==='donor'&&donorNameWithheld(index,n.label)).flatMap(n=>[n.label,...n.aliases||[]]))].map(foldDonorName));
 const organisationAliases=new Set(original.flatMap(g=>g.nodes.filter(n=>n.kind==='donor'&&!donorNameWithheld(index,n.label)).flatMap(n=>[n.label,...n.aliases||[]])).map(foldDonorName));
+const organisationIds=new Set(original.flatMap(g=>g.nodes.filter(n=>n.kind==='donor'&&!donorNameWithheld(index,n.label)).map(n=>n.id)));
 function hasHiddenIdentity(value,donor=false,nameField=false){
  if(typeof value==='string'){
+  if(donor&&context.registry.ids[context.hash(value)]&&!organisationIds.has(value)&&!/^donor:withheld-/.test(value))return true;
   const key=foldDonorName(value),entry=context.registry.names[context.hash(key)];
   if(blocked.has(key)&&!organisationAliases.has(key)&&(!isOrganisationDonor({label:value}) || (donor||nameField) && !isOrganisationDonor({label:value.toLowerCase()}))&&(donor||!entry?.exempt)&&(donor||nameField||/[a-z].*\s+.*[a-z]/i.test(value)))return true;
   for(const match of value.matchAll(/\/subject\/donor\/([^\s"<>?#]+)/g)){let label;try{label=decodeURIComponent(match[1])}catch{continue}if(blocked.has(foldDonorName(label))&&!index.organisations.has(foldDonorName(label)))return true;}
@@ -35,14 +37,14 @@ function hasHiddenIdentity(value,donor=false,nameField=false){
   if(['recipient','rn','rid','recipientId','recipient_id','recipient_label'].includes(key)||/^\/money\/grants\//.test(key)||/(?:^|:)(?:grant(?:-|:)|grant-program|grant-recipient)/.test(key))return false;
   if(key==='grants')return assetDonorRecords(v).some(n=>hasHiddenIdentity(n,true));
   if(key==='donors'&&v&&typeof v==='object'&&!Array.isArray(v))return Object.entries(v).some(([label,entry])=>hasHiddenIdentity(label,true)||hasHiddenIdentity(entry));
-  return hasHiddenIdentity(v,isDonor||key==='top_donors'||key==='donor'||key==='donor_label',['name','label','n','aliases'].includes(key));
+  return hasHiddenIdentity(v,isDonor||key==='top_donors'||key==='donor'||key==='donor_label'||key==='donor_links',['name','label','n','aliases'].includes(key));
  });
 }
 function hiddenLookupKey(value){
  if(!value||typeof value!=='object')return false;
  return Object.entries(value).some(([key,row])=>{
   const entry=context.registry.names[context.hash(foldDonorName(key))];
-  return Boolean(entry&&!entry.exempt&&!organisationAliases.has(foldDonorName(key)))||hiddenLookupKey(row);
+  return Boolean(entry&&!entry.exempt&&entry.sourceKnown!==false&&!organisationAliases.has(foldDonorName(key)))||hiddenLookupKey(row);
  });
 }
 
@@ -82,10 +84,42 @@ test('every served JSON and client module passes the runtime export privacy set'
 test('public lookups are rebuilt from sanitised labels without changing record joins',()=>{
  const n=original.flatMap(g=>g.nodes).find(n=>n.kind==='donor'&&donorNameWithheld(index,n.label)&&!context.registry.names[context.hash(foldDonorName(n.label))]?.exempt);
  assert.ok(n);const id='n-'+foldDonorName(n.label).replace(/[^a-z0-9]+/g,'-');
- const fixture={people:{[id]:{id,name:n.label}},_by_name:{[foldDonorName(n.label)]:id},ties:{[id]:Array.from({length:21},()=>({record_id:id,description:'record fixture'}))},nested:{aliases:{[n.label]:[n.id]}}};
+ const fixture={people:{[id]:{id,name:n.label}},_by_name:{[foldDonorName(n.label)]:id},ties:{[id]:Array.from({length:21},()=>({record_id:id,description:'record fixture'}))},nested:{aliases:{[n.label]:[n.id]}},donor_links:[{id:n.id,label:n.label}]};
  for(const safe of [sanitiseDonorAsset(fixture,context),withholdStoredDonors(fixture,context.registry)]){
   assert.ok(!hiddenLookupKey(safe));assert.ok(safe.people[id].id===id);assert.ok(Object.values(safe._by_name)[0]===id);assert.ok(Object.keys(safe._by_name)[0]===safe.people[id].name.toLowerCase());assert.equal(safe.ties[id].length,21);assert.ok(safe.ties[id].every(r=>r.record_id===id));
+  assert.ok(/^donor:withheld-/.test(safe.donor_links[0].id),'donor link identity retained');
  }
+});
+
+test('interest lookup references and ties retain every source record and row',()=>{
+ for(const file of ['interests/index.json','interests/ties-by-donor.json']){
+  const before=JSON.parse(execFileSync('git',['show',`${PRIVACY_BASELINE}:portal/public/${file}`],{maxBuffer:30*1024*1024}).toString()),after=read(file);
+  if(file.endsWith('index.json')){
+   assert.ok(JSON.stringify(Object.values(before._by_name).sort())===JSON.stringify(Object.values(after._by_name).sort()),'interest lookup references differ');
+   assert.ok(JSON.stringify(Object.keys(before.people).sort())===JSON.stringify(Object.keys(after.people).sort()),'interest record keys differ');
+  }else{
+   const ids=x=>Object.values(x.donors).flatMap(rows=>rows.map(r=>r.id)).sort();
+   assert.equal(Object.keys(after.donors).length,Object.keys(before.donors).length);assert.ok(JSON.stringify(ids(after))===JSON.stringify(ids(before)),'ties record references or rows differ');
+  }
+ }
+});
+
+test('unknown donor fallbacks cannot rename unrelated schema fields',()=>{
+ const code='unregistered-schema-code',entry={id:'donor:withheld-99999',label:'Donor 99999 (name withheld)',sourceKnown:false,exempt:false};
+ const donorId='donor:'+code,local={...context,registry:{...context.registry,names:{...context.registry.names,[context.hash(code)]:entry},ids:{...context.registry.ids,[context.hash(donorId)]:entry}}};
+ const fixture={meta:{[code]:code},nodes:[{kind:'donor',id:donorId,label:code,aliases:[]}],_by_name:{[code]:entry.id}};
+ for(const safe of [sanitiseDonorAsset(fixture,local),withholdStoredDonors(fixture,local.registry)]){
+  assert.deepEqual(safe.meta,fixture.meta);assert.equal(safe.nodes[0].label,entry.label);assert.deepEqual(Object.keys(safe._by_name),[entry.label.toLowerCase()]);
+ }
+});
+
+test('current organisation evidence overrides historical anonymous identity entries',()=>{
+ const nodes=original.flatMap(g=>g.nodes).filter(n=>n.kind==='donor'&&!donorNameWithheld(index,n.label)&&context.registry.ids[context.hash(n.id)]);
+ assert.ok(nodes.length>0);
+ for(const node of nodes){assert.ok(JSON.stringify(withholdStoredDonors(node,context.registry))===JSON.stringify(node),'approved organisation changed');}
+ const hidden=original.flatMap(g=>g.nodes).find(n=>n.kind==='donor'&&donorNameWithheld(index,n.label)&&!context.registry.names[context.hash(foldDonorName(n.label))]?.exempt);
+ assert.ok(hidden);const fixture={...hidden,id:nodes[0].id},safe=withholdStoredDonors(fixture,context.registry);
+ assert.ok(/^donor:withheld-/.test(safe.id));assert.equal(safe.label,`Donor ${safe.id.split('-').at(-1)} (name withheld)`);
 });
 
 test('native graph schemas, groups, amounts and year cells are unchanged',()=>{

@@ -212,3 +212,22 @@ test('bad weeks return a real 404 with noindex; hubs keep SSR and remove SPA sta
     assert.match(source,/main#main/);
   } finally {globalThis.HTMLRewriter=previous;}
 });
+test('hubs carry the breadcrumb, one dated source line per records block, and the shared link and type rules',async()=>{
+  const page = renderSittingWeek(data,fixtureWeek,people,slugs);
+  assert.match(page.html,/^<nav class="crumbs prerender-crumbs"[^>]*>[\s\S]*href="\/sitting">Sitting weeks<\/a>[\s\S]*aria-current="page"><svg[^]*?<span class="crumb-label">12 Oct 2026 – 15 Oct 2026<\/span>/);
+  assert.match(page.html,/<h1>[^<]+<\/h1><p class="hub-meta">House of Representatives and Senate<\/p>/);
+  const sections = page.html.match(/<section class="hub-section">[\s\S]*?<\/section>/g);
+  assert.equal(sections.length,2);
+  for (const section of sections) {
+    const lines = section.match(/<span class="ui-source-text">[^]*?<\/span><\/span>/g)||[];
+    assert.equal(lines.length,1);assert.match(lines[0],/\d{1,2} \w{3} \d{4}/);
+  }
+  assert.doesNotMatch(page.html,/hub-pills|hub-cutoff|hub-trail|ui-tag|<footer/);
+  const estimates = renderEstimates(await json('hubs/estimates-2026-10.json')).html;
+  assert.equal((estimates.match(/class="ui-pop ui-source"/g)||[]).length,2);
+  assert.equal((estimates.match(/not payments/g)||[]).length,1);
+  assert.match(estimates,/<nav class="hub-toc"[^>]*>[\s\S]*href="#group-A"/);
+  assert.doesNotMatch(estimates,/\$\d{1,3}(,\d{3}){2,}|ui-tag|hub-cutoff/);
+  const css = await readFile(new URL('../public/hubs.css',import.meta.url),'utf8');
+  assert.doesNotMatch(css.replace(/\/\*[\s\S]*?\*\//g,''),/--bills-|max-width: 960px|font-size|font: \d|border-left|--space-\d|--line\b/);
+});

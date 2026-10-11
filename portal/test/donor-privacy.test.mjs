@@ -5,8 +5,8 @@
 // Failure messages carry paths and counts only, never a donor's name.
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {readFileSync, readdirSync, mkdtempSync, mkdirSync, symlinkSync, writeFileSync, rmSync, existsSync} from 'node:fs';
-import {tmpdir} from 'node:os';
+import {readFileSync, readdirSync, rmSync, existsSync} from 'node:fs';
+import {memoryExport,closeMemoryExports} from './memory-export.mjs';
 import {join} from 'node:path';
 import {execFileSync} from 'node:child_process';
 import {build} from 'esbuild';
@@ -50,24 +50,18 @@ const [interestBucket] = Object.keys(interestRegister.buckets);
 const keptEntry = interestRegister.buckets[interestBucket].items[0];
 interestRegister.buckets[interestBucket].items.unshift({description: `Gift of a framed print from ${FIXTURE_INDIVIDUALS[0][0]}`, holder: 'Self'});
 
-/** The export with these money graphs in place: every other entry is a symlink. */
+/** Raw fixtures and generated outputs are held entirely in memory. */
 function exportRoot(money) {
-  const dir = mkdtempSync(join(tmpdir(), 'opax-donor-privacy-'));
-  for (const entry of readdirSync(pub)) if (!['crawl', 'person-paths.js', 'graph', 'interests'].includes(entry)) symlinkSync(join(pub, entry), join(dir, entry));
-  mkdirSync(join(dir, 'graph'));
-  for (const entry of readdirSync(join(pub, 'graph'))) if (entry!=='campaigners.json' && !MONEY_GRAPHS.some(p=>p.endsWith('/'+entry))) symlinkSync(join(pub, 'graph', entry), join(dir, 'graph', entry));
-  writeFileSync(join(dir, 'graph', 'money.json'), JSON.stringify(money));
-  for(let i=1;i<MONEY_GRAPHS.length;i++)writeFileSync(join(dir,MONEY_GRAPHS[i]),JSON.stringify(sourceGraphs[i]));
-  writeFileSync(join(dir,'graph/campaigners.json'),JSON.stringify(real('graph/campaigners.json')));
-  mkdirSync(join(dir, 'interests'));
-  for (const entry of readdirSync(join(pub, 'interests'))) if (entry !== `${interestMember.pid}.json`) symlinkSync(join(pub, 'interests', entry), join(dir, 'interests', entry));
-  writeFileSync(join(dir, 'interests', `${interestMember.pid}.json`), JSON.stringify(interestRegister));
-  return dir;
+ return memoryExport(pub,Object.fromEntries([
+  ['graph/money.json',money],...MONEY_GRAPHS.slice(1).map((p,i)=>[p,sourceGraphs[i+1]]),
+  ['graph/campaigners.json',real('graph/campaigners.json')],
+  [`interests/${interestMember.pid}.json`,interestRegister],
+ ]));
 }
 const root = exportRoot(fixtureGraph);
 await buildGrowth(root);
 await buildCrawl(root);
-test.after(() => rmSync(root, {recursive: true, force: true}));
+test.after(closeMemoryExports);
 const at = path => join(root, path.replace(/^\//, ''));
 
 // --- what may not be named -------------------------------------------------------
