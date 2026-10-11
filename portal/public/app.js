@@ -983,6 +983,7 @@ function showPanel(name) {
   if (name !== "discover") destroyDiscoveryMap();
   if (name !== "money") {
     moneyJourneys?.destroy(); moneyJourneys = null;
+    moneyMapSetup?.abort(); moneyMapSetup = null;
     moneyMapLoading = null; moneyMapGeneration += 1;
     moneyMapHandle?.setPaused(true);
   } else moneyMapHandle?.setPaused(false);
@@ -1158,7 +1159,7 @@ async function mountDiscoveryMap(signal) {
     if (!current()) return;
     const donor = data?.nodes?.find((node) => node.kind === "donor" && node.label.trim().toLocaleLowerCase() === signal.entity.trim().toLocaleLowerCase());
     if (!donor) { root.innerHTML = '<p class="status">This organisation isn’t in the money map’s selected donor set. You can still search its name in the record.</p>'; return; }
-    const { mountMoneyMap } = await import("/money-map.js?v=ca923f4f2e");
+    const { mountMoneyMap } = await import("/money-map.js?v=3503adeea7");
     if (!current()) return;
     root.textContent = "";
     const handle = await mountMoneyMap(root, "/graph/money.json?v=suppliers-1", { focus: donor.id, chrome: "mini", reveal: true, openCard: false,
@@ -1417,6 +1418,7 @@ async function openLargestGrants(month, manageFocus) {
   }
 }
 let moneyMapGeneration = 0;
+let moneyMapSetup = null;
 let moneyJourneys = null;
 let moneyJourneyModule = null;
 let moneyJourneyData = null;
@@ -1466,9 +1468,12 @@ async function mountMoney(jurParam, industry, params = new URLSearchParams()) {
   }
   moneyMapIsolate = isolate;
   if (moneyMapLoading === jur) return;
+  moneyMapSetup?.abort();
+  const setup = moneyMapSetup = new AbortController();
   moneyMapLoading = jur;
   moneyResearch?.destroy(); moneyResearch = null;
   const generation = ++moneyMapGeneration;
+  const isCurrent = () => !setup.signal.aborted && generation === moneyMapGeneration;
   moneyJourneys?.destroy(); moneyJourneys = null;
   if (moneyMapHandle) { moneyMapHandle.destroy(); moneyMapHandle = null; moneyMapJur = null; }
   const root = $("money-map-root");
@@ -1476,17 +1481,21 @@ async function mountMoney(jurParam, industry, params = new URLSearchParams()) {
   root.innerHTML = `<p class="status" style="margin:0;padding:1rem 1.25rem">Loading the map…</p>`;
   const cfg = MONEY_JURISDICTIONS[jur];
   try {
-    const [{ mountMoneyMap }, data, journeysModule, researchModule, recordsModule] = await Promise.all([import("/money-map.js?v=ca923f4f2e"), loadMoneyFile(jur), import("/money-journeys.js?v=mobile-picker-20260908"), import("/map-research.js?v=883d9cacb0"), import("/money-records.js?v=ia-ux-20260908-2")]);
-    if (moneyMapLoading !== jur || generation !== moneyMapGeneration) return; // switched again while loading
+    const [{ mountMoneyMap }, data, journeysModule, researchModule, recordsModule] = await Promise.all([import("/money-map.js?v=3503adeea7"), loadMoneyFile(jur), import("/money-journeys.js?v=mobile-picker-20260908"), import("/map-research.js?v=7ea547e625"), import("/money-records.js?v=ia-ux-20260908-2")]);
+    if (!isCurrent()) return; // switched again while loading
     const fine = $("money-fineprint");
     if (fine) fine.innerHTML = moneyFineprintHTML(jur, data?.meta);
     root.textContent = "";
-    moneyResearch = await researchModule.mountMapResearch($('money-research'), data, {
+    const research = await researchModule.mountMapResearch($('money-research'), data, {
+      signal: setup.signal, isCurrent,
       resultsContainer: $('money-research-results'),
       onChange(filters) { moneyJourneys?.setRoute(null, null, null); const u = new URL(location.href); for (const key of ['journey','step','focus']) u.searchParams.delete(key); replaceRoute(u.pathname + u.search); moneyMapHandle?.setFilters(filters); },
       onFocus(id) { moneyJourneys?.pause('map'); moneyMapHandle?.select(id); $('money-stage').scrollIntoView({ block: 'center', behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth' }); },
     });
+    if (!isCurrent()) { research?.destroy(); return; }
+    moneyResearch = research;
     const handle = await mountMoneyMap(root, cfg.file, {
+      signal: setup.signal, isCurrent,
       filters: recordsModule.readMoneyFilters(new URLSearchParams(location.search)),
       focus: params.get('journey') ? undefined : params.get('focus') || undefined,
       onViewChange: (view, filters, years) => {
@@ -1499,7 +1508,7 @@ async function mountMoney(jurParam, industry, params = new URLSearchParams()) {
       askUrl: (industry) =>
         askHash(`What has parliament said about ${industry.replace(/_/g, " ")}?`),
     });
-    if (moneyMapLoading !== jur || generation !== moneyMapGeneration) { handle.destroy(); return; }
+    if (!isCurrent()) { handle.destroy(); return; }
     moneyMapHandle = handle;
     const legend = root.querySelector('.mm-legend');
     if (legend) {
@@ -1527,7 +1536,7 @@ async function mountMoney(jurParam, industry, params = new URLSearchParams()) {
     attachMoneyJourneys(params);
     if (moneyMapIsolate && !params.get("journey")) handle.isolate?.(moneyMapIsolate);
   } catch (err) {
-    if (moneyMapLoading !== jur || generation !== moneyMapGeneration) return;
+    if (!isCurrent()) return;
     root.textContent = "";
     const p = document.createElement("p");
     p.className = "status error";
@@ -1541,6 +1550,7 @@ async function mountMoney(jurParam, industry, params = new URLSearchParams()) {
     root.appendChild(p);
   } finally {
     if (moneyMapLoading === jur && generation === moneyMapGeneration) moneyMapLoading = null;
+    if (moneyMapSetup === setup) moneyMapSetup = null;
   }
 }
 
@@ -1611,7 +1621,7 @@ async function openSupplierPage(name, params, manageFocus) {
   body.classList.remove("subject-person", "subject-party");
   body.innerHTML = '<p role="status">Loading suppliers…</p>';
   try {
-    const module = await import("/suppliers.js?v=1d01466ca3");
+    const module = await import("/suppliers.js?v=46ee6566ec");
     if (generation !== supplierPageGeneration) return;
     const helpers = {
       params,
@@ -4145,7 +4155,7 @@ async function mountSubjectMap(nodeId, label = "") {
   el.hidden = false;
   $("subject-map-hint").hidden = false;
   try {
-    const { mountMoneyMap } = await import("/money-map.js?v=ca923f4f2e");
+    const { mountMoneyMap } = await import("/money-map.js?v=3503adeea7");
     if (currentSubjectKey !== key) return; // navigated away while loading
     destroySubjectMap();
     const handle = await mountMoneyMap(el, "/graph/money.json?v=suppliers-1", {
@@ -9579,7 +9589,7 @@ async function mountFrontMap() {
   if (!root || frontMapHandle || frontMapLoading) return;
   frontMapLoading = true;
   try {
-    const [mod, data] = await Promise.all([import("/money-map.js?v=ca923f4f2e"), loadMoneyData()]);
+    const [mod, data] = await Promise.all([import("/money-map.js?v=3503adeea7"), loadMoneyData()]);
     if (!data) throw new Error("money data unavailable");
     root.textContent = "";
     const handle = await mod.mountMoneyMap(root, "/graph/money.json?v=suppliers-1", {
@@ -14379,7 +14389,7 @@ async function mountReportWords(el, cfg, slug) {
 
 async function mountReportMap(el, cfg, slug) {
   try {
-    const { mountMoneyMap } = await import("/money-map.js?v=ca923f4f2e");
+    const { mountMoneyMap } = await import("/money-map.js?v=3503adeea7");
     if (currentReportSlug !== slug || !el.isConnected) return; // moved on while loading
     const handle = await mountMoneyMap(el, "/graph/money.json?v=suppliers-1", {
       chrome: "mini",

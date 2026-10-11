@@ -117,6 +117,6 @@ export function mountConnectionFallback(container: HTMLElement, data: MoneyGraph
     fit: () => { current = undefined; group = null; render() },
     pauseScene: () => {},
     setPaused: () => {},
-    destroy: () => { destroyed = true; root.remove(); container.classList.remove('mm-root') },
+    destroy: () => { destroyed = true; if (root.parentNode === container) container.classList.remove('mm-root'); root.remove() },
   }
 }

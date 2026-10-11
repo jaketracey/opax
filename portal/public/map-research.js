@@ -5,9 +5,14 @@ import {createTablePrivacyValidator} from './datatable-privacy.js?v=de6469a26a';
 import {rawQueryValues} from './datatable-query.js?v=6dd55aab38';
 const esc = value => String(value ?? '').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 export async function mountMapResearch(container, data, options = {}) {
+  const cancelled=()=>options.signal?.aborted || options.isCurrent?.() === false;
+  if(cancelled())return null;
   const validator=createTablePrivacyValidator({privacyCheck:options.privacyCheck,fetch:(...args)=>fetch(...args)}),permit=validator.permit;
   const initialURL=new URL(location.href);
   await validator.permitSet([...rawQueryValues(initialURL.searchParams)]);
+  // Validation can finish after the reader has switched jurisdictions.
+  // Check before the first history or DOM write, while this setup owns neither.
+  if(cancelled())return null;
   const guarded=guardTableURL({id:'money-connections',caption:'',pageType:'money',privacy:'donors',privacyCheck:validator.approved,urlKey:'c',columns:[]},initialURL);
   const initial=guarded.url.searchParams;
   let rejectedQuery=guarded.rejected;
@@ -82,5 +87,5 @@ export async function mountMapResearch(container, data, options = {}) {
 
   };
   container.addEventListener('click',click);if(resultsHost !== container) records.addEventListener('click',click);controls();
-  return {update,destroy(){destroyed=true;tableHandle?.destroy();clearTimeout(timer);container.removeEventListener('click',click);records.removeEventListener('click',click);document.removeEventListener('click',closeMenus);document.removeEventListener('keydown',closeMenus);records.remove();container.replaceChildren()}};
+  return {update,destroy(){destroyed=true;tableHandle?.destroy();clearTimeout(timer);container.removeEventListener('click',click);records.removeEventListener('click',click);document.removeEventListener('click',closeMenus);document.removeEventListener('keydown',closeMenus);records.remove();if(container.contains(form))container.replaceChildren()}};
 }
