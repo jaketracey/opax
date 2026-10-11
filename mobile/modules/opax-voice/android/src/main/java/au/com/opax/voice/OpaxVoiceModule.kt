@@ -1,5 +1,10 @@
 package au.com.opax.voice
 
+import android.app.Application
+import android.os.Handler
+import android.os.Looper
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleOwner
 import expo.modules.kotlin.exception.Exceptions
 import expo.modules.kotlin.functions.Coroutine
 import expo.modules.kotlin.modules.Module
@@ -24,6 +29,13 @@ class OpaxVoiceModule : Module() {
       val context = appContext.reactContext ?: throw Exceptions.ReactContextLost()
       val created = VoiceController.create(context) { appContext.currentActivity }
       controller = created
+      // The call ends in the background, as on iOS; no foreground service keeps it.
+      val application = context.applicationContext as Application
+      Handler(Looper.getMainLooper()).post {
+        val activity = appContext.currentActivity
+        val visible = (activity as? LifecycleOwner)?.lifecycle?.currentState?.isAtLeast(Lifecycle.State.STARTED) ?: (activity != null)
+        created.lifecycle.observe(application, visible)
+      }
       scope = CoroutineScope(SupervisorJob() + Dispatchers.Default).also {
         it.launch { created.core.events.collect { event -> sendEvent("onVoiceEvent", VoiceBridgeValue.event(event)) } }
         // A separate event, so levels never displace call events.
@@ -33,13 +45,11 @@ class OpaxVoiceModule : Module() {
     OnDestroy {
       scope?.cancel(); scope = null
       val owner = controller ?: return@OnDestroy
+      val application = appContext.reactContext?.applicationContext as? Application
+      if (application != null) Handler(Looper.getMainLooper()).post { owner.lifecycle.stopObserving(application) }
       controller = null
       CoroutineScope(Dispatchers.Default).launch { owner.shutdown() }
     }
-
-    // The call ends in the background, as on iOS; no foreground service keeps it.
-    OnActivityEntersBackground { controller?.lifecycle?.emit(LifecycleEvent.background) }
-    OnActivityEntersForeground { controller?.lifecycle?.emit(LifecycleEvent.foreground) }
 
     AsyncFunction("snapshot") Coroutine { -> voice.snapshot() }
     AsyncFunction("status") Coroutine { -> voice.status() }

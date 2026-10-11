@@ -7,7 +7,9 @@ import android.app.Activity
 import android.media.AudioManager
 import android.os.Looper
 import android.view.WindowManager
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.withTimeout
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
@@ -122,6 +124,25 @@ class AndroidAudioTests : SafeVoiceTest() {
     session.keepAwake(false)
     shadowOf(Looper.getMainLooper()).idle()
     assertEquals(0, activity.window.attributes.flags and WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+  }
+
+  @Test fun backgroundIsTheLastActivityStoppingNotAPause() = test {
+    val activity = Robolectric.buildActivity(Activity::class.java).setup()
+    val lifecycle = AndroidVoiceLifecycle()
+    lifecycle.observe(context, visible = true)
+    val events = mutableListOf<LifecycleEvent>()
+    val collecting = launch(Dispatchers.Unconfined) { lifecycle.events.collect { events += it } }
+    activity.pause() // a permission dialog or other window over the app
+    activity.resume()
+    assertEquals(emptyList<LifecycleEvent>(), events)
+    activity.pause().stop()
+    assertEquals(listOf(LifecycleEvent.background), events)
+    activity.start()
+    assertEquals(listOf(LifecycleEvent.background, LifecycleEvent.foreground), events)
+    lifecycle.stopObserving(context)
+    activity.stop()
+    assertEquals(2, events.size)
+    collecting.cancel()
   }
 
   /** A playback device that presents frames only when the test says so. */

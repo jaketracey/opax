@@ -2,6 +2,7 @@ package au.com.opax.voice
 
 import android.Manifest
 import android.app.Activity
+import android.app.Application
 import android.content.Context
 import android.content.pm.PackageManager
 import android.media.AudioAttributes
@@ -18,6 +19,7 @@ import android.media.audiofx.AudioEffect
 import android.media.audiofx.AutomaticGainControl
 import android.media.audiofx.NoiseSuppressor
 import android.os.Build
+import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.os.Process
@@ -593,6 +595,35 @@ class AndroidVoiceAudioSession(
 class AndroidVoiceLifecycle : VoiceLifecycle {
   private val channel = Channel<LifecycleEvent>(32, BufferOverflow.DROP_OLDEST)
   override val events: Flow<LifecycleEvent> = channel.receiveAsFlow()
+  private var started = 0 // main thread only
+
+  /**
+   * Background is the last visible activity stopping, as UIApplication's
+   * didEnterBackground. A dialog over the app, such as the permission prompt,
+   * only pauses it and ends nothing.
+   */
+  private val activities = object : Application.ActivityLifecycleCallbacks {
+    override fun onActivityStarted(activity: Activity) {
+      if (started++ == 0) emit(LifecycleEvent.foreground)
+    }
+    override fun onActivityStopped(activity: Activity) {
+      started = maxOf(0, started - 1)
+      if (started == 0 && !activity.isChangingConfigurations) emit(LifecycleEvent.background)
+    }
+    override fun onActivityCreated(activity: Activity, state: Bundle?) = Unit
+    override fun onActivityResumed(activity: Activity) = Unit
+    override fun onActivityPaused(activity: Activity) = Unit
+    override fun onActivitySaveInstanceState(activity: Activity, state: Bundle) = Unit
+    override fun onActivityDestroyed(activity: Activity) = Unit
+  }
 
   fun emit(event: LifecycleEvent) { channel.trySend(event) }
+
+  /** Call on the main thread; [visible] counts the activity already started. */
+  fun observe(application: Application, visible: Boolean) {
+    started = if (visible) 1 else 0
+    application.registerActivityLifecycleCallbacks(activities)
+  }
+
+  fun stopObserving(application: Application) { application.unregisterActivityLifecycleCallbacks(activities) }
 }
