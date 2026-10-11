@@ -440,6 +440,26 @@ describe('Sign in by code', () => {
     expect(mocked.consumeCode).toHaveBeenCalledWith(challengeId, '01234567');
     expect(onSignedIn).toHaveBeenCalledWith('signedIn');
   });
+  // Android, 12 October: a change on the sign-in screen committed with its
+  // pop crashed Fabric ("child already has a parent"). On success the screen
+  // closes with nothing on it changed.
+  test('a signed-in code closes the screen without changing it', async () => {
+    const onSignedIn = jest.fn();
+    const renderer = await toCode(onSignedIn);
+    const signIn = () =>
+      renderer.root.findByProps({ testID: 'account-sign-in-code' });
+    let release!: (value: { ok: true; value: VoiceStatus }) => void;
+    mocked.consumeCode.mockReturnValueOnce(
+      new Promise((resolve) => (release = resolve)),
+    );
+    await type(renderer, 'account-code', '01234567');
+    expect(signIn().props.loading).toBe(true);
+    const before = JSON.stringify(renderer.toJSON());
+    await act(async () => release({ ok: true, value: status() }));
+    expect(onSignedIn).toHaveBeenCalledWith('signedIn');
+    expect(JSON.stringify(renderer.toJSON())).toBe(before);
+    expect(signIn().props.loading).toBe(true);
+  });
   test('a wrong code gets the one answer and keeps the code to check', async () => {
     mocked.consumeCode.mockResolvedValueOnce({
       ok: false,

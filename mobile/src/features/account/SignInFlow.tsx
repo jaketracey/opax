@@ -50,10 +50,14 @@ export function SignInFlow({
   // Only a confirmed exchange for this attempt signs in and labels the
   // account with this address; status the exchange returned says which.
   function accepted(address: string, status: VoiceStatus) {
-    challenge.clear();
-    setCode('');
-    if (!status.signedIn && !status.accountHeld)
+    if (!status.signedIn && !status.accountHeld) {
+      challenge.clear();
+      setCode('');
+      setBusy(null);
       return refuse(refusalCopy.generic);
+    }
+    // Signed in: the screen closes now, so nothing on it changes while it
+    // leaves. On Android a change committed with the pop crashed Fabric.
     codeAccepted(address, status);
     onSignedIn(status.signedIn ? 'signedIn' : 'unavailable');
   }
@@ -96,8 +100,8 @@ export function SignInFlow({
     challenge.tried();
     const result = await voice.consumeCode(challenge.challenge.id, value);
     inFlight.current = false;
-    setBusy(null);
     if (result.ok) return accepted(sentTo, result.value);
+    setBusy(null);
     // A failure leaves the account as it was. A general status read cannot
     // say whose session it sees, so it never stands in for this exchange.
     refuse(consumeRefusal(result.error));

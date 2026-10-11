@@ -98,6 +98,22 @@ describe('Button', () => {
     });
     expect(texts(root)).toContain('Search people');
   });
+  // Android, 12 October: the label's view is never flattened, so loading
+  // changes only its opacity and never moves the label between native
+  // parents (Fabric crashed doing that during a screen pop).
+  test('loading never moves the label between native views', () => {
+    for (const loading of [false, true]) {
+      const root = render(
+        <Button label="Sign in" loading={loading} onPress={() => undefined} />,
+      );
+      const label = root.findAll(
+        (node) => node.type === NativeText && node.props.children === 'Sign in',
+      )[0]!;
+      let parent = label.parent;
+      while (parent && parent.type !== View) parent = parent.parent;
+      expect(parent?.props.collapsable).toBe(false);
+    }
+  });
   test('disabled is announced', () => {
     const root = render(
       <Button label="Show more" disabled onPress={() => undefined} />,
