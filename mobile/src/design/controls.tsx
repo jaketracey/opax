@@ -194,12 +194,13 @@ export function Button({
           const state = pressed && !inert ? states.pressed : resting;
           return (
             <>
-              {/* Never flattened. Loading toggles opacity, and a flattened
-                  view would move its label in and out of a native parent;
-                  on Android, Fabric crashed doing that while sign-in's
-                  screen was popping ("child already has a parent"). */}
+              {/* Never flattened on Android. Loading toggles opacity, and a
+                  flattened view would move its label in and out of a native
+                  parent; Fabric crashed doing that while sign-in's screen was
+                  popping ("child already has a parent"). UIKit reparents views
+                  itself, so iOS keeps build 34's tree. */}
               <View
-                collapsable={false}
+                collapsable={Platform.OS === 'android' ? false : undefined}
                 style={[styles.buttonContent, loading ? styles.hidden : null]}
               >
                 {icon ? <Icon name={icon} tone={state.label} /> : null}

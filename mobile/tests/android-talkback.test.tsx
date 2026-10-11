@@ -638,7 +638,13 @@ describe('accounts with TalkBack', () => {
         const { DeleteAccountFlow } = loaded.load<
           typeof import('../src/features/account/DeleteAccountFlow')
         >('../src/features/account/DeleteAccountFlow');
-        return <DeleteAccountFlow onCancel={jest.fn()} onDone={jest.fn()} />;
+        return (
+          <DeleteAccountFlow
+            onCancel={jest.fn()}
+            onDone={jest.fn()}
+            onSignIn={jest.fn()}
+          />
+        );
       });
       expectTargets(renderer);
       const confirm = JSON.stringify(renderer.toJSON());

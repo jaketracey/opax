@@ -1,5 +1,5 @@
 import { act, type ReactElement } from 'react';
-import { Text as NativeText, View } from 'react-native';
+import { Text as NativeText, Platform, View } from 'react-native';
 import TestRenderer, { type ReactTestInstance } from 'react-test-renderer';
 import {
   Button,
@@ -98,22 +98,43 @@ describe('Button', () => {
     });
     expect(texts(root)).toContain('Search people');
   });
-  // Android, 12 October: the label's view is never flattened, so loading
-  // changes only its opacity and never moves the label between native
-  // parents (Fabric crashed doing that during a screen pop).
-  test('loading never moves the label between native views', () => {
-    for (const loading of [false, true]) {
-      const root = render(
-        <Button label="Sign in" loading={loading} onPress={() => undefined} />,
-      );
-      const label = root.findAll(
-        (node) => node.type === NativeText && node.props.children === 'Sign in',
-      )[0]!;
-      let parent = label.parent;
-      while (parent && parent.type !== View) parent = parent.parent;
-      expect(parent?.props.collapsable).toBe(false);
-    }
-  });
+  // Android, 12 October: the label's view is never flattened there, so
+  // loading changes only its opacity and never moves the label between
+  // native parents (Fabric crashed doing that during a screen pop). iOS keeps
+  // build 34's tree.
+  test.each([
+    ['android', false],
+    ['ios', undefined],
+  ] as const)(
+    'on %s the label view is collapsable=%s whether loading or not',
+    (os, collapsable) => {
+      const original = Platform.OS;
+      Object.defineProperty(Platform, 'OS', { value: os, configurable: true });
+      try {
+        for (const loading of [false, true]) {
+          const root = render(
+            <Button
+              label="Sign in"
+              loading={loading}
+              onPress={() => undefined}
+            />,
+          );
+          const label = root.findAll(
+            (node) =>
+              node.type === NativeText && node.props.children === 'Sign in',
+          )[0]!;
+          let parent = label.parent;
+          while (parent && parent.type !== View) parent = parent.parent;
+          expect(parent?.props.collapsable).toBe(collapsable);
+        }
+      } finally {
+        Object.defineProperty(Platform, 'OS', {
+          value: original,
+          configurable: true,
+        });
+      }
+    },
+  );
   test('disabled is announced', () => {
     const root = render(
       <Button label="Show more" disabled onPress={() => undefined} />,

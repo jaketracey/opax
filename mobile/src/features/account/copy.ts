@@ -85,6 +85,7 @@ export const accountCopy = {
     'Your OPAX account, its personal data and your own discussions and replies have been removed from OPAX’s live database. Its recovery history keeps them for up to 30 days, then they are gone. This iPhone is signed out. Everything public in the app keeps working.',
   ),
   done: 'Done',
+  signInAgain: 'Sign in again',
 } as const;
 
 export const refusalCopy = {
@@ -101,6 +102,11 @@ export const refusalCopy = {
     'Sign-in is not available right now. Please try again shortly.',
   deletionUnavailable:
     'Deletion is not available right now. Please try again shortly.',
+  // The device's credential store failed: the native core signed this device
+  // out, but the Worker was never asked to delete the account.
+  deletionSignedOutHere: phoneCopy(
+    'This iPhone is signed out, but your account was not deleted. Sign in again to finish deleting it.',
+  ),
   signedOut: 'You are signed out. Sign in again to delete your account.',
   generic: 'That did not work. Please try again.',
 } as const;

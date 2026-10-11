@@ -27,7 +27,7 @@ export type SignInOutcome = 'signedIn' | 'unavailable';
 
 /**
  * Sign in by emailed code (IOS-UX 4.11): the address, then the eight-digit
- * code. The Talk sheet can host it too; `onSignedIn` decides where to go.
+ * code. `onSignedIn` decides where to go.
  */
 export function SignInFlow({
   onSignedIn,
