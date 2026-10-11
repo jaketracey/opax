@@ -20,6 +20,7 @@ export interface QueueRow {
   names_rejected: number
   historic: number
   historic_released: number
+  batch_run: string | null
   terminal_reason: TerminalReason | null
   transient: number
   force: number

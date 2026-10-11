@@ -33,7 +33,7 @@ for (const source of sourceLabels) for (const scenario of scenarios) {
   if(scenario==='flush-full-read-failure') kb.getResource=async()=>{throw new (await load('src/kb.ts')).KbBackpressure('full-read backpressure',429)};
  }
  const stats=await runTick(deps); delete stats.ms; delete stats.skippedShort; delete stats.rejectedNames;
- const q=rows(raw,'SELECT * FROM queue');q.forEach(r=>{delete r.names_rejected;delete r.terminal_reason;delete r.historic;delete r.historic_released});
+ const q=rows(raw,'SELECT * FROM queue');q.forEach(r=>{delete r.names_rejected;delete r.terminal_reason;delete r.historic;delete r.historic_released;delete r.batch_run});
  const state=rows(raw,"SELECT key,value FROM state WHERE key != 'last_tick' ORDER BY key");
  const spent=rows(raw,'SELECT * FROM spend ORDER BY day,model');
  const modelHash=createHash('sha256').update(JSON.stringify(ai.calls)).digest('hex');
