@@ -1,3 +1,4 @@
+import {tablePrivacy} from './table-privacy'
 import { divisionPlain } from '../public/division-markdown.js'
 import { runSocialPublication, socialStatus, socialEngagement, publicationCopy, previewPublication, todayRedirect, CHANNELS, type Channel } from './social-publication'
 import { positionEvidence, positionProposalQuote, positionEligibilityQuotes, positionCostQuote, isPositionEligibilityQuestion, isPositionCostQuestion, isPositionDetailQuestion, positionPointSupported, normalizePositionDraft } from './position-evidence'
@@ -5621,6 +5622,7 @@ export default {
     if (url.pathname === '/.well-known/atproto-did') return /^did:plc:[a-z2-7]{24}$/.test(env.BSKY_DID ?? '')
       ? new Response(env.BSKY_DID, { headers: { 'content-type': 'text/plain; charset=utf-8', 'cache-control': 'public, max-age=300' } })
       : new Response('Not found', { status: 404 })
+    if (url.pathname === '/api/table/privacy') return withSecurityHeaders(await tablePrivacy(request, env.ASSETS), url)
     const isApi = url.pathname.startsWith('/api/')
     const communityResponse = (response: Response) => { const secured = withSecurityHeaders(response, url); if (env.STAGING_API) secured.headers.set('x-robots-tag', 'noindex, nofollow'); return secured }
     // Public app adapters use this Worker's journal/assets, before any staging

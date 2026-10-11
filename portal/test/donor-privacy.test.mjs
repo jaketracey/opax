@@ -17,7 +17,8 @@ import {personIndex} from '../src/person-slug.ts';
 import {buildCrawl} from '../../scripts/build_crawl_catalog.mjs';
 import {buildGrowth} from '../../scripts/build_growth_modules.mjs';
 import {moduleOutputs} from './growth-module-harness.mjs';
-import {applyQuery,toCSV,serializeQuery} from '../public/datatable.js';
+import {applyQuery,dataTableHTML,mountDataTable,toCSV,serializeQuery} from '../public/datatable.js';
+import {tableHarness} from './datatable-harness.mjs';
 import {interestTableData,interestTableConfig,partyMoneyData,partyMoneyTableConfig,guardRegisterQuery} from '../public/register-tables.js';
 
 const pub = new URL('../public/', import.meta.url).pathname;
@@ -695,4 +696,79 @@ test('the published search catalogue holds no donor, receipt, meeting or campaig
     }
   }
   assert.ok(records > 100000);
+});
+
+const tablePhrases=withheldPhrases(graphs,[]);
+
+test('money tables withhold every derived donor in client and server rows, facets and CSV', () => {
+  for (const [i,graph] of graphs.entries()) {
+    const rows = graph.nodes.filter(n=>n.kind === 'donor');
+    const config = {id:`privacy-table-${i}`,caption:'Receipts',privacy:'donors',pageType:'money',privacyCheck:value=>!namesWithheldPhrase(tablePhrases,`donor receipts ${value}`),rows,
+      columns:[{key:'label',label:'Organisation',type:'text',primary:true,facet:'multi'}, {key:'industry',label:'Sector',type:'category',facet:'chips'}, {key:'total',label:'Amount',type:'money',facet:'range'}]};
+    const page = applyQuery(rows,config,{pageSize:50000});
+    assert.ok(page.rows.every(isOrganisationDonor),`table ${i}: unsafe row`);
+    assert.equal(page.total,rows.filter(isOrganisationDonor).length,`table ${i}: organisation count`);
+    assertClean(`table ${i}: rows and facets`,JSON.stringify(page));
+    assertClean(`table ${i}: client SSR`,dataTableHTML(config,page));
+    assertClean(`table ${i}: client CSV`,toCSV(rows,config));
+    const source = {...config,rows:undefined,source:{endpoint:'/__fixtures/table/money'}};
+    // Refuse unsafe donor facets even if the endpoint accidentally supplies them.
+    const facets = {...page.facets,label:rows.map(row=>({value:row.label,count:1}))};
+    assertClean(`table ${i}: server SSR`,dataTableHTML(source,{...page,facets}));
+    assertClean(`table ${i}: unsafe server page`,dataTableHTML(source,{rows,total:rows.length,page:1,pageSize:50000,facets}));
+    assertClean(`table ${i}: server CSV`,toCSV(rows,source));
+  }
+});
+
+test('money table hydration removes all derived withheld names and aliases from URL state', async () => {
+  let queries = 0;
+  for (const [i,graph] of graphs.entries()) {
+    const donors = graph.nodes.filter(n=>n.kind === 'donor');
+    const organisation = donors.find(isOrganisationDonor);
+    for (const node of donors.filter(n=>!isOrganisationDonor(n))) {
+      for (const value of [node.label,...(node.aliases || [])]) {
+        if (!namesWithheldPhrase(tablePhrases,`donor receipts ${value}`)) continue;
+        const config = {id:`privacy-url-${i}`,caption:'Receipts',privacy:'donors',pageType:'money',urlKey:'t',privacyCheck:value=>!namesWithheldPhrase(tablePhrases,`donor receipts ${value}`),rows:[organisation],
+          columns:[{key:'label',label:'Organisation',type:'text',primary:true,facet:'multi'},{key:'total',label:'Amount',type:'money'},{key:'industry',label:'Sector',type:'category',facet:'multi'}]};
+        const params = new URLSearchParams({'t.q':value,'t.f.label':JSON.stringify([value]),'t.f.industry':JSON.stringify([value]),campaign:'fixture'});
+        const harness = tableHarness(`http://localhost/money?${params}`);
+        const mounted = mountDataTable(harness.root,config);
+        await new Promise(setImmediate);
+        const url = new URL(harness.win.location.href);
+        assert.equal(url.searchParams.has('t.q'),false,`query ${queries}: search echo`);
+        assert.equal(url.searchParams.has('t.f.label'),false,`query ${queries}: facet echo`);
+        assert.equal(url.searchParams.has('t.f.industry'),false,`query ${queries}: secondary facet echo`);
+        assert.equal(url.searchParams.get('campaign'),'fixture');
+        assertClean(`query ${queries}: HTML`,harness.html());
+        mounted.destroy();
+        const server = tableHarness(`http://localhost/money?${params}`);
+        server.win.fetch = async () => Response.json({rows:[],total:0,page:1,pageSize:50,facets:{}});
+        const serverMount = mountDataTable(server.root,{...config,rows:undefined,source:{endpoint:'/__fixtures/table/money'}});
+        await new Promise(setImmediate);
+        const serverURL = new URL(server.win.location.href);
+        assert.equal(serverURL.searchParams.has('t.q'),false,`query ${queries}: server search echo`);
+        assert.equal(serverURL.searchParams.has('t.f.label'),false,`query ${queries}: server facet echo`);
+        assert.equal(serverURL.searchParams.has('t.f.industry'),false,`query ${queries}: server secondary facet echo`);
+        assertClean(`query ${queries}: server HTML`,server.html());
+        serverMount.destroy(); queries++;
+      }
+    }
+  }
+  assert.ok(queries > 400,'the full derived withheld set and aliases were checked');
+});
+
+test('table privacy boundary validates the shared index without reflecting input',async ()=>{
+  let checked=0;
+  for (const graph of graphs) for (const node of graph.nodes.filter(n=>n.kind === 'donor' && !isOrganisationDonor(n))) {
+    for (const value of [node.label,...(node.aliases || [])]) {
+      if (!namesWithheldPhrase(tablePhrases,`donor receipts ${value}`)) continue;
+      const response=await fetchWorker('/api/table/privacy',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({text:value})});
+      assert.equal(response.status,200,`validation ${checked}: status`);
+      assert.deepEqual(await response.json(),{safe:false},`validation ${checked}: rejected`);
+      assert.equal(response.headers.get('cache-control'),'no-store');checked++;
+    }
+  }
+  assert.ok(checked > 400);
+  const response=await fetchWorker('/api/table/privacy',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({text:'Infrastructure'})});
+  assert.deepEqual(await response.json(),{safe:true});
 });
