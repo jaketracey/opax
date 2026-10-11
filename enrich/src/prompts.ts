@@ -22,6 +22,9 @@ export interface PromptRecord {
   words: number
   /** Already clipped (text.clip). */
   text: string
+  historic?: boolean
+  /** Not sent to the model; used only for name provenance. */
+  nameText?: string
 }
 
 const INTRO =
@@ -42,12 +45,13 @@ const shapeLine = (tasks: readonly Task[]): string =>
   tasks.length === 2 ? '{"summary": "<one sentence>", "topics": ["<slug>", ...]}' : tasks[0] === 'summary' ? '{"summary": "<one sentence>"}' : '{"topics": ["<slug>", ...]}'
 
 /** The system message for the tasks outstanding on a record (bake-off build_system when both). */
-export function buildSystemPrompt(tasks: readonly Task[]): string {
+export function buildSystemPrompt(tasks: readonly Task[], historic = false): string {
   const wantSummary = tasks.includes('summary')
   const wantTopics = tasks.includes('topics')
   const ordered: Task[] = [...(wantSummary ? (['summary'] as const) : []), ...(wantTopics ? (['topics'] as const) : [])]
   const sections: string[] = []
   if (wantSummary) sections.push(SUMMARY_SECTION)
+  if (wantSummary && historic) sections.push('HISTORIC HANSARD\nDescribe private individuals by role, not by name. Use only names and capitalised terms from the supplied unit text, except parliamentary roster names and common Australian parliamentary terms. Do not introduce or infer names, places or organisations.')
   if (wantTopics) sections.push(TOPICS_SECTION, `TAXONOMY\n${taxonomyBlock()}`)
   sections.push(
     `OUTPUT\nReturn only the JSON object, with no markdown fences and no commentary, in exactly this shape:\n${shapeLine(ordered)}\nDo not call tools or external APIs.`,
@@ -70,7 +74,7 @@ export function buildRecordMessage(record: PromptRecord): string {
 }
 
 /** The user message: the record, plus (on a retry) the validator's complaints. */
-export function buildUserPrompt(record: PromptRecord, complaints: readonly string[] = []): string {
+export function buildUserPrompt(record: PromptRecord, complaints: readonly string[] = [], offendingTerms: readonly string[] = []): string {
   let prompt = buildRecordMessage(record)
   if (complaints.length) {
     // codex_enrichment_loop.main(): the validator's complaints go back with the retry.
@@ -78,12 +82,17 @@ export function buildUserPrompt(record: PromptRecord, complaints: readonly strin
       '\n\nThe previous attempt failed these checks. Rewrite every value and return the complete object:\n- ' +
       complaints.slice(0, 20).join('\n- ')
   }
+  if (record.historic && offendingTerms.length) {
+    // Transient model input only: never add these terms to stored complaints or logs.
+    prompt += '\n\nThe previous brief contained these unsupported terms: ' + JSON.stringify(offendingTerms)
+      + '. Rewrite the brief without them; use only names that appear in the speech. Describe private individuals by role and keep the brief meaningful.'
+  }
   return prompt
 }
 
-export function buildMessages(record: PromptRecord, tasks: readonly Task[], complaints: readonly string[] = []) {
+export function buildMessages(record: PromptRecord, tasks: readonly Task[], complaints: readonly string[] = [], offendingTerms: readonly string[] = []) {
   return [
-    { role: 'system', content: buildSystemPrompt(tasks) },
-    { role: 'user', content: buildUserPrompt(record, complaints) },
+    { role: 'system', content: buildSystemPrompt(tasks, record.historic) },
+    { role: 'user', content: buildUserPrompt(record, complaints, offendingTerms) },
   ]
 }

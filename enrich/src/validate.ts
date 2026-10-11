@@ -8,11 +8,168 @@
 
 import { MAX_TOPIC_LABELS, TOPIC_SLUGS } from './topics.ts'
 import { squash, wordCount } from './text.ts'
+import historicNames from './historic-names.json' with { type: 'json' }
+import historicWords from './historic-words.json' with { type: 'json' }
+import geography from './historic-geography.json' with { type: 'json' }
+import historicOffices from './historic-offices.json' with { type: 'json' }
 
 export interface SourceRecord {
   title?: string
   /** The clipped text the model was shown: the only place a figure may come from. */
   text: string
+  /** Enables the historic-only capitalised-term provenance check. */
+  historic?: boolean
+  /** Full unit text for name provenance; figures still use the clipped model input. */
+  nameText?: string
+}
+
+export const NAMES_PROBLEM = 'unsupported capitalised term; use only names that appear in the speech; describe private individuals by role'
+
+/** Punctuation normalisation for both source support and capitalised terms. */
+export const normaliseTermText = (s: string): string => s.normalize('NFKC')
+  .replace(/[’‘ʼ`]/g, "'").replace(/[‐‑‒–—−]/g, '-')
+  .replace(/\s+/gu, ' ').trim()
+
+const TERM_WORD = /[\p{L}\p{M}\p{N}]+(?:['-][\p{L}\p{M}\p{N}]+)*/gu
+
+/** Whole lexical terms; possessives and surrounding punctuation are grammatical. */
+export const nameKey = (s: string): string =>
+  (normaliseTermText(s).replace(/'s\b/gi, '').toLowerCase().match(TERM_WORD) ?? []).join(' ')
+
+const ROSTER_NAMES = new Set(historicNames.names.split('\n').map(nameKey))
+
+// Reviewed closed list. No electorates, street/geographic prefixes or
+// institution suffix exemptions.
+// Membership is for the ENTIRE candidate: "Government Zelara" is not Government.
+export const NON_PERSON_TERMS = [
+  'New South Wales', 'Victoria', 'Queensland', 'South Australia', 'Western Australia',
+  'Tasmania', 'Northern Territory', 'Australian Capital Territory',
+  'NSW', 'VIC', 'QLD', 'SA', 'WA', 'TAS', 'NT', 'ACT',
+  'Sydney', 'Melbourne', 'Brisbane', 'Adelaide', 'Perth', 'Hobart', 'Darwin', 'Canberra',
+  'Parliament', 'House', 'Senate', 'Commonwealth', 'Australia', 'Australian',
+  'Government', 'Opposition', 'Minister', 'Bill', 'Act', 'Committee', 'Department',
+  'Treasurer', 'Speaker', 'President', 'Premier', 'Prime Minister', 'Deputy Prime Minister',
+  'Deputy Treasurer', 'Mr Speaker', 'Madam Speaker', 'Mr President', 'Madam President',
+  'Mr Deputy Speaker', 'Mr Deputy President',
+  'Labor', 'Liberal', 'National', 'Greens', 'Australian Labor Party', 'Labor Party',
+  'Liberal Party', 'National Party', 'Country Party', 'Australian Democrats',
+  'Australian Greens', 'One Nation', 'Liberal National Party',
+  'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September',
+  'October', 'November', 'December', 'Monday', 'Tuesday', 'Wednesday', 'Thursday',
+  'Friday', 'Saturday', 'Sunday',
+] as const
+const NON_PERSON_KEYS = new Set(NON_PERSON_TERMS.map(nameKey))
+
+export const OFFICE_TERMS = [
+  'Prime Minister', 'Deputy Prime Minister', 'Chief Minister', 'First Minister',
+  'Foreign Minister', 'Defence Minister', 'Finance Minister', 'Foreign Secretary',
+  'Health Minister', 'Education Minister', 'Trade Minister', 'Environment Minister',
+  'Agriculture Minister', 'Immigration Minister', 'Industry Minister', 'Transport Minister',
+  'Communications Minister', 'Resources Minister', 'Employment Minister', 'Housing Minister',
+  'Treasurer', 'Assistant Treasurer', 'Deputy Treasurer', 'Shadow Treasurer',
+  'Speaker', 'Deputy Speaker', 'Acting Speaker', 'President', 'Deputy President',
+  'Acting President', 'President of the Senate', 'Leader of the House',
+  'Leader of the Senate', 'Leader of the Government', 'Leader of the Opposition',
+  'Deputy Leader', 'Deputy Leader of the Opposition', 'Opposition Leader',
+  'Leader of the Government in the Senate', 'Leader of the Opposition in the Senate',
+  'Attorney-General', 'Solicitor-General', 'Governor-General', 'Governor',
+  'Attorney General', 'Solicitor General', 'Governor General',
+  'Government Whip', 'Opposition Whip', 'Chief Government Whip', 'Chief Opposition Whip',
+  'Chairman of Committees', 'Chair of Committees', 'Deputy Leader of Opposition',
+  'Leader of the Federal Opposition',
+  'Premier', 'Deputy Premier', 'Parliamentary Secretary', 'Parliamentary Under-Secretary',
+  'Minister of State', 'Minister for Foreign Affairs', 'Minister for Defence',
+  'Minister for Finance', 'Minister for Health', 'Minister for Health and Aged Care',
+  'Minister for Education', 'Minister for Education and Training',
+  'Minister for Agriculture', 'Minister for Transport', 'Minister for Regional Development',
+  'Minister for Immigration', 'Minister for Immigration and Multicultural Affairs',
+  'Minister for the Environment', 'Minister for Social Security',
+  'Minister for Employment and Workplace Relations', 'Minister for Trade',
+  'Minister for Industry', 'Minister for Communications', 'Minister for Veterans Affairs',
+  'Shadow Minister', 'Shadow Minister for Foreign Affairs', 'Shadow Minister for Defence',
+  'Shadow Minister for Health', 'Shadow Minister for Education', 'Senator', 'Justice',
+] as const
+export const OFFICE_KEYS = new Set([...OFFICE_TERMS, ...historicOffices.offices.split('\n')].map(nameKey))
+const COUNTRY_KEYS = new Set((geography.countries + '\n' + geography.demonyms).split('\n').map(nameKey))
+const DICTIONARY_KEYS = new Set(historicWords.words.split('\n'))
+// Join "and" only inside the grammar of a declared whole office/country phrase.
+// This changes token boundaries, never grants a partial-phrase exemption.
+const AND_PREFIXES = new Set([...OFFICE_KEYS, ...COUNTRY_KEYS].flatMap(key => {
+  const words = key.split(' ')
+  return words.flatMap((word, i) => word === 'and' ? [words.slice(0, i).join(' ')] : [])
+}))
+
+/** Exempt the entire term, never a known prefix followed by an unknown name. */
+export function allowedHistoricTerm(term: string): boolean {
+  const key = nameKey(term)
+  return NON_PERSON_KEYS.has(key) || OFFICE_KEYS.has(key) || COUNTRY_KEYS.has(key)
+    || /^[A-Z]{2,6}$/.test(term)
+    || (/^[a-z]+(?:['-][a-z]+)*$/.test(key) && DICTIONARY_KEYS.has(key))
+}
+
+// Only sentence-initial words get this exception, including the existing brief
+// prompt's action verbs. A capitalised occurrence elsewhere still needs support.
+const SENTENCE_OPENERS = new Set([
+  'a', 'an', 'the', 'this', 'that', 'these', 'those', 'it', 'its', 'he', 'she', 'they',
+  'we', 'i', 'in', 'on', 'at', 'by', 'for', 'from', 'to', 'with', 'as', 'if', 'but',
+  'and', 'or', 'there', 'their', 'his', 'her', 'our',
+  'asked', 'argued', 'announced', 'moved', 'reported', 'paid', 'urged', 'called',
+  'supported', 'opposed', 'said', 'noted', 'outlined', 'explained', 'warned',
+  'welcomed', 'proposed', 'discussed', 'questioned', 'thanked', 'commended',
+])
+const ORIGINAL_CONNECTORS = new Set(['of', 'de', 'la', 'van'])
+const CONNECTORS = new Set([...ORIGINAL_CONNECTORS, 'for', 'the'])
+const CAPITAL_WORD = /^(?:[\p{Lu}\p{Lt}]|[\p{L}\p{M}]+['-][\p{Lu}\p{Lt}])/u
+const JOIN = /^[\s'-]+$/u
+
+/** Maximal capitalised terms; no attempt to distinguish people from places. */
+export function capitalisedTerms(value: string, originalRuns = false): string[] {
+  const text = normaliseTermText(value)
+  const connectors = originalRuns ? ORIGINAL_CONNECTORS : CONNECTORS
+  const words = [...text.matchAll(TERM_WORD)]
+  const terms: string[] = []
+  const isCapital = (i: number): boolean => CAPITAL_WORD.test(words[i][0])
+  const sentenceInitial = (i: number): boolean => {
+    const start = i ? words[i - 1].index! + words[i - 1][0].length : 0
+    const gap = text.slice(start, words[i].index!)
+    return i === 0 || /[.!?]/u.test(gap)
+  }
+  for (let i = 0; i < words.length; i++) {
+    if (!isCapital(i) || (sentenceInitial(i) && SENTENCE_OPENERS.has(words[i][0].toLowerCase()))) continue
+    const start = words[i].index!
+    let end = start + words[i][0].length
+    // Connectors count only when followed by another capitalised word. The
+    // entire run is checked, even if some of its words are individually allowed.
+    while (i + 1 < words.length) {
+      let next = i + 1
+      let previousEnd = end
+      while (next < words.length && (connectors.has(words[next][0])
+        || (!originalRuns && words[next][0] === 'and' && AND_PREFIXES.has(nameKey(text.slice(start, previousEnd)))))) {
+        if (!JOIN.test(text.slice(previousEnd, words[next].index!))) break
+        previousEnd = words[next].index! + words[next][0].length
+        next++
+      }
+      if (next >= words.length || !isCapital(next) || !JOIN.test(text.slice(previousEnd, words[next].index!))) break
+      i = next
+      end = words[i].index! + words[i][0].length
+    }
+    terms.push(text.slice(start, end))
+  }
+  return terms
+}
+
+/** Private transient data: use only in the corrective model prompt, never diagnostics. */
+export function unsupportedHistoricTerms(summary: string, unitText: string): string[] {
+  const source = ` ${nameKey(unitText)} `
+  return [...new Set(capitalisedTerms(summary).filter((term) => {
+    const key = nameKey(term)
+    return !source.includes(` ${key} `) && !ROSTER_NAMES.has(key) && !allowedHistoricTerm(term)
+  }))]
+}
+
+/** Historic guard against novelty. Diagnostics never contain candidate text. */
+export function hasNewPersonalName(summary: string, unitText: string): boolean {
+  return unsupportedHistoricTerms(summary, unitText).length > 0
 }
 
 // codex_enrichment_loop.validate_payload limits (stricter than summary_workers' 800).
@@ -91,6 +248,7 @@ const stripCommas = (s: string): string => s.replaceAll(',', '')
 export function validateSummary(value: unknown, item: SourceRecord): string[] {
   if (typeof value !== 'string') return ['brief is not a string']
   const problems: string[] = []
+  if (item.historic && hasNewPersonalName(value, item.nameText ?? item.text)) problems.push(NAMES_PROBLEM)
 
   // --- codex_enrichment_loop.validate_payload ---
   const words = wordCount(value)

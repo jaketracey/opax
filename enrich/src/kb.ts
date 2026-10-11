@@ -122,6 +122,11 @@ export class Kb implements KbApi {
     return this.call('GET', `/resource/${rid}?show=basic`, undefined, true)
   }
 
+  /** Admin reconciliation resolves only successful push-log slugs. */
+  getBySlug(slug: string): Promise<KbResource | null> {
+    return this.call('GET', `/slug/${encodeURIComponent(slug)}?show=basic`, undefined, true)
+  }
+
   async getSummaryBody(rid: string): Promise<string> {
     const d = await this.call('GET', `/resource/${rid}/text/${FIELD}`, undefined, true)
     const body = d?.value?.body
