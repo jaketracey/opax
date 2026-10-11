@@ -52,7 +52,7 @@ a corrected, unambiguous fresh-day record can subsequently load normally.
 The real loader proof for 15–17 September copied 508 federal API rows and the
 member table from the read-only DB, preserving the citation high-water mark.
 All six chamber-days added **0** rows and retained every original row byte for
-byte. It reconciled 54 XML speeches, including `speech-1319216`; 1,755 XML
+byte. It reconciled 49 XML speeches, including `speech-1319216`; 1,760 XML
 speeches remained unmatched and were held. The fresh sitting fixture adds one
 row; a second gid with the same normalized body adds none.
 
@@ -228,8 +228,8 @@ lane. No separate permissive XML licence is claimed on that evidence.
 
 ## Validation
 
-The touched pytest gate passes **76 tests and 47 subtests**. The complete
-`python3 -m pytest` run passes **1,153 tests**, using cached local dependencies.
+The rejected-identity and schema export fixtures pass **70 tests and 32 subtests**.
+The complete `python3 -m pytest` run passes **1,163 tests**, using cached local dependencies.
 `scripts/vm/test_nightly.sh` passes **301 checks, zero failures**, including
 real speech loading in both chambers, zero-byte days and idempotent reruns.
 The revision gates include XML reconciliation, cache refusal/validation,

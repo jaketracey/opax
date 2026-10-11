@@ -16,6 +16,9 @@ set -uo pipefail
 # its seed commit: recompilation after cloning leaves tracked changes that
 # randomly block the push-race rebase when the seed/run cross a second boundary.
 export PYTHONDONTWRITEBYTECODE=1
+# Baseline scenarios exercise a daily refresh. Calendar scenarios below set
+# their own dates; the real weekday must not silently run the weekly fixture.
+export OPAX_TODAY=2026-10-10
 
 SRC="${OPAX_TEST_SRC:-$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)}"
 WORK=$(mktemp -d)
