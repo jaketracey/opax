@@ -1,4 +1,3 @@
-import {recipientIdentityIndex} from '../portal/src/recipient-index.mjs';
 import {contractTitle,placeholderContract,ausTenderURL} from '../portal/public/contracts-table.js';
 import {readFile, readdir, mkdir, writeFile, rm} from 'node:fs/promises';
 import {fileURLToPath} from 'node:url';
@@ -6,11 +5,12 @@ import {join, resolve} from 'node:path';
 import {createHash} from 'node:crypto';
 import {TABLE_DATASETS} from '../portal/src/table-datasets.mjs';
 import {isOrganisationRecipient} from '../portal/src/table-recipient.mjs';
-import {identityVariants, compileIdentityCheck} from '../portal/src/table-identities.mjs';
+import {identityVariants, compileIdentityCheck, publicationIdentityCheck, strippedLengths, STRIPPED_PREFIX, STRIPPED_CONTAINS_MIN_LENGTH} from '../portal/src/table-identities.mjs';
 import {tableSchema,tableName,quote,arrayColumns} from './table-schema.mjs';
 import {MONEY_GRAPHS, isOrganisationDonor, withheldPhrases} from '../portal/public/donor-entity.js';
 import {moneyFlowType} from '../portal/public/money-records.js';
 import {tablePrivacyCheck} from '../portal/src/table-privacy.mjs';
+import {sourceTableDonorIdentities} from './table_identity_source.mjs';
 
 const defaultRoot = fileURLToPath(new URL('../portal/public/', import.meta.url));
 export async function interestTableRows(root, graphs) {
@@ -111,26 +111,61 @@ export async function tableRows(root = defaultRoot, {moneyOnly = false, graphs: 
 export async function tableIdentityIndex(root = defaultRoot, suppliedGraphs) {
   const read = async path => JSON.parse(await readFile(join(root,path),'utf8'));
   const graphs = suppliedGraphs || await Promise.all(MONEY_GRAPHS.map(path=>read(path.slice(1))));
-  const phrases = new Set(), suppliers = new Set();
-  const add = entity => {
+  const phrases = new Set(), recipientPhrases = new Set(), suppliers = new Set();
+  const add = (entity, recipient = false) => {
     const values = [entity.label,entity.name,entity.n,entity.abn,entity.abr?.abn,entity.identity?.legal_name,entity.abr?.name,entity.abr?.legal_name, ...(entity.aliases || []), ...(entity.lookup_names || [])];
     for (const id of [entity.id,entity.canonical_id]) {if (String(id || '').startsWith('person:')) values.push(String(id).slice(7));if (/^(?:abn:)?\d{11}$/.test(String(id || ''))) values.push(String(id).replace(/^abn:/,''));}
-    for (const value of values.filter(v=>typeof v==='string'||typeof v==='number')) for (const p of identityVariants(value)) phrases.add(p);
+    for (const value of values.filter(v=>typeof v==='string'||typeof v==='number')) for (const p of identityVariants(value)) {phrases.add(p);if(recipient)recipientPhrases.add(p);}
   };
+  const source=sourceTableDonorIdentities();
+  for(const entity of source.entities)add(entity);
   for (const graph of graphs) for (const node of graph.nodes) if (node.kind==='donor' && !isOrganisationDonor(node)) add(node);
-  const recipients=await recipientIdentityIndex(path=>read(path.replace(/^\//,'')));
-  for(const p of recipients.phrases) phrases.add(p);
-  for(const id of recipients.suppliers) suppliers.add(id);
+  const donorPhrases=new Set(phrases),donorCheck=compileIdentityCheck(donorPhrases);
+  const politicalSuppliers=new Set([...source.supplierProfiles].filter(([,profile])=>donorCheck(JSON.stringify([profile.name,profile.abn,profile.identity?.legal_name,...profile.aliases || [],...profile.lookup_names || [],...profile.donor_links || []]))).map(([id])=>id));
+  for(const entity of source.recipients)add(entity,true);
+  for(const id of source.suppliers)suppliers.add(id);
+  const profiles = new Map();
+  for (const file of (await readdir(join(root,'suppliers'))).filter(f=>f.endsWith('.json')).sort()) {
+    for (const s of Object.values((await read('suppliers/'+file)).profiles)) {
+      profiles.set(String(s.id),s);
+      if (!isOrganisationRecipient({...s,...s.identity})) {suppliers.add(String(s.id));add(s,true);}
+    }
+  }
+  for (const s of (await read('suppliers.json')).suppliers) {
+    const profile = profiles.get(String(s.id));
+    if (!isOrganisationRecipient(profile ? {...s,...profile,...profile.identity} : s)) {suppliers.add(String(s.id));add(s);}
+  }
+  for (const jur of ['federal','qld']) {
+    for (const r of (await read(`graph/grants.${jur}.json`)).recipients) if (!isOrganisationRecipient(r)) add(r,true);
+    for (const file of (await readdir(join(root,'grants',jur))).filter(f=>f.startsWith('shard-') && f.endsWith('.json')).sort()) for (const r of Object.values(await read(`grants/${jur}/${file}`))) if (!isOrganisationRecipient(r)) add(r);
+  }
   const lengths = [...new Set([...phrases].map(p=>p.split(' ').length))].sort((a,b)=>a-b);
-  return {phrases,suppliers,lengths,check:compileIdentityCheck(phrases),recipientCheck:recipients.check,recipientPhrases:recipients.phrases};
+  const agencyNames=(await read('agencies.json')).agencies.map(agency=>agency.name);
+  return {phrases,donorPhrases,suppliers,politicalSuppliers,profiles,lengths,strippedLengths:strippedLengths(phrases),check:compileIdentityCheck(phrases),recipientPhrases,recipientCheck:publicationIdentityCheck(compileIdentityCheck(recipientPhrases),agencyNames)};
+}
+export function tableIdentityHashes(policy, selectors = false) {
+  const hash=value=>createHash('sha256').update(value).digest('hex');
+  return [...policy.phrases].map(p=>({hash:hash(p),words:p.split(' ').length,...(selectors ? p.startsWith(STRIPPED_PREFIX)
+    ? {characters:p.length-STRIPPED_PREFIX.length,compactPrefix:hash(p.slice(STRIPPED_PREFIX.length,STRIPPED_PREFIX.length+STRIPPED_CONTAINS_MIN_LENGTH))}
+    : {first:hash(p.split(' ')[0])} : {})})).sort((a,b)=>a.hash.localeCompare(b.hash));
+}
+export function tablePrivacyRegistry(policy) {
+  return {version:1,identities:tableIdentityHashes(policy,true),strippedLengths:policy.strippedLengths,
+    donorIdentities:tableIdentityHashes({phrases:policy.donorPhrases},true),donorStrippedLengths:strippedLengths(policy.donorPhrases),
+    recipientIdentities:tableIdentityHashes({phrases:policy.recipientPhrases},true),recipientStrippedLengths:strippedLengths(policy.recipientPhrases),withheldSuppliers:[...policy.suppliers],politicalSuppliers:[...policy.politicalSuppliers]};
+}
+export function tableRegistryFingerprint(policy) {
+  return createHash('sha256').update(tableIdentityHashes(policy).map(e=>e.hash).join('\n')).digest('hex');
 }
 const literal = value => value == null ? 'NULL' : typeof value === 'number' && Number.isFinite(value) ? String(value) : "'" + String(value).replaceAll("'","''") + "'";
 
 /** Sanitised SQL chunks live outside public/. No raw source snapshot is copied. */
 export async function buildTableSQL({root=defaultRoot,output=fileURLToPath(new URL('../portal/private/dt-api/sql/',import.meta.url)),datasets,policy}={}) {
   if (!datasets) {const loaded=await tableRows(root);datasets=loaded.rows;policy=loaded.policy;}
+  policy ||= await tableIdentityIndex(root);
   await mkdir(output,{recursive:true});
   for (const file of await readdir(output)) if (/^\d+-.*\.sql$|^manifest\.json$/.test(file)) await rm(join(output,file));
+  const fingerprint=tableRegistryFingerprint(policy || {phrases:new Set()});
   const files=[],counts={};let bytes=0,part=0;
   const put=async (suffix,sql)=>{const file=String(part++).padStart(4,'0')+'-'+suffix+'.sql';await writeFile(join(output,file),sql);files.push(file);bytes+=Buffer.byteLength(sql);};
   let setup=tableSchema();
@@ -146,12 +181,13 @@ export async function buildTableSQL({root=defaultRoot,output=fileURLToPath(new U
     if (sql.length>2_000_000) await flush('privacy');
   }
   sql+=`INSERT INTO table_meta VALUES ('privacy_lengths',${literal(JSON.stringify(policy?.lengths || []))});\n`;
+  sql+=`INSERT INTO table_meta VALUES ('privacy_stripped_lengths',${literal(JSON.stringify(strippedLengths(policy?.phrases || new Set())))});\n`;
   await flush('privacy');
   for (const [name,config] of Object.entries(TABLE_DATASETS)) {
     const table=tableName(name);counts[name]=0;
     for (const {row} of datasets[name] || []) {
       // A second barrier protects callers supplying rows directly in tests/tools.
-      if (config.privacy && (['contracts','suppliers'].includes(name) ? policy?.recipientCheck || policy?.check : policy?.check)?.(Object.values(row).flat().join(' '))) throw new Error('Unsanitised financial row');
+      if (config.privacy && (['contracts','suppliers'].includes(name) ? policy?.recipientCheck || policy?.check : policy?.check)(Object.values(row).flat().join(' '))) throw new Error('Unsanitised financial row');
       const rowid=++counts[name];
       const values=config.columns.map(c=>arrayColumns.has(c.key) && Array.isArray(row[c.key]) ? JSON.stringify(row[c.key]) : row[c.key] ?? null);
       const search=config.columns.filter(c=>!['url','canonical_url'].includes(c.key)).map(c=>Array.isArray(row[c.key]) ? row[c.key].join(' ') : row[c.key] ?? '').join(' ');
@@ -164,14 +200,18 @@ export async function buildTableSQL({root=defaultRoot,output=fileURLToPath(new U
     await put(name+'-fts',`INSERT INTO ${table}_fts (${table}_fts) VALUES ('rebuild');\n`);
   }
   const version=createHash('sha256');for(const file of files)version.update(await readFile(join(output,file)));
-  await put('version',`INSERT INTO table_meta VALUES ('version','${version.digest('hex').slice(0,24)}');\nANALYZE;\n`);
-  const manifest={files,bytes,counts,privateIdentities:policy?.phrases.size||0,publicAssets:0};
+  // Publish the fingerprint last: privacy tables stay dark throughout a reload.
+  await put('version',`INSERT INTO table_meta VALUES ('privacy_fingerprint','${fingerprint}');\nINSERT INTO table_meta VALUES ('version','${version.digest('hex').slice(0,24)}');\nANALYZE;\n`);
+  const manifest={files,bytes,counts,privacyFingerprint:fingerprint,privateIdentities:policy?.phrases.size||0,publicAssets:0};
   await writeFile(join(output,'manifest.json'),JSON.stringify(manifest,null,2)+'\n');
   return manifest;
 }
 if (process.argv[1] && resolve(process.argv[1])===fileURLToPath(import.meta.url)) {
   try {
-    const result=await buildTableSQL();
-    console.log(JSON.stringify({sqlFiles:result.files.length,bytes:result.bytes,rows:result.counts,privateIdentityHashes:result.privateIdentities,publicTableAssets:0}));
+    const loaded=await tableRows();
+    const result=await buildTableSQL({datasets:loaded.rows,policy:loaded.policy});
+    await writeFile(join(defaultRoot,'table-private-identities.json'),JSON.stringify(tablePrivacyRegistry(loaded.policy))+'\n');
+    await writeFile(fileURLToPath(new URL('../portal/src/table-registry-fingerprint.json',import.meta.url)),JSON.stringify({fingerprint:result.privacyFingerprint})+'\n');
+    console.log(JSON.stringify({sqlFiles:result.files.length,bytes:result.bytes,rows:result.counts,privateIdentityHashes:result.privateIdentities,publicTableAssets:0,publicPrivacyAssets:1}));
   } catch {console.error('Table load preparation failed; no source identities are logged.');process.exitCode=1;}
 }

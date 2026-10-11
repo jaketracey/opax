@@ -1,5 +1,6 @@
 import {isOrganisationRecipient} from '../public/recipient-entity.js'
 import {supplierContractsHTML} from '../public/contracts-table.js'
+import {donorsNotNamedDetail} from "../public/donor-views.js"
 import { shortDate } from '../public/format.js'
 import { personUrl, partyUrl } from '../public/canonical-urls.js'
 import {sponsorPerson} from '../public/sponsor-person.js'
@@ -205,6 +206,7 @@ export async function renderPersonAnswer(p: Person, read: ReadAsset, slugs: Map<
     } else body += '<p>No register of interests in this export.</p>'
   }
   body += '<h2>Donors to their party</h2><p>Donations to a party are not personal donations to this member. An association does not prove influence.</p>'
+  const sharedDonors=await donorIndex(read).catch(()=>({organisations:new Set<string>(),withheld:new Set<string>()}))
   if (party) for (const [path,source] of [['/graph/money.json','AEC'],['/graph/money.qld.json','ECQ'],['/graph/money.vic.json','VEC']]) {
     const graph = await optional<MoneyGraph>(read,path)
     const node = graph?.nodes.find(n=>n.kind==='party' && fold(n.label)===fold(party))
@@ -212,9 +214,12 @@ export async function renderPersonAnswer(p: Person, read: ReadAsset, slugs: Map<
     const donors = new Map(graph.nodes.filter(n=>n.kind==='donor').map(n=>[n.id,n]))
     const flows = graph.edges.filter(e=>e.target===node.id && !e.grant && !e.flow && donors.has(e.source))
     // Only donors with positive organisation evidence are named; the industry tag never counts.
-    const unnamed = new Set(flows.filter(e=>!isOrganisationDonor(donors.get(e.source))).map(e=>e.source)).size
-    const organisations = flows.filter(e=>isOrganisationDonor(donors.get(e.source))).sort((a,b)=>b.total-a.total).slice(0,10)
-    body += `<h3>${escapeHtml(source)} disclosed receipts</h3><p>${unnamed} donors in this export are not named here: individuals, and organisations without a recorded legal form. ${escapeHtml(graph.meta.coverage || '')}</p><ul>${organisations.map(e=>`<li>${link(`/subject/donor/${encodeURIComponent(donors.get(e.source)!.label)}`,donors.get(e.source)!.label)} — ${currency(e.total)}</li>`).join('')}</ul>`
+    const hiddenFlows=flows.filter(e=>donorNameWithheld(sharedDonors,donors.get(e.source)!.label))
+    const hiddenIds=new Set(hiddenFlows.map(e=>e.source))
+    const unnamed=graph.nodes.filter(n=>n.kind==='donor'&&hiddenIds.has(n.id)).length
+    const hiddenAmount=hiddenFlows.reduce((sum,e)=>sum+e.total,0)
+    const organisations = flows.filter(e=>!donorNameWithheld(sharedDonors,donors.get(e.source)!.label)).sort((a,b)=>b.total-a.total).slice(0,10)
+    body += `<h3>${escapeHtml(source)} disclosed receipts</h3><p>${escapeHtml(graph.meta.coverage || '')}</p><ul>${organisations.map(e=>`<li>${link(`/subject/donor/${encodeURIComponent(donors.get(e.source)!.label)}`,donors.get(e.source)!.label)} — ${currency(e.total)}</li>`).join('')}${unnamed?`<li><details><summary>Donors not named (${unnamed}) — ${currency(hiddenAmount)}</summary><p>${escapeHtml(donorsNotNamedDetail)}</p></details></li>`:''}</ul>`
     body += `<p>Source: ${escapeHtml(graph.meta.sourceShort || graph.meta.source || source)}. Federal and state returns are shown separately and never summed.</p>${original(graph.meta.source_url || (source==='AEC' ? 'https://transparency.aec.gov.au/' : source==='ECQ' ? 'https://disclosures.ecq.qld.gov.au/' : 'https://disclosures.vec.vic.gov.au/'))}`
   }
   const owned = sponsored?.sponsored[p.pid || p.name] || []

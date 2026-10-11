@@ -150,17 +150,21 @@ test('a contract search link reaches the table adapter and departure destroys it
 
 
 test('an unsafe legal-name field preserves the organisation procurement page', async () => {
-  const {recipientIdentityIndex} = await import('../src/recipient-index.mjs');
+  const {tableIdentityIndex} = await import('../../scripts/load_tables.mjs');
+  const {sourceTableDonorIdentities} = await import('../../scripts/table_identity_source.mjs');
   const pub = new URL('../public/', import.meta.url);
   const read = path => JSON.parse(readFileSync(new URL(path.replace(/^\//, ''), pub)));
-  const recipients = await recipientIdentityIndex(async path => read(path));
+  const policy = await tableIdentityIndex(pub.pathname);
+  const recipients={...policy,check:policy.recipientCheck};
+  const originals=sourceTableDonorIdentities().supplierProfiles;
   const directory = read('/suppliers.json');
   let example;
   for (const entry of directory.suppliers) {
-    const candidate = recipients.profiles.get(entry.id);
+    const candidate = originals.get(entry.id);
     if (candidate && isOrganisationRecipient(candidate) && !recipients.check(candidate.name)
         && !recipients.check(String(candidate.abn || '')) && recipients.check(String(candidate.identity?.legal_name || ''))) {
-      example = read(entry.profile_path).profiles[entry.id]; break;
+      const published=read(entry.profile_path).profiles[entry.id];
+      example={...published,identity:{...published.identity,legal_name:candidate.identity.legal_name}}; break;
     }
   }
   assert.ok(example, 'a derived organisation with an unsafe optional field is required');
@@ -176,4 +180,28 @@ test('an unsafe legal-name field preserves the organisation procurement page', a
   assert.match(root.innerHTML, /data-contracts-table/);
   assert.ok(!recipients.check(root.innerHTML), 'all rendered identity fields are public');
   handle.destroy();
+});
+
+test('published aliases cannot restore political funding for an originally withheld donor',async()=>{
+  const {tableIdentityIndex}=await import('../../scripts/load_tables.mjs');
+  const {compileIdentityCheck}=await import('../src/table-identities.mjs');
+  const pub=new URL('../public/',import.meta.url);
+  const read=path=>JSON.parse(readFileSync(new URL(path.replace(/^\//,''),pub)));
+  const policy=await tableIdentityIndex(pub.pathname),donorCheck=compileIdentityCheck(policy.donorPhrases);
+  const entry=read('/suppliers.json').suppliers.find(entry=>{
+    const profile=policy.profiles.get(entry.id);
+    return profile&&isOrganisationRecipient(profile)&&policy.politicalSuppliers.has(entry.id)
+      &&!policy.recipientCheck(JSON.stringify({name:profile.name,abn:profile.abn}))
+      &&!donorCheck(JSON.stringify([profile.name,profile.abn,profile.identity?.legal_name,...profile.aliases || [],...profile.lookup_names || [],...profile.donor_links || []]));
+  });
+  assert.ok(entry,'a runtime-derived supplier whose unsafe aliases were removed is required');
+  const profile=read(entry.profile_path).profiles[entry.id];
+  const check=async(text,surface,subject)=>surface==='political'
+    ? !policy.politicalSuppliers.has(subject)&&!donorCheck(text)
+    : !(surface==='data' ? policy.recipientCheck : policy.check)(text);
+  const context=setup(async()=>response({}),undefined,check);
+  const projected=await context.supplierPublicationProfile(profile,check);
+  assert.equal(projected.politicalMoneyAllowed,false,'original donor status survives publication');
+  assert.equal(projected.name,profile.name,'the organisation procurement identity remains');
+  assert.equal(projected.contracts,profile.contracts,'all procurement records remain');
 });

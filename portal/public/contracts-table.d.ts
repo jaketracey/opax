@@ -1,6 +1,5 @@
 import type {Row, Query, Page, DataTableConfig} from './datatable.js';
 type Guard = ((...texts: unknown[]) => boolean) & {subjects?: (...texts: unknown[]) => string[]; recipientCheck?: (text: string) => boolean; supplierWithheld?: (id: string) => boolean};
-export function compileContractGuard(phrases: {withheld: [string, string[]][]}): Guard;
 export function contractTitle(contract: Row): string;
 export function placeholderContract(contract: Row): boolean;
 export function ausTenderURL(row: Row): string | null;
@@ -14,4 +13,6 @@ export function mountContractsTable(el: Element, options?: {supplierId?: string;
 export function contractsClientRows(host: Element): Row[];
 export function isPublicContractRow(row: Row): boolean;
 
-export function remotePrivacyCheck(text: string, surface?: string): Promise<boolean>;
+export function remotePrivacyCheck(text: string, surface?: string, subject?: string): Promise<boolean>;
+
+export function publicQueryState(params:URLSearchParams):Promise<{url:URL;query:Query;rejected:boolean}>;

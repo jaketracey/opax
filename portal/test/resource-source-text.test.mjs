@@ -17,7 +17,7 @@ async function readSource(texts,slug='research-cpi-mlci-2026',overrides={}) {
     speakerAttribution: async (_env, speaker) => speaker === 'Stewart' ? {state:'qld',chamber:'qld_la'} : null,
     cacheRequest:()=>new Request('https://opax.test/cache'), cacheBypass:()=>true,
     kbFetch:async()=>Response.json(record), json:data=>Response.json(data),
-    cacheStore:()=>{}, withCacheStatus:response=>response, RESOURCE_CACHE_TTL:3600,
+    cacheStore:()=>{}, sanitiseStoredResponse:async r=>r,sanitiseStoredDonors:v=>v,withCacheStatus:response=>response, RESOURCE_CACHE_TTL:3600,
   });
   const request=new Request('https://opax.test/api/resource/'+slug);
   return (await api(request,new URL(request.url),slug,{CACHE_EPOCH:'test'},{})).json();

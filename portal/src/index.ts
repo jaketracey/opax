@@ -1,7 +1,9 @@
 import {suppliersTableHTML} from '../public/suppliers-table.js'
-import {serializeQuery,parseQuery} from '../public/datatable.js'
+import {serializeQuery,parseQuery,guardTableURL} from '../public/datatable.js'
 import {contractsHubHTML} from '../public/contracts-table.js'
 import {tablePrivacy, tablePrivacyGuard} from './table-privacy'
+import {sanitiseStoredResponse} from './donor-stored-response'
+import {sanitiseStoredDonors} from './donor-hashes.mjs'
 import sourceIdentity from '../../parli/ingest/user-agent.json'
 import { SA_EXCERPT_LABEL, isSaHansard, saFullText, saOfficialUrl } from '../public/sa-hansard.js'
 import { saPublicResponse, saEventPayload } from './sa-hansard'
@@ -371,7 +373,7 @@ function withCacheStatus(res: Response, status: CacheStatus, browserCache = true
 function cacheStore(ctx: ExecutionContext, key: Request, res: Response, maxAge: number): void {
   res.headers.set('cache-control', `public, max-age=${maxAge}`)
   res.headers.set('x-opax-cached-at', new Date().toISOString())
-  ctx.waitUntil(caches.default.put(key, res.clone()))
+  ctx.waitUntil(sanitiseStoredResponse(res.clone()).then(safe=>caches.default.put(key, safe)))
 }
 
 /**
@@ -495,7 +497,7 @@ async function apiSearch(request: Request, url: URL, env: Env, ctx: ExecutionCon
   const bypass = cacheBypass(request, url)
   if (!bypass) {
     const hit = await caches.default.match(pageKey)
-    if (hit) return withCacheStatus(hit, 'HIT')
+    if (hit) return withCacheStatus(await sanitiseStoredResponse(hit), 'HIT')
   }
 
   const mode = url.searchParams.get('mode') ?? 'hybrid'
@@ -504,7 +506,7 @@ async function apiSearch(request: Request, url: URL, env: Env, ctx: ExecutionCon
   let win: SearchWindow | null = null
   if (!bypass) {
     const cached = await caches.default.match(windowKey)
-    if (cached) win = (await cached.json()) as SearchWindow
+    if (cached) win = sanitiseStoredDonors(await cached.json()) as SearchWindow
   }
   if (!win) {
     const limited = await rateLimited(env.SEARCH_LIMITER, request)
@@ -1265,7 +1267,7 @@ async function moneyOverview(facts: MoneyFacts, env: Env, ctx: ExecutionContext,
   const model = env.MONEY_OVERVIEW_MODEL || env.ASK_MODEL || 'openai-compatible'
   const key = cacheRequest('money-overview', await sha256Hex(JSON.stringify({ epoch: env.CACHE_EPOCH, model, facts })))
   const hit = await caches.default.match(key)
-  if (hit) return { overview: (await hit.json<{ overview?: string }>()).overview || '', why: 'hit' }
+  if (hit) return { overview: sanitiseStoredDonors(await hit.json<{ overview?: string }>()).overview || '', why: 'hit' }
   // A paid call, so it spends the reader's Ask quota like any other answer; past
   // the limit the calculated answer goes out without its opening paragraph.
   if (await rateLimited(env.ASK_LIMITER, request)) return { overview: '', why: 'rate-limited' }
@@ -1430,12 +1432,12 @@ async function apiAsk(request: Request, env: Env, ctx: ExecutionContext, prepare
   if (cacheKey && !bypass) {
     const hit = await readGenerationCache(env, ctx, cacheKey)
     if (hit) {
-      const safe = await saPublicResponse(hit, env.SA_HANSARD_FULL_TEXT, async slug => {
+      const safe = await saPublicResponse(await sanitiseStoredResponse(hit), env.SA_HANSARD_FULL_TEXT, async slug => {
         const resourceUrl=new URL('/api/resource/'+slug,url)
         const response=await apiResource(new Request(resourceUrl),resourceUrl,slug,env,ctx)
         return response.ok ? await response.json() as Record<string,unknown> : null
       })
-      return wantStream ? replayCachedAsk(safe, ctx) : withCacheStatus(safe, 'HIT', false)
+      return wantStream ? replayCachedAsk(await sanitiseStoredResponse(safe), ctx) : withCacheStatus(await sanitiseStoredResponse(safe), 'HIT', false)
     }
   }
   const status: CacheStatus = bypass ? 'BYPASS' : 'MISS'
@@ -1942,7 +1944,7 @@ async function apiSearchSummary(request: Request, url: URL, env: Env, ctx: Execu
   const filters = Object.fromEntries(['kind','mode','speaker','party','state','topic','from','to'].map(k => [k, searchUrl.searchParams.get(k) || '']))
   const key = cacheRequest('search-summary', await sha256Hex(JSON.stringify({version:SEARCH_SUMMARY_VERSION, epoch:env.CACHE_EPOCH, query, filters, sources, index:results.index_version})))
   const cached = await readGenerationCache(env, ctx, key)
-  if (cached) return withCacheStatus(cached, 'HIT', false)
+  if (cached) return withCacheStatus(await sanitiseStoredResponse(cached), 'HIT', false)
   const limited = await rateLimited(env.FOLLOWUPS_LIMITER, request)
   if (limited) return limited
   const unavailable = 'A cited summary is unavailable. Your matching records are still below.'
@@ -2039,7 +2041,7 @@ async function apiJourneyStory(request: Request, input: Record<string, unknown>,
   const files: Record<string,string> = {federal:'/graph/money.json',qld:'/graph/money.qld.json',vic:'/graph/money.vic.json',tas:'/graph/money.tas.json'}
   const { jurisdiction, lens, focus } = input
   if (typeof jurisdiction !== 'string' || !Object.hasOwn(files,jurisdiction) || typeof lens !== 'string' || typeof focus !== 'string' || focus.length > 500) return json({error:'Invalid journey'},400)
-  // Individual donors are withheld from the narration (public/donor-entity.js).
+  // Unconfirmed donors are withheld from the narration (public/donor-entity.js).
   const graph = withholdIndividualDonors(await assetJson<StoryGraph>(env,files[jurisdiction]))
   const context = journeyStoryContext(graph,lens,focus)
   if (!context) return json({error:'Journey not available'},404)
@@ -2607,7 +2609,7 @@ async function apiFollowups(request: Request, env: Env, ctx: ExecutionContext): 
   const bypass = cacheBypass(request, url)
   if (!bypass) {
     const hit = await caches.default.match(cacheKey)
-    if (hit) return withCacheStatus(hit, 'HIT', false)
+    if (hit) return withCacheStatus(await sanitiseStoredResponse(hit), 'HIT', false)
   }
   const limited = await rateLimited(env.FOLLOWUPS_LIMITER, request)
   if (limited) return limited
@@ -2698,7 +2700,7 @@ async function apiResource(request: Request, url: URL, slug: string, env: Env, c
   const bypass = cacheBypass(request, url)
   if (!bypass) {
     const hit = await caches.default.match(cacheKey)
-    if (hit) return withCacheStatus(hit, 'HIT')
+    if (hit) return withCacheStatus(await sanitiseStoredResponse(hit), 'HIT')
   }
   const res = await kbFetch(
     env,
@@ -2811,7 +2813,7 @@ async function apiNews(): Promise<Response> {
   const cache = caches.default
   const cacheKey = new Request('https://opax.com.au/api/news')
   const cached = await cache.match(cacheKey)
-  if (cached) return withCacheStatus(cached, 'HIT')
+  if (cached) return withCacheStatus(await sanitiseStoredResponse(cached), 'HIT')
 
   // Order matters: CDATA first, numeric refs, then named — so a literal
   // "&amp;#39;" decodes to "&#39;" and no further.
@@ -2924,9 +2926,9 @@ async function apiNews(): Promise<Response> {
   const res = json({ fetched_at: new Date().toISOString(), items })
   if (items.length) {
     res.headers.set('cache-control', 'public, max-age=900')
-    await cache.put(cacheKey, res.clone())
+    await cache.put(cacheKey, await sanitiseStoredResponse(res.clone()))
   }
-  return withCacheStatus(res, 'MISS')
+  return withCacheStatus(await sanitiseStoredResponse(res), 'MISS')
 }
 
 
@@ -2940,7 +2942,7 @@ async function apiRecent(env: Env): Promise<Response> {
   const cache = caches.default
   const cacheKey = new Request('https://opax.com.au/api/recent')
   const cached = await cache.match(cacheKey)
-  if (cached) return withCacheStatus(cached, 'HIT')
+  if (cached) return withCacheStatus(await sanitiseStoredResponse(cached), 'HIT')
   const res = await kbFetch(
     env,
     '/catalog?page_number=0&page_size=14&sort_field=created&sort_order=desc',
@@ -2968,8 +2970,8 @@ async function apiRecent(env: Env): Promise<Response> {
     .slice(0, 12)
   const out = json({ items })
   out.headers.set('cache-control', `public, max-age=${RECENT_CACHE_TTL}`)
-  await cache.put(cacheKey, out.clone())
-  return withCacheStatus(out, 'MISS')
+  await cache.put(cacheKey, await sanitiseStoredResponse(out.clone()))
+  return withCacheStatus(await sanitiseStoredResponse(out), 'MISS')
 }
 
 /**
@@ -2990,7 +2992,7 @@ async function apiBrief(url: URL, env: Env): Promise<Response> {
   const cache = caches.default
   const cacheKey = new Request(`https://opax.com.au/api/brief?rids=${rids.join(',')}`)
   const cached = await cache.match(cacheKey)
-  if (cached) return withCacheStatus(cached, 'HIT')
+  if (cached) return withCacheStatus(await sanitiseStoredResponse(cached), 'HIT')
   const briefs: Record<string, string> = {}
   await Promise.all(
     rids.map(async (rid) => {
@@ -3007,8 +3009,8 @@ async function apiBrief(url: URL, env: Env): Promise<Response> {
   )
   const out = json({ briefs })
   out.headers.set('cache-control', 'public, max-age=3600')
-  await cache.put(cacheKey, out.clone())
-  return withCacheStatus(out, 'MISS')
+  await cache.put(cacheKey, await sanitiseStoredResponse(out.clone()))
+  return withCacheStatus(await sanitiseStoredResponse(out), 'MISS')
 }
 
 // --- topic pages ------------------------------------------------------------
@@ -3045,13 +3047,13 @@ async function cachedJson(
   const cache = caches.default
   const cacheKey = new Request(`https://opax.com.au${cachePath}`)
   const cached = await cache.match(cacheKey)
-  if (cached) return withCacheStatus(cached, 'HIT')
+  if (cached) return withCacheStatus(await sanitiseStoredResponse(cached), 'HIT')
   const out = await build()
   if (out.ok) {
     out.headers.set('cache-control', `public, max-age=${maxAge}`)
-    await cache.put(cacheKey, out.clone())
+    await cache.put(cacheKey, await sanitiseStoredResponse(out.clone()))
   }
-  return withCacheStatus(out, 'MISS')
+  return withCacheStatus(await sanitiseStoredResponse(out), 'MISS')
 }
 
 /** All 21 topics with live counts, plus how many speeches carry any topic label. */
@@ -4274,8 +4276,9 @@ async function buildMeta(route: SeoRoute, url: URL, request: Request, env: Env, 
       const guard=await tablePrivacyGuard(env.ASSETS)
       const params=new URLSearchParams(url.searchParams)
       if(params.has('q')) params.set('t.q',params.get('q')!)
-      const rejected=[...params].some(([key,value])=>key.startsWith('t.') && guard(value))
-      const response=await tableApi(new Request('https://opax.com.au/api/table/suppliers?'+serializeQuery(parseQuery(params,'t'))),env)
+      const guarded=guardTableURL({id:'suppliers-table',caption:'Suppliers',pageType:'suppliers',columns:[],privacy:'donors',privacyCheck:value=>!guard(value),urlKey:'t'},new URL('https://local.invalid/?'+params))
+      const rejected=guarded.rejected
+      const response=await tableApi(new Request('https://opax.com.au/api/table/suppliers?'+serializeQuery(guarded.query)),env)
       const page=rejected || !response.ok ? {rows:[],total:0,page:1,pageSize:50,facets:{}} : await response.json() as import('../public/datatable.js').Page
       meta.prerender=answerBlock('Government suppliers','Recorded Commonwealth contract awards. Values are commitments, not verified payments.',suppliersTableHTML(page,guard,params))
     } else if(route.kind==='static' && route.page==='discover') {
@@ -4294,7 +4297,7 @@ async function buildMeta(route: SeoRoute, url: URL, request: Request, env: Env, 
   if ((route.kind==='static' && route.page==='discover' || route.kind==='subject' && route.dir==='supplier' || route.kind==='index' && route.dir==='supplier') && [...url.searchParams.keys()].some(key=>key.startsWith('t.') || key==='contract')) meta.noindex=true
   // Every non-home path has a single answer, including unavailable/not-found pages.
   meta.prerender ??= answerBlock(meta.title.replace(/ · OPAX$/, ''),meta.description)
-  meta.jsonLd=meta.status>=400 ? null : buildSchemaGraph({canonical:meta.canonical,title:meta.title,description:meta.description,jsonLd:meta.jsonLd,person:personIdentity,bill:billIdentity})
+  meta.jsonLd=meta.status>=400 || meta.noindex ? null : buildSchemaGraph({canonical:meta.canonical,title:meta.title,description:meta.description,jsonLd:meta.jsonLd,person:personIdentity,bill:billIdentity})
   return meta
 }
 
@@ -4522,7 +4525,7 @@ async function canonicalRoutePath(url: URL, env: Env): Promise<string> {
   }
   if(route?.kind==='grant-recipient') {
     const meta=await grantRecipientMeta(route.jurisdiction,route.id,candidate,env)
-    if(meta.status===200) return new URL(meta.canonical).pathname
+    if(meta.status===200 && meta.canonical) return new URL(meta.canonical).pathname
   }
   return url.pathname
 }
@@ -4852,13 +4855,14 @@ async function donorKnown(name: string, env: Env): Promise<boolean | null> {
 
 function withheldMeta(dir: 'donor' | 'campaigner', canonical: string): PageMeta {
   const [heading, sentence] = dir === 'donor'
-    ? ['Donor', 'A disclosed political donor in the OPAX money data. Which parties it funded, year by year.']
+    ? ['Donor', 'This donor is not named in OPAX.']
     : ['Campaigner', 'An entry on the AEC register of campaigners, third parties and associated entities. Every return it filed, year by year.']
-  return { title: `${heading} · OPAX`, description: sentence, canonical, ogType: 'profile', status: 200, jsonLd: null,
+  return { title: `${heading} · OPAX`, description: sentence, canonical: '', ogType: 'profile', status: 200, jsonLd: null,
     prerender: prerenderBlock(heading, sentence), card: null, noindex: true }
 }
 
 async function moneySubjectMeta(dir: 'party' | 'donor', name: string, url: URL, env: Env): Promise<PageMeta> {
+  if(dir==='donor' && await donorWithheld(env.ASSETS,name)) return withheldMeta('donor','')
   const [moneyData, people] = await Promise.all([loadMoney(env).catch(() => null), loadPeople(env).catch(() => null)])
   // A name no record holds is never repeated back (unknownSubjectMeta).
   let node: MoneyEntry | null, display: string
@@ -5183,16 +5187,16 @@ async function serveSeoPage(route: SeoRoute, url: URL, request: Request, env: En
   const rewriter = new HTMLRewriter()
     .on('title', new SetText(meta.title))
     .on('meta[name="description"]', new SetAttr('content', meta.description))
-    .on('link[rel="canonical"]', { element(el) { if(meta.status>=400) el.remove(); else el.setAttribute('href',meta.canonical) } })
+    .on('link[rel="canonical"]', { element(el) { if(meta.status>=400 || !meta.canonical) el.remove(); else el.setAttribute('href',meta.canonical) } })
     .on('meta[property="og:title"]', new SetAttr('content', meta.title))
     .on('meta[property="og:description"]', new SetAttr('content', meta.description))
-    .on('meta[property="og:url"]', { element(el) { if(meta.status>=400) el.remove(); else el.setAttribute('content',meta.canonical) } })
+    .on('meta[property="og:url"]', { element(el) { if(meta.status>=400 || !meta.canonical) el.remove(); else el.setAttribute('content',meta.canonical) } })
     .on('meta[property="og:type"]', new SetAttr('content', meta.ogType))
-    .on('meta[property="og:image"]', new SetAttr('content', image))
-    .on('meta[property="og:image:alt"]', new SetAttr('content', imageAlt))
+    .on('meta[property="og:image"]', {element(el){if(meta.noindex && !meta.canonical)el.remove();else el.setAttribute('content',image)}})
+    .on('meta[property="og:image:alt"]', {element(el){if(meta.noindex && !meta.canonical)el.remove();else el.setAttribute('content',imageAlt)}})
     .on('meta[name="twitter:title"]', new SetAttr('content', meta.title))
     .on('meta[name="twitter:description"]', new SetAttr('content', meta.description))
-    .on('meta[name="twitter:image"]', new SetAttr('content', image))
+    .on('meta[name="twitter:image"]', {element(el){if(meta.noindex && !meta.canonical)el.remove();else el.setAttribute('content',image)}})
     .on('script#ld-page', {
       element(el) {
         if (ld) el.setInnerContent(ld, { html: true })
@@ -5875,11 +5879,11 @@ export default {
     const url = new URL(request.url)
     const display = (response: Response, target = url) => {
       if (!/^\/api\/(?:resource\/[^/]+|search|search-all|search-summary|ask)$/.test(target.pathname) && !/^\/reports\/[^/]+\.json$/.test(target.pathname)) return Promise.resolve(response)
-      return saPublicResponse(response, env.SA_HANSARD_FULL_TEXT, async slug => {
+      return sanitiseStoredResponse(response).then(safe => saPublicResponse(safe, env.SA_HANSARD_FULL_TEXT, async slug => {
         const sourceUrl = new URL(`/api/resource/${slug}`, url)
         const result = await apiResource(new Request(sourceUrl), sourceUrl, slug, env, ctx)
         return result.ok ? await result.json() as Record<string, unknown> : null
-      }, target.searchParams.get('q') || '')
+      }, target.searchParams.get('q') || '')).then(sanitiseStoredResponse)
     }
     if (!vicElectionEnabled(env.VIC_ELECTION_HUB_ENABLED) && vicElectionPublicationPath(url.pathname))
       return withSecurityHeaders(new Response(request.method === 'HEAD' ? null : 'Not found', {status:404,headers:{'x-robots-tag':'noindex','cache-control':'no-store','content-type':'text/plain; charset=utf-8'}}), url)

@@ -1,9 +1,11 @@
-import {recipientIdentityIndex} from '../src/recipient-index.mjs';
+import {sourceTableDonorIdentities} from '../../scripts/table_identity_source.mjs';
+import {isOrganisationRecipient} from '../public/recipient-entity.js';
+import {tableIdentityIndex} from '../../scripts/load_tables.mjs';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import {contractsFixture} from './contracts-table-fixture.mjs';
-import {contractTitle, contractRows, placeholderContract, ausTenderURL, contractsTableConfig, supplierContractsHTML, compileContractGuard, publicContractQuery} from '../public/contracts-table.js';
+import {contractTitle, contractRows, placeholderContract, ausTenderURL, contractsTableConfig, supplierContractsHTML, publicContractQuery} from '../public/contracts-table.js';
 import {MONEY_GRAPHS, withheldPhrases} from '../public/donor-entity.js';
 import {renderSupplierAnswer} from '../src/seo-content.ts';
 import {tablePrivacyGuard} from '../src/table-privacy.ts';
@@ -12,13 +14,14 @@ import {offline, loadWorker} from './worker-harness.mjs';
 
 const pub = new URL('../public/', import.meta.url).pathname;
 const index = JSON.parse(readFileSync(pub + 'suppliers.json'));
-const recipients=await recipientIdentityIndex(async path=>JSON.parse(readFileSync(pub+path)));
+const sharedPolicy=await tableIdentityIndex(pub);
+const recipients={...sharedPolicy,check:sharedPolicy.recipientCheck};
 const publicSupplier=index.suppliers.find(s=>s.count>=50 && s.count<=2000 && !recipients.suppliers.has(s.id) && !recipients.check(s.name));
 
-test('escaped JSON facets cannot preserve a withheld donor in URL state', () => {
-  const graphs=MONEY_GRAPHS.map(path=>JSON.parse(readFileSync(pub+path)));
-  const guard=compileContractGuard(withheldPhrases(graphs,[]));
-  const value=graphs.flatMap(g=>g.nodes).find(n=>n.kind==='donor' && /\s/.test(n.label) && guard(n.label)).label;
+test('escaped JSON facets cannot preserve a withheld donor in URL state', async () => {
+  const {sourceTableDonorIdentities}=await import('../../scripts/table_identity_source.mjs');
+  const guard=sharedPolicy.check;
+  const value=sourceTableDonorIdentities().labels.find(value=>/\s/.test(value) && guard(value));
   const escaped=JSON.stringify([value]).replace(/[a-z]/gi,char=>'\\u'+char.charCodeAt(0).toString(16).padStart(4,'0'));
   const params=new URLSearchParams({'t.f.agency':escaped});
   assert.deepEqual(publicContractQuery(params,guard),{});
@@ -87,13 +90,13 @@ test('supplier SSR preserves facts, renders a real first page, and ignores table
 
 test('the shared privacy guard retains a deduplicated neutral value and no identifying fields', async () => {
   const guard=await tablePrivacyGuard({fetch:async request=>Response.json(JSON.parse(readFileSync(pub+new URL(request.url).pathname)))});
-  const graphs=MONEY_GRAPHS.map(path=>JSON.parse(readFileSync(pub+path)));
-  const node=graphs.flatMap(graph=>graph.nodes).find(node=>node.kind==='donor' && guard(node.label) && guard.subjects(node.label).length===1);
+  const name=sourceTableDonorIdentities().recipients.map(r=>r.n || r.name || r.label).find(value=>value && guard.subjects(value).length===1);
+  const node=name ? {label:name} : null;
   assert.ok(node,'a runtime-derived withheld identity is required');
   const rows=contractRows([25,75].map((amount,i)=>({id:`CN${i+1}`,title:node.label,agency:'Example agency',amount,start_date:'2026-01-01'})),guard);
   assert.equal(rows.length,1);assert.equal(rows[0].aggregate.count,1);assert.equal(rows[0].amount,100);
   assert.deepEqual(Object.keys(rows[0]).sort(),['aggregate','amount']);
-  const config=contractsTableConfig({supplierId:'s-fixture',rows,count:2,privacyCheck:text=>!guard(text)});
+  const config=contractsTableConfig({supplierId:'s-fixture',rows,count:2,privacyCheck:text=>!guard(text),dataPrivacyCheck:guard.recipientCheck});
   const page=applyQuery(rows,config,{});
   assert.equal(page.rows[0].title,'Donors not named (1)');
   assert.ok(!guard(JSON.stringify(page)));assert.ok(!guard(toCSV(rows,config)));
@@ -103,8 +106,9 @@ test('the shared privacy guard retains a deduplicated neutral value and no ident
 
 test('supplier SSR related-award totals use the shared guard and retain anonymous values', async () => {
   const guard=await tablePrivacyGuard({fetch:async request=>Response.json(JSON.parse(readFileSync(pub+new URL(request.url).pathname)))});
-  const graphs=MONEY_GRAPHS.map(path=>JSON.parse(readFileSync(pub+path)));
-  const node=graphs.flatMap(graph=>graph.nodes).find(node=>node.kind==='donor' && guard(node.label) && guard.subjects(node.label).length===1);
+  const original=[...sourceTableDonorIdentities().supplierProfiles.values()].find(profile=>isOrganisationRecipient(profile) && guard.recipientCheck(profile.name) && guard(JSON.stringify([profile.identity?.legal_name,...profile.aliases || []])));
+  assert.ok(original,'a derived permitted organisation with a withheld optional identity is required');
+  const node={label:original.name};
   const assets={
     '/suppliers.json':{meta:{generated_at:'2026-10-01',source:'Fixture register'},suppliers:[{id:'s-fixture',profile_path:'/supplier-fixture.json'}]},
     '/supplier-fixture.json':{profiles:{'s-fixture':{id:'s-fixture',name:'Fixture supplier Pty Ltd',kind:'company',total:10,count:1,agencies:[{name:'Fixture agency',count:1,total:10}],contracts:[]}}},

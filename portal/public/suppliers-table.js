@@ -1,5 +1,5 @@
-import {dataTableHTML,mountDataTable,parseQuery,serializeQuery} from './datatable.js?v=3ab724d532';
-import {remotePrivacyCheck,publicContractQuery} from './contracts-table.js?v=f252eada22';
+import {dataTableHTML,mountDataTable,guardTableURL} from './datatable.js?v=b397d3c40c';
+import {remotePrivacyCheck,publicQueryState} from './contracts-table.js?v=40e5d3f3b1';
 import {isOrganisationRecipient} from './recipient-entity.js?v=33f5c5486d';
 export function suppliersTableConfig({rows,privacyCheck,dataPrivacyCheck}={}) {
   return {id:'suppliers-table',caption:'Suppliers',pageType:'suppliers',privacy:'donors',
@@ -14,7 +14,7 @@ export function suppliersTableConfig({rows,privacyCheck,dataPrivacyCheck}={}) {
 }
 export function suppliersTableHTML(page,withheld,params) {
   const config=suppliersTableConfig({privacyCheck:text=>!withheld(text),dataPrivacyCheck:withheld.recipientCheck});
-  const stateRejected=[...params].some(([key,value])=>(key.startsWith('t.') || key==='q') && withheld(value));
+  const stateRejected=guardTableURL(config,new URL('https://local.invalid/?'+params)).rejected;
   const safe=stateRejected ? {rows:[],total:0,page:1,pageSize:50,facets:{}} : page;
   return `<div data-suppliers-table>${dataTableHTML(config,safe).replace('<section ',`<section ${stateRejected ? 'data-dt-rejected ' : ''}`)}<script type="application/json" data-suppliers-seed>${JSON.stringify({page:safe,stateRejected}).replace(/</g,'\\u003c')}</script></div>`;
 }
@@ -26,10 +26,11 @@ export async function mountSuppliersTable(el,{params,signal}={}) {
   node?.closest('[data-suppliers-table]')?.remove();
   const state=new URLSearchParams(params || location.search);
   if(state.has('q')) {state.set('t.q',state.get('q'));state.delete('q');}
-  const values=[...state].filter(([key])=>key.startsWith('t.')).flatMap(([,value])=>{try{return [value,...Object.values(JSON.parse(value))].flat()}catch{return [value]}});
-  const rejected=seed?.stateRejected || values.length>0 && !await remotePrivacyCheck(JSON.stringify(values));
-  if(rejected) for(const key of [...state.keys()]) if(key.startsWith('t.')) state.delete(key);
-  history.replaceState(history.state,'',location.pathname+(state.size ? '?'+state : '')+location.hash);
+  const guarded=await publicQueryState(state);
+  const rejected=seed?.stateRejected || guarded.rejected;
+  const safe=guarded.url.searchParams;
+  if(rejected) for(const key of [...safe.keys()]) if(key.startsWith('t.'))safe.delete(key);
+  history.replaceState(history.state,'',location.pathname+(safe.size ? '?'+safe : '')+location.hash);
   if(signal?.aborted) return {destroy(){}};
   const config=suppliersTableConfig();
   el.innerHTML=dataTableHTML({...config,privacyCheck:()=>false,dataPrivacyCheck:()=>false},seed?.page || {rows:[],total:0,page:1,pageSize:50});

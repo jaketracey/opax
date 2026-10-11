@@ -1,12 +1,12 @@
 /* Supplier entries: recorded procurement and source notices.
    No dependencies but the shared formats; the host router owns mounting and calls destroy on departure. */
 import {isOrganisationRecipient} from './recipient-entity.js?v=33f5c5486d';
-import {mountSuppliersTable} from './suppliers-table.js?v=7ab9cb0f1c';
+import {mountSuppliersTable} from './suppliers-table.js?v=03534a6ad5';
 import { shortDate, shortMoney } from "./format.js";
-import { contractTitle, placeholderContract, mountContractsTable, remotePrivacyCheck } from "./contracts-table.js?v=f252eada22";
-export { contractTitle, placeholderContract } from "./contracts-table.js?v=f252eada22";
+import { contractTitle, placeholderContract, mountContractsTable, remotePrivacyCheck } from "./contracts-table.js?v=40e5d3f3b1";
+export { contractTitle, placeholderContract } from "./contracts-table.js?v=40e5d3f3b1";
 
-import { mountSupplierGrowth, supplierDonations } from "./supplier-growth.js?v=8c890b86ce";
+import { mountSupplierGrowth, supplierDonations } from "./supplier-growth.js?v=86e58f592c";
 import { sourceLineHTML } from "./labels.js?v=c6bf994ef7";
 import { partyUrl } from "./canonical-urls.js?v=225d5915ea";
 const esc = (value) => String(value ?? "").replace(/[&<>"']/g, (char) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[char]);
@@ -31,7 +31,7 @@ function agencyIds(signal) {
 const agencyUrl = (name, ids) => ids?.has(name) ? `/subject/agency/${encodeURIComponent(ids.get(name))}` : `/subject/agency?q=${encodeURIComponent(name)}`;
 
 export async function json(url, signal) {
-  const response = await fetch(url, { signal });
+  const response = await fetch(url, { signal, cache:"no-cache" });
   if (!response.ok) throw new Error("The supplier records could not be loaded.");
   return response.json();
 }
@@ -214,7 +214,7 @@ async function renderProfile(root, profile, meta, helpers, life, suppliers) {
 export async function supplierPublicationProfile(profile, check = remotePrivacyCheck) {
   const politicalTexts = [profile.name, profile.abn, profile.identity?.legal_name,
     ...(profile.aliases || []), ...(profile.lookup_names || []), ...(profile.donor_links || [])];
-  const politicalMoneyAllowed = await check(JSON.stringify(politicalTexts));
+  const politicalMoneyAllowed = await check(JSON.stringify(politicalTexts), 'political', profile.id);
   const identity = {};
   for (const [key, value] of Object.entries(profile.identity || {})) {
     if (await check(String(value), key === 'legal_name' ? 'query' : 'data')) identity[key] = value;
@@ -302,7 +302,7 @@ async function mountFunding(root, links, life, register = "") {
       slot.hidden = false;
       slot.innerHTML = '<p role="status">Opening the money map…</p>';
       try {
-        const { mountMoneyMap } = await import("/money-map.js?v=224ab013ee");
+        const { mountMoneyMap } = await import("/money-map.js?v=ca923f4f2e");
         if (!life.alive()) return;
         slot.textContent = "";
         const handle = await mountMoneyMap(slot, "/graph/money.json?v=suppliers-1", { focus: links[0].id, chrome: "mini", reveal: true, openCard: false });

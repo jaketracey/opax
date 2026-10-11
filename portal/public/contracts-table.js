@@ -1,22 +1,6 @@
-import { applyQuery, dataTableHTML, mountDataTable, parseQuery, serializeQuery } from './datatable.js?v=3ab724d532';
+import { applyQuery, dataTableHTML, mountDataTable, guardTableURL, parseQuery, serializeQuery } from './datatable.js?v=b397d3c40c';
 import {isOrganisationRecipient} from './recipient-entity.js?v=33f5c5486d';
-import {namesWithheldPhrase} from './donor-entity.js?v=2b8d45a50d';
-
-/** Index candidates, then use the existing fail-closed donor matcher unchanged.
- * Server/build only: neither this index nor its names enter table payloads. */
-export function compileContractGuard(phrases) {
-  const byFirst = new Map();
-  for (const entry of phrases.withheld) {
-    const first = entry[0].split(' ')[0];
-    if (!byFirst.has(first)) byFirst.set(first, []);
-    byFirst.get(first).push(entry);
-  }
-  return (...texts) => texts.some(value => {
-    const words = String(value).normalize('NFKC').toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim().split(' ');
-    const candidates = [...new Set(words)].flatMap(word => byFirst.get(word) || []);
-    return candidates.length > 0 && namesWithheldPhrase({withheld: candidates}, value);
-  });
-}
+import {rawQueryValues} from './datatable-query.js?v=6dd55aab38';
 
 // Pass 5 lane B: references read by what was bought, then by the counterpart.
 const referenceTitle = value => !/\s/.test(value) && (/\d/.test(value) || value === value.toUpperCase());
@@ -68,9 +52,9 @@ export function contractRows(contracts, withheld = () => true) {
 export function isPublicContractRow(row) {
   return isOrganisationRecipient(row) && /^CN[\w.-]+$/i.test(String(row?.id || '')) && typeof row.title === 'string' && typeof row.agency === 'string' && Number.isFinite(row.amount);
 }
-export async function remotePrivacyCheck(text, surface = 'query') {
+export async function remotePrivacyCheck(text, surface = 'query', subject) {
   try {
-    const response = await fetch('/api/table/privacy', {method: 'POST', headers: {'content-type': 'application/json'}, body: JSON.stringify({text,surface})});
+    const response = await fetch('/api/table/privacy', {method: 'POST', headers: {'content-type': 'application/json'}, body: JSON.stringify({text,surface,subject})});
     return response.ok && (await response.json()).safe === true;
   } catch {return false;}
 }
@@ -97,28 +81,21 @@ export function contractsTableConfig({supplierId, rows, count = rows?.length || 
 }
 /** Never return or serialise a query naming a withheld donor, including hidden fields. */
 export function publicContractQuery(params, withheld) {
-  const query = parseQuery(params, 't');
-  if (rejectedState(params, withheld)) return {};
-  if (params.get('contract') && !query.q) query.q = params.get('contract');
-  return query;
+  const guarded=guardTableURL({privacy:'donors',privacyCheck:text=>!withheld(text),urlKey:'t'},new URL('https://local.invalid/?'+params));
+  if (!guarded.rejected && params.get('contract') && !guarded.query.q) guarded.query.q=params.get('contract');
+  return guarded.query;
 }
 const json = value => JSON.stringify(value).replace(/</g, '\\u003c');
-function queryTexts(params) {
-  const texts = [];
-  const collect = value => {
-    if (typeof value === 'string') texts.push(value);
-    else if (Array.isArray(value)) value.forEach(collect);
-    else if (value && typeof value === 'object') Object.entries(value).forEach(([key, item]) => {texts.push(key); collect(item);});
-  };
-  for (const [key, value] of params) if (key.startsWith('t.') || key === 'contract') {
-    texts.push(key, value);
-    // Facets are JSON in the frozen query contract. Inspect decoded strings,
-    // including Unicode escapes, as well as the raw URL values.
-    try {collect(JSON.parse(value));} catch {}
-  }
-  return texts;
+function rejectedState(params, withheld) {
+  return guardTableURL({privacy:'donors',privacyCheck:text=>!withheld(text),urlKey:'t'},new URL('https://local.invalid/?'+params)).rejected;
 }
-function rejectedState(params, withheld) {return withheld(...queryTexts(params));}
+/** Async approval feeds the shared whole-state validator before any initial fetch. */
+export async function publicQueryState(params) {
+  const values=[...new Set(rawQueryValues(params))],approved=new Set();
+  if (await remotePrivacyCheck(values.join('\n'))) values.forEach(value=>approved.add(value));
+  else await Promise.all(values.map(async value=>{if(await remotePrivacyCheck(value))approved.add(value)}));
+  return guardTableURL({privacy:'donors',privacyCheck:value=>approved.has(value),urlKey:'t'},new URL('https://local.invalid/?'+params));
+}
 export function supplierContractsHTML(contracts, id, params, withheld, recipient) {
   const rows = contractRows(contracts.map(c=>({...c,recipient,supplier_id:id})), withheld).sort((a, b) => String(b.start_date || '').localeCompare(String(a.start_date || '')) || Number(b.amount) - Number(a.amount));
   const config = contractsTableConfig({supplierId: id, rows, count: contracts.length, privacyCheck: text => !withheld(text),dataPrivacyCheck:withheld.recipientCheck || (text=>!withheld(text))});
@@ -147,23 +124,18 @@ export async function mountContractsTable(el, {supplierId, count, seed, signal, 
     if (node && JSON.parse(node.textContent).supplierId === (supplierId || null)) node.closest('[data-contracts-table]')?.remove();
   }
   const state = new URLSearchParams(params || location.search);
-  // Unknown prefixed fields are outside the core's URL ownership. Preserve safe
-  // fields, but never leave a withheld value in ignored table state.
-  const known = new Set(['t.q','t.sort','t.page','t.pageSize','t.f.agency','t.f.amount']);
-  const extra = new URLSearchParams([...state].filter(([key]) => key.startsWith('t.') && !known.has(key)));
-  let stateRejected=seed?.stateRejected === true;
-  if (extra.size && !await remotePrivacyCheck(JSON.stringify(queryTexts(extra)))) {
-    stateRejected=true;
-    for (const key of [...state.keys()]) if(key.startsWith('t.') || key==='contract') state.delete(key);
-    history.replaceState(history.state, '', location.pathname + (state.size ? `?${state}` : '') + location.hash);
-  }
+  const guarded=await publicQueryState(state);
+  let stateRejected=seed?.stateRejected === true || guarded.rejected;
+  const legacy=state.get('contract');
+  const safe=guarded.url.searchParams;
+  if(guarded.rejected) for(const key of [...safe.keys()]) if(key.startsWith('t.') || key==='contract')safe.delete(key);
+  safe.delete('contract');
+  if(!guarded.rejected && legacy && !safe.has('t.q')) safe.set('t.q',legacy);
+  history.replaceState(history.state,'',location.pathname+(safe.size ? '?'+safe : '')+location.hash);
+  const queryState=safe;
   if (signal?.aborted) return {destroy() {}};
-  if (state.has('contract')) {
-    state.set('t.q', state.get('contract')); state.delete('contract');
-    history.replaceState(history.state, '', location.pathname + `?${state}` + location.hash);
-  }
   if (!seed) {
-    const query=new URLSearchParams(supplierId && count<=2000 ? '' : serializeQuery(parseQuery(state,'t')));
+    const query=new URLSearchParams(supplierId && count<=2000 ? '' : serializeQuery(parseQuery(queryState,'t')));
     if(supplierId) query.set('supplier',supplierId);
     query.set('pageSize','200');
     const response=await fetch(`/api/table/contracts?${query}`,{signal});

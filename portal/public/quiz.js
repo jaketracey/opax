@@ -1,3 +1,6 @@
+import {isUnnamedAggregate} from './donor-views.js?v=55a8bd3ae0';
+import {donorPrivacyIndex,donorNameWithheld} from './donor-entity.js?v=ebb2c972d5';
+import {loadDonorViewIndex} from './donor-views.js?v=55a8bd3ae0';
 import {subjectUrl} from './canonical-urls.js?v=225d5915ea';
 /*
  * The record quiz — a MindMaze-spirited quiz over OPAX's real data.
@@ -78,7 +81,7 @@ const INDUSTRY_LABELS = {
   telecom: "Telecommunications", legal: "Legal services", health: "Health",
   defence: "Defence", transport: "Transport", security: "Security",
   waste_management: "Waste management", lobbying: "Lobbying",
-  individual: "Individual donors",
+  individual: "Donors not named",
 };
 
 const DONOR_PHRASES = {
@@ -96,7 +99,8 @@ function industryLabel(key) {
 
 export function makeQuizContext(data) {
   const money = data.money || { nodes: [], edges: [], meta: {} };
-  const donors = money.nodes.filter((n) => n.kind === "donor");
+  const privacy=data.donorPrivacy || donorPrivacyIndex([money]);
+  const donors = money.nodes.filter((n) => n.kind === 'donor' && !isUnnamedAggregate(n.label) && !donorNameWithheld(privacy,n.label));
   const donorsById = new Map(donors.map((d) => [d.id, d]));
   const parties = money.nodes.filter((n) => n.kind === "party");
 
@@ -112,7 +116,7 @@ export function makeQuizContext(data) {
   }
 
   const reports = Object.entries(data.reports || {})
-    .map(([slug, r]) => ({ slug, title: r.title || slug, stats: r.stats || {} }))
+    .map(([slug, r]) => ({ slug, title: r.title || slug, stats: {...r.stats,donations:r.stats?.donations?{...r.stats.donations,top_donors:(r.stats.donations.top_donors||[]).filter(row=>!donorNameWithheld(privacy,row[0]))}:undefined} }))
     .filter((r) => r.stats.speech_count > 0);
 
   // Faces come from the portrait map (photos/people.json), never from a roster pid:
@@ -785,14 +789,14 @@ export function rankFor(score, total) {
  * ---------------------------------------------------------------- */
 
 async function fetchJson(url, signal, init) {
-  const res = await fetch(url, { signal, ...init });
+  const res = await fetch(url, { signal, cache:"no-cache", ...init });
   if (!res.ok) throw new Error(url + " → HTTP " + res.status);
   return res.json();
 }
 
 async function loadData(signal) {
   const [money, index, corpus, photos, yearIndex] = await Promise.all([
-    fetchJson("/graph/money.json", signal),
+    fetchJson("/graph/money.json", signal, {cache:"no-cache"}),
     fetchJson("/reports/index.json", signal),
     fetchJson("/corpus.json", signal).catch(() => null),
     fetchJson("/photos/people.json", signal, { cache: "no-cache" }).catch(() => null),  // whose face: revalidated
@@ -810,7 +814,7 @@ async function loadData(signal) {
       catch (e) { if (e && e.name === "AbortError") throw e; /* year questions degrade */ }
     }),
   ]);
-  return { money, reports, corpus, photos, years };
+  return { money, reports, corpus, photos, years, donorPrivacy:await loadDonorViewIndex() };
 }
 
 /* ---------------------------------------------------------------- *

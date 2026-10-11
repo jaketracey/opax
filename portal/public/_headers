@@ -31,10 +31,10 @@
 /*.js
   Cache-Control: public, max-age=300, stale-while-revalidate=86400
 
-# Data exports and portraits: hourly freshness is plenty. (/photos is scoped to
+# Published JSON revalidates on every use. (/photos is scoped to
 # .webp so /photos/people.json is left to the /*.json rule and not double-set.)
 /*.json
-  Cache-Control: public, max-age=3600, stale-while-revalidate=86400
+  Cache-Control: public, max-age=0, must-revalidate
 # The files that say who is who: whose face (the portrait map), which person id and
 # seat (the roster), and the name indexes of the pay, votes, expenses and interests
 # records. A correction must reach a returning reader on the next page view, not after
@@ -62,11 +62,10 @@
 /bills/*.json
   ! Cache-Control
   Cache-Control: public, max-age=0, must-revalidate
-# Reports are regenerated several times a day now; five minutes, then a day of
-# stale grace, so a rebuild reaches readers without a hard refresh.
+# Donor-bearing report data revalidates on every use after a publication.
 /reports/*.json
   ! Cache-Control
-  Cache-Control: public, max-age=300, stale-while-revalidate=86400
+  Cache-Control: public, max-age=0, must-revalidate
 /photos/*.webp
   Cache-Control: public, max-age=3600, stale-while-revalidate=86400
 # JPEG twins of the portraits, read by the Worker to draw share images

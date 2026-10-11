@@ -1,4 +1,4 @@
-import {recipientIdentityIndex} from '../src/recipient-index.mjs';
+import {tableIdentityIndex} from '../../scripts/load_tables.mjs';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync,existsSync,readdirSync} from 'node:fs';
@@ -8,7 +8,8 @@ import {renderBillAnswer,renderPersonAnswer,partyLine,escapeHtml,safeHref,intern
 const pub=new URL('../public/',import.meta.url);
 const parsedAssets=new Map();
 const read=async path=>{if(!parsedAssets.has(path)) parsedAssets.set(path,JSON.parse(readFileSync(new URL(path.slice(1),pub),'utf8')));return parsedAssets.get(path);};
-const recipientPolicy=await recipientIdentityIndex(read);
+const sharedPolicy=await tableIdentityIndex(new URL('../public/',import.meta.url).pathname);
+const recipientPolicy={...sharedPolicy,check:sharedPolicy.recipientCheck};
 const publicSupplier=(await read('/suppliers.json')).suppliers.find(s=>s.count>=50 && !recipientPolicy.suppliers.has(s.id) && !recipientPolicy.check([s.name,s.abn || ''].join(' ')));
 // Exercise the real Worker dispatch/render/meta code with disk-backed ASSETS.
 // A minimal HTMLRewriter adapter supplies only the platform transformations it uses.
@@ -46,7 +47,7 @@ test('raw MP answer includes exported bill votes without unsupported recent-vote
   const record=(await read('/votes.json'))['11009'];const votes=[...record.for,...record.against].sort((a,b)=>b.date.localeCompare(a.date)).slice(0,10);for(const vote of votes)assert.ok(html.includes(escapeHtml(vote.name)),vote.name);
   for(const path of ['/graph/money.json','/graph/money.qld.json','/graph/money.vic.json'])for(const n of (await read(path)).nodes.filter(n=>n.kind==='donor'&&!isOrganisationDonor(n)))assert.ok(!html.includes(escapeHtml(n.label)),n.label);
   const person=graph.find(n=>n['@type']==='Person');assert.ok(person.image);assert.ok(person.sameAs.some(url=>url.startsWith('https://www.aph.gov.au/Senators_and_Members/Parliamentarian?MPID=')));
-  const labor=await get('/subject/person/anthony-albanese');assert.ok(labor.includes('donors in this export are not named here'));
+  const labor=await get('/subject/person/anthony-albanese');assert.ok(labor.includes('Donors not named ('));assert.ok(labor.includes('<details>'));assert.ok(labor.includes("OPAX names organisations only. Donors it can&#39;t confirm are organisations are counted here, not named."));
 });
 test('mobile voting asset retains schema 1 and the shipped per-person keys',async()=>{
   const data=await read('/votes.json');assert.equal(data._meta.schema,1);
@@ -105,7 +106,7 @@ test('reported TVFY bill and division routes render Markdown blocks from local e
 test('built SSR pages for every route type expose one canonical, factual content and canonical entity URLs',async()=>{
   const seats=await read((await read('/electorates/manifest.json')).index_url);
   const recipient=(await read('/graph/grants.federal.json')).recipients.find(r=>r.k==='company');
-  const policy=await recipientIdentityIndex(read);const supplier=(await read('/suppliers.json')).suppliers.find(s=>!policy.suppliers.has(s.id) && !policy.check([s.name,s.abn || ''].join(' ')));
+  const shared=await tableIdentityIndex(new URL('../public/',import.meta.url).pathname);const policy={...shared,check:shared.recipientCheck};const supplier=(await read('/suppliers.json')).suppliers.find(s=>!policy.suppliers.has(s.id) && !policy.check([s.name,s.abn || ''].join(' ')));
   const agency=(await read('/agencies.json')).agencies[0];
   const campaigner=(await read('/graph/campaigners.json')).entities[0];
   const report=(await read('/reports/index.json')).reports[0];

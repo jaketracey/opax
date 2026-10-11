@@ -1,4 +1,4 @@
-import { json, lifecycle, coverageHTML, yearChart, contractHTML, mountYearChart, placeholderContract, procurementSourceHTML, procurementRailHTML } from './suppliers.js?v=7c3068becc';
+import { json, lifecycle, coverageHTML, yearChart, contractHTML, mountYearChart, placeholderContract, procurementSourceHTML, procurementRailHTML } from './suppliers.js?v=4b4b3427cb';
 import { procurementGraph } from './procurement-data.js';
 import { shortMoney } from './format.js';
 const esc = value => String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -19,7 +19,7 @@ export async function mountProcurementPreview(root, profile, kind, life) {
   root.hidden = false;
   root.innerHTML = '<p role="status">Opening the 3D map…</p>';
   try {
-    const { mountMoneyMap } = await import('/money-map.js?v=224ab013ee');
+    const { mountMoneyMap } = await import('/money-map.js?v=ca923f4f2e');
     if (!life.alive()) return;
     const graph = procurementGraph(profile, kind);
     if (!graph.edges.length) { root.innerHTML = '<p>No relationships with positive recorded contract value are available for the map.</p>'; return; }
@@ -128,7 +128,7 @@ function renderProfile(root, profile, meta, helpers, life) {
     const q = supplierQuery.value.trim().toLocaleLowerCase();
     const rows = sortAgencySuppliers(profile.suppliers.filter(s => `${s.name} ${s.abn || ''}`.toLocaleLowerCase().includes(q)), supplierSort.value);
     root.querySelector('.agency-supplier-count').textContent = `${number(rows.length)} suppliers${q ? ' matching this filter' : ''}`;
-    root.querySelector('.agency-suppliers').innerHTML = rows.length ? rows.slice(0,suppliersVisible).map(s => `<div class="supplier-directory-row"><span><a href="${supplierUrl(s.id)}"><strong>${esc(s.name)}</strong></a><small>${s.abn ? `ABN ${esc(s.abn)}` : 'No ABN recorded'}</small>${s.donor_links.length ? `<small>${s.donor_links.filter(l => /^\/subject\/donor\//.test(l.url)).map(l => `<a href="${esc(l.url)}">Recorded donor profile</a>`).join(' · ')}</small>` : ''}</span><span class="supplier-directory-value"><strong>${money(s.total)}</strong><small>${number(s.count)} ${s.count === 1 ? 'contract' : 'contracts'}</small></span></div>`).join('') : '<p>No suppliers match this filter.</p>';
+    root.querySelector('.agency-suppliers').innerHTML = rows.length ? rows.slice(0,suppliersVisible).map(s => `<div class="supplier-directory-row"><span><a href="${supplierUrl(s.id)}"><strong>${esc(s.name)}</strong></a><small>${s.abn ? `ABN ${esc(s.abn)}` : 'No ABN recorded'}</small>${s.donor_links.length ? `<small>${s.donor_links.filter(l => /^\/subject\/donor\//.test(l.url) && !/^donor:withheld-/.test(l.id)).map(l => `<a href="${esc(l.url)}">Recorded donor profile</a>`).join(' · ')}</small>` : ''}</span><span class="supplier-directory-value"><strong>${money(s.total)}</strong><small>${number(s.count)} ${s.count === 1 ? 'contract' : 'contracts'}</small></span></div>`).join('') : '<p>No suppliers match this filter.</p>';
     const more = root.querySelector('.agency-suppliers-more'); more.innerHTML = rows.length > suppliersVisible ? '<button type="button" class="ui-button">Show more suppliers</button>' : '';
     more.querySelector('button')?.addEventListener('click', () => { const first = suppliersVisible; suppliersVisible += 20; suppliers(); root.querySelectorAll('.agency-suppliers .supplier-directory-row')[first]?.querySelector('a')?.focus(); });
   }
