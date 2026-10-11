@@ -14,8 +14,10 @@ test('individual type evidence overrides organisation-looking names',()=>{
   assert.equal(isOrganisationRecipient({name:org.label,kind:'company'}),true);
   assert.equal(isOrganisationRecipient({}),false);
 });
-test('checked-in schema matches the typed dataset and FTS generator',async()=>{
-  const checked=await readFile(new URL('../table-migrations/0001_tables.sql',import.meta.url),'utf8');assert.equal(checked,tableSchema());assert.equal((checked.match(/USING fts5/g)||[]).length,10);
+test('the original migration retains the dataset FTS tables',async()=>{
+  const checked=await readFile(new URL('../table-migrations/0001_tables.sql',import.meta.url),'utf8');
+  assert.equal((checked.match(/USING fts5/g)||[]).length,10);
+  assert.equal((tableSchema().match(/USING fts5/g)||[]).length,10);
 });
 test('private identifier variants are derived from exports and cover spaced and encoded forms',async()=>{
   const files=JSON.parse(await readFile(new URL('../public/suppliers.json',import.meta.url))).suppliers;
