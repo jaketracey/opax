@@ -21,13 +21,15 @@ const recipients=[];
 for(const jur of ['federal','qld'])for(const file of (await readdir(new URL(`grants/${jur}/`,pub))).filter(f=>f.startsWith('shard-')&&f.endsWith('.json')))for(const row of Object.values(await read(`grants/${jur}/${file}`)))if(!isOrganisationRecipient(row))recipients.push(...[row.n,row.abn,row.abr?.abn,row.identity?.legal_name,row.abr?.name,...row.aliases||[],...row.lookup_names||[]].filter(v=>(typeof v==='string'||typeof v==='number')&&String(v).trim()).map(String));
 const probes=[...new Set([...source.labels,...source.identifiers,...recipients])];
 test('the published table registry rejects the complete runtime donor and recipient set',async t=>{
-  assert.equal(registry.version,1);
+  assert.equal(registry.version,2);
   assert.equal(tableRegistryFingerprint(policy),TABLE_REGISTRY_FINGERPRINT);
-  assert.ok(registry.identities.every(e=>Object.keys(e).sort().join(',')==='hash,words'&&/^[a-f0-9]{64}$/.test(e.hash)&&Number.isSafeInteger(e.words)&&e.words>0));
+  assert.ok(registry.identities.every(e=>Object.keys(e).sort().join(',')==='compact,hash,length,rolling,words'&&/^[a-f0-9]{64}$/.test(e.hash)&&Number.isSafeInteger(e.words)&&e.words>0));
   const blocked=compileHashedIdentityCheck(registry.identities,registry.strippedLengths),safe=await tablePrivacyCheck(assets);
+  const rowBlocked=compileHashedIdentityCheck(registry.identities,registry.strippedLengths,{mode:'row'}),rowSafe=await tablePrivacyCheck(assets,'row');
   assert.equal(probes.filter(v=>!policy.check(v)||!blocked(v)||safe(v)).length,0,'guard miss count');
-  for(const value of probes){const response=await tablePrivacy(new Request('https://local.invalid/api/table/privacy',{method:'POST',body:JSON.stringify({text:value})}),assets);assert.ok(response.status===200&&(await response.json()).safe===false,'browser validator rejection count');}
-  t.diagnostic(JSON.stringify({donorLabels:source.labels.length,donorLabelsRejected:source.labels.filter(blocked).length,donorIdentifiers:source.identifiers.length,donorIdentifiersRejected:source.identifiers.filter(blocked).length,recipientInputs:new Set(recipients).size,misses:0}));
+  assert.equal(probes.filter(v=>!policy.rowCheck(v)||!rowBlocked(v)||rowSafe(v)).length,0,'row guard miss count');
+  for(const value of probes)for(const mode of ['query','row','csv']){const text=mode==='csv'?'"'+value.replaceAll('"','""')+'"':value;const response=await tablePrivacy(new Request('https://local.invalid/api/table/privacy',{method:'POST',body:JSON.stringify({text,mode})}),assets);assert.ok(response.status===200&&(await response.json()).safe===false,'browser validator rejection count');}
+  t.diagnostic(JSON.stringify({donorLabels:source.labels.length,donorLabelsRejected:source.labels.filter(blocked).length,donorIdentifiers:source.identifiers.length,donorIdentifiersRejected:source.identifiers.filter(blocked).length,recipientInputs:new Set(recipients).size,misses:0,rowMisses:0,csvMisses:0}));
 });
 test('all financial endpoints and CSV reject every runtime donor and recipient input after publication',async()=>{
   const local=await tableDatabase({datasets:{},policy});

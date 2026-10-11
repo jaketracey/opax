@@ -16,18 +16,19 @@ export async function tablePrivacyIndex({donorContext=true} = {}) {
   }
   const phrases=withheldPhrases(graphs,officeHolders.filter(Boolean));
   const source=sourceTableDonorIdentities(),values=[...source.labels,...source.identifiers];
-  const blocked=compileIdentityCheck(new Set(values.flatMap(identityVariants)));
-  return {phrases,values,safe:value=>!blocked(value)&&!namesWithheldPhrase(phrases,`donor receipts ${value}`)};
+  const identities=new Set(values.flatMap(identityVariants));
+  const blocked=compileIdentityCheck(identities),rowBlocked=compileIdentityCheck(identities,{mode:'row'});
+  return {phrases,values,safe:value=>!blocked(value)&&!namesWithheldPhrase(phrases,`donor receipts ${value}`),safeRows:value=>!rowBlocked(value)&&!namesWithheldPhrase(phrases,`donor receipts ${value}`)};
 }
 
 /** CSV must be an actual browser download path. All listed surfaces are mandatory. */
 export async function assertTablePrivacy(surfaces,index) {
   for (const key of ['clientInput','serverResponses','url','renderedText','accessibleText','analytics']) {
     assert.ok(Object.hasOwn(surfaces,key),`privacy surface missing: ${key}`);
-    assert.ok(index.safe(typeof surfaces[key] === 'string' ? surfaces[key] : JSON.stringify(surfaces[key])),`withheld text on privacy surface: ${key}`);
+    assert.ok((key==='url' ? index.safe : index.safeRows || index.safe)(typeof surfaces[key] === 'string' ? surfaces[key] : JSON.stringify(surfaces[key])),`withheld text on privacy surface: ${key}`);
   }
   assert.equal(typeof surfaces.csvPath,'string','privacy gate requires an actual downloaded file');
-  assert.ok(index.safe(await readFile(surfaces.csvPath,'utf8')),'withheld text in downloaded CSV');
+  assert.ok((index.safeRows || index.safe)(await readFile(surfaces.csvPath,'utf8')),'withheld text in downloaded CSV');
 }
 
 /** Each donor rollout adds one registration to its browser gate and runs it locally. */

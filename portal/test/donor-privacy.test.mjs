@@ -213,7 +213,7 @@ test.after(offline());
 const {env, fetch: fetchWorker} = await loadWorker(new URL('../src/index.ts', import.meta.url).pathname, root);
 env.TABLE_DB = tablesD1.db;
 const originalAssets = env.ASSETS.fetch.bind(env.ASSETS);
-env.ASSETS.fetch = request => new URL(request.url).pathname === '/table-private-identities.json' ? Promise.resolve(Response.json({version:1,identities:tableIdentityHashes(moneyTables.policy),strippedLengths:moneyTables.policy.strippedLengths})) : originalAssets(request);
+env.ASSETS.fetch = request => new URL(request.url).pathname === '/table-private-identities.json' ? Promise.resolve(Response.json({version:2,identities:tableIdentityHashes(moneyTables.policy),strippedLengths:moneyTables.policy.strippedLengths})) : originalAssets(request);
 const ownUrl = (html, path) => entities(html).replaceAll(path, '');
 
 function assertCleanCSV(where, csv) {
@@ -251,7 +251,7 @@ test('all five money tables withhold donor, recipient, supplier, alias and ident
   const shared=await tablePrivacyIndex();
   // The shared gate covers HTTP output here; UI rollouts register its Chrome gate.
   // Extend its independently derived donor index with recipient/supplier ABNs.
-  const sharedIndex={...shared,safe:value=>shared.safe(value)&&!policy.check(value)};
+  const sharedIndex={...shared,safe:value=>shared.safe(value)&&!policy.check(value),safeRows:value=>shared.safeRows(value)&&!policy.rowCheck(value)};
   const identifiers=denied.filter(p=>/^\d{11}$/.test(p));
   const donorPhrases=withheldPhrases(graphs,[]);
   const donors=[...new Set(graphs.flatMap(g=>g.nodes.filter(n=>n.kind==='donor'&&!isOrganisationDonor(n)).flatMap(n=>[n.label,...(n.aliases||[])])).filter(v=>namesWithheldPhrase(donorPhrases,'donor '+v)))];
@@ -264,7 +264,7 @@ test('all five money tables withhold donor, recipient, supplier, alias and ident
   const probes=[...new Set([...donors.slice(0,10),...recipients.slice(0,10),...suppliers.slice(0,10),...aliases.slice(0,5),...abns.slice(0,5),...identifiers.slice(0,10),...identifiers.slice(0,3).map(v=>v.split('').join(' '))])];
   const decodedProbes=[donors[0],recipients[0],suppliers[0],aliases[0],identifiers[0]].filter(Boolean);
   assert.ok(recipients.length>=64,'individual recipient coverage');assert.ok(suppliers.length>0,'individual supplier coverage');assert.ok(identifiers.length>0,'withheld identifier coverage');
-  const clean = (where,text) => assert.equal(policy.check(text),false,where+': withheld identity count must be zero');
+  const clean = (where,text) => assert.equal(policy.rowCheck(text),false,where+': withheld identity count must be zero');
   // Schema keys (including the registration column) are labels, not identities.
   const cleanJSON=(where,value)=>{if(Array.isArray(value))for(const v of value)cleanJSON(where,v);else if(value&&typeof value==='object')for(const v of Object.values(value))cleanJSON(where,v);else if(value!=null)clean(where,String(value));};
   for (const [dataset,config] of Object.entries(TABLE_DATASETS).filter(([,c])=>c.privacy)) {

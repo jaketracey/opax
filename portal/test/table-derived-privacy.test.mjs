@@ -7,7 +7,7 @@ import {createHash} from 'node:crypto';
 import ts from 'typescript';
 import {sourceTableDonorIdentities} from '../../scripts/table_identity_source.mjs';
 import {tableIdentityIndex,tableIdentityHashes,tableRegistryFingerprint} from '../../scripts/load_tables.mjs';
-import {identityStripped,STRIPPED_MIN_LENGTH,STRIPPED_CONTAINS_MIN_LENGTH} from '../src/table-identities.mjs';
+import {identityStripped,STRIPPED_MIN_LENGTH,STRIPPED_CONTAINS_MIN_LENGTH,ROW_IDENTITY_POLICY} from '../src/table-identities.mjs';
 import {compileHashedIdentityCheck} from '../src/table-identity-hashes.mjs';
 import {tablePrivacy,tablePrivacyCheck} from '../src/table-privacy.ts';
 import {tableApi,TABLE_REGISTRY_FINGERPRINT} from '../src/table-api.ts';
@@ -56,7 +56,7 @@ test('additive compact hashes retain all production word hashes and reject every
   const published=new Map(registry.identities.map(e=>[e.hash,e.words]));
   assert.equal(old.identities.filter(e=>published.get(e.hash)!==e.words).length,0,'production hash retention');
   assert.equal(tableRegistryFingerprint(policy),TABLE_REGISTRY_FINGERPRINT);
-  assert.equal(createHash('sha256').update([...published.keys()].sort().join('\n')).digest('hex'),TABLE_REGISTRY_FINGERPRINT);
+  assert.equal(createHash('sha256').update(ROW_IDENTITY_POLICY+'\n').update([...published.keys()].sort().join('\n')).digest('hex'),TABLE_REGISTRY_FINGERPRINT);
   assert.equal(stripped.filter(v=>!policy.check(v)||!blocked(v)||safe(v)).length,0,'variant misses');
   const short=donorVariants.find(v=>v.length<6),long=donorVariants.find(v=>v.length>=6);
   for(const value of [short,long]){
