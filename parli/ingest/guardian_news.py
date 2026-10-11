@@ -14,6 +14,8 @@ Usage:
     python -m parli.ingest.guardian_news --all-topics --limit 50
 """
 
+from parli.ingest import http as source_http
+
 import argparse
 import os
 import time
@@ -24,8 +26,8 @@ from parli.schema import get_db, init_db
 
 API_BASE = "https://content.guardianapis.com/search"
 
-SESSION = requests.Session()
-SESSION.headers.update({"User-Agent": "OPAX/1.0 (parliamentary transparency research)"})
+SESSION = source_http.Session()
+SESSION.headers.update({"User-Agent": source_http.USER_AGENT})
 
 # Topics and their search queries — tuned for Australian political coverage
 TOPIC_QUERIES = {

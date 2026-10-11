@@ -5,7 +5,7 @@
 // Failure messages carry paths and counts only, never a donor's name.
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {readFileSync, readdirSync, rmSync, existsSync} from 'node:fs';
+import {readFileSync, writeFileSync, readdirSync, rmSync, existsSync} from 'node:fs';
 import {memoryExport,closeMemoryExports} from './memory-export.mjs';
 import {join} from 'node:path';
 import {execFileSync} from 'node:child_process';
@@ -17,9 +17,21 @@ import {WITHHELD_DONOR_REPLY} from '../src/donor-index.ts';
 import {MONEY_GRAPHS, isOrganisationDonor, donorPrivacyIndex, donorNameWithheld, foldDonorName, withholdIndividualDonors, withheldPhrases, namesWithheldPhrase} from '../public/donor-entity.js';
 import {partyUrl} from '../public/canonical-urls.js';
 import {personIndex} from '../src/person-slug.ts';
-import {buildCrawl} from '../../scripts/build_crawl_catalog.mjs';
-import {buildGrowth} from '../../scripts/build_growth_modules.mjs';
+import {buildCrawl as buildCrawlOriginal} from '../../scripts/build_crawl_catalog.mjs';
+import {buildGrowth as buildGrowthOriginal} from '../../scripts/build_growth_modules.mjs';
 import {moduleOutputs} from './growth-module-harness.mjs';
+import {applyQuery, dataTableHTML, mountDataTable, toCSV} from '../public/datatable.js';
+import {tableHarness} from './datatable-harness.mjs';
+import {tableRows,tableIdentityHashes} from '../../scripts/load_tables.mjs';
+import {tableDatabase} from './table-d1-harness.mjs';
+import {isOrganisationRecipient} from '../src/table-recipient.mjs';
+import {moneyFlowType} from '../public/money-records.js';
+import {TABLE_DATASETS} from '../src/table-datasets.mjs';
+import {assertTablePrivacy,tablePrivacyIndex} from './datatable-privacy.mjs';
+
+const sourceRead = root => async path => JSON.parse(readFileSync(join(root,path.replace(/^\//,'')),'utf8'));
+const buildGrowth = buildGrowthOriginal;
+const buildCrawl = buildCrawlOriginal;
 
 const pub = new URL('../public/', import.meta.url).pathname;
 const real = path => JSON.parse(path==='graph/campaigners.json' ? execFileSync('git',['show','33594d4ec048c77359af1336032dbaa4161b8665:portal/public/'+path],{maxBuffer:20*1024*1024}).toString() : readFileSync(join(pub, path), 'utf8'));
@@ -66,7 +78,13 @@ test.after(closeMemoryExports);
 const at = path => join(root, path.replace(/^\//, ''));
 
 // --- what may not be named -------------------------------------------------------
-const graphs = MONEY_GRAPHS.map(path => JSON.parse(readFileSync(at(path), 'utf8')));
+const graphs = await Promise.all(MONEY_GRAPHS.map(path=>sourceRead(root)(path)));
+// Build the populated financial registers under the same fixture privacy policy
+// as the donation graphs, rather than trusting a prebuilt public snapshot.
+const moneyTables = await tableRows(root, {moneyOnly: true,graphs});
+for (const dataset of ['contracts', 'suppliers', 'grants']) assert.ok(moneyTables.rows[dataset].length > 0, dataset);
+const tablesD1 = await tableDatabase({datasets:moneyTables.rows,policy:moneyTables.policy});
+test.after(()=>tablesD1.close());
 const index = donorPrivacyIndex(graphs);
 const donorNodes = graphs.flatMap(g => g.nodes.filter(n => n.kind === 'donor'));
 const fixtureLabels = new Set(FIXTURE_INDIVIDUALS.map(([label]) => label));
@@ -188,7 +206,98 @@ function assertClean(where, text) {
 // what would have been sent to a model is checked like any other output.
 test.after(offline());
 const {env, fetch: fetchWorker} = await loadWorker(new URL('../src/index.ts', import.meta.url).pathname, root);
+env.TABLE_DB = tablesD1.db;
+const originalAssets = env.ASSETS.fetch.bind(env.ASSETS);
+env.ASSETS.fetch = request => new URL(request.url).pathname === '/table-private-identities.json' ? Promise.resolve(Response.json({version:1,identities:tableIdentityHashes(moneyTables.policy)})) : originalAssets(request);
 const ownUrl = (html, path) => entities(html).replaceAll(path, '');
+
+function assertCleanCSV(where, csv) {
+  let quoted = false, start = 0, batch = [];
+  for (let i = 0; i < csv.length; i++) {
+    if (csv[i] === '"') {
+      if (quoted && csv[i + 1] === '"') i++;
+      else quoted = !quoted;
+    } else if (!quoted && csv[i] === '\n') {
+      batch.push(csv.slice(start, i + 1)); start = i + 1;
+      if (batch.length === 128) {assertClean(where, batch.join(''));batch = [];}
+    }
+  }
+  assertClean(where, batch.join('') + csv.slice(start));
+}
+
+test('neutral D1 aggregates retain source financial totals without identity fields', async () => {
+  const expected={suppliers:real('suppliers.json').suppliers.reduce((n,s)=>n+(Number(s.total)||0),0),contracts:0,grants:0,'money-connections':0,'party-money':0};
+  const contracts=new Set();
+  for(const file of readdirSync(join(pub,'suppliers')).filter(f=>f.endsWith('.json')))for(const s of Object.values(real('suppliers/'+file).profiles))for(const c of s.contracts||[])if(!contracts.has(c.id)){contracts.add(c.id);expected.contracts+=Number(c.amount)||0;}
+  for(const jur of ['federal','qld'])for(const file of readdirSync(join(pub,'grants',jur)).filter(f=>f.startsWith('shard-')))for(const r of Object.values(real(`grants/${jur}/${file}`)))for(const g of r.grants||[])expected.grants+=Number(g.v)||0;
+  for(const graph of graphs){const nodes=new Map(graph.nodes.map(n=>[n.id,n]));for(const edge of graph.edges){const flow=moneyFlowType(edge,nodes);if(flow){expected['money-connections']+=Number(edge.total)||0;if(flow==='receipts')expected['party-money']+=Number(edge.total)||0;}}}
+  for(const [name,total]of Object.entries(expected)){
+    const table='table_'+name.replaceAll('-','_'),value=name==='suppliers'?'total':'amount';
+    const stored=Number(await tablesD1.db.prepare(`SELECT SUM(${value}) AS total FROM ${table}`).first('total'));
+    assert.ok(Math.abs(stored-total)<=Math.max(0.00001,Math.abs(total)*1e-12),name+': source total retained');
+    const aggregates=(await tablesD1.db.prepare(`SELECT * FROM ${table} WHERE id LIKE 'aggregate:%' LIMIT 100`).all()).results;
+    assert.ok(aggregates.length>0,name+': neutral aggregates exist');
+    for(const row of aggregates)for(const key of ['abn','url','canonical_url','aliases','description','to'])if(key in row)assert.equal(row[key],null,name+': aggregate has no identity or link');
+  }
+});
+
+test('all five money tables withhold donor, recipient, supplier, alias and identifier state', async () => {
+  const policy=moneyTables.policy,denied=[...policy.phrases];
+  const shared=await tablePrivacyIndex();
+  // The shared gate covers HTTP output here; UI rollouts register its Chrome gate.
+  // Extend its independently derived donor index with recipient/supplier ABNs.
+  const sharedIndex={...shared,safe:value=>shared.safe(value)&&!policy.check(value)};
+  const identifiers=denied.filter(p=>/^\d{11}$/.test(p));
+  const donorPhrases=withheldPhrases(graphs,[]);
+  const donors=[...new Set(graphs.flatMap(g=>g.nodes.filter(n=>n.kind==='donor'&&!isOrganisationDonor(n)).flatMap(n=>[n.label,...(n.aliases||[])])).filter(v=>namesWithheldPhrase(donorPhrases,'donor '+v)))];
+  const recipients=['federal','qld'].flatMap(jur=>real(`graph/grants.${jur}.json`).recipients.filter(r=>!isOrganisationRecipient(r)).map(r=>r.n));
+  const recipientDetails=['federal','qld'].flatMap(jur=>readdirSync(join(pub,'grants',jur)).filter(f=>f.startsWith('shard-')).flatMap(f=>Object.values(real(`grants/${jur}/${f}`))).filter(r=>!isOrganisationRecipient(r)));
+  const supplierDetails=readdirSync(join(pub,'suppliers')).filter(f=>f.endsWith('.json')).flatMap(f=>Object.values(real('suppliers/'+f).profiles)).filter(s=>!isOrganisationRecipient({...s,...s.identity}));
+  const suppliers=supplierDetails.map(s=>s.name);
+  const aliases=[...recipientDetails,...supplierDetails].flatMap(r=>[...(r.aliases||[]),...(r.lookup_names||[]),r.identity?.legal_name,r.abr?.name]).filter(v=>typeof v==='string');
+  const abns=[...recipientDetails,...supplierDetails].map(r=>r.abn??r.abr?.abn).filter(Boolean).map(String);
+  const probes=[...new Set([...donors.slice(0,10),...recipients.slice(0,10),...suppliers.slice(0,10),...aliases.slice(0,5),...abns.slice(0,5),...identifiers.slice(0,10),...identifiers.slice(0,3).map(v=>v.split('').join(' '))])];
+  const decodedProbes=[donors[0],recipients[0],suppliers[0],aliases[0],identifiers[0]].filter(Boolean);
+  assert.ok(recipients.length>=64,'individual recipient coverage');assert.ok(suppliers.length>0,'individual supplier coverage');assert.ok(identifiers.length>0,'withheld identifier coverage');
+  const clean = (where,text) => assert.equal(policy.check(text),false,where+': withheld identity count must be zero');
+  // Schema keys (including the registration column) are labels, not identities.
+  const cleanJSON=(where,value)=>{if(Array.isArray(value))for(const v of value)cleanJSON(where,v);else if(value&&typeof value==='object')for(const v of Object.values(value))cleanJSON(where,v);else if(value!=null)clean(where,String(value));};
+  for (const [dataset,config] of Object.entries(TABLE_DATASETS).filter(([,c])=>c.privacy)) {
+    const base='/api/table/'+dataset;
+    const response=await fetchWorker(base+'?pageSize=200');assert.equal(response.status,200,dataset);
+    const page=await response.json();cleanJSON(dataset+' rows and facets',page);
+    const publicValues=[];const values=value=>{if(Array.isArray(value))value.forEach(values);else if(value&&typeof value==='object')Object.values(value).forEach(values);else if(value!=null)publicValues.push(value);};values(page);
+    const csv=await fetchWorker(base+'?format=csv');assert.equal(csv.status,200,dataset);
+    const csvText=await csv.text();
+    // Bounded chunks avoid building quadratic candidate sets for a full CSV.
+    for (const line of csvText.split('\r\n')) clean(dataset+' CSV',line);
+    const csvPath=join(root,'table-'+dataset+'.csv');writeFileSync(csvPath,csvText);
+    await assertTablePrivacy({clientInput:[],serverResponses:publicValues,csvPath,url:response.headers.get('content-location') || '',renderedText:'',accessibleText:'',analytics:[]},sharedIndex);
+    writeFileSync(csvPath,csvText.slice(0,csvText.indexOf('\r\n')+2));
+    for (const [i,label] of probes.entries()) for (const format of ['', '&format=csv']) {
+      const state=new URLSearchParams({q:label,pageSize:'200'});
+      const filtered=await fetchWorker(base+'?'+state+format);assert.equal(filtered.status,200,`${dataset} query ${i}`);
+      const text=await filtered.text();if(format)clean(dataset+' body',text);else cleanJSON(dataset+' body',JSON.parse(text));clean(dataset+' headers',JSON.stringify([...filtered.headers]));
+      assert.equal(filtered.headers.get('content-location'),null);assert.equal(filtered.headers.get('x-robots-tag'),'noindex');
+      await assertTablePrivacy({clientInput:[],serverResponses:[text,[...filtered.headers]],csvPath,url:filtered.headers.get('content-location') || '',renderedText:'',accessibleText:'',analytics:[]},sharedIndex);
+      if (format) assert.equal(filtered.headers.get('x-table-exported'),'0');else assert.equal(JSON.parse(text).total,0);
+    }
+    const malformed=await fetchWorker(base+'?'+new URLSearchParams({q:probes[0],sort:'invalid'}));
+    assert.equal((await malformed.json()).total,0);assert.equal(malformed.headers.get('content-location'),null);
+    const textColumn=config.columns.find(c=>c.type==='text'&&c.key!=='id');
+    for(const [i,value]of decodedProbes.entries())for(const format of ['', '&format=csv']) {
+      const escaped='"'+value.split('').map(c=>'\\u'+c.charCodeAt(0).toString(16).padStart(4,'0')).join('')+'"';
+      const state=new URLSearchParams({['f.'+textColumn.key]:'['+escaped+']'});
+      const decoded=await fetchWorker(base+'?'+state+format);assert.equal(decoded.status,200,`${dataset} decoded query ${i}`);
+      const text=await decoded.text();if(format)clean(dataset+' decoded body',text);else cleanJSON(dataset+' decoded body',JSON.parse(text));
+      assert.equal(decoded.headers.get('content-location'),null);assert.equal(decoded.headers.get('link'),null);
+      await assertTablePrivacy({clientInput:[],serverResponses:[text,[...decoded.headers]],csvPath,url:'',renderedText:'',accessibleText:'',analytics:[]},sharedIndex);
+      if(format)assert.equal(decoded.headers.get('x-table-exported'),'0');else assert.equal(JSON.parse(text).total,0);
+    }
+    const filter=new URLSearchParams({['f.'+textColumn.key]:JSON.stringify([probes[0]])});
+    const r=await fetchWorker(base+'?'+filter);assert.equal((await r.json()).total,0);assert.equal(r.headers.get('content-location'),null);
+  }
+});
 
 test('the fixture individuals are withheld and the fixture organisation is not', () => {
   for (const label of fixtureLabels) assert.ok(donorNameWithheld(index, label) && known.includes(label) && checked.includes(label), `fixture ${[...fixtureLabels].indexOf(label)}`);
@@ -654,4 +763,79 @@ test('historical withheld acronym aliases have no indexed profile or card',async
   const response=await fetchWorker('/subject/donor/'+encodeURIComponent(alias),{method:'HEAD'});
   assert.match(response.headers.get('x-robots-tag') || '',/noindex/);
  }
+});
+
+const tablePhrases=withheldPhrases(graphs,[]);
+
+test('money tables withhold every derived donor in client and server rows, facets and CSV', () => {
+  for (const [i,graph] of graphs.entries()) {
+    const rows = graph.nodes.filter(n=>n.kind === 'donor');
+    const config = {id:`privacy-table-${i}`,caption:'Receipts',privacy:'donors',pageType:'money',privacyCheck:value=>!namesWithheldPhrase(tablePhrases,`donor receipts ${value}`),rows,
+      columns:[{key:'label',label:'Organisation',type:'text',primary:true,facet:'multi'}, {key:'industry',label:'Sector',type:'category',facet:'chips'}, {key:'total',label:'Amount',type:'money',facet:'range'}]};
+    const page = applyQuery(rows,config,{pageSize:50000});
+    assert.ok(page.rows.every(isOrganisationDonor),`table ${i}: unsafe row`);
+    assert.equal(page.total,rows.filter(isOrganisationDonor).length,`table ${i}: organisation count`);
+    assertClean(`table ${i}: rows and facets`,JSON.stringify(page));
+    assertClean(`table ${i}: client SSR`,dataTableHTML(config,page));
+    assertClean(`table ${i}: client CSV`,toCSV(rows,config));
+    const source = {...config,rows:undefined,source:{endpoint:'/__fixtures/table/money'}};
+    // Refuse unsafe donor facets even if the endpoint accidentally supplies them.
+    const facets = {...page.facets,label:rows.map(row=>({value:row.label,count:1}))};
+    assertClean(`table ${i}: server SSR`,dataTableHTML(source,{...page,facets}));
+    assertClean(`table ${i}: unsafe server page`,dataTableHTML(source,{rows,total:rows.length,page:1,pageSize:50000,facets}));
+    assertClean(`table ${i}: server CSV`,toCSV(rows,source));
+  }
+});
+
+test('money table hydration removes all derived withheld names and aliases from URL state', async () => {
+  let queries = 0;
+  for (const [i,graph] of graphs.entries()) {
+    const donors = graph.nodes.filter(n=>n.kind === 'donor');
+    const organisation = donors.find(isOrganisationDonor);
+    for (const node of donors.filter(n=>!isOrganisationDonor(n))) {
+      for (const value of [node.label,...(node.aliases || [])]) {
+        if (!namesWithheldPhrase(tablePhrases,`donor receipts ${value}`)) continue;
+        const config = {id:`privacy-url-${i}`,caption:'Receipts',privacy:'donors',pageType:'money',urlKey:'t',privacyCheck:value=>!namesWithheldPhrase(tablePhrases,`donor receipts ${value}`),rows:[organisation],
+          columns:[{key:'label',label:'Organisation',type:'text',primary:true,facet:'multi'},{key:'total',label:'Amount',type:'money'},{key:'industry',label:'Sector',type:'category',facet:'multi'}]};
+        const params = new URLSearchParams({'t.q':value,'t.f.label':JSON.stringify([value]),'t.f.industry':JSON.stringify([value]),campaign:'fixture'});
+        const harness = tableHarness(`http://localhost/money?${params}`);
+        const mounted = mountDataTable(harness.root,config);
+        await new Promise(setImmediate);
+        const url = new URL(harness.win.location.href);
+        assert.equal(url.searchParams.has('t.q'),false,`query ${queries}: search echo`);
+        assert.equal(url.searchParams.has('t.f.label'),false,`query ${queries}: facet echo`);
+        assert.equal(url.searchParams.has('t.f.industry'),false,`query ${queries}: secondary facet echo`);
+        assert.equal(url.searchParams.get('campaign'),'fixture');
+        assertClean(`query ${queries}: HTML`,harness.html());
+        mounted.destroy();
+        const server = tableHarness(`http://localhost/money?${params}`);
+        server.win.fetch = async () => Response.json({rows:[],total:0,page:1,pageSize:50,facets:{}});
+        const serverMount = mountDataTable(server.root,{...config,rows:undefined,source:{endpoint:'/__fixtures/table/money'}});
+        await new Promise(setImmediate);
+        const serverURL = new URL(server.win.location.href);
+        assert.equal(serverURL.searchParams.has('t.q'),false,`query ${queries}: server search echo`);
+        assert.equal(serverURL.searchParams.has('t.f.label'),false,`query ${queries}: server facet echo`);
+        assert.equal(serverURL.searchParams.has('t.f.industry'),false,`query ${queries}: server secondary facet echo`);
+        assertClean(`query ${queries}: server HTML`,server.html());
+        serverMount.destroy(); queries++;
+      }
+    }
+  }
+  assert.ok(queries > 400,'the full derived withheld set and aliases were checked');
+});
+
+test('table privacy boundary validates the shared index without reflecting input',async ()=>{
+  let checked=0;
+  for (const graph of graphs) for (const node of graph.nodes.filter(n=>n.kind === 'donor' && !isOrganisationDonor(n))) {
+    for (const value of [node.label,...(node.aliases || [])]) {
+      if (!namesWithheldPhrase(tablePhrases,`donor receipts ${value}`)) continue;
+      const response=await fetchWorker('/api/table/privacy',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({text:value})});
+      assert.equal(response.status,200,`validation ${checked}: status`);
+      assert.deepEqual(await response.json(),{safe:false},`validation ${checked}: rejected`);
+      assert.equal(response.headers.get('cache-control'),'no-store');checked++;
+    }
+  }
+  assert.ok(checked > 400);
+  const response=await fetchWorker('/api/table/privacy',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({text:'Infrastructure'})});
+  assert.deepEqual(await response.json(),{safe:true});
 });

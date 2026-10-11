@@ -28,6 +28,11 @@ nothing is lost, every 25 awards are committed.
 
 from __future__ import annotations
 
+import sys as _http_sys
+from pathlib import Path as _HttpPath
+_http_sys.path.insert(0, str(_HttpPath(__file__).resolve().parents[1]))
+from parli.ingest import http as source_http
+
 import argparse
 import html
 import json
@@ -45,7 +50,7 @@ DB = os.environ.get("OPAX_DB") or os.path.expanduser("~/.cache/autoresearch/parl
 BASE = "https://www.grants.gov.au"
 # GrantConnect answers 403 to anything that does not look like a browser; the
 # compatible-token form still names the project and a contact.
-UA = "Mozilla/5.0 (compatible; OPAX research; +https://opax.com.au; contact jake.tracey@noice.work)"
+UA = source_http.USER_AGENT
 DELAY = 0.5              # between requests; two per award, so about one award a second
 COMMIT_EVERY = 25
 SOURCE = "grantconnect_details"
@@ -118,8 +123,8 @@ def now():
 
 class Client:
     def __init__(self):
-        self.s = requests.Session()
-        self.s.headers.update({"User-Agent": UA, "Accept-Language": "en-AU,en;q=0.9"})
+        self.s = source_http.Session()
+        self.s.headers.update({"User-Agent": source_http.USER_AGENT, "Accept-Language": "en-AU,en;q=0.9"})
         self.requests = 0
 
     def get(self, url: str) -> requests.Response | None:

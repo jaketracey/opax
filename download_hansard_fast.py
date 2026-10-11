@@ -14,6 +14,8 @@ Usage:
     uv run download_hansard_fast.py --test
 """
 
+from parli.ingest import http as source_http
+
 import argparse
 import asyncio
 import json
@@ -36,7 +38,7 @@ BACKFILL_START = "2006-02-07"
 BACKFILL_END = date.today().isoformat()
 API_RATE_LIMIT = 1.0  # seconds between API calls
 SCRAPE_RATE_LIMIT = 0.2  # seconds between scrape requests per worker
-USER_AGENT = "AutoResearch-Hansard/2.0 (async)"
+USER_AGENT = source_http.USER_AGENT
 # OpenAustralia publishes a sitting day's Hansard a day or two later. An
 # empty result for a recent day is therefore "not yet", not "never": no
 # marker file is written for it, so the next run retries. Older empty days
@@ -162,6 +164,7 @@ async def get_debates(session: aiohttp.ClientSession, chamber: str, date_str: st
     }
     try:
         async with session.get(url, params=params, timeout=aiohttp.ClientTimeout(total=30)) as resp:
+            source_http.check_response(url, resp.status, await resp.read())
             resp.raise_for_status()
             data = await resp.json(content_type=None)
             if isinstance(data, list):
@@ -190,6 +193,7 @@ async def scrape_debate_page(
         await asyncio.sleep(SCRAPE_RATE_LIMIT)
         try:
             async with session.get(url, timeout=aiohttp.ClientTimeout(total=30)) as resp:
+                source_http.check_response(url, resp.status, await resp.read())
                 resp.raise_for_status()
                 html = await resp.text()
                 stats["pages_scraped"] += 1
@@ -395,7 +399,8 @@ async def run(args):
     connector = aiohttp.TCPConnector(limit=workers + 5)
     async with aiohttp.ClientSession(
         connector=connector,
-        headers={"User-Agent": USER_AGENT},
+        headers={"User-Agent": source_http.USER_AGENT},
+        trace_configs=[source_http.aiohttp_trace()],
     ) as session:
         for i, (date_str, chamber) in enumerate(work):
             elapsed = time.monotonic() - t_start

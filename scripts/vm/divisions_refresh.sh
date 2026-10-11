@@ -33,8 +33,17 @@ divisions_refresh() {
     return 0
   fi
   log "federal divisions refresh ($reason, since $since); KB sync off; budget ${OPAX_DIVISIONS_TIMEOUT:-20m}"
-  if ! OPAX_SYNC_KB=0 OPAX_DB="$HOME/.cache/autoresearch/parli.db" OPAX_PYTHON="$PY" \
+  if OPAX_SOURCE_NAME=divisions OPAX_SOURCE_STATUS_FILE="$PIPE/source-access/divisions.json" OPAX_SYNC_KB=0 OPAX_DB="$HOME/.cache/autoresearch/parli.db" OPAX_PYTHON="$PY" \
       run timeout --kill-after=60 "${OPAX_DIVISIONS_TIMEOUT:-20m}" bash scripts/refresh_divisions.sh "$since"; then
+    rm -f "$PIPE/source-access/divisions.json"
+  else
+    local rc=$?
+    if [ "$rc" = 4 ]; then
+      log "divisions PAUSED; existing votes kept"
+      DIVISIONS_ACQUISITION_FAILED=1
+      divisions_revert
+      return 0
+    fi
     fail "federal divisions acquisition/export failed or timed out; vote exports restored to HEAD"
     DIVISIONS_ACQUISITION_FAILED=1
     divisions_revert

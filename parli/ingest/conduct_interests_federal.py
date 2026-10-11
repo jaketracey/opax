@@ -10,12 +10,9 @@ Sources
                             per senator (tables per section, dated Addition/Deletion
                             alterations).
 
-Access constraints (measured 2026-09-02, see docs/DATA-INTERESTS.md)
-  * static.aph.gov.au (the PDFs) serves our honest User-Agent "OPAX research (opax.com.au)".
-  * www.aph.gov.au (index + Senate pages) sits behind a WAF that 403s every non-browser
-    User-Agent, including python-requests and curl. This module therefore never spoofs a
-    browser: Firecrawl (FIRECRAWL_API_KEY) is the approved route, or pass saved HTML with
-    --index-html / --senate-html-dir. robots.txt allows the paths.
+Access policy (2026-10-10, docs/SOURCES-ACCESS.md)
+  * Every request identifies OPAX with the shared honest agent. Refused sources
+    are paused; saved HTML / PDFs remain available for offline parsing.
   * Licence: CC BY-NC-ND 4.0 (site-wide). Facts are extracted, every row links to the
     source document; the KB rendering is a decision for the user (see the doc).
 
@@ -34,6 +31,8 @@ Usage
 
 from __future__ import annotations
 
+from parli.ingest import http as source_http
+
 import argparse
 import hashlib
 import json
@@ -46,7 +45,7 @@ from dataclasses import dataclass, field, asdict
 from datetime import datetime, timezone
 from pathlib import Path
 
-USER_AGENT = "OPAX research (opax.com.au)"
+USER_AGENT = source_http.USER_AGENT
 
 CACHE_DIR = Path(os.environ.get("OPAX_INTERESTS_CACHE", "~/.cache/autoresearch/conduct_interests/federal")).expanduser()
 DEFAULT_DB = Path(os.environ.get("OPAX_DB") or "~/.cache/autoresearch/parli.db").expanduser()
@@ -196,7 +195,7 @@ def _normalize_name(raw: str) -> str | None:
 
 def _session():
     import requests
-    s = requests.Session()
+    s = source_http.Session()
     s.headers["User-Agent"] = USER_AGENT
     return s
 
@@ -249,8 +248,8 @@ def parse_house_index(html: str) -> list[dict]:
 def fetch_house_index(index_html: Path | None) -> list[dict]:
     if index_html:
         return parse_house_index(Path(index_html).read_text(encoding="utf-8", errors="replace"))
-    from .interests_fetch import Firecrawl
-    return parse_house_index(Firecrawl().scrape(HOUSE_INDEX_URL))
+    from .interests_fetch import DirectHTTP
+    return parse_house_index(DirectHTTP().scrape(HOUSE_INDEX_URL))
 
 
 def download_house_pdfs(entries: list[dict], dest: Path, limit: int | None = None,
@@ -1162,8 +1161,8 @@ def cmd_senate(args):
             docs.append(doc)
             print(f"  {f.name:24s} {doc.member_name_raw:30s} rows={len(doc.rows):3d} last_modified={doc.last_updated}")
     else:
-        from .interests_fetch import Firecrawl, FetchError, senate_page
-        client = Firecrawl()
+        from .interests_fetch import DirectHTTP, FetchError, senate_page
+        client = DirectHTTP()
         index = parse_senate_index(client.scrape(SENATE_INDEX_URL))
         print(f"[senate] {len(index)} senators on the index")
         for e in index[:args.limit] if args.limit else index:
@@ -1301,7 +1300,7 @@ def main(argv=None):
     common(r)
     r.add_argument("--cache-dir", default=str(CACHE_DIR))
     r.add_argument("--status", help="receipt path; defaults to production only for both chambers loaded into a DB")
-    r.add_argument("--credit-cap", type=int, default=int(os.environ.get("OPAX_INTERESTS_CREDIT_CAP", "100")))
+    r.add_argument("--request-cap", type=int, default=100)
     r.add_argument("--chamber", choices=("house", "senate"))
     from .interests_fetch import refresh, STATUS_PATH
     r.set_defaults(func=refresh)

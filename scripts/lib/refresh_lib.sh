@@ -21,6 +21,7 @@ declare -A STEP_DELTA=()   # step name -> rows it added ("?" when the table coul
 FAILED_STEPS=()
 STALE_STEPS=()
 PARTIAL_STEPS=()
+PAUSED_STEPS=()
 mkdir -p "$PIPE"
 
 ts() { date '+%F %T'; }
@@ -46,8 +47,10 @@ run_step() {
   local before after rc t0 dur delta status
   before=$(count "$sql")
   t0=$(date +%s)
-  log "[$name] start: $*"
-  if timeout --kill-after=60 "${STEP_TIMEOUT:-3h}" "$@" >"$PIPE/$name.log" 2>&1; then
+  log "[$name] start"
+  mkdir -p "$PIPE/source-access"
+  rm -f "$PIPE/source-access/$name.json"
+  if OPAX_SOURCE_NAME="$name" OPAX_SOURCE_STATUS_FILE="$PIPE/source-access/$name.json" timeout --kill-after=60 "${STEP_TIMEOUT:-3h}" "$@" >"$PIPE/$name.log" 2>&1; then
     rc=0
   else
     rc=$?
@@ -63,10 +66,11 @@ run_step() {
   fi
   case $rc in
     0)   status=OK ;;
+    4)   status="PAUSED: honest agent refused (awaiting permission); last good data kept"; PAUSED_STEPS+=("$name") ;;
     124|137) status="FAIL(timeout ${STEP_TIMEOUT:-3h})" ;;
     *)   status="FAIL(rc=$rc)" ;;
   esac
-  if [ "$rc" -ne 0 ]; then
+  if [ "$rc" -ne 0 ] && [ "$rc" -ne 4 ]; then
     if { [ "$rc" -eq 124 ] || [ "$rc" -eq 137 ]; } && [[ ",${PARTIAL_OK:-}," == *",$name,"* ]]; then
       status="PARTIAL(timeout ${STEP_TIMEOUT:-3h}: resumes from its checkpoint next run)"
       PARTIAL_STEPS+=("$name")

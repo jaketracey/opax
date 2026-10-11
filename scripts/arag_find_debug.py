@@ -1,5 +1,10 @@
 #!/usr/bin/env python3
 """Dump the raw /find response structure (debugging serialization shapes)."""
+
+import sys as _http_sys
+from pathlib import Path as _HttpPath
+_http_sys.path.insert(0, str(_HttpPath(__file__).resolve().parents[1]))
+from parli.ingest import http as source_http
 import json
 import re
 import urllib.request
@@ -9,7 +14,7 @@ tok = re.search(r"^ARAG_KB_TOKEN=(.*)$", env, re.M).group(1)
 kb = re.search(r"^ARAG_KB_ID=(.*)$", env, re.M).group(1)
 zone = re.search(r"^ARAG_ZONE=(.*)$", env, re.M).group(1)
 
-req = urllib.request.Request(
+req = source_http.Request(
     f"https://{zone}.rag.progress.cloud/api/v1/kb/{kb}/find",
     data=json.dumps({
         "query": "gambling reform",
@@ -19,7 +24,7 @@ req = urllib.request.Request(
     headers={"content-type": "application/json",
              "x-nuclia-serviceaccount": f"Bearer {tok}"},
 )
-d = json.load(urllib.request.urlopen(req))
+d = json.load(source_http.urlopen(req))
 r = next(iter(d["resources"].values()))
 print("resource keys:", sorted(r.keys()))
 flds = r.get("fields") or {}

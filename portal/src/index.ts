@@ -1,14 +1,21 @@
 import {sanitiseStoredResponse} from './donor-stored-response'
 import {sanitiseStoredDonors} from './donor-hashes.mjs'
+import sourceIdentity from '../../parli/ingest/user-agent.json'
 import { SA_EXCERPT_LABEL, isSaHansard, saFullText, saOfficialUrl } from '../public/sa-hansard.js'
 import { saPublicResponse, saEventPayload } from './sa-hansard'
 import { saEvidenceText, saEvidenceRecord, saGenerationResponse, saConversationInput } from './sa-evidence'
+import {tablePrivacy} from './table-privacy'
 import { divisionPlain } from '../public/division-markdown.js'
+import { tableApi } from './table-api'
 import { runSocialPublication, socialStatus, socialEngagement, publicationCopy, previewPublication, todayRedirect, CHANNELS, type Channel } from './social-publication'
 import { positionEvidence, positionProposalQuote, positionEligibilityQuotes, positionCostQuote, isPositionEligibilityQuestion, isPositionCostQuestion, isPositionDetailQuestion, positionPointSupported, normalizePositionDraft } from './position-evidence'
 import { rankedMoneyAnswer } from './ask-money'
 import { paidAnswer, mentionsPay } from './ask-pay'
 import { rewriteFollowUp, clarifyPayload, REWRITE_SYSTEM, type FollowUpRewrite } from './ask-rewrite'
+import { buildPersonOverview, isPersonOverviewCandidate, isPersonOverviewIntent, isPersonRecentCandidate, isPersonRecentIntent, OVERVIEW_INSTRUCTIONS, OVERVIEW_CAPS, OVERVIEW_RETRIEVAL_MS, OVERVIEW_FIRST_ANSWER_MS, OVERVIEW_VERIFICATION_MS, type OverviewPack, type OverviewSpeech, type PersonContext } from './ask-person-overview'
+import { AskDeadline, AskPackCache } from './ask-deadline'
+import { personFollowups } from '../public/ask-person.js'
+import { firstSpeechTurn } from './position-evidence'
 import { slugIndex, personIndex } from './person-slug'
 import { missingEntitySlug } from './crawl-hygiene'
 import { normalizePassage, passageWindow } from './passage-text'
@@ -224,6 +231,7 @@ async function kbFetch(
     method: init?.method ?? (init?.body === undefined ? 'GET' : 'POST'),
     headers: {
       'content-type': 'application/json',
+      'user-agent': sourceIdentity.user_agent,
       'x-nuclia-serviceaccount': `Bearer ${env.ARAG_KB_TOKEN}`,
       ...headers,
     },
@@ -595,7 +603,7 @@ async function apiUnifiedSearch(request: Request, url: URL, env: Env, ctx: Execu
 /** One /find at `topK` depth, deduped to documents and ranked by score. */
 async function searchWindow(
   env: Env,
-  opts: { q: string; mode: string; kind: string; topK: number; url: URL },
+  opts: { q: string; mode: string; kind: string; topK: number; url: URL; reranker?: 'noop'; signal?: AbortSignal },
 ): Promise<SearchWindow | null> {
   const { q, mode, kind, topK, url } = opts
   const speakerDirectory = await loadPeople(env)
@@ -607,7 +615,7 @@ async function searchWindow(
   const body: Record<string, unknown> = {
     query: q,
     top_k: topK,
-    reranker: 'predict',
+    reranker: opts.reranker || 'predict',
     // origin + extra aren't serialized by default; the UI needs them for
     // speaker and date.
     show: ['basic', 'origin', 'extra'],
@@ -633,7 +641,7 @@ async function searchWindow(
       url.searchParams.get('attribution') === 'unattributed' ? { not: own } : own] } }
   }
 
-  const res = await kbFetch(env, '/find', { body })
+  const res = await kbFetch(env, '/find', { body, signal: opts.signal })
   if (!res.ok) return null
   const found = (await res.json()) as {
     resources?: Record<string, FindResource & {
@@ -924,8 +932,8 @@ function buildAskBody(input: AskInput, records: AskRecords = { records: [], cove
 }
 
 /** The portal's answer payload: the same shape from the sync and streamed paths. */
-function askPayload(answer: AskAnswer, records: AskRecords = { records: [], coverage: '', total: 0 }, scope?: AskScope, people?: PeopleData): { answer: string; citations: Record<string, unknown>; sources: unknown[]; scope?: AskScope; answer_status?: string; evidence_excerpts?: { resource: string; text: string }[] } {
-  const resources = Object.fromEntries(Object.entries(answer.retrieval_results?.resources ?? {})
+function askPayload(answer: AskAnswer, records: AskRecords = { records: [], coverage: '', total: 0 }, scope?: AskScope, people?: PeopleData, verifiedOnly = false): { answer: string; citations: Record<string, unknown>; sources: unknown[]; scope?: AskScope; answer_status?: string; evidence_excerpts?: { resource: string; text: string }[] } {
+  const resources = Object.fromEntries(Object.entries(verifiedOnly ? {} : answer.retrieval_results?.resources ?? {})
     .filter(([, r]) => !/^(da-|news-)/.test(r.slug ?? '')))
   const knownContexts = new Set<string>(records.records.map((_, i) => `USER_CONTEXT_${i}`))
   for (const resource of Object.values(resources)) {
@@ -1025,7 +1033,7 @@ function askPayload(answer: AskAnswer, records: AskRecords = { records: [], cove
   }
 }
 
-type AskPayload = ReturnType<typeof askPayload> & { evidence_kind?: 'original_position_proposal' }
+type AskPayload = ReturnType<typeof askPayload> & { evidence_kind?: 'original_position_proposal'; is_overview_intent?: boolean; subject_context?: PersonContext; followups?: {label: string; question: string; kind: string}[] }
 
 /** Verify quotes against original cited resources, not model metadata. */
 function hasUnsupportedQuotes(payload: AskPayload, raw: AskAnswer): boolean {
@@ -1277,8 +1285,60 @@ async function moneyOverview(facts: MoneyFacts, env: Env, ctx: ExecutionContext,
   }
 }
 
-async function apiAsk(request: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
-  const rawInput = saConversationInput(((await request.json().catch(() => ({}))) ?? {}) as Record<string,unknown>, env.SA_HANSARD_FULL_TEXT) as AskInput
+/** Emit progress before roster, cache, catalogue or original reads. No reader
+ * text or model output leaves this transport before the normal privacy checks. */
+function earlyOverviewStream(work: () => Promise<Response>, budget: AskDeadline, ctx: ExecutionContext): Response {
+  const encoder = new TextEncoder()
+  let gone = false
+  const readable = new ReadableStream<Uint8Array>({
+    start(controller) {
+      controller.enqueue(encoder.encode('event: status\ndata: {"phase":"searching"}\n\n'))
+      ctx.waitUntil((async () => {
+        try {
+          const response = await work()
+          if (response.headers.get('content-type')?.includes('text/event-stream') && response.body) {
+            const reader = response.body.getReader()
+            try {
+              for (;;) {
+                const item = await budget.run(() => reader.read())
+                if (item.done) break
+                if (gone) break
+                controller.enqueue(item.value)
+              }
+            } finally { await reader.cancel().catch(() => {}) }
+          } else {
+            const data = await budget.run(() => response.json())
+            if (!gone) controller.enqueue(encoder.encode(`event: ${response.ok ? 'done' : 'error'}\ndata: ${JSON.stringify(response.ok ? data : {...data as object,final:true})}\n\n`))
+          }
+        } catch {
+          if (!gone) controller.enqueue(encoder.encode('event: error\ndata: {"error":"The answer took too long. Please try again.","final":true}\n\n'))
+        } finally {
+          budget.dispose()
+          if (!gone) controller.close()
+        }
+      })())
+    },
+    cancel() { gone = true; budget.cancel() },
+  })
+  return new Response(readable, {headers:SSE_HEADERS})
+}
+
+async function apiAsk(request: Request, env: Env, ctx: ExecutionContext, prepared?: AskInput, firstBudget?: AskDeadline): Promise<Response> {
+  const rawInput = saConversationInput((prepared || ((await request.json().catch(() => ({}))) ?? {})) as Record<string,unknown>, env.SA_HANSARD_FULL_TEXT) as AskInput
+  const overviewCandidate = (isPersonOverviewCandidate(rawInput.question || '') || isPersonRecentCandidate(rawInput.question || '')) && !rawInput.topic && !rawInput.from && !rawInput.to && (!rawInput.kind || ['speech','all'].includes(rawInput.kind))
+  if (!firstBudget && (overviewCandidate || isPersonRecentIntent(rawInput))) {
+    const budget = new AskDeadline(OVERVIEW_FIRST_ANSWER_MS, request.signal)
+    const work = () => budget.run(async () => {
+      const response = await apiAsk(request,env,ctx,rawInput,budget)
+      if (budget.signal.aborted) await response.body?.cancel().catch(() => {})
+      return response
+    })
+    const url = new URL(request.url)
+    if (url.searchParams.get('stream') === '1' || request.headers.get('accept')?.includes('text/event-stream')) return earlyOverviewStream(work, budget, ctx)
+    try { return await work() }
+    catch { return json({error:'The answer took too long. Please try again.'},504) }
+    finally { budget.dispose() }
+  }
   // Phase durations go out as a Server-Timing header on synchronous answers,
   // so a slow ask can be split into our work and the platform's from outside.
   const marks: [string, number][] = [['start', Date.now()]]
@@ -1331,7 +1391,8 @@ async function apiAsk(request: Request, env: Env, ctx: ExecutionContext): Promis
   if (conversation) {
     const limited = await rateLimited(env.ASK_LIMITER, request)
     if (limited) return limited
-    const rewrite = await standaloneQuestion(rawInput, env)
+    const rewrite = await standaloneQuestion(rawInput, env, firstBudget)
+    firstBudget?.signal.throwIfAborted()
     // "High", "ok", "?": nothing to search on, and never the last question
     // over again. A free request for a full question, no answer generated.
     if (rewrite && typeof rewrite === 'object') { mark('rewrite'); return timed(json(clarifyPayload(rawInput.question ?? '', rewrite.suggestion))) }
@@ -1382,15 +1443,41 @@ async function apiAsk(request: Request, env: Env, ctx: ExecutionContext): Promis
   mark('cache')
 
   let records: AskRecords
-  try { records = await retrieveAskRecords(input, env.ASSETS) }
+  let overview: OverviewPack | undefined
+  const overviewIntent = isPersonOverviewIntent(input)
+  const recentIntent = isPersonRecentIntent(input)
+  firstBudget?.signal.throwIfAborted()
+  try {
+    if (overviewIntent || recentIntent) {
+      try {
+        overview = await personOverviewPack(input, env, ctx, firstBudget?.signal)
+        records = overview.records
+      } catch {
+        // The aggregate is an enhancement. Fail back to the existing local
+        // records and ordinary Ask retrieval; never fail the answer with it.
+        console.warn('person overview unavailable; using ordinary Ask retrieval')
+        records = await retrieveAskRecords(input, env.ASSETS).catch(() => ({records:[],coverage:'',total:0}))
+      }
+    } else records = await retrieveAskRecords(input, env.ASSETS)
+  }
   catch (err) {
     // Swallowed silently, this was undiagnosable from outside (2026-09-17).
     console.error('ask records', err instanceof Error ? err.stack || err.message : String(err))
     return json({ error: 'Public-record search is temporarily unavailable. Please try again.' }, 503)
   }
   mark('records')
-  const body = buildAskBody(input, records)
+  const body = buildAskBody(input, records, { reasoned: overviewIntent || recentIntent })
+  if (overview || recentIntent) {
+    const prompt = body.prompt as {system: string; user: string}
+    // The evidence uses ordinary extra_context IDs and the existing Ask preset.
+    // The position checks apply to the verified speaking turns in the pack.
+    prompt.user += '\n' + (overviewIntent ? OVERVIEW_INSTRUCTIONS :
+      (overview?.context.complete ? 'Answer about the most recent dated speech in the complete catalogue metadata selection. Give its title and exact speech date, then a short cited account of its verified original speaking turn. ' :
+        'Speech metadata is incomplete or unavailable. Do not claim any speech is the latest or give rolling-year counts. Explain the limitation and give a short cited account of the supplied speaking turns, with dates only where verified. ') +
+      'Use only the supplied verified speech records for this answer. ' + FOOTNOTE_INSTRUCTIONS)
+  }
   await scopeSpeakerBody(body, env, input.speaker)
+  firstBudget?.signal.throwIfAborted()
   // Pinned per pipeline through wrangler vars (see env.d.ts). Every pipeline
   // rides the KB's OpenRouter slot: generation bills to OpenRouter only.
   body.generative_model = askModel
@@ -1408,14 +1495,17 @@ async function apiAsk(request: Request, env: Env, ctx: ExecutionContext): Promis
       return timed(withCacheStatus(json(payload), status, false))
     } catch { return json({ error: 'The speech records are temporarily unavailable. Please try again.' }, 503) }
   }
-  if (wantStream) return apiAskStream(body, env, ctx, { onDone: store, cacheStatus: status, records, scope, askedAs })
+  if (wantStream) return apiAskStream(body, env, ctx, { onDone: store, cacheStatus: status, records, scope, askedAs, overview, overviewIntent, recentIntent, firstBudget })
 
   const askOnce = async (b: Record<string, unknown>, timeoutMs: number): Promise<AskAnswer | Response> => {
     try {
-      const res = await kbFetch(env, '/ask', { body: b, headers: { 'x-synchronous': 'true' }, signal: AbortSignal.timeout(timeoutMs) })
-      if (res.headers.get(MODEL_BUDGET_HEADER)) return modelBudgetBusy()
-      if (!res.ok) return json({ error: `ask failed (${res.status})` }, 502)
-      return guardPositionAnswer((await res.json()) as AskAnswer, b)
+      const work = async (signal: AbortSignal) => {
+        const res = await kbFetch(env, '/ask', { body: b, headers: { 'x-synchronous': 'true' }, signal })
+        if (res.headers.get(MODEL_BUDGET_HEADER)) return modelBudgetBusy()
+        if (!res.ok) return json({ error: `ask failed (${res.status})` }, 502)
+        return guardPositionAnswer((await res.json()) as AskAnswer, b)
+      }
+      return firstBudget ? await firstBudget.run(work,timeoutMs) : await work(AbortSignal.timeout(timeoutMs))
     } catch (err) {
       return json({ error: `ask failed (${err instanceof Error ? err.name : 'error'})` }, 504)
     }
@@ -1425,27 +1515,133 @@ async function apiAsk(request: Request, env: Env, ctx: ExecutionContext): Promis
   mark('ask')
   // A stall or an upstream error gets one lighter attempt before the reader hears about it;
   // a spent model budget does not.
-  if (answer instanceof Response && !answer.headers.get(MODEL_BUDGET_HEADER)) answer = await askOnce(lighterAsk(body), ASK_SYNC_TIMEOUT_MS)
+  if (answer instanceof Response && !answer.headers.get(MODEL_BUDGET_HEADER) && (!firstBudget || firstBudget.remaining > 0)) answer = await askOnce(lighterAsk(body), ASK_SYNC_TIMEOUT_MS)
   if (answer instanceof Response) return answer
   if (isRefusal(answer) && healthyRetrieval(answer) && Date.now() - t0 < ASK_RETRY_BUDGET_MS) {
     const again = await askOnce(body, ASK_SYNC_TIMEOUT_MS)
     if (!(again instanceof Response) && !isRefusal(again)) answer = again
   }
   mark('retry')
-  let payload = askPayload(answer, records, scope, await loadPeople(env))
+  let payload = askPayload(answer, records, scope, await loadPeople(env), !!overview)
   if (isPositionBody(body) && payload.sources.length && (isEvidenceGap(payload.answer) || !Object.keys(payload.citations).length || hasUnsupportedQuotes(payload, answer))) {
     payload = await recoverPositionAnswer(payload, body, env) || payload
   }
   if (!isPositionBody(body) && !isRefusal(answer) && payload.sources.length && (!Object.keys(payload.citations).length || hasUnsupportedQuotes(payload, answer))) {
     const retryBody = Object.keys(payload.citations).length ? body : legacyCitationsAsk(body)
-    const fallback = await askOnce(hasUnsupportedQuotes(payload, answer) ? quoteRecoveryAsk(retryBody) : retryBody, ASK_SYNC_TIMEOUT_MS)
-    if (!(fallback instanceof Response) && !isRefusal(fallback)) { answer = fallback; payload = askPayload(fallback, records, scope, await loadPeople(env)) }
+    const fallback = await askOnce(hasUnsupportedQuotes(payload, answer) ? quoteRecoveryAsk(retryBody) : retryBody, firstBudget ? OVERVIEW_VERIFICATION_MS : ASK_SYNC_TIMEOUT_MS)
+    if (!(fallback instanceof Response) && !isRefusal(fallback)) { answer = fallback; payload = askPayload(fallback, records, scope, await loadPeople(env), !!overview) }
   }
   payload = looseAnswer(payload, answer)
   mark('verify')
   payload = withAskedAs(payload, askedAs)
+  payload = await overviewPayload(payload, overview, env, overviewIntent, overviewIntent || recentIntent)
   store(payload)
   return timed(withCacheStatus(json(payload), status, false))
+}
+
+/** Public metadata only; no catalogue index-time sort or generative call. */
+const overviewPackCache = new AskPackCache<OverviewPack>(500,600_000)
+async function personOverviewPack(input: AskInput, env: Env, ctx: ExecutionContext, signal?: AbortSignal): Promise<OverviewPack> {
+  const deadline = new AskDeadline(OVERVIEW_RETRIEVAL_MS,signal)
+  try { return await deadline.run(async () => {
+      const key = await sha256Hex(JSON.stringify({epoch:env.CACHE_EPOCH,version:ASK_PIPELINE_VERSION,saFullText:saFullText(env.SA_HANSARD_FULL_TEXT),speaker:input.speaker,state:input.state,chamber:input.chamber,party:input.party}))
+      const hit = overviewPackCache.get(key)
+      if (hit) return hit
+      const pack = await buildOverviewPack(input,env,ctx,deadline)
+      deadline.signal.throwIfAborted()
+      overviewPackCache.set(key,pack)
+      return pack
+  }) } catch (error) { deadline.cancel(); throw error }
+  finally { deadline.dispose() }
+}
+
+async function buildOverviewPack(input: AskInput, env: Env, ctx: ExecutionContext, deadline: AskDeadline): Promise<OverviewPack> {
+  const people = await loadPeople(env)
+  const person = people.byFold.get(foldName(input.speaker || ''))
+  if (!person) throw new Error('Person unavailable')
+  const attribution = personScope(person)
+  const withheld = await withheldNameCheck(env.ASSETS)
+  const safe = (...values: string[]) => !withheld(...values)
+  if (!safe(person.name,person.party_now || person.party || '',...(person.representation || []).map(r=>r.electorate))) throw new Error('Person context unavailable')
+  const corpus = await assetJson<{version: string}>(env, '/corpus.json')
+  const asOf = corpus.version.slice(0,10)
+  // Catalogue accepts resource predicates only. Field exclusions belong to find.
+  const base = {and:[{prop:'label',labelset:'kind',label:'speech'},
+    {prop:'origin_collaborator',collaborator:person.name},
+    ...(['state','chamber','party'] as const).flatMap(key=>input[key] ? [{prop:'label',labelset:key,label:input[key]}] : [])]}
+  // Service dates are checked against speech metadata below. Catalogue created
+  // means index time; it cannot supply a service-date predicate.
+  const scope = attribution ? scopeFilter({...attribution,service:undefined}) : undefined
+  const filter = {resource:{and:[attribution ? scopedCollaborators(base,attribution) : base,...(scope ? [scope] : []),
+    ...['witness','chair','unknown'].map(label => ({not:{prop:'label',labelset:'speaker_type',label}}))]}}
+  const decode = (rid: string, r: FindResource & {computedmetadata?:{field_classifications?:{classifications?:{labelset:string;label:string}[]}[]}}): OverviewSpeech => ({
+    resource:rid,slug:r.slug || '',title:r.title || r.slug || '',speaker:r.origin?.collaborators?.[0] || '',
+    source:label(r,'source') || (typeof r.extra?.metadata?.source === 'string' ? r.extra.metadata.source : undefined),
+    date:typeof r.extra?.metadata?.date === 'string' && Number.isFinite(Date.parse(r.extra.metadata.date)) ? r.extra.metadata.date.slice(0,10) : '',state:label(r,'state') || (label(r,'source') === 'sa_hansard' ? 'sa' : undefined),chamber:label(r,'chamber') || undefined,
+    url:r.origin?.url || undefined,source_url:typeof r.extra?.metadata?.source_url === 'string' ? r.extra.metadata.source_url : undefined,topics:[...new Set([...(r.usermetadata?.classifications || []),...(r.computedmetadata?.field_classifications || []).flatMap(f=>f.classifications || [])].filter(c=>c.labelset==='topic').map(c=>c.label))],
+  })
+  const belongs = (s: OverviewSpeech) => /^speech-\d+$/.test(s.slug) &&
+    (attribution ? belongsToScope({...s,kind:'speech'},attribution) : foldName(s.speaker) === foldName(person.name))
+  return buildPersonOverview(person,asOf,personPath(people,person.name),{
+    safe,belongs,
+    catalogue: async (page,signal) => {
+      const response = await kbFetch(env,'/catalog',{signal,body:{filter_expression:filter,faceted:[TOPIC_FILTER_PREFIX],page_size:OVERVIEW_CAPS.page_size,page_number:page,show:['basic','origin','extra']}})
+      if (!response.ok) throw new Error('Speech catalogue unavailable')
+      const data = await response.json() as CatalogPage
+      return {total:data.fulltext?.total || 0,counts:Object.fromEntries(Object.entries(data.fulltext?.facets?.[TOPIC_FILTER_PREFIX] || {}).map(([path,n])=>[path.slice((TOPIC_FILTER_PREFIX+'/').length),n])),
+        speeches:Object.entries(data.resources || {}).map(([rid,r])=>decode(rid,r))}
+    },
+    find: async (theme,signal) => {
+      const url = new URL('https://opax.com.au/api/search')
+      for (const [key,value] of Object.entries({...input,topic:theme})) if (['speaker','state','chamber','party','topic'].includes(key) && typeof value==='string') url.searchParams.set(key,value)
+      const found = await searchWindow(env,{q:TOPIC_NAMES[theme],mode:'keyword',reranker:'noop',kind:'speech',topK:10,url,signal})
+      if (!found) throw new Error('Theme retrieval unavailable')
+      return found.results.map(r=>({...r,speaker:r.speaker || '',date:r.date || '',topics:r.topics || [],state:r.state || undefined,chamber:r.chamber || undefined,url:r.url || undefined,source_url:'source_url' in r ? String(r.source_url) : undefined}))
+    },
+    original: async (speech,_theme,signal) => {
+      const url = new URL('https://opax.com.au/api/resource/'+speech.slug)
+      const response = await apiResource(new Request(url,{signal}),url,speech.slug,env,ctx)
+      if (response.status === 404) return null
+      if (!response.ok) throw new Error('Speech original unavailable')
+      const original = await response.json() as {speaker?:string;text?:string;url?:string;labels?:Record<string,string>;metadata?:Record<string,unknown>}
+      if (foldName(original.speaker || '') !== foldName(speech.speaker) || !original.text) return null
+      // Original provenance can be absent from catalogue/search metadata.
+      speech.source = original.labels?.source || (typeof original.metadata?.source === 'string' ? original.metadata.source : speech.source)
+      speech.state = original.labels?.state || (original.labels?.source === 'sa_hansard' ? 'sa' : speech.state)
+      speech.chamber = original.labels?.chamber || speech.chamber
+      speech.url = original.url || speech.url
+      if (typeof original.metadata?.source_url === 'string') speech.source_url = original.metadata.source_url
+      return firstSpeechTurn(original.text)
+    },
+    bills: async () => {
+      const hash = (await sha256Hex(person.name.normalize('NFKC').toLowerCase().replace(/[^\p{L}\p{N}]+/gu,' ').trim())).slice(0,24)
+      return (await assetJson<{bills:{key:string;title:string;introduced:string;sponsor?:string;speech_dates?:string[]}[]}>(env,'/growth/person-bills/'+hash+'.json')).bills
+    },
+    peer: async (theme,signal) => {
+      const response = await kbFetch(env,'/catalog',{signal,body:{filter_expression:{resource:{and:[{prop:'label',labelset:'kind',label:'speech'},{prop:'label',labelset:'topic',label:theme}]}},faceted:['/origin.collaborators'],page_size:0}})
+      if (!response.ok) throw new Error('Topic collaborator catalogue unavailable')
+      const data = await response.json() as CatalogPage
+      return Object.entries(data.fulltext?.facets?.['/origin.collaborators'] || {}).sort((a,b)=>b[1]-a[1]).map(([path])=>path.replace(/^\/origin\.collaborators\//,''))
+        .find(name=>name!==person.name && people.byName.has(name) && safe(name))
+    },
+  },!!attribution,deadline,env.SA_HANSARD_FULL_TEXT)
+}
+
+async function overviewPayload(payload: AskPayload, pack: OverviewPack | undefined, env: Env, overviewIntent = true, personIntent = overviewIntent): Promise<AskPayload> {
+  if (!pack && !personIntent) return {...payload,is_overview_intent:false}
+  const withheld = await withheldNameCheck(env.ASSETS)
+  if (withheld(payload.answer)) return {...withheldDonorAnswer(),is_overview_intent:overviewIntent} as AskPayload
+  const sources = payload.sources.filter((source) => {
+    const row = source as {title?:string;snippet?:string;speaker?:string}
+    return !withheld(row.title,row.snippet,row.speaker)
+  })
+  const ids = new Set(sources.map(source=>(source as {resource:string}).resource))
+  const citations = Object.fromEntries(Object.entries(payload.citations).filter(([id])=>ids.has(id.split('/')[0])))
+  if (Object.keys(payload.citations).length && !Object.keys(citations).length) return {...withheldDonorAnswer(),is_overview_intent:overviewIntent} as AskPayload
+  payload = {...payload,sources,citations}
+  if (!pack) return {...payload,is_overview_intent:overviewIntent}
+  return {...payload,is_overview_intent:overviewIntent,subject_context:pack.context,
+    followups:personFollowups(payload.answer,payload.sources as {title:string;cited?:boolean;kind?:string}[],pack.context,(...values)=>!withheld(...values))}
 }
 
 /** The reader's own earlier turns: what a follow-up can inherit a name from. */
@@ -1474,19 +1670,23 @@ function withAskedAs<T extends object>(payload: T, askedAs: string | null | unde
  * stands alone comes back unchanged and is reported as null too; one with
  * nothing to search on is { unclear } (ask-rewrite.ts).
  */
-async function standaloneQuestion(input: AskInput, env: Env): Promise<FollowUpRewrite> {
-  return rewriteFollowUp(input, async (user, question) => summaryModelAnswer(await kbFetch(env, '/ask', {
-    body: {
-      query: question,
-      top_k: 1,
-      reranker: 'noop',
-      generative_model: env.FOLLOWUPS_MODEL || 'openai-compatible',
-      max_tokens: 200,
-      prompt: { system: REWRITE_SYSTEM, user },
-    },
-    headers: { 'x-synchronous': 'true' },
-    signal: AbortSignal.timeout(9_000),
-  })))
+async function standaloneQuestion(input: AskInput, env: Env, budget?: AskDeadline): Promise<FollowUpRewrite> {
+  return rewriteFollowUp(input, async (user, question) => {
+    const work = async (signal: AbortSignal) => summaryModelAnswer(await kbFetch(env, '/ask', {
+      body: {
+        query: question,
+        top_k: 1,
+        reranker: 'noop',
+        generative_model: env.FOLLOWUPS_MODEL || 'openai-compatible',
+        max_tokens: 200,
+        prompt: { system: REWRITE_SYSTEM, user },
+      },
+      headers: { 'x-synchronous': 'true' },
+      signal,
+    }))
+    // Keep the fetch and its response-body read under the same parent budget.
+    return budget ? budget.run(work, 9_000) : work(AbortSignal.timeout(9_000))
+  })
 }
 
 /** Retrieve once, then generate only from original turns belonging to the index speaker. */
@@ -2058,7 +2258,7 @@ function apiAskStream(
   body: Record<string, unknown>,
   env: Env,
   ctx: ExecutionContext,
-  opts: { onDone?: (payload: AskPayload) => void; cacheStatus: CacheStatus; records: AskRecords; scope?: AskScope; askedAs?: string | null },
+  opts: { onDone?: (payload: AskPayload) => void; cacheStatus: CacheStatus; records: AskRecords; scope?: AskScope; askedAs?: string | null; overview?: OverviewPack; overviewIntent?: boolean; recentIntent?: boolean; firstBudget?: AskDeadline },
 ): Response {
   const { readable, writable } = new TransformStream<Uint8Array, Uint8Array>()
   const writer = writable.getWriter()
@@ -2077,7 +2277,11 @@ function apiAskStream(
     }
   }
 
-  const checkedSend: SseSend = isPositionBody(body) ? async (event, data) => { if (event !== 'delta') await send(event, data) } : send
+  const checkedSend: SseSend = isPositionBody(body) || opts.overview || opts.overviewIntent || opts.recentIntent ? async (event, data) => { if (event !== 'delta') await send(event, data) } : send
+  const attempt = (b: Record<string,unknown>, stallMs: number, verification = false) => {
+    const work = (signal: AbortSignal) => streamAskGuarded(env,b,checkedSend,AbortSignal.any([upstream.signal,signal]),stallMs)
+    return opts.firstBudget ? opts.firstBudget.run(work,verification ? OVERVIEW_VERIFICATION_MS : opts.firstBudget.remaining) : work(upstream.signal)
+  }
   ctx.waitUntil(
     (async () => {
       try {
@@ -2087,13 +2291,13 @@ function apiAskStream(
         const t0 = Date.now()
         let result: AskAnswer
         try {
-          result = await streamAskGuarded(env, body, checkedSend, upstream.signal, ASK_STALL_MS)
+          result = await attempt(body, ASK_STALL_MS)
         } catch (err) {
           // The reader left: nothing to recover. Otherwise the platform stalled
           // or answered with an error status — one lighter attempt.
-          if (clientGone || upstream.signal.aborted) throw err
+          if (clientGone || upstream.signal.aborted || opts.firstBudget?.signal.aborted) throw err
           await send('retry', { reason: 'slow' })
-          result = await streamAskGuarded(env, lighterAsk(body), checkedSend, upstream.signal, ASK_STALL_MS * 2)
+          result = await attempt(lighterAsk(body), ASK_STALL_MS * 2)
         }
         // An empty answer is a reasoning burn whatever the retrieval; a
         // refusal is only retried over a healthy one (the sync rule) — and
@@ -2102,11 +2306,11 @@ function apiAskStream(
         const quick = Date.now() - t0 < ASK_RETRY_BUDGET_MS
         if (isRefusal(result) && (quick || !(result.answer ?? '').trim()) && (healthyRetrieval(result) || !(result.answer ?? '').trim())) {
           await send('retry', { reason: (result.answer ?? '').trim() ? 'refusal' : 'empty' })
-          const again = await streamAskOnce(env, body, checkedSend, upstream.signal)
+          const again = opts.firstBudget ? await attempt(body,ASK_STALL_MS) : await streamAskOnce(env, body, checkedSend, upstream.signal)
           if (!isRefusal(again)) result = again
         }
         result = guardPositionAnswer(result, body)
-        let payload = askPayload(result, opts.records, opts.scope, await loadPeople(env))
+        let payload = askPayload(result, opts.records, opts.scope, await loadPeople(env), !!opts.overview)
         if (!clientGone && isPositionBody(body) && payload.sources.length && (isEvidenceGap(payload.answer) || !Object.keys(payload.citations).length || hasUnsupportedQuotes(payload, result))) {
           payload = await recoverPositionAnswer(payload, body, env) || payload
         }
@@ -2114,20 +2318,21 @@ function apiAskStream(
           await send('retry', { reason: 'citations' })
           try {
             const retryBody = Object.keys(payload.citations).length ? body : legacyCitationsAsk(body)
-            const fallback = await streamAskGuarded(env, hasUnsupportedQuotes(payload, result) ? quoteRecoveryAsk(retryBody) : retryBody, checkedSend, upstream.signal, ASK_STALL_MS)
-            if (!isRefusal(fallback)) { result = guardPositionAnswer(fallback, body); payload = askPayload(result, opts.records, opts.scope, await loadPeople(env)) }
+            const fallback = await attempt(hasUnsupportedQuotes(payload, result) ? quoteRecoveryAsk(retryBody) : retryBody, ASK_STALL_MS,true)
+            if (!isRefusal(fallback)) { result = guardPositionAnswer(fallback, body); payload = askPayload(result, opts.records, opts.scope, await loadPeople(env), !!opts.overview) }
           } catch {
             // The final quotation check below falls back to evidence if recovery fails.
           }
         }
         payload = looseAnswer(payload, result)
         payload = withAskedAs(payload, opts.askedAs)
+        payload = await overviewPayload(payload, opts.overview, env, opts.overviewIntent, opts.overviewIntent || opts.recentIntent)
         await send('done', payload)
         // Cached from the `done` payload — the same bytes the reader got —
         // even when the reader left early (the answer was paid for).
         opts.onDone?.(payload)
       } catch (err) {
-        if (!clientGone) await send('error', { error: err instanceof Error ? err.message : String(err) })
+        if (!clientGone) await send('error', { error: err instanceof Error ? err.message : String(err), ...(opts.firstBudget ? {final:true} : {}) })
       } finally {
         try {
           await writer.close()
@@ -2352,15 +2557,17 @@ function parseFollowUpLines(answerText: string): { question: string; evidence: s
 }
 
 async function apiFollowups(request: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
-  const { question, answer, passages } = ((await request.json().catch(() => ({}))) ?? {}) as {
+  const { question, answer, passages, person: personName } = ((await request.json().catch(() => ({}))) ?? {}) as {
     question?: string
     answer?: string
+    person?: string
     passages?: Record<string,unknown>[]
   }
   // Always 200 with a possibly-empty list: follow-ups are an extra, never an error.
   if (!question?.trim() || !answer?.trim()) return json({ questions: [] })
   // Never suggest a next question about a withheld donor (src/donor-index.ts).
   if (await questionNamesWithheldDonor(env.ASSETS, question, answer)) return json({ questions: [] })
+  const withheld = await withheldNameCheck(env.ASSETS)
   const inputPassages = (Array.isArray(passages) ? passages : []).filter(p => p && typeof p === 'object' && !Array.isArray(p))
   const restricted = inputPassages.some(p => isSaHansard(p) || (!p.kind && !p.source && !p.state && !p.labels))
   // Older clients may send a previous answer containing full source quotations.
@@ -2370,10 +2577,20 @@ async function apiFollowups(request: Request, env: Env, ctx: ExecutionContext): 
     .map((p) => ({
       title: String(p?.title ?? '').slice(0, 300),
       text: String(p?.text ?? '').slice(0, 4000),
+      kind: p?.kind === 'speech' || p?.kind === 'bill' ? p.kind : undefined,
+      cited: p?.cited === true,
     }))
-    .filter((p) => p.text.trim().length > 0)
+    .filter((p) => p.text.trim().length > 0 && !withheld(p.title,p.text))
     .slice(0, 12)
   const context = passageContext(clean)
+  if (personName && !withheld(personName)) {
+    const person = (await loadPeople(env)).byFold.get(foldName(personName))
+    if (person) {
+      const topics = Object.entries(TOPIC_NAMES).filter(([,name])=>answer.toLowerCase().includes(name.toLowerCase())).map(([slug,name])=>({slug,name,count:0,recent_count:null}))
+      const questions = personFollowups(answer,clean,{name:person.name,party:null,electorate:'',speeches:0,topics,recent_from:'',as_of:'',complete:false,profile:'',votes:'',interests:''},(...texts)=>!withheld(...texts))
+      if (questions.length >= 2) return json({questions})
+    }
+  }
   if (context.length < FOLLOWUP_MIN_CONTEXT) return json({ questions: [] })
 
   // The input is the whole story (question, answer, passages): the same
@@ -2443,7 +2660,7 @@ async function apiFollowups(request: Request, env: Env, ctx: ExecutionContext): 
     if (!res.ok) return withCacheStatus(json({ questions: [] }), cacheStatus, false)
     const data = (await res.json()) as { answer?: string }
     const candidates = parseFollowUpLines(data.answer ?? '')
-    const questions = selectFollowUps(candidates, question, clean, context)
+    const questions = selectFollowUps(candidates, question, clean, context).filter(item=>!withheld(item.question,item.evidence))
     const out = json({ questions })
     // An empty list may be a model stumble — never pin that for a day.
     if (questions.length > 0) cacheStore(ctx, cacheKey, out, FOLLOWUPS_CACHE_TTL)
@@ -2485,6 +2702,7 @@ async function apiResource(request: Request, url: URL, slug: string, env: Env, c
   const res = await kbFetch(
     env,
     `/slug/${slug}?show=basic&show=origin&show=extra&show=values&show=extracted&extracted=text`,
+    {signal:request.signal},
   )
   if (res.status === 404) return json({ error: 'not found' }, 404)
   if (!res.ok) return json({ error: `resource fetch failed (${res.status})` }, 502)
@@ -2653,7 +2871,7 @@ async function apiNews(): Promise<Response> {
           signal: ac.signal,
           headers: {
             accept: 'application/rss+xml, application/xml, text/xml, */*',
-            'user-agent': 'OPAX-portal/1.0 (+https://opax.com.au)',
+            'user-agent': sourceIdentity.user_agent,
           },
         })
         clearTimeout(timer)
@@ -5661,9 +5879,12 @@ export default {
     if (url.pathname === '/.well-known/atproto-did') return /^did:plc:[a-z2-7]{24}$/.test(env.BSKY_DID ?? '')
       ? new Response(env.BSKY_DID, { headers: { 'content-type': 'text/plain; charset=utf-8', 'cache-control': 'public, max-age=300' } })
       : new Response('Not found', { status: 404 })
+    if (url.pathname === '/api/table/privacy') return withSecurityHeaders(await tablePrivacy(request, env.ASSETS), url)
     const isApi = url.pathname.startsWith('/api/')
     const communityResponse = (response: Response) => { const secured = withSecurityHeaders(response, url); if (env.STAGING_API) secured.headers.set('x-robots-tag', 'noindex, nofollow'); return secured }
     if (url.pathname === '/api/display-policy' && request.method === 'GET') return communityResponse(new Response(JSON.stringify({SA_HANSARD_FULL_TEXT:saFullText(env.SA_HANSARD_FULL_TEXT) ? 'true' : 'false'}), {headers:{'content-type':'application/json','cache-control':'no-store'}}))
+    if (url.pathname === '/table-index' || url.pathname.startsWith('/table-index/')) return communityResponse(new Response(null, {status:404,headers:{'cache-control':'no-store','x-robots-tag':'noindex'}}))
+    if (url.pathname.startsWith('/api/table/')) return communityResponse(await tableApi(request, env, ctx))
     // Public app adapters use this Worker's journal/assets, before any staging
     // proxy or general retrieval dispatch. No composition callback is supplied.
     if (url.pathname.startsWith('/api/app/v1/edition/')) return communityResponse(await appEdition(request, env))

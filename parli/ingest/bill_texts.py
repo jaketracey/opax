@@ -6,6 +6,8 @@ successful section commits independently; a restart reuses those sections.
 """
 from __future__ import annotations
 
+from parli.ingest import http as source_http
+
 import hashlib
 import fcntl
 import os
@@ -23,7 +25,7 @@ from parli.ingest.words_parlinfo import parse_billhome, parse_display, page_titl
 from parli.ingest.words_common import parse_date
 
 HOST = "https://parlinfo.aph.gov.au"
-USER_AGENT = "Mozilla/5.0 (X11; Linux x86_64; rv:128.0) Gecko/20100101 Firefox/128.0"
+USER_AGENT = source_http.USER_AGENT
 VERSION_RE = re.compile(r"^[rs]\d+_[a-z0-9-]+$")
 BILL_KEY_RE = re.compile(r"^au-federal-[a-z0-9-]+$")
 STAGE_LABELS = {"first": "As introduced", "first-reps": "First reading — House of Representatives", "first-senate": "First reading — Senate", "third-reps": "Third reading — House of Representatives", "third-senate": "Third reading — Senate", "aspassed": "As passed by both houses"}
@@ -115,15 +117,14 @@ class SourceBlocked(RuntimeError):
 
 class SourceFetcher:
     """Cache source bytes, pace every request, and stop on repeated refusals."""
-    def __init__(self, cache_dir, rate=0.7, browser_ua=False, timeout=45):
+    def __init__(self, cache_dir, rate=0.7, timeout=45):
         self.cache_dir = Path(cache_dir)
         self.cache_dir.mkdir(parents=True, exist_ok=True)
         self.interval = 1 / rate if rate > 0 else 1 / 0.7
-        self.browser_ua = browser_ua
         self.timeout = timeout
         self.last_request = 0
         self.refusals = 0
-        self.opener = urllib.request.build_opener(NoRedirect())
+        self.opener = source_http.build_opener(NoRedirect())
 
     def invalidate(self, url):
         """A200 error page must not poison every future resumed acquisition."""
@@ -136,14 +137,12 @@ class SourceFetcher:
         path = self.cache_dir / (digest(url) + ".json")
         if path.exists() and not refresh:
             return json.loads(path.read_text())
-        if not self.browser_ua:
-            raise ValueError("Network acquisition requires explicit --browser-ua; cached operation remains available")
         wait = self.last_request + self.interval - time.monotonic()
         if wait > 0:
             time.sleep(wait)
         self.last_request = time.monotonic()
         try:
-            with self.opener.open(urllib.request.Request(url, headers={"User-Agent": USER_AGENT, "Accept": "text/html", "Accept-Language": "en-AU,en;q=0.9"}), timeout=self.timeout) as response:
+            with source_http.open_url(self.opener, source_http.Request(url, headers={"User-Agent": source_http.USER_AGENT, "Accept": "text/html", "Accept-Language": "en-AU,en;q=0.9"}), timeout=self.timeout) as response:
                 raw = response.read()
                 result = {"status": response.status, "url": url, "body": raw.decode("utf-8", "replace"), "location": None, "sha256": digest(raw), "fetched_at": now()}
         except urllib.error.HTTPError as error:

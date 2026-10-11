@@ -45,8 +45,17 @@ bills_refresh() {
   log "bills full refresh ($reason, parliament ${OPAX_BILL_PARLIAMENT:-48}); KB sync off; budget ${OPAX_BILLS_TIMEOUT:-20m}"
   # bills_fetch has a fixed home-directory DB path; pin the export to that same DB.
   # Override inherited KB sync even though daily/periodic refresh enables it.
-  if ! OPAX_SYNC_KB=0 OPAX_DB="$HOME/.cache/autoresearch/parli.db" OPAX_PYTHON="$PY" \
+  if OPAX_SOURCE_NAME=bills OPAX_SOURCE_STATUS_FILE="$PIPE/source-access/bills.json" OPAX_SYNC_KB=0 OPAX_DB="$HOME/.cache/autoresearch/parli.db" OPAX_PYTHON="$PY" \
       run timeout --kill-after=60 "${OPAX_BILLS_TIMEOUT:-20m}" bash scripts/refresh_bills.sh; then
+    rm -f "$PIPE/source-access/bills.json"
+  else
+    local rc=$?
+    if [ "$rc" = 4 ]; then
+      BILLS_SOURCE_PAUSED=1
+      log "bills PAUSED; existing bills kept"
+      revert portal/public/bills
+      return 0
+    fi
     fail "bills fetch/full export failed or timed out; bills reverted to HEAD"
     revert portal/public/bills
     return 1
@@ -60,6 +69,7 @@ bills_refresh() {
 }
 
 bills_fill_and_verify() {
+  [ "${BILLS_SOURCE_PAUSED:-0}" != 1 ] || return 0
   log "filling bill speech briefs from the knowledge box"
   if ! run "$PY" scripts/export_bills.py --fill-briefs portal/public/bills; then
     log "WARN: fill-briefs exited non-zero; the verification below decides whether the bills are usable"

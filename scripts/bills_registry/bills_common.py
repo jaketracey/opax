@@ -13,6 +13,11 @@ Bill numbers and the bill year survive on purpose, because they are what tells
 a reintroduced bill from its original.
 """
 
+import sys as _http_sys
+from pathlib import Path as _HttpPath
+_http_sys.path.insert(0, str(_HttpPath(__file__).resolve().parents[2]))
+from parli.ingest import http as source_http
+
 import bisect
 from datetime import date
 import hashlib
@@ -30,8 +35,8 @@ DB_RO = f"file:{DB_PATH}?mode=ro"
 CACHE = os.path.expanduser("~/.cache/autoresearch/bills_v2")
 LICENCE = "CC BY-NC-ND 4.0"
 
-# ParlInfo refuses the honest OPAX agent with 403; this one was measured working.
-UA = "Mozilla/5.0 (X11; Linux x86_64; rv:128.0) Gecko/20100101 Firefox/128.0"
+# Identify OPAX honestly; a refusal stops the source and retains the cache.
+UA = source_http.USER_AGENT
 RATE = 1.0 / 0.7  # seconds between requests to parlinfo.aph.gov.au
 HOST = "https://parlinfo.aph.gov.au"
 
@@ -75,8 +80,7 @@ def legacy_key(bill_id):
 
 _last_request = [0.0]
 _consecutive_403 = [0]
-_stats = {"fetched": 0, "cached": 0, "bytes": 0, "403": 0, "error": 0,
-          "firecrawl": 0}
+_stats = {"fetched": 0, "cached": 0, "bytes": 0, "403": 0, "error": 0}
 
 
 def stats():
@@ -105,13 +109,13 @@ def fetch(url, kind, name, timeout=45, retries=3, refresh=False, max_cache_age=0
         if wait > 0:
             time.sleep(wait)
         _last_request[0] = time.monotonic()
-        req = urllib.request.Request(url, headers={
-            "User-Agent": UA,
+        req = source_http.Request(url, headers={
+            "User-Agent": source_http.USER_AGENT,
             "Accept": "text/html,application/xhtml+xml",
             "Accept-Language": "en-AU,en;q=0.9",
         })
         try:
-            with urllib.request.urlopen(req, timeout=timeout) as r:
+            with source_http.urlopen(req, timeout=timeout) as r:
                 body = r.read()
             _consecutive_403[0] = 0
             _stats["fetched"] += 1

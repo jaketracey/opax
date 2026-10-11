@@ -28,6 +28,8 @@ Usage:
     python -m parli.ingest.abs_profiles --analyze
 """
 
+from parli.ingest import http as source_http
+
 import argparse
 import csv
 import io
@@ -41,9 +43,9 @@ import requests
 
 from parli.schema import get_db, init_db
 
-SESSION = requests.Session()
+SESSION = source_http.Session()
 SESSION.headers.update({
-    "User-Agent": "OPAX/1.0 (parliamentary transparency research; https://opax.com.au)"
+    "User-Agent": source_http.USER_AGENT
 })
 
 CACHE_DIR = Path("~/.cache/autoresearch/abs").expanduser()

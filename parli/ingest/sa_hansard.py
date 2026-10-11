@@ -17,6 +17,8 @@ Usage:
     python -m parli.ingest.sa_hansard --since 2020-01-01 --chamber sa_ha --dry-run
 """
 
+from parli.ingest import http as source_http
+
 import argparse
 import functools
 import hashlib
@@ -37,7 +39,7 @@ from parli.ingest.dedup import build_seen
 from parli.schema import get_db, init_db
 
 BASE_URL = "https://hansardsearch.parliament.sa.gov.au"
-USER_AGENT = "Mozilla/5.0 (compatible; OPAX/1.0; +https://opax.com.au)"
+USER_AGENT = source_http.USER_AGENT
 
 # Map SA chamber codes to our DB codes
 CHAMBER_MAP = {
@@ -69,14 +71,14 @@ PROGRESS_DIR = Path("~/.cache/autoresearch/sa_hansard").expanduser()
 
 def _api_get(url: str, retries: int = 3) -> bytes:
     """Make a GET request with rate limiting and retries."""
-    req = urllib.request.Request(url, headers={
-        "User-Agent": USER_AGENT,
+    req = source_http.Request(url, headers={
+        "User-Agent": source_http.USER_AGENT,
         "Accept": "*/*",
     })
     for attempt in range(retries):
         try:
             time.sleep(REQUEST_DELAY)
-            with urllib.request.urlopen(req, timeout=60) as resp:
+            with source_http.urlopen(req, timeout=60) as resp:
                 return resp.read()
         except Exception as e:
             if attempt == retries - 1:

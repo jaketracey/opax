@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+import { honestFetch, runSource } from './lib/http.mjs'
 // Sweep every UI entry point that reaches a generative endpoint and check the
 // answers: citations resolve to cited sources, offsets fit the answer, quoted
 // text is verbatim in the cited original, sources link, no markup leaks.
@@ -11,6 +12,8 @@
 // Writes scripts/ask_sweep-report.json beside the console summary.
 import { readFile, writeFile } from 'node:fs/promises';
 
+await runSource(async () => {
+
 const ORIGIN = process.env.ORIGIN || 'https://opax.com.au';
 const NOCACHE = process.env.NOCACHE === '0' ? '' : '&nocache=1';
 const PORTAL = process.env.PORTAL || new URL('../portal', import.meta.url).pathname;
@@ -22,14 +25,14 @@ const cp = (s) => Array.from(s).length;
 
 async function post(path, body, extra = '') {
   const t0 = Date.now();
-  const res = await fetch(`${ORIGIN}${path}${path.includes('?') ? '' : '?'}${extra}`, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(body), signal: AbortSignal.timeout(180_000) });
+  const res = await honestFetch(`${ORIGIN}${path}${path.includes('?') ? '' : '?'}${extra}`, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(body), signal: AbortSignal.timeout(180_000) });
   const text = await res.text();
   let json = null; try { json = JSON.parse(text); } catch {}
   return { status: res.status, ms: Date.now() - t0, json, text, headers: res.headers };
 }
 async function get(path) {
   const t0 = Date.now();
-  const res = await fetch(`${ORIGIN}${path}`, { signal: AbortSignal.timeout(120_000) });
+  const res = await honestFetch(`${ORIGIN}${path}`, { signal: AbortSignal.timeout(120_000) });
   const text = await res.text();
   let json = null; try { json = JSON.parse(text); } catch {}
   return { status: res.status, ms: Date.now() - t0, json, text };
@@ -101,7 +104,7 @@ async function checkAsk(label, r, { allowEvidenceOnly = false, expectPosition = 
   // A sample of source links resolves.
   for (const s of sources.slice(0, 2)) {
     if (!s.href || !String(s.href).startsWith('/')) continue;
-    try { const h = await fetch(`${ORIGIN}${s.href}`, { method: 'GET', signal: AbortSignal.timeout(30_000) }); if (h.status !== 200) issues.push(`source link ${s.href} -> ${h.status}`); } catch (e) { issues.push(`source link ${s.href} failed: ${e.message}`); }
+    try { const h = await honestFetch(`${ORIGIN}${s.href}`, { method: 'GET', signal: AbortSignal.timeout(30_000) }); if (h.status !== 200) issues.push(`source link ${s.href} -> ${h.status}`); } catch (e) { issues.push(`source link ${s.href} failed: ${e.message}`); }
   }
   return issues;
 }
@@ -123,7 +126,7 @@ async function ask(section, label, body, opts = {}) {
 
 async function askStream(section, label, body, opts = {}) {
   const t0 = Date.now();
-  const res = await fetch(`${ORIGIN}/api/ask?stream=1&nocache=1`, { method: 'POST', headers: { 'content-type': 'application/json', accept: 'text/event-stream' }, body: JSON.stringify(body), signal: AbortSignal.timeout(200_000) });
+  const res = await honestFetch(`${ORIGIN}/api/ask?stream=1&nocache=1`, { method: 'POST', headers: { 'content-type': 'application/json', accept: 'text/event-stream' }, body: JSON.stringify(body), signal: AbortSignal.timeout(200_000) });
   const text = await res.text();
   const isStream = (res.headers.get('content-type') || '').includes('text/event-stream');
   let json = null; const events = []; let deltaText = '';
@@ -280,3 +283,5 @@ try {
 const failed = report.filter((r) => r.issues.length);
 console.log(`\n${report.length} entry-point checks, ${failed.length} with issues.`);
 await writeFile(new URL('./ask_sweep-report.json', import.meta.url), JSON.stringify(report, null, 1));
+
+})

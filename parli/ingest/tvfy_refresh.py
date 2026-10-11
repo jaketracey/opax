@@ -34,6 +34,8 @@ key that was checked into fetch_division_votes.py is the last resort.
 
 from __future__ import annotations
 
+from parli.ingest import http as source_http
+
 import argparse
 import json
 import os
@@ -47,7 +49,7 @@ from datetime import date, timedelta
 from pathlib import Path
 
 API = "https://theyvoteforyou.org.au/api/v1"
-USER_AGENT = "OPAX research (opax.com.au; contact jake.tracey@noice.work)"
+USER_AGENT = source_http.USER_AGENT
 DB_PATH = Path(os.environ.get("OPAX_DB") or "~/.cache/autoresearch/parli.db").expanduser()
 CACHE = Path("~/.cache/autoresearch/tvfy").expanduser()
 STATE_PATH = CACHE / "refresh_state.json"
@@ -138,8 +140,8 @@ def get(path: str, params: dict) -> object:
             time.sleep(wait)
         _last_request = time.time()
         try:
-            req = urllib.request.Request(url, headers={"User-Agent": USER_AGENT, "Accept": "application/json"})
-            with urllib.request.urlopen(req, timeout=60) as r:
+            req = source_http.Request(url, headers={"User-Agent": source_http.USER_AGENT, "Accept": "application/json"})
+            with source_http.urlopen(req, timeout=60) as r:
                 return json.loads(r.read())
         except urllib.error.HTTPError as e:
             if e.code == 404:

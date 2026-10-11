@@ -19,6 +19,10 @@ try:
     from scripts.donor_public import public_donor_data
 except ModuleNotFoundError:
     from donor_public import public_donor_data
+import sys as _http_sys
+from pathlib import Path as _HttpPath
+_http_sys.path.insert(0, str(_HttpPath(__file__).resolve().parents[1]))
+from parli.ingest import http as source_http
 
 import argparse
 from collections import Counter, defaultdict
@@ -563,7 +567,7 @@ def openrouter_tool_call(schema: dict, prompt: str) -> dict:
         }}],
         "tool_choice": {"type": "function", "function": {"name": name}},
     }
-    req = urllib.request.Request(
+    req = source_http.Request(
         "https://openrouter.ai/api/v1/chat/completions",
         data=json.dumps(body).encode(),
         headers={"content-type": "application/json", "authorization": f"Bearer {key}"})
@@ -573,7 +577,7 @@ def openrouter_tool_call(schema: dict, prompt: str) -> dict:
     data: dict = {}
     for attempt in range(4):
         try:
-            with urllib.request.urlopen(req, timeout=180) as r:
+            with source_http.urlopen(req, timeout=180) as r:
                 data = json.load(r)
             break
         except Exception as error:  # noqa: BLE001 - any transport failure

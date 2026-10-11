@@ -2,8 +2,8 @@
 """Acquire, export and publish versioned federal bill text without rewriting summaries.
 
 Examples (all commands are resumable):
-  python scripts/publish_bill_texts.py crawl --browser-ua --limit 10
-  python scripts/publish_bill_texts.py crawl --browser-ua
+  python scripts/publish_bill_texts.py crawl --limit 10
+  python scripts/publish_bill_texts.py crawl
   python scripts/publish_bill_texts.py export
   python scripts/publish_bill_texts.py reconcile  # cached identity evidence only
   python scripts/publish_bill_texts.py finish-legacy  # only after main crawl stops
@@ -45,7 +45,6 @@ def options():
     parser.add_argument("--limit", type=int, help="Newest N bills; omit to process the selected corpus")
     parser.add_argument("--source-attempts", type=int, default=3, help="Bounded attempts per source billhome/version before reporting a gap")
     parser.add_argument("--max-sections", type=int, default=1000)
-    parser.add_argument("--browser-ua", action="store_true")
     parser.add_argument("--refresh-discovery", action="store_true", help="Recheck billhome pages for newly published stages")
     parser.add_argument("--source-rate", type=float, default=0.7)
     parser.add_argument("--export-every", type=int, default=25)
@@ -68,7 +67,7 @@ def crawl(args, db):
     if args.limit:
         documents = documents[:args.limit]
     register_documents(db, documents)
-    fetcher = SourceFetcher(args.state_dir / "http-cache", rate=args.source_rate, browser_ua=args.browser_ua)
+    fetcher = SourceFetcher(args.state_dir / "http-cache", rate=args.source_rate)
     failures = 0
     operational_failures = 0
     interrupted = False
@@ -189,7 +188,7 @@ def reconcile(args, db):
             connection.close()
     source_errors = []
     if args.reconcile_network:
-        # This explicit mode uses the registry's existing browser UA, cache and
+        # This mode uses the registry's shared honest agent, cache and
         # fixed 0.7 req/s limiter for BOTH listings and homepages.
         common.CACHE = args.home_cache.parent
         common.RATE = 1 / args.source_rate
@@ -255,7 +254,6 @@ def finish_legacy(args, db):
         return reconciliation_exit
     args.keys = ",".join(keys)
     args.limit = None
-    args.browser_ua = True
     args.refresh_discovery = False
     time.sleep(1 / args.source_rate)  # preserve pacing across the two source clients
     acquisition_exit = crawl(args, db)

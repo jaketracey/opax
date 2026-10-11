@@ -1,3 +1,5 @@
+
+from parli.ingest import http as source_http
 import os
 """
 parli.ingest.load_votes -- Populate the votes table from cached policy data
@@ -27,7 +29,7 @@ from parli.schema import get_db, init_db
 TVFY_API_BASE = "https://theyvoteforyou.org.au/api/v1"
 TVFY_API_KEY = os.environ.get("TVFY_API_KEY", "")
 RATE_LIMIT_SEC = 1.0
-USER_AGENT = "ParliIntel/1.0 (load_votes)"
+USER_AGENT = source_http.USER_AGENT
 
 logging.basicConfig(
     level=logging.INFO,
@@ -45,11 +47,11 @@ def _api_get(url: str, params: dict | None = None, retries: int = 3) -> dict | l
     qs = urllib.parse.urlencode(params)
     full_url = f"{url}?{qs}"
 
-    req = urllib.request.Request(full_url, headers={"User-Agent": USER_AGENT})
+    req = source_http.Request(full_url, headers={"User-Agent": source_http.USER_AGENT})
 
     for attempt in range(1, retries + 1):
         try:
-            with urllib.request.urlopen(req, timeout=60) as resp:
+            with source_http.urlopen(req, timeout=60) as resp:
                 data = json.loads(resp.read().decode("utf-8"))
             time.sleep(RATE_LIMIT_SEC)
             return data

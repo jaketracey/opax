@@ -7,6 +7,7 @@ import {build} from 'esbuild';
 import {saEvidenceText,saEvidenceRecord,saGenerationContext,saGenerationResponse,saConversationInput} from './sa-evidence-harness.mjs';
 import {saEventPayload,saPublicResponse} from '../src/sa-hansard.ts';
 import {SA_EXCERPT_LABEL,isSaHansard} from '../public/sa-hansard.js';
+import sourceIdentity from '../../parli/ingest/user-agent.json' with {type:'json'};
 
 const {sa,nonSA}=JSON.parse(readFileSync(new URL('./fixtures/sa-excerpts.json',import.meta.url)));
 const cap=text=>assert.ok(String(text).trim().split(/\s+/).length<=120);
@@ -102,15 +103,15 @@ async function streamFixture(sources, code=emitter) {
   let release;const barrier=new Promise(resolve=>{release=resolve});const pending=[];
   const payload={answer:'A progressive answer. Another sentence.',sources,citations:sources.length?{[id]:[[0,21]]}:{}};
   const emit=runInNewContext(ts.transpile(code)+';apiAskStream',{
-    Response,TransformStream,TextEncoder,AbortController,Date,SSE_HEADERS:headers,ASK_STALL_MS:1000,ASK_RETRY_BUDGET_MS:1000,
+    Response,TransformStream,TextEncoder,AbortController,AbortSignal,Date,SSE_HEADERS:headers,ASK_STALL_MS:1000,ASK_RETRY_BUDGET_MS:1000,
     saSendData:(event,data)=>saEventPayload(event,data,'false',async()=>sa),isPositionBody:()=>false,
     streamAskGuarded:async(_env,_body,send)=>{await send('status',{phase:'writing'});await send('delta',{text:'A progressive answer. '});await barrier;await send('delta',{text:'Another sentence.'});return {answer:payload.answer};},
-    isRefusal:()=>false,guardPositionAnswer:r=>r,askPayload:()=>payload,loadPeople:async()=>null,hasUnsupportedQuotes:()=>false,looseAnswer:p=>p,withAskedAs:p=>p,
+    overviewPayload:async p=>p,isRefusal:()=>false,guardPositionAnswer:r=>r,askPayload:()=>payload,loadPeople:async()=>null,hasUnsupportedQuotes:()=>false,looseAnswer:p=>p,withAskedAs:p=>p,
   });
   const response=await saPublicResponse(emit({},{SA_HANSARD_FULL_TEXT:'false'},{waitUntil:p=>pending.push(p)},{cacheStatus:'MISS',records:{}}),'false',async()=>sa);
   assert.deepEqual([...response.headers],[...new Headers({...headers,'x-opax-cache':'MISS'})]);
   const started=performance.now(),reader=response.body.getReader(),decoder=new TextDecoder();let text='';
-  while(!text.includes('event: delta'))text+=decoder.decode((await reader.read()).value);
+  while(!text.includes('event: delta')){const part=await reader.read();assert.equal(part.done,false,'stream must produce a delta before closing');text+=decoder.decode(part.value);}
   const firstDeltaMs=performance.now()-started;
   assert.doesNotMatch(text,/event: done/);release();
   for(;;){const r=await reader.read();if(r.done)break;text+=decoder.decode(r.value);}
@@ -141,7 +142,7 @@ test('follow-up prompts cap both SA evidence and legacy copied answers before ge
   const followups=runInNewContext(ts.transpile(code)+';apiFollowups',{
     saEvidenceRecord,saEvidenceText,isSaHansard,Response,URL,AbortSignal,
     FOLLOWUP_MIN_CONTEXT:200,FOLLOWUP_WANT:3,FOLLOWUP_ANSWER_BUDGET:2500,FOLLOWUP_PASSAGE_BUDGET:6000,
-    json:Response.json,questionNamesWithheldDonor:async()=>false,cacheRequest:()=>new Request('https://cache.test/followup'),sha256Hex:async()=>'',cacheBypass:()=>true,rateLimited:async()=>null,
+    json:Response.json,questionNamesWithheldDonor:async()=>false,withheldNameCheck:async()=>()=>false,cacheRequest:()=>new Request('https://cache.test/followup'),sha256Hex:async()=>'',cacheBypass:()=>true,rateLimited:async()=>null,
     withCacheStatus:r=>r,kbFetch:async(_env,_path,init)=>{request=init.body;return Response.json({answer:''});},parseFollowUpLines:()=>[],selectFollowUps:()=>[],
   });
   const req=()=>new Request('https://opax.test/api/followups',{method:'POST',body:JSON.stringify({question:'statement 30',answer:sa.text,passages:[null,{...sa,title:'SA record',text:sa.text}]})});
@@ -157,7 +158,7 @@ test('the shared KB call retrieves without generation and caps SA before the aut
   const fn=ast.statements.find(n=>ts.isFunctionDeclaration(n)&&n.name?.text==='kbFetch').getText(ast);
   const calls=[];
   const kb=runInNewContext(ts.transpile(fn)+';kbFetch',{
-    saGenerationResponse,modelBudgetSpent:async()=>false,ragBase:()=> 'https://fixture.test/kb',
+    sourceIdentity,saGenerationResponse,modelBudgetSpent:async()=>false,ragBase:()=> 'https://fixture.test/kb',
     fetch:async(url,init)=>{calls.push({url,...init,body:JSON.parse(init.body)});return url.endsWith('/ask')?Response.json(retrieval()):new Response(bytes({type:'text',text:'Generated words.'}));},
   });
   const response=await kb({SA_HANSARD_FULL_TEXT:'false',ARAG_KB_TOKEN:'fixture'},'/ask',{body:{query:'statement 30'},headers:{accept:'application/x-ndjson'}});
@@ -165,6 +166,7 @@ test('the shared KB call retrieves without generation and caps SA before the aut
   assert.equal(calls[0].body.generate_answer,false);assert.equal(calls[0].headers['x-synchronous'],'true');
   assert.equal(calls[1].url,'https://fixture.test/kb/predict/chat');assert.equal(calls[1].headers.accept,'application/x-ndjson');assert.equal(calls[1].headers['x-synchronous'],undefined);
   assert.equal(calls[1].headers['x-nuclia-serviceaccount'],'Bearer fixture');
+  assert.ok(calls.every(call=>call.headers['user-agent']===sourceIdentity.user_agent));
   cap(calls[1].body.query_context[id]);assert.equal(calls[1].method,'POST');
 });
 

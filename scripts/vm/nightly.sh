@@ -117,6 +117,7 @@ export GIT_AUTHOR_NAME="${OPAX_BOT_NAME:-OPAX nightly}" GIT_COMMITTER_NAME="${OP
 export GIT_AUTHOR_EMAIL="${OPAX_BOT_EMAIL:-opax-nightly@users.noreply.github.com}"
 export GIT_COMMITTER_EMAIL="$GIT_AUTHOR_EMAIL"
 export GIT_TERMINAL_PROMPT=0
+export OPAX_SOURCE_STATUS_FILE="$PIPE/source-access.json"
 PY="$REPO/.venv/bin/python"
 cd "$REPO" || { fail "cannot cd $REPO"; exit 1; }
 # only paths HEAD tracks can be checked out or cleaned; a group's file that does not exist yet needs a first manual commit
@@ -151,11 +152,35 @@ write_status() {
 import json, sys, datetime
 path, status, day, started, sha, deploy, summary, nwarn, *rest = sys.argv[1:]
 warnings, failures = rest[:int(nwarn)], rest[int(nwarn):]
+from pathlib import Path
+paused_sources = {}
+for receipt in [Path(path).parent / 'source-access.json', *(Path(path).parent / 'source-access').glob('*.json')]:
+    try:
+        paused_sources.update({k:v for k,v in json.loads(receipt.read_text()).items() if v.get('status') == 'paused'})
+    except (OSError, ValueError): pass
 json.dump({"date": day, "status": status, "started": started,
            "finished": datetime.datetime.now(datetime.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
-           "commit": sha or None, "deploy": deploy, "summary": summary, "failures": failures, "warnings": warnings},
+           "commit": sha or None, "deploy": deploy, "summary": summary, "failures": failures, "warnings": warnings,
+           "paused_sources": paused_sources},
           open(path, "w"), indent=1)
 PYEOF
+}
+
+paused_summary() {
+  local paused
+  paused=$("$PY" - "$PIPE" <<'PYEOF'
+import json, sys
+from pathlib import Path
+root = Path(sys.argv[1]); sources = set()
+for receipt in [root / 'source-access.json', *(root / 'source-access').glob('*.json')]:
+    try:
+        sources.update(k for k,v in json.loads(receipt.read_text()).items() if v.get('status') == 'paused')
+    except (OSError, ValueError): pass
+print(', '.join(sorted(sources)) or 'none')
+PYEOF
+)
+  log "Paused sources: ${paused:-none}"
+  RESULT_SUMMARY="${RESULT_SUMMARY:+$RESULT_SUMMARY; }Paused sources: ${paused:-none}"
 }
 
 finish() {
@@ -523,6 +548,7 @@ fi
 divisions_summary || { fail "cannot summarize retained divisions"; finish; }
 bills_summary || { fail "cannot summarize retained bills"; finish; }
 evidence_summary
+paused_summary
 
 # ---- 6. commit -----------------------------------------------------------------------------------------------
 # Re-read HEAD after sync/validation; stage whole published directory roots,

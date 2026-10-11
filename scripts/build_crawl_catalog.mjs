@@ -130,8 +130,8 @@ export function namedDonors(html) {
   return [...block.matchAll(/href="\/subject\/donor\/([^"]+)"/g)].map(m => decodeURIComponent(unescape(m[1])));
 }
 
-export async function buildCrawl(root) {
-  const read = async p => JSON.parse(await readFile(join(root,p.replace(/^\//,'')), 'utf8'));
+export async function buildCrawl(root, {read: sourceRead} = {}) {
+  const read = async p => sourceRead ? sourceRead(p) : JSON.parse(await readFile(join(root,p.replace(/^\//,'')), 'utf8'));
   const optional = async p => { try { return await read(p); } catch (e) { if (e.code === 'ENOENT') return null; throw e; } };
   const [roster, seatManifest, bills, suppliers, agencies, reports, corpus, votes, campaigners] = await Promise.all([
     read('parliamentarians.json'), read('electorates/manifest.json'), read('bills/index.json'), read('suppliers.json'), read('agencies.json'), read('reports/index.json'), read('corpus.json'), read('votes.json'), optional('graph/campaigners.json')

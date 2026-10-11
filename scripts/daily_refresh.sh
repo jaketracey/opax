@@ -49,8 +49,7 @@
 #
 # Known-broken source: sa_hansard. hansardsearch.parliament.sa.gov.au sits
 # behind an Azure Front Door WAF JavaScript challenge (Sept 2026) that rejects
-# every non-browser client; the step is kept so the log shows the day it
-# starts working again.
+# honest clients; that source is paused pending permission.
 
 set -u
 export PATH="$HOME/.local/bin:/usr/local/bin:/usr/bin:/bin:$PATH"
@@ -104,7 +103,7 @@ if ! flock -n 9; then
   exit 0
 fi
 
-# Secrets: ARAG_*, OPENAUSTRALIA_API_KEY, TVFY_API_KEY, FIRECRAWL_API_KEY.
+# Secrets: ARAG_*, OPENAUSTRALIA_API_KEY, TVFY_API_KEY.
 # News is excluded from both acquisition and the knowledge box.
 if [ -f .env ]; then set -a; . ./.env; set +a; fi
 
@@ -206,10 +205,13 @@ run_step link_speakers "SELECT COUNT(*) FROM speeches WHERE person_id IS NOT NUL
 # also queues KB patches for rows already pushed; draining that queue is scripts/arag_patch_speakers.py, not
 # part of the nightly.
 if [ "${STEP_DELTA[committees]:-0}" != "0" ] || grep -q '^COMMITTEES_CHANGED ' "$PIPE/committees.log" 2>/dev/null; then
-  run_step committee_fetch "" \
-    "$PY" -m parli.ingest.committee_witnesses fetch --db "$DB"
-  run_step committee_resolve "" \
-    "$PY" -m parli.ingest.committee_witnesses resolve --db "$DB"
+  if run_step committee_fetch "" \
+    "$PY" -m parli.ingest.committee_witnesses fetch --db "$DB"; then
+    run_step committee_resolve "" \
+      "$PY" -m parli.ingest.committee_witnesses resolve --db "$DB"
+  else
+    log "[committee_resolve] SKIP: attendance fetch incomplete; existing identities kept"
+  fi
 fi
 run_step classify "SELECT COUNT(*) FROM speech_topics" \
   "$PY" classify_state_speeches.py
@@ -222,7 +224,11 @@ if [ "${OPAX_SYNC_KB:-0}" = "1" ]; then
   # sane checkpoint: that would re-push the whole ~550K-document corpus.
   STATE="$HOME/.cache/autoresearch/arag_sync_state.json"
   gate_failed=""
+  gate_paused=""
   for g in ${SYNC_GATE//,/ }; do
+    for p in ${PAUSED_STEPS[@]+"${PAUSED_STEPS[@]}"}; do
+      if [ "$p" = "$g" ]; then gate_paused="$gate_paused $g"; fi
+    done
     for f in ${FAILED_STEPS[@]+"${FAILED_STEPS[@]}"}; do
       if [ "$f" = "$g" ]; then gate_failed="$gate_failed $g"; fi
     done
@@ -230,6 +236,8 @@ if [ "${OPAX_SYNC_KB:-0}" = "1" ]; then
   if [ -n "$gate_failed" ]; then
     log "[arag_sync] SKIP: gate step(s) failed:$gate_failed; not pushing to the knowledge box"
     FAILED_STEPS+=("arag_sync(skipped)")
+  elif [ -n "$gate_paused" ]; then
+    log "[arag_sync] SKIP: required source(s) paused:$gate_paused; existing knowledge-box data kept"
   elif "$PY" - "$STATE" <<'PYEOF'
 import json, sys
 s = json.load(open(sys.argv[1]))["tables"]
@@ -294,12 +302,18 @@ for src, mx, n in db.execute("SELECT source, MAX(date), COUNT(*) FROM speeches G
     print(f"{src:18s} newest {mx}  rows {n:,}")
 PYEOF
 # Federal registers change on most working days. Date-aware caching keeps daily
-# polling cheap (two indexes + changed Senate pages, shared maximum 100 credits).
+# polling bounded (two indexes + changed Senate pages, maximum 100 direct requests).
+interests_rc=0
 STEP_TIMEOUT=45m run_step interests_federal "SELECT COUNT(*) FROM ext_interests" \
-  "$PY" -m parli.ingest.conduct_interests_federal refresh --db "$DB"
-run_step x_interests "" env PY="$PY" scripts/vm/export_step.sh dir portal/public/interests -- \
-  "$PY" scripts/export_interests.py --out portal/public/interests
+  "$PY" -m parli.ingest.conduct_interests_federal refresh --db "$DB" || interests_rc=$?
+if [ "$interests_rc" = 4 ]; then
+  log "[x_interests] SKIP: source paused; published disclosures kept"
+else
+  run_step x_interests "" env PY="$PY" scripts/vm/export_step.sh dir portal/public/interests -- \
+    "$PY" scripts/export_interests.py --out portal/public/interests
+fi
 
+log "Paused sources: ${PAUSED_STEPS[*]:-none}"
 log "===== daily refresh end ====="
 [ "${#STALE_STEPS[@]}" -eq 0 ] || log "Stale daily refresh: source refused to change the register: ${STALE_STEPS[*]}"
 [ "${#PARTIAL_STEPS[@]}" -eq 0 ] || log "Partial daily refresh: cut by its time limit, resumes from its checkpoint next run: ${PARTIAL_STEPS[*]}"

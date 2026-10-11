@@ -1,5 +1,10 @@
 # Nightly refresh (AWS EC2, starts itself, powers itself off)
 
+> Access policy updated 10 Oct 2026: use the shared OPAX agent. Historical
+> proxy approvals below are superseded; refused sources are paused and the last
+> good data kept. See [SOURCES-ACCESS.md](../SOURCES-ACCESS.md).
+
+
 The corpus is refreshed, published and deployed every night with no one at a keyboard. This
 replaces the hand-run procedure (WSL desktop, then a laptop worktree, then a manual deploy).
 

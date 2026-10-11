@@ -13,6 +13,8 @@ Usage:
     python -m parli.ingest.divisions --since 2023-01-01
 """
 
+from parli.ingest import http as source_http
+
 import os
 import time
 from datetime import date, timedelta
@@ -24,8 +26,8 @@ from parli.schema import get_db, init_db
 TVFY_API = "https://theyvoteforyou.org.au/api/v1"
 RATE_LIMIT = 1.0
 
-SESSION = requests.Session()
-SESSION.headers.update({"User-Agent": "ParliIntel/1.0"})
+SESSION = source_http.Session()
+SESSION.headers.update({"User-Agent": source_http.USER_AGENT})
 
 
 def get_api_key() -> str:

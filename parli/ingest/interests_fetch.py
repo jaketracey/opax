@@ -1,11 +1,12 @@
 """Bounded federal interests refresh. Only facts go to ext_interests; no KB writes.
 
-www.aph.gov.au is fetched through Firecrawl, never with a disguised user agent.
+All network requests use the shared honest agent. Refused sources are paused.
 PDFs retain their bytes and geometry for the existing parser (including OCR caveats).
 """
 from __future__ import annotations
 
-import base64
+from parli.ingest import http as source_http
+
 from contextlib import closing
 import json
 import os
@@ -18,7 +19,7 @@ import requests
 
 from parli.ingest import conduct_interests_federal as federal
 
-MAX_CREDITS = 100
+MAX_REQUESTS = 100
 STATUS_PATH = Path("~/.cache/autoresearch/pipeline/interests-status.json").expanduser()
 
 
@@ -38,80 +39,28 @@ def write_json(path, value):
     tmp.replace(path)
 
 
-class Firecrawl:
-    def __init__(self, cap=MAX_CREDITS, session=None):
-        if not 0 <= cap <= MAX_CREDITS:
-            raise ValueError(f"credit cap must be between 0 and {MAX_CREDITS}")
+class DirectHTTP:
+    """Bounded direct requests; no rendering, proxy or fallback service."""
+    def __init__(self, cap=100, session=None):
         self.cap = cap
-        self.requests = self.credits = 0
-        self.unknown = 0
-        self.key = os.environ.get("FIRECRAWL_API_KEY", "")
-        self.session = session or requests.Session()
-        self.unavailable = None
+        self.requests = 0
+        self.session = session or source_http.Session()
 
-    def scrape(self, url, pdf=False, wait_for=3000):
-        if not self.key:
-            raise FetchError("Firecrawl unavailable: FIRECRAWL_API_KEY is missing")
-        if self.unavailable:
-            raise FetchError(self.unavailable)
+    def scrape(self, url, pdf=False):
+        source_http.ensure_allowed(url)
         if self.requests >= self.cap:
-            raise FetchError(f"Firecrawl per-run credit cap reached ({self.cap})")
-        # Reserve one credit BEFORE the request, even on timeouts/error documents. No
-        # hidden retries, paid extraction, PDF parsing, crawl, or proxy escalation.
+            raise FetchError(f"Direct per-run request cap reached ({self.cap})")
         self.requests += 1
-        payload = {"url": url, "formats": ["rawBase64" if pdf else "rawHtml"], "onlyMainContent": False,
-                   "proxy": "basic", "maxAge": 0, "waitFor": wait_for,
-                   "parsers": [], "timeout": 60000, "skipTlsVerification": False}
         try:
-            r = self.session.post("https://api.firecrawl.dev/v2/scrape", json=payload,
-                                  headers={"Authorization": "Bearer " + self.key}, timeout=90)
-            result = r.json()
-        except (requests.RequestException, ValueError):
-            self.unknown += 1
-            self.unavailable = "Firecrawl unavailable: request failed (credit reserved; billing unknown)"
-            raise FetchError(self.unavailable) from None
-        if not isinstance(result, dict) or not isinstance(result.get("data", {}), (dict, type(None))):
-            self.unknown += 1
-            self.unavailable = "Firecrawl unavailable: invalid response (credit reserved; billing unknown)"
-            raise FetchError(self.unavailable)
-        data = result.get("data") or {}
-        meta = data.get("metadata") or {}
-        if not isinstance(meta, dict):
-            self.unknown += 1
-            self.unavailable = "Firecrawl unavailable: invalid metadata (credit reserved; billing unknown)"
-            raise FetchError(self.unavailable)
-        charge = meta.get("creditsUsed")
-        # The documented one-credit raw scrape can return an error document. Some
-        # responses omit creditsUsed; account reconciliation is done by the operator.
-        self.credits += charge if isinstance(charge, int) else int(bool(data))
-        if isinstance(charge, int) and charge > 1:
-            self.unavailable = "Firecrawl unavailable: unexpected credit charge; further requests stopped"
-            raise FetchError(self.unavailable)
-        if r.status_code == 402:
-            self.unavailable = "Firecrawl out of credits (HTTP 402)"
-            raise FetchError(self.unavailable)
-        if r.status_code in (401, 403, 429):
-            self.unavailable = f"Firecrawl unavailable (HTTP {r.status_code})"
-            raise FetchError(self.unavailable)
-        if r.status_code >= 500:
-            # A rendering failure can be URL-specific. Preserve this statement,
-            # then try the next one within the same conservative budget.
-            raise FetchError(f"Firecrawl unavailable for this page (HTTP {r.status_code})")
-        if not r.ok or not result.get("success") or meta.get("statusCode") != 200:
-            raise FetchError(f"Firecrawl fetch failed (HTTP {r.status_code}, source {meta.get('statusCode')})")
-        if pdf:
-            try:
-                content = base64.b64decode(data.get("rawBase64", ""), validate=True)
-            except (ValueError, TypeError):
-                raise FetchError("Firecrawl returned invalid PDF bytes") from None
-            if not content.startswith(b"%PDF-"):
-                raise FetchError("Firecrawl returned no PDF bytes")
-        else:
-            content = data.get("rawHtml")
-            if not isinstance(content, str) or not content:
-                raise FetchError("Firecrawl returned no HTML")
-        print(f"[firecrawl] source=200 bytes={len(content)} credits={charge if charge is not None else '1 (inferred)'} proxy=basic", flush=True)
-        return content
+            r = self.session.get(url, headers={"User-Agent": source_http.USER_AGENT}, timeout=90)
+        except requests.RequestException:
+            raise FetchError("direct source request failed; existing data kept") from None
+        source_http.check_response(url, r.status_code, r.content)
+        if not r.ok:
+            raise FetchError(f"direct source unavailable (HTTP {r.status_code})")
+        if pdf and not r.content.startswith(b"%PDF-"):
+            raise FetchError("direct source returned no PDF bytes")
+        return r.content if pdf else r.text
 
 
 def cached_json(path):
@@ -144,14 +93,11 @@ def house_pdf(entry, dest, client, session):
     if (path.exists() and path.read_bytes().startswith(b"%PDF-") and entry.get("rev")
             and cached.get("rev") == entry["rev"] and date_settled(entry["rev"], cached.get("fetched_at"))):
         return path, cached.get("fetched_at")
-    try:
-        r = session.get(entry["url"], timeout=90)
-        print(f"[pdf] {entry['file']} status={r.status_code} bytes={len(r.content)}", flush=True)
-        if not r.ok or not r.content.startswith(b"%PDF-"):
-            raise FetchError("direct PDF unavailable")
-        content = r.content
-    except (requests.RequestException, FetchError):
-        content = client.scrape(entry["url"], pdf=True)
+    r = session.get(entry["url"], headers={"User-Agent": source_http.USER_AGENT}, timeout=90)
+    source_http.check_response(entry["url"], r.status_code, r.content)
+    if not r.ok or not r.content.startswith(b"%PDF-"):
+        raise FetchError("direct PDF unavailable; existing data kept")
+    content = r.content
     # Do not replace a cached PDF with a WAF page or a partially downloaded file.
     dest.mkdir(parents=True, exist_ok=True)
     tmp = path.with_suffix(".pdf.tmp"); tmp.write_bytes(content); tmp.replace(path)
@@ -174,8 +120,8 @@ def senate_page(entry, dest, client):
     html = client.scrape(entry["url"])
     if "interests-table-collapse" not in html:
         # Rendering occasionally returns the listing rather than the detail.
-        # One basic-proxy retry with a longer wait remains inside the shared cap.
-        html = client.scrape(entry["url"], wait_for=6000)
+        # One paced direct retry remains inside the shared request cap.
+        html = client.scrape(entry["url"])
         if "interests-table-collapse" not in html:
             raise FetchError("source has no interests blocks after retry (statement unavailable)")
     dest.mkdir(parents=True, exist_ok=True)
@@ -243,14 +189,14 @@ def retain_house_ids(entries, db_path):
 
 
 def refresh(args):
-    client = Firecrawl(args.credit_cap)
+    client = DirectHTTP(getattr(args, "request_cap", MAX_REQUESTS))
     cache = Path(args.cache_dir)
     cache.mkdir(parents=True, exist_ok=True)
     summary = {"checked_at": stamp(), "complete": False, "chambers": {}, "held_count": 0, "holds": [],
                "limitations": ["Federal interests refresh interrupted; existing disclosures were preserved."]}
     if args.status:
         write_json(args.status, summary)  # a killed run must not leave yesterday's success
-    docs, failures, holds = [], [], []
+    docs, failures, holds, paused = [], [], [], []
     chambers = [args.chamber] if args.chamber else ["house", "senate"]
     for chamber in chambers:
         loaded = []
@@ -301,25 +247,28 @@ def refresh(args):
                     # Parser errors are per-document, never blank the old statement.
                     failures.append(f"{chamber} {label}: parse/cache failed ({type(e).__name__})")
                     print(f"[preserved] {failures[-1]}", flush=True)
+        except source_http.SourceRefused as e:
+            paused.append(chamber)
+            summary["paused_sources"] = list(paused)
         except FetchError as e:
             failures.append(f"{chamber} index: {e}")
         summary["chambers"][chamber] = {"documents": len(loaded), "rows": sum(len(d.rows) for d in loaded),
                                          "held": sum(h["chamber"] == chamber for h in holds)}
         docs.extend(loaded)
-    if args.export_jsonl:
+    if args.export_jsonl and docs:
         Path(args.export_jsonl).write_text("".join(json.dumps(federal.doc_to_json(d), ensure_ascii=False) + "\n" for d in docs))
     if args.db and docs and not args.dry_run:
         federal._load_docs(docs, Path(args.db))
     reasons = sorted(set(f.split(": ", 1)[-1] for f in failures))
-    summary.update(complete=not failures, failures=failures, held_count=len(holds), holds=holds,
-                   credits_used=client.credits, credits_reserved=client.requests,
-                   credits_unknown=client.unknown, credit_cap=client.cap,
+    summary.update(complete=not failures and not paused, paused_sources=paused, failures=failures, held_count=len(holds), holds=holds,
+                   requests=client.requests, request_cap=client.cap,
                    limitations=([f"Federal interests refresh incomplete: {'; '.join(reasons)}. "
-                                 f"{len(failures)} unavailable statements/indexes; existing disclosures were preserved."] if failures else []))
+                                 f"{len(failures)} unavailable statements/indexes; existing disclosures were preserved."] if failures else ([source_http.PAUSE_MESSAGE + "; existing disclosures were preserved."] if paused else [])))
     if args.status:
         write_json(args.status, summary)
     print(f"[interests] documents={len(docs)} rows={sum(len(d.rows) for d in docs)} preserved={len(failures)} "
-          f"held={len(holds)} credits={client.credits} reserved={client.requests}/{client.cap}", flush=True)
+          f"held={len(holds)} requests={client.requests}/{client.cap}", flush=True)
     for line in summary["limitations"]:
-        print(line, flush=True)
-    return 3 if failures else 0
+        if not line.startswith(source_http.PAUSE_MESSAGE):
+            print(line, flush=True)
+    return 3 if failures else (4 if paused else 0)

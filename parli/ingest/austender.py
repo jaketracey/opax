@@ -15,6 +15,8 @@ Usage:
     python -m parli.ingest.austender --start-date 2020-01-01 --min-amount 5000000
 """
 
+from parli.ingest import http as source_http
+
 import argparse
 import time
 from datetime import datetime, timedelta
@@ -25,8 +27,8 @@ from parli.schema import get_db, init_db
 
 API_BASE = "https://api.tenders.gov.au/ocds"
 
-SESSION = requests.Session()
-SESSION.headers.update({"User-Agent": "OPAX/1.0 (parliamentary transparency research)"})
+SESSION = source_http.Session()
+SESSION.headers.update({"User-Agent": source_http.USER_AGENT})
 
 BATCH_SIZE = 500
 

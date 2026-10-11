@@ -27,27 +27,21 @@ from the Federal Register of Legislation OData API (api.prod.legislation.gov.au,
 honest UA, no WAF) into ext_frl_acts; each carries `originatingBillUri`, i.e.
 the ParlInfo billhome code -> bills ↔ Acts ↔ legal_documents join.
 
-ACCESS CAVEAT — READ BEFORE RUNNING. parlinfo.aph.gov.au (and www.aph.gov.au)
-sit behind an Azure WAF that answers 403 to any non-browser User-Agent,
-including the honest "OPAX research (opax.com.au)". robots.txt is permissive
-(Allow: /; Disallow: /parlInfo/download/ and /parlInfo/genpdf/) and the site
-licence is CC BY-NC-ND 4.0, so reading summary/display pages is within the
-stated rules — but only a browser UA gets past the WAF. This module refuses to
-run without --browser-ua so that sending a browser UA is the operator's
-explicit decision (the existing committee_hearings ingester already does the
-same). It NEVER requests anything under /parlInfo/download/.
+ACCESS POLICY: use the shared honest agent. Refused sources are paused and
+existing records retained. Offline parsing is available; see docs/SOURCES-ACCESS.md.
+It NEVER requests anything under /parlInfo/download/.
 
 Writes ONLY ext_parlinfo_docs (PK parlinfo_id) and ext_frl_acts (PK act_id).
 Never pushes to the KB.
 
 Usage:
-  python3 -m parli.ingest.words_parlinfo --browser-ua listing --dataset pressrel --pages 3
-  python3 -m parli.ingest.words_parlinfo --browser-ua listing --dataset billhome --pages 3
-  python3 -m parli.ingest.words_parlinfo --browser-ua listing --dataset reportsen --pages 2
-  python3 -m parli.ingest.words_parlinfo --browser-ua display --dataset reportsen --limit 40
-  python3 -m parli.ingest.words_parlinfo --browser-ua display --dataset ems --limit 20
-  python3 -m parli.ingest.words_parlinfo --browser-ua display --dataset billsdgs --limit 20
-  python3 -m parli.ingest.words_parlinfo --browser-ua bill-sections --limit 10   # text of 10 bills
+  python3 -m parli.ingest.words_parlinfo listing --dataset pressrel --pages 3
+  python3 -m parli.ingest.words_parlinfo listing --dataset billhome --pages 3
+  python3 -m parli.ingest.words_parlinfo listing --dataset reportsen --pages 2
+  python3 -m parli.ingest.words_parlinfo display --dataset reportsen --limit 40
+  python3 -m parli.ingest.words_parlinfo display --dataset ems --limit 20
+  python3 -m parli.ingest.words_parlinfo display --dataset billsdgs --limit 20
+  python3 -m parli.ingest.words_parlinfo bill-sections --limit 10   # text of 10 bills
   python3 -m parli.ingest.words_parlinfo frl-acts                               # all 13.7K Acts, honest UA
   python3 -m parli.ingest.words_parlinfo link-bills
   python3 -m parli.ingest.words_parlinfo stats
@@ -64,7 +58,7 @@ from typing import Optional
 from parli.ingest.frl_instruments import Held, MIN_SPACING, PoliteSession as FRLSession
 from parli.ingest.speaker_names import normalize_speaker
 from parli.ingest.words_common import (
-    BROWSER_UA, DB_PATH, PoliteSession, connect_db, decade_of, ensure_table,
+    DB_PATH, PoliteSession, connect_db, decade_of, ensure_table,
     html_to_text, log, now_iso, parse_date, upsert, warn, write_txn,
 )
 
@@ -323,15 +317,8 @@ def parse_billhome(page_html: str) -> tuple[list[str], list[str]]:
 # ---------------------------------------------------------------------------
 
 
-def require_browser_ua(args) -> PoliteSession:
-    if not args.browser_ua:
-        sys.exit(
-            "parlinfo.aph.gov.au's WAF rejects the honest OPAX User-Agent (HTTP 403). "
-            "Re-run with --browser-ua to send a Firefox UA instead — this is an explicit "
-            "operator decision; see the module docstring and docs/DATA-WORDS.md."
-        )
-    return PoliteSession(min_interval=1.0 / args.rps, ua=BROWSER_UA, timeout=60)
-
+def source_session(args) -> PoliteSession:
+    return PoliteSession(min_interval=1.0 / args.rps, timeout=60)
 
 def listing_row(ds: str, item: dict) -> dict:
     spec = DATASETS[ds]
@@ -349,7 +336,7 @@ def listing_row(ds: str, item: dict) -> dict:
 
 
 def run_listing(args) -> None:
-    session = require_browser_ua(args)
+    session = source_session(args)
     db = connect_db(args.db)
     ensure_table(db, TABLE, DDL, INDEXES)
     ds = args.dataset
@@ -386,7 +373,7 @@ def run_listing(args) -> None:
 
 
 def run_display(args) -> None:
-    session = require_browser_ua(args)
+    session = source_session(args)
     db = connect_db(args.db)
     ensure_table(db, TABLE, DDL, INDEXES)
     rows = db.execute(
@@ -440,7 +427,7 @@ def run_bill_sections(args) -> None:
     pages /0000, /0001, ... until ParlInfo 301s to the summary (no such
     section). EM ids found on the bill-home page are stubbed into the ems
     dataset so `display --dataset ems` picks up their body later."""
-    session = require_browser_ua(args)
+    session = source_session(args)
     db = connect_db(args.db)
     ensure_table(db, TABLE, DDL, INDEXES)
     if args.codes:
@@ -720,8 +707,6 @@ def run_stats(args) -> None:
 def main() -> None:
     p = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     p.add_argument("--db", default=str(DB_PATH))
-    p.add_argument("--browser-ua", action="store_true",
-                   help="send a Firefox User-Agent (required: the WAF 403s the honest UA)")
     p.add_argument("--rps", type=float, default=0.7, help="max requests/second (default 0.7)")
     sub = p.add_subparsers(dest="cmd", required=True)
 
