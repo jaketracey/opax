@@ -155,13 +155,9 @@ name: Submission reviewer reading walkthrough
       id: doc-title
     timeout: 30000
 - takeScreenshot: ${EVIDENCE}/review-09-reader
-- scrollUntilVisible:
-    element:
-      id: doc-cite
-    centerElement: true
-    timeout: 60000
-- tapOn:
-    id: doc-cite
+# Cite lives under the navigation bar's ⋯ (pass 5, P1-2).
+- tapOn: More for this record
+- tapOn: Cite
 - assertVisible:
     id: doc-citations
 - takeScreenshot: ${EVIDENCE}/review-10-cite

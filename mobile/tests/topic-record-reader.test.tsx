@@ -11,8 +11,9 @@ import {
 } from '../src/features/reports/model';
 import { docRoute, fromWebPath } from '../src/navigation/routes';
 import { catalogs } from '../src/api/runtime';
+import { SourceLine } from '../src/design/primitives';
 import { openSource } from '../src/navigation/external';
-import { pinned, roster, slugs } from './pinned';
+import { index, manifest, people, pinned, roster, slugs } from './pinned';
 
 // Jake, build 17/18: Today → Gambling → "Peter Costello — 1999-02-09" opened
 // the reader, which failed with "The catalog response could not be read."
@@ -49,6 +50,7 @@ jest.mock('../src/api/runtime', () => ({
     billFor: jest.fn(),
     roster: jest.fn(),
     slugs: jest.fn(),
+    directory: jest.fn(),
     bills: jest.fn(),
   },
 }));
@@ -86,6 +88,14 @@ beforeEach(() => {
   jest.clearAllMocks();
   jest.mocked(catalogs.roster).mockResolvedValue(record(roster));
   jest.mocked(catalogs.slugs).mockResolvedValue(record(slugs));
+  // The reader joins its speaker as a bill joins its sponsors.
+  jest.mocked(catalogs.directory).mockResolvedValue({
+    roster: record(roster),
+    slugs: record(slugs),
+    people: record(people),
+    manifest: record(manifest),
+    electorates: record(index),
+  } as never);
   jest.mocked(catalogs.billFor).mockResolvedValue(record(null) as never);
 });
 
@@ -120,7 +130,10 @@ test('the reader opened from a topic record loads the 1999 speech', async () => 
   expect(textOf(view.root.findByProps({ testID: 'doc-title' }))).toBe(
     'Speech · 9 February 1999',
   );
-  expect(view.root.findAllByProps({ testID: 'doc-source' })).toHaveLength(0);
+  // No official link: the record's one source line opens no original.
+  const line = view.root.findByType(SourceLine);
+  expect(line.props.testID).toBe('doc-source');
+  expect(line.props.originals).toEqual([]);
   await act(async () => view.unmount());
 });
 

@@ -82,20 +82,22 @@ export default function Citations() {
                 key={citation.id}
                 title={citation.label}
                 accent="bills"
-                info={
-                  citation.note
-                    ? {
-                        title: `About ${citation.label}`,
-                        notes: [citation.note],
-                      }
-                    : undefined
-                }
                 testID={`cite-${citation.id}`}
               >
                 <Group gap={rhythm.tight}>
                   <Text selectable testID={`cite-text-${citation.id}`}>
                     {citation.text}
                   </Text>
+                  {/* The style's one caveat, inline, not behind an ⓘ. */}
+                  {citation.note ? (
+                    <Text
+                      variant="fine"
+                      wordSafe
+                      testID={`cite-note-${citation.id}`}
+                    >
+                      {citation.note}
+                    </Text>
+                  ) : null}
                   <Group
                     gap={rhythm.tight}
                     style={{ flexDirection: 'row', flexWrap: 'wrap' }}

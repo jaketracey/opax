@@ -20,7 +20,15 @@ import RecentRecords from '../src/features/records/RecentRecords';
 import BillTextReader from '../src/features/records/BillTextReader';
 import { RecordActions } from '../src/features/records/RecordActions';
 import { billFor, decodeBill } from '../src/api/catalogs';
-import { pinned, bills, roster, slugs } from './pinned';
+import {
+  pinned,
+  bills,
+  index,
+  manifest,
+  people,
+  roster,
+  slugs,
+} from './pinned';
 const responses: Record<string, unknown> = fixtures.responses;
 const speech = decodeDocument(responses['/api/resource/speech-1205524']);
 const record = <T,>(data: T) => ({
@@ -45,6 +53,7 @@ jest.mock('../src/api/runtime', () => ({
     billFor: jest.fn(),
     roster: jest.fn(),
     slugs: jest.fn(),
+    directory: jest.fn(),
     bills: jest.fn(),
     corpus: jest.fn(),
   },
@@ -101,6 +110,14 @@ beforeEach(() => {
     );
   jest.mocked(catalogs.roster).mockResolvedValue(record(roster));
   jest.mocked(catalogs.slugs).mockResolvedValue(record(slugs));
+  // The reader joins its speaker as a bill joins its sponsors.
+  jest.mocked(catalogs.directory).mockResolvedValue({
+    roster: record(roster),
+    slugs: record(slugs),
+    people: record(people),
+    manifest: record(manifest),
+    electorates: record(index),
+  } as never);
   jest.mocked(catalogs.bills).mockResolvedValue(record(bills));
   jest.mocked(records.document).mockResolvedValue(record(speech));
   jest.mocked(records.recent).mockResolvedValue(record([]));
@@ -129,7 +146,7 @@ beforeEach(() => {
 test('launch/Today and Bill mount have no paid reads; result actions mount without loading a record', async () => {
   const today = await mount(<Today />),
     bill = await mount(<BillDetail recordKey="au-federal-r7534" />),
-    actions = await mount(<RecordActions slug="speech-1205524" />);
+    actions = await mount(<RecordActions slug="speech-1205524" title="A speech" />);
   for (const method of Object.values(records))
     if (typeof method === 'function') expect(method).not.toHaveBeenCalled();
   expect(today.root.findByProps({ testID: 'today-records-open' })).toBeTruthy();
@@ -155,7 +172,7 @@ test('opening reader loads one record; similar loads only on tap and reopening t
     view.root.findByProps({ testID: 'doc-similar' }).props.onToggle(true);
   });
   expect(records.similar).toHaveBeenCalledTimes(1);
-  expect(view.root.findByProps({ testID: 'doc-more' }).props.title).toBe(
+  expect(view.root.findByProps({ testID: 'doc-more' }).props.name).toBe(
     speech.speaker,
   );
   await act(async () => view.unmount());

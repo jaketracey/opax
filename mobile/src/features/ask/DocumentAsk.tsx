@@ -52,13 +52,12 @@ export function documentQuestion(doc: DocumentRecord) {
   return `What has parliament said about ${about || trim(doc.title, 70)}?`;
 }
 
+/** The record's one drawn action: a plain row, no icon tile (pass 5, P1-2). */
 export function DocumentAsk({ doc }: { doc: DocumentRecord }) {
   const openAsk = useOpenAsk();
   return (
     <LinkRow
       title="Ask about this"
-      icon="text.bubble"
-      accent="people"
       testID="doc-ask"
       onPress={() => openAsk({ question: documentQuestion(doc) })}
     />

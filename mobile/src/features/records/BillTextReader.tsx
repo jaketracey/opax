@@ -3,7 +3,6 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import { AccessibilityInfo, StyleSheet, View } from 'react-native';
 import { Stack, useLocalSearchParams } from 'expo-router';
 import {
-  AsAtLine,
   Button,
   EmptyState,
   ErrorState,
@@ -13,8 +12,9 @@ import {
   Section,
   Disclosure,
   LinkRow,
+  MachineLabel,
   RowList,
-  ViewOriginal,
+  SourceLine,
   Text,
   errorMessage,
 } from '../../design/primitives';
@@ -141,16 +141,19 @@ export default function BillTextReader({
               </>
             ) : (
               <>
+                {/* One title, no kicker, and one source line that holds the
+                    collection's coverage (pass 5, P1-2). */}
                 <Group gap={rhythm.tight} testID="bill-text-head">
-                  <Text variant="label" tone="billsInk">
-                    Bill text
-                  </Text>
                   <Heading level={1} testID="bill-text-title">
                     {manifest.title}
                   </Heading>
-                  <AsAtLine
+                  <SourceLine
+                    title="About collected versions"
                     asOf={manifest.generated_at}
                     citation="Collected original bill texts"
+                    notes={[manifest.coverage_note]}
+                    licenceDataset="bills"
+                    testID="bill-text-collected-source"
                   />
                 </Group>
                 {summary ? (
@@ -183,11 +186,6 @@ export default function BillTextReader({
                   title="Read the bill"
                   accent="bills"
                   testID="bill-text-version"
-                  info={{
-                    title: 'About collected versions',
-                    notes: [manifest.coverage_note],
-                    testID: 'bill-text-coverage-info',
-                  }}
                 >
                   <View style={styles.version}>
                     <Text variant="label" tone="billsInk">
@@ -265,37 +263,38 @@ export default function BillTextReader({
                   <LoadingState label="Loading this bill text version" />
                 ) : (
                   <>
-                    <Group gap={rhythm.tight}>
-                      <ViewOriginal
-                        sources={[
-                          {
-                            label: 'Original bill document',
-                            url: current.version.source_url,
-                          },
-                        ]}
-                        testID="bill-text-source"
-                      />
-                      <AsAtLine
-                        asOf={current.version.date}
-                        citation="Original bill document"
-                      />
-                    </Group>
+                    <SourceLine
+                      title="About this version"
+                      asOf={current.version.date}
+                      dateLabel={
+                        current.version.date
+                          ? `Dated ${formatDate(current.version.date, 'short')}`
+                          : undefined
+                      }
+                      citation="Original bill document"
+                      originals={[
+                        {
+                          label: 'Original bill document',
+                          url: current.version.source_url,
+                          record: current.version.stage_label,
+                        },
+                      ]}
+                      notes={[
+                        'Published bill text, transcribed from the original document. Check the original for authoritative formatting.',
+                      ]}
+                      licenceDataset="bills"
+                      testID="bill-text-source"
+                    />
                     {current.enrichment ? (
                       <Section
                         title="In this version"
                         accent="bills"
                         testID="bill-text-overview"
-                        info={{
-                          title: 'About this overview',
-                          notes: [
-                            'AI overview of selected provisions in this version. Read the full text for all proposed changes.',
-                          ],
-                          testID: 'bill-text-overview-info',
-                        }}
                       >
-                        <Text variant="fine" testID="bill-text-overview-label">
-                          AI overview of selected provisions in this version.
-                        </Text>
+                        <MachineLabel
+                          explanation="An overview of selected provisions in this version, written by a model. Read the full text for all proposed changes."
+                          testID="bill-text-overview-label"
+                        />
                         <Text selectable>{current.enrichment.brief}</Text>
                         <Disclosure
                           label="Supporting passages"
@@ -350,17 +349,7 @@ export default function BillTextReader({
                         ))}
                       </RowList>
                     </Disclosure>
-                    <Section
-                      title="Full text"
-                      accent="bills"
-                      info={{
-                        title: 'About this text',
-                        notes: [
-                          'Published bill text, transcribed from the original document. Check the original for authoritative formatting.',
-                        ],
-                        testID: 'bill-text-info',
-                      }}
-                    >
+                    <Section title="Full text" accent="bills">
                       {null}
                     </Section>
                     {!current.text ? (

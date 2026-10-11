@@ -1,9 +1,16 @@
 # Native records
 
 `doc/[slug]` is the shared reader for public resource slugs accepted by the
-Worker. Bill and Talk source links and `fromWebPath` converge here. Search can
-use `RecordActions` to open Cite or copy a record permalink without fetching
-anything per result row.
+Worker. Bill and Talk source links and `fromWebPath` converge here. A record's
+Cite, Copy link and Share are one menu, `recordActions` in `RecordActions.tsx`:
+the reader's navigation-bar ⋯ (`recordMenuItem`), or the inline ⋯
+(`RecordActions`) in an iPad pane. None of them fetches anything until Cite
+opens the record.
+
+The reader's header is one title, one meta line ("Speech · House of
+Representatives · 18 Aug 2026"), the speaker as a person row, and one source
+line (`source.ts`) whose sheet holds the original, the text's notes and the
+licence. "Ask about this" is the one drawn action.
 
 The document source is preserved in contiguous, selectable text slices in a
 FlatList. Speaker/profile links require one unambiguous roster and slug-directory

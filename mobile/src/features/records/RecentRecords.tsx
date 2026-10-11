@@ -9,6 +9,7 @@ import {
   ErrorState,
   Heading,
   LoadingState,
+  SourceLine,
   errorMessage,
 } from '../../design/primitives';
 import { formatDate } from '../../design/format';
@@ -41,18 +42,7 @@ export default function RecentRecords() {
         header={
           <>
             <Heading level={1}>Just added to the record</Heading>
-            <Section
-              title="Newly indexed"
-              accent="bills"
-              rule={false}
-              info={{
-                title: 'About indexed dates',
-                notes: [
-                  'Newly indexed records. The indexed date is when the record entered OPAX, rather than when it was published.',
-                ],
-                testID: 'recent-info',
-              }}
-            >
+            <Section title="Newly indexed" accent="bills" rule={false}>
               {error ? (
                 <ErrorState
                   message={errorMessage(error)}
@@ -81,6 +71,23 @@ export default function RecentRecords() {
               ) : (
                 <EmptyState message="No newly indexed records are available." />
               )}
+              {value ? (
+                <SourceLine
+                  title="About indexed dates"
+                  asOf={
+                    value.data
+                      .map((row) => row.indexed ?? '')
+                      .filter(Boolean)
+                      .sort()
+                      .at(-1) ?? null
+                  }
+                  citation="OPAX record index"
+                  notes={[
+                    'Newly indexed records. The indexed date is when the record entered OPAX, rather than when it was published.',
+                  ]}
+                  testID="recent-source"
+                />
+              ) : null}
             </Section>
           </>
         }
