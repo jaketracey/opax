@@ -160,7 +160,7 @@ try {
   else if (command === 'poll' && ['haiku', 'haiku-2', 'haiku-3', 'judge', 'donation'].includes(lane)) await poll(lane)
   else if (command === 'wait-qwen') await waitQwen()
   else if (command === 'blind') makeBlind()
-  else throw Error('usage: bakeoff.ts prepare | submit haiku|judge|donation | poll haiku|judge|donation | wait-qwen | blind')
+  else throw Error('usage: bakeoff.ts prepare | retry 2|3 | submit|poll haiku|haiku-2|haiku-3|judge|donation | wait-qwen | blind')
 } catch (e) {
   // Do not print request bodies, response text, environment, or stack traces.
   console.error(e instanceof Error ? e.message : 'bakeoff failed'); process.exitCode = 1

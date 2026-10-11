@@ -1,7 +1,7 @@
 import test from 'node:test'
 import assert from 'node:assert/strict'
 import { buildSystemPrompt, buildUserPrompt } from '../src/prompts.ts'
-import { select, recordOf, enrichmentRequests, usageCost, blind, judgeRequests, validate, decode, upperCost, retryRequests, mergeAttempt } from '../scripts/bakeoff-lib.ts'
+import { select, recordOf, enrichmentRequests, usageCost, blind, judgeRequests, judgeSystem, validate, decode, upperCost, retryRequests, mergeAttempt } from '../scripts/bakeoff-lib.ts'
 
 const unit = (id: number, length: number, year = '1993', chamber = 'senate', kind = 'speech') => ({ slug: `unit-${id}`, title: 'Record', texts: { body: { body: 'text '.repeat(Math.ceil(length / 5)) } }, extra: { metadata: { date: `${year}-01-01`, unit_kind: kind } }, usermetadata: { classifications: [{ labelset: 'kind', label: 'speech' }, { labelset: 'chamber', label: chamber }] } })
 test('selection excludes thin text and preserves strata and short quota deterministically', () => {
@@ -80,4 +80,13 @@ test('merging an attempt preserves completed topics and books all failed-call us
   assert.equal(merged.usage.input_tokens, 300)
   assert.equal(merged.history.length, 2)
   assert.deepEqual(mergeAttempt(merged, current, ['summary'], 2), merged)
+})
+test('judge uses full source text and exact topic policy without generation output instructions', () => {
+  const u = unit(1, 20000), output = new Map([[u.slug, { summary: 'Candidate', topics: [] }]])
+  const { pairs } = blind([u], output, output, 'source-test')
+  assert.equal(pairs[0].text, u.texts.body.body)
+  assert.ok(pairs[0].text.length > recordOf(u).text.length)
+  const policy = buildSystemPrompt(['topics']).split('\n\n').filter(s => s.startsWith('TOPICS\n') || s.startsWith('TAXONOMY\n')).join('\n\n')
+  assert.ok(judgeSystem.includes(policy))
+  assert.ok(!judgeSystem.includes('OUTPUT\nReturn only the JSON object'))
 })
