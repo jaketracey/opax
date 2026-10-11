@@ -4,7 +4,12 @@ This lane starts at iOS 1.0.0 build 34, `b7f2fd501`, on `android/play-1.0`. Andr
 
 ## Release parity gate
 
-The base is not voice-equivalent on Android. `app.config.ts` suppresses productionVoice on Android, blocks RECORD_AUDIO, and `metro.config.js` excludes Talk, account sign-in and deletion routes. `modules/opax-voice/expo-module.config.json` supports Apple only; there is no Android native voice implementation. The root navigator and Account entry also exclude those features. Setting `OPAX_PRODUCTION_VOICE=1` alone cannot port the native module.
+The base was not voice-equivalent on Android. The JS and config exclusions are gone on `android/parity-ui`:
+- `app.config.ts` applies the production voice switch to Android and blocks `RECORD_AUDIO` only where iOS has no purpose string;
+- Metro bundles the Talk, sign-in and deletion routes;
+- one runtime switch, `voiceLinked` (`mobile/src/voice/linked.ts`), offers them when the Android OpaxVoice module is linked.
+
+The native module is the parity lanes 1 and 2 (`android/voice-account`, `android/voice-call`). Without it, the app keeps the null-module fallback: no Talk, and Account and about is the list of rows. `verify-android-build.py` follows the switch. `verify-play.py` still asserts that the AAB manifest has no `RECORD_AUDIO`, which contradicts its own parity check; that is the integration lane's.
 
 `verify-play.py --version-code 2026101101 --require-ios-parity` writes artifact-integrity results and a separate parity result before failing for missing voice, microphone, consent config and routes. This prevents a signed, valid bundle from being described as a voice-enabled 1.0 release.
 
@@ -14,9 +19,9 @@ The Android tablet viewport is supported, but the iOS split-pane behavior is iPa
 
 `mobile/private/play/1.0/` is gitignored. It holds the signed candidate, exact hashes and packaged manifests, QA logs, fixture screenshots and hierarchies, a screenshot manifest, listing JSON/text and the Data safety draft/diff. Private evidence and signing material must never enter this public repository.
 
-The listing source is `release/store-1.0:release/1.0/listing.json`. Name: OPAX. Short description: “Your MP, votes, bills and pay”. Support: https://opax.com.au/support. Privacy: https://opax.com.au/privacy. The parity draft retains the iOS feature claims; it is blocked while Android voice/account support is missing. Do not submit a draft that advertises unavailable functionality.
+The listing and Data safety text are in [ANDROID-STORE.md](ANDROID-STORE.md): the iOS 1.0 parity listing without the iPad-only tablet paragraph, and the seven iOS types. The reading-plus-Ask alternative is superseded. Do not submit either until the candidate links the Android voice module (the checks listed there).
 
-The Data safety source is `release/store-1.0:release/1.0/app-privacy.json` and `mobile/voice-production-policy.json`: email address, user ID, audio, other user content, product interaction, search history and other diagnostic data. All seven are linked, not used for tracking, and used for app functionality only. Location remains on-device only. Play has different field names and no Apple-style linked-to-user checkbox; the draft maps the seven types explicitly. Collection/sharing, optional/required, encryption and deletion answers must match the final binary and provider evidence. The seven-type iOS declaration cannot be claimed as accurate for the current Android voice-disabled binary without resolving the discrepancy.
+The Data safety source is `release/store-1.0:release/1.0/app-privacy.json` and `mobile/voice-production-policy.json`: email address, user ID, audio, other user content, product interaction, search history and other diagnostic data. All seven are linked, not used for tracking, and used for app functionality only. Location remains on-device only. Play has different field names and no Apple-style linked-to-user checkbox; the draft maps the seven types explicitly. Collection/sharing, optional/required, encryption and deletion answers must match the final binary and provider evidence. The seven-type declaration is accurate only for a candidate that links the Android voice module; [ANDROID-STORE.md](ANDROID-STORE.md) has the final table.
 
 ## Play Console sequence after account creation
 

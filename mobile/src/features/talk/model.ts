@@ -31,6 +31,20 @@ export const failureCopy: Record<VoiceFailure, string> = {
   deletionVerificationFailed:
     'OPAX could not verify the deletion code. Check it in Account.',
 };
+/**
+ * Android's microphone step: the rationale before the system dialog (the
+ * iOS purpose string, voice-production-policy.json) and how a refusal reads.
+ */
+export const microphoneCopy = {
+  heading: 'Microphone access',
+  purpose:
+    'OPAX uses your microphone only during a Talk call you start. Your audio is sent to ElevenLabs, OPAX’s voice provider, to understand and answer you.',
+  next: 'Android asks you next. You can change it any time in Settings.',
+  continue: 'Continue',
+  notNow: 'Not now',
+  denied: 'Allow microphone access to talk.',
+  blocked: 'Turn on microphone access in Settings to talk.',
+} as const;
 export const endCopy: Record<EndReason, string> = {
   user: 'Call ended. Microphone off.',
   interruption: 'Another app took the audio. Microphone off.',
