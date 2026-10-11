@@ -5684,7 +5684,10 @@ async function openSubject(kind, name, manageFocus, params = new URLSearchParams
   };
   wireGrowthAsk(body);
   const fitsRow = fitsInfoRow(fits, "people", name);
-  if (fitsRow) head.insertAdjacentHTML("afterend", `<p class="person-fits">${fitsRow[1]}</p>`);
+  // A fact about the person, so it sits in the head's text column: the grid draws it under the
+  // source line; on phones it comes before the source line, which keeps clear of the ⋯ button.
+  const fitsAnchor = head.querySelector(":scope > .ui-source");
+  if (fitsRow) (fitsAnchor || head).insertAdjacentHTML(fitsAnchor ? "beforebegin" : "beforeend", `<p class="person-fits">${fitsRow[1]}</p>`);
   box.innerHTML = entryRailHTML();
   renderPortraitCredit(name, key);
   // The structured record first; the speeches follow it.
@@ -6744,9 +6747,7 @@ function fitsInfoRow(fits, bucket, name) {
   // The label stays as short as the longest existing one ("Donations counted"):
   // the infobox's label column is `auto`, so a longer term squeezes every value.
   return ["Foreign influence",
-    `${sentence}
-     ${url ? `<a href="${esc(url)}" rel="noopener" target="_blank" style="display:inline-block;margin-top:0.15rem">Register entry&nbsp;↗︎</a>` : ""}
-     <span style="display:block;color:var(--ink-faint);font-size:0.75rem;line-height:1.4;margin-top:0.2rem">Registration is a disclosure the scheme requires by law, not a finding of wrongdoing.</span>`];
+    `${sentence}${url ? ` <a href="${esc(url)}" rel="noopener" target="_blank">Register entry&nbsp;↗︎</a>` : ""}`];
 }
 
 // The live directory, so a second visit to the same index with other hash
