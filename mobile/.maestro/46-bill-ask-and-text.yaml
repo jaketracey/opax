@@ -31,7 +31,8 @@ name: 46 From a bill in the Bills tab, Ask about this opens a draft; the bill te
     visible:
       id: bill-screen
     timeout: 15000
-# One primary action (Read the bill text); Ask about this is under ⋯.
+# Follow and ⋯ share one row; Ask about this is under ⋯. The bill text is
+# a row under the meta line (P1-3).
 - scrollUntilVisible:
     element:
       id: bill-more

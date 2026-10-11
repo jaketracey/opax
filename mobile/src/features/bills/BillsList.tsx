@@ -32,6 +32,7 @@ import {
   Text,
   errorMessage,
   isPad,
+  useAccessibilitySize,
   useLayout,
 } from '../../design/primitives';
 import { shareRecord } from '../../navigation/share';
@@ -48,7 +49,7 @@ import {
   useBillFilterState,
   withoutFilter,
 } from './filters';
-import { BillRow } from './parts';
+import { BillIndexRow } from './parts';
 import { useCatalogRecord } from './useCatalogRecord';
 
 // The web's bill-list fine print, in its words (portal/public/app.js
@@ -147,7 +148,21 @@ function BillsScreen() {
     },
     [rows],
   );
+  // iPad landscape: the pane opens on the first bill rather than standing
+  // empty. A selection through the route, as a tap makes it, so VoiceOver
+  // stays on the list; once per visit, so closing the pane (Escape) keeps
+  // it closed. Portrait and the iPhone are unchanged.
+  const opened = useRef(false);
+  const first = rows[0]?.key;
+  useEffect(() => {
+    if (selectedKey) opened.current = true;
+    if (opened.current || !isPad || !split || !layout.landscape || !first)
+      return;
+    opened.current = true;
+    router.setParams({ bill: first });
+  }, [split, layout.landscape, selectedKey, first]);
   const offline = error instanceof ApiError && error.code === 'offline';
+  const stacked = useAccessibilitySize();
 
   const header = (
     <Group>
@@ -165,30 +180,6 @@ function BillsScreen() {
         autoCapitalize="none"
         clearButtonMode="while-editing"
       />
-      <View style={styles.filters}>
-        <Button
-          label={chips.length ? `Filters (${chips.length})` : 'Filters'}
-          icon="line.3.horizontal.decrease.circle"
-          size="compact"
-          disabled={!facets}
-          onPress={() => {
-            Keyboard.dismiss();
-            router.push('/bill-filters');
-          }}
-          testID="bills-filters"
-        />
-        {chips.map((chip) => (
-          <FilterChip
-            key={chip.key}
-            filter={chip.filter}
-            value={chip.value}
-            onRemove={() =>
-              billFilterStore.setFilters(withoutFilter(filters, chip.key))
-            }
-            testID={`bills-chip-${chip.key}`}
-          />
-        ))}
-      </View>
       {record?.stale ? (
         <>
           <SavedCopyNotice
@@ -203,30 +194,50 @@ function BillsScreen() {
           />
         </>
       ) : null}
-      {list && index ? (
-        <View style={styles.count}>
-          <Text variant="metadata" testID="bills-count">
+      {/* The count line carries Filters; the list's source line is at its
+          foot, so the first row comes sooner. */}
+      <View style={[styles.count, stacked ? styles.countStacked : null]}>
+        {list && index ? (
+          <Text
+            variant="metadata"
+            wordSafe
+            testID="bills-count"
+            style={stacked ? null : styles.grow}
+          >
             {countLine(rows.length, index.bills.length)} ·{' '}
             {billSorts
               .find((s) => s.value === (filters.sort ?? 'newest'))
               ?.label.toLowerCase()}
           </Text>
-          {/* The list's one source line: its date, the register and, in
-              its sheet, the fine print. Rows carry no date of their own. */}
-          <SourceLine
-            title="About the bill list"
-            asOf={list.asAt}
-            citation={list.sources.map((source) => source.label)}
-            savedAt={record?.stale ? record.savedAt : null}
-            state={record?.partial ? 'partial' : null}
-            notes={[
-              record?.partial
-                ? 'Some rows in this export could not be read.'
-                : null,
-              FINEPRINT,
-            ]}
-            testID="bills-as-at"
-          />
+        ) : stacked ? null : (
+          // Filters keeps its place at the line's end while the list loads.
+          <View style={styles.grow} />
+        )}
+        <Button
+          label={chips.length ? `Filters (${chips.length})` : 'Filters'}
+          icon="line.3.horizontal.decrease.circle"
+          size="compact"
+          disabled={!facets}
+          onPress={() => {
+            Keyboard.dismiss();
+            router.push('/bill-filters');
+          }}
+          testID="bills-filters"
+        />
+      </View>
+      {chips.length ? (
+        <View style={styles.filters}>
+          {chips.map((chip) => (
+            <FilterChip
+              key={chip.key}
+              filter={chip.filter}
+              value={chip.value}
+              onRemove={() =>
+                billFilterStore.setFilters(withoutFilter(filters, chip.key))
+              }
+              testID={`bills-chip-${chip.key}`}
+            />
+          ))}
         </View>
       ) : null}
       <LinkRow
@@ -260,6 +271,26 @@ function BillsScreen() {
     </Group>
   );
 
+  // The list's one source line, at its foot: its date, the register and,
+  // in its sheet, the fine print. Rows carry no date of their own.
+  const footer =
+    list && index ? (
+      <SourceLine
+        title="About the bill list"
+        asOf={list.asAt}
+        citation={list.sources.map((source) => source.label)}
+        savedAt={record?.stale ? record.savedAt : null}
+        state={record?.partial ? 'partial' : null}
+        notes={[
+          record?.partial
+            ? 'Some rows in this export could not be read.'
+            : null,
+          FINEPRINT,
+        ]}
+        testID="bills-as-at"
+      />
+    ) : null;
+
   const listView = (
     <FlatList
       ref={listRef}
@@ -281,7 +312,7 @@ function BillsScreen() {
       keyExtractor={(bill) => bill.key}
       renderItem={({ item }) =>
         split ? (
-          <BillRow
+          <BillIndexRow
             bill={item}
             selected={item.key === selectedKey}
             onPress={() =>
@@ -289,7 +320,7 @@ function BillsScreen() {
             }
           />
         ) : (
-          <BillRow
+          <BillIndexRow
             bill={item}
             onPress={() => router.push(billRoute(item.key))}
           />
@@ -306,6 +337,8 @@ function BillsScreen() {
       ItemSeparatorComponent={() => <Divider variant="subtle" />}
       ListHeaderComponent={header}
       ListHeaderComponentStyle={styles.header}
+      ListFooterComponent={footer}
+      ListFooterComponentStyle={styles.footer}
       ListEmptyComponent={
         list ? (
           <Group>
@@ -382,11 +415,19 @@ const styles = StyleSheet.create({
     paddingBottom: rhythm.section + rhythm.block,
   },
   header: { paddingBottom: rhythm.block },
+  footer: { paddingTop: rhythm.block },
   filters: {
     flexDirection: 'row',
     flexWrap: 'wrap',
     alignItems: 'center',
     gap: rhythm.tight,
   },
-  count: { gap: rhythm.line },
+  // "2,989 bills · newest first" with Filters at its end.
+  count: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: rhythm.tight,
+  },
+  countStacked: { flexDirection: 'column', alignItems: 'stretch' },
+  grow: { flexGrow: 1, flexShrink: 1 },
 });

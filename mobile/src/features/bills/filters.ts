@@ -3,6 +3,7 @@ import { billSentenceCase, billName } from '../../api/bill-transforms';
 import type { billFacetsFor, billsFor } from '../../api/catalogs';
 import { formatCount, formatDate } from '../../design/format';
 import { CHAMBER_NOT_RECORDED, chamberName } from '../../design/parliament';
+import { partyFromCode } from './party-codes';
 
 export type BillListRow = NonNullable<
   ReturnType<typeof billsFor>['data']
@@ -135,8 +136,9 @@ export function countLine(shown: number, total: number) {
 
 /**
  * What a bill row says, as the selectors render it: name, dated status,
- * chamber and introduced (or released) date, then sponsor, party and
- * portfolio. `label` is the one VoiceOver element for the row.
+ * introduced (or released) date, who brought it (the sponsor, with their
+ * recorded party, or else the portfolio) and the chamber. `label` is the
+ * one VoiceOver element for the row.
  */
 export function billRowText(bill: BillListRow) {
   const name = billName(bill);
@@ -156,23 +158,26 @@ export function billRowText(bill: BillListRow) {
       : null;
   const asAt = (style: 'short' | 'long') =>
     bill.status_as_of ? `as at ${date(bill.status_as_of, style)}` : null;
-  const people =
-    [bill.sponsor, bill.sponsor_party, bill.portfolio]
-      .filter(Boolean)
-      .join(' · ') || null;
   return {
     name,
     status,
     asAt: asAt('short'),
-    where: [chamber, introduced('short')].filter(Boolean).join(' · ') || null,
-    people,
+    date: introduced('short'),
+    chamber,
+    // The register names a sponsor or a portfolio, never both.
+    by: bill.sponsor || bill.portfolio || null,
+    // The party as recorded, drawn as a PartyLabel (a dot and its name).
+    // The list does not date it, so it is never said as current or former.
+    party: bill.sponsor_party
+      ? { party: partyFromCode(bill.sponsor_party), status: 'unknown' as const }
+      : null,
     label: [
       name,
       [status, asAt('long')].filter(Boolean).join(', '),
       chamber,
       introduced('long'),
       bill.sponsor,
-      bill.sponsor_party,
+      partyFromCode(bill.sponsor_party),
       bill.portfolio,
     ]
       .filter(Boolean)

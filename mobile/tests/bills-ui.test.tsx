@@ -4,7 +4,7 @@ import TestRenderer, { type ReactTestInstance } from 'react-test-renderer';
 import * as d from '../src/api/catalogs';
 import { billSplits } from '../src/api/bill-transforms';
 import {
-  BillRow,
+  BillIndexRow,
   DivisionQuestion,
   DivisionSplits,
   MachineBrief,
@@ -131,7 +131,7 @@ test('a bill row is one element naming the bill, its dated status and where it b
   const row = d
     .billsFor(bills)
     .data!.find((b) => b.key === 'au-federal-r6850')!;
-  const root = render(<BillRow bill={row} onPress={() => undefined} />);
+  const root = render(<BillIndexRow bill={row} onPress={() => undefined} />);
   const element = root.find(
     (node) =>
       typeof node.type === 'string' &&
