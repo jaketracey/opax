@@ -66,9 +66,11 @@ name: 12 Search keyboard keeps the submit target and delivers a single tap
 - assertTrue:
     condition: ${output.first.results && !output.first.editing && output.first.keyboardHeight == 0}
     label: One tap submits and dismisses the keyboard
+# Pass 5 (P1-1): an answered search collapses the form, so the submit pill
+# goes; the field it was submitted from must not move.
 - assertTrue:
-    condition: ${Math.abs(output.first.button.y - output.typed.button.y) <= 3}
-    label: First submission keeps the button within 3 pt
+    condition: ${output.first.button.y === undefined && Math.abs(output.first.field.y - output.typed.field.y) <= 3}
+    label: First submission collapses the form and keeps the field within 3 pt
 - takeScreenshot: ${EVIDENCE}/12-keyboard-after-first-tap
 - scrollUntilVisible:
     element:
@@ -107,8 +109,8 @@ name: 12 Search keyboard keeps the submit target and delivers a single tap
     id: search-geometry
 - evalScript: ${output.second = JSON.parse(maestro.copiedText); console.log('SECOND_SUBMIT ' + maestro.copiedText)}
 - assertTrue:
-    condition: ${output.second.results && !output.second.editing && Math.abs(output.second.button.y - output.repeat.button.y) <= 3}
-    label: Same-query second submission keeps the button within 3 pt
+    condition: ${output.second.results && !output.second.editing && output.second.button.y === undefined && Math.abs(output.second.field.y - output.repeat.field.y) <= 3}
+    label: Same-query second submission collapses the form and keeps the field within 3 pt
 - takeScreenshot: ${EVIDENCE}/12-keyboard-after-second-tap
 - scrollUntilVisible:
     element:
