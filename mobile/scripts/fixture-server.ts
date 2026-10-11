@@ -409,4 +409,6 @@ for (const signal of ['SIGTERM', 'SIGINT'] as const)
   process.on(signal, () => {
     voice?.close();
     server.close(() => process.exit(0));
+    // Idle connections now live 65 s; drop them so shutdown stays prompt.
+    server.closeAllConnections();
   });
