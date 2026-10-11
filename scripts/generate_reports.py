@@ -15,6 +15,10 @@ to use the installed Codex CLI for figures, positions and the introduction.
 Narratives use the knowledge box’s configured writer. This does not trigger enrichment.
 """
 
+try:
+    from scripts.donor_public import public_donor_data
+except ModuleNotFoundError:
+    from donor_public import public_donor_data
 import sys as _http_sys
 from pathlib import Path as _HttpPath
 _http_sys.path.insert(0, str(_HttpPath(__file__).resolve().parents[1]))
@@ -2654,7 +2658,7 @@ def main() -> None:
                 report["sections"] = sections
             report["version"] = 2
             report["generated_at"] = datetime.now(timezone.utc).isoformat(timespec="seconds")
-            path.write_text(json.dumps(report, indent=1) + "\n")
+            path.write_text(json.dumps(public_donor_data(report), indent=1) + "\n")
         print(f"Wrote {args.only} for {len(picked)} report(s). {budget_line()}")
         return
 
@@ -2667,7 +2671,7 @@ def main() -> None:
         prior = load_prior(slug)
         if args.stats_only:
             report = {**prior, "stats": all_stats.get(slug)}
-            report_path(slug).write_text(json.dumps(report, indent=1) + "\n")
+            report_path(slug).write_text(json.dumps(public_donor_data(report), indent=1) + "\n")
             print(f"[{slug}] embedded audited static stats")
             continue
 
@@ -2698,7 +2702,7 @@ def main() -> None:
         def checkpoint(**blocks: object) -> None:
             report.update(blocks)
             report["generated_at"] = datetime.now(timezone.utc).isoformat(timespec="seconds")
-            report_path(slug).write_text(json.dumps(report, indent=1) + "\n")
+            report_path(slug).write_text(json.dumps(public_donor_data(report), indent=1) + "\n")
 
         checkpoint()
         checkpoint(now=build_now(kb, slug, rows, args.since))

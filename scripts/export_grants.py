@@ -68,6 +68,7 @@ import sys
 from collections import Counter, defaultdict
 from datetime import date
 from pathlib import Path
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 HERE = Path(__file__).resolve().parent
 ROOT = HERE.parent
@@ -1285,6 +1286,8 @@ def write_outputs(data: dict, out: Path, jur: str) -> dict:
     Stale files (a recipient or program that fell off the list) are removed so
     each directory is exactly the listed set. Returns what was written.
     """
+    from scripts.donor_public import public_donor_data
+    data = public_donor_data(data)
     graph = out / "graph"
     graph.mkdir(parents=True, exist_ok=True)
     index_path = graph / f"grants.{jur}.json"

@@ -1,9 +1,15 @@
-import {applyQuery, dataTableHTML, mountDataTable, parseQuery} from './datatable.js?v=b038b24a2e';
-import {isOrganisationDonor} from './donor-entity.js?v=2b8d45a50d';
+import {applyQuery, dataTableHTML, guardTableURL, mountDataTable, parseQuery} from './datatable.js?v=fd903ef4b0';
+import {isOrganisationDonor} from './donor-entity.js?v=ebb2c972d5';
+import {queryValues} from './datatable-query.js?v=6dd55aab38';
 
 const esc = value => String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const date = value => /^\d{4}-\d{2}-\d{2}/.test(String(value || '')) ? String(value).slice(0, 10) : null;
 const href = value => { try { const url = new URL(value); return /^https?:$/.test(url.protocol) ? url.href : null; } catch { return null; } };
+const approvedRow = (row,check) => {
+  if(!check)return true;
+  const values=[...queryValues(row)];
+  return check(JSON.stringify(row))===true && check(values.join('\n'))===true && values.every(value=>check(value)===true);
+};
 const categoryLabels = {shareholdings:'Shareholdings',real_estate:'Real estate',trusts:'Trusts',directorships:'Directorships',gifts:'Gifts',travel:'Sponsored travel and hospitality',memberships:'Memberships and offices',liabilities:'Liabilities',other:'Other (savings, income, assets, partnerships)'};
 
 export function instrumentTableConfig(privacyCheck) {
@@ -28,17 +34,18 @@ export function auditTableConfig(records, privacyCheck) {
 }
 
 /** An entry is omitted whole, including its holder and source URL. Never rewrite source words. */
+export const interestEntryOmitted = item => [item.description,item.holder,item.url].some(value=>/Donor \d+ \(name withheld\)/i.test(String(value || '')));
 export function interestTableData(register, withheld = () => true, privacyCheck) {
   const rows = [];
   let omitted = 0;
   for (const [category,bucket] of Object.entries(register.buckets || {})) for (const item of bucket.items || []) {
-    if (withheld(item.description, item.holder || '', item.url || '')) { omitted++; continue; }
+    if (interestEntryOmitted(item) || withheld(item.description, item.holder || '', item.url || '')) { omitted++; continue; }
     const source = href(item.url) || href(register.source_url);
     const row = {category:categoryLabels[category] || category.replaceAll('_',' '),item:item.description,
       date:date(item.date) || date(register.as_at),source:source && item.page ? `${source.split('#')[0]}#page=${Number(item.page) || 1}` : source};
     if (privacyCheck) {
       try {
-        if (privacyCheck(JSON.stringify({description:item.description,holder:item.holder || '',url:item.url || ''})) !== true || privacyCheck(JSON.stringify(row)) !== true) { omitted++; continue; }
+        if (!approvedRow({description:item.description,holder:item.holder || '',url:item.url || ''},privacyCheck) || !approvedRow(row,privacyCheck)) { omitted++; continue; }
       } catch { omitted++; continue; }
     }
     rows.push(row);
@@ -69,7 +76,7 @@ export function partyMoneyData(graph, partyId, withheld = () => true, privacyChe
     // Keep only aliases that independently prove organisation status. Browser
     // approvals cover labels, so requiring alias approval would drop valid rows.
     const publicDonor = {label:donor.label,aliases:(donor.aliases || []).filter(label=>isOrganisationDonor({label}))};
-    if (!isOrganisationDonor(donor) || !isOrganisationDonor(publicDonor) || withheld(donor.label) || (privacyCheck && privacyCheck(JSON.stringify({...publicDonor,industry:donor.industry || 'Not supplied'})) !== true)) {
+    if (!isOrganisationDonor(donor) || !isOrganisationDonor(publicDonor) || withheld(donor.label) || !approvedRow({id:donor.id,...publicDonor,industry:donor.industry || 'Not supplied'},privacyCheck)) {
       individualIds.add(edge.source); aggregate.total += Number(edge.total) || 0; aggregate.count += Number(edge.count) || 0;
       continue;
     }
@@ -78,6 +85,9 @@ export function partyMoneyData(graph, partyId, withheld = () => true, privacyChe
     if (Number.isFinite(edge.firstYear)) row.firstYear = row.firstYear == null ? edge.firstYear : Math.min(row.firstYear,edge.firstYear);
     if (Number.isFinite(edge.lastYear)) row.lastYear = row.lastYear == null ? edge.lastYear : Math.max(row.lastYear,edge.lastYear);
     rows.set(donor.id,row);
+  }
+  for(const [id,row]of rows)if(!approvedRow(row,privacyCheck)){
+    individualIds.add(id);aggregate.total+=row.total;aggregate.count+=row.count;rows.delete(id);
   }
   aggregate.donors = individualIds.size;
   return {rows:[...rows.values()],aggregate};
@@ -94,7 +104,11 @@ export function partyMoneyTableConfig(rows, aggregate, id = 'party-money-table',
 }
 
 /** The shared core owns query validation, pending states, history and CSV checks. */
-export function registerTableHTML(config, query = {}) {
+export function registerTableHTML(config, query = {}, requestURL) {
+  if (requestURL) {
+    const guarded=guardTableURL(config,requestURL);
+    if (guarded.rejected) query=guarded.query;
+  }
   const page = applyQuery(config.rows || [],config,query);
   const {initialQuery,...clientConfig}=config;
   const payload = JSON.stringify({config:clientConfig}).replace(/</g,'\\u003c');
@@ -104,9 +118,7 @@ export function registerTableHTML(config, query = {}) {
 export function mountRegisterTable(el, config) {
   if (['instruments','audit'].includes(config.urlKey)) {
     const url=new URL(el.ownerDocument.defaultView.location.href),query=registerTableQuery(url.searchParams,config);
-    for(const key of ['q','portfolio','type','status','sector','entity','year'])url.searchParams.delete(key);
-    config={...config,initialQuery:query};
-    el.ownerDocument.defaultView.history.replaceState(null,'',url);
+    config={...config,initialQuery:query,initialQueryKeys:['q','portfolio','type','status','sector','entity','year']};
   }
   return mountDataTable(el,config);
 }

@@ -1,6 +1,10 @@
 import type {Column, Page, Query, Row} from '../public/datatable.js'
 import {TABLE_DATASETS, tableText, tableTerms} from './table-datasets.mjs'
 import {identityCandidates, identityHash} from './table-identities.mjs'
+import registryBuild from './table-registry-fingerprint.json' with {type:'json'}
+import {rawQueryValues,repeatedTableKeys} from '../public/datatable-query.js'
+
+export const TABLE_REGISTRY_FINGERPRINT = registryBuild.fingerprint
 
 type TableEnv = {TABLE_DB: D1Database; CACHE_EPOCH?: string}
 const MAX_CSV = 50_000, CSV_PAGE = 10_000, BATCH = 200, MAX_FACETS = 100
@@ -64,37 +68,9 @@ export function normalizedTableQuery(query: Query, csv = false): string {
   return params.toString()
 }
 
-function canonicalNumber(value: number): string {
-  const raw=String(value)
-  if (!raw.includes('e')) return raw
-  const [coefficient,exponent]=raw.split('e'),sign=coefficient.startsWith('-') ? '-' : ''
-  const unsigned=coefficient.replace(/^-/,'')
-  const digits=unsigned.replace('.',''),point=unsigned.split('.')[0].length+Number(exponent)
-  return sign+(point<=0 ? '0.'+'0'.repeat(-point)+digits : point>=digits.length ? digits+'0'.repeat(point-digits.length) : digits.slice(0,point)+'.'+digits.slice(point))
-}
-function* scalarValues(input: unknown): Generator<string> {
-  const pending=[input]
-  while (pending.length) {
-    const value=pending.pop()
-    if (typeof value==='string') yield value
-    else if (typeof value==='number') yield canonicalNumber(value)
-    else if (Array.isArray(value)) pending.push(...value)
-    else if (value && typeof value==='object') pending.push(...Object.values(value))
-  }
-}
-function decodedInputs(params: URLSearchParams): unknown[] {
-  const values: unknown[]=[]
-  for (const [key,raw] of params) {
-    // Free text is still text even if it resembles JSON. Filter keys are schema,
-    // not identities; only their decoded array/object values enter the guard.
-    if (!/(^|\.)f\.[^.]+$/.test(key)) values.push(raw)
-    try {values.push(JSON.parse(raw))} catch {values.push(raw)}
-  }
-  return values
-}
-async function blocked(db: D1Database, values: Iterable<string>, lengths: number[]): Promise<boolean> {
+async function blocked(db: D1Database, values: Iterable<string>, lengths: number[], strippedLengths: number[]): Promise<boolean> {
   for (const value of values) {
-    const candidates=[...identityCandidates(value,lengths)]
+    const candidates=[...identityCandidates(value,lengths,strippedLengths)]
     for (let start=0;start<candidates.length;start+=90) {
       const hashes=await Promise.all(candidates.slice(start,start+90).map(identityHash))
       if (hashes.length && await db.prepare(`SELECT 1 AS found FROM table_private_identity WHERE hash IN (${hashes.map(()=>'?').join(',')}) LIMIT 1`).bind(...hashes).first()) return true
@@ -136,16 +112,19 @@ export async function tableApi(request: Request, env: TableEnv, _ctx?: Execution
   if (request.method!=='GET') return errorResponse(405,'method_not_allowed',{allow:'GET'})
   if (url.search.length>20_000 || url.searchParams.toString().length>8192) return errorResponse(400,'invalid_query')
   try {
-    // Decode and parse before any database access, including the rejection index.
-    const inputs=decodedInputs(url.searchParams)
-    let query: Query | undefined
-    try {query=parseTableQuery(url.searchParams,config.columns,config.defaultSort)} catch { /* Guard decoded values before returning a fixed grammar error. */ }
+    // Check every raw key/value occurrence before a parser can discard input.
+    const inputs=[...rawQueryValues(url.searchParams)]
     const db=env.TABLE_DB
-    const meta=await db.prepare("SELECT key,value FROM table_meta WHERE key IN ('version','privacy_lengths') LIMIT 2").all<{key:string;value:string}>()
+    const meta=await db.prepare("SELECT key,value FROM table_meta WHERE key IN ('version','privacy_lengths','privacy_stripped_lengths','privacy_fingerprint') LIMIT 4").all<{key:string;value:string}>()
     const metadata=Object.fromEntries(meta.results.map(r=>[r.key,r.value]))
+    if (config.privacy && (!/^[a-f0-9]{64}$/.test(TABLE_REGISTRY_FINGERPRINT) || metadata.privacy_fingerprint !== TABLE_REGISTRY_FINGERPRINT)) return errorResponse(503,'unavailable',{'retry-after':'60'})
     if (!metadata.version || !metadata.privacy_lengths) throw new Error('unavailable')
-    const denied=Boolean(config.privacy) && await blocked(db,scalarValues(inputs),JSON.parse(metadata.privacy_lengths))
+    if(config.privacy && !metadata.privacy_stripped_lengths)throw new Error('unavailable')
+    const denied=Boolean(config.privacy) && await blocked(db,inputs,JSON.parse(metadata.privacy_lengths),JSON.parse(metadata.privacy_stripped_lengths || '[]'))
+    if (repeatedTableKeys(url.searchParams,null).size) return errorResponse(400,'invalid_query')
+    let query: Query | undefined
     if (denied) query={q:'',filters:{},sort:config.defaultSort,page:1,pageSize:50}
+    else try {query=parseTableQuery(url.searchParams,config.columns,config.defaultSort)} catch { /* Fixed grammar error, without echo. */ }
     if (!query) return errorResponse(400,'invalid_query')
     const csv=url.searchParams.get('format')==='csv'
     if (!denied && (url.searchParams.getAll('format').length>1 || url.searchParams.has('format') && !csv)) return errorResponse(400,'invalid_query')
@@ -211,5 +190,5 @@ export async function tableApi(request: Request, env: TableEnv, _ctx?: Execution
     }
     headers.set('content-type','application/json; charset=utf-8')
     return Response.json({rows,total,page,pageSize,facets} satisfies Page,{headers})
-  } catch {return errorResponse(503,'unavailable')}
+  } catch {return errorResponse(503,'unavailable',config.privacy ? {'retry-after':'60'} : {})}
 }

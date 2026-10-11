@@ -6,6 +6,7 @@ import {tablePrivacyIndex,assertTablePrivacy} from './datatable-privacy.mjs';
 import {mkdtemp,writeFile,rm} from 'node:fs/promises';
 import {tmpdir} from 'node:os';
 import {join} from 'node:path';
+import {memoryExport,closeMemoryExports} from './memory-export.mjs';
 let input=[];
 const config={columns:[{key:'name',label:'Organisation',type:'text'},{key:'amount',label:'Amount',type:'money'}]};
 // A reference endpoint boundary; dt-api must register the same gate against its real handler.
@@ -28,7 +29,8 @@ test('shared rollout privacy assertion catches independent query and secondary-f
     for (const key of ['url','renderedText','accessibleText','analytics','serverResponses','clientInput']) {
       await assert.rejects(()=>assertTablePrivacy({...clean,[key]:index.values[0]},index),/withheld text/);
     }
-    await writeFile(csvPath,'Withheld donor fixture');
-    await assert.rejects(()=>assertTablePrivacy(clean,{...index,safe:text=>!String(text).includes('Withheld donor fixture') && index.safe(text)}),/downloaded CSV/);
-  } finally {await rm(dir,{recursive:true,force:true});}
+    // Negative CSV fixtures carry a runtime identity in RAM, never on disk.
+    const virtual=memoryExport(dir,{'download.csv':index.values[0]});
+    await assert.rejects(()=>assertTablePrivacy({...clean,csvPath:join(virtual,'download.csv')},index),/downloaded CSV/);
+  } finally {closeMemoryExports();await rm(dir,{recursive:true,force:true});}
 });

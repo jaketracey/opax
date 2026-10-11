@@ -1,11 +1,13 @@
-import {tableIdentityIndex} from '../src/table-identity-index.mjs';
+import {tablePrivacyCheckFrom} from '../src/table-privacy.ts';
+import {donorsNotNamedDetail,isUnnamedAggregate,unnamedDonorLabel} from '../public/donor-views.js';
+import {donorNameWithheld,donorPrivacyIndex} from '../public/donor-entity.js';
 // Render the client modules over the derived test's export. This supplies local
 // assets and a small DOM, not another privacy policy or another name scan.
 import {readFileSync} from 'node:fs';
 import {join} from 'node:path';
 import {runInNewContext} from 'node:vm';
 import * as modules from '../public/growth-modules.js';
-import {withheldPhrases,namesWithheldPhrase,MONEY_GRAPHS} from '../public/donor-entity.js';
+import {withheldPhrases,namesWithheldPhrase,MONEY_GRAPHS,isOrganisationDonor} from '../public/donor-entity.js';
 import * as registerTables from '../public/register-tables.js';
 import {supplierRecordsHTML,agencyGrantsHTML,publishedSupplierIndex} from '../public/supplier-growth.js';
 import {sourceLineHTML} from '../public/labels.js';
@@ -31,13 +33,13 @@ export async function* moduleOutputs(root,withheld,readAsset) {
   if(typeof url!=='string'||!url.startsWith('/'))throw Error('Only local module assets');
   if (url.startsWith('/api/register/interests?')) {
    const pid=new URL(url,'https://fixture.test').searchParams.get('pid');
-   interestPolicy ||= await tableIdentityIndex(read);
+   interestPolicy ||= {safe:await tablePrivacyCheckFrom(read)};
    const check=(...texts)=>texts.some(text=>!interestPolicy.safe(String(text)));
    return {ok:true,json:async()=>registerTables.interestTableData(await read('/interests/'+pid+'.json'),check,interestPolicy.safe)};
   }
   if (url.startsWith('/api/register/party-money?')) {
    const partyId=new URL(url,'https://fixture.test').searchParams.get('partyId');
-   interestPolicy ||= await tableIdentityIndex(read);
+   interestPolicy ||= {safe:await tablePrivacyCheckFrom(read)};
    return {ok:true,json:async()=>registerTables.partyMoneyData(await read('/graph/money.json'),partyId,text=>!interestPolicy.safe(String(text)),interestPolicy.safe)};
   }
   try {return {ok:true,json:()=>read(url)}}catch{return {ok:false,json:async()=>null}}
@@ -46,7 +48,8 @@ export async function* moduleOutputs(root,withheld,readAsset) {
  // belong to the published roster, so use the fixture file as that authority.
  const roster=JSON.parse(readFileSync(join(root,'parliamentarians.json'),'utf8'));
  const localModules={...modules,loadModulePrivacy:async(kind,id)=>modules.approvedModulePrivacy(await read(await modules.growthSummaryPath('privacy/'+kind,id)))};
- const context={URLSearchParams,growthModules:localModules,registerTables:{...registerTables,hydrateRegisterTables(){}},registerTablesReady:Promise.resolve(),esc,safeUrl:v=>v || '',fmtDate:v=>v || '',fmtMoney:String,industryLabel:String,partyDotHTML:()=>'',
+ const donorViewIndex=donorPrivacyIndex(await Promise.all(MONEY_GRAPHS.map(read)));
+ const context={URLSearchParams,isOrganisationDonor,donorNameWithheld,donorViewIndex,unnamedDonorLabel,isUnnamedAggregate,donorsNotNamedDetail,growthModules:localModules,registerTables:{...registerTables,hydrateRegisterTables(){}},registerTablesReady:Promise.resolve(),esc,safeUrl:v=>v || '',fmtDate:v=>v || '',fmtMoney:String,industryLabel:String,partyDotHTML:()=>'',
   sourceLineHTML,excerptNoticeHTML,entityHrefAttr:href=>`href="${esc(href)}"`,subjectHash:(kind,name)=>`/subject/${kind}/${encodeURIComponent(name)}`,fetch:fetchAsset,currentSubjectKey:'fixture',
   document:{createElement:()=>({dataset:{},isConnected:true,remove(){},querySelectorAll:()=>[]})},searchHash:q=>'/ask?view=search&'+new URLSearchParams({q}),STATE_NAMES:{},billQuestion:v=>v,
   machineLabelHTML:({note=''})=>`<span>${esc(note)}</span>`,partyChipHTML:esc,

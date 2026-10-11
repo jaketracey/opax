@@ -214,7 +214,7 @@ export async function buildCrawl(root, {read: sourceRead} = {}) {
     snapshot.set(path,hash({...base,...(named.length ? {donors:named} : {}),...(html.includes(INTEREST_OMITTED_MARK) ? {interestsWithheld:true} : {})}));
   }
   const partyLabels = new Map(), donors = new Map();
-  // Individual donors stay out of the sitemap, as individual grant recipients do.
+  // Unconfirmed donors stay out of the sitemap, as individual grant recipients do.
   // The industry tag does not say who is a person: public/donor-entity.js.
   const donorIndex = donorPrivacyIndex((await Promise.all(['money.json','money.qld.json','money.vic.json','money.tas.json'].map(name => optional(`graph/${name}`)))).filter(Boolean));
   for (const name of ['money.json','money.qld.json','money.vic.json']) {

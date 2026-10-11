@@ -140,7 +140,7 @@ test('audit Worker routes give bad/unknown ids a 404 and noindex without externa
   const response=await worker.fetch(new Request('https://opax.com.au/audit/'+id),env,{});
   assert.equal(response.status,404,id);assert.equal(response.headers.get('x-robots-tag'),'noindex');
  }
- assert.ok(paths.every(p=>p==='/'||/^\/(?:audit|graph|suppliers|grants)\//.test(p)||p==='/suppliers.json'));
+ assert.ok(paths.every(p=>p==='/'||/^\/(?:audit|graph|suppliers|grants)\//.test(p)||p==='/suppliers.json'||p==='/table-private-identities.json'));
  assert.equal(CATALOG_KINDS.has('audit report'),true);
 });
 

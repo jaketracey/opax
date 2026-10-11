@@ -1,7 +1,7 @@
-import {tableIdentityIndex} from './table-identity-index.mjs'
+import {tablePrivacyCheckFrom} from './table-privacy.ts'
 import { FRL_ID, catalogueComplete, unpack, instrumentTableRows, type CatalogueRow } from '../public/instruments.js'
 import { catalogueReader } from './catalogue-reader.mjs'
-import {applyQuery, dataTableHTML} from '../public/datatable.js'
+import {applyQuery, dataTableHTML, guardTableURL, serializeQuery, type Page, type Query} from '../public/datatable.js'
 import {instrumentTableConfig,registerTableQuery} from '../public/register-tables.js'
 import { sourceLineHTML } from '../public/labels.js'
 import { shortDate } from '../public/format.js'
@@ -48,7 +48,7 @@ function sourceLine(m: Manifest, originals: { href: string; label: string }[], n
 }
 const facts = (rows: [string, string][]) => `<dl class="instrument-facts">${rows.filter(([, v]) => v).map(([k, v]) => `<dt>${k}</dt><dd>${v}</dd>`).join('')}</dl>`
 
-export async function instrumentPage(id: string | null, url: URL, read: Read, block: Block, privacyCheck?: (text:string)=>boolean) {
+export async function instrumentPage(id: string | null, url: URL, read: Read, block: Block, privacyCheck?: (text:string)=>boolean, readPage?: (query:Query)=>Promise<Page>) {
   const missing = () => ({ title: 'Instrument not found · OPAX', description: 'No instrument metadata is available for this FRL id.', status: 404, prerender: block('Instrument not found', 'No instrument metadata is available for this FRL id.', '', [INDEX_CRUMB, {label:'Not found'}]) })
   if (id === null && url.pathname.replace(/\/+$/, '') !== '/instruments') return missing()
   if (id !== null && !FRL_ID.test(id)) return missing()
@@ -57,21 +57,30 @@ export async function instrumentPage(id: string | null, url: URL, read: Read, bl
     const manifest = await read<Manifest>('/instruments/manifest.json')
     if (!catalogueComplete(manifest)) return unavailable()
     if (id === null) {
-      const index = await read<{ records: CatalogueRow[] }>(manifest.index_url)
-      if (!Array.isArray(index.records) || index.records.length !== (manifest.exported ?? manifest.count)) return unavailable()
-      const safe=privacyCheck ?? (await tableIdentityIndex(read)).safe
+      const safe=privacyCheck ?? await tablePrivacyCheckFrom(read)
       const config = instrumentTableConfig(safe)
-      const rows = (await instrumentTableRows(read,manifest,index.records)).filter(row=>safe(JSON.stringify(row)))
-      const query=registerTableQuery(url.searchParams,config)
-      const page = applyQuery(rows,config,query)
+      const requestURL=new URL(url)
+      const guarded=guardTableURL(config,url)
+      const query=guarded.rejected ? guarded.query : registerTableQuery(url.searchParams,config)
+      let page:Page
+      if (guarded.rejected) page=applyQuery([],config,query)
+      else if (readPage) page=await readPage(query)
+      else {
+        const index = await read<{ records: CatalogueRow[] }>(manifest.index_url)
+        if (!Array.isArray(index.records) || index.records.length !== (manifest.exported ?? manifest.count)) return unavailable()
+        const rows=(await instrumentTableRows(read,manifest,index.records)).filter(row=>safe(JSON.stringify(row)))
+        page=applyQuery(rows,config,query)
+      }
+      const tableURL=new URL(requestURL)
+      if(!guarded.rejected)for(const [key,value]of new URLSearchParams(serializeQuery(query,config.urlKey)))tableURL.searchParams.set(key,value)
       const description = `${(manifest.exported ?? manifest.count).toLocaleString('en-AU')} in-force federal legislative-instrument titles. Metadata only; authoritative text is on the Federal Register of Legislation.`
       const notes = [
         ...(manifest.unresolved_gap ? [`The Register listed ${manifest.count.toLocaleString('en-AU')} titles; ${manifest.unresolved_gap} could not be retrieved from its API.`] : []),
         'Registered is the as-made registration date. The Register’s in-force listing includes instruments made but not yet commenced. Dates the Register does not supply stay unknown.',
       ]
       const facts = block('Federal legislative instruments', description, '')
-      const table = `<div data-register-table="${config.id}">${dataTableHTML(config,page)}<script type="application/json" data-register-config>${JSON.stringify({config}).replace(/</g,'\\u003c')}</script></div>`
-      return { title: 'Federal legislative instruments · OPAX', description, status: 200,noindex:Boolean(url.search),
+      const table = `<div data-register-table="${config.id}">${dataTableHTML(config,page,tableURL)}<script type="application/json" data-register-config>${JSON.stringify({config}).replace(/</g,'\\u003c')}</script></div>`
+      return { title: 'Federal legislative instruments · OPAX', description, status: 200,noindex:guarded.rejected || Boolean(url.search),
         prerender: facts + `<section class="wrap instrument-content">${table}${sourceLine(manifest, [],notes)}</section>` }
     }
     const chunk = manifest.lookup[id]

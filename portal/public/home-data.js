@@ -8,7 +8,7 @@ const count = value => Number(value).toLocaleString('en-AU');
 const date = value => shortDate(String(value).slice(0,10));
 const jur = value => ({federal:'Federal',nsw:'New South Wales',vic:'Victoria',qld:'Queensland',sa:'South Australia',act:'ACT'}[value] || value);
 const href = (kind, name) => subjectUrl(kind,name);
-const read = async (url, init) => { const response = await fetch(url, init); if (!response.ok) throw Error('Data unavailable'); return response.json(); };
+const read = async (url, init) => { const response = await fetch(url, {cache:"no-cache",...init}); if (!response.ok) throw Error('Data unavailable'); return response.json(); };
 // who-is-who files revalidate on every load (app.js loadPhotoMap says why)
 const IDENTITY = { cache: 'no-cache' };
 export function newest(items, key, limit) {

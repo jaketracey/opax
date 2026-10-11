@@ -1,10 +1,11 @@
-import {tableIdentityIndex} from './table-identity-index.mjs'
+import {tablePrivacyCheckFrom} from './table-privacy.ts'
 import { AUDIT_ID, auditComplete, type AuditRow } from '../public/audit.js'
 import { sourceLineHTML, tagHTML, statusLabelHTML } from '../public/labels.js'
 import { shortDate } from '../public/format.js'
 import type { Crumb } from './seo-content'
 import { catalogueReader } from './catalogue-reader.mjs'
 import {auditTableConfig, registerTableHTML, registerTableQuery} from '../public/register-tables.js'
+import {guardTableURL} from '../public/datatable.js'
 
 interface Manifest {
   count: number; listed: number; generated_at: string; index_url: string; lookup: Record<string, number>
@@ -59,12 +60,14 @@ export async function auditPage(id: string | null, url: URL, read: Read, block: 
     if (id === null) {
       const index = await read<{ records: AuditRow[] }>(m.index_url)
       if (index.records.length !== m.count) return missing()
-      const safe=privacyCheck ?? (await tableIdentityIndex(read)).safe
+      const safe=privacyCheck ?? await tablePrivacyCheckFrom(read)
       const config = auditTableConfig(index.records,safe)
       config.rows=config.rows!.filter(row=>safe(JSON.stringify(row)))
+      const requestURL=new URL(url)
+      const guarded=guardTableURL(config,url)
       const description = `${m.count} Queensland Audit Office reports tabled in Parliament, with report metadata and recommendations published as HTML.`
-      return { title: 'Queensland audit reports · OPAX', description, status: 200,noindex:Boolean(url.search),
-        prerender: block('Queensland audit reports', description, '') + `<section class="wrap audit-content">${registerTableHTML(config,registerTableQuery(url.searchParams,config))}${source(m, [{href:m.attribution.source_url,label:'Reports to Parliament'}])}</section>` }
+      return { title: 'Queensland audit reports · OPAX', description, status: 200,noindex:guarded.rejected || Boolean(url.search),
+        prerender: block('Queensland audit reports', description, '') + `<section class="wrap audit-content">${registerTableHTML(config,registerTableQuery(url.searchParams,config),requestURL)}${source(m, [{href:m.attribution.source_url,label:'Reports to Parliament'}])}</section>` }
     }
     const chunk = m.lookup[id]
     if (!Number.isInteger(chunk) || !m.chunks[chunk]) return missing()

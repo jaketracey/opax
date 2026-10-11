@@ -143,7 +143,7 @@ test('null/unknown ids return noindex 404 through the actual Worker and no paid 
   for(const path of ['/instruments','/instrument/'+index.records[0][0]]){
     const res=await worker.fetch(new Request('https://opax.com.au'+path),env,{});assert.equal(res.status,200);
   }
-  assert.ok(paths.every(p=>p==='/'||/^\/(?:instruments|graph|suppliers|grants)\//.test(p)||p==='/suppliers.json'));
+  assert.ok(paths.every(p=>p==='/'||/^\/(?:instruments|graph|suppliers|grants)\//.test(p)||p==='/suppliers.json'||p==='/table-private-identities.json'));
   for(const m of [null,{...manifest,complete:false}]) {
     const missingEnv={...env,ASSETS:{async fetch(req){const p=new URL(req.url).pathname;
       if(p==='/')return new Response(readFileSync(new URL('index.html',root)));
@@ -239,4 +239,21 @@ test('source block is verbatim, OPAX fields left out, authoritative link unique 
 
 test('weekly first-catalogue guard and nightly directory staging use offline git fixtures', () => {
   execFileSync('python3',[new URL('../../scripts/vm/test_frl_refresh.py',import.meta.url).pathname],{stdio:['ignore','pipe','pipe']});
+});
+
+test('server catalogue uses the shared page projection and rejects private state before reading D1',async()=>{
+  const {readFile}=await import('node:fs/promises');
+  const {tablePrivacyCheckFrom}=await import('../src/table-privacy.ts');
+  const {tablePrivacyIndex}=await import('./datatable-privacy.mjs');
+  const fromPublic=async path=>JSON.parse(await readFile(new URL('../public'+path,import.meta.url),'utf8'));
+  const manifest=await fromPublic('/instruments/manifest.json'),safe=await tablePrivacyCheckFrom(fromPublic),calls=[];
+  const read=async path=>{assert.equal(path,'/instruments/manifest.json','native SSR does not read the complete catalogue');return manifest};
+  const projected={rows:[{id:'F2026L99999',title:'Fixture airport instrument',type:'Principal',portfolios:['Health'],status:'InForce',registered:'2026-01-01',year:2026}],total:51,page:1,pageSize:50,facets:{year:{min:2026,max:2026}}};
+  const native=async query=>{calls.push(query);return projected};
+  const nativeBlock=(heading,sentence)=>`<h1>${heading}</h1><p>${sentence}</p>`;
+  const result=await instrumentPage(null,new URL('https://local.invalid/instruments?q=airport&year=2026'),read,nativeBlock,safe,native);
+  assert.equal(result.status,200);assert.equal(result.noindex,true);assert.equal(calls.length,1);assert.equal(calls[0].q,'airport');assert.deepEqual(calls[0].filters.year,{min:2026,max:2026});assert.ok(result.prerender.includes('of 51'));
+  const shared=await tablePrivacyIndex(),probe=shared.values.find(value=>/^\d{11}$/.test(value));
+  const rejected=await instrumentPage(null,new URL('https://local.invalid/instruments?'+new URLSearchParams({q:probe})),read,nativeBlock,safe,native);
+  assert.equal(calls.length,1,'private state performs no D1 page read');assert.equal(rejected.status,200);assert.ok(rejected.prerender.includes('Showing 0–0 of 0'));assert.ok(rejected.prerender.includes('data-export disabled'));
 });

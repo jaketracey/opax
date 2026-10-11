@@ -1,4 +1,4 @@
-import {applyQuery, dataTableHTML, mountDataTable, parseQuery, serializeQuery, toCSV} from './datatable.js?v=b038b24a2e';
+import {applyQuery, dataTableHTML, mountDataTable, parseQuery, serializeQuery, toCSV} from './datatable.js?v=fd903ef4b0';
 import {workbenchConfig, workbenchRows} from './datatable-workbench-data.js';
 
 const nativeFetch = window.fetch.bind(window);
@@ -28,7 +28,7 @@ function show(example, reset = false) {
   }
   const config = example === 'server' ? {...workbenchConfig,rows:undefined,source:{endpoint:'/__fixtures/table/receipts',params:{dataset:'fixture'}}} : workbenchConfig;
   // Keep the first server page visible while hydration fetches the stub endpoint.
-  if (reset) host.innerHTML = dataTableHTML({...config,privacyCheck:()=>true},applyQuery(workbenchRows,workbenchConfig,{}));
+  if (reset) host.innerHTML = dataTableHTML({...config,privacyCheck:()=>true},applyQuery(workbenchRows,{...workbenchConfig,privacyCheck:()=>true},{}));
   mounted = mountDataTable(host,config);
   for (const button of document.querySelectorAll('[data-example]')) button.setAttribute('aria-pressed',String(button.dataset.example === example));
   document.querySelector('#example-note').textContent = example === 'server' ? 'Server mode · fixture fetch' : 'Client mode · fixture records';

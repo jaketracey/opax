@@ -109,9 +109,9 @@ test('neutral individual aggregates carry only counts and numeric totals, withou
   const row=page.rows.find(r=>r.aggregate);
   assert.deepEqual(row,{aggregate:{kind:'individual-donors',count:12},name:'Donors not named (12)',amount:12345.67,count:20});
   const html=dataTableHTML(config,page);
-  assert.match(html,/Donors not named \(12\)/); assert.ok(!html.includes('unsafe-id')); assert.ok(!html.includes('untrusted'));
+  assert.match(html,/Donors not named \(12\)/); assert.match(html,/<details class="donor-aggregate">/); assert.match(html,/OPAX names organisations only/); assert.ok(!html.includes('unsafe-id')); assert.ok(!html.includes('untrusted'));
   assert.ok(!html.includes('href="#undefined"'));
-  assert.match(toCSV(page.rows,config),/Donors not named \(12\),,,12345.67,20/);
+  assert.match(toCSV(page.rows,config),/Donors not named \(12\),,,12345.67,20/); assert.ok(!toCSV(page.rows,config).includes('OPAX names organisations only'));
   assert.equal(toCSV([aggregate],{...config,privacy:undefined}),toCSV([aggregate],config));
   const numericPrimary={...config,columns:config.columns.map(c=>({...c,primary:c.key === 'amount'}))};
   assert.equal(toCSV([aggregate],numericPrimary),toCSV([aggregate],config));
@@ -167,4 +167,35 @@ test('multi-member facets count records once and callback policies keep distinct
  const second={...first,columns:[{...first.columns[0],facetValues:facetValues('2024-25')}]};
  assert.equal(applyQuery(rows,first,{}).facets.date[0].value,'2025-26');
  assert.equal(applyQuery(rows,second,{}).facets.date[0].value,'2024-25');
+});
+
+test('server hydration validates pending state while preserving approved facet selections',async()=>{
+  const h=tableHarness('http://localhost/table?t.f.region='+encodeURIComponent(JSON.stringify(['Victoria'])));
+  const page={rows:[rows[0]],total:9,page:1,pageSize:5,facets:{region:[{value:'Victoria',count:4}]}};
+  h.root.querySelector=selector=>selector==='[data-dt-page]'?{textContent:JSON.stringify(page)}:null;
+  let request;
+  h.win.fetch=async input=>{request=new URL(input);return Response.json(page);};
+  const mounted=mountDataTable(h.root,{...config,rows:undefined,source:{endpoint:'/__fixtures/table/receipts'}});
+  await new Promise(setImmediate);
+  assert.equal(request.searchParams.get('f.region'),JSON.stringify(['Victoria']));
+  assert.equal(new URL(h.win.location.href).searchParams.get('t.f.region'),JSON.stringify(['Victoria']));
+  mounted.destroy();
+});
+
+test('legacy query adapters remove keys only after the shared raw URL guard',async()=>{
+  for (const repeated of [false,true]) {
+    const h=tableHarness('http://localhost/table?q=accepted&year=2025&campaign=fixture'+(repeated?'&q=second':''));
+    const mounted=mountDataTable(h.root,{...config,initialQuery:{q:'accepted'},initialQueryKeys:['q','year']});
+    await new Promise(setImmediate);
+    const url=new URL(h.win.location.href);
+    assert.equal(url.searchParams.has('q'),false);
+    assert.equal(url.searchParams.has('year'),false);
+    assert.equal(url.searchParams.get('campaign'),'fixture');
+    if (repeated) {
+      assert.equal(url.searchParams.has('t.q'),false);
+      assert.match(h.html(),/Showing 0–0 of 0/);
+      assert.match(h.html(),/data-export disabled/);
+    } else assert.equal(url.searchParams.get('t.q'),'accepted');
+    mounted.destroy();
+  }
 });

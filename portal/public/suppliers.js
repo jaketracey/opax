@@ -1,7 +1,7 @@
 /* Supplier entries: recorded procurement, source notices and funding cross-links.
    No dependencies but the shared formats; the host router owns mounting and calls destroy on departure. */
 import { shortDate, shortMoney } from "./format.js";
-import { mountSupplierGrowth, supplierDonations } from "./supplier-growth.js?v=5feac962ca";
+import { mountSupplierGrowth, supplierDonations } from "./supplier-growth.js?v=5ef2f40838";
 import { sourceLineHTML } from "./labels.js?v=c6bf994ef7";
 import { partyUrl } from "./canonical-urls.js?v=225d5915ea";
 const esc = (value) => String(value ?? "").replace(/[&<>"']/g, (char) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[char]);
@@ -26,7 +26,7 @@ function agencyIds(signal) {
 const agencyUrl = (name, ids) => ids?.has(name) ? `/subject/agency/${encodeURIComponent(ids.get(name))}` : `/subject/agency?q=${encodeURIComponent(name)}`;
 
 export async function json(url, signal) {
-  const response = await fetch(url, { signal });
+  const response = await fetch(url, { signal, cache:"no-cache" });
   if (!response.ok) throw new Error("The supplier records could not be loaded.");
   return response.json();
 }
@@ -326,7 +326,7 @@ async function mountFunding(root, links, life, register = "") {
       slot.hidden = false;
       slot.innerHTML = '<p role="status">Opening the money map…</p>';
       try {
-        const { mountMoneyMap } = await import("/money-map.js?v=224ab013ee");
+        const { mountMoneyMap } = await import("/money-map.js?v=ca923f4f2e");
         if (!life.alive()) return;
         slot.textContent = "";
         const handle = await mountMoneyMap(slot, "/graph/money.json?v=suppliers-1", { focus: links[0].id, chrome: "mini", reveal: true, openCard: false });

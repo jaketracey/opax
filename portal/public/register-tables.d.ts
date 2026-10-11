@@ -6,10 +6,11 @@ export interface IndividualAggregate {donors:number;total:number;count:number}
 export function instrumentTableConfig(privacyCheck?:DataTableConfig['privacyCheck']): DataTableConfig;
 export function auditTableConfig(records: AuditRow[],privacyCheck?:DataTableConfig['privacyCheck']): DataTableConfig;
 export function interestTableData(register: InterestRegister, withheld?: (...texts:unknown[])=>boolean,privacyCheck?:(text:string)=>boolean): {rows:Row[];omitted:number};
+export function interestEntryOmitted(item:InterestRegister['buckets'][string]['items'][number]):boolean;
 export function interestTableConfig(rows: Row[],privacyCheck?:DataTableConfig['privacyCheck']): DataTableConfig;
 export function partyMoneyData(graph: PartyGraph, partyId: string, withheld?: (...texts:unknown[])=>boolean,privacyCheck?:(text:string)=>boolean): {rows:Row[];aggregate:IndividualAggregate};
 export function partyMoneyTableConfig(rows:Row[],aggregate?:IndividualAggregate,id?:string,urlKey?:string,pageType?:string,privacyCheck?:DataTableConfig['privacyCheck']): DataTableConfig;
-export function registerTableHTML(config:DataTableConfig,query?:Query): string;
+export function registerTableHTML(config:DataTableConfig,query?:Query,requestURL?:string|URL): string;
 export function mountRegisterTable(el:Element,config:DataTableConfig): {destroy():void};
 export function hydrateRegisterTables(root?:ParentNode): void;
 export function categoryMembers(values:string[]): string[];

@@ -1,3 +1,4 @@
+import {historicalWithheldName,historicalWithheldText} from './donor-hashes.mjs'
 import { MONEY_GRAPHS, donorPrivacyIndex, donorNameWithheld, foldDonorName, withheldPhrases, namesWithheldPhrase, type DonorPrivacyIndex, type WithheldPhrases } from '../public/donor-entity.js'
 export { withheldPhrases, namesWithheldPhrase }
 type DonorGraph = { nodes: { label: string; kind: string; aliases?: string[] | null; industry?: string | null }[] }
@@ -16,17 +17,17 @@ export function loadDonorIndex(assets: Fetcher): Promise<DonorPrivacyIndex> {
 /** A donor page, card or link for this name withholds it; unreadable money data fails closed. */
 export async function donorWithheld(assets: Fetcher, name: string): Promise<boolean> {
   const index = await loadDonorIndex(assets).catch(() => null)
-  return !index || donorNameWithheld(index, name)
+  return !index || donorNameWithheld(index, name) || (!index.organisations.has(foldDonorName(name)) && historicalWithheldName(name))
 }
 
 /** Whether a name from another register (a campaigner, a connection, a meeting) is a withheld donor's. */
 export async function namesWithheldDonor(assets: Fetcher, name: string): Promise<boolean> {
   const index = await loadDonorIndex(assets).catch(() => null)
-  return !index || index.withheld.has(foldDonorName(name))
+  return !index || index.withheld.has(foldDonorName(name)) || (!index.organisations.has(foldDonorName(name)) && historicalWithheldName(name))
 }
 
 /** The one reply to a question naming a withheld donor: fixed text, no model call. */
-export const WITHHELD_DONOR_REPLY = "OPAX doesn't name individual donors. Party-level totals are on the party's page."
+export const WITHHELD_DONOR_REPLY = "This donor is not named in OPAX. Party-level totals are on the party's page."
 
 type PhraseGraph = { nodes: { label: string; kind: string; aliases?: string[] | null; industry?: string | null }[] }
 
@@ -54,7 +55,7 @@ export async function questionNamesWithheldDonor(assets: Fetcher | undefined, ..
   if (!assets) return false
   const phrases = await loadWithheldPhrases(assets).catch(() => null)
   if (!phrases) return texts.some(t => String(t ?? '').trim().length > 0)
-  return namesWithheldPhrase(phrases, ...texts)
+  return namesWithheldPhrase(phrases, ...texts) || (!phrases.withheld.some(([p]) => !/^donor \d+ name withheld$/.test(p)) && historicalWithheldText(...texts))
 }
 
 /** A synchronous withheld-name check over the per-isolate phrases, for renderers that
@@ -62,5 +63,5 @@ export async function questionNamesWithheldDonor(assets: Fetcher | undefined, ..
 export async function withheldNameCheck(assets: Fetcher | undefined): Promise<(...texts: unknown[]) => boolean> {
   if (!assets) return () => false
   const phrases = await loadWithheldPhrases(assets).catch(() => null)
-  return phrases ? (...texts) => namesWithheldPhrase(phrases, ...texts) : () => true
+  return phrases ? (...texts) => namesWithheldPhrase(phrases, ...texts) || (!phrases.withheld.some(([p]) => !/^donor \d+ name withheld$/.test(p)) && historicalWithheldText(...texts)) : () => true
 }
