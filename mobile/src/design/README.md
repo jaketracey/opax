@@ -86,6 +86,50 @@ Nothing is uppercase or letter-spaced (D6).
   `RoundButton`, `Figure`, static `light.*` reads, the `radius` token, old
   spacing steps) per file; a count may fall, never rise.
 
+## Design programme pass 5 (Oct 2026): shared seams
+
+Lane D of `docs/design/review-2026-10/pass5-app-critique.md`. Screens take
+these helpers; `src/design` changes only in a shared-component lane.
+
+- **Source names** (P2-5): `sourceName(raw)` in `format.ts` reads an export's
+  citation as `{ label, title }`: a short publisher for the line ("AEC
+  election results", "Parliamentary Library", "AusTender", "IPEA") and the
+  full title for the sheet, with ISO dates in words and pipeline tails
+  ("via parli.db …", "tcp", ", OPAX import") left out. `sourceLabel(raw)` is
+  the label alone. `SourceLine` applies it to every string `citation`, and
+  names each label once ("AEC election results and 1 more"); pass
+  `{ label, title }` where the screen knows better.
+- **Per-source dates** (P2-4): a `citation` entry may be
+  `{ label, title?, asOf? }`. The sheet's "As at" heading is followed by the
+  date alone ("4 September 2026"); when the sources' dates differ, each
+  source row says its own ("ParlInfo bill records · 4 Oct 2026"), and a
+  block with no `asOf` is dated by its newest source. `SourceOriginal` takes
+  `asOf` too. Pass only originals a reader can open; OPAX's own datasets go in
+  `notes` ("Matched to OPAX's people list").
+- **Licence row** (P2-4): `licence` is a row that opens Sources and licences,
+  at `licenceDataset` (a `datasets.ts` id: that dataset leads the list, open).
+  "See source terms" reads "The source's own terms". With a licence there is
+  no separate "Sources and licences" row; without one, that row stays.
+- **`BillRow`** (P2-8, `rows.tsx`): one bill row for Today and Bills: the
+  `StatusLabel` and `date` on one line, the `title` in the serif
+  `subheading`, then `by` (portfolio or sponsor) with an optional nested
+  `party` (`PartyLabel`, never a code), and an optional `detail` line.
+  Callers pass the words and the spoken `accessibilityLabel`; `selected` and
+  `highlighted` for an iPad split list; `dragPath` for dragging.
+- **Title cap** (P2-18): the `title` role (and `padTitle`) grows no further
+  than its AX2 size (48pt on the largeTitle ramp), by scaling its font size
+  (`titleSizeCap`), never `maxFontSizeMultiplier`. Headings and body still
+  scale to AX5.
+- **One external glyph** (P3-7): `EXTERNAL_GLYPH` (↗ in a square), on
+  `LinkRow external`, source sheets, `SourceLink` and lead evidence. Never the
+  Safari compass.
+- **Sheet Done** (P3-8): `closeSheetItem()` is the plain variant: text in the
+  tint, as `SheetBody` draws it, never iOS 26's filled done pill.
+- **Party dot** (P3-14): the `PartyLabel` dot grows with text from 10pt to
+  16pt (`partyDotSize`).
+- **`Portrait ring`** is retiring (P1-4): no new uses; remove the prop once
+  the profile stops passing it.
+
 ## UI sweep (Oct 2026): rhythm, colour, licences
 
 - **One vertical rhythm** (`rhythm` in `tokens.ts`): `line` 4 (a line bound
@@ -124,7 +168,7 @@ Nothing is uppercase or letter-spaced (D6).
 - **Controls:** `Disclosure` (label, trailing value, turning chevron,
   animated with Reduce Motion respected) replaces bordered Show/Hide
   buttons; `LinkRow` (optional `IconTile`, title, detail, value, chevron or
-  Safari symbol) replaces full-width text links; `Section` takes `accent`
+  ↗ for an external page) replaces full-width text links; `Section` takes `accent`
   and `info`. `haptic('success' | 'selection' | 'light')` on
   Follow and Share only.
 
@@ -564,7 +608,7 @@ sidebarAdaptable`): a sidebar, or the top tab bar the reader expands into
 
 ## People
 
-- `PartyLabel`: 10pt dot plus the party exactly as the data names it: the
+- `PartyLabel`: a 10pt dot (growing with text to 16pt) plus the party exactly as the data names it: the
   party they sit for, or last sat for. `status` (`PartyStatus` from
   `src/api/party-transforms.ts`) is required and has three values, but the
   label draws them all alike, "Labor" (TestFlight build 32: "Formerly should
@@ -632,7 +676,7 @@ image sources, which the transport gate checks.
   with the ID in `record`. E2E builds show the destination in a scrollable
   local view instead of opening a browser.
 - `OpaxWebLink`: a web-only OPAX page (community, the money map, Methods),
-  opened in Safari: a compact row with the Safari symbol; VoiceOver hears
+  opened in Safari: a compact row with the external glyph (↗); VoiceOver hears
   "Opens on opax.com.au". `canonicalUrl` checks
   the path raw, parses it and requires the configured origin and the same
   path back: foreign hosts, protocol-relative and backslash paths, dot

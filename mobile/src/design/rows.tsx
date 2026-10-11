@@ -11,7 +11,10 @@ import {
 import { openOnWeb, openSource } from '../navigation/external';
 import { useAccessibilitySize } from './accessibility';
 import { Hoverable, useHover } from './adaptive';
-import { Icon, type SFSymbol } from './icon';
+import { EXTERNAL_GLYPH, Icon, type SFSymbol } from './icon';
+import { StatusLabel } from './labels';
+import type { PartyContext } from './party';
+import { PartyLabel } from './people';
 import { SelectedMark, selectedWash, splitRowStyles } from './selection';
 import { SourceAffordance } from './source';
 import { Text } from './text';
@@ -26,8 +29,8 @@ import {
 
 /**
  * A compact navigation row: an optional tinted symbol, a title, an optional
- * detail line or trailing value, and a chevron (or the Safari symbol for a
- * page on opax.com.au). 44pt minimum; the whole row is one VoiceOver button.
+ * detail line or trailing value, and a chevron (or ↗ for anything that
+ * leaves the app). 44pt minimum; the whole row is one VoiceOver button.
  */
 export function LinkRow({
   title,
@@ -53,7 +56,7 @@ export function LinkRow({
   value?: string;
   icon?: SFSymbol;
   accent?: Accent;
-  /** Leaves the app (opax.com.au in Safari): a Safari symbol, not a chevron. */
+  /** Leaves the app (opax.com.au, an original): ↗, not a chevron. */
   external?: boolean;
   disabled?: boolean;
   /** Drawn before the title instead of an icon tile: a "For" label, a chip. */
@@ -127,7 +130,7 @@ export function LinkRow({
         </View>
         {inSplit && !external ? null : (
           <Icon
-            name={external ? 'safari' : 'chevron.right'}
+            name={external ? EXTERNAL_GLYPH : 'chevron.right'}
             size={external ? 16 : 13}
             tone={external ? 'navy' : 'inkSoft'}
           />
@@ -173,6 +176,124 @@ export function IconTile({
         tone={tone.ink}
       />
     </View>
+  );
+}
+
+/**
+ * One bill in a list, the same on Today and in Bills (P2-8): its status and
+ * date on one line, the title in the record's serif (`subheading`, never cut
+ * short, never broken mid-word), then who brought it: a portfolio, or a
+ * sponsor with their party as a dot and its name (never a bare code). One
+ * VoiceOver element that opens the bill; a chevron, or in an iPad split
+ * list the selected wash and no chevron. Callers say the words: the status
+ * in sentence case, the date ("Introduced 17 Sep"), the spoken label.
+ */
+export function BillRow({
+  title,
+  status,
+  date,
+  by,
+  party,
+  detail,
+  onPress,
+  accessibilityLabel,
+  accessibilityHint = 'Opens the bill',
+  testID,
+  dragPath,
+  selected,
+  highlighted = false,
+}: {
+  /** The bill's title as the record has it. */
+  title: string;
+  /** The recorded status word, in sentence case ("Passed both houses"). */
+  status: string;
+  /** Beside the status: "Introduced 17 Sep 2026". */
+  date?: string | null;
+  /** Who brought it: the portfolio, or the sponsor's name. */
+  by?: string | null;
+  /** The sponsor's party, drawn after `by` as a nested PartyLabel. */
+  party?: PartyContext | null;
+  /** One more metadata line: the chamber, "House of Representatives". */
+  detail?: string | null;
+  onPress: () => void;
+  /** The whole row as VoiceOver says it: title, status, date, who. */
+  accessibilityLabel: string;
+  accessibilityHint?: string;
+  testID?: string;
+  /** "/bill/<key>", for dragging on iPad. */
+  dragPath?: string;
+  /** In an iPad split list: true for the bill in the detail pane. */
+  selected?: boolean;
+  /** The keyboard's place in a split list. */
+  highlighted?: boolean;
+}) {
+  const stacked = useAccessibilitySize();
+  const [hovered, onHover] = useHover();
+  const inSplit = selected !== undefined;
+  return (
+    <Hoverable
+      effect="none"
+      onHover={onHover}
+      onActivate={onPress}
+      drag={dragPath ? { path: dragPath, title } : undefined}
+    >
+      <Pressable
+        accessibilityRole="button"
+        accessibilityLabel={accessibilityLabel}
+        accessibilityHint={inSplit ? undefined : accessibilityHint}
+        accessibilityState={inSplit ? { selected } : undefined}
+        testID={testID}
+        onPress={onPress}
+        style={({ pressed }) => [
+          styles.bill,
+          inSplit ? splitRowStyles.bleed : null,
+          selected
+            ? selectedWash()
+            : pressed || hovered || highlighted
+              ? { backgroundColor: colors.sunken }
+              : null,
+        ]}
+      >
+        {selected ? <SelectedMark /> : null}
+        <View style={styles.billMain}>
+          <View style={[styles.billLine, stacked ? styles.billStacked : null]}>
+            <StatusLabel label={status} hidden />
+            {date ? (
+              <Text wordSafe variant="fine">
+                {date}
+              </Text>
+            ) : null}
+          </View>
+          <Text
+            wordSafe
+            variant="subheading"
+            testID={testID && `${testID}-title`}
+          >
+            {title}
+          </Text>
+          {by || party ? (
+            <View
+              style={[styles.billLine, stacked ? styles.billStacked : null]}
+            >
+              {by ? (
+                <Text wordSafe variant="metadata">
+                  {by}
+                </Text>
+              ) : null}
+              {party ? <PartyLabel {...party} linked={false} nested /> : null}
+            </View>
+          ) : null}
+          {detail ? (
+            <Text wordSafe variant="metadata">
+              {detail}
+            </Text>
+          ) : null}
+        </View>
+        {inSplit ? null : (
+          <Icon name="chevron.right" size={13} tone="inkSoft" />
+        )}
+      </Pressable>
+    </Hoverable>
   );
 }
 
@@ -228,9 +349,7 @@ export function ViewOriginal({
   return (
     <SourceAffordance
       ref={anchor}
-      glyph={
-        usable.length === 1 ? 'arrow.up.right.square' : 'list.bullet.rectangle'
-      }
+      glyph={usable.length === 1 ? EXTERNAL_GLYPH : 'list.bullet.rectangle'}
       name={label}
       accessibilityRole="link"
       accessibilityLabel={
@@ -261,6 +380,28 @@ const styles = StyleSheet.create({
   // flex: 1 only beside the value: in a stacked column it would collapse.
   titles: { gap: 2, alignSelf: 'stretch', flexShrink: 1 },
   grow: { flex: 1 },
+  bill: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: rhythm.heading,
+    minHeight: minimumTarget,
+    paddingVertical: rhythm.tight,
+  },
+  // flex: 1 would become a zero height basis if the row ever stacked.
+  billMain: { flexGrow: 1, flexShrink: 1, gap: rhythm.line + 2 },
+  // Status and date; who and their party. Stacked at accessibility sizes.
+  billLine: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    alignItems: 'center',
+    columnGap: rhythm.tight,
+    rowGap: rhythm.line,
+  },
+  billStacked: {
+    flexDirection: 'column',
+    flexWrap: 'nowrap',
+    alignItems: 'stretch',
+  },
   tile: {
     borderRadius: radii.sm,
     alignItems: 'center',
@@ -269,3 +410,4 @@ const styles = StyleSheet.create({
 });
 
 ownsRowPadding(LinkRow);
+ownsRowPadding(BillRow);

@@ -11,8 +11,14 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { openOnWeb, openSource } from '../navigation/external';
 import { useAccessibilitySize, useReduceMotion } from './accessibility';
-import { formatDate, savedText, type DateInput } from './format';
-import { Icon, type SFSymbol } from './icon';
+import {
+  calendarDate,
+  formatDate,
+  savedText,
+  sourceName,
+  type DateInput,
+} from './format';
+import { EXTERNAL_GLYPH, Icon, type SFSymbol } from './icon';
 import { useKeyCommand } from './keyboard';
 import { Heading, Text } from './text';
 import { colors, hairline, minimumTarget, radii, rhythm } from './tokens';
@@ -25,6 +31,21 @@ export interface SourceOriginal {
   url: string;
   /** What the record is: "division, 19 Aug 2026", "record CN3407266". */
   record?: string;
+  /** This original's own as-at date, said in the sheet beside it. */
+  asOf?: DateInput | null;
+}
+
+/**
+ * One source a block cites, where the caller knows more than its name: the
+ * line's short label, the sheet's full title, and its own as-at date when
+ * sources differ ("Hansard · 6 Mar 2023"). A plain string is read with
+ * `sourceName()`, so an export's "AEC 2019-05-18 tcp votes" says "AEC
+ * election results" on the line and the full title in the sheet.
+ */
+export interface SourceCitation {
+  label: string;
+  title?: string;
+  asOf?: DateInput | null;
 }
 
 /** A state the block is drawn in, said after the source. */
@@ -41,10 +62,11 @@ export interface SourceDetails {
   asOf?: DateInput | null;
   /**
    * Who holds the record: one name, or several. The line shows the first
-   * ("and 2 more"); the sheet lists them all. (`source` is reserved for
-   * image sources.)
+   * short name ("and 2 more"); the sheet lists every full title, each with
+   * its own date when the dates differ. (`source` is reserved for image
+   * sources.)
    */
-  citation?: string | readonly string[];
+  citation?: string | readonly (string | SourceCitation | null | undefined)[];
   /** Coverage after the date: "Divisions to 25 Sep 2026". */
   coverage?: string | null;
   /** The content is a saved copy that could not be refreshed. */
@@ -54,8 +76,13 @@ export interface SourceDetails {
   originals?: readonly SourceOriginal[];
   /** Methodology and caveats, one paragraph each, shown in full. */
   notes?: readonly (string | null | undefined | false)[];
-  /** "CC BY 4.0"; Sources and licences has every licence in full. */
+  /**
+   * "CC BY 4.0". The sheet's licence row opens Sources and licences, which
+   * has every licence in full; "See source terms" is said in plain words.
+   */
   licence?: string | null;
+  /** The dataset on Sources and licences (`datasets.ts` id) the row opens at. */
+  licenceDataset?: string;
   /** Anything else the sheet carries below the notes. */
   extra?: ReactNode;
   /**
@@ -65,10 +92,53 @@ export interface SourceDetails {
   dateLabel?: string | null;
 }
 
-const citations = (citation: SourceDetails['citation']) =>
-  (typeof citation === 'string' ? [citation] : (citation ?? [])).filter(
-    (name): name is string => !!name?.trim(),
-  );
+/** A cited source, read: its short label, full title and own date. */
+export type CitedSource = Required<Pick<SourceCitation, 'label' | 'title'>> &
+  Pick<SourceCitation, 'asOf'>;
+/** Every cited source with a label and a title, once each by title. */
+export function sourceCitations(
+  citation: SourceDetails['citation'],
+): CitedSource[] {
+  const list = typeof citation === 'string' ? [citation] : (citation ?? []);
+  const out: CitedSource[] = [];
+  for (const item of list) {
+    if (!item) continue;
+    const named =
+      typeof item === 'string'
+        ? item.trim()
+          ? sourceName(item)
+          : null
+        : item.label.trim()
+          ? {
+              label: item.label.trim(),
+              title: item.title?.trim() || item.label.trim(),
+              asOf: item.asOf,
+            }
+          : null;
+    if (named && !out.some((o) => o.title === named.title)) out.push(named);
+  }
+  return out;
+}
+/** The labels a line names: each short name once. */
+const lineNames = (citation: SourceDetails['citation']) => [
+  ...new Set(sourceCitations(citation).map((s) => s.label)),
+];
+const dayNumber = (value: DateInput | null | undefined) => {
+  const date = value == null ? null : calendarDate(value);
+  return date ? Date.UTC(date.year, date.month, date.day) : null;
+};
+/** The newest of the sources' own dates, for a block that gives none. */
+function newestSourceDate(
+  citation: SourceDetails['citation'],
+): DateInput | null {
+  let newest: { value: DateInput; day: number } | null = null;
+  for (const { asOf } of sourceCitations(citation)) {
+    const day = dayNumber(asOf);
+    if (asOf != null && day != null && (!newest || day > newest.day))
+      newest = { value: asOf, day };
+  }
+  return newest?.value ?? null;
+}
 /** "Updated 4 Oct 2026", a year-only date as "Updated 2021". */
 export function updatedText(asOf: DateInput | null | undefined): string | null {
   if (asOf == null) return null;
@@ -95,7 +165,7 @@ export function sourceLineParts({
   name: string | null;
   rest: string[];
 } {
-  const names = citations(citation);
+  const names = lineNames(citation);
   const name = names.length
     ? names.length === 1
       ? names[0]!
@@ -115,7 +185,8 @@ export function sourceLineParts({
   const date =
     dateLabel !== undefined
       ? dateLabel
-      : (updatedText(asOf) ?? 'Date not published');
+      : (updatedText(asOf ?? newestSourceDate(citation)) ??
+        'Date not published');
   return { date, name, rest };
 }
 
@@ -162,7 +233,7 @@ export function SourceLine({
   return (
     <>
       <SourceAffordance
-        glyph={label ? 'arrow.up.right.square' : 'doc.text'}
+        glyph={label ? EXTERNAL_GLYPH : 'doc.text'}
         date={visible.date}
         name={visible.name}
         rest={visible.rest}
@@ -341,20 +412,36 @@ function SourceDetailsBody({
   after: (action: () => void) => void;
   testID?: string;
 }) {
-  const { asOf, coverage, savedAt, originals, notes, licence, extra } = details;
-  const names = citations(details.citation);
+  const { coverage, savedAt, originals, notes, licence, extra } = details;
+  const sources = sourceCitations(details.citation);
+  const asOf = details.asOf ?? newestSourceDate(details.citation);
   const usable = (originals ?? []).filter(
     (s, i, all) =>
       (s.url.startsWith('https://') || s.url.startsWith('/')) &&
       all.findIndex((o) => o.url === s.url) === i,
   );
   const shownNotes = (notes ?? []).filter((note): note is string => !!note);
-  // A year-only date (Census vintages) is said as a year.
-  const year = typeof asOf === 'string' && /^\d{4}$/.test(asOf) ? asOf : null;
-  const date = year ?? (asOf == null ? '' : formatDate(asOf));
+  const date = sheetDate(asOf);
   const dated = !!date || !!coverage || savedAt != null;
+  // Each source says its own date only when the dates differ (P2-4): one
+  // date for many sources would date the oldest feed as the newest.
+  const sourceDays = new Set(
+    sources.map((s) => dayNumber(s.asOf ?? asOf)).filter((d) => d != null),
+  );
+  const perSource = sources.some((s) => s.asOf != null) && sourceDays.size > 1;
   const provenance =
-    dated || names.length > 0 || usable.length > 0 || !!licence;
+    dated || sources.length > 0 || usable.length > 0 || !!licence;
+  const openLicences = () =>
+    after(() =>
+      router.push(
+        details.licenceDataset
+          ? {
+              pathname: '/account/sources',
+              params: { dataset: details.licenceDataset },
+            }
+          : '/account/sources',
+      ),
+    );
   return (
     <>
       {usable.length ? (
@@ -384,8 +471,9 @@ function SourceDetailsBody({
       {dated ? (
         <View style={styles.group}>
           <Heading level={3}>As at</Heading>
+          {/* The heading says "As at"; the value is the date alone. */}
           <Text wordSafe variant="body">
-            {date ? `As at ${date}` : 'Date not published'}
+            {date || 'Date not published'}
           </Text>
           {coverage ? (
             <Text wordSafe variant="metadata">
@@ -399,16 +487,21 @@ function SourceDetailsBody({
           ) : null}
         </View>
       ) : null}
-      {names.length ? (
+      {sources.length ? (
         <View style={styles.group}>
           <Heading level={3}>
-            {names.length === 1 ? 'Source' : 'Sources'}
+            {sources.length === 1 ? 'Source' : 'Sources'}
           </Heading>
-          {names.map((name) => (
-            <Text key={name} wordSafe variant="body">
-              {name}
-            </Text>
-          ))}
+          {sources.map((source) => {
+            const own = perSource
+              ? sheetDate(source.asOf ?? asOf, 'short')
+              : '';
+            return (
+              <Text key={source.title} wordSafe variant="body">
+                {own ? `${source.title} · ${own}` : source.title}
+              </Text>
+            );
+          })}
         </View>
       ) : null}
       {shownNotes.length ? (
@@ -424,17 +517,23 @@ function SourceDetailsBody({
       {licence ? (
         <View style={styles.group}>
           <Heading level={3}>Licence</Heading>
-          <Text wordSafe variant="body">
-            {licence}
-          </Text>
+          {/* The licence opens its terms in full (Sources and licences). */}
+          <OriginalRow
+            original={{ label: licenceText(licence), url: '' }}
+            internal
+            accessibilityLabel={`Licence: ${licenceText(licence)}`}
+            accessibilityHint="Opens Sources and licences"
+            onOpen={openLicences}
+            testID={testID ? `${testID}-licences` : undefined}
+          />
         </View>
       ) : null}
       {extra}
-      {provenance ? (
+      {provenance && !licence ? (
         <OriginalRow
           original={{ label: 'Sources and licences', url: '' }}
           internal
-          onOpen={() => after(() => router.push('/account/sources'))}
+          onOpen={openLicences}
           testID={testID ? `${testID}-licences` : undefined}
         />
       ) : null}
@@ -442,29 +541,54 @@ function SourceDetailsBody({
   );
 }
 
+/** A date in the sheet: "4 September 2026", a year-only vintage as "2021". */
+function sheetDate(
+  value: DateInput | null | undefined,
+  style: 'long' | 'short' = 'long',
+): string {
+  if (value == null) return '';
+  if (typeof value === 'string' && /^\d{4}$/.test(value)) return value;
+  return formatDate(value, style);
+}
+
+/** A licence as the sheet says it; "See source terms" in plain words. */
+export function licenceText(licence: string): string {
+  return /^see (the )?source('s)? terms\.?$/i.test(licence.trim())
+    ? 'The source’s own terms'
+    : licence.trim();
+}
+
 function OriginalRow({
   original,
   onOpen,
   internal = false,
+  accessibilityLabel,
+  accessibilityHint,
   testID,
 }: {
   original: SourceOriginal;
   onOpen: () => void;
   internal?: boolean;
+  accessibilityLabel?: string;
+  accessibilityHint?: string;
   testID?: string;
 }) {
   const stacked = useAccessibilitySize();
+  const meta = [original.record, sheetDate(original.asOf, 'short')]
+    .filter(Boolean)
+    .join(' · ');
   return (
     <Pressable
       accessibilityRole={internal ? 'button' : 'link'}
-      accessibilityLabel={[
-        internal ? null : 'View original',
-        original.label,
-        original.record,
-      ]
-        .filter(Boolean)
-        .join(', ')}
-      accessibilityHint={internal ? undefined : 'Opens the source'}
+      accessibilityLabel={
+        accessibilityLabel ??
+        [internal ? null : 'View original', original.label, meta || null]
+          .filter(Boolean)
+          .join(', ')
+      }
+      accessibilityHint={
+        accessibilityHint ?? (internal ? undefined : 'Opens the source')
+      }
       testID={testID}
       onPress={onOpen}
       style={({ pressed }) => [
@@ -477,14 +601,14 @@ function OriginalRow({
         <Text wordSafe variant="strong" tone={internal ? 'ink' : 'bronzeInk'}>
           {original.label}
         </Text>
-        {original.record ? (
+        {meta ? (
           <Text wordSafe variant="metadata">
-            {original.record}
+            {meta}
           </Text>
         ) : null}
       </View>
       <Icon
-        name={internal ? 'chevron.right' : 'arrow.up.right.square'}
+        name={internal ? 'chevron.right' : EXTERNAL_GLYPH}
         size={internal ? 13 : 16}
         tone={internal ? 'inkSoft' : 'bronzeInk'}
       />

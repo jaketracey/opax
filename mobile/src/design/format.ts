@@ -274,6 +274,95 @@ export function votesCaptionText(
   return parts.join(' · ');
 }
 
+/**
+ * A source as a block names it: a short publisher name for the source line
+ * ("AEC election results", "Parliamentary Library", "AusTender") and the full
+ * title for the source sheet. Neither carries an ISO date or a pipeline word.
+ */
+export interface SourceName {
+  label: string;
+  title: string;
+}
+
+// The AEC results files, by what the export calls them ("tcp votes").
+const aecResults: Record<string, string> = {
+  'tcp votes': 'two-candidate preferred votes',
+  'primary votes': 'first preference votes',
+  'final division results': 'final division results',
+  candidates: 'candidates',
+};
+// Publishers whose long names open a citation: the line says the short one.
+const publishers: [RegExp, string][] = [
+  [/^AEC Transparency Register\b/, 'AEC Transparency Register'],
+  [/^AEC donation returns\b/, 'AEC donation returns'],
+  [/^AEC (national )?boundaries\b/, 'AEC boundaries'],
+  [/^ABS Census (\d{4})\b/, 'ABS Census $1'],
+  [/^ABS [A-Z]{3} \d{4} statistical boundaries\b/, 'ABS boundaries'],
+  [/^Independent Parliamentary Expenses Authority\b/, 'IPEA'],
+  [/^GrantConnect\b/, 'GrantConnect'],
+  [/^AusTender\b/, 'AusTender'],
+  [
+    /^Registers of Members' and Senators' Interests\b/,
+    'Registers of interests',
+  ],
+  [/^OPAX federal roster\b/, 'OPAX parliamentary roster'],
+  [/^OPAX existing parliamentary person identifiers$/, 'OPAX people list'],
+  [/^parli\.db speeches\b/, 'OPAX indexed speeches'],
+];
+const isoDate = /\b(\d{4}-\d{2}-\d{2})\b/g;
+
+/**
+ * The full title, readable: ISO dates as "17 August 2012", and the export's
+ * pipeline tails ("via parli.db `ext_donations` (source qld_ecq)", ", OPAX
+ * import") left out.
+ */
+function sourceTitle(raw: string): string {
+  return raw
+    .replace(/\s*\bvia parli\.db\b.*$/s, '')
+    .replace(/,?\s*OPAX import\b/g, '')
+    .replace(/`/g, '')
+    .replace(isoDate, (iso) => formatDate(iso) || iso)
+    .replace(/\btcp\b/g, 'two-candidate preferred')
+    .replace(/\s{2,}/g, ' ')
+    .replace(/[\s,;:]+$/, '')
+    .trim();
+}
+
+/**
+ * A raw citation from an export as a short label and a full title. Known
+ * publishers get their short name; otherwise the label is the publisher
+ * before "Title: …", "Name, Department. Notes" or "(…)", with any ISO date
+ * dropped. A name that is already short comes back unchanged.
+ */
+export function sourceName(raw: string): SourceName {
+  const text = raw.trim();
+  const aec = /^AEC (\d{4}-\d{2}-\d{2}) (.+)$/.exec(text);
+  if (aec && aecResults[aec[2]!]) {
+    const date = formatDate(aec[1]!);
+    return {
+      label: 'AEC election results',
+      title: `AEC ${aecResults[aec[2]!]}, ${date || aec[1]} election`,
+    };
+  }
+  const title = sourceTitle(text);
+  for (const [pattern, short] of publishers) {
+    const match = pattern.exec(text);
+    if (match) return { label: short.replace('$1', match[1] ?? ''), title };
+  }
+  const cut = /^(.+?)(?::\s|\.\s|\s\(|\svia\s|,\s)/.exec(title);
+  const label = (cut ? cut[1]! : title)
+    .replace(isoDate, '')
+    .replace(/\s{2,}/g, ' ')
+    .replace(/[\s,;:]+$/, '')
+    .trim();
+  return { label: label || title, title };
+}
+
+/** The short name a source line shows: "AEC election results". */
+export function sourceLabel(raw: string): string {
+  return sourceName(raw).label;
+}
+
 /** "Saved 3 October 2026", for a copy kept on this iPhone. */
 export function savedText(savedAt: DateInput): string {
   const saved = formatDate(savedAt);

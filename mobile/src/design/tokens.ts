@@ -293,7 +293,7 @@ export const isAccessibilityCategory = (fontScale: number) =>
 
 // Apple's Dynamic Type sizes for the ramps the navigation bar uses. Custom
 // header fonts do not scale natively, so the layouts pass these sizes.
-const largeTitleSizes: Record<ContentSizeCategory, number> = {
+export const largeTitleSizes: Record<ContentSizeCategory, number> = {
   xSmall: 31,
   small: 32,
   medium: 33,

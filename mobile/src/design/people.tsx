@@ -11,6 +11,7 @@ import {
   Pressable,
   StyleSheet,
   View,
+  useWindowDimensions,
 } from 'react-native';
 import { useAccessibilitySize, useReduceMotion } from './accessibility';
 import { Icon } from './icon';
@@ -93,7 +94,11 @@ export function Portrait({
   name?: string;
   official?: boolean;
   nameBeside?: boolean;
-  /** A party colour drawn as a ring around a profile portrait. */
+  /**
+   * A party colour drawn as a ring around a profile portrait. Retiring
+   * (pass 5, P1-4: party colour is a dot beside a name, never a ring):
+   * remove once the profile stops passing it.
+   */
   ring?: string | null;
   onDisplay?: (visible: boolean) => void;
   /** The portrait lookup has not answered yet. */
@@ -191,9 +196,19 @@ export function Portrait({
   );
 }
 
+const DOT = 10;
+const DOT_MAX = 16;
 /**
- * Party identity: a 10pt dot beside the party's name, never colour alone and
- * never a fill: the party they sit (or last sat) for, "Labor", and "One
+ * The party dot's size at a font scale: 10pt, growing with the text beside
+ * it to 16pt (pass 5, P3-14).
+ */
+export function partyDotSize(fontScale: number): number {
+  return Math.round(DOT * Math.min(Math.max(fontScale, 1), DOT_MAX / DOT));
+}
+
+/**
+ * Party identity: a 10pt dot (growing with text to 16pt) beside the party's
+ * name, never colour alone and never a fill: the party they sit (or last sat) for, "Labor", and "One
  * Nation · formerly Nationals" only for a change of party. Whether they
  * still sit is the row's to say ("Former member"), never the label's. The `label` role in ink-soft, one size. `dense` (tables only)
  * shows the web's short label (ALP, LIB); VoiceOver still reads the full
@@ -233,6 +248,7 @@ export function PartyLabel({
   const previousLinked =
     linked && !nested && !!text.previous && isPartyLabel(formerly);
   const fixed = useAccessibilitySize();
+  const dotSize = partyDotSize(useWindowDimensions().fontScale);
   const Container = partyLinked ? Pressable : View;
   return (
     <Container
@@ -281,9 +297,13 @@ export function PartyLabel({
           accessibilityElementsHidden
           importantForAccessibility="no-hide-descendants"
           style={[
-            styles.dot,
             onDeep ? styles.dotRinged : null,
-            { backgroundColor: dot },
+            {
+              width: dotSize,
+              height: dotSize,
+              borderRadius: dotSize / 2,
+              backgroundColor: dot,
+            },
           ]}
         />
       ) : null}
@@ -457,7 +477,11 @@ export function PersonRow({
             </View>
           ) : null}
           {former ? (
-            <Text wordSafe variant="metadata" testID={testID && `${testID}-former`}>
+            <Text
+              wordSafe
+              variant="metadata"
+              testID={testID && `${testID}-former`}
+            >
               {former}
             </Text>
           ) : null}
@@ -576,7 +600,6 @@ const styles = StyleSheet.create({
   partyFixed: { alignSelf: 'stretch', width: '100%' },
   partyLinked: { minHeight: minimumTarget, minWidth: minimumTarget },
   partyText: { flexShrink: 1 },
-  dot: { width: 10, height: 10, borderRadius: 5 },
   dotRinged: {
     borderWidth: 1.5,
     borderColor: colors.raised,
