@@ -18,6 +18,7 @@ const questionsIn=html=>[
  ...[...html.matchAll(/href="(\/ask\?[^"<>]+)"/g)].map(m=>new URL(decode(m[1]),'https://fixture.test').searchParams.get('q')).filter(Boolean),
 ];
 const region=(start,end)=>app.slice(app.indexOf(start),app.indexOf(end,app.indexOf(start)));
+const excerptNoticeHTML=runInNewContext(region('function excerptNoticeHTML(', '// Categories and counts only:')+';excerptNoticeHTML',{esc,safeUrl:v=>v || ''});
 export async function* moduleOutputs(root,withheld,readAsset) {
  const cache=new Map();
  const read=async path=>{
@@ -46,7 +47,7 @@ export async function* moduleOutputs(root,withheld,readAsset) {
  const roster=JSON.parse(readFileSync(join(root,'parliamentarians.json'),'utf8'));
  const localModules={...modules,loadModulePrivacy:async(kind,id)=>modules.approvedModulePrivacy(await read(await modules.growthSummaryPath('privacy/'+kind,id)))};
  const context={URLSearchParams,growthModules:localModules,registerTables:{...registerTables,hydrateRegisterTables(){}},registerTablesReady:Promise.resolve(),esc,safeUrl:v=>v || '',fmtDate:v=>v || '',fmtMoney:String,industryLabel:String,partyDotHTML:()=>'',
-  sourceLineHTML,entityHrefAttr:href=>`href="${esc(href)}"`,subjectHash:(kind,name)=>`/subject/${kind}/${encodeURIComponent(name)}`,fetch:fetchAsset,currentSubjectKey:'fixture',
+  sourceLineHTML,excerptNoticeHTML,entityHrefAttr:href=>`href="${esc(href)}"`,subjectHash:(kind,name)=>`/subject/${kind}/${encodeURIComponent(name)}`,fetch:fetchAsset,currentSubjectKey:'fixture',
   document:{createElement:()=>({dataset:{},isConnected:true,remove(){},querySelectorAll:()=>[]})},searchHash:q=>'/ask?view=search&'+new URLSearchParams({q}),STATE_NAMES:{},billQuestion:v=>v,
   machineLabelHTML:({note=''})=>`<span>${esc(note)}</span>`,partyChipHTML:esc,
  };
