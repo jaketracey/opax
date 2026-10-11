@@ -24,6 +24,8 @@ export interface Env {
   BATCH_SIZE?: string
   /** "live" writes to the knowledge box; anything else is a dry run (results recorded in D1 only). */
   WRITE_MODE?: string
+  /** Only "true" holds newly discovered/reconciled historic speeches. */
+  HISTORIC_HOLD?: string
   CONCURRENCY?: string
   MAX_TOKENS?: string
   /** ISO time discovery starts from when no cursor is stored. */
@@ -39,6 +41,7 @@ export interface Config {
   steadyBudget: number
   batchSize: number
   live: boolean
+  historicHold: boolean
   concurrency: number
   maxTokens: number
   discoveryStart: string
@@ -71,6 +74,7 @@ export function readConfig(env: Partial<Env>): Config {
     maxTokens: clampInt(env.MAX_TOKENS, 4000, 200, 8000),
     // Only the exact string "live" ever writes to the box.
     live: env.WRITE_MODE === 'live',
+    historicHold: env.HISTORIC_HOLD === 'true',
     discoveryStart: new Date(env.DISCOVERY_START || DEFAULT_DISCOVERY_START).toISOString(),
     discoveryMaxPages: clampInt(env.DISCOVERY_MAX_PAGES, 6, 1, 40),
     discoveryOverlapS: 120,

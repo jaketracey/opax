@@ -58,8 +58,9 @@ The nightly only brings new records in and publishes them.
 10:30 Sydney   EventBridge Scheduler "opax-refresh-stop-backstop" stops the instance if still up
 
 the push (corpus.json changed) ──► .github/workflows/deploy.yml
-      npm ci · build:search/social/grants-map/analytics/voice · node --test (Node 24)
-      wrangler types + tsc · `npm run deploy` · commit restamped assets back with [skip ci]
+      npm ci · build:release (search/social/grants-map/analytics/voice, stamps, photos, privacy)
+      npm test (Node 24) · wrangler types + tsc · `npm run deploy:built`
+      mandatory privacy sweep before upload · commit restamped assets back with [skip ci]
 11:00 Sydney   .github/workflows/refresh-watchdog.yml reads https://opax.com.au/corpus.json and the
                nightly-status branch; a red run (GitHub emails the owner) means the chain broke
 ```

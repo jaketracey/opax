@@ -12,6 +12,7 @@ import { finishRows, isSummaryTask, logError, type QueueRow, type RowUpdate } fr
 import { FIELD } from './text.ts'
 import { KbBackpressure, KbHttpError, type KbApi, type KbResource } from './kb.ts'
 import { RejectedNames, UnsafeWrite, writeItem, type WriteOutcome } from './write.ts'
+import { eligibleHistoricRows } from './hold.ts'
 
 export const MAX_CANARY_RIDS = 10
 const RID = /^[0-9a-f]{32}$/
@@ -120,6 +121,7 @@ export interface CanaryDeps {
   db: D1Database
   kb: KbApi
   now: () => number
+  historicHold?: boolean
   /** Pause between the write and the "after" read. */
   settle: (ms: number) => Promise<void>
 }
@@ -129,8 +131,8 @@ export async function runCanary(d: CanaryDeps, rids: string[]): Promise<{ result
   for (const rid of rids) {
     const result: CanaryRidResult = { rid, status: 'skipped', writes: [] }
     results.push(result)
-    const { results: rows } = await d.db
-      .prepare("SELECT * FROM queue WHERE rid = ? AND status = 'done' AND outcome IN ('dry', 'unwritten') AND result IS NOT NULL")
+    let { results: rows } = await d.db
+      .prepare("SELECT * FROM queue WHERE rid = ? AND status = 'done' AND terminal_reason IS NULL AND outcome IN ('dry', 'unwritten') AND result IS NOT NULL")
       .bind(rid)
       .all<QueueRow>()
     if (rows.length === 0) {
@@ -144,6 +146,14 @@ export async function runCanary(d: CanaryDeps, rids: string[]): Promise<{ result
         continue
       }
       result.before = before
+
+      if (d.historicHold) {
+        rows = await eligibleHistoricRows(d.db, rows, before as KbResource, d.now)
+        if (!rows.length) {
+          result.reason = 'historic hold requires an explicit release'
+          continue
+        }
+      }
 
       const updates: RowUpdate[] = []
       for (const row of rows) {
