@@ -1,57 +1,7 @@
-/* Money lane preview only; shared DataTable styling belongs to DT-core. */
+/* Shared table styles come from datatable.css. */
 .research-records { margin-block: var(--space-group) var(--space-section); }
 .research-records h2 { font: var(--type-heading); margin: 0 0 var(--space-line); }
 .research-records .mc-explainer { margin: 0 0 var(--space-tight); max-width: var(--size-readable); }
 .research-records .research-period { margin-block: var(--space-tight) var(--space-block); color: var(--ink-soft); }
 .money-connections-table { min-width: 0; color: var(--ink); }
 .money-connections-table caption { position: absolute; inline-size: var(--border-hairline); block-size: var(--border-hairline); overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
-.money-connections-table .mc-toolbar { display: flex; gap: var(--space-tight); align-items: center; flex-wrap: wrap; }
-.money-connections-table .mc-toolbar > input { flex: 1; min-width: var(--size-control-large); }
-.money-connections-table input, .money-connections-table select { font: var(--type-metadata); }
-.money-connections-table .mc-toolbar details { position: relative; }
-.money-connections-table summary { cursor: pointer; font: var(--type-control); min-height: var(--size-control-compact); display: flex; align-items: center; padding-inline: var(--space-heading); border: var(--border-hairline) solid var(--line-control); border-radius: var(--radius-pill); background: var(--paper-raised); }
-.money-connections-table .mc-filter-panel, .money-connections-table .mc-column-panel { position: absolute; inset-block-start: calc(100% + var(--space-tight)); inset-inline-end: 0; z-index: 1; width: min(var(--size-readable), calc(100vw - var(--space-screen) * 2)); padding: var(--space-block); border: var(--border-hairline) solid var(--line-control); border-radius: var(--radius-md); background: var(--paper-raised); box-shadow: var(--shadow-overlay); display: grid; gap: var(--space-heading); }
-.money-connections-table .mc-column-panel { width: max-content; }
-.money-connections-table .mc-filter-panel label { display: grid; gap: var(--space-line); font: var(--type-label); }
-.money-connections-table .mc-filter-panel select { width: 100%; min-width: 0; }
-.money-connections-table .mc-range { display: flex; gap: var(--space-tight); }
-.money-connections-table .mc-range input { width: 50%; min-width: 0; }
-.money-connections-table .mc-column-panel label { display: flex; align-items: center; gap: var(--space-tight); font: var(--type-metadata); min-height: var(--size-target); }
-.money-connections-table .mc-chips { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-tight); margin-block: var(--space-heading); }
-.money-connections-table .mc-chip { display: inline-flex; align-items: center; padding: var(--space-tight) var(--space-heading); border: var(--border-hairline) solid var(--divider-subtle); border-radius: var(--radius-pill); font: var(--type-metadata); background: var(--paper-raised); }
-.money-connections-table table { table-layout: fixed; font: var(--type-metadata); }
-.money-connections-table td, .money-connections-table th { padding: var(--space-heading) var(--space-tight); overflow-wrap: anywhere; }
-.money-connections-table th { color: var(--ink-soft); }
-.money-connections-table th .ui-button { border: 0; background: transparent; padding: 0; font: var(--type-label); color: inherit; min-height: var(--size-target); }
-.money-connections-table th[data-key="value"], .money-connections-table th[data-key="records"], .money-connections-table .mc-value, .money-connections-table .mc-number { text-align: end; font-variant-numeric: tabular-nums; }
-.money-connections-table th:last-child { width: calc(var(--size-target) + var(--space-block)); }
-.money-connections-table .mc-primary a { color: var(--navy); border-color: currentColor; font: var(--type-strong); text-decoration-color: currentColor; text-decoration-thickness: var(--border-hairline); text-underline-offset: var(--space-line); }
-.money-connections-table .mc-value strong { font: var(--type-strong); }
-.money-connections-table .mc-bar { display: block; height: var(--space-line); background: var(--divider-subtle); margin-top: var(--space-tight); border-radius: var(--radius-pill); overflow: hidden; }
-.money-connections-table .mc-bar > span { display: block; height: 100%; background: var(--navy); }
-.money-connections-table .mc-action .ui-button { padding: 0; inline-size: var(--size-target); block-size: var(--size-target); color: var(--navy); }
-.money-connections-table .mc-action svg { width: var(--size-icon-md); height: var(--size-icon-md); fill: none; stroke: currentColor; stroke-width: var(--border-hairline); }
-.money-connections-table [data-density] { padding: var(--space-tight); width: var(--size-target); height: var(--size-target); }
-.money-connections-table [data-density] svg { width: var(--size-icon-md); height: var(--size-icon-md); fill: none; stroke: currentColor; stroke-width: var(--border-hairline); }
-.money-connections-table .mc-mobile-sort { display: none; }
-.money-connections-table .mc-footer { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--space-block); margin-top: var(--space-block); font: var(--type-metadata); }
-.money-connections-table .mc-footer p { margin: 0; }
-.money-connections-table .mc-footer > div { display: flex; gap: var(--space-tight); }
-.money-connections-table .mc-footer label { display: flex; align-items: center; gap: var(--space-tight); }
-.money-connections-table[data-density="compact"] td { padding-block: var(--space-line); }
-.money-connections-table :focus-visible { outline: var(--border-focus) solid var(--navy); outline-offset: var(--space-line); }
-@media (max-width: 599px) {
-  .money-connections-table .mc-toolbar > input { flex-basis: 100%; }
-  .money-connections-table .mc-mobile-sort { display: flex; align-items: center; gap: var(--space-tight); margin-block: var(--space-tight); font: var(--type-metadata); }
-  .money-connections-table .mc-filter-panel { position: fixed; inset-inline: var(--space-screen); inset-block-start: 20%; max-height: 60%; overflow-y: auto; width: auto; }
-  .money-connections-table table, .money-connections-table tbody { display: block; }
-  .money-connections-table thead { position: absolute; width: var(--border-hairline); height: var(--border-hairline); overflow: hidden; clip-path: inset(50%); }
-  .money-connections-table tbody tr { display: grid; grid-template-columns: minmax(0, 1fr) auto; column-gap: var(--space-block); padding-block: var(--space-block); border-bottom: var(--border-hairline) solid var(--divider-subtle); }
-  .money-connections-table td { border: 0; padding: var(--space-line) 0; grid-column: 1 / -1; }
-  .money-connections-table td::before { content: attr(data-label); color: var(--ink-soft); font: var(--type-fine); margin-inline-end: var(--space-tight); }
-  .money-connections-table .mc-primary { grid-column: 1; grid-row: 1; }
-  .money-connections-table .mc-primary::before, .money-connections-table .mc-value::before, .money-connections-table .mc-action::before { content: none; }
-  .money-connections-table .mc-value { grid-column: 1; grid-row: 2; text-align: start; padding-bottom: var(--space-tight); }
-  .money-connections-table .mc-number { text-align: start; }
-  .money-connections-table .mc-action { grid-column: 2; grid-row: 1 / 3; align-self: start; }
-}

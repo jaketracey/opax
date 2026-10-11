@@ -1,4 +1,4 @@
-import {tablePrivacy} from './table-privacy'
+import {tablePrivacy, tablePrivacyCheck} from './table-privacy'
 import { divisionPlain } from '../public/division-markdown.js'
 import { runSocialPublication, socialStatus, socialEngagement, publicationCopy, previewPublication, todayRedirect, CHANNELS, type Channel } from './social-publication'
 import { positionEvidence, positionProposalQuote, positionEligibilityQuotes, positionCostQuote, isPositionEligibilityQuestion, isPositionCostQuestion, isPositionDetailQuestion, positionPointSupported, normalizePositionDraft } from './position-evidence'
@@ -4013,7 +4013,7 @@ async function buildMeta(route: SeoRoute, url: URL, request: Request, env: Env, 
       if(content) meta.prerender=content.html
     } else if(route.kind==='static' && ['money','connections','explore'].includes(route.page)) {
       meta.prerender=(await renderMoneyAnswer(meta.title.replace(/ · OPAX$/,''),read).catch(()=>null))?.html || answerBlock(meta.title.replace(/ · OPAX$/,''),meta.description)
-      if(route.page==='money')meta.prerender+=await renderMoneyConnectionsTable(url,read).catch(()=> '')
+      if(route.page==='money')meta.prerender+=await renderMoneyConnectionsTable(url,read,await tablePrivacyCheck(env.ASSETS)).catch(()=> '')
     } else {
       const directory=route.kind==='index' ? route.dir : route.kind==='topics' ? 'topic' : route.kind==='static' && route.page==='bills' ? 'bills' : route.kind==='static' && route.page==='money/grants' && !url.searchParams.has('program') && !url.searchParams.has('open') && !url.searchParams.has('largest') ? 'grants' : null
       if(directory){
@@ -4926,7 +4926,7 @@ async function serveSeoPage(route: SeoRoute, url: URL, request: Request, env: En
     })
     .on('head', {
       element(el) {
-        if(route.kind==='static' && route.page==='money')el.append('<link rel="stylesheet" href="/money-connections.css?v=dt-money-1">', { html: true })
+        if(route.kind==='static' && route.page==='money')el.append('<link rel="stylesheet" href="/datatable.css"><link rel="stylesheet" href="/money-connections.css?v=dt-money-2">', { html: true })
         if (noindex) el.append('<meta name="robots" content="noindex">', { html: true })
         for(const [rel,href] of [['prev',meta.prev],['next',meta.next]]) if(href) el.append(`<link rel="${rel}" href="${escHtml(href)}">`,{html:true})
       },

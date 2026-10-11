@@ -53,14 +53,18 @@ function publicRows(rows, config) {
   return rows.flatMap(row => {
     if (row?.aggregate?.kind === 'individual-donors' && !aggregate(row)) return [];
     if (aggregate(row)) {
-      const safe = {aggregate:{kind:'individual-donors',count:row.aggregate.count}};
+      const label=row.aggregate.label === 'Donors not named' ? 'Donors not named' : 'Individual donors';
+      const safe = {aggregate:{kind:'individual-donors',count:row.aggregate.count,...(row.aggregate.label === 'Donors not named' ? {label} : {})}};
       for (const c of config.columns) {
-        if (['text','category'].includes(c.type) && (c.primary || donorColumn(c))) safe[c.key] = `Individual donors (${row.aggregate.count})`;
+        if (['text','category'].includes(c.type) && (c.primary || donorColumn(c))) safe[c.key] = `${label} (${row.aggregate.count})`;
         else if (numeric(c) && number(row[c.key]) != null) safe[c.key] = number(row[c.key]);
       }
       return [safe];
     }
-    return config.privacy !== 'donors' || isOrganisationDonor(donorNode(row)) ? [row] : [];
+    const permitted=Array.isArray(row.donorEndpoints)
+      ? row.donorEndpoints.every(node=>node && typeof node === 'object' && isOrganisationDonor(node))
+      : isOrganisationDonor(donorNode(row));
+    return config.privacy !== 'donors' || permitted ? [row] : [];
   });
 }
 const donorColumn = column => /^(?:donor(?:_?name)?|label|name)$/i.test(column.key) || column.primary;
@@ -222,7 +226,7 @@ function safePage(page, config) {
     if (!column) continue;
     if (Array.isArray(values)) {
       facets[key]=values.filter(v=>v && typeof v.value === 'string' && Number.isFinite(v.count) && v.count >= 0)
-        .filter(v=>config.privacy !== 'donors' || (donorColumn(column) ? isOrganisationDonor({label:v.value}) || /^Individual donors \([0-9]+\)$/.test(v.value) : true)
+        .filter(v=>config.privacy !== 'donors' || (donorColumn(column) ? isOrganisationDonor({label:v.value}) || /^(?:Individual donors|Donors not named) \([0-9]+\)$/.test(v.value) || rows.some(row=>text(row[key]) === v.value && Array.isArray(row.donorEndpoints)) : true)
           && (config.privacyCheck ? allowedText(config,v.value) : rows.some(row=>text(row[key]) === v.value)))
         .map(v=>({value:v.value,count:v.count}));
     } else if (values && Number.isFinite(values.min) && Number.isFinite(values.max)) facets[key]={min:values.min,max:values.max};
@@ -238,7 +242,7 @@ function constants(config, page, query) {
   return config.columns.filter(c => c.hideWhenConstant ?? c.type === 'category').flatMap(column => {
     const selected = query.filters?.[column.key];
     const facet = page.facets?.[column.key];
-    const values = rows ? [...new Set(rows.map(row => text(row[column.key])))]
+    const values = rows ? [...new Set(rows.filter(row=>!aggregate(row)).map(row => text(row[column.key])))]
       : Array.isArray(selected) && selected.length === 1 && page.total > 0 ? selected
       : Array.isArray(facet) ? facet.map(v => v.value)
       : facet && facet.min === facet.max ? [text(facet.min)] : [];

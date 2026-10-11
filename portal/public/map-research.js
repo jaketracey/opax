@@ -1,13 +1,15 @@
 import { readMoneyFilters } from './money-records.js?v=ia-ux-20260908-2';
-import {dataTableHTML, mountDataTable, applyQuery, parseQuery, serializeQuery} from './datatable.js';
-import {moneyConnectionsConfig, cleanMoneyConnectionsParams} from './money-connections.js?v=24a0d122be';
-import {mountMoneyConnectionsPreview} from './money-connections-preview.js?v=0ad7fdc3c7';
+import {dataTableHTML, mountDataTable, applyQuery} from './datatable.js?v=793882f55b';
+import {moneyConnectionsConfig} from './money-connections.js?v=c3276f152d';
 const esc = value => String(value ?? '').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-export function mountMapResearch(container, data, options = {}) {
-  const privacyData=options.privacyGraph || data;
-  const initial=cleanMoneyConnectionsParams(new URLSearchParams(location.search),privacyData);
-  if(initial.params.toString()!==new URLSearchParams(location.search).toString())history.replaceState(history.state,'',location.pathname+(initial.params.size?'?'+initial.params:'')+location.hash);
-  let current = data, filters = readMoneyFilters(initial.params), tableHandle, timer, destroyed=false, rejectedQuery=initial.blocked;
+export async function mountMapResearch(container, data, options = {}) {
+  const permit=options.privacyCheck || (async text=>{
+    try{const response=await fetch('/api/table/privacy',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({text})});return response.ok && (await response.json()).safe === true;}catch{return false;}
+  });
+  const initial=new URLSearchParams(location.search);
+  let rejectedQuery=false;
+  if(initial.get('q') && !await permit(initial.get('q'))){initial.delete('q');rejectedQuery=true;history.replaceState(history.state,'',location.pathname+(initial.size?'?'+initial:'')+location.hash);}
+  let current=data,filters=readMoneyFilters(initial),tableHandle,timer,destroyed=false,inputRevision=0;
   const partyOptions = data.nodes.filter(n=>n.kind==='party').sort((a,b)=>a.label.localeCompare(b.label));
   const industries = [...new Set(data.nodes.filter(n=>n.kind==='donor').map(n=>n.group).filter(Boolean))].sort();
   const resultsHost = options.resultsContainer || container;
@@ -15,8 +17,7 @@ export function mountMapResearch(container, data, options = {}) {
   const records=container.querySelector('.research-records');
   if (resultsHost !== container) resultsHost.replaceChildren(records);
   const form=container.querySelector('form'), period=records.querySelector('.research-period'), tableHost=records.querySelector('.money-connections-table');
-  const isStub=serializeQuery({q:'table-contract'},'c')==='';
-  for(const href of ['/money-connections.css?v=dt-money-1',...(!isStub?['/datatable.css']:[])]) {
+  for(const href of ['/money-connections.css?v=dt-money-2','/datatable.css']) {
     if(!document.querySelector(`link[href="${href}"]`)){const link=document.createElement('link');link.rel='stylesheet';link.href=href;document.head.append(link);}
   }
   const filterPanel=container.querySelector('details');
@@ -31,15 +32,11 @@ export function mountMapResearch(container, data, options = {}) {
   }
   function renderRows(){
     tableHandle?.destroy();tableHandle=null;
-    const clean=cleanMoneyConnectionsParams(new URLSearchParams(location.search),privacyData);
-    if(clean.params.toString()!==new URLSearchParams(location.search).toString())history.replaceState(history.state,'',location.pathname+(clean.params.size?'?'+clean.params:'')+location.hash);
-    const blocked=rejectedQuery || clean.blocked;rejectedQuery=blocked;
-    if(records.hidden)return;
     const config=moneyConnectionsConfig(current);
-    if(isStub){tableHandle=mountMoneyConnectionsPreview(tableHost,config,privacyData,{blocked,onBlockedChange:value=>{rejectedQuery=value;}});return;}
-    if(blocked)config.rows=[];
-    const query=parseQuery(clean.params,'c');
-    tableHost.innerHTML=dataTableHTML(config,applyQuery(config.rows,config,query));
+    if(rejectedQuery)config.rows=[];
+    // The core validates its own URL/search state against the shared server index.
+    // SSR-like paint has no search echo while asynchronous validation is pending.
+    tableHost.innerHTML=dataTableHTML(config,applyQuery(config.rows,config,{}));
     tableHandle=mountDataTable(tableHost,config);
   }
   function update(graph, nextFilters, years){
@@ -49,36 +46,36 @@ export function mountMapResearch(container, data, options = {}) {
     recordButton.textContent = `List (${moneyConnectionsConfig(graph).rows.length.toLocaleString('en-AU')})`;
     renderRows();
   }
-  function apply(){
+  async function apply(){
     clearTimeout(timer); if(destroyed)return;
-    filters=Object.fromEntries(new FormData(form));filters.min=Number(filters.min)||0;
+    const version=++inputRevision,next=Object.fromEntries(new FormData(form));
+    const safe=!next.query || await permit(next.query);
+    if(destroyed || version!==inputRevision)return;
+    rejectedQuery=!safe;next.query=safe?next.query:'';form.elements.query.value=next.query;
+    filters=next;filters.min=Number(filters.min)||0;
     if(['contracts','grants'].includes(filters.type))filters.party='';
     if(filters.party)filters.type='receipts';
     options.onChange?.(filters);
     const u=new URL(location.href);
     if(u.pathname==='/money' || u.pathname==='/map'){
       for(const [key,value] of Object.entries({q:filters.query,type:filters.type==='all'?'':filters.type,party:filters.party,industry:filters.industry,min:filters.min||''})) value?u.searchParams.set(key,String(value)):u.searchParams.delete(key);
-      const clean=cleanMoneyConnectionsParams(u.searchParams,privacyData);rejectedQuery ||= clean.blocked;
-      history.replaceState(history.state,'',u.pathname+(clean.params.size?'?'+clean.params:''));
+      history.replaceState(history.state,'',u.pathname+(u.searchParams.size?'?'+u.searchParams:''));
     }
     controls();
   }
-  const input=e=>{if(e.target.name==='query'){clearTimeout(timer);timer=setTimeout(apply,180)}};
+  const input=e=>{if(e.target.name==='query'){++inputRevision;clearTimeout(timer);timer=setTimeout(apply,180)}};
   const track=(action,properties={})=>{try{dispatchEvent(new CustomEvent('opax:analytics',{detail:{event:'opax_map_action',properties:{action,...properties}}}))}catch{}};
   const change=e=>{if(e.target.name!=='query'){apply();track('filter_changed',{filter:e.target.name})}};
   const submit=e=>{e.preventDefault();apply();track('filters_applied');filterPanel.open=false};
-  const reset=e=>{e.preventDefault();clearTimeout(timer);filters={type:'all',min:0};for(const key of ['query','party','industry'])form.elements[key].value='';form.elements.type.value='all';form.elements.min.value='0';apply()};
+  const reset=e=>{e.preventDefault();++inputRevision;clearTimeout(timer);filters={type:'all',min:0};for(const key of ['query','party','industry'])form.elements[key].value='';form.elements.type.value='all';form.elements.min.value='0';apply()};
   form.addEventListener('input',input);form.addEventListener('change',change);form.addEventListener('submit',submit);form.addEventListener('reset',reset);
   const click=e=>{
     const focus=e.target.closest('a[href^="#money-focus="]');
-    if(focus){e.preventDefault();options.onFocus?.(decodeURIComponent(focus.getAttribute('href').slice('#money-focus='.length)));return;}
+    if(focus){e.preventDefault();options.onFocus?.(current.nodes[Number(focus.getAttribute('href').slice('#money-focus='.length))]?.id);return;}
     const b=e.target.closest('button');if(!b)return;
-    if(b.hasAttribute('data-records')){records.hidden=!records.hidden;if(!records.hidden)track('records_opened');b.setAttribute('aria-expanded',String(!records.hidden));renderRows();if(!records.hidden)records.scrollIntoView({block:'nearest',behavior:'instant'})}
-    if(b.dataset.focus){track('record_focused');options.onFocus?.(b.dataset.focus);}
+    if(b.hasAttribute('data-records')){records.hidden=!records.hidden;if(!records.hidden)track('records_opened');b.setAttribute('aria-expanded',String(!records.hidden));if(!tableHandle)renderRows();if(!records.hidden)records.scrollIntoView({block:'nearest',behavior:'instant'})}
 
   };
-  const restoreCore=e=>{if(!isStub && rejectedQuery && (e.target.matches('input[type="search"]') || e.target.closest('button')?.textContent.trim()==='Clear all')){rejectedQuery=false;renderRows();}};
-  tableHost.addEventListener('change',restoreCore);tableHost.addEventListener('click',restoreCore);
   container.addEventListener('click',click);if(resultsHost !== container) records.addEventListener('click',click);controls();
-  return {update,destroy(){destroyed=true;tableHandle?.destroy();clearTimeout(timer);tableHost.removeEventListener('change',restoreCore);tableHost.removeEventListener('click',restoreCore);container.removeEventListener('click',click);records.removeEventListener('click',click);document.removeEventListener('click',closeMenus);document.removeEventListener('keydown',closeMenus);records.remove();container.replaceChildren()}};
+  return {update,destroy(){destroyed=true;tableHandle?.destroy();clearTimeout(timer);container.removeEventListener('click',click);records.removeEventListener('click',click);document.removeEventListener('click',closeMenus);document.removeEventListener('keydown',closeMenus);records.remove();container.replaceChildren()}};
 }

@@ -155,3 +155,21 @@ test('query engine uses its row argument for server facet options and isolates c
   const unsorted={...config,columns:config.columns.map(c=>c.key === 'amount' ? {...c,sortable:false} : c)};
   assert.equal(applyQuery(reverse,unsorted,{}).rows[0].id,'organisation-9');
 });
+
+test('connection privacy validates every donor endpoint and retains connections without donors',()=>{
+  const columns=[{key:'to',label:'To',type:'text',primary:true},{key:'value',label:'Value',type:'money'}];
+  const connection={id:'connection',to:'Fixture supplier',value:12.25,donorEndpoints:[]};
+  const cfg={...config,columns,rows:[connection]};
+  assert.equal(applyQuery(cfg.rows,cfg).total,1);
+  assert.match(dataTableHTML(cfg,applyQuery(cfg.rows,cfg)),/Fixture supplier/);
+  assert.match(toCSV(cfg.rows,cfg),/Fixture supplier,12.25/);
+  const organisation={label:'Fixture holdings Pty Ltd'};
+  assert.equal(applyQuery([{...connection,donorEndpoints:[organisation]}],cfg).total,1);
+  assert.equal(applyQuery([{...connection,donorEndpoints:[organisation,{label:'name withheld'}]}],cfg).total,0);
+  assert.equal(applyQuery([{...connection,donorEndpoints:[null]}],cfg).total,0);
+  const anonymous={aggregate:{kind:'individual-donors',count:3,label:'Donors not named'},value:45.75,to:'untrusted',donorEndpoints:[organisation]};
+  const page=applyQuery([anonymous],cfg);
+  assert.deepEqual(page.rows,[{aggregate:{kind:'individual-donors',count:3,label:'Donors not named'},to:'Donors not named (3)',value:45.75}]);
+  assert.match(toCSV(page.rows,cfg),/Donors not named \(3\),45.75/);
+  assert.ok(!dataTableHTML(cfg,page).includes('untrusted'));
+});

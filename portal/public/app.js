@@ -1449,21 +1449,18 @@ async function mountMoney(jurParam, industry, params = new URLSearchParams()) {
   root.innerHTML = `<p class="status" style="margin:0;padding:1rem 1.25rem">Loading the map…</p>`;
   const cfg = MONEY_JURISDICTIONS[jur];
   try {
-    const [{ mountMoneyMap }, data, journeysModule, researchModule, recordsModule] = await Promise.all([import("/money-map.js?v=224ab013ee"), loadMoneyFile(jur), import("/money-journeys.js?v=mobile-picker-20260908"), import("/map-research.js?v=87dd93f420"), import("/money-records.js?v=ia-ux-20260908-2")]);
+    const [{ mountMoneyMap }, data, journeysModule, researchModule, recordsModule] = await Promise.all([import("/money-map.js?v=224ab013ee"), loadMoneyFile(jur), import("/money-journeys.js?v=mobile-picker-20260908"), import("/map-research.js?v=fae6cc1ca9"), import("/money-records.js?v=ia-ux-20260908-2")]);
     if (moneyMapLoading !== jur || generation !== moneyMapGeneration) return; // switched again while loading
     const fine = $("money-fineprint");
     if (fine) fine.innerHTML = moneyFineprintHTML(jur, data?.meta);
     root.textContent = "";
-    const privacyGraphs = await Promise.all(Object.keys(MONEY_JURISDICTIONS).map(loadMoneyFile));
-    if (moneyMapLoading !== jur || generation !== moneyMapGeneration) return;
-    moneyResearch = researchModule.mountMapResearch($('money-research'), data, {
-      privacyGraph: { nodes: privacyGraphs.flatMap(graph => graph.nodes), edges: [] },
+    moneyResearch = await researchModule.mountMapResearch($('money-research'), data, {
       resultsContainer: $('money-research-results'),
       onChange(filters) { moneyJourneys?.setRoute(null, null, null); const u = new URL(location.href); for (const key of ['journey','step','focus']) u.searchParams.delete(key); replaceRoute(u.pathname + u.search); moneyMapHandle?.setFilters(filters); },
       onFocus(id) { moneyJourneys?.pause('map'); moneyMapHandle?.select(id); $('money-stage').scrollIntoView({ block: 'center', behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth' }); },
     });
     const handle = await mountMoneyMap(root, cfg.file, {
-      filters: recordsModule.readMoneyFilters(params),
+      filters: recordsModule.readMoneyFilters(new URLSearchParams(location.search)),
       focus: params.get('journey') ? undefined : params.get('focus') || undefined,
       onViewChange: (view, filters, years) => {
         moneyResearch?.update(view, filters, years);

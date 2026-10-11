@@ -128,13 +128,15 @@ async function refreshFonts() {
  *  edge only, then app.js. Keep the reverse edge hand-versioned to avoid a hash cycle. */
 export const MODULE_STAMPS = [
   ['datatable.js', 'donor-entity.js'],
+  ['datatable-workbench.js', 'datatable.js'],
   ['growth-modules.js', 'donor-entity.js'], ['growth-modules.js', 'labels.js'], ['growth-modules.js', 'sponsor-person.js'],
   ['supplier-growth.js', 'growth-modules.js'], ['supplier-growth.js', 'labels.js'],
 
   ['canonical-urls.js', 'person-paths.js'],
+  ['money-connections.js', 'datatable.js'],
   ['money-connections.js', 'donor-entity.js'], ['money-connections.js', 'canonical-urls.js'],
-  ['money-connections-preview.js', 'money-connections.js'],
-  ['map-research.js', 'money-connections.js'], ['map-research.js', 'money-connections-preview.js'],
+  ['map-research.js', 'datatable.js'],
+  ['map-research.js', 'money-connections.js'],
   ['ballot.js', 'canonical-urls.js'],
   ['electorates.js', 'canonical-urls.js'],
   ['evidence.js', 'canonical-urls.js'],
