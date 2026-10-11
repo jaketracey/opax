@@ -1,4 +1,4 @@
-import {applyQuery, dataTableHTML, mountDataTable, parseQuery} from './datatable.js?v=cc919f173e';
+import {applyQuery, dataTableHTML, mountDataTable, parseQuery} from './datatable.js?v=b038b24a2e';
 import {isOrganisationDonor} from './donor-entity.js?v=2b8d45a50d';
 
 const esc = value => String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));

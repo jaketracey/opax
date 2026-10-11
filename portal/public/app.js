@@ -8,7 +8,7 @@ const divisionMarkdownReady = import('/division-markdown.js?v=5991511166').then(
 let growthModules;
 const growthModulesReady = import("/growth-modules.js?v=a467db42f2").then(module => { growthModules = module; });
 let registerTables;
-const registerTablesReady = import('/register-tables.js?v=ca12005c73').then(module => { registerTables = module; });
+const registerTablesReady = import('/register-tables.js?v=1b1a3b83d8').then(module => { registerTables = module; });
 let askPerson;
 const askPersonReady = import('/ask-person.js?v=a0b3602921').then(module => { askPerson = module; });
 let uiLabels;
