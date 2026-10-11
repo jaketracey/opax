@@ -42,3 +42,14 @@ test('departure destroys the mounted supplier view and invalidates its title cal
   assert.equal(destroyed, 1);
   assert.equal(context.document.title, 'Next page');
 });
+
+
+test('stable supplier identity retains current table state and unrelated URL parameters', async () => {
+  let helpers,target;
+  const {context}=harness(async()=>({mountSupplierProfile(root,id,options) {helpers=options;return {destroy() {}};}}));
+  context.URL=URL;context.location={href:'https://opax.test/subject/supplier/source-alias?campaign=fixture&t.sort=amount%3Aasc#supplier-contracts'};
+  context.replaceRoute=value=>{target=value;};
+  await context.openSupplierPage('source-alias',new URLSearchParams({'t.q':'old state'}),false);
+  helpers.onCanonical('s-fixture','Fixture organisation');
+  assert.equal(target,'/subject/supplier/s-fixture?campaign=fixture&t.sort=amount%3Aasc#supplier-contracts');
+});

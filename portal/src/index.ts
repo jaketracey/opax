@@ -1,5 +1,5 @@
 import {contractsHubHTML} from '../public/contracts-table.js'
-import {tablePrivacy} from './table-privacy'
+import {tablePrivacy, tablePrivacyGuard} from './table-privacy'
 import { divisionPlain } from '../public/division-markdown.js'
 import { runSocialPublication, socialStatus, socialEngagement, publicationCopy, previewPublication, todayRedirect, CHANNELS, type Channel } from './social-publication'
 import { positionEvidence, positionProposalQuote, positionEligibilityQuotes, positionCostQuote, isPositionEligibilityQuestion, isPositionCostQuestion, isPositionDetailQuestion, positionPointSupported, normalizePositionDraft } from './position-evidence'
@@ -4009,11 +4009,11 @@ async function buildMeta(route: SeoRoute, url: URL, request: Request, env: Env, 
         const related=await read<{bills:Parameters<typeof renderBillAnswer>[0][]}>('/bills/index.json')
         meta.prerender=renderBillAnswer({...bill,divisions},people?.people || [],people?.slugOf || new Map(),related.bills).html;billIdentity={identifier:bill.key,status:bill.status}}
     } else if(route.kind==='subject' && route.dir==='supplier') {
-      const content=await renderSupplierAnswer(meta.canonical.split('/').at(-1)!,read,url.searchParams,await withheldNameCheck(env.ASSETS,true))
+      const content=await renderSupplierAnswer(meta.canonical.split('/').at(-1)!,read,url.searchParams,await tablePrivacyGuard(env.ASSETS))
       if(content) meta.prerender=content.html
     } else if(route.kind==='static' && route.page==='discover') {
       const facts=await renderMoneyAnswer('Government contracts',read)
-      meta.prerender=facts.html.replace('</section>',await contractsHubHTML(read,url.searchParams,await withheldNameCheck(env.ASSETS,true))+'</section>')
+      meta.prerender=facts.html.replace('</section>',await contractsHubHTML(read,url.searchParams,await tablePrivacyGuard(env.ASSETS))+'</section>')
     } else if(route.kind==='static' && ['money','connections','explore'].includes(route.page)) {
       meta.prerender=(await renderMoneyAnswer(meta.title.replace(/ · OPAX$/,''),read).catch(()=>null))?.html || answerBlock(meta.title.replace(/ · OPAX$/,''),meta.description)
     } else {

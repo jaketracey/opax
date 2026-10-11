@@ -322,7 +322,7 @@ export async function renderDirectory(dir: string, url: URL, read: ReadAsset, pe
 interface Contract { id: string; title?: string; description?: string; agency?: string; amount: number; start_date?: string; published?: string; url?: string; link_scope?: string }
 interface SupplierProfile { id: string; name: string; total: number; count: number; agencies: {name:string;total:number;count:number}[]; contracts: Contract[] }
 interface AgencyProfile { id: string; name: string; profile_path: string }
-export async function renderSupplierAnswer(id: string, read: ReadAsset, params = new URLSearchParams(), withheld: (...texts: unknown[]) => boolean = () => true): Promise<RenderedContent | null> {
+export async function renderSupplierAnswer(id: string, read: ReadAsset, params = new URLSearchParams(), withheld: ((...texts: unknown[]) => boolean) & {subjects?: (...texts: unknown[]) => string[]} = () => true): Promise<RenderedContent | null> {
   const [index,agencies] = await Promise.all([
     read<{meta:{generated_at:string;source:string};suppliers:{id:string;profile_path:string}[]}>('/suppliers.json'),
     read<{agencies:AgencyProfile[]}>('/agencies.json'),
@@ -345,7 +345,9 @@ export async function renderSupplierAnswer(id: string, read: ReadAsset, params =
     if(!record) continue
     const data=await optional<{suppliers:{id:string;name:string;total:number}[]}>(read,record.profile_path)
     const rows=(data?.suppliers || []).filter(s=>s.id!==id).sort((a,b)=>b.total-a.total).slice(0,10)
-    body+=`<h3>${escapeHtml(a.name)}</h3><ul>${rows.map(s=>`<li>${link(`/subject/supplier/${s.id}`,s.name)} — ${currency(s.total)} in recorded awards from this agency</li>`).join('')}</ul>`
+    const hidden=rows.filter(s=>withheld(s.name))
+    const subjects=new Set(hidden.flatMap(s=>withheld.subjects?.(s.name) || [s.id]))
+    body+=`<h3>${escapeHtml(a.name)}</h3><ul>${rows.filter(s=>!withheld(s.name)).map(s=>`<li>${link(`/subject/supplier/${s.id}`,s.name)} — ${currency(s.total)} in recorded awards from this agency</li>`).join('')}${hidden.length ? `<li>Donors not named (${subjects.size}) — ${currency(hidden.reduce((sum,s)=>sum+s.total,0))} in recorded awards from this agency</li>` : ''}</ul>`
   }
   body+=`<p>An association does not prove influence.</p><p>${link('/subject/supplier','Browse suppliers')} · ${link('/methods','Sources and methods')}</p>`
   return {html:answerBlock(profile.name,description,body),description}

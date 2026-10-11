@@ -1067,7 +1067,8 @@ function destroyDiscoveryMap() {
   discoveryMapHandle = null;
 }
 function discoveryUrl() {
-  const params = new URLSearchParams([...new URLSearchParams(location.search)].filter(([key]) => key.startsWith("t.")));
+  const params = new URLSearchParams(location.search);
+  for (const key of ["category", "q", "sort", "item"]) params.delete(key);
   const category = discoveryCategory();
   if (category !== DISCOVERY_DEFAULT) params.set("category", category);
   const q = $("discover-query").value.trim();
@@ -1195,9 +1196,10 @@ async function renderDiscoveryPage(params, manageFocus) {
   const tableGeneration = contractsTableGeneration;
   const tableController = contractsTableController = new AbortController();
   const slot = $("contracts-hub-table");
+  slot.innerHTML = '<p role="status">Loading contracts…</p>';
   const seedNode = document.querySelector('#prerender [data-contracts-seed]');
   const seed = seedNode ? JSON.parse(seedNode.textContent) : null;
-  import('/contracts-table.js?v=98e8b452f1').then(async ({mountContractsTable}) => {
+  import('/contracts-table.js?v=c40c8a979c').then(async ({mountContractsTable}) => {
     if (tableGeneration !== contractsTableGeneration) return;
     const handle = await mountContractsTable(slot, {seed: seed?.supplierId === null ? seed : undefined, signal: tableController.signal});
     if (tableGeneration === contractsTableGeneration) contractsTableHandle = handle; else handle.destroy();
@@ -1603,7 +1605,7 @@ async function openSupplierPage(name, params, manageFocus) {
   body.classList.remove("subject-person", "subject-party");
   body.innerHTML = '<p role="status">Loading suppliers…</p>';
   try {
-    const module = await import("/suppliers.js?v=3908a4549d");
+    const module = await import("/suppliers.js?v=4697a437c8");
     if (generation !== supplierPageGeneration) return;
     const helpers = {
       params,
@@ -1614,7 +1616,8 @@ async function openSupplierPage(name, params, manageFocus) {
       },
       onCanonical(id, label) {
         if (generation !== supplierPageGeneration) return;
-        replaceRoute(`/subject/supplier/${encodeURIComponent(id)}${params.get("contract") ? "?"+new URLSearchParams({contract:params.get("contract")}) : ""}`);
+        const current = new URL(location.href);
+        replaceRoute(`/subject/supplier/${encodeURIComponent(id)}${current.search}${current.hash}`);
         setCrumbs([{ label: "Suppliers", href: "/subject/supplier" }, { label }]);
       },
       onMentions: (label, container) => subjectMentions(label, container, "In parliament", true),

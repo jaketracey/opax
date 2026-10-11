@@ -28,45 +28,52 @@ export async function assertTablePrivacy(surfaces,index) {
 
 /** Each donor rollout adds one registration to its browser gate and runs it locally. */
 export function registerTablePrivacy(registry, rollout) {
-  for (const key of ['id','path','module','configExport','rowsExport','host','facet','serverExample','endpoint']) assert.ok(rollout[key],`privacy registration missing: ${key}`);
-  registry.push(async ({page,base,index,outputDir})=>{
-    await page.goto(base+rollout.path);
-    await page.waitForFunction(host=>document.querySelector(host)?.querySelector('.dt-count') && !document.querySelector(host).hasAttribute('aria-busy'),rollout.host);
-    const {clientInput,donorContext}=await page.evaluate(async r=>{const module=await import(r.module);return {clientInput:module[r.rowsExport],donorContext:module[r.configExport].privacy === 'donors'};},rollout);
-    if (!donorContext) index=await tablePrivacyIndex({donorContext:false});
-    assert.ok(index.safe(JSON.stringify(clientInput)),`${rollout.id}: unsafe public client input`);
-    const responses=[];
+  for (const key of ['id','path','module','configExport','rowsExport','host','facet','endpoint']) assert.ok(rollout[key],`privacy registration missing: ${key}`);
+  assert.ok(rollout.modes || rollout.serverExample,'privacy registration requires modes or a server example');
+  registry.push(async ({page,base,index,outputDir,onProgress})=>{
+    const responses=[],inputCounts={};
     page.on('response',async response=>{
-      if (new URL(response.url()).pathname.startsWith('/api/table/') && new URL(response.url()).pathname !== '/api/table/privacy') {
+      if (new URL(response.url()).pathname.startsWith('/api/table/') && new URL(response.url()).pathname !== '/api/table/privacy' && new URL(response.url()).searchParams.get('format') !== 'csv') {
         const value=await response.text().catch(()=> ''); responses.push(value);
       }
     });
     for (const mode of ['client','server']) {
-      await page.goto(base+rollout.path);
-      if (mode === 'server') await page.locator(`[data-example="${rollout.serverExample}"]`).click();
-      await page.waitForFunction(host=>!document.querySelector(host).hasAttribute('aria-busy'),rollout.host);
+      const active={...rollout,...rollout.modes?.[mode]};
+      await page.goto(base+active.path);
+      if (mode === 'server' && !rollout.modes) await page.locator(`[data-example="${rollout.serverExample}"]`).click();
+      await page.waitForFunction(host=>document.querySelector(host)?.querySelector('.dt-count') && !document.querySelector(host).hasAttribute('aria-busy'),active.host);
+      const {clientInput,donorContext}=await page.evaluate(async r=>{
+        const module=await import(r.module),rows=module[r.rowsExport],config=module[r.configExport];
+        return {clientInput:typeof rows === 'function' ? rows(document.querySelector(r.host)) : rows,
+          donorContext:(typeof config === 'function' ? config(r.configArgs) : config).privacy === 'donors'};
+      },active);
+      if (!donorContext) index=await tablePrivacyIndex({donorContext:false});
+      inputCounts[mode]=clientInput.length;
+      if (rollout.modes && mode === 'client') assert.ok(clientInput.length>0,`${rollout.id}: actual client input is required`);
+      assert.ok(index.safe(JSON.stringify(clientInput)),`${rollout.id}: unsafe public client input`);
       await page.evaluate(r=>{
         window.privacyEvents=[]; window.privacyServerResponses=[];
         addEventListener('opax:analytics',event=>window.privacyEvents.push(event.detail));
         const original=window.fetch;
         window.fetch=async (input,options)=>{
           const response=await original(input,options);
-          if (new URL(input,location.href).pathname === r.endpoint) window.privacyServerResponses.push(await response.clone().text());
+          if (new URL(input,location.href).pathname === r.endpoint && new URL(input,location.href).searchParams.get('format') !== 'csv') window.privacyServerResponses.push(await response.clone().text());
           return response;
         };
-      },rollout);
-      const host=page.locator(rollout.host);
+      },active);
+      const host=page.locator(active.host);
       const download=page.waitForEvent('download'); await host.locator('[data-export]').click();
       const downloaded=await download;
       const csvPath=outputDir ? `${outputDir}/${rollout.id}-${mode}.csv` : await downloaded.path();
       if (outputDir) await downloaded.saveAs(csvPath);
       const serverResponses=await page.evaluate(async r=>{
-        const config=(await import(r.module))[r.configExport];
         const response=await fetch(r.endpoint);
         return await response.json();
-      },rollout);
+      },active);
       await assertTablePrivacy({clientInput,serverResponses:[serverResponses,...responses,...await page.evaluate(()=>window.privacyServerResponses)],csvPath,url:decodeURIComponent(page.url()),renderedText:await host.innerHTML(),accessibleText:await host.ariaSnapshot(),analytics:await page.evaluate(()=>window.privacyEvents)},index);
+      onProgress?.({id:rollout.id,mode,stage:'baseline'});
       if (!donorContext) continue;
+      let samples=0;
       for (const value of index.values.filter((_,i)=>i % Math.max(1,Math.floor(index.values.length/8)) === 0).slice(0,8)) {
         for (const kind of ['q','facet']) {
           await page.evaluate(({r,value,kind})=>{
@@ -75,23 +82,28 @@ export function registerTablePrivacy(registry, rollout) {
             else url.searchParams.set(key+'f.'+r.facet,JSON.stringify([value]));
             url.searchParams.set('campaign','fixture');
             history.replaceState(null,'',url); dispatchEvent(new PopStateEvent('popstate'));
-          },{r:rollout,value,kind});
+          },{r:active,value,kind});
           // This immediate check detects old SSR rows/query echoes during validation.
           assert.ok(index.safe(await host.innerHTML()),`${rollout.id}: reflected pending state`);
-          await page.waitForFunction(host=>!document.querySelector(host).hasAttribute('aria-busy'),rollout.host);
+          await page.waitForFunction(host=>document.querySelector(host)?.querySelector('.dt-count') && !document.querySelector(host).hasAttribute('aria-busy'),active.host);
           if (kind === 'q') {
             await host.locator('[data-search]').fill(value);
             await host.locator('form').evaluate(el=>el.requestSubmit());
-            await page.waitForFunction(host=>!document.querySelector(host).hasAttribute('aria-busy'),rollout.host);
+            await page.waitForFunction(host=>document.querySelector(host)?.querySelector('.dt-count') && !document.querySelector(host).hasAttribute('aria-busy'),active.host);
           }
-          await assertTablePrivacy({clientInput,serverResponses:[serverResponses,...responses,...await page.evaluate(()=>window.privacyServerResponses)],csvPath,url:decodeURIComponent(page.url()),renderedText:await host.innerHTML(),accessibleText:await host.ariaSnapshot(),analytics:await page.evaluate(()=>window.privacyEvents)},index);
+          const rejectedDownload=page.waitForEvent('download'); await host.locator('[data-export]').click();
+          const rejectedFile=await rejectedDownload;
+          const rejectedPath=await rejectedFile.path();
+          assert.equal((await readFile(rejectedPath,'utf8')).split('\r\n').length,1,`${rollout.id}: rejected CSV must be header-only`);
+          await assertTablePrivacy({clientInput,serverResponses:[serverResponses,...responses,...await page.evaluate(()=>window.privacyServerResponses)],csvPath:rejectedPath,url:decodeURIComponent(page.url()),renderedText:await host.innerHTML(),accessibleText:await host.ariaSnapshot(),analytics:await page.evaluate(()=>window.privacyEvents)},index);
           assert.equal(new URL(page.url()).searchParams.get('campaign'),'fixture');
-          if (kind === 'q') assert.equal(await host.locator('.dt-count').textContent(),'Showing 0–0 of 0');
-          await page.evaluate(({r})=>{ const url=new URL(location.href),key=r.urlKey ? r.urlKey+'.' : '';url.searchParams.delete(key+'q');url.searchParams.delete(key+'f.'+r.facet);history.replaceState(null,'',url);dispatchEvent(new PopStateEvent('popstate')); },{r:rollout});
-          await page.waitForFunction(host=>!document.querySelector(host).hasAttribute('aria-busy'),rollout.host);
+          assert.equal(await host.locator('.dt-count').textContent(),'Showing 0–0 of 0');
+          await page.evaluate(({r})=>{ const url=new URL(location.href),key=r.urlKey ? r.urlKey+'.' : '';url.searchParams.delete(key+'q');url.searchParams.delete(key+'f.'+r.facet);history.replaceState(null,'',url);dispatchEvent(new PopStateEvent('popstate')); },{r:active});
+          await page.waitForFunction(host=>document.querySelector(host)?.querySelector('.dt-count') && !document.querySelector(host).hasAttribute('aria-busy'),active.host);
         }
+        onProgress?.({id:rollout.id,mode,samples:++samples});
       }
     }
-    return {id:rollout.id,withheldValues:index.values.length,modes:2,surfaces:7};
+    return {id:rollout.id,withheldValues:index.values.length,modes:2,surfaces:7,inputCounts};
   });
 }

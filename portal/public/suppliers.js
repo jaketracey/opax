@@ -1,8 +1,8 @@
 /* Supplier entries: recorded procurement, source notices and funding cross-links.
    No dependencies but the shared formats; the host router owns mounting and calls destroy on departure. */
 import { shortDate, shortMoney } from "./format.js";
-import { contractTitle, placeholderContract, mountContractsTable } from "./contracts-table.js?v=98e8b452f1";
-export { contractTitle, placeholderContract } from "./contracts-table.js?v=98e8b452f1";
+import { contractTitle, placeholderContract, mountContractsTable } from "./contracts-table.js?v=c40c8a979c";
+export { contractTitle, placeholderContract } from "./contracts-table.js?v=c40c8a979c";
 import { mountSupplierGrowth, supplierDonations } from "./supplier-growth.js?v=bd36519a83";
 import { sourceLineHTML } from "./labels.js?v=804befe8de";
 import { partyUrl } from "./canonical-urls.js?v=225d5915ea";

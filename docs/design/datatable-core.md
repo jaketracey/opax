@@ -62,7 +62,7 @@ Emit aggregates with numeric column keys and this optional metadata:
 {aggregate: {kind: 'individual-donors', count: 12}, amount: 12345.67, count: 20}
 ```
 
-The core generates `Individual donors (12)` in the primary/name column. It keeps
+The core generates `Donors not named (12)` in the primary/name column. It keeps
 only numeric counts/totals, removes identifying fields, aliases, categories and
 IDs, and emits no primary link or action menu. The row survives HTML and CSV.
 Do not emit an ordinary donor row with an aggregate-looking label.

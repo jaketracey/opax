@@ -2,8 +2,11 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import {contractsFixture} from './contracts-table-fixture.mjs';
-import {contractTitle, placeholderContract, ausTenderURL, contractsTableConfig, supplierContractsHTML, compileContractGuard, publicContractQuery} from '../public/contracts-table.js';
+import {contractTitle, contractRows, placeholderContract, ausTenderURL, contractsTableConfig, supplierContractsHTML, compileContractGuard, publicContractQuery} from '../public/contracts-table.js';
 import {MONEY_GRAPHS, withheldPhrases} from '../public/donor-entity.js';
+import {renderSupplierAnswer} from '../src/seo-content.ts';
+import {tablePrivacyGuard} from '../src/table-privacy.ts';
+import {applyQuery,toCSV} from '../public/datatable.js';
 import {offline, loadWorker} from './worker-harness.mjs';
 
 const pub = new URL('../public/', import.meta.url).pathname;
@@ -76,4 +79,37 @@ test('supplier SSR preserves facts, renders a real first page, and ignores table
     const guarded=supplierContractsHTML([{id:'CN1',title:'</script><script>bad()</script>',amount:10,start_date:'2026-01-01'}],supplier.id,new URLSearchParams(),()=>false);
     assert.doesNotMatch(guarded,/<script>bad\(\)/);
   } finally {restore();}
+});
+
+
+test('the shared privacy guard retains a deduplicated neutral value and no identifying fields', async () => {
+  const guard=await tablePrivacyGuard({fetch:async request=>Response.json(JSON.parse(readFileSync(pub+new URL(request.url).pathname)))});
+  const graphs=MONEY_GRAPHS.map(path=>JSON.parse(readFileSync(pub+path)));
+  const node=graphs.flatMap(graph=>graph.nodes).find(node=>node.kind==='donor' && guard(node.label) && guard.subjects(node.label).length===1);
+  assert.ok(node,'a runtime-derived withheld identity is required');
+  const rows=contractRows([25,75].map((amount,i)=>({id:`CN${i+1}`,title:node.label,agency:'Example agency',amount,start_date:'2026-01-01'})),guard);
+  assert.equal(rows.length,1);assert.equal(rows[0].aggregate.count,1);assert.equal(rows[0].amount,100);
+  assert.deepEqual(Object.keys(rows[0]).sort(),['aggregate','amount']);
+  const config=contractsTableConfig({supplierId:'s-fixture',rows,count:2,privacyCheck:text=>!guard(text)});
+  const page=applyQuery(rows,config,{});
+  assert.equal(page.rows[0].title,'Donors not named (1)');
+  assert.ok(!guard(JSON.stringify(page)));assert.ok(!guard(toCSV(rows,config)));
+  assert.equal(config.actions[0].href(page.rows[0]),null);
+});
+
+
+test('supplier SSR related-award totals use the shared guard and retain anonymous values', async () => {
+  const guard=await tablePrivacyGuard({fetch:async request=>Response.json(JSON.parse(readFileSync(pub+new URL(request.url).pathname)))});
+  const graphs=MONEY_GRAPHS.map(path=>JSON.parse(readFileSync(pub+path)));
+  const node=graphs.flatMap(graph=>graph.nodes).find(node=>node.kind==='donor' && guard(node.label) && guard.subjects(node.label).length===1);
+  const assets={
+    '/suppliers.json':{meta:{generated_at:'2026-10-01',source:'Fixture register'},suppliers:[{id:'s-fixture',profile_path:'/supplier-fixture.json'}]},
+    '/supplier-fixture.json':{profiles:{'s-fixture':{id:'s-fixture',name:'Fixture supplier Pty Ltd',total:10,count:1,agencies:[{name:'Fixture agency',count:1,total:10}],contracts:[]}}},
+    '/agencies.json':{agencies:[{id:'a-fixture',name:'Fixture agency',profile_path:'/agency-fixture.json'}]},
+    '/agency-fixture.json':{suppliers:[{id:'s-other',name:node.label,total:100}]},
+  };
+  const result=await renderSupplierAnswer('s-fixture',async path=>assets[path],new URLSearchParams(),guard);
+  assert.ok(!guard(result.html),'related awards must not name an indexed donor');
+  assert.match(result.html,/Donors not named \(1\) — \$100/);
+  assert.ok(!result.html.includes('/subject/supplier/s-other'));
 });

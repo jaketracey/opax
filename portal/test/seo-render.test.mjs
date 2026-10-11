@@ -89,7 +89,7 @@ test('sample HTML stays bounded and boot assets preserve the original app panel 
 test('reported TVFY bill and division routes render Markdown blocks from local exports',async()=>{
   for(const path of ['/bill/au-federal-s1488','/doc/division-federal-senate-10178']) {
     const html=await get(path);checkHtml(html);
-    const answer=html.match(/<section id="prerender"[\s\S]*?<\/section>/)[0];
+    const answer=html.match(/<main\b[\s\S]*?<\/main>/)[0];
     assert.doesNotMatch(answer,/###|&gt; /);
     assert.match(answer,/<strong>What is the bill&#39;s main idea\?<\/strong>/);
     assert.match(answer,/<blockquote><p><em>Amends the Criminal Code Act 1995/);
@@ -177,7 +177,7 @@ test('supplier SSR carries agency facts, contract references and related supplie
   const html=await get('/subject/supplier/s-f93824d9abc756c8f32f');
   for(const fact of ['Department of Foreign Affairs and Trade','CN4248039','2026-02-24','112,216','Other suppliers to these agencies','An association does not prove influence']) assert.ok(html.includes(fact),fact);
   assert.match(html,/tenders\.gov\.au\/Search\/KeywordSearch\?keyword=CN4248039/);
-  const answer=html.match(/<section id="prerender"[\s\S]*?<\/section>/)[0];
+  const answer=html.match(/<main\b[\s\S]*?<\/main>/)[0];
   assert.doesNotMatch(answer,/linked to|href="\/subject\/donor\//i);
 });
 
@@ -251,8 +251,8 @@ test('noindex 404 bodies emit no canonical or page identity, including unknown r
 test('all SSR body types use factual relationship wording and pair political money with the caveat',async()=>{
   const samples=['/subject/party/labor','/subject/person/anthony-albanese','/subject/donor/Clubs%20NSW','/subject/supplier/s-f93824d9abc756c8f32f','/money','/connections','/explore'];
   const campaigners=(await read('/graph/campaigners.json')).entities;
-  for(const c of campaigners){const html=await get('/subject/campaigner/'+encodeURIComponent(c.name));const body=html.match(/<section id="prerender"[\s\S]*?<\/section>/)[0];assert.doesNotMatch(body,/linked to/i,c.name);assert.equal(associationCaveat(body,body),body,c.name);}
-  for(const path of samples){const body=(await get(path)).match(/<section id="prerender"[\s\S]*?<\/section>/)[0];assert.doesNotMatch(body,/linked to/i,path);assert.match(body,/An association does not prove influence\./,path);}
+  for(const c of campaigners){const html=await get('/subject/campaigner/'+encodeURIComponent(c.name));const body=html.match(/<main\b[\s\S]*?<\/main>/)[0];assert.doesNotMatch(body,/linked to/i,c.name);assert.equal(associationCaveat(body,body),body,c.name);}
+  for(const path of samples){const body=(await get(path)).match(/<main\b[\s\S]*?<\/main>/)[0];assert.doesNotMatch(body,/linked to/i,path);assert.match(body,/An association does not prove influence\./,path);}
 });
 
 test('association caveat requires a rendered money pairing, not an election coverage gap',async()=>{
@@ -264,7 +264,7 @@ test('association caveat requires a rendered money pairing, not an election cove
     assert.doesNotMatch(html,/An association does not prove influence/,path);
   }
   const person=await get('/subject/person/anthony-albanese');
-  const body=person.match(/<section id="prerender"[\s\S]*?<\/section>/)[0];
+  const body=person.match(/<main\b[\s\S]*?<\/main>/)[0];
   assert.match(body,/<h1>Anthony Albanese<\/h1>/);
   assert.match(body,/<h2>Donors to their party<\/h2>[\s\S]*An association does not prove influence\.[\s\S]*\$[\d,]+/);
 });

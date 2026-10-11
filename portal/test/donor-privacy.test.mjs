@@ -17,8 +17,9 @@ import {personIndex} from '../src/person-slug.ts';
 import {buildCrawl} from '../../scripts/build_crawl_catalog.mjs';
 import {buildGrowth} from '../../scripts/build_growth_modules.mjs';
 import {moduleOutputs} from './growth-module-harness.mjs';
-import {contractRows, contractsTableConfig, contractsTableHTML, publicContractQuery, compileContractGuard} from '../public/contracts-table.js';
+import {contractRows, contractsTableConfig, contractsTableHTML, publicContractQuery} from '../public/contracts-table.js';
 import {contractsFixture} from './contracts-table-fixture.mjs';
+import {tablePrivacyGuard} from '../src/table-privacy.ts';
 import {applyQuery, dataTableHTML, mountDataTable, toCSV, serializeQuery} from '../public/datatable.js';
 import {tableHarness} from './datatable-harness.mjs';
 
@@ -651,8 +652,8 @@ test('the published search catalogue holds no donor, receipt, meeting or campaig
 
 
 test('contracts and supplier money tables withhold donors in rows, facets, CSV and URL state in both modes', async () => {
-  const phrases = withheldPhrases(graphs, [...rosterNames]);
-  const guard = compileContractGuard(phrases);
+  const phrases = withheldPhrases(graphs, []);
+  const guard = await tablePrivacyGuard({fetch:async request=>Response.json(JSON.parse(readFileSync(at(new URL(request.url).pathname),'utf8')))});
   const supplier = [...real('suppliers.json').suppliers].sort((a,b)=>b.count-a.count)[0];
   assert.ok(supplier.count>50, 'the export exercises paging');
   const fixture = contractsFixture(root);
@@ -668,13 +669,17 @@ test('contracts and supplier money tables withhold donors in rows, facets, CSV a
   }
   // Derive every poisoned value from the export, including aliases; no names in source.
   const values = [...new Set(donorNodes.filter(n => donorNameWithheld(index, n.label)).flatMap(n => [n.label, ...(n.aliases || [])]))].filter(value => guard(value));
-  for (const [i,value] of values.entries()) assert.equal(guard(value),namesWithheldPhrase(phrases,value),`guard candidate ${i}`);
-  for (const [i,value] of [...organisationNames].entries()) assert.equal(guard(value),namesWithheldPhrase(phrases,value),`organisation candidate ${i}`);
+  for (const [i,value] of values.entries()) assert.equal(guard(value),namesWithheldPhrase(phrases,`donor receipts ${value}`),`guard candidate ${i}`);
+  for (const [i,value] of [...organisationNames].entries()) assert.equal(guard(value),namesWithheldPhrase(phrases,`donor receipts ${value}`),`organisation candidate ${i}`);
   const contracts = values.flatMap((value, i) => ['title','description','agency','reported_supplier','supplier_id','id','url'].map(key => ({id:`CN${i+1}`,title:'Public contract',agency:'Example agency',amount:100,start_date:'2026-01-01',[key]:value})));
-  assert.equal(contractRows(contracts,guard).length,0,'poisoned rows are withheld before querying or exporting');
+  const aggregate=contractRows(contracts,guard);
+  assert.equal(aggregate.length,1,'poisoned rows become one neutral total');
+  assert.equal(aggregate[0].amount,contracts.length*100);
+  assert.deepEqual(Object.keys(aggregate[0]).sort(),['aggregate','amount']);
+  assert.ok(aggregate[0].aggregate.count>0);
   for (const count of [2000,2001]) {
     const rows = contractRows([{id:'CN1',title:'Public contract',agency:'Example agency',amount:100,start_date:'2026-01-01'},...contracts],guard);
-    const config = contractsTableConfig({supplierId: supplier.id,rows,count});
+    const config = contractsTableConfig({supplierId: supplier.id,rows,count,privacyCheck:text=>!guard(text)});
     assertClean('supplier client/server rows',JSON.stringify(applyQuery(rows,config,{})));
     assertClean('supplier client/server CSV',toCSV(rows,config));
     assert.equal(Boolean(config.rows),count<=2000);

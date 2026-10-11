@@ -41,21 +41,41 @@ export function ausTenderURL(row) {
 }
 /** Project only public procurement fields. The caller supplies the shared donor guard. */
 export function contractRows(contracts, withheld = () => true) {
-  return contracts.flatMap(contract => {
+  const subjects = new Set();
+  let amount = 0;
+  const rows = contracts.flatMap(contract => {
     const texts = Object.values(contract).filter(v => typeof v === 'string' && !/^(?:\d+|CN[\d.-]+|\d{4}-\d{2}-\d{2})$/.test(v));
     const decoded = texts.map(value => {try {return decodeURIComponent(value);} catch {return value;}});
-    if (placeholderContract(contract) || withheld(...decoded)) return [];
+    if (placeholderContract(contract)) return [];
+    if (withheld(...decoded)) {
+      for (const id of withheld.subjects?.(...decoded) || []) subjects.add(id);
+      amount += Number(contract.amount) || 0;
+      return [];
+    }
     const row = {id: String(contract.id || ''), title: contractTitle(contract), agency: String(contract.agency || 'Not recorded'),
       amount: Number(contract.amount) || 0, start_date: Number(String(contract.start_date).slice(0, 4)) > 1900 ? String(contract.start_date).slice(0, 10) : null,
       supplier_id: contract.supplier_id || null, url: contract.url || null, link_scope: contract.link_scope || null};
     row.url = ausTenderURL(row);
     return [row];
   });
+  if (subjects.size) rows.push({aggregate: {kind: 'individual-donors', count: subjects.size}, amount});
+  return rows;
 }
-export function contractsTableConfig({supplierId, rows, count = rows?.length || 0} = {}) {
+export function isPublicContractRow(row) {
+  return /^CN[\w.-]+$/i.test(String(row?.id || '')) && typeof row.title === 'string' && typeof row.agency === 'string' && Number.isFinite(row.amount);
+}
+async function remotePrivacyCheck(text) {
+  try {
+    const response = await fetch('/api/table/privacy', {method: 'POST', headers: {'content-type': 'application/json'}, body: JSON.stringify({text})});
+    return response.ok && (await response.json()).safe === true;
+  } catch {return false;}
+}
+export function contractsTableConfig({supplierId, rows, count = rows?.length || 0, privacyCheck} = {}) {
   const client = Boolean(supplierId) && count <= 2000 && Array.isArray(rows);
   return {
     id: supplierId ? 'supplier-contracts-table' : 'contracts-table', caption: 'Contracts', pageType: supplierId ? 'supplier' : 'contracts',
+    privacy: 'donors', privacyCheck: privacyCheck || remotePrivacyCheck,
+    rowPrivacyCheck: row => isPublicContractRow(row) && (!privacyCheck || privacyCheck(JSON.stringify(row)) === true),
     columns: [
       {key: 'title', label: 'Title', type: 'text', primary: true},
       {key: 'agency', label: 'Agency', type: 'category', facet: 'multi'},
@@ -84,15 +104,17 @@ export async function contractsHubRows(read, withheld) {
   hubRows ??= (async () => {
     const index = await read('/suppliers.json');
     const rows = [];
+    const contracts = [];
     for (const path of new Set(index.suppliers.map(s => s.profile_path))) {
       const shard = await read(path);
-      for (const profile of Object.values(shard.profiles)) rows.push(...contractRows(profile.contracts.map(c => ({...c, supplier_id: profile.id})), withheld));
+      for (const profile of Object.values(shard.profiles)) contracts.push(...profile.contracts.map(c => ({...c, supplier_id: profile.id})));
     }
+    rows.push(...contractRows(contracts, withheld));
     return rows.sort((a, b) => Number(b.amount) - Number(a.amount) || String(a.id).localeCompare(String(b.id)));
   })().catch(error => {hubRows = null; throw error;});
   return hubRows;
 }
-function rejectedState(params, withheld) {
+function queryTexts(params) {
   const texts = [];
   const collect = value => {
     if (typeof value === 'string') texts.push(value);
@@ -105,16 +127,17 @@ function rejectedState(params, withheld) {
     // including Unicode escapes, as well as the raw URL values.
     try {collect(JSON.parse(value));} catch {}
   }
-  return withheld(...texts);
+  return texts;
 }
+function rejectedState(params, withheld) {return withheld(...queryTexts(params));}
 export function supplierContractsHTML(contracts, id, params, withheld) {
   const rows = contractRows(contracts, withheld).sort((a, b) => String(b.start_date || '').localeCompare(String(a.start_date || '')) || Number(b.amount) - Number(a.amount));
-  const config = contractsTableConfig({supplierId: id, rows, count: contracts.length});
+  const config = contractsTableConfig({supplierId: id, rows, count: contracts.length, privacyCheck: text => !withheld(text)});
   const rejected = rejectedState(params, withheld);
   return contractsTableHTML(config, applyQuery(rejected ? [] : rows, config, publicContractQuery(params, withheld)), {supplierId: id, count: contracts.length, stateRejected: rejected});
 }
 export async function contractsHubHTML(read, params, withheld) {
-  const config = contractsTableConfig();
+  const config = contractsTableConfig({privacyCheck: text => !withheld(text)});
   const rows = await contractsHubRows(read, withheld);
   const rejected = rejectedState(params, withheld);
   return contractsTableHTML(config, applyQuery(rejected ? [] : rows, config, publicContractQuery(params, withheld)), {stateRejected: rejected});
@@ -124,106 +147,44 @@ export function contractsTableHTML(config, page, {supplierId, count, stateReject
   const seed = {supplierId: supplierId || null, count, rows: config.rows, page, stateRejected};
   return `<div data-contracts-table>${dataTableHTML(config, page)}<script type="application/json" data-contracts-seed>${json(seed)}</script></div>`;
 }
-/** Mount through the frozen core; the route lifecycle owns and destroys the handle. */
+const mountedRows = new WeakMap();
+/** The actual guarded client input, used by the shared browser privacy gate. */
+export function contractsClientRows(host) {return mountedRows.get(host) || [];}
+
+/** Mount the real core; it owns validation, URL state, downloads and analytics. */
 export async function mountContractsTable(el, {supplierId, count, seed, signal, params} = {}) {
-  // The SPA keeps the crawl answer hidden. Consume its table once so the
-  // hydrated controls have unique ids and accessible label associations.
   if (seed) {
     const node = el.ownerDocument.querySelector('#prerender [data-contracts-seed]');
     if (node && JSON.parse(node.textContent).supplierId === (supplierId || null)) node.closest('[data-contracts-table]')?.remove();
   }
-  if (seed?.stateRejected) {
-    const url = new URL(location.href);
-    for (const key of [...url.searchParams.keys()]) if (key.startsWith('t.') || key === 'contract') url.searchParams.delete(key);
-    history.replaceState(history.state, '', url.pathname + url.search + url.hash);
-  }
   const state = new URLSearchParams(params || location.search);
-  if (seed?.stateRejected) for (const key of [...state.keys()]) if (key.startsWith('t.') || key === 'contract') state.delete(key);
-  if (state.has('contract') && !seed?.stateRejected) {
-    state.set('t.q', state.get('contract'));
-    state.delete('contract');
+  // Unknown prefixed fields are outside the core's URL ownership. Preserve safe
+  // fields, but never leave a withheld value in ignored table state.
+  const known = new Set(['t.q','t.sort','t.page','t.pageSize','t.f.agency','t.f.amount']);
+  const extra = new URLSearchParams([...state].filter(([key]) => key.startsWith('t.') && !known.has(key)));
+  if (extra.size && !await remotePrivacyCheck(JSON.stringify(queryTexts(extra)))) {
+    for (const key of extra.keys()) state.delete(key);
+    history.replaceState(history.state, '', location.pathname + (state.size ? `?${state}` : '') + location.hash);
+  }
+  if (signal?.aborted) return {destroy() {}};
+  if (state.has('contract')) {
+    state.set('t.q', state.get('contract')); state.delete('contract');
     history.replaceState(history.state, '', location.pathname + `?${state}` + location.hash);
   }
   if (!seed) {
-    // Client mode needs its entire guarded dataset so clearing a filter restores
-    // every row, even when the arrival URL requests a later page or a search.
-    const params = new URLSearchParams(supplierId && count <= 2000 ? '' : serializeQuery(parseQuery(state, 't')));
-    if (supplierId) { params.set('supplier', supplierId); if (count <= 2000) params.set('pageSize', '2000'); }
-    const response = await fetch(`/api/table/contracts?${params}`, {signal});
+    const query = new URLSearchParams(supplierId && count <= 2000 ? '' : serializeQuery(parseQuery(state, 't')));
+    if (supplierId) {query.set('supplier', supplierId); if (count <= 2000) query.set('pageSize', '2000');}
+    const response = await fetch(`/api/table/contracts?${query}`, {signal});
     if (!response.ok) throw Error('The contract records could not be loaded.');
     const page = await response.json();
-    if (!page.total) {
-      const url = new URL(location.href);
-      for (const key of [...url.searchParams.keys()]) if (key.startsWith('t.')) url.searchParams.delete(key);
-      history.replaceState(history.state, '', url.pathname + url.search + url.hash);
-    }
     seed = {page, ...(supplierId && count <= 2000 ? {rows: page.rows} : {})};
   }
   if (signal?.aborted) return {destroy() {}};
   const config = contractsTableConfig({supplierId, rows: seed.rows, count});
-  const arrival = parseQuery(state, 't');
-  let initialEmpty = Boolean(seed.stateRejected);
-  if (arrival.q || arrival.filters) {
-    const query = new URLSearchParams(serializeQuery({...arrival, page: 1, pageSize: 1}));
-    if (supplierId) query.set('supplier', supplierId);
-    const response = await fetch(`/api/table/contracts?${query}`, {signal});
-    initialEmpty = !response.ok || !(await response.json()).total;
-  }
-  if (signal?.aborted) return {destroy() {}};
-  if (initialEmpty) {
-    const url = new URL(location.href);
-    for (const key of [...url.searchParams.keys()]) if (key.startsWith('t.') || key === 'contract') url.searchParams.delete(key);
-    history.replaceState(history.state, '', url.pathname + url.search + url.hash);
-  }
-  const initialConfig = initialEmpty ? {...config, rows: [], source: undefined} : config;
-  el.innerHTML = dataTableHTML(initialConfig, initialEmpty ? {rows: [], total: 0, page: 1, pageSize: config.pageSize} : seed.page || applyQuery(config.rows || [], config, {}));
-  let handle = mountDataTable(el, initialConfig), controller, timer, revision = 0, active = true, replay = false, empty = initialEmpty;
-  const win = el.ownerDocument.defaultView;
-  // Procurement rows are already guarded. The core's donors-only mode expects
-  // donor identities, so procurement search is verified by the money endpoint
-  // before the core can put it into shareable state. Zero-result text is never
-  // echoed; its empty view still exports an empty CSV. No donor index is shipped.
-  function forward(value) {
-    const field = el.querySelector('[data-search]');
-    if (!field) return;
-    field.value = value; replay = true;
-    field.dispatchEvent(new win.Event('input', {bubbles: true}));
-    replay = false;
-  }
-  function input(event) {
-    if (replay || !event.target.matches('[data-search]')) return;
-    event.stopImmediatePropagation();
-    clearTimeout(timer); controller?.abort();
-    const value = event.target.value.trim(), version = ++revision;
-    timer = win.setTimeout(async () => {
-      let approved = !value;
-      if (value) {
-        controller = new win.AbortController();
-        const query = new URLSearchParams(serializeQuery({q: value, pageSize: 1}));
-        if (supplierId) query.set('supplier', supplierId);
-        try {
-          const response = await fetch(`/api/table/contracts?${query}`, {signal: controller.signal});
-          if (!response.ok) throw Error('Contract search unavailable');
-          approved = (await response.json()).total > 0;
-        } catch (error) {
-          if (error.name === 'AbortError') return;
-          // Fail closed while leaving a useful, guarded empty view.
-        }
-      }
-      if (!active || version !== revision) return;
-      if (!approved || empty) {
-        handle.destroy();
-        const url = new URL(location.href); url.searchParams.delete('t.q'); url.searchParams.delete('t.page');
-        history.replaceState(history.state, '', url.pathname + url.search + url.hash);
-        const view = approved ? config : {...config, rows: [], source: undefined};
-        el.innerHTML = dataTableHTML(view, approved ? seed.page : {rows: [], total: 0, page: 1, pageSize: config.pageSize});
-        handle = mountDataTable(el, view); empty = !approved;
-      }
-      forward(approved ? value : '');
-    }, 200);
-  }
-  // Capture runs before the core's delegated input and submit listeners.
-  const submit = event => { if (event.target.matches('form[role="search"]')) {event.preventDefault(); event.stopImmediatePropagation();} };
-  el.addEventListener('input', input, true); el.addEventListener('submit', submit, true);
-  return {destroy() {active = false; revision++; clearTimeout(timer); controller?.abort(); handle.destroy(); el.removeEventListener('input', input, true); el.removeEventListener('submit', submit, true);}};
+  // The shared core validates these records before painting or exporting them.
+  el.innerHTML = dataTableHTML({...config, privacyCheck: () => false}, seed.page || {rows: [], total: 0, page: 1, pageSize: config.pageSize});
+  const root = el.querySelector('[data-datatable]');
+  mountedRows.set(root, config.rows || []);
+  const handle = mountDataTable(root, config);
+  return {destroy() {mountedRows.delete(root); handle.destroy();}};
 }

@@ -158,3 +158,22 @@ test('departure aborts the hub table request and destroys a late handle', async 
   pending.resolve({destroy(){destroyed++;}});
   await new Promise(resolve=>setImmediate(resolve));assert.equal(destroyed,1);
 });
+
+
+test('comparison selection retains table state and unrelated URL parameters',()=>{
+  const h=harness();h.context.location.search='?campaign=fixture&t.q=CN1&q=previous&sort=share';
+  const url=new URL(h.context.discoveryUrl(),'https://opax.test');
+  assert.equal(url.searchParams.get('campaign'),'fixture');assert.equal(url.searchParams.get('t.q'),'CN1');
+  assert.equal(url.searchParams.has('q'),false);assert.equal(url.searchParams.has('sort'),false);
+});
+
+
+test('hub rerouting removes destroyed controls before the next table is mounted',async()=>{
+  const h=harness(),pending=deferred();
+  h.element('contracts-hub-table').innerHTML='Old table controls';
+  h.context.loadContractsModule=()=>pending.promise;
+  await h.context.renderDiscoveryPage(new URLSearchParams(),false);
+  assert.equal(h.element('contracts-hub-table').innerHTML,'<p role="status">Loading contracts…</p>');
+  h.context.destroyContractsTable();
+  pending.resolve({mountContractsTable:async()=>({destroy() {}})});
+});
