@@ -1,14 +1,8 @@
 import { useState } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { View } from 'react-native';
 import { Canvas, Path, useCanvasRef } from '@shopify/react-native-skia';
-import {
-  EmptyState,
-  Group,
-  InfoButton,
-  SourceLink,
-  Text,
-} from '../../design/primitives';
-import { light, radii, rhythm } from '../../design/tokens';
+import { EmptyState, Group, SourceLine } from '../../design/primitives';
+import { colors, light, radii, rhythm } from '../../design/tokens';
 import { useOutlineProbe } from './outline-probe';
 import {
   displayBoundary,
@@ -40,8 +34,8 @@ export function OutlineMap({
         testID="outline-unavailable"
       />
     );
-  const origin =
-    boundary.geometry_kind === 'official' ? 'AEC' : 'ABS statistical geography';
+  const official = boundary.geometry_kind === 'official';
+  const origin = official ? 'AEC' : 'ABS statistical geography';
   return (
     <Group gap={rhythm.tight}>
       <View
@@ -52,7 +46,7 @@ export function OutlineMap({
         onLayout={(e) => setWidth(e.nativeEvent.layout.width)}
         style={{
           height,
-          backgroundColor: light.sunken,
+          backgroundColor: colors.sunken,
           borderRadius: radii.md,
           overflow: 'hidden',
         }}
@@ -78,39 +72,36 @@ export function OutlineMap({
           ) : null}
         </Canvas>
       </View>
-      <View style={styles.caption}>
-        <View style={styles.grow}>
-          <Text wordSafe variant="metadata" testID="outline-label">
-            Display outline · {boundary.vintage}
-          </Text>
-          <Text wordSafe variant="fine" testID="outline-limit">
-            Not for address allocation.
-          </Text>
-        </View>
-        <InfoButton
-          title="About this outline"
-          notes={[
-            'Not for address allocation. This simplified outline does not establish your current electorate. North is up. No basemap is shown; the saved outline works offline.',
-          ]}
-          testID="outline-info"
-        />
-      </View>
-      {boundary.source_geometry_url ? (
-        <SourceLink
-          citation="Electorate boundary"
-          url={boundary.source_geometry_url}
-          kind="record"
-          testID="outline-source"
-        />
-      ) : null}
+      {/* One source line: the boundary and who drew it, with "not for
+          address allocation" and how the outline is drawn in its sheet
+          (pass 5, P2-7). */}
+      <SourceLine
+        title="About this outline"
+        dateLabel={`${boundary.vintage} boundary`}
+        citation={[
+          {
+            label: official ? 'AEC' : 'ABS',
+            title: official
+              ? 'Australian Electoral Commission boundary'
+              : 'ABS statistical geography (an approximation of the boundary)',
+          },
+        ]}
+        originals={
+          boundary.source_geometry_url
+            ? [
+                {
+                  label: 'Electorate boundary',
+                  url: boundary.source_geometry_url,
+                },
+              ]
+            : []
+        }
+        notes={[
+          'Not for address allocation. This simplified outline does not establish your current electorate.',
+          'North is up. No basemap is shown; the saved outline works offline.',
+        ]}
+        testID="outline-source"
+      />
     </Group>
   );
 }
-const styles = StyleSheet.create({
-  caption: {
-    flexDirection: 'row',
-    alignItems: 'flex-start',
-    gap: rhythm.tight,
-  },
-  grow: { flex: 1, gap: 2 },
-});

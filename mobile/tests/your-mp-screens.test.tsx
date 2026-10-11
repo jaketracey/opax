@@ -221,7 +221,10 @@ test('electorate preserves Census vintage and renders candidates as plain public
     result(c.electorateFor(c.decodeElectorate(pinned(seat.detail_url)))),
   );
   const r = await render(<Electorate />);
-  expect(text(r)).toContain('2021 Census geography');
+  // One Census heading and its caveat, without the vintage said twice
+  // (pass 5, P2-7).
+  expect(text(r)).toContain('Census 2021');
+  expect(text(r)).not.toContain('2021 Census geography');
   expect(text(r)).toContain('Updated 2021');
   expect(text(r)).not.toContain('1 January 2021');
   expect(text(r)).toContain('not been redistributed');
@@ -286,10 +289,8 @@ test('a malformed outline drops only itself: the Electorate screen still reads',
   );
   mock.electorateFor.mockResolvedValue(result(c.electorateFor(official)));
   let r = await render(<Electorate />);
-  expect(text(r)).toContain('2021 Census geography');
-  expect(text(r)).toContain(
-    `Display outline · ${official.boundaries[0]!.vintage}`,
-  );
+  expect(text(r)).toContain('Census 2021');
+  expect(text(r)).toContain(`${official.boundaries[0]!.vintage} boundary`);
   expect(text(r)).not.toContain('Source geometry');
   await act(async () => r.unmount());
   mock.electorateFor.mockResolvedValue(
@@ -298,7 +299,7 @@ test('a malformed outline drops only itself: the Electorate screen still reads',
     ),
   );
   r = await render(<Electorate />);
-  expect(text(r)).toContain('2021 Census geography');
+  expect(text(r)).toContain('Census 2021');
   expect(
     r.root.findAll((n) => n.props.testID === 'outline-unavailable').length,
   ).toBeGreaterThan(0);
@@ -753,10 +754,13 @@ test('missing register ties do not refer to an existing file; expense copy uses 
     c.profileFor(identity.canonicalPersonId!, catalogs),
   );
   const r = await render(<Person />);
+  // Ties sit inside Declared interests (pass 5, P3-4): with no register
+  // file, that block's one sentence says so for both.
   expect(text(r)).toContain(
-    'No linked register file is available for declared organisation ties',
+    'No register file is held for this person in the covered registers.',
   );
   expect(text(r)).not.toContain('in this register file');
+  expect(text(r)).not.toContain('Declared ties');
   await act(async () => r.unmount());
   mockParams.slug = 'anthony-albanese';
   const albanese = c.joinPerson(

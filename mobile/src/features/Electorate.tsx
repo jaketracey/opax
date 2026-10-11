@@ -42,9 +42,9 @@ import { electorateRoute } from '../navigation/routes';
 import { shareHeaderItem } from '../navigation/share';
 import {
   BlockSource,
-  EvidenceFooter,
   RecordBlock,
   combinedBlock,
+  representationBlock,
 } from './your-mp/Evidence';
 import { RepresentativeRows } from './your-mp/RepresentativeRows';
 import type { Directory, ElectorateView } from './your-mp/model';
@@ -200,17 +200,8 @@ export function ElectorateScreen({
                 webPath={seat?.url ?? `/subject/electorate/${id}`}
                 testID="electorate"
               />
-              <EvidenceFooter
-                block={view.identity}
-                id="electorate"
-                about={{
-                  title: 'About this electorate record',
-                  notes: [
-                    view.coverageNote,
-                    'Representation is shown only as recorded in the dated release.',
-                  ],
-                }}
-              />
+              {/* No source line here: the representation block below carries
+                  the record's (pass 5, P2-7). */}
             </Group>
             <PadGrid>
               <SeatGrants
@@ -237,10 +228,11 @@ export function ElectorateScreen({
                 notes: [
                   'Election winners and present-day representation can differ.',
                   'Representation is shown only as recorded in the dated release.',
+                  view.coverageNote,
                 ],
               })}
               id="electorate-representatives"
-              block={view.representatives}
+              block={representationBlock(view.representatives)}
               retry={refresh}
               missing={
                 identity.status === 'historical'
@@ -357,67 +349,7 @@ export function ElectorateScreen({
                   />
                 ) : null}
               </Section>
-              <Section
-                title="Local context"
-                accent="people"
-                testID="electorate-census"
-              >
-                {view.census.length ? (
-                  view.census.map((b, i) => (
-                    <RecordBlock
-                      key={i}
-                      sub={i ? 'ruled' : 'first'}
-                      title={`Census ${b.data?.year ?? ''}`}
-                      id={`electorate-census-${i}`}
-                      block={b}
-                      missing="No Census indicators are held."
-                      retry={refresh}
-                      footer={false}
-                    >
-                      {(d) => (
-                        <Group gap={rhythm.tight}>
-                          <Text wordSafe variant="strong">
-                            {d.vintage}
-                          </Text>
-                          <Text wordSafe variant="metadata">
-                            {d.note}
-                          </Text>
-                          <KeyValueList
-                            items={Object.entries(d.indicators).map(
-                              ([key, value]) => {
-                                const [label, kind] = indicators[key] ?? [
-                                  key.replaceAll('_', ' '),
-                                  'count',
-                                ];
-                                return {
-                                  label,
-                                  value:
-                                    value === null
-                                      ? 'Not recorded'
-                                      : kind === 'money'
-                                        ? formatMoney(value)
-                                        : kind === 'percent'
-                                          ? formatPercent(value)
-                                          : formatCount(value),
-                                };
-                              },
-                            )}
-                          />
-                        </Group>
-                      )}
-                    </RecordBlock>
-                  ))
-                ) : (
-                  <EmptyState message="No Census context is held for this electorate." />
-                )}
-                {view.census.length ? (
-                  <BlockSource
-                    block={combinedBlock(view.census)}
-                    title="About the Census context"
-                    testID="electorate-census-source"
-                  />
-                ) : null}
-              </Section>
+              <LocalContext view={view} retry={refresh} />
             </PadGrid>
             <Section title="Related constituencies" accent="people">
               {view.related.length ? (
@@ -459,6 +391,90 @@ export function ElectorateScreen({
     </>
   );
 }
+/**
+ * Local context: one Census a heading ("Census 2021") and its one caveat,
+ * read from the export's note without the vintage it repeats; several
+ * Census years each under their own heading.
+ */
+function LocalContext({
+  view,
+  retry,
+}: {
+  view: ElectorateView;
+  retry: () => void;
+}) {
+  const one = view.census.length === 1 ? view.census[0]! : null;
+  return (
+    <Section
+      title={one?.data ? `Census ${one.data.year}` : 'Local context'}
+      accent="people"
+      testID="electorate-census"
+    >
+      {view.census.length ? (
+        view.census.map((b, i) => (
+          <RecordBlock
+            key={i}
+            sub={one ? 'bare' : i ? 'ruled' : 'first'}
+            title={`Census ${b.data?.year ?? ''}`}
+            id={`electorate-census-${i}`}
+            block={b}
+            missing="No Census indicators are held."
+            retry={retry}
+            footer={false}
+          >
+            {(d) => (
+              <Group gap={rhythm.tight}>
+                <Text wordSafe variant="metadata">
+                  {censusCaveat(d.note, d.vintage)}
+                </Text>
+                <KeyValueList
+                  items={Object.entries(d.indicators).map(([key, value]) => {
+                    const [label, kind] = indicators[key] ?? [
+                      key.replaceAll('_', ' '),
+                      'count',
+                    ];
+                    return {
+                      label,
+                      value:
+                        value === null
+                          ? 'Not recorded'
+                          : kind === 'money'
+                            ? formatMoney(value)
+                            : kind === 'percent'
+                              ? formatPercent(value)
+                              : formatCount(value),
+                    };
+                  })}
+                />
+              </Group>
+            )}
+          </RecordBlock>
+        ))
+      ) : (
+        <EmptyState message="No Census context is held for this electorate." />
+      )}
+      {view.census.length ? (
+        <BlockSource
+          block={combinedBlock(view.census)}
+          title="About the Census context"
+          testID="electorate-census-source"
+        />
+      ) : null}
+    </Section>
+  );
+}
+/**
+ * The export's Census note without the vintage the heading already says:
+ * "2021 Census geography; values have not been redistributed…" reads
+ * "Values have not been redistributed…".
+ */
+export function censusCaveat(note: string, vintage: string): string {
+  const rest = note.startsWith(vintage)
+    ? note.slice(vintage.length).replace(/^[\s;:,.-]+/, '')
+    : note;
+  return rest ? rest.charAt(0).toUpperCase() + rest.slice(1) : note;
+}
+
 const styles = StyleSheet.create({
   // One point, at the foot of the last section rather than a section below.
   end: { height: 1, marginTop: -layout.sectionGap },

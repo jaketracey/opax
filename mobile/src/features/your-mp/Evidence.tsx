@@ -9,6 +9,7 @@ import {
   Section,
   SourceLine,
   errorMessage,
+  licenceText,
   type InfoNotes,
   type SourceDetails,
 } from '../../design/primitives';
@@ -96,6 +97,18 @@ export function combinedBlock(blocks: readonly SourcedBlock[]): SourcedBlock {
   };
 }
 
+/**
+ * The release's dated election, Census and boundary files: each has its own
+ * block (Elections, the Census, the outline), so representation names only
+ * its rosters and service records (pass 5, P2-7).
+ */
+const notRepresentation =
+  /^(AEC \d{4}-\d{2}-\d{2} |ABS |AEC (national )?boundaries\b)/;
+export function representationBlock<T extends SourcedBlock>(block: T): T {
+  const sources = block.sources.filter((s) => !notRepresentation.test(s.label));
+  return { ...block, sources: sources.length ? sources : block.sources };
+}
+
 /** A fetched record (topics, speeches, diaries) as a sourced block. */
 export function recordBlock(
   record: Pick<
@@ -115,12 +128,53 @@ export function recordBlock(
 }
 
 /**
+ * OPAX's own datasets (its people list, roster and electorate release): what
+ * a record was matched to, not an original a reader can open. Their URLs are
+ * opax.com.au pages or app paths; an OPAX label over an outside URL ("OPAX
+ * federal roster reconciled against APH") is that outside record.
+ */
+export function isOpaxDataset(source: { url: string }): boolean {
+  return (
+    source.url.startsWith('/') ||
+    /^https:\/\/(www\.)?opax\.com\.au(\/|$)/.test(source.url)
+  );
+}
+/** The note an OPAX dataset becomes in the source sheet. */
+export function opaxDatasetNote(label: string): string {
+  if (/person identifiers|people list/i.test(label))
+    return 'Matched to OPAX’s people list.';
+  if (/roster/i.test(label)) return 'Matched to OPAX’s parliamentary roster.';
+  return `From ${label.replace(/^OPAX\b\s*/, 'OPAX’s ')}.`;
+}
+// A licence an export appends to a source's name: "AEC disclosure returns,
+// CC BY 4.0".
+const licenceTail = /,\s*(CC BY(?:-[A-Z-]+)?(?: \d(?:\.\d)?)?(?: AU)?|ODbL)$/;
+/**
+ * A source's name and licence, read apart: the line names the source, and
+ * the licence goes to the sheet's licence row (pass 5, P2-6).
+ */
+export function sourceLicence(source: {
+  label: string;
+  licence?: string | null;
+}): { label: string; licence: string | null } {
+  const tail = licenceTail.exec(source.label);
+  return tail
+    ? {
+        label: source.label.slice(0, tail.index).trim(),
+        licence: source.licence || tail[1]!,
+      }
+    : { label: source.label, licence: source.licence || null };
+}
+
+/**
  * The one source line at the foot of a record block: "Updated 4 Oct 2026 ·
  * OPAX electorate release", then "partial" or "Saved 3 Oct 2026" when the
  * block is. Tapping it opens the source sheet with the original records, the
  * as-at date, the notes and caveats in full (the methodology that sat behind
  * an ⓘ, the partial and saved-copy notices) and the licence. It replaces the
- * block's as-at line, "View original", ⓘ and notice paragraphs.
+ * block's as-at line, "View original", ⓘ and notice paragraphs. OPAX's own
+ * datasets are named in the notes ("Matched to OPAX's people list"), never
+ * as original records (pass 5, P2-4).
  */
 export function BlockSource({
   block,
@@ -128,6 +182,7 @@ export function BlockSource({
   title = 'Sources and notes',
   citation,
   licence,
+  licenceDataset,
   notes = [],
   originals = [],
   line,
@@ -140,6 +195,8 @@ export function BlockSource({
   citation?: SourceDetails['citation'];
   /** The licence where the block's sources do not carry one. */
   licence?: string;
+  /** The Sources and licences entry the licence row opens. */
+  licenceDataset?: string;
   notes?: InfoNotes['notes'];
   /** Original records beyond the block's own sources: one per division. */
   originals?: SourceDetails['originals'];
@@ -147,9 +204,24 @@ export function BlockSource({
   line?: SourceOverrides;
 }) {
   const { accessibilityLabel, partial: incomplete, ...overrides } = line ?? {};
-  const labels = [...new Set(block.sources.map((s) => s.label))];
+  const outside = block.sources.filter((s) => !isOpaxDataset(s));
+  const own = block.sources.filter(isOpaxDataset);
+  // The line names the outside sources; a block held only in OPAX's own
+  // datasets still names them on the line, but never as originals.
+  const labels = [
+    ...new Set(
+      (outside.length ? outside : own).map((s) => sourceLicence(s).label),
+    ),
+  ];
   const licences = [
-    ...new Set(block.sources.flatMap((s) => (s.licence ? [s.licence] : []))),
+    ...new Set(
+      block.sources.flatMap((s) => {
+        const { licence } = sourceLicence(s);
+        // Each licence in plain words: "See source terms" is said once as
+        // "The source's own terms", even beside an open licence.
+        return licence ? [licenceText(licence)] : [];
+      }),
+    ),
   ];
   const stale = block.stale;
   const partial = !!block.partial || !!incomplete;
@@ -159,12 +231,14 @@ export function BlockSource({
       asOf={block.asAt}
       citation={citation ?? labels}
       licence={licences.join('; ') || licence || null}
+      licenceDataset={licenceDataset}
       originals={[
-        ...block.sources.map(({ label, url }) => ({ label, url })),
+        ...outside.map((s) => ({ label: sourceLicence(s).label, url: s.url })),
         ...originals,
       ]}
       notes={[
         ...notes,
+        ...[...new Set(own.map((s) => opaxDatasetNote(s.label)))],
         // An incomplete register says why in its own notes.
         block.partial ? PARTIAL_NOTE : null,
         stale ? staleNote(block) : null,
@@ -193,12 +267,15 @@ export function EvidenceFooter({
   id,
   about,
   line,
+  licenceDataset,
 }: {
   block: SourcedBlock;
   id: string;
   /** The source sheet's title and notes: methodology and caveats. */
   about?: InfoNotes | null;
   line?: SourceOverrides;
+  /** The Sources and licences entry the licence row opens. */
+  licenceDataset?: string;
 }) {
   return (
     <BlockSource
@@ -207,6 +284,7 @@ export function EvidenceFooter({
       title={about?.title}
       notes={about?.notes}
       line={line}
+      licenceDataset={licenceDataset}
     />
   );
 }
@@ -225,6 +303,7 @@ export function RecordBlock<T>({
   line,
   sub,
   footer = true,
+  licenceDataset,
 }: {
   /**
    * A block inside a section (one election, one Census year): a level 3
@@ -247,6 +326,8 @@ export function RecordBlock<T>({
   line?: (data: T | null) => SourceOverrides | undefined;
   /** False where the section draws one line for several blocks. */
   footer?: boolean;
+  /** The Sources and licences entry the source sheet's licence opens. */
+  licenceDataset?: string;
 }) {
   const body = (
     <>
@@ -289,6 +370,7 @@ export function RecordBlock<T>({
           id={id}
           about={about?.(block.data)}
           line={line?.(block.data)}
+          licenceDataset={licenceDataset}
         />
       ) : null}
     </>

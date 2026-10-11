@@ -15,6 +15,8 @@ import {
   StatusLabel,
   Text,
   errorMessage,
+  isPad,
+  useLayout,
 } from '../design/primitives';
 import { SeatGrants } from './money-public/Grants';
 import { PayBlock, PartyReceiptsBlock } from './people/FinancialBlocks';
@@ -67,6 +69,7 @@ import {
   type ProfileView,
 } from './your-mp/model';
 export default function YourMP() {
+  const layout = useLayout();
   const [directory, setDirectory] = useState<Directory | null>(null),
     [choice, setChoice] = useState<SeatChoice | null>(null),
     [view, setView] = useState<YourMPView | null>(null);
@@ -221,6 +224,7 @@ export default function YourMP() {
       choice?.stateSeatIds.includes(s.electorate_id),
     ) ?? [];
   const seatName = view && !chooser ? view.seat.data!.name : null;
+  const padTitle = isPad && layout.regular;
   return (
     <Screen
       column="wide"
@@ -230,7 +234,21 @@ export default function YourMP() {
     >
       {/* One title: the chosen seat replaces "Your MP" (the tab still says
           it); the chooser keeps "Your MP". */}
-      <Stack.Screen options={{ title: seatName ?? 'Your MP' }} />
+      {/* On iPad the title sits in the readable column with the content it
+          heads, not at the detail's far edge (pass 5, P3-16). */}
+      <Stack.Screen
+        options={{
+          title: seatName ?? 'Your MP',
+          ...(padTitle
+            ? { headerLargeTitleEnabled: false, headerTitle: '' }
+            : null),
+        }}
+      />
+      {padTitle ? (
+        <Heading level={1} testID="your-mp-title">
+          {seatName ?? 'Your MP'}
+        </Heading>
+      ) : null}
       {Platform.OS === 'android' ? (
         <AndroidFocusBack
           active={choosing || stateChoosing}
@@ -266,24 +284,6 @@ export default function YourMP() {
           {directory?.electorates.staleReason ? (
             <SavedCopyNotice reason={directory.electorates.staleReason} />
           ) : null}
-          {!stateChoosing && directory ? (
-            <LocationSuggestion
-              seats={directory.electorates.data.electorates}
-              onConfirm={(seat) => void choose(seat)}
-              disabled={saving}
-            />
-          ) : null}
-          {/* The state district from the same tap, on the device against
-              bundled outlines (TestFlight build 32). The name search below
-              stays the fallback, including when permission is denied. */}
-          {stateChoosing && view ? (
-            <LocationSuggestion
-              scope="state"
-              seats={view.verifiedStateSeats}
-              onConfirm={(seat) => void choose(seat)}
-              disabled={saving}
-            />
-          ) : null}
           <Field
             label="Electorate or member’s name"
             hint="Your choice is saved on this device. Device backups may include it."
@@ -294,13 +294,10 @@ export default function YourMP() {
             returnKeyType="done"
             onSubmitEditing={() => Keyboard.dismiss()}
           />
-          {!query.trim() ? (
-            <EmptyState
-              icon="magnifyingglass"
-              message="Search by electorate or member name."
-              testID="seat-empty"
-            />
-          ) : !matches.length ? (
+          {/* The field is the chooser's main task, so it comes first; its
+              label says what to type, with no helper line repeating it
+              (pass 5, P2-20 and P3-1). */}
+          {!query.trim() ? null : !matches.length ? (
             <EmptyState
               message="No matching electorate or member in this release."
               testID="seat-no-results"
@@ -328,6 +325,24 @@ export default function YourMP() {
               ))}
             </RowList>
           )}
+          {!stateChoosing && directory ? (
+            <LocationSuggestion
+              seats={directory.electorates.data.electorates}
+              onConfirm={(seat) => void choose(seat)}
+              disabled={saving}
+            />
+          ) : null}
+          {/* The state district from the same tap, on the device against
+              bundled outlines (TestFlight build 32). The name search below
+              stays the fallback, including when permission is denied. */}
+          {stateChoosing && view ? (
+            <LocationSuggestion
+              scope="state"
+              seats={view.verifiedStateSeats}
+              onConfirm={(seat) => void choose(seat)}
+              disabled={saving}
+            />
+          ) : null}
           {!stateChoosing ? (
             <RowList>
               <LinkRow
