@@ -66,8 +66,11 @@ export function historyItems(rows: readonly DivisionRow[]): HistoryItem[] {
   let divisions = 0;
   let line: Extract<HistoryItem, { type: 'bill' }> | null = null;
   for (const row of rows) {
-    if (divisions === SOURCE_AFTER)
+    if (divisions === SOURCE_AFTER) {
       items.push({ type: 'source', key: 'source' });
+      // The run picks up again under its bill after the source line.
+      line = null;
+    }
     if (!line || line.billKey !== row.billKey) {
       line = {
         type: 'bill',

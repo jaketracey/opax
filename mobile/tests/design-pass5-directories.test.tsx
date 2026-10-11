@@ -128,6 +128,17 @@ test('the source line follows the first page of divisions, once', () => {
   expect(historyItems([]).map((i) => i.type)).toEqual(['source']);
 });
 
+test('a run split by the source line starts again under its bill', () => {
+  const rows = Array.from({ length: SOURCE_AFTER + 2 }, (_, i) =>
+    division('a', i),
+  );
+  const items = historyItems(rows);
+  const at = items.findIndex((i) => i.type === 'source');
+  expect(items[at + 1]).toMatchObject({ type: 'bill', billKey: 'a', count: 2 });
+  expect(items[0]).toMatchObject({ type: 'bill', count: SOURCE_AFTER });
+  expect(new Set(items.map((i) => i.key)).size).toBe(items.length);
+});
+
 test('a division is spoken by its stage, outcome and count, then where and its bill', () => {
   expect(divisionLabel(division('a', 1))).toBe(
     'Limitation of debate, Negatived, 11 ayes, 24 noes, Senate · 19 Aug 2026, Bill a',

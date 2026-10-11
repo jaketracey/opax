@@ -5,7 +5,14 @@ name: 04 Read saved public catalogs with the fixture stopped
 - tapOn:
     id: tab-search
 # Search pages are session-only. Explicitly refresh the saved public catalogs
-# to demonstrate their offline fallback after an app relaunch.
+# to demonstrate their offline fallback after an app relaunch. Refresh shows
+# only beside suggestions (pass 5, P3-12), so type a name first.
+- tapOn:
+    id: search-input
+- eraseText
+- inputText: Anthony Albanese
+- hideKeyboard
+- waitForAnimationToEnd
 - scrollUntilVisible:
     element:
       id: search-refresh
@@ -17,15 +24,6 @@ name: 04 Read saved public catalogs with the fixture stopped
     visible:
       id: search-suggestions-offline
     timeout: 20000
-- scrollUntilVisible:
-    element:
-      id: search-input
-    direction: UP
-    timeout: 20000
-- tapOn:
-    id: search-input
-- eraseText
-- inputText: Anthony Albanese
 # Swipe on content above the keyboard; visibility checks can see through it.
 - swipe:
     start: 90%, 40%
