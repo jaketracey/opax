@@ -9,8 +9,10 @@ let growthModules;
 const growthModulesReady = import("/growth-modules.js?v=b3095eab8c").then(module => { growthModules = module; });
 let registerTables;
 const registerTablesReady = import('/register-tables.js?v=68883bdacd').then(module => { registerTables = module; });
+let askPerson;
+const askPersonReady = import('/ask-person.js?v=a0b3602921').then(module => { askPerson = module; });
 let uiLabels;
-const uiLabelsReady = import('/labels.js?v=804befe8de').then(module => { uiLabels = module; });
+const uiLabelsReady = import('/labels.js?v=c6bf994ef7').then(module => { uiLabels = module; });
 let attributionHelpers;
 const attributionReady = Promise.allSettled([divisionMarkdownReady,
   import('./speech-attribution.js?v=20261006-4').then(module => { attributionHelpers = module; })]);
@@ -23,7 +25,20 @@ const splitSpeakers = person => attributionHelpers?.splitSpeakers(person) || [];
 const personScope = person => attributionHelpers?.personScope(person) || person?.speech_scope || null;
 const datedAffiliationParty = (row, person) => attributionHelpers?.datedAffiliationParty(row, person) || null;
 
+let saDisplayHelpers;
+let saFullTextFlag = 'false';
+const saDisplayReady = Promise.all([
+  import('/sa-hansard.js?v=ebd30b6d90').then(module => { saDisplayHelpers = module; }),
+  fetch('/api/display-policy').then(response => response.json()).then(policy => { saFullTextFlag = policy.SA_HANSARD_FULL_TEXT === 'true' ? 'true' : 'false'; }).catch(() => {}),
+]);
+
 const $ = (id) => document.getElementById(id);
+
+function excerptNoticeHTML(record) {
+  if (!record?.excerpt) return "";
+  const source = safeUrl(record.source_url || record.url);
+  return `<p class="fineprint sa-excerpt-notice">${esc(record.excerpt_label)}${source ? ` <a href="${esc(source)}" target="_blank" rel="noopener">Official record ↗︎</a>` : ""}</p>`;
+}
 
 // Categories and counts only: never pass questions, answers or error messages.
 function trackOutcome(event, properties = {}) {
@@ -554,7 +569,7 @@ async function askRecord(body, signal, on = {}) {
   trackOutcome("opax_ask_started", { from_section, page_type: growthModules.askPageType(location.href) });
   try {
     const data = await askRecordRequest(body, signal, on);
-    trackOutcome("opax_ask_completed", { from_section, duration_ms: Math.round(performance.now() - started), source_count: data.sources?.length || 0, has_answer: !!data.answer?.trim() });
+    trackOutcome("opax_ask_completed", { from_section, duration_ms: Math.round(performance.now() - started), source_count: data.sources?.length || 0, has_answer: !!data.answer?.trim(), is_overview_intent: data.is_overview_intent === true });
     return data;
   } catch (err) {
     trackOutcome("opax_ask_failed", { from_section, duration_ms: Math.round(performance.now() - started), cancelled: err.name === "AbortError" });
@@ -855,10 +870,10 @@ function exportHeader(context) {
 }
 
 function sourcesCSV(rows, context) {
-  const head = "slug,kind,title,speaker,party,state,date,score,snippet,opax_url,source_url";
+  const head = "slug,kind,title,speaker,party,state,date,score,snippet,opax_url,source_url,excerpt_label";
   const body = rows.map((r) =>
     [r.slug, r.kind || (r.slug || "").split("-")[0], r.title, r.speaker, r.party, r.state, r.date,
-      r.score ?? "", (r.snippet || "").slice(0, 300), searchResultUrl(r), r.url || ""].map(csvCell).join(",")
+      r.score ?? "", (r.snippet || "").slice(0, 300), searchResultUrl(r), r.url || "", r.excerpt_label || ""].map(csvCell).join(",")
   );
   return `${exportHeader(context)}\n${head}\n${body.join("\n")}\n`;
 }
@@ -1586,7 +1601,7 @@ async function openSupplierPage(name, params, manageFocus) {
   body.classList.remove("subject-person", "subject-party");
   body.innerHTML = '<p role="status">Loading suppliers…</p>';
   try {
-    const module = await import("/suppliers.js?v=f07fa5d29c");
+    const module = await import("/suppliers.js?v=b670f2f222");
     if (generation !== supplierPageGeneration) return;
     const helpers = {
       params,
@@ -2846,6 +2861,7 @@ function sourceItem(s, num, passage = false) {
     read.textContent = "Read the speech";
     li.appendChild(read);
   }
+  if (passage) li.insertAdjacentHTML("beforeend", excerptNoticeHTML(s));
   return li;
 }
 
@@ -3022,7 +3038,7 @@ function quoteCardHTML(s, i, n) {
     : esc(displayTitle(s));
   return `<span class="kicker">From the record · ${i + 1} of ${n}</span>` +
     `<blockquote>${body}</blockquote>` +
-    (meta ? `<span class="quote-meta"><span class="quote-portrait"></span><span>${meta}</span></span>` : "");
+    (meta ? `<span class="quote-meta"><span class="quote-portrait"></span><span>${meta}</span></span>` : "") + excerptNoticeHTML(s);
 }
 
 function setQuoteRail(sources) {
@@ -3745,6 +3761,7 @@ async function renderDeclaredPage(params, manageFocus) {
   const root = $("declared-list");
   root.innerHTML = `<p class="status">Opening the register ledger…</p>`;
   const [data, roster] = await Promise.all([loadRecentInterests(), loadParliamentarians(), loadPhotoMap()]);
+  $("declared-updated").innerHTML = sourceLineHTML({updated:data?.meta?.generated || "",source:"Registers of interests"});
   const items = Array.isArray(data?.items) ? data.items : [];
   if (!items.length) {
     root.innerHTML = `<p class="status">No dated alterations are available in the current export.</p>`;
@@ -4170,7 +4187,7 @@ async function subjectMentions(name, container, heading, moneyContext = false) {
     const items = data.results.slice(0, 5).map((r) => `
       <li><a href="/doc/${esc(r.slug)}" class="source-title doc-title">${esc(displayTitle(r))}</a>
         <span class="result-meta">${metaHTML(r, { linkSpeaker: true, linkParty: true })}</span>
-        <p class="snippet">${esc((r.snippet || "").slice(0, 220))}</p></li>`).join("");
+        <p class="snippet">${esc((r.snippet || "").slice(0, 220))}</p>${excerptNoticeHTML(r)}</li>`).join("");
     container.insertAdjacentHTML("beforeend",
       `<div class="entry-section-head"><h3 class="subject-section-title">${esc(heading)}</h3>
         <a href="${esc(searchHash(`"${name}"`, {}))}">All mentions</a></div>
@@ -5073,7 +5090,7 @@ async function renderPartyMentions(label, sections, key) {
           const excerpt = passage.length > 240 ? `${passage.slice(0, 240).replace(/\s+\S*$/, "")}…` : passage;
           return `<li><a ${entityHrefAttr(`/doc/${encodeURIComponent(result.slug)}`)} class="source-title doc-title">${esc(displayTitle(result))}</a>
             <span class="result-meta">${metaHTML(result, { linkSpeaker: true, linkParty: true })}</span>
-            <p class="${brief ? "party-mention-brief" : "snippet"}">${brief ? machineLabelHTML({ inline: true, className: "party-brief-label" }) : ""}${esc(brief || excerpt || "Open the speech to read the passage.")}</p></li>`;
+            <p class="${brief ? "party-mention-brief" : "snippet"}">${brief ? machineLabelHTML({ inline: true, className: "party-brief-label" }) : ""}${esc(brief || excerpt || "Open the speech to read the passage.")}</p>${excerptNoticeHTML(result)}</li>`;
         }).join("")}</ul>`;
     };
     paint({});
@@ -5659,7 +5676,10 @@ async function openSubject(kind, name, manageFocus, params = new URLSearchParams
   };
   wireGrowthAsk(body);
   const fitsRow = fitsInfoRow(fits, "people", name);
-  if (fitsRow) head.insertAdjacentHTML("afterend", `<p class="person-fits">${fitsRow[1]}</p>`);
+  // A fact about the person, so it sits in the head's text column: the grid draws it under the
+  // source line; on phones it comes before the source line, which keeps clear of the ⋯ button.
+  const fitsAnchor = head.querySelector(":scope > .ui-source");
+  if (fitsRow) (fitsAnchor || head).insertAdjacentHTML(fitsAnchor ? "beforebegin" : "beforeend", `<p class="person-fits">${fitsRow[1]}</p>`);
   box.innerHTML = entryRailHTML();
   renderPortraitCredit(name, key);
   // The structured record first; the speeches follow it.
@@ -5891,7 +5911,7 @@ async function renderPersonSpeeches(name, fallback, chambers, sections, opts = {
           <time datetime="${esc(String(r.date || "").slice(0, 10))}">${esc(r.date ? fmtDate(r.date) : "Undated")}${esc(where)}</time>
           <span class="person-speech-body"><span class="speech-debate">${esc(safeText(titleSubject(r)) || (opts.evidence ? "Evidence" : "Speech"))}</span>
             ${rowText(brief, r)}
-          </span></a></li>`;
+          </span></a>${excerptNoticeHTML(r)}</li>`;
       }).join("")}</ul>
       ${opts.unattributed ? '' : `<p class="person-more"><a href="${esc(opts.scope ? splitSpeechSearch(name) : searchHash("", { speaker: name }, 1, "newest"))}">View all their ${noun}</a></p>`}
       ${sourceLineHTML({
@@ -6163,7 +6183,7 @@ function topicArcItemHTML(item, brief, showYear) {
       ${heading ? `<a class="topic-arc-source" ${entityHrefAttr(`/doc/${encodeURIComponent(item.slug)}`)}>${esc(heading)}</a>` : ""}
       ${brief
         ? `<p class="topic-arc-brief">${machineLabelHTML({ inline: true, className: "topic-arc-tag" })}${esc(brief)}</p><a class="topic-arc-open ui-button" data-ui-size="compact" ${entityHrefAttr(`/doc/${encodeURIComponent(item.slug)}`)}>Read the speech</a>`
-        : `<a class="topic-arc-passage" ${entityHrefAttr(`/doc/${encodeURIComponent(item.slug)}`)}>${esc(passage || "Open the speech to read the passage.")}</a>`}
+        : `<a class="topic-arc-passage" ${entityHrefAttr(`/doc/${encodeURIComponent(item.slug)}`)}>${esc(passage || "Open the speech to read the passage.")}</a>`}${excerptNoticeHTML(item)}
     </div>
   </li>`;
 }
@@ -6593,7 +6613,7 @@ const DIRECTORY_KINDS = {
 };
 let electorateModulePromise;
 function loadElectorateModule() {
-  return electorateModulePromise ??= import("./electorates.js?v=044baa0c8c").catch((e) => { electorateModulePromise = null; throw e; });
+  return electorateModulePromise ??= import("./electorates.js?v=f60dff0a4b").catch((e) => { electorateModulePromise = null; throw e; });
 }
 const DIR_CHUNK = 60;
 
@@ -6719,9 +6739,7 @@ function fitsInfoRow(fits, bucket, name) {
   // The label stays as short as the longest existing one ("Donations counted"):
   // the infobox's label column is `auto`, so a longer term squeezes every value.
   return ["Foreign influence",
-    `${sentence}
-     ${url ? `<a href="${esc(url)}" rel="noopener" target="_blank" style="display:inline-block;margin-top:0.15rem">Register entry&nbsp;↗︎</a>` : ""}
-     <span style="display:block;color:var(--ink-faint);font-size:0.75rem;line-height:1.4;margin-top:0.2rem">Registration is a disclosure the scheme requires by law, not a finding of wrongdoing.</span>`];
+    `${sentence}${url ? ` <a href="${esc(url)}" rel="noopener" target="_blank">Register entry&nbsp;↗︎</a>` : ""}`];
 }
 
 // The live directory, so a second visit to the same index with other hash
@@ -8372,7 +8390,7 @@ function billSummaryHTML(bill) {
   return `<section class="bill-section bill-summary" data-accent="bills" aria-labelledby="bill-summary-head">
     <div class="bill-section-head">
       <h3 class="subject-section-title" id="bill-summary-head">In short</h3>
-      ${machineLabelHTML({ note })}
+      ${machineLabelHTML({ note, notRecord: true })}
     </div>
     <div class="bill-sentences">${sentences.map((t) => `<p>${esc(t)}</p>`).join("")}</div>
     ${changes.length ? `<h4 class="bill-sub">What it changes</h4>
@@ -8606,12 +8624,11 @@ async function fillBillPeek(details, entry) {
     return;
   }
   box.innerHTML = `
-    <div class="bill-peek-head">${machineLabelHTML({ note: `${summary.attribution
+    <div class="bill-peek-head">${machineLabelHTML({ notRecord: true, note: `${summary.attribution
       || "Written by a model from the explanatory memorandum; not the record"}.` })}</div>
     ${growthModules.summaryWrittenHTML(summary)}
     <div class="bill-sentences">${sentences.map((t) => `<p>${esc(t)}</p>`).join("")}</div>
-    <p class="fineprint">${esc(summary.attribution
-      || "Written by a model from the explanatory memorandum; not the record")}. ${esc(billStatusLine(entry))}.</p>
+    <p class="fineprint">${esc(billStatusLine(entry))}.</p>
     ${foot}`;
 }
 
@@ -8794,10 +8811,10 @@ async function renderDocBillPanel(doc, slug) {
   const el = box.querySelector(".doc-bill-sentence");
   if (!el) return;
   el.outerHTML = first
-    ? `<p class="doc-bill-sentence">${esc(first)}</p>
-       ${growthModules.summaryWrittenHTML(bill.summary)}
-       <p class="fineprint doc-bill-attrib">${esc(bill.summary.attribution
-         || "Written by a model from the explanatory memorandum; not the record")}.</p>`
+    ? `<div class="doc-bill-machine">${machineLabelHTML({ notRecord: true, note: `${bill.summary.attribution
+         || "Written by a model from the explanatory memorandum; not the record"}.` })}</div>
+       <p class="doc-bill-sentence">${esc(first)}</p>
+       ${growthModules.summaryWrittenHTML(bill.summary)}`
     : `<p class="fineprint doc-bill-none">No summary written for this bill yet.</p>`;
 }
 
@@ -8894,14 +8911,14 @@ document.addEventListener("opax:explain", (e) => openExplain(e.detail));
 
 const GAMES = {
   ballot: { name: "Build your ballot", dialog: "dialog-ballot", body: "explore-ballot", module: "/ballot.js?v=49e7bc6382", mount: "mountBallot" },
-  tm: { name: "Time machine", dialog: "dialog-tm", body: "explore-tm", module: "/timemachine.js?v=b331b0dcd1", mount: "mountTimeMachine" },
+  tm: { name: "Time machine", dialog: "dialog-tm", body: "explore-tm", module: "/timemachine.js?v=8e86f26747", mount: "mountTimeMachine" },
   tide: { name: "The tide", dialog: "dialog-tide", body: "explore-tide", module: "/tide.js", mount: "mountTide" },
   quiz: { name: "The record quiz", dialog: "dialog-quiz", body: "explore-quiz", module: "/quiz.js?v=deeaffee40", mount: "mountQuiz" },
   ledger: { name: "The ledger", dialog: "dialog-ledger", body: "explore-ledger", module: "/ledger.js?v=65ee0aa12f", mount: "mountLedger" },
   grants: { name: "Who gets the grants", dialog: "dialog-grants", body: "explore-grants", module: "/grants.js?v=9e66f26ed2", mount: "mountGrants" },
   matrix: { name: "Who owns which debate", dialog: "dialog-matrix", body: "explore-matrix", module: "/matrix.js?v=25f5793db5", mount: "mountMatrix" },
   wd: { name: "Words per dollar", dialog: "dialog-wd", body: "explore-wd", module: "/wordsdollars.js?v=58a0a413a1", mount: "mountWordsDollars" },
-  tvn: { name: "Then vs now", dialog: "dialog-tvn", body: "explore-tvn", module: "/thenvsnow.js?v=f57768f881", mount: "mountThenVsNow" },
+  tvn: { name: "Then vs now", dialog: "dialog-tvn", body: "explore-tvn", module: "/thenvsnow.js?v=de2fe807c7", mount: "mountThenVsNow" },
 };
 
 async function openGame(which, params = null) {
@@ -9797,7 +9814,7 @@ async function runAsk(question) {
     $("ask-answer").askEvidence = citedList;
     // The speaker this answer was actually filtered to (chosen in Options or
     // read out of the question), so "Continue in a conversation" keeps it.
-    lastAsk = { question, answer: answerText, sources, kind: askKind(), speaker: askFilters().speaker || speakerFilter || "", answer_status: data.answer_status, evidence_excerpts: data.evidence_excerpts, money_question: data.money_question, money_ranking: data.money_ranking, money_context: data.money_context, money_overview: data.money_overview, pay_answer: data.pay_answer, pay_next: data.pay_next };
+    lastAsk = { question, answer: answerText, sources, is_overview_intent: data.is_overview_intent, next: data.followups, subject_context: data.subject_context, kind: askKind(), speaker: askFilters().speaker || speakerFilter || data.scope?.speaker || data.subject_context?.name || "", answer_status: data.answer_status, evidence_excerpts: data.evidence_excerpts, money_question: data.money_question, money_ranking: data.money_ranking, money_context: data.money_context, money_overview: data.money_overview, pay_answer: data.pay_answer, pay_next: data.pay_next };
     // A calculated answer carries its own fixed next steps, not generated ones.
     const calculated = !!(data.money_ranking || data.pay_answer);
     if (!calculated) prefetchAskFollowups(lastAsk);
@@ -9811,6 +9828,7 @@ async function runAsk(question) {
     $("ask-stamp").hidden = needsClarification;
     $("ask-result").querySelector(".kicker").textContent = needsClarification ? "Choose the scope" : data.answer_status === "calculated" ? (data.pay_answer ? "From the pay determinations" : "From disclosed receipts") : data.answer_status === "evidence_only" ? "From the record" : data.answer_status === "uncited" ? "Answer, without citations" : "Answer";
     renderAnswerOverview($("ask-overview"), data.money_overview);
+    if (data.is_overview_intent) { $("ask-overview").innerHTML = machineLabelHTML(); $("ask-overview").hidden = false; }
     if (answerText) {
       // Final rendering uses the complete citation ranges, including cache hits.
       renderAnswer($("ask-answer"), answerText, { ...data, onRetry: () => runAsk(question) });
@@ -10265,7 +10283,9 @@ function setFrontPageHidden(hidden) {
 let askFollowupsInflight = null; // {question, answer, promise}
 function followupPassages(sources) {
   return (sources || [])
-    .map((s) => ({ title: s.title || s.slug || "", text: (s.snippet || "").trim() }))
+    .map((s) => ({ title: s.title || s.slug || "", text: (s.snippet || "").trim(),
+      date: s.date, cited: s.cited === true,
+      ...Object.fromEntries(['slug','kind','source','state','chamber','source_url'].filter(key => s[key]).map(key => [key,s[key]])) }))
     .filter((p) => p.text)
     .slice(0, 8);
 }
@@ -10276,12 +10296,16 @@ function normaliseFollowups(data) {
 }
 function prefetchAskFollowups(ask) {
   if (!ask?.question || !ask?.answer) return;
+  if (ask.next?.length) {
+    renderFollowups(ask.next, $("ask-followups"), item => { if (openConversationFrom(ask)) sendChat(item.question, item); });
+    return;
+  }
   const passages = followupPassages(ask.sources);
   if (!passages.length) return;
   const promise = api("/api/followups", {
     method: "POST",
     headers: { "content-type": "application/json" },
-    body: JSON.stringify({ question: ask.question, answer: ask.answer, passages }),
+    body: JSON.stringify({ question: ask.question, answer: ask.answer, passages, person: ask.speaker || ask.subject_context?.name }),
   }).then((data) => {
     const questions = normaliseFollowups(data);
     if (questions.length && lastAsk === ask) {
@@ -10372,7 +10396,7 @@ function trimTurn(m) {
   const sources = Array.isArray(m.sources) ? m.sources : [];
   const kept = [...sources.filter((s) => s?.cited), ...sources.filter((s) => !s?.cited)].slice(0, 30).map((s) => {
     const out = {};
-    for (const [k, v] of Object.entries(s || {})) out[k] = typeof v === "string" && v.length > 240 && k !== "href" && k !== "url" ? `${v.slice(0, 239)}…` : v;
+    for (const [k, v] of Object.entries(s || {})) out[k] = typeof v === "string" && v.length > 240 && k !== "href" && k !== "url" && k !== "source_url" ? `${v.slice(0, 239)}…` : v;
     return out;
   });
   return { ...m, sources: kept };
@@ -10635,7 +10659,7 @@ function initChat(manageFocus) {
           store.active = null;
           chatThread = [
             { role: "user", text: seed.question, fundingQuestion: seed.money_question },
-            { role: "answer", text: seed.answer, sources: seed.sources || [], next: seed.next || undefined, answer_status: seed.answer_status, evidence_excerpts: seed.evidence_excerpts, money_ranking: seed.money_ranking, money_context: seed.money_context, money_overview: seed.money_overview, pay_answer: seed.pay_answer, pay_next: seed.pay_next },
+            { role: "answer", text: seed.answer, sources: seed.sources || [], is_overview_intent: seed.is_overview_intent, next: seed.next || undefined, subject_context: seed.subject_context, answer_status: seed.answer_status, evidence_excerpts: seed.evidence_excerpts, money_ranking: seed.money_ranking, money_context: seed.money_context, money_overview: seed.money_overview, pay_answer: seed.pay_answer, pay_next: seed.pay_next },
           ];
           chatKind = seed.kind === "speech" ? "speech" : "all";
           // An ask that was filtered to one speaker hands that filter on: the
@@ -10837,8 +10861,15 @@ function renderChatScope() {
 }
 
 function renderChatThread({ landed = false, rise = false } = {}) {
+  // Recheck saved conversations against today's display policy on every restore.
+  if (saDisplayHelpers) chatThread = chatThread.map(msg => {
+    if (msg.role === 'user') return msg;
+    const safe = saDisplayHelpers.saDisplayPayload({...msg, answer:msg.text}, saFullTextFlag);
+    return {...msg, ...safe, text:safe.answer};
+  });
   syncAskChatViewport();
   renderChatScope();
+  renderChatContext();
   const thread = $("chat-thread");
   thread.replaceChildren();
   $("chat-input").placeholder = chatThread.length ? "Ask a follow-up question…"
@@ -10937,6 +10968,7 @@ function syncAskChatViewport() {
 function chatAnswerEl(msg) {
   const wrap = document.createElement("div");
   wrap.className = "chat-turn chat-turn-answer";
+  if (msg.is_overview_intent) wrap.insertAdjacentHTML('beforeend', machineLabelHTML());
   if (msg.money_overview) {
     const overview = document.createElement("div");
     overview.className = "answer-overview";
@@ -10993,7 +11025,30 @@ function chatAnswerEl(msg) {
       : "This suggested follow-up drew on a passage retrieved for the previous answer.";
     wrap.appendChild(p);
   }
+  if (msg.next?.length) {
+    const next = document.createElement('div');
+    renderFollowups(msg.next, next, item => sendChat(item.question, item));
+    wrap.appendChild(next);
+  }
   return wrap;
+}
+
+async function renderChatContext() {
+  const slot = $("chat-person-context");
+  if (!slot) return;
+  const last = [...chatThread].reverse().find(msg => msg.role === 'answer');
+  const context = last?.subject_context;
+  slot.hidden = true;
+  $("panel-chat").classList.toggle('has-person-context', !!context);
+  if (!context || (chatSpeaker && chatSpeaker !== context.name)) return;
+  await Promise.allSettled([askPersonReady, loadPhotoMap()]);
+  if (chatThread.includes(last) && [...chatThread].reverse().find(msg => msg.role === 'answer') === last) {
+    const dot = document.createElement('span');
+    dot.innerHTML = partyDotHTML(context.party);
+    // subject_context is a server projection checked by withheldNameCheck;
+    // the model cannot supply its fields. Saved chats retain that projection.
+    askPerson?.renderPersonContext(slot, context, {portrait: photoUrlFor(context.name) || '', partyDot: dot, safe: () => true});
+  }
 }
 
 async function requestChatFollowups() {
@@ -11016,7 +11071,7 @@ async function requestChatFollowups() {
       : normaliseFollowups(await api("/api/followups", {
           method: "POST",
           headers: { "content-type": "application/json" },
-          body: JSON.stringify({ question: asked.text, answer: last.text, passages }),
+          body: JSON.stringify({ question: asked.text, answer: last.text, passages, person: chatSpeaker || last.subject_context?.name }),
           signal: myAbort.signal,
         }));
     if (chatFollowAbort !== myAbort || chatThread[chatThread.length - 1] !== last) return;
@@ -11028,12 +11083,14 @@ async function requestChatFollowups() {
     // they land: once rendered they are what moves the end. A reader who has
     // scrolled up to read is left where they are.
     const wasAtEnd = chatFollower.nearEnd();
-    renderChatNext(questions);
+    renderChatThread();
     if (wasAtEnd) requestAnimationFrame(() => scrollChatToEnd());
   } catch { /* follow-ups are an extra, never an error */ }
 }
 
 function renderChatNext(questions) {
+  const last = chatThread[chatThread.length - 1];
+  if (last?.role === 'answer' && last.next?.length) { renderChatThread(); return; }
   const next = $("chat-next");
   renderFollowups(questions, next, (item) => sendChat(item.question, item));
 }
@@ -11043,10 +11100,6 @@ function renderFollowups(questions, next, onSelect, caption) {
   next.hidden = false;
   next.replaceChildren();
   next.className = "chat-next";
-  const kicker = document.createElement("h3");
-  kicker.className = "subject-section-title";
-  kicker.textContent = "Ask next";
-  next.appendChild(kicker);
   if (caption) {
     const note = document.createElement("p");
     note.className = "chat-next-note";
@@ -11057,7 +11110,7 @@ function renderFollowups(questions, next, onSelect, caption) {
   row.className = "chat-next-btns";
   row.setAttribute("role", "group");
   row.setAttribute("aria-label", "Suggested follow-up questions");
-  for (const raw of questions.slice(0, 3)) {
+  for (const raw of questions.slice(0, 4)) {
     // Sessions saved before follow-ups carried evidence stored plain strings.
     const item = typeof raw === "string" ? { question: raw } : raw;
     if (!item?.question) continue;
@@ -11066,16 +11119,21 @@ function renderFollowups(questions, next, onSelect, caption) {
     // They land together but read as a list, so they arrive as one: rise-in
     // staggers off --i, and the stylesheet drops the motion under
     // prefers-reduced-motion.
-    b.className = "chat-next-btn rise-in";
+    b.className = "chat-next-btn ui-button rise-in";
+    b.dataset.variant = 'quiet';
     b.style.setProperty("--i", String(row.children.length));
     const text = document.createElement("span");
-    text.textContent = item.question;
+    text.textContent = item.label || item.question;
     const arrow = document.createElement("span");
     arrow.className = "next-arrow";
     arrow.setAttribute("aria-hidden", "true");
     arrow.textContent = "→";
     b.append(text, arrow);
-    b.addEventListener("click", () => onSelect(item));
+    const position = row.children.length + 1;
+    b.addEventListener("click", () => {
+      trackOutcome('opax_ask_followup_click', {position, kind: item.kind || 'detail'});
+      onSelect(item);
+    });
     row.appendChild(b);
   }
   next.appendChild(row);
@@ -11094,7 +11152,8 @@ async function sendChat(question, carry) {
   // money path's resolved question, or the Worker's standalone rewrite of a
   // follow-up, and only otherwise the words as typed.
   const context = chatThread
-    .map((m) => ({ author: m.role === "answer" ? "answer" : "user", text: m.role === "user" && typeof m.fundingQuestion === "string" ? m.fundingQuestion : m.role === "user" && typeof m.askedAs === "string" ? m.askedAs : m.text }))
+    .map((m) => ({ author: m.role === "answer" ? "answer" : "user", text: m.role === "user" && typeof m.fundingQuestion === "string" ? m.fundingQuestion : m.role === "user" && typeof m.askedAs === "string" ? m.askedAs : m.text,
+      ...(m.role === "answer" ? {sources:(m.sources || []).map(s => Object.fromEntries(['slug','kind','source','state','chamber'].filter(key => s[key]).map(key => [key,s[key]])))} : {}) }))
     .slice(-12);
   // A chip's question was proven against a passage retrieved for the PREVIOUS
   // answer; fresh retrieval on the chip's wording alone can miss that passage,
@@ -11190,8 +11249,8 @@ async function sendChat(question, carry) {
     // would read out of the wording, so "and on housing?" stays with them.
     const chatBody = JSON.stringify({
       question: q,
-      kind: chatSpeaker ? "speech" : chatKind,
-      ...(chatSpeaker ? { speaker: chatSpeaker } : {}),
+      kind: ['vote','compare'].includes(carry?.kind) ? 'all' : chatSpeaker ? "speech" : chatKind,
+      ...(chatSpeaker && !['vote','compare'].includes(carry?.kind) ? { speaker: chatSpeaker } : {}),
       context,
       prior_resources: priorResources.slice(0, 6),
     });
@@ -11268,6 +11327,9 @@ async function sendChat(question, carry) {
     chatThread.push({
       role: "answer",
       text: (data.answer || "").trim() || "(no answer)",
+      next: data.followups,
+      is_overview_intent: data.is_overview_intent,
+      subject_context: data.subject_context || (chatSpeaker ? [...chatThread].reverse().find(msg => msg.subject_context?.name === chatSpeaker)?.subject_context : undefined),
       answer_status: data.answer_status,
       money_ranking: data.money_ranking,
       money_context: data.money_context,
@@ -12020,7 +12082,7 @@ function renderResults(results) {
           <h3 class="search-result-heading"><a class="result-title" href="${esc(searchResultHref(r))}">${esc(r.title)}</a></h3>
           ${r.machine ? machineLabelHTML({ className: "search-result-machine", note: "The summary sentences in this row were written by a model from the bill's explanatory material. They are not the record: open the bill for its own documents." }) : ""}
           <p id="search-passage-${index}" class="search-result-text snippet" data-full="catalog">${highlightHTML(cleanPassage(r.snippet), lastSearch.query)}</p>
-          <button type="button" class="search-passage-more" hidden aria-controls="search-passage-${index}" aria-expanded="false">Read more</button>`;
+          <button type="button" class="search-passage-more" hidden aria-controls="search-passage-${index}" aria-expanded="false">Read more</button>${excerptNoticeHTML(r)}`;
         return li;
       }
       const brief = lastSearch.briefs[r.resource];
@@ -12049,11 +12111,11 @@ function renderResults(results) {
       ].filter(Boolean).join(" ");
       const topics = [...new Set((Array.isArray(r.topics) ? r.topics : []).filter((t) => typeof t === "string" && t.trim()))];
       // Opening a speech row loads the whole speech in place, so its button says so.
-      const more = r.kind === "speech" ? "Read the full speech here" : "Read more";
+      const more = r.excerpt ? "Read excerpt" : r.kind === "speech" ? "Read the full speech here" : "Read more";
       li.innerHTML = `<div class="result-meta">${meta}</div>
         <h3 class="search-result-heading"><a class="result-title" ${entityHrefAttr(`/doc/${encodeURIComponent(r.slug)}`)}>${esc(title)}</a></h3>
         ${byline ? `<div class="result-byline">${byline}</div>` : ""}${text}
-        <button type="button" class="search-passage-more" hidden aria-controls="search-passage-${index}" aria-expanded="false" data-more="${esc(more)}">${esc(more)}</button>
+        <button type="button" class="search-passage-more" hidden aria-controls="search-passage-${index}" aria-expanded="false" data-more="${esc(more)}"${r.excerpt ? ' data-excerpt="true"' : ''}>${esc(more)}</button>${excerptNoticeHTML(r)}
         ${topics.length ? `<nav class="search-result-topics" aria-label="Topics for ${esc(title)}">${topics.map((topic) => `<a class="ui-tag" ${entityHrefAttr(subjectHash("topic", topic))}>${esc(TOPICS[topic] || topic)}</a>`).join("")}</nav>` : ""}`;
       return li;
     }),
@@ -12077,7 +12139,7 @@ function refreshSearchPassageFolds() {
       // The retrieved passage is a few sentences; the first opening swaps in
       // the speech itself, so reading on means reading the record.
       const slug = text.closest("li")?.querySelector(".result-title")?.getAttribute("href")?.replace(/^\/doc\//, "");
-      if (!expanded || text.dataset.full || !slug || text.classList.contains("search-result-brief")) return;
+      if (!expanded || btn.dataset.excerpt || text.dataset.full || !slug || text.classList.contains("search-result-brief")) return;
       text.dataset.full = "loading";
       try {
         const doc = await api(`/api/resource/${slug}`);
@@ -12411,7 +12473,7 @@ async function runSearchAnswer(q, f, key) {
     }));
     $("search-answer-sum").textContent = `Sources (${sources.size})`;
     $("search-answer-fold").hidden = false;
-    $("search-answer-more").textContent = `Written by a model from ${data.reviewed_count} matching records; not part of the record.${data.partial ? " Some sources are temporarily unavailable." : ""}`;
+    $("search-answer-more").textContent = `Drawn from ${data.reviewed_count} matching records.${data.partial ? " Some sources are temporarily unavailable." : ""}`;
     setStatus($("search-answer-status"), "Summary ready");
     $("search-answer-status").classList.add("visually-hidden");
   } catch (err) {
@@ -12804,6 +12866,7 @@ async function openDocPage(slug, manageFocus) {
   $("doc-topic").hidden = true;
   $("doc-speaker-links").hidden = true;
   $("doc-text").textContent = "";
+  document.querySelector("#panel-doc .sa-excerpt-notice")?.remove();
   $("doc-brief").hidden = true;
   $("doc-bill").hidden = true;
   $("doc-bill").replaceChildren();
@@ -12879,9 +12942,9 @@ async function openDocPage(slug, manageFocus) {
       doc.labels?.party ? partyChipHTML(doc.labels.party) : "",
       doc.metadata?.electorate ? `${doc.labels?.chamber === "representatives" || doc.labels?.chamber === "nsw_la" ? "Member for " : ""}${esc(doc.metadata.electorate)}` : "",
       house ? esc(house) : "",
-      doc.metadata?.date ? esc(fmtDate(doc.metadata.date)) : "",
+      doc.metadata?.date ? esc(fmtDate(doc.metadata.date)).replace(/ /g, "&nbsp;") : "",
       origin ? `<a href="${esc(origin)}" rel="noopener" target="_blank">View original ↗︎</a>` : "",
-    ].filter(Boolean).join(" · ");
+    ].filter(Boolean).join("&nbsp;· "); // a line never starts on a dot, nor splits a date
     // Machine topic labels (field-level enrichment; a speech can carry
     // several). Chips only for slugs the taxonomy knows — an unknown label
     // has no topic page to link to. Most of the corpus has none yet: the
@@ -12898,7 +12961,7 @@ async function openDocPage(slug, manageFocus) {
     const docWitness = doc.labels?.speaker_type === "witness" || (isCommitteeChamber(doc.labels?.chamber) && doc.metadata?.person_id == null);
     if (docWitness && (doc.metadata?.witness_position || doc.metadata?.witness_organisation)) {
       $("doc-meta").insertAdjacentHTML("afterbegin",
-        `${[doc.metadata.witness_position, doc.metadata.witness_organisation].filter(Boolean).map(esc).join(", ")} · `);
+        `${[doc.metadata.witness_position, doc.metadata.witness_organisation].filter(Boolean).map(esc).join(", ")}&nbsp;· `);
     }
     if (doc.speaker && (docWitness || doc.speaker_attribution === 'unattributed')) {
       speakerLinks.innerHTML = `${docWitness ? 'Committee witness' : 'Unattributed speaker'}, named as the transcript names them. <a ${entityHrefAttr(hasEntityId(doc.speaker) ? subjectHash("person", doc.speaker) + "?attribution=unattributed" : null)}>Their evidence on OPAX</a>`;
@@ -12918,13 +12981,18 @@ async function openDocPage(slug, manageFocus) {
       $("doc-brief-text").textContent = doc.summary;
       $("doc-brief").hidden = false;
     }
-    document.querySelector('#doc-brief .doc-brief-note').textContent = isBillText ? 'Written from this document by a model, not part of the original bill text.' : 'Written from this speech by a model, not by a person, and not part of the record.';
+    // The pill says what wrote the brief; its sheet says from what.
+    const briefHead = document.querySelector("#doc-brief .doc-brief-head");
+    briefHead.querySelector(".ui-machine")?.remove();
+    briefHead.insertAdjacentHTML("beforeend", machineLabelHTML({ notRecord: true,
+      note: isBillText ? "Written from this document by a model. It is not part of the bill's text." : "Written from this speech by a model. It is not part of the record." }));
     if (isBillText && /^[a-z0-9][a-z0-9-]{1,160}$/.test(doc.metadata?.bill_key || '')) {
       const version = typeof doc.metadata?.version_id === 'string' ? '?text-version=' + encodeURIComponent(doc.metadata.version_id) : '';
       $('doc-bill').innerHTML = `<a class="ui-button" href="/bill/${encodeURIComponent(doc.metadata.bill_key)}${version}#bill-full-text">Bill page and text versions</a><p class="fineprint">${doc.metadata.complete === false ? 'Incomplete extracted bill text. Use the original document for the complete bill.' : 'Published bill text. Check the original document for authoritative wording and formatting.'}</p>`;
       $('doc-bill').hidden = false;
     } else renderDocBillPanel(doc, slug);
     renderDocText(doc);
+    $("doc-text").insertAdjacentHTML("afterend", excerptNoticeHTML(doc));
     $("doc-ask").href = askHash(
       docAskQuestion(doc, topic, isGovernmentRelease || isResearchRecord),
       isGovernmentRelease || isResearchRecord ? "all" : undefined,
@@ -13069,7 +13137,7 @@ async function renderDocSimilar(doc) {
           : title.length > 110 ? `${title.slice(0, 110).replace(/\s+\S*$/, "")}…` : title;
         return `<li><a ${entityHrefAttr(`/doc/${encodeURIComponent(row.slug)}`)} title="${esc(title)}">${esc(label)}</a>
           <p class="doc-related-meta">${esc([label === row.speaker ? "" : row.speaker, fmtDate(row.date)].filter(Boolean).join(" · "))}</p>
-          <p>${esc(excerpt(brief || row.snippet || "No passage available."))}</p>
+          <p>${esc(excerpt(brief || row.snippet || "No passage available."))}</p>${excerptNoticeHTML(row)}
           <p class="doc-related-meta">${brief ? machineLabelHTML({ inline: true }) : "Passage from the record"}</p></li>`;
       }).join("")}</ul>` : '<p>No related speeches found for this subject.</p>') +
       `<div class="doc-related-actions"><a class="doc-search-all" href="${esc(searchHash(query, {}))}">Search this subject →</a>
@@ -13796,6 +13864,7 @@ function reportSourceRow(s, num) {
   read.href = `/doc/${s.slug}`;
   read.textContent = speech ? "Read the speech" : "Read the record";
   body.appendChild(read);
+  body.insertAdjacentHTML("beforeend", excerptNoticeHTML(s));
 
   li.appendChild(body); // the portrait, when there is one, is already in place
   return li;
@@ -14952,7 +15021,7 @@ function syncPathMeta() {
 
 // The first render waits for labels, attribution helpers and the canonical
 // person URL lookup, so links use the roster's aliases from the first render.
-Promise.allSettled([attributionReady, uiLabelsReady, growthModulesReady, personUrlsReady]).finally(() => {
+Promise.allSettled([attributionReady, uiLabelsReady, growthModulesReady, personUrlsReady, saDisplayReady]).finally(() => {
   loadPersonSlugs();
   initAskBuilder();
   route();

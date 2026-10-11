@@ -51,6 +51,8 @@ the Parliament's copyright terms as the existing committee ingest relies on.
 
 from __future__ import annotations
 
+from parli.ingest import http as source_http
+
 import argparse
 import html as htmlmod
 import os
@@ -65,7 +67,7 @@ from pathlib import Path
 from parli.ingest.committee_store import COMMITTEE_SOURCES_SQL, read_cached_page, write_cached_page
 
 PARLINFO_BASE = "https://parlinfo.aph.gov.au"
-USER_AGENT = "Mozilla/5.0 (X11; Linux x86_64; rv:128.0) Gecko/20100101 Firefox/128.0"
+USER_AGENT = source_http.USER_AGENT
 CACHE_DIR = Path(os.environ.get("OPAX_ATTENDANCE_CACHE", "~/.cache/autoresearch/committee_attendance")).expanduser()
 DELAY = 1.0
 SOURCE = "committee_attendance"
@@ -251,6 +253,7 @@ def hearing_fragments(session, base: str) -> list[str]:
     if not page or len(page) < 5000:
         time.sleep(DELAY)
         r = session.get(toc_url(base), timeout=60)
+        source_http.check_response(toc_url(base), r.status_code, r.content)
         if r.status_code != 200:
             return []
         page = _body(r)
@@ -265,6 +268,7 @@ def fetch_page(session, base: str, frag: str) -> str | None:
         return page
     time.sleep(DELAY)
     r = session.get(fragment_url(base, frag), timeout=60)
+    source_http.check_response(fragment_url(base, frag), r.status_code, r.content)
     if r.status_code != 200:
         return None
     page = _body(r)
@@ -322,8 +326,8 @@ def cmd_fetch(db_path: str, refetch: bool, limit: int | None) -> None:
     if limit:
         bases = bases[:limit]
     have = {r[0] for r in db.execute("SELECT DISTINCT hearing_base FROM ext_committee_attendance")}
-    session = requests.Session()
-    session.headers.update({"User-Agent": USER_AGENT, "Accept": "text/html,application/xhtml+xml"})
+    session = source_http.Session()
+    session.headers.update({"User-Agent": source_http.USER_AGENT, "Accept": "text/html,application/xhtml+xml"})
     log(f"{len(bases)} hearings; {len(have)} already parsed")
     stamp = now_iso()
     loaded = 0

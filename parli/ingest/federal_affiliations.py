@@ -44,7 +44,7 @@ def source_parties(detail: dict) -> dict[str, tuple[str, str]]:
     out = {}
     for vote in detail.get("votes") or []:
         member = vote.get("member") or {}
-        pid = (member.get("person") or {}).get("id") or member.get("id")
+        pid = (member.get("person") or {}).get("id")
         party = affiliation(vote.get("party") or member.get("party"))
         if pid is not None and party:
             out[str(pid)] = (vote_value(vote.get("vote")), party)

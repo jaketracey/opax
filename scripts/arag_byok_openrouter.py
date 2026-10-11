@@ -22,6 +22,11 @@ The switch self-verifies with a live /ask; if that fails, the previous
 OpenRouter configuration is restored automatically. Native-provider rollback
 is refused: generation must continue to bill through our OpenRouter account.
 """
+
+import sys as _http_sys
+from pathlib import Path as _HttpPath
+_http_sys.path.insert(0, str(_HttpPath(__file__).resolve().parents[1]))
+from parli.ingest import http as source_http
 import json
 import re
 import sys
@@ -53,12 +58,12 @@ HEADERS = {"content-type": "application/json",
 
 
 def call(path, method="GET", body=None, timeout=90, headers=None):
-    req = urllib.request.Request(
+    req = source_http.Request(
         f"{BASE}{path}",
         data=json.dumps(body).encode() if body is not None else None,
         method=method, headers={**HEADERS, **(headers or {})})
     try:
-        with urllib.request.urlopen(req, timeout=timeout) as r:
+        with source_http.urlopen(req, timeout=timeout) as r:
             raw = r.read()
             return r.status, json.loads(raw) if raw.strip() else {}
     except urllib.error.HTTPError as e:

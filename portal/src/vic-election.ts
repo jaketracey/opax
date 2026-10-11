@@ -1,6 +1,6 @@
 import {sourceLineHTML, tagHTML} from '../public/labels.js'
 import {shortDate} from '../public/format.js'
-import {VIC_ELECTION_PATH, VIC_ELECTION_ASSET, vicElectionEnabled} from '../public/vic-election.js'
+import {VIC_ELECTION_PATH, VIC_ELECTION_ASSET, VIC_ELECTION_AUTHORISATION_LINE, VIC_ELECTION_CORRECTIONS_EMAIL, VIC_ELECTION_CORRECTIONS_RESPONSE, vicElectionEnabled} from '../public/vic-election.js'
 import {escapeHtml as esc, safeHref, type ReadAsset} from './seo-content'
 import {hubShell, type HubFooterConfig} from './hubs'
 
@@ -16,6 +16,7 @@ interface Seat {
   districts: string[]; boundary_note: string | null; electorate_url: string; roster_date: string; members: Member[];
 }
 export interface VicElection {
+  authorisation: string; corrections: {email: string; response: string};
   updated: string; checked: string; election_day: string; term_start: string; term_end: string; nominations_close: string;
   sources: Record<string,string>; licence: {name: string; attribution: string; exceptions: string};
   boundaries: {summary: string; created: string[]; abolished: string[]};
@@ -23,6 +24,9 @@ export interface VicElection {
   seats: Seat[]; pages: {path: string; lastmod: string}[];
 }
 const ORIGIN = 'https://opax.com.au'
+const approvedFooter = (footer: HubFooterConfig): HubFooterConfig => ({...footer,
+  AUTHORISATION_LINE:VIC_ELECTION_AUTHORISATION_LINE,
+  CORRECTION_CONTACT:`mailto:${VIC_ELECTION_CORRECTIONS_EMAIL}`, CORRECTION_RESPONSE:VIC_ELECTION_CORRECTIONS_RESPONSE})
 const link = (href: string, label: string) => safeHref(href) ? `<a href="${esc(href)}">${esc(label)}</a>` : esc(label)
 const count = (n: number) => n.toLocaleString('en-AU')
 const dates = (d: VicElection) => `<section class="hub-section" id="key-dates"><h2>Key dates</h2><dl class="vic-dates"><div><dt>Caretaker period</dt><dd>6 pm Tuesday 3 November 2026, unless the Legislative Assembly is dissolved earlier. ${link(d.sources.caretaker,'Victorian caretaker guidelines')}</dd></div><div><dt>Early voting</dt><dd>18–27 November 2026; closed Sunday 22 November. ${link(d.sources.voting,'VEC voting options')}</dd></div><div><dt>Election day</dt><dd>Saturday 28 November 2026, 8 am to 6 pm. ${link(d.sources.timeline,'VEC election timeline')}</dd></div></dl></section>`
@@ -63,10 +67,11 @@ export function renderVicElection(d: VicElection, s: Seat | null, footer: HubFoo
     }
   }
   body += dates(d)+candidates(d,now)+boundary(d,s || undefined)+grants()+coverage(d)+licence(d)
-  return {title,description,html:hubShell(body,footer),jsonLd:structured(path,d,s ? s.members.map(m=>({href:m.href,name:m.name})) : d.seats.map(s=>({href:s.path,name:s.name})))}
+  return {title,description,html:hubShell(body,approvedFooter(footer)),jsonLd:structured(path,d,s ? s.members.map(m=>({href:m.href,name:m.name})) : d.seats.map(s=>({href:s.path,name:s.name}))),
+    card:{kicker:'Victorian election · 28 November 2026',title,lines:[description],authorisation:VIC_ELECTION_AUTHORISATION_LINE}}
 }
 export async function vicElectionPage(id: string | null, read: ReadAsset, config: HubFooterConfig & {VIC_ELECTION_HUB_ENABLED?: string} = {}) {
-  const missing = {title:'Hub not found',description:'This hub is not available.',html:hubShell('<h1>Hub not found</h1><p>This hub is not available.</p>',config),jsonLd:null,status:404}
+  const missing = {title:'Hub not found',description:'This hub is not available.',html:hubShell('<h1>Hub not found</h1><p>This hub is not available.</p>',vicElectionEnabled(config.VIC_ELECTION_HUB_ENABLED) ? approvedFooter(config) : {}),jsonLd:null,status:404}
   if (!vicElectionEnabled(config.VIC_ELECTION_HUB_ENABLED) || (id !== null && !/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(id))) return missing
   const d = await read<VicElection>(VIC_ELECTION_ASSET)
   if (id === null) return {...renderVicElection(d,null,config),status:200}

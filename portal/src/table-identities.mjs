@@ -1,7 +1,7 @@
 // Private identities are normalised in memory; only SHA-256 hashes reach D1.
 const decodedIdentity = value => {
   let raw=String(value ?? '');
-  for(let i=0;i<2;i++){try{const decoded=raw.replace(/(?:%[a-f0-9]{2})+/gi,part=>{try{return decodeURIComponent(part)}catch{return part}});if(decoded===raw)break;raw=decoded;}catch{break;}}
+  for(let i=0;i<2;i++){try{const decoded=decodeURIComponent(raw);if(decoded===raw)break;raw=decoded;}catch{break;}}
   return raw;
 };
 const words = raw => raw.toLowerCase().replace(/[^a-z0-9]+/g,' ').trim().split(' ').filter(Boolean);

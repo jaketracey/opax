@@ -15,7 +15,9 @@ import json
 from pathlib import Path
 import re
 import unicodedata
-from urllib.request import urlopen
+import sys
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+from parli.ingest.http import urlopen
 
 
 ROOT = Path(__file__).resolve().parents[1]

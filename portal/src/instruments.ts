@@ -3,6 +3,9 @@ import { FRL_ID, catalogueComplete, unpack, instrumentTableRows, type CatalogueR
 import { catalogueReader } from './catalogue-reader.mjs'
 import {applyQuery, dataTableHTML} from '../public/datatable.js'
 import {instrumentTableConfig,registerTableQuery} from '../public/register-tables.js'
+import { sourceLineHTML } from '../public/labels.js'
+import { shortDate } from '../public/format.js'
+import type { Crumb } from './seo-content'
 
 interface Attribution { source: string; source_url: string; licence_url: string; dated: string; changes: string; exceptions: string; endorsement: string }
 interface Manifest {
@@ -22,21 +25,34 @@ interface Instrument {
   namePossibleFuture: unknown[]; hasCommencedUnincorporatedAmendments: boolean
 }
 type Read = <T>(path: string) => Promise<T>
-type Block = (heading: string, sentence: string, links?: string) => string
+type Block = (heading: string, sentence: string, links?: string, crumbs?: Crumb[]) => string
 const esc = (v: unknown) => String(v ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]!))
-const shown = (v: unknown) => v == null || v === '' ? 'Not supplied' : esc(v)
-const date = (v: string | null) => v ? esc(v.slice(0, 10)) : 'Not supplied'
+const clean = (v: unknown) => String(v ?? '').replace(/\s+/g, ' ').trim()
+/** The Register's enum values in words: InForce → In force, CourtRules · Principal → Court rules · Principal. */
+const WORDS: Record<string, string> = { InForce: 'In force', NotInForce: 'Not in force', ByLaws: 'By-laws', CourtRules: 'Court rules' }
+export const words = (v: unknown) => clean(v).split(' · ').map(part => WORDS[part]
+  ?? part.replace(/([a-z])([A-Z])/g, (_, a: string, b: string) => `${a} ${b.toLowerCase()}`)).join(' · ')
+const date = (v: string | null) => v ? esc(shortDate(v)) : ''
 export const instrumentReader = catalogueReader
-const directoryLink = '<p><a href="/instruments">All instruments</a></p>'
+const REGISTER = 'Federal Register of Legislation'
+const INDEX_CRUMB: Crumb = { label: 'Instruments', href: '/instruments' }
 
-function attribution(a: Attribution) {
-  return `<footer class="instrument-attribution"><p>Source: <a href="${esc(a.source_url)}">Federal Register of Legislation (legislation.gov.au)</a>, <a href="${esc(a.licence_url)}">CC BY 4.0</a></p><p>${esc(a.dated)}</p><p>${esc(a.changes)}</p><p>${esc(a.exceptions)} ${esc(a.endorsement)}</p></footer>`
+/** One source line for the catalogue: the date of the export, the Register, and
+ *  the attribution the CC BY licence asks for in its sheet. */
+function sourceLine(m: Manifest, originals: { href: string; label: string }[], notes: string[] = []) {
+  const a = m.attribution
+  return sourceLineHTML({ updated: m.generated_at, source: REGISTER,
+    originals: [...originals, { href: a.source_url, label: 'Federal Register of Legislation' }],
+    notes: [...notes, esc(a.dated), esc(a.changes), `${esc(a.exceptions)} ${esc(a.endorsement)}`],
+    licence: `<a href="${esc(a.licence_url)}">CC BY 4.0</a>` })
 }
+const facts = (rows: [string, string][]) => `<dl class="instrument-facts">${rows.filter(([, v]) => v).map(([k, v]) => `<dt>${k}</dt><dd>${v}</dd>`).join('')}</dl>`
+
 export async function instrumentPage(id: string | null, url: URL, read: Read, block: Block, privacyCheck?: (text:string)=>boolean) {
-  const missing = () => ({ title: 'Instrument not found · OPAX', description: 'No instrument metadata is available for this FRL id.', status: 404, prerender: block('Instrument not found', 'No instrument metadata is available for this FRL id.', directoryLink) })
+  const missing = () => ({ title: 'Instrument not found · OPAX', description: 'No instrument metadata is available for this FRL id.', status: 404, prerender: block('Instrument not found', 'No instrument metadata is available for this FRL id.', '', [INDEX_CRUMB, {label:'Not found'}]) })
   if (id === null && url.pathname.replace(/\/+$/, '') !== '/instruments') return missing()
   if (id !== null && !FRL_ID.test(id)) return missing()
-  const unavailable = () => ({ title: 'Instrument catalogue not yet available · OPAX', description: 'Instrument metadata is not yet available.', status: 404, prerender: block('Instrument catalogue not yet available', 'Instrument metadata is not yet available.', '') })
+  const unavailable = () => ({ title: 'Instrument catalogue not yet available · OPAX', description: 'Instrument metadata is not yet available.', status: 404, prerender: block('Instrument catalogue not yet available', 'Instrument metadata is not yet available.', '', [{ label: 'Instruments' }]) })
   try {
     const manifest = await read<Manifest>('/instruments/manifest.json')
     if (!catalogueComplete(manifest)) return unavailable()
@@ -53,7 +69,7 @@ export async function instrumentPage(id: string | null, url: URL, read: Read, bl
       const facts = block('Federal legislative instruments', description, '')
       const table = `<div data-register-table="${config.id}">${dataTableHTML(config,page)}<script type="application/json" data-register-config>${JSON.stringify({config}).replace(/</g,'\\u003c')}</script></div>`
       return { title: 'Federal legislative instruments · OPAX', description, status: 200,noindex:Boolean(url.search),
-        prerender: facts + `<section class="wrap instrument-content">${gapNote}<p class="fineprint">Registered is the as-made registration date. FRL's in-force listing includes instruments made but not yet commenced. Dates not supplied by the API stay unknown.</p>${table}${attribution(manifest.attribution)}</section>` }
+        prerender: facts + `<section class="wrap instrument-content">${gapNote}<p class="fineprint">Registered is the as-made registration date. FRL's in-force listing includes instruments made but not yet commenced. Dates not supplied by the API stay unknown.</p>${table}${sourceLine(manifest, [])}</section>` }
     }
     const chunk = manifest.lookup[id]
     if (!Number.isInteger(chunk) || !manifest.chunks[chunk]) return missing()
@@ -63,16 +79,26 @@ export async function instrumentPage(id: string | null, url: URL, read: Read, bl
     const r = record.source
     const departments = r.administeringDepartments || []
     const sourceVersions = r.versions || []
-    const portfolios = [...new Set(departments.map(d => d.portfolio).filter(Boolean))].join('; ')
-    const kind = [r.subCollection, r.isPrincipal === true ? 'Principal' : r.isPrincipal === false ? 'Amending' : null].filter(Boolean).join(' · ') || 'Not supplied'
-    const description = `${r.status}. Made: ${r.makingDate?.slice(0, 10) || 'Not supplied'}. Registered: ${r.asMadeRegisteredAt?.slice(0, 10) || 'Not supplied'}. Commenced: ${r.commencementDate?.slice(0, 10) || 'Not supplied'}. OPAX shows metadata only.`
+    const portfolios = [...new Set(departments.map(d => clean(d.portfolio)).filter(Boolean))].join('; ')
+    const kind = words([r.subCollection, r.isPrincipal === true ? 'Principal' : r.isPrincipal === false ? 'Amending' : null].filter(Boolean).join(' · '))
+    const status = words(r.status)
+    // One meta line under the title: status, type and the making date (principle 3).
+    const meta = [status, kind, r.makingDate ? `Made ${shortDate(r.makingDate)}` : ''].filter(Boolean).join(' · ')
+    const description = `Federal legislative instrument${status ? `, ${status.toLowerCase()}` : ''}${r.makingDate ? `, made ${shortDate(r.makingDate)}` : ''}. Metadata from the Federal Register of Legislation, which holds the authoritative text.`
     // FRL publishes /{id}/latest canonical links in its own terms page.
     // Never invent a title/version path from a returned registration id.
     const authoritative = record.opax.canonical_url
-    const dates = `<dl class="instrument-facts"><dt>Made</dt><dd>${date(r.makingDate)}</dd><dt>Registered</dt><dd>${date(r.asMadeRegisteredAt)}</dd><dt>Commenced</dt><dd>${date(r.commencementDate)}</dd><dt>Status</dt><dd>${shown(r.status)}</dd><dt>Portfolio</dt><dd>${shown(portfolios)}</dd><dt>Type</dt><dd>${esc(kind)}</dd><dt>Administering department</dt><dd>${shown(departments.map(d => d.name).join('; '))}</dd><dt>FRL id</dt><dd>${esc(r.id)}</dd><dt>Series</dt><dd>${shown([r.seriesType, r.optionalSeriesNumber].filter(Boolean).join(' '))}</dd><dt>Source year / number</dt><dd>${shown(r.year)} / ${shown(r.number)}</dd></dl>`
-    const versions = `<h2>Returned version metadata</h2><p>Acquisition is bounded to one API-returned version per title. It may be an earlier version. FRL's flags below identify whether it is current or latest; use the authoritative FRL link for the latest text. Full version history is outside this phase.</p>${sourceVersions.length ? sourceVersions.map(v => `<dl class="instrument-facts"><dt>Version registration id</dt><dd>${shown(v.registerId)}</dd><dt>Version start</dt><dd>${date(v.start)}</dd><dt>Version registered</dt><dd>${date(v.registeredAt)}</dd><dt>Compilation number</dt><dd>${shown(v.compilationNumber)}</dd><dt>Latest registered version</dt><dd>${v.isLatest ? 'Yes' : 'No'}</dd><dt>Current version</dt><dd>${v.isCurrent ? 'Yes' : 'No'}</dd></dl>`).join('') : `<p>Not supplied</p>`}`
-    const relationships = [...(r.statusHistory || []), ...(r.statusPossibleFuture || [])]
+    const dates = facts([['Registered', date(r.asMadeRegisteredAt)], ['Commenced', date(r.commencementDate) || 'Not recorded on the Register'],
+      ['Portfolio', esc(portfolios)], ['Administering department', esc(departments.map(d => clean(d.name)).join('; '))],
+      ['Series', esc([r.seriesType, r.optionalSeriesNumber].filter(Boolean).join(' '))],
+      ['Year and number', r.year != null && r.number != null ? `${esc(r.year)} No. ${esc(r.number)}` : ''], ['Register id', esc(r.id)]])
+    const versions = sourceVersions.length ? `<details class="instrument-disclosure"><summary>Version</summary><p>The version OPAX holds, which may not be the latest. The Register has the latest text.</p>${sourceVersions.map(v => facts([
+      ['Registration id', esc(v.registerId)], ['Version starts', date(v.start)], ['Registered', date(v.registeredAt)], ['Compilation', esc(v.compilationNumber)],
+      ['Latest registered version', v.isLatest ? 'Yes' : 'No'], ['Current version', v.isCurrent ? 'Yes' : 'No']])).join('')}</details>` : ''
+    const notes = ['OPAX shows metadata only; the authoritative legal text is on the Register.',
+      'Registered is the as-made registration date. A version’s start date is not necessarily when the whole instrument commenced. In force can include an instrument made but not yet commenced.',
+      'No repeal, supersession or disallowance relationships are inferred.']
     return { title: `${r.name} · OPAX`, description, status: 200,
-      prerender: block(r.name, description, directoryLink) + `<section class="wrap instrument-content">${dates}<p><a href="${esc(authoritative)}" rel="noopener">Authoritative text — Federal Register of Legislation (latest registered version)</a></p><p class="fineprint">OPAX shows metadata only. The authoritative legal text is on FRL. Registered means the as-made registration date. A version start is not necessarily whole-instrument commencement. InForce can include an instrument made but not yet commenced.</p>${versions}${r.hasCommencedUnincorporatedAmendments ? '<p>FRL records commenced amendments that have not been incorporated.</p>' : ''}${r.publishComments ? `<h2>Publisher comments</h2><p>${esc(r.publishComments)}</p>` : ''}<details><summary>Source status and relationship metadata</summary><p>Supplied by FRL; no repeal, supersession or disallowance relationships are inferred.</p><pre>${esc(JSON.stringify(relationships, null, 2))}</pre></details><details><summary>All exported source metadata</summary><pre>${esc(JSON.stringify(r, null, 2))}</pre></details><details><summary>OPAX-derived fields</summary><pre>${esc(JSON.stringify(record.opax, null, 2))}</pre></details>${attribution(manifest.attribution)}</section>` }
+      prerender: block(r.name, meta, '', [INDEX_CRUMB, { label: r.name }]) + `<section class="wrap instrument-content">${dates}<p class="instrument-out"><a href="${esc(authoritative)}" rel="noopener">Authoritative text on the Federal Register of Legislation ↗</a></p>${r.hasCommencedUnincorporatedAmendments ? '<p>The Register records commenced amendments that are not yet incorporated in this text.</p>' : ''}${r.publishComments ? `<h2>Publisher comments</h2><p>${esc(r.publishComments)}</p>` : ''}${versions}<details class="instrument-disclosure"><summary>Source metadata</summary><pre>${esc(JSON.stringify(r, null, 2))}</pre></details>${sourceLine(manifest, [], notes)}</section>` }
   } catch { return unavailable() }
 }

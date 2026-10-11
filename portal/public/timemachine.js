@@ -37,6 +37,7 @@ import { personUrl, partyUrl } from './canonical-urls.js?v=225d5915ea';
  */
 
 import { shortMoney as fmtMoney } from './format.js'
+import { machineLabelHTML } from './labels.js?v=c6bf994ef7'
 
 const YEAR_MIN = 1998
 const YEAR_MAX = 2026
@@ -572,6 +573,7 @@ const CSS = `
   .tm-brief-more-inline[hidden] { display: inline !important; }
   .tm-root .tm-brief-toggle { display: none; }
 }
+.tm-brief-machine { margin: 0 0 var(--space-tight); }
 .tm-fineprint { font: var(--type-fine); color: var(--ink-soft); margin: var(--space-line) 0 0; }
 .tm-sources { margin-top: var(--space-line); font: var(--type-fine); }
 .tm-sources summary {
@@ -1618,6 +1620,11 @@ export function mountTimeMachine(container, opts = {}) {
     // On a phone the opening sentences carry the year; the rest of the
     // first paragraph and every later one wait behind one tap. Wide screens
     // show it all (CSS un-hides .tm-brief-more there).
+    // The pill says the brief is machine-written, once, at its top.
+    const machine = el('div', 'tm-brief-machine')
+    machine.innerHTML = machineLabelHTML({ notRecord: true,
+      note: `Written by a language model from the passages the knowledge box retrieved for ${data.year}. A reading aid, not the record: check any claim against the speeches.` })
+    briefEl.appendChild(machine)
     const body = el('div', 'tm-brief-body')
     const leadEnd = paras[0].length > 460 ? sentenceEnd(paras[0], 160, 400) : -1
     let hasMore = paras.length > 1
@@ -1654,8 +1661,8 @@ export function mountTimeMachine(container, opts = {}) {
     const cited = sources.filter((s) => s.cited).length
     const fine = el('p', 'tm-fineprint')
     fine.textContent = sources.length
-      ? `Machine-written from the ${sources.length} passages the knowledge box retrieved for ${data.year} so far, ${cited} of them cited. A reading aid, not the record: check any claim against the speeches.`
-      : `Machine-written from what the knowledge box had retrieved for ${data.year} so far. A reading aid, not the record.`
+      ? `From the ${sources.length} passages the knowledge box retrieved for ${data.year} so far, ${cited} of them cited.`
+      : `From what the knowledge box had retrieved for ${data.year} so far.`
     briefEl.appendChild(fine)
 
     if (sources.length) {

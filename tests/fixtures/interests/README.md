@@ -2,7 +2,7 @@ Recorded on 3 October 2026 from the opax-refresh VM using the approved access ro
 No credentials or response headers are retained.
 
 - `house-index.html`: the six `members-interests__table` elements from the House
-  register fetched with Firecrawl (`proxy: basic`, `waitFor: 3000`). Contains all
+  register fetched with Firecrawl (`basic proxy setting`, `waitFor: 3000`). Contains all
   151 members, the new APH statement API links and four remaining static PDFs.
   Source: https://www.aph.gov.au/Senators_and_Members/Members/Register
 - `senate-index.html`: the register table (76 entries), fetched by the same route.

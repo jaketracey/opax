@@ -5,6 +5,11 @@ Run: python3 scripts/ask_regression.py --out /tmp/opax-ask-baseline
 Review every answer against response.sources and original records before shipping.
 Raw responses are retained locally; commit the reviewed report, not model dumps.
 """
+
+import sys as _http_sys
+from pathlib import Path as _HttpPath
+_http_sys.path.insert(0, str(_HttpPath(__file__).resolve().parents[1]))
+from parli.ingest import http as source_http
 import argparse
 from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime, timezone
@@ -82,10 +87,10 @@ def run(base, spec, timeout):
     body = {'question': spec['q'], 'kind': 'all', **spec.get('request', {})}
     if spec.get('speaker'):
         body['speaker'] = spec['speaker']
-    req = urllib.request.Request(base.rstrip('/') + '/api/ask', data=json.dumps(body).encode(), headers={'content-type':'application/json','user-agent':'opax-ask-regression/2.0'})
+    req = source_http.Request(base.rstrip('/') + '/api/ask', data=json.dumps(body).encode(), headers={'content-type':'application/json','user-agent':source_http.USER_AGENT})
     start = time.monotonic()
     try:
-        with urllib.request.urlopen(req, timeout=timeout) as response:
+        with source_http.urlopen(req, timeout=timeout) as response:
             data = json.load(response)
             status, cache = response.status, response.headers.get('x-opax-cache')
         verdict, notes = check(spec, data)

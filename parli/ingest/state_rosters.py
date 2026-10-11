@@ -29,6 +29,8 @@ stub the member's full name from Wikidata's roster of each chamber.
 """
 from __future__ import annotations
 
+from parli.ingest import http as source_http
+
 import argparse
 import json
 import os
@@ -44,7 +46,7 @@ from datetime import datetime, timezone
 from parli.ingest.replace_guard import ExtGuardError, env_allow_shrink, replace_guard
 
 SOURCE = "state_rosters"
-UA = "OPAX research (https://opax.com.au; contact jake.tracey@noice.work)"
+UA = source_http.USER_AGENT
 SPARQL = "https://query.wikidata.org/sparql"
 
 # (state, chamber) as parli.db names them -> the Wikidata position item.
@@ -129,10 +131,10 @@ CREATE TABLE IF NOT EXISTS ext_ingest_log (
 
 def sparql(query: str, tries: int = 4) -> list[dict]:
     url = SPARQL + "?" + urllib.parse.urlencode({"query": query, "format": "json"})
-    req = urllib.request.Request(url, headers={"User-Agent": UA, "Accept": "application/sparql-results+json"})
+    req = source_http.Request(url, headers={"User-Agent": source_http.USER_AGENT, "Accept": "application/sparql-results+json"})
     for attempt in range(tries):
         try:
-            with urllib.request.urlopen(req, timeout=240) as resp:
+            with source_http.urlopen(req, timeout=240) as resp:
                 return json.load(resp)["results"]["bindings"]
         except Exception as e:  # noqa: BLE001
             if attempt == tries - 1:

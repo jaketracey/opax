@@ -6,7 +6,7 @@
 #
 # On the machine, as the user that will own the pipeline (`ubuntu`), with sudo:
 #
-#   curl -fsSL https://raw.githubusercontent.com/jaketracey/opax/main/scripts/vm/bootstrap.sh | bash
+#   git clone https://github.com/jaketracey/opax; bash opax/scripts/vm/bootstrap.sh
 #   # or, from a checkout:   scripts/vm/bootstrap.sh
 #
 # What it does (each step is skipped if already done):
@@ -280,8 +280,9 @@ if [ "$SKIP_NODE" -eq 0 ]; then
       note "node already at $NODE_VERSION"
     else
       ntmp=$(mktemp -d); ntar="node-$NODE_VERSION-linux-$NODE_ARCH.tar.xz"
-      curl -fsSL -o "$ntmp/$ntar" "https://nodejs.org/dist/$NODE_VERSION/$ntar"
-      curl -fsSL -o "$ntmp/SHASUMS256.txt" "https://nodejs.org/dist/$NODE_VERSION/SHASUMS256.txt"
+      . "$REPO_DIR/scripts/lib/http.sh"
+      curl --noproxy '*' --user-agent "$OPAX_USER_AGENT" -fsSL -o "$ntmp/$ntar" "https://nodejs.org/dist/$NODE_VERSION/$ntar"
+      curl --noproxy '*' --user-agent "$OPAX_USER_AGENT" -fsSL -o "$ntmp/SHASUMS256.txt" "https://nodejs.org/dist/$NODE_VERSION/SHASUMS256.txt"
       ( cd "$ntmp" && grep " $ntar\$" SHASUMS256.txt | sha256sum -c - >/dev/null ) || { echo "Node checksum mismatch; not installing" >&2; rm -rf "$ntmp"; exit 1; }
       $SUDO tar -xJf "$ntmp/$ntar" -C /opt
       rm -rf "$ntmp"

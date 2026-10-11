@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+import { honestFetch, runSource } from './lib/http.mjs'
 /**
  * OPAX insights: one command for "how is traffic, and is anyone responding".
  *
@@ -21,6 +22,8 @@ import { existsSync, readFileSync } from 'node:fs'
 import { homedir } from 'node:os'
 import { dirname, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
+
+await runSource(async () => {
 
 const portal = resolve(dirname(fileURLToPath(import.meta.url)), '../portal')
 const ZONE = 'de2bde527274c1b5cfeb162fbce1099d'
@@ -80,7 +83,7 @@ function wranglerToken() {
   return c.token
 }
 async function graphql(token, query) {
-  const res = await fetch('https://api.cloudflare.com/client/v4/graphql', {
+  const res = await honestFetch('https://api.cloudflare.com/client/v4/graphql', {
     method: 'POST', headers: { authorization: `Bearer ${token}`, 'content-type': 'application/json' }, body: JSON.stringify({ query }),
   })
   const body = await res.json()
@@ -104,7 +107,7 @@ async function cloudflare() {
   out.modelRoutes = await attempt(() => group(`userAgent_neq:"", clientRequestPath_in:[${MODEL_PATHS.map(p => `"${p}"`).join(',')}]`, 'clientRequestPath edgeResponseStatus clientCountryName', 30))
   out.askCallers = await attempt(() => group('clientRequestPath:"/api/ask", edgeResponseStatus:200', 'clientIP clientCountryName', 20))
   out.auPages = await attempt(() => group('userAgent_neq:"", clientCountryName:"AU", edgeResponseStatus:200, edgeResponseContentTypeName:"html"', 'clientRequestPath', 15))
-  out.ownIp = await attempt(async () => (await (await fetch('https://api64.ipify.org', { signal: AbortSignal.timeout(5000) })).text()).trim())
+  out.ownIp = await attempt(async () => (await (await honestFetch('https://api64.ipify.org', { signal: AbortSignal.timeout(5000) })).text()).trim())
   if (has('--whois') && Array.isArray(out.askCallers)) {
     for (const row of out.askCallers) {
       const r = spawnSync('whois', ['-h', 'whois.cymru.com', ` -v ${row.clientIP}`], { encoding: 'utf8' })
@@ -131,7 +134,7 @@ function printCloudflare(cf) {
 
 // ---------------------------------------------------------------- posthog
 async function hogql(key, query) {
-  const res = await fetch(`https://us.posthog.com/api/projects/${POSTHOG_PROJECT}/query/`, {
+  const res = await honestFetch(`https://us.posthog.com/api/projects/${POSTHOG_PROJECT}/query/`, {
     method: 'POST', headers: { authorization: `Bearer ${key}`, 'content-type': 'application/json' },
     body: JSON.stringify({ query: { kind: 'HogQLQuery', query } }),
   })
@@ -212,11 +215,11 @@ function printCommunity(c) {
 // ---------------------------------------------------------------- social
 async function social() {
   const out = {}
-  out.status = await attempt(async () => await (await fetch(`${ORIGIN}/api/daily-post/status`, { signal: AbortSignal.timeout(20000) })).json())
+  out.status = await attempt(async () => await (await honestFetch(`${ORIGIN}/api/daily-post/status`, { signal: AbortSignal.timeout(20000) })).json())
   const secret = env.DAILY_POST_OPERATOR_SECRET
   out.engagement = secret
     ? await attempt(async () => {
-      const res = await fetch(`${ORIGIN}/api/daily-post/engagement${has('--fresh') ? '?fresh=1' : ''}`, { headers: { authorization: `Bearer ${secret}` }, signal: AbortSignal.timeout(90000) })
+      const res = await honestFetch(`${ORIGIN}/api/daily-post/engagement${has('--fresh') ? '?fresh=1' : ''}`, { headers: { authorization: `Bearer ${secret}` }, signal: AbortSignal.timeout(90000) })
       if (!res.ok) throw new Error(`engagement HTTP ${res.status}`)
       return await res.json()
     })
@@ -252,3 +255,5 @@ else {
   for (const s of sections) printers[s](report[s])
   console.log('')
 }
+
+})

@@ -51,6 +51,8 @@ Usage:
 
 from __future__ import annotations
 
+from parli.ingest import http as source_http
+
 import argparse
 import base64
 import csv
@@ -70,7 +72,7 @@ from parli.ingest.ext_common import ExtWriter, clean_ws, log, make_session, pars
 
 CKAN = "https://data.gov.au/data/api/3/action"
 DATASET_BASE = "https://data.gov.au/data/dataset/"
-USER_AGENT = "OPAX/1.0 (+https://opax.com.au)"
+USER_AGENT = source_http.USER_AGENT
 DELAY = 1.0
 CACHE = Path(os.environ.get("OPAX_ACNC_CACHE", "~/.cache/autoresearch/acnc_ato")).expanduser()
 
@@ -635,7 +637,7 @@ class Dataset:
 
 def _session():
     s = make_session()
-    s.headers.update({"User-Agent": USER_AGENT})
+    s.headers.update({"User-Agent": source_http.USER_AGENT})
     return s
 
 

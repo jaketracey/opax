@@ -1,5 +1,10 @@
 # Periodic refresh: the sources the nightly does not touch
 
+> Access policy updated 10 Oct 2026: use the shared OPAX agent. Historical
+> proxy approvals below are superseded; refused sources are paused and the last
+> good data kept. See [SOURCES-ACCESS.md](../SOURCES-ACCESS.md).
+
+
 Runbook for refreshing the one-off data sources (government releases, GrantConnect, state donations,
 lobbyist registers, FITS, IPEA, diaries, interests, rosters, contracts, FRL Acts) and the static JSON
 exports built from them, **unattended on the nightly VM**. It is the contract between the prerequisites

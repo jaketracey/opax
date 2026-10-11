@@ -145,5 +145,21 @@ class RunTests(unittest.TestCase):
         self.assertEqual([("words_press_releases" in " ".join(c)) for c in self.calls], [True])
 
 
+def test_paused_release_keeps_other_sources_running_and_skips_its_publication():
+    calls = []
+    def run(argv, timeout, env):
+        calls.append((argv, env))
+        if argv == ['qld', 'fetch']:
+            return 4, '', '', 0
+        return 0, '{}', '', 0
+    with mock.patch.object(rr, 'count_source', return_value={'rows': 2, 'newest': '2026-10-08'}), \
+         mock.patch.object(rr, 'fetch_argv', side_effect=lambda py, db, source, since: [source, 'fetch']), \
+         mock.patch.object(rr, 'publish_argv', side_effect=lambda py, db, source, since, apply: [source, 'publish']), \
+         mock.patch.object(rr, '_run', side_effect=run), contextlib.redirect_stdout(io.StringIO()):
+        assert rr.main(['--source', 'qld', '--source', 'vic']) == 4
+    assert [argv for argv, env in calls] == [['qld', 'fetch'], ['vic', 'fetch'], ['vic', 'publish']]
+    assert calls[0][1]['OPAX_SOURCE_NAME'] == 'releases_qld'
+
+
 if __name__ == "__main__":
     unittest.main()

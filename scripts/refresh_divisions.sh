@@ -5,9 +5,10 @@ set -euo pipefail
 PY="${OPAX_PYTHON:-.venv/bin/python}"
 export OPAX_SYNC_KB=0
 SINCE=$1
-"$PY" -m parli.ingest.tvfy_refresh --db "$OPAX_DB" --since "$SINCE" --relist --strict
-# No --limit/--days: project complete chamber-days across the entire window.
-"$PY" -m parli.ingest.votes_ingest --db "$OPAX_DB" --from-legacy --load-ext-only --strict-ext --since "$SINCE"
+"$PY" -m parli.ingest.federal_feed --db "$OPAX_DB" --start "$SINCE" \
+  --stage "${OPAX_OA_STAGE:-$HOME/.cache/autoresearch/oa-feed}" --load-divisions
+# XML already writes complete ext_ evidence. The API fallback projects its
+# legacy acquisition inside federal_feed, before this exact bill-ID join.
 "$PY" -m parli.ingest.tvfy_bill_links --db "$OPAX_DB" --since "$SINCE"
 # Keep stdout JSON separate from diagnostics; the wrapper restores exports on failure.
 tmp=$(mktemp)
