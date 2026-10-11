@@ -4,7 +4,6 @@ import { StyleSheet, View } from 'react-native';
 import { Stack, router, useLocalSearchParams } from 'expo-router';
 import { catalogs } from '../../api/runtime';
 import { passageText, serverPassage } from '../../api/passage-text';
-import type { PersonSlug } from '../../api/catalogs';
 import { chamberName, jurisdictionName } from '../../design/parliament';
 import {
   EmptyState,
@@ -19,7 +18,6 @@ import {
   PersonRow,
   SourceLine,
   Text,
-  errorMessage,
 } from '../../design/primitives';
 import { formatDate } from '../../design/format';
 import { rhythm } from '../../design/tokens';

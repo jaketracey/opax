@@ -200,6 +200,8 @@ test('a first question shows the consent and sends nothing', async () => {
   expect(words.split(/\s+/).filter(Boolean).length).toBeLessThanOrEqual(60);
   expect(words).not.toMatch(/\b[A-Z]{2,}\b(?<!OPAX|RAG|AI)/);
   expect(shown('ask-consent-machine')).toBe(true);
+  // One way out, Not now: no ✕ beside it (pass 5, P3-6).
+  expect(shown('ask-consent-close')).toBe(false);
   await press('ask-consent-privacy');
   expect(openOnWeb).toHaveBeenCalledWith('/privacy', 'Privacy');
 });

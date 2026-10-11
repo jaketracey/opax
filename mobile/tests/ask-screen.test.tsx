@@ -41,6 +41,29 @@ jest.mock('../src/features/ask/store', () => {
     clearAskConversations: jest.fn(),
   };
 });
+// Pass 5, P3-6: "Your conversations" shows only with a saved conversation.
+const oneChat = {
+  v: 1 as const,
+  active: null,
+  chats: [
+    {
+      id: 'saved-fixture',
+      title: 'A saved fixture question?',
+      kind: 'all' as const,
+      speaker: '',
+      created: 1,
+      updated: 1,
+      thread: [],
+    },
+  ],
+};
+const noChats = { v: 1 as const, active: null, chats: [] };
+function withSavedChat() {
+  jest.mocked(chatsSnapshot).mockImplementation(() => oneChat);
+}
+afterEach(() => {
+  jest.mocked(chatsSnapshot).mockImplementation(() => noChats);
+});
 jest.mock('../src/features/ask/sync', () => ({
   ChatSyncError: jest.requireActual('../src/features/ask/sync').ChatSyncError,
   pushChat: jest.fn(),
@@ -173,6 +196,7 @@ test('signed-in Ask mount, typing, options and tab remount never call paid route
   });
 });
 test('failed account sync preserves local history without claiming an account save', async () => {
+  withSavedChat();
   jest.mocked(reconcileChats).mockRejectedValueOnce(new Error('Unavailable'));
   let view: ReactTestRenderer;
   await act(async () => {
@@ -401,6 +425,7 @@ test('a failed follow-up hides the previous answer suggestions and keeps Try aga
 // with Options and Your conversations; once there is an answer the question
 // and answer lead, and the same composer follows them as the follow-up.
 test('one composer: the question at idle, the follow-up under an answer', async () => {
+  withSavedChat();
   jest
     .mocked(client.askPost)
     .mockReset()
@@ -452,4 +477,21 @@ test('one composer: the question at idle, the follow-up under an answer', async 
     view.unmount();
     askSession.start();
   });
+});
+
+test('idle Ask hides Your conversations when none is saved', async () => {
+  let view!: ReactTestRenderer;
+  await act(async () => {
+    view = create(<AskScreen />);
+  });
+  expect(view.root.findAllByProps({ testID: 'ask-saved' })).toEqual([]);
+  expect(view.root.findAllByProps({ testID: 'ask-options' })).not.toEqual([]);
+  await act(async () => view.unmount());
+  withSavedChat();
+  await act(async () => {
+    view = create(<AskScreen />);
+  });
+  const row = view.root.findAllByProps({ testID: 'ask-saved' })[0]!;
+  expect(row.props.value).toBe('1');
+  await act(async () => view.unmount());
 });

@@ -22,6 +22,8 @@ export function AskConsent({
       title="Before you ask"
       onDone={onDecline}
       doneLabel="Close"
+      // "Not now" is the way out; one, not two (pass 5, P3-6).
+      closeButton={false}
       testID="ask-consent"
       doneID="ask-consent-close"
     >

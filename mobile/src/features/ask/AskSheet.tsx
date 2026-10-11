@@ -15,6 +15,7 @@ export function AskSheet({
   onDone,
   onClose = onDone,
   doneLabel = 'Done',
+  closeButton = true,
   testID,
   doneID,
   keyboardTarget,
@@ -25,6 +26,11 @@ export function AskSheet({
   onClose?: () => void;
   /** What VoiceOver calls the close button. */
   doneLabel?: string;
+  /**
+   * False where the sheet ends in its own way out ("Not now"): no ✕ beside
+   * it. A swipe down still closes the sheet (`onClose`).
+   */
+  closeButton?: boolean;
   testID: string;
   doneID: string;
   keyboardTarget?: RefObject<View | null>;
@@ -45,12 +51,14 @@ export function AskSheet({
           <Heading level={2} style={styles.title}>
             {title}
           </Heading>
-          <IconButton
-            symbol="xmark"
-            accessibilityLabel={doneLabel}
-            onPress={onDone}
-            testID={doneID}
-          />
+          {closeButton ? (
+            <IconButton
+              symbol="xmark"
+              accessibilityLabel={doneLabel}
+              onPress={onDone}
+              testID={doneID}
+            />
+          ) : null}
         </View>
         {keyboardTarget ? (
           <KeyboardStableScreen testID={testID} keyboardTarget={keyboardTarget}>

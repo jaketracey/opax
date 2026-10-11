@@ -7,6 +7,7 @@ import {
   Group,
   ChoiceChips,
   Section,
+  Text,
 } from '../../design/primitives';
 import { AskSheet } from './AskSheet';
 import {
@@ -145,17 +146,7 @@ export function Options({
           testID="ask-topic"
         />
       </Section>
-      <Section
-        title="Include"
-        accent="bills"
-        info={{
-          title: 'About record types',
-          notes: [
-            'Search all records, including political funding, contracts and grants. Choose Speeches to search speeches only.',
-          ],
-          testID: 'ask-record-types-info',
-        }}
-      >
+      <Section title="Include" accent="bills">
         <ChoiceChips
           value={o.kind}
           segments={[
@@ -165,6 +156,10 @@ export function Options({
           onChange={(v) => update('kind', v)}
           testID="ask-kind"
         />
+        {/* Said once under its choice, not behind an ⓘ (pass 5). */}
+        <Text variant="fine" wordSafe testID="ask-kind-note">
+          All records includes political funding, contracts and grants.
+        </Text>
       </Section>
       <Group>
         {error ? <ErrorState message={error} /> : null}

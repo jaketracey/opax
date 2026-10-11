@@ -506,13 +506,16 @@ export default function AskScreen() {
               onPress={openOptions}
               testID="ask-options"
             />
-            <LinkRow
-              title="Your conversations"
-              value={String(saved.chats.length)}
-              disabled={s.busy}
-              onPress={() => void history()}
-              testID="ask-saved"
-            />
+            {/* An empty list is not a destination (pass 5, P3-6). */}
+            {saved.chats.length ? (
+              <LinkRow
+                title="Your conversations"
+                value={String(saved.chats.length)}
+                disabled={s.busy}
+                onPress={() => void history()}
+                testID="ask-saved"
+              />
+            ) : null}
           </RowList>
           {filters}
         </Group>
