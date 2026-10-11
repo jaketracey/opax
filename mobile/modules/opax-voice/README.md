@@ -222,3 +222,54 @@ Jake alone checks echo cancellation on physical hardware, Siri/calls/alarms, Blu
 | Worker-derived deletion responses, disabled members and credential races              | [AccountDeletionTests.swift:13](ios/OpaxVoiceCore/Tests/OpaxVoiceCoreTests/AccountDeletionTests.swift#L13)     |
 | Actual Worker deletion/community-status fixture generation                            | [generate-deletion-fixtures.mjs:10](scripts/generate-deletion-fixtures.mjs#L10)                                |
 | Cached, broadcast close signal and terminal delegate callbacks                        | [HTTPClient.swift:262](ios/OpaxVoiceCore/Sources/OpaxVoiceCore/HTTPClient.swift#L262)                          |
+
+## Android (`android/`, package `au.com.opax.voice`)
+
+The Kotlin module registers as `OpaxVoice` with the same functions, events and
+bridge values as iOS; the Swift core is its specification. Account half (lane 1):
+
+```
+android/src/main/java/au/com/opax/voice/
+  Models.kt            typed status, read models, events, strict JSON (Swift JSONDecoder rules)
+  Credentials.kt       opaque credential, origin-scoped Keystore store, atomic compare-and-clear, cookie parser
+  HttpClient.kt        routes, RoutePolicy, scoped headers, fresh-status classification, OkHttp transport
+  CommunityPolicy.kt   the reviewed community methods and query parameters
+  StoredVoiceConsent.kt consent, denied unless an explicit grant is stored
+  VoiceBridgeValue.kt  explicit projection of every bridge value and event
+  VoiceController.kt   VoiceCore (the bridge's contract), AccountVoiceCore, the bridge controller
+  OpaxVoiceModule.kt   the Expo module
+android/src/voiceTest/      debug and e2e: loopback policy, in-memory e2e credentials
+android/src/voiceProduction/ production release: the opax.com.au origin and the Keystore only
+```
+
+- **Build switches.** `build.gradle` reads `OPAX_VARIANT`, `OPAX_PRODUCTION_VOICE`
+  and `OPAX_FIXTURE_PORT`, as the iOS pods do. The app's e2e build type uses this
+  library's release variant compiled from `voiceTest`; e2e talks only to
+  `http://10.0.2.2:<port>` (the emulator's host loopback) with in-memory
+  credentials. Development builds use production, as iOS DEBUG does. The
+  production switch embeds `voice-production-policy.json`'s routes and consent
+  default, and the module refuses to start unless they match `AuthRoute`.
+- **Credential.** AES-256-GCM under a non-exportable Android Keystore key, no user
+  authentication; the origin is authenticated data. The ciphertext lives in the
+  private `au.com.opax.voice.session` preferences file, which
+  `res/xml/opax_voice_*_rules.xml` exclude from cloud backup and device transfer.
+  The manifest merges both rules into the app. An item that cannot be decrypted
+  (lost key, restored copy, other origin) reads as signed out and is removed; a
+  Keystore error is `unavailable`. iOS's WhenUnlocked restriction has no exact
+  equivalent here (`setUnlockedDeviceRequired` misbehaves on some devices), so the
+  key is usable while the device is locked.
+- **Transport.** OkHttp with no cookie jar, cache, redirects or silent retries,
+  15-second timeouts, and a policy check on the `HttpUrl` actually sent.
+  `TransportGuard` is the test and e2e host guard (Swift's `VoiceTestSafety`
+  for HTTP).
+- **Call half.** `start`, `mute`, `end`, `sendText`, `discardEvidence` and
+  `background` return `{ok: false, error: "unavailable"}` until the call lane
+  wires them. `AccountVoiceCore` implements the non-call part of
+  `VoiceCallController` (status, refusals, open-session polling, teardown,
+  sign-out, deletion) behind `VoiceCore`; the call lane's `CallController`
+  implements `VoiceCore` and replaces it in `VoiceController.create`, then adds
+  `onVoiceLevel` forwarding with `VoiceBridgeValue.levels`.
+- **Tests.** `./gradlew :opax-voice:testDebugUnitTest` (Robolectric, SDK 34) ports
+  the account and HTTP XCTest cases against real loopback HTTP servers and the
+  copied Worker fixtures. Robolectric has no AndroidKeyStore, so the store's
+  tests use a software key and check the Keystore key spec separately.

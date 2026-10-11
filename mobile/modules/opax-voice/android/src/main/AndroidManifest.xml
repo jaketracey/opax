@@ -1,0 +1,8 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+  <uses-permission android:name="android.permission.INTERNET" />
+  <!-- The session credential never leaves this device: excluded from cloud
+       backup (Android 6+) and from device-to-device transfer (Android 12+). -->
+  <application
+    android:dataExtractionRules="@xml/opax_voice_data_extraction_rules"
+    android:fullBackupContent="@xml/opax_voice_backup_rules" />
+</manifest>
