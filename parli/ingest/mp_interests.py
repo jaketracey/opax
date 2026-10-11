@@ -373,6 +373,7 @@ def extract_interests_with_haiku(text: str, api_key: str) -> dict | None:
     try:
         response = client.messages.create(
             model=HAIKU_MODEL,
+            thinking={"type": "disabled"},
             max_tokens=4096,
             messages=[
                 {"role": "user", "content": EXTRACTION_PROMPT + text},

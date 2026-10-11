@@ -349,6 +349,7 @@ def classify_donations_llm(db, batch_size: int = 100, max_batches: int = 0) -> d
         try:
             response = client.messages.create(
                 model="claude-haiku-5-5",
+                thinking={"type": "disabled"},
                 max_tokens=4096,
                 system=LLM_SYSTEM_PROMPT,
                 messages=[{"role": "user", "content": json.dumps(batch)}],

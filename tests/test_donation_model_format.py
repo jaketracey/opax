@@ -36,6 +36,7 @@ class DonationModelFormatTests(unittest.TestCase):
             counts = classifier.classify_donations_llm(db, batch_size=100, max_batches=1)
         create.assert_called_once()
         self.assertEqual(create.call_args.kwargs["system"], classifier.LLM_SYSTEM_PROMPT)
+        self.assertEqual(create.call_args.kwargs["thinking"], {"type": "disabled"})
         self.assertEqual(set(json.loads(create.call_args.kwargs["messages"][0]["content"])), set(self.expected))
         return dict(db.execute("SELECT donor_name, industry FROM donations")), counts, create.call_args.kwargs["model"]
 
