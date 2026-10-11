@@ -6,15 +6,25 @@ very long text with `text.clip`. The short threshold counts Unicode code points 
 input: **under 200**, rather than 200 or fewer. Both queue tasks finish with `status=done` and
 `terminal_reason=skipped-short` before generation, including one-word procedural records. Nothing is removed from the KB.
 
-The summary validator checks personal honorifics, capitalised or uppercase names,
-hyphenated and compound names, initials, and surnames in personal or possessive positions. Names supported by the full unit text or the parliamentary
-roster pass. Electorates, known places, parties, institutional/law titles and ministerial
-portfolios are exempt as whole phrases; institutional words never excuse a titled person.
-This is a deterministic recogniser, with limited coverage of
-ambiguous isolated capitalised words; the offline audit is specificity evidence, not
-personal-name recall or model-output precision.
+The historic summary validator guards against **novel capitalised terms**, without trying
+to recognise personal names. It tokenises capitalised words and maximal runs joined by
+spaces, hyphens, apostrophes or `of/de/la/van`. Sentence-initial terms are also checked,
+except a small list of common English words and the existing prompt's action verbs.
+Each whole candidate must occur in the full unit text, the parliamentary roster, or the
+closed, reviewed `NON_PERSON_TERMS` list in `src/validate.ts`. Matching uses NFKC,
+case folding, apostrophe/hyphen normalisation and whitespace normalisation.
 
-A name failure discards the summary and permits one corrective escalation. The
+The non-person list covers Australian states/territories and their capital cities,
+Parliament/House/Senate/Commonwealth/Australia, parties, months/weekdays and common
+parliamentary offices and institutional words. It applies only to the whole candidate:
+`Government Quenwick` and `Government Department` cannot inherit an exemption from
+`Government`. There are no street, geography, organisation, electorate or law-title
+exemptions. Added places and organisations, including New Caledonia and Bureau of
+Meteorology, need their own unit-text support. Conservative rejection is intentional;
+the unit remains indexed and readable without its machine brief.
+
+A novelty failure discards the summary and permits one corrective escalation with the
+instruction **"use only names that appear in the speech"**. The
 `names_rejected` queue flag preserves that allowance across budget/deadline interruptions
 and outages. A completed corrective response that still fails validation finishes as
 `status=done, terminal_reason=rejected-names`. Accepted topics can finish independently.
@@ -63,38 +73,43 @@ and senate 1993–2005. The pilot samples those files and is excluded from the T
 | Question | 19 / 667 | 991 / 38,226 |
 | Answer | 33 / 667 | 2,166 / 38,399 |
 
-## Text-only guard audit
+## Strictness measurement
 
-No model was called. Complete pilot text checked against its own unit text fires **0/2,000**.
-That control verifies source support and necessarily passes references present in the unit;
-it does not estimate generated-summary quality. Using the clipped model input as the
-stand-in summary fires **3/2,000 (0.15%)**, from names cut by head/tail clipping.
+The offline bake-off contains **200 real Haiku briefs** in
+`/home/jake/opax-staging/federation/bakeoff/haiku-200.jsonl`. Every brief was matched to
+its full unit in the staged pilot and passed through the Worker's deterministic cleanup
+before checking the strict guard. No briefs were missing, empty, refused or excluded.
+**69/200 (34.5%) would be rejected by the guard. This exceeds the 15% threshold; the
+rule has not been loosened.** This measures existing first-attempt outputs, rather than
+terminal rejections after a corrective escalation. The sample is not a random T1 sample,
+so its rate should not be treated as a precise T1 forecast.
 
-An independent reference selector extracts place/electorate and party mentions,
-ministerial titles and bill/act titles from the pilot. Testing those spans in summary-style
-prose with source support withheld fires **0/8,135 references (0%)**. The selector stops
-before personal honorifics or incomplete subsequent offices, restores split hyphenated
-law titles, and excludes ambiguous personal-title fragments mistaken for laws. It corrects
-58 spans and replaces nine malformed/ambiguous controls with nine additional source-derived
-place/organisation occurrences, selected in pilot order independently of guard results.
-There are 8,126 clean original occurrences plus nine replacements, with no resampling.
-The review's nine place/organisation examples also pass: **0/9 (0%)**.
+The seven new invented probes and four earlier probes all reject: **11/11**. Fourteen
+review place/organisation references (the nine earlier examples plus New Caledonia,
+Bureau of Meteorology, New Delhi, Rio de Janeiro and Kings Cross) reject without source
+support and all pass with source support.
 
-| Reference controls | References | Fired |
-| --- | ---: | ---: |
-| Places/electorates | 4,545 | 0 |
-| Parties | 685 | 0 |
-| Ministerial titles | 1,956 | 0 |
-| Bills/acts | 943 | 0 |
-| Additional organisations | 6 | 0 |
+The fixed pilot reference sample retains **8,135 controls** (8,126 clean original spans
+plus nine deterministic replacements; 58 spans corrected). Used as briefs, **31/8,135
+(0.3811%)** reject with full source support, and **3,276/8,135 (40.2704%)** reject with
+source support withheld. The latter is the cost of prohibiting novel additions, not a
+false-positive rate under this policy. Fragment selection and normalised whole-term
+matching also limit what the supported control rate establishes. Complete pilot text
+checked as its own brief rejects **0/2,000**; clipped model text rejects **8/2,000 (0.4%)**.
 
-These automatically selected controls establish text-only specificity; they do not
-measure model-output precision or personal-name recall. Aggregate review evidence is in
-`enrich/historic-review-measurements.json`.
+| Reference controls | References | Source supported rejects | Source withheld rejects |
+| --- | ---: | ---: | ---: |
+| Places/electorates | 4,545 | 18 | 1,489 |
+| Parties | 685 | 0 | 0 |
+| Ministerial titles | 1,956 | 0 | 838 |
+| Bills/acts | 943 | 13 | 943 |
+| Additional organisations | 6 | 0 | 6 |
 
-The original combined prompt SHA256 is
-`44029ec22e9b37b0bf6cdd383b499e62be187f085ec38fb432043f49c4c02b30`.
-No speech text, names, titles or model prompts are persisted by the measurement script.
+`historic-strict-measurements.json` contains aggregate results and input hashes;
+`historic-review-measurements.json` retains migration/differential evidence alongside
+updated guard and roster counts. Neither report contains people, speech text, briefs,
+selected terms or prompts. The live combined prompt remains byte-identical to its golden
+fixture, SHA256 `44029ec22e9b37b0bf6cdd383b499e62be187f085ec38fb432043f49c4c02b30`.
 
 ## Neuron estimate
 
@@ -107,15 +122,15 @@ to need both tasks. Tokenizer/schema framing and nightly spend are excluded.
 
 | Scenario | Neurons | Days at 1.5M/day | Whole budget days |
 | --- | ---: | ---: | ---: |
-| One primary call per eligible unit | 5,012,388 | 3.34 | 4 |
-| Plus name escalation for 1% of units | 5,168,152 | 3.45 | 4 |
-| Plus name escalation for 5% of units | 5,791,210 | 3.86 | 4 |
-| Every unit needs a name escalation | 20,588,829 | 13.73 | 14 |
-| Primary calls all reach 4,000 output tokens | 22,624,474 | 15.08 | 16 |
+| One primary call per eligible unit | 5,028,655 | 3.35 | 4 |
+| Plus name escalation for 1% of units | 5,185,585 | 3.46 | 4 |
+| Plus name escalation for 5% of units | 5,813,306 | 3.88 | 4 |
+| Every unit needs a name escalation | 20,721,675 | 13.81 | 14 |
+| Primary calls all reach 4,000 output tokens | 22,640,742 | 15.09 | 16 |
 
 Escalation scenarios use the same output-token assumption; their rates are illustrative,
 not measured. Ordinary validator retries and concurrent nightly spending can add days.
-At the existing steady budget of 150,000/day, the baseline would require 33.42 budget days.
+At the existing steady budget of 150,000/day, the baseline would require 33.52 budget days.
 
 ## Reproduce locally
 
@@ -125,29 +140,46 @@ From `enrich/`, with Node 24 and dependencies installed:
 node scripts/build_historic_names.ts
 node scripts/measure_historic.ts
 node scripts/measure_historic.ts --pilot-audit
+node scripts/measure_strict_guard.ts
 node scripts/benchmark_migration.ts /tmp/opax-enrich-migration.json
 npm test
 npx tsc --noEmit
 npx wrangler deploy --dry-run
 ```
 
-The builders accept alternate local roster/portal and staged-directory paths. The asset
-contains 5,791 parliamentary name forms, 440 electorate names and 307 portfolio words
-(97,308 bytes), derived from the Handbook federation members/electorates/ministries
-exports and `portal/public/parliamentarians.json`. It is bundled by Wrangler; no roster D1
-table or upload is needed. Handbook members are admitted on verified service. Portal entries
-require a pid, a seat/representation record, or dated service in a chamber; speech attendance
-and committee witness records do not qualify. The filter admits 1,129 of 1,700 portal entries
-and removes 571, including all 260 witness entries flagged in review. The Handbook contributes
-1,881 verified members; overlaps are deduplicated as name forms. The census never contacts
-KB, Workers AI or D1. The migration benchmark uses an isolated local Miniflare D1 over IPv6;
-it does not modify dependencies or use any remote binding.
+The roster builder accepts positional local paths for the Handbook directory, portal
+export, cached official snapshots and dated member SQLite database. Defaults are the
+staged Handbook roster, `portal/public/parliamentarians.json`,
+`scripts/roster_state_evidence.json` and `/home/jake/.cache/autoresearch/parli.db`.
+The database is opened read-only. A missing evidence source fails the build rather than
+silently dropping verified forms.
+
+The bundled asset contains **5,835 parliamentary name forms (90,101 bytes including
+newline)**. The Handbook contributes 1,881 verified members. Portal entries first qualify
+through a pid, seat/representation record, or dated chamber service. Entries with incomplete
+portal metadata are additionally matched to cached official parliamentary member snapshots
+**and** canonical member records with dated service, matching state, chamber and full/alias
+forms. Historical service qualifies even if a cached end date precedes a later snapshot:
+this is an all-time roster, rather than a current-member list.
+
+This restores **27 verified NSW directory entries**, adding their 27 full forms and 17
+surname forms: 44 forms total. It admits 1,156 of 1,700 portal entries and excludes 544,
+including all **260 unverified witness entries** flagged in review. Speech attendance and
+committee witness records do not establish membership. Overlaps are deduplicated.
+Only parliamentary names are shipped to the Worker. The 440 electorate names and 307
+portfolio words used to select the fixed offline controls are separate, script-only
+`historic-control-vocabulary.json`; they cannot become guard exemptions.
+
+No roster D1 table/upload is needed. The census and strictness measurement never contact
+KB, Workers AI or D1. The unchanged migration benchmark uses isolated local Miniflare D1
+over IPv6 and never uses a remote binding.
 
 The review's differential harness is preserved as `scripts/differential_non_historic.mjs`.
 Run it against an isolated `origin/main` checkout and this worktree, then compare the output
 JSON objects. It covers 13 source labels and 11 scenarios (143 cases), comparing model calls,
 KB requests/state, original queue fields, spend, cursors/backoff and tick stats. Only the new
-historic metadata columns and counters are excluded. **0 differences** were observed.
+historic metadata columns and counters are excluded. **0 differences** were observed again across all 143 cases against `origin/main` at
+`108bbdd0`.
 
 ## Orchestrator deployment
 
@@ -192,6 +224,6 @@ row hashes and table/index root pages were identical before and after. Old-worke
 claim and finish statements succeeded against the migrated schema. Timing is local evidence,
 not a production latency guarantee.
 
-Validation: 157 tests, TypeScript and Worker deploy dry run. No production KB, Workers AI,
+Validation: 162 tests, TypeScript and Worker deploy dry run. No production KB, Workers AI,
 remote D1 calls, push or deployment were performed. Repository changes are confined to
 `enrich/`; the staged aggregate report was refreshed in place.

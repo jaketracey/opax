@@ -1,0 +1,115 @@
+{
+  "schema": 1,
+  "method": "Strict capitalised-term novelty guard on cleaned offline Haiku summaries, with each full staged unit as source support; no model or network calls.",
+  "limitations": "Observed first-attempt guard failures, not terminal rejection after corrective escalation. The 200-unit bake-off sample is not a random T1 sample. Control references without source support are deliberate novelty failures, not false positives under this rule.",
+  "inputs": {
+    "briefFile": "haiku-200.jsonl",
+    "sha256": "bbe95d82b5a1c1998967ab45681c16bf39f01aebe3d90a9b066ee061bd2e4f86",
+    "pilotFile": "pilot-2000.jsonl",
+    "pilotSha256": "c70064bc1485bae07ed2b82069645a4d92bb35e7bc7deb37c9091f46acf86b44",
+    "pilotUnits": 2000,
+    "matchedSources": 200
+  },
+  "haiku": {
+    "tested": 200,
+    "rejected": 69,
+    "rate": 0.345,
+    "rows": 200,
+    "excluded": 0,
+    "missingSource": 0,
+    "aboveFifteenPercent": true
+  },
+  "controls": {
+    "tested": 8135,
+    "rejected": 31,
+    "rate": 0.0038106945298094653,
+    "sourceSupport": "full own unit",
+    "sourceWithheld": {
+      "tested": 8135,
+      "rejected": 3276,
+      "rate": 0.4027043638598648
+    },
+    "originalCleanOccurrences": 8126,
+    "malformedReplaced": 9,
+    "correctedSpans": 58,
+    "byCategory": {
+      "placesElectorates": {
+        "supported": {
+          "tested": 4545,
+          "rejected": 18,
+          "rate": 0.0039603960396039604
+        },
+        "withheld": {
+          "tested": 4545,
+          "rejected": 1489,
+          "rate": 0.3276127612761276
+        }
+      },
+      "parties": {
+        "supported": {
+          "tested": 685,
+          "rejected": 0,
+          "rate": 0
+        },
+        "withheld": {
+          "tested": 685,
+          "rejected": 0,
+          "rate": 0
+        }
+      },
+      "titles": {
+        "supported": {
+          "tested": 1956,
+          "rejected": 0,
+          "rate": 0
+        },
+        "withheld": {
+          "tested": 1956,
+          "rejected": 838,
+          "rate": 0.4284253578732106
+        }
+      },
+      "laws": {
+        "supported": {
+          "tested": 943,
+          "rejected": 13,
+          "rate": 0.013785790031813362
+        },
+        "withheld": {
+          "tested": 943,
+          "rejected": 943,
+          "rate": 1
+        }
+      },
+      "organisations": {
+        "supported": {
+          "tested": 6,
+          "rejected": 0,
+          "rate": 0
+        },
+        "withheld": {
+          "tested": 6,
+          "rejected": 6,
+          "rate": 1
+        }
+      }
+    }
+  },
+  "reviewProbes": {
+    "novelInventedTerms": {
+      "tested": 11,
+      "rejected": 11,
+      "rate": 1
+    },
+    "placesAndOrganisationsWithheld": {
+      "tested": 14,
+      "rejected": 14,
+      "rate": 1
+    },
+    "placesAndOrganisationsSupported": {
+      "tested": 14,
+      "rejected": 0,
+      "rate": 0
+    }
+  }
+}

@@ -31,10 +31,10 @@ function add(out: Counts, year: string, chamber: string, kind: string, short: bo
   for (const [group, key] of [[out.byYear, year], [out.byChamber, chamber], [out.byKind, kind], [out.strata, `${year}/${chamber}/${kind}`]] as const) bump(group[key] ??= { total: 0, short: 0, share: 0 })
 }
 
-// Independently select known legitimate references from pilot text. These are tested with
-// source support removed, so the source-text exemption cannot make the controls tautological.
+// Independently select known legitimate references from pilot text. With source support
+// withheld, this measures the cost of strict novelty rather than false positives.
 // The controls cover place/electorate names, party names, ministerial titles and law titles;
-// they are an offline specificity audit, not labelled model-output precision/recall.
+// Real offline model-output rejection is measured by measure_strict_guard.ts.
 const controls: Record<string, { references: number; fired: number; rate: number; affectedUnits: number }> = Object.fromEntries(['placesElectorates','parties','titles','laws','organisations'].map((k) => [k, { references: 0, fired: 0, rate: 0, affectedUnits: 0 }]))
 let malformedControls = 0
 let correctedControls = 0
@@ -138,8 +138,8 @@ const report = {
   t1Definition: 'Manifest outputs; excludes the duplicate pilot sample. allJsonl includes the pilot for literal glob totals.',
   pilot, t1, allJsonl, files,
   guardAudit: {
-    method: 'Existing prompt text is retained for live sources. No model is called: test full pilot text and clipped model input against each unit own full text, and independently selected non-person reference spans with source support withheld.',
-    limitation: 'Text-only specificity checks; no generated summaries or labelled personal-name recall. The own-text control necessarily passes supported references and is not a model-output precision estimate.',
+    method: 'Strict capitalised-term novelty guard; no model is called. Test full pilot text and clipped model input against each unit own full text, plus independently selected references with source support withheld.',
+    limitation: 'Withheld-source references deliberately test novel additions and are not false positives under this rule. Real offline Haiku brief rejection is reported separately in historic-strict-measurements.json.',
     promptSha256: createHash('sha256').update(buildSystemPrompt(['summary', 'topics'])).digest('hex'),
     unitsTested: pilotTested, ownTextFired: pilotFired, ownTextRate: pilotFired / pilotTested, clippedTextFired: pilotClippedFired,
     nonPersonControls: { ...controlTotals, originalCleanOccurrences: cleanPool.length, correctedSpans: correctedControls, malformedOrAmbiguousFragmentsReplaced: malformedControls, replacementMethod: 'Replace malformed fragments with the first independently selected additional gazetteer/organisation occurrences in pilot order; no guard-dependent filtering.', rate: controlTotals.fired / controlTotals.references, affectedUnits: controlUnitsFired, byCategory: controls },

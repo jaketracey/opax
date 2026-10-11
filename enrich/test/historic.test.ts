@@ -9,7 +9,7 @@ import { effectiveBudget } from '../src/budget.ts'
 import { isHistoricSpeech, skipHistoricShort, summaryCharacters } from '../src/historic.ts'
 import { buildSystemPrompt } from '../src/prompts.ts'
 import { runTick } from '../src/tick.ts'
-import { NAMES_PROBLEM, hasNewPersonalName, validateSummary } from '../src/validate.ts'
+import { NAMES_PROBLEM, NON_PERSON_TERMS, capitalisedTerms, hasNewPersonalName, validateSummary } from '../src/validate.ts'
 import { RejectedNames, writeItem } from '../src/write.ts'
 import { FakeAi, FakeKb, GOOD_SUMMARY, makeD1, makeDeps, rows, speechText } from './helpers.ts'
 
@@ -106,22 +106,23 @@ test('guard passes names in the unit, word boundaries, normalised punctuation an
   assert.equal(validateSummary(badSummary, { text: speechText(), historic: true, nameText: `${speechText()} ${'other text '.repeat(1600)} ${invented}` }).includes(NAMES_PROBLEM), false)
 })
 
-test('guard passes roster names and titled surnames derived from the asset at runtime', () => {
+test('guard passes whole roster forms derived from the asset at runtime', () => {
   const entries = roster.names.split('\n')
   const full = entries.find((n) => /^[a-z]+ [a-z]+$/.test(n))!
   const titled = full.replace(/\b[a-z]/g, (s) => s.toUpperCase())
   assert.equal(hasNewPersonalName(`Reported that ${titled} supported regional housing projects.`, ''), false)
-  assert.equal(hasNewPersonalName(`Asked Mr ${titled} about regional housing projects.`, ''), false)
+  assert.equal(hasNewPersonalName(`Asked Mr ${titled} about regional housing projects.`, `Mr ${titled} attended.`), false)
   const surname = entries.find((n) => /^[a-z]{5,}$/.test(n))!
-  assert.equal(hasNewPersonalName(`Reported that Mr ${surname[0].toUpperCase() + surname.slice(1)} supported housing.`, ''), false)
+  assert.equal(hasNewPersonalName(`Reported that ${surname[0].toUpperCase() + surname.slice(1)} supported housing.`, ''), false)
 })
 
-test('guard passes places, electorates, parties, acts, bills and ministerial titles', () => {
-  for (const reference of ['New South Wales', 'South Australia', 'Port Moresby', 'New Zealand', 'Australian Labor Party', 'Liberal Party', 'Australian Democrats', 'One Nation', 'Health Insurance Amendment Bill', 'Health Insurance (Regional Housing) Amendment Bill', 'Native Title Act', 'the Treasurer', 'Mr Speaker', 'Deputy Prime Minister', 'Minister for Foreign Affairs', 'Minister for Regional Development', 'Mr Deputy Speaker', 'Question Time']) {
-    assert.equal(hasNewPersonalName(`Reported concerns about ${reference} and better regional services.`, ''), false)
+test('the reviewed allow-list passes only whole terms', () => {
+  for (const reference of NON_PERSON_TERMS) {
+    assert.equal(hasNewPersonalName(`Reported concerns about ${reference} and regional services.`, ''), false)
+    assert.equal(hasNewPersonalName(`Reported concerns about ${reference} Quenwick and regional services.`, ''), true)
   }
-  const electorate = roster.electorates.split('\n').find((n) => n.includes(' '))!
-  assert.equal(hasNewPersonalName(electorate.replace(/\b[a-z]/g, (s) => s.toUpperCase()), ''), false)
+  assert.equal(hasNewPersonalName('Reported concerns about Government Department and regional services.', ''), true)
+  assert.equal(hasNewPersonalName('Reported concerns about Australian Bill and regional services.', ''), true)
 })
 
 test('historic prompt adds the role instruction while the live golden prompt remains unchanged', () => {
@@ -138,6 +139,7 @@ test('one name rejection escalates once, then becomes terminal without a summary
   await queueBoth(d1)
   const stats = await runTick(deps)
   assert.deepEqual(ai.calls.map((c) => c.model), [deps.cfg.primaryModel, deps.cfg.escalationModel])
+  assert.ok(ai.userPrompts()[1].includes('use only names that appear in the speech'))
   assert.equal(stats.rejectedNames, 1)
   const summary = rows(raw, "SELECT * FROM queue WHERE task = 'speech_summary'")[0]
   assert.equal(summary.status, 'done')
@@ -150,6 +152,60 @@ test('one name rejection escalates once, then becomes terminal without a summary
   assert.ok(rows(raw, 'SELECT sample FROM rejections').every((r) => r.sample === ''))
   await runTick(deps)
   assert.equal(ai.calls.length, 2)
+})
+
+test('seven round-two probes reject novel street, river and bare surname terms on the write path', async () => {
+  for (const summary of [
+    'Thanked Arvella Street for supporting regional housing projects and better local health services.',
+    'Thanked River Vaelquist for supporting regional housing projects and better local health services.',
+    'Paid tribute to Vaelquist after his work supporting housing projects and better regional health services.',
+    'Urged action after Vaelquist died while supporting regional housing projects and better local health services.',
+    "Called for an investigation into Vaelquist's conduct during regional housing projects and local health services.",
+    'Reported concerns raised by Vaelquist during regional housing projects and local health services.',
+    'Reported concerns that Vaelquist would lose support for regional housing projects and local health services.',
+  ]) {
+    assert.equal(hasNewPersonalName(summary, speechText()), true)
+    const kb = new FakeKb()
+    hist(kb)
+    await assert.rejects(writeItem(kb, 'r1', { task: 'speech_summary', value: summary, historic: true, force: true }), RejectedNames)
+    const ai = new FakeAi(() => JSON.stringify({ summary, topics: [] }))
+    const { deps, d1, raw } = makeDeps({ kb, ai, env: { WRITE_MODE: 'live' } })
+    await queueBoth(d1)
+    await runTick(deps)
+    const row = rows(raw, "SELECT * FROM queue WHERE task='speech_summary'")[0]
+    assert.equal(ai.calls.length, 2)
+    assert.ok(ai.userPrompts()[1].includes('use only names that appear in the speech'))
+    assert.equal(row.status, 'done')
+    assert.equal(row.terminal_reason, 'rejected-names')
+    assert.equal(row.result, null)
+    assert.ok(!kb.writes().some(call => call.includes('summary')))
+  }
+})
+
+test('additional places and organisations pass only when the unit mentions them', () => {
+  for (const reference of ['New Caledonia', 'Bureau of Meteorology', 'New Delhi', 'Rio de Janeiro', 'Kings Cross']) {
+    const summary = `Reported concerns about ${reference} and regional services.`
+    assert.equal(hasNewPersonalName(summary, ''), true)
+    assert.equal(hasNewPersonalName(summary, `Discussed ${reference.toLowerCase()} in the proceeding.`), false)
+  }
+})
+
+test('capitalised terms include sentence-initial novelty, all positions and maximal compound runs', () => {
+  assert.deepEqual(capitalisedTerms('Asked Zelara de la Quenwick about housing. Vaelquist died.'), ['Zelara de la Quenwick', 'Vaelquist'])
+  assert.deepEqual(capitalisedTerms('Thanked ZELARA-QUENWICK and O\'Vaelquist.'), ['ZELARA-QUENWICK', "O'Vaelquist"])
+  assert.equal(hasNewPersonalName('Vaelquist supported housing services.', ''), true)
+  assert.equal(hasNewPersonalName('Reported concerns. Asked about housing services.', ''), false)
+  assert.equal(hasNewPersonalName('Reported concerns that Asked about housing services.', ''), true)
+  assert.equal(hasNewPersonalName('Supported services in New Caledonia.', ''), true)
+  assert.equal(hasNewPersonalName('Mr Quenwick said services needed support.', ''), true)
+  assert.equal(hasNewPersonalName('Reported concerns about ＺＥＬＡＲＡ　ＱＵＥＮＷＩＣＫ.', 'zelara quenwick attended.'), false)
+  assert.equal(hasNewPersonalName("Reported concerns about O'Vaelquist–Quenwick.", 'oʼvaelquist-quenwick attended.'), false)
+  assert.equal(hasNewPersonalName('Reported concerns about Vaelquist.', 'Vaelquist-Quenwick attended.'), true)
+  assert.equal(hasNewPersonalName('Reported concerns about Australia Vaelquist.', 'Australia and Vaelquist attended separately.'), true)
+  // Dash punctuation and numeric prefixes must not create unsupported fragments
+  // when a complete unit is evaluated as its own brief.
+  const source = 'Asked whether -Arvella attended. Senator Zelara- spoke about 1993Quenwick and O\'Vaelquist.'
+  assert.equal(hasNewPersonalName(source, source), false)
 })
 
 test('one corrective escalation can accept a role-based brief; an invalid corrective reply is terminal', async () => {
@@ -285,9 +341,10 @@ test('personal titles, uppercase surnames and compound or hyphenated names canno
   assert.equal(hasNewPersonalName('Thanked Quenwick for support from the Royal Australian Navy.',''),true)
 })
 
-test('review place and organisation controls pass without source support', () => {
+test('review place and organisation terms require unit support', () => {
   for(const reference of ['Port Hedland','Cape Town','Royal Australian Navy','Mount Isa','Lake Eyre','River Murray','Department of Foreign Affairs','Department of Health and Aged Care','Royal Australian Air Force']) {
-    assert.equal(hasNewPersonalName(`Reported concerns about ${reference} and regional services.`,''),false)
+    assert.equal(hasNewPersonalName(`Reported concerns about ${reference} and regional services.`,''),true)
+    assert.equal(hasNewPersonalName(`Reported concerns about ${reference} and regional services.`,`Discussed ${reference} in this proceeding.`),false)
   }
 })
 
@@ -299,9 +356,10 @@ test('saved non-historic writes do not read full resources even under backpressu
   assert.ok(!kb.calls.some(c=>c.startsWith('GET full')))
 })
 
-test('all-uppercase roster names and honorifics retain roster support', () => {
+test('all-uppercase whole roster forms retain support and honorific terms require full provenance', () => {
   const full=roster.names.split('\n').find(n=>/^[a-z]+ [a-z]+$/.test(n))!
-  assert.equal(hasNewPersonalName(`Asked MR ${full.toUpperCase()} for assistance.`,''),false)
+  assert.equal(hasNewPersonalName(`Asked ${full.toUpperCase()} for assistance.`,''),false)
+  assert.equal(hasNewPersonalName(`Asked MR ${full.toUpperCase()} for assistance.`,`Mr ${full} attended.`),false)
   assert.equal(hasNewPersonalName('Asked MR ZELARA QUENWICK for assistance.',''),true)
   for(const reference of ['General Bill','Justice Zelara Quenwick Act','Dr Zelara Navy','Ms Zelara Council']) assert.equal(hasNewPersonalName(`Asked ${reference} for assistance.`,''),true)
 })

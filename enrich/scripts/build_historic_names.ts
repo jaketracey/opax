@@ -1,13 +1,14 @@
 // Local, reproducible roster asset. Never reads speech text or emits names to stdout.
 import { readFileSync, writeFileSync } from 'node:fs'
 import { resolve } from 'node:path'
-import { hasParliamentaryService, type DirectoryPerson } from './roster_membership.ts'
+import { DatabaseSync } from 'node:sqlite'
+import { hasParliamentaryService, resolvedParliamentaryService, rosterKey, verifiedStateMemberNames, type DirectoryPerson, type DatedMember } from './roster_membership.ts'
 
 const roster = process.argv[2] ?? '/home/jake/opax-staging/federation/roster'
 const portal = process.argv[3] ?? resolve(import.meta.dirname, '../../portal/public/parliamentarians.json')
-const normalise = (s: string): string => s.normalize('NFC').replace(/[’‘]/g, "'").replace(/[‐‑–]/g, '-')
-  .replace(/\([^)]*\)/g, ' ').replace(/^(?:(?:the|hon|honourable|mr|mrs|ms|miss|dr|sir|dame|senator)\.?\s+)+/i, '')
-  .replace(/\s+/g, ' ').trim().toLowerCase()
+const snapshots = process.argv[4] ?? resolve(import.meta.dirname, '../../scripts/roster_state_evidence.json')
+const datedPath = process.argv[5] ?? '/home/jake/.cache/autoresearch/parli.db'
+const normalise = rosterKey
 const names = new Set<string>()
 const add = (value: unknown): void => {
   if (typeof value !== 'string' || !value.trim()) return
@@ -25,7 +26,12 @@ for (const member of members) {
   for (const alias of member.aliases ?? []) add(alias)
 }
 const directory = JSON.parse(readFileSync(portal, 'utf8')).people
-const people = directory.filter((person: DirectoryPerson) => hasParliamentaryService(person))
+const db = new DatabaseSync(datedPath, { readOnly: true })
+const dated = db.prepare('SELECT person_id, first_name, last_name, full_name, state, chamber, entered_house, left_house FROM members').all() as unknown as DatedMember[]
+db.close()
+const verified = verifiedStateMemberNames(JSON.parse(readFileSync(snapshots, 'utf8')).snapshots, dated)
+const people = directory.filter((person: DirectoryPerson) => resolvedParliamentaryService(person, verified))
+const restored = people.filter((person: DirectoryPerson) => !hasParliamentaryService(person))
 for (const person of people) {
   add(person.name)
   // Only verified members contribute surname forms used after a title.
@@ -44,7 +50,21 @@ const portfolioWords = new Set<string>()
 for (const appointment of appointments) {
   for (const word of normalise(appointment.portfolio ?? '').match(/[\p{L}-]{3,}/gu) ?? []) portfolioWords.add(word)
 }
-const asset = { names: [...names].sort().join('\n'), electorates: [...places].sort().join('\n'), portfolioWords: [...portfolioWords].sort().join('\n') }
+// The Worker receives parliamentary forms only. Selection vocabulary belongs to
+// the offline audit and must never become exemptions in the novelty guard.
+const asset = { names: [...names].sort().join('\n') }
+const vocabulary = { electorates: [...places].sort().join('\n'), portfolioWords: [...portfolioWords].sort().join('\n') }
+writeFileSync(resolve(import.meta.dirname, 'historic-control-vocabulary.json'), JSON.stringify(vocabulary) + '\n')
 const out = resolve(import.meta.dirname, '../src/historic-names.json')
 writeFileSync(out, JSON.stringify(asset) + '\n')
-console.log(JSON.stringify({ members: members.length, portalPeople: people.length, portalRemoved: directory.length - people.length, names: names.size, electorates: places.size, portfolioWords: portfolioWords.size, bytes: Buffer.byteLength(JSON.stringify(asset)) }))
+console.log(JSON.stringify({
+  members: members.length, portalPeople: people.length, portalRemoved: directory.length - people.length,
+  restoredVerifiedEntries: restored.length,
+  restoredNswEntries: restored.filter((person: DirectoryPerson) => dated.some(record =>
+    record.state === 'nsw' && verified.has(normalise(person.name ?? ''))
+    && normalise(record.full_name) === normalise(person.name ?? ''))).length,
+  excludedWitnessEntries: directory.filter((person: DirectoryPerson & { witness_rows?: number }) =>
+    !!person.witness_rows && !resolvedParliamentaryService(person, verified)).length,
+  names: names.size, electorates: places.size, portfolioWords: portfolioWords.size,
+  bytes: Buffer.byteLength(JSON.stringify(asset)) + 1,
+}))

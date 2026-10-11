@@ -1,5 +1,5 @@
 // Source-derived, non-person controls. Never emit the selected text or title metadata.
-import roster from '../src/historic-names.json' with {type: 'json'}
+import roster from './historic-control-vocabulary.json' with {type: 'json'}
 const escape = (s: string) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
 const places = [...roster.electorates.split('\n'), 'New South Wales', 'New Zealand', 'Papua New Guinea', 'East Timor', 'South Africa', 'United States', 'United Kingdom', 'Northern Territory', 'Australian Capital Territory', 'Western Australia', 'South Australia', 'Hong Kong', 'Sri Lanka', 'Port Moresby', 'Torres Strait', 'Cape York']
 const patterns: Record<string, RegExp> = {

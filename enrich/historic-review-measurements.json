@@ -9,46 +9,34 @@
     "queueHash": "250795fac6e50e1f4229dc1431baea63235b01a61f8eca09d1b4033ba2061ea1"
   },
   "differential": {
+    "baseline": "108bbdd059eb44d949eb40c045556e5778850110",
     "cases": 143,
     "differences": 0,
-    "baseline": "origin/main 108bbdd0",
-    "omittedNewFields": [
-      "historic",
-      "names_rejected",
-      "terminal_reason"
-    ],
-    "comparisons": [
-      "model calls",
-      "KB state and calls",
-      "queue original fields",
-      "spend",
-      "tick stats",
-      "state"
-    ]
+    "method": "Review harness against a fresh local origin/main archive; original fields, model calls and KB requests included."
   },
   "guardAudit": {
-    "method": "Existing prompt text is retained for live sources. No model is called: test full pilot text and clipped model input against each unit own full text, and independently selected non-person reference spans with source support withheld.",
-    "limitation": "Text-only specificity checks; no generated summaries or labelled personal-name recall. The own-text control necessarily passes supported references and is not a model-output precision estimate.",
+    "method": "Strict capitalised-term novelty guard; no model is called. Test full pilot text and clipped model input against each unit own full text, plus independently selected references with source support withheld.",
+    "limitation": "Withheld-source references deliberately test novel additions and are not false positives under this rule. Real offline Haiku brief rejection is reported separately in historic-strict-measurements.json.",
     "promptSha256": "44029ec22e9b37b0bf6cdd383b499e62be187f085ec38fb432043f49c4c02b30",
     "unitsTested": 2000,
     "ownTextFired": 0,
     "ownTextRate": 0,
-    "clippedTextFired": 3,
+    "clippedTextFired": 8,
     "nonPersonControls": {
       "references": 8135,
-      "fired": 0,
+      "fired": 3276,
       "originalCleanOccurrences": 8126,
       "correctedSpans": 58,
       "malformedOrAmbiguousFragmentsReplaced": 9,
       "replacementMethod": "Replace malformed fragments with the first independently selected additional gazetteer/organisation occurrences in pilot order; no guard-dependent filtering.",
-      "rate": 0,
-      "affectedUnits": 0,
+      "rate": 0.4027043638598648,
+      "affectedUnits": 987,
       "byCategory": {
         "placesElectorates": {
           "references": 4545,
-          "fired": 0,
-          "rate": 0,
-          "affectedUnits": 0
+          "fired": 1489,
+          "rate": 0.3276127612761276,
+          "affectedUnits": 399
         },
         "parties": {
           "references": 685,
@@ -58,38 +46,53 @@
         },
         "titles": {
           "references": 1956,
-          "fired": 0,
-          "rate": 0,
-          "affectedUnits": 0
+          "fired": 838,
+          "rate": 0.4284253578732106,
+          "affectedUnits": 621
         },
         "laws": {
           "references": 943,
-          "fired": 0,
-          "rate": 0,
-          "affectedUnits": 0
+          "fired": 943,
+          "rate": 1,
+          "affectedUnits": 273
         },
         "organisations": {
           "references": 6,
-          "fired": 0,
-          "rate": 0,
-          "affectedUnits": 0
+          "fired": 6,
+          "rate": 1,
+          "affectedUnits": 4
         }
       }
     },
     "reviewExamples": {
       "references": 9,
-      "fired": 0,
-      "rate": 0
+      "fired": 9,
+      "rate": 1
     }
   },
   "roster": {
     "handbookMembers": 1881,
-    "portalAdmitted": 1129,
-    "portalRemoved": 571,
-    "removedWitnessEntries": 260,
-    "nameForms": 5791,
-    "electorates": 440,
-    "portfolioWords": 307,
-    "bytes": 97308
+    "portalAdmitted": 1156,
+    "portalRemoved": 544,
+    "restoredVerifiedNswEntries": 27,
+    "restoredFullForms": 27,
+    "restoredSurnameForms": 17,
+    "excludedWitnessEntries": 260,
+    "nameForms": 5835,
+    "bytesIncludingNewline": 90101,
+    "workerContains": "parliamentary name forms only",
+    "controlVocabulary": "scripts/historic-control-vocabulary.json (offline only)"
+  },
+  "strictness": {
+    "report": "historic-strict-measurements.json",
+    "haiku": {
+      "tested": 200,
+      "rejected": 69,
+      "rate": 0.345,
+      "rows": 200,
+      "excluded": 0,
+      "missingSource": 0,
+      "aboveFifteenPercent": true
+    }
   }
 }

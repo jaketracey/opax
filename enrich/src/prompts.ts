@@ -51,7 +51,7 @@ export function buildSystemPrompt(tasks: readonly Task[], historic = false): str
   const ordered: Task[] = [...(wantSummary ? (['summary'] as const) : []), ...(wantTopics ? (['topics'] as const) : [])]
   const sections: string[] = []
   if (wantSummary) sections.push(SUMMARY_SECTION)
-  if (wantSummary && historic) sections.push('HISTORIC HANSARD\nDescribe private individuals by role, not by name. A personal name may appear only if it is in the supplied unit text or the parliamentary roster. Do not introduce or infer names.')
+  if (wantSummary && historic) sections.push('HISTORIC HANSARD\nDescribe private individuals by role, not by name. Use only names and capitalised terms from the supplied unit text, except parliamentary roster names and common Australian parliamentary terms. Do not introduce or infer names, places or organisations.')
   if (wantTopics) sections.push(TOPICS_SECTION, `TAXONOMY\n${taxonomyBlock()}`)
   sections.push(
     `OUTPUT\nReturn only the JSON object, with no markdown fences and no commentary, in exactly this shape:\n${shapeLine(ordered)}\nDo not call tools or external APIs.`,

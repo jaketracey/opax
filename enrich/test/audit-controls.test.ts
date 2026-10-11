@@ -8,7 +8,7 @@ test('audit selectors stop before personal honorifics and incomplete subsequent 
     const controls = pilotControls(text).controls.filter(c => c.category === 'titles')
     assert.ok(controls.length)
     assert.ok(controls.every(c => !c.text.includes('Quenwick') && !c.text.endsWith('Assisting')))
-    assert.ok(controls.every(c => !hasNewPersonalName(c.text, '')))
+    assert.ok(controls.every(c => !hasNewPersonalName(c.text, text)))
   }
 })
 
