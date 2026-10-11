@@ -93,10 +93,10 @@ export async function tableRows(root = defaultRoot, {moneyOnly = false, graphs: 
   // Preserve the schema-1 votes export byte for byte; this is a separate projection.
   for (const [id, v] of Object.entries(await read('votes.json'))) if (v && typeof v === 'object' && typeof v.name === 'string') add('votes', {id, name: v.name, party: v.party, jurisdiction: v.jurisdiction, house: v.house, ayes: v.ayes, noes: v.noes, divisions_total: v.divisions_total, first_year: v.years?.[0] ?? null, last_year: v.years?.at(-1) ?? null});
   const instruments = await read('instruments/index.json');
-  const registered = new Map((await instrumentTableRows(path=>read(path.slice(1)),await read('instruments/manifest.json'),instruments.records)).map(row=>[row.id,row.registered]));
+  const projected = new Map((await instrumentTableRows(path=>read(path.slice(1)),await read('instruments/manifest.json'),instruments.records)).map(row=>[row.id,row]));
   for (const values of instruments.records) {
     const v = Object.fromEntries(instruments.fields.map((field, i) => [field, values[i]]));
-    add('instruments', {id: v.id, title: v.title, portfolios: categoryMembers(v.portfolios), type: v.type, status: v.status, commenced: v.commenced || null, year: Number(registered.get(v.id)?.slice(0, 4)) || null, registered:registered.get(v.id) ?? null});
+    add('instruments', {id: v.id, title: v.title, portfolios: projected.get(v.id).portfolios, type: v.type, status: v.status, commenced: v.commenced || null, year: projected.get(v.id).year, registered:projected.get(v.id).registered});
   }
   for (const v of (await read('audit/index.json')).records) add('audit-reports', {id: v.id, title: v.title, report_label: v.report_label, sectors: categoryMembers(v.sectors), entities: v.entities, jurisdiction: 'qld', number: v.number, year: Number(String(v.year).slice(0, 4)) || null, tabled_date: v.tabled_date, canonical_url: v.canonical_url});
   rows.interests = await interestTableRows(root, graphs,policy);
