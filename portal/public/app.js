@@ -6,9 +6,9 @@ let divisionMarkdown;
 const divisionMarkdownReady = import('/division-markdown.js?v=5991511166').then(module => { divisionMarkdown = module; });
 // The labels, source lines and ⋯ (labels.js); the first render waits for them.
 let growthModules;
-const growthModulesReady = import("/growth-modules.js?v=b3095eab8c").then(module => { growthModules = module; });
+const growthModulesReady = import("/growth-modules.js?v=a467db42f2").then(module => { growthModules = module; });
 let registerTables;
-const registerTablesReady = import('/register-tables.js?v=68883bdacd').then(module => { registerTables = module; });
+const registerTablesReady = import('/register-tables.js?v=ca12005c73').then(module => { registerTables = module; });
 let askPerson;
 const askPersonReady = import('/ask-person.js?v=a0b3602921').then(module => { askPerson = module; });
 let uiLabels;

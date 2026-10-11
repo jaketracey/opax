@@ -1,5 +1,5 @@
 import {tableIdentityIndex} from '../src/table-identity-index.mjs';
-import {instrumentTableResponse} from '../src/instrument-table.ts';
+import {tableApi} from '../src/table-api.ts';
 import {partyMoneyResponse} from '../src/party-money-table.ts';
 import {instrumentTableRows} from '../public/instruments.js';
 // Donor privacy regression (October 2026 hotfix): no donor failing the
@@ -908,7 +908,7 @@ test('all four register tables reject the complete shared donor and recipient in
   const rows=input||config.rows,page=applyQuery(rows,config,{pageSize:50000});
   assert.ok(policy.safe(JSON.stringify(page)),`${id}: rows and facets`);
   assert.ok(policy.safe(toCSV(page.rows,config)),`${id}: CSV`);
-  for(const [i,value] of policy.values.entries())for(const query of [{q:value},{filters:{[facet]:[value]}}]) {
+  for(const [i,value] of policy.values.entries())for(const query of [{q:value},{filters:{[facet]:[value]}},...(/^\d{11}$/.test(value) ? [{filters:{[id==='party-money'?'total':'year']:{min:Number(value),max:Number(value)}}}] : [])]) {
    const rejected=applyQuery(rows,config,query);
    assert.equal(rejected.total,0,`${id}: rejected value ${i}`);
    const html=dataTableHTML(config,rejected);
@@ -922,7 +922,8 @@ test('all four register tables reject the complete shared donor and recipient in
  const assets={fetch:async request=>Response.json(await read(new URL(request.url).pathname))};
  for(const value of [policy.values[0],abns[0]]){
   const params=new URLSearchParams({q:value,format:'csv'});
-  assert.equal((await instrumentTableResponse(new Request('https://fixture.test/api/table/instruments?'+params),assets)).status,403,'rejected endpoint CSV is unavailable');
+  const denied=await tableApi(new Request('https://fixture.test/api/table/instruments?'+params),{TABLE_DB:tablesD1.db});
+  assert.equal(denied.headers.get('X-Table-Total'),'0','rejected real D1 export has no data rows');
  }
  const response=await partyMoneyResponse(new Request('https://fixture.test/api/register/party-money?'+new URLSearchParams({partyId:topParty.id})),assets);
  assert.equal(response.status,200);assert.ok(policy.safe(JSON.stringify(await response.json())),'public party client input');

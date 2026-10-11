@@ -1,11 +1,13 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync,readdirSync} from 'node:fs';
-import {instrumentTableResponse} from '../src/instrument-table.ts';
+import {tableApi} from '../src/table-api.ts';
+import {tableDatabase} from './table-d1-harness.mjs';
+import {TABLE_DATASETS} from '../src/table-datasets.mjs';
+import {tableIdentityIndex as registryIdentityIndex} from '../../scripts/load_tables.mjs';
 import {instrumentTableConfig,auditTableConfig,registerTableQuery,interestTableConfig,interestTableData,partyMoneyData} from '../public/register-tables.js';
 import {isOrganisationDonor} from '../public/donor-entity.js';
 import {applyQuery,dataTableHTML,toCSV} from '../public/datatable.js';
-import {registerServerCSVContract} from './datatable-endpoint-contract.mjs';
 import {tablePrivacyIndex} from './datatable-privacy.mjs';
 import {instrumentPage} from '../src/instruments.ts';
 import {auditPage} from '../src/audit.ts';
@@ -24,19 +26,15 @@ test('instrument server rows use as-made registration dates and do not transfer 
   }
   const config = instrumentTableConfig();
   assert.equal(config.rows,undefined);assert.equal(config.source.endpoint,'/api/table/instruments');
-  assert.deepEqual(config.columns.map(c=>c.label),['Title','Type','Portfolio','Registered','Status']);
-  const assets = {async fetch(request){try{return Response.json(await read(new URL(request.url).pathname));}catch{return new Response('missing',{status:404});}}};
-  const page = await instrumentTableResponse(new Request('https://opax.test/api/table/instruments'),assets);
-  assert.equal(page.status,200);assert.equal((await page.json()).rows.length,50);
-  const unavailable = await instrumentTableResponse(new Request('https://opax.test/api/table/instruments'),{fetch:async()=>new Response('missing',{status:404})});
-  assert.equal(unavailable.status,503);
+  assert.deepEqual(config.columns.filter(c=>config.columnsVisible.includes(c.key)).map(c=>c.label),['Title','Type','Portfolio','Registered','Status']);
+
 });
 
 test('audit client mode contains the complete small catalogue and the required column types',async()=>{
   const manifest = await read('/audit/manifest.json'), index = await read(manifest.index_url);
   const config = auditTableConfig(index.records,(await tablePrivacyIndex()).safe);
   assert.equal(config.rows.length,manifest.count);assert.equal(config.source,undefined);
-  assert.deepEqual(config.columns.map(c=>[c.label,c.type]),[['Title','text'],['Tabled','date'],['Sector','category'],['Entities','text']]);
+  assert.deepEqual(config.columns.filter(c=>config.columnsVisible.includes(c.key)).map(c=>[c.label,c.type]),[['Title','text'],['Tabled','date'],['Sector','category'],['Entities','text']]);
   for (const row of config.rows) assert.equal(config.primaryLink(row),`/audit/${row.id}`);
 });
 
@@ -89,16 +87,32 @@ test('every interest register omits entries rejected by the shared table index w
   assert.ok(registers>300);assert.ok(extraOmitted>0,'derived entries exercise the stricter core check');
 });
 
-let seededAssets;
-registerServerCSVContract(test,{name:'instruments',seed:async rows=>{
-  const original=await read('/instruments/manifest.json');
-  const records=rows.map((row,i)=>[`F2026L${String(i).padStart(5,'0')}`,row.name,['Fixture portfolio'],'Regulation','2026-01-01','In force']);
-  const lookup=Object.fromEntries(records.map((row,i)=>[row[0],Math.floor(i/512)]));
-  const chunks=Array.from({length:Math.ceil(rows.length/512)},(_,i)=>({path:`/instruments/catalogue-fixture-${i}.json`,count:Math.min(512,rows.length-i*512)}));
-  const manifest={...original,count:rows.length,exported:rows.length,odata_count:rows.length,count_start:rows.length,count_end:rows.length,drift:0,unresolved_gap:0,gap_pages:[],lookup,chunks,metadata_coverage:{...original.metadata_coverage,expanded_titles:rows.length}};
-  const data={'/instruments/manifest.json':manifest,'/instruments/index.json':{records},'/instruments/registered.json':Object.fromEntries(records.map(row=>[row[0],'2026-01-01']))};
-  seededAssets={fetch:async request=>{const path=new URL(request.url).pathname;return Response.json(data[path] ?? await read(path));}};
-},request:query=>instrumentTableResponse(new Request('https://opax.test/api/table/instruments'+query),seededAssets)});
+test('real D1 instruments project registration dates and accept date sorting, numeric year filters and CSV',async()=>{
+ const policy=await registryIdentityIndex();
+ const manifest=await read('/instruments/manifest.json'),rows=(await instrumentTableRows(read,manifest,(await read(manifest.index_url)).records)).filter(row=>!policy.check(JSON.stringify(row)));
+ const audit=auditTableConfig((await read('/audit/index.json')).records,()=>true);
+ const datasets=Object.fromEntries(Object.keys(TABLE_DATASETS).map(key=>[key,[]]));
+ datasets.instruments=rows.map(row=>({row}));datasets['audit-reports']=audit.rows.filter(row=>!policy.check(JSON.stringify(row))).map(row=>({row}));
+ const local=await tableDatabase({datasets,policy});
+ try {
+  const request=path=>tableApi(new Request('https://opax.test/api/table/'+path),{TABLE_DB:local.db});
+  const response=await request('instruments?sort=registered:desc'),page=await response.json();
+  assert.equal(response.status,200);assert.equal(page.total,rows.length);assert.equal(page.rows.length,50);
+  assert.ok(page.rows.every(row=>/^\d{4}-\d{2}-\d{2}$/.test(row.registered)),'registered cells are populated');
+  assert.deepEqual(page.rows.map(row=>row.registered),page.rows.map(row=>row.registered).sort().reverse());
+  const year=rows.find(row=>row.year)?.year,filter=new URLSearchParams({'f.year':JSON.stringify({min:year,max:year})});
+  const filtered=await request('instruments?'+filter);assert.equal(filtered.status,200);
+  assert.equal((await filtered.json()).total,rows.filter(row=>row.year===year).length);
+  const csv=await request('instruments?q=airport&format=csv'),text=await csv.text();
+  assert.equal(csv.status,200);assert.ok(text.split('\r\n')[0].split(',').includes('Registered'));
+  assert.ok(text.includes(rows.find(row=>row.title.toLowerCase().includes('airport'))?.registered),'CSV retains source registration date');
+  const all=await (await request('audit-reports')).json();assert.ok(all.facets.year.min);assert.ok(all.facets.year.max);
+  const reportYear=audit.rows[0].year,auditFilter=new URLSearchParams({'f.year':JSON.stringify({min:reportYear,max:reportYear})});
+  const reports=await request('audit-reports?'+auditFilter);assert.equal(reports.status,200);
+  assert.equal((await reports.json()).total,audit.rows.filter(row=>row.year===reportYear).length);
+  const health=await (await request('audit-reports?'+new URLSearchParams({'f.sectors':'["Health"]'}))).json();assert.equal(health.total,48);
+ }finally{await local.close();}
+});
 
 test('category facets count each audit sector and each instrument portfolio once',async()=>{
  const safe=(await tablePrivacyIndex()).safe,records=(await read('/audit/index.json')).records,config=auditTableConfig(records,safe);
@@ -118,5 +132,5 @@ test('legacy query state uses complete catalogues and filtered SSR remains noind
  assert.equal(audit.noindex,true);assert.ok(audit.prerender.includes('of 48'));
  const config=auditTableConfig((await read('/audit/index.json')).records,safe);
  assert.equal(applyQuery(config.rows,config,{}).total,296);
- assert.deepEqual(registerTableQuery(new URLSearchParams('year=2025-26'),config),{filters:{tabled_date:['2025-26']}});
+ assert.deepEqual(registerTableQuery(new URLSearchParams('year=2025-26'),config),{filters:{year:{min:2025,max:2025}}});
 });

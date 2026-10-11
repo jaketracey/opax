@@ -65,11 +65,14 @@ export async function instrumentPage(id: string | null, url: URL, read: Read, bl
       const query=registerTableQuery(url.searchParams,config)
       const page = applyQuery(rows,config,query)
       const description = `${(manifest.exported ?? manifest.count).toLocaleString('en-AU')} in-force federal legislative-instrument titles. Metadata only; authoritative text is on the Federal Register of Legislation.`
-      const gapNote = manifest.unresolved_gap ? `<p class="fineprint">FRL listed ${manifest.count.toLocaleString('en-AU')}; ${manifest.unresolved_gap} could not be retrieved from its API</p>` : ''
+      const notes = [
+        ...(manifest.unresolved_gap ? [`The Register listed ${manifest.count.toLocaleString('en-AU')} titles; ${manifest.unresolved_gap} could not be retrieved from its API.`] : []),
+        'Registered is the as-made registration date. The Register’s in-force listing includes instruments made but not yet commenced. Dates the Register does not supply stay unknown.',
+      ]
       const facts = block('Federal legislative instruments', description, '')
       const table = `<div data-register-table="${config.id}">${dataTableHTML(config,page)}<script type="application/json" data-register-config>${JSON.stringify({config}).replace(/</g,'\\u003c')}</script></div>`
       return { title: 'Federal legislative instruments · OPAX', description, status: 200,noindex:Boolean(url.search),
-        prerender: facts + `<section class="wrap instrument-content">${gapNote}<p class="fineprint">Registered is the as-made registration date. FRL's in-force listing includes instruments made but not yet commenced. Dates not supplied by the API stay unknown.</p>${table}${sourceLine(manifest, [])}</section>` }
+        prerender: facts + `<section class="wrap instrument-content">${table}${sourceLine(manifest, [],notes)}</section>` }
     }
     const chunk = manifest.lookup[id]
     if (!Number.isInteger(chunk) || !manifest.chunks[chunk]) return missing()

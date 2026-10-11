@@ -9,18 +9,21 @@ const categoryLabels = {shareholdings:'Shareholdings',real_estate:'Real estate',
 export function instrumentTableConfig(privacyCheck) {
   return {id:'instruments-table',caption:'Instrument titles',pageType:'instruments',urlKey:'instruments',pageSize:50,
     privacy:'donors',privacyCheck,rowPrivacyCheck:instrumentRow,source:{endpoint:'/api/table/instruments'},defaultSort:{key:'title',dir:'asc'},export:{filename:'instruments.csv'},
+    columnsVisible:['title','type','portfolios','registered','status'],
     columns:[{key:'title',label:'Title',type:'text',primary:true},{key:'type',label:'Type',type:'category',facet:'multi'},
-      {key:'portfolios',label:'Portfolio',type:'category',facet:'multi'},{key:'registered',label:'Registered',type:'date',facet:'multi',facetValues:row=>[row.commencementYear || 'Not supplied'],facetLabel:'Commencement year'},
-      {key:'status',label:'Status',type:'category',facet:'chips'}],
+      {key:'portfolios',label:'Portfolio',type:'category',facet:'multi'},{key:'registered',label:'Registered',type:'date'},
+      {key:'status',label:'Status',type:'category',facet:'chips'},{key:'year',label:'Registration year',type:'year',facet:'range'}],
     primaryLink:row=>/^([CF]\d{4}[A-Z]\d{5})$/.test(String(row.id)) ? `/instrument/${row.id}` : null};
 }
 
 export function auditTableConfig(records, privacyCheck) {
   return {id:'audit-table',caption:'Tabled reports',pageType:'audit',urlKey:'audit',pageSize:50,
     privacy:'donors',privacyCheck,rowPrivacyCheck:auditRow,defaultSort:{key:'tabled_date',dir:'desc'},export:{filename:'audit-reports.csv'},
-    columns:[{key:'title',label:'Title',type:'text',primary:true},{key:'tabled_date',label:'Tabled',type:'date',facet:'multi',facetValues:row=>[row.reportYear || 'Not supplied'],facetLabel:'Report year'},
-      {key:'sectors',label:'Sector',type:'category',facet:'multi'},{key:'entities',label:'Entities',type:'text',facet:'multi'}],
-    rows:records.map(row=>({id:row.id,title:row.title,tabled_date:date(row.tabled_date),reportYear:row.year,sectors:categoryMembers(row.sectors),entities:row.entities})),
+    columnsVisible:['title','tabled_date','sectors','entities'],
+    columns:[{key:'title',label:'Title',type:'text',primary:true},{key:'tabled_date',label:'Tabled',type:'date'},
+      {key:'sectors',label:'Sector',type:'category',facet:'multi'},{key:'entities',label:'Entities',type:'text',facet:'multi'},
+      {key:'year',label:'Report year',type:'year',facet:'range'}],
+    rows:records.map(row=>({id:row.id,title:row.title,tabled_date:date(row.tabled_date),year:Number(String(row.year).slice(0,4)) || null,sectors:categoryMembers(row.sectors),entities:row.entities})),
     primaryLink:row=>/^qao-\d{4}(?:-\d{2})?-\d+$/.test(String(row.id)) ? `/audit/${row.id}` : null};
 }
 
@@ -95,8 +98,7 @@ export function registerTableHTML(config, query = {}) {
   const page = applyQuery(config.rows || [],config,query);
   const {initialQuery,...clientConfig}=config;
   const payload = JSON.stringify({config:clientConfig}).replace(/</g,'\\u003c');
-  const note=config.rows?.some(row=>row.aggregate) ? `<p class="fineprint">OPAX names organisations only. Donors it can't confirm are organisations are counted here, not named.</p>` : '';
-  return `<div data-register-table="${esc(config.id)}">${dataTableHTML(config,page)}<script type="application/json" data-register-config>${payload}</script></div>${note}`;
+  return `<div data-register-table="${esc(config.id)}">${dataTableHTML(config,page)}<script type="application/json" data-register-config>${payload}</script></div>`;
 }
 
 export function mountRegisterTable(el, config) {
@@ -137,9 +139,13 @@ export function hydrateRegisterTables(root = document) {
 export function registerTableQuery(params,config) {
  const query=parseQuery(params,config.urlKey);
  if(!query.q && params.get('q'))query.q=params.get('q').trim();
- const aliases=config.urlKey==='instruments'?{portfolio:'portfolios',type:'type',status:'status',year:'registered'}:{sector:'sectors',entity:'entities',year:'tabled_date'};
+ const aliases=config.urlKey==='instruments'?{portfolio:'portfolios',type:'type',status:'status'}:{sector:'sectors',entity:'entities'};
  for(const [legacy,column] of Object.entries(aliases))if(params.get(legacy) && !query.filters?.[column]){
   query.filters ||= {};query.filters[column]=[params.get(legacy)==='unknown'?'Not supplied':params.get(legacy)];
+ }
+ if(params.get('year') && !query.filters?.year){
+  const value=params.get('year');query.filters ||= {};
+  query.filters.year=/^\d{4}(?:-\d{2})?$/.test(value) ? {min:Number(value.slice(0,4)),max:Number(value.slice(0,4))} : [value];
  }
  return query;
 }

@@ -6,25 +6,24 @@ import {TABLE_DATASETS} from '../portal/src/table-datasets.mjs';
 import {isOrganisationRecipient} from '../portal/src/table-recipient.mjs';
 import {identityVariants, compileIdentityCheck} from '../portal/src/table-identities.mjs';
 import {tableSchema,tableName,quote,arrayColumns} from './table-schema.mjs';
-import {MONEY_GRAPHS, isOrganisationDonor, withheldPhrases} from '../portal/public/donor-entity.js';
+import {MONEY_GRAPHS, isOrganisationDonor} from '../portal/public/donor-entity.js';
 import {moneyFlowType} from '../portal/public/money-records.js';
-import {tablePrivacyCheck} from '../portal/src/table-privacy.mjs';
+import {instrumentTableRows} from '../portal/public/instruments.js';
+import {categoryMembers} from '../portal/public/register-tables.js';
 
 const defaultRoot = fileURLToPath(new URL('../portal/public/', import.meta.url));
-export async function interestTableRows(root, graphs) {
+export async function interestTableRows(root, graphs, suppliedPolicy) {
   const read = async name => JSON.parse(await readFile(join(root, name), 'utf8'));
-  const roster = await read('parliamentarians.json'), access = await read('access.json');
-  const check = tablePrivacyCheck(withheldPhrases(graphs, [
-    ...roster.people.flatMap(p => [p.name, p.full]), ...Object.values(access.ministers || {}).map(m => m.name),
-  ].filter(Boolean)));
+  const check = (suppliedPolicy || await tableIdentityIndex(root,graphs)).check;
   const rows = [];
   for (const file of (await readdir(join(root, 'interests'))).filter(f => f.endsWith('.json')).sort()) {
     if (['index.json', 'recent.json', 'ties-by-donor.json'].includes(file)) continue;
     const v = await read('interests/' + file);
     for (const [category, bucket] of Object.entries(v.buckets || {})) for (const [i, item] of (bucket.items || []).entries()) {
-      if (check(item.description, item.holder || '')) continue;
+      if (check(JSON.stringify(item))) continue;
       const date = item.date || v.as_at || null;
-      rows.push({row: {id: `${file.slice(0, -5)}:${category}:${i}`, name: v.name, category, holder: item.holder || '', jurisdiction: v.jurisdiction, chamber: v.chamber, description: item.description || '', date, year: Number(String(date || '').slice(0, 4)) || null, url: v.source_url || ''}});
+      const row = {id: `${file.slice(0, -5)}:${category}:${i}`, name: v.name, category, holder: item.holder || '', jurisdiction: v.jurisdiction, chamber: v.chamber, description: item.description || '', date, year: Number(String(date || '').slice(0, 4)) || null, url: v.source_url || ''};
+      if (!check(JSON.stringify(row))) rows.push({row});
     }
   }
   return rows;
@@ -40,6 +39,7 @@ export async function tableRows(root = defaultRoot, {moneyOnly = false, graphs: 
   const aggregates = new Map();
   const add = (name, row, identity = '', hidden = false) => {
     if (TABLE_DATASETS[name].privacy && (hidden || policy.check(Object.values(row).flat().join(' ')))) {
+      if (['instruments','audit-reports','interests'].includes(name)) return;
       const key = name + ':' + (row.jurisdiction || '') + ':' + (row.type || '');
       let aggregate = aggregates.get(key);
       if (!aggregate) {aggregate = {name, jurisdiction:row.jurisdiction, type:row.type, identities:new Set(), amount:0, count:0, first:null,last:null};aggregates.set(key,aggregate);}
@@ -93,12 +93,13 @@ export async function tableRows(root = defaultRoot, {moneyOnly = false, graphs: 
   // Preserve the schema-1 votes export byte for byte; this is a separate projection.
   for (const [id, v] of Object.entries(await read('votes.json'))) if (v && typeof v === 'object' && typeof v.name === 'string') add('votes', {id, name: v.name, party: v.party, jurisdiction: v.jurisdiction, house: v.house, ayes: v.ayes, noes: v.noes, divisions_total: v.divisions_total, first_year: v.years?.[0] ?? null, last_year: v.years?.at(-1) ?? null});
   const instruments = await read('instruments/index.json');
+  const registered = new Map((await instrumentTableRows(path=>read(path.slice(1)),await read('instruments/manifest.json'),instruments.records)).map(row=>[row.id,row.registered]));
   for (const values of instruments.records) {
     const v = Object.fromEntries(instruments.fields.map((field, i) => [field, values[i]]));
-    add('instruments', {id: v.id, title: v.title, portfolios: v.portfolios, type: v.type, status: v.status, commenced: v.commenced || null, year: Number(String(v.commenced || '').slice(0, 4)) || null});
+    add('instruments', {id: v.id, title: v.title, portfolios: categoryMembers(v.portfolios), type: v.type, status: v.status, commenced: v.commenced || null, year: Number(registered.get(v.id)?.slice(0, 4)) || null, registered:registered.get(v.id) ?? null});
   }
-  for (const v of (await read('audit/index.json')).records) add('audit-reports', {id: v.id, title: v.title, report_label: v.report_label, sectors: v.sectors, entities: v.entities, jurisdiction: 'qld', number: v.number, year: Number(String(v.year).slice(0, 4)) || null, tabled_date: v.tabled_date, canonical_url: v.canonical_url});
-  rows.interests = await interestTableRows(root, graphs);
+  for (const v of (await read('audit/index.json')).records) add('audit-reports', {id: v.id, title: v.title, report_label: v.report_label, sectors: categoryMembers(v.sectors), entities: v.entities, jurisdiction: 'qld', number: v.number, year: Number(String(v.year).slice(0, 4)) || null, tabled_date: v.tabled_date, canonical_url: v.canonical_url});
+  rows.interests = await interestTableRows(root, graphs,policy);
   return {rows,policy};
 }
 

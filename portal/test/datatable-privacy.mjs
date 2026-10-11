@@ -93,10 +93,11 @@ export function registerTablePrivacy(registry, rollout) {
       for (const event of events) assert.deepEqual(Object.keys(event.properties).sort(),['page_type','table_id'],`${rollout.id}: analytics property boundary`);
       let probes=0;
       for (const value of rollout.fullPrivacy ? index.probes : index.values.filter((_,i)=>i % Math.max(1,Math.floor(index.values.length/8)) === 0).slice(0,8)) {
-        for (const kind of ['q','facet']) {
+        for (const kind of /^\d{11}$/.test(value) ? ['q','facet','range'] : ['q','facet']) {
           await page.evaluate(({r,value,kind})=>{
             const url=new URL(location.href), key=r.urlKey ? r.urlKey+'.' : '';
             if (kind === 'q') url.searchParams.set(key+'q',value);
+            else if (kind === 'range') url.searchParams.set(key+'f.'+(r.rangeFacet || r.facet),JSON.stringify({min:Number(value),max:Number(value)}));
             else url.searchParams.set(key+'f.'+r.facet,JSON.stringify([value]));
             url.searchParams.set('campaign','fixture');
             history.replaceState(null,'',url); dispatchEvent(new PopStateEvent('popstate'));

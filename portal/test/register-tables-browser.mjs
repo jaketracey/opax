@@ -22,24 +22,24 @@ await mkdir(outputDir,{recursive:true});
 const base='http://127.0.0.1:9754';
 const dev=spawn(process.execPath,['node_modules/wrangler/bin/wrangler.js','dev','--local','--ip','127.0.0.1','--port','9754','--inspector-port','9755','--log-level','error','--show-interactive-dev-session=false','--var','INDEXNOW_ENABLED:false','--var','INDEXNOW_DRY_RUN:true'],{cwd:fileURLToPath(new URL('../',import.meta.url)),env:{...process.env,WRANGLER_SEND_METRICS:'false'},stdio:['ignore','pipe','pipe']});
 let devLog=0,devMessages='',browser;
-await writeFile(resolve(outputDir,'revision-wrangler-dev.log'),'');
+await writeFile(resolve(outputDir,'round3-wrangler-dev.log'),'');
 dev.stdout.on('data',value=>{devLog+=value.length;devMessages+=value;});dev.stderr.on('data',value=>{devLog+=value.length;devMessages+=value;});
 const errors=[],blocked=[],privacyRollouts=[];
 const privacyIndex=await tablePrivacyIndex();
-registerTablePrivacy(privacyRollouts,{id:'interests',path:personPath,host:'[data-register-table="interests-table"]',facet:'category',urlKey:'interests',fullPrivacy:true,endpoint:`/api/register/interests?pid=${encodeURIComponent(member.pid)}`,modes:['client'],readInput:page=>page.evaluate(async ({pid})=>{
+registerTablePrivacy(privacyRollouts,{id:'interests',path:personPath,host:'[data-register-table="interests-table"]',facet:'category',rangeFacet:'date',urlKey:'interests',fullPrivacy:true,endpoint:`/api/register/interests?pid=${encodeURIComponent(member.pid)}`,modes:['client'],readInput:page=>page.evaluate(async ({pid})=>{
   const core=await import('/datatable.js'),tables=await import('/register-tables.js');
   const projected=await fetch(`/api/register/interests?pid=${encodeURIComponent(pid)}`).then(r=>r.json()),config=tables.interestTableConfig(projected.rows);
   return {clientInput:{rows:config.rows,facets:core.applyQuery(config.rows,config,{}).facets},donorContext:true};
 },{pid:member.pid})});
-registerTablePrivacy(privacyRollouts,{id:'party-money',path:partyPath,host:'[data-register-table="party-money-table"]',facet:'industry',urlKey:'partyMoney',fullPrivacy:true,endpoint:`/api/register/party-money?${new URLSearchParams({partyId:party.id})}`,modes:['client'],readInput:page=>page.evaluate(async partyId=>{
+registerTablePrivacy(privacyRollouts,{id:'party-money',path:partyPath,host:'[data-register-table="party-money-table"]',facet:'industry',rangeFacet:'total',urlKey:'partyMoney',fullPrivacy:true,endpoint:`/api/register/party-money?${new URLSearchParams({partyId:party.id})}`,modes:['client'],readInput:page=>page.evaluate(async partyId=>{
   const tables=await import('/register-tables.js'),core=await import('/datatable.js');
   const projected=await fetch(`/api/register/party-money?${new URLSearchParams({partyId})}`).then(r=>r.json()),config=tables.partyMoneyTableConfig(projected.rows,projected.aggregate);
   return {clientInput:{rows:core.applyQuery(config.rows,config,{pageSize:2000}).rows,facets:core.applyQuery(config.rows,config,{}).facets},donorContext:true};
 },party.id)});
-registerTablePrivacy(privacyRollouts,{id:'instruments',path:'/instruments',host:'[data-register-table="instruments-table"]',facet:'portfolios',urlKey:'instruments',fullPrivacy:true,endpoint:'/api/table/instruments',modes:['server'],readInput:page=>page.evaluate(async()=>{
+registerTablePrivacy(privacyRollouts,{id:'instruments',path:'/instruments',host:'[data-register-table="instruments-table"]',facet:'portfolios',rangeFacet:'year',urlKey:'instruments',fullPrivacy:true,endpoint:'/api/table/instruments',modes:['server'],readInput:page=>page.evaluate(async()=>{
  const page=await fetch('/api/table/instruments').then(r=>r.json());return {clientInput:page,donorContext:true};
 })});
-registerTablePrivacy(privacyRollouts,{id:'audit',path:'/audit',host:'[data-register-table="audit-table"]',facet:'sectors',urlKey:'audit',fullPrivacy:true,endpoint:'/audit',responseType:'table',modes:['client'],readInput:page=>page.evaluate(async()=>{
+registerTablePrivacy(privacyRollouts,{id:'audit',path:'/audit',host:'[data-register-table="audit-table"]',facet:'sectors',rangeFacet:'year',urlKey:'audit',fullPrivacy:true,endpoint:'/audit',responseType:'table',modes:['client'],readInput:page=>page.evaluate(async()=>{
  const records=await fetch('/audit/index.json').then(r=>r.json()),tables=await import('/register-tables.js'),core=await import('/datatable.js'),complete=tables.auditTableConfig(records.records);
  return {clientInput:{rows:complete.rows,facets:core.applyQuery(complete.rows,complete,{}).facets},donorContext:true};
 })});
@@ -56,10 +56,10 @@ try{
  await context.route('**/*',route=>{
   const url=new URL(route.request().url());
   if(url.origin !== base){blocked.push('external');return route.abort();}
-  if(url.pathname.startsWith('/api/') && !['/api/table/instruments','/api/table/privacy','/api/register/interests','/api/register/party-money','/api/person-slugs'].includes(url.pathname))return route.fulfill({contentType:'application/json',body:'{"results":[],"topics":[],"people":[]}'});
+  if(url.pathname.startsWith('/api/') && !['/api/table/instruments','/api/table/audit-reports','/api/table/privacy','/api/register/interests','/api/register/party-money','/api/person-slugs'].includes(url.pathname))return route.fulfill({contentType:'application/json',body:'{"results":[],"topics":[],"people":[]}'});
   return route.continue();
  });
- await writeFile(resolve(outputDir,'revision-runner.pid'),String(process.pid)+'\n');
+ await writeFile(resolve(outputDir,'round3-runner.pid'),String(process.pid)+'\n');
  const page=await context.newPage();page.setDefaultTimeout(15000);page.setDefaultNavigationTimeout(60000);page.on('pageerror',error=>errors.push(error.message));
  const settled=host=>page.waitForFunction(host=>document.querySelector(host)?.querySelector('.dt-count') && !document.querySelector(host).hasAttribute('aria-busy'),host);
  for(const width of [390,1280]){
@@ -74,14 +74,20 @@ try{
    if(layout.total>width+1)console.log(JSON.stringify({table:name,layout}));
    assert.ok(layout.total<=width+1,`${name} ${width}: fits the viewport`);
    assert.ok(await host.locator('tbody [data-primary]').count(),`${name}: rows loaded`);
-   await page.screenshot({path:resolve(outputDir,`revision-${name}-${width}.png`)});
-   console.log(`revision-${name}-${width}.png`);
+   await page.screenshot({path:resolve(outputDir,`round3-${name}-${width}.png`)});
+   console.log(`round3-${name}-${width}.png`);
    const download=page.waitForEvent('download');await host.locator('[data-export]').click();
    const csv=await readFile(await (await download).path(),'utf8');
    assert.ok(csv.includes(name === 'interests' ? 'Category,Item,Date' : name === 'party-money' ? 'Donor,Industry,Given' : 'Title,'),`${name}: CSV headers`);
    if(name === 'party-money'){
     assert.ok(csv.includes('Donors not named ('),'neutral aggregate survives real CSV');
     if(width === 1280){
+     const aggregate=host.locator('details.donor-aggregate');
+     assert.equal(await aggregate.count(),1,'aggregate owns the policy disclosure');
+     assert.equal(await aggregate.locator('p').isVisible(),false,'policy is initially inside the closed disclosure');
+     await aggregate.locator('summary').click();
+     assert.equal(await aggregate.locator('p').textContent(),"OPAX names organisations only. Donors it can't confirm are organisations are counted here, not named.");
+     await aggregate.locator('summary').click();
      assert.ok(await host.locator('.dt-scale').count(),'column scale is rendered');
      const scale=await host.locator('.dt-scale').textContent();
      await host.locator('[data-page="2"]').click();await settled(selector);
@@ -89,6 +95,9 @@ try{
     }
    }
    if(name === 'instruments'){
+    assert.equal(await host.locator('tbody [data-label="Registered"] .dt-value').count(),50,'D1 projects 50 Registered cells');
+    assert.equal(await host.locator('tbody [data-label="Registered"] .dt-value').filter({hasText:'—'}).count(),0,'Registered cells are populated');
+    assert.ok(csv.split('\r\n')[0].split(',').includes('Registered'),'real D1 CSV includes Registered');
     if(width < 600)await host.locator('[data-sort-select]').selectOption('registered:desc');
     else await host.locator('[data-sort="registered"]').click();
     await settled(selector);await host.locator('[data-page="2"]').click();await settled(selector);
@@ -133,9 +142,28 @@ try{
  const auditHost=page.locator('[data-register-table="audit-table"]');assert.equal(await auditHost.locator('.dt-count').textContent(),'Showing 1–48 of 48');
  await auditHost.getByRole('button',{name:'Clear all',exact:true}).click();await settled('[data-register-table="audit-table"]');
  assert.equal(await auditHost.locator('.dt-count').textContent(),'Showing 1–50 of 296','legacy Clear all restores full catalogue');
+ // Match the UI's year range predicates to the loaded D1 API, including real CSV.
+ for(const [path,key,id,dataset] of [['/instruments','instruments','instruments-table','instruments'],['/audit','audit','audit-table','audit-reports']]){
+  const metadata=await page.evaluate(async dataset=>fetch('/api/table/'+dataset).then(r=>r.json()),dataset);
+  assert.ok(metadata.facets.year.min && metadata.facets.year.max,'D1 has a year range facet');
+  const year=metadata.facets.year.max,params=new URLSearchParams({'f.year':JSON.stringify({min:year,max:year})});
+  const filtered=await page.evaluate(async ({dataset,query})=>{const r=await fetch('/api/table/'+dataset+'?'+query);return {status:r.status,page:await r.json()};},{dataset,query:params.toString()});
+  assert.equal(filtered.status,200,'D1 accepts the API year predicate');assert.ok(filtered.page.total>0);
+  await page.goto(base+path+'?year='+year);await settled(`[data-register-table="${id}"]`);
+  const host=page.locator(`[data-register-table="${id}"]`);
+  const total=Number((await host.locator('.dt-count').textContent()).split(' of ')[1].replaceAll(',',''));
+  assert.equal(total,filtered.page.total,'legacy year links preserve the API predicate');
+  assert.equal(new URL(page.url()).searchParams.get(key+'.f.year'),JSON.stringify({min:year,max:year}));
+  const download=page.waitForEvent('download');await host.locator('[data-export]').click();
+  const csv=await readFile(await (await download).path(),'utf8');assert.ok(privacyIndex.safe(csv),'filtered real CSV is private');
+  if(dataset==='instruments')assert.ok(csv.split('\r\n')[0].includes('Registered'),'filtered D1 CSV includes Registered');
+  await host.getByRole('button',{name:'Clear all',exact:true}).click();await settled(`[data-register-table="${id}"]`);
+  const full=Number((await host.locator('.dt-count').textContent()).split(' of ')[1].replaceAll(',',''));
+  assert.equal(full,metadata.total,'Clear all restores the loaded catalogue');
+ }
  assert.equal(errors.length,0,'browser script error count');
- const result={server:'wrangler dev --local',core:'7a57261b4',screenshots:8,viewports:[390,1280],privacy,pageErrors:errors.length,blockedExternalRequests:blocked.length,checks:['rows and facets','actual CSV download','URL and initial SSR state','rendered and accessible text','analytics','neutral aggregate','column-wide bar scale across pages','server dates and pagination','viewport fit']};
- await writeFile(resolve(outputDir,'revision-browser-results.json'),JSON.stringify(result,null,2)+'\n');console.log(JSON.stringify(result));
+ const result={server:'wrangler dev --local',core:'merged main',screenshots:8,viewports:[390,1280],privacy,pageErrors:errors.length,blockedExternalRequests:blocked.length,checks:['rows and facets','actual CSV download','URL and initial SSR state','rendered and accessible text','analytics','neutral aggregate','column-wide bar scale across pages','server dates and pagination','viewport fit']};
+ await writeFile(resolve(outputDir,'round3-browser-results.json'),JSON.stringify(result,null,2)+'\n');console.log(JSON.stringify(result));
 }finally{
- await browser?.close();dev.kill('SIGTERM');await Promise.race([new Promise(done=>dev.once('exit',done)),new Promise(done=>setTimeout(done,5000))]);if(dev.exitCode == null && dev.signalCode == null)dev.kill('SIGKILL');await writeFile(resolve(outputDir,'revision-wrangler-dev.log'),JSON.stringify({diagnosticBytes:devLog,exitCode:dev.exitCode,signal:dev.signalCode,lines:devMessages.split('\n').filter(line=>/Error|ERROR|Failed|failed|memory|OOM|EADDR/.test(line)).map(line=>privacyIndex.safe(line) && !/(?:\d[\s-]*){11}/.test(line) ? line : '[withheld diagnostic suppressed]')})+'\n');
+ await browser?.close();dev.kill('SIGTERM');await Promise.race([new Promise(done=>dev.once('exit',done)),new Promise(done=>setTimeout(done,5000))]);if(dev.exitCode == null && dev.signalCode == null)dev.kill('SIGKILL');await writeFile(resolve(outputDir,'round3-wrangler-dev.log'),JSON.stringify({diagnosticBytes:devLog,exitCode:dev.exitCode,signal:dev.signalCode,lines:devMessages.split('\n').filter(line=>/Error|ERROR|Failed|failed|memory|OOM|EADDR/.test(line)).map(line=>privacyIndex.safe(line) && !/(?:\d[\s-]*){11}/.test(line) ? line : '[withheld diagnostic suppressed]')})+'\n');
 }

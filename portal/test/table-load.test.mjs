@@ -15,7 +15,12 @@ test('individual type evidence overrides organisation-looking names',()=>{
   assert.equal(isOrganisationRecipient({}),false);
 });
 test('checked-in schema matches the typed dataset and FTS generator',async()=>{
-  const checked=await readFile(new URL('../table-migrations/0001_tables.sql',import.meta.url),'utf8');assert.equal(checked,tableSchema());assert.equal((checked.match(/USING fts5/g)||[]).length,10);
+  const checked=await readFile(new URL('../table-migrations/0001_tables.sql',import.meta.url),'utf8');
+  const migrated=checked.replace('"commenced" TEXT, "year" INTEGER, search TEXT','"commenced" TEXT, "year" INTEGER, "registered" TEXT, search TEXT')
+    .replace('CREATE VIRTUAL TABLE IF NOT EXISTS table_instruments_fts','CREATE INDEX IF NOT EXISTS table_instruments_registered ON table_instruments ("registered", rowid);\nCREATE VIRTUAL TABLE IF NOT EXISTS table_instruments_fts');
+  assert.equal(migrated,tableSchema());assert.equal((checked.match(/USING fts5/g)||[]).length,10);
+  const migration=await readFile(new URL('../table-migrations/0002_instrument_registered.sql',import.meta.url),'utf8');
+  assert.match(migration,/ALTER TABLE table_instruments ADD COLUMN registered TEXT/);
 });
 test('private identifier variants are derived from exports and cover spaced and encoded forms',async()=>{
   const files=JSON.parse(await readFile(new URL('../public/suppliers.json',import.meta.url))).suppliers;
