@@ -2957,16 +2957,18 @@ footer #stats:empty { display: none; }
 .defs dd p { margin: 0.25rem 0 0; font-size: 0.9375rem; line-height: 1.55; color: var(--ink-soft); max-width: 68ch; }
 .defs dd .defs-src { font: 400 0.75rem/1.5 var(--sans); color: var(--ink-faint); }
 
-/* /privacy: a reference page. Its h1/h2/h3 take the shared heading roles; a
-   hairline rule opens each major section because the page is long and flat. */
-#panel-privacy > .kicker { margin-top: 0; }
-#panel-privacy > h1 { margin: 0 0 var(--space-4); }
-#panel-privacy .lede { font: 400 1.0625rem/1.65 var(--serif); color: var(--ink); margin: 0 0 var(--space-3); }
-#panel-privacy p, #panel-privacy li { max-width: 68ch; }
-#panel-privacy p { margin-block: var(--space-3); line-height: 1.7; }
-#panel-privacy > h2 { margin: var(--space-6) 0 var(--space-3); padding-top: var(--space-5); border-top: 1px solid var(--divider-default); }
-#panel-privacy > h3 { margin: var(--space-5) 0 var(--space-2); }
-#panel-privacy code { background: var(--paper-sunken); border-radius: 4px; padding: 0.1em 0.35em; font-size: 0.875em; }
+/* /privacy and /support: reference pages, as panels and as the Worker's
+   server-rendered copy (#prerender[data-panel-copy]). Their h1/h2/h3 take the
+   shared heading roles; a hairline rule opens each major section because the
+   pages are long and flat. */
+.policy-page > .kicker { margin-top: 0; }
+.policy-page > h1 { margin: 0 0 var(--space-4); }
+.policy-page .lede { font: 400 1.0625rem/1.65 var(--serif); color: var(--ink); margin: 0 0 var(--space-3); }
+.policy-page p, .policy-page li { max-width: 68ch; }
+.policy-page p { margin-block: var(--space-3); line-height: 1.7; }
+.policy-page > h2 { margin: var(--space-6) 0 var(--space-3); padding-top: var(--space-5); border-top: 1px solid var(--divider-default); }
+.policy-page > h3 { margin: var(--space-5) 0 var(--space-2); }
+.policy-page code { background: var(--paper-sunken); border-radius: 4px; padding: 0.1em 0.35em; font-size: 0.875em; }
 .privacy-contents { margin: var(--space-5) 0 0; }
 .privacy-contents .kicker { margin: 0 0 var(--space-2); }
 .privacy-contents ul { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: var(--space-2) var(--space-5); }
@@ -3353,7 +3355,7 @@ mark.privacy-confirm {
 @media (min-width: 701px) {
   .subject-person .subject-head:has(.subject-portrait) {
     grid-template-columns: max-content minmax(0, 1fr) auto;
-    grid-template-areas: "portrait title actions" "portrait meta meta" "portrait source source" "portrait caveat caveat";
+    grid-template-areas: "portrait title actions" "portrait meta meta" "portrait source source" "portrait fits fits" "portrait caveat caveat";
     align-items: start; row-gap: 0;
   }
   .subject-person .subject-head:has(.subject-portrait) .subject-portrait { grid-area: portrait; grid-row: 1 / -1; align-self: start; }
@@ -3361,10 +3363,12 @@ mark.privacy-confirm {
   .subject-person .subject-head:has(.subject-portrait) .subject-tag { grid-area: meta; }
   .subject-person .subject-head:has(.subject-portrait) > .ui-source { grid-area: source; }
   .subject-person .subject-head:has(.subject-portrait) > .person-caveat { grid-area: caveat; }
+  .subject-person .subject-head:has(.subject-portrait) > .person-fits { grid-area: fits; }
   .subject-person .subject-head:has(.subject-portrait) > .person-actions { grid-area: actions; margin: 0; align-self: center; justify-content: flex-end; }
 }
 .person-caveat { margin: var(--space-tight) 0 0; max-width: 68ch; font: var(--type-fine); color: var(--ink-soft); }
-.person-fits { margin: var(--space-block) 0 0; max-width: 68ch; font: var(--type-body); color: var(--ink); }
+.person-fits { margin: var(--space-tight) 0 0; max-width: 68ch; font: var(--type-metadata); color: var(--ink-soft); }
+.person-fits b { color: var(--ink); font-weight: 600; }
 .subject-person #subject-ask-form[hidden] { display: none; }
 .subject-person #subject-ask-form { margin: var(--space-block) 0 0; max-width: 40rem; }
 
@@ -3874,6 +3878,9 @@ body:has(#search-options-pop[open]) { overflow: hidden; }
   font-variant-numeric: tabular-nums;
 }
 .ask-source-passage { margin: 0.35rem 0 0; }
+.source-list li:has(> .sa-excerpt-notice) > :not(.source-num) { grid-column: 2; min-width: 0; overflow-wrap: anywhere; }
+.sa-excerpt-notice { max-width: 65ch; overflow-wrap: anywhere; }
+.sa-excerpt-notice a { white-space: nowrap; }
 
 /* ==== growing query fields (ask, search) ==== */
 /* Filled queries wrap and keep their height on blur. A long question should
@@ -5978,8 +5985,12 @@ html[data-panel="search"] .research-app main.compact .hero-intro { display: bloc
 .header-search-panel { position: absolute; right: var(--space-screen); top: calc(100% + var(--border-focus)); z-index: 60; width: min(26rem, calc(100vw - var(--space-screen) * 2)); background: var(--paper); padding: var(--space-block); border: var(--border-hairline) solid var(--divider-default); border-top: 0; box-shadow: var(--shadow-overlay); }
 .header-search-panel .mast-search.ui-input-wrap { display: flex; margin: 0; width: 100%; }
 .header-search-panel .mast-sugg { width: calc(100% + var(--space-block) * 2); top: calc(100% + var(--space-block)); right: calc(-1 * var(--space-block)); }
+/* Without the nav the band is the mark on the left and its icons together on the right;
+   the menu icon sits on the screen gutter, not 10px inside it. */
 @media (max-width: 960px) {
-  .site-header .nav-toggle { margin-left: 0; }
+  .site-header .masthead { justify-content: flex-start; gap: var(--space-tight); }
+  .site-header .masthead-id { margin-right: auto; }
+  .site-header .nav-toggle { margin-left: 0; margin-right: calc(var(--space-row) * -1); }
   .site-header .header-search-toggle { margin-left: 0; }
 }
 @media print {
@@ -6007,7 +6018,7 @@ html[data-panel="search"] .research-app main.compact .hero-intro { display: bloc
 .division-markdown a:hover { color: var(--bronze-ink); border-color: var(--bronze-rule); }
 
 /* Landing modules use the view's bronze accent and the shared controls. */
-.growth-ask { margin: 0 0 var(--space-section); padding: var(--space-block) 0; border-block: var(--border-hairline) solid var(--divider-default); }
+.growth-ask { margin: var(--space-group) 0 var(--space-section); padding: var(--space-block) 0; border-block: var(--border-hairline) solid var(--divider-default); }
 .growth-ask h3 { margin: 0 0 var(--space-heading); font: var(--type-subheading); }
 .growth-ask-form { display: flex; align-items: start; gap: var(--space-tight); }
 .growth-ask-form .ui-input { flex: 1; min-width: 0; font: var(--type-body); resize: vertical; white-space: pre-wrap; overflow-wrap: normal; word-break: normal; }

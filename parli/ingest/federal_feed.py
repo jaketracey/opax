@@ -10,6 +10,7 @@ from urllib.parse import urlencode
 import xml.etree.ElementTree as ET
 
 from .honest_http import HonestHTTP, Refused, Unavailable
+from . import http as source_http
 from .cache_batch import CacheBatch
 from .openaustralia_xml import DEFAULT_STAGE, fetch, read_only
 
@@ -47,7 +48,7 @@ def api_hansard(args):
         for house in ('representatives', 'senate'):
             url = 'https://www.openaustralia.org.au/api/getDebates?' + urlencode(
                 {'key': key, 'type': house, 'date': day.isoformat(), 'output': 'json'})
-            body = http.get(url)
+            body = http.get(url, expected_json=True)
             try:
                 debates = json.loads(body or b'null')
             except ValueError:
@@ -124,7 +125,9 @@ def main():
             with sqlite3.connect(str(Path(args.db).expanduser())) as db:
                 apply_divisions(db, divisions, votes)
         print(f"Federal XML: {len(report['days'])} chamber-days, {len(divisions)} divisions, {len(votes)} votes")
-    except (Refused, Unavailable, ValueError, ET.ParseError) as exc:
+    except Refused as exc:
+        raise source_http.SourceRefused(exc.url or 'https://data.openaustralia.org.au', str(exc)) from None
+    except (Unavailable, ValueError, ET.ParseError) as exc:
         raise SystemExit(str(exc)) from None
 
 

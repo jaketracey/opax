@@ -19,6 +19,7 @@ import xml.etree.ElementTree as ET
 
 from scripts.roster_identity import agrees, federal_members, member, verify
 from .honest_http import HonestHTTP, Refused, Unavailable
+from . import http as source_http
 from .cache_batch import CacheBatch
 from .speaker_names import normalize_speaker
 from .tvfy_bill_links import official_ref
@@ -349,7 +350,9 @@ def main():
             with sqlite3.connect(str(Path(args.db).expanduser())) as db:
                 apply_divisions(db, divisions, votes)
         print(json.dumps({k: v for k, v in report.items() if k not in ('issues', 'days')}))
-    except (Refused, Unavailable, ValueError, ET.ParseError) as exc:
+    except Refused as exc:
+        raise source_http.SourceRefused(exc.url or BASE, str(exc)) from None
+    except (Unavailable, ValueError, ET.ParseError) as exc:
         raise SystemExit(str(exc)) from None
 
 

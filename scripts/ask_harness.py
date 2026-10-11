@@ -21,6 +21,11 @@ a markdown summary under scripts/harness_runs/ (gitignored-ish artefacts;
 commit the summary if it's worth keeping).
 """
 
+import sys as _http_sys
+from pathlib import Path as _HttpPath
+_http_sys.path.insert(0, str(_HttpPath(__file__).resolve().parents[1]))
+from parli.ingest import http as source_http
+
 import argparse
 import json
 import re
@@ -35,7 +40,7 @@ BENCH = ROOT / "ask_questions.json"
 RUNS = ROOT / "harness_runs"
 
 # Cloudflare blocks bare python-urllib; identify honestly as the harness.
-UA = "opax-ask-harness/1.0 (+https://opax.com.au/#/methods)"
+UA = source_http.USER_AGENT
 
 THIN_RE = re.compile(
     r"not (?:enough|sufficient)|no (?:information|relevant|specific)|"
@@ -49,20 +54,20 @@ def ask(base: str, question: str, speaker: str | None, timeout: int) -> tuple[di
     body = {"question": question}
     if speaker:
         body["speaker"] = speaker
-    req = urllib.request.Request(
+    req = source_http.Request(
         f"{base}/api/ask",
         data=json.dumps(body).encode(),
-        headers={"content-type": "application/json", "user-agent": UA},
+        headers={"content-type": "application/json", "user-agent": source_http.USER_AGENT},
         method="POST",
     )
     t0 = time.time()
-    with urllib.request.urlopen(req, timeout=timeout) as res:
+    with source_http.urlopen(req, timeout=timeout) as res:
         data = json.load(res)
     # One silent retry on an empty answer, mirroring the portal UI: the
     # generative model occasionally burns its budget and returns nothing
     # under load, which is a transient, not a corpus verdict.
     if not (data.get("answer") or "").strip():
-        with urllib.request.urlopen(req, timeout=timeout) as res:
+        with source_http.urlopen(req, timeout=timeout) as res:
             data = json.load(res)
     return data, time.time() - t0
 
@@ -70,9 +75,9 @@ def ask(base: str, question: str, speaker: str | None, timeout: int) -> tuple[di
 def corpus_latest_year(base: str) -> int:
     """Rough newest-evidence year: max date across a cheap probe search."""
     try:
-        probe = urllib.request.Request(
-            f"{base}/api/search?q=the&top_k=50&mode=keyword", headers={"user-agent": UA})
-        with urllib.request.urlopen(probe, timeout=30) as res:
+        probe = source_http.Request(
+            f"{base}/api/search?q=the&top_k=50&mode=keyword", headers={"user-agent": source_http.USER_AGENT})
+        with source_http.urlopen(probe, timeout=30) as res:
             data = json.load(res)
         years = [int(r["date"][:4]) for r in data.get("results", []) if r.get("date")]
         return max(years) if years else 0

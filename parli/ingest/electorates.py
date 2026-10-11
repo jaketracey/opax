@@ -5,6 +5,8 @@ Optional GIS dependencies: pip install 'opax[electorates]'. No legacy table is w
 """
 from __future__ import annotations
 
+from parli.ingest import http as source_http
+
 import argparse
 import csv
 import hashlib
@@ -68,7 +70,7 @@ class Builder:
         sid = stable_id("source", url)
         path = self.cache / sid
         if self.refresh or not path.exists():
-            response = requests.get(url, timeout=90, headers={"User-Agent": "Mozilla/5.0 (compatible; OPAX/1.0; +https://opax.com.au)"})
+            response = source_http.get(url, timeout=90, headers={"User-Agent": source_http.USER_AGENT})
             response.raise_for_status()
             path.write_bytes(response.content)
             time.sleep(.15)

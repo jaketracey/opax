@@ -209,7 +209,7 @@ test('labels.js is the one copy: app.js and the homepage import it, neither keep
   assert.match(app, /import\('\/labels\.js(\?v=[0-9a-f]{10})?'\)/);
   assert.match(homeData, /from '\.\/labels\.js(\?v=[0-9a-f]{10})?';/);
   // The first render waits for it.
-  assert.match(app, /Promise\.allSettled\(\[attributionReady, uiLabelsReady, growthModulesReady, personUrlsReady\]\)\.finally\(\(\) => \{[^}]*route\(\);/);
+  assert.match(app, /Promise\.allSettled\(\[attributionReady, uiLabelsReady, growthModulesReady, personUrlsReady, saDisplayReady\]\)\.finally\(\(\) => \{[^}]*route\(\);/);
   assert.match(read('index.html'), /<link rel="modulepreload" href="\/labels\.js\?v=[0-9a-f]{10}">/);
 });
 
@@ -357,6 +357,16 @@ test('every web header has a named home link with only the hidden Australia and 
   assert.match(standalone, /aria-label="OPAX home"/);
   assert.match(standalone, /aria-hidden="true"/);
   assert.doesNotMatch(standalone, /site-wordmark|>OPAX</);
+});
+
+test('the Ask block rule never touches the page actions above it', () => {
+  assert.match(style, /\n\.growth-ask \{ margin: var\(--space-group\) 0 var\(--space-section\);/);
+});
+
+test('the compact band keeps the mark left and its icons together on the right', () => {
+  const band = style.slice(style.indexOf('@media (max-width: 960px) {\n  .site-header .masthead { justify-content: flex-start;'));
+  assert.match(band, /^@media \(max-width: 960px\) \{\n  \.site-header \.masthead \{ justify-content: flex-start; gap: var\(--space-tight\); \}/);
+  assert.match(band.slice(0, band.indexOf('}\n}')), /\.site-header \.masthead-id \{ margin-right: auto; \}/);
 });
 
 test('the Ask launcher is a header icon, never a pill floating over the page', () => {

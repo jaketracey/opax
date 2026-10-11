@@ -1,5 +1,10 @@
 # Federal interests refresh: 3 October 2026 rehearsal
 
+> Access policy updated 10 Oct 2026: use the shared OPAX agent. Historical
+> proxy approvals below are superseded; refused sources are paused and the last
+> good data kept. See [SOURCES-ACCESS.md](../SOURCES-ACCESS.md).
+
+
 Jake authorised the existing Firecrawl key and this pipeline fix. The candidate is
 on `pipeline/interests-refresh`; it has not been pushed, merged or deployed. All
 fetch/parse/load/export rehearsals used `/home/ubuntu/interests-rehearsal-20261003`

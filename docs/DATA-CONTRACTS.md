@@ -1,5 +1,10 @@
 # Commonwealth contracts: AusTender, keyed by ABN, on the money map
 
+> Access policy updated 10 Oct 2026: use the shared OPAX agent. Historical
+> proxy approvals below are superseded; refused sources are paused and the last
+> good data kept. See [SOURCES-ACCESS.md](SOURCES-ACCESS.md).
+
+
 Government contracts are the other direction of money between companies and
 politics. Saab Australia gave parties about $357k over eight years and holds
 $122m of Defence contracts; the money map used to leave it off because its

@@ -28,6 +28,8 @@ Usage:
     python -m parli.ingest.donations --download-only
 """
 
+from parli.ingest import http as source_http
+
 import csv
 import io
 import re
@@ -41,8 +43,8 @@ from parli.schema import get_db, init_db
 AEC_DOWNLOAD_BASE = "https://transparency.aec.gov.au/Download"
 CACHE_DIR = Path("~/.cache/autoresearch/donations").expanduser()
 
-SESSION = requests.Session()
-SESSION.headers.update({"User-Agent": "OPAX/1.0 (opax.com.au; parliamentary research)"})
+SESSION = source_http.Session()
+SESSION.headers.update({"User-Agent": source_http.USER_AGENT})
 
 BATCH_SIZE = 1000
 
@@ -553,12 +555,6 @@ def main():
     pre_count = db.execute("SELECT COUNT(*) FROM donations").fetchone()[0]
     print(f"Donations before: {pre_count:,}")
 
-    # Clear existing data for a clean reload (unless --no-clear)
-    if not args.no_clear:
-        db.execute("DELETE FROM donations")
-        db.commit()
-        print("Cleared existing donations for clean reload.")
-
     CACHE_DIR.mkdir(parents=True, exist_ok=True)
 
     # Download phase
@@ -576,6 +572,12 @@ def main():
     if args.download_only:
         print("Download complete.")
         return
+
+    # Clear existing data for a clean reload (unless --no-clear)
+    if not args.no_clear:
+        db.execute("DELETE FROM donations")
+        db.commit()
+        print("Cleared existing donations for clean reload.")
 
     # Load phase
     total = 0

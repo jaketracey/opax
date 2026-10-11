@@ -20,6 +20,9 @@ All HTTP is serial, at most one request per second, with
 restriction). Retry-After supports seconds and HTTP dates. Refusal stops the
 request sequence; no browser impersonation, challenge solving or proxy is used.
 The passive Cloudflare script on the usable Apache index is not executed.
+The feed uses the shared honest-agent identity, redirect and challenge policy.
+Refusals record a paused source and exit 4; the nightly preserves the caches
+and published data, skips speech loading and does not try the API fallback.
 
 ## Rows and identities
 
@@ -228,9 +231,12 @@ lane. No separate permissive XML licence is claimed on that evidence.
 
 ## Validation
 
-The rejected-identity and schema export fixtures pass **70 tests and 32 subtests**.
-The complete `python3 -m pytest` run passes **1,163 tests**, using cached local dependencies.
-`scripts/vm/test_nightly.sh` passes **301 checks, zero failures**, including
+The feed, export and shared source-policy fixtures pass **153 tests**.
+The complete `python3 -m pytest` run passes **1,242 tests with one skipped**,
+using cached local dependencies.
+The clean-checkout data check skipped during the pending merge passed separately
+after the merge commit.
+`scripts/vm/test_nightly.sh` passes **307 checks, zero failures**, including
 real speech loading in both chambers, zero-byte days and idempotent reruns.
 The revision gates include XML reconciliation, cache refusal/validation,
 procedural bill stances, the bounded morning runner, existing schema 1 export

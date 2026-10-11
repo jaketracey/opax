@@ -2,10 +2,12 @@
 from argparse import Namespace
 from copy import deepcopy
 import json
+import io
 from pathlib import Path
 import sqlite3
 from unittest.mock import patch
 import urllib.error
+import urllib.response
 import pytest
 
 from parli.ingest import federal_feed as N, honest_http as H, openaustralia_xml as X
@@ -16,6 +18,12 @@ from scripts.vm.mobile_votes_contract import validate_votes
 from scripts import export_votes as E
 
 FIXTURES = Path(__file__).parent / 'fixtures' / 'openaustralia'
+
+
+@pytest.fixture(autouse=True)
+def isolated_source_status(monkeypatch, tmp_path):
+    monkeypatch.setenv('OPAX_SOURCE_STATUS_FILE', str(tmp_path/'source-status.json'))
+    monkeypatch.delenv('OPAX_SOURCE_NAME', raising=False)
 
 
 def db_fixture():
@@ -121,11 +129,46 @@ def test_additive_load_idempotence_and_schema_one_bytes():
     assert E.dump(again)==before
 
 
-def test_xml_refusal_stops_without_api_fallback():
+def test_xml_refusal_stops_without_api_fallback(tmp_path):
     with patch.object(N,'read_only'),patch.object(N,'fetch',side_effect=H.Refused('refused')), \
          patch.object(N,'api_hansard') as fallback,patch('sys.argv',['feed','--start','2026-10-13']):
-        with pytest.raises(SystemExit,match='refused'):N.main()
+        with pytest.raises(N.source_http.SourceRefused) as refused:N.main()
+        assert refused.value.code == 4
         fallback.assert_not_called()
+    status=json.loads((tmp_path/'source-status.json').read_text())
+    assert status['data.openaustralia.org.au']['status']=='paused'
+
+
+@pytest.mark.parametrize('body,headers',[
+    (b'<html><title>Just a moment</title></html>',{}),
+    (b'<html><form id="challenge-form"></form></html>',{}),
+    (b'ok',{'cf-mitigated':'challenge'}),
+    (b'ok',{'x-sucuri-block':'1'}),
+])
+def test_feed_uses_shared_challenge_checks_without_retry(body,headers):
+    client=H.HonestHTTP()
+    response=urllib.response.addinfourl(io.BytesIO(body),headers,'https://example.test/xml',200)
+    with patch.object(client.opener,'open',return_value=response) as request,patch.object(H.time,'sleep'):
+        with pytest.raises(N.source_http.SourceRefused) as refused:
+            client._request('https://example.test/xml')
+    assert refused.value.code==4 and request.call_count==1
+
+
+def test_usable_archive_index_with_passive_detection_script_is_not_a_challenge():
+    client=H.HonestHTTP()
+    body=b'<html><title>Index of /scrapedxml/senate_debates</title><a href="2026-10-13.xml">XML</a><script>var s=document.createElement("script");s.src="/cdn-cgi/challenge-platform/scripts/jsd/main.js";</script></html>'
+    response=urllib.response.addinfourl(io.BytesIO(body),{},'https://data.openaustralia.org.au/scrapedxml/senate_debates/',200)
+    with patch.object(client.opener,'open',return_value=response),patch.object(H.time,'sleep'):
+        assert client._request(response.geturl())==body
+
+
+def test_tvfy_refusal_is_paused_and_never_retried(tmp_path):
+    with patch.object(T,'key',return_value='fixture-key'),patch.object(T._http,'get',side_effect=H.Refused('HTTP 403')) as request:
+        with pytest.raises(N.source_http.SourceRefused) as refused:T.get('divisions.json',{})
+    assert refused.value.code==4 and request.call_count==1
+    status=(tmp_path/'source-status.json').read_text()
+    assert json.loads(status)['theyvoteforyou.org.au']['status']=='paused'
+    assert 'fixture-key' not in status
 
 
 def test_serial_http_agent_robots_retry_after_and_stop():
@@ -384,7 +427,7 @@ def test_conflicting_valid_identities_are_held_before_first_citation(tmp_path,sa
     assert db.execute('SELECT COUNT(*) FROM speeches').fetchone()[0]==0
 
 
-@pytest.mark.parametrize('failure',[H.Refused('refused'),H.Unavailable('failed'),b'<broken>',
+@pytest.mark.parametrize('failure',[H.Refused('refused'),H.Unavailable('failed'),'shared-refusal',b'<broken>',
     (FIXTURES/'sitting.xml').read_bytes().replace(b'2026-10-13',b'2026-10-14').replace(b'ayes="1"',b'ayes="4"')])
 def test_second_day_failure_leaves_entire_cache_unchanged(tmp_path,failure):
     stage=tmp_path/'stage';stage.mkdir();modern=tmp_path/'modern';modern.mkdir()
@@ -394,15 +437,23 @@ def test_second_day_failure_leaves_entire_cache_unchanged(tmp_path,failure):
         (modern/f'{day}_senate.jsonl').write_bytes(b'previous speeches')
     (stage/'divisions.json').write_bytes(b'previous divisions')
     before={p.relative_to(tmp_path):p.read_bytes() for p in tmp_path.rglob('*') if p.is_file()}
-    responses=[(FIXTURES/'people.xml').read_bytes(),b'<members/>',(FIXTURES/'senators.xml').read_bytes(),
+    responses=iter([(FIXTURES/'people.xml').read_bytes(),b'<members/>',(FIXTURES/'senators.xml').read_bytes(),
                b'Index of',b'Index of href="2026-10-13.xml" href="2026-10-14.xml"',
-               (FIXTURES/'sitting.xml').read_bytes(),failure]
+               (FIXTURES/'sitting.xml').read_bytes(),failure])
+    def response(url):
+        value=next(responses)
+        if value=='shared-refusal':raise N.source_http.SourceRefused(url,'HTTP 403')
+        if isinstance(value,BaseException):raise value
+        return value
     args=Namespace(stage=str(stage),offline=False,start='2026-10-13',end='2026-10-14',
                    modern_dir=str(modern),tvfy_list_cache=str(tmp_path/'lists'),load_divisions=False)
-    with patch.object(X.HonestHTTP,'get',side_effect=responses):
-        expected = (X.ET.ParseError if failure == b'<broken>' else ValueError) if isinstance(failure,bytes) else type(failure)
+    with patch.object(X.HonestHTTP,'get',side_effect=response):
+        if failure=='shared-refusal':expected=N.source_http.SourceRefused
+        elif isinstance(failure,bytes):expected=X.ET.ParseError if failure==b'<broken>' else ValueError
+        else:expected=type(failure)
         with pytest.raises(expected):X.fetch(args,db_fixture())
-    assert {p.relative_to(tmp_path):p.read_bytes() for p in tmp_path.rglob('*') if p.is_file()}==before
+    assert {p.relative_to(tmp_path):p.read_bytes() for p in tmp_path.rglob('*')
+            if p.is_file() and p.name!='source-status.json'}==before
     assert not list(tmp_path.glob('.*-batch-*'))
 
 

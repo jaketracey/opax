@@ -1,3 +1,4 @@
+import { shortDate } from '../public/format.js'
 import { personUrl, partyUrl } from '../public/canonical-urls.js'
 import {sponsorPerson} from '../public/sponsor-person.js'
 import {currentSittingPath, sydneyDay} from '../public/hubs-data.js'
@@ -82,6 +83,22 @@ export function crumbsHTML(items: Crumb[] = []): string {
 export function answerBlock(title: string, description: string, body = '', crumbs: Crumb[] = []): string {
   body = associationCaveat(body, `${description} ${body}`)
   return `${crumbsHTML(crumbs)}<section id="prerender" class="wrap"><h1>${escapeHtml(title)}</h1><p>${escapeHtml(description)}</p>${body}</section>`
+}
+/** Pages whose whole text is served by the Worker, copied from their panel in index.html. */
+export const SERVER_PANELS: ReadonlySet<string> = new Set(['privacy', 'support'])
+/**
+ * The server-rendered copy of a policy page (/privacy, /support): the inner
+ * markup of its panel in the shell (index.html), so the page a crawler or a
+ * reader without scripts gets and the app's panel have one source. It keeps the
+ * section anchors for readers without scripts; spa-shell.js drops the copy's
+ * ids once the panel is back, and `.spa-ready #prerender` hides it. Null when
+ * the panel is missing or holds a nested section the pattern cannot bound.
+ */
+export function panelPrerender(shell: string, name: string): string | null {
+  if (!SERVER_PANELS.has(name)) return null
+  const m = new RegExp(`<section id="panel-${name}"[^>]*>([\\s\\S]*?)</section>`).exec(shell)
+  if (!m || /<section\b/.test(m[1])) return null
+  return `<section id="prerender" class="wrap policy-page" data-panel-copy="${name}">${m[1]}</section>`
 }
 export const ASSOCIATION_CAVEAT = 'An association does not prove influence.'
 export function associationCaveat(body: string, facts: string): string {
@@ -169,6 +186,7 @@ export async function renderPersonAnswer(p: Person, read: ReadAsset, slugs: Map<
     const register = id && /^[\w-]+$/.test(id) ? await optional<Interest>(read,`/interests/${id}.json`) : null
     body += '<h2>Declared interests</h2>'
     if (register) {
+      if (register.as_at) body += `<p>Updated ${escapeHtml(shortDate(register.as_at))}</p>`
       body += `<p>${count(register.total)} recorded entries${register.as_at ? ` in the latest register snapshot, as at ${escapeHtml(register.as_at)}` : ''}.</p><ul>`
       // The register's own words (CC BY-NC-ND): an entry naming a withheld donor is
       // left out whole, never reworded, and the official register still has it.

@@ -7,6 +7,8 @@ are requested, and no identities or inferred legal relationships are created.
 """
 from __future__ import annotations
 
+from parli.ingest import http as source_http
+
 import argparse
 from datetime import datetime, time as day_time, timedelta, timezone
 from zoneinfo import ZoneInfo
@@ -50,7 +52,7 @@ REQUEST_TIMEOUT = 45
 WINDOW_MARGIN = 60
 MELBOURNE = ZoneInfo("Australia/Melbourne")
 FIXED_AEST = timezone(timedelta(hours=10))
-UA = "OPAX metadata research (https://opax.com.au)"
+UA = source_http.USER_AGENT
 LICENCE = "https://creativecommons.org/licenses/by/4.0/"
 
 
@@ -353,6 +355,22 @@ class Text(HTMLParser):
         if not self.skip: self.parts.append(data)
 
 
+def split_curl_response(raw: bytes) -> tuple[dict[str, str], bytes]:
+    """Separate the final response from any CONNECT or informational headers."""
+    headers = {}
+    while re.match(rb"HTTP/\d(?:\.\d)?[ \t]+\d{3}\b", raw):
+        separator = re.search(rb"\r?\n\r?\n", raw)
+        if not separator:
+            break
+        block, raw = raw[:separator.start()], raw[separator.end():]
+        headers = {}
+        for line in block.splitlines()[1:]:
+            name, colon, value = line.partition(b":")
+            if colon:
+                headers[name.decode("latin-1").lower()] = value.decode("latin-1").strip()
+    return headers, raw
+
+
 class PoliteSession:
     """curl transport (HTTP/1.1), shared budget, delay and retry accounting.
 
@@ -380,6 +398,7 @@ class PoliteSession:
             raise Held("Quiet window ending; checkpoint kept for the next quiet window")
 
     def get(self, url: str, allow_missing=False) -> bytes:
+        source_http.ensure_allowed(url)
         host = urlsplit(url).netloc
         publisher = host == "legislation.gov.au" or host.endswith(".legislation.gov.au")
         if publisher: self.check_window()
@@ -398,20 +417,17 @@ class PoliteSession:
             print(f"[frl-instruments] HTTP request {self.requests} (attempt {attempt + 1})", flush=True)
             result = subprocess.run([
                 "curl", "--globoff", "--http1.1", "--compressed", "--max-time", str(REQUEST_TIMEOUT), "--silent", "--show-error",
-                "--user-agent", UA, "--dump-header", "-", "--write-out", "\n%{http_code}", url,
+                "--noproxy", "*", "--user-agent", UA, "--dump-header", "-", "--write-out", "\n%{http_code}", url,
             ], capture_output=True)
             self.last = self.clock()
             raw, _, status = result.stdout.rpartition(b"\n")
             code = int(status) if status.isdigit() else 0
+            headers, raw = split_curl_response(raw)
+            source_http.check_response(url, code, raw, headers)
             self.http_429 += code == 429
             self.http_503 += code == 503
             if self.http_429 + self.http_503 >= 2:
                 raise Held("Repeated publisher throttling (HTTP 429/503); checkpoint kept")
-            # curl may include proxy/100 response headers before the final ones.
-            while raw.startswith(b"HTTP/"):
-                header, separator, body = raw.partition(b"\r\n\r\n")
-                if not separator: break
-                raw = body
             if not result.returncode and (code == 200 or allow_missing and code == 404):
                 return raw if code == 200 else b""
             if code not in (0, 429) and code < 500:
@@ -419,12 +435,12 @@ class PoliteSession:
             if attempt == 4:
                 raise Held(f"Metadata request failed after backoff (HTTP {code})")
             print(f"[frl-instruments] backoff after HTTP {code}, transport code {result.returncode}", flush=True)
-            retry = re.search(rb"(?im)^retry-after:\s*([^\r\n]+)", result.stdout)
+            retry = headers.get("retry-after")
             pause = max(delay, 5 * 2 ** attempt)
             if retry:
                 if self.retry_after_waits >= 2:
                     raise Held("Third Retry-After demand; checkpoint kept")
-                value = retry[1].decode()
+                value = retry
                 try:
                     pause = max(pause, float(value) if value.isdigit() else
                                 (parsedate_to_datetime(value) - self.now()).total_seconds())

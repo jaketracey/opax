@@ -16,9 +16,6 @@ set -uo pipefail
 # its seed commit: recompilation after cloning leaves tracked changes that
 # randomly block the push-race rebase when the seed/run cross a second boundary.
 export PYTHONDONTWRITEBYTECODE=1
-# Baseline scenarios exercise a daily refresh. Calendar scenarios below set
-# their own dates; the real weekday must not silently run the weekly fixture.
-export OPAX_TODAY=2026-10-10
 
 SRC="${OPAX_TEST_SRC:-$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)}"
 WORK=$(mktemp -d)
@@ -32,6 +29,9 @@ check() { # check "description" command...
 }
 
 TODAY=$(TZ=Australia/Sydney date +%F)
+# Generic scenarios exercise daily work, independent of the day this runs.
+# Calendar scenarios below supply their own dates, including weekly Sundays.
+export OPAX_TODAY=2026-10-10
 BASE_TOTAL=$(python3 -c "import json; print(json.load(open('$SRC/portal/public/corpus.json'))['expected_resources'])")
 BASE_SPEECH=$(python3 -c "import json; print(json.load(open('$SRC/portal/public/corpus.json'))['collected_speeches'])")
 
@@ -57,7 +57,7 @@ new_sandbox() {
            scripts/bills_registry/bills_stages.py \
            scripts/export_division_pages.py scripts/export_recent_votes.py scripts/export_votes.py \
            scripts/verify_bill_briefs.py scripts/update_corpus_manifest.py scripts/bump_cache_epoch.py \
-           parli/__init__.py parli/arag.py parli/ingest/__init__.py parli/ingest/speaker_names.py \
+           parli/__init__.py parli/arag.py parli/ingest/http.py parli/ingest/user-agent.json parli/ingest/__init__.py parli/ingest/speaker_names.py \
            portal/wrangler.jsonc portal/public/corpus.json; do
     mkdir -p "$seed/$(dirname "$f")"
     cp "$SRC/$f" "$seed/$f" || { bad "cannot copy fixture dependency: $f"; exit 1; }
@@ -75,6 +75,12 @@ new_sandbox() {
 #!/usr/bin/env bash
 [ "$OPAX_SYNC_KB" = 0 ] || exit 1
 printf 'acquire\n' >> "$HOME/bills.calls"
+if [ "${FAKE_BILLS_MODE:-ok}" = paused ]; then
+  mkdir -p "$(dirname "$OPAX_SOURCE_STATUS_FILE")"
+  printf '{"bills":{"status":"paused","reason":"HTTP 403"}}\n' > "$OPAX_SOURCE_STATUS_FILE"
+  echo 'source paused: honest agent refused (awaiting permission)'
+  exit 4
+fi
 # Exact relationship added by the post-division full bill export.
 if [ "${FAKE_DIVISIONS_MODE:-ok}" = new_division ]; then
   python3 - <<'PYEOF'
@@ -203,6 +209,10 @@ PYEOF
 PIPE="$HOME/.cache/autoresearch/pipeline"
 if [ -f .env ]; then set -a; . ./.env; set +a; fi   # like the real script
 sleep 1
+if [ "${FAKE_MODE:-ok}" = paused ]; then
+  mkdir -p "$PIPE/source-access"
+  printf '{"interests_federal":{"status":"paused","reason":"challenge/WAF page"}}\n' > "$PIPE/source-access/interests_federal.json"
+fi
 [ "${FAKE_MODE:-ok}" = noblock ] && { echo "fake: exiting without doing anything"; exit 0; }
 {
   echo "$(date '+%F %T') ===== daily refresh start (since=2026-08-29, timeout/step=3h, host=fake) ====="
@@ -498,6 +508,14 @@ if [ "${1:-}" = "-" ]; then
 fi
 if [ "${1:-}" = "-m" ]; then
   [ "$2" = parli.ingest.committee_hearings ] && [ -n "${COMMITTEES_CHANGED:-}" ] && echo "COMMITTEES_CHANGED rows_updated=$COMMITTEES_CHANGED rows_removed=0"
+  for f in ${PAUSE_STEPS:-}; do
+    if [ "$2" = "parli.ingest.$f" ]; then
+      mkdir -p "$(dirname "$OPAX_SOURCE_STATUS_FILE")"
+      printf '{"%s":{"status":"paused","reason":"HTTP 403"}}\n' "$OPAX_SOURCE_NAME" > "$OPAX_SOURCE_STATUS_FILE"
+      echo 'source paused: honest agent refused (awaiting permission)'
+      exit 4
+    fi
+  done
   for f in ${FAIL_STEPS:-}; do [ "$2" = "parli.ingest.$f" ] && exit ${FAIL_RC:-1}; done
 else
   for f in ${FAIL_STEPS:-}; do [ "${1:-}" = "scripts/$f" ] && { [ -z "${FAIL_MSG:-}" ] || echo "$FAIL_MSG" >&2; exit ${FAIL_RC:-1}; }; done
@@ -1059,6 +1077,22 @@ OPAX_ONLY=fed_download,fed_load refresh
 check "daily Hansard uses the XML-first module" grep -q 'parli.ingest.federal_feed --start' "$RS_CALLS"
 FAIL_STEPS=federal_feed OPAX_ONLY=fed_download,fed_load refresh
 check "source refusal/failure skips speech loading and remains visible" bash -c "[ '$RRC' -eq 1 ] && grep -q 'fed_load.*SKIP: federal source acquisition failed' '$HOME/.cache/autoresearch/pipeline/daily.log'"
+new_refresh_sandbox federal_paused
+PAUSE_STEPS=federal_feed OPAX_ONLY=fed_download,fed_load refresh
+check "a paused federal feed preserves cached citations and skips loading without failing the night" bash -c "[ '$RRC' -eq 0 ] && ! grep -q 'parli.ingest.speeches --modern-only' '$RS_CALLS' && grep -q 'Paused sources: fed_download' '$HOME/.cache/autoresearch/pipeline/daily.log'"
+
+echo "== honest source access: pauses preserve publications and do not fail the night"
+new_refresh_sandbox honest-daily
+PAUSE_STEPS="committee_hearings grantconnect conduct_interests_federal" refresh
+check "daily pauses exit 0 and appear in the summary" bash -c "[ '$RRC' -eq 0 ] && grep -q 'Paused sources: .*committees.*grants_fetch.*interests_federal' '$HOME/.cache/autoresearch/pipeline/daily.log'"
+check "a refused staged register is not applied" bash -c "! grep -q 'scripts/ext_apply.py grants' '$RS_CALLS' && grep -q ipea_expenses '$RS_CALLS'"
+new_refresh_sandbox honest-attendance
+COMMITTEE_ADDS=3 OPAX_SYNC_KB=1 OPAX_SYNC_GATE=committee_fetch PAUSE_STEPS=committee_witnesses refresh
+check "a paused attendance source skips resolution and KB sync without failing" bash -c "[ '$RRC' -eq 0 ] && ! grep -q 'committee_witnesses resolve' '$RS_CALLS' && ! grep -q 'parli.ingest.arag_sync' '$RS_CALLS'"
+new_sandbox honest-nightly
+FAKE_MODE=paused FAKE_BILLS_MODE=paused nightly
+check "nightly pauses exit 0 and status contains both paused sources" bash -c "[ '$NRC' -eq 0 ] && python3 -c 'import json; d=json.load(open(\"$HOME/.cache/autoresearch/pipeline/nightly-last.json\")); assert d[\"status\"]==\"ok\" and {\"bills\",\"interests_federal\"} <= set(d[\"paused_sources\"]) and \"Paused sources:\" in d[\"summary\"]'"
+check "a refused bill source retains the published bill while votes refresh" bash -c "git --git-dir='$ORIGIN' show main:portal/public/bills/au-federal-t1.json | python3 -c 'import json,sys; assert json.load(sys.stdin)[\"status_as_of\"]==\"2026-09-01\"' && git --git-dir='$ORIGIN' show main:portal/public/votes.json | python3 -c 'import json,sys; assert \"9999\" in json.load(sys.stdin)'"
 
 echo "passed $PASS, failed $FAILN"
 [ "$FAILN" -eq 0 ]

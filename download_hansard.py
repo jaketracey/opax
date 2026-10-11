@@ -6,6 +6,8 @@ Fetches debate transcripts for a date range, scrapes full speech text from
 individual debate pages, and saves as JSONL files (one per sitting day).
 """
 
+from parli.ingest import http as source_http
+
 import argparse
 import json
 import os
@@ -25,8 +27,8 @@ DEFAULT_START = "2023-01-01"
 DEFAULT_END = "2026-03-28"
 RATE_LIMIT_SECONDS = 1.0
 
-SESSION = requests.Session()
-SESSION.headers.update({"User-Agent": "AutoResearch-Hansard/1.0"})
+SESSION = source_http.Session()
+SESSION.headers.update({"User-Agent": source_http.USER_AGENT})
 
 
 def rate_limit():

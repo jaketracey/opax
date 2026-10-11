@@ -62,9 +62,11 @@ export async function buildHubs(root, configRoot = fileURLToPath(new URL('./hubs
   const estimatesLastmod = latest([estimates.updated,agencies.meta.generated_at,grants.meta.generated]);
   const pages = [{path:'/sitting',lastmod:latest(weeks.map(w => w.lastmod))},...weeks.map(w => ({path:`/sitting/${w.start}`,lastmod:w.lastmod})),{path:`/estimates/${estimates.id}`,lastmod:estimatesLastmod}];
   await mkdir(join(root,'hubs'),{recursive:true});
+  const billUpdated = day(billsIndex.generated_at);
+  if (!billUpdated) throw new Error('The retained bills snapshot must have its own date');
   const snapshotDate = day(corpus.version);
   if (!snapshotDate) throw new Error('The published corpus snapshot must have a date');
-  await writeFile(join(root,'hubs/index.json'),JSON.stringify({updated:calendar.updated,snapshotDate,latestFederalDivision,sources:calendar.sources,weeks,pages})+'\n');
+  await writeFile(join(root,'hubs/index.json'),JSON.stringify({updated:calendar.updated,snapshotDate,billUpdated,latestFederalDivision,sources:calendar.sources,weeks,pages})+'\n');
   await writeFile(join(root,`hubs/estimates-${estimates.id}.json`),JSON.stringify(estimatePage)+'\n');
   return {weeks:weeks.length,agencies:records.size,pages:pages.length};
 }

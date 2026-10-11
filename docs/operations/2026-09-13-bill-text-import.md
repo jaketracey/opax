@@ -38,11 +38,11 @@ BILL_TEXT_ENV=/home/jake/opax/.env
 
 # Full newest-first acquisition, or resume the same state after interruption.
 "$BILL_TEXT_PY" scripts/publish_bill_texts.py crawl \
-  --state-dir "$BILL_TEXT_STATE" --browser-ua --source-rate 0.7
+  --state-dir "$BILL_TEXT_STATE" --source-rate 0.7
 
 # Retry one bill; cached successful sections and completed versions are reused.
 "$BILL_TEXT_PY" scripts/publish_bill_texts.py crawl \
-  --state-dir "$BILL_TEXT_STATE" --browser-ua --keys au-federal-r7542
+  --state-dir "$BILL_TEXT_STATE" --keys au-federal-r7542
 
 # Inspect pending KB writes locally, then publish complete versions.
 "$BILL_TEXT_PY" scripts/publish_bill_texts.py publish \

@@ -2,12 +2,17 @@
 author from the Commons API, write portal/public/photos/wd-<QID>.webp (200x200), map every OPAX name
 variant to that key in photos/people.json, and write photos/credits.json for the attribution line.
 Also builds a contact sheet PNG for a visual check of the crops. Honest UA, ~1 request/second."""
+
+import sys as _http_sys
+from pathlib import Path as _HttpPath
+_http_sys.path.insert(0, str(_HttpPath(__file__).resolve().parents[1]))
+from parli.ingest import http as source_http
 import json, os, io, time, urllib.parse, re
 from pathlib import Path
 import requests
 from PIL import Image, ImageDraw
 W=Path(__file__).resolve().parents[1]; PH=W/"portal/public/photos"; SCR=W/"scripts"/"_photos_work"; SCR.mkdir(exist_ok=True)
-UA={"User-Agent":"OPAX research (opax.com.au; jake.tracey@noice.work)"}; S=requests.Session(); S.headers.update(UA)
+UA={"User-Agent":source_http.USER_AGENT}; S=source_http.Session(); S.headers.update(UA)
 import sys
 matches=json.load(open(SCR/("wikidata_matches_new.json" if "--new" in sys.argv else "wikidata_matches.json")))
 drop=set(json.load(open(SCR/"wikidata_drop.json"))) if (SCR/"wikidata_drop.json").exists() else set()

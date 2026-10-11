@@ -26,6 +26,8 @@ Usage:
     python -m parli.ingest.ipea_expenses --since 2026 --new-only  # daily: add new quarters
 """
 
+from parli.ingest import http as source_http
+
 import argparse
 import csv
 import io
@@ -113,7 +115,7 @@ def discover_datasets() -> list[dict]:
 
     while True:
         print(f"  Querying CKAN API (offset={offset})...")
-        resp = requests.get(CKAN_API, params={
+        resp = source_http.get(CKAN_API, params={
             "q": f"organization:{CKAN_ORG}",
             "rows": rows_per_page,
             "start": offset,
@@ -202,7 +204,7 @@ def download_csvs(datasets: list[dict], since: str | None = None) -> list[Path]:
 
         print(f"  Downloading {fname} ({ds['title']})...")
         try:
-            resp = requests.get(url, timeout=120)
+            resp = source_http.get(url, timeout=120)
             resp.raise_for_status()
             dest.write_bytes(resp.content)
             print(f"    OK ({len(resp.content):,} bytes)")

@@ -22,7 +22,7 @@ one division existed in it and never handled the list endpoint's silent
 
 Every raw response is cached under ~/.cache/autoresearch/tvfy/. One serial
 request per second as OPAXBot; honour robots/Retry-After and stop on refusal.
-Stdlib only: runs under the system python3 on `desktop`, where parli.db lives.
+Uses the shared honest transport policy and runs under python3 where parli.db lives.
 
   cd /tmp/arag_mig && nohup python3 -m parli.ingest.tvfy_refresh > logs/tvfy_refresh.log 2>&1 &
   python3 -m parli.ingest.tvfy_refresh --since 2026-08-01 --limit 3     # smoke run
@@ -33,6 +33,8 @@ key is required; never use a repository-embedded credential.
 """
 
 from __future__ import annotations
+
+from parli.ingest import http as source_http
 
 import argparse
 import json
@@ -132,8 +134,10 @@ def get(path: str, params: dict) -> object:
     """Serial honest GET: JSON, None on 404, immediate stop on refusal."""
     url = f"{API}/{path}?{urllib.parse.urlencode(dict(params, key=key()))}"
     try:
-        body = _http.get(url)
+        body = _http.get(url, expected_json=True)
         return json.loads(body) if body is not None else None
+    except Refused as exc:
+        raise source_http.SourceRefused(exc.url or url, str(exc)) from None
     except (Unavailable, ValueError):
         raise TvfyError(f"unavailable or invalid JSON on {path}") from None
 
