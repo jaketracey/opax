@@ -1,4 +1,6 @@
-package au.com.opax.voice
+package au.com.opax.voice.call
+
+import au.com.opax.voice.*
 
 import java.io.IOException
 import java.util.UUID
@@ -65,7 +67,7 @@ fun epochSeconds() = System.currentTimeMillis() / 1000.0
 
 @Suppress("UNCHECKED_CAST")
 val workerShapes: Map<String, Map<String, Any?>> by lazy {
-  val data = SafeVoiceTest::class.java.getResourceAsStream("/worker-status.json")!!.readBytes()
+  val data = SafeVoiceTest::class.java.getResourceAsStream("/fixtures/worker-status.json")!!.readBytes()
   bodyMap(data)["shapes"] as Map<String, Map<String, Any?>>
 }
 

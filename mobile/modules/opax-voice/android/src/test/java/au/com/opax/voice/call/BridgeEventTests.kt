@@ -1,4 +1,6 @@
-package au.com.opax.voice
+package au.com.opax.voice.call
+
+import au.com.opax.voice.*
 
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNull
