@@ -1,4 +1,5 @@
 import test from 'node:test';
+import {createLookupAudit,lookupAuditEntities,lookupNormalise} from './donor-lookup-audit.mjs';
 import ts from 'typescript';
 import {Script} from 'node:vm';
 import assert from 'node:assert/strict';
@@ -40,13 +41,13 @@ function hasHiddenIdentity(value,donor=false,nameField=false){
   return hasHiddenIdentity(v,isDonor||key==='top_donors'||key==='donor'||key==='donor_label'||key==='donor_links',['name','label','n','aliases'].includes(key));
  });
 }
-function hiddenLookupKey(value){
- if(!value||typeof value!=='object')return false;
- return Object.entries(value).some(([key,row])=>{
-  const entry=context.registry.names[context.hash(foldDonorName(key))];
-  return Boolean(entry&&!entry.exempt&&entry.sourceKnown!==false&&!organisationAliases.has(foldDonorName(key)))||hiddenLookupKey(row);
- });
-}
+const lookupEntities=new Map(),publicRoleLabels=[];
+for(const path of walk(pub).filter(p=>p.endsWith('.json')))lookupAuditEntities(JSON.parse(readFileSync(path,'utf8')),lookupEntities);
+for(const record of lookupEntities.values())if(!/^donor:withheld-/.test(record.id||'')&&!/^Donor \d+ \(name withheld\)$/.test(record.name||record.label||'')&&!record.kind)publicRoleLabels.push(record.name||record.label);
+const keyAudit=createLookupAudit([...blocked].filter(label=>{const entry=context.registry.names[context.hash(label)];return entry&&!entry.exempt&&entry.sourceKnown!==false}),[...organisationAliases,...publicRoleLabels,...privacySourceDonorRecords().flatMap(n=>n.aliases||[]).filter(label=>isOrganisationDonor({label:label.toLowerCase()}))]);
+function hiddenLookupKey(value,rootLookup=false,grant=false){const counts=keyAudit(value,lookupEntities,rootLookup,grant);return counts.anonymousJoins>0||counts.containsHits>0;}
+
+
 
 
 test('every served JSON and client module passes the runtime export privacy set',t=>{
@@ -55,7 +56,7 @@ test('every served JSON and client module passes the runtime export privacy set'
   const file=relative(pub,path);
   if(path.endsWith('.json')) {
    const value=JSON.parse(readFileSync(path,'utf8'));
-   assert.ok(!hiddenLookupKey(value),`${file}: withheld dictionary key`);
+   assert.ok(!hiddenLookupKey(value,file.startsWith('evidence/lookup/')||/^search-catalog\/[^/]+\/terms-/.test(file),file.startsWith('grants/')||/^graph\/grants\./.test(file)||file==='social/grants-largest.json'),`${file}: withheld dictionary key`);
    const grant=file.startsWith('grants/') || /^graph\/grants\./.test(file) || file==='social/grants-largest.json';
    if(file.startsWith('electorates/')){json++;continue;}
    const scope=grant?assetDonorRecords(value):value;
@@ -84,9 +85,9 @@ test('every served JSON and client module passes the runtime export privacy set'
 test('public lookups are rebuilt from sanitised labels without changing record joins',()=>{
  const n=original.flatMap(g=>g.nodes).find(n=>n.kind==='donor'&&donorNameWithheld(index,n.label)&&!context.registry.names[context.hash(foldDonorName(n.label))]?.exempt);
  assert.ok(n);const id='n-'+foldDonorName(n.label).replace(/[^a-z0-9]+/g,'-');
- const fixture={people:{[id]:{id,name:n.label}},_by_name:{[foldDonorName(n.label)]:id},ties:{[id]:Array.from({length:21},()=>({record_id:id,description:'record fixture'}))},nested:{aliases:{[n.label]:[n.id]}},donor_links:[{id:n.id,label:n.label}]};
+ const fixture={linked:{subject:n.id,record_id:id},people:{[id]:{id,name:n.label}},_by_name:{[foldDonorName(n.label)]:id},ties:{[id]:Array.from({length:21},()=>({record_id:id,description:'record fixture'}))},nested:{aliases:{[n.label]:[n.id]}},donor_links:[{id:n.id,label:n.label}]};
  for(const safe of [sanitiseDonorAsset(fixture,context),withholdStoredDonors(fixture,context.registry)]){
-  assert.ok(!hiddenLookupKey(safe));assert.ok(safe.people[id].id===id);assert.ok(Object.values(safe._by_name)[0]===id);assert.ok(Object.keys(safe._by_name)[0]===safe.people[id].name.toLowerCase());assert.equal(safe.ties[id].length,21);assert.ok(safe.ties[id].every(r=>r.record_id===id));
+  assert.ok(/^donor:withheld-/.test(safe.linked.subject));assert.ok(safe.linked.record_id===id);assert.equal(Object.keys(safe.nested.aliases).length,0);assert.ok(!hiddenLookupKey(safe));assert.ok(safe.people[id].id===id);assert.ok(Object.values(safe._by_name)[0]===id);assert.ok(Object.keys(safe._by_name)[0]===safe.people[id].name.toLowerCase());assert.equal(safe.ties[id].length,21);assert.ok(safe.ties[id].every(r=>r.record_id===id));
   assert.ok(/^donor:withheld-/.test(safe.donor_links[0].id),'donor link identity retained');
  }
 });
@@ -109,7 +110,7 @@ test('unknown donor fallbacks cannot rename unrelated schema fields',()=>{
  const donorId='donor:'+code,local={...context,registry:{...context.registry,names:{...context.registry.names,[context.hash(code)]:entry},ids:{...context.registry.ids,[context.hash(donorId)]:entry}}};
  const fixture={meta:{[code]:code},nodes:[{kind:'donor',id:donorId,label:code,aliases:[]}],_by_name:{[code]:entry.id}};
  for(const safe of [sanitiseDonorAsset(fixture,local),withholdStoredDonors(fixture,local.registry)]){
-  assert.deepEqual(safe.meta,fixture.meta);assert.equal(safe.nodes[0].label,entry.label);assert.deepEqual(Object.keys(safe._by_name),[entry.label.toLowerCase()]);
+  assert.deepEqual(safe.meta,fixture.meta);assert.equal(safe.nodes[0].label,entry.label);assert.equal(Object.keys(safe._by_name).length,0);
  }
 });
 
@@ -291,4 +292,23 @@ test('registry labels and phrases follow current evidence while anonymous source
  const prior={names:{[nameHash]:entry},ids:{[idHash]:entry},phrases:[{hash:nameHash,words:2,first:context.hash('schema'),replacement:entry.label}],organisations:[]};
  const fresh=publicationContext(original,[],prior);
  assert.equal(fresh.registry.names[nameHash],undefined);assert.ok(!fresh.registry.phrases.some(p=>p.hash===nameHash));assert.deepEqual(fresh.registry.ids[idHash],entry);
+});
+
+// Runtime-derived probes exercise substrings, punctuation and Unicode forms.
+test('lookup joins and normalised contains reject extended private aliases',()=>{
+ const n=original.flatMap(g=>g.nodes).find(n=>n.kind==='donor'&&donorNameWithheld(index,n.label)&&!context.registry.names[context.hash(foldDonorName(n.label))]?.exempt&&lookupNormalise(n.label).length>=4);
+ assert.ok(n);const id=context.registry.ids[context.hash(n.id)].id;
+ const variants=[`prefix ${n.label} suffix`,n.label.replace(/\s/g,'._-'),n.label.toUpperCase(),[...n.label].map(c=>c.charCodeAt(0)>=33&&c.charCodeAt(0)<=126?String.fromCharCode(c.charCodeAt(0)+65248):c).join('')];
+ for(const key of variants){
+  const fixture={nodes:[{id,label:`Donor ${id.split('-').at(-1)} (name withheld)`,kind:'donor',aliases:[]}],nested:{aliases:{[key]:[id]}}};
+  const findings=keyAudit(fixture);assert.equal(findings.anonymousJoins,1);assert.equal(findings.containsHits,1);
+  for(const field of ['aliases','name_index','alias_index','search_map','lookup_table']){const input={...fixture,nested:{[field]:{[key]:[id]}}};for(const safe of [sanitiseDonorAsset(input,context),withholdStoredDonors(input,context.registry)]){assert.equal(Object.keys(safe.nested[field]).length,0);assert.ok(!hiddenLookupKey(safe));}}
+ }
+});
+
+test('lookup normalisation agrees with the independent Unicode reference',()=>{
+ const values=[...privacySourceDonorRecords(),...original.flatMap(g=>g.nodes)].flatMap(n=>[n.label,...n.aliases||[]]);
+ values.push(...[0xdf,0x130,0x3c2,0x149,0x212a].map(cp=>String.fromCodePoint(cp)));
+ const reference=JSON.parse(execFileSync('python3',['-c','import json,sys,unicodedata; print(json.dumps(["".join(c for c in unicodedata.normalize("NFKC",s).casefold() if c.isalnum()) for s in json.load(sys.stdin)]))'],{input:JSON.stringify(values),maxBuffer:5*1024*1024}));
+ assert.equal(values.filter((value,i)=>lookupNormalise(value)!==reference[i]).length,0,'Unicode normalisation mismatch count');
 });

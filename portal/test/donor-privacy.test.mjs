@@ -10,6 +10,7 @@ import {memoryExport,closeMemoryExports} from './memory-export.mjs';
 import {join} from 'node:path';
 import {execFileSync} from 'node:child_process';
 import {build} from 'esbuild';
+import {createLookupAudit} from './donor-lookup-audit.mjs';
 import {privacySourceGraphs} from '../../scripts/withhold_donor_assets.mjs';
 import {offline, loadWorker, outbound, rendered} from './worker-harness.mjs';
 import {WITHHELD_DONOR_REPLY} from '../src/donor-index.ts';
@@ -139,6 +140,7 @@ for (const org of organisationNames) for (const name of within(org)) if (phrase(
 }
 const namesIn = nameMatcher(checked, allowed);
 // DONOR_PRIVACY_DEBUG=1 adds the surrounding text to a failure, for a local run only.
+const workerLookupAudit=createLookupAudit(donorNodes.filter(n=>donorNameWithheld(index,n.label)).flatMap(n=>[n.label,...n.aliases||[]]).filter(label=>!rosterNames.has(foldDonorName(label))),[...organisationNames,...roster.flatMap(p=>[p.name,p.full]).filter(Boolean)]);
 const debug = false;
 // Graphs share ids ("donor:x" can be an organisation in one state and a bare label in
 // another, where it is re-keyed); an id is withheld when no organisation node carries it.
@@ -175,6 +177,7 @@ function context(text, named) {
   return named.flatMap(name => { const w = words(name); const re = new RegExp(w.map(x => x.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('[^a-z0-9]+'), 'i'); const m = re.exec(plain); return m ? [plain.slice(Math.max(0, m.index - 120), m.index + 120)] : []; });
 }
 function assertClean(where, text) {
+  if(/^[\s]*[\[{]/.test(text)){let value;try{value=JSON.parse(text)}catch{}if(value){const result=workerLookupAudit(value,new Map(),where.includes('/evidence/lookup/'),/\/grants\//.test(where));assert.equal(result.anonymousJoins+result.containsHits,0,`${where}: lookup privacy count`);}}
   const named = namesIn(text), links = withheldLinks(text);
   const detail = debug ? `\n${[...named.map(n => `matched: ${n}`), ...context(text, named), ...[...entities(text).matchAll(/\/subject\/(?:donor|campaigner)\/[^"<>\s?#\]]+/g)].map(m => m[0])].join('\n')}` : '';
   assert.equal(named.length + links.length, 0, `${where}: ${named.length} withheld donor name(s), ${links.join(', ') || 'no withheld links'}${detail}`);

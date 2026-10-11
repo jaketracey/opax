@@ -2,6 +2,7 @@ import { readFile, readdir, mkdir, writeFile, rm } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
 import { resolve, join } from 'node:path';
 import { createHash } from 'node:crypto';
+import {containsWithheldLookupPhrase} from '../portal/src/donor-sanitise.mjs';
 import { normalize, tokens, bucket } from '../portal/src/catalog-query.mjs';
 import { personNameKey, personUrl } from '../portal/public/canonical-urls.js';
 import { recordPathIndex } from '../portal/public/record-paths.js';
@@ -186,17 +187,18 @@ async function main() {
    `${r.report_label}. Tabled date: ${r.tabled_date}. ${[...r.sectors,...r.entities].join('; ')}.`,
    {date:r.tabled_date,state:'qld',source:'Queensland Audit Office',url:r.canonical_url,record_id:r.id});
  }
- // Postings are public dictionaries too. Filter exact withheld aliases before
+ // Rebuild postings from sanitised document tokens; block contained aliases before
  // both release hashing and writing; unrelated record IDs stay intact.
  const registry=JSON.parse(await readFile(new URL('../portal/src/donor-withheld.json',import.meta.url),'utf8'));
- const publicTerm=term=>{const entry=registry.names[createHash('sha256').update(foldDonorName(term)).digest('hex')];return !entry || entry.exempt || entry.sourceKnown===false;};
+ const publicTerm=term=>!containsWithheldLookupPhrase(term,registry);
  for(const doc of docs){doc.titleTokens=doc.titleTokens.filter(publicTerm);doc.bodyTokens=doc.bodyTokens.filter(publicTerm);}
  const meta=docs.map(d=>d.meta), postings=Array.from({length:64},()=>Object.create(null));
  for(const [id,d] of docs.entries()) {
   const weights=new Map(d.bodyTokens.map(t=>[t,1])); for(const t of d.titleTokens)weights.set(t,8);
   for(const [term,weight] of weights){const p=postings[bucket(term)];(p[term]??=[]).push(id,weight);}
  }
- const version=createHash('sha256').update(JSON.stringify(docs.map(d=>[d.record,d.meta,d.titleTokens,d.bodyTokens]))).digest('hex').slice(0,16);
+ const publicPaths=recordPathIndex(docs.map(d=>d.key.includes(':grant-recipient:')?{...d.record,owner:true}:d.record)).map(shard=>Object.fromEntries(Object.entries(shard).filter(([path])=>!containsWithheldLookupPhrase(path,registry))));
+ const version=createHash('sha256').update(JSON.stringify([docs.map(d=>[d.record,d.meta,d.titleTokens,d.bodyTokens]),publicPaths])).digest('hex').slice(0,16);
  const output=join(root,'search-catalog'); await mkdir(output,{recursive:true});
  // This directory contains generated search assets only.
  for(const name of await readdir(output))await rm(join(output,name),{recursive:true,force:true});
@@ -208,7 +210,7 @@ async function main() {
  // /support names a reported record only when its path is exactly one of these (portal/public/record-paths.js).
  // A grant recipient's own record owns its page; the award records only link to it.
  // Support reports use the same canonical addresses as search links.
- for(const [i,shard] of recordPathIndex(docs.map(d=>d.key.includes(':grant-recipient:')?{...d.record,owner:true}:d.record)).entries())await put('paths-'+i+'.json',shard);
+ for(const [i,shard]of publicPaths.entries())await put('paths-'+i+'.json',shard);
  const manifest={version,count:docs.length,counts,recordShardSize:256,coverage:'Searches the records and profiles published on OPAX. Map connections, expense totals and recipient profiles are aggregates and may overlap individual records. Published grant and interest detail exports are samples of their source registers; document search returns a ranked retrieval window.'};
  await writeFile(join(output,'manifest.json'),JSON.stringify(manifest));
  console.log(JSON.stringify(manifest,null,2));
