@@ -87,7 +87,7 @@ export default {
     const parsed = parseCanaryBody(await request.json().catch(() => null))
     if ('error' in parsed) return json({ error: parsed.error }, 400)
     const out = await runCanary(
-      { db: env.DB, kb: new Kb(env), now: () => Date.now(), settle: (ms) => new Promise((resolve) => setTimeout(resolve, ms)) },
+      { db: env.DB, kb: new Kb(env), historicHold: readConfig(env).historicHold, now: () => Date.now(), settle: (ms) => new Promise((resolve) => setTimeout(resolve, ms)) },
       parsed.rids,
     )
     return json(out)

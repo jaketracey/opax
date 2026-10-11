@@ -1,5 +1,7 @@
-// Offline review differential: node scripts/differential_non_historic.mjs ENRICH_DIR OUTPUT_JSON
-// Compares original behavior; excludes only new historic metadata and tick counters.
+// Offline review differential: node scripts/differential_non_historic.mjs ENRICH_DIR OUTPUT_JSON [true|false]
+// Compares original behavior; excludes new historic metadata, tick counters and
+// the one required source-classification read before each saved-result flush.
+// Source-less metadata is covered by fail-closed tests, not the parity cohort.
 import { writeFileSync } from 'node:fs'
 import { createHash } from 'node:crypto'
 import { pathToFileURL } from 'node:url'
@@ -8,9 +10,12 @@ const load=async p=>import(pathToFileURL(`${dir}/${p}`));
 const {FakeAi,FakeKb,makeDeps,speechText,GOOD_SUMMARY,rows}=await load('test/helpers.ts');
 const {runTick}=await load('src/tick.ts');
 const {enqueue,finishRows,hasBackfill}=await load('src/db.ts');
-const sourceLabels=['vic_hansard','hansard','aph_hansard','nsw_hansard','qld_hansard','sa_hansard','wa_hansard','tas_hansard','act_hansard','nt_hansard','media_release','arbitrary-source',''];
+const sourceLabels=['vic_hansard','hansard','aph_hansard','nsw_hansard','qld_hansard','sa_hansard','wa_hansard','tas_hansard','act_hansard','nt_hansard','media_release','arbitrary-source','unlabelled-source'];
+const historicHold=process.argv[4] ?? 'true';
+if(historicHold==='false') sourceLabels.push('hansard_hist');
 const scenarios=['success','retry','quarantine','quota','no-text','short','existing','budget','flush','flush-backpressure','flush-full-read-failure'];
 const result={};
+let holdClassificationReads=0;
 for (const source of sourceLabels) for (const scenario of scenarios) {
  const kb=new FakeKb(); kb.add('r1',{title:'A withheld speaker — topic — 2026-09-24',texts:{body:speechText()},classifications:[{labelset:'kind',label:source==='media_release'?'press_release':'speech'},{labelset:'source',label:source}]});
  const good=JSON.stringify({summary:GOOD_SUMMARY,topics:['housing']});
@@ -20,7 +25,7 @@ for (const source of sourceLabels) for (const scenario of scenarios) {
   if(scenario==='quota') return new Error('quota 4006');
   return good;
  });
- const {deps,d1,raw}=makeDeps({kb,ai,env:{HISTORIC_HOLD:'true',WRITE_MODE:'live',DAILY_NEURON_BUDGET:'100',STEADY_NEURON_BUDGET:'100'}});
+ const {deps,d1,raw}=makeDeps({kb,ai,env:{HISTORIC_HOLD:historicHold,WRITE_MODE:'live',DAILY_NEURON_BUDGET:'100',STEADY_NEURON_BUDGET:'100'}});
  const tasks=source==='media_release'?['release_summary']:['speech_summary','speech_topics'];
  await enqueue(d1,tasks.map(task=>({rid:'r1',task,priority:0})),1);
  if(scenario==='no-text') kb.resources.get('r1').texts.body='Moved.';
@@ -38,8 +43,12 @@ for (const source of sourceLabels) for (const scenario of scenarios) {
  const spent=rows(raw,'SELECT * FROM spend ORDER BY day,model');
  const modelHash=createHash('sha256').update(JSON.stringify(ai.calls)).digest('hex');
  const resourceHash=createHash('sha256').update(JSON.stringify([...kb.resources])).digest('hex');
- result[`${source}/${scenario}`]={stats,queue:q,state,spent,modelHash,resourceHash,kbCalls:kb.calls};
+ const kbCalls=[...kb.calls];
+ // Keep every original request, write and their order; allow only the new leading
+ // basic read that classifies saved work before any write. Report its count below.
+ if(historicHold==='true' && scenario.startsWith('flush') && kbCalls[0]==='GET basic r1') {kbCalls.shift();holdClassificationReads++;}
+ result[`${source}/${scenario}`]={stats,queue:q,state,spent,modelHash,resourceHash,kbCalls};
  raw.close();
 }
 writeFileSync(process.argv[3],JSON.stringify(result));
-console.log(JSON.stringify({cases:Object.keys(result).length}));
+console.log(JSON.stringify({cases:Object.keys(result).length,holdClassificationReads}));

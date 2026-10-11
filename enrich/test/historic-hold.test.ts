@@ -4,15 +4,16 @@ import { resolve } from 'node:path'
 import { DatabaseSync } from 'node:sqlite'
 import { test } from 'node:test'
 import worker from '../src/index.ts'
+import { runCanary } from '../src/canary.ts'
 import { claimRids, enqueue, finishRows, getState, hasBackfill, unwrittenRows } from '../src/db.ts'
 import { discover } from '../src/discover.ts'
 import { readConfig, type Env } from '../src/env.ts'
-import { Kb } from '../src/kb.ts'
+import { HOLD_METADATA_TIMEOUT_MS, Kb } from '../src/kb.ts'
 import { reconcileHistoric, releaseHistoric } from '../src/reconcile.ts'
 import { buildStatus } from '../src/status.ts'
 import { runTick } from '../src/tick.ts'
 import { checkHistoricHold } from '../scripts/check_historic_hold.ts'
-import { FakeAi, FakeKb, GOOD_SUMMARY, makeD1, makeDeps, rows, speechText } from './helpers.ts'
+import { FakeAi, FakeKb, GOOD_SUMMARY, KbBackpressure, makeD1, makeDeps, rows, speechText } from './helpers.ts'
 
 const rid = 'a'.repeat(32)
 const labels = [{ labelset: 'kind', label: 'speech' }, { labelset: 'source', label: 'hansard_hist' }]
@@ -238,4 +239,229 @@ test('T1 preflight refuses false, absent, malformed and unavailable hold status'
     assert.deepEqual(init?.headers, { authorization: `Bearer ${token}` })
     return new Response(JSON.stringify({ historicHold: true, heldRows: 2 }))
   })
+})
+
+async function saveHistoric(db: D1Database, raw: DatabaseSync, marked = false, force = false): Promise<void> {
+  await enqueue(db, ['speech_summary', 'speech_topics'].map(task => ({ rid, task: task as 'speech_summary', priority: 100 })), 1)
+  await finishRows(db, [
+    { rid, task: 'speech_summary', status: 'done', outcome: 'unwritten', historic: marked, result: GOOD_SUMMARY },
+    { rid, task: 'speech_topics', status: 'done', outcome: 'unwritten', historic: marked, result: '["housing"]' },
+  ], 2)
+  if (force) raw.exec('UPDATE queue SET force = 1')
+}
+
+test('canary holds unreleased historic saved results, including forced and unmarked legacy rows', async () => {
+  for (const marked of [false, true]) for (const force of [false, true]) {
+    const { d1, raw } = makeD1()
+    const kb = catalogKb()
+    await saveHistoric(d1, raw, marked, force)
+    const out = await runCanary({ db: d1, kb, historicHold: true, now: () => 3, settle: async () => {} }, [rid])
+    assert.equal(out.results[0].status, 'skipped')
+    assert.deepEqual(kb.writes(), [])
+    assert.ok(rows(raw, 'SELECT * FROM queue').every(row => row.terminal_reason === 'historic-held' && row.historic === 1))
+    assert.equal(kb.calls.filter(call => call.startsWith('GET everything')).length, 1)
+  }
+})
+
+test('authenticated canary route passes the hold switch for normal and forced results', async () => {
+  for (const force of [false, true]) {
+    const { d1, raw } = makeD1()
+    await saveHistoric(d1, raw, true, force)
+    const env = { DB: d1, HISTORIC_HOLD: 'true', ENRICH_ADMIN_TOKEN: 'invented-test-secret', ARAG_ZONE: 'example', ARAG_KB_ID: 'invented-kb', ARAG_KB_TOKEN: 'invented-token' } as Env
+    const savedFetch = globalThis.fetch
+    const methods: string[] = []
+    globalThis.fetch = async (_input, init) => { methods.push(init?.method ?? 'GET'); return new Response(JSON.stringify({ ...resource, data: { texts: { body: { value: { body: speechText() } } } } })) }
+    try {
+      const response = await worker.fetch(new Request('https://example.invalid/canary', { method: 'POST', headers: { authorization: 'Bearer invented-test-secret', 'content-type': 'application/json' }, body: JSON.stringify({ rids: [rid] }) }), env)
+      assert.equal(response.status, 200)
+      assert.equal((await response.json() as { results: Array<{ status: string }> }).results[0].status, 'skipped')
+      assert.deepEqual(methods, ['GET'])
+    } finally { globalThis.fetch = savedFetch }
+  }
+})
+
+test('review reproduction: legacy historic zero saved rows cannot flush a summary or topics, including force', async () => {
+  for (const force of [false, true]) {
+    const kb = catalogKb()
+    const ai = new FakeAi(() => { throw new Error('held legacy result reached model') })
+    const { deps, d1, raw } = makeDeps({ kb, ai, env: { HISTORIC_HOLD: 'true', WRITE_MODE: 'live' } })
+    await saveHistoric(d1, raw, false, force)
+    assert.ok(rows(raw, 'SELECT historic,historic_released FROM queue').every(row => row.historic === 0 && row.historic_released === 0))
+    await runTick(deps)
+    assert.deepEqual(kb.writes(), [])
+    assert.equal(ai.calls.length, 0)
+    assert.ok(rows(raw, 'SELECT * FROM queue').every(row => row.terminal_reason === 'historic-held' && row.historic === 1))
+  }
+})
+
+test('saved-result flush fails closed on missing, malformed, absent-source or unreadable metadata', async () => {
+  for (const basic of [null, {}, { usermetadata: { classifications: [{ labelset: 'kind', label: 'speech' }] } }, new Error('injected read failure'), new KbBackpressure('metadata unavailable', 503)]) {
+    const kb = catalogKb()
+    kb.catalogRows = [] // Isolate flush; discovery may independently obtain valid metadata and hold it.
+    const { deps, d1, raw } = makeDeps({ kb, ai: new FakeAi(() => { throw new Error('unexpected model') }), env: { HISTORIC_HOLD: 'true', WRITE_MODE: 'live' } })
+    await saveHistoric(d1, raw, false, true)
+    const before = rows(raw, 'SELECT * FROM queue')
+    kb.getBasic = async () => { if (basic instanceof Error) throw basic; return basic }
+    await runTick(deps)
+    assert.deepEqual(kb.writes(), [])
+    assert.deepEqual(rows(raw, 'SELECT * FROM queue'), before)
+  }
+})
+
+test('pending work with missing source metadata cannot generate or force a write while held', async () => {
+  const kb = catalogKb()
+  kb.catalogRows = []
+  kb.resources.get(rid)!.classifications = [{ labelset: 'kind', label: 'speech' }]
+  const ai = new FakeAi(() => { throw new Error('unclassified resource reached model') })
+  const { deps, d1, raw } = makeDeps({ kb, ai, env: { HISTORIC_HOLD: 'true', WRITE_MODE: 'live' } })
+  await enqueue(d1, [{ rid, task: 'speech_summary', priority: 100 }], 1)
+  raw.exec('UPDATE queue SET force=1')
+  await runTick(deps)
+  assert.equal(ai.calls.length, 0)
+  assert.deepEqual(kb.writes(), [])
+  assert.equal(rows(raw, 'SELECT status FROM queue')[0].status, 'pending')
+})
+
+test('canary fails closed on source-less metadata even for explicitly released forced results', async () => {
+  const { d1, raw } = makeD1()
+  const kb = catalogKb()
+  await saveHistoric(d1, raw, false, true)
+  raw.exec('UPDATE queue SET historic_released = 1')
+  kb.resources.get(rid)!.classifications = [{ labelset: 'kind', label: 'speech' }]
+  const before = rows(raw, 'SELECT * FROM queue')
+  const out = await runCanary({ db: d1, kb, historicHold: true, now: () => 3, settle: async () => {} }, [rid])
+  assert.equal(out.allClean, false)
+  assert.deepEqual(kb.writes(), [])
+  assert.deepEqual(rows(raw, 'SELECT * FROM queue'), before)
+})
+
+test('released historic saved results can flush and canary, including force and legacy marker zero', async () => {
+  for (const path of ['flush', 'canary']) for (const force of [false, true]) {
+    const kb = catalogKb()
+    const { deps, d1, raw } = makeDeps({ kb, ai: new FakeAi(() => { throw new Error('saved result reached model') }), env: { HISTORIC_HOLD: 'true', WRITE_MODE: 'live' } })
+    await saveHistoric(d1, raw, false, force)
+    // A released task may have a saved result after write backpressure.
+    raw.exec('UPDATE queue SET historic_released = 1')
+    if (path === 'flush') await runTick(deps)
+    else await runCanary({ db: d1, kb, historicHold: true, now: () => 3, settle: async () => {} }, [rid])
+    assert.equal(kb.resources.get(rid)!.texts['da-summary-t-body'], GOOD_SUMMARY)
+    assert.ok(rows(raw, 'SELECT * FROM queue').every(row => row.outcome === 'written' && row.historic === 1 && row.historic_released === 1))
+  }
+})
+
+for (const path of ['validator retry', 'name escalation', 'transient retry', 'stale claim', 'forced generation']) {
+  test(`${path} cannot spend neurons or write an unreleased historic task`, async () => {
+    const kb = catalogKb()
+    const ai = new FakeAi(() => { throw new Error('held retry reached model') })
+    const { deps, d1, raw } = makeDeps({ kb, ai, env: { HISTORIC_HOLD: 'true', WRITE_MODE: 'live' } })
+    await enqueue(d1, ['speech_summary', 'speech_topics'].map(task => ({ rid, task: task as 'speech_summary', priority: 999999 })), 1)
+    if (path === 'validator retry') raw.exec('UPDATE queue SET attempts=2')
+    if (path === 'name escalation') raw.exec('UPDATE queue SET names_rejected=1, attempts=1')
+    if (path === 'transient retry') raw.exec('UPDATE queue SET transient=7')
+    if (path === 'stale claim') raw.exec("UPDATE queue SET status='claimed',claim_token='old',claimed_at=1")
+    if (path === 'forced generation') raw.exec('UPDATE queue SET force=1')
+    await runTick(deps)
+    assert.equal(ai.calls.length, 0)
+    assert.deepEqual(kb.writes(), [])
+    assert.ok(rows(raw, 'SELECT * FROM queue').every(row => row.terminal_reason === 'historic-held' && row.claim_token === null))
+  })
+}
+
+test('non-historic canary keeps writing with the hold enabled', async () => {
+  const { d1, raw } = makeD1()
+  const kb = catalogKb()
+  kb.resources.get(rid)!.classifications[1].label = 'vic_hansard'
+  await saveHistoric(d1, raw)
+  const out = await runCanary({ db: d1, kb, historicHold: true, now: () => 3, settle: async () => {} }, [rid])
+  assert.equal(out.results[0].status, 'written')
+  assert.ok(rows(raw, 'SELECT outcome FROM queue').every(row => row.outcome === 'written'))
+})
+
+test('admin requeue of a legacy saved historic result cannot bypass the model hold', async () => {
+  const kb = catalogKb()
+  const ai = new FakeAi(() => { throw new Error('admin requeue reached model') })
+  const { deps, d1, raw } = makeDeps({ kb, ai, env: { HISTORIC_HOLD: 'true', WRITE_MODE: 'live' } })
+  await saveHistoric(d1, raw, false, true)
+  // The existing requeue CLI discards saved work and raises priority, without releasing it.
+  raw.exec("UPDATE queue SET status='pending',priority=200,attempts=0,transient=0,names_rejected=0,outcome=NULL,result=NULL,claim_token=NULL,claimed_at=NULL,done_at=NULL WHERE status='done' AND outcome IN ('dry','unwritten','empty')")
+  await runTick(deps)
+  assert.equal(ai.calls.length, 0)
+  assert.deepEqual(kb.writes(), [])
+  assert.ok(rows(raw, 'SELECT * FROM queue').every(row => row.terminal_reason === 'historic-held' && row.historic_released === 0))
+})
+
+for (const failure of ['503', '429', 'timeout', 'error']) {
+  test(`classification read ${failure} defers only its saved summary while live rows keep processing over three ticks`, async () => {
+    const kb = new FakeKb()
+    kb.add(rid, { texts: { body: speechText() } }) // saved vic_hansard result, healthy except for basic reads
+    let clock = Date.parse('2026-09-28T12:00:00Z')
+    const ai = new FakeAi(() => JSON.stringify({ summary: GOOD_SUMMARY, topics: [] }))
+    const { deps, d1, raw } = makeDeps({ kb, ai, now: () => clock, env: { HISTORIC_HOLD: 'true', WRITE_MODE: 'live', CONCURRENCY: '1', TICK_SOFT_MS: '5000' } })
+    await enqueue(d1, [{ rid, task: 'speech_summary', priority: 100 }], 1)
+    await finishRows(d1, [{ rid, task: 'speech_summary', status: 'done', outcome: 'unwritten', result: GOOD_SUMMARY }], 2)
+    const before = rows(raw, 'SELECT * FROM queue WHERE rid = ?', rid)
+    const basic = kb.getBasic.bind(kb)
+    let reads = 0
+    kb.getBasic = async (id: string, timeoutMs?: number) => {
+      if (id !== rid) return basic(id)
+      reads++
+      assert.equal(timeoutMs, HOLD_METADATA_TIMEOUT_MS)
+      if (failure === 'timeout') {
+        clock += HOLD_METADATA_TIMEOUT_MS // Exhausts the original soft deadline.
+        throw new DOMException('metadata read timed out', 'TimeoutError')
+      }
+      if (failure === 'error') throw new Error('injected classification read failure')
+      throw new KbBackpressure('metadata read unavailable', Number(failure), 300)
+    }
+    for (let i = 0; i < 3; i++) {
+      const liveRid = String(i + 1).repeat(32)
+      kb.add(liveRid, { texts: { body: speechText() } })
+      await enqueue(d1, [{ rid: liveRid, task: 'speech_summary', priority: 100 }], clock)
+      const stats = await runTick(deps)
+      assert.equal(stats.claimed, 1)
+      assert.equal(stats.written, 1)
+      assert.equal(stats.stop, null)
+      assert.equal(kb.resources.get(liveRid)!.texts['da-summary-t-body'], GOOD_SUMMARY)
+      assert.equal(await getState(d1, 'kb_backoff_until'), null)
+      assert.deepEqual(rows(raw, 'SELECT * FROM queue WHERE rid = ?', rid), before)
+      assert.ok(!kb.writes().some(call => call.endsWith(rid)))
+      clock += 60_000
+    }
+    assert.equal(reads, 3)
+    assert.equal(ai.calls.length, 3)
+    assert.equal(rows(raw, "SELECT COUNT(*) AS n FROM errors WHERE kind='historic-hold-metadata'")[0].n, 3)
+  })
+}
+
+test('a failed classification does not prevent another saved summary from flushing', async () => {
+  const kb = new FakeKb()
+  const healthyRid = 'b'.repeat(32)
+  for (const id of [rid, healthyRid]) kb.add(id, { texts: { body: speechText() } })
+  const { deps, d1, raw } = makeDeps({ kb, ai: new FakeAi(() => { throw new Error('saved work reached model') }), env: { HISTORIC_HOLD: 'true', WRITE_MODE: 'live', CONCURRENCY: '1' } })
+  await enqueue(d1, [rid, healthyRid].map(id => ({ rid: id, task: 'speech_summary', priority: 100 })), 1)
+  await finishRows(d1, [rid, healthyRid].map(id => ({ rid: id, task: 'speech_summary', status: 'done', outcome: 'unwritten', result: GOOD_SUMMARY })), 2)
+  const basic = kb.getBasic.bind(kb)
+  kb.getBasic = async id => { if (id === rid) throw new KbBackpressure('metadata read unavailable', 503); return basic(id) }
+  const stats = await runTick(deps)
+  assert.equal(stats.flushed, 1)
+  assert.equal(stats.stop, null)
+  assert.equal(kb.resources.get(healthyRid)!.texts['da-summary-t-body'], GOOD_SUMMARY)
+  assert.equal(rows(raw, 'SELECT outcome FROM queue WHERE rid=?', rid)[0].outcome, 'unwritten')
+  assert.equal(await getState(d1, 'kb_backoff_until'), null)
+})
+
+test('basic metadata reads obey their supplied timeout and abort the fetch', async () => {
+  let aborted = false
+  const client = new Kb({ ARAG_ZONE: 'example', ARAG_KB_ID: 'invented', ARAG_KB_TOKEN: 'invented' }, async (_input, init) => {
+    return new Promise<Response>((_resolve, reject) => {
+      const watchdog = setTimeout(() => reject(new Error('metadata request did not abort')), 250)
+      init!.signal!.addEventListener('abort', () => {
+        aborted = true
+        clearTimeout(watchdog)
+        reject(init!.signal!.reason)
+      }, { once: true })
+    })
+  })
+  await assert.rejects(client.getBasic(rid, 5), KbBackpressure)
+  assert.equal(aborted, true)
 })
