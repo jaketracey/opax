@@ -9,9 +9,9 @@ export async function tablePrivacyCheck(assets: Fetcher): Promise<(text: string)
     pending = (async () => {
       const response = await assets.fetch(new Request('https://opax.com.au/table-private-identities.json'))
       if (!response.ok) throw new Error('Privacy index unavailable')
-      const registry = await response.json() as {version:number;identities:{hash:string;words:number}[]}
-      if(registry.version!==1)throw new Error('Privacy index unavailable')
-      const blocked=compileHashedIdentityCheck(registry.identities)
+      const registry = await response.json() as {version:number;identities:{hash:string;words:number}[];strippedLengths:number[]}
+      if(registry.version!==1 || !Array.isArray(registry.strippedLengths) || !registry.strippedLengths.length || registry.strippedLengths.some(n=>!Number.isSafeInteger(n)||n<4))throw new Error('Privacy index unavailable')
+      const blocked=compileHashedIdentityCheck(registry.identities,registry.strippedLengths)
       return (text: string) => !blocked(text)
     })().catch(() => {indices.delete(assets); return () => false})
     indices.set(assets, pending)

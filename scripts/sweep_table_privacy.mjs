@@ -22,7 +22,8 @@ try {
   const build=JSON.parse(await readFile(new URL('../portal/src/table-registry-fingerprint.json',import.meta.url),'utf8'));
   const actualFingerprint=createHash('sha256').update(hashes.map(e=>e.hash).sort().join('\n')).digest('hex');
   const fingerprintMatches=storedFingerprint===build.fingerprint&&actualFingerprint===build.fingerprint&&tableRegistryFingerprint(policy)===build.fingerprint;
-  const blocked=compileHashedIdentityCheck(hashes),source=sourceTableDonorIdentities();
+  const compactLengths=JSON.parse(await db.prepare("SELECT value FROM table_meta WHERE key='privacy_stripped_lengths'").first('value'));
+  const blocked=compileHashedIdentityCheck(hashes,compactLengths),source=sourceTableDonorIdentities();
   const guard={labels:source.labels.length,labelsRejected:source.labels.filter(blocked).length,identifiers:source.identifiers.length,identifiersRejected:source.identifiers.filter(blocked).length};
   const result={databaseId,fingerprintMatches,storedIdentityHashes:hashes.length,guard,privateIdentityHashes:policy.phrases.size,rowsScanned:0,withheldIdentities:0,datasets:{}};
   for (const [name,config]of Object.entries(TABLE_DATASETS).filter(([,c])=>c.privacy)) {

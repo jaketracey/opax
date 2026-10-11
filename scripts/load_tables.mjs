@@ -4,7 +4,7 @@ import {join, resolve} from 'node:path';
 import {createHash} from 'node:crypto';
 import {TABLE_DATASETS} from '../portal/src/table-datasets.mjs';
 import {isOrganisationRecipient} from '../portal/src/table-recipient.mjs';
-import {identityVariants, compileIdentityCheck} from '../portal/src/table-identities.mjs';
+import {identityVariants, compileIdentityCheck, strippedLengths} from '../portal/src/table-identities.mjs';
 import {tableSchema,tableName,quote,arrayColumns} from './table-schema.mjs';
 import {MONEY_GRAPHS, isOrganisationDonor, withheldPhrases} from '../portal/public/donor-entity.js';
 import {moneyFlowType} from '../portal/public/money-records.js';
@@ -132,7 +132,7 @@ export async function tableIdentityIndex(root = defaultRoot, suppliedGraphs) {
     for (const file of (await readdir(join(root,'grants',jur))).filter(f=>f.startsWith('shard-') && f.endsWith('.json')).sort()) for (const r of Object.values(await read(`grants/${jur}/${file}`))) if (!isOrganisationRecipient(r)) add(r);
   }
   const lengths = [...new Set([...phrases].map(p=>p.split(' ').length))].sort((a,b)=>a-b);
-  return {phrases,suppliers,lengths,check:compileIdentityCheck(phrases)};
+  return {phrases,suppliers,lengths,strippedLengths:strippedLengths(phrases),check:compileIdentityCheck(phrases)};
 }
 export function tableIdentityHashes(policy) {
   return [...policy.phrases].map(p=>({hash:createHash('sha256').update(p).digest('hex'),words:p.split(' ').length})).sort((a,b)=>a.hash.localeCompare(b.hash));
@@ -164,6 +164,7 @@ export async function buildTableSQL({root=defaultRoot,output=fileURLToPath(new U
     if (sql.length>2_000_000) await flush('privacy');
   }
   sql+=`INSERT INTO table_meta VALUES ('privacy_lengths',${literal(JSON.stringify(policy?.lengths || []))});\n`;
+  sql+=`INSERT INTO table_meta VALUES ('privacy_stripped_lengths',${literal(JSON.stringify(strippedLengths(policy?.phrases || new Set())))});\n`;
   await flush('privacy');
   for (const [name,config] of Object.entries(TABLE_DATASETS)) {
     const table=tableName(name);counts[name]=0;
@@ -192,7 +193,7 @@ if (process.argv[1] && resolve(process.argv[1])===fileURLToPath(import.meta.url)
   try {
     const loaded=await tableRows();
     const result=await buildTableSQL({datasets:loaded.rows,policy:loaded.policy});
-    await writeFile(join(defaultRoot,'table-private-identities.json'),JSON.stringify({version:1,identities:tableIdentityHashes(loaded.policy)})+'\n');
+    await writeFile(join(defaultRoot,'table-private-identities.json'),JSON.stringify({version:1,identities:tableIdentityHashes(loaded.policy),strippedLengths:loaded.policy.strippedLengths})+'\n');
     await writeFile(fileURLToPath(new URL('../portal/src/table-registry-fingerprint.json',import.meta.url)),JSON.stringify({fingerprint:result.privacyFingerprint})+'\n');
     console.log(JSON.stringify({sqlFiles:result.files.length,bytes:result.bytes,rows:result.counts,privateIdentityHashes:result.privateIdentities,publicTableAssets:0,publicPrivacyAssets:1}));
   } catch {console.error('Table load preparation failed; no source identities are logged.');process.exitCode=1;}

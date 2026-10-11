@@ -21,6 +21,7 @@ import {buildCrawl as buildCrawlOriginal} from '../../scripts/build_crawl_catalo
 import {buildGrowth as buildGrowthOriginal} from '../../scripts/build_growth_modules.mjs';
 import {moduleOutputs} from './growth-module-harness.mjs';
 import {applyQuery, dataTableHTML, mountDataTable, toCSV} from '../public/datatable.js';
+import {queryValues} from '../public/datatable-query.js';
 import {tableHarness} from './datatable-harness.mjs';
 import {tableRows,tableIdentityHashes} from '../../scripts/load_tables.mjs';
 import {tableDatabase} from './table-d1-harness.mjs';
@@ -212,7 +213,7 @@ test.after(offline());
 const {env, fetch: fetchWorker} = await loadWorker(new URL('../src/index.ts', import.meta.url).pathname, root);
 env.TABLE_DB = tablesD1.db;
 const originalAssets = env.ASSETS.fetch.bind(env.ASSETS);
-env.ASSETS.fetch = request => new URL(request.url).pathname === '/table-private-identities.json' ? Promise.resolve(Response.json({version:1,identities:tableIdentityHashes(moneyTables.policy)})) : originalAssets(request);
+env.ASSETS.fetch = request => new URL(request.url).pathname === '/table-private-identities.json' ? Promise.resolve(Response.json({version:1,identities:tableIdentityHashes(moneyTables.policy),strippedLengths:moneyTables.policy.strippedLengths})) : originalAssets(request);
 const ownUrl = (html, path) => entities(html).replaceAll(path, '');
 
 function assertCleanCSV(where, csv) {
@@ -778,7 +779,8 @@ test('money tables withhold every derived donor in client and server rows, facet
       columns:[{key:'label',label:'Organisation',type:'text',primary:true,facet:'multi'}, {key:'industry',label:'Sector',type:'category',facet:'chips'}, {key:'total',label:'Amount',type:'money',facet:'range'}]};
     const page = applyQuery(rows,config,{pageSize:50000});
     assert.ok(page.rows.every(isOrganisationDonor),`table ${i}: unsafe row`);
-    assert.equal(page.total,rows.filter(isOrganisationDonor).length,`table ${i}: organisation count`);
+    const approved=rows.filter(row=>isOrganisationDonor(row) && config.privacyCheck(JSON.stringify(row)) && [...queryValues(row)].every(config.privacyCheck));
+    assert.equal(page.total,approved.length,`table ${i}: approved organisation count`);
     assertClean(`table ${i}: rows and facets`,JSON.stringify(page));
     assertClean(`table ${i}: client SSR`,dataTableHTML(config,page));
     assertClean(`table ${i}: client CSV`,toCSV(rows,config));

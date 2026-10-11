@@ -24,7 +24,7 @@ test('the published table registry rejects the complete runtime donor and recipi
   assert.equal(registry.version,1);
   assert.equal(tableRegistryFingerprint(policy),TABLE_REGISTRY_FINGERPRINT);
   assert.ok(registry.identities.every(e=>Object.keys(e).sort().join(',')==='hash,words'&&/^[a-f0-9]{64}$/.test(e.hash)&&Number.isSafeInteger(e.words)&&e.words>0));
-  const blocked=compileHashedIdentityCheck(registry.identities),safe=await tablePrivacyCheck(assets);
+  const blocked=compileHashedIdentityCheck(registry.identities,registry.strippedLengths),safe=await tablePrivacyCheck(assets);
   assert.equal(probes.filter(v=>!policy.check(v)||!blocked(v)||safe(v)).length,0,'guard miss count');
   for(const value of probes){const response=await tablePrivacy(new Request('https://local.invalid/api/table/privacy',{method:'POST',body:JSON.stringify({text:value})}),assets);assert.ok(response.status===200&&(await response.json()).safe===false,'browser validator rejection count');}
   t.diagnostic(JSON.stringify({donorLabels:source.labels.length,donorLabelsRejected:source.labels.filter(blocked).length,donorIdentifiers:source.identifiers.length,donorIdentifiersRejected:source.identifiers.filter(blocked).length,recipientInputs:new Set(recipients).size,misses:0}));

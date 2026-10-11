@@ -68,9 +68,9 @@ export function normalizedTableQuery(query: Query, csv = false): string {
   return params.toString()
 }
 
-async function blocked(db: D1Database, values: Iterable<string>, lengths: number[]): Promise<boolean> {
+async function blocked(db: D1Database, values: Iterable<string>, lengths: number[], strippedLengths: number[]): Promise<boolean> {
   for (const value of values) {
-    const candidates=[...identityCandidates(value,lengths)]
+    const candidates=[...identityCandidates(value,lengths,strippedLengths)]
     for (let start=0;start<candidates.length;start+=90) {
       const hashes=await Promise.all(candidates.slice(start,start+90).map(identityHash))
       if (hashes.length && await db.prepare(`SELECT 1 AS found FROM table_private_identity WHERE hash IN (${hashes.map(()=>'?').join(',')}) LIMIT 1`).bind(...hashes).first()) return true
@@ -115,11 +115,12 @@ export async function tableApi(request: Request, env: TableEnv, _ctx?: Execution
     // Check every raw key/value occurrence before a parser can discard input.
     const inputs=[...rawQueryValues(url.searchParams)]
     const db=env.TABLE_DB
-    const meta=await db.prepare("SELECT key,value FROM table_meta WHERE key IN ('version','privacy_lengths','privacy_fingerprint') LIMIT 3").all<{key:string;value:string}>()
+    const meta=await db.prepare("SELECT key,value FROM table_meta WHERE key IN ('version','privacy_lengths','privacy_stripped_lengths','privacy_fingerprint') LIMIT 4").all<{key:string;value:string}>()
     const metadata=Object.fromEntries(meta.results.map(r=>[r.key,r.value]))
     if (config.privacy && (!/^[a-f0-9]{64}$/.test(TABLE_REGISTRY_FINGERPRINT) || metadata.privacy_fingerprint !== TABLE_REGISTRY_FINGERPRINT)) return errorResponse(503,'unavailable',{'retry-after':'60'})
     if (!metadata.version || !metadata.privacy_lengths) throw new Error('unavailable')
-    const denied=Boolean(config.privacy) && await blocked(db,inputs,JSON.parse(metadata.privacy_lengths))
+    if(config.privacy && !metadata.privacy_stripped_lengths)throw new Error('unavailable')
+    const denied=Boolean(config.privacy) && await blocked(db,inputs,JSON.parse(metadata.privacy_lengths),JSON.parse(metadata.privacy_stripped_lengths || '[]'))
     if (repeatedTableKeys(url.searchParams,null).size) return errorResponse(400,'invalid_query')
     let query: Query | undefined
     if (denied) query={q:'',filters:{},sort:config.defaultSort,page:1,pageSize:50}
