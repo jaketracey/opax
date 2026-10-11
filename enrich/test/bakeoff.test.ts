@@ -1,7 +1,7 @@
 import test from 'node:test'
 import assert from 'node:assert/strict'
 import { buildSystemPrompt, buildUserPrompt } from '../src/prompts.ts'
-import { select, recordOf, enrichmentRequests, usageCost, blind, judgeRequests, judgeSystem, validate, decode, upperCost, retryRequests, mergeAttempt } from '../scripts/bakeoff-lib.ts'
+import { select, recordOf, enrichmentRequests, usageCost, blind, judgeRequests, judgeSystem, judgeSchema, validate, decode, upperCost, retryRequests, mergeAttempt, qwenAccounting } from '../scripts/bakeoff-lib.ts'
 
 const unit = (id: number, length: number, year = '1993', chamber = 'senate', kind = 'speech') => ({ slug: `unit-${id}`, title: 'Record', texts: { body: { body: 'text '.repeat(Math.ceil(length / 5)) } }, extra: { metadata: { date: `${year}-01-01`, unit_kind: kind } }, usermetadata: { classifications: [{ labelset: 'kind', label: 'speech' }, { labelset: 'chamber', label: chamber }] } })
 test('selection excludes thin text and preserves strata and short quota deterministically', () => {
@@ -89,4 +89,15 @@ test('judge uses full source text and exact topic policy without generation outp
   const policy = buildSystemPrompt(['topics']).split('\n\n').filter(s => s.startsWith('TOPICS\n') || s.startsWith('TAXONOMY\n')).join('\n\n')
   assert.ok(judgeSystem.includes(policy))
   assert.ok(!judgeSystem.includes('OUTPUT\nReturn only the JSON object'))
+  assert.deepEqual(judgeSchema.properties.A.properties.summary_errors, { type: 'integer' })
+})
+test('qwen cost distinguishes measured cohort receipts from a full-pilot allocation', () => {
+  const pilot = { neurons_total_pilot: 92025, pilot_units: 2000 }
+  const average = qwenAccounting(Array.from({ length: 200 }, () => ({})), pilot)
+  assert.equal(average.run_cost_usd, 1.012275)
+  assert.ok(Math.abs(average.cost_usd - 0.1012275) < 1e-12)
+  assert.match(average.basis, /average/)
+  assert.equal(qwenAccounting([{ neurons: 100 }, { neurons: 200 }]).neurons, 300)
+  assert.throws(() => qwenAccounting([{}]))
+  assert.throws(() => qwenAccounting([{}], { ...pilot, neurons_total_pilot: NaN }))
 })

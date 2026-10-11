@@ -1,6 +1,6 @@
 import { readFileSync, writeFileSync, existsSync } from 'node:fs'
 import { pathToFileURL } from 'node:url'
-import { hash, recordOf, validate, usageCost } from './bakeoff-lib.ts'
+import { hash, validate, qwenAccounting } from './bakeoff-lib.ts'
 
 const out = '/home/jake/opax-staging/federation/bakeoff/'
 const read = (n: string) => JSON.parse(readFileSync(out + n, 'utf8'))
@@ -24,6 +24,8 @@ function audit() {
     })
     write(`${side}-validator-details.json`, scores)
     all[side] = { units: scores.length, validator_pass: scores.filter(s => s.valid).length, raw_validator_pass: scores.filter(s => s.raw_valid).length, new_name_hits: scores.filter(s => s.new_name).length, refusals: scores.filter(s => s.refusal).length, empty: scores.filter(s => s.empty).length, errors: scores.filter(s => s.error).length }
+    if (side === 'qwen3' && !rows.every(r => Object.hasOwn(r, 'refusal') || Object.hasOwn(r, 'stop_reason'))) all[side].refusals = null
+    if (side === 'qwen3' && !rows.every(r => Object.hasOwn(r, 'error'))) all[side].errors = null
   }
   write('validator-metrics.json', all); console.log(JSON.stringify(all))
 }
@@ -47,27 +49,33 @@ function score() {
   for (const side of ['haiku', 'qwen3']) {
     const s = scores.filter(s => s.side === side)
     Object.assign(metrics[side], { supported_topics: s.reduce((n, x) => n + x.supported_topics, 0), total_topics: s.reduce((n, x) => n + x.topic_count, 0), units_all_topics_supported: s.filter(x => x.topics_all_supported).length, summary_error_units: s.filter(x => x.summary_errors > 0).length, summary_errors: s.reduce((n, x) => n + x.summary_errors, 0) })
+    const nonempty = s.filter(x => pairs.find((p: any) => p.id === x.id)[x.position].summary.trim())
+    metrics[side].nonempty_summaries = nonempty.length
+    metrics[side].nonempty_summary_error_units = nonempty.filter(x => x.summary_errors > 0).length
   }
+  const nameReview = read('name-guard-reviewed.json'), nameFlags = read('name-guard-blind-flags.json')
+  const expectedFlags = nameFlags.flatMap((f: any) => ['A', 'B'].filter(p => f[p]).map(position => `${f.id}:${position}`))
+  if (nameReview.length !== expectedFlags.length || new Set(nameReview.map((r: any) => `${r.id}:${r.position}`)).size !== expectedFlags.length || expectedFlags.some((f: string) => !nameReview.some((r: any) => `${r.id}:${r.position}` === f)) || nameReview.some((r: any) => typeof r.personal_name_hit !== 'boolean')) throw Error('require blind review of every name-guard flag')
+  for (const side of ['haiku', 'qwen3']) metrics[side].confirmed_new_personal_names = nameReview.filter((r: any) => (key.get(r.id) as any)[r.position] === side && r.personal_name_hit).length
   const manual = read('spotcheck-verdicts.json')
   const spots = read('spotcheck-30.json')
   if (manual.length !== 30 || new Set(manual.map((s: any) => s.id)).size !== 30 || spots.some((s: any) => !manual.some((m: any) => m.id === s.id))) throw Error('require independent review of all 30 selected pairs')
   let topicAgreement = 0, summaryAgreement = 0, exactErrorAgreement = 0
   for (const m of manual) for (const position of ['A', 'B']) {
     const s = scores.find(s => s.id === m.id && s.position === position)
-    if (typeof m[position]?.topics_all_supported !== 'boolean' || !Number.isInteger(m[position]?.summary_errors)) throw Error('invalid manual verdict')
+    if (typeof m[position]?.topics_all_supported !== 'boolean' || !Number.isInteger(m[position]?.summary_errors) || m[position].summary_errors < 0) throw Error('invalid manual verdict')
     topicAgreement += Number(s.topics_all_supported === m[position].topics_all_supported)
     summaryAgreement += Number((s.summary_errors === 0) === (m[position].summary_errors === 0))
     exactErrorAgreement += Number(s.summary_errors === m[position].summary_errors)
   }
   metrics.spotcheck = { pairs: 30, candidates: 60, topic_support_agreement: topicAgreement, summary_clean_agreement: summaryAgreement, summary_error_count_agreement: exactErrorAgreement }
   const qwen = lines(out + 'qwen3-200.jsonl')
-  if (qwen.some(r => typeof r.neurons !== 'number' || r.neurons < 0)) throw Error('measured qwen neurons required per unit, including retries')
-  const neurons = qwen.reduce((n, r) => n + r.neurons, 0)
-  metrics.qwen3.neurons = neurons; metrics.qwen3.cost_usd = neurons * 0.011 / 1000
+  Object.assign(metrics.qwen3, qwenAccounting(qwen, existsSync(out + 'qwen3-meta.json') ? read('qwen3-meta.json') : undefined))
   metrics.haiku.cost_usd = read(existsSync(out + 'haiku-total-usage.json') ? 'haiku-total-usage.json' : 'haiku-usage.json').cost_usd
   metrics.haiku.first_pass = read('haiku-early-audit.json').metrics
   for (const side of ['haiku', 'qwen3']) metrics[side].cost_per_1000_usd = metrics[side].cost_usd * 5
-  metrics.total_spend_usd = metrics.haiku.cost_usd + metrics.qwen3.cost_usd + read('judge-usage.json').cost_usd + read('donation-usage.json').cost_usd
+  metrics.cohort_spend_usd = metrics.haiku.cost_usd + metrics.qwen3.cost_usd + read('judge-usage.json').cost_usd + read('donation-usage.json').cost_usd
+  metrics.total_spend_usd = metrics.haiku.cost_usd + metrics.qwen3.run_cost_usd + read('judge-usage.json').cost_usd + read('donation-usage.json').cost_usd
   metrics.model = 'claude-haiku-5-5'
   write('metrics.json', metrics); console.log(JSON.stringify(metrics))
 }

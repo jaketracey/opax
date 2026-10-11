@@ -4,7 +4,7 @@ import { spawnSync } from 'node:child_process'
 import { randomBytes } from 'node:crypto'
 import { pathToFileURL } from 'node:url'
 import { join } from 'node:path'
-import { MODEL, hash, recordOf, stratumOf, select, enrichmentRequests, upperCost, decode, blind, judgeRequests, usageCost, retryRequests, mergeAttempt } from './bakeoff-lib.ts'
+import { MODEL, hash, recordOf, stratumOf, select, enrichmentRequests, upperCost, decode, blind, judgeRequests, usageCost, retryRequests, mergeAttempt, qwenAccounting } from './bakeoff-lib.ts'
 
 const out = '/home/jake/opax-staging/federation/bakeoff'
 const pilot = '/home/jake/opax-staging/federation/kb-gap/pilot-2000.jsonl'
@@ -37,7 +37,7 @@ function spendGuard(lane: string, upper: number) {
   const previous = readdirSync(out).filter(n => n.endsWith('-submission.json')).map(n => read(n))
   const billedOrReserved = previous.reduce((n, s) => n + (existsSync(join(out, `${s.lane}-usage.json`)) ? read(`${s.lane}-usage.json`).cost_usd : s.upper_usd), 0)
   const futureJudge = lane !== 'judge' && !previous.some(s => s.lane === 'judge') ? budget.judge_upper_usd : 0
-  const qwenReserve = existsSync(join(out, 'qwen3-200.jsonl')) ? jsonl(join(out, 'qwen3-200.jsonl')).reduce((n, r) => n + (typeof r.neurons === 'number' ? r.neurons * 0.011 / 1000 : budget.qwen_reserve_usd / 200), 0) : budget.qwen_reserve_usd
+  const qwenReserve = existsSync(join(out, 'qwen3-meta.json')) ? qwenAccounting(jsonl(join(out, 'qwen3-200.jsonl')), read('qwen3-meta.json')).run_cost_usd : budget.qwen_reserve_usd
   const whole = qwenReserve + billedOrReserved + upper + futureJudge
   if (whole > 5) throw Error('whole-bakeoff estimate exceeds US$5')
   return whole
