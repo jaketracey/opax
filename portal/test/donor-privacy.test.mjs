@@ -1,3 +1,7 @@
+import {tableIdentityIndex} from '../src/table-identity-index.mjs';
+import {instrumentTableResponse} from '../src/instrument-table.ts';
+import {partyMoneyResponse} from '../src/party-money-table.ts';
+import {instrumentTableRows} from '../public/instruments.js';
 // Donor privacy regression (October 2026 hotfix): no donor failing the
 // organisation test (public/donor-entity.js) may be named by any server output.
 // The real Worker and crawl build run over the export plus fictional fixture
@@ -19,7 +23,7 @@ import {buildGrowth} from '../../scripts/build_growth_modules.mjs';
 import {moduleOutputs} from './growth-module-harness.mjs';
 import {applyQuery,dataTableHTML,mountDataTable,toCSV,serializeQuery} from '../public/datatable.js';
 import {tableHarness} from './datatable-harness.mjs';
-import {interestTableData,interestTableConfig,partyMoneyData,partyMoneyTableConfig} from '../public/register-tables.js';
+import {instrumentTableConfig,auditTableConfig,interestTableData,interestTableConfig,partyMoneyData,partyMoneyTableConfig} from '../public/register-tables.js';
 
 const pub = new URL('../public/', import.meta.url).pathname;
 const real = path => JSON.parse(readFileSync(join(pub, path), 'utf8'));
@@ -333,12 +337,13 @@ test('a declared-interest entry naming a withheld donor is left out whole, with 
   assert.ok(html.includes(escaped), 'the next entry is shown as written');
 });
 
-test('interest tables omit withheld entries before rows, facets, CSV and URL state are constructed', () => {
-  const phrases = withheldPhrases(graphs,[...rosterNames]);
-  const projected = interestTableData(interestRegister,(...texts)=>namesWithheldPhrase(phrases,...texts),text=>!namesWithheldPhrase(phrases,`donor receipts ${text}`));
+test('interest tables omit withheld entries before rows, facets, CSV and URL state are constructed', async () => {
+  const policy=await tableIdentityIndex(async path=>path==='/graph/money.json'?fixtureGraph:real(path.slice(1)));
+  const phrases = withheldPhrases(graphs,[]);
+  const projected = interestTableData(interestRegister,(...texts)=>texts.some(text=>!policy.safe(String(text))),policy.safe);
   assert.ok(projected.omitted > 0,'the derived fixture entry is omitted');
   assert.ok(projected.rows.some(row=>row.item === keptEntry.description),'the next source entry stays verbatim');
-  const config = interestTableConfig(projected.rows,text=>!namesWithheldPhrase(phrases,`donor receipts ${text}`));
+  const config = interestTableConfig(projected.rows,policy.safe);
   const page = applyQuery(config.rows,config,{pageSize:2000});
   assertClean('interest table rows and facets',JSON.stringify(page));
   assertClean('interest table CSV',toCSV(page.rows,config));
@@ -781,4 +786,36 @@ test('table privacy boundary validates the shared index without reflecting input
   assert.ok(checked > 400);
   const response=await fetchWorker('/api/table/privacy',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({text:'Infrastructure'})});
   assert.deepEqual(await response.json(),{safe:true});
+});
+
+test('all four register tables reject the complete shared donor and recipient index including ABNs',async t=>{
+ const read=async path=>path==='/graph/money.json'?fixtureGraph:real(path.slice(1)),policy=await tableIdentityIndex(read);
+ const projected=interestTableData(interestRegister,(...texts)=>texts.some(text=>!policy.safe(String(text))),policy.safe);
+ const m=await read('/instruments/manifest.json'),instruments=await instrumentTableRows(read,m,(await read(m.index_url)).records);
+ const audits=(await read('/audit/index.json')).records;
+ const money=partyMoneyData(fixtureGraph,topParty.id,(...texts)=>texts.some(text=>!policy.safe(String(text))),policy.safe);
+ const tables=[['interests',interestTableConfig(projected.rows,policy.safe),projected.rows,'category'],['instruments',instrumentTableConfig(policy.safe),instruments.filter(row=>policy.safe(JSON.stringify(row))),'portfolios'],['audit',auditTableConfig(audits,policy.safe),null,'sectors'],['party-money',partyMoneyTableConfig(money.rows,money.aggregate,undefined,undefined,undefined,policy.safe),null,'industry']];
+ for(const [id,config,input,facet] of tables){
+  const rows=input||config.rows,page=applyQuery(rows,config,{pageSize:50000});
+  assert.ok(policy.safe(JSON.stringify(page)),`${id}: rows and facets`);
+  assert.ok(policy.safe(toCSV(page.rows,config)),`${id}: CSV`);
+  for(const [i,value] of policy.values.entries())for(const query of [{q:value},{filters:{[facet]:[value]}}]) {
+   const rejected=applyQuery(rows,config,query);
+   assert.equal(rejected.total,0,`${id}: rejected value ${i}`);
+   const html=dataTableHTML(config,rejected);
+   assert.ok(policy.safe(html),`${id}: safe HTML and live region ${i}`);
+   assert.ok(/data-export disabled/.test(html),`${id}: no rejected CSV ${i}`);
+  }
+ }
+ // Format variants use the same normalisation as dt-contracts; no identifier is logged.
+ const abns=policy.values.filter(value=>/^\d{11}$/.test(value));
+ for(const value of abns)for(const candidate of [value,value.replace(/^(\d{2})(\d{3})(\d{3})(\d{3})$/,'$1 $2 $3 $4'),'ABN '+value,encodeURIComponent(encodeURIComponent(value.replace(/^(\d{2})(\d{3})(\d{3})(\d{3})$/,'$1 $2 $3 $4')))])assert.equal(policy.safe(candidate),false,'ABN variant rejected');
+ const assets={fetch:async request=>Response.json(await read(new URL(request.url).pathname))};
+ for(const value of [policy.values[0],abns[0]]){
+  const params=new URLSearchParams({q:value,format:'csv'});
+  assert.equal((await instrumentTableResponse(new Request('https://fixture.test/api/table/instruments?'+params),assets)).status,403,'rejected endpoint CSV is unavailable');
+ }
+ const response=await partyMoneyResponse(new Request('https://fixture.test/api/register/party-money?'+new URLSearchParams({partyId:topParty.id})),assets);
+ assert.equal(response.status,200);assert.ok(policy.safe(JSON.stringify(await response.json())),'public party client input');
+ t.diagnostic(`${policy.values.length} derived values, ${abns.length} ABNs checked across four tables; no identities logged`);
 });

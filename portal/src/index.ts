@@ -1,3 +1,4 @@
+import {partyMoneyResponse} from './party-money-table'
 import {interestRegisterResponse} from './interest-register'
 import {tablePrivacy,tablePrivacyCheck} from './table-privacy'
 import { divisionPlain } from '../public/division-markdown.js'
@@ -3813,9 +3814,9 @@ async function buildRouteMeta(route: SeoRoute, url: URL, request: Request, env: 
       const page = await hubPage(route.hub,route.id,<T>(path: string) => assetJson<T>(env,path),people?.people || [],people?.slugOf || new Map(),undefined,env)
       return base({title:page.title+' · OPAX',description:page.description,prerender:page.html,jsonLd:page.jsonLd,status:page.status})
     }
-    case 'audit': return base({ ...await auditPage(route.id, url, auditReader(env.ASSETS), prerenderBlock),
+    case 'audit': return base({ ...await auditPage(route.id, url, auditReader(env.ASSETS), prerenderBlock, route.id===null ? await tablePrivacyCheck(env.ASSETS) : undefined),
       ...(route.id && AUDIT_ID.test(route.id) ? { canonical: `${SITE_ORIGIN}/audit/${route.id}` } : {}) })
-    case 'instruments': return base(await instrumentPage(route.id, url, instrumentReader(env.ASSETS), prerenderBlock))
+    case 'instruments': return base(await instrumentPage(route.id, url, instrumentReader(env.ASSETS), prerenderBlock, route.id===null ? await tablePrivacyCheck(env.ASSETS) : undefined))
     case 'grant-recipient': return grantRecipientMeta(route.jurisdiction, route.id, url, env)
     case 'static': {
       // Existing shared query links retain their behavior and point search engines
@@ -3992,7 +3993,7 @@ async function buildMeta(route: SeoRoute, url: URL, request: Request, env: Env, 
       if (p) {
         const profiles=await read<{people:Record<string,PersonSchemaIdentity>;by_name:Record<string,PersonSchemaIdentity>}>('/profile-links.json').catch(()=>null)
         const identity={...profiles?.by_name[foldName(p.name)],...profiles?.people[p.pid || '']}
-        const content = await renderPersonAnswer(p,read,people.slugOf,identity.aphProfileUrl || undefined,await withheldNameCheck(env.ASSETS),url.searchParams)
+        const content = await renderPersonAnswer(p,read,people.slugOf,identity.aphProfileUrl || undefined,await withheldNameCheck(env.ASSETS),url.searchParams,await tablePrivacyCheck(env.ASSETS))
         meta.prerender = content.html
         if(content.description) meta.description=clip(content.description)
         const photos=await loadPhotos(env).catch(()=>null)
@@ -4649,7 +4650,7 @@ async function moneySubjectMeta(dir: 'party' | 'donor', name: string, url: URL, 
     const party = graph?.nodes.find(n=>n.kind === 'party' && foldName(n.label) === foldName(display))
     if (graph && party) {
       const privacyCheck = await tablePrivacyCheck(env.ASSETS)
-      const {rows,aggregate} = partyMoneyData(graph,party.id,text=>!privacyCheck(String(text)))
+      const {rows,aggregate} = partyMoneyData(graph,party.id,text=>!privacyCheck(String(text)),privacyCheck)
       const config = partyMoneyTableConfig(rows,aggregate,undefined,undefined,undefined,privacyCheck)
       config.id = 'ssr-party-money-table'
       table = `<section class="wrap"><h2>Where it came from</h2>${registerTableHTML(config,parseQuery(url.searchParams,config.urlKey))}<p>Party transfers and grants are excluded. Source: <a href="https://transparency.aec.gov.au/">AEC Transparency Register</a>.</p></section>`
@@ -5625,6 +5626,7 @@ export default {
     if (url.pathname === '/.well-known/atproto-did') return /^did:plc:[a-z2-7]{24}$/.test(env.BSKY_DID ?? '')
       ? new Response(env.BSKY_DID, { headers: { 'content-type': 'text/plain; charset=utf-8', 'cache-control': 'public, max-age=300' } })
       : new Response('Not found', { status: 404 })
+    if (url.pathname === '/api/register/party-money') return withSecurityHeaders(await partyMoneyResponse(request,env.ASSETS),url)
     if (url.pathname === '/api/table/privacy') return withSecurityHeaders(await tablePrivacy(request, env.ASSETS), url)
     const isApi = url.pathname.startsWith('/api/')
     const communityResponse = (response: Response) => { const secured = withSecurityHeaders(response, url); if (env.STAGING_API) secured.headers.set('x-robots-tag', 'noindex, nofollow'); return secured }

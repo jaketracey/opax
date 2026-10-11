@@ -75,5 +75,5 @@ export async function instrumentTableRows(read, manifest, records) {
       }
     }
   }
-  return records.map(row=>({id:row[0],title:row[1],portfolios:row[2].join('; ') || 'Not supplied',type:row[3],registered:registered[row[0]] ?? null,status:row[5]}))
+  return records.map(row=>{const portfolios=[...new Set(row[2].flatMap(value=>value.split(';').map(v=>v.trim()).filter(Boolean)))];return {id:row[0],title:row[1],portfolios:portfolios.length ? portfolios : ['Not supplied'],type:row[3],commencementYear:row[4]?.slice(0,4) || 'Not supplied',registered:registered[row[0]] ?? null,status:row[5]}})
 }

@@ -10,7 +10,10 @@ const number = value => value == null || value === '' || !Number.isFinite(Number
 const collator = new Intl.Collator('en-AU', {numeric:true, sensitivity:'base'});
 const decimal = new Intl.NumberFormat('en-AU', {maximumFractionDigits:20});
 const money = new Intl.NumberFormat('en-AU', {style:'currency', currency:'AUD', minimumFractionDigits:2, maximumFractionDigits:20});
-const text = value => String(value ?? '');
+const text = value => Array.isArray(value) ? value.join('; ') : String(value ?? '');
+const members = value => [...new Set((Array.isArray(value) ? value : [value]).filter(v=>v != null && v !== '').map(text))];
+const pageQueries = new WeakMap();
+const facetMembers = (row,column) => column?.facetValues ? members(column.facetValues(row)) : members(row[column.key]);
 const prefix = key => key ? `${key}.` : '';
 const own = (object, key) => Object.hasOwn(object, key);
 const recognised = (key,config) => {
@@ -80,9 +83,11 @@ function cleanQuery(query = {}, config, page) {
     const column = config.columns.find(c => c.key === key && c.facet);
     if (!column) { delete out.filters[key]; continue; }
     if (Array.isArray(value)) {
-      const options = config.rows ? publicRows(config.rows,config).map(row=>text(row[key]))
+      const permitted=value.filter(v=>config.privacy !== 'donors' || allowedText(config,v));
+      if (!permitted.length) {delete out.filters[key];continue;}
+      const options = config.rows ? publicRows(config.rows,config).flatMap(row=>facetMembers(row,column))
         : Array.isArray(page?.facets?.[key]) ? page.facets[key].map(f=>f.value) : [];
-      const safe = value.filter(v=>options.includes(v) && (config.privacy !== 'donors' || allowedText(config,v)));
+      const safe = permitted.filter(v=>options.includes(v));
       if (safe.length) out.filters[key] = safe; else delete out.filters[key];
     } else if (column.facet !== 'range') delete out.filters[key];
   }
@@ -146,19 +151,24 @@ export function serializeQuery(query = {}, urlKey) {
 const engines = new WeakMap();
 const rowPolicies = new WeakMap();
 let nextRowPolicy = 0;
+const policyId = fn => {
+  if (!fn) return 0;
+  if (!rowPolicies.has(fn)) rowPolicies.set(fn,++nextRowPolicy);
+  return rowPolicies.get(fn);
+};
 function engine(rows, config) {
   let byColumns = engines.get(rows);
   if (!byColumns) engines.set(rows,byColumns = new Map());
-  if (config.rowPrivacyCheck && !rowPolicies.has(config.rowPrivacyCheck)) rowPolicies.set(config.rowPrivacyCheck,++nextRowPolicy);
-  const key = JSON.stringify(config.columns.map(c=>[c.key,c.type,c.facet,c.hideWhenConstant,c.sortable,c.primary])) + config.privacy + (rowPolicies.get(config.rowPrivacyCheck) || 0);
+  const key = JSON.stringify(config.columns.map(c=>[c.key,c.type,c.facet,c.hideWhenConstant,c.sortable,c.primary,policyId(c.facetValues)])) + config.privacy + policyId(config.rowPrivacyCheck);
   if (byColumns.has(key)) return byColumns.get(key);
   const safe = publicRows(rows,config);
-  const result = {safe, json:JSON.stringify(safe), rowJSON:safe.map(row=>JSON.stringify(row)), values:[...new Set(config.columns.flatMap(c=>safe.map(row=>text(row[c.key]))))], search:safe.map(row=>config.columns.map(c=>text(row[c.key])).join('\n').normalize('NFKC').toLowerCase()), results:new Map()};
+  const result = {safe, json:JSON.stringify(safe), rowJSON:safe.map(row=>JSON.stringify(row)), values:[...new Set(config.columns.flatMap(c=>safe.flatMap(row=>[text(row[c.key]),...facetMembers(row,c)])))], search:safe.map(row=>config.columns.map(c=>text(row[c.key])).join('\n').normalize('NFKC').toLowerCase()), results:new Map()};
   byColumns.set(key,result);
   return result;
 }
 function resultFor(rows, config, query) {
   const data = engine(rows,config), rejected = blockedQuery(config,query);
+  if (rejected) return {rows:[],facets:{}};
   query = cleanQuery(query,{...config,rows:data.safe});
   const key = serializeQuery({...query,sort:query.sort || config.defaultSort,page:1,pageSize:undefined}) + rejected;
   if (data.results.has(key)) return data.results.get(key);
@@ -172,14 +182,14 @@ function resultFor(rows, config, query) {
     const row = data.safe[i], failed = [];
     for (const [key,filter] of filters) {
       const n = number(row[key]);
-      if (filter instanceof Set ? !filter.has(text(row[key])) : n == null || (filter.min != null && n < filter.min) || (filter.max != null && n > filter.max)) failed.push(key);
+      if (filter instanceof Set ? !facetMembers(row,config.columns.find(c=>c.key===key)).some(value=>filter.has(value)) : n == null || (filter.min != null && n < filter.min) || (filter.max != null && n > filter.max)) failed.push(key);
     }
     if (!failed.length) selected.push(row);
     for (const c of facetColumns) {
       if (failed.length && (failed.length !== 1 || failed[0] !== c.key)) continue;
       const value = row[c.key], count = counts.get(c.key);
       if (c.facet === 'range') { const n=number(value); if (n != null) { count.min=Math.min(count.min,n); count.max=Math.max(count.max,n); } }
-      else if (value != null && value !== '') count.set(text(value),(count.get(text(value)) || 0)+1);
+      else for (const member of facetMembers(row,c)) count.set(member,(count.get(member) || 0)+1);
     }
   }
   const sort = query.sort || config.defaultSort, column = config.columns.find(c=>c.key === sort?.key && sortable(c));
@@ -207,7 +217,9 @@ const filteredRows = (rows,config,query) => resultFor(rows,config,query).rows;
 export function applyQuery(rows, config, query = {}) {
   const result=resultFor(rows,config,query), pageSize=integer(query.pageSize,integer(config.pageSize,50));
   const page=Math.min(integer(query.page,1),Math.max(1,Math.ceil(result.rows.length/pageSize)));
-  return {rows:result.rows.slice((page-1)*pageSize,page*pageSize),total:result.rows.length,page,pageSize,facets:result.facets};
+  const value={rows:result.rows.slice((page-1)*pageSize,page*pageSize),total:result.rows.length,page,pageSize,facets:result.facets};
+  pageQueries.set(value,query);
+  return value;
 }
 
 export function toCSV(rows, config) {
@@ -228,7 +240,7 @@ function safePage(page, config) {
     if (Array.isArray(values)) {
       facets[key]=values.filter(v=>v && typeof v.value === 'string' && Number.isFinite(v.count) && v.count >= 0)
         .filter(v=>config.privacy !== 'donors' || (donorColumn(column) ? isOrganisationDonor({label:v.value}) || /^Donors not named \([0-9]+\)$/.test(v.value) : true)
-          && (config.privacyCheck ? allowedText(config,v.value) : rows.some(row=>text(row[key]) === v.value)))
+          && (config.privacyCheck ? allowedText(config,v.value) : rows.some(row=>facetMembers(row,column).includes(v.value))))
         .map(v=>({value:v.value,count:v.count}));
     } else if (values && Number.isFinite(values.min) && Number.isFinite(values.max)) facets[key]={min:values.min,max:values.max};
   }
@@ -243,7 +255,7 @@ function constants(config, page, query) {
   return config.columns.filter(c => c.hideWhenConstant ?? c.type === 'category').flatMap(column => {
     const selected = query.filters?.[column.key];
     const facet = page.facets?.[column.key];
-    const values = rows ? [...new Set(rows.map(row => text(row[column.key])))]
+    const values = rows ? [...new Set(rows.flatMap(row => members(row[column.key])))]
       : Array.isArray(selected) && selected.length === 1 && page.total > 0 ? selected
       : Array.isArray(facet) ? facet.map(v => v.value)
       : facet && facet.min === facet.max ? [text(facet.min)] : [];
@@ -286,14 +298,14 @@ function render(config, page, query = {}, view = {}, error = '') {
   for (const [key, filter] of Object.entries(query.filters || {})) {
     const column = config.columns.find(c => c.key === key);
     if (!column) continue;
-    if (Array.isArray(filter)) for (const value of filter) active.push(chip(`${column.label}: ${value}`, key, value));
+    if (Array.isArray(filter)) for (const value of filter) active.push(chip(`${column.facetLabel || column.label}: ${value}`, key, value));
     else active.push(chip(`${column.label}: ${filter.min == null ? 'Any' : formatCell(filter.min,column)} – ${filter.max == null ? 'Any' : formatCell(filter.max,column)}`, key, ''));
   }
   for (const {column,value} of constant) if (!query.filters?.[column.key]) active.push(chip(`${column.label}: ${formatCell(value,column)}`, column.key, value, false, formatCell(value,{...column,format:'exact'})));
   for (const column of config.columns.filter(c => c.facet)) {
     const facet = page.facets?.[column.key], selected = query.filters?.[column.key];
     if (column.facet === 'range') {
-      controls.push(`<details class="dt-panel" data-panel="facet-${esc(column.key)}">${summary(column.label)}<fieldset><legend class="dt-sr">${esc(column.label)}</legend>${['min','max'].map(bound => `<label>${bound === 'min' ? 'From' : 'To'}<input type="number" step="any" data-range="${esc(column.key)}" data-bound="${bound}" data-focus="${esc(column.key)}-${bound}" value="${esc(selected?.[bound] ?? '')}" placeholder="${esc(facet?.[bound] ?? '')}"></label>`).join('')}</fieldset></details>`);
+      controls.push(`<details class="dt-panel" data-panel="facet-${esc(column.key)}">${summary(column.facetLabel || column.label)}<fieldset><legend class="dt-sr">${esc(column.facetLabel || column.label)}</legend>${['min','max'].map(bound => `<label>${bound === 'min' ? 'From' : 'To'}<input type="number" step="any" data-range="${esc(column.key)}" data-bound="${bound}" data-focus="${esc(column.key)}-${bound}" value="${esc(selected?.[bound] ?? '')}" placeholder="${esc(facet?.[bound] ?? '')}"></label>`).join('')}</fieldset></details>`);
     } else if (Array.isArray(facet) && facet.length) {
       const choices = facet.map(({value,count}) => {
         const checked = Array.isArray(selected) && selected.includes(value);
@@ -301,7 +313,7 @@ function render(config, page, query = {}, view = {}, error = '') {
           ? button(`${esc(value)} <span class="dt-muted">${decimal.format(count)}</span>`, `data-facet="${esc(column.key)}" data-value="${esc(value)}" aria-pressed="${checked}"`)
           : `<label class="dt-choice"><input type="checkbox" data-facet="${esc(column.key)}" value="${esc(value)}"${checked ? ' checked' : ''}>${esc(value)} <span class="dt-muted">${decimal.format(count)}</span></label>`;
       }).join('');
-      controls.push(`<details class="dt-panel" data-panel="facet-${esc(column.key)}">${summary(column.label)}<fieldset><legend class="dt-sr">${esc(column.label)}</legend>${choices}</fieldset></details>`);
+      controls.push(`<details class="dt-panel" data-panel="facet-${esc(column.key)}">${summary(column.facetLabel || column.label)}<fieldset><legend class="dt-sr">${esc(column.facetLabel || column.label)}</legend>${choices}</fieldset></details>`);
     }
   }
   const prominence = columns.find(c => c.type === 'money' || c.type === 'count');
@@ -324,14 +336,14 @@ function render(config, page, query = {}, view = {}, error = '') {
   const count = `Showing ${decimal.format(start)}–${decimal.format(page.total ? start + page.rows.length - 1 : 0)} of ${decimal.format(page.total)}`;
   const data = JSON.stringify(page).replace(/</g,'\\u003c').replace(/&/g,'\\u0026');
   return `<section class="dt-root" data-datatable="${esc(config.id)}" data-density="${esc(view.density || config.density || 'comfortable')}" aria-label="${esc(config.caption)}">
-<div class="dt-toolbar"><form role="search"><label class="dt-sr" for="${esc(config.id)}-search">Search ${esc(config.caption)}</label><input id="${esc(config.id)}-search" type="search" data-search data-focus="search" placeholder="Search" value="${esc(query.q || '')}" autocomplete="off"></form><select class="dt-phone-sort" data-sort-select aria-label="Sort">${config.columns.filter(sortable).map(c => ['asc','desc'].map(dir => `<option value="${esc(c.key)}:${dir}"${sort?.key === c.key && sort.dir === dir ? ' selected' : ''}>${esc(c.label)} ${dir === 'asc' ? 'ascending' : 'descending'}</option>`).join('')).join('')}</select><details class="dt-panel dt-filters" data-panel="filters">${summary('Filters')}<div class="dt-tools">${controls.join('')}<details class="dt-panel" data-panel="columns">${summary('Columns')}<fieldset><legend class="dt-sr">Visible columns</legend>${config.columns.map(c => `<label class="dt-choice"><input type="checkbox" data-column="${esc(c.key)}"${columns.includes(c) ? ' checked' : ''}${columns.length === 1 && columns[0] === c ? ' disabled' : ''}>${esc(c.label)}</label>`).join('')}</fieldset></details>${button('Compact', `data-density-toggle aria-pressed="${(view.density || config.density) === 'compact'}"`)}</div></details>${config.export === false ? '' : button('Export CSV', 'data-export')}</div>
+<div class="dt-toolbar"><form role="search"><label class="dt-sr" for="${esc(config.id)}-search">Search ${esc(config.caption)}</label><input id="${esc(config.id)}-search" type="search" data-search data-focus="search" placeholder="Search" value="${esc(query.q || '')}" autocomplete="off"></form><select class="dt-phone-sort" data-sort-select aria-label="Sort">${config.columns.filter(sortable).map(c => ['asc','desc'].map(dir => `<option value="${esc(c.key)}:${dir}"${sort?.key === c.key && sort.dir === dir ? ' selected' : ''}>${esc(c.label)} ${dir === 'asc' ? 'ascending' : 'descending'}</option>`).join('')).join('')}</select><details class="dt-panel dt-filters" data-panel="filters">${summary('Filters')}<div class="dt-tools">${controls.join('')}<details class="dt-panel" data-panel="columns">${summary('Columns')}<fieldset><legend class="dt-sr">Visible columns</legend>${config.columns.map(c => `<label class="dt-choice"><input type="checkbox" data-column="${esc(c.key)}"${columns.includes(c) ? ' checked' : ''}${columns.length === 1 && columns[0] === c ? ' disabled' : ''}>${esc(c.label)}</label>`).join('')}</fieldset></details>${button('Compact', `data-density-toggle aria-pressed="${(view.density || config.density) === 'compact'}"`)}</div></details>${config.export === false ? '' : button('Export CSV', `data-export${view.rejected ? ' disabled' : ''}`)}</div>
 <div class="dt-chips" aria-label="Applied filters">${active.join('')}${query.q || Object.keys(query.filters || {}).length || redactedSearch || redactedFilters || view.rejected ? button('Clear all', 'data-clear') : ''}</div>
 <div class="dt-scroll"><table class="dt" id="${esc(config.id)}" role="table"><caption>${esc(config.caption)}</caption><thead role="rowgroup"><tr role="row">${columns.map(column => `<th role="columnheader" scope="col" data-align="${esc(column.align || (numeric(column) ? 'end' : 'start'))}"${sortable(column) ? ` aria-sort="${sort?.key === column.key ? sort.dir === 'asc' ? 'ascending' : 'descending' : 'none'}"` : ''}>${sortable(column) ? button(`${esc(column.label)} ${icon(sort?.key === column.key ? sort.dir : 'unsorted')}`, `data-sort="${esc(column.key)}"`) : esc(column.label)}${column.bar && maxima[column.key] ? `<small class="dt-scale">0–${esc(formatCell(maxima[column.key],column))}</small>` : ''}</th>`).join('')}${config.actions?.length ? '<th scope="col"><span class="dt-sr">Actions</span></th>' : ''}</tr></thead><tbody role="rowgroup">${error ? `<tr><td colspan="${columns.length + (config.actions?.length ? 1 : 0)}"><div class="dt-empty" role="alert">${esc(error)} ${button('Try again','data-retry')}</div></td></tr>` : body || `<tr><td colspan="${columns.length + (config.actions?.length ? 1 : 0)}"><div class="dt-empty">No results. Try another search or clear the filters.</div></td></tr>`}</tbody></table></div>
 <div class="dt-footer"><p class="dt-count" role="status" aria-live="polite" aria-atomic="true">${error ? 'Table unavailable' : count}</p><div class="dt-paging">${button('Previous', `data-page="${page.page - 1}"${page.page <= 1 || error ? ' disabled' : ''}`)}<span>Page ${page.page}</span>${button('Next', `data-page="${page.page + 1}"${page.page * page.pageSize >= page.total || error ? ' disabled' : ''}`)}<label class="dt-page-size" for="${esc(config.id)}-size">Rows per page <select id="${esc(config.id)}-size" data-page-size aria-label="Rows per page">${[...new Set([10,25,50,100,page.pageSize])].sort((a,b)=>a-b).map(size => `<option${size === page.pageSize ? ' selected' : ''}>${size}</option>`).join('')}</select></label></div></div>
 <script type="application/json" data-dt-page>${data}</script></section>`;
 }
 
-export function dataTableHTML(config, page) { return render(config, page, {sort:config.defaultSort}); }
+export function dataTableHTML(config, page) { const query=pageQueries.get(page) || {}; return render(config,page,query,{rejected:blockedQuery(config,query)}); }
 
 // Several mounted tables cannot undo each other's noindex state.
 const robotsOwners = new WeakMap();
@@ -357,7 +369,7 @@ export function mountDataTable(el, config) {
   const root = el.matches?.('[data-datatable]') ? el : el.matches?.('table') ? el.closest('[data-datatable]') : el;
   if (!root) throw new Error('Mount the SSR table or its container');
   const doc = root.ownerDocument, win = doc.defaultView;
-  let query = parseQuery(new URL(win.location.href).searchParams,config.urlKey);
+  let query = config.initialQuery || parseQuery(new URL(win.location.href).searchParams,config.urlKey);
   const rawConfig = config, approvals = new Map();
   if (config.privacy === 'donors') config = {...config,privacyCheck:value=>approvals.get(value) === true};
   const view = {density:config.density || 'comfortable', columnsVisible:config.columnsVisible || config.columns.map(c=>c.key), constantsVisible:[]};
@@ -516,7 +528,7 @@ export function mountDataTable(el, config) {
     query.page = 1; update('table_filter');
   }
   async function download() {
-    if (root.getAttribute('aria-busy') === 'true') return;
+    if (root.getAttribute('aria-busy') === 'true' || view.rejected) return;
     const requested=parseQuery(new URLSearchParams(serializeQuery(query)));
     const control = root.querySelector('[data-export]'); control.disabled = true;
     exportController?.abort(); exportController = new win.AbortController();
@@ -524,7 +536,7 @@ export function mountDataTable(el, config) {
       await permitSet([requested.q,...Object.values(requested.filters || {}).flatMap(value=>Array.isArray(value) ? value : [])].filter(Boolean));
       const state=cleanQuery(requested,config,page);
       let csv, truncated=false;
-      if (view.rejected || blockedQuery(config,requested)) csv=toCSV([],config);
+      if (blockedQuery(config,requested)) return;
       else if (config.source) {
         const response = await win.fetch(endpoint(true,state),{signal:exportController.signal});
         if (!response.ok) throw new Error('Export failed');

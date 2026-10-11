@@ -1,5 +1,6 @@
-import {withheldNameCheck} from './donor-index'
-import {interestTableData, type InterestRegister} from '../public/register-tables.js'
+import {applyQuery} from '../public/datatable.js'
+import {tablePrivacyCheck} from './table-privacy.ts'
+import {interestTableData, interestTableConfig, type InterestRegister} from '../public/register-tables.js'
 
 /** A complete public projection for client tables. No query, paging or remote calls. */
 export async function interestRegisterResponse(request: Request, assets: Fetcher): Promise<Response> {
@@ -11,8 +12,9 @@ export async function interestRegisterResponse(request: Request, assets: Fetcher
     const response = await assets.fetch(new Request(`https://opax.com.au/interests/${pid}.json`))
     if (!response.ok) throw new Error('unavailable')
     const register = await response.json() as InterestRegister
-    const withheld = await withheldNameCheck(assets)
-    const data = interestTableData(register,withheld,text=>!withheld(`donor receipts ${text}`))
-    return request.method === 'HEAD' ? new Response(null,{headers}) : Response.json(data,{headers})
+    const safe = await tablePrivacyCheck(assets)
+    const data = interestTableData(register,(...texts)=>texts.some(text=>!safe(String(text))),safe)
+    const rows=applyQuery(data.rows,interestTableConfig(data.rows,safe),{pageSize:50_000}).rows
+    return request.method === 'HEAD' ? new Response(null,{headers}) : Response.json({rows,omitted:data.omitted+data.rows.length-rows.length},{headers})
   } catch { return Response.json({error:'Register unavailable'},{status:503,headers}) }
 }

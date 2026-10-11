@@ -155,3 +155,16 @@ test('query engine uses its row argument for server facet options and isolates c
   const unsorted={...config,columns:config.columns.map(c=>c.key === 'amount' ? {...c,sortable:false} : c)};
   assert.equal(applyQuery(reverse,unsorted,{}).rows[0].id,'organisation-9');
 });
+
+test('multi-member facets count records once and callback policies keep distinct caches',()=>{
+ const rows=[{name:'Fixture organisation Pty Ltd',sectors:['Health','Education','Health'],date:'2026-01-01',reportYear:'2025-26'}];
+ const config={id:'category-members',caption:'Reports',pageType:'audit',columns:[{key:'sectors',label:'Sector',type:'category',facet:'multi'}],rows};
+ assert.deepEqual(applyQuery(rows,config,{}).facets.sectors,[{value:'Education',count:1},{value:'Health',count:1}]);
+ assert.equal(applyQuery(rows,config,{filters:{sectors:['Health','Education']}}).total,1);
+ assert.ok(toCSV(rows,config).includes('Health; Education; Health'));
+ const facetValues=value=>()=>[value];
+ const first={...config,columns:[{key:'date',label:'Tabled',type:'date',facet:'multi',facetValues:facetValues('2025-26'),facetLabel:'Report year'}]};
+ const second={...first,columns:[{...first.columns[0],facetValues:facetValues('2024-25')}]};
+ assert.equal(applyQuery(rows,first,{}).facets.date[0].value,'2025-26');
+ assert.equal(applyQuery(rows,second,{}).facets.date[0].value,'2024-25');
+});

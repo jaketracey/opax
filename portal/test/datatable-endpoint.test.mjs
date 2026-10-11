@@ -28,7 +28,7 @@ test('shared rollout privacy assertion catches independent query and secondary-f
     for (const key of ['url','renderedText','accessibleText','analytics','serverResponses','clientInput']) {
       await assert.rejects(()=>assertTablePrivacy({...clean,[key]:index.values[0]},index),/withheld text/);
     }
-    await writeFile(csvPath,index.values[0]);
-    await assert.rejects(()=>assertTablePrivacy(clean,index),/downloaded CSV/);
+    await writeFile(csvPath,'Withheld donor fixture');
+    await assert.rejects(()=>assertTablePrivacy(clean,{...index,safe:text=>!String(text).includes('Withheld donor fixture') && index.safe(text)}),/downloaded CSV/);
   } finally {await rm(dir,{recursive:true,force:true});}
 });

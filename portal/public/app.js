@@ -8,7 +8,7 @@ const divisionMarkdownReady = import('/division-markdown.js?v=5991511166').then(
 let growthModules;
 const growthModulesReady = import("/growth-modules.js?v=b3095eab8c").then(module => { growthModules = module; });
 let registerTables;
-const registerTablesReady = import('/register-tables.js?v=a01a7cb1ca').then(module => { registerTables = module; });
+const registerTablesReady = import('/register-tables.js?v=68883bdacd').then(module => { registerTables = module; });
 let uiLabels;
 const uiLabelsReady = import('/labels.js?v=804befe8de').then(module => { uiLabels = module; });
 let attributionHelpers;
@@ -5379,7 +5379,8 @@ async function openSubject(kind, name, manageFocus, params = new URLSearchParams
       counter.set(label, (counter.get(label) || 0) + (e.total || 0));
     }
     const flowRows = [...counter.entries()].sort((a, b) => b[1] - a[1]).slice(0, 10);
-    const partyDonations = isParty ? registerTables.partyMoneyData(moneyData,node.id,donorPrivacy) : null;
+    const partyDonations = isParty ? await fetch(`/api/register/party-money?${new URLSearchParams({partyId:node.id})}`).then(response=>response.ok ? response.json() : null).catch(()=>null) : null;
+    if (currentSubjectKey !== key) return;
     const partyTable = partyDonations ? registerTables.registerTableHTML(registerTables.partyMoneyTableConfig(partyDonations.rows,partyDonations.aggregate)) : "";
     // Identity once (principle 3): the title, then one meta line with the
     // party's own dot and full name (or the donor's industry) and its years.

@@ -1,7 +1,8 @@
-import { FRL_ID, catalogueComplete, filterInstruments, unpack, instrumentTableRows, type CatalogueRow } from '../public/instruments.js'
+import {tableIdentityIndex} from './table-identity-index.mjs'
+import { FRL_ID, catalogueComplete, unpack, instrumentTableRows, type CatalogueRow } from '../public/instruments.js'
 import { catalogueReader } from './catalogue-reader.mjs'
-import {applyQuery, dataTableHTML, parseQuery} from '../public/datatable.js'
-import {instrumentTableConfig} from '../public/register-tables.js'
+import {applyQuery, dataTableHTML} from '../public/datatable.js'
+import {instrumentTableConfig,registerTableQuery} from '../public/register-tables.js'
 
 interface Attribution { source: string; source_url: string; licence_url: string; dated: string; changes: string; exceptions: string; endorsement: string }
 interface Manifest {
@@ -31,7 +32,7 @@ const directoryLink = '<p><a href="/instruments">All instruments</a></p>'
 function attribution(a: Attribution) {
   return `<footer class="instrument-attribution"><p>Source: <a href="${esc(a.source_url)}">Federal Register of Legislation (legislation.gov.au)</a>, <a href="${esc(a.licence_url)}">CC BY 4.0</a></p><p>${esc(a.dated)}</p><p>${esc(a.changes)}</p><p>${esc(a.exceptions)} ${esc(a.endorsement)}</p></footer>`
 }
-export async function instrumentPage(id: string | null, url: URL, read: Read, block: Block) {
+export async function instrumentPage(id: string | null, url: URL, read: Read, block: Block, privacyCheck?: (text:string)=>boolean) {
   const missing = () => ({ title: 'Instrument not found · OPAX', description: 'No instrument metadata is available for this FRL id.', status: 404, prerender: block('Instrument not found', 'No instrument metadata is available for this FRL id.', directoryLink) })
   if (id === null && url.pathname.replace(/\/+$/, '') !== '/instruments') return missing()
   if (id !== null && !FRL_ID.test(id)) return missing()
@@ -42,15 +43,16 @@ export async function instrumentPage(id: string | null, url: URL, read: Read, bl
     if (id === null) {
       const index = await read<{ records: CatalogueRow[] }>(manifest.index_url)
       if (!Array.isArray(index.records) || index.records.length !== (manifest.exported ?? manifest.count)) return unavailable()
-      const matches = filterInstruments(index.records, url.searchParams)
-      const config = instrumentTableConfig()
-      const rows = await instrumentTableRows(read,manifest,matches)
-      const page = applyQuery(rows,config,parseQuery(url.searchParams,config.urlKey))
+      const safe=privacyCheck ?? (await tableIdentityIndex(read)).safe
+      const config = instrumentTableConfig(safe)
+      const rows = (await instrumentTableRows(read,manifest,index.records)).filter(row=>safe(JSON.stringify(row)))
+      const query=registerTableQuery(url.searchParams,config)
+      const page = applyQuery(rows,config,query)
       const description = `${(manifest.exported ?? manifest.count).toLocaleString('en-AU')} in-force federal legislative-instrument titles. Metadata only; authoritative text is on the Federal Register of Legislation.`
       const gapNote = manifest.unresolved_gap ? `<p class="fineprint">FRL listed ${manifest.count.toLocaleString('en-AU')}; ${manifest.unresolved_gap} could not be retrieved from its API</p>` : ''
       const facts = block('Federal legislative instruments', description, '')
       const table = `<div data-register-table="${config.id}">${dataTableHTML(config,page)}<script type="application/json" data-register-config>${JSON.stringify({config}).replace(/</g,'\\u003c')}</script></div>`
-      return { title: 'Federal legislative instruments · OPAX', description, status: 200,
+      return { title: 'Federal legislative instruments · OPAX', description, status: 200,noindex:Boolean(url.search),
         prerender: facts + `<section class="wrap instrument-content">${gapNote}<p class="fineprint">Registered is the as-made registration date. FRL's in-force listing includes instruments made but not yet commenced. Dates not supplied by the API stay unknown.</p>${table}${attribution(manifest.attribution)}</section>` }
     }
     const chunk = manifest.lookup[id]

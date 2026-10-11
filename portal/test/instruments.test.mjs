@@ -15,7 +15,7 @@ const fixtureFiles = JSON.parse(execFileSync('python3',['-c',"import json,sys; f
 const json = p => JSON.parse(fixtureFiles[p.replace(/^\/?instruments\//,'')]);
 const manifest = json('instruments/manifest.json');
 const index = json('instruments/index.json');
-const read = async p => json(p);
+const read = async p => p.startsWith('/instruments/') ? json(p) : JSON.parse(readFileSync(new URL(p.slice(1),root),'utf8'));
 const block = (title, text, links='') => `<section id="prerender"><h1>${title.replaceAll('&','&amp;').replaceAll('<','&lt;')}</h1><p>${text}</p>${links}</section>`;
 
 test('FRL loader stubbed HTTP paging, count reconciliation, resume, shrink and export guards', () => {
@@ -79,7 +79,7 @@ test('an evidenced bounded plain gap is public only as a small directory note', 
   const staged={...fixture,titles:records,count:2001,odata_count:2001,exported:2000,unresolved_gap:1,
     gap_pages:[{offset:0,unresolved_gap:1}],metadata_coverage:{expanded_titles:2000,missing_expansion_ids:[]}};
   const files=JSON.parse(execFileSync('python3',['-c',"import json,sys; from scripts.export_instruments import plan_export; p,m=plan_export(json.load(sys.stdin)); print(json.dumps({k:v.decode() for k,v in p.items()}))"],{cwd:new URL('../../',import.meta.url).pathname,input:JSON.stringify(staged),encoding:'utf8',maxBuffer:8*1024*1024}));
-  const read=async path=>JSON.parse(files[path.replace('/instruments/','')]);
+  const read=async path=>path.startsWith('/instruments/') ? JSON.parse(files[path.replace('/instruments/','')]) : JSON.parse(readFileSync(new URL(path.slice(1),root),'utf8'));
   const m=await read('/instruments/manifest.json');
   assert.equal(catalogueComplete(m),true); assert.equal(reconciledCounts(m),true);
   const directory=await instrumentPage(null,new URL('https://opax.com.au/instruments'),read,block);
@@ -135,7 +135,7 @@ test('null/unknown ids return noindex 404 through the actual Worker and no paid 
   for(const path of ['/instruments','/instrument/'+index.records[0][0]]){
     const res=await worker.fetch(new Request('https://opax.com.au'+path),env,{});assert.equal(res.status,200);
   }
-  assert.ok(paths.every(p=>p==='/'||p.startsWith('/instruments/')));
+  assert.ok(paths.every(p=>p==='/'||/^\/(?:instruments|graph|suppliers|grants)\//.test(p)||p==='/suppliers.json'));
   for(const m of [null,{...manifest,complete:false}]) {
     const missingEnv={...env,ASSETS:{async fetch(req){const p=new URL(req.url).pathname;
       if(p==='/')return new Response(readFileSync(new URL('index.html',root)));
@@ -207,7 +207,7 @@ test('parsed catalogue is reused per isolate and failed reads can recover', asyn
   const registered=Object.fromEntries(fixture.titles.map(row=>[row.id,row.asMadeRegisteredAt?.slice(0,10) || null]));
   const assets={async fetch(req){const p=new URL(req.url).pathname;calls.push(p);return p === '/instruments/registered.json' ? Response.json(registered) : new Response(fixtureFiles[p.slice('/instruments/'.length)])}};
   const read=instrumentReader(assets);assert.equal(read,instrumentReader(assets));
-  await Promise.all([instrumentPage(null,new URL('https://opax.com.au/instruments'),read,block),instrumentPage(null,new URL('https://opax.com.au/instruments?q=jane'),read,block)]);
+  await Promise.all([instrumentPage(null,new URL('https://opax.com.au/instruments'),read,block,()=>true),instrumentPage(null,new URL('https://opax.com.au/instruments?q=jane'),read,block,()=>true)]);
   assert.deepEqual(calls.sort(),['/instruments/index.json','/instruments/manifest.json','/instruments/registered.json']);
   let available=false;
   const recovering=instrumentReader({async fetch(){return available?new Response(fixtureFiles['manifest.json']):new Response('',{status:404})}});

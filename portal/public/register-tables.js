@@ -1,4 +1,4 @@
-import {applyQuery, dataTableHTML, mountDataTable} from './datatable.js?v=f799267242';
+import {applyQuery, dataTableHTML, mountDataTable, parseQuery} from './datatable.js?v=cc919f173e';
 import {isOrganisationDonor} from './donor-entity.js?v=2b8d45a50d';
 
 const esc = value => String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -6,21 +6,21 @@ const date = value => /^\d{4}-\d{2}-\d{2}/.test(String(value || '')) ? String(va
 const href = value => { try { const url = new URL(value); return /^https?:$/.test(url.protocol) ? url.href : null; } catch { return null; } };
 const categoryLabels = {shareholdings:'Shareholdings',real_estate:'Real estate',trusts:'Trusts',directorships:'Directorships',gifts:'Gifts',travel:'Sponsored travel and hospitality',memberships:'Memberships and offices',liabilities:'Liabilities',other:'Other (savings, income, assets, partnerships)'};
 
-export function instrumentTableConfig() {
+export function instrumentTableConfig(privacyCheck) {
   return {id:'instruments-table',caption:'Instrument titles',pageType:'instruments',urlKey:'instruments',pageSize:50,
-    source:{endpoint:'/api/table/instruments'},defaultSort:{key:'title',dir:'asc'},export:{filename:'instruments.csv'},
+    privacy:'donors',privacyCheck,rowPrivacyCheck:instrumentRow,source:{endpoint:'/api/table/instruments'},defaultSort:{key:'title',dir:'asc'},export:{filename:'instruments.csv'},
     columns:[{key:'title',label:'Title',type:'text',primary:true},{key:'type',label:'Type',type:'category',facet:'multi'},
-      {key:'portfolios',label:'Portfolio',type:'category',facet:'multi'},{key:'registered',label:'Registered',type:'date'},
+      {key:'portfolios',label:'Portfolio',type:'category',facet:'multi'},{key:'registered',label:'Registered',type:'date',facet:'multi',facetValues:row=>[row.commencementYear || 'Not supplied'],facetLabel:'Commencement year'},
       {key:'status',label:'Status',type:'category',facet:'chips'}],
     primaryLink:row=>/^([CF]\d{4}[A-Z]\d{5})$/.test(String(row.id)) ? `/instrument/${row.id}` : null};
 }
 
-export function auditTableConfig(records) {
+export function auditTableConfig(records, privacyCheck) {
   return {id:'audit-table',caption:'Tabled reports',pageType:'audit',urlKey:'audit',pageSize:50,
-    defaultSort:{key:'tabled_date',dir:'desc'},export:{filename:'audit-reports.csv'},
-    columns:[{key:'title',label:'Title',type:'text',primary:true},{key:'tabled_date',label:'Tabled',type:'date'},
-      {key:'sectors',label:'Sector',type:'category',facet:'multi'},{key:'entities',label:'Entities',type:'text'}],
-    rows:records.map(row=>({id:row.id,title:row.title,tabled_date:date(row.tabled_date),sectors:row.sectors.join('; '),entities:row.entities.join('; ')})),
+    privacy:'donors',privacyCheck,rowPrivacyCheck:auditRow,defaultSort:{key:'tabled_date',dir:'desc'},export:{filename:'audit-reports.csv'},
+    columns:[{key:'title',label:'Title',type:'text',primary:true},{key:'tabled_date',label:'Tabled',type:'date',facet:'multi',facetValues:row=>[row.reportYear || 'Not supplied'],facetLabel:'Report year'},
+      {key:'sectors',label:'Sector',type:'category',facet:'multi'},{key:'entities',label:'Entities',type:'text',facet:'multi'}],
+    rows:records.map(row=>({id:row.id,title:row.title,tabled_date:date(row.tabled_date),reportYear:row.year,sectors:categoryMembers(row.sectors),entities:row.entities})),
     primaryLink:row=>/^qao-\d{4}(?:-\d{2})?-\d+$/.test(String(row.id)) ? `/audit/${row.id}` : null};
 }
 
@@ -43,17 +43,20 @@ export function interestTableData(register, withheld = () => true, privacyCheck)
   return {rows,omitted};
 }
 
+const instrumentRow = row => typeof row.title === 'string' && /^([CF]\d{4}[A-Z]\d{5})$/.test(String(row.id)) && !row.aggregate;
+const auditRow = row => typeof row.title === 'string' && /^qao-\d{4}(?:-\d{2})?-\d+$/.test(String(row.id)) && !row.aggregate;
+export const categoryMembers = values => [...new Set(values.flatMap(value=>String(value).split(';').map(v=>v.trim()).filter(Boolean)))];
 const interestRow = row => typeof row.item === 'string' && typeof row.category === 'string' && !row.aggregate;
 
 export function interestTableConfig(rows, privacyCheck) {
   return {id:'interests-table',caption:'Register entries',pageType:'person',urlKey:'interests',pageSize:50,
-    rows,privacy:'donors',rowPrivacyCheck:interestRow,privacyCheck,defaultSort:{key:'category',dir:'asc'},export:{filename:'declared-interests.csv'},
+    rows,privacy:'donors',rowPrivacyCheck:row=>interestRow(row) && (!privacyCheck || privacyCheck(JSON.stringify(row)) === true),privacyCheck,defaultSort:{key:'category',dir:'asc'},export:{filename:'declared-interests.csv'},
     columns:[{key:'category',label:'Category',type:'category',facet:'multi'},{key:'item',label:'Item',type:'text',primary:true},
       {key:'date',label:'Date',type:'date'}],primaryLink:row=>href(row.source)};
 }
 
 /** Party transfers and grants are excluded. Distinct withheld sources contribute only to totals. */
-export function partyMoneyData(graph, partyId, withheld = () => true) {
+export function partyMoneyData(graph, partyId, withheld = () => true, privacyCheck) {
   const donors = new Map(graph.nodes.filter(node=>node.kind === 'donor').map(node=>[node.id,node]));
   const rows = new Map(), individualIds = new Set();
   const aggregate = {donors:0,total:0,count:0};
@@ -63,7 +66,7 @@ export function partyMoneyData(graph, partyId, withheld = () => true) {
     // Keep only aliases that independently prove organisation status. Browser
     // approvals cover labels, so requiring alias approval would drop valid rows.
     const publicDonor = {label:donor.label,aliases:(donor.aliases || []).filter(label=>isOrganisationDonor({label}))};
-    if (!isOrganisationDonor(donor) || !isOrganisationDonor(publicDonor) || withheld(donor.label)) {
+    if (!isOrganisationDonor(donor) || !isOrganisationDonor(publicDonor) || withheld(donor.label) || (privacyCheck && privacyCheck(JSON.stringify({...publicDonor,industry:donor.industry || 'Not supplied'})) !== true)) {
       individualIds.add(edge.source); aggregate.total += Number(edge.total) || 0; aggregate.count += Number(edge.count) || 0;
       continue;
     }
@@ -90,17 +93,25 @@ export function partyMoneyTableConfig(rows, aggregate, id = 'party-money-table',
 /** The shared core owns query validation, pending states, history and CSV checks. */
 export function registerTableHTML(config, query = {}) {
   const page = applyQuery(config.rows || [],config,query);
-  const payload = JSON.stringify({config}).replace(/</g,'\\u003c');
-  return `<div data-register-table="${esc(config.id)}">${dataTableHTML(config,page)}<script type="application/json" data-register-config>${payload}</script></div>`;
+  const {initialQuery,...clientConfig}=config;
+  const payload = JSON.stringify({config:clientConfig}).replace(/</g,'\\u003c');
+  const note=config.rows?.some(row=>row.aggregate) ? `<p class="fineprint">OPAX names organisations only. Donors it can't confirm are organisations are counted here, not named.</p>` : '';
+  return `<div data-register-table="${esc(config.id)}">${dataTableHTML(config,page)}<script type="application/json" data-register-config>${payload}</script></div>${note}`;
 }
 
 export function mountRegisterTable(el, config) {
+  if (['instruments','audit'].includes(config.urlKey)) {
+    const url=new URL(el.ownerDocument.defaultView.location.href),query=registerTableQuery(url.searchParams,config);
+    for(const key of ['q','portfolio','type','status','sector','entity','year'])url.searchParams.delete(key);
+    config={...config,initialQuery:query};
+    el.ownerDocument.defaultView.history.replaceState(null,'',url);
+  }
   return mountDataTable(el,config);
 }
 
-async function registerPrivacy(text, interests = false) {
+async function registerPrivacy(text) {
   try {
-    const response = await fetch('/api/table/privacy' + (interests ? '?context=interests' : ''),{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({text})});
+    const response = await fetch('/api/table/privacy',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({text})});
     return response.ok && (await response.json()).safe === true;
   } catch { return false; }
 }
@@ -110,9 +121,9 @@ export function hydrateRegisterTables(root = document) {
     const script = el.querySelector('[data-register-config]');
     if (!script) continue;
     const {config} = JSON.parse(script.textContent);
-    if (config.id === 'instruments-table') Object.assign(config,instrumentTableConfig());
-    else if (config.id === 'audit-table') config.primaryLink = row=>`/audit/${row.id}`;
-    else if (config.urlKey === 'interests') Object.assign(config,{rowPrivacyCheck:interestRow,privacyCheck:text=>registerPrivacy(text,true),primaryLink:row=>href(row.source)});
+    if (config.id === 'instruments-table') Object.assign(config,instrumentTableConfig(registerPrivacy));
+    else if (config.id === 'audit-table') Object.assign(config,{columns:auditTableConfig([],registerPrivacy).columns,privacy:'donors',rowPrivacyCheck:auditRow,privacyCheck:registerPrivacy,primaryLink:row=>`/audit/${row.id}`});
+    else if (config.urlKey === 'interests') Object.assign(config,{rowPrivacyCheck:interestRow,privacyCheck:registerPrivacy,primaryLink:row=>href(row.source)});
     else Object.assign(config,{rowPrivacyCheck:isOrganisationDonor,privacyCheck:registerPrivacy,primaryLink:row=>isOrganisationDonor(row) ? `/subject/donor/${encodeURIComponent(row.label)}` : null});
     script.remove();
     const mounted = mountRegisterTable(el,config);
@@ -120,4 +131,15 @@ export function hydrateRegisterTables(root = document) {
     const observer = new MutationObserver(()=>{if (!el.isConnected) {mounted.destroy();observer.disconnect();}});
     observer.observe(el.ownerDocument.body,{childList:true,subtree:true});
   }
+}
+
+/** Legacy links become core state against the complete catalogue. */
+export function registerTableQuery(params,config) {
+ const query=parseQuery(params,config.urlKey);
+ if(!query.q && params.get('q'))query.q=params.get('q').trim();
+ const aliases=config.urlKey==='instruments'?{portfolio:'portfolios',type:'type',status:'status',year:'registered'}:{sector:'sectors',entity:'entities',year:'tabled_date'};
+ for(const [legacy,column] of Object.entries(aliases))if(params.get(legacy) && !query.filters?.[column]){
+  query.filters ||= {};query.filters[column]=[params.get(legacy)==='unknown'?'Not supplied':params.get(legacy)];
+ }
+ return query;
 }

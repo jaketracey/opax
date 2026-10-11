@@ -2,12 +2,13 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync,readdirSync} from 'node:fs';
 import {instrumentTableResponse} from '../src/instrument-table.ts';
-import {instrumentTableConfig,auditTableConfig,interestTableConfig,interestTableData,partyMoneyData} from '../public/register-tables.js';
+import {instrumentTableConfig,auditTableConfig,registerTableQuery,interestTableConfig,interestTableData,partyMoneyData} from '../public/register-tables.js';
 import {isOrganisationDonor} from '../public/donor-entity.js';
 import {applyQuery,dataTableHTML,toCSV} from '../public/datatable.js';
 import {registerServerCSVContract} from './datatable-endpoint-contract.mjs';
 import {tablePrivacyIndex} from './datatable-privacy.mjs';
-import {namesWithheldPhrase} from '../public/donor-entity.js';
+import {instrumentPage} from '../src/instruments.ts';
+import {auditPage} from '../src/audit.ts';
 import {unpack,instrumentTableRows} from '../public/instruments.js';
 const root = new URL('../public/',import.meta.url);
 const read = async path=>JSON.parse(readFileSync(new URL(path.replace(/^\//,''),root),'utf8'));
@@ -33,7 +34,7 @@ test('instrument server rows use as-made registration dates and do not transfer 
 
 test('audit client mode contains the complete small catalogue and the required column types',async()=>{
   const manifest = await read('/audit/manifest.json'), index = await read(manifest.index_url);
-  const config = auditTableConfig(index.records);
+  const config = auditTableConfig(index.records,(await tablePrivacyIndex()).safe);
   assert.equal(config.rows.length,manifest.count);assert.equal(config.source,undefined);
   assert.deepEqual(config.columns.map(c=>[c.label,c.type]),[['Title','text'],['Tabled','date'],['Sector','category'],['Entities','text']]);
   for (const row of config.rows) assert.equal(config.primaryLink(row),`/audit/${row.id}`);
@@ -72,13 +73,13 @@ test('protected row policies are fail closed and cached independently',()=>{
 });
 
 test('every interest register omits entries rejected by the shared table index without losing the whole table',async()=>{
-  const index=await tablePrivacyIndex({donorContext:false});
-  const withheld=(...texts)=>namesWithheldPhrase(index.phrases,...texts);
+  const index=await tablePrivacyIndex();
+  const withheld=(...texts)=>texts.some(text=>!index.safe(String(text)));
   let extraOmitted=0,registers=0;
   for(const file of readdirSync(new URL('interests/',root)).filter(file=>file !== 'index.json' && file.endsWith('.json'))) {
     const register=await read('/interests/'+file);
     if(!register.buckets)continue;
-    const before=interestTableData(register,withheld),projected=interestTableData(register,withheld,index.safe);
+    const before=interestTableData(register,()=>false),projected=interestTableData(register,withheld,index.safe);
     const config=interestTableConfig(projected.rows,index.safe),page=applyQuery(config.rows,config,{pageSize:50000});
     assert.ok(index.safe(JSON.stringify(page)),`register ${registers}: rows and facets`);
     assert.ok(index.safe(toCSV(page.rows,config)),`register ${registers}: CSV`);
@@ -96,5 +97,26 @@ registerServerCSVContract(test,{name:'instruments',seed:async rows=>{
   const chunks=Array.from({length:Math.ceil(rows.length/512)},(_,i)=>({path:`/instruments/catalogue-fixture-${i}.json`,count:Math.min(512,rows.length-i*512)}));
   const manifest={...original,count:rows.length,exported:rows.length,odata_count:rows.length,count_start:rows.length,count_end:rows.length,drift:0,unresolved_gap:0,gap_pages:[],lookup,chunks,metadata_coverage:{...original.metadata_coverage,expanded_titles:rows.length}};
   const data={'/instruments/manifest.json':manifest,'/instruments/index.json':{records},'/instruments/registered.json':Object.fromEntries(records.map(row=>[row[0],'2026-01-01']))};
-  seededAssets={fetch:async request=>Response.json(data[new URL(request.url).pathname])};
+  seededAssets={fetch:async request=>{const path=new URL(request.url).pathname;return Response.json(data[path] ?? await read(path));}};
 },request:query=>instrumentTableResponse(new Request('https://opax.test/api/table/instruments'+query),seededAssets)});
+
+test('category facets count each audit sector and each instrument portfolio once',async()=>{
+ const safe=(await tablePrivacyIndex()).safe,records=(await read('/audit/index.json')).records,config=auditTableConfig(records,safe);
+ const all=applyQuery(config.rows,config,{});
+ assert.equal(all.total,296);assert.equal(all.facets.sectors.find(f=>f.value==='Health').count,48);
+ assert.equal(applyQuery(config.rows,config,{filters:{sectors:['Health']}}).total,48);
+ assert.equal(applyQuery(config.rows,config,{filters:{sectors:['Housing']}}).total,7);
+ const m=await read('/instruments/manifest.json'),rows=await instrumentTableRows(read,m,(await read(m.index_url)).records),instruments=instrumentTableConfig(safe);
+ for(const portfolio of new Set(rows.flatMap(r=>r.portfolios)))assert.equal(applyQuery(rows,instruments,{filters:{portfolios:[portfolio]}}).total,rows.filter(r=>r.portfolios.includes(portfolio)).length,'portfolio membership');
+});
+test('legacy query state uses complete catalogues and filtered SSR remains noindex',async()=>{
+ const safe=(await tablePrivacyIndex()).safe,block=(title,text)=>`<h1>${title}</h1><p>${text}</p>`;
+ const instruments=await instrumentPage(null,new URL('https://opax.test/instruments?q=airport'),read,block,safe);
+ assert.equal(instruments.noindex,true);assert.ok(instruments.prerender.includes('of 51'));
+ assert.deepEqual(registerTableQuery(new URLSearchParams('q=airport'),instrumentTableConfig(safe)),{q:'airport'});
+ const audit=await auditPage(null,new URL('https://opax.test/audit?sector=Health'),read,block,safe);
+ assert.equal(audit.noindex,true);assert.ok(audit.prerender.includes('of 48'));
+ const config=auditTableConfig((await read('/audit/index.json')).records,safe);
+ assert.equal(applyQuery(config.rows,config,{}).total,296);
+ assert.deepEqual(registerTableQuery(new URLSearchParams('year=2025-26'),config),{filters:{tabled_date:['2025-26']}});
+});

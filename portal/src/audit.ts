@@ -1,8 +1,8 @@
-import { AUDIT_ID, auditComplete, filterAudit, type AuditRow } from '../public/audit.js'
+import {tableIdentityIndex} from './table-identity-index.mjs'
+import { AUDIT_ID, auditComplete, type AuditRow } from '../public/audit.js'
 import { sourceLineHTML, tagHTML, statusLabelHTML } from '../public/labels.js'
 import { catalogueReader } from './catalogue-reader.mjs'
-import {parseQuery} from '../public/datatable.js'
-import {auditTableConfig, registerTableHTML} from '../public/register-tables.js'
+import {auditTableConfig, registerTableHTML, registerTableQuery} from '../public/register-tables.js'
 
 interface Manifest {
   count: number; listed: number; generated_at: string; index_url: string; lookup: Record<string, number>
@@ -42,7 +42,7 @@ function recommendationText(rec: Report['recommendations'][number]) {
   return /[<>]/.test(remainder) ? esc(rec.text) : rec.html || esc(rec.text)
 }
 
-export async function auditPage(id: string | null, url: URL, read: Read, block: Block) {
+export async function auditPage(id: string | null, url: URL, read: Read, block: Block, privacyCheck?: (text:string)=>boolean) {
   const missing = () => ({ title: 'Audit report not found · OPAX', description: 'No audit report is available for this id.', status: 404, prerender: block('Audit report not found', 'No audit report is available for this id.', directory) })
   if (id !== null && !AUDIT_ID.test(id)) return missing()
   try {
@@ -51,11 +51,12 @@ export async function auditPage(id: string | null, url: URL, read: Read, block: 
     if (id === null) {
       const index = await read<{ records: AuditRow[] }>(m.index_url)
       if (index.records.length !== m.count) return missing()
-      const matches = filterAudit(index.records, url.searchParams)
-      const config = auditTableConfig(matches)
+      const safe=privacyCheck ?? (await tableIdentityIndex(read)).safe
+      const config = auditTableConfig(index.records,safe)
+      config.rows=config.rows!.filter(row=>safe(JSON.stringify(row)))
       const description = `${m.count} Queensland Audit Office reports tabled in Parliament, with report metadata and recommendations published as HTML.`
-      return { title: 'Queensland audit reports · OPAX', description, status: 200,
-        prerender: block('Queensland audit reports', description, '') + `<section class="wrap audit-content">${registerTableHTML(config,parseQuery(url.searchParams,config.urlKey))}${source(m, m.attribution.source_url)}</section>` }
+      return { title: 'Queensland audit reports · OPAX', description, status: 200,noindex:Boolean(url.search),
+        prerender: block('Queensland audit reports', description, '') + `<section class="wrap audit-content">${registerTableHTML(config,registerTableQuery(url.searchParams,config))}${source(m, m.attribution.source_url)}</section>` }
     }
     const chunk = m.lookup[id]
     if (!Number.isInteger(chunk) || !m.chunks[chunk]) return missing()
