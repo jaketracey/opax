@@ -19,8 +19,10 @@ import { askPageType } from '../public/growth-modules.js';
       ? {...detail.properties, page_type: detail.properties?.page_type || askPageType(location.href)}
       : detail?.properties);
     if (!properties) return;
-    properties.page_path ??= safePath(location.href);
-    properties.page_section = sectionOf(properties.page_path);
+    if (!detail.event.startsWith('table_')) {
+      properties.page_path ??= safePath(location.href);
+      properties.page_section = sectionOf(properties.page_path);
+    }
     const measured = { event: detail.event, properties };
     (window.dataLayer = window.dataLayer || []).push({ event: detail.event, opax: { ...properties, _clear: true } });
     if (window.opaxAnalyticsPending) {

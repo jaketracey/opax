@@ -2,6 +2,7 @@ import sourceIdentity from '../../parli/ingest/user-agent.json'
 import { SA_EXCERPT_LABEL, isSaHansard, saFullText, saOfficialUrl } from '../public/sa-hansard.js'
 import { saPublicResponse, saEventPayload } from './sa-hansard'
 import { saEvidenceText, saEvidenceRecord, saGenerationResponse, saConversationInput } from './sa-evidence'
+import {tablePrivacy} from './table-privacy'
 import { divisionPlain } from '../public/division-markdown.js'
 import { runSocialPublication, socialStatus, socialEngagement, publicationCopy, previewPublication, todayRedirect, CHANNELS, type Channel } from './social-publication'
 import { positionEvidence, positionProposalQuote, positionEligibilityQuotes, positionCostQuote, isPositionEligibilityQuestion, isPositionCostQuestion, isPositionDetailQuestion, positionPointSupported, normalizePositionDraft } from './position-evidence'
@@ -5660,6 +5661,7 @@ export default {
     if (url.pathname === '/.well-known/atproto-did') return /^did:plc:[a-z2-7]{24}$/.test(env.BSKY_DID ?? '')
       ? new Response(env.BSKY_DID, { headers: { 'content-type': 'text/plain; charset=utf-8', 'cache-control': 'public, max-age=300' } })
       : new Response('Not found', { status: 404 })
+    if (url.pathname === '/api/table/privacy') return withSecurityHeaders(await tablePrivacy(request, env.ASSETS), url)
     const isApi = url.pathname.startsWith('/api/')
     const communityResponse = (response: Response) => { const secured = withSecurityHeaders(response, url); if (env.STAGING_API) secured.headers.set('x-robots-tag', 'noindex, nofollow'); return secured }
     if (url.pathname === '/api/display-policy' && request.method === 'GET') return communityResponse(new Response(JSON.stringify({SA_HANSARD_FULL_TEXT:saFullText(env.SA_HANSARD_FULL_TEXT) ? 'true' : 'false'}), {headers:{'content-type':'application/json','cache-control':'no-store'}}))
