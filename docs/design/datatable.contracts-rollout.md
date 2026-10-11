@@ -1,48 +1,43 @@
-# Contracts table rollout
+# Contracts and suppliers tables
 
-The contracts hub is `/discover`, the existing Government contracts destination.
-It uses server mode at `/api/table/contracts`. Supplier profiles use client rows
-at 2,000 contracts or fewer; larger profiles use the same endpoint with the
-fixed `supplier=<stable supplier id>` source parameter.
+Approved DT-core `7a57261b4` and DT-api `85a3c7298` are merged. The contracts hub
+at `/discover` uses server mode against D1 `/api/table/contracts`, including
+its SSR first page. The supplier directory uses `/api/table/suppliers`.
+Supplier profiles use client mode at 2,000 source contracts or fewer; larger
+profiles use the contracts endpoint with fixed `supplier=<stable supplier id>`.
 
-The shared adapter is `portal/public/contracts-table.js`, using the approved
-DT-core implementation at `7a57261b4`. Procurement rows carry `title`, `agency`,
-`amount`, `start_date` and `id`; CN ids are hidden initially. The primary title
-uses the pass 5 description/title/counterpart rule. AusTender URLs are restricted
-to the source domain, with keyword lookup when a direct notice is absent.
-Undated zero-value placeholders remain omitted.
+The contracts adapter uses the pass 5 description/title/counterpart rule,
+agency facets, money values with column-wide bars, start dates and initially
+hidden CN ids. Its icon action opens an AusTender source notice or CN lookup.
+Undated zero-value placeholders remain omitted. Paging keeps the same bar scale;
+phones hide bars through the core's design-system CSS.
 
-SSR retains the recorded totals, agency links, coverage, latest-notice rule and
-largest-notice details. Table state never changes the canonical URL. URLs with
-table state are noindex. Legacy `?contract=CN…` links become `t.q` searches.
+SSR keeps procurement facts, agency links, coverage, latest-notice rules and
+largest-notice details. Table queries remain outside canonical URLs and cause
+noindex. Legacy contract queries migrate to `t.q`; unrelated URL parameters
+survive. A rejected initial parameter keeps zero rows and header-only exports
+through hydration until the reader changes or clears the query.
 
-Both modes register `privacy: 'donors'`, the shared `privacyCheck` and the optional
-`rowPrivacyCheck`. The row hook validates procurement schema; the text hook uses
-DT-core's `/api/table/privacy`, backed by the shared graph index with no office
-holder exemptions. SSR and the local fixture use that same policy synchronously.
-Withheld records retain only their summed amount and a deduplicated identity
-count. The core generates “Donors not named (N)” and removes all identifying
-fields, categories and actions. Identity counts are derived server-side; the
-index and identity IDs never enter public payloads.
+Supplier pages contain procurement records, without donation blocks, donor
+links, donor aliases or political-money notes. Organisation procurement remains
+public independently of donor classification. Individual/person/sole-trader
+kinds and ABN type `IND` override organisation-looking names. Recipient labels,
+aliases, legal names and ABNs come from supplier and grant profiles at runtime.
+Withheld award values remain in neutral “Donors not named (N)” aggregates without
+identities, categories or actions.
 
-Value bars use DT-core's column-wide scale from the full matched amount range;
-paging does not rescale them. The core hides bars on phones. It owns query
-validation, URL state, actual downloads and the sanitized analytics events.
-Supplier identity resolution and comparison selection preserve unrelated URL
-parameters. Ignored table fields are checked against the same privacy hook.
+Both adapters register `privacyCheck` and `rowPrivacyCheck`. Query validation
+uses the combined donor/recipient index. The optional `dataPrivacyCheck` uses
+the recipient policy for procurement data, facets and exports; it defaults to
+`privacyCheck` for existing tables. Data approval never approves query state.
+Neither privacy index enters public assets or payloads.
 
-Until DT-api merges, SSR reads the exported snapshot through ASSETS. The local
-fixture in `portal/test/contracts-table-fixture.mjs` implements the GET endpoint
-using the real core query/CSV functions, including supplier scope and the
-50,000-row CSV cap. It is served by an isolated local proxy and is never routed
-by the production Worker. All other routes, including privacy validation, use
-actual `wrangler dev --local`.
+`build:search` includes `build:tables`. The local-only SQL application helper
+loads the sanitised output into D1. The Chrome gate runs directly against
+Wrangler, with non-local hosts blocked and no fixture endpoint substitution.
+Shared privacy registrations cover actual client input, D1 responses/facets,
+downloaded CSV, URL state, rendered and accessible text, and analytics. Additional
+checks cover complete supplier profiles and initial rejected hidden facets.
+Screenshots and verification logs are under `portal/private/dt-contracts/`.
 
-`portal/test/contracts-table-browser.mjs` registers the supplier client table and
-hub server table with `registerTablePrivacy` in the core's shared browser hook.
-It checks guarded input, server rows/facets, actual CSV downloads, URL state,
-rendered HTML, accessible text and analytics, including rejected searches and
-facets. Screenshots and validation logs live in `portal/private/dt-contracts/`.
-
-Contract addition: optional `rowPrivacyCheck` on `DataTableConfig`, matching the
-DT-grants adapter pattern. The default donor-row classifier remains fail-closed.
+Optional contract additions are `rowPrivacyCheck` and `dataPrivacyCheck`.

@@ -1,3 +1,4 @@
+import {recipientIdentityIndex} from '../src/recipient-index.mjs';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync,existsSync,readdirSync} from 'node:fs';
@@ -7,6 +8,8 @@ import {renderBillAnswer,renderPersonAnswer,partyLine,escapeHtml,safeHref,intern
 const pub=new URL('../public/',import.meta.url);
 const parsedAssets=new Map();
 const read=async path=>{if(!parsedAssets.has(path)) parsedAssets.set(path,JSON.parse(readFileSync(new URL(path.slice(1),pub),'utf8')));return parsedAssets.get(path);};
+const recipientPolicy=await recipientIdentityIndex(read);
+const publicSupplier=(await read('/suppliers.json')).suppliers.find(s=>s.count>=50 && !recipientPolicy.suppliers.has(s.id) && !recipientPolicy.check([s.name,s.abn || ''].join(' ')));
 // Exercise the real Worker dispatch/render/meta code with disk-backed ASSETS.
 // A minimal HTMLRewriter adapter supplies only the platform transformations it uses.
 class Rewriter {
@@ -100,7 +103,7 @@ test('reported TVFY bill and division routes render Markdown blocks from local e
 test('built SSR pages for every route type expose one canonical, factual content and canonical entity URLs',async()=>{
   const seats=await read((await read('/electorates/manifest.json')).index_url);
   const recipient=(await read('/graph/grants.federal.json')).recipients.find(r=>r.k==='company');
-  const supplier=(await read('/suppliers.json')).suppliers[0];
+  const policy=await recipientIdentityIndex(read);const supplier=(await read('/suppliers.json')).suppliers.find(s=>!policy.suppliers.has(s.id) && !policy.check([s.name,s.abn || ''].join(' ')));
   const agency=(await read('/agencies.json')).agencies[0];
   const campaigner=(await read('/graph/campaigners.json')).entities[0];
   const report=(await read('/reports/index.json')).reports[0];
@@ -173,12 +176,15 @@ test('bill SSR renders all exported members, dated party votes and related bills
   assert.doesNotMatch(await get('/subject/person/bruce-baird'),/Died \d/);
 });
 
-test('supplier SSR carries agency facts, contract references and related suppliers without individual donor links',async()=>{
-  const html=await get('/subject/supplier/s-f93824d9abc756c8f32f');
-  for(const fact of ['Department of Foreign Affairs and Trade','CN4248039','2026-02-24','112,216','Other suppliers to these agencies','An association does not prove influence']) assert.ok(html.includes(fact),fact);
-  assert.match(html,/tenders\.gov\.au\/Search\/KeywordSearch\?keyword=CN4248039/);
+test('supplier SSR carries procurement facts and references without donor information',async()=>{
+  const profile=(await read(publicSupplier.profile_path)).profiles[publicSupplier.id];
+  const html=await get(`/subject/supplier/${publicSupplier.id}`);
   const answer=html.match(/<main\b[\s\S]*?<\/main>/)[0];
-  assert.doesNotMatch(answer,/linked to|href="\/subject\/donor\//i);
+  assert.ok(answer.includes(escapeHtml(profile.name)),'permitted supplier identity');
+  for(const fact of ['Agencies contracted','Award values are not expenditure','Other suppliers to these agencies']) assert.ok(answer.includes(fact),fact);
+  assert.match(answer,/tenders\.gov\.au/);
+  assert.doesNotMatch(answer,/linked to|href="\/subject\/donor\/|also a donor|disclosed receipts/i);
+  assert.equal(recipientPolicy.check(answer),false,'whole supplier SSR recipient privacy');
 });
 
 test('all exported bill bodies render safely within the member, byte and link budgets',async t=>{
@@ -249,7 +255,7 @@ test('noindex 404 bodies emit no canonical or page identity, including unknown r
 });
 
 test('all SSR body types use factual relationship wording and pair political money with the caveat',async()=>{
-  const samples=['/subject/party/labor','/subject/person/anthony-albanese','/subject/donor/Clubs%20NSW','/subject/supplier/s-f93824d9abc756c8f32f','/money','/connections','/explore'];
+  const samples=['/subject/party/labor','/subject/person/anthony-albanese','/subject/donor/Clubs%20NSW',`/subject/supplier/${publicSupplier.id}`,'/money','/connections','/explore'];
   const campaigners=(await read('/graph/campaigners.json')).entities;
   for(const c of campaigners){const html=await get('/subject/campaigner/'+encodeURIComponent(c.name));const body=html.match(/<main\b[\s\S]*?<\/main>/)[0];assert.doesNotMatch(body,/linked to/i,c.name);assert.equal(associationCaveat(body,body),body,c.name);}
   for(const path of samples){const body=(await get(path)).match(/<main\b[\s\S]*?<\/main>/)[0];assert.doesNotMatch(body,/linked to/i,path);assert.match(body,/An association does not prove influence\./,path);}

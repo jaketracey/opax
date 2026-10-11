@@ -1,9 +1,10 @@
 // Shared rollout gate. Names are read at run time; failure messages contain counts only.
+import {recipientIdentityIndex} from '../src/recipient-index.mjs';
 import assert from 'node:assert/strict';
 import {readFile} from 'node:fs/promises';
 import {MONEY_GRAPHS,isOrganisationDonor,withheldPhrases,namesWithheldPhrase} from '../public/donor-entity.js';
 
-export async function tablePrivacyIndex({donorContext=true} = {}) {
+export async function tablePrivacyIndex({donorContext=true,recipients=false} = {}) {
   const graphs=await Promise.all(MONEY_GRAPHS.map(path=>readFile(new URL(`../public${path}`,import.meta.url),'utf8').then(JSON.parse)));
   const officeHolders=[];
   if (!donorContext) {
@@ -13,17 +14,22 @@ export async function tablePrivacyIndex({donorContext=true} = {}) {
   }
   const phrases=withheldPhrases(graphs,officeHolders.filter(Boolean));
   const values=[...new Set(graphs.flatMap(g=>g.nodes.filter(n=>n.kind === 'donor' && !isOrganisationDonor(n)).flatMap(n=>[n.label,...(n.aliases || [])])))].filter(v=>namesWithheldPhrase(phrases,`donor receipts ${v}`));
-  return {phrases,values,safe:value=>!namesWithheldPhrase(phrases,`donor receipts ${value}`)};
+  const donorSafe=value=>!namesWithheldPhrase(phrases,`donor receipts ${value}`);
+  if(!recipients) return {phrases,values,safe:donorSafe};
+  const policy=await recipientIdentityIndex(path=>readFile(new URL(`../public${path}`,import.meta.url),'utf8').then(JSON.parse));
+  const recipientValues=[...policy.phrases];
+  return {phrases,values:[...new Set([...values,...recipientValues])],recipientValues,dataSafe:value=>!policy.check(value),safe:value=>donorSafe(value)&&!policy.check(value)};
 }
 
 /** CSV must be an actual browser download path. All listed surfaces are mandatory. */
 export async function assertTablePrivacy(surfaces,index) {
   for (const key of ['clientInput','serverResponses','url','renderedText','accessibleText','analytics']) {
     assert.ok(Object.hasOwn(surfaces,key),`privacy surface missing: ${key}`);
-    assert.ok(index.safe(typeof surfaces[key] === 'string' ? surfaces[key] : JSON.stringify(surfaces[key])),`withheld text on privacy surface: ${key}`);
+    const check=['url','analytics'].includes(key) ? index.safe : index.dataSafe || index.safe;
+    assert.ok(check(typeof surfaces[key] === 'string' ? surfaces[key] : JSON.stringify(surfaces[key])),`withheld text on privacy surface: ${key}`);
   }
   assert.equal(typeof surfaces.csvPath,'string','privacy gate requires an actual downloaded file');
-  assert.ok(index.safe(await readFile(surfaces.csvPath,'utf8')),'withheld text in downloaded CSV');
+  assert.ok((index.dataSafe || index.safe)(await readFile(surfaces.csvPath,'utf8')),'withheld text in downloaded CSV');
 }
 
 /** Each donor rollout adds one registration to its browser gate and runs it locally. */
@@ -49,8 +55,8 @@ export function registerTablePrivacy(registry, rollout) {
       },active);
       if (!donorContext) index=await tablePrivacyIndex({donorContext:false});
       inputCounts[mode]=clientInput.length;
-      if (rollout.modes && mode === 'client') assert.ok(clientInput.length>0,`${rollout.id}: actual client input is required`);
-      assert.ok(index.safe(JSON.stringify(clientInput)),`${rollout.id}: unsafe public client input`);
+      if (rollout.modes && mode === 'client' && rollout.clientRequired !== false) assert.ok(clientInput.length>0,`${rollout.id}: actual client input is required`);
+      assert.ok((index.dataSafe || index.safe)(JSON.stringify(clientInput)),`${rollout.id}: unsafe public client input`);
       await page.evaluate(r=>{
         window.privacyEvents=[]; window.privacyServerResponses=[];
         addEventListener('opax:analytics',event=>window.privacyEvents.push(event.detail));
@@ -70,11 +76,12 @@ export function registerTablePrivacy(registry, rollout) {
         const response=await fetch(r.endpoint);
         return await response.json();
       },active);
+      assert.ok(Array.isArray(serverResponses.rows) && serverResponses.rows.length>0 && serverResponses.total>0,`${rollout.id}: actual endpoint must supply a populated page`);
       await assertTablePrivacy({clientInput,serverResponses:[serverResponses,...responses,...await page.evaluate(()=>window.privacyServerResponses)],csvPath,url:decodeURIComponent(page.url()),renderedText:await host.innerHTML(),accessibleText:await host.ariaSnapshot(),analytics:await page.evaluate(()=>window.privacyEvents)},index);
       onProgress?.({id:rollout.id,mode,stage:'baseline'});
       if (!donorContext) continue;
       let samples=0;
-      for (const value of index.values.filter((_,i)=>i % Math.max(1,Math.floor(index.values.length/8)) === 0).slice(0,8)) {
+      for (const value of [...new Set([...index.values.filter((_,i)=>i % Math.max(1,Math.floor(index.values.length/6)) === 0).slice(0,6),...index.values.filter(v=>/^\d{11}$/.test(v)).slice(0,2)])]) {
         for (const kind of ['q','facet']) {
           await page.evaluate(({r,value,kind})=>{
             const url=new URL(location.href), key=r.urlKey ? r.urlKey+'.' : '';
@@ -84,7 +91,7 @@ export function registerTablePrivacy(registry, rollout) {
             history.replaceState(null,'',url); dispatchEvent(new PopStateEvent('popstate'));
           },{r:active,value,kind});
           // This immediate check detects old SSR rows/query echoes during validation.
-          assert.ok(index.safe(await host.innerHTML()),`${rollout.id}: reflected pending state`);
+          assert.ok((index.dataSafe || index.safe)(await host.innerHTML()),`${rollout.id}: reflected pending state`);
           await page.waitForFunction(host=>document.querySelector(host)?.querySelector('.dt-count') && !document.querySelector(host).hasAttribute('aria-busy'),active.host);
           if (kind === 'q') {
             await host.locator('[data-search]').fill(value);

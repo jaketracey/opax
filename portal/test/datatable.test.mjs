@@ -166,3 +166,27 @@ test('row privacy adapters fail closed and do not reuse approval across policies
   assert.equal(applyQuery(input,{...base,rowPrivacyCheck:()=>{throw Error('unavailable');}},{}).total,0);
   assert.equal(applyQuery(input,base,{}).total,0);
 });
+
+test('initial SSR rejection stays empty until the reader clears it',async()=>{
+  const harness=tableHarness('http://localhost/table?campaign=fixture');
+  harness.root.setAttribute('data-dt-rejected','');
+  const mounted=mountDataTable(harness.root,config);
+  await new Promise(setImmediate);
+  assert.ok(harness.html().includes('Showing 0–0 of 0'));
+  assert.ok(harness.html().includes('Search unavailable'));
+  assert.equal(new URL(harness.win.location.href).searchParams.get('campaign'),'fixture');
+  const button={dataset:{clear:''},disabled:false};harness.root.contains=target=>target===button;
+  const event=new Event('click');Object.defineProperty(event,'target',{value:{closest:()=>button}});
+  harness.root.dispatchEvent(event);await new Promise(setImmediate);
+  assert.ok(!harness.html().includes('Showing 0–0 of 0'));
+  mounted.destroy();
+});
+
+test('procurement data approval does not approve the same text as search state',async()=>{
+  const harness=tableHarness('http://localhost/table?t.q=Organisation&campaign=fixture');
+  const c={...config,urlKey:'t',privacyCheck:()=>false,dataPrivacyCheck:()=>true};
+  const mounted=mountDataTable(harness.root,c);await new Promise(setImmediate);
+  assert.equal(new URL(harness.win.location.href).searchParams.has('t.q'),false);
+  assert.ok(harness.html().includes('Showing 0–0 of 0'));
+  mounted.destroy();
+});

@@ -1,11 +1,12 @@
-/* Supplier entries: recorded procurement, source notices and funding cross-links.
+/* Supplier entries: recorded procurement and source notices.
    No dependencies but the shared formats; the host router owns mounting and calls destroy on departure. */
+import {isOrganisationRecipient} from './recipient-entity.js?v=33f5c5486d';
+import {mountSuppliersTable} from './suppliers-table.js?v=7ab9cb0f1c';
 import { shortDate, shortMoney } from "./format.js";
-import { contractTitle, placeholderContract, mountContractsTable } from "./contracts-table.js?v=c40c8a979c";
-export { contractTitle, placeholderContract } from "./contracts-table.js?v=c40c8a979c";
-import { mountSupplierGrowth, supplierDonations } from "./supplier-growth.js?v=bd36519a83";
+import { contractTitle, placeholderContract, mountContractsTable, remotePrivacyCheck } from "./contracts-table.js?v=f252eada22";
+export { contractTitle, placeholderContract } from "./contracts-table.js?v=f252eada22";
+
 import { sourceLineHTML } from "./labels.js?v=804befe8de";
-import { partyUrl } from "./canonical-urls.js?v=225d5915ea";
 const esc = (value) => String(value ?? "").replace(/[&<>"']/g, (char) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[char]);
 const number = (value) => (Number(value) || 0).toLocaleString("en-AU");
 const currency = (value) => (Number(value) || 0).toLocaleString("en-AU", { style: "currency", currency: "AUD", maximumFractionDigits: 0 });
@@ -13,16 +14,16 @@ const percent = (value) => value > 0 && value < 0.1 ? "less than 0.1%" : value >
 const sourceUrl = (value) => typeof value === "string" && /^https?:\/\//i.test(value) ? value : null;
 const profileUrl = (id) => `/subject/supplier/${encodeURIComponent(id)}`;
 const identityMethod = (method) => ({ source: "Supplier identity in the source register", source_abn: "ABN in the source register", abn: "Matching ABN", exact_normalized_name: "Matching recorded name", normalized_name: "Matching recorded name", exact_name: "Matching recorded name", published_graph_supplier_id: "Recorded in the money map", verified_abn: "Matching ABN" })[method] || "Matching source records";
-const donorUrl = (value) => typeof value === "string" && /^\/subject\/donor\/[^\s]+$/.test(value) ? value : null;
 // The source writes 1900-01-01 where it has no date; that is "not recorded", not a day.
 const placeholderDate = (value) => !value || !/^\d{4}-\d{2}-\d{2}/.test(value) || Number(value.slice(0, 4)) <= 1900;
 const date = (value) => placeholderDate(value) ? "Not recorded" : shortDate(value);
 /** An undated $0 row is the register's placeholder, not a contract a reader can follow. */
 
-let agencyIdsPromise = null;
+let agencyIdsPromise = null,agencyDirectoryPromise=null;
+const agencyDirectory=signal=>agencyDirectoryPromise ??= json("/agencies.json",signal).catch(error=>{agencyDirectoryPromise=null;throw error;});
 /** Agency pages canonicalise on their id; the supplier export names agencies only, so the directory supplies the ids. */
 function agencyIds(signal) {
-  agencyIdsPromise ??= json("/agencies.json", signal).then((data) => new Map((data.agencies || []).map((agency) => [agency.name, agency.id]))).catch(() => { agencyIdsPromise = null; return new Map(); });
+  agencyIdsPromise ??= agencyDirectory(signal).then((data) => new Map((data.agencies || []).map((agency) => [agency.name, agency.id]))).catch(() => { agencyIdsPromise = null; return new Map(); });
   return agencyIdsPromise;
 }
 const agencyUrl = (name, ids) => ids?.has(name) ? `/subject/agency/${encodeURIComponent(ids.get(name))}` : `/subject/agency?q=${encodeURIComponent(name)}`;
@@ -77,45 +78,10 @@ export function procurementRailHTML(rows, links) {
 }
 
 export function mountSupplierDirectory(root, helpers = {}) {
-  const life = lifecycle(root);
-  async function load() {
-    loading(root);
-    try {
-      const data = await json("/suppliers.json", life.signal);
-      if (!life.alive()) return;
-      if (!Array.isArray(data.suppliers)) throw new Error("The supplier directory is incomplete.");
-      const suppliers = data.suppliers;
-
-      root.removeAttribute("aria-busy");
-      root.innerHTML = `<div class="supplier-page">
-        <div class="subject-head"><h2 id="subject-title" tabindex="-1">Government suppliers</h2><p class="subject-tag">Follow Commonwealth contracts, agencies and recorded funding connections behind a supplier.</p></div>
-        <div class="ui-toolbar"><label class="ui-field">Find a supplier<input class="ui-input" type="search" name="supplier-query" placeholder="Name or ABN" autocomplete="off"></label><label class="ui-field">Sort by<select class="ui-input" name="supplier-sort"><option value="total">Contract value</option><option value="count">Number of contracts</option><option value="name">Name</option></select></label></div>
-        <p class="supplier-result-count" role="status"></p><div class="supplier-directory"></div><div class="supplier-more"></div>${coverageHTML(data.meta)}
-      </div>`;
-      const query = root.querySelector('input[name="supplier-query"]');
-      const sort = root.querySelector('select[name="supplier-sort"]');
-      const donor = helpers.params?.get("donor") || "";
-      query.value = helpers.params?.get("q") || "";
-      helpers.onTitle?.("Government suppliers");
-      let visible = 40;
-      function render() {
-        const term = query.value.trim().toLocaleLowerCase();
-        const abnTerm = term.replace(/\s/g, "");
-        const filtered = suppliers.filter((item) => (!donor || (item.money_node_ids || []).includes(donor)) && (!term || [item.name, ...(item.aliases || []), ...(item.lookup_names || [])].some((name) => String(name).toLocaleLowerCase().includes(term)) || (item.abn && String(item.abn).replace(/\s/g, "").includes(abnTerm))))
-          .sort((a, b) => sort.value === "name" ? a.name.localeCompare(b.name) : (Number(b[sort.value]) || 0) - (Number(a[sort.value]) || 0) || a.name.localeCompare(b.name));
-        root.querySelector(".supplier-result-count").textContent = `${number(filtered.length)} ${filtered.length === 1 ? "supplier" : "suppliers"}${term ? ` matching your search` : " in the available records"}${donor ? " linked to this funding profile" : ""}`;
-        root.querySelector(".supplier-directory").innerHTML = filtered.length ? filtered.slice(0, visible).map((item) => `<a class="supplier-directory-row" href="${profileUrl(item.id)}"><span><strong>${esc(item.name)}</strong><small>${item.abn ? `ABN ${esc(item.abn)}` : "No ABN recorded"}${item.first_year ? ` · ${esc(item.first_year)}${item.last_year !== item.first_year ? `–${esc(item.last_year)}` : ""}` : ""}</small></span><span class="supplier-directory-value"><strong>${currency(item.total)}</strong><small>${number(item.count)} ${Number(item.count) === 1 ? "contract" : "contracts"} · ${number(item.agency_count)} ${Number(item.agency_count) === 1 ? "agency" : "agencies"}</small></span></a>`).join("") : '<div class="supplier-empty"><p>No suppliers match this view. Try another name or ABN, or <a href="/subject/supplier">browse all suppliers</a>.</p></div>';
-        const more = root.querySelector(".supplier-more");
-        more.innerHTML = filtered.length > visible ? '<button type="button" class="ui-button">Show more suppliers</button>' : "";
-        more.querySelector("button")?.addEventListener("click", () => { const firstNew = visible; visible += 40; render(); root.querySelectorAll(".supplier-directory-row")[firstNew]?.focus(); });
-      }
-      query.addEventListener("input", () => { const params = new URLSearchParams(); if (donor) params.set("donor", donor); if (query.value.trim()) params.set("q", query.value.trim()); history.replaceState(null, "", `/subject/supplier${params.size ? `?${params}` : ""}`); visible = 40; render(); });
-      sort.addEventListener("change", () => { visible = 40; render(); });
-      render();
-    } catch (error) { if (life.alive()) failure(root, load, error.message); }
-  }
-  load();
-  return { destroy: life.destroy };
+  const life=lifecycle(root);
+  loading(root);helpers.onTitle?.('Government suppliers');
+  const ready=mountSuppliersTable(root,{params:helpers.params,signal:life.signal}).then(handle=>{root.removeAttribute('aria-busy');if(life.alive()) life.cleanup(()=>handle.destroy());else handle.destroy();}).catch(()=>{if(life.alive()) failure(root,()=>mountSupplierDirectory(root,helpers));});
+  return {ready,destroy:life.destroy};
 }
 
 function agencyChart(agencies, total, ids, meta) {
@@ -176,6 +142,21 @@ export function contractHTML(contract, ids) {
   return `<details class="supplier-contract"><summary><span><strong>${esc(heading)}</strong><small>${meta.map(esc).join(" · ")}</small></span><b>${currency(contract.amount)}</b></summary><dl><dt>${contract.supplier_id ? "Supplier" : "Awarding agency"}</dt><dd>${counterpart}</dd><dt>Contract reference</dt><dd>${esc(contract.id)}</dd>${reference && reference !== heading && reference !== contract.id ? `<dt>Agency reference</dt><dd>${esc(reference)}</dd>` : ""}<dt>Start date</dt><dd>${esc(date(contract.start_date))}</dd><dt>End date</dt><dd>${esc(date(contract.end_date))}</dd><dt>Published</dt><dd>${esc(date(contract.published))}</dd><dt>Procurement method</dt><dd>${esc(contract.procurement_method || "Not recorded")}</dd></dl>${url ? `<a href="${esc(url)}" target="_blank" rel="noopener noreferrer">${contract.link_scope === "source_register" ? `Find ${esc(contract.id)} on AusTender` : "Open the source notice"}<span class="visually-hidden"> (opens in a new tab)</span></a>` : '<p class="fineprint">No direct source URL is recorded. Use the contract reference to find the notice on <a href="https://www.tenders.gov.au/" target="_blank" rel="noopener noreferrer">AusTender</a>.</p>'}${Number(contract.notices) > 1 ? `<p class="fineprint">${number(contract.notices)} source notices are associated with this contract.</p>` : ""}</details>`;
 }
 
+async function mountRelatedSuppliers(root,profile,life) {
+  try {
+    const agencies=await agencyDirectory(life.signal);
+    const top=[...(profile.agencies || [])].sort((a,b)=>b.total-a.total)[0];
+    const agency=agencies.agencies.find(a=>a.name===top?.name);
+    if(!agency) return;
+    const data=await json(agency.profile_path,life.signal);
+    const ids=(data.suppliers || []).filter(s=>s.id!==profile.id).sort((a,b)=>b.total-a.total).slice(0,10).map(s=>s.id);
+    const params=new URLSearchParams({'f.id':JSON.stringify(ids)});
+    const page=await json('/api/table/suppliers?'+params,life.signal);
+    if(!life.alive()) return;
+    root.innerHTML=`<section class="supplier-section"><h3 class="subject-section-title">Other suppliers to ${esc(agency.name)}</h3><ul>${page.rows.filter(s=>isOrganisationRecipient({kind:s.recipient_kind})).map(s=>`<li><a href="${profileUrl(s.id)}">${esc(s.name)}</a></li>`).join('')}</ul></section>`;
+  } catch {if(life.alive()) root.innerHTML='';}
+}
+
 async function renderProfile(root, profile, meta, helpers, life, suppliers) {
   const ids = await agencyIds(life.signal);
   if (!life.alive()) return;
@@ -190,10 +171,10 @@ async function renderProfile(root, profile, meta, helpers, life, suppliers) {
   const identity = [
     sourceUrl(profile.identity?.abn_url) ? `<dt>Business register</dt><dd><a href="${esc(sourceUrl(profile.identity.abn_url))}" target="_blank" rel="noopener noreferrer">Check the ABN record</a></dd>` : "",
     profile.identity?.legal_name ? `<dt>Legal name</dt><dd>${esc(profile.identity.legal_name)}</dd>` : "",
-    profile.identity?.method ? `<dt>Records grouped by</dt><dd>${esc(identityMethod(profile.identity.method))}</dd>` : "",
+    profile.identity?.method && profile.identity.method!=="published_graph_supplier_id" ? `<dt>Records grouped by</dt><dd>${esc(identityMethod(profile.identity.method))}</dd>` : "",
     profile.identity?.status ? `<dt>ABN status</dt><dd>${esc(profile.identity.status === "ACT" ? "Active" : profile.identity.status === "CAN" ? "Cancelled" : profile.identity.status)}</dd>` : "",
   ].join("");
-  const aliases = (profile.aliases || []).length > 1 ? `<details><summary>Names in the source records</summary><ul>${profile.aliases.map((name) => `<li>${esc(name)}</li>`).join("")}</ul></details>` : "";
+  const aliases = "";
   const rail = procurementRailHTML([
     ["supplier-agencies", "Who awards the contracts"], ["supplier-connections", "Agency connections"], ["procurement-years", "Contract value over time"],
     ["supplier-contracts", "The contract record"], ["supplier-identity", "Identity"],
@@ -204,34 +185,20 @@ async function renderProfile(root, profile, meta, helpers, life, suppliers) {
   root.innerHTML = `<div class="supplier-page"><div class="subject-head"><h2 id="subject-title" tabindex="-1">${esc(profile.name)}</h2><p class="subject-tag">Commonwealth supplier${profile.abn ? ` · ABN ${esc(profile.abn)}` : ""}</p></div>
     <p class="supplier-lede">${top ? `${esc(top.name)} accounts for ${percent(share)} of the recorded contract value.` : "No agency breakdown is available in this export."}</p>
     <dl class="supplier-totals"><div><dt>Recorded contract value</dt><dd title="${currency(profile.total)}">${shortMoney(profile.total)}</dd></div><div><dt>Contracts</dt><dd>${number(profile.count)}</dd></div><div><dt>Agencies</dt><dd>${number(agencies.length)}</dd></div></dl>
-    <div class="supplier-profile-grid"><div class="supplier-profile-main">${agencyChart(agencies, Number(profile.total), ids, meta)}<section class="supplier-section" id="supplier-connections"><h3 class="subject-section-title">Agency connections</h3><p>Explore the agencies awarding contracts to this supplier.</p><div class="supplier-money-map supplier-agency-map"></div></section>${yearChart(years, profile.undated)}<div class="supplier-growth"></div><section class="supplier-section supplier-funding" id="supplier-funding" hidden></section><section class="supplier-section supplier-evidence" hidden></section><section class="supplier-section supplier-taxcharity" hidden></section><section class="supplier-section supplier-mentions"></section>
-      <section class="supplier-section" id="supplier-contracts"><div data-contracts-table></div>${procurementSourceHTML(meta, profile.caveats || [])}</section>
+    <div class="supplier-profile-grid"><div class="supplier-profile-main">${agencyChart(agencies, Number(profile.total), ids, meta)}<section class="supplier-section" id="supplier-connections"><h3 class="subject-section-title">Agency connections</h3><p>Explore the agencies awarding contracts to this supplier.</p><div class="supplier-money-map supplier-agency-map"></div></section>${yearChart(years, profile.undated)}<div class="supplier-growth"></div><section class="supplier-section supplier-mentions"></section>
+      <section class="supplier-section" id="supplier-contracts"><div data-contracts-table></div>${procurementSourceHTML(meta, (profile.caveats || []).filter(note=>!/donor|donat|receipts|money map|funding/i.test(note)))}</section>
       <section class="supplier-section" id="supplier-identity"><h3 class="subject-section-title">Identity</h3>${identity ? `<dl class="supplier-identity">${identity}</dl>` : "<p>No business register details are recorded for this supplier.</p>"}${aliases}</section>
     </div>${rail}</div></div>`;
-  mountSupplierGrowth(root.querySelector(".supplier-growth"), profile, meta, life, suppliers);
+  mountRelatedSuppliers(root.querySelector('.supplier-growth'),profile,life);
   import('/agencies.js?v=p4g-20261010').then(({ mountProcurementPreview }) => {
     if (life.alive()) return mountProcurementPreview(root.querySelector('.supplier-agency-map'), profile, 'supplier', life);
   }).catch(() => {
     if (life.alive()) root.querySelector('.supplier-agency-map').innerHTML = '<p>The map could not open. Agency relationships are listed above.</p>';
   });
-  const evidenceSlot = root.querySelector('.supplier-evidence');
-  import('/evidence.js').then(({ mountEvidence }) => {
-    if (life.alive()) return mountEvidence(evidenceSlot, {name: profile.name, abn: profile.abn}, life);
-  }).catch(() => {});
-  // Charity register, AIS and ATO tax transparency, by the supplier's ABN only (no ABN: no block).
-  const taxSlot = root.querySelector('.supplier-taxcharity');
-  if (profile.abn) import('/tax-charity.js?v=tax-charity-20260929c').then(({ mountTaxCharity }) => {
-    if (life.alive()) return mountTaxCharity(taxSlot, { abn: profile.abn, alive: life.alive });
-  }).catch(() => {}); else taxSlot?.remove();
   mountYearChart(root, life);
   helpers.onCanonical?.(profile.id, profile.name);
   helpers.onTitle?.(`${profile.name} · Government supplier`);
   helpers.onMentions?.(profile.name, root.querySelector(".supplier-mentions"));
-  supplierDonations(profile, life).then(donations => {
-    if (!life.alive()) return;
-    const donorLinks = donations.links;
-    if (donorLinks.length) mountFunding(root.querySelector(".supplier-funding"), donorLinks, life, donations.html);
-  }).catch(() => {});
   const table = root.querySelector('#supplier-contracts [data-contracts-table]');
   try {
     const handle = await mountContractsTable(table, {supplierId: profile.id, count: profile.contracts.length,
@@ -250,7 +217,11 @@ export function mountSupplierProfile(root, idOrName, helpers = {}) {
       const directory = await json("/suppliers.json", life.signal);
       if (!life.alive()) return;
       const exact = (directory.suppliers || []).find((item) => item.id === idOrName);
-      const matches = exact ? [exact] : (directory.suppliers || []).filter((item) => [item.name, ...(item.aliases || []), ...(item.lookup_names || [])].some((name) => String(name).trim().toLocaleLowerCase() === String(idOrName).trim().toLocaleLowerCase()));
+      const matches = exact ? [exact] : (directory.suppliers || []).filter((item) => [item.name,...(item.aliases || []),...(item.lookup_names || [])].some((name) => String(name).trim().toLocaleLowerCase() === String(idOrName).trim().toLocaleLowerCase()));
+      const visibleMatches=[];
+      for(const entry of matches) if(await remotePrivacyCheck(entry.name,'data')) visibleMatches.push(entry);
+      if(!life.alive()) return;
+      matches.splice(0,matches.length,...visibleMatches);
       if (matches.length > 1) {
         root.removeAttribute("aria-busy");
         root.innerHTML = `<div class="supplier-page"><h2 id="subject-title" tabindex="-1">Choose a supplier</h2><p>More than one supplier uses this name. Check the ABN before opening a profile.</p><ul>${matches.map((item) => `<li><a href="${profileUrl(item.id)}">${esc(item.name)}</a> — ${item.abn ? `ABN ${esc(item.abn)}` : "No ABN recorded"}</li>`).join("")}</ul></div>`;
@@ -268,65 +239,15 @@ export function mountSupplierProfile(root, idOrName, helpers = {}) {
       if (!life.alive()) return;
       const profile = shard.profiles?.[entry.id];
       if (!profile || !Array.isArray(profile.contracts)) throw new Error("This supplier profile is not available in the current export.");
+      const safe=isOrganisationRecipient(profile) && await remotePrivacyCheck(JSON.stringify({name:profile.name,abn:profile.abn,identity:profile.identity}),'data');
+      if(!life.alive()) return;
+      if(!safe) {
+        root.innerHTML='<div class="supplier-page"><h2>Supplier not named</h2><p>Individual recipient details are withheld. Their award values are included in aggregate procurement totals.</p><a href="/subject/supplier">Browse suppliers</a></div>';
+        root.removeAttribute('aria-busy');helpers.onTitle?.('Supplier not named');return;
+      }
       await renderProfile(root, profile, directory.meta, helpers, life, directory.suppliers);
     } catch (error) { if (life.alive()) failure(root, load, error.message); }
   }
   load();
   return { destroy: life.destroy };
-}
-
-async function mountFunding(root, links, life, register = "") {
-  root.hidden = false;
-  root.innerHTML = `<h3 class="subject-section-title">Also in the funding record</h3><p role="status">Opening the funding records…</p>${register}`;
-  try {
-    const data = await json("/graph/money.json?v=suppliers-1", life.signal);
-    if (!life.alive()) return;
-    const ids = new Set(links.map((link) => link.id));
-    const nodes = new Map((data.nodes || []).map((node) => [node.id, node]));
-    const matchedNodes = [...ids].map((id) => nodes.get(id)).filter(Boolean);
-    const nodeTotal = matchedNodes.reduce((sum, node) => sum + (Number(node.total) || 0), 0);
-    const nodeCount = matchedNodes.reduce((sum, node) => sum + (Number(node.count) || 0), 0);
-    const fromYears = matchedNodes.map((node) => Number(node.firstYear)).filter((year) => Number.isFinite(year) && year > 0);
-    const toYears = matchedNodes.map((node) => Number(node.lastYear)).filter((year) => Number.isFinite(year) && year > 0);
-    const firstYear = Math.min(...fromYears), lastYear = Math.max(...toYears);
-    const yearSpan = fromYears.length && toYears.length ? (firstYear === lastYear ? String(firstYear) : `${firstYear}–${lastYear}`) : "";
-    const edges = (data.edges || []).filter((edge) => ids.has(edge.source) && nodes.get(edge.target)?.kind === "party");
-    const grouped = new Map();
-    for (const edge of edges) {
-      const row = grouped.get(edge.target) || { name: nodes.get(edge.target).label, total: 0, count: 0 };
-      row.total += Number(edge.total) || 0;
-      row.count += Number(edge.count) || 0;
-      grouped.set(edge.target, row);
-    }
-    const rows = [...grouped.values()].sort((a, b) => b.total - a.total);
-    const max = Math.max(1, ...rows.map((row) => row.total));
-    root.innerHTML = `<h3 class="subject-section-title">Also in the funding record</h3><p class="supplier-section-note">Disclosed party receipts recorded under this supplier’s identity, from the money map’s selected donor data${yearSpan ? ` (${yearSpan})` : ""}. These totals cover a different set of records and dates from the contracts above.</p>${rows.length ? `<ol class="supplier-bars">${rows.map((row) => `<li><div><a href="${partyUrl(row.name)}">${esc(row.name)}</a><strong>${currency(row.total)}</strong></div><svg viewBox="0 0 100 5" preserveAspectRatio="none" aria-hidden="true"><rect width="100" height="5" class="supplier-bar-track"/><rect width="${(row.total / max * 100).toFixed(2)}" height="5" class="supplier-bar-fill"/></svg><small>${number(row.count)} recorded receipts</small></li>`).join("")}</ol>` : matchedNodes.length ? `<p><strong>${currency(nodeTotal)}</strong> across ${number(nodeCount)} recorded receipts${yearSpan ? ` (${yearSpan})` : ""}. The party breakdown is not available in this map export.</p>` : "<p>This recorded identity is not present in the current map export.</p>"}${matchedNodes.length ? '<button type="button" class="ui-button supplier-map-toggle">Explore the money map</button><div class="supplier-money-map" hidden></div>' : ""}${register}`;
-    root.querySelector(".supplier-map-toggle")?.addEventListener("click", async (event) => {
-      const button = event.currentTarget;
-      const slot = root.querySelector(".supplier-money-map");
-      button.disabled = true;
-      slot.hidden = false;
-      slot.innerHTML = '<p role="status">Opening the money map…</p>';
-      try {
-        const { mountMoneyMap } = await import("/money-map.js?v=224ab013ee");
-        if (!life.alive()) return;
-        slot.textContent = "";
-        const handle = await mountMoneyMap(slot, "/graph/money.json?v=suppliers-1", { focus: links[0].id, chrome: "mini", reveal: true, openCard: false });
-        if (!life.alive()) { handle.destroy(); return; }
-        life.cleanup(() => handle.destroy());
-        if (typeof IntersectionObserver !== "undefined") {
-          const observer = new IntersectionObserver((entries) => handle.setPaused(!entries.at(-1).isIntersecting));
-          observer.observe(slot);
-          life.cleanup(() => observer.disconnect());
-        }
-        button.hidden = true;
-      } catch {
-        if (!life.alive()) return;
-        slot.innerHTML = '<p>The map could not open here. <a href="/money">Open the full money map</a>.</p>';
-        button.disabled = false;
-      }
-    });
-  } catch {
-    if (life.alive()) root.innerHTML = `<h3 class="subject-section-title">Also in the funding record</h3>${register}`;
-  }
 }

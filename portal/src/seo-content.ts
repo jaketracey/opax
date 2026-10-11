@@ -1,3 +1,4 @@
+import {isOrganisationRecipient} from '../public/recipient-entity.js'
 import {supplierContractsHTML} from '../public/contracts-table.js'
 import { personUrl, partyUrl } from '../public/canonical-urls.js'
 import {sponsorPerson} from '../public/sponsor-person.js'
@@ -322,7 +323,7 @@ export async function renderDirectory(dir: string, url: URL, read: ReadAsset, pe
 interface Contract { id: string; title?: string; description?: string; agency?: string; amount: number; start_date?: string; published?: string; url?: string; link_scope?: string }
 interface SupplierProfile { id: string; name: string; total: number; count: number; agencies: {name:string;total:number;count:number}[]; contracts: Contract[] }
 interface AgencyProfile { id: string; name: string; profile_path: string }
-export async function renderSupplierAnswer(id: string, read: ReadAsset, params = new URLSearchParams(), withheld: ((...texts: unknown[]) => boolean) & {subjects?: (...texts: unknown[]) => string[]} = () => true): Promise<RenderedContent | null> {
+export async function renderSupplierAnswer(id: string, read: ReadAsset, params = new URLSearchParams(), withheld: ((...texts: unknown[]) => boolean) & {subjects?: (...texts: unknown[]) => string[]; recipientCheck?: (text: string) => boolean; supplierWithheld?: (id: string) => boolean} = () => true): Promise<RenderedContent | null> {
   const [index,agencies] = await Promise.all([
     read<{meta:{generated_at:string;source:string};suppliers:{id:string;profile_path:string}[]}>('/suppliers.json'),
     read<{agencies:AgencyProfile[]}>('/agencies.json'),
@@ -330,13 +331,13 @@ export async function renderSupplierAnswer(id: string, read: ReadAsset, params =
   const row=index.suppliers.find(s=>s.id===id)
   if(!row) return null
   const profile=(await read<{profiles:Record<string,SupplierProfile>}>(row.profile_path)).profiles[id]
-  if(!profile) return null
+  if(!profile || !isOrganisationRecipient(profile) || withheld.supplierWithheld?.(id) || withheld.recipientCheck?.(profile.name) === false) return null
   const description=`${profile.name}: ${currency(profile.total)} in recorded Commonwealth contract awards across ${count(profile.count)} contracts and ${profile.agencies.length} agencies.`
   let body=`<p>Exported ${escapeHtml(index.meta.generated_at.slice(0,10))}. Source: ${escapeHtml(index.meta.source)}. Award values are not expenditure. One contract is counted at its latest recorded notice value; amendments are not added together. Coverage is limited to the available notices.</p><h2>Agencies contracted</h2><ul>`
   const matches=profile.agencies.map(a=>({a,record:agencies.agencies.find(r=>r.name===a.name)}))
   body+=matches.map(({a,record})=>`<li>${record ? link(`/subject/agency/${record.id}`,a.name) : escapeHtml(a.name)} — ${count(a.count)} contracts, ${currency(a.total)}</li>`).join('')+'</ul>'
-  body+=supplierContractsHTML(profile.contracts as unknown as Record<string, unknown>[],id,params,withheld)+'<details><summary>Notice details for the largest awards</summary><ol>'
-  body+=[...profile.contracts].filter(c=>!withheld(...Object.values(c))).sort((a,b)=>b.amount-a.amount).slice(0,10).map(c=>{
+  body+=supplierContractsHTML(profile.contracts as unknown as Record<string, unknown>[],id,params,withheld,profile)+'<details><summary>Notice details for the largest awards</summary><ol>'
+  body+=[...profile.contracts].filter(c=>withheld.recipientCheck ? withheld.recipientCheck(Object.values(c).join(' ')) : !withheld(...Object.values(c))).sort((a,b)=>b.amount-a.amount).slice(0,10).map(c=>{
     const agency=agencies.agencies.find(a=>a.name===c.agency)
     const notice=c.link_scope==='source_register' ? `https://www.tenders.gov.au/Search/KeywordSearch?keyword=${encodeURIComponent(c.id)}` : c.url
     return `<li>${escapeHtml(c.title || c.id)}${c.description ? ` — ${escapeHtml(c.description)}` : ''}. ${currency(c.amount)}. Start date: ${escapeHtml(c.start_date || 'Not recorded')}. Published: ${escapeHtml(c.published || 'Not recorded')}. Agency: ${agency ? link(`/subject/agency/${agency.id}`,agency.name) : escapeHtml(c.agency || 'Not recorded')}. ${notice ? link(notice,`AusTender notice ${c.id}`,'noopener noreferrer') : escapeHtml(c.id)}.</li>`
@@ -345,9 +346,9 @@ export async function renderSupplierAnswer(id: string, read: ReadAsset, params =
     if(!record) continue
     const data=await optional<{suppliers:{id:string;name:string;total:number}[]}>(read,record.profile_path)
     const rows=(data?.suppliers || []).filter(s=>s.id!==id).sort((a,b)=>b.total-a.total).slice(0,10)
-    const hidden=rows.filter(s=>withheld(s.name))
-    const subjects=new Set(hidden.flatMap(s=>withheld.subjects?.(s.name) || [s.id]))
-    body+=`<h3>${escapeHtml(a.name)}</h3><ul>${rows.filter(s=>!withheld(s.name)).map(s=>`<li>${link(`/subject/supplier/${s.id}`,s.name)} — ${currency(s.total)} in recorded awards from this agency</li>`).join('')}${hidden.length ? `<li>Donors not named (${subjects.size}) — ${currency(hidden.reduce((sum,s)=>sum+s.total,0))} in recorded awards from this agency</li>` : ''}</ul>`
+    const hidden=rows.filter(s=>withheld.supplierWithheld?.(s.id) || withheld.recipientCheck?.(s.name) === false)
+    const subjects=new Set(hidden.map(s=>s.id))
+    body+=`<h3>${escapeHtml(a.name)}</h3><ul>${rows.filter(s=>!hidden.includes(s)).map(s=>`<li>${link(`/subject/supplier/${s.id}`,s.name)} — ${currency(s.total)} in recorded awards from this agency</li>`).join('')}${hidden.length ? `<li>Donors not named (${subjects.size}) — ${currency(hidden.reduce((sum,s)=>sum+s.total,0))} in recorded awards from this agency</li>` : ''}</ul>`
   }
   body+=`<p>An association does not prove influence.</p><p>${link('/subject/supplier','Browse suppliers')} · ${link('/methods','Sources and methods')}</p>`
   return {html:answerBlock(profile.name,description,body),description}

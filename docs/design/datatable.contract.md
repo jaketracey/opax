@@ -89,3 +89,24 @@ The shared derived test, `portal/test/donor-privacy.test.mjs`, covers every tabl
 - Every rollout registers `registerTablePrivacy` from `portal/test/datatable-privacy.mjs` in its local Chrome gate. The registration names its actual public input module, table host, secondary facet and server example/endpoint. The hook derives withheld values at run time and asserts public client input, server responses, actual downloaded files, URL state, rendered and accessible text, and analytics in both modes. Core registration lives in `portal/test/datatable-browser.mjs`.
 
 - Optional `DataTableConfig.rowPrivacyCheck?: (row: Row) => boolean` supplies a synchronous row policy for other money records. Only `true` permits a row; exceptions fail closed. Contracts validate their procurement projection here and use the same shared text index separately.
+
+## Server CSV continuation (11 Oct 2026, additive clarification)
+
+The 50,000-row limit remains the ceiling for one filtered export. Each CSV
+response contains at most 10,000 data rows; `format=csv&page=1` starts that
+export, and `page=2` through `page=5` continue it. CSV page size is fixed and
+independent of the JSON `pageSize`. `Link` headers provide `rel="next"` and
+`rel="prev"` URLs preserving the filters and sort. Each partial CSV includes a
+trailer record showing its row range, the full matching count, the 50,000-row
+ceiling when applicable, and the next export URL when available.
+
+`X-Table-Total`, `X-Table-Exported`, `X-Table-Page`, `X-Table-Truncated` and
+`X-Table-Export-Note` describe the current CSV. `X-Table-Export-Truncated` is
+true only when the matching set exceeds the logical 50,000-row export ceiling,
+so clients announcing that ceiling continue to report it accurately.
+Money dataset responses omit `Content-Location`; decoded queries containing
+withheld identities produce empty results with no echoed state or continuation
+links. No fields in the shared TypeScript contract change.
+
+- Optional `DataTableConfig.dataPrivacyCheck?: (text: string) => boolean | Promise<boolean>` validates row, facet and export text where a record has a distinct publication policy. It defaults to `privacyCheck`. Query approvals remain separate: approving procurement data cannot approve the same text as a search or URL value. Contracts and suppliers use recipient kind/ABN-type rules for data and the combined donor/recipient index for query state. Other money tables retain the donor policy.
+- SSR may mark the core root with `data-dt-rejected`. Hydration keeps that rejection and header-only exports until the reader changes or clears the query; scrubbing a private initial parameter does not restore the full table.

@@ -1,3 +1,4 @@
+import {recipientIdentityIndex} from '../src/recipient-index.mjs';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
@@ -11,6 +12,8 @@ import {offline, loadWorker} from './worker-harness.mjs';
 
 const pub = new URL('../public/', import.meta.url).pathname;
 const index = JSON.parse(readFileSync(pub + 'suppliers.json'));
+const recipients=await recipientIdentityIndex(async path=>JSON.parse(readFileSync(pub+path)));
+const publicSupplier=index.suppliers.find(s=>s.count>=50 && s.count<=2000 && !recipients.suppliers.has(s.id) && !recipients.check(s.name));
 
 test('escaped JSON facets cannot preserve a withheld donor in URL state', () => {
   const graphs=MONEY_GRAPHS.map(path=>JSON.parse(readFileSync(pub+path)));
@@ -45,7 +48,7 @@ test('the hub uses the table endpoint and suppliers switch modes at the row limi
 
 test('the fixture searches hidden CN ids, combines facets with ranges, pages, and exports the full filtered view', async () => {
   const fixture=contractsFixture(pub);
-  const supplier=index.suppliers.find(s=>s.count>=50 && s.count<=2000);
+  const supplier=publicSupplier;
   const base=new URL('https://fixture.invalid/api/table/contracts');base.searchParams.set('supplier',supplier.id);
   const first=await (await fixture(base)).json();
   assert.ok(first.total>first.rows.length);
@@ -65,7 +68,7 @@ test('supplier SSR preserves facts, renders a real first page, and ignores table
   const restore=offline();
   try {
     const worker=await loadWorker(new URL('../src/index.ts',import.meta.url).pathname,pub);
-    const supplier=index.suppliers.find(s=>s.count>=50 && s.count<=2000);
+    const supplier=publicSupplier;
     const path=`/subject/supplier/${supplier.id}`;
     const response=await worker.fetch(path+'?t.sort=amount:asc&t.page=2');
     assert.equal(response.status,200);assert.equal(response.headers.get('x-robots-tag'),'noindex');
@@ -104,12 +107,12 @@ test('supplier SSR related-award totals use the shared guard and retain anonymou
   const node=graphs.flatMap(graph=>graph.nodes).find(node=>node.kind==='donor' && guard(node.label) && guard.subjects(node.label).length===1);
   const assets={
     '/suppliers.json':{meta:{generated_at:'2026-10-01',source:'Fixture register'},suppliers:[{id:'s-fixture',profile_path:'/supplier-fixture.json'}]},
-    '/supplier-fixture.json':{profiles:{'s-fixture':{id:'s-fixture',name:'Fixture supplier Pty Ltd',total:10,count:1,agencies:[{name:'Fixture agency',count:1,total:10}],contracts:[]}}},
+    '/supplier-fixture.json':{profiles:{'s-fixture':{id:'s-fixture',name:'Fixture supplier Pty Ltd',kind:'company',total:10,count:1,agencies:[{name:'Fixture agency',count:1,total:10}],contracts:[]}}},
     '/agencies.json':{agencies:[{id:'a-fixture',name:'Fixture agency',profile_path:'/agency-fixture.json'}]},
     '/agency-fixture.json':{suppliers:[{id:'s-other',name:node.label,total:100}]},
   };
   const result=await renderSupplierAnswer('s-fixture',async path=>assets[path],new URLSearchParams(),guard);
-  assert.ok(!guard(result.html),'related awards must not name an indexed donor');
-  assert.match(result.html,/Donors not named \(1\) — \$100/);
-  assert.ok(!result.html.includes('/subject/supplier/s-other'));
+  assert.ok(result.html.includes('/subject/supplier/s-other'),'public procurement is retained independently of donor classification');
+  assert.ok(!result.html.includes('/subject/donor/'));
+  assert.ok(!result.html.includes('disclosed receipts'));
 });

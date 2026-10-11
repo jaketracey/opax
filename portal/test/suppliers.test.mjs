@@ -24,7 +24,7 @@ const supplier = (overrides = {}) => ({ id, name: 'Acme Pty Ltd', abn: '12345678
 
 function harness(rows = [supplier()], loader) {
   let requests = 0;
-  const context = {
+  const context = {tablePrivacyGuard:async()=>Object.assign(()=>false,{recipientCheck:()=>true,supplierWithheld:()=>false}),
     vicElectionEnabled, vicElectionDiscovery, VIC_ELECTION_ASSET, VIC_ELECTION_SITEMAP,
     money: shortMoney, URL, Request, Response, SITE_ORIGIN: 'https://opax.com.au', SITE_TITLE: 'OPAX', SITE_DESCRIPTION: 'Parliamentary records', TOPIC_NAMES: {},
     assetJson: async (_env, path) => { assert.equal(path, '/suppliers.json'); requests++; return loader ? loader() : { meta: { generated_at: '2026-09-07T00:00:00Z' }, suppliers: rows }; },

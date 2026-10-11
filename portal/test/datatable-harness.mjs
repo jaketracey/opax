@@ -8,7 +8,8 @@ export function tableHarness(initialURL = 'http://localhost/table') {
   const root = new EventTarget();
   root.dataset = {}; root.childNodes = []; root.classList = {add(){}};
   root.contains = () => false; root.querySelectorAll = () => []; root.querySelector = () => null;
-  root.setAttribute = () => {}; root.removeAttribute = () => {};
+  const attrs=new Map();
+  root.setAttribute=(key,value)=>attrs.set(key,value);root.removeAttribute=key=>attrs.delete(key);root.hasAttribute=key=>attrs.has(key);
   root.append = (...nodes) => { root.childNodes.push(...nodes); };
   const head = {querySelector:()=>null,append(){}};
   const doc = {defaultView:win,head,createElement(kind) {

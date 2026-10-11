@@ -1,6 +1,9 @@
+import {suppliersTableHTML} from '../public/suppliers-table.js'
+import {serializeQuery,parseQuery} from '../public/datatable.js'
 import {contractsHubHTML} from '../public/contracts-table.js'
 import {tablePrivacy, tablePrivacyGuard} from './table-privacy'
 import { divisionPlain } from '../public/division-markdown.js'
+import { tableApi } from './table-api'
 import { runSocialPublication, socialStatus, socialEngagement, publicationCopy, previewPublication, todayRedirect, CHANNELS, type Channel } from './social-publication'
 import { positionEvidence, positionProposalQuote, positionEligibilityQuotes, positionCostQuote, isPositionEligibilityQuestion, isPositionCostQuestion, isPositionDetailQuestion, positionPointSupported, normalizePositionDraft } from './position-evidence'
 import { rankedMoneyAnswer } from './ask-money'
@@ -4011,9 +4014,17 @@ async function buildMeta(route: SeoRoute, url: URL, request: Request, env: Env, 
     } else if(route.kind==='subject' && route.dir==='supplier') {
       const content=await renderSupplierAnswer(meta.canonical.split('/').at(-1)!,read,url.searchParams,await tablePrivacyGuard(env.ASSETS))
       if(content) meta.prerender=content.html
+    } else if(route.kind==='index' && route.dir==='supplier') {
+      const guard=await tablePrivacyGuard(env.ASSETS)
+      const params=new URLSearchParams(url.searchParams)
+      if(params.has('q')) params.set('t.q',params.get('q')!)
+      const rejected=[...params].some(([key,value])=>key.startsWith('t.') && guard(value))
+      const response=await tableApi(new Request('https://opax.com.au/api/table/suppliers?'+serializeQuery(parseQuery(params,'t'))),env)
+      const page=rejected || !response.ok ? {rows:[],total:0,page:1,pageSize:50,facets:{}} : await response.json() as import('../public/datatable.js').Page
+      meta.prerender=answerBlock('Government suppliers','Recorded Commonwealth contract awards. Values are commitments, not verified payments.',suppliersTableHTML(page,guard,params))
     } else if(route.kind==='static' && route.page==='discover') {
       const facts=await renderMoneyAnswer('Government contracts',read)
-      meta.prerender=facts.html.replace('</section>',await contractsHubHTML(read,url.searchParams,await tablePrivacyGuard(env.ASSETS))+'</section>')
+      meta.prerender=facts.html.replace('</section>',await contractsHubHTML(async query => {const response=await tableApi(new Request('https://opax.com.au/api/table/contracts?'+serializeQuery(query)),env); if(!response.ok) return {rows:[],total:0,page:1,pageSize:50,facets:{}}; return response.json()},url.searchParams,await tablePrivacyGuard(env.ASSETS))+'</section>')
     } else if(route.kind==='static' && ['money','connections','explore'].includes(route.page)) {
       meta.prerender=(await renderMoneyAnswer(meta.title.replace(/ · OPAX$/,''),read).catch(()=>null))?.html || answerBlock(meta.title.replace(/ · OPAX$/,''),meta.description)
     } else {
@@ -4024,7 +4035,7 @@ async function buildMeta(route: SeoRoute, url: URL, request: Request, env: Env, 
       }
     }
   }
-  if ((route.kind==='static' && route.page==='discover' || route.kind==='subject' && route.dir==='supplier') && [...url.searchParams.keys()].some(key=>key.startsWith('t.') || key==='contract')) meta.noindex=true
+  if ((route.kind==='static' && route.page==='discover' || route.kind==='subject' && route.dir==='supplier' || route.kind==='index' && route.dir==='supplier') && [...url.searchParams.keys()].some(key=>key.startsWith('t.') || key==='contract')) meta.noindex=true
   // Every non-home path has a single answer, including unavailable/not-found pages.
   meta.prerender ??= answerBlock(meta.title.replace(/ · OPAX$/, ''),meta.description)
   meta.jsonLd=meta.status>=400 ? null : buildSchemaGraph({canonical:meta.canonical,title:meta.title,description:meta.description,jsonLd:meta.jsonLd,person:personIdentity,bill:billIdentity})
@@ -4507,12 +4518,15 @@ async function agencyMeta(name: string, url: URL, env: Env): Promise<PageMeta> {
 
 async function supplierMeta(name: string, url: URL, env: Env): Promise<PageMeta> {
   const data = await loadSuppliers(env).catch(() => null)
+  if(!data) return {title:'Supplier temporarily unavailable · OPAX',description:'The supplier index could not be loaded. Please try again.',canonical:`${SITE_ORIGIN}/subject/supplier`,ogType:'website',status:503,jsonLd:null,prerender:null,card:null}
+  const guard=await tablePrivacyGuard(env.ASSETS)
   const supplier = data?.byId.get(name) ?? data?.byName.get(supplierNameKey(name)) ?? null
+  if(guard.supplierWithheld(supplier?.id || '') || !guard.recipientCheck(supplier ? [supplier.name,supplier.abn || ''].join(' ') : name)) return {title:'Supplier not named · OPAX',description:'Individual recipient details are withheld. Their award values are included in aggregate procurement totals.',canonical:`${SITE_ORIGIN}/subject/supplier`,ogType:'website',status:404,jsonLd:null,card:null,prerender:prerenderBlock('Supplier not named','Individual recipient details are withheld. Browse aggregate procurement totals.')}
   if (!supplier && data?.byName.has(supplierNameKey(name))) {
     const candidates = data.suppliers.filter((entry) => [entry.name, ...(entry.aliases ?? []), ...(entry.lookup_names ?? [])]
       .some((alias) => supplierNameKey(alias) === supplierNameKey(name)))
     const description = 'More than one government supplier uses this name. Check the ABN and choose the matching contract profile.'
-    const links = candidates.map((entry) => `<li><a href="/subject/supplier/${encodeURIComponent(entry.id)}">${escHtml(entry.name)}</a> · ${entry.abn ? `ABN ${escHtml(entry.abn)}` : 'No ABN recorded'}</li>`).join('')
+    const links = candidates.filter(entry=>!guard.supplierWithheld(entry.id) && guard.recipientCheck(entry.name)).map((entry) => `<li><a href="/subject/supplier/${encodeURIComponent(entry.id)}">${escHtml(entry.name)}</a> · ${entry.abn ? `ABN ${escHtml(entry.abn)}` : 'No ABN recorded'}</li>`).join('')
     return { title: 'Choose a supplier · OPAX', description, canonical: canonicalFor(url, false),
       ogType: 'website', status: 200, jsonLd: null, card: null,
       prerender: `<section id="prerender" class="wrap"><h1>Choose a supplier</h1><p>${description}</p><ul>${links}</ul>${indexLinks()}</section>` }
@@ -5613,6 +5627,8 @@ export default {
     if (url.pathname === '/api/table/privacy') return withSecurityHeaders(await tablePrivacy(request, env.ASSETS), url)
     const isApi = url.pathname.startsWith('/api/')
     const communityResponse = (response: Response) => { const secured = withSecurityHeaders(response, url); if (env.STAGING_API) secured.headers.set('x-robots-tag', 'noindex, nofollow'); return secured }
+    if (url.pathname === '/table-index' || url.pathname.startsWith('/table-index/')) return communityResponse(new Response(null, {status:404,headers:{'cache-control':'no-store','x-robots-tag':'noindex'}}))
+    if (url.pathname.startsWith('/api/table/')) return communityResponse(await tableApi(request, env, ctx))
     // Public app adapters use this Worker's journal/assets, before any staging
     // proxy or general retrieval dispatch. No composition callback is supplied.
     if (url.pathname.startsWith('/api/app/v1/edition/')) return communityResponse(await appEdition(request, env))

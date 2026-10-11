@@ -115,15 +115,9 @@ test('donation matches require an organisation and exact normalised name, with A
  assert.match(donationRegisterHTML(supplier,[donor]),/Also in the donations register/);
  assert.ok(donationRegisterHTML(supplier,[donor]).includes(ASSOCIATION_NOTE));
 });
-test('live individual-donor fixture cannot enter the supplier donations or funding path',async()=>{
- const {supplierDonations}=await import('../public/supplier-growth.js');
- const prior=globalThis.fetch;
- globalThis.fetch=async()=>({ok:true,json:async()=>({donors:[{kind:'donor',label:'Alex Example',abn:donor.abn,id:'donor:alex'}]})});
- try {assert.deepEqual(await supplierDonations({...supplier,name:'Alex Example',donor_links:[{id:'donor:alex',url:'/subject/donor/Acme',method:'abn'}]},{signal:new AbortController().signal}),{html:'',links:[]});}finally{globalThis.fetch=prior;}
+test('supplier profiles have no donations or funding path',()=>{
  const source=read('../public/suppliers.js');
- assert.match(source,/supplierDonations\(profile, life\).then\(donations =>/);
- assert.match(source,/const donorLinks = donations.links/);
- assert.doesNotMatch(source,/profile.donor_links[^\n]*filter/);
+ assert.doesNotMatch(source,/supplierDonations|mountFunding|profile\.donor_links|supplier-funding/);
 });
 test('other bills use the shared sponsor-person identity rule, with no surname guesses',()=>{
  const roster=[{name:'Andrew Gee',pid:'1',speeches:1}];

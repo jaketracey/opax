@@ -64,11 +64,12 @@ function publicRows(rows, config) {
   });
 }
 const donorColumn = column => /^(?:donor(?:_?name)?|label|name)$/i.test(column.key) || column.primary;
-const allowedText = (config, value) => {
+const allowedText = (config, value, data = false) => {
   if (config.privacy !== 'donors') return true;
-  try { return config.privacyCheck?.(value) === true; } catch { return false; }
+  try { return (data ? config.dataPrivacyCheck || config.privacyCheck : config.privacyCheck)?.(value) === true; } catch { return false; }
 };
-const blockedQuery = (config, query) => [query.q, ...Object.values(query.filters || {}).flatMap(value => Array.isArray(value) ? value : [])].filter(Boolean).some(value => !allowedText(config,value));
+const queryValues = query => [query.q,...Object.values(query.filters || {}).flatMap(value=>Array.isArray(value) ? value : Object.values(value).map(String))].filter(Boolean);
+const blockedQuery = (config, query) => queryValues(query).some(value=>!allowedText(config,value));
 function cleanQuery(query = {}, config, page) {
   const out = parseQuery(new URLSearchParams(serializeQuery(query)));
   if (!config) return out;
@@ -82,7 +83,7 @@ function cleanQuery(query = {}, config, page) {
         : Array.isArray(page?.facets?.[key]) ? page.facets[key].map(f=>f.value) : [];
       const safe = value.filter(v=>options.includes(v) && (config.privacy !== 'donors' || allowedText(config,v)));
       if (safe.length) out.filters[key] = safe; else delete out.filters[key];
-    } else if (column.facet !== 'range') delete out.filters[key];
+    } else if (column.facet !== 'range' || config.privacy === 'donors' && Object.values(value).some(v=>!allowedText(config,String(v)))) delete out.filters[key];
   }
   if (out.filters && !Object.keys(out.filters).length) delete out.filters;
   return out;
@@ -216,14 +217,14 @@ export function toCSV(rows, config) {
 }
 
 function safePage(page, config) {
-  const rows=publicRows(page.rows,config).filter(row=>config.privacy !== 'donors' || !config.privacyCheck || allowedText(config,JSON.stringify(row))),facets={};
+  const rows=publicRows(page.rows,config).filter(row=>config.privacy !== 'donors' || !(config.dataPrivacyCheck || config.privacyCheck) || allowedText(config,JSON.stringify(row),true)),facets={};
   for (const [key,values] of Object.entries(page.facets || {})) {
     const column=config.columns.find(c=>c.key === key);
     if (!column) continue;
     if (Array.isArray(values)) {
       facets[key]=values.filter(v=>v && typeof v.value === 'string' && Number.isFinite(v.count) && v.count >= 0)
         .filter(v=>config.privacy !== 'donors' || (donorColumn(column) ? isOrganisationDonor({label:v.value}) || /^Donors not named \([0-9]+\)$/.test(v.value) : true)
-          && (config.privacyCheck ? allowedText(config,v.value) : rows.some(row=>text(row[key]) === v.value)))
+          && ((config.dataPrivacyCheck || config.privacyCheck) ? allowedText(config,v.value,true) : rows.some(row=>text(row[key]) === v.value)))
         .map(v=>({value:v.value,count:v.count}));
     } else if (values && Number.isFinite(values.min) && Number.isFinite(values.max)) facets[key]={min:values.min,max:values.max};
   }
@@ -353,8 +354,9 @@ export function mountDataTable(el, config) {
   if (!root) throw new Error('Mount the SSR table or its container');
   const doc = root.ownerDocument, win = doc.defaultView;
   let query = parseQuery(new URL(win.location.href).searchParams,config.urlKey);
-  const rawConfig = config, approvals = new Map();
-  if (config.privacy === 'donors') config = {...config,privacyCheck:value=>approvals.get(value) === true};
+  const rawConfig = config, approvals = new Map(), dataApprovals = new Map();
+  let initialRejected = root.hasAttribute?.('data-dt-rejected') || false;
+  if (config.privacy === 'donors') config = {...config,privacyCheck:value=>approvals.get(value) === true,dataPrivacyCheck:value=>dataApprovals.get(value) === true};
   const view = {density:config.density || 'comfortable', columnsVisible:config.columnsVisible || config.columns.map(c=>c.key), constantsVisible:[]};
   let page;
   try { page = JSON.parse(root.querySelector('[data-dt-page]')?.textContent || 'null'); } catch { /* Client rows below. */ }
@@ -397,7 +399,7 @@ export function mountDataTable(el, config) {
     const url = new URL(win.location.href), base = prefix(config.urlKey), state = cleanQuery(query,config,page);
     if (state.sort?.key === config.defaultSort?.key && state.sort?.dir === config.defaultSort?.dir) delete state.sort;
     if (state.pageSize === (config.pageSize || 50)) delete state.pageSize;
-    for (const key of [...url.searchParams.keys()]) if (recognised(key,config)) url.searchParams.delete(key);
+    for (const key of [...url.searchParams.keys()]) if (recognised(key,config) || view.rejected && key.startsWith(base+'f.')) url.searchParams.delete(key);
     const encoded = serializeQuery(state,config.urlKey);
     for (const [key,value] of new URLSearchParams(encoded)) url.searchParams.set(key,value);
     win.history.replaceState(win.history.state,'',url);
@@ -420,25 +422,28 @@ export function mountDataTable(el, config) {
   function analytics(event) {
     win.dispatchEvent(new win.CustomEvent('opax:analytics', {detail:{event, properties:{table_id:config.id, page_type:config.pageType}}}));
   }
-  async function permit(value) {
+  async function permit(value, data = false) {
+    const cache = data ? dataApprovals : approvals;
     if (config.privacy !== 'donors') return true;
-    if (approvals.has(value)) return approvals.get(value);
+    if (cache.has(value)) return cache.get(value);
     let safe=false;
     try {
-      if (rawConfig.privacyCheck) safe=await rawConfig.privacyCheck(value) === true;
+      const check = data ? rawConfig.dataPrivacyCheck || rawConfig.privacyCheck : rawConfig.privacyCheck;
+      if (check) safe=await check(value) === true;
       else {
         const response=await win.fetch('/api/table/privacy',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({text:value})});
         safe=response.ok && (await response.json()).safe === true;
       }
     } catch { /* Fail closed, including an unavailable shared index. */ }
-    if (safe) approvals.set(value,true);
+    if (safe) cache.set(value,true);
     return safe;
   }
-  async function permitSet(values) {
-    const pending=[...new Set(values)].filter(v=>!approvals.has(v));
+  async function permitSet(values, data = false) {
+    const cache = data ? dataApprovals : approvals;
+    const pending=[...new Set(values)].filter(v=>!cache.has(v));
     if (!pending.length) return;
-    if (await permit(pending.join('\n'))) for (const value of pending) approvals.set(value,true);
-    else await Promise.all(pending.map(permit));
+    if (await permit(pending.join('\n'),data)) for (const value of pending) cache.set(value,true);
+    else await Promise.all(pending.map(value=>permit(value,data)));
   }
   async function refresh() {
     clearTimeout(timer);
@@ -446,9 +451,9 @@ export function mountDataTable(el, config) {
     controller?.abort();
     const pending=query;
     if (config.privacy === 'donors') {
-      const values=[pending.q,...Object.values(pending.filters || {}).flatMap(v=>Array.isArray(v) ? v : [])].filter(Boolean);
+      const values=queryValues(pending);
       const data=config.rows ? engine(config.rows,config) : null;
-      const needsValidation=values.some(value=>!approvals.has(value)) || (data ? !approvals.has(data.json) : page.rows.some(row=>!approvals.has(JSON.stringify(row))));
+      const needsValidation=values.some(value=>!approvals.has(value)) || (data ? !dataApprovals.has(data.json) : page.rows.some(row=>!dataApprovals.has(JSON.stringify(row))));
       // Pending names never render against old SSR rows. Already approved state can
       // retain its controls and focus while fetching, avoiding a second redraw.
       if (needsValidation) {
@@ -459,16 +464,16 @@ export function mountDataTable(el, config) {
       root.setAttribute('aria-busy','true');
       await permitSet(values);
       if (data) {
-        if (!await permit(data.json)) {
+        if (!await permit(data.json,true)) {
           if (version === revision && !destroyed) { page={...page,rows:[],total:0,facets:{}}; paint('Could not load this table.'); root.removeAttribute('aria-busy'); }
           return;
         }
-        for (const row of data.rowJSON) approvals.set(row,true);
-        await permitSet(data.values);
+        for (const row of data.rowJSON) dataApprovals.set(row,true);
+        await permitSet(data.values,true);
       }
       if (destroyed || version !== revision) return;
     }
-    const rejected=blockedQuery(config,pending); view.rejected=rejected;
+    const rejected=initialRejected || blockedQuery(config,pending); view.rejected=rejected;
     query=cleanQuery(pending,config,page);
     if (rejected) {
       page={rows:[],total:0,page:1,pageSize:config.pageSize || 50,facets:{}};
@@ -484,15 +489,15 @@ export function mountDataTable(el, config) {
       if (!response.ok) throw new Error('Table request failed');
       const result=await response.json();
       if (!Array.isArray(result.rows) || !Number.isSafeInteger(result.total) || result.total < 0 || !integer(result.page,null) || !integer(result.pageSize,null)) throw new Error('Invalid table page');
-      const candidate=safePage(result,{...config,privacyCheck:undefined});
+      const candidate=safePage(result,{...config,privacyCheck:undefined,dataPrivacyCheck:undefined});
       // Validate all supplied facet text, including options outside this page.
       candidate.facets=result.facets || {};
       if (config.privacy === 'donors') {
         const texts=[JSON.stringify(candidate.rows),...Object.values(candidate.facets || {}).flatMap(v=>Array.isArray(v) ? v.map(f=>f.value) : [])];
-        await permitSet(texts);
-        const passed=texts.map(value=>approvals.get(value));
+        await permitSet(texts,true);
+        const passed=texts.map(value=>dataApprovals.get(value));
         if (passed.some(v=>!v)) throw new Error('Unsafe table page');
-        for (const row of candidate.rows) approvals.set(JSON.stringify(row),true);
+        for (const row of candidate.rows) dataApprovals.set(JSON.stringify(row),true);
       }
       if (destroyed || version !== revision) return;
       page=safePage(candidate,config); query.page=page.page;
@@ -502,7 +507,7 @@ export function mountDataTable(el, config) {
     } finally { if (!destroyed && version === revision) root.removeAttribute('aria-busy'); }
   }
 
-  function update(event) { analytics(event); void refresh(); }
+  function update(event) { initialRejected=false; root.removeAttribute('data-dt-rejected'); analytics(event); void refresh(); }
   function toggleFacet(key,value) {
     const selected = Array.isArray(query.filters?.[key]) ? query.filters[key] : [];
     const next = selected.includes(value) ? selected.filter(v=>v !== value) : [...selected,value];
@@ -516,7 +521,7 @@ export function mountDataTable(el, config) {
     const control = root.querySelector('[data-export]'); control.disabled = true;
     exportController?.abort(); exportController = new win.AbortController();
     try {
-      await permitSet([requested.q,...Object.values(requested.filters || {}).flatMap(value=>Array.isArray(value) ? value : [])].filter(Boolean));
+      await permitSet(queryValues(requested));
       const state=cleanQuery(requested,config,page);
       let csv, truncated=false;
       if (view.rejected || blockedQuery(config,requested)) csv=toCSV([],config);
@@ -527,7 +532,7 @@ export function mountDataTable(el, config) {
         csv = await response.text();
 
       } else csv = toCSV(filteredRows(config.rows || [],config,state),config);
-      if (!await permit(csv)) throw new Error('Unsafe table export');
+      if (!await permit(csv,true)) throw new Error('Unsafe table export');
       if (destroyed) return;
       const url = win.URL.createObjectURL(new win.Blob([csv],{type:'text/csv;charset=utf-8'}));
       const a = doc.createElement('a'); a.href = url; a.download = config.export?.filename || `${config.id}.csv`;
@@ -590,7 +595,7 @@ export function mountDataTable(el, config) {
     if (!detail || !root.contains(detail)) return;
     detail.open=false; detail.querySelector(':scope > summary').focus(); event.preventDefault();
   }
-  function popstate() { query = parseQuery(new URL(win.location.href).searchParams,config.urlKey); void refresh(); }
+  function popstate() { initialRejected=false; root.removeAttribute('data-dt-rejected'); query = parseQuery(new URL(win.location.href).searchParams,config.urlKey); void refresh(); }
   root.addEventListener('click',click); root.addEventListener('change',change); root.addEventListener('input',input); root.addEventListener('submit',submit); root.addEventListener('keydown',keydown);
   win.addEventListener('popstate',popstate);
   // SSR supplies a real page; server mode keeps it until its response arrives.

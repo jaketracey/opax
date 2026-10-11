@@ -252,16 +252,14 @@ test('a reader who has moved on gets no late write', async () => {
 
 // --- wiring ---------------------------------------------------------------------------------------
 
-test('donor pages mount the block by name, suppliers and recipients by their own ABN only', () => {
+test('donor and recipient pages mount register blocks while supplier pages retain procurement', () => {
   const app = read('app.js');
   assert.match(app, /await mountTaxCharity\(slot, \{ name, alive/);
   assert.equal((app.match(/renderDonorTaxCharity\(/g) || []).length, 3);    // the definition and both donor branches
   assert.match(app, /if \(!isParty\) renderDonorTaxCharity\(node\.label, sections\)/);
   assert.match(app, /if \(kind === "donor"\) renderDonorTaxCharity\(name, sections\)/);
   const suppliers = read('suppliers.js');
-  assert.match(suppliers, /if \(profile\.abn\) import\('\/tax-charity\.js\?v=[^']+'\)/);
-  assert.match(suppliers, /mountTaxCharity\(taxSlot, \{ abn: profile\.abn, alive: life\.alive \}\)/);
-  assert.doesNotMatch(suppliers, /mountTaxCharity\([^)]*name/);            // a supplier with no ABN is never matched by name
+  assert.doesNotMatch(suppliers,/mountTaxCharity|supplier-taxcharity/);
   const recipient = read('grant-recipient.js');
   assert.match(recipient, /if \(data\.abn\) import\('\/tax-charity\.js\?v=[^']+'\)/);
   assert.match(recipient, /mountTaxCharity\(taxCharity, \{ abn: data\.abn/);

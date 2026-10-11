@@ -127,8 +127,11 @@ async function refreshFonts() {
  *  agencies.js and suppliers.js import each other: stamp the agencies → suppliers
  *  edge only, then app.js. Keep the reverse edge hand-versioned to avoid a hash cycle. */
 export const MODULE_STAMPS = [
-  ['contracts-table.js', 'donor-entity.js'], ['suppliers.js', 'contracts-table.js'], ['app.js', 'contracts-table.js'],
-  ['datatable.js', 'donor-entity.js'],
+  ['datatable.js', 'donor-entity.js'], ['datatable-workbench.js', 'datatable.js'],
+  ['contracts-table.js', 'datatable.js'], ['suppliers-table.js', 'datatable.js'],
+  ['contracts-table.js', 'recipient-entity.js'], ['contracts-table.js', 'donor-entity.js'],
+  ['suppliers-table.js', 'recipient-entity.js'], ['suppliers-table.js', 'contracts-table.js'],
+  ['suppliers.js', 'recipient-entity.js'], ['suppliers.js', 'contracts-table.js'], ['app.js', 'contracts-table.js'],
   ['growth-modules.js', 'donor-entity.js'], ['growth-modules.js', 'labels.js'], ['growth-modules.js', 'sponsor-person.js'],
   ['supplier-growth.js', 'growth-modules.js'], ['supplier-growth.js', 'labels.js'],
 
@@ -143,11 +146,11 @@ export const MODULE_STAMPS = [
   ['ledger.js', 'canonical-urls.js'],
   ['money-journeys.js', 'canonical-urls.js'],
   ['quiz.js', 'canonical-urls.js'],
-  ['suppliers.js', 'canonical-urls.js'], ['suppliers.js', 'labels.js'], ['suppliers.js', 'supplier-growth.js'], ['agencies.js', 'suppliers.js'],
+  ['suppliers.js', 'labels.js'], ['suppliers.js', 'suppliers-table.js'], ['agencies.js', 'suppliers.js'],
   ['timemachine.js', 'canonical-urls.js'],
   // The money map's bundle names its chunks by content, so an importer holding
   // an old money-map.js would ask for chunks the build has removed.
-  ['map-page.js', 'money-map.js'], ['agencies.js', 'money-map.js'], ['suppliers.js', 'money-map.js'],
+  ['map-page.js', 'money-map.js'], ['agencies.js', 'money-map.js'],
   ['thenvsnow.js', 'wombat.js'], ['thenvsnow.js', 'labels.js'], ['grant-recipient.js', 'grants.js'],
   ['electorates.js', 'labels.js'], ['home-data.js', 'labels.js'],
   ['app.js', 'canonical-urls.js'], ['app.js', 'growth-modules.js'], ['app.js', 'suppliers.js'],

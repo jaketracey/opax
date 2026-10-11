@@ -1,13 +1,13 @@
-// Local preview only. DT-api replaces this fixture at the same endpoint.
+// Unit fixture only. The browser gate uses the real D1 API.
 import {readFileSync} from 'node:fs';
 import {join} from 'node:path';
 import {contractRows, contractsTableConfig} from '../public/contracts-table.js';
 import {toCSV, applyQuery, parseQuery} from '../public/datatable.js';
 import {tablePrivacyGuard} from '../src/table-privacy.ts';
 
-export function contractsFixture(root) {
+export function contractsFixture(root, privacyGuard) {
   const read = path => JSON.parse(readFileSync(join(root, path.replace(/^\//, '')), 'utf8'));
-  const guard = tablePrivacyGuard({fetch: async request => Response.json(read(new URL(request.url).pathname))});
+  const guard = privacyGuard || tablePrivacyGuard({fetch: async request => Response.json(read(new URL(request.url).pathname))});
   const index = read('/suppliers.json');
   const shards = new Map();
   const profile = supplier => {
@@ -19,7 +19,7 @@ export function contractsFixture(root) {
     const withheld = await guard;
     const params = url.searchParams;
     const supplierId = params.get('supplier');
-    const config = contractsTableConfig({supplierId, privacyCheck: text => !withheld(text)});
+    const config = contractsTableConfig({supplierId, privacyCheck: text => !withheld(text),dataPrivacyCheck:withheld.recipientCheck});
     const size = Math.max(1, Math.min(2000, Number(params.get('pageSize')) || 50));
     const privateQuery = withheld(...[...params.values()]);
     if (privateQuery) return params.get('format') === 'csv'
@@ -28,9 +28,9 @@ export function contractsFixture(root) {
     let rows;
     if (supplierId) {
       const entry = index.suppliers.find(s => s.id === supplierId);
-      rows = entry ? contractRows(profile(entry).contracts, withheld) : [];
+      rows = entry ? contractRows(profile(entry).contracts.map(c=>({...c,recipient:profile(entry),supplier_id:entry.id})), withheld) : [];
     } else {
-      all ??= contractRows(index.suppliers.flatMap(s => profile(s).contracts.map(c => ({...c, supplier_id: s.id}))), withheld);
+      all ??= contractRows(index.suppliers.flatMap(s => profile(s).contracts.map(c => ({...c, recipient:profile(s),supplier_id: s.id}))), withheld);
       rows = all;
     }
     const query = {...parseQuery(params), pageSize: size};
