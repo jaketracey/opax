@@ -6,6 +6,13 @@ import { colors, type Role } from './tokens';
 export type { SFSymbol };
 
 /**
+ * The one glyph for anything that leaves the app (an original record, a
+ * page on opax.com.au, the AEC's finder): ↗ in a square, on rows and in
+ * source sheets alike. Never the Safari compass.
+ */
+export const EXTERNAL_GLYPH = 'arrow.up.right.square' satisfies SFSymbol;
+
+/**
  * An SF Symbol, decorative by default: the control or row around it carries
  * the accessible name. Grows with text size (to twice its base) so icons stay
  * in proportion with their labels.

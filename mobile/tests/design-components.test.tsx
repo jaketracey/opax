@@ -491,7 +491,7 @@ describe('SourceLine and SourceSheet', () => {
       'Date not published · AusTender',
     );
   });
-  test('the sheet: originals, as at, sources, notes, licence, Sources and licences', () => {
+  test('the sheet: originals, as at, sources, notes, and the licence row to Sources and licences', () => {
     const renderer = render(
       <SourceLine
         asOf="2026-10-04"
@@ -524,7 +524,7 @@ describe('SourceLine and SourceSheet', () => {
       'AEC Transparency Register',
       'return 2024-25',
       'As at',
-      'As at 4 October 2026',
+      '4 October 2026',
       'Sources',
       'AEC annual returns',
       'AusTender',
@@ -532,9 +532,15 @@ describe('SourceLine and SourceSheet', () => {
       'Party disclosures, not this person’s finances.',
       'Licence',
       'CC BY 4.0',
-      'Sources and licences',
     ])
       expect(said).toContain(text);
+    // The heading says "As at" once (pass 5, P2-4); the licence row is the
+    // way to Sources and licences, so there is no second row.
+    expect(said).not.toContain('As at 4 October 2026');
+    expect(said).not.toContain('Sources and licences');
+    expect(host(sheet, 'src-sheet-licences').props.accessibilityLabel).toBe(
+      'Licence: CC BY 4.0',
+    );
     // Only https originals, once each.
     expect(said).not.toContain('Duplicate');
     expect(said).not.toContain('Not a source');

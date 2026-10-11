@@ -19,6 +19,8 @@ import { lightHighContrast } from './palette';
 import {
   boldStep,
   colors,
+  contentSizeCategory,
+  largeTitleSizes,
   light,
   textStyles,
   type Role,
@@ -131,6 +133,29 @@ export function nextWordSafeCap(
   const current = lineScale(lineHeight, baseLineHeight);
   if (current <= 1.01) return null;
   return Math.max(1, Math.round(current * 90) / 100);
+}
+
+/** The title role's largest growth: its Dynamic Type size at AX2 (48pt). */
+const TITLE_MAX_GROWTH = largeTitleSizes.ax2 / largeTitleSizes.large;
+/**
+ * What the title role's size is multiplied by so it grows no further than
+ * at AX2 (pass 5, P2-18). iOS large titles grow far less than body text, and
+ * a six-line bill title filled the first screen at AX5. On iOS the role
+ * follows the largeTitle ramp (60pt at AX5), so AX5 draws 48/60 of it; on
+ * Android the multiplier is the font scale itself. 1 at AX2 and below, and
+ * for every other role: headings and body scale to AX5 uncapped.
+ */
+export function titleSizeCap(
+  variant: TextVariant,
+  fontScale: number,
+  os: string = Platform.OS,
+): number {
+  if (variant !== 'title' && variant !== 'padTitle') return 1;
+  const growth =
+    os === 'android'
+      ? fontScale
+      : largeTitleSizes[contentSizeCategory(fontScale)] / largeTitleSizes.large;
+  return growth > TITLE_MAX_GROWTH ? TITLE_MAX_GROWTH / growth : 1;
 }
 
 /**
@@ -324,7 +349,11 @@ export function Text({
   // cached full-size layout and drawing ("Parliamentar / y" in About at AX5).
   // The cap scales the role's own size and line height instead, which the
   // cache does compare; Dynamic Type multiplies the result by the same ramp.
-  const capScale = wordSafe && cap && full ? cap / full : 1;
+  // The title's AX2 ceiling works the same way, under any word-safe cap:
+  // measured line heights include it, so the steps stay in drawn sizes.
+  const capScale =
+    (wordSafe && cap && full ? cap / full : 1) *
+    titleSizeCap(variant, fontScale);
   const heightKey = `${key}|${cap}|${scale}`;
   const probe = useTextProbe(props, heightKey, content);
   const measured = useRef<{

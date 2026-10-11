@@ -33,12 +33,16 @@ export {
   SourceLine,
   SourceSheet,
   sourceLineParts,
+  sourceCitations,
+  licenceText,
+  type CitedSource,
+  type SourceCitation,
   type SourceDetails,
   type SourceOriginal,
   type SourceState,
 } from './source';
 export { Card, useInCard } from './card';
-export { Icon, type SFSymbol } from './icon';
+export { Icon, EXTERNAL_GLYPH, type SFSymbol } from './icon';
 export { MachineWritten } from './machine';
 export {
   Screen,
@@ -73,7 +77,13 @@ export {
 } from './record';
 export { Disclosure, animateLayout } from './disclosure';
 export { InfoButton, InfoSheet, type InfoNotes } from './info';
-export { LinkRow, IconTile, ViewOriginal, type Original } from './rows';
+export {
+  LinkRow,
+  BillRow,
+  IconTile,
+  ViewOriginal,
+  type Original,
+} from './rows';
 export { haptic, type HapticKind } from './haptics';
 export {
   LoadingState,

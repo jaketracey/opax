@@ -584,7 +584,7 @@ describe('the Leads screen', () => {
     await press(root, 'leads-source');
     for (const method of discovery.methodology)
       expect(texts(root)).toContain(method);
-    expect(texts(root)).toContain('As at 21 September 2026');
+    expect(texts(root)).toContain('21 September 2026');
     await press(root, 'leads-source-sheet-done');
     await press(root, 'lead-0-source');
     for (const caveat of first.caveats) expect(texts(root)).toContain(caveat);

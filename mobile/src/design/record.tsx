@@ -14,6 +14,7 @@ import {
   type AsAt,
   type VotesMeta,
 } from './format';
+import { EXTERNAL_GLYPH } from './icon';
 import { LinkRow } from './rows';
 import { SourceAffordance, SourceLine } from './source';
 import { Text, type TextTone } from './text';
@@ -138,7 +139,7 @@ export function SourceLink({
   const destination = record ? `${citation} · ${record}` : citation;
   return (
     <SourceAffordance
-      glyph="arrow.up.right.square"
+      glyph={EXTERNAL_GLYPH}
       name={label}
       accessibilityRole="link"
       // The visible label first (Voice Control says what it sees), then

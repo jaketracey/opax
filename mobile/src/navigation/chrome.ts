@@ -149,12 +149,16 @@ export function headerItems(
   };
 }
 
-/** The Done button that closes a sheet. */
+/**
+ * The Done button that closes a sheet: plain text in the tint, as every
+ * sheet draws it (SheetBody). Not the `done` variant, which iOS 26 fills as
+ * a navy pill (pass 5, P3-8).
+ */
 export function closeSheetItem(): NativeStackHeaderItem {
   return {
     type: 'button',
     label: 'Done',
-    variant: 'done',
+    variant: 'plain',
     tintColor: chrome.tint,
     accessibilityLabel: 'Done',
     onPress: () => router.back(),

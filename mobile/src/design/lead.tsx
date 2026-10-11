@@ -8,7 +8,7 @@ import {
   formatPercent,
   moneyAccessibilityLabel,
 } from './format';
-import { Icon } from './icon';
+import { EXTERNAL_GLYPH, Icon } from './icon';
 import { AsAtLine } from './record';
 import { Text } from './text';
 import { colors, minimumTarget, spacing } from './tokens';
@@ -117,7 +117,7 @@ export function LeadEvidenceLink({
         </Text>
       </View>
       {item.url ? (
-        <Icon name="arrow.up.right.square" size={15} tone="bronzeInk" />
+        <Icon name={EXTERNAL_GLYPH} size={15} tone="bronzeInk" />
       ) : null}
     </>
   );

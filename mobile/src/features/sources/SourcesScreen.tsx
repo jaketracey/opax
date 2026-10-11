@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { findNodeHandle, RefreshControl, StyleSheet, View } from 'react-native';
 import Constants from 'expo-constants';
+import { useLocalSearchParams } from 'expo-router';
 import { catalogs, portraits } from '../../api/runtime';
 import type { PortraitListing } from '../../api/people-portraits';
 import { leadRegisters } from '../leads/About';
@@ -68,8 +69,12 @@ async function settle<T>(read: () => Promise<T>): Promise<T | undefined> {
  * One pattern for every licence: a dataset's row names it and its
  * publisher; opened, it says the licence, the terms in full, then one source
  * line to the originals (one opens it, several list each in a menu).
+ *
+ * A source sheet's licence row opens this screen at its dataset
+ * (`?dataset=<id>`): that dataset leads the list, already open.
  */
 export function SourcesScreen() {
+  const { dataset: anchor } = useLocalSearchParams<{ dataset?: string }>();
   const [loaded, setLoaded] = useState<Loaded>({});
   const [refreshing, setRefreshing] = useState(false);
   const [retry, setRetry] = useState(0);
@@ -124,7 +129,11 @@ export function SourcesScreen() {
       active = false;
     };
   }, [retry]);
-  const all = useMemo(() => withLoaded(datasets, loaded), [loaded]);
+  const all = useMemo(() => {
+    const list = withLoaded(datasets, loaded);
+    const at = list.findIndex((dataset) => dataset.id === anchor);
+    return at > 0 ? [list[at]!, ...list.filter((_, i) => i !== at)] : list;
+  }, [loaded, anchor]);
   return (
     <Screen
       column="wide"
@@ -149,7 +158,11 @@ export function SourcesScreen() {
       <Section title="Datasets" testID="sources-datasets">
         <RowList grid>
           {all.map((dataset) => (
-            <DatasetRow key={dataset.id} dataset={dataset} />
+            <DatasetRow
+              key={dataset.id}
+              dataset={dataset}
+              open={dataset.id === anchor}
+            />
           ))}
         </RowList>
       </Section>
@@ -260,11 +273,19 @@ function withLoaded(base: Dataset[], loaded: Loaded): Dataset[] {
     );
 }
 
-function DatasetRow({ dataset }: { dataset: Dataset }) {
+function DatasetRow({
+  dataset,
+  open = false,
+}: {
+  dataset: Dataset;
+  /** Opened from a source sheet's licence row. */
+  open?: boolean;
+}) {
   return (
     <Disclosure
       label={dataset.name}
       detail={dataset.publisher}
+      defaultOpen={open}
       testID={`sources-dataset-${dataset.id}`}
     >
       {/* Only a verified licence is named; the terms say the rest. */}
