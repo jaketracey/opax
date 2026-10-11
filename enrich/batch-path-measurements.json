@@ -1,5 +1,5 @@
 {
-  "hold_dependency": "416c49fe",
+  "hold_dependency": "4bcf50235",
   "baseline": "5bb21959",
   "original_failures": {
     "haiku": 12,
@@ -37,7 +37,8 @@
   },
   "differential": {
     "cases": 143,
-    "differences": 0
+    "differences": 0,
+    "added_hold_classification_reads_excluded": 39
   },
   "cost_reference": {
     "haiku_per_1000_usd": 0.099287225,
@@ -47,7 +48,7 @@
     "t3_approx_units": 321000
   },
   "gates": {
-    "worker_tests": 217,
+    "worker_tests": 247,
     "typescript": "passed",
     "wrangler": "dry run passed",
     "portal": "not required; all changes under enrich/"

@@ -16,6 +16,10 @@ const HELD = "status = 'done' AND terminal_reason = 'historic-held' AND historic
 const held = (r: QueueRow) => r.status === 'done' && r.terminal_reason === 'historic-held' && r.historic === 1 && r.force === 0
 const taskOf = (t: string): Task => isSummaryTask(t) ? 'summary' : 'topics'
 export class BatchConflict extends Error {}
+export class BatchBusy extends Error {
+  leaseUntil: number
+  constructor(leaseUntil: number) { super('batch writer lease active'); this.leaseUntil = leaseUntil }
+}
 const conflict = () => new BatchConflict('batch ownership, queue eligibility or source changed')
 
 export function parseBatchBody(body: unknown): { run_id: string; rid: string; source_hash?: string; result?: unknown } | { error: string } {
@@ -29,6 +33,19 @@ async function queue(d: BatchDeps, rid: string): Promise<QueueRow[]> {
 }
 async function job(d: BatchDeps, rid: string): Promise<BatchJob | null> {
   return d.db.prepare('SELECT * FROM batch_items WHERE rid = ?').bind(rid).first<BatchJob>()
+}
+
+/** Authoritative ownership, including acknowledgements lost before a client save. */
+export async function readBatchReservations(d: BatchDeps, run: string, limit: number, after = '') {
+  const { results } = await d.db.prepare(`SELECT rid, source_hash, state, lease_until FROM batch_items
+    WHERE run_id = ? AND rid > ? ORDER BY rid LIMIT ?`).bind(run, after, limit)
+    .all<Pick<BatchJob, 'rid' | 'source_hash' | 'state' | 'lease_until'>>()
+  return { reservations: results, next_after: results.length === limit ? results.at(-1)!.rid : null }
+}
+
+function reservedBy(b: BatchJob, run: string, expectedHash: string) {
+  if (b.run_id !== run || b.source_hash !== expectedHash) throw conflict()
+  return { state: b.state }
 }
 
 /** Read only: full source records remain in the authenticated response, never logs. */
@@ -54,10 +71,7 @@ export async function readHeldBatch(d: BatchDeps, limit: number, after = '') {
 /** Reserve without releasing the hold; one durable owner per resource. */
 export async function reserveBatch(d: BatchDeps, run: string, rid: string, expectedHash: string) {
   const existing = await job(d, rid)
-  if (existing) {
-    if (existing.run_id !== run || existing.source_hash !== expectedHash || existing.state !== 'reserved') throw conflict()
-    return { state: 'reserved' }
-  }
+  if (existing) return reservedBy(existing, run, expectedHash)
   const resource = await d.kb.getResource(rid)
   if (!resource || resource.id !== rid || !isHistoricSpeech(resource) || skipHistoricShort(true, pickText(resource.data?.texts))) throw conflict()
   if (await sourceHash(batchRecord(resource, rid)) !== expectedHash) throw conflict()
@@ -68,18 +82,27 @@ export async function reserveBatch(d: BatchDeps, run: string, rid: string, expec
     SELECT ?, ?, ?, ?, 'reserved', ? WHERE (SELECT COUNT(*) FROM queue WHERE rid = ? AND ${HELD}
       AND task IN ('speech_summary','speech_topics')) = ?`)
     .bind(rid, run, expectedHash, JSON.stringify(tasks), d.now(), rid, tasks.length).run()
-  if (result.meta.changes !== 1) throw conflict()
+  if (result.meta.changes !== 1) {
+    // Concurrent retries can both read no owner before one wins the insert.
+    const winner = await job(d, rid)
+    if (!winner) throw conflict()
+    return reservedBy(winner, run, expectedHash)
+  }
   return { state: 'reserved' }
 }
 
 /** Cancellation precedes /backfill/release. A writer holding a live lease cannot be released. */
 export async function cancelBatch(d: BatchDeps, run: string, rid: string) {
   const existing = await job(d, rid)
+  if (!existing) return { state: 'unreserved' }
+  if (existing.run_id !== run) return { state: 'unowned' }
   if (existing?.run_id === run && existing.state === 'done') return { state: 'done' }
   await d.db.prepare(`UPDATE batch_items SET state = 'released', lease_until = 0, updated_at = ?
-    WHERE rid = ? AND run_id = ? AND (state IN ('reserved','released') OR (state = 'applying' AND lease_until < ?))`)
+    WHERE rid = ? AND run_id = ? AND (state IN ('reserved','released') OR (state = 'applying' AND lease_until <= ?))`)
     .bind(d.now(), rid, run, d.now()).run()
   const b = await job(d, rid)
+  if (b?.run_id === run && b.state === 'done') return { state: 'done' }
+  if (b?.run_id === run && b.state === 'applying' && b.lease_until > d.now()) throw new BatchBusy(b.lease_until)
   if (!b || b.run_id !== run || b.state !== 'released') throw conflict()
   return { state: 'released' }
 }
@@ -110,9 +133,14 @@ export async function applyBatch(d: BatchDeps, run: string, rid: string, expecte
   if (!d.live) return { state: 'dry', validated: true }
   const lock = await d.db.prepare(`UPDATE batch_items SET state = 'applying', payload_hash = ?, lease_until = ?, updated_at = ?
     WHERE rid = ? AND run_id = ? AND (payload_hash IS NULL OR payload_hash = ?)
-    AND (state = 'reserved' OR (state = 'applying' AND lease_until < ?))`)
+    AND (state = 'reserved' OR (state = 'applying' AND lease_until <= ?))`)
     .bind(payloadHash, d.now() + 15 * 60000, d.now(), rid, run, payloadHash, d.now()).run()
-  if (lock.meta.changes !== 1) throw conflict()
+  if (lock.meta.changes !== 1) {
+    const writer = await job(d, rid)
+    if (writer?.run_id === run && writer.source_hash === expectedHash && writer.state === 'applying'
+      && writer.payload_hash === payloadHash && writer.lease_until > d.now()) throw new BatchBusy(writer.lease_until)
+    throw conflict()
+  }
   try {
     for (const task of tasks) {
       const row = rows.find(r => r.task === task)!

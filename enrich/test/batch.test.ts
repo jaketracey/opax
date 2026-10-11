@@ -3,8 +3,8 @@ import { readFileSync } from 'node:fs'
 import { test } from 'node:test'
 import { join } from 'node:path'
 import worker from '../src/index.ts'
-import { applyBatch, BatchConflict, cancelBatch, parseBatchBody, readHeldBatch, reserveBatch, type BatchDeps } from '../src/batch.ts'
-import { batchRecord, sourceHash, validateBatchResult } from '../src/batch-result.ts'
+import { applyBatch, BatchBusy, BatchConflict, cancelBatch, parseBatchBody, readBatchReservations, readHeldBatch, reserveBatch, type BatchDeps } from '../src/batch.ts'
+import { hashValue, validateBatchResult } from '../src/batch-result.ts'
 import { claimRids, enqueue } from '../src/db.ts'
 import { releaseHistoric } from '../src/reconcile.ts'
 import { KbBackpressure } from '../src/kb.ts'
@@ -50,6 +50,18 @@ test('held inventory is read-only and reservations exclude overlap without makin
   assert.deepEqual(await claimRids(d.db, 10, 3, 'live'), [])
 })
 
+test('concurrent reserve retries have one durable owner and both acknowledge that owner', async () => {
+  const { d, raw, unit } = await setup()
+  const replies = await Promise.all([reserveBatch(d, run, rid, unit.source_hash), reserveBatch(d, run, rid, unit.source_hash)])
+  assert.deepEqual(replies, [{ state: 'reserved' }, { state: 'reserved' }])
+  assert.equal(rows(raw, 'SELECT * FROM batch_items').length, 1)
+  assert.deepEqual(await cancelBatch(d, 'other-run', rid), { state: 'unowned' })
+  assert.equal(rows(raw, 'SELECT state FROM batch_items')[0].state, 'reserved')
+  await cancelBatch(d, run, rid)
+  assert.deepEqual(await reserveBatch(d, run, rid, unit.source_hash), { state: 'released' })
+  assert.deepEqual(await readBatchReservations(d, 'other-run', 200), { reservations: [], next_after: null })
+})
+
 test('batch delivery rejects missing, pending, claimed, terminal and non-historic rows', async () => {
   for (const state of ['missing', 'pending', 'claimed', 'terminal', 'non-historic', 'forced']) {
     const { d, raw, kb, unit } = await setup()
@@ -92,6 +104,7 @@ test('delivery uses the tick write path, repairs non-topic labels and replays wi
   assert.equal(kb.writes().length, calls)
   assert.equal((await applyBatch(d, run, rid, unit.source_hash, { topics: good.topics, summary: good.summary })).state, 'done')
   assert.deepEqual(await cancelBatch(d, run, rid), { state: 'done' })
+  assert.deepEqual(await reserveBatch(d, run, rid, unit.source_hash), { state: 'done' })
   assert.ok(rows(raw, 'SELECT * FROM queue').every(r => r.status === 'done' && r.terminal_reason === null && r.batch_run === run))
   await assert.rejects(applyBatch(d, run, rid, unit.source_hash, { ...good, summary: good.summary + ' changed' }), BatchConflict)
 })
@@ -132,8 +145,9 @@ test('write backpressure keeps paid results resumable and leases prevent concurr
   assert.equal((await applyBatch(d, run, rid, unit.source_hash, good)).state, 'retry-write')
   kb.failWrites = null
   raw.exec("UPDATE batch_items SET state='applying',lease_until=900000")
-  await assert.rejects(applyBatch(d, run, rid, unit.source_hash, good), BatchConflict)
-  await assert.rejects(cancelBatch(d, run, rid), BatchConflict)
+  await assert.rejects(applyBatch(d, run, rid, unit.source_hash, good), BatchBusy)
+  await assert.rejects(cancelBatch(d, run, rid), BatchBusy)
+  await assert.rejects(applyBatch(d, run, rid, unit.source_hash, { ...good, summary: good.summary + ' changed' }), BatchConflict)
   advance()
   assert.equal((await applyBatch(d, run, rid, unit.source_hash, good)).state, 'done')
 })
@@ -180,18 +194,37 @@ test('short records paginate but cannot be reserved or charged to Anthropic', as
 
 test('admin batch routes require authentication and reject invalid bodies', async () => {
   const { d1 } = makeD1(), env = { DB: d1, ENRICH_ADMIN_TOKEN: 'invented-admin-secret' } as Env
-  for (const path of ['/backfill/batch','/backfill/batch/reserve','/backfill/batch/result','/backfill/batch/cancel']) {
-    const method = path === '/backfill/batch' ? 'GET' : 'POST'
+  for (const path of ['/backfill/batch','/backfill/batch/reservations','/backfill/batch/reserve','/backfill/batch/result','/backfill/batch/cancel']) {
+    const method = path === '/backfill/batch' || path === '/backfill/batch/reservations' ? 'GET' : 'POST'
     assert.equal((await worker.fetch(new Request('https://example.invalid' + path, { method }), env)).status, 401)
   }
   assert.ok('error' in parseBatchBody({ rid: 'unsafe', run_id: run }))
   const headers = { authorization: 'Bearer invented-admin-secret' }
   assert.equal((await worker.fetch(new Request('https://example.invalid/backfill/batch?limit=21', { headers }), env)).status, 400)
+  for (const query of ['', '?run_id=unsafe%2Frun', '?run_id=invented-run&limit=201', '?run_id=invented-run&after=unsafe']) {
+    assert.equal((await worker.fetch(new Request('https://example.invalid/backfill/batch/reservations' + query, { headers }), env)).status, 400)
+  }
   assert.equal((await worker.fetch(new Request('https://example.invalid/backfill/batch/result', { method: 'POST', headers, body: '{}' }), env)).status, 400)
 })
 
-test('HTTP result route rejects unqueued and non-historic resources and cannot bypass validation', async () => {
-  const { d, d1, unit, kb } = await setup()
+test('authenticated reservation reads isolate runs, paginate and never mutate queue or call KB', async () => {
+  const { d, d1, raw, unit } = await setup()
+  await reserveBatch(d, run, rid, unit.source_hash)
+  raw.prepare("INSERT INTO batch_items (rid,run_id,source_hash,tasks,state,updated_at) VALUES (?,?,?,'[]','reserved',1)")
+    .run('b'.repeat(32), 'other-run', unit.source_hash)
+  const before = rows(raw, 'SELECT * FROM queue')
+  const env = { DB: d1, ENRICH_ADMIN_TOKEN: 'invented-admin-secret' } as Env
+  const get = (query: string) => worker.fetch(new Request('https://example.invalid/backfill/batch/reservations' + query, { headers: { authorization: 'Bearer invented-admin-secret' } }), env)
+  const first = await get('?run_id=invented-run&limit=1')
+  assert.equal(first.status, 200)
+  assert.equal(first.headers.get('cache-control'), 'no-store')
+  assert.deepEqual(await first.json(), { reservations: [{ rid, source_hash: unit.source_hash, state: 'reserved', lease_until: 0 }], next_after: rid })
+  assert.deepEqual(await (await get(`?run_id=invented-run&limit=1&after=${rid}`)).json(), { reservations: [], next_after: null })
+  assert.deepEqual(rows(raw, 'SELECT * FROM queue'), before)
+})
+
+test('HTTP result route separates active leases from conflicts and cannot bypass validation', async () => {
+  const { d, d1, unit, kb, raw } = await setup()
   const env = { DB: d1, ENRICH_ADMIN_TOKEN: 'invented-admin-secret', ARAG_ZONE: 'example', ARAG_KB_ID: 'invented-kb', ARAG_KB_TOKEN: 'invented-kb-secret', WRITE_MODE: 'live' } as Env
   const original = globalThis.fetch
   let patches = 0
@@ -201,6 +234,12 @@ test('HTTP result route rejects unqueued and non-historic resources and cannot b
     assert.equal((await send(good)).status, 409)
     await reserveBatch(d, run, rid, unit.source_hash)
     assert.equal((await send({ ...good, summary: 'Too short.' })).status, 422)
+    const expiry = Date.now() + 15 * 60000
+    raw.prepare("UPDATE batch_items SET state='applying',payload_hash=?,lease_until=?").run(await hashValue({ summary: good.summary, topics: good.topics }), expiry)
+    const busy = await send(good)
+    assert.equal(busy.status, 423)
+    assert.equal((await busy.json() as { lease_until: number }).lease_until, expiry)
+    assert.equal((await send({ ...good, summary: good.summary + ' changed' })).status, 409)
     kb.resources.get(rid)!.classifications = [{ labelset: 'kind', label: 'speech' }]
     assert.equal((await send(good)).status, 409)
     assert.equal(patches, 0)

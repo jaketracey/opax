@@ -2,9 +2,13 @@ import assert from 'node:assert/strict'
 import { readFileSync } from 'node:fs'
 import { test } from 'node:test'
 import { join } from 'node:path'
-import { batchRecord, sourceHash } from '../src/batch-result.ts'
+import { batchRecord, hashValue, sourceHash } from '../src/batch-result.ts'
 import { decode } from '../scripts/batch-lib.ts'
-import { AdminHttp, adoptRun, cancelRun, deliver, poll, prepare, submit, type BatchRuntime, type Run, type Unit } from '../scripts/batch-path.ts'
+import { AdminHttp, adoptRun, cancelRun, deliver, poll, prepare, reconcileRun, stepRun, submit, type BatchRuntime, type Run, type Unit } from '../scripts/batch-path.ts'
+import { applyBatch, BatchBusy, BatchConflict, cancelBatch, readBatchReservations, readHeldBatch, reserveBatch, type BatchDeps } from '../src/batch.ts'
+import { claimRids, enqueue } from '../src/db.ts'
+import { releaseHistoric } from '../src/reconcile.ts'
+import { FakeKb, makeD1, rows } from './helpers.ts'
 
 const fixture = JSON.parse(readFileSync(join(import.meta.dirname, 'fixtures', 'batch-responses.json'), 'utf8'))
 const rid = 'a'.repeat(32)
@@ -20,8 +24,10 @@ async function setup() {
     save: r => { saved.set(r.id, structuredClone(r)) }, allRuns: () => [...saved.values()], write: (n, v) => { receipts.set(n, structuredClone(v)) },
     admin: async (path, body) => {
       adminCalls.push({ path, body })
+      if (path.startsWith('/backfill/batch/reservations?')) return { reservations: [], next_after: null }
       if (path.startsWith('/backfill/batch?')) return { units: [unit], next_after: null }
       if (path === '/backfill/batch/result') return { state: 'done' }
+      if (path === '/backfill/batch/cancel') return { state: 'released' }
       return { state: 'reserved', released: 2 }
     },
     anthropic: async (path, body, raw) => {
@@ -33,13 +39,191 @@ async function setup() {
   return { run, unit, d, saved, receipts, adminCalls, posts, setResponse: (r: any) => { response = r }, setComplete: (v: boolean) => { complete = v } }
 }
 
+// Use the real D1 ownership/queue/write handlers; all KB and batch data is invented.
+async function integrated() {
+  const client = await setup(), { d, run, adminCalls } = client
+  const { d1, raw } = makeD1(), kb = new FakeKb()
+  kb.add(rid, { title: '', slug: 'invented-unit', texts: { body: fixture.source }, classifications: [
+    { labelset: 'kind', label: 'speech' }, { labelset: 'source', label: 'hansard_hist' },
+  ] })
+  await enqueue(d1, ['speech_summary', 'speech_topics'].map(task => ({ rid, task: task as 'speech_summary', priority: 0, historicHold: true })), 1)
+  const server: BatchDeps = { db: d1, kb, now: () => d.now(), live: true }
+  const unit: Unit = { ...(await readHeldBatch(server, 20)).units[0]!, stage: 'selected', attempt: 1 }
+  run.units = [unit]
+  d.admin = async (path, body?: any) => {
+    adminCalls.push({ path, body })
+    const query = new URL(path, 'https://example.invalid').searchParams
+    try {
+      if (path.startsWith('/backfill/batch/reservations?')) return readBatchReservations(server, query.get('run_id')!, Number(query.get('limit')), query.get('after')!)
+      if (path.startsWith('/backfill/batch?')) return readHeldBatch(server, Number(query.get('limit')), query.get('after')!)
+      if (path === '/backfill/batch/reserve') return await reserveBatch(server, body.run_id, body.rid, body.source_hash)
+      if (path === '/backfill/batch/cancel') return await cancelBatch(server, body.run_id, body.rid)
+      if (path === '/backfill/batch/result') return await applyBatch(server, body.run_id, body.rid, body.source_hash, body.result)
+      if (path === '/backfill/release') return await releaseHistoric({ db: d1, kb: { getBySlug: async () => kb.getBasic(rid) }, now: server.now }, body.slugs)
+      throw Error('unexpected fixture route')
+    } catch (e) {
+      if (e instanceof BatchBusy) throw new AdminHttp(423, e.leaseUntil)
+      if (e instanceof BatchConflict) throw new AdminHttp(409)
+      throw e
+    }
+  }
+  return { ...client, unit, server, raw, kb }
+}
+
+test('a reserve/save crash reconciles ownership before cancel and makes both held rows claimable', async () => {
+  const { run, unit, d, server, raw, adminCalls, saved } = await integrated()
+  d.save(run) // durable selection precedes reserve
+  const durable = saved.get(run.id)!
+  const originalSave = d.save
+  d.save = r => {
+    if (r.units.some(u => u.stage === 'reserved')) throw Error('invented controller crash before save')
+    originalSave(r)
+  }
+  await assert.rejects(prepare(run, d), /controller crash/)
+  assert.equal(durable.units[0].stage, 'selected')
+  assert.equal(rows(raw, 'SELECT state FROM batch_items')[0].state, 'reserved')
+  assert.equal((await readHeldBatch(server, 20)).units.length, 0)
+  d.save = originalSave
+  adminCalls.length = 0
+  await cancelRun(durable, d)
+  assert.ok(adminCalls[0].path.startsWith('/backfill/batch/reservations?'))
+  assert.deepEqual(adminCalls.slice(1).map(c => c.path), ['/backfill/batch/cancel','/backfill/release'])
+  assert.equal(durable.units[0].stage, 'released')
+  assert.equal(rows(raw, 'SELECT state FROM batch_items')[0].state, 'released')
+  assert.equal(rows(raw, "SELECT * FROM queue WHERE status='pending' AND historic_released=1").length, 2)
+  const claimed = await claimRids(server.db, 10, d.now(), 'invented-live')
+  assert.equal(claimed.length, 2)
+  assert.equal(claimed[0].rid, unit.rid)
+  assert.equal(rows(raw, "SELECT * FROM queue WHERE status='claimed'").length, 2)
+})
+
+test('resuming a lost reserve acknowledgement reuses ownership without reserving or paying twice', async () => {
+  const { run, d, server, unit, adminCalls, posts } = await integrated()
+  await reserveBatch(server, run.id, unit.rid, unit.source_hash)
+  await prepare(run, d)
+  assert.equal(run.units[0].stage, 'reserved')
+  assert.equal(adminCalls.filter(c => c.path === '/backfill/batch/reserve').length, 0)
+  await stepRun(run, d)
+  assert.equal(posts.length, 1)
+})
+
+test('ownership reconciliation repairs a prior local cancellation that never reached the worker', async () => {
+  const { run, unit, d, server, raw } = await integrated()
+  await reserveBatch(server, run.id, unit.rid, unit.source_hash)
+  run.canceled = true; unit.stage = 'released' // state saved by the reviewed buggy controller
+  await stepRun(run, d)
+  assert.equal(unit.stage, 'released')
+  assert.equal(rows(raw, 'SELECT state FROM batch_items')[0].state, 'released')
+  assert.equal(rows(raw, "SELECT * FROM queue WHERE status='pending'").length, 2)
+})
+
+test('ownership reconciliation reads every page and saves only a complete server snapshot', async () => {
+  const { run, d, unit } = await setup()
+  const other = { ...structuredClone(unit), rid: 'b'.repeat(32) }
+  run.units = [unit, other]
+  const paths: string[] = []
+  let fail = true
+  d.admin = async path => {
+    paths.push(path)
+    if (path.endsWith(`after=${unit.rid}`)) {
+      if (fail) throw new AdminHttp(503)
+      return { reservations: [{ ...other, state: 'reserved' }], next_after: null }
+    }
+    return { reservations: [{ ...unit, state: 'reserved' }], next_after: unit.rid }
+  }
+  await assert.rejects(reconcileRun(run, d), AdminHttp)
+  assert.ok(run.units.every(u => u.stage === 'selected'))
+  fail = false
+  await reconcileRun(run, d)
+  assert.ok(run.units.every(u => u.stage === 'reserved'))
+  assert.equal(paths.length, 4)
+})
+
+test('cancel before reserve asks the worker, and a failed release never becomes locally released', async () => {
+  const { run, d, raw, server, unit, saved } = await integrated()
+  await reserveBatch(server, run.id, unit.rid, unit.source_hash)
+  const original = d.admin
+  d.admin = async (path, body) => { if (path === '/backfill/release') throw new AdminHttp(503); return original(path, body) }
+  await assert.rejects(cancelRun(run, d), AdminHttp)
+  assert.notEqual(saved.get(run.id)!.units[0].stage, 'released')
+  assert.equal(rows(raw, 'SELECT state FROM batch_items')[0].state, 'released')
+  d.admin = original
+  await cancelRun(saved.get(run.id)!, d)
+  assert.equal(rows(raw, "SELECT * FROM queue WHERE status='pending'").length, 2)
+  const fresh = await integrated()
+  await cancelRun(fresh.run, fresh.d)
+  assert.ok(fresh.adminCalls.some(c => c.path === '/backfill/batch/cancel'))
+  assert.ok(fresh.adminCalls.some(c => c.path === '/backfill/release'))
+  assert.equal(rows(fresh.raw, "SELECT * FROM queue WHERE status='pending'").length, 2)
+})
+
+test('failed reservation reconciliation stops resume before any writes or batch API calls', async () => {
+  const { run, d, posts, adminCalls } = await integrated()
+  d.admin = async () => { throw new AdminHttp(503) }
+  await assert.rejects(stepRun(run, d), AdminHttp)
+  await assert.rejects(cancelRun(run, d), AdminHttp)
+  assert.equal(run.canceled, undefined)
+  assert.equal(posts.length, 0)
+  assert.equal(adminCalls.length, 0)
+})
+
+test('expired writer leases retry the retained paid result; true eligibility conflicts use live release', async () => {
+  const { run, d, unit, raw, kb, adminCalls, posts, saved } = await integrated()
+  await prepare(run, d); await submit(run, d); await poll(run, run.submissions[0], d)
+  const result = structuredClone(unit.result), end = d.now() + 15 * 60000
+  // A worker crash leaves its durable writer lease and payload hash.
+  raw.prepare("UPDATE batch_items SET state='applying', payload_hash=?, lease_until=?").run(await hashValue(result), end)
+  await stepRun(run, d)
+  assert.equal(unit.stage, 'ready')
+  assert.deepEqual(saved.get(run.id)!.units[0].result, result)
+  assert.equal(unit.retry_at, end)
+  assert.equal(posts.length, 1)
+  assert.deepEqual(kb.writes(), [])
+  assert.equal(adminCalls.filter(c => c.path === '/backfill/batch/cancel' || c.path === '/backfill/release').length, 0)
+  const deliveries = adminCalls.filter(c => c.path === '/backfill/batch/result').length
+  await stepRun(saved.get(run.id)!, d)
+  assert.equal(adminCalls.filter(c => c.path === '/backfill/batch/result').length, deliveries)
+  d.now = () => end // expiry permits delivery, without another paid submission
+  const resumed = saved.get(run.id)!
+  await stepRun(resumed, d)
+  assert.equal(resumed.units[0].stage, 'done')
+  assert.equal(posts.length, 1)
+  assert.ok(rows(raw, 'SELECT batch_run FROM queue').every(r => r.batch_run === run.id))
+
+  const conflict = await integrated()
+  await prepare(conflict.run, conflict.d); await submit(conflict.run, conflict.d); await poll(conflict.run, conflict.run.submissions[0], conflict.d)
+  // A row is no longer held: this is a permanent conflict, rather than a lease.
+  conflict.raw.exec("UPDATE queue SET status='pending', terminal_reason=NULL")
+  await stepRun(conflict.run, conflict.d)
+  assert.equal(conflict.run.units[0].stage, 'released')
+  assert.deepEqual(conflict.adminCalls.slice(-2).map(c => c.path), ['/backfill/batch/cancel','/backfill/release'])
+  assert.equal(rows(conflict.raw, 'SELECT state FROM batch_items')[0].state, 'released')
+  assert.deepEqual(conflict.kb.writes(), [])
+})
+
+test('cancellation waits out an active writer lease before releasing any held rows', async () => {
+  const { run, d, unit, raw, adminCalls, saved } = await integrated()
+  await prepare(run, d); await submit(run, d); await poll(run, run.submissions[0], d)
+  const end = d.now() + 15 * 60000
+  raw.prepare("UPDATE batch_items SET state='applying',lease_until=?").run(end)
+  await cancelRun(run, d)
+  assert.equal(unit.stage, 'ready')
+  assert.equal(unit.retry_at, end)
+  assert.ok(rows(raw, 'SELECT terminal_reason FROM queue').every(r => r.terminal_reason === 'historic-held'))
+  assert.equal(adminCalls.filter(c => c.path === '/backfill/release').length, 0)
+  d.now = () => end
+  await stepRun(saved.get(run.id)!, d)
+  assert.equal(rows(raw, "SELECT * FROM queue WHERE status='pending'").length, 2)
+})
+
 test('client prepares only held inventory and resumes selected rows saved before reservation', async () => {
   const { run, unit, d, adminCalls } = await setup()
   run.units = [unit] // crash just after the page was saved at the target batch size
   await prepare(run, d)
   assert.equal(run.units[0].stage, 'reserved')
-  assert.equal(adminCalls.length, 1)
-  assert.equal(adminCalls[0].path, '/backfill/batch/reserve')
+  assert.equal(adminCalls.length, 2)
+  assert.ok(adminCalls[0].path.startsWith('/backfill/batch/reservations?run_id=invented-run'))
+  assert.equal(adminCalls[1].path, '/backfill/batch/reserve')
 })
 
 test('client excludes short records from paid submissions and uses the live short-unit rule', async () => {

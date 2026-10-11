@@ -16,10 +16,15 @@ export interface Unit extends BatchUnit {
   complaints?: string[]
   result?: { summary?: unknown; topics?: unknown }
   short?: boolean
+  retry_at?: number
 }
 export interface Submission { id?: string; attempt: number; rids: string[]; reservation: Reservation; ended?: boolean }
 export interface Run { id: string; units: Unit[]; submissions: Submission[]; canceled?: boolean; preparing?: boolean; after?: string }
-export class AdminHttp extends Error { status: number; constructor(status: number) { super('admin request refused'); this.status = status } }
+export class AdminHttp extends Error {
+  status: number
+  retryAt?: number
+  constructor(status: number, retryAt?: number) { super('admin request refused'); this.status = status; this.retryAt = retryAt }
+}
 
 const root = resolve(process.env.OPAX_BATCH_STATE_DIR ?? '/home/jake/opax-staging/federation/enrich-batch-path/spool')
 const integer = (name: string, fallback: number, max: number) => {
@@ -64,7 +69,10 @@ async function admin(path: string, body?: unknown): Promise<any> {
   if (url.protocol !== 'https:' || url.origin !== new URL(base).origin) throw Error('invalid admin origin')
   const response = await fetch(url, { method: body ? 'POST' : 'GET', redirect: 'error', signal: AbortSignal.timeout(55000),
     headers: { authorization: `Bearer ${token}`, 'content-type': 'application/json' }, ...(body ? { body: JSON.stringify(body) } : {}) })
-  if (!response.ok && response.status !== 422) throw new AdminHttp(response.status)
+  if (!response.ok && response.status !== 422) {
+    const busy = response.status === 423 ? await response.json().catch(() => null) as { lease_until?: unknown } | null : null
+    throw new AdminHttp(response.status, typeof busy?.lease_until === 'number' ? busy.lease_until : undefined)
+  }
   return response.json()
 }
 
@@ -82,6 +90,38 @@ export interface BatchRuntime {
 }
 const runtime: BatchRuntime = { admin, anthropic, save, allRuns, write, now: () => Date.now(), dailyCap, totalCap, maxActive, batchSize }
 
+/** Read ownership before any resumed work; local selection can predate a lost reserve acknowledgement. */
+export async function reconcileRun(run: Run, d: BatchRuntime = runtime) {
+  const owned = new Map<string, { source_hash: string; state: string }>()
+  let after = ''
+  do {
+    const page = await d.admin(`/backfill/batch/reservations?run_id=${encodeURIComponent(run.id)}&limit=200&after=${after}`)
+    if (!Array.isArray(page.reservations)) throw Error('invalid reservation inventory')
+    for (const b of page.reservations) {
+      const u = run.units.find(u => u.rid === b.rid)
+      if (!u || b.rid <= after || owned.has(b.rid) || b.source_hash !== u.source_hash
+        || !['reserved','applying','done','released'].includes(b.state)) throw Error('reservation inventory does not match durable run')
+      owned.set(b.rid, b)
+    }
+    if (page.next_after !== null && (typeof page.next_after !== 'string' || page.next_after <= after || !owned.has(page.next_after))) throw Error('invalid reservation cursor')
+    after = page.next_after ?? ''
+  } while (after)
+  for (const u of run.units) {
+    const b = owned.get(u.rid)
+    if (!b) continue // cancel still asks the worker; absence never proves a local release
+    if (b.state === 'done') u.stage = 'done'
+    else if (b.state === 'released') {
+      if (u.stage !== 'released') u.stage = 'release' // /release may have been interrupted after /cancel
+    } else if (u.stage === 'selected' || u.stage === 'released') {
+      if (run.canceled) u.stage = 'release'
+      else if (u.result) u.stage = 'ready'
+      else if (b.state === 'reserved') u.stage = 'reserved'
+      else throw Error('active writer has no durable result')
+    }
+  }
+  d.save(run)
+}
+
 async function reserveSelected(run: Run, d: BatchRuntime) {
   for (const u of run.units.filter(u => u.stage === 'selected')) {
       try {
@@ -89,11 +129,13 @@ async function reserveSelected(run: Run, d: BatchRuntime) {
           await d.admin('/backfill/release', { slugs: [u.record.slug] })
           u.stage = 'released' // live worker applies its own short-unit skip without a model call
         } else {
-          await d.admin('/backfill/batch/reserve', { run_id: run.id, rid: u.rid, source_hash: u.source_hash })
-          u.stage = 'reserved'
+          const reserved = await d.admin('/backfill/batch/reserve', { run_id: run.id, rid: u.rid, source_hash: u.source_hash })
+          if (reserved.state === 'reserved' || reserved.state === 'done') u.stage = reserved.state
+          else if (reserved.state === 'released') { u.stage = 'release'; await release(run, u, d) }
+          else throw Error('unexpected reservation state')
         }
       } catch (e) {
-        if (e instanceof AdminHttp && e.status === 409) u.stage = 'released' // another run/release won; never submit this row
+        if (e instanceof AdminHttp && e.status === 409) { u.stage = 'release'; await release(run, u, d) }
         else throw e
       }
       d.save(run)
@@ -101,6 +143,7 @@ async function reserveSelected(run: Run, d: BatchRuntime) {
 }
 
 export async function prepare(run: Run, d: BatchRuntime = runtime) {
+  await reconcileRun(run, d)
   if (run.canceled) { run.preparing = false; d.save(run); return }
   await reserveSelected(run, d)
   while (run.units.length < d.batchSize) {
@@ -171,26 +214,38 @@ export async function poll(run: Run, s: Submission, d: BatchRuntime = runtime) {
 }
 
 async function release(run: Run, u: Unit, d: BatchRuntime) {
-  if (u.stage === 'selected') { u.stage = 'released'; d.save(run); return }
-  const canceled = await d.admin('/backfill/batch/cancel', { run_id: run.id, rid: u.rid })
+  let canceled
+  try { canceled = await d.admin('/backfill/batch/cancel', { run_id: run.id, rid: u.rid }) }
+  catch (e) { if (deferLease(run, u, e, d)) return; throw e }
   if (canceled.state === 'done') { u.stage = 'done'; d.save(run); return }
+  if (canceled.state === 'unowned') { u.stage = 'released'; d.save(run); return } // leave the other owner's rows alone
+  if (canceled.state !== 'released' && canceled.state !== 'unreserved') throw Error('unexpected cancellation state')
   await d.admin('/backfill/release', { slugs: [u.record.slug] })
-  u.stage = 'released'; d.save(run)
+  delete u.retry_at; u.stage = 'released'; d.save(run)
+}
+function deferLease(run: Run, u: Unit, e: unknown, d: BatchRuntime): boolean {
+  if (!(e instanceof AdminHttp) || e.status !== 423) return false
+  u.retry_at = Number.isFinite(e.retryAt) ? Math.max(d.now() + 1000, e.retryAt!) : d.now() + 60000
+  d.save(run) // preserve the paid result and stage; a later step retries the same write/cancel
+  return true
 }
 export async function deliver(run: Run, d: BatchRuntime = runtime) {
   for (const u of run.units) {
+    if (u.retry_at && u.retry_at > d.now()) continue
     if (run.canceled && u.stage !== 'done' && u.stage !== 'released') { await release(run, u, d); continue }
     if (u.stage === 'release') { await release(run, u, d); continue }
     if (u.stage !== 'ready') continue
     let response
     try { response = await d.admin('/backfill/batch/result', { run_id: run.id, rid: u.rid, source_hash: u.source_hash, result: u.result }) }
     catch (e) {
+      if (deferLease(run, u, e, d)) continue
       if (e instanceof AdminHttp && e.status === 409) {
         // A stale source/queue is released only if this run still owns the hold.
         u.stage = 'release'; d.save(run); await release(run, u, d); continue
       }
       throw e
     }
+    delete u.retry_at
     if (response.state === 'done') u.stage = 'done'
     else if (response.state === 'release') u.stage = 'release'
     else if (response.state === 'invalid') {
@@ -208,15 +263,17 @@ export function stats(run: Run) {
 }
 
 export async function cancelRun(run: Run, d: BatchRuntime = runtime) {
+  await reconcileRun(run, d)
   run.canceled = true; d.save(run)
   for (const s of run.submissions.filter(s => !s.ended)) {
     if (!s.id) throw Error('reconcile ambiguous submission before cancellation')
     await d.anthropic(`/v1/messages/batches/${s.id}/cancel`, {})
   }
-  for (const u of run.units.filter(u => u.stage !== 'done' && u.stage !== 'released')) await release(run, u, d)
+  for (const u of run.units.filter(u => u.stage !== 'done' && u.stage !== 'released' && (!u.retry_at || u.retry_at <= d.now()))) await release(run, u, d)
 }
 
 export async function adoptRun(run: Run, id: string, d: BatchRuntime = runtime) {
+  await reconcileRun(run, d)
   const pending = run.submissions.filter(s => !s.id)
   if (pending.length !== 1 || !/^msgbatch_[a-zA-Z0-9]+$/.test(id) || d.allRuns().some(r => r.submissions.some(s => s.id === id))) throw Error('invalid adoption')
   const batch = await d.anthropic(`/v1/messages/batches/${id}`)
@@ -226,6 +283,14 @@ export async function adoptRun(run: Run, id: string, d: BatchRuntime = runtime) 
   const expected = pending[0].rids.map(rid => `${rid}-${pending[0].attempt}`)
   if (new Set(ids).size !== ids.length || ids.length !== expected.length || expected.some(id => !ids.includes(id))) throw Error('adopted batch coverage mismatch')
   pending[0].id = id; d.save(run)
+}
+
+export async function stepRun(run: Run, d: BatchRuntime = runtime) {
+  if (run.preparing) await prepare(run, d)
+  else await reconcileRun(run, d)
+  for (const s of run.submissions.filter(s => !s.ended)) await poll(run, s, d)
+  await deliver(run, d)
+  if (!run.submissions.some(s => !s.ended)) await submit(run, d)
 }
 
 async function main() {
@@ -242,10 +307,7 @@ try {
     const run: Run = command === 'prepare' ? { id: randomUUID(), units: [], submissions: [], preparing: true } : loadRun(process.argv[3])
     if (command === 'prepare') { save(run); await prepare(run) }
     else if (command === 'step') {
-      if (run.preparing) await prepare(run)
-      for (const s of run.submissions.filter(s => !s.ended)) await poll(run, s)
-      await deliver(run)
-      if (!run.submissions.some(s => !s.ended)) await submit(run)
+      await stepRun(run)
     } else if (command === 'cancel') {
       await cancelRun(run)
     } else if (command === 'adopt') {

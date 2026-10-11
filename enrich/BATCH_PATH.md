@@ -2,8 +2,10 @@
 
 T1 briefs use this path following the 11 October decision. T2/T3 can use the same
 path. The live worker retains its qwen3 primary, escalation, retry and terminal
-rules. This branch incorporates desktop `web/enrich-hold` at `416c49fe`; it does
-not push, deploy or write to the KB. All paid tests called Anthropic only.
+rules. This branch incorporates desktop `web/enrich-hold` at `4bcf50235`, including
+per-resource deferral when source classification fails. The original paid tests
+called Anthropic only; the review fixes used recorded fixtures with no API or
+production calls, push, deploy or KB writes.
 
 ## Validator-failure analysis
 
@@ -93,9 +95,10 @@ Only numeric evidence is committed in `batch-path-measurements.json`.
 | Authenticated route | Purpose |
 | --- | --- |
 | `GET /backfill/batch?limit=20&after=RID` | Read held historic rows and full source snapshots; no mutation. Cursor advances past ineligible rows. |
-| `POST /backfill/batch/reserve` | `{run_id,rid,source_hash}` reserves an eligible held unit after re-reading source. |
+| `GET /backfill/batch/reservations?run_id=RUN&limit=200&after=RID` | Read this run's authoritative ownership, including completed/canceled jobs; no KB read or mutation. |
+| `POST /backfill/batch/reserve` | `{run_id,rid,source_hash}` reserves an eligible held unit after re-reading source. Retries for the same run/unit/hash return its current state, including concurrent insert retries. |
 | `POST /backfill/batch/result` | `{run_id,rid,source_hash,result:{summary,topics}}` validates and delivers the DB-owned tasks. |
-| `POST /backfill/batch/cancel` | `{run_id,rid}` abandons ownership before live release; an active writer lease blocks cancellation. |
+| `POST /backfill/batch/cancel` | `{run_id,rid}` abandons ownership before live release; an active writer lease blocks cancellation. Missing ownership is acknowledged as `unreserved`; another run's ownership as `unowned`, without altering it. |
 | `POST /backfill/release` | Existing `{slugs:[...]}` route releases remaining holds at priority zero. Active batch ownership blocks release. |
 
 Ownership lives in `batch_items`, with one row per resource. The queue remains
@@ -109,7 +112,11 @@ brief check, fresh classification merge, preservation of non-topic labels,
 read-back repair, and the historic short/name checks. Partial delivery is recorded
 per task; retries preserve earlier completed tasks. A 15-minute writer lease
 prevents overlapping delivery and live release. Backpressure retains paid results
-for another write attempt. Refusals, failed corrections and definite write refusals
+for another write attempt. Active writer contention returns **423** with
+`lease_until`; the controller saves `retry_at`, retains the paid result, and retries
+the same delivery after expiry. It also defers cancellation until that lease
+expires. **409** remains a permanent ownership/source/queue conflict and takes
+the cancellation/release path. Refusals, failed corrections and definite write refusals
 cancel batch ownership and use `/backfill/release`; batch attempts do not consume
 the live worker's attempts or change its names-rejection/terminal rules.
 
@@ -121,7 +128,17 @@ completed job is rejected.
 
 The Node 24 client uses one durable private spool. A SQLite controller lock
 serialises commands and releases on crash; JSON updates use atomic rename and
-fsync. A reservation is saved before POST. An ambiguous POST blocks resubmission.
+fsync. Selection is saved before the worker reserve request. Every resumed
+`step`, `cancel` and `adopt` first reads all server reservations for its run ID.
+Thus a crash after reserve succeeds but before the local `reserved` save recovers
+the owner, and cancellation calls the worker before marking the unit released.
+The same reconciliation repairs old locally released units whose server
+reservation remains active. If cancellation succeeded but live release failed,
+resume finishes `/backfill/release` before saving local completion. A different
+owner is acknowledged server-side and left alone. Failed/incomplete ownership
+reads stop the command before batch API calls or writes.
+
+The spend reservation is saved before the Anthropic POST. An ambiguous POST blocks resubmission.
 Locate its remote ID through Anthropic's batch list, then use `adopt`; adoption
 waits for an ended batch and verifies every saved custom ID before recording it.
 Do not create a second submission while resolving an ambiguous one.
@@ -194,6 +211,10 @@ are discarded. If the POST is ambiguous, reconcile/adopt first.
    models, with `HISTORIC_HOLD=true`. `WRITE_MODE=dry` retains held results for
    review; `live` enables the authenticated delivery route. No portal deployment
    or Anthropic Worker secret is required.
+   Deploy the reservation-read route and 423 lease response before updating the
+   controller; no migration beyond the existing additive `0004` is needed for
+   these review fixes. Run `check_historic_hold.ts` before the next historic push
+   and reconcile its recorded slugs.
 3. Install/run the Node 24 client on the desktop controller. It reads only
    `ANTHROPIC_API_KEY` from `/home/jake/opax/.env`. Supply `OPAX_ENRICH_URL` and
    the existing `ENRICH_ADMIN_TOKEN` in the controller environment.
@@ -207,9 +228,15 @@ are discarded. If the POST is ambiguous, reconcile/adopt first.
    done/released and its pending-batch count is zero. Prepare the next run when
    capacity permits. `status` prints only aggregate counts, run IDs and costs.
 
-Offline gates: 217 worker tests, `npx tsc --noEmit`, Wrangler deploy dry-run,
+Offline gates: 247 worker tests, `npx tsc --noEmit`, Wrangler deploy dry-run,
 and 0/143 non-historic differences against `5bb21959`. The differential includes
 original queue fields, model requests, KB requests/resource hashes, spend, and
-tick counters, excluding only added historic/batch metadata. Every changed file
+tick counters, excluding added historic/batch metadata/counters and the hold
+dependency's 39 leading classification reads before saved-result flushes. Every
+original request/write and its order remains compared. Regression fixtures cover
+the reserve/save crash (both rows become claimable), concurrent idempotent reserve,
+interrupted release, old orphaned local cancellation, paginated ownership reads,
+lease-delayed delivery/cancellation, and permanent conflicts. Validators, prompts,
+the guarded write path and migration `0004` remain unchanged. Every changed file
 is under `enrich/`; portal gates are therefore unnecessary. No push or deploy was
 performed and no KB or production D1 writes were made.
