@@ -55,7 +55,7 @@ test('core-sized category arrays use bounded SQL bindings',async()=>{
   const response=await fetchTable('contracts',new URLSearchParams({'f.agency':JSON.stringify(values),'f.jurisdiction':JSON.stringify(values)}));
   assert.equal(response.status,200);assert.equal((await response.json()).total,260);
 });
-test('decoded identity variants reject before data SQL across all five money datasets',async()=>{
+test('decoded identity variants reject before data SQL across all protected datasets',async()=>{
   const policy=await tableIdentityIndex();
   const phrase=[...policy.phrases].find(v=>v.includes(' ')&&/[aeiou]/.test(v));
   const identifier=[...policy.phrases].find(v=>/^\d{11}$/.test(v)&&String(Number(v))===v);
@@ -70,7 +70,7 @@ test('decoded identity variants reject before data SQL across all five money dat
   const spaced='  '+phrase.replaceAll(' ','  \t  ')+'  ';
   for(const [name,config]of Object.entries(TABLE_DATASETS).filter(([,c])=>c.privacy)) {
     const category=config.columns.find(c=>c.type==='category').key;
-    const numeric=config.columns.find(c=>c.type==='money').key;
+    const numeric=config.columns.find(c=>['money','count','year'].includes(c.type)).key;
     const states=[
       new URLSearchParams({['f.'+category]:'['+escaped(phrase)+']'}),
       new URLSearchParams({['f.'+category]:'['+escaped(identifier)+']'}),
