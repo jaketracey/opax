@@ -3,10 +3,10 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFile,readdir} from 'node:fs/promises';
 import {sourceTableDonorIdentities} from '../../scripts/table_identity_source.mjs';
-import {tableIdentityIndex} from '../../scripts/load_tables.mjs';
+import {tableIdentityIndex,tableRegistryFingerprint} from '../../scripts/load_tables.mjs';
 import {compileHashedIdentityCheck} from '../src/table-identity-hashes.mjs';
 import {tablePrivacy,tablePrivacyCheck} from '../src/table-privacy.ts';
-import {tableApi} from '../src/table-api.ts';
+import {tableApi,TABLE_REGISTRY_FINGERPRINT} from '../src/table-api.ts';
 import {TABLE_DATASETS} from '../src/table-datasets.mjs';
 import {isOrganisationRecipient} from '../src/table-recipient.mjs';
 import {tableDatabase} from './table-d1-harness.mjs';
@@ -22,6 +22,7 @@ for(const jur of ['federal','qld'])for(const file of (await readdir(new URL(`gra
 const probes=[...new Set([...source.labels,...source.identifiers,...recipients])];
 test('the published table registry rejects the complete runtime donor and recipient set',async t=>{
   assert.equal(registry.version,1);
+  assert.equal(tableRegistryFingerprint(policy),TABLE_REGISTRY_FINGERPRINT);
   assert.ok(registry.identities.every(e=>Object.keys(e).sort().join(',')==='hash,words'&&/^[a-f0-9]{64}$/.test(e.hash)&&Number.isSafeInteger(e.words)&&e.words>0));
   const blocked=compileHashedIdentityCheck(registry.identities),safe=await tablePrivacyCheck(assets);
   assert.equal(probes.filter(v=>!policy.check(v)||!blocked(v)||safe(v)).length,0,'guard miss count');
@@ -51,5 +52,48 @@ test('default browser validation clears every runtime private input from URL, HT
     const url=new URL(h.win.location.href);
     assert.ok(!url.searchParams.has('t.q')&&!url.searchParams.has('t.f.name'),'URL input echo');assert.equal(url.searchParams.get('campaign'),'fixture');
     assert.ok(!h.html().includes(value),'HTML or live region input echo');mounted.destroy();
+  }
+});
+
+test('162 runtime identifier range probes fail closed during hydration in both browser modes',async t=>{
+  let tested=0;
+  for(const value of source.identifiers)for(const server of [false,true]){
+    assert.equal(policy.check(String(Number(value))),true,'numeric probe derived coverage');
+    const params=new URLSearchParams({'t.f.amount':JSON.stringify({min:Number(value),max:Number(value)}),campaign:'fixture'}),h=tableHarness('http://localhost/money?'+params);
+    let dataReads=0;
+    h.win.fetch=(input,options)=>{
+      if(new URL(input,'http://localhost').pathname==='/api/table/privacy')return tablePrivacy(new Request('https://local.invalid/api/table/privacy',options),assets);
+      dataReads++;return Promise.resolve(Response.json({rows:[],total:0,page:1,pageSize:50,facets:{}}));
+    };
+    const config={id:'publication-range',caption:'Receipts',privacy:'donors',urlKey:'t',columns:[{key:'name',label:'Organisation',type:'text',primary:true},{key:'amount',label:'Amount',type:'money',facet:'range'}],...(server?{source:{endpoint:'/__fixtures/table/money'}}:{rows:[{name:'Fixture organisation Pty Ltd',amount:1}]})};
+    const mounted=mountDataTable(h.root,config);
+    // The synchronous pending paint and URL rewrite must already be clean.
+    const check=()=>{
+      assert.ok(!new URL(h.win.location.href).searchParams.has('t.f.amount'),'range URL echo');
+      assert.ok(!policy.check(h.html()),'HTML or accessible range echo');
+      assert.ok(h.html().includes('Showing 0–0 of 0'),'rejected range rows');
+      assert.ok(h.html().includes('data-export disabled'),'rejected range export');
+    };
+    check();await new Promise(setImmediate);check();
+    assert.equal(dataReads,0,'rejected range reached dataset');
+    assert.equal(new URL(h.win.location.href).searchParams.get('campaign'),'fixture');
+    mounted.destroy();tested++;
+  }
+  assert.equal(tested,162);t.diagnostic(JSON.stringify({numericProbes:tested,rejected:tested,echoes:0,dataRequests:0}));
+});
+test('paging, sorting and nested future query values use the same whole-state privacy gate',async()=>{
+  const value=source.identifiers.find(v=>String(Number(v))===v);
+  for(const state of [{page:Number(value)},{pageSize:Number(value)},{sort:{key:value,dir:'asc'}},{future:{nested:[Number(value)]}},{filters:{amount:{min:Number(value)}}}]){
+    const config={id:'state-gate',caption:'Receipts',privacy:'donors',privacyCheck:v=>!policy.check(v),columns:[{key:'name',label:'Organisation',type:'text',primary:true},{key:'amount',label:'Amount',type:'money',facet:'range'}],rows:[{name:'Fixture organisation Pty Ltd',amount:1}]};
+    const {applyQuery}=await import('../public/datatable.js');
+    const page=applyQuery(config.rows,config,state);
+    assert.equal(page.total,0);assert.equal(page.page,1);assert.equal(page.pageSize,50);assert.equal(page.rows.length,0);
+  }
+  for(const parameter of ['page','pageSize','sort'])for(const server of [false,true]){
+    const h=tableHarness('http://localhost/money?'+new URLSearchParams({['t.'+parameter]:parameter==='sort'?value+':asc':value}));
+    h.win.fetch=(input,options)=>tablePrivacy(new Request('https://local.invalid/api/table/privacy',options),assets);
+    const config={id:'state-hydration',caption:'Receipts',privacy:'donors',urlKey:'t',columns:[{key:'name',label:'Organisation',type:'text',primary:true}],...(server?{source:{endpoint:'/__fixtures/table/money'}}:{rows:[]})};
+    const mounted=mountDataTable(h.root,config);await new Promise(setImmediate);
+    assert.equal(new URL(h.win.location.href).searchParams.size,0);assert.ok(!policy.check(h.html()));assert.ok(h.html().includes('data-export disabled'));mounted.destroy();
   }
 });

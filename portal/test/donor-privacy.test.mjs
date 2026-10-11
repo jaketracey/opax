@@ -24,6 +24,7 @@ import {applyQuery, dataTableHTML, mountDataTable, toCSV} from '../public/datata
 import {tableHarness} from './datatable-harness.mjs';
 import {tableRows,tableIdentityHashes} from '../../scripts/load_tables.mjs';
 import {tableDatabase} from './table-d1-harness.mjs';
+import {TABLE_REGISTRY_FINGERPRINT} from '../src/table-api.ts';
 import {isOrganisationRecipient} from '../src/table-recipient.mjs';
 import {moneyFlowType} from '../public/money-records.js';
 import {TABLE_DATASETS} from '../src/table-datasets.mjs';
@@ -84,6 +85,9 @@ const graphs = await Promise.all(MONEY_GRAPHS.map(path=>sourceRead(root)(path)))
 const moneyTables = await tableRows(root, {moneyOnly: true,graphs});
 for (const dataset of ['contracts', 'suppliers', 'grants']) assert.ok(moneyTables.rows[dataset].length > 0, dataset);
 const tablesD1 = await tableDatabase({datasets:moneyTables.rows,policy:moneyTables.policy});
+// Offline fixtures add fictional identities to the release registry. Mark this
+// fixture snapshot for the actual Worker build so its response guards run.
+await tablesD1.db.prepare("UPDATE table_meta SET value=? WHERE key='privacy_fingerprint'").bind(TABLE_REGISTRY_FINGERPRINT).run();
 test.after(()=>tablesD1.close());
 const index = donorPrivacyIndex(graphs);
 const donorNodes = graphs.flatMap(g => g.nodes.filter(n => n.kind === 'donor'));

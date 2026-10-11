@@ -69,10 +69,19 @@ const allowedText = (config, value) => {
   if (config.privacy !== 'donors') return true;
   try { return config.privacyCheck?.(value) === true; } catch { return false; }
 };
-const blockedQuery = (config, query) => Boolean(query.q && !allowedText(config,query.q));
+// Walk the whole decoded state so new query fields inherit the same gate.
+// Expand numeric values before checking identifiers, including exponent notation.
+function* queryValues(input) {
+  if (typeof input === 'string' || typeof input === 'boolean') yield String(input);
+  else if (typeof input === 'number') yield decimal.format(input).replaceAll(',', '');
+  else if (Array.isArray(input)) for (const value of input) yield* queryValues(value);
+  else if (input && typeof input === 'object') for (const value of Object.values(input)) yield* queryValues(value);
+}
+const blockedQuery = (config, query) => [...queryValues(query)].some(value=>!allowedText(config,value));
 function cleanQuery(query = {}, config, page) {
   const out = parseQuery(new URLSearchParams(serializeQuery(query)));
   if (!config) return out;
+  if (blockedQuery(config,query)) return {};
   if (out.sort && !config.columns.some(c => c.key === out.sort.key && sortable(c))) delete out.sort;
   if (out.q && !allowedText(config,out.q)) delete out.q;
   if (out.filters) for (const [key, value] of Object.entries(out.filters)) {
@@ -201,7 +210,9 @@ function resultFor(rows, config, query) {
 }
 const filteredRows = (rows,config,query) => resultFor(rows,config,query).rows;
 export function applyQuery(rows, config, query = {}) {
-  const result=resultFor(rows,config,query), pageSize=integer(query.pageSize,integer(config.pageSize,50));
+  const result=resultFor(rows,config,query);
+  if (blockedQuery(config,query)) return {rows:[],total:0,page:1,pageSize:config.pageSize || 50,facets:{}};
+  const pageSize=integer(query.pageSize,integer(config.pageSize,50));
   const page=Math.min(integer(query.page,1),Math.max(1,Math.ceil(result.rows.length/pageSize)));
   return {rows:result.rows.slice((page-1)*pageSize,page*pageSize),total:result.rows.length,page,pageSize,facets:result.facets};
 }
@@ -264,7 +275,8 @@ function chip(label, key, value, removable = true, title = label) {
 }
 
 function render(config, page, query = {}, view = {}, error = '') {
-  const requested = query;
+  const requested = query, rejected=blockedQuery(config,query);
+  if (rejected) { page={rows:[],total:0,page:1,pageSize:config.pageSize || 50,facets:{}}; view={...view,rejected:true}; }
   page = safePage(page, config);
   query = cleanQuery(query, config, page);
   const redactedSearch = Boolean(requested.q && !query.q);
@@ -320,7 +332,7 @@ function render(config, page, query = {}, view = {}, error = '') {
   const count = `Showing ${decimal.format(start)}–${decimal.format(page.total ? start + page.rows.length - 1 : 0)} of ${decimal.format(page.total)}`;
   const data = JSON.stringify(page).replace(/</g,'\\u003c').replace(/&/g,'\\u0026');
   return `<section class="dt-root" data-datatable="${esc(config.id)}" data-density="${esc(view.density || config.density || 'comfortable')}" aria-label="${esc(config.caption)}">
-<div class="dt-toolbar"><form role="search"><label class="dt-sr" for="${esc(config.id)}-search">Search ${esc(config.caption)}</label><input id="${esc(config.id)}-search" type="search" data-search data-focus="search" placeholder="Search" value="${esc(query.q || '')}" autocomplete="off"></form><select class="dt-phone-sort" data-sort-select aria-label="Sort">${config.columns.filter(sortable).map(c => ['asc','desc'].map(dir => `<option value="${esc(c.key)}:${dir}"${sort?.key === c.key && sort.dir === dir ? ' selected' : ''}>${esc(c.label)} ${dir === 'asc' ? 'ascending' : 'descending'}</option>`).join('')).join('')}</select><details class="dt-panel dt-filters" data-panel="filters">${summary('Filters')}<div class="dt-tools">${controls.join('')}<details class="dt-panel" data-panel="columns">${summary('Columns')}<fieldset><legend class="dt-sr">Visible columns</legend>${config.columns.map(c => `<label class="dt-choice"><input type="checkbox" data-column="${esc(c.key)}"${columns.includes(c) ? ' checked' : ''}${columns.length === 1 && columns[0] === c ? ' disabled' : ''}>${esc(c.label)}</label>`).join('')}</fieldset></details>${button('Compact', `data-density-toggle aria-pressed="${(view.density || config.density) === 'compact'}"`)}</div></details>${config.export === false ? '' : button('Export CSV', 'data-export')}</div>
+<div class="dt-toolbar"><form role="search"><label class="dt-sr" for="${esc(config.id)}-search">Search ${esc(config.caption)}</label><input id="${esc(config.id)}-search" type="search" data-search data-focus="search" placeholder="Search" value="${esc(query.q || '')}" autocomplete="off"></form><select class="dt-phone-sort" data-sort-select aria-label="Sort">${config.columns.filter(sortable).map(c => ['asc','desc'].map(dir => `<option value="${esc(c.key)}:${dir}"${sort?.key === c.key && sort.dir === dir ? ' selected' : ''}>${esc(c.label)} ${dir === 'asc' ? 'ascending' : 'descending'}</option>`).join('')).join('')}</select><details class="dt-panel dt-filters" data-panel="filters">${summary('Filters')}<div class="dt-tools">${controls.join('')}<details class="dt-panel" data-panel="columns">${summary('Columns')}<fieldset><legend class="dt-sr">Visible columns</legend>${config.columns.map(c => `<label class="dt-choice"><input type="checkbox" data-column="${esc(c.key)}"${columns.includes(c) ? ' checked' : ''}${columns.length === 1 && columns[0] === c ? ' disabled' : ''}>${esc(c.label)}</label>`).join('')}</fieldset></details>${button('Compact', `data-density-toggle aria-pressed="${(view.density || config.density) === 'compact'}"`)}</div></details>${config.export === false ? '' : button('Export CSV', `data-export${view.rejected ? ' disabled' : ''}`)}</div>
 <div class="dt-chips" aria-label="Applied filters">${active.join('')}${query.q || Object.keys(query.filters || {}).length || redactedSearch || redactedFilters || view.rejected ? button('Clear all', 'data-clear') : ''}</div>
 <div class="dt-scroll"><table class="dt" id="${esc(config.id)}" role="table"><caption>${esc(config.caption)}</caption><thead role="rowgroup"><tr role="row">${columns.map(column => `<th role="columnheader" scope="col" data-align="${esc(column.align || (numeric(column) ? 'end' : 'start'))}"${sortable(column) ? ` aria-sort="${sort?.key === column.key ? sort.dir === 'asc' ? 'ascending' : 'descending' : 'none'}"` : ''}>${sortable(column) ? button(`${esc(column.label)} ${icon(sort?.key === column.key ? sort.dir : 'unsorted')}`, `data-sort="${esc(column.key)}"`) : esc(column.label)}${column.bar && maxima[column.key] ? `<small class="dt-scale">0–${esc(formatCell(maxima[column.key],column))}</small>` : ''}</th>`).join('')}${config.actions?.length ? '<th scope="col"><span class="dt-sr">Actions</span></th>' : ''}</tr></thead><tbody role="rowgroup">${error ? `<tr><td colspan="${columns.length + (config.actions?.length ? 1 : 0)}"><div class="dt-empty" role="alert">${esc(error)} ${button('Try again','data-retry')}</div></td></tr>` : body || `<tr><td colspan="${columns.length + (config.actions?.length ? 1 : 0)}"><div class="dt-empty">No results. Try another search or clear the filters.</div></td></tr>`}</tbody></table></div>
 <div class="dt-footer"><p class="dt-count" role="status" aria-live="polite" aria-atomic="true">${error ? 'Table unavailable' : count}</p><div class="dt-paging">${button('Previous', `data-page="${page.page - 1}"${page.page <= 1 || error ? ' disabled' : ''}`)}<span>Page ${page.page}</span>${button('Next', `data-page="${page.page + 1}"${page.page * page.pageSize >= page.total || error ? ' disabled' : ''}`)}<label class="dt-page-size" for="${esc(config.id)}-size">Rows per page <select id="${esc(config.id)}-size" data-page-size aria-label="Rows per page">${[...new Set([10,25,50,100,page.pageSize])].sort((a,b)=>a-b).map(size => `<option${size === page.pageSize ? ' selected' : ''}>${size}</option>`).join('')}</select></label></div></div>
@@ -444,17 +456,17 @@ export function mountDataTable(el, config) {
   async function refresh() {
     clearTimeout(timer);
     const version = ++revision;
-    controller?.abort();
-    const pending=query;
+    controller?.abort(); exportController?.abort();
+    const pending=structuredClone(query), previousPage=page;
     if (config.privacy === 'donors') {
-      const values=[pending.q,...Object.values(pending.filters || {}).flatMap(v=>Array.isArray(v) ? v : [])].filter(Boolean);
+      const values=[...queryValues(pending)];
       const data=config.rows ? engine(config.rows,config) : null;
       const needsValidation=values.some(value=>!approvals.has(value)) || (data ? !approvals.has(data.json) : page.rows.some(row=>!approvals.has(JSON.stringify(row))));
-      // Pending names never render against old SSR rows. Already approved state can
+      // Pending query values never render against old SSR rows. Already approved state can
       // retain its controls and focus while fetching, avoiding a second redraw.
       if (needsValidation) {
         if (doc.activeElement?.dataset?.focus === 'search') view.searchSelection=[doc.activeElement.selectionStart,doc.activeElement.selectionEnd];
-        page={rows:[],total:0,page:1,pageSize:integer(query.pageSize,config.pageSize || 50),facets:page.facets};
+        page={rows:[],total:0,page:1,pageSize:config.pageSize || 50,facets:{}};
         paint(); urlState();
       }
       root.setAttribute('aria-busy','true');
@@ -470,13 +482,16 @@ export function mountDataTable(el, config) {
       if (destroyed || version !== revision) return;
     }
     const rejected=blockedQuery(config,pending); view.rejected=rejected;
-    query=cleanQuery(pending,config,page);
+    query=cleanQuery(pending,config,previousPage);
     if (rejected) {
       page={rows:[],total:0,page:1,pageSize:config.pageSize || 50,facets:{}};
       paint(); delete view.searchSelection; urlState(); root.removeAttribute('aria-busy'); return;
     }
     if (!config.source) {
-      page=applyQuery(config.rows || [],config,query); query.page=page.page;
+      page=applyQuery(config.rows || [],config,query);
+      await permitSet([...queryValues({page:page.page,pageSize:page.pageSize})]);
+      if (destroyed || version !== revision) return;
+      query.page=page.page;
       paint(); delete view.searchSelection; urlState(); root.removeAttribute('aria-busy'); return;
     }
     controller=new win.AbortController(); root.setAttribute('aria-busy','true'); urlState();
@@ -489,7 +504,7 @@ export function mountDataTable(el, config) {
       // Validate all supplied facet text, including options outside this page.
       candidate.facets=result.facets || {};
       if (config.privacy === 'donors') {
-        const texts=[JSON.stringify(candidate.rows),...Object.values(candidate.facets || {}).flatMap(v=>Array.isArray(v) ? v.map(f=>f.value) : [])];
+        const texts=[JSON.stringify(candidate.rows),...queryValues({page:candidate.page,pageSize:candidate.pageSize,facets:candidate.facets})];
         await permitSet(texts);
         const passed=texts.map(value=>approvals.get(value));
         if (passed.some(v=>!v)) throw new Error('Unsafe table page');
@@ -513,15 +528,17 @@ export function mountDataTable(el, config) {
   }
   async function download() {
     if (root.getAttribute('aria-busy') === 'true') return;
-    const requested=parseQuery(new URLSearchParams(serializeQuery(query)));
+    if (view.rejected) return;
+    const requested=structuredClone(query), exportRevision=revision;
     const control = root.querySelector('[data-export]'); control.disabled = true;
     exportController?.abort(); exportController = new win.AbortController();
     try {
-      await permitSet([requested.q,...Object.values(requested.filters || {}).flatMap(value=>Array.isArray(value) ? value : [])].filter(Boolean));
+      await permitSet([...queryValues(requested)]);
+      if (destroyed || revision !== exportRevision || view.rejected) return;
+      if (blockedQuery(config,requested)) { void refresh(); return; }
       const state=cleanQuery(requested,config,page);
       let csv, truncated=false;
-      if (view.rejected || blockedQuery(config,requested)) csv=toCSV([],config);
-      else if (config.source) {
+      if (config.source) {
         const response = await win.fetch(endpoint(true,state),{signal:exportController.signal});
         if (!response.ok) throw new Error('Export failed');
         truncated=response.headers.get('x-table-export-truncated') === 'true';
@@ -529,7 +546,7 @@ export function mountDataTable(el, config) {
 
       } else csv = toCSV(filteredRows(config.rows || [],config,state),config);
       if (!await permit(csv)) throw new Error('Unsafe table export');
-      if (destroyed) return;
+      if (destroyed || revision !== exportRevision || view.rejected) return;
       const url = win.URL.createObjectURL(new win.Blob([csv],{type:'text/csv;charset=utf-8'}));
       const a = doc.createElement('a'); a.href = url; a.download = config.export?.filename || `${config.id}.csv`;
       doc.body.append(a); a.click(); a.remove(); win.setTimeout(()=>win.URL.revokeObjectURL(url),0); analytics('table_export');

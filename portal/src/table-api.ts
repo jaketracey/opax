@@ -1,6 +1,9 @@
 import type {Column, Page, Query, Row} from '../public/datatable.js'
 import {TABLE_DATASETS, tableText, tableTerms} from './table-datasets.mjs'
 import {identityCandidates, identityHash} from './table-identities.mjs'
+import registryBuild from './table-registry-fingerprint.json' with {type:'json'}
+
+export const TABLE_REGISTRY_FINGERPRINT = registryBuild.fingerprint
 
 type TableEnv = {TABLE_DB: D1Database; CACHE_EPOCH?: string}
 const MAX_CSV = 50_000, CSV_PAGE = 10_000, BATCH = 200, MAX_FACETS = 100
@@ -141,8 +144,9 @@ export async function tableApi(request: Request, env: TableEnv, _ctx?: Execution
     let query: Query | undefined
     try {query=parseTableQuery(url.searchParams,config.columns,config.defaultSort)} catch { /* Guard decoded values before returning a fixed grammar error. */ }
     const db=env.TABLE_DB
-    const meta=await db.prepare("SELECT key,value FROM table_meta WHERE key IN ('version','privacy_lengths') LIMIT 2").all<{key:string;value:string}>()
+    const meta=await db.prepare("SELECT key,value FROM table_meta WHERE key IN ('version','privacy_lengths','privacy_fingerprint') LIMIT 3").all<{key:string;value:string}>()
     const metadata=Object.fromEntries(meta.results.map(r=>[r.key,r.value]))
+    if (config.privacy && (!/^[a-f0-9]{64}$/.test(TABLE_REGISTRY_FINGERPRINT) || metadata.privacy_fingerprint !== TABLE_REGISTRY_FINGERPRINT)) return errorResponse(503,'unavailable',{'retry-after':'60'})
     if (!metadata.version || !metadata.privacy_lengths) throw new Error('unavailable')
     const denied=Boolean(config.privacy) && await blocked(db,scalarValues(inputs),JSON.parse(metadata.privacy_lengths))
     if (denied) query={q:'',filters:{},sort:config.defaultSort,page:1,pageSize:50}
@@ -211,5 +215,5 @@ export async function tableApi(request: Request, env: TableEnv, _ctx?: Execution
     }
     headers.set('content-type','application/json; charset=utf-8')
     return Response.json({rows,total,page,pageSize,facets} satisfies Page,{headers})
-  } catch {return errorResponse(503,'unavailable')}
+  } catch {return errorResponse(503,'unavailable',config.privacy ? {'retry-after':'60'} : {})}
 }

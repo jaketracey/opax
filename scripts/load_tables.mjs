@@ -137,13 +137,18 @@ export async function tableIdentityIndex(root = defaultRoot, suppliedGraphs) {
 export function tableIdentityHashes(policy) {
   return [...policy.phrases].map(p=>({hash:createHash('sha256').update(p).digest('hex'),words:p.split(' ').length})).sort((a,b)=>a.hash.localeCompare(b.hash));
 }
+export function tableRegistryFingerprint(policy) {
+  return createHash('sha256').update(tableIdentityHashes(policy).map(e=>e.hash).join('\n')).digest('hex');
+}
 const literal = value => value == null ? 'NULL' : typeof value === 'number' && Number.isFinite(value) ? String(value) : "'" + String(value).replaceAll("'","''") + "'";
 
 /** Sanitised SQL chunks live outside public/. No raw source snapshot is copied. */
 export async function buildTableSQL({root=defaultRoot,output=fileURLToPath(new URL('../portal/private/dt-api/sql/',import.meta.url)),datasets,policy}={}) {
   if (!datasets) {const loaded=await tableRows(root);datasets=loaded.rows;policy=loaded.policy;}
+  policy ||= await tableIdentityIndex(root);
   await mkdir(output,{recursive:true});
   for (const file of await readdir(output)) if (/^\d+-.*\.sql$|^manifest\.json$/.test(file)) await rm(join(output,file));
+  const fingerprint=tableRegistryFingerprint(policy || {phrases:new Set()});
   const files=[],counts={};let bytes=0,part=0;
   const put=async (suffix,sql)=>{const file=String(part++).padStart(4,'0')+'-'+suffix+'.sql';await writeFile(join(output,file),sql);files.push(file);bytes+=Buffer.byteLength(sql);};
   let setup=tableSchema();
@@ -177,8 +182,9 @@ export async function buildTableSQL({root=defaultRoot,output=fileURLToPath(new U
     await put(name+'-fts',`INSERT INTO ${table}_fts (${table}_fts) VALUES ('rebuild');\n`);
   }
   const version=createHash('sha256');for(const file of files)version.update(await readFile(join(output,file)));
-  await put('version',`INSERT INTO table_meta VALUES ('version','${version.digest('hex').slice(0,24)}');\nANALYZE;\n`);
-  const manifest={files,bytes,counts,privateIdentities:policy?.phrases.size||0,publicAssets:0};
+  // Publish the fingerprint last: privacy tables stay dark throughout a reload.
+  await put('version',`INSERT INTO table_meta VALUES ('privacy_fingerprint','${fingerprint}');\nINSERT INTO table_meta VALUES ('version','${version.digest('hex').slice(0,24)}');\nANALYZE;\n`);
+  const manifest={files,bytes,counts,privacyFingerprint:fingerprint,privateIdentities:policy?.phrases.size||0,publicAssets:0};
   await writeFile(join(output,'manifest.json'),JSON.stringify(manifest,null,2)+'\n');
   return manifest;
 }
@@ -187,6 +193,7 @@ if (process.argv[1] && resolve(process.argv[1])===fileURLToPath(import.meta.url)
     const loaded=await tableRows();
     const result=await buildTableSQL({datasets:loaded.rows,policy:loaded.policy});
     await writeFile(join(defaultRoot,'table-private-identities.json'),JSON.stringify({version:1,identities:tableIdentityHashes(loaded.policy)})+'\n');
+    await writeFile(fileURLToPath(new URL('../portal/src/table-registry-fingerprint.json',import.meta.url)),JSON.stringify({fingerprint:result.privacyFingerprint})+'\n');
     console.log(JSON.stringify({sqlFiles:result.files.length,bytes:result.bytes,rows:result.counts,privateIdentityHashes:result.privateIdentities,publicTableAssets:0,publicPrivacyAssets:1}));
   } catch {console.error('Table load preparation failed; no source identities are logged.');process.exitCode=1;}
 }

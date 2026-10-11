@@ -544,7 +544,7 @@ OPAX_SYNC_KB=1 OPAX_ALLOW_FAIL=sa OPAX_SYNC_GATE=link_speakers,classify FAIL_STE
 check "exit 1" test "$RRC" -eq 1
 check "arag_sync was skipped and said why" grep -q '\[arag_sync\] SKIP: gate step(s) failed: link_speakers' "$HOME/.cache/autoresearch/pipeline/daily.log"
 check "the push module was never run" bash -c "! grep -q 'parli.ingest.arag_sync' '$RS_CALLS'"
-check "votes refresh still ran" grep -q 'parli.ingest.tvfy_refresh' "$RS_CALLS"
+check "votes refresh still ran" grep -q -- '--load-divisions' "$RS_CALLS"
 new_refresh_sandbox r10b
 OPAX_SYNC_KB=1 OPAX_ALLOW_FAIL=sa OPAX_SYNC_GATE=link_speakers,classify FAIL_STEPS="sa_hansard" refresh
 check "exit 0 when the gate steps pass" test "$RRC" -eq 0
@@ -1068,6 +1068,18 @@ new_sandbox division_links_innocent
 mkdir -p "$REPO/portal/node_modules" "$REPO/portal/test"
 FAKE_DIVISIONS_MODE=new_division EVIDENCE_TEST_MODE=ok FAKE_NODE_RED_WHILE_CHANGED=portal/public/evidence/aa.json nightly
 check "innocent division trials restore bill links with the accepted pages" bash -c "[ '$NRC' -eq 1 ] && git --git-dir='$ORIGIN' show main:portal/public/bills/au-federal-t1.json | grep -q federal-senate-2 && git --git-dir='$ORIGIN' show main:portal/public/divisions/index.json | grep -q federal-senate-2 && [ ! -f '$HOME/.cache/autoresearch/pipeline/divisions-refresh-v1.pending' ]"
+
+echo "== 32. federal XML normal and zero-byte days in both chambers"
+check "real federal feed stages and loads fixtures idempotently, retaining empty days" \
+  env PYTHONPATH="$SRC" python3 "$SRC/tests/fixtures/openaustralia/nightly_check.py" "$SRC" "$WORK/federal-xml"
+new_refresh_sandbox federal_source
+OPAX_ONLY=fed_download,fed_load refresh
+check "daily Hansard uses the XML-first module" grep -q 'parli.ingest.federal_feed --start' "$RS_CALLS"
+FAIL_STEPS=federal_feed OPAX_ONLY=fed_download,fed_load refresh
+check "source refusal/failure skips speech loading and remains visible" bash -c "[ '$RRC' -eq 1 ] && grep -q 'fed_load.*SKIP: federal source acquisition failed' '$HOME/.cache/autoresearch/pipeline/daily.log'"
+new_refresh_sandbox federal_paused
+PAUSE_STEPS=federal_feed OPAX_ONLY=fed_download,fed_load refresh
+check "a paused federal feed preserves cached citations and skips loading without failing the night" bash -c "[ '$RRC' -eq 0 ] && ! grep -q 'parli.ingest.speeches --modern-only' '$RS_CALLS' && grep -q 'Paused sources: fed_download' '$HOME/.cache/autoresearch/pipeline/daily.log'"
 
 echo "== honest source access: pauses preserve publications and do not fail the night"
 new_refresh_sandbox honest-daily

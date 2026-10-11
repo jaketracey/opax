@@ -19,7 +19,7 @@ import threading
 import time
 import urllib.error
 import urllib.request
-from urllib.parse import urlsplit
+from urllib.parse import urljoin, urlsplit
 
 import requests
 
@@ -114,6 +114,16 @@ def ensure_allowed(url):
         raise SourceRefused(url, "honest identity without proxies is unverified; permission requested")
 
 
+def refuse_unchecked_redirect(url):
+    """Shared transports have no robots cache; never follow unchecked targets.
+
+    The federal client handles redirects itself with its serial robots policy.
+    Other paths preserve and report the source until a policy can be supplied.
+    """
+    ensure_allowed(url)
+    raise SourceRefused(url, "redirect refused: destination robots policy is unavailable")
+
+
 def check_response(url, status, body=b"", headers=None, expected_json=False):
     headers = {k.lower(): str(v).lower() for k, v in (headers or {}).items()}
     if status in (401, 403):
@@ -178,6 +188,14 @@ class Session(requests.Session):
         request.headers["User-Agent"] = USER_AGENT
         kwargs["proxies"] = {}
         return super().send(request, **kwargs)
+
+    def resolve_redirects(self, response, request, *args, **kwargs):
+        # Requests also prepares an unfollowed next request when redirects are
+        # disabled. Only block a redirect that would actually be requested.
+        if response.is_redirect and not kwargs.get('yield_requests', False):
+            response.close()
+            refuse_unchecked_redirect(urljoin(response.url, response.headers['Location']))
+        return super().resolve_redirects(response, request, *args, **kwargs)
 
     def request(self, method, url, **kwargs):
         ensure_allowed(url)
@@ -262,11 +280,8 @@ def open_url(opener, req, *args, **kwargs):
 
 class _Redirect(urllib.request.HTTPRedirectHandler):
     def redirect_request(self, req, fp, code, msg, headers, newurl):
-        ensure_allowed(newurl)
-        result = super().redirect_request(req, fp, code, msg, headers, newurl)
-        if result is not None:
-            result.add_header("User-Agent", USER_AGENT)
-        return result
+        fp.close()
+        refuse_unchecked_redirect(newurl)
 
 
 def build_opener(*handlers):
@@ -306,9 +321,8 @@ def aiohttp_trace():
 
     async def redirect(session, context, params):
         target = params.response.headers.get("Location", "")
-        from urllib.parse import urljoin
-        ensure_allowed(urljoin(str(params.url), target))
-        params.headers["User-Agent"] = USER_AGENT
+        params.response.close()
+        refuse_unchecked_redirect(urljoin(str(params.url), target))
 
     trace.on_request_start.append(start)
     trace.on_request_end.append(end)

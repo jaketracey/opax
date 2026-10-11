@@ -113,13 +113,13 @@ class OfflineTests(unittest.TestCase):
 STUB = r'''
 import json, os, sys, time
 from pathlib import Path
-operation = "fetch" if "tvfy_refresh" in __file__ else "map" if "votes_ingest" in __file__ else "links" if "tvfy_bill_links" in __file__ else "export"
+operation = "fetch" if "federal_feed" in __file__ else "map" if "votes_ingest" in __file__ else "links" if "tvfy_bill_links" in __file__ else "export"
 with open(os.environ["DIVISION_TEST_CALLS"], "a") as out: out.write(operation + "\n")
 assert os.environ["OPAX_SYNC_KB"] == "0"
 assert os.environ["OPAX_DB"] == str(Path.home() / ".cache/autoresearch/parli.db")
 if operation == "fetch":
-    assert "--relist" in sys.argv and "--strict" in sys.argv
-    assert sys.argv[sys.argv.index("--since") + 1] == "2026-08-20"
+    assert "--load-divisions" in sys.argv
+    assert sys.argv[sys.argv.index("--start") + 1] == "2026-08-20"
 if operation == "map":
     assert "--load-ext-only" in sys.argv and "--strict-ext" in sys.argv
     assert "--limit" not in sys.argv and "--days" not in sys.argv
@@ -166,7 +166,7 @@ class WrapperTests(unittest.TestCase):
                      "scripts/hubs/sitting-2026.json", "scripts/vm/bills_guard.py", "scripts/vm/mobile_votes_contract.py", "scripts/vm/keep_if_unchanged.py", "scripts/bills_registry/bills_stages.py"):
             dest = self.root / name; dest.parent.mkdir(parents=True, exist_ok=True)
             shutil.copyfile(ROOT / name, dest)
-        for name in ("parli/ingest/tvfy_refresh.py", "parli/ingest/votes_ingest.py", "parli/ingest/tvfy_bill_links.py", "scripts/export_votes.py"):
+        for name in ("parli/ingest/federal_feed.py", "parli/ingest/tvfy_bill_links.py", "scripts/export_votes.py"):
             dest = self.root / name; dest.parent.mkdir(parents=True, exist_ok=True); dest.write_text(STUB)
         public = self.root / "portal/public"; (public / "divisions").mkdir(parents=True); (public / "seo").mkdir()
         (public / "bills").mkdir()
@@ -195,14 +195,14 @@ class WrapperTests(unittest.TestCase):
 
     def test_acquisition_mapping_and_mobile_export_run_in_order(self):
         output = self.run_refresh()
-        self.assertEqual(self.calls.read_text().splitlines(), ["fetch", "map", "links", "export"])
+        self.assertEqual(self.calls.read_text().splitlines(), ["fetch", "links", "export"])
         self.assertFalse(self.pending())
         self.assertNotIn("FAIL:", output)
         self.assertEqual(json.loads((self.root / "portal/public/votes.json").read_text())["_meta"]["schema"], 1)
 
     def test_failure_timeout_and_regression_restore_bytes_and_retry(self):
         path = self.root / "portal/public/votes.json"; original = path.read_bytes()
-        for mode in ("fetch_fail", "map_fail", "links_fail", "export_fail", "shrink", "schema", "missing_names", "dangling_seo", "timeout"):
+        for mode in ("fetch_fail", "links_fail", "export_fail", "shrink", "schema", "missing_names", "dangling_seo", "timeout"):
             with self.subTest(mode=mode):
                 self.assertIn("FAIL:", self.run_refresh(mode))
                 self.assertEqual(path.read_bytes(), original)
