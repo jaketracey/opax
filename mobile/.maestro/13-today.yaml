@@ -137,9 +137,9 @@ name: 13 Today front page, its native records and dated original sources
 - tapOn: OK
 - assertVisible:
     id: today-screen
-# One source line for the page, at its foot: the date the page is current
-# to and its sources by name; it opens the sheet of original records, each
-# block's own date and the notes.
+# The foot's source line is the daily edition's: its own date and source;
+# it opens the sheet of its original page and notes. Each feed closes with
+# its own line (pass 5, P2-3).
 - scrollUntilVisible:
     element:
       id: today-screen-footer

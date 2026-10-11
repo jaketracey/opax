@@ -8,6 +8,7 @@ import {
   OfflineBanner,
   SourceLine,
   errorMessage,
+  type SourceDetails,
 } from '../../design/primitives';
 import { rhythm } from '../../design/tokens';
 import { PartialNotice, SavedCopyNotice } from '../CatalogNotice';
@@ -15,10 +16,10 @@ import { isOffline } from '../CatalogState';
 
 /**
  * A Today feed in every state, as CatalogState draws it elsewhere, but
- * quiet and on the paper: no box around a failure or an empty feed. Its
- * date and source are in Today's one source line at the foot. A saved copy
- * says so above its rows and carries its own source line in the saved state
- * ("Updated 4 Oct · ParlInfo bill records · Saved 3 Oct").
+ * quiet and on the paper: no box around a failure or an empty feed. Once it
+ * has loaded, its own source line closes it, with the feed's own date and
+ * source ("Updated 17 Sep 2026 · ParlInfo bill records"); a saved copy says
+ * so above its rows and in that line ("… · Saved 3 Oct 2026").
  */
 export function TodayBlock<T>({
   block,
@@ -26,6 +27,8 @@ export function TodayBlock<T>({
   onRetry,
   testID,
   children,
+  sources,
+  sourceTitle,
   placeholder = 'rows',
 }: {
   block: Block<T> | null;
@@ -33,6 +36,10 @@ export function TodayBlock<T>({
   onRetry: () => void;
   testID: string;
   children: (data: T) => ReactNode;
+  /** The feed's source line: its date, sources, originals and note. */
+  sources: (block: Block<T>) => SourceDetails;
+  /** The source sheet's title: "About these bills". */
+  sourceTitle: string;
   placeholder?: 'rows' | 'people';
 }) {
   if (!block || block.status === 'loading')
@@ -66,15 +73,11 @@ export function TodayBlock<T>({
       ) : (
         children(block.data as T)
       )}
-      {block.stale && block.savedAt !== null ? (
-        <SourceLine
-          asOf={block.asAt}
-          citation={[...new Set(block.sources.map((source) => source.label))]}
-          savedAt={block.savedAt}
-          originals={block.sources}
-          testID={`${testID}-as-at`}
-        />
-      ) : null}
+      <SourceLine
+        title={sourceTitle}
+        {...sources(block)}
+        testID={`${testID}-as-at`}
+      />
     </View>
   );
 }

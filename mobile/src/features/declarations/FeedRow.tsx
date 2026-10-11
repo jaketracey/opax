@@ -3,18 +3,11 @@ import { findNodeHandle, Pressable, StyleSheet, View } from 'react-native';
 import type { recentDeclarationsFor } from '../../api/selectors';
 import { formatDate } from '../../design/format';
 import { chamberName } from '../../design/parliament';
-import { partyText } from '../../design/party';
-import {
-  Icon,
-  PartyLabel,
-  Text,
-  useAccessibilitySize,
-} from '../../design/primitives';
-import { colors, minimumTarget, rhythm } from '../../design/tokens';
+import { PersonRow, Text, useAccessibilitySize } from '../../design/primitives';
+import { minimumTarget, rhythm } from '../../design/tokens';
 import { openSource } from '../../navigation/external';
-import { CachedPortrait } from '../CachedPortrait';
 import { registerChangeLabel } from '../your-mp/model';
-import { originalLabel } from '../today/DeclarationRow';
+import { declarantRow, originalLabel } from '../today/DeclarationRow';
 import { shortDay } from '../today/parts';
 import { showRecordMenu } from '../today/RecordMenu';
 
@@ -43,7 +36,12 @@ export function tieText(tie: Tie) {
  * the chamber, on the row's one date line (Today's anatomy, with the chamber
  * the feed filters by).
  */
-export function feedDateLine(item: Pick<Declaration, 'category' | 'kind' | 'date' | 'chamber' | 'jurisdiction'>) {
+export function feedDateLine(
+  item: Pick<
+    Declaration,
+    'category' | 'kind' | 'date' | 'chamber' | 'jurisdiction'
+  >,
+) {
   return [
     item.category,
     `${registerChangeLabel(item.kind)} ${shortDay(item.date)}`,
@@ -54,15 +52,47 @@ export function feedDateLine(item: Pick<Declaration, 'category' | 'kind' | 'date
 }
 
 /**
- * One row of the declared-interests feed, on the paper as Today draws it:
- * portrait, the member's name and party (a dot and a name), the entry in the
- * member's own words and in full, then one date line ("Gift · added 31 Aug
- * · Senate"). The row opens the member's native profile when there is one.
- * "View original" (the register page) is a touch-and-hold action and a
- * VoiceOver action, as on Today; the registers are in the feed's source line
- * and on Sources and licences. Any name match the export found follows the
- * entry, in full, with its caveat.
+ * Consecutive entries by one member in the declared-interests feed, under
+ * one PersonRow (portrait, name, party as a dot and a name), which opens the
+ * member's native profile when there is one. Each entry follows in the
+ * member's own words and in full, with one date line ("Gift · added 31 Aug
+ * · Senate") and any name match the export found, with its caveat.
  */
+export function FeedGroup({
+  entries,
+  onOpenPerson,
+}: {
+  entries: readonly { item: Declaration; index: number }[];
+  /** Present only when the member has a native profile. */
+  onOpenPerson?: () => void;
+}) {
+  const stacked = useAccessibilitySize();
+  const first = entries[0]!;
+  return (
+    <View style={styles.frame}>
+      <PersonRow
+        {...declarantRow(
+          first.item,
+          `declaration-person-${first.index}`,
+          `declaration-portrait-${first.index}`,
+        )}
+        onPress={onOpenPerson}
+      />
+      <View style={[styles.entries, stacked ? null : styles.indent]}>
+        {entries.map(({ item, index }) => (
+          <FeedEntry
+            key={item.id}
+            item={item}
+            index={index}
+            onOpenPerson={onOpenPerson}
+          />
+        ))}
+      </View>
+    </View>
+  );
+}
+
+/** One feed row: a group of one entry. */
 export function FeedRow({
   item,
   index,
@@ -70,28 +100,34 @@ export function FeedRow({
 }: {
   item: Declaration;
   index: number;
-  /** Present only when the member has a native profile. */
   onOpenPerson?: () => void;
 }) {
-  const stacked = useAccessibilitySize();
-  const changed = registerChangeLabel(item.kind);
-  const party = item.party
-    ? partyText({
-        party: item.party,
-        status: item.partyStatus,
-        formerly: item.formerly,
-      }).spoken
-    : null;
-  const chamber = chamberName(item.chamber, item.jurisdiction);
+  return <FeedGroup entries={[{ item, index }]} onOpenPerson={onOpenPerson} />;
+}
+
+/**
+ * One entry, its own VoiceOver element, named so it reads on its own.
+ * "View original" (the register page) is a touch-and-hold action and a
+ * VoiceOver action, as on Today; the registers are in the feed's source
+ * line and on Sources and licences.
+ */
+function FeedEntry({
+  item,
+  index,
+  onOpenPerson,
+}: {
+  item: Declaration;
+  index: number;
+  onOpenPerson?: () => void;
+}) {
   const ties = item.ties?.length
     ? `Name match: ${item.ties.map(tieText).join('; ')}. Exact names only; this identifies a shared name across public registers, not wrongdoing.`
     : null;
   const original = () => void openSource(item.url, originalLabel(item));
   const label = [
     item.name,
-    party,
-    chamber,
-    `${item.category}, ${changed} ${formatDate(item.date)}`,
+    `${item.category}, ${registerChangeLabel(item.kind)} ${formatDate(item.date)}`,
+    chamberName(item.chamber, item.jurisdiction),
     item.description,
   ]
     .filter(Boolean)
@@ -109,60 +145,27 @@ export function FeedRow({
       findNodeHandle(menuAnchor.current) ?? undefined,
     );
   return (
-    <View style={styles.frame}>
+    <View style={styles.entry}>
       <Pressable
         ref={menuAnchor}
-        accessibilityRole={onOpenPerson ? 'button' : 'text'}
+        accessibilityRole="text"
         accessibilityLabel={label}
-        accessibilityHint={onOpenPerson ? 'Opens the profile' : undefined}
         accessibilityActions={[
           { name: 'viewOriginal', label: 'View original' },
         ]}
         onAccessibilityAction={(event) => {
           if (event.nativeEvent.actionName === 'viewOriginal') original();
         }}
-        onPress={onOpenPerson}
         onLongPress={menu}
-        testID={`declaration-person-${index}`}
-        style={({ pressed }) => [
-          styles.row,
-          stacked ? styles.stacked : null,
-          pressed && onOpenPerson ? styles.pressed : null,
-        ]}
+        testID={`declaration-entry-${index}`}
+        style={styles.main}
       >
-        <CachedPortrait
-          name={item.name}
-          testID={`declaration-portrait-${index}`}
-        />
-        <View style={styles.main}>
-          <View style={styles.head}>
-            <Text wordSafe variant="strong">
-              {item.name}
-            </Text>
-            {item.party ? (
-              <PartyLabel
-                party={item.party}
-                status={item.partyStatus}
-                formerly={item.formerly}
-                linked={false}
-                nested
-              />
-            ) : null}
-          </View>
-          {item.description ? (
-            <Text testID={`declaration-text-${index}`}>{item.description}</Text>
-          ) : null}
-          <Text
-            wordSafe
-            variant="fine"
-            testID={`declaration-change-${index}`}
-          >
-            {feedDateLine(item)}
-          </Text>
-        </View>
-        {onOpenPerson && !stacked ? (
-          <Icon name="chevron.right" size={13} tone="inkSoft" />
+        {item.description ? (
+          <Text testID={`declaration-text-${index}`}>{item.description}</Text>
         ) : null}
+        <Text wordSafe variant="fine" testID={`declaration-change-${index}`}>
+          {feedDateLine(item)}
+        </Text>
       </Pressable>
       {ties ? (
         <Text
@@ -170,7 +173,6 @@ export function FeedRow({
           variant="fine"
           tone="ink"
           testID={`declaration-ties-${index}`}
-          style={stacked ? null : styles.indent}
         >
           {ties}
         </Text>
@@ -183,22 +185,9 @@ export function FeedRow({
 const PORTRAIT_COLUMN = 44 + rhythm.heading;
 
 const styles = StyleSheet.create({
-  frame: { gap: rhythm.tight, paddingVertical: rhythm.row },
-  row: {
-    flexDirection: 'row',
-    alignItems: 'flex-start',
-    gap: rhythm.heading,
-    minHeight: minimumTarget,
-  },
-  stacked: { flexDirection: 'column' },
-  pressed: { backgroundColor: colors.sunken },
-  // flex: 1 would become a zero height basis when the row stacks.
-  main: {
-    flexGrow: 1,
-    flexShrink: 1,
-    alignSelf: 'stretch',
-    gap: rhythm.line + 2,
-  },
-  head: { gap: 2 },
+  frame: { gap: rhythm.line, paddingVertical: rhythm.row },
+  entries: { gap: rhythm.block },
   indent: { marginLeft: PORTRAIT_COLUMN },
+  entry: { gap: rhythm.tight },
+  main: { minHeight: minimumTarget, gap: rhythm.line + 2 },
 });

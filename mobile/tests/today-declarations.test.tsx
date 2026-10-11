@@ -22,11 +22,13 @@ jest.mock('../src/api/image-policy', () => ({
 }));
 const recent = decodeRecentInterests(pinned('/interests/recent.json'));
 const items = recentDeclarationsFor(recent, 300, catalogs).data!;
-const rowLabel = (renderer: TestRenderer.ReactTestRenderer) =>
+const labelOf = (renderer: TestRenderer.ReactTestRenderer, testID: string) =>
   renderer.root.find(
-    (n) =>
-      typeof n.type !== 'string' && n.props.testID === 'declaration-person-0',
+    (n) => typeof n.type !== 'string' && n.props.testID === testID,
   ).props.accessibilityLabel as string;
+// The member's row: name, party and chamber; each entry is its own element.
+const rowLabel = (renderer: TestRenderer.ReactTestRenderer) =>
+  labelOf(renderer, 'declaration-person-0');
 const render = (item: (typeof items)[number]) => {
   let renderer!: TestRenderer.ReactTestRenderer;
   act(() => {
@@ -34,7 +36,7 @@ const render = (item: (typeof items)[number]) => {
   });
   return renderer;
 };
-test('the feed names the actual category, change, party, chamber and date in its whole row', () => {
+test('the feed names the party and chamber on the member’s row and the category, change and date on the entry', () => {
   const item = items[0]!;
   expect(item).toMatchObject({
     name: 'Susan McDonald',
@@ -46,9 +48,12 @@ test('the feed names the actual category, change, party, chamber and date in its
   expect(label.startsWith(item.name)).toBe(true);
   expect(label).toContain('LNP');
   expect(label).toContain('Senate');
-  expect(label).toContain(
+  const entry = labelOf(renderer, 'declaration-entry-0');
+  expect(entry.startsWith(`${item.name}, `)).toBe(true);
+  expect(entry).toContain(
     `Sponsored travel or hospitality, added ${formatDate(item.date)}`,
   );
+  expect(entry).toContain(item.description!);
   // No source row: the register page is a "View original" action.
   expect(JSON.stringify(renderer.toJSON())).not.toContain('Register of');
   expect(originalLabel(item)).toContain('Register of Senators’ Interests');
