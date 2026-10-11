@@ -2,9 +2,12 @@ import {tableIdentityIndex} from './load_tables.mjs';
 import {TABLE_DATASETS} from '../portal/src/table-datasets.mjs';
 import {Miniflare,convertV4MiniflareOptions} from '../portal/node_modules/miniflare/dist/src/index.js';
 import {fileURLToPath} from 'node:url';
+import {readFile} from 'node:fs/promises';
+if(process.argv.slice(2).join(' ')!=='--local') throw Error('Privacy sweeps require --local');
 const policy=await tableIdentityIndex();
-const options=convertV4MiniflareOptions({workers:[{name:'tables',modules:true,script:'export default{fetch(){return new Response("local")}}',compatibilityDate:'2026-09-01',d1Databases:{TABLE_DB:'00000000-0000-0000-0000-000000000000'}}]});
-options.resourcePersistencePath=fileURLToPath(new URL('../portal/.wrangler/state/v3/',import.meta.url));
+const databaseId=(await readFile(new URL('../portal/wrangler.jsonc',import.meta.url),'utf8')).match(/"binding"\s*:\s*"TABLE_DB"[^}]*"database_id"\s*:\s*"([^"]+)"/)[1];
+const options=convertV4MiniflareOptions({workers:[{name:'tables',modules:true,script:'export default{fetch(){return new Response("local")}}',compatibilityDate:'2026-09-01',d1Databases:{TABLE_DB:databaseId}}]});
+options.resourcePersistencePath=process.env.OPAX_TABLE_LOCAL_DIR || fileURLToPath(new URL('../portal/.wrangler/state/v3/',import.meta.url));
 options.unsafeEnableSharedStorage=false;
 const mf=new Miniflare(options);
 try {
