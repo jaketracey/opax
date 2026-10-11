@@ -5,6 +5,7 @@
 //     GET  /status  queue counts, spend, cursors, last tick, recent errors
 //     POST /canary  {"rids": [<=10]} write those rids' stored dry-run results for real, with a full before/after diff
 //     POST /backfill/reconcile {"slugs": [<=200]} verify historic labels, reconcile unfinished work to priority 0
+//     POST /backfill/release {"slugs": [<=200]} release held historic tasks to pending at priority 0
 //   Nothing else is served.
 
 import { readConfig, type Env } from './env.ts'
@@ -12,7 +13,7 @@ import { Kb } from './kb.ts'
 import { parseCanaryBody, runCanary } from './canary.ts'
 import { buildStatus, bearerOk } from './status.ts'
 import { runTick } from './tick.ts'
-import { parseReconcileBody, reconcileHistoric } from './reconcile.ts'
+import { parseReconcileBody, reconcileHistoric, releaseHistoric } from './reconcile.ts'
 
 const json = (body: unknown, status = 200): Response =>
   new Response(JSON.stringify(body, null, 2), { status, headers: { 'content-type': 'application/json', 'cache-control': 'no-store' } })
@@ -37,27 +38,28 @@ export default {
   async fetch(request: Request, env: Env): Promise<Response> {
     const url = new URL(request.url)
     const route = `${request.method} ${url.pathname}`
-    if (route !== 'GET /status' && route !== 'POST /canary' && route !== 'POST /backfill/reconcile') return new Response('Not found', { status: 404 })
+    if (route !== 'GET /status' && route !== 'POST /canary' && route !== 'POST /backfill/reconcile' && route !== 'POST /backfill/release') return new Response('Not found', { status: 404 })
     if (!bearerOk(request.headers.get('authorization'), env.ENRICH_ADMIN_TOKEN)) {
       return new Response('Unauthorized', { status: 401, headers: { 'www-authenticate': 'Bearer' } })
     }
     if (route === 'GET /status') return json(await buildStatus(env.DB, readConfig(env), Date.now()))
 
-    if (route === 'POST /backfill/reconcile') {
+    if (route === 'POST /backfill/reconcile' || route === 'POST /backfill/release') {
       const parsed = parseReconcileBody(await request.json().catch(() => null))
       if ('error' in parsed) return json({ error: parsed.error }, 400)
       try {
-        return json(await reconcileHistoric({ db: env.DB, kb: new Kb(env), now: () => Date.now() }, parsed.slugs))
+        const action = route === 'POST /backfill/release' ? releaseHistoric : reconcileHistoric
+        return json(await action({ db: env.DB, kb: new Kb(env), now: () => Date.now(), historicHold: readConfig(env).historicHold }, parsed.slugs))
       } catch {
         // KB errors can contain slug or metadata text; return only a generic retry instruction.
-        return json({ error: 'reconciliation incomplete; verify historic push-log entries and retry' }, 503)
+        return json({ error: 'backfill operation incomplete; verify historic push-log entries and retry' }, 503)
       }
     }
 
     const parsed = parseCanaryBody(await request.json().catch(() => null))
     if ('error' in parsed) return json({ error: parsed.error }, 400)
     const out = await runCanary(
-      { db: env.DB, kb: new Kb(env), now: () => Date.now(), settle: (ms) => new Promise((resolve) => setTimeout(resolve, ms)) },
+      { db: env.DB, kb: new Kb(env), historicHold: readConfig(env).historicHold, now: () => Date.now(), settle: (ms) => new Promise((resolve) => setTimeout(resolve, ms)) },
       parsed.rids,
     )
     return json(out)
