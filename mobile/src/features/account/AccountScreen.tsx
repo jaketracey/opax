@@ -2,6 +2,7 @@ import { router } from 'expo-router';
 import { Screen } from '../../design/primitives';
 import { AccountSection } from './AccountSection';
 import { AccountLinks } from './AccountLinks';
+import { AccountRowsScreen } from './AccountRows';
 import { communityHome } from '../community/entry';
 import { voiceLinked } from '../../voice/linked';
 
@@ -19,11 +20,11 @@ import { voiceLinked } from '../../voice/linked';
  */
 export function AccountScreen() {
   const home = communityHome;
+  if (!voiceLinked) return <AccountRowsScreen />;
   return (
     <Screen column="wide" testID="account-sheet">
-      {voiceLinked ? <AccountSection /> : null}
+      <AccountSection />
       <AccountLinks
-        first={!voiceLinked}
         community={home ? () => router.push(home) : undefined}
         testID="account-links"
       />

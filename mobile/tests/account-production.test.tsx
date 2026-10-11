@@ -123,10 +123,15 @@ test('production bundles cannot see the sign-in or deletion screens', () => {
     'src/features/account/DeleteAccountFlow.tsx',
     'src/features/account/copy.ts',
     'src/features/account/store.ts',
+    'src/features/account/AccountSection.tsx',
+    'src/features/account/code.ts',
   ])
     expect([path, blocked(list, path)]).toEqual([path, true]);
   for (const path of [
     'src/features/account/entry.production.ts',
+    'src/features/account/store.production.ts',
+    'src/features/account/AccountRows.tsx',
+    'src/features/account/AccountLinks.tsx',
     'src/app/account/index.tsx',
     'src/app/account/about.tsx',
     'src/app/account/_layout.tsx',
@@ -134,6 +139,105 @@ test('production bundles cannot see the sign-in or deletion screens', () => {
     'src/features/About.tsx',
   ])
     expect([path, blocked(list, path)]).toEqual([path, false]);
+});
+
+// Review P2-3: Ask reads the account store, which the voice-off release
+// leaves out, so that release resolved nothing and failed to bundle.
+test.each([
+  ['0', 'src/features/account/store.production.ts'],
+  ['1', 'src/features/account/store.tsx'],
+])(
+  'production with voice %s resolves Ask’s account read at build time',
+  (voiceMode, expected) => {
+    const resolved = metro(
+      'production',
+      `
+      const path = require('node:path');
+      const c = require('./metro.config.js');
+      const context = { originModulePath: path.resolve('src/features/ask/AskScreen.tsx'),
+        resolveRequest: (_context, name) => ({ filePath: path.resolve('src/features/ask', name + '.tsx') }) };
+      process.stdout.write(JSON.stringify(['ios', 'android'].map((platform) =>
+        c.resolver.resolveRequest(context, '../account/store', platform).filePath)));
+    `,
+      voiceMode,
+    ) as string[];
+    expect(resolved).toEqual([
+      resolve(root, expected),
+      resolve(root, expected),
+    ]);
+  },
+);
+
+test('the voice-off store holds no account, so Ask never syncs or offers sign-in', async () => {
+  const stub = jest.requireActual('../src/features/account/store.production');
+  const real = jest.requireActual('../src/features/account/store');
+  expect(Object.keys(stub).sort()).toEqual(['accountSnapshot', 'useAccount']);
+  for (const name of Object.keys(stub))
+    expect(typeof real[name]).toBe('function');
+  const state = stub.accountSnapshot();
+  expect(stub.useAccount()).toBe(state);
+  expect(state.status).toMatchObject({
+    signedIn: false,
+    accountHeld: false,
+    activeSession: null,
+  });
+  expect(real.accountView(state)).toEqual({ kind: 'signedOut' });
+  // A submitted conversation is not pushed: no native request is attempted.
+  const { syncSubmittedChat } = jest.requireActual('../src/features/ask/sync');
+  await expect(
+    syncSubmittedChat(
+      {
+        id: 'fixture',
+        title: 'Fixture',
+        kind: 'all',
+        speaker: '',
+        created: 1,
+        updated: 1,
+        thread: [],
+      },
+      state.status,
+    ),
+  ).resolves.toBeUndefined();
+});
+
+test('voice-off Android shows the one list of rows, not the placeholder', () => {
+  jest.isolateModules(() => {
+    const { Platform } = jest.requireActual('react-native');
+    Object.defineProperty(Platform, 'OS', {
+      value: 'android',
+      configurable: true,
+    });
+    const Entry = jest.requireActual(
+      '../src/features/account/entry.production',
+    ).default;
+    const { AccountRowsScreen } = jest.requireActual(
+      '../src/features/account/AccountRows',
+    );
+    expect(Entry).toBe(AccountRowsScreen);
+    const React = jest.requireActual('react') as typeof import('react');
+    const Renderer = jest.requireActual(
+      'react-test-renderer',
+    ) as typeof TestRenderer;
+    let renderer!: TestRenderer.ReactTestRenderer;
+    React.act(() => {
+      renderer = Renderer.create(React.createElement(Entry));
+    });
+    const text = JSON.stringify(renderer.toJSON());
+    for (const row of [
+      'About OPAX',
+      'Sources and licences',
+      'Replay welcome tour',
+    ])
+      expect(text).toContain(row);
+    for (const absent of [
+      'Signing in is not in this version',
+      'Sign in',
+      'Delete account',
+      'Design workbench',
+    ])
+      expect(text).not.toContain(absent);
+    React.act(() => renderer.unmount());
+  });
 });
 
 test('development and e2e builds keep them', () => {

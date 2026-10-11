@@ -23,9 +23,13 @@ const productionStubs = [
   'src/features/electorate-map/outline-probe',
   'src/features/money/money-probe',
 ].map((module) => path.join(__dirname, module));
-const voiceEntries = ['account', 'talk'].map((feature) =>
-  path.join(__dirname, `src/features/${feature}/entry`),
-);
+const voiceEntries = [
+  ...['account', 'talk'].map((feature) =>
+    path.join(__dirname, `src/features/${feature}/entry`),
+  ),
+  // Ask reads the account; the voice-off release has none (store.production.ts).
+  path.join(__dirname, 'src/features/account/store'),
+];
 const communityEntry = path.join(__dirname, 'src/features/community/entry');
 config.resolver.resolveRequest = (context, moduleName, platform) => {
   const target = moduleName.startsWith('.')
@@ -48,11 +52,12 @@ config.resolver.resolveRequest = (context, moduleName, platform) => {
 const productionBlockList = require('./scripts/production-block-list.json').map(
   (source) => new RegExp(source),
 );
-// Account sign-in and deletion stay out of production until voice ships there:
-// only entry.production.ts (the placeholder) is visible to release bundles.
+// With the voice switch off, account sign-in and deletion stay out of
+// production: of this folder, release bundles see only the production entry
+// and store, and the rows the entry draws on Android.
 const accountSignIn = [
   /[/\\]src[/\\]app[/\\]account[/\\](?:sign-in|delete)\.tsx$/,
-  /[/\\]src[/\\]features[/\\]account[/\\](?!entry\.production\.ts$).*/,
+  /[/\\]src[/\\]features[/\\]account[/\\](?!(?:(?:entry|store)\.production\.ts|AccountRows\.tsx|AccountLinks\.tsx)$).*/,
 ];
 config.cacheVersion = `opax-${variant}-voice-${voiceEnabled ? 'on' : 'off'}${communityHidden ? '-community-off' : ''}${androidBuild ? '-android' : ''}`;
 const existing = config.resolver.blockList;
