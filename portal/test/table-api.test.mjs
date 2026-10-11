@@ -1,12 +1,12 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {readFile} from 'node:fs/promises';
 import {TABLE_DATASETS} from '../src/table-datasets.mjs';
 import {tableApi} from '../src/table-api.ts';
 import {tableDatabase} from './table-d1-harness.mjs';
 import {tableIdentityIndex} from '../../scripts/load_tables.mjs';
 import {identityHash} from '../src/table-identities.mjs';
 import {registerServerCSVContract} from './datatable-endpoint-contract.mjs';
+import {serializeQuery} from '../public/datatable.js';
 
 const rows=Object.fromEntries(Object.entries(TABLE_DATASETS).map(([name,c])=>[name,Array.from({length:260},(_,i)=>({row:Object.fromEntries(c.columns.map(col=>[col.key,col.key==='id' ? 'item-'+i : ['money','count'].includes(col.type) ? i+0.25 : col.type==='year' ? 2000+i : col.type==='category' ? (['portfolios','sectors','entities'].includes(col.key) ? ['Group '+i%2] : 'Group '+i%2) : col.type==='date' ? '2024-01-01' : col.key==='abn' ? '' : i===3 ? 'Needle record' : 'Record '+i]))}))]));
 const local=await tableDatabase({datasets:rows});test.after(()=>local.close());
@@ -34,15 +34,9 @@ test('canonical state uses JSON filters, normalises order and supports condition
   const cached=await fetchTable('contracts',new URLSearchParams({q:'needle','f.amount':'{"min":10,"max":100}'}),{headers:{'if-none-match':b.headers.get('etag')}});assert.equal(cached.status,304);assert.equal(cached.headers.get('x-robots-tag'),'noindex');
 });
 test('core serializer and D1 API integrate with category and range state',async()=>{
-  // Exercise core query exports without replacing its public module.
-  // At merge it is present at ../public/datatable.js; this branch still has the stub.
-  let module=await readFile(process.env.DT_CORE_MODULE_PATH || new URL('../public/datatable.js',import.meta.url),'utf8');
-  if(module.includes('STUB'))module=await readFile(new URL('./fixtures/core-query.mjs',import.meta.url),'utf8');
-  module=module.replace(/from '\.\/donor-entity\.js[^']*'/,"from '"+new URL('../public/donor-entity.js',import.meta.url).href+"'").replace("from './format.js'","from '"+new URL('../public/format.js',import.meta.url).href+"'");
-  const core=await import('data:text/javascript;base64,'+Buffer.from(module).toString('base64'));
   for(const prefix of [undefined,'t']){
     const query={filters:{jurisdiction:['Group 0'],amount:{min:10,max:20}},sort:{key:'amount',dir:'asc'},pageSize:2,page:2};
-    const response=await fetchTable('contracts',core.serializeQuery(query,prefix));assert.equal(response.status,200);
+    const response=await fetchTable('contracts',serializeQuery(query,prefix));assert.equal(response.status,200);
     const page=await response.json();assert.equal(page.total,5);assert.deepEqual(page.rows.map(r=>r.amount),[14.25,16.25]);
   }
 });
