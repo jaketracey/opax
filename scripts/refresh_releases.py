@@ -145,14 +145,20 @@ def main(argv: list[str] | None = None) -> int:
         return 0
 
     failed = False
+    paused = set()
     if not args.no_fetch:
         for s in sources:
             before = count_source(db, s)
-            rc, out, err, secs = _run(fetch_argv(py, db, s, args.since), args.fetch_timeout, env)
+            rc, out, err, secs = _run(fetch_argv(py, db, s, args.since), args.fetch_timeout,
+                                     dict(env, OPAX_SOURCE_NAME=f"releases_{s}"))
             after = count_source(db, s)
             entry = {"before": before, "after": after, "rc": rc, "seconds": round(secs),
                      "added": after["rows"] - before["rows"]}
-            if rc != 0:
+            if rc == 4:
+                paused.add(s)
+                entry["status"] = "paused"
+                print(f"source paused: honest agent refused (awaiting permission); source=releases_{s}; existing data kept", flush=True)
+            elif rc != 0:
                 failed = True
                 entry["error"] = (err or out)[-400:]
             report["sources"].setdefault(s, {})["fetch"] = entry
@@ -168,6 +174,9 @@ def main(argv: list[str] | None = None) -> int:
                 failed = True
                 print(f"KB safety check failed, publishing nothing: {blocked}", flush=True)
         for s in sources:
+            if s in paused:
+                report["sources"][s]["publish"] = {"skipped": "source paused; existing data kept"}
+                continue
             if blocked:
                 report["sources"].setdefault(s, {})["publish"] = {"skipped": blocked}
                 continue
@@ -185,7 +194,7 @@ def main(argv: list[str] | None = None) -> int:
             print(f"[{s}] publish({entry['mode']}) rc={rc} " + json.dumps({k: entry.get(k) for k in ("accepted", "created", "existing", "failed")}),
                   flush=True)
     print(json.dumps(report, indent=2))
-    return 1 if failed else 0
+    return 1 if failed else (4 if paused else 0)
 
 
 if __name__ == "__main__":

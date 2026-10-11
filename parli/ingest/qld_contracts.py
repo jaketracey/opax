@@ -21,6 +21,8 @@ files are kept once. Values are AUD; the award date is ISO.
 """
 from __future__ import annotations
 
+from parli.ingest import http as source_http
+
 import argparse
 import csv
 import hashlib
@@ -41,7 +43,7 @@ from pathlib import Path
 from parli.ingest.replace_guard import env_allow_shrink, replace_guard
 
 SOURCE = "qld_contract_disclosure"
-UA = "OPAX research (https://opax.com.au; contact jake.tracey@noice.work)"
+UA = source_http.USER_AGENT
 CKAN = "https://www.data.qld.gov.au/api/3/action/package_search"
 QUERIES = ["contract disclosure", "contracts disclosure", "contract disclosure report"]
 
@@ -94,10 +96,10 @@ def log(*a):
 
 
 def get(url: str, tries: int = 4) -> bytes:
-    req = urllib.request.Request(url, headers={"User-Agent": UA})
+    req = source_http.Request(url, headers={"User-Agent": source_http.USER_AGENT})
     for attempt in range(tries):
         try:
-            with urllib.request.urlopen(req, timeout=180) as resp:
+            with source_http.urlopen(req, timeout=180) as resp:
                 return resp.read()
         except urllib.error.HTTPError as e:
             # a file the portal no longer has is gone; only a busy server earns a retry

@@ -99,21 +99,23 @@ under public/. SQL statements are kept below 80 KB where possible. No raw
 source snapshot or withheld identity is written to SQL. The local helper accepts
 only `--local` and never prints SQL or source identities. Preparation is
 repeatable; applying the manifest replaces table data and rebuilds FTS indexes.
-Rebuild and reload the manifest for this revision: it adds accent-insensitive
-rejection hashes while retaining the earlier hashes.
+Rebuild and reload the manifest for this revision: it adds separator-stripped
+rejection hashes while retaining every earlier hash and its word count.
 Run the load to completion before exposing the binding: a partial load is not a
 published snapshot. D1 fixtures in the tests use Miniflare, never production.
 
 ## Merge orchestrator only: production setup
 
-Create the real database with `wrangler d1 create opax-tables`, then replace the
-placeholder UUID on the production and staging `TABLE_DB` bindings with the real
-ID. Both configurations currently name this same table database. Review the
-sanitised local manifest and privacy sweep before loading. After building from
-the release exports, the orchestrator applies every file in manifest order:
+The production and staging `TABLE_DB` bindings both name the configured
+`opax-tables` database. Rebuild the sanitised manifest and verify its local
+privacy sweep before deployment. Release order is **deploy, reload, verify**:
+deploy the Worker built from these release exports, then apply every manifest
+file in order, then verify the fingerprint and privacy endpoints. Privacy
+datasets return 503 with `Retry-After: 60` between deployment and the completed
+reload. Instruments and audit do not require this fingerprint. The orchestrator loads:
 
 ```sh
-cd portal
+cd portal || exit
 node --input-type=module <<'JS'
 import {readFile} from 'node:fs/promises';
 import {spawnSync} from 'node:child_process';
@@ -235,3 +237,22 @@ The final capped CSV continuation additionally ends with the separate record
 # Export truncated at 50,000 rows. The core joins up to five continuation pages,
 removes repeated headers and range trailers, and preserves that final record.
 The shared contract registration certifies the combined real endpoint export.
+## Complete publication registry
+
+The table loader seeds the complete donor registry from raw source identities held in memory, including compact-block numeric identifiers, and adds private recipient and supplier identities. The Worker reads `/table-private-identities.json`, containing only `{hash, words}` entries. Existing SHA-256 inputs and word counts are unchanged: `identityVariants` produces NFKD accent-insensitive and legacy NFKC lowercase ASCII word phrases, inverted-name variants, and eleven-digit identifier variants; `words` remains the phrase word count. A full rebuild and ordered D1 reload is required to install the additional hashes, not a schema migration. The build also emits `src/table-registry-fingerprint.json` for the Worker and records `privacy_fingerprint` in D1's `table_meta`, published in the last SQL file. This fingerprint is SHA-256 of the sorted identity hashes joined by a newline, with no trailing newline. The API requires an exact match before any privacy dataset SQL or cached response. Missing or stale metadata returns 503 with `Retry-After: 60`, no rows and no echo. Additional compact forms use NFKC, case folding and letters/digits only, with the SHA-256 input `stripped:v1:` followed by that form. Their `words` field is 1. Minimum length is 4; lengths 4–5 require token boundaries and lengths 6+ also match substrings after separator removal. `/table-private-identities.json` adds `strippedLengths`; D1 adds the `privacy_stripped_lengths` metadata row. The D1 schema stays unchanged, and the fingerprint includes both hash domains. All previous hashes and word counts remain unchanged. The orchestrator uses the remote manifest loop above after merge deployment; this lane uses local D1 only. The local sweep resolves TABLE_DB’s production database_id from wrangler.jsonc and rejects an empty store.
+
+After the ordered reload, verify the published metadata (hashes only):
+
+```sh
+npx wrangler d1 execute opax-tables --remote --command "SELECT key,value FROM table_meta WHERE key IN ('version','privacy_fingerprint','privacy_stripped_lengths');"
+node --input-type=module -e "import build from './src/table-registry-fingerprint.json' with {type:'json'}; console.log(build.fingerprint)"
+```
+
+The D1 fingerprint must equal the build fingerprint. Then verify the five privacy
+page and CSV endpoints and the complete runtime rejection set against the
+release, using counts-only diagnostics. An interrupted reload must finish before
+these datasets can serve; the fingerprint marker is written last.
+
+Round 7 adds compact hashes to the same ordered manifest reload; no command or schema migration changes. The build fingerprint is `f620d6a19ecb395c34e4f2f2e6a8b2a1e07e5524510c3b48ec962d7359b6ffd7`. Deploy, reload every manifest file using the remote loop above, then verify this fingerprint and the privacy endpoints. Privacy tables stay unavailable until the new fingerprint is installed.
+
+The ordinary-query regression sample contains 53 distinct terms derived from existing tests and fictional workbench fixtures. Compact matching rejects one additional term (1/53, 1.89%); this ambiguous compact identity remains blocked. The 751 reviewer-derived donor and recipient compact variants are all rejected. Every prior 8,766 word hash and word count is retained; the new registry contains 17,518 hashes.

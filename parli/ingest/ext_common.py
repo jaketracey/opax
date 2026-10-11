@@ -38,6 +38,8 @@ limits by default.
 
 from __future__ import annotations
 
+from parli.ingest import http as source_http
+
 import base64
 import gzip
 import json
@@ -59,7 +61,7 @@ from parli.ingest.replace_guard import (  # noqa: F401  (re-exported for the loa
     DEFAULT_MIN_RATIO, ExtGuardError, env_allow_shrink, replace_guard,
 )
 
-USER_AGENT = "OPAX research (opax.com.au; contact jake.tracey@noice.work)"
+USER_AGENT = source_http.USER_AGENT
 DEFAULT_DB_HOST = os.environ.get("OPAX_DB_HOST", "desktop")
 DEFAULT_REMOTE_DB = os.environ.get("OPAX_REMOTE_DB", "/home/jake/.cache/autoresearch/parli.db")
 CACHE_ROOT = Path(os.environ.get("OPAX_CACHE", "~/.cache/autoresearch/ext_money")).expanduser()
@@ -88,10 +90,11 @@ def log(*args) -> None:
 # ── HTTP ─────────────────────────────────────────────────────────────────────
 
 def make_session(total_retries: int = 4, backoff: float = 1.5) -> requests.Session:
-    s = requests.Session()
-    s.headers.update({"User-Agent": USER_AGENT, "Accept-Language": "en-AU,en;q=0.9"})
+    s = source_http.Session()
+    s.headers.update({"User-Agent": source_http.USER_AGENT, "Accept-Language": "en-AU,en;q=0.9"})
     retry = Retry(total=total_retries, backoff_factor=backoff,
-                  status_forcelist=(429, 500, 502, 503, 504),
+                  # Shared transport owns throttling and its preserved-source exit.
+                  status_forcelist=(500, 502, 504),
                   allowed_methods=frozenset(["GET", "POST"]))
     s.mount("https://", HTTPAdapter(max_retries=retry))
     s.mount("http://", HTTPAdapter(max_retries=retry))

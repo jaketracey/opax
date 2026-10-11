@@ -1,3 +1,4 @@
+import {saConversationInput} from './sa-evidence-harness.mjs';
 import * as passageText from '../src/passage-text.ts';
 import test from 'node:test';
 import assert from 'node:assert/strict';
@@ -32,7 +33,8 @@ function harness(responses, env = {}) {
     return value;
   };
   const ctx = { waitUntil(p) { pending.push(p); } };
-  const api = runInNewContext(transpile(code) + ';({apiAsk,apiAskStream})', {
+  const api = runInNewContext(transpile(code) + ';({apiAsk,apiAskStream})', {saConversationInput,
+    saSendData:async (_event,data)=>data,
     isWitness, loadPeople: async () => ({byFold:new Map()}), scopeSpeakerBody: async () => {}, // External scoped retrieval is exercised in witness-split.test.mjs.
     ...passageText, ...helpers, Response, Request, URL, Date, AbortController, AbortSignal, TransformStream, TextEncoder,
     REFUSAL_PREFIXES: ['not enough data'], ASK_SYNC_TIMEOUT_MS: 1000, ASK_STALL_MS: 1000, ASK_RETRY_BUDGET_MS: 1000,
@@ -41,9 +43,10 @@ function harness(responses, env = {}) {
     questionNamesWithheldDonor: async () => false, readerTurns: () => [], withheldDonorAnswer: () => ({}), MODEL_BUDGET_HEADER: 'x-opax-model-budget', modelBudgetBusy: () => new Response(null, { status: 503 }), 
     rankedMoneyAnswer: async () => null, paidAnswer: async () => null, standaloneQuestion: async () => null, needsAskPeople: () => false, resolveAskScope: input => ({ input, scope: {} }),
     askCacheInput: () => null, cacheBypass: () => false, rateLimited: async () => null,
+    isPersonOverviewCandidate: () => false, isPersonOverviewIntent: () => false, isPersonRecentCandidate: () => false, isPersonRecentIntent: () => false, overviewPayload: async payload => ({...payload,is_overview_intent:false}),
     retrieveAskRecords: async () => ({ records: [], coverage: '', total: 0 }),
     buildAskBody: input => ({ query: input.question, citations: 'llm_footnotes', prompt: { user: 'Answer {question} from {context}. ' + helpers.FOOTNOTE_INSTRUCTIONS } }),
-    json: (data, status = 200) => new Response(JSON.stringify(data), { status }), withCacheStatus: r => r,
+    json: (data, status = 200) => new Response(JSON.stringify(data), { status }), sanitiseStoredResponse:async r=>r,sanitiseStoredDonors:v=>v,withCacheStatus: r => r,
     healthyRetrieval: () => false, lighterAsk: b => b, recordSources: () => [], label: () => null, calibrate: score => score,
     kbFetch: async (_env, _path, init) => new Response(JSON.stringify(next(init.body))),
     streamAskGuarded: async (_env, body) => next(body),

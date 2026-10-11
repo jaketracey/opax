@@ -23,7 +23,7 @@ const tableIndex = await tablePrivacyIndex();
 const renderSittingWeek = (data, week, people, slugs, today, footer, query) => rawSittingWeek(data, week, people, slugs, today, footer, query, tableIndex.safe);
 const period = calendar.periods.find(w => w.start === '2026-10-12');
 const fixtureWeek = deriveWeek(period,records.bills,records.divisions,calendar.updated);
-const data = {...calendar,snapshotDate:calendar.updated,latestFederalDivision:'2026-08-20',weeks:[fixtureWeek]};
+const data = {...calendar,snapshotDate:calendar.updated,billUpdated:'2026-10-04',latestFederalDivision:'2026-08-20',weeks:[fixtureWeek]};
 const people = [{name:'Faruqi',pid:'10912'},{name:'Mehreen Faruqi',pid:'10912',speeches:30}];
 const slugs = new Map([['Mehreen Faruqi','mehreen-faruqi']]);
 
@@ -58,7 +58,7 @@ test('SSR week uses the validated sponsor, dated Machine-written label and 2D ti
 test('empty week retains calendar facts and a zero-row division table',()=>{
   const week = deriveWeek(period,[],[],calendar.updated);
   const page = renderSittingWeek({...data,weeks:[week]},week,[],new Map(),'2026-10-10');
-  for (const fact of ['12 Oct 2026','15 Oct 2026','House of Representatives','Senate','14 Oct 2026','Bills and divisions appear here the morning after each sitting day']) assert.ok(page.html.includes(fact),fact);
+  for (const fact of ['12 Oct 2026','15 Oct 2026','House of Representatives','Senate','14 Oct 2026',"Bill details update when Parliament's site allows our crawler"]) assert.ok(page.html.includes(fact),fact);
   assert.doesNotMatch(page.html,/loading|opening|<h2>Bills introduced|<h2>Divisions held|<ul class="hub-records">/i);
   assert.match(page.html,/data-vote-table/);
   assert.match(page.html,/Showing 0–0 of 0/);
@@ -168,7 +168,7 @@ test('offline build drops individual donor and politician fields even when sourc
   const files={
     'config/sitting-2026.json':calendar,'config/estimates-2026-10.json':cfg,
     'corpus.json':{version:'2026-10-10'},
-    'bills/index.json':{bills:records.bills},...Object.fromEntries(records.bills.map(b=>[`bills/${b.key}.json`,structuredClone(b)])),
+    'bills/index.json':{generated_at:'2026-10-04T16:27:54Z',bills:records.bills},...Object.fromEntries(records.bills.map(b=>[`bills/${b.key}.json`,structuredClone(b)])),
     'divisions/index.json':{divisions:records.divisions},...Object.fromEntries(records.divisions.map(d=>[`divisions/${d.slug}.json`,{...d,title:null} ])),
     'agencies.json':{meta:{generated_at:'2026-10-03'},agencies:[{id:'a-fixture',name:'Fixture Agency',profile_path:'/agencies/fixture.json'}]},
     'agencies/fixture.json':{...sentinels,contracts:[{id:'CN1',title:'Fixture contract',supplier:'Organisation',amount:20,published:'2026-10-02',...sentinels}]},
@@ -219,4 +219,35 @@ test('bad weeks return a real 404 with noindex; hubs keep SSR and remove SPA sta
     assert.match(source,/route.kind === 'hub'\) rewriter.on\('script\[src\]'/);
     assert.match(source,/main#main/);
   } finally {globalThis.HTMLRewriter=previous;}
+});
+test('hubs carry the breadcrumb, one dated source line per records block, and the shared link and type rules',async()=>{
+  const page = renderSittingWeek(data,fixtureWeek,people,slugs);
+  assert.match(page.html,/^<nav class="crumbs prerender-crumbs"[^>]*>[\s\S]*href="\/sitting">Sitting weeks<\/a>[\s\S]*aria-current="page"><svg[^]*?<span class="crumb-label">12 Oct 2026 – 15 Oct 2026<\/span>/);
+  assert.match(page.html,/<h1>[^<]+<\/h1><p class="hub-meta">House of Representatives and Senate<\/p>/);
+  // The shared table contains its own section; inspect each complete hub block.
+  const sections = page.html.split('<section class="hub-section">').slice(1);
+  assert.equal(sections.length,2);
+  for (const section of sections) {
+    const lines = section.match(/<span class="ui-source-text">[^]*?<\/span><\/span>/g)||[];
+    assert.equal(lines.length,1);assert.match(lines[0],/\d{1,2} \w{3} \d{4}/);
+  }
+  assert.doesNotMatch(page.html,/hub-pills|hub-cutoff|hub-trail|ui-tag|<footer/);
+  const estimates = renderEstimates(await json('hubs/estimates-2026-10.json')).html;
+  assert.equal((estimates.match(/class="ui-pop ui-source"/g)||[]).length,2);
+  assert.equal((estimates.match(/not payments/g)||[]).length,1);
+  assert.match(estimates,/<nav class="hub-toc"[^>]*>[\s\S]*href="#group-A"/);
+  assert.doesNotMatch(estimates,/\$\d{1,3}(,\d{3}){2,}|ui-tag|hub-cutoff/);
+  const css = await readFile(new URL('../public/hubs.css',import.meta.url),'utf8');
+  assert.doesNotMatch(css.replace(/\/\*[\s\S]*?\*\//g,''),/--bills-|max-width: 960px|font-size|font: \d|border-left|--space-\d|--line\b/);
+});
+
+test('bill source date stays with retained snapshot while the corpus advances',async()=>{
+  const index = await json('hubs/index.json');
+  const bills = await json('bills/index.json');
+  assert.equal(index.billUpdated,bills.generated_at.slice(0,10));
+  const html = renderSittingWeek({...data,snapshotDate:'2026-10-10'},fixtureWeek,people,slugs).html;
+  const billSection = html.match(/<h2>Bills introduced[\s\S]*?<\/section>/)[0];
+  assert.match(billSection,/Updated 4 Oct 2026/);
+  assert.doesNotMatch(billSection,/Updated 10 Oct 2026/);
+  assert.ok(html.includes("Bill details update when Parliament's site allows our crawler"));
 });

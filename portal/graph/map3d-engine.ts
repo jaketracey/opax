@@ -1089,7 +1089,7 @@ export class KnowledgeMapEngine {
         const caption = document.createElement('div')
         caption.className = 'rp-map3d-territory'
         caption.style.color = style.ink
-        const groupLabel = group.charAt(0).toUpperCase() + group.slice(1)
+        const groupLabel = ['individual', 'individuals'].includes(group) ? 'Industry not recorded' : group.charAt(0).toUpperCase() + group.slice(1)
         const captionFull = `${groupLabel} · ${count}`
         caption.textContent = captionFull
         caption.style.display = 'none'
@@ -1583,7 +1583,7 @@ export class KnowledgeMapEngine {
     dot.setAttribute('aria-hidden', 'true')
     let name: string
     if (hub) {
-      name = hub.group.charAt(0).toUpperCase() + hub.group.slice(1)
+      name = ['individual', 'individuals'].includes(hub.group) ? 'Industry not recorded' : hub.group.charAt(0).toUpperCase() + hub.group.slice(1)
       dot.style.background = `#${hub.anchor.colour.getHexString()}`
       this.popupMeta.textContent = 'Industry cluster'
       const parties = hub.flows.length

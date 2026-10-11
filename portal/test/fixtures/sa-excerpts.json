@@ -1,0 +1,88 @@
+{
+  "sa": {
+    "slug": "speech-900001",
+    "title": "Regional infrastructure — 2024-09-12",
+    "speaker": null,
+    "labels": {
+      "kind": "speech",
+      "state": "sa",
+      "source": "sa_hansard",
+      "chamber": "sa_ha"
+    },
+    "metadata": {
+      "date": "2024-09-12",
+      "source_url": "https://hansardsearch.parliament.sa.gov.au/daily/lh/2024-09-12/1"
+    },
+    "topics": [
+      "infrastructure-transport"
+    ],
+    "url": "https://hansardsearch.parliament.sa.gov.au/daily/lh/2024-09-12/1",
+    "summary": "The speech discusses how public services and regional infrastructure are planned and funded.",
+    "text": "The record discusses public services and regional infrastructure in statement 0. The record discusses public services and regional infrastructure in statement 1. The record discusses public services and regional infrastructure in statement 2. The record discusses public services and regional infrastructure in statement 3. The record discusses public services and regional infrastructure in statement 4. The record discusses public services and regional infrastructure in statement 5. The record discusses public services and regional infrastructure in statement 6. The record discusses public services and regional infrastructure in statement 7. The record discusses public services and regional infrastructure in statement 8. The record discusses public services and regional infrastructure in statement 9. The record discusses public services and regional infrastructure in statement 10. The record discusses public services and regional infrastructure in statement 11. The record discusses public services and regional infrastructure in statement 12. The record discusses public services and regional infrastructure in statement 13. The record discusses public services and regional infrastructure in statement 14. The record discusses public services and regional infrastructure in statement 15. The record discusses public services and regional infrastructure in statement 16. The record discusses public services and regional infrastructure in statement 17. The record discusses public services and regional infrastructure in statement 18. The record discusses public services and regional infrastructure in statement 19. The record discusses public services and regional infrastructure in statement 20. The record discusses public services and regional infrastructure in statement 21. The record discusses public services and regional infrastructure in statement 22. The record discusses public services and regional infrastructure in statement 23. The record discusses public services and regional infrastructure in statement 24. The record discusses public services and regional infrastructure in statement 25. The record discusses public services and regional infrastructure in statement 26. The record discusses public services and regional infrastructure in statement 27. The record discusses public services and regional infrastructure in statement 28. The record discusses public services and regional infrastructure in statement 29. The record discusses public services and regional infrastructure in statement 30. The record discusses public services and regional infrastructure in statement 31. The record discusses public services and regional infrastructure in statement 32. The record discusses public services and regional infrastructure in statement 33. The record discusses public services and regional infrastructure in statement 34. The record discusses public services and regional infrastructure in statement 35. The record discusses public services and regional infrastructure in statement 36. The record discusses public services and regional infrastructure in statement 37. The record discusses public services and regional infrastructure in statement 38. The record discusses public services and regional infrastructure in statement 39."
+  },
+  "nonSA": [
+    {
+      "slug": "speech-900002",
+      "title": "Regional infrastructure — 2024-09-12",
+      "speaker": null,
+      "labels": {
+        "kind": "speech",
+        "state": "federal",
+        "source": "zenodo",
+        "chamber": "representatives"
+      },
+      "metadata": {
+        "date": "2024-09-12"
+      },
+      "topics": [
+        "infrastructure-transport"
+      ],
+      "url": "https://example.test/federal",
+      "summary": "The speech discusses how public services and regional infrastructure are planned and funded.",
+      "text": "The record discusses public services and regional infrastructure in statement 0. The record discusses public services and regional infrastructure in statement 1. The record discusses public services and regional infrastructure in statement 2. The record discusses public services and regional infrastructure in statement 3. The record discusses public services and regional infrastructure in statement 4. The record discusses public services and regional infrastructure in statement 5. The record discusses public services and regional infrastructure in statement 6. The record discusses public services and regional infrastructure in statement 7. The record discusses public services and regional infrastructure in statement 8. The record discusses public services and regional infrastructure in statement 9. The record discusses public services and regional infrastructure in statement 10. The record discusses public services and regional infrastructure in statement 11. The record discusses public services and regional infrastructure in statement 12. The record discusses public services and regional infrastructure in statement 13. The record discusses public services and regional infrastructure in statement 14. The record discusses public services and regional infrastructure in statement 15. The record discusses public services and regional infrastructure in statement 16. The record discusses public services and regional infrastructure in statement 17. The record discusses public services and regional infrastructure in statement 18. The record discusses public services and regional infrastructure in statement 19. The record discusses public services and regional infrastructure in statement 20. The record discusses public services and regional infrastructure in statement 21. The record discusses public services and regional infrastructure in statement 22. The record discusses public services and regional infrastructure in statement 23. The record discusses public services and regional infrastructure in statement 24. The record discusses public services and regional infrastructure in statement 25. The record discusses public services and regional infrastructure in statement 26. The record discusses public services and regional infrastructure in statement 27. The record discusses public services and regional infrastructure in statement 28. The record discusses public services and regional infrastructure in statement 29. The record discusses public services and regional infrastructure in statement 30. The record discusses public services and regional infrastructure in statement 31. The record discusses public services and regional infrastructure in statement 32. The record discusses public services and regional infrastructure in statement 33. The record discusses public services and regional infrastructure in statement 34. The record discusses public services and regional infrastructure in statement 35. The record discusses public services and regional infrastructure in statement 36. The record discusses public services and regional infrastructure in statement 37. The record discusses public services and regional infrastructure in statement 38. The record discusses public services and regional infrastructure in statement 39.",
+      "snapshot_sha256": "42c3cf8e475e289571d8d78f05a6b93537869004db6e9bc727138ba1205055f0"
+    },
+    {
+      "slug": "speech-900003",
+      "title": "Regional infrastructure — 2024-09-12",
+      "speaker": null,
+      "labels": {
+        "kind": "speech",
+        "state": "vic",
+        "source": "vic_hansard",
+        "chamber": "vic_la"
+      },
+      "metadata": {
+        "date": "2024-09-12"
+      },
+      "topics": [
+        "infrastructure-transport"
+      ],
+      "url": "https://example.test/vic",
+      "summary": "The speech discusses how public services and regional infrastructure are planned and funded.",
+      "text": "The record discusses public services and regional infrastructure in statement 0. The record discusses public services and regional infrastructure in statement 1. The record discusses public services and regional infrastructure in statement 2. The record discusses public services and regional infrastructure in statement 3. The record discusses public services and regional infrastructure in statement 4. The record discusses public services and regional infrastructure in statement 5. The record discusses public services and regional infrastructure in statement 6. The record discusses public services and regional infrastructure in statement 7. The record discusses public services and regional infrastructure in statement 8. The record discusses public services and regional infrastructure in statement 9. The record discusses public services and regional infrastructure in statement 10. The record discusses public services and regional infrastructure in statement 11. The record discusses public services and regional infrastructure in statement 12. The record discusses public services and regional infrastructure in statement 13. The record discusses public services and regional infrastructure in statement 14. The record discusses public services and regional infrastructure in statement 15. The record discusses public services and regional infrastructure in statement 16. The record discusses public services and regional infrastructure in statement 17. The record discusses public services and regional infrastructure in statement 18. The record discusses public services and regional infrastructure in statement 19. The record discusses public services and regional infrastructure in statement 20. The record discusses public services and regional infrastructure in statement 21. The record discusses public services and regional infrastructure in statement 22. The record discusses public services and regional infrastructure in statement 23. The record discusses public services and regional infrastructure in statement 24. The record discusses public services and regional infrastructure in statement 25. The record discusses public services and regional infrastructure in statement 26. The record discusses public services and regional infrastructure in statement 27. The record discusses public services and regional infrastructure in statement 28. The record discusses public services and regional infrastructure in statement 29. The record discusses public services and regional infrastructure in statement 30. The record discusses public services and regional infrastructure in statement 31. The record discusses public services and regional infrastructure in statement 32. The record discusses public services and regional infrastructure in statement 33. The record discusses public services and regional infrastructure in statement 34. The record discusses public services and regional infrastructure in statement 35. The record discusses public services and regional infrastructure in statement 36. The record discusses public services and regional infrastructure in statement 37. The record discusses public services and regional infrastructure in statement 38. The record discusses public services and regional infrastructure in statement 39.",
+      "snapshot_sha256": "b7c411ceac0220bdfe94ad6e97b29a1c1ce34f4f9ac66d003ab6ff6cc59394ac"
+    },
+    {
+      "slug": "speech-900004",
+      "title": "Regional infrastructure — 2024-09-12",
+      "speaker": null,
+      "labels": {
+        "kind": "speech",
+        "state": "qld",
+        "source": "qld_hansard",
+        "chamber": "qld_la"
+      },
+      "metadata": {
+        "date": "2024-09-12"
+      },
+      "topics": [
+        "infrastructure-transport"
+      ],
+      "url": "https://example.test/qld",
+      "summary": "The speech discusses how public services and regional infrastructure are planned and funded.",
+      "text": "The record discusses public services and regional infrastructure in statement 0. The record discusses public services and regional infrastructure in statement 1. The record discusses public services and regional infrastructure in statement 2. The record discusses public services and regional infrastructure in statement 3. The record discusses public services and regional infrastructure in statement 4. The record discusses public services and regional infrastructure in statement 5. The record discusses public services and regional infrastructure in statement 6. The record discusses public services and regional infrastructure in statement 7. The record discusses public services and regional infrastructure in statement 8. The record discusses public services and regional infrastructure in statement 9. The record discusses public services and regional infrastructure in statement 10. The record discusses public services and regional infrastructure in statement 11. The record discusses public services and regional infrastructure in statement 12. The record discusses public services and regional infrastructure in statement 13. The record discusses public services and regional infrastructure in statement 14. The record discusses public services and regional infrastructure in statement 15. The record discusses public services and regional infrastructure in statement 16. The record discusses public services and regional infrastructure in statement 17. The record discusses public services and regional infrastructure in statement 18. The record discusses public services and regional infrastructure in statement 19. The record discusses public services and regional infrastructure in statement 20. The record discusses public services and regional infrastructure in statement 21. The record discusses public services and regional infrastructure in statement 22. The record discusses public services and regional infrastructure in statement 23. The record discusses public services and regional infrastructure in statement 24. The record discusses public services and regional infrastructure in statement 25. The record discusses public services and regional infrastructure in statement 26. The record discusses public services and regional infrastructure in statement 27. The record discusses public services and regional infrastructure in statement 28. The record discusses public services and regional infrastructure in statement 29. The record discusses public services and regional infrastructure in statement 30. The record discusses public services and regional infrastructure in statement 31. The record discusses public services and regional infrastructure in statement 32. The record discusses public services and regional infrastructure in statement 33. The record discusses public services and regional infrastructure in statement 34. The record discusses public services and regional infrastructure in statement 35. The record discusses public services and regional infrastructure in statement 36. The record discusses public services and regional infrastructure in statement 37. The record discusses public services and regional infrastructure in statement 38. The record discusses public services and regional infrastructure in statement 39.",
+      "snapshot_sha256": "e34e440fa4d3c42b6f63d3aae587be4bac08c1d2f624fc697e2ae456ee6cc745"
+    }
+  ]
+}

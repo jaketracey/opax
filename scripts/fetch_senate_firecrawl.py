@@ -1,7 +1,7 @@
 """Compatibility entry point for a bounded, date-aware Senate refresh.
 
-FIRECRAWL_API_KEY must be supplied in the environment. Uses the same approved
-basic-proxy path, cache invalidation and credit cap as the daily pipeline.
+Historical filename retained for compatibility. Uses direct honest HTTP only;
+refused sources are paused, as in the daily pipeline.
 Saved pages are parsed; nothing is loaded unless --db is passed explicitly.
 """
 import sys

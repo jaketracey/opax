@@ -109,9 +109,9 @@ test('neutral individual aggregates carry only counts and numeric totals, withou
   const row=page.rows.find(r=>r.aggregate);
   assert.deepEqual(row,{aggregate:{kind:'individual-donors',count:12},name:'Donors not named (12)',amount:12345.67,count:20});
   const html=dataTableHTML(config,page);
-  assert.match(html,/Donors not named \(12\)/); assert.ok(!html.includes('unsafe-id')); assert.ok(!html.includes('untrusted'));
+  assert.match(html,/Donors not named \(12\)/); assert.match(html,/<details class="donor-aggregate">/); assert.match(html,/OPAX names organisations only/); assert.ok(!html.includes('unsafe-id')); assert.ok(!html.includes('untrusted'));
   assert.ok(!html.includes('href="#undefined"'));
-  assert.match(toCSV(page.rows,config),/Donors not named \(12\),,,12345.67,20/);
+  assert.match(toCSV(page.rows,config),/Donors not named \(12\),,,12345.67,20/); assert.ok(!toCSV(page.rows,config).includes('OPAX names organisations only'));
   assert.equal(toCSV([aggregate],{...config,privacy:undefined}),toCSV([aggregate],config));
   const numericPrimary={...config,columns:config.columns.map(c=>({...c,primary:c.key === 'amount'}))};
   assert.equal(toCSV([aggregate],numericPrimary),toCSV([aggregate],config));
@@ -154,4 +154,17 @@ test('query engine uses its row argument for server facet options and isolates c
   assert.equal(applyQuery(reverse,config,{}).rows[0].id,'organisation-1');
   const unsorted={...config,columns:config.columns.map(c=>c.key === 'amount' ? {...c,sortable:false} : c)};
   assert.equal(applyQuery(reverse,unsorted,{}).rows[0].id,'organisation-9');
+});
+
+test('server hydration validates pending state while preserving approved facet selections',async()=>{
+  const h=tableHarness('http://localhost/table?t.f.region='+encodeURIComponent(JSON.stringify(['Victoria'])));
+  const page={rows:[rows[0]],total:9,page:1,pageSize:5,facets:{region:[{value:'Victoria',count:4}]}};
+  h.root.querySelector=selector=>selector==='[data-dt-page]'?{textContent:JSON.stringify(page)}:null;
+  let request;
+  h.win.fetch=async input=>{request=new URL(input);return Response.json(page);};
+  const mounted=mountDataTable(h.root,{...config,rows:undefined,source:{endpoint:'/__fixtures/table/receipts'}});
+  await new Promise(setImmediate);
+  assert.equal(request.searchParams.get('f.region'),JSON.stringify(['Victoria']));
+  assert.equal(new URL(h.win.location.href).searchParams.get('t.f.region'),JSON.stringify(['Victoria']));
+  mounted.destroy();
 });

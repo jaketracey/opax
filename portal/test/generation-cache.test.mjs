@@ -1,3 +1,4 @@
+import {saConversationInput} from './sa-evidence-harness.mjs';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync,mkdtempSync,rmSync} from 'node:fs';
@@ -57,16 +58,20 @@ test('failed responses, account responses and oversized generations never enter 
  await f.flush();assert.equal(f.shared.size,0);
 });
 const index=readFileSync(new URL('../src/index.ts',import.meta.url),'utf8');
-const routeCode=ts.transpileModule(index.slice(index.indexOf('async function apiAsk('),index.indexOf('/** A short overview grounded')), {compilerOptions:{target:ts.ScriptTarget.ES2022}}).outputText;
+const source=ts.createSourceFile('index.ts',index,ts.ScriptTarget.ES2022,true);
+const handler=source.statements.find(statement=>ts.isFunctionDeclaration(statement) && statement.name?.text==='apiAsk');
+assert.ok(handler,'the actual Ask handler is present');
+const routeCode=ts.transpileModule(handler.getText(source), {compilerOptions:{target:ts.ScriptTarget.ES2022}}).outputText;
 test('Ask checks shared cache before quota, while conversations and explicit refresh bypass it',async()=>{
  let cacheReads=0,quota=0;
- const api=runInNewContext(routeCode+';apiAsk', {URL,Request,Response,AbortSignal,Date,
+ const api=runInNewContext(routeCode+';apiAsk', {saConversationInput,URL,Request,Response,AbortSignal,Date,saPublicResponse:async response=>response,
   // The donor privacy check and model budget are exercised in donor-privacy.test.mjs and model-budget.test.mjs.
   questionNamesWithheldDonor: async () => false, readerTurns: () => [], withheldDonorAnswer: () => ({}), MODEL_BUDGET_HEADER: 'x-opax-model-budget', modelBudgetBusy: () => new Response(null, { status: 503 }), 
+  isPersonOverviewCandidate:()=>false,isPersonRecentCandidate:()=>false,isPersonRecentIntent:()=>false,
   rankedMoneyAnswer: async () => null, paidAnswer: async () => null, standaloneQuestion: async () => null, withAskedAs:p=>p, needsAskPeople:()=>false,resolveAskScope:input=>({input}),askCacheInput:input=>input.context?.length?null:'public',
   cacheRequest:()=>key(),sha256Hex:async()=>'',cacheBypass:(r,u)=>u.searchParams.get('nocache')==='1',
   readGenerationCache:async()=>{cacheReads++;return Response.json({answer:'Cached'})},
-  rateLimited:async()=>{quota++;return Response.json({error:'limited'},{status:429})},json:Response.json,withCacheStatus:r=>r});
+  rateLimited:async()=>{quota++;return Response.json({error:'limited'},{status:429})},json:Response.json,sanitiseStoredResponse:async r=>r,sanitiseStoredDonors:v=>v,withCacheStatus:r=>r});
  const req=(input,url='')=>new Request('https://opax.test/api/ask'+url,{method:'POST',body:JSON.stringify(input)});
  assert.equal((await (await api(req({question:'Q'}),{CACHE_EPOCH:'v1'},{})).json()).answer,'Cached');assert.equal(quota,0);
  assert.equal((await api(req({question:'Q',context:[{text:'private'}]}),{CACHE_EPOCH:'v1'},{})).status,429);
@@ -74,3 +79,15 @@ test('Ask checks shared cache before quota, while conversations and explicit ref
  assert.equal(cacheReads,1);assert.equal(quota,2);
 });
 test.after(()=>rmSync(dir,{recursive:true,force:true}));
+
+test('edge reads, shared reads and both cache writes withhold runtime export labels and aliases',async()=>{
+ const {privacySourceGraphs}=await import('../../scripts/withhold_donor_assets.mjs');
+ const {donorNameWithheld,donorPrivacyIndex,foldDonorName}=await import('../public/donor-entity.js');
+ const graphs=privacySourceGraphs(),context={index:donorPrivacyIndex(graphs),registry:JSON.parse(readFileSync(new URL('../src/donor-withheld.json',import.meta.url),'utf8')),hash:s=>createHash('sha256').update(s).digest('hex')},n=privacySourceGraphs().flatMap(g=>g.nodes).find(n=>n.kind==='donor'&&donorNameWithheld(context.index,n.label)&&!context.registry.names[context.hash(foldDonorName(n.label))]?.exempt);
+ assert.ok(n);const payload={answer:`${n.label} to a council.`,sources:[{title:`${n.label} to the party.`,url:'/subject/donor/'+encodeURIComponent(n.label)}]};
+ const safe=text=>{assert.ok(!text.toLowerCase().includes(n.label.toLowerCase()),'cache retains registered identity');assert.ok(!text.includes(encodeURIComponent(n.label)),'cache retains profile URL')};
+ const f=fixture();store(f.env,f.ctx,key(),Response.json(payload),3600);await f.flush();
+ safe(await f.edge.get(key().url).clone().text());safe([...f.shared.values()][0].body);
+ f.edge.set(key().url,Response.json(payload,{headers:{'x-opax-shared-cache':'1'}}));safe(await (await read(f.env,f.ctx,key())).text());
+ f.edge.clear();const [id,entry]=[...f.shared.entries()][0];f.shared.set(id,{...entry,body:JSON.stringify(payload)});safe(await (await read(f.env,f.ctx,key())).text());await f.flush();safe(await f.edge.get(key().url).clone().text());
+});

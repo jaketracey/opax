@@ -1,8 +1,11 @@
+import {donorsNotNamedDetail} from "../public/donor-views.js"
+import { shortDate } from '../public/format.js'
 import { personUrl, partyUrl } from '../public/canonical-urls.js'
 import {sponsorPerson} from '../public/sponsor-person.js'
 import {currentSittingPath, sydneyDay} from '../public/hubs-data.js'
 import {isOrganisationDonor, donorPrivacyIndex, donorNameWithheld, foldDonorName, MONEY_GRAPHS, withheldPhrases, namesWithheldPhrase} from '../public/donor-entity.js'
-import {renderDivisionMarkdown, divisionPlain} from '../public/division-markdown.js'
+import {renderDivisionMarkdown, divisionPlain, billNoteRepair, billStripTitle, billStripStage} from '../public/division-markdown.js'
+import {machineLabelHTML} from '../public/labels.js'
 import {divisionTableConfig, voteTableConfig, personVoteKeys, divisionRows, votingRows, voteTablePage, voteTableHTML} from '../public/vote-tables.js'
 import {tablePrivacyCheckFromRead} from './table-privacy.ts'
 import type {Query} from '../public/datatable.js'
@@ -84,6 +87,22 @@ export function crumbsHTML(items: Crumb[] = []): string {
 export function answerBlock(title: string, description: string, body = '', crumbs: Crumb[] = []): string {
   body = associationCaveat(body, `${description} ${body}`)
   return `${crumbsHTML(crumbs)}<section id="prerender" class="wrap"><h1>${escapeHtml(title)}</h1><p>${escapeHtml(description)}</p>${body}</section>`
+}
+/** Pages whose whole text is served by the Worker, copied from their panel in index.html. */
+export const SERVER_PANELS: ReadonlySet<string> = new Set(['privacy', 'support'])
+/**
+ * The server-rendered copy of a policy page (/privacy, /support): the inner
+ * markup of its panel in the shell (index.html), so the page a crawler or a
+ * reader without scripts gets and the app's panel have one source. It keeps the
+ * section anchors for readers without scripts; spa-shell.js drops the copy's
+ * ids once the panel is back, and `.spa-ready #prerender` hides it. Null when
+ * the panel is missing or holds a nested section the pattern cannot bound.
+ */
+export function panelPrerender(shell: string, name: string): string | null {
+  if (!SERVER_PANELS.has(name)) return null
+  const m = new RegExp(`<section id="panel-${name}"[^>]*>([\\s\\S]*?)</section>`).exec(shell)
+  if (!m || /<section\b/.test(m[1])) return null
+  return `<section id="prerender" class="wrap policy-page" data-panel-copy="${name}">${m[1]}</section>`
 }
 export const ASSOCIATION_CAVEAT = 'An association does not prove influence.'
 export function associationCaveat(body: string, facts: string): string {
@@ -175,6 +194,7 @@ export async function renderPersonAnswer(p: Person, read: ReadAsset, slugs: Map<
     const register = id && /^[\w-]+$/.test(id) ? await optional<Interest>(read,`/interests/${id}.json`) : null
     body += '<h2>Declared interests</h2>'
     if (register) {
+      if (register.as_at) body += `<p>Updated ${escapeHtml(shortDate(register.as_at))}</p>`
       body += `<p>${count(register.total)} recorded entries${register.as_at ? ` in the latest register snapshot, as at ${escapeHtml(register.as_at)}` : ''}.</p><ul>`
       // The register's own words (CC BY-NC-ND): an entry naming a withheld donor is
       // left out whole, never reworded, and the official register still has it.
@@ -191,6 +211,7 @@ export async function renderPersonAnswer(p: Person, read: ReadAsset, slugs: Map<
     } else body += '<p>No register of interests in this export.</p>'
   }
   body += '<h2>Donors to their party</h2><p>Donations to a party are not personal donations to this member. An association does not prove influence.</p>'
+  const sharedDonors=await donorIndex(read).catch(()=>({organisations:new Set<string>(),withheld:new Set<string>()}))
   if (party) for (const [path,source] of [['/graph/money.json','AEC'],['/graph/money.qld.json','ECQ'],['/graph/money.vic.json','VEC']]) {
     const graph = await optional<MoneyGraph>(read,path)
     const node = graph?.nodes.find(n=>n.kind==='party' && fold(n.label)===fold(party))
@@ -198,9 +219,12 @@ export async function renderPersonAnswer(p: Person, read: ReadAsset, slugs: Map<
     const donors = new Map(graph.nodes.filter(n=>n.kind==='donor').map(n=>[n.id,n]))
     const flows = graph.edges.filter(e=>e.target===node.id && !e.grant && !e.flow && donors.has(e.source))
     // Only donors with positive organisation evidence are named; the industry tag never counts.
-    const unnamed = new Set(flows.filter(e=>!isOrganisationDonor(donors.get(e.source))).map(e=>e.source)).size
-    const organisations = flows.filter(e=>isOrganisationDonor(donors.get(e.source))).sort((a,b)=>b.total-a.total).slice(0,10)
-    body += `<h3>${escapeHtml(source)} disclosed receipts</h3><p>${unnamed} donors in this export are not named here: individuals, and organisations without a recorded legal form. ${escapeHtml(graph.meta.coverage || '')}</p><ul>${organisations.map(e=>`<li>${link(`/subject/donor/${encodeURIComponent(donors.get(e.source)!.label)}`,donors.get(e.source)!.label)} — ${currency(e.total)}</li>`).join('')}</ul>`
+    const hiddenFlows=flows.filter(e=>donorNameWithheld(sharedDonors,donors.get(e.source)!.label))
+    const hiddenIds=new Set(hiddenFlows.map(e=>e.source))
+    const unnamed=graph.nodes.filter(n=>n.kind==='donor'&&hiddenIds.has(n.id)).length
+    const hiddenAmount=hiddenFlows.reduce((sum,e)=>sum+e.total,0)
+    const organisations = flows.filter(e=>!donorNameWithheld(sharedDonors,donors.get(e.source)!.label)).sort((a,b)=>b.total-a.total).slice(0,10)
+    body += `<h3>${escapeHtml(source)} disclosed receipts</h3><p>${escapeHtml(graph.meta.coverage || '')}</p><ul>${organisations.map(e=>`<li>${link(`/subject/donor/${encodeURIComponent(donors.get(e.source)!.label)}`,donors.get(e.source)!.label)} — ${currency(e.total)}</li>`).join('')}${unnamed?`<li><details><summary>Donors not named (${unnamed}) — ${currency(hiddenAmount)}</summary><p>${escapeHtml(donorsNotNamedDetail)}</p></details></li>`:''}</ul>`
     body += `<p>Source: ${escapeHtml(graph.meta.sourceShort || graph.meta.source || source)}. Federal and state returns are shown separately and never summed.</p>${original(graph.meta.source_url || (source==='AEC' ? 'https://transparency.aec.gov.au/' : source==='ECQ' ? 'https://disclosures.ecq.qld.gov.au/' : 'https://disclosures.vec.vic.gov.au/'))}`
   }
   const owned = sponsored?.sponsored[p.pid || p.name] || []
@@ -224,7 +248,7 @@ export function renderBillAnswer(b: Bill, people: Person[], slugs: Map<string,st
   const divisionSlot = '<!--bill-divisions-->'
   body += divisionSlot
 
-  if (b.summary) body += `<h2>Plain-language summary</h2><p>${escapeHtml(b.summary.attribution || 'Written by a model; not the record')}${b.summary.as_of ? `, as at ${escapeHtml(b.summary.as_of)}` : ', date not recorded'}.</p>${(b.summary.sentences || []).slice(0,10).map(s=>`<p>${escapeHtml(s)}</p>`).join('')}<ul>${(b.summary.changes || []).slice(0,10).map(s=>`<li>${escapeHtml(s)}</li>`).join('')}</ul>${b.summary.affected ? `<p>${escapeHtml(b.summary.affected)}</p>` : ''}`
+  if (b.summary) body += `<h2>Plain-language summary</h2><p>${machineLabelHTML({pill:true,notRecord:true})} ${b.summary.as_of ? `As at ${escapeHtml(b.summary.as_of)}` : 'Date not recorded'}.</p>${(b.summary.sentences || []).slice(0,10).map(s=>`<p>${escapeHtml(s)}</p>`).join('')}<ul>${(b.summary.changes || []).slice(0,10).map(s=>`<li>${escapeHtml(s)}</li>`).join('')}</ul>${b.summary.affected ? `<p>${escapeHtml(b.summary.affected)}</p>` : ''}`
   else body += '<h2>Plain-language summary</h2><p>No machine-written summary in this export.</p>'
   const sameSponsor = related.filter(r=>r.key!==b.key && !!b.sponsor && fold(r.sponsor || '')===fold(b.sponsor)).slice(0,20)
   const samePortfolio = related.filter(r=>r.key!==b.key && !!b.portfolio && fold(r.portfolio || '')===fold(b.portfolio)).slice(0,20)

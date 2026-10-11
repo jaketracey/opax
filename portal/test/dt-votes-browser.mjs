@@ -20,6 +20,15 @@ const slug=person.name.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g
 const cases=[['bill','/bill/au-federal-r7534','#bill-body [data-vote-table]','dv','outcome'],['person','/subject/person/'+slug,'#subject-votes [data-vote-table]','vr','vote'],['hub','/sitting/2026-09-14','.hub-section [data-vote-table]','dv','outcome']];
 const samples=[...new Set([...index.donors.slice(0,2),...index.recipients.slice(0,3),...index.recipientABNs.slice(0,3)])];
 const privacyResults=[],measurements=[],csvGates=[],aliasChecks=[];
+const clearFilters=async table=>{
+  const filters=table.locator('[data-panel="filters"]');
+  if(await filters.evaluate(el=>el.open))await filters.locator(':scope > summary').click();
+  const clear=table.locator('[data-clear]').last();
+  if(await clear.count()){
+    await clear.evaluate(el=>el.scrollIntoView({block:'center'}));
+    await clear.click();
+  }
+};
 await mkdir(out,{recursive:true});
 const browser=await chromium.launch({executablePath:process.env.OPAX_CHROME || '/usr/bin/google-chrome',headless:true,args:['--no-sandbox','--disable-background-networking','--host-resolver-rules=MAP * ~NOTFOUND, EXCLUDE 127.0.0.1']});
 let stage='start';
@@ -82,13 +91,13 @@ try {
         await table.locator('[data-search]').fill(searchValue);await table.locator('form').evaluate(el=>el.requestSubmit());await settled();
         await page.reload();await settled();assert.equal(await table.locator('[data-search]').inputValue(),searchValue);
         await page.keyboard.press('Escape');await page.keyboard.press('Escape');
-        if(await table.locator('[data-clear]').count())await table.locator('[data-clear]').last().click();await settled();
+        await clearFilters(table);await settled();
         const value=data.facets[facet]?.[0]?.value;assert.ok(value,'the source supplies category facets');
         await table.locator('[data-panel="filters"] > summary').click();await table.locator(`[data-panel="facet-${facet}"] > summary`).click();
         await table.locator(`[data-facet="${facet}"]`).filter({hasText:value}).first().click();await settled();
         assert.ok(JSON.parse(new URL(page.url()).searchParams.get(urlKey+'.f.'+facet)).includes(value));
         await page.keyboard.press('Escape');await page.keyboard.press('Escape');
-        if(await table.locator('[data-clear]').count())await table.locator('[data-clear]').last().click();await settled();
+        await clearFilters(table);await settled();
         if(width===1280)await table.locator('[data-sort="date"]').click();else await table.locator('[data-sort-select]').selectOption('date:asc');await settled();
         if(data.total>25){await table.locator('[data-page="2"]').click();await settled();assert.equal(requests.at(-1).url.searchParams.get('page'),'2');}
         stage=`${label}-${width}: actual CSV`;

@@ -1,3 +1,4 @@
+import sourceIdentity from '../../parli/ingest/user-agent.json' with { type: 'json' }
 // A small client for the OPAX knowledge box (Progress Agentic RAG, Nuclia-style REST).
 // Same zone, base URL and service-account header the production Worker uses
 // (portal/src/index.ts kbFetch); same endpoints as parli/arag.py and the Codex
@@ -84,7 +85,7 @@ export class Kb implements KbApi {
     // Not `fetch` itself: a bare reference called as a method throws "Illegal invocation" in Workers.
     this.fetcher = fetcher ?? ((input, init) => fetch(input, init))
     this.base = `https://${env.ARAG_ZONE}.rag.progress.cloud/api/v1/kb/${env.ARAG_KB_ID}`
-    this.headers = { 'content-type': 'application/json', 'x-nuclia-serviceaccount': `Bearer ${env.ARAG_KB_TOKEN}` }
+    this.headers = { 'user-agent': sourceIdentity.user_agent, 'content-type': 'application/json', 'x-nuclia-serviceaccount': `Bearer ${env.ARAG_KB_TOKEN}` }
   }
 
   private async call(method: string, path: string, body?: unknown, allow404 = false, timeoutMs = TIMEOUT_MS): Promise<any> {
@@ -119,6 +120,11 @@ export class Kb implements KbApi {
 
   getBasic(rid: string): Promise<KbResource | null> {
     return this.call('GET', `/resource/${rid}?show=basic`, undefined, true)
+  }
+
+  /** Admin reconciliation resolves only successful push-log slugs. */
+  getBySlug(slug: string): Promise<KbResource | null> {
+    return this.call('GET', `/slug/${encodeURIComponent(slug)}?show=basic`, undefined, true)
   }
 
   async getSummaryBody(rid: string): Promise<string> {

@@ -1,3 +1,5 @@
+import {build} from 'esbuild';
+import {sanitiseStoredDonors} from '../src/donor-hashes.mjs';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
@@ -5,9 +7,12 @@ import { runInNewContext } from 'node:vm';
 import { createHash, webcrypto } from 'node:crypto';
 import ts from 'typescript';
 
+const bundle=await build({entryPoints:[new URL('../src/donor-stored-response.ts',import.meta.url).pathname],bundle:true,write:false,platform:'node',format:'esm'});
+const privacy=await import('data:text/javascript;base64,'+Buffer.from(bundle.outputFiles[0].text).toString('base64'));
+const localRequire=p=>p==='./donor-stored-response'?privacy:p==='./donor-hashes.mjs'?{sanitiseStoredDonors}:(()=>{throw Error('Unexpected dependency')})();
 const exports = {};
 const code = ts.transpileModule(readFileSync(new URL('../src/bill-text.ts', import.meta.url), 'utf8'), {compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022}}).outputText;
-runInNewContext(code, {exports,Response,Request,URL,TextEncoder,crypto:webcrypto});
+runInNewContext(code, {exports,require:localRequire,Response,Request,URL,TextEncoder,crypto:webcrypto});
 const {handleBillText} = exports;
 const key = 'au-federal-r7542';
 const source = '1  Short title 😀\n    Original provision\n\nSchedule 1\nFinal provision.';

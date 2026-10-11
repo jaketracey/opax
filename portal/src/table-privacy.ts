@@ -1,28 +1,46 @@
-import {loadTableIdentityIndex} from './table-identities.mjs'
+import {compileHashedIdentityCheck} from './table-identity-hashes.mjs'
 
 const indices = new WeakMap<Fetcher, Promise<(text: string) => boolean>>()
 const readers = new WeakMap<Function, Fetcher>()
-/** SSR renderers share the same index through their disk/ASSETS read boundary. */
+const readChecks = new WeakMap<Fetcher, Promise<(text: string) => boolean>>()
+/** Adapt SSR's read boundary to the same complete hashed registry. */
 export function tablePrivacyCheckFromRead(read: (path: string) => Promise<unknown>): Promise<(text: string) => boolean> {
   let assets = readers.get(read)
   if (!assets) {
     assets = {fetch: async (request: Request) => Response.json(await read(new URL(request.url).pathname))} as Fetcher
     readers.set(read, assets)
   }
-  return tablePrivacyCheck(assets)
+  let pending = readChecks.get(assets)
+  if (!pending) {
+    pending = tablePrivacyCheck(assets).then(check => {
+      // The shared index is immutable for this reader. Bound repeated row,
+      // scalar and facet checks to this render without duplicating its policy.
+      const results = new Map<string, boolean>()
+      return text => {
+        if (results.has(text)) return results.get(text)!
+        const safe = check(text)
+        if (results.size >= 256) results.clear()
+        results.set(text, safe)
+        return safe
+      }
+    })
+    readChecks.set(assets, pending)
+  }
+  return pending
 }
-/** Shared graph index, independent of client rows. In donor tables there are no
- * office-holder exemptions: a donor search must not reflect a withheld name. */
+/** Complete build-time registry: donor, recipient and supplier identities.
+ * Only hashes are served; anonymised graphs cannot reconstruct this index. */
 export async function tablePrivacyCheck(assets: Fetcher): Promise<(text: string) => boolean> {
   let pending = indices.get(assets)
   if (!pending) {
-    pending = loadTableIdentityIndex(async path => {
-      const response = await assets.fetch(new Request(`https://opax.com.au${path}`))
+    pending = (async () => {
+      const response = await assets.fetch(new Request('https://opax.com.au/table-private-identities.json'))
       if (!response.ok) throw new Error('Privacy index unavailable')
-      return response.json()
-    }).then(index => {
-      return (text: string) => !index.check(text)
-    }).catch(() => {indices.delete(assets); return () => false})
+      const registry = await response.json() as {version:number;identities:{hash:string;words:number}[];strippedLengths:number[]}
+      if(registry.version!==1 || !Array.isArray(registry.strippedLengths) || !registry.strippedLengths.length || registry.strippedLengths.some(n=>!Number.isSafeInteger(n)||n<4))throw new Error('Privacy index unavailable')
+      const blocked=compileHashedIdentityCheck(registry.identities,registry.strippedLengths)
+      return (text: string) => !blocked(text)
+    })().catch(() => {indices.delete(assets); return () => false})
     indices.set(assets, pending)
   }
   return pending

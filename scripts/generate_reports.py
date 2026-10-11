@@ -15,6 +15,15 @@ to use the installed Codex CLI for figures, positions and the introduction.
 Narratives use the knowledge box’s configured writer. This does not trigger enrichment.
 """
 
+try:
+    from scripts.donor_public import public_donor_data
+except ModuleNotFoundError:
+    from donor_public import public_donor_data
+import sys as _http_sys
+from pathlib import Path as _HttpPath
+_http_sys.path.insert(0, str(_HttpPath(__file__).resolve().parents[1]))
+from parli.ingest import http as source_http
+
 import argparse
 from collections import Counter, defaultdict
 from concurrent.futures import ThreadPoolExecutor
@@ -558,7 +567,7 @@ def openrouter_tool_call(schema: dict, prompt: str) -> dict:
         }}],
         "tool_choice": {"type": "function", "function": {"name": name}},
     }
-    req = urllib.request.Request(
+    req = source_http.Request(
         "https://openrouter.ai/api/v1/chat/completions",
         data=json.dumps(body).encode(),
         headers={"content-type": "application/json", "authorization": f"Bearer {key}"})
@@ -568,7 +577,7 @@ def openrouter_tool_call(schema: dict, prompt: str) -> dict:
     data: dict = {}
     for attempt in range(4):
         try:
-            with urllib.request.urlopen(req, timeout=180) as r:
+            with source_http.urlopen(req, timeout=180) as r:
                 data = json.load(r)
             break
         except Exception as error:  # noqa: BLE001 - any transport failure
@@ -2649,7 +2658,7 @@ def main() -> None:
                 report["sections"] = sections
             report["version"] = 2
             report["generated_at"] = datetime.now(timezone.utc).isoformat(timespec="seconds")
-            path.write_text(json.dumps(report, indent=1) + "\n")
+            path.write_text(json.dumps(public_donor_data(report), indent=1) + "\n")
         print(f"Wrote {args.only} for {len(picked)} report(s). {budget_line()}")
         return
 
@@ -2662,7 +2671,7 @@ def main() -> None:
         prior = load_prior(slug)
         if args.stats_only:
             report = {**prior, "stats": all_stats.get(slug)}
-            report_path(slug).write_text(json.dumps(report, indent=1) + "\n")
+            report_path(slug).write_text(json.dumps(public_donor_data(report), indent=1) + "\n")
             print(f"[{slug}] embedded audited static stats")
             continue
 
@@ -2693,7 +2702,7 @@ def main() -> None:
         def checkpoint(**blocks: object) -> None:
             report.update(blocks)
             report["generated_at"] = datetime.now(timezone.utc).isoformat(timespec="seconds")
-            report_path(slug).write_text(json.dumps(report, indent=1) + "\n")
+            report_path(slug).write_text(json.dumps(public_donor_data(report), indent=1) + "\n")
 
         checkpoint()
         checkpoint(now=build_now(kb, slug, rows, args.since))

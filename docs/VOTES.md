@@ -1,5 +1,10 @@
 # Voting records (divisions) — audit, source survey, pipeline, ingestion plan
 
+**10 October 2026 update:** the supplied snapshot already contains all 10,575
+cached TVFY IDs through 20 August. The historical 6,924 gap below is no longer
+the remaining gap. The XML feed, current reconciliation and staging-only schema
+proof are documented in [DATA-OA-FEED.md](DATA-OA-FEED.md).
+
 Status 2026-09-02 (second pass): audit complete, source survey complete, and the pipeline
 runs end to end — `parli/ingest/votes_state.py` fetches real divisions from NSW, VIC, QLD
 and the federal table, normalises every voter's name, and loads them into two new additive

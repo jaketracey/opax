@@ -1,7 +1,9 @@
 // Division and voting-record rollout using the shared server-mode core.
-import {dataTableHTML, mountDataTable, applyQuery} from './datatable.js?v=ceedd17925';
+import {dataTableHTML, mountDataTable, applyQuery, guardTableURL} from './datatable.js?v=465c80b0a4';
+// Guard and render must share the core module's rejection-state registry.
+export {guardTableURL};
 import {shortDate} from './format.js';
-import {statusLabelHTML} from './labels.js?v=804befe8de';
+import {statusLabelHTML} from './labels.js?v=c6bf994ef7';
 import {divisionPlain} from './division-markdown.js?v=5991511166';
 
 const sentence = value => { const text = String(value || '').replace(/_/g, ' ').trim(); return text ? text[0].toUpperCase() + text.slice(1).toLowerCase() : ''; };
@@ -102,7 +104,7 @@ export function votingRows(votes = [], bills = []) {
 }
 
 export function voteTablePage(rows, config, query = {}) {
-  return applyQuery(rows, config, {...query, sort:query.sort || config.defaultSort});
+  return applyQuery(rows, config, query);
 }
 
 // Presentation stays outside the core: the contract has no cell-render callback.

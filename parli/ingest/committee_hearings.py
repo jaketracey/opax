@@ -3,7 +3,7 @@ parli.ingest.committee_hearings -- Ingest Australian federal committee hearing t
 Senate Estimates (`estimate`), other Senate committees (`commsen`), House committees (`commrep`) and Joint
 committees (`commjnt`).
 
-Data source: parlinfo.aph.gov.au (the Firefox user agent below is required: the WAF refuses honest ones).
+Data source: parlinfo.aph.gov.au; honest agent only, pause on refusal.
 
   discovery   the ParlInfo summary listing for a date window (one row per transcript fragment, all four datasets in one
               query). The RSS feed gives 15 items and the estimates schedule page only estimates, so neither is used
@@ -34,6 +34,8 @@ Legacy discovery is still available: --schedule (estimates schedule page), --dis
 """
 
 from __future__ import annotations
+
+from parli.ingest import http as source_http
 
 import argparse
 import difflib
@@ -75,7 +77,7 @@ ESTIMATES_SCHEDULE_URL = (
 )
 
 USER_AGENT = (
-    "Mozilla/5.0 (X11; Linux x86_64; rv:128.0) Gecko/20100101 Firefox/128.0"
+    source_http.USER_AGENT
 )
 
 RATE_LIMIT_SECS = 1.0  # Minimum seconds between requests
@@ -125,9 +127,9 @@ class RateLimitedSession:
 
     def __init__(self, rate_limit: float = RATE_LIMIT_SECS, retries: int = 3, session=None,
                  sleep=time.sleep, clock=time.time):
-        self.session = session or requests.Session()
+        self.session = session or source_http.Session()
         self.session.headers.update({
-            "User-Agent": USER_AGENT,
+            "User-Agent": source_http.USER_AGENT,
             "Accept": "text/html,application/xhtml+xml,application/xml",
         })
         self.rate_limit = rate_limit
@@ -155,7 +157,9 @@ class RateLimitedSession:
                 self._sleep(backoff)
                 backoff *= 2
                 continue
-            if resp.status_code in (403, 429):
+            source_http.check_response(url, resp.status_code, getattr(resp, "content", resp.text))
+            if resp.status_code == 429:
+                self._sleep(source_http.retry_after(resp.headers.get("Retry-After")))
                 self.blocked += 1
                 if self.blocked >= 3:
                     raise SourceBlocked(f"ParlInfo answered {resp.status_code} {self.blocked} times running; stopping")

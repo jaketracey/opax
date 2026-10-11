@@ -48,8 +48,8 @@ export function summarySources(rows: Record<string, unknown>[], snippetLimit = 1
     seen.add(href)
     sources.push({ id: `s${sources.length + 1}`, href, snippet,
       title: clean(row.title, 220) || clean(row.speaker, 100) || 'Source record', kind: clean(row.kind, 40),
-      ...Object.fromEntries(['speaker','party','state','date'].flatMap(key => {
-        const value = clean(row[key], 120)
+      ...Object.fromEntries(['speaker','party','state','date','chamber','source','url','source_url'].flatMap(key => {
+        const value = clean(row[key], ['url','source_url'].includes(key) ? 2000 : 120)
         return value ? [[key, value]] : []
       })),
     })

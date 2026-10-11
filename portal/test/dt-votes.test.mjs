@@ -5,6 +5,7 @@ const index = await tablePrivacyIndex();
 import {readFileSync} from 'node:fs';
 import {divisionColumns, voteColumns, divisionRows, votingRows, divisionTableConfig, voteTableConfig, voteTableHTML, voteTablePage} from '../public/vote-tables.js';
 import {toCSV} from '../public/datatable.js';
+import {guardTableURL} from '../public/vote-tables.js';
 import {build} from 'esbuild';
 const bundled=await build({entryPoints:[new URL('../src/hubs.ts',import.meta.url).pathname],bundle:true,write:false,platform:'node',format:'esm'});
 const {renderSittingWeek}=await import('data:text/javascript;base64,'+Buffer.from(bundled.outputFiles[0].text).toString('base64'));
@@ -63,6 +64,20 @@ test('division bars use the core column range across server pages', () => {
     assert.match(html,/class="dt-scale">0–64/);
     assert.match(html,/class="dt-scale">0–128/);
     assert.ok(html.includes(`--dt-bar:${Math.round(page.rows[0].ayes/64*100)}%`));
+  }
+});
+
+test('rollout paging retains the shared URL guard rejection through SSR', () => {
+  for(const config of [divisionTableConfig({},'Divisions','bill',index.safe),voteTableConfig('fixture','Voting record',index.safe)]) {
+    const rows=[{title:'Recorded division',date:'2026-08-19',vote:'Aye',chamber:'Senate',outcome:'Agreed',party_position:'Not recorded'}];
+    const url=new URL('https://local.test/record');url.searchParams.append(config.urlKey+'.q','recorded');url.searchParams.append(config.urlKey+'.q',index.recipients[0]);
+    const guarded=guardTableURL(config,url);
+    assert.equal(guarded.rejected,true);
+    const page=voteTablePage(rows,config,guarded.query);
+    assert.equal(page.total,0,'the adapter must preserve the core rejection marker');
+    assert.ok(index.safe(url.href));
+    assert.ok(index.safe(voteTableHTML(config,page)));
+    assert.match(voteTableHTML(config,page),/data-export disabled/);
   }
 });
 

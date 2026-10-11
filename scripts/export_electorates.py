@@ -13,6 +13,9 @@ from datetime import date
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+import sys as _donor_sys
+from pathlib import Path as _DonorPath
+_donor_sys.path.insert(0, str(_DonorPath(__file__).resolve().parents[1]))
 from parli.electorates import export_bundle, import_bundle, read_bundle
 
 

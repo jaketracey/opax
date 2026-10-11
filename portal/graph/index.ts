@@ -1,3 +1,5 @@
+import {donorNameWithheld,donorPrivacyIndex} from '../public/donor-entity.js'
+import {donorAggregateDetail,isUnnamedAggregate,unnamedDonorLabel,withheldDonorTotals,loadDonorViewIndex} from '../public/donor-views.js'
 import {partyUrl} from '../public/canonical-urls.js'
 // ---------------------------------------------------------------------------
 // OPAX Money Map - public entry.
@@ -217,7 +219,7 @@ const markColour = (n: MoneyNode): string =>
   n.kind === 'grantor' ? hubColour(n) : n.colour ?? (n.kind === 'party' ? partyDot(n.label) : clusterColour(n.group).colour)
 
 /** Sentence case for a lower-case data key shown as a label ("mining & energy"). */
-const sentence = (text: string) => text.charAt(0).toUpperCase() + text.slice(1)
+const sentence = (text: string) => ['individual', 'individuals'].includes(text.toLowerCase()) ? 'Industry not recorded' : text.charAt(0).toUpperCase() + text.slice(1)
 
 const toMapNode = (n: MoneyNode): MapNode => ({
   id: n.id,
@@ -796,12 +798,15 @@ export async function mountMoneyMap(
 
   let raw: MoneyGraph
   if (typeof dataUrl === 'string') {
-    const response = await fetch(dataUrl)
+    const response = await fetch(dataUrl,{cache:"no-cache"})
     if (!response.ok) throw new Error(`money map data: HTTP ${response.status} for ${dataUrl}`)
     raw = await response.json() as MoneyGraph
   } else raw = dataUrl
 
-  if (!webglAvailable()) return mountConnectionFallback(container, raw, opts)
+  const privacy = typeof fetch === 'function' ? await loadDonorViewIndex() : donorPrivacyIndex([raw])
+  const withheld = (node: MoneyNode) => node.kind === 'donor' && donorNameWithheld(privacy,node.label)
+
+  if (!webglAvailable()) return mountConnectionFallback(container, raw, opts, privacy)
 
   const graph = buildGraph(raw)
   const byId = new Map(raw.nodes.map((n) => [n.id, n]))
@@ -917,6 +922,10 @@ export async function mountMoneyMap(
     legendTitle.textContent = 'Industries · click to isolate'
   }
 
+  const individualSummary = donorAggregateDetail('',document)
+  individualSummary.classList.add('mm-individual-summary')
+  container.append(individualSummary)
+  individualSummary.style.cssText='position:absolute;left:12px;bottom:12px;z-index:3;background:var(--paper);padding:8px;font:var(--type-fine)'
   const card = el('div', 'mm-card', container)
   // A short host (the front page's box, any phone) is shorter than the card,
   // which then clips or scrolls. While a card is up the host grows to hold it
@@ -1067,7 +1076,7 @@ export async function mountMoneyMap(
     )
   } catch {
     container.replaceChildren()
-    return mountConnectionFallback(container, raw, opts)
+    return mountConnectionFallback(container, raw, opts, privacy)
   }
   engine.setOverviewMode(opts.overview === true)
   engine.onEdgePick = (edge) => setEdgeSelection(edge)
@@ -1175,8 +1184,12 @@ export async function mountMoneyMap(
       grants: grantsByNode,
       contracts: contractsByNode,
     }
+    const hiddenTotals=withheldDonorTotals(windowNodes,windowEdges,privacy)
+    individualSummary.hidden=hiddenTotals.count===0
+    individualSummary.querySelector('summary')!.textContent=`${unnamedDonorLabel(hiddenTotals.count)} · ${formatMoney(hiddenTotals.amount)}`
     const activeDonors = new Set(windowEdges.flatMap((e) => [e.source, e.target]))
     const visibleNodes = windowNodes.filter((n) => {
+      if(withheld(n)) return false
       if (n.kind === 'grantor') return grantsOn && activeDonors.has(n.id)
       if (n.group === 'parties') return windowEdges.length > 0 && (researchFilters.party ? n.id === researchFilters.party : activeDonors.has(n.id))
       if (activeGroup !== null && n.group !== activeGroup && n.industry !== activeGroup) return false
@@ -1201,7 +1214,7 @@ export async function mountMoneyMap(
     visibleSceneEdges = visibleEdges
     engine.setData(data)
     syncUrlState()
-    opts.onViewChange?.({ ...raw, nodes: visibleNodes, edges: windowEdges.filter(e => visibleIds.has(e.source) && visibleIds.has(e.target)) }, { ...researchFilters, industry: activeGroup || '' }, { from: yearLo, to: yearHi, cpi: adjustForInflation })
+    opts.onViewChange?.({ ...raw, nodes: windowNodes, edges: windowEdges }, { ...researchFilters, industry: activeGroup || '' }, { from: yearLo, to: yearHi, cpi: adjustForInflation })
     // The fit signature deliberately excludes the year window: refitting the
     // camera on every scrub step would turn the timeline into a fairground
     // ride. Filters and resizes refit; the scrub holds the view still.
@@ -1355,7 +1368,7 @@ export async function mountMoneyMap(
           const score = at === 0 ? 0 : label.includes(` ${q}`) ? 1 : at > 0 ? 2 : -1
           return { n, score, at }
         })
-        .filter((s) => s.score >= 0)
+        .filter((s) => s.score >= 0 && !withheld(s.n))
         .sort((a, b) => a.score - b.score || a.n.label.length - b.n.label.length)
         .slice(0, 8)
       for (const { n } of scored) {
@@ -1505,6 +1518,7 @@ export async function mountMoneyMap(
     onClick: (() => void) | null,
   ) => {
     const item = el('li', '', parent)
+    if (isUnnamedAggregate(name)) { item.append(donorAggregateDetail(`${name} · ${formatMoney(amount)}`,document)); return }
     const body = el('button', 'mm-row', item)
     body.type = 'button'
     // The row's pieces run together as one string otherwise ("Westpac$55.2m1998–2024").
@@ -1778,7 +1792,7 @@ export async function mountMoneyMap(
     if (node.kind === 'donor') {
       listTitle.textContent = 'Where it went'
       const out = view.edges
-        .filter((e) => e.source === node.id)
+        .filter((e) => e.source === node.id && !withheld(view.nodes.get(e.target)!))
         .sort((a, b) => b.total - a.total)
       for (const edge of out) {
         const party = view.nodes.get(edge.target)
@@ -1831,8 +1845,12 @@ export async function mountMoneyMap(
       listTitle.textContent = contracts
         ? 'Largest contractors among the donors on this map'
         : 'Largest recipients among the donors on this map'
+      const hiddenOutgoing=view.edges.filter(e=>e.source===node.id && view.nodes.has(e.target) && withheld(view.nodes.get(e.target)!))
+      const hiddenTargets=new Set(hiddenOutgoing.map(e=>e.target))
+      const hiddenCount=[...view.nodes.values()].filter(n=>n.kind==='donor'&&hiddenTargets.has(n.id)).length
+      if(hiddenCount) row(list,null,unnamedDonorLabel(hiddenCount),hiddenOutgoing.reduce((sum,e)=>sum+e.total,0),'',null)
       const outgoing = view.edges
-        .filter((e) => e.source === node.id)
+        .filter((e) => e.source === node.id && !withheld(view.nodes.get(e.target)!))
         .sort((a, b) => b.total - a.total)
         .slice(0, 15)
       for (const edge of outgoing) {
@@ -1857,8 +1875,11 @@ export async function mountMoneyMap(
       renderActions(card, node, plan, {})
     } else {
       listTitle.textContent = 'Top donors shown on the map'
+      const allIncoming=view.edges.filter(e=>e.target===node.id)
+      const hiddenTotals=withheldDonorTotals([...view.nodes.values()],allIncoming,privacy)
+      if(hiddenTotals.count) row(list,null,unnamedDonorLabel(hiddenTotals.count),hiddenTotals.amount,'',null)
       const incoming = view.edges
-        .filter((e) => e.target === node.id)
+        .filter((e) => e.target === node.id && !withheld(view.nodes.get(e.source)!))
         .sort((a, b) => b.total - a.total)
         .slice(0, 15)
       for (const edge of incoming) {
@@ -2138,6 +2159,7 @@ export async function mountMoneyMap(
    * focus seed, handle.select and filter-driven clears stay silent.
    */
   function setSelection(id: string | null, { user = false } = {}) {
+    if (id && byId.has(id) && withheld(byId.get(id)!)) id = null
     if (user) cancelReveal()
     selectedId = id
     selectedEdge = null

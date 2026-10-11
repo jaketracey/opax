@@ -10,3 +10,4 @@ export function voteTablePage(rows: Row[], config: DataTableConfig, query?: Quer
 export function voteTableHTML(config: DataTableConfig, page: Page): string;
 export function mountVoteTables(root?: Element | Document): void;
 export function votePrivacyCheck(text: string): Promise<boolean>;
+export {guardTableURL} from './datatable.js';

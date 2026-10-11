@@ -4,11 +4,12 @@ import {join, resolve} from 'node:path';
 import {createHash} from 'node:crypto';
 import {TABLE_DATASETS} from '../portal/src/table-datasets.mjs';
 import {isOrganisationRecipient} from '../portal/src/table-recipient.mjs';
-import {loadTableIdentityIndex} from '../portal/src/table-identities.mjs';
+import {identityVariants, compileIdentityCheck, strippedLengths} from '../portal/src/table-identities.mjs';
 import {tableSchema,tableName,quote,arrayColumns} from './table-schema.mjs';
 import {MONEY_GRAPHS, isOrganisationDonor, withheldPhrases} from '../portal/public/donor-entity.js';
 import {moneyFlowType} from '../portal/public/money-records.js';
 import {tablePrivacyCheck} from '../portal/src/table-privacy.mjs';
+import {sourceTableDonorIdentities} from './table_identity_source.mjs';
 import {divisionRows,votingRows} from '../portal/public/vote-tables.js';
 
 const defaultRoot = fileURLToPath(new URL('../portal/public/', import.meta.url));
@@ -128,7 +129,39 @@ export async function tableRows(root = defaultRoot, {moneyOnly = false, graphs: 
 
 /** Source identities stay in memory. The database receives only hashes. */
 export async function tableIdentityIndex(root = defaultRoot, suppliedGraphs) {
-  return loadTableIdentityIndex(path => readFile(join(root,path.slice(1)), 'utf8').then(JSON.parse), suppliedGraphs);
+  const read = async path => JSON.parse(await readFile(join(root,path),'utf8'));
+  const graphs = suppliedGraphs || await Promise.all(MONEY_GRAPHS.map(path=>read(path.slice(1))));
+  const phrases = new Set(), suppliers = new Set();
+  const add = entity => {
+    const values = [entity.label,entity.name,entity.n,entity.abn,entity.abr?.abn,entity.identity?.legal_name,entity.abr?.name,entity.abr?.legal_name, ...(entity.aliases || []), ...(entity.lookup_names || [])];
+    for (const id of [entity.id,entity.canonical_id]) {if (String(id || '').startsWith('person:')) values.push(String(id).slice(7));if (/^(?:abn:)?\d{11}$/.test(String(id || ''))) values.push(String(id).replace(/^abn:/,''));}
+    for (const value of values.filter(v=>typeof v==='string'||typeof v==='number')) for (const p of identityVariants(value)) phrases.add(p);
+  };
+  for(const entity of sourceTableDonorIdentities().entities)add(entity);
+  for (const graph of graphs) for (const node of graph.nodes) if (node.kind==='donor' && !isOrganisationDonor(node)) add(node);
+  const profiles = new Map();
+  for (const file of (await readdir(join(root,'suppliers'))).filter(f=>f.endsWith('.json')).sort()) {
+    for (const s of Object.values((await read('suppliers/'+file)).profiles)) {
+      profiles.set(String(s.id),s);
+      if (!isOrganisationRecipient({...s,...s.identity})) {suppliers.add(String(s.id));add(s);}
+    }
+  }
+  for (const s of (await read('suppliers.json')).suppliers) {
+    const profile = profiles.get(String(s.id));
+    if (!isOrganisationRecipient(profile ? {...s,...profile,...profile.identity} : s)) {suppliers.add(String(s.id));add(s);}
+  }
+  for (const jur of ['federal','qld']) {
+    for (const r of (await read(`graph/grants.${jur}.json`)).recipients) if (!isOrganisationRecipient(r)) add(r);
+    for (const file of (await readdir(join(root,'grants',jur))).filter(f=>f.startsWith('shard-') && f.endsWith('.json')).sort()) for (const r of Object.values(await read(`grants/${jur}/${file}`))) if (!isOrganisationRecipient(r)) add(r);
+  }
+  const lengths = [...new Set([...phrases].map(p=>p.split(' ').length))].sort((a,b)=>a-b);
+  return {phrases,suppliers,lengths,strippedLengths:strippedLengths(phrases),check:compileIdentityCheck(phrases)};
+}
+export function tableIdentityHashes(policy) {
+  return [...policy.phrases].map(p=>({hash:createHash('sha256').update(p).digest('hex'),words:p.split(' ').length})).sort((a,b)=>a.hash.localeCompare(b.hash));
+}
+export function tableRegistryFingerprint(policy) {
+  return createHash('sha256').update(tableIdentityHashes(policy).map(e=>e.hash).join('\n')).digest('hex');
 }
 
 const literal = value => value == null ? 'NULL' : typeof value === 'number' && Number.isFinite(value) ? String(value) : "'" + String(value).replaceAll("'","''") + "'";
@@ -136,8 +169,10 @@ const literal = value => value == null ? 'NULL' : typeof value === 'number' && N
 /** Sanitised SQL chunks live outside public/. No raw source snapshot is copied. */
 export async function buildTableSQL({root=defaultRoot,output=fileURLToPath(new URL('../portal/private/dt-api/sql/',import.meta.url)),datasets,policy}={}) {
   if (!datasets) {const loaded=await tableRows(root);datasets=loaded.rows;policy=loaded.policy;}
+  policy ||= await tableIdentityIndex(root);
   await mkdir(output,{recursive:true});
   for (const file of await readdir(output)) if (/^\d+-.*\.sql$|^manifest\.json$/.test(file)) await rm(join(output,file));
+  const fingerprint=tableRegistryFingerprint(policy || {phrases:new Set()});
   const files=[],counts={};let bytes=0,part=0;
   const put=async (suffix,sql)=>{const file=String(part++).padStart(4,'0')+'-'+suffix+'.sql';await writeFile(join(output,file),sql);files.push(file);bytes+=Buffer.byteLength(sql);};
   // Rebuild these projections when reloading an earlier summary-only database.
@@ -154,6 +189,7 @@ export async function buildTableSQL({root=defaultRoot,output=fileURLToPath(new U
     if (sql.length>2_000_000) await flush('privacy');
   }
   sql+=`INSERT INTO table_meta VALUES ('privacy_lengths',${literal(JSON.stringify(policy?.lengths || []))});\n`;
+  sql+=`INSERT INTO table_meta VALUES ('privacy_stripped_lengths',${literal(JSON.stringify(strippedLengths(policy?.phrases || new Set())))});\n`;
   await flush('privacy');
   for (const [name,config] of Object.entries(TABLE_DATASETS)) {
     const table=tableName(name);counts[name]=0;
@@ -172,14 +208,18 @@ export async function buildTableSQL({root=defaultRoot,output=fileURLToPath(new U
     await put(name+'-fts',`INSERT INTO ${table}_fts (${table}_fts) VALUES ('rebuild');\n`);
   }
   const version=createHash('sha256');for(const file of files)version.update(await readFile(join(output,file)));
-  await put('version',`INSERT INTO table_meta VALUES ('version','${version.digest('hex').slice(0,24)}');\nANALYZE;\n`);
-  const manifest={files,bytes,counts,privateIdentities:policy?.phrases.size||0,publicAssets:0};
+  // Publish the fingerprint last: privacy tables stay dark throughout a reload.
+  await put('version',`INSERT INTO table_meta VALUES ('privacy_fingerprint','${fingerprint}');\nINSERT INTO table_meta VALUES ('version','${version.digest('hex').slice(0,24)}');\nANALYZE;\n`);
+  const manifest={files,bytes,counts,privacyFingerprint:fingerprint,privateIdentities:policy?.phrases.size||0,publicAssets:0};
   await writeFile(join(output,'manifest.json'),JSON.stringify(manifest,null,2)+'\n');
   return manifest;
 }
 if (process.argv[1] && resolve(process.argv[1])===fileURLToPath(import.meta.url)) {
   try {
-    const result=await buildTableSQL();
-    console.log(JSON.stringify({sqlFiles:result.files.length,bytes:result.bytes,rows:result.counts,privateIdentityHashes:result.privateIdentities,publicTableAssets:0}));
+    const loaded=await tableRows();
+    const result=await buildTableSQL({datasets:loaded.rows,policy:loaded.policy});
+    await writeFile(join(defaultRoot,'table-private-identities.json'),JSON.stringify({version:1,identities:tableIdentityHashes(loaded.policy),strippedLengths:loaded.policy.strippedLengths})+'\n');
+    await writeFile(fileURLToPath(new URL('../portal/src/table-registry-fingerprint.json',import.meta.url)),JSON.stringify({fingerprint:result.privacyFingerprint})+'\n');
+    console.log(JSON.stringify({sqlFiles:result.files.length,bytes:result.bytes,rows:result.counts,privateIdentityHashes:result.privateIdentities,publicTableAssets:0,publicPrivacyAssets:1}));
   } catch {console.error('Table load preparation failed; no source identities are logged.');process.exitCode=1;}
 }

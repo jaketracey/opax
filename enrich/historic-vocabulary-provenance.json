@@ -1,0 +1,31 @@
+{
+  "dictionary": {
+    "project": "12dicts 6.0.2",
+    "license": "Public domain (selected 3of6game and 2of12 lists)",
+    "source": "https://wordlist.aspell.net/12dicts-readme/",
+    "archiveUrl": "https://downloads.sourceforge.net/wordlist/12dicts-6.0.2.zip",
+    "archiveSha256": "64ac1d35acb66b550c7ebc56e080b62e0bad8f5984d72059dc2e05ac48780e52",
+    "selection": "Lowercase 3of6game entries with annotations removed, plus lowercase hyphenated/apostrophe words from 2of12. No proper-name, abbreviation or multiword lists. Exact lexical words only.",
+    "words": 66298,
+    "assetSha256": "217d124a52eb6ea89e6446c1d33a84e0608299b020b649e7b09aaa0bdc8d79d9"
+  },
+  "geography": {
+    "countrySource": "https://www.gov.uk/csv-preview/6a5e0ceb9e2827ee5f6d08ca/FCDO_Geographical_Names_Index_July2026.csv",
+    "countrySha256": "89a8a35667122cb8390c1fcc37d9127d746dcb87091f25b2ada7f92739061196",
+    "nationalitySource": "https://www.gov.uk/api/content/government/publications/nationalities/list-of-nationalities",
+    "nationalitySha256": "6e878f9f2533c361b946e906ddceb4ac4202e65dd19dbf5bac8ba775b937d929",
+    "isoSource": "/usr/share/iso-codes/json/iso_3166-1.json",
+    "isoSha256": "f01b812b57fba9f31ff621bf33e7c7570a01964dbeb5be2167e94decf538c89f",
+    "countryForms": 626,
+    "demonymForms": 243,
+    "assetSha256": "051e4f738217a9656643b982aa7e3c141758a9757d36823f687372d95dc20758",
+    "license": "FCDO and GOV.UK nationality data: Open Government Licence v3.0; ISO country names supplemented with reviewed historic/conventional forms."
+  },
+  "offices": {
+    "source": "/home/jake/opax-staging/federation/roster/ministries.json",
+    "sourceSha256": "32a45db9df69a9bf3b4a791c03084253834441cdb0c3bae7a5e71e20a81e0146",
+    "selection": "Official portfolio field only; excludes honorific-containing fields. Adds Minister for, Shadow Minister for and trailing Minister forms for portfolios that are not already offices. Never reads appointment person or ministry name.",
+    "phrases": 765,
+    "assetSha256": "362eb582e7d9d6115815fc4d8c0f8c114db95e7325013bcb1d02281e481da3cd"
+  }
+}
