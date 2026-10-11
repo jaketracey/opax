@@ -49,7 +49,7 @@ jobs:
     # belt and braces: the bot's own restamp push must never start another run
     if: ${{ github.event_name != 'push' || github.actor != 'github-actions[bot]' }}
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 60
     defaults:
       run:
         working-directory: portal
