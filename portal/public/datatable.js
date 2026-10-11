@@ -2,6 +2,7 @@
 import {isOrganisationDonor} from './donor-entity.js?v=ebb2c972d5';
 import {unnamedDonorLabel,isUnnamedAggregate,donorsNotNamedDetail} from './donor-views.js?v=55a8bd3ae0';
 import {shortDate} from './format.js';
+import {queryValues,rawQueryValues,scrubQuery} from './datatable-query.js?v=6dd55aab38';
 
 const esc = value => String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;'}[c]));
 const numeric = column => ['money', 'count', 'year'].includes(column.type);
@@ -69,15 +70,19 @@ const allowedText = (config, value) => {
   if (config.privacy !== 'donors') return true;
   try { return config.privacyCheck?.(value) === true; } catch { return false; }
 };
-// Walk the whole decoded state so new query fields inherit the same gate.
-// Expand numeric values before checking identifiers, including exponent notation.
-function* queryValues(input) {
-  if (typeof input === 'string' || typeof input === 'boolean') yield String(input);
-  else if (typeof input === 'number') yield decimal.format(input).replaceAll(',', '');
-  else if (Array.isArray(input)) for (const value of input) yield* queryValues(value);
-  else if (input && typeof input === 'object') for (const value of Object.values(input)) yield* queryValues(value);
+const rejectedQueries = new WeakSet();
+const blockedQuery = (config, query) => rejectedQueries.has(query) || [...queryValues(query)].some(value=>!allowedText(config,value));
+
+/** SSR callers use the mutated URL for canonical and request-derived links. */
+export function guardTableURL(config, input) {
+  const url = input instanceof URL ? input : new URL(input,'https://local.invalid');
+  const {params,rejected} = scrubQuery(url.searchParams,value=>allowedText(config,value),config.urlKey || '');
+  url.search = params.toString();
+  // No parser sees raw private content or repeated table keys.
+  const query=rejected ? {} : parseQuery(params,config.urlKey);
+  if (rejected) rejectedQueries.add(query);
+  return {url,rejected,query};
 }
-const blockedQuery = (config, query) => [...queryValues(query)].some(value=>!allowedText(config,value));
 function cleanQuery(query = {}, config, page) {
   const out = parseQuery(new URLSearchParams(serializeQuery(query)));
   if (!config) return out;
@@ -269,7 +274,14 @@ function menuIdentity(row, identities) {
   return `${key}-${occurrence}`;
 }
 const button = (label, attrs = '') => `<button type="button" class="dt-button" ${attrs}>${label}</button>`;
-const href = value => typeof value === 'string' && /^(?:https?:\/\/|\/(?!\/)|#|\.\.?\/)/i.test(value.trim()) ? value : null;
+const href = (value,config) => {
+  if (typeof value !== 'string' || !/^(?:https?:\/\/|\/(?!\/)|#|\.\.?\/)/i.test(value.trim())) return null;
+  if (!value.includes('?')) return value;
+  const guarded=guardTableURL(config,value);
+  if (!guarded.rejected) return value;
+  const start=value.indexOf('?'), hash=value.indexOf('#',start), query=guarded.url.search;
+  return value.slice(0,start)+query+(hash < 0 ? '' : value.slice(hash));
+};
 function chip(label, key, value, removable = true, title = label) {
   return removable ? button(`${esc(label)} <span aria-hidden="true">×</span>`, `data-remove="${esc(key)}" data-value="${esc(value)}" aria-label="Remove ${esc(label)}"`) : button(`${esc(label)} <span aria-hidden="true">×</span>`, `data-show-constant="${esc(key)}" title="${esc(title)}" aria-label="Show ${esc(label)} column"`);
 }
@@ -321,11 +333,11 @@ function render(config, page, query = {}, view = {}, error = '') {
   const body = page.rows.map(row => `<tr role="row">${columns.map(column => {
     const value = row[column.key], display = formatCell(value,column), n = number(value);
     const exact = numeric(column) && n != null ? column.type === 'money' ? money.format(n) : decimal.format(n) : display;
-    const link = !aggregate(row) && column.primary && config.primaryLink ? href(config.primaryLink(row)) : null;
+    const link = !aggregate(row) && column.primary && config.primaryLink ? href(config.primaryLink(row),config) : null;
     const bar = column.bar && n != null && maxima[column.key] ? `<span class="dt-bar-track" aria-hidden="true"><span class="dt-bar" style="--dt-bar:${Math.min(100,Math.round(Math.abs(n) / maxima[column.key] * 100))}%"></span></span>` : '';
     return `<td role="cell" data-label="${esc(column.label)}" data-align="${esc(column.align || (numeric(column) ? 'end' : 'start'))}"${column.primary ? ' data-primary' : ''}${column === prominence ? ' data-prominent' : ''}${numeric(column) ? ' class="dt-number"' : ''} title="${esc(exact)}">${aggregate(row) && (column.primary || donorColumn(column)) && isUnnamedAggregate(display) ? `<details class="donor-aggregate"><summary>${esc(display)}</summary><p>${esc(donorsNotNamedDetail)}</p></details>` : `<span class="dt-value">${link ? `<a href="${esc(link)}">${esc(display)}</a>` : esc(display) || '—'}</span>`}${bar}</td>`;
   }).join('')}${config.actions?.length ? aggregate(row) ? '<td role="cell" class="dt-actions"></td>' : `<td role="cell" class="dt-actions"><details class="dt-panel" data-panel="action-${menuIdentity(row,menuIdentities)}"><summary aria-label="Actions" title="Actions"><span aria-hidden="true">⋯</span></summary><div>${config.actions.map(action => {
-    const target = href(action.href(row));
+    const target = href(action.href(row),config);
     return target ? `<a href="${esc(target)}"><span aria-hidden="true">${esc(action.icon)}</span> ${esc(action.label)}</a>` : '';
   }).join('')}</div></details></td>` : ''}</tr>`).join('');
   const start = page.total ? (page.page - 1) * page.pageSize + 1 : 0;
@@ -339,7 +351,12 @@ function render(config, page, query = {}, view = {}, error = '') {
 <script type="application/json" data-dt-page>${data}</script></section>`;
 }
 
-export function dataTableHTML(config, page) { return render(config, page, {sort:config.defaultSort}); }
+export function dataTableHTML(config, page, requestURL) {
+  if (!requestURL) return render(config,page,{sort:config.defaultSort});
+  const {query,rejected}=guardTableURL(config,requestURL);
+  if (rejected) page={rows:[],total:0,page:1,pageSize:config.pageSize || 50,facets:{}};
+  return render(config,page,query,{rejected});
+}
 
 // Several mounted tables cannot undo each other's noindex state.
 const robotsOwners = new WeakMap();
@@ -365,7 +382,7 @@ export function mountDataTable(el, config) {
   const root = el.matches?.('[data-datatable]') ? el : el.matches?.('table') ? el.closest('[data-datatable]') : el;
   if (!root) throw new Error('Mount the SSR table or its container');
   const doc = root.ownerDocument, win = doc.defaultView;
-  let query = parseQuery(new URL(win.location.href).searchParams,config.urlKey);
+  let query = {}, rawURL, rawPage, lastURL, rawRejected = false;
   const rawConfig = config, approvals = new Map();
   if (config.privacy === 'donors') config = {...config,privacyCheck:value=>approvals.get(value) === true};
   const view = {density:config.density || 'comfortable', columnsVisible:config.columnsVisible || config.columns.map(c=>c.key), constantsVisible:[]};
@@ -373,9 +390,39 @@ export function mountDataTable(el, config) {
   try { page = JSON.parse(root.querySelector('[data-dt-page]')?.textContent || 'null'); } catch { /* Client rows below. */ }
   page ||= {rows:[], total:0, page:1, pageSize:config.pageSize || 50};
   let controller, exportController, revision = 0, destroyed = false, timer;
+  const canonical=doc.head.querySelector('link[rel="canonical"]'), canonicalURL=canonical?.href;
+  const requestLinks=new Map([...doc.querySelectorAll?.('a[href]') || []].map(link=>[link,link.getAttribute('href')]));
+  const linkInputs=()=>[canonicalURL,...requestLinks.values()].filter(Boolean).flatMap(value=>[...rawQueryValues(new URL(value,win.location.href).searchParams)]);
+
+  function replaceURL(url) {
+    win.history.replaceState(win.history.state,'',url); lastURL=String(url);
+  }
+  function scrubHead() {
+    if (canonical) {
+      const clean=guardTableURL(config,new URL(canonicalURL,win.location.href)).url;
+      for (const key of [...clean.searchParams.keys()]) if (recognised(key,config)) clean.searchParams.delete(key);
+      canonical.href=clean.href;
+    }
+    for (const [link,value] of requestLinks) {
+      const clean=href(value,config);
+      if (clean != null && clean !== link.getAttribute('href')) link.setAttribute('href',clean);
+    }
+  }
+  function captureURL() {
+    rawURL=new URL(win.location.href);
+    rawPage ||= page;
+    // Async predicates have no approvals yet. Quarantine those pairs now, before
+    // the first render or await; safe unrelated pairs are restored after checking.
+    const guarded=guardTableURL(config,new URL(rawURL));
+    replaceURL(guarded.url);
+    scrubHead();
+    view.rejected=config.privacy === 'donors' || guarded.rejected;
+    if (view.rejected) page={rows:[],total:0,page:1,pageSize:config.pageSize || 50,facets:{}};
+  }
 
   function paint(error = '') {
     if (destroyed) return;
+    if (win.location.href !== lastURL) { captureURL(); void refresh(); return; }
     const active = doc.activeElement, inside = root.contains(active);
     const focused = inside ? active?.dataset?.focus : null;
     const identity = inside && !focused && Object.keys(active.dataset || {}).length ? JSON.stringify(active.dataset) : null;
@@ -407,20 +454,16 @@ export function mountDataTable(el, config) {
     }
   }
   function urlState() {
-    const url = new URL(win.location.href), base = prefix(config.urlKey), state = cleanQuery(query,config,page);
+    const url = guardTableURL(config,new URL(win.location.href)).url, state = cleanQuery(query,config,page);
     if (state.sort?.key === config.defaultSort?.key && state.sort?.dir === config.defaultSort?.dir) delete state.sort;
     if (state.pageSize === (config.pageSize || 50)) delete state.pageSize;
     for (const key of [...url.searchParams.keys()]) if (recognised(key,config)) url.searchParams.delete(key);
     const encoded = serializeQuery(state,config.urlKey);
-    for (const [key,value] of new URLSearchParams(encoded)) url.searchParams.set(key,value);
-    win.history.replaceState(win.history.state,'',url);
+    const checked=scrubQuery(new URLSearchParams(encoded),value=>allowedText(config,value),config.urlKey || '');
+    for (const [key,value] of checked.params) url.searchParams.set(key,value);
+    replaceURL(url);
     setRobots(doc,root,Boolean(encoded));
-    const canonical = doc.head.querySelector('link[rel="canonical"]');
-    if (canonical) {
-      const clean = new URL(canonical.href,win.location.href);
-      for (const key of [...clean.searchParams.keys()]) if (recognised(key,config)) clean.searchParams.delete(key);
-      canonical.href = clean.href;
-    }
+    scrubHead();
   }
   function endpoint(csv = false, state = query) {
     const url = new URL(config.source.endpoint,win.location.href);
@@ -455,11 +498,22 @@ export function mountDataTable(el, config) {
   }
   async function refresh() {
     clearTimeout(timer);
+    if (win.location.href !== lastURL) captureURL();
     const version = ++revision;
     controller?.abort(); exportController?.abort();
-    const pending=structuredClone(query), previousPage=page;
+    if (rawURL) {
+      const captured=rawURL;
+      root.setAttribute('aria-busy','true'); paint();
+      if (config.privacy === 'donors') await permitSet([...rawQueryValues(captured.searchParams),...linkInputs()]);
+      if (destroyed || version !== revision) return;
+      const guarded=guardTableURL(config,captured);
+      rawURL=undefined; rawRejected=guarded.rejected; query=guarded.query;
+      replaceURL(guarded.url); scrubHead();
+    }
+    const pending=structuredClone(query), previousPage=rawPage || page;
+    rawPage=undefined;
     if (config.privacy === 'donors') {
-      const values=[...queryValues(pending)];
+      const values=[...queryValues(pending),...rawQueryValues(new URLSearchParams(serializeQuery(pending,config.urlKey)))];
       const data=config.rows ? engine(config.rows,config) : null;
       const needsValidation=values.some(value=>!approvals.has(value)) || (data ? !approvals.has(data.json) : page.rows.some(row=>!approvals.has(JSON.stringify(row))));
       // Pending query values never render against old SSR rows. Already approved state can
@@ -467,6 +521,7 @@ export function mountDataTable(el, config) {
       if (needsValidation) {
         if (doc.activeElement?.dataset?.focus === 'search') view.searchSelection=[doc.activeElement.selectionStart,doc.activeElement.selectionEnd];
         page={rows:[],total:0,page:1,pageSize:config.pageSize || 50,facets:{}};
+        view.rejected=true;
         paint(); urlState();
       }
       root.setAttribute('aria-busy','true');
@@ -481,7 +536,7 @@ export function mountDataTable(el, config) {
       }
       if (destroyed || version !== revision) return;
     }
-    const rejected=blockedQuery(config,pending); view.rejected=rejected;
+    const rejected=rawRejected || blockedQuery(config,pending); view.rejected=rejected;
     query=cleanQuery(pending,config,previousPage);
     if (rejected) {
       page={rows:[],total:0,page:1,pageSize:config.pageSize || 50,facets:{}};
@@ -489,7 +544,7 @@ export function mountDataTable(el, config) {
     }
     if (!config.source) {
       page=applyQuery(config.rows || [],config,query);
-      await permitSet([...queryValues({page:page.page,pageSize:page.pageSize})]);
+      await permitSet([...queryValues({page:page.page,pageSize:page.pageSize}),...rawQueryValues(new URLSearchParams(serializeQuery({...query,page:page.page},config.urlKey)))]);
       if (destroyed || version !== revision) return;
       query.page=page.page;
       paint(); delete view.searchSelection; urlState(); root.removeAttribute('aria-busy'); return;
@@ -527,6 +582,9 @@ export function mountDataTable(el, config) {
     query.page = 1; update('table_filter');
   }
   async function download() {
+    // A caller can change history without popstate. Audit raw input again before
+    // any export request, even when the mounted parsed state has not changed.
+    if (win.location.href !== lastURL) { captureURL(); void refresh(); return; }
     if (root.getAttribute('aria-busy') === 'true') return;
     if (view.rejected) return;
     const requested=structuredClone(query), exportRevision=revision;
@@ -553,7 +611,7 @@ export function mountDataTable(el, config) {
       if (truncated) root.querySelector('.dt-count').textContent='Export limited to 50,000 rows. Narrow the filters to export more.';
     } catch (error) {
       if (!destroyed && error?.name !== 'AbortError') root.querySelector('.dt-count').textContent = 'Could not export this table. Try again.';
-    } finally { if (!destroyed) control.disabled = false; }
+    } finally { if (!destroyed) control.disabled = Boolean(view.rejected); }
   }
   function click(event) {
     const target = event.target.closest('button');
@@ -564,7 +622,7 @@ export function mountDataTable(el, config) {
       query.sort = {key:data.sort, dir:current?.key === data.sort && current.dir === 'asc' ? 'desc' : 'asc'};
       query.page = 1; update('table_sort');
     } else if (own(data,'facet')) toggleFacet(data.facet,data.value);
-    else if (own(data,'clear')) { delete query.q; delete query.filters; query.page = 1; update('table_filter'); }
+    else if (own(data,'clear')) { rawRejected=false; delete query.q; delete query.filters; query.page = 1; update('table_filter'); }
     else if (own(data,'remove')) {
       if (data.remove === 'q') delete query.q;
       else if (Array.isArray(query.filters?.[data.remove])) query.filters[data.remove] = query.filters[data.remove].filter(v=>v !== data.value);
@@ -608,11 +666,10 @@ export function mountDataTable(el, config) {
     if (!detail || !root.contains(detail)) return;
     detail.open=false; detail.querySelector(':scope > summary').focus(); event.preventDefault();
   }
-  function popstate() { query = parseQuery(new URL(win.location.href).searchParams,config.urlKey); void refresh(); }
+  function popstate() { captureURL(); void refresh(); }
   root.addEventListener('click',click); root.addEventListener('change',change); root.addEventListener('input',input); root.addEventListener('submit',submit); root.addEventListener('keydown',keydown);
   win.addEventListener('popstate',popstate);
-  // SSR supplies a real page; server mode keeps it until its response arrives.
-  if (config.source && config.privacy !== 'donors') paint();
+  captureURL();
   void refresh();
   return {destroy() {
     destroyed = true; revision++; clearTimeout(timer); controller?.abort(); exportController?.abort();
