@@ -1,6 +1,6 @@
 // Test doubles: a D1 shim over node:sqlite, an in-memory knowledge box, a scripted model.
 
-import { readFileSync } from 'node:fs'
+import { readFileSync, readdirSync } from 'node:fs'
 import { join } from 'node:path'
 import { DatabaseSync } from 'node:sqlite'
 import { readConfig, type Config } from '../src/env.ts'
@@ -45,7 +45,8 @@ class Stmt {
 
 export function makeD1(): { d1: D1Database; raw: DatabaseSync } {
   const raw = new DatabaseSync(':memory:')
-  raw.exec(readFileSync(join(import.meta.dirname, '..', 'migrations', '0001_init.sql'), 'utf8'))
+  const migrations = join(import.meta.dirname, '..', 'migrations')
+  for (const file of readdirSync(migrations).filter((f) => f.endsWith('.sql')).sort()) raw.exec(readFileSync(join(migrations, file), 'utf8'))
   const d1 = {
     prepare: (sql: string) => new Stmt(raw, sql),
     async batch(stmts: Stmt[]) {
