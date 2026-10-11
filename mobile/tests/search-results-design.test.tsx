@@ -205,9 +205,7 @@ test('briefs carry one machine label for the list, not one per row', () => {
     [farrell.resource]: 'A machine brief of the speech.',
   });
   const labels = renderer.root.findAllByType(MachineLabel);
-  expect(labels.map((l) => l.props.testID)).toEqual([
-    'records-brief-label',
-    'records-summary-machine',
-  ]);
+  // Pass 5, P2-11: the list's one pill; Summarise carries none in Briefs.
+  expect(labels.map((l) => l.props.testID)).toEqual(['records-brief-label']);
   expect(text).toContain('A machine brief of the speech.');
 });

@@ -15,6 +15,7 @@ import {
 import type { RecordsPage, SearchSummary } from './decoders';
 import {
   defaultFilters,
+  filterChips,
   normaliseFilters,
   searchWebPath,
   type SearchFilters,
@@ -31,6 +32,7 @@ import type { useCursorReveal } from '../split/cursor';
 export function RecordSearchForm({
   query,
   scope,
+  collapsed = false,
   roster,
   onSubmitted,
   onQuery,
@@ -45,6 +47,12 @@ export function RecordSearchForm({
 }: {
   query: string;
   scope: string;
+  /**
+   * The search has been submitted: the submit pill goes (the keyboard's
+   * Search key submits), and once results show, Filters moves into their
+   * count line.
+   */
+  collapsed?: boolean;
   roster: Roster | null;
   onSubmitted: () => void;
   onQuery: (q: string) => void;
@@ -276,27 +284,35 @@ export function RecordSearchForm({
       if (token === seq.current) setOpenError(e);
     }
   }
+  const openFilters = () => {
+    Keyboard.dismiss();
+    setSheet(true);
+  };
+  const applied = filterChips(filters).filter(
+    (c) => scope === 'records' || (c.id !== 'kind' && c.id !== 'mode'),
+  ).length;
   return (
     <Group>
-      <Button
-        label={`Search ${scope === 'records' ? 'records' : scope === 'grant' ? 'grants' : scope === 'party' ? 'parties' : scope === 'agency' ? 'government agencies' : scope === 'bill' ? 'bills' : 'reports'}`}
-        variant="primary"
-        ref={submitRef}
-        testID="search-submit"
-        loading={busy}
-        disabled={!(query.trim() || filters.speaker) || !roster}
-        onPress={submit}
-      />
-      <LinkRow
-        title="Filters"
-        icon="slider.horizontal.3"
-        accent="people"
-        testID="search-filters"
-        onPress={() => {
-          Keyboard.dismiss();
-          setSheet(true);
-        }}
-      />
+      {collapsed ? null : (
+        <Button
+          label={`Search ${scope === 'records' ? 'records' : scope === 'grant' ? 'grants' : scope === 'party' ? 'parties' : scope === 'agency' ? 'government agencies' : scope === 'bill' ? 'bills' : 'reports'}`}
+          variant="primary"
+          ref={submitRef}
+          testID="search-submit"
+          loading={busy}
+          disabled={!(query.trim() || filters.speaker) || !roster}
+          onPress={submit}
+        />
+      )}
+      {collapsed && result ? null : (
+        <LinkRow
+          title="Filters"
+          icon="slider.horizontal.3"
+          accent="people"
+          testID="search-filters"
+          onPress={openFilters}
+        />
+      )}
       <ResultFilters
         filters={filters}
         fixedKind={scope !== 'records'}
@@ -344,6 +360,8 @@ export function RecordSearchForm({
               }).catch(setOpenError)
             }
             busy={busy}
+            onFilters={collapsed ? openFilters : undefined}
+            filterCount={applied}
             filtered={filtered}
             sort={sort}
             onSort={(s) => {

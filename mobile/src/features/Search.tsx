@@ -391,12 +391,20 @@ function SearchScreen({
           returnKeyType="search"
           autoCorrect={false}
         />
-        <KindPicker value={kind} onChange={(value) => change(query, value)} />
+        {/* Once answered, the query form stops asking (pass 5, P1-1): the
+            kind becomes the query's scope, the keyboard's Search key
+            submits, and the first result reaches the first screen. */}
+        <KindPicker
+          value={kind}
+          compact={submitted}
+          onChange={(value) => change(query, value)}
+        />
         {extended ? (
           <RecordSearchForm
             key={kind}
             query={query}
             scope={kind}
+            collapsed={submitted}
             roster={sources?.roster ?? null}
             onSubmitted={() => setSubmitted(true)}
             onQuery={setQuery}
@@ -426,7 +434,7 @@ function SearchScreen({
             }
             cursorReveal={split ? cursor : undefined}
           />
-        ) : (
+        ) : submitted ? null : (
           <Button
             label={`Search ${kindLabel(kind).toLowerCase()}`}
             variant="primary"
@@ -546,15 +554,8 @@ function SearchScreen({
                       }
                     />
                   </RowList>
-                  <Button
-                    label="Refresh suggestions"
-                    variant="quiet"
-                    size="compact"
-                    icon="arrow.clockwise"
-                    testID="search-refresh"
-                    onPress={() => void loadSources(true)}
-                    loading={refreshing}
-                  />
+                  {/* No suggestions are drawn idle, so there is nothing to
+                      refresh here; pull to refresh still reloads them. */}
                 </>
               ) : null}
             </Section>
@@ -768,7 +769,7 @@ function SearchScreen({
               onRetry={() => void loadSources(true)}
             />
           ) : null}
-          {showSuggestions ? (
+          {showSuggestions && sources && !noSuggestions ? (
             <Button
               label="Refresh suggestions"
               variant="quiet"

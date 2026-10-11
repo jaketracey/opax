@@ -50,6 +50,13 @@ export function highlightParts(text: string, query: string | undefined) {
 }
 
 /**
+ * A cut after a sentence's full stop reads "housing.…", which draws as four
+ * dots (pass 5, P3-12): the cut says it once.
+ */
+export const oneEllipsis = (text: string) =>
+  text.replace(/(?:\.{1,3}|…)+…$/u, '…').replace(/\.{4,}$/, '…');
+
+/**
  * A result's passage: the record's own words in the serif, cut on a word
  * with an ellipsis after about three lines, with the searched words marked.
  * The whole record is one tap away on the row, so there is no disclosure
@@ -70,9 +77,11 @@ export function Excerpt({
   prefix?: string;
   testID?: string;
 }) {
-  const snippet = isWorkerSnippet(resource)
-    ? serverPassage(raw, { max: PASSAGE_MAX })
-    : passageText(raw, { max: PASSAGE_MAX });
+  const snippet = oneEllipsis(
+    isWorkerSnippet(resource)
+      ? serverPassage(raw, { max: PASSAGE_MAX })
+      : passageText(raw, { max: PASSAGE_MAX }),
+  );
   if (!snippet) return null;
   const parts = highlightParts(snippet, query);
   return (
