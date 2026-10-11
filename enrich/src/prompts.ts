@@ -22,6 +22,9 @@ export interface PromptRecord {
   words: number
   /** Already clipped (text.clip). */
   text: string
+  historic?: boolean
+  /** Not sent to the model; used only for name provenance. */
+  nameText?: string
 }
 
 const INTRO =
@@ -42,12 +45,13 @@ const shapeLine = (tasks: readonly Task[]): string =>
   tasks.length === 2 ? '{"summary": "<one sentence>", "topics": ["<slug>", ...]}' : tasks[0] === 'summary' ? '{"summary": "<one sentence>"}' : '{"topics": ["<slug>", ...]}'
 
 /** The system message for the tasks outstanding on a record (bake-off build_system when both). */
-export function buildSystemPrompt(tasks: readonly Task[]): string {
+export function buildSystemPrompt(tasks: readonly Task[], historic = false): string {
   const wantSummary = tasks.includes('summary')
   const wantTopics = tasks.includes('topics')
   const ordered: Task[] = [...(wantSummary ? (['summary'] as const) : []), ...(wantTopics ? (['topics'] as const) : [])]
   const sections: string[] = []
   if (wantSummary) sections.push(SUMMARY_SECTION)
+  if (wantSummary && historic) sections.push('HISTORIC HANSARD\nDescribe private individuals by role, not by name. A personal name may appear only if it is in the supplied unit text or the parliamentary roster. Do not introduce or infer names.')
   if (wantTopics) sections.push(TOPICS_SECTION, `TAXONOMY\n${taxonomyBlock()}`)
   sections.push(
     `OUTPUT\nReturn only the JSON object, with no markdown fences and no commentary, in exactly this shape:\n${shapeLine(ordered)}\nDo not call tools or external APIs.`,
@@ -83,7 +87,7 @@ export function buildUserPrompt(record: PromptRecord, complaints: readonly strin
 
 export function buildMessages(record: PromptRecord, tasks: readonly Task[], complaints: readonly string[] = []) {
   return [
-    { role: 'system', content: buildSystemPrompt(tasks) },
+    { role: 'system', content: buildSystemPrompt(tasks, record.historic) },
     { role: 'user', content: buildUserPrompt(record, complaints) },
   ]
 }

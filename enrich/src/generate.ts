@@ -1,11 +1,12 @@
-// One record, up to three model attempts: primary, primary again with the
-// validator's complaints, then the escalation model with the same complaints.
+// One record: primary, primary again with the validator's complaints, then escalation.
+// A historic name failure instead gets exactly one corrective escalation; its allowance
+// survives tick interruptions, including a name failure on the last ordinary attempt.
 // Nothing here touches the knowledge box; it turns text into validated values.
 
 import { neuronsFor } from './budget.ts'
 import { extractJsonObject, readModelReply } from './extract.ts'
 import { buildMessages, type PromptRecord, type Task } from './prompts.ts'
-import { cleanupSummary, validateSummary, validateTopics } from './validate.ts'
+import { NAMES_PROBLEM, cleanupSummary, validateSummary, validateTopics } from './validate.ts'
 import { TOPIC_SLUGS } from './topics.ts'
 import type { AiLike } from './env.ts'
 
@@ -28,6 +29,9 @@ export interface TaskResult {
   neurons: number
   /** Validator complaints from the last failed attempt (for quarantine diagnostics). */
   complaints: string[]
+  /** A historic name failure permits exactly one escalation, even across ticks. */
+  namesRejected: boolean
+  terminalNames: boolean
 }
 
 export interface Generation {
@@ -106,20 +110,23 @@ export interface GenerateOptions {
   onReject?: (info: { task: Task; model: string; attempt: number; reasons: string[]; sample: string }) => Promise<void>
   /** Polled before each attempt: false stops the run (daily budget, tick deadline). */
   mayContinue: () => boolean
+  priorNamesRejected?: boolean
 }
 
 export async function generate(opts: GenerateOptions): Promise<Generation> {
   const { record, tasks } = opts
   const models = [opts.primaryModel, opts.primaryModel, opts.escalationModel]
   const results: Record<Task, TaskResult | undefined> = { summary: undefined, topics: undefined }
-  for (const t of tasks) results[t] = { rejected: 0, model: opts.primaryModel, neurons: 0, complaints: [] }
+  for (const t of tasks) results[t] = { rejected: 0, model: opts.primaryModel, neurons: 0, complaints: [], namesRejected: t === 'summary' && !!record.historic && !!opts.priorNamesRejected, terminalNames: false }
 
-  let complaints: string[] = []
+  let complaints: string[] = opts.priorNamesRejected && record.historic ? [`summary: ${NAMES_PROBLEM}`] : []
   let outstanding: Task[] = [...tasks]
 
-  for (let attempt = 0; attempt < MAX_ATTEMPTS && outstanding.length > 0; attempt += 1) {
+  // A name failure on the last ordinary attempt still gets its one corrective escalation.
+  for (let attempt = 0; attempt < MAX_ATTEMPTS + 1 && outstanding.length > 0; attempt += 1) {
     if (!opts.mayContinue()) return { results, incomplete: true }
-    const model = models[attempt]
+    const namesRetry = outstanding.includes('summary') && !!results.summary?.namesRejected
+    const model = namesRetry ? opts.escalationModel : models[attempt]
     const messages = buildMessages(record, outstanding, complaints)
     const body = requestBody(model, messages, opts.maxTokens, outstanding)
 
@@ -161,11 +168,12 @@ export async function generate(opts: GenerateOptions): Promise<Generation> {
         if (t === 'summary') {
           const raw = parsed.summary
           const cleaned = typeof raw === 'string' ? cleanupSummary(raw, record.text) : raw
-          const problems = validateSummary(cleaned, { title: record.title, text: record.text })
+          const problems = validateSummary(cleaned, record)
           if (problems.length === 0) found.summary = cleaned as string
           else {
             failed.push('summary')
             next.push(...problems.map((p) => `summary: ${p}`))
+            if (problems.includes(NAMES_PROBLEM)) results.summary!.namesRejected = true
           }
         } else {
           const verdict = validateTopics(parsed.topics)
@@ -184,10 +192,11 @@ export async function generate(opts: GenerateOptions): Promise<Generation> {
       else {
         r.rejected += 1
         r.complaints = next
+        if (t === 'summary' && namesRetry) r.terminalNames = true
         await opts.onReject?.({ task: t, model, attempt: attempt + 1, reasons: next.filter((c) => !c.includes(':') || c.startsWith(`${t}:`)), sample: reply.text })
       }
     }
-    outstanding = failed
+    outstanding = failed.filter((t) => !results[t]!.terminalNames && (attempt < MAX_ATTEMPTS - 1 || (t === 'summary' && results[t]!.namesRejected)))
     complaints = next
   }
   return { results, incomplete: false }
