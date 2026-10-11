@@ -30,17 +30,21 @@ def house_db(path, records):
                           for key, name, seat, raw in records])
 
 def response(content=None, status=200, page_status=200, pdf=False):
-    data = {'metadata': {'statusCode': page_status, 'creditsUsed': 1}}
-    data['rawBase64' if pdf else 'rawHtml'] = base64.b64encode(content).decode() if pdf else content
-    r = mock.Mock(status_code=status, ok=status == 200)
-    r.json.return_value = {'success': status == 200, 'data': data if status == 200 else None}
+    r = mock.Mock(status_code=status if status != 200 else page_status, ok=status == 200 and page_status == 200)
+    r.content = content if isinstance(content, bytes) else (content or "").encode()
+    r.text = content if isinstance(content, str) else ""
     return r
 
 def client(cap=100, responses=()):
     s = mock.Mock()
-    s.post.side_effect = list(responses)
-    with mock.patch.dict(os.environ, {'FIRECRAWL_API_KEY': 'test-secret'}):
-        return fetch.Firecrawl(cap=cap, session=s)
+    s.get.side_effect = list(responses)
+    c = fetch.DirectHTTP(cap=cap, session=s)
+    original = c.scrape
+    def offline(*args, **kwargs):
+        with mock.patch.object(fetch.source_http, 'ensure_allowed'):
+            return original(*args, **kwargs)
+    c.scrape = offline
+    return c
 
 @contextlib.contextmanager
 def quiet():
@@ -113,61 +117,25 @@ class Layouts(unittest.TestCase):
                 self.assertEqual(f.match_person_id(conn, doc), expected)
         conn.close()
 
-class CreditAndTransport(unittest.TestCase):
-    def test_payload_and_failed_source_charge_respect_cap(self):
-        c = client(1, [response('Forbidden', page_status=403)])
-        with self.assertRaisesRegex(fetch.FetchError, 'source 403'):
-            c.scrape(f.HOUSE_INDEX_URL)
-        with self.assertRaisesRegex(fetch.FetchError, 'cap reached'):
-            c.scrape(f.HOUSE_INDEX_URL)
-        self.assertEqual((c.requests, c.credits), (1, 1))
-        payload = c.session.post.call_args.kwargs['json']
-        self.assertEqual((payload['proxy'], payload['waitFor'], payload['parsers']), ('basic', 3000, []))
-        self.assertEqual(payload['formats'], ['rawHtml'])
-        self.assertNotIn('headers', payload)
-
-    def test_missing_key_never_reads_mac_config_or_calls_api(self):
-        with mock.patch.dict(os.environ, {}, clear=True):
-            c = fetch.Firecrawl(session=mock.Mock())
-        with self.assertRaisesRegex(fetch.FetchError, 'missing'):
-            c.scrape(f.HOUSE_INDEX_URL)
+class DirectTransport(unittest.TestCase):
+    def test_request_cap_has_no_service_fallback(self):
+        c = client(1, [response('valid HTML')])
+        with mock.patch.object(fetch.source_http, 'ensure_allowed'), quiet():
+            self.assertEqual(c.scrape(f.HOUSE_INDEX_URL), 'valid HTML')
+            with self.assertRaisesRegex(fetch.FetchError, 'cap reached'):
+                c.scrape(f.HOUSE_INDEX_URL)
         c.session.post.assert_not_called()
+        self.assertEqual(c.session.get.call_args.kwargs['headers']['User-Agent'], fetch.source_http.USER_AGENT)
 
-    def test_credit_exhaustion_stops_further_calls_and_does_not_log_body(self):
-        c = client(responses=[response(status=402)])
-        with self.assertRaisesRegex(fetch.FetchError, 'out of credits'):
-            c.scrape(f.HOUSE_INDEX_URL)
-        with self.assertRaisesRegex(fetch.FetchError, 'out of credits'):
-            c.scrape(f.SENATE_INDEX_URL)
-        self.assertEqual(c.session.post.call_count, 1)
-        self.assertEqual(c.credits, 0)
-
-    def test_timeout_reserved_and_safe_error(self):
-        c = client(responses=[requests.Timeout('test-secret private response')])
-        with self.assertRaises(fetch.FetchError) as cm:
-            c.scrape(f.HOUSE_INDEX_URL)
-        self.assertNotIn('test-secret', str(cm.exception))
-        self.assertEqual((c.requests, c.unknown), (1, 1))
-
-    def test_one_rendering_failure_does_not_block_other_statements(self):
-        c = client(responses=[response(status=500), response('valid HTML')])
-        with self.assertRaisesRegex(fetch.FetchError, 'HTTP 500'):
-            c.scrape(f.SENATE_INDEX_URL+'/missing')
-        with quiet():
-            self.assertEqual(c.scrape(f.SENATE_INDEX_URL+'/valid'), 'valid HTML')
-        self.assertEqual(c.requests, 2)
-
-    def test_pdf_fallback_keeps_original_bytes_without_paid_pdf_parser(self):
-        pdf = b'%PDF-1.7\nrecorded transport bytes'
-        c = client(responses=[response(pdf, pdf=True)])
-        s = mock.Mock(); s.get.return_value = mock.Mock(ok=False, status_code=403, content=b'Forbidden')
-        with tempfile.TemporaryDirectory() as td, quiet():
-            path, _ = fetch.house_pdf({'file':'Test.pdf','url':'https://static.aph.gov.au/test.pdf','rev':'a'}, Path(td), c, s)
-            self.assertEqual(path.read_bytes(), pdf)
-            fetch.house_pdf({'file':'Test.pdf','url':'https://static.aph.gov.au/test.pdf','rev':'a'}, Path(td), c, s)
-        self.assertEqual(s.get.call_count, 1)
-        self.assertEqual(c.requests, 1)
-        self.assertEqual(c.session.post.call_args.kwargs['json']['formats'], ['rawBase64'])
+    def test_pdf_refusal_preserves_original_bytes(self):
+        s = mock.Mock(); s.get.return_value = response('Forbidden', status=403)
+        c = mock.Mock()
+        with tempfile.TemporaryDirectory() as td, quiet(), mock.patch.dict(os.environ, {'OPAX_SOURCE_STATUS_FILE': td+'/status.json'}):
+            p = Path(td); old = p/'Test.pdf'; old.write_bytes(b'%PDF-original')
+            with self.assertRaises(fetch.source_http.SourceRefused):
+                fetch.house_pdf({'file':'Test.pdf','url':'https://static.aph.gov.au/test.pdf','rev':'new'}, p, c, s)
+            self.assertEqual(old.read_bytes(), b'%PDF-original')
+            c.scrape.assert_not_called()
 
 class CacheAndPreservation(unittest.TestCase):
     def test_date_only_revisions_are_rechecked_after_the_source_day(self):
@@ -187,7 +155,7 @@ class CacheAndPreservation(unittest.TestCase):
             result, _ = fetch.senate_page(e, Path(td), c)
             self.assertIn('interests-table-collapse', result)
         self.assertEqual(c.requests, 2)
-        self.assertEqual(c.session.post.call_args.kwargs['json']['waitFor'], 6000)
+        self.assertEqual(c.session.get.call_count, 2)
 
     def test_reloading_identical_statements_preserves_recent_row_ids(self):
         doc = f.parse_senate_page(html('senate-269375.html'), f.SENATE_INDEX_URL+'/269375', '269375')
@@ -213,7 +181,7 @@ class CacheAndPreservation(unittest.TestCase):
             fetch.senate_page(e, p, c)
             self.assertEqual(c.requests, 2)
             (p/'269375.html').write_text('<h1>Register listing</h1>')
-            c.session.post.side_effect=[response('<h1>Register listing</h1>'), response('<h1>Register listing</h1>')]
+            c.session.get.side_effect=[response('<h1>Register listing</h1>'), response('<h1>Register listing</h1>')]
             with self.assertRaisesRegex(fetch.FetchError, 'no interests blocks'):
                 fetch.senate_page(e, p, c)
 
@@ -330,7 +298,7 @@ class CacheAndPreservation(unittest.TestCase):
         for outage in (False, True):
             with self.subTest(outage=outage), tempfile.TemporaryDirectory() as td, quiet():
                 p = Path(td)
-                args = argparse.Namespace(cache_dir=p/'cache', credit_cap=100, status=p/'status.json',
+                args = argparse.Namespace(cache_dir=p/'cache', request_cap=100, status=p/'status.json',
                                           chamber='house', db=None, dry_run=True, export_jsonl=None)
                 c = client(responses=[response(html('house-index.html'))])
                 def attach_holds(entries, db):
@@ -339,7 +307,7 @@ class CacheAndPreservation(unittest.TestCase):
                 paths = [fetch.FetchError('PDF unavailable')] if outage else []
                 paths += [(FIX/'house-abdo.pdf', '2026-10-03T12:00:00+00:00')] * 149
                 doc = mock.Mock(rows=[object()], ocr_pages=0, warnings=[])
-                with mock.patch.object(fetch, 'Firecrawl', return_value=c), \
+                with mock.patch.object(fetch, 'DirectHTTP', return_value=c), \
                      mock.patch.object(fetch, 'retain_house_ids', side_effect=attach_holds), \
                      mock.patch.object(fetch, 'house_pdf', side_effect=paths), \
                      mock.patch.object(f, 'parse_house_pdf', return_value=doc) as parser:
@@ -357,11 +325,11 @@ class CacheAndPreservation(unittest.TestCase):
     def test_failed_retention_preserves_house_chamber_but_checks_senate(self):
         with tempfile.TemporaryDirectory() as td, quiet():
             p = Path(td)
-            args = argparse.Namespace(cache_dir=p/'cache', credit_cap=100, status=p/'status.json',
+            args = argparse.Namespace(cache_dir=p/'cache', request_cap=100, status=p/'status.json',
                                       chamber=None, db=None, dry_run=True, export_jsonl=None)
             c = client(responses=[response(html('house-index.html')), response(html('senate-index.html'))])
             doc = mock.Mock(rows=[object()], ocr_pages=0, warnings=[])
-            with mock.patch.object(fetch, 'Firecrawl', return_value=c), \
+            with mock.patch.object(fetch, 'DirectHTTP', return_value=c), \
                  mock.patch.object(fetch, 'retain_house_ids', side_effect=fetch.FetchError('House document ID retention unavailable (OperationalError); chamber preserved')), \
                  mock.patch.object(fetch, 'house_pdf') as pdf, \
                  mock.patch.object(fetch, 'senate_page', return_value=(html('senate-269375.html'), '2026-10-03T12:00:00+00:00')), \
@@ -387,24 +355,24 @@ class CacheAndPreservation(unittest.TestCase):
 
     def test_manual_failure_does_not_overwrite_production_receipt(self):
         with tempfile.TemporaryDirectory() as td, quiet(), mock.patch.dict(os.environ, {}, clear=True):
-            p = Path(td); production = p/'production.json'
+            p = Path(td); os.environ['OPAX_SOURCE_STATUS_FILE'] = str(p/'access.json'); production = p/'production.json'
             production.write_text('production sentinel')
             with mock.patch.object(fetch, 'STATUS_PATH', production):
                 for extra in (['--chamber', 'senate'], ['--dry-run']):
-                    self.assertEqual(f.main(['refresh', '--db', str(p/'db.sqlite'), '--cache-dir', str(p/'cache'), *extra]), 3)
+                    self.assertEqual(f.main(['refresh', '--db', str(p/'db.sqlite'), '--cache-dir', str(p/'cache'), *extra]), 4)
                     self.assertEqual(production.read_text(), 'production sentinel')
 
     def test_unavailable_indices_preserve_db_and_write_limitation(self):
         with tempfile.TemporaryDirectory() as td, quiet(), mock.patch.dict(os.environ, {}, clear=True):
-            p = Path(td);db=p/'db.sqlite';db.write_bytes(b'untouched database sentinel')
-            args=argparse.Namespace(cache_dir=p/'cache',credit_cap=100,status=p/'status.json',chamber=None,
+            p = Path(td); os.environ['OPAX_SOURCE_STATUS_FILE'] = str(p/'access.json');db=p/'db.sqlite';db.write_bytes(b'untouched database sentinel')
+            args=argparse.Namespace(cache_dir=p/'cache',request_cap=100,status=p/'status.json',chamber=None,
                                     db=db,dry_run=False,export_jsonl=p/'out.jsonl')
-            self.assertEqual(fetch.refresh(args),3)
+            self.assertEqual(fetch.refresh(args),4)
             self.assertEqual(db.read_bytes(),b'untouched database sentinel')
             status=json.loads(args.status.read_text())
             self.assertFalse(status['complete'])
-            self.assertIn('FIRECRAWL_API_KEY is missing',status['limitations'][0])
-            self.assertEqual(status['credits_reserved'],0)
+            self.assertIn('source paused: honest agent refused', status['limitations'][0])
+            self.assertEqual(status['requests'],0)
 
 if __name__ == '__main__':
     unittest.main()

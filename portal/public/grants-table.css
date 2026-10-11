@@ -11,3 +11,11 @@
 @media (max-width: 599px) {
   [data-grants-table] .dt { table-layout: fixed; }
 }
+
+@media (min-width: 600px) {
+  [data-grants-table] .dt th { white-space: nowrap; }
+  [data-grants-table] .dt td:is([data-label="Date"], [data-label="Electorate"]) {
+    min-width: calc(var(--size-control) * 2);
+    overflow-wrap: normal;
+  }
+}

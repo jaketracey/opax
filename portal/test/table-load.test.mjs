@@ -1,0 +1,39 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {readFile} from 'node:fs/promises';
+import {isOrganisationDonor} from '../public/donor-entity.js';
+import {isOrganisationRecipient} from '../src/table-recipient.mjs';
+import {identityVariants,identityCandidates} from '../src/table-identities.mjs';
+import {tableSchema} from '../../scripts/table-schema.mjs';
+import {TABLE_DATASETS} from '../src/table-datasets.mjs';
+import {tableDatabase} from './table-d1-harness.mjs';
+const org=JSON.parse(await readFile(new URL('../public/graph/money.json',import.meta.url))).nodes.find(n=>n.kind==='donor'&&isOrganisationDonor(n));
+test('individual type evidence overrides organisation-looking names',()=>{
+  for (const kind of ['individual','person','sole_trader','sole proprietor']) assert.equal(isOrganisationRecipient({name:org.label,kind}),false);
+  assert.equal(isOrganisationRecipient({name:org.label,identity:{type:'IND',kind:'company'}}),false);
+  assert.equal(isOrganisationRecipient({name:org.label,abr:{etype:'IND'}}),false);
+  assert.equal(isOrganisationRecipient({name:org.label,id:'person:fixture-id',kind:'company'}),false);
+  assert.equal(isOrganisationRecipient({name:org.label,kind:'company'}),true);
+  assert.equal(isOrganisationRecipient({}),false);
+});
+test('checked-in migrations produce the typed dataset and FTS schema',async()=>{
+  const local = await tableDatabase({datasets: {}});
+  try {
+    // Exercise the upgrade from main's unchanged first migration.
+    await local.db.prepare('DROP TABLE table_grants').run();
+    for (const file of ['0001_tables.sql', '0002_grants_projection.sql']) {
+      const sql = await readFile(new URL('../table-migrations/' + file, import.meta.url), 'utf8');
+      for (const statement of sql.replace(/^--.*$/gm, '').split(';').filter(v => v.trim())) await local.db.prepare(statement).run();
+    }
+    const columns = (await local.db.prepare('PRAGMA table_info(table_grants)').all()).results;
+    assert.deepEqual(columns.map(c => c.name).sort(), ['rowid', 'search', ...TABLE_DATASETS.grants.columns.map(c => c.key)].sort());
+    assert.equal((tableSchema().match(/USING fts5/g)||[]).length,10);
+  } finally {await local.close();}
+});
+test('private identifier variants are derived from exports and cover spaced and encoded forms',async()=>{
+  const files=JSON.parse(await readFile(new URL('../public/suppliers.json',import.meta.url))).suppliers;
+  const supplier=files.find(s=>s.abn);const value=String(supplier.abn),normal=value.replace(/\D/g,'');
+  assert.ok(identityVariants(value).includes(normal));
+  assert.ok(identityCandidates(normal.split('').join(' '),[1,11]).has(normal));
+  const encoded=encodeURIComponent(org.label);assert.ok(identityCandidates(encoded, [org.label.toLowerCase().replace(/[^a-z0-9]+/g,' ').trim().split(' ').length]).has(identityVariants(org.label)[0]));
+});

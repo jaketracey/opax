@@ -1,5 +1,10 @@
 #!/usr/bin/env python3
 """List the models available to the opax KB and its current learning config."""
+
+import sys as _http_sys
+from pathlib import Path as _HttpPath
+_http_sys.path.insert(0, str(_HttpPath(__file__).resolve().parents[1]))
+from parli.ingest import http as source_http
 import json
 import re
 import urllib.request
@@ -14,9 +19,9 @@ H = {"x-nuclia-serviceaccount": f"Bearer {tok}"}
 
 def get(host: str, path: str):
     url = f"https://{zone}.{host}.progress.cloud/api/v1/kb/{kb}{path}"
-    req = urllib.request.Request(url, headers=H)
+    req = source_http.Request(url, headers=H)
     try:
-        with urllib.request.urlopen(req, timeout=30) as r:
+        with source_http.urlopen(req, timeout=30) as r:
             return r.status, json.load(r)
     except urllib.error.HTTPError as e:
         return e.code, e.read()[:200].decode(errors="replace")

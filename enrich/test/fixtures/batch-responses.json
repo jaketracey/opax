@@ -1,0 +1,10 @@
+{
+  "source": "The question concerned a commitment to providing 500 supported housing places for young people in regional communities. The minister responded that $75 million had been set aside for these housing projects and explained how local services would coordinate delivery.",
+  "responses": [
+    { "custom_id": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa-1", "result": { "type": "succeeded", "message": { "stop_reason": "end_turn", "content": [{ "type": "text", "text": "{\"summary\":\"Asked whether the government would provide 500 supported housing places for young people; the minister said $75 million was set aside for regional projects.\",\"topics\":[\"housing\"]}" }], "usage": { "input_tokens": 200, "cache_creation_input_tokens": 100, "cache_read_input_tokens": 0, "output_tokens": 50, "cache_creation": { "ephemeral_1h_input_tokens": 100 } } } } },
+    { "custom_id": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa-1", "result": { "type": "succeeded", "message": { "stop_reason": "end_turn", "content": [{ "type": "text", "text": "{\"summary\":\"Too short.\",\"topics\":[\"housing\"]}" }], "usage": { "input_tokens": 200, "output_tokens": 20 } } } },
+    { "custom_id": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa-1", "result": { "type": "succeeded", "message": { "stop_reason": "refusal", "content": [{ "type": "refusal" }], "usage": { "input_tokens": 200, "output_tokens": 1 } } } },
+    { "custom_id": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa-1", "result": { "type": "expired" } },
+    { "custom_id": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa-1", "result": { "type": "succeeded", "message": { "stop_reason": "max_tokens", "content": [{ "type": "text", "text": "{\"summary\":" }], "usage": { "input_tokens": 200, "output_tokens": 512 } } } }
+  ]
+}

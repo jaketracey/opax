@@ -1,6 +1,6 @@
 // Test doubles: a D1 shim over node:sqlite, an in-memory knowledge box, a scripted model.
 
-import { readFileSync } from 'node:fs'
+import { readFileSync, readdirSync } from 'node:fs'
 import { join } from 'node:path'
 import { DatabaseSync } from 'node:sqlite'
 import { readConfig, type Config } from '../src/env.ts'
@@ -45,7 +45,8 @@ class Stmt {
 
 export function makeD1(): { d1: D1Database; raw: DatabaseSync } {
   const raw = new DatabaseSync(':memory:')
-  raw.exec(readFileSync(join(import.meta.dirname, '..', 'migrations', '0001_init.sql'), 'utf8'))
+  const migrations = join(import.meta.dirname, '..', 'migrations')
+  for (const file of readdirSync(migrations).filter((f) => f.endsWith('.sql')).sort()) raw.exec(readFileSync(join(migrations, file), 'utf8'))
   const d1 = {
     prepare: (sql: string) => new Stmt(raw, sql),
     async batch(stmts: Stmt[]) {
@@ -157,7 +158,7 @@ export class FakeKb implements KbApi {
       .filter((r) => r.kind === kind && Date.parse(`${r.created}Z`) >= sinceMs)
       .sort((a, b) => a.created.localeCompare(b.created))
     const slice = all.slice(page * pageSize, (page + 1) * pageSize)
-    return { rows: slice.map((r) => ({ rid: r.rid, created: r.created })), hasNext: (page + 1) * pageSize < all.length && slice.length > 0 }
+    return { rows: slice.map((r) => ({ rid: r.rid, created: r.created, usermetadata: this.view(r.rid, false)?.usermetadata })), hasNext: (page + 1) * pageSize < all.length && slice.length > 0 }
   }
   writes(): string[] {
     return this.calls.filter((c) => c.startsWith('PATCH'))

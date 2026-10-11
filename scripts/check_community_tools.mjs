@@ -6,6 +6,7 @@ import {join} from 'node:path';
 import {tmpdir} from 'node:os';
 const {webkit,chromium}=await import(process.env.OPAX_PLAYWRIGHT_MODULE||'playwright');
 const base=process.env.OPAX_BASE||'http://localhost:8803';
+if (!['localhost','127.0.0.1','[::1]'].includes(new URL(base).hostname)) throw new Error('UI tests require a local OPAX preview origin');
 const fakeKey='opax_'+'a'.repeat(43);
 const browserType=process.env.OPAX_BROWSER||'webkit';
 const browser=await ({webkit,chromium}[browserType]).launch({headless:true,...(process.env.OPAX_BROWSER_EXECUTABLE?{executablePath:process.env.OPAX_BROWSER_EXECUTABLE}:{})});
@@ -14,6 +15,7 @@ async function fixture(width){
  const errors=[],requests=[];let keys=[],fail=false;
  page.on('pageerror',e=>errors.push(e.message));
  await page.addInitScript(()=>{window.copies=[];window.failClipboard=false;Object.defineProperty(navigator,'clipboard',{value:{writeText:async value=>{if(window.failClipboard)throw Error('blocked');window.copies.push(value)}}})});
+ await page.route('**/*',route=>new URL(route.request().url()).origin===new URL(base).origin?route.continue():route.abort());
  await page.route('**/api/community/**',async route=>{
   const request=route.request(),path=new URL(request.url()).pathname;requests.push({path,method:request.method(),data:request.postData()});
   if(path.endsWith('/status'))return route.fulfill({json:{enabled:true,member:{id:'layout-preview',name:'Preview',role:'member'},mcp_url:'https://opax.com.au/mcp'}});

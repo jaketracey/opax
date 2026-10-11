@@ -1,5 +1,10 @@
 # Bill summaries: measured scope and implementation plan
 
+> Access policy updated 10 Oct 2026: use the shared OPAX agent. Historical
+> proxy approvals below are superseded; refused sources are paused and the last
+> good data kept. See [SOURCES-ACCESS.md](SOURCES-ACCESS.md).
+
+
 **Decision: feasible. Start with federal bills active during 2013–2026.** Build a jurisdiction-aware registry, publish independently written summaries as knowledge-box resources of kind `bill`, and export a small static relationship manifest for the portal. Source collection, identity, versioning and review dominate cost; model tokens do not.
 
 Scope date: **5 September 2026, Australia/Melbourne**. Main database snapshot: **2026-09-04 21:35:32 UTC**. Branch: `scope-bills`. All local repository work stayed in `/Users/jake/Projects/opax/.claude/worktrees/scope-bills`. No site code changed; no ingest, knowledge-box request or model-generation request was made. Only this document is committed. Scratch measurements and public responses are under `/tmp/opax-scope-bills` and are not deliverables or published source text.
@@ -787,7 +792,7 @@ All public HTTP probes were GET requests except Firecrawl’s scrape POST wrappe
 ```python
 # Independent read probe; write its bytes only to local scratch if needed.
 import urllib.request, urllib.parse
-ua = 'Mozilla/5.0 (X11; Linux x86_64; rv:128.0) Gecko/20100101 Firefox/128.0'
+from parli.ingest.http import USER_AGENT as ua
 query = 'Dataset:billhome ParliamentNumber:"47"'
 url = ('https://parlinfo.aph.gov.au/parlInfo/search/summary/summary.w3p;'
        'adv=yes;orderBy=date-eFirst;page=0;query=' + urllib.parse.quote(query) + ';resCount=100')

@@ -2,6 +2,8 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync,existsSync,readdirSync} from 'node:fs';
 import {build} from 'esbuild';
+import {tableDatabase} from './table-d1-harness.mjs';
+import {tableApi} from '../src/table-api.ts';
 import {isOrganisationDonor} from '../public/donor-entity.js';
 import {renderBillAnswer,renderPersonAnswer,partyLine,escapeHtml,safeHref,internalLinkCount,associationCaveat,crumbsHTML,answerBlock} from '../src/seo-content.ts';
 const pub=new URL('../public/',import.meta.url);
@@ -36,12 +38,14 @@ function checkHtml(html){assert.equal((html.match(/<h1\b/g)||[]).length,1);asser
 test('raw MP answer includes exported bill votes without unsupported recent-vote claims',async()=>{
   const html=await get('/subject/person/david-pocock');const graph=checkHtml(html);
   for(const fact of ['David Pocock','Independent','Senate','Latest exported bill votes','Declared interests','View original'])assert.ok(html.includes(fact),fact);
+  const register=await read('/interests/11009.json');
+  assert.ok(html.includes('Updated '+(await import('../public/format.js')).shortDate(register.as_at)));
   assert.match(html,/href="\/subject\/party\/independent"/);assert.match(html,/href="\/subject\/electorate\//);
   assert.doesNotMatch(html,/Last 10 recorded votes|No per-member votes|not a complete list of recent divisions/);
   const record=(await read('/votes.json'))['11009'];const votes=[...record.for,...record.against].sort((a,b)=>b.date.localeCompare(a.date)).slice(0,10);for(const vote of votes)assert.ok(html.includes(escapeHtml(vote.name)),vote.name);
   for(const path of ['/graph/money.json','/graph/money.qld.json','/graph/money.vic.json'])for(const n of (await read(path)).nodes.filter(n=>n.kind==='donor'&&!isOrganisationDonor(n)))assert.ok(!html.includes(escapeHtml(n.label)),n.label);
   const person=graph.find(n=>n['@type']==='Person');assert.ok(person.image);assert.ok(person.sameAs.some(url=>url.startsWith('https://www.aph.gov.au/Senators_and_Members/Parliamentarian?MPID=')));
-  const labor=await get('/subject/person/anthony-albanese');assert.ok(labor.includes('donors in this export are not named here'));
+  const labor=await get('/subject/person/anthony-albanese');assert.ok(labor.includes('Donors not named ('));assert.ok(labor.includes('<details>'));assert.ok(labor.includes("OPAX names organisations only. Donors it can&#39;t confirm are organisations are counted here, not named."));
 });
 test('mobile voting asset retains schema 1 and the shipped per-person keys',async()=>{
   const data=await read('/votes.json');assert.equal(data._meta.schema,1);
@@ -59,9 +63,9 @@ test('recent-vote answers only use the separate OPAX export and omit an empty vo
   const empty=(await renderPersonAnswer(p,readFixture,new Map())).html;
   assert.doesNotMatch(empty,/Last 10 recorded votes|Latest exported bill votes|No per-member votes|Recorded question/);
 });
-test('raw bill includes summary attribution, stages, sponsor/portfolio, divisions and source links',async()=>{
+test('raw bill labels its summary machine-written, with stages, sponsor/portfolio, divisions and source links',async()=>{
   const html=await get('/bill/au-federal-r7534');const graph=checkHtml(html);
-  const bill=await read('/bills/au-federal-r7534.json');assert.ok(html.includes(escapeHtml(bill.portfolio)));assert.ok(html.includes(escapeHtml(bill.summary.attribution)));assert.ok(html.includes(escapeHtml(bill.summary.sentences[0])));assert.ok(html.includes('ayes 11, noes 24'));assert.match(html,/href="\/doc\/division-federal-senate-10701"/);assert.ok(graph.some(n=>n['@type']==='Legislation'&&n.legislationIdentifier===bill.key&&n.creativeWorkStatus));
+  const bill=await read('/bills/au-federal-r7534.json');assert.ok(html.includes(escapeHtml(bill.portfolio)));assert.match(html,/<h2>Plain-language summary<\/h2><p><span class="ui-machine-pill"[^>]*>.*?Machine-written/);assert.ok(!html.includes(`<p>${escapeHtml(bill.summary.attribution)}`));assert.ok(html.includes(escapeHtml(bill.summary.sentences[0])));assert.ok(html.includes('ayes 11, noes 24'));assert.match(html,/href="\/doc\/division-federal-senate-10701"/);assert.ok(graph.some(n=>n['@type']==='Legislation'&&n.legislationIdentifier===bill.key&&n.creativeWorkStatus));
   const sponsored=await get('/bill/au-federal-s1517');assert.match(sponsored,/href="\/subject\/person\/david-pocock"/);
 });
 test('raw division names and links every recorded member, with question/date/tally/bills',async()=>{
@@ -72,14 +76,24 @@ test('directories expose bounded links and canonical pagination with rel prev/ne
   for(const path of ['/subject/person','/subject/party','/subject/electorate','/subject/topic','/bills?page=2']){const html=await get(path);checkHtml(html);const main=html.match(/<main\b[^>]*>([\s\S]*?)<\/main>/)[1];assert.ok((main.match(/<li>/g)||[]).length<=50);assert.match(main,/href="\/(subject|bill|money\/grants)\//);if(path.includes('page=2')){assert.match(html,/<link rel="prev"/);assert.match(html,/<link rel="next"/);}}
   const first=await get('/bills');const second=await get('/bills?page=2');const rows=(await read('/bills/index.json')).bills;assert.ok(first.includes(`/bill/${rows[0].key}`));assert.ok(!second.includes(`/bill/${rows[0].key}`));assert.ok(second.includes(`/bill/${rows[50].key}`));const last=await get('/bills?page=999999');assert.match(last,/rel="canonical" href="https:\/\/opax.com.au\/bills\?page=60"/);
 });
-test('grants server rendering supplies bounded award rows and canonical table state', async()=>{
+test('grants server rendering supplies filtered D1 rows, canonical and noindex state', async t=>{
+  const rows = Array.from({length: 110}, (_, i) => ({row: {id: `fixture-ssr-award-${i}`, recipient: `fixture-ssr-organisation-${i}`, recipientKind: 'company', agency: 'Fixture agency', program: i % 2 ? 'Fixture filtered program' : 'Fixture other program', jurisdiction: 'federal', amount: 1000 + i, start_date: '2026-01-01', electorate: 'Fixture district'}}));
+  const local = await tableDatabase({datasets: {grants: rows}}); env.TABLE_DB = local.db;
+  t.after(async () => {delete env.TABLE_DB; await local.close();});
   const first=await get('/money/grants');checkHtml(first);
   assert.match(first, /data-grants-table/);assert.match(first, /<caption>Awards<\/caption>/);
   assert.equal((first.match(/<tbody\b[^>]*>[\s\S]*?<\/tbody>/)?.[0].match(/<tr\b/g)||[]).length,50);
-  const filtered=await get('/money/grants?t.page=2');checkHtml(filtered);
+  const state = new URLSearchParams({'t.page': '2', 't.f.program': '["Fixture filtered program"]'});
+  const expected = await (await tableApi(new Request('https://local.invalid/api/table/grants?' + state), {TABLE_DB: local.db})).json();
+  assert.equal(expected.total, 55); assert.equal(expected.rows.length, 5);
+  const filtered=await get('/money/grants?' + state);
   assert.match(filtered, /rel="canonical" href="https:\/\/opax.com.au\/money\/grants"/);
   assert.match(filtered, /<meta name="robots" content="noindex">/);
-  const body=html=>html.match(/<tbody\b[^>]*>([\s\S]*?)<\/tbody>/)[1];assert.notEqual(body(first),body(filtered));
+  assert.doesNotMatch(filtered, /id="ld-page"|application\/ld\+json/);
+  const hydrated = JSON.parse(filtered.match(/<script[^>]*data-dt-page[^>]*>(.*?)<\/script>/s)[1]);
+  assert.deepEqual(hydrated.rows.map(r => r.id), expected.rows.map(r => r.id));
+  assert.equal(hydrated.total, 55); assert.equal(hydrated.page, 2);
+  assert.equal((filtered.match(/<tbody\b[^>]*>[\s\S]*?<\/tbody>/)?.[0].match(/<tr\b/g)||[]).length,5);
 });
 test('homepage schema includes website, search, organisation and breadcrumb; stats is a dataset',async()=>{
   const html=await get('/');const graph=JSON.parse(html.match(/<script[^>]*id="ld-page"[^>]*>(.*?)<\/script>/s)[1])['@graph'];for(const type of ['WebSite','Organization','BreadcrumbList'])assert.ok(graph.some(n=>n['@type']===type));assert.equal(graph.find(n=>n['@type']==='WebSite').potentialAction.target,origin+'/ask?view=search&q={search_term_string}');assert.ok(checkHtml(await get('/stats')).some(n=>n['@type']==='Dataset'));
@@ -176,7 +190,10 @@ test('bill SSR renders all exported members, dated party votes and related bills
   for(const m of division.members) assert.ok(html.includes(escapeHtml(m.name)),m.name);
   assert.match(html,/How each party voted/);
   const bill=await get('/bill/au-federal-r7537');
-  for(const fact of ['Andrew Gee','Independent Members','Introduced','Second reading','Written by a model','2026-09-07','Other bills from this sponsor']) assert.ok(bill.includes(fact),fact);
+  for(const fact of ['Andrew Gee','Independent Members','Introduced','Second reading','Machine-written','2026-09-07','Other bills from this sponsor']) assert.ok(bill.includes(fact),fact);
+  // The pill says it once; no sentence beside it repeats it.
+  assert.match(bill,/<span class="ui-machine-pill" title="[^"]+">.*Machine-written<span class="visually-hidden">, not part of the record<\/span><\/span> As at 2026-09-07\./);
+  assert.doesNotMatch(bill,/>Written by a model|not the record\b/);
   assert.match(bill,/href="\/subject\/person\/andrew-gee"/);
   assert.match(bill,/href="\/bill\/au-federal-r7450"/);
   assert.doesNotMatch(await get('/subject/person/bruce-baird'),/Died \d/);
@@ -310,4 +327,18 @@ test('an address nothing answers gets the site page, noindex, with a way on; a m
     const response=await worker.fetch(new Request(origin+path),env,{waitUntil(){}});
     assert.equal(response.status,404,path);assert.doesNotMatch(await response.text(),/Page not found · OPAX/,path);
   }
+});
+test('/privacy and /support are served whole, from their panels, with canonical links',async()=>{
+  const types=['Email Address','User ID','Audio Data','Other User Content','Product Interaction','Search History','Other Diagnostic Data'];
+  for(const [path,name,facts] of [['/privacy','privacy',['What OPAX collects and who receives it','id="privacy-app"','id="privacy-deletion"','id="voice"','privacy@opax.com.au','Noice Pty Ltd',...types]],['/support','support',['Help with OPAX','id="support-contact"','id="support-report"','id="support-delete"','support@opax.com.au','8-digit deletion code']]]){
+    const html=await get(path);checkHtml(html);
+    assert.match(html,new RegExp(`<link rel="canonical" href="https://opax\\.com\\.au${path}"`),path);
+    assert.match(html,new RegExp(`<section id="prerender" class="wrap policy-page" data-panel-copy="${name}">`),path);
+    const main=html.match(/<main\b[^>]*data-server-rendered[^>]*>([\s\S]*?)<\/main>/)[1];
+    for(const fact of facts)assert.ok(main.includes(fact),`${path}: ${fact}`);
+    assert.doesNotMatch(main,/An association does not prove influence/,path);
+    assert.doesNotMatch(main.match(/<section id="prerender"[^>]*>/)[0],/\shidden/,`${path}: the copy is visible without scripts`);
+  }
+  const shell=readFileSync(new URL('spa-shell.js',pub),'utf8');
+  assert.ok(shell.includes('if(answer.hasAttribute("data-panel-copy"))for(const el of answer.querySelectorAll("[id]"))el.removeAttribute("id");main.prepend(answer);'));
 });

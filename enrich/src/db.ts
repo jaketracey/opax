@@ -4,7 +4,8 @@
 
 export type TaskName = 'speech_summary' | 'speech_topics' | 'release_summary'
 export type RowStatus = 'pending' | 'claimed' | 'done' | 'quarantined'
-export type Outcome = 'written' | 'dry' | 'unwritten' | 'empty' | 'skipped-existing' | 'no-text' | 'missing'
+export type TerminalReason = 'skipped-short' | 'rejected-names' | 'historic-held'
+export type Outcome = 'written' | 'dry' | 'unwritten' | 'empty' | 'skipped-existing' | 'no-text' | 'missing' | 'skipped-short' | 'rejected-names'
 
 export const SUMMARY_TASKS: readonly TaskName[] = ['speech_summary', 'release_summary']
 export const isSummaryTask = (task: string): boolean => SUMMARY_TASKS.includes(task as TaskName)
@@ -16,6 +17,11 @@ export interface QueueRow {
   priority: number
   source_created: number | null
   attempts: number
+  names_rejected: number
+  historic: number
+  historic_released: number
+  batch_run: string | null
+  terminal_reason: TerminalReason | null
   transient: number
   force: number
   model: string | null
@@ -45,7 +51,7 @@ export const STALE_CLAIM_MS = 10 * 60 * 1000
 /** Infrastructure failures a row may absorb before it is set aside. */
 export const MAX_TRANSIENT = 8
 
-const ROWS_PER_INSERT = 15 // 6 bound parameters a row; D1 allows 100 per statement
+const ROWS_PER_INSERT = 10 // 9 bound parameters a row; D1 allows 100 per statement
 
 // ---------------------------------------------------------------- state
 
@@ -74,24 +80,40 @@ export interface NewWork {
   priority: number
   /** The resource's `created` time in the box (unix ms), when known. */
   sourceCreated?: number | null
+  historicHold?: boolean
+}
+
+/** Completed/terminal rows and explicit releases are never held. Clear unfinished
+ * saved results so even an old worker cannot flush held work during rollout. */
+export function holdHistoricStatement(db: D1Database, rids: readonly string[], now: number): D1PreparedStatement {
+  return db.prepare(`UPDATE queue SET status = 'done', terminal_reason = 'historic-held', historic = 1,
+    outcome = NULL, result = NULL, claim_token = NULL, claimed_at = NULL, done_at = NULL, updated_at = ?
+    WHERE rid IN (${rids.map(() => '?').join(',')}) AND task IN ('speech_summary', 'speech_topics')
+      AND historic_released = 0 AND terminal_reason IS NULL
+      AND (status IN ('pending', 'claimed') OR (status = 'done' AND outcome IN ('dry', 'unwritten')))`)
+    .bind(now, ...rids)
 }
 
 /** INSERT OR IGNORE on (rid, task): the queue de-duplicates. Returns how many rows were new. */
 export async function enqueue(db: D1Database, work: readonly NewWork[], now: number): Promise<number> {
   if (work.length === 0) return 0
   const statements: D1PreparedStatement[] = []
+  const inserts = new Set<D1PreparedStatement>()
   for (let i = 0; i < work.length; i += ROWS_PER_INSERT) {
     const chunk = work.slice(i, i + ROWS_PER_INSERT)
-    const values = chunk.map(() => "(?, ?, 'pending', ?, ?, ?, ?)").join(', ')
-    const params = chunk.flatMap((w) => [w.rid, w.task, w.priority, w.sourceCreated ?? null, now, now])
-    statements.push(
-      db.prepare(`INSERT OR IGNORE INTO queue (rid, task, status, priority, source_created, created_at, updated_at) VALUES ${values}`).bind(...params),
-    )
+    const values = chunk.map(() => '(?, ?, ?, ?, ?, ?, ?, ?, ?)').join(', ')
+    const params = chunk.flatMap((w) => [w.rid, w.task, w.historicHold ? 'done' : 'pending', w.priority,
+      w.sourceCreated ?? null, w.historicHold ? 1 : 0, w.historicHold ? 'historic-held' : null, now, now])
+    const insert = db.prepare(`INSERT OR IGNORE INTO queue (rid, task, status, priority, source_created, historic, terminal_reason, created_at, updated_at) VALUES ${values}`).bind(...params)
+    statements.push(insert)
+    inserts.add(insert)
+    const held = [...new Set(chunk.filter(w => w.historicHold).map(w => w.rid))]
+    if (held.length) statements.push(holdHistoricStatement(db, held, now))
   }
   let inserted = 0
   for (let i = 0; i < statements.length; i += 50) {
     const results = await db.batch(statements.slice(i, i + 50))
-    for (const r of results) inserted += r.meta?.changes ?? 0
+    results.forEach((r, index) => { if (inserts.has(statements[i + index])) inserted += r.meta?.changes ?? 0 })
   }
   return inserted
 }
@@ -115,7 +137,7 @@ export async function reclaimStale(db: D1Database, now: number): Promise<number>
  */
 export async function claimRids(db: D1Database, n: number, now: number, token: string): Promise<QueueRow[]> {
   const { results: candidates } = await db
-    .prepare("SELECT rid FROM queue WHERE status = 'pending' ORDER BY priority DESC, source_created DESC, created_at LIMIT ?")
+    .prepare("SELECT rid FROM queue WHERE status = 'pending' AND terminal_reason IS NULL ORDER BY priority DESC, source_created DESC, created_at LIMIT ?")
     .bind(n * 2)
     .all<{ rid: string }>()
   const rids: string[] = []
@@ -126,11 +148,11 @@ export async function claimRids(db: D1Database, n: number, now: number, token: s
   if (rids.length === 0) return []
   await db
     .prepare(
-      `UPDATE queue SET status = 'claimed', claim_token = ?, claimed_at = ?, updated_at = ? WHERE status = 'pending' AND rid IN (${rids.map(() => '?').join(',')})`,
+      `UPDATE queue SET status = 'claimed', claim_token = ?, claimed_at = ?, updated_at = ? WHERE status = 'pending' AND terminal_reason IS NULL AND rid IN (${rids.map(() => '?').join(',')})`,
     )
     .bind(token, now, now, ...rids)
     .run()
-  const { results } = await db.prepare("SELECT * FROM queue WHERE claim_token = ? AND status = 'claimed'").bind(token).all<QueueRow>()
+  const { results } = await db.prepare("SELECT * FROM queue WHERE claim_token = ? AND status = 'claimed' AND terminal_reason IS NULL").bind(token).all<QueueRow>()
   return results
 }
 
@@ -159,6 +181,9 @@ export interface RowUpdate {
   addAttempts?: number
   /** Infrastructure failures to ADD. */
   addTransient?: number
+  namesRejected?: boolean
+  historic?: boolean
+  terminalReason?: TerminalReason
 }
 
 /** Settle rows in one batch. `claim_token` is cleared, so nothing finished is ever "released". */
@@ -167,22 +192,27 @@ export async function finishRows(db: D1Database, updates: readonly RowUpdate[], 
   const statements = updates.map((u) =>
     db
       .prepare(
-        `UPDATE queue SET status = ?, outcome = COALESCE(?, outcome), result = COALESCE(?, result), model = COALESCE(?, model),
-           last_error = ?, neurons = neurons + ?, attempts = attempts + ?, transient = transient + ?,
+        `UPDATE queue SET status = ?, outcome = COALESCE(?, outcome), result = CASE WHEN ? THEN NULL ELSE COALESCE(?, result) END, model = COALESCE(?, model),
+           last_error = ?, neurons = neurons + ?, attempts = attempts + ?, transient = transient + ?, names_rejected = COALESCE(?, names_rejected),
+           historic = COALESCE(?, historic), terminal_reason = COALESCE(?, terminal_reason),
            claim_token = NULL, claimed_at = NULL, updated_at = ?, done_at = ?
-         WHERE rid = ? AND task = ?`,
+         WHERE rid = ? AND task = ? AND (terminal_reason IS NULL OR terminal_reason != 'historic-held')`,
       )
       .bind(
         u.status,
         u.outcome ?? null,
+        u.result === null || u.terminalReason ? 1 : 0,
         u.result ?? null,
         u.model ?? null,
         u.lastError ?? null,
         u.addNeurons ?? 0,
         u.addAttempts ?? 0,
         u.addTransient ?? 0,
+        u.namesRejected === undefined ? null : Number(u.namesRejected),
+        u.historic === undefined ? null : Number(u.historic),
+        u.terminalReason ?? null,
         now,
-        u.status === 'done' || u.status === 'quarantined' ? now : null,
+        u.status === 'pending' || u.status === 'claimed' ? null : now,
         u.rid,
         u.task,
       ),
@@ -195,7 +225,7 @@ export async function finishRows(db: D1Database, updates: readonly RowUpdate[], 
 /** Rows the model has finished but the box has not received: dry-run results, or writes that met backpressure. */
 export async function unwrittenRows(db: D1Database, limit: number): Promise<QueueRow[]> {
   const { results } = await db
-    .prepare("SELECT * FROM queue WHERE status = 'done' AND outcome IN ('dry', 'unwritten') AND result IS NOT NULL ORDER BY priority DESC, done_at LIMIT ?")
+    .prepare("SELECT * FROM queue WHERE status = 'done' AND terminal_reason IS NULL AND outcome IN ('dry', 'unwritten') AND result IS NOT NULL ORDER BY priority DESC, done_at LIMIT ?")
     .bind(limit)
     .all<QueueRow>()
   return results

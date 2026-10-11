@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict';
 const {chromium,webkit}=await import(process.env.OPAX_PLAYWRIGHT_MODULE || 'playwright');
 const base=process.env.OPAX_PREVIEW_URL || 'http://localhost:8803';
+if (!['localhost','127.0.0.1','[::1]'].includes(new URL(base).hostname)) throw new Error('UI tests require a local OPAX preview origin');
 const summary=q=>({status:'ready',reviewed_count:2,points:[{text:`The matching records discuss ${q} research and a grant award for local facilities.`,source_ids:['s1','s2']}],sources:[{id:'s1',title:'Agricultural research',href:'/doc/speech-1',evidence:['The speaker discussed agricultural research and development.']},{id:'s2',title:'Local facilities',href:'/money/grants?open=award-2#record',evidence:['A published grant award supported local facilities.']}]});
 for(const [name,type,executablePath] of [['chromium',chromium,process.env.OPAX_CHROMIUM_PATH],['webkit',webkit,process.env.OPAX_WEBKIT_PATH]]){
  const browser=await type.launch({headless:true,executablePath});
@@ -8,6 +9,7 @@ for(const [name,type,executablePath] of [['chromium',chromium,process.env.OPAX_C
  for(const width of [390,768,1440]){
   const p=await browser.newPage({viewport:{width,height:900},reducedMotion:'reduce'}),errors=[];let mode='loading',summaryRequests=0,releases=[];
   p.on('pageerror',e=>errors.push(e.message));
+  await p.route('**/*',route=>new URL(route.request().url()).origin===new URL(base).origin?route.continue():route.abort());
   await p.route('**/api/**',async route=>{
    const url=new URL(route.request().url()),q=url.searchParams.get('q');
    if(url.pathname==='/api/search-summary'){

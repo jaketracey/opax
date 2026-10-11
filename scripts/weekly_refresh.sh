@@ -154,12 +154,17 @@ if [ "$want_weekly" = 1 ]; then
   # shipped roster is kept (STALE_OK); say why, for the nightly status (docs/PHOTOS.md, "Nightly safety net")
   held=$(grep -m1 '^ROSTER HELD:' "$PIPE/x_people.log" 2>/dev/null || true)
   [ -z "$held" ] || log "Roster held: ${held#ROSTER HELD: }"
-  run_step x_money "" "$EXPORT" json portal/public/graph/money.json "$PY" scripts/export_money_graph.py
+  donor_stage=portal/private/donor-export
+  mkdir -p "$donor_stage/graph"
+  # All graphs are exported privately first: any jurisdiction can vouch for a
+  # donor before the one publication index writes any public graph.
+  run_step x_money "" bash -c 'OPAX_DONOR_STAGE=private "$1" scripts/export_money_graph.py > "$2"' _ "$PY" "$donor_stage/graph/money.json"
   for j in qld vic tas; do
-    run_step "x_money_$j" "" "$EXPORT" json "portal/public/graph/money.$j.json" "$PY" scripts/export_state_money.py "$j"
+    run_step "x_money_$j" "" bash -c 'OPAX_DONOR_STAGE=private "$1" scripts/export_state_money.py "$2" > "$3"' _ "$PY" "$j" "$donor_stage/graph/money.$j.json"
   done
+  run_step x_money_publish "" node scripts/withhold_donor_assets.mjs portal/public "$donor_stage"
   run_step x_access "" "$EXPORT" json portal/public/access.json \
-    "$PY" scripts/export_access.py portal/public/graph/money.json portal/public/speakers.json
+    "$PY" scripts/export_access.py "$donor_stage/graph/money.json" portal/public/speakers.json
   run_step x_fits "" "$EXPORT" file portal/public/fits.json "$TMP/fits.json" \
     "$PY" scripts/export_fits.py --portal portal/public --out "$TMP/fits.json"
   run_step x_interests "" "$EXPORT" dir portal/public/interests -- \
@@ -204,6 +209,7 @@ fi
 run_step x_taxcharity "" "$EXPORT" dir portal/public/entities/tax-charity -- \
   "$PY" scripts/export_tax_charity.py --db "$DB" --portal portal/public
 
+log "Paused sources: ${PAUSED_STEPS[*]:-none}"
 log "===== weekly refresh end ====="
 [ "${#STALE_STEPS[@]}" -eq 0 ] || log "Stale weekly refresh: source refused to change the register: ${STALE_STEPS[*]}"
 if [ "${#FAILED_STEPS[@]}" -gt 0 ]; then

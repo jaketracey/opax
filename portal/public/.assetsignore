@@ -1,3 +1,9 @@
 # Local design references are committed for contributors, never uploaded.
 /ui-workbench
 /ui-workbench.*
+
+# DataTable data is held in D1 only; never upload legacy generated indexes.
+/table-index
+/table-index/**
+/table-assets/**
+/table-datasets.*

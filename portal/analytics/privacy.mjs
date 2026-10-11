@@ -4,6 +4,7 @@ const fields = {
   opax_ask: ['question_length', 'from_section'],
   opax_search: ['query_length', 'search_kind', 'search_mode'],
   opax_chip: ['chip_kind'],
+  opax_ask_followup_click: ['position', 'kind'],
   opax_game_open: ['game'],
   opax_download: ['format'],
   opax_outbound: ['host', 'partner', 'placement'],
@@ -14,7 +15,7 @@ const fields = {
   opax_source_open: ['from_section'],
   opax_ask_started: ['from_section', 'page_type'],
   opax_module_click: ['module', 'page_type', 'position'],
-  opax_ask_completed: ['from_section', 'duration_ms', 'source_count', 'has_answer'],
+  opax_ask_completed: ['from_section', 'duration_ms', 'source_count', 'has_answer', 'is_overview_intent'],
   opax_ask_failed: ['from_section', 'duration_ms', 'cancelled'],
   opax_search_started: ['page', 'filter_count'],
   opax_search_completed: ['page', 'result_count', 'total_count', 'duration_ms'],
@@ -38,6 +39,12 @@ export function cleanEvent(event, props = {}) {
   const clean = {};
   for (const key of fields[event]) {
     const value = props[key];
+    if (event === 'opax_ask_followup_click') {
+      if (key === 'position' && Number.isInteger(value) && value >= 1 && value <= 4) clean[key] = value;
+      if (key === 'kind' && ['speech', 'vote', 'recent', 'compare', 'detail'].includes(value)) clean[key] = value;
+      continue;
+    }
+    if (key === 'is_overview_intent') { if (typeof value === 'boolean') clean[key] = value; continue; }
     if (key === 'page_path') clean[key] = safePath(value);
     else if (typeof value === 'number' && Number.isFinite(value)) clean[key] = value;
     else if (typeof value === 'boolean') clean[key] = value;

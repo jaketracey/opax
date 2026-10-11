@@ -11,6 +11,8 @@ docs/DATA-WORDS.md).
 Run on the machine that holds parli.db (the WSL box `desktop`).
 """
 
+from parli.ingest import http as source_http
+
 import os
 import json
 import re
@@ -29,12 +31,8 @@ if TYPE_CHECKING:
 
 DB_PATH = Path(os.environ.get("OPAX_DB") or "~/.cache/autoresearch/parli.db").expanduser()
 
-# Honest identification. Some hosts (aph.gov.au / parlinfo.aph.gov.au behind
-# Azure WAF) reject any non-browser UA outright; those fetchers require an
-# explicit opt-in flag before they will send BROWSER_UA instead.
-USER_AGENT = "OPAX research (opax.com.au)"
-BROWSER_UA = "Mozilla/5.0 (X11; Linux x86_64; rv:128.0) Gecko/20100101 Firefox/128.0"
-
+# Shared identification; refusals preserve data and pause the source.
+USER_AGENT = source_http.USER_AGENT
 
 class PoliteSession:
     """requests.Session with a global minimum interval between requests,
@@ -42,12 +40,11 @@ class PoliteSession:
     The interval lock is shared across threads so a thread pool never exceeds
     the configured rate."""
 
-    def __init__(self, min_interval: float = 1.0, ua: str = USER_AGENT,
-                 timeout: int = 45, retries: int = 4):
+    def __init__(self, min_interval: float = 1.0, timeout: int = 45, retries: int = 4):
         import requests
-        self.session = requests.Session()
+        self.session = source_http.Session()
         self._request_exception = requests.RequestException
-        self.session.headers.update({"User-Agent": ua, "Accept-Language": "en-AU,en;q=0.8"})
+        self.session.headers.update({"User-Agent": source_http.USER_AGENT, "Accept-Language": "en-AU,en;q=0.8"})
         self.min_interval = min_interval
         self.timeout = timeout
         self.retries = retries
@@ -79,8 +76,8 @@ class PoliteSession:
                 continue
             if resp.status_code == 429 or resp.status_code >= 500:
                 retry_after = resp.headers.get("Retry-After")
-                wait = float(retry_after) if retry_after and retry_after.isdigit() else delay
-                time.sleep(min(wait, 120))
+                wait = max(source_http.retry_after(retry_after), delay)
+                time.sleep(wait)
                 delay = min(delay * 2, 60)
                 last_exc = None
                 continue

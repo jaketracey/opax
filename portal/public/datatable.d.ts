@@ -7,7 +7,8 @@ export interface Action { icon: string; label: string; href: (row: Row) => strin
 export interface Query { q?: string; filters?: Record<string, string[] | { min?: number; max?: number }>; sort?: { key: string; dir: 'asc' | 'desc' }; page?: number; pageSize?: number }
 export interface Page { rows: Row[]; total: number; page: number; pageSize: number; facets?: Record<string, { value: string; count: number }[] | { min: number; max: number }> }
 export interface DataTableConfig { id: string; caption: string; columns: Column[]; rows?: Row[]; source?: { endpoint: string; params?: Record<string, string> }; pageSize?: number; defaultSort?: Query['sort']; primaryLink?: (row: Row) => string | null; actions?: Action[]; export?: { filename: string } | false; urlKey?: string; density?: 'comfortable' | 'compact'; columnsVisible?: string[]; pageType: string; privacy?: 'donors'; rowPrivacyCheck?: (row: Row) => boolean; privacyCheck?: (text: string) => boolean | Promise<boolean> }
-export function dataTableHTML(config: DataTableConfig, page: Page): string;
+export function guardTableURL(config: DataTableConfig, input: string | URL): {url: URL; query: Query; rejected: boolean};
+export function dataTableHTML(config: DataTableConfig, page: Page, requestURL?: string | URL): string;
 export function mountDataTable(el: Element, config: DataTableConfig): { destroy(): void };
 export function applyQuery(rows: Row[], config: DataTableConfig, query: Query): Page;
 export function toCSV(rows: Row[], config: DataTableConfig): string;

@@ -30,6 +30,8 @@ Usage:
     python -m parli.ingest.ministerial_diaries --dry-run
 """
 
+from parli.ingest import http as source_http
+
 import argparse
 import io
 import json
@@ -48,7 +50,7 @@ from parli.schema import get_db, init_db
 
 CABINET_BASE = "https://cabinet.qld.gov.au"
 MINISTERS_URL = f"{CABINET_BASE}/ministers-portfolios.aspx"
-USER_AGENT = "Mozilla/5.0 (compatible; OPAX/1.0; +https://opax.com.au)"
+USER_AGENT = source_http.USER_AGENT
 REQUEST_DELAY = 1.0  # seconds between requests
 MAX_RETRIES = 3
 
@@ -73,10 +75,10 @@ MONTHS = [
 
 def _get(url: str, binary: bool = False) -> Optional[bytes | str]:
     """Fetch a URL with retries and rate limiting."""
-    headers = {"User-Agent": USER_AGENT}
+    headers = {"User-Agent": source_http.USER_AGENT}
     for attempt in range(MAX_RETRIES):
         try:
-            resp = requests.get(url, headers=headers, timeout=30)
+            resp = source_http.get(url, headers=headers, timeout=30)
             if resp.status_code == 404:
                 return None
             resp.raise_for_status()

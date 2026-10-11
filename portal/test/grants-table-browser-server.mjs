@@ -3,15 +3,14 @@ import {createServer} from 'node:http';
 import {readFileSync, existsSync} from 'node:fs';
 import {join} from 'node:path';
 import {offline, loadWorker} from './worker-harness.mjs';
-import {grantPrivacyFixture} from './grants-table-privacy-fixture.mjs';
+import {tableDatabase} from './table-d1-harness.mjs';
+import {tableRows} from '../../scripts/load_tables.mjs';
 const pub = new URL('../public/', import.meta.url).pathname;
+const loaded = await tableRows(pub, {moneyOnly: true});
+const local = await tableDatabase({datasets: {grants: loaded.rows.grants}, policy: loaded.policy});
 offline();
 const {env, fetch: worker} = await loadWorker(new URL('../src/index.ts', import.meta.url).pathname, pub);
-if (process.env.DT_GRANTS_PRIVACY_FIXTURE) {
-  const fixture = await grantPrivacyFixture(async path => JSON.parse(readFileSync(join(pub, path))));
-  const original = env.ASSETS.fetch;
-  env.ASSETS.fetch = async request => new URL(request.url).pathname.startsWith('/grants/federal/programs/') ? Response.json(await fixture.read(new URL(request.url).pathname)) : original(request);
-}
+env.TABLE_DB = local.db;
 const server = createServer(async (req, res) => {
   try {
     const path = new URL(req.url, 'http://localhost').pathname, asset = join(pub, path);
@@ -26,4 +25,5 @@ const server = createServer(async (req, res) => {
   } catch {res.writeHead(500); res.end('Local preview unavailable');}
 });
 server.listen(8795, '127.0.0.1');
-process.on('SIGINT', () => {server.close(() => process.exit(0)); server.closeAllConnections();});
+process.on('SIGINT', () => {server.close(async () => {await local.close(); process.exit(0);}); server.closeAllConnections();});
+process.on('SIGTERM', () => {server.close(async () => {await local.close(); process.exit(0);}); server.closeAllConnections();});

@@ -212,6 +212,28 @@ def state_polarity(question, bill_ref, divided_on):
     return 1, stage
 
 
+def xml_polarity(parsed, question):
+    """XML bill stances require the actual bill question, not its heading.
+
+    Keep the established TVFY classifier untouched so existing schema 1
+    records retain their bytes. A contextual bill link is still evidence for
+    the division page, but does not make a closure vote a vote for that bill.
+    """
+    q = WS.sub(' ', re.sub(r'<[^>]+>', ' ', question or '')).strip().lower().strip(' .')
+    if not q or re.search(
+            r'\b(?:question be (?:now )?put|adjourn\w*|clos\w*|suspend\w*|suspension|'
+            r'standing orders|amendments?|omit\w*|substitut\w*)\b', q):
+        return 0
+    if POSITIVE.fullmatch(q):
+        return 1 if parsed[3] else 0
+    if NEGATIVE.fullmatch(q):
+        return -1 if parsed[3] else 0
+    direct_bill = re.fullmatch(
+        r'that (?:this|the) bill(?:,? as amended,?)? be (?:now )?'
+        r'(?:read a (?:second|third) time|agreed to|passed)', q)
+    return 1 if direct_bill and parsed[3] else 0
+
+
 def slugify(name):
     s = unicodedata.normalize("NFKD", name or "")
     s = "".join(ch for ch in s if not unicodedata.combining(ch)).lower()
@@ -321,6 +343,37 @@ def export_federal(db, out, names, newest):
     votes = {}
     for pid, did, vote in db.execute("SELECT person_id, division_id, vote FROM votes WHERE vote IN ('aye', 'no')"):
         votes.setdefault(pid, []).append((did, vote))
+    # XML-only divisions use the same schema 1 person records. Existing TVFY
+    # divisions keep their legacy path, order and bytes; never count them twice.
+    has_xml = db.execute("SELECT 1 FROM sqlite_master WHERE type='table' AND name='oa_division_provenance'").fetchone()
+    if has_xml:
+        legacy_keys = {f"federal-{house}-{did}" for did, house in db.execute(
+            "SELECT division_id,house FROM divisions WHERE COALESCE(state,'federal')='federal'")}
+        legacy_days = {(house, day, number) for house, day, number in db.execute(
+            "SELECT house,date,number FROM divisions WHERE COALESCE(state,'federal')='federal'")}
+        extra_days = {}
+        for did, name, day, house, question, number in db.execute(
+                "SELECT id,name,date,house,question,number FROM ext_divisions WHERE jurisdiction='federal' ORDER BY id"):
+            if did in legacy_keys or (house, day, number) in legacy_days:
+                continue
+            dates[did] = counted[did] = day[:10]
+            extra_days[did] = house
+            parsed = parse_name(name)
+            if parsed:
+                title, stage, _, _ = parsed
+                divisions[did] = {"name": title, "stage": stage, "date": day[:10], "jur": "federal",
+                                  "rebels": 0, "polarity": xml_polarity(parsed, question)}
+        for did, scoped, name, vote, party in db.execute(
+                "SELECT division_id,person_id,person_name,vote,party FROM ext_votes "
+                "WHERE jurisdiction='federal' AND vote IN ('aye','no') ORDER BY id"):
+            if did not in extra_days or not scoped:
+                continue
+            pid = scoped.removeprefix('tvfy_')
+            if not pid.isdigit():
+                continue
+            votes.setdefault(pid, []).append((did, vote))
+            if pid not in members and name:
+                members[pid] = (pid, name, party, extra_days[did])
     for pid, rows in votes.items():
         member = members.get(pid)
         name = (member and member[1]) or None

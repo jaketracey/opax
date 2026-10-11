@@ -1,3 +1,4 @@
+import {sanitiseStoredDonors} from './donor-hashes.mjs'
 /**
  * A daily source-based edition: politician statistics, bills, grants and topics.
  * All facts come from the site's published records; no model runs at post time.
@@ -1021,12 +1022,12 @@ const COMPOSERS: Record<DailyPostKind, (date: string, sources: DailyPostSources,
 /** Composes the post for a date; falls back through the other kinds if one has nothing to say. */
 export async function composeDailyPost(date: string, sources: DailyPostSources, kind: DailyPostKind = kindFor(date), subject?: string): Promise<DailyPost | null> {
   // A named subject is an operator's choice: only the grant form exists so far.
-  if (subject) return subject.startsWith('grant:') ? grantPostFor(date, sources, subject) : null
+  if (subject) { const post = subject.startsWith('grant:') ? await grantPostFor(date, sources, subject) : null; return post ? sanitiseStoredDonors(post) : null }
   const recent = await sources.recent()
   const order = [kind, ...FALLBACK[kind]]
   for (const k of order) {
     const post = await COMPOSERS[k](date, sources, recent)
-    if (post) return post
+    if (post) return sanitiseStoredDonors(post)
   }
   return null
 }

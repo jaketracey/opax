@@ -23,6 +23,8 @@ Usage:
     python -m parli.ingest.federal_lobbyists --cross-reference-only
 """
 
+from parli.ingest import http as source_http
+
 import argparse
 import hashlib
 import json
@@ -48,7 +50,7 @@ API_HEADERS = {
     "Content-Type": "application/json",
     "Origin": "https://lobbyists.ag.gov.au",
     "Referer": "https://lobbyists.ag.gov.au/",
-    "User-Agent": "Mozilla/5.0 (compatible; OPAX/1.0; +https://opax.com.au)",
+    "User-Agent": source_http.USER_AGENT,
 }
 
 # ── Database schema ──────────────────────────────────────────────────────────
@@ -120,7 +122,7 @@ def _fetch_organisation_list(include_deregistered: bool = True) -> list[dict]:
             }
 
             try:
-                resp = requests.post(
+                resp = source_http.post(
                     f"{API_BASE}/search/organisations",
                     json=body,
                     headers=API_HEADERS,
@@ -169,7 +171,7 @@ def _fetch_organisation_profile(org_id: str) -> dict | None:
     Returns dict with keys: summary, lobbyists, clients, stakeholders
     """
     try:
-        resp = requests.get(
+        resp = source_http.get(
             f"{API_BASE}/search/organisations/{org_id}/profile",
             headers=API_HEADERS,
             timeout=30,

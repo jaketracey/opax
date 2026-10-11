@@ -10,6 +10,11 @@
   (a surname-only page that spans more than one parliament, or a rival holder with the same surname);
   their files, credits and name-map entries are removed.
 Writes contact sheets to scripts/_photos_work/recrop_sheet_<n>.png for a visual check."""
+
+import sys as _http_sys
+from pathlib import Path as _HttpPath
+_http_sys.path.insert(0, str(_HttpPath(__file__).resolve().parents[1]))
+from parli.ingest import http as source_http
 import json, os, sys, collections, time, urllib.parse
 from pathlib import Path
 import cv2, numpy as np, requests
@@ -20,7 +25,7 @@ drop_names=set(json.load(open(WK/"wikidata_drop.json")))
 ONLY=None   # --new: only this run's matches (wikidata_matches_new.json); sources are fetched at 640px if missing
 if "--new" in sys.argv:
     ONLY={f"wd-{m['qid']}" for m in json.load(open(WK/"wikidata_matches_new.json")).values()}
-S=requests.Session(); S.headers["User-Agent"]="OPAX research (opax.com.au; jake.tracey@noice.work)"
+S=source_http.Session(); S.headers["User-Agent"]="OPAX research (opax.com.au; jake.tracey@noice.work)"
 def fetch_src(key):
     f=credits[key]["file"][5:]; SRC.mkdir(exist_ok=True)
     r=S.get("https://commons.wikimedia.org/wiki/Special:FilePath/"+urllib.parse.quote(f), params={"width":"640"}, timeout=60)

@@ -2,6 +2,11 @@
 """Fetch cited original documents for review; never treat quote matches as entailment.
 Usage: python3 scripts/ask_evidence_audit.py /tmp/opax-ask-baseline
 """
+
+import sys as _http_sys
+from pathlib import Path as _HttpPath
+_http_sys.path.insert(0, str(_HttpPath(__file__).resolve().parents[1]))
+from parli.ingest import http as source_http
 import argparse
 from concurrent.futures import ThreadPoolExecutor
 import json
@@ -22,8 +27,8 @@ def main():
         path=docs/(slug+'.json')
         if path.exists():return
         try:
-            req=urllib.request.Request(args.base+'/api/resource/'+slug,headers={'user-agent':'opax-ask-evidence-audit/1.0'})
-            with urllib.request.urlopen(req,timeout=60) as res:data=json.load(res)
+            req=source_http.Request(args.base+'/api/resource/'+slug,headers={'user-agent':source_http.USER_AGENT})
+            with source_http.urlopen(req,timeout=60) as res:data=json.load(res)
         except Exception as exc:data={'error':str(exc)}
         path.write_text(json.dumps(data,indent=2)+'\n')
     with ThreadPoolExecutor(max_workers=4) as pool:list(pool.map(fetch,slugs))

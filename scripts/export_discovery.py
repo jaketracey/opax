@@ -7,6 +7,10 @@ The database is opened mode=ro with query_only enabled. Filtered analysis tables
 exist only in a separate in-memory connection. SSH streams source code to Python;
 it does not install files or alter the source checkout/database on the host.
 """
+import sys as _donor_sys
+from pathlib import Path as _DonorPath
+_donor_sys.path.insert(0, str(_DonorPath(__file__).resolve().parents[1]))
+from scripts.donor_public import public_donor_data
 import os
 import argparse
 from collections import Counter
@@ -63,7 +67,7 @@ def donation_label(donor_name, recipient, amount, financial_year):
 
 
 def dump(data):
-    return json.dumps(data, ensure_ascii=False, allow_nan=False, indent=2) + "\n"
+    return json.dumps(public_donor_data(data), ensure_ascii=False, allow_nan=False, indent=2) + "\n"
 
 
 def _analysis():

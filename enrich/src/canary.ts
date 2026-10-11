@@ -10,8 +10,9 @@
 
 import { finishRows, isSummaryTask, logError, type QueueRow, type RowUpdate } from './db.ts'
 import { FIELD } from './text.ts'
-import { KbBackpressure, KbHttpError, type KbApi } from './kb.ts'
-import { UnsafeWrite, writeItem, type WriteOutcome } from './write.ts'
+import { KbBackpressure, KbHttpError, type KbApi, type KbResource } from './kb.ts'
+import { RejectedNames, UnsafeWrite, writeItem, type WriteOutcome } from './write.ts'
+import { eligibleHistoricRows } from './hold.ts'
 
 export const MAX_CANARY_RIDS = 10
 const RID = /^[0-9a-f]{32}$/
@@ -120,6 +121,7 @@ export interface CanaryDeps {
   db: D1Database
   kb: KbApi
   now: () => number
+  historicHold?: boolean
   /** Pause between the write and the "after" read. */
   settle: (ms: number) => Promise<void>
 }
@@ -129,8 +131,8 @@ export async function runCanary(d: CanaryDeps, rids: string[]): Promise<{ result
   for (const rid of rids) {
     const result: CanaryRidResult = { rid, status: 'skipped', writes: [] }
     results.push(result)
-    const { results: rows } = await d.db
-      .prepare("SELECT * FROM queue WHERE rid = ? AND status = 'done' AND outcome IN ('dry', 'unwritten') AND result IS NOT NULL")
+    let { results: rows } = await d.db
+      .prepare("SELECT * FROM queue WHERE rid = ? AND status = 'done' AND terminal_reason IS NULL AND outcome IN ('dry', 'unwritten') AND result IS NOT NULL")
       .bind(rid)
       .all<QueueRow>()
     if (rows.length === 0) {
@@ -145,14 +147,33 @@ export async function runCanary(d: CanaryDeps, rids: string[]): Promise<{ result
       }
       result.before = before
 
+      if (d.historicHold) {
+        rows = await eligibleHistoricRows(d.db, rows, before as KbResource, d.now)
+        if (!rows.length) {
+          result.reason = 'historic hold requires an explicit release'
+          continue
+        }
+      }
+
       const updates: RowUpdate[] = []
       for (const row of rows) {
         const value = isSummaryTask(row.task) ? (row.result as string) : (JSON.parse(row.result as string) as string[])
         // The very same write path as live mode: the existing-brief / existing-topics conditions are
         // re-checked NOW, the merge keeps every non-topic label, and the topic write is read back.
-        const done: WriteOutcome = await writeItem(d.kb, rid, { task: row.task, force: row.force === 1, value })
+        let done: WriteOutcome
+        try {
+          done = await writeItem(d.kb, rid, { task: row.task, force: row.force === 1, value }, before as KbResource)
+        } catch (err) {
+          if (!(err instanceof RejectedNames)) throw err
+          const terminal = row.names_rejected === 1
+          updates.push({ rid, task: row.task, status: terminal ? 'done' : 'pending',
+            terminalReason: terminal ? 'rejected-names' : undefined, outcome: terminal ? 'rejected-names' : null,
+            result: null, namesRejected: true, historic: true, addAttempts: 1, lastError: err.message })
+          await finishRows(d.db, updates, d.now())
+          throw err
+        }
         result.writes.push({ task: row.task, outcome: done.outcome, warning: done.warning })
-        updates.push({ rid, task: row.task, status: 'done', outcome: done.outcome, lastError: done.warning ?? null })
+        updates.push({ rid, task: row.task, status: 'done', terminalReason: done.outcome === 'skipped-short' ? 'skipped-short' : undefined, outcome: done.outcome, lastError: done.warning ?? null })
       }
       await finishRows(d.db, updates, d.now())
 

@@ -1,150 +1,152 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {readFileSync} from 'node:fs';
-import {isOrganisationRecipient} from '../public/recipient-privacy.js';
-import {grantsTableConfig, sanitizeGrantsState} from '../public/grants-table.js';
-import {grantFixtureQuery, grantFixtureRows, queryGrantFixture, grantFixtureResponse, grantFixturePrivacy} from '../src/grants-table-fixture.ts';
-import {offline, loadWorker} from './worker-harness.mjs';
+import {readFile} from 'node:fs/promises';
+import {grantsTableConfig} from '../public/grants-table.js';
+import {isOrganisationRecipient} from '../src/table-recipient.mjs';
+import {tableApi, TABLE_REGISTRY_FINGERPRINT} from '../src/table-api.ts';
+import {tablePrivacyCheck} from '../src/table-privacy.ts';
+import {tableRows} from '../../scripts/load_tables.mjs';
 import {dataTableHTML, mountDataTable, toCSV} from '../public/datatable.js';
 import {tableHarness} from './datatable-harness.mjs';
+import {tableDatabase} from './table-d1-harness.mjs';
+import {loadWorker, offline} from './worker-harness.mjs';
+import {grantsPrivateInputs} from './grants-table-inputs.mjs';
 
-const config = grantsTableConfig();
+const root = new URL('../public/', import.meta.url);
+const loaded = await tableRows(root.pathname, {moneyOnly: true});
+const local = await tableDatabase({datasets: {grants: loaded.rows.grants}, policy: loaded.policy});
+test.after(() => local.close());
+const inputs = await grantsPrivateInputs();
+const registry = JSON.parse(await readFile(new URL('table-private-identities.json', root), 'utf8'));
+const safe = await tablePrivacyCheck({fetch: async () => Response.json(registry)});
+const config = {...grantsTableConfig(), privacyCheck: safe};
+const api = params => tableApi(new Request('https://local.invalid/api/table/grants?' + new URLSearchParams(params)), {TABLE_DB: local.db});
+const clean = (value, surface) => assert.equal(loaded.policy.check(value), false, `${surface}: withheld hit count`);
+
+// Synthetic fixtures only. Typed organisations deliberately need no label heuristic.
 const rows = [
-  {id: '1', recipient: 'Fixture Community Council', recipientKind: 'council', program: 'Community facilities', agency: 'Fixture Department of Services', value: 25000.75, date: '2026-08-19', electorate: 'Example district', address: '42 Fixture Road'},
-  {id: '2', recipient: 'Fixture Research Institute', recipientKind: 'company', program: 'Research grants', agency: 'Fixture Department of Health', value: 5000, date: '2025-01-01', electorate: 'Example district', address: '87 Sample Street'},
+  {id: 'fixture-award-1', recipient: 'fixture-organisation-1', recipientKind: 'company', recipientABNType: 'PRV', program: 'Fixture facilities', agency: 'Fixture services', amount: 25000.75, start_date: '2026-08-19', electorate: 'Fixture district', description: '42 Fixture Road', jurisdiction: 'federal', recipientId: 'name:fixture-organisation-1', recipientAvailable: 1},
+  {id: 'fixture-award-2', recipient: 'fixture-organisation-2', recipientKind: 'company', program: 'Fixture research', agency: 'Fixture services', amount: 5000, start_date: '2025-01-01', electorate: 'Fixture district', description: '87 Fixture Street', jurisdiction: 'federal', recipientId: 'name:fixture-organisation-2', recipientAvailable: 0},
 ];
 
-test('grants uses the frozen server contract with six columns and exact export', () => {
-  assert.deepEqual(config.source, {endpoint: '/api/table/grants', params: {}});
-  assert.equal(config.rows, undefined);assert.equal(config.privacy, 'donors');
-  assert.deepEqual(config.columns.map(c => [c.key, c.type]), [['recipient', 'text'], ['program', 'category'], ['agency', 'category'], ['value', 'money'], ['date', 'date'], ['electorate', 'category']]);
-  assert.equal(config.columns[0].primary, true);assert.equal(config.columns[3].bar, true);
-  assert.equal(config.export.filename, 'grants.csv');
-  assert.equal(config.primaryLink({...rows[0], jurisdiction: 'federal', recipientId: 'abn:00000000000', recipientAvailable: true}), '/money/grants/federal/recipient/abn%3A00000000000');
-  assert.equal(config.primaryLink({...rows[0], jurisdiction: 'federal', recipientId: 'person:withheld'}), null);
-  assert.equal(config.primaryLink({...rows[0], jurisdiction: 'federal', recipientId: 'abn:00000000000', recipientAvailable: false}), null);
+test('grants uses main API fields and organisation type overrides in the real core', () => {
+  assert.deepEqual(config.columns.map(c => c.key), ['recipient', 'program', 'agency', 'amount', 'start_date', 'electorate']);
+  assert.deepEqual(config.defaultSort, {key: 'amount', dir: 'desc'});
+  assert.equal(grantsTableConfig().privacyCheck, undefined, 'browser uses shared validation');
+  assert.deepEqual(grantsTableConfig(new URLSearchParams({jur: 'qld'})).source.params, {'f.jurisdiction': '["qld"]'});
+  assert.equal(config.primaryLink(rows[0]), '/money/grants/federal/recipient/name%3Afixture-organisation-1');
+  assert.equal(config.primaryLink(rows[1]), null);
+  const overrides = [{recipientKind: 'person'}, {recipientKind: 'sole trader'}, {recipientABNType: 'IND'}, {recipientId: 'person:fixture-private-id'}];
+  const rejected = overrides.map((override, i) => ({...rows[0], ...override, recipient: `fixture-private-${i} Pty Ltd`}));
+  for (const r of rejected) assert.equal(isOrganisationRecipient(r), false);
+  for (const output of [dataTableHTML(config, {rows: [rows[0], ...rejected], total: 5, page: 1, pageSize: 50}), toCSV([rows[0], ...rejected], config)]) {
+    assert.ok(output.includes(rows[0].recipient), 'organisation positive control');
+    assert.ok(!output.includes('fixture-private'), 'type override reaches no public field');
+  }
 });
 
-test('recipient source types override organisation-looking labels and preserve positive controls', () => {
-  const recipient = {n: 'fixture-recipient Pty Ltd', k: 'company', id: 'abn:00000000000'};
-  for (const override of [{k: 'person'}, {k: 'individual'}, {k: 'sole trader'}, {kind: 'people'}, {k: 'sole proprietor'}, {abr: {etype: 'IND'}}, {abr: {type: 'Individual'}}, {abnType: 'Sole Trader'}, {id: 'person:fixture-recipient'}]) assert.equal(isOrganisationRecipient({...recipient, ...override}), false);
-  assert.equal(isOrganisationRecipient(recipient), true);
-  assert.equal(isOrganisationRecipient({n: 'fixture-recipient', k: 'company'}), true);
-  assert.equal(isOrganisationRecipient({n: 'fixture-recipient', k: 'co-operative'}), true);
-  assert.equal(isOrganisationRecipient({n: 'fixture-recipient', abr: {etype: 'PRV'}}), true);
-  assert.equal(isOrganisationRecipient({n: 'fixture-recipient', k: 'other'}), false);
+test('shared D1 grants supplies real organisation controls in API, HTML and CSV', async () => {
+  assert.equal(local.manifest.privacyFingerprint, TABLE_REGISTRY_FINGERPRINT);
+  assert.equal(loaded.rows.grants.filter(({row}) => row.recipientKind !== 'aggregate' && !isOrganisationRecipient(row)).length, 0, 'non-organisation public row count');
+  const response = await api({pageSize: '50'}); assert.equal(response.status, 200);
+  const page = await response.json(); assert.ok(page.total > 50); assert.equal(page.rows.length, 50);
+  const organisation = page.rows.find(isOrganisationRecipient); assert.ok(organisation, 'organisation control exists');
+  const html = dataTableHTML(config, page, new URL('https://local.invalid/money/grants'));
+  assert.ok(html.includes(organisation.id), 'real organisation survives HTML hydration');
+  const body = html.match(/<tbody[^>]*>([\s\S]*?)<\/tbody>/)[1];
+  const label = organisation.recipient.replace(/[&<>"']/g, c => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'}[c]));
+  assert.ok(body.includes(label), 'real organisation appears in visible HTML');
+  assert.ok(html.includes('dt-scale'), 'shared column-wide scale'); clean(html, 'HTML');
+  const csvResponse = await api({format: 'csv', 'f.recipientId': JSON.stringify([organisation.recipientId])}); assert.equal(csvResponse.status, 200);
+  const csv = await csvResponse.text(); assert.ok(Number(csvResponse.headers.get('x-table-exported')) > 0);
+  assert.ok(csv.includes(organisation.id), 'real organisation survives CSV');
+  assert.ok(csv.includes(organisation.recipient.replaceAll('"', '""')), 'organisation name in D1 CSV');
+  for (const line of csv.split('\r\n')) clean(line, 'CSV');
+  clean(JSON.stringify(page), 'rows and facets');
 });
 
-test('each facet keeps alternatives while respecting the search and all other filters', () => {
-  const {page} = queryGrantFixture(rows, {filters: {program: [rows[0].program]}});
-  assert.equal(page.total, 1);
-  assert.deepEqual(page.facets.program.map(f => f.value), rows.map(r => r.program));
-  assert.deepEqual(page.facets.agency, [{value: rows[0].agency, count: 1}]);
-  const bounded = queryGrantFixture(rows, {filters: {value: {min: 20000}}}).page;
-  assert.equal(bounded.total, 1);
-  assert.deepEqual(bounded.facets.value, {min: 5000, max: 25000.75});
-  assert.equal(queryGrantFixture(rows, {q: 'Research', filters: {program: [rows[0].program]}}).page.facets.program[0].value, rows[1].program);
+test('D1 facets retain alternatives and search uses names only', async () => {
+  const fixture = await tableDatabase({datasets: {grants: rows.map(row => ({row}))}, policy: loaded.policy});
+  try {
+    const fetch = params => tableApi(new Request('https://local.invalid/api/table/grants?' + new URLSearchParams(params)), {TABLE_DB: fixture.db});
+    const page = await (await fetch({'f.program': JSON.stringify([rows[0].program])})).json();
+    assert.equal(page.total, 1); assert.equal(page.facets.program.length, 2); assert.equal(page.facets.agency.length, 1);
+    const url = new URL('https://local.invalid/money/grants?' + new URLSearchParams({'t.f.program': JSON.stringify([rows[0].program])}));
+    const html = dataTableHTML(config, page, url); assert.ok(html.includes('data-panel="facet-program"'), 'multi-select stays available');
+    const bounded = await (await fetch({'f.amount': '{"min":20000}'})).json();
+    assert.deepEqual(bounded.facets.amount, {min: 5000, max: 25000.75});
+    for (const q of ['fixture-organisation-1', 'facilities']) assert.equal((await (await fetch({q})).json()).total, 1);
+    for (const q of ['42 Fixture Road', '87 Fixture Street', 'Fixture district', '2026-08-19', '25000']) assert.equal((await (await fetch({q})).json()).total, 0);
+    const csv = await (await fetch({format: 'csv'})).text();
+    for (const row of rows) assert.ok(csv.includes(row.id), 'fixture organisation CSV control');
+  } finally {await fixture.close();}
 });
 
-test('the real core keeps multi-select controls when a selected category has alternatives', async () => {
-  const page = queryGrantFixture(rows, {filters: {program: [rows[0].program]}}).page;
-  const harness = tableHarness('http://localhost/money/grants?' + new URLSearchParams({'t.f.program': JSON.stringify([rows[0].program])}));
-  harness.win.fetch = async () => Response.json(page);
-  const mounted = mountDataTable(harness.root, {...config, privacyCheck: () => true});
-  await new Promise(done => setTimeout(done, 0));
-  const html = harness.html();
-  assert.ok(html.includes('data-panel="facet-program"'));
-  for (const row of rows) assert.ok(html.includes(`value="${row.program}"`));
-  mounted.destroy();
+test('merged-tree D1 rejects every donor, registration, recipient, variant and numeric probe before dataset SQL', async t => {
+  assert.equal(inputs.labels.length, 666); assert.equal(inputs.identifiers.length, 81); assert.equal(inputs.recipients.length, 169);
+  let probes = 0;
+  const db = {prepare(sql) {assert.ok(!/FROM\s+table_grants(?:\b|_)/i.test(sql), 'rejected query reached dataset SQL'); return local.db.prepare(sql);}};
+  for (const value of [...inputs.labels, ...inputs.identifiers, ...inputs.recipients, ...inputs.variants]) {
+    for (const format of ['', 'csv']) {
+      const params = new URLSearchParams({q: value, ...(format ? {format} : {})});
+      const response = await tableApi(new Request('https://local.invalid/api/table/grants?' + params), {TABLE_DB: db});
+      assert.equal(response.status, 200, 'probe status'); assert.equal(response.headers.get('content-location'), null);
+      const text = await response.text(); clean(text, 'rejected response');
+      if (format) assert.equal(response.headers.get('x-table-exported'), '0'); else assert.equal(JSON.parse(text).total, 0);
+      probes++;
+    }
+  }
+  for (const value of inputs.identifiers) for (const bound of ['min', 'max']) {
+    const response = await tableApi(new Request('https://local.invalid/api/table/grants?' + new URLSearchParams({'f.amount': JSON.stringify({[bound]: Number(value)})})), {TABLE_DB: db});
+    assert.equal(response.status, 200); assert.equal((await response.json()).total, 0); probes++;
+  }
+  t.diagnostic(JSON.stringify({donorInputs: 666,registrationInputs: 81,recipientInputs: 169,numericProbes: 162,totalProbes: probes,datasetReads: 0,withheldHits: 0}));
 });
 
-test('grants search matches recipient, program and agency names, never an address or electorate', () => {
-  for (const q of ['Council', 'facilities', 'Department of Health']) assert.equal(queryGrantFixture(rows, {q}).page.total, 1);
-  for (const q of ['42 Fixture Road', '87 Sample Street', 'Example district', '2026-08-19', '25000']) assert.equal(queryGrantFixture(rows, {q}).page.total, 0);
-});
-
-test('grants filters, sorts and pages the full filtered set, with its facets', () => {
-  const query = grantFixtureQuery(new URLSearchParams({'f.program': '["Community facilities"]', 'f.value': '{"min":20000}', sort: 'date:asc', page: '999', pageSize: '1'}));
-  const {page, filtered} = queryGrantFixture(rows, query);
-  assert.equal(page.total, 1);assert.equal(page.page, 1);assert.equal(page.rows[0].value, 25000.75);assert.equal(filtered.length, 1);
-  assert.deepEqual(page.facets.program, [{value: 'Community facilities', count: 1}]);
-  const second = queryGrantFixture(rows, {sort: {key: 'date', dir: 'asc'}, page: 2, pageSize: 1});
-  assert.equal(second.page.rows[0].id, '1');assert.equal(second.filtered.length, 2);
-  const malformed = grantFixtureQuery(new URLSearchParams({'f.program': 'broken', 'f.value': '{"min":"bad"}', pageSize: '100000', sort: 'address:desc'}));
-  assert.equal(malformed.pageSize, 200);assert.equal(malformed.sort, undefined);assert.equal(malformed.filters, undefined);
-});
-
-const read = async path => JSON.parse(readFileSync(new URL('../public' + path, import.meta.url), 'utf8'));
-test('fixture endpoint serves bounded pages and exports every filtered award with exact values', async () => {
-  const request = new Request('https://fixture.test/api/table/grants?pageSize=1');
-  const response = await grantFixtureResponse(request, new URL(request.url), read);
-  assert.equal(response.status, 200);assert.equal(response.headers.get('x-opax-table-source'), 'fixture');
-  const page = await response.json();assert.equal(page.rows.length, 1);assert.ok(page.total > 50);
-  const {rows: all, withheld} = await grantFixtureRows(read);
-  const {filtered} = queryGrantFixture(all, {}, withheld);
-  const csvURL = new URL('https://fixture.test/api/table/grants?pageSize=1&format=csv');
-  const csv = await (await grantFixtureResponse(new Request(csvURL), csvURL, read)).text();
-  assert.equal(csv.trim().split(/\r?\n/).length, filtered.length + 1);
-  assert.ok(csv.includes(String(filtered[0].value)));
-  const clean = sanitizeGrantsState({q: '42 Fixture Road', filters: {recipient: ['withheld'], program: [page.rows[0].program]}}, page);
-  assert.equal(clean.q, undefined);assert.equal(clean.filters.recipient, undefined);
-  const failure = await grantFixtureResponse(request, new URL(request.url), async () => {throw Error('fixture unavailable');});
-  assert.equal(failure.status, 503);assert.deepEqual(await failure.json(), {error: 'Grant records are temporarily unavailable.'});
-});
-
-test('every generated recipient link resolves to an existing organisation page', async () => {
+test('SSR and initial hydration reject recipient identities absent from donor graphs and metadata injection', async t => {
+  const donorValues = new Set(inputs.labels);
+  const recipients = inputs.recipients.filter(value => !donorValues.has(value)); assert.ok(recipients.length > 0);
   const restore = offline();
   try {
-    const {fetch: worker} = await loadWorker(new URL('../src/index.ts', import.meta.url).pathname, new URL('../public/', import.meta.url).pathname);
-    const {rows} = await grantFixtureRows(read);
-    const links = [...new Set(rows.map(config.primaryLink).filter(Boolean))];
-    assert.ok(links.length > 0);
-    assert.ok(rows.some(row => !config.primaryLink(row)), 'unavailable destinations have no link');
-    for (const [i, path] of links.entries()) assert.equal((await worker(path)).status, 200, `recipient destination ${i}`);
+    const worker = await loadWorker(new URL('../src/index.ts', import.meta.url).pathname, root.pathname);
+    worker.env.TABLE_DB = local.db;
+    for (const value of [...recipients, ...inputs.labels.slice(0, 3), ...inputs.identifiers.slice(0, 3)]) {
+      const query = new URLSearchParams({'t.q': value});
+      const response = await worker.fetch('/money/grants?' + query); assert.equal(response.status, 200);
+      const html = await response.text(); clean(html, 'Worker SSR'); assert.ok(html.includes('Showing 0–0 of 0'));
+      const h = tableHarness('http://localhost/money/grants?' + query);
+      h.win.fetch = async () => {throw new Error('rejected hydration reached dataset API');};
+      const mounted = mountDataTable(h.root, {...grantsTableConfig(), privacyCheck: async text => safe(text)});
+      await new Promise(setImmediate); clean(h.html(), 'hydration'); clean(h.win.location.href, 'URL state');
+      assert.ok(h.html().includes('Showing 0–0 of 0')); assert.ok(!new URL(h.win.location.href).searchParams.has('t.q')); mounted.destroy();
+      const malicious = {...rows[0], program: value};
+      const injected = dataTableHTML(config, {rows: [malicious], total: 1, page: 1, pageSize: 50, facets: {program: [{value, count: 1}]}});
+      clean(injected, 'facet and chip injection'); assert.ok(!injected.includes('data-show-constant='));
+      assert.ok(toCSV([rows[0], malicious], config).includes(rows[0].recipient), 'mixed export positive control');
+    }
+    t.diagnostic(JSON.stringify({grantOnlyInputs: recipients.length, SSRHits: 0, hydrationHits: 0, derivedUIHits: 0}));
   } finally {restore();}
 });
 
-test('the core validation hook rejects recipient names independently of donor graphs', async () => {
-  const index = await read('/graph/grants.federal.json');
-  const names = index.recipients.filter(r => r.k === 'individual').map(r => r.n);
-  const request = text => new Request('https://fixture.test/api/table/grants/privacy', {method: 'POST', body: JSON.stringify({text})});
-  const rejected = await grantFixturePrivacy(request(names.join('\n')), read);
-  assert.deepEqual(await rejected.json(), {safe: false});
-  const {rows} = await grantFixtureRows(read);
-  const accepted = await grantFixturePrivacy(request(rows.find(r => !r.aggregate).recipient), read);
-  assert.deepEqual(await accepted.json(), {safe: true});
-  const failed = await grantFixturePrivacy(request('fixture'), async () => {throw Error('unavailable');});
-  assert.equal(failed.status, 503);assert.deepEqual(await failed.json(), {safe: false});
+test('every shared API recipient link has an existing organisation profile', async () => {
+  const restore = offline();
+  try {
+    const worker = await loadWorker(new URL('../src/index.ts', import.meta.url).pathname, root.pathname);
+    const byProfile = new Map(loaded.rows.grants.map(({row}) => [config.primaryLink(row), row])); byProfile.delete(null);
+    assert.ok(byProfile.size > 0); assert.equal(config.primaryLink(rows[1]), null, 'missing profile control');
+    const paths = [...byProfile.keys()];
+    for (const jur of ['federal', 'qld']) {
+      const index = JSON.parse(await readFile(new URL(`graph/grants.${jur}.json`, root), 'utf8'));
+      const ids = new Set(index.recipients.map(r => r.id));
+      for (const row of byProfile.values()) if (row.jurisdiction === jur) assert.ok(ids.has(row.recipientId), 'destination in profile index');
+    }
+    for (const path of paths.filter((_, i) => i % Math.max(1, Math.floor(paths.length / 40)) === 0)) assert.equal((await worker.fetch(path)).status, 200, 'recipient destination status');
+  } finally {restore();}
 });
 
-test('neutral recipient totals keep only counts and value in HTML and CSV', () => {
-  const aggregate = {aggregate: {kind: 'individual-donors', subject: 'recipients', count: 3}, value: 1234.56, id: 'fixture-secret-row', recipient: 'fixture-secret-recipient Pty Ltd', program: 'fixture-secret-program', aliases: ['fixture-secret-alias']};
-  const config = {...grantsTableConfig(), privacyCheck: () => true, primaryLink: () => '/fixture-secret-link'};
-  const page = {rows: [aggregate], total: 1, page: 1, pageSize: 50};
-  const csv = toCSV(page.rows, config), html = dataTableHTML(config, page);
-  for (const text of [csv, html]) {
-    assert.ok(text.includes('Recipients (3, names withheld)'));
-    assert.ok(text.includes('1234.56'));
-    assert.ok(!text.includes('fixture-secret'));
+test('neutral recipient aggregates strip identifying metadata while retaining exact totals', () => {
+  const row = {aggregate: {kind: 'individual-donors', subject: 'recipients', count: 3}, amount: 1234.56, recipient: 'fixture-secret-recipient', program: 'fixture-secret-program', id: 'fixture-secret-id'};
+  for (const value of [dataTableHTML(config, {rows: [row], total: 1, page: 1, pageSize: 50}), toCSV([row], config)]) {
+    assert.ok(value.includes('Recipients not named (3)')); assert.ok(value.includes('1234.56')); assert.ok(!value.includes('fixture-secret'));
   }
-});
-
-test('the real core applies recipient types to HTML and CSV without label-only evidence', () => {
-  const organisation = {id: 'fixture-organisation-award', recipient: 'fixture-organisation', recipientKind: 'company', recipientABNType: 'PRV', value: 10000, donor: {label: 'fixture-organisation'}};
-  const privateRows = [{recipientKind: 'person'}, {recipientKind: 'sole trader'}, {recipientABNType: 'IND'}, {recipientKinds: ['company', 'person']}].map((override, i) => ({...organisation, id: `fixture-private-${i}`, recipient: `fixture-private-${i} Pty Ltd`, ...override}));
-  const config = {...grantsTableConfig(), privacyCheck: () => true};
-  for (const output of [toCSV([organisation, ...privateRows], config), dataTableHTML(config, {rows: [organisation, ...privateRows], total: 5, page: 1, pageSize: 50})]) {
-    assert.ok(output.includes('fixture-organisation'));
-    assert.ok(!output.includes('fixture-private'));
-  }
-});
-
-test('value bars use one full-result scale across server pages', () => {
-  const publicRows = rows.map(row => ({...row, donor: {label: row.recipient}}));
-  const config = {...grantsTableConfig(), privacyCheck: () => true};
-  const html = [1, 2].map(page => dataTableHTML(config, queryGrantFixture(publicRows, {page, pageSize: 1}).page));
-  const scales = html.map(text => text.match(/<small class="dt-scale">([^<]+)<\/small>/)?.[1]);
-  assert.ok(scales[0]);assert.equal(scales[0], scales[1]);
-  assert.ok(html[0].includes('--dt-bar:100%'));
-  assert.ok(html[1].includes('--dt-bar:20%'));
 });

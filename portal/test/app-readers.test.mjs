@@ -269,3 +269,21 @@ test('manifest hashes and source dates match this worktree static exports',async
   const votes=JSON.parse(readFileSync(new URL('../public/votes.json',import.meta.url),'utf8'));
   if(!votes._meta)assert.equal(body.catalogs.votes.as_of,null,'never substitute the corpus refresh for missing vote metadata');
 });
+
+test('all persisted edition selectors withhold export-derived identities on read before ETags, without writes',async()=>{
+ const {privacySourceGraphs}=await import('../../scripts/withhold_donor_assets.mjs');
+ const {donorNameWithheld,donorPrivacyIndex,foldDonorName}=await import('../public/donor-entity.js');
+ const graphs=privacySourceGraphs(),context={index:donorPrivacyIndex(graphs),registry:JSON.parse(readFileSync(new URL('../src/donor-withheld.json',import.meta.url),'utf8')),hash:s=>createHash('sha256').update(s).digest('hex')},candidate=privacySourceGraphs().flatMap(g=>g.nodes).find(n=>n.kind==='donor'&&donorNameWithheld(context.index,n.label)&&!context.registry.names[context.hash(foldDonorName(n.label))]?.exempt);
+ assert.ok(candidate);
+ const f=journal();try{
+  const unsafe={...post,title:candidate.label,text:`${candidate.label} to the party.`,caption:`${candidate.label} to a council.`,slides:slides.map(s=>({...s,title:candidate.label,alt:`${candidate.label} to a council.`}))};
+  f.store(unsafe);
+  for(const path of ['edition/latest','edition/today','edition/2026-10-03']){
+   const response=await f.call(path),body=await response.text();assert.equal(response.status,200);
+   assert.ok(!body.toLowerCase().includes(candidate.label.toLowerCase()),'stored identity remains');assert.ok(body.includes('(name withheld)'));
+   const etag=response.headers.get('etag');assert.equal((await f.call(path,'GET',{'if-none-match':etag})).status,304);
+   assert.equal((await f.call(path,'HEAD')).headers.get('etag'),etag);
+  }
+  assert.ok(f.db.prepare('SELECT post_json FROM social_editions').get().post_json===JSON.stringify(unsafe),'read mutated stored edition');
+ }finally{f.db.close()}
+});

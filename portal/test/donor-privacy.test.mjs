@@ -5,36 +5,48 @@
 // Failure messages carry paths and counts only, never a donor's name.
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {readFileSync, readdirSync, mkdtempSync, mkdirSync, symlinkSync, writeFileSync, rmSync, existsSync} from 'node:fs';
-import {tmpdir} from 'node:os';
+import {readFileSync, writeFileSync, readdirSync, rmSync, existsSync} from 'node:fs';
+import {memoryExport,closeMemoryExports} from './memory-export.mjs';
 import {join} from 'node:path';
+import {execFileSync} from 'node:child_process';
 import {build} from 'esbuild';
+import {createLookupAudit} from './donor-lookup-audit.mjs';
+import {privacySourceGraphs} from '../../scripts/withhold_donor_assets.mjs';
 import {offline, loadWorker, outbound, rendered} from './worker-harness.mjs';
 import {WITHHELD_DONOR_REPLY} from '../src/donor-index.ts';
 import {MONEY_GRAPHS, isOrganisationDonor, donorPrivacyIndex, donorNameWithheld, foldDonorName, withholdIndividualDonors, withheldPhrases, namesWithheldPhrase} from '../public/donor-entity.js';
 import {partyUrl} from '../public/canonical-urls.js';
 import {personIndex} from '../src/person-slug.ts';
-import {buildCrawl} from '../../scripts/build_crawl_catalog.mjs';
-import {buildGrowth} from '../../scripts/build_growth_modules.mjs';
+import {buildCrawl as buildCrawlOriginal} from '../../scripts/build_crawl_catalog.mjs';
+import {buildGrowth as buildGrowthOriginal} from '../../scripts/build_growth_modules.mjs';
 import {moduleOutputs} from './growth-module-harness.mjs';
-import {grantFixtureRows, queryGrantFixture, grantFixtureQuery} from '../src/grants-table-fixture.ts';
-import {grantsTableConfig, sanitizeGrantsState} from '../public/grants-table.js';
-import {applyQuery, dataTableHTML, mountDataTable, toCSV, serializeQuery} from '../public/datatable.js';
+import {applyQuery, dataTableHTML, mountDataTable, toCSV} from '../public/datatable.js';
+import {queryValues} from '../public/datatable-query.js';
 import {tableHarness} from './datatable-harness.mjs';
+import {tableRows,tableIdentityHashes} from '../../scripts/load_tables.mjs';
+import {tableDatabase} from './table-d1-harness.mjs';
+import {TABLE_REGISTRY_FINGERPRINT} from '../src/table-api.ts';
+import {isOrganisationRecipient} from '../src/table-recipient.mjs';
+import {moneyFlowType} from '../public/money-records.js';
+import {TABLE_DATASETS} from '../src/table-datasets.mjs';
+import {assertTablePrivacy,tablePrivacyIndex} from './datatable-privacy.mjs';
+
+const sourceRead = root => async path => JSON.parse(readFileSync(join(root,path.replace(/^\//,'')),'utf8'));
+const buildGrowth = buildGrowthOriginal;
+const buildCrawl = buildCrawlOriginal;
 
 const pub = new URL('../public/', import.meta.url).pathname;
-const real = path => JSON.parse(readFileSync(join(pub, path), 'utf8'));
+const real = path => JSON.parse(path==='graph/campaigners.json' ? execFileSync('git',['show','33594d4ec048c77359af1336032dbaa4161b8665:portal/public/'+path],{maxBuffer:20*1024*1024}).toString() : readFileSync(join(pub, path), 'utf8'));
 
 // --- fixtures: fictional donors to the party with the most receipts --------------
-const federal = real('graph/money.json');
+const sourceGraphs=privacySourceGraphs();
+const federal = sourceGraphs[0];
 const inbound = new Map();
 for (const e of federal.edges) if (!e.flow && !e.grant) inbound.set(e.target, (inbound.get(e.target) || 0) + e.total);
 const topParty = federal.nodes.find(n => n.id === [...inbound].sort((a, b) => b[1] - a[1])[0][0]);
 // Sector-tagged, titled, inverted and individual-tagged people; the reviews' ABN-only alias,
 // unions-tagged personal name and acronym aliases ("ABN", initials); an all-capitals name.
-const FIXTURE_INDIVIDUALS = [['Quillon Fixturewright', 'media', ['Q. Fixturewright']], ['Mrs Verity Fixturemoor AO', 'finance', []], ['Fixturemoor, Ottoline', 'unions', []], ['Bertram Fixturebay', 'individual', []],
-  ['Alexandra Fixturely', 'other', ['ABN 12 345 678 901']], ['Morgan Fixtureton', 'unions', []], ['JUNIPER FIXTUREHAM', 'unions', ['ACN 123 456 789']],
-  ['Ines Fixturegate', 'other', ['ABN']], ['Rowan Fixturepeak', 'media', ['RF']], ['Hollis Fixtureford', 'finance', ['HFX']]];
+const FIXTURE_INDIVIDUALS = Array.from({length:10},(_,i)=>[`Withheld fixture ${i+1}`, ['media','finance','unions','individual','other'][i%5], i===4?['ABN 12 345 678 901']:i===6?['ACN 123 456 789']:i===7?['ABN']:i===8?['RF']:i===9?['HFX']:[]]);
 const FIXTURE_ORGANISATION = 'Fixtureworks Holdings Pty Ltd';
 const big = Math.max(...federal.edges.map(e => e.total)) * 2;
 const fixtureNodes = [...FIXTURE_INDIVIDUALS, [FIXTURE_ORGANISATION, 'property', []]].map(([label, industry, aliases], i) => ({
@@ -53,26 +65,31 @@ const [interestBucket] = Object.keys(interestRegister.buckets);
 const keptEntry = interestRegister.buckets[interestBucket].items[0];
 interestRegister.buckets[interestBucket].items.unshift({description: `Gift of a framed print from ${FIXTURE_INDIVIDUALS[0][0]}`, holder: 'Self'});
 
-/** The export with these money graphs in place: every other entry is a symlink. */
+/** Raw fixtures and generated outputs are held entirely in memory. */
 function exportRoot(money) {
-  const dir = mkdtempSync(join(tmpdir(), 'opax-donor-privacy-'));
-  for (const entry of readdirSync(pub)) if (!['crawl', 'person-paths.js', 'graph', 'interests'].includes(entry)) symlinkSync(join(pub, entry), join(dir, entry));
-  mkdirSync(join(dir, 'graph'));
-  for (const entry of readdirSync(join(pub, 'graph'))) if (entry !== 'money.json') symlinkSync(join(pub, 'graph', entry), join(dir, 'graph', entry));
-  writeFileSync(join(dir, 'graph', 'money.json'), JSON.stringify(money));
-  mkdirSync(join(dir, 'interests'));
-  for (const entry of readdirSync(join(pub, 'interests'))) if (entry !== `${interestMember.pid}.json`) symlinkSync(join(pub, 'interests', entry), join(dir, 'interests', entry));
-  writeFileSync(join(dir, 'interests', `${interestMember.pid}.json`), JSON.stringify(interestRegister));
-  return dir;
+ return memoryExport(pub,Object.fromEntries([
+  ['graph/money.json',money],...MONEY_GRAPHS.slice(1).map((p,i)=>[p,sourceGraphs[i+1]]),
+  ['graph/campaigners.json',real('graph/campaigners.json')],
+  [`interests/${interestMember.pid}.json`,interestRegister],
+ ]));
 }
 const root = exportRoot(fixtureGraph);
 await buildGrowth(root);
 await buildCrawl(root);
-test.after(() => rmSync(root, {recursive: true, force: true}));
+test.after(closeMemoryExports);
 const at = path => join(root, path.replace(/^\//, ''));
 
 // --- what may not be named -------------------------------------------------------
-const graphs = MONEY_GRAPHS.map(path => JSON.parse(readFileSync(at(path), 'utf8')));
+const graphs = await Promise.all(MONEY_GRAPHS.map(path=>sourceRead(root)(path)));
+// Build the populated financial registers under the same fixture privacy policy
+// as the donation graphs, rather than trusting a prebuilt public snapshot.
+const moneyTables = await tableRows(root, {moneyOnly: true,graphs});
+for (const dataset of ['contracts', 'suppliers', 'grants']) assert.ok(moneyTables.rows[dataset].length > 0, dataset);
+const tablesD1 = await tableDatabase({datasets:moneyTables.rows,policy:moneyTables.policy});
+// Offline fixtures add fictional identities to the release registry. Mark this
+// fixture snapshot for the actual Worker build so its response guards run.
+await tablesD1.db.prepare("UPDATE table_meta SET value=? WHERE key='privacy_fingerprint'").bind(TABLE_REGISTRY_FINGERPRINT).run();
+test.after(()=>tablesD1.close());
 const index = donorPrivacyIndex(graphs);
 const donorNodes = graphs.flatMap(g => g.nodes.filter(n => n.kind === 'donor'));
 const fixtureLabels = new Set(FIXTURE_INDIVIDUALS.map(([label]) => label));
@@ -146,7 +163,8 @@ for (const org of organisationNames) for (const name of within(org)) if (phrase(
 }
 const namesIn = nameMatcher(checked, allowed);
 // DONOR_PRIVACY_DEBUG=1 adds the surrounding text to a failure, for a local run only.
-const debug = process.env.DONOR_PRIVACY_DEBUG === '1';
+const workerLookupAudit=createLookupAudit(donorNodes.filter(n=>donorNameWithheld(index,n.label)).flatMap(n=>[n.label,...n.aliases||[]]).filter(label=>!rosterNames.has(foldDonorName(label))),[...organisationNames,...roster.flatMap(p=>[p.name,p.full]).filter(Boolean)]);
+const debug = false;
 // Graphs share ids ("donor:x" can be an organisation in one state and a bare label in
 // another, where it is re-keyed); an id is withheld when no organisation node carries it.
 const organisationIds = new Set(donorNodes.filter(n => !donorNameWithheld(index, n.label)).map(n => n.id));
@@ -182,6 +200,7 @@ function context(text, named) {
   return named.flatMap(name => { const w = words(name); const re = new RegExp(w.map(x => x.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('[^a-z0-9]+'), 'i'); const m = re.exec(plain); return m ? [plain.slice(Math.max(0, m.index - 120), m.index + 120)] : []; });
 }
 function assertClean(where, text) {
+  if(/^[\s]*[\[{]/.test(text)){let value;try{value=JSON.parse(text)}catch{}if(value){const result=workerLookupAudit(value,new Map(),where.includes('/evidence/lookup/'),/\/grants\//.test(where));assert.equal(result.anonymousJoins+result.containsHits,0,`${where}: lookup privacy count`);}}
   const named = namesIn(text), links = withheldLinks(text);
   const detail = debug ? `\n${[...named.map(n => `matched: ${n}`), ...context(text, named), ...[...entities(text).matchAll(/\/subject\/(?:donor|campaigner)\/[^"<>\s?#\]]+/g)].map(m => m[0])].join('\n')}` : '';
   assert.equal(named.length + links.length, 0, `${where}: ${named.length} withheld donor name(s), ${links.join(', ') || 'no withheld links'}${detail}`);
@@ -192,91 +211,102 @@ function assertClean(where, text) {
 // what would have been sent to a model is checked like any other output.
 test.after(offline());
 const {env, fetch: fetchWorker} = await loadWorker(new URL('../src/index.ts', import.meta.url).pathname, root);
+env.TABLE_DB = tablesD1.db;
+const originalAssets = env.ASSETS.fetch.bind(env.ASSETS);
+env.ASSETS.fetch = request => new URL(request.url).pathname === '/table-private-identities.json' ? Promise.resolve(Response.json({version:1,identities:tableIdentityHashes(moneyTables.policy),strippedLengths:moneyTables.policy.strippedLengths})) : originalAssets(request);
 const ownUrl = (html, path) => entities(html).replaceAll(path, '');
+
+function assertCleanCSV(where, csv) {
+  let quoted = false, start = 0, batch = [];
+  for (let i = 0; i < csv.length; i++) {
+    if (csv[i] === '"') {
+      if (quoted && csv[i + 1] === '"') i++;
+      else quoted = !quoted;
+    } else if (!quoted && csv[i] === '\n') {
+      batch.push(csv.slice(start, i + 1)); start = i + 1;
+      if (batch.length === 128) {assertClean(where, batch.join(''));batch = [];}
+    }
+  }
+  assertClean(where, batch.join('') + csv.slice(start));
+}
+
+test('neutral D1 aggregates retain source financial totals without identity fields', async () => {
+  const expected={suppliers:real('suppliers.json').suppliers.reduce((n,s)=>n+(Number(s.total)||0),0),contracts:0,grants:0,'money-connections':0,'party-money':0};
+  const contracts=new Set();
+  for(const file of readdirSync(join(pub,'suppliers')).filter(f=>f.endsWith('.json')))for(const s of Object.values(real('suppliers/'+file).profiles))for(const c of s.contracts||[])if(!contracts.has(c.id)){contracts.add(c.id);expected.contracts+=Number(c.amount)||0;}
+  for(const jur of ['federal','qld'])for(const file of readdirSync(join(pub,'grants',jur)).filter(f=>f.startsWith('shard-')))for(const r of Object.values(real(`grants/${jur}/${file}`)))for(const g of r.grants||[])expected.grants+=Number(g.v)||0;
+  for(const graph of graphs){const nodes=new Map(graph.nodes.map(n=>[n.id,n]));for(const edge of graph.edges){const flow=moneyFlowType(edge,nodes);if(flow){expected['money-connections']+=Number(edge.total)||0;if(flow==='receipts')expected['party-money']+=Number(edge.total)||0;}}}
+  for(const [name,total]of Object.entries(expected)){
+    const table='table_'+name.replaceAll('-','_'),value=name==='suppliers'?'total':'amount';
+    const stored=Number(await tablesD1.db.prepare(`SELECT SUM(${value}) AS total FROM ${table}`).first('total'));
+    assert.ok(Math.abs(stored-total)<=Math.max(0.00001,Math.abs(total)*1e-12),name+': source total retained');
+    const aggregates=(await tablesD1.db.prepare(`SELECT * FROM ${table} WHERE id LIKE 'aggregate:%' LIMIT 100`).all()).results;
+    assert.ok(aggregates.length>0,name+': neutral aggregates exist');
+    for(const row of aggregates)for(const key of ['abn','url','canonical_url','aliases','description','to'])if(key in row)assert.equal(row[key],null,name+': aggregate has no identity or link');
+  }
+});
+
+test('all five money tables withhold donor, recipient, supplier, alias and identifier state', async () => {
+  const policy=moneyTables.policy,denied=[...policy.phrases];
+  const shared=await tablePrivacyIndex();
+  // The shared gate covers HTTP output here; UI rollouts register its Chrome gate.
+  // Extend its independently derived donor index with recipient/supplier ABNs.
+  const sharedIndex={...shared,safe:value=>shared.safe(value)&&!policy.check(value)};
+  const identifiers=denied.filter(p=>/^\d{11}$/.test(p));
+  const donorPhrases=withheldPhrases(graphs,[]);
+  const donors=[...new Set(graphs.flatMap(g=>g.nodes.filter(n=>n.kind==='donor'&&!isOrganisationDonor(n)).flatMap(n=>[n.label,...(n.aliases||[])])).filter(v=>namesWithheldPhrase(donorPhrases,'donor '+v)))];
+  const recipients=['federal','qld'].flatMap(jur=>real(`graph/grants.${jur}.json`).recipients.filter(r=>!isOrganisationRecipient(r)).map(r=>r.n));
+  const recipientDetails=['federal','qld'].flatMap(jur=>readdirSync(join(pub,'grants',jur)).filter(f=>f.startsWith('shard-')).flatMap(f=>Object.values(real(`grants/${jur}/${f}`))).filter(r=>!isOrganisationRecipient(r)));
+  const supplierDetails=readdirSync(join(pub,'suppliers')).filter(f=>f.endsWith('.json')).flatMap(f=>Object.values(real('suppliers/'+f).profiles)).filter(s=>!isOrganisationRecipient({...s,...s.identity}));
+  const suppliers=supplierDetails.map(s=>s.name);
+  const aliases=[...recipientDetails,...supplierDetails].flatMap(r=>[...(r.aliases||[]),...(r.lookup_names||[]),r.identity?.legal_name,r.abr?.name]).filter(v=>typeof v==='string');
+  const abns=[...recipientDetails,...supplierDetails].map(r=>r.abn??r.abr?.abn).filter(Boolean).map(String);
+  const probes=[...new Set([...donors.slice(0,10),...recipients.slice(0,10),...suppliers.slice(0,10),...aliases.slice(0,5),...abns.slice(0,5),...identifiers.slice(0,10),...identifiers.slice(0,3).map(v=>v.split('').join(' '))])];
+  const decodedProbes=[donors[0],recipients[0],suppliers[0],aliases[0],identifiers[0]].filter(Boolean);
+  assert.ok(recipients.length>=64,'individual recipient coverage');assert.ok(suppliers.length>0,'individual supplier coverage');assert.ok(identifiers.length>0,'withheld identifier coverage');
+  const clean = (where,text) => assert.equal(policy.check(text),false,where+': withheld identity count must be zero');
+  // Schema keys (including the registration column) are labels, not identities.
+  const cleanJSON=(where,value)=>{if(Array.isArray(value))for(const v of value)cleanJSON(where,v);else if(value&&typeof value==='object')for(const v of Object.values(value))cleanJSON(where,v);else if(value!=null)clean(where,String(value));};
+  for (const [dataset,config] of Object.entries(TABLE_DATASETS).filter(([,c])=>c.privacy)) {
+    const base='/api/table/'+dataset;
+    const response=await fetchWorker(base+'?pageSize=200');assert.equal(response.status,200,dataset);
+    const page=await response.json();cleanJSON(dataset+' rows and facets',page);
+    const publicValues=[];const values=value=>{if(Array.isArray(value))value.forEach(values);else if(value&&typeof value==='object')Object.values(value).forEach(values);else if(value!=null)publicValues.push(value);};values(page);
+    const csv=await fetchWorker(base+'?format=csv');assert.equal(csv.status,200,dataset);
+    const csvText=await csv.text();
+    // Bounded chunks avoid building quadratic candidate sets for a full CSV.
+    for (const line of csvText.split('\r\n')) clean(dataset+' CSV',line);
+    const csvPath=join(root,'table-'+dataset+'.csv');writeFileSync(csvPath,csvText);
+    await assertTablePrivacy({clientInput:[],serverResponses:publicValues,csvPath,url:response.headers.get('content-location') || '',renderedText:'',accessibleText:'',analytics:[]},sharedIndex);
+    writeFileSync(csvPath,csvText.slice(0,csvText.indexOf('\r\n')+2));
+    for (const [i,label] of probes.entries()) for (const format of ['', '&format=csv']) {
+      const state=new URLSearchParams({q:label,pageSize:'200'});
+      const filtered=await fetchWorker(base+'?'+state+format);assert.equal(filtered.status,200,`${dataset} query ${i}`);
+      const text=await filtered.text();if(format)clean(dataset+' body',text);else cleanJSON(dataset+' body',JSON.parse(text));clean(dataset+' headers',JSON.stringify([...filtered.headers]));
+      assert.equal(filtered.headers.get('content-location'),null);assert.equal(filtered.headers.get('x-robots-tag'),'noindex');
+      await assertTablePrivacy({clientInput:[],serverResponses:[text,[...filtered.headers]],csvPath,url:filtered.headers.get('content-location') || '',renderedText:'',accessibleText:'',analytics:[]},sharedIndex);
+      if (format) assert.equal(filtered.headers.get('x-table-exported'),'0');else assert.equal(JSON.parse(text).total,0);
+    }
+    const malformed=await fetchWorker(base+'?'+new URLSearchParams({q:probes[0],sort:'invalid'}));
+    assert.equal((await malformed.json()).total,0);assert.equal(malformed.headers.get('content-location'),null);
+    const textColumn=config.columns.find(c=>c.type==='text'&&c.key!=='id');
+    for(const [i,value]of decodedProbes.entries())for(const format of ['', '&format=csv']) {
+      const escaped='"'+value.split('').map(c=>'\\u'+c.charCodeAt(0).toString(16).padStart(4,'0')).join('')+'"';
+      const state=new URLSearchParams({['f.'+textColumn.key]:'['+escaped+']'});
+      const decoded=await fetchWorker(base+'?'+state+format);assert.equal(decoded.status,200,`${dataset} decoded query ${i}`);
+      const text=await decoded.text();if(format)clean(dataset+' decoded body',text);else cleanJSON(dataset+' decoded body',JSON.parse(text));
+      assert.equal(decoded.headers.get('content-location'),null);assert.equal(decoded.headers.get('link'),null);
+      await assertTablePrivacy({clientInput:[],serverResponses:[text,[...decoded.headers]],csvPath,url:'',renderedText:'',accessibleText:'',analytics:[]},sharedIndex);
+      if(format)assert.equal(decoded.headers.get('x-table-exported'),'0');else assert.equal(JSON.parse(text).total,0);
+    }
+    const filter=new URLSearchParams({['f.'+textColumn.key]:JSON.stringify([probes[0]])});
+    const r=await fetchWorker(base+'?'+filter);assert.equal((await r.json()).total,0);assert.equal(r.headers.get('content-location'),null);
+  }
+});
 
 test('the fixture individuals are withheld and the fixture organisation is not', () => {
   for (const label of fixtureLabels) assert.ok(donorNameWithheld(index, label) && known.includes(label) && checked.includes(label), `fixture ${[...fixtureLabels].indexOf(label)}`);
   assert.equal(donorNameWithheld(index, FIXTURE_ORGANISATION), false);
-});
-
-test('grants withhold individual recipients in rows, facets, CSV and URL state', async () => {
-  const publicGrant = {id: 'fixture-award', rid: 'name:fixture-community-council', rn: 'Fixture Community Council', k: 'council', v: 25000, s: '2026-08-19', el: 'Fixture electorate'};
-  // Names come only from the derived export set, including the existing fixtures.
-  const privateGrants = checked.map((rn, i) => ({...publicGrant, id: `withheld-${i}`, rid: `abn:${String(i).padStart(11, '0')}`, rn, k: 'company'}));
-  const program = {n: 'Community facilities', ag: 'Fixture Department of Services', grants: [publicGrant, ...privateGrants,
-    {...publicGrant, id: 'withheld-kind', rid: 'person:withheld', rn: 'fixture-private-kind Pty Ltd', k: 'individual'},
-    {...publicGrant, id: 'withheld-link', rid: `name:${checked[0]}`},
-    {...publicGrant, id: `award:${checked[0]}`},
-  ]};
-  const read = async path => path.startsWith('/grants/federal/programs/') ? program : MONEY_GRAPHS.includes(path) ? graphs[MONEY_GRAPHS.indexOf(path)] : real(path);
-  const {rows, withheld} = await grantFixtureRows(read);
-  assert.equal(rows.filter(row => !row.aggregate).length, 3, 'one organisation award per fixture program');
-  assert.equal(rows.filter(row => row.aggregate).length, 1, 'one neutral aggregate preserves anonymous totals');
-  const config = grantsTableConfig();
-  const {page, filtered} = queryGrantFixture(rows, {}, withheld);
-  for (const [where, output] of Object.entries({rows: JSON.stringify(page.rows), facets: JSON.stringify(page.facets), CSV: toCSV(filtered, config), HTML: dataTableHTML(config, page)})) assertClean(`grants ${where}`, output);
-  const clean = sanitizeGrantsState({q: 'Community', filters: {program: [program.n], recipient: checked}}, page);
-  assertClean('grants URL state', JSON.stringify(clean) + decode(serializeQuery(clean, 't')));
-  assert.equal(clean.q, 'Community');assert.equal(clean.filters.recipient, undefined);
-  for (const [i, name] of checked.entries()) {
-    const query = grantFixtureQuery(new URLSearchParams({q: name, 'f.program': JSON.stringify([name])}));
-    const rejected = queryGrantFixture(rows, query, withheld);
-    assert.equal(rejected.page.total, 0, `grants rejected query ${i}`);
-    assertClean(`grants rejected page ${i}`, JSON.stringify(rejected.page));
-    const state = sanitizeGrantsState(query, rejected.page);
-    assertClean(`grants rejected URL ${i}`, JSON.stringify(state) + decode(serializeQuery(state, 't')));
-    assertClean(`grants rejected CSV ${i}`, toCSV(rejected.filtered, config));
-  }
-  const originalFetch = env.ASSETS.fetch;
-  env.ASSETS.fetch = async request => new URL(request.url).pathname.startsWith('/grants/federal/programs/') ? Response.json(program) : originalFetch(request);
-  try {
-    for (const path of ['/api/table/grants', '/api/table/grants?format=csv', `/api/table/grants?q=${encodeURIComponent(checked[0])}`, `/api/table/grants?format=csv&f.recipient=${encodeURIComponent(JSON.stringify([checked[0]]))}`, `/money/grants?t.q=${encodeURIComponent(checked[0])}`]) {
-      const response = await fetchWorker(path);assert.equal(response.status, 200);
-      const body = await response.text();
-      assertClean('grants fixture endpoint', path.startsWith('/money/') ? rendered(ownUrl(body, path)) : body);
-    }
-  } finally {env.ASSETS.fetch = originalFetch;}
-});
-
-// The grant recipient rejection set is independent of donor graphs.
-test('grants reject every indexed individual, aliases and contradictory source types', async () => {
-  const grantIndex = real('graph/grants.federal.json');
-  const individuals = grantIndex.recipients.filter(r => r.k === 'individual');
-  assert.equal(individuals.length, 45);
-  assert.ok(individuals.every(r => !index.withheld.has(foldDonorName(r.n))));
-  const names = [...new Set(individuals.flatMap(r => {
-    const shard = real(`grants/federal/shard-${String(r.sh).padStart(2, '0')}.json`);
-    const detail = Object.values(shard).find(d => d.id === r.id);
-    return [r.n, ...(detail?.aliases || [])];
-  }))];
-  const publicGrant = {id: 'fixture-award', rid: 'name:fixture-organisation', rn: 'Fixture Research Institute', k: 'company', v: 25000};
-  const overrides = [{k: 'person'}, {k: 'sole trader'}, {kind: 'people'}, {abr: {etype: 'IND'}}, {abnType: 'IND'}].map((override, i) => ({...publicGrant, id: `fixture-private-award-${i}`, rid: `abn:${String(i).padStart(11, '0')}`, rn: `fixture-recipient-${i} Pty Ltd`, ...override}));
-  const metadata = [{k: 'person'}, {k: 'sole trader'}, {abr: {etype: 'IND', name: 'fixture-abr-alias-2'}}].map((override, i) => ({id: `name:fixture-metadata-${i}`, n: `fixture-metadata-${i} Pty Ltd`, k: 'company', sh: 99, ...override}));
-  const metadataAwards = metadata.map((r, i) => ({...publicGrant, id: `fixture-metadata-award-${i}`, rid: r.id, rn: r.n}));
-  const cleanProgram = {n: 'Fixture program', ag: 'Fixture agency', grants: [publicGrant, ...overrides, ...metadataAwards]};
-  const programs = [cleanProgram, {...cleanProgram, n: names[0]}, {...cleanProgram, ag: names[1] || names[0]}];
-  const read = async path => path === '/graph/grants.federal.json' ? {...grantIndex, recipients: [...grantIndex.recipients, ...metadata.map(r => ({...r, k: 'company', abr: undefined}))]}
-    : path === '/grants/federal/shard-99.json' ? Object.fromEntries(metadata.map(r => [r.id, r]))
-    : path.startsWith('/grants/federal/programs/') ? programs[['go3141', 'go90', 'go6284'].findIndex(key => path.endsWith(key + '.json'))] : MONEY_GRAPHS.includes(path) ? graphs[MONEY_GRAPHS.indexOf(path)] : real(path);
-  const {rows, withheld} = await grantFixtureRows(read);
-  assert.equal(rows.filter(row => !row.aggregate).length, 1, 'organisation award remains; embedded withheld program/agency text is scrubbed');
-  const aggregate = rows.find(row => row.aggregate);
-  assert.deepEqual(Object.keys(aggregate).sort(), ['aggregate', 'value']);
-  assert.equal(aggregate.aggregate.subject, 'recipients');
-  const safe = value => !withheld(value);
-  const config = grantsTableConfig();
-  const {page, filtered} = queryGrantFixture(rows, {}, withheld);
-  for (const output of [page, page.facets, toCSV(filtered, config), dataTableHTML(config, page)]) assert.ok(safe(output));
-  for (const [i, name] of [...names, ...overrides.map(g => g.rn), ...metadata.flatMap(r => [r.n, r.abr?.name].filter(Boolean))].entries()) {
-    assert.ok(withheld(name), `grant rejection index ${i}`);
-    for (const query of [{q: name}, {filters: {program: [name]}}, {filters: {recipient: [name]}}]) {
-      const rejected = queryGrantFixture(rows, query, withheld);
-      assert.equal(rejected.page.total, 0, `grant rejected query ${i}`);
-      assert.ok(safe(rejected.page));
-      assert.ok(safe(toCSV(rejected.filtered, config)));
-      assert.ok(safe(serializeQuery(sanitizeGrantsState(query, rejected.page), 't')));
-    }
-  }
 });
 
 test('anonymising keeps every donor group and its totals: duplicated source ids never merge', () => {
@@ -292,7 +322,7 @@ test('anonymising keeps every donor group and its totals: duplicated source ids 
 
 test('a campaigner route never repeats a requested name it cannot show', async () => {
   const register = new Set(real('graph/campaigners.json').entities.map(e => foldDonorName(e.name)));
-  const names = [...checked.filter(label => !register.has(foldDonorName(label))).slice(0, 80), 'Quinella Fixturestone'];
+  const names = [...checked.filter(label => !register.has(foldDonorName(label))).slice(0, 80), 'Withheld fixture 11'];
   for (const name of names) {
     const path = `/subject/campaigner/${encodeURIComponent(name)}`;
     const response = await fetchWorker(path);
@@ -361,7 +391,7 @@ test('a withheld donor or campaigner page is reachable, noindex and unnamed; its
     const path = `/subject/donor/${encodeURIComponent(label)}`;
     const response = await fetchWorker(path);
     const html = await response.text();
-    assert.equal(response.status, 200, path);
+    assert.equal(response.status, 200, `donor route ${withheld+organisations}`);
     if (donorNameWithheld(index, label)) {
       withheld++;
       assert.equal(response.headers.get('x-robots-tag'), 'noindex', `withheld donor page ${withheld}: robots header`);
@@ -407,7 +437,7 @@ test('a declared-interest entry naming a withheld donor is left out whole, with 
 });
 
 test('a subject route never repeats a name it does not hold, and real names still redirect', async t => {
-  const fictional = ['Quentin Fixtureperson', 'Fictional Example Pty Ltd', 'Zara Fixturequill', 'FIXTUREAXE'];
+  const fictional = ['Withheld fixture 12', 'Fictional Example Pty Ltd', 'Withheld fixture 13', 'FIXTUREAXE'];
   const names = [...checked.slice(0, 150), ...fictional];
   let unknown = 0, withheldPages = 0, redirects = 0;
   for (const [i, name] of names.entries()) {
@@ -459,7 +489,7 @@ test('a card for a subject the page would not show is refused before any cache r
   try {
     const withheldName = checked.find(label => /\S\s+\S/.test(label) && !fixtureLabels.has(label));
     const withheldDonor = withheldLabels.find(label => !fixtureLabels.has(label) && donorNodes.some(n => n.label === label));
-    const fictional = 'Quentin Fixtureperson';
+    const fictional = 'Withheld fixture 12';
     const refused = {
       person: [withheldName, fictional].map(n => `/subject/person/${encodeURIComponent(n)}`),
       party: [withheldName, 'Fictional Fixture Party'].map(n => `/subject/party/${encodeURIComponent(n)}`),
@@ -503,7 +533,7 @@ test('the Victorian election hub names no withheld donor', async t => {
     assert.ok(pages.length >= 90, `${pages.length} hub pages`);
     for (const path of pages) {
       const response = await fetchWorker(path);
-      assert.equal(response.status, 200, path);
+      assert.equal(response.status, 200, 'election route status');
       assertClean(path, rendered(await response.text()));
     }
     assertClean('Victorian election sitemap', xml);
@@ -729,6 +759,17 @@ test('the published search catalogue holds no donor, receipt, meeting or campaig
   assert.ok(records > 100000);
 });
 
+test('historical withheld acronym aliases have no indexed profile or card',async()=>{
+ const realIndex=donorPrivacyIndex(sourceGraphs);
+ const orgAliases=new Set(sourceGraphs.flatMap(g=>g.nodes.filter(n=>n.kind==='donor'&&!donorNameWithheld(realIndex,n.label)).flatMap(n=>[n.label,...n.aliases||[]])).map(foldDonorName));
+ const aliases=[...new Set(sourceGraphs.flatMap(g=>g.nodes.filter(n=>n.kind==='donor'&&donorNameWithheld(realIndex,n.label)).flatMap(n=>n.aliases||[])).filter(a=>isOrganisationDonor({label:a})&&!isOrganisationDonor({label:a.toLowerCase()})&&!orgAliases.has(foldDonorName(a))))];
+ assert.ok(aliases.length>0);
+ for(const alias of aliases){
+  const response=await fetchWorker('/subject/donor/'+encodeURIComponent(alias),{method:'HEAD'});
+  assert.match(response.headers.get('x-robots-tag') || '',/noindex/);
+ }
+});
+
 const tablePhrases=withheldPhrases(graphs,[]);
 
 test('money tables withhold every derived donor in client and server rows, facets and CSV', () => {
@@ -738,7 +779,8 @@ test('money tables withhold every derived donor in client and server rows, facet
       columns:[{key:'label',label:'Organisation',type:'text',primary:true,facet:'multi'}, {key:'industry',label:'Sector',type:'category',facet:'chips'}, {key:'total',label:'Amount',type:'money',facet:'range'}]};
     const page = applyQuery(rows,config,{pageSize:50000});
     assert.ok(page.rows.every(isOrganisationDonor),`table ${i}: unsafe row`);
-    assert.equal(page.total,rows.filter(isOrganisationDonor).length,`table ${i}: organisation count`);
+    const approved=rows.filter(row=>isOrganisationDonor(row) && config.privacyCheck(JSON.stringify(row)) && [...queryValues(row)].every(config.privacyCheck));
+    assert.equal(page.total,approved.length,`table ${i}: approved organisation count`);
     assertClean(`table ${i}: rows and facets`,JSON.stringify(page));
     assertClean(`table ${i}: client SSR`,dataTableHTML(config,page));
     assertClean(`table ${i}: client CSV`,toCSV(rows,config));

@@ -1,5 +1,10 @@
 # The year in pictures: sources, licences, curation, refresh
 
+> Access policy updated 10 Oct 2026: use the shared OPAX agent. Historical
+> proxy approvals below are superseded; refused sources are paused and the last
+> good data kept. See [SOURCES-ACCESS.md](SOURCES-ACCESS.md).
+
+
 Status 2026-09-05: **189 photographs** cover every Time Machine year from 1998 to
 2026, each year holding six to eight except 1998 and 1999. Files live in
 `portal/public/years/pictures/<year>/<slug>.webp`; `portal/public/years/pictures.json`

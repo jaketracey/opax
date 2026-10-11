@@ -136,7 +136,8 @@ def test_one_day_with_more_results_than_a_page_is_paged_through():
     assert len(hearings) == 7
 
 
-def test_three_refusals_in_a_row_stop_the_run_instead_of_hammering_parlinfo():
+def test_first_refusal_stops_the_source(tmp_path, monkeypatch):
+    monkeypatch.setenv("OPAX_SOURCE_STATUS_FILE", str(tmp_path / "status.json"))
     class Refuser:
         headers = {}
 
@@ -144,8 +145,7 @@ def test_three_refusals_in_a_row_stop_the_run_instead_of_hammering_parlinfo():
             return FakeResponse(403, "")
 
     http = ch.RateLimitedSession(rate_limit=0, session=Refuser(), sleep=lambda s: None)
-    assert http.get("https://x").status_code == 403 and http.get("https://x").status_code == 403
-    with pytest.raises(ch.SourceBlocked):
+    with pytest.raises(ch.source_http.SourceRefused):
         http.get("https://x")
 
 

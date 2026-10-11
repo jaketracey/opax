@@ -11,6 +11,11 @@ a surname-only or initials print only alongside a fetch of its pid and only when
 person (federal only, no committee-witness rows; the roster gives a mixed print no pid); never onto a pid listed there as wrong_face; and a download whose bytes match another portrait
 is discarded. A full name whose pid already has a file (the roster renamed someone) is mapped to it without
 a fetch. The run ends with scripts/photo_identity.mjs over the whole map and exits with its status."""
+
+import sys as _http_sys
+from pathlib import Path as _HttpPath
+_http_sys.path.insert(0, str(_HttpPath(__file__).resolve().parents[1]))
+from parli.ingest import http as source_http
 import hashlib, io, json, subprocess, sys, time
 from pathlib import Path
 W = Path(__file__).resolve().parents[1]; PH = W/"portal/public/photos"
@@ -48,7 +53,7 @@ def plan(people, pm, have, owner, identity):
 def main():
     import requests
     from PIL import Image
-    S = requests.Session(); S.headers["User-Agent"] = "OPAX research (opax.com.au; jake.tracey@noice.work)"
+    S = source_http.Session(); S.headers["User-Agent"] = "OPAX research (opax.com.au; jake.tracey@noice.work)"
     people = json.load(open(W/"portal/public/parliamentarians.json"))["people"]
     pm = json.load(open(PH/"people.json"))
     identity = json.load(open(W/"scripts/person_identity.json"))

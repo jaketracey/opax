@@ -1,0 +1,56 @@
+{
+  "hold_dependency": "4bcf50235",
+  "baseline": "5bb21959",
+  "original_failures": {
+    "haiku": 12,
+    "qwen3": 8,
+    "haiku_copied_opening": 7,
+    "haiku_figure_provenance": 6,
+    "haiku_speaker_provenance": 1,
+    "haiku_copy_figure_overlap": 1,
+    "qwen3_missing_briefs": 8,
+    "length": 0,
+    "topic_list": 0
+  },
+  "rerun": {
+    "selected": 35,
+    "original_failure_union": 17,
+    "additional_current_guard_hits": 18,
+    "fresh_calls": 35,
+    "corrective_calls": 17,
+    "first_pass": 18,
+    "final_pass": 32,
+    "original_haiku_failures_repaired": 10,
+    "qwen3_missing_repaired": 8,
+    "remaining_copied_opening": 2,
+    "remaining_novelty_guard": 1,
+    "cost_usd": 0.009671540000000001,
+    "cap_usd": 0.5,
+    "lane_cap_usd": 3,
+    "usage": {
+      "input_tokens": 37252,
+      "cache_creation_input_tokens": 64284,
+      "cache_read_input_tokens": 28958,
+      "output_tokens": 4943
+    },
+    "limitation": "Selected difficult records; validator repair only, not a fresh random-cohort quality comparison."
+  },
+  "differential": {
+    "cases": 143,
+    "differences": 0,
+    "added_hold_classification_reads_excluded": 39
+  },
+  "cost_reference": {
+    "haiku_per_1000_usd": 0.099287225,
+    "qwen_route_per_1000_usd": 0.5061375,
+    "t1_nonshort_units": 170982,
+    "t2_approx_units": 741000,
+    "t3_approx_units": 321000
+  },
+  "gates": {
+    "worker_tests": 247,
+    "typescript": "passed",
+    "wrangler": "dry run passed",
+    "portal": "not required; all changes under enrich/"
+  }
+}

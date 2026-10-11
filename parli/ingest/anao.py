@@ -16,6 +16,8 @@ Usage:
     python -m parli.ingest.anao --audit-type financial
 """
 
+from parli.ingest import http as source_http
+
 import argparse
 import json
 import re
@@ -29,24 +31,17 @@ from parli.schema import get_db, init_db
 
 BASE_URL = "https://www.anao.gov.au"
 
-USER_AGENT = "Mozilla/5.0 (compatible; OPAX/1.0)"
+USER_AGENT = source_http.USER_AGENT
 
 
 def fetch_url(url: str, timeout: int = 120) -> str | None:
-    """Fetch a URL using curl (works reliably with ANAO's Akamai CDN).
-
-    Python requests times out against this CDN, but curl handles it fine.
+    """Fetch directly using the shared honest transport.
     """
     try:
-        result = subprocess.run(
-            ["curl", "-s", "--max-time", str(timeout), "-A", USER_AGENT, url],
-            capture_output=True, text=True, timeout=timeout + 10,
-        )
-        if result.returncode == 0 and result.stdout:
-            return result.stdout
-        return None
-    except (subprocess.TimeoutExpired, Exception) as e:
-        print(f"  curl error for {url}: {e}")
+        with source_http.urlopen(source_http.Request(url), timeout=timeout) as response:
+            return response.read().decode("utf-8", "replace")
+    except Exception as error:
+        print(f"  source request failed ({type(error).__name__})")
         return None
 
 # Mapping from URL path segment to our audit_type field

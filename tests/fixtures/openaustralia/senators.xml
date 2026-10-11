@@ -1,0 +1,4 @@
+<members>
+ <member id="uk.org.publicwhip/lord/1" firstname="Alex" lastname="Example" house="senate" fromdate="2000-01-01" todate="9999-12-31" party="Australian Labor Party" division="NSW"/>
+ <member id="uk.org.publicwhip/lord/2" firstname="Sam" lastname="Fixture" house="senate" fromdate="2000-01-01" todate="9999-12-31" party="Australian Greens" division="NSW"/>
+</members>

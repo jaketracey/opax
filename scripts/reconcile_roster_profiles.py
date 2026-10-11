@@ -6,6 +6,11 @@ catalog and source bodies only. --apply is for the approved orchestrator/box:
 back up originals, verify ownership and concurrent changes, replace (including
 old generated fields), and read back. No model or enrichment calls are made.
 """
+
+import sys as _http_sys
+from pathlib import Path as _HttpPath
+_http_sys.path.insert(0, str(_HttpPath(__file__).resolve().parents[1]))
+from parli.ingest import http as source_http
 import argparse
 from collections import Counter
 from concurrent.futures import ThreadPoolExecutor
@@ -93,7 +98,7 @@ def public_inventory(base,names):
     import requests
     def read(name):
         slug='roster-profile-'+hashlib.sha256(name.encode()).hexdigest()[:16]
-        response=requests.get(base.rstrip('/')+'/api/resource/'+slug+'?cache=bypass',timeout=30)
+        response=source_http.get(base.rstrip('/')+'/api/resource/'+slug+'?cache=bypass',timeout=30)
         if response.status_code==404:return None
         response.raise_for_status();r=response.json()
         return {'slug':slug,'title':r['title'],'texts':{'t-body':{'body':r['text'],'format':'PLAIN'}},

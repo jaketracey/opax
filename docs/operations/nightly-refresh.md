@@ -1,5 +1,10 @@
 # Nightly refresh (AWS EC2, starts itself, powers itself off)
 
+> Access policy updated 10 Oct 2026: use the shared OPAX agent. Historical
+> proxy approvals below are superseded; refused sources are paused and the last
+> good data kept. See [SOURCES-ACCESS.md](../SOURCES-ACCESS.md).
+
+
 The corpus is refreshed, published and deployed every night with no one at a keyboard. This
 replaces the hand-run procedure (WSL desktop, then a laptop worktree, then a manual deploy).
 
@@ -53,8 +58,9 @@ The nightly only brings new records in and publishes them.
 10:30 Sydney   EventBridge Scheduler "opax-refresh-stop-backstop" stops the instance if still up
 
 the push (corpus.json changed) ──► .github/workflows/deploy.yml
-      npm ci · build:search/social/grants-map/analytics/voice · node --test (Node 24)
-      wrangler types + tsc · `npm run deploy` · commit restamped assets back with [skip ci]
+      npm ci · build:release (search/social/grants-map/analytics/voice, stamps, photos, privacy)
+      npm test (Node 24) · wrangler types + tsc · `npm run deploy:built`
+      mandatory privacy sweep before upload · commit restamped assets back with [skip ci]
 11:00 Sydney   .github/workflows/refresh-watchdog.yml reads https://opax.com.au/corpus.json and the
                nightly-status branch; a red run (GitHub emails the owner) means the chain broke
 ```

@@ -1,51 +1,43 @@
 # Grants table rollout
 
-`/money/grants` mounts the shared DataTable in server mode at
-`/api/table/grants`. The table state uses the `t` URL prefix. Existing program,
-recipient and largest-award deep links retain their record views.
+`/money/grants` uses main's server DataTable and `/api/table/grants` D1 query
+engine. SSR calls that engine, obtains `tablePrivacyCheck(env.ASSETS)`, and
+passes the original request URL to `dataTableHTML`. Browser hydration uses
+main's shared `/api/table/privacy` validator. There is no fixture route,
+fixture SSR reader, lane rejection index or lane query validator.
 
-The six displayed fields are `recipient`, `program`, `agency`, `value`, `date`
-and `electorate`. `value` is an exact numeric Australian-dollar award commitment;
-`date` is the start date, falling back to the approval date. Recipient links
-require `recipientAvailable`, checked against the index and recipient shard.
-Unavailable destinations return null. `recipientKind`, `recipientABNType` and their evidence arrays
-retain the metadata needed for privacy checks; source types are checked before
-joining so a conflicting individual/sole-trader type cannot be overwritten.
+The six visible fields are `recipient`, `program`, `agency`, `amount`,
+`start_date` and `electorate`. Search indexes only recipient, program and
+agency names. Category filters use JSON arrays; value filters use numeric
+ranges. Facets apply every other filter while retaining their own alternatives.
+The shared column-wide value scale spans the full filtered result. CSV uses
+main's paginated D1 export with its 50,000-row cap.
 
-`recipient-privacy.js` mirrors the app's `features/money-public/privacy.ts`:
-entity kinds and ABN types override labels. The optional core `rowPrivacyCheck` hook applies that same typed policy to
-HTML and CSV, alongside the shared text validation hook. The server builds its
-rejection index from every federal grant recipient and alias, source recipient
-types, and the donor graphs. It checks all returned fields, including program,
-agency, IDs and link metadata. Name-only withheld queries return zero rows.
-The config supplies `privacyCheck` against the same server index at
-`POST /api/table/grants/privacy`; only a boolean is returned. SSR supplies the
-same synchronous predicate. Core round 2 (`7a57261b`) is merged. Its shared
-privacy handling owns initial hydration, safe query echoes and URL state;
-rejected search or facet values keep zero rows instead of broadening the query.
+The minimal optional additions in `table-datasets.mjs` project `electorate`,
+`recipientId`, `recipientKind`, `recipientABNType`, `recipientAvailable` and
+`recipientCount`. Missing metadata remains null. `recipientAvailable` is 1
+only when the recipient exists in both the jurisdiction's profile index and
+its shard. Migration `0002_grants_projection.sql` upgrades main's existing
+schema; apply migrations before importing the regenerated table SQL.
+Optional `searchKeys` limits the grants FTS projection to the three name fields.
 
-Anonymous totals use the core's neutral aggregate shape, with optional
-`aggregate.subject: 'recipients'` for the fixed recipient wording. No IDs,
-links, names or categories survive in this row. These totals appear only in
-the unfiltered view; a name or facet search never confirms a withheld award.
+The loader and browser share main's recipient evidence classifier. The loader
+checks all original entity-kind and ABN-type evidence before projection;
+individual and sole-trader evidence overrides labels. Main's complete hashed
+registry checks every field, including programs, facets, IDs and profile links.
+Rejected queries return zero rows and cannot broaden initial hydration.
 
-The temporary handler reads selected published GrantConnect program files.
-Search matches recipient, program and agency names only. Facets apply the
-search and all other filters, excluding their own. Numeric facet bounds span
-the complete result. Core round 2 supplies one column-wide value-bar scale,
-shared across pages. CSV exports
-the complete filtered sample, capped at 50,000 rows. The page identifies this
-coverage as a preview. Queensland data is outside this sample.
+The previously approved optional core `rowPrivacyCheck` and
+`aggregate.subject: 'recipients'` fields remain additive. Entity classification
+runs alongside main's whole-row hashed guard. Anonymous grants use the core's
+neutral aggregate shape and fixed `Recipients not named (N)` wording; IDs,
+links and categories are removed from its hydration and rendered row.
 
-At the DT-api merge, replace the temporary route and SSR sample reader with
-the shared endpoint/query engine. Retain privacy validation, profile availability,
-row mappings (or map `amount` and `start_date`), electorate, and name-only search.
-The wire format uses JSON category arrays and numeric ranges. Normalised-query
-caching remains an API handoff check; this fixture deliberately returns no-store.
-
-The Chrome gate is `portal/test/grants-table-browser.mjs`, run in an isolated
-network namespace with loopback enabled. It uses the real core and disk-backed
-Worker, blocks non-local requests, derives private test sets at run time, and
-checks initial URLs, actual CSV downloads, rendered/accessibility text, input,
-responses, analytics and URL state using the core's shared privacy assertion hook.
-Private screenshots are in `portal/private/dt-grants/` at 390 and 1280 pixels.
+Current `origin/main` (`80bf798c8`) includes the DataTable core round-two work,
+shared table API, hashed registry, raw-query validation and fingerprint gate.
+The obsolete grants fixture and its privacy validator have been removed.
+Tests derive source identities in memory and use synthetic fixture IDs.
+Organisation controls must survive API, HTML and actual CSV downloads.
+Local gates block non-local hosts and production model, voice and auth calls.
+Screenshots are kept privately under `portal/private/dt-grants/` at 390 and
+1280 pixels.

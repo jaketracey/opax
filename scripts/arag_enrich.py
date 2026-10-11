@@ -22,6 +22,11 @@ Field notes honoured: labelers run one at a time; parameters.llm.model is
 always pinned (unpinned tasks 200 then fail silently).
 """
 
+import sys as _http_sys
+from pathlib import Path as _HttpPath
+_http_sys.path.insert(0, str(_HttpPath(__file__).resolve().parents[1]))
+from parli.ingest import http as source_http
+
 import json
 import os
 import random
@@ -219,11 +224,11 @@ def sample_rids(cfg: AragConfig, n: int) -> list[str]:
 def _catalog_page(cfg: AragConfig, page: int) -> dict:
     url = (f"https://{cfg.zone}.rag.progress.cloud/api/v1/kb/{cfg.kb_id}"
            f"/catalog?page_number={page}&page_size=100")
-    req = urllib.request.Request(url, headers={
+    req = source_http.Request(url, headers={
         "x-nuclia-serviceaccount": f"Bearer {cfg.kb_token}",
-        "user-agent": "opax-enrich/1.0",
+        "user-agent": source_http.USER_AGENT,
     })
-    with urllib.request.urlopen(req, timeout=60) as res:
+    with source_http.urlopen(req, timeout=60) as res:
         return (json.load(res).get("resources")) or {}
 
 
@@ -302,13 +307,13 @@ def main() -> None:
                 "show": ["basic"],
                 "filter_expression": {"field": {"prop": "label", "labelset": "topic", "label": lab}},
             }).encode()
-            req = urllib.request.Request(
+            req = source_http.Request(
                 f"https://{cfg.zone}.rag.progress.cloud/api/v1/kb/{cfg.kb_id}/find",
                 data=body, method="POST",
                 headers={"x-nuclia-serviceaccount": f"Bearer {cfg.kb_token}",
-                         "content-type": "application/json", "user-agent": "opax-enrich/1.0"})
+                         "content-type": "application/json", "user-agent": source_http.USER_AGENT})
             try:
-                with urllib.request.urlopen(req, timeout=60) as res:
+                with source_http.urlopen(req, timeout=60) as res:
                     found = json.load(res)
                 titles = [r.get("title", "?") for r in (found.get("resources") or {}).values()]
                 print(f"  {lab:22} {len(titles)} shown: {'; '.join(t[:45] for t in titles)}")
@@ -325,11 +330,11 @@ def main() -> None:
                 break
             url = (f"https://{cfg.zone}.rag.progress.cloud/api/v1/kb/{cfg.kb_id}"
                    f"/resource/{rid}?show=basic")
-            req = urllib.request.Request(url, headers={
+            req = source_http.Request(url, headers={
                 "x-nuclia-serviceaccount": f"Bearer {cfg.kb_token}",
-                "user-agent": "opax-enrich/1.0"})
+                "user-agent": source_http.USER_AGENT})
             try:
-                with urllib.request.urlopen(req, timeout=30) as res:
+                with source_http.urlopen(req, timeout=30) as res:
                     r = json.load(res)
             except Exception:
                 continue

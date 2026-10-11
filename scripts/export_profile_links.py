@@ -7,6 +7,10 @@ Both the verified roster id and an agreeing source name are required here.
 No remote database or API key is required. All network access is a public GET.
 """
 
+import sys as _donor_sys
+from pathlib import Path as _DonorPath
+_donor_sys.path.insert(0, str(_DonorPath(__file__).resolve().parents[1]))
+from scripts.donor_public import public_donor_data
 import argparse
 import csv
 import hashlib
@@ -15,7 +19,9 @@ import json
 from pathlib import Path
 import re
 import unicodedata
-from urllib.request import urlopen
+import sys
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+from parli.ingest.http import urlopen
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -108,7 +114,7 @@ def main():
     public = ROOT / "portal/public"
     read = lambda path: json.loads((public / path).read_text())
     result = build_profile_links(csv_text, read("parliamentarians.json"), read("photos/people.json"), read("photos/credits.json"))
-    args.output.write_text(json.dumps(result, ensure_ascii=False, indent=2) + "\n")
+    args.output.write_text(json.dumps(public_donor_data(result), ensure_ascii=False, indent=2) + "\n")
     print(f"Exported {result['meta']['aph_people']} verified APH identities and {result['meta']['named_profiles']} named profiles.")
 
 
