@@ -8,7 +8,8 @@ const words = raw => raw.toLowerCase().replace(/[^a-z0-9]+/g,' ').trim().split('
 export const identityWords = value => words(decodedIdentity(value).normalize('NFKD').replace(/\p{M}+/gu,''));
 const legacyWords = value => words(decodedIdentity(value).normalize('NFKC'));
 export const identityPhrase = value => identityWords(value).join(' ');
-export const ROW_IDENTITY_POLICY = 'row-token-v1';
+export const ROW_IDENTITY_POLICY = 'row-identifying-v2';
+export const ROW_COMPACT_MIN_LENGTH = 8;
 export const STRIPPED_PREFIX = 'stripped:v1:';
 export const STRIPPED_MIN_LENGTH = 4;
 // Visitor queries keep strict substring rejection; row fields require tokens.
@@ -31,6 +32,20 @@ export function identityVariants(value) {
     if (compact.length >= STRIPPED_MIN_LENGTH) out.push(STRIPPED_PREFIX+compact);
   }
   return [...new Set(out.filter(Boolean))];
+}
+// Preserve source provenance: compact hashes cannot reveal whether their source
+// was a full multi-token name or a single-token alias.
+export function identityRowVariants(value, {name=true} = {}) {
+  const variants=identityVariants(value),multiToken=strippedWords(value).length>=2;
+  const tokens=[],fields=[];
+  for(const variant of variants){
+    if(variant.startsWith(STRIPPED_PREFIX)){
+      const compact=variant.slice(STRIPPED_PREFIX.length);
+      if(/^\d{11}$/.test(compact)||name&&multiToken&&compact.length>=ROW_COMPACT_MIN_LENGTH)tokens.push(variant);
+    }else if(variant.includes(' ')||/^\d{11}$/.test(variant))tokens.push(variant);
+    else fields.push(variant);
+  }
+  return {tokens,fields};
 }
 export function identityCandidates(value, lengths, compactLengths = [], {mode='query'} = {}) {
   const words = identityWords(value), out = new Set();
@@ -62,18 +77,20 @@ export async function identityHash(value) {
 }
 // Loader/sweep matcher: a trie visits only phrases starting at an actual word,
 // avoiding all possible n-grams across long source descriptions.
-export function compileIdentityMatch(phrases, {mode='query'} = {}) {
+export function compileIdentityMatch(phrases, {mode='query',fieldPhrases=new Set()} = {}) {
   const root=new Map(),compactRoot=new Map();
-  for(const phrase of phrases) {
+  for(const phrase of new Set([...phrases,...fieldPhrases])) {
     const stripped=phrase.startsWith(STRIPPED_PREFIX), key=stripped ? phrase.slice(STRIPPED_PREFIX.length) : phrase;
+    if(mode==='row'&&stripped&&key.length<ROW_COMPACT_MIN_LENGTH)continue;
+    if(mode==='row'&&!stripped&&!key.includes(' ')&&!/^\d{11}$/.test(key)&&!fieldPhrases.has(phrase))continue;
     let node=stripped ? compactRoot : root;
-    for(const word of stripped ? key.split('') : key.split(' ')){if(!node.has(word))node.set(word,new Map());node=node.get(word);}node.set(null,key.length);
+    for(const word of stripped ? key.split('') : key.split(' ')){if(!node.has(word))node.set(word,new Map());node=node.get(word);}node.set(null,{length:key.length,fieldOnly:!phrases.has(phrase)});
   }
   return value => {
     const words=identityWords(value);
     for(let i=0;i<words.length;i++) {
       let node=root;
-      for(let j=i;j<words.length;j++){node=node.get(words[j]);if(!node)break;if(node.has(null))return {rule:'word-boundary',length:node.get(null)};}
+      for(let j=i;j<words.length;j++){node=node.get(words[j]);if(!node)break;const hit=node.get(null);if(hit&&(!hit.fieldOnly||i===0&&j===words.length-1))return {rule:hit.fieldOnly?'field-exact':'word-boundary',length:hit.length};}
       if(/^\d+$/.test(words[i])) {
         let digits='';for(let j=i;j<words.length&&/^\d+$/.test(words[j])&&digits.length<11;j++){digits+=words[j];if(digits.length===11&&phrases.has(digits))return {rule:'word-boundary',length:11};}
       }
@@ -85,7 +102,7 @@ export function compileIdentityMatch(phrases, {mode='query'} = {}) {
       let node=compactRoot;
       for(let end=start;end<compact.length;end++) {
         node=node.get(compact[end]);if(!node)break;
-        if(node.has(null) && (mode !== 'row' && node.get(null)>=STRIPPED_CONTAINS_MIN_LENGTH || starts.has(start)&&ends.has(end+1)))return {rule:start===0&&end+1===compact.length?'compact-exact':starts.has(start)&&ends.has(end+1)?'compact-token-aligned':'compact-contains',length:node.get(null)};
+        if(node.has(null) && (mode !== 'row' && node.get(null).length>=STRIPPED_CONTAINS_MIN_LENGTH || starts.has(start)&&ends.has(end+1)))return {rule:start===0&&end+1===compact.length?'compact-exact':starts.has(start)&&ends.has(end+1)?'compact-token-aligned':'compact-contains',length:node.get(null).length};
       }
     }
     return null;

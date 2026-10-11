@@ -1,141 +1,9 @@
 {
   "baseline": "3374b4d7",
+  "previous": "1c62b50c",
   "baselineHashes": 8766,
   "rows": 257582,
   "before": {
-    "total": 49625,
-    "datasets": {
-      "money-connections": 36,
-      "party-money": 25,
-      "suppliers": 213,
-      "contracts": 2525,
-      "grants": 46826
-    },
-    "rules": {
-      "word-boundary": 0,
-      "compact-exact": 581,
-      "compact-token-aligned": 48801,
-      "compact-contains": 243
-    },
-    "lengths": {
-      "compact-exact:4": 451,
-      "compact-token-aligned:4": 48668,
-      "compact-contains:6": 90,
-      "compact-token-aligned:13": 20,
-      "compact-token-aligned:11": 28,
-      "compact-exact:10": 10,
-      "compact-exact:13": 115,
-      "compact-contains:9": 16,
-      "compact-contains:32": 4,
-      "compact-contains:14": 9,
-      "compact-contains:8": 85,
-      "compact-contains:16": 5,
-      "compact-exact:20": 3,
-      "compact-contains:11": 2,
-      "compact-contains:7": 17,
-      "compact-token-aligned:7": 16,
-      "compact-token-aligned:8": 27,
-      "compact-token-aligned:15": 3,
-      "compact-contains:30": 2,
-      "compact-contains:31": 2,
-      "compact-token-aligned:12": 4,
-      "compact-contains:17": 3,
-      "compact-token-aligned:9": 32,
-      "compact-contains:10": 2,
-      "compact-token-aligned:5": 2,
-      "compact-exact:12": 2,
-      "compact-contains:20": 2,
-      "compact-contains:15": 4,
-      "compact-token-aligned:6": 1
-    },
-    "byDataset": {
-      "money-connections": {
-        "compact-exact:4": 7,
-        "compact-token-aligned:4": 19,
-        "compact-contains:6": 3,
-        "compact-token-aligned:13": 3,
-        "compact-token-aligned:11": 4
-      },
-      "party-money": {
-        "compact-exact:4": 6,
-        "compact-token-aligned:4": 11,
-        "compact-contains:6": 2,
-        "compact-token-aligned:13": 2,
-        "compact-token-aligned:11": 4
-      },
-      "suppliers": {
-        "compact-exact:4": 1,
-        "compact-exact:10": 1,
-        "compact-token-aligned:4": 168,
-        "compact-exact:13": 1,
-        "compact-contains:9": 5,
-        "compact-contains:6": 7,
-        "compact-contains:32": 1,
-        "compact-contains:14": 2,
-        "compact-contains:8": 9,
-        "compact-contains:16": 2,
-        "compact-exact:20": 1,
-        "compact-token-aligned:13": 1,
-        "compact-contains:11": 1,
-        "compact-contains:7": 1,
-        "compact-token-aligned:7": 1,
-        "compact-token-aligned:8": 1,
-        "compact-token-aligned:15": 1,
-        "compact-contains:30": 1,
-        "compact-contains:31": 1,
-        "compact-token-aligned:12": 1,
-        "compact-contains:17": 1,
-        "compact-token-aligned:9": 1,
-        "compact-contains:10": 1,
-        "compact-token-aligned:5": 1,
-        "compact-exact:12": 1,
-        "compact-contains:20": 1
-      },
-      "contracts": {
-        "compact-token-aligned:4": 1773,
-        "compact-token-aligned:8": 25,
-        "compact-token-aligned:7": 15,
-        "compact-contains:6": 30,
-        "compact-contains:16": 3,
-        "compact-contains:8": 55,
-        "compact-token-aligned:13": 14,
-        "compact-contains:7": 12,
-        "compact-contains:30": 1,
-        "compact-contains:9": 8,
-        "compact-contains:15": 3,
-        "compact-token-aligned:15": 2,
-        "compact-exact:13": 114,
-        "compact-token-aligned:5": 1,
-        "compact-token-aligned:9": 3,
-        "compact-contains:20": 1,
-        "compact-contains:17": 2,
-        "compact-contains:14": 5,
-        "compact-contains:31": 1,
-        "compact-token-aligned:12": 3,
-        "compact-contains:32": 3,
-        "compact-contains:11": 1,
-        "compact-contains:10": 1,
-        "compact-exact:4": 437,
-        "compact-exact:10": 9,
-        "compact-exact:20": 2,
-        "compact-exact:12": 1
-      },
-      "grants": {
-        "compact-token-aligned:4": 46697,
-        "compact-contains:6": 48,
-        "compact-contains:8": 21,
-        "compact-contains:9": 3,
-        "compact-token-aligned:6": 1,
-        "compact-token-aligned:11": 20,
-        "compact-contains:7": 4,
-        "compact-token-aligned:9": 28,
-        "compact-contains:14": 2,
-        "compact-contains:15": 1,
-        "compact-token-aligned:8": 1
-      }
-    }
-  },
-  "after": {
     "total": 49382,
     "datasets": {
       "money-connections": 33,
@@ -146,6 +14,7 @@
     },
     "rules": {
       "word-boundary": 0,
+      "field-exact": 0,
       "compact-exact": 581,
       "compact-token-aligned": 48801,
       "compact-contains": 0
@@ -217,22 +86,208 @@
         "compact-token-aligned:9": 28,
         "compact-token-aligned:8": 1
       }
+    }
+  },
+  "after": {
+    "total": 37,
+    "datasets": {
+      "money-connections": 0,
+      "party-money": 0,
+      "suppliers": 6,
+      "contracts": 31,
+      "grants": 0
     },
+    "rules": {
+      "word-boundary": 0,
+      "field-exact": 0,
+      "compact-exact": 15,
+      "compact-token-aligned": 22,
+      "compact-contains": 0
+    },
+    "lengths": {
+      "compact-exact:10": 10,
+      "compact-exact:20": 3,
+      "compact-token-aligned:13": 16,
+      "compact-token-aligned:8": 2,
+      "compact-token-aligned:15": 3,
+      "compact-exact:12": 2,
+      "compact-token-aligned:9": 1
+    },
+    "byDataset": {
+      "suppliers": {
+        "compact-exact:10": 1,
+        "compact-exact:20": 1,
+        "compact-token-aligned:13": 1,
+        "compact-token-aligned:8": 1,
+        "compact-token-aligned:15": 1,
+        "compact-exact:12": 1
+      },
+      "contracts": {
+        "compact-token-aligned:13": 15,
+        "compact-token-aligned:15": 2,
+        "compact-token-aligned:8": 1,
+        "compact-token-aligned:9": 1,
+        "compact-exact:10": 9,
+        "compact-exact:20": 2,
+        "compact-exact:12": 1
+      }
+    },
+    "fullIdentityWitnesses": 37,
     "unexplained": 0
   },
-  "sampleClassification": "Field-boundary matching rule; person attribution remains unverified",
-  "semanticPrecisionTarget": "Unverified; reload blocked",
+  "sampleClassification": "Full label/alias word sequence, eligible full-name compact token run, or full identifier; single-token aliases require field equality",
   "sampleBefore": {
-    "total": 50,
-    "boundaryValid": 49,
-    "boundaryFalsePositives": 1,
-    "semanticUnverified": 50
+    "total": 100,
+    "trueHits": 8,
+    "falsePositives": 92,
+    "byDataset": {
+      "contracts": {
+        "total": 29,
+        "trueHits": 2,
+        "falsePositives": 27
+      },
+      "grants": {
+        "total": 14,
+        "trueHits": 0,
+        "falsePositives": 14
+      },
+      "money-connections": {
+        "total": 21,
+        "trueHits": 0,
+        "falsePositives": 21
+      },
+      "party-money": {
+        "total": 19,
+        "trueHits": 0,
+        "falsePositives": 19
+      },
+      "suppliers": {
+        "total": 17,
+        "trueHits": 6,
+        "falsePositives": 11
+      }
+    },
+    "byStratum": {
+      "contracts:long:compact-exact": {
+        "total": 8,
+        "trueHits": 0,
+        "falsePositives": 8
+      },
+      "contracts:long:compact-token-aligned": {
+        "total": 7,
+        "trueHits": 2,
+        "falsePositives": 5
+      },
+      "contracts:short:compact-exact": {
+        "total": 7,
+        "trueHits": 0,
+        "falsePositives": 7
+      },
+      "contracts:short:compact-token-aligned": {
+        "total": 7,
+        "trueHits": 0,
+        "falsePositives": 7
+      },
+      "grants:long:compact-token-aligned": {
+        "total": 7,
+        "trueHits": 0,
+        "falsePositives": 7
+      },
+      "grants:short:compact-token-aligned": {
+        "total": 7,
+        "trueHits": 0,
+        "falsePositives": 7
+      },
+      "money-connections:long:compact-token-aligned": {
+        "total": 7,
+        "trueHits": 0,
+        "falsePositives": 7
+      },
+      "money-connections:short:compact-exact": {
+        "total": 7,
+        "trueHits": 0,
+        "falsePositives": 7
+      },
+      "money-connections:short:compact-token-aligned": {
+        "total": 7,
+        "trueHits": 0,
+        "falsePositives": 7
+      },
+      "party-money:long:compact-token-aligned": {
+        "total": 6,
+        "trueHits": 0,
+        "falsePositives": 6
+      },
+      "party-money:short:compact-exact": {
+        "total": 6,
+        "trueHits": 0,
+        "falsePositives": 6
+      },
+      "party-money:short:compact-token-aligned": {
+        "total": 7,
+        "trueHits": 0,
+        "falsePositives": 7
+      },
+      "suppliers:long:compact-exact": {
+        "total": 4,
+        "trueHits": 3,
+        "falsePositives": 1
+      },
+      "suppliers:long:compact-token-aligned": {
+        "total": 5,
+        "trueHits": 3,
+        "falsePositives": 2
+      },
+      "suppliers:short:compact-exact": {
+        "total": 1,
+        "trueHits": 0,
+        "falsePositives": 1
+      },
+      "suppliers:short:compact-token-aligned": {
+        "total": 7,
+        "trueHits": 0,
+        "falsePositives": 7
+      }
+    }
   },
   "sampleAfter": {
-    "total": 50,
-    "boundaryValid": 50,
-    "boundaryFalsePositives": 0,
-    "semanticUnverified": 50
+    "total": 37,
+    "trueHits": 37,
+    "falsePositives": 0,
+    "byDataset": {
+      "contracts": {
+        "total": 31,
+        "trueHits": 31,
+        "falsePositives": 0
+      },
+      "suppliers": {
+        "total": 6,
+        "trueHits": 6,
+        "falsePositives": 0
+      }
+    },
+    "byStratum": {
+      "contracts:long:compact-exact": {
+        "total": 12,
+        "trueHits": 12,
+        "falsePositives": 0
+      },
+      "contracts:long:compact-token-aligned": {
+        "total": 19,
+        "trueHits": 19,
+        "falsePositives": 0
+      },
+      "suppliers:long:compact-exact": {
+        "total": 3,
+        "trueHits": 3,
+        "falsePositives": 0
+      },
+      "suppliers:long:compact-token-aligned": {
+        "total": 3,
+        "trueHits": 3,
+        "falsePositives": 0
+      }
+    }
   },
-  "crossFieldOnly": 4
+  "baselineRowsRestored": 794
 }

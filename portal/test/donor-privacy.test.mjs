@@ -30,6 +30,7 @@ import {isOrganisationRecipient} from '../src/table-recipient.mjs';
 import {moneyFlowType} from '../public/money-records.js';
 import {TABLE_DATASETS} from '../src/table-datasets.mjs';
 import {assertTablePrivacy,tablePrivacyIndex} from './datatable-privacy.mjs';
+import {csvFields} from '../public/datatable-csv.js';
 
 const sourceRead = root => async path => JSON.parse(readFileSync(join(root,path.replace(/^\//,'')),'utf8'));
 const buildGrowth = buildGrowthOriginal;
@@ -213,7 +214,7 @@ test.after(offline());
 const {env, fetch: fetchWorker} = await loadWorker(new URL('../src/index.ts', import.meta.url).pathname, root);
 env.TABLE_DB = tablesD1.db;
 const originalAssets = env.ASSETS.fetch.bind(env.ASSETS);
-env.ASSETS.fetch = request => new URL(request.url).pathname === '/table-private-identities.json' ? Promise.resolve(Response.json({version:2,identities:tableIdentityHashes(moneyTables.policy),strippedLengths:moneyTables.policy.strippedLengths})) : originalAssets(request);
+env.ASSETS.fetch = request => new URL(request.url).pathname === '/table-private-identities.json' ? Promise.resolve(Response.json({version:3,identities:tableIdentityHashes(moneyTables.policy),strippedLengths:moneyTables.policy.strippedLengths})) : originalAssets(request);
 const ownUrl = (html, path) => entities(html).replaceAll(path, '');
 
 function assertCleanCSV(where, csv) {
@@ -274,8 +275,7 @@ test('all five money tables withhold donor, recipient, supplier, alias and ident
     const publicValues=[];const values=value=>{if(Array.isArray(value))value.forEach(values);else if(value&&typeof value==='object')Object.values(value).forEach(values);else if(value!=null)publicValues.push(value);};values(page);
     const csv=await fetchWorker(base+'?format=csv');assert.equal(csv.status,200,dataset);
     const csvText=await csv.text();
-    // Bounded chunks avoid building quadratic candidate sets for a full CSV.
-    for (const line of csvText.split('\r\n')) clean(dataset+' CSV',line);
+    for (const field of csvFields(csvText)) clean(dataset+' CSV',field);
     const csvPath=join(root,'table-'+dataset+'.csv');writeFileSync(csvPath,csvText);
     await assertTablePrivacy({clientInput:[],serverResponses:publicValues,csvPath,url:response.headers.get('content-location') || '',renderedText:'',accessibleText:'',analytics:[]},sharedIndex);
     writeFileSync(csvPath,csvText.slice(0,csvText.indexOf('\r\n')+2));

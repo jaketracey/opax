@@ -32,5 +32,13 @@ test('shared rollout privacy assertion catches independent query and secondary-f
     // Negative CSV fixtures carry a runtime identity in RAM, never on disk.
     const virtual=memoryExport(dir,{'download.csv':index.values[0]});
     await assert.rejects(()=>assertTablePrivacy({...clean,csvPath:join(virtual,'download.csv')},index),/downloaded CSV/);
+    const fragment=index.values.find(value=>!value.includes(' ')&&index.safeRows('Fixture prefix '+value+' Holdings Pty Ltd'));
+    assert.ok(fragment,'no runtime nonidentifying fragment');
+    assert.equal(index.safeRows(fragment),false,'standalone alias must remain withheld');
+    await writeFile(join(virtual,'download.csv'),'Organisation,Amount\r\n"Fixture prefix '+fragment+' Holdings Pty Ltd",1');
+    await assertTablePrivacy({...clean,csvPath:join(virtual,'download.csv')},index);
+    await writeFile(join(virtual,'download.csv'),'Organisation,Amount\r\n"'+fragment.replaceAll('"','""')+'",1');
+    await assert.rejects(()=>assertTablePrivacy({...clean,csvPath:join(virtual,'download.csv')},index),/downloaded CSV/);
+    await assert.rejects(()=>assertTablePrivacy({...clean,serverResponses:{rows:[{name:fragment}]}},index),/withheld text/);
   } finally {closeMemoryExports();await rm(dir,{recursive:true,force:true});}
 });

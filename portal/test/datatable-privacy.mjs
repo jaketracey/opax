@@ -4,7 +4,8 @@ import {readFile} from 'node:fs/promises';
 import {withheldPhrases,namesWithheldPhrase} from '../public/donor-entity.js';
 import {privacySourceGraphs} from '../../scripts/withhold_donor_assets.mjs';
 import {sourceTableDonorIdentities} from '../../scripts/table_identity_source.mjs';
-import {compileIdentityCheck,identityVariants} from '../src/table-identities.mjs';
+import {compileIdentityCheck,identityVariants,identityRowVariants} from '../src/table-identities.mjs';
+import {csvFields} from '../public/datatable-csv.js';
 
 export async function tablePrivacyIndex({donorContext=true} = {}) {
   const graphs=privacySourceGraphs();
@@ -17,18 +18,27 @@ export async function tablePrivacyIndex({donorContext=true} = {}) {
   const phrases=withheldPhrases(graphs,officeHolders.filter(Boolean));
   const source=sourceTableDonorIdentities(),values=[...source.labels,...source.identifiers];
   const identities=new Set(values.flatMap(identityVariants));
-  const blocked=compileIdentityCheck(identities),rowBlocked=compileIdentityCheck(identities,{mode:'row'});
-  return {phrases,values,safe:value=>!blocked(value)&&!namesWithheldPhrase(phrases,`donor receipts ${value}`),safeRows:value=>!rowBlocked(value)&&!namesWithheldPhrase(phrases,`donor receipts ${value}`)};
+  const rowForms=values.map(identityRowVariants),rowPhrases=new Set(rowForms.flatMap(v=>v.tokens)),fieldPhrases=new Set(rowForms.flatMap(v=>v.fields));
+  const blocked=compileIdentityCheck(identities),rowBlocked=compileIdentityCheck(rowPhrases,{mode:'row',fieldPhrases});
+  return {phrases,values,safe:value=>!blocked(value)&&!namesWithheldPhrase(phrases,`donor receipts ${value}`),safeRows:value=>!rowBlocked(value)};
 }
 
 /** CSV must be an actual browser download path. All listed surfaces are mandatory. */
 export async function assertTablePrivacy(surfaces,index) {
+  const safeRow=index.safeRows || index.safe;
+  const safeValue=value=>{
+    if(Array.isArray(value))return value.every(safeValue);
+    if(value&&typeof value==='object')return Object.values(value).every(safeValue);
+    if(typeof value==='string'){let parsed;try{parsed=JSON.parse(value);}catch{}if(parsed&&typeof parsed==='object')return safeValue(parsed);}
+    return value==null||safeRow(String(value));
+  };
   for (const key of ['clientInput','serverResponses','url','renderedText','accessibleText','analytics']) {
     assert.ok(Object.hasOwn(surfaces,key),`privacy surface missing: ${key}`);
-    assert.ok((key==='url' ? index.safe : index.safeRows || index.safe)(typeof surfaces[key] === 'string' ? surfaces[key] : JSON.stringify(surfaces[key])),`withheld text on privacy surface: ${key}`);
+    assert.ok(key==='url'?index.safe(surfaces[key]):safeValue(surfaces[key]),`withheld text on privacy surface: ${key}`);
   }
   assert.equal(typeof surfaces.csvPath,'string','privacy gate requires an actual downloaded file');
-  assert.ok((index.safeRows || index.safe)(await readFile(surfaces.csvPath,'utf8')),'withheld text in downloaded CSV');
+  let safeCSV=true;try{for(const field of csvFields(await readFile(surfaces.csvPath,'utf8')))if(!safeRow(field)){safeCSV=false;break;}}catch{safeCSV=false;}
+  assert.ok(safeCSV,'withheld text in downloaded CSV');
 }
 
 /** Each donor rollout adds one registration to its browser gate and runs it locally. */

@@ -22,11 +22,12 @@ const registry=await read('table-private-identities.json');
 const old=JSON.parse(execFileSync('git',['show','35ba00f5f7f442be61b4902face4c2d43ac6c618:portal/public/table-private-identities.json'],{cwd:new URL('../../',import.meta.url),maxBuffer:2000000}));
 const oldCheck=compileHashedIdentityCheck(old.identities),blocked=compileHashedIdentityCheck(registry.identities,registry.strippedLengths);
 const assets={fetch:async()=>Response.json(registry)},safe=await tablePrivacyCheck(assets);
+const safeRows=await tablePrivacyCheck(assets,'row');
 const recipientSet=new Set();
 for(const jur of ['federal','qld'])for(const file of (await readdir(new URL(`grants/${jur}/`,root))).filter(f=>f.startsWith('shard-')&&f.endsWith('.json')))for(const row of Object.values(await read(`grants/${jur}/${file}`)))if(!isOrganisationRecipient(row))for(const value of [row.n,row.abn,row.abr?.abn,row.identity?.legal_name,row.abr?.name,...row.aliases||[],...row.lookup_names||[]])if((typeof value==='string'||typeof value==='number')&&String(value).trim())recipientSet.add(String(value));
 const recipients=[...recipientSet],variants=values=>values.map(identityStripped).filter(v=>!oldCheck(v));
 const donorVariants=variants(source.labels),recipientVariants=variants(recipients),stripped=[...donorVariants,...recipientVariants];
-const config={id:'derived-privacy',caption:'Receipts',privacy:'donors',urlKey:'t',privacyCheck:safe,columns:[{key:'name',label:'Organisation',type:'text',primary:true},{key:'category',label:'Category',type:'category',facet:'chips'},{key:'amount',label:'Amount',type:'money',facet:'range',bar:true}]};
+const config={id:'derived-privacy',caption:'Receipts',privacy:'donors',urlKey:'t',privacyCheck:safe,privacyRowCheck:safeRows,columns:[{key:'name',label:'Organisation',type:'text',primary:true},{key:'category',label:'Category',type:'category',facet:'chips'},{key:'amount',label:'Amount',type:'money',facet:'range',bar:true}]};
 const empty={rows:[],total:0,page:1,pageSize:50,facets:{}};
 const publicRow={name:'Fixture organisation Pty Ltd',category:'Public sector',amount:1};
 const noPrivate=(value,message)=>assert.equal(policy.check(value),false,message);
@@ -56,7 +57,7 @@ test('additive compact hashes retain all production word hashes and reject every
   const published=new Map(registry.identities.map(e=>[e.hash,e.words]));
   assert.equal(old.identities.filter(e=>published.get(e.hash)!==e.words).length,0,'production hash retention');
   assert.equal(tableRegistryFingerprint(policy),TABLE_REGISTRY_FINGERPRINT);
-  assert.equal(createHash('sha256').update(ROW_IDENTITY_POLICY+'\n').update([...published.keys()].sort().join('\n')).digest('hex'),TABLE_REGISTRY_FINGERPRINT);
+  assert.equal(createHash('sha256').update(ROW_IDENTITY_POLICY+'\n').update([...registry.identities].sort((a,b)=>a.hash.localeCompare(b.hash)).map(e=>e.hash+':'+e.row).join('\n')).digest('hex'),TABLE_REGISTRY_FINGERPRINT);
   assert.equal(stripped.filter(v=>!policy.check(v)||!blocked(v)||safe(v)).length,0,'variant misses');
   const short=donorVariants.find(v=>v.length<6),long=donorVariants.find(v=>v.length>=6);
   for(const value of [short,long]){

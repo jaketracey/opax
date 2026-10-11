@@ -2,6 +2,7 @@
 import {isOrganisationDonor} from './donor-entity.js?v=ebb2c972d5';
 import {unnamedDonorLabel,isUnnamedAggregate,donorsNotNamedDetail} from './donor-views.js?v=55a8bd3ae0';
 import {shortDate} from './format.js';
+import {csvFields} from './datatable-csv.js';
 import {queryValues,rawQueryValues,scrubQuery} from './datatable-query.js?v=6dd55aab38';
 
 const esc = value => String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;'}[c]));
@@ -497,12 +498,15 @@ export function mountDataTable(el, config) {
     let safe=false;
     try {
       const check = mode === 'csv' ? rawConfig.privacyCSVCheck || rawConfig.privacyRowCheck || rawConfig.privacyCheck : mode === 'row' ? rawConfig.privacyRowCheck || rawConfig.privacyCheck : rawConfig.privacyCheck;
-      if (check) safe=await check(value) === true;
+      if (check) {
+        if(mode==='csv'&&!rawConfig.privacyCSVCheck){safe=true;for(const field of csvFields(value))if(await check(field)!==true){safe=false;break;}}
+        else safe=await check(value) === true;
+      }
       else {
         const response=await win.fetch('/api/table/privacy',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({text:value,mode})});
         safe=response.ok && (await response.json()).safe === true;
       }
-    } catch { /* Fail closed, including an unavailable shared index. */ }
+    } catch { safe=false; /* Fail closed, including an unavailable shared index. */ }
     if (safe) cache.set(value,true);
     return safe;
   }
@@ -510,6 +514,15 @@ export function mountDataTable(el, config) {
     const cache = mode === 'csv' ? csvApprovals : mode === 'row' ? rowApprovals : approvals;
     const pending=[...new Set(values)].filter(v=>!cache.has(v));
     if (!pending.length) return;
+    // Preserve field equality: joining row fields can hide a standalone alias.
+    if (mode === 'row') {
+      if (!rawConfig.privacyRowCheck && !rawConfig.privacyCheck) {
+        let safe=false;
+        try { const response=await win.fetch('/api/table/privacy',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({texts:pending,mode:'row'})});safe=response.ok && (await response.json()).safe === true; } catch { /* Fail closed. */ }
+        if (safe) {for(const value of pending)cache.set(value,true);return;}
+      }
+      await Promise.all(pending.map(value=>permit(value,mode)));return;
+    }
     if (await permit(pending.join('\n'),mode)) for (const value of pending) cache.set(value,true);
     else await Promise.all(pending.map(value=>permit(value,mode)));
   }
