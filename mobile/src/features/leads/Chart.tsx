@@ -230,7 +230,11 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     gap: rhythm.tight,
   },
-  headStacked: { flexDirection: 'column', alignItems: 'flex-start' },
+  headStacked: {
+    flexDirection: 'column',
+    flexWrap: 'nowrap',
+    alignItems: 'flex-start',
+  },
   grow: { flexGrow: 1, flexShrink: 1 },
   bar: {
     minHeight: minimumTarget,

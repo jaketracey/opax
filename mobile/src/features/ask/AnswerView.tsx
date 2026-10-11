@@ -455,5 +455,9 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     gap: rhythm.tight,
   },
-  footStacked: { flexDirection: 'column', alignItems: 'flex-start' },
+  footStacked: {
+    flexDirection: 'column',
+    flexWrap: 'nowrap',
+    alignItems: 'flex-start',
+  },
 });

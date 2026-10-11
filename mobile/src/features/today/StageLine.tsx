@@ -95,7 +95,7 @@ const styles = StyleSheet.create({
     columnGap: rhythm.heading,
     rowGap: rhythm.line,
   },
-  endsStacked: { flexDirection: 'column' },
+  endsStacked: { flexDirection: 'column', flexWrap: 'nowrap' },
   last: { flexShrink: 1 },
   lastEnd: { textAlign: 'right', marginStart: 'auto' },
 });

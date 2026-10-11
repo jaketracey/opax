@@ -653,7 +653,11 @@ const styles = StyleSheet.create({
     alignItems: 'baseline',
     gap: rhythm.tight,
   },
-  stacked: { flexDirection: 'column', alignItems: 'flex-start' },
+  stacked: {
+    flexDirection: 'column',
+    flexWrap: 'nowrap',
+    alignItems: 'flex-start',
+  },
   check: { width: 36, alignItems: 'center' },
   grow: { flexShrink: 1, flexGrow: 1 },
   full: { width: '100%' },

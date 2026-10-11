@@ -508,6 +508,9 @@ const styles = StyleSheet.create({
   kvLabel: { flex: 1 },
   kvValue: { textAlign: 'right', flexShrink: 1, maxWidth: '60%' },
   stats: { flexDirection: 'row', flexWrap: 'wrap', gap: rhythm.block },
-  statsStacked: { flexDirection: 'column' },
+  // Never a wrapping column: Yoga lays its stretched tiles out at max-content
+  // width, so their text measures one width and draws in another (blank or
+  // clipped figures at AX5, the profile strip in build 33).
+  statsStacked: { flexDirection: 'column', flexWrap: 'nowrap' },
   stat: { minWidth: 96, flexGrow: 1, flexBasis: 96, gap: 2 },
 });

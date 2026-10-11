@@ -803,7 +803,10 @@ const styles = StyleSheet.create({
     rowGap: rhythm.tight,
     paddingTop: rhythm.tight,
   },
-  stripStacked: { flexDirection: 'column' },
+  // A wrapping column lays its stretched figures out at max-content width
+  // (Yoga), so their text measures one width and draws in another: build 33
+  // at AX5 drew two figures blank and clipped "declared interests".
+  stripStacked: { flexDirection: 'column', flexWrap: 'nowrap' },
   figure: {
     gap: 2,
     borderRadius: radii.sm,

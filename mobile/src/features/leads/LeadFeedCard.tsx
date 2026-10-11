@@ -155,7 +155,7 @@ const styles = StyleSheet.create({
     rowGap: rhythm.tight,
     paddingVertical: rhythm.line,
   },
-  stacked: { flexDirection: 'column' },
+  stacked: { flexDirection: 'column', flexWrap: 'nowrap' },
   figure: { flexShrink: 1 },
   foot: { gap: rhythm.tight, paddingTop: rhythm.heading },
 });

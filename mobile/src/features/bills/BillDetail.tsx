@@ -1141,7 +1141,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     gap: rhythm.tight,
   },
-  actionsStacked: { flexDirection: 'column', alignItems: 'stretch' },
+  actionsStacked: {
+    flexDirection: 'column',
+    flexWrap: 'nowrap',
+    alignItems: 'stretch',
+  },
   sponsor: { gap: rhythm.line },
   ruler: { gap: rhythm.tight, paddingTop: rhythm.line },
   rulerList: { gap: rhythm.tight },
