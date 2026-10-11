@@ -18,8 +18,10 @@ noindex. Legacy contract queries migrate to `t.q`; unrelated URL parameters
 survive. A rejected initial parameter keeps zero rows and header-only exports
 through hydration until the reader changes or clears the query.
 
-Supplier pages contain procurement records, without donation blocks, donor
-links, donor aliases or political-money notes. Organisation procurement remains
+Supplier pages retain source aliases, evidence, tax/charity and permitted funding
+features. For donor-withheld entities, political-money blocks, donor links,
+donor aliases and political-money notes are suppressed. Unsafe optional identity
+fields are withheld individually; the organisation and its procurement remain
 public independently of donor classification. Individual/person/sole-trader
 kinds and ABN type `IND` override organisation-looking names. Recipient labels,
 aliases, legal names and ABNs come from supplier and grant profiles at runtime.
@@ -33,11 +35,15 @@ the recipient policy for procurement data, facets and exports; it defaults to
 Neither privacy index enters public assets or payloads.
 
 `build:search` includes `build:tables`. The local-only SQL application helper
-loads the sanitised output into D1. The Chrome gate runs directly against
+loads the sanitised output into D1. Existing databases first apply
+`0002_procurement_recipient.sql`; `0001_tables.sql` retains main's original schema.
+The upgrade test preserves existing records and compares all dataset schemas
+and indexes with a fresh database. The Chrome gate runs directly against
 Wrangler, with non-local hosts blocked and no fixture endpoint substitution.
 Shared privacy registrations cover actual client input, D1 responses/facets,
 downloaded CSV, URL state, rendered and accessible text, and analytics. Additional
 checks cover complete supplier profiles and initial rejected hidden facets.
+The round 3 audit covers 101 derived profiles and 241,101 financial rows and facets.
 Screenshots and verification logs are under `portal/private/dt-contracts/`.
 
 Optional contract additions are `rowPrivacyCheck` and `dataPrivacyCheck`.
