@@ -1,5 +1,8 @@
 {
-  "platforms": ["apple"],
+  "platforms": ["apple", "android"],
+  "android": {
+    "modules": ["au.com.opax.voice.OpaxVoiceModule"]
+  },
   "apple": {
     "modules": ["OpaxVoiceModule"],
     "podspecPath": ["ios/OpaxVoiceCore.podspec", "ios/OpaxVoice.podspec"]

@@ -1,0 +1,8 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+  <!-- Merged only with the production voice switch on. JS asks for the
+       microphone after stored consent; start() only checks the grant. -->
+  <uses-permission android:name="android.permission.RECORD_AUDIO" />
+  <!-- Normal (install-time) permission: communication mode and speaker or
+       headset routing for the call. AudioManager ignores both without it. -->
+  <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
+</manifest>

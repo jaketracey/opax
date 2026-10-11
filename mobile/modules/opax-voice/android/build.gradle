@@ -1,0 +1,64 @@
+plugins {
+  id 'com.android.library'
+  id 'expo-module-gradle-plugin'
+}
+
+group = 'au.com.opax.voice'
+version = '0.1.0'
+
+// The iOS pods' compile switches, read from the same build environment. The
+// e2e variant compiles the loopback guard and synthetic audio into the library;
+// production compiles neither, and only the production voice switch declares
+// the microphone permission (the iOS purpose string's gate).
+def opaxVariant = System.getenv('OPAX_VARIANT') ?: 'development'
+def voiceE2E = opaxVariant == 'e2e'
+def productionVoice = opaxVariant == 'production' &&
+  (System.getenv('OPAX_PRODUCTION_VOICE') ?: '1') == '1'
+
+android {
+  namespace 'au.com.opax.voice'
+  defaultConfig {
+    versionCode 1
+    versionName '0.1.0'
+    buildConfigField 'boolean', 'OPAX_VOICE_E2E', voiceE2E.toString()
+    buildConfigField 'boolean', 'OPAX_VOICE_PRODUCTION', productionVoice.toString()
+  }
+  buildFeatures {
+    buildConfig true
+  }
+  sourceSets {
+    // Debug is iOS DEBUG: unit tests and development builds carry the guard.
+    debug.java.srcDirs += 'src/voiceTest/java'
+    // The app's e2e build type consumes this library's release variant.
+    release.java.srcDirs += voiceE2E ? 'src/voiceTest/java' : 'src/voiceProduction/java'
+    if (productionVoice) {
+      release.manifest.srcFile 'src/voiceProduction/AndroidManifest.xml'
+    }
+  }
+  testOptions {
+    unitTests.includeAndroidResources = true
+    unitTests.all {
+      maxHeapSize = '1g'
+      testLogging {
+        events 'failed'
+        exceptionFormat 'full'
+      }
+    }
+  }
+}
+
+androidComponents {
+  // Release compiles the production stubs, which have no fixtures to test.
+  beforeVariants(selector().withBuildType('release')) { variant ->
+    variant.enableUnitTest = false
+  }
+}
+
+dependencies {
+  // React Native's own OkHttp; no second copy in the app.
+  implementation 'com.squareup.okhttp3:okhttp:4.9.2'
+  testImplementation 'junit:junit:4.13.2'
+  testImplementation 'org.jetbrains.kotlinx:kotlinx-coroutines-test:1.10.2'
+  testImplementation 'com.squareup.okhttp3:mockwebserver:4.9.2'
+  testImplementation 'org.robolectric:robolectric:4.16.1'
+}
