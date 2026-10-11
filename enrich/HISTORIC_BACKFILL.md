@@ -3,20 +3,22 @@
 Only active `kind/speech` resources carrying `source/hansard_hist` enable these rules.
 The summariser selects the longest non-summary text field, squashes whitespace and clips
 very long text with `text.clip`. The short threshold counts Unicode code points of that
-input: **under 200**, rather than 200 or fewer. Both queue tasks finish as `skipped-short`
-before generation, including one-word procedural records. Nothing is removed from the KB.
+input: **under 200**, rather than 200 or fewer. Both queue tasks finish with `status=done` and
+`terminal_reason=skipped-short` before generation, including one-word procedural records. Nothing is removed from the KB.
 
-The summary validator checks titled surnames, capitalised full names/initials and surnames
-attributed with speech verbs. Names supported by the full unit text or the parliamentary
+The summary validator checks personal honorifics, capitalised or uppercase names,
+hyphenated and compound names, initials, and surnames in personal or possessive positions. Names supported by the full unit text or the parliamentary
 roster pass. Electorates, known places, parties, institutional/law titles and ministerial
-portfolios are exempt. This is a deterministic recogniser, with limited coverage of
+portfolios are exempt as whole phrases; institutional words never excuse a titled person.
+This is a deterministic recogniser, with limited coverage of
 ambiguous isolated capitalised words; the offline audit is specificity evidence, not
 personal-name recall or model-output precision.
 
 A name failure discards the summary and permits one corrective escalation. The
 `names_rejected` queue flag preserves that allowance across budget/deadline interruptions
 and outages. A completed corrective response that still fails validation finishes as
-`rejected-names`. Accepted topics can finish independently. Both new states have `done_at`,
+`status=done, terminal_reason=rejected-names`. Accepted topics can finish independently.
+Both terminal reasons have `done_at`,
 release their claims, clear saved results and are excluded from claims, saved-result flushes
 and the backlog budget query. The write path also checks saved/forced results.
 
@@ -66,20 +68,29 @@ and senate 1993–2005. The pilot samples those files and is excluded from the T
 No model was called. Complete pilot text checked against its own unit text fires **0/2,000**.
 That control verifies source support and necessarily passes references present in the unit;
 it does not estimate generated-summary quality. Using the clipped model input as the
-stand-in summary fires **2/2,000 (0.10%)**, from names cut by head/tail clipping.
+stand-in summary fires **3/2,000 (0.15%)**, from names cut by head/tail clipping.
 
-An independent reference selector extracts known place/electorate and party mentions,
+An independent reference selector extracts place/electorate and party mentions,
 ministerial titles and bill/act titles from the pilot. Testing those spans in summary-style
-prose with source support withheld fires **2/8,135 references (0.0246%)**, in two units.
-The selector uses dictionaries and title patterns; these are automatically selected
-controls, rather than manually labelled model outputs.
+prose with source support withheld fires **0/8,135 references (0%)**. The selector stops
+before personal honorifics or incomplete subsequent offices, restores split hyphenated
+law titles, and excludes ambiguous personal-title fragments mistaken for laws. It corrects
+58 spans and replaces nine malformed/ambiguous controls with nine additional source-derived
+place/organisation occurrences, selected in pilot order independently of guard results.
+There are 8,126 clean original occurrences plus nine replacements, with no resampling.
+The review's nine place/organisation examples also pass: **0/9 (0%)**.
 
 | Reference controls | References | Fired |
 | --- | ---: | ---: |
-| Places/electorates | 4,542 | 0 |
+| Places/electorates | 4,545 | 0 |
 | Parties | 685 | 0 |
-| Ministerial titles | 1,956 | 2 |
-| Bills/acts | 952 | 0 |
+| Ministerial titles | 1,956 | 0 |
+| Bills/acts | 943 | 0 |
+| Additional organisations | 6 | 0 |
+
+These automatically selected controls establish text-only specificity; they do not
+measure model-output precision or personal-name recall. Aggregate review evidence is in
+`enrich/historic-review-measurements.json`.
 
 The original combined prompt SHA256 is
 `44029ec22e9b37b0bf6cdd383b499e62be187f085ec38fb432043f49c4c02b30`.
@@ -114,34 +125,73 @@ From `enrich/`, with Node 24 and dependencies installed:
 node scripts/build_historic_names.ts
 node scripts/measure_historic.ts
 node scripts/measure_historic.ts --pilot-audit
+node scripts/benchmark_migration.ts /tmp/opax-enrich-migration.json
 npm test
 npx tsc --noEmit
 npx wrangler deploy --dry-run
 ```
 
 The builders accept alternate local roster/portal and staged-directory paths. The asset
-contains 6,115 parliamentary name forms, 440 electorate names and 307 portfolio words
-(100,799 bytes), derived from the Handbook federation members/electorates/ministries
+contains 5,791 parliamentary name forms, 440 electorate names and 307 portfolio words
+(97,308 bytes), derived from the Handbook federation members/electorates/ministries
 exports and `portal/public/parliamentarians.json`. It is bundled by Wrangler; no roster D1
-table or upload is needed. Measurement never contacts KB, Workers AI or D1.
+table or upload is needed. Handbook members are admitted on verified service. Portal entries
+require a pid, a seat/representation record, or dated service in a chamber; speech attendance
+and committee witness records do not qualify. The filter admits 1,129 of 1,700 portal entries
+and removes 571, including all 260 witness entries flagged in review. The Handbook contributes
+1,881 verified members; overlaps are deduplicated as name forms. The census never contacts
+KB, Workers AI or D1. The migration benchmark uses an isolated local Miniflare D1 over IPv6;
+it does not modify dependencies or use any remote binding.
+
+The review's differential harness is preserved as `scripts/differential_non_historic.mjs`.
+Run it against an isolated `origin/main` checkout and this worktree, then compare the output
+JSON objects. It covers 13 source labels and 11 scenarios (143 cases), comparing model calls,
+KB requests/state, original queue fields, spend, cursors/backoff and tick stats. Only the new
+historic metadata columns and counters are excluded. **0 differences** were observed.
 
 ## Orchestrator deployment
 
 1. Apply **`enrich/migrations/0002_historic_rules.sql`** to the existing **opax-enrich D1**
-   database before deploying the new Worker. It copies existing queue rows unchanged,
-   extends the status CHECK, adds `names_rejected` defaulting to zero and recreates all
-   three queue indexes. Existing state/spend/errors/rejections tables are unchanged.
-2. Deploy **opax-enrich** from `enrich/` using its existing `wrangler.jsonc`. Wrangler
-   includes `src/historic-names.json` in the Worker bundle. Existing bindings, secrets,
-   budget variables, cron and live write mode apply. No app or portal deployment is needed.
-3. Enqueue T1 resource IDs from the KB upload ledger as `speech_summary` and
-   `speech_topics` at **priority 0** (INSERT OR IGNORE on `(rid, task)`). Preserve priority
-   100 for nightly discoveries. The existing general discovery path still uses priority
-   100; discovery alone would therefore use the steady budget once other backfill drains.
-   The four-day estimate assumes T1 is seeded as backfill so DAILY_NEURON_BUDGET applies.
+   database before deploying the new Worker. This unreleased migration replaces the review's
+   table rebuild: it only adds nullable `terminal_reason`, `names_rejected DEFAULT 0` and
+   `historic DEFAULT 0`. There is no row copy, table rewrite, CHECK change or index rebuild.
+   The original worker remains compatible while the migration goes first.
+2. Deploy **opax-enrich** from `enrich/` using its existing `wrangler.jsonc`. Wrangler includes
+   `src/historic-names.json` in the Worker bundle. Existing bindings, secrets, budgets, cron
+   and live mode apply. No app or portal deployment is needed. Deploy before pushing T1.
+3. After pushing historic resources, reconcile the successful slugs from the JSONL push log.
+   Set `T1_PUSH_LOG` to that log's absolute path, `OPAX_ENRICH_URL` to the deployed Worker URL,
+   and load the existing `ENRICH_ADMIN_TOKEN` into the environment. Run:
 
-Validation passed locally: 138 tests, TypeScript and Worker deploy dry run. The offline
-SQLite test applies the migration over an existing queue row and verifies every field and
-index survives. An additional Wrangler **`--local`** migration check failed with a fetch
-error, so that extra integration check remains unverified. No KB, Workers AI or
-remote D1 calls, push or deployment were performed. Repo changes are confined to `enrich/`.
+   ```sh
+   node /home/jake/opax-work/wt/enrich-backfill/enrich/scripts/reconcile_historic.ts \
+     --push-log "$T1_PUSH_LOG" \
+     --url "$OPAX_ENRICH_URL"
+   ```
+
+   An offline preview uses the same command with `--dry-run`; it makes no network requests.
+   Each JSONL entry must carry `slug` and a successful `status` (`pushed`, `created`, `updated`,
+   `exists`, `ok`, or numeric HTTP 2xx), or `ok: true`. Failed/pending entries are ignored.
+   The script deduplicates slugs, submits batches of at most 200 and prints only aggregate
+   counts. It calls **`POST /backfill/reconcile`**, body **`{"slugs":["invented-slug"]}`**,
+   header **`Authorization: Bearer <ENRICH_ADMIN_TOKEN>`**, using the existing admin auth.
+
+   The Worker resolves slugs through basic metadata and verifies active historic speech
+   labels before any batch mutation. It inserts absent summary/topics tasks, then sets
+   **priority 0** and the historic marker for unfinished rows: pending, claimed, or saved
+   `done/dry` and `done/unwritten` results. Processing state, claims, attempts, results and
+   timestamps stay intact. Completed writes, empty/no-text outcomes, quarantines and terminal
+   reasons stay intact. Either discovery order works, and re-running the same log is idempotent.
+   This also marks any saved results from an older worker before flushing them. Saved results
+   from other sources require no full-resource read. Newly generated historic writes reuse
+   the text already read for generation; canaries reuse their existing before snapshot.
+
+The additive migration on **480,000 local D1 rows** took **37.45 ms wall time** (D1 reported
+**1 ms SQL time** across three ALTER statements, with millisecond resolution). Full original
+row hashes and table/index root pages were identical before and after. Old-worker enqueue,
+claim and finish statements succeeded against the migrated schema. Timing is local evidence,
+not a production latency guarantee.
+
+Validation: 157 tests, TypeScript and Worker deploy dry run. No production KB, Workers AI,
+remote D1 calls, push or deployment were performed. Repository changes are confined to
+`enrich/`; the staged aggregate report was refreshed in place.

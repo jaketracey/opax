@@ -24,7 +24,7 @@ export const NAMES_PROBLEM = 'personal name is absent from the unit text and par
 
 /** Punctuation/case differences and possessives do not turn a supported name into a new one. */
 export const nameKey = (s: string): string => s.normalize('NFC').replace(/[’‘]/g, "'").replace(/[‐‑–]/g, '-')
-  .replace(/'s\b/g, '').replace(/(?<![\p{L}\p{N}])'|'(?![\p{L}\p{N}])/gu, ' ')
+  .replace(/'s\b/gi, '').replace(/(?<![\p{L}\p{N}])'|'(?![\p{L}\p{N}])/gu, ' ')
   .toLowerCase().replace(/[^\p{L}\p{N}'-]+/gu, ' ').trim()
 
 const ROSTER_NAMES = new Set(historicNames.names.split('\n').map(nameKey))
@@ -42,46 +42,62 @@ const NON_PERSON_NAMES = new Set((historicNames.electorates + '\n' + [
   'Deputy President', 'Acting President', 'Assistant Treasurer', 'Mr Speaker', 'Madam Speaker',
   'Mr President', 'Madam President', 'Mr Deputy Speaker', 'Mr Deputy President',
   'The Treasurer', 'The Speaker', 'The President', 'The Minister', 'The Commonwealth',
+  'Treasurer', 'Speaker', 'President', 'Minister', 'Premier', 'Deputy Treasurer',
   'Australian Democrats', 'Australian Greens', 'One Nation', 'Liberal Nationals',
 ].join('\n')).split('\n').map(nameKey))
 
-// Institutional/geographic nouns distinguish capitalised titles from personal names. A titled
-// person is checked separately, so an institution elsewhere in the sentence cannot excuse them.
-const NON_PERSON_WORD = /\b(?:act|bill|amendment|regulations?|treaty|convention|agreement|scheme|program|strategy|report|inquiry|commission|authority|council|association|services?|agency|party|government|parliament|assembly|tribunal|courts?|committee|university|bank|fund|union|college|hospital|centre|department|office|corporation|company|ltd|pty|board|road|street|river|islands?|bay|mountains?|sea|ocean|gulf|valley|lake|minister|treasurer|speaker|president|opposition|leader|secretary|general|chair|chairman|chairperson|justice)\b/i
-const OPENING_WORD = /^(?:The|A|An|Asked|Argued|Announced|Moved|Reported|Paid|Urged|Called|Supported|Opposed|Said|Noted|Outlined|Explained|Warned|Welcomed|Proposed|Discussed|Questioned|Thanked|Commended)\s+/
+// Exemptions are whole phrases. Titled people never inherit institutional exemptions.
+const OPENING_WORD = /^(?:The|A|An|Asked|Argued|Announced|Moved|Reported|Paid|Urged|Called|Supported|Opposed|Said|Noted|Outlined|Explained|Warned|Welcomed|Proposed|Discussed|Questioned|Thanked|Commended)\s+/i
 const CAPITAL = String.raw`(?:\p{Lu}\.(?!\p{L})|\p{Lu}[\p{L}\p{M}]*(?:['’\-‐‑–][\p{L}\p{M}]+)*)(?:'s)?(?![\p{L}\p{M}\p{N}\-‐‑–]|['’][\p{L}\p{M}])`
-const TITLE = String.raw`(?:Mr|Mrs|Ms|Miss|Dr|Sir|Dame|Senator|Professor|Prof|Captain|Rev|Reverend|Prime Minister|Deputy Prime Minister|Minister|Treasurer|Premier|President|Speaker|Justice|General)`
+const PARTICLES = String.raw`(?:(?:de|del|della|la|le|los|van|von|der|den|da|dos|du|al|bin)\s+)*`
+const PERSON = String.raw`${PARTICLES}${CAPITAL}(?:\s+${PARTICLES}${CAPITAL}){0,5}`
+const TITLE_WORDS = String.raw`(?:Deputy Prime Minister|Prime Minister|Mr|Mrs|Ms|Miss|Dr|Sir|Dame|Senator|Professor|Prof|Captain|Rev|Reverend|Minister|Treasurer|Premier|President|Speaker|Justice|General)`
+const TITLE = `(?:${TITLE_WORDS.slice(3,-1).split('|').flatMap(word=>[word,word.toUpperCase()]).join('|')})`
 const PORTFOLIO = String.raw`(?:Foreign|Home|Education|Training|Transport|Regional|Development|Industry|Science|Small|Business|Trade|Health|Resources|Energy|Agriculture|Primary|Environment|Arts|Tourism|Employment|Workplace|Relations|Defence|Finance|Immigration|Ethnic|Affairs|Veterans|Human|Services|Family|Families|Children|Justice|Police|Housing|Communications|Infrastructure|Indigenous|Aboriginal|Community|Sport|Recreation|Social|Security|Administrative|Water|Forestry|Fisheries|Conservation|Land|Labor|Industrial|Assistance|Aged|Care|Territories|Northern|Youth|Consumer|Multicultural|Customs|Local|Government|National|International|Cooperation|Public|Works)`
 const PORTFOLIO_WORD = `(?:${PORTFOLIO}|${historicNames.portfolioWords.split('\n').map((w) => w.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('|')})`
+const OFFICE = /^(?:(?:Mr|Madam) (?:Deputy |Acting )?(?:Speaker|President)|(?:Deputy )?Prime Minister|the Treasurer)$/i
+const ACRONYMS = new Set(['ABC', 'APRA', 'ATO', 'ASIC', 'ABS', 'CSIRO', 'RAN', 'RAAF', 'NATO', 'UN', 'UNESCO', 'WHO', 'OECD', 'ACT', 'NSW', 'MP', 'QC', 'KC', 'AO', 'AM', 'AC', 'OBE', 'CBE'])
+const INSTITUTION_END = /^(?:[\p{L}'-]+\s+)*(?:act|bill|amendment|regulations?|treaty|convention|agreement|scheme|program|strategy|report|inquiry|commission|authority|council|association|services?|agency|party|government|parliament|assembly|tribunal|courts?|committee|university|bank|fund|union|college|hospital|centre|department|office|corporation|company|ltd|pty|board|road|street|islands?|bay|mountains?|sea|ocean|gulf|valley|lake|force|forces|navy|army|air force)$/iu
+const GEOGRAPHIC_PREFIX = /^(?:port|cape|mount|mt|lake|river)\s+[\p{L}'-]+(?:\s+[\p{L}'-]+){0,4}$/iu
+const ORGANISATION_PREFIX = /^(?:department|ministry|office) of (?:[\p{L}'-]+\s*)+$/iu
 
 export interface NameCandidate { name: string; titled: boolean }
 
-/** Deterministic recogniser: titled surnames, capitalised full names/initials and attributed surnames. */
+/** Recognise titled people, compound/uppercase names and surnames in personal positions. */
 export function personalNameCandidates(text: string): NameCandidate[] {
   const candidates: NameCandidate[] = []
-  const titledSpans: Array<[number, number]> = []
-  // Parenthetical subtitles are part of the law title, even when they lack "Act"/"Bill".
+  const occupied: Array<[number, number]> = []
   const lawSpans = Array.from(text.matchAll(new RegExp(String.raw`\b${CAPITAL}(?:\s+(?:${CAPITAL}|and|of|the|for)|\s+\([^()\r\n]{1,120}\)){0,16}\s+(?:Act|Bill)\b`, 'gu')), (m): [number, number] => [m.index!, m.index! + m[0].length])
   const portfolioSpans = Array.from(text.matchAll(new RegExp(String.raw`\bMinister for ${PORTFOLIO_WORD}\b(?:\s+(?:${PORTFOLIO_WORD}|and|the)\b){0,12}`, 'giu')), (m): [number, number] => [m.index!, m.index! + m[0].length])
-  const nonPersonSpans = [...lawSpans, ...portfolioSpans]
-  const inNonPerson = (start: number, end: number): boolean => nonPersonSpans.some(([a, b]) => start >= a && end <= b)
-  for (const m of text.matchAll(new RegExp(String.raw`(?<![\p{L}\p{N}'’\-‐‑–])${TITLE}\.?\s+((?:${CAPITAL}|(?:de|van|von|der)\s+${CAPITAL})(?:\s+${CAPITAL}){0,4})`, 'gu'))) {
-    if (inNonPerson(m.index!, m.index! + m[0].length)) continue
-    const name = m[1].replace(/^(?:Deputy Speaker|Deputy President|Speaker|President|Minister|Treasurer)\s+(?=\p{Lu}[\p{L}]+\s+\p{Lu})/u, '')
+  const assistingSpans = Array.from(text.matchAll(/\bMinister Assisting the (?:Prime Minister|Treasurer|Minister)\b/g), (m): [number, number] => [m.index!, m.index! + m[0].length])
+  // Titles are recognised first, independently of law and organisation words.
+  for (const m of text.matchAll(new RegExp(String.raw`(?<![\p{L}\p{N}'’\-‐‑–])${TITLE}\.?\s+(${PERSON})`, 'gu'))) {
+    if (assistingSpans.some(([a,b]) => m.index! >= a && m.index! + m[0].length <= b)) continue
+    // Within a whole law title, Justice denotes a subject. Explicit personal
+    // honorifics still count, even when the name contains institutional words.
+    if (m[0].startsWith('Justice ') && lawSpans.some(([a,b]) => m.index! + m[0].length <= b && /^(?:Law|Criminal Law|Civil Law) and$/.test(text.slice(a,m.index!).trim()))) continue
+    let name = m[1]
+    const office = /^(?:Deputy |Acting )?(?:Speaker|President)\b/i.exec(name)
+    if (office && /^(?:Mr|Madam)\b/i.test(m[0])) {
+      const rest = name.slice(office[0].length).trim()
+      if (!rest) { occupied.push([m.index!, m.index! + m[0].length]); continue }
+      name = rest
+    }
     candidates.push({ name, titled: true })
-    titledSpans.push([m.index!, m.index! + m[0].length])
+    occupied.push([m.index!, m.index! + m[0].length])
   }
-  titledSpans.push(...nonPersonSpans)
-  titledSpans.sort((a, b) => a[0] - b[0])
-  for (const m of text.matchAll(new RegExp(String.raw`(?<![\p{L}\p{N}\-‐‑–])${CAPITAL}(?:\s+(?:(?:de|van|von|der)\s+)?${CAPITAL}){1,5}`, 'gu'))) {
-    if (inNonPerson(m.index!, m.index! + m[0].length)) continue
-    let start = m.index!
-    const end = start + m[0].length
+  occupied.push(...lawSpans, ...portfolioSpans, ...assistingSpans)
+  // Whole public offices, including multiword titles, are non-person spans.
+  for (const m of text.matchAll(/\b(?:(?:Mr|Madam) (?:Deputy |Acting )?(?:Speaker|President)|(?:Deputy )?Prime Minister|the Treasurer)\b/g)) {
+    occupied.push([m.index!, m.index! + m[0].length])
+  }
+  occupied.sort((a, b) => a[0] - b[0])
+  const addFragments = (start: number, end: number): void => {
     const fragments: string[] = []
-    for (const [titleStart, titleEnd] of titledSpans) {
-      if (titleEnd <= start || titleStart >= end) continue
-      if (titleStart > start) fragments.push(text.slice(start, titleStart))
-      start = Math.min(end, titleEnd)
+    for (const [a, b] of occupied) {
+      if (b <= start || a >= end) continue
+      if (a > start) fragments.push(text.slice(start, a))
+      start = Math.min(end, b)
     }
     if (start < end) fragments.push(text.slice(start, end))
     for (const fragment of fragments) {
@@ -89,17 +105,30 @@ export function personalNameCandidates(text: string): NameCandidate[] {
       if (name.split(/\s+/).length >= 2) candidates.push({ name, titled: false })
     }
   }
-  for (const m of text.matchAll(new RegExp(String.raw`(?<![\p{L}\p{N}'’\-‐‑–])(${CAPITAL})\s+(?:said|argued|asked|announced|warned|proposed|urged|testified)\b`, 'gu'))) {
-    candidates.push({ name: m[1], titled: false })
+  for (const m of text.matchAll(new RegExp(String.raw`(?<![\p{L}\p{N}\-‐‑–])${CAPITAL}(?:\s+(?:(?:and|of|the|for)\s+|${PARTICLES})${CAPITAL}){1,12}`, 'gu'))) {
+    addFragments(m.index!, m.index! + m[0].length)
+  }
+  const inOccupied = (start: number, end: number): boolean => occupied.some(([a, b]) => start >= a && end <= b)
+  for (const pattern of [
+    String.raw`(?<![\p{L}\p{N}'’\-‐‑–])(${CAPITAL})\s+(?:said|argued|asked|announced|warned|proposed|urged|testified|supported|opposed|called|reported|told|wrote|was|has|had|is)\b`,
+    String.raw`\b(?:[Tt]hanked|[Cc]ommended|[Cc]riticised|[Cc]riticized|[Cc]ongratulated|[Aa]sked|[Mm]et|[Nn]amed|[Cc]onsulted|[Pp]raised|[Tt]old|[Uu]rged|[Cc]alled on|[Ww]elcomed|[Rr]emembered|[Aa]cknowledged|[Ii]ntroduced|[Aa]ddressed|[Ee]ndorsed|[Mm]ourned|[Ss]ingled out)\s+(${PERSON})`,
+    String.raw`\b(?:with|by|from|to)\s+(${PERSON})(?=\s+(?:to|for|who|said|argued|supported|opposed|about|on)\b|[,.])`,
+    String.raw`(?<![\p{L}\p{N}'’\-‐‑–])(${CAPITAL})(?<=['’]s)\s+(?:speech|proposal|remarks|evidence|appointment|death|resignation|request)\b`,
+  ]) {
+    for (const m of text.matchAll(new RegExp(pattern, 'gu'))) {
+      const start = m.index! + m[0].indexOf(m[1])
+      if (!inOccupied(start, start + m[1].length)) candidates.push({ name: m[1], titled: false })
+    }
   }
   return candidates
 }
 
 export function isNonPersonalReference(candidate: NameCandidate): boolean {
+  if (candidate.titled) return false
   const key = nameKey(candidate.name)
-  if (NON_PERSON_NAMES.has(key) || NON_PERSON_WORD.test(key)) return true
-  // Acronyms are organisations/initialisms; an initial plus a mixed-case surname still counts.
-  return !candidate.titled && /^[\p{Lu}\s.\d-]+$/u.test(candidate.name)
+  return NON_PERSON_NAMES.has(key) || OFFICE.test(candidate.name) || ACRONYMS.has(candidate.name)
+    || INSTITUTION_END.test(key) || GEOGRAPHIC_PREFIX.test(key) || ORGANISATION_PREFIX.test(key)
+    || /^royal (?:[\p{L}'-]+\s+)*(?:navy|army|air force|society|college|commission|hospital|institute)$/iu.test(key)
 }
 
 /** No names are included in diagnostics, logs or retry complaints. */

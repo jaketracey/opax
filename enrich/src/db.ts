@@ -3,7 +3,8 @@
 // run it against a node:sqlite shim.
 
 export type TaskName = 'speech_summary' | 'speech_topics' | 'release_summary'
-export type RowStatus = 'pending' | 'claimed' | 'done' | 'quarantined' | 'skipped-short' | 'rejected-names'
+export type RowStatus = 'pending' | 'claimed' | 'done' | 'quarantined'
+export type TerminalReason = 'skipped-short' | 'rejected-names'
 export type Outcome = 'written' | 'dry' | 'unwritten' | 'empty' | 'skipped-existing' | 'no-text' | 'missing' | 'skipped-short' | 'rejected-names'
 
 export const SUMMARY_TASKS: readonly TaskName[] = ['speech_summary', 'release_summary']
@@ -17,6 +18,8 @@ export interface QueueRow {
   source_created: number | null
   attempts: number
   names_rejected: number
+  historic: number
+  terminal_reason: TerminalReason | null
   transient: number
   force: number
   model: string | null
@@ -161,6 +164,8 @@ export interface RowUpdate {
   /** Infrastructure failures to ADD. */
   addTransient?: number
   namesRejected?: boolean
+  historic?: boolean
+  terminalReason?: TerminalReason
 }
 
 /** Settle rows in one batch. `claim_token` is cleared, so nothing finished is ever "released". */
@@ -171,13 +176,14 @@ export async function finishRows(db: D1Database, updates: readonly RowUpdate[], 
       .prepare(
         `UPDATE queue SET status = ?, outcome = COALESCE(?, outcome), result = CASE WHEN ? THEN NULL ELSE COALESCE(?, result) END, model = COALESCE(?, model),
            last_error = ?, neurons = neurons + ?, attempts = attempts + ?, transient = transient + ?, names_rejected = COALESCE(?, names_rejected),
+           historic = COALESCE(?, historic), terminal_reason = COALESCE(?, terminal_reason),
            claim_token = NULL, claimed_at = NULL, updated_at = ?, done_at = ?
          WHERE rid = ? AND task = ?`,
       )
       .bind(
         u.status,
         u.outcome ?? null,
-        u.result === null || u.status === 'skipped-short' || u.status === 'rejected-names' ? 1 : 0,
+        u.result === null || u.terminalReason ? 1 : 0,
         u.result ?? null,
         u.model ?? null,
         u.lastError ?? null,
@@ -185,6 +191,8 @@ export async function finishRows(db: D1Database, updates: readonly RowUpdate[], 
         u.addAttempts ?? 0,
         u.addTransient ?? 0,
         u.namesRejected === undefined ? null : Number(u.namesRejected),
+        u.historic === undefined ? null : Number(u.historic),
+        u.terminalReason ?? null,
         now,
         u.status === 'pending' || u.status === 'claimed' ? null : now,
         u.rid,

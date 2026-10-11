@@ -9,7 +9,7 @@ import { HISTORIC_MIN_CHARS, isHistoricSpeech, skipHistoricShort, summaryCharact
 import { buildRecordMessage, buildSystemPrompt, type PromptRecord } from '../src/prompts.ts'
 import { clip, pickText, wordCount } from '../src/text.ts'
 import { NAMES_PROBLEM, hasNewPersonalName } from '../src/validate.ts'
-import roster from '../src/historic-names.json' with { type: 'json' }
+import {pilotControls, REVIEW_REFERENCES} from './audit_controls.ts'
 
 const auditOnly = process.argv.includes('--pilot-audit')
 const directory = resolve(process.argv.slice(2).find((a: string) => a !== '--pilot-audit') ?? '/home/jake/opax-staging/federation/kb-gap')
@@ -35,15 +35,11 @@ function add(out: Counts, year: string, chamber: string, kind: string, short: bo
 // source support removed, so the source-text exemption cannot make the controls tautological.
 // The controls cover place/electorate names, party names, ministerial titles and law titles;
 // they are an offline specificity audit, not labelled model-output precision/recall.
-const escape = (s: string): string => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
-const places = [...roster.electorates.split('\n'), 'New South Wales', 'New Zealand', 'Papua New Guinea', 'East Timor', 'South Africa', 'United States', 'United Kingdom', 'Northern Territory', 'Australian Capital Territory', 'Western Australia', 'South Australia', 'Hong Kong', 'Sri Lanka', 'Port Moresby', 'Torres Strait', 'Cape York']
-const controlPatterns: Record<string, RegExp> = {
-  placesElectorates: new RegExp(`\\b(?:${places.sort((a, b) => b.length - a.length).map(escape).join('|')})\\b`, 'gi'),
-  parties: /\b(?:Australian Labor Party|Labor Party|Liberal Party|National Party|Country Party|Australian Democrats|Australian Greens|One Nation|Liberal National Party)\b/g,
-  titles: /\b(?:Mr (?:Deputy )?Speaker|Mr (?:Deputy )?President|Madam Speaker|Madam President|(?:Deputy )?Prime Minister|the Treasurer|Minister for (?:[A-Z][a-z-]+(?: (?:and|the))? ?){1,5})\b/g,
-  laws: /\b[A-Z][a-z-]+(?: (?:[A-Z][a-z-]+|and|of|the|for)| \([A-Za-z ]+\)){0,10} (?:Act|Bill)\b/g,
-}
-const controls: Record<string, { references: number; fired: number; rate: number; affectedUnits: number }> = Object.fromEntries(Object.keys(controlPatterns).map((k) => [k, { references: 0, fired: 0, rate: 0, affectedUnits: 0 }]))
+const controls: Record<string, { references: number; fired: number; rate: number; affectedUnits: number }> = Object.fromEntries(['placesElectorates','parties','titles','laws','organisations'].map((k) => [k, { references: 0, fired: 0, rate: 0, affectedUnits: 0 }]))
+let malformedControls = 0
+let correctedControls = 0
+const cleanPool: Array<{category: string; text: string; unit: number}> = []
+const replacementPool: Array<{category: string; text: string; unit: number}> = []
 let pilotFired = 0
 let pilotClippedFired = 0
 let pilotTested = 0
@@ -89,19 +85,11 @@ for (const file of ['pilot-2000.jsonl', ...(auditOnly ? [] : actualT1.sort())]) 
       pilotTested++
       pilotFired += Number(hasNewPersonalName(text, text))
       pilotClippedFired += Number(hasNewPersonalName(clip(text), text))
-      let anyControlFired = false
-      for (const [category, pattern] of Object.entries(controlPatterns)) {
-        let categoryFired = false
-        for (const match of text.matchAll(pattern)) {
-          const fire = hasNewPersonalName(`Reported concerns about ${match[0]} and the need for better regional services.`, '')
-          controls[category].references++
-          controls[category].fired += Number(fire)
-          categoryFired ||= fire
-          anyControlFired ||= fire
-        }
-        controls[category].affectedUnits += Number(categoryFired)
-      }
-      controlUnitsFired += Number(anyControlFired)
+      const selected = pilotControls(text)
+      malformedControls += selected.malformed
+      correctedControls += selected.controls.filter(c=>c.corrected).length
+      cleanPool.push(...selected.controls.map(c=>({...c, unit:pilotTested})))
+      replacementPool.push(...selected.replacements.map(c=>({...c, unit:pilotTested})))
     } else if (!short) {
       const words = wordCount(text)
       if (words < 3) { noText++; continue }
@@ -123,6 +111,24 @@ for (const file of ['pilot-2000.jsonl', ...(auditOnly ? [] : actualT1.sort())]) 
   files.push({ file, sha256: hash.digest('hex'), bytes: statSync(resolve(directory, file)).size, ...fileCounts })
   console.log(JSON.stringify({ file, total: fileCounts.total, short: fileCounts.short }))
 }
+// Keep the review's 8,135-control sample size. Malformed person fragments are
+// replaced deterministically with source-derived controls, irrespective of guard results.
+const targetControls = 8135
+if (!cleanPool.length || cleanPool.length > targetControls) throw new Error('Unexpected pilot control pool')
+const sample = [...cleanPool]
+if (replacementPool.length < targetControls - sample.length) throw new Error('Insufficient independent replacement controls')
+for (let i=0; sample.length<targetControls; i++) sample.push(replacementPool[i])
+const affected = new Set<number>()
+const byCategory = new Map<string,Set<number>>()
+for (const control of sample) {
+  const fire = hasNewPersonalName(`Reported concerns about ${control.text} and the need for better regional services.`, '')
+  controls[control.category].references++
+  controls[control.category].fired += Number(fire)
+  if (fire) { affected.add(control.unit); const units=byCategory.get(control.category)??new Set<number>(); units.add(control.unit); byCategory.set(control.category,units) }
+}
+controlUnitsFired=affected.size
+for (const [category,units] of byCategory) controls[category].affectedUnits=units.size
+const reviewFired = REVIEW_REFERENCES.filter(reference=>hasNewPersonalName(`Reported concerns about ${reference} and regional services.`, '')).length
 for (const control of Object.values(controls)) control.rate = control.references ? control.fired / control.references : 0
 const controlTotals = Object.values(controls).reduce((a, c) => ({ references: a.references + c.references, fired: a.fired + c.fired }), { references: 0, fired: 0 })
 const scenario = (neurons: number) => ({ neurons, budgetDays: neurons / dailyBudget, wholeBudgetDays: Math.ceil(neurons / dailyBudget) })
@@ -136,7 +142,8 @@ const report = {
     limitation: 'Text-only specificity checks; no generated summaries or labelled personal-name recall. The own-text control necessarily passes supported references and is not a model-output precision estimate.',
     promptSha256: createHash('sha256').update(buildSystemPrompt(['summary', 'topics'])).digest('hex'),
     unitsTested: pilotTested, ownTextFired: pilotFired, ownTextRate: pilotFired / pilotTested, clippedTextFired: pilotClippedFired,
-    nonPersonControls: { ...controlTotals, rate: controlTotals.fired / controlTotals.references, affectedUnits: controlUnitsFired, byCategory: controls },
+    nonPersonControls: { ...controlTotals, originalCleanOccurrences: cleanPool.length, correctedSpans: correctedControls, malformedOrAmbiguousFragmentsReplaced: malformedControls, replacementMethod: 'Replace malformed fragments with the first independently selected additional gazetteer/organisation occurrences in pilot order; no guard-dependent filtering.', rate: controlTotals.fired / controlTotals.references, affectedUnits: controlUnitsFired, byCategory: controls },
+    reviewExamples: { references: REVIEW_REFERENCES.length, fired: reviewFired, rate: reviewFired / REVIEW_REFERENCES.length },
   },
   neurons: {
     method: 'src/budget.ts neuronsFor, prompt input estimated at 3.5 JS characters/token; actual clipped text and historic combined system/record messages; one shared primary call for summary+topics.',

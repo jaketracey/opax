@@ -20,6 +20,8 @@ export interface WriteItem {
   force: boolean
   /** The brief text, or the topic slugs ([] = no-topic verdict). */
   value: string | string[]
+  /** Persisted eligibility for saved results; other sources need no additional read. */
+  historic?: boolean
 }
 
 export interface WriteOutcome {
@@ -46,6 +48,7 @@ export class RejectedNames extends UnsafeWrite {
 
 /** Also protects saved dry/unwritten results and forced writes. */
 async function historicWriteCheck(kb: KbApi, rid: string, item: WriteItem, known?: KbResource): Promise<WriteOutcome | null> {
+  if (!known && !item.historic) return null
   const resource = known ?? await kb.getResource(rid)
   if (!resource || !isHistoricSpeech(resource)) return null
   const text = pickText(resource.data?.texts)

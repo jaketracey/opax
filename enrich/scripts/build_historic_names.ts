@@ -1,6 +1,7 @@
 // Local, reproducible roster asset. Never reads speech text or emits names to stdout.
 import { readFileSync, writeFileSync } from 'node:fs'
 import { resolve } from 'node:path'
+import { hasParliamentaryService, type DirectoryPerson } from './roster_membership.ts'
 
 const roster = process.argv[2] ?? '/home/jake/opax-staging/federation/roster'
 const portal = process.argv[3] ?? resolve(import.meta.dirname, '../../portal/public/parliamentarians.json')
@@ -23,10 +24,11 @@ for (const member of members) {
   }
   for (const alias of member.aliases ?? []) add(alias)
 }
-const people = JSON.parse(readFileSync(portal, 'utf8')).people
+const directory = JSON.parse(readFileSync(portal, 'utf8')).people
+const people = directory.filter((person: DirectoryPerson) => hasParliamentaryService(person))
 for (const person of people) {
   add(person.name)
-  // Portal entries are parliamentary names; include the short surname form used after a title.
+  // Only verified members contribute surname forms used after a title.
   add(person.name.split(/\s+/).at(-1))
 }
 const electorates = JSON.parse(readFileSync(resolve(roster, 'electorates.json'), 'utf8'))
@@ -45,4 +47,4 @@ for (const appointment of appointments) {
 const asset = { names: [...names].sort().join('\n'), electorates: [...places].sort().join('\n'), portfolioWords: [...portfolioWords].sort().join('\n') }
 const out = resolve(import.meta.dirname, '../src/historic-names.json')
 writeFileSync(out, JSON.stringify(asset) + '\n')
-console.log(JSON.stringify({ members: members.length, portalPeople: people.length, names: names.size, electorates: places.size, portfolioWords: portfolioWords.size, bytes: Buffer.byteLength(JSON.stringify(asset)) }))
+console.log(JSON.stringify({ members: members.length, portalPeople: people.length, portalRemoved: directory.length - people.length, names: names.size, electorates: places.size, portfolioWords: portfolioWords.size, bytes: Buffer.byteLength(JSON.stringify(asset)) }))

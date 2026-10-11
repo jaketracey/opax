@@ -1,0 +1,95 @@
+{
+  "migration": {
+    "rows": 480000,
+    "wallMs": 37.446727000000465,
+    "sqlMs": 1,
+    "statements": 3,
+    "rowsAndIndexesPreserved": true,
+    "oldWorkerCompatible": true,
+    "queueHash": "250795fac6e50e1f4229dc1431baea63235b01a61f8eca09d1b4033ba2061ea1"
+  },
+  "differential": {
+    "cases": 143,
+    "differences": 0,
+    "baseline": "origin/main 108bbdd0",
+    "omittedNewFields": [
+      "historic",
+      "names_rejected",
+      "terminal_reason"
+    ],
+    "comparisons": [
+      "model calls",
+      "KB state and calls",
+      "queue original fields",
+      "spend",
+      "tick stats",
+      "state"
+    ]
+  },
+  "guardAudit": {
+    "method": "Existing prompt text is retained for live sources. No model is called: test full pilot text and clipped model input against each unit own full text, and independently selected non-person reference spans with source support withheld.",
+    "limitation": "Text-only specificity checks; no generated summaries or labelled personal-name recall. The own-text control necessarily passes supported references and is not a model-output precision estimate.",
+    "promptSha256": "44029ec22e9b37b0bf6cdd383b499e62be187f085ec38fb432043f49c4c02b30",
+    "unitsTested": 2000,
+    "ownTextFired": 0,
+    "ownTextRate": 0,
+    "clippedTextFired": 3,
+    "nonPersonControls": {
+      "references": 8135,
+      "fired": 0,
+      "originalCleanOccurrences": 8126,
+      "correctedSpans": 58,
+      "malformedOrAmbiguousFragmentsReplaced": 9,
+      "replacementMethod": "Replace malformed fragments with the first independently selected additional gazetteer/organisation occurrences in pilot order; no guard-dependent filtering.",
+      "rate": 0,
+      "affectedUnits": 0,
+      "byCategory": {
+        "placesElectorates": {
+          "references": 4545,
+          "fired": 0,
+          "rate": 0,
+          "affectedUnits": 0
+        },
+        "parties": {
+          "references": 685,
+          "fired": 0,
+          "rate": 0,
+          "affectedUnits": 0
+        },
+        "titles": {
+          "references": 1956,
+          "fired": 0,
+          "rate": 0,
+          "affectedUnits": 0
+        },
+        "laws": {
+          "references": 943,
+          "fired": 0,
+          "rate": 0,
+          "affectedUnits": 0
+        },
+        "organisations": {
+          "references": 6,
+          "fired": 0,
+          "rate": 0,
+          "affectedUnits": 0
+        }
+      }
+    },
+    "reviewExamples": {
+      "references": 9,
+      "fired": 0,
+      "rate": 0
+    }
+  },
+  "roster": {
+    "handbookMembers": 1881,
+    "portalAdmitted": 1129,
+    "portalRemoved": 571,
+    "removedWitnessEntries": 260,
+    "nameForms": 5791,
+    "electorates": 440,
+    "portfolioWords": 307,
+    "bytes": 97308
+  }
+}

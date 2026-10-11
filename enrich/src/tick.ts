@@ -290,7 +290,7 @@ async function processRid(d: TickDeps, ctl: Ctl, day: string, rid: string, rows:
   // ---- settle what needs no model
   const todo: QueueRow[] = []
   for (const row of rows) {
-    if (skipHistoricShort(historic, text)) updates.push({ rid, task: row.task, status: 'skipped-short', outcome: 'skipped-short', lastError: null })
+    if (skipHistoricShort(historic, text)) updates.push({ rid, task: row.task, status: 'done', terminalReason: 'skipped-short', historic: true, outcome: 'skipped-short', lastError: null })
     else if (words < 3) updates.push({ rid, task: row.task, status: 'done', outcome: 'no-text', lastError: null })
     else if (isSummaryTask(row.task) && briefPresent && !row.force) updates.push({ rid, task: row.task, status: 'done', outcome: 'skipped-existing', lastError: null })
     else if (!isSummaryTask(row.task) && topicsPresent && !row.force) updates.push({ rid, task: row.task, status: 'done', outcome: 'skipped-existing', lastError: null })
@@ -367,7 +367,7 @@ async function processRid(d: TickDeps, ctl: Ctl, day: string, rid: string, rows:
     }
     const totalRejected = row.attempts + r.rejected
     if (r.terminalNames) {
-      updates.push({ rid, task: row.task, status: 'rejected-names', outcome: 'rejected-names', namesRejected: true, model: r.model, lastError: 'historic personal-name validation failed after one corrective escalation', addAttempts: r.rejected, addNeurons: r.neurons })
+      updates.push({ rid, task: row.task, status: 'done', terminalReason: 'rejected-names', historic: true, outcome: 'rejected-names', namesRejected: true, model: r.model, lastError: 'historic personal-name validation failed after one corrective escalation', addAttempts: r.rejected, addNeurons: r.neurons })
       stats.rejectedNames += 1
     } else if (totalRejected >= MAX_ATTEMPTS && !r.namesRejected) {
       const why = `rejected after ${totalRejected} attempts (${d.cfg.primaryModel}, then ${d.cfg.escalationModel}): ${r.complaints.join('; ')}`
@@ -377,16 +377,16 @@ async function processRid(d: TickDeps, ctl: Ctl, day: string, rid: string, rows:
     } else if (gen.unavailable) {
       if (rowFault) {
         const u = retryOrQuarantine(row, gen.unavailable.message, r.neurons)
-        updates.push({ ...u, model: r.model, addAttempts: r.rejected, namesRejected: r.namesRejected })
+        updates.push({ ...u, model: r.model, addAttempts: r.rejected, namesRejected: r.namesRejected, historic })
         if (u.status === 'quarantined') stats.quarantined += 1
         else stats.transient += 1
       } else {
-        updates.push({ rid, task: row.task, status: 'pending', model: r.model, namesRejected: r.namesRejected, lastError: gen.unavailable.message.slice(0, 300), addAttempts: r.rejected, addNeurons: r.neurons })
+        updates.push({ rid, task: row.task, status: 'pending', model: r.model, namesRejected: r.namesRejected, historic, lastError: gen.unavailable.message.slice(0, 300), addAttempts: r.rejected, addNeurons: r.neurons })
         stats.retried += 1
       }
     } else {
       // Cut short (budget or tick deadline) with attempts to spare: try again next tick.
-      updates.push({ rid, task: row.task, status: 'pending', model: r.model, namesRejected: r.namesRejected, lastError: 'cut short before every attempt ran', addAttempts: r.rejected, addNeurons: r.neurons })
+      updates.push({ rid, task: row.task, status: 'pending', model: r.model, namesRejected: r.namesRejected, historic, lastError: 'cut short before every attempt ran', addAttempts: r.rejected, addNeurons: r.neurons })
       stats.retried += 1
     }
   }
@@ -394,7 +394,7 @@ async function processRid(d: TickDeps, ctl: Ctl, day: string, rid: string, rows:
   // ---- deliver accepted values
   let backpressure: KbBackpressure | null = null
   for (const w of toWrite) {
-    const base: RowUpdate = { rid, task: w.row.task, status: 'done', model: w.model, namesRejected: w.namesRejected, addAttempts: w.rejected, addNeurons: w.neurons, result: Array.isArray(w.item.value) ? JSON.stringify(w.item.value) : w.item.value }
+    const base: RowUpdate = { rid, task: w.row.task, status: 'done', model: w.model, namesRejected: w.namesRejected, historic, addAttempts: w.rejected, addNeurons: w.neurons, result: Array.isArray(w.item.value) ? JSON.stringify(w.item.value) : w.item.value }
     if (!d.cfg.live) {
       const outcome: Outcome = Array.isArray(w.item.value) && w.item.value.length === 0 ? 'empty' : 'dry'
       updates.push({ ...base, outcome, lastError: null })
@@ -408,7 +408,7 @@ async function processRid(d: TickDeps, ctl: Ctl, day: string, rid: string, rows:
     }
     try {
       const done: WriteOutcome = await writeItem(d.kb, rid, w.item, resource)
-      updates.push({ ...base, status: done.outcome === 'skipped-short' ? 'skipped-short' : 'done', outcome: done.outcome, lastError: done.warning ?? null })
+      updates.push({ ...base, status: 'done', terminalReason: done.outcome === 'skipped-short' ? 'skipped-short' : undefined, outcome: done.outcome, lastError: done.warning ?? null })
       count(stats, done.outcome)
       if (done.warning) await logError(d.db, d.now(), 'verify', done.warning, rid, w.row.task)
     } catch (err) {
@@ -417,7 +417,7 @@ async function processRid(d: TickDeps, ctl: Ctl, day: string, rid: string, rows:
         updates.push({ ...base, outcome: 'unwritten', lastError: errText(err) })
         count(stats, 'unwritten')
       } else if (err instanceof RejectedNames) {
-        updates.push({ ...base, status: 'rejected-names', outcome: 'rejected-names', lastError: err.message })
+        updates.push({ ...base, status: 'done', terminalReason: 'rejected-names', historic: true, outcome: 'rejected-names', lastError: err.message })
         stats.rejectedNames += 1
       } else if (err instanceof UnsafeWrite || err instanceof KbHttpError) {
         updates.push({ ...base, status: 'quarantined', outcome: 'unwritten', lastError: errText(err) })
@@ -445,8 +445,8 @@ async function flush(d: TickDeps, ctl: Ctl, stats: TickStats): Promise<void> {
       if (ctl.stop) return
       const value = isSummaryTask(row.task) ? (row.result as string) : (JSON.parse(row.result as string) as string[])
       try {
-        const done = await writeItem(d.kb, rid, { task: row.task, force: row.force === 1, value })
-        updates.push({ rid, task: row.task, status: done.outcome === 'skipped-short' ? 'skipped-short' : 'done', outcome: done.outcome, lastError: done.warning ?? null })
+        const done = await writeItem(d.kb, rid, { task: row.task, force: row.force === 1, value, historic: row.historic === 1 })
+        updates.push({ rid, task: row.task, status: 'done', terminalReason: done.outcome === 'skipped-short' ? 'skipped-short' : undefined, outcome: done.outcome, lastError: done.warning ?? null })
         stats.flushed += 1
         count(stats, done.outcome)
       } catch (err) {
@@ -458,7 +458,7 @@ async function flush(d: TickDeps, ctl: Ctl, stats: TickStats): Promise<void> {
           // This saved result predates the guard. Discard it and spend only the one corrective
           // escalation when claimed again; a saved result that already used it is terminal.
           const terminal = row.names_rejected === 1
-          updates.push({ rid, task: row.task, status: terminal ? 'rejected-names' : 'pending', outcome: terminal ? 'rejected-names' : null, result: null, namesRejected: true, addAttempts: 1, lastError: err.message })
+          updates.push({ rid, task: row.task, status: terminal ? 'done' : 'pending', terminalReason: terminal ? 'rejected-names' : undefined, outcome: terminal ? 'rejected-names' : null, result: null, namesRejected: true, addAttempts: 1, lastError: err.message })
           if (terminal) stats.rejectedNames += 1
           else stats.retried += 1
         } else if (err instanceof UnsafeWrite || err instanceof KbHttpError) {
