@@ -1,5 +1,5 @@
 // Division and voting-record rollout using the shared server-mode core.
-import {dataTableHTML, mountDataTable, applyQuery} from './datatable.js?v=0b85cfe36e';
+import {dataTableHTML, mountDataTable, applyQuery} from './datatable.js?v=ceedd17925';
 import {shortDate} from './format.js';
 import {statusLabelHTML} from './labels.js?v=804befe8de';
 import {divisionPlain} from './division-markdown.js?v=5991511166';
@@ -36,12 +36,16 @@ function privacy(check) {
 }
 
 export function divisionTableConfig(params = {}, caption = 'Divisions', pageType = 'bill', check = votePrivacyCheck) {
-  return {...privacy(check), id:'division-table', caption, columns:divisionColumns, source:{endpoint:'/api/table/divisions', params},
+  const scope = {};
+  if (params.bill) scope['f.bill'] = JSON.stringify([params.bill]);
+  if (params.jurisdiction) scope['f.jurisdiction'] = JSON.stringify([params.jurisdiction]);
+  if (params.start) scope['f.sitting'] = JSON.stringify([params.start]);
+  return {...privacy(check), id:'division-table', caption, columns:divisionColumns, source:{endpoint:'/api/table/divisions', params:scope},
     pageSize:25, defaultSort:{key:'date', dir:'desc'}, primaryLink:row => safeLink(row.href),
     export:{filename:'divisions.csv'}, urlKey:'dv', pageType};
 }
 export function voteTableConfig(person, caption = 'Voting record', check = votePrivacyCheck) {
-  return {...privacy(check), id:'vote-table', caption, columns:voteColumns, source:{endpoint:'/api/table/votes', params:{person}},
+  return {...privacy(check), id:'vote-table', caption, columns:voteColumns, source:{endpoint:'/api/table/votes', params:{'f.person':JSON.stringify([person])}},
     pageSize:25, defaultSort:{key:'date', dir:'desc'}, primaryLink:row => safeLink(row.href),
     export:{filename:'voting-record.csv'}, urlKey:'vr', pageType:'person'};
 }

@@ -2,8 +2,7 @@
 
 The web bill pages, sitting-week division lists and person voting records use
 `portal/public/vote-tables.js`, shared by the Worker and browser. The tables use
-the approved core from `web/dt-core` at `7a57261b4`. DT-api remains a separate
-merge dependency, so local browser checks use a Wrangler-only fixture entry.
+the approved core from `web/dt-core` at `7a57261b4`. The approved dt-api at `85a3c729` supplies real local D1 responses.
 
 Division titles use the recorded stage plus date. Missing tallies remain unknown,
 and party position is displayed only when explicitly supplied by the vote source.
@@ -18,23 +17,27 @@ full filtered CSV use the following endpoints and fixed scope parameters:
 
 | List | Endpoint | Scope parameters | URL state |
 | --- | --- | --- | --- |
-| Bill divisions | `/api/table/divisions` | `bill`: bill key | `dv.*` |
-| Sitting-week divisions | `/api/table/divisions` | `jurisdiction`: `federal`, `start` and `end`: inclusive ISO dates | `dv.*` |
-| Person votes | `/api/table/votes` | `person`: roster person ID, or canonical person slug when no ID exists | `vr.*` |
+| Bill divisions | `/api/table/divisions` | `f.bill`: JSON array of bill keys | `dv.*` |
+| Sitting-week divisions | `/api/table/divisions` | `f.jurisdiction`: `["federal"]`, `f.sitting`: JSON array of week-start IDs | `dv.*` |
+| Person votes | `/api/table/votes` | `f.person`: JSON array of roster person IDs | `vr.*` |
 
 The API needs to enforce scope before applying query filters and CSV export.
 Normalized division rows contain `title`, `date`, `chamber`, `outcome`, `ayes`,
 `noes` and `href`; vote rows contain `title`, `date`, `vote`, `party_position` and
-`href`. These are ordinary `Row` properties, not contract additions. The fixture
-adapter uses the same projections in `portal/test/dt-votes-worker.mjs`.
+`href`. These are optional `Row` properties. The D1 loader and SSR share the same
+projections, with migration 0002 upgrading the earlier summary schema.
 
-Filtered URLs are shareable and noindex; canonical URLs omit table state. Local
-fixtures never ship as an API route. `votes.json` is read without modification.
+Filtered URLs are shareable and noindex; canonical URLs omit table state. The local safety wrapper delegates table endpoints, SSR and assets unchanged;
+it blocks unrelated API/ingest dispatch. `votes.json` is read without modification.
 Both configs register `privacy: 'donors'`, `privacyCheck` and the optional
 `rowPrivacyCheck`. The row predicate admits the division/vote shape and, on SSR,
 checks all row fields with the shared index. SSR uses `tablePrivacyCheck` or its
 read-boundary adapter; browser hydration uses the read-only `/api/table/privacy`
-validator. Names and aliases stay server-side. Encoded links are checked decoded.
+validator. The full `loadTableIdentityIndex` covers donors, recipients and suppliers from
+source exports, with kind and ABN type overriding name evidence. Names, aliases
+and identifiers stay server-side. Encoded links are checked decoded.
+The loader applies that index before persisting every dataset, including interest
+and instrument rows. Grant and donation aggregates use “Donors not named (N)”.
 The optional `rowPrivacyCheck` field is the sole contract addition in this lane.
 No aggregate rows are used here; the core's money aggregate label is now
 “Donors not named (N)” as requested.
@@ -44,15 +47,18 @@ filtered column's scale across server pages. Outcome stays visible for its Statu
 label; other constant categories use the core's single applied-filter label.
 
 Before screenshots remain in `portal/private/dt-votes/`. The current merged-core
-shots are `after-wrangler-{bill,person,hub}-{390,1280}.png`, served by local Wrangler.
+shots are `after-api-{bill,person,hub}-{390,1280}.png`, served by local Wrangler.
 Chrome runs headless in an isolated network namespace. Non-local hosts are blocked
-by request interception and the resolver. The fixture Worker refuses model,
-generation, voice, auth and ingest dispatch.
+by request interception and the resolver. The local safety wrapper refuses unrelated API and ingest dispatch.
+The published sitting windows have no divisions; their shots show the real empty
+table and coverage note, without substituting fixture data.
 
 Run the browser check after `npm ci` and `npm run build:search`:
 
 ```sh
 cd portal
+npm run build:tables
+unshare -rn sh -c 'ip link set lo up; node ../scripts/apply_table_sql.mjs --local'
 unshare -rn sh -c 'ip link set lo up; OPAX_PLAYWRIGHT_MODULE=/path/to/playwright/index.mjs node test/dt-votes-dev.mjs'
 ```
 
@@ -62,5 +68,9 @@ actual downloaded CSV, and the 50,000-row server export cap. Both table configs
 are checked against every runtime-derived withheld name/alias in unit tests.
 The browser gate calls the core's shared `assertTablePrivacy` for client input,
 server rows/facets, an actual CSV file, URL state, rendered and accessible text,
-and analytics. Rejected searches download headers only. Results and source hash
-are recorded in `after-wrangler-measurements.json`.
+and analytics. Rejected searches and facets disable export, including initial URLs through hydration.
+Sitting JSON-LD uses the same filtered/paged rows as SSR. Source text is checked
+before formatting. The core follows real CSV continuation links and preserves
+the required final truncation record. Both endpoints register the shared CSV
+contract gate. The runner seeds isolated public cap scopes in local D1 only. Results and source hash
+are recorded in `after-api-measurements.json`.

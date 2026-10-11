@@ -1,22 +1,11 @@
 // Shared rollout gate. Names are read at run time; failure messages contain counts only.
 import assert from 'node:assert/strict';
 import {readFile} from 'node:fs/promises';
-import {MONEY_GRAPHS,isOrganisationDonor,withheldPhrases,namesWithheldPhrase} from '../public/donor-entity.js';
+import {loadTableIdentityIndex} from '../src/table-identities.mjs';
 
-export async function tablePrivacyIndex({donorContext=true} = {}) {
-  const graphs=await Promise.all(MONEY_GRAPHS.map(path=>readFile(new URL(`../public${path}`,import.meta.url),'utf8').then(JSON.parse)));
-  const officeHolders=[];
-  if (!donorContext) {
-    const roster=JSON.parse(await readFile(new URL('../public/parliamentarians.json',import.meta.url),'utf8'));
-    const access=JSON.parse(await readFile(new URL('../public/access.json',import.meta.url),'utf8'));
-    officeHolders.push(...roster.people.flatMap(p=>[p.name,p.full || '']),...Object.values(access.ministers || {}).map(m=>m.name));
-  }
-  const phrases=withheldPhrases(graphs,officeHolders.filter(Boolean));
-  const values=[...new Set(graphs.flatMap(g=>g.nodes.filter(n=>n.kind === 'donor' && !isOrganisationDonor(n)).flatMap(n=>[n.label,...(n.aliases || [])])))].filter(v=>namesWithheldPhrase(phrases,`donor receipts ${v}`));
-  return {phrases,values,safe:value=>{
-    let decoded=value; try {decoded=decodeURIComponent(value);} catch {}
-    return !namesWithheldPhrase(phrases,`donor receipts ${value}`,`donor receipts ${decoded}`);
-  }};
+export async function tablePrivacyIndex() {
+  const index = await loadTableIdentityIndex(path=>readFile(new URL(`../public${path}`,import.meta.url),'utf8').then(JSON.parse));
+  return {...index,safe:value=>!index.check(value)};
 }
 
 /** CSV must be an actual browser download path. All listed surfaces are mandatory. */

@@ -73,7 +73,7 @@ test('bill tables link to the division whose SSR retains the formatted question'
 test('MP vote tables link to the question instead of repeating its Markdown',async()=>{
  const data={'1':{name:'Example Member',jurisdiction:'federal',for:[{name:'Example Bill',date:'2026-04-01',division_slug:'division-fixture',question:division.question}],against:[]}};
  const read=async path=>{if(path==='/votes.json')return data;if(path.startsWith('/graph/money'))return JSON.parse(readFileSync(new URL('../public'+path,import.meta.url),'utf8'));throw Error('No fixture');};
- const html=(await renderPersonAnswer({pid:'1',name:'Example Member',states:[],chambers:['senate']},read,new Map())).html;
+ const html=(await renderPersonAnswer({pid:'1',name:'Example Member',states:[],chambers:['senate']},read,new Map(),undefined,undefined,{},tableIndex.safe)).html;
  assert.match(html,/href="\/doc\/division-fixture">Example Bill/);
  assert.doesNotMatch(html,/###|&gt; |<blockquote>/);
 });

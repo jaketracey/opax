@@ -55,11 +55,14 @@ test('SSR week uses the validated sponsor, dated Machine-written label and 2D ti
   malicious.divisions[0].ayes='<script>bad</script>';
   assert.doesNotMatch(renderSittingWeek(data,malicious,people,slugs).html,/<img|<script>|javascript:/);
 });
-test('empty week has calendar facts and arrival text, with no loading text or empty record sections',()=>{
+test('empty week retains calendar facts and a zero-row division table',()=>{
   const week = deriveWeek(period,[],[],calendar.updated);
   const page = renderSittingWeek({...data,weeks:[week]},week,[],new Map(),'2026-10-10');
   for (const fact of ['12 Oct 2026','15 Oct 2026','House of Representatives','Senate','14 Oct 2026','Bills and divisions appear here the morning after each sitting day']) assert.ok(page.html.includes(fact),fact);
-  assert.doesNotMatch(page.html,/loading|opening|placeholder|<h2>Bills introduced|<h2>Divisions held|<ul class="hub-records">/i);
+  assert.doesNotMatch(page.html,/loading|opening|<h2>Bills introduced|<h2>Divisions held|<ul class="hub-records">/i);
+  assert.match(page.html,/data-vote-table/);
+  assert.match(page.html,/Showing 0–0 of 0/);
+  assert.match(page.html,/data-export disabled/);
   assert.equal(week.lastmod,calendar.updated);
 });
 test('bill rows have one introduction meta line, portfolio fallback and no missing-summary placeholder',()=>{

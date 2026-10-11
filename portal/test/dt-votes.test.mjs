@@ -5,12 +5,15 @@ const index = await tablePrivacyIndex();
 import {readFileSync} from 'node:fs';
 import {divisionColumns, voteColumns, divisionRows, votingRows, divisionTableConfig, voteTableConfig, voteTableHTML, voteTablePage} from '../public/vote-tables.js';
 import {toCSV} from '../public/datatable.js';
+import {build} from 'esbuild';
+const bundled=await build({entryPoints:[new URL('../src/hubs.ts',import.meta.url).pathname],bundle:true,write:false,platform:'node',format:'esm'});
+const {renderSittingWeek}=await import('data:text/javascript;base64,'+Buffer.from(bundled.outputFiles[0].text).toString('base64'));
 
 test('division and voting configs use scoped server sources and the frozen columns', () => {
   const divisions = divisionTableConfig({bill:'au-federal-fixture'});
   const votes = voteTableConfig('fixture-member');
-  assert.deepEqual(divisions.source, {endpoint:'/api/table/divisions', params:{bill:'au-federal-fixture'}});
-  assert.deepEqual(votes.source, {endpoint:'/api/table/votes', params:{person:'fixture-member'}});
+  assert.deepEqual(divisions.source, {endpoint:'/api/table/divisions', params:{'f.bill':'["au-federal-fixture"]'}});
+  assert.deepEqual(votes.source, {endpoint:'/api/table/votes', params:{'f.person':'["fixture-member"]'}});
   assert.deepEqual(divisionColumns.map(c=>[c.key,c.type]), [['title','text'],['date','date'],['chamber','category'],['outcome','category'],['ayes','count'],['noes','count']]);
   assert.deepEqual(voteColumns.map(c=>c.key), ['title','date','vote','party_position']);
   for (const config of [divisions,votes]) {
@@ -38,6 +41,8 @@ test('both rollouts register the shared index for rows, secondary facets, CSV an
       assert.ok(index.safe(toCSV(rows,config)),'CSV must exclude withheld rows');
       const rejected = voteTablePage(rows,config,{q:value});
       assert.equal(rejected.total,0,'Rejected searches must return no rows');
+      const rejectedFacet = voteTablePage(rows,config,{filters:{[facet]:[value]}});
+      assert.equal(rejectedFacet.total,0,'Rejected facets must return no rows');
       assert.ok(index.safe(voteTableHTML(config,rejected)),'SSR must not reflect rejected query text');
       const supplied = {...page,facets:{[facet]:[{value,count:1}]}};
       assert.ok(index.safe(voteTableHTML(config,supplied)),'Secondary server facets must be checked independently');
@@ -58,6 +63,30 @@ test('division bars use the core column range across server pages', () => {
     assert.match(html,/class="dt-scale">0–64/);
     assert.match(html,/class="dt-scale">0–128/);
     assert.ok(html.includes(`--dt-bar:${Math.round(page.rows[0].ayes/64*100)}%`));
+  }
+});
+
+test('the shared recipient policy rejects every derived name, alias and registration identifier', () => {
+  assert.ok(index.recipients.length>=151,'recipient aliases covered');
+  assert.ok(index.abns.length>=21,'recipient registration identifiers covered');
+  for (const value of [...index.recipients,...index.abns]) {
+    assert.equal(index.safe(value),false,'recipient identity is private');
+    assert.equal(index.safe(encodeURIComponent(value)),false,'encoded identity is private');
+    if (/^\d{11}$/.test(value)) assert.equal(index.safe('ABN '+value.split('').join(' ')),false,'spaced identifiers are private');
+  }
+});
+
+test('sitting structured data uses the same filtered and paged division rows as SSR', () => {
+  const publicDivision={key:'fixture-public',slug:'fixture-public',title:'Recorded division',date:'2026-09-14',house:'senate',ayes:1,noes:0};
+  const week={start:'2026-09-14',end:'2026-09-17',houses:['senate'],bills:[],divisions:[],lastmod:'2026-09-17'};
+  const data={updated:'2026-09-17',snapshotDate:'2026-09-17',latestFederalDivision:'2026-09-17',sources:[{label:'Register',url:'https://www.aph.gov.au/'}],weeks:[week],pages:[]};
+  for (const value of index.values) {
+    const result=renderSittingWeek(data,{...week,divisions:[publicDivision,{...publicDivision,key:'fixture-private',slug:'fixture-private',title:value}]},[],new Map(),'2026-10-01',{}, {},index.safe);
+    assert.ok(index.safe(result.html),'SSR contains no withheld identity');
+    assert.ok(index.safe(JSON.stringify(result.jsonLd)),'structured data contains no withheld identity');
+    const list=result.jsonLd['@graph'][1];
+    assert.equal(list.numberOfItems,1,'structured data and visible rows agree');
+    assert.equal(list.itemListElement[0].url,'https://opax.com.au/doc/division-fixture-public');
   }
 });
 

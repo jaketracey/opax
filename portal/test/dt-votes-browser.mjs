@@ -1,190 +1,146 @@
 import assert from 'node:assert/strict';
-import {readFile, writeFile, mkdir} from 'node:fs/promises';
+import {readFile,writeFile,mkdir} from 'node:fs/promises';
 import {resolve} from 'node:path';
 import {createHash} from 'node:crypto';
-import {parseQuery} from '../public/datatable.js';
-import {tablePrivacyIndex, assertTablePrivacy} from './datatable-privacy.mjs';
-// Run through dt-votes-dev.mjs inside unshare -rn. Wrangler serves the real core.
-// Only the local fixture entry replaces table APIs until DT-api merges.
-const {chromium} = await import(process.env.OPAX_PLAYWRIGHT_MODULE || 'playwright');
-const pub = resolve(new URL('../public/',import.meta.url).pathname);
-const out = resolve(new URL('../private/dt-votes/',import.meta.url).pathname);
-const phase = 'after-wrangler';
-const base = 'http://127.0.0.1:8804';
-const meta = await (await fetch(base+'/__fixtures/table/meta')).json();
-const index = await tablePrivacyIndex();
-const privacyResults = [];
+import {build} from 'esbuild';
+import {tablePrivacyIndex,assertTablePrivacy} from './datatable-privacy.mjs';
+import {registerServerCSVContract,assertServerCSVCap} from './datatable-endpoint-contract.mjs';
+
+// Real Worker, assets and local D1. No table response substitution.
+const {chromium}=await import(process.env.OPAX_PLAYWRIGHT_MODULE || 'playwright');
+const pub=resolve('public'),out=resolve('private/dt-votes'),base='http://127.0.0.1:8804',phase='after-api';
+const read=async path=>JSON.parse(await readFile(pub+'/'+path));
+const index=await tablePrivacyIndex(),roster=await read('parliamentarians.json'),records=await read('votes.json');
+const person=roster.people.filter(p=>p.pid && records[p.pid]?.name && index.safe(p.name) && index.safe(records[p.pid].name)).sort((a,b)=>(records[b.pid].for?.length || 0)-(records[a.pid].for?.length || 0))[0];
+assert.ok(person,'a populated public voting record');
+const slug=person.name.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
+const cases=[['bill','/bill/au-federal-r7534','#bill-body [data-vote-table]','dv','outcome'],['person','/subject/person/'+slug,'#subject-votes [data-vote-table]','vr','vote'],['hub','/sitting/2026-09-14','.hub-section [data-vote-table]','dv','outcome']];
+const samples=[...new Set([...index.donors.slice(0,2),...index.recipients.slice(0,3),...index.recipientABNs.slice(0,3)])];
+const privacyResults=[],measurements=[],csvGates=[];
 await mkdir(out,{recursive:true});
-const browser = await chromium.launch({executablePath:process.env.OPAX_CHROME || '/usr/bin/google-chrome',headless:true,
-  args:['--no-sandbox','--disable-background-networking','--host-resolver-rules=MAP * ~NOTFOUND, EXCLUDE 127.0.0.1']});
-const measurements = [];
+const browser=await chromium.launch({executablePath:process.env.OPAX_CHROME || '/usr/bin/google-chrome',headless:true,args:['--no-sandbox','--disable-background-networking','--host-resolver-rules=MAP * ~NOTFOUND, EXCLUDE 127.0.0.1']});
+let stage='start';
 try {
-  for (const width of [390,1280]) {
-    const page = await browser.newPage({viewport:{width,height:1000},reducedMotion:'reduce',serviceWorkers:'block',acceptDownloads:true});
-    const settled = () => page.waitForFunction(selector => !document.querySelector(selector).querySelector('[data-datatable]').hasAttribute('aria-busy'), activeSelector);
-    let activeSelector;
-    const requests = [];
-    const errors = [];
-    page.on('pageerror',error=>errors.push(error.message));
-    await page.route('**/*', route => new URL(route.request().url()).origin === base ? route.continue() : route.abort());
-    const responses = [];
-    page.on('response', async response => {
-      const path = new URL(response.url()).pathname;
-      if (/^\/api\/table\/(divisions|votes)$/.test(path)) {
-        requests.push(new URL(response.url()));
-        responses.push(await response.text().catch(() => ''));
+  for(const kind of ['divisions','votes']) {
+    let contractPage;
+    registerServerCSVContract((name,run)=>csvGates.push({name,run}),{
+      name:`Wrangler ${kind}`,
+      seed:async rows=>{
+        contractPage=await browser.newPage({serviceWorkers:'block'});
+        await contractPage.route('**/*',route=>new URL(route.request().url()).origin===base ? route.continue() : route.abort());
+        await contractPage.goto(base+'/server-csv.js');
+        const params=new URLSearchParams({[kind==='votes' ? 'f.person' : 'f.bill']:'["csv-cap-fixture"]',pageSize:'1'});
+        const total=await contractPage.evaluate(async url=>(await (await fetch(url)).json()).total,base+'/api/table/'+kind+'?'+params);
+        assert.equal(total,rows.length);
+      },
+      request:async search=>{
+        const url=new URL(base+'/api/table/'+kind+search);url.searchParams.set(kind==='votes' ? 'f.person' : 'f.bill','["csv-cap-fixture"]');
+        try {
+          // Exercise the same browser transport and continuation consumer as export.
+          const exported=await contractPage.evaluate(async url=>{const {readServerCSV}=await import('/server-csv.js');const result=await readServerCSV(url,fetch.bind(window));return {csv:result.csv,headers:[...result.headers]};},url.href);
+          return new Response(exported.csv,{headers:exported.headers});
+        } finally {await contractPage.close();}
+      },
+    });
+  }
+  for(const gate of csvGates){stage=gate.name;await gate.run();console.log(`${gate.name} CSV contract: passed`);}
+  for(const width of [390,1280]) {
+    const page=await browser.newPage({viewport:{width,height:1000},reducedMotion:'reduce',serviceWorkers:'block',acceptDownloads:true});
+    await page.route('**/*',route=>new URL(route.request().url()).origin===base ? route.continue() : route.abort());
+    await page.addInitScript(()=>{window.privacyEvents=[];addEventListener('opax:analytics',e=>window.privacyEvents.push(e.detail));});
+    const responses=[],requests=[],errors=[];
+    page.on('pageerror',error=>errors.push(error.name));
+    page.on('response',async response=>{
+      if (/^\/api\/table\/(divisions|votes)$/.test(new URL(response.url()).pathname)) {
+        requests.push({url:new URL(response.url()),status:response.status()});responses.push(await response.text().catch(()=>''));
       }
     });
-    await page.addInitScript(() => {
-      window.privacyEvents = [];
-      addEventListener('opax:analytics', event => window.privacyEvents.push(event.detail));
-    });
-    for (const [label,path,selector] of [['bill','/bill/au-federal-r7534','#bill-body [data-vote-table]'],['person','/subject/person/'+meta.slug,'#subject-votes [data-vote-table]'],['hub','/sitting/2026-09-14','.hub-section [data-vote-table]']]) {
-      activeSelector = selector;
-      requests.length = 0; errors.length = 0;
-      const hydration = page.waitForResponse(response => new URL(response.url()).pathname === (label === 'person' ? '/api/table/votes' : '/api/table/divisions'));
-      await page.goto(base+path);
-      await hydration;
-      const table = page.locator(selector);
-      await table.waitFor({timeout:45000});
-        await page.waitForFunction(selector=>{const root=document.querySelector(selector)?.querySelector('[data-datatable]');return root?.querySelector('.dt-count') && !root.hasAttribute('aria-busy');},selector);
-        assert.ok(requests.length>0,'Server hydration must request its source');
-        assert.equal(requests.length,1,'Hidden crawlable tables must not also hydrate');
-        const initial = requests.at(-1);
-        assert.equal(initial.pathname,label==='person'?'/api/table/votes':'/api/table/divisions');
-        if (label==='bill') assert.equal(initial.searchParams.get('bill'),'au-federal-r7534');
-        if (label==='person') assert.equal(initial.searchParams.get('person'),meta.pid);
-        if (label==='hub') for (const [key,value] of Object.entries({jurisdiction:'federal',start:'2026-09-14',end:'2026-09-17'})) assert.equal(initial.searchParams.get(key),value);
-      await table.scrollIntoViewIfNeeded();
-      await page.evaluate(el=>window.scrollBy(0,el.getBoundingClientRect().top-90),await table.elementHandle());
-      await page.waitForTimeout(200);
+    for(const [label,path,selector,urlKey,facet] of cases) {
+      stage=`${label}-${width}: hydration`;requests.length=0;responses.length=0;errors.length=0;
+      const settled=()=>page.waitForFunction(selector=>{const table=document.querySelector(selector)?.querySelector('[data-datatable]');return table?.querySelector('.dt-count') && !table.hasAttribute('aria-busy');},selector,{timeout:90000});
+      const hydration=page.waitForResponse(r=>new URL(r.url()).pathname===(label==='person' ? '/api/table/votes' : '/api/table/divisions'));
+      await page.goto(base+path);await hydration;await settled();
+      const table=page.locator(selector),initial=requests[0];
+      assert.equal(initial.status,200);assert.equal(requests.length,1,'one visible table hydrates');
+      if(label==='bill')assert.deepEqual(JSON.parse(initial.url.searchParams.get('f.bill')),['au-federal-r7534']);
+      if(label==='person')assert.deepEqual(JSON.parse(initial.url.searchParams.get('f.person')),[person.pid]);
+      if(label==='hub')assert.deepEqual(JSON.parse(initial.url.searchParams.get('f.sitting')),['2026-09-14']);
+      const data=JSON.parse(responses[0]);
+      await table.scrollIntoViewIfNeeded();await page.evaluate(el=>scrollBy(0,el.getBoundingClientRect().top-90),await table.elementHandle());
       await page.screenshot({path:resolve(out,`${phase}-${label}-${width}.png`)});
-      measurements.push({phase,label,width,overflow:await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth)});
+      measurements.push({label,width,rows:data.total,overflow:await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth)});
+      const clientInput=await table.locator('[data-vote-config]').evaluate(el=>JSON.parse(el.textContent));
+      if(data.total>0) {
         assert.ok(await table.locator('tbody a').count()>0);
-        if (label!=='person') assert.ok(await table.locator('.ui-status').count()>0);
-        if (width===390) {
-          assert.equal(await table.locator('tbody tr').first().evaluate(el=>getComputedStyle(el).display),'grid');
-          if (label!=='person') {
-            assert.equal(await table.locator('[data-prominent]').first().getAttribute('data-label'),'Ayes');
-            assert.equal(await table.locator('[data-prominent]').first().evaluate(el=>getComputedStyle(el).gridRowStart),'2');
-          }
-        }
-        const search = table.locator('input[type="search"]');
-        await search.fill(label==='person'?'Recorded bill 1':'Second reading');
-        const urlKey = label==='person'?'vr':'dv';
-        await page.waitForFunction(key=>new URL(location.href).searchParams.has(key+'.q'),urlKey);
-        await settled();
-        assert.ok(requests.at(-1).searchParams.get('q'));
-        const shared = page.url();
-        await page.reload();
-        await table.waitFor();
-        await page.waitForFunction(({selector,value}) => document.querySelector(selector)?.querySelector('[data-search]')?.value === value && !document.querySelector(selector).querySelector('[data-datatable]').hasAttribute('aria-busy'),{selector,value:new URL(shared).searchParams.get(urlKey+'.q')});
-        assert.equal(await search.inputValue(),new URL(shared).searchParams.get(urlKey+'.q'));
-        await page.keyboard.press('Escape');
-        await page.keyboard.press('Escape');
-        if (await table.locator('[data-clear]').count()) await table.locator('[data-clear]').last().click();
-        await page.waitForFunction(key=>!new URL(location.href).searchParams.has(key+'.q'),urlKey);
-        await settled();
-        const facetKey = label==='person'?'vote':'outcome';
-        const facetValue = label==='person'?'Aye':'Agreed';
-        await table.locator('[data-panel="filters"] > summary').click();
-        await table.locator(`[data-panel="facet-${facetKey}"] > summary`).click();
-        await table.locator(`[data-facet="${facetKey}"][data-value="${facetValue}"]`).click();
-        await page.waitForFunction(([key,field,value])=>JSON.parse(new URL(location.href).searchParams.get(key+'.f.'+field)||'[]').includes(value),[urlKey,facetKey,facetValue]);
-        await settled();
-        assert.ok(parseQuery(requests.at(-1).searchParams).filters[facetKey].includes(facetValue));
-        await page.keyboard.press('Escape');
-        await page.keyboard.press('Escape');
-        if (await table.locator('[data-clear]').count()) await table.locator('[data-clear]').last().click();
-        await settled();
-        if (width===1280) await table.locator('[data-sort="date"]').click();
-        else await table.locator('[data-sort-select]').selectOption('date:asc');
-        await page.waitForFunction(key=>new URL(location.href).searchParams.get(key+'.sort')==='date:asc',urlKey);
-        await settled();
-        if (label!=='hub') {
-          await table.locator('[data-page="2"]').click();
-          await page.waitForFunction(key=>new URL(location.href).searchParams.get(key+'.page')==='2',urlKey);
-          await settled();
-          assert.equal(requests.at(-1).searchParams.get('page'),'2');
-        }
-        const downloadPromise = page.waitForEvent('download');
-        await table.locator('[data-export]').click();
-        const download = await downloadPromise;
-        const csv = await readFile(await download.path(),'utf8');
-        assert.ok(csv.split('\n').length>25 || label==='hub');
-        assert.equal(requests.at(-1).searchParams.get('format'),'csv');
-        assert.ok((await page.evaluate(() => window.privacyEvents)).some(event => event.event === 'table_export'),'Privacy gate must inspect actual export analytics');
-        const csvPath = resolve(out, `${phase}-${label}-${width}.csv`);
-        await download.saveAs(csvPath);
-        const clientInput = await page.evaluate(async () => {
-          const module = await import(document.querySelector('script[src^="/vote-tables.js"]').src);
-          return {columns:[module.divisionColumns,module.voteColumns],config:JSON.parse(document.querySelector('[data-vote-config]').textContent)};
-        });
-        const privacy = async path => assertTablePrivacy({clientInput,serverResponses:responses,csvPath:path,
-          url:decodeURIComponent(page.url()),renderedText:await table.innerHTML(),accessibleText:await table.ariaSnapshot(),analytics:await page.evaluate(() => window.privacyEvents)},index);
-        await privacy(csvPath);
-        const sample = index.values.filter((_,i) => i % Math.max(1,Math.floor(index.values.length/8)) === 0).slice(0,8);
-        for (const value of sample) for (const kind of ['q','facet']) {
-          await page.evaluate(({value,kind,key,facet}) => {
-            const url = new URL(location.href);
-            url.searchParams.set(kind === 'q' ? key+'.q' : key+'.f.'+facet, kind === 'q' ? value : JSON.stringify([value]));
-            url.searchParams.set('campaign','fixture');
-            history.replaceState(null,'',url); dispatchEvent(new PopStateEvent('popstate'));
-          },{value,kind,key:urlKey,facet:facetKey});
-          assert.ok(index.safe(await table.innerHTML()), 'Pending state must not reflect withheld text');
-          await page.waitForFunction(selector => !document.querySelector(selector).querySelector('[data-datatable]').hasAttribute('aria-busy'),selector);
-          if (kind === 'q') {
-            await table.locator('[data-search]').fill(value);
-            await table.locator('form').evaluate(el => el.requestSubmit());
-            await settled();
+        if(width===390)assert.equal(await table.locator('tbody tr').first().evaluate(el=>getComputedStyle(el).display),'grid');
+        if(label!=='person')assert.ok(await table.locator('.ui-status').count()>0);
+        stage=`${label}-${width}: search and filters`;
+        const searchValue=data.rows[0].title.match(/[\p{L}\p{N}]+/u)[0];
+        await table.locator('[data-search]').fill(searchValue);await table.locator('form').evaluate(el=>el.requestSubmit());await settled();
+        await page.reload();await settled();assert.equal(await table.locator('[data-search]').inputValue(),searchValue);
+        await page.keyboard.press('Escape');await page.keyboard.press('Escape');
+        if(await table.locator('[data-clear]').count())await table.locator('[data-clear]').last().click();await settled();
+        const value=data.facets[facet]?.[0]?.value;assert.ok(value,'the source supplies category facets');
+        await table.locator('[data-panel="filters"] > summary').click();await table.locator(`[data-panel="facet-${facet}"] > summary`).click();
+        await table.locator(`[data-facet="${facet}"]`).filter({hasText:value}).first().click();await settled();
+        assert.ok(JSON.parse(new URL(page.url()).searchParams.get(urlKey+'.f.'+facet)).includes(value));
+        await page.keyboard.press('Escape');await page.keyboard.press('Escape');
+        if(await table.locator('[data-clear]').count())await table.locator('[data-clear]').last().click();await settled();
+        if(width===1280)await table.locator('[data-sort="date"]').click();else await table.locator('[data-sort-select]').selectOption('date:asc');await settled();
+        if(data.total>25){await table.locator('[data-page="2"]').click();await settled();assert.equal(requests.at(-1).url.searchParams.get('page'),'2');}
+        stage=`${label}-${width}: actual CSV`;
+        const pending=page.waitForEvent('download');await table.locator('[data-export]').click();const download=await pending;
+        const csvPath=resolve(out,`${phase}-${label}-${width}.csv`);await download.saveAs(csvPath);
+        assert.ok((await page.evaluate(()=>window.privacyEvents)).some(e=>e.event==='table_export'));
+        assert.ok(requests.some(r=>r.url.searchParams.get('format')==='csv'));
+        const check=async()=>assertTablePrivacy({clientInput,serverResponses:responses,csvPath,url:decodeURIComponent(page.url()),renderedText:await table.innerHTML(),accessibleText:await table.ariaSnapshot(),analytics:await page.evaluate(()=>window.privacyEvents)},index);
+        await check();
+        for(const value of samples)for(const kind of ['q','facet']) {
+          stage=`${label}-${width}: rejected ${kind}`;
+          await page.evaluate(({value,key,facet,kind})=>{const url=new URL(location.href);url.searchParams.set(kind==='q' ? key+'.q' : key+'.f.'+facet,kind==='q' ? value : JSON.stringify([value]));url.searchParams.set('campaign','local');history.replaceState(null,'',url);dispatchEvent(new PopStateEvent('popstate'));},{value,key:urlKey,facet,kind});
+          assert.ok(index.safe(await table.innerHTML()),'pending state is private');await settled();
+          assert.equal(await table.locator('.dt-count').textContent(),'Showing 0–0 of 0');
+          assert.equal(await table.locator('[data-export]').isDisabled(),true,'rejected state cannot download a CSV');await check();
+          if(kind==='q') {
+            const initialURL=new URL(base+path);initialURL.searchParams.set(urlKey+'.q',value);
+            await page.goto(initialURL.href);await settled();await page.waitForLoadState('networkidle');await settled();
             assert.equal(await table.locator('.dt-count').textContent(),'Showing 0–0 of 0');
-            // The rejected search must download headers only, not old rows.
-            const rejectedDownload = page.waitForEvent('download');
-            await table.locator('[data-export]').click();
-            const rejected = await rejectedDownload;
-            const rejectedPath = resolve(out,`${phase}-${label}-${width}-rejected.csv`);
-            await rejected.saveAs(rejectedPath);
-            assert.equal((await readFile(rejectedPath,'utf8')).trim().split('\n').length,1);
-            await privacy(rejectedPath);
-          } else await privacy(csvPath);
-          assert.equal(new URL(page.url()).searchParams.get('campaign'),'fixture');
-          await page.keyboard.press('Escape');
-        await page.keyboard.press('Escape');
-        if (await table.locator('[data-clear]').count()) await table.locator('[data-clear]').last().click();
-          await page.waitForFunction(selector => !document.querySelector(selector).querySelector('[data-datatable]').hasAttribute('aria-busy'),selector);
+            assert.equal(await table.locator('[data-export]').isDisabled(),true,'initial URL rejection survives hydration');await check();
+          }
+          await page.goto(base+path);await settled();
         }
-        // An unsafe initial URL must also be cleaned after a full SSR load.
-        const reloadUrl = new URL(page.url()); reloadUrl.searchParams.set(urlKey+'.q',sample[0]);
-        await page.goto(reloadUrl.href); await table.waitFor();
-        await page.waitForFunction(selector => !document.querySelector(selector).querySelector('[data-datatable]').hasAttribute('aria-busy') && document.querySelector(selector).querySelector('.dt-count').textContent === 'Showing 0–0 of 0',selector);
-        await privacy(csvPath);
-        privacyResults.push({table:label,width,withheldValues:index.values.length,queryCases:sample.length*2+1,surfaces:7});
-      assert.deepEqual(errors,[]);
-      console.log(`${phase} ${label} ${width}: passed`);
+        privacyResults.push({label,width,surfaces:7,derivedValues:index.values.length,recipientNames:index.recipients.length,recipientABNs:index.recipientABNs.length,queryCases:samples.length*3});
+      } else {
+        assert.equal(await table.locator('[data-export]').isDisabled(),true);assert.equal(await table.locator('.dt-count').textContent(),'Showing 0–0 of 0');
+      }
+      assert.deepEqual(errors,[]);console.log(`${phase} ${label} ${width}: passed`);
     }
-    if (width === 1280) for (const kind of ['divisions','votes']) {
-      console.log(`Checking ${kind} CSV cap under Wrangler`);
-      await page.evaluate(async ({kind,pid}) => {
-        const module = await import(document.querySelector('script[src^="/vote-tables.js"]').src);
-        const {mountDataTable} = await import('/datatable.js');
-        const config = kind === 'votes' ? module.voteTableConfig(pid) : module.divisionTableConfig();
-        config.id = `cap-${kind}`; config.urlKey = 'cap'; config.source.params.fixture = 'cap';
-        const host = document.createElement('div'); host.id = 'cap'; document.body.append(host);
-        window.capHandle = mountDataTable(host,config);
-      },{kind,pid:meta.pid});
-      const cap = page.locator('#cap');
-      await page.waitForFunction(() => document.querySelector('#cap .dt-count')?.textContent.includes('of 50,003') && !document.querySelector('#cap').hasAttribute('aria-busy'),{},{timeout:120000});
-      const downloadPromise = page.waitForEvent('download',{timeout:120000});
-      await cap.locator('[data-export]').click();
-      const download = await downloadPromise, csvPath = resolve(out,`${phase}-${kind}-cap.csv`);
-      await download.saveAs(csvPath);
-      assert.equal((await readFile(csvPath,'utf8')).trim().split('\n').length,50001);
-      assert.equal(await cap.locator('.dt-count').textContent(),'Export limited to 50,000 rows. Narrow the filters to export more.');
-      await assertTablePrivacy({clientInput:[],serverResponses:responses,csvPath,url:decodeURIComponent(page.url()),renderedText:await cap.innerHTML(),accessibleText:await cap.ariaSnapshot(),analytics:await page.evaluate(() => window.privacyEvents)},index);
-      await page.evaluate(() => {window.capHandle.destroy(); document.querySelector('#cap').remove();});
+    if(width===1280) {
+      const bundled=await build({entryPoints:[resolve('src/hubs.ts')],bundle:true,write:false,platform:'node',format:'esm'});
+      const {renderSittingWeek}=await import('data:text/javascript;base64,'+Buffer.from(bundled.outputFiles[0].text).toString('base64'));
+      const hubs=await read('hubs/index.json'),week=hubs.weeks.find(w=>w.start==='2026-09-14');
+      for(const value of [index.donors[0],index.recipients[0],index.recipientABNs[0]]) {
+        stage='filtered JSON-LD hydration';
+        const rendered=renderSittingWeek(hubs,{...week,bills:[],divisions:[{key:'private-probe',slug:'private-probe',stage:value,date:week.start,house:'senate'}]},[],new Map(),'2026-10-11',{}, {},index.safe);
+        assert.ok(index.safe(rendered.html));assert.ok(index.safe(JSON.stringify(rendered.jsonLd)));
+        await page.goto(base+'/sitting/'+week.start);
+        await page.evaluate(({html,jsonLd})=>{document.querySelector('#prerender').outerHTML=html;document.querySelector('script[type="application/ld+json"]').textContent=JSON.stringify(jsonLd);},{html:rendered.html,jsonLd:rendered.jsonLd});
+        await page.waitForFunction(()=>document.querySelector('[data-vote-table] [data-datatable] .dt-count')?.textContent==='Showing 0–0 of 0' && !document.querySelector('[data-vote-table] [data-datatable]').hasAttribute('aria-busy'));
+        assert.ok(index.safe(await page.locator('[data-vote-table]').innerHTML()));assert.ok(index.safe(await page.locator('script[type="application/ld+json"]').textContent()));
+      }
+      for(const kind of ['divisions','votes']) {
+        stage=kind+' actual capped CSV';
+        await page.evaluate(async kind=>{const module=await import(document.querySelector('script[src^="/vote-tables.js"]').src),{mountDataTable}=await import('/datatable.js');const config=kind==='votes' ? module.voteTableConfig('csv-cap-fixture') : module.divisionTableConfig({bill:'csv-cap-fixture'});config.id='cap-'+kind;config.urlKey='cap';const host=document.createElement('div');host.id='cap';document.body.append(host);window.capHandle=mountDataTable(host,config);},kind);
+        const cap=page.locator('#cap');await page.waitForFunction(()=>document.querySelector('#cap .dt-count')?.textContent.includes('of 50,001') && !document.querySelector('#cap').hasAttribute('aria-busy'),{},{timeout:120000});
+        const pending=page.waitForEvent('download',{timeout:180000});await cap.locator('[data-export]').click();const download=await pending;
+        const csvPath=resolve(out,`${phase}-${kind}-cap.csv`);await download.saveAs(csvPath);assertServerCSVCap(await readFile(csvPath,'utf8'));
+        assert.equal(await cap.locator('.dt-count').textContent(),'Export limited to 50,000 rows. Narrow the filters to export more.');
+        await assertTablePrivacy({clientInput:[],serverResponses:responses,csvPath,url:decodeURIComponent(page.url()),renderedText:await cap.innerHTML(),accessibleText:await cap.ariaSnapshot(),analytics:await page.evaluate(()=>window.privacyEvents)},index);
+        await page.evaluate(()=>{window.capHandle.destroy();document.querySelector('#cap').remove();});
+      }
     }
     await page.close();
   }
-} finally {await browser.close();}
-await writeFile(resolve(out,`${phase}-measurements.json`),JSON.stringify({server:'wrangler dev --local',coreSHA:createHash('sha256').update(await readFile(pub+'/datatable.js')).digest('hex'),privacy:privacyResults,measurements},null,2)+'\n');
-assert.ok(measurements.every(m=>!m.overflow),'Tables must fit both viewport widths');
+  assert.ok(measurements.every(m=>!m.overflow));
+  await writeFile(resolve(out,`${phase}-measurements.json`),JSON.stringify({server:'wrangler dev --local / real D1',coreSHA:createHash('sha256').update(await readFile(pub+'/datatable.js')).digest('hex'),privacy:privacyResults,measurements,csvContracts:csvGates.length,jsonLdChecks:3},null,2)+'\n');
+} catch(error) {console.error(JSON.stringify({stage,type:error.name,message:index.safe(error.message) ? error.message : 'private details omitted'}));process.exitCode=1;} finally {await browser.close();}

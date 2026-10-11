@@ -127,7 +127,7 @@ async function refreshFonts() {
  *  agencies.js and suppliers.js import each other: stamp the agencies → suppliers
  *  edge only, then app.js. Keep the reverse edge hand-versioned to avoid a hash cycle. */
 export const MODULE_STAMPS = [
-  ['datatable.js', 'donor-entity.js'],
+  ['datatable.js', 'donor-entity.js'], ['datatable.js', 'server-csv.js'],
   ['datatable-workbench.js', 'datatable.js'],
   ['vote-tables.js', 'labels.js'], ['vote-tables.js', 'division-markdown.js'], ['vote-tables.js', 'datatable.js'],
   ['growth-modules.js', 'donor-entity.js'], ['growth-modules.js', 'labels.js'], ['growth-modules.js', 'sponsor-person.js'],

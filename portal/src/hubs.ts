@@ -11,7 +11,7 @@ interface Bill {
   key: string; title: string; introduced: string; originating_house: string; sponsor?: string; sponsor_person_id?: string; portfolio?: string;
   summary?: { sentences?: string[]; generated_at?: string; as_of?: string }; sources?: {kind: string; url: string}[];
 }
-interface Division { key: string; slug: string; title?: string; name?: string; question?: string; date: string; house: string; result?: string; ayes?: number; noes?: number; source_url?: string }
+interface Division { key: string; slug: string; title?: string; name?: string; stage?:string; question?: string; date: string; house: string; result?: string; ayes?: number; noes?: number; source_url?: string }
 interface Week { start: string; end: string; houses: string[]; senate_cutoff?: string; estimates?: string; bills: Bill[]; divisions: Division[]; lastmod: string }
 export interface HubIndex { updated: string; snapshotDate: string; latestFederalDivision: string; sources: { label: string; url: string }[]; weeks: Week[]; pages: {path: string; lastmod: string}[] }
 interface Window { start: string; end: string }
@@ -82,14 +82,16 @@ export function renderSittingWeek(data: HubIndex, week: Week, people: SponsorCan
       return `<li><h3>${link(href,b.title)}</h3><p class="hub-meta">Introduced ${date(b.introduced)} · ${esc(houseName(b.originating_house))} · ${sponsorText}</p>${summary}${sourceLineHTML({source:'ParlInfo bill record',originals:(b.sources || []).map(s => ({href:s.url,label:s.kind === 'billhome' ? 'Original bill record' : s.kind}))})}</li>`
     }).join('')+'</ul></section>'
   }
-  if (week.divisions.length) {
+  {
     const config = divisionTableConfig({jurisdiction:'federal', start:week.start, end:week.end}, 'Divisions held', 'sitting', privacyCheck)
-    const divisions = divisionRows(week.divisions)
-    for (const d of divisions) if (typeof d.href === 'string') rows.push({href:d.href,name:String(d.title)})
-    body += `<section class="hub-section">${voteTableHTML(config,voteTablePage(divisions,config,tableQuery))}${sourceLineHTML({updated:data.snapshotDate,dateLabel:'Published snapshot',source:'Exported division records',notes:['Only formal divisions leave a per-member record. Open a division for its question, party tallies, members and original source.']})}</section>`
-  } else if (today >= week.start) {
+    const divisions = divisionRows(week.divisions.filter(d=>privacyCheck(JSON.stringify([d.title,d.name,d.stage,d.question]))))
+    const page = voteTablePage(divisions,config,tableQuery)
+    for (const d of page.rows) if (typeof d.href === 'string') rows.push({href:d.href,name:String(d.title)})
+    body += `<section class="hub-section">${voteTableHTML(config,page)}${sourceLineHTML({updated:data.snapshotDate,dateLabel:'Published snapshot',source:'Exported division records',notes:['Only formal divisions leave a per-member record. Open a division for its question, party tallies, members and original source.']})}</section>`
+  }
+  if (!week.divisions.length && today >= week.start) {
     const coverage = data.latestFederalDivision ? `Federal divisions in OPAX's published record currently run to ${date(data.latestFederalDivision)}; divisions held after that date will appear here once the record is updated.` : 'Federal divisions are not available in this OPAX export; they will appear here once the record is updated.'
-    body += `<section class="hub-section"><h2>Divisions</h2><p>${esc(coverage)}</p>${sourceLineHTML({updated:data.snapshotDate,dateLabel:'Published snapshot',source:'Exported division records',originals:[{href:'https://theyvoteforyou.org.au/divisions',label:'They Vote For You divisions'}],notes:['Absence from this export does not establish that no divisions were held.']})}</section>`
+    body += `<section class="hub-section"><p>${esc(coverage)}</p>${sourceLineHTML({originals:[{href:'https://theyvoteforyou.org.au/divisions',label:'They Vote For You divisions'}],notes:['Absence from this export does not establish that no divisions were held.']})}</section>`
   }
   return {title,description,html:shell(body,footer),jsonLd:{'@graph':[event(path,title,week.start,week.end,data.sources[0].url),itemList(path,rows)]}}
 }

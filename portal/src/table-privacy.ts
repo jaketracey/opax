@@ -1,4 +1,4 @@
-import {MONEY_GRAPHS,withheldPhrases,namesWithheldPhrase} from '../public/donor-entity.js'
+import {loadTableIdentityIndex} from './table-identities.mjs'
 
 const indices = new WeakMap<Fetcher, Promise<(text: string) => boolean>>()
 const readers = new WeakMap<Function, Fetcher>()
@@ -16,17 +16,12 @@ export function tablePrivacyCheckFromRead(read: (path: string) => Promise<unknow
 export async function tablePrivacyCheck(assets: Fetcher): Promise<(text: string) => boolean> {
   let pending = indices.get(assets)
   if (!pending) {
-    pending = Promise.all(MONEY_GRAPHS.map(async path => {
+    pending = loadTableIdentityIndex(async path => {
       const response = await assets.fetch(new Request(`https://opax.com.au${path}`))
       if (!response.ok) throw new Error('Privacy index unavailable')
-      return response.json() as Promise<{nodes: {label: string; kind: string; aliases?: string[] | null}[]}>
-    })).then(graphs => {
-      const phrases = withheldPhrases(graphs, [])
-      return (text: string) => {
-        let decoded = text
-        try { decoded = decodeURIComponent(text) } catch {}
-        return !namesWithheldPhrase(phrases, `donor receipts ${text}`, `donor receipts ${decoded}`)
-      }
+      return response.json()
+    }).then(index => {
+      return (text: string) => !index.check(text)
     }).catch(() => {indices.delete(assets); return () => false})
     indices.set(assets, pending)
   }

@@ -1,3 +1,4 @@
+import {readServerCSV} from './server-csv.js?v=47fc2aba1d';
 // Shared, dependency-free table renderer and query engine. Safe to import in a Worker.
 import {isOrganisationDonor} from './donor-entity.js?v=2b8d45a50d';
 import {shortDate} from './format.js';
@@ -68,7 +69,8 @@ const allowedText = (config, value) => {
   if (config.privacy !== 'donors') return true;
   try { return config.privacyCheck?.(value) === true; } catch { return false; }
 };
-const blockedQuery = (config, query) => Boolean(query.q && !allowedText(config,query.q));
+const blockedQuery = (config, query) => [query.q,...Object.values(query.filters || {}).flatMap(value=>Array.isArray(value) ? value : [])]
+  .filter(Boolean).some(value=>!allowedText(config,value));
 function cleanQuery(query = {}, config, page) {
   const out = parseQuery(new URLSearchParams(serializeQuery(query)));
   if (!config) return out;
@@ -319,7 +321,7 @@ function render(config, page, query = {}, view = {}, error = '') {
   const count = `Showing ${decimal.format(start)}–${decimal.format(page.total ? start + page.rows.length - 1 : 0)} of ${decimal.format(page.total)}`;
   const data = JSON.stringify(page).replace(/</g,'\\u003c').replace(/&/g,'\\u0026');
   return `<section class="dt-root" data-datatable="${esc(config.id)}" data-density="${esc(view.density || config.density || 'comfortable')}" aria-label="${esc(config.caption)}">
-<div class="dt-toolbar"><form role="search"><label class="dt-sr" for="${esc(config.id)}-search">Search ${esc(config.caption)}</label><input id="${esc(config.id)}-search" type="search" data-search data-focus="search" placeholder="Search" value="${esc(query.q || '')}" autocomplete="off"></form><select class="dt-phone-sort" data-sort-select aria-label="Sort">${config.columns.filter(sortable).map(c => ['asc','desc'].map(dir => `<option value="${esc(c.key)}:${dir}"${sort?.key === c.key && sort.dir === dir ? ' selected' : ''}>${esc(c.label)} ${dir === 'asc' ? 'ascending' : 'descending'}</option>`).join('')).join('')}</select><details class="dt-panel dt-filters" data-panel="filters">${summary('Filters')}<div class="dt-tools">${controls.join('')}<details class="dt-panel" data-panel="columns">${summary('Columns')}<fieldset><legend class="dt-sr">Visible columns</legend>${config.columns.map(c => `<label class="dt-choice"><input type="checkbox" data-column="${esc(c.key)}"${columns.includes(c) ? ' checked' : ''}${columns.length === 1 && columns[0] === c ? ' disabled' : ''}>${esc(c.label)}</label>`).join('')}</fieldset></details>${button('Compact', `data-density-toggle aria-pressed="${(view.density || config.density) === 'compact'}"`)}</div></details>${config.export === false ? '' : button('Export CSV', 'data-export')}</div>
+<div class="dt-toolbar"><form role="search"><label class="dt-sr" for="${esc(config.id)}-search">Search ${esc(config.caption)}</label><input id="${esc(config.id)}-search" type="search" data-search data-focus="search" placeholder="Search" value="${esc(query.q || '')}" autocomplete="off"></form><select class="dt-phone-sort" data-sort-select aria-label="Sort">${config.columns.filter(sortable).map(c => ['asc','desc'].map(dir => `<option value="${esc(c.key)}:${dir}"${sort?.key === c.key && sort.dir === dir ? ' selected' : ''}>${esc(c.label)} ${dir === 'asc' ? 'ascending' : 'descending'}</option>`).join('')).join('')}</select><details class="dt-panel dt-filters" data-panel="filters">${summary('Filters')}<div class="dt-tools">${controls.join('')}<details class="dt-panel" data-panel="columns">${summary('Columns')}<fieldset><legend class="dt-sr">Visible columns</legend>${config.columns.map(c => `<label class="dt-choice"><input type="checkbox" data-column="${esc(c.key)}"${columns.includes(c) ? ' checked' : ''}${columns.length === 1 && columns[0] === c ? ' disabled' : ''}>${esc(c.label)}</label>`).join('')}</fieldset></details>${button('Compact', `data-density-toggle aria-pressed="${(view.density || config.density) === 'compact'}"`)}</div></details>${config.export === false ? '' : button('Export CSV', page.total===0 || view.rejected ? 'data-export disabled' : 'data-export')}</div>
 <div class="dt-chips" aria-label="Applied filters">${active.join('')}${query.q || Object.keys(query.filters || {}).length || redactedSearch || redactedFilters || view.rejected ? button('Clear all', 'data-clear') : ''}</div>
 <div class="dt-scroll"><table class="dt" id="${esc(config.id)}" role="table"><caption>${esc(config.caption)}</caption><thead role="rowgroup"><tr role="row">${columns.map(column => `<th role="columnheader" scope="col" data-align="${esc(column.align || (numeric(column) ? 'end' : 'start'))}"${sortable(column) ? ` aria-sort="${sort?.key === column.key ? sort.dir === 'asc' ? 'ascending' : 'descending' : 'none'}"` : ''}>${sortable(column) ? button(`${esc(column.label)} ${icon(sort?.key === column.key ? sort.dir : 'unsorted')}`, `data-sort="${esc(column.key)}"`) : esc(column.label)}${column.bar && maxima[column.key] ? `<small class="dt-scale">0–${esc(formatCell(maxima[column.key],column))}</small>` : ''}</th>`).join('')}${config.actions?.length ? '<th scope="col"><span class="dt-sr">Actions</span></th>' : ''}</tr></thead><tbody role="rowgroup">${error ? `<tr><td colspan="${columns.length + (config.actions?.length ? 1 : 0)}"><div class="dt-empty" role="alert">${esc(error)} ${button('Try again','data-retry')}</div></td></tr>` : body || `<tr><td colspan="${columns.length + (config.actions?.length ? 1 : 0)}"><div class="dt-empty">No results. Try another search or clear the filters.</div></td></tr>`}</tbody></table></div>
 <div class="dt-footer"><p class="dt-count" role="status" aria-live="polite" aria-atomic="true">${error ? 'Table unavailable' : count}</p><div class="dt-paging">${button('Previous', `data-page="${page.page - 1}"${page.page <= 1 || error ? ' disabled' : ''}`)}<span>Page ${page.page}</span>${button('Next', `data-page="${page.page + 1}"${page.page * page.pageSize >= page.total || error ? ' disabled' : ''}`)}<label class="dt-page-size" for="${esc(config.id)}-size">Rows per page <select id="${esc(config.id)}-size" data-page-size aria-label="Rows per page">${[...new Set([10,25,50,100,page.pageSize])].sort((a,b)=>a-b).map(size => `<option${size === page.pageSize ? ' selected' : ''}>${size}</option>`).join('')}</select></label></div></div>
@@ -511,7 +513,7 @@ export function mountDataTable(el, config) {
     query.page = 1; update('table_filter');
   }
   async function download() {
-    if (root.getAttribute('aria-busy') === 'true') return;
+    if (root.getAttribute('aria-busy') === 'true' || view.rejected || page.total===0) return;
     const requested=parseQuery(new URLSearchParams(serializeQuery(query)));
     const control = root.querySelector('[data-export]'); control.disabled = true;
     exportController?.abort(); exportController = new win.AbortController();
@@ -521,11 +523,8 @@ export function mountDataTable(el, config) {
       let csv, truncated=false;
       if (view.rejected || blockedQuery(config,requested)) csv=toCSV([],config);
       else if (config.source) {
-        const response = await win.fetch(endpoint(true,state),{signal:exportController.signal});
-        if (!response.ok) throw new Error('Export failed');
-        truncated=response.headers.get('x-table-export-truncated') === 'true';
-        csv = await response.text();
-
+        const result = await readServerCSV(endpoint(true,state),win.fetch.bind(win),exportController.signal);
+        csv=result.csv; truncated=result.truncated;
       } else csv = toCSV(filteredRows(config.rows || [],config,state),config);
       if (!await permit(csv)) throw new Error('Unsafe table export');
       if (destroyed) return;

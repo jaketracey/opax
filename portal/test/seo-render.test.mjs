@@ -58,9 +58,9 @@ test('recent-vote answers only use the separate OPAX export and omit an empty vo
   const rows=Array.from({length:10},(_,i)=>({title:`Recorded question ${i}`,date:'2026-09-01',vote:'aye',division_slug:`division-example-${i}`,source_url:`https://example.test/${i}`}));
   const assets={'/votes.json':{_names:{},'123':{name:p.name,recent:rows,for:[],against:[]}},'/seo/recent-votes.json':{_meta:{schema:1,source:'opax-parli-db',coverage:'recorded'},people:{'123':{name:p.name,recent:rows}}}};
   const readFixture=async path=>{if(path in assets)return assets[path];throw Error('Missing');};
-  assert.match((await renderPersonAnswer(p,readFixture,new Map())).html,/<caption>Recorded votes<\/caption>/);
+  assert.match((await renderPersonAnswer(p,readFixture,new Map(),undefined,undefined,{},tableIndex.safe)).html,/<caption>Recorded votes<\/caption>/);
   assets['/seo/recent-votes.json']._meta.source='manual-tvfy-sample';
-  const empty=(await renderPersonAnswer(p,readFixture,new Map())).html;
+  const empty=(await renderPersonAnswer(p,readFixture,new Map(),undefined,undefined,{},tableIndex.safe)).html;
   assert.doesNotMatch(empty,/Last 10 recorded votes|Latest exported bill votes|No per-member votes|Recorded question/);
 });
 test('raw bill includes summary attribution, stages, sponsor/portfolio, divisions and source links',async()=>{

@@ -8,8 +8,8 @@ import {agencyGrants,publishedSupplierIndex,publishedAgencySuppliers} from '../p
 import {isOrganisationDonor,MONEY_GRAPHS,withheldPhrases,namesWithheldPhrase} from '../portal/public/donor-entity.js';
 import {TOPIC_NAMES} from '../portal/src/topic-names.mjs';
 export const SUMMARY_BUDGET = 24_000;
-export async function buildGrowth(root=fileURLToPath(new URL('../portal/public',import.meta.url))) {
- const read=async p=>JSON.parse(await readFile(join(root,p),'utf8'));
+export async function buildGrowth(root=fileURLToPath(new URL('../portal/public',import.meta.url)), {read: sourceRead} = {}) {
+ const read=async p=>sourceRead ? sourceRead(p) : JSON.parse(await readFile(join(root,p),'utf8'));
  const output=join(root,'growth');
  await rm(output,{recursive:true,force:true});
  for(const dir of ['sponsors','agencies','privacy/person','privacy/bill'])await mkdir(join(output,dir),{recursive:true});
