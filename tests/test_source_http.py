@@ -111,6 +111,45 @@ def test_known_paused_hosts_and_service_never_send_requests():
     assert not wire.sent
 
 
+@pytest.mark.parametrize('status,fixture,headers', [
+    (200, 'challenge.html', b'Content-Type: text/html'),
+    (200, None, b'Content-Type: text/plain\r\ncf-mitigated: challenge'),
+    (403, '403.html', b'Content-Type: text/html'),
+])
+def test_frl_curl_refusal_records_pause_before_replacing_data(status, fixture, headers, monkeypatch, tmp_path, capsys):
+    from parli.ingest import frl_instruments as frl
+    body = (FIX / fixture).read_bytes() if fixture else b'challenge'
+    wire = b'HTTP/1.1 100 Continue\r\n\r\n' + f'HTTP/1.1 {status}\r\n'.encode() + headers + b'\r\n\r\n' + body + f'\n{status}'.encode()
+    reply = subprocess.CompletedProcess([], 0, wire, b'')
+    published = tmp_path / 'published.json'
+    published.write_bytes(b'{"existing":"last good"}')
+    monkeypatch.setenv('OPAX_SOURCE_NAME', 'frl')
+    client = frl.PoliteSession(now=lambda: datetime(2026, 10, 9, 11, tzinfo=timezone.utc), clock=lambda: 0, sleep=lambda _: None)
+    with mock.patch.object(frl.subprocess, 'run', return_value=reply) as transport:
+        with pytest.raises(http.SourceRefused) as exc:
+            published.write_bytes(client.get(frl.API))
+    assert exc.value.code == 4
+    assert transport.call_count == client.requests == 1
+    assert published.read_bytes() == b'{"existing":"last good"}'
+    receipt = json.loads((tmp_path / 'access.json').read_text())['frl']
+    assert receipt['status'] == 'paused'
+    assert receipt['message'] == http.PAUSE_MESSAGE
+    assert capsys.readouterr().out.count(http.PAUSE_MESSAGE) == 1
+
+
+@pytest.mark.parametrize('newline', [b'\r\n', b'\n'])
+def test_frl_uses_final_headers_and_returns_only_valid_body(newline, tmp_path):
+    from parli.ingest import frl_instruments as frl
+    body = b'{"value":[]}'
+    wire = newline.join([b'HTTP/1.1 100 Continue', b'cf-mitigated: challenge', b'',
+                         b'HTTP/1.1 200 OK', b'Content-Type: application/json', b'', b'']) + body + b'\n200'
+    reply = subprocess.CompletedProcess([], 0, wire, b'')
+    client = frl.PoliteSession(now=lambda: datetime(2026, 10, 9, 11, tzinfo=timezone.utc), clock=lambda: 0, sleep=lambda _: None)
+    with mock.patch.object(frl.subprocess, 'run', return_value=reply):
+        assert client.get(frl.API) == body
+    assert not (tmp_path / 'access.json').exists()
+
+
 def test_urllib_forces_identity_and_does_not_cache_challenge():
     req = http.Request('https://example.test/source', headers={'user-agent': 'spoof'})
     assert req.get_header('User-agent') == http.USER_AGENT

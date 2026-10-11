@@ -1,3 +1,4 @@
+import {saEvidenceRecord,saEvidenceText} from './sa-evidence-harness.mjs';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync,mkdtempSync,rmSync} from 'node:fs';
@@ -76,7 +77,7 @@ const index=readFileSync(new URL('../src/index.ts',import.meta.url),'utf8');
 const code=ts.transpileModule(index.slice(index.indexOf('async function apiSearchSummary('),index.indexOf('// Narration is generated')), {compilerOptions:{target:ts.ScriptTarget.ES2022}}).outputText;
 function fixture({empty=false,invalid=false,denied=false}={}){
  const calls=[],cache=new Map();
- const ctx={...summary,URL,Request,Response,AbortSignal,Error,json:(x,status=200)=>Response.json(x,{status}),
+ const ctx={saEvidenceRecord,saSendData:async(_e,d)=>d,...summary,URL,Request,Response,AbortSignal,Error,json:(x,status=200)=>Response.json(x,{status}),
   apiUnifiedSearch:async(req,url)=>{calls.push({search:url.href});return Response.json({results:empty?[]:rows,index_version:'v1'})},
   cacheRequest:(kind,key)=>new Request('https://cache.test/'+kind+'/'+key),sha256Hex:async s=>createHash('sha256').update(s).digest('hex'),
   readGenerationCache:async (_env,_ctx,key)=>cache.get(key.url)?.clone(),storeGenerationCache:(_env,_ctx,key,res)=>cache.set(key.url,res.clone()),withCacheStatus:res=>res,
@@ -118,13 +119,13 @@ test('the streamed overview sends each validated point as it lands, then the cac
  const answer=JSON.stringify({points:[...draft().points,{text:'An invented claim that must be dropped.',citations:[{id:'s1',quote:'not in the record at all, really not'}]}]});
  const chunks=[];for(let i=0;i<answer.length;i+=11) chunks.push(JSON.stringify({item:{type:'answer',text:answer.slice(i,i+11)}})+'\n');
  chunks.unshift(JSON.stringify({item:{type:'reasoning',text:''}})+'\n');
- const ctx={...summary,URL,Request,Response,AbortSignal,Error,TransformStream,TextEncoder,TextDecoder,JSON,json:(x,status=200)=>Response.json(x,{status}),
+ const ctx={saEvidenceRecord,saSendData:async(_e,d)=>d,...summary,URL,Request,Response,AbortSignal,Error,TransformStream,TextEncoder,TextDecoder,JSON,json:(x,status=200)=>Response.json(x,{status}),
   SSE_HEADERS:{'content-type':'text/event-stream; charset=utf-8'},ragBase:()=>'https://rag.test/kb',
   fetch:async(url,init)=>{calls.push({url,body:JSON.parse(init.body)});const enc=new TextEncoder();return new Response(new ReadableStream({start(c){for(const ch of chunks)c.enqueue(enc.encode(ch));c.close()}}),{status:200})},
   apiUnifiedSearch:async()=>Response.json({results:rows,index_version:'v1'}),
   cacheRequest:(kind,key)=>new Request('https://cache.test/'+kind+'/'+key),sha256Hex:async s=>createHash('sha256').update(s).digest('hex'),
   readGenerationCache:async(_e,_c,key)=>cache.get(key.url)?.clone(),storeGenerationCache:(_e,_c,key,res)=>cache.set(key.url,res.clone()),withCacheStatus:res=>res,
-  rateLimited:async()=>null,kbFetch:async()=>{throw new Error('the streamed path must not fall back to a synchronous generation when points validated')},
+  rateLimited:async()=>null,kbFetch:async(_env,path,init)=>ctx.fetch('https://rag.test/kb'+path,{...init,body:JSON.stringify(init.body)}),
   questionNamesWithheldDonor:async()=>false,modelBudgetSpent:async()=>false,modelBudgetResponse:()=>new Response(null,{status:429})};
  const fn=runInNewContext(code+';apiSearchSummary',ctx);
  const pending=[];const u=new URL('https://opax.test/api/search-summary?q=agriculture&kind=all&stream=1');
