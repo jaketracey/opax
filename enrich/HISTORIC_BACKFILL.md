@@ -206,10 +206,16 @@ over IPv6 and never uses a remote binding.
 
 The review's differential harness is preserved as `scripts/differential_non_historic.mjs`.
 Run it against an isolated `origin/main` checkout and this worktree, then compare the output
-JSON objects. It covers 13 source labels and 11 scenarios (143 cases), comparing model calls,
-KB requests/state, original queue fields, spend, cursors/backoff and tick stats. Only the new
-historic metadata columns and counters are excluded. **0 differences** were observed again across all 143 cases against `origin/main` at
-`108bbdd0`.
+JSON objects. It covers 13 classified source labels and 11 scenarios (143 cases), comparing
+model calls, KB writes/state, original queue fields, spend, cursors/backoff and tick stats.
+The new historic metadata columns/counters and the single leading basic-metadata read
+required before each saved-result flush are excluded. This read is counted explicitly:
+**39 additional reads** across the 143 cases, with every original request and its order
+still compared. The old empty-source fixture now uses an explicit synthetic non-historic
+source label; missing/partial source metadata is covered by dedicated fail-closed tests,
+because blocking unclassified work is required behavior. Against `5bb219592`, the revised
+cohort has **0/143 differences** with the hold on, and **0/154** with it off (including
+historic cases). Pass `false` as the harness's fourth argument for the latter run.
 
 ## Orchestrator deployment: historic hold
 
@@ -219,6 +225,15 @@ and advances its cursor, but historic tasks use `status=done` with
 `terminal_reason=historic-held`. Claims, saved-result flushes and canaries skip them
 at every priority. `/status` exposes boolean `historicHold` and integer `heldRows`
 (the number of task rows, normally two per held speech).
+
+Canary receives the hold switch and checks source labels from its existing before
+snapshot. Every saved-result flush reads basic metadata before its first write;
+neither `historic=0` nor `force=1` grants permission. Missing kind/source labels or
+failed reads defer the write. Historic rows require `historic_released=1` to proceed.
+The same check runs before generation, covering stale claims, validator and transient
+retries, name escalation, forced generation and admin requeues. The worker backfills
+`historic=1` only for observed unfinished historic tasks; completed pilot rows stay
+untouched. There is no bulk census or additional migration.
 
 The deployment order is mandatory; the orchestrator performs these commands, not
 this worktree task:
@@ -281,9 +296,9 @@ row hashes and table/index root pages were identical before and after. Old-worke
 claim and finish statements succeeded against the migrated schema. Timing is local evidence,
 not a production latency guarantee.
 
-Hold validation: **191 tests**, TypeScript and Worker deploy dry run pass. The
-143-case non-historic differential against `5bb219592` has **zero differences** with
-the hold enabled. The 0003 test preserves original rows and index roots and accepts
+Hold validation: **205 tests**, TypeScript and Worker deploy dry run pass. The
+classified-source differential described above has **0/143** differences with the hold
+enabled and **0/154** with it disabled. The 0003 test preserves original rows and index roots and accepts
 old-worker enqueue/claim/finish statements. An additional offline run of the old
 worker against the migrated schema skipped held work, processed live work and left
 all **2,000 simulated completed pilot units** unchanged. No production KB, Workers

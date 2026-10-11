@@ -9,7 +9,6 @@ import {
   finishRows,
   getState,
   hasBackfill,
-  holdHistoricStatement,
   isSummaryTask,
   logError,
   logRejection,
@@ -27,6 +26,7 @@ import { discover } from './discover.ts'
 import type { AiLike, Config } from './env.ts'
 import { MAX_ATTEMPTS, generate, type Generation } from './generate.ts'
 import { isHistoricSpeech, skipHistoricShort } from './historic.ts'
+import { eligibleHistoricRows } from './hold.ts'
 import { KbBackpressure, KbHttpError, type KbApi, type KbResource } from './kb.ts'
 import type { PromptRecord, Task } from './prompts.ts'
 import { clip, existingSummary, pickText, wordCount } from './text.ts'
@@ -287,9 +287,8 @@ async function processRid(d: TickDeps, ctl: Ctl, day: string, rid: string, rows:
   const historic = isHistoricSpeech(resource)
   // Also catch pending work left by a previous deployment or a manual seed.
   // Explicitly released tasks retain permission to use the live model.
-  if (d.cfg.historicHold && historic && rows.some(row => row.historic_released !== 1)) {
-    await d.db.batch([holdHistoricStatement(d.db, [rid], d.now())])
-    rows = rows.filter(row => row.historic_released === 1)
+  if (d.cfg.historicHold) {
+    rows = await eligibleHistoricRows(d.db, rows, resource, d.now)
     if (!rows.length) return
   }
   const words = wordCount(text)
@@ -449,17 +448,25 @@ async function flush(d: TickDeps, ctl: Ctl, stats: TickStats): Promise<void> {
   for (const row of rows) byRid.set(row.rid, [...(byRid.get(row.rid) ?? []), row])
   await pool([...byRid.entries()], d.cfg.concurrency, async ([rid, group]) => {
     if (!mayContinue(d, ctl)) return
-    if (d.cfg.historicHold && group.some(row => row.historic === 1 && row.historic_released !== 1)) {
-      await d.db.batch([holdHistoricStatement(d.db, [rid], d.now())])
-      group = group.filter(row => row.historic_released === 1)
-      if (!group.length) return
+    let classifiedHistoric: boolean | undefined
+    if (d.cfg.historicHold) {
+      try {
+        const basic = await d.kb.getBasic(rid)
+        group = await eligibleHistoricRows(d.db, group, basic, d.now)
+        if (!group.length) return
+        classifiedHistoric = isHistoricSpeech(basic!)
+      } catch (err) {
+        if (err instanceof KbBackpressure) await backoffKb(d, ctl, err)
+        else await logError(d.db, d.now(), 'historic-hold-metadata', 'saved result source could not be classified; write deferred', rid)
+        return
+      }
     }
     const updates: RowUpdate[] = []
     for (const row of group) {
       if (ctl.stop) return
       const value = isSummaryTask(row.task) ? (row.result as string) : (JSON.parse(row.result as string) as string[])
       try {
-        const done = await writeItem(d.kb, rid, { task: row.task, force: row.force === 1, value, historic: row.historic === 1 })
+        const done = await writeItem(d.kb, rid, { task: row.task, force: row.force === 1, value, historic: classifiedHistoric ?? row.historic === 1 })
         updates.push({ rid, task: row.task, status: 'done', terminalReason: done.outcome === 'skipped-short' ? 'skipped-short' : undefined, outcome: done.outcome, lastError: done.warning ?? null })
         stats.flushed += 1
         count(stats, done.outcome)
