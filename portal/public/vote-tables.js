@@ -45,9 +45,16 @@ export function divisionTableConfig(params = {}, caption = 'Divisions', pageType
     export:{filename:'divisions.csv'}, urlKey:'dv', pageType};
 }
 export function voteTableConfig(person, caption = 'Voting record', check = votePrivacyCheck) {
-  return {...privacy(check), id:'vote-table', caption, columns:voteColumns, source:{endpoint:'/api/table/votes', params:{'f.person':JSON.stringify([person])}},
+  const people = [...new Set((Array.isArray(person) ? person : [person]).filter(Boolean))];
+  return {...privacy(check), id:'vote-table', caption, columns:voteColumns, source:{endpoint:'/api/table/votes', params:{'f.person':JSON.stringify(people)}},
     pageSize:25, defaultSort:{key:'date', dir:'desc'}, primaryLink:row => safeLink(row.href),
     export:{filename:'voting-record.csv'}, urlKey:'vr', pageType:'person'};
+}
+
+/** @returns {string[]} */
+export function personVoteKeys(name, personId, votes = {}) {
+  const key = String(name || '').normalize('NFKC').replace(/[‘’ʼ`]/g, "'").replace(/\s+/g, ' ').trim().toLowerCase();
+  return [...new Set([personId, ...(votes?._names?.[key] || [])].filter(Boolean))];
 }
 
 const chambers = {senate:'Senate', representatives:'House of Representatives', nsw_la:'New South Wales Legislative Assembly',

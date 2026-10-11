@@ -5,6 +5,9 @@ import {createHash} from 'node:crypto';
 import {build} from 'esbuild';
 import {tablePrivacyIndex,assertTablePrivacy} from './datatable-privacy.mjs';
 import {registerServerCSVContract,assertServerCSVCap} from './datatable-endpoint-contract.mjs';
+import {csvRecords} from '../public/server-csv.js';
+import {personVoteKeys} from '../public/vote-tables.js';
+import {aliasVotingProfiles} from './dt-votes-aliases.mjs';
 
 // Real Worker, assets and local D1. No table response substitution.
 const {chromium}=await import(process.env.OPAX_PLAYWRIGHT_MODULE || 'playwright');
@@ -16,7 +19,7 @@ assert.ok(person,'a populated public voting record');
 const slug=person.name.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
 const cases=[['bill','/bill/au-federal-r7534','#bill-body [data-vote-table]','dv','outcome'],['person','/subject/person/'+slug,'#subject-votes [data-vote-table]','vr','vote'],['hub','/sitting/2026-09-14','.hub-section [data-vote-table]','dv','outcome']];
 const samples=[...new Set([...index.donors.slice(0,2),...index.recipients.slice(0,3),...index.recipientABNs.slice(0,3)])];
-const privacyResults=[],measurements=[],csvGates=[];
+const privacyResults=[],measurements=[],csvGates=[],aliasChecks=[];
 await mkdir(out,{recursive:true});
 const browser=await chromium.launch({executablePath:process.env.OPAX_CHROME || '/usr/bin/google-chrome',headless:true,args:['--no-sandbox','--disable-background-networking','--host-resolver-rules=MAP * ~NOTFOUND, EXCLUDE 127.0.0.1']});
 let stage='start';
@@ -63,7 +66,7 @@ try {
       const table=page.locator(selector),initial=requests[0];
       assert.equal(initial.status,200);assert.equal(requests.length,1,'one visible table hydrates');
       if(label==='bill')assert.deepEqual(JSON.parse(initial.url.searchParams.get('f.bill')),['au-federal-r7534']);
-      if(label==='person')assert.deepEqual(JSON.parse(initial.url.searchParams.get('f.person')),[person.pid]);
+      if(label==='person')assert.deepEqual(JSON.parse(initial.url.searchParams.get('f.person')),personVoteKeys(person.name,person.pid,records));
       if(label==='hub')assert.deepEqual(JSON.parse(initial.url.searchParams.get('f.sitting')),['2026-09-14']);
       const data=JSON.parse(responses[0]);
       await table.scrollIntoViewIfNeeded();await page.evaluate(el=>scrollBy(0,el.getBoundingClientRect().top-90),await table.elementHandle());
@@ -116,6 +119,31 @@ try {
       assert.deepEqual(errors,[]);console.log(`${phase} ${label} ${width}: passed`);
     }
     if(width===1280) {
+      const profiles=aliasVotingProfiles(roster,records,index.safe);
+      assert.equal(profiles.length,2,'both affected alias profiles must be covered');
+      for(const [number,profile] of profiles.entries()) {
+        stage=`alias profile ${number+1}: SSR, hydration and actual CSV`;
+        const aliasSlug=profile.person.name.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
+        const pendingResponse=page.waitForResponse(r=>new URL(r.url()).pathname==='/api/table/votes' && new URL(r.url()).searchParams.get('format')!=='csv');
+        await page.goto(base+'/subject/person/'+aliasSlug);
+        const response=await pendingResponse,data=await response.json();
+        const table=page.locator('#subject-votes [data-vote-table]');
+        await page.waitForFunction(()=>document.querySelector('#subject-votes .dt-count') && !document.querySelector('#subject-votes [data-datatable]').hasAttribute('aria-busy'));
+        assert.deepEqual(JSON.parse(new URL(response.url()).searchParams.get('f.person')),profile.keys,'hydration keeps every alias ID');
+        assert.equal(data.total,14);
+        const ssr=page.locator('#prerender [data-vote-table] tbody tr');
+        assert.equal(await ssr.count(),14,'SSR count');
+        assert.equal(await table.locator('tbody tr').count(),14,'hydrated count');
+        assert.deepEqual((await table.locator('tbody tr').allTextContents()).sort(),(await ssr.allTextContents()).sort(),'SSR and hydrated records agree');
+        const pending=page.waitForEvent('download');await table.locator('[data-export]').click();const download=await pending;
+        const csvPath=resolve(out,`alias-profile-${number+1}.csv`);await download.saveAs(csvPath);
+        const exported=csvRecords(await readFile(csvPath,'utf8')).slice(1);
+        assert.equal(exported.length,14,'actual CSV count');
+        for(const row of data.rows)assert.ok(exported.some(record=>record.startsWith(row.id+',')),'actual CSV includes every hydrated record');
+        assert.ok(index.safe(await readFile(csvPath,'utf8')));
+        aliasChecks.push({profile:number+1,ssr:14,hydrated:14,csv:14});
+        console.log(`alias profile ${number+1}: 14 SSR, hydrated and exported rows`);
+      }
       const bundled=await build({entryPoints:[resolve('src/hubs.ts')],bundle:true,write:false,platform:'node',format:'esm'});
       const {renderSittingWeek}=await import('data:text/javascript;base64,'+Buffer.from(bundled.outputFiles[0].text).toString('base64'));
       const hubs=await read('hubs/index.json'),week=hubs.weeks.find(w=>w.start==='2026-09-14');
@@ -142,5 +170,5 @@ try {
     await page.close();
   }
   assert.ok(measurements.every(m=>!m.overflow));
-  await writeFile(resolve(out,`${phase}-measurements.json`),JSON.stringify({server:'wrangler dev --local / real D1',coreSHA:createHash('sha256').update(await readFile(pub+'/datatable.js')).digest('hex'),privacy:privacyResults,measurements,csvContracts:csvGates.length,jsonLdChecks:3},null,2)+'\n');
+  await writeFile(resolve(out,`${phase}-measurements.json`),JSON.stringify({server:'wrangler dev --local / real D1',coreSHA:createHash('sha256').update(await readFile(pub+'/datatable.js')).digest('hex'),privacy:privacyResults,measurements,aliasChecks,csvContracts:csvGates.length,jsonLdChecks:3},null,2)+'\n');
 } catch(error) {console.error(JSON.stringify({stage,type:error.name,message:index.safe(error.message) ? error.message : 'private details omitted'}));process.exitCode=1;} finally {await browser.close();}

@@ -3,7 +3,7 @@ import {sponsorPerson} from '../public/sponsor-person.js'
 import {currentSittingPath, sydneyDay} from '../public/hubs-data.js'
 import {isOrganisationDonor, donorPrivacyIndex, donorNameWithheld, foldDonorName, MONEY_GRAPHS, withheldPhrases, namesWithheldPhrase} from '../public/donor-entity.js'
 import {renderDivisionMarkdown, divisionPlain} from '../public/division-markdown.js'
-import {divisionTableConfig, voteTableConfig, divisionRows, votingRows, voteTablePage, voteTableHTML} from '../public/vote-tables.js'
+import {divisionTableConfig, voteTableConfig, personVoteKeys, divisionRows, votingRows, voteTablePage, voteTableHTML} from '../public/vote-tables.js'
 import {tablePrivacyCheckFromRead} from './table-privacy.ts'
 import type {Query} from '../public/datatable.js'
 /** Crawlable answers from the same static projections the application reads.
@@ -155,8 +155,7 @@ export async function renderPersonAnswer(p: Person, read: ReadAsset, slugs: Map<
   body += `</ul>${original(profileUrl)}<p>${link('/parliamentarians.json','Parliamentarian data export')}. Recorded representation can include historical seats; affiliation with no current-roster flag is not verified as current or former.</p>`
   if (!p.speech_scope) {
     const tableCheck = privacyCheck ?? await tablePrivacyCheckFromRead(read)
-    const names = voteData?._names as Record<string,string[]> | undefined
-    const keys = [...new Set([p.pid,...(names?.[fold(p.name)] || [])].filter((k): k is string => !!k))]
+    const keys = personVoteKeys(p.name,p.pid,voteData)
     const records = keys.map(k=>voteData?.[k] as Votes | undefined).filter((r): r is Votes => !!r?.name)
     const recent = recentData?._meta?.schema===1 && recentData._meta.source==='opax-parli-db' && recentData._meta.coverage==='recorded'
       ? keys.flatMap(k=> { const r=recentData.people?.[k]; return r && fold(r.name)===fold(p.name) && Array.isArray(r.recent) ? r.recent : [] }) : []
@@ -166,7 +165,7 @@ export async function renderPersonAnswer(p: Person, read: ReadAsset, slugs: Map<
       .filter(v=>tableCheck(JSON.stringify(v)))
       .sort((a,b)=>String(b.date || '').localeCompare(String(a.date || '')))
     if (votes.length) {
-      const config = voteTableConfig(p.pid || personHref(p,slugs).split('/').at(-1)!, hasRecent ? 'Recorded votes' : 'Latest exported bill votes', tableCheck)
+      const config = voteTableConfig(keys, hasRecent ? 'Recorded votes' : 'Latest exported bill votes', tableCheck)
       config.id += '-ssr'
       body += voteTableHTML(config,voteTablePage(votingRows(votes,bills?.bills || []),config,tableQuery))
       body += '<p>This list covers votes available in the published export. Only formal divisions leave a per-member record. Party position is shown only when the vote source records it.</p>'

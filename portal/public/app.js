@@ -3,7 +3,7 @@
 
 "use strict";
 let voteTables;
-const voteTablesReady = import("/vote-tables.js?v=a6581df347").then(module => { voteTables = module; });
+const voteTablesReady = import("/vote-tables.js?v=6e3425dcce").then(module => { voteTables = module; });
 let divisionMarkdown;
 const divisionMarkdownReady = import('/division-markdown.js?v=5991511166').then(module => { divisionMarkdown = module; });
 // The labels, source lines and ⋯ (labels.js); the first render waits for them.
@@ -5119,7 +5119,7 @@ async function renderPersonVotes(name, personId, sections, onRecord = () => {}) 
   const slot = $("subject-votes");
   if (!slot) return;
   const lname = String(name || "").trim().toLowerCase();
-  const keys = [...new Set([personId, ...(votesData?._names?.[lname] || [])].filter(Boolean))];
+  const keys = voteTables.personVoteKeys(name, personId, votesData);
   const recs = keys.map((k) => votesData?.[k]).filter((r) => r && typeof r === "object");
   if (!recs.length) { slot.remove(); return; }
   const sum = (field) => recs.reduce((a, r) => a + (Number(r[field]) || 0), 0);
@@ -5139,7 +5139,7 @@ async function renderPersonVotes(name, personId, sections, onRecord = () => {}) 
   const recent = recentData?._meta?.schema === 1 && recentData._meta.source === "opax-parli-db" && recentData._meta.coverage === "recorded"
     ? keys.flatMap(k => { const r = recentData.people?.[k]; return r?.name?.trim().toLowerCase() === lname ? r.recent || [] : []; }) : [];
   const rows = voteTables.votingRows((recent.length ? recent : all).filter(v => !privacy(v.title || v.name, v.question)), billIndex?.bills || []);
-  const config = voteTables.voteTableConfig(String(personId || keys[0]), recent.length ? "Recorded votes" : "Latest exported bill votes");
+  const config = voteTables.voteTableConfig(keys, recent.length ? "Recorded votes" : "Latest exported bill votes");
   const total = sum("divisions_total");
   const ayes = sum("ayes");
   const noes = sum("noes");
