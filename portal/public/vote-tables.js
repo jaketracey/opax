@@ -1,10 +1,9 @@
-// Division and voting-record rollout. Configs use the frozen DataTable contract.
-import {dataTableHTML, mountDataTable, applyQuery} from './datatable.js?v=9b1adb0638';
+// Division and voting-record rollout using the shared server-mode core.
+import {dataTableHTML, mountDataTable, applyQuery} from './datatable.js?v=0b85cfe36e';
 import {shortDate} from './format.js';
 import {statusLabelHTML} from './labels.js?v=804befe8de';
 import {divisionPlain} from './division-markdown.js?v=5991511166';
 
-const esc = value => String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;'}[c]));
 const sentence = value => { const text = String(value || '').replace(/_/g, ' ').trim(); return text ? text[0].toUpperCase() + text.slice(1).toLowerCase() : ''; };
 const count = value => value == null || value === '' ? null : Number.isFinite(Number(value)) && Number(value) >= 0 ? Number(value) : null;
 const safeLink = value => typeof value === 'string' && /^(?:\/(?!\/)|https?:\/\/)/i.test(value) ? value : null;
@@ -14,9 +13,9 @@ export const divisionColumns = [
   {key:'title', label:'Title', type:'text', primary:true},
   {key:'date', label:'Date', type:'date'},
   {key:'chamber', label:'Chamber', type:'category', facet:'chips'},
-  {key:'outcome', label:'Outcome', type:'category', facet:'chips'},
-  {key:'ayes', label:'Ayes', type:'count', format:'exact'},
-  {key:'noes', label:'Noes', type:'count', format:'exact'},
+  {key:'outcome', label:'Outcome', type:'category', facet:'chips', hideWhenConstant:false},
+  {key:'ayes', label:'Ayes', type:'count', format:'exact', bar:true, facet:'range'},
+  {key:'noes', label:'Noes', type:'count', format:'exact', bar:true, facet:'range'},
 ];
 export const voteColumns = [
   {key:'title', label:'Bill or division', type:'text', primary:true},
@@ -25,13 +24,24 @@ export const voteColumns = [
   {key:'party_position', label:'Party position', type:'category', facet:'chips'},
 ];
 
-export function divisionTableConfig(params = {}, caption = 'Divisions', pageType = 'bill') {
-  return {id:'division-table', caption, columns:divisionColumns, source:{endpoint:'/api/table/divisions', params},
+const tableRow = row => typeof row?.title === 'string' && typeof row.date === 'string';
+export async function votePrivacyCheck(text) {
+  try {
+    const response = await fetch('/api/table/privacy', {method:'POST', headers:{'content-type':'application/json'}, body:JSON.stringify({text})});
+    return response.ok && (await response.json()).safe === true;
+  } catch { return false; }
+}
+function privacy(check) {
+  return {privacy:'donors', privacyCheck:check, rowPrivacyCheck:row => tableRow(row) && (check === votePrivacyCheck || check(JSON.stringify(row)) === true)};
+}
+
+export function divisionTableConfig(params = {}, caption = 'Divisions', pageType = 'bill', check = votePrivacyCheck) {
+  return {...privacy(check), id:'division-table', caption, columns:divisionColumns, source:{endpoint:'/api/table/divisions', params},
     pageSize:25, defaultSort:{key:'date', dir:'desc'}, primaryLink:row => safeLink(row.href),
     export:{filename:'divisions.csv'}, urlKey:'dv', pageType};
 }
-export function voteTableConfig(person, caption = 'Voting record') {
-  return {id:'vote-table', caption, columns:voteColumns, source:{endpoint:'/api/table/votes', params:{person}},
+export function voteTableConfig(person, caption = 'Voting record', check = votePrivacyCheck) {
+  return {...privacy(check), id:'vote-table', caption, columns:voteColumns, source:{endpoint:'/api/table/votes', params:{person}},
     pageSize:25, defaultSort:{key:'date', dir:'desc'}, primaryLink:row => safeLink(row.href),
     export:{filename:'voting-record.csv'}, urlKey:'vr', pageType:'person'};
 }
@@ -85,33 +95,21 @@ export function voteTablePage(rows, config, query = {}) {
 }
 
 // Presentation stays outside the core: the contract has no cell-render callback.
-function outcomeCell(html, rows) {
-  let index = 0;
+function outcomeCell(html) {
   return html.replace(/(<td\b[^>]*data-label="Outcome"[^>]*>)([\s\S]*?)(<\/td>)/g, (_, start, cell, end) => {
-    const word = String(rows[index++]?.outcome || 'Not recorded');
+    // Read only the core's filtered, escaped cell. Original row positions may
+    // differ after privacy filtering; looking back into page.rows could leak.
+    const encoded = cell.match(/<span class="dt-value">([\s\S]*?)<\/span>/)?.[1] || '';
+    const word = encoded && encoded !== '—' ? encoded.replace(/&(?:amp|lt|gt|quot|#39);/g,
+      entity => ({'&amp;':'&','&lt;':'<','&gt;':'>','&quot;':'"','&#39;':"'"}[entity])) : 'Not recorded';
     const label = statusLabelHTML(word, word === 'Agreed' ? 'done' : 'ended');
     return start + (cell.includes('class="dt-value"') ? cell.replace(/(<span class="dt-value">)[\s\S]*?(<\/span>)/, (_, open, close) => open + label + close) : label) + end;
   });
 }
 export function voteTableHTML(config, page) {
   let html = dataTableHTML(config, page);
-  // The frozen branch's stub lacks links and cell labels. This small SSR bridge
-  // disappears naturally once DT-core provides its contract-shaped markup.
-  if (!html.includes('data-datatable=')) {
-    let rowIndex = 0;
-    html = html.replace(/<tbody>([\s\S]*?)<\/tbody>/, (_, body) => '<tbody>' + body.replace(/<tr>([\s\S]*?)<\/tr>/g, (_, cells) => {
-      const row = page.rows[rowIndex++]; let columnIndex = 0;
-      return '<tr>' + cells.replace(/<td>[\s\S]*?<\/td>/g, () => {
-        const column = config.columns[columnIndex++]; const value = row[column.key];
-        let display = column.type === 'date' ? shortDate(value) : column.type === 'count' && typeof value === 'number' ? value.toLocaleString('en-AU') : value ?? '—';
-        display = esc(display);
-        const href = column.primary && config.primaryLink?.(row);
-        return `<td data-label="${esc(column.label)}"${column.primary ? ' data-primary' : ''}${column === config.columns.find(c=>c.type==='count') ? ' data-prominent' : ''}${column.type === 'count' ? ' data-align="end"' : ''}>${href ? `<a href="${esc(href)}">${display}</a>` : display}</td>`;
-      }) + '</tr>';
-    }) + '</tbody>');
-  }
   const json = JSON.stringify(config).replace(/</g, '\\u003c').replace(/&/g, '\\u0026');
-  return `<div class="vote-table" data-vote-table>${outcomeCell(html,page.rows)}<script type="application/json" data-vote-config>${json}</script></div>`;
+  return `<div class="vote-table" data-vote-table>${outcomeCell(html)}<script type="application/json" data-vote-config>${json}</script></div>`;
 }
 
 const mounted = new Map();
@@ -124,7 +122,8 @@ export function mountVoteTables(root = document) {
     if (el.closest('#prerender') && el.ownerDocument.querySelector('script[src^="/app.js"]')) continue;
     const config = JSON.parse(el.querySelector('[data-vote-config]').textContent);
     config.primaryLink = row => safeLink(row.href);
-    const table = el.querySelector('[data-datatable]') || el;
+    Object.assign(config, privacy(votePrivacyCheck));
+    const table = el.querySelector('[data-datatable]');
     const decorate = () => {
       for (const cell of el.querySelectorAll('td[data-label="Outcome"]')) {
         if (cell.querySelector('.ui-status')) continue;

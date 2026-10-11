@@ -3,7 +3,7 @@
 
 "use strict";
 let voteTables;
-const voteTablesReady = import("/vote-tables.js?v=4e00584b53").then(module => { voteTables = module; });
+const voteTablesReady = import("/vote-tables.js?v=163dab8c21").then(module => { voteTables = module; });
 let divisionMarkdown;
 const divisionMarkdownReady = import('/division-markdown.js?v=5991511166').then(module => { divisionMarkdown = module; });
 // The labels, source lines and ⋯ (labels.js); the first render waits for them.

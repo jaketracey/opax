@@ -4,6 +4,7 @@ import {currentSittingPath, sydneyDay} from '../public/hubs-data.js'
 import {isOrganisationDonor, donorPrivacyIndex, donorNameWithheld, foldDonorName, MONEY_GRAPHS, withheldPhrases, namesWithheldPhrase} from '../public/donor-entity.js'
 import {renderDivisionMarkdown, divisionPlain} from '../public/division-markdown.js'
 import {divisionTableConfig, voteTableConfig, divisionRows, votingRows, voteTablePage, voteTableHTML} from '../public/vote-tables.js'
+import {tablePrivacyCheckFromRead} from './table-privacy.ts'
 import type {Query} from '../public/datatable.js'
 /** Crawlable answers from the same static projections the application reads.
  * All lists are bounded; source strings and URLs cross one escaping boundary. */
@@ -133,7 +134,7 @@ async function withheldCheckFrom(read: ReadAsset): Promise<WithheldCheck> {
   return check
 }
 
-export async function renderPersonAnswer(p: Person, read: ReadAsset, slugs: Map<string,string>, profileUrl?: string, withheld?: WithheldCheck, tableQuery: Query = {}): Promise<RenderedContent> {
+export async function renderPersonAnswer(p: Person, read: ReadAsset, slugs: Map<string,string>, profileUrl?: string, withheld?: WithheldCheck, tableQuery: Query = {}, privacyCheck?: (text: string) => boolean): Promise<RenderedContent> {
   const [voteData, interests, seats, bills, sponsored, recentData] = await Promise.all([
     optional<Record<string, Votes | Record<string,string[]>>>(read,'/votes.json'),
     optional<{people: Record<string,unknown>; _by_name: Record<string,string>}>(read,'/interests/index.json'),
@@ -163,7 +164,7 @@ export async function renderPersonAnswer(p: Person, read: ReadAsset, slugs: Map<
       .filter(v=>!withheld?.(v.title || v.name || '', v.question || ''))
       .sort((a,b)=>String(b.date || '').localeCompare(String(a.date || '')))
     if (votes.length) {
-      const config = voteTableConfig(p.pid || personHref(p,slugs).split('/').at(-1)!, hasRecent ? 'Recorded votes' : 'Latest exported bill votes')
+      const config = voteTableConfig(p.pid || personHref(p,slugs).split('/').at(-1)!, hasRecent ? 'Recorded votes' : 'Latest exported bill votes', privacyCheck ?? await tablePrivacyCheckFromRead(read))
       config.id += '-ssr'
       body += voteTableHTML(config,voteTablePage(votingRows(votes,bills?.bills || []),config,tableQuery))
       body += '<p>This list covers votes available in the published export. Only formal divisions leave a per-member record. Party position is shown only when the vote source records it.</p>'
@@ -210,7 +211,7 @@ export async function renderPersonAnswer(p: Person, read: ReadAsset, slugs: Map<
 export function sponsorFor(b: Bill, people: Person[]): Person | null {
   return b.sponsor ? sponsorPerson(b.sponsor, b.sponsor_person_id, people) : null
 }
-export function renderBillAnswer(b: Bill, people: Person[], slugs: Map<string,string>, related: Bill[] = [], tableQuery: Query = {}): RenderedContent {
+export function renderBillAnswer(b: Bill, people: Person[], slugs: Map<string,string>, related: Bill[] = [], tableQuery: Query = {}, privacyCheck: (text: string) => boolean = () => false): RenderedContent {
   const title = b.short_title || b.title
   const sponsor = sponsorFor(b,people)
   const party = b.sponsor_party || sponsor?.party
@@ -231,7 +232,7 @@ export function renderBillAnswer(b: Bill, people: Person[], slugs: Map<string,st
   }
   body += `<p>Stage dates describe the parliamentary progress recorded by the source. They do not establish when provisions commence. A bill before parliament is a proposal; its text can change before passage. Division totals describe the recorded question on that date. A procedural division does not necessarily establish support for every provision of a bill. Check the official bill text and explanatory memorandum for the wording.</p><p>${link(`/bills/${b.key}.json`,'Bill data export')} · ${link('/bills','Browse bills')} · ${link('/ask','Ask about the parliamentary record')} · ${link('/methods','Sources and methods')}</p>`
   body += `<h2>Sources</h2>${(b.sources || []).map(s=>`<p>${escapeHtml(human(s.kind))}</p>${original(s.url)}`).join('')}`
-  const config = divisionTableConfig({bill:b.key})
+  const config = divisionTableConfig({bill:b.key}, 'Divisions', 'bill', privacyCheck)
   config.id += '-ssr'
   const rows = divisionRows(divisions,true)
   const block = () => rows.length ? voteTableHTML(config,voteTablePage(rows,config,tableQuery)) : '<h2>Divisions</h2><p>No divisions recorded. Most questions are decided on the voices; this does not establish that a bill was unopposed.</p>'

@@ -1,3 +1,4 @@
+import {tablePrivacy, tablePrivacyCheck} from './table-privacy'
 import { divisionPlain } from '../public/division-markdown.js'
 import {parseQuery} from '../public/datatable.js'
 import { runSocialPublication, socialStatus, socialEngagement, publicationCopy, previewPublication, todayRedirect, CHANNELS, type Channel } from './social-publication'
@@ -3806,7 +3807,7 @@ async function buildRouteMeta(route: SeoRoute, url: URL, request: Request, env: 
         return base({title:page.title+' · OPAX',description:page.description,prerender:page.html,jsonLd:page.jsonLd,status:page.status})
       }
       const people = route.hub === 'sitting' && route.id ? await loadPeople(env) : null
-      const page = await hubPage(route.hub,route.id,<T>(path: string) => assetJson<T>(env,path),people?.people || [],people?.slugOf || new Map(),undefined,env,parseQuery(url.searchParams,'dv'))
+      const page = await hubPage(route.hub,route.id,<T>(path: string) => assetJson<T>(env,path),people?.people || [],people?.slugOf || new Map(),undefined,env,parseQuery(url.searchParams,'dv'),await tablePrivacyCheck(env.ASSETS))
       return base({title:page.title+' · OPAX',description:page.description,prerender:page.html,jsonLd:page.jsonLd,status:page.status})
     }
     case 'audit': return base({ ...await auditPage(route.id, url, auditReader(env.ASSETS), prerenderBlock),
@@ -3988,7 +3989,7 @@ async function buildMeta(route: SeoRoute, url: URL, request: Request, env: Env, 
       if (p) {
         const profiles=await read<{people:Record<string,PersonSchemaIdentity>;by_name:Record<string,PersonSchemaIdentity>}>('/profile-links.json').catch(()=>null)
         const identity={...profiles?.by_name[foldName(p.name)],...profiles?.people[p.pid || '']}
-        const content = await renderPersonAnswer(p,read,people.slugOf,identity.aphProfileUrl || undefined,await withheldNameCheck(env.ASSETS),parseQuery(url.searchParams,'vr'))
+        const content = await renderPersonAnswer(p,read,people.slugOf,identity.aphProfileUrl || undefined,await withheldNameCheck(env.ASSETS),parseQuery(url.searchParams,'vr'),await tablePrivacyCheck(env.ASSETS))
         meta.prerender = content.html
         if(content.description) meta.description=clip(content.description)
         const photos=await loadPhotos(env).catch(()=>null)
@@ -4003,7 +4004,7 @@ async function buildMeta(route: SeoRoute, url: URL, request: Request, env: Env, 
       const bill=await read<Parameters<typeof renderBillAnswer>[0]>(`/bills/${route.key}.json`).catch(()=>null)
       if(bill){
         const related=await read<{bills:Parameters<typeof renderBillAnswer>[0][]}>('/bills/index.json')
-        meta.prerender=renderBillAnswer(bill,people?.people || [],people?.slugOf || new Map(),related.bills,parseQuery(url.searchParams,'dv')).html;billIdentity={identifier:bill.key,status:bill.status}}
+        meta.prerender=renderBillAnswer(bill,people?.people || [],people?.slugOf || new Map(),related.bills,parseQuery(url.searchParams,'dv'),await tablePrivacyCheck(env.ASSETS)).html;billIdentity={identifier:bill.key,status:bill.status}}
     } else if(route.kind==='subject' && route.dir==='supplier') {
       const content=await renderSupplierAnswer(meta.canonical.split('/').at(-1)!,read)
       if(content) meta.prerender=content.html
@@ -5604,6 +5605,7 @@ export default {
     if (url.pathname === '/.well-known/atproto-did') return /^did:plc:[a-z2-7]{24}$/.test(env.BSKY_DID ?? '')
       ? new Response(env.BSKY_DID, { headers: { 'content-type': 'text/plain; charset=utf-8', 'cache-control': 'public, max-age=300' } })
       : new Response('Not found', { status: 404 })
+    if (url.pathname === '/api/table/privacy') return withSecurityHeaders(await tablePrivacy(request, env.ASSETS), url)
     const isApi = url.pathname.startsWith('/api/')
     const communityResponse = (response: Response) => { const secured = withSecurityHeaders(response, url); if (env.STAGING_API) secured.headers.set('x-robots-tag', 'noindex, nofollow'); return secured }
     // Public app adapters use this Worker's journal/assets, before any staging

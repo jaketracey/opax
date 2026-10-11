@@ -1,0 +1,89 @@
+/* Only OPAX design tokens supply colour, type, space, size and shape. */
+.dt-root { color: var(--ink); font: var(--type-body); min-width: 0; }
+.dt-root *, .dt-root *::before { box-sizing: border-box; }
+.dt-toolbar, .dt-tools, .dt-chips, .dt-footer, .dt-paging { display: flex; align-items: center; flex-wrap: wrap; gap: var(--space-tight); }
+.dt-toolbar { display: grid; grid-template-columns: minmax(0, 1fr) auto auto; gap: var(--space-block); margin-block: var(--space-block); }
+.dt-toolbar form { min-width: 0; }
+.dt-tools { display: flex; align-items: flex-start; flex-direction: column; gap: var(--space-tight); }
+.dt-filters > .dt-tools { min-width: calc(var(--size-control) * 6); max-height: none; overflow: visible; }
+.dt-tools > .dt-panel { width: 100%; }
+.dt-tools > .dt-panel > :is(fieldset, div) { position: static; min-width: 0; max-width: 100%; box-shadow: none; }
+.dt-phone-sort { display: none; }
+.dt-root :is(input[type="search"], input[type="number"], select) { max-width: 100%; min-width: 0; min-height: var(--size-target); padding: var(--space-tight) var(--space-heading); font: var(--type-body); color: var(--ink); background: var(--paper-raised); border: var(--border-hairline) solid var(--line-control); border-radius: var(--radius-sm); }
+.dt-root input[type="search"] { width: 100%; }
+.dt-root :is(button, summary) { min-height: var(--size-target); padding: var(--space-tight) var(--space-heading); border: var(--border-hairline) solid var(--divider-subtle); border-radius: var(--radius-pill); font: var(--type-label); background: var(--paper-raised); color: var(--ink); cursor: pointer; }
+.dt-root :is(button:enabled, summary):hover { background: var(--paper-sunken); }
+.dt-root button[aria-pressed="true"] { color: var(--money-ink); background: var(--money-wash); border-color: var(--money-ink); }
+.dt-root button:disabled { color: var(--ink-faint); background: var(--paper-sunken); border-color: var(--paper-sunken); cursor: default; }
+.dt-root :is(button, summary, input, select, a):focus-visible { outline: var(--border-focus) solid var(--money-ink); outline-offset: var(--space-line); }
+.dt-panel { position: relative; }
+.dt-panel > summary { display: flex; align-items: center; justify-content: space-between; gap: var(--space-tight); list-style: none; }
+.dt-panel > summary::marker { content: ''; }
+.dt-panel > summary::-webkit-details-marker { display: none; }
+.dt-icon { width: var(--size-icon-md); height: var(--size-icon-md); flex-shrink: 0; vertical-align: middle; }
+.dt-icon-unsorted { color: var(--ink-faint); }
+.dt-panel[open] > summary .dt-icon-chevron { transform: rotate(180deg); }
+.dt-panel > :is(fieldset, div) { position: absolute; z-index: 3; top: 100%; right: 0; min-width: calc(var(--size-control) * 5); max-width: min(var(--size-readable), calc(100vw - var(--space-screen) * 2)); max-height: calc(var(--size-control) * 6); overflow: auto; margin: var(--space-line) 0 0; padding: var(--space-block); background: var(--paper-raised); border: var(--border-hairline) solid var(--divider-subtle); border-radius: var(--radius-md); box-shadow: var(--shadow-overlay); }
+.dt-panel fieldset { display: flex; flex-direction: column; gap: var(--space-tight); }
+.dt-panel fieldset > label:not(.dt-choice) { display: grid; gap: var(--space-line); font: var(--type-label); }
+.dt-choice { display: flex; align-items: center; gap: var(--space-tight); min-height: var(--size-target); font: var(--type-metadata); }
+.dt-choice input { accent-color: var(--money-ink); width: var(--size-icon-md); height: var(--size-icon-md); }
+.dt-muted { color: var(--ink-soft); font-variant-numeric: tabular-nums; }
+.dt-chips:empty { display: none; }
+.dt-chips { margin-block: var(--space-tight) var(--space-block); }
+.dt-scroll { max-width: 100%; overflow-x: auto; max-height: calc(var(--size-control) * 14); border-block: var(--border-hairline) solid var(--divider-default); }
+.dt { width: 100%; border-collapse: separate; border-spacing: 0; font: var(--type-metadata); }
+.dt caption { text-align: start; padding-block: var(--space-block); font: var(--type-heading); color: var(--ink); }
+.dt th { position: sticky; top: 0; z-index: 1; background: var(--paper-sunken); text-align: start; font: var(--type-label); }
+.dt :is(td, th) { padding: var(--space-block); border-bottom: var(--border-hairline) solid var(--divider-subtle); }
+.dt th .dt-button { border: 0; border-radius: 0; padding: 0; background: transparent; font: inherit; color: inherit; white-space: nowrap; }
+.dt [data-align="end"] { text-align: end; }
+.dt td { position: relative; vertical-align: middle; background: var(--paper-raised); overflow-wrap: anywhere; }
+.dt tbody tr:hover td { background: var(--paper); }
+.dt .dt-number { font-variant-numeric: tabular-nums; white-space: nowrap; }
+.dt-value { position: relative; }
+.dt [data-primary] { font: var(--type-strong); }
+.dt a { color: var(--money-ink); text-decoration-thickness: var(--border-hairline); text-underline-offset: var(--space-line); }
+.dt-bar-track { display: block; height: var(--space-line); background: var(--money-wash); margin-top: var(--space-tight); border-radius: var(--radius-pill); overflow: hidden; }
+.dt-bar { display: block; width: var(--dt-bar); height: 100%; background: var(--money-ink); }
+.dt-scale { display: block; color: var(--ink-soft); font: var(--type-fine); margin-top: var(--space-line); }
+.dt-actions { width: var(--size-control); }
+.dt-actions summary { display: inline-flex; align-items: center; justify-content: center; width: var(--size-target); padding: 0; list-style: none; }
+.dt-actions summary::marker { content: ''; }
+.dt-actions summary::-webkit-details-marker { display: none; }
+.dt-actions .dt-panel > div { min-width: auto; width: max-content; }
+.dt-actions a { display: block; padding: var(--space-tight); }
+.dt-empty { padding: var(--space-section) var(--space-block); text-align: center; color: var(--ink-soft); font: var(--type-body); white-space: normal; }
+.dt-footer { justify-content: space-between; margin-block: var(--space-block); font: var(--type-fine); font-variant-numeric: tabular-nums; }
+.dt-count { margin: 0; }
+.dt-page-size { display: flex; align-items: center; gap: var(--space-tight); }
+.dt-root[data-density="compact"] .dt td { padding-block: var(--space-tight); }
+.dt-sr { position: absolute; width: var(--border-hairline); height: var(--border-hairline); padding: 0; margin: 0; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+@media (width < 600px) {
+  .dt-phone-sort { display: block; }
+  .dt-toolbar { grid-template-columns: minmax(0, 1fr) auto; }
+  .dt-toolbar form { grid-column: 1 / -1; }
+  .dt-phone-sort { grid-column: 1 / -1; grid-row: 3; width: 100%; }
+  .dt-toolbar > [data-export] { grid-column: 2; grid-row: 2; }
+  .dt-toolbar > .dt-filters { grid-column: 1; grid-row: 2; }
+  .dt-bar-track, .dt-scale { display: none; }
+  .dt-filters > .dt-tools { min-width: min(calc(var(--size-control) * 6), calc(100vw - var(--space-screen) * 2)); }
+  .dt-panel > :is(fieldset, div) { min-width: min(calc(var(--size-control) * 5), calc(100vw - var(--space-screen) * 2)); right: auto; left: 0; }
+  .dt-scroll { overflow: visible; max-height: none; border: 0; }
+  .dt, .dt caption, .dt tbody { display: block; }
+  .dt thead { position: absolute; width: var(--border-hairline); height: var(--border-hairline); overflow: hidden; clip-path: inset(50%); }
+  .dt tr { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); margin-bottom: var(--space-block); padding: var(--space-block); border: var(--border-hairline) solid var(--divider-subtle); border-radius: var(--radius-md); background: var(--paper-raised); }
+  .dt td, .dt td[data-align="end"] { border: 0; padding: var(--space-tight); text-align: start; white-space: normal; }
+  .dt td::before { content: attr(data-label); display: block; font: var(--type-fine); color: var(--ink-soft); margin-bottom: var(--space-line); }
+  .dt [data-primary] { grid-column: 1 / -1; grid-row: 1; font: var(--type-subheading); }
+  .dt [data-primary]::before { display: none; }
+  .dt [data-prominent] { grid-column: 1 / -1; grid-row: 2; font: var(--type-heading); }
+  .dt .dt-actions { grid-column: 1 / -1; width: auto; }
+  .dt .dt-actions .dt-panel > div { left: auto; right: 0; }
+  .dt td[colspan] { grid-column: 1 / -1; }
+  .dt-footer { align-items: flex-start; }
+  .dt-paging { width: 100%; }
+  .dt-page-size { flex-basis: 100%; }
+}
+/* Typography shorthands above must not reset numeric alignment on phone cards. */
+.dt .dt-number { font-variant-numeric: tabular-nums; }

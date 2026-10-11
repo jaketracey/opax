@@ -17,7 +17,10 @@ const compile = async entry => {
   const compiled = await build({entryPoints:[new URL(entry,import.meta.url).pathname],bundle:true,platform:'browser',format:'esm',write:false,external:['node:*'],plugins:[{name:'omit-og',setup(b){b.onResolve({filter:/^\.\/og-render$/},()=>({path:'renderer',namespace:'hub-test'}));b.onLoad({filter:/.*/,namespace:'hub-test'},()=>({contents:'export const renderOgPng=async()=>null; export const renderOgJpeg=renderOgPng;',loader:'js'}));}}]});
   return import('data:text/javascript;base64,'+Buffer.from(compiled.outputFiles[0].text).toString('base64'));
 };
-const {renderSittingWeek,renderSittingIndex,renderEstimates,hubPage} = await compile('../src/hubs.ts');
+const {renderSittingWeek: rawSittingWeek,renderSittingIndex,renderEstimates,hubPage} = await compile('../src/hubs.ts');
+import {tablePrivacyIndex} from './datatable-privacy.mjs';
+const tableIndex = await tablePrivacyIndex();
+const renderSittingWeek = (data, week, people, slugs, today, footer, query) => rawSittingWeek(data, week, people, slugs, today, footer, query, tableIndex.safe);
 const period = calendar.periods.find(w => w.start === '2026-10-12');
 const fixtureWeek = deriveWeek(period,records.bills,records.divisions,calendar.updated);
 const data = {...calendar,snapshotDate:calendar.updated,latestFederalDivision:'2026-08-20',weeks:[fixtureWeek]};
@@ -38,8 +41,8 @@ test('SSR week uses the validated sponsor, dated Machine-written label and 2D ti
   const page = renderSittingWeek(data,fixtureWeek,people,slugs);
   assert.match(page.html,/href="\/subject\/person\/mehreen-faruqi">Mehreen Faruqi/);
   for (const text of ['Machine-written','Written 13 Oct 2026','A model summary.','The 2D division title','Agreed','Not agreed','Senate two-thirds cut-off','14 Oct 2026']) assert.ok(page.html.includes(text),text);
-  assert.match(page.html,/data-label="Ayes"[^>]*>40<\/td>/);
-  assert.match(page.html,/data-label="Noes"[^>]*>80<\/td>/);
+  assert.match(page.html,/data-label="Ayes"[^>]*>[\s\S]*?class="dt-value">40<\/span>/);
+  assert.match(page.html,/data-label="Noes"[^>]*>[\s\S]*?class="dt-value">80<\/span>/);
   assert.doesNotMatch(page.html,/Fallback title/);
   assert.equal(page.jsonLd['@graph'][0]['@type'],'Event');
   assert.equal(page.jsonLd['@graph'][1].numberOfItems,4);
