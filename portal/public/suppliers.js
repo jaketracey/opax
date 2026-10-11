@@ -1,7 +1,7 @@
 /* Supplier entries: recorded procurement and source notices.
    No dependencies but the shared formats; the host router owns mounting and calls destroy on departure. */
 import {isOrganisationRecipient} from './recipient-entity.js?v=33f5c5486d';
-import {mountSuppliersTable} from './suppliers-table.js?v=03534a6ad5';
+import {mountSuppliersTable} from './suppliers-table.js?v=d11f079ab4';
 import { shortDate, shortMoney } from "./format.js";
 import { contractTitle, placeholderContract, mountContractsTable, remotePrivacyCheck } from "./contracts-table.js?v=40e5d3f3b1";
 export { contractTitle, placeholderContract } from "./contracts-table.js?v=40e5d3f3b1";

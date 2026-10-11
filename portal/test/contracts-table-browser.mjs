@@ -134,6 +134,53 @@ try {
     await page.waitForTimeout(100);page.off('download',observe);
     assert.equal(downloads,0,'initial rejection starts no CSV download');
   }
+  const donorScope=[];
+  if(!profileOnly) {
+    const funding=(await read('/graph/money.json')).nodes.find(node=>node.kind==='donor' && !sharedPolicy.check(node.id)
+      && suppliers.filter(entry=>entry.money_node_ids?.includes(node.id)).length===1
+      && suppliers.some(entry=>entry.money_node_ids?.includes(node.id) && isOrganisationRecipient(originalProfiles.get(entry.id)) && index.dataSafe(JSON.stringify(entry))));
+    const withheld=sourceTableDonorIdentities().entities.find(node=>node.id && sharedPolicy.check(node.id));
+    assert.ok(funding && withheld,'derived donor scope coverage');
+    const expected=suppliers.filter(entry=>entry.money_node_ids?.includes(funding.id)).map(entry=>entry.id);
+    const directoryHost='#subject-body [data-datatable]';
+    for(const [node,rejected] of [[funding,false],[withheld,true]]) {
+      const response=await page.goto(base+'/subject/supplier?'+new URLSearchParams({donor:node.id}));
+      const ssr=await response.text();
+      const seed=JSON.parse(ssr.match(/<script type="application\/json" data-suppliers-seed>(.*?)<\/script>/s)[1]);
+      assert.equal(seed.stateRejected,rejected);
+      assert.equal(seed.page.total,rejected?0:expected.length);
+      assert.deepEqual(seed.page.rows.map(row=>row.id),rejected?[]:expected);
+      assert.ok(index.dataSafe(JSON.stringify(seed)),'scoped SSR rows are recipient safe');
+      if(rejected) assert.ok(!sharedPolicy.check(ssr),'withheld donor scope has no SSR echo');
+      await settled(directoryHost);
+      const host=page.locator(directoryHost);
+      assert.equal(await host.locator('.dt-count').textContent(),rejected?'Showing 0–0 of 0':'Showing 1–1 of 1');
+      assert.ok(index.dataSafe(await host.innerText()));
+      assert.ok(index.dataSafe(await host.ariaSnapshot()));
+      assert.ok(!sharedPolicy.check(decodeURIComponent(page.url())),'scoped URL passes the shared guard');
+      if(rejected) {
+        assert.ok(!new URL(page.url()).searchParams.has('donor'),'rejected donor scope is removed from URL');
+        assert.equal(await host.locator('[data-export]').isDisabled(),true);
+        let downloads=0;const observe=()=>downloads++;page.on('download',observe);
+        await host.locator('[data-export]').evaluate(button=>button.click());
+        await page.waitForTimeout(100);page.off('download',observe);
+        assert.equal(downloads,0,'rejected donor scope starts no download');
+      } else {
+        assert.equal(new URL(page.url()).searchParams.get('donor'),funding.id);
+        const download=page.waitForEvent('download');await host.locator('[data-export]').click();
+        const path=resolve(outputDir,'donor-scope.csv');await (await download).saveAs(path);
+        const csv=await readFile(path,'utf8');
+        assert.ok(index.dataSafe(csv),'scoped actual CSV is recipient safe');
+        assert.deepEqual([...csv.matchAll(/^(s-[a-f0-9]{20}),/gm)].map(match=>match[1]),expected,'actual CSV stays within donor scope');
+        // Filtering and sorting must retain the source parameter after hydration.
+        await host.locator('[data-sort="name"]').click();
+        await settled(directoryHost);
+        assert.equal(await host.locator('.dt-count').textContent(),'Showing 1–1 of 1');
+      }
+      donorScope.push({rejected,rows:seed.page.total,csv:rejected?'disabled':'actual download'});
+    }
+    console.log(JSON.stringify({donorScope}));
+  }
   // Inspect complete profiles, including the public organisations the donor policy withholds.
   const matched = suppliers.filter(entry => {
     const profile = originalProfiles.get(entry.id);
@@ -204,7 +251,7 @@ try {
   }
   console.log(JSON.stringify({profileAudit:matched.length, publicProfiles, withheldProfiles}));
     assert.deepEqual(errors,[]);
-  const result={server:'wrangler dev --local',profileOnly,dryRunBundle:Boolean(process.env.DT_WRANGLER_CONFIG),contractsEndpoint:'D1 /api/table/contracts',suppliersEndpoint:'D1 /api/table/suppliers',core:'7a57261b4',profiles:{matched:matched.length,publicProfiles,withheldProfiles},screenshots:shots,privacy,checks:profileOnly?['supplier SSR, hydration and accessible text']:['client and server rows/facets','actual client CSV and D1 CSV continuation','rejected header-only API CSV and disabled browser downloads','URL and fresh SSR arrivals','rendered and accessible text','analytics','hidden CN id','column-wide bars across pages','phone bars hidden','no page overflow'],pageErrors:errors,blockedExternalRequests:blocked.length};
+  const result={server:'wrangler dev --local',profileOnly,dryRunBundle:Boolean(process.env.DT_WRANGLER_CONFIG),contractsEndpoint:'D1 /api/table/contracts',suppliersEndpoint:'D1 /api/table/suppliers',core:'7a57261b4',profiles:{matched:matched.length,publicProfiles,withheldProfiles},donorScope,screenshots:shots,privacy,checks:profileOnly?['supplier SSR, hydration and accessible text']:['client and server rows/facets','actual client CSV and D1 CSV continuation','donor supplier scope across SSR, hydration and actual CSV','rejected header-only API CSV and disabled browser downloads','URL and fresh SSR arrivals','rendered and accessible text','analytics','hidden CN id','column-wide bars across pages','phone bars hidden','no page overflow'],pageErrors:errors,blockedExternalRequests:blocked.length};
   await writeFile(resolve(outputDir,'review-browser-results.json'),JSON.stringify(result,null,2)+'\n');console.log(JSON.stringify(result));
 } catch(error) {
   if(page) {

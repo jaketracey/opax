@@ -6,7 +6,7 @@ import {rawQueryValues,repeatedTableKeys} from '../public/datatable-query.js'
 
 export const TABLE_REGISTRY_FINGERPRINT = registryBuild.fingerprint
 
-type TableEnv = {TABLE_DB: D1Database; CACHE_EPOCH?: string}
+type TableEnv = {TABLE_DB: D1Database; CACHE_EPOCH?: string; ASSETS?: Fetcher}
 const MAX_CSV = 50_000, CSV_PAGE = 10_000, BATCH = 200, MAX_FACETS = 100
 const arrays = new Set(['portfolios','sectors','entities'])
 const quote = (key: string) => `"${key}"`
@@ -78,8 +78,19 @@ async function blocked(db: D1Database, values: Iterable<string>, lengths: number
   }
   return false
 }
-function where(table: string, query: Query, except?: string) {
+/** Resolve the existing funding-profile link without publishing directory identities. */
+async function donorSupplierIds(assets: Fetcher | undefined, donor: string): Promise<string[]> {
+  if (!assets) throw new Error('unavailable')
+  const response=await assets.fetch(new Request('https://local.invalid/suppliers.json'))
+  if (!response.ok) throw new Error('unavailable')
+  const directory=await response.json<{suppliers?: {id:string;money_node_ids?:string[]}[]}>()
+  if (!Array.isArray(directory.suppliers)) throw new Error('unavailable')
+  return [...new Set(directory.suppliers.filter(row=>/^s-[a-f0-9]{20}$/.test(row.id) && row.money_node_ids?.includes(donor)).map(row=>row.id))].sort()
+}
+function where(table: string, query: Query, except?: string, supplierIds?: string[]) {
   const clauses: string[]=[], values: (string|number)[]=[]
+  // A scope with no matches remains empty, including facets and CSV.
+  if (supplierIds) {clauses.push('t.id IN (SELECT value FROM json_each(?))');values.push(JSON.stringify(supplierIds))}
   if (query.q) {
     const terms=[...new Set(tableTerms(query.q))]
     if (!terms.length) clauses.push('0')
@@ -119,7 +130,9 @@ export async function tableApi(request: Request, env: TableEnv, _ctx?: Execution
     // Check every raw key/value occurrence before a parser can discard input.
     const inputs=[...rawQueryValues(url.searchParams)]
     const queryParams=new URLSearchParams(url.searchParams), supplier=name==='contracts' ? queryParams.get('supplier') : null
+    const donor=name==='suppliers' ? queryParams.get('donor') : null
     if(supplier) queryParams.delete('supplier')
+    if(donor!==null) queryParams.delete('donor')
     const db=env.TABLE_DB
     const meta=await db.prepare("SELECT key,value FROM table_meta WHERE key IN ('version','privacy_lengths','privacy_stripped_lengths','privacy_fingerprint') LIMIT 4").all<{key:string;value:string}>()
     const metadata=Object.fromEntries(meta.results.map(r=>[r.key,r.value]))
@@ -134,22 +147,30 @@ export async function tableApi(request: Request, env: TableEnv, _ctx?: Execution
     if (!query) return errorResponse(400,'invalid_query')
     if(supplier && !denied && !/^s-[a-f0-9]{20}$/.test(supplier)) return errorResponse(400,'invalid_query')
     if(supplier && !denied) {query.filters ||= {};query.filters.supplier_id=[supplier]}
+    if(donor!==null && !denied && (!donor || donor.length>1000 || url.searchParams.getAll('donor').length!==1)) return errorResponse(400,'invalid_query')
+    // Raw donor input has already passed the shared, fingerprint-checked guard.
+    const supplierIds=donor!==null && !denied ? await donorSupplierIds(env.ASSETS,donor) : undefined
     const csv=url.searchParams.get('format')==='csv'
     if (!denied && (url.searchParams.getAll('format').length>1 || url.searchParams.has('format') && !csv)) return errorResponse(400,'invalid_query')
-    const key=normalizedTableQuery(query,csv)
-    const digest=await identityHash(['decoded-privacy-v2',metadata.version,env.CACHE_EPOCH || '',name,denied ? 'withheld:'+csv : key].join('|'))
+    const stateKey=(state: Query,csv: boolean) => {
+      const params=new URLSearchParams(normalizedTableQuery(state,csv))
+      if(donor!==null && !denied) params.set('donor',donor)
+      return params.toString()
+    }
+    const key=stateKey(query,csv)
+    const digest=await identityHash(['decoded-privacy-v2',metadata.version,env.CACHE_EPOCH || '',name,denied ? 'withheld:'+csv : key,JSON.stringify(supplierIds)].join('|'))
     const headers=new Headers({'cache-control':'public, max-age=60, s-maxage=60','etag':`"${digest}"`})
     if (!config.privacy) headers.set('content-location','/api/table/'+name+'?'+key)
     if (url.searchParams.size || csv) headers.set('x-robots-tag','noindex')
     if (request.headers.get('if-none-match')===headers.get('etag')) return new Response(null,{status:304,headers})
-    const table=tableName(name), selection=where(table,query), columnSQL=config.columns.map(c=>'t.'+quote(c.key)).join(',')
+    const table=tableName(name), selection=where(table,query,undefined,supplierIds), columnSQL=config.columns.map(c=>'t.'+quote(c.key)).join(',')
     const total=denied ? 0 : Number(await db.prepare(`SELECT COUNT(*) FROM ${table} t${selection.sql}`).bind(...selection.values).first<number>('COUNT(*)'))
     if (csv) {
       const exportable=Math.min(MAX_CSV,total),exportLimited=total>MAX_CSV
       const csvPage=query.page!,pages=Math.ceil(exportable/CSV_PAGE)
       const start=csvPage>pages ? exportable : (csvPage-1)*CSV_PAGE
       const end=Math.min(exportable,start+CSV_PAGE),exported=end-start,truncated=exported<total
-      const link=(page: number) => '/api/table/'+name+'?'+normalizedTableQuery({...query,page},true)
+      const link=(page: number) => '/api/table/'+name+'?'+stateKey({...query,page},true)
       const next=csvPage<pages ? link(csvPage+1) : undefined
       const links: string[]=[]
       if (next) links.push(`<${next}>; rel="next"`)
@@ -186,7 +207,7 @@ export async function tableApi(request: Request, env: TableEnv, _ctx?: Execution
       const statements=[db.prepare(`SELECT ${columnSQL} FROM ${table} t${selection.sql}${order(query,config.columns)} LIMIT ? OFFSET ?`).bind(...selection.values,pageSize,(page-1)*pageSize)]
       const facetColumns=config.columns.filter(c=>c.facet)
       for (const c of facetColumns) {
-        const scope=where(table,query,c.key)
+        const scope=where(table,query,c.key,supplierIds)
         statements.push(c.facet==='range' ? db.prepare(`SELECT MIN(t.${quote(c.key)}) AS min,MAX(t.${quote(c.key)}) AS max FROM ${table} t${scope.sql}`).bind(...scope.values) : db.prepare(`SELECT f.value,COUNT(*) AS count FROM ${table}_facets f JOIN ${table} t ON t.rowid=f.rowid${scope.sql ? scope.sql+' AND' : ' WHERE'} f.key=? GROUP BY f.value ORDER BY count DESC,f.value LIMIT ${MAX_FACETS}`).bind(...scope.values,c.key))
       }
       const results=await db.batch<Row>(statements);rows=decode(results[0].results)

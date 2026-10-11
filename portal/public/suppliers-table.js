@@ -1,14 +1,14 @@
 import {dataTableHTML,mountDataTable,guardTableURL} from './datatable.js?v=b397d3c40c';
 import {remotePrivacyCheck,publicQueryState} from './contracts-table.js?v=40e5d3f3b1';
 import {isOrganisationRecipient} from './recipient-entity.js?v=33f5c5486d';
-export function suppliersTableConfig({rows,privacyCheck,dataPrivacyCheck}={}) {
+export function suppliersTableConfig({donor,rows,privacyCheck,dataPrivacyCheck}={}) {
   return {id:'suppliers-table',caption:'Suppliers',pageType:'suppliers',privacy:'donors',
     privacyCheck:privacyCheck || remotePrivacyCheck,dataPrivacyCheck:dataPrivacyCheck || (text=>remotePrivacyCheck(text,'data')),
     rowPrivacyCheck:row=>/^s-[a-f0-9]{20}$/.test(String(row.id)) && isOrganisationRecipient(row) && typeof row.name==='string' && Number.isFinite(row.total),
     columns:[{key:'name',label:'Name',type:'text',primary:true},{key:'total',label:'Value',type:'money',bar:true,facet:'range'},
       {key:'count',label:'Contracts',type:'count'},{key:'agency_count',label:'Agencies',type:'count'},
       {key:'jurisdiction',label:'Jurisdiction',type:'category',facet:'multi'},{key:'abn',label:'ABN',type:'text'}],
-    ...(rows ? {rows} : {source:{endpoint:'/api/table/suppliers'}}),columnsVisible:['name','total','count','agency_count'],
+    ...(rows ? {rows} : {source:{endpoint:'/api/table/suppliers',...(typeof donor==='string' ? {params:{donor}} : {})}}),columnsVisible:['name','total','count','agency_count'],
     primaryLink:row=>/^s-[a-f0-9]{20}$/.test(String(row.id)) ? `/subject/supplier/${row.id}` : null,
     pageSize:50,defaultSort:{key:'total',dir:'desc'},urlKey:'t',export:{filename:'suppliers.csv'}};
 }
@@ -29,10 +29,10 @@ export async function mountSuppliersTable(el,{params,signal}={}) {
   const guarded=await publicQueryState(state);
   const rejected=seed?.stateRejected || guarded.rejected;
   const safe=guarded.url.searchParams;
-  if(rejected) for(const key of [...safe.keys()]) if(key.startsWith('t.'))safe.delete(key);
+  if(rejected) for(const key of [...safe.keys()]) if(key.startsWith('t.') || key==='donor')safe.delete(key);
   history.replaceState(history.state,'',location.pathname+(safe.size ? '?'+safe : '')+location.hash);
   if(signal?.aborted) return {destroy(){}};
-  const config=suppliersTableConfig();
+  const config=suppliersTableConfig({donor:safe.get('donor') ?? undefined});
   el.innerHTML=dataTableHTML({...config,privacyCheck:()=>false,dataPrivacyCheck:()=>false},seed?.page || {rows:[],total:0,page:1,pageSize:50});
   const root=el.querySelector('[data-datatable]');
   if(rejected) root.setAttribute('data-dt-rejected','');

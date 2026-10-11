@@ -4278,8 +4278,10 @@ async function buildMeta(route: SeoRoute, url: URL, request: Request, env: Env, 
       if(params.has('q')) params.set('t.q',params.get('q')!)
       const guarded=guardTableURL({id:'suppliers-table',caption:'Suppliers',pageType:'suppliers',columns:[],privacy:'donors',privacyCheck:value=>!guard(value),urlKey:'t'},new URL('https://local.invalid/?'+params))
       const rejected=guarded.rejected
-      const response=await tableApi(new Request('https://opax.com.au/api/table/suppliers?'+serializeQuery(guarded.query)),env)
-      const page=rejected || !response.ok ? {rows:[],total:0,page:1,pageSize:50,facets:{}} : await response.json() as import('../public/datatable.js').Page
+      const query=new URLSearchParams(serializeQuery(guarded.query))
+      if(guarded.url.searchParams.has('donor')) query.set('donor',guarded.url.searchParams.get('donor')!)
+      const response=rejected ? null : await tableApi(new Request('https://opax.com.au/api/table/suppliers?'+query),env)
+      const page=!response?.ok ? {rows:[],total:0,page:1,pageSize:50,facets:{}} : await response.json() as import('../public/datatable.js').Page
       meta.prerender=answerBlock('Government suppliers','Recorded Commonwealth contract awards. Values are commitments, not verified payments.',suppliersTableHTML(page,guard,params))
     } else if(route.kind==='static' && route.page==='discover') {
       const facts=await renderMoneyAnswer('Government contracts',read)
@@ -4294,7 +4296,7 @@ async function buildMeta(route: SeoRoute, url: URL, request: Request, env: Env, 
       }
     }
   }
-  if ((route.kind==='static' && route.page==='discover' || route.kind==='subject' && route.dir==='supplier' || route.kind==='index' && route.dir==='supplier') && [...url.searchParams.keys()].some(key=>key.startsWith('t.') || key==='contract')) meta.noindex=true
+  if ((route.kind==='static' && route.page==='discover' || route.kind==='subject' && route.dir==='supplier' || route.kind==='index' && route.dir==='supplier') && [...url.searchParams.keys()].some(key=>key.startsWith('t.') || key==='contract' || key==='donor')) meta.noindex=true
   // Every non-home path has a single answer, including unavailable/not-found pages.
   meta.prerender ??= answerBlock(meta.title.replace(/ · OPAX$/, ''),meta.description)
   meta.jsonLd=meta.status>=400 || meta.noindex ? null : buildSchemaGraph({canonical:meta.canonical,title:meta.title,description:meta.description,jsonLd:meta.jsonLd,person:personIdentity,bill:billIdentity})
