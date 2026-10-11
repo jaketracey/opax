@@ -178,7 +178,7 @@ def load_modern_jsonl(db, seen: set[str], since: str | None = None, report=None,
     any new rows on that day; the report contains its gid and reason. New days
     deduplicate normalized bodies as well as gids, including within the batch.
     """
-    from .speech_reconciliation import SpeechReconciler, normalized_body
+    from .speech_reconciliation import SpeechReconciler
     if not MODERN_DIR.exists():
         print(f"  Modern dir not found: {MODERN_DIR}")
         return 0
@@ -199,19 +199,22 @@ def load_modern_jsonl(db, seen: set[str], since: str | None = None, report=None,
                  'short_speeches': 0}
         with filepath.open(encoding='utf-8') as stream:
             records = [json.loads(line) for line in stream if line.strip()]
-        for record in records:
-            if record.get('date', day) != day or record.get('chamber', house) != house:
-                raise ValueError('speech record disagrees with its chamber-day file')
+        for prepared in reconciler.prepare(records, house, day):
+            record = prepared['record']
+            if prepared['reason']:
+                entry['unmatched'].append({'gid':record.get('gid'), 'reason':prepared['reason']})
+                continue
             raw = record.get('text', '')
             text = clean_text(raw)
             speaker = record.get('speaker', '') or ''
-            pid, identity = reconciler.identity(speaker, record.get('person_id'), house, day)
+            pid, identity = prepared['pid'], prepared['identity']
             gid = record.get('gid')
-            key = (identity, normalized_body(raw))
+            key = (identity, prepared['body'])
             matches = bodies.get(key, [])
             sid = gids.get(gid) if gid else None
             if sid is not None and identities[sid] != identity:
-                raise ValueError('OpenAustralia gid disagrees with its guarded citation identity')
+                entry['unmatched'].append({'gid':gid, 'reason':'gid-identity-conflict'})
+                continue
             basis = 'gid' if sid is not None else 'normalized-body'
             if sid is None and len(matches) == 1:
                 sid = matches[0]

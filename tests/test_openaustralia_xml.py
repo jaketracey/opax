@@ -179,8 +179,12 @@ def test_jsonl_loader_rechecks_a_conflicting_person_id(tmp_path):
     from parli.ingest import speeches as S
     db=db_fixture(); rows=normal(db)[0];rows[0]['person_id']='102'
     (tmp_path/'2026-10-13_senate.jsonl').write_text(json.dumps(rows[0])+'\n')
-    with patch.object(S,'MODERN_DIR',tmp_path):load_modern_jsonl(db,set(),'2026-10-13')
-    assert db.execute('SELECT person_id FROM speeches').fetchone()[0] is None
+    report=[]
+    with patch.object(S,'MODERN_DIR',tmp_path):
+        assert load_modern_jsonl(db,set(),'2026-10-13',report=report)==0
+        assert load_modern_jsonl(db,set(),'2026-10-13')==0
+    assert db.execute('SELECT COUNT(*) FROM speeches').fetchone()[0]==0
+    assert report[0]['unmatched'][0]['reason']=='rejected-person-id'
 
 
 def test_api_fallback_only_writes_after_every_honest_response(tmp_path):
@@ -320,9 +324,64 @@ def test_gid_cannot_reconcile_a_different_guarded_person(tmp_path):
     with patch.object(S,'MODERN_DIR',tmp_path):
         assert S.load_modern_jsonl(db,set())==1
         write_speeches(tmp_path,[dict(row,speaker='Sam Fixture',person_id='102')])
-        with pytest.raises(ValueError,match='guarded citation identity'):
-            S.load_modern_jsonl(db,set())
+        report=[]
+        assert S.load_modern_jsonl(db,set(),report=report)==0
+        assert S.load_modern_jsonl(db,set())==0
+    assert report[0]['unmatched'][0]['reason']=='gid-identity-conflict'
     assert db.execute('SELECT COUNT(*) FROM speeches').fetchone()[0]==1
+
+
+@pytest.mark.parametrize('reverse',[False,True])
+@pytest.mark.parametrize('same_gid',[False,True])
+def test_rejected_then_valid_identity_batch_is_held_in_either_order_and_on_rerun(tmp_path,reverse,same_gid):
+    from parli.ingest import speeches as S
+    db=db_fixture();good=normal(db)[0][0]
+    bad=dict(good,person_id='102',gid=good['gid'] if same_gid else good['gid']+'.rejected')
+    rows=[bad,good]
+    if reverse:rows.reverse()
+    write_speeches(tmp_path,rows)
+    with patch.object(S,'MODERN_DIR',tmp_path):
+        for _ in range(2):
+            report=[]
+            assert S.load_modern_jsonl(db,set(),report=report)==0
+            assert len(report[0]['unmatched'])==2
+            assert {r['reason'] for r in report[0]['unmatched']}=={'batch-identity-conflict'}
+    assert db.execute('SELECT COUNT(*) FROM speeches').fetchone()[0]==0
+    assert db.execute('SELECT COUNT(*) FROM oa_speech_provenance').fetchone()[0]==0
+
+
+@pytest.mark.parametrize('reverse',[False,True])
+def test_rejected_and_valid_identity_across_loads_mint_one_citation_and_replay(tmp_path,reverse):
+    from parli.ingest import speeches as S
+    db=db_fixture();good=normal(db)[0][0];bad=dict(good,person_id='102')
+    rows=[bad,good]
+    if reverse:rows.reverse()
+    with patch.object(S,'MODERN_DIR',tmp_path):
+        for row in rows:
+            write_speeches(tmp_path,[row])
+            assert S.load_modern_jsonl(db,set())==(1 if row['person_id']=='101' else 0)
+        before=db.execute('SELECT * FROM speeches').fetchall()
+        for row in rows:
+            write_speeches(tmp_path,[row])
+            assert S.load_modern_jsonl(db,set())==0
+        write_speeches(tmp_path,rows)
+        assert S.load_modern_jsonl(db,set())==0
+    assert db.execute('SELECT * FROM speeches').fetchall()==before
+    assert db.execute('SELECT person_id FROM speeches').fetchall()==[('101',)]
+
+
+@pytest.mark.parametrize('same_gid',[False,True])
+def test_conflicting_valid_identities_are_held_before_first_citation(tmp_path,same_gid):
+    from parli.ingest import speeches as S
+    db=db_fixture();first=normal(db)[0][0]
+    second=dict(first,person_id='102',speaker='Sam Fixture',
+                gid=first['gid'] if same_gid else first['gid']+'.other',
+                text=first['text'].replace('\n\n','  ')+'\nView the PC OA website')
+    write_speeches(tmp_path,[first,second])
+    with patch.object(S,'MODERN_DIR',tmp_path):
+        assert S.load_modern_jsonl(db,set())==0
+        assert S.load_modern_jsonl(db,set())==0
+    assert db.execute('SELECT COUNT(*) FROM speeches').fetchone()[0]==0
 
 
 @pytest.mark.parametrize('failure',[H.Refused('refused'),H.Unavailable('failed'),b'<broken>',

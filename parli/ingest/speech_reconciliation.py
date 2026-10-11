@@ -58,6 +58,52 @@ class SpeechReconciler:
             gids[gid] = sid
         return rows, bodies, gids, identities
 
+    def prepare(self, records, house, day):
+        """Hold contradictory evidence before any record receives a citation.
+
+        A supplied ID rejected by the guard is not an unattributed speech.
+        Inspect the complete batch so changing record order cannot resolve an
+        identity conflict by giving the first record a permanent citation.
+        """
+        prepared, groups = [], defaultdict(list)
+        for record in records:
+            if record.get('date', day) != day or record.get('chamber', house) != house:
+                raise ValueError('speech record disagrees with its chamber-day file')
+            pid, identity = self.identity(record.get('speaker') or '', record.get('person_id'), house, day)
+            body = normalized_body(record.get('text', ''))
+            item = {'record':record, 'pid':pid, 'identity':identity, 'body':body, 'reason':None}
+            if record.get('person_id') is not None and pid is None:
+                item['reason'] = 'rejected-person-id'
+            prepared.append(item)
+            groups[('body', body)].append(item)
+            if record.get('gid'):
+                groups[('gid', record['gid'])].append(item)
+        for items in groups.values():
+            if len({item['identity'] for item in items}) > 1:
+                for item in items:
+                    item['reason'] = 'batch-identity-conflict'
+        for item in prepared:
+            gid = item['record'].get('gid')
+            if not gid or item['reason']:
+                continue
+            previous = self.db.execute(
+                'SELECT s.speech_id,s.person_id,s.speaker_name,s.chamber,s.date '
+                'FROM oa_speech_provenance p JOIN speeches s ON s.speech_id=p.speech_id WHERE p.gid=?',
+                (gid,)).fetchall()
+            if self.gid_column:
+                previous += self.db.execute(
+                    'SELECT speech_id,person_id,speaker_name,chamber,date FROM speeches '
+                    f'WHERE {self.gid_column}=?', (gid,)).fetchall()
+            if len({row[0] for row in previous}) > 1:
+                item['reason'] = 'ambiguous-gid'
+            for _, stored_pid, speaker, stored_house, stored_day in previous:
+                _, stored_identity = self.identity(speaker, stored_pid, stored_house, stored_day)
+                if (stored_house, stored_day) != (house, day):
+                    item['reason'] = 'gid-chamber-day-conflict'
+                elif stored_identity != item['identity']:
+                    item['reason'] = 'gid-identity-conflict'
+        return prepared
+
     def remember(self, gid, sid):
         if not gid:
             return

@@ -41,6 +41,14 @@ protects API days whose grouped procedural text cannot match XML boundaries.
 The nightly writes detailed evidence to `speech-reconciliation.json` in its OA
 cache; `--report` exposes the same evidence for manual scratch-copy tests.
 
+The JSONL loader checks the whole chamber-day before assigning citations.
+A supplied person ID rejected by the guard is held, not inserted with NULL
+attribution. Conflicting identities under the same gid or normalized body hold
+the affected batch records in either order. A gid that contradicts an existing
+citation is also reported and held, including across chamber-days. Replaying
+held records adds no rows and does not raise an identity-conflict exception;
+a corrected, unambiguous fresh-day record can subsequently load normally.
+
 The real loader proof for 15–17 September copied 508 federal API rows and the
 member table from the read-only DB, preserving the citation high-water mark.
 All six chamber-days added **0** rows and retained every original row byte for
