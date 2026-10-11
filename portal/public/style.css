@@ -3355,7 +3355,7 @@ mark.privacy-confirm {
 @media (min-width: 701px) {
   .subject-person .subject-head:has(.subject-portrait) {
     grid-template-columns: max-content minmax(0, 1fr) auto;
-    grid-template-areas: "portrait title actions" "portrait meta meta" "portrait source source" "portrait caveat caveat";
+    grid-template-areas: "portrait title actions" "portrait meta meta" "portrait source source" "portrait fits fits" "portrait caveat caveat";
     align-items: start; row-gap: 0;
   }
   .subject-person .subject-head:has(.subject-portrait) .subject-portrait { grid-area: portrait; grid-row: 1 / -1; align-self: start; }
@@ -3363,10 +3363,12 @@ mark.privacy-confirm {
   .subject-person .subject-head:has(.subject-portrait) .subject-tag { grid-area: meta; }
   .subject-person .subject-head:has(.subject-portrait) > .ui-source { grid-area: source; }
   .subject-person .subject-head:has(.subject-portrait) > .person-caveat { grid-area: caveat; }
+  .subject-person .subject-head:has(.subject-portrait) > .person-fits { grid-area: fits; }
   .subject-person .subject-head:has(.subject-portrait) > .person-actions { grid-area: actions; margin: 0; align-self: center; justify-content: flex-end; }
 }
 .person-caveat { margin: var(--space-tight) 0 0; max-width: 68ch; font: var(--type-fine); color: var(--ink-soft); }
-.person-fits { margin: var(--space-block) 0 0; max-width: 68ch; font: var(--type-body); color: var(--ink); }
+.person-fits { margin: var(--space-tight) 0 0; max-width: 68ch; font: var(--type-metadata); color: var(--ink-soft); }
+.person-fits b { color: var(--ink); font-weight: 600; }
 .subject-person #subject-ask-form[hidden] { display: none; }
 .subject-person #subject-ask-form { margin: var(--space-block) 0 0; max-width: 40rem; }
 
