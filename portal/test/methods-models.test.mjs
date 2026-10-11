@@ -55,6 +55,12 @@ test('methods checks run during search builds and stamp gates', () => {
   const stamp = readFileSync(new URL('../../scripts/stamp_assets.mjs', import.meta.url), 'utf8');
   assert.match(pkg.scripts['build:search'], /npm run build:methods/);
   assert.match(pkg.scripts.check, /stamp_assets\.mjs --check/);
-  assert.match(pkg.scripts.deploy, /stamp_assets\.mjs/);
+  // Deploy may share its build pipeline with CI; follow npm script references
+  // so this checks the executed stamp gate rather than its inline spelling.
+  const expand = (name, parents = []) => {
+    assert.ok(pkg.scripts[name] && !parents.includes(name), 'Invalid deploy script reference');
+    return pkg.scripts[name].replace(/npm run ([a-z0-9:-]+)/gi, (_, child) => expand(child, [...parents, name]));
+  };
+  assert.match(expand('deploy'), /stamp_assets\.mjs/);
   assert.match(stamp, /buildMethods\(\{ check \}\)\s+buildSpaShell\(\{ check \}\)/);
 });
