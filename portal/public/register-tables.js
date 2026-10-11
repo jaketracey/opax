@@ -1,6 +1,6 @@
-import {applyQuery, dataTableHTML, guardTableURL, mountDataTable, parseQuery} from './datatable.js?v=e8c88ee351';
+import {applyQuery, dataTableHTML, guardTableURL, mountDataTable, parseQuery} from './datatable.js?v=56c137319d';
 import {isOrganisationDonor} from './donor-entity.js?v=ebb2c972d5';
-import {privacyTexts,privacyCSVFields} from './datatable-privacy-fields.js';
+import {privacyTexts,privacyCSVFields} from './datatable-privacy-fields.js?v=8077ab9d01';
 import {queryValues} from './datatable-query.js?v=6dd55aab38';
 
 const esc = value => String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));

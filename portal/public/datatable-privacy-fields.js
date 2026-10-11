@@ -1,5 +1,5 @@
-import {queryValues} from './datatable-query.js';
-import {csvFields} from './datatable-csv.js';
+import {queryValues} from './datatable-query.js?v=6dd55aab38';
+import {csvFields} from './datatable-csv.js?v=af19f6f725';
 
 /** Only explicitly selected person-bearing fields use row identity matching.
  * Visitor queries always use the complete strict guard. */

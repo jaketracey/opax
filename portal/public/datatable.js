@@ -2,7 +2,7 @@
 import {isOrganisationDonor} from './donor-entity.js?v=ebb2c972d5';
 import {unnamedDonorLabel,isUnnamedAggregate,donorsNotNamedDetail} from './donor-views.js?v=55a8bd3ae0';
 import {shortDate} from './format.js';
-import {privacyTexts as rowTexts,privacyCSVFields} from './datatable-privacy-fields.js';
+import {privacyTexts as rowTexts,privacyCSVFields} from './datatable-privacy-fields.js?v=8077ab9d01';
 import {queryValues,rawQueryValues,scrubQuery} from './datatable-query.js?v=6dd55aab38';
 
 const esc = value => String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;'}[c]));

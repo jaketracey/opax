@@ -213,10 +213,10 @@ test('every shipped HTML file has no static instruments href before catalogue av
 test('parsed catalogue is reused per isolate and failed reads can recover', async () => {
   const calls=[];
   const registered=Object.fromEntries(fixture.titles.map(row=>[row.id,row.asMadeRegisteredAt?.slice(0,10) || null]));
-  const assets={async fetch(req){const p=new URL(req.url).pathname;calls.push(p);return p === '/instruments/registered.json' ? Response.json(registered) : new Response(fixtureFiles[p.slice('/instruments/'.length)])}};
+  const assets={async fetch(req){const p=new URL(req.url).pathname;calls.push(p);return p === '/table-private-identities.json' ? new Response(readFileSync(new URL('table-private-identities.json',root))) : p === '/instruments/registered.json' ? Response.json(registered) : new Response(fixtureFiles[p.slice('/instruments/'.length)])}};
   const read=instrumentReader(assets);assert.equal(read,instrumentReader(assets));
   await Promise.all([instrumentPage(null,new URL('https://opax.com.au/instruments'),read,block,()=>true),instrumentPage(null,new URL('https://opax.com.au/instruments?q=jane'),read,block,()=>true)]);
-  assert.deepEqual(calls.sort(),['/instruments/index.json','/instruments/manifest.json','/instruments/registered.json']);
+  assert.deepEqual(calls.sort(),['/instruments/index.json','/instruments/manifest.json','/instruments/registered.json','/table-private-identities.json']);
   let available=false;
   const recovering=instrumentReader({async fetch(){return available?new Response(fixtureFiles['manifest.json']):new Response('',{status:404})}});
   await assert.rejects(recovering('/instruments/manifest.json'));
@@ -247,7 +247,7 @@ test('server catalogue uses the shared page projection and rejects private state
   const {tablePrivacyIndex}=await import('./datatable-privacy.mjs');
   const fromPublic=async path=>JSON.parse(await readFile(new URL('../public'+path,import.meta.url),'utf8'));
   const manifest=await fromPublic('/instruments/manifest.json'),safe=await tablePrivacyCheckFrom(fromPublic),calls=[];
-  const read=async path=>{assert.equal(path,'/instruments/manifest.json','native SSR does not read the complete catalogue');return manifest};
+  const read=async path=>{assert.ok(['/instruments/manifest.json','/table-private-identities.json'].includes(path),'native SSR reads only metadata and the shared guard');return path==='/table-private-identities.json'?fromPublic(path):manifest};
   const projected={rows:[{id:'F2026L99999',title:'Fixture airport instrument',type:'Principal',portfolios:['Health'],status:'InForce',registered:'2026-01-01',year:2026}],total:51,page:1,pageSize:50,facets:{year:{min:2026,max:2026}}};
   const native=async query=>{calls.push(query);return projected};
   const nativeBlock=(heading,sentence)=>`<h1>${heading}</h1><p>${sentence}</p>`;

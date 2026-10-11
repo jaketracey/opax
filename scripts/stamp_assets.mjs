@@ -137,9 +137,11 @@ export async function refreshFonts({ publicRoot = PUBLIC, fetcher = honestFetch 
  *  agencies.js and suppliers.js import each other: stamp the agencies → suppliers
  *  edge only, then app.js. Keep the reverse edge hand-versioned to avoid a hash cycle. */
 export const MODULE_STAMPS = [
+  ['datatable-privacy-fields.js', 'datatable-query.js'], ['datatable-privacy-fields.js', 'datatable-csv.js'],
+  ['datatable.js', 'datatable-privacy-fields.js'],
   ['datatable.js', 'donor-entity.js'],
   ['datatable-workbench.js', 'datatable.js'],
-  ['register-tables.js', 'donor-entity.js'], ['register-tables.js', 'datatable.js'], ['register-tables.js', 'datatable-query.js'], ['register-tables-entry.js', 'register-tables.js'], ['app.js', 'register-tables.js'],
+  ['register-tables.js', 'donor-entity.js'], ['register-tables.js', 'datatable.js'], ['register-tables.js', 'datatable-query.js'], ['register-tables.js', 'datatable-privacy-fields.js'], ['register-tables-entry.js', 'register-tables.js'], ['app.js', 'register-tables.js'],
   ['donor-views.js', 'donor-entity.js'], ['wordsdollars.js','donor-views.js'], ['quiz.js','donor-views.js'], ['ledger.js', 'donor-views.js'], ['home.js', 'donor-views.js'],
   ['ledger.js', 'donor-entity.js'], ['quiz.js', 'donor-entity.js'], ['money-journeys-data.js', 'donor-entity.js'], ['map-research.js','donor-entity.js'], ['map-research.js','donor-views.js'],
   ['datatable.js', 'donor-entity.js'], ['datatable.js', 'donor-views.js'],
