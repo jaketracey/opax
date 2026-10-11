@@ -107,11 +107,11 @@ test('neutral individual aggregates carry only counts and numeric totals, withou
   const aggregate={aggregate:{kind:'individual-donors',count:12},name:'untrusted label',id:'unsafe-id',aliases:['untrusted alias'],amount:12345.67,count:20,industry:'untrusted sector'};
   const page=applyQuery([rows[0],aggregate],config,{});
   const row=page.rows.find(r=>r.aggregate);
-  assert.deepEqual(row,{aggregate:{kind:'individual-donors',count:12},name:'Individual donors (12)',amount:12345.67,count:20});
+  assert.deepEqual(row,{aggregate:{kind:'individual-donors',count:12},name:'Donors not named (12)',amount:12345.67,count:20});
   const html=dataTableHTML(config,page);
-  assert.match(html,/Individual donors \(12\)/); assert.ok(!html.includes('unsafe-id')); assert.ok(!html.includes('untrusted'));
+  assert.match(html,/Donors not named \(12\)/); assert.ok(!html.includes('unsafe-id')); assert.ok(!html.includes('untrusted'));
   assert.ok(!html.includes('href="#undefined"'));
-  assert.match(toCSV(page.rows,config),/Individual donors \(12\),,,12345.67,20/);
+  assert.match(toCSV(page.rows,config),/Donors not named \(12\),,,12345.67,20/);
   assert.equal(toCSV([aggregate],{...config,privacy:undefined}),toCSV([aggregate],config));
   const numericPrimary={...config,columns:config.columns.map(c=>({...c,primary:c.key === 'amount'}))};
   assert.equal(toCSV([aggregate],numericPrimary),toCSV([aggregate],config));

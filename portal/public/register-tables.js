@@ -1,4 +1,4 @@
-import {applyQuery, dataTableHTML, mountDataTable, parseQuery, serializeQuery} from './datatable.js';
+import {applyQuery, dataTableHTML, mountDataTable} from './datatable.js?v=f799267242';
 import {isOrganisationDonor} from './donor-entity.js?v=2b8d45a50d';
 
 const esc = value => String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -25,21 +25,29 @@ export function auditTableConfig(records) {
 }
 
 /** An entry is omitted whole, including its holder and source URL. Never rewrite source words. */
-export function interestTableData(register, withheld = () => true) {
+export function interestTableData(register, withheld = () => true, privacyCheck) {
   const rows = [];
   let omitted = 0;
   for (const [category,bucket] of Object.entries(register.buckets || {})) for (const item of bucket.items || []) {
     if (withheld(item.description, item.holder || '', item.url || '')) { omitted++; continue; }
     const source = href(item.url) || href(register.source_url);
-    rows.push({category:categoryLabels[category] || category.replaceAll('_',' '),item:item.description,
-      date:date(item.date) || date(register.as_at),source:source && item.page ? `${source.split('#')[0]}#page=${Number(item.page) || 1}` : source});
+    const row = {category:categoryLabels[category] || category.replaceAll('_',' '),item:item.description,
+      date:date(item.date) || date(register.as_at),source:source && item.page ? `${source.split('#')[0]}#page=${Number(item.page) || 1}` : source};
+    if (privacyCheck) {
+      try {
+        if (privacyCheck(JSON.stringify({description:item.description,holder:item.holder || '',url:item.url || ''})) !== true || privacyCheck(JSON.stringify(row)) !== true) { omitted++; continue; }
+      } catch { omitted++; continue; }
+    }
+    rows.push(row);
   }
   return {rows,omitted};
 }
 
-export function interestTableConfig(rows) {
+const interestRow = row => typeof row.item === 'string' && typeof row.category === 'string' && !row.aggregate;
+
+export function interestTableConfig(rows, privacyCheck) {
   return {id:'interests-table',caption:'Register entries',pageType:'person',urlKey:'interests',pageSize:50,
-    rows,defaultSort:{key:'category',dir:'asc'},export:{filename:'declared-interests.csv'},
+    rows,privacy:'donors',rowPrivacyCheck:interestRow,privacyCheck,defaultSort:{key:'category',dir:'asc'},export:{filename:'declared-interests.csv'},
     columns:[{key:'category',label:'Category',type:'category',facet:'multi'},{key:'item',label:'Item',type:'text',primary:true},
       {key:'date',label:'Date',type:'date'}],primaryLink:row=>href(row.source)};
 }
@@ -69,8 +77,9 @@ export function partyMoneyData(graph, partyId, withheld = () => true) {
   return {rows:[...rows.values()],aggregate};
 }
 
-export function partyMoneyTableConfig(rows, id = 'party-money-table', urlKey = 'partyMoney', pageType = 'party') {
-  return {id,caption:'Organisation donors',pageType,urlKey,pageSize:50,privacy:'donors',rows,
+export function partyMoneyTableConfig(rows, aggregate, id = 'party-money-table', urlKey = 'partyMoney', pageType = 'party', privacyCheck) {
+  rows = aggregate?.donors ? [...rows,{aggregate:{kind:'individual-donors',count:aggregate.donors},total:aggregate.total,count:aggregate.count}] : rows;
+  return {id,caption:'Disclosed donations',pageType,urlKey,pageSize:50,privacy:'donors',rowPrivacyCheck:isOrganisationDonor,privacyCheck,rows,
     defaultSort:{key:'total',dir:'desc'},export:{filename:'party-donations.csv'},
     columns:[{key:'label',label:'Donor',type:'text',primary:true},{key:'industry',label:'Industry',type:'category',facet:'multi'},
       {key:'total',label:'Given',type:'money',bar:true,format:'compact',facet:'range'},
@@ -78,104 +87,35 @@ export function partyMoneyTableConfig(rows, id = 'party-money-table', urlKey = '
       {key:'lastYear',label:'Last year',type:'year'}],primaryLink:row=>isOrganisationDonor(row) ? `/subject/donor/${encodeURIComponent(row.label)}` : null};
 }
 
-export function individualDonorsHTML(aggregate) {
-  if (!aggregate.donors) return '';
-  const money = new Intl.NumberFormat('en-AU',{style:'currency',currency:'AUD',maximumFractionDigits:2}).format(aggregate.total);
-  return `<p data-donor-aggregate="">Individual donors (${aggregate.donors.toLocaleString('en-AU')}): ${esc(money)} across ${aggregate.count.toLocaleString('en-AU')} receipts. Includes donors without recorded organisation evidence.</p>`;
-}
-
-/** Public rows are the only vocabulary allowed in protected URL state. Unknown text has no matches and no echo. */
-export function guardRegisterQuery(query, config) {
-  const clean = {...query,filters:{...query.filters}}, rows = config.rows || [];
-  let blocked = false;
-  if (clean.sort && !config.columns.some(column=>column.key === clean.sort.key && column.sortable !== false)) {
-    delete clean.sort; blocked = true;
-  }
-  if (clean.q) {
-    const text = clean.q.trim().toLocaleLowerCase('en-AU');
-    const matches = rows.some(row=>config.columns.some(c=>String(row[c.key] ?? '').toLocaleLowerCase('en-AU').includes(text)));
-    const exact = rows.some(row=>config.columns.some(c=>String(row[c.key] ?? '').trim().toLocaleLowerCase('en-AU') === text));
-    const organisation = isOrganisationDonor({label:clean.q}) || rows.some(row=>String(row.label ?? '').trim().toLocaleLowerCase('en-AU') === text);
-    // A bare name can be a substring of a longer approved organisation. It
-    // cannot substantiate a donor search; other registers require whole public
-    // phrases or organisation evidence for searches containing several words.
-    if (!matches || (config.privacy === 'donors' ? !organisation : /\s/.test(text) && !exact && !organisation)) {
-      delete clean.q; blocked = true;
-    }
-  }
-  for (const [key,values] of Object.entries(clean.filters)) {
-    const column = config.columns.find(c=>c.key === key);
-    if (!column?.facet) { delete clean.filters[key]; blocked = true; continue; }
-    if (Array.isArray(values)) {
-      const allowed = new Set(rows.map(row=>String(row[key] ?? '')));
-      const safe = values.filter(value=>allowed.has(value));
-      if (safe.length !== values.length) blocked = true;
-      if (safe.length) clean.filters[key] = safe; else delete clean.filters[key];
-    }
-  }
-  if (blocked) { delete clean.q; clean.filters = {}; }
-  return {query:clean,blocked};
-}
-
-export function registerTableHTML(config, query = {}, protectedSearch = false) {
-  const guarded = protectedSearch ? guardRegisterQuery(query,config) : {query,blocked:false};
-  const page = applyQuery(guarded.blocked ? [] : config.rows || [],config,guarded.query);
-  const payload = JSON.stringify({config,protectedSearch}).replace(/</g,'\\u003c');
+/** The shared core owns query validation, pending states, history and CSV checks. */
+export function registerTableHTML(config, query = {}) {
+  const page = applyQuery(config.rows || [],config,query);
+  const payload = JSON.stringify({config}).replace(/</g,'\\u003c');
   return `<div data-register-table="${esc(config.id)}">${dataTableHTML(config,page)}<script type="application/json" data-register-config>${payload}</script></div>`;
 }
 
-function replaceQuery(config, query) {
-  const url = new URL(location.href), prefix = `${config.urlKey}.`;
-  for (const key of [...url.searchParams.keys()]) if (key.startsWith(prefix)) url.searchParams.delete(key);
-  for (const [key,value] of new URLSearchParams(serializeQuery(query,config.urlKey))) url.searchParams.append(key,value);
-  history.replaceState(history.state,'',url);
+export function mountRegisterTable(el, config) {
+  return mountDataTable(el,config);
 }
 
-/** Keep removed entries out of search fields and history, including typing and browser navigation. */
-export function mountRegisterTable(el, config, protectedSearch = false) {
-  if (!protectedSearch) return mountDataTable(el,config);
-  let mounted, blocked = false;
-  const mount = query => {
-    const guard = guardRegisterQuery(query,config);
-    replaceQuery(config,guard.query);
-    mounted?.destroy(); blocked = guard.blocked;
-    mounted = mountDataTable(el,blocked ? {...config,rows:[]} : config);
-    if (blocked && !el.querySelector('[data-clear]')) el.querySelector('.dt-chips')?.insertAdjacentHTML('beforeend','<button type="button" class="dt-button" data-clear>Clear all</button>');
-  };
-  mount(parseQuery(new URL(location.href).searchParams,config.urlKey));
-  const input = event => {
-    if (!event.target.matches?.('[data-search]')) return;
-    const query = {...parseQuery(new URL(location.href).searchParams,config.urlKey),q:event.target.value,page:1};
-    const guard = guardRegisterQuery(query,config);
-    if (guard.blocked || blocked) {
-      const value = event.target.value, cursor = event.target.selectionStart;
-      event.stopImmediatePropagation(); mount(query);
-      const search = el.querySelector('[data-search]');
-      search.value = value; search.focus();
-      // Search inputs do not support setSelectionRange in every browser.
-      if (search.type !== 'search' && cursor != null) search.setSelectionRange(cursor,cursor);
-    }
-  };
-  const clear = event => {
-    if (blocked && event.target.closest?.('[data-clear]')) { event.stopImmediatePropagation(); mount({}); }
-  };
-  const popstate = () => mount(parseQuery(new URL(location.href).searchParams,config.urlKey));
-  el.addEventListener('input',input,true); el.addEventListener('click',clear,true);
-  window.addEventListener('popstate',popstate);
-  return {destroy(){mounted.destroy();el.removeEventListener('input',input,true);el.removeEventListener('click',clear,true);window.removeEventListener('popstate',popstate);}};
+async function registerPrivacy(text, interests = false) {
+  try {
+    const response = await fetch('/api/table/privacy' + (interests ? '?context=interests' : ''),{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({text})});
+    return response.ok && (await response.json()).safe === true;
+  } catch { return false; }
 }
 
 export function hydrateRegisterTables(root = document) {
   for (const el of root.querySelectorAll('[data-register-table]')) {
     const script = el.querySelector('[data-register-config]');
     if (!script) continue;
-    const {config,protectedSearch} = JSON.parse(script.textContent);
+    const {config} = JSON.parse(script.textContent);
     if (config.id === 'instruments-table') Object.assign(config,instrumentTableConfig());
     else if (config.id === 'audit-table') config.primaryLink = row=>`/audit/${row.id}`;
-    else if (config.id === 'interests-table') config.primaryLink = row=>href(row.source);
-    else config.primaryLink = row=>isOrganisationDonor(row) ? `/subject/donor/${encodeURIComponent(row.label)}` : null;
+    else if (config.urlKey === 'interests') Object.assign(config,{rowPrivacyCheck:interestRow,privacyCheck:text=>registerPrivacy(text,true),primaryLink:row=>href(row.source)});
+    else Object.assign(config,{rowPrivacyCheck:isOrganisationDonor,privacyCheck:registerPrivacy,primaryLink:row=>isOrganisationDonor(row) ? `/subject/donor/${encodeURIComponent(row.label)}` : null});
     script.remove();
-    const mounted = mountRegisterTable(el,config,protectedSearch);
+    const mounted = mountRegisterTable(el,config);
     // The existing app replaces SSR and subject sections during navigation.
     const observer = new MutationObserver(()=>{if (!el.isConnected) {mounted.destroy();observer.disconnect();}});
     observer.observe(el.ownerDocument.body,{childList:true,subtree:true});

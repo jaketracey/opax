@@ -51,16 +51,18 @@ function donorNode(row) {
 const aggregate = row => row?.aggregate?.kind === 'individual-donors' && Number.isSafeInteger(row.aggregate.count) && row.aggregate.count >= 0;
 function publicRows(rows, config) {
   return rows.flatMap(row => {
-    if (row?.aggregate?.kind === 'individual-donors' && !aggregate(row)) return [];
+    if (row?.aggregate && !aggregate(row)) return [];
     if (aggregate(row)) {
       const safe = {aggregate:{kind:'individual-donors',count:row.aggregate.count}};
       for (const c of config.columns) {
-        if (['text','category'].includes(c.type) && (c.primary || donorColumn(c))) safe[c.key] = `Individual donors (${row.aggregate.count})`;
+        if (['text','category'].includes(c.type) && (c.primary || donorColumn(c))) safe[c.key] = `Donors not named (${row.aggregate.count})`;
         else if (numeric(c) && number(row[c.key]) != null) safe[c.key] = number(row[c.key]);
       }
       return [safe];
     }
-    return config.privacy !== 'donors' || isOrganisationDonor(donorNode(row)) ? [row] : [];
+    if (config.privacy !== 'donors') return [row];
+    try { return (config.rowPrivacyCheck ? config.rowPrivacyCheck(row) === true : isOrganisationDonor(donorNode(row))) ? [row] : []; }
+    catch { return []; }
   });
 }
 const donorColumn = column => /^(?:donor(?:_?name)?|label|name)$/i.test(column.key) || column.primary;
@@ -68,7 +70,7 @@ const allowedText = (config, value) => {
   if (config.privacy !== 'donors') return true;
   try { return config.privacyCheck?.(value) === true; } catch { return false; }
 };
-const blockedQuery = (config, query) => Boolean(query.q && !allowedText(config,query.q));
+const blockedQuery = (config, query) => Boolean(query.q && !allowedText(config,query.q)) || Object.values(query.filters || {}).some(values=>Array.isArray(values) && values.some(value=>!allowedText(config,value)));
 function cleanQuery(query = {}, config, page) {
   const out = parseQuery(new URLSearchParams(serializeQuery(query)));
   if (!config) return out;
@@ -142,10 +144,13 @@ export function serializeQuery(query = {}, urlKey) {
 }
 
 const engines = new WeakMap();
+const rowPolicies = new WeakMap();
+let nextRowPolicy = 0;
 function engine(rows, config) {
   let byColumns = engines.get(rows);
   if (!byColumns) engines.set(rows,byColumns = new Map());
-  const key = JSON.stringify(config.columns.map(c=>[c.key,c.type,c.facet,c.hideWhenConstant,c.sortable,c.primary])) + config.privacy;
+  if (config.rowPrivacyCheck && !rowPolicies.has(config.rowPrivacyCheck)) rowPolicies.set(config.rowPrivacyCheck,++nextRowPolicy);
+  const key = JSON.stringify(config.columns.map(c=>[c.key,c.type,c.facet,c.hideWhenConstant,c.sortable,c.primary])) + config.privacy + (rowPolicies.get(config.rowPrivacyCheck) || 0);
   if (byColumns.has(key)) return byColumns.get(key);
   const safe = publicRows(rows,config);
   const result = {safe, json:JSON.stringify(safe), rowJSON:safe.map(row=>JSON.stringify(row)), values:[...new Set(config.columns.flatMap(c=>safe.map(row=>text(row[c.key]))))], search:safe.map(row=>config.columns.map(c=>text(row[c.key])).join('\n').normalize('NFKC').toLowerCase()), results:new Map()};
@@ -222,7 +227,7 @@ function safePage(page, config) {
     if (!column) continue;
     if (Array.isArray(values)) {
       facets[key]=values.filter(v=>v && typeof v.value === 'string' && Number.isFinite(v.count) && v.count >= 0)
-        .filter(v=>config.privacy !== 'donors' || (donorColumn(column) ? isOrganisationDonor({label:v.value}) || /^Individual donors \([0-9]+\)$/.test(v.value) : true)
+        .filter(v=>config.privacy !== 'donors' || (donorColumn(column) ? isOrganisationDonor({label:v.value}) || /^Donors not named \([0-9]+\)$/.test(v.value) : true)
           && (config.privacyCheck ? allowedText(config,v.value) : rows.some(row=>text(row[key]) === v.value)))
         .map(v=>({value:v.value,count:v.count}));
     } else if (values && Number.isFinite(values.min) && Number.isFinite(values.max)) facets[key]={min:values.min,max:values.max};

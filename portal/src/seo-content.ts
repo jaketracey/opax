@@ -4,7 +4,7 @@ import {currentSittingPath, sydneyDay} from '../public/hubs-data.js'
 import {isOrganisationDonor, donorPrivacyIndex, donorNameWithheld, foldDonorName, MONEY_GRAPHS, withheldPhrases, namesWithheldPhrase} from '../public/donor-entity.js'
 import {renderDivisionMarkdown, divisionPlain, billNoteRepair, billStripTitle, billStripStage} from '../public/division-markdown.js'
 import {parseQuery} from '../public/datatable.js'
-import {interestTableData,interestTableConfig,partyMoneyData,partyMoneyTableConfig,registerTableHTML,individualDonorsHTML} from '../public/register-tables.js'
+import {interestTableData,interestTableConfig,partyMoneyData,partyMoneyTableConfig,registerTableHTML} from '../public/register-tables.js'
 /** Crawlable answers from the same static projections the application reads.
  * All lists are bounded; source strings and URLs cross one escaping boundary. */
 export type ReadAsset = <T>(path: string) => Promise<T>
@@ -133,6 +133,26 @@ async function withheldCheckFrom(read: ReadAsset): Promise<WithheldCheck> {
   return check
 }
 
+const moneyPhraseMemo = new WeakMap<object,WithheldCheck>()
+async function withheldMoneyCheckFrom(read: ReadAsset): Promise<WithheldCheck> {
+  const graphs = await Promise.all(MONEY_GRAPHS.map(path=>read<MoneyGraph>(path))).catch(()=>null)
+  if (!graphs) return () => true
+  const cached = moneyPhraseMemo.get(graphs[0])
+  if (cached) return cached
+  const phrases = withheldPhrases(graphs,[])
+  const results = new Map<string,boolean>()
+  const check: WithheldCheck = (...texts)=>{
+    const text = texts.join(' ')
+    if (results.has(text)) return results.get(text)!
+    const blocked = namesWithheldPhrase(phrases,`donor receipts ${text}`)
+    if (results.size >= 4096) results.delete(results.keys().next().value!)
+    results.set(text,blocked)
+    return blocked
+  }
+  moneyPhraseMemo.set(graphs[0],check)
+  return check
+}
+
 export async function renderPersonAnswer(p: Person, read: ReadAsset, slugs: Map<string,string>, profileUrl?: string, withheld?: WithheldCheck, tableParams = new URLSearchParams()): Promise<RenderedContent> {
   const [voteData, interests, seats, bills, sponsored, recentData] = await Promise.all([
     optional<Record<string, Votes | Record<string,string[]>>>(read,'/votes.json'),
@@ -174,10 +194,10 @@ export async function renderPersonAnswer(p: Person, read: ReadAsset, slugs: Map<
       // The register's own words (CC BY-NC-ND): an entry naming a withheld donor is
       // left out whole, never reworded, and the official register still has it.
       const named = withheld ?? await withheldCheckFrom(read)
-      const {rows,omitted} = interestTableData(register,named)
-      const config = interestTableConfig(rows)
+      const {rows,omitted} = interestTableData(register,named,text=>!named(`donor receipts ${text}`))
+      const config = interestTableConfig(rows,text=>!named(`donor receipts ${text}`))
       config.id = 'ssr-interests-table'
-      body += registerTableHTML(config,parseQuery(tableParams,config.urlKey),true)
+      body += registerTableHTML(config,parseQuery(tableParams,config.urlKey))
       body += '<p>Date is the notification date where supplied, otherwise the register snapshot date. Check the official entry for holders and alterations.</p>'
       if (omitted) body += `<p ${INTEREST_OMITTED_MARK}="">Some register entries are shown only on the ${register.source_url && safeHref(register.source_url) ? link(register.source_url,'official register','noopener noreferrer') : 'official register'}.</p>`
       body += original(register.source_url)
@@ -189,10 +209,10 @@ export async function renderPersonAnswer(p: Person, read: ReadAsset, slugs: Map<
     const graph = await optional<MoneyGraph>(read,path)
     const node = graph?.nodes.find(n=>n.kind==='party' && fold(n.label)===fold(party))
     if (!graph || !node) continue
-    const named = withheld ?? await withheldCheckFrom(read)
+    const named = await withheldMoneyCheckFrom(read)
     const {rows,aggregate} = partyMoneyData(graph,node.id,named)
-    const config = partyMoneyTableConfig(rows,`person-party-money-${source.toLowerCase()}`,`partyMoney${source}`,'person')
-    body += `<h3>${escapeHtml(source)} disclosed receipts</h3><p>${escapeHtml(graph.meta.coverage || '')}</p>${individualDonorsHTML(aggregate)}${registerTableHTML(config,parseQuery(tableParams,config.urlKey),true)}`
+    const config = partyMoneyTableConfig(rows,aggregate,`person-party-money-${source.toLowerCase()}`,`partyMoney${source}`,'person',text=>!named(text))
+    body += `<h3>${escapeHtml(source)} disclosed receipts</h3><p>${escapeHtml(graph.meta.coverage || '')}</p>${registerTableHTML(config,parseQuery(tableParams,config.urlKey))}`
     body += `<p>Source: ${escapeHtml(graph.meta.sourceShort || graph.meta.source || source)}. Federal and state returns are shown separately and never summed.</p>${original(graph.meta.source_url || (source==='AEC' ? 'https://transparency.aec.gov.au/' : source==='ECQ' ? 'https://disclosures.ecq.qld.gov.au/' : 'https://disclosures.vec.vic.gov.au/'))}`
   }
   const owned = sponsored?.sponsored[p.pid || p.name] || []

@@ -8,7 +8,7 @@ const divisionMarkdownReady = import('/division-markdown.js?v=5991511166').then(
 let growthModules;
 const growthModulesReady = import("/growth-modules.js?v=b3095eab8c").then(module => { growthModules = module; });
 let registerTables;
-const registerTablesReady = import('/register-tables.js?v=861e275caf').then(module => { registerTables = module; });
+const registerTablesReady = import('/register-tables.js?v=a01a7cb1ca').then(module => { registerTables = module; });
 let uiLabels;
 const uiLabelsReady = import('/labels.js?v=804befe8de').then(module => { uiLabels = module; });
 let attributionHelpers;
@@ -3818,7 +3818,7 @@ async function renderPersonInterests(name, personId, sections, onRecord = () => 
   const lname = String(name || "").trim().toLowerCase();
   const id = personId && index?.people?.[personId] ? personId : index?._by_name?.[lname];
   if (!id || !/^[\w-]+$/.test(id)) { slot.remove(); return; }
-  const [data,privacy] = await Promise.all([getJSON(`/interests/${encodeURIComponent(id)}.json`),growthModules.loadModulePrivacy("person",growthModules.normalisedName(name)),registerTablesReady]);
+  const [data,privacy,projection] = await Promise.all([getJSON(`/interests/${encodeURIComponent(id)}.json`),growthModules.loadModulePrivacy("person",growthModules.normalisedName(name)),getJSON(`/api/register/interests?pid=${encodeURIComponent(id)}`),registerTablesReady]);
   if (currentSubjectKey !== key) return;
   if (!data?.total || !data.buckets) { slot.remove(); return; }
   onRecord({interests: data});
@@ -3915,9 +3915,9 @@ async function renderPersonInterests(name, personId, sections, onRecord = () => 
       })}
     </section>` : "";
 
-  const {rows: registerRows, omitted} = registerTables.interestTableData(data,privacy);
+  const {rows: registerRows, omitted} = projection?.rows ? projection : {rows:[],omitted:data.total};
   const registerConfig = registerTables.interestTableConfig(registerRows);
-  const registerHTML = registerTables.registerTableHTML(registerConfig,{},true);
+  const registerHTML = registerTables.registerTableHTML(registerConfig);
   const added = Number(data.alterations?.added) || 0;
   const deleted = Number(data.alterations?.deleted) || 0;
   const since = data.statement_date ? `since the statement of ${esc(fmtDate(data.statement_date))}` : "since the statement";
@@ -5380,8 +5380,7 @@ async function openSubject(kind, name, manageFocus, params = new URLSearchParams
     }
     const flowRows = [...counter.entries()].sort((a, b) => b[1] - a[1]).slice(0, 10);
     const partyDonations = isParty ? registerTables.partyMoneyData(moneyData,node.id,donorPrivacy) : null;
-    const partyTable = partyDonations ? registerTables.individualDonorsHTML(partyDonations.aggregate)
-      + registerTables.registerTableHTML(registerTables.partyMoneyTableConfig(partyDonations.rows),{},true) : "";
+    const partyTable = partyDonations ? registerTables.registerTableHTML(registerTables.partyMoneyTableConfig(partyDonations.rows,partyDonations.aggregate)) : "";
     // Identity once (principle 3): the title, then one meta line with the
     // party's own dot and full name (or the donor's industry) and its years.
     // Quick facts became the head's source sheet and the "On this page" rail;

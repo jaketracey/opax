@@ -1,3 +1,4 @@
+import {withheldNameCheck} from './donor-index'
 import {MONEY_GRAPHS,withheldPhrases,namesWithheldPhrase} from '../public/donor-entity.js'
 
 const indices = new WeakMap<Fetcher, Promise<(text: string) => boolean>>()
@@ -27,7 +28,9 @@ export async function tablePrivacy(request: Request, assets: Fetcher): Promise<R
     const input = await request.text()
     const value: unknown = JSON.parse(input).text
     if (typeof value !== 'string') return Response.json({safe:false}, {status:400, headers})
-    const check = await tablePrivacyCheck(assets)
+    const check = new URL(request.url).searchParams.get('context') === 'interests'
+      ? await withheldNameCheck(assets).then(withheld => (text: string) => !withheld(`donor receipts ${text}`))
+      : await tablePrivacyCheck(assets)
     return Response.json({safe:check(value)}, {headers})
   } catch { return Response.json({safe:false}, {status:503, headers}) }
 }

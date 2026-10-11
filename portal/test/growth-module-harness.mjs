@@ -4,6 +4,7 @@ import {readFileSync} from 'node:fs';
 import {join} from 'node:path';
 import {runInNewContext} from 'node:vm';
 import * as modules from '../public/growth-modules.js';
+import {withheldPhrases,namesWithheldPhrase,MONEY_GRAPHS} from '../public/donor-entity.js';
 import * as registerTables from '../public/register-tables.js';
 import {supplierRecordsHTML,agencyGrantsHTML,publishedSupplierIndex} from '../public/supplier-growth.js';
 import {sourceLineHTML} from '../public/labels.js';
@@ -23,8 +24,15 @@ export async function* moduleOutputs(root,withheld,readAsset) {
   if(!cache.has(path))cache.set(path,readAsset ? await readAsset('/'+path) : JSON.parse(readFileSync(join(root,path),'utf8')));
   return cache.get(path);
  };
+ let interestPhrases;
  const fetchAsset=async url=>{
   if(typeof url!=='string'||!url.startsWith('/'))throw Error('Only local module assets');
+  if (url.startsWith('/api/register/interests?')) {
+   const pid=new URL(url,'https://fixture.test').searchParams.get('pid');
+   if(!interestPhrases){const graphs=await Promise.all(MONEY_GRAPHS.map(read)),access=await read('/access.json').catch(()=>({ministers:{}}));interestPhrases=withheldPhrases(graphs,[...roster.people.flatMap(p=>[p.name,p.full || '']),...Object.values(access.ministers || {}).map(m=>m.name)]);}
+   const check=(...texts)=>namesWithheldPhrase(interestPhrases,...texts);
+   return {ok:true,json:async()=>registerTables.interestTableData(await read('/interests/'+pid+'.json'),check,text=>!check(`donor receipts ${text}`))};
+  }
   try {return {ok:true,json:()=>read(url)}}catch{return {ok:false,json:async()=>null}}
  };
  // SSR enriches its cached roster with historical speakers. Module approvals

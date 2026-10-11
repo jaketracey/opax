@@ -1,9 +1,13 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {readFileSync} from 'node:fs';
+import {readFileSync,readdirSync} from 'node:fs';
 import {instrumentTableResponse} from '../src/instrument-table.ts';
-import {instrumentTableConfig,auditTableConfig,interestTableConfig,interestTableData,guardRegisterQuery,partyMoneyData} from '../public/register-tables.js';
+import {instrumentTableConfig,auditTableConfig,interestTableConfig,interestTableData,partyMoneyData} from '../public/register-tables.js';
 import {isOrganisationDonor} from '../public/donor-entity.js';
+import {applyQuery,dataTableHTML,toCSV} from '../public/datatable.js';
+import {registerServerCSVContract} from './datatable-endpoint-contract.mjs';
+import {tablePrivacyIndex} from './datatable-privacy.mjs';
+import {namesWithheldPhrase} from '../public/donor-entity.js';
 import {unpack,instrumentTableRows} from '../public/instruments.js';
 const root = new URL('../public/',import.meta.url);
 const read = async path=>JSON.parse(readFileSync(new URL(path.replace(/^\//,''),root),'utf8'));
@@ -37,12 +41,12 @@ test('audit client mode contains the complete small catalogue and the required c
 
 test('interest dates distinguish notification dates from the snapshot and source text stays exact',()=>{
   const register = {as_at:'2026-09-19',source_url:'https://register.example/statement.pdf',buckets:{gifts:{items:[{description:'An organisation-provided item',date:'2026-08-03',page:2},{description:'An item in the latest statement'}]}}};
-  const {rows,omitted} = interestTableData(register,()=>false), config = interestTableConfig(rows);
+  const {rows,omitted} = interestTableData(register,()=>false), config = interestTableConfig(rows,()=>true);
   assert.equal(omitted,0);assert.deepEqual(rows.map(row=>row.date),['2026-08-03','2026-09-19']);
   assert.equal(rows[0].item,register.buckets.gifts.items[0].description);
   assert.equal(config.primaryLink(rows[0]),register.source_url+'#page=2');
-  assert.equal(guardRegisterQuery({q:'organisation'},config).blocked,false);
-  assert.equal(guardRegisterQuery({q:'absent text'},config).blocked,true);
+  assert.equal(applyQuery(rows,config,{q:'organisation'}).total,1);
+  assert.equal(applyQuery(rows,config,{q:'absent text'}).total,0);
 });
 
 test('organisation aliases retain evidence and repeated withheld receipts count one donor',()=>{
@@ -55,7 +59,42 @@ test('organisation aliases retain evidence and repeated withheld receipts count 
   assert.equal(rows.length,1);assert.equal(isOrganisationDonor(rows[0]),true);
   assert.deepEqual(rows[0].aliases,['Register Fixture Organisation Pty Ltd']);
   assert.deepEqual(aggregate,{donors:1,total:7,count:2});
-  const config = {columns:[{key:'label',label:'Donor',type:'text'}],rows:[{label:'Withheld donor fixture Pty Ltd'}],privacy:'donors'};
-  assert.equal(guardRegisterQuery({q:'Withheld donor fixture'},config).blocked,true,'a bare name cannot borrow evidence from a longer organisation');
-  assert.equal(guardRegisterQuery({q:'Pty Ltd'},config).blocked,false,'organisation evidence substantiates a matching search');
 });
+
+test('protected row policies are fail closed and cached independently',()=>{
+  const rows=[{item:'A source entry',category:'Gifts'}];
+  const config=interestTableConfig(rows,()=>true);
+  assert.equal(applyQuery(rows,config,{}).total,1);
+  for(const rowPrivacyCheck of [()=>false,()=>undefined,()=>{throw new Error('unavailable');}]) {
+    assert.equal(applyQuery(rows,{...config,rowPrivacyCheck},{}).total,0);
+    assert.equal(toCSV(rows,{...config,rowPrivacyCheck}).split('\r\n').length,1);
+  }
+});
+
+test('every interest register omits entries rejected by the shared table index without losing the whole table',async()=>{
+  const index=await tablePrivacyIndex({donorContext:false});
+  const withheld=(...texts)=>namesWithheldPhrase(index.phrases,...texts);
+  let extraOmitted=0,registers=0;
+  for(const file of readdirSync(new URL('interests/',root)).filter(file=>file !== 'index.json' && file.endsWith('.json'))) {
+    const register=await read('/interests/'+file);
+    if(!register.buckets)continue;
+    const before=interestTableData(register,withheld),projected=interestTableData(register,withheld,index.safe);
+    const config=interestTableConfig(projected.rows,index.safe),page=applyQuery(config.rows,config,{pageSize:50000});
+    assert.ok(index.safe(JSON.stringify(page)),`register ${registers}: rows and facets`);
+    assert.ok(index.safe(toCSV(page.rows,config)),`register ${registers}: CSV`);
+    assert.equal(projected.omitted-before.omitted,before.rows.length-projected.rows.length);
+    extraOmitted+=projected.omitted-before.omitted;registers++;
+  }
+  assert.ok(registers>300);assert.ok(extraOmitted>0,'derived entries exercise the stricter core check');
+});
+
+let seededAssets;
+registerServerCSVContract(test,{name:'instruments',seed:async rows=>{
+  const original=await read('/instruments/manifest.json');
+  const records=rows.map((row,i)=>[`F2026L${String(i).padStart(5,'0')}`,row.name,['Fixture portfolio'],'Regulation','2026-01-01','In force']);
+  const lookup=Object.fromEntries(records.map((row,i)=>[row[0],Math.floor(i/512)]));
+  const chunks=Array.from({length:Math.ceil(rows.length/512)},(_,i)=>({path:`/instruments/catalogue-fixture-${i}.json`,count:Math.min(512,rows.length-i*512)}));
+  const manifest={...original,count:rows.length,exported:rows.length,odata_count:rows.length,count_start:rows.length,count_end:rows.length,drift:0,unresolved_gap:0,gap_pages:[],lookup,chunks,metadata_coverage:{...original.metadata_coverage,expanded_titles:rows.length}};
+  const data={'/instruments/manifest.json':manifest,'/instruments/index.json':{records},'/instruments/registered.json':Object.fromEntries(records.map(row=>[row[0],'2026-01-01']))};
+  seededAssets={fetch:async request=>Response.json(data[new URL(request.url).pathname])};
+},request:query=>instrumentTableResponse(new Request('https://opax.test/api/table/instruments'+query),seededAssets)});

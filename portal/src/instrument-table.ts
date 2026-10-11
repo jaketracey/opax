@@ -20,7 +20,9 @@ export async function instrumentTableResponse(request:Request, assets:Fetcher):P
     query.pageSize = Math.max(1,Math.min(200,query.pageSize || 50))
     if (url.searchParams.get('format') === 'csv') {
       const page = applyQuery(rows,config,{...query,page:1,pageSize:50_000})
-      return new Response(request.method === 'HEAD' ? null : toCSV(page.rows,config),{headers:{...headers,'content-type':'text/csv; charset=utf-8','content-disposition':'attachment; filename="instruments.csv"'}})
+      const truncated = page.total > 50_000
+      const csv = toCSV(page.rows,config) + (truncated ? '\r\n# Export truncated at 50,000 rows.' : '')
+      return new Response(request.method === 'HEAD' ? null : csv,{headers:{...headers,'content-type':'text/csv; charset=utf-8','content-disposition':'attachment; filename="instruments.csv"',...(truncated ? {'x-table-export-truncated':'true'} : {})}})
     }
     const page = applyQuery(rows,config,query)
     return request.method === 'HEAD' ? new Response(null,{headers:{...headers,'content-type':'application/json'}}) : Response.json(page,{headers})

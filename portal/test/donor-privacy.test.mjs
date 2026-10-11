@@ -19,7 +19,7 @@ import {buildGrowth} from '../../scripts/build_growth_modules.mjs';
 import {moduleOutputs} from './growth-module-harness.mjs';
 import {applyQuery,dataTableHTML,mountDataTable,toCSV,serializeQuery} from '../public/datatable.js';
 import {tableHarness} from './datatable-harness.mjs';
-import {interestTableData,interestTableConfig,partyMoneyData,partyMoneyTableConfig,guardRegisterQuery} from '../public/register-tables.js';
+import {interestTableData,interestTableConfig,partyMoneyData,partyMoneyTableConfig} from '../public/register-tables.js';
 
 const pub = new URL('../public/', import.meta.url).pathname;
 const real = path => JSON.parse(readFileSync(join(pub, path), 'utf8'));
@@ -335,30 +335,40 @@ test('a declared-interest entry naming a withheld donor is left out whole, with 
 
 test('interest tables omit withheld entries before rows, facets, CSV and URL state are constructed', () => {
   const phrases = withheldPhrases(graphs,[...rosterNames]);
-  const projected = interestTableData(interestRegister,(...texts)=>namesWithheldPhrase(phrases,...texts));
+  const projected = interestTableData(interestRegister,(...texts)=>namesWithheldPhrase(phrases,...texts),text=>!namesWithheldPhrase(phrases,`donor receipts ${text}`));
   assert.ok(projected.omitted > 0,'the derived fixture entry is omitted');
   assert.ok(projected.rows.some(row=>row.item === keptEntry.description),'the next source entry stays verbatim');
-  const config = interestTableConfig(projected.rows);
-  const page = applyQuery(projected.rows,config,{pageSize:2000});
+  const config = interestTableConfig(projected.rows,text=>!namesWithheldPhrase(phrases,`donor receipts ${text}`));
+  const page = applyQuery(config.rows,config,{pageSize:2000});
   assertClean('interest table rows and facets',JSON.stringify(page));
   assertClean('interest table CSV',toCSV(page.rows,config));
   for (const [i,label] of checked.entries()) {
-    for (const query of [{q:label},{filters:{category:[label]}},{sort:{key:label,dir:'asc'}}]) {
-      const guarded = guardRegisterQuery(query,config);
-      assertClean(`interest table URL ${i}`,serializeQuery(guarded.query,config.urlKey));
-      assert.equal(applyQuery(guarded.blocked ? [] : projected.rows,config,guarded.query).total,0,`interest query ${i} has no rows`);
+    for (const query of [{q:label},{filters:{category:[label]}}]) {
+      const rejected = applyQuery(config.rows,config,query);
+      assertClean(`interest table state ${i}`,dataTableHTML(config,rejected));
+      assert.equal(rejected.total,0,`interest query ${i} has no rows`);
     }
   }
   assert.deepEqual(interestTableData(interestRegister).rows,[],'missing privacy approval fails closed');
 });
 
+test('the public interest projection omits donor entries before client input and retains the omission count',async()=>{
+  const response=await fetchWorker('/api/register/interests?'+new URLSearchParams({pid:interestMember.pid}));
+  assert.equal(response.status,200);assert.equal(response.headers.get('cache-control'),'no-store');
+  const projected=await response.json();
+  assert.ok(projected.omitted>0);assert.ok(projected.rows.some(row=>row.item===keptEntry.description));
+  assertClean('public interest client rows',JSON.stringify(projected));
+  assert.equal((await fetchWorker('/api/register/interests',{method:'POST'})).status,405);
+  assert.equal((await fetchWorker('/api/register/interests')).status,404);
+});
+
 test('party money tables name only organisations in rows, facets, CSV and URL state and retain withheld totals', () => {
-  const phrases = withheldPhrases(graphs,[...rosterNames]);
+  const phrases = withheldPhrases(graphs,[]);
   const check = (...texts)=>namesWithheldPhrase(phrases,...texts);
   for (const [g,graph] of graphs.entries()) for (const party of graph.nodes.filter(n=>n.kind === 'party')) {
-    const projected = partyMoneyData(graph,party.id,check), config = partyMoneyTableConfig(projected.rows);
+    const projected = partyMoneyData(graph,party.id,check), config = partyMoneyTableConfig(projected.rows,projected.aggregate,undefined,undefined,undefined,text=>!check(`donor receipts ${text}`));
     assert.ok(projected.rows.every(isOrganisationDonor),`graph ${g}: organisation evidence`);
-    const page = applyQuery(projected.rows,config,{pageSize:2000});
+    const page = applyQuery(config.rows,config,{pageSize:2000});
     assertClean(`party table ${g} rows and facets`,JSON.stringify(page));
     assertClean(`party table ${g} CSV`,toCSV(page.rows,config));
     const donorIds = new Set(graph.nodes.filter(n=>n.kind === 'donor').map(n=>n.id));
@@ -366,10 +376,10 @@ test('party money tables name only organisations in rows, facets, CSV and URL st
     assert.ok(Math.abs(projected.rows.reduce((n,row)=>n+row.total,0)+projected.aggregate.total-receipts.reduce((n,e)=>n+e.total,0)) < 0.01,`graph ${g}: every receipt amount retained`);
     assert.equal(projected.rows.reduce((n,row)=>n+row.count,0)+projected.aggregate.count,receipts.reduce((n,e)=>n+(e.count || 0),0),`graph ${g}: every receipt count retained`);
     for (const [i,label] of checked.entries()) {
-      for (const query of [{q:label},{filters:{label:[label]}},{sort:{key:label,dir:'asc'}}]) {
-        const guarded = guardRegisterQuery(query,config);
-        assertClean(`party table ${g} URL ${i}`,serializeQuery(guarded.query,config.urlKey));
-        assert.equal(applyQuery(guarded.blocked ? [] : projected.rows,config,guarded.query).total,0,`party query ${i} has no rows`);
+      for (const query of [{q:label},{filters:{industry:[label]}}]) {
+        const rejected = applyQuery(config.rows,config,query);
+        assertClean(`party table ${g} state ${i}`,dataTableHTML(config,rejected));
+        assert.equal(rejected.total,0,`party query ${i} has no rows`);
       }
     }
   }

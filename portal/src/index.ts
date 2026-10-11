@@ -1,4 +1,5 @@
-import {tablePrivacy} from './table-privacy'
+import {interestRegisterResponse} from './interest-register'
+import {tablePrivacy,tablePrivacyCheck} from './table-privacy'
 import { divisionPlain } from '../public/division-markdown.js'
 import { runSocialPublication, socialStatus, socialEngagement, publicationCopy, previewPublication, todayRedirect, CHANNELS, type Channel } from './social-publication'
 import { positionEvidence, positionProposalQuote, positionEligibilityQuotes, positionCostQuote, isPositionEligibilityQuestion, isPositionCostQuestion, isPositionDetailQuestion, positionPointSupported, normalizePositionDraft } from './position-evidence'
@@ -12,7 +13,7 @@ import { instrumentPage, instrumentReader } from './instruments'
 import { auditPage, auditReader } from './audit'
 import {instrumentTableResponse} from './instrument-table'
 import {parseQuery} from '../public/datatable.js'
-import {partyMoneyData,partyMoneyTableConfig,registerTableHTML,individualDonorsHTML} from '../public/register-tables.js'
+import {partyMoneyData,partyMoneyTableConfig,registerTableHTML} from '../public/register-tables.js'
 import { hubPage } from './hubs'
 import { vicElectionPage, type VicElection } from './vic-election'
 import { vicElectionEnabled, vicElectionPublicationPath, vicElectionDiscovery, vicElectionLlms, VIC_ELECTION_ASSET, VIC_ELECTION_SITEMAP } from '../public/vic-election.js'
@@ -4647,10 +4648,11 @@ async function moneySubjectMeta(dir: 'party' | 'donor', name: string, url: URL, 
     const graph = await read<Parameters<typeof partyMoneyData>[0]>('/graph/money.json').catch(()=>null)
     const party = graph?.nodes.find(n=>n.kind === 'party' && foldName(n.label) === foldName(display))
     if (graph && party) {
-      const {rows,aggregate} = partyMoneyData(graph,party.id,await withheldNameCheck(env.ASSETS))
-      const config = partyMoneyTableConfig(rows)
+      const privacyCheck = await tablePrivacyCheck(env.ASSETS)
+      const {rows,aggregate} = partyMoneyData(graph,party.id,text=>!privacyCheck(String(text)))
+      const config = partyMoneyTableConfig(rows,aggregate,undefined,undefined,undefined,privacyCheck)
       config.id = 'ssr-party-money-table'
-      table = `<section class="wrap"><h2>Disclosed donations</h2>${individualDonorsHTML(aggregate)}${registerTableHTML(config,parseQuery(url.searchParams,config.urlKey),true)}<p>Party transfers and grants are excluded. Source: <a href="https://transparency.aec.gov.au/">AEC Transparency Register</a>.</p></section>`
+      table = `<section class="wrap"><h2>Where it came from</h2>${registerTableHTML(config,parseQuery(url.searchParams,config.urlKey))}<p>Party transfers and grants are excluded. Source: <a href="https://transparency.aec.gov.au/">AEC Transparency Register</a>.</p></section>`
     }
   }
   return {
@@ -5608,6 +5610,7 @@ function personTopicsFor(name: string, env: Env): Promise<Response> {
 export default {
   async fetch(request, env, ctx): Promise<Response> {
     const url = new URL(request.url)
+    if (url.pathname === '/api/register/interests') return withSecurityHeaders(await interestRegisterResponse(request,env.ASSETS),url)
     if (url.pathname === '/api/table/instruments') return withSecurityHeaders(await instrumentTableResponse(request,env.ASSETS),url)
     if (!vicElectionEnabled(env.VIC_ELECTION_HUB_ENABLED) && vicElectionPublicationPath(url.pathname))
       return withSecurityHeaders(new Response(request.method === 'HEAD' ? null : 'Not found', {status:404,headers:{'x-robots-tag':'noindex','cache-control':'no-store','content-type':'text/plain; charset=utf-8'}}), url)

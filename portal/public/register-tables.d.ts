@@ -5,12 +5,10 @@ export interface PartyGraph {nodes:{id:string;kind:string;label:string;industry?
 export interface IndividualAggregate {donors:number;total:number;count:number}
 export function instrumentTableConfig(): DataTableConfig;
 export function auditTableConfig(records: AuditRow[]): DataTableConfig;
-export function interestTableData(register: InterestRegister, withheld?: (...texts:unknown[])=>boolean): {rows:Row[];omitted:number};
-export function interestTableConfig(rows: Row[]): DataTableConfig;
+export function interestTableData(register: InterestRegister, withheld?: (...texts:unknown[])=>boolean,privacyCheck?:(text:string)=>boolean): {rows:Row[];omitted:number};
+export function interestTableConfig(rows: Row[],privacyCheck?:DataTableConfig['privacyCheck']): DataTableConfig;
 export function partyMoneyData(graph: PartyGraph, partyId: string, withheld?: (...texts:unknown[])=>boolean): {rows:Row[];aggregate:IndividualAggregate};
-export function partyMoneyTableConfig(rows:Row[],id?:string,urlKey?:string,pageType?:string): DataTableConfig;
-export function individualDonorsHTML(aggregate:IndividualAggregate): string;
-export function guardRegisterQuery(query:Query,config:DataTableConfig): {query:Query;blocked:boolean};
-export function registerTableHTML(config:DataTableConfig,query?:Query,protectedSearch?:boolean): string;
-export function mountRegisterTable(el:Element,config:DataTableConfig,protectedSearch?:boolean): {destroy():void};
+export function partyMoneyTableConfig(rows:Row[],aggregate?:IndividualAggregate,id?:string,urlKey?:string,pageType?:string,privacyCheck?:DataTableConfig['privacyCheck']): DataTableConfig;
+export function registerTableHTML(config:DataTableConfig,query?:Query): string;
+export function mountRegisterTable(el:Element,config:DataTableConfig): {destroy():void};
 export function hydrateRegisterTables(root?:ParentNode): void;

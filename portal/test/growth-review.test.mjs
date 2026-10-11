@@ -29,7 +29,7 @@ test('individual donor fixture is absent from rendered person interests and supp
  const record={total:1,buckets:{gifts:{count:1,items:[]}},ties};
  const esc=s=>String(s??'').replaceAll('&','&amp;').replaceAll('<','&lt;');
  const {renderPersonInterests}=runInNewContext(code+';({renderPersonInterests})',{
-  registerTables:{...registerTables,hydrateRegisterTables(){}},registerTablesReady:Promise.resolve(),growthModules:{...growthModules,loadModulePrivacy:async()=>()=>false},currentSubjectKey:'person',document:{createElement:()=>({dataset:{},remove(){}})},fetch:async url=>({ok:true,json:async()=>url==='/interests/index.json'?{people:{fixture:{}}}:record}),
+  registerTables:{...registerTables,hydrateRegisterTables(){}},registerTablesReady:Promise.resolve(),growthModules:{...growthModules,loadModulePrivacy:async()=>()=>false},currentSubjectKey:'person',document:{createElement:()=>({dataset:{},remove(){}})},fetch:async url=>({ok:true,json:async()=>url==='/interests/index.json'?{people:{fixture:{}}}:url.startsWith('/api/register/interests?')?registerTables.interestTableData(record,()=>false):record}),
   esc,safeUrl:()=>'',fmtDate:String,fmtMoney:String,industryLabel:String,partyDotHTML:()=>'',entityHrefAttr:href=>`href="${href}"`,subjectHash:(kind,name)=>`/subject/${kind}/${name}`,sourceLineHTML:()=>'<details class="ui-source"></details>',
  });
  await renderPersonInterests('Example','fixture',{appendChild:slot=>slots.push(slot)});
