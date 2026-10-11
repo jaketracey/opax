@@ -2,8 +2,9 @@
 import { readFileSync, writeFileSync, existsSync, mkdirSync, readdirSync } from 'node:fs'
 import { spawnSync } from 'node:child_process'
 import { randomBytes } from 'node:crypto'
+import { pathToFileURL } from 'node:url'
 import { join } from 'node:path'
-import { MODEL, hash, recordOf, stratumOf, select, enrichmentRequests, upperCost, decode, blind, judgeRequests, usageCost } from './bakeoff-lib.ts'
+import { MODEL, hash, recordOf, stratumOf, select, enrichmentRequests, upperCost, decode, blind, judgeRequests, usageCost, retryRequests, mergeAttempt } from './bakeoff-lib.ts'
 
 const out = '/home/jake/opax-staging/federation/bakeoff'
 const pilot = '/home/jake/opax-staging/federation/kb-gap/pilot-2000.jsonl'
@@ -44,6 +45,7 @@ function spendGuard(lane: string, upper: number) {
 async function submit(lane: string) {
   if (existsSync(join(out, `${lane}-submission.json`))) throw Error('submission already recorded; poll it instead')
   const requests = read(`${lane}-requests.json`).requests
+  if (!requests.length) throw Error('no outstanding units to submit')
   const upper = upperCost(requests), whole = spendGuard(lane, upper)
   console.log(JSON.stringify({ lane, requests: requests.length, upper_usd: upper, whole_estimate_usd: whole }))
   // Record an ambiguous submission before POST. Never automatically resubmit on a timeout.
@@ -53,6 +55,9 @@ async function submit(lane: string) {
   console.log(JSON.stringify({ lane, batch_id: batch.id, status: batch.processing_status, counts: batch.request_counts }))
 }
 async function poll(lane: string) {
+  if (existsSync(join(out, `${lane}-applied.json`))) {
+    console.log(JSON.stringify({ lane, status: 'already-applied', ...read(`${lane}-usage.json`) })); return
+  }
   const submission = read(`${lane}-submission.json`)
   if (!submission.batch?.id) throw Error('ambiguous POST: reconcile with the batch list before proceeding')
   const batch = await api(`/v1/messages/batches/${submission.batch.id}`)
@@ -72,8 +77,35 @@ async function poll(lane: string) {
   if (lane === 'haiku') {
     const units = selected(), byId = new Map(rows.map(r => [r.custom_id, r]))
     writeLines('haiku-200.jsonl', units.map((u, i) => ({ slug: u.slug, ...decode(byId.get(`unit-${String(i).padStart(3, '0')}`) ?? { result: { type: 'missing-result' } }) })))
+    if (!existsSync(join(out, 'haiku-initial-200.jsonl'))) writeLines('haiku-initial-200.jsonl', jsonl(join(out, 'haiku-200.jsonl')))
+  } else if (lane.startsWith('haiku-')) {
+    const plan = read(`${lane}-requests.json`), previous = jsonl(join(out, 'haiku-200.jsonl'))
+    const byId = new Map(rows.map(r => [r.custom_id, r]))
+    const updates = new Map(plan.mapping.map((m: any) => [m.slug, m]))
+    writeLines('haiku-200.jsonl', previous.map(p => {
+      const mapping: any = updates.get(p.slug)
+      return mapping ? mergeAttempt(p, decode(byId.get(mapping.custom_id) ?? { result: { type: 'missing-result' } }), mapping.tasks, plan.attempt) : p
+    }))
+    const aggregate = { input_tokens: 0, cache_creation_input_tokens: 0, cache_read_input_tokens: 0, output_tokens: 0, cost_usd: 0 }
+    for (const r of jsonl(join(out, 'haiku-200.jsonl'))) {
+      for (const k of ['input_tokens', 'cache_creation_input_tokens', 'cache_read_input_tokens', 'output_tokens'] as const) aggregate[k] += r.usage?.[k] ?? 0
+      aggregate.cost_usd += r.cost ?? 0
+    }
+    write('haiku-total-usage.json', aggregate)
   }
+  write(`${lane}-applied.json`, { batch_id: batch.id, applied_at: new Date().toISOString() })
   console.log(JSON.stringify({ lane, ...usage }))
+}
+async function prepareRetry(attempt: number) {
+  const lane = `haiku-${attempt}`
+  if (existsSync(join(out, `${lane}-requests.json`))) throw Error('retry plan already exists')
+  if (attempt === 3 && !existsSync(join(out, 'haiku-2-results.jsonl'))) throw Error('second attempt must finish first')
+  if (!existsSync(join(out, 'haiku-initial-200.jsonl'))) writeLines('haiku-initial-200.jsonl', jsonl(join(out, 'haiku-200.jsonl')))
+  const guard = await import(pathToFileURL(join(out, 'guard-snapshot/validate.ts')).href)
+  const outputs = new Map(jsonl(join(out, 'haiku-200.jsonl')).map(r => [r.slug, r]))
+  const plan = retryRequests(selected(), outputs, guard.hasNewPersonalName, guard.NAMES_PROBLEM, attempt)
+  write(`${lane}-requests.json`, plan)
+  console.log(JSON.stringify({ lane, retry_units: plan.requests.length, upper_usd: upperCost(plan.requests) }))
 }
 function prepare() {
   if (existsSync(join(out, 'units-200.json'))) throw Error('selection already exists; do not overwrite')
@@ -123,8 +155,9 @@ function makeBlind() {
 const command = process.argv[2], lane = process.argv[3]
 try {
   if (command === 'prepare') prepare()
-  else if (command === 'submit' && ['haiku', 'judge', 'donation'].includes(lane)) await submit(lane)
-  else if (command === 'poll' && ['haiku', 'judge', 'donation'].includes(lane)) await poll(lane)
+  else if (command === 'retry') await prepareRetry(Number(lane))
+  else if (command === 'submit' && ['haiku', 'haiku-2', 'haiku-3', 'judge', 'donation'].includes(lane)) await submit(lane)
+  else if (command === 'poll' && ['haiku', 'haiku-2', 'haiku-3', 'judge', 'donation'].includes(lane)) await poll(lane)
   else if (command === 'wait-qwen') await waitQwen()
   else if (command === 'blind') makeBlind()
   else throw Error('usage: bakeoff.ts prepare | submit haiku|judge|donation | poll haiku|judge|donation | wait-qwen | blind')

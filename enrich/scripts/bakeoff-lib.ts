@@ -3,6 +3,7 @@ import { buildSystemPrompt, buildUserPrompt, type PromptRecord } from '../src/pr
 import { clip, squash, wordCount } from '../src/text.ts'
 import { TOPIC_SLUGS } from '../src/topics.ts'
 import { cleanupSummary, validateSummary, validateTopics } from '../src/validate.ts'
+import { MAX_ATTEMPTS } from '../src/generate.ts'
 
 export const MODEL = 'claude-haiku-5-5'
 export const hash = (s: string) => createHash('sha256').update(s).digest('hex')
@@ -51,6 +52,32 @@ export function params(system: string, user: string, schema: any, maxTokens: num
 }
 export function enrichmentRequests(units: any[]) {
   return units.map((u, i) => ({ custom_id: `unit-${String(i).padStart(3, '0')}`, params: params(buildSystemPrompt(['summary', 'topics']), buildUserPrompt(recordOf(u)), enrichmentSchema, 512) }))
+}
+export function retryRequests(units: any[], outputs: Map<string, any>, nameGuard: (summary: string, source: string) => boolean, nameProblem: string, attempt: number) {
+  if (attempt < 2 || attempt > MAX_ATTEMPTS) throw Error('retry attempt outside worker limit')
+  const requests: any[] = [], mapping: any[] = []
+  units.forEach((u, i) => {
+    const output = outputs.get(u.slug), verdict = validate(output, u), record = recordOf(u)
+    const fullText = Object.entries(u.texts).filter(([k]) => !k.toLowerCase().includes('summary')).map(([, v]: any) => v.body ?? v.value?.body ?? '').sort((a, b) => b.length - a.length)[0] ?? ''
+    const nameHit = nameGuard(verdict.summary ?? '', fullText)
+    const tasks: Array<'summary' | 'topics'> = []
+    if (output.error || output.refusal || verdict.summaryProblems.length || nameHit) tasks.push('summary')
+    if (output.error || output.refusal || verdict.topicProblems.length) tasks.push('topics')
+    if (!tasks.length) return
+    const complaints = [...verdict.summaryProblems, ...verdict.topicProblems, ...(nameHit ? [nameProblem] : [])]
+    const properties: any = {}, required: string[] = []
+    for (const task of tasks) { properties[task] = enrichmentSchema.properties[task]; required.push(task) }
+    const custom_id = `unit-${String(i).padStart(3, '0')}`
+    requests.push({ custom_id, params: params(buildSystemPrompt(tasks), buildUserPrompt(record, complaints), { type: 'object', additionalProperties: false, required, properties }, 512) })
+    mapping.push({ custom_id, slug: u.slug, tasks })
+  })
+  return { requests, mapping, attempt }
+}
+export function mergeAttempt(previous: any, current: any, tasks: string[], attempt: number) {
+  if ((previous.attempts ?? 1) >= attempt) return previous
+  const usage: any = {}
+  for (const k of ['input_tokens', 'cache_creation_input_tokens', 'cache_read_input_tokens', 'output_tokens']) usage[k] = (previous.usage?.[k] ?? 0) + (current.usage?.[k] ?? 0)
+  return { ...previous, ...current, summary: tasks.includes('summary') ? current.summary : previous.summary, topics: tasks.includes('topics') ? current.topics : previous.topics, usage, cost: (previous.cost ?? 0) + (current.cost ?? 0), attempts: attempt, history: [...previous.history ?? [{ attempt: 1, ...previous }], { attempt, ...current }] }
 }
 /** UTF-8 bytes bound token count conservatively; charge all input as 1h cache writes. */
 export function upperCost(requests: any[]) {

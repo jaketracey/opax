@@ -1,7 +1,7 @@
 import test from 'node:test'
 import assert from 'node:assert/strict'
 import { buildSystemPrompt, buildUserPrompt } from '../src/prompts.ts'
-import { select, recordOf, enrichmentRequests, usageCost, blind, judgeRequests, validate, decode, upperCost } from '../scripts/bakeoff-lib.ts'
+import { select, recordOf, enrichmentRequests, usageCost, blind, judgeRequests, validate, decode, upperCost, retryRequests, mergeAttempt } from '../scripts/bakeoff-lib.ts'
 
 const unit = (id: number, length: number, year = '1993', chamber = 'senate', kind = 'speech') => ({ slug: `unit-${id}`, title: 'Record', texts: { body: { body: 'text '.repeat(Math.ceil(length / 5)) } }, extra: { metadata: { date: `${year}-01-01`, unit_kind: kind } }, usermetadata: { classifications: [{ labelset: 'kind', label: 'speech' }, { labelset: 'chamber', label: chamber }] } })
 test('selection excludes thin text and preserves strata and short quota deterministically', () => {
@@ -58,4 +58,26 @@ test('preflight accounts for each full output cap and unshared input', () => {
   const requests = enrichmentRequests([unit(1, 800)])
   assert.ok(upperCost(requests) >= 512 * 0.25 / 1e6)
   assert.equal(upperCost([...requests, ...requests]), upperCost(requests) * 2)
+})
+test('retries use only failed tasks and the worker complaint prompt, capped at three attempts', () => {
+  const u = unit(1, 800), outputs = new Map([[u.slug, { summary: '', topics: ['health'] }]])
+  const plan = retryRequests([u], outputs, () => false, 'name guard', 2)
+  assert.deepEqual(plan.mapping[0].tasks, ['summary'])
+  assert.equal(plan.requests[0].params.system[0].text, buildSystemPrompt(['summary']))
+  assert.deepEqual(plan.requests[0].params.output_config.format.schema.required, ['summary'])
+  assert.ok(plan.requests[0].params.messages[0].content.includes('The previous attempt failed these checks'))
+  assert.throws(() => retryRequests([u], outputs, () => false, 'name guard', 4))
+  const guarded = retryRequests([u], new Map([[u.slug, { summary: 'Reported the text with a compact neutral description of the proceeding.', topics: [] }]]), () => true, 'name guard', 2)
+  assert.ok(guarded.requests[0].params.messages[0].content.includes('name guard'))
+})
+test('merging an attempt preserves completed topics and books all failed-call usage', () => {
+  const previous = { slug: 'unit-1', summary: '', topics: ['health'], cost: 0.01, usage: { input_tokens: 100, output_tokens: 10 }, error: null }
+  const current = { summary: 'Rewritten brief', topics: null, cost: 0.02, usage: { input_tokens: 200, output_tokens: 20 }, error: null }
+  const merged = mergeAttempt(previous, current, ['summary'], 2)
+  assert.deepEqual(merged.topics, ['health'])
+  assert.equal(merged.summary, current.summary)
+  assert.equal(merged.cost, 0.03)
+  assert.equal(merged.usage.input_tokens, 300)
+  assert.equal(merged.history.length, 2)
+  assert.deepEqual(mergeAttempt(merged, current, ['summary'], 2), merged)
 })

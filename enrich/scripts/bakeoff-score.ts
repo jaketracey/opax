@@ -1,4 +1,4 @@
-import { readFileSync, writeFileSync } from 'node:fs'
+import { readFileSync, writeFileSync, existsSync } from 'node:fs'
 import { pathToFileURL } from 'node:url'
 import { hash, recordOf, validate, usageCost } from './bakeoff-lib.ts'
 
@@ -64,7 +64,8 @@ function score() {
   if (qwen.some(r => typeof r.neurons !== 'number' || r.neurons < 0)) throw Error('measured qwen neurons required per unit, including retries')
   const neurons = qwen.reduce((n, r) => n + r.neurons, 0)
   metrics.qwen3.neurons = neurons; metrics.qwen3.cost_usd = neurons * 0.011 / 1000
-  metrics.haiku.cost_usd = read('haiku-usage.json').cost_usd
+  metrics.haiku.cost_usd = read(existsSync(out + 'haiku-total-usage.json') ? 'haiku-total-usage.json' : 'haiku-usage.json').cost_usd
+  metrics.haiku.first_pass = read('haiku-early-audit.json').metrics
   for (const side of ['haiku', 'qwen3']) metrics[side].cost_per_1000_usd = metrics[side].cost_usd * 5
   metrics.total_spend_usd = metrics.haiku.cost_usd + metrics.qwen3.cost_usd + read('judge-usage.json').cost_usd + read('donation-usage.json').cost_usd
   metrics.model = 'claude-haiku-5-5'
