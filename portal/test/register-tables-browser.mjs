@@ -27,7 +27,7 @@ const selectedTables=process.env.DT_REGISTER_TABLES?.split(',').filter(Boolean);
 const workerBundle=process.env.DT_REGISTER_WORKER;
 const dev=spawn(process.execPath,['node_modules/wrangler/bin/wrangler.js','dev',...workerBundle?[workerBundle,'--no-bundle']:[],'--local','--ip','127.0.0.1','--port','9754','--inspector-port','9755','--log-level','error','--show-interactive-dev-session=false','--var','INDEXNOW_ENABLED:false','--var','INDEXNOW_DRY_RUN:true'],{cwd:fileURLToPath(new URL('../',import.meta.url)),env:{...process.env,WRANGLER_SEND_METRICS:'false'},stdio:['ignore','pipe','pipe']});
 let devLog=0,devMessages='',browser;
-await writeFile(resolve(outputDir,'round4-wrangler-dev.log'),'');
+await writeFile(resolve(outputDir,'round5-wrangler-dev.log'),'');
 dev.stdout.on('data',value=>{devLog+=value.length;devMessages+=value;});dev.stderr.on('data',value=>{devLog+=value.length;devMessages+=value;});
 const errors=[],blocked=[],privacyRollouts=[];
 registerTablePrivacy(privacyRollouts,{id:'interests',path:personPath,host:'[data-register-table="interests-table"]',facet:'category',rangeFacet:'date',urlKey:'interests',fullPrivacy:true,endpoint:`/api/register/interests?pid=${encodeURIComponent(member.pid)}`,modes:['client'],readInput:page=>page.evaluate(async ({pid})=>{
@@ -65,7 +65,7 @@ try{
   if(url.pathname.startsWith('/api/') && !['/api/table/instruments','/api/table/audit-reports','/api/table/privacy','/api/register/interests','/api/register/party-money','/api/person-slugs'].includes(url.pathname))return route.fulfill({contentType:'application/json',body:'{"results":[],"topics":[],"people":[]}'});
   return route.continue();
  });
- await writeFile(resolve(outputDir,'round4-runner.pid'),String(process.pid)+'\n');
+ await writeFile(resolve(outputDir,'round5-runner.pid'),String(process.pid)+'\n');
  const page=await context.newPage();page.setDefaultTimeout(60000);page.setDefaultNavigationTimeout(60000);page.on('pageerror',error=>errors.push(error.message));
  const validationResults=[],moduleStatuses=[];
  page.on('response',async response=>{
@@ -91,8 +91,8 @@ try{
    if(layout.total>width+1)console.log(JSON.stringify({table:name,layout}));
    assert.ok(layout.total<=width+1,`${name} ${width}: fits the viewport`);
    assert.ok(await host.locator('tbody [data-primary]').count(),`${name}: rows loaded`);
-   await page.screenshot({path:resolve(outputDir,`round4-${name}-${width}.png`)});
-   console.log(`round4-${name}-${width}.png`);
+   await page.screenshot({path:resolve(outputDir,`round5-${name}-${width}.png`)});
+   console.log(`round5-${name}-${width}.png`);
    const download=page.waitForEvent('download');await host.locator('[data-export]').click();
    const received=await download.catch(async error=>{
     const state=await host.evaluate(el=>({outerBusy:el.hasAttribute('aria-busy'),innerBusy:el.querySelector('[data-datatable]')?.hasAttribute('aria-busy'),disabled:el.querySelector('[data-export]')?.disabled,failed:el.querySelector('.dt-count')?.textContent.includes('Could not export'),pendingScript:!!el.querySelector('[data-register-config]')}));
@@ -140,6 +140,8 @@ try{
   const range=kind==='min'||kind==='max',column=id==='party-money-table'?'total':id==='interests-table'?'date':'year';
   const selector=`[data-register-table="${id}"]`,params=new URLSearchParams({[key+(kind==='q'?'.q':'.f.'+(range?column:facet))]:kind==='q'?value:JSON.stringify(range?{[kind]:Number(value)}:[value])});
   const response=await page.goto(base+path+'?'+params),html=await response.text();
+  assert.equal(response.headers()['x-robots-tag'],'noindex','rejected initial URL is noindex in SSR');
+  assert.ok(await page.evaluate(html=>new DOMParser().parseFromString(html,'text/html').querySelector('meta[name="robots"]')?.content.includes('noindex'),html),'rejected initial URL has SSR robots metadata');
   const ssr=await page.evaluate(html=>{
    const document=new DOMParser().parseFromString(html,'text/html');
    return [...document.querySelectorAll('[data-register-table]')].map(el=>el.outerHTML).join('');
@@ -152,18 +154,44 @@ try{
   assert.equal(await host.locator('.dt-count').textContent(),'Showing 0–0 of 0','initial rejection remains empty');
   assert.equal(await host.locator('[data-export]').isDisabled(),true,'initial rejection offers no CSV');
   assert.ok(index.safe(JSON.stringify(await page.evaluate(()=>window.initialPrivacyEvents))),'initial analytics have no private echo');
+  assert.ok((await page.locator('meta[name="robots"]').getAttribute('content')).includes('noindex'),'rejected initial URL stays noindex after hydration');
   if(range)initialRangeCases++;
  }
- for(const [path,key,id] of initialCases.slice(0,2))for(const kind of ['duplicate','unknown','discarded']){
+ let robotsRejectedCases=0;
+ for(const [path,key,id] of initialCases.slice(0,2))for(const kind of ['duplicate','unknown','discarded','raw-query','raw-facet','raw-unknown','raw-duplicate']){
   const value=index.probes[0],params=new URLSearchParams();
   if(kind==='duplicate'){params.append(key+'.q','fixture');params.append(key+'.q',value);}
   else if(kind==='unknown')params.set(key+'.future',value);
-  else params.set(key+'.f.'+(key==='partyMoney'?'total':'date'),JSON.stringify({min:0,discarded:value}));
+  else if(kind==='discarded')params.set(key+'.f.'+(key==='partyMoney'?'total':'date'),JSON.stringify({min:0,discarded:value}));
+  else if(kind==='raw-duplicate'){params.append('q','fixture');params.append('q',value);}
+  else params.set(kind==='raw-query'?'q':kind==='raw-facet'?'f.future':'future',value);
   const response=await page.goto(base+path+'?'+params),html=await response.text();
   assert.equal(response.headers()['x-robots-tag'],'noindex','original rejected SSR state is noindex');
-  const state=await page.evaluate(({html,key})=>{const doc=new DOMParser().parseFromString(html,'text/html'),host=doc.querySelector(key==='partyMoney'?'[data-register-table="ssr-party-money-table"]':'[data-register-table="ssr-interests-table"]');return {count:host.querySelector('.dt-count').textContent,disabled:host.querySelector('[data-export]').disabled,html:host.outerHTML};},{html,key});
+  const state=await page.evaluate(({html,key})=>{const doc=new DOMParser().parseFromString(html,'text/html'),host=doc.querySelector(key==='partyMoney'?'[data-register-table="ssr-party-money-table"]':'[data-register-table="ssr-interests-table"]');return {count:host.querySelector('.dt-count').textContent,disabled:host.querySelector('[data-export]').disabled,html:host.outerHTML,robots:doc.querySelector('meta[name="robots"]')?.content};},{html,key});
+  assert.ok(state.robots?.includes('noindex'),'raw rejection has SSR robots metadata');
   assert.equal(state.count,'Showing 0–0 of 0','raw rejection is empty in SSR');assert.equal(state.disabled,true,'raw rejection cannot export in SSR');assert.ok(index.safe(state.html),'SSR rejection contains no private value');
   const selector=`[data-register-table="${id}"]`;await settled(selector);assert.equal(await page.locator(selector+' .dt-count').textContent(),'Showing 0–0 of 0','hydration retains raw rejection');assert.ok(index.safe(await page.locator(selector).innerHTML()),'hydrated rejection contains no private value');
+  assert.ok((await page.locator('meta[name="robots"]').getAttribute('content')).includes('noindex'),'raw rejection stays noindex after hydration');robotsRejectedCases++;
+ }
+ let robotsFilteredCases=0;
+ for(const [path,key,id] of initialCases.slice(0,2)) {
+  const response=await page.goto(base+path),html=await response.text();
+  assert.equal(response.headers()['x-robots-tag'],'all','ordinary unfiltered page is indexable in SSR');
+  assert.equal(await page.evaluate(html=>new DOMParser().parseFromString(html,'text/html').querySelector('meta[name="robots"]')?.content.includes('noindex') || false,html),false,'ordinary SSR metadata stays indexable');
+  await settled(`[data-register-table="${id}"]`);
+  assert.equal(await page.evaluate(()=>document.querySelector('meta[name="robots"]')?.content.includes('noindex') || false),false,'ordinary page stays indexable after hydration');
+  for(const field of ['q',key+'.q']) {
+   const response=await page.goto(base+path+'?'+new URLSearchParams({[field]:'fixture'})),html=await response.text();
+   assert.equal(response.headers()['x-robots-tag'],'noindex','filtered page is noindex in SSR');
+   assert.ok(await page.evaluate(html=>new DOMParser().parseFromString(html,'text/html').querySelector('meta[name="robots"]')?.content.includes('noindex'),html),'filtered page has SSR robots metadata');
+   await settled(`[data-register-table="${id}"]`);
+   assert.ok((await page.locator('meta[name="robots"]').getAttribute('content')).includes('noindex'),'filtered page stays noindex after hydration');robotsFilteredCases++;
+   await page.goto(base+path);await settled(`[data-register-table="${id}"]`);
+   await page.evaluate(field=>{const url=new URL(location.href);url.searchParams.set(field,'fixture');history.replaceState(null,'',url);dispatchEvent(new PopStateEvent('popstate'));},field);
+   await page.waitForFunction(()=>document.querySelector('meta[name="robots"]')?.content.includes('noindex'));
+   await settled(`[data-register-table="${id}"]`);
+   assert.ok((await page.locator('meta[name="robots"]').getAttribute('content')).includes('noindex'),'filtered popstate is noindex without SSR metadata');
+  }
  }
  for(const [path,key,id] of initialCases.slice(2)){
   await page.goto(base+path+'?'+new URLSearchParams({q:initialValues[2]}));await settled(`[data-register-table="${id}"]`);
@@ -201,9 +229,9 @@ try{
   assert.equal(full,metadata.total,'Clear all restores the loaded catalogue');
  }
  assert.equal(errors.length,0,'browser script error count');
- const result={server:'wrangler dev --local',core:'merged main',screenshots:initialOnly?0:2*(selectedTables?.length||4),viewports:initialOnly?[1280]:[390,1280],privacy,initialRangeCases,pageErrors:errors.length,blockedExternalRequests:blocked.length,checks:initialOnly?['initial upper and lower numeric bounds','SSR and hydrated rejection','URL, DOM and accessible text','disabled CSV','analytics']:['rows and facets','actual CSV download','URL and initial SSR state','rendered and accessible text','analytics','neutral aggregate','column-wide bar scale across pages','server dates and pagination','viewport fit']};
- const resultName=initialOnly?'round4-initial-range-results.json':selectedTables?`round4-${selectedTables.join('-')}-browser-results.json`:'round4-browser-results.json';
+ const result={server:'wrangler dev --local',core:'merged main',screenshots:initialOnly?0:2*(selectedTables?.length||4),viewports:initialOnly?[1280]:[390,1280],privacy,initialRangeCases,robotsRejectedCases,robotsFilteredCases,pageErrors:errors.length,blockedExternalRequests:blocked.length,checks:initialOnly?['initial upper and lower numeric bounds','SSR and hydrated rejection','URL, DOM and accessible text','disabled CSV','analytics']:['rows and facets','actual CSV download','URL and initial SSR state','rendered and accessible text','analytics','neutral aggregate','column-wide bar scale across pages','server dates and pagination','viewport fit']};
+ const resultName=initialOnly?'round5-initial-range-results.json':selectedTables?`round5-${selectedTables.join('-')}-browser-results.json`:'round5-browser-results.json';
  await writeFile(resolve(outputDir,resultName),JSON.stringify(result,null,2)+'\n');console.log(JSON.stringify(result));
 }finally{
- await browser?.close();dev.kill('SIGTERM');await Promise.race([new Promise(done=>dev.once('exit',done)),new Promise(done=>setTimeout(done,5000))]);if(dev.exitCode == null && dev.signalCode == null)dev.kill('SIGKILL');await writeFile(resolve(outputDir,'round4-wrangler-dev.log'),JSON.stringify({diagnosticBytes:devLog,exitCode:dev.exitCode,signal:dev.signalCode,lines:devMessages.split('\n').filter(Boolean).slice(-200).map(line=>privacyIndex.safe(line) && !/(?:\d[\s-]*){11}/.test(line) ? line : '[withheld diagnostic suppressed]')})+'\n');
+ await browser?.close();dev.kill('SIGTERM');await Promise.race([new Promise(done=>dev.once('exit',done)),new Promise(done=>setTimeout(done,5000))]);if(dev.exitCode == null && dev.signalCode == null)dev.kill('SIGKILL');await writeFile(resolve(outputDir,'round5-wrangler-dev.log'),JSON.stringify({diagnosticBytes:devLog,exitCode:dev.exitCode,signal:dev.signalCode,lines:devMessages.split('\n').filter(Boolean).slice(-200).map(line=>privacyIndex.safe(line) && !/(?:\d[\s-]*){11}/.test(line) ? line : '[withheld diagnostic suppressed]')})+'\n');
 }

@@ -2,8 +2,8 @@
 import {isOrganisationDonor} from './donor-entity.js?v=ebb2c972d5';
 import {unnamedDonorLabel,isUnnamedAggregate,donorsNotNamedDetail} from './donor-views.js?v=55a8bd3ae0';
 import {shortDate} from './format.js';
-import {privacyTexts as rowTexts,privacyCSVFields} from './datatable-privacy-fields.js?v=8077ab9d01';
-import {queryValues,rawQueryValues,scrubQuery} from './datatable-query.js?v=6dd55aab38';
+import {privacyTexts as rowTexts,privacyCSVFields} from './datatable-privacy-fields.js?v=7a6c85a822';
+import {queryValues,rawQueryValues,scrubQuery} from './datatable-query.js?v=91898b0c1f';
 
 const esc = value => String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;'}[c]));
 const numeric = column => ['money', 'count', 'year'].includes(column.type);
@@ -493,7 +493,8 @@ export function mountDataTable(el, config) {
     const checked=scrubQuery(new URLSearchParams(encoded),value=>allowedText(config,value),config.urlKey || '');
     for (const [key,value] of checked.params) url.searchParams.set(key,value);
     replaceURL(url);
-    setRobots(doc,root,Boolean(encoded));
+    const rawState=scrubQuery(url.searchParams,value=>allowedText(config,value),null);
+    setRobots(doc,root,view.rejected || Boolean(encoded) || rawState.noindex);
     scrubHead();
   }
   function endpoint(csv = false, state = query) {

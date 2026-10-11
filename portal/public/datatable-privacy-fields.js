@@ -1,4 +1,4 @@
-import {queryValues} from './datatable-query.js?v=6dd55aab38';
+import {queryValues} from './datatable-query.js?v=91898b0c1f';
 import {csvFields} from './datatable-csv.js?v=af19f6f725';
 
 /** Only explicitly selected person-bearing fields use row identity matching.

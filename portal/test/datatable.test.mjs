@@ -5,9 +5,27 @@ import {applyQuery,dataTableHTML,formatCell,mountDataTable,parseQuery,serializeQ
 import {workbenchConfig,workbenchRows as rows} from '../public/datatable-workbench-data.js';
 import {cleanEvent} from '../analytics/privacy.mjs';
 import {tableHarness} from './datatable-harness.mjs';
+import {scrubQuery} from '../public/datatable-query.js';
 
 const config={...workbenchConfig,privacyCheck:()=>true};
 const all = query => applyQuery(rows,config,{...query,pageSize:100});
+test('the shared raw-query guard retains noindex for rejected, duplicate and filtered state',()=>{
+  const safe=value=>value !== 'blocked-fixture';
+  for(const key of ['q','f.future','future','receipts.q','receipts.f.future']) {
+    const result=scrubQuery(new URLSearchParams({[key]:'blocked-fixture'}),safe,null);
+    assert.equal(result.rejected,true);assert.equal(result.noindex,true);
+    assert.equal(result.params.toString(),'','rejection survives removal of the raw pair');
+  }
+  for(const key of ['q','receipts.q']) {
+    const params=new URLSearchParams([[key,'first'],[key,'second']]);
+    const result=scrubQuery(params,safe,null);
+    assert.equal(result.rejected,true);assert.equal(result.noindex,true);
+  }
+  for(const key of ['q','f.future','receipts.q','receipts.f.future'])
+    assert.equal(scrubQuery(new URLSearchParams({[key]:'accepted'}),safe,null).noindex,true);
+  assert.equal(scrubQuery(new URLSearchParams(),safe,null).noindex,false);
+  assert.equal(scrubQuery(new URLSearchParams({campaign:'fixture'}),safe,null).noindex,false);
+});
 test('query round trips namespaces, lists, ranges and a colon in the sort key',()=>{
   const query = {q:'Works & services',filters:{region:['Victoria','Queensland'],amount:{min:0,max:500000}},sort:{key:'total:amount',dir:'desc'},page:3,pageSize:25};
   const encoded = serializeQuery(query,'receipts');

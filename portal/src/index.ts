@@ -24,6 +24,7 @@ import { normalizePassage, passageWindow } from './passage-text'
 import { instrumentPage, instrumentReader } from './instruments'
 import { auditPage, auditReader } from './audit'
 import {parseQuery,serializeQuery,type Page} from '../public/datatable.js'
+import {scrubQuery} from '../public/datatable-query.js'
 import {partyMoneyData,partyMoneyTableConfig,registerTableHTML} from '../public/register-tables.js'
 import { hubPage } from './hubs'
 import { vicElectionPage, type VicElection } from './vic-election'
@@ -5171,14 +5172,18 @@ function legacyConnectionsRedirect(url: URL): Response {
 }
 
 async function serveSeoPage(route: SeoRoute, url: URL, request: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
+  // Rendering may scrub the shared URL. Preserve the guard's original decision
+  // for robots, including unprefixed, unknown and duplicate raw properties.
+  const originalQuery = new URLSearchParams(url.searchParams)
   const originalTableState = [...url.searchParams.keys()].some(key=>/^(?:instruments|audit|interests|partyMoney(?:AEC|ECQ|VEC)?)\./.test(key))
-  const [shell, meta] = await Promise.all([
+  const [shell, meta, originalQueryNoindex] = await Promise.all([
     env.ASSETS.fetch(new Request(`${SITE_ORIGIN}/`)),
     buildMeta(route, url, request, env, ctx),
+    originalQuery.size ? tablePrivacyCheck(env.ASSETS).then(safe=>scrubQuery(originalQuery,safe,null).noindex) : false,
   ])
   if (!shell.ok) return shell
   const tableState = [...url.searchParams.keys()].some(key=>/^(?:instruments|audit|interests|partyMoney(?:AEC|ECQ|VEC)?)\./.test(key))
-  const noindex = meta.noindex || meta.status >= 400 || originalTableState || tableState || (['/ask', '/search'].includes(url.pathname.replace(/\/+$/, '')) && Boolean(url.search))
+  const noindex = meta.noindex || meta.status >= 400 || originalQueryNoindex || originalTableState || tableState || (['/ask', '/search'].includes(url.pathname.replace(/\/+$/, '')) && Boolean(url.search))
   // Election coverage names unavailable grants, but renders no financial records.
   // Its renderer owns any future caveat alongside an actual political money pairing.
   // The policy pages (privacy, support) name no association between records.

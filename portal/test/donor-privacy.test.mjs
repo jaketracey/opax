@@ -474,6 +474,33 @@ test('interest tables omit withheld entries before rows, facets, CSV and URL sta
   assert.deepEqual(interestTableData(interestRegister).rows,[],'missing privacy approval fails closed');
 });
 
+test('rejected raw register queries retain SSR noindex after URL scrubbing',async()=>{
+  const value=checked[0];assert.ok(value,'a runtime-derived withheld probe exists');
+  const routes=[
+    [`/subject/person/${personIndex(rosterPeople).slugOf.get(interestMember.name)}`,'interests'],
+    [partyUrl(topParty.label),'partyMoney'],
+  ];
+  for(const [path,prefix] of routes) {
+    const ordinary=await fetchWorker(path),ordinaryHTML=await ordinary.text();
+    assert.equal(ordinary.headers.get('x-robots-tag'),'all','ordinary register page is indexable');
+    assert.doesNotMatch(ordinaryHTML,/<meta name="robots" content="noindex"/);
+    const cases=['q','f.future','future',prefix+'.q',prefix+'.f.future'].map(key=>new URLSearchParams({[key]:value}));
+    for(const key of ['q',prefix+'.q'])cases.push(new URLSearchParams([[key,'fixture'],[key,value]]));
+    for(const [i,params] of cases.entries()) {
+      const response=await fetchWorker(path+'?'+params),html=await response.text();
+      assert.equal(response.headers.get('x-robots-tag'),'noindex',`${prefix} rejected state ${i}: header`);
+      assert.match(html,/<meta name="robots" content="noindex"/,`${prefix} rejected state ${i}: metadata`);
+      assert.ok(html.includes('Showing 0–0 of 0'),'rejected register has zero rows');
+      assertClean(`${prefix} rejected state ${i}`,html);
+    }
+    for(const key of ['q',prefix+'.q']) {
+      const response=await fetchWorker(path+'?'+new URLSearchParams({[key]:'fixture'}));
+      assert.equal(response.headers.get('x-robots-tag'),'noindex','filtered register is noindex');
+      assert.match(await response.text(),/<meta name="robots" content="noindex"/);
+    }
+  }
+});
+
 test('the public interest projection omits donor entries before client input and retains the omission count',async()=>{
   const response=await fetchWorker('/api/register/interests?'+new URLSearchParams({pid:interestMember.pid}));
   assert.equal(response.status,200);assert.equal(response.headers.get('cache-control'),'no-store');

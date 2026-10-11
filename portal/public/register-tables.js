@@ -1,7 +1,7 @@
-import {applyQuery, dataTableHTML, guardTableURL, mountDataTable, parseQuery} from './datatable.js?v=56c137319d';
+import {applyQuery, dataTableHTML, guardTableURL, mountDataTable, parseQuery} from './datatable.js?v=a16bcc4d46';
 import {isOrganisationDonor} from './donor-entity.js?v=ebb2c972d5';
-import {privacyTexts,privacyCSVFields} from './datatable-privacy-fields.js?v=8077ab9d01';
-import {queryValues} from './datatable-query.js?v=6dd55aab38';
+import {privacyTexts,privacyCSVFields} from './datatable-privacy-fields.js?v=7a6c85a822';
+import {queryValues} from './datatable-query.js?v=91898b0c1f';
 
 const esc = value => String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const date = value => /^\d{4}-\d{2}-\d{2}/.test(String(value || '')) ? String(value).slice(0, 10) : null;
