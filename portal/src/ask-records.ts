@@ -95,6 +95,7 @@ export function recordContext(records: CatalogRecord[]): string[] {
     period: r.dateLabel || r.date || 'Not recorded',
     ...(r.kind === 'bill' ? { date_meaning: 'Introduction date, not passage or assent date. Status is current register status, not status on this date.' } : {}),
     source: r.source,
+    ...((r.state || r.chamber || r.source_url) ? {state:r.state,chamber:r.chamber,source_url:r.source_url,url:r.url} : {}),
     destination: r.href, official_url: r.url, record_id: r.record_id,
   }))
 }
