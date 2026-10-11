@@ -5,6 +5,7 @@ import {
   Screen,
   Section,
   SegmentedControl,
+  SourceLine,
   Text,
 } from '../../design/primitives';
 import { headerItems } from '../../navigation/chrome';
@@ -21,6 +22,22 @@ const NOTES = [
   'Counts are speeches labelled so far. The small bars are each topic’s share of federal speeches by decade, 1993 to 2026, scaled within the topic.',
   'A speech can carry more than one topic label, so the shares do not sum to one hundred. The decade bars use federal speeches only, the longest comparable run; each is that topic’s share of the decade’s labelled speeches, scaled to the topic’s own peak. The labelling pass is still running.',
 ];
+
+type TopicCount = { slug: string; count: number };
+/** The known topics that pass `keep`, A–Z or most discussed first. */
+function listed(
+  topics: readonly TopicCount[],
+  order: 'name' | 'count',
+  keep: (t: TopicCount) => boolean,
+) {
+  return topics
+    .filter((t) => topicNames[t.slug] && keep(t))
+    .sort((a, b) =>
+      order === 'name'
+        ? topicNames[a.slug]!.localeCompare(topicNames[b.slug]!)
+        : b.count - a.count,
+    );
+}
 
 export default function TopicsIndex() {
   const read = useRead(reports.topics),
@@ -44,10 +61,10 @@ export default function TopicsIndex() {
         <ReadState
           read={read}
           citation="OPAX labelled topic catalog"
-          sheet={{ title: 'About these numbers', notes: NOTES }}
+          foot={false}
           testID="topics"
         >
-          {(data) => (
+          {(data, meta) => (
             <Group>
               <Text variant="metadata" testID="topics-count">
                 {data.labelled.toLocaleString()} speeches labelled so far ·{' '}
@@ -69,24 +86,63 @@ export default function TopicsIndex() {
                 }}
               />
               <RowList grid>
-                {[...data.topics]
-                  .filter((t) => topicNames[t.slug])
-                  .sort((a, b) =>
-                    order === 'name'
-                      ? topicNames[a.slug]!.localeCompare(topicNames[b.slug]!)
-                      : b.count - a.count,
-                  )
-                  .map((t) => {
-                    const points = tide.record?.data.topics[t.slug] ?? [];
-                    const decades = tide.record?.data.decades ?? [];
-                    const pct =
-                      data.labelled > 0 ? (t.count / data.labelled) * 100 : 0;
-                    return (
-                      <Group key={t.slug} gap={6}>
+                {listed(data.topics, order, (t) => t.count > 0).map((t) => {
+                  const points = tide.record?.data.topics[t.slug] ?? [];
+                  const decades = tide.record?.data.decades ?? [];
+                  const pct =
+                    data.labelled > 0 ? (t.count / data.labelled) * 100 : 0;
+                  return (
+                    <Group key={t.slug} gap={6}>
+                      <RecordRow
+                        path={`/subject/topic/${t.slug}`}
+                        title={topicNames[t.slug]!}
+                        detail={`${t.count.toLocaleString()} speeches labelled so far · ${pct >= 10 ? pct.toFixed(0) : pct.toFixed(1)}% of the labelled record`}
+                        onPress={() =>
+                          openRecord(
+                            `/subject/topic/${t.slug}`,
+                            topicNames[t.slug]!,
+                          )
+                        }
+                        testID={`topic-open-${t.slug}`}
+                      />
+                      <Text wordSafe variant="metadata">
+                        {topicDescriptions[t.slug]}
+                      </Text>
+                      {points.length ? (
+                        <ShareBars
+                          compact
+                          label="Share of federal speeches by decade"
+                          points={points.map((p) => ({
+                            ...p,
+                            label:
+                              decades.find((d) => d.slug === p.decade)?.label ??
+                              p.decade,
+                          }))}
+                        />
+                      ) : null}
+                    </Group>
+                  );
+                })}
+              </RowList>
+              <SourceLine
+                {...meta}
+                citation="OPAX labelled topic catalog"
+                title="About these numbers"
+                notes={NOTES}
+                testID="topics-as-at"
+              />
+              {/* A topic no speech carries yet has no count or share to
+                  give: it is named here, apart, until the pass reaches it. */}
+              {data.topics.some((t) => topicNames[t.slug] && t.count === 0) ? (
+                <Section title="Not yet labelled" testID="topics-unlabelled">
+                  <RowList grid>
+                    {listed(data.topics, 'name', (t) => t.count === 0).map(
+                      (t) => (
                         <RecordRow
+                          key={t.slug}
                           path={`/subject/topic/${t.slug}`}
                           title={topicNames[t.slug]!}
-                          detail={`${t.count.toLocaleString()} speeches labelled so far · ${pct >= 10 ? pct.toFixed(0) : pct.toFixed(1)}% of the labelled record`}
+                          detail={topicDescriptions[t.slug]}
                           onPress={() =>
                             openRecord(
                               `/subject/topic/${t.slug}`,
@@ -95,25 +151,11 @@ export default function TopicsIndex() {
                           }
                           testID={`topic-open-${t.slug}`}
                         />
-                        <Text wordSafe variant="metadata">
-                          {topicDescriptions[t.slug]}
-                        </Text>
-                        {points.length ? (
-                          <ShareBars
-                            compact
-                            label="Share of federal speeches by decade"
-                            points={points.map((p) => ({
-                              ...p,
-                              label:
-                                decades.find((d) => d.slug === p.decade)
-                                  ?.label ?? p.decade,
-                            }))}
-                          />
-                        ) : null}
-                      </Group>
-                    );
-                  })}
-              </RowList>
+                      ),
+                    )}
+                  </RowList>
+                </Section>
+              ) : null}
             </Group>
           )}
         </ReadState>
@@ -124,8 +166,8 @@ export default function TopicsIndex() {
           <RowList>
             <RecordRow
               path={'/stats'}
-              title="Sources & coverage"
-              onPress={() => openRecord('/stats', 'Sources & coverage')}
+              title="Coverage by source"
+              onPress={() => openRecord('/stats', 'Coverage by source')}
               testID="topics-stats"
             />
             <RecordRow

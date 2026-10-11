@@ -31,6 +31,7 @@ import {
   moneyPairings,
   moneyRows,
   numberedSections,
+  sectionHeading,
   topicReport,
   type Essay,
   type Report,
@@ -94,9 +95,16 @@ function EssayView({
   number: number;
   line: Line;
 }) {
+  // The heading is the section's short name; the question it answers is
+  // said first, in full, so a 35-word question never sets a heading.
+  const { heading, lead } = sectionHeading(item);
   return (
-    <Section title={item.question} testID={`report-section-${number}`}>
-      {item.label ? <Text variant="metadata">{item.label}</Text> : null}
+    <Section title={heading} testID={`report-section-${number}`}>
+      {lead ? (
+        <Text wordSafe testID={`report-question-${number}`}>
+          {lead}
+        </Text>
+      ) : null}
       <Prose
         value={item.answer}
         sources={item.sources}
@@ -577,11 +585,11 @@ function ReportContent({
             <RecordRow
               path={`/reports/${report.slug}/s/${s.number}`}
               key={s.number}
-              title={`${s.number}. ${s.item.question}`}
+              title={`${s.number}. ${sectionHeading(s.item).heading}`}
               onPress={() =>
                 openRecord(
                   `/reports/${report.slug}/s/${s.number}`,
-                  s.item.question,
+                  sectionHeading(s.item).heading,
                 )
               }
               testID={`report-open-section-${s.number}`}

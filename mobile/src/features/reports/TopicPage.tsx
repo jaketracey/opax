@@ -21,7 +21,13 @@ import {
 import { formatMoney } from '../../design/format';
 import { shareHeaderItem } from '../../navigation/share';
 import { RecordRow } from '../RecordRow';
-import { moneyRows, parliamentNames, topicNames, topicReport } from './model';
+import {
+  moneyRows,
+  parliamentNames,
+  partyName,
+  topicNames,
+  topicReport,
+} from './model';
 import {
   AEC_NOTE,
   ReadState,
@@ -152,7 +158,12 @@ function TopicContent({
           <Section title="The debate's speeches">
             <Text variant="fine">
               Within the retrieved window of up to 200 speeches:{' '}
-              {Object.values(filters).join(' · ')}.
+              {Object.entries(filters)
+                .map(([key, value]) =>
+                  key === 'party' && value ? partyName(value) : value,
+                )
+                .join(' · ')}
+              .
             </Text>
             <ReadState
               read={arc}
@@ -236,19 +247,22 @@ function TopicContent({
                 >
                   <RowList>
                     {data.parties.slice(0, 8).map(([party, n]) => (
+                      // The facet's code ("ALP") opens the speeches; the
+                      // label says the party's name ("Labor").
                       <LinkRow
                         key={party}
                         title={`${n.toLocaleString()} speeches`}
                         leading={
                           <PartyLabel
                             status="unknown"
-                            party={party}
-                            dense
-                            linked={false}
+                            party={partyName(party)}
+                            nested
+                            testID={`topic-party-${party}`}
                           />
                         }
-                        accessibilityLabel={`${party}, ${n.toLocaleString()} speeches`}
+                        accessibilityLabel={`${partyName(party)}, ${n.toLocaleString()} speeches`}
                         onPress={() => openTopicWindow(slug, { party }, title)}
+                        testID={`topic-party-row-${party}`}
                       />
                     ))}
                   </RowList>
@@ -427,8 +441,8 @@ function TopicContent({
             />
             <RecordRow
               path={'/stats'}
-              title="Sources & coverage"
-              onPress={() => openRecord('/stats', 'Sources & coverage')}
+              title="Coverage by source"
+              onPress={() => openRecord('/stats', 'Coverage by source')}
               testID="topic-stats"
             />
           </RowList>

@@ -15,6 +15,7 @@ import {
   type Decoder,
 } from '../../api/validation';
 import topicsCopy from './topics-copy.json';
+import { partyFromCode } from '../bills/party-codes';
 import {
   isOrganisationDonor,
   withholdIndividualDonors,
@@ -328,6 +329,34 @@ export function arcPath(slug: string, filters: SpeechFilters = {}) {
       );
   }
   return `/api/search?${params}`;
+}
+// The party names design/party.ts knows, read the other way: the speech
+// facet's dense codes ("ALP", "IND") back to the name a label draws.
+/**
+ * A party as a topic's counts give it, said as its name: "ALP" is Labor,
+ * "IND" Independent. Names and unknown codes are kept exactly as recorded.
+ */
+export const partyName = (party: string): string => partyFromCode(party);
+/**
+ * A report section's heading and its opening sentence. The heading is the
+ * section's short name where the export gives one (an era's "1993–2009");
+ * otherwise the question's first sentence. Whatever the heading leaves out
+ * of the question is said first in the body, so nothing is dropped.
+ */
+export function sectionHeading(item: Pick<Essay, 'question' | 'label'>): {
+  heading: string;
+  lead: string | null;
+} {
+  const question = item.question.trim();
+  const label = item.label?.trim();
+  if (label) return { heading: label, lead: question };
+  const end = /[?.!](?=\s)/.exec(question);
+  if (!end) return { heading: question, lead: null };
+  const rest = question.slice(end.index + 1).trim();
+  return {
+    heading: question.slice(0, end.index + 1),
+    lead: rest || null,
+  };
 }
 export function numberedSections(report: Report) {
   return [

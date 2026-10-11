@@ -36,12 +36,12 @@ export default function Stats() {
     <>
       <Stack.Screen
         options={{
-          title: 'Sources & coverage',
+          title: 'Coverage by source',
           ...(Platform.OS === 'android'
             ? { header: AndroidReadingHeader }
             : {}),
           ...headerItems(() => [
-            shareHeaderItem({ path: '/stats', title: 'Sources & coverage' }),
+            shareHeaderItem({ path: '/stats', title: 'Coverage by source' }),
           ]),
         }}
       />

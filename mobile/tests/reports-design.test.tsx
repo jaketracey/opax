@@ -231,12 +231,17 @@ test('topics: one list, its notes in the source line, one accent', async () => {
   const r = await render(TopicsIndex);
   for (const recipe of retired)
     expect(r.root.findAllByType(recipe)).toHaveLength(0);
-  // The topics are rows of one list, not a ruled section each.
-  expect(r.root.findAllByType(Section)).toHaveLength(1);
-  const list = r.root.findAllByType(RowList)[0]!;
+  // The topics are rows of one list, not a ruled section each; topics no
+  // speech carries yet are named apart, under "Not yet labelled" (pass 5
+  // P3-12), beside the more links.
+  expect(r.root.findAllByType(Section).map((s) => s.props.testID)).toEqual([
+    'topics-unlabelled',
+    'topics-more',
+  ]);
   expect(
-    list.findAll((n) => String(n.props.testID).startsWith('topic-open-'))
-      .length,
+    r.root
+      .findAll((n) => /^topic-open-/.test(String(n.props.testID)))
+      .filter((n) => n.type === LinkRow).length,
   ).toBeGreaterThan(20);
   const source = r.root
     .findAllByType(SourceLine)

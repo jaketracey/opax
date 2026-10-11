@@ -45,7 +45,6 @@
     "src/features/records/CitationScreen.tsx": 1,
     "src/features/records/DocumentReader.tsx": 1,
     "src/features/records/RecentRecords.tsx": 1,
-    "src/features/reports/TodayReports.tsx": 2,
     "src/features/search/FiltersSheet.tsx": 1,
     "src/features/your-mp/Evidence.tsx": 1
   },
@@ -53,7 +52,6 @@
     "src/features/Party.tsx": 1,
     "src/features/YourMP.tsx": 1,
     "src/features/electorate-map/OutlineMap.tsx": 1,
-    "src/features/explore/PhotoCredits.tsx": 2,
     "src/features/people/ExpenseGlossary.tsx": 1,
     "src/features/people/PartyDepth.tsx": 2,
     "src/features/people/Sections.tsx": 1,
@@ -71,7 +69,6 @@
   "ViewOriginal": {
     "src/features/records/BillTextReader.tsx": 1,
     "src/features/records/DocumentReader.tsx": 1,
-    "src/features/reports/TodayReports.tsx": 1,
     "src/features/your-mp/Evidence.tsx": 1
   },
   "VoteSide": {

@@ -177,6 +177,13 @@ export default function About() {
                       </Group>
                     )}
                   </Disclosure>
+                  {/* The record's coverage source by source, folded in
+                      here: one destination, under the block it details. */}
+                  <LinkRow
+                    title="Coverage by source"
+                    onPress={() => openRecord('/stats', 'Coverage by source')}
+                    testID="about-stats"
+                  />
                 </RowList>
               </Group>
             )}
@@ -205,17 +212,8 @@ export default function About() {
             onPress={() => router.push('/account/sources')}
             testID="about-sources-open"
           />
-          <LinkRow
-            title="Sources & coverage"
-            onPress={() => openRecord('/stats', 'Sources & coverage')}
-            testID="about-stats"
-          />
-          <LinkRow
-            title="Methods and source terms"
-            onPress={() => openRecord('/methods', 'Methods')}
-            testID="about-methods"
-          />
         </RowList>
+        <WebRow title="Methods" path="/methods" testID="about-methods" />
       </Section>
       <Section title="Machine-written text">
         <Text wordSafe>

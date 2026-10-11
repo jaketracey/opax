@@ -6,10 +6,35 @@ import {
   RowList,
   Group,
   Disclosure,
-  SourceLink,
+  SourceLine,
+  type SourceOriginal,
 } from '../../design/primitives';
 import { useRead, ReadState } from '../reports/parts';
 import { explore } from './runtime';
+import type { YearPicture } from './pictures';
+
+/**
+ * A photograph's originals: its Wikimedia Commons page, then its licence.
+ * Creative Commons still publishes some licence links as http; they are
+ * served over https.
+ */
+export function photoOriginals(p: YearPicture): SourceOriginal[] {
+  return [
+    { label: 'Photo source', record: 'Wikimedia Commons', url: p.source_url },
+    ...(p.licence_url
+      ? [
+          {
+            label: 'Licence',
+            record: p.licence,
+            url: p.licence_url.replace(
+              /^http:\/\/creativecommons\.org\//,
+              'https://creativecommons.org/',
+            ),
+          },
+        ]
+      : []),
+  ];
+}
 export function ExplorePhotoCredits() {
   return (
     <Section title="Time machine photographs">
@@ -58,19 +83,20 @@ function PhotoCreditsList() {
                   <Text wordSafe variant="metadata">
                     {p.credit}
                   </Text>
-                  <SourceLink
+                  {/* As a portrait credit reads on the same screen: one
+                      line naming the photo source and licence, both
+                      opening from its sheet. */}
+                  <SourceLine
+                    label={
+                      p.licence_url
+                        ? 'Photo source and licence'
+                        : 'Photo source'
+                    }
+                    title="About this photograph"
                     citation="Wikimedia Commons"
-                    url={p.source_url}
-                    kind="record"
+                    originals={photoOriginals(p)}
+                    testID={`explore-photo-source-${p.file}`}
                   />
-                  {p.licence_url ? (
-                    <SourceLink
-                      citation={p.licence}
-                      url={p.licence_url}
-                      label="Licence"
-                      kind="record"
-                    />
-                  ) : null}
                 </Group>
               ))}
             </RowList>
