@@ -1,5 +1,6 @@
-import {applyQuery, dataTableHTML, guardTableURL, mountDataTable, parseQuery} from './datatable.js?v=fd903ef4b0';
+import {applyQuery, dataTableHTML, guardTableURL, mountDataTable, parseQuery} from './datatable.js?v=e8c88ee351';
 import {isOrganisationDonor} from './donor-entity.js?v=ebb2c972d5';
+import {privacyTexts,privacyCSVFields} from './datatable-privacy-fields.js';
 import {queryValues} from './datatable-query.js?v=6dd55aab38';
 
 const esc = value => String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -12,9 +13,9 @@ const approvedRow = (row,check) => {
 };
 const categoryLabels = {shareholdings:'Shareholdings',real_estate:'Real estate',trusts:'Trusts',directorships:'Directorships',gifts:'Gifts',travel:'Sponsored travel and hospitality',memberships:'Memberships and offices',liabilities:'Liabilities',other:'Other (savings, income, assets, partnerships)'};
 
-export function instrumentTableConfig(privacyCheck) {
+export function instrumentTableConfig(privacyCheck, privacyRowCheck = privacyCheck) {
   return {id:'instruments-table',caption:'Instrument titles',pageType:'instruments',urlKey:'instruments',pageSize:50,
-    privacy:'donors',privacyCheck,rowPrivacyCheck:instrumentRow,source:{endpoint:'/api/table/instruments'},defaultSort:{key:'title',dir:'asc'},export:{filename:'instruments.csv'},
+    privacy:'donors',privacyCheck,privacyRowCheck,rowPrivacyCheck:instrumentRow,source:{endpoint:'/api/table/instruments'},defaultSort:{key:'title',dir:'asc'},export:{filename:'instruments.csv'},
     columnsVisible:['title','type','portfolios','registered','status'],
     columns:[{key:'title',label:'Title',type:'text',primary:true},{key:'type',label:'Type',type:'category',facet:'multi'},
       {key:'portfolios',label:'Portfolio',type:'category',facet:'multi'},{key:'registered',label:'Registered',type:'date'},
@@ -22,9 +23,9 @@ export function instrumentTableConfig(privacyCheck) {
     primaryLink:row=>/^([CF]\d{4}[A-Z]\d{5})$/.test(String(row.id)) ? `/instrument/${row.id}` : null};
 }
 
-export function auditTableConfig(records, privacyCheck) {
-  return {id:'audit-table',caption:'Tabled reports',pageType:'audit',urlKey:'audit',pageSize:50,
-    privacy:'donors',privacyCheck,rowPrivacyCheck:auditRow,defaultSort:{key:'tabled_date',dir:'desc'},export:{filename:'audit-reports.csv'},
+export function auditTableConfig(records, privacyCheck, privacyRowCheck = privacyCheck) {
+  return {privacyFields:['entities'],id:'audit-table',caption:'Tabled reports',pageType:'audit',urlKey:'audit',pageSize:50,
+    privacy:'donors',privacyCheck,privacyRowCheck,rowPrivacyCheck:auditRow,defaultSort:{key:'tabled_date',dir:'desc'},export:{filename:'audit-reports.csv'},
     columnsVisible:['title','tabled_date','sectors','entities'],
     columns:[{key:'title',label:'Title',type:'text',primary:true},{key:'tabled_date',label:'Tabled',type:'date'},
       {key:'sectors',label:'Sector',type:'category',facet:'multi'},{key:'entities',label:'Entities',type:'text',facet:'multi'},
@@ -58,9 +59,9 @@ const auditRow = row => typeof row.title === 'string' && /^qao-\d{4}(?:-\d{2})?-
 export const categoryMembers = values => [...new Set(values.flatMap(value=>String(value).split(';').map(v=>v.trim()).filter(Boolean)))];
 const interestRow = row => typeof row.item === 'string' && typeof row.category === 'string' && !row.aggregate;
 
-export function interestTableConfig(rows, privacyCheck) {
+export function interestTableConfig(rows, privacyCheck, privacyRowCheck = privacyCheck) {
   return {id:'interests-table',caption:'Register entries',pageType:'person',urlKey:'interests',pageSize:50,
-    rows,privacy:'donors',rowPrivacyCheck:row=>interestRow(row) && (!privacyCheck || privacyCheck(JSON.stringify(row)) === true),privacyCheck,defaultSort:{key:'category',dir:'asc'},export:{filename:'declared-interests.csv'},
+    rows,privacy:'donors',privacyRowCheck,rowPrivacyCheck:row=>interestRow(row) && (!privacyCheck || privacyCheck(JSON.stringify(row)) === true),privacyCheck,defaultSort:{key:'category',dir:'asc'},export:{filename:'declared-interests.csv'},
     columns:[{key:'category',label:'Category',type:'category',facet:'multi'},{key:'item',label:'Item',type:'text',primary:true},
       {key:'date',label:'Date',type:'date'}],primaryLink:row=>href(row.source)};
 }
@@ -93,9 +94,9 @@ export function partyMoneyData(graph, partyId, withheld = () => true, privacyChe
   return {rows:[...rows.values()],aggregate};
 }
 
-export function partyMoneyTableConfig(rows, aggregate, id = 'party-money-table', urlKey = 'partyMoney', pageType = 'party', privacyCheck) {
+export function partyMoneyTableConfig(rows, aggregate, id = 'party-money-table', urlKey = 'partyMoney', pageType = 'party', privacyCheck, privacyRowCheck = privacyCheck) {
   rows = aggregate?.donors ? [...rows,{aggregate:{kind:'individual-donors',count:aggregate.donors},total:aggregate.total,count:aggregate.count}] : rows;
-  return {id,caption:'Disclosed donations',pageType,urlKey,pageSize:50,privacy:'donors',rowPrivacyCheck:isOrganisationDonor,privacyCheck,rows,
+  return {id,caption:'Disclosed donations',pageType,urlKey,pageSize:50,privacy:'donors',privacyRowCheck,rowPrivacyCheck:isOrganisationDonor,privacyCheck,rows,
     defaultSort:{key:'total',dir:'desc'},export:{filename:'party-donations.csv'},
     columns:[{key:'label',label:'Donor',type:'text',primary:true},{key:'industry',label:'Industry',type:'category',facet:'multi'},
       {key:'total',label:'Given',type:'money',bar:true,format:'compact',facet:'range'},
@@ -104,12 +105,12 @@ export function partyMoneyTableConfig(rows, aggregate, id = 'party-money-table',
 }
 
 /** The shared core owns query validation, pending states, history and CSV checks. */
-export function registerTableHTML(config, query = {}, requestURL) {
+export function registerTableHTML(config, query, requestURL) {
   if (requestURL) {
     const guarded=guardTableURL(config,requestURL);
-    if (guarded.rejected) query=guarded.query;
+    if (guarded.rejected || query == null) query=guarded.query;
   }
-  const page = applyQuery(config.rows || [],config,query);
+  const page = applyQuery(config.rows || [],config,query || {});
   const {initialQuery,...clientConfig}=config;
   const payload = JSON.stringify({config:clientConfig}).replace(/</g,'\\u003c');
   return `<div data-register-table="${esc(config.id)}">${dataTableHTML(config,page)}<script type="application/json" data-register-config>${payload}</script></div>`;
@@ -123,9 +124,9 @@ export function mountRegisterTable(el, config) {
   return mountDataTable(el,config);
 }
 
-async function registerPrivacy(text) {
+async function registerPrivacy(text, mode = 'query') {
   try {
-    const response = await fetch('/api/table/privacy',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({text})});
+    const response = await fetch('/api/table/privacy',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({text,mode})});
     return response.ok && (await response.json()).safe === true;
   } catch { return false; }
 }
@@ -135,10 +136,17 @@ export function hydrateRegisterTables(root = document) {
     const script = el.querySelector('[data-register-config]');
     if (!script) continue;
     const {config} = JSON.parse(script.textContent);
-    if (config.id === 'instruments-table') Object.assign(config,instrumentTableConfig(registerPrivacy));
-    else if (config.id === 'audit-table') Object.assign(config,{columns:auditTableConfig([],registerPrivacy).columns,privacy:'donors',rowPrivacyCheck:auditRow,privacyCheck:registerPrivacy,primaryLink:row=>`/audit/${row.id}`});
-    else if (config.urlKey === 'interests') Object.assign(config,{rowPrivacyCheck:interestRow,privacyCheck:registerPrivacy,primaryLink:row=>href(row.source)});
-    else Object.assign(config,{rowPrivacyCheck:isOrganisationDonor,privacyCheck:registerPrivacy,primaryLink:row=>isOrganisationDonor(row) ? `/subject/donor/${encodeURIComponent(row.label)}` : null});
+    if (config.id === 'instruments-table') Object.assign(config,instrumentTableConfig(registerPrivacy,text=>registerPrivacy(text,'row')));
+    else if (config.id === 'audit-table') Object.assign(config,{columns:auditTableConfig([],registerPrivacy).columns,privacyFields:['entities'],privacy:'donors',rowPrivacyCheck:auditRow,privacyCheck:registerPrivacy,privacyRowCheck:text=>registerPrivacy(text,'row'),primaryLink:row=>`/audit/${row.id}`});
+    else if (config.urlKey === 'interests') Object.assign(config,{rowPrivacyCheck:interestRow,privacyCheck:registerPrivacy,privacyRowCheck:text=>registerPrivacy(text,'row'),primaryLink:row=>href(row.source)});
+    else Object.assign(config,{rowPrivacyCheck:isOrganisationDonor,privacyCheck:registerPrivacy,privacyRowCheck:text=>registerPrivacy(text,'row'),primaryLink:row=>isOrganisationDonor(row) ? `/subject/donor/${encodeURIComponent(row.label)}` : null});
+    config.privacyCSVCheck=async csv=>{
+      try {
+        const texts=[...privacyCSVFields(csv,config)];
+        const response=await fetch('/api/table/privacy',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({texts,mode:'row'})});
+        return response.ok && (await response.json()).safe === true;
+      } catch { return false; }
+    };
     script.remove();
     const mounted = mountRegisterTable(el,config);
     // The existing app replaces SSR and subject sections during navigation.

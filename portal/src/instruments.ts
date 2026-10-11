@@ -58,7 +58,7 @@ export async function instrumentPage(id: string | null, url: URL, read: Read, bl
     if (!catalogueComplete(manifest)) return unavailable()
     if (id === null) {
       const safe=privacyCheck ?? await tablePrivacyCheckFrom(read)
-      const config = instrumentTableConfig(safe)
+      const config = instrumentTableConfig(safe,await tablePrivacyCheckFrom(read,'row'))
       const requestURL=new URL(url)
       const guarded=guardTableURL(config,url)
       const query=guarded.rejected ? guarded.query : registerTableQuery(url.searchParams,config)

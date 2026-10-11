@@ -119,3 +119,5 @@ links. No fields in the shared TypeScript contract change.
 - Identity checks retain the existing word hashes and add NFKC, case-folded letters-and-digits forms in the `stripped:v1:` hash domain. Minimum compact length is 4. Forms of length 4 or 5 require alphanumeric token boundaries; forms of length 6 or more also match substrings of the separator-stripped input.
 
 - Optional `DataTableConfig.initialQueryKeys?: string[]` lists legacy URL keys to remove after the core validates every raw key/value occurrence on first mount. This lets `initialQuery` translate legacy filters without hiding duplicates or private values from the shared guard. Later navigation uses normal core URL state.
+
+`privacyFields?: string[]` optionally scopes row and CSV identity matching to explicitly person-bearing fields of institutional-document datasets. Query validation remains strict over all raw query keys and values. Omission of this field checks every row field.

@@ -5,7 +5,7 @@ import {tableApi} from '../src/table-api.ts';
 import {tableDatabase} from './table-d1-harness.mjs';
 import {TABLE_DATASETS} from '../src/table-datasets.mjs';
 import {tableIdentityIndex as registryIdentityIndex} from '../../scripts/load_tables.mjs';
-import {instrumentTableConfig,auditTableConfig,registerTableQuery,interestTableConfig,interestTableData,partyMoneyData} from '../public/register-tables.js';
+import {instrumentTableConfig,auditTableConfig,registerTableQuery,interestTableConfig,interestTableData,partyMoneyData,partyMoneyTableConfig,registerTableHTML} from '../public/register-tables.js';
 import {isOrganisationDonor} from '../public/donor-entity.js';
 import {applyQuery,dataTableHTML,toCSV} from '../public/datatable.js';
 import {queryValues} from '../public/datatable-query.js';
@@ -101,11 +101,11 @@ test('every interest register omits entries rejected by the shared table index w
 
 test('real D1 instruments project registration dates and accept date sorting, numeric year filters and CSV',async()=>{
  const policy=await registryIdentityIndex();
- const publicRow=row=>!policy.check(JSON.stringify(row))&&!policy.check(Object.values(row).flat().join(' '));
+ const publicRow=row=>!Object.values(row).flat().some(policy.rowCheck);
  const manifest=await read('/instruments/manifest.json'),rows=(await instrumentTableRows(read,manifest,(await read(manifest.index_url)).records)).filter(publicRow);
  const audit=auditTableConfig((await read('/audit/index.json')).records,()=>true);
  const datasets=Object.fromEntries(Object.keys(TABLE_DATASETS).map(key=>[key,[]]));
- const auditRows=audit.rows.filter(publicRow);
+ const auditRows=audit.rows.filter(row=>!row.entities.some(policy.rowCheck));
  datasets.instruments=rows.map(row=>({row}));datasets['audit-reports']=auditRows.map(row=>({row}));
  const local=await tableDatabase({datasets,policy});
  try {
@@ -120,7 +120,8 @@ test('real D1 instruments project registration dates and accept date sorting, nu
   const csv=await request('instruments?q=airport&format=csv'),text=await csv.text();
   assert.equal(csv.status,200);assert.ok(text.split('\r\n')[0].split(',').includes('Registered'));
   assert.ok(text.includes(rows.find(row=>row.title.toLowerCase().includes('airport'))?.registered),'CSV retains source registration date');
-  const all=await (await request('audit-reports')).json();assert.ok(all.facets.year.min);assert.ok(all.facets.year.max);
+  const all=await (await request('audit-reports')).json();assert.equal(all.total,296);assert.ok(all.facets.year.min);assert.ok(all.facets.year.max);
+  const auditCSV=await (await request('audit-reports?format=csv')).text();assert.ok(auditCSV.includes('qao-2015-16-14'),'institutional report is restored to D1 CSV');
   const reportYear=audit.rows[0].year,auditFilter=new URLSearchParams({'f.year':JSON.stringify({min:reportYear,max:reportYear})});
   const reports=await request('audit-reports?'+auditFilter);assert.equal(reports.status,200);
   assert.equal((await reports.json()).total,auditRows.filter(row=>row.year===reportYear).length);
@@ -129,23 +130,55 @@ test('real D1 instruments project registration dates and accept date sorting, nu
 });
 
 test('category facets count each audit sector and each instrument portfolio once',async()=>{
- const safe=(await tablePrivacyIndex()).safe,records=(await read('/audit/index.json')).records,config=auditTableConfig(records,safe);
+ const {safe,safeRows}=await tablePrivacyIndex(),records=(await read('/audit/index.json')).records,config=auditTableConfig(records,safe,safeRows);
  const all=applyQuery(config.rows,config,{});
- assert.equal(records.length,296);assert.equal(all.total,295);assert.equal(all.facets.sectors.find(f=>f.value==='Health').count,48);
+ assert.equal(records.length,296);assert.equal(all.total,296);assert.equal(all.facets.sectors.find(f=>f.value==='Health').count,48);
  assert.equal(applyQuery(config.rows,config,{filters:{sectors:['Health']}}).total,48);
  assert.equal(applyQuery(config.rows,config,{filters:{sectors:['Housing']}}).total,7);
- const m=await read('/instruments/manifest.json'),rows=await instrumentTableRows(read,m,(await read(m.index_url)).records),instruments=instrumentTableConfig(safe);
- const approved=rows.filter(row=>safe(JSON.stringify(row))&&[...queryValues(row)].every(safe));
+ const m=await read('/instruments/manifest.json'),rows=await instrumentTableRows(read,m,(await read(m.index_url)).records),instruments=instrumentTableConfig(safe,safeRows);
+ const approved=rows.filter(row=>[...queryValues(row)].every(safeRows));
  for(const portfolio of new Set(rows.flatMap(r=>r.portfolios)))assert.equal(applyQuery(rows,instruments,{filters:{portfolios:[portfolio]}}).total,approved.filter(r=>r.portfolios.includes(portfolio)).length,'portfolio membership');
 });
 test('legacy query state uses complete catalogues and filtered SSR remains noindex',async()=>{
- const safe=(await tablePrivacyIndex()).safe,block=(title,text)=>`<h1>${title}</h1><p>${text}</p>`;
+ const {safe,safeRows}=await tablePrivacyIndex(),block=(title,text)=>`<h1>${title}</h1><p>${text}</p>`;
  const instruments=await instrumentPage(null,new URL('https://opax.test/instruments?q=airport'),read,block,safe);
  assert.equal(instruments.noindex,true);assert.ok(instruments.prerender.includes('of 51'));
  assert.deepEqual(registerTableQuery(new URLSearchParams('q=airport'),instrumentTableConfig(safe)),{q:'airport'});
- const audit=await auditPage(null,new URL('https://opax.test/audit?sector=Health'),read,block,safe);
+ const audit=await auditPage(null,new URL('https://opax.test/audit?sector=Health'),read,block,safe,safeRows);
  assert.equal(audit.noindex,true);assert.ok(audit.prerender.includes('of 48'));
- const config=auditTableConfig((await read('/audit/index.json')).records,safe);
- assert.equal(applyQuery(config.rows,config,{}).total,295);
+ const config=auditTableConfig((await read('/audit/index.json')).records,safe,safeRows);
+ assert.equal(applyQuery(config.rows,config,{}).total,296);
  assert.deepEqual(registerTableQuery(new URLSearchParams('year=2025-26'),config),{filters:{year:{min:2025,max:2025}}});
+});
+
+test('audit publication guards entity fields without hiding institutional titles or slugs',async()=>{
+ const index=await tablePrivacyIndex(),records=(await read('/audit/index.json')).records;
+ const config=auditTableConfig(records,index.safe,index.safeRows);
+ const restored=config.rows.find(row=>row.id==='qao-2015-16-14');
+ assert.ok(restored,'institutional report exists');
+ assert.equal(applyQuery(config.rows,config,{}).total,296);
+ assert.ok(toCSV(config.rows,config).includes(restored.title),'institutional report survives CSV');
+ const probe=index.probes.find(value=>!index.safeRows(value));
+ assert.equal(typeof probe,'string','person-bearing field probe available');
+ const unsafe={...restored,entities:[probe]};
+ assert.equal(applyQuery([unsafe],{...config,rows:[unsafe]},{}).total,0,'private entity field omits the whole row');
+ assert.equal(toCSV([unsafe],config).split('\r\n').length,1,'private entity field cannot export');
+});
+
+test('party SSR validates the raw query before discarding duplicate or future properties',async()=>{
+ const index=await tablePrivacyIndex(),probe=index.probes[0];
+ const config=partyMoneyTableConfig([{label:'Fixture organisation Pty Ltd',industry:'Fixture',total:1,count:1}],undefined,undefined,undefined,undefined,index.safe,index.safeRows);
+ for(const kind of ['duplicate','unknown','discarded']){
+  const url=new URL('https://fixture.test/subject/party/fixture');
+  if(kind==='duplicate'){url.searchParams.append('partyMoney.q','fixture');url.searchParams.append('partyMoney.q',probe);}
+  else if(kind==='unknown')url.searchParams.set('partyMoney.future',probe);
+  else url.searchParams.set('partyMoney.f.total',JSON.stringify({min:0,discarded:probe}));
+  const html=registerTableHTML(config,undefined,url);
+  assert.ok(html.includes('Showing 0–0 of 0'),'SSR has no rows');
+  assert.ok(html.includes('data-export disabled'),'SSR cannot export');
+  assert.ok(index.safe(html),'SSR has no private echo');
+  assert.ok(index.safe(decodeURIComponent(url.href)),'raw URL is scrubbed');
+ }
+ const url=new URL('https://fixture.test/subject/party/fixture?partyMoney.q=fixture');
+ assert.ok(registerTableHTML(config,undefined,url).includes('Showing 1–1 of 1'),'valid raw query is retained');
 });

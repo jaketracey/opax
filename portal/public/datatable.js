@@ -2,6 +2,7 @@
 import {isOrganisationDonor} from './donor-entity.js?v=ebb2c972d5';
 import {unnamedDonorLabel,isUnnamedAggregate,donorsNotNamedDetail} from './donor-views.js?v=55a8bd3ae0';
 import {shortDate} from './format.js';
+import {privacyTexts as rowTexts,privacyCSVFields} from './datatable-privacy-fields.js';
 import {queryValues,rawQueryValues,scrubQuery} from './datatable-query.js?v=6dd55aab38';
 
 const esc = value => String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;'}[c]));
@@ -71,14 +72,14 @@ function candidateRows(rows, config) {
   });
 }
 const donorColumn = column => /^(?:donor(?:_?name)?|label|name)$/i.test(column.key) || column.primary;
-const allowedText = (config, value) => {
+const allowedText = (config, value, mode = 'query') => {
   if (config.privacy !== 'donors') return true;
-  try { return config.privacyCheck?.(value) === true; } catch { return false; }
+  try { return (mode === 'row' ? config.privacyRowCheck || config.privacyCheck : config.privacyCheck)?.(value) === true; } catch { return false; }
 };
-// A row is approved as a whole and by every decoded scalar, before any UI derives
-// options, counts, chips or bars from it. Async browser checks populate approvals.
+// Each field (including nested metadata) and decoded scalar is approved before
+// deriving options, counts, chips or bars. Never join separate row fields.
 function rowPrivacyCheck(row, config) {
-  return allowedText(config,JSON.stringify(row)) && [...queryValues(row)].every(value=>allowedText(config,value));
+  return [...rowTexts(row,config)].every(value=>allowedText(config,value,'row'));
 }
 const publicRows = (rows,config) => candidateRows(rows,config).filter(row=>rowPrivacyCheck(row,config));
 const rejectedQueries = new WeakSet();
@@ -180,10 +181,10 @@ const policyId = fn => {
 function engine(rows, config) {
   let byColumns = engines.get(rows);
   if (!byColumns) engines.set(rows,byColumns = new Map());
-  const key = JSON.stringify(config.columns.map(c=>[c.key,c.type,c.facet,c.hideWhenConstant,c.sortable,c.primary,policyId(c.facetValues)])) + config.privacy + policyId(config.rowPrivacyCheck);
+  const key = JSON.stringify(config.columns.map(c=>[c.key,c.type,c.facet,c.hideWhenConstant,c.sortable,c.primary,policyId(c.facetValues)])) + config.privacy + policyId(config.rowPrivacyCheck) + JSON.stringify(config.privacyFields);
   if (byColumns.has(key)) return byColumns.get(key);
   const candidates = candidateRows(rows,config);
-  const result = {candidates, rowJSON:candidates.map(row=>JSON.stringify(row)), search:candidates.map(row=>config.columns.map(c=>text(row[c.key])).join('\n').normalize('NFKC').toLowerCase()), results:new Map()};
+  const result = {candidates, search:candidates.map(row=>config.columns.map(c=>text(row[c.key])).join('\n').normalize('NFKC').toLowerCase()), results:new Map()};
   byColumns.set(key,result);
   return result;
 }
@@ -268,12 +269,12 @@ function safePage(page, config) {
     if (Array.isArray(values)) {
       facets[key]=values.filter(v=>v && typeof v.value === 'string' && Number.isFinite(v.count) && v.count >= 0)
         .filter(v=>config.privacy !== 'donors' || (donorColumn(column) ? isOrganisationDonor({label:v.value}) || isUnnamedAggregate(v.value) : true)
-          && [...queryValues(v)].every(value=>allowedText(config,value)))
+          && [...queryValues(v)].every(value=>allowedText(config,value,'row')))
         .map(v=>({value:v.value,count:v.count}));
-    } else if (values && Number.isFinite(values.min) && Number.isFinite(values.max) && [...queryValues(values)].every(value=>allowedText(config,value))) facets[key]={min:values.min,max:values.max};
+    } else if (values && Number.isFinite(values.min) && Number.isFinite(values.max) && [...queryValues(values)].every(value=>allowedText(config,value,'row'))) facets[key]={min:values.min,max:values.max};
   }
   // Unknown endpoint fields must never enter the hydration payload.
-  const result={rows,total:Number.isSafeInteger(page.total) && page.total >= 0 && allowedText(config,String(page.total)) ? page.total : rows.length,page:allowedText(config,String(page.page)) ? integer(page.page,1) : 1,pageSize:allowedText(config,String(page.pageSize)) ? integer(page.pageSize,config.pageSize || 50) : config.pageSize || 50,facets};
+  const result={rows,total:Number.isSafeInteger(page.total) && page.total >= 0 && allowedText(config,String(page.total),'row') ? page.total : rows.length,page:allowedText(config,String(page.page),'row') ? integer(page.page,1) : 1,pageSize:allowedText(config,String(page.pageSize),'row') ? integer(page.pageSize,config.pageSize || 50) : config.pageSize || 50,facets};
   if (rows.length !== page.rows.length) return {...result,total:rows.length,page:1,facets:applyQuery(rows,config).facets};
   return result;
 }
@@ -413,8 +414,8 @@ export function mountDataTable(el, config) {
   if (!root) throw new Error('Mount the SSR table or its container');
   const doc = root.ownerDocument, win = doc.defaultView;
   let query = {}, rawURL, rawPage, lastURL, rawRejected = false, firstQuery=config.initialQuery;
-  const rawConfig = config, approvals = new Map();
-  if (config.privacy === 'donors') config = {...config,privacyCheck:value=>approvals.get(value) === true};
+  const rawConfig = config, approvals = new Map(), rowApprovals = new Map(), csvApprovals = new Map();
+  if (config.privacy === 'donors') config = {...config,privacyCheck:value=>approvals.get(value) === true,privacyRowCheck:value=>rowApprovals.get(value) === true};
   const view = {density:config.density || 'comfortable', columnsVisible:config.columnsVisible || config.columns.map(c=>c.key), constantsVisible:[]};
   let page;
   try { page = JSON.parse(root.querySelector('[data-dt-page]')?.textContent || 'null'); } catch { /* Client rows below. */ }
@@ -506,25 +507,45 @@ export function mountDataTable(el, config) {
   function analytics(event) {
     win.dispatchEvent(new win.CustomEvent('opax:analytics', {detail:{event, properties:{table_id:config.id, page_type:config.pageType}}}));
   }
-  async function permit(value) {
+  async function permit(value, mode = 'query') {
+    const cache = mode === 'csv' ? csvApprovals : mode === 'row' ? rowApprovals : approvals;
     if (config.privacy !== 'donors') return true;
-    if (approvals.has(value)) return approvals.get(value);
+    if (cache.has(value)) return cache.get(value);
     let safe=false;
     try {
-      if (rawConfig.privacyCheck) safe=await rawConfig.privacyCheck(value) === true;
+      const check = mode === 'csv' ? rawConfig.privacyCSVCheck || rawConfig.privacyRowCheck || rawConfig.privacyCheck : mode === 'row' ? rawConfig.privacyRowCheck || rawConfig.privacyCheck : rawConfig.privacyCheck;
+      if (check) {
+        if(mode==='csv'&&!rawConfig.privacyCSVCheck){safe=true;for(const field of privacyCSVFields(value,config))if(await check(field)!==true){safe=false;break;}}
+        else safe=await check(value) === true;
+      }
       else {
-        const response=await win.fetch('/api/table/privacy',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({text:value})});
+        const response=await win.fetch('/api/table/privacy',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({text:value,mode})});
         safe=response.ok && (await response.json()).safe === true;
       }
-    } catch { /* Fail closed, including an unavailable shared index. */ }
-    if (safe) approvals.set(value,true);
+    } catch { safe=false; /* Fail closed, including an unavailable shared index. */ }
+    if (safe) cache.set(value,true);
     return safe;
   }
-  async function permitSet(values) {
-    const pending=[...new Set(values)].filter(v=>!approvals.has(v));
+  async function permitSet(values, mode = 'query') {
+    const cache = mode === 'csv' ? csvApprovals : mode === 'row' ? rowApprovals : approvals;
+    const pending=[...new Set(values)].filter(v=>!cache.has(v));
     if (!pending.length) return;
-    if (await permit(pending.join('\n'))) for (const value of pending) approvals.set(value,true);
-    else await Promise.all(pending.map(permit));
+    // Preserve field equality: joining row fields can hide a standalone alias.
+    if (mode === 'row') {
+      if (!rawConfig.privacyRowCheck && !rawConfig.privacyCheck) {
+        let safe=false;
+        try { const response=await win.fetch('/api/table/privacy',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({texts:pending,mode:'row'})});safe=response.ok && (await response.json()).safe === true; } catch { /* Fail closed. */ }
+        if (safe) {for(const value of pending)cache.set(value,true);return;}
+      }
+      // Bound requests from custom field guards as well as the shared batch
+      // fallback. A catalogue must not overload the validator and lose rows.
+      let next=0;
+      await Promise.all(Array.from({length:Math.min(12,pending.length)},async()=>{
+        while(next<pending.length)await permit(pending[next++],mode);
+      }));return;
+    }
+    if (await permit(pending.join('\n'),mode)) for (const value of pending) cache.set(value,true);
+    else await Promise.all(pending.map(value=>permit(value,mode)));
   }
   async function refresh() {
     clearTimeout(timer);
@@ -545,12 +566,17 @@ export function mountDataTable(el, config) {
       firstQuery=undefined;
       replaceURL(guarded.url); scrubHead();
     }
+    if (rawRejected) {
+      page={rows:[],total:0,page:1,pageSize:config.pageSize || 50,facets:{}};
+      view.rejected=true;query={};rawPage=undefined;
+      paint();urlState();root.removeAttribute('aria-busy');return;
+    }
     const pending=structuredClone(query), previousPage=rawPage || page;
     rawPage=undefined;
     if (config.privacy === 'donors') {
       const values=[...queryValues(pending),...rawQueryValues(new URLSearchParams(serializeQuery(pending,config.urlKey)))];
       const data=config.rows ? engine(config.rows,config) : null;
-      const needsValidation=values.some(value=>!approvals.has(value)) || (data ? data.rowJSON.some(row=>!approvals.has(row)) : page.rows.some(row=>!approvals.has(JSON.stringify(row))));
+      const needsValidation=values.some(value=>!approvals.has(value)) || (data ? data.candidates.some(row=>[...rowTexts(row,config)].some(value=>!rowApprovals.has(value))) : page.rows.some(row=>[...rowTexts(row,config)].some(value=>!rowApprovals.has(value))));
       // Pending query values never render against old SSR rows. Already approved state can
       // retain its controls and focus while fetching, avoiding a second redraw.
       if (needsValidation) {
@@ -561,7 +587,7 @@ export function mountDataTable(el, config) {
       }
       root.setAttribute('aria-busy','true');
       await permitSet(values);
-      if (data) await permitSet(data.candidates.flatMap(row=>[JSON.stringify(row),...queryValues(row)]));
+      if (data) await permitSet(data.candidates.flatMap(row=>[...rowTexts(row,config)]),'row');
       if (destroyed || version !== revision) return;
     }
     const rejected=rawRejected || blockedQuery(config,pending); view.rejected=rejected;
@@ -572,7 +598,10 @@ export function mountDataTable(el, config) {
     }
     if (!config.source) {
       page=applyQuery(config.rows || [],config,query);
-      await permitSet([...queryValues({page:page.page,pageSize:page.pageSize,total:page.total,facets:page.facets}),...rawQueryValues(new URLSearchParams(serializeQuery({...query,page:page.page},config.urlKey)))]);
+      await permitSet([...queryValues({page:page.page,pageSize:page.pageSize,total:page.total,facets:page.facets})],'row');
+      await permitSet([...rawQueryValues(new URLSearchParams(serializeQuery({...query,page:page.page},config.urlKey)))]);
+      if (destroyed || version !== revision) return;
+      await permitSet([...queryValues({page:page.page})]);
       if (destroyed || version !== revision) return;
       query.page=page.page;
       paint(); delete view.searchSelection; urlState(); root.removeAttribute('aria-busy'); return;
@@ -583,17 +612,20 @@ export function mountDataTable(el, config) {
       if (!response.ok) throw new Error('Table request failed');
       const result=await response.json();
       if (!Array.isArray(result.rows) || !Number.isSafeInteger(result.total) || result.total < 0 || !integer(result.page,null) || !integer(result.pageSize,null)) throw new Error('Invalid table page');
-      const candidate={rows:candidateRows(result.rows,config),total:result.total,page:result.page,pageSize:result.pageSize};
+      const candidate={rows:result.rows,total:result.total,page:result.page,pageSize:result.pageSize};
       // Validate all supplied facet text, including options outside this page.
       candidate.facets=result.facets || {};
       if (config.privacy === 'donors') {
-        const texts=[...candidate.rows.flatMap(row=>[JSON.stringify(row),...queryValues(row)]),...queryValues({page:candidate.page,pageSize:candidate.pageSize,total:candidate.total,facets:candidate.facets})];
-        await permitSet(texts);
+        const texts=[...candidate.rows.flatMap(row=>[...rowTexts(row,config)]),...queryValues({page:candidate.page,pageSize:candidate.pageSize,total:candidate.total,facets:candidate.facets})];
+        await permitSet(texts,'row');
         // Invalid rows are dropped; safePage recomputes counts and facets from
         // the surviving rows instead of trusting metadata for rejected records.
       }
       if (destroyed || version !== revision) return;
-      page=safePage(candidate,config); query.page=page.page;
+      page=safePage(candidate,config);
+      await permitSet([...queryValues({page:page.page})]);
+      if (destroyed || version !== revision) return;
+      query.page=page.page;
       paint(); delete view.searchSelection; urlState();
     } catch (error) {
       if (error?.name !== 'AbortError' && !destroyed && version === revision) paint('Could not load this table.');
@@ -630,7 +662,7 @@ export function mountDataTable(el, config) {
         csv = await response.text();
 
       } else csv = toCSV(filteredRows(config.rows || [],config,state),config);
-      if (!await permit(csv)) throw new Error('Unsafe table export');
+      if (!await permit(csv,'csv')) throw new Error('Unsafe table export');
       if (destroyed || revision !== exportRevision || view.rejected) return;
       const url = win.URL.createObjectURL(new win.Blob([csv],{type:'text/csv;charset=utf-8'}));
       const a = doc.createElement('a'); a.href = url; a.download = config.export?.filename || `${config.id}.csv`;

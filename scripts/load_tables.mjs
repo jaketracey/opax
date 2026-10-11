@@ -2,9 +2,12 @@ import {readFile, readdir, mkdir, writeFile, rm} from 'node:fs/promises';
 import {fileURLToPath} from 'node:url';
 import {join, resolve} from 'node:path';
 import {createHash} from 'node:crypto';
+import {privacyValues} from '../portal/public/datatable-privacy-fields.js';
 import {TABLE_DATASETS} from '../portal/src/table-datasets.mjs';
 import {isOrganisationRecipient} from '../portal/src/table-recipient.mjs';
-import {identityVariants, compileIdentityCheck, strippedLengths,identityQuickHash} from '../portal/src/table-identities.mjs';
+import {identityVariants, identityRowVariants, compileIdentityCheck, strippedLengths, ROW_IDENTITY_POLICY} from '../portal/src/table-identities.mjs';
+import {identityHashEntry} from '../portal/src/table-identity-hashes.mjs';
+
 import {tableSchema,tableName,quote,arrayColumns} from './table-schema.mjs';
 import {MONEY_GRAPHS, isOrganisationDonor} from '../portal/public/donor-entity.js';
 import {moneyFlowType} from '../portal/public/money-records.js';
@@ -32,7 +35,7 @@ export async function interestTableRows(root, graphs, suppliedPolicy) {
 }
 
 /** Read existing public snapshots only. No database or network operations. */
-export async function tableRows(root = defaultRoot, {moneyOnly = false, graphs: suppliedGraphs} = {}) {
+export async function tableRows(root = defaultRoot, {moneyOnly = false, graphs: suppliedGraphs, observe} = {}) {
   const read = async name => JSON.parse(await readFile(join(root, name), 'utf8'));
   const files = async name => (await readdir(join(root, name))).filter(f => f.endsWith('.json')).sort();
   const graphs = suppliedGraphs || await Promise.all(MONEY_GRAPHS.map(name => read(name.slice(1))));
@@ -40,8 +43,10 @@ export async function tableRows(root = defaultRoot, {moneyOnly = false, graphs: 
   const rows = Object.fromEntries(Object.keys(TABLE_DATASETS).map(name => [name, []]));
   const aggregates = new Map();
   const add = (name, row, identity = '', hidden = false) => {
-    if (TABLE_DATASETS[name].privacy && (hidden || policy.check(Object.values(row).flat().join(' ')))) {
+    if (TABLE_DATASETS[name].privacy) observe?.({name,row,hidden});
+    if (TABLE_DATASETS[name].privacy && (hidden || privacyValues(row,TABLE_DATASETS[name]).some(policy.rowCheck))) {
       if (['instruments','audit-reports','interests'].includes(name)) return;
+
       const key = name + ':' + (row.jurisdiction || '') + ':' + (row.type || '');
       let aggregate = aggregates.get(key);
       if (!aggregate) {aggregate = {name, jurisdiction:row.jurisdiction, type:row.type, identities:new Set(), amount:0, count:0, first:null,last:null};aggregates.set(key,aggregate);}
@@ -110,11 +115,16 @@ export async function tableRows(root = defaultRoot, {moneyOnly = false, graphs: 
 export async function tableIdentityIndex(root = defaultRoot, suppliedGraphs) {
   const read = async path => JSON.parse(await readFile(join(root,path),'utf8'));
   const graphs = suppliedGraphs || await Promise.all(MONEY_GRAPHS.map(path=>read(path.slice(1))));
-  const phrases = new Set(), suppliers = new Set();
+  const phrases = new Set(), rowPhrases = new Set(), fieldPhrases = new Set(), suppliers = new Set();
   const add = entity => {
-    const values = [entity.label,entity.name,entity.n,entity.abn,entity.abr?.abn,entity.identity?.legal_name,entity.abr?.name,entity.abr?.legal_name, ...(entity.aliases || []), ...(entity.lookup_names || [])];
-    for (const id of [entity.id,entity.canonical_id]) {if (String(id || '').startsWith('person:')) values.push(String(id).slice(7));if (/^(?:abn:)?\d{11}$/.test(String(id || ''))) values.push(String(id).replace(/^abn:/,''));}
-    for (const value of values.filter(v=>typeof v==='string'||typeof v==='number')) for (const p of identityVariants(value)) phrases.add(p);
+    const names = [entity.label,entity.name,entity.n,entity.identity?.legal_name,entity.abr?.name,entity.abr?.legal_name, ...(entity.aliases || []), ...(entity.lookup_names || [])];
+    const identifiers=[entity.abn,entity.abr?.abn];
+    for (const id of [entity.id,entity.canonical_id]) {if (String(id || '').startsWith('person:')) identifiers.push(String(id).slice(7));if (/^(?:abn:)?\d{11}$/.test(String(id || ''))) identifiers.push(String(id).replace(/^abn:/,''));}
+    const values=[...names,...identifiers];
+    for (const value of values.filter(v=>typeof v==='string'||typeof v==='number')) {
+      for (const p of identityVariants(value)) phrases.add(p);
+      const row=identityRowVariants(value,{name:names.includes(value)});for(const p of row.tokens)rowPhrases.add(p);for(const p of row.fields)fieldPhrases.add(p);
+    }
   };
   for(const entity of sourceTableDonorIdentities().entities)add(entity);
   for (const graph of graphs) for (const node of graph.nodes) if (node.kind==='donor' && !isOrganisationDonor(node)) add(node);
@@ -134,16 +144,14 @@ export async function tableIdentityIndex(root = defaultRoot, suppliedGraphs) {
     for (const file of (await readdir(join(root,'grants',jur))).filter(f=>f.startsWith('shard-') && f.endsWith('.json')).sort()) for (const r of Object.values(await read(`grants/${jur}/${file}`))) if (!isOrganisationRecipient(r)) add(r);
   }
   const lengths = [...new Set([...phrases].map(p=>p.split(' ').length))].sort((a,b)=>a-b);
-  return {phrases,suppliers,lengths,strippedLengths:strippedLengths(phrases),check:compileIdentityCheck(phrases)};
+  return {phrases,rowPhrases,fieldPhrases,suppliers,lengths,strippedLengths:strippedLengths(phrases),check:compileIdentityCheck(phrases),rowCheck:compileIdentityCheck(rowPhrases,{mode:'row',fieldPhrases})};
 }
 export function tableIdentityHashes(policy) {
-  return [...policy.phrases].map(p=>({hash:createHash('sha256').update(p).digest('hex'),words:p.split(' ').length})).sort((a,b)=>a.hash.localeCompare(b.hash));
+  return [...policy.phrases].map(p=>identityHashEntry(p,{row:policy.rowPhrases?.has(p)?'token':policy.fieldPhrases?.has(p)?'field':false})).sort((a,b)=>a.hash.localeCompare(b.hash));
 }
-export function tableIdentityFingerprints(policy) {
-  return [...policy.phrases].map(p=>({hash:createHash('sha256').update(p).digest('hex'),quick:identityQuickHash(p),characters:p.length})).sort((a,b)=>a.hash.localeCompare(b.hash));
-}
+
 export function tableRegistryFingerprint(policy) {
-  return createHash('sha256').update(tableIdentityHashes(policy).map(e=>e.hash).join('\n')).digest('hex');
+  return createHash('sha256').update(ROW_IDENTITY_POLICY+'\n').update(tableIdentityHashes(policy).map(e=>e.hash+':'+e.row).join('\n')).digest('hex');
 }
 const literal = value => value == null ? 'NULL' : typeof value === 'number' && Number.isFinite(value) ? String(value) : "'" + String(value).replaceAll("'","''") + "'";
 
@@ -175,7 +183,7 @@ export async function buildTableSQL({root=defaultRoot,output=fileURLToPath(new U
     const table=tableName(name);counts[name]=0;
     for (const {row} of datasets[name] || []) {
       // A second barrier protects callers supplying rows directly in tests/tools.
-      if (config.privacy && policy?.check(Object.values(row).flat().join(' '))) throw new Error('Unsanitised financial row');
+      if (config.privacy && privacyValues(row,config).some(policy?.rowCheck || policy?.check || (()=>false))) throw new Error('Unsanitised financial row');
       const rowid=++counts[name];
       const values=config.columns.map(c=>arrayColumns.has(c.key) && Array.isArray(row[c.key]) ? JSON.stringify(row[c.key]) : row[c.key] ?? null);
       const search=config.columns.filter(c=>!['url','canonical_url'].includes(c.key)).map(c=>Array.isArray(row[c.key]) ? row[c.key].join(' ') : row[c.key] ?? '').join(' ');
@@ -198,7 +206,7 @@ if (process.argv[1] && resolve(process.argv[1])===fileURLToPath(import.meta.url)
   try {
     const loaded=await tableRows();
     const result=await buildTableSQL({datasets:loaded.rows,policy:loaded.policy});
-    await writeFile(join(defaultRoot,'table-private-identities.json'),JSON.stringify({version:1,identities:tableIdentityHashes(loaded.policy),strippedLengths:loaded.policy.strippedLengths})+'\n');
+    await writeFile(join(defaultRoot,'table-private-identities.json'),JSON.stringify({version:3,identities:tableIdentityHashes(loaded.policy),strippedLengths:loaded.policy.strippedLengths})+'\n');
     await writeFile(fileURLToPath(new URL('../portal/src/table-registry-fingerprint.json',import.meta.url)),JSON.stringify({fingerprint:result.privacyFingerprint})+'\n');
     console.log(JSON.stringify({sqlFiles:result.files.length,bytes:result.bytes,rows:result.counts,privateIdentityHashes:result.privateIdentities,publicTableAssets:0,publicPrivacyAssets:1}));
   } catch {console.error('Table load preparation failed; no source identities are logged.');process.exitCode=1;}

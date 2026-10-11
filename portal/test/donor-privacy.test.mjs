@@ -1,5 +1,6 @@
 import {tableApi} from '../src/table-api.ts';
 import {partyMoneyResponse} from '../src/party-money-table.ts';
+import {privacyCSVFields} from '../public/datatable-privacy-fields.js';
 import {instrumentTableRows} from '../public/instruments.js';
 // Donor privacy regression (October 2026 hotfix): no donor failing the
 // organisation test (public/donor-entity.js) may be named by any server output.
@@ -34,6 +35,7 @@ import {isOrganisationRecipient} from '../src/table-recipient.mjs';
 import {moneyFlowType} from '../public/money-records.js';
 import {TABLE_DATASETS} from '../src/table-datasets.mjs';
 import {assertTablePrivacy,tablePrivacyIndex} from './datatable-privacy.mjs';
+import {csvFields} from '../public/datatable-csv.js';
 
 const sourceRead = root => async path => JSON.parse(readFileSync(join(root,path.replace(/^\//,'')),'utf8'));
 const buildGrowth = buildGrowthOriginal;
@@ -227,7 +229,7 @@ test.after(offline());
 const {env, fetch: fetchWorker} = await loadWorker(new URL('../src/index.ts', import.meta.url).pathname, root);
 env.TABLE_DB = tablesD1.db;
 const originalAssets = env.ASSETS.fetch.bind(env.ASSETS);
-env.ASSETS.fetch = request => new URL(request.url).pathname === '/table-private-identities.json' ? Promise.resolve(Response.json({version:1,identities:tableIdentityHashes(moneyTables.policy),strippedLengths:moneyTables.policy.strippedLengths})) : originalAssets(request);
+env.ASSETS.fetch = request => new URL(request.url).pathname === '/table-private-identities.json' ? Promise.resolve(Response.json({version:3,identities:tableIdentityHashes(moneyTables.policy),strippedLengths:moneyTables.policy.strippedLengths})) : originalAssets(request);
 const ownUrl = (html, path) => entities(html).replaceAll(path, '');
 
 function assertCleanCSV(where, csv) {
@@ -265,7 +267,7 @@ test('all five money tables withhold donor, recipient, supplier, alias and ident
   const shared=await tablePrivacyIndex();
   // The shared gate covers HTTP output here; UI rollouts register its Chrome gate.
   // Extend its independently derived donor index with recipient/supplier ABNs.
-  const sharedIndex={...shared,safe:value=>shared.safe(value)&&!policy.check(value)};
+  const sharedIndex={...shared,safe:value=>shared.safe(value)&&!policy.check(value),safeRows:value=>shared.safeRows(value)&&!policy.rowCheck(value)};
   const identifiers=denied.filter(p=>/^\d{11}$/.test(p));
   const donorPhrases=withheldPhrases(graphs,[]);
   const donors=[...new Set(graphs.flatMap(g=>g.nodes.filter(n=>n.kind==='donor'&&!isOrganisationDonor(n)).flatMap(n=>[n.label,...(n.aliases||[])])).filter(v=>namesWithheldPhrase(donorPhrases,'donor '+v)))];
@@ -278,20 +280,22 @@ test('all five money tables withhold donor, recipient, supplier, alias and ident
   const probes=[...new Set([...donors.slice(0,10),...recipients.slice(0,10),...suppliers.slice(0,10),...aliases.slice(0,5),...abns.slice(0,5),...identifiers.slice(0,10),...identifiers.slice(0,3).map(v=>v.split('').join(' '))])];
   const decodedProbes=[donors[0],recipients[0],suppliers[0],aliases[0],identifiers[0]].filter(Boolean);
   assert.ok(recipients.length>=64,'individual recipient coverage');assert.ok(suppliers.length>0,'individual supplier coverage');assert.ok(identifiers.length>0,'withheld identifier coverage');
-  const clean = (where,text) => assert.equal(policy.check(text),false,where+': withheld identity count must be zero');
+  const clean = (where,text) => assert.equal(policy.rowCheck(text),false,where+': withheld identity count must be zero');
   // Schema keys (including the registration column) are labels, not identities.
   const cleanJSON=(where,value)=>{if(Array.isArray(value))for(const v of value)cleanJSON(where,v);else if(value&&typeof value==='object')for(const v of Object.values(value))cleanJSON(where,v);else if(value!=null)clean(where,String(value));};
   for (const [dataset,config] of Object.entries(TABLE_DATASETS).filter(([,c])=>c.privacy)) {
+    const datasetIndex={...sharedIndex,csvConfig:config};
     const base='/api/table/'+dataset;
     const response=await fetchWorker(base+'?pageSize=200');assert.equal(response.status,200,dataset);
-    const page=await response.json();cleanJSON(dataset+' rows and facets',page);
-    const publicValues=[];const values=value=>{if(Array.isArray(value))value.forEach(values);else if(value&&typeof value==='object')Object.values(value).forEach(values);else if(value!=null)publicValues.push(value);};values(page);
+    const page=await response.json();
+    const personFields=config.privacyFields ? {rows:page.rows.map(row=>Object.fromEntries(config.privacyFields.map(key=>[key,row[key]]))),facets:Object.fromEntries(Object.entries(page.facets||{}).filter(([key])=>config.privacyFields.includes(key)))} : page;
+    cleanJSON(dataset+' rows and facets',personFields);
+    const publicValues=[];const values=value=>{if(Array.isArray(value))value.forEach(values);else if(value&&typeof value==='object')Object.values(value).forEach(values);else if(value!=null)publicValues.push(value);};values(personFields);
     const csv=await fetchWorker(base+'?format=csv');assert.equal(csv.status,200,dataset);
     const csvText=await csv.text();
-    // Bounded chunks avoid building quadratic candidate sets for a full CSV.
-    for (const line of csvText.split('\r\n')) clean(dataset+' CSV',line);
+    for (const field of privacyCSVFields(csvText,config)) clean(dataset+' CSV',field);
     const csvPath=join(root,'table-'+dataset+'.csv');writeFileSync(csvPath,csvText);
-    await assertTablePrivacy({clientInput:[],serverResponses:publicValues,csvPath,url:response.headers.get('content-location') || '',renderedText:'',accessibleText:'',analytics:[]},sharedIndex);
+    await assertTablePrivacy({clientInput:[],serverResponses:publicValues,csvPath,url:response.headers.get('content-location') || '',renderedText:'',accessibleText:'',analytics:[]},datasetIndex);
     writeFileSync(csvPath,csvText.slice(0,csvText.indexOf('\r\n')+2));
     for (const [i,label] of probes.entries()) for (const format of ['', '&format=csv']) {
       const state=new URLSearchParams({q:label,pageSize:'200'});
@@ -919,11 +923,11 @@ test('all four register tables reject the complete shared donor and recipient in
  const m=await read('/instruments/manifest.json'),instruments=await instrumentTableRows(read,m,(await read(m.index_url)).records);
  const audits=(await read('/audit/index.json')).records;
  const money=partyMoneyData(fixtureGraph,topParty.id,(...texts)=>texts.some(text=>!policy.safe(String(text))),policy.safe);
- const tables=[['interests',interestTableConfig(projected.rows,policy.safe),projected.rows,'category'],['instruments',instrumentTableConfig(policy.safe),instruments.filter(row=>policy.safe(JSON.stringify(row))),'portfolios'],['audit',auditTableConfig(audits,policy.safe),null,'sectors'],['party-money',partyMoneyTableConfig(money.rows,money.aggregate,undefined,undefined,undefined,policy.safe),null,'industry']];
+ const tables=[['interests',interestTableConfig(projected.rows,policy.safe),projected.rows,'category'],['instruments',instrumentTableConfig(policy.safe),instruments.filter(row=>policy.safe(JSON.stringify(row))),'portfolios'],['audit',auditTableConfig(audits,policy.safe,policy.safeRows),null,'sectors'],['party-money',partyMoneyTableConfig(money.rows,money.aggregate,undefined,undefined,undefined,policy.safe),null,'industry']];
  for(const [id,config,input,facet] of tables){
   const rows=input||config.rows,page=applyQuery(rows,config,{pageSize:50000});
-  assert.ok(policy.safe(JSON.stringify(page)),`${id}: rows and facets`);
-  assert.ok(policy.safe(toCSV(page.rows,config)),`${id}: CSV`);
+  assert.ok((id==='audit'? page.rows.every(row=>row.entities.every(policy.safeRows)):policy.safe(JSON.stringify(page))),`${id}: rows and facets`);
+  assert.ok((id==='audit'? [...privacyCSVFields(toCSV(page.rows,config),config)].every(policy.safeRows):policy.safe(toCSV(page.rows,config))),`${id}: CSV`);
   // Query rejection is independent of catalogue size; full rows and CSV were checked above.
   const queryRows=rows.slice(0,2);
   for(const [i,value] of policy.values.entries())for(const query of [{q:value},{filters:{[facet]:[value]}},...(/^\d{11}$/.test(value) ? [{filters:{[id==='party-money'?'total':'year']:{min:Number(value),max:Number(value)}}}] : [])]) {

@@ -1,51 +1,32 @@
-import {compileHashedIdentityCheck} from './table-identity-hashes.mjs'
-import fingerprints from './table-privacy-fingerprints.json' with {type:'json'}
+import {compileHashedIdentityCheck,csvIdentityCheck} from './table-identity-hashes.mjs'
 
-const indices = new WeakMap<Fetcher, Promise<(text: string) => boolean>>()
+const indices = new WeakMap<Fetcher, Map<string, Promise<(text: string) => boolean>>>()
 const readers = new WeakMap<(path:string)=>Promise<unknown>, Fetcher>()
-/** Local/SSR readers use exactly the same hash-only registry guard as the worker. */
-export function tablePrivacyCheckFrom(read:(path:string)=>Promise<unknown>):Promise<(text:string)=>boolean> {
+/** Readers use the same complete registry and query/row policy as the worker. */
+export function tablePrivacyCheckFrom(read:(path:string)=>Promise<unknown>, mode: 'query' | 'row' = 'query'):Promise<(text:string)=>boolean> {
   let assets=readers.get(read)
   if (!assets) {
     assets={fetch:async (request:Request)=>Response.json(await read(new URL(request.url).pathname))} as Fetcher
     readers.set(read,assets)
   }
-  return tablePrivacyCheck(assets)
+  return tablePrivacyCheck(assets,mode)
 }
 /** Complete build-time registry: donor, recipient and supplier identities.
  * Only hashes are served; anonymised graphs cannot reconstruct this index. */
-export async function tablePrivacyCheck(assets: Fetcher): Promise<(text: string) => boolean> {
-  let pending = indices.get(assets)
+export async function tablePrivacyCheck(assets: Fetcher, mode: 'query' | 'row' = 'query'): Promise<(text: string) => boolean> {
+  let modes = indices.get(assets)
+  if (!modes) indices.set(assets, modes = new Map())
+  let pending = modes.get(mode)
   if (!pending) {
     pending = (async () => {
       const response = await assets.fetch(new Request('https://opax.com.au/table-private-identities.json'))
       if (!response.ok) throw new Error('Privacy index unavailable')
-      const registry = await response.json() as {version:number;identities:{hash:string;words:number}[];strippedLengths:number[]}
-      if(registry.version!==1 || !Array.isArray(registry.strippedLengths) || !registry.strippedLengths.length || registry.strippedLengths.some(n=>!Number.isSafeInteger(n)||n<4))throw new Error('Privacy index unavailable')
-      const quick=fingerprints.version===1 ? new Map(fingerprints.identities.map(entry=>[entry.hash,entry])) : null
-      const entries=registry.identities.map(entry=>({...entry,...quick?.get(entry.hash)}))
-      const blocked=compileHashedIdentityCheck(entries,registry.strippedLengths)
-      const approved=new Map<string,number>();let approvedBytes=0
-      return (text: string) => {
-        if (approved.has(text)) {
-          const bytes=approved.get(text)!
-          approved.delete(text);approved.set(text,bytes)
-          return true
-        }
-        if (blocked(text)) return false
-        const bytes=text.length*2
-        if (bytes<=262144) {
-          while (approved.size>=65536 || approvedBytes+bytes>8388608) {
-            const first=approved.keys().next().value!
-            approvedBytes-=approved.get(first)!
-            approved.delete(first)
-          }
-          approved.set(text,bytes);approvedBytes+=bytes
-        }
-        return true
-      }
-    })().catch(() => {indices.delete(assets); return () => false})
-    indices.set(assets, pending)
+      const registry = await response.json() as {version:number;identities:{hash:string;words:number;compact:boolean;length:number;rolling:number;row:false|'token'|'field'}[];strippedLengths:number[]}
+      if(registry.version!==3 || !Array.isArray(registry.identities) || registry.identities.some(e=>typeof e.compact!=='boolean'||!Number.isSafeInteger(e.length)||!Number.isSafeInteger(e.rolling)||![false,'token','field'].includes(e.row)) || !Array.isArray(registry.strippedLengths) || !registry.strippedLengths.length || registry.strippedLengths.some(n=>!Number.isSafeInteger(n)||n<4))throw new Error('Privacy index unavailable')
+      const blocked=compileHashedIdentityCheck(registry.identities,registry.strippedLengths,{mode})
+      return (text: string) => !blocked(text)
+    })().catch(() => {modes!.delete(mode); return () => false})
+    modes.set(mode, pending)
   }
   return pending
 }
@@ -56,9 +37,16 @@ export async function tablePrivacy(request: Request, assets: Fetcher): Promise<R
   if (request.method !== 'POST') return Response.json({safe:false}, {status:405, headers})
   try {
     const input = await request.text()
-    const value: unknown = JSON.parse(input).text
+    const parsed = JSON.parse(input)
+    const value: unknown = parsed.text
+    if (parsed.mode != null && !['query','row','csv'].includes(parsed.mode)) return Response.json({safe:false}, {status:400, headers})
+    if(parsed.mode==='row'&&Array.isArray(parsed.texts)){
+      if(!parsed.texts.length||parsed.texts.some((v:unknown)=>typeof v!=='string'))return Response.json({safe:false},{status:400,headers})
+      const check=await tablePrivacyCheck(assets,'row')
+      return Response.json({safe:parsed.texts.every(check)},{headers})
+    }
     if (typeof value !== 'string') return Response.json({safe:false}, {status:400, headers})
-    const check = await tablePrivacyCheck(assets)
-    return Response.json({safe:check(value)}, {headers})
+    const check = await tablePrivacyCheck(assets, parsed.mode === 'csv' ? 'row' : parsed.mode || 'query')
+    return Response.json({safe:parsed.mode === 'csv' ? !csvIdentityCheck(value,field=>!check(field)) : check(value)}, {headers})
   } catch { return Response.json({safe:false}, {status:503, headers}) }
 }

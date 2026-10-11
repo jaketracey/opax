@@ -51,7 +51,7 @@ function recommendationText(rec: Report['recommendations'][number]) {
   return /[<>]/.test(remainder) ? esc(rec.text) : rec.html || esc(rec.text)
 }
 
-export async function auditPage(id: string | null, url: URL, read: Read, block: Block, privacyCheck?: (text:string)=>boolean) {
+export async function auditPage(id: string | null, url: URL, read: Read, block: Block, privacyCheck?: (text:string)=>boolean, privacyRowCheck?: (text:string)=>boolean) {
   const missing = () => ({ title: 'Audit report not found · OPAX', description: 'No audit report is available for this id.', status: 404, prerender: block('Audit report not found', 'No audit report is available for this id.', '', [INDEX_CRUMB, {label:'Not found'}]) })
   if (id !== null && !AUDIT_ID.test(id)) return missing()
   try {
@@ -61,8 +61,8 @@ export async function auditPage(id: string | null, url: URL, read: Read, block: 
       const index = await read<{ records: AuditRow[] }>(m.index_url)
       if (index.records.length !== m.count) return missing()
       const safe=privacyCheck ?? await tablePrivacyCheckFrom(read)
-      const config = auditTableConfig(index.records,safe)
-      config.rows=config.rows!.filter(row=>safe(JSON.stringify(row)))
+      const safeRows=privacyRowCheck ?? privacyCheck ?? await tablePrivacyCheckFrom(read,'row')
+      const config = auditTableConfig(index.records,safe,safeRows)
       const requestURL=new URL(url)
       const guarded=guardTableURL(config,url)
       const description = `${m.count} Queensland Audit Office reports tabled in Parliament, with report metadata and recommendations published as HTML.`

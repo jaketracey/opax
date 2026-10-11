@@ -4068,7 +4068,7 @@ async function buildRouteMeta(route: SeoRoute, url: URL, request: Request, env: 
       const page = await hubPage(route.hub,route.id,<T>(path: string) => assetJson<T>(env,path),people?.people || [],people?.slugOf || new Map(),undefined,env)
       return base({title:page.title+' · OPAX',description:page.description,prerender:page.html,jsonLd:page.jsonLd,status:page.status})
     }
-    case 'audit': return base({ ...await auditPage(route.id, url, auditReader(env.ASSETS), prerenderBlock, route.id===null ? await tablePrivacyCheck(env.ASSETS) : undefined),
+    case 'audit': return base({ ...await auditPage(route.id, url, auditReader(env.ASSETS), prerenderBlock, route.id===null ? await tablePrivacyCheck(env.ASSETS) : undefined, route.id===null ? await tablePrivacyCheck(env.ASSETS,'row') : undefined),
       ...(route.id && AUDIT_ID.test(route.id) ? { canonical: `${SITE_ORIGIN}/audit/${route.id}` } : {}) })
     case 'instruments': return base(await instrumentPage(route.id, url, instrumentReader(env.ASSETS), prerenderBlock, route.id===null ? await tablePrivacyCheck(env.ASSETS) : undefined, env.TABLE_DB ? async query=>{
       const endpoint=new URL('/api/table/instruments',url)
@@ -4916,9 +4916,9 @@ async function moneySubjectMeta(dir: 'party' | 'donor', name: string, url: URL, 
     if (graph && party) {
       const privacyCheck = await tablePrivacyCheck(env.ASSETS)
       const {rows,aggregate} = partyMoneyData(graph,party.id,text=>!privacyCheck(String(text)),privacyCheck)
-      const config = partyMoneyTableConfig(rows,aggregate,undefined,undefined,undefined,privacyCheck)
+      const config = partyMoneyTableConfig(rows,aggregate,undefined,undefined,undefined,privacyCheck,await tablePrivacyCheck(env.ASSETS,'row'))
       config.id = 'ssr-party-money-table'
-      table = `<section class="wrap"><h2>Where it came from</h2>${registerTableHTML(config,parseQuery(url.searchParams,config.urlKey))}<p>Party transfers and grants are excluded. Source: <a href="https://transparency.aec.gov.au/">AEC Transparency Register</a>.</p></section>`
+      table = `<section class="wrap"><h2>Where it came from</h2>${registerTableHTML(config,undefined,url)}<p>Party transfers and grants are excluded. Source: <a href="https://transparency.aec.gov.au/">AEC Transparency Register</a>.</p></section>`
     }
   }
   return {
@@ -5171,13 +5171,14 @@ function legacyConnectionsRedirect(url: URL): Response {
 }
 
 async function serveSeoPage(route: SeoRoute, url: URL, request: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
+  const originalTableState = [...url.searchParams.keys()].some(key=>/^(?:instruments|audit|interests|partyMoney(?:AEC|ECQ|VEC)?)\./.test(key))
   const [shell, meta] = await Promise.all([
     env.ASSETS.fetch(new Request(`${SITE_ORIGIN}/`)),
     buildMeta(route, url, request, env, ctx),
   ])
   if (!shell.ok) return shell
   const tableState = [...url.searchParams.keys()].some(key=>/^(?:instruments|audit|interests|partyMoney(?:AEC|ECQ|VEC)?)\./.test(key))
-  const noindex = meta.noindex || meta.status >= 400 || tableState || (['/ask', '/search'].includes(url.pathname.replace(/\/+$/, '')) && Boolean(url.search))
+  const noindex = meta.noindex || meta.status >= 400 || originalTableState || tableState || (['/ask', '/search'].includes(url.pathname.replace(/\/+$/, '')) && Boolean(url.search))
   // Election coverage names unavailable grants, but renders no financial records.
   // Its renderer owns any future caveat alongside an actual political money pairing.
   // The policy pages (privacy, support) name no association between records.

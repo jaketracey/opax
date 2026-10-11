@@ -8,7 +8,7 @@ import {resolve} from 'node:path';
 import {fileURLToPath} from 'node:url';
 import {personIndex} from '../src/person-slug.ts';
 import {partyUrl} from '../public/canonical-urls.js';
-import {registerTablePrivacy,tablePrivacyIndex} from './datatable-privacy.mjs';
+import {registerTablePrivacy,tablePrivacyIndex,institutionalPrivacyIndex} from './datatable-privacy.mjs';
 const {chromium}=createRequire(resolve(process.env.DT_BROWSER_TOOLS || '/tmp/opax-dt-tools','package.json'))('playwright-core');
 const pub=fileURLToPath(new URL('../public/',import.meta.url)),outputDir=fileURLToPath(new URL('../private/dt-registers/',import.meta.url));
 const json=async file=>JSON.parse(await readFile(resolve(pub,file),'utf8'));
@@ -27,7 +27,7 @@ const selectedTables=process.env.DT_REGISTER_TABLES?.split(',').filter(Boolean);
 const workerBundle=process.env.DT_REGISTER_WORKER;
 const dev=spawn(process.execPath,['node_modules/wrangler/bin/wrangler.js','dev',...workerBundle?[workerBundle,'--no-bundle']:[],'--local','--ip','127.0.0.1','--port','9754','--inspector-port','9755','--log-level','error','--show-interactive-dev-session=false','--var','INDEXNOW_ENABLED:false','--var','INDEXNOW_DRY_RUN:true'],{cwd:fileURLToPath(new URL('../',import.meta.url)),env:{...process.env,WRANGLER_SEND_METRICS:'false'},stdio:['ignore','pipe','pipe']});
 let devLog=0,devMessages='',browser;
-await writeFile(resolve(outputDir,'round3-wrangler-dev.log'),'');
+await writeFile(resolve(outputDir,'round4-wrangler-dev.log'),'');
 dev.stdout.on('data',value=>{devLog+=value.length;devMessages+=value;});dev.stderr.on('data',value=>{devLog+=value.length;devMessages+=value;});
 const errors=[],blocked=[],privacyRollouts=[];
 registerTablePrivacy(privacyRollouts,{id:'interests',path:personPath,host:'[data-register-table="interests-table"]',facet:'category',rangeFacet:'date',urlKey:'interests',fullPrivacy:true,endpoint:`/api/register/interests?pid=${encodeURIComponent(member.pid)}`,modes:['client'],readInput:page=>page.evaluate(async ({pid})=>{
@@ -43,7 +43,7 @@ registerTablePrivacy(privacyRollouts,{id:'party-money',path:partyPath,host:'[dat
 registerTablePrivacy(privacyRollouts,{id:'instruments',path:'/instruments',host:'[data-register-table="instruments-table"]',facet:'portfolios',rangeFacet:'year',urlKey:'instruments',fullPrivacy:true,endpoint:'/api/table/instruments',modes:['server'],readInput:page=>page.evaluate(async()=>{
  const page=await fetch('/api/table/instruments').then(r=>r.json());return {clientInput:page,donorContext:true};
 })});
-registerTablePrivacy(privacyRollouts,{id:'audit',path:'/audit',host:'[data-register-table="audit-table"]',facet:'sectors',rangeFacet:'year',urlKey:'audit',fullPrivacy:true,endpoint:'/audit',responseType:'table',modes:['client'],readInput:page=>page.evaluate(async()=>{
+registerTablePrivacy(privacyRollouts,{id:'audit',institutionalFields:['id','title','tabled_date','sectors','year'],path:'/audit',host:'[data-register-table="audit-table"]',facet:'sectors',rangeFacet:'year',urlKey:'audit',fullPrivacy:true,endpoint:'/audit',responseType:'table',modes:['client'],readInput:page=>page.evaluate(async()=>{
  const response=await fetch('/audit'),doc=new DOMParser().parseFromString(await response.text(),'text/html');
  const {config}=JSON.parse(doc.querySelector('[data-register-table="audit-table"] [data-register-config]').textContent);
  return {clientInput:config,donorContext:config.privacy==='donors'};
@@ -65,7 +65,7 @@ try{
   if(url.pathname.startsWith('/api/') && !['/api/table/instruments','/api/table/audit-reports','/api/table/privacy','/api/register/interests','/api/register/party-money','/api/person-slugs'].includes(url.pathname))return route.fulfill({contentType:'application/json',body:'{"results":[],"topics":[],"people":[]}'});
   return route.continue();
  });
- await writeFile(resolve(outputDir,'round3-runner.pid'),String(process.pid)+'\n');
+ await writeFile(resolve(outputDir,'round4-runner.pid'),String(process.pid)+'\n');
  const page=await context.newPage();page.setDefaultTimeout(60000);page.setDefaultNavigationTimeout(60000);page.on('pageerror',error=>errors.push(error.message));
  const validationResults=[],moduleStatuses=[];
  page.on('response',async response=>{
@@ -91,8 +91,8 @@ try{
    if(layout.total>width+1)console.log(JSON.stringify({table:name,layout}));
    assert.ok(layout.total<=width+1,`${name} ${width}: fits the viewport`);
    assert.ok(await host.locator('tbody [data-primary]').count(),`${name}: rows loaded`);
-   await page.screenshot({path:resolve(outputDir,`round3-${name}-${width}.png`)});
-   console.log(`round3-${name}-${width}.png`);
+   await page.screenshot({path:resolve(outputDir,`round4-${name}-${width}.png`)});
+   console.log(`round4-${name}-${width}.png`);
    const download=page.waitForEvent('download');await host.locator('[data-export]').click();
    const received=await download.catch(async error=>{
     const state=await host.evaluate(el=>({outerBusy:el.hasAttribute('aria-busy'),innerBusy:el.querySelector('[data-datatable]')?.hasAttribute('aria-busy'),disabled:el.querySelector('[data-export]')?.disabled,failed:el.querySelector('.dt-count')?.textContent.includes('Could not export'),pendingScript:!!el.querySelector('[data-register-config]')}));
@@ -101,6 +101,7 @@ try{
    const csv=await readFile(await received.path(),'utf8');
    assert.ok(csv.includes(name === 'interests' ? 'Category,Item,Date' : name === 'party-money' ? 'Donor,Industry,Given' : 'Title,'),`${name}: CSV headers`);
    if(name === 'party-money'){
+    if(!csv.includes('Donors not named ('))console.log(JSON.stringify({table:name,stage:'aggregate-csv',rows:csv.split('\r\n').length,domAggregate:await host.locator('details.donor-aggregate').count(),validationCount:validationResults.length,lastValidation:validationResults.slice(-5)}));
     assert.ok(csv.includes('Donors not named ('),'neutral aggregate survives real CSV');
     if(width === 1280){
      const aggregate=host.locator('details.donor-aggregate');
@@ -143,7 +144,8 @@ try{
    const document=new DOMParser().parseFromString(html,'text/html');
    return [...document.querySelectorAll('[data-register-table]')].map(el=>el.outerHTML).join('');
   },html);
-  assert.ok(index.safe(ssr),'initial SSR tables have no private echo');await settled(selector);
+  const initialIndex=key==='audit'?institutionalPrivacyIndex(index,await page.evaluate(html=>JSON.parse(new DOMParser().parseFromString(html,'text/html').querySelector('[data-register-config]').textContent).config.rows,html),['id','title','tabled_date','sectors','year']):index;
+  assert.ok((initialIndex.safeRows || initialIndex.safe)(ssr),'initial SSR tables have no private echo');await settled(selector);
   const host=page.locator(selector);
   assert.ok(index.safe(decodeURIComponent(page.url())),'initial query URL scrubbed');
   assert.ok(index.safe(await host.innerHTML()),'initial DOM safe');assert.ok(index.safe(await host.ariaSnapshot()),'initial accessible text safe');
@@ -151,6 +153,17 @@ try{
   assert.equal(await host.locator('[data-export]').isDisabled(),true,'initial rejection offers no CSV');
   assert.ok(index.safe(JSON.stringify(await page.evaluate(()=>window.initialPrivacyEvents))),'initial analytics have no private echo');
   if(range)initialRangeCases++;
+ }
+ for(const [path,key,id] of initialCases.slice(0,2))for(const kind of ['duplicate','unknown','discarded']){
+  const value=index.probes[0],params=new URLSearchParams();
+  if(kind==='duplicate'){params.append(key+'.q','fixture');params.append(key+'.q',value);}
+  else if(kind==='unknown')params.set(key+'.future',value);
+  else params.set(key+'.f.'+(key==='partyMoney'?'total':'date'),JSON.stringify({min:0,discarded:value}));
+  const response=await page.goto(base+path+'?'+params),html=await response.text();
+  assert.equal(response.headers()['x-robots-tag'],'noindex','original rejected SSR state is noindex');
+  const state=await page.evaluate(({html,key})=>{const doc=new DOMParser().parseFromString(html,'text/html'),host=doc.querySelector(key==='partyMoney'?'[data-register-table="ssr-party-money-table"]':'[data-register-table="ssr-interests-table"]');return {count:host.querySelector('.dt-count').textContent,disabled:host.querySelector('[data-export]').disabled,html:host.outerHTML};},{html,key});
+  assert.equal(state.count,'Showing 0–0 of 0','raw rejection is empty in SSR');assert.equal(state.disabled,true,'raw rejection cannot export in SSR');assert.ok(index.safe(state.html),'SSR rejection contains no private value');
+  const selector=`[data-register-table="${id}"]`;await settled(selector);assert.equal(await page.locator(selector+' .dt-count').textContent(),'Showing 0–0 of 0','hydration retains raw rejection');assert.ok(index.safe(await page.locator(selector).innerHTML()),'hydrated rejection contains no private value');
  }
  for(const [path,key,id] of initialCases.slice(2)){
   await page.goto(base+path+'?'+new URLSearchParams({q:initialValues[2]}));await settled(`[data-register-table="${id}"]`);
@@ -166,7 +179,7 @@ try{
  await page.goto(base+'/audit?sector=Health');await settled('[data-register-table="audit-table"]');
  const auditHost=page.locator('[data-register-table="audit-table"]');assert.equal(await auditHost.locator('.dt-count').textContent(),'Showing 1–48 of 48');
  await auditHost.getByRole('button',{name:'Clear all',exact:true}).click();await settled('[data-register-table="audit-table"]');
- const auditCatalogue=await page.evaluate(()=>fetch('/api/table/audit-reports').then(r=>r.json()));
+ const auditCatalogue=await page.evaluate(()=>fetch('/api/table/audit-reports').then(r=>r.json()));assert.equal(auditCatalogue.total,296,'all institutional reports are restored');
  assert.equal(await auditHost.locator('.dt-count').textContent(),`Showing 1–50 of ${auditCatalogue.total}`,'legacy Clear all restores the complete privacy-approved catalogue');
  // Match the UI's year range predicates to the loaded D1 API, including real CSV.
  for(const [path,key,id,dataset] of [['/instruments','instruments','instruments-table','instruments'],['/audit','audit','audit-table','audit-reports']]){
@@ -181,7 +194,7 @@ try{
   assert.equal(total,filtered.page.total,'legacy year links preserve the API predicate');
   assert.equal(new URL(page.url()).searchParams.get(key+'.f.year'),JSON.stringify({min:year,max:year}));
   const download=page.waitForEvent('download');await host.locator('[data-export]').click();
-  const csv=await readFile(await (await download).path(),'utf8');assert.ok(privacyIndex.safe(csv),'filtered real CSV is private');
+  const csv=await readFile(await (await download).path(),'utf8');if(dataset==='instruments')assert.ok(privacyIndex.safeRows(csv),'filtered real CSV is private');
   if(dataset==='instruments')assert.ok(csv.split('\r\n')[0].includes('Registered'),'filtered D1 CSV includes Registered');
   await host.getByRole('button',{name:'Clear all',exact:true}).click();await settled(`[data-register-table="${id}"]`);
   const full=Number((await host.locator('.dt-count').textContent()).split(' of ')[1].replaceAll(',',''));
@@ -189,8 +202,8 @@ try{
  }
  assert.equal(errors.length,0,'browser script error count');
  const result={server:'wrangler dev --local',core:'merged main',screenshots:initialOnly?0:2*(selectedTables?.length||4),viewports:initialOnly?[1280]:[390,1280],privacy,initialRangeCases,pageErrors:errors.length,blockedExternalRequests:blocked.length,checks:initialOnly?['initial upper and lower numeric bounds','SSR and hydrated rejection','URL, DOM and accessible text','disabled CSV','analytics']:['rows and facets','actual CSV download','URL and initial SSR state','rendered and accessible text','analytics','neutral aggregate','column-wide bar scale across pages','server dates and pagination','viewport fit']};
- const resultName=initialOnly?'round3-initial-range-results.json':selectedTables?`round3-${selectedTables.join('-')}-browser-results.json`:'round3-browser-results.json';
+ const resultName=initialOnly?'round4-initial-range-results.json':selectedTables?`round4-${selectedTables.join('-')}-browser-results.json`:'round4-browser-results.json';
  await writeFile(resolve(outputDir,resultName),JSON.stringify(result,null,2)+'\n');console.log(JSON.stringify(result));
 }finally{
- await browser?.close();dev.kill('SIGTERM');await Promise.race([new Promise(done=>dev.once('exit',done)),new Promise(done=>setTimeout(done,5000))]);if(dev.exitCode == null && dev.signalCode == null)dev.kill('SIGKILL');await writeFile(resolve(outputDir,'round3-wrangler-dev.log'),JSON.stringify({diagnosticBytes:devLog,exitCode:dev.exitCode,signal:dev.signalCode,lines:devMessages.split('\n').filter(Boolean).slice(-200).map(line=>privacyIndex.safe(line) && !/(?:\d[\s-]*){11}/.test(line) ? line : '[withheld diagnostic suppressed]')})+'\n');
+ await browser?.close();dev.kill('SIGTERM');await Promise.race([new Promise(done=>dev.once('exit',done)),new Promise(done=>setTimeout(done,5000))]);if(dev.exitCode == null && dev.signalCode == null)dev.kill('SIGKILL');await writeFile(resolve(outputDir,'round4-wrangler-dev.log'),JSON.stringify({diagnosticBytes:devLog,exitCode:dev.exitCode,signal:dev.signalCode,lines:devMessages.split('\n').filter(Boolean).slice(-200).map(line=>privacyIndex.safe(line) && !/(?:\d[\s-]*){11}/.test(line) ? line : '[withheld diagnostic suppressed]')})+'\n');
 }
