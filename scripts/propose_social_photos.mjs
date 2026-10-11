@@ -1,3 +1,4 @@
+import { honestFetch, USER_AGENT, runSource } from './lib/http.mjs'
 // Proposes, and on approval adds, photographs for the daily edition's carousel
 // covers. The Worker only ever posts photographs listed in
 // portal/public/social/photos.json, so a person runs this: first to see what
@@ -15,12 +16,14 @@ import { readFileSync, writeFileSync, mkdirSync } from 'node:fs'
 import { fileURLToPath } from 'node:url'
 import { createRequire } from 'node:module'
 
+await runSource(async () => {
+
 // sharp is the portal's dependency; the script lives beside the other repo scripts.
 const sharp = createRequire(new URL('../portal/package.json', import.meta.url))('sharp')
 
 const root = fileURLToPath(new URL('../portal/public/', import.meta.url))
 const catalogPath = root + 'social/photos.json'
-const UA = 'opax-social-photos/1.0 (https://opax.com.au; contact via github.com/jaketracey/opax)'
+const UA = USER_AGENT
 const ACCEPTED = /^(CC0|Public domain|CC BY(?:-SA)?(?: \d(?:\.\d)?)?(?: [A-Z]{2})?)$/i
 
 const [, , command, ...rest] = process.argv
@@ -33,7 +36,7 @@ for (let i = 0; i < rest.length; i++) {
 
 async function commons(params) {
   const url = 'https://commons.wikimedia.org/w/api.php?' + new URLSearchParams({ format: 'json', ...params })
-  const res = await fetch(url, { headers: { 'user-agent': UA } })
+  const res = await honestFetch(url, { headers: { 'user-agent': UA } })
   if (!res.ok) throw new Error(`Commons ${res.status}`)
   return res.json()
 }
@@ -65,7 +68,7 @@ if (command === 'search') {
   if (!r) throw new Error('file not found on Commons')
   if (!ACCEPTED.test(r.licence)) throw new Error(`licence "${r.licence}" is not accepted (CC0, public domain, CC BY, CC BY-SA)`)
   if (r.width < 1200) throw new Error(`too small: ${r.width}px wide, need 1200`)
-  const bytes = Buffer.from(await (await fetch(r.thumb ?? r.url, { headers: { 'user-agent': UA } })).arrayBuffer())
+  const bytes = Buffer.from(await (await honestFetch(r.thumb ?? r.url, { headers: { 'user-agent': UA } })).arrayBuffer())
   mkdirSync(root + 'social/photos', { recursive: true })
   const out = await sharp(bytes).rotate().resize({ width: 1200, withoutEnlargement: true }).jpeg({ quality: 82, progressive: true, mozjpeg: true }).toBuffer({ resolveWithObject: true })
   writeFileSync(root + `social/photos/${id}.jpg`, out.data)
@@ -81,3 +84,5 @@ if (command === 'search') {
   console.log('usage: propose_social_photos.mjs search "<query>" | approve "<File:…>" --id <slug> (--subject <id> | --kind <kind>) [--describe "…"]')
   process.exit(command ? 1 : 0)
 }
+
+})

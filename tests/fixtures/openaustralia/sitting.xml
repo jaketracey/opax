@@ -1,0 +1,12 @@
+<debates>
+ <major-heading id="uk.org.publicwhip/lords/2026-10-13.1.1">BILLS</major-heading>
+ <minor-heading id="uk.org.publicwhip/lords/2026-10-13.1.2">Example Bill 2026; Second Reading</minor-heading>
+ <speech id="uk.org.publicwhip/lords/2026-10-13.1.3" speakerid="uk.org.publicwhip/lord/1" speakername="Alex Example"><p>This invented fixture speech has enough text for the existing Hansard loader to keep it.</p><p pwmotiontext="moved">That this bill be now read a second time.</p></speech>
+ <division id="uk.org.publicwhip/lords/2026-10-13.2.1" divdate="2026-10-13" divnumber="1">
+  <bills><bill id="S999" url="https://parlinfo.aph.gov.au/legislation/billhome/S999">EXAMPLE BILL 2026</bill></bills>
+  <divisioncount ayes="1" noes="1" tellerayes="1" tellernoes="0"/>
+  <memberlist vote="aye"><member id="uk.org.publicwhip/lord/1" vote="aye" teller="yes">Alex Example</member></memberlist>
+  <memberlist vote="no"><member id="uk.org.publicwhip/lord/2" vote="no">Sam Fixture</member></memberlist>
+ </division>
+ <speech nospeaker="true"><p>Question agreed to.</p></speech>
+</debates>

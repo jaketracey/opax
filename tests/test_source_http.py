@@ -1,0 +1,483 @@
+"""Source access policy, including a repository-wide regression guard."""
+import ast
+import asyncio
+from datetime import datetime, timezone
+from email.message import Message
+from email.utils import format_datetime
+import io
+import json
+from pathlib import Path
+import re
+import subprocess
+import sqlite3
+import urllib.error
+import urllib.request
+import urllib.response
+from unittest import mock
+
+import pytest
+import requests
+
+from parli.ingest import honest_http, http
+
+ROOT = Path(__file__).resolve().parents[1]
+FIX = Path(__file__).parent / 'fixtures/source_access'
+
+
+@pytest.fixture(autouse=True)
+def isolated_access(monkeypatch, tmp_path):
+    monkeypatch.setenv('OPAX_SOURCE_STATUS_FILE', str(tmp_path / 'access.json'))
+    monkeypatch.delenv('OPAX_SOURCE_NAME', raising=False)
+    http._logged.clear()
+    monkeypatch.setattr(http, 'pace', lambda *a: None)
+
+
+class Transport(requests.adapters.BaseAdapter):
+    def __init__(self, responses):
+        self.responses = iter(responses)
+        self.sent = []
+
+    def send(self, request, **kwargs):
+        self.sent.append((request, kwargs))
+        status, body, headers = next(self.responses)
+        response = requests.Response()
+        response.status_code, response._content = status, body
+        response.headers = requests.structures.CaseInsensitiveDict(headers)
+        response.url, response.request = request.url, request
+        return response
+
+    def close(self): pass
+
+
+def session(responses):
+    client = http.Session()
+    transport = Transport(responses)
+    client.mount('https://', transport)
+    return client, transport
+
+
+@pytest.mark.parametrize('family', ['Mozilla', 'Firefox', 'Chrome', 'Safari', 'AppleWebKit', 'Gecko'])
+def test_requests_cannot_override_identity(family):
+    client, wire = session([(200, b'ok', {})])
+    client.headers['User-Agent'] = family + '/128.0'
+    client.get('https://example.test/source', headers={'user-agent': family + '/1.0'}, proxies={'https': 'http://proxy.invalid'})
+    assert wire.sent[0][0].headers['User-Agent'] == http.USER_AGENT
+    assert not wire.sent[0][1]['proxies']
+    assert not client.trust_env
+
+
+def test_requests_redirect_without_robots_policy_is_not_requested(tmp_path):
+    client, wire = session([(302, b'', {'Location': '/detail'}), (200, b'ok', {})])
+    with pytest.raises(http.SourceRefused, match='4') as refusal:
+        client.get('https://example.test/source')
+    assert 'destination robots policy' in refusal.value.reason
+    assert len(wire.sent) == 1
+    assert all(request.headers['User-Agent'] == http.USER_AGENT for request, _ in wire.sent)
+    assert json.loads((tmp_path / 'access.json').read_text())['example.test']['status'] == 'paused'
+
+
+def test_requests_unfollowed_redirect_remains_a_terminal_response():
+    client, wire = session([(302, b'', {'Location': '/detail'})])
+    assert client.get('https://example.test/source', allow_redirects=False).status_code == 302
+    assert len(wire.sent) == 1
+
+
+def federal_transport(routes, monkeypatch):
+    """Use urllib's real redirect handling with offline HTTP responses."""
+    sent, responses = [], []
+    class FixtureHTTP(urllib.request.HTTPHandler):
+        def http_open(self, request):
+            assert not responses or responses[-1].closed, 'previous connection must be closed'
+            sent.append(request.full_url)
+            assert request.get_header('User-agent') == http.USER_AGENT
+            status, body, headers = routes[request.full_url]
+            fields = Message()
+            for name, value in headers.items():
+                fields[name] = value
+            response = urllib.response.addinfourl(io.BytesIO(body), fields, request.full_url, status)
+            response.msg = 'Fixture response'
+            responses.append(response)
+            return response
+    client = honest_http.HonestHTTP()
+    client.opener = http.build_opener(honest_http._NoRedirect(), FixtureHTTP())
+    monkeypatch.setattr(honest_http.time, 'sleep', lambda _: None)
+    return client, sent
+
+
+@pytest.mark.parametrize('cross_origin', [False, True])
+@pytest.mark.parametrize('blocked', [False, True])
+def test_federal_redirect_checks_destination_robots_before_request(monkeypatch, cross_origin, blocked):
+    origin = 'http://example.test'
+    target_origin = 'http://destination.test' if cross_origin else origin
+    target = target_origin + ('/blocked' if blocked else '/allowed')
+    robots = b'User-agent: OPAXBot\nDisallow: /blocked\nCrawl-delay: 2\n'
+    routes = {origin + '/robots.txt': (200, robots, {}),
+              target_origin + '/robots.txt': (200, robots, {}),
+              origin + '/source': (302, b'', {'Location': target}),
+              target: (200, b'verified XML', {})}
+    client, sent = federal_transport(routes, monkeypatch)
+    if blocked:
+        with pytest.raises(honest_http.Refused, match='robots.txt disallows'):
+            client.get(origin + '/source')
+        assert target not in sent
+    else:
+        assert client.get(origin + '/source') == b'verified XML'
+        assert sent.count(target) == 1
+    assert sent.count(origin + '/robots.txt') == 1
+    assert sent.count(target_origin + '/robots.txt') == 1
+    assert client.delay == 2
+
+
+def test_federal_redirect_to_paused_host_does_not_fetch_its_robots(monkeypatch):
+    origin = 'http://example.test'
+    routes = {origin + '/robots.txt': (200, b'User-agent: *\nAllow: /', {}),
+              origin + '/source': (302, b'', {'Location': 'https://www.aph.gov.au/destination'})}
+    client, sent = federal_transport(routes, monkeypatch)
+    with pytest.raises(http.SourceRefused):
+        client.get(origin + '/source')
+    assert sent == [origin + '/robots.txt', origin + '/source']
+
+
+def test_federal_redirect_hops_are_bounded_and_use_cached_robots(monkeypatch):
+    origin = 'http://example.test'
+    routes = {origin + '/robots.txt': (200, b'User-agent: *\nAllow: /', {})}
+    routes.update({origin + f'/{i}': (302, b'', {'Location': f'/{i + 1}'})
+                   for i in range(honest_http.MAX_REDIRECTS + 1)})
+    client, sent = federal_transport(routes, monkeypatch)
+    with pytest.raises(honest_http.Refused, match='redirect limit'):
+        client.get(origin + '/0')
+    assert sent == [origin + '/robots.txt'] + [origin + f'/{i}' for i in range(6)]
+
+
+def test_robots_redirect_without_destination_rules_is_refused(monkeypatch):
+    origin = 'http://example.test'
+    routes = {origin + '/robots.txt': (302, b'', {'Location': 'http://destination.test/rules'})}
+    client, sent = federal_transport(routes, monkeypatch)
+    with pytest.raises(honest_http.Refused, match='robots.txt redirect refused'):
+        client.get(origin + '/source')
+    assert sent == [origin + '/robots.txt']
+
+
+def test_shared_urllib_redirect_without_robots_policy_is_not_requested():
+    sent = []
+    class FixtureHTTP(urllib.request.HTTPHandler):
+        def http_open(self, request):
+            sent.append(request.full_url)
+            response = urllib.response.addinfourl(io.BytesIO(b''), {'location': '/detail'}, request.full_url, 302)
+            response.msg = 'Fixture redirect'
+            return response
+    with pytest.raises(http.SourceRefused) as refusal:
+        http.open_url(http.build_opener(FixtureHTTP()), http.Request('http://example.test/source'))
+    assert 'destination robots policy' in refusal.value.reason
+    assert sent == ['http://example.test/source']
+
+
+def test_async_redirect_without_robots_policy_is_refused_before_following():
+    trace = http.aiohttp_trace()
+    response = mock.Mock(headers={'Location': '/detail'})
+    params = mock.Mock(url='https://example.test/source', response=response, headers={})
+    with pytest.raises(http.SourceRefused) as refusal:
+        asyncio.run(trace.on_request_redirect[0](mock.Mock(), mock.Mock(), params))
+    assert 'destination robots policy' in refusal.value.reason
+    response.close.assert_called_once()
+
+
+def test_prepared_requests_cannot_bypass_identity():
+    client, wire = session([(200, b'ok', {})])
+    prepared = requests.Request('GET', 'https://example.test', headers={'User-Agent': 'spoof'}).prepare()
+    client.send(prepared)
+    assert wire.sent[0][0].headers['User-Agent'] == http.USER_AGENT
+
+
+def test_internal_api_fetches_identify_opax_without_changing_retry_policy():
+    from parli import arag
+    response = mock.Mock(ok=True, status_code=200)
+    response.json.return_value = {'records': []}
+    with mock.patch.object(arag.requests, 'request', return_value=response) as wire:
+        assert arag._request('GET', 'https://example.test/fixture', {'user-agent': 'spoof'}) == {'records': []}
+    assert wire.call_args.kwargs['headers']['User-Agent'] == http.USER_AGENT
+
+
+@pytest.mark.parametrize('status,fixture', [(403, '403.html'), (200, 'challenge.html')])
+def test_refusal_stops_on_first_response_and_preserves_file(status, fixture, tmp_path, capsys):
+    published = tmp_path / 'published.json'
+    published.write_bytes(b'{"existing":"last good"}')
+    client, wire = session([(status, (FIX / fixture).read_bytes(), {})])
+    with pytest.raises(http.SourceRefused) as exc:
+        response = client.get('https://example.test/source')
+        published.write_bytes(response.content)
+    assert exc.value.code == 4
+    assert published.read_bytes() == b'{"existing":"last good"}'
+    assert len(wire.sent) == 1
+    state = json.loads((tmp_path / 'access.json').read_text())
+    assert state['example.test']['status'] == 'paused'
+    assert capsys.readouterr().out.count(http.PAUSE_MESSAGE) == 1
+
+
+def test_known_paused_hosts_and_service_never_send_requests():
+    client, wire = session([])
+    for host in [*http.PAUSED_HOSTS, 'api.firecrawl.dev']:
+        with pytest.raises(http.SourceRefused):
+            client.get('https://' + host + '/source')
+    assert not wire.sent
+
+
+@pytest.mark.parametrize('status,fixture,headers', [
+    (200, 'challenge.html', b'Content-Type: text/html'),
+    (200, None, b'Content-Type: text/plain\r\ncf-mitigated: challenge'),
+    (403, '403.html', b'Content-Type: text/html'),
+])
+def test_frl_curl_refusal_records_pause_before_replacing_data(status, fixture, headers, monkeypatch, tmp_path, capsys):
+    from parli.ingest import frl_instruments as frl
+    body = (FIX / fixture).read_bytes() if fixture else b'challenge'
+    wire = b'HTTP/1.1 100 Continue\r\n\r\n' + f'HTTP/1.1 {status}\r\n'.encode() + headers + b'\r\n\r\n' + body + f'\n{status}'.encode()
+    reply = subprocess.CompletedProcess([], 0, wire, b'')
+    published = tmp_path / 'published.json'
+    published.write_bytes(b'{"existing":"last good"}')
+    monkeypatch.setenv('OPAX_SOURCE_NAME', 'frl')
+    client = frl.PoliteSession(now=lambda: datetime(2026, 10, 9, 11, tzinfo=timezone.utc), clock=lambda: 0, sleep=lambda _: None)
+    with mock.patch.object(frl.subprocess, 'run', return_value=reply) as transport:
+        with pytest.raises(http.SourceRefused) as exc:
+            published.write_bytes(client.get(frl.API))
+    assert exc.value.code == 4
+    assert transport.call_count == client.requests == 1
+    assert published.read_bytes() == b'{"existing":"last good"}'
+    receipt = json.loads((tmp_path / 'access.json').read_text())['frl']
+    assert receipt['status'] == 'paused'
+    assert receipt['message'] == http.PAUSE_MESSAGE
+    assert capsys.readouterr().out.count(http.PAUSE_MESSAGE) == 1
+
+
+@pytest.mark.parametrize('newline', [b'\r\n', b'\n'])
+def test_frl_uses_final_headers_and_returns_only_valid_body(newline, tmp_path):
+    from parli.ingest import frl_instruments as frl
+    body = b'{"value":[]}'
+    wire = newline.join([b'HTTP/1.1 100 Continue', b'cf-mitigated: challenge', b'',
+                         b'HTTP/1.1 200 OK', b'Content-Type: application/json', b'', b'']) + body + b'\n200'
+    reply = subprocess.CompletedProcess([], 0, wire, b'')
+    client = frl.PoliteSession(now=lambda: datetime(2026, 10, 9, 11, tzinfo=timezone.utc), clock=lambda: 0, sleep=lambda _: None)
+    with mock.patch.object(frl.subprocess, 'run', return_value=reply):
+        assert client.get(frl.API) == body
+    assert not (tmp_path / 'access.json').exists()
+
+
+def test_urllib_forces_identity_and_does_not_cache_challenge():
+    req = http.Request('https://example.test/source', headers={'user-agent': 'spoof'})
+    assert req.get_header('User-agent') == http.USER_AGENT
+    response = mock.Mock()
+    response.headers = {}
+    response.getcode.return_value = 200
+    response.geturl.return_value = req.full_url
+    response.read.return_value = (FIX / 'challenge.html').read_bytes()
+    response.__enter__ = mock.Mock(return_value=response)
+    response.__exit__ = mock.Mock(return_value=False)
+    opener = mock.Mock(); opener.open.return_value = response
+    with pytest.raises(http.SourceRefused):
+        http.open_url(opener, req)
+    opener.open.assert_called_once()
+
+
+def test_urllib_403_stops_before_backoff():
+    opener = mock.Mock()
+    opener.open.side_effect = urllib.error.HTTPError('https://example.test', 403, 'Forbidden', {}, io.BytesIO(b''))
+    with pytest.raises(http.SourceRefused):
+        http.open_url(opener, http.Request('https://example.test'))
+    opener.open.assert_called_once()
+
+
+def test_bill_redirect_terminal_is_not_followed():
+    from parli.ingest.bill_texts import NoRedirect
+    requests_seen = []
+    class FixtureHTTP(urllib.request.HTTPHandler):
+        def http_open(self, request):
+            requests_seen.append((request.selector, request.get_header('User-agent')))
+            response = urllib.response.addinfourl(io.BytesIO(b''), {'Location': '/download/forbidden'}, request.full_url, 301)
+            response.msg = 'Moved permanently'
+            return response
+    with pytest.raises(urllib.error.HTTPError) as error:
+        http.open_url(http.build_opener(NoRedirect(), FixtureHTTP()), http.Request('http://example.test/display'))
+    assert error.value.code == 301
+    assert requests_seen == [('/display', http.USER_AGENT)]
+
+
+def test_retry_after_seconds_and_dates_are_not_capped():
+    stamp = datetime(2026, 10, 10, tzinfo=timezone.utc).timestamp()
+    assert http.retry_after('240') == 240
+    assert http.retry_after(format_datetime(datetime.fromtimestamp(stamp + 300, timezone.utc)), now=stamp) == 300
+    assert http.retry_after('invalid') == 0
+
+
+def test_throttling_honours_retry_after():
+    client, wire = session([(429, b'', {'Retry-After': '240'}), (200, b'ok', {})])
+    with mock.patch.object(http.time, 'sleep') as sleep:
+        assert client.get('https://example.test/source').content == b'ok'
+    sleep.assert_called_once_with(240)
+    assert len(wire.sent) == 2
+
+
+def test_register_replace_rolls_back_committed_batches_on_later_refusal():
+    db = sqlite3.connect(':memory:')
+    db.execute('CREATE TABLE records (id INTEGER)')
+    db.execute('INSERT INTO records VALUES (1)'); db.commit()
+
+    @http.preserve_on_refusal
+    def fetch_register(staged):
+        staged.execute('DELETE FROM records'); staged.commit()
+        staged.execute('INSERT INTO records VALUES (2)'); staged.commit()
+        http.check_response('https://example.test', 403)
+
+    with pytest.raises(http.SourceRefused): fetch_register(db)
+    assert db.execute('SELECT id FROM records').fetchall() == [(1,)]
+
+
+def test_aec_refusal_precedes_any_register_deletion(monkeypatch, tmp_path):
+    from parli.ingest import donations
+    db = sqlite3.connect(':memory:')
+    db.execute('CREATE TABLE donations (id INTEGER)')
+    db.execute('INSERT INTO donations VALUES (1)'); db.commit()
+    monkeypatch.setattr(donations, 'get_db', lambda: db)
+    monkeypatch.setattr(donations, 'init_db', lambda db: None)
+    monkeypatch.setattr(donations, 'CACHE_DIR', tmp_path)
+    monkeypatch.setattr(donations, 'AEC_ZIPS', {'snapshot': 'https://example.test'})
+    monkeypatch.setattr('sys.argv', ['donations'])
+    def refuse(url): http.check_response(url, 403)
+    monkeypatch.setattr(donations, 'download_zip', refuse)
+    with pytest.raises(http.SourceRefused): donations.main()
+    assert db.execute('SELECT id FROM donations').fetchall() == [(1,)]
+
+
+def test_repository_cannot_reintroduce_browser_identity_or_bypass_flag():
+    from scripts.source_access_guard import scan
+    assert not (failures := scan(ROOT)), '\n'.join(failures)
+
+
+def test_python_fetch_paths_cannot_bypass_shared_transport():
+    paths = [*(ROOT / 'parli/ingest').glob('*.py'), *(ROOT / 'scripts').rglob('*.py'), ROOT / 'download_hansard.py', ROOT / 'download_hansard_fast.py']
+    direct = {'requests.Session', 'requests.get', 'requests.post', 'requests.request', 'urllib.request.Request', 'urllib.request.urlopen'}
+    failures = []
+    for path in paths:
+        if path.name.startswith('test') or path.name == 'http.py': continue
+        tree = ast.parse(path.read_text())
+        for node in ast.walk(tree):
+            if isinstance(node, ast.Call) and ast.unparse(node.func) in direct:
+                failures.append(f'{path.relative_to(ROOT)}:{node.lineno}')
+    assert not failures, '\n'.join(failures)
+
+
+def test_node_build_fetches_use_same_identity_and_refusal_fixtures(tmp_path):
+    code = """
+import assert from 'node:assert/strict';
+import { readFileSync } from 'node:fs';
+import { honestFetch, USER_AGENT, SourceRefused } from './scripts/lib/http.mjs';
+assert.equal(USER_AGENT, JSON.parse(readFileSync('./parli/ingest/user-agent.json','utf8')).user_agent);
+let calls = 0;
+globalThis.fetch = async (url, options) => {
+  calls++; assert.equal(options.headers.get('user-agent'), USER_AGENT);
+  return new Response(readFileSync('./tests/fixtures/source_access/challenge.html'), {headers:{'content-type':'text/html'}});
+};
+await assert.rejects(honestFetch('https://example.test', {headers:{'user-agent':'spoof'}}), SourceRefused);
+assert.equal(calls, 1);
+process.exitCode = 0;
+"""
+    subprocess.run(['node', '--input-type=module', '-e', code], cwd=ROOT, check=True, capture_output=True)
+
+
+def test_node_cli_refusal_exits_with_preserved_source_status():
+    code = """
+import { honestFetch, runSource } from './scripts/lib/http.mjs';
+globalThis.fetch = async () => new Response('Forbidden', { status: 403 });
+await runSource(async () => { await honestFetch('https://example.test'); throw new Error('must not continue'); });
+"""
+    result = subprocess.run(['node', '--input-type=module', '-e', code], cwd=ROOT, capture_output=True)
+    assert result.returncode == 4
+    assert result.stderr.decode().count(http.PAUSE_MESSAGE) == 1
+
+
+def test_austender_valid_200_json_is_never_a_challenge():
+    body = (FIX / 'austender.json').read_bytes()
+    client, wire = session([(200, body, {'Content-Type': 'application/json'})])
+    assert client.get('https://example.test/feed', expected_json=True).json()['success']
+    assert len(wire.sent) == 1
+
+
+@pytest.mark.parametrize('body,headers,expected_json', [
+    (b'ok', {'cf-mitigated': 'challenge'}, False),
+    (b'<html><body id="cf-chl-widget">Waiting</body></html>', {}, False),
+    (b'<html><body><script src="/cdn-cgi/challenge-platform/entry"></script></body></html>', {}, False),
+    (b'<html><body>Unavailable</body></html>', {'Content-Type': 'text/html'}, True),
+    ((FIX / 'challenge.html').read_bytes(), {'Content-Type': 'text/plain'}, False),
+])
+def test_headers_structure_and_json_mismatch_pause(body, headers, expected_json):
+    client, wire = session([(200, body, headers)])
+    with pytest.raises(http.SourceRefused):
+        client.get('https://example.test/source', expected_json=expected_json)
+    assert len(wire.sent) == 1
+
+
+def test_ordinary_html_about_access_controls_does_not_pause():
+    body = b'<html><title>Procurement</title><body>Our web application firewall: verify you are human, enable JavaScript and cookies to continue.</body></html>'
+    http.check_response('https://example.test', 200, body)
+
+
+@pytest.mark.parametrize('mime', ['text/plain', 'application/json', 'text/html'])
+def test_node_detects_challenges_regardless_of_mime(mime):
+    code = """
+import assert from 'node:assert/strict';
+import { readFileSync } from 'node:fs';
+import { honestFetch, SourceRefused } from './scripts/lib/http.mjs';
+globalThis.fetch = async () => new Response(readFileSync('./tests/fixtures/source_access/challenge.html'), {headers:{'content-type':MIME}});
+await assert.rejects(honestFetch('https://example.test'), SourceRefused);
+process.exitCode = 0;
+""".replace('MIME', json.dumps(mime))
+    subprocess.run(['node', '--input-type=module', '-e', code], cwd=ROOT, check=True, capture_output=True)
+
+
+def test_node_accepts_austender_200_json():
+    code = """
+import assert from 'node:assert/strict';
+import { readFileSync } from 'node:fs';
+import { honestFetch } from './scripts/lib/http.mjs';
+globalThis.fetch = async () => new Response(readFileSync('./tests/fixtures/source_access/austender.json'), {headers:{'content-type':'application/json'}});
+assert.equal((await (await honestFetch('https://example.test', {expectedJson:true})).json()).success, true);
+"""
+    subprocess.run(['node', '--input-type=module', '-e', code], cwd=ROOT, check=True, capture_output=True)
+
+
+def test_qld_contact_log_refusal_keeps_retained_rows(monkeypatch):
+    from parli.ingest import qld_lobbyists as source
+    db = sqlite3.connect(':memory:')
+    source.init_lobbyist_tables(db)
+    db.execute("INSERT INTO qld_lobbyist_contacts(contact_id) VALUES ('retained')")
+    db.commit()
+    monkeypatch.setattr(source.source_http, 'get', lambda *a, **kw: mock.Mock(ok=True, content=b'<html><div class="entitylist"><table></table></div></html>'))
+    with pytest.raises(http.SourceRefused):
+        source.store_contact_entries(db, source.scrape_contact_log())
+    assert db.execute('SELECT contact_id FROM qld_lobbyist_contacts').fetchall() == [('retained',)]
+
+
+def test_qld_contact_log_direct_static_data(monkeypatch):
+    from parli.ingest import qld_lobbyists as source
+    body = b'<html><table class="table"><tbody><tr><td>Fixture firm</td><td>Fixture company</td><td>Public office</td><td>Portfolio</td><td>2026-10-10</td></tr></tbody></table></html>'
+    monkeypatch.setattr(source.source_http, 'get', lambda *a, **kw: mock.Mock(ok=True, content=body))
+    assert source.scrape_contact_log()[0]['client_name'] == 'Fixture company'
+
+
+def test_probe_records_refusal_and_continues(monkeypatch, tmp_path, capsys):
+    from scripts.vm import probe_sources as probe
+    monkeypatch.setattr(probe, 'load_env', lambda: None)
+    monkeypatch.setattr('sys.argv', ['probe_sources'])
+    probes = [dict(name='refused fixture', step='refused', url='https://refused.test', ua=http.USER_AGENT),
+              dict(name='healthy fixture', step='healthy', url='https://healthy.test', ua=http.USER_AGENT, ok=lambda r: True)]
+    monkeypatch.setattr(probe, 'probes', lambda: probes)
+    monkeypatch.setattr(probe.source_http, 'get', lambda *a, **kw: mock.Mock(text='fixture IP'))
+    calls = []
+    def fetch(method, url, **kw):
+        calls.append(url)
+        if url == 'https://refused.test': raise http.SourceRefused(url, 'HTTP 403')
+        return mock.Mock(status_code=200, text='ok', headers={})
+    monkeypatch.setattr(probe.source_http, 'request', fetch)
+    assert probe.main() == 0
+    assert calls == [p['url'] for p in probes]
+    out = capsys.readouterr().out
+    assert 'PAUSED' in out and 'healthy fixture' in out
+    assert json.loads((tmp_path / 'access.json').read_text())['refused.test']['status'] == 'paused'

@@ -12,6 +12,8 @@ Usage:
     python -m parli.ingest.bills --skip-download  # use cached XLSX files only
 """
 
+from parli.ingest import http as source_http
+
 import argparse
 import re
 import urllib.request
@@ -32,7 +34,7 @@ PROGRESS_URL = (
     "Progress-of-Commonwealth-Bills-through-Parliament.xlsx"
 )
 
-USER_AGENT = "Mozilla/5.0 (X11; Linux x86_64) OPAX/1.0"
+USER_AGENT = source_http.USER_AGENT
 
 # Map raw event strings to normalised stage names
 STAGE_MAP = {
@@ -85,8 +87,8 @@ def download_files(force: bool = False) -> tuple[Path, Path]:
             print(f"  [{label}] Using cached {path}")
             continue
         print(f"  [{label}] Downloading from {url} ...")
-        req = urllib.request.Request(url, headers={"User-Agent": USER_AGENT})
-        with urllib.request.urlopen(req, timeout=60) as resp:
+        req = source_http.Request(url, headers={"User-Agent": source_http.USER_AGENT})
+        with source_http.urlopen(req, timeout=60) as resp:
             data = resp.read()
         path.write_bytes(data)
         print(f"  [{label}] Saved {path} ({len(data):,} bytes)")

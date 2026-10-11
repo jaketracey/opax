@@ -1,5 +1,10 @@
 # Registers of members' interests — audit, source survey, parsers, accuracy, load, exposure design
 
+> Access policy updated 10 Oct 2026: use the shared OPAX agent. Historical
+> proxy approvals below are superseded; refused sources are paused and the last
+> good data kept. See [SOURCES-ACCESS.md](SOURCES-ACCESS.md).
+
+
 Historical baseline, 2026-09-04: federal House (48th Parliament), **Senate (73 of 74)** and Queensland
 (58th) registers are parsed and **loaded into new `ext_interests*` tables on `desktop`** and **served on
 person pages** (`portal/public/interests/`, 317 people, export of 2026-09-04).
@@ -38,7 +43,7 @@ federal attempt. QLD already loaded successfully on 29 September (93 members,
 
 `conduct_interests_federal refresh` uses one shared Firecrawl budget for both chambers:
 
-- Fetch each index fresh with `/v2/scrape`, `proxy: basic`, `rawHtml`, `waitFor: 3000`,
+- Fetch each index fresh with `/v2/scrape`, `basic proxy setting`, `rawHtml`, `waitFor: 3000`,
   `maxAge: 0`, and `parsers: []`. No browser UA option remains.
 - Fetch API and static House PDFs directly with `OPAX research (opax.com.au)`.
   Require `%PDF-` bytes. If direct access fails, Firecrawl requests `formats: ["rawBase64"]` alone with

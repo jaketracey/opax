@@ -115,9 +115,11 @@ test('donation matches require an organisation and exact normalised name, with A
  assert.match(donationRegisterHTML(supplier,[donor]),/Also in the donations register/);
  assert.ok(donationRegisterHTML(supplier,[donor]).includes(ASSOCIATION_NOTE));
 });
-test('supplier profiles have no donations or funding path',()=>{
+test('supplier funding is gated by the shared publication policy',()=>{
  const source=read('../public/suppliers.js');
- assert.doesNotMatch(source,/supplierDonations|mountFunding|profile\.donor_links|supplier-funding/);
+ assert.match(source,/if \(profile\.politicalMoneyAllowed\) supplierDonations/);
+ assert.match(source,/supplier-evidence/);
+ assert.match(source,/supplier-taxcharity/);
 });
 test('other bills use the shared sponsor-person identity rule, with no surname guesses',()=>{
  const roster=[{name:'Andrew Gee',pid:'1',speeches:1}];

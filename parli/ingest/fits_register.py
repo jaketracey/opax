@@ -50,6 +50,8 @@ Usage:
 
 from __future__ import annotations
 
+from parli.ingest import http as source_http
+
 import argparse
 import json
 import re
@@ -61,7 +63,7 @@ from parli.ingest.ext_common import add_writer_args, clean_ws, log, make_session
 
 BASE = "https://foreigninfluence.ag.gov.au"
 SOURCE = "agd_fits_register"
-USER_AGENT = "OPAX/1.0 (+https://opax.com.au)"
+USER_AGENT = source_http.USER_AGENT
 CACHE = Path("~/.cache/autoresearch/fits").expanduser()
 PAGE = 100          # the API silently caps `length` at 100
 DELAY = 1.0
@@ -232,7 +234,7 @@ def profile_url(registrant_id: str, page: str | None = None, anchor: str | None 
 
 def _session():
     s = make_session()
-    s.headers.update({"User-Agent": USER_AGENT, "Accept": "application/json", "Origin": BASE, "Referer": BASE + "/"})
+    s.headers.update({"User-Agent": source_http.USER_AGENT, "Accept": "application/json", "Origin": BASE, "Referer": BASE + "/"})
     return s
 
 

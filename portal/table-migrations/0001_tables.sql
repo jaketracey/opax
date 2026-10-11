@@ -14,12 +14,10 @@ CREATE INDEX IF NOT EXISTS table_money_connections_lastYear ON table_money_conne
 CREATE VIRTUAL TABLE IF NOT EXISTS table_money_connections_fts USING fts5(search, content='table_money_connections', content_rowid='rowid', tokenize='unicode61', prefix='1 2 3');
 CREATE TABLE IF NOT EXISTS table_money_connections_facets (key TEXT NOT NULL, value TEXT NOT NULL, rowid INTEGER NOT NULL, PRIMARY KEY(key,value,rowid)) WITHOUT ROWID;
 CREATE INDEX IF NOT EXISTS table_money_connections_facets_row ON table_money_connections_facets (rowid,key,value);
-CREATE TABLE IF NOT EXISTS table_contracts (rowid INTEGER PRIMARY KEY, "id" TEXT, "title" TEXT, "supplier" TEXT, "supplier_id" TEXT, "recipient_kind" TEXT, "agency" TEXT, "procurement_method" TEXT, "jurisdiction" TEXT, "amount" REAL, "start_date" TEXT, "end_date" TEXT, "description" TEXT, "url" TEXT, search TEXT NOT NULL, UNIQUE(id));
+CREATE TABLE IF NOT EXISTS table_contracts (rowid INTEGER PRIMARY KEY, "id" TEXT, "title" TEXT, "supplier" TEXT, "agency" TEXT, "procurement_method" TEXT, "jurisdiction" TEXT, "amount" REAL, "start_date" TEXT, "end_date" TEXT, "description" TEXT, "url" TEXT, search TEXT NOT NULL, UNIQUE(id));
 CREATE INDEX IF NOT EXISTS table_contracts_id ON table_contracts ("id" COLLATE NOCASE, rowid);
 CREATE INDEX IF NOT EXISTS table_contracts_title ON table_contracts ("title" COLLATE NOCASE, rowid);
 CREATE INDEX IF NOT EXISTS table_contracts_supplier ON table_contracts ("supplier" COLLATE NOCASE, rowid);
-CREATE INDEX IF NOT EXISTS table_contracts_supplier_id ON table_contracts ("supplier_id" COLLATE NOCASE, rowid);
-CREATE INDEX IF NOT EXISTS table_contracts_recipient_kind ON table_contracts ("recipient_kind" COLLATE NOCASE, rowid);
 CREATE INDEX IF NOT EXISTS table_contracts_agency ON table_contracts ("agency" COLLATE NOCASE, rowid);
 CREATE INDEX IF NOT EXISTS table_contracts_procurement_method ON table_contracts ("procurement_method" COLLATE NOCASE, rowid);
 CREATE INDEX IF NOT EXISTS table_contracts_jurisdiction ON table_contracts ("jurisdiction" COLLATE NOCASE, rowid);
@@ -31,11 +29,10 @@ CREATE INDEX IF NOT EXISTS table_contracts_url ON table_contracts ("url" COLLATE
 CREATE VIRTUAL TABLE IF NOT EXISTS table_contracts_fts USING fts5(search, content='table_contracts', content_rowid='rowid', tokenize='unicode61', prefix='1 2 3');
 CREATE TABLE IF NOT EXISTS table_contracts_facets (key TEXT NOT NULL, value TEXT NOT NULL, rowid INTEGER NOT NULL, PRIMARY KEY(key,value,rowid)) WITHOUT ROWID;
 CREATE INDEX IF NOT EXISTS table_contracts_facets_row ON table_contracts_facets (rowid,key,value);
-CREATE TABLE IF NOT EXISTS table_suppliers (rowid INTEGER PRIMARY KEY, "id" TEXT, "name" TEXT, "abn" TEXT, "recipient_kind" TEXT, "jurisdiction" TEXT, "total" REAL, "count" INTEGER, "agency_count" INTEGER, "first_year" INTEGER, "last_year" INTEGER, search TEXT NOT NULL, UNIQUE(id));
+CREATE TABLE IF NOT EXISTS table_suppliers (rowid INTEGER PRIMARY KEY, "id" TEXT, "name" TEXT, "abn" TEXT, "jurisdiction" TEXT, "total" REAL, "count" INTEGER, "agency_count" INTEGER, "first_year" INTEGER, "last_year" INTEGER, search TEXT NOT NULL, UNIQUE(id));
 CREATE INDEX IF NOT EXISTS table_suppliers_id ON table_suppliers ("id" COLLATE NOCASE, rowid);
 CREATE INDEX IF NOT EXISTS table_suppliers_name ON table_suppliers ("name" COLLATE NOCASE, rowid);
 CREATE INDEX IF NOT EXISTS table_suppliers_abn ON table_suppliers ("abn" COLLATE NOCASE, rowid);
-CREATE INDEX IF NOT EXISTS table_suppliers_recipient_kind ON table_suppliers ("recipient_kind" COLLATE NOCASE, rowid);
 CREATE INDEX IF NOT EXISTS table_suppliers_jurisdiction ON table_suppliers ("jurisdiction" COLLATE NOCASE, rowid);
 CREATE INDEX IF NOT EXISTS table_suppliers_total ON table_suppliers ("total", rowid);
 CREATE INDEX IF NOT EXISTS table_suppliers_count ON table_suppliers ("count", rowid);

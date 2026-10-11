@@ -14,6 +14,8 @@ Usage:
     uv run download_hansard_fast.py --test
 """
 
+from parli.ingest import http as source_http
+
 import argparse
 import asyncio
 import json
@@ -36,7 +38,7 @@ BACKFILL_START = "2006-02-07"
 BACKFILL_END = date.today().isoformat()
 API_RATE_LIMIT = 1.0  # seconds between API calls
 SCRAPE_RATE_LIMIT = 0.2  # seconds between scrape requests per worker
-USER_AGENT = "AutoResearch-Hansard/2.0 (async)"
+USER_AGENT = source_http.USER_AGENT
 # OpenAustralia publishes a sitting day's Hansard a day or two later. An
 # empty result for a recent day is therefore "not yet", not "never": no
 # marker file is written for it, so the next run retries. Older empty days
@@ -48,103 +50,7 @@ EMPTY_DAY_GRACE_DAYS = 10
 # HTML parsing — identical to download_hansard.py
 # ---------------------------------------------------------------------------
 
-def parse_debate_html(html: str) -> list[dict]:
-    """
-    Parse a debate page HTML to extract complete speeches.
-
-    Returns a list of dicts with keys: speaker, party, electorate, text.
-    This is the exact same logic as scrape_debate_page() in the sync version.
-    """
-    soup = BeautifulSoup(html, "html.parser")
-    speeches = []
-
-    main = soup.find("div", class_="main")
-    if not main:
-        return speeches
-
-    children = list(main.children)
-
-    current_speaker = ""
-    current_party = ""
-    current_electorate = ""
-    current_paragraphs = []
-
-    def _flush():
-        if current_paragraphs:
-            text = "\n\n".join(current_paragraphs)
-            if text.strip():
-                speeches.append(
-                    {
-                        "speaker": current_speaker,
-                        "party": current_party,
-                        "electorate": current_electorate,
-                        "text": text,
-                    }
-                )
-
-    for el in children:
-        if not hasattr(el, "name") or el.name is None:
-            continue
-
-        if el.name == "p" and "speaker" in (el.get("class") or []):
-            _flush()
-            current_paragraphs = []
-
-            strong = el.find("strong")
-            current_speaker = strong.get_text(strip=True) if strong else ""
-
-            current_party = ""
-            current_electorate = ""
-            small = el.find("small")
-            if small:
-                small_text = small.get_text(strip=True)
-                paren = re.search(r"\(([^)]+)\)", small_text)
-                if paren:
-                    parts = [p.strip() for p in paren.group(1).split(",")]
-                    if len(parts) >= 2:
-                        current_electorate = parts[0]
-                        current_party = parts[1]
-                    elif len(parts) == 1:
-                        current_party = parts[0]
-
-            inner_ps = el.find_all("p")
-            for ip in inner_ps:
-                ip_classes = ip.get("class") or []
-                if "speaker" in ip_classes:
-                    continue
-                ip_text = ip.get_text(strip=True)
-                if ip_text:
-                    current_paragraphs.append(ip_text)
-
-            continue
-
-        if el.name == "p":
-            el_text = el.get_text(strip=True)
-            if re.match(r"^\d{1,2}:\d{2}\s*(am|pm)$", el_text):
-                continue
-            if el_text:
-                current_paragraphs.append(el_text)
-
-    _flush()
-
-    if not speeches:
-        all_ps = main.find_all("p")
-        all_text = "\n\n".join(
-            p.get_text(strip=True)
-            for p in all_ps
-            if p.get_text(strip=True) and "speaker" not in (p.get("class") or [])
-        )
-        if all_text:
-            speeches.append(
-                {
-                    "speaker": "",
-                    "party": "",
-                    "electorate": "",
-                    "text": all_text,
-                }
-            )
-
-    return speeches
+from parli.ingest.hansard_html import parse_debate_html
 
 
 # ---------------------------------------------------------------------------
@@ -162,6 +68,7 @@ async def get_debates(session: aiohttp.ClientSession, chamber: str, date_str: st
     }
     try:
         async with session.get(url, params=params, timeout=aiohttp.ClientTimeout(total=30)) as resp:
+            source_http.check_response(url, resp.status, await resp.read())
             resp.raise_for_status()
             data = await resp.json(content_type=None)
             if isinstance(data, list):
@@ -190,6 +97,7 @@ async def scrape_debate_page(
         await asyncio.sleep(SCRAPE_RATE_LIMIT)
         try:
             async with session.get(url, timeout=aiohttp.ClientTimeout(total=30)) as resp:
+                source_http.check_response(url, resp.status, await resp.read())
                 resp.raise_for_status()
                 html = await resp.text()
                 stats["pages_scraped"] += 1
@@ -395,7 +303,8 @@ async def run(args):
     connector = aiohttp.TCPConnector(limit=workers + 5)
     async with aiohttp.ClientSession(
         connector=connector,
-        headers={"User-Agent": USER_AGENT},
+        headers={"User-Agent": source_http.USER_AGENT},
+        trace_configs=[source_http.aiohttp_trace()],
     ) as session:
         for i, (date_str, chamber) in enumerate(work):
             elapsed = time.monotonic() - t_start

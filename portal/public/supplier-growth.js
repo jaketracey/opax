@@ -1,6 +1,6 @@
 /* Client-side agency records, from the same published exports as their pages. */
-import {sourceLineHTML} from './labels.js?v=804befe8de';
-import {moduleAttrs, donationRegisterHTML, exactOrganisationDonors, growthSummaryPath, normalisedName, approvedModulePrivacy, loadModuleDonors} from './growth-modules.js?v=b3095eab8c';
+import {sourceLineHTML} from './labels.js?v=c6bf994ef7';
+import {moduleAttrs, donationRegisterHTML, exactOrganisationDonors, growthSummaryPath, normalisedName, approvedModulePrivacy, loadModuleDonors} from './growth-modules.js?v=a467db42f2';
 const esc = value => String(value ?? '').replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const money = n => Number(n).toLocaleString('en-AU',{style:'currency',currency:'AUD',maximumFractionDigits:0});
 async function json(url,signal) {const r=await fetch(url,{signal});if(!r.ok)throw new Error('Records unavailable');return r.json();}
@@ -40,13 +40,22 @@ export function agencyGrantsHTML(agency,rows,meta) {
 
   return `<section class="growth-records supplier-section" ${moduleAttrs('agency_grants','supplier',2)}><h3 class="subject-section-title">Largest grants from ${esc(agency)}</h3><p>Largest awards in the published sample.</p>${rows.length?`<ul class="subject-list" role="list">${rows.map(g=>`<li><a href="/money/grants/federal/recipient/${encodeURIComponent(g.recipientId)}?award=${encodeURIComponent(g.id)}">${esc(g.n || g.id)}</a><span class="result-meta">${esc(g.recipient)} · ${esc(money(g.v))}</span></li>`).join('')}</ul>`:'<p>No awards from this agency in the published sample.</p>'}${sourceLineHTML({source:'GrantConnect',updated:meta?.generated,state:'sample',originals:[{label:'GrantConnect awards',href:meta?.source_url || 'https://www.grants.gov.au/Ga/List'}],notes:['Each listed recipient’s largest exported awards only; this is not a complete agency ranking. Award values, not payments. '+(meta?.coverage || '')]})}</section>`;
 }
-export async function mountSupplierGrowth(root,profile,meta,life,suppliers) {
+export async function mountSupplierGrowth(root,profile,meta,life,suppliers,publicationCheck) {
   const top=[...(profile.agencies || [])].sort((a,b)=>Number(b.total)-Number(a.total))[0];
   if (!top) return;
   const load=async()=>{
     try {
       const summary=await json(await growthSummaryPath('agencies',normalisedName(top.name)),life.signal);
       if (!life.alive() || summary.agency?.name!==top.name) return;
+      if (publicationCheck) {
+        const visible = [];
+        for (const row of summary.agency.suppliers || []) if (await publicationCheck(row.name)) visible.push(row);
+        summary.agency = {...summary.agency, suppliers:visible};
+        const grants = [];
+        for (const row of summary.grants || []) if (await publicationCheck(JSON.stringify(row))) grants.push(row);
+        summary.grants = grants;
+        if (!life.alive()) return;
+      }
       root.innerHTML=supplierRecordsHTML(summary.agency,profile.id,summary.contracts_updated || meta?.generated_at,publishedSupplierIndex(suppliers))
         +agencyGrantsHTML(top.name,summary.grants || [],summary.meta);
       root.dataset.recordsReady='true';

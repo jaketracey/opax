@@ -259,7 +259,7 @@ test('donor and recipient pages mount register blocks while supplier pages retai
   assert.match(app, /if \(!isParty\) renderDonorTaxCharity\(node\.label, sections\)/);
   assert.match(app, /if \(kind === "donor"\) renderDonorTaxCharity\(name, sections\)/);
   const suppliers = read('suppliers.js');
-  assert.doesNotMatch(suppliers,/mountTaxCharity|supplier-taxcharity/);
+  assert.match(suppliers,/mountTaxCharity/);
   const recipient = read('grant-recipient.js');
   assert.match(recipient, /if \(data\.abn\) import\('\/tax-charity\.js\?v=[^']+'\)/);
   assert.match(recipient, /mountTaxCharity\(taxCharity, \{ abn: data\.abn/);

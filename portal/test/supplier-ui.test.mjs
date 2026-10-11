@@ -28,10 +28,10 @@ function node() {
     querySelectorAll() { return []; }, focus() {}, scrollIntoView() {},
   };
 }
-function setup(fetch, mount = async () => ({ destroy() {}, setPaused() {} })) {
+function setup(fetch, mount = async () => ({ destroy() {}, setPaused() {} }), privacyCheck = async () => true) {
   const context = { fetch, AbortController, URLSearchParams, history: { replaceState() {} }, shortDate, shortMoney, partyUrl,
-    document: {querySelector: () => null}, isOrganisationRecipient,remotePrivacyCheck:async()=>true,contractTitle, placeholderContract, mountContractsTable: async () => ({destroy() {}}),
-    sourceLineHTML,
+    document: {querySelector: () => null}, isOrganisationRecipient,remotePrivacyCheck:privacyCheck,contractTitle, placeholderContract, mountContractsTable: async () => ({destroy() {}}),
+    sourceLineHTML, supplierDonations:async()=>({links:[],html:''}), mountSupplierGrowth:()=>{},
     loadMapModule: async () => ({ mountMoneyMap: mount }) };
   runInNewContext(source, context);
   return context;
@@ -44,7 +44,7 @@ const profile = (overrides = {}) => ({ id, name: 'Acme Pty Ltd', abn: '123456789
   contracts: [{ id: 'CN1', title: 'Example award', agency: 'Agency', amount: 100, start_date: '2025-01-01' }], donor_links: [], caveats: [], ...overrides });
 const response = (data) => ({ ok: true, json: async () => data });
 
-test('supplier profiles use procurement data without funding expansion',async()=>{
+test('supplier profiles retain procurement and optional organisation features',async()=>{
   const suppliers=[entry(),entry({id:second,name:'Published second supplier'})];
   const calls=[];
   const context=setup(async url=>{calls.push(url);return response(url==='/suppliers.json'?{suppliers}:url==='/agencies.json'?{agencies:[]}:{profiles:{[id]:profile()}})});
@@ -52,7 +52,9 @@ test('supplier profiles use procurement data without funding expansion',async()=
   await tick();
   assert.deepEqual(calls,['/suppliers.json','/suppliers/01.json','/agencies.json']);
   assert.match(root.innerHTML,/data-contracts-table/);
-  assert.doesNotMatch(root.innerHTML,/supplier-funding|supplier-donations|subject\/donor/);
+  assert.match(root.innerHTML,/supplier-evidence/);
+  assert.match(root.innerHTML,/supplier-taxcharity/);
+  assert.match(root.innerHTML,/supplier-funding/);
   handle.destroy();
 });
 
@@ -144,4 +146,34 @@ test('a contract search link reaches the table adapter and departure destroys it
   assert.match(root.innerHTML, /data-contracts-table/);
   handle.destroy();
   assert.equal(destroyed, 1);
+});
+
+
+test('an unsafe legal-name field preserves the organisation procurement page', async () => {
+  const {recipientIdentityIndex} = await import('../src/recipient-index.mjs');
+  const pub = new URL('../public/', import.meta.url);
+  const read = path => JSON.parse(readFileSync(new URL(path.replace(/^\//, ''), pub)));
+  const recipients = await recipientIdentityIndex(async path => read(path));
+  const directory = read('/suppliers.json');
+  let example;
+  for (const entry of directory.suppliers) {
+    const candidate = recipients.profiles.get(entry.id);
+    if (candidate && isOrganisationRecipient(candidate) && !recipients.check(candidate.name)
+        && !recipients.check(String(candidate.abn || '')) && recipients.check(String(candidate.identity?.legal_name || ''))) {
+      example = read(entry.profile_path).profiles[entry.id]; break;
+    }
+  }
+  assert.ok(example, 'a derived organisation with an unsafe optional field is required');
+  const context = setup(async url => response(url === '/suppliers.json' ? directory : url === '/agencies.json' ? {agencies:[]} : {profiles:{[example.id]:example}}), undefined,
+    async text => !recipients.check(text));
+  const projection = await context.supplierPublicationProfile(example, async text => !recipients.check(text));
+  assert.equal(projection.id, example.id);
+  assert.equal(projection.identity.legal_name, undefined);
+  assert.equal(projection.contracts, example.contracts);
+  const root = node(); const handle = context.mountSupplierProfile(root, example.id);
+  for (let i=0; i<8; i++) await tick();
+  assert.ok(root.innerHTML.includes(example.name), 'the public organisation remains');
+  assert.match(root.innerHTML, /data-contracts-table/);
+  assert.ok(!recipients.check(root.innerHTML), 'all rendered identity fields are public');
+  handle.destroy();
 });

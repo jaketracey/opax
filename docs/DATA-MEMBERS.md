@@ -12,6 +12,9 @@ Source: the APH Senators and Members list, fetched through Firecrawl (the site's
 non-browser agents; robots allows the path) as two member pages and one senator page — the
 `sr` page parameter only reaches two pages of a combined query, so the query is split by
 chamber. 226 rows: 150 members, 76 senators, each with name, seat/state and party.
+Historical acquisition only; Firecrawl refresh is disabled under the 10 Oct
+2026 decision; see [SOURCES-ACCESS.md](SOURCES-ACCESS.md).
+
 Saved as `aph_current.json` in the session scratch; re-fetch is three Firecrawl credits.
 
 Applied to `members` (matched 225 of 226 by full name, nickname-tolerant):
@@ -42,7 +45,9 @@ office string, not a party).
 
 ## Refresh
 
-Re-run the three Firecrawl fetches, re-run the diff (`/tmp/aph_diff.json` on desktop was the
+The APH member-list refresh is paused pending permission (10 Oct 2026).
+Do not re-run the historical Firecrawl fetches. Once honest direct access is
+authorised, re-fetch and re-run the diff (`/tmp/aph_diff.json` on desktop was the
 session's dry run), apply, then `export_parliamentarians.py` on desktop and copy the JSON in.
 Do it after every by-election, casual vacancy or defection; quarterly otherwise.
 

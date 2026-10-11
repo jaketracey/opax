@@ -27,6 +27,8 @@ Usage:
     python -m parli.ingest.qld_parliament --dry-run
 """
 
+from parli.ingest import http as source_http
+
 import argparse
 import hashlib
 import io
@@ -49,13 +51,9 @@ API_BASE = "https://data.parliament.qld.gov.au/api"
 API_VERSION = "v1"
 HANSARD_PDF_BASE = "https://documents.parliament.qld.gov.au/events/han"
 # data.parliament.qld.gov.au sits behind an Azure Front Door WAF (Sept 2026)
-# that serves a JavaScript challenge (HTTP 403) to any User-Agent that does
-# not look like a browser -- "Mozilla/5.0 (compatible; OPAX/1.0; ...)" and
-# bare "OPAX/1.0" are both challenged. A browser-shaped UA with the OPAX
-# product token appended passes and still identifies us honestly.
+# Use the shared honest agent; a refused API is paused.
 USER_AGENT = (
-    "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) "
-    "Chrome/128.0.0.0 Safari/537.36 OPAX/1.0 (+https://opax.com.au)"
+    source_http.USER_AGENT
 )
 
 # Rate limiting
@@ -132,14 +130,14 @@ QLD_PARTY_ALIASES = {
 def _make_request(url: str, accept: str = "application/json",
                   delay: float = API_DELAY) -> bytes:
     """HTTP GET with rate limiting, retries, and user-agent."""
-    req = urllib.request.Request(url, headers={
-        "User-Agent": USER_AGENT,
+    req = source_http.Request(url, headers={
+        "User-Agent": source_http.USER_AGENT,
         "Accept": accept,
     })
     for attempt in range(MAX_RETRIES):
         try:
             time.sleep(delay)
-            with urllib.request.urlopen(req, timeout=120) as resp:
+            with source_http.urlopen(req, timeout=120) as resp:
                 return resp.read()
         except urllib.error.HTTPError as e:
             if e.code == 404:

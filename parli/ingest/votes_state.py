@@ -54,6 +54,8 @@ both machines).
 
 from __future__ import annotations
 
+from parli.ingest import http as source_http
+
 import argparse
 import html
 import json
@@ -74,7 +76,7 @@ from typing import Iterable, Optional
 
 from parli.ingest.speaker_names import normalize_speaker
 
-USER_AGENT = "OPAX research (opax.com.au)"
+USER_AGENT = source_http.USER_AGENT
 CACHE_DIR = Path("~/.cache/autoresearch/votes_state").expanduser()
 REPO_ROOT = Path(__file__).resolve().parents[2]
 SPEAKERS_JSON = REPO_ROOT / "portal" / "public" / "speakers.json"
@@ -148,7 +150,7 @@ def _get(url: str, accept: str = "*/*", delay: float = 0.15,
         try:
             time.sleep(delay)
             import urllib.request
-            with urllib.request.urlopen(req, timeout=120) as resp:
+            with source_http.urlopen(req, timeout=120) as resp:
                 data = resp.read()
             break
         except Exception as e:  # noqa: BLE001 - retry anything transient
@@ -165,7 +167,7 @@ def _get(url: str, accept: str = "*/*", delay: float = 0.15,
 
 def urllib_request(url: str, accept: str):
     import urllib.request
-    return urllib.request.Request(url, headers={"User-Agent": USER_AGENT, "Accept": accept})
+    return source_http.Request(url, headers={"User-Agent": source_http.USER_AGENT, "Accept": accept})
 
 
 def bill_ref(*texts: Optional[str]) -> Optional[str]:

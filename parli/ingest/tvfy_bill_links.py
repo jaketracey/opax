@@ -37,7 +37,7 @@ def official_ref(value: str | None) -> str | None:
 
 def plan_links(db: sqlite3.Connection, since: str | None = None) -> list[tuple[str, str, dict]]:
     tables = {r[0] for r in db.execute("SELECT name FROM sqlite_master WHERE type='table'")}
-    if not {"bills_v2", "division_bills", "divisions"} <= tables:
+    if "bills_v2" not in tables:
         return []
     registry = {}
     for key, source in db.execute("SELECT bill_key,source_id FROM bills_v2 WHERE jurisdiction='federal'"):
@@ -50,10 +50,18 @@ def plan_links(db: sqlite3.Connection, since: str | None = None) -> list[tuple[s
             for ref in {official_ref(source), official_ref(url)} - {None}:
                 registry.setdefault(ref, set()).add(key)
     links = {}
-    for did, house, day, bid, official, url in db.execute(
-        "SELECT d.division_id,d.house,d.date,b.bill_id,b.official_id,b.url "
+    canonical = {}
+    if "ext_divisions" in tables:
+        columns = {r[1] for r in db.execute("PRAGMA table_info(ext_divisions)")}
+        if {"id", "house", "date", "number"} <= columns:
+            canonical = {(house, day, number): key for key, house, day, number in db.execute(
+                "SELECT id,house,date,number FROM ext_divisions WHERE jurisdiction='federal'")}
+    rows = db.execute(
+        "SELECT d.division_id,d.house,d.date,d.number,b.bill_id,b.official_id,b.url "
         "FROM division_bills b JOIN divisions d ON d.division_id=b.division_id "
-        "WHERE COALESCE(d.state,'federal')='federal' AND (? IS NULL OR d.date>=?)", (since, since)):
+        "WHERE COALESCE(d.state,'federal')='federal' AND (? IS NULL OR d.date>=?)", (since, since)) \
+        if {"division_bills", "divisions"} <= tables else []
+    for did, house, day, number, bid, official, url in rows:
         refs = {official_ref(official), official_ref(url)} - {None}
         # Conflicting IDs or ambiguous registry rows are not exact evidence.
         if len(refs) != 1:
@@ -61,9 +69,21 @@ def plan_links(db: sqlite3.Connection, since: str | None = None) -> list[tuple[s
         ref = next(iter(refs)); keys = registry.get(ref, set())
         if len(keys) != 1:
             continue
-        key = next(iter(keys)); target = f"federal-{house}-{did}"
+        key = next(iter(keys)); target = canonical.get((house, day, number), f"federal-{house}-{did}")
         links[(key, target)] = {"tvfy_division_id": did, "tvfy_bill_id": bid,
                                "official_id": ref, "source_url": url}
+    if {"oa_division_provenance", "ext_divisions"} <= tables:
+        for target, gid, raw in db.execute(
+                "SELECT p.division_id,p.gid,p.evidence FROM oa_division_provenance p "
+                "JOIN ext_divisions d ON d.id=p.division_id WHERE (? IS NULL OR d.date>=?)", (since, since)):
+            for bill in json.loads(raw).get("bills", []):
+                refs = {official_ref(bill.get("official_id")), official_ref(bill.get("url"))} - {None}
+                if len(refs) != 1:
+                    continue
+                ref = next(iter(refs)); keys = registry.get(ref, set())
+                if len(keys) == 1:
+                    links[(next(iter(keys)), target)] = {"oa_gid": gid, "official_id": ref,
+                                                       "source_url": bill.get("url")}
     return [(key, target, evidence) for (key, target), evidence in sorted(links.items())]
 
 

@@ -12,6 +12,11 @@ birth year is rejected (that is how a 19th-century namesake slipped through the 
 A QID that recrop_commons_portraits.py already dropped as a group shot is offered again only if Wikidata's
 P18 file has changed since. Output: scripts/_photos_work/wikidata_matches.json (all matches, old and new)
 and wikidata_matches_new.json (this run's additions)."""
+
+import sys as _http_sys
+from pathlib import Path as _HttpPath
+_http_sys.path.insert(0, str(_HttpPath(__file__).resolve().parents[1]))
+from parli.ingest import http as source_http
 import json, requests, re, collections, time, os, sys
 W=os.path.dirname(os.path.dirname(os.path.abspath(__file__))); SCR=os.path.join(W, "scripts", "_photos_work")
 os.makedirs(SCR, exist_ok=True)
@@ -30,10 +35,10 @@ def chambers(p):
     if ch & {"senate_committee","house_committee","joint_committee"}: ch|={"representatives","senate"}
     return ch-{"senate_committee","house_committee","joint_committee"}
 POS={"nsw_la":"Q19202748","nsw_lc":"Q18810377","vic_la":"Q18534408","vic_lc":"Q19185341","qld_la":"Q18526194","sa_ha":"Q18220900","sa_lc":"Q18662245","act_la":"Q6814365","representatives":"Q18912794","senate":"Q6814428"}
-UA={"User-Agent":"OPAX research (opax.com.au; jake.tracey@noice.work)"}
+UA={"User-Agent":source_http.USER_AGENT}
 def sparql(q):
     for i in range(3):
-        r=requests.get("https://query.wikidata.org/sparql", params={"query":q,"format":"json"}, headers=UA, timeout=180)
+        r=source_http.get("https://query.wikidata.org/sparql", params={"query":q,"format":"json"}, headers=UA, timeout=180)
         if r.status_code==200: return r.json()["results"]["bindings"]
         time.sleep(5)
     r.raise_for_status()

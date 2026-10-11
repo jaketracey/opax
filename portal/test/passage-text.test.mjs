@@ -1,3 +1,4 @@
+import {saConversationInput} from './sa-evidence-harness.mjs';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
@@ -13,7 +14,7 @@ const {normalizePassage, passageWindow} = passageText;
 const source = ts.createSourceFile('index.ts', readFileSync(new URL('../src/index.ts', import.meta.url), 'utf8'), ts.ScriptTarget.Latest, true);
 const select = names => source.statements.filter(n => ts.isFunctionDeclaration(n) && names.includes(n.name?.text)).map(n => n.getText(source)).join('\n');
 const transpile = text => ts.transpileModule(text,{compilerOptions:{target:ts.ScriptTarget.ES2022,module:ts.ModuleKind.CommonJS}}).outputText;
-const compile = (names, context) => runInNewContext(transpile(select(names)) + ';({' + names.join(',') + '})', {...passageText, ...context});
+const compile = (names, context) => runInNewContext(transpile(select(names)) + ';({' + names.join(',') + '})', {saConversationInput,...passageText, ...context});
 const evidence = {};
 runInNewContext(transpile(readFileSync(new URL('../src/ask-evidence.ts', import.meta.url), 'utf8')), {exports: evidence, require: () => passageText});
 const rid = '855d6df1c8c1429df4e4123c7557373b';
@@ -122,6 +123,7 @@ test('Worker /ask sources normalize once and keep the 600 maximum on word bounda
     questionNamesWithheldDonor: async () => false, readerTurns: () => [], withheldDonorAnswer: () => ({}), MODEL_BUDGET_HEADER: 'x-opax-model-budget', modelBudgetBusy: () => new Response(null, { status: 503 }), 
     rankedMoneyAnswer:async()=>null, rateLimited:async()=>null, paidAnswer:async()=>null, integrityQuestion:()=>false,
     needsAskPeople:()=>false, loadPeople:async()=>people,
+    isPersonOverviewCandidate:()=>false,isPersonOverviewIntent:()=>false, isPersonRecentCandidate:()=>false,isPersonRecentIntent:()=>false, overviewPayload:async payload=>({...payload,is_overview_intent:false}),
     resolveAskScope:input=>({input,scope:undefined}), askCacheInput:()=>null, cacheBypass:()=>true,
     retrieveAskRecords:async()=>({records:[],coverage:'',total:0}),
     buildAskBody:()=>({}), scopeSpeakerBody:async()=>{},

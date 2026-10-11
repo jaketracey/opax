@@ -204,6 +204,7 @@ fi
 run_step x_taxcharity "" "$EXPORT" dir portal/public/entities/tax-charity -- \
   "$PY" scripts/export_tax_charity.py --db "$DB" --portal portal/public
 
+log "Paused sources: ${PAUSED_STEPS[*]:-none}"
 log "===== weekly refresh end ====="
 [ "${#STALE_STEPS[@]}" -eq 0 ] || log "Stale weekly refresh: source refused to change the register: ${STALE_STEPS[*]}"
 if [ "${#FAILED_STEPS[@]}" -gt 0 ]; then

@@ -56,7 +56,7 @@ account and there is no API. Both are half true, and the traps cost a morning
   and are reported in `meta.counts.abn_known_share` / `electorate_known_share`.
 - GrantConnect answers **403 to any user agent that does not look like a browser**,
   the project's plain `OPAX research (...)` UA included. Both scripts send
-  `Mozilla/5.0 (compatible; OPAX research; +https://opax.com.au; contact ...)`.
+  the identity from `parli/ingest/user-agent.json` and pause on refusal.
 - The site occasionally drops connections outright (HTTP 000 from curl) for a minute
   after a burst of requests; the harvester backs off and resumes.
 

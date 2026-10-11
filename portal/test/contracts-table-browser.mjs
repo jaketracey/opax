@@ -8,7 +8,7 @@ import {fileURLToPath} from 'node:url';
 import {resolve} from 'node:path';
 import {registerTablePrivacy,tablePrivacyIndex} from './datatable-privacy.mjs';
 import {recipientIdentityIndex} from '../src/recipient-index.mjs';
-import {isOrganisationDonor} from '../public/donor-entity.js';
+import {isOrganisationDonor,namesWithheldPhrase} from '../public/donor-entity.js';
 import {isOrganisationRecipient} from '../public/recipient-entity.js';
 
 const portal=fileURLToPath(new URL('../',import.meta.url));
@@ -33,7 +33,7 @@ const supplierModule='/'+(await readFile(resolve(portal,'public/suppliers.js'),'
 registerTablePrivacy(privacyRollouts,{id:'suppliers',path:'/subject/supplier',host:'#subject-body [data-datatable]',module:supplierModule,configExport:'suppliersTableConfig',rowsExport:'suppliersClientRows',facet:'jurisdiction',urlKey:'t',endpoint:'/api/table/suppliers',clientRequired:false,modes:{client:{},server:{}}});
 registerTablePrivacy(privacyRollouts,{id:'contracts',...modes.client,module:modulePath,configExport:'contractsTableConfig',rowsExport:'contractsClientRows',facet:'agency',urlKey:'t',endpoint:'/api/table/contracts',modes});
 
-const dev=spawn(process.execPath,['--no-warnings','node_modules/wrangler/wrangler-dist/cli.js','dev','--local','--ip','127.0.0.1','--port','9767','--inspector-port','9768','--log-level',process.env.DT_DEV_LOG_LEVEL || 'error','--show-interactive-dev-session=false','--var','INDEXNOW_ENABLED:false','--var','INDEXNOW_DRY_RUN:true','--var','VOICE_ENABLED:false','--var','COMMUNITY_ENABLED:false','--var','DAILY_POST_ENABLED:false'],{cwd:portal,env:{...process.env,WRANGLER_SEND_METRICS:'false',WRANGLER_LOG_PATH:discardLog,GOMAXPROCS:'2'},stdio:['ignore','pipe','pipe']});
+const dev=spawn(process.execPath,['--no-warnings','node_modules/wrangler/wrangler-dist/cli.js','dev','--local',...(process.env.DT_D1_PERSIST ? ['--persist-to',process.env.DT_D1_PERSIST] : []),'--ip','127.0.0.1','--port','9767','--inspector-port','9768','--log-level',process.env.DT_DEV_LOG_LEVEL || 'error','--show-interactive-dev-session=false','--var','INDEXNOW_ENABLED:false','--var','INDEXNOW_DRY_RUN:true','--var','VOICE_ENABLED:false','--var','COMMUNITY_ENABLED:false','--var','DAILY_POST_ENABLED:false'],{cwd:portal,env:{...process.env,WRANGLER_SEND_METRICS:'false',WRANGLER_LOG_PATH:discardLog,GOMAXPROCS:'2'},stdio:['ignore','pipe','pipe']});
 dev.on('exit',(code,signal)=>console.log(JSON.stringify({wranglerExit:code,signal})));
 await writeFile(resolve(outputDir,'review-wrangler.pid'),String(dev.pid)+'\n');
 let devLog='',browser,page;
@@ -125,33 +125,44 @@ try {
     assert.equal((await readFile(await (await download).path(),'utf8')).split('\r\n').length,1,'initial rejection exports no data');
   }
   // Inspect complete profiles, including the public organisations the donor policy withholds.
-  const donors=(await read('/graph/money.json')).nodes.filter(n=>n.kind==='donor' && !isOrganisationDonor(n));
-  const donorLabels=new Set(donors.map(n=>n.label.toLowerCase()));
-  const organisations=suppliers.filter(s=>!recipientPolicy.suppliers.has(s.id) && donorLabels.has(s.name.toLowerCase()) && index.dataSafe(s.name)).slice(0,3);
-  assert.ok(organisations.length>0,'organisation procurement coverage for donor-withheld entities');
-  for(const entity of organisations) {
-    const response=await page.goto(base+'/subject/supplier/'+entity.id);
-    const html=await response.text();
-    const ssr=html.slice(html.indexOf('id="prerender"'),html.indexOf('</main>'));
-    assert.ok(index.dataSafe(ssr),'whole-profile SSR recipient privacy');
-    assert.ok(!/\/subject\/donor\/|also a donor|donation register|disclosed receipts/i.test(ssr),'supplier SSR is procurement only');
+  const matched = suppliers.filter(entry => {
+    const profile = recipientPolicy.profiles.get(entry.id);
+    const fields = [entry.name, ...(entry.aliases || []), ...(entry.lookup_names || []),
+      profile?.identity?.legal_name, ...(profile?.aliases || []), ...(profile?.lookup_names || [])];
+    return namesWithheldPhrase(index.phrases, 'donor receipts '+JSON.stringify(fields));
+  });
+  assert.ok(matched.length > 0, 'derived donor-matched supplier coverage');
+  let publicProfiles=0, withheldProfiles=0;
+  for (const entity of matched) {
+    const source = recipientPolicy.profiles.get(entity.id);
+    const visible = source && isOrganisationRecipient(source) && index.dataSafe(entity.name)
+      && index.dataSafe(String(source.abn || ''));
+    const response = await page.goto(base+'/subject/supplier/'+entity.id);
+    const html = await response.text();
+    assert.equal(response.status(), visible ? 200 : 404, 'supplier publication status');
+    assert.ok(index.dataSafe(html), 'whole supplier SSR recipient privacy');
+    if (!visible) {
+      withheldProfiles++;
+      await page.waitForTimeout(100);
+      assert.ok(index.dataSafe(await page.locator('body').ariaSnapshot()), 'withheld supplier accessible text');
+      continue;
+    }
+    publicProfiles++;
     await settled(modes.client.host);
-    const profile=page.locator('#subject-body');
-    await page.waitForTimeout(500);
-    assert.ok(index.dataSafe(await profile.innerHTML()),'whole-profile hydrated recipient privacy');
-    assert.ok(index.dataSafe(await profile.ariaSnapshot()),'whole-profile accessible recipient privacy');
-    assert.ok(!/\/subject\/donor\/|also a donor|donation register|disclosed receipts/i.test(await profile.innerHTML()),'supplier DOM is procurement only');
-    assert.ok((await profile.textContent()).includes(entity.name),'organisation procurement identity remains public');
+    const profile = page.locator('#subject-body');
+    await page.waitForTimeout(150);
+    const dom = await profile.innerHTML(), accessible = await profile.ariaSnapshot();
+    assert.ok(index.dataSafe(dom), 'whole supplier hydrated recipient privacy');
+    assert.ok(index.dataSafe(accessible), 'whole supplier accessible recipient privacy');
+    assert.ok(!/\/subject\/donor\/|also a donor|donation register|disclosed receipts/i.test(dom), 'withheld political-money DOM');
+    const ssr = html.slice(html.indexOf('id="prerender"'),html.indexOf('</main>'));
+    assert.ok(!/\/subject\/donor\/|also a donor|donation register|disclosed receipts/i.test(ssr), 'withheld political-money SSR');
+    assert.ok((await profile.textContent()).includes(entity.name), 'organisation procurement survives hydration');
+    if (publicProfiles % 10 === 0) console.log(JSON.stringify({profileAudit:publicProfiles, withheldProfiles}));
   }
-  for(const id of [...recipientPolicy.suppliers].slice(0,3)) {
-    const response=await page.goto(base+'/subject/supplier/'+id);
-    assert.equal(response.status(),404,'individual supplier profile withheld');
-    assert.ok(index.dataSafe(await response.text()),'withheld supplier SSR');
-    await page.waitForTimeout(500);
-    assert.ok(index.dataSafe(await page.locator('body').ariaSnapshot()),'withheld supplier accessible text');
-  }
+  console.log(JSON.stringify({profileAudit:matched.length, publicProfiles, withheldProfiles}));
     assert.deepEqual(errors,[]);
-  const result={server:'wrangler dev --local',contractsEndpoint:'D1 /api/table/contracts',suppliersEndpoint:'D1 /api/table/suppliers',core:'7a57261b4',screenshots:shots,privacy,checks:['client and server rows/facets','actual client CSV and D1 CSV continuation','rejected header-only CSV','URL and fresh SSR arrivals','rendered and accessible text','analytics','hidden CN id','column-wide bars across pages','phone bars hidden','no page overflow'],pageErrors:errors,blockedExternalRequests:blocked.length};
+  const result={server:'wrangler dev --local',contractsEndpoint:'D1 /api/table/contracts',suppliersEndpoint:'D1 /api/table/suppliers',core:'7a57261b4',profiles:{matched:matched.length,publicProfiles,withheldProfiles},screenshots:shots,privacy,checks:['client and server rows/facets','actual client CSV and D1 CSV continuation','rejected header-only CSV','URL and fresh SSR arrivals','rendered and accessible text','analytics','hidden CN id','column-wide bars across pages','phone bars hidden','no page overflow'],pageErrors:errors,blockedExternalRequests:blocked.length};
   await writeFile(resolve(outputDir,'review-browser-results.json'),JSON.stringify(result,null,2)+'\n');console.log(JSON.stringify(result));
 } catch(error) {
   if(page) {

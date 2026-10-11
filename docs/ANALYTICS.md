@@ -42,6 +42,7 @@ query-free internal paths. Google signals and advertising personalization are of
 | `$pageview`, `$pageleave` | Initial visit, SPA route changes, session duration |
 | `opax_ask`, `opax_search` | Ask/search form submission |
 | `opax_ask_started`, `opax_ask_completed`, `opax_ask_failed` | Full answer lifecycle, including streamed answers and fallbacks; duration, source count, cancellation. Started includes `page_type`. |
+| `opax_ask_followup_click` | Select an answer-derived follow-up: `{position, kind}` only; one-based position 1–4 and kind `speech`, `vote`, `recent`, `compare` or `detail`. No question text or subject name. |
 | `opax_module_click` | Landing-module link or question submission: `{module, page_type, position}`; categories and placement only |
 | `opax_search_started`, `opax_search_completed`, `opax_search_failed` | Search lifecycle; duration, page, filter count and result counts |
 | `opax_source_open` | Open an original record |
@@ -165,3 +166,25 @@ Navigation does not emit another module event. Answer requests alone emit
 unchanged). Module clicks can also produce the existing source/outbound event;
 those describe different actions and should not be summed as module clicks.
 Do Not Track and the shared property allowlist apply to both events.
+
+## Person overview answers and follow-ups
+
+`opax_ask_completed` adds the boolean `is_overview_intent`. It is true for a
+broad request about one parliamentarian's speeches, themes or views; targeted
+position questions, recent-speech questions, comparisons and other answers use
+false. It comes from the finished Worker payload, including cached and streamed
+answers. `opax_ask_started` still includes `page_type`, with one event per answer
+lifecycle, including a chip-submitted question.
+
+Every answer's follow-up buttons emit `opax_ask_followup_click` once on activation,
+before submitting the full question to Ask. Its only supplied properties are
+`position` (one-based 1–4) and `kind` (`speech`, `vote`, `recent`, `compare`,
+`detail`). The shared privacy boundary rejects other kinds, out-of-range positions,
+question text and names. Existing generic generated questions use `detail`.
+Do Not Track applies as before.
+
+Compare completed overview answers with the timing of the next Ask start, and
+compare chip positions/kinds with answer completion and source opening. An
+immediate second Ask is a proxy for an unsatisfying first answer: the events
+cannot identify a typed “what else” because they carry no question text. The
+saved conversation text is not an analytics input.
