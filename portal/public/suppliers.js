@@ -144,21 +144,6 @@ export function contractHTML(contract, ids) {
   return `<details class="supplier-contract"><summary><span><strong>${esc(heading)}</strong><small>${meta.map(esc).join(" · ")}</small></span><b>${currency(contract.amount)}</b></summary><dl><dt>${contract.supplier_id ? "Supplier" : "Awarding agency"}</dt><dd>${counterpart}</dd><dt>Contract reference</dt><dd>${esc(contract.id)}</dd>${reference && reference !== heading && reference !== contract.id ? `<dt>Agency reference</dt><dd>${esc(reference)}</dd>` : ""}<dt>Start date</dt><dd>${esc(date(contract.start_date))}</dd><dt>End date</dt><dd>${esc(date(contract.end_date))}</dd><dt>Published</dt><dd>${esc(date(contract.published))}</dd><dt>Procurement method</dt><dd>${esc(contract.procurement_method || "Not recorded")}</dd></dl>${url ? `<a href="${esc(url)}" target="_blank" rel="noopener noreferrer">${contract.link_scope === "source_register" ? `Find ${esc(contract.id)} on AusTender` : "Open the source notice"}<span class="visually-hidden"> (opens in a new tab)</span></a>` : '<p class="fineprint">No direct source URL is recorded. Use the contract reference to find the notice on <a href="https://www.tenders.gov.au/" target="_blank" rel="noopener noreferrer">AusTender</a>.</p>'}${Number(contract.notices) > 1 ? `<p class="fineprint">${number(contract.notices)} source notices are associated with this contract.</p>` : ""}</details>`;
 }
 
-async function mountRelatedSuppliers(root,profile,life) {
-  try {
-    const agencies=await agencyDirectory(life.signal);
-    const top=[...(profile.agencies || [])].sort((a,b)=>b.total-a.total)[0];
-    const agency=agencies.agencies.find(a=>a.name===top?.name);
-    if(!agency) return;
-    const data=await json(agency.profile_path,life.signal);
-    const ids=(data.suppliers || []).filter(s=>s.id!==profile.id).sort((a,b)=>b.total-a.total).slice(0,10).map(s=>s.id);
-    const params=new URLSearchParams({'f.id':JSON.stringify(ids)});
-    const page=await json('/api/table/suppliers?'+params,life.signal);
-    if(!life.alive()) return;
-    root.innerHTML=`<section class="supplier-section"><h3 class="subject-section-title">Other suppliers to ${esc(agency.name)}</h3><ul>${page.rows.filter(s=>isOrganisationRecipient({kind:s.recipient_kind})).map(s=>`<li><a href="${profileUrl(s.id)}">${esc(s.name)}</a></li>`).join('')}</ul></section>`;
-  } catch {if(life.alive()) root.innerHTML='';}
-}
-
 async function renderProfile(root, profile, meta, helpers, life, suppliers) {
   const ids = await agencyIds(life.signal);
   if (!life.alive()) return;
@@ -198,8 +183,8 @@ async function renderProfile(root, profile, meta, helpers, life, suppliers) {
     if (life.alive()) root.querySelector('.supplier-agency-map').innerHTML = '<p>The map could not open. Agency relationships are listed above.</p>';
   });
   const evidenceSlot = root.querySelector('.supplier-evidence');
-  if (profile.politicalMoneyAllowed) import('/evidence.js').then(({ mountEvidence }) => {
-    if (life.alive()) return mountEvidence(evidenceSlot, {name: profile.name, abn: profile.abn}, life);
+  import('/evidence.js').then(({ mountEvidence }) => {
+    if (life.alive()) return mountEvidence(evidenceSlot, {name: profile.name, abn: profile.abn}, {...life, allowPolitical:profile.politicalMoneyAllowed, publicationCheck:text=>remotePrivacyCheck(text, "data")});
   }).catch(() => {});
   // Charity register, AIS and ATO tax transparency, by the supplier's ABN only (no ABN: no block).
   const taxSlot = root.querySelector('.supplier-taxcharity');

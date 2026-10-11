@@ -156,13 +156,12 @@ export const MODULE_STAMPS = [
   ['ledger.js', 'canonical-urls.js'],
   ['money-journeys.js', 'canonical-urls.js'],
   ['quiz.js', 'canonical-urls.js'],
-  ['suppliers.js', 'labels.js'], ['suppliers.js', 'suppliers-table.js'], ['agencies.js', 'suppliers.js'],
-  ['timemachine.js', 'canonical-urls.js'],
+  ['suppliers.js', 'suppliers-table.js'],
   ['suppliers.js', 'canonical-urls.js'], ['suppliers.js', 'labels.js'], ['suppliers.js', 'supplier-growth.js'], ['agencies.js', 'suppliers.js'],
   ['timemachine.js', 'canonical-urls.js'], ['timemachine.js', 'labels.js'],
   // The money map's bundle names its chunks by content, so an importer holding
   // an old money-map.js would ask for chunks the build has removed.
-  ['map-page.js', 'money-map.js'], ['agencies.js', 'money-map.js'],
+  ['map-page.js', 'money-map.js'], ['agencies.js', 'money-map.js'], ['suppliers.js', 'money-map.js'],
   ['thenvsnow.js', 'wombat.js'], ['thenvsnow.js', 'labels.js'], ['grant-recipient.js', 'grants.js'],
   ['electorates.js', 'labels.js'], ['home-data.js', 'labels.js'],
   ['ask-person.js', 'labels.js'],

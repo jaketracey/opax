@@ -55,8 +55,19 @@ export async function mountEvidence(root, identity, options={}) {
       if (!nameLookup?.[name]?.includes(ids[0])) return false;
     }
     const data=await read(`/evidence/${ids[0].slice(0,2)}.json`,options.signal);
-    const entry=data?.entries?.[ids[0]];
+    let entry=data?.entries?.[ids[0]];
     if (!entry || options.alive && !options.alive()) return false;
+    if (options.allowPolitical === false) {
+      const political = row => /donor|donat|receipt|funding|political|money/i.test([row.source_kind,row.source_table,row.predicate].join(' '));
+      const excerpts = (entry.excerpts || []).filter(row=>!political(row));
+      if (!excerpts.length) return false;
+      if (excerpts.length !== (entry.excerpts || []).length) {
+        // Mixed source totals cannot describe the remaining procurement sample.
+        entry = {...entry, excerpts, years:{}, records:excerpts.length, identity_links:[]};
+      } else entry = {...entry, identity_links:[]};
+    }
+    if (options.publicationCheck && !await options.publicationCheck(JSON.stringify(entry))) return false;
+    if (options.alive && !options.alive()) return false;
     root.innerHTML=evidenceHTML(options.compact ? {...entry, years:{},locations:[],excerpts:entry.excerpts.slice(0,2)} : entry);
     root.hidden=false;
     return true;
