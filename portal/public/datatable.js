@@ -327,7 +327,10 @@ function render(config, page, query = {}, view = {}, error = '') {
     const exact = numeric(column) && n != null ? column.type === 'money' ? money.format(n) : decimal.format(n) : display;
     const link = !aggregate(row) && column.primary && config.primaryLink ? href(config.primaryLink(row)) : null;
     const bar = column.bar && n != null && maxima[column.key] ? `<span class="dt-bar-track" aria-hidden="true"><span class="dt-bar" style="--dt-bar:${Math.min(100,Math.round(Math.abs(n) / maxima[column.key] * 100))}%"></span></span>` : '';
-    return `<td role="cell" data-label="${esc(column.label)}" data-align="${esc(column.align || (numeric(column) ? 'end' : 'start'))}"${column.primary ? ' data-primary' : ''}${column === prominence ? ' data-prominent' : ''}${numeric(column) ? ' class="dt-number"' : ''} title="${esc(exact)}"><span class="dt-value">${link ? `<a href="${esc(link)}">${esc(display)}</a>` : esc(display) || '—'}</span>${bar}</td>`;
+    const content = aggregate(row) && (column.primary || donorColumn(column))
+      ? `<details class="donor-aggregate"><summary>${esc(display)}</summary><p>OPAX names organisations only. Donors it can't confirm are organisations are counted here, not named.</p></details>`
+      : `<span class="dt-value">${link ? `<a href="${esc(link)}">${esc(display)}</a>` : esc(display) || '—'}</span>`;
+    return `<td role="cell" data-label="${esc(column.label)}" data-align="${esc(column.align || (numeric(column) ? 'end' : 'start'))}"${column.primary ? ' data-primary' : ''}${column === prominence ? ' data-prominent' : ''}${numeric(column) ? ' class="dt-number"' : ''} title="${esc(exact)}">${content}${bar}</td>`;
   }).join('')}${config.actions?.length ? aggregate(row) ? '<td role="cell" class="dt-actions"></td>' : `<td role="cell" class="dt-actions"><details class="dt-panel" data-panel="action-${menuIdentity(row,menuIdentities)}"><summary aria-label="Actions" title="Actions"><span aria-hidden="true">⋯</span></summary><div>${config.actions.map(action => {
     const target = href(action.href(row));
     return target ? `<a href="${esc(target)}"><span aria-hidden="true">${esc(action.icon)}</span> ${esc(action.label)}</a>` : '';
