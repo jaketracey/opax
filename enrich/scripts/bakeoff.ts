@@ -156,11 +156,11 @@ const command = process.argv[2], lane = process.argv[3]
 try {
   if (command === 'prepare') prepare()
   else if (command === 'retry') await prepareRetry(Number(lane))
-  else if (command === 'submit' && ['haiku', 'haiku-2', 'haiku-3', 'judge', 'donation'].includes(lane)) await submit(lane)
-  else if (command === 'poll' && ['haiku', 'haiku-2', 'haiku-3', 'judge', 'donation'].includes(lane)) await poll(lane)
+  else if (command === 'submit' && ['haiku', 'haiku-2', 'haiku-3', 'judge', 'judge-2', 'donation'].includes(lane)) await submit(lane)
+  else if (command === 'poll' && ['haiku', 'haiku-2', 'haiku-3', 'judge', 'judge-2', 'donation'].includes(lane)) await poll(lane)
   else if (command === 'wait-qwen') await waitQwen()
   else if (command === 'blind') makeBlind()
-  else throw Error('usage: bakeoff.ts prepare | retry 2|3 | submit|poll haiku|haiku-2|haiku-3|judge|donation | wait-qwen | blind')
+  else throw Error('usage: bakeoff.ts prepare | retry 2|3 | submit|poll haiku|haiku-2|haiku-3|judge|judge-2|donation | wait-qwen | blind')
 } catch (e) {
   // Do not print request bodies, response text, environment, or stack traces.
   console.error(e instanceof Error ? e.message : 'bakeoff failed'); process.exitCode = 1

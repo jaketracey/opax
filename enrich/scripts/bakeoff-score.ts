@@ -1,6 +1,6 @@
 import { readFileSync, writeFileSync, existsSync } from 'node:fs'
 import { pathToFileURL } from 'node:url'
-import { hash, validate, qwenAccounting } from './bakeoff-lib.ts'
+import { hash, validate, qwenAccounting, judgeVerdict } from './bakeoff-lib.ts'
 
 const out = '/home/jake/opax-staging/federation/bakeoff/'
 const read = (n: string) => JSON.parse(readFileSync(out + n, 'utf8'))
@@ -30,7 +30,7 @@ function audit() {
   write('validator-metrics.json', all); console.log(JSON.stringify(all))
 }
 function score() {
-  const pairs = read('blind-pairs.json'), key = new Map(read('blind-key.json').map((k: any) => [k.id, k])), raw = lines(out + 'judge-results.jsonl')
+  const pairs = read('blind-pairs.json'), key = new Map(read('blind-key.json').map((k: any) => [k.id, k])), raw = [...lines(out + 'judge-results.jsonl'), ...(existsSync(out + 'judge-2-results.jsonl') ? lines(out + 'judge-2-results.jsonl') : [])]
   const byId = new Map(raw.map(r => [r.custom_id, r]))
   const scores: any[] = []
   for (const pair of pairs) {
@@ -38,8 +38,7 @@ function score() {
     if (!row || row.result?.type !== 'succeeded' || row.result.message.stop_reason !== 'end_turn') throw Error(`incomplete judge result ${pair.id}`)
     const result = JSON.parse(row.result.message.content.filter((c: any) => c.type === 'text').map((c: any) => c.text).join(''))
     for (const position of ['A', 'B']) {
-      const verdict = result[position], topics = pair[position].topics
-      if (!Array.isArray(verdict.topics) || verdict.topics.length !== topics.length || new Set(verdict.topics.map((t: any) => t.slug)).size !== topics.length || topics.some((t: string) => !verdict.topics.some((v: any) => v.slug === t)) || !Number.isInteger(verdict.summary_errors) || verdict.summary_errors < 0) throw Error(`invalid judge coverage ${pair.id}`)
+      const topics = pair[position].topics, verdict = judgeVerdict(result[position], topics)
       // Never retain the judge's free-text reason in the report: numeric properties only.
       scores.push({ id: pair.id, slug: pair.slug, position, side: (key.get(pair.id) as any)[position], topic_count: topics.length, supported_topics: verdict.topics.filter((t: any) => t.supported === true).length, topics_all_supported: verdict.topics.every((t: any) => t.supported === true), summary_errors: verdict.summary_errors })
     }
@@ -74,8 +73,9 @@ function score() {
   metrics.haiku.cost_usd = read(existsSync(out + 'haiku-total-usage.json') ? 'haiku-total-usage.json' : 'haiku-usage.json').cost_usd
   metrics.haiku.first_pass = read('haiku-early-audit.json').metrics
   for (const side of ['haiku', 'qwen3']) metrics[side].cost_per_1000_usd = metrics[side].cost_usd * 5
-  metrics.cohort_spend_usd = metrics.haiku.cost_usd + metrics.qwen3.cost_usd + read('judge-usage.json').cost_usd + read('donation-usage.json').cost_usd
-  metrics.total_spend_usd = metrics.haiku.cost_usd + metrics.qwen3.run_cost_usd + read('judge-usage.json').cost_usd + read('donation-usage.json').cost_usd
+  metrics.judge_cost_usd = read('judge-usage.json').cost_usd + (existsSync(out + 'judge-2-usage.json') ? read('judge-2-usage.json').cost_usd : 0)
+  metrics.cohort_spend_usd = metrics.haiku.cost_usd + metrics.qwen3.cost_usd + metrics.judge_cost_usd + read('donation-usage.json').cost_usd
+  metrics.total_spend_usd = metrics.haiku.cost_usd + metrics.qwen3.run_cost_usd + metrics.judge_cost_usd + read('donation-usage.json').cost_usd
   metrics.model = 'claude-haiku-5-5'
   write('metrics.json', metrics); console.log(JSON.stringify(metrics))
 }

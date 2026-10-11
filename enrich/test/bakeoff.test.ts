@@ -1,7 +1,7 @@
 import test from 'node:test'
 import assert from 'node:assert/strict'
 import { buildSystemPrompt, buildUserPrompt } from '../src/prompts.ts'
-import { select, recordOf, enrichmentRequests, usageCost, blind, judgeRequests, judgeSystem, judgeSchema, validate, decode, upperCost, retryRequests, mergeAttempt, qwenAccounting } from '../scripts/bakeoff-lib.ts'
+import { select, recordOf, enrichmentRequests, usageCost, blind, judgeRequests, judgeSystem, judgeSchema, validate, decode, upperCost, retryRequests, mergeAttempt, qwenAccounting, judgeVerdict } from '../scripts/bakeoff-lib.ts'
 
 const unit = (id: number, length: number, year = '1993', chamber = 'senate', kind = 'speech') => ({ slug: `unit-${id}`, title: 'Record', texts: { body: { body: 'text '.repeat(Math.ceil(length / 5)) } }, extra: { metadata: { date: `${year}-01-01`, unit_kind: kind } }, usermetadata: { classifications: [{ labelset: 'kind', label: 'speech' }, { labelset: 'chamber', label: chamber }] } })
 test('selection excludes thin text and preserves strata and short quota deterministically', () => {
@@ -100,4 +100,12 @@ test('qwen cost distinguishes measured cohort receipts from a full-pilot allocat
   assert.equal(qwenAccounting([{ neurons: 100 }, { neurons: 200 }]).neurons, 300)
   assert.throws(() => qwenAccounting([{}]))
   assert.throws(() => qwenAccounting([{}], { ...pilot, neurons_total_pilot: NaN }))
+})
+test('judge scores supplied topics from a taxonomy audit and rejects missing or duplicate coverage', () => {
+  const verdict = { topics: [{ slug: 'health', supported: true }, { slug: 'education', supported: false }], summary_errors: 1 }
+  assert.deepEqual(judgeVerdict(verdict, ['health']), { topics: [verdict.topics[0]], summary_errors: 1 })
+  assert.deepEqual(judgeVerdict(verdict, []).topics, [])
+  assert.throws(() => judgeVerdict(verdict, ['foreign-affairs']))
+  assert.throws(() => judgeVerdict({ ...verdict, topics: [verdict.topics[0], verdict.topics[0]] }, ['health']))
+  assert.throws(() => judgeVerdict({ ...verdict, summary_errors: -1 }, ['health']))
 })

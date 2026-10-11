@@ -142,3 +142,10 @@ export const judgeSystem = `You are a blind auditor of Australian public-record 
 const judgeSide = { type: 'object', additionalProperties: false, required: ['topics', 'summary_errors', 'reason'], properties: { topics: { type: 'array', items: { type: 'object', additionalProperties: false, required: ['slug', 'supported'], properties: { slug: { type: 'string' }, supported: { type: 'boolean' } } } }, summary_errors: { type: 'integer' }, reason: { type: 'string' } } }
 export const judgeSchema = { type: 'object', additionalProperties: false, required: ['A', 'B'], properties: { A: judgeSide, B: judgeSide } }
 export function judgeRequests(pairs: any[]) { return pairs.map(p => ({ custom_id: p.id, params: params(judgeSystem, JSON.stringify({ id: p.id, text: p.text, A: p.A, B: p.B }), judgeSchema, 1024) })) }
+/** Some responses audit the whole taxonomy. Score only supplied labels, with complete coverage. */
+export function judgeVerdict(verdict: any, expected: string[]) {
+  if (!Array.isArray(verdict?.topics) || !Number.isInteger(verdict.summary_errors) || verdict.summary_errors < 0) throw Error('invalid judge verdict')
+  const topics = verdict.topics
+  if (new Set(topics.map((t: any) => t.slug)).size !== topics.length || topics.some((t: any) => !TOPIC_SLUGS.includes(t.slug) || typeof t.supported !== 'boolean') || expected.some(t => !topics.some((v: any) => v.slug === t))) throw Error('invalid judge topic coverage')
+  return { topics: expected.map(slug => topics.find((t: any) => t.slug === slug)), summary_errors: verdict.summary_errors }
+}
