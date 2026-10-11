@@ -5,7 +5,7 @@ at `/discover` uses server mode against D1 `/api/table/contracts`, including
 its SSR first page. The supplier directory uses `/api/table/suppliers`.
 Supplier profiles use client mode at 2,000 source contracts or fewer; larger
 profiles use the contracts endpoint with fixed `supplier=<stable supplier id>`.
-Main `f0012b2eeb139211e7f6abb9edb55614510a3a65`, including donor-withhold,
+Main `5bb219592cc45cd1a6d2663179674ea916dc82e7`, including donor-withhold,
 is merged. All query state uses the core's shared validator, including hidden
 fields, repeated keys and numeric bounds. D1 enforces the registry fingerprint.
 
@@ -56,6 +56,9 @@ downloaded CSV, URL state, rendered and accessible text, and analytics. Addition
 checks cover complete supplier profiles and initial rejected hidden facets.
 The browser audit checks all derived donor-matched supplier profiles. A separate
 local D1 sweep checks the loaded financial rows and facets against their scopes.
+Profile DOM probes resolve only the map renderer's exact shortened labels from
+that profile's verified agency entries back to their complete official names;
+all other text and attributes retain the recipient checks.
 Screenshots and verification logs are under `portal/private/dt-contracts/`.
 
 Optional contract additions are `rowPrivacyCheck` and `dataPrivacyCheck`.

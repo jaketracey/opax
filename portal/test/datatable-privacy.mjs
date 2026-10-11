@@ -101,8 +101,11 @@ export function registerTablePrivacy(registry, rollout) {
             history.replaceState(null,'',url); dispatchEvent(new PopStateEvent('popstate'));
           },{r:active,value,kind});
           // This immediate check detects old SSR rows/query echoes during validation.
-          assert.ok((index.dataSafe || index.safe)(await host.innerText()),`${rollout.id}: reflected pending state`);
+          const pendingText=await page.evaluate(selector=>document.querySelector(selector)?.innerText || '',active.host);
+          assert.ok((index.dataSafe || index.safe)(pendingText),`${rollout.id}: reflected pending state`);
           await assertDOMValues();
+          // The SPA replaces the route after popstate; don't submit a torn-down form.
+          await page.waitForTimeout(150);
           await page.waitForFunction(host=>document.querySelector(host)?.querySelector('.dt-count') && !document.querySelector(host).hasAttribute('aria-busy'),active.host);
           if (kind === 'q') {
             await host.locator('[data-search]').fill(value);
@@ -119,6 +122,7 @@ export function registerTablePrivacy(registry, rollout) {
           assert.equal(new URL(page.url()).searchParams.get('campaign'),'fixture');
           assert.equal(await host.locator('.dt-count').textContent(),'Showing 0–0 of 0');
           await page.evaluate(({r})=>{ const url=new URL(location.href),key=r.urlKey ? r.urlKey+'.' : '';url.searchParams.delete(key+'q');url.searchParams.delete(key+'f.'+r.facet);history.replaceState(null,'',url);dispatchEvent(new PopStateEvent('popstate')); },{r:active});
+          await page.waitForTimeout(150);
           await page.waitForFunction(host=>document.querySelector(host)?.querySelector('.dt-count') && !document.querySelector(host).hasAttribute('aria-busy'),active.host);
         }
         onProgress?.({id:rollout.id,mode,samples:++samples});

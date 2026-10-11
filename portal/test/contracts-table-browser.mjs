@@ -11,6 +11,7 @@ import {registerTablePrivacy,tablePrivacyIndex} from './datatable-privacy.mjs';
 import {tableIdentityIndex} from '../../scripts/load_tables.mjs';
 import {isOrganisationDonor,namesWithheldPhrase} from '../public/donor-entity.js';
 import {isOrganisationRecipient} from '../public/recipient-entity.js';
+import {shortLabel} from '../graph/map-types.ts';
 
 const portal=fileURLToPath(new URL('../',import.meta.url));
 const {chromium}=createRequire(resolve(process.env.DT_BROWSER_TOOLS || '/tmp/opax-dt-tools','package.json'))('playwright-core');
@@ -26,6 +27,7 @@ const recipientPolicy={...sharedPolicy,check:sharedPolicy.recipientCheck};
 const originalProfiles=sourceTableDonorIdentities().supplierProfiles;
 const index=await tablePrivacyIndex({recipients:true});
 const suppliers=JSON.parse(await readFile(resolve(portal,'public/suppliers.json'),'utf8')).suppliers;
+const officialAgencyNames=new Set((await read('/agencies.json')).agencies.map(agency=>agency.name));
 const supplier=suppliers.find(entry=>entry.count>=50 && entry.count<=2000 && !recipientPolicy.suppliers.has(entry.id) && index.dataSafe(entry.name));
 assert.ok(supplier,'the snapshot must exercise client paging');
 const clientPath=`/subject/supplier/${supplier.id}`;
@@ -172,7 +174,26 @@ try {
     const profile = page.locator('#subject-body');
     await page.waitForTimeout(150);
     const dom = await profile.innerHTML(), accessible = await profile.ariaSnapshot();
-    assert.ok(index.dataSafe(dom), 'whole supplier hydrated recipient privacy');
+    // The map's shortened government label is still that verified public agency.
+    // Expand only exact source-backed map labels in the in-memory probe copy.
+    const agencyLabels=(source.agencies || []).filter(agency=>officialAgencyNames.has(agency.name)).map(agency=>[shortLabel(agency.name),agency.name]);
+    const privacyDom=await profile.evaluate((root,labels)=>{
+      const copy=root.cloneNode(true),official=new Map(labels);
+      for(const node of copy.querySelectorAll('.supplier-agency-map .rp-map3d-label')) {
+        if(node.childNodes.length===1 && node.firstChild.nodeType===Node.TEXT_NODE && official.has(node.textContent))node.textContent=official.get(node.textContent);
+      }
+      return copy.innerHTML;
+    },agencyLabels);
+    if(!index.dataSafe(privacyDom)) {
+      const parts=await profile.evaluate(root=>{
+        const attrs=[...root.querySelectorAll('*')].flatMap(node=>[...node.attributes].map(attr=>({key:attr.name,value:attr.value})));
+        const walker=document.createTreeWalker(root,NodeFilter.SHOW_TEXT),nodes=[];
+        while(walker.nextNode()) {const parent=walker.currentNode.parentElement;nodes.push({text:walker.currentNode.textContent,tag:parent.tagName,classes:parent.className,hidden:parent.closest('[hidden],[aria-hidden="true"],style,script')!==null,display:getComputedStyle(parent).display,parentTag:parent.parentElement.tagName,link:parent.getAttribute('href')?.split('?')[0]});}
+        return {text:root.innerText,attrs,nodes};
+      });
+      console.log(JSON.stringify({profile:entity.id,hydratedTextSafe:index.dataSafe(parts.text),accessibleSafe:index.dataSafe(accessible),unsafeAttributeKeys:parts.attrs.filter(attr=>!index.dataSafe(attr.value)).map(attr=>attr.key),unsafeTextNodes:parts.nodes.filter(node=>!index.dataSafe(node.text)).map(node=>({tag:node.tag,classes:typeof node.classes==='string'&&index.safe(node.classes)?node.classes:undefined,hidden:node.hidden,display:node.display,parentTag:node.parentTag,textBytes:node.text.length,link:node.link&&index.safe(node.link)?node.link:undefined}))}));
+    }
+    assert.ok(index.dataSafe(privacyDom), 'whole supplier hydrated recipient privacy');
     assert.ok(index.dataSafe(accessible), 'whole supplier accessible recipient privacy');
     assert.ok(!/\/subject\/donor\/|also a donor|donation register|disclosed receipts/i.test(dom), 'withheld political-money DOM');
     assert.equal(await profile.locator('.supplier-funding').isVisible(),false,'withheld supplier has no political funding block');

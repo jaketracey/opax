@@ -11,6 +11,7 @@ import {donorPrivacyIndex,donorNameWithheld,withholdIndividualDonors,MONEY_GRAPH
 import {donorRows,withheldDonorTotals,donorRouteWithheld} from '../public/donor-views.js';
 import {buildFlows} from '../public/ledger.js';
 import {withholdStoredDonors} from '../src/donor-sanitise.mjs';
+import {sanitiseSocialCatalog} from '../../scripts/social_publication.mjs';
 const pub=new URL('../public/',import.meta.url).pathname;
 const original=privacySourceGraphs(),index=donorPrivacyIndex(original),context=readPublicationContext(pub,original);
 const read=p=>JSON.parse(readFileSync(join(pub,p),'utf8'));
@@ -80,6 +81,40 @@ test('every served JSON and client module passes the runtime export privacy set'
   }
  }
  t.diagnostic(`${json} served JSON files; ${modules} client and crawl files`);
+});
+
+test('social publication withholds runtime-derived program identities and keeps totals and references', () => {
+ const n=original.flatMap(g=>g.nodes).find(n=>n.kind==='donor'&&donorNameWithheld(index,n.label)&&!context.registry.names[context.hash(foldDonorName(n.label))]?.exempt);
+ assert.ok(n);
+ // Raw identities exist only in memory; failures report counts, never values.
+ const program={id:'GO-fixture',key:'program-fixture',n:`${n.label} to the party`,ag:'Department',t:500,c:3,r:2,mapped:400,groups:{Labor:[300,2],Coalition:[100,1]},recipients:[],donor_links:[{...n,profileUrl:`/subject/donor/${encodeURIComponent(n.label)}`}]};
+ const value={asOf:'2026-10-11',programs:[program]};
+ const safe=sanitiseSocialCatalog('social/programs.json',value,context);
+ assert.ok(!hasHiddenIdentity(safe), 'social program identity retained');
+ assert.ok(!hiddenLookupKey(safe), 'social program lookup identity retained');
+ assert.ok(safe.programs[0].n!==program.n, 'social program narrative unchanged');
+ for(const key of ['id','key','t','c','r','mapped'])assert.ok(safe.programs[0][key]===program[key], `program ${key} changed`);
+ assert.ok(JSON.stringify(safe.programs[0].groups)===JSON.stringify(program.groups), 'program money changed');
+ assert.ok(!safe.programs[0].donor_links[0].profileUrl, 'social donor profile retained');
+ assert.equal(safe.programs[0].donor_links[0].aliases.length,0);
+});
+
+test('all social catalog writers share the publication boundary and preserve grant roles', () => {
+ const graph=JSON.parse(execFileSync('git',['show',`${PRIVACY_BASELINE}:portal/public/graph/grants.federal.json`],{maxBuffer:40*1024*1024}).toString());
+ let donor;
+ const find=x=>{if(!x||typeof x!=='object'||donor)return;if(x.d?.e&&typeof x.d.n==='string'&&donorNameWithheld(index,x.d.n))donor=x.d;else for(const v of Object.values(x))find(v)};
+ find(graph);assert.ok(donor, 'runtime grant donor fixture unavailable');
+ const row={id:'GA-fixture',recipientId:'grant-recipient:fixture',recipient:'Grant recipient fixture',amount:500,more:2,d:donor};
+ for(const [file,value]of [['social/grants.json',{grants:[row]}],['social/programs.json',{programs:[{id:'GO-fixture',key:'fixture',n:'Program fixture',t:500,c:2,donor_links:[{kind:'donor',id:donor.e,label:donor.n,aliases:[]}]}]}],['social/grants-largest.json',{months:{'2026-01':[row]}}]]){
+  const safe=sanitiseSocialCatalog(file,value,context),expected=(file==='social/grants-largest.json'?sanitiseGrantDonors:sanitiseDonorAsset)(value,context);
+  assert.ok(JSON.stringify(safe)===JSON.stringify(expected), `${file}: publication policy differs`);
+  assert.ok(assetDonorRecords(safe).every(n=>!donorNameWithheld(index,n.label)), `${file}: donor metadata retained`);
+  const grant=safe.grants?.[0]||safe.months?.['2026-01']?.[0];
+  if(grant){for(const key of ['id','recipientId','recipient','amount','more'])assert.ok(grant[key]===row[key], `${file}: grant field changed`);assert.ok(/^donor:withheld-/.test(grant.d.e));assert.ok(!grant.d.on, `${file}: donor identifier retained`);}
+ }
+ const builder=readFileSync(new URL('../../scripts/build_social_catalog.mjs',import.meta.url),'utf8');
+ assert.equal((builder.match(/writeFileSync\(/g)||[]).length,1);
+ for(const file of ['social/grants.json','social/programs.json','social/grants-largest.json'])assert.ok(builder.includes(`publish('${file}',`), `${file}: writer bypasses publication`);
 });
 
 test('public lookups are rebuilt from sanitised labels without changing record joins',()=>{
