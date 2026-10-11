@@ -84,7 +84,8 @@ export async function releaseHistoric(d: ReconcileDeps, slugs: string[]): Promis
   const statements = [...rids].map(rid => d.db.prepare(`UPDATE queue SET status = 'pending', priority = ?,
     terminal_reason = NULL, historic_released = 1, outcome = NULL, result = NULL,
     claim_token = NULL, claimed_at = NULL, done_at = NULL, updated_at = ?
-    WHERE rid = ? AND task IN ('speech_summary', 'speech_topics') AND status = 'done' AND terminal_reason = 'historic-held'`)
+    WHERE rid = ? AND task IN ('speech_summary', 'speech_topics') AND status = 'done' AND terminal_reason = 'historic-held'
+      AND NOT EXISTS (SELECT 1 FROM batch_items b WHERE b.rid = queue.rid AND b.state IN ('reserved','applying'))`)
     .bind(BACKFILL_PRIORITY, now, rid))
   let released = 0
   for (let i = 0; i < statements.length; i += 50) {
