@@ -1,6 +1,8 @@
 """Source access policy, including a repository-wide regression guard."""
 import ast
+import asyncio
 from datetime import datetime, timezone
+from email.message import Message
 from email.utils import format_datetime
 import io
 import json
@@ -16,7 +18,7 @@ from unittest import mock
 import pytest
 import requests
 
-from parli.ingest import http
+from parli.ingest import honest_http, http
 
 ROOT = Path(__file__).resolve().parents[1]
 FIX = Path(__file__).parent / 'fixtures/source_access'
@@ -64,11 +66,120 @@ def test_requests_cannot_override_identity(family):
     assert not client.trust_env
 
 
-def test_redirect_keeps_honest_identity():
+def test_requests_redirect_without_robots_policy_is_not_requested(tmp_path):
     client, wire = session([(302, b'', {'Location': '/detail'}), (200, b'ok', {})])
-    client.get('https://example.test/source')
-    assert len(wire.sent) == 2
+    with pytest.raises(http.SourceRefused, match='4') as refusal:
+        client.get('https://example.test/source')
+    assert 'destination robots policy' in refusal.value.reason
+    assert len(wire.sent) == 1
     assert all(request.headers['User-Agent'] == http.USER_AGENT for request, _ in wire.sent)
+    assert json.loads((tmp_path / 'access.json').read_text())['example.test']['status'] == 'paused'
+
+
+def test_requests_unfollowed_redirect_remains_a_terminal_response():
+    client, wire = session([(302, b'', {'Location': '/detail'})])
+    assert client.get('https://example.test/source', allow_redirects=False).status_code == 302
+    assert len(wire.sent) == 1
+
+
+def federal_transport(routes, monkeypatch):
+    """Use urllib's real redirect handling with offline HTTP responses."""
+    sent, responses = [], []
+    class FixtureHTTP(urllib.request.HTTPHandler):
+        def http_open(self, request):
+            assert not responses or responses[-1].closed, 'previous connection must be closed'
+            sent.append(request.full_url)
+            assert request.get_header('User-agent') == http.USER_AGENT
+            status, body, headers = routes[request.full_url]
+            fields = Message()
+            for name, value in headers.items():
+                fields[name] = value
+            response = urllib.response.addinfourl(io.BytesIO(body), fields, request.full_url, status)
+            response.msg = 'Fixture response'
+            responses.append(response)
+            return response
+    client = honest_http.HonestHTTP()
+    client.opener = http.build_opener(honest_http._NoRedirect(), FixtureHTTP())
+    monkeypatch.setattr(honest_http.time, 'sleep', lambda _: None)
+    return client, sent
+
+
+@pytest.mark.parametrize('cross_origin', [False, True])
+@pytest.mark.parametrize('blocked', [False, True])
+def test_federal_redirect_checks_destination_robots_before_request(monkeypatch, cross_origin, blocked):
+    origin = 'http://example.test'
+    target_origin = 'http://destination.test' if cross_origin else origin
+    target = target_origin + ('/blocked' if blocked else '/allowed')
+    robots = b'User-agent: OPAXBot\nDisallow: /blocked\nCrawl-delay: 2\n'
+    routes = {origin + '/robots.txt': (200, robots, {}),
+              target_origin + '/robots.txt': (200, robots, {}),
+              origin + '/source': (302, b'', {'Location': target}),
+              target: (200, b'verified XML', {})}
+    client, sent = federal_transport(routes, monkeypatch)
+    if blocked:
+        with pytest.raises(honest_http.Refused, match='robots.txt disallows'):
+            client.get(origin + '/source')
+        assert target not in sent
+    else:
+        assert client.get(origin + '/source') == b'verified XML'
+        assert sent.count(target) == 1
+    assert sent.count(origin + '/robots.txt') == 1
+    assert sent.count(target_origin + '/robots.txt') == 1
+    assert client.delay == 2
+
+
+def test_federal_redirect_to_paused_host_does_not_fetch_its_robots(monkeypatch):
+    origin = 'http://example.test'
+    routes = {origin + '/robots.txt': (200, b'User-agent: *\nAllow: /', {}),
+              origin + '/source': (302, b'', {'Location': 'https://www.aph.gov.au/destination'})}
+    client, sent = federal_transport(routes, monkeypatch)
+    with pytest.raises(http.SourceRefused):
+        client.get(origin + '/source')
+    assert sent == [origin + '/robots.txt', origin + '/source']
+
+
+def test_federal_redirect_hops_are_bounded_and_use_cached_robots(monkeypatch):
+    origin = 'http://example.test'
+    routes = {origin + '/robots.txt': (200, b'User-agent: *\nAllow: /', {})}
+    routes.update({origin + f'/{i}': (302, b'', {'Location': f'/{i + 1}'})
+                   for i in range(honest_http.MAX_REDIRECTS + 1)})
+    client, sent = federal_transport(routes, monkeypatch)
+    with pytest.raises(honest_http.Refused, match='redirect limit'):
+        client.get(origin + '/0')
+    assert sent == [origin + '/robots.txt'] + [origin + f'/{i}' for i in range(6)]
+
+
+def test_robots_redirect_without_destination_rules_is_refused(monkeypatch):
+    origin = 'http://example.test'
+    routes = {origin + '/robots.txt': (302, b'', {'Location': 'http://destination.test/rules'})}
+    client, sent = federal_transport(routes, monkeypatch)
+    with pytest.raises(honest_http.Refused, match='robots.txt redirect refused'):
+        client.get(origin + '/source')
+    assert sent == [origin + '/robots.txt']
+
+
+def test_shared_urllib_redirect_without_robots_policy_is_not_requested():
+    sent = []
+    class FixtureHTTP(urllib.request.HTTPHandler):
+        def http_open(self, request):
+            sent.append(request.full_url)
+            response = urllib.response.addinfourl(io.BytesIO(b''), {'location': '/detail'}, request.full_url, 302)
+            response.msg = 'Fixture redirect'
+            return response
+    with pytest.raises(http.SourceRefused) as refusal:
+        http.open_url(http.build_opener(FixtureHTTP()), http.Request('http://example.test/source'))
+    assert 'destination robots policy' in refusal.value.reason
+    assert sent == ['http://example.test/source']
+
+
+def test_async_redirect_without_robots_policy_is_refused_before_following():
+    trace = http.aiohttp_trace()
+    response = mock.Mock(headers={'Location': '/detail'})
+    params = mock.Mock(url='https://example.test/source', response=response, headers={})
+    with pytest.raises(http.SourceRefused) as refusal:
+        asyncio.run(trace.on_request_redirect[0](mock.Mock(), mock.Mock(), params))
+    assert 'destination robots policy' in refusal.value.reason
+    response.close.assert_called_once()
 
 
 def test_prepared_requests_cannot_bypass_identity():

@@ -23,6 +23,13 @@ The passive Cloudflare script on the usable Apache index is not executed.
 The feed uses the shared honest-agent identity, redirect and challenge policy.
 Refusals record a paused source and exit 4; the nightly preserves the caches
 and published data, skips speech loading and does not try the API fallback.
+The federal client follows at most five redirects, checking each destination
+against the same honest agent, pause list and cached robots rules before
+requesting it. Responses close before another origin's robots file is fetched,
+and every hop observes the serial pacing policy. A redirect from a robots file
+is refused because the destination's rules are not yet known. Shared urllib,
+requests and async paths without a robots checker refuse and report redirects;
+callers that deliberately retain an unfollowed redirect still receive it.
 
 ## Rows and identities
 
@@ -46,8 +53,11 @@ cache; `--report` exposes the same evidence for manual scratch-copy tests.
 
 The JSONL loader checks the whole chamber-day before assigning citations.
 A supplied person ID rejected by the guard is held, not inserted with NULL
-attribution. Conflicting identities under the same gid or normalized body hold
-the affected batch records in either order. A gid that contradicts an existing
+attribution, and cannot enter conflict groups or suppress a verified record.
+A rejected/verified pair inserts exactly one verified row in either order,
+with identical or different gids; reruns add zero. Conflicting unrejected
+identities under the same gid or normalized body hold the affected batch
+records in either order. A gid that contradicts an existing
 citation is also reported and held, including across chamber-days. Replaying
 held records adds no rows and does not raise an identity-conflict exception;
 a corrected, unambiguous fresh-day record can subsequently load normally.
@@ -231,11 +241,13 @@ lane. No separate permissive XML licence is claimed on that evidence.
 
 ## Validation
 
-The feed, export and shared source-policy fixtures pass **153 tests**.
-The complete `python3 -m pytest` run passes **1,242 tests with one skipped**,
-using cached local dependencies.
-The clean-checkout data check skipped during the pending merge passed separately
-after the merge commit.
+The complete `python3 -m pytest` run passes **1,255 tests**, using cached local
+dependencies. The citation fixtures cover both orders with identical and
+different gids: one verified `101` row, zero on rerun; genuine conflicts remain
+held. Offline redirect tests confirm zero requests to robots-disallowed paths
+and one to allowed paths, on the same origin and another origin, as well as
+serial connection closure, cached rules, paused hosts and the five-hop limit.
+Shared transports without robots rules refuse redirects before requesting them.
 `scripts/vm/test_nightly.sh` passes **307 checks, zero failures**, including
 real speech loading in both chambers, zero-byte days and idempotent reruns.
 The revision gates include XML reconciliation, cache refusal/validation,
@@ -244,5 +256,5 @@ fixtures and the offline nightly harness. The regenerated staging proof
 validates all 434 recovered divisions and 30,539 member votes against the
 strict schema 1 decoder, checks baseline byte compatibility and idempotence,
 and records polarity 0 plus retained totals/bill IDs for both closure divisions.
-`portal/public/votes.json` is byte-identical to HEAD (SHA-256
+`portal/public/votes.json` is byte-identical to `origin/main` (SHA-256
 `a77128dc0e1e1b3fdaa4bf84501e2c94af3125dea3cf0b2dffbc688a49d68546`).

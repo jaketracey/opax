@@ -75,6 +75,10 @@ class SpeechReconciler:
             if record.get('person_id') is not None and pid is None:
                 item['reason'] = 'rejected-person-id'
             prepared.append(item)
+            # Rejected evidence cannot contradict a verified identity or claim
+            # its gid. Keep it in the report, outside the conflict groups.
+            if item['reason']:
+                continue
             groups[('body', body)].append(item)
             if record.get('gid'):
                 groups[('gid', record['gid'])].append(item)

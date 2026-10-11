@@ -376,7 +376,7 @@ def test_gid_cannot_reconcile_a_different_guarded_person(tmp_path):
 
 @pytest.mark.parametrize('reverse',[False,True])
 @pytest.mark.parametrize('same_gid',[False,True])
-def test_rejected_then_valid_identity_batch_is_held_in_either_order_and_on_rerun(tmp_path,reverse,same_gid):
+def test_rejected_identity_cannot_suppress_valid_speech_in_either_order_and_on_rerun(tmp_path,reverse,same_gid):
     from parli.ingest import speeches as S
     db=db_fixture();good=normal(db)[0][0]
     bad=dict(good,person_id='102',gid=good['gid'] if same_gid else good['gid']+'.rejected')
@@ -384,13 +384,13 @@ def test_rejected_then_valid_identity_batch_is_held_in_either_order_and_on_rerun
     if reverse:rows.reverse()
     write_speeches(tmp_path,rows)
     with patch.object(S,'MODERN_DIR',tmp_path):
-        for _ in range(2):
+        for added in (1,0):
             report=[]
-            assert S.load_modern_jsonl(db,set(),report=report)==0
-            assert len(report[0]['unmatched'])==2
-            assert {r['reason'] for r in report[0]['unmatched']}=={'batch-identity-conflict'}
-    assert db.execute('SELECT COUNT(*) FROM speeches').fetchone()[0]==0
-    assert db.execute('SELECT COUNT(*) FROM oa_speech_provenance').fetchone()[0]==0
+            assert S.load_modern_jsonl(db,set(),report=report)==added
+            assert len(report[0]['unmatched'])==1
+            assert report[0]['unmatched'][0]['reason']=='rejected-person-id'
+    assert db.execute('SELECT person_id FROM speeches').fetchall()==[('101',)]
+    assert db.execute('SELECT gid FROM oa_speech_provenance').fetchall()==[(good['gid'],)]
 
 
 @pytest.mark.parametrize('reverse',[False,True])
@@ -413,14 +413,17 @@ def test_rejected_and_valid_identity_across_loads_mint_one_citation_and_replay(t
     assert db.execute('SELECT person_id FROM speeches').fetchall()==[('101',)]
 
 
+@pytest.mark.parametrize('reverse',[False,True])
 @pytest.mark.parametrize('same_gid',[False,True])
-def test_conflicting_valid_identities_are_held_before_first_citation(tmp_path,same_gid):
+def test_conflicting_valid_identities_are_held_before_first_citation(tmp_path,same_gid,reverse):
     from parli.ingest import speeches as S
     db=db_fixture();first=normal(db)[0][0]
     second=dict(first,person_id='102',speaker='Sam Fixture',
                 gid=first['gid'] if same_gid else first['gid']+'.other',
                 text=first['text'].replace('\n\n','  ')+'\nView the PC OA website')
-    write_speeches(tmp_path,[first,second])
+    rows=[first,second]
+    if reverse:rows.reverse()
+    write_speeches(tmp_path,rows)
     with patch.object(S,'MODERN_DIR',tmp_path):
         assert S.load_modern_jsonl(db,set())==0
         assert S.load_modern_jsonl(db,set())==0
