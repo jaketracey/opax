@@ -20,16 +20,16 @@ one division existed in it and never handled the list endpoint's silent
            division fetched. Transient failures are NOT marked fetched, so the
            next run retries them; a 404 is.
 
-Every raw response is cached under ~/.cache/autoresearch/tvfy/ (the fallback
-when TVFY is unavailable). One request per second, identified as OPAX research.
-Stdlib only: runs under the system python3 on `desktop`, where parli.db lives.
+Every raw response is cached under ~/.cache/autoresearch/tvfy/. One serial
+request per second as OPAXBot; honour robots/Retry-After and stop on refusal.
+Uses the shared honest transport policy and runs under python3 where parli.db lives.
 
   cd /tmp/arag_mig && nohup python3 -m parli.ingest.tvfy_refresh > logs/tvfy_refresh.log 2>&1 &
   python3 -m parli.ingest.tvfy_refresh --since 2026-08-01 --limit 3     # smoke run
   python3 -m parli.ingest.tvfy_refresh --detail-only                    # resume the votes fetch
 
 Key: TVFY_API_KEY in the environment or a .env file (cwd, repo root, ~); the
-key that was checked into fetch_division_votes.py is the last resort.
+key is required; never use a repository-embedded credential.
 """
 
 from __future__ import annotations
@@ -49,7 +49,7 @@ from datetime import date, timedelta
 from pathlib import Path
 
 API = "https://theyvoteforyou.org.au/api/v1"
-USER_AGENT = source_http.USER_AGENT
+from .honest_http import HonestHTTP, Refused, Unavailable, USER_AGENT
 DB_PATH = Path(os.environ.get("OPAX_DB") or "~/.cache/autoresearch/parli.db").expanduser()
 CACHE = Path("~/.cache/autoresearch/tvfy").expanduser()
 STATE_PATH = CACHE / "refresh_state.json"
@@ -123,6 +123,7 @@ def key() -> str:
         _KEY = api_key()
     return _KEY
 _last_request = 0.0
+_http = HonestHTTP()
 
 
 class TvfyError(Exception):
@@ -130,32 +131,15 @@ class TvfyError(Exception):
 
 
 def get(path: str, params: dict) -> object:
-    """GET {API}/{path} with the key, paced to one request per second. Returns
-    parsed JSON, None on 404, raises TvfyError after five failed attempts."""
-    global _last_request
+    """Serial honest GET: JSON, None on 404, immediate stop on refusal."""
     url = f"{API}/{path}?{urllib.parse.urlencode(dict(params, key=key()))}"
-    for attempt in range(5):
-        wait = RATE_SECONDS - (time.time() - _last_request)
-        if wait > 0:
-            time.sleep(wait)
-        _last_request = time.time()
-        try:
-            req = source_http.Request(url, headers={"User-Agent": source_http.USER_AGENT, "Accept": "application/json"})
-            with source_http.urlopen(req, timeout=60) as r:
-                return json.loads(r.read())
-        except urllib.error.HTTPError as e:
-            if e.code == 404:
-                return None
-            retry_after = e.headers.get("Retry-After") if e.headers else None
-            back = float(retry_after) if retry_after and retry_after.isdigit() else 10.0 * (attempt + 1)
-            if e.code == 429:
-                back = max(back, 60.0)
-            log(f"  HTTP {e.code} on {path}; sleeping {back:.0f}s (attempt {attempt + 1}/5)")
-            time.sleep(back)
-        except Exception as e:  # noqa: BLE001 - never log a credential-bearing URL
-            log(f"  {type(e).__name__} on {path}; sleeping {10 * (attempt + 1)}s (attempt {attempt + 1}/5)")
-            time.sleep(10.0 * (attempt + 1))
-    raise TvfyError(f"gave up on {path}")
+    try:
+        body = _http.get(url, expected_json=True)
+        return json.loads(body) if body is not None else None
+    except Refused as exc:
+        raise source_http.SourceRefused(exc.url or url, str(exc)) from None
+    except (Unavailable, ValueError):
+        raise TvfyError(f"unavailable or invalid JSON on {path}") from None
 
 
 def connect(db_path: Path) -> sqlite3.Connection:
@@ -253,7 +237,9 @@ def phase_list(db: sqlite3.Connection, since: date, relist: bool) -> int:
         ym = s.strftime("%Y-%m")
         for house in HOUSES:
             done = state["months_done"].setdefault(house, [])
-            if ym in done and not relist:
+            # A settled full month is a checkpoint, an arbitrary --since
+            # window is not. Recent months always re-list for corrections.
+            if ym in done and e < settled_before and not relist:
                 continue
             rows: list = []
             try:
@@ -268,7 +254,7 @@ def phase_list(db: sqlite3.Connection, since: date, relist: bool) -> int:
             commit(db)
             listed += len(rows)
             inserted += n_new
-            if e < settled_before and ym not in done:
+            if e < settled_before and s.day == 1 and (e + timedelta(days=1)).day == 1 and ym not in done:
                 done.append(ym)
                 save_state(state)
             if n_new or s.month in (1, 7):
@@ -303,7 +289,7 @@ def store_detail(db: sqlite3.Connection, div_id: int, d: dict, known_members: se
     votes_in = members_in = 0
     for v in d.get("votes") or []:
         m = v.get("member") or {}
-        pid = (m.get("person") or {}).get("id") or m.get("id")
+        pid = (m.get("person") or {}).get("id")
         if not pid:
             continue
         pid = str(pid)
@@ -400,7 +386,7 @@ def complete_detail(d: object, div_id: int) -> bool:
         if not isinstance(v, dict) or not isinstance(v.get("member"), dict):
             return False
         m = v["member"]
-        pid = (m.get("person") or {}).get("id") or m.get("id")
+        pid = (m.get("person") or {}).get("id")
         if pid is None or str(pid) in people:
             return False
         people.add(str(pid))
