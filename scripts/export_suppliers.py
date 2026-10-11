@@ -4,6 +4,11 @@
 python3 scripts/export_suppliers.py --ssh desktop --output portal/public
 Source DB is read-only; the export never rebuilds registers or alters source rows.
 """
+try:
+    from scripts.donor_public import public_donor_data
+except ModuleNotFoundError:
+    from donor_public import public_donor_data
+
 import os
 import argparse
 from collections import defaultdict
@@ -264,11 +269,11 @@ def write_export(result, output):
         target = output / relative.lstrip('/')
         target.parent.mkdir(parents=True, exist_ok=True)
         temporary = target.with_suffix('.json.tmp')
-        temporary.write_text(json.dumps(data, ensure_ascii=False, allow_nan=False, separators=(',', ':')) + '\n')
+        temporary.write_text(json.dumps(public_donor_data(data), ensure_ascii=False, allow_nan=False, separators=(',', ':')) + '\n')
         temporary.replace(target)
     target = output / 'suppliers.json'
     temporary = target.with_suffix('.json.tmp')
-    temporary.write_text(json.dumps(result['index'], ensure_ascii=False, allow_nan=False, separators=(',', ':')) + '\n')
+    temporary.write_text(json.dumps(public_donor_data(result['index']), ensure_ascii=False, allow_nan=False, separators=(',', ':')) + '\n')
     temporary.replace(target)
 
 

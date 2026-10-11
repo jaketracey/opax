@@ -1,3 +1,4 @@
+import {donorPrivacyIndex,donorNameWithheld,loadDonorViewIndex,donorAggregateDetail,unnamedDonorLabel} from './donor-views.js?v=55a8bd3ae0';
 /**
  * OPAX Words per dollar — the site's thesis in one view: per industry, who
  * takes the money and who does the talking.
@@ -264,9 +265,11 @@ function partyChip (party) {
  * One panel's worth of numbers: the pairing's donors aggregated per party
  * (verbatim canonical names) beside the topic's matrix cells.
  */
-function buildPanel (pairing, matrix, money) {
+function buildPanel (pairing, matrix, money, privacy = donorPrivacyIndex([money])) {
   const donors = (money.nodes || []).filter(
     (n) => n.kind === 'donor' && pairing.industries.includes(n.industry))
+  const hidden=donors.filter(n=>donorNameWithheld(privacy,n.label));
+  const individualDonors={count:hidden.length,amount:hidden.reduce((sum,n)=>sum+(n.total||0),0)};
   const donorIds = new Set(donors.map((n) => n.id))
   const moneyByParty = new Map()
   for (const e of money.edges || []) {
@@ -304,7 +307,7 @@ function buildPanel (pairing, matrix, money) {
     speechKnown: majors.includes(party),
   }))
   return {
-    ...pairing, donors: donors.length, moneyTotal, firstYear,
+    ...pairing, donors: donors.length, moneyTotal, firstYear, individualDonors,
     speechTotal, rows,
   }
 }
@@ -436,6 +439,7 @@ export function mountWordsDollars (container, opts = {}) {
       lead.append(`; the labelling pass has not reached the ${phrase} debate yet.`)
     }
     section.appendChild(lead)
+    if(panel.individualDonors.count)section.appendChild(donorAggregateDetail(`${unnamedDonorLabel(panel.individualDonors.count)} · ${fmtMoney(panel.individualDonors.amount)}`,document))
 
     const rowsEl = el('div', 'wd-rows')
     const maxMoney = Math.max(...panel.rows.map((r) => r.money), 1)
@@ -472,12 +476,13 @@ export function mountWordsDollars (container, opts = {}) {
     try {
       const [matrix, money] = await Promise.all([MATRIX_URL, MONEY_URL].map(
         async (u) => {
-          const res = await fetch(u, { signal: aborter.signal })
+          const res = await fetch(u, { signal: aborter.signal, cache:"no-cache" })
           if (!res.ok) throw new Error(`${u} → ${res.status}`)
           return res.json()
         }))
 
-      const panels = pairings.map((p) => buildPanel(p, matrix, money))
+      const privacy=await loadDonorViewIndex()
+      const panels = pairings.map((p) => buildPanel(p, matrix, money, privacy))
         .filter((p) => p.moneyTotal > 0)
         .sort((a, b) => b.moneyTotal - a.moneyTotal)
       const grand = panels.reduce((a, p) => a + p.moneyTotal, 0)

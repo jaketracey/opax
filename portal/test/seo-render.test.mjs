@@ -43,7 +43,7 @@ test('raw MP answer includes exported bill votes without unsupported recent-vote
   const record=(await read('/votes.json'))['11009'];const votes=[...record.for,...record.against].sort((a,b)=>b.date.localeCompare(a.date)).slice(0,10);for(const vote of votes)assert.ok(html.includes(escapeHtml(vote.name)),vote.name);
   for(const path of ['/graph/money.json','/graph/money.qld.json','/graph/money.vic.json'])for(const n of (await read(path)).nodes.filter(n=>n.kind==='donor'&&!isOrganisationDonor(n)))assert.ok(!html.includes(escapeHtml(n.label)),n.label);
   const person=graph.find(n=>n['@type']==='Person');assert.ok(person.image);assert.ok(person.sameAs.some(url=>url.startsWith('https://www.aph.gov.au/Senators_and_Members/Parliamentarian?MPID=')));
-  const labor=await get('/subject/person/anthony-albanese');assert.ok(labor.includes('donors in this export are not named here'));
+  const labor=await get('/subject/person/anthony-albanese');assert.ok(labor.includes('Donors not named ('));assert.ok(labor.includes('<details>'));assert.ok(labor.includes("OPAX names organisations only. Donors it can&#39;t confirm are organisations are counted here, not named."));
 });
 test('mobile voting asset retains schema 1 and the shipped per-person keys',async()=>{
   const data=await read('/votes.json');assert.equal(data._meta.schema,1);

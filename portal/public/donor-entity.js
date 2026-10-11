@@ -1,7 +1,7 @@
 /** Whether a money-map donor node is an organisation, for every surface that
- * can name a donor without the client: server-rendered pages, share cards,
+ * names a donor: client views, served JSON, server-rendered pages, share cards,
  * the sitemap, the search catalogue, IndexNow, and server-side answers, stories
- * and tools. Individual donors stay out of those.
+ * and tools. Donors not named stay out of those.
  *
  * Donor nodes carry no entity type and no ABN, only a label, aliases and an
  * industry tag, and individuals are often tagged with a sector (a person
@@ -9,9 +9,9 @@
  * Organisation evidence is a legal-form or organisation word or phrase as whole
  * tokens in the label or an alias, a trailing "Co", or a label that is a single
  * acronym of 3-7 capitals ("CFMEU"). An alias is never an acronym ("RP" reads as
- * initials), a two-letter label is not one ("EY" needs a legal form in an alias),
+ * initials). A two-letter label needs legal-form evidence from an alias,
  * and ABN, ACN, ARBN and TFN are registration words, not names. An ABN/ACN is not
- * evidence: sole traders have ABNs. Everything else is treated as an individual:
+ * evidence: sole traders have ABNs. Everything else is withheld:
  * a bare company name ("Visy") fails closed.
  *
  * Shared by the Worker (src/) and the build scripts (scripts/build_*_catalog.mjs);
@@ -52,17 +52,23 @@ export function isOrganisationDonor(node) {
  * @template {{nodes: {id: string, label: string, kind: string, aliases?: string[] | null, industry?: string | null}[], edges: {source: string, target: string}[]}} G
  * @param {G} graph
  * @returns {G} */
-export function withholdIndividualDonors(graph) {
+export function withholdIndividualDonors(graph, index = donorPrivacyIndex([graph]), ids = new Map()) {
   const withheld = new Map()
-  for (const node of graph.nodes) if (node.kind === 'donor') withheld.set(node.id, (withheld.get(node.id) ?? true) && !isOrganisationDonor(node))
+  for (const node of graph.nodes) if (node.kind === 'donor') withheld.set(node.id, (withheld.get(node.id) ?? true) && donorNameWithheld(index, node.label))
   /** @type {Map<string, number>} source id -> anonymous number, in first-appearance order of the groups */
-  const anonymous = new Map()
-  for (const [id, hidden] of withheld) if (hidden) anonymous.set(id, anonymous.size + 1)
-  if (!anonymous.size) return graph
+  const anonymous = new Map(), existing = new Map()
+  for (const [id, hidden] of withheld) if (hidden) {
+    const match = /^donor:withheld-(\d+)$/.exec(id)
+    if (match) {
+      const number = Number(match[1])
+      if (graph.nodes.some(n => n.kind === 'donor' && n.id === id && (n.label !== `Donor ${number} (name withheld)` || !Array.isArray(n.aliases) || n.aliases.length || Object.hasOwn(n,'profileUrl')))) existing.set(id,number)
+    } else { if (!ids.has(id)) ids.set(id, ids.size + 1); anonymous.set(id, ids.get(id)) }
+  }
+  if (!anonymous.size && !existing.size) return graph
   const anonymousId = id => `donor:withheld-${anonymous.get(id)}`
-  const nodes = graph.nodes.map(node => node.kind === 'donor' && anonymous.has(node.id)
+  const nodes = graph.nodes.map(node => node.kind === 'donor' && (anonymous.has(node.id) || existing.has(node.id))
     // Neutral: failing closed also withholds organisations without a legal form.
-    ? {...node, id: anonymousId(node.id), label: `Donor ${anonymous.get(node.id)} (name withheld)`, aliases: []}
+    ? (() => { const {profileUrl, ...fields} = node; return {...fields, id: anonymous.has(node.id) ? anonymousId(node.id) : node.id, label: `Donor ${anonymous.get(node.id) ?? existing.get(node.id)} (name withheld)`, aliases: []} })()
     : node)
   const edges = graph.edges.map(e => anonymous.has(e.source) || anonymous.has(e.target)
     ? {...e, source: anonymous.has(e.source) ? anonymousId(e.source) : e.source, target: anonymous.has(e.target) ? anonymousId(e.target) : e.target} : e)
@@ -77,7 +83,7 @@ export const foldDonorName = s => String(s).normalize('NFKC').replace(/[‘’ʼ
 
 /** Folded donor labels across the money graphs: a label is an organisation if
  * any graph gives it organisation evidence, otherwise it is withheld. For
- * server-side and build-time filters only; never publish the withheld set.
+ * client, server and publication filters; never publish the raw withheld set.
  * @param {{nodes: {label: string, kind: string, aliases?: string[] | null, industry?: string | null}[]}[]} graphs */
 export function donorPrivacyIndex(graphs) {
   const donors = graphs.flatMap(g => g.nodes.filter(n => n.kind === 'donor'))
@@ -109,15 +115,15 @@ const MONEY_INTENT = /\b(?:money|donat\w*|donors?|receipts?|funding|funded|contr
  * Server-side and build-time only; never publish the result.
  * @param {{nodes: {label: string, kind: string, aliases?: string[] | null, industry?: string | null}[]}[]} graphs
  * @param {string[]} officeHolders
+ * @param {{organisations: Set<string>, withheld: Set<string>}} [index]
  * @returns {{withheld: [string, string[]][]}} */
-export function withheldPhrases(graphs, officeHolders) {
-  const index = donorPrivacyIndex(graphs)
+export function withheldPhrases(graphs, officeHolders, index = donorPrivacyIndex(graphs)) {
   const donors = graphs.flatMap(g => g.nodes.filter(n => n.kind === 'donor'))
   const names = n => [n.label, ...(Array.isArray(n.aliases) ? n.aliases : [])].filter(s => typeof s === 'string')
-  const organisations = new Set(donors.filter(n => index.organisations.has(foldDonorName(n.label))).flatMap(names).map(phraseOf).filter(p => p.length > 1))
+  const organisations = new Set(donors.filter(n => !donorNameWithheld(index,n.label)).flatMap(names).map(phraseOf).filter(p => p.length > 1))
   const exempt = new Set([...officeHolders.map(phraseOf), ...organisations])
   const withheld = new Set()
-  for (const n of donors) if (index.withheld.has(foldDonorName(n.label))) for (const name of names(n)) {
+  for (const n of donors) if (donorNameWithheld(index,n.label)) for (const name of names(n)) {
     const inverted = /^([^,]+),\s*([^,]+)$/.exec(name)
     for (const p of [name, ...(inverted ? [`${inverted[2]} ${inverted[1]}`] : [])].map(phraseOf)) if (p.length > 1 && !exempt.has(p)) withheld.add(p)
   }

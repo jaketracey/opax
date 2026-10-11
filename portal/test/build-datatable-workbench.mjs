@@ -2,7 +2,7 @@
 import {writeFileSync} from 'node:fs';
 import {applyQuery, dataTableHTML} from '../public/datatable.js';
 import {workbenchConfig,workbenchRows} from '../public/datatable-workbench-data.js';
-const table = dataTableHTML({...workbenchConfig,privacyCheck:()=>true},applyQuery(workbenchRows,workbenchConfig,{}));
+const table = dataTableHTML({...workbenchConfig,privacyCheck:()=>true},applyQuery(workbenchRows,{...workbenchConfig,privacyCheck:()=>true},{}));
 writeFileSync(new URL('./fixtures/datatable.html',import.meta.url),`${table}\n`);
 writeFileSync(new URL('../public/datatable-workbench.html',import.meta.url),`<!doctype html>
 <html lang="en-AU"><head>

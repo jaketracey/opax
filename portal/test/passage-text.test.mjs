@@ -92,7 +92,7 @@ test('Worker /api/search repairs stored name joins and bounds both snippet ends'
     SEARCH_PER_DEFAULT:20, SEARCH_PER_MAX:200, SEARCH_WINDOW_TOPK:200, SEARCH_TOPK_MAX:200,
     SEARCH_WINDOW_CACHE_TTL:3600, SEARCH_CACHE_TTL:600,
     sha256Hex:async s=>s, cacheRequest:()=>new Request('https://local.test/cache'), cacheBypass:()=>true,
-    rateLimited:async()=>null, cacheStore:()=>{}, withCacheStatus:r=>r, json:data=>Response.json(data),
+    rateLimited:async()=>null, cacheStore:()=>{}, sanitiseStoredResponse:async r=>r,sanitiseStoredDonors:v=>v,withCacheStatus:r=>r, json:data=>Response.json(data),
     kbFetch:async(_env,path)=>{assert.equal(path,'/find'); calls++; return Response.json({resources:{[rid]:record(raw)}})},
   });
   const url = new URL('https://local.test/api/search?q=Malcolm');
@@ -129,7 +129,7 @@ test('Worker /ask sources normalize once and keep the 600 maximum on word bounda
     buildAskBody:()=>({}), scopeSpeakerBody:async()=>{},
     ASK_SYNC_TIMEOUT_MS:1000, ASK_RETRY_BUDGET_MS:0,
     isRefusal:()=>false, isPositionBody:()=>false, looseAnswer:p=>p, withAskedAs:p=>p,
-    recordSources:()=>[], cacheableAnswer:()=>false, withCacheStatus:r=>r, json:data=>Response.json(data),
+    recordSources:()=>[], cacheableAnswer:()=>false, sanitiseStoredResponse:async r=>r,sanitiseStoredDonors:v=>v,withCacheStatus:r=>r, json:data=>Response.json(data),
     hasUnsupportedQuotes:()=>false,
     kbFetch:async(_env,path)=>{assert.equal(path,'/ask'); calls++; return Response.json({answer:'A fact.',citations:{[pid]:[[0,6]]},retrieval_results:{resources:{[rid]:record(text)}}})},
   });

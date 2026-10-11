@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFile} from 'node:fs/promises';
 import {TABLE_DATASETS} from '../src/table-datasets.mjs';
-import {tableApi} from '../src/table-api.ts';
+import {tableApi,TABLE_REGISTRY_FINGERPRINT} from '../src/table-api.ts';
 import {tableDatabase} from './table-d1-harness.mjs';
 import {tableIdentityIndex} from '../../scripts/load_tables.mjs';
 import {identityHash} from '../src/table-identities.mjs';
@@ -28,6 +28,33 @@ test('bad dataset is 404; invalid state and methods return fixed JSON errors',as
   for(const q of ['page=0','sort=not-a-column:desc','f.amount.min=4','f.amount=%5B%224%22%5D','format=bad','f.agency=literal','q=a&q=b'])assert.equal((await fetchTable('contracts',q)).status,400,q);
   const response=await fetchTable('contracts','',{method:'POST'});assert.equal(response.status,405);assert.deepEqual(await response.json(),{error:'method_not_allowed'});
 });
+test('privacy datasets stay dark for a missing or stale registry fingerprint; public datasets keep serving',async()=>{
+  assert.equal(local.manifest.privacyFingerprint,TABLE_REGISTRY_FINGERPRINT);
+  const version=await local.db.prepare("SELECT value FROM table_meta WHERE key='version'").first('value');
+  try {
+    await local.db.prepare("UPDATE table_meta SET value='fa2445a27fb28701ed0c0554' WHERE key='version'").run();
+    for(const fingerprint of [null, '0'.repeat(64)]) {
+      if(fingerprint===null)await local.db.prepare("DELETE FROM table_meta WHERE key='privacy_fingerprint'").run();
+      else await local.db.prepare("INSERT OR REPLACE INTO table_meta VALUES ('privacy_fingerprint',?)").bind(fingerprint).run();
+      let reads=0;
+      const db={prepare(sql){if(/FROM\s+table_(?!meta\b|private_identity\b)/i.test(sql))reads++;return local.db.prepare(sql);},batch:local.db.batch.bind(local.db)};
+      for(const [name,c]of Object.entries(TABLE_DATASETS).filter(([,c])=>c.privacy))for(const csv of [false,true]) {
+        const response=await tableApi(new Request('https://local.invalid/api/table/'+name+(csv?'?format=csv':'')),{TABLE_DB:db});
+        assert.equal(response.status,503);assert.equal(response.headers.get('retry-after'),'60');
+        assert.equal(response.headers.get('cache-control'),'no-store');assert.equal(response.headers.get('link'),null);
+        assert.deepEqual(await response.json(),{error:'unavailable'});
+      }
+      assert.equal(reads,0,'mismatched publication reached data SQL');
+      for(const name of ['instruments','audit-reports']) {
+        const response=await tableApi(new Request('https://local.invalid/api/table/'+name),{TABLE_DB:db});
+        assert.equal(response.status,200);assert.equal((await response.json()).total,260);
+      }
+    }
+  } finally {
+    await local.db.prepare("INSERT OR REPLACE INTO table_meta VALUES ('privacy_fingerprint',?)").bind(TABLE_REGISTRY_FINGERPRINT).run();
+    await local.db.prepare("UPDATE table_meta SET value=? WHERE key='version'").bind(version).run();
+  }
+});
 test('canonical state uses JSON filters, normalises order and supports conditional caching',async()=>{
   const a=await fetchTable('contracts',new URLSearchParams({'f.amount':'{"max":100,"min":10}',q:' NEEDLE '}));
   const b=await fetchTable('contracts',new URLSearchParams({q:'needle','f.amount':'{"min":10,"max":100}'}));assert.equal(a.headers.get('etag'),b.headers.get('etag'));
@@ -38,7 +65,7 @@ test('core serializer and D1 API integrate with category and range state',async(
   // At merge it is present at ../public/datatable.js; this branch still has the stub.
   let module=await readFile(process.env.DT_CORE_MODULE_PATH || new URL('../public/datatable.js',import.meta.url),'utf8');
   if(module.includes('STUB'))module=await readFile(new URL('./fixtures/core-query.mjs',import.meta.url),'utf8');
-  module=module.replace(/from '\.\/donor-entity\.js[^']*'/,"from '"+new URL('../public/donor-entity.js',import.meta.url).href+"'").replace("from './format.js'","from '"+new URL('../public/format.js',import.meta.url).href+"'");
+  module=module.replace(/from (['"])(\.\/[^'"]+)\1/g,(_,quote,path)=>'from '+JSON.stringify(new URL(path,new URL('../public/datatable.js',import.meta.url)).href));
   const core=await import('data:text/javascript;base64,'+Buffer.from(module).toString('base64'));
   for(const prefix of [undefined,'t']){
     const query={filters:{jurisdiction:['Group 0'],amount:{min:10,max:20}},sort:{key:'amount',dir:'asc'},pageSize:2,page:2};

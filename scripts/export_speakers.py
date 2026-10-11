@@ -14,6 +14,10 @@ searchable by speaker like anything else.
     ssh desktop python3 - < scripts/export_speakers.py > portal/public/speakers.json
 """
 
+import sys as _donor_sys
+from pathlib import Path as _DonorPath
+_donor_sys.path.insert(0, str(_DonorPath(__file__).resolve().parents[1]))
+from scripts.donor_public import public_donor_data
 import os
 import json
 import sqlite3
@@ -40,4 +44,4 @@ rows = db.execute(f"""
     GROUP BY speaker_name_clean HAVING n >= {MIN_SPEECHES}
     ORDER BY n DESC, speaker_name_clean
 """).fetchall()
-json.dump([[name, n] for name, n in rows], sys.stdout, ensure_ascii=False, separators=(",", ":"))
+json.dump(public_donor_data([[name, n] for name, n in rows]), sys.stdout, ensure_ascii=False, separators=(",", ":"))
