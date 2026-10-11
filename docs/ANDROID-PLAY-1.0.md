@@ -1,0 +1,32 @@
+# Android Play 1.0 local candidate
+
+This lane starts at iOS 1.0.0 build 34, `b7f2fd501`, on `android/play-1.0`. Android prep `1422df6e8` is already an ancestor, so merging `android/play-prep` is a no-op. It retains the API 34 Back/navigation correction and Play signing/build tooling, plus the 1.0 donor withholding, Machine-written pill and large-text figure-strip fix. No push, Play upload, account creation, tester contact or production action is part of this lane.
+
+## Release parity gate
+
+The base is not voice-equivalent on Android. `app.config.ts` suppresses productionVoice on Android, blocks RECORD_AUDIO, and `metro.config.js` excludes Talk, account sign-in and deletion routes. `modules/opax-voice/expo-module.config.json` supports Apple only; there is no Android native voice implementation. The root navigator and Account entry also exclude those features. Setting `OPAX_PRODUCTION_VOICE=1` alone cannot port the native module.
+
+`verify-play.py --version-code 2026101101 --require-ios-parity` writes artifact-integrity results and a separate parity result before failing for missing voice, microphone, consent config and routes. This prevents a signed, valid bundle from being described as a voice-enabled 1.0 release.
+
+The Android tablet viewport is supported, but the iOS split-pane behavior is iPad-only (`isPad` in adaptive.tsx). Review actual Android tablet captures before making split-pane claims.
+
+## Local kit
+
+`mobile/private/play/1.0/` is gitignored. It holds the signed candidate, exact hashes and packaged manifests, QA logs, fixture screenshots and hierarchies, a screenshot manifest, listing JSON/text and the Data safety draft/diff. Private evidence and signing material must never enter this public repository.
+
+The listing source is `release/store-1.0:release/1.0/listing.json`. Name: OPAX. Short description: “Your MP, votes, bills and pay”. Support: https://opax.com.au/support. Privacy: https://opax.com.au/privacy. The parity draft retains the iOS feature claims; it is blocked while Android voice/account support is missing. Do not submit a draft that advertises unavailable functionality.
+
+The Data safety source is `release/store-1.0:release/1.0/app-privacy.json` and `mobile/voice-production-policy.json`: email address, user ID, audio, other user content, product interaction, search history and other diagnostic data. All seven are linked, not used for tracking, and used for app functionality only. Location remains on-device only. Play has different field names and no Apple-style linked-to-user checkbox; the draft maps the seven types explicitly. Collection/sharing, optional/required, encryption and deletion answers must match the final binary and provider evidence. The seven-type iOS declaration cannot be claimed as accurate for the current Android voice-disabled binary without resolving the discrepancy.
+
+## Play Console sequence after account creation
+
+1. Complete Organization verification for Noice Pty Ltd: matching legal entity/address and D-U-N-S details, organization website and phone, authorized contact and verified public developer contacts. Account registration has a US$25 one-time fee. Keep the upload key and its credentials backed up privately. [Account setup](https://support.google.com/googleplay/android-developer/answer/6112435), [organization information](https://support.google.com/googleplay/android-developer/answer/13628312).
+2. Resolve the Android feature/privacy/listing discrepancy, finish the required gates and approve the exact candidate SHA-256. Either implement and verify Android voice/account parity or explicitly approve a reading/Ask release with truthful Android copy and Data safety answers. Do not upload this parity-blocked candidate as a voice-enabled release.
+3. Create OPAX as a free app with default language English (Australia), accept the app declarations, and confirm `au.com.opax.app`. Package names are permanent. Select the final category, audience and countries deliberately. [App setup](https://support.google.com/googleplay/android-developer/answer/9859152).
+4. Fill the main store listing with verified Android copy, icon, feature graphic and actual phone/tablet screenshots. Name/short/full limits are 30/80/4,000 characters. Use the support and privacy URLs above, and verify public support contacts. [Preview assets](https://support.google.com/googleplay/android-developer/answer/9866151).
+5. Complete App content: privacy policy, accurate Data safety, ads = No, app access, IARC content rating, target audience and any government-information declarations shown. OPAX is independent and not affiliated with government. If Talk is added, provide working access instructions and whatever review account/access Google requires; do not assume the iOS email-code review approach suffices. Internal-only apps are exempt from the public Data safety section, but the draft must still be correct for subsequent tracks. [Data safety](https://support.google.com/googleplay/android-developer/answer/10787469).
+6. Create an Internal testing release, enroll in Google-managed Play App Signing, and upload the approved AAB. Check the displayed versionCode, package and permissions. The local APK uses the upload certificate; Play-delivered APKs use the Play app-signing certificate. Record both certificate roles correctly and review all Console warnings. [Internal testing](https://support.google.com/googleplay/android-developer/answer/9845334).
+7. Add consenting tester Google accounts manually, publish the internal release, and provide the opt-in link. No tester has been contacted by this lane. Install this exact Play-delivered candidate on the physical Pixel and run the release journeys; the older Pixel success does not verify this candidate. Review pre-launch/device reports and fix failures before promotion.
+8. Finish every dashboard requirement and request production review for the approved territories. Review and deliberately start the production rollout only after approval. The closed-test rule for new personal accounts is separate from the Organization account selected here; follow any actual account-specific Console requirements. [Publishing setup](https://support.google.com/googleplay/android-developer/answer/9859152).
+
+Official documentation checked 11 October 2026. The Console itself remains the final source for account-specific requirements; this lane has taken no Console action.
