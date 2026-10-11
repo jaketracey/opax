@@ -84,7 +84,7 @@ internal sealed interface ClientMessage {
  * the upgrade, as for every credential-bearing request, and no compression is
  * offered: frames arrive exactly as iOS receives them.
  */
-class OkHttpRelayFactory(client: OkHttpClient, private val route: RelayRoute) : RelayFactory {
+class OkHttpRelayFactory(client: OkHttpClient, private val policy: RoutePolicy = RoutePolicy()) : RelayFactory {
   private val client = client.newBuilder()
     .followRedirects(false)
     .followSslRedirects(false)
@@ -99,7 +99,8 @@ class OkHttpRelayFactory(client: OkHttpClient, private val route: RelayRoute) : 
 
   override suspend fun connect(request: Request): RelayTransport {
     VoiceTestSafety.validate(request.url)
-    if (request.method != "GET" || !route.permits(request.url) ||
+    TransportGuard.check(request.url)
+    if (request.method != "GET" || !policy.permits(request.url, "GET", webSocket = true) ||
       request.header("Sec-WebSocket-Protocol") != "convai" ||
       request.header("Origin") != "https://opax.com.au"
     ) {
@@ -185,9 +186,9 @@ internal class OkHttpRelay(private val socket: WebSocket, private val listener: 
       }
       if (socket.queueSize() == 0L) return
     }
-    listener.refusedStatus?.let { throw APIFailure.upgrade(it) }
+    listener.refusedStatus?.let { throw refused(it) }
     val close = listener.termination.value()
-    listener.refusedStatus?.let { throw APIFailure.upgrade(it) }
+    listener.refusedStatus?.let { throw refused(it) }
     throw RelayTerminated(close)
   }
 
@@ -195,9 +196,9 @@ internal class OkHttpRelay(private val socket: WebSocket, private val listener: 
     listener.incoming.receiveCatching().getOrNull()?.let { return RelayMessage.Data(it) }
     // The frame queue ends at the close; classify it like URLSession's terminal
     // callback. This neither reads another frame nor reconnects.
-    listener.refusedStatus?.let { throw APIFailure.upgrade(it) }
+    listener.refusedStatus?.let { throw refused(it) }
     val close = listener.termination.value()
-    listener.refusedStatus?.let { throw APIFailure.upgrade(it) }
+    listener.refusedStatus?.let { throw refused(it) }
     return RelayMessage.Closed(close)
   }
 
@@ -213,6 +214,9 @@ internal class OkHttpRelay(private val socket: WebSocket, private val listener: 
       .onMalformedInput(CodingErrorAction.REPORT)
       .onUnmappableCharacter(CodingErrorAction.REPORT)
       .decode(ByteBuffer.wrap(data)).toString()
+
+    /** A refused upgrade is classified by its status alone; its body is never read. */
+    fun refused(status: Int) = APIFailure.decode(HttpResponse(status, body = ByteArray(0)), AuthRoute.voiceConnect)
   }
 }
 

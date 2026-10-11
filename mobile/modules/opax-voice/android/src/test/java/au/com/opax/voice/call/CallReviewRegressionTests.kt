@@ -17,7 +17,7 @@ import org.junit.Test
 class CallReviewRegressionTests : SafeVoiceTest() {
   @Test fun exactWorkerStatusFixturesAndUnlimitedCall() = test {
     for (name in listOf("signedOut", "allowance", "unlimited", "openSession", "budgetClosed", "budgetClosedFutureW8")) {
-      val status = decodeStatus(json(workerShapes.getValue(name)))
+      val status = VoiceStatus.decode(json(workerShapes.getValue(name)))
       if (name == "unlimited") { assertNull(status.totalSeconds); assertEquals(true, status.unlimited) }
       if (name == "signedOut") assertNull(status.unlimited)
       if (name == "openSession") assertNotNull(status.activeSession)
@@ -39,18 +39,18 @@ class CallReviewRegressionTests : SafeVoiceTest() {
     body["total_seconds"] = null
     body["unlimited"] = null
     body["budget_open"] = null
-    val status = decodeStatus(json(body))
+    val status = VoiceStatus.decode(json(body))
     assertEquals(VoiceFailure.callOpen, status.refusal)
     val rig = Rig.make()
     rig.http.configure(status = json(body))
     rig.controller.start()
     assertEquals(CallState.unavailable, rig.controller.state)
-    assertEquals(0, rig.http.count(Route.voiceStart))
+    assertEquals(0, rig.http.count(AuthRoute.voiceStart))
     rig.close()
   }
 
   @Test fun disabledPrecedesSignedOutAndStartDuringRefreshHasSpecificError() = test {
-    assertEquals(VoiceFailure.disabled, decodeStatus(signedStatus(signedIn = false, enabled = false)).refusal)
+    assertEquals(VoiceFailure.disabled, VoiceStatus.decode(signedStatus(signedIn = false, enabled = false)).refusal)
     val rig = Rig.make()
     rig.http.pauseNextStatus()
     val refreshing = launch { rig.controller.refreshStatus() }
@@ -68,10 +68,10 @@ class CallReviewRegressionTests : SafeVoiceTest() {
       override suspend fun sleep(seconds: Double) = SystemVoiceClock.sleep(seconds)
     }
     val rig = Rig.make(clock = fast)
-    rig.http.credential = SessionCredential(fixtureToken, Double.MAX_VALUE)
+    rig.store.write(SessionCredential(fixtureToken, distantFuture))
     rig.live()
     rig.close()
-    assertEquals(1, rig.http.count(Route.voiceFinish))
+    assertEquals(1, rig.http.count(AuthRoute.voiceFinish))
   }
 
   @Test fun invalidStartResponseFinishesEveryValidRecoveredSessionId() = test {
@@ -86,9 +86,9 @@ class CallReviewRegressionTests : SafeVoiceTest() {
       if (invalid == "remaining") body["remaining_seconds"] = 0
       if (invalid == "expiry") body["expires_at"] = null
       if (invalid == "oversized") body["padding"] = "x".repeat(2 * 1024 * 1024)
-      rig.http.configure(start = FixtureResponse(201, json(body)))
+      rig.http.configure(start = HttpResponse(201, body = json(body)))
       rig.controller.start()
-      assertEquals(invalid, 1, rig.http.count(Route.voiceFinish))
+      assertEquals(invalid, 1, rig.http.count(AuthRoute.voiceFinish))
       assertEquals(0, rig.relay.connects)
       assertEquals(600L, rig.controller.latestStatus?.remainingSeconds)
       rig.close()
@@ -98,17 +98,17 @@ class CallReviewRegressionTests : SafeVoiceTest() {
   @Test fun start403UsesFreshStatusRegardlessOfWordingAndRetainsCredential() = test {
     for (text in listOf("Reworded allowance", "Origin-looking prose", "")) {
       val rig = Rig.make()
-      rig.http.configure(start = FixtureResponse(403, json(mapOf("error" to text))), statusAfterStart = signedStatus(remaining = 0))
+      rig.http.configure(start = HttpResponse(403, body = json(mapOf("error" to text))), statusAfterStart = signedStatus(remaining = 0))
       rig.controller.start()
       eventually { rig.recorder.hasError(VoiceFailure.allowanceExhausted) }
-      assertNotNull(rig.http.credential)
+      assertNotNull(rig.store.read())
       rig.close()
     }
   }
 
   @Test fun refreshAndLogoutExposeOnlyCoreFailures() = test {
     val rig = Rig.make()
-    rig.http.setResponse(Route.voiceStatus, FixtureResponse(200, "bad JSON".encodeToByteArray()))
+    rig.http.setResponse(AuthRoute.voiceStatus, HttpResponse(200, body = "bad JSON".encodeToByteArray()))
     try { rig.controller.refreshStatus(); fail() } catch (error: VoiceException) { assertEquals(VoiceFailure.invalidResponse, error.failure) }
     rig.http.failTransport()
     try { rig.controller.refreshStatus(); fail() } catch (error: VoiceException) { assertEquals(VoiceFailure.network, error.failure) }
@@ -165,18 +165,18 @@ class CallReviewRegressionTests : SafeVoiceTest() {
     for (expired in listOf(false, true)) {
       val clock = StepClock()
       val rig = Rig.make(timing = CallTiming(pollMaxInterval = 30.0, pollMaxAttempts = 4), clock = clock)
-      rig.http.credential = SessionCredential(fixtureToken, Double.MAX_VALUE)
+      rig.store.write(SessionCredential(fixtureToken, distantFuture))
       val body = bodyMap(signedStatus(active = "reserved")).toMutableMap()
       body["active_session"] = (body["active_session"] as Map<String, Any?>).toMutableMap()
         .also { it["expires_at"] = clock.now() + if (expired) -100 else 20 }
       rig.http.configure(status = json(body))
       rig.controller.refreshStatus()
-      eventually { rig.http.count(Route.voiceStatus) == 5 }
+      eventually { rig.http.count(AuthRoute.voiceStatus) == 5 }
       val delays = synchronized(clock.delays) { clock.delays.toList() }
       assertEquals(4, delays.size)
       if (expired) assertEquals(listOf(2.0, 4.0, 8.0, 16.0), delays) else assertEquals(20.5, delays[0], 0.01)
       delay(30)
-      assertEquals(5, rig.http.count(Route.voiceStatus))
+      assertEquals(5, rig.http.count(AuthRoute.voiceStatus))
       rig.close()
     }
   }
@@ -186,7 +186,7 @@ class CallReviewRegressionTests : SafeVoiceTest() {
       val socket = okhttp3.Request.Builder().url("wss://opax.com.au/api/voice/connect?session_id=$fixtureId")
         .header("Sec-WebSocket-Protocol", "convai").header("Origin", "https://opax.com.au").build()
       try {
-        OkHttpRelayFactory(testClient) { true }.connect(socket)
+        OkHttpRelayFactory(testClient).connect(socket)
         fail()
       } catch (error: VoiceException) {
         assertEquals(VoiceFailure.forbidden, error.failure)
@@ -229,12 +229,12 @@ class SnapshotTests : SafeVoiceTest() {
     rig.controller.discardEvidence()
     assertEquals(1, rig.controller.snapshot().transcript.size)
     rig.controller.end()
-    val requests = rig.http.count(Route.voiceStatus)
+    val requests = rig.http.count(AuthRoute.voiceStatus)
     rig.controller.discardEvidence()
     val closed = rig.controller.snapshot()
     assertEquals(emptyList<TranscriptTurn>(), closed.transcript)
     assertEquals(emptyList<VoiceSource>(), closed.sources)
-    assertEquals(requests, rig.http.count(Route.voiceStatus))
+    assertEquals(requests, rig.http.count(AuthRoute.voiceStatus))
     rig.close()
   }
 
@@ -249,7 +249,7 @@ class SnapshotTests : SafeVoiceTest() {
     assertEquals(emptyList<TranscriptTurn>(), value.transcript)
     assertEquals(emptyList<VoiceSource>(), value.sources)
     assertNull(value.status)
-    assertEquals(0, rig.http.count(Route.voiceStatus))
+    assertEquals(0, rig.http.count(AuthRoute.voiceStatus))
     rig.close()
   }
 
@@ -272,7 +272,7 @@ class SnapshotTests : SafeVoiceTest() {
     assertEquals("Synthetic transcript", first.transcript.first().text)
     assertEquals("/money/receipts", first.sources.first().path)
     assertNotNull(first.status)
-    assertEquals(1, rig.http.count(Route.voiceStatus))
+    assertEquals(1, rig.http.count(AuthRoute.voiceStatus))
     rig.controller.end()
     val ended = rig.controller.snapshot()
     assertEquals(CallState.ended, ended.state)
@@ -299,7 +299,7 @@ class CallProductionVoiceTests : SafeVoiceTest() {
     rig.controller.start()
     eventually { rig.recorder.hasError(VoiceFailure.consentRequired) }
     assertEquals(1, rig.permission.count)
-    assertEquals(1, rig.http.count(Route.voiceStart))
+    assertEquals(1, rig.http.count(AuthRoute.voiceStart))
     rig.close()
   }
 }

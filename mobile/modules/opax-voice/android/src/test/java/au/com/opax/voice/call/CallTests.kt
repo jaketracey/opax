@@ -21,12 +21,12 @@ class CallTests : SafeVoiceTest() {
     assertEquals(CallState.ready, rig.controller.state)
     rig.http.pauseNextStatus()
     val task = launch { rig.controller.start() }
-    eventually { rig.http.count(Route.voiceStatus) == 2 }
+    eventually { rig.http.count(AuthRoute.voiceStatus) == 2 }
     rig.controller.end()
     rig.http.resumeStatus()
     task.join()
     assertEquals(CallState.ended, rig.controller.state)
-    assertEquals(0, rig.http.count(Route.voiceStart))
+    assertEquals(0, rig.http.count(AuthRoute.voiceStart))
     rig.close()
   }
 
@@ -37,7 +37,7 @@ class CallTests : SafeVoiceTest() {
     rig.relay.enqueue(RelayMessage.Closed(RelayClose(1000)))
     eventually { rig.controller.state == CallState.ended }
     assertEquals(123L, rig.controller.latestStatus?.remainingSeconds)
-    assertEquals(1, rig.http.count(Route.voiceFinish))
+    assertEquals(1, rig.http.count(AuthRoute.voiceFinish))
     rig.close()
   }
 
@@ -60,7 +60,7 @@ class CallTests : SafeVoiceTest() {
   @Test fun failedFreshStatusDoesNotExposeCachedAllowance() = test {
     val rig = Rig.make()
     rig.controller.refreshStatus()
-    rig.http.setResponse(Route.voiceStatus, FixtureResponse(503, json(mapOf("error" to "Synthetic failure"))))
+    rig.http.setResponse(AuthRoute.voiceStatus, HttpResponse(503, body = json(mapOf("error" to "Synthetic failure"))))
     try { rig.controller.refreshStatus(); fail() } catch (_: VoiceException) {}
     assertNull(rig.controller.latestStatus)
     assertEquals(CallState.failed, rig.controller.state)
@@ -78,8 +78,8 @@ class CallTests : SafeVoiceTest() {
     rig.controller.end()
     eventually { rig.controller.state == CallState.ended }
     assertEquals(600L, rig.controller.latestStatus?.remainingSeconds)
-    assertEquals(1, rig.http.count(Route.voiceFinish))
-    assertEquals(2, rig.http.count(Route.voiceStatus))
+    assertEquals(1, rig.http.count(AuthRoute.voiceFinish))
+    assertEquals(2, rig.http.count(AuthRoute.voiceStatus))
     assertFalse(rig.session.awake)
     eventually { VoiceEvent.State(CallState.ended, EndReason.user) in rig.recorder }
     val states = rig.recorder.items.filterIsInstance<VoiceEvent.State>().map { it.state }
@@ -102,7 +102,7 @@ class CallTests : SafeVoiceTest() {
       rig.controller.start()
       assertEquals(CallState.unavailable, rig.controller.state)
       assertEquals(0, rig.permission.count)
-      assertEquals(0, rig.http.count(Route.voiceStart))
+      assertEquals(0, rig.http.count(AuthRoute.voiceStart))
       eventually { rig.recorder.hasError(refusal) }
       rig.close()
     }
@@ -115,7 +115,7 @@ class CallTests : SafeVoiceTest() {
       if (consent) rig.permission.allowed = false
       rig.controller.start()
       eventually { rig.recorder.hasError(if (consent) VoiceFailure.microphoneDenied else VoiceFailure.consentRequired) }
-      assertEquals(0, rig.http.count(Route.voiceStart))
+      assertEquals(0, rig.http.count(AuthRoute.voiceStart))
       rig.close()
     }
   }
@@ -131,13 +131,13 @@ class CallTests : SafeVoiceTest() {
     )) {
       val rig = Rig.make()
       rig.http.configure(
-        start = FixtureResponse(code, json(body)),
+        start = HttpResponse(code, body = json(body)),
         statusAfterStart = if (refusal == VoiceFailure.allowanceExhausted) signedStatus(remaining = 0) else null,
       )
       rig.controller.start()
       eventually { rig.recorder.hasError(refusal) }
-      assertEquals(1, rig.http.count(Route.voiceStart))
-      assertEquals(if (code == 403) 3 else 2, rig.http.count(Route.voiceStatus))
+      assertEquals(1, rig.http.count(AuthRoute.voiceStart))
+      assertEquals(if (code == 403) 3 else 2, rig.http.count(AuthRoute.voiceStatus))
       assertEquals(0, rig.relay.connects)
       rig.close()
     }
@@ -145,14 +145,14 @@ class CallTests : SafeVoiceTest() {
 
   @Test fun start503WithUnknownReservationPollsWithoutFinish() = test {
     val rig = Rig.make(timing = CallTiming(pollInterval = 0.05, pollMaxInterval = 0.05))
-    rig.http.configure(start = FixtureResponse(503, json(mapOf("error" to "Synthetic failure"))))
+    rig.http.configure(start = HttpResponse(503, body = json(mapOf("error" to "Synthetic failure"))))
     val startTask = launch { rig.controller.start() }
-    eventually { rig.http.count(Route.voiceStart) == 1 }
-    rig.http.configure(status = signedStatus(active = "reserved"), start = FixtureResponse(503, json(mapOf("error" to "Synthetic failure"))))
+    eventually { rig.http.count(AuthRoute.voiceStart) == 1 }
+    rig.http.configure(status = signedStatus(active = "reserved"), start = HttpResponse(503, body = json(mapOf("error" to "Synthetic failure"))))
     startTask.join()
     // Refresh also exposes the held row when the status raced the initial failure.
     rig.controller.refreshStatus()
-    assertEquals(0, rig.http.count(Route.voiceFinish))
+    assertEquals(0, rig.http.count(AuthRoute.voiceFinish))
     assertEquals(600L, rig.controller.latestStatus?.remainingSeconds)
     rig.http.configure(status = signedStatus())
     eventually { rig.controller.state == CallState.ready }
@@ -168,7 +168,7 @@ class CallTests : SafeVoiceTest() {
     rig.controller.end()
     rig.permission.resume()
     task.join()
-    assertEquals(0, rig.http.count(Route.voiceStart))
+    assertEquals(0, rig.http.count(AuthRoute.voiceStart))
     assertEquals(1, rig.permission.count)
     rig.close()
   }
@@ -181,7 +181,7 @@ class CallTests : SafeVoiceTest() {
     rig.controller.end()
     rig.http.resumeStart()
     task.join()
-    assertEquals(1, rig.http.count(Route.voiceFinish))
+    assertEquals(1, rig.http.count(AuthRoute.voiceFinish))
     assertEquals(0, rig.relay.connects)
     rig.close()
   }
@@ -193,7 +193,7 @@ class CallTests : SafeVoiceTest() {
     rig.controller.end()
     rig.controller.end()
     assertEquals(1, rig.relay.closes)
-    assertEquals(1, rig.http.count(Route.voiceFinish))
+    assertEquals(1, rig.http.count(AuthRoute.voiceFinish))
     rig.close()
   }
 
@@ -202,15 +202,15 @@ class CallTests : SafeVoiceTest() {
     rig.live()
     rig.http.pauseNextStatus()
     val ending = launch { rig.controller.end() }
-    eventually { rig.http.count(Route.voiceStatus) == 2 }
+    eventually { rig.http.count(AuthRoute.voiceStatus) == 2 }
     val logout = launch { rig.controller.logout() }
     delay(30)
-    assertEquals(0, rig.http.count(Route.logout))
+    assertEquals(0, rig.http.count(AuthRoute.logout))
     rig.http.resumeStatus()
     ending.join()
     logout.join()
-    assertEquals(1, rig.http.count(Route.logout))
-    assertNull(rig.http.credential)
+    assertEquals(1, rig.http.count(AuthRoute.logout))
+    assertNull(rig.store.read())
     rig.close()
   }
 
@@ -218,7 +218,7 @@ class CallTests : SafeVoiceTest() {
     val rig = Rig.make(timing = CallTiming(connectTimeout = 0.03))
     rig.controller.start()
     eventually { rig.recorder.hasError(VoiceFailure.timeout) }
-    assertEquals(1, rig.http.count(Route.voiceFinish))
+    assertEquals(1, rig.http.count(AuthRoute.voiceFinish))
     assertEquals(CallState.failed, rig.controller.state)
     rig.close()
   }
@@ -267,7 +267,7 @@ class CallTests : SafeVoiceTest() {
         rig.controller.start()
       }
       eventually { rig.recorder.hasError(VoiceFailure.audio) }
-      assertEquals(2, rig.http.count(Route.voiceStatus))
+      assertEquals(2, rig.http.count(AuthRoute.voiceStatus))
       rig.close()
     }
   }
@@ -284,7 +284,7 @@ class CallTests : SafeVoiceTest() {
       rig.controller.handle(LifecycleEvent.interruptionEnded)
       rig.controller.handle(LifecycleEvent.resumptionRecommended)
       rig.controller.handle(LifecycleEvent.foreground)
-      assertEquals(1, rig.http.count(Route.voiceStart))
+      assertEquals(1, rig.http.count(AuthRoute.voiceStart))
       rig.close()
     }
   }
@@ -387,7 +387,7 @@ class CallTests : SafeVoiceTest() {
       rig.http.configure(status = body)
       rig.relay.enqueue(RelayMessage.Closed(RelayClose(1006, "Your free voice time has finished")))
       eventually { VoiceEvent.State(state, reason) in rig.recorder }
-      assertEquals(decodeStatus(body).remainingSeconds, rig.controller.latestStatus?.remainingSeconds)
+      assertEquals(VoiceStatus.decode(body).remainingSeconds, rig.controller.latestStatus?.remainingSeconds)
       assertEquals(state == CallState.failed, rig.recorder.hasError(VoiceFailure.network))
       rig.close()
     }
@@ -397,7 +397,7 @@ class CallTests : SafeVoiceTest() {
     for (code in listOf(1006, 1008, 1011)) {
       val rig = Rig.make()
       rig.live()
-      if (code == 1006) rig.http.setResponse(Route.voiceStatus, FixtureResponse(503, json(mapOf("error" to "Synthetic unavailable"))))
+      if (code == 1006) rig.http.setResponse(AuthRoute.voiceStatus, HttpResponse(503, body = json(mapOf("error" to "Synthetic unavailable"))))
       else rig.http.configure(status = signedStatus(remaining = 0))
       rig.relay.enqueue(RelayMessage.Closed(RelayClose(code)))
       // The recorder trails the controller; its failed state follows every error event.
@@ -441,7 +441,7 @@ class CallTests : SafeVoiceTest() {
     rig.controller.start()
     assertEquals(CallState.unavailable, rig.controller.state)
     eventually { rig.recorder.hasError(VoiceFailure.allowanceExhausted) }
-    assertEquals(1, rig.http.count(Route.voiceStart))
+    assertEquals(1, rig.http.count(AuthRoute.voiceStart))
     assertEquals(1, rig.permission.count)
     rig.close()
   }
@@ -460,7 +460,7 @@ class CallTests : SafeVoiceTest() {
     assertEquals(0, rig.permission.count)
     assertEquals(0, rig.session.activations)
     assertEquals(0, rig.engine.starts)
-    assertEquals(0, rig.http.count(Route.voiceStart))
+    assertEquals(0, rig.http.count(AuthRoute.voiceStart))
     rig.close()
   }
 }

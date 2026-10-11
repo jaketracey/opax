@@ -33,8 +33,8 @@ class BridgeEventTests {
   }
 
   @Test fun levelsAreTwoRoundedUnitValues() {
-    assertEquals(mapOf("input" to 0.0, "output" to 1.0), VoiceBridgeValue.levels(AudioLevels(-0.2f, 1.7f)))
-    assertEquals(mapOf("input" to 0.12, "output" to 0.99), VoiceBridgeValue.levels(AudioLevels(0.1234f, 0.987f)))
-    assertEquals(mapOf("input" to 0.0, "output" to 0.0), VoiceBridgeValue.levels(AudioLevels(Float.NaN, Float.POSITIVE_INFINITY)))
+    assertEquals(mapOf("input" to 0.0, "output" to 1.0), VoiceBridgeValue.levels(-0.2f, 1.7f))
+    assertEquals(mapOf("input" to 0.12, "output" to 0.99), VoiceBridgeValue.levels(0.1234f, 0.987f))
+    assertEquals(mapOf("input" to 0.0, "output" to 0.0), VoiceBridgeValue.levels(Float.NaN, Float.POSITIVE_INFINITY))
   }
 }

@@ -1,70 +1,66 @@
 package au.com.opax.voice
 
-// PENDING LANE 1: placeholder bridge so the call half builds before
-// android/voice-account lands. Only the call wiring survives the merge.
-
+import expo.modules.kotlin.exception.Exceptions
 import expo.modules.kotlin.functions.Coroutine
 import expo.modules.kotlin.modules.Module
 import expo.modules.kotlin.modules.ModuleDefinition
-import kotlinx.coroutines.Job
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
 
+// The name index.ts loads (requireOptionalNativeModule('OpaxVoice')), as on iOS.
 class OpaxVoiceModule : Module() {
-  private val lifecycle = AndroidVoiceLifecycle()
-  private var controller: VoiceCallController? = null
-  private var forwarding: List<Job> = emptyList()
+  @Volatile private var controller: VoiceController? = null
+  @Volatile private var scope: CoroutineScope? = null
+  private val voice get() = controller ?: throw Exceptions.ModuleNotFound(OpaxVoiceModule::class)
 
   override fun definition() = ModuleDefinition {
     Name("OpaxVoice")
     Events("onVoiceEvent", "onVoiceLevel")
 
     OnCreate {
-      val context = requireNotNull(appContext.reactContext).applicationContext
-      val call = VoiceCallController(
-        http = PendingHttp, relays = RelayFactory { throw VoiceException(VoiceFailure.unavailable) },
-        engines = VoiceCallVariant.engines(lifecycle), permission = VoiceCallVariant.permission(context),
-        consent = PendingConsent, audioSession = VoiceCallVariant.audioSession(context, lifecycle) { appContext.currentActivity },
-        lifecycle = lifecycle,
-      )
-      controller = call
-      forwarding = listOf(
-        appContext.backgroundCoroutineScope.launch { call.events.collect { sendEvent("onVoiceEvent", VoiceBridgeValue.event(it)) } },
-        appContext.backgroundCoroutineScope.launch { call.levels.collect { sendEvent("onVoiceLevel", VoiceBridgeValue.levels(it)) } },
-      )
+      val context = appContext.reactContext ?: throw Exceptions.ReactContextLost()
+      val created = VoiceController.create(context) { appContext.currentActivity }
+      controller = created
+      scope = CoroutineScope(SupervisorJob() + Dispatchers.Default).also {
+        it.launch { created.core.events.collect { event -> sendEvent("onVoiceEvent", VoiceBridgeValue.event(event)) } }
+        // A separate event, so levels never displace call events.
+        it.launch { created.levels.collect { sendEvent("onVoiceLevel", VoiceBridgeValue.levels(it.input, it.output)) } }
+      }
     }
     OnDestroy {
-      forwarding.forEach { it.cancel() }
-      val call = controller ?: return@OnDestroy
-      appContext.backgroundCoroutineScope.launch { call.shutdown() }
+      scope?.cancel(); scope = null
+      val owner = controller ?: return@OnDestroy
+      controller = null
+      CoroutineScope(Dispatchers.Default).launch { owner.shutdown() }
     }
-    OnActivityEntersBackground { lifecycle.emit(LifecycleEvent.background) }
-    OnActivityEntersForeground { lifecycle.emit(LifecycleEvent.foreground) }
 
-    AsyncFunction("sendText") Coroutine { text: String ->
-      try { call().sendText(text); VoiceBridgeValue.success() } catch (error: Exception) { VoiceBridgeValue.failure(error) }
+    // The call ends in the background, as on iOS; no foreground service keeps it.
+    OnActivityEntersBackground { controller?.lifecycle?.emit(LifecycleEvent.background) }
+    OnActivityEntersForeground { controller?.lifecycle?.emit(LifecycleEvent.foreground) }
+
+    AsyncFunction("snapshot") Coroutine { -> voice.snapshot() }
+    AsyncFunction("status") Coroutine { -> voice.status() }
+    AsyncFunction("requestCode") Coroutine { email: String -> voice.requestCode(email) }
+    AsyncFunction("consumeCode") Coroutine { challenge: String, code: String -> voice.consumeCode(challenge, code) }
+    AsyncFunction("consent") Coroutine { -> voice.consent() }
+    AsyncFunction("setConsent") Coroutine { granted: Boolean -> voice.setConsent(granted) }
+    AsyncFunction("logout") Coroutine { -> voice.logout() }
+    AsyncFunction("requestDeletionCode") Coroutine { -> voice.requestDeletionCode() }
+    AsyncFunction("deleteAccount") Coroutine { challenge: String, code: String -> voice.deleteAccount(challenge, code) }
+    AsyncFunction("communityRequest") Coroutine { path: String, method: String, body: String? ->
+      voice.communityRequest(path, method, body)
     }
-    AsyncFunction("discardEvidence") Coroutine { -> call().discardEvidence() }
-    AsyncFunction("background") Coroutine { -> call().handle(LifecycleEvent.background) }
-    AsyncFunction("start") Coroutine { -> call().start(); VoiceBridgeValue.success() }
-    AsyncFunction("mute") Coroutine { muted: Boolean -> call().setMuted(muted); VoiceBridgeValue.success() }
-    AsyncFunction("end") Coroutine { -> call().end(); VoiceBridgeValue.success() }
-  }
-
-  private fun call() = requireNotNull(controller)
-
-  private object PendingConsent : VoiceConsent {
-    override suspend fun isGranted() = false
-  }
-
-  private object PendingHttp : VoiceCallHttp {
-    private fun pending(): Nothing = throw VoiceException(VoiceFailure.unavailable)
-    override suspend fun status() = pending()
-    override suspend fun start() = pending()
-    override suspend fun finish(sessionId: String) = pending()
-    override suspend fun relayRequest(reservation: Reservation) = pending()
-    override suspend fun observeRelayFailure(failure: APIFailure, credential: SessionCredential?) = pending()
-    override suspend fun logout(everywhere: Boolean) = pending()
-    override suspend fun requestDeletionCode() = pending()
-    override suspend fun deleteAccount(challengeId: String, code: String) = pending()
+    AsyncFunction("chatRequest") Coroutine { path: String, method: String, body: String? ->
+      voice.chatRequest(path, method, body)
+    }
+    AsyncFunction("start") Coroutine { -> voice.start() }
+    AsyncFunction("mute") Coroutine { muted: Boolean -> voice.mute(muted) }
+    AsyncFunction("end") Coroutine { -> voice.end() }
+    AsyncFunction("sendText") Coroutine { text: String -> voice.sendText(text) }
+    AsyncFunction("discardEvidence") Coroutine { -> voice.discardEvidence() }
+    AsyncFunction("background") Coroutine { -> voice.background() }
   }
 }

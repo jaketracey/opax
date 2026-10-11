@@ -29,25 +29,13 @@ data class CallTiming(
   val pollMaxAttempts: Int = 24,
 )
 
-/** What the call needs from the account half's HTTP client (VoiceHTTPClient on iOS). */
-interface VoiceCallHttp {
-  suspend fun status(): VoiceStatus
-  suspend fun start(): Reservation
-  suspend fun finish(sessionId: String)
-  suspend fun relayRequest(reservation: Reservation): CredentialRequest
-  suspend fun observeRelayFailure(failure: APIFailure, credential: SessionCredential?)
-  suspend fun logout(everywhere: Boolean)
-  suspend fun requestDeletionCode(): DeletionChallenge
-  suspend fun deleteAccount(challengeId: String, code: String): AccountDeletion
-}
-
 /**
  * The iOS actor: one serial context owns state and decoding, and calls
  * interleave only at suspension points. Record and playback threads never enter it.
  */
 @OptIn(ExperimentalCoroutinesApi::class)
 class VoiceCallController(
-  private val http: VoiceCallHttp,
+  private val http: VoiceHttpClient,
   private val relays: RelayFactory,
   private val engines: VoiceEngineFactory,
   private val permission: MicrophonePermission,
@@ -56,12 +44,12 @@ class VoiceCallController(
   private val lifecycle: VoiceLifecycle,
   private val clock: VoiceClock = SystemVoiceClock,
   private val timing: CallTiming = CallTiming(),
-) {
+) : VoiceCore {
   private val actor = Dispatchers.Default.limitedParallelism(1)
   private val scope = CoroutineScope(SupervisorJob() + actor)
   private val eventChannel = Channel<VoiceEvent>(128, BufferOverflow.DROP_OLDEST)
   /** Single consumer, newest 128 kept, as Swift's `AsyncStream(.bufferingNewest(128))`. */
-  val events: Flow<VoiceEvent> = eventChannel.receiveAsFlow()
+  override val events: Flow<VoiceEvent> = eventChannel.receiveAsFlow()
   /** Call-screen animation only, kept apart so levels never displace events. */
   private val levelChannel = Channel<AudioLevels>(Channel.CONFLATED)
   val levels: Flow<AudioLevels> = levelChannel.receiveAsFlow()
@@ -110,7 +98,7 @@ class VoiceCallController(
   private val endWaiters = mutableListOf<CompletableDeferred<Unit>>()
 
   /** Reads controller-owned values atomically; does not refresh, emit or open a call. */
-  suspend fun snapshot(): VoiceSnapshot = withContext(actor) {
+  override suspend fun snapshot(): VoiceSnapshot = withContext(actor) {
     VoiceSnapshot(state, reason, mode, playbackState, remaining, evidence.turns, evidence.sources, latestStatus)
   }
 
@@ -118,7 +106,7 @@ class VoiceCallController(
    * The UI discards transient captions only after leaving a finished call.
    * End itself retains them for the on-screen end state and snapshot recovery.
    */
-  suspend fun discardEvidence() = withContext(actor) {
+  override suspend fun discardEvidence() = withContext(actor) {
     if (state in callBusy) return@withContext
     evidence = EvidenceModel()
     emit(VoiceEvent.Transcript(emptyList()))
@@ -160,7 +148,7 @@ class VoiceCallController(
     playbackBacklog.weight + playbackInFlight + (engine?.queuedSamples() ?: 0)
   }
 
-  suspend fun refreshStatus(): VoiceStatusSnapshot = withContext(actor) { refreshOnActor() }
+  override suspend fun refreshStatus(): VoiceStatusSnapshot = withContext(actor) { refreshOnActor() }
 
   private suspend fun refreshOnActor(): VoiceStatusSnapshot {
     observe()
@@ -183,18 +171,18 @@ class VoiceCallController(
           clearStatus()
           if (!isBusy) {
             change(CallState.failed)
-            emit(VoiceEvent.Error(failureOf(error)))
+            emit(VoiceEvent.Error(voiceFailure(error)))
           }
         }
         if (error is CancellationException) throw error
-        throw VoiceException(failureOf(error))
+        throw VoiceException(voiceFailure(error))
       }
     } finally {
       refreshes -= 1
     }
   }
 
-  suspend fun start() = withContext(actor) { startOnActor() }
+  override suspend fun start() = withContext(actor) { startOnActor() }
 
   private suspend fun startOnActor() {
     observe()
@@ -281,7 +269,7 @@ class VoiceCallController(
     if (error is RelayTerminated) {
       terminate(error.close.endReason, error.close.failure, closeCode = error.close.code)
     } else {
-      terminate(fallback, failureOf(error), api = error as? APIFailure)
+      terminate(fallback, voiceFailure(error), api = error as? APIFailure)
     }
   }
 
@@ -440,7 +428,7 @@ class VoiceCallController(
       if (playbackState != PlaybackState.truncated) changePlayback(PlaybackState.flowing)
     } catch (error: Throwable) {
       if (epoch != attempt || playbackEpoch != generation) return
-      terminate(EndReason.failed, failureOf(error))
+      terminate(EndReason.failed, voiceFailure(error))
     }
   }
 
@@ -488,7 +476,7 @@ class VoiceCallController(
       }
     } catch (error: Throwable) {
       if (epoch != attempt) return
-      terminate(EndReason.failed, failureOf(error))
+      terminate(EndReason.failed, voiceFailure(error))
     }
   }
 
@@ -525,7 +513,7 @@ class VoiceCallController(
     // Display only. Never end locally at zero; the relay deadline is authoritative.
   }
 
-  suspend fun setMuted(value: Boolean) = withContext(actor) {
+  override suspend fun setMuted(value: Boolean) = withContext(actor) {
     if (state != CallState.live) return@withContext
     muted = value
     engine?.setMuted(value)
@@ -538,7 +526,7 @@ class VoiceCallController(
     )
   }
 
-  suspend fun sendText(text: String): Unit = withContext(actor) {
+  override suspend fun sendText(text: String): Unit = withContext(actor) {
     if (state != CallState.live) throw VoiceException(VoiceFailure.callOpen)
     socket?.send(ClientMessage.Message(text).data())
   }
@@ -553,7 +541,7 @@ class VoiceCallController(
     socket?.send(ClientMessage.Activity.data())
   }
 
-  suspend fun end() = withContext(actor) { endOnActor() }
+  override suspend fun end() = withContext(actor) { endOnActor() }
 
   private suspend fun endOnActor() {
     if (state == CallState.ending) {
@@ -565,31 +553,31 @@ class VoiceCallController(
     terminate(EndReason.user, null)
   }
 
-  suspend fun withdrawConsent() = withContext(actor) { terminate(EndReason.consentWithdrawn, null) }
+  override suspend fun withdrawConsent() = withContext(actor) { terminate(EndReason.consentWithdrawn, null) }
 
-  suspend fun logout(everywhere: Boolean = false) = withContext(actor) {
+  override suspend fun logout(everywhere: Boolean) = withContext(actor) {
     endOnActor()
     var failure: VoiceFailure? = null
     try {
       http.logout(everywhere)
     } catch (error: Throwable) {
       if (error is CancellationException) throw error
-      failure = failureOf(error)
+      failure = voiceFailure(error)
     }
     runCatching { refreshOnActor() }
-    failure?.let { throw VoiceException(it) }
+    if (failure != null) throw VoiceException(failure)
   }
 
-  suspend fun requestDeletionCode(): DeletionChallenge = withContext(actor) {
+  override suspend fun requestDeletionCode(): DeletionChallenge = withContext(actor) {
     try {
       http.requestDeletionCode()
     } catch (error: Throwable) {
       if (error is CancellationException) throw error
-      throw VoiceException(failureOf(error))
+      throw VoiceException(voiceFailure(error))
     }
   }
 
-  suspend fun deleteAccount(challengeId: String, code: String): AccountDeletion = withContext(actor) {
+  override suspend fun deleteAccount(challengeId: String, code: String): AccountDeletion = withContext(actor) {
     endOnActor() // finish/close before deleting; never infer a budget refund
     try {
       val result = http.deleteAccount(challengeId, code)
@@ -601,11 +589,11 @@ class VoiceCallController(
       result
     } catch (error: Throwable) {
       if (error is CancellationException) throw error
-      throw VoiceException(failureOf(error))
+      throw VoiceException(voiceFailure(error))
     }
   }
 
-  suspend fun handle(event: LifecycleEvent) = withContext(actor) { handleOnActor(event) }
+  override suspend fun handle(event: LifecycleEvent) = withContext(actor) { handleOnActor(event) }
 
   private suspend fun handleOnActor(event: LifecycleEvent) {
     if (state !in lifecycleWatched) return
@@ -703,7 +691,7 @@ class VoiceCallController(
           }
         }
         if (status.activeSession != null) schedulePoll()
-      }.onFailure { emit(VoiceEvent.Error(failureOf(it))) }
+      }.onFailure { emit(VoiceEvent.Error(voiceFailure(it))) }
       if (epoch != endingEpoch) return
       finalFailure?.let { emit(VoiceEvent.Error(it)) }
       change(if (finalFailure == null) CallState.ended else CallState.failed, finalReason)
@@ -750,14 +738,14 @@ class VoiceCallController(
     } catch (error: Throwable) {
       if (epoch == pollEpoch && currentCoroutineContext().isActive) {
         clearStatus()
-        emit(VoiceEvent.Error(failureOf(error)))
+        emit(VoiceEvent.Error(voiceFailure(error)))
         pollJob = null
       }
       return false
     }
   }
 
-  suspend fun shutdown() {
+  override suspend fun shutdown() {
     end()
     withContext(actor) {
       lifecycleJob?.cancel()
@@ -770,12 +758,10 @@ class VoiceCallController(
     scope.cancel()
   }
 
-  internal companion object {
-    private val callBusy = setOf(CallState.checking, CallState.reserving, CallState.connecting, CallState.live, CallState.ending)
-    private val refreshBusy = callBusy
-    private val pollQuiet = setOf(CallState.reserving, CallState.connecting, CallState.live, CallState.ending)
-    private val lifecycleWatched = setOf(CallState.checking, CallState.ready, CallState.reserving, CallState.connecting, CallState.live)
-
-    fun failureOf(error: Throwable) = voiceFailure(error)
+  private companion object {
+    val callBusy = setOf(CallState.checking, CallState.reserving, CallState.connecting, CallState.live, CallState.ending)
+    val refreshBusy = callBusy
+    val pollQuiet = setOf(CallState.reserving, CallState.connecting, CallState.live, CallState.ending)
+    val lifecycleWatched = setOf(CallState.checking, CallState.ready, CallState.reserving, CallState.connecting, CallState.live)
   }
 }

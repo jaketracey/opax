@@ -117,7 +117,7 @@ class LoopbackCallTests : SafeVoiceTest() {
     eventually { rig.controller.state == CallState.failed }
     rig.controller.start()
     assertEquals(CallState.unavailable, rig.controller.state)
-    assertEquals(1, rig.http.count(Route.voiceStart))
+    assertEquals(1, rig.http.count(AuthRoute.voiceStart))
     assertEquals(1, server.snapshot().peers.size)
     rig.http.configure(status = signedStatus(remaining = 0)) // fixture expiry fully charges reservation
     eventually { rig.controller.latestStatus?.activeSession == null }
@@ -133,13 +133,13 @@ class LoopbackCallTests : SafeVoiceTest() {
     server.drop()
     eventually { rig.controller.state == CallState.failed }
     // An explicit retry can still race a server-side open row: the 409 is never retried.
-    rig.http.configure(start = FixtureResponse(409, json(mapOf("error" to "Open"))))
+    rig.http.configure(start = HttpResponse(409, body = json(mapOf("error" to "Open"))))
     rig.controller.start()
-    assertEquals(2, rig.http.count(Route.voiceStart))
+    assertEquals(2, rig.http.count(AuthRoute.voiceStart))
     rig.http.configure(status = signedStatus(), start = null)
     rig.controller.start()
     eventually { rig.controller.state == CallState.live }
-    assertEquals(3, rig.http.requests.count { it == Route.voiceStart })
+    assertEquals(3, rig.http.requests.count { it == AuthRoute.voiceStart })
     assertEquals(2, server.snapshot().peers.size)
     rig.close()
     server.stop()
@@ -156,11 +156,11 @@ class LoopbackCallTests : SafeVoiceTest() {
       rig.http.resumeStart()
       task.join()
       eventually { rig.recorder.hasError(VoiceFailure.unavailable) }
-      assertEquals(1, rig.http.count(Route.voiceFinish))
+      assertEquals(1, rig.http.count(AuthRoute.voiceFinish))
       assertEquals(600L, rig.controller.latestStatus?.remainingSeconds)
       if (active != null) {
         rig.controller.start()
-        assertEquals(1, rig.http.count(Route.voiceStart))
+        assertEquals(1, rig.http.count(AuthRoute.voiceStart))
         val remaining = if (active == "connecting" || active == "active") 0 else 600
         rig.http.configure(status = signedStatus(remaining = remaining))
         eventually { rig.controller.latestStatus?.activeSession == null }
@@ -172,7 +172,7 @@ class LoopbackCallTests : SafeVoiceTest() {
     val (server, rig) = fixture(LoopbackRelay.Scenario.Refuse(401))
     rig.controller.start()
     eventually { rig.recorder.hasError(VoiceFailure.signedOut) }
-    assertNull(rig.http.credential)
+    assertNull(rig.store.read())
     assertEquals(false, rig.controller.latestStatus?.signedIn)
     rig.close()
     server.stop()
@@ -207,10 +207,10 @@ class LoopbackCallTests : SafeVoiceTest() {
 
   @Test fun loopbackPreflightFixtureRowsAllowanceBudgetCapacityAndRevocation() = test {
     for ((response, failure) in listOf(
-      FixtureResponse(403, json(mapOf("error" to "You have used your ten free minutes of voice conversation."))) to VoiceFailure.allowanceExhausted,
-      FixtureResponse(429, json(mapOf("error" to "Busy", "reason" to "budget"))) to VoiceFailure.budgetClosed,
-      FixtureResponse(429, json(mapOf("error" to "Busy", "reason" to "capacity"))) to VoiceFailure.capacity,
-      FixtureResponse(401, json(mapOf("error" to "Revoked"))) to VoiceFailure.signedOut,
+      HttpResponse(403, body = json(mapOf("error" to "You have used your ten free minutes of voice conversation."))) to VoiceFailure.allowanceExhausted,
+      HttpResponse(429, body = json(mapOf("error" to "Busy", "reason" to "budget"))) to VoiceFailure.budgetClosed,
+      HttpResponse(429, body = json(mapOf("error" to "Busy", "reason" to "capacity"))) to VoiceFailure.capacity,
+      HttpResponse(401, body = json(mapOf("error" to "Revoked"))) to VoiceFailure.signedOut,
     )) {
       val (server, rig) = fixture(LoopbackRelay.Scenario.Quiet)
       rig.http.configure(start = response, statusAfterStart = if (failure == VoiceFailure.allowanceExhausted) signedStatus(remaining = 0) else null)

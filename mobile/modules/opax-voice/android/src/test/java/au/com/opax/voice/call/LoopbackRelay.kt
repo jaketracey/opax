@@ -212,9 +212,7 @@ val testClient: OkHttpClient by lazy { OkHttpClient() }
 
 /** The real OkHttp relay restricted to one loopback port, behind the shared guard. */
 class GuardedRelayFactory(port: Int) : RelayFactory {
-  private val inner = OkHttpRelayFactory(testClient) { url ->
-    url.host == "127.0.0.1" && url.port == port && url.encodedPath == "/api/voice/connect"
-  }
+  private val inner = OkHttpRelayFactory(testClient, RoutePolicy.loopback(port))
 
   override suspend fun connect(request: Request): RelayTransport {
     VoiceTestSafety.validate(request)

@@ -213,7 +213,7 @@ class ContinuousReadTests : SafeVoiceTest() {
       val events = rig.recorder.items
       assertFalse("iteration $iteration", VoiceEvent.Error(VoiceFailure.network) in events)
       assertEquals("iteration $iteration", 2, rig.engine.flushes)
-      val expectedRequests = listOf(Route.voiceStatus, Route.voiceStart, Route.voiceFinish, Route.voiceStatus)
+      val expectedRequests = listOf(AuthRoute.voiceStatus, AuthRoute.voiceStart, AuthRoute.voiceFinish, AuthRoute.voiceStatus)
       assertEquals(expectedRequests, rig.http.requests)
       if (observed != wanted || VoiceEvent.Error(VoiceFailure.network) in events || rig.engine.flushes != 2 || rig.http.requests != expectedRequests) failures += 1
       rig.close()

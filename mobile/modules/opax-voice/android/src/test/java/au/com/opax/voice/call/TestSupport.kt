@@ -14,15 +14,23 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
-import okhttp3.HttpUrl.Companion.toHttpUrl
-import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
 import okhttp3.Request
 import org.junit.After
 import org.junit.Assert.assertTrue
 import org.junit.Assert.fail
 import org.junit.Before
+import org.junit.runner.RunWith
+import org.robolectric.RobolectricTestRunner
+import org.robolectric.annotation.Config
+import kotlinx.coroutines.currentCoroutineContext
+import kotlinx.coroutines.ensureActive
 
-/** Every test runs under the loopback-only guard; the cumulative audit must stay clean. */
+/**
+ * Every test runs under the loopback-only guard; the cumulative audit must stay
+ * clean. Robolectric supplies Android's org.json, which the account half decodes with.
+ */
+@RunWith(RobolectricTestRunner::class)
+@Config(sdk = [34])
 abstract class SafeVoiceTest {
   @Before fun installGuard() { VoiceTestSafety.installLoopbackOnly() }
 
@@ -91,69 +99,36 @@ fun signedStatus(
   return json(body)
 }
 
-// PENDING LANE 1: the account half's status decoder replaces this at the merge.
-fun decodeStatus(data: ByteArray, accountHeld: Boolean = false): VoiceStatus {
-  val root = JsonValue.parse(data) as? JsonValue.Obj ?: throw VoiceException(VoiceFailure.invalidResponse)
-  fun bool(key: String) = (root[key] as? JsonValue.Bool)?.value
-  val open = root["active_session"] as? JsonValue.Obj
-  return VoiceStatus(
-    enabled = bool("enabled") ?: throw VoiceException(VoiceFailure.invalidResponse),
-    signedIn = bool("signed_in") ?: throw VoiceException(VoiceFailure.invalidResponse),
-    unlimited = bool("unlimited"),
-    totalSeconds = root["total_seconds"].int?.toLong(),
-    remainingSeconds = root["remaining_seconds"].int?.toLong() ?: throw VoiceException(VoiceFailure.invalidResponse),
-    activeSession = open?.let { ActiveSession(it["id"].string, it["state"].string ?: throw VoiceException(VoiceFailure.invalidResponse), seconds(it["expires_at"])) },
-    budgetOpen = bool("budget_open"),
-    accountHeld = accountHeld,
-  )
-}
-
-internal fun seconds(value: JsonValue): Double? = when (value) {
-  is JsonValue.Num -> value.value.toDouble()
-  is JsonValue.Real -> value.value
-  else -> null
-}
-
-enum class Route(val path: String) {
-  voiceStatus("/api/voice/status"), voiceStart("/api/voice/start"), voiceConnect("/api/voice/connect"),
-  voiceFinish("/api/voice/finish"), communityStatus("/api/community/status"), logout("/api/community/auth/logout"),
-  deletionCode("/api/community/account/deletion-code"), deleteAccount("/api/community/account/delete"),
-}
-
-class FixtureResponse(val status: Int, val body: ByteArray)
-
 /**
- * PENDING LANE 1: the iOS FixtureHTTP transport behind VoiceHTTPClient, as one
- * VoiceCallHttp with the client's call-route semantics (fresh-status 403, 401
- * revocation, reservation validation and recovery). Every request passes the
- * loopback guard first.
+ * The iOS FixtureHTTP transport behind the real VoiceHttpClient: canned Worker
+ * shapes per route, pausable responses and a request log. Every request
+ * passes the loopback guard first.
  */
-class FixtureHttp(val port: Int = 8901) : VoiceCallHttp {
+class FixtureHttp(val port: Int = 8901) : HttpTransport {
   private val lock = Any()
-  var statusBody = signedStatus()
-  private var startResponse: FixtureResponse? = null
+  private var statusBody = signedStatus()
+  private var startResponse: HttpResponse? = null
   private var statusAfterStart: ByteArray? = null
   private var throwOnSend = false
-  private val responses = mutableMapOf<Route, FixtureResponse>()
-  private val log = mutableListOf<Route>()
+  private val responses = mutableMapOf<AuthRoute, HttpResponse>()
+  private val log = mutableListOf<AuthRoute>()
   private var delayStatus = false
   @Volatile var statusWaiter: CompletableDeferred<Unit>? = null
-  private var delayedRoute: Route? = null
+  private var delayedRoute: AuthRoute? = null
   @Volatile var responseWaiter: CompletableDeferred<Unit>? = null
   private var delayStart = false
   private var startWaiter: CompletableDeferred<Unit>? = null
-  @Volatile var credential: SessionCredential? = SessionCredential(fixtureToken, epochSeconds() + 100)
 
-  val requests: List<Route> get() = synchronized(lock) { log.toList() }
-  fun count(route: Route) = synchronized(lock) { log.count { it == route } }
+  val requests: List<AuthRoute> get() = synchronized(lock) { log.toList() }
+  fun count(route: AuthRoute) = synchronized(lock) { log.count { it == route } }
 
-  fun configure(status: ByteArray? = null, start: FixtureResponse? = null, statusAfterStart: ByteArray? = null) = synchronized(lock) {
+  fun configure(status: ByteArray? = null, start: HttpResponse? = null, statusAfterStart: ByteArray? = null) = synchronized(lock) {
     if (status != null) statusBody = status
     startResponse = start
     this.statusAfterStart = statusAfterStart
   }
-  fun setResponse(route: Route, response: FixtureResponse) = synchronized(lock) { responses[route] = response }
-  fun pauseResponse(route: Route) = synchronized(lock) { delayedRoute = route }
+  fun setResponse(route: AuthRoute, response: HttpResponse) = synchronized(lock) { responses[route] = response }
+  fun pauseResponse(route: AuthRoute) = synchronized(lock) { delayedRoute = route }
   fun resumeResponse() = synchronized(lock) { responseWaiter?.complete(Unit); responseWaiter = null; delayedRoute = null }
   fun pauseNextStatus() = synchronized(lock) { delayStatus = true }
   fun resumeStatus() = synchronized(lock) { statusWaiter?.complete(Unit); statusWaiter = null }
@@ -161,10 +136,12 @@ class FixtureHttp(val port: Int = 8901) : VoiceCallHttp {
   fun resumeStart() = synchronized(lock) { delayStart = false; startWaiter?.complete(Unit); startWaiter = null }
   fun failTransport() = synchronized(lock) { throwOnSend = true }
 
-  private suspend fun send(route: Route, cookie: Boolean): FixtureResponse {
-    VoiceTestSafety.validate("http://127.0.0.1:$port${route.path}".toHttpUrl())
+  override suspend fun send(request: Request): HttpResponse {
+    currentCoroutineContext().ensureActive()
+    VoiceTestSafety.validate(request.url)
     var gate: CompletableDeferred<Unit>? = null
-    val response = synchronized(lock) {
+    val route = AuthRoute.fromPath(request.url.encodedPath) ?: throw VoiceException(VoiceFailure.forbidden)
+    val immediate = synchronized(lock) {
       log += route
       if (throwOnSend) throw IOException("Synthetic offline transport")
       responses[route]?.let {
@@ -172,34 +149,43 @@ class FixtureHttp(val port: Int = 8901) : VoiceCallHttp {
         return@synchronized it
       }
       when (route) {
-        Route.voiceStatus -> {
+        AuthRoute.voiceStatus -> {
+          val body = if (request.header("Cookie") == null) signedStatus(signedIn = false) else statusBody
           if (delayStatus) { delayStatus = false; gate = CompletableDeferred<Unit>().also { statusWaiter = it } }
-          FixtureResponse(200, if (cookie) statusBody else signedStatus(signedIn = false))
+          HttpResponse(200, body = body)
         }
-        Route.voiceStart -> {
+        AuthRoute.voiceStart -> {
           if (delayStart) gate = CompletableDeferred<Unit>().also { startWaiter = it }
           null
         }
-        Route.voiceFinish -> FixtureResponse(200, signedStatus(remaining = 1)) // must never supply displayed allowance
-        Route.logout -> { statusBody = signedStatus(signedIn = false); FixtureResponse(200, json(mapOf("signed_out" to true))) }
-        Route.communityStatus -> FixtureResponse(200, json(mapOf("enabled" to true, "member" to mapOf("id" to "fixture"))))
-        else -> throw VoiceException(VoiceFailure.invalidResponse) // explicit Worker fixture required
+        // Must never supply the displayed allowance.
+        AuthRoute.voiceFinish -> HttpResponse(200, body = signedStatus(remaining = 1))
+        AuthRoute.communityStatus -> HttpResponse(200, body = json(mapOf("enabled" to true, "member" to mapOf("id" to "fixture"))))
+        AuthRoute.requestCode -> HttpResponse(200, body = json(mapOf("sent" to true, "challenge_id" to "fixture-challenge")))
+        AuthRoute.consumeCode -> HttpResponse(
+          200,
+          mapOf("Set-Cookie" to "__Host-opax_session=$fixtureToken; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=2592000"),
+          json(mapOf("signed_in" to true)),
+        )
+        AuthRoute.logout -> { statusBody = signedStatus(signedIn = false); HttpResponse(200, body = json(mapOf("signed_out" to true))) }
+        AuthRoute.deletionCode, AuthRoute.deleteAccount -> throw VoiceException(VoiceFailure.invalidResponse) // explicit Worker fixture required
+        AuthRoute.voiceConnect -> throw VoiceException(VoiceFailure.forbidden)
       }
     }
     gate?.await()
-    if (response != null) return response
+    if (immediate != null) return immediate
     return synchronized(lock) {
       startResponse?.let { start ->
-        val failure = decodeFailure(start, Route.voiceStart).failure
+        val failure = APIFailure.decode(start, AuthRoute.voiceStart).failure
         statusAfterStart?.let { statusBody = it }
         if (failure == VoiceFailure.budgetClosed) statusBody = signedStatus(budget = false)
         if (failure == VoiceFailure.callOpen) statusBody = signedStatus(active = "active")
         return@synchronized start
       }
       val id = UUID.randomUUID().toString()
-      FixtureResponse(
+      HttpResponse(
         201,
-        json(
+        body = json(
           mapOf(
             "session_id" to id, "transport" to "websocket",
             "signed_url" to "ws://127.0.0.1:$port/api/voice/connect?session_id=$id",
@@ -207,102 +193,6 @@ class FixtureHttp(val port: Int = 8901) : VoiceCallHttp {
           ),
         ),
       )
-    }
-  }
-
-  private fun clear(sent: SessionCredential?) = synchronized(lock) { if (sent != null && credential === sent) credential = null }
-
-  private suspend fun execute(route: Route): Pair<FixtureResponse, SessionCredential?> {
-    val sent = credential?.takeIf { it.expiresAt > epochSeconds() }
-    val response = send(route, sent != null)
-    if (response.status !in 200..299) {
-      var failure = decodeFailure(response, route)
-      if (route == Route.voiceStart && response.status == 403) {
-        // Server prose is never a discriminator. If status fails, keep the credential.
-        runCatching { status() }.getOrNull()?.let { fresh ->
-          val reason = fresh.refusal ?: VoiceFailure.forbidden
-          failure = APIFailure(403, reason, failure.charge)
-          if (reason == VoiceFailure.forbidden) clear(sent)
-        }
-      } else if (failure.failure == VoiceFailure.signedOut || failure.failure == VoiceFailure.forbidden) {
-        clear(sent)
-      }
-      throw failure
-    }
-    return response to sent
-  }
-
-  override suspend fun status(): VoiceStatus {
-    val (response, sent) = execute(Route.voiceStatus)
-    return decodeStatus(response.body, accountHeld = sent != null)
-  }
-
-  override suspend fun start(): Reservation {
-    val (response, _) = execute(Route.voiceStart)
-    val body = runCatching { JsonValue.parse(response.body) }.getOrNull()
-    val id = body?.get("session_id")?.string
-    try {
-      if (response.status != 201 || response.body.size > 2 * 1024 * 1024 || body == null) throw VoiceException(VoiceFailure.invalidResponse)
-      val signed = body["signed_url"].string?.replaceFirst(Regex("^ws(s?)://"), "http$1://")?.toHttpUrlOrNull()
-      val remaining = body["remaining_seconds"].int ?: 0
-      val expires = seconds(body["expires_at"])
-      if (body["transport"].string != "websocket" || signed == null || signed.host != "127.0.0.1" || signed.port != port ||
-        signed.encodedPath != Route.voiceConnect.path || signed.queryParameterValues("session_id") != listOf(id) ||
-        runCatching { UUID.fromString(id) }.isFailure || remaining !in 1..600 || expires == null || !expires.isFinite()
-      ) {
-        throw VoiceException(VoiceFailure.invalidResponse)
-      }
-      return Reservation(id!!, "websocket", body["signed_url"].string!!, remaining.toLong(), expires)
-    } catch (error: Exception) {
-      if (id != null && runCatching { UUID.fromString(id) }.isSuccess) runCatching { finish(id) }
-      throw VoiceException(VoiceFailure.invalidResponse)
-    }
-  }
-
-  override suspend fun finish(sessionId: String) { execute(Route.voiceFinish) }
-
-  override suspend fun relayRequest(reservation: Reservation): CredentialRequest {
-    val sent = credential?.takeIf { it.expiresAt > epochSeconds() } ?: throw VoiceException(VoiceFailure.signedOut)
-    val request = Request.Builder().url(reservation.signedUrl)
-      .header("Origin", "https://opax.com.au")
-      .header("Cookie", "__Host-opax_session=${sent.token}")
-      .header("Sec-WebSocket-Protocol", "convai")
-      .build()
-    VoiceTestSafety.validate(request)
-    return CredentialRequest(request, sent)
-  }
-
-  override suspend fun observeRelayFailure(failure: APIFailure, credential: SessionCredential?) {
-    if (failure.status == 401 || failure.failure == VoiceFailure.forbidden) clear(credential)
-  }
-
-  override suspend fun logout(everywhere: Boolean) {
-    val sent = credential
-    try { execute(Route.logout) } finally { clear(sent) }
-  }
-
-  override suspend fun requestDeletionCode(): DeletionChallenge = throw VoiceException(VoiceFailure.invalidResponse)
-  override suspend fun deleteAccount(challengeId: String, code: String): AccountDeletion = throw VoiceException(VoiceFailure.invalidResponse)
-
-  companion object {
-    /** APIFailure.decode, with the body's reason and release flag. */
-    fun decodeFailure(response: FixtureResponse, route: Route): APIFailure {
-      val body = runCatching { JsonValue.parse(response.body) }.getOrNull()
-      val failure = when (response.status) {
-        400 -> if (route == Route.deletionCode || route == Route.deleteAccount) VoiceFailure.deletionVerificationFailed else VoiceFailure.invalidResponse
-        401 -> VoiceFailure.signedOut
-        409 -> VoiceFailure.callOpen
-        403 -> VoiceFailure.forbidden
-        429 -> when (body?.get("reason")?.string) {
-          "budget" -> VoiceFailure.budgetClosed
-          "capacity" -> VoiceFailure.capacity
-          else -> VoiceFailure.rateLimited
-        }
-        503 -> VoiceFailure.unavailable
-        else -> VoiceFailure.invalidResponse
-      }
-      val released = (body?.get("released") as? JsonValue.Bool)?.value
-      return APIFailure(response.status, failure, released?.let { if (it) ChargeDisposition.released else ChargeDisposition.retained } ?: ChargeDisposition.unknown)
     }
   }
 }
@@ -535,7 +425,7 @@ class EventRecorder {
 }
 
 class Rig private constructor(
-  val http: FixtureHttp, val engine: FakeAudioEngine, val relay: InMemoryRelay, val permission: FakePermission,
+  val http: FixtureHttp, val client: VoiceHttpClient, val store: InMemoryCredentialStore, val engine: FakeAudioEngine, val relay: InMemoryRelay, val permission: FakePermission,
   val session: FakeSession, val consent: FakeConsent, val lifecycle: FakeLifecycle,
   val controller: VoiceCallController, val recorder: EventRecorder, private val recording: Job,
 ) {
@@ -556,6 +446,9 @@ class Rig private constructor(
       clock: VoiceClock = SystemVoiceClock, storedConsent: VoiceConsent? = null, engines: VoiceEngineFactory? = null,
     ): Rig {
       val http = FixtureHttp(port)
+      val store = InMemoryCredentialStore()
+      store.write(SessionCredential(fixtureToken, epochSeconds() + 100))
+      val client = VoiceHttpClient(RoutePolicy.loopback(port), store, http, clock)
       val engine = FakeAudioEngine()
       val relay = InMemoryRelay()
       val permission = FakePermission()
@@ -563,11 +456,11 @@ class Rig private constructor(
       val consent = FakeConsent()
       val lifecycle = FakeLifecycle()
       val controller = VoiceCallController(
-        http, relays ?: relay, engines ?: engine, permission, storedConsent ?: consent, session, lifecycle, clock, timing,
+        client, relays ?: relay, engines ?: engine, permission, storedConsent ?: consent, session, lifecycle, clock, timing,
       )
       val recorder = EventRecorder()
       val recording = CoroutineScope(Dispatchers.Default).launch { controller.events.collect { recorder.record(it) } }
-      return Rig(http, engine, relay, permission, session, consent, lifecycle, controller, recorder, recording)
+      return Rig(http, client, store, engine, relay, permission, session, consent, lifecycle, controller, recorder, recording)
     }
   }
 }
