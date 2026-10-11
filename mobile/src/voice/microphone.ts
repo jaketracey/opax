@@ -12,12 +12,16 @@ export type MicrophoneAccess = 'granted' | 'denied' | 'blocked';
  * Android production voice builds ask from JS before `start()`. iOS asks in
  * its native `start()` with the purpose string, which only its production
  * build embeds; e2e uses the native synthetic input and development never
- * opens the hardware microphone, on both platforms.
+ * opens the hardware microphone, on both platforms. An Android e2e build made
+ * with OPAX_E2E_MICROPHONE=1 asks too, so the prompt's journeys run against
+ * the fixture; its input is still synthetic.
  */
 export function asksForMicrophone(): boolean {
+  const extra = Constants.expoConfig?.extra;
   return (
     Platform.OS === 'android' &&
-    Constants.expoConfig?.extra?.productionVoiceEnabled === true
+    (extra?.productionVoiceEnabled === true ||
+      (extra?.variant === 'e2e' && extra?.e2eMicrophonePrompt === true))
   );
 }
 

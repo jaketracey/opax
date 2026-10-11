@@ -263,6 +263,30 @@ test('“Don’t ask again” leads to Settings, and access turned on there clea
   expect(mockVoice.start).toHaveBeenCalledTimes(1);
 });
 
+test('the e2e prompt build asks as production does; other e2e builds never do', async () => {
+  const { asksForMicrophone } = jest.requireActual<
+    typeof import('../src/voice/microphone')
+  >('../src/voice/microphone');
+  delete mockExtra.productionVoiceEnabled;
+  try {
+    mockExtra.variant = 'e2e';
+    mockExtra.e2eMicrophonePrompt = true;
+    expect(asksForMicrophone()).toBe(true);
+    asPlatform('ios');
+    expect(asksForMicrophone()).toBe(false);
+    asPlatform('android');
+    // Only an e2e build honours the prompt flag.
+    mockExtra.variant = 'development';
+    expect(asksForMicrophone()).toBe(false);
+    mockExtra.variant = 'e2e';
+    delete mockExtra.e2eMicrophonePrompt;
+    expect(asksForMicrophone()).toBe(false);
+  } finally {
+    delete mockExtra.variant;
+    delete mockExtra.e2eMicrophonePrompt;
+  }
+});
+
 test.each([
   ['Android e2e and development', 'android', undefined],
   ['iOS, where native start() asks', 'ios', true],

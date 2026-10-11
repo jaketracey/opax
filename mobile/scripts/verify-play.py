@@ -93,12 +93,29 @@ namespace = "{http://schemas.android.com/apk/res/android}"
 app = root.find("application")
 assert root.attrib["package"] == "au.com.opax.app"
 assert app is not None and app.attrib[namespace + "usesCleartextTraffic"] == "false"
-assert "android.permission.RECORD_AUDIO" not in manifest
 assert root.attrib[namespace + "versionName"] == "1.0.0"
 assert int(root.find("uses-sdk").attrib[namespace + "targetSdkVersion"]) >= 36
 permissions = sorted(
     n.attrib[namespace + "name"] for n in root.findall("uses-permission")
 )
+# The microphone follows the production voice switch the bundle was built with,
+# as verify-android-build.py checks for the APK: both voice permissions with
+# voice on, neither with it off.
+with zipfile.ZipFile(args.aab) as archive:
+    bundle_voice = (
+        json.loads(archive.read("base/assets/app.config"))["extra"].get(
+            "productionVoiceEnabled"
+        )
+        is True
+    )
+voice_permissions = {
+    "android.permission.RECORD_AUDIO",
+    "android.permission.MODIFY_AUDIO_SETTINGS",
+}
+if bundle_voice:
+    assert voice_permissions <= set(permissions), "Voice bundle without its permissions"
+else:
+    assert not voice_permissions & set(permissions), "Microphone without the voice switch"
 if args.version_code is not None:
     assert int(root.attrib[namespace + "versionCode"]) == args.version_code
 with zipfile.ZipFile(args.aab) as archive:
@@ -296,6 +313,7 @@ report = {
         "package_id": "passed",
         "cleartext_disabled": "passed",
         "android_permission_allowlist": "passed",
+        "microphone_follows_voice_switch": "passed",
         "known_advertising_analytics_namespaces_absent": "passed",
         "signing_credentials_absent_from_bundle": "passed",
         "universal_apk_generated": "passed",

@@ -9,15 +9,17 @@ The base was not voice-equivalent on Android. The JS and config exclusions are g
 - Metro bundles the Talk, sign-in and deletion routes;
 - one runtime switch, `voiceLinked` (`mobile/src/voice/linked.ts`), offers them when the Android OpaxVoice module is linked.
 
-The native module is the parity lanes 1 and 2 (`android/voice-account`, `android/voice-call`). Without it, the app keeps the null-module fallback: no Talk, and Account and about is the list of rows. `verify-android-build.py` follows the switch. `verify-play.py` still asserts that the AAB manifest has no `RECORD_AUDIO`, which contradicts its own parity check; that is the integration lane's.
+The native module is the parity lanes 1 and 2 (`android/voice-account`, `android/voice-call`), integrated with the screens on `android/parity`. Without it, the app keeps the null-module fallback: no Talk, and Account and about is the list of rows. The voice-off release (`OPAX_PRODUCTION_VOICE=0`) bundles on both platforms: Android leaves the module out and shows that list, iOS keeps its placeholder, and Ask reads a no-account store (`store.production.ts`).
 
-`verify-play.py --version-code 2026101101 --require-ios-parity` writes artifact-integrity results and a separate parity result before failing for missing voice, microphone, consent config and routes. This prevents a signed, valid bundle from being described as a voice-enabled 1.0 release.
+Both verifiers follow the production voice switch: a voice build must declare `RECORD_AUDIO` and `MODIFY_AUDIO_SETTINGS` (the call's communication mode and routing), and a voice-off build neither. `verify-play.py --require-ios-parity` writes artifact-integrity results and a separate parity result, and fails without voice, the microphone, the consent default or the routes, so a signed, valid bundle cannot be described as a voice-enabled 1.0 release. Candidate versionCode 2026101201 passes it.
+
+Talk's Android permission journeys run on an e2e build made with `OPAX_E2E_MICROPHONE=1`: it declares `RECORD_AUDIO` alone and asks as production does, while its input stays synthetic. `verify-android-build.py e2e` accepts that permission only with the build's `e2eMicrophonePrompt` flag.
 
 The Android tablet viewport is supported, but the iOS split-pane behavior is iPad-only (`isPad` in adaptive.tsx). Review actual Android tablet captures before making split-pane claims.
 
 ## Local kit
 
-`mobile/private/play/1.0/` is gitignored. It holds the signed candidate, exact hashes and packaged manifests, QA logs, fixture screenshots and hierarchies, a screenshot manifest, listing JSON/text and the Data safety draft/diff. Private evidence and signing material must never enter this public repository.
+`mobile/private/play/` is gitignored; `1.0/` is the 11 October reading-only kit and `2026101201/` the parity candidate. Each holds the signed candidate, exact hashes and packaged manifests, QA logs, fixture screenshots and hierarchies, a screenshot manifest, listing JSON/text and the Data safety draft/diff. Private evidence and signing material must never enter this public repository.
 
 The listing and Data safety text are in [ANDROID-STORE.md](ANDROID-STORE.md): the iOS 1.0 parity listing without the iPad-only tablet paragraph, and the seven iOS types. The reading-plus-Ask alternative is superseded. Do not submit either until the candidate links the Android voice module (the checks listed there).
 

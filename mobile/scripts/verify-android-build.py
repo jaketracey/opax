@@ -32,15 +32,28 @@ permissions = sorted(n.attrib[ns + "name"] for n in root.findall("uses-permissio
 # The production voice switch (OPAX_PRODUCTION_VOICE, default on) is the only
 # build that may declare the microphone, as only its iOS twin embeds the
 # purpose string. E2e and development never open the hardware microphone.
+# A voice build needs both: RECORD_AUDIO for capture and MODIFY_AUDIO_SETTINGS
+# for the call's communication mode and routing (the module's
+# voiceProduction manifest).
 voice = False
-if args.variant == "production":
+microphone_prompt = False
+if args.variant != "development":
     with zipfile.ZipFile(args.apk) as archive:
-        voice = json.loads(archive.read("assets/app.config"))["extra"].get("productionVoiceEnabled") is True
+        packaged = json.loads(archive.read("assets/app.config"))["extra"]
+    voice = args.variant == "production" and packaged.get("productionVoiceEnabled") is True
+    # The e2e prompt build (OPAX_E2E_MICROPHONE=1) declares RECORD_AUDIO alone,
+    # for Talk's permission journeys; its native input stays synthetic.
+    microphone_prompt = args.variant == "e2e" and packaged.get("e2eMicrophonePrompt") is True
+voice_permissions = {"android.permission.RECORD_AUDIO", "android.permission.MODIFY_AUDIO_SETTINGS"}
 allowed = {"android.permission.ACCESS_COARSE_LOCATION", "android.permission.ACCESS_FINE_LOCATION",
            "android.permission.INTERNET", "android.permission.VIBRATE",
            "au.com.opax.app.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION"}
 if voice:
+    allowed |= voice_permissions
+    assert voice_permissions <= set(permissions), f"Voice build without {voice_permissions - set(permissions)}"
+if microphone_prompt:
     allowed.add("android.permission.RECORD_AUDIO")
+    assert "android.permission.RECORD_AUDIO" in permissions, "Prompt build without RECORD_AUDIO"
 assert set(permissions) <= allowed, f"Unexpected Android permission: {set(permissions) - allowed}"
 app = root.find("application")
 assert app is not None and app.attrib[ns + "usesCleartextTraffic"] == "false"
@@ -100,7 +113,8 @@ args.output.with_suffix(".network.xml").write_text(network)
 evidence = {"variant": args.variant, "version": root.attrib[ns + "versionName"],
             "apk_bytes": args.apk.stat().st_size,
             "sha256": hashlib.sha256(args.apk.read_bytes()).hexdigest(),
-            "permissions": permissions, "production_voice": voice, "cleartext_domains": domains,
+            "permissions": permissions, "production_voice": voice,
+            "e2e_microphone_prompt": microphone_prompt, "cleartext_domains": domains,
             "signing": signing_label, "checks": "passed"}
 args.output.write_text(json.dumps(evidence, indent=2) + "\n")
 print(json.dumps(evidence))

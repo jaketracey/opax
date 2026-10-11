@@ -4,7 +4,7 @@ Android 1.0 ships at iOS 1.0 parity, with Talk and accounts, including account d
 
 **Superseded:** the reading-plus-Ask alternative (`listing-android-current.json` in the 11 October local kit, "Alternative truthful draft for this Android reading/Ask binary") and the Data safety draft's "Binary mismatch blocking this draft" section. Both described a binary without Talk and accounts. Neither is to be used.
 
-**Still to verify before submission (integration lane):** the candidate links the Android OpaxVoice module, declares `RECORD_AUDIO`, embeds `productionVoiceEnabled: true` with `voiceConsentDefault: false`, and bundles the Talk, sign-in and deletion routes (`mobile/scripts/verify-android-build.py`, `verify-play.py --require-ios-parity`). The listing and the seven types below are true only of such a binary.
+**Verified on candidate 2026101201 (integration lane, 12 October 2026):** it links the Android OpaxVoice module, declares `RECORD_AUDIO` and `MODIFY_AUDIO_SETTINGS`, embeds `productionVoiceEnabled: true` with `voiceConsentDefault: false`, hides Community, and bundles the Talk, sign-in and deletion routes (`mobile/scripts/verify-android-build.py`, `verify-play.py --require-ios-parity`). The listing and the seven types below are true only of such a binary. Before submission, a physical-device smoke test of a production build still has to cover a real microphone call, audio focus, a phone-call interruption and sign-in with a real emailed code.
 
 ## Listing
 

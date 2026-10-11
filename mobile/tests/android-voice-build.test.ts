@@ -54,15 +54,17 @@ const environment = { ...process.env };
 afterEach(() => {
   process.env = { ...environment };
 });
-function appConfig(variant: string, voice = '1') {
+function appConfig(variant: string, voice = '1', microphone = '0') {
   Object.assign(process.env, {
     OPAX_TARGET_PLATFORM: 'android',
+    OPAX_E2E_MICROPHONE: microphone,
     ...android(variant, voice),
   });
   jest.resetModules();
   const config = jest.requireActual('../app.config').default;
   return {
     extra: config.extra as Record<string, unknown>,
+    permissions: config.android.permissions as string[],
     blocked: config.android.blockedPermissions as string[],
     autolinking: config.plugins.find(
       (plugin: unknown) =>
@@ -121,8 +123,17 @@ describe('Android bundles', () => {
       'src/app/account/sign-in.tsx',
       'src/app/account/delete.tsx',
       'src/features/account/SignInFlow.tsx',
+      'src/features/account/store.ts',
     ])
       expect([path, blocked(list, path)]).toEqual([path, true]);
+    // The entry's rows and Ask's no-account store bundle (review P2-3).
+    for (const path of [
+      'src/features/account/entry.production.ts',
+      'src/features/account/store.production.ts',
+      'src/features/account/AccountRows.tsx',
+      'src/features/account/AccountLinks.tsx',
+    ])
+      expect([path, blocked(list, path)]).toEqual([path, false]);
   });
 
   test('no Android-only account entry remains', () => {
@@ -157,6 +168,31 @@ describe('Android app config', () => {
       expect(config.autolinking).toEqual({ variant });
     },
   );
+
+  test('the e2e prompt build declares the microphone for the permission journeys only', () => {
+    const prompt = appConfig('e2e', '1', '1');
+    expect(prompt.permissions).toContain('RECORD_AUDIO');
+    expect(prompt.blocked).not.toContain('android.permission.RECORD_AUDIO');
+    expect(prompt.extra.e2eMicrophonePrompt).toBe(true);
+    expect(prompt.extra.productionVoiceEnabled).toBeUndefined();
+    expect(prompt.extra.apiOrigin).toMatch(/^http:\/\/10\.0\.2\.2:89\d\d$/);
+    // No other variant honours it.
+    for (const [variant, voice] of [
+      ['development', '1'],
+      ['production', '0'],
+    ] as const) {
+      const other = appConfig(variant, voice, '1');
+      expect(other.permissions).not.toContain('RECORD_AUDIO');
+      expect(other.blocked).toContain('android.permission.RECORD_AUDIO');
+      expect(other.extra.e2eMicrophonePrompt).toBeUndefined();
+    }
+    expect(
+      appConfig('production', '1', '1').extra.e2eMicrophonePrompt,
+    ).toBeUndefined();
+    expect(() => appConfig('e2e', '1', 'yes')).toThrow(
+      'OPAX_E2E_MICROPHONE must be 0 or 1',
+    );
+  });
 
   test('the rationale says what the iOS purpose string says', () => {
     const { microphoneCopy } = jest.requireActual<
