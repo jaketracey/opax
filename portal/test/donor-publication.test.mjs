@@ -9,6 +9,7 @@ import {privacyBaselineFiles,privacySourceGraphs,privacySourceDonorRecords,asset
 import {donorPrivacyIndex,donorNameWithheld,withholdIndividualDonors,MONEY_GRAPHS,foldDonorName,isOrganisationDonor} from '../public/donor-entity.js';
 import {donorRows,withheldDonorTotals,donorRouteWithheld} from '../public/donor-views.js';
 import {buildFlows} from '../public/ledger.js';
+import {withholdStoredDonors} from '../src/donor-sanitise.mjs';
 const pub=new URL('../public/',import.meta.url).pathname;
 const original=privacySourceGraphs(),index=donorPrivacyIndex(original),context=readPublicationContext(pub,original);
 const read=p=>JSON.parse(readFileSync(join(pub,p),'utf8'));
@@ -37,6 +38,13 @@ function hasHiddenIdentity(value,donor=false,nameField=false){
   return hasHiddenIdentity(v,isDonor||key==='top_donors'||key==='donor'||key==='donor_label',['name','label','n','aliases'].includes(key));
  });
 }
+function hiddenLookupKey(value){
+ if(!value||typeof value!=='object')return false;
+ return Object.entries(value).some(([key,row])=>{
+  const entry=context.registry.names[context.hash(foldDonorName(key))];
+  return Boolean(entry&&!entry.exempt&&!organisationAliases.has(foldDonorName(key)))||hiddenLookupKey(row);
+ });
+}
 
 
 test('every served JSON and client module passes the runtime export privacy set',t=>{
@@ -45,6 +53,7 @@ test('every served JSON and client module passes the runtime export privacy set'
   const file=relative(pub,path);
   if(path.endsWith('.json')) {
    const value=JSON.parse(readFileSync(path,'utf8'));
+   assert.ok(!hiddenLookupKey(value),`${file}: withheld dictionary key`);
    const grant=file.startsWith('grants/') || /^graph\/grants\./.test(file) || file==='social/grants-largest.json';
    if(file.startsWith('electorates/')){json++;continue;}
    const scope=grant?assetDonorRecords(value):value;
@@ -68,6 +77,15 @@ test('every served JSON and client module passes the runtime export privacy set'
   }
  }
  t.diagnostic(`${json} served JSON files; ${modules} client and crawl files`);
+});
+
+test('public lookups are rebuilt from sanitised labels without changing record joins',()=>{
+ const n=original.flatMap(g=>g.nodes).find(n=>n.kind==='donor'&&donorNameWithheld(index,n.label)&&!context.registry.names[context.hash(foldDonorName(n.label))]?.exempt);
+ assert.ok(n);const id='n-'+foldDonorName(n.label).replace(/[^a-z0-9]+/g,'-');
+ const fixture={people:{[id]:{id,name:n.label}},_by_name:{[foldDonorName(n.label)]:id},ties:{[id]:Array.from({length:21},()=>({record_id:id,description:'record fixture'}))},nested:{aliases:{[n.label]:[n.id]}}};
+ for(const safe of [sanitiseDonorAsset(fixture,context),withholdStoredDonors(fixture,context.registry)]){
+  assert.ok(!hiddenLookupKey(safe));assert.ok(safe.people[id].id===id);assert.ok(Object.values(safe._by_name)[0]===id);assert.ok(Object.keys(safe._by_name)[0]===safe.people[id].name.toLowerCase());assert.equal(safe.ties[id].length,21);assert.ok(safe.ties[id].every(r=>r.record_id===id));
+ }
 });
 
 test('native graph schemas, groups, amounts and year cells are unchanged',()=>{

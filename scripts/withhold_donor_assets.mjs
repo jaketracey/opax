@@ -6,7 +6,7 @@ import {readFileSync,writeFileSync,readdirSync,existsSync} from 'node:fs';
 import {join,relative,resolve} from 'node:path';
 import {fileURLToPath} from 'node:url';
 import {MONEY_GRAPHS,donorPrivacyIndex,donorNameWithheld,foldDonorName,withholdIndividualDonors,isOrganisationDonor,withheldPhrases} from '../portal/public/donor-entity.js';
-import {withholdDonorText} from '../portal/src/donor-sanitise.mjs';
+import {withholdDonorText,recordReferenceField,nameLookupField,rebuildPublicLookup,publicLookupEntities} from '../portal/src/donor-sanitise.mjs';
 const repo=resolve(fileURLToPath(new URL('..',import.meta.url)));
 
 // A pinned pre-withholding export supports regression checks and removal of
@@ -97,9 +97,9 @@ export function sanitiseDonorAsset(value,context) {
   if (/^(?:person|name):/.test(clean) && /Donor \d+ \(name withheld\)/i.test(clean)) clean=clean.toLowerCase();
   return clean.replace(/(\/subject\/donor\/)([^\s"<>?#]+)/g,(_,prefix,segment)=>{let label;try{label=decodeURIComponent(segment)}catch{return prefix+segment}const hidden=registry.names[hash(foldDonorName(label))];return hidden && !context.index.organisations.has(foldDonorName(label))?prefix+encodeURIComponent(hidden.label):prefix+segment});
  };
- const visit=(x,donor=false,identityKeys=false)=>{
-  if(typeof x==='string')return string(x,donor);
-  if(Array.isArray(x)){if(typeof x[0]==='string'&&/(?:^|:)(?:grant(?:-|:)|grant-program|grant-recipient)/.test(x[0]))return grants(x);return x.map(v=>visit(v,donor));}
+ const visit=(x,donor=false,identityKeys=false,reference=false)=>{
+  if(typeof x==='string')return reference&&!donor&&!x.includes('/subject/donor/')?x:string(x,donor);
+  if(Array.isArray(x)){if(typeof x[0]==='string'&&/(?:^|:)(?:grant(?:-|:)|grant-program|grant-recipient)/.test(x[0]))return grants(x);return x.map(v=>visit(v,donor,identityKeys,reference));}
   if(!x || typeof x!=='object')return x;
   if(Array.isArray(x.nodes)&&Array.isArray(x.edges))return withholdIndividualDonors(x,context.index,context.numbers);
   if(x.kind==='grant'&&typeof x.href==='string'&&typeof x.resource==='string'&&!x.subject)return grants(x);
@@ -116,11 +116,15 @@ export function sanitiseDonorAsset(value,context) {
    if(k==='d' && v?.e && typeof v.n==='string' && typeof v.aec==='number'){out[k]=compactDonor(v);continue;}
    if(k==='top_donors' && Array.isArray(v)){out[k]=v.map(row=>[donorLabel(row[0]),...row.slice(1)]);continue;}
    if(k==='donors' && v && typeof v==='object' && !Array.isArray(v)){out[k]=Object.fromEntries(Object.entries(v).map(([label,entry])=>[donorLabel(label),visit(entry)]));continue;}
+   if(nameLookupField(k)&&v&&typeof v==='object'&&!Array.isArray(v)){out[k]=Object.fromEntries(Object.entries(v).map(([label,row])=>[label,typeof row==='string'?row:visit(row)]));continue;}
    // Field names are schema, not identity. Only name-keyed dictionaries may
    // replace keys; native node/edge/access fields stay byte-for-byte named.
    const key=identityKeys || /^(?:donor|person|name):/.test(k)?string(k,donor):k;
-   out[key]=visit(v,hidden || ['name','label','n'].includes(k) && /[a-z]/i.test(String(v)) && !registry.names[hash(foldDonorName(String(v)))]?.exempt || k==='donors' || k==='top_donors' || k==='donor' || k==='donor_label' || k==='aliases', ['names','by_name'].includes(k));
-  }return out;
+   out[key]=visit(v,hidden || ['name','label','n'].includes(k) && /[a-z]/i.test(String(v)) && !registry.names[hash(foldDonorName(String(v)))]?.exempt || k==='donors' || k==='top_donors' || k==='donor' || k==='donor_label' || k==='aliases',false,recordReferenceField(k));
+  }
+  const entities=publicLookupEntities(out);
+  for(const k of Object.keys(out))if(nameLookupField(k)&&out[k]&&typeof out[k]==='object'&&!Array.isArray(out[k]))out[k]=rebuildPublicLookup(out[k],registry,entities);
+  return rebuildPublicLookup(out,registry,entities);
  };
  const compactDonor=v=>{
   const label=donorLabel(v.n),hidden=/^Donor \d+ \(name withheld\)$/.test(label);
