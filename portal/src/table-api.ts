@@ -3,7 +3,7 @@ import {TABLE_DATASETS, tableText, tableTerms} from './table-datasets.mjs'
 import {identityCandidates, identityHash} from './table-identities.mjs'
 
 type TableEnv = {TABLE_DB: D1Database; CACHE_EPOCH?: string}
-const MAX_CSV = 50_000, BATCH = 200, MAX_FACETS = 100
+const MAX_CSV = 50_000, CSV_PAGE = 10_000, BATCH = 200, MAX_FACETS = 100
 const arrays = new Set(['portfolios','sectors','entities'])
 const quote = (key: string) => `"${key}"`
 const tableName = (name: string) => 'table_' + name.replaceAll('-', '_')
@@ -59,13 +59,41 @@ export function normalizedTableQuery(query: Query, csv = false): string {
   if (query.q) params.set('q',query.q)
   for (const key of Object.keys(query.filters || {}).sort()) params.set('f.'+key,JSON.stringify(query.filters![key]))
   if (query.sort) params.set('sort',`${query.sort.key}:${query.sort.dir}`)
-  if (csv) params.set('format','csv')
+  if (csv) {params.set('format','csv');params.set('page',String(query.page))}
   else {params.set('page',String(query.page));params.set('pageSize',String(query.pageSize))}
   return params.toString()
 }
 
-async function blocked(db: D1Database, params: URLSearchParams, lengths: number[]): Promise<boolean> {
-  for (const value of params.values()) {
+function canonicalNumber(value: number): string {
+  const raw=String(value)
+  if (!raw.includes('e')) return raw
+  const [coefficient,exponent]=raw.split('e'),sign=coefficient.startsWith('-') ? '-' : ''
+  const unsigned=coefficient.replace(/^-/,'')
+  const digits=unsigned.replace('.',''),point=unsigned.split('.')[0].length+Number(exponent)
+  return sign+(point<=0 ? '0.'+'0'.repeat(-point)+digits : point>=digits.length ? digits+'0'.repeat(point-digits.length) : digits.slice(0,point)+'.'+digits.slice(point))
+}
+function* scalarValues(input: unknown): Generator<string> {
+  const pending=[input]
+  while (pending.length) {
+    const value=pending.pop()
+    if (typeof value==='string') yield value
+    else if (typeof value==='number') yield canonicalNumber(value)
+    else if (Array.isArray(value)) pending.push(...value)
+    else if (value && typeof value==='object') pending.push(...Object.values(value))
+  }
+}
+function decodedInputs(params: URLSearchParams): unknown[] {
+  const values: unknown[]=[]
+  for (const [key,raw] of params) {
+    // Free text is still text even if it resembles JSON. Filter keys are schema,
+    // not identities; only their decoded array/object values enter the guard.
+    if (!/(^|\.)f\.[^.]+$/.test(key)) values.push(raw)
+    try {values.push(JSON.parse(raw))} catch {values.push(raw)}
+  }
+  return values
+}
+async function blocked(db: D1Database, values: Iterable<string>, lengths: number[]): Promise<boolean> {
+  for (const value of values) {
     const candidates=[...identityCandidates(value,lengths)]
     for (let start=0;start<candidates.length;start+=90) {
       const hashes=await Promise.all(candidates.slice(start,start+90).map(identityHash))
@@ -108,41 +136,56 @@ export async function tableApi(request: Request, env: TableEnv, _ctx?: Execution
   if (request.method!=='GET') return errorResponse(405,'method_not_allowed',{allow:'GET'})
   if (url.search.length>20_000 || url.searchParams.toString().length>8192) return errorResponse(400,'invalid_query')
   try {
+    // Decode and parse before any database access, including the rejection index.
+    const inputs=decodedInputs(url.searchParams)
+    let query: Query | undefined
+    try {query=parseTableQuery(url.searchParams,config.columns,config.defaultSort)} catch { /* Guard decoded values before returning a fixed grammar error. */ }
     const db=env.TABLE_DB
     const meta=await db.prepare("SELECT key,value FROM table_meta WHERE key IN ('version','privacy_lengths') LIMIT 2").all<{key:string;value:string}>()
     const metadata=Object.fromEntries(meta.results.map(r=>[r.key,r.value]))
     if (!metadata.version || !metadata.privacy_lengths) throw new Error('unavailable')
-    // Before grammar validation: even malformed state can contain an identifier.
-    const denied=Boolean(config.privacy) && await blocked(db,url.searchParams,JSON.parse(metadata.privacy_lengths))
-    let query: Query
-    try {query=denied ? {q:'',filters:{},sort:config.defaultSort,page:1,pageSize:50} : parseTableQuery(url.searchParams,config.columns,config.defaultSort)}
-    catch {return errorResponse(400,'invalid_query')}
+    const denied=Boolean(config.privacy) && await blocked(db,scalarValues(inputs),JSON.parse(metadata.privacy_lengths))
+    if (denied) query={q:'',filters:{},sort:config.defaultSort,page:1,pageSize:50}
+    if (!query) return errorResponse(400,'invalid_query')
     const csv=url.searchParams.get('format')==='csv'
     if (!denied && (url.searchParams.getAll('format').length>1 || url.searchParams.has('format') && !csv)) return errorResponse(400,'invalid_query')
     const key=normalizedTableQuery(query,csv)
-    const digest=await identityHash([metadata.version,env.CACHE_EPOCH || '',name,denied ? 'withheld:'+csv : key].join('|'))
-    const headers=new Headers({'cache-control':'public, max-age=60, s-maxage=60','etag':`"${digest}"`,'content-location':denied ? '/api/table/'+name : '/api/table/'+name+'?'+key})
+    const digest=await identityHash(['decoded-privacy-v2',metadata.version,env.CACHE_EPOCH || '',name,denied ? 'withheld:'+csv : key].join('|'))
+    const headers=new Headers({'cache-control':'public, max-age=60, s-maxage=60','etag':`"${digest}"`})
+    if (!config.privacy) headers.set('content-location','/api/table/'+name+'?'+key)
     if (url.searchParams.size || csv) headers.set('x-robots-tag','noindex')
     if (request.headers.get('if-none-match')===headers.get('etag')) return new Response(null,{status:304,headers})
     const table=tableName(name), selection=where(table,query), columnSQL=config.columns.map(c=>'t.'+quote(c.key)).join(',')
     const total=denied ? 0 : Number(await db.prepare(`SELECT COUNT(*) FROM ${table} t${selection.sql}`).bind(...selection.values).first<number>('COUNT(*)'))
     if (csv) {
-      const exported=Math.min(MAX_CSV,total),truncated=total>MAX_CSV
-      headers.set('content-type','text/csv; charset=utf-8');headers.set('content-disposition',`attachment; filename="${name}.csv"`)
-      headers.set('x-table-total',String(total));headers.set('x-table-exported',String(exported));headers.set('x-table-truncated',String(truncated));headers.set('x-table-export-truncated',String(truncated))
-      headers.set('access-control-expose-headers','X-Table-Total, X-Table-Exported, X-Table-Truncated, X-Table-Export-Truncated, X-Table-Export-Note')
-      const note=`Showing the first ${exported.toLocaleString('en-AU')} of ${total.toLocaleString('en-AU')} rows`
+      const exportable=Math.min(MAX_CSV,total),exportLimited=total>MAX_CSV
+      const csvPage=query.page!,pages=Math.ceil(exportable/CSV_PAGE)
+      const start=csvPage>pages ? exportable : (csvPage-1)*CSV_PAGE
+      const end=Math.min(exportable,start+CSV_PAGE),exported=end-start,truncated=exported<total
+      const link=(page: number) => '/api/table/'+name+'?'+normalizedTableQuery({...query,page},true)
+      const next=csvPage<pages ? link(csvPage+1) : undefined
+      const links: string[]=[]
+      if (next) links.push(`<${next}>; rel="next"`)
+      if (csvPage>1 && pages) links.push(`<${link(Math.min(csvPage-1,pages))}>; rel="prev"`)
+      if (links.length) headers.set('link',links.join(', '))
+      headers.set('content-type','text/csv; charset=utf-8');headers.set('content-disposition',`attachment; filename="${name}-page-${csvPage}.csv"`)
+      headers.set('x-table-total',String(total));headers.set('x-table-exported',String(exported));headers.set('x-table-page',String(csvPage))
+      headers.set('x-table-truncated',String(truncated));headers.set('x-table-export-truncated',String(exportLimited))
+      headers.set('access-control-expose-headers','Link, X-Table-Total, X-Table-Exported, X-Table-Page, X-Table-Truncated, X-Table-Export-Truncated, X-Table-Export-Note')
+      const note=(exported ? `Showing rows ${(start+1).toLocaleString('en-AU')}-${end.toLocaleString('en-AU')} of ${total.toLocaleString('en-AU')}` : `Showing 0 rows of ${total.toLocaleString('en-AU')}`)
+        +(exportLimited ? '; export limited to the first 50,000 rows' : '')
+        +(next ? `; next export: ${next}` : '')
       if (truncated) headers.set('x-table-export-note',note)
-      let offset=0,started=false
+      let offset=start,started=false
       const encoder=new TextEncoder()
       const stream=new ReadableStream<Uint8Array>({async pull(controller) {
         try {
           if (!started) {started=true;controller.enqueue(encoder.encode(config.columns.map(c=>csvValue(c.label)).join(',')+'\r\n'));return}
-          if (offset>=exported) {
+          if (offset>=end) {
             if (truncated) controller.enqueue(encoder.encode([csvValue(note),...config.columns.slice(1).map(()=>'')].join(',')+'\r\n'))
             controller.close();return
           }
-          const batch=await db.prepare(`SELECT ${columnSQL} FROM ${table} t${selection.sql}${order(query,config.columns)} LIMIT ? OFFSET ?`).bind(...selection.values,Math.min(BATCH,exported-offset),offset).all<Row>()
+          const batch=await db.prepare(`SELECT ${columnSQL} FROM ${table} t${selection.sql}${order(query,config.columns)} LIMIT ? OFFSET ?`).bind(...selection.values,Math.min(BATCH,end-offset),offset).all<Row>()
           if (!batch.results.length) throw new Error('unavailable')
           const rows=decode(batch.results);offset+=rows.length
           controller.enqueue(encoder.encode(rows.map(row=>config.columns.map(c=>csvValue(row[c.key])).join(',')).join('\r\n')+'\r\n'))

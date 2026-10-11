@@ -257,6 +257,7 @@ test('all five money tables withhold donor, recipient, supplier, alias and ident
   const aliases=[...recipientDetails,...supplierDetails].flatMap(r=>[...(r.aliases||[]),...(r.lookup_names||[]),r.identity?.legal_name,r.abr?.name]).filter(v=>typeof v==='string');
   const abns=[...recipientDetails,...supplierDetails].map(r=>r.abn??r.abr?.abn).filter(Boolean).map(String);
   const probes=[...new Set([...donors.slice(0,10),...recipients.slice(0,10),...suppliers.slice(0,10),...aliases.slice(0,5),...abns.slice(0,5),...identifiers.slice(0,10),...identifiers.slice(0,3).map(v=>v.split('').join(' '))])];
+  const decodedProbes=[donors[0],recipients[0],suppliers[0],aliases[0],identifiers[0]].filter(Boolean);
   assert.ok(recipients.length>=64,'individual recipient coverage');assert.ok(suppliers.length>0,'individual supplier coverage');assert.ok(identifiers.length>0,'withheld identifier coverage');
   const clean = (where,text) => assert.equal(policy.check(text),false,where+': withheld identity count must be zero');
   // Schema keys (including the registration column) are labels, not identities.
@@ -271,21 +272,30 @@ test('all five money tables withhold donor, recipient, supplier, alias and ident
     // Bounded chunks avoid building quadratic candidate sets for a full CSV.
     for (const line of csvText.split('\r\n')) clean(dataset+' CSV',line);
     const csvPath=join(root,'table-'+dataset+'.csv');writeFileSync(csvPath,csvText);
-    await assertTablePrivacy({clientInput:[],serverResponses:publicValues,csvPath,url:response.headers.get('content-location'),renderedText:'',accessibleText:'',analytics:[]},sharedIndex);
+    await assertTablePrivacy({clientInput:[],serverResponses:publicValues,csvPath,url:response.headers.get('content-location') || '',renderedText:'',accessibleText:'',analytics:[]},sharedIndex);
     writeFileSync(csvPath,csvText.slice(0,csvText.indexOf('\r\n')+2));
     for (const [i,label] of probes.entries()) for (const format of ['', '&format=csv']) {
       const state=new URLSearchParams({q:label,pageSize:'200'});
       const filtered=await fetchWorker(base+'?'+state+format);assert.equal(filtered.status,200,`${dataset} query ${i}`);
       const text=await filtered.text();if(format)clean(dataset+' body',text);else cleanJSON(dataset+' body',JSON.parse(text));clean(dataset+' headers',JSON.stringify([...filtered.headers]));
-      assert.equal(filtered.headers.get('content-location'),base);assert.equal(filtered.headers.get('x-robots-tag'),'noindex');
-      await assertTablePrivacy({clientInput:[],serverResponses:[text,[...filtered.headers]],csvPath,url:filtered.headers.get('content-location'),renderedText:'',accessibleText:'',analytics:[]},sharedIndex);
+      assert.equal(filtered.headers.get('content-location'),null);assert.equal(filtered.headers.get('x-robots-tag'),'noindex');
+      await assertTablePrivacy({clientInput:[],serverResponses:[text,[...filtered.headers]],csvPath,url:filtered.headers.get('content-location') || '',renderedText:'',accessibleText:'',analytics:[]},sharedIndex);
       if (format) assert.equal(filtered.headers.get('x-table-exported'),'0');else assert.equal(JSON.parse(text).total,0);
     }
     const malformed=await fetchWorker(base+'?'+new URLSearchParams({q:probes[0],sort:'invalid'}));
-    assert.equal((await malformed.json()).total,0);assert.equal(malformed.headers.get('content-location'),base);
+    assert.equal((await malformed.json()).total,0);assert.equal(malformed.headers.get('content-location'),null);
     const textColumn=config.columns.find(c=>c.type==='text'&&c.key!=='id');
+    for(const [i,value]of decodedProbes.entries())for(const format of ['', '&format=csv']) {
+      const escaped='"'+value.split('').map(c=>'\\u'+c.charCodeAt(0).toString(16).padStart(4,'0')).join('')+'"';
+      const state=new URLSearchParams({['f.'+textColumn.key]:'['+escaped+']'});
+      const decoded=await fetchWorker(base+'?'+state+format);assert.equal(decoded.status,200,`${dataset} decoded query ${i}`);
+      const text=await decoded.text();if(format)clean(dataset+' decoded body',text);else cleanJSON(dataset+' decoded body',JSON.parse(text));
+      assert.equal(decoded.headers.get('content-location'),null);assert.equal(decoded.headers.get('link'),null);
+      await assertTablePrivacy({clientInput:[],serverResponses:[text,[...decoded.headers]],csvPath,url:'',renderedText:'',accessibleText:'',analytics:[]},sharedIndex);
+      if(format)assert.equal(decoded.headers.get('x-table-exported'),'0');else assert.equal(JSON.parse(text).total,0);
+    }
     const filter=new URLSearchParams({['f.'+textColumn.key]:JSON.stringify([probes[0]])});
-    const r=await fetchWorker(base+'?'+filter);assert.equal((await r.json()).total,0);assert.equal(r.headers.get('content-location'),base);
+    const r=await fetchWorker(base+'?'+filter);assert.equal((await r.json()).total,0);assert.equal(r.headers.get('content-location'),null);
   }
 });
 

@@ -79,3 +79,21 @@ type Row = Record<string, unknown>;
 
 ## Privacy regression (blocking)
 The shared derived test, `portal/test/donor-privacy.test.mjs`, covers every table in every mode. That includes the rows, facets, CSV and URL state of each.
+
+## Server CSV continuation (11 Oct 2026, additive clarification)
+
+The 50,000-row limit remains the ceiling for one filtered export. Each CSV
+response contains at most 10,000 data rows; `format=csv&page=1` starts that
+export, and `page=2` through `page=5` continue it. CSV page size is fixed and
+independent of the JSON `pageSize`. `Link` headers provide `rel="next"` and
+`rel="prev"` URLs preserving the filters and sort. Each partial CSV includes a
+trailer record showing its row range, the full matching count, the 50,000-row
+ceiling when applicable, and the next export URL when available.
+
+`X-Table-Total`, `X-Table-Exported`, `X-Table-Page`, `X-Table-Truncated` and
+`X-Table-Export-Note` describe the current CSV. `X-Table-Export-Truncated` is
+true only when the matching set exceeds the logical 50,000-row export ceiling,
+so clients announcing that ceiling continue to report it accurately.
+Money dataset responses omit `Content-Location`; decoded queries containing
+withheld identities produce empty results with no echoed state or continuation
+links. No fields in the shared TypeScript contract change.

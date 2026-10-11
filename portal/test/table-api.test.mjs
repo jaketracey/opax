@@ -4,6 +4,8 @@ import {readFile} from 'node:fs/promises';
 import {TABLE_DATASETS} from '../src/table-datasets.mjs';
 import {tableApi} from '../src/table-api.ts';
 import {tableDatabase} from './table-d1-harness.mjs';
+import {tableIdentityIndex} from '../../scripts/load_tables.mjs';
+import {identityHash} from '../src/table-identities.mjs';
 import {registerServerCSVContract} from './datatable-endpoint-contract.mjs';
 
 const rows=Object.fromEntries(Object.entries(TABLE_DATASETS).map(([name,c])=>[name,Array.from({length:260},(_,i)=>({row:Object.fromEntries(c.columns.map(col=>[col.key,col.key==='id' ? 'item-'+i : ['money','count'].includes(col.type) ? i+0.25 : col.type==='year' ? 2000+i : col.type==='category' ? (['portfolios','sectors','entities'].includes(col.key) ? ['Group '+i%2] : 'Group '+i%2) : col.type==='date' ? '2024-01-01' : col.key==='abn' ? '' : i===3 ? 'Needle record' : 'Record '+i]))}))]));
@@ -16,7 +18,7 @@ for(const [name,config]of Object.entries(TABLE_DATASETS))test(name+': paging, so
   r=await fetchTable(name,'sort='+numeric.key+':asc&pageSize=999');page=await r.json();assert.equal(page.rows.length,200);assert.equal(page.rows[0][numeric.key],numeric.type==='year' ? 2000 : 0.25);
   assert.deepEqual(page.facets[numeric.key],numeric.type==='year' ? {min:2000,max:2259} : {min:0.25,max:259.25});
   const cat=config.columns.find(c=>c.type==='category');assert.equal(page.facets[cat.key].length,2);assert.equal(page.facets[cat.key][0].count,130);
-  r=await fetchTable(name,'q=needle');page=await r.json();assert.equal(page.total,1);assert.equal(page.rows[0].id,'item-3');assert.equal(r.headers.get('x-robots-tag'),'noindex');
+  r=await fetchTable(name,'q=needle');page=await r.json();assert.equal(page.total,1);assert.equal(page.rows[0].id,'item-3');assert.equal(r.headers.get('x-robots-tag'),'noindex');if(config.privacy)assert.equal(r.headers.get('content-location'),null);
   const filter=new URLSearchParams({['f.'+cat.key]:JSON.stringify(['Group 0']),['f.'+numeric.key]:JSON.stringify(numeric.type==='year' ? {min:2010,max:2020} : {min:10,max:20})});
   r=await fetchTable(name,filter);page=await r.json();assert.equal(page.total,numeric.type==='year' ? 6 : 5);assert.ok(page.rows.every(row=>[row[cat.key]].flat().includes('Group 0')&&row[numeric.key]>=(numeric.type==='year' ? 2010 : 10)&&row[numeric.key]<=(numeric.type==='year' ? 2020 : 20)));
   r=await fetchTable(name,'format=csv');const csv=await r.text();assert.equal(r.headers.get('x-table-exported'),'260');assert.equal(r.headers.get('x-table-truncated'),'false');assert.equal(csv.split('\r\n').length,262);assert.ok(csv.includes(numeric.type==='year' ? '2000' : '0.25'));
@@ -53,16 +55,79 @@ test('core-sized category arrays use bounded SQL bindings',async()=>{
   const response=await fetchTable('contracts',new URLSearchParams({'f.agency':JSON.stringify(values),'f.jurisdiction':JSON.stringify(values)}));
   assert.equal(response.status,200);assert.equal((await response.json()).total,260);
 });
-test('CSV cap is visible in the downloaded content and response headers',async()=>{
+test('decoded identity variants reject before data SQL across all five money datasets',async()=>{
+  const policy=await tableIdentityIndex();
+  const phrase=[...policy.phrases].find(v=>v.includes(' ')&&/[aeiou]/.test(v));
+  const identifier=[...policy.phrases].find(v=>/^\d{11}$/.test(v)&&String(Number(v))===v);
+  assert.ok(phrase&&identifier,'derived identity and identifier coverage');
+  const hashes=await Promise.all([...policy.phrases].map(async value=>({hash:await identityHash(value),words:value.split(' ').length})));
+  for(let i=0;i<hashes.length;i+=100)await local.db.batch(hashes.slice(i,i+100).map(v=>local.db.prepare('INSERT OR IGNORE INTO table_private_identity VALUES (?,?)').bind(v.hash,v.words)));
+  await local.db.prepare("UPDATE table_meta SET value=? WHERE key='privacy_lengths'").bind(JSON.stringify(policy.lengths)).run();
+  const escaped=value=>'"'+value.split('').map(c=>'\\u'+c.charCodeAt(0).toString(16).padStart(4,'0')).join('')+'"';
+  const accents={a:'á',e:'é',i:'í',o:'ó',u:'ú'};
+  const accented=phrase.replace(/[aeiou]/,c=>accents[c]);
+  const mixed=phrase.split('').map((c,i)=>i%2?c.toUpperCase():c).join('');
+  const spaced='  '+phrase.replaceAll(' ','  \t  ')+'  ';
+  for(const [name,config]of Object.entries(TABLE_DATASETS).filter(([,c])=>c.privacy)) {
+    const category=config.columns.find(c=>c.type==='category').key;
+    const numeric=config.columns.find(c=>c.type==='money').key;
+    const states=[
+      new URLSearchParams({['f.'+category]:'['+escaped(phrase)+']'}),
+      new URLSearchParams({['f.'+category]:'['+escaped(identifier)+']'}),
+      ...[mixed,spaced,accented,accented.normalize('NFD'),identifier.split('').join(' ')].map(value=>new URLSearchParams({['f.'+category]:JSON.stringify([value])})),
+      new URLSearchParams({['f.'+numeric]:'{"min":'+Number(identifier).toExponential()+',"max":'+Number(identifier).toExponential()+'}'}),
+      new URLSearchParams({['f.'+numeric]:JSON.stringify({min:Number(identifier)})}),
+      new URLSearchParams({['f.'+category]:'{"nested":['+escaped(phrase)+']}'}),
+      new URLSearchParams({['f.'+category]:'[['+escaped(identifier)+']]'}),
+      ...[mixed,spaced,accented,accented.normalize('NFD'),identifier.split('').join(' '),Number(identifier).toExponential()].map(q=>new URLSearchParams({q})),
+    ];
+    for(const [i,state]of states.entries())for(const prefix of ['','t.'])for(const csv of [false,true]) {
+      const params=new URLSearchParams([...state].map(([key,value])=>[prefix+key,value]));if(csv)params.set('format','csv');
+      let dataQueries=0;
+      const db={prepare(sql){if(/FROM\s+table_(?!meta\b|private_identity\b)/i.test(sql))dataQueries++;return local.db.prepare(sql);},batch:local.db.batch.bind(local.db)};
+      const response=await tableApi(new Request('https://opax.com.au/api/table/'+name+'?'+params),{TABLE_DB:db});
+      const context=name+' decoded variant '+i+' '+(csv?'CSV':'page');
+      assert.equal(response.status,200,context);assert.equal(dataQueries,0,context+': no row/facet queries');
+      assert.equal(response.headers.get('content-location'),null,context);assert.equal(response.headers.get('link'),null,context);
+      assert.equal(response.headers.get('x-robots-tag'),'noindex',context);
+      assert.equal(policy.check(JSON.stringify([...response.headers])),false,context+': clean headers');
+      if(csv){assert.equal(response.headers.get('x-table-exported'),'0',context);assert.equal((await response.text()).split('\r\n').length,2,context);}
+      else {const page=await response.json();assert.equal(page.total,0,context);assert.deepEqual(page.rows,[],context);assert.deepEqual(page.facets,{},context);}
+    }
+  }
+});
+test('CSV pages are bounded, retryable and retain the 50,000-row export ceiling',async()=>{
   await local.db.prepare("WITH RECURSIVE n(x) AS (SELECT 261 UNION ALL SELECT x+1 FROM n WHERE x<50100) INSERT INTO table_votes (rowid,id,name,ayes,search) SELECT x,'cap-'||x,'Record',x,'Record' FROM n").run();
-  const response=await fetchTable('votes','format=csv&sort=ayes:asc');assert.equal(response.headers.get('x-table-total'),'50100');assert.equal(response.headers.get('x-table-exported'),'50000');assert.equal(response.headers.get('x-table-truncated'),'true');
-  const csv=await response.text();assert.ok(csv.endsWith('"Showing the first 50,000 of 50,100 rows"'+','.repeat(TABLE_DATASETS.votes.columns.length-1)+'\r\n'));assert.equal(csv.split('\r\n').length,50003);
+  let path='/api/table/votes?format=csv&sort=ayes:asc',previousETag,last;
+  const values=[];
+  for(let page=1;page<=5;page++){
+    const response=await tableApi(new Request('https://opax.com.au'+path),env);last=response;
+    assert.equal(response.headers.get('x-table-total'),'50100');assert.equal(response.headers.get('x-table-exported'),'10000');assert.equal(response.headers.get('x-table-page'),String(page));assert.equal(response.headers.get('x-table-export-truncated'),'true');
+    assert.notEqual(response.headers.get('etag'),previousETag);previousETag=response.headers.get('etag');
+    const records=(await response.text()).split('\r\n');assert.equal(records.length,10003);
+    const note=response.headers.get('x-table-export-note');assert.ok(note.includes('export limited to the first 50,000 rows'));assert.ok(records.at(-2).startsWith('"'+note));
+    for(const record of records.slice(1,10001))values.push(Number(record.split(',')[TABLE_DATASETS.votes.columns.findIndex(c=>c.key==='ayes')]));
+    const next=/<([^>]+)>; rel="next"/.exec(response.headers.get('link')||'');
+    assert.equal(Boolean(next),page<5);if(page<5){path=next[1];assert.equal(new URL(path,'https://opax.com.au').searchParams.get('page'),String(page+1));}
+  }
+  assert.equal(values.length,50000);assert.equal(new Set(values).size,50000);assert.equal(values[0],0.25);assert.equal(values.at(-1),50000);
+  assert.ok(last.headers.get('link').includes('rel="prev"'));
+  const beyond=await fetchTable('votes','format=csv&page=6');assert.equal(beyond.headers.get('x-table-exported'),'0');assert.ok(!(beyond.headers.get('link')||'').includes('rel="next"'));
+});
+test('CSV continuation links preserve filters and sorting within an uncapped logical export',async()=>{
+  const state=new URLSearchParams({'f.ayes':JSON.stringify({min:1000,max:12000}),sort:'ayes:desc',format:'csv'});
+  const first=await fetchTable('votes',state);assert.equal(first.headers.get('x-table-total'),'11001');assert.equal(first.headers.get('x-table-exported'),'10000');assert.equal(first.headers.get('x-table-export-truncated'),'false');
+  const path=/<([^>]+)>; rel="next"/.exec(first.headers.get('link'))[1];
+  assert.ok((await first.text()).includes('next export: '+path));
+  const second=await tableApi(new Request('https://opax.com.au'+path),env);assert.equal(second.headers.get('x-table-exported'),'1001');assert.ok(!(second.headers.get('link')||'').includes('rel="next"'));
+  const records=(await second.text()).split('\r\n');const index=TABLE_DATASETS.votes.columns.findIndex(c=>c.key==='ayes');assert.equal(Number(records[1].split(',')[index]),2000);assert.equal(Number(records[1001].split(',')[index]),1000);
 });
 
 let coreCSV;
 registerServerCSVContract(test,{
   name:'D1 table endpoint',
-  note:'"Showing the first 50,000 of 50,001 rows"'+','.repeat(TABLE_DATASETS.votes.columns.length-1),
+  limit:10000,
+  note:response=>'"'+response.headers.get('x-table-export-note')+'"'+','.repeat(TABLE_DATASETS.votes.columns.length-1),
   seed:async records=>{coreCSV=await tableDatabase({datasets:{votes:records.map(row=>({row:{id:row.id,name:row.name,ayes:row.amount}}))}});},
   request:async search=>{try{return await tableApi(new Request('https://opax.com.au/api/table/votes'+search),{TABLE_DB:coreCSV.db});}finally{test.after(()=>coreCSV.close());}},
 });

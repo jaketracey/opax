@@ -1,21 +1,26 @@
 // Private identities are normalised in memory; only SHA-256 hashes reach D1.
-export const identityWords = value => {
+const decodedIdentity = value => {
   let raw=String(value ?? '');
   for(let i=0;i<2;i++){try{const decoded=decodeURIComponent(raw);if(decoded===raw)break;raw=decoded;}catch{break;}}
-  return raw.normalize('NFKC').toLowerCase().replace(/[^a-z0-9]+/g,' ').trim().split(' ').filter(Boolean);
+  return raw;
 };
+const words = raw => raw.toLowerCase().replace(/[^a-z0-9]+/g,' ').trim().split(' ').filter(Boolean);
+export const identityWords = value => words(decodedIdentity(value).normalize('NFKD').replace(/\p{M}+/gu,''));
+const legacyWords = value => words(decodedIdentity(value).normalize('NFKC'));
 export const identityPhrase = value => identityWords(value).join(' ');
 export function identityVariants(value) {
   const raw = String(value ?? '');
   const inverted = /^([^,]+),\s*([^,]+)$/.exec(raw);
-  const out = [identityPhrase(raw), ...(inverted ? [identityPhrase(`${inverted[2]} ${inverted[1]}`)] : [])];
+  const values = [raw,...(inverted ? [`${inverted[2]} ${inverted[1]}`] : [])];
+  // Retain the previous hashes while adding accent-insensitive identities.
+  const out = values.flatMap(v=>[identityPhrase(v),legacyWords(v).join(' ')]);
   const digits = raw.replace(/\D/g, '');
   if (digits.length === 11) out.push(digits);
   return [...new Set(out.filter(Boolean))];
 }
 export function identityCandidates(value, lengths) {
   const words = identityWords(value), out = new Set();
-  for (const size of lengths) for (let i = 0; i + size <= words.length; i++) out.add(words.slice(i, i + size).join(' '));
+  for (const tokens of [words,legacyWords(value)]) for (const size of lengths) for (let i = 0; i + size <= tokens.length; i++) out.add(tokens.slice(i, i + size).join(' '));
   // ABNs remain identifiers with punctuation/spaces or an ABN prefix.
   for (let i = 0; i < words.length; i++) {
     let digits = '';
