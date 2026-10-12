@@ -113,7 +113,10 @@ export async function buildGrowth(root=fileURLToPath(new URL('../portal/public',
   await write(await growthSummaryPath('privacy/person',normalisedName(person.name)),approvedTexts(names,questions,interests,latest,related,speeches),128_000);
  }
  const grouped=new Map();
- for(const bill of index.bills){
+ // The browser requests summaries from the detail record, including its pid.
+ // Older index exports omit that field; never lose its identity evidence or
+ // build a different summary path by resolving the lighter index row.
+ for(const bill of billRecords){
   const person=sponsorPerson(bill.sponsor,bill.sponsor_person_id,roster.people);
   if(!person)continue;
   const identity=person.pid || person.name;
@@ -122,7 +125,7 @@ export async function buildGrowth(root=fileURLToPath(new URL('../portal/public',
   grouped.get(key).push(bill);
  }
  const written=new Set();
- for(const bill of index.bills){
+ for(const bill of billRecords){
   if(!bill.sponsor)continue;
   const path=await sponsorSummaryPath(bill);if(written.has(path))continue;written.add(path);
   const person=sponsorPerson(bill.sponsor,bill.sponsor_person_id,roster.people);

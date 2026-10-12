@@ -209,6 +209,9 @@
 /labels.js
   ! Cache-Control
   Cache-Control: public, max-age=31536000, immutable
+/loader.css
+  ! Cache-Control
+  Cache-Control: public, max-age=31536000, immutable
 /map-page.js
   ! Cache-Control
   Cache-Control: public, max-age=31536000, immutable

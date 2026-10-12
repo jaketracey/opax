@@ -2,6 +2,7 @@
 
     python3 -m unittest scripts/test_export_bills_sponsors.py
 """
+import json
 import sqlite3
 import sys
 import unittest
@@ -56,6 +57,15 @@ class SponsorPrint(unittest.TestCase):
 
 
 class FillSponsorIds(unittest.TestCase):
+    def test_index_retains_the_detail_records_identity_evidence(self):
+        path = Path(__file__).resolve().parents[1] / "portal/public/bills/au-federal-s1471.json"
+        detail = json.loads(path.read_text())
+        row = eb.index_row(detail)
+        self.assertEqual(row["sponsor"], "POCOCK, Sen David")
+        self.assertEqual(row["sponsor_person_id"], "11009")
+        self.assertEqual(row["sponsor_person_id"], detail["sponsor_person_id"])
+        self.assertIsNone(eb.index_row({**detail, "sponsor_person_id": None})["sponsor_person_id"])
+
     def test_fills_only_one_agreeing_member_in_term(self):
         m = members()
         bills = [
