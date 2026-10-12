@@ -7089,8 +7089,8 @@ async function buildPeopleDirectory() {
 
 /** Parties: money-file party nodes, the record's party facet and the directory's member counts. */
 async function buildPartiesDirectory() {
-  const [fed, qld, vic, live, dir] = await Promise.all([
-    loadMoneyFile("federal"), loadMoneyFile("qld"), loadMoneyFile("vic"),
+  const [fed, qld, vic, tas, live, dir] = await Promise.all([
+    loadMoneyFile("federal"), loadMoneyFile("qld"), loadMoneyFile("vic"), loadMoneyFile("tas"),
     api("/api/parties").catch(() => null), loadParliamentarians(),
   ]);
   const files = [["federal", fed], ["qld", qld], ["vic", vic], ["tas", tas]].filter(([, d]) => d?.nodes);
@@ -7156,7 +7156,7 @@ async function buildPartiesDirectory() {
     text: (p) => p.label,
     filters: [
       { key: "jur", label: "Disclosures", any: "Any commission",
-        options: [["federal", "Federal (AEC)"], ["qld", "Queensland (ECQ)"], ["vic", "Victoria (VEC)"]],
+        options: [["federal", "Federal (AEC)"], ["qld", "Queensland (ECQ)"], ["vic", "Victoria (VEC)"], ["tas", "Tasmania (TEC)"]],
         test: (p, v) => Boolean(p.money[v]) },
       { key: "show", label: "Show", any: "Every party",
         options: [["speeches", "With speeches in the record"], ["members", "With members in the directory"], ["money", "With disclosed receipts"]],
