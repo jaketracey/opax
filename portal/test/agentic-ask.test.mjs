@@ -35,13 +35,13 @@ test('route-only rollout: every gold question takes the agentic path, ordinary q
   ]) assert.equal(classifyAgentic(q).route, 'ask', q);
 });
 
-test('a plan keeps only known tools, caps the steps and rejects junk', () => {
+test('a plan rejects unknown tools, excess steps and malformed arguments', () => {
   assert.equal(parsePlan('no json here'), null);
   assert.equal(parsePlan('{"shape":"ranking","steps":[]}'), null);
   const p = parsePlan('Sure! {"shape":"ranking","steps":[{"tool":"count_speeches","args":{"topic":"gambling","group_by":"speaker"}},{"tool":"rm_rf","args":{}}]}');
-  assert.deepEqual(p.steps.map((s) => s.tool), ['count_speeches']);
+  assert.equal(p, null);
   const many = JSON.stringify({ shape: 'trend', steps: Array.from({ length: 9 }, () => ({ tool: 'find_people', args: { name: 'x' } })) });
-  assert.equal(parsePlan(many).steps.length, 6);
+  assert.equal(parsePlan(many), null);
   assert.equal(parsePlan('{"shape":"unanswerable","steps":[],"reason":"no party labels"}').shape, 'unanswerable');
 });
 
@@ -100,11 +100,11 @@ test('donors not named are aggregated, never listed or shown as placeholders', a
     nodes: [
       { id: 'party:Example Party', label: 'Example Party', kind: 'party' },
       { id: 'donor:acme holdings pty ltd', label: 'Acme Holdings Pty Ltd', kind: 'donor', industry: 'property', aliases: [] },
-      { id: 'donor:jordan quill', label: 'Jordan Quill', kind: 'donor', industry: 'individual', aliases: [] },
+      { id: 'donor:withheld-1', label: 'Donor 1 (name withheld)', kind: 'donor', industry: 'individual', aliases: [] },
     ],
     edges: [
       { source: 'donor:acme holdings pty ltd', target: 'party:Example Party', total: 5000, count: 2 },
-      { source: 'donor:jordan quill', target: 'party:Example Party', total: 9000, count: 1 },
+      { source: 'donor:withheld-1', target: 'party:Example Party', total: 9000, count: 1 },
     ],
   };
   const r = await partyDonations({ kb: async () => ({}), asset: async () => graph }, { party: 'Example Party' });
@@ -130,13 +130,13 @@ test('the run streams plan and step events, and falls back to the template when 
       ? { text: '{"shape":"ranking","steps":[{"tool":"count_speeches","args":{"topic":"gambling","group_by":"speaker"},"label":"Counting gambling speeches by speaker"}]}', tokens: { input: 10, output: 5 } }
       : { text: 'Alex Example leads with 99 [1].', tokens: { input: 20, output: 8 } },
   };
-  const out = await runAgentic('Who speaks most about gambling?', deps, async (e, d) => events.push([e, d]));
+  const out = await runAgentic('Who has spoken most about gambling?', deps, async (e, d) => events.push([e, d]));
   assert.equal(out.answered, true);
   assert.equal(out.answer_source, 'template');
   assert.match(out.answer, /Alex Example: 87 chamber speeches labelled gambling \[1\]/);
-  assert.deepEqual(out.tokens, { input: 30, output: 13 });
-  assert.deepEqual(events.map(([, d]) => d.phase + (d.step ? `:${d.step.state}` : '')), ['planning', 'plan', 'step:running', 'step:done', 'writing']);
-  const none = await runAgentic('Who speaks most about gambling?', { ...deps, generate: async () => ({ text: 'I cannot help' }) });
+  assert.deepEqual(out.tokens, { input: 10, output: 5 });
+  assert.deepEqual(events.map(([, d]) => d.phase + (d.step ? `:${d.step.state}` : '')), ['step:running', 'step:done', 'step:running', 'step:done', 'writing']);
+  const none = await runAgentic('Who has spoken most about an unknown subject?', { ...deps, generate: async () => ({ text: 'I cannot help' }) });
   assert.equal(none.answered, false);
   assert.equal(none.reason, 'declined');
 });

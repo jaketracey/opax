@@ -404,3 +404,34 @@ Paid runs a month, at 4.35 weeks:
   - `facets_count` raises `cannot access local variable 'context' where it is not associated with a value` (15 of 30 gold runs);
   - agentic runs don't appear in the KB activity log;
   - `consumption.customer_key_tokens` reads 0 even on customer-key calls, where `metadata.tokens` holds the real counts.
+
+## Build lane 1 delivery (13 Oct, supersedes the rollout above)
+
+Jake selected design (i). Design (ii) stays documented as spike evidence, and its MCP registration has been removed. `/api/ask-agentic` and the spike enable/model flags are retired. No deploy is performed by this isolated lane.
+
+The orchestrator deploys `AGENTIC_ASK_MODE=route` after review, with `ASK_MODEL=openai-compatible` and the existing corpus `CACHE_EPOCH`. Unset, `off`, and unknown values leave Ask unchanged. `shadow` remains available for background runs but there is no shadow waiting period. The optional monitoring price vars are `AGENTIC_INPUT_USD_PER_MILLION` and `AGENTIC_OUTPUT_USD_PER_MILLION` (USD per million tokens); use the currently pinned model's verified rates. Costs are token estimates, or NULL when rates/token usage are unavailable, and zero on cache hits.
+
+Apply `portal/migrations/0016_agentic_shadow.sql` to the target `COMMUNITY_DB` before enabling the route. It adds only `question_hash`, `shape`, `latency_ms`, and `cost_usd`; it stores no question, answer, tool args, step labels or exception strings. Route runs, including unsuccessful attempts and cache hits, are monitored. This lane validates the migration locally only. The orchestrator must apply it remotely and deploy.
+
+Routed SSE follows the 13 Oct shared step-event brief: existing `searching`, fixed tool labels with arguments capped at 40 characters, `running`/`done`/`failed` in real time, then existing `writing` and the ordinary Ask payload with `agentic: {steps, ms}`. There is no plan event or model-written progress text. Ordinary Ask has no steps or `done.agentic`. The cached path uses existing `cached` replay and the stored collapsed steps. The client contract is the existing source-range renderer; there is no new answer block, banner or feature wording.
+
+Present-tense questions default to the current parliament (since 22 July 2025); otherwise the whole record. Explicit periods and selected date controls win. Every answer has one plain period sentence. The alternative period is an ordinary `followups` question; no switch. Committee turns are counted separately when including them changes the chamber ranking. Coverage limits, including the current federal gap where the selected period crosses it, remain ordinary answer sentences, with source-method citation ranges; no separate caveat block.
+
+Counts are from catalog facets or body-only search totals. Window rankings whose candidate bound is insufficient fail closed. All model plans are schema-checked; malformed plans, wrong-subject counts and planner timeouts use a rule plan. Ranked speech and money rows are copied deterministically, with no discarded composer call billed. Tool fetches and body reads carry cancellation signals, and races enforce the deadline even if a provider ignores abort. Tool errors or insufficient evidence fall back to ordinary Ask. Successful answers alone enter `GENERATION_CACHE`, alongside the existing edge cache, for seven days. Keys include normalized question, effective period and filters, `CACHE_EPOCH`, `ASK_MODEL`, prompt version, and `AGENTIC_TOOLS_VERSION`.
+
+Money reads the federal published export only. A donor is named only when its published source spellings agree after whitespace/case folding; different spellings/aliases and anonymous nodes contribute to one `Donors not named (N)` amount. Industry or legal form does not decide whether an individual can be named. These uncertain aggregate figures are cited to the party page. The published export is still a selection, so totals are lower bounds. A donation is not evidence of influence on a vote or speech. Existing publication sanitizers still protect the served assets.
+
+Operator gold runner (kept for deterministic comparisons in either enabled mode):
+
+```sh
+# DAILY_POST_OPERATOR_SECRET is supplied through the operator environment.
+node scripts/agentic_ask_shadow.mjs --base https://opax.com.au --out /path/to/gold-results.json
+# Offline scoring, with no network or generation:
+node scripts/agentic_ask_shadow.mjs --fixture /path/to/fixture-rows.json
+```
+
+Only the bearer-guarded `/api/ops/ask-gold` is used. It bypasses staging's production API proxy and runs the same classifier and orchestration; it never invokes production `/api/ask`. The historical gold defines unstated periods as the whole record, so the runner makes that period explicit for those questions. The snapshot predates the new donor rule and present-tense default; it is not proof of current-record accuracy, and its counts can drift. The runner is delivered but is not run against a deployed host in this lane.
+
+Fixture proof: `docs/evidence/agentic-ask-route-fixture.sse`, `.txt` and `.html`, generated offline by `node portal/test/fixtures/render-agentic-sse.mjs`. The question is Jake's exact gambling question. People and counts are synthetic and are not a claim about the current live ranking. The HTML comes from the actual existing Ask renderer, and the tests assert identical rendered markup for an ordinary payload and the routed payload.
+
+Deferred to tool-depth follow-up: state-party roster joins, division lookup by bill key and topic synonyms, sitting-week trends, and the quote attribution repair. No MCP surface for design (ii) is shipped. The no-answer lane has not landed on `origin/main` at this build's baseline; the route already matches its `answered: false`, empty answer and `declined`/`no_supported_claim`/`grounding_failed` reason contract. Integration with that lane is for the orchestrator when it lands.
