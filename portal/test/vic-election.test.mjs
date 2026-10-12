@@ -211,6 +211,7 @@ test('seat finder: suburbs, postcodes and council areas from ABS splits, exact n
   const found=await vicElectionPage(null,read,{VIC_ELECTION_HUB_ENABLED:'true'},'3350');
   assert.equal(found.noindex,true);assert.match(found.html,/<strong>3350<\/strong> <span>Postcode<\/span>/);assert.match(found.html,/Check your exact address with the VEC/);
   const none=await vicElectionPage(null,read,{VIC_ELECTION_HUB_ENABLED:'true'},'<script>x');assert.match(none.html,/matches “&lt;script&gt;x”/);assert.doesNotMatch(none.html,/<script>x/);
+  assert.match((await vicElectionPage(null,read,{VIC_ELECTION_HUB_ENABLED:'true'},'3001')).html,/No Victorian postcode area matches “3001”\. PO box postcodes aren’t included/);
   const r=await fetchPage('/vic-election-2026?place=3350','true');assert.equal(r.status,200);assert.equal(r.headers.get('x-robots-tag'),'noindex');
   assert.equal((await fetchPage('/vic-election-2026','true')).headers.get('x-robots-tag'),'all');
 });
