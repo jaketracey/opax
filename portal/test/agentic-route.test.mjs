@@ -10,7 +10,8 @@ h.env.COMMUNITY_DB={prepare(sql){return{bind(...values){logs.push({sql,values});
 h.env.GENERATION_CACHE={async get(k){return shared.get(k)??null},async put(k,v){shared.set(k,JSON.parse(v))}};
 h.env.AGENTIC_INPUT_USD_PER_MILLION='0.66';h.env.AGENTIC_OUTPUT_USD_PER_MILLION='1.98';
 globalThis.caches={default:{async match(k){return edge.get(k.url)?.clone()},async put(k,r){edge.set(k.url,new Response(await r.text(),r))}}};
-let mode='ranking',models=0,normalModels=0;
+let mode='ranking',models=0,normalModels=0,quota=0;
+h.env.ASK_LIMITER={async limit(){quota++;return{success:true}}};
 globalThis.fetch=async(input,init)=>{
  const url=new URL(input);assert.ok(url.hostname.startsWith('offline.'),'no outbound service calls');const b=JSON.parse(init?.body??'{}');
  if(url.pathname.endsWith('/ask')){
@@ -54,7 +55,7 @@ test('shadow returns the normal answer and starts a monitored run with waitUntil
  h.env.AGENTIC_ASK_MODE='shadow';const before=normalModels;const r=await post(question);const body=await r.json();assert.equal(body.agentic,undefined);assert.ok(normalModels>before);await flush();assert.ok(logs.length>=2);
 });
 test('answered false and exhausted budgets fall back to normal Ask and cannot cache the failure',async()=>{
- h.env.AGENTIC_ASK_MODE='route';shared.clear();edge.clear();mode='empty';const before=normalModels;const r=await post(question);assert.equal((await r.json()).agentic,undefined);assert.ok(normalModels>before);await flush();assert.ok(![...shared.keys()].some(k=>k.includes('ask-agentic')));
+ h.env.AGENTIC_ASK_MODE='route';shared.clear();edge.clear();mode='empty';const before=normalModels,quotaBefore=quota;const r=await post(question);assert.equal((await r.json()).agentic,undefined);assert.ok(normalModels>before);assert.equal(quota,quotaBefore+1,'fallback shares the original request quota');await flush();assert.ok(![...shared.keys()].some(k=>k.includes('ask-agentic')));
  mode='overrun';const normalBefore=normalModels;const over=await post(question);assert.equal((await over.json()).agentic,undefined);assert.ok(normalModels>normalBefore);await new Promise(r=>setTimeout(r,25));mode='ranking';await flush();
 });
 test('the gold operator route fails closed without bearer or enabled mode, including staging',async()=>{

@@ -1327,13 +1327,13 @@ function earlyOverviewStream(work: () => Promise<Response>, budget: AskDeadline,
   return new Response(readable, {headers:SSE_HEADERS})
 }
 
-async function apiAsk(request: Request, env: Env, ctx: ExecutionContext, prepared?: AskInput, firstBudget?: AskDeadline): Promise<Response> {
+async function apiAsk(request: Request, env: Env, ctx: ExecutionContext, prepared?: AskInput, firstBudget?: AskDeadline, quotaTaken = false): Promise<Response> {
   const rawInput = saConversationInput((prepared || ((await request.json().catch(() => ({}))) ?? {})) as Record<string,unknown>, env.SA_HANSARD_FULL_TEXT) as AskInput
   const overviewCandidate = (isPersonOverviewCandidate(rawInput.question || '') || isPersonRecentCandidate(rawInput.question || '')) && !rawInput.topic && !rawInput.from && !rawInput.to && (!rawInput.kind || ['speech','all'].includes(rawInput.kind))
   if (!firstBudget && (overviewCandidate || isPersonRecentIntent(rawInput))) {
     const budget = new AskDeadline(OVERVIEW_FIRST_ANSWER_MS, request.signal)
     const work = () => budget.run(async () => {
-      const response = await apiAsk(request,env,ctx,rawInput,budget)
+      const response = await apiAsk(request,env,ctx,rawInput,budget,quotaTaken)
       if (budget.signal.aborted) await response.body?.cancel().catch(() => {})
       return response
     })
@@ -1393,7 +1393,7 @@ async function apiAsk(request: Request, env: Env, ctx: ExecutionContext, prepare
   const conversation = Array.isArray(rawInput.context) && rawInput.context.length > 0
   let askedAs: string | null = null
   if (conversation) {
-    const limited = await rateLimited(env.ASK_LIMITER, request)
+    const limited = quotaTaken ? null : await rateLimited(env.ASK_LIMITER, request)
     if (limited) return limited
     const rewrite = await standaloneQuestion(rawInput, env, firstBudget)
     firstBudget?.signal.throwIfAborted()
@@ -1442,7 +1442,7 @@ async function apiAsk(request: Request, env: Env, ctx: ExecutionContext, prepare
     }
   }
   const status: CacheStatus = bypass ? 'BYPASS' : 'MISS'
-  const limited = conversation ? null : await rateLimited(env.ASK_LIMITER, request)
+  const limited = conversation || quotaTaken ? null : await rateLimited(env.ASK_LIMITER, request)
   if (limited) return limited
   mark('cache')
 
@@ -5747,7 +5747,8 @@ async function apiAgenticGold(request: Request, env: Env, ctx: ExecutionContext)
 async function apiAskRouted(request: Request, url: URL, input: Record<string, unknown>, env: Env, ctx: ExecutionContext): Promise<Response> {
   const started = Date.now()
   const question = String(input.question).trim()
-  const fallback = () => apiAsk(request.clone(), env, ctx)
+  let quotaTaken = false
+  const fallback = () => apiAsk(request.clone(), env, ctx, undefined, undefined, quotaTaken)
   const mode = env.AGENTIC_ASK_MODE
   if (!['route', 'shadow'].includes(String(mode)) || classifyAgentic(question).route !== 'agentic' || input.kind && !['speech', 'all'].includes(String(input.kind))) return fallback()
   // Reuse the existing donor guard before planning; no donor prompt bypass.
@@ -5771,6 +5772,7 @@ async function apiAskRouted(request: Request, url: URL, input: Record<string, un
     }
   }
   const limited = await rateLimited(env.ASK_LIMITER, request); if (limited) return limited
+  quotaTaken = true
   const finish = (run: AgenticPayload) => {
     const response = json(agenticAskPayload(run, question))
     if (run.answered && !run.over_budget && !privateTurn) storeGenerationCache(env, ctx, key, response.clone(), ASK_CACHE_TTL)
