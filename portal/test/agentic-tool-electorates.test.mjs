@@ -11,7 +11,7 @@ const load = async (entry) => {
   return import('data:text/javascript;base64,' + Buffer.from(out.outputFiles[0].text).toString('base64'));
 };
 const { electorates, ELECTORATE_INDICATORS, electoratePlan } = await load('../src/agentic-tool-electorates.ts');
-const { classifyAgentic, runAgentic, factSheet, verifyComposition } = await load('../src/agentic-ask.ts');
+const { classifyAgentic, runAgentic, factSheet, verifyComposition, agenticCacheKey } = await load('../src/agentic-ask.ts');
 const { runTool } = await load('../src/agentic-tools.ts');
 const fixture = JSON.parse(await readFile(new URL('./fixtures/agentic-electorates.json', import.meta.url), 'utf8'));
 const stub = (assets = fixture.assets) => ({
@@ -185,6 +185,13 @@ test('invalid and unknown electorate selectors give Ask non-answers without echo
     assert.equal(out.answered, false, name);
     assert.deepEqual(out.facts, []);
     assert.equal(out.answer, '');
+  }
+});
+
+test('invalid Census selector characters cannot reuse a validated electorate cache key', async () => {
+  const valid = await agenticCacheKey('What is the median age in Fowler?', 'fixture', 'fixture');
+  for (const name of ['Fowler>', '<Fowler>', 'Fowler/', 'Fowler\n', 'Fowler\u0000']) {
+    assert.notEqual(await agenticCacheKey('What is the median age in ' + name + '?', 'fixture', 'fixture'), valid, name);
   }
 });
 

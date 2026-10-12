@@ -59,7 +59,7 @@ Round 3 merges `origin/main` at `608b824b3`, preserving `localMiniflare` with th
 | `portal/public/index.html` | Both | Keep datatable/vote-table imports and MCP docs; regenerate style/app hashes and SPA shell. |
 | `portal/src/agentic-tools.ts` | Route | Keep registry adapters/validation; combine route's `agentic-tools-4` version with `TOOL_REGISTRY_VERSION`. |
 | `portal/src/agentic-ask.ts` | Route | Combine registry facts/labels with round-3 entity binding and scope checks. Census plans skip speech-name resolution and retain Census-only execution. Keep requested ranking limits and render all returned Census rows, including cutoff ties, instead of applying the speech answer's eight-fact limit. |
-| `portal/src/index.ts` | Route | Preserve round-3 scoped cache keys and scope propagation, `toolEnv`, and Census non-answer handling without speech fallback. |
+| `portal/src/index.ts` | Route | Preserve round-3 scoped cache keys and scope propagation, `toolEnv`, and Census non-answer handling without speech fallback. Census cache keys must retain selector punctuation/controls so rejected names cannot reuse a validated lookup answer. |
 | `portal/test/table-d1-harness.mjs` | Main | Keep `localMiniflare` plus main's isolated root, persistence/temp paths and unique D1 name (resolved in this lane). |
 
 Ask's deterministic electorate plans honor explicit ranking counts from 1 to 20 (digits or number words) and decline unsupported top/bottom count wording. The tool's MCP limit remains 1–50. Both include every tie at the requested cutoff. Speech intent, including remarks, statements, said, speeches, debate and mentioned, retains speech routing.

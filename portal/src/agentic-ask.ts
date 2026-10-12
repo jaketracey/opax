@@ -505,6 +505,9 @@ async function hashText(text: string): Promise<string> {
   return [...new Uint8Array(await crypto.subtle.digest('SHA-256', new TextEncoder().encode(text)))].map(b => b.toString(16).padStart(2, '0')).join('')
 }
 export async function agenticCacheKey(question: string, epoch: string, model: string, period = inferPeriod(question), toolsVersion = AGENTIC_TOOLS_VERSION, filters: Record<string, unknown> = {}, shape = classifyAgentic(question).shape): Promise<string> {
-  const hash = await hashText(JSON.stringify({ q: normaliseQuestion(question), shape, period, filters, epoch, model, v: AGENTIC_PROMPT_VERSION, t: toolsVersion }))
+  // Census selectors must retain characters that distinguish invalid input
+  // from a validated electorate; punctuation-stripping can bypass validation on a cache hit.
+  const cacheQuestion = isElectorateDataQuestion(question) ? question.normalize('NFKC').toLowerCase().trim() : normaliseQuestion(question)
+  const hash = await hashText(JSON.stringify({ q: cacheQuestion, shape, period, filters, epoch, model, v: AGENTIC_PROMPT_VERSION, t: toolsVersion }))
   return `https://cache.opax.internal/ask-agentic/${hash}`
 }

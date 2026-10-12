@@ -20,8 +20,8 @@ h.env.COMMUNITY_DB = { prepare() { return { bind() { return { run: async () => (
 h.env.GENERATION_CACHE = { get: async () => null, put: async () => {} };
 globalThis.caches = { default: { match: async () => undefined, put: async () => {} } };
 globalThis.fetch = async () => { outbound++; throw Error('No Ask, KB or generation calls permitted for these fixture data questions'); };
-const post = (question, stream) => h.fetch(`/api/ask${stream ? '?stream=1' : ''}`, {
-  method: 'POST', headers: { 'content-type': 'application/json', 'x-opax-nocache': '1', ...(stream ? { accept: 'text/event-stream' } : {}) },
+const post = (question, stream, cache = false) => h.fetch(`/api/ask${stream ? '?stream=1' : ''}`, {
+  method: 'POST', headers: { 'content-type': 'application/json', ...(!cache ? { 'x-opax-nocache': '1' } : {}), ...(stream ? { accept: 'text/event-stream' } : {}) },
   body: JSON.stringify({ question, kind: 'speech' }),
 });
 const frames = (text) => text.trim().split('\n\n').map((frame) => {
@@ -73,6 +73,30 @@ test('invalid and unknown electorate names remain non-answers in JSON and SSE', 
     assert.deepEqual(payload.sources, []);
     await flush();
   }
+  assert.equal(outbound, 0);
+});
+
+test('a cached valid lookup cannot bypass invalid-name rejection in JSON or SSE', async () => {
+  const previous = globalThis.caches, cached = new Map();
+  globalThis.caches = { default: {
+    match: async req => cached.get(req.url)?.clone(),
+    put: async (req, response) => { cached.set(req.url, response.clone()); },
+  } };
+  try {
+    const valid = 'What is the median age in Sample Bay?';
+    assert.equal((await done(await post(valid, false, true), false)).answered, true);
+    await flush();
+    assert.ok(cached.size);
+    const hit = await post(valid, false, true);
+    assert.equal(hit.headers.get('x-opax-cache'), 'HIT');
+    assert.equal((await hit.json()).answered, true);
+    for (const streaming of [false, true]) {
+      const response = await post('What is the median age in Sample Bay>?', streaming, true);
+      assert.equal(response.headers.get('x-opax-cache'), 'MISS');
+      assert.equal((await done(response, streaming)).answered, false);
+      await flush();
+    }
+  } finally { globalThis.caches = previous; }
   assert.equal(outbound, 0);
 });
 
