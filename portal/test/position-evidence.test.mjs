@@ -75,7 +75,7 @@ function harness({rows,texts={},recover=true,unavailable=false,reasoned}={}){
   buildAskBody:(input,records,options)=>{reasonedOptions=options;return {query:input.question,prompt:{system:'ordinary'}};},
   kbFetch:async(env,path,{body})=>{reasonedBody=body;return Response.json(reasoned);},
   askPayload:(answer,records,scope)=>({answer:answer.answer,citations:answer.citations||{},sources:[],scope})}:{};
- const fn=runInNewContext(code+';documentedPositionAnswer',{saEvidenceRecord,saEvidenceText,...helpers,...reasoning,scopeSpeakerBody:async()=>{},loadPeople:async()=>({byFold:new Map()}),URL,Request,canonicalSpeaker:s=>s,EVIDENCE_GAP_ANSWER:'This selection does not establish their position on that topic.',
+ const fn=runInNewContext(code+';documentedPositionAnswer',{saEvidenceRecord,saEvidenceText,...helpers,noAnswer:(p,reason)=>({...p,answer:'',answered:false,reason,citations:{}}),looseAnswer:(p)=>({...p,answered:true}),...reasoning,scopeSpeakerBody:async()=>{},loadPeople:async()=>({byFold:new Map()}),URL,Request,evidenceExcerpt:text=>({text}),canonicalSpeaker:s=>s,EVIDENCE_GAP_ANSWER:'This selection does not establish their position on that topic.',
   searchWindow:async(e,args)=>{query=args;return rows===null?null:{results:rows||[{slug:'speech-1',speaker:'Example MP',title:'Example MP — 2025-02-11',date:'2025-02-11',kind:'speech',resource:'rid'}]};},
   apiResource:async(r,u,slug)=>{reads++;return unavailable?Response.json({error:'down'},{status:503}):Response.json(texts[slug]||{speaker:'Example MP',text:proposal+'\n\n1:08 pm\n\n'+other});},
   quotedPositionAnswer:()=>null, positionExcerptsAnswer:(payload)=>({...payload,answer_status:'evidence_only'}), recoverPositionAnswer:async(payload,body)=>{generated=payload;generationBody=body;return recover?{...payload,answer:'Verified proposal',answer_status:undefined}:null;},
@@ -89,8 +89,8 @@ test('a failed summary gets one reasoned answer before excerpts, and only a cite
  assert.equal(out.answer_status,'reasoned');assert.equal(out.answer,'Taken together, the record suggests a cap.');assert.equal(out.scope.speaker,'Example MP');
  assert.equal(h.reasonedOptions?.reasoned,true);assert.equal(h.reasonedBody.prompt.system,'ordinary');assert.equal(h.reasonedBody.generative_model,'openai-compatible');
  // Uncited, or a refusal: the excerpts, as before.
- assert.equal((await harness({recover:false,reasoned:{answer:'Unsupported claims.',citations:{}}}).run()).answer_status,'evidence_only');
- assert.equal((await harness({recover:false,reasoned:{answer:'The record retrieved for this question does not discuss it.',citations:{'rid':[[0,1]]}}}).run()).answer_status,'evidence_only');
+ assert.equal((await harness({recover:false,reasoned:{answer:'Unsupported claims.',citations:{}}}).run()).answered,false);
+ assert.equal((await harness({recover:false,reasoned:{answer:'The record retrieved for this question does not discuss it.',citations:{'rid':[[0,1]]}}}).run()).answered,false);
  // A verified summary never reaches the fallback.
  const verified=harness({recover:true,reasoned:{answer:'Never used.',citations:{'rid':[[0,1]]}}});assert.equal((await verified.run()).answer,'Verified proposal');assert.equal(verified.reasonedBody,undefined);
 });
@@ -106,8 +106,8 @@ test('source and generation failures cannot replay unverified retrieval snippets
  await assert.rejects(harness({unavailable:true}).run(),/Original speeches unavailable/);
  await assert.rejects(harness({rows:null}).run(),/Speech retrieval failed/);
  // A failed summary falls back to the originals that were read (verified first-turn text), never to retrieval snippets.
- const h=harness({recover:false});const out=await h.run();assert.equal(out.answer_status,'evidence_only');assert.equal(out.sources.length,1);assert.equal(out.sources[0].snippet,proposal);assert.equal(Object.keys(out.citations).length,0);
- const none=harness({recover:false,texts:{'speech-1':{speaker:'Example MP',text:'Procedural remarks only.'}}});const gap=await none.run();assert.equal(gap.answer_status,'evidence_gap');assert.equal(gap.sources.length,0);
+ const h=harness({recover:false});const out=await h.run();assert.equal(out.answered,false);assert.equal(out.reason,'grounding_failed');assert.equal(out.sources.length,1);assert.equal(out.sources[0].snippet,proposal);assert.equal(Object.keys(out.citations).length,0);
+ const none=harness({recover:false,texts:{'speech-1':{speaker:'Example MP',text:'Procedural remarks only.'}}});const gap=await none.run();assert.equal(gap.answer_status,'evidence_gap');assert.equal(gap.sources.length,1);assert.equal(gap.answered,false);
 });
 test('position source reads are bounded to twelve original documents',async()=>{
  const rows=Array.from({length:20},(_,i)=>({slug:'speech-'+i,speaker:'Example MP',kind:'speech'}));const h=harness({rows});await h.run();assert.equal(h.reads,12);
@@ -142,5 +142,5 @@ test('proposal duration excludes policy age and costing horizons',()=>{
 
 test('eligibility without verified criteria preserves scope and never calls generation',async()=>{
  const h=harness();const out=await h.run('Who would be eligible?');
- assert.equal(h.generated,undefined);assert.equal(out.answer_status,'evidence_gap');assert.equal(out.scope.speaker,'Example MP');assert.equal(out.sources.length,0);assert.match(out.answer,/couldn’t verify who would qualify/);
+ assert.equal(h.generated,undefined);assert.equal(out.answer_status,'evidence_gap');assert.equal(out.scope.speaker,'Example MP');assert.equal(out.sources.length,1);assert.equal(out.answered,false);assert.equal(out.reason,'grounding_failed');assert.equal(out.answer,'');
 });
