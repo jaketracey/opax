@@ -39,9 +39,12 @@ export function sourceMeta(s: Source) {
  * numbered as in the answer, each with the passage the answer drew on and
  * its original; what was retrieved but not cited; the dates in the record;
  * and the notes about the answer. Records and originals open once the sheet
- * has gone, so nothing lands behind it.
+ * has gone, so nothing lands behind it: the sheet closes by `visible` and
+ * stays mounted until then, since an unmounted Modal never reports its
+ * dismissal (iOS) and the record waiting on it would never open.
  */
 export function AnswerSources({
+  visible,
   question,
   sources,
   notes,
@@ -49,6 +52,7 @@ export function AnswerSources({
   onOpen,
   onClose,
 }: {
+  visible: boolean;
   question: string;
   sources: Source[];
   notes: readonly (string | null | undefined | false)[];
@@ -65,7 +69,7 @@ export function AnswerSources({
     onClose();
     if (Platform.OS !== 'ios') action();
   };
-  useKeyCommand('list-escape', onClose, true);
+  useKeyCommand('list-escape', onClose, visible);
   const groups = sourceGroups(sources);
   const cited = groups.cited.some((s) => s.cited);
   const dates = dateRuler(sources);
@@ -100,7 +104,7 @@ export function AnswerSources({
   );
   return (
     <Modal
-      visible
+      visible={visible}
       animationType={reduced ? 'none' : 'slide'}
       presentationStyle="pageSheet"
       onRequestClose={onClose}
