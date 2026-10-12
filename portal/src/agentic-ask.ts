@@ -427,7 +427,7 @@ export async function runAgentic(question: string, deps: AgenticDeps, progress: 
       usage(out)
       const v = verifyComposition(out.text, mainFacts, question)
       // Unverified prose or missing ranked rows gets the deterministic answer.
-      if (v.prose && v.cited.length && !v.dropped && plan.shape !== 'ranking' && plan.shape !== 'money') { answer = v.prose; source = 'model' }
+      if (v.prose && v.cited.length && !v.dropped) { answer = v.prose; source = 'model' }
     } catch { /* template below */ }
   }
   if (!answer) answer = templateAnswer(peakYear ? mainFacts.slice(0, 1) : mainFacts, [])
