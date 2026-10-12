@@ -16,12 +16,12 @@ const paths = [
   ['home', '/', 'hp-page', false],
 ];
 
-function execute(path, repeat = false) {
+function execute(path, repeat = false, probe = null) {
   return new Promise((resolve, reject) => {
     // vm modules let jsdom execute the complete browser scripts and their real
     // imports, including home.js's module entry point, without slicing handlers.
     const worker = new Worker(new URL('./helpers/header-search-shell.mjs', import.meta.url), {
-      execArgv: ['--experimental-vm-modules', '--disable-warning=ExperimentalWarning'], workerData: { path, repeat },
+      execArgv: ['--experimental-vm-modules', '--disable-warning=ExperimentalWarning'], workerData: { path, repeat, probe },
     });
     worker.once('message', message => message.error ? reject(Error(message.error)) : resolve(message.result));
     worker.once('error', reject);
@@ -88,3 +88,15 @@ test('header search initializes once after parsing when the shared script loads 
     assert.equal(panel.hidden, true);
   } finally { dom.window.close(); }
 });
+
+// Server-only pages lose app.js, so navigation.js wires their band itself.
+for (const [label, path] of [['sitting hub', '/sitting'], ['Victorian election hub', '/vic-election-2026'], ['instrument list', '/instruments'], ['audit detail', '/audit/' + audit]]) {
+  test('the menus, drawer and header search work on the ' + label + ' without app.js', async () => {
+    const result = await execute(path, false, 'menus');
+    assert.equal(result.scripts.includes('/app.js'), false);
+    assert.deepEqual(result.drawerOpen, { open: true, expanded: 'true' });
+    assert.deepEqual(result.menuOpen, { expanded: 'true', hidden: false });
+    assert.deepEqual(result.menuEscape, { expanded: 'false', hidden: true });
+    assert.equal(result.suggestion, 'Search the record for “housing”Search');
+  });
+}

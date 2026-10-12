@@ -104,6 +104,26 @@ async function run() {
       else classic(script.src);
     }
     for (const url of deferredModules) await evaluateModule(url);
+    if (workerData.probe === 'menus') {
+      window.document.dispatchEvent(new window.Event('DOMContentLoaded'));
+      // The band's menus on this page: does each control actually open something?
+      const doc = window.document;
+      const drawer = doc.getElementById('nav-drawer');
+      doc.getElementById('nav-open').click();
+      const drawerOpen = { open: drawer.open, expanded: doc.getElementById('nav-open').getAttribute('aria-expanded') };
+      const trigger = doc.querySelector('#primary-nav .has-menu button[aria-controls]');
+      trigger.click();
+      const panel = doc.getElementById(trigger.getAttribute('aria-controls'));
+      const menuOpen = { expanded: trigger.getAttribute('aria-expanded'), hidden: panel.hidden };
+      trigger.dispatchEvent(new window.KeyboardEvent('keydown', { key: 'Escape', bubbles: true }));
+      const menuEscape = { expanded: trigger.getAttribute('aria-expanded'), hidden: panel.hidden };
+      const field = doc.getElementById('mast-q');
+      field.value = 'housing';
+      field.dispatchEvent(new window.Event('input', { bubbles: true }));
+      await new Promise(r => setTimeout(r, 200));
+      const suggestion = doc.querySelector('#mast-sugg .ms-row')?.textContent || null;
+      return { scripts: scripts.map(node => new URL(node.src).pathname), drawerOpen, menuOpen, menuEscape, suggestion };
+    }
     const toggle = window.document.getElementById('header-search-open');
     const panel = window.document.getElementById('header-search-panel');
     const field = window.document.getElementById('mast-q');
