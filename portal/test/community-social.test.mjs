@@ -164,7 +164,9 @@ test('social writes reject cross-origin requests, empty messages, self messages 
  }finally{f.db.close()}
 });
 
-test('message rate limits cap sending and retries do not consume additional allowance',async()=>{
+test('message rate limits cap sending and retries do not consume additional allowance',async t=>{
+ // Keep all sends in one rate-limit window even if the suite crosses a minute.
+ const messageNow=Date.now();t.mock.method(Date,'now',()=>messageNow);
  const f=fixture();try{
   const message=f.post();await f.call('conversations','POST',message);
   for(let i=0;i<25;i++)assert.equal((await f.call('conversations','POST',message)).status,200);

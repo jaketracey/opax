@@ -142,7 +142,7 @@ test('0012 test 7: failure halfway through deletion rolls back every scope row a
 });
 
 test('0012 test 8: request and scheduled cleanup clear only orphaned terminal IDs one day after stored closed_at',async t=>{
- const f=fixture(t);await f.login('a');const at=time();
+ const f=fixture(t);await f.login('a');const at=time();t.mock.method(Date,'now',()=>at*1000);
  const cases=[['old','closed',null,at-86400],['young','closed',null,at-86399],['linked','closed','a',at-86401],['open','active',null,at-86401],['cancel','cancelled',null,at-86400],['expired','expired',null,at-86400],['no-close','closed',null,null]];
  for(const [id,state,member,closed] of cases)f.db.prepare('INSERT INTO voice_sessions VALUES (?,?,?,?,?,?,?,?,?,?)').run(id,member,state,600,600,at-90000,at+600,at-90000,closed,'conv_'+id);
  const r=await voiceRoute(new Request('https://example.test/api/voice/status',{headers:{cookie:f.cookies.a}}),f.env,{},()=>{throw Error('No reads')});assert.equal(r.status,200);

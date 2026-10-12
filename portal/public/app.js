@@ -13,6 +13,8 @@ const donorViewReady = import('/donor-views.js?v=77470b1d26').then(module => {
    The hash is the single source of truth for navigation; route() renders it. */
 
 "use strict";
+let voteTables;
+const voteTablesReady = import("/vote-tables.js?v=2df85485a3").then(module => { voteTables = module; });
 let divisionMarkdown;
 const divisionMarkdownReady = import('/division-markdown.js?v=5991511166').then(module => { divisionMarkdown = module; });
 // The labels, source lines and ⋯ (labels.js); the first render waits for them.
@@ -1375,6 +1377,27 @@ async function openMoneyRecords(kind, params) {
     else if (grants && (params.get('open') || params.get('jur'))) moneyRecordsHandle.open?.(params.get('open'), params.get('jur') || undefined);
   } catch { if (generation === moneyRecordsGeneration) body.innerHTML = '<p role="alert">These records could not load. <a href="'+(grants?'/money/grants':'/money/receipts')+'">Try again</a>.</p>'; }
 }
+/** /money/explain?…: one disclosed-money flow, explained from the data alone
+ *  (money-explain.js). The module settles the address before it draws: graph
+ *  IDs only, and a donor OPAX withholds becomes the not-named aggregate. */
+async function openMoneyExplain(params, manageFocus) {
+  const generation = ++moneyRecordsGeneration;
+  moneyRecordsHandle?.destroy(); moneyRecordsHandle = null;
+  $('money-records-title').hidden = true;
+  const body = $('money-records-body');
+  try {
+    const mod = await import('/money-explain.js?v=d6d3e50c00');
+    if (generation !== moneyRecordsGeneration) return;
+    const current = () => generation === moneyRecordsGeneration && location.pathname === '/money/explain';
+    moneyRecordsHandle = mod.mountMoneyExplain(body, {
+      params, manageFocus, loadMoney: loadMoneyFile, loadAecExtras, loadBillsIndex, loadBill, loadAccess, loadFits, normName,
+      partyName: partyAskName, electionYears: [...BALANCE_ELECTION_YEARS],
+      onAddress(path) { if (current() && path !== location.pathname + location.search) replaceRoute(path); },
+      // After syncPathMeta: on the landed URL it restores the Worker's generic title.
+      onTitle(title) { if (current()) { syncPathMeta(); document.title = `${title} · OPAX`; } },
+    });
+  } catch { if (generation === moneyRecordsGeneration) body.innerHTML = '<p role="alert">This explanation could not load. <a href="/money">Open the money map</a>.</p>'; }
+}
 async function openGrantRecipient(jurisdiction, id, manageFocus) {
   const generation = ++moneyRecordsGeneration;
   moneyRecordsHandle?.destroy(); moneyRecordsHandle = null;
@@ -1864,6 +1887,11 @@ function route() {
       setCrumbs([{ label: "Reports" }]);
       loadReportsList(manageFocus);
     }
+  } else if (view === "money" && segs[1] === "explain") {
+    showPanel("money-records");
+    document.title = "Explain this flow · OPAX";
+    setCrumbs([{ label: "Money", href: "/money" }, { label: "Explain this flow" }]);
+    openMoneyExplain(params, manageFocus);
   } else if (view === "money" && ["receipts", "grants"].includes(segs[1])) {
     showPanel("money-records");
     const isGrantRecipient = segs[1] === 'grants' && ((segs[3] === 'recipient' && segs[4]) || (params.get('open') && !params.get('program')));
@@ -3511,10 +3539,16 @@ function actionBtn(icon, href, label, { external = false, primary = false } = {}
     `${iconSvg(icon)}<span>${esc(label)}${external ? " ↗︎" : ""}</span></a>`;
 }
 
-/** One inert-looking page action, routed through the single delegated explain handler. */
-function explainBtn(detail, label, { primary = false } = {}) {
-  return `<button type="button" class="ui-button"${primary ? ' data-variant="primary"' : ""} ` +
-    `data-explain="${esc(JSON.stringify(detail))}">${iconSvg("map")}<span>${esc(label)}</span></button>`;
+/** A page's "Explain" action: a link to /money/explain for the graph IDs it names (money-explain.js).
+ *  Its look in an action column lives in money-explain.css, linked once here. */
+function explainBtn(query, label, { primary = false } = {}) {
+  if (!document.querySelector("link[data-money-explain]")) {
+    const sheet = Object.assign(document.createElement("link"), { rel: "stylesheet", href: "/money-explain.css?v=39bdb46509" });
+    sheet.dataset.moneyExplain = "";
+    document.head.append(sheet);
+  }
+  return `<a class="ui-button"${primary ? ' data-variant="primary"' : ""} data-explain-link href="${esc(`/money/explain?${new URLSearchParams(query)}`)}">` +
+    `${iconSvg("map")}<span>${esc(label)}</span></a>`;
 }
 
 
@@ -5147,14 +5181,14 @@ async function renderPersonVotes(name, personId, sections, onRecord = () => {}) 
   const slot = $("subject-votes");
   if (!slot) return;
   const lname = String(name || "").trim().toLowerCase();
-  const keys = [...new Set([personId, ...(votesData?._names?.[lname] || [])].filter(Boolean))];
+  const keys = voteTables.personVoteKeys(name, personId, votesData);
   const recs = keys.map((k) => votesData?.[k]).filter((r) => r && typeof r === "object");
   if (!recs.length) { slot.remove(); return; }
   const sum = (field) => recs.reduce((a, r) => a + (Number(r[field]) || 0), 0);
   const years = recs.flatMap((r) => (Array.isArray(r.years) ? r.years : [])).map(Number).filter(Number.isFinite);
   const jurs = [...new Set(recs.map((r) => r.jurisdiction).filter(Boolean))];
   const jurName = (j) => STATE_NAMES[j] || String(j || "").toUpperCase();
-  const all = recs.flatMap(r => ["for", "against"].flatMap(field => (r[field] || []).map(d => ({...d, jur: d.jur || r.jurisdiction, vote: field === "for" ? "Voted for" : "Voted against"}))));
+  const all = recs.flatMap(r => ["for", "against"].flatMap(field => (r[field] || []).map(d => ({...d, jur: d.jur || r.jurisdiction, vote: field === "for" ? "For the bill" : "Against the bill"}))));
   const privacy = await growthModules.loadModulePrivacy("person",growthModules.normalisedName(name));
   if (currentSubjectKey !== key) return;
   const latestBills = growthModules.latestBillVotes(all).filter(d=>!privacy(d.name));
@@ -5162,8 +5196,12 @@ async function renderPersonVotes(name, personId, sections, onRecord = () => {}) 
   if (currentSubjectKey !== key || !slot.isConnected) return;
   onRecord({votes: latestBills, bills: billIndex?.bills || []});
   Object.assign(slot.dataset, {module: "latest_bills", pageType: "person", modulePosition: "2"});
-  const billRow = d => `<li data-bill-name="${esc(d.name)}" data-bill-jur="${esc(d.jur)}"><a class="source-title" href="${esc(searchHash(`"${d.name}"`, {}))}">${esc(billQuestion(d.name))}</a>
-    <span class="result-meta">${esc(d.vote)} · ${esc(fmtDate(d.date))}${d.stage ? ` · ${esc(d.stage)}` : ""}${jurs.length > 1 ? ` · ${esc(jurName(d.jur))}` : ""}</span></li>`;
+  const recentData = await fetch("/seo/recent-votes.json").then(r => r.ok ? r.json() : null).catch(() => null);
+  if (currentSubjectKey !== key || !slot.isConnected) return;
+  const recent = recentData?._meta?.schema === 1 && recentData._meta.source === "opax-parli-db" && recentData._meta.coverage === "recorded"
+    ? keys.flatMap(k => { const r = recentData.people?.[k]; return r?.name?.trim().toLowerCase() === lname ? r.recent || [] : []; }) : [];
+  const rows = voteTables.votingRows((recent.length ? recent : all).filter(v => !privacy(v.title || v.name, v.question)), billIndex?.bills || []);
+  const config = voteTables.voteTableConfig(keys, recent.length ? "Recorded votes" : "Latest exported bill votes");
   const total = sum("divisions_total");
   const ayes = sum("ayes");
   const noes = sum("noes");
@@ -5174,7 +5212,6 @@ async function renderPersonVotes(name, personId, sections, onRecord = () => {}) 
   slot.dataset.railFigure = total.toLocaleString();
   slot.dataset.accent = "votes";
   slot.innerHTML = `
-    <h3 class="subject-section-title">Latest bills they voted on</h3>
     <div class="tiles tiles-compact votes-tiles">
       <div class="tile"><b>${esc(total.toLocaleString())}</b><span>recorded division${total === 1 ? "" : "s"}</span></div>
       <div class="tile"><b>${esc(ayes.toLocaleString())}</b><span>ayes</span></div>
@@ -5182,9 +5219,7 @@ async function renderPersonVotes(name, personId, sections, onRecord = () => {}) 
     </div>
     ${ayes + noes ? `<div class="votes-split" role="img" aria-label="${esc(ayePct)} percent ayes, ${esc(100 - ayePct)} percent noes"><i style="width:${ayePct}%"></i></div>
     <p class="votes-lede">${esc(ayePct)}% ayes${where ? ` in the ${where}` : ""}${span ? `, ${span}` : ""}.</p>` : ""}
-    ${latestBills.length
-      ? `<ul class="subject-list" role="list">${latestBills.slice(0, 6).map(billRow).join("")}</ul>`
-      : `<p class="status" style="margin-top:0.6rem">None of their recorded divisions was a vote on a bill itself.</p>`}
+    ${voteTables.voteTableHTML(config, voteTables.voteTablePage(rows, config))}
     ${sourceLineHTML({
       updated: votesData?._meta?.content_changed_at || "",
       source: federal ? "They Vote For You" : "State Hansard",
@@ -5192,13 +5227,12 @@ async function renderPersonVotes(name, personId, sections, onRecord = () => {}) 
       originals: federal ? [{ label: "Full record on They Vote For You", href: `https://theyvoteforyou.org.au/search?query=${encodeURIComponent(name)}` }] : [],
       notes: [
         "Only formal divisions are counted; most questions are decided on the voices and leave no per-member record.",
-        `This list shows the latest recorded vote on each bill itself: a second or third reading, or agreeing
-          to the bill. Amendments, gag motions and other procedural votes are left out because an aye there says nothing about
-          the bill. A bill missing here was not necessarily unvoted on. A matched title opens the bill page; other titles search the record.`,
+        "This list covers votes available in the published export. A bill missing here was not necessarily unvoted on.",
+        "Party position is shown only when this vote's source records it. Open a division for the question and the party tallies.",
       ],
       licence: "They Vote For You (federal divisions, OpenAustralia Foundation, ODbL) and the NSW, Victorian and Queensland Hansard for state divisions.",
     })}`;
-  decoratePersonVoteBills(slot);
+  voteTables.mountVoteTables(slot);
 }
 
 async function renderPersonTopics(name, sections, onRecord = () => {}) {
@@ -5493,7 +5527,7 @@ async function openSubject(kind, name, manageFocus, params = new URLSearchParams
         ? { href: askHash(`What has parliament said about ${node.label}?`), label: "Ask what parliament said about this donor" }
         : { href: askHash(`What has parliament said about ${industryLabel(node.industry)}?`), label: "Ask what parliament said about this industry" };
     head.insertAdjacentHTML("beforeend", `<div class="page-actions entry-actions">
-      ${explainBtn(isParty ? { kind: "party", to: node.label, jurisdiction: "federal" } : { kind: "donor", from: node.label, jurisdiction: "federal" },
+      ${explainBtn(isParty ? { to: node.id } : { from: node.id },
         isParty ? "Explain where the money comes from" : "Explain this money")}
       ${moreMenuHTML([
         askAbout,
@@ -6098,9 +6132,7 @@ function topicMoneyHTML(ind) {
       interests disclosed <b>${esc(fmtMoney(total))}</b> in donations to political parties.</p>
     ${barList(rankedDonors, { fmt: fmtMoney, heading: `Largest ${industryLabel(ind)} donors`,
       linkTo: (nm) => subjectHash("donor", nm) })}
-    <p class="action-row">${explainBtn({
-      kind: "industry", from: industryLabel(ind), jurisdiction: "federal",
-    }, "Explain this flow", { primary: true })}</p>
+    <p class="action-row">${explainBtn({ industry: ind }, "Explain this flow", { primary: true })}</p>
     <p class="fineprint">${esc(AEC_NOTE)} <a href="/money">Explore on the money map</a></p>`;
 }
 
@@ -8358,12 +8390,10 @@ function billDivisionsHTML(bill) {
         "A bill with no division here was not necessarily unopposed. This register does not establish whether a vote on the voices has occurred.",
         "No per-member or per-party vote is available without a formal division."]})}</section>`;
   }
-  const head = divs.slice(0, 6), rest = divs.slice(6);
+  const config = voteTables.divisionTableConfig({bill:bill.key});
+  const rows = voteTables.divisionRows(divs, true);
   return `<section class="bill-section" data-accent="votes" ${growthModules.moduleAttrs("party_votes", "bill", 2)}>
-    <h3 class="subject-section-title">How each party voted</h3>
-    <ol class="bill-division-list" role="list" id="bill-divisions">${head.map((d) => billDivisionHTML(d, bill)).join("")}</ol>
-    ${rest.length ? `<p class="dir-more-row"><button type="button" class="ui-button" id="bill-divisions-more"
-      data-rest="${esc(String(rest.length))}">Show more (${rest.length} more)</button></p>` : ""}
+    ${voteTables.voteTableHTML(config, voteTables.voteTablePage(rows, config))}
     ${sourceLineHTML({
       updated: bill.exportedAt || "", source: "They Vote For You",
       notes: [
@@ -8597,17 +8627,7 @@ async function openBill(key, manageFocus) {
   linkBillSponsors(body, bill);
   openBillText(bill);
   if (manageFocus) $("bill-title")?.focus();
-  const more = $("bill-divisions-more");
-  if (more) {
-    more.addEventListener("click", () => {
-      const list = $("bill-divisions");
-      const first = list.children.length;
-      const divs = billDedupeDivisions(bill.divisions, bill).divisions.slice(6);
-      list.insertAdjacentHTML("beforeend", divs.map((d) => billDivisionHTML(d, bill)).join(""));
-      more.remove();
-      list.children[first]?.querySelector("a, .bill-division-q")?.focus?.();
-    });
-  }
+  voteTables.mountVoteTables(body);
 }
 
 function renderOtherSponsorBills(bill, body, view, generation) {
@@ -8905,68 +8925,17 @@ document.querySelector(".about-index")?.addEventListener("click", (event) => {
 
 const explore = { ballot: null, tm: null, tide: null, quiz: null, ledger: null, grants: null, matrix: null, wd: null, tvn: null };
 
-let explainInstance = null;
-let explainOpenSeq = 0;
-let explainReturnCrumbs = [];
-
-function readCrumbs() {
-  return [...document.querySelectorAll("#crumbs li")].slice(1).map((li) => {
-    const link = li.querySelector("a");
-    return { label: li.querySelector(".crumb-label")?.textContent || "", ...(link ? { href: link.getAttribute("href") } : {}) };
-  }).filter((item) => item.label);
-}
-
-/** The one shell entry point for map events and every data-explain button. */
-document.getElementById("dialog-explain")?.addEventListener("opax:explain-close", () => closeGame($("dialog-explain")));
+/** The map's cards (and any data-explain markup) name a flow by its labels; the
+ *  explainer resolves them to graph IDs, withheld donors to the not-named
+ *  aggregate, and the reader lands on /money/explain. */
 async function openExplain(detail) {
   if (!detail || !["industry", "donor", "party"].includes(detail.kind)) return;
-  const clean = {
-    kind: detail.kind,
-    ...(typeof detail.from === "string" && detail.from.trim() ? { from: detail.from.trim() } : {}),
-    ...(typeof detail.to === "string" && detail.to.trim() ? { to: detail.to.trim() } : {}),
-    jurisdiction: MONEY_JURISDICTIONS[detail.jurisdiction] ? detail.jurisdiction : "federal",
-  };
-  const dialog = $("dialog-explain");
-  const body = $("explain-body");
-  const seq = ++explainOpenSeq;
-  explainInstance?.destroy?.();
-  explainInstance = null;
-  explainReturnCrumbs = readCrumbs();
-  setCrumbs([...explainReturnCrumbs, { label: "Explain this flow" }]);
-  body.replaceChildren();
-  if (!dialog.open) dialog.showModal();
-  pauseSubjectMap("dialog", true);
-
-  let waiting = null;
+  const jur = MONEY_JURISDICTIONS[detail.jurisdiction] ? detail.jurisdiction : "federal";
   try {
-    const explainModule = import("/explain.js?v=4f577eb978");
-    const wombat = await import("/wombat.js?v=cb89a88dad");
-    if (seq !== explainOpenSeq || !dialog.open) return;
-    waiting = wombat.mountWombat(body, { label: "Tracing the disclosed money." });
-    const mod = await explainModule;
-    if (seq !== explainOpenSeq || !dialog.open) { waiting?.destroy?.(); return; }
-    waiting?.destroy?.();
-    body.replaceChildren();
-    explainInstance = mod.mountExplain(body, clean, {
-      displayTitle, searchHash, askHash, subjectHash, partyChipHTML, fmtMoney,
-      money: clean.jurisdiction === "federal" ? moneyData : null,
-      loadMoney: loadMoneyFile,
-      loadAccess,
-      loadFits,
-      askRecord,
-      renderAnswer,
-      normName,
-      industryLabel,
-      portraitFor: async (name) => { await loadPhotoMap(); return photoUrlFor(name) || null; },
-      electionYears: [...BALANCE_ELECTION_YEARS],
-      aecNote: AEC_NOTE,
-      stateNotSummed: STATE_NOT_SUMMED,
-    });
-  } catch (err) {
-    waiting?.destroy?.();
-    if (seq !== explainOpenSeq || !dialog.open) return;
-    body.innerHTML = `<p class="status error">This explanation could not load just now. Close it and try again.</p>`;
-  }
+    const [mod, graph] = await Promise.all([import("/money-explain.js?v=d6d3e50c00"), loadMoneyFile(jur)]);
+    const { loadDonorViewIndex } = await import("/donor-views.js?v=77470b1d26");
+    goRoute(mod.explainHrefFor({ ...detail, jurisdiction: jur }, graph, await loadDonorViewIndex()) || "/money/explain");
+  } catch { goRoute("/money/explain"); }
 }
 
 // All page hook points carry plain JSON and converge here; the map sends the
@@ -9099,24 +9068,9 @@ for (const dialog of document.querySelectorAll(".game-dialog")) {
   // Closed by any route (button, backdrop, Esc): the trail is Explore's again,
   // unless the page underneath has already moved on.
   dialog.addEventListener("close", () => {
-    if (dialog.id === "dialog-explain") {
-      explainOpenSeq++;
-      explainInstance?.destroy?.();
-      explainInstance = null;
-      if (explainReturnCrumbs) setCrumbs(explainReturnCrumbs);
-      explainReturnCrumbs = [];
-      return;
-    }
     if (parseHash().segs[0] === "explore") setCrumbs([{ label: "Explore" }]);
   });
   dialog.addEventListener("click", (e) => {
-    // An explanation's profile, search and cited-document links leave the
-    // modal before the shell router paints their destination underneath it.
-    if (dialog.id === "dialog-explain" && e.target instanceof Element && e.target.closest("a[href]")) {
-      explainReturnCrumbs = null;
-      dialog.close();
-      return;
-    }
     // Only the dialog itself is the backdrop; a click on anything inside it
     // is never a dismissal. Without this guard a keyboard-activated button
     // (Enter, or the quiz's 1/2/3 shortcuts calling click()) reports
@@ -15212,7 +15166,7 @@ function syncPathMeta() {
 
 // The first render waits for labels, attribution helpers and the canonical
 // person URL lookup, so links use the roster's aliases from the first render.
-Promise.allSettled([attributionReady, uiLabelsReady, growthModulesReady, personUrlsReady, saDisplayReady, donorViewReady]).finally(() => {
+Promise.allSettled([attributionReady, uiLabelsReady, growthModulesReady, personUrlsReady, saDisplayReady, donorViewReady, voteTablesReady]).finally(() => {
   loadPersonSlugs();
   initAskBuilder();
   route();

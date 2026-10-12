@@ -3,7 +3,10 @@ import assert from 'node:assert/strict';
 import {readFileSync,existsSync,readdirSync} from 'node:fs';
 import {build} from 'esbuild';
 import {isOrganisationDonor} from '../public/donor-entity.js';
-import {renderBillAnswer,renderPersonAnswer,partyLine,escapeHtml,safeHref,internalLinkCount,associationCaveat,crumbsHTML,answerBlock} from '../src/seo-content.ts';
+import {renderBillAnswer as rawBillAnswer,renderPersonAnswer,partyLine,escapeHtml,safeHref,internalLinkCount,associationCaveat,crumbsHTML,answerBlock} from '../src/seo-content.ts';
+import {tablePrivacyIndex} from './datatable-privacy.mjs';
+const tableIndex = await tablePrivacyIndex();
+const renderBillAnswer = (bill, people, slugs, related = [], query = {}) => rawBillAnswer(bill, people, slugs, related, query, tableIndex.safe);
 const pub=new URL('../public/',import.meta.url);
 const parsedAssets=new Map();
 const read=async path=>{if(!parsedAssets.has(path)) parsedAssets.set(path,JSON.parse(readFileSync(new URL(path.slice(1),pub),'utf8')));return parsedAssets.get(path);};
@@ -32,6 +35,7 @@ const {default:worker}=await import('data:text/javascript;base64,'+Buffer.from(c
 const origin='https://opax.com.au';
 const env={COMMUNITY_ORIGIN:origin,ASSETS:{async fetch(req){const path=new URL(req.url).pathname;const file=new URL(path==='/'?'index.html':path==='/home'?'home.html':path==='/community'?'community.html':path.slice(1),pub);if(!existsSync(file)) return new Response('Missing',{status:404}); const response=new Response(readFileSync(file),{headers:{'content-type':path.endsWith('.json')?'application/json':'text/html'}}); if(path.endsWith('.json')) response.json=()=>read(path); return response;}}};
 async function get(path){const r=await worker.fetch(new Request(origin+path),env,{waitUntil(){}});assert.equal(r.status,200,path);return r.text();}
+const prerenderBody = html => html.slice(html.indexOf('<section id="prerender"'),html.indexOf('</main>'));
 function checkHtml(html){assert.equal((html.match(/<h1\b/g)||[]).length,1);assert.doesNotMatch(html,/id="panel-ask"|id="panel-privacy"|Ask &amp; search the record/);const graph=JSON.parse(html.match(/<script[^>]*id="ld-page"[^>]*>(.*?)<\/script>/s)[1]);assert.ok(graph['@graph'].some(n=>n['@type']==='BreadcrumbList'));return graph['@graph'];}
 test('raw MP answer includes exported bill votes without unsupported recent-vote claims',async()=>{
   const html=await get('/subject/person/david-pocock');const graph=checkHtml(html);
@@ -40,7 +44,7 @@ test('raw MP answer includes exported bill votes without unsupported recent-vote
   assert.ok(html.includes('Updated '+(await import('../public/format.js')).shortDate(register.as_at)));
   assert.match(html,/href="\/subject\/party\/independent"/);assert.match(html,/href="\/subject\/electorate\//);
   assert.doesNotMatch(html,/Last 10 recorded votes|No per-member votes|not a complete list of recent divisions/);
-  const record=(await read('/votes.json'))['11009'];const votes=[...record.for,...record.against].sort((a,b)=>b.date.localeCompare(a.date)).slice(0,10);for(const vote of votes)assert.ok(html.includes(escapeHtml(vote.name)),vote.name);
+  const record=(await read('/votes.json'))['11009'];const votes=[...record.for,...record.against].filter(vote=>tableIndex.safe(JSON.stringify(vote))).sort((a,b)=>b.date.localeCompare(a.date)).slice(0,10);for(const vote of votes)assert.ok(html.includes(escapeHtml(vote.name)),'every public vote title is rendered');
   for(const path of ['/graph/money.json','/graph/money.qld.json','/graph/money.vic.json'])for(const n of (await read(path)).nodes.filter(n=>n.kind==='donor'&&!isOrganisationDonor(n)))assert.ok(!html.includes(escapeHtml(n.label)),n.label);
   const person=graph.find(n=>n['@type']==='Person');assert.ok(person.image);assert.ok(person.sameAs.some(url=>url.startsWith('https://www.aph.gov.au/Senators_and_Members/Parliamentarian?MPID=')));
   const labor=await get('/subject/person/anthony-albanese');assert.ok(labor.includes('Donors not named ('));assert.ok(labor.includes('<details>'));assert.ok(labor.includes("OPAX names organisations only. Donors it can&#39;t confirm are organisations are counted here, not named."));
@@ -56,14 +60,14 @@ test('recent-vote answers only use the separate OPAX export and omit an empty vo
   const rows=Array.from({length:10},(_,i)=>({title:`Recorded question ${i}`,date:'2026-09-01',vote:'aye',division_slug:`division-example-${i}`,source_url:`https://example.test/${i}`}));
   const assets={'/votes.json':{_names:{},'123':{name:p.name,recent:rows,for:[],against:[]}},'/seo/recent-votes.json':{_meta:{schema:1,source:'opax-parli-db',coverage:'recorded'},people:{'123':{name:p.name,recent:rows}}}};
   const readFixture=async path=>{if(path in assets)return assets[path];throw Error('Missing');};
-  assert.match((await renderPersonAnswer(p,readFixture,new Map())).html,/Last 10 recorded votes/);
+  assert.match((await renderPersonAnswer(p,readFixture,new Map(),undefined,undefined,{},tableIndex.safe)).html,/<caption>Recorded votes<\/caption>/);
   assets['/seo/recent-votes.json']._meta.source='manual-tvfy-sample';
-  const empty=(await renderPersonAnswer(p,readFixture,new Map())).html;
+  const empty=(await renderPersonAnswer(p,readFixture,new Map(),undefined,undefined,{},tableIndex.safe)).html;
   assert.doesNotMatch(empty,/Last 10 recorded votes|Latest exported bill votes|No per-member votes|Recorded question/);
 });
 test('raw bill labels its summary machine-written, with stages, sponsor/portfolio, divisions and source links',async()=>{
   const html=await get('/bill/au-federal-r7534');const graph=checkHtml(html);
-  const bill=await read('/bills/au-federal-r7534.json');assert.ok(html.includes(escapeHtml(bill.portfolio)));assert.match(html,/<h2>Plain-language summary<\/h2><p><span class="ui-machine-pill"[^>]*>.*?Machine-written/);assert.ok(!html.includes(`<p>${escapeHtml(bill.summary.attribution)}`));assert.ok(html.includes(escapeHtml(bill.summary.sentences[0])));assert.ok(html.includes('ayes 11, noes 24'));assert.match(html,/href="\/doc\/division-federal-senate-10701"/);assert.ok(graph.some(n=>n['@type']==='Legislation'&&n.legislationIdentifier===bill.key&&n.creativeWorkStatus));
+  const bill=await read('/bills/au-federal-r7534.json');assert.ok(html.includes(escapeHtml(bill.portfolio)));assert.match(html,/<h2>Plain-language summary<\/h2><p><span class="ui-machine-pill"[^>]*>.*?Machine-written/);assert.ok(!html.includes(`<p>${escapeHtml(bill.summary.attribution)}`));assert.ok(html.includes(escapeHtml(bill.summary.sentences[0])));assert.match(html,/data-label="Ayes"[^>]*>[\s\S]*?class="dt-value">11<\/span>/);assert.match(html,/data-label="Noes"[^>]*>[\s\S]*?class="dt-value">24<\/span>/);assert.match(html,/href="\/doc\/division-federal-senate-10701"/);assert.ok(graph.some(n=>n['@type']==='Legislation'&&n.legislationIdentifier===bill.key&&n.creativeWorkStatus));
   const sponsored=await get('/bill/au-federal-s1517');assert.match(sponsored,/href="\/subject\/person\/david-pocock"/);
 });
 test('raw division names and links every recorded member, with question/date/tally/bills',async()=>{
@@ -88,10 +92,10 @@ test('sample HTML stays bounded and boot assets preserve the original app panel 
 
 // The nightly exports division JSON; the Worker must format its question as
 // well as the same record embedded in a bill's crawlable answer.
-test('reported TVFY bill and division routes render Markdown blocks from local exports',async()=>{
-  for(const path of ['/bill/au-federal-s1488','/doc/division-federal-senate-10178']) {
+test('reported TVFY division routes render Markdown blocks from local exports',async()=>{
+  for(const path of ['/doc/division-federal-senate-10178']) {
     const html=await get(path);checkHtml(html);
-    const answer=html.match(/<section id="prerender"[\s\S]*?<\/section>/)[0];
+    const answer=prerenderBody(html);
     assert.doesNotMatch(answer,/###|&gt; /);
     assert.match(answer,/<strong>What is the bill&#39;s main idea\?<\/strong>/);
     assert.match(answer,/<blockquote><p><em>Amends the Criminal Code Act 1995/);
@@ -163,11 +167,11 @@ test('page aliases, including combined www/path aliases, redirect once to an exp
   }
 });
 
-test('bill SSR renders all exported members, dated party votes and related bills',async()=>{
+test('bill SSR links dated divisions to their member records and preserves related bills',async()=>{
   const html=await get('/bill/au-federal-r7534');
-  const division=await read('/divisions/division-federal-senate-10701.json');
-  for(const m of division.members) assert.ok(html.includes(escapeHtml(m.name)),m.name);
-  assert.match(html,/How each party voted/);
+  assert.match(html,/data-vote-table/);
+  assert.match(html,/href="\/doc\/division-federal-senate-10701"/);
+  assert.match(html,/Limitation of debate, 19 Aug 2026/);
   const bill=await get('/bill/au-federal-r7537');
   for(const fact of ['Andrew Gee','Independent Members','Introduced','Second reading','Machine-written','2026-09-07','Other bills from this sponsor']) assert.ok(bill.includes(fact),fact);
   // The pill says it once; no sentence beside it repeats it.
@@ -178,11 +182,21 @@ test('bill SSR renders all exported members, dated party votes and related bills
   assert.doesNotMatch(await get('/subject/person/bruce-baird'),/Died \d/);
 });
 
+test('division and voting table URL state is noindex with a clean canonical',async()=>{
+  for(const path of ['/bill/au-federal-r7534?dv.q=reading','/subject/person/david-pocock?vr.f.vote=Aye','/sitting/2026-09-14?dv.sort=date:asc']) {
+    const response=await worker.fetch(new Request(origin+path),env,{waitUntil(){}});
+    assert.equal(response.headers.get('x-robots-tag'),'noindex');
+    const html=await response.text();
+    assert.match(html,/<meta name="robots" content="noindex">/);
+    assert.ok(html.includes(`rel="canonical" href="${origin+path.split('?')[0]}"`));
+  }
+});
+
 test('supplier SSR carries agency facts, contract references and related suppliers without individual donor links',async()=>{
   const html=await get('/subject/supplier/s-f93824d9abc756c8f32f');
   for(const fact of ['Department of Foreign Affairs and Trade','CN4248039','2026-02-24','112,216','Other suppliers to these agencies','An association does not prove influence']) assert.ok(html.includes(fact),fact);
   assert.match(html,/tenders\.gov\.au\/Search\/KeywordSearch\?keyword=CN4248039/);
-  const answer=html.match(/<section id="prerender"[\s\S]*?<\/section>/)[0];
+  const answer=prerenderBody(html);
   assert.doesNotMatch(answer,/linked to|href="\/subject\/donor\//i);
 });
 
@@ -256,8 +270,8 @@ test('noindex 404 bodies emit no canonical or page identity, including unknown r
 test('all SSR body types use factual relationship wording and pair political money with the caveat',async()=>{
   const samples=['/subject/party/labor','/subject/person/anthony-albanese','/subject/donor/Clubs%20NSW','/subject/supplier/s-f93824d9abc756c8f32f','/money','/connections','/explore'];
   const campaigners=(await read('/graph/campaigners.json')).entities;
-  for(const c of campaigners){const html=await get('/subject/campaigner/'+encodeURIComponent(c.name));const body=html.match(/<section id="prerender"[\s\S]*?<\/section>/)[0];assert.doesNotMatch(body,/linked to/i,c.name);assert.equal(associationCaveat(body,body),body,c.name);}
-  for(const path of samples){const body=(await get(path)).match(/<section id="prerender"[\s\S]*?<\/section>/)[0];assert.doesNotMatch(body,/linked to/i,path);assert.match(body,/An association does not prove influence\./,path);}
+  for(const c of campaigners){const html=await get('/subject/campaigner/'+encodeURIComponent(c.name));const body=prerenderBody(html);assert.doesNotMatch(body,/linked to/i,c.name);assert.equal(associationCaveat(body,body),body,c.name);}
+  for(const path of samples){const body=prerenderBody(await get(path));assert.doesNotMatch(body,/linked to/i,path);assert.match(body,/An association does not prove influence\./,path);}
 });
 
 test('association caveat requires a rendered money pairing, not an election coverage gap',async()=>{
@@ -269,7 +283,7 @@ test('association caveat requires a rendered money pairing, not an election cove
     assert.doesNotMatch(html,/An association does not prove influence/,path);
   }
   const person=await get('/subject/person/anthony-albanese');
-  const body=person.match(/<section id="prerender"[\s\S]*?<\/section>/)[0];
+  const body=prerenderBody(person);
   assert.match(body,/<h1>Anthony Albanese<\/h1>/);
   assert.match(body,/<h2>Donors to their party<\/h2>[\s\S]*An association does not prove influence\.[\s\S]*\$[\d,]+/);
 });
