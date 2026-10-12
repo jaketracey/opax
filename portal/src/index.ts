@@ -68,6 +68,8 @@ import { melbourneDate, DAILY_POST_KINDS, type DailyPostKind } from './daily-pos
 import { CATALOG_KINDS, searchCatalog } from './catalog-search'
 import { retrieveAskRecords, recordContext, recordSources, RECORD_GROUNDING, integrityQuestion, type AskRecords } from './ask-records'
 import { SEARCH_SORTS, compareSearchResults } from './search-sort'
+import { runAgentic, classifyAgentic, agenticCacheKey, AGENTIC_BUDGET_MS, type AgenticDeps } from './agentic-ask'
+import type { ToolDeps } from './agentic-tools'
 import { tokens as catalogTokens } from './catalog-query.mjs'
 import { journeyStoryContext, parseJourneyStory, journeyStoryPrompt, JOURNEY_STORY_SYSTEM, STORY_VERSION, type StoryGraph } from './journey-story'
 import { shortDate, shortMoney as money } from '../public/format.js'
@@ -5524,7 +5526,7 @@ const NULL_BODY_STATUS = new Set([101, 204, 205, 304])
 // query's result set. Every other /api route is the caching work's to own, so
 // its Cache-Control is left exactly as the handler returned it — and even here
 // a handler that sets its own (the SSE stream does) wins.
-const NO_STORE_PATHS = new Set(['/api/search-summary', '/api/journey-story', '/api/ask', '/api/followups', '/api/search', '/api/search-all'])
+const NO_STORE_PATHS = new Set(['/api/search-summary', '/api/journey-story', '/api/ask', '/api/ask-agentic', '/api/followups', '/api/search', '/api/search-all'])
 
 function withSecurityHeaders(res: Response, url: URL): Response {
   const isApi = url.pathname.startsWith('/api/')
@@ -5660,6 +5662,84 @@ const replayPost = (request: Request, body: string) =>
 
 // ---------------------------------------------------------------------------
 
+/** KB and asset access for the agentic tools (design (i) and the flagged MCP tools). Reads only. */
+function agenticToolDeps(env: Env): ToolDeps {
+  return {
+    origin: SITE_ORIGIN,
+    kb: async (path, body) => {
+      const res = await kbFetch(env, path, body === undefined ? undefined : { body })
+      if (!res.ok) throw new Error(`kb ${path} ${res.status}`)
+      return await res.json() as Record<string, unknown>
+    },
+    asset: async (path) => {
+      const res = await env.ASSETS.fetch(new Request(new URL(path, SITE_ORIGIN)))
+      if (!res.ok || !(res.headers.get('content-type') ?? '').includes('json')) return null
+      try { return await res.json() } catch { return null }
+    },
+  }
+}
+
+/**
+ * Agentic Ask spike, design (i) (docs/design/agentic-ask-2026-10.md). Off unless
+ * AGENTIC_ASK_ENABLED is 'true'. Plans with one model call, counts with the
+ * deterministic tools in src/agentic-tools.ts, writes with one more, all on the
+ * openai-compatible slot. `force: true` runs a question the route classifier
+ * would leave on today's Ask (the spike scores the planner on every question).
+ * SSE when the client asks for it: status phases planning -> plan -> step
+ * (running/done per tool) -> writing, then `done` with the payload.
+ */
+async function apiAskAgentic(request: Request, url: URL, input: Record<string, unknown>, env: Env, ctx: ExecutionContext): Promise<Response> {
+  const question = typeof input.question === 'string' ? input.question.trim() : ''
+  if (!question || question.length > MAX_QUESTION_CHARS) return json({ error: 'question is required' }, 400)
+  const routed = classifyAgentic(question)
+  if (routed.route !== 'agentic' && input.force !== true) return json({ route: 'ask', routed }, 409)
+  const model = env.AGENTIC_MODEL || env.ASK_MODEL || 'openai-compatible'
+  const key = new Request(await agenticCacheKey(question, env.CACHE_EPOCH, model))
+  const wantsStream = (request.headers.get('accept') ?? '').includes('text/event-stream')
+  if (!cacheBypass(request, url)) {
+    const hit = await caches.default.match(key)
+    if (hit) return withCacheStatus(hit, 'HIT', false)
+  }
+  const limited = await rateLimited(env.ASK_LIMITER, request)
+  if (limited) return limited
+  const deps: AgenticDeps = {
+    ...agenticToolDeps(env),
+    generate: async (query, prompt, maxTokens, signal) => {
+      const res = await kbFetch(env, '/ask', {
+        body: { query, top_k: 1, reranker: 'noop', generative_model: model, max_tokens: maxTokens, prompt },
+        headers: { 'x-synchronous': 'true', 'x-show-consumption': 'true' },
+        signal,
+      })
+      if (!res.ok) throw new Error(`ask ${res.status}`)
+      const out = await res.json() as { answer?: string; consumption?: { customer_key_tokens?: { input?: number; output?: number }; normalized_tokens?: { input?: number; output?: number } }; metadata?: { tokens?: { input?: number; output?: number } } }
+      // metadata.tokens holds the slot's real token counts; consumption reads 0/0 for a customer-key model.
+      const t = out.metadata?.tokens
+      return { text: out.answer ?? '', tokens: t ? { input: Number(t.input) || 0, output: Number(t.output) || 0 } : undefined }
+    },
+  }
+  const finish = (payload: Record<string, unknown>) => {
+    const res = json({ ...payload, routed })
+    if (payload.answered === true) cacheStore(ctx, key, res.clone(), ASK_CACHE_TTL)
+    return res
+  }
+  if (!wantsStream) return withCacheStatus(finish(await runAgentic(question, deps, undefined, AGENTIC_BUDGET_MS) as unknown as Record<string, unknown>), 'MISS', false)
+  const encoder = new TextEncoder()
+  const { readable, writable } = new TransformStream<Uint8Array, Uint8Array>()
+  const writer = writable.getWriter()
+  const send = async (event: string, data: unknown) => { await writer.write(encoder.encode(`event: ${event}\ndata: ${JSON.stringify(data)}\n\n`)) }
+  ctx.waitUntil((async () => {
+    try {
+      await send('status', { phase: 'searching' })
+      const payload = await runAgentic(question, deps, send, AGENTIC_BUDGET_MS) as unknown as Record<string, unknown>
+      finish(payload)
+      await send('done', { ...payload, routed })
+    } catch (err) {
+      await send('error', { error: 'The agentic answer failed.', detail: String(err).slice(0, 200), final: true })
+    } finally { await writer.close() }
+  })())
+  return new Response(readable, { headers: { ...SSE_HEADERS, 'x-opax-cache': 'MISS' } })
+}
+
 async function route(
   request: Request,
   url: URL,
@@ -5699,6 +5779,11 @@ async function route(
         const bad = validateFilters((k) => body.value[k])
         if (bad) return json({ error: bad }, 400)
         return await apiAsk(replayPost(request, body.text), env, ctx)
+      }
+      if (url.pathname === '/api/ask-agentic' && request.method === 'POST' && env.AGENTIC_ASK_ENABLED === 'true') {
+        const body = await readJsonBody(request)
+        if (body instanceof Response) return body
+        return await apiAskAgentic(request, url, body.value, env, ctx)
       }
       if (url.pathname === '/api/journey-story' && request.method === 'POST') {
         const body = await readJsonBody(request)
@@ -5930,7 +6015,7 @@ export default {
       if (target.pathname === '/api/search-all') return display(await apiUnifiedSearch(local, target, env, ctx), target)
       if (env.STAGING_API) return display(await env.STAGING_API.fetch(local), target)
       return display(await route(local, target, env, ctx), target)
-    }))
+    }, env.AGENTIC_MCP_TOOLS === 'true' ? agenticToolDeps(env) : undefined))
     if (url.pathname === '/api/search-all' && request.method === 'GET') {
       try {
         const response = withSecurityHeaders(await display(await apiUnifiedSearch(request, url, env, ctx)), url)

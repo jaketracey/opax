@@ -4,7 +4,8 @@ import {z} from 'zod'
 import {body,CommunityError,digest,json,limit,now,type Member} from './community-core'
 import {loadDonorIndex,questionNamesWithheldDonor,WITHHELD_DONOR_REPLY} from './donor-index'
 import {foldDonorName} from '../public/donor-entity.js'
-export async function communityMcp(req:Request,env:Env,readPublic:(path:string)=>Promise<Response>):Promise<Response>{
+import {TOOL_SPECS,runTool,type ToolDeps} from './agentic-tools'
+export async function communityMcp(req:Request,env:Env,readPublic:(path:string)=>Promise<Response>,agentic?:ToolDeps):Promise<Response>{
  try{
   if(String(env.COMMUNITY_ENABLED)!=='true')throw new CommunityError(503,'Community access is being prepared.')
   const origin=req.headers.get('origin');if(origin&&origin!==env.COMMUNITY_ORIGIN)throw new CommunityError(403,'This origin is not allowed.')
@@ -116,6 +117,22 @@ export async function communityMcp(req:Request,env:Env,readPublic:(path:string)=
    const opax_url=env.COMMUNITY_ORIGIN+'/money/grants?'+new URLSearchParams({jur:jurisdiction,program:entry.id})
    return grantResult(file,opax_url,jurisdiction)
   })
+  // Agentic Ask spike (docs/design/agentic-ask-2026-10.md): counting, trend, vote and money tools for a
+  // Nuclia smart agent. Registered only when AGENTIC_MCP_TOOLS is 'true'; all read-only, no model calls.
+  if(agentic)for(const spec of TOOL_SPECS){
+   const props=(spec.input.properties??{}) as Record<string,{type?:string;enum?:string[]}>,required=new Set((spec.input.required??[]) as string[])
+   const shape:Record<string,z.ZodTypeAny>={}
+   for(const [key,p] of Object.entries(props)){
+    let field:z.ZodTypeAny=p.enum?z.enum(p.enum as [string,...string[]]):p.type==='integer'?z.number().int().min(0).max(3000):z.string().min(1).max(300)
+    if(!required.has(key))field=field.optional()
+    shape[key]=field
+   }
+   server.registerTool(spec.name,{description:spec.description,inputSchema:shape,annotations:{readOnlyHint:true,destructiveHint:false,openWorldHint:false}},async(args:Record<string,unknown>)=>{
+    if(await questionNamesWithheldDonor(env.ASSETS,...Object.values(args).filter(v=>typeof v==='string')))return withheldReply()
+    const r=await runTool(agentic,spec.name,args)
+    return {content:[{type:'text' as const,text:JSON.stringify(r)}],isError:!r.ok}
+   })
+  }
   const transport=new WebStandardStreamableHTTPServerTransport({sessionIdGenerator:undefined,enableJsonResponse:true})
   await server.connect(transport)
   try{return await transport.handleRequest(req,{parsedBody:parsed})}finally{await server.close()}

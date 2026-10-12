@@ -58,6 +58,12 @@ interface Env {
   JOURNEY_STORY_MODEL?: string
   FOLLOWUPS_MODEL?: string
   MONEY_OVERVIEW_MODEL?: string
+  /** Agentic Ask spike (docs/design/agentic-ask-2026-10.md): 'true' serves POST /api/ask-agentic. Unset in every environment. */
+  AGENTIC_ASK_ENABLED?: string
+  /** 'true' registers the structured agentic tools on /mcp. Unset in every environment. */
+  AGENTIC_MCP_TOOLS?: string
+  /** Model pin for the agentic planner and composer; falls back to ASK_MODEL. */
+  AGENTIC_MODEL?: string
 }
 
 declare namespace Cloudflare {
