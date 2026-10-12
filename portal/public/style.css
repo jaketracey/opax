@@ -235,6 +235,17 @@
 .spa-booting:not(.spa-ready) #main .panel,
 .spa-booting:not(.spa-routed) #main .panel,
 .spa-failed #main .panel { display: none; }
+/* Boot frame (perf lane, CLS): spa-entry.js marks the frame the route will
+   draw, so the first paint already has it. The breadcrumb strip (41px: its
+   40px list and hairline) is held while hidden; route() unhides it in the
+   same task that sets spa-routed. A compact panel takes main.compact's top
+   space and, except Search, no hero. */
+.spa-booting:not(.spa-routed) #crumbs[hidden] { display: block !important; visibility: hidden; }
+.spa-boot-compact:not(.spa-routed) #main { padding-top: var(--space-5); }
+.spa-boot-compact:not(.spa-boot-search):not(.spa-routed) #hero-intro { display: none; }
+@media (max-width: 860px) { .spa-boot-compact:not(.spa-routed) #main { padding-top: var(--space-4); } }
+/* A person's record stays unseen while its head settles (app.js revealGrid). */
+.subject-grid.is-settling { visibility: hidden; }
 #prerender { padding-bottom: 1.5rem; }
 /* Audit reports and legislative instruments: server-only record pages. The
    sentence under the title is the page's one meta line; each page closes in

@@ -5564,12 +5564,23 @@ async function openSubject(kind, name, manageFocus, params = new URLSearchParams
   // person
   const sections = $("subject-sections");
   const box = $("subject-infobox");
+  // The record waits, unseen, until the head has its final height: the meta
+  // line's second row, the source line and ⋯ arrive with their data, and each
+  // pushed a visible grid down (CLS). Hidden content does not shift. Shown with
+  // the finished head, on any early exit, or after four seconds at the latest.
+  const grid = body.querySelector(".subject-grid");
+  grid?.classList.add("is-settling");
+  const revealGrid = () => grid?.classList.remove("is-settling");
+  setTimeout(revealGrid, 4000);
   const unattributed = params.get('attribution') === 'unattributed';
   const people = (await loadParliamentarians())?.people || [];
   const record = splitPerson(people, name) || people.find((p) => p.name.toLowerCase() === String(name).toLowerCase());
   const roster = unattributed ? null : record;
   const speechSpeaker = splitSpeakers(roster)[0] || name;
   const speechScope = personScope(roster);
+  // The ask block's privacy file, read alongside the speeches: awaited after the
+  // head is drawn, it landed a frame later and pushed the record down (CLS).
+  const privacyReady = roster && !unattributed ? growthModules.loadModulePrivacy("person", growthModules.normalisedName(roster.name || name)) : null;
   if (currentSubjectKey !== key) return;
   loadPhotoMap().then(() => {
     if (currentSubjectKey !== key || unattributed) return;
@@ -5610,6 +5621,7 @@ async function openSubject(kind, name, manageFocus, params = new URLSearchParams
     // The one caveat drawn inline: without it a reader would take these for an MP's speeches.
     head.insertAdjacentHTML('beforeend', `<p class="person-caveat">Evidence printed as ${esc(name)} is kept separate from parliamentary speeches. No MP identity, party or portrait is assigned to these records.</p>`);
     renderPersonSpeeches(name, speeches, chambers, sections, { unattributed: true }).then(() => refreshEntryRail(sections));
+    revealGrid();
     return;
   }
   if (roster?.speech_scope) {
@@ -5620,6 +5632,7 @@ async function openSubject(kind, name, manageFocus, params = new URLSearchParams
   const witness = !roster && speeches.length > 0 &&
     speeches.every((r) => r.speaker_type === "witness" || (isCommitteeChamber(r.chamber) && r.person_id == null));
   if (witness) {
+    revealGrid();
     renderCommitteeWitness(name, key, body, box, sections, speeches, dates);
     return;
   }
@@ -5643,6 +5656,7 @@ async function openSubject(kind, name, manageFocus, params = new URLSearchParams
         <ul class="subject-list" role="list">${holders.map(([n, c]) => `<li><a ${entityHrefAttr(subjectHash("person", n))}>${esc(n)}</a> <span class="meta">${c.toLocaleString()} speeches</span></li>`).join("")}</ul>` : ""}
         ${sourceLineHTML({ source: "Parliamentary Hansard", notes: ["The record names its speakers as the transcripts do, so a person may be indexed under a fuller or shorter form of this name. The search looks across every spelling."] })}`,
     });
+    revealGrid();
     return;
   }
   const q = encodeURIComponent(name);
@@ -5710,7 +5724,7 @@ async function openSubject(kind, name, manageFocus, params = new URLSearchParams
       ], "More about this person")}
     </div>`);
   const promptName = roster?.full || name;
-  const privacy = await growthModules.loadModulePrivacy("person",growthModules.normalisedName(roster?.name || name));
+  const privacy = await (privacyReady || growthModules.loadModulePrivacy("person",growthModules.normalisedName(roster?.name || name)));
   if (currentSubjectKey !== key) return;
   head.insertAdjacentHTML("afterend", growthModules.askBlockHTML({name: promptName, pageType: "person", seed: `What has ${promptName} said in parliament?`,privacy}));
   const askRecord = {name: promptName,privacy};
@@ -5725,6 +5739,7 @@ async function openSubject(kind, name, manageFocus, params = new URLSearchParams
   // source line; on phones it comes before the source line, which keeps clear of the ⋯ button.
   const fitsAnchor = head.querySelector(":scope > .ui-source");
   if (fitsRow) (fitsAnchor || head).insertAdjacentHTML(fitsAnchor ? "beforebegin" : "beforeend", `<p class="person-fits">${fitsRow[1]}</p>`);
+  revealGrid(); // the head is final: meta line, source line, ⋯, fits row and the ask block
   box.innerHTML = entryRailHTML();
   renderPortraitCredit(name, key);
   // The structured record first; the speeches follow it.
@@ -8496,7 +8511,8 @@ async function openBill(key, manageFocus) {
   showPageLoader("bill-loader", "Opening the bill.");
   // The bills export's date dates every block it supplies (principle 4). The
   // index is the export's one dated file, fetched alongside the bill itself.
-  const [bill, billsIndex] = await Promise.all([loadBill(key), loadBillsIndex().catch(() => null)]);
+  // The ask block's privacy file is keyed by the bill, so it is read with it, not after it.
+  const [bill, billsIndex, keyPrivacy] = await Promise.all([loadBill(key), loadBillsIndex().catch(() => null), growthModules.loadModulePrivacy("bill", key)]);
   if (billView !== view || generation !== billTextGeneration) return;
   clearPageLoader("bill-loader");
   if (!bill) {
@@ -8513,7 +8529,7 @@ async function openBill(key, manageFocus) {
     return;
   }
   bill.exportedAt = billsIndex?.generated_at || "";
-  bill.modulePrivacy = await growthModules.loadModulePrivacy("bill",bill.key);
+  bill.modulePrivacy = bill.key === key ? keyPrivacy : await growthModules.loadModulePrivacy("bill",bill.key);
   if (billView !== view || generation !== billTextGeneration) return;
   const title = bill.title || bill.short_title || key;
   // Landed here from outside: keep the Worker's search title (see BOOT_META).
