@@ -3801,8 +3801,8 @@ async function renderDeclaredPage(params, manageFocus) {
   const buckets = [...new Set(items.map((x) => x.bucket).filter(Boolean))]
     .sort((a, b) => (DECLARED_BUCKET_LABELS[a] || a).localeCompare(DECLARED_BUCKET_LABELS[b] || b));
   const parties = [...new Set(items.map((x) => partyByName.get(String(x.name || "").toLowerCase())).filter(Boolean))].sort();
-  bucketSelect.innerHTML = `<option value="">Category: all</option>${buckets.map((b) => `<option value="${esc(b)}">${esc(DECLARED_BUCKET_LABELS[b] || b)}</option>`).join("")}`;
-  partySelect.innerHTML = `<option value="">Party: all</option>${parties.map((p) => `<option value="${esc(p)}">${esc(p)}</option>`).join("")}`;
+  bucketSelect.innerHTML = `<option value="">All</option>${buckets.map((b) => `<option value="${esc(b)}">${esc(DECLARED_BUCKET_LABELS[b] || b)}</option>`).join("")}`;
+  partySelect.innerHTML = `<option value="">All</option>${parties.map((p) => `<option value="${esc(p)}">${esc(p)}</option>`).join("")}`;
   bucketSelect.value = buckets.includes(bucket) ? bucket : "";
   partySelect.value = parties.includes(party) ? party : "";
   const result = declaredPage(items, partyByName, {
@@ -6873,9 +6873,9 @@ function renderDirectory(spec) {
 
   const filterHTML = (f) => f.check
     ? `<label class="dir-check ui-filter-toggle"><input type="checkbox" data-filter="${esc(f.key)}"${state[f.key] ? " checked" : ""}>${esc(f.label)}</label>`
-    : `<label class="dir-field ui-filter-field"><span class="visually-hidden">${esc(f.label)}</span>
-        <select data-filter="${esc(f.key)}" class="ui-input">
-          <option value="">${esc(f.any || `${f.label}: all`)}</option>
+    : `<label class="dir-field ui-filter-field"><span class="ui-filter-key">${esc(f.pill || f.label)}</span>
+        <select data-filter="${esc(f.key)}" class="ui-input"${f.pill ? ` aria-label="${esc(f.label)}"` : ""}>
+          <option value="">All</option>
           ${f.options.map(([v, l]) => `<option value="${esc(v)}"${state[f.key] === v ? " selected" : ""}>${esc(l)}</option>`).join("")}
         </select></label>`;
   body.innerHTML = `
@@ -7201,10 +7201,10 @@ async function buildPartiesDirectory() {
     items,
     text: (p) => p.label,
     filters: [
-      { key: "jur", label: "Disclosures", any: "Any commission",
+      { key: "jur", label: "Disclosures",
         options: [["federal", "Federal (AEC)"], ["qld", "Queensland (ECQ)"], ["vic", "Victoria (VEC)"], ["tas", "Tasmania (TEC)"]],
         test: (p, v) => Boolean(p.money[v]) },
-      { key: "show", label: "Show", any: "Every party",
+      { key: "show", label: "Show",
         options: [["speeches", "With speeches in the record"], ["members", "With members in the directory"], ["money", "With disclosed receipts"]],
         test: (p, v) => v === "speeches" ? p.speeches > 0 : v === "members" ? p.members > 0 : Object.keys(p.money).length > 0 },
     ],
@@ -7329,10 +7329,10 @@ async function buildDonorsDirectory() {
       { key: "industry", label: "Industry",
         options: [...groupCounts.entries()].sort((a, b) => a[0].localeCompare(b[0])).map(([g, n]) => [g, `${g} (${n.toLocaleString()})`]),
         test: (d, v) => (d.group || "other") === v },
-      { key: "jur", label: "Disclosed to", any: "Any commission",
+      { key: "jur", label: "Disclosed to",
         options: [["federal", "Federal (AEC)"], ["qld", "Queensland (ECQ)"], ["vic", "Victoria (VEC)"]],
         test: (d, v) => Boolean(d.money[v]) },
-      { key: "party", label: "Party given to", any: "Any party",
+      { key: "party", label: "Party given to",
         options: [...partyCounts.entries()].sort((a, b) => b[1] - a[1]).map(([p, n]) => [p, `${p} (${n.toLocaleString()})`]),
         test: (d, v) => d._partyList.includes(v) },
       { key: "access", label: "Lobbyists or meetings", check: true, test: (d) => d._lobbyists > 0 || d._meetings > 0 },
@@ -7533,7 +7533,7 @@ async function buildCampaignersDirectory() {
     items,
     text: (e) => `${e.name} ${campaignerKindLabel(e.kind)} ${(e.return_types || []).join(" ")} ${e._parties.join(" ")}`,
     filters: [
-      { key: "kind", label: "Register category", any: "Any category",
+      { key: "kind", label: "Register category", pill: "Category",
         options: Object.keys(CAMPAIGNER_KINDS).filter((k) => kindCounts.has(k))
           .map((k) => countOpt(k, CAMPAIGNER_KINDS[k], kindCounts.get(k))),
         test: (e, v) => e.kind === v },
@@ -7541,7 +7541,7 @@ async function buildCampaignersDirectory() {
       // number: one side of politics registers far more associated entities
       // than the other, and a bare "Labor (153)" beside "Liberal (36)" invites
       // a reader to take it for four times the money, which it is not.
-      { key: "party", label: "Party named on the return", any: "Any party",
+      { key: "party", label: "Party named on the return", pill: "Party",
         options: [...partyCounts.entries()].sort((a, b) => b[1] - a[1])
           .map(([p, n]) => [p, `${p} (${orgCount(n)})`])
           .concat([["none", `No party named (${orgCount(items.length - withParty)})`]]),
@@ -8011,13 +8011,13 @@ async function openBillsIndex(params, manageFocus) {
     href: (b) => billHash(b.key),
     hint: (b) => sentenceCase(b.status),
     filters: [
-      { key: "parliament", label: "Parliament", any: "All parliaments",
+      { key: "parliament", label: "Parliament",
         options: parliaments.map((p) => countOpt(String(p), `${ordinal(p)} parliament`, countBy((b) => b.parliament, p))),
         test: (b, v) => String(b.parliament) === v },
-      { key: "status", label: "Status", any: "All statuses",
+      { key: "status", label: "Status",
         options: statuses.map((s) => countOpt(s, sentenceCase(s), countBy((b) => b.status, s))),
         test: (b, v) => b.status === v },
-      { key: "year", label: "Year", any: "All years",
+      { key: "year", label: "Year",
         options: years.map((y) => countOpt(y, y, countBy((b) => b._year, y))),
         test: (b, v) => b._year === v },
       { key: "divided", label: "Divided on", check: true, test: (b) => Number(b.divisions) > 0 },

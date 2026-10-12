@@ -55,7 +55,7 @@ function pdfHoldNote(r: Report) {
   }
 }
 function select(label: string, key: string, values: string[], url: URL) {
-  return `<label class="ui-filter-field"><span class="visually-hidden">${label}</span><select name="${key}" class="ui-input"><option value="">${label}: all</option>${values.map(v => `<option value="${esc(v)}"${url.searchParams.get(key) === v ? ' selected' : ''}>${esc(key === 'year' ? v.replace('-', '–') : v)}</option>`).join('')}</select></label>`
+  return `<label class="ui-filter-field"><span class="ui-filter-key">${label}</span><select name="${key}" class="ui-input"><option value="">All</option>${values.map(v => `<option value="${esc(v)}"${url.searchParams.get(key) === v ? ' selected' : ''}>${esc(key === 'year' ? v.replace('-', '–') : v)}</option>`).join('')}</select></label>`
 }
 function entities(r: Report) {
   return r.entities.length ? `<ul class="ui-list audit-entities" data-density="compact" role="list">${r.entities.map(name => {

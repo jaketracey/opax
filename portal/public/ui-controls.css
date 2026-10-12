@@ -114,7 +114,7 @@ textarea.ui-input.grow-field { display: block; min-height: var(--ui-height); hei
 .ui-segmented > .ui-button:hover { background: transparent; color: var(--ink); }
 .ui-segmented > .ui-button:is([aria-pressed="true"], [aria-selected="true"]) { background: var(--paper-raised); border-color: var(--line-control); color: var(--ink); }
 /* A segment draws inside the track; on touch its hit area reaches 44. */
-.ui-segmented > .ui-button:not([aria-busy="true"])::after { content: ""; position: absolute; inset: calc(-1 * var(--sp-4)) 0; }
+.ui-segmented > .ui-button:not([aria-busy="true"])::after { content: ""; position: absolute; inset: min(calc(-1 * var(--sp-4)), calc(50% - var(--size-target) / 2)) 0; }
 
 /* ---- Choice chip: pick among peers. Pill, navy wash; navy when chosen.
    36 drawn, 44 on touch. .chip is the retired name for the same thing. */
@@ -257,6 +257,20 @@ a:is(.ui-tag, .topic-chip):hover { text-decoration: underline; text-underline-of
   color: var(--navy); font: var(--type-label); background-position: right var(--sp-12) center; background-size: var(--size-icon-sm) var(--size-icon-sm);
 }
 .ui-filter-bar select:hover { background-color: var(--ui-wash-pressed); }
+/* A keyed pill keeps its key in view once a value is chosen ("Year: 2019"):
+   the field is the pill, its key the first word, the select the value. A
+   chosen value adds the control line's edge. */
+.ui-filter-bar > .ui-filter-field:has(> .ui-filter-key) {
+  display: inline-flex; align-items: center; padding-left: var(--sp-16);
+  border: var(--border-hairline) solid transparent; border-radius: var(--radius-pill); background: var(--ui-wash); color: var(--navy);
+}
+.ui-filter-bar > .ui-filter-field:has(> .ui-filter-key):hover { background: var(--ui-wash-pressed); }
+.ui-filter-key { font: var(--type-label); color: var(--ink-soft); white-space: nowrap; cursor: pointer; }
+.ui-filter-key::after { content: ":"; }
+.ui-filter-bar > .ui-filter-field:has(> .ui-filter-key) select { padding-left: var(--sp-4); border-color: transparent; background-color: transparent; }
+.ui-filter-bar > .ui-filter-field:has(> .ui-filter-key):has(option[value=""]):not(:has(option[value=""]:checked)) { border-color: var(--line-control); }
+.ui-filter-bar > .ui-filter-field:has(> .ui-filter-key):has(select:focus-visible) { outline: var(--border-focus) solid var(--bronze-ink); outline-offset: 3px; }
+.ui-filter-bar > .ui-filter-field:has(> .ui-filter-key) select:focus-visible { outline: none; }
 .ui-filter-bar .ui-filter-toggle {
   display: inline-flex; align-items: center; gap: var(--sp-8); width: auto; min-height: var(--size-control-compact);
   padding: 0 var(--sp-16) 0 var(--sp-12); border-radius: var(--radius-pill); background: var(--ui-wash); color: var(--navy); font: var(--type-label); cursor: pointer;
@@ -308,9 +322,10 @@ button.ui-link:hover { color: var(--bronze-ink); text-decoration-color: var(--br
 
 /* ---- Focus: one ring, bronze ink on paper, outside the shape. */
 :is(.ui-button, .ui-input, .ui-choice > input, .ui-chip, .chip, .ui-filter-chip, a.ui-tag, a.topic-chip, .ui-tabs > a, .ui-tabs > button, .ui-disclosure > summary, button.ui-link):focus-visible,
-label.ui-chip:has(input:focus-visible) {
+label.ui-chip:has(input:focus-visible), .ui-filter-bar .ui-filter-toggle:has(input:focus-visible) {
   outline: var(--border-focus) solid var(--bronze-ink); outline-offset: 3px;
 }
+.ui-filter-bar .ui-filter-toggle > input:focus-visible { outline: none; }
 
 /* ---- Touch: every pressable thing is at least 44px. Mobile fields stay 16px so
    Safari does not zoom on focus. */

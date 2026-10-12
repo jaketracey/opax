@@ -44,7 +44,7 @@ function sourceLine(m: Manifest, originals: { href: string; label: string }[], n
     licence: `<a href="${esc(a.licence_url)}">CC BY 4.0</a>` })
 }
 function select(label: string, key: string, values: string[], url: URL, unknown = false) {
-  return `<label class="ui-filter-field"><span class="visually-hidden">${label}</span><select name="${key}" class="ui-input"><option value="">${label}: all</option>${[...values, ...(unknown && !values.includes('unknown') ? ['unknown'] : [])].map(v => `<option value="${esc(v)}"${url.searchParams.get(key) === v ? ' selected' : ''}>${v === 'unknown' ? 'Not recorded' : esc(key === 'portfolio' || key === 'year' ? clean(v) : words(v))}</option>`).join('')}</select></label>`
+  return `<label class="ui-filter-field"><span class="ui-filter-key">${label}</span><select name="${key}" class="ui-input"><option value="">All</option>${[...values, ...(unknown && !values.includes('unknown') ? ['unknown'] : [])].map(v => `<option value="${esc(v)}"${url.searchParams.get(key) === v ? ' selected' : ''}>${v === 'unknown' ? 'Not recorded' : esc(key === 'portfolio' || key === 'year' ? clean(v) : words(v))}</option>`).join('')}</select></label>`
 }
 /** Key-value rows; a value the Register does not supply is left out, not drawn as "Not supplied". */
 const facts = (rows: [string, string][]) => `<dl class="ui-kv instrument-facts" data-stack="phone">${rows.filter(([, v]) => v).map(([k, v]) => `<div><dt>${k}</dt><dd>${v}</dd></div>`).join('')}</dl>`
