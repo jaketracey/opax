@@ -54,7 +54,7 @@ test('empty week has calendar facts and arrival text, with no loading text or em
   const week = deriveWeek(period,[],[],calendar.updated);
   const page = renderSittingWeek({...data,weeks:[week]},week,[],new Map(),'2026-10-10');
   for (const fact of ['12 Oct 2026','15 Oct 2026','House of Representatives','Senate','14 Oct 2026',"Bill details update when Parliament's site allows our crawler"]) assert.ok(page.html.includes(fact),fact);
-  assert.doesNotMatch(page.html,/loading|opening|placeholder|<h2>Bills introduced|<h2>Divisions held|<ul class="hub-records">/i);
+  assert.doesNotMatch(page.html,/loading|opening|placeholder|<h2[^>]*>Bills introduced|<h2[^>]*>Divisions held|<ul class="[^"]*hub-records[^"]*"/i);
   assert.equal(week.lastmod,calendar.updated);
 });
 test('bill rows have one introduction meta line, portfolio fallback and no missing-summary placeholder',()=>{
@@ -63,7 +63,7 @@ test('bill rows have one introduction meta line, portfolio fallback and no missi
   const html = renderSittingWeek(data,week,people,slugs).html;
   assert.match(html,/Introduced 12 Oct 2026 · House of Representatives · <a[^>]+>Mehreen Faruqi/);
   assert.match(html,/Introduced 14 Oct 2026 · Senate · Health, Disability and Ageing/);
-  const billSection = html.match(/<h2>Bills introduced[\s\S]*?<\/section>/)[0];
+  const billSection = html.match(/<h2[^>]*>Bills introduced[\s\S]*?<\/section>/)[0];
   assert.equal((billSection.match(/12 Oct 2026/g)||[]).length,1);
   assert.equal((billSection.match(/14 Oct 2026/g)||[]).length,1);
   assert.doesNotMatch(billSection,/Sponsor not recorded|No dated machine-written summary/);
@@ -77,7 +77,7 @@ test('missing divisions state actual federal export coverage rather than an upst
     const page = await hubPage('sitting',week.start,async()=>({...index,snapshotDate:'2026-10-10',latestFederalDivision:coverage,weeks:[week]}),[],new Map(),'2026-10-10');
     assert.ok(page.html.includes(`Federal divisions in OPAX&#39;s published record currently run to ${shortDate(coverage)}; divisions held after that date will appear here once the record is updated.`));
     assert.match(page.html,/Published snapshot 10 Oct 2026/);
-    assert.doesNotMatch(page.html,/aren't in the published record yet|No divisions|<h2>Divisions held|Divisions[^<]*<span class="hub-count">0/);
+    assert.doesNotMatch(page.html,/aren't in the published record yet|No divisions|<h2[^>]*>Divisions held|Divisions[^<]*<span class="hub-count">0/);
   }
   assert.match(renderSittingWeek({...index,latestFederalDivision:''},week,[],new Map(),'2026-10-10').html,/Federal divisions are not available in this OPAX export/);
   const upcoming = deriveWeek(period,[],[],calendar.updated);
@@ -215,8 +215,8 @@ test('bad weeks return a real 404 with noindex; hubs keep SSR and remove SPA sta
 test('hubs carry the breadcrumb, one dated source line per records block, and the shared link and type rules',async()=>{
   const page = renderSittingWeek(data,fixtureWeek,people,slugs);
   assert.match(page.html,/^<nav class="crumbs prerender-crumbs"[^>]*>[\s\S]*href="\/sitting">Sitting weeks<\/a>[\s\S]*aria-current="page"><svg[^]*?<span class="crumb-label">12 Oct 2026 – 15 Oct 2026<\/span>/);
-  assert.match(page.html,/<h1>[^<]+<\/h1><p class="hub-meta">House of Representatives and Senate<\/p>/);
-  const sections = page.html.match(/<section class="hub-section">[\s\S]*?<\/section>/g);
+  assert.match(page.html,/<div class="ui-page-head"><h1>[^<]+<\/h1><p class="ui-page-meta">House of Representatives and Senate<\/p>/);
+  const sections = page.html.match(/<section class="ui-section hub-section">[\s\S]*?<\/section>/g);
   assert.equal(sections.length,2);
   for (const section of sections) {
     const lines = section.match(/<span class="ui-source-text">[^]*?<\/span><\/span>/g)||[];
@@ -237,7 +237,7 @@ test('bill source date stays with retained snapshot while the corpus advances',a
   const bills = await json('bills/index.json');
   assert.equal(index.billUpdated,bills.generated_at.slice(0,10));
   const html = renderSittingWeek({...data,snapshotDate:'2026-10-10'},fixtureWeek,people,slugs).html;
-  const billSection = html.match(/<h2>Bills introduced[\s\S]*?<\/section>/)[0];
+  const billSection = html.match(/<h2[^>]*>Bills introduced[\s\S]*?<\/section>/)[0];
   assert.match(billSection,/Updated 4 Oct 2026/);
   assert.doesNotMatch(billSection,/Updated 10 Oct 2026/);
   assert.ok(html.includes("Bill details update when Parliament's site allows our crawler"));
