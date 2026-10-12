@@ -532,7 +532,7 @@ window.addEventListener("pagehide", (event) => {
 window.addEventListener("pageshow", pause);
 
 // The compact header keeps the same cross-collection quick search as the app.
-const headerSearch = OpaxQuickSearch.disclosure($('header-search-open'), $('header-search-panel'), $('mast-q'));
+const headerSearch = OpaxQuickSearch.header;
 const searchHref = q => '/ask?' + new URLSearchParams({view:'search', q});
 let headerReferences;
 async function headerSuggestions(q) {
