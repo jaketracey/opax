@@ -171,7 +171,21 @@ def load_zenodo_parquet(db, seen: set[str]) -> int:
     return count
 
 
-def load_modern_jsonl(db, seen: set[str], since: str | None = None, report=None, until=None) -> int:
+XML_COLUMNS = ('gid', 'oa_office_id', 'citation_anchor', 'talktype', 'speaker_type',
+               'chair_role', 'source_url', 'source_attribution')
+
+
+def ensure_xml_columns(db):
+    """Retain XML identity, role and source provenance on newly loaded rows."""
+    columns = {r[1] for r in db.execute('PRAGMA table_info(speeches)')}
+    for column in XML_COLUMNS:
+        if column not in columns:
+            db.execute(f'ALTER TABLE speeches ADD COLUMN {column} TEXT')
+    db.execute('CREATE INDEX IF NOT EXISTS idx_speeches_gid ON speeches(gid)')
+
+
+def load_modern_jsonl(db, seen: set[str], since: str | None = None, report=None, until=None,
+                      modern_dir=None, missing_days_only=False) -> int:
     """Reconcile complete chamber-days before inserting new citation IDs.
 
     Existing days are retained in full. Even one unmatched XML speech prevents
@@ -179,12 +193,15 @@ def load_modern_jsonl(db, seen: set[str], since: str | None = None, report=None,
     deduplicate normalized bodies as well as gids, including within the batch.
     """
     from .speech_reconciliation import SpeechReconciler
-    if not MODERN_DIR.exists():
-        print(f"  Modern dir not found: {MODERN_DIR}")
+    directory = Path(modern_dir) if modern_dir is not None else MODERN_DIR
+    if not directory.exists():
+        print(f"  Modern dir not found: {directory}")
         return 0
+    ensure_xml_columns(db)
     count = 0
     reconciler = SpeechReconciler(db)
-    for filepath in sorted(MODERN_DIR.glob('*.jsonl')):
+    db.commit()
+    for filepath in sorted(directory.glob('*.jsonl')):
         parts = filepath.stem.split('_', 1)
         if len(parts) != 2:
             continue
@@ -193,7 +210,16 @@ def load_modern_jsonl(db, seen: set[str], since: str | None = None, report=None,
             continue
         if house not in ('representatives', 'senate'):
             continue
+        if missing_days_only:
+            # Keep the zero-row recheck and insertion in the same write lock.
+            db.execute('BEGIN IMMEDIATE')
         existing, bodies, gids, identities = reconciler.day(house, day)
+        if missing_days_only and existing:
+            if report is not None:
+                report.append({'date': day, 'chamber': house, 'existing_rows': len(existing),
+                               'added': 0, 'held': 'occupied-day'})
+            db.commit()
+            continue
         entry = {'date': day, 'chamber': house, 'existing_rows': len(existing),
                  'matched': [], 'unmatched': [], 'added': 0, 'duplicate_bodies': 0,
                  'short_speeches': 0}
@@ -237,9 +263,11 @@ def load_modern_jsonl(db, seen: set[str], since: str | None = None, report=None,
                 """INSERT INTO speeches
                 (person_id,speaker_name,party,electorate,chamber,date,topic,text,word_count,source)
                 VALUES (?,?,?,?,?,?,?,?,?,?)""",
-                (pid, speaker, record.get('party') or '', record.get('electorate') or '',
+                (pid, speaker, record.get('chair_role') or record.get('party') or '', record.get('electorate') or '',
                  house, day, record.get('topic') or None, text, len(text.split()), 'openaustralia'))
             sid = cursor.lastrowid
+            db.execute('UPDATE speeches SET ' + ','.join(f'{c}=?' for c in XML_COLUMNS) +
+                       ' WHERE speech_id=?', tuple(record.get(c) for c in XML_COLUMNS) + (sid,))
             identities[sid] = identity
             reconciler.remember(gid, sid)
             if gid:
