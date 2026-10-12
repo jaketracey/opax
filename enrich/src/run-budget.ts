@@ -14,10 +14,17 @@ export const USD_PER_NEURON = 0.011 / 1000
 export interface RunBudget { run_id: string; max_usd: number }
 export interface AdmissionBudget extends RunBudget { initial_neurons: number }
 
-export async function admittedBudget(db: D1Database, rid: string): Promise<RunBudget|null> {
-  const run=await db.prepare(`SELECT r.run_id,r.cap_neurons FROM enrichment_units u JOIN enrichment_runs r ON u.run_id=r.run_id
-    WHERE u.rid=? AND u.admitted=1`).bind(rid).first<{run_id:string;cap_neurons:number}>()
-  return run ? {run_id:run.run_id,max_usd:(run.cap_neurons+0.25)*USD_PER_NEURON} : null
+/** Waiting admission owns the resource too; a KB omission cannot erase that ownership. */
+export async function ownedBudget(db: D1Database, rid: string): Promise<AdmissionBudget|null> {
+  const run=await db.prepare(`SELECT r.run_id,r.cap_neurons,u.initial_neurons FROM enrichment_units u JOIN enrichment_runs r ON u.run_id=r.run_id
+    WHERE u.rid=?`).bind(rid).first<{run_id:string;cap_neurons:number;initial_neurons:number}>()
+  return run ? {run_id:run.run_id,max_usd:(run.cap_neurons+0.25)*USD_PER_NEURON,initial_neurons:run.initial_neurons} : null
+}
+
+export function assertBudgetOwnership(saved: RunBudget|null, declared: RunBudget|null): void {
+  if (saved && declared && (saved.run_id!==declared.run_id
+      || Math.floor(saved.max_usd/USD_PER_NEURON)!==Math.floor(declared.max_usd/USD_PER_NEURON)))
+    throw new Error('resource budget changed after ownership')
 }
 
 export function resourceBudget(resource: KbResource): RunBudget | null {

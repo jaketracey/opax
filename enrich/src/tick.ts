@@ -1,7 +1,7 @@
 // One cron tick: discover, then process a bounded batch of claimed resources.
 
 import { budgetView, effectiveBudget, utcDay, type BudgetMode } from './budget.ts'
-import { admitWaiting, admittedBudget, resourceBudget, reserveCall, settleCall, callUpper, releaseUnusedAdmission, USD_PER_NEURON } from './run-budget.ts'
+import { admitWaiting, ownedBudget, assertBudgetOwnership, resourceBudget, reserveCall, settleCall, callUpper, releaseUnusedAdmission } from './run-budget.ts'
 import { hasTopicLabels, readClassifications } from './classify.ts'
 import {
   MAX_TRANSIENT,
@@ -329,10 +329,8 @@ async function processRid(d: TickDeps, ctl: Ctl, day: string, rid: string, rows:
     historic,
     nameText: historic ? text : undefined,
   }
-  const declaredBudget=resourceBudget(resource), savedBudget=await admittedBudget(d.db,rid)
-  if (savedBudget && declaredBudget && (savedBudget.run_id!==declaredBudget.run_id
-      || Math.floor(savedBudget.max_usd/USD_PER_NEURON)!==Math.floor(declaredBudget.max_usd/USD_PER_NEURON)))
-    throw new Error('resource budget changed after admission')
+  const declaredBudget=resourceBudget(resource), savedBudget=await ownedBudget(d.db,rid)
+  assertBudgetOwnership(savedBudget,declaredBudget)
   const runBudget=savedBudget ?? declaredBudget
   let reservation: string|null=null
   const gen: Generation = await generate({

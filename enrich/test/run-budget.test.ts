@@ -10,6 +10,72 @@ const work=(rid:string)=>[{rid,task:'speech_summary' as const,priority:100},{rid
 const budget=(neurons:number,initial=40)=>({run_id:'invented-run',max_usd:(neurons+0.1)*USD_PER_NEURON,initial_neurons:initial})
 const good=JSON.stringify({summary:GOOD_SUMMARY,topics:['housing']})
 
+async function exhaustedRun() {
+  const kb=new FakeKb(),ai=new FakeAi(()=>good)
+  const run_id='invented-exhausted',cap=Math.floor(40/USD_PER_NEURON)
+  kb.add('waiting',{texts:{body:speechText()},extraMetadata:{source_attribution:'Invented fixture',
+    enrichment_budget:{run_id,max_usd:40}},classifications:[{labelset:'kind',label:'speech'},
+    {labelset:'source',label:'openaustralia'},{labelset:'state',label:'federal'},
+    {labelset:'chamber',label:'senate'},{labelset:'decade',label:'2020s'}]})
+  kb.catalogRows=[{kind:'speech',rid:'waiting',created:'2026-09-28T11:00:00'}]
+  const fixture=makeDeps({kb,ai})
+  fixture.raw.prepare('INSERT INTO enrichment_runs(run_id,cap_neurons,spent_neurons) VALUES (?,?,?)').run(run_id,cap,cap)
+  const first=await runTick(fixture.deps)
+  assert.deepEqual(first.discoveryErrors,[])
+  assert.equal(rows(fixture.raw,"SELECT admitted FROM enrichment_units WHERE rid='waiting'")[0].admitted,0)
+  assert.equal(rows(fixture.raw,'SELECT COUNT(*) n FROM queue')[0].n,0)
+  // The later KB response still has extra.metadata, but loses only the budget.
+  delete kb.resources.get('waiting')!.extraMetadata!.enrichment_budget
+  return {...fixture,kb,ai,cap}
+}
+
+test('an exhausted US$40 run cannot rediscover a waiting resource as uncapped when KB drops its budget',async()=>{
+  const {deps,raw,ai,cap}=await exhaustedRun()
+  const ledger=rows(raw,'SELECT * FROM enrichment_runs')
+  const second=await runTick(deps)
+  assert.deepEqual(second.discoveryErrors,[])
+  assert.equal(second.discovered.speech,0)
+  assert.equal(rows(raw,'SELECT COUNT(*) n FROM queue')[0].n,0)
+  await runTick(deps)
+  assert.equal(ai.calls.length,0)
+  assert.equal(rows(raw,'SELECT COUNT(*) n FROM enrichment_calls')[0].n,0)
+  assert.equal(rows(raw,'SELECT COUNT(*) n FROM spend')[0].n,0)
+  assert.deepEqual(rows(raw,'SELECT * FROM enrichment_runs'),ledger)
+  assert.ok(cap*USD_PER_NEURON<=40)
+})
+
+test('processing a legacy queued waiting resource with missing KB budget makes zero unreserved calls',async()=>{
+  const {deps,raw,ai}=await exhaustedRun()
+  const ledger=rows(raw,'SELECT * FROM enrichment_runs')
+  // Simulate a queue row left by the old discovery bug, bypassing enqueue itself.
+  raw.exec("INSERT INTO queue(rid,task,status,priority,created_at,updated_at) VALUES ('waiting','speech_summary','pending',100,1,1),('waiting','speech_topics','pending',100,1,1)")
+  await runTick(deps)
+  assert.equal(ai.calls.length,0)
+  assert.equal(rows(raw,'SELECT COUNT(*) n FROM enrichment_calls')[0].n,0)
+  assert.equal(rows(raw,'SELECT COUNT(*) n FROM spend')[0].n,0)
+  assert.deepEqual(rows(raw,'SELECT * FROM enrichment_runs'),ledger)
+})
+
+test('enqueue cannot bypass waiting ownership when its caller omits the run budget',async()=>{
+  const {d1,raw,ai}=await exhaustedRun()
+  assert.equal(await enqueue(d1,work('waiting'),2),0)
+  assert.equal(rows(raw,'SELECT COUNT(*) n FROM queue')[0].n,0)
+  assert.equal(ai.calls.length,0)
+})
+
+test('waiting ownership still admits and reserves normally if headroom returns after KB drops its budget',async()=>{
+  const {deps,raw,ai,cap}=await exhaustedRun()
+  const initial=rows(raw,"SELECT initial_neurons FROM enrichment_units WHERE rid='waiting'")[0].initial_neurons
+  // A verified settlement may free headroom; retain the original run and cap.
+  raw.prepare('UPDATE enrichment_runs SET spent_neurons=?').run(cap-initial)
+  await runTick(deps)
+  assert.equal(ai.calls.length,1)
+  assert.equal(rows(raw,'SELECT COUNT(*) n FROM enrichment_calls WHERE state=\'settled\'')[0].n,1)
+  assert.equal(rows(raw,'SELECT cap_neurons FROM enrichment_runs')[0].cap_neurons,cap)
+  assert.equal(rows(raw,'SELECT spent_neurons FROM enrichment_runs')[0].spent_neurons,cap-initial+5)
+  assert.equal(rows(raw,'SELECT neurons FROM spend')[0].neurons,5)
+})
+
 test('admission atomically reserves the run ceiling; unadmitted units are not queued',async()=>{
   const {d1,raw}=makeD1();const b=budget(100)
   const added=await Promise.all(['a','b','c','d'].map(r=>admit(d1,work(r),b,1)))

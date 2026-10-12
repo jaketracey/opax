@@ -2,6 +2,8 @@
 
 Both P1s are fixed. This lane performed only read-only source analysis, a fresh staging copy, and fixture/stub tests. No production DB/KB/D1 writes, enrichment queueing, generation, deploys or pushes occurred. The final local SHA is reported in the handoff.
 
+The subsequent waiting-resource cap bypass is repaired in [round 3](2026-10-13-federal-hansard-backfill-round3.md), which retains the same dry-run counts and go command.
+
 ## Owner locks and exact rows
 
 `run()` takes nonblocking exclusive `flock` locks on the existing owner files, in order: `~/.cache/autoresearch/pipeline/nightly.lock`, then `daily_refresh.lock`. Both descriptors stay open across discovery, source acquisition, backup, loading, receipt generation and KB sync. Either held lock refuses the entire operation; exceptions release both. There is no override or inherited-lock bypass. The `MIGRATED_TO_VM` guard remains.
