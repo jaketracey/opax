@@ -17,7 +17,7 @@ People and parties are matched against the roster, with standard party aliases a
 | Other named scope | `portal/test/agentic-fix2.test.mjs` | Dropped party, partially scoped people, ambiguous surname and named bill decline |
 | Citation scope | `portal/test/agentic-citations.test.mjs` | Exact dates and venue survive citation URLs, client hydration, pagination, request serialization and the actual search filter |
 
-Both new test files were copied unchanged into an isolated temporary source tree restored from the reviewed baseline. The baseline produced **9 tests, 0 passes, 9 failures**. The fixed targeted suite passes **49 tests, 0 failures**.
+Both new test files were copied unchanged into an isolated temporary source tree restored from the reviewed baseline. The baseline produced **9 tests, 0 passes, 9 failures**. The fixed targeted suite passes **49 tests, 0 failures**. The existing deadline regression now uses a manually advanced clock and barriers at the actual stalled tool/fallback fetches, eliminating desktop scheduler amplification. It still fails against the original pre-fix deadline code (`d10c64865`) because fallback fetches remain active at the original 40-second deadline, and passes with both JSON and SSE finishing at exactly 40,000 simulated milliseconds.
 
 The ordinary fixture corpus now includes the reviewer's additional ten questions, for **38** questions. The parity test imports the real `origin/main` Worker and compares response bytes: **38 JSON plus 38 SSE bodies, all 76 identical**, with zero planner calls.
 

@@ -135,7 +135,10 @@ function searchUrl(origin: string, f: SpeechFilter): string {
   if (f.since) p.set('since', f.since)
   if (f.until) p.set('until', f.until)
   p.set('venue', f.venue ?? 'chamber')
-  if (f.topic) p.set('q', f.topic.replace(/-/g, ' '))
+  // A citation opens all records in the counted scope, without adding a
+  // second lexical topic constraint. Existing scoped speech search uses '*'.
+  p.set('q', '*')
+  p.set('mode', 'keyword')
   return `${origin}/search?${p}`
 }
 

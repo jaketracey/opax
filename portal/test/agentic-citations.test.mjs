@@ -13,7 +13,7 @@ test('P2 citations retain exact midyear dates, speaker, chamber and venue',async
  for(const venue of ['chamber','committee','all']){
   const r=await countSpeeches(fixtureDeps,{topic:'housing',speaker:'Taylor Example',state:'federal',chamber:'senate',since:'2025-07-22',until:'2026-03-28',venue,group_by:'none'});
   assert.equal(r.ok,true);const p=new URL(r.cite[0].url).searchParams;
-  for(const [key,value] of Object.entries({since:'2025-07-22',until:'2026-03-28',venue,speaker:'Taylor Example',chamber:'senate',q:'housing'}))assert.equal(p.get(key),value);
+  for(const [key,value] of Object.entries({since:'2025-07-22',until:'2026-03-28',venue,speaker:'Taylor Example',chamber:'senate',q:'*',mode:'keyword'}))assert.equal(p.get(key),value);
   assert.equal(p.has('from'),false);assert.equal(p.has('to'),false);
  }
  const r=await speechTrend(fixtureDeps,{topic:'housing',speaker:'Taylor Example',since:'2025-07-22',until:'2026-03-28',from_year:2025,to_year:2026});
