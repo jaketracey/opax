@@ -53,7 +53,8 @@ test('steps are real-time, fixed text and escaped/bounded args; the answer keeps
  assert.ok(r.events.every(s=>['done','failed'].includes(s.state)&&s.ms>=0));
  assert.match(r.answer,/Counting speeches in the current parliament since July 2025\./);
  assert.match(r.answer,/Including committee hearings: Alex Example: 130 \[\d+\], Sam Sample: 94 \[\d+\], Casey Sample: 65/);
- const safe=stepEvent({tool:'party_donations',args:{party:'<script>'+('x'.repeat(80))}},1);assert.ok(safe.arg.length<=40);assert.doesNotMatch(safe.arg,/[<>]/);
+ assert.equal(stepEvent({tool:'party_donations',args:{party:'Jordan Private Name'}},1).arg,undefined);
+ const safe=stepEvent({tool:'member_votes',args:{keyword:'<script>'+('x'.repeat(80))}},1);assert.ok(safe.arg.length<=40);assert.doesNotMatch(safe.arg,/[<>]/);
 });
 test('confident exact-name individuals are named; alias merges and placeholders are aggregated without names',async()=>{
  const nodes=[{id:'party:Example',label:'Example',kind:'party'},

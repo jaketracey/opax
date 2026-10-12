@@ -309,7 +309,8 @@ function periodPlan(plan: Plan, period: Period, filters: Record<string, unknown>
 export function stepEvent(step: PlanStep, id: number, committee = false): StepEvent {
   const a = step.args
   const label = committee ? 'Checking committee hearings' : step.tool === 'count_speeches' ? a.group_by === 'speaker' ? 'Counting by speaker' : a.group_by === 'party' ? 'Counting by party' : 'Searching speeches' : ({ member_votes: 'Checking votes', party_donations: 'Checking donations', speech_trend: 'Comparing years', find_quotes: 'Searching speeches', find_people: 'Searching speeches' } as Record<string, string>)[step.tool]
-  const raw = a.keyword ?? a.party ?? a.industry ?? a.speaker ?? a.topic ?? a.query ?? a.name
+  const moneyArgs = new Set(['Labor', 'Liberal', 'Greens', 'Nationals', 'LNP', 'Independent', 'One Nation', 'United Australia Party', 'gambling', 'mining', 'fossil_fuels', 'finance', 'property', 'unions', 'health', 'hospitality', 'media', 'tech'])
+  const raw = step.tool === 'party_donations' ? [a.party, a.industry].find(v => typeof v === 'string' && moneyArgs.has(v)) : a.keyword ?? a.party ?? a.industry ?? a.speaker ?? a.topic ?? a.query ?? a.name
   const arg = typeof raw === 'string' ? raw.replace(/[<>&"'\x00-\x1f]/g, '').slice(0, 40) : undefined
   return { id, label, ...(arg ? { arg } : {}), state: 'running' }
 }
