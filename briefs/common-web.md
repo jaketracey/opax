@@ -88,3 +88,7 @@ are replaced by the confident-match lane together with its production classifier
 gate-speed must not remove them ahead of that integration. Check
 `web/donor-withhold` and `briefs/donor-confident-match-r4.md` before changing that
 coverage. Feature tests are retired only once the removal is present on main.
+The committed confident-match implementation is on `web/donor-failclosed`
+(`298fa84cd` at this audit). Its `donor-confidence` and `donor-provenance` tests
+join the always-run smoke set when present, and its money-conservation smoke name
+is recognised. Retired withholding cases remain that lane's responsibility.

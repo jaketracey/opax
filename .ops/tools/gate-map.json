@@ -11,8 +11,9 @@
     "portal/test/analytics.test.mjs",
     "portal/test/posthog-proxy.test.mjs"
   ],
+  "optionalSmoke": ["portal/test/donor-confidence.test.mjs", "portal/test/donor-provenance.test.mjs"],
   "smokePatterns": {
-    "portal/test/donor-privacy.test.mjs": "^(?:the fixture individuals are withheld and the fixture organisation is not|anonymising keeps every donor group and its totals: duplicated source ids never merge|a campaigner route never repeats a requested name it cannot show|a question or search is never echoed into page metadata or a share card)$"
+    "portal/test/donor-privacy.test.mjs": "^(?:the fixture individuals are withheld and the fixture organisation is not|anonymising keeps every donor group and its totals: duplicated source ids never merge|publication conserves graph money while folding uncertain identities|a campaigner route never repeats a requested name it cannot show|a question or search is never echoed into page metadata or a share card)$"
   },
   "smokeMinimum": {"portal/test/donor-privacy.test.mjs": 4},
   "fullBuildPatterns": ["^scripts/", "^portal/(?:src|public)/.*(?:donor|privacy|table-)", "^portal/public/.*\\.json$"],

@@ -49,6 +49,7 @@ const walk = dir => readdirSync(dir,{withFileTypes:true}).flatMap(e=>e.isDirecto
 export function selectTests(root,changed,config) {
   const files=walk(join(root,'portal/test')).filter(f=>f.endsWith('.test.mjs')).map(f=>relative(root,f)).sort();
   const chosen=new Set(config.smoke);
+  for(const file of config.optionalSmoke||[])if(files.includes(file))chosen.add(file);
   const affected=new Set();
   for(const file of config.smoke) if(!files.includes(file)) throw Error(`Missing smoke test: ${file}`);
   // Read references as well as imports: many tests load assets via fs/URL/vm.
