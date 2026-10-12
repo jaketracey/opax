@@ -207,14 +207,31 @@ export default function YourMP() {
   const scroll = useRef<ScrollView>(null);
   const headerBottom = useHeaderBottom();
   const shown = useRef(chooser);
+  // Closing the chooser reloads the chosen seat: the first scroll lands on a
+  // short loading page, so the drawn page could keep the chooser's offset
+  // (pass 5: "Use my location" sits below the field, so a confirm comes from
+  // further down). Land at the top again once the seat has drawn.
+  const settle = useRef(false);
+  const top = useCallback(
+    () =>
+      scroll.current?.scrollTo({
+        y: Platform.OS === 'ios' ? -headerBottom : 0,
+        animated: false,
+      }),
+    [headerBottom],
+  );
   useEffect(() => {
     if (shown.current === chooser) return;
     shown.current = chooser;
-    scroll.current?.scrollTo({
-      y: Platform.OS === 'ios' ? -headerBottom : 0,
-      animated: false,
-    });
-  }, [chooser, headerBottom]);
+    // Only a new seat reloads; Cancel closes onto the drawn page.
+    settle.current = !chooser && !view;
+    top();
+  }, [chooser, view, top]);
+  useEffect(() => {
+    if (!settle.current || !view || chooser) return;
+    settle.current = false;
+    top();
+  }, [view, chooser, top]);
   const seats = stateChoosing
     ? (view?.verifiedStateSeats ?? [])
     : (directory?.electorates.data.electorates ?? []);
