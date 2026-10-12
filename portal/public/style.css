@@ -386,7 +386,7 @@ a.visually-hidden:focus-visible {
 
 /* A label above a block, in the label role: sentence case, never letter-spaced
    (D6). The identity kickers over page titles go in pass 3; breadcrumbs say it. */
-.kicker, .card-kicker, .chart figcaption, .cite-panel h3 { font: var(--type-label); color: var(--ink-soft); }
+.kicker, .chart figcaption, .cite-panel h3 { font: var(--type-label); color: var(--ink-soft); }
 .kicker { margin: var(--sp-24) 0 var(--sp-8); }
 /* A trailing note belongs to the section above it, never to the one below:
    it sits a row's breath under the last row and takes no bottom margin. */
@@ -987,7 +987,7 @@ input[type="range"]:focus-visible::-moz-range-thumb { box-shadow: 0 0 0 3px var(
 
 .btn-spinner {
   width: 15px; height: 15px; border-radius: var(--radius-round); display: inline-block;
-  border: var(--border-focus) solid rgba(255, 255, 255, 0.35); border-top-color: var(--on-navy);
+  border: var(--border-focus) solid color-mix(in srgb, var(--on-navy) 35%, transparent); border-top-color: var(--on-navy);
   margin-right: var(--sp-8); vertical-align: -2px;
 }
 @media (prefers-reduced-motion: no-preference) {
@@ -1757,11 +1757,9 @@ button.link.result-title:hover { color: var(--bronze-ink); }
 .report-card:hover .card-title { text-decoration: underline; text-decoration-color: var(--bronze-rule); text-underline-offset: 3px; }
 #reports-index .subject-tag { max-width: var(--size-readable); }
 #reports-source .ui-source { margin-top: var(--space-group); }
-.card-kicker { display: block; margin-bottom: var(--sp-8); }
 .card-glyph { display: block; width: var(--size-icon-lg); height: var(--size-icon-lg); margin-bottom: var(--space-tight); color: var(--bronze-ink); }
 .card-title { display: block; font: var(--type-subheading); margin-bottom: var(--space-line); }
 .card-blurb { display: block; color: var(--ink-soft); font: var(--type-metadata); }
-.card-meta { display: block; color: var(--ink-soft); font: var(--type-fine); }
 
 /* The report's title is the page's h1 (the title role); the index's is #reports-title. */
 #report-view #report-title { margin: var(--space-line) 0 var(--space-tight); }
@@ -2124,41 +2122,25 @@ a.barrow-name:hover { color: var(--bronze-ink); }
 .party-dot-only { margin-right: var(--sp-8); }
 .subject-active { display: inline-flex; align-items: center; gap: var(--sp-4); font: var(--type-label); color: var(--ink-soft); }
 .subject-active svg { width: 12px; height: 12px; color: var(--ink-faint); }
-.search-everything { display: inline-flex; }
 
 /* ---- front page grid ---------------------------------------------------- */
 
 /* Rhythm: 3.5rem between the home page's sections (chips, map, modules),
    3rem between modules, 0.9rem from a kicker to its content; 2.5rem on phones. */
-.front-grid { display: grid; grid-template-columns: 1fr; gap: var(--sp-48) var(--sp-48); margin-top: var(--sp-64); }
-.front-main, .front-rail { display: grid; gap: var(--sp-48); align-content: start; min-width: 0; }
-.front-mod { min-width: 0; }
-.front-mod > h2 { margin: 0 0 var(--sp-16); }
-@media (min-width: 1100px) {
-  .front-grid { grid-template-columns: minmax(0, 8fr) minmax(0, 4fr); }
-}
-@media (max-width: 700px) {
-  .front-grid { gap: var(--sp-40); margin-top: var(--sp-40); }
-  .front-main, .front-rail { gap: var(--sp-40); }
-}
+
+
 
 /* ---- home maps ---------------------------------------------------------- */
 /* Two plates side by side above the modules, a hairline between them: the
    record by state (Australia engraved, statemap.js) at 5/12 and the money map's
    mini chrome at 7/12, equal heights. Stacked on phones, state map first. */
 .front-map { margin-top: var(--sp-64); }
-.front-map-root { position: relative; height: 380px; overflow: hidden; }
-.front-map-root > .status { position: absolute; inset: 0; display: grid; place-items: center; margin: 0; }
 /* The 3D bundle's own labels take Public Sans here. */
-.front-map-root.mm-root, .front-map-root .rp-map3d-label, .front-map-root .rp-map3d-territory,
-.front-map-root .rp-map3d-edge-label, .front-map-root .rp-map3d-popup { font-family: var(--sans); }
 @media (max-width: 700px) {
   .front-map { margin-top: var(--sp-40); }
-        .front-map-root { height: 260px; }
-
+        
 }
-.split-list { display: grid; grid-template-columns: 1fr; gap: 0 var(--sp-40); }
-@media (min-width: 1100px) { .split-list { grid-template-columns: 1fr 1fr; } }
+
 
 .news-list { list-style: none; margin: 0; padding: 0; }
 .news-list li { border-top: var(--border-hairline) solid var(--divider-subtle); padding: var(--space-row) 0; }
@@ -2169,12 +2151,9 @@ a.barrow-name:hover { color: var(--bronze-ink); }
 .news-source { font: var(--type-label); color: var(--ink-soft); }
 
 a.report-card { display: block; text-decoration: none; }
-a.report-card .card-meta { color: var(--ink-soft); }
-.entry-stack { display: grid; gap: var(--sp-12); }
 .tiles-compact { margin-top: var(--sp-8); gap: var(--sp-16) var(--sp-24); }
 .tiles-compact .tile { min-width: 130px; flex-basis: 130px; padding: var(--sp-12) 0 var(--sp-4); }
 .tiles-compact .tile b { font-size: var(--text-24); }
-.front-mod .report-cards { grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); }
 
 /* ---- encyclopedia slider (front rail) ----------------------------------- */
 /* One card per view in the rail, a peek of the next on phones; the track is
@@ -2211,8 +2190,8 @@ a.report-card .card-meta { color: var(--ink-soft); }
 
 .subject-portrait {
   display: block; width: 112px; height: 112px; border-radius: var(--radius-round);
-  object-fit: cover; border: 3px solid var(--paper-raised);
-  box-shadow: var(--ring-hairline) var(--divider-subtle); margin: var(--sp-8) 0 var(--sp-16);
+  object-fit: cover; background: var(--paper-sunken);
+  box-shadow: var(--ring-inset-hairline) var(--divider-subtle); margin: var(--sp-8) 0 var(--sp-16);
 }
 .doc-portrait {
   width: 64px; height: 64px; border-radius: var(--radius-round); object-fit: cover; margin: var(--sp-4) 0 0;
@@ -2263,8 +2242,7 @@ a.report-card .card-meta { color: var(--ink-soft); }
   @keyframes plateWait { 0%, 100% { opacity: 0.55; } 50% { opacity: 0.85; } }
 }
 /* Two rows of industry chips arrive with the map's data; hold their space. */
-#front-map-chips { min-height: 76px; }
-@media (max-width: 700px) { #front-map-chips { min-height: 44px; } }
+
 /* The side column is a column, not a card (principle 2). */
 .infobox { position: sticky; top: calc(var(--header-h) + var(--sp-16)); }
 .infobox dl { margin: var(--sp-8) 0 0; display: grid; grid-template-columns: auto 1fr; gap: var(--sp-4) var(--sp-16); }
@@ -3386,7 +3364,7 @@ mark.privacy-confirm {
 .subject-person #subject-ask-form:not([hidden]) { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: var(--sp-8); }
 .subject-person #subject-ask-form label { grid-column: 1 / -1; font: var(--weight-strong) var(--text-16)/var(--leading-normal) var(--serif); }
 .subject-person #subject-ask-form input { min-width: 0; }
-.subject-person #subject-sections [id] { scroll-margin-top: 90px; }
+.subject-person #subject-sections [id] { scroll-margin-top: calc(var(--sp-80) + var(--sp-8)); }
 .subject-person .person-topics-head { gap: var(--sp-8); }
 .subject-person .person-topics-head .quiet-toggle { display: flex; border: var(--border-hairline) solid var(--line-control); padding: var(--sp-4); border-radius: var(--radius-sm); }
 .subject-person .person-topics-head .quiet-toggle button { min-height: 44px; min-width: 56px; padding: var(--sp-8) var(--sp-16); font-size: var(--text-15); }
@@ -3546,63 +3524,12 @@ mark.privacy-confirm {
 #panel-subject .party-brief-label { display: flex; margin-bottom: var(--space-line); }
 :is(.subject-person, .subject-party) #subject-sections > section { scroll-margin-top: calc(var(--header-h) + var(--sp-16)); }
 /* ==== page-home: The home page (/) ==== */
-#front-map, #front-page { font-variant-numeric: tabular-nums; }
-#front-map { margin-top: var(--sp-40); }
-#front-page .front-mod { margin-bottom: 0; }
-#front-page, #front-page .front-main, #front-page .front-rail { gap: var(--sp-40); }
-#front-page .front-mod > .subject-section-title,
-#front-map .subject-section-title { margin: 0 0 var(--sp-16); font-size: var(--text-24); line-height: var(--leading-snug); }
-#front-map .fineprint, #front-page .fineprint { font-size: var(--text-15); line-height: var(--leading-body); }
-#front-map-root { height: 380px; max-height: none; }
-#front-statemap .sm-federal { min-height: 44px; }
-@media (max-width: 700px) {
-    #front-statemap { height: 290px; }
-  #front-map-root { height: 320px; }
-    }
-#front-map-root .mm-card-close { width: 44px; height: 44px; top: 4px; right: 4px; }
-#front-map-root .mm-card h2 { margin-right: var(--sp-40); font-family: var(--serif); line-height: var(--leading-normal); }
-#front-map-root .mm-card { overscroll-behavior: contain; scrollbar-gutter: stable; }
 
-#front-declared .declared-row { grid-template-columns: 48px minmax(0, 1fr); padding: var(--sp-16) 0; gap: var(--sp-12); }
-#front-declared .declared-portrait { grid-column: 1; }
-#front-declared .declared-entry { grid-column: 2; }
-#front-declared .declared-kind { font: var(--type-fine); }
-#front-declared .declared-description { font: var(--weight-regular) var(--text-15)/var(--leading-loose) var(--serif); }
-#front-declared .declared-person > a { display: inline-flex; align-items: center; min-height: 44px; }
-#front-reports { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--sp-12); }
-#front-reports .report-card { min-width: 0; padding: var(--sp-16); border: var(--border-hairline) solid var(--divider-subtle); border-radius: 0; }
-#front-reports .card-title { font-size: var(--text-17); line-height: var(--leading-normal); }
-#front-reports .card-blurb { font: var(--type-fine); }
-@media (max-width: 700px) {
-  #front-reports { display: flex; overflow-x: auto; scroll-snap-type: x proximity; padding-bottom: var(--sp-12); scrollbar-width: thin; }
-  #front-reports .report-card { flex: 0 0 285px; scroll-snap-align: start; }
-  #front-declared .declared-entry { display: contents; }
-  #front-declared .declared-person { grid-column: 2; min-height: 48px; }
-  #front-declared .declared-kind, #front-declared .declared-description, #front-declared .declared-match { grid-column: 1 / -1; margin: 0; }
-}
 
-#front-declared .declared-source-link { display: table; margin: var(--sp-4) 0 0; padding-block: var(--sp-8); }
-#front-declared .declared-match { margin-top: var(--sp-8); }
 
-#front-page :is(a, button, summary), #front-map :is(a, button) { scroll-margin-block: 90px var(--sp-20); }
-#front-page :is(a, button, summary):focus-visible,
-#front-map :is(a, button):focus-visible { outline: var(--border-focus) solid var(--bronze-ink); outline-offset: 3px; }
-#front-page button:not(.ui-button) { min-height: 44px; }
-#front-declared .declared-match a, #mod-declared > .fineprint a { display: inline-flex; align-items: center; min-height: 44px; }
-#front-declared .declared-portrait img { max-width: none; flex-shrink: 0; }
-#front-map-root .mm-row { min-height: var(--size-target); align-items: center; font: var(--type-metadata); }
-#front-map-root .mm-row-name { white-space: normal; overflow-wrap: anywhere; }
-#front-map-root .mm-row-years { font: var(--type-fine); color: var(--ink-soft); }
-#front-map-root .mm-card-sub, #front-map-root .mm-card-fine { font-size: var(--text-13); line-height: var(--leading-normal); color: var(--ink-soft); }
-@media (max-width: 700px) {
-  #front-reports .report-card { flex-basis: 270px; }
-}
-@media (prefers-reduced-motion: reduce) {
-  #front-page *, #front-map * { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
-  #front-reports { scroll-snap-type: none; }
-}
-#front-page button { min-width: 44px; }
-#front-reports .report-card:focus-visible { outline-offset: -3px; }
+
+
+
 /* ==== page-search: The search page (/search) ==== */
 #panel-search { min-width: 0; }
 #panel-search button:not(.ui-button):not(.ui-filter-chip), #panel-search select:not(.ui-input), #panel-search input:not([type="range"]):not(.ui-input) { min-height: 44px; }
@@ -4388,7 +4315,6 @@ a.bill-division-q:hover { color: var(--bronze-ink); }
 .bill-row-figures { margin: var(--sp-4) 0 0; font: var(--type-fine); color: var(--ink-faint); }
 
 /* ---- the newest bills on the front page ---------------------------------- */
-.front-bills-machine { margin: 0 0 var(--space-tight); }
 
 /* ---- the disclosure on a person's voting record ------------------------- */
 /* The row was a link to the record and stays one when nothing matches. Where
@@ -4922,7 +4848,6 @@ a.bill-division-q:hover { color: var(--bronze-ink); }
    shrink cleanly below its nominal card width. */
 .report-cards { grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr)); gap: var(--space-block); }
 .report-card { display: flex; flex-direction: column; }
-.report-card .card-meta { margin-top: auto; padding-top: var(--space-row); }
 
 /* Ask suggestions use the same responsive rule. At 320px, a fixed 320px
    minimum plus the page gutters could widen the document. */
@@ -4996,7 +4921,6 @@ a.bill-division-q:hover { color: var(--bronze-ink); }
 .home-tasks strong, .home-tasks span { display: block; }
 .home-tasks strong { font-size: var(--text-16); margin-bottom: var(--sp-8); }
 .home-tasks span { color: var(--ink-soft); font-size: var(--text-13); }
-#front-map-root .rp-map3d-territory { font: var(--type-label); }
 .bill-text-overview { margin: var(--sp-24) 0; padding: var(--sp-20) 0; border-block: var(--border-hairline) solid var(--divider-subtle); }
 .bill-text-overview h4 { margin: 0 0 var(--sp-8); }
 .bill-text-overview p { max-width: 75ch; }
@@ -5004,14 +4928,6 @@ a.bill-division-q:hover { color: var(--bronze-ink); }
 .bill-text-topics a { color: var(--bronze-ink); text-transform: capitalize; }
 .bill-text-evidence summary { color: var(--bronze-ink); cursor: pointer; }
 .bill-text-evidence blockquote { margin: var(--sp-16) 0; padding-left: var(--sp-16); border-left: var(--border-focus) solid var(--divider-subtle); max-width: 75ch; }
-.home-map-stage { position: relative; margin: var(--sp-16) 0; }
-.home-map-stage #front-map-root { width: 100%; height: clamp(420px,38vw,540px); min-height: 420px; }
-.home-map-invite { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: var(--sp-20); align-items: center; padding: var(--sp-16) 0; border-top: var(--border-hairline) solid var(--divider-subtle); }
-.home-map-journeys { display: flex; flex-wrap: wrap; align-items: center; gap: var(--sp-8) var(--sp-20); }
-.home-map-journeys > span { color: var(--ink-soft); font-size: var(--text-13); }
-.home-map-journeys > a { font-size: var(--text-13); color: var(--bronze-ink); }
-.home-parliaments #front-statemap { max-width: 600px; height: 330px; margin: auto; }
-.home-map-industries { margin-top: var(--sp-12); }
 .drawer-primary { min-height: 52px; padding: var(--space-heading); border-bottom: var(--border-hairline) solid var(--divider-subtle); font: var(--type-control); }
 .research-filters { border: var(--border-hairline) solid var(--divider-subtle); border-radius: var(--radius-md); padding: var(--space-heading) var(--space-block); margin: var(--space-block) 0; }
 .research-filters summary { cursor: pointer; font: var(--type-control); color: var(--navy); min-height: 32px; }
@@ -5035,20 +4951,16 @@ a.bill-division-q:hover { color: var(--bronze-ink); }
 @media (max-width: 1050px) { .research-controls { grid-template-columns: repeat(3,1fr); } }
 @media (max-width: 700px) {
   .home-tasks { grid-template-columns: repeat(2,1fr); gap: var(--sp-16); margin: var(--sp-24) 0; }
-  .home-map-stage #front-map-root { height: 460px; min-height: 460px; }
-  .home-map-invite { grid-template-columns: minmax(0, 1fr); gap: var(--sp-12); }
-  .home-map-journeys > a { padding: var(--sp-4) 0; min-height: 40px; }
-  .research-controls { grid-template-columns: repeat(2,minmax(0,1fr)); }
+        .research-controls { grid-template-columns: repeat(2,minmax(0,1fr)); }
   .research-controls label:first-child { grid-column: 1 / -1; }
   .research-summary { gap: var(--sp-8) var(--sp-16); }
   .research-summary .research-period { margin-left: 0; flex-basis: 100%; }
   #panel-money .money-map-root { min-height: 480px; }
   .entry-modes, .area-nav { gap: var(--space-block); }
 }
-@media (prefers-reduced-motion: reduce) { .home-map-stage *, .research-records * { scroll-behavior: auto; } }
+@media (prefers-reduced-motion: reduce) { .research-records * { scroll-behavior: auto; } }
 
-.home-map-invite .home-map-open { margin-left: auto;  text-decoration: none; flex-shrink: 0; }
-@media(max-width:700px) { .home-map-invite .home-map-open { width: 100%; justify-content: center; margin-left: 0; } }
+
 
 /* The map leads. Research controls are opened only when needed: the
    jurisdiction is a field (4px), the tools that open are pills (D1), and the
@@ -5481,13 +5393,7 @@ h1, .hero-intro h1, #subject-title, #bill-title, #report-view #report-title,
    overflow-wrap:break-word;
 }
 /* Section headings retain their local spacing and share the home-page scale. */
-h2, .subject-section-title, #front-page .front-mod > .subject-section-title,
-#front-map .subject-section-title, .report-section h3,
-.report-part-title, #report-money-head, #panel-about h2, #panel-methods h2,
-#panel-expenses h2, .connections-page h2, .allocation-detail h2,
-.allocation-comparison h2, .allocation-results-heading,
-.subject-person #subject-sections .subject-section-title,
-.person-topics-head h3, .person-topics > h3 {
+h2, .subject-section-title, .report-section h3, .report-part-title, #report-money-head, #panel-about h2, #panel-methods h2, #panel-expenses h2, .connections-page h2, .allocation-detail h2, .allocation-comparison h2, .allocation-results-heading, .subject-person #subject-sections .subject-section-title, .person-topics-head h3, .person-topics > h3 {
   font:var(--type-heading); color:var(--ink); 
 }
 h3, #panel-methods h3, #panel-expenses h3 {
@@ -5497,9 +5403,6 @@ h3, #panel-methods h3, #panel-expenses h3 {
 #panel-expenses > h2:first-of-type { font:var(--type-title);  margin-bottom:var(--sp-24); }
 
 /* Home shortcuts: the same bronze line icons used in navigation and reports. */
-.front-way-heading { display:flex; align-items:center; gap:var(--sp-12); margin-bottom:var(--sp-8); }
-.front-way-heading .card-glyph { flex:0 0 26px; width:26px; height:26px; margin:0; }
-.front-way-heading .card-kicker { margin:0; }
 
 /* The live total belongs beside the Topics title, with the detail tucked away. */
 .topic-index-coverage { margin-top:var(--sp-24); color:var(--ink-soft); font-size:var(--text-13); }
@@ -5836,7 +5739,6 @@ html[data-chat="docked"] .answer-overview p { font-size: var(--text-15); line-he
 }
 
 /* The dedicated research document never renders the old homepage modules. */
-.research-app :is(#front-map, #home-tasks, #front-page) { display: none !important; }
 html[data-panel="search"] .research-app main.compact .hero-intro { display: block; }
 
 /* Shared compact masthead for the homepage and research pages. */
