@@ -47,6 +47,8 @@ import { isWitness, isUnattributed, belongsToScope, scopeFilter, speakerHref, sp
 import { ASK_PIPELINE_VERSION, EVIDENCE_GAP_ANSWER, isEvidenceGap, isPositionBody, guardPositionAnswer, FOOTNOTE_INSTRUCTIONS, legacyCitationsAsk, quoteRecoveryAsk, evidenceExcerpt, stripListingBoilerplate, FootnoteStream, normaliseFootnotes, originalContext, unsupportedQuotes, type AugmentedContext } from './ask-evidence'
 import { resolveAskScope, needsAskPeople, askRetrievalQuery, isNamedPositionQuestion, POSITION_GROUNDING, type AskScope } from './ask-scope'
 import { communityRoute } from './community'
+import { reviewerLoginEnabled } from './community-auth'
+import { operatorAuthorized } from './operator-auth'
 import { deliverReplyEmails, REPLY_EMAIL_CRON } from './community-notifications'
 import { partyUrl, personUrl, personNameKey } from '../public/canonical-urls.js'
 import { withholdIndividualDonors, foldDonorName } from '../public/donor-entity.js'
@@ -5734,8 +5736,7 @@ async function route(
         // An operator's read of what the platforms report for the account and
         // the latest editions (docs/INSIGHTS.md). Bearer-guarded like the run
         // route; cached ten minutes because every platform read is metered.
-        const secret = env.DAILY_POST_OPERATOR_SECRET
-        if (!secret || request.headers.get('authorization') !== `Bearer ${secret}`) return json({ error: 'operator secret required' }, 401)
+        if (!await operatorAuthorized(request, env)) return json({ error: 'operator secret required' }, 401)
         const key = 'daily-post:engagement'
         const cached = url.searchParams.has('fresh') ? null : await env.GENERATION_CACHE.get(key)
         const result = cached ? JSON.parse(cached) as unknown : await socialEngagement(env)
@@ -5749,8 +5750,7 @@ async function route(
         // subject such as grant:GA34203@abn:97694995462) under a journal date
         // and deliver it to chosen channels, or dry-run it. Bearer-guarded by
         // DAILY_POST_OPERATOR_SECRET; the journal prevents double delivery.
-        const secret = env.DAILY_POST_OPERATOR_SECRET
-        if (!secret || request.headers.get('authorization') !== `Bearer ${secret}`) return json({ error: 'operator secret required' }, 401)
+        if (!await operatorAuthorized(request, env)) return json({ error: 'operator secret required' }, 401)
         const body = await readJsonBody(request)
         if (body instanceof Response) return body
         const v = body.value as Record<string, unknown>
@@ -5882,6 +5882,17 @@ export default {
     if (url.pathname === '/api/table/privacy') return withSecurityHeaders(await tablePrivacy(request, env.ASSETS), url)
     const isApi = url.pathname.startsWith('/api/')
     const communityResponse = (response: Response) => { const secured = withSecurityHeaders(response, url); if (env.STAGING_API) secured.headers.set('x-robots-tag', 'noindex, nofollow'); return secured }
+    if (url.pathname === '/api/ops/reviewer-login') {
+      // Same bearer guard as daily-post engagement/run; always local, including staging.
+      const response = !await operatorAuthorized(request, env)
+        ? json({ error: 'operator secret required' }, 401)
+        : request.method !== 'GET'
+          ? json({ error: 'Use GET for reviewer login status.' }, 405)
+          : json({ reviewer_login_enabled: reviewerLoginEnabled(env) })
+      response.headers.set('cache-control', 'no-store')
+      if (response.status === 405) response.headers.set('allow', 'GET')
+      return communityResponse(response)
+    }
     if (url.pathname === '/api/display-policy' && request.method === 'GET') return communityResponse(new Response(JSON.stringify({SA_HANSARD_FULL_TEXT:saFullText(env.SA_HANSARD_FULL_TEXT) ? 'true' : 'false'}), {headers:{'content-type':'application/json','cache-control':'no-store'}}))
     if (url.pathname === '/table-index' || url.pathname.startsWith('/table-index/')) return communityResponse(new Response(null, {status:404,headers:{'cache-control':'no-store','x-robots-tag':'noindex'}}))
     if (url.pathname.startsWith('/api/table/')) return communityResponse(await tableApi(request, env, ctx))
