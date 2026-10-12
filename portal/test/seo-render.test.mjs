@@ -335,3 +335,14 @@ test('/privacy and /support are served whole, from their panels, with canonical 
   const shell=readFileSync(new URL('spa-shell.js',pub),'utf8');
   assert.ok(shell.includes('if(answer.hasAttribute("data-panel-copy"))for(const el of answer.querySelectorAll("[id]"))el.removeAttribute("id");main.prepend(answer);'));
 });
+
+test('ordinary Victorian electorate summaries carry the exact authorisation server-side',async()=>{
+  const manifest=await read('/electorates/manifest.json');
+  const index=await read(manifest.index_url);
+  const line='Authorised by Jake Tracey, Noice Pty Ltd, Level 6, 608/343 Little Collins Street, Melbourne VIC 3000.';
+  for(const entry of index.electorates.filter(e=>e.jurisdiction==='vic')) {
+    const html=await get(entry.url);
+    assert.ok(html.includes(line),entry.url);
+    assert.match(html,/href="mailto:corrections@opax.com.au"/);
+  }
+});

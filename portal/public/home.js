@@ -541,7 +541,7 @@ async function headerSuggestions(q) {
   const read = async url => { const response = await fetch(url); if (!response.ok) throw Error('Unavailable'); return response.json(); };
   headerReferences ??= Promise.allSettled([
     read('/speakers.json'), read('/graph/money.json'), read('/reports/index.json'),
-    import('/electorates.js?v=f60dff0a4b').then(async module => ({...await module.loadIndex(), jurisdictions:module.JURISDICTIONS})),
+    import('/electorates.js?v=759d9cf2ac').then(async module => ({...await module.loadIndex(), jurisdictions:module.JURISDICTIONS})),
   ]);
   const [speakers, money, reports, electorates] = (await headerReferences).map(result => result.status === 'fulfilled' ? result.value : null);
   for (const e of (electorates?.electorates || []).filter(e => contains(e.name)).slice(0,3)) out.push({label:e.name, type:`${electorates.jurisdictions[e.jurisdiction]} electorate`, href:e.url});
