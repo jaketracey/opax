@@ -8013,20 +8013,21 @@ function billRulerHTML(dates) {
   const span = last - first || 1;
   const x = (t) => 8 + ((t - first) / span) * 664;
   const ticks = points.map((t) =>
-    `<line class="bill-ruler-tick" x1="${x(t).toFixed(2)}" x2="${x(t).toFixed(2)}" y1="10" y2="30"/>`).join("");
+    `<line class="bill-ruler-tick" x1="${x(t).toFixed(2)}" x2="${x(t).toFixed(2)}" y1="6" y2="26"/>`).join("");
   const day = (t) => esc(fmtDate(new Date(t).toISOString().slice(0, 10)));
-  const label = (t, anchor) =>
-    `<text class="bill-ruler-label" x="${x(t).toFixed(2)}" y="45" text-anchor="${anchor}">${day(t)}</text>`;
+  // The two ends are named in the page's own type under the ruler, not as svg
+  // text: drawn in the ruler's 680 units they shrank to 7px on a phone.
+  const label = (t, anchor) => `<span class="bill-ruler-label" data-anchor="${anchor}">${day(t)}</span>`;
   // A bill whose every stage fell on one day has no span: both ends land on the
   // left edge, and the end label, anchored to finish there, ran off the ruler and
   // left its last digit printed over the first label (":617 Sep 2026"). One day
   // is one notch with one date.
   const oneDay = last === first;
-  return `<svg class="bill-ruler" viewBox="0 0 680 52" role="img"
+  return `<div class="bill-ruler"><svg class="bill-ruler-marks" viewBox="0 0 680 32" preserveAspectRatio="none" role="img"
     aria-label="The recorded stages of this bill, ${oneDay ? `all on ${day(first)}` : `from ${day(first)} to ${day(last)}`}">
-    <line class="bill-ruler-axis" x1="8" x2="672" y1="30" y2="30"/>
-    ${ticks}${label(first, "start")}${oneDay ? "" : label(last, "end")}
-  </svg>`;
+    <line class="bill-ruler-axis" x1="8" x2="672" y1="26" y2="26"/>
+    ${ticks}
+  </svg><p class="bill-ruler-ends" aria-hidden="true">${label(first, "start")}${oneDay ? "" : label(last, "end")}</p></div>`;
 }
 
 /* The register records a stage on every day it was before the house, so a
@@ -8084,8 +8085,8 @@ function billTimelineHTML(bill) {
     licence: billLicence(bill),
   });
   if (!dates.length) {
-    return `<section class="bill-section" data-accent="bills"><h3 class="subject-section-title">How it moved</h3>
-      <p class="status">No dates recorded.</p>${source(null)}</section>`;
+    return `<section class="ui-section bill-section" data-accent="bills"><h3 class="ui-section-title">How it moved</h3>
+      <p class="ui-empty">No dates recorded.</p>${source(null)}</section>`;
   }
   const runs = billStageRuns(dates);
   const folded = dates.length - runs.length;
@@ -8107,13 +8108,13 @@ function billTimelineHTML(bill) {
         days > 1 ? `<span class="bill-date-days">on ${days} recorded days</span>` : ""}</span>
     </li>`;
   }).join("");
-  const list = `<ol class="bill-dates" role="list">${rows}</ol>`;
+  const list = `<ol class="ui-list bill-dates" role="list">${rows}</ol>`;
   // The ruler carries the shape; the stages sit behind one disclosure, links kept inside.
   const stages = runs.length > 3
-    ? `<details class="bill-stages"><summary>All ${runs.length} stages</summary>${list}</details>`
+    ? `<details class="ui-disclosure bill-stages"><summary>All ${runs.length} stages</summary><div class="ui-disclosure-body">${list}</div></details>`
     : list;
-  return `<section class="bill-section" data-accent="bills">
-    <h3 class="subject-section-title">How it moved</h3>
+  return `<section class="ui-section bill-section" data-accent="bills">
+    <h3 class="ui-section-title">How it moved</h3>
     ${billRulerHTML(dates)}
     ${stages}
     ${source(folded ? { runs: runs.length, dates: dates.length } : null)}
@@ -8129,6 +8130,9 @@ function billTimelineHTML(bill) {
    wait behind the division's one disclosure with the question, named in full,
    so nothing disappears; only the bars a reader cannot take in anyway. */
 const BILL_SPLIT_DRAWN = 3;
+/* What the two bars in a party's pair are: one key per block, above the list.
+   The figures beside each party say the same to a screen reader. */
+const BILL_SPLIT_LEGEND = `<p class="ui-legend bill-legend" aria-hidden="true"><span><i class="bill-key-aye"></i>Ayes</span><span><i class="bill-key-no"></i>Noes</span></p>`;
 
 /** The split's pieces: the drawn rows, the rest as one line, and the clauses
  *  that say what the attribution rests on. */
@@ -8137,7 +8141,7 @@ function billSplitParts(division) {
     .map(([party, v]) => ({ party, ayes: Number(v?.ayes) || 0, noes: Number(v?.noes) || 0 }))
     .filter((s) => s.ayes || s.noes)
     .sort((a, b) => (b.ayes + b.noes) - (a.ayes + a.noes) || a.party.localeCompare(b.party));
-  if (!splits.length) return { drawn: `<p class="status bill-split-none">Party split not recorded for this division.</p>`, rest: "", restCount: 0, notes: "" };
+  if (!splits.length) return { drawn: `<p class="ui-row-meta bill-split-none">Party split not recorded for this division.</p>`, rest: "", restCount: 0, notes: "" };
   let drawn = splits.slice(0, BILL_SPLIT_DRAWN);
   let folded = splits.slice(drawn.length);
   if (folded.length === 1) { drawn = splits; folded = []; } // one line saved is no saving
@@ -8151,8 +8155,8 @@ function billSplitParts(division) {
       <span class="bill-split-party">${partyDotHTML(s.party)}${esc(billParty(s.party))}</span>
       <span class="bill-split-n">${s.ayes}<span aria-hidden="true">–</span>${s.noes}<span class="visually-hidden"> ayes to noes</span></span>
       <span class="bill-split-bars" aria-hidden="true">
-        <span class="bill-split-bar-track"><i class="bill-bar-aye" style="width:${((s.ayes / max) * 100).toFixed(1)}%"></i></span>
-        <span class="bill-split-bar-track"><i class="bill-bar-no" style="width:${((s.noes / max) * 100).toFixed(1)}%"></i></span>
+        <span class="ui-bar bill-bar-aye"><i style="width:${((s.ayes / max) * 100).toFixed(1)}%"></i></span>
+        <span class="ui-bar bill-bar-no"><i style="width:${((s.noes / max) * 100).toFixed(1)}%"></i></span>
       </span>
     </li>`;
   // What the attribution rests on, as a clause rather than a paragraph:
@@ -8319,12 +8323,10 @@ function billDivisionHTML(d, bill) {
   return `<li class="bill-division">
     <p class="bill-division-out">${billOutcomeLabelHTML(d.outcome)}
       <span class="bill-division-count">${ayes.toLocaleString()} ayes, ${noes.toLocaleString()} noes</span></p>
-    ${target
-      ? `<a class="source-title bill-division-q" href="${esc(target)}">${esc(title)}</a>`
-      : `<span class="source-title bill-division-q">${esc(title)}</span>`}
-    ${meta ? `<span class="result-meta">${meta}</span>` : ""}
+    <p class="ui-row-title bill-division-q">${target ? `<a href="${esc(target)}">${esc(title)}</a>` : esc(title)}</p>
+    ${meta ? `<p class="ui-row-meta">${meta}</p>` : ""}
     ${split.drawn}
-    ${more ? `<details class="bill-division-more"><summary>${esc(more)}</summary>${inside}</details>`
+    ${more ? `<details class="ui-disclosure bill-division-more"><summary>${esc(more)}</summary><div class="ui-disclosure-body">${inside}</div></details>`
       : split.notes}
   </li>`;
 }
@@ -8336,16 +8338,17 @@ function billDivisionsHTML(bill) {
     const heading = growthModules.noDivisionsHeading(bill);
     const line = heading === "Not yet voted" ? "No formal division recorded. Most questions are decided on the voices."
       : "Most questions are decided on the voices.";
-    return `<section class="bill-section" data-accent="votes" ${growthModules.moduleAttrs("party_votes", "bill", 2)}><h3 class="subject-section-title">${esc(heading)}</h3>
-      <p class="status">${line}</p>${sourceLineHTML({updated: bill.exportedAt || "", source: "Parliamentary division records", notes: [
+    return `<section class="ui-section bill-section" data-accent="votes" ${growthModules.moduleAttrs("party_votes", "bill", 2)}><h3 class="ui-section-title">${esc(heading)}</h3>
+      <p class="ui-empty">${line}</p>${sourceLineHTML({updated: bill.exportedAt || "", source: "Parliamentary division records", notes: [
         "A bill with no division here was not necessarily unopposed. This register does not establish whether a vote on the voices has occurred.",
         "No per-member or per-party vote is available without a formal division."]})}</section>`;
   }
   const head = divs.slice(0, 6), rest = divs.slice(6);
-  return `<section class="bill-section" data-accent="votes" ${growthModules.moduleAttrs("party_votes", "bill", 2)}>
-    <h3 class="subject-section-title">How each party voted</h3>
-    <ol class="bill-division-list" role="list" id="bill-divisions">${head.map((d) => billDivisionHTML(d, bill)).join("")}</ol>
-    ${rest.length ? `<p class="dir-more-row"><button type="button" class="ui-button" id="bill-divisions-more"
+  return `<section class="ui-section bill-section" data-accent="votes" ${growthModules.moduleAttrs("party_votes", "bill", 2)}>
+    <h3 class="ui-section-title">How each party voted</h3>
+    ${BILL_SPLIT_LEGEND}
+    <ol class="ui-list bill-division-list" role="list" id="bill-divisions">${head.map((d) => billDivisionHTML(d, bill)).join("")}</ol>
+    ${rest.length ? `<p class="ui-actions"><button type="button" class="ui-button" id="bill-divisions-more"
       data-rest="${esc(String(rest.length))}">Show more (${rest.length} more)</button></p>` : ""}
     ${sourceLineHTML({
       updated: bill.exportedAt || "", source: "They Vote For You",
@@ -8373,22 +8376,22 @@ function billSpeechesHTML(bill) {
   // A speech the record leaves unattributed has one fact — its date — so the
   // date is what opens it, rather than nine rows all reading the same absence.
   const rows = speeches.slice(0, 24).map((s) => `<li>
-    <a class="source-title" ${entityHrefAttr(`/doc/${encodeURIComponent(s.slug)}`)}>${
-      s.speaker ? esc(s.speaker) : `Speech${s.date ? ` on ${esc(fmtDate(s.date))}` : ", speaker not named"}`}</a>
-    <span class="result-meta">${[
+    <p class="ui-row-name"><a ${entityHrefAttr(`/doc/${encodeURIComponent(s.slug)}`)}>${
+      s.speaker ? esc(s.speaker) : `Speech${s.date ? ` on ${esc(fmtDate(s.date))}` : ", speaker not named"}`}</a></p>
+    <p class="ui-row-meta">${[
       s.party ? partyChipHTML(s.party) : "",
       s.state && s.state !== "federal" ? esc(STATE_NAMES[s.state] || s.state) : "",
       s.stage_hint ? esc(billStage(s.stage_hint)) : "",
       s.speaker && s.date ? esc(fmtDate(s.date)) : "",
-    ].filter(Boolean).join(" · ")}</span>
-    ${s.brief ? `<p class="bill-speech-brief"><span class="visually-hidden">Machine-written brief: </span>${esc(s.brief)}</p>` : ""}
+    ].filter(Boolean).join(" · ")}</p>
+    ${s.brief ? `<p class="ui-row-text bill-speech-brief"><span class="visually-hidden">Machine-written brief: </span>${esc(s.brief)}</p>` : ""}
   </li>`).join("");
   const briefs = speeches.filter((s) => s.brief).length;
   // One machine label for the list, at its head (pass 3: one label per list).
-  return `<section class="bill-section">
-    <div class="bill-section-head"><h3 class="subject-section-title">What was said</h3>${
+  return `<section class="ui-section bill-section">
+    <div class="ui-section-head bill-section-head"><h3 class="ui-section-title">What was said</h3>${
       briefs ? machineLabelHTML({ note: BILL_SPEECH_BRIEF_NOTE }) : ""}</div>
-    <ul class="subject-list bill-speeches" role="list">${rows}</ul>
+    <ul class="ui-list bill-speeches" role="list">${rows}</ul>
     ${sourceLineHTML({
       updated: bill.exportedAt || "", source: "Parliamentary Hansard",
       notes: [`Speeches the record attaches to this bill${speeches.length > 24 ? `, the first 24 of ${speeches.length}` : ""}.
@@ -8402,21 +8405,20 @@ function billActsHTML(bill) {
   const passed = /passed|assent/i.test(String(bill.status || ""));
   if (!acts.length) {
     return passed
-      ? `<section class="bill-section"><h3 class="subject-section-title">What became law</h3>
-         <p class="status">No Act matched to this bill yet.</p></section>`
+      ? `<section class="ui-section bill-section"><h3 class="ui-section-title">What became law</h3>
+         <p class="ui-empty">No Act matched to this bill yet.</p></section>`
       : "";
   }
   const rows = acts.map((a) => {
     const url = safeUrl(a.frl_uri);
     return `<li>
-      ${url ? `<a class="source-title" href="${esc(url)}" rel="noopener" target="_blank">${esc(a.title)}</a>`
-        : `<span class="source-title">${esc(a.title)}</span>`}
-      <span class="result-meta">${a.assent_date ? `Assented ${esc(fmtDate(a.assent_date))}` : "Assent date not recorded"}</span>
+      <p class="ui-row-title">${url ? `<a href="${esc(url)}" rel="noopener" target="_blank">${esc(a.title)}</a>` : esc(a.title)}</p>
+      <p class="ui-row-meta">${a.assent_date ? `Assented ${esc(fmtDate(a.assent_date))}` : "Assent date not recorded"}</p>
     </li>`;
   }).join("");
-  return `<section class="bill-section">
-    <h3 class="subject-section-title">What became law</h3>
-    <ul class="subject-list" role="list">${rows}</ul>
+  return `<section class="ui-section bill-section">
+    <h3 class="ui-section-title">What became law</h3>
+    <ul class="ui-list bill-acts" role="list">${rows}</ul>
     ${sourceLineHTML({
       updated: bill.exportedAt || "", source: "Federal Register of Legislation",
       notes: ["The Act as made, linked to its page on the Federal Register of Legislation."],
@@ -8438,9 +8440,9 @@ function billSummaryHTML(bill) {
   const attribution = `${s.attribution || "Written by a model from the explanatory memorandum; not the record"}.`;
   const note = `${attribution}${s.describes_version ? ` Describes the bill ${s.describes_version}.` : ""}`;
   const basis = BILL_SOURCE_NAMES[s.basis] || "Explanatory memorandum";
-  return `<section class="bill-section bill-summary" data-accent="bills" aria-labelledby="bill-summary-head">
-    <div class="bill-section-head">
-      <h3 class="subject-section-title" id="bill-summary-head">In short</h3>
+  return `<section class="ui-section bill-section bill-summary" data-accent="bills" aria-labelledby="bill-summary-head">
+    <div class="ui-section-head bill-section-head">
+      <h3 class="ui-section-title" id="bill-summary-head">In short</h3>
       ${machineLabelHTML({ note, notRecord: true })}
     </div>
     <div class="bill-sentences">${sentences.map((t) => `<p>${esc(t)}</p>`).join("")}</div>
@@ -8471,7 +8473,7 @@ function billRelatedHTML(bill) {
     const when = c.closes ? `Consultation closes ${esc(fmtDate(c.closes))}` : "Open for consultation";
     lines.push(`${when}: <a href="${esc(safeUrl(c.url) || "#")}" rel="noopener" target="_blank">have your say ↗︎</a>`);
   }
-  return lines.length ? `<p class="bill-related">${lines.join("<br>")}</p>` : "";
+  return lines.length ? `<p class="ui-page-meta bill-related">${lines.join("<br>")}</p>` : "";
 }
 
 /** /bill/<key> — one bill, whole. */
@@ -8555,13 +8557,13 @@ async function openBill(key, manageFocus) {
       ], "More for this bill")}
     </div>`;
   body.innerHTML = `
-    <div class="subject-head bill-head">
+    <div class="ui-page-head bill-head">
       <p class="bill-status">${statusLabelHTML(statusWord, billStatusTone(bill.status))}${
         bill.status_as_of ? `<span class="bill-status-as">Status as at ${esc(fmtDate(bill.status_as_of))}</span>` : ""}</p>
       <h1 id="bill-title" class="bill-title" tabindex="-1">${esc(title)}</h1>
       ${bill.short_title && bill.short_title !== title
-        ? `<p class="bill-short">Known as the ${esc(bill.short_title)}</p>` : ""}
-      ${metaBits.length ? `<p class="subject-tag bill-tag">${metaBits.join(" · ")}</p>` : ""}
+        ? `<p class="ui-page-meta bill-short">Known as the ${esc(bill.short_title)}</p>` : ""}
+      ${metaBits.length ? `<p class="ui-page-meta bill-tag">${metaBits.join(" · ")}</p>` : ""}
       ${billRelatedHTML(bill)}
       ${actions}
     </div>
@@ -8596,16 +8598,16 @@ function renderOtherSponsorBills(bill, body, view, generation) {
   const slot = body.querySelector("#bill-sponsor-others");
   if (!slot) return;
   if (!bill.sponsor) { slot.remove(); return; }
-  slot.innerHTML = `<section class="bill-section growth-records" ${growthModules.moduleAttrs("sponsor_bills", "bill", 3)}>
-    <h3 class="subject-section-title">Other bills from this sponsor</h3><p role="status">Opening the sponsor’s records…</p></section>`;
+  slot.innerHTML = `<section class="ui-section bill-section growth-records" ${growthModules.moduleAttrs("sponsor_bills", "bill", 3)}>
+    <h3 class="ui-section-title">Other bills from this sponsor</h3><p class="ui-status-line" role="status">Opening the sponsor’s records…</p></section>`;
   const load = async () => {
     const summary = await loadSponsorSummary(bill);
     if (billView !== view || generation !== billTextGeneration || !slot.isConnected) return;
     const rows = (summary?.bills || []).filter(b=>b.key!==bill.key && b.jurisdiction===bill.jurisdiction).slice(0,5);
     if (!summary?.person || !rows.length) { slot.remove(); return; }
-    slot.innerHTML = `<section class="bill-section growth-records" data-records-ready="true" ${growthModules.moduleAttrs("sponsor_bills", "bill", 3)}>
-      <h3 class="subject-section-title">Other bills from this sponsor</h3>
-      <ul class="subject-list" role="list">${rows.map(b => `<li><a href="${esc(billHash(b.key))}">${esc(billName(b))}</a><span class="result-meta">${esc(fmtDate(b.introduced))} · ${esc(sentenceCase(b.status))}</span></li>`).join("")}</ul>
+    slot.innerHTML = `<section class="ui-section bill-section growth-records" data-records-ready="true" ${growthModules.moduleAttrs("sponsor_bills", "bill", 3)}>
+      <h3 class="ui-section-title">Other bills from this sponsor</h3>
+      <ul class="ui-list bill-sponsor-list" role="list">${rows.map(b => `<li><p class="ui-row-title"><a href="${esc(billHash(b.key))}">${esc(billName(b))}</a></p><p class="ui-row-meta">${esc(fmtDate(b.introduced))} · ${esc(sentenceCase(b.status))}</p></li>`).join("")}</ul>
       ${sourceLineHTML({source: "Parliamentary bill register", updated: summary.generated || "", notes: ["Bills in the same jurisdiction, matched to the same roster person using the sponsor identity rules."]})}
     </section>`;
   };
@@ -12333,10 +12335,10 @@ async function loadDivisionNames(slug, d) {
  *  carry no person id, so they print as the record prints them, unlinked.
  *  Export names carry their party on the day: a dot and the short name. */
 function divisionMembersHTML(names, { ayes = 0, noes = 0 } = {}) {
-  const open = `<section class="division-block division-members" id="division-members" aria-labelledby="division-members-head">
-      <h3 class="subject-section-title" id="division-members-head">Who voted which way</h3>`;
+  const open = `<section class="ui-section division-block division-members" id="division-members" aria-labelledby="division-members-head">
+      <h3 class="ui-section-title" id="division-members-head">Who voted which way</h3>`;
   if (!names || names.failed) {
-    return `${open}<p class="division-none">The member list could not load just now; the counts and the party split are from the published export.</p></section>`;
+    return `${open}<p class="ui-empty">The member list could not load just now; the counts and the party split are from the published export.</p></section>`;
   }
   if (names.text) return `${open}<div class="division-markdown">${billNoteHTML(names.text)}</div></section>`;
   const who = (list) => list.map((m) => `<li>${m.slug
@@ -12368,8 +12370,8 @@ function renderDivisionDoc({ d, entry, bills }, slug, manageFocus) {
   const question = billQuestion(d.question || d.name || "");
   const ask = askHash(bills[0]?.title ? `How did parliament vote on the ${bills[0].title}?` : `What was the ${house} division of ${fmtDate(d.date)} about?`);
   $("doc-bill").innerHTML = `
-    ${bills.length ? `<ul class="division-bills" role="list">${bills.map((b) =>
-      `<li><a ${entityHrefAttr(billHash(b.key))}>${esc(b.title)}</a></li>`).join("")}</ul>` : ""}
+    ${bills.length ? `<ul class="ui-list division-bills" data-rule="none" role="list" aria-label="${bills.length === 1 ? "The bill" : "The bills"} this division was on">${bills.map((b) =>
+      `<li class="ui-row-name"><a ${entityHrefAttr(billHash(b.key))}>${esc(b.title)}</a></li>`).join("")}</ul>` : ""}
     <div class="page-actions">
       <a class="ui-button" href="${esc(ask)}">Ask the record about this</a>
       ${moreMenuHTML([
@@ -12385,15 +12387,15 @@ function renderDivisionDoc({ d, entry, bills }, slug, manageFocus) {
   const meta = d._meta || {};
   const retrieved = meta.member_retrieved_at || "";
   $("doc-text").innerHTML = `<div class="division-view">
-    ${split ? `<section class="division-block" aria-labelledby="division-split-head">
-      <h3 class="subject-section-title" id="division-split-head">How the parties voted</h3>
-      ${split.drawn}${split.restCount ? `<details class="bill-division-more"><summary>${split.restCount} more ${split.restCount === 1 ? "party" : "parties"}</summary>${split.rest}</details>` : ""}${split.notes}
+    ${split ? `<section class="ui-section division-block" aria-labelledby="division-split-head">
+      <h3 class="ui-section-title" id="division-split-head">How the parties voted</h3>
+      ${BILL_SPLIT_LEGEND}${split.drawn}${split.restCount ? `<details class="ui-disclosure bill-division-more"><summary>${split.restCount} more ${split.restCount === 1 ? "party" : "parties"}</summary><div class="ui-disclosure-body">${split.rest}</div></details>` : ""}${split.notes}
     </section>` : ""}
-    <section class="division-block division-members" id="division-members" aria-labelledby="division-members-head" aria-busy="true">
-      <h3 class="subject-section-title" id="division-members-head">Who voted which way</h3>
-      <p class="status">Reading the member list…</p>
+    <section class="ui-section division-block division-members" id="division-members" aria-labelledby="division-members-head" aria-busy="true">
+      <h3 class="ui-section-title" id="division-members-head">Who voted which way</h3>
+      <p class="ui-status-line">Reading the member list…</p>
     </section>
-    ${question ? `<details class="division-question bill-division-more"><summary>The question</summary><div class="division-markdown">${billNoteHTML(question)}</div></details>` : ""}
+    ${question ? `<section class="ui-section division-block division-question-block"><details class="ui-disclosure division-question"><summary>The question</summary><div class="ui-disclosure-body division-markdown">${billNoteHTML(question)}</div></details></section>` : ""}
     ${sourceLineHTML({
       updated: retrieved, dateLabel: retrieved ? "Retrieved" : "Updated", source: "They Vote For You",
       originals: [safeUrl(d.source_url) && { label: "The count on They Vote For You", href: d.source_url }, ...bills.map((b) => ({ label: b.title, href: `/bill/${encodeURIComponent(b.key)}` }))].filter(Boolean),
