@@ -11813,19 +11813,20 @@ function currentFilters() {
   // range means "no year filter".
   let from = $("f-from").value.trim(), to = $("f-to").value.trim();
   if (Number(from) > Number(to)) [from, to] = [to, from];
-  const displayFrom = from, displayTo = to;
+  const exactDates = searchCitationScope.since || searchCitationScope.until;
+  const sameYears = from === (searchCitationScope.since?.slice(0, 4) || String(RECORD_FIRST_YEAR)) &&
+    to === (searchCitationScope.until?.slice(0, 4) || String(RECORD_LAST_YEAR));
   if (from === "1993" && to === "2026") { from = ""; to = ""; }
   return {
     ...Object.fromEntries(Object.entries(searchCitationScope).filter(([key]) =>
-      !["since", "until"].includes(key) ||
-      (!searchCitationScope.since || displayFrom === searchCitationScope.since.slice(0, 4)) &&
-      (!searchCitationScope.until || displayTo === searchCitationScope.until.slice(0, 4)))),
+      !["since", "until"].includes(key) || sameYears)),
     speaker: $("f-speaker").value.trim(),
     party: $("f-party").value,
     state: $("f-state").value,
     topic: $("f-topic").value,
-    from,
-    to,
+    // Do not introduce an end-of-year cutoff into an open exact-date citation.
+    from: exactDates && sameYears ? "" : from,
+    to: exactDates && sameYears ? "" : to,
     kind: $("search-kind").value,
     scope: "all",
     mode: $("search-mode").value,

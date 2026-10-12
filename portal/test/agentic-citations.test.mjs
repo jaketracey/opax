@@ -42,6 +42,11 @@ test('P2 citation scope survives search hydration, pagination, requests and copi
  // The 1993..2026 default display must still preserve an exact partial window.
  api.applySearchParams(new URLSearchParams({q:'housing',since:'1993-07-22',until:'2026-03-28',venue:'chamber'}));
  assert.equal(api.currentFilters().since,'1993-07-22');assert.equal(api.currentFilters().until,'2026-03-28');
+ // An open current-term citation must not acquire a to=2026 cutoff.
+ api.applySearchParams(new URLSearchParams({q:'housing',since:'2025-07-22',venue:'chamber'}));
+ const open=api.searchQueryParams('housing',api.currentFilters(),1,'relevance');
+ assert.equal(open.get('since'),'2025-07-22');assert.equal(open.has('until'),false);assert.equal(open.has('from'),false);assert.equal(open.has('to'),false);
+ elements['f-to'].value='2025';assert.equal(api.currentFilters().since,undefined);assert.equal(api.currentFilters().to,'2025');
 });
 
 test('P2 actual search applies exact dates and chamber/committee/member constraints',async()=>{
