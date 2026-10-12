@@ -4858,6 +4858,13 @@ a.bill-division-q:hover { color: var(--bronze-ink); }
 .journey-help { color: var(--ink-soft); font: var(--type-fine); margin: var(--space-tight) 0 0; min-height: 2.1rem; }
 @keyframes journey-progress { from { transform: scaleX(0); } to { transform: scaleX(1); } }
 @media (max-width: 1000px) { .money-stage.has-journey { grid-template-columns: 250px minmax(0, 1fr); } }
+/* The narrow rail has no room for a label between the arrows: the play
+   control takes its own row above them. */
+@media (min-width: 701px) and (max-width: 1000px) {
+  .journey-playback { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .journey-playback [data-action="play"] { grid-column: 1 / -1; grid-row: 1; }
+  .journey-playback :is([data-action="previous"], [data-action="next"]) { grid-row: 2; }
+}
 @media (max-width: 700px) {
   .money-stage.has-journey { grid-template-columns: minmax(0, 1fr); }
   .journey-story { position: relative; padding: var(--space-heading); border-right: var(--border-hairline) solid var(--divider-subtle); border-bottom: 0; border-radius: var(--radius-md) var(--radius-md) 0 0; }
