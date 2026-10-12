@@ -15,6 +15,7 @@ import {
   parties,
   staleTargets,
 } from '../../scripts/build_tokens.mjs';
+import { census } from './helpers/css-census.mjs';
 
 const PORTAL = fileURLToPath(new URL('..', import.meta.url));
 const source = loadSource();
@@ -144,41 +145,37 @@ const HEX_BASELINE = {
   'public/procurement-data.js': 2,
 };
 // Filled from the counts at pass 5 lane D (design/p5w-shell, merged with lane
-// B), after their regions moved to roles and canonical names. Lower a number when a pass
+// B), then lowered by the 12 Oct 2026 uplift codemod. Lower a number when a pass
 // removes some; never raise one.
 const TYPE_BASELINE = {
   'graph/explain.ts': 1,
   'graph/index.ts': 7,
   'graph/map3d-engine.ts': 2,
   'graph/words.ts': 3,
-  'public/app.js': 3,
+  'public/app.js': 2,
   'public/ballot.css': 2,
   'public/community.css': 5,
-  'public/community.html': 9,
   'public/grants.js': 6,
-  'public/home.css': 8,
-  'public/hubs.css': 19,
-  'public/index.html': 9,
+  'public/home.css': 6,
   'public/ledger.js': 2,
   'public/matrix.js': 1,
   'public/quiz.js': 4,
   'public/st-test.html': 1,
   'public/stages.js': 2,
-  'public/style.css': 652,
+  'public/style.css': 34,
   'public/thenvsnow.js': 2,
   'public/timemachine.js': 15,
-  'public/ui-controls.css': 9,
-  'public/ui-source.css': 2,
-  'public/ui-workbench.css': 10,
-  'public/voice.css': 19,
+  'public/ui-controls.css': 2,
+  'public/ui-source.css': 1,
+  'public/ui-workbench.css': 8,
   'public/wordsdollars.js': 2,
-  'src/community-notifications.ts': 4,
+  'src/community-notifications.ts': 3,
 };
 const DEPRECATED_BASELINE = {
-  'public/style.css': 629,
-  'public/ui-controls.css': 2,
+  // The uplift codemod (12 Oct 2026) retired the rest; these sit in rules the
+  // nav and page-actions lanes own, and go when those rules move.
+  'public/style.css': 5,
   'public/ui-workbench.css': 5,
-  'public/voice.css': 4,
 };
 const HEX = /(?<![\w&#-])#(?:[0-9a-fA-F]{8}|[0-9a-fA-F]{6}|[0-9a-fA-F]{3,4})(?![\w-])/g;
 const SCANNED = ['public', 'graph', 'grants-map', 'voice', 'analytics'];
@@ -269,4 +266,31 @@ test('no new raw type values outside the roles', (t) => {
 
 test('no new uses of deprecated token names', (t) => {
   onlyDown(t, 'deprecated token names', deprecatedCounts(), DEPRECATED_BASELINE, 'use the name design-tokens.json gives as its replacement');
+});
+
+// --- the uplift ratchet: hard-coded share of the owned stylesheets ------------
+// The 12 Oct 2026 web uplift (docs/design/uplift-2026-10) moved the design
+// system's four stylesheets onto the token scale. Per file, the percentage of
+// declarations (spacing, type, colour, radius, shadow, motion and rules) that
+// carry a literal value instead of a token may go down, never up. style.css is
+// measured without its generated token region. Lower a number when a change
+// lowers the share; the rules other lanes own still count until they move.
+const SHARE_BASELINE = {
+  'public/style.css': 7.2,
+  'public/ui-controls.css': 5.9,
+  'public/ui-source.css': 8.5,
+  'public/voice.css': 4.5,
+};
+test('the owned stylesheets only move onto the tokens (hard-coded share ratchet)', (t) => {
+  const over = [];
+  for (const [file, baseline] of Object.entries(SHARE_BASELINE)) {
+    let text = readFileSync(join(PORTAL, file), 'utf8');
+    if (file === 'public/style.css') text = text.slice(0, text.indexOf(STYLE_BEGIN)) + text.slice(text.indexOf(STYLE_END));
+    const { hard, token } = census(text);
+    const share = Math.round((hard / Math.max(1, hard + token)) * 1000) / 10;
+    t.diagnostic(`${file}: ${share}% hard-coded (${hard} of ${hard + token}; baseline ${baseline}%)`);
+    if (share > baseline) over.push(`${file}: ${share}% hard-coded, over its baseline of ${baseline}%; use a token from tokens.css`);
+    else if (share < baseline - 0.5) t.diagnostic(`${file} is down to ${share}% from ${baseline}%: lower the baseline`);
+  }
+  assert.deepEqual(over, []);
 });
