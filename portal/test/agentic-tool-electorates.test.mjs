@@ -169,7 +169,7 @@ test('requested ranking counts are honored, including every rendered fact beyond
   assert.equal(out.answered, true);
   assert.ok(out.facts.length >= 20); // Ties may extend the requested cutoff.
   assert.ok(out.facts.every(f => out.answer.includes(f.text + ' [' + f.id + ']')));
-  for (const question of ['top 21 federal electorates by unemployment rate', 'top 0 federal electorates by unemployment rate', 'top 3.5 federal electorates by unemployment rate', 'top several federal electorates by unemployment rate']) {
+  for (const question of ['top 21 federal electorates by unemployment rate', 'top 0 federal electorates by unemployment rate', 'top 3.5 federal electorates by unemployment rate', 'top several federal electorates by unemployment rate', 'top twenty one federal electorates by unemployment rate', 'top one hundred federal electorates by unemployment rate']) {
     assert.equal(electoratePlan(question).shape, 'unanswerable', question);
     assert.equal((await runAgentic(question, deps)).answered, false, question);
   }

@@ -4,8 +4,8 @@ import { readFile } from 'node:fs/promises';
 import { build } from 'esbuild';
 import { computeElectorateGold } from '../../scripts/agentic_ask_electorates_gold.mjs';
 
-async function load(entry) {
-  const out = await build({ entryPoints: [new URL(entry, import.meta.url).pathname], bundle: true, write: false, platform: 'node', format: 'esm' });
+async function load(entry, plugins = []) {
+  const out = await build({ entryPoints: [new URL(entry, import.meta.url).pathname], bundle: true, write: false, platform: 'node', format: 'esm', plugins });
   return import('data:text/javascript;base64,' + Buffer.from(out.outputFiles[0].text).toString('base64'));
 }
 const { communityMcp } = await load('../src/community-mcp.ts');
@@ -84,7 +84,26 @@ test('bad registry input returns JSON-RPC -32602 before any asset read', async (
 test('the shared identifier validator accepts names, slugs and IDs and rejects markup and controls', () => {
   for (const name of ['Fowler', '  SAMPLE BAY  ', "O’Connor", 'St. George', 'Île Example', 'federal-representatives-nsw-fowler', 'el_c0ffee']) assert.equal(validToolIdentifier(name), true, name);
   for (const name of ['<script>alert(1)</script>', '../Fowler', 'Fowler\n', 'Fowler\t', 'Fowler\u0000', 'A'.repeat(201), '', '   ']) assert.equal(validToolIdentifier(name), false, name);
-  for (const tool of tools) assert.deepEqual(tool.identifierFields, ['electorate']);
+});
+
+test('every registry module gets automatic name/slug/ID checks plus declared selectors, without restricting free text', async () => {
+  const registry = await load('../src/tools/index.ts', [{ name: 'fixture-registry-module', setup(builder) {
+    builder.onLoad({ filter: /\/src\/tools\/electorates\.ts$/ }, () => ({ loader: 'ts', contents: `
+      export const tool = { name: 'fixture_select', description: 'Fixture selector contract',
+        inputSchema: { type: 'object', additionalProperties: false, properties: {
+          name: { type: 'string' }, slug: { type: 'string' }, record_id: { type: 'string' },
+          electorate: { type: 'string' }, query: { type: 'string' }
+        }, examples: [] }, identifierFields: ['electorate'], stepLabel: () => ({ label: 'Fixture' }),
+        handler: async () => ({ rows: [], citations: [], notes: [] }) };
+    ` }));
+  } }]);
+  for (const field of ['name', 'slug', 'record_id', 'electorate']) {
+    assert.equal(registry.parseToolArgs('fixture_select', { [field]: 'O’Connor_el-123' })[field], 'O’Connor_el-123');
+    for (const value of ['<script>alert(1)</script>', 'A'.repeat(201), 'Fowler\n']) {
+      assert.throws(() => registry.parseToolArgs('fixture_select', { [field]: value }), error => error.code === -32602, field);
+    }
+  }
+  assert.equal(registry.parseToolArgs('fixture_select', { query: '<script>quoted source text</script>' }).query, '<script>quoted source text</script>');
 });
 
 test('unknown published electorate names, slugs and IDs return -32602 on MCP and a failed Ask step', async () => {

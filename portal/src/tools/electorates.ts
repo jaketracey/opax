@@ -62,10 +62,11 @@ export function electoratePlan(question: string): { shape: 'ranking' | 'unanswer
   if (!indicator) return null
   const ranked = /\b(?:lowest|highest|oldest|youngest|most|least|fewest|rank|top|bottom)\b/.test(q)
   const countWords = ['one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten', 'eleven', 'twelve', 'thirteen', 'fourteen', 'fifteen', 'sixteen', 'seventeen', 'eighteen', 'nineteen', 'twenty']
-  const countToken = q.match(/\b(?:top|bottom)\s+(?:the\s+)?(\S+)/)?.[1] ??
+  const topCount = q.match(/\b(?:top|bottom)\s+(?:the\s+)?(\S+)(?:\s+(one|two|three|four|five|six|seven|eight|nine|ten|hundred|thousand|million|billion|and|\d+)\b)?/)
+  const countToken = topCount?.[1] ??
     (ranked ? q.match(/\b(\d+(?:\.\d+)?|one|two|three|four|five|six|seven|eight|nine|ten|eleven|twelve|thirteen|fourteen|fifteen|sixteen|seventeen|eighteen|nineteen|twenty)\s+(?:\w+\s+){0,4}electorates?\b/)?.[1] : undefined)
   const limit = countToken === undefined ? undefined : /^\d+$/.test(countToken) ? Number(countToken) : countWords.indexOf(countToken) + 1
-  if (limit !== undefined && (!Number.isInteger(limit) || limit < 1 || limit > 20)) return { shape: 'unanswerable', steps: [], reason: 'Ask supports an explicit ranking count from 1 to 20 electorates, including ties at the cutoff.' }
+  if (topCount?.[2] || limit !== undefined && (!Number.isInteger(limit) || limit < 1 || limit > 20)) return { shape: 'unanswerable', steps: [], reason: 'Ask supports an explicit ranking count from 1 to 20 electorates, including ties at the cutoff.' }
   // Threshold/comparison wording needs the schema-aware planner; never ignore it.
   if (/\b(?:above|below|over|under|between|compare|than)\b/.test(q)) return null
   const states: [string, RegExp][] = [['nsw', /new south wales|\bnsw\b/], ['vic', /victoria\w*|\bvic\b/], ['qld', /queensland|\bqld\b/], ['sa', /south australia\w*|\bsa\b/], ['wa', /western australia\w*|\bwa\b/], ['tas', /tasmania\w*|\btas\b/], ['act', /australian capital territory|\bact\b/], ['nt', /northern territory|\bnt\b/]]
