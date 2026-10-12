@@ -47,7 +47,7 @@ function select(label: string, key: string, values: string[], url: URL, unknown 
   return `<label class="ui-filter-field"><span class="visually-hidden">${label}</span><select name="${key}" class="ui-input"><option value="">${label}: all</option>${[...values, ...(unknown && !values.includes('unknown') ? ['unknown'] : [])].map(v => `<option value="${esc(v)}"${url.searchParams.get(key) === v ? ' selected' : ''}>${v === 'unknown' ? 'Not recorded' : esc(key === 'portfolio' || key === 'year' ? clean(v) : words(v))}</option>`).join('')}</select></label>`
 }
 /** Key-value rows; a value the Register does not supply is left out, not drawn as "Not supplied". */
-const facts = (rows: [string, string][]) => `<dl class="ui-kv instrument-facts">${rows.filter(([, v]) => v).map(([k, v]) => `<div><dt>${k}</dt><dd>${v}</dd></div>`).join('')}</dl>`
+const facts = (rows: [string, string][]) => `<dl class="ui-kv instrument-facts" data-stack="phone">${rows.filter(([, v]) => v).map(([k, v]) => `<div><dt>${k}</dt><dd>${v}</dd></div>`).join('')}</dl>`
 
 export async function instrumentPage(id: string | null, url: URL, read: Read, block: Block) {
   const missing = () => ({ title: 'Instrument not found · OPAX', description: 'No instrument metadata is available for this FRL id.', status: 404, prerender: block('Instrument not found', 'No instrument metadata is available for this FRL id.', '', [INDEX_CRUMB, { label: 'Not found' }]) })

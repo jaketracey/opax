@@ -41,7 +41,7 @@ How each route is moved onto the tokens and the shared components, for every lan
 | A person in a row | `ui-byline` (`ui-byline-portrait`, `ui-byline-who`, `ui-byline-name`, `ui-byline-meta`) | 44 portrait; a blank circle when there is none, never initials |
 | Figures | `ui-stats` > `ui-stat` (`ui-stat-value`, `ui-stat-label`; `data-size="compact"`) | |
 | Bars | `ui-bar > i` (a 4px track); `ui-legend` | |
-| Key/value facts | `ui-kv` | `<dl class="ui-kv"><div><dt/><dd/></div></dl>` |
+| Key/value facts | `ui-kv` (`data-stack="phone"`: key over value under 541px) | `<dl class="ui-kv"><div><dt/><dd/></div></dl>` |
 | A unit to pick up | `ui-card` (`ui-card-title`, `ui-card-text`), in a `ui-card-grid` | The whole card is the link |
 | A map or chart frame | `ui-plate` | |
 | On this page | `ui-toc-head`, `ui-toc-list` | |

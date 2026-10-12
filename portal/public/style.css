@@ -314,11 +314,6 @@
 .instrument-disclosure p { font: var(--type-metadata); color: var(--ink-soft); }
 .instrument-disclosure .instrument-facts { margin-bottom: var(--space-block); }
 .instrument-content pre { white-space: pre-wrap; overflow-wrap: anywhere; font: var(--type-fine); }
-@media (max-width: 540px) {
-  /* On a phone each fact is its key over its value. */
-  .instrument-content .ui-kv.instrument-facts { grid-template-columns: minmax(0, 1fr); gap: var(--space-line); }
-  .instrument-content .instrument-facts dd { margin-bottom: var(--space-row); }
-}
 html {
   scroll-padding-top: calc(var(--header-h) + var(--sp-8));
   /* iOS Safari otherwise inflates text after rotating to landscape while the
@@ -402,7 +397,9 @@ a.visually-hidden:focus-visible {
 .ui-page-head { display: grid; gap: var(--space-line); margin: 0 0 var(--space-section); }
 /* Drawn as a <header>, a page head must not pick up the masthead's bare header rule. */
 header.ui-page-head { position: static; z-index: auto; padding: 0; border: 0; background: none; color: inherit; box-shadow: none; }
-.ui-page-head > :where(h1) { margin: 0; font: var(--type-title); color: var(--ink); overflow-wrap: anywhere; }
+.ui-page-head > :where(h1, h2) { margin: 0; font: var(--type-title); color: var(--ink); overflow-wrap: anywhere; }
+/* Controls open straight under a head: the head's section step is the air between them. */
+.ui-page-head + .ui-filter-bar { margin-top: 0; }
 .ui-page-meta { margin: 0; font: var(--type-metadata); color: var(--ink-soft); }
 .ui-lede { margin: var(--space-heading) 0 0; max-width: var(--size-readable); font: var(--type-body); color: var(--ink-soft); }
 
@@ -501,6 +498,11 @@ header.ui-page-head { position: static; z-index: auto; padding: 0; border: 0; ba
 .ui-kv > div { display: contents; }
 .ui-kv dt { font: var(--type-label); color: var(--ink-soft); }
 .ui-kv dd { margin: 0; font: var(--type-body); color: var(--ink); overflow-wrap: anywhere; }
+/* data-stack="phone": on a phone each fact is its key over its value. */
+@media (max-width: 540px) {
+  .ui-kv[data-stack="phone"] { grid-template-columns: minmax(0, 1fr); gap: var(--space-line); }
+  .ui-kv[data-stack="phone"] dd { margin-bottom: var(--space-row); }
+}
 
 /* ---- Table: a static data table (the money hub's receipts, grants and map
    list). The header in the label role over the one rule; rows a subtle
@@ -836,11 +838,11 @@ main.compact { padding-top: var(--sp-24); }
 .doc-head > .kicker, .subject-head > .kicker { margin-top: 0; }
 @media (max-width: 860px) {
   /* Less of it on a phone, where the breadcrumb strip is already close work. */
-  main.compact { padding-top: var(--sp-16); }/* Narrow screens: the ask question takes its own line; the submit and the
+  main.compact { padding-top: var(--sp-16); }
+  /* Narrow screens: the ask question takes its own line; the submit and the
      options icon share the next one. (The search row stays on one line — see
      the mobile block at the end of the file.) */
-.ask-row > :is(input, .grow-field, .ask-field) { flex: 1 1 320px; }
-  .ask-row .ui-button  { flex: 1 1 auto; }
+  .ask-row .ui-button { flex: 1 1 auto; }
 }
 
 .hero-intro h1 {
@@ -1884,7 +1886,6 @@ a.barrow-name:hover { color: var(--bronze-ink); }
 
 /* Explore: a ui-card-grid of ui-cards; each card is the button that opens its
    tool, so its words are the title and one line, left-aligned, no icon. */
-#panel-explore .ui-page-head > h2 { margin: 0; font: var(--type-title); color: var(--ink); }
 .game-grid { margin-top: var(--space-group); }
 @media (min-width: 1100px) { .game-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
 .game-card { display: grid; align-content: start; width: 100%; margin: 0; text-align: left; font: inherit; color: var(--ink); cursor: pointer; }
@@ -1998,8 +1999,8 @@ a.barrow-name:hover { color: var(--bronze-ink); }
 /* ---- the tide ---------------------------------------------------------- */
 
 .tide-shell { max-width: 980px; margin: 0 auto; padding-bottom: var(--sp-16); }
-.tide-shell > h1 { margin: 0; font: 700 clamp(1.8rem, 5vw, 2.7rem)/1.16 var(--serif); }
-.tide-lede { max-width: 68ch; margin: var(--sp-8) 0 var(--sp-24); color: var(--ink-soft); font: var(--weight-regular) var(--text-16)/var(--leading-loose) var(--serif); }
+.tide-shell > h1 { margin: 0; }
+.tide-lede { margin: var(--space-line) 0 var(--space-block); }
 .tide-controls { display: flex; align-items: end; gap: var(--sp-16); flex-wrap: wrap; }
 .tide-control { display: grid; gap: var(--sp-4); }
 .tide-control > span { color: var(--ink-faint); font-size: var(--text-13); }
@@ -2122,7 +2123,7 @@ a.barrow-name:hover { color: var(--bronze-ink); }
 
 /* ---- subject entries (the encyclopedia) --------------------------------- */
 
-.subject-head h2 { font: 700 clamp(1.75rem, 3.5vw, 2.6rem)/1.15 var(--serif); margin: var(--sp-4) 0 var(--sp-4); }
+.subject-head h2 { margin: var(--sp-4) 0 var(--sp-4); }
 /* The page's one visible title is its h1 (the prerendered h1 is hidden once
    the app runs); the title role comes from #subject-title / #bill-title. */
 .subject-head h1 { margin: var(--space-line) 0; }
@@ -2310,7 +2311,7 @@ a.barrow-name:hover { color: var(--bronze-ink); }
 .declared-match { margin: var(--sp-2) 0 0; color: var(--ink-soft); font-size: var(--text-13); line-height: var(--leading-normal); }
 .declared-match .result-meta { margin-left: var(--sp-4); }
 #panel-declared { max-width: 920px; }
-#panel-declared > h1 { font: 700 clamp(2rem, 4vw, 3rem)/1.2 var(--serif); margin: 0 0 var(--sp-16); }
+#panel-declared > h1 { margin: 0 0 var(--sp-16); }
 .declared-source { margin-top: var(--sp-24); }
 .declared-week { margin-top: var(--sp-24); }
 .declared-week > h3 {
@@ -2454,17 +2455,6 @@ a.barrow-name:hover { color: var(--bronze-ink); }
   .expense-value { grid-row: 2; text-align: left; white-space: normal; }
   .expense-track { grid-row: 3; }
 }
-.quiet-toggle {
-  display: inline-flex; flex: 0 0 auto; border: var(--border-hairline) solid var(--line-control);
-  border-radius: var(--radius-sm); overflow: hidden; background: var(--paper-raised); /* the action buttons' radius */
-}
-.quiet-toggle button {
-  min-height: 44px; padding: var(--sp-8) var(--sp-12); border: 0; cursor: pointer;
-  background: transparent; color: var(--ink-soft); font: var(--type-label);
-}
-.quiet-toggle button + button { border-left: var(--border-hairline) solid var(--line-control); }
-.quiet-toggle button:hover { background: var(--bronze-wash); color: var(--ink); }
-.quiet-toggle button[aria-pressed="true"] { background: var(--navy); color: var(--on-navy); }
 .person-topics { margin-top: var(--space-section); max-width: 760px; }
 .person-topics-head {
   display: flex; align-items: center; justify-content: space-between; gap: var(--sp-12); flex-wrap: wrap;
@@ -2669,36 +2659,28 @@ footer #stats:empty { display: none; }
 /* ---- mobile ------------------------------------------------------------- */
 
 @media (max-width: 640px) {
-
-
   /* Ask stretches, the options button rides at its right on the same line. */
-  .ask-row .ui-button  { flex: 1 1 auto; }
-#ask-options-btn, #search-options-btn { align-self: stretch; }
+  #ask-options-btn, #search-options-btn { align-self: stretch; }
   /* Search stays on ONE line: the query shrinks as far as it must, the
      submit keeps its natural width and the filter icon rides at the right —
      no second line for the button, no third for the icon. */
   .query-line { flex-wrap: nowrap; }
-.query-line > :is(input, .grow-field) { flex: 1 1 0; min-width: 0; }
-
+  .query-line > :is(input, .grow-field) { flex: 1 1 0; min-width: 0; }
   .query-line .ask-options-wrap { flex: 0 0 auto; }
   .date-ruler { margin-top: var(--sp-16); }
   .date-ruler-year { font-size: var(--text-13); }
   .search-readbar .ui-segmented { width: 100%; }
   .barrow { grid-template-columns: minmax(90px, 30%) 1fr auto; }
   .topic-arc-head { align-items: stretch; }
-  .topic-arc-head .quiet-toggle { width: 100%; }
-  .topic-arc-head .quiet-toggle button { flex: 1 1 50%; }
   .topic-arc-item { grid-template-columns: 2.7rem minmax(0, 1fr); column-gap: var(--sp-8); }
   .topic-arc-entry { padding-left: var(--sp-16); }
   .person-topics-head { align-items: stretch; }
-  .person-topics-head .quiet-toggle { width: 100%; }
-  .person-topics-head .quiet-toggle button { flex: 1 1 33%; }
   .person-topic-bars .barrow { grid-template-columns: minmax(100px, 34%) minmax(60px, 1fr) 4rem; gap: var(--sp-8); }
   .topic-tide-decade { grid-template-rows: auto 64px auto auto; min-height: 132px; padding-inline: var(--sp-4); }
   .topic-tide-track { height: 64px; }
   .coverage-band { font-size: var(--text-13); }
-  .tide-controls, .tide-control, .tide-control .quiet-toggle { width: 100%; }
-  .tide-control .quiet-toggle button { flex: 1 1 auto; padding-inline: var(--sp-8); }
+  .tide-controls, .tide-control, .tide-control .ui-segmented { width: 100%; }
+  .tide-control .ui-segmented > .ui-button { flex: 1 1 auto; }
   .tide-column-head, .tide-row { grid-template-columns: minmax(0, 1fr) auto; gap: var(--sp-8); }
   .tide-column-head > span:first-child, .tide-column-head > span:last-child { display: none; }
   .tide-column-head > span:nth-child(2) { grid-column: 1 / -1; }
@@ -3262,9 +3244,6 @@ mark.privacy-confirm {
 .subject-person #subject-ask-form input { min-width: 0; }
 .subject-person #subject-sections [id] { scroll-margin-top: calc(var(--sp-80) + var(--sp-8)); }
 .subject-person .person-topics-head { gap: var(--sp-8); }
-.subject-person .person-topics-head .quiet-toggle { display: flex; border: var(--border-hairline) solid var(--line-control); padding: var(--sp-4); border-radius: var(--radius-sm); }
-.subject-person .person-topics-head .quiet-toggle button { min-height: 44px; min-width: 56px; padding: var(--sp-8) var(--sp-16); font-size: var(--text-15); }
-.subject-person .person-topics-head .quiet-toggle button[aria-pressed="true"] { background: var(--bronze-ink); color: var(--paper); }
 .subject-person .interests-bucket > summary { min-height: 44px; box-sizing: border-box; align-items: center; padding-block: var(--sp-12); font: var(--weight-strong) var(--text-15)/var(--leading-normal) var(--sans);  text-transform: none; gap: var(--sp-12); }
 .subject-person .interests-count { flex-shrink: 0; }
 @media (max-width: 700px) {
@@ -4208,7 +4187,6 @@ html[data-panel="chat"] footer { display: none; }
 /* Supplier and agency entries: a ui-page-head with the figures (ui-stats) in
    it, then ui-sections beside an On this page rail (ui-toc). The directories
    keep their own rows below. */
-.supplier-page .ui-page-head > h2 { margin: 0; overflow-wrap: anywhere; }
 .supplier-head > .ui-stats { margin: var(--space-block) 0 0; }
 .supplier-page .ui-section:empty { display: none; }
 .supplier-growth > .ui-section:first-child { margin-top: var(--space-section); }
@@ -4664,9 +4642,6 @@ html[data-panel="chat"] footer { display: none; }
    one, which reads as a column of its own, unboxed. One column on a phone,
    the list a short scroller above the open connection. */
 .connections-page { min-width: 0; }
-/* A hub page's controls open straight under its head: the head's section
-   step is the air between them. */
-:is(.connections-head, .money-records-head) + .ui-filter-bar { margin-top: 0; }
 .connections-layout { display: grid; grid-template-columns: minmax(calc(var(--size-control) * 5), 1fr) minmax(0, 2fr); gap: var(--space-group); align-items: start; margin-top: var(--space-heading); }
 .connection-choice { display: grid; gap: var(--space-line); width: 100%; min-height: var(--size-target); margin: 0; padding: 0; border: 0; background: none; color: inherit; text-align: left; cursor: pointer; }
 .connection-choice .ui-row-meta { margin: 0; }
