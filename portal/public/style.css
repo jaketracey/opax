@@ -399,7 +399,11 @@ a.visually-hidden:focus-visible {
 /* Drawn as a <header>, a page head must not pick up the masthead's bare header rule. */
 header.ui-page-head { position: static; z-index: auto; padding: 0; border: 0; background: none; color: inherit; box-shadow: none; }
 .ui-page-head > :where(h1, h2) { margin: 0; font: var(--type-title); color: var(--ink); overflow-wrap: anywhere; }
-/* Controls open straight under a head: the head's section step is the air between them. */
+/* Controls belong to what they filter: a head with controls straight under it
+   keeps the block step (as on every directory), not the section step. */
+.ui-page-head:has(+ :is(.ui-filter-bar, .money-workspace-toolbar)) { margin-bottom: var(--space-block); }
+/* Receipts and grants open their body on the filter bar. */
+.ui-page-head.money-records-head { margin-bottom: var(--space-block); }
 .ui-page-head + .ui-filter-bar { margin-top: 0; }
 .ui-page-meta { margin: 0; font: var(--type-metadata); color: var(--ink-soft); }
 .ui-lede { margin: var(--space-heading) 0 0; max-width: var(--size-readable); font: var(--type-body); color: var(--ink-soft); }

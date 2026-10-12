@@ -315,9 +315,11 @@ label.ui-chip:has(input:focus-visible) {
 /* ---- Touch: every pressable thing is at least 44px. Mobile fields stay 16px so
    Safari does not zoom on focus. */
 @media (pointer: coarse) { [data-ui-size="compact"] { --ui-height: var(--size-target); } }
+/* A pill select keeps the label size on screen, but 16 on touch so Safari does not zoom when it opens. */
+@media (pointer: coarse) { .ui-filter-bar select.ui-input, .ui-filter-bar > .ui-filter-field select { font-size: var(--text-16); } }
 @media (max-width: 1000px), (pointer: coarse) {
   :root, [data-ui-size] { --ui-font: var(--text-16); }
-  .ui-filter-bar select, .ui-filter-bar .ui-filter-toggle { min-height: var(--size-target); height: var(--size-target); }
+  .ui-filter-bar select.ui-input, .ui-filter-bar > .ui-filter-field select, .ui-filter-bar .ui-filter-toggle { min-height: var(--size-target); height: var(--size-target); }
   [data-ui-size="compact"] { --ui-height: var(--size-target); }
   :is(button, a).ui-filter-chip, :is(button, a, label).ui-chip, :is(button, a).chip:not(.ui-button),
   a:is(.ui-tag, .topic-chip) { min-height: var(--size-target); }
