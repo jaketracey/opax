@@ -313,7 +313,8 @@ function tagHTML(label, href) { return uiLabels.tagHTML(label, href); }
 function machineLabelHTML(opts) { return uiLabels.machineLabelHTML(opts); }
 function sourceLineHTML(opts) { return uiLabels.sourceLineHTML(opts); }
 function fineprintSourceHTML(html, opts) { return uiLabels.fineprintSourceHTML(html, opts); }
-function moreMenuHTML(items, label, opts) { return pageMenus.pageMenuHTML(items, label, opts); }
+// A ⋯ whose module failed to load draws nothing; the page still renders.
+function moreMenuHTML(items, label, opts) { return pageMenus?.pageMenuHTML(items, label, opts) ?? ""; }
 
 /* A party's name as a sentence says it: "the Labor Party", "the Greens", "One
    Nation". The money data's short labels ("Labor", "Liberal") take an article

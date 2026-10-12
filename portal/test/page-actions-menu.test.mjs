@@ -293,7 +293,7 @@ test('every ⋯ on the site is this menu: the static toolbars, the renderers and
   // app.js draws ⋯ with the module's markup and gives every ⋯ its behaviour at boot,
   // before the first render; electorates.js draws it with the same markup.
   assert.match(app, /const pageMenusReady = import\('\/page-actions-menu\.js\?v=[0-9a-f]{10}'\)\.then\(module => \{ pageMenus = module; module\.initPageMenus\(document, window\); \}\);/);
-  assert.match(app, /function moreMenuHTML\(items, label, opts\) \{ return pageMenus\.pageMenuHTML\(items, label, opts\); \}/);
+  assert.match(app, /function moreMenuHTML\(items, label, opts\) \{ return pageMenus\?\.pageMenuHTML\(items, label, opts\) \?\? ""; \}/);
   assert.match(app, /Promise\.allSettled\(\[[^\]]*\bpageMenusReady\b[^\]]*\]\)\.finally/);
   assert.match(read('electorates.js'), /^import \{ pageMenuHTML as moreMenuHTML \} from '\.\/page-actions-menu\.js\?v=[0-9a-f]{10}';$/m);
   assert.match(read('electorates.js'), /<div class="page-actions">\$\{moreMenuHTML\(/);
