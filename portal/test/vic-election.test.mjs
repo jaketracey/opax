@@ -6,9 +6,10 @@ import {join,dirname} from 'node:path';
 import {build} from 'esbuild';
 import {isOrganisationDonor} from '../public/donor-entity.js';
 import {personNameKey} from '../public/canonical-urls.js';
-import {vicElectionEnabled,vicElectionDiscovery,VIC_ELECTION_ASSET,VIC_ELECTION_PLACES,VIC_ELECTION_AUTHORISATION_LINE,VIC_ELECTION_CORRECTIONS_EMAIL,VIC_ELECTION_CORRECTIONS_RESPONSE} from '../public/vic-election.js';
+import {vicElectionEnabled,vicElectionDiscovery,vicElectionMaterial,VIC_ELECTION_ASSET,VIC_ELECTION_PLACES,VIC_ELECTION_AUTHORISATION_LINE,VIC_ELECTION_CORRECTIONS_EMAIL,VIC_ELECTION_CORRECTIONS_RESPONSE} from '../public/vic-election.js';
 import {buildVicElection} from '../../scripts/build_vic_election.mjs';
 import {sitemapFiles} from '../../scripts/build_crawl_catalog.mjs';
+const EXACT_AUTHORISATION = 'Authorised by Jake Tracey, Noice Pty Ltd, Level 6, 608/343 Little Collins Street, Melbourne VIC 3000.';
 const root = new URL('../public/',import.meta.url);
 const json = async path => JSON.parse(await readFile(new URL(path,root),'utf8'));
 const compile = async entry => {
@@ -81,7 +82,7 @@ test('enabled SSR renders all 88 districts and 8 regions, 128 existing people, r
     }
     assert.doesNotMatch(page.html,/An association does not prove influence/);
     assert.equal(page.jsonLd['@graph'][0]['@type'],'Event');assert.equal(page.jsonLd['@graph'][1]['@type'],'ItemList');
-    assert.equal((await fetchPage(s.path,'true')).status,200);
+    const response=await fetchPage(s.path,'true');assert.equal(response.status,200);assert.equal(response.headers.get('x-robots-tag'),'all');
   }
   const index=renderVicElection(data,null);assert.equal(index.jsonLd['@graph'][1].numberOfItems,96);
   for(const p of data.pages.slice(1))assert.ok(index.html.includes(p.path));
@@ -98,7 +99,8 @@ test('enabled crawl discovery has a separate sitemap type; trailing-slash aliase
   assert.match(await (await fetchPage('/llms.txt','true')).text(),/https:\/\/opax.com.au\/vic-election-2026/);
   for(const p of data.pages){const r=await fetchPage(p.path+'/','true');assert.equal(r.status,301);assert.equal(r.headers.get('location'),'https://opax.com.au'+p.path);}
 });
-test('every election page and download carries the approved authorisation and corrections contact',()=>{
+test('every election page and download carries Jake’s exact 13 October authorisation and corrections contact',()=>{
+  assert.equal(VIC_ELECTION_AUTHORISATION_LINE,EXACT_AUTHORISATION);
   assert.equal(data.authorisation,VIC_ELECTION_AUTHORISATION_LINE);
   assert.deepEqual(data.corrections,{email:VIC_ELECTION_CORRECTIONS_EMAIL,response:VIC_ELECTION_CORRECTIONS_RESPONSE});
   for(const s of [null,...data.seats]) {
@@ -106,12 +108,22 @@ test('every election page and download carries the approved authorisation and co
     const page=renderVicElection(data,s,{AUTHORISATION_LINE:'',CORRECTION_CONTACT:null});
     const footer=page.html.match(/<div class="hub-footer">[\s\S]*?<\/div>/)?.[0];
     assert.ok(footer);
-    assert.ok(footer.includes(VIC_ELECTION_AUTHORISATION_LINE));
+    assert.ok(footer.includes(EXACT_AUTHORISATION));
     assert.ok(footer.includes(`href="mailto:${VIC_ELECTION_CORRECTIONS_EMAIL}"`));
     assert.ok(footer.includes(VIC_ELECTION_CORRECTIONS_RESPONSE));
     assert.doesNotMatch(footer,/48[- ]hours?|placeholder|TODO/i);
     assert.equal(page.card.authorisation,VIC_ELECTION_AUTHORISATION_LINE);
   }
+});
+test('production config publishes with the exact line; staging explicitly stays unpublished',async()=>{
+  const {default:ts}=await import('typescript');
+  const {config,error}=ts.parseConfigFileTextToJson('wrangler.jsonc',await readFile(new URL('../wrangler.jsonc',import.meta.url),'utf8'));assert.equal(error,undefined);
+  assert.equal(config.vars.VIC_ELECTION_HUB_ENABLED,'true');
+  assert.equal(config.vars.AUTHORISATION_LINE,EXACT_AUTHORISATION);
+  assert.equal(config.vars.CORRECTION_CONTACT,'mailto:corrections@opax.com.au');
+  assert.equal(config.env.staging.vars.VIC_ELECTION_HUB_ENABLED,'false');
+  const stage=await fetchPage('/vic-election-2026',config.env.staging.vars.VIC_ELECTION_HUB_ENABLED);
+  assert.equal(stage.status,404);assert.equal(stage.headers.get('x-robots-tag'),'noindex');
 });
 test('federal hub footer values remain optional, escaped and safe',async()=>{
   const cfg={AUTHORISATION_LINE:'Authorised by <Approved Person>, Melbourne',CORRECTION_CONTACT:'/corrections'};
@@ -211,4 +223,9 @@ test('Methods carries the coverage detail the election pages link to',async()=>{
   const section=shell.split('<h3 id="vic-election">')[1]?.split('<h3>')[0];assert.ok(section);
   for(const text of ['2026 only','no Victorian register','no Victorian\n        state grants','Federal electorates are different from state districts','CC BY 4.0','Australian Bureau of Statistics','usual residents at the 2021 Census','copyright material without an open licence'])
     assert.ok(section.replace(/\s+/g,' ').includes(text.replace(/\s+/g,' ')),text);
+});
+
+test('election detection identifies state election copy without treating federal records in Victoria as state electoral copy',()=>{
+  for(const text of ['Victorian election 2026','2026 Victorian state election','Victoria’s election','State election in Victoria','VIC election 2026','https://opax.com.au/vic-election-2026/lowan'])assert.ok(vicElectionMaterial(text),text);
+  for(const text of ['Federal election in Victoria','Federal election grants in Victoria','Gippsland, Vic. Held at the 2025 federal election.','Victorian Hansard speeches','Time to the next federal election'])assert.equal(vicElectionMaterial(text),false,text);
 });

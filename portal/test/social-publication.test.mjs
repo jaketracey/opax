@@ -410,3 +410,22 @@ test('newly composed editions are withheld before journal writes',async()=>{
   const stored=h.sqlite.prepare('SELECT post_json FROM social_editions').get();assert.ok(stored);const edition=JSON.parse(stored.post_json);assert.ok(!prose(edition).toLowerCase().includes(n.label.toLowerCase()),'journal prose retains identity');assert.ok(edition.subject===composed.subject,'non-donor record reference changed');
  }finally{h.sqlite.close()}
 });
+
+test('all six electoral channel templates retain the exact line even after caption truncation', async () => {
+ const line='Authorised by Jake Tracey, Noice Pty Ltd, Level 6, 608/343 Little Collins Street, Melbourne VIC 3000.';
+ const electoral={...story,title:'Victorian election 2026',url:'https://opax.com.au/vic-election-2026',text:'Official dates and parliamentary records.\n\nhttps://opax.com.au/vic-election-2026',caption:'Source-qualified records. '.repeat(400)};
+ for(const channel of ['x','bluesky','facebook','instagram','instagram_story','facebook_story']) {
+  const copy=publicationCopy(electoral,channel);
+  assert.ok(copy.text.includes(line),channel);
+  assert.equal(copy.text.split(line).length-1,1,channel+' includes it once');
+  if(channel==='x')assert.ok([...copy.text.replace(/https?:\/\/\S+/g,'x'.repeat(23))].length<=280);
+  if(channel==='bluesky')assert.ok([...copy.text].length<=300);
+ }
+ const h=harness();
+ h.sqlite.prepare('UPDATE social_editions SET post_json=?').run(JSON.stringify(electoral));
+ const frozen=await previewPublication(h.env,post.date,()=>assert.fail('Frozen edition requested generation'));
+ assert.equal(frozen.authorisation,line);
+ for(const slide of frozen.slides)assert.equal(slide.authorisation,line);
+ assert.equal(h.calls.length,0,'preview and copy do not send requests');
+ h.sqlite.close();
+});

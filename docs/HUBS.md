@@ -13,20 +13,51 @@ redirects, including www, trailing slashes, case and encoded aliases for pages,
 the election sitemap and facts asset. Disabled hubs have no election links,
 sitemap entry or llms.txt entry.
 
-The control hub approved the electoral authorisation and corrections contact on
-10 October 2026. Every published Victorian hub page carries:
+Jake approved the electoral authorisation and corrections contact through the
+control hub on 13 October 2026. Every published Victorian hub page carries exactly:
 
-> Authorised by Jake Tracey, Noice Pty Ltd, Level 6, 343 Little Collins St, Melbourne VIC 3000.
+> Authorised by Jake Tracey, Noice Pty Ltd, Level 6, 608/343 Little Collins Street, Melbourne VIC 3000.
 
-The address was verified against [Noice's contact page](https://noice.net.au/contact/).
 The footer links to `corrections@opax.com.au` and says “We aim to respond within
-2 business days.” These values live in `portal/public/vic-election.js` and are
-required for Victorian pages even when optional federal footer variables are
-empty. The complete authorisation is also on landscape and portrait electoral
-share cards and in the downloadable `/hubs/vic-election-2026.json` projection,
-which includes the corrections contact and response wording. Print styles
-retain the footer and keep its lines together. Enabling publication is a
-separate change to `VIC_ELECTION_HUB_ENABLED`; the text change does not enable it.
+2 business days.” The approved values live in `portal/public/vic-election.js`;
+optional federal footer values cannot remove them. The production vars explicitly
+set `VIC_ELECTION_HUB_ENABLED: "true"`, `AUTHORISATION_LINE` to the exact line above
+and `CORRECTION_CONTACT: "mailto:corrections@opax.com.au"`. The checked-out main
+already enabled the production flag; this lane supplies the revised address and
+explicit footer bindings. Staging explicitly sets the flag to `"false"`, has no
+social cron, and keeps 404/noindex pages with no election discovery. Wrangler
+vars are not inherited into named environments. An isolated local override can
+preview staging with publication enabled; its mandatory Victorian footer still
+uses the same approved constants.
+
+The line appears as small, unabridged text on landscape and portrait electoral
+share cards, every Victorian electorate card, and all nine carousel slide types
+at 1080×1350 and 1080×1920 (inside the story safe area). Card versions are bumped
+so older cached addresses are not replayed. The downloadable
+`/hubs/vic-election-2026.json` includes the line and corrections wording. Print
+styles retain the hub footer and keep its lines together.
+
+The 96 hub seat pages carry the footer alongside their hub links. Ordinary
+Victorian electorate profiles also retain it in both their server summary and
+client-rendered election timeline. There are no standalone promotional hub links
+in the homepage, navigation or growth module catalogue. Hub directory and
+constituency links are on authorised hub pages.
+
+The daily rotation contains politician, bill, grant, topic, program and largest
+award editions; it has no hub kind. It can choose Victorian parliamentarians, so
+those editions carry the line in short post text, full captions and every slide.
+Any kind explicitly mentioning the Victorian election also receives it. Frozen
+editions with election wording are covered when previewed/rendered. All six
+channel copy templates preserve the full line, including after Instagram and
+Facebook caption truncation. Federal grants/programs and federal election timing
+alone are not Victorian election material. No post is sent as part of these tests.
+
+The remaining election-text matches in published JSON are dated speech briefs
+in three federal bills introduced on 22 October 2014 (`au-federal-r5360`,
+`r5361`, `r5365`) and their growth projections. They refer to the 2014 Victorian
+election. Those archival sources fall outside the 2026 hub; the daily bill
+composer’s one-year date window also excludes them. Their dated record text
+keeps its original source context.
 
 For an **isolated local preview only**, run Wrangler with
 `--var VIC_ELECTION_HUB_ENABLED:true` inside the required network namespace.

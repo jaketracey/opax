@@ -230,3 +230,17 @@ test('a story frame is the same slide drawn at 1080x1920 with Instagram\'s bands
   const feed = decode(await draw(slides.number, 'feed'), { useTArray: true, tolerantDecoding: true, maxMemoryUsageInMB: 512 });
   assert.deepEqual([feed.width, feed.height], [1080, 1350], 'the feed is unchanged');
 });
+
+test('all nine electoral slide templates draw the exact line without clipping in feed and story formats', async () => {
+  const line = 'Authorised by Jake Tracey, Noice Pty Ltd, Level 6, 608/343 Little Collins Street, Melbourne VIC 3000.';
+  for (const format of ['feed', 'story']) for (const [name, slide] of Object.entries(slides)) {
+    const tree = storySlideTree({...slide, authorisation: line}, {}, format);
+    const authorisation = walk(tree).find(n => n.props?.children === line);
+    assert.ok(authorisation, `${name} (${format})`);
+    assert.equal(authorisation.props.style.textOverflow, undefined);
+    assert.equal(authorisation.props.style.overflow, undefined);
+    // Exercise real font layout for each template; no missing glyph/overflow fallback.
+    const svg = await satori(tree, {...(format === 'story' ? {width:1080,height:1920} : {width:1080,height:1350}), fonts});
+    assert.ok(svg.includes('<svg'));
+  }
+});

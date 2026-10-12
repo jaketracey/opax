@@ -2,7 +2,7 @@ import {sanitiseStoredDonors} from './donor-hashes.mjs'
 /** One frozen edition per Melbourne day, independent delivery receipts per channel.
  * Claims are atomic in D1. An uncertain write is held for review, never blindly retried.
  */
-import { clip, composeDailyPost, envSources, melbourneDate, oauth1Header, postToX, xCredentials, xLength, type DailyPost, type DailyPostKind } from './daily-post'
+import { authoriseVicPost, clip, composeDailyPost, envSources, melbourneDate, oauth1Header, postToX, xCredentials, xLength, type DailyPost, type DailyPostKind } from './daily-post'
 import { OG_VERSION } from './og'
 import { STORY_VERSION, storyFrames, validStory } from './story'
 
@@ -43,7 +43,7 @@ export function readiness(env: SocialEnv): Record<Channel, { enabled: boolean; r
  * edition. X keeps the single card; so does any edition stored before stories.
  */
 export function publicationCopy(post: DailyPost, channel: Channel): { text: string; link: string; image: string; slides?: string[]; frames?: number[] } {
-  post = sanitiseStoredDonors(post)
+  post = authoriseVicPost(sanitiseStoredDonors(post))
   const link = new URL(post.url)
   if (link.origin !== 'https://opax.com.au') throw new Error('Publication requires an Opax source page')
   link.searchParams.set('utm_source', channel)
@@ -56,13 +56,17 @@ export function publicationCopy(post: DailyPost, channel: Channel): { text: stri
   image.searchParams.set('v', OG_VERSION)
   // Instagram's feed and grid are portrait; the landscape card is cropped there.
   if (channel === 'instagram') image.searchParams.set('format', 'portrait')
-  const full = (post.caption || post.text).replace(post.url, '').trim()
+  const full = (post.caption || post.text).replace(post.url, '').split('\n\n').filter(p => p !== post.authorisation).join('\n\n').trim()
+  // The line is mandatory; reserve its space before truncating a channel caption.
+  const captionFor = (limit: number) => post.authorisation
+    ? `${clip(full, limit - post.authorisation.length - 2)}\n\n${post.authorisation}`
+    : full.slice(0, limit)
   const xText = post.text.replace(post.url, link.toString())
   // Bluesky allows 300 graphemes and the link rides in the card, so the text drops the URL.
   const text = channel === 'x' ? (xLength(`${xText}\n\n${AUSPOL}`) <= 280 ? `${xText}\n\n${AUSPOL}` : xText)
     : channel === 'bluesky' ? `${clip(post.text.replace(post.url, '').replace(/\n{3,}/g, '\n\n').trim(), 300 - AUSPOL.length - 2)}\n\n${AUSPOL}`
-    : channel === 'facebook' ? `${full.slice(0, 4900)}\n\n${AUSPOL}`
-    : `${full.slice(0, 1850)}\n\nExplore ${post.title} at opax.com.au — link in bio.\n\n${instagramTags(post).join(' ')}`
+    : channel === 'facebook' ? `${captionFor(4900)}\n\n${AUSPOL}`
+    : `${captionFor(1850)}\n\nExplore ${post.title} at opax.com.au — link in bio.\n\n${instagramTags(post).join(' ')}`
   // A story channel posts a few of the slides as 9:16 frames (story.ts chooses which); the feed channels post them all at 4:5.
   const frames = isStoryChannel(channel) ? storyFrames(post.slides) : undefined
   const slides = frames
@@ -185,7 +189,7 @@ export async function socialStatus(env: SocialEnv, date = melbourneDate()): Prom
 export async function previewPublication(env: SocialEnv, date: string, personTopics: (name: string) => Promise<Response>, kind?: DailyPostKind, subject?: string): Promise<DailyPost | null> {
   if (!kind && !subject) {
     const existing = await env.COMMUNITY_DB.prepare('SELECT post_json FROM social_editions WHERE date=?').bind(date).first<{ post_json: string }>()
-    if (existing) return sanitiseStoredDonors(JSON.parse(existing.post_json)) as DailyPost
+    if (existing) return authoriseVicPost(sanitiseStoredDonors(JSON.parse(existing.post_json)) as DailyPost)
   }
   const sources = envSources(env, personTopics)
   const since = new Date(Date.parse(date + 'T12:00:00Z') - 90 * 86400000).toISOString().slice(0, 10)
@@ -223,7 +227,7 @@ export async function runSocialPublication(env: SocialEnv, options: {
     edition = await db.prepare('SELECT post_json FROM social_editions WHERE date=?').bind(date).first<{ post_json: string }>()
   }
   if (!edition) throw new Error('Edition could not be stored')
-  const post = sanitiseStoredDonors(JSON.parse(edition.post_json)) as DailyPost
+  const post = authoriseVicPost(sanitiseStoredDonors(JSON.parse(edition.post_json)) as DailyPost)
   const results: Record<string, string> = {}
   for (const channel of channels) {
     // Preserve the previous runner's sent receipts during rollout.

@@ -10,7 +10,7 @@
  */
 
 /** A slide's kicker is short and uppercase on the card; the alt text is what Instagram reads out. */
-interface SlideBase { kicker: string; title: string; alt: string }
+interface SlideBase { kicker: string; title: string; alt: string; authorisation?: string }
 
 export type StorySlide =
   /** The opening photograph, headline over its lower edge. `photo` is a catalogue id; `inset` a portrait id from /photos/jpg. */
@@ -38,7 +38,7 @@ export type StorySlideType = StorySlide['type']
 export const STORY_MIN_SLIDES = 3
 export const STORY_MAX_SLIDES = 10
 /** Bump when a slide's drawing changes so cached renders are not reused. */
-export const STORY_VERSION = 2
+export const STORY_VERSION = 3
 
 /** Where a slide is drawn: the feed carousel at 4:5, or a story frame at 9:16. */
 export type StoryFormat = 'feed' | 'story'
