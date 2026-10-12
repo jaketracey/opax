@@ -127,27 +127,105 @@ const TRAILS = [
   ['/chat', 'Ask › Keep asking'],
   ['/no-such-page', 'Page not found'],
 ];
-const serverTrail = async (path, env) => {
-  const response = await workerFetch(path, env);
+const serverTrail = async (path, env, assets) => {
+  const response = await workerFetch(path, env, {}, { assets });
   const doc = new JSDOM(await response.text()).window.document;
   const items = [...doc.querySelectorAll('.prerender-crumbs li')];
-  return { status: response.status, doc, items: items.map(li => ({ label: li.textContent.trim(), href: li.querySelector('a')?.getAttribute('href') || null, here: li.getAttribute('aria-current') })) };
+  const graph = JSON.parse(doc.getElementById('ld-page')?.textContent || 'null')?.['@graph'] || [];
+  const breadcrumbs = graph.find(node => node['@type'] === 'BreadcrumbList')?.itemListElement || null;
+  return { status: response.status, doc, breadcrumbs, canonical: doc.querySelector('link[rel="canonical"]')?.getAttribute('href') || null,
+    items: items.map(li => ({ label: li.textContent.trim(), href: li.querySelector('a')?.getAttribute('href') || null, here: li.getAttribute('aria-current') })) };
 };
+/** The page's BreadcrumbList says what its strip shows: the same names, in
+ *  order, each ancestor at its own address and the page at its canonical. */
+function assertSameTrail({ items, breadcrumbs, canonical }, path) {
+  assert.ok(breadcrumbs, `${path} has a BreadcrumbList`);
+  assert.deepEqual(breadcrumbs.map(b => b.name), items.map(i => i.label), `${path}: names`);
+  items.slice(0, -1).forEach((item, i) => assert.equal(breadcrumbs[i].item, new URL(item.href, 'https://opax.com.au').href, `${path}: ${item.label}`));
+  assert.equal(breadcrumbs.at(-1).item, canonical, `${path}: the page itself is its canonical`);
+}
 
 for (const [path, expected] of TRAILS) {
-  test(`the server writes the trail for ${path}`, async () => {
-    const { items } = await serverTrail(path);
+  test(`the server writes the trail for ${path}, and its BreadcrumbList says the same`, async () => {
+    const page = await serverTrail(path);
+    const { items } = page;
     assert.equal(items.map(i => i.label).join(' › '), `Home › ${expected}`);
     assert.equal(items[0].href, '/');
     assert.equal(items.at(-1).href, null, 'the page itself is not a link');
     assert.equal(items.at(-1).here, 'page');
     for (const item of items.slice(0, -1)) assert.ok(item.href, `${item.label} links to its page`);
+    if (page.status === 200) assertSameTrail(page, path);
+    else assert.equal(page.breadcrumbs, null, 'an error page carries no structured data');
   });
 }
 
-test('a donor\'s page never puts a name in its trail', async () => {
-  const { items } = await serverTrail('/subject/donor/An%20Example%20Donor');
-  assert.equal(items.map(i => i.label).join(' › '), 'Home › Donors');
+// A division page's record is its bill, whatever its first speaker said: the
+// chair opening the question must not name the page.
+const CHAIR = 'Milton Dick In accordance with standing order 133, I shall now proceed to put the question';
+const divisionFixture = (bills) => ({ key: 'division-federal-representatives-99999', slug: 'division-federal-representatives-99999', jurisdiction: 'federal', house: 'representatives',
+  date: '2026-09-15', name: 'Bills — A Fixture Amendment Bill 2026; Second Reading', question: CHAIR, ayes: 80, noes: 50, result: 'Passed', members: [], bills });
+
+test('a division sits under its bill, not under the words its chair opened with', async () => {
+  const real = await serverTrail('/doc/division-federal-representatives-10005');
+  assert.equal(real.status, 200);
+  const bill = JSON.parse(read('divisions/division-federal-representatives-10005.json')).bills[0];
+  assert.deepEqual(real.items.map(i => i.label), ['Home', 'Bills', nav.trail('/bills', bill.title)[1].label, 'Division']);
+  assert.deepEqual(real.items.map(i => i.href), ['/', '/bills', `/bill/${bill.key}`, null]);
+  assert.ok(real.items.every(i => !/Milton Dick|standing order/.test(i.label)));
+  assertSameTrail(real, 'a real division');
+  const fixture = '/divisions/division-federal-representatives-99999.json';
+  const withBill = await serverTrail('/doc/division-federal-representatives-99999', {}, { [fixture]: divisionFixture([{ key: 'au-federal-r1', title: 'A Fixture Amendment Bill 2026' }]) });
+  assert.equal(withBill.items.map(i => i.label).join(' › '), 'Home › Bills › A Fixture Amendment Bill 2026 › Division');
+  assertSameTrail(withBill, 'a fixture division with a bill');
+  const noBill = await serverTrail('/doc/division-federal-representatives-99999', {}, { [fixture]: divisionFixture([]) });
+  assert.equal(noBill.items.map(i => i.label).join(' › '), 'Home › Search › Division');
+  assert.equal(noBill.items[1].href, '/ask?view=search');
+  assertSameTrail(noBill, 'a fixture division without a bill');
+});
+
+test('a tool opened on /explore does not repeat its section', async () => {
+  const { items } = await serverTrail('/explore?game=tm');
+  assert.equal(items.map(i => i.label).join(' › '), 'Home › Interactive tools');
+});
+
+test('the reports in the menus are the published reports, by their own titles', () => {
+  const column = nav.groups.find(g => g.id === 'research').columns.find(c => c.section?.href === '/reports');
+  const listed = column.links.filter(l => l.record).map(l => [l.href, l.label]);
+  const published = JSON.parse(read('reports/index.json')).reports.map(r => [`/reports/${r.slug}`, r.title]);
+  assert.deepEqual(listed, published);
+});
+
+test('the community page\'s rewritten body does not keep the file\'s tag', async () => {
+  const response = await workerFetch('/community');
+  assert.equal(response.status, 200);
+  assert.equal(response.headers.get('etag'), null);
+  assert.equal(response.headers.get('content-length'), null);
+  await response.arrayBuffer();
+});
+
+test('every control in the sheet is a full touch target', () => {
+  const css = read('nav.css');
+  assert.match(css, /\.nav-sheet \.drawer-close \{[^}]*width: var\(--size-target\); height: var\(--size-target\)/);
+  assert.match(css, /\.sheet-chip \{[^}]*height: var\(--size-target\)/);
+  assert.match(css, /\.sheet-foot a \{[^}]*min-height: var\(--size-target\)/);
+  assert.match(css, /\.sheet-link \{[^}]*min-height: var\(--size-target\)/);
+});
+
+test('a donor\'s trail names a donor the page names, and never a placeholder', async () => {
+  const { isOrganisationDonor } = await import('../public/donor-entity.js');
+  // Derived from the published graph, never typed: one confidently named
+  // organisation, and one placeholder the publication withholds.
+  const donors = JSON.parse(read('graph/money.json')).nodes.filter(n => n.kind === 'donor');
+  const named = donors.find(n => !/name withheld/i.test(n.label) && isOrganisationDonor(n));
+  const placeholder = donors.find(n => /name withheld/i.test(n.label));
+  const shown = await serverTrail(`/subject/donor/${encodeURIComponent(named.label)}`);
+  assert.equal(shown.status, 200);
+  assert.equal(shown.doc.querySelector('meta[name="robots"]'), null, 'a named donor\'s page is indexable');
+  assert.deepEqual(shown.items.map(i => i.label), ['Home', 'Donors', nav.trail('/subject/donor', named.label)[1].label]);
+  assertSameTrail(shown, 'a named donor');
+  const hidden = await serverTrail(`/subject/donor/${encodeURIComponent(placeholder.label)}`);
+  assert.deepEqual(hidden.items.map(i => i.label), ['Home', 'Donors']);
+  assert.ok(!hidden.doc.querySelector('.prerender-crumbs').textContent.includes(placeholder.label));
   assert.equal(label(nav.trail('/subject/donor/someone')), 'Donors');
 });
 

@@ -228,7 +228,7 @@
 }
 .nav-sheet .drawer-name { margin: 0; font: var(--type-strong); color: var(--ink); }
 .nav-sheet .drawer-close {
-  display: grid; place-items: center; width: 40px; height: 40px; flex: none; margin: 0 -4px 0 0; padding: 0;
+  display: grid; place-items: center; width: var(--size-target); height: var(--size-target); flex: none; margin: 0 -6px 0 0; padding: 0;
   border: 0; border-radius: var(--radius-round); background: var(--paper-sunken); color: var(--ink); cursor: pointer;
 }
 .nav-sheet .drawer-close:hover { background: var(--divider-subtle); }
@@ -264,7 +264,7 @@
 }
 .sheet-chips::-webkit-scrollbar { display: none; }
 .sheet-chip {
-  display: inline-flex; align-items: center; height: var(--size-control-compact); padding: 0 1rem;
+  display: inline-flex; align-items: center; height: var(--size-target); padding: 0 1rem;
   border: var(--border-hairline) solid var(--divider-subtle); border-radius: var(--radius-pill);
   background: var(--paper-raised); color: var(--ink); text-decoration: none;
   font: var(--type-metadata); white-space: nowrap;
@@ -299,8 +299,9 @@
 .sheet-link:hover { background: var(--paper-sunken); }
 .sheet-link[aria-current="page"] { font: var(--type-strong); line-height: 1.35; box-shadow: inset 3px 0 0 var(--bronze); }
 .sheet-link-all { color: var(--bronze-ink); font: var(--type-strong); line-height: 1.35; }
-.sheet-foot { display: flex; flex-wrap: wrap; gap: var(--space-tight) var(--space-group); margin: var(--space-group) 0 0; font: var(--type-fine); }
-.sheet-foot a { color: var(--ink-soft); }
+.sheet-foot { display: flex; flex-wrap: wrap; gap: 0 var(--space-group); margin: var(--space-block) 0 0; font: var(--type-fine); }
+/* Small type, full targets: each link stands 44px tall. */
+.sheet-foot a { display: inline-flex; align-items: center; min-height: var(--size-target); color: var(--ink-soft); }
 
 /* A tablet lays the groups out open, two to a row. */
 @media (min-width: 641px) {

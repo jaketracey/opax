@@ -1569,12 +1569,6 @@ function crumbsFor(address, ...records) {
   return OpaxNavigation.trail(address, ...records);
 }
 
-/** A label short enough for the strip: the current page, not its full title. */
-function crumbLabel(s, max = 60) {
-  const t = String(s || "").replace(/\s+/g, " ").trim();
-  return t.length > max ? `${t.slice(0, max - 1).trimEnd()}…` : t;
-}
-
 // The band is sticky, so scroll targets and sticky asides offset by its real
 // height: measured once it has rendered, and again whenever it reflows
 // (breakpoints, font load). style.css carries per-breakpoint estimates so
@@ -8479,7 +8473,7 @@ async function openBill(key, manageFocus) {
   // name, never cut, with the masthead only when both fit in 70 characters.
   const fullName = String(billName(bill) || "").replace(/\s+/g, " ").trim();
   document.title = bootTitleHere() || (`${fullName} · OPAX`.length <= 70 ? `${fullName} · OPAX` : fullName);
-  setCrumbs(crumbsFor("/bills", crumbLabel(billName(bill), 48)));
+  setCrumbs(crumbsFor("/bills", billName(bill)));
   const members = billSponsorFromPortfolio(bill.portfolio);
   // Each co-sponsor is a person with an entry of their own, so each is a link.
   const sponsorLinks = bill.sponsor
@@ -12813,7 +12807,7 @@ function renderDivisionDoc({ d, entry, bills }, slug, manageFocus) {
   const stage = billStage(entry?.stage || "");
   $("doc-title").textContent = recorded || stage || `${house} division`;
   setCrumbs(bills[0]?.key
-    ? crumbsFor("/bills", { label: crumbLabel(bills[0].title, 48), href: `/bill/${encodeURIComponent(bills[0].key)}` }, "Division")
+    ? crumbsFor("/bills", { label: bills[0].title, href: `/bill/${encodeURIComponent(bills[0].key)}` }, "Division")
     : crumbsFor("/ask?view=search", "Division"));
   const ayes = Number(d.ayes) || 0, noes = Number(d.noes) || 0;
   $("doc-meta").innerHTML = [
@@ -12917,7 +12911,7 @@ async function openDocPage(slug, manageFocus) {
       : doc.speaker || displayTitle(doc);
     // The trail names the page the same way, shortened for the strip.
     setCrumbs(crumbsFor("/ask?view=search", (doc.kind || slug.split("-")[0]) === "division"
-      ? "Division" : crumbLabel(doc.speaker || displayTitle(doc), 48)));
+      ? "Division" : doc.speaker || displayTitle(doc)));
     // Headshot floats beside the headline; the name is already in the
     // headline, so the image is decorative (alt "").
     if (doc.speaker && !isUnattributed({ ...doc.labels, person_id: doc.metadata?.person_id, speaker_attribution: doc.speaker_attribution })) {

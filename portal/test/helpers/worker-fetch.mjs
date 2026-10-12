@@ -50,18 +50,20 @@ async function loadWorker() {
   return worker;
 }
 
-/** The Worker's response for a path. `env` overrides the deployment's values. */
-export async function workerFetch(path, env = {}, init = {}) {
+/** The Worker's response for a path. `env` overrides the deployment's values;
+ *  `assets` serves fixture files ({ '/divisions/x.json': {...} }) over the built ones. */
+export async function workerFetch(path, env = {}, init = {}, { assets: fixtures = {} } = {}) {
   const fetchHandler = await loadWorker();
   const assets = { async fetch(request) {
     const pathname = new URL(request.url).pathname;
+    if (pathname in fixtures) return new Response(typeof fixtures[pathname] === 'string' ? fixtures[pathname] : JSON.stringify(fixtures[pathname]), { headers: { 'content-type': 'application/json', etag: '"fixture"' } });
     const isFile = url => { try { return statSync(url).isFile(); } catch { return false; } };
     // As the assets binding does: "/community" is community.html.
     let file = new URL(pathname === '/' ? 'index.html' : pathname === '/home' ? 'home.html' : pathname.slice(1), publicRoot);
     if (!isFile(file) && isFile(new URL(file.href + '.html'))) file = new URL(file.href + '.html');
     if (!isFile(file)) return new Response('Missing', { status: 404 });
     const type = pathname.endsWith('.json') ? 'application/json' : pathname.endsWith('.js') ? 'text/javascript' : 'text/html';
-    return new Response(readFileSync(file), { headers: { 'content-type': type } });
+    return new Response(readFileSync(file), { headers: { 'content-type': type, etag: '"asset"' } });
   } };
   return fetchHandler.fetch(new Request(origin + path, init), { COMMUNITY_ORIGIN: origin, VIC_ELECTION_HUB_ENABLED: 'true', ASSETS: assets, ...env }, { waitUntil() {} });
 }

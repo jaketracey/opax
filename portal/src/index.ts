@@ -80,8 +80,8 @@ import { renderOgPng, renderOgJpeg, type OgFont } from './og-render'
 import * as storyRender from './og-render'
 import { personRole, personTitle, roleLine, billTitle } from './seo-titles'
 import { navGates, pageTrail, trail } from './nav-model.mjs'
-import { answerBlock, associationCaveat, crumbsHTML, panelPrerender, SERVER_PANELS, type Crumb, renderPersonAnswer, renderBillAnswer, renderDivisionAnswer, renderDirectory, renderSupplierAnswer, renderMoneyAnswer, type Division, type ReadAsset } from './seo-content'
-import { buildSchemaGraph, type PersonSchemaIdentity } from './seo-schema'
+import { answerBlock, associationCaveat, crumbSteps, printedTrail, headingOf, crumbsHTML, panelPrerender, SERVER_PANELS, type Crumb, renderPersonAnswer, renderBillAnswer, renderDivisionAnswer, renderDirectory, renderSupplierAnswer, renderMoneyAnswer, type Division, type ReadAsset } from './seo-content'
+import { buildSchemaGraph, serializeSchemaGraph, type PersonSchemaIdentity } from './seo-schema'
 import { photoFor, validStory, STORY_VERSION as STORY_SLIDES_VERSION, type PhotoCatalogue, type StoryFormat } from './story'
 
 interface FindParagraph {
@@ -3526,6 +3526,10 @@ interface PageMeta {
   next?: string
   /** Served with a noindex robots tag (an individual donor's page). */
   noindex?: boolean
+  /** The page's trail after Home, when its builder knows better than its
+   *  heading (a division sits under its bill). Settled for every page in
+   *  buildMeta: the strip it prints and its BreadcrumbList both read it. */
+  trail?: Crumb[]
 }
 
 // How long a /subject/<dir>/<name> segment may be. A person, a party or a donor
@@ -4284,7 +4288,15 @@ async function buildMeta(route: SeoRoute, url: URL, request: Request, env: Env, 
   }
   // Every non-home path has a single answer, including unavailable/not-found pages.
   meta.prerender ??= answerBlock(meta.title.replace(/ · OPAX$/, ''),meta.description)
-  meta.jsonLd=meta.status>=400 || meta.noindex ? null : buildSchemaGraph({canonical:meta.canonical,title:meta.title,description:meta.description,jsonLd:meta.jsonLd,person:personIdentity,bill:billIdentity})
+  // The page's one trail, from the menus' own list: what a server-only
+  // renderer printed, what the builder set (a division), or the page's
+  // section and the name its heading gives it. The strip (serveSeoPage) and
+  // the BreadcrumbList below both read this, so they always agree.
+  meta.trail = printedTrail(meta.prerender) ?? meta.trail
+    ?? pageTrail(url.pathname + url.search, meta.status === 404 ? 'Not found' : headingOf(meta.prerender) || meta.card?.title || '',
+      { donorNamed: meta.status === 200 && !meta.noindex })
+  const breadcrumbs = breadcrumbList(meta.trail, meta.canonical)
+  meta.jsonLd=meta.status>=400 || meta.noindex ? null : buildSchemaGraph({canonical:meta.canonical,title:meta.title,description:meta.description,jsonLd:meta.jsonLd,person:personIdentity,bill:billIdentity,breadcrumbs})
   return meta
 }
 
@@ -4968,6 +4980,20 @@ async function campaignerMeta(name: string, url: URL, env: Env): Promise<PageMet
 }
 
 /** /doc/<slug>: the existing /api/resource logic under a hard time cap. */
+/** A trail as a BreadcrumbList's entries: the strip's own steps (crumbSteps),
+ *  each ancestor at its address and the page itself at its canonical. */
+function breadcrumbList(trail: Crumb[], canonical: string): { name: string; url: string }[] {
+  return crumbSteps(trail).map((step, i, all) => ({ name: step.label, url: i === all.length - 1 || !step.href ? canonical : new URL(step.href, SITE_ORIGIN).href }))
+}
+
+/** A division's trail, as the app draws it: Bills › its bill › Division, or
+ *  Search › Division when the record names no bill. */
+function divisionTrail(bill: { key: string; title: string } | null | undefined): Crumb[] {
+  return bill?.key && bill.title
+    ? trail('/bills', { label: bill.title, href: `/bill/${encodeURIComponent(bill.key)}` }, 'Division')
+    : trail('/ask?view=search', 'Division')
+}
+
 async function docMeta(slug: string, url: URL, request: Request, env: Env, ctx: ExecutionContext): Promise<PageMeta> {
   const canonical = `${SITE_ORIGIN}/doc/${slug}`
   const generic: PageMeta = {
@@ -4988,7 +5014,9 @@ async function docMeta(slug: string, url: URL, request: Request, env: Env, ctx: 
       const content = renderDivisionAnswer(division,people?.people || [],people?.slugOf || new Map())
       return {...generic,title:`${clip(divisionPlain(division.name || division.question || 'Division'),90)} · OPAX`,description:clip(content.description || ''),prerender:content.html,
         jsonLd:{'@context':'https://schema.org','@type':'Article',headline:divisionPlain(division.name || division.question),url:canonical,...(division.date ? {datePublished:division.date} : {}),publisher},
-        card:{kicker:'Division',title:divisionPlain(division.question || division.name || 'Division'),lines:[content.description || '']}}
+        card:{kicker:'Division',title:divisionPlain(division.question || division.name || 'Division'),lines:[content.description || '']},
+        // As the app's division page: under its bill when it has one, else under Search.
+        trail:divisionTrail(division.bills?.[0])}
     }
     return {...generic,title:'Division not found · OPAX',status:404}
   }
@@ -5041,6 +5069,7 @@ async function docMeta(slug: string, url: URL, request: Request, env: Env, ctx: 
         title: motion,
         lines: [`${outcome || 'Division'}${tally}. Who voted which way.`],
       },
+      trail: divisionTrail(null),
     }
   }
   if (r.labels.kind === 'press_release' || PRESS_SLUG_RE.test(slug)) {
@@ -5166,7 +5195,7 @@ async function serveSeoPage(route: SeoRoute, url: URL, request: Request, env: En
   // scripts, crawlers), from the menus' own list; the app's strip replaces it
   // once it runs. Server-only pages write theirs into the prerender themselves.
   if (meta.prerender && !meta.prerender.includes('prerender-crumbs'))
-    meta.prerender = crumbsHTML(pageTrail(url.pathname + url.search, meta.status === 404 ? 'Not found' : meta.card?.title || '')) + meta.prerender
+    meta.prerender = crumbsHTML(meta.trail || []) + meta.prerender
   // JSON-LD sits in a <script>: keep "</script>" from ever appearing in it.
   const ld = meta.jsonLd ? JSON.stringify(meta.jsonLd).replace(/</g, '\\u003c') : null
   // The share image is drawn per route (see "Share images" below); a page
@@ -5850,19 +5879,36 @@ async function route(
       // The community page wears the site band; its menus read the published sections off the page.
       // Its trail is written here, after the band, as the server writes every other page's.
       if (asset.ok && request.method === 'GET' && url.pathname === '/community')
-        return withNavGates(new HTMLRewriter().on('header.site-header', { element(el) { el.after(trailHTML('/community'), { html: true }) } }).transform(asset), env)
+        return withNavGates(rewritten(communityPage(asset)), env)
       return asset
   }
 }
 
-/** The trail strip as the server writes it, from the menus' own list. */
-const trailHTML = (address: string, ...records: string[]): string => crumbsHTML(trail(address, ...records))
+/** The community page: its trail after the band, and the BreadcrumbList that
+ *  says the same, as every server-written page has. */
+function communityPage(asset: Response): Response {
+  const steps = trail('/community')
+  const schema = serializeSchemaGraph(buildSchemaGraph({ canonical: `${SITE_ORIGIN}/community`, title: 'The OPAX community', breadcrumbs: breadcrumbList(steps, `${SITE_ORIGIN}/community`) }))
+  return new HTMLRewriter()
+    .on('header.site-header', { element(el) { el.after(crumbsHTML(steps), { html: true }) } })
+    .on('head', { element(el) { el.append(`<script type="application/ld+json" id="ld-page">${schema}</script>`, { html: true }) } })
+    .transform(asset)
+}
 
 /** Marks the optional sections this deployment publishes on <html>, where the
  *  menus (navigation.js) read them: no request when a menu opens. */
 function withNavGates(res: Response, env: Env): Response {
   const gates = navGates(env)
-  return gates ? new HTMLRewriter().on('html', { element(el) { el.setAttribute('data-nav-gates', gates) } }).transform(res) : res
+  return gates ? rewritten(new HTMLRewriter().on('html', { element(el) { el.setAttribute('data-nav-gates', gates) } }).transform(res)) : res
+}
+
+/** A rewritten body is a new body: the asset's tag and length describe the
+ *  file as stored, so they go (as serveSeoPage drops them). */
+function rewritten(res: Response): Response {
+  const out = new Response(res.body, res)
+  out.headers.delete('etag')
+  out.headers.delete('content-length')
+  return out
 }
 
 /** An address a reader would type or follow: no file extension, or .html. */
