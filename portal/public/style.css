@@ -241,13 +241,17 @@
    same task that sets spa-routed. A compact panel takes main.compact's top
    space and, except Search, no hero. */
 .spa-booting:not(.spa-routed) #crumbs[hidden] { display: block !important; visibility: hidden; }
-.spa-boot-compact:not(.spa-routed) #main { padding-top: var(--space-5); }
-.spa-boot-compact:not(.spa-boot-search):not(.spa-routed) #hero-intro { display: none; }
-/* In its place, the page's own title from the server answer (the Worker's h1:
-   the person, bill or party named): a true first paint, not the Ask hero. */
-.spa-boot-compact:not(.spa-boot-search):not(.spa-routed) #prerender { display: block; }
-.spa-boot-compact:not(.spa-boot-search):not(.spa-routed) #prerender > :not(h1) { display: none; }
-@media (max-width: 860px) { .spa-boot-compact:not(.spa-routed) #main { padding-top: var(--space-4); } }
+.spa-booting.spa-boot-compact:not(.spa-routed) #main { padding-top: var(--space-5); }
+.spa-booting.spa-boot-compact:not(.spa-boot-search):not(.spa-routed) #hero-intro { display: none; }
+/* In its place, the start of the page's own server answer: the Worker's h1
+   (the person, bill or party named) and the summary under it. A true first
+   paint, not the Ask hero. Every rule here needs .spa-booting: if the app
+   never boots, spa-entry.js drops it and the whole server answer shows. */
+.spa-booting.spa-boot-compact:not(.spa-boot-search):not(.spa-routed) #prerender { display: block; }
+.spa-booting.spa-boot-compact:not(.spa-boot-search):not(.spa-routed) #prerender > * { display: none; }
+.spa-booting.spa-boot-compact:not(.spa-boot-search):not(.spa-routed) #prerender > h1,
+.spa-booting.spa-boot-compact:not(.spa-boot-search):not(.spa-routed) #prerender > h1 + p { display: block; }
+@media (max-width: 860px) { .spa-booting.spa-boot-compact:not(.spa-routed) #main { padding-top: var(--space-4); } }
 /* A person's record stays unseen while its head settles (app.js revealGrid). */
 .subject-grid.is-settling { visibility: hidden; }
 #prerender { padding-bottom: 1.5rem; }

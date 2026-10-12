@@ -9,7 +9,8 @@ if (location.pathname !== '/' && location.pathname !== '/index.html') {
   if (search) document.documentElement.classList.add('spa-boot-search');
   setTimeout(() => {
     if (!document.documentElement.classList.contains('spa-ready')) {
-      document.documentElement.classList.remove('spa-booting');
+      // The app never routed: give the reader the whole server answer.
+      document.documentElement.classList.remove('spa-booting', 'spa-boot-compact', 'spa-boot-search');
       document.documentElement.classList.add('spa-failed');
     }
   }, 10000);
