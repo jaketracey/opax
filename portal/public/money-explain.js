@@ -825,7 +825,7 @@ function nextStepsHTML(flow) {
   if (donor) q.set('focus', donor.id);
   if (party) q.set('party', party.id);
   if (state.industry) q.set('industry', state.industry);
-  if (flow.kind !== 'unnamed') links.push({ href: `/money/receipts${q.toString() ? `?${q}` : ''}`, label: 'Open these receipts in the ledger' });
+  if (flow.kind !== 'unnamed' && !flow.coarse) links.push({ href: `/money/receipts${q.toString() ? `?${q}` : ''}`, label: 'Open these receipts in the ledger' });
   const map = new URLSearchParams();
   if (jur !== 'federal') map.set('jur', jur);
   if (donor || party) map.set('focus', (donor || party).id);
