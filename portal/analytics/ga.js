@@ -3,11 +3,16 @@ import { cleanEvent, safePath } from './privacy.mjs';
 // Delivered by GTM-PNDM87LW. Keep the audited mapping in source control rather
 // than copying reader-data handling into an untested Custom JavaScript tag.
 const ID = 'G-EGY7Y5VTEQ';
+const LAYER = 'opaxGaLayer';
 if (['opax.com.au', 'www.opax.com.au'].includes(location.hostname)
     && navigator.doNotTrack !== '1' && window.doNotTrack !== '1' && !window.opaxGaLoaded) {
   window.opaxGaLoaded = true;
-  window.dataLayer = window.dataLayer || [];
-  function gtag() { window.dataLayer.push(arguments); }
+  // Its own command queue, not GTM's dataLayer: GTM reads every 'config' pushed to
+  // dataLayer and loads the Google tag a second time (gtag/js ...&cx=c), which
+  // cost every page ~160 KB and ~80 ms of main thread. gtag.js takes the queue's
+  // name from the l= parameter of its URL.
+  const queue = window[LAYER] = window[LAYER] || [];
+  function gtag() { queue.push(arguments); }
   const initialPath = safePath(location.href);
   gtag('set', {
     send_page_view: false, allow_google_signals: false, allow_ad_personalization_signals: false,
@@ -36,6 +41,6 @@ if (['opax.com.au', 'www.opax.com.au'].includes(location.hostname)
   addEventListener('opax:measured', ({ detail }) => { try { send(detail); } catch { /* optional */ } });
   const script = document.createElement('script');
   script.async = true;
-  script.src = `https://www.googletagmanager.com/gtag/js?id=${ID}`;
+  script.src = `https://www.googletagmanager.com/gtag/js?id=${ID}&l=${LAYER}`;
   document.head.appendChild(script);
 }
