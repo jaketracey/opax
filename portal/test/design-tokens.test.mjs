@@ -161,7 +161,7 @@ const TYPE_BASELINE = {
   'public/quiz.js': 4,
   'public/st-test.html': 1,
   'public/stages.js': 2,
-  'public/style.css': 31,
+  'public/style.css': 30,
   'public/thenvsnow.js': 2,
   'public/timemachine.js': 15,
   'public/ui-controls.css': 2,

@@ -4634,84 +4634,84 @@ html[data-panel="chat"] footer { display: none; }
 /* Supplier dossiers: procurement charts and source records, scoped to the lazy module. */
 .supplier-page { min-width: 0; }
 .supplier-page .subject-head h2 { color: var(--navy); overflow-wrap: anywhere; }
-.supplier-lede { max-width: 76ch; color: var(--ink-soft); line-height: var(--leading-loose); }
-.supplier-more, .supplier-contract-more, .agency-suppliers-more { margin-top: var(--sp-16); }
-.supplier-result-count, .supplier-contract-count { color: var(--ink-faint); font-size: var(--text-13); margin: var(--sp-16) 0; }
+/* Supplier and agency entries: a ui-page-head with the figures (ui-stats) in
+   it, then ui-sections beside an On this page rail (ui-toc). The directories
+   keep their own rows below. */
+.supplier-page .ui-page-head > h2 { margin: 0; overflow-wrap: anywhere; }
+.supplier-head > .ui-stats { margin: var(--space-block) 0 0; }
+.supplier-page .ui-section:empty { display: none; }
+.supplier-growth > .ui-section:first-child { margin-top: var(--space-section); }
+.supplier-more { margin-top: var(--sp-16); }
+.supplier-result-count { color: var(--ink-faint); font-size: var(--text-13); margin: var(--sp-16) 0; }
 .supplier-directory-row { display: flex; justify-content: space-between; gap: var(--sp-16); padding: var(--sp-16) var(--sp-4); border-bottom: var(--border-hairline) solid var(--divider-subtle); color: var(--ink); text-decoration: none; }
 .supplier-directory-row:hover { background: var(--paper-sunken); }
 .supplier-directory-row > span { min-width: 0; }
 .supplier-directory-row strong { display: block; color: var(--navy); font-size: var(--text-15); overflow-wrap: anywhere; }
 .supplier-directory-row small { display: block; color: var(--ink-soft); font: var(--type-fine); margin-top: var(--space-line); }
 .supplier-directory-value { text-align: right; flex-shrink: 0; font-variant-numeric: tabular-nums; }
-.supplier-totals { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--sp-16); border-block: var(--border-hairline) solid var(--divider-subtle); padding: var(--sp-24) 0; margin: var(--sp-24) 0 var(--sp-40); }
-.supplier-totals > div { display: grid; grid-template-rows: 1fr auto; gap: var(--sp-12); min-width: 0; }
-.supplier-totals dt { color: var(--ink-soft); font: var(--type-fine); }
-.supplier-totals dd { font: 700 clamp(1.4rem, 3vw, 2.2rem) var(--serif); color: var(--navy); margin: 0; font-variant-numeric: tabular-nums; }
 .supplier-profile-grid { display: grid; grid-template-columns: minmax(0, 1fr) 290px; gap: var(--sp-40); align-items: start; }
 .supplier-profile-main { min-width: 0; }
-.supplier-section { margin-bottom: var(--sp-40); }
-.supplier-section-note { color: var(--ink-soft); font-size: var(--text-13); line-height: var(--leading-body); margin: var(--sp-12) 0 var(--sp-16); }
-.supplier-bars { list-style: none; padding: 0; margin: 0; }
-.supplier-bars li { margin: var(--sp-16) 0; }
-.supplier-bars li > div { display: flex; gap: var(--sp-16); justify-content: space-between; font-size: var(--text-13); line-height: var(--leading-normal); margin-bottom: var(--sp-8); }
-.supplier-bars strong { white-space: nowrap; font-variant-numeric: tabular-nums; }
-.supplier-bars svg { display: block; width: 100%; height: 8px; }
-.supplier-bars small { display: block; color: var(--ink-soft); font: var(--type-fine); margin-top: var(--space-line); }
-.supplier-bar-track { fill: var(--paper-sunken); }
+.supplier-section:not(.ui-section) { margin-bottom: var(--sp-40); }
+.supplier-section-note:not(.ui-section-note) { color: var(--ink-soft); font-size: var(--text-13); line-height: var(--leading-body); margin: var(--sp-12) 0 var(--sp-16); }
+.ui-section > .ui-section-note { margin: 0 0 var(--space-heading); }
+/* Ranked bars: the name and its figure on one line, a ui-bar under them. */
+.supplier-bar-head { display: flex; flex-wrap: wrap; justify-content: space-between; gap: var(--space-line) var(--space-heading); margin-bottom: var(--space-tight); }
+.supplier-bar-head > .ui-row-name { min-width: 0; overflow-wrap: anywhere; }
+.supplier-bars .ui-row-meta { margin-top: var(--space-tight); }
 .supplier-bar-fill { fill: var(--bronze); }
 .supplier-year-chart svg { width: 100%; display: block; overflow: visible; }
 .supplier-year-chart text { font: var(--type-fine); fill: var(--ink-soft); }
-.supplier-chart-baseline { stroke: var(--line-control); stroke-width: 1; }
-.supplier-chart-data { margin-top: var(--sp-12); font-size: var(--text-13); }
+.supplier-chart-baseline { stroke: var(--line-control); stroke-width: var(--border-hairline); }
+.supplier-chart-data { margin-top: var(--space-row); }
 .supplier-page summary { cursor: pointer; }
-.supplier-chart-data table { width: 100%; margin-top: var(--sp-16); border-collapse: collapse; font-variant-numeric: tabular-nums; }
+.supplier-chart-data table { width: 100%; border-collapse: collapse; font: var(--type-fine); font-variant-numeric: tabular-nums; }
 .supplier-chart-data :is(th, td) { padding: var(--sp-8); border-bottom: var(--border-hairline) solid var(--divider-subtle); text-align: right; }
 .supplier-chart-data :is(th, td):first-child { text-align: left; }
 .supplier-chart-data caption { text-align: left; color: var(--ink-soft); padding-bottom: var(--sp-12); }
-.supplier-contract { border-top: var(--border-hairline) solid var(--divider-subtle); padding: var(--sp-16) 0; }
-.supplier-contract summary { display: flex; justify-content: space-between; gap: var(--sp-16); font-size: var(--text-15); }
-.supplier-contract summary::before { content: "+"; flex-shrink: 0; color: var(--bronze-ink); font-weight: var(--weight-bold); }
-.supplier-contract[open] summary::before { content: "−"; }
-.supplier-contract summary span { flex: 1; min-width: 0; overflow-wrap: anywhere; }
-.supplier-contract summary small { display: block; color: var(--ink-soft); font: var(--type-fine); margin-top: var(--space-line); }
-.supplier-contract summary b { white-space: nowrap; font-variant-numeric: tabular-nums; }
-.supplier-contract dl { display: grid; grid-template-columns: max-content minmax(0, 1fr); gap: var(--sp-8) var(--sp-16); font-size: var(--text-13); margin: var(--sp-20) 0; }
-.supplier-contract dt { color: var(--ink-soft); }
-.supplier-contract dd { margin: 0; overflow-wrap: anywhere; }
-.supplier-contract > a { font-size: var(--text-13); }
+/* A contract opens in place (ui-disclosure): what was bought and its meta
+   line, the figure beside them; its facts are a ui-kv. One hairline between. */
+.supplier-contract.ui-disclosure + .supplier-contract.ui-disclosure { border-top: var(--border-hairline) solid var(--divider-subtle); }
+.supplier-contract.ui-disclosure > summary { padding-block: var(--space-row); font: var(--type-body); }
+.supplier-contract-what { flex: 1; min-width: 0; overflow-wrap: anywhere; }
+.supplier-contract.ui-disclosure .ui-kv { margin: 0 0 var(--space-heading); }
+/* Evidence excerpts (evidence.js) still borrow the older row look. */
+.evidence-excerpt { border-top: var(--border-hairline) solid var(--divider-subtle); padding: var(--sp-16) 0; }
+.evidence-excerpt summary { display: flex; justify-content: space-between; gap: var(--sp-16); font-size: var(--text-15); }
+.evidence-excerpt summary::before { content: "+"; flex-shrink: 0; color: var(--bronze-ink); font-weight: var(--weight-bold); }
+.evidence-excerpt[open] summary::before { content: "−"; }
+.evidence-excerpt summary span { flex: 1; min-width: 0; overflow-wrap: anywhere; }
+.evidence-excerpt summary small { display: block; color: var(--ink-soft); font: var(--type-fine); margin-top: var(--space-line); }
+.evidence-excerpt summary b { white-space: nowrap; font-variant-numeric: tabular-nums; }
+.evidence-excerpt dl { display: grid; grid-template-columns: max-content minmax(0, 1fr); gap: var(--sp-8) var(--sp-16); font-size: var(--text-13); margin: var(--sp-20) 0; }
+.evidence-excerpt dt { color: var(--ink-soft); }
+.evidence-excerpt dd { margin: 0; overflow-wrap: anywhere; }
+.evidence-excerpt > a { font-size: var(--text-13); }
 .supplier-rail { position: sticky; top: calc(var(--header-h) + var(--space-block)); padding-top: var(--space-block); border-top: var(--border-hairline) solid var(--divider-default); }
-.supplier-rail .entry-rail-list { display: block; }
-.supplier-rail .entry-rail-list li { border-top: 0; }
-.supplier-rail .entry-rail-list li + li { border-top: var(--border-hairline) solid var(--divider-subtle); }
-.supplier-rail .entry-rail-list a { flex-direction: row; align-items: center; justify-content: flex-start; min-height: var(--size-target); }
-.supplier-rail .entry-rail-label { font: var(--type-strong); color: var(--ink); }
 .supplier-rail-links { list-style: none; margin: var(--space-group) 0 0; padding: 0; border-top: var(--border-hairline) solid var(--divider-default); }
 .supplier-rail-links li + li { border-top: var(--border-hairline) solid var(--divider-subtle); }
 .supplier-rail-links a { display: flex; align-items: center; min-height: var(--size-target); font: var(--type-body); }
 .supplier-rail-links span { display: block; margin-bottom: var(--space-tight); font: var(--type-fine); color: var(--ink-soft); }
 /* The tax block writes its title as a label; on the entry it is a section heading like its neighbours. */
 .supplier-taxcharity > .kicker { margin: 0 0 var(--space-heading); font: var(--type-heading); color: var(--ink); }
-.supplier-identity { margin: 0; }
-.supplier-identity dt { font: var(--type-fine); color: var(--ink-soft); }
-.supplier-identity dd { margin: var(--space-line) 0 var(--space-row); font: var(--type-body); overflow-wrap: anywhere; }
+.supplier-aliases { margin-top: var(--space-block); }
+.agency-suppliers .ui-row-figure > .ui-row-meta { justify-content: flex-end; font-weight: var(--weight-regular); }
 .supplier-empty { padding: var(--sp-24); border: var(--border-hairline) solid var(--divider-subtle); }
 .supplier-page :is(a, button, input, select, summary):focus-visible { outline: var(--border-focus) solid var(--bronze-ink); outline-offset: 4px; }
 /* One column: the page reads straight down, and the rail keeps only its ways out. */
-@media (max-width: 850px) { .supplier-profile-grid { grid-template-columns: minmax(0, 1fr); } .supplier-rail { position: static; padding-top: 0; border-top: 0; } .supplier-rail .entry-rail-nav { display: none; } .supplier-rail-links { margin-top: 0; } }
+@media (max-width: 850px) { .supplier-profile-grid { grid-template-columns: minmax(0, 1fr); } .supplier-rail { position: static; padding-top: 0; border-top: 0; } .supplier-rail .supplier-rail-nav { display: none; } .supplier-rail-links { margin-top: 0; } }
 @media (max-width: 540px) {
   .supplier-directory-row { flex-direction: column; gap: var(--sp-8); }
   .supplier-directory-value { text-align: left; }
-  .supplier-totals { gap: var(--sp-8); }
-  .supplier-contract summary { flex-wrap: wrap; }
-  .supplier-contract summary b { width: 100%; padding-left: var(--sp-24); }
-  .supplier-bars li > div { flex-wrap: wrap; gap: var(--sp-4); }
+  .supplier-contract.ui-disclosure > summary { flex-wrap: wrap; }
+  .evidence-excerpt summary { flex-wrap: wrap; }
+  .evidence-excerpt summary b { width: 100%; padding-left: var(--sp-24); }
 }
 .supplier-money-map { height: 360px; margin-top: var(--space-block); position: relative; overflow: hidden; }
 /* Filters sit on the page, not in a box (as the directory controls do). */
 .supplier-page .ui-toolbar { margin: var(--space-block) 0 var(--space-tight); padding: 0; border: 0; border-radius: 0; background: none; }
 .supplier-money-map[hidden] { display: none; }
 .supplier-money-map > p { padding: var(--sp-16); }
-.supplier-section > .subject-section-title { margin: 0 0 var(--sp-12); }
+.supplier-section:not(.ui-section) > .subject-section-title { margin: 0 0 var(--sp-12); }
 
 /* Guided money-map journeys: a short reading rail alongside the 3D scene. */
 .journey-lenses { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--sp-8); margin-bottom: var(--sp-16); }
@@ -4871,7 +4871,6 @@ html[data-panel="chat"] footer { display: none; }
 
 @media (max-width: 540px) {
       .ency-votes-label { min-height: 2.6em; line-height: var(--leading-snug); }
-      .supplier-totals dd { font-size: var(--text-17); }
 }
 /* The same quiet scroll treatment for horizontal comparison charts. */
 #discover-results, #panel-search .search-year-chart { scrollbar-color: var(--line-control) transparent; scrollbar-width: thin; }
@@ -5072,13 +5071,9 @@ html[data-panel="chat"] footer { display: none; }
 }
 
 #panel-search .search-record-kind { font-weight: var(--weight-strong); color: var(--navy); }
-/* Agency records share the supplier profile's measured type and spacing. */
-.supplier-bars li > div > a { color: var(--ink); text-decoration-color: var(--divider-subtle); text-underline-offset: .2em; }
-.supplier-bars li > div > a:hover { color: var(--bronze-ink); }
 .agency-map, .supplier-agency-map { height: clamp(360px, 55vh, 580px); }
-.agency-suppliers .supplier-directory-row > span:first-child { min-width: 0; }
 .agency-suppliers a { overflow-wrap: anywhere; }
-.supplier-totals dd { overflow-wrap: anywhere; }
+.supplier-totals .ui-stat-value { overflow-wrap: anywhere; }
 
 .supplier-year-chart { position: relative; }
 .supplier-year-bar { cursor: pointer; outline: none; }
