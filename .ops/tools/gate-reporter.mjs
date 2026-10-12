@@ -1,6 +1,6 @@
 // Child summaries omit module setup. The parent file completion includes it.
 import {writeFileSync} from 'node:fs';
-import {relative} from 'node:path';
+import {relative,resolve} from 'node:path';
 export default async function* reporter(events) {
   const byFile=new Map(),wall=new Map(),printed=new Set();let summary;
   const line=file=>{const data=byFile.get(file);data.duration_ms=wall.get(file);printed.add(file);return `FILE ${data.file} ${(data.duration_ms/1000).toFixed(3)}s ${data.success?'PASS':'FAIL'}\n`;};
@@ -10,7 +10,7 @@ export default async function* reporter(events) {
       if (data.file) {byFile.set(data.file,{...data,test_duration_ms:data.duration_ms,file:relative(process.cwd(),data.file)});if(wall.has(data.file)&&!printed.has(data.file))yield line(data.file);}
       else {summary = data; yield `TESTS ${data.counts.tests} PASS ${data.counts.passed} FAIL ${data.counts.failed} SKIP ${data.counts.skipped} ${(data.duration_ms/1000).toFixed(3)}s\n`;}
     }
-    if(type==='test:complete'&&data.name===data.file&&data.nesting===0){
+    if(type==='test:complete'&&data.file&&typeof data.name==='string'&&resolve(data.name)===resolve(data.file)&&data.nesting===0){
       wall.set(data.file,data.details.duration_ms);
       // Files containing module-level assertions but no node:test callbacks
       // produce a parent completion only. Node counts that wrapper as one test.
