@@ -168,21 +168,41 @@ export const MODULE_STAMPS = [
   ['app.js', 'canonical-urls.js'], ['app.js', 'growth-modules.js'], ['app.js', 'ask-person.js'], ['app.js', 'suppliers.js'],
   ['app.js', 'labels.js'], ['app.js', 'electorates.js'], ['app.js', 'division-markdown.js'], ['app.js', 'quiz.js'], ['app.js', 'timemachine.js'],
   ['app.js', 'sa-hansard.js'],
-  ['app.js', 'money-map.js'], ['app.js', 'explain.js'], ['app.js', 'grant-recipient.js'],
+  ['app.js', 'money-map.js'], ['app.js', 'grant-recipient.js'],
+  // /money/explain: the explainer, its stylesheet and the modules it reads.
+  ['app.js', 'money-explain.js'], ['money-explain.js', 'donor-views.js'],
+  ['money-explain.js', 'labels.js'], ['money-explain.js', 'canonical-urls.js'],
   // The Explore tools and the loaders, restyled on tokens in pass 4G.
   ['app.js', 'ballot.js'], ['app.js', 'grants.js'], ['app.js', 'ledger.js'], ['app.js', 'matrix.js'], ['app.js', 'wordsdollars.js'],
   ['app.js', 'thenvsnow.js'], ['app.js', 'statemap.js'], ['app.js', 'stages.js'], ['app.js', 'wombat.js'],
   ['home.js', 'home-data.js'], ['home.js', 'electorates.js'], ['home.js', 'money-map.js'],
 ]
 
-/** Write each MODULE_STAMPS module's content hash into its importer; returns the importers that were stale. */
+// Stylesheets a module links itself (not imports), stamped the same way.
+const ASSET_STAMPS = [
+  ['money-explain.js', 'money-explain.css'],
+]
+
+/** Write each MODULE_STAMPS module's content hash into its importer; returns the importers that were stale.
+ *  A write repeats until nothing changes, so a chain (app.js → module → its stylesheet) settles in one run. */
 function stampModules({ check }) {
+  if (check) return stampPass({ check })
+  const stale = new Set()
+  for (let pass = 0; pass < 4; pass++) {
+    const changed = stampPass({ check })
+    if (!changed.length) break
+    for (const file of changed) stale.add(file)
+  }
+  return [...stale]
+}
+function stampPass({ check }) {
   const stale = []
-  for (const importer of [...new Set(MODULE_STAMPS.map(([i]) => i))]) {
+  const stamps = [...ASSET_STAMPS, ...MODULE_STAMPS]
+  for (const importer of [...new Set(stamps.map(([i]) => i))]) {
     const path = join(PUBLIC, importer)
     const before = readFileSync(path, 'utf8')
     let after = before
-    for (const [, mod] of MODULE_STAMPS.filter(([i]) => i === importer)) {
+    for (const [, mod] of stamps.filter(([i]) => i === importer)) {
       // A site path or a relative one ("./labels.js": Node's tests resolve it too).
       const pattern = new RegExp(`(["'])(\\.?)/${mod.replace('.', '\\.')}(?:\\?v=[A-Za-z0-9._-]*)?\\1`, 'g')
       let hits = 0

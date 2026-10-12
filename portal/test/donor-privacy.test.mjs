@@ -341,7 +341,9 @@ test('every server-rendered person, party, money, hub, campaigner and supplier p
   const people = sitemapFiles.filter(f => f.startsWith('people-')).flatMap(locs);
   assert.ok(people.length > 1000);
   const parties = new Set([...sitemapFiles.filter(f => f.startsWith('parties-')).flatMap(locs), ...graphs.flatMap(g => g.nodes.filter(n => n.kind === 'party').map(n => partyUrl(n.label)))]);
-  const money = ['/', '/money', '/money/receipts', '/money/grants', '/map', '/connections', '/explore', '/subject/party', '/subject/supplier', '/subject/agency'];
+  const money = ['/', '/money', '/money/receipts', '/money/grants', '/money/explain', '/map', '/connections', '/explore', '/subject/party', '/subject/supplier', '/subject/agency'];
+  // The explainer's address names graph IDs; one crafted from a withheld name is never echoed by the server.
+  for (const label of checked.slice(0, 25)) money.push(`/money/explain?${new URLSearchParams({from: `donor:${foldDonorName(label)}`, to: 'party:Liberal'})}`);
   for (const dir of ['donor', 'campaigner']) for (let page = 1, next = true; next; page++) {
     const path = `/subject/${dir}${page > 1 ? `?page=${page}` : ''}`;
     money.push(path);
