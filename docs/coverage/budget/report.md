@@ -2,6 +2,12 @@
 
 Checked **13 October 2026 (Australia/Sydney)**. Branch `coverage/budget`, created from `origin/main` at `c41740e8e52128b7b761a2499a186277387f93b3`. The candidate commit SHA is supplied in the handoff. Everything is staged or local code/QA: no KB, production D1, live JSON, push or deploy. The default `/budget` route returns a sourced unavailable message until a reviewed budget asset is loaded; local QA substitutes the staged projection through an in-memory Worker asset binding.
 
+## Review fixes
+
+Merged `origin/main` at `608b824b3` and preserved both isolated fixture storage and the `OPAX_TEST_HOST` setting. Unlinked portfolio entries remain in the discovery inventory but are filtered from the hub; empty portfolio sections are omitted. Rendered filler fell from **25 to 0** for `/budget?year=2015-16`, and **252 to 0** across all 12 years. [Per-year counts](fix-results.json). [2015–16 at 390](budget-2015-16-390.png), [2015–16 at 1440](budget-2015-16-1440.png).
+
+The **25 early receipts** were re-acquired using a fresh, empty cache, with three fresh robots checks before the origin's source requests. The **28 outgoing GETs** record the actual shared OPAX identity hash, request start/previous start, measured interval and robots policy receipt/decision. The shortest interval was **1.000060 seconds**, with no pacing violations. The archive returned robots HTTP 404 (no published rules); Budget and Treasury returned robots HTTP 200. All 25 body hashes matched; the three PDFs' document grants were rechecked before updating staged provenance and parser fixture receipts. No original UA or pacing evidence is reconstructed. [Repair evidence](../../../data/staged/budget/receipt-repair.json).
+
 ## Inventory and scope
 
 [Inventory](../../../data/staged/budget/inventory.json): **852 distinct document-file URLs**, 2015–16 to 2026–27. Files and publications are different grains; these counts are not additive.

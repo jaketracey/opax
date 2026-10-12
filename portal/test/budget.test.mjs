@@ -12,6 +12,34 @@ const fixture={schema:1,generated_at:document.receipt.snapshot,scope:'Budget fix
 const block=(heading,text)=>`<section id="prerender"><h1>${heading}</h1><p>${text}</p></section>`;
 const read=async()=>structuredClone(fixture);
 
+test('portfolio lists omit unlinked rows and the section when no links remain',async()=>{
+ const h=structuredClone(fixture);
+ h.portfolio_indexes=[{release:'2026-27',title:'Unlinked fixture portfolio',url:null},{release:'2026-27',title:'Unsafe fixture portfolio',url:'javascript:alert(1)'}];
+ let p=await budgetPage(new URL('https://opax.com.au/budget'),async()=>h,block);
+ let d=new JSDOM(p.prerender).window.document;
+ assert.equal(d.querySelector('[aria-labelledby="budget-portfolios"]'),null);
+ assert.doesNotMatch(p.prerender,/Unlinked fixture portfolio|Unsafe fixture portfolio|Publisher document link unavailable/);
+ h.portfolio_indexes.push({release:'2026-27',title:'Linked fixture portfolio',url:'https://treasury.gov.au/treasury-portfolio-budget-papers'});
+ p=await budgetPage(new URL('https://opax.com.au/budget'),async()=>h,block);
+ d=new JSDOM(p.prerender).window.document;
+ assert.equal(d.querySelectorAll('[aria-labelledby="budget-portfolios"] > ul > li').length,1);
+ assert.equal(d.querySelector('[aria-labelledby="budget-portfolios"] a').textContent,'Linked fixture portfolio');
+ assert.doesNotMatch(p.prerender,/Unlinked fixture portfolio|Unsafe fixture portfolio|Publisher document link unavailable/);
+});
+
+test('staged inventory renders no unlinked portfolio filler in any year',async()=>{
+ const h=JSON.parse(readFileSync(new URL('../../data/staged/budget/hub.json',import.meta.url),'utf8'));
+ for(const year of new Set(h.releases.map(r=>r.year))) {
+  const p=await budgetPage(new URL('https://opax.com.au/budget?year='+year),async()=>h,block);
+  const d=new JSDOM(p.prerender).window.document;
+  assert.equal(p.status,200);
+  assert.doesNotMatch(p.prerender,/Publisher document link unavailable/);
+  const expected=h.portfolio_indexes.filter(r=>r.release.startsWith(year)&&typeof r.url==='string'&&/^https?:\/\//.test(r.url)).length;
+  assert.equal(d.querySelectorAll('[aria-labelledby="budget-portfolios"] > ul > li').length,expected);
+  assert.equal(Boolean(d.querySelector('[aria-labelledby="budget-portfolios"]')),expected>0);
+ }
+});
+
 test('budget hub SSR has sourced figures, year list, chart table and shared DataTable',async()=>{
  const page=await budgetPage(new URL('https://opax.com.au/budget'),read,block);assert.equal(page.status,200);
  const doc=new JSDOM(page.prerender).window.document;

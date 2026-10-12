@@ -164,6 +164,82 @@ def test_word_nonbreaking_hyphens_are_part_of_the_financial_year_header():
     assert word_text(p)=='2025‑26'
 
 
+@pytest.mark.parametrize('allowed', [True, False])
+def test_receipt_records_actual_identity_robots_order_and_request_spacing(tmp_path, monkeypatch, allowed):
+    import io
+    import hashlib
+    from parli.ingest import honest_http, http
+    from scripts.budget_registry.acquire import ReceiptHTTP
+    clock = [100.0]
+    monkeypatch.setattr(honest_http.time, 'monotonic', lambda: clock[0])
+    monkeypatch.setattr(honest_http.time, 'sleep', lambda seconds: clock.__setitem__(0, clock[0] + seconds))
+    calls = []
+    class Response(io.BytesIO):
+        headers = {'Content-Type': 'text/plain'}
+        def getcode(self): return 200
+        def geturl(self): return self.url
+    class Opener:
+        def open(self, request, **_):
+            calls.append(request.full_url)
+            rules = f'User-agent: *\nCrawl-delay: 2\n{"Allow: /" if allowed else "Disallow: /"}\n'.encode()
+            response = Response(rules if request.full_url.endswith('/robots.txt') else b'original fixture')
+            response.url = request.full_url
+            return response
+    monkeypatch.setattr(http, 'build_opener', lambda *_: Opener())
+    client = ReceiptHTTP(tmp_path)
+    url = 'https://example.test/paper'
+    if not allowed:
+        with pytest.raises(honest_http.Refused, match='robots.txt disallows'): client.get(url)
+        assert calls == ['https://example.test/robots.txt']
+        assert client.receipt(url)['robots']['decision'] == 'disallowed'
+        return
+    assert client.get(url) == b'original fixture'
+    robots, receipt = client.receipt(calls[0]), client.receipt(url)
+    request = receipt['requests'][0]
+    assert request['user_agent_policy'] == 'parli/ingest/user-agent.json'
+    assert request['user_agent_sha256'] == hashlib.sha256(http.USER_AGENT.encode()).hexdigest()
+    assert request['robots']['decision'] == 'allowed'
+    assert request['robots']['sha256'] == robots['sha256']
+    assert request['robots']['snapshot'] == robots['snapshot']
+    assert request['previous_started_at'] == robots['requests'][0]['started_at']
+    assert request['interval_seconds'] == request['minimum_interval_seconds'] == 2
+    assert client.get(url) == b'original fixture'
+    assert calls == ['https://example.test/robots.txt', url]
+
+
+def test_receipt_refresh_preserves_hash_join_and_requires_empty_cache(tmp_path):
+    from scripts.budget_registry.refresh_receipts import refresh, refresh_provenance
+    old = {'url': 'https://example.test/paper', 'status': 200, 'snapshot': 'old', 'sha256': 'a' * 64}
+    fresh = {**old, 'snapshot': 'new', 'user_agent_policy': 'parli/ingest/user-agent.json'}
+    row = {'source_url': old['url'], 'sha256': old['sha256'], 'snapshot': 'old'}
+    updated = refresh_provenance({'receipt': old, 'rows': [row, {**row, 'sha256': 'b' * 64}]}, {old['url']: fresh})
+    assert updated['receipt'] == fresh
+    assert updated['rows'][0]['snapshot'] == 'new'
+    assert updated['rows'][1]['snapshot'] == 'old'
+    cache = tmp_path / 'cache'
+    cache.mkdir()
+    (cache / 'previous').write_text('cached bytes')
+    with pytest.raises(ValueError, match='fresh empty cache'): refresh(tmp_path, cache)
+
+
+def test_receipt_refresh_holds_newly_restricted_document_before_staged_writes(tmp_path, monkeypatch):
+    from scripts.budget_registry import refresh_receipts as repair
+    stage = tmp_path / 'stage'
+    stage.mkdir()
+    old = {'url': 'https://example.test/paper.pdf', 'status': 200, 'snapshot': 'old', 'sha256': 'a' * 64}
+    (stage / 'receipts.json').write_text(json.dumps([old]))
+    (stage / 'inventory.json').write_text(json.dumps({'documents': [{'url': old['url'], 'licence': {'url': 'https://creativecommons.org/licenses/by/4.0/'}}]}))
+    before = {p.name: p.read_bytes() for p in stage.iterdir()}
+    class Client:
+        def __init__(self, cache): self.robots = {}
+        def get(self, url): return b'newly restricted original'
+        def receipt(self, url): return {**old, 'snapshot': 'new'}
+    monkeypatch.setattr(repair, 'ReceiptHTTP', Client)
+    monkeypatch.setattr(repair, 'pdf_rights', lambda _: {'status': 'blocked'})
+    with pytest.raises(ValueError, match='rights changed; hold'): repair.refresh(stage, tmp_path / 'fresh-cache')
+    assert {p.name: p.read_bytes() for p in stage.iterdir()} == before
+
+
 def test_archive_link_mismatch_cannot_move_a_paper_into_the_wrong_year():
     from scripts.budget_registry.acquire import normalize_document_years
     documents=[{'year':'2019-20','release':'2019-20','kind':'bp1','title':'Publisher index label','url':'https://archive.budget.gov.au/2018-19/bp1/bp1.pdf'},

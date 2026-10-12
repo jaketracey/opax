@@ -1,8 +1,8 @@
 {
-  "snapshotSha256": "ed7d7c9cd2ca19744d736746cb37d9b801090ce437042951d04cc22fb9a21344",
+  "snapshotSha256": "5e755a7f18c295b9d8c5d84087fad43e47a5a5952fddd598b07e12b47f9af4a8",
   "codeHashes": {
-    "portal/src/index.ts": "23e3aa2e007bf191245e5c0ba169981d7efe68169a04066b8656b03ac18d9079",
-    "portal/src/budget.ts": "6e925e2952f205650f9a708ab7fa50f0ab29e1298e5c7eb122ad0244f3d50861",
+    "portal/src/index.ts": "7b7efee78ba08eb997c2af0396f37318600fa323308c11c3c1d07f79a7bdfe85",
+    "portal/src/budget.ts": "10ca76e21ec1ffeba651908dfe1748111132ebddc3504b4ba51ca935e2d532a6",
     "portal/public/budget.css": "89208912cb08f370dc61092fdc6d9cfc4cc245cb5b93ae71b61935e4592c3131",
     "portal/public/budget.js": "996197ce8e9a3847954ecfcb96fa74f318c861975789067f0a0a721065c52a7c",
     "portal/public/budget-table.js": "0611aafd79a5b3079888bf7a3cb48762bf44baf060437e1d4b013d97f8b8c16e"
@@ -14,14 +14,18 @@
       "status": 200,
       "horizontalOverflow": false,
       "headlineCards": 4,
-      "cashYears": 12
+      "cashYears": 12,
+      "archivedPortfolioLinks": 0,
+      "archivedFillerRows": 0
     },
     {
       "width": 1440,
       "status": 200,
       "horizontalOverflow": false,
       "headlineCards": 4,
-      "cashYears": 12
+      "cashYears": 12,
+      "archivedPortfolioLinks": 0,
+      "archivedFillerRows": 0
     }
   ],
   "search": {

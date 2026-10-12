@@ -3,8 +3,42 @@
   "receipt": {
     "url": "https://archive.budget.gov.au/2015-16/myefo/MYEFO_2015-16_Final.pdf",
     "status": 200,
-    "snapshot": "2026-10-12T21:25:41.880277+00:00",
-    "sha256": "d44e6e2d54042a7162a1cb93d927012f4176f491d376e65a9f4a4c31f7b32c88"
+    "snapshot": "2026-10-12T23:06:22.750403+00:00",
+    "sha256": "d44e6e2d54042a7162a1cb93d927012f4176f491d376e65a9f4a4c31f7b32c88",
+    "requests": [
+      {
+        "url": "https://archive.budget.gov.au/2015-16/myefo/MYEFO_2015-16_Final.pdf",
+        "started_at": "2026-10-12T23:06:21.759550+00:00",
+        "minimum_interval_seconds": 1.0,
+        "previous_started_at": "2026-10-12T23:06:20.759432+00:00",
+        "interval_seconds": 1.000114919967018,
+        "robots": {
+          "url": "https://archive.budget.gov.au/robots.txt",
+          "status": 404,
+          "snapshot": "2026-10-12T23:06:18.485885+00:00",
+          "sha256": null,
+          "decision": "allowed",
+          "crawl_delay_seconds": null,
+          "request_rate": null,
+          "fallback": "HTTP 404: no published rules; allow"
+        },
+        "status": 200,
+        "user_agent_policy": "parli/ingest/user-agent.json",
+        "user_agent_sha256": "1100b17c9651df0a8cac3179efbf025b2b55acf7d93bee70876cd24bcd3c0b2b"
+      }
+    ],
+    "robots": {
+      "url": "https://archive.budget.gov.au/robots.txt",
+      "status": 404,
+      "snapshot": "2026-10-12T23:06:18.485885+00:00",
+      "sha256": null,
+      "decision": "allowed",
+      "crawl_delay_seconds": null,
+      "request_rate": null,
+      "fallback": "HTTP 404: no published rules; allow"
+    },
+    "user_agent_policy": "parli/ingest/user-agent.json",
+    "user_agent_sha256": "1100b17c9651df0a8cac3179efbf025b2b55acf7d93bee70876cd24bcd3c0b2b"
   },
   "pages": [
     {

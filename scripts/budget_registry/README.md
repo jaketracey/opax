@@ -24,3 +24,11 @@ node portal/test/budget-browser.mjs
 ```
 
 The browser test runs at 390/1440, exercises four metric charts and shared-table search/CSV, verifies JavaScript-disabled figures and blocks off-origin browser requests. It records snapshot/code hashes beside screenshots. Set `OPAX_BUDGET_BROWSER_TOOLS` to the directory containing the local Playwright package; `OPAX_BUDGET_PORT` selects the IPv6 loopback port. `OPAX_TEST_HOST=::1` selects the same loopback family for desktop portal fixtures.
+
+To repair receipts that predate request-identity evidence, use a separate empty cache:
+
+```sh
+python3 -m scripts.budget_registry.refresh_receipts --cache .cache/budget-receipt-repair-YYYY-MM-DD
+```
+
+This command selects the incomplete ledger entries, performs serial robots-aware GETs, and records each outgoing request's shared identity hash, start time, previous start, measured interval and applicable robots receipt/decision. It requires unchanged document bytes and an open document licence before moving staged provenance; changed rights, source status or index links stop promotion and leave the fresh cache for review. The receipt repair never publishes data. The original source cache remains the retained body store when the fresh hashes match.

@@ -14,6 +14,7 @@ from pathlib import Path
 import re
 import signal
 import sys
+import time
 from urllib.parse import urljoin, urlsplit
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -43,8 +44,49 @@ class ReceiptHTTP(HonestHTTP):
         super().__init__()
         self.cache = cache
         self.paused_hosts = set()
+        self.attempts = []
+        self.previous_request = None
+        transport = self.opener
+        client = self
+        class RecordedOpener:
+            def open(self, request, **kwargs):
+                previous = client.previous_request
+                if previous:
+                    time.sleep(max(0, client.delay - (time.monotonic() - previous[0])))
+                started = time.monotonic()
+                event = {'url': request.full_url, 'started_at': now(),
+                         'user_agent': request.get_header('User-agent'),
+                         'minimum_interval_seconds': client.delay,
+                         'previous_started_at': previous[1] if previous else None,
+                         'interval_seconds': started - previous[0] if previous else None,
+                         'robots': client.robots_evidence(request.full_url)}
+                client.previous_request = (started, event['started_at'])
+                client.attempts.append(event)
+                try:
+                    response = transport.open(request, **kwargs)
+                    event['status'] = response.getcode()
+                    return response
+                except Exception as exc:
+                    event['status'] = getattr(exc, 'code', 'error')
+                    raise
+        self.opener = RecordedOpener()
         cache.mkdir(parents=True, exist_ok=True)
         os.environ.setdefault('OPAX_SOURCE_STATUS_FILE',str(cache/'source-access.json'))
+
+    def robots_evidence(self, url):
+        parts = urlsplit(url)
+        origin = f'{parts.scheme}://{parts.netloc}'
+        if parts.path == '/robots.txt':
+            return {'decision': 'policy request'}
+        robot = self.robots.get(origin)
+        receipt = self.receipt(origin + '/robots.txt')
+        rate = robot.request_rate(USER_AGENT) if robot else None
+        return {'url': origin + '/robots.txt', 'status': receipt.get('status'),
+                'snapshot': receipt.get('snapshot'), 'sha256': receipt.get('sha256'),
+                'decision': 'allowed' if robot and robot.can_fetch(USER_AGENT, url) else 'disallowed',
+                'crawl_delay_seconds': robot.crawl_delay(USER_AGENT) if robot else None,
+                'request_rate': {'requests': rate.requests, 'seconds': rate.seconds} if rate else None,
+                'fallback': 'HTTP 404: no published rules; allow' if receipt.get('status') == 404 else None}
 
     def get(self,url,**kwargs):
         previous=signal.getsignal(signal.SIGALRM)
@@ -56,7 +98,7 @@ class ReceiptHTTP(HonestHTTP):
             self.paused_hosts.add(urlsplit(url).netloc)
             path=self.cache/(sha(url.encode())+'.json')
             reason=getattr(exc,'reason',str(exc))
-            if not path.exists():dump(path,{'url':url,'status':'held','reason':reason,'snapshot':now(),'user_agent':USER_AGENT})
+            if not path.exists():dump(path,{'url':url,'status':'held','reason':reason,'snapshot':now(),'user_agent':USER_AGENT,'robots':self.robots_evidence(url)})
             raise Refused(reason,url) from None
         finally:
             signal.setitimer(signal.ITIMER_REAL,*timer);signal.signal(signal.SIGALRM,previous)
@@ -73,14 +115,18 @@ class ReceiptHTTP(HonestHTTP):
             if receipt.get('status') == 404:
                 return None
             raise Refused(receipt.get('reason', 'previous source refusal'), url)
+        first_attempt = len(self.attempts)
         try:
             body = super()._request(url, **kwargs)
         except (Refused, Unavailable, SourceRefused) as exc:
             self.paused_hosts.add(urlsplit(url).netloc)
-            dump(receipt_path, {'url': url, 'status': 'held', 'reason': str(exc), 'snapshot': now(), 'user_agent': USER_AGENT})
-            raise Refused(str(exc), url) from None
+            reason = getattr(exc, 'reason', str(exc))
+            dump(receipt_path, {'url': url, 'status': 'held', 'reason': reason, 'snapshot': now(), 'user_agent': USER_AGENT,
+                                'requests': [a for a in self.attempts[first_attempt:] if a['url'] == url], 'robots': self.robots_evidence(url)})
+            raise Refused(reason, url) from None
         receipt = {'url': url, 'status': 200 if body is not None else 404, 'snapshot': now(),
-                   'sha256': sha(body) if body is not None else None, 'user_agent': USER_AGENT}
+                   'sha256': sha(body) if body is not None else None, 'user_agent': USER_AGENT,
+                   'requests': [a for a in self.attempts[first_attempt:] if a['url'] == url], 'robots': self.robots_evidence(url)}
         if body is not None: body_path.write_bytes(body)
         dump(receipt_path, receipt)
         return body

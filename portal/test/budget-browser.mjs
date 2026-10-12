@@ -20,6 +20,12 @@ import {createRequire} from 'node:module';
    await page.screenshot({path:resolve(out,`budget-${width}.png`),fullPage:true});
    await page.screenshot({path:resolve(out,`budget-${width}-viewport.png`),fullPage:false});
    results.push({width,status:response.status(),horizontalOverflow:overflow,headlineCards:await page.locator('.budget-cards article').count(),cashYears:await page.locator('.budget-chart tbody tr').count()});
+   await page.goto(base+'/budget?year=2015-16');await page.waitForSelector('[data-datatable]');
+   if((await page.locator('body').textContent()).includes('Publisher document link unavailable'))throw Error('Unlinked portfolio filler rendered');
+   if(await page.locator('[aria-labelledby="budget-portfolios"] > ul > li:not(:has(a))').count())throw Error('Unlinked portfolio row rendered');
+   await page.screenshot({path:resolve(out,`budget-2015-16-${width}.png`),fullPage:true});
+   results.at(-1).archivedPortfolioLinks=await page.locator('[aria-labelledby="budget-portfolios"] > ul > li').count();
+   results.at(-1).archivedFillerRows=0;
   }
   for(const metric of ['receipts','payments','underlying_cash_balance','net_debt']){await page.goto(base+'/budget?metric='+metric);if(await page.locator('.budget-chart tbody tr').count()!==12)throw Error('Incomplete metric chart');}
   await page.goto(base+'/budget?year=2025-26');await page.waitForSelector('[data-datatable]');
