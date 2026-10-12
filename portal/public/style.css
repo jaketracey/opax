@@ -518,7 +518,7 @@ header.ui-page-head { position: static; z-index: auto; padding: 0; border: 0; ba
   .ui-card, .ui-plate { border-color: CanvasText; }
   .ui-section[data-accent]::before { background: CanvasText; }
 }
-@media (prefers-reduced-motion: reduce) { .ui-card { transition: none; } }
+@media (prefers-reduced-motion: reduce) { .ui-card, .bill-peek-summary::after { transition: none; } }
 
 a, button.link {
   color: var(--ink); text-decoration: underline;
@@ -4211,24 +4211,24 @@ html[data-panel="chat"] footer { display: none; }
 .bill-peek { margin: 0; }
 .bill-peek-summary {
   display: flex; flex-direction: column; justify-content: center; gap: var(--sp-2);
-  min-height: 44px; padding: var(--sp-4) var(--sp-24) var(--sp-4) 0; position: relative;
+  min-height: var(--size-target); padding: var(--sp-4) var(--sp-24) var(--sp-4) 0; position: relative;
   cursor: pointer; list-style: none;
 }
 .bill-peek-summary::-webkit-details-marker { display: none; }
 .bill-peek-summary::after {
-  content: ""; position: absolute; right: 0.35rem; top: 50%; width: 8px; height: 8px;
-  border-right: var(--border-hairline) solid var(--bronze); border-bottom: var(--border-hairline) solid var(--bronze);
-  transform: translateY(-70%) rotate(45deg); transform-origin: center;
+  /* The disclosure chevron, as ui-disclosure draws it. */
+  content: ""; position: absolute; right: var(--sp-4); top: 50%; width: var(--sp-8); height: var(--sp-8);
+  border-right: var(--border-focus) solid var(--ink-soft); border-bottom: var(--border-focus) solid var(--ink-soft);
+  transform: translateY(-70%) rotate(45deg); transform-origin: center; transition: transform var(--duration-standard) var(--ease-standard);
 }
 .bill-peek[open] > .bill-peek-summary::after { transform: translateY(-25%) rotate(-135deg); }
 .bill-peek-summary:focus-visible { outline: var(--border-focus) solid var(--bronze-ink); outline-offset: 2px; }
-.bill-peek-name { font: var(--weight-strong) var(--text-15)/var(--leading-normal) var(--serif); color: var(--ink); }
+.bill-peek-name { font: var(--type-metadata); font-weight: var(--weight-strong); color: var(--ink); }
 .bill-peek-summary:hover .bill-peek-name { color: var(--bronze-ink); }
 .bill-peek-body {
-  padding: var(--sp-12) 0 var(--sp-12) var(--sp-16); margin: var(--sp-8) 0 var(--sp-12);
-  border-left: 3px solid var(--bronze-wash);
+  padding: var(--sp-4) 0 var(--sp-12); margin: var(--sp-4) 0 var(--sp-12);
 }
-.bill-peek-body .bill-sentences p { font-size: var(--text-15); line-height: var(--leading-body); }
+.bill-peek-body .bill-sentences p { font: var(--type-body); }
 .bill-peek-head { margin-bottom: var(--sp-8); }
 .bill-peek-line { margin: 0; font: var(--type-metadata); color: var(--ink); }
 .bill-peek-status { margin: 0; }
