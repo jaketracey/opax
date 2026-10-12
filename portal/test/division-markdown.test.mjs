@@ -3,7 +3,10 @@ import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import {runInNewContext} from 'node:vm';
 import * as markdown from '../public/division-markdown.js';
-import {renderBillAnswer, renderDivisionAnswer, renderPersonAnswer} from '../src/seo-content.ts';
+import {renderBillAnswer as rawBillAnswer, renderDivisionAnswer, renderPersonAnswer} from '../src/seo-content.ts';
+import {tablePrivacyIndex} from './datatable-privacy.mjs';
+const tableIndex = await tablePrivacyIndex();
+const renderBillAnswer = (bill, people, slugs, related = [], query = {}) => rawBillAnswer(bill, people, slugs, related, query, tableIndex.safe);
 const {renderDivisionMarkdown:render, divisionPlain, billNoteRepair}=markdown;
 const read = name => JSON.parse(readFileSync(new URL(`../public/${name}`,import.meta.url),'utf8'));
 const bill = read('bills/au-federal-s1488.json');
@@ -57,16 +60,20 @@ test('SPA shares the SSR renderer and retains title/stage stripping and sentence
  const parts=c.billQuestionParts(fake,{title:'Example Bill'});
  assert.equal(parts.head,'A sufficiently long first sentence about the motion.');assert.match(c.billNoteHTML(parts.note),/<blockquote>/);
 });
-test('bill and nightly-exported division SSR contain formatted fixture without raw Markdown',()=>{
- for(const html of [renderBillAnswer(bill,[],new Map()).html,renderDivisionAnswer(read('divisions/division-federal-senate-10178.json'),[],new Map()).html]){
+test('bill tables link to the division whose SSR retains the formatted question',()=>{
+ const billHTML=renderBillAnswer(bill,[],new Map()).html;
+ assert.match(billHTML,/href="\/doc\/division-federal-senate-10178"/);
+ assert.doesNotMatch(billHTML,/###|&gt; |<blockquote>/);
+ for(const html of [renderDivisionAnswer(read('divisions/division-federal-senate-10178.json'),[],new Map()).html]){
   assert.doesNotMatch(html,/###|&gt; /);assert.match(html,/<blockquote>/);
   assert.match(html,/<strong>What is the bill&#39;s main idea\?<\/strong>/);
   assert.match(html,/The majority voted against/);assert.equal((html.match(/<h1\b/g)||[]).length,1);
  }
 });
-test('MP vote questions use the same renderer when supplied',async()=>{
- const data={'1':{name:'Example Member',jurisdiction:'federal',for:[{name:'Example Bill',date:'2026-04-01',question:division.question}],against:[]}};
- const read=async path=>{if(path==='/votes.json')return data;throw Error('No fixture');};
- const html=(await renderPersonAnswer({pid:'1',name:'Example Member',states:[],chambers:['senate']},read,new Map())).html;
- assert.match(html,/<blockquote>/);assert.doesNotMatch(html,/###|&gt; /);
+test('MP vote tables link to the question instead of repeating its Markdown',async()=>{
+ const data={'1':{name:'Example Member',jurisdiction:'federal',for:[{name:'Example Bill',date:'2026-04-01',division_slug:'division-fixture',question:division.question}],against:[]}};
+ const read=async path=>{if(path==='/votes.json')return data;if(path.startsWith('/graph/money'))return JSON.parse(readFileSync(new URL('../public'+path,import.meta.url),'utf8'));throw Error('No fixture');};
+ const html=(await renderPersonAnswer({pid:'1',name:'Example Member',states:[],chambers:['senate']},read,new Map(),undefined,undefined,{},tableIndex.safe)).html;
+ assert.match(html,/href="\/doc\/division-fixture">Example Bill/);
+ assert.doesNotMatch(html,/###|&gt; |<blockquote>/);
 });

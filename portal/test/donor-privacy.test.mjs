@@ -242,6 +242,7 @@ test('neutral D1 aggregates retain source financial totals without identity fiel
     assert.ok(Math.abs(stored-total)<=Math.max(0.00001,Math.abs(total)*1e-12),name+': source total retained');
     const aggregates=(await tablesD1.db.prepare(`SELECT * FROM ${table} WHERE id LIKE 'aggregate:%' LIMIT 100`).all()).results;
     assert.ok(aggregates.length>0,name+': neutral aggregates exist');
+    if(['grants','money-connections','party-money'].includes(name))for(const row of aggregates)assert.ok(Object.values(row).some(value=>typeof value==='string'&&/^Donors not named \([0-9]+\)$/.test(value)),name+': shared neutral aggregate label');
     for(const row of aggregates)for(const key of ['abn','url','canonical_url','aliases','description','to'])if(key in row)assert.equal(row[key],null,name+': aggregate has no identity or link');
   }
 });

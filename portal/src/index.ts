@@ -4,8 +4,9 @@ import sourceIdentity from '../../parli/ingest/user-agent.json'
 import { SA_EXCERPT_LABEL, isSaHansard, saFullText, saOfficialUrl } from '../public/sa-hansard.js'
 import { saPublicResponse, saEventPayload } from './sa-hansard'
 import { saEvidenceText, saEvidenceRecord, saGenerationResponse, saConversationInput } from './sa-evidence'
-import {tablePrivacy} from './table-privacy'
+import {tablePrivacy, tablePrivacyCheck} from './table-privacy'
 import { divisionPlain } from '../public/division-markdown.js'
+import {guardTableURL, divisionTableConfig, voteTableConfig} from '../public/vote-tables.js'
 import { tableApi } from './table-api'
 import { runSocialPublication, socialStatus, socialEngagement, publicationCopy, previewPublication, todayRedirect, CHANNELS, type Channel } from './social-publication'
 import { positionEvidence, positionProposalQuote, positionEligibilityQuotes, positionCostQuote, isPositionEligibilityQuestion, isPositionCostQuestion, isPositionDetailQuestion, positionPointSupported, normalizePositionDraft } from './position-evidence'
@@ -4060,7 +4061,9 @@ async function buildRouteMeta(route: SeoRoute, url: URL, request: Request, env: 
         return base({title:page.title+' · OPAX',description:page.description,prerender:page.html,jsonLd:page.jsonLd,status:page.status,card:'card' in page ? page.card : null})
       }
       const people = route.hub === 'sitting' && route.id ? await loadPeople(env) : null
-      const page = await hubPage(route.hub,route.id,<T>(path: string) => assetJson<T>(env,path),people?.people || [],people?.slugOf || new Map(),undefined,env)
+      const check = await tablePrivacyCheck(env.ASSETS)
+      const query = guardTableURL(divisionTableConfig({},'Divisions','sitting',check),url).query
+      const page = await hubPage(route.hub,route.id,<T>(path: string) => assetJson<T>(env,path),people?.people || [],people?.slugOf || new Map(),undefined,env,query,check)
       return base({title:page.title+' · OPAX',description:page.description,prerender:page.html,jsonLd:page.jsonLd,status:page.status})
     }
     case 'audit': return base({ ...await auditPage(route.id, url, auditReader(env.ASSETS), prerenderBlock),
@@ -4246,7 +4249,9 @@ async function buildMeta(route: SeoRoute, url: URL, request: Request, env: Env, 
       if (p) {
         const profiles=await read<{people:Record<string,PersonSchemaIdentity>;by_name:Record<string,PersonSchemaIdentity>}>('/profile-links.json').catch(()=>null)
         const identity={...profiles?.by_name[foldName(p.name)],...profiles?.people[p.pid || '']}
-        const content = await renderPersonAnswer(p,read,people.slugOf,identity.aphProfileUrl || undefined,await withheldNameCheck(env.ASSETS))
+        const check = await tablePrivacyCheck(env.ASSETS)
+        const query = guardTableURL(voteTableConfig(p.pid || '',undefined,check),url).query
+        const content = await renderPersonAnswer(p,read,people.slugOf,identity.aphProfileUrl || undefined,await withheldNameCheck(env.ASSETS),query,check)
         meta.prerender = content.html
         if(content.description) meta.description=clip(content.description)
         const photos=await loadPhotos(env).catch(()=>null)
@@ -4260,11 +4265,10 @@ async function buildMeta(route: SeoRoute, url: URL, request: Request, env: Env, 
     } else if (route.kind === 'bill') {
       const bill=await read<Parameters<typeof renderBillAnswer>[0]>(`/bills/${route.key}.json`).catch(()=>null)
       if(bill){
-        const recent=new Set([...(bill.divisions || [])].sort((a,b)=>String(b.date || '').localeCompare(String(a.date || ''))).slice(0,3).map(d=>d.key))
-        const summaries=await loadDivisionSummaries(env)
-        const divisions=await Promise.all((bill.divisions || []).map(async d=>({...d,...summaries.get(d.key.replace(/^division-/,'')),...(recent.has(d.key) ? await read<Division>(`/divisions/${d.key.startsWith('division-') ? d.key : `division-${d.key}`}.json`).catch(()=>null) : {})})))
         const related=await read<{bills:Parameters<typeof renderBillAnswer>[0][]}>('/bills/index.json')
-        meta.prerender=renderBillAnswer({...bill,divisions},people?.people || [],people?.slugOf || new Map(),related.bills).html;billIdentity={identifier:bill.key,status:bill.status}}
+        const check = await tablePrivacyCheck(env.ASSETS)
+        const query = guardTableURL(divisionTableConfig({bill:bill.key},undefined,undefined,check),url).query
+        meta.prerender=renderBillAnswer(bill,people?.people || [],people?.slugOf || new Map(),related.bills,query,check).html;billIdentity={identifier:bill.key,status:bill.status}}
     } else if(route.kind==='subject' && route.dir==='supplier') {
       const content=await renderSupplierAnswer(meta.canonical.split('/').at(-1)!,read)
       if(content) meta.prerender=content.html
@@ -5152,7 +5156,9 @@ async function serveSeoPage(route: SeoRoute, url: URL, request: Request, env: En
     buildMeta(route, url, request, env, ctx),
   ])
   if (!shell.ok) return shell
-  const noindex = meta.noindex || meta.status >= 400 || (['/ask', '/search'].includes(url.pathname.replace(/\/+$/, '')) && Boolean(url.search))
+  const tableKey = route.kind === 'bill' || route.kind === 'hub' && route.hub === 'sitting' ? 'dv' : route.kind === 'subject' && route.dir === 'person' ? 'vr' : null
+  const tableState = tableKey && [...url.searchParams].some(([key,value])=>key.startsWith(tableKey+'.') && value !== '')
+  const noindex = meta.noindex || meta.status >= 400 || tableState || (['/ask', '/search'].includes(url.pathname.replace(/\/+$/, '')) && Boolean(url.search))
   // Election coverage names unavailable grants, but renders no financial records.
   // Its renderer owns any future caveat alongside an actual political money pairing.
   // The policy pages (privacy, support) name no association between records.
