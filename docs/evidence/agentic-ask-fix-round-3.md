@@ -11,13 +11,14 @@ All regressions are in `portal/test/agentic-fix3.test.mjs`:
 | Finding | Fixture proof |
 | --- | --- |
 | P1 lowercase unresolved speaker | Lowercase/capitalized Morgan Fiction, possessives, single names, by/from grammar and partially resolved comparisons decline before planner or count |
+| P1 explicit person grammar | Names made from ordinary query words still decline; passive and generic MP counts continue to answer |
 | P1 cache entity identity | Changing resolved people, parties or bill keys changes the key; set order/duplicates do not; unresolved scope cannot form a key |
 | P1 lowercase then capitalized cache order | Real Worker JSON and SSE both use normal Ask; no agentic cache read/write, planner, count or tool-step event; a poisoned entry is ignored |
 | P1 lowercase real MP | User-requested public roster identity Penny Wong resolves without also matching the separate Wong entry; all model/count responses are synthetic and every count constrains Penny Wong |
 | P2 requested-entity truncation | Taylor/Pat yearly query produces 24 supported facts and renders eight for each, in either tool order; missing requested-entity facts cannot report success |
 | P3 written-out figures | Hyphenated/spaced eighty-seven, aye/no words, dollar amounts, spelled calendar years, ordinals and fractions are rejected |
 
-Copied unchanged into isolated source restored from the reviewed baseline, all six regressions fail: **6 tests, 0 passes, 6 failures**. The fixed targeted suite passes **58 tests, 0 failures, 0 skips**, including existing cancellation, deadline, metric-binding, citations, migration, renderer and operator tests.
+Copied unchanged into isolated source restored from the reviewed baseline, all seven regressions fail: **7 tests, 0 passes, 7 failures**. The fixed targeted suite passes **59 tests, 0 failures, 0 skips**, including existing cancellation, deadline, metric-binding, citations, migration, renderer and operator tests.
 
 The ordinary fixture corpus now has 48 questions. The real `origin/main` Worker and this branch produce **48 JSON + 48 SSE bodies, all 96 byte-identical**, with zero planner calls. All network-dependent tests use offline hosts and stubbed providers; no production Ask, generation, voice or auth call is permitted.
 

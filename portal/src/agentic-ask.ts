@@ -295,23 +295,30 @@ export function extractNamedScope(question: string, roster: unknown, billList: u
   // examining person grammar and remaining name-like token spans.
   const resolvedPeople = [...new Set(people)]
   const mask = (text: string, phrase: string) => text.split(` ${normaliseQuestion(phrase)} `).join(' ~ ')
-  let unknown = resolvedPeople.reduce((text, name) => mask(mask(text, name), name.split(' ').at(-1)!), q)
+  let unknown = resolvedPeople.reduce((text, name) => mask(text, name), q)
+  for (const name of resolvedPeople) unknown = mask(unknown, name.split(' ').at(-1)!)
   for (const party of parties) for (const alias of aliases[party]) unknown = mask(unknown, alias)
   for (const bill of (billList as { bills?: { key: string; title?: string; short_title?: string }[] } | null)?.bills ?? [])
     if (bills.includes(bill.key)) for (const title of [bill.key, bill.title, bill.short_title]) if (title) unknown = mask(unknown, title)
   // Grammar also catches an unresolved single name: "has morgan made", "did
   // morgan say", "speeches by morgan", or "morgan's housing speeches".
-  const words = '[\\p{L}]+(?: [\\p{L}]+){0,5}'
-  const candidates = [
-    ...unknown.matchAll(new RegExp(`\\b(?:has|have|did|does|do) (${words}) (?:made|make|given|give|said|say|spoken|speak|voted|vote)\\b`, 'gu')),
-    ...unknown.matchAll(new RegExp(`\\b(?:speeches|remarks|statements|votes) (?:by|from|of) (${words})`, 'gu')),
-    ...unknown.matchAll(new RegExp(`(${words}) s\\b`, 'gu')),
-  ].map(m => m[1])
+  const words = '(?:[\\p{L}]+|~)(?: (?:[\\p{L}]+|~)){0,8}'
+  const subjects = [...unknown.matchAll(new RegExp(`\\b(?:has|have|did|does|do) (${words}) (?:made|make|given|give|said|say|spoken|speak|voted|vote)\\b`, 'gu'))].map(m => m[1])
+  const byNames = [...unknown.matchAll(new RegExp(`\\b(?:speeches|remarks|statements|votes) (?:by|from|of) (${words})`, 'gu'))]
+    .map(m => m[1].split(/\b(?:about|on|in|since|until|from|across|over|each|per|are|were)\b/)[0].trim())
+  const possessives = [...unknown.matchAll(new RegExp(`(${words}) s\\b`, 'gu'))].map(m => m[1])
+  const collective = /^(?:(?:the|all|these|those|which|federal|australian|state|current) )*(?:been|mps|members|senators|parties|party|parliament|senate|house|committee|committees|government|opposition|speaker|speakers|year|years|decade|decades|term|terms|topic|topics)$/
+  // Explicit person slots cannot be pardoned by the query-word vocabulary:
+  // "has bill justice made" is still an unresolved person, even though both
+  // words also have ordinary parliamentary meanings.
+  const unresolvedGrammar = [...subjects, ...byNames, ...possessives].some(span => {
+    const remaining = span.replace(/^(?:(?:how|many|of|the|compare)\s+)*/, '').replace(/~|\b(?:and|or|versus|vs)\b/g, ' ').replace(/\s+/g, ' ').trim()
+    return remaining && !collective.test(remaining)
+  })
   // These are parliamentary/query words, not guessed identities. Unknown
   // multi-word subjects conservatively stay on normal Ask as well.
   const ordinary = new Set(('please email me at call contact send my phone how many who which what where when why is are was were be been being has have had did does do made make making give given gave giving said say spoken spoke speak speaks speaking voted vote votes voting and or versus vs compared compare comparing than more most less least fewest often much the a an of for from by to in on about with into across over per each every all overall total number count counts counting rank ranking ranks top leading changed change changing grown growth debating debated debate discussed discuss mentions mention mentioned statements remarks speeches speech activity their his her its they them he she s senator senators mp mps member members minister ministers party parties parliament parliaments parliamentary chamber chambers committee committees hearing hearings house representatives legislative assembly council federal australian australia new south wales nsw victoria victorian vic queensland qld act sa current previous last this term terms record whole time year years yearly decade decades since until between through before after during now today recent recently reform reforms policy policies bill bills amendment amendments support affordability rental rentals assistance advertising ban bans labelled indexed recorded topic topics gambling housing climate environment change health mining energy coal welfare social financial services bank banks banking finance unions workplace education schools agriculture farming property construction immigration indigenous affairs tax budget media communications hospitality alcohol defence security integrity democracy infrastructure transport justice law foreign affairs fossil fuels donations donation donors donor money industry industries received receive receives receiving gave give giving donated contribute contributions paid funding raised same both similar different difference differences percentage percentages share shares coverage trend trends').split(' '))
   const isUnknown = (word: string) => !ordinary.has(word) && !/^(?:19|20)\d{2}s?$/.test(word)
-  const unresolvedGrammar = candidates.some(span => span.split(' ').some(isUnknown))
   const unresolvedSpan = unknown.split(/[^\p{L}\p{N} ]+/u).some(span => {
     let length = 0
     return span.trim().split(/\s+/).some(word => { length = isUnknown(word) ? length + 1 : 0; return length >= 2 })

@@ -18,6 +18,19 @@ test('P1 lowercase unresolved speaker declines before any planner or count, incl
  }
 });
 
+test('P1 explicit person grammar declines unresolved names made from ordinary query words',async()=>{
+ for(const q of ['How many housing speeches has bill justice made?', "How many of bill justice's housing speeches are recorded?",'How many housing speeches by bill justice are recorded?', 'How many housing speeches have Taylor Example and morgan made?']){
+  let calls=0;const r=await ask.runAgentic(q,{...fixtureDeps,generate:async()=>({text:plan()}),kb:async()=>{calls++;return{fulltext:{total:300}}}});
+  assert.equal(r.answered,false,q);assert.equal(calls,0,q);
+ }
+ for(const q of ['How many housing speeches have been made?', 'How many housing speeches have MPs made?', 'How many housing speeches by year are recorded?']){
+  const r=await ask.runAgentic(q,{...fixtureDeps,generate:async()=>({text:plan()})});assert.equal(r.answered,true,q);
+ }
+ const resolved=await ask.runAgentic("How many of Taylor Example's housing speeches are recorded?",{...fixtureDeps,generate:async()=>({text:plan('Taylor Example')})});
+ assert.equal(resolved.answered,true);
+
+});
+
 test('P1 cache identity binds canonical resolved people, parties and bills and rejects unresolved scope',async()=>{
  const key=entities=>ask.agenticCacheKey(lower,'epoch','model',ask.inferPeriod(lower),undefined,{},'trend',entities);
  assert.notEqual(await key(scope(['Taylor Example'])),await key(scope(['Pat Example'])));
