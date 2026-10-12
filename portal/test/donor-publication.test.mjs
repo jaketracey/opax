@@ -6,6 +6,7 @@ import assert from 'node:assert/strict';
 import {readFileSync,readdirSync} from 'node:fs';
 import {execFileSync} from 'node:child_process';
 import {join,relative} from 'node:path';
+import {publicationGateFiles} from '../../.ops/tools/gate-publication-files.mjs';
 import {privacyBaselineFiles,privacySourceGraphs,privacySourceDonorRecords,assetDonorRecords,PRIVACY_BASELINE,readPublicationContext,publicationContext,sanitiseDonorAsset,sanitiseGrantDonors} from '../../scripts/withhold_donor_assets.mjs';
 import {donorPrivacyIndex,donorNameWithheld,withholdIndividualDonors,MONEY_GRAPHS,foldDonorName,isOrganisationDonor} from '../public/donor-entity.js';
 import {donorRows,withheldDonorTotals,donorRouteWithheld} from '../public/donor-views.js';
@@ -53,7 +54,7 @@ function hiddenLookupKey(value,rootLookup=false,grant=false){const counts=keyAud
 
 test('every served JSON and client module passes the runtime export privacy set',t=>{
  let json=0,modules=0;
- for(const path of walk(pub)) {
+ for(const path of publicationGateFiles(pub,walk(pub))) {
   const file=relative(pub,path);
   if(path.endsWith('.json')) {
    const value=JSON.parse(readFileSync(path,'utf8'));

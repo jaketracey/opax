@@ -90,7 +90,7 @@ try{
      reports.push(smoke);
    }
    const report=join(output,`profile-${limit}.json`);
-   await run(`tests-${limit}`,'node',['--test',`--test-concurrency=${limit}`,`--test-reporter=${reporter}`,...selection.files.filter(f=>!sampled.includes(f)).map(f=>f.replace(/^portal\//,''))],{OX_GATE_REPORT:report});
+   await run(`tests-${limit}`,'node',['--test',`--test-concurrency=${limit}`,`--test-reporter=${reporter}`,...selection.files.filter(f=>!sampled.includes(f)).map(f=>f.replace(/^portal\//,''))],{OX_GATE_REPORT:report,OX_GATE_PUBLICATION_CHANGED:full||selection.affected.includes('portal/test/donor-publication.test.mjs')?'':JSON.stringify(changed)});
    reports.push(JSON.parse(readFileSync(report)));
    record.test={files:reports.flatMap(r=>r.files),summary:{success:reports.every(r=>r.summary?.success),duration_ms:reports.reduce((n,r)=>n+r.summary.duration_ms,0),counts:Object.fromEntries(Object.keys(reports[0].summary.counts).map(k=>[k,reports.reduce((n,r)=>n+r.summary.counts[k],0)]))}};record.profiles.push({concurrency:limit,...record.test});
    if(!record.test.summary?.success || record.test.files.length!==selection.files.length)throw Error('Missing/failed test summaries');
@@ -101,6 +101,7 @@ try{
  const votes=JSON.parse(readFileSync(join(work,'portal/public/votes.json')));if(votes._meta?.schema!==1)throw Error('votes.json must stay schema 1');
  if(identity(root).tree!==id.tree)throw Error('Source tree changed while gate ran; pass is not reusable');
  record.success=true;
+ if(full&&selection.files.length===selection.total)record.tier='merge';
 }catch(error){failure=error;console.error(error.message);}
 finally{
  record.seconds=(performance.now()-started)/1000;

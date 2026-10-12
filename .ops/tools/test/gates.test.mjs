@@ -5,6 +5,7 @@ import {tmpdir} from 'node:os';
 import {join,resolve} from 'node:path';
 import {spawnSync} from 'node:child_process';
 import {snapshot,git,identity,cacheKey,reusable,selectTests,quote,catalogKey} from '../gate-lib.mjs';
+import {publicationGateFiles} from '../gate-publication-files.mjs';
 const tools=resolve(import.meta.dirname,'..');
 function fixture(t){const root=mkdtempSync(join(tmpdir(),'opax-gate-test-'));t.after(()=>rmSync(root,{recursive:true,force:true}));return root;}
 function repo(t){const root=fixture(t);git(root,['init','-q']);git(root,['config','user.name','Fixture']);git(root,['config','user.email','fixture@example.invalid']);mkdirSync(join(root,'portal/test'),{recursive:true});writeFileSync(join(root,'portal/package-lock.json'),'{}');writeFileSync(join(root,'.gitignore'),'.ops/gate-cache/\n');git(root,['add','.']);git(root,['commit','-qm','fixture']);return root;}
@@ -44,11 +45,15 @@ test('reporter uses parent file duration and records failed global summaries',as
  let out='';for await(const value of reporter(events()))out+=value;assert.match(out,/FILE fixture.test.mjs 1.500s PASS/);assert.match(out,/TESTS 2 PASS 1 FAIL 1/);
 });
 test('real reporter includes time awaiting top-level fixture setup',t=>{
- const root=fixture(t),file=join(root,'setup.test.mjs'),report=join(root,'report.json');writeFileSync(file,'import test from "node:test"; await new Promise(r=>setTimeout(r,70)); test("fixture",()=>{});');
+ const root=fixture(t),file=join(root,'setup.test.mjs'),empty=join(root,'module.test.mjs'),report=join(root,'report.json');writeFileSync(file,'import test from "node:test"; await new Promise(r=>setTimeout(r,70)); test("fixture",()=>{});');writeFileSync(empty,'import assert from "node:assert/strict"; assert.equal(1+1,2);');
  const env={...process.env,OX_GATE_REPORT:report};delete env.NODE_TEST_CONTEXT;
- const run=spawnSync(process.execPath,['--test','--test-reporter='+join(tools,'gate-reporter.mjs'),file],{encoding:'utf8',env});assert.equal(run.status,0,run.stderr);const result=JSON.parse(readFileSync(report));assert.ok(result.files[0].duration_ms>=70);assert.ok(result.files[0].duration_ms>result.files[0].test_duration_ms);
+ const run=spawnSync(process.execPath,['--test','--test-reporter='+join(tools,'gate-reporter.mjs'),file,empty],{encoding:'utf8',env});assert.equal(run.status,0,run.stderr);const result=JSON.parse(readFileSync(report)),setup=result.files.find(f=>f.file.endsWith('/setup.test.mjs'));assert.ok(setup.duration_ms>=70);assert.ok(setup.duration_ms>setup.test_duration_ms);assert.equal(result.files.length,2);assert.ok(result.files.every(f=>f.success));
 });
 test('catalog cache binds export blobs and transitive builder imports; presentation-only changes can reuse fixtures',t=>{
  const root=repo(t);mkdirSync(join(root,'scripts'));mkdirSync(join(root,'portal/public'));writeFileSync(join(root,'scripts/build_search_catalog.mjs'),"import '../portal/public/catalog-reader.mjs'");writeFileSync(join(root,'portal/public/catalog-reader.mjs'),'export const x=1');writeFileSync(join(root,'portal/public/export.json'),'{}');
  const key=()=>catalogKey(root,identity(root));const initial=key();writeFileSync(join(root,'portal/public/navigation.js'),'presentation');assert.equal(key(),initial);writeFileSync(join(root,'portal/public/export.json'),'{"new":true}');assert.notEqual(key(),initial);writeFileSync(join(root,'portal/public/export.json'),'{}');assert.equal(key(),initial);writeFileSync(join(root,'portal/public/catalog-reader.mjs'),'export const x=2');assert.notEqual(key(),initial);
+});
+test('narrow publication scope covers changed assets and each real jurisdiction; full scope retains every file',()=>{
+ const root='/fixture/public',files=['app.js','graph/money.json','graph/money.qld.json','graph/money.vic.json','graph/money.tas.json','changed.js','other.json'].map(f=>join(root,f));
+ assert.equal(publicationGateFiles(root,files,'').length,files.length);const selected=publicationGateFiles(root,files,JSON.stringify(['portal/public/changed.js']));assert.ok(selected.includes(join(root,'changed.js')));assert.equal(selected.filter(f=>f.includes('/graph/')).length,4);assert.ok(!selected.includes(join(root,'other.json')));assert.throws(()=>publicationGateFiles(root,files,'{}'));
 });

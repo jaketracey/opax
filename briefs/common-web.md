@@ -27,7 +27,9 @@ OX_HEAVY_LOCAL=1 .ops/tools/web-gates.sh merge --force
 
 Lane gates select changed-file dependants (imports and asset references) plus the
 fixed donor privacy/publication, directory, MCP, analytics and deploy-chain smoke
-set in `.ops/tools/gate-map.json`. For unchanged donor code, four privacy smoke
+set in `.ops/tools/gate-map.json`. Narrow lanes check changed served assets and
+representative privacy assets from every jurisdiction; the complete publication
+corpus sweep is a merge/pre-deploy gate. For unchanged donor code, four privacy smoke
 cases run; a donor-related change runs its exhaustive file. A missing/renamed
 smoke case fails the gate until the maintained map is updated. Unknown changes
 require the full suite. A lane
@@ -80,7 +82,8 @@ OX_HEAVY_LOCAL=1 .ops/tools/web-gates.sh profile --matrix 4,6,8
 node --test .ops/tools/test/*.test.mjs
 ```
 
-Profiling always runs fresh. A successful full profile also records a full gate
+Profiling always runs fresh. A successful full profile (or a lane fallback that
+ran the complete build and every test file) also records a full gate
 pass for that exact key, since it runs the complete build/check/dry-run chain.
 
 Full-suite privacy and MCP coverage is mandatory. Retired donor-policy assertions
