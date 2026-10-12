@@ -41,9 +41,14 @@ name: 27 Leads and the declared-interests feed
     timeout: 180000
     centerElement: true
     speed: 20
+# Leads about a donor not named in OPAX are withheld (donor privacy,
+# 10 Oct): the count says how many are shown, the next line how many not.
 - assertVisible:
     id: leads-count
-    text: 60 leads
+    text: 46 leads
+- assertVisible:
+    id: leads-withheld
+    text: 14 leads about a donor not named in OPAX are not shown\.
 - takeScreenshot: ${EVIDENCE}/27-leads
 # The first lead is the export's first signal: its title, its one figure
 # and its sentence, as one element that opens the comparison (design pass
@@ -132,11 +137,22 @@ name: 27 Leads and the declared-interests feed
     speed: 20
 - takeScreenshot: ${EVIDENCE}/27-lead-as-at
 # A source opens once the sheet has gone: e2e builds show the checked
-# address locally.
+# address locally. The sheet holds every caveat (design pass 5, P2-13), so
+# it is closed and reopened at its top rather than swiped back up, which
+# would dismiss it.
+- tapOn:
+    id: lead-0-source-sheet-done
+- waitForAnimationToEnd
+- tapOn:
+    id: lead-0-source
+- extendedWaitUntil:
+    visible:
+      id: lead-0-source-sheet
+    timeout: 15000
 - scrollUntilVisible:
     element:
       id: lead-0-source-sheet-original-0
-    direction: UP
+    direction: DOWN
     timeout: 60000
     visibilityPercentage: 10
     centerElement: true
@@ -302,10 +318,11 @@ name: 27 Leads and the declared-interests feed
     visible:
       id: today-screen
     timeout: 20000
+# Today keeps its place at the Leads entry, which is below Just declared.
 - scrollUntilVisible:
     element:
       id: today-declarations-all
-    direction: DOWN
+    direction: UP
     timeout: 300000
     visibilityPercentage: 10
     centerElement: true
