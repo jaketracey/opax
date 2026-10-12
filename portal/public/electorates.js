@@ -165,7 +165,7 @@ const unitOf = (value, unit) => unit === '%' ? `${number(value)}%` : unit.starts
 function censusHTML(d) {
   const rows = Object.entries(INDICATORS).filter(([key]) => key !== 'population' && d.indicators[key] != null);
   return `${d.indicators.population != null ? `<div class="ui-stats"><p class="ui-stat"><b class="ui-stat-value">${number(d.indicators.population)}</b><span class="ui-stat-label">people, ${esc(d.vintage)}</span></p></div>` : ''}
-    <dl class="ui-kv el-demographics">${rows.map(([key, [label, unit]]) => `<div><dt>${esc(label)}</dt><dd>${esc(unitOf(d.indicators[key], unit))}</dd></div>`).join('')}</dl>`;
+    <dl class="ui-kv el-demographics" data-variant="ledger">${rows.map(([key, [label, unit]]) => `<div><dt>${esc(label)}</dt><dd>${esc(unitOf(d.indicators[key], unit))}</dd></div>`).join('')}</dl>`;
 }
 /* One title and one meta line (no kicker), ⋯ on the title's row; then
    sections (ui-section), each ending in one source line that opens its

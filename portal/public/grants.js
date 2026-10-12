@@ -1049,10 +1049,13 @@ export function mountGrants (container, opts = {}) {
       val.setAttribute('class', 'gr-val')
       val.setAttribute('x', x + bw / 2); val.setAttribute('y', H - padB - h - 4)
       val.setAttribute('text-anchor', 'middle')
-      val.textContent = fmtMoney(y.t)
-      // A value label wider than its bar would run into its neighbours; the
-      // column's title and label carry the figure either way.
-      if (bw >= 60) g.appendChild(val)
+      // Narrow bars (a tablet's thirteen years) take the figure to one decimal
+      // ("$22.2bn"); a label still wider than its column would run into its
+      // neighbours, so it is left to the column's title and label.
+      const figure = fmtMoney(y.t)
+      const unit = { bn: 1e9, m: 1e6, k: 1e3 }[(figure.match(/[a-z]+$/i) || [''])[0]]
+      val.textContent = bw >= 60 || !unit ? figure : figure.replace(/[\d.,]+(?=[a-z]+$)/i, (y.t / unit).toFixed(1))
+      if (val.textContent.length * 7.2 <= bw + gap) g.appendChild(val)
       const lab = document.createElementNS(svgNS, 'text')
       lab.setAttribute('class', i % 2 ? 'gr-axis gr-axis-odd' : 'gr-axis')
       lab.setAttribute('x', x + bw / 2); lab.setAttribute('y', H - 6)

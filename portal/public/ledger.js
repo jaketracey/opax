@@ -427,7 +427,7 @@ const CSS = `
   .lg-card-label { display: block; font: var(--type-fine); color: var(--ink-soft); }
   .lg-card-donor { display: inline-flex; align-items: center; min-height: var(--size-target); font: var(--type-strong); overflow-wrap: anywhere; }
   .lg-card-value { text-align: right; }
-  .lg-card-value strong { display: block; padding-top: var(--space-line); font: var(--type-strong); font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .lg-card-value strong { display: block; padding-top: var(--space-line); font: var(--type-heading); font-variant-numeric: tabular-nums; white-space: nowrap; }
   .lg-card-recipient { margin-top: var(--space-tight); }
   .lg-card-recipient .lg-cell-label { display: flex; align-items: center; min-width: 0; }
   .lg-card-recipient a { display: inline-flex; align-items: center; min-height: var(--size-target); overflow-wrap: anywhere; }

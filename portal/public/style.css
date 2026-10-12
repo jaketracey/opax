@@ -425,7 +425,8 @@ header.ui-page-head { position: static; z-index: auto; padding: 0; border: 0; ba
 .ui-page-head.money-records-head { margin-bottom: var(--space-block); }
 .ui-page-head + .ui-filter-bar { margin-top: 0; }
 .ui-page-meta { margin: 0; font: var(--type-metadata); color: var(--ink-soft); }
-.ui-lede { margin: var(--space-heading) 0 0; max-width: var(--size-readable); font: var(--type-body); color: var(--ink-soft); }
+/* A lede opens the page in the body's own ink: never quieter than the text under it. */
+.ui-lede { margin: var(--space-heading) 0 0; max-width: var(--size-readable); font: var(--type-body); color: var(--ink); }
 
 /* ---- Section: one rule at the top, the section step above it, an optional
    accent mark where a view's sections differ by category. */
@@ -530,6 +531,12 @@ header.ui-page-head { position: static; z-index: auto; padding: 0; border: 0; ba
 .ui-kv > div { display: contents; }
 .ui-kv dt { font: var(--type-label); color: var(--ink-soft); }
 .ui-kv dd { margin: 0; font: var(--type-body); color: var(--ink); overflow-wrap: anywhere; }
+/* data-variant="ledger": each fact a ruled row, its key left and its figure
+   right in the strong role (a census, a set of totals); two columns when wide. */
+.ui-kv[data-variant="ledger"] { grid-template-columns: repeat(auto-fill, minmax(min(100%, 18rem), 1fr)); gap: 0 var(--space-group); }
+.ui-kv[data-variant="ledger"] > div { display: flex; justify-content: space-between; align-items: baseline; gap: var(--space-block); padding-block: var(--space-tight); border-top: var(--border-hairline) solid var(--divider-subtle); }
+.ui-kv[data-variant="ledger"] dt { font: var(--type-metadata); color: var(--ink-soft); }
+.ui-kv[data-variant="ledger"] dd { font: var(--type-strong); font-variant-numeric: tabular-nums; text-align: right; }
 /* data-stack="phone": on a phone each fact is its key over its value. */
 @media (max-width: 540px) {
   .ui-kv[data-stack="phone"] { grid-template-columns: minmax(0, 1fr); gap: var(--space-line); }
@@ -982,8 +989,6 @@ button.primary:disabled { opacity: 0.55; cursor: wait; }
 .ask-field > .grow-field { flex: 1 1 auto; width: 100%; }
 
 .ask-field.has-text .field-clear { display: inline-flex; }
-
-
 
 /* A flex item that stretches to the row, and a flex container so the button
    inside stretches with it: the textarea sets the row's height (its padding
@@ -1922,11 +1927,6 @@ a.barrow-name:hover { color: var(--bronze-ink); }
 @media (min-width: 1100px) { .game-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
 .game-card { display: flex; flex-direction: column; align-items: flex-start; width: 100%; margin: 0; text-align: left; font: inherit; color: var(--ink); cursor: pointer; }
 .game-card:hover .ui-card-title { color: var(--bronze-ink); }
-.game-card:focus-visible { outline: var(--border-focus) solid var(--bronze-ink); outline-offset: 3px; }
-
-.game-dialog {
-  border: none; border-radius: var(--radius-md); padding: 0;
-  width: min(1200px, calc(100vw - 2rem)); max-height: calc(100vh - 3rem);
 /* The engraving: each tool's glyph in hairline bronze on a hairline ring, and
    its action word at the card's foot (Play, Open), the cue that it opens. */
 .game-icon { display: grid; place-items: center; width: var(--size-control-large); height: var(--size-control-large); margin-bottom: var(--space-heading); border: var(--border-hairline) solid var(--bronze-rule); border-radius: var(--radius-round); color: var(--bronze-ink); transition: border-color var(--duration-quick) var(--ease-standard); }
@@ -1934,6 +1934,11 @@ a.barrow-name:hover { color: var(--bronze-ink); }
 .game-card:hover .game-icon { border-color: var(--bronze-ink); }
 .game-cta { margin-top: auto; padding-top: var(--space-heading); font: var(--type-label); color: var(--navy); text-decoration: underline; text-decoration-color: var(--bronze-rule); text-underline-offset: 3px; }
 .game-card:hover .game-cta { text-decoration-color: var(--bronze-ink); }
+.game-card:focus-visible { outline: var(--border-focus) solid var(--bronze-ink); outline-offset: 3px; }
+
+.game-dialog {
+  border: none; border-radius: var(--radius-md); padding: 0;
+  width: min(1200px, calc(100vw - 2rem)); max-height: calc(100vh - 3rem);
   background: var(--paper);
   box-shadow: var(--shadow-overlay);
 }
@@ -2074,25 +2079,6 @@ a.barrow-name:hover { color: var(--bronze-ink); }
 .party-dot-only { margin-right: var(--sp-8); }
 .subject-active { display: inline-flex; align-items: center; gap: var(--sp-4); font: var(--type-label); color: var(--ink-soft); }
 .subject-active svg { width: 12px; height: 12px; color: var(--ink-faint); }
-
-/* ---- front page grid ---------------------------------------------------- */
-
-/* Rhythm: 3.5rem between the home page's sections (chips, map, modules),
-   3rem between modules, 0.9rem from a kicker to its content; 2.5rem on phones. */
-
-
-
-/* ---- home maps ---------------------------------------------------------- */
-/* Two plates side by side above the modules, a hairline between them: the
-   record by state (Australia engraved, statemap.js) at 5/12 and the money map's
-   mini chrome at 7/12, equal heights. Stacked on phones, state map first. */
-.front-map { margin-top: var(--sp-64); }
-/* The 3D bundle's own labels take Public Sans here. */
-@media (max-width: 700px) {
-  .front-map { margin-top: var(--sp-40); }
-        
-}
-
 
 .news-list { list-style: none; margin: 0; padding: 0; }
 .news-list li { border-top: var(--border-hairline) solid var(--divider-subtle); padding: var(--space-row) 0; }
@@ -2283,7 +2269,9 @@ a.barrow-name:hover { color: var(--bronze-ink); }
 .dir-fig b { display: block; font: var(--type-strong); color: var(--ink); font-variant-numeric: tabular-nums; }
 .dir-more-row { margin: var(--space-block) 0 0; }
 .dir-empty { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-row) var(--space-block); margin: var(--space-block) 0 0; font: var(--type-body); color: var(--ink-soft); }
-@media (max-width: 640px) {
+/* Up to a tablet the figures go under the name, so a row of them never
+   squeezes the name to two or three lines. */
+@media (max-width: 1000px) {
   .dir-list li.dir-row { grid-template-columns: auto minmax(0, 1fr); }
   .dir-list li.dir-row-plain { grid-template-columns: minmax(0, 1fr); }
   .dir-list li.dir-row .dir-figs { grid-column: 1 / -1; justify-content: flex-start; text-align: left; }
@@ -2440,7 +2428,7 @@ a.barrow-name:hover { color: var(--bronze-ink); }
 }
 .pay-when { color: var(--ink-faint); font-variant-numeric: tabular-nums; }
 .pay-post { color: var(--ink); font-weight: var(--weight-strong); min-width: 0; }
-.pay-post small { color: var(--ink-faint); font-weight: var(--weight-regular); margin-left: var(--sp-4); }
+.pay-post small { margin-left: var(--sp-4); font: var(--type-fine); color: var(--ink-faint); }
 .pay-rate { text-align: right; color: var(--ink-soft); font-variant-numeric: tabular-nums; white-space: nowrap; }
 .pay-rate b { color: var(--ink); }
 .pay-rate small { display: block; color: var(--ink-faint); font-size: var(--text-13); }
@@ -2576,7 +2564,9 @@ a.barrow-name:hover { color: var(--bronze-ink); }
 }
 .policy-page > h3 { margin: var(--space-group) 0 var(--space-tight); }
 .policy-page > h2 + h3 { margin-top: 0; }
-.policy-page p, .policy-page li { max-width: var(--size-readable); }
+/* Long reading keeps the loose leading the pages had (1.7). */
+.policy-page p, .policy-page li { max-width: var(--size-readable); line-height: var(--leading-loose); }
+#panel-expenses p { line-height: var(--leading-loose); }
 .policy-page > p { margin-block: var(--space-row); }
 .policy-page code { background: var(--paper-sunken); border-radius: var(--radius-sm); padding: var(--sp-2) var(--sp-4); font-size: var(--text-15); }
 .about-list { margin-block: var(--space-heading); padding-left: var(--sp-20); }
@@ -2711,12 +2701,8 @@ footer #stats:empty { display: none; }
   .search-readbar .ui-segmented { width: 100%; }
   .barrow { grid-template-columns: minmax(90px, 30%) 1fr auto; }
   .topic-arc-head { align-items: stretch; }
-  .topic-arc-item { grid-template-columns: 2.7rem minmax(0, 1fr); column-gap: var(--sp-8); }
-  .topic-arc-entry { padding-left: var(--sp-16); }
   .person-topics-head { align-items: stretch; }
   .person-topic-bars .barrow { grid-template-columns: minmax(100px, 34%) minmax(60px, 1fr) 4rem; gap: var(--sp-8); }
-  .topic-tide-decade { grid-template-rows: auto 64px auto auto; min-height: 132px; padding-inline: var(--sp-4); }
-  .topic-tide-track { height: 64px; }
   .coverage-band { font-size: var(--text-13); }
   .tide-controls, .tide-control, .tide-control .ui-segmented { width: 100%; }
   .tide-control .ui-segmented > .ui-button { flex: 1 1 auto; }
@@ -2858,6 +2844,11 @@ mark.privacy-confirm {
 .topic-tide-track i { display: block; width: var(--sp-12); min-height: var(--sp-2); border-radius: var(--radius-sm) var(--radius-sm) 0 0; background: var(--chart-mark); }
 .topic-tide-decade strong { font: var(--type-strong); font-variant-numeric: tabular-nums; }
 .topic-tide-decade small { font: var(--type-fine); color: var(--ink-soft); font-variant-numeric: tabular-nums; }
+/* A phone's four decades draw a shorter track on a tighter inset. */
+@media (max-width: 640px) {
+  .topic-tide-decade { grid-template-rows: auto var(--sp-64) auto auto; padding-inline: var(--sp-4); }
+  .topic-tide-track { height: var(--sp-64); }
+}
 #panel-subject .topic-tide .coverage-rule { margin-top: var(--space-heading); }
 #panel-subject .topic-tide .coverage-rule figcaption { margin: 0 0 var(--space-tight); font: var(--type-fine); color: var(--ink-soft); }
 #panel-subject .topic-tide .coverage-bands { display: flex; flex-wrap: wrap; gap: var(--space-tight) var(--space-block); }
@@ -2875,7 +2866,8 @@ mark.privacy-confirm {
 .topic-arc-counts i { margin: 0 var(--space-tight); font-style: normal; color: var(--divider-default); }
 .topic-arc-list { list-style: none; margin: 0; padding: 0; }
 .topic-arc-item { display: grid; grid-template-columns: minmax(0, 1fr); padding: var(--space-block) 0; border-top: var(--border-hairline) solid var(--divider-subtle); scroll-margin-top: calc(var(--header-h) + var(--sp-16)); }
-.topic-arc-year { font: var(--type-subheading); color: var(--ink-soft); font-variant-numeric: tabular-nums; }
+/* The year is the arc's landmark: the serif at 24, in bronze ink. */
+.topic-arc-year { font: var(--weight-regular) var(--text-24)/var(--leading-snug) var(--serif); color: var(--bronze-ink); font-variant-numeric: tabular-nums; }
 .topic-arc-entry { min-width: 0; }
 .topic-arc-who { display: grid; grid-template-columns: var(--size-portrait-row) minmax(0, 1fr); column-gap: var(--space-heading); align-items: center; }
 .topic-arc-face { display: block; width: var(--size-portrait-row); height: var(--size-portrait-row); border-radius: var(--radius-round); overflow: hidden; background: var(--paper-sunken); box-shadow: var(--ring-inset-hairline) var(--divider-subtle); }
@@ -2901,7 +2893,7 @@ mark.privacy-confirm {
 .topic-arc-open:hover { text-decoration-color: currentColor; }
 .topic-arc-note { margin-top: var(--space-block); }
 .topic-arc-footer { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-tight) var(--space-block); margin-top: var(--space-block); }
-.topic-arc-footer .fineprint { flex-basis: 100%; margin: 0; }
+.topic-arc-footer .fineprint { flex-basis: 100%; max-width: none; margin: 0; }
 .topic-arc-footer a { display: inline-flex; align-items: center; min-height: var(--size-target); }
 @media (min-width: 700px) {
   .topic-arc-item { grid-template-columns: var(--sp-64) minmax(0, 1fr); column-gap: var(--space-block); }
@@ -3439,11 +3431,6 @@ mark.privacy-confirm {
 :is(.subject-person, .subject-party) #subject-sections > section { scroll-margin-top: calc(var(--header-h) + var(--sp-16)); }
 /* ==== page-home: The home page (/) ==== */
 
-
-
-
-
-
 /* ==== page-search: The search page (/search) ==== */
 #panel-search { min-width: 0; }
 #panel-search button:not(.ui-button):not(.ui-filter-chip), #panel-search select:not(.ui-input), #panel-search input:not([type="range"]):not(.ui-input) { min-height: 44px; }
@@ -3527,8 +3514,11 @@ body:has(#search-options-pop[open]) { overflow: hidden; }
    link), who spoke, then the record's own passage in the record role. */
 /* A catalog row whose text a model wrote: its machine label above that text. */
 #panel-search .search-result-machine { margin: var(--space-line) 0 0; }
-#panel-search #search-results .ui-row-meta { margin: 0; }
-#panel-search #search-results .ui-row-meta a { display: inline-flex; align-items: center; min-height: var(--size-target); }
+/* The meta line flows as one sentence, so a long source wraps after the kind
+   rather than leaving it alone on a line; the kind link reaches 44 unseen. */
+#panel-search #search-results .ui-row-meta { display: block; margin: 0; }
+#panel-search #search-results .ui-row-meta a { position: relative; }
+#panel-search #search-results .ui-row-meta a::after { content: ""; position: absolute; inset: calc(-1 * var(--sp-12)) calc(-1 * var(--sp-4)); }
 #panel-search .snippet, #panel-search .search-result-brief {
   display: block; max-width: var(--size-readable); padding: 0; margin: var(--space-tight) 0 0; background: none;
   font: var(--type-record); color: var(--ink); overflow-wrap: anywhere;
@@ -3748,10 +3738,10 @@ html[data-panel="chat"] footer { display: none; }
 /* The jump control belongs to the head: a block step under it, not a section. */
 .report-head:has(+ .report-jump:not([hidden])) { margin-bottom: var(--space-block); }
 
-/* Citations are the ask page's mark (page-ask). In the sans the raised box
-   would open up its line, so it is lifted rather than set superscript; the
+/* Citations are the ask page's mark (page-ask), a true superscript set solid
+   at no line height, so it neither floats between lines nor opens its own; the
    touch halo keeps inside the right edge when a citation ends a line. */
-#panel-reports .ask-citation { vertical-align: baseline; top: -0.5em; }
+#panel-reports .ask-citation { margin-inline: var(--sp-2) 0; }
 #panel-reports .ask-citation::before { left: auto; right: 0; transform: translateY(-50%); }
 #panel-reports .ask-citation:hover { color: var(--ink); }
 /* Now, Over time and Money: a segmented control that stays under the
@@ -3811,6 +3801,11 @@ html[data-panel="chat"] footer { display: none; }
 /* ---- how it has moved: each era's span over its essay -------------------- */
 
 .report-era + .report-era { margin-top: var(--space-group); }
+/* How it has moved: a spine, and each era hung off a bronze notch on it. */
+.report-eras { position: relative; padding-left: var(--sp-24); }
+.report-eras::before { content: ""; position: absolute; left: var(--sp-4); top: var(--sp-8); bottom: var(--sp-8); width: var(--border-hairline); background: var(--line-control); }
+.report-era { position: relative; }
+.report-era::before { content: ""; position: absolute; left: calc(var(--border-hairline) / 2 - var(--sp-24)); top: var(--sp-4); width: var(--sp-8); height: var(--sp-8); border-radius: var(--radius-round); background: var(--bronze); box-shadow: 0 0 0 var(--sp-4) var(--paper); }
 .report-era-span { margin: 0 0 var(--space-line); font-variant-numeric: tabular-nums; }
 .report-tide { margin-top: var(--space-group); }
 .report-tide > figure > figcaption { margin: 0 0 var(--space-heading); font: var(--type-subheading); color: var(--ink); }
@@ -4337,7 +4332,7 @@ html[data-panel="chat"] footer { display: none; }
   .money-stage.has-journey > .money-map-root { border-radius: 0 0 var(--radius-md) var(--radius-md); }
   .journey-story-top { margin-bottom: var(--space-tight); }
   .journey-steps { margin: 0 0 var(--space-heading); }
-  .journey-narrative h3 { margin-bottom: var(--space-tight); font: var(--type-subheading); }
+  .journey-narrative h3 { margin-bottom: var(--space-tight); }
   .journey-metric { margin: var(--space-row) 0; }
   .journey-source-links { margin: var(--space-row) 0; }
   .journey-help { min-height: 0; margin-top: var(--space-row); }
@@ -4490,11 +4485,6 @@ html[data-panel="chat"] footer { display: none; }
 .area-nav { display: flex; gap: var(--space-group); flex-wrap: wrap; margin: 0 0 var(--space-group); border-bottom: var(--border-hairline) solid var(--divider-subtle); }
 .area-nav a { color: var(--ink-soft); padding: var(--space-row) 0; min-height: var(--size-target); font: var(--type-body); text-decoration: none; }
 .area-nav a[aria-current] { color: var(--navy); border-bottom: var(--border-focus) solid var(--navy); font: var(--type-strong); }
-.home-tasks { display: grid; grid-template-columns: repeat(4,1fr); gap: var(--sp-24); margin: var(--sp-32) 0 var(--sp-48); }
-.home-tasks a { border-top: var(--border-hairline) solid var(--divider-subtle); padding: var(--sp-16) 0; color: var(--navy); text-decoration: none; }
-.home-tasks strong, .home-tasks span { display: block; }
-.home-tasks strong { font-size: var(--text-16); margin-bottom: var(--sp-8); }
-.home-tasks span { color: var(--ink-soft); font-size: var(--text-13); }
 .bill-text-overview { margin: var(--sp-24) 0; padding: var(--sp-20) 0; border-block: var(--border-hairline) solid var(--divider-subtle); }
 .bill-text-overview h4 { margin: 0 0 var(--sp-8); }
 .bill-text-overview p { max-width: 75ch; }
@@ -4504,16 +4494,16 @@ html[data-panel="chat"] footer { display: none; }
 .bill-text-evidence blockquote { margin: var(--sp-16) 0; padding-left: var(--sp-16); border-left: var(--border-focus) solid var(--divider-subtle); max-width: 75ch; }
 .drawer-primary { min-height: 52px; padding: var(--space-heading); border-bottom: var(--border-hairline) solid var(--divider-subtle); font: var(--type-control); }
 #panel-money .money-map-root { min-height: 560px; }
+/* With a journey open beside it, the map grows with the rail, so a long step
+   never hangs below the plate (the engine follows its box). */
+@media (min-width: 701px) { #panel-money .money-stage.has-journey > .money-map-root { height: auto; min-height: max(560px, min(72vh, 720px)); } }
 @media (min-width: 1440px) { .masthead-nav { min-width: max-content; } .mast-search { min-width: 180px; } }
 @media (max-width: 700px) {
-  .home-tasks { grid-template-columns: repeat(2,1fr); gap: var(--sp-16); margin: var(--sp-24) 0; }
   .research-summary .research-period { margin-left: 0; flex-basis: 100%; }
   #panel-money .money-map-root { min-height: 480px; }
   .area-nav { gap: var(--space-block); }
 }
 @media (prefers-reduced-motion: reduce) { .research-records * { scroll-behavior: auto; } }
-
-
 
 /* The map leads. Its tools are one row of compact pills (D1), 44 on touch
    (data-ui-size="compact" on the toolbar): the jurisdiction a pill select,
@@ -4612,7 +4602,8 @@ html[data-panel="chat"] footer { display: none; }
 .supplier-year-tooltip[hidden] { display: none; }
 
 
-.journey-story-top .journey-title { margin: 0; color: var(--ink); font: var(--type-heading); }
+/* The journey's name is the rail's subheading; its step is the heading under it. */
+.journey-story-top .journey-title { margin: 0; color: var(--ink); font: var(--type-subheading); }
 @media (max-width: 700px) { .journey-story-top:has(.journey-title) { position: static; margin-bottom: var(--sp-12); } }
 
 /* Search sorting shares the navy, paper and bronze of the record toolbar. */
@@ -4980,7 +4971,8 @@ h3 {
 }
 
 /* Citation buttons need a real box for keyboard focus and touch hit testing. */
-#panel-ask .ask-citation, #panel-chat .ask-citation, #panel-reports .ask-citation { line-height: var(--leading-none); }
+#panel-ask .ask-citation, #panel-chat .ask-citation { line-height: var(--leading-none); }
+#panel-reports .ask-citation { line-height: 0; }
 
 /* Standalone grant recipients use the same type, records and quiet bronze
    actions as the other public-record detail pages. */
@@ -5117,8 +5109,6 @@ html[data-chat="docked"] .dock-bar {
 }
 .dock-icon { flex: none; }
 
-
-
 /* The panel. The bronze edge, the paper and the layered shadow are the voice
    panel's, so the corner keeps one frame whichever mode is showing. */
 html[data-chat="docked"] #panel-chat {
@@ -5239,8 +5229,6 @@ html[data-chat="docked"] #panel-chat .chat-composer {
 
 .chat-mic[aria-expanded="true"] { background: var(--navy); border-color: var(--navy); color: var(--on-navy); }
 .chat-mic.is-loading { opacity: 0.6; cursor: progress; }
-
-
 
 /* On a phone the assistant is a sheet, not a card in the corner. */
 @media (max-width: 600px) {
