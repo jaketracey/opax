@@ -23,9 +23,11 @@ test('P1 entity figures: swapped counts fail verification and comparison renders
  assert.match(r.answer,/87 chamber speeches labelled housing by Taylor Example/);assert.match(r.answer,/60 chamber speeches labelled housing by Pat Example/);
 });
 test('P1 unknown subject: an unscoped valid planner must never answer quantum dragons',async()=>{
- let tools=0;const r=await runAgentic('Who has spoken most about quantum dragons?',{...fixtureDeps,
+ for(const question of ['Who has spoken most about quantum dragons?','How many quantum dragon speeches have been made?','Who has spoken most about housing and climate?']){
+ let tools=0;const r=await runAgentic(question,{...fixtureDeps,
   generate:async()=>({text:'{"shape":"ranking","steps":[{"tool":"count_speeches","args":{"group_by":"speaker"}}]}'}),kb:async(...a)=>{tools++;return fixtureDeps.kb(...a)}});
  assert.equal(r.answered,false);assert.equal(r.reason,'declined');assert.equal(tools,0);
+ }
 });
 test('P1 planner junk: malformed plans decline without starting tools',async()=>{
  for(const text of ['junk','{}','{"shape":"ranking","steps":[]}']){

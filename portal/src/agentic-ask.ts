@@ -80,7 +80,8 @@ export function fallbackPlan(question: string): Plan | null {
   const shape = classifyAgentic(question).shape
   if (!shape) return null
   const q = question.toLowerCase()
-  const topic = TOPIC_RULES.find(([, re]) => re.test(q))?.[0] ?? TOPICS.find(t => q.includes(t))
+  const topics = [...new Set([...TOPIC_RULES.filter(([, re]) => re.test(q)).map(([topic]) => topic), ...TOPICS.filter(t => q.includes(t))])]
+  const topic = topics.length === 1 ? topics[0] : undefined
   if (!topic) return null // never replace an unknown subject with overall counts
   const state = /\bnsw\b|new south wales/.test(q) ? 'nsw' : /victori|\bvic\b/.test(q) ? 'vic' : /\bact\b|legislative assembly/.test(q) ? 'act' : /queensland|\bqld\b/.test(q) ? 'qld' : /south australia|\bsa\b/.test(q) ? 'sa' : /federal|senat|representatives/.test(q) ? 'federal' : undefined
   const chamber = /senat/.test(q) ? 'senate' : /house of representatives/.test(q) ? 'representatives' : undefined
@@ -350,7 +351,7 @@ export async function runAgentic(question: string, deps: AgenticDeps, progress: 
   // Malformed output is a planner failure, not permission to substitute a
   // numerical answer. Timeout recovery is limited to a complete rule plan.
   if (!plan && !plannerFailed) return base({ reason: 'declined' })
-  if (/\b(?:about|on)\b/i.test(question) && !rulePlan) return base({ reason: 'declined' })
+  if (!rulePlan) return base({ reason: 'declined' })
   // A valid JSON plan must still answer the classified shape and retain its
   // subject. In particular, never replace topic counts with overall totals.
   const topic = rulePlan?.steps.find(s => s.args.topic)?.args.topic
