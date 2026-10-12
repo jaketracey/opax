@@ -26,7 +26,7 @@ if(matrix.some(n=>!Number.isInteger(n)||n<1||n>16))throw Error('Matrix concurren
 const commit=git(root,['commit-tree',id.tree,'-p','HEAD','-m','Isolated web gate snapshot']);
 const work=join(cache,`work-${key.slice(0,16)}-${process.pid}`);
 const output=join(cache,`run-${Date.now()}-${tier}`);mkdirSync(output);
-const record={identity:id,base,tier:tier==='review'?'merge':tier,host:process.platform,concurrency,success:false,steps:[]};
+const record={identity:id,base,tier:tier==='lane'?'lane':'merge',profiling:tier==='profile',host:process.platform,concurrency,success:false,steps:[]};
 let failure;
 const inventory=dir=>readdirSync(dir,{withFileTypes:true}).flatMap(e=>e.isDirectory()?inventory(join(dir,e.name)).map(([file,digest])=>[e.name+'/'+file,digest]):[[e.name,hash(readFileSync(join(dir,e.name)))]]).sort(([a],[b])=>a.localeCompare(b));
 async function searchFixtures(){
@@ -105,7 +105,7 @@ try{
 finally{
  record.seconds=(performance.now()-started)/1000;
  writeFileSync(join(output,'result.json'),JSON.stringify(record,null,2)+'\n');
- if(record.success&&tier!=='profile') {const temp=passFile+'.'+process.pid;writeFileSync(temp,JSON.stringify(record,null,2)+'\n');await import('node:fs').then(fs=>fs.renameSync(temp,passFile));}
+ if(record.success) {const temp=passFile+'.'+process.pid;writeFileSync(temp,JSON.stringify(record,null,2)+'\n');renameSync(temp,passFile);}
  if(existsSync(work))git(root,['worktree','remove','--force',work]);
  console.log(`GATES ${record.success?'OK':'FAILED'} ${record.seconds.toFixed(2)}s tree=${id.tree}; ${output}`);
 }

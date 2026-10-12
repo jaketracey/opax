@@ -80,6 +80,9 @@ OX_HEAVY_LOCAL=1 .ops/tools/web-gates.sh profile --matrix 4,6,8
 node --test .ops/tools/test/*.test.mjs
 ```
 
+Profiling always runs fresh. A successful full profile also records a full gate
+pass for that exact key, since it runs the complete build/check/dry-run chain.
+
 Full-suite privacy and MCP coverage is mandatory. Retired donor-policy assertions
 are replaced by the confident-match lane together with its production classifier;
 gate-speed must not remove them ahead of that integration. Check
