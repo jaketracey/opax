@@ -151,7 +151,7 @@ Three files:
 
 | File | Role |
 | --- | --- |
-| `portal/src/og.ts` | The card, pure: an element tree in the masthead's register (navy, the gold mark and pale stars as the lockup, Merriweather for the one line that names the page, the bronze rule). `fitTitle()` sizes the title to two lines (three for a question or a motion) from measured glyph advances, since satori wraps but never shrinks. `OG_VERSION` is folded into every image URL; bump it when the drawing changes, because crawlers cache by URL. |
+| `portal/src/og.ts` | The card, pure: an element tree in the masthead's register (navy, the gold mark and pale stars as the lockup, Merriweather for the one line that names the page, the bronze rule). `fitTitle()` sizes the title to two lines (three for a question or a motion) from measured glyph advances, since satori wraps but never shrinks. `OG_VERSION` is folded into every image URL; bump it when the drawing changes, because crawlers cache by URL. The Instagram portrait card (`?format=portrait`) has its own `PORTRAIT_VERSION`, folded into its cache key only: bump that when only the portrait card is redrawn. |
 | `portal/src/og-render.ts` | satori (layout, via yoga wasm) then resvg (raster, wasm) to PNG, both instantiated once per isolate. |
 | `portal/og/build.mjs` | Build side: `npm run og:portraits` writes the JPEG twins of the portraits under `public/photos/jpg/` (satori cannot read WebP); `npm run og:default` writes `public/og-default.png` from the same tree; `npm run og:preview` renders one of every card kind for the eye. Needs Node 23.6 or newer (it imports `src/og.ts` directly). |
 
