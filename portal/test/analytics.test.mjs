@@ -44,11 +44,16 @@ test('a reader\'s search words in the page title, session-entry copies of free t
   assert.equal(p.title, undefined);
   assert.ok(!JSON.stringify(event).includes('private'), JSON.stringify(event));
 });
-test('analytics loads before the shared event emitter, both deferred', () => {
-  const html = readFileSync(new URL('../public/index.html', import.meta.url), 'utf8');
-  assert.match(html, /src="\/analytics.js\?v=[^"]+" defer/);
-  assert.match(html, /src="\/events.js\?v=[^"]+" defer/);
-  assert.ok(html.indexOf('src="/analytics.js') < html.indexOf('src="/events.js'));
+// PostHog used to run first so it heard the first view; it now runs after the
+// app (the first route is not queued behind it) and replays from opaxAnalyticsLog.
+test('PostHog runs after the shared event emitter and the app scripts, all deferred', () => {
+  const index = readFileSync(new URL('../public/index.html', import.meta.url), 'utf8');
+  const home = readFileSync(new URL('../public/home.html', import.meta.url), 'utf8');
+  assert.match(index, /src="\/analytics.js\?v=[^"]+" defer/);
+  assert.match(index, /src="\/events.js\?v=[^"]+" defer/);
+  assert.ok(index.indexOf('src="/analytics.js') > index.indexOf('src="/events.js'));
+  assert.ok(index.indexOf('/analytics.js?v=') > index.indexOf('/app.js?v='));
+  assert.ok(home.indexOf('/analytics.js?v=') > home.indexOf('/home.js?v='));
 });
 
 
@@ -177,4 +182,21 @@ test('footer partners have explicit referral UTMs and fixed tracking identifiers
   assert.ok(!JSON.stringify(captured).includes('private'));
   const ga = context.window.opaxGaLayer.filter(e=>e[0]==='event');
   for (const key of ['host','partner','placement','page_section']) assert.equal(captured[2].properties[key], ga[2][2][key]);
+});
+
+test('PostHog loaded after the app replays every earlier event once, even after GA drained its buffer', async () => {
+  const { runInNewContext } = await import('node:vm');
+  const { context, emit } = browserHarness();
+  const captured = [];
+  context.cleanEvent = cleanEvent; context.beforeSend = beforeSend;
+  context.posthog = { init(){}, capture:(event,properties)=>captured.push({event,properties}) };
+  runInNewContext(readFileSync(new URL('../public/events.js', import.meta.url), 'utf8'), context);
+  emit('opax:analytics', {event:'opax_search_completed',properties:{result_count:4,query:'private'}});
+  runInNewContext(readFileSync(new URL('../public/ga.js', import.meta.url), 'utf8'), context);
+  assert.equal(context.window.opaxAnalyticsPending, null);
+  runInNewContext(readFileSync(new URL('../analytics/index.js', import.meta.url), 'utf8').replace(/^import .*;\n/gm,''), context);
+  emit('opax:analytics', {event:'opax_source_open',properties:{from_section:'search'}});
+  assert.deepEqual(captured.map(e=>e.event), ['$pageview','opax_search_completed','opax_source_open']);
+  assert.equal(context.window.opaxAnalyticsLog, null);
+  assert.ok(!JSON.stringify(captured).includes('private'));
 });

@@ -8,9 +8,8 @@
 <meta name="theme-color" content="#142A43">
 <!-- Google Tag Manager (container GTM-PNDM87LW). The loader and the site's
      own dataLayer events live in /gtm.js so no inline script is needed. -->
-<script src="/analytics.js?v=6639c30065" defer></script>
 <script src="/spa-entry.js?v=0cf4b9027a"></script>
-<script src="/events.js?v=3b8a8448ac" defer></script>
+<script src="/events.js?v=08151d5d9b" defer></script>
 <script src="/gtm.js?v=0764911f84" defer></script>
 <!-- Home page values. On a real path (/subject/person/slug, /reports/gambling)
      the Worker rewrites these per route; app.js keeps canonical and og:url in
@@ -2187,5 +2186,7 @@
 <script src="/quick-search.js?v=27eac3b2f7" defer></script>
 <script src="/ui-source.js?v=5e7b751ca0" defer></script>
 <script src="/app.js?v=74412201da" defer></script>
+<!-- PostHog runs after the app (defer order) so the first route is not queued behind it; it replays the events measured before it (analytics/index.js). -->
+<script src="/analytics.js?v=7a83ce20cf" defer></script>
 </body>
 </html>

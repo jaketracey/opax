@@ -13,6 +13,9 @@ import { askPageType } from '../public/growth-modules.js';
   // One privacy boundary for every producer, including async application outcomes.
   // Buffer early events so the GTM-delivered GA adapter can replay the first view.
   window.opaxAnalyticsPending = [];
+  // PostHog (analytics.js) runs after the app's own scripts, so it replays from
+  // its own log: GA's adapter empties opaxAnalyticsPending when it arrives.
+  window.opaxAnalyticsLog = [];
   addEventListener('opax:analytics', ({ detail }) => {
     if (optedOut()) return;
     const properties = cleanEvent(detail?.event, detail?.event === "opax_ask_started"
@@ -25,9 +28,9 @@ import { askPageType } from '../public/growth-modules.js';
     }
     const measured = { event: detail.event, properties };
     (window.dataLayer = window.dataLayer || []).push({ event: detail.event, opax: { ...properties, _clear: true } });
-    if (window.opaxAnalyticsPending) {
-      window.opaxAnalyticsPending.push(measured);
-      if (window.opaxAnalyticsPending.length > 100) window.opaxAnalyticsPending.shift();
+    for (const buffer of [window.opaxAnalyticsPending, window.opaxAnalyticsLog]) if (buffer) {
+      buffer.push(measured);
+      if (buffer.length > 100) buffer.shift();
     }
     dispatchEvent(new CustomEvent('opax:measured', { detail: measured }));
   });
