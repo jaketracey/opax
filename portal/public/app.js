@@ -1384,7 +1384,7 @@ async function openMoneyExplain(params, manageFocus) {
   $('money-records-title').hidden = true;
   const body = $('money-records-body');
   try {
-    const mod = await import('/money-explain.js?v=84d1d09fbf');
+    const mod = await import('/money-explain.js?v=7c65278cf6');
     if (generation !== moneyRecordsGeneration) return;
     const current = () => generation === moneyRecordsGeneration && location.pathname === '/money/explain';
     moneyRecordsHandle = mod.mountMoneyExplain(body, {
@@ -3535,9 +3535,16 @@ function actionBtn(icon, href, label, { external = false, primary = false } = {}
     `${iconSvg(icon)}<span>${esc(label)}${external ? " ↗︎" : ""}</span></a>`;
 }
 
-/** A page's "Explain" action: a link to /money/explain for the graph IDs it names (money-explain.js). */
+/** A page's "Explain" action: a link to /money/explain for the graph IDs it names (money-explain.js).
+ *  Its look in an action column lives in money-explain.css, linked once here. */
 function explainBtn(query, label, { primary = false } = {}) {
-  return actionBtn("map", `/money/explain?${new URLSearchParams(query)}`, label, { primary });
+  if (!document.querySelector("link[data-money-explain]")) {
+    const sheet = Object.assign(document.createElement("link"), { rel: "stylesheet", href: "/money-explain.css?v=39bdb46509" });
+    sheet.dataset.moneyExplain = "";
+    document.head.append(sheet);
+  }
+  return `<a class="ui-button"${primary ? ' data-variant="primary"' : ""} data-explain-link href="${esc(`/money/explain?${new URLSearchParams(query)}`)}">` +
+    `${iconSvg("map")}<span>${esc(label)}</span></a>`;
 }
 
 
@@ -8917,7 +8924,7 @@ async function openExplain(detail) {
   if (!detail || !["industry", "donor", "party"].includes(detail.kind)) return;
   const jur = MONEY_JURISDICTIONS[detail.jurisdiction] ? detail.jurisdiction : "federal";
   try {
-    const [mod, graph] = await Promise.all([import("/money-explain.js?v=84d1d09fbf"), loadMoneyFile(jur)]);
+    const [mod, graph] = await Promise.all([import("/money-explain.js?v=7c65278cf6"), loadMoneyFile(jur)]);
     const { loadDonorViewIndex } = await import("/donor-views.js?v=55a8bd3ae0");
     goRoute(mod.explainHrefFor({ ...detail, jurisdiction: jur }, graph, await loadDonorViewIndex()) || "/money/explain");
   } catch { goRoute("/money/explain"); }

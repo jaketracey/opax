@@ -13,6 +13,21 @@ import {
   receiptTypeNote, mountMoneyExplain, pctText, fyLabel, yearPhrase, AGGREGATE_FLOOR,
 } from '../public/money-explain.js';
 
+/** A view reduced by the floor: total and count only, with no year, share, split or chart. */
+function assertReduced(flow, index) {
+  assert.equal(flow.coarse, true);
+  assert.deepEqual([flow.dated.length, flow.years.size, flow.peak, flow.latest, flow.recipientShare, flow.parties.length, flow.industries.length],
+    [0, 0, null, null, null, 0, 0]);
+  const words = narrative(flow).join(' ');
+  assert.ok(!/\d{4}–\d{2}/.test(words), 'no year in the words');
+  assert.ok(!/went to/.test(words), 'no party split in the words');
+  assert.match(words, /For a group of fewer than 5 donors this page gives the total and the count only\./);
+  const html = pageHTML(flow, {index});
+  assert.ok(!/mx-trend|mx-timeline|mx-share|Largest year|Years with money|By industry|went to/.test(html));
+  assert.ok(!/Donor \d+ \(name withheld\)/.test(html), 'no single placeholder label');
+  assert.ok(!/no one donor|can’t be read|cannot be read/i.test(html), 'the floor is not presented as a safeguard');
+}
+
 // --- fixtures ---------------------------------------------------------------------
 // An organisation (legal form), a union, a sector-tagged person the classifier
 // withholds, and an already-anonymised node as the served files carry them.
@@ -147,9 +162,7 @@ test('the not-named aggregate shows counts and totals, compares only with other 
   assert.ok(!/individual/i.test(narrative(flow).join(' ')), 'never presented as given by individuals');
   // Two donors is under the floor: the total and the count, and no year, chart, timeline or industry.
   assert.equal(AGGREGATE_FLOOR, 5);
-  assert.equal(flow.coarse, true);
-  assert.ok(!/mx-trend|mx-timeline|Largest year|2018–19|By industry/.test(html));
-  assert.match(narrative(flow).join(' '), /fewer than 5 donors in this group, OPAX shows only the total and the count/);
+  assertReduced(flow, INDEX);
 });
 
 test('an aggregate at the floor gets its years but never an industry breakdown', () => {
@@ -205,7 +218,7 @@ const BILL = {key: 'au-federal-r1', title: 'Mining Royalties Amendment Bill 2019
 ], speeches: [{slug: 'speech-1', speaker: 'Member One', party: 'Labor', date: '2019-09-01'}, {slug: 'speech-2', speaker: 'Member Two', party: 'Liberal', date: '2019-09-01'}]};
 
 test('bills match on whole title words, federal and divided only; procedural votes and other years are left out', () => {
-  assert.deepEqual(billWordsFor('mining & energy'), ['mining', 'mineral', 'minerals', 'coal', 'petroleum', 'gas']);
+  assert.deepEqual(billWordsFor('mining & energy'), ['mining', 'minerals resource rent tax', 'minerals exploration', 'coal', 'offshore petroleum', 'petroleum and other fuels']);
   assert.deepEqual(billWordsFor('legal'), []);
   assert.deepEqual(candidateBills(BILLS, 'mining').map((b) => b.key), ['au-federal-r1']);
   assert.deepEqual(candidateBills(BILLS, 'mining & energy').map((b) => b.key), ['au-federal-r1']);
@@ -221,9 +234,10 @@ test('bills match on whole title words, federal and divided only; procedural vot
 const ACCESS = {donors: {'Quarry Example Pty Ltd': {meetings_total: 3, lobbyists_total: 1}, 'Donor 7 (name withheld)': {meetings_total: 9}}};
 const FITS = {meta: {source_url: 'https://foreigninfluence.ag.gov.au/'}, by_entity: {'quarry example': [{status: 'current'}]}};
 const registerReads = [];
-function mount(query, extra = {}) {
+function mount(query, {wide = false, ...extra} = {}) {
   registerReads.length = 0;
   const dom = new JSDOM('<!doctype html><html><head></head><body><div id="root"></div></body></html>');
+  if (wide) dom.window.matchMedia = (q) => ({matches: q === '(min-width: 701px)'});
   const root = dom.window.document.getElementById('root');
   const addresses = [], titles = [], fetched = [];
   const realFetch = globalThis.fetch;
@@ -248,7 +262,7 @@ test('a withheld donor in the address is rewritten before anything is drawn and 
   assert.deepEqual(m.titles, ['Donors not named (2) → Labor']);
   const text = m.root.textContent;
   for (const name of [...PRIVATE_NAMES, 'withheld-7']) assert.ok(!text.includes(name) && !m.root.innerHTML.includes(name), name);
-  assert.match(text, /OPAX names organisations only, so this shows every donor it doesn’t name together\./);
+  assert.match(text, /OPAX names organisations only, so donors it doesn’t name are shown here as a group\./);
   assert.deepEqual(registerReads, [], 'an aggregate reads no name-keyed register');
   assert.ok(!/register matches|ministerial diary/i.test(text));
   assert.equal(m.root.querySelector('#mx-parliament').hidden, true, 'no parliament section for an aggregate');
@@ -299,6 +313,118 @@ test('a flow whose industry has no title words gets no parliament section', asyn
   assert.equal(m.root.querySelector('#mx-parliament').hidden, true);
 });
 
+// --- the floor follows who is in the view (review P1) ------------------------------------
+// Invented graphs for the three shapes the review found: one withheld donor in an
+// industry to one party, the person-tagged bucket, and a state industry of two
+// withheld donors with no party named.
+const anon = (n, industry, group = industry) => ({id: `donor:withheld-${n}`, label: `Donor ${n} (name withheld)`, kind: 'donor', industry, group, aliases: []});
+
+test('an industry→party view of one withheld donor reduces to its total and count', () => {
+  const graph = structuredClone(GRAPH);
+  graph.nodes.push(anon(31, 'security', 'defence & security'));
+  graph.edges.push(edge('donor:withheld-31', LIBERAL.id, {2016: [8000, 1], 2018: [9000, 2], 2019: [7000, 1], 2021: [6000, 1]}));
+  const index = donorPrivacyIndex([graph]);
+  const p = parseExplainParams(new URLSearchParams('industry=security&to=party%3ALiberal'), graph, index);
+  assert.deepEqual(p.state, {jur: 'federal', to: 'party:Liberal', industry: 'security'});
+  const flow = resolveFlow(p.state, graph, index, {aec: AEC, electionYears: [2016, 2019]});
+  assert.equal(flow.kind, 'industry');
+  assert.deepEqual([flow.total, flow.count, flow.unnamed.donors, flow.named.length], [30000, 5, 1, 0]);
+  assertReduced(flow, index);
+  assert.deepEqual(comparableFlows(flow, index).rows, [], 'no per-party split of the same group');
+});
+
+test('the person-tagged bucket is never an industry view: industry=individual(s) reroutes to the not-named group', () => {
+  const graph = structuredClone(GRAPH);
+  graph.nodes.push({id: 'party:Fieldstone', label: 'Fieldstone Party', kind: 'party'});
+  for (let i = 0; i < 3; i++) {
+    graph.nodes.push(anon(40 + i, 'individual', 'individuals'));
+    graph.edges.push(edge(`donor:withheld-${40 + i}`, 'party:Fieldstone', {2019: [1000 * (i + 1), 1], 2022: [500, 1]}));
+  }
+  const index = donorPrivacyIndex([graph]);
+  for (const key of ['individual', 'individuals']) {
+    const p = parseExplainParams(new URLSearchParams({industry: key, to: 'party:Fieldstone'}), graph, index);
+    assert.equal(p.withheld, true);
+    assert.deepEqual(p.state, {jur: 'federal', unnamed: true, to: 'party:Fieldstone'});
+    assert.equal(explainPath(p.state), '/money/explain?donors=unnamed&to=party%3AFieldstone');
+  }
+  assert.equal(explainHrefFor({kind: 'industry', from: 'Individuals', to: 'Fieldstone Party'}, graph, index), '/money/explain?donors=unnamed&to=party%3AFieldstone');
+  const flow = resolveFlow({jur: 'federal', unnamed: true, to: 'party:Fieldstone'}, graph, index, {aec: AEC});
+  assert.equal(flow.unnamed.donors, 3);
+  assertReduced(flow, index);
+});
+
+test('a state industry of two withheld donors gives no years, no "most went to" split and no per-party comparisons', () => {
+  const graph = {
+    meta: {jurisdiction: 'vic', jurisdictionLabel: 'Victoria', commission: 'Victorian Electoral Commission', sourceShort: 'VEC disclosures',
+      source_url: 'https://disclosures.vec.vic.gov.au/public-donations/', threshold: 'Donations above the indexed threshold must be disclosed.', coverage: 'financial years 2020-21 to 2026-27'},
+    nodes: [{id: 'party:Labor', label: 'Labor', kind: 'party'}, {id: 'party:Liberal', label: 'Liberal', kind: 'party'}, anon(51, 'gambling'), anon(52, 'gambling')],
+    edges: [edge('donor:withheld-51', 'party:Labor', {2021: [3000, 1], 2023: [2000, 1]}), edge('donor:withheld-52', 'party:Liberal', {2022: [4000, 2]})],
+  };
+  const index = donorPrivacyIndex([graph]);
+  const all = resolveFlow(parseExplainParams(new URLSearchParams('jur=vic&industry=gambling'), graph, index).state, graph, index, {});
+  assert.deepEqual([all.total, all.count, all.unnamed.donors], [9000, 4, 2]);
+  assertReduced(all, index);
+  assert.deepEqual(comparableFlows(all, index).rows.filter((r) => /Gambling →/.test(r.label)), []);
+  const one = resolveFlow({jur: 'vic', industry: 'gambling', to: 'party:Labor'}, graph, index, {});
+  assertReduced(one, index);
+  assert.deepEqual(comparableFlows(one, index).rows, []);
+});
+
+test('a named organisation keeps an industry view out of the floor; so does a group of five or more', () => {
+  const flow = resolveFlow({jur: 'federal', industry: 'mining', to: 'party:Labor'}, GRAPH, INDEX, {aec: AEC});
+  assert.deepEqual([flow.named.length, flow.unnamed.donors, flow.coarse], [1, 1, false]);
+});
+
+test('the reduced view on the page: no chart, timeline or years, and the notes start with the not-named one', async () => {
+  const graph = structuredClone(GRAPH);
+  graph.nodes.push(anon(31, 'security', 'defence & security'));
+  graph.edges.push(edge('donor:withheld-31', LIBERAL.id, {2016: [8000, 1], 2018: [9000, 2]}));
+  const index = donorPrivacyIndex([graph]);
+  const m = mount('industry=security&to=party%3ALiberal', {loadMoney: async () => graph, loadPrivacyIndex: async () => index});
+  await m.handle.ready; m.restore();
+  assert.deepEqual(m.addresses, ['/money/explain?industry=security&to=party%3ALiberal']);
+  const text = m.root.textContent;
+  assert.ok(!m.root.querySelector('.mx-trend, .mx-timeline, .mx-share'));
+  assert.ok(!/2016–17|2018–19|Largest year/.test(text));
+  assert.equal(m.root.querySelector('.mx-limits h3')?.textContent, 'Donors OPAX doesn’t name');
+  assert.equal(m.root.querySelector('#mx-parliament').hidden, true);
+});
+
+// --- review P3s ------------------------------------------------------------------------------
+test('bill matching takes the industry’s own phrases and drops loose hits', () => {
+  const titles = {
+    property: ['Treasury Laws Amendment (Housing Measures No. 1) Bill 2023', 'Defence Housing Australia Amendment Bill 2025'],
+    media: ['News Media Bargaining Charge Bill 2026', 'Online Safety Amendment (Social Media Minimum Age) Bill 2024', 'Australian Broadcasting Corporation Amendment (Fair and Balanced) Bill 2017'],
+    finance: ['Major Bank Levy Bill 2017', 'Asian Infrastructure Investment Bank Bill 2015', 'Treasury Laws Amendment (Payday Superannuation) Bill 2025'],
+    telecom: ['Telecommunications Amendment (Enhancing Consumer Safeguards) Bill 2025', 'Telecommunications (Interception and Access) Amendment Bill 2023'],
+    fossil_fuels: ['Offshore Petroleum and Greenhouse Gas Storage Amendment Bill 2020', 'Gas Supply Assurance Bill 2026'],
+    waste_management: ['Recycling and Waste Reduction Bill 2020', 'Asset Recycling Fund Bill 2014'],
+  };
+  for (const [key, [keep, ...drop]] of Object.entries(titles)) {
+    const index = {bills: [keep, ...drop].map((title, i) => ({key: `k${i}`, title, jurisdiction: 'federal', divisions: 1}))};
+    assert.deepEqual(candidateBills(index, key).map((b) => b.title), [keep], key);
+  }
+});
+
+test('a federal year from 2026 says returns move to calendar years, not a 20 October date', () => {
+  const graph = structuredClone(GRAPH);
+  graph.edges.push(edge(UNION.id, LIBERAL.id, {2025: [1000, 1], 2026: [2000, 1]}));
+  const flow = resolveFlow({jur: 'federal', from: UNION.id, to: 'party:Liberal'}, graph, INDEX, {});
+  assert.deepEqual(timelineRows(flow).map((r) => [r.label, r.lodged]), [
+    ['2026–27', 'Returns move to calendar years from 1 Jan 2027'], ['2025–26', 'Annual returns due by 20 Oct 2026']]);
+});
+
+test('the record notes show three and fold the rest, opened on wide screens', async () => {
+  for (const wide of [false, true]) {
+    const m = mount(`from=${encodeURIComponent(ORG.id)}&to=party%3ALabor`, {wide});
+    await m.handle.ready; m.restore();
+    const more = m.root.querySelector('.mx-limits-more');
+    assert.equal(m.root.querySelectorAll('section[aria-labelledby="mx-limits-h"] > .mx-limits > li').length, 3);
+    assert.match(more.querySelector('summary').textContent, /^\d+ more notes on this record$/);
+    assert.equal(more.hasAttribute('open'), wide);
+  }
+});
+
 // --- the served files ----------------------------------------------------------------------
 const served = Object.fromEntries(['', '.qld', '.vic', '.tas'].map((s) => [s ? s.slice(1) : 'federal', JSON.parse(readFileSync(new URL(`../public/graph/money${s}.json`, import.meta.url)))]));
 const servedIndex = donorPrivacyIndex(Object.values(served));
@@ -339,4 +465,33 @@ test('served files: the largest named federal flow reads back its own edge exact
   const words = narrative(flow).join(' ');
   assert.ok(words.includes(shortMoney(e.total)) && words.includes(`${e.count.toLocaleString('en-AU')} receipts`));
   assert.ok(flow.recipientShare === null || flow.recipientShare.amount <= flow.recipientShare.whole);
+});
+
+test('served files: every withheld-only industry view (the review found 44) reduces through the real address path', (t) => {
+  // The review's measure: an industry or cluster view, with or without a party,
+  // whose givers are all donors OPAX doesn't name, fewer than five. Found at run
+  // time, then each one is asked for by its address as a reader would.
+  const found = {}, parties = {};
+  for (const [jur, graph] of Object.entries(served)) {
+    const keys = [...new Set(graph.nodes.filter((n) => n.kind === 'donor').flatMap((n) => [n.industry, n.group]).filter(Boolean))];
+    const partyIds = graph.nodes.filter((n) => n.kind === 'party').map((n) => n.id);
+    for (const industry of keys) for (const to of [null, ...partyIds]) {
+      const view = {jur, industry, ...(to ? {to} : {})};
+      const raw = resolveFlow(view, graph, servedIndex, {});
+      const withheldOnly = raw.count > 0 && !raw.named.length && raw.unnamed.donors < AGGREGATE_FLOOR;
+      const p = parseExplainParams(new URLSearchParams(view), graph, servedIndex);
+      assert.equal(p.ok, true);
+      const flow = resolveFlow(p.state, graph, servedIndex, {aec: servedAec});
+      if (withheldOnly) { assertReduced(flow, servedIndex); found[jur] = (found[jur] || 0) + 1; }
+      else if (flow.count && flow.named.length) assert.equal(flow.coarse, false);
+    }
+    // A party whose donors on the map are all withheld, fewer than five, reduces too.
+    for (const to of partyIds) {
+      const flow = resolveFlow({jur, to}, graph, servedIndex, {aec: servedAec});
+      if (flow.count && !flow.named.length && flow.unnamed.donors < AGGREGATE_FLOOR) { assertReduced(flow, servedIndex); parties[jur] = (parties[jur] || 0) + 1; }
+    }
+  }
+  const total = Object.values(found).reduce((a, b) => a + b, 0);
+  t.diagnostic(`withheld-only industry views: ${JSON.stringify(found)} (${total}); withheld-only party views: ${JSON.stringify(parties)}`);
+  assert.ok(total > 0);
 });

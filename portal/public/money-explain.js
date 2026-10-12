@@ -18,9 +18,9 @@
 import { donorNameWithheld, loadDonorViewIndex, unnamedDonorLabel, donorsNotNamedDetail } from './donor-views.js?v=55a8bd3ae0';
 import { sourceLineHTML, partyLabelHTML } from './labels.js?v=c6bf994ef7';
 import { subjectUrl } from './canonical-urls.js?v=225d5915ea';
-import { shortMoney, shortDate } from './format.js';
+import { shortMoney, shortDate } from './format.js?v=9fcab43d8d';
 
-const STYLE_HREF = '/money-explain.css?v=4c7421b9e2';
+const STYLE_HREF = '/money-explain.css?v=39bdb46509';
 
 // --- sources -------------------------------------------------------------------
 // The pages behind the "what the record does and doesn't show" notes. Each was
@@ -68,9 +68,13 @@ const STATE_LINES = {
 
 const FEDERAL_META = { jurisdictionLabel: 'Federal', commission: 'Australian Electoral Commission', sourceShort: 'AEC returns', source_url: 'https://transparency.aec.gov.au/' };
 export const JURISDICTIONS = ['federal', 'qld', 'vic', 'tas'];
-/** Below this many donors a not-named aggregate shows its total and count
- *  only: a year-by-year line for one or two donors would read as their own. */
+/** A presentation rule, not a safeguard: when every giver in a view is a donor
+ *  OPAX doesn't name and there are fewer than this many, the page gives the
+ *  total and the count only. (The served money files still carry each such
+ *  donor's figures under a placeholder; what is withheld is the name.) */
 export const AGGREGATE_FLOOR = 5;
+/** The industry tag the graphs give donors recorded as people: the not-named group, never an industry view. */
+const PERSON_TAGS = new Set(['individual', 'individuals']);
 export const EXPLAIN_KEYS = ['jur', 'from', 'to', 'industry', 'donors'];
 
 // --- small helpers ---------------------------------------------------------------
@@ -172,6 +176,11 @@ export function parseExplainParams(params, graph, index) {
   if (industry) {
     const known = nodes.some((n) => n.kind === 'donor' && (n.industry === industry || n.group === industry));
     if (!known) return fail('That industry is not in OPAX’s money data.');
+    if (PERSON_TAGS.has(industry)) {
+      const out = { jur, unnamed: true };
+      if (state.to) out.to = state.to;
+      return { ok: true, state: out, withheld: true };
+    }
     state.industry = industry;
     return { ok: true, state, withheld: false };
   }
@@ -231,7 +240,9 @@ export function explainHrefFor(detail, graph, index) {
     const key = fold(detail.from);
     const hit = nodes.find((n) => n.kind === 'donor' && (fold(n.industry) === key || fold(n.group) === key));
     if (!hit) return null;
-    state.industry = fold(hit.industry) === key ? hit.industry : hit.group;
+    const industry = fold(hit.industry) === key ? hit.industry : hit.group;
+    if (PERSON_TAGS.has(industry)) state.unnamed = true;
+    else state.industry = industry;
   } else if (!state.to) return null;
   return explainPath(state);
 }
@@ -354,9 +365,12 @@ export function resolveFlow(state, graph, index, { aec = null, electionYears = [
     recipientShare, donorShare, aecLatest: state.jur === 'federal' ? aec?.meta?.latest_year || null : null,
     coarse: false,
   };
-  if (kind === 'unnamed' && unnamed.donors < AGGREGATE_FLOOR) Object.assign(flow, {
+  // The floor follows who is in the view, not the address that asked for it:
+  // a not-named group, an industry or a party whose givers are all donors OPAX
+  // doesn't name, fewer than the floor, gets its total and count only.
+  if (!named.length && unnamed.donors > 0 && unnamed.donors < AGGREGATE_FLOOR) Object.assign(flow, {
     coarse: true, years: new Map(), undated: [0, 0], dated: [], firstYear: null, lastYear: null,
-    peak: null, latest: null, recipientShare: null, industries: [],
+    peak: null, latest: null, recipientShare: null, industries: [], parties: [], contextTotal: 0,
   });
   return flow;
 }
@@ -368,6 +382,7 @@ export function resolveFlow(state, graph, index, { aec = null, electionYears = [
  */
 export function comparableFlows(flow, index, limit = 3) {
   const { graph, state } = flow;
+  if (flow.coarse && flow.kind === 'industry') return { rule: '', rows: [] };
   const byId = new Map(graph.nodes.map((n) => [n.id, n]));
   const donation = graph.edges.filter(isDonation);
   const withheld = (n) => isWithheldNode(n, index);
@@ -443,38 +458,49 @@ export function comparableFlows(flow, index, limit = 3) {
 // Bills whose own titles name the industry: a match a reader can check by
 // reading the title. Industries with no such words get no section at all.
 
-/** The words a bill's title must contain, whole, to sit beside an industry. */
+/** The phrases a bill's title must contain, whole, to sit beside an industry:
+ *  the industry's own name or the regime that regulates it. A loose word
+ *  ("housing", "media", "bank", "gas") is not enough; an industry left out
+ *  gets no section at all. */
 export const BILL_WORDS = {
-  gambling: ['gambling', 'wagering', 'betting', 'casino', 'casinos'],
+  gambling: ['gambling', 'wagering'],
   tobacco: ['tobacco'],
   alcohol: ['alcohol', 'liquor'],
-  mining: ['mining', 'mineral', 'minerals'],
-  fossil_fuels: ['coal', 'petroleum', 'gas'],
-  pharmacy: ['pharmacy', 'pharmacies', 'pharmaceutical'],
+  mining: ['mining', 'minerals resource rent tax', 'minerals exploration'],
+  fossil_fuels: ['coal', 'offshore petroleum', 'petroleum and other fuels'],
+  pharmacy: ['pharmaceutical benefits', 'pharmacy', 'pharmacies'],
   health: ['private health insurance'],
   telecom: ['telecommunications'],
-  media: ['broadcasting', 'media'],
-  finance: ['banking', 'bank', 'banks', 'superannuation'],
+  media: ['news media', 'broadcasting', 'media reform'],
+  finance: ['banking', 'bank levy', 'financial services'],
   unions: ['fair work', 'registered organisations', 'workplace relations', 'industrial relations'],
-  property: ['housing', 'building and construction'],
+  property: ['housing affordability', 'housing supply', 'housing measures', 'building and construction industry'],
   agriculture: ['agriculture', 'agricultural'],
-  waste_management: ['waste', 'recycling'],
+  waste_management: ['waste'],
+};
+/** Titles that carry an industry phrase but are about something else. */
+const BILL_EXCLUDE = {
+  telecom: ['interception', 'production orders', 'assistance and access'],
+  media: ['australian broadcasting corporation'],
 };
 const GROUP_INDUSTRIES = {
   'mining & energy': ['mining', 'fossil_fuels'], 'health & pharma': ['health', 'pharmacy'],
   'media & tech': ['media', 'telecom'], 'tobacco & alcohol': ['tobacco', 'alcohol'],
 };
-/** The title words that tie an industry key (or a map cluster) to bills, or []. */
+const industriesFor = (key) => GROUP_INDUSTRIES[key] || [key];
+/** The title phrases that tie an industry key (or a map cluster) to bills, or []. */
 export function billWordsFor(key) {
-  return [...new Set((GROUP_INDUSTRIES[key] || [key]).flatMap((k) => BILL_WORDS[k] || []))];
+  return [...new Set(industriesFor(key).flatMap((k) => BILL_WORDS[k] || []))];
 }
-const titleNames = (words, title) => words.some((w) => new RegExp(`\\b${w.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\b`, 'i').test(String(title || '')));
+const titleHas = (phrases, title) => phrases.some((w) => new RegExp(`\\b${w.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\b`, 'i').test(String(title || '')));
 
 /** Bills in the register whose titles name the industry and that went to a division. */
 export function candidateBills(billsIndex, key) {
   const words = billWordsFor(key);
   if (!words.length) return [];
-  return (billsIndex?.bills || []).filter((b) => b?.jurisdiction === 'federal' && Number(b.divisions) > 0 && titleNames(words, b.title));
+  const exclude = industriesFor(key).flatMap((k) => BILL_EXCLUDE[k] || []);
+  return (billsIndex?.bills || []).filter((b) => b?.jurisdiction === 'federal' && Number(b.divisions) > 0
+    && titleHas(words, b.title) && !titleHas(exclude, b.title));
 }
 
 const STAGE_RANK = { 'Third reading': 3, 'Second reading': 2 };
@@ -535,14 +561,14 @@ export function narrative(flow, { partyName = (l) => l } = {}) {
     out.push(`${recordedIn(flow)} ${money(total)} from ${donor.label} to ${to} across ${plural(count, 'receipt')}${when ? `, from ${when}` : ''}, with money in ${plural(yearsWithMoney, 'financial year')}.`);
   } else if (kind === 'party') {
     const givers = flow.named.length + unnamed.donors;
-    out.push(`${recordedIn(flow)} ${money(total)} to ${to} from the ${plural(givers, 'donor')} on OPAX’s map, across ${plural(count, 'receipt')}${when ? `, from ${when}` : ''}.`);
+    out.push(`${recordedIn(flow)} ${money(total)} to ${to} from ${givers === 1 ? 'the one donor' : `the ${plural(givers, 'donor')}`} on OPAX’s map, across ${plural(count, 'receipt')}${when ? `, from ${when}` : ''}.`);
   } else if (kind === 'unnamed') {
-    out.push(`OPAX names organisations only. ${plural(unnamed.donors, 'donor')} it can’t confirm ${unnamed.donors === 1 ? 'is an organisation' : 'are organisations'} account for ${money(total)} to ${to} across ${plural(count, 'receipt')}${when ? `, from ${when}` : ''}. They are counted here, not named.`);
-    if (flow.coarse) out.push(`With fewer than ${AGGREGATE_FLOOR} donors in this group, OPAX shows only the total and the count, so no one donor’s giving can be read from it.`);
+    out.push(`OPAX names organisations only. ${plural(unnamed.donors, 'donor')} it can’t confirm ${unnamed.donors === 1 ? 'is an organisation accounts' : 'are organisations account'} for ${money(total)} to ${to} across ${plural(count, 'receipt')}${when ? `, from ${when}` : ''}. They are counted here, not named.`);
   } else {
     const givers = flow.named.length + unnamed.donors;
-    out.push(`${plural(givers, `${industryName(flow.state.industry).toLowerCase()} donor`)} on OPAX’s map account for ${money(total)} to ${to} across ${plural(count, 'receipt')}${when ? `, from ${when}` : ''}.`);
+    out.push(`${plural(givers, `${industryName(flow.state.industry).toLowerCase()} donor`)} on OPAX’s map ${givers === 1 ? 'accounts' : 'account'} for ${money(total)} to ${to} across ${plural(count, 'receipt')}${when ? `, from ${when}` : ''}.`);
   }
+  if (flow.coarse) out.push(`${kind === 'unnamed' ? '' : 'OPAX names organisations only, and none of these donors is named, so they are shown as a group. '}For a group of fewer than ${AGGREGATE_FLOOR} donors this page gives the total and the count only.`);
   if (peak && yearsWithMoney > 1) {
     const latestPart = latest && latest.year !== peak.year ? ` The latest year with money is ${yearPhrase(latest.year, flow.jur, flow.electionYears)}: ${money(latest.amount)}.` : '';
     out.push(`The largest year was ${yearPhrase(peak.year, flow.jur, flow.electionYears)}: ${money(peak.amount)} across ${plural(peak.count, 'receipt')}, ${pctText(peak.amount, total)} of the flow.${latestPart}`);
@@ -578,7 +604,9 @@ export function timelineRows(flow) {
     if (flow.jur === 'federal') {
       row.election = flow.electionYears.includes(year);
       row.threshold = federalThreshold(year);
-      row.lodged = `Annual returns due by 20 Oct ${year + 1}`;
+      // From 1 January 2027 returns cover calendar years (due 25 February), so a
+      // financial year from 2026 is no longer lodged as one annual return.
+      row.lodged = year >= 2026 ? 'Returns move to calendar years from 1 Jan 2027' : `Annual returns due by 20 Oct ${year + 1}`;
     }
     rows.push(row);
   }
@@ -644,8 +672,8 @@ function scaleHTML(flow, comparisons, partyName, matches = null) {
       <p class="mx-fine">${esc(comparisons.rule)}. Listed for scale only: these are separate flows, not linked to this one.</p>
       <ul class="mx-compare-list">${comparisons.rows.map((c) => `<li><a href="${esc(c.href)}">${esc(c.label)}</a><span class="mx-compare-figure">${esc(money(c.total))}${c.first ? `<small>${esc(c.first === c.last ? fyLabel(c.first) : `${fyLabel(c.first)} to ${fyLabel(c.last)}`)}</small>` : ''}</span></li>`).join('')}</ul>
     </div>` : '';
-  // A party's money by industry; never for the not-named aggregate, where a tag
-  // with one donor in it would single that donor out.
+  // A party's money by industry. Not for the not-named group: its industry tags
+  // would split the group back towards single donors.
   const breakdown = flow.kind === 'party' && flow.industries.length > 1
     ? `<div class="mx-compare"><h3 class="mx-subhead">By industry</h3><ul class="mx-compare-list">${flow.industries.slice(0, 5).map((i) => `<li><span>${esc(industryName(i.key))}</span><span class="mx-compare-figure">${esc(money(i.total))}<small>${esc(pctText(i.total, flow.total))}</small></span></li>`).join('')}</ul>
       <p class="mx-fine">Industry is OPAX’s tag on each donor, not a category on the return.</p></div>` : '';
@@ -717,12 +745,20 @@ function limitsHTML(flow, partyName) {
     esc(`${donorsNotNamedDetail} `) + (notNamed?.donors
       ? esc(`In this view that is ${unnamedDonorLabel(notNamed.donors)}, with ${shortMoney(notNamed.total)} across ${plural(notNamed.count, 'receipt')}; their amounts are in every total above.`)
       : flow.kind === 'unnamed'
-        ? esc('This page shows them only as a count and a total, never one by one.')
+        ? esc('This page shows them as a group.')
         : esc('None of the money in this view comes from them.')));
   const top = federal ? 'The map holds the 250 largest donors by lifetime total, plus donors holding $50m or more in Commonwealth contracts and grants' : 'The map holds the 250 largest donors by lifetime total in this jurisdiction';
   item('Smaller donors are not on the map',
     esc(`${top}. The flow totals in this explanation count only those donors and leave out internal party transfers; a party’s own return totals count everything it received.`));
-  return `<ul class="mx-limits">${items.join('')}</ul>`;
+  // The first notes stay in view; the rest sit under one disclosure that the
+  // mount opens on wide screens, so a phone reads three notes, not eight.
+  const SHOWN = 3;
+  const notNamedAt = items.findIndex((i) => i.includes('Donors OPAX doesn’t name'));
+  if ((flow.kind === 'unnamed' || flow.coarse) && notNamedAt > 0) items.unshift(...items.splice(notNamedAt, 1));
+  const rest = items.slice(SHOWN);
+  return `<ul class="mx-limits">${items.slice(0, SHOWN).join('')}</ul>${rest.length ? `<details class="mx-disclose mx-limits-more">
+      <summary>${esc(`${rest.length} more ${rest.length === 1 ? 'note' : 'notes'} on this record`)}</summary>
+      <ul class="mx-limits">${rest.join('')}</ul></details>` : ''}`;
 }
 
 function parliamentHTML(rows, flow, partyName, words) {
@@ -943,8 +979,10 @@ export function mountMoneyExplain(root, options) {
     const flow = resolveFlow(parsed.state, graph, index, { aec, electionYears });
     onTitle(flowTitle(flow, partyName));
     settle(pageHTML(flow, { index, partyName, access, fits, normName }));
+    const wide = doc.defaultView?.matchMedia?.('(min-width: 701px)');
+    if (wide?.matches) root.querySelector('.mx-limits-more')?.setAttribute('open', '');
     if (parsed.withheld) root.querySelector('.mx-head')?.insertAdjacentHTML('beforeend',
-      `<p class="mx-note" role="note">${esc('OPAX names organisations only, so this shows every donor it doesn’t name together.')}</p>`);
+      `<p class="mx-note" role="note">${esc('OPAX names organisations only, so donors it doesn’t name are shown here as a group.')}</p>`);
     await renderParliament(flow);
   })().catch(() => { if (!destroyed) settle(errorHTML('The disclosed-money data could not be read just now.')); });
 

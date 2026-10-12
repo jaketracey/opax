@@ -76,6 +76,10 @@
 .mx-limits p { max-width: var(--size-readable); margin: 0; color: var(--ink); font: var(--type-body); }
 .mx-limits .mx-sources { margin-top: var(--space-tight); color: var(--ink-soft); font: var(--type-fine); }
 
+/* The notes after the first three, under one disclosure (opened on wide screens by the module). */
+.mx-limits-more { margin-top: var(--space-group); }
+.mx-limits-more > .mx-limits { margin-top: var(--space-block); }
+
 /* In parliament, for context. */
 .mx-caution { max-width: var(--size-readable); margin: 0 0 var(--space-block); padding: var(--space-block) var(--space-group); border-radius: var(--radius-md); background: var(--bronze-wash); color: var(--ink); font: var(--type-strong); }
 .mx-bills { margin: var(--space-group) 0 0; padding: 0; list-style: none; }
@@ -96,3 +100,7 @@
   .mx-page { max-width: 52rem; }
   .mx-limits { grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: var(--space-section); row-gap: var(--space-section); }
 }
+
+/* The pages' "Explain" links (app.js explainBtn, which links this sheet): in a
+   column of actions the link takes the column, as the old button did. */
+.action-row > a.ui-button[data-explain-link] { width: 100%; justify-content: flex-start; text-align: left; }

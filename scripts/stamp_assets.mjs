@@ -178,9 +178,12 @@ export const MODULE_STAMPS = [
   ['home.js', 'home-data.js'], ['home.js', 'electorates.js'], ['home.js', 'money-map.js'],
 ]
 
-// Stylesheets a module links itself (not imports), stamped the same way.
+// Files stamped the same way that are not MODULE_STAMPS imports: a stylesheet
+// a script links itself, and a shared helper whose other importers stay
+// unstamped (identity-cache.test.mjs requires every importer of a
+// MODULE_STAMPS module to carry the stamp).
 const ASSET_STAMPS = [
-  ['money-explain.js', 'money-explain.css'],
+  ['money-explain.js', 'money-explain.css'], ['money-explain.js', 'format.js'], ['app.js', 'money-explain.css'],
 ]
 
 /** Write each MODULE_STAMPS module's content hash into its importer; returns the importers that were stale.
