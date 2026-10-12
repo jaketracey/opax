@@ -312,7 +312,8 @@ export function cardTree(card: OgCard): El {
 // Instagram's feed and grid are portrait (4:5), and the landscape card dropped
 // in there is cropped to its middle: half a title, no wordmark. This is the same
 // card stood upright, in the same register: the masthead at the top, the
-// wordmark footer and thick rule at the bottom, and between them the person's
+// wordmark footer at the bottom (no rule or band, as on the carousel slides),
+// and between them the person's
 // portrait large and centred when there is one, the headline set big enough to
 // read as a grid thumbnail, and the statistic as the largest figure on the card.
 // The engraving is drawn only when a card has neither a portrait nor a
@@ -321,6 +322,12 @@ export function cardTree(card: OgCard): El {
 
 export const PORTRAIT_WIDTH = 1080
 export const PORTRAIT_HEIGHT = 1350
+
+/** Bump when the portrait card alone is redrawn: folded into its cache key only,
+ *  so the edge draws it afresh while every landscape og:image URL (OG_VERSION)
+ *  stays put. A posted card is Instagram's copy and is never fetched again.
+ *  1: no bronze band along the foot, to match the carousel slides. */
+export const PORTRAIT_VERSION = '1'
 
 export type OgFormat = 'landscape' | 'portrait'
 
@@ -454,14 +461,13 @@ export function portraitTree(card: OgCard): El {
 
   const footer = h(
     'div',
-    { style: { display: 'flex', flexDirection: 'column', padding: `24px ${P_PAD}px 44px ${P_PAD}px` } },
+    // The foot is the old 44px plus the 8px band it replaces, so the wordmark stays where it was.
+    { style: { display: 'flex', flexDirection: 'column', padding: `24px ${P_PAD}px 52px ${P_PAD}px` } },
     h('div', { style: { fontFamily: SANS, fontSize: 28, fontWeight: 700, letterSpacing: card.authorisation ? 0 : '0.16em', color: BRONZE_BRIGHT } }, card.authorisation ? 'opax.com.au' : 'OPAX.COM.AU'),
     card.authorisation ? h('div', { style: { fontFamily: SANS, fontSize: 22, lineHeight: 1.4, color: SOFT, marginTop: 16 } }, card.authorisation) : null,
     card.sourceNotice ? h('div', { style: { fontFamily: SANS, fontSize: 22, lineHeight: 1.4, color: SOFT, marginTop: 16 } }, card.sourceNotice.label) : null,
     card.sourceNotice?.url ? h('div', { style: { fontFamily: SANS, fontSize: 18, lineHeight: 1.4, color: SOFT, marginTop: 4 } }, card.sourceNotice.url) : null,
   )
-
-  const bottomRule = h('div', { style: { height: 8, background: BRONZE } })
 
   return h(
     'div',
@@ -469,7 +475,6 @@ export function portraitTree(card: OgCard): El {
     masthead,
     body,
     footer,
-    bottomRule,
   )
 }
 

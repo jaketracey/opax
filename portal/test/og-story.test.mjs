@@ -129,14 +129,21 @@ test('a slide carries the mark and nothing else up top: no counter, no header ru
   assert.equal(total.props.style.borderBottom, undefined, 'no rule under the total');
 });
 
-test('the share cards: the portrait card drops its header rule, and neither format draws a counter', () => {
+test('the share cards: the portrait card has no header rule or bronze band, and neither format draws a counter', () => {
   const card = { kicker: 'Grant recipient', title: 'Fifteen awards, five departments', lines: ['15 awards in the record'], stat: { value: '$11.7m', label: 'in the record' } };
   const portrait = portraitTree(card);
   const top = [].concat(portrait.props.children).filter(n => n && typeof n === 'object');
   assert.ok(images(top[0]).some(n => MARK.test(n.props.src)), 'the portrait card keeps the logo');
   assert.ok(!isRule(top[1]), 'no rule under the portrait masthead');
+  assert.deepEqual(top.filter(isRule), [], 'no rule or band anywhere on the portrait card, the foot included');
+  const foot = top.at(-1);
+  assert.ok(texts(foot).includes('OPAX.COM.AU'), 'the portrait card ends on the wordmark');
+  assert.match(foot.props.style.padding, / 52px /, 'the foot takes the band\'s 8px, so the wordmark does not move');
   assert.deepEqual(counterText(portrait), []);
-  assert.deepEqual(counterText(cardTree(card)), [], 'the landscape card draws no counter');
+  const landscape = cardTree(card);
+  assert.deepEqual(counterText(landscape), [], 'the landscape card draws no counter');
+  const landscapeTop = [].concat(landscape.props.children).filter(n => n && typeof n === 'object');
+  assert.ok(isRule(landscapeTop.at(-1)) && landscapeTop.at(-1).props.style.height === 6, 'the landscape card keeps its bronze band');
 });
 
 test('validStory and the catalogue helpers guard what may be posted', () => {
