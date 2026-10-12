@@ -22,6 +22,7 @@ import os
 import json
 import sqlite3
 import sys
+from parli.ingest.speaker_roles import chair_party_sql
 
 DB = os.environ.get("OPAX_DB") or os.path.expanduser("~/.cache/autoresearch/parli.db")
 MIN_SPEECHES = 5
@@ -34,8 +35,10 @@ rows = db.execute(f"""
     SELECT speaker_name_clean, COUNT(*) AS n FROM speeches
     WHERE speaker_name_clean IS NOT NULL AND speaker_name_clean != ''
       AND source != 'wragge_xml'
-      AND NOT (UPPER(COALESCE(speaker_name,'')) LIKE '%SPEAKER%' OR UPPER(COALESCE(speaker_name,'')) LIKE '%PRESIDENT%'
-               OR UPPER(COALESCE(speaker_name,'')) LIKE '%CHAIR%')
+      AND NOT ((source = 'openaustralia' AND {chair_party_sql()}) OR
+          (source != 'openaustralia' AND (UPPER(COALESCE(speaker_name,'')) LIKE '%SPEAKER%'
+            OR UPPER(COALESCE(speaker_name,'')) LIKE '%PRESIDENT%'
+            OR UPPER(COALESCE(speaker_name,'')) LIKE '%CHAIR%')))
       AND NOT (source = 'zenodo' AND COALESCE(speaker_name,'') = 'stage direction')
       AND NOT (source = 'openaustralia' AND COALESCE(chamber,'') = 'representatives'
                AND date IN (SELECT DISTINCT date FROM speeches WHERE source = 'zenodo'))
