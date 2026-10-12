@@ -1,0 +1,98 @@
+/* /money/explain (money-explain.js): one disclosed-money flow, explained.
+   One reading column, generous air between sections and no rules between
+   them; hairlines only between rows of a list. Tokens only (tokens.css). */
+
+.mx-page { max-width: 48rem; margin: var(--space-section) auto calc(var(--space-section) * 2); min-width: 0; }
+.mx-page[aria-busy="true"] { min-height: 40vh; }
+
+/* The head: a kicker, the flow, one meta line. */
+.mx-kicker { margin: 0 0 var(--space-tight); color: var(--money-ink); font: var(--type-label); }
+.mx-title { margin: 0; color: var(--ink); font: var(--type-title); overflow-wrap: anywhere; text-wrap: balance; }
+.mx-title:focus { outline: none; }
+.mx-title:focus-visible { outline: 2px solid var(--bronze-ink); outline-offset: 4px; border-radius: var(--radius-sm); }
+.mx-meta { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-line); margin: var(--space-heading) 0 0; color: var(--ink-soft); font: var(--type-metadata); }
+.mx-lede { max-width: var(--size-readable); margin: var(--space-heading) 0 0; color: var(--ink-soft); font: var(--type-body); }
+.mx-head .mx-note { margin-top: var(--space-block); }
+
+/* Sections: separated by space, not lines. */
+.mx-section { margin-top: calc(var(--space-section) * 1.5); }
+.mx-heading { margin: 0 0 var(--space-group); color: var(--ink); font: var(--type-heading); }
+.mx-subhead { margin: 0 0 var(--space-line); color: var(--ink); font: var(--type-strong); }
+.mx-fine { max-width: var(--size-readable); margin: var(--space-tight) 0 0; color: var(--ink-soft); font: var(--type-fine); }
+.mx-page a { color: var(--bronze-ink); text-decoration-color: var(--bronze-rule); text-underline-offset: 0.18em; }
+
+/* What the record shows: four figures, then the sentences. */
+.mx-figures { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-group) var(--space-block); margin: 0 0 var(--space-group); }
+.mx-figure { display: flex; flex-direction: column-reverse; gap: var(--space-line); min-width: 0; }
+.mx-figure dt { color: var(--ink-soft); font: var(--type-fine); }
+.mx-figure dd { margin: 0; color: var(--ink); font: var(--type-display); font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
+.mx-story p { max-width: var(--size-readable); margin: 0 0 var(--space-block); color: var(--ink); font: var(--type-record); }
+.mx-note { max-width: var(--size-readable); margin: var(--space-group) 0; padding: var(--space-block) var(--space-group); border-radius: var(--radius-md); background: var(--paper-sunken); color: var(--ink-soft); font: var(--type-fine); }
+.mx-shows .ui-source { margin-top: var(--space-block); }
+
+/* Scale: two shares, the trend, then the comparisons. */
+.mx-shares { display: grid; gap: var(--space-group); margin: 0 0 var(--space-section); }
+.mx-share-figure { margin: 0; color: var(--money-ink); font: var(--type-display); font-variant-numeric: tabular-nums; }
+.mx-share-track { height: 6px; margin: var(--space-tight) 0; overflow: hidden; border-radius: var(--radius-pill); background: var(--chart-baseline); }
+.mx-share-track i { display: block; min-width: 2px; height: 100%; border-radius: inherit; background: var(--money-ink); }
+.mx-share-text { max-width: var(--size-readable); margin: 0; color: var(--ink-soft); font: var(--type-body); }
+
+.mx-trend { margin: 0; }
+.mx-trend-cap { margin: 0 0 var(--space-heading); color: var(--ink); font: var(--type-body); }
+.mx-trend-chart { display: block; width: 100%; height: 9rem; overflow: visible; }
+.mx-bar { fill: var(--chart-mark); }
+.mx-bar.is-peak { fill: var(--bronze-ink); }
+.mx-trend-axis { display: flex; justify-content: space-between; margin-top: var(--space-line); padding-top: var(--space-line); border-top: var(--border-hairline) solid var(--chart-baseline); color: var(--ink-soft); font: var(--type-fine); font-variant-numeric: tabular-nums; }
+.mx-disclose { margin-top: var(--space-block); }
+.mx-disclose > summary { display: inline-flex; align-items: center; min-height: var(--size-target); color: var(--bronze-ink); font: var(--type-control); cursor: pointer; }
+.mx-table { width: 100%; margin-top: var(--space-tight); border-collapse: collapse; font: var(--type-fine); font-variant-numeric: tabular-nums; }
+.mx-table th, .mx-table td { padding: var(--space-tight) 0; border-bottom: var(--border-hairline) solid var(--divider-subtle); text-align: right; }
+.mx-table th:first-child { text-align: left; font: var(--type-fine); }
+.mx-table thead th { color: var(--ink-soft); font: var(--type-label); }
+.mx-table tr.is-zero td { color: var(--ink-faint); }
+
+.mx-compare { margin-top: var(--space-section); }
+.mx-compare-list { margin: var(--space-heading) 0 0; padding: 0; list-style: none; }
+.mx-compare-list li { display: flex; justify-content: space-between; align-items: baseline; gap: var(--space-block); min-height: var(--size-target); padding: var(--space-row) 0; border-top: var(--border-hairline) solid var(--divider-subtle); }
+.mx-compare-list li:last-child { border-bottom: var(--border-hairline) solid var(--divider-subtle); }
+.mx-compare-list a, .mx-compare-list li > span:first-child { min-width: 0; color: var(--ink); font: var(--type-strong); overflow-wrap: anywhere; }
+.mx-compare-figure { flex: none; color: var(--ink); font: var(--type-strong); font-variant-numeric: tabular-nums; text-align: right; }
+.mx-compare-figure small { display: block; color: var(--ink-soft); font: var(--type-fine); }
+.mx-landing { margin-top: var(--space-section); }
+
+/* Timeline: one quiet spine, a mark per year. */
+.mx-timeline { margin: var(--space-group) 0 0; padding: 0 0 0 var(--space-block); list-style: none; border-left: 2px solid var(--chart-baseline); }
+.mx-period { position: relative; padding: 0 0 var(--space-group) var(--space-block); }
+.mx-period::before { content: ""; position: absolute; top: 0.45rem; left: calc(-1 * var(--space-block) - 5px); width: 8px; height: 8px; border-radius: var(--radius-round); background: var(--chart-mark); }
+.mx-period-next::before { box-sizing: border-box; background: var(--paper); border: 2px solid var(--bills-ink); }
+.mx-period-head { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 0 var(--space-block); }
+.mx-period-year, .mx-period-amount { color: var(--ink); font: var(--type-strong); font-variant-numeric: tabular-nums; }
+.mx-period-amount small { margin-left: var(--space-tight); color: var(--ink-soft); font: var(--type-fine); }
+.mx-period-detail { max-width: var(--size-readable); margin: var(--space-line) 0 0; color: var(--ink-soft); font: var(--type-fine); }
+.mx-timeline-more > summary { margin-left: calc(var(--space-block) * 2); }
+
+/* What the record does and doesn't show. */
+.mx-limits { display: grid; gap: var(--space-group); margin: 0; padding: 0; list-style: none; }
+.mx-limits p { max-width: var(--size-readable); margin: 0; color: var(--ink); font: var(--type-body); }
+.mx-limits .mx-sources { margin-top: var(--space-tight); color: var(--ink-soft); font: var(--type-fine); }
+
+/* In parliament, for context. */
+.mx-caution { max-width: var(--size-readable); margin: 0 0 var(--space-block); padding: var(--space-block) var(--space-group); border-radius: var(--radius-md); background: var(--bronze-wash); color: var(--ink); font: var(--type-strong); }
+.mx-bills { margin: var(--space-group) 0 0; padding: 0; list-style: none; }
+.mx-bill { padding: var(--space-block) 0; border-top: var(--border-hairline) solid var(--divider-subtle); }
+.mx-page .mx-bill-title { color: var(--ink); font: var(--type-strong); }
+.mx-bill-vote, .mx-bill-speeches { margin: var(--space-line) 0 0; color: var(--ink-soft); font: var(--type-fine); }
+
+/* Keep going. */
+.mx-next { display: flex; flex-wrap: wrap; gap: 0 var(--space-group); margin: 0; padding: 0; list-style: none; }
+.mx-next a { display: inline-flex; align-items: center; min-height: var(--size-target); font: var(--type-control); }
+
+@media (min-width: 701px) {
+  .mx-figures { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  .mx-shares { grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: var(--space-section); }
+  .mx-trend-chart { height: 11rem; }
+}
+@media (min-width: 1100px) {
+  .mx-page { max-width: 52rem; }
+  .mx-limits { grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: var(--space-section); row-gap: var(--space-section); }
+}
