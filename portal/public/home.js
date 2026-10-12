@@ -1,4 +1,4 @@
-import {donorNameWithheld,loadDonorViewIndex} from './donor-views.js?v=55a8bd3ae0';
+import {donorNameWithheld,loadDonorViewIndex} from './donor-views.js?v=39885305c2';
 let donorPrivacy={organisations:new Set(),withheld:new Set()};
 loadDonorViewIndex().then(index=>{donorPrivacy=index});
 import { personUrl, partyUrl } from './canonical-urls.js?v=225d5915ea';
@@ -383,7 +383,7 @@ renderBuilder();
 const root = $("hp-money-map");
 const chipGroup = $("hp-industries");
 const chips = () => [...chipGroup.querySelectorAll("[data-industry]")];
-const MAP_DATA = "/graph/money.json?v=suppliers-1";
+const MAP_DATA = "/graph/money.json";
 let handle;
 let visible = false;
 let started = false;

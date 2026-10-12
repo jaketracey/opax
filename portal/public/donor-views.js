@@ -1,10 +1,14 @@
 import {donorPrivacyIndex, donorNameWithheld, foldDonorName, MONEY_GRAPHS} from './donor-entity.js?v=ebb2c972d5';
 export {donorNameWithheld, donorPrivacyIndex};
 let memo;
+const graphs = new Map();
+/** One read of a money graph per page: the privacy index and the views share it (read-only). */
+export function loadMoneyGraph(path) {
+  if (!graphs.has(path)) graphs.set(path, fetch(path,{cache:"no-cache"}).then(r => { if (!r.ok) throw Error('Money data unavailable'); return r.json(); }));
+  return graphs.get(path);
+}
 export function loadDonorViewIndex() {
-  return memo ??= Promise.all(MONEY_GRAPHS.map(async path => {
-    const r = await fetch(path,{cache:"no-cache"}); if (!r.ok) throw Error('Money data unavailable'); return r.json();
-  })).then(donorPrivacyIndex).catch(() => ({organisations:new Set(),withheld:new Set()}));
+  return memo ??= Promise.all(MONEY_GRAPHS.map(loadMoneyGraph)).then(donorPrivacyIndex).catch(() => ({organisations:new Set(),withheld:new Set()}));
 }
 export const unnamedDonorLabel = n => `Donors not named (${n})`;
 export const isUnnamedAggregate = label => /^Donors not named \(\d+\)$/.test(label);
