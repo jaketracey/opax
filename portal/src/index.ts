@@ -4986,6 +4986,13 @@ function breadcrumbList(trail: Crumb[], canonical: string): { name: string; url:
   return crumbSteps(trail).map((step, i, all) => ({ name: step.label, url: i === all.length - 1 || !step.href ? canonical : new URL(step.href, SITE_ORIGIN).href }))
 }
 
+/** A document's trail, as the app draws it: Search › its speaker, or the
+ *  record's own title where no one is attributed (the page's h1 is the
+ *  speaker with the date, which the strip leaves to the page). */
+function docTrail(speaker: string | null | undefined, title: string): Crumb[] {
+  return trail('/ask?view=search', speaker || title)
+}
+
 /** A division's trail, as the app draws it: Bills › its bill › Division, or
  *  Search › Division when the record names no bill. */
 function divisionTrail(bill: { key: string; title: string } | null | undefined): Crumb[] {
@@ -5104,6 +5111,7 @@ async function docMeta(slug: string, url: URL, request: Request, env: Env, ctx: 
         title: headline,
         lines: [[r.speaker, r.metadata.role].filter(Boolean).join(' · '), 'Read the official source text on OPAX.'],
       },
+      trail: docTrail(r.speaker, headline),
     }
   }
   if (RESEARCH_SLUG_RE.test(slug)) {
@@ -5112,13 +5120,13 @@ async function docMeta(slug: string, url: URL, request: Request, env: Env, ctx: 
     const description = clip(`${r.title}. ${kind} with source provenance on OPAX. ${typeof r.metadata.date_meaning === 'string' ? r.metadata.date_meaning : 'Invitations, awards and payments are distinct stages.'}`)
     return { ...generic, title:`${r.title} · OPAX`, description,
       jsonLd:{'@context':'https://schema.org','@type':'CreativeWork',name:r.title,description,url:canonical,publisher},
-      card:{kicker:kind,title:r.title,lines:['Read the record and its source on OPAX.']} }
+      card:{kicker:kind,title:r.title,lines:['Read the record and its source on OPAX.']}, trail: docTrail(r.speaker, r.title) }
   }
   if (r.labels.kind === 'bill_text') {
     const description = clip(`${r.title}. Original federal bill text, with its source version and provenance, readable on OPAX.`)
     return { ...generic, title: `${r.title} · OPAX`, description,
       jsonLd: { '@context': 'https://schema.org', '@type': 'DigitalDocument', name: r.title, description, url: canonical, publisher },
-      card: { kicker: 'Original bill text', title: r.title, lines: ['Read the bill and its source version on OPAX.'] } }
+      card: { kicker: 'Original bill text', title: r.title, lines: ['Read the bill and its source version on OPAX.'] }, trail: docTrail(r.speaker, r.title) }
   }
   const speaker = r.speaker ?? 'Unknown speaker'
   // A committee transcript's speaker may be a witness, named as the transcript
@@ -5161,6 +5169,7 @@ async function docMeta(slug: string, url: URL, request: Request, env: Env, ctx: 
       portraitId,
       credit: await creditLine(env, portraitId),
     },
+    trail: docTrail(r.speaker, r.title),
   }
 }
 

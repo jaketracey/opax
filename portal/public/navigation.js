@@ -92,6 +92,10 @@
     page('/bills', 'Latest bills'),
     page('/vic-election-2026', 'Victorian election', '', { gate: 'vic-election' }),
   ];
+  // The tools on Interactive tools, by the key /explore?game= opens them with:
+  // a tool's page is a record inside that section (app.js GAMES keeps the same names).
+  const tools = { ballot: 'Build your ballot', tm: 'Time machine', tide: 'The tide', quiz: 'The record quiz', ledger: 'The ledger',
+    grants: 'Who gets the grants', matrix: 'Who owns which debate', wd: 'Words per dollar', tvn: 'Then vs now' };
   // Pages reached in context (an answer, a result, a record), not from the menus.
   const ASK = page('/ask', 'Ask');
   const SEARCH = page('/ask?view=search', 'Search');
@@ -146,11 +150,14 @@
     const [pathPart, query = ''] = String(address).split('#')[0].split('?');
     const p = pathPart.replace(/(.)\/+$/, '$1') || '/';
     if (p === '/') return [];
-    const at = placeOf(p, new URLSearchParams(query));
+    const params = new URLSearchParams(query);
+    const at = placeOf(p, params);
     if (!at) return [{ label: 'Page not found' }];
     const steps = at.parent ? [{ label: at.parent.label, href: at.parent.href }] : [];
     const tail = records.filter(r => r && (typeof r === 'string' ? r.trim() : r.label))
       .map(r => typeof r === 'string' ? { label: clip(r) } : { label: clip(r.label), ...(r.href ? { href: r.href } : {}) });
+    // A tool opened by its address names itself, wherever the trail is drawn.
+    if (!tail.length && p === '/explore' && Object.hasOwn(tools, params.get('game') || '')) tail.push({ label: tools[params.get('game')] });
     if (at.page && !tail.length) return [...steps, { label: at.page.label }];
     const anchor = at.page || at.section;
     return [...steps, { label: anchor.label, href: anchor.href }, ...tail];
@@ -471,7 +478,7 @@
   // The page's menus are drawn and wired once, however often this script runs.
   const initialised = Symbol.for('opax.navigation.page');
   if (typeof document !== 'undefined' && document[initialised]) return;
-  globalThis.OpaxNavigation = { groups, footerOnly, shortcuts, sections, money, active, trail, moneyNav, mountDesktop, mountDrawer, markCurrent, footerHTML, barHTML, FULL_NAV };
+  globalThis.OpaxNavigation = { groups, footerOnly, shortcuts, sections, tools, money, active, trail, moneyNav, mountDesktop, mountDrawer, markCurrent, footerHTML, barHTML, FULL_NAV };
   if (typeof document === 'undefined') return;
   document[initialised] = true;
   for (const name of (document.documentElement.dataset.navGates || '').split(/\s+/)) if (name in gates && name !== 'estimates') gates[name] = true;

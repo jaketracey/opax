@@ -2,10 +2,11 @@ let donorRows = rows => rows?.length ? [[`Donors not named (${rows.length})`,row
 let isUnnamedAggregate = label => /^Donors not named \(\d+\)$/.test(label);
 let donorsNotNamedDetail = "OPAX names organisations only. Donors it can't confirm are organisations are counted here, not named.";
 let donorNameWithheld = () => true;
+let donorOrganisationKnown = () => false; // fail-closed until donor-views.js loads
 let donorRouteWithheld = async(name,index) => donorNameWithheld(index,name);
 let donorViewIndex = {organisations:new Set(),withheld:new Set()};
-const donorViewReady = import('/donor-views.js?v=55a8bd3ae0').then(module => {
-  ({donorRows,isUnnamedAggregate,donorNameWithheld,donorsNotNamedDetail}=module);
+const donorViewReady = import('/donor-views.js?v=783b253885').then(module => {
+  ({donorRows,isUnnamedAggregate,donorNameWithheld,donorsNotNamedDetail,donorOrganisationKnown}=module);
   if(typeof module.donorRouteWithheld==='function') donorRouteWithheld=module.donorRouteWithheld;
   return module.loadDonorViewIndex();
 }).then(index => (donorViewIndex=index));
@@ -1339,7 +1340,7 @@ async function openMoneyRecords(kind, params) {
   $('money-records-title').textContent = grants ? 'Government grants' : 'Political receipts';
   const body = $('money-records-body'); body.innerHTML = '<p class="status">Loading the records…</p>';
   try {
-    const mod = await import(grants ? '/grants.js?v=bf7c17477c' : '/ledger.js?v=5644afe6e0');
+    const mod = await import(grants ? '/grants.js?v=e85283c6f1' : '/ledger.js?v=620276d0e9');
     if (generation !== moneyRecordsGeneration) return;
     body.replaceChildren();
     // Both modules report their shareable state (open file, filters) so the
@@ -1367,7 +1368,7 @@ async function openGrantRecipient(jurisdiction, id, manageFocus) {
   const body = $('money-records-body');
   body.innerHTML = '<div class="grant-recipient-page" aria-busy="true"><p class="visually-hidden" role="status">Loading recipient records</p><div class="answer-skeleton grant-recipient-skeleton" aria-hidden="true"><i style="width:62%;height:2.75rem"></i><i style="width:38%"></i><i style="width:100%;height:6rem"></i><i style="width:84%"></i><i style="width:96%"></i><i style="width:74%"></i></div></div>';
   try {
-    const mod = await import('/grant-recipient.js?v=8abe507dc5');
+    const mod = await import('/grant-recipient.js?v=fd13c2f024');
     if (generation !== moneyRecordsGeneration) return;
     moneyRecordsHandle = mod.mountGrantRecipient(body, { jurisdiction, id, manageFocus,
       onTitle(name) {
@@ -1461,7 +1462,7 @@ async function mountMoney(jurParam, industry, params = new URLSearchParams()) {
   root.innerHTML = `<p class="status" style="margin:0;padding:1rem 1.25rem">Loading the map…</p>`;
   const cfg = MONEY_JURISDICTIONS[jur];
   try {
-    const [{ mountMoneyMap }, data, journeysModule, researchModule, recordsModule] = await Promise.all([import("/money-map.js?v=fb33962c2d"), loadMoneyFile(jur), import("/money-journeys.js?v=mobile-picker-20260908"), import("/map-research.js?v=d4a14d9676"), import("/money-records.js?v=ia-ux-20260908-2")]);
+    const [{ mountMoneyMap }, data, journeysModule, researchModule, recordsModule] = await Promise.all([import("/money-map.js?v=fb33962c2d"), loadMoneyFile(jur), import("/money-journeys.js?v=mobile-picker-20260908"), import("/map-research.js?v=8dd1576d75"), import("/money-records.js?v=ia-ux-20260908-2")]);
     if (moneyMapLoading !== jur || generation !== moneyMapGeneration) return; // switched again while loading
     const fine = $("money-fineprint");
     if (fine) fine.innerHTML = moneyFineprintHTML(jur, data?.meta);
@@ -1786,7 +1787,9 @@ function route() {
     showPanel("subject");
     document.title = TITLES.subject;
     const name = decodeURIComponent(segs[2]);
-    // The kind's index is the section step; a donor's name is never shown.
+    // The kind's index is the section step. A donor's name waits for the
+    // withheld check in openSubject: named once the page names them (12 Oct
+    // rule), never a placeholder, as the server's trail does.
     setCrumbs(crumbsFor(herePath, segs[1] === "donor" ? "" : name));
     openSubject(segs[1], name, manageFocus, params);
   } else if (view === "subject" && DIRECTORY_KINDS[segs[1]]) {
@@ -5235,12 +5238,15 @@ async function renderPersonTopics(name, sections, onRecord = () => {}) {
   }
 }
 
+// A withheld donor's stand-in name ("Donor 12 (name withheld)"): never shown in a trail.
+const DONOR_PLACEHOLDER = /\(name withheld\)|^Donor \d+\b/i;
+
 async function openSubject(kind, name, manageFocus, params = new URLSearchParams()) {
   if (kind === "donor" || kind === "campaigner") {
     destroySubjectMap();
     const body = $("subject-body");
     body.innerHTML = '<h1 id="subject-title" tabindex="-1">Donor</h1>';
-    setCrumbs(crumbsFor("/subject/donor"));
+    setCrumbs(crumbsFor(`/subject/${kind}`));
     await donorViewReady;
     const knownCampaigner=kind==='campaigner' && (await loadCampaigners())?.entities?.some(e=>e.name===name || normName(e.name)===normName(name));
     if (kind==='donor'?await donorRouteWithheld(name,donorViewIndex):!knownCampaigner || /^Donor \d+ \(name withheld\)$/.test(name)) {
@@ -5345,6 +5351,13 @@ async function openSubject(kind, name, manageFocus, params = new URLSearchParams
     const [, fits] = await Promise.all([loadMoneyData(), loadFits()]);
     if (currentSubjectKey !== key) return;
     const node = findMoneyNode(kind, name) || (kind === "party" ? moneyData?.nodes.find(n => n.kind === "party" && personSlug(n.label) === name) : null);
+    // A donor the records confirm is named by its page, so by its trail too,
+    // as the server's: the money data's spelling, else a known organisation's;
+    // a placeholder never.
+    if (kind === "donor") {
+      const named = node?.label || (donorOrganisationKnown(name, donorViewIndex) ? name : "");
+      if (named && !DONOR_PLACEHOLDER.test(named)) setCrumbs(crumbsFor("/subject/donor", named));
+    }
     // The title is always the record's own name, never the address's slug.
     if (kind === "party") $("subject-title").textContent = node?.label || name;
     // An old spelling reaches the canonical entry: retitle to the canonical
@@ -8916,11 +8929,11 @@ const GAMES = {
   ballot: { name: "Build your ballot", dialog: "dialog-ballot", body: "explore-ballot", module: "/ballot.js?v=49e7bc6382", mount: "mountBallot" },
   tm: { name: "Time machine", dialog: "dialog-tm", body: "explore-tm", module: "/timemachine.js?v=8e86f26747", mount: "mountTimeMachine" },
   tide: { name: "The tide", dialog: "dialog-tide", body: "explore-tide", module: "/tide.js", mount: "mountTide" },
-  quiz: { name: "The record quiz", dialog: "dialog-quiz", body: "explore-quiz", module: "/quiz.js?v=e157a21ae1", mount: "mountQuiz" },
-  ledger: { name: "The ledger", dialog: "dialog-ledger", body: "explore-ledger", module: "/ledger.js?v=5644afe6e0", mount: "mountLedger" },
-  grants: { name: "Who gets the grants", dialog: "dialog-grants", body: "explore-grants", module: "/grants.js?v=bf7c17477c", mount: "mountGrants" },
+  quiz: { name: "The record quiz", dialog: "dialog-quiz", body: "explore-quiz", module: "/quiz.js?v=bf0748eac9", mount: "mountQuiz" },
+  ledger: { name: "The ledger", dialog: "dialog-ledger", body: "explore-ledger", module: "/ledger.js?v=620276d0e9", mount: "mountLedger" },
+  grants: { name: "Who gets the grants", dialog: "dialog-grants", body: "explore-grants", module: "/grants.js?v=e85283c6f1", mount: "mountGrants" },
   matrix: { name: "Who owns which debate", dialog: "dialog-matrix", body: "explore-matrix", module: "/matrix.js?v=25f5793db5", mount: "mountMatrix" },
-  wd: { name: "Words per dollar", dialog: "dialog-wd", body: "explore-wd", module: "/wordsdollars.js?v=9e390529d6", mount: "mountWordsDollars" },
+  wd: { name: "Words per dollar", dialog: "dialog-wd", body: "explore-wd", module: "/wordsdollars.js?v=d8bdc3d2ac", mount: "mountWordsDollars" },
   tvn: { name: "Then vs now", dialog: "dialog-tvn", body: "explore-tvn", module: "/thenvsnow.js?v=de2fe807c7", mount: "mountThenVsNow" },
 };
 
@@ -14323,7 +14336,7 @@ document.addEventListener("close", (e) => {
 /** Words per dollar for the report's own industry: money beside the debate share, party by party. */
 async function mountReportWords(el, cfg, slug) {
   try {
-    const { mountWordsDollars } = await import("/wordsdollars.js?v=9e390529d6");
+    const { mountWordsDollars } = await import("/wordsdollars.js?v=d8bdc3d2ac");
     if (currentReportSlug !== slug || !el.isConnected) return;
     reportWordsHandle = mountWordsDollars(el, { only: [cfg.topic] });
   } catch {

@@ -1,4 +1,4 @@
-import {donorNameWithheld,loadDonorViewIndex} from './donor-views.js?v=55a8bd3ae0';
+import {donorNameWithheld,loadDonorViewIndex} from './donor-views.js?v=783b253885';
 let donorPrivacy={organisations:new Set(),withheld:new Set()};
 loadDonorViewIndex().then(index=>{donorPrivacy=index});
 import { personUrl, partyUrl } from './canonical-urls.js?v=225d5915ea';

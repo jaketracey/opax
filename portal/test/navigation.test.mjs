@@ -183,9 +183,63 @@ test('a division sits under its bill, not under the words its chair opened with'
   assertSameTrail(noBill, 'a fixture division without a bill');
 });
 
-test('a tool opened on /explore does not repeat its section', async () => {
-  const { items } = await serverTrail('/explore?game=tm');
-  assert.equal(items.map(i => i.label).join(' › '), 'Home › Interactive tools');
+test('a tool opened by its address is named the same by the server, the app and the list', async () => {
+  const { items, breadcrumbs } = await serverTrail('/explore?game=tm');
+  assert.equal(items.map(i => i.label).join(' › '), 'Home › Interactive tools › Time machine');
+  assert.deepEqual(breadcrumbs.map(b => b.name), items.map(i => i.label));
+  assert.equal(label(nav.trail('/explore?game=unknown')), 'Interactive tools');
+  // The app's tools (GAMES) carry the list's names, so its trail reads the same.
+  const games = Object.fromEntries([...read('app.js').matchAll(/\n  (\w+): \{ name: "([^"]+)", dialog:/g)].map(m => [m[1], m[2]]));
+  assert.deepEqual(games, nav.tools);
+  for (const [key, name] of Object.entries(nav.tools)) assert.equal(label(nav.trail(`/explore?game=${key}`)), `Interactive tools › ${name}`);
+});
+
+// A speech or committee page names its speaker, as the app's doc page does
+// (Search › speaker), never the h1's "speaker, date · From the record".
+const kbRecord = (speaker, title) => ({ title, origin: { collaborators: speaker ? [speaker] : [], url: 'https://example.test/hansard' },
+  usermetadata: { classifications: [['kind', 'speech'], ['state', 'federal'], ['chamber', 'representatives']].map(([labelset, label]) => ({ labelset, label })) },
+  extra: { metadata: { date: '2023-09-13', word_count: 420 } }, data: { texts: { body: { value: { body: 'Words of the fixture speech.' } } } } });
+async function withKnowledgeBase(record, fn) {
+  const realFetch = globalThis.fetch, hadCaches = 'caches' in globalThis, realCaches = globalThis.caches;
+  globalThis.caches = { default: { match: async () => undefined, put: async () => {} } };
+  globalThis.fetch = async (input) => String(input).includes('/slug/speech-') ? new Response(JSON.stringify(record), { headers: { 'content-type': 'application/json' } }) : new Response('{}', { status: 404 });
+  try { return await fn(); } finally { globalThis.fetch = realFetch; if (hadCaches) globalThis.caches = realCaches; else delete globalThis.caches; }
+}
+const KB_ENV = { ARAG_ZONE: 'offline', ARAG_KB_ID: 'offline', ARAG_KB_TOKEN: 'offline', CACHE_EPOCH: 'nav-test' };
+
+test('a speech page sits under Search by its speaker, on the server and in its BreadcrumbList', async () => {
+  const speaker = 'An Invented Speaker';
+  const page = await withKnowledgeBase(kbRecord(speaker, `${speaker} — A fixture debate — 13 September 2023`), () => serverTrail('/doc/speech-990001', KB_ENV));
+  assert.equal(page.status, 200);
+  assert.equal(page.items.map(i => i.label).join(' › '), `Home › Search › ${speaker}`);
+  assert.equal(page.items[1].href, '/ask?view=search');
+  assert.ok(page.items.every(i => !/From the record|September/.test(i.label)));
+  assertSameTrail(page, 'a speech');
+  const anonymous = await withKnowledgeBase(kbRecord(null, 'A fixture debate'), () => serverTrail('/doc/speech-990002', KB_ENV));
+  assert.equal(anonymous.items.map(i => i.label).join(' › '), 'Home › Search › A fixture debate');
+  // The app's doc page draws the same: Search › the speaker, else the record's title.
+  assert.match(read('app.js'), /setCrumbs\(crumbsFor\("\/ask\?view=search", \(doc\.kind \|\| slug\.split\("-"\)\[0\]\) === "division"\s*\? "Division" : doc\.speaker \|\| displayTitle\(doc\)\)\);/);
+});
+
+test('the app names a donor exactly where the server does: the record confirms them, never a placeholder', async () => {
+  const app = read('app.js');
+  const model = readFileSync(new URL('../src/nav-model.mjs', import.meta.url), 'utf8');
+  // One placeholder rule on both sides.
+  const appRule = app.match(/const DONOR_PLACEHOLDER = (\/.+\/i);/)[1];
+  assert.ok(model.includes(appRule.replace(/\\/g, '\\\\')) || model.includes(appRule), 'the server keeps the same placeholder pattern');
+  // The app names the money record's spelling, else a known organisation; nothing before the withheld check.
+  assert.match(app, /const named = node\?\.label \|\| \(donorOrganisationKnown\(name, donorViewIndex\) \? name : ""\);\n\s*if \(named && !DONOR_PLACEHOLDER\.test\(named\)\) setCrumbs\(crumbsFor\("\/subject\/donor", named\)\);/);
+  assert.match(app, /setCrumbs\(crumbsFor\(herePath, segs\[1\] === "donor" \? "" : name\)\);/);
+  assert.match(app, /let donorOrganisationKnown = \(\) => false;/, 'fail-closed before donor-views.js loads');
+  const { donorOrganisationKnown, loadDonorViewIndex } = await import('../public/donor-views.js');
+  const { donorPrivacyIndex, isOrganisationDonor } = await import('../public/donor-entity.js');
+  const graph = JSON.parse(read('graph/money.json'));
+  const index = donorPrivacyIndex([graph]);
+  const organisation = graph.nodes.find(n => n.kind === 'donor' && !/name withheld/i.test(n.label) && isOrganisationDonor(n));
+  const placeholder = graph.nodes.find(n => n.kind === 'donor' && /name withheld/i.test(n.label));
+  assert.equal(donorOrganisationKnown(organisation.label, index), true);
+  assert.equal(donorOrganisationKnown(placeholder.label, index), false);
+  assert.equal(typeof loadDonorViewIndex, 'function');
 });
 
 test('the reports in the menus are the published reports, by their own titles', () => {

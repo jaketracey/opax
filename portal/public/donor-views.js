@@ -33,6 +33,8 @@ export function withheldDonorTotals(nodes, edges, index = donorPrivacyIndex([{no
 
 /** A withheld alias can look like a company acronym after public aliases are
  * removed. Ask only the public profile's HEAD metadata; never a model route. */
+/** An organisation the disclosure records confirm by this name: one a page (and its trail) names. */
+export function donorOrganisationKnown(name,index) { return Boolean(index?.organisations?.has(foldDonorName(name))); }
 export async function donorRouteWithheld(name,index) {
  if(donorNameWithheld(index,name))return true;
  if(index.organisations.has(foldDonorName(name)) || !/^[A-Z]{3,7}$/.test(name.trim()))return false;
