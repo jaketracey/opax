@@ -56,6 +56,7 @@ import { donorWithheld, namesWithheldDonor, questionNamesWithheldDonor, withheld
 import { canonicalPageRedirect } from './canonical-origin'
 import { pageEntry } from './page-entry'
 import { htmlValidator, notModified } from './html-etag'
+import { cacheKeyParams } from './cache-key'
 import { communityMcp } from './community-mcp'
 import { expireVoiceSessions, voiceRoute } from './voice'
 import { appEdition } from './app-edition'
@@ -482,12 +483,7 @@ async function apiSearch(request: Request, url: URL, env: Env, ctx: ExecutionCon
   // Two keys. The page key carries page/per/sort so page 2 can never be served
   // from page 1's entry; the window key drops them so paging and re-sorting
   // inside one result set costs no upstream call and no rate-limit quota.
-  const keyParams = (drop: string[]) =>
-    new URLSearchParams(
-      [...url.searchParams.entries()]
-        .filter(([k]) => !drop.includes(k))
-        .sort(([a], [b]) => a.localeCompare(b)),
-    ).toString()
+  const keyParams = (drop: string[]) => cacheKeyParams(url.searchParams, drop)
   // Retire windows/pages containing the old unnormalized, character-cut snippets.
   const pageKey = cacheRequest('search', await sha256Hex(`${env.CACHE_EPOCH}\nyears-topics-v3-split-speakers-passage-v3\n${keyParams(['nocache'])}`))
   const windowKey = cacheRequest(
