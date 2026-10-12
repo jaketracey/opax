@@ -50,6 +50,7 @@ try{
  const changed=git(work,['diff','--name-only',base,id.tree]).split('\n').filter(Boolean);
  const selection=selectTests(work,tier==='lane'?changed:['portal/package.json'],config);
  record.selection=selection;console.log(`Selected ${selection.files.length}/${selection.total} files`);for(const reason of selection.reasons)console.log(reason);
+ await run('scripts-tests','node',['--test',join(tools,'test/gates.test.mjs')]);
  await run('install','npm',['ci','--no-audit','--no-fund']);
  await run('runtime-types','npx',['--no-install','wrangler','types']);
  // Merge/fallback: build every deploy writer. Narrow lanes regenerate only the
@@ -63,7 +64,6 @@ try{
    await run('stamp','node',['../scripts/stamp_assets.mjs']);
  }
  await run('check','npm',['run','check']);
- await run('scripts-tests','node',['--test',join(tools,'test/gates.test.mjs')]);
  const reporter=join(tools,'gate-reporter.mjs');
  record.profiles=[];
  for(const limit of matrix){

@@ -26,7 +26,9 @@ test('shell quoting preserves spaces, quotes and literal substitutions',()=>{con
 test('desktop availability never routes deploy, local asset builds or arbitrary shell commands',()=>{for(const command of [['npm','run','deploy'],['npm','run','build:release'],['npx','wrangler','deploy'],['bash','-c','npm test']]){const run=spawnSync('node',[join(tools,'heavy-remote.mjs'),'--available',...command],{encoding:'utf8'});assert.equal(run.status,1);}});
 test('busy Mac routes recognised gates, keeps owner unchanged and forwards remote exit; LOCAL override bypasses routing',t=>{
  const root=fixture(t),mockTools=join(root,'tools');mkdirSync(mockTools);cpSync(join(tools,'ox-heavy.sh'),join(mockTools,'ox-heavy.sh'));writeFileSync(join(mockTools,'ox-heavy-remote.sh'),'#!/usr/bin/env bash\nif [ "$1" = --available ]; then exit 0; fi\nexit 19\n',{mode:0o755});mkdirSync(join(root,'lock'));writeFileSync(join(root,'lock/pid'),String(process.pid));
- const env={...process.env,OX_HEAVY_LOCK:join(root,'lock'),OX_HEAVY_WAIT:'0',OX_HEAVY_LOCAL:'0'};
+ // Simulate the Mac explicitly; the real desktop intentionally stays local.
+ writeFileSync(join(mockTools,'uname'),'#!/usr/bin/env bash\nprintf Darwin\\n',{mode:0o755});
+ const env={...process.env,PATH:mockTools+':'+process.env.PATH,OX_HEAVY_LOCK:join(root,'lock'),OX_HEAVY_WAIT:'0',OX_HEAVY_LOCAL:'0'};
  assert.equal(spawnSync('bash',[join(mockTools,'ox-heavy.sh'),'node','web-gates.mjs','merge'],{env}).status,19);assert.equal(readFileSync(join(root,'lock/pid'),'utf8'),String(process.pid));
  assert.equal(spawnSync('bash',[join(mockTools,'ox-heavy.sh'),'true'],{env:{...env,OX_HEAVY_LOCAL:'1'}}).status,75);
 });
