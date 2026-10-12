@@ -1,10 +1,15 @@
 import assert from 'node:assert/strict'
-import { readFileSync } from 'node:fs'
+import { mkdtempSync, readFileSync, rmSync } from 'node:fs'
+import { spawn } from 'node:child_process'
+import { once } from 'node:events'
+import { createServer } from 'node:http'
+import { tmpdir } from 'node:os'
 import { test } from 'node:test'
 import { join } from 'node:path'
+import { setImmediate as nextTurn, setTimeout as delay } from 'node:timers/promises'
 import { batchRecord, hashValue, sourceHash } from '../src/batch-result.ts'
 import { decode } from '../scripts/batch-lib.ts'
-import { AdminHttp, adoptRun, cancelRun, deliver, poll, prepare, reconcileRun, stepRun, submit, type BatchRuntime, type Run, type Unit } from '../scripts/batch-path.ts'
+import { AdminHttp, adoptRun, cancelRun, deliver, poll, prepare, readDeliveryConcurrency, reconcileRun, saveRun, stepRun, submit, type BatchRuntime, type Run, type Unit } from '../scripts/batch-path.ts'
 import { applyBatch, BatchBusy, BatchConflict, cancelBatch, readBatchReservations, readHeldBatch, reserveBatch, type BatchDeps } from '../src/batch.ts'
 import { claimRids, enqueue } from '../src/db.ts'
 import { releaseHistoric } from '../src/reconcile.ts'
@@ -12,6 +17,11 @@ import { FakeKb, makeD1, rows } from './helpers.ts'
 
 const fixture = JSON.parse(readFileSync(join(import.meta.dirname, 'fixtures', 'batch-responses.json'), 'utf8'))
 const rid = 'a'.repeat(32)
+function deferred<T>() {
+  let resolve!: (value: T) => void, reject!: (reason: unknown) => void
+  const promise = new Promise<T>((yes, no) => { resolve = yes; reject = no })
+  return { promise, resolve, reject }
+}
 async function setup() {
   const resource = { title: '', slug: 'invented-unit', usermetadata: { classifications: [{ labelset: 'kind', label: 'speech' }, { labelset: 'source', label: 'hansard_hist' }] }, data: { texts: { body: { value: { body: fixture.source } } } } }
   const record = batchRecord(resource, rid)
@@ -20,7 +30,7 @@ async function setup() {
   const saved = new Map<string, Run>(), receipts = new Map<string, unknown>(), adminCalls: Array<{ path: string; body?: any }> = [], posts: any[] = []
   let response = structuredClone(fixture.responses[0]), count = 0, complete = true
   const d: BatchRuntime = {
-    dailyCap: 3, totalCap: 3, maxActive: 2, batchSize: 1, now: () => Date.parse('2026-10-11T00:00:00Z'),
+    dailyCap: 3, totalCap: 3, maxActive: 2, batchSize: 1, deliveryConcurrency: 6, now: () => Date.parse('2026-10-11T00:00:00Z'),
     save: r => { saved.set(r.id, structuredClone(r)) }, allRuns: () => [...saved.values()], write: (n, v) => { receipts.set(n, structuredClone(v)) },
     admin: async (path, body) => {
       adminCalls.push({ path, body })
@@ -40,16 +50,18 @@ async function setup() {
 }
 
 // Use the real D1 ownership/queue/write handlers; all KB and batch data is invented.
-async function integrated() {
+async function integrated(count = 1) {
   const client = await setup(), { d, run, adminCalls } = client
   const { d1, raw } = makeD1(), kb = new FakeKb()
-  kb.add(rid, { title: '', slug: 'invented-unit', texts: { body: fixture.source }, classifications: [
+  const rids = Array.from({ length: count }, (_, i) => i === 0 ? rid : i.toString(16).padStart(32, '0'))
+  for (const id of rids) kb.add(id, { title: '', slug: `invented-unit-${id}`, texts: { body: fixture.source }, classifications: [
     { labelset: 'kind', label: 'speech' }, { labelset: 'source', label: 'hansard_hist' },
   ] })
-  await enqueue(d1, ['speech_summary', 'speech_topics'].map(task => ({ rid, task: task as 'speech_summary', priority: 0, historicHold: true })), 1)
+  await enqueue(d1, rids.flatMap(rid => ['speech_summary', 'speech_topics'].map(task => ({ rid, task: task as 'speech_summary', priority: 0, historicHold: true }))), 1)
   const server: BatchDeps = { db: d1, kb, now: () => d.now(), live: true }
-  const unit: Unit = { ...(await readHeldBatch(server, 20)).units[0]!, stage: 'selected', attempt: 1 }
-  run.units = [unit]
+  run.units = (await readHeldBatch(server, 20)).units.map(u => ({ ...u, stage: 'selected', attempt: 1 }))
+  const unit = run.units[0]
+  d.batchSize = count
   d.admin = async (path, body?: any) => {
     adminCalls.push({ path, body })
     const query = new URL(path, 'https://example.invalid').searchParams
@@ -59,7 +71,7 @@ async function integrated() {
       if (path === '/backfill/batch/reserve') return await reserveBatch(server, body.run_id, body.rid, body.source_hash)
       if (path === '/backfill/batch/cancel') return await cancelBatch(server, body.run_id, body.rid)
       if (path === '/backfill/batch/result') return await applyBatch(server, body.run_id, body.rid, body.source_hash, body.result)
-      if (path === '/backfill/release') return await releaseHistoric({ db: d1, kb: { getBySlug: async () => kb.getBasic(rid) }, now: server.now }, body.slugs)
+      if (path === '/backfill/release') return await releaseHistoric({ db: d1, kb: { getBySlug: async slug => kb.getBasic([...kb.resources].find(([, r]) => r.slug === slug)![0]) }, now: server.now }, body.slugs)
       throw Error('unexpected fixture route')
     } catch (e) {
       if (e instanceof BatchBusy) throw new AdminHttp(423, e.leaseUntil)
@@ -69,6 +81,199 @@ async function integrated() {
   }
   return { ...client, unit, server, raw, kb }
 }
+
+test('delivery concurrency defaults to six and accepts only integers from one to twelve', async () => {
+  assert.equal(readDeliveryConcurrency(6), 6)
+  assert.equal(readDeliveryConcurrency('12'), 12)
+  const previous = process.env.OPAX_BATCH_DELIVERY_CONCURRENCY
+  try {
+    delete process.env.OPAX_BATCH_DELIVERY_CONCURRENCY
+    assert.equal(readDeliveryConcurrency(), 6)
+  } finally {
+    if (previous === undefined) delete process.env.OPAX_BATCH_DELIVERY_CONCURRENCY
+    else process.env.OPAX_BATCH_DELIVERY_CONCURRENCY = previous
+  }
+  for (const value of [0, -1, 13, 1.5, NaN, Infinity, '', 'invalid']) assert.throws(() => readDeliveryConcurrency(value), /1-12/)
+  const { run, d, adminCalls } = await setup()
+  d.deliveryConcurrency = 13
+  await assert.rejects(deliver(run, d), /1-12/)
+  assert.equal(adminCalls.length, 0)
+})
+
+test('delivery caps concurrent requests at one, six and twelve and saves every settled unit', async () => {
+  for (const concurrency of [1, 6, 12]) {
+    const { run, unit, d, saved } = await setup()
+    run.units = Array.from({ length: 29 }, (_, i) => ({ ...structuredClone(unit), rid: i.toString(16).padStart(32, '0'), stage: 'ready' }))
+    d.deliveryConcurrency = concurrency
+    let active = 0, peak = 0, saves = 0
+    const calls: string[] = [], originalSave = d.save
+    d.save = r => { saves++; originalSave(r) }
+    d.admin = async (path, body: any) => {
+      assert.equal(path, '/backfill/batch/result')
+      calls.push(body.rid); peak = Math.max(peak, ++active)
+      await delay(1 + Number.parseInt(body.rid, 16) % 4)
+      active--; return { state: 'done' }
+    }
+    await deliver(run, d)
+    assert.equal(peak, concurrency)
+    assert.equal(active, 0)
+    assert.equal(new Set(calls).size, 29)
+    assert.equal(calls.length, 29)
+    assert.equal(saves, 29)
+    assert.ok(saved.get(run.id)!.units.every(u => u.stage === 'done'))
+  }
+})
+
+test('concurrent mixed successes, active leases and conflicts preserve paid results and release ownership safely', async () => {
+  const { run, d, kb, raw, server, saved, adminCalls } = await integrated(6)
+  run.preparing = false
+  const good = decode(fixture.responses[0])
+  for (const u of run.units) {
+    await reserveBatch(server, run.id, u.rid, u.source_hash)
+    u.stage = 'ready'; u.result = { summary: good.summary, topics: good.topics }
+  }
+  const [busy, stale] = run.units, end = d.now() + 15 * 60000
+  raw.prepare("UPDATE batch_items SET state='applying',payload_hash=?,lease_until=? WHERE rid=?")
+    .run(await hashValue(busy.result), end, busy.rid)
+  kb.resources.get(stale.rid)!.texts.body += ' Additional evidence.'
+  const paid = structuredClone(busy.result), originalAdmin = d.admin
+  let active = 0, peak = 0
+  d.admin = async (path, body) => {
+    peak = Math.max(peak, ++active)
+    try { await delay(2); return await originalAdmin(path, body) }
+    finally { active-- }
+  }
+  d.deliveryConcurrency = 3
+  await deliver(run, d)
+  assert.equal(peak, 3)
+  assert.equal(busy.stage, 'ready')
+  assert.equal(busy.retry_at, end)
+  assert.deepEqual(saved.get(run.id)!.units[0].result, paid)
+  assert.equal(stale.stage, 'released')
+  assert.ok(run.units.slice(2).every(u => u.stage === 'done'))
+  assert.deepEqual(adminCalls.filter(c => c.body?.rid === stale.rid || c.path === '/backfill/release').map(c => c.path),
+    ['/backfill/batch/result', '/backfill/batch/cancel', '/backfill/release'])
+  assert.equal(kb.writes().filter(c => c.endsWith(busy.rid) || c.endsWith(stale.rid)).length, 0)
+  const claimed = await claimRids(server.db, 10, 3, 'fixture-tick')
+  assert.equal(claimed.length, 2)
+  assert.ok(claimed.every(row => row.rid === stale.rid))
+  const writes = kb.writes().length
+  await deliver(saved.get(run.id)!, d)
+  assert.equal(kb.writes().length, writes)
+  d.now = () => end
+  const resumed = saved.get(run.id)!
+  await stepRun(resumed, d)
+  assert.equal(resumed.units[0].stage, 'done')
+  assert.equal(kb.writes().length, writes + 2)
+  const replay = await applyBatch(server, run.id, busy.rid, busy.source_hash, paid)
+  assert.deepEqual(replay, { state: 'done', replay: true })
+  assert.equal(kb.writes().length, writes + 2)
+})
+
+test('a failed delivery stops dispatch and drains other units before returning, retaining unsettled results', async () => {
+  const { run, unit, d, saved } = await setup()
+  run.units = Array.from({ length: 8 }, (_, i) => ({ ...structuredClone(unit), rid: i.toString(16).padStart(32, '0'), stage: 'ready', result: { summary: 'Paid fixture result.' } }))
+  d.deliveryConcurrency = 3
+  d.save(run)
+  const gates = Array.from({ length: 3 }, () => deferred<{ state: string }>())
+  const calls: string[] = []
+  d.admin = async (_path, body: any) => { calls.push(body.rid); return gates[calls.length - 1].promise }
+  let finished = false
+  const delivery = deliver(run, d).finally(() => { finished = true })
+  const rejected = assert.rejects(delivery, e => e instanceof AdminHttp && e.status === 503)
+  assert.equal(calls.length, 3)
+  gates[0].reject(new AdminHttp(503))
+  await nextTurn()
+  assert.equal(finished, false)
+  assert.equal(calls.length, 3)
+  gates[2].resolve({ state: 'done' }); gates[1].resolve({ state: 'done' })
+  await rejected
+  assert.equal(finished, true)
+  assert.equal(calls.length, 3)
+  const resumed = saved.get(run.id)!
+  assert.deepEqual(resumed.units.map(u => u.stage), ['ready', 'done', 'done', 'ready', 'ready', 'ready', 'ready', 'ready'])
+  assert.ok(resumed.units.every(u => u.result?.summary === 'Paid fixture result.'))
+  d.admin = async (_path, body: any) => { calls.push(body.rid); return { state: 'done' } }
+  await deliver(resumed, d)
+  assert.equal(calls.length, 9) // one ambiguous result is replayed; acknowledged successes are skipped
+  assert.ok(saved.get(run.id)!.units.every(u => u.stage === 'done'))
+})
+
+test('a killed parallel controller resumes its atomic spool and ledger without double writes or lost paid results', { timeout: 20000 }, async () => {
+  const { run, d, server, kb, raw } = await integrated(6)
+  const directory = mkdtempSync(join(tmpdir(), 'opax-batch-crash-'))
+  const good = decode(fixture.responses[0]), acknowledged = deferred<void>()
+  const lostAcknowledgement = deferred<void>(), unfinished = deferred<void>()
+  run.preparing = false
+  for (const u of run.units) {
+    await reserveBatch(server, run.id, u.rid, u.source_hash)
+    u.stage = 'ready'; u.result = { summary: good.summary, topics: good.topics }
+  }
+  run.submissions = [{ id: 'msgbatch_fixture', attempt: 1, rids: run.units.map(u => u.rid), ended: true,
+    reservation: { day: '2026-10-11', upper: 0.1, actual: 0.000195, settled_day: '2026-10-11' } }]
+  saveRun(run, directory)
+  let crash = true, deliveries = 0
+  const local = createServer(async (request, response) => {
+    try {
+      const chunks = []
+      for await (const chunk of request) chunks.push(chunk)
+      const body = chunks.length ? JSON.parse(Buffer.concat(chunks).toString()) : undefined
+      if (crash && request.url === '/backfill/batch/result') {
+        const number = ++deliveries
+        if (number > 2) { if (number === 4) unfinished.resolve(); return } // next dispatch proves the first save completed
+        const result = await d.admin(request.url, body)
+        if (number === 2) { lostAcknowledgement.resolve(); return } // committed remotely, no client acknowledgement
+        response.end(JSON.stringify(result)); acknowledged.resolve(); return
+      }
+      response.end(JSON.stringify(await d.admin(request.url!, body)))
+    } catch (e) {
+      response.statusCode = e instanceof AdminHttp ? e.status : 503
+      response.end(JSON.stringify({ error: 'fixture request incomplete' }))
+    }
+  })
+  let child: ReturnType<typeof spawn> | undefined
+  try {
+    local.listen(0, '::1'); await once(local, 'listening')
+    const address = local.address()
+    assert.ok(address && typeof address !== 'string')
+    const start = () => spawn(process.execPath, [join(import.meta.dirname, 'fixtures/batch-controller.ts'), 'step', run.id], {
+      stdio: 'ignore', env: { ...process.env, OPAX_BATCH_STATE_DIR: directory, OPAX_ENRICH_URL: 'https://example.invalid',
+        ENRICH_ADMIN_TOKEN: 'invented-fixture', OPAX_BATCH_DELIVERY_CONCURRENCY: '3',
+        OPAX_BATCH_FIXTURE_URL: `http://[::1]:${address.port}` },
+    })
+    child = start()
+    await Promise.race([
+      Promise.all([acknowledged.promise, lostAcknowledgement.promise, unfinished.promise]),
+      once(AbortSignal.timeout(8000), 'abort').then(() => { throw Error('controller fixture did not reach crash boundary') }),
+      once(child, 'exit').then(() => { throw Error('controller fixture exited before crash boundary') }),
+    ])
+    // Wait until one settled unit is durable; the next dispatch proves save has completed.
+    const durable = JSON.parse(readFileSync(join(directory, `run-${run.id}.json`), 'utf8')) as Run
+    assert.equal(durable.units.filter(u => u.stage === 'done').length, 1)
+    assert.equal(rows(raw, "SELECT * FROM batch_items WHERE state='done'").length, 2)
+    const killed = once(child, 'exit')
+    child.kill('SIGKILL'); await killed
+    local.closeAllConnections()
+    assert.ok(durable.units.every(u => u.result?.summary === good.summary))
+    assert.deepEqual(durable.submissions, run.submissions)
+    assert.equal(kb.writes().length, 4)
+    crash = false
+    child = start() // same spool; SQLite's controller lock must have been released on death
+    const [code] = await once(child, 'exit')
+    assert.equal(code, 0)
+    const resumed = JSON.parse(readFileSync(join(directory, `run-${run.id}.json`), 'utf8')) as Run
+    assert.ok(resumed.units.every(u => u.stage === 'done' && u.result?.summary === good.summary))
+    assert.deepEqual(resumed.submissions, run.submissions)
+    assert.equal(kb.writes().length, 12)
+    // Explicit replay also cannot write twice, even with the acknowledgement lost before a crash.
+    for (const u of resumed.units) assert.deepEqual(await applyBatch(server, run.id, u.rid, u.source_hash, u.result), { state: 'done', replay: true })
+    assert.equal(kb.writes().length, 12)
+  } finally {
+    if (child && child.exitCode === null && child.signalCode === null) { const exited = once(child, 'exit'); child.kill('SIGKILL'); await exited }
+    local.closeAllConnections(); await new Promise<void>(resolve => local.close(() => resolve()))
+    raw.close(); rmSync(directory, { recursive: true, force: true })
+  }
+})
 
 test('a reserve/save crash reconciles ownership before cancel and makes both held rows claimable', async () => {
   const { run, unit, d, server, raw, adminCalls, saved } = await integrated()

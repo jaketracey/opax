@@ -297,7 +297,7 @@ async function mountFunding(root, links, life, register = "") {
   root.hidden = false;
   root.innerHTML = `<h3 class="subject-section-title">Also in the funding record</h3><p role="status">Opening the funding records…</p>${register}`;
   try {
-    const data = await json("/graph/money.json?v=suppliers-1", life.signal);
+    const data = await json("/graph/money.json", life.signal);
     if (!life.alive()) return;
     const ids = new Set(links.map((link) => link.id));
     const nodes = new Map((data.nodes || []).map((node) => [node.id, node]));
@@ -326,10 +326,10 @@ async function mountFunding(root, links, life, register = "") {
       slot.hidden = false;
       slot.innerHTML = '<p role="status">Opening the money map…</p>';
       try {
-        const { mountMoneyMap } = await import("/money-map.js?v=3503adeea7");
+        const { mountMoneyMap } = await import("/money-map.js?v=6a5d1961fa");
         if (!life.alive()) return;
         slot.textContent = "";
-        const handle = await mountMoneyMap(slot, "/graph/money.json?v=suppliers-1", { focus: links[0].id, chrome: "mini", reveal: true, openCard: false });
+        const handle = await mountMoneyMap(slot, "/graph/money.json", { focus: links[0].id, chrome: "mini", reveal: true, openCard: false });
         if (!life.alive()) { handle.destroy(); return; }
         life.cleanup(() => handle.destroy());
         if (typeof IntersectionObserver !== "undefined") {

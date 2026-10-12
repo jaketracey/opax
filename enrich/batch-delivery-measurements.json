@@ -1,0 +1,102 @@
+{
+  "localOnly": true,
+  "worker": "src/index.ts (unchanged)",
+  "includes": [
+    "HTTP result route",
+    "Miniflare D1",
+    "six KB calls per result",
+    "atomic rename and file/directory fsync after each result"
+  ],
+  "results": [
+    {
+      "kbLatencyMs": 150,
+      "concurrency": 1,
+      "results": 72,
+      "spoolUnits": 1000,
+      "kbCalls": 432,
+      "peakKbCalls": 1,
+      "wallMs": 70593,
+      "resultsPerHour": 3672
+    },
+    {
+      "kbLatencyMs": 150,
+      "concurrency": 6,
+      "results": 72,
+      "spoolUnits": 1000,
+      "kbCalls": 432,
+      "peakKbCalls": 6,
+      "wallMs": 12295,
+      "resultsPerHour": 21082
+    },
+    {
+      "kbLatencyMs": 150,
+      "concurrency": 12,
+      "results": 72,
+      "spoolUnits": 1000,
+      "kbCalls": 432,
+      "peakKbCalls": 12,
+      "wallMs": 7679,
+      "resultsPerHour": 33752
+    },
+    {
+      "kbLatencyMs": 225,
+      "concurrency": 1,
+      "results": 72,
+      "spoolUnits": 1000,
+      "kbCalls": 432,
+      "peakKbCalls": 1,
+      "wallMs": 102573,
+      "resultsPerHour": 2527
+    },
+    {
+      "kbLatencyMs": 225,
+      "concurrency": 6,
+      "results": 72,
+      "spoolUnits": 1000,
+      "kbCalls": 432,
+      "peakKbCalls": 6,
+      "wallMs": 17610,
+      "resultsPerHour": 14719
+    },
+    {
+      "kbLatencyMs": 225,
+      "concurrency": 12,
+      "results": 72,
+      "spoolUnits": 1000,
+      "kbCalls": 432,
+      "peakKbCalls": 12,
+      "wallMs": 10115,
+      "resultsPerHour": 25625
+    },
+    {
+      "kbLatencyMs": 300,
+      "concurrency": 1,
+      "results": 72,
+      "spoolUnits": 1000,
+      "kbCalls": 432,
+      "peakKbCalls": 1,
+      "wallMs": 134977,
+      "resultsPerHour": 1920
+    },
+    {
+      "kbLatencyMs": 300,
+      "concurrency": 6,
+      "results": 72,
+      "spoolUnits": 1000,
+      "kbCalls": 432,
+      "peakKbCalls": 6,
+      "wallMs": 23292,
+      "resultsPerHour": 11128
+    },
+    {
+      "kbLatencyMs": 300,
+      "concurrency": 12,
+      "results": 72,
+      "spoolUnits": 1000,
+      "kbCalls": 432,
+      "peakKbCalls": 12,
+      "wallMs": 13274,
+      "resultsPerHour": 19527
+    }
+  ]
+}

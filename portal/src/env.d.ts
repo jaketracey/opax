@@ -7,6 +7,8 @@ interface Env {
   APP_MINIMUM_VERSION?: string
   /** HMAC-SHA-256 key for sign-in and member-bound deletion codes. Separate Worker secret in each environment. */
   COMMUNITY_CODE_MAC_SECRET?: string
+  /** Optional eight-digit store reviewer credential; code-reviewed emails only. */
+  REVIEWER_LOGIN_CODE?: string
   /** Present only on staging: the existing public API, with secrets kept in its Worker. */
   STAGING_API?: Fetcher;
   ARAG_KB_ID: string
@@ -63,6 +65,8 @@ declare namespace Cloudflare {
     APP_MINIMUM_VERSION?: string
     /** HMAC-SHA-256 key for sign-in and member-bound deletion codes. Separate Worker secret in each environment. */
     COMMUNITY_CODE_MAC_SECRET?: string
+    /** Optional eight-digit store reviewer credential; code-reviewed emails only. */
+    REVIEWER_LOGIN_CODE?: string
   /** Present only on staging: the existing public API, with secrets kept in its Worker. */
   STAGING_API?: Fetcher;
   ARAG_KB_ID: string

@@ -22,16 +22,16 @@ class Tests(unittest.TestCase):
         result=subprocess.run(['git','-c','user.name=fixture','-c','user.email=fixture@example.invalid','-c','commit.gpgsign=false',*args],cwd=self.repo,env=ENV,capture_output=True,text=True)
         self.assertEqual(result.returncode,0,result.stderr);return result.stdout
 
-    def run_block(self,held=False):
+    def run_block(self,held=False,body_held=False):
         stub='''set -eu
-PY=unused
+PY=python3
 EXPORT=unused
 log() { echo "$1"; }
-run_step() { echo "STEP $1"; if [ "$1" = qao_reports ] && [ "$HELD" = 1 ]; then return 3; fi; }
+run_step() { echo "STEP $1"; if [ "$1" = qao_reports ] && [ "$HELD" = 1 ]; then return 3; fi; if [ "$1" = qao_bodies ] && [ "$BODY_HELD" = 1 ]; then return 3; fi; }
 '''
         # Stub reports successful acquisition/export unless the source is held.
         stub=stub.replace('then return 3; fi; }','then return 3; fi; return 0; }')
-        result=subprocess.run(['/bin/bash'],input=stub+f'HELD={int(held)}\n'+BLOCK,cwd=self.repo,env=ENV,text=True,capture_output=True)
+        result=subprocess.run(['/bin/bash'],input=stub+f'HELD={int(held)}\nBODY_HELD={int(body_held)}\n'+BLOCK,cwd=self.repo,env=ENV,text=True,capture_output=True)
         self.assertEqual(result.returncode,0,result.stderr);return result.stdout
 
     def publish(self):
@@ -48,8 +48,20 @@ run_step() { echo "STEP $1"; if [ "$1" = qao_reports ] && [ "$HELD" = 1 ]; then 
 
     def test_quiet_and_keep_if_unchanged_are_wired(self):
         self.assertIn('--quiet-hours',BLOCK)
+        self.assertIn('--with-html-run',BLOCK)
         self.assertIn('"$EXPORT" dir portal/public/audit',BLOCK)
         groups=(ROOT/'scripts/vm/data_groups.sh').read_text();self.assertIn('[audit]="portal/public/audit"',groups)
+
+    def test_phase2_requires_tracked_loader_and_manifest_and_preserves_body_hold(self):
+        self.publish()
+        loader=self.repo/'parli/ingest/qao_bodies.py';loader.parent.mkdir(parents=True);loader.write_text('fixture')
+        manifest=self.repo/'portal/public/audit/manifest.json';manifest.write_text('{"phase":2}')
+        self.assertEqual(self.run_block().splitlines(),['STEP qao_reports','STEP x_audit'])
+        self.git('add','.');self.git('commit','-qm','phase 2 fixture')
+        self.assertEqual(self.run_block().splitlines(),['STEP qao_reports','STEP qao_bodies','STEP x_audit'])
+        output=self.run_block(body_held=True)
+        self.assertIn('STEP qao_bodies',output);self.assertNotIn('STEP x_audit',output)
+        self.assertIn('last good export kept',output)
 
 
 if __name__=='__main__':unittest.main()
