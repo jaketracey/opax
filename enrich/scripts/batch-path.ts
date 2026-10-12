@@ -36,15 +36,20 @@ const dailyCap = Number(process.env.OPAX_BATCH_DAILY_USD ?? 3)
 const totalCap = Number(process.env.OPAX_BATCH_TOTAL_USD ?? 3)
 const maxActive = integer('OPAX_BATCH_CONCURRENCY', 2, 4)
 const batchSize = integer('OPAX_BATCH_UNITS', 1000, 5000)
+export function readDeliveryConcurrency(value: string | number | undefined = process.env.OPAX_BATCH_DELIVERY_CONCURRENCY): number {
+  const n = Number(value ?? 6)
+  if (!Number.isInteger(n) || n < 1 || n > 12) throw Error('invalid delivery concurrency: expected 1-12')
+  return n
+}
 const read = (name: string): any => JSON.parse(readFileSync(join(root, name), 'utf8'))
-function write(name: string, value: unknown) {
-  const path = join(root, name), temp = path + '.tmp'
+function write(name: string, value: unknown, directory = root) {
+  const path = join(directory, name), temp = path + '.tmp'
   writeFileSync(temp, JSON.stringify(value) + '\n', { mode: 0o600 })
   const fd = openSync(temp, 'r'); try { fsyncSync(fd) } finally { closeSync(fd) }
   renameSync(temp, path)
-  const dir = openSync(root, 'r'); try { fsyncSync(dir) } finally { closeSync(dir) }
+  const dir = openSync(directory, 'r'); try { fsyncSync(dir) } finally { closeSync(dir) }
 }
-const save = (run: Run) => write(`run-${run.id}.json`, run)
+export const saveRun = (run: Run, directory = root) => write(`run-${run.id}.json`, run, directory)
 function allRuns(): Run[] { return readdirSync(root).filter(n => /^run-[a-zA-Z0-9_-]+\.json$/.test(n)).map(read) }
 function loadRun(id: string): Run {
   if (!/^[a-zA-Z0-9_-]{1,64}$/.test(id)) throw Error('invalid run id')
@@ -87,8 +92,9 @@ export interface BatchRuntime {
   totalCap: number
   maxActive: number
   batchSize: number
+  deliveryConcurrency: number
 }
-const runtime: BatchRuntime = { admin, anthropic, save, allRuns, write, now: () => Date.now(), dailyCap, totalCap, maxActive, batchSize }
+const runtime: BatchRuntime = { admin, anthropic, save: saveRun, allRuns, write, now: () => Date.now(), dailyCap, totalCap, maxActive, batchSize, deliveryConcurrency: readDeliveryConcurrency() }
 
 /** Read ownership before any resumed work; local selection can predate a lost reserve acknowledgement. */
 export async function reconcileRun(run: Run, d: BatchRuntime = runtime) {
@@ -229,32 +235,46 @@ function deferLease(run: Run, u: Unit, e: unknown, d: BatchRuntime): boolean {
   d.save(run) // preserve the paid result and stage; a later step retries the same write/cancel
   return true
 }
-export async function deliver(run: Run, d: BatchRuntime = runtime) {
-  for (const u of run.units) {
-    if (u.retry_at && u.retry_at > d.now()) continue
-    if (run.canceled && u.stage !== 'done' && u.stage !== 'released') { await release(run, u, d); continue }
-    if (u.stage === 'release') { await release(run, u, d); continue }
-    if (u.stage !== 'ready') continue
-    let response
-    try { response = await d.admin('/backfill/batch/result', { run_id: run.id, rid: u.rid, source_hash: u.source_hash, result: u.result }) }
-    catch (e) {
-      if (deferLease(run, u, e, d)) continue
-      if (e instanceof AdminHttp && e.status === 409) {
-        // A stale source/queue is released only if this run still owns the hold.
-        u.stage = 'release'; d.save(run); await release(run, u, d); continue
-      }
-      throw e
+async function deliverUnit(run: Run, u: Unit, d: BatchRuntime) {
+  if (run.canceled && u.stage !== 'done' && u.stage !== 'released') { await release(run, u, d); return }
+  if (u.stage === 'release') { await release(run, u, d); return }
+  if (u.stage !== 'ready') return
+  let response
+  try { response = await d.admin('/backfill/batch/result', { run_id: run.id, rid: u.rid, source_hash: u.source_hash, result: u.result }) }
+  catch (e) {
+    if (deferLease(run, u, e, d)) return
+    if (e instanceof AdminHttp && e.status === 409) {
+      // A stale source/queue is released only if this run still owns the hold.
+      u.stage = 'release'; d.save(run); await release(run, u, d); return
     }
-    delete u.retry_at
-    if (response.state === 'done') u.stage = 'done'
-    else if (response.state === 'release') u.stage = 'release'
-    else if (response.state === 'invalid') {
-      if (u.attempt >= 2) u.stage = 'release'
-      else { u.stage = 'reserved'; u.attempt = 2; u.complaints = response.problems; u.retry_tasks = u.tasks }
-    } else if (response.state !== 'dry' && response.state !== 'retry-write') throw Error('unexpected delivery state')
-    d.save(run)
-    if (u.stage === 'release') await release(run, u, d)
+    throw e
   }
+  delete u.retry_at
+  if (response.state === 'done') u.stage = 'done'
+  else if (response.state === 'release') u.stage = 'release'
+  else if (response.state === 'invalid') {
+    if (u.attempt >= 2) u.stage = 'release'
+    else { u.stage = 'reserved'; u.attempt = 2; u.complaints = response.problems; u.retry_tasks = u.tasks }
+  } else if (response.state !== 'dry' && response.state !== 'retry-write') throw Error('unexpected delivery state')
+  d.save(run)
+  if (u.stage === 'release') await release(run, u, d)
+}
+export async function deliver(run: Run, d: BatchRuntime = runtime) {
+  const concurrency = readDeliveryConcurrency(d.deliveryConcurrency)
+  const units = run.units.filter(u => (!u.retry_at || u.retry_at <= d.now())
+    && (u.stage === 'ready' || u.stage === 'release' || (run.canceled && u.stage !== 'done' && u.stage !== 'released')))
+  let next = 0, failed = false, failure: unknown
+  async function lane() {
+    while (!failed && next < units.length) {
+      const u = units[next++] // assigned synchronously, once per step
+      try { await deliverUnit(run, u, d) }
+      catch (e) { if (!failed) { failed = true; failure = e } }
+    }
+  }
+  // Drain every dispatched unit even on failure, before main releases the controller
+  // lock. Synchronous save/fsync/rename serialises each settled unit's full snapshot.
+  await Promise.all(Array.from({ length: Math.min(concurrency, units.length) }, lane))
+  if (failed) throw failure
 }
 export function stats(run: Run) {
   return { run_id: run.id, units: run.units.length, stages: Object.fromEntries(['selected','reserved','ready','release','done','released'].map(stage => [stage, run.units.filter(u => u.stage === stage).length])),
@@ -305,7 +325,7 @@ try {
   if (command === 'status') console.log(JSON.stringify(allRuns().map(stats)))
   else {
     const run: Run = command === 'prepare' ? { id: randomUUID(), units: [], submissions: [], preparing: true } : loadRun(process.argv[3])
-    if (command === 'prepare') { save(run); await prepare(run) }
+    if (command === 'prepare') { saveRun(run); await prepare(run) }
     else if (command === 'step') {
       await stepRun(run)
     } else if (command === 'cancel') {
