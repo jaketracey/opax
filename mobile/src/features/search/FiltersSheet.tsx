@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Modal, Pressable, StyleSheet, View } from 'react-native';
 import {
   Button,
+  Disclosure,
   Field,
   Group,
   Heading,
@@ -31,6 +32,12 @@ import {
   type SearchFilters,
 } from './contracts';
 import type { Roster } from '../../api/catalog-decoders';
+
+const filterNotes = [
+  'Results are limited to public records and roster parliamentarians. This page excludes recipient profiles and records without a reliable organisation classification.',
+  'Document search is not available for Tasmania, Western Australia or the Northern Territory. Those jurisdictions remain available for public-record catalogs.',
+  'Unavailable record types are shown in the list. Choose people, interests, expenses or pay from Search kind.',
+];
 
 type Choice = { value: string; label: string; reason?: string };
 export function Choices({
@@ -231,20 +238,7 @@ export function FiltersSheet({
             />
           ) : (
             <>
-              <Section
-                title="Search filters"
-                accent="people"
-                rule={false}
-                info={{
-                  title: 'About search filters',
-                  testID: 'search-filters-info',
-                  notes: [
-                    'Results are limited to public records and roster parliamentarians. This page excludes recipient profiles and records without a reliable organisation classification.',
-                    'Document search is not available for Tasmania, Western Australia or the Northern Territory. Those jurisdictions remain available for public-record catalogs.',
-                    'Unavailable record types are shown in the list. Choose people, interests, expenses or pay from Search kind.',
-                  ],
-                }}
-              >
+              <Section title="Search filters" accent="people" rule={false}>
                 <Text variant="strong">Years</Text>
                 <View style={stacked ? styles.yearsStacked : styles.years}>
                   <View style={stacked ? undefined : styles.grow}>
@@ -323,6 +317,19 @@ export function FiltersSheet({
                   }
                   testID="search-filters-reset"
                 />
+                {/* The notes the heading's ⓘ held, at the sheet's foot. */}
+                <Disclosure
+                  label="About search filters"
+                  testID="search-filters-about"
+                >
+                  <Group gap={rhythm.tight}>
+                    {filterNotes.map((note) => (
+                      <Text key={note} variant="fine" wordSafe>
+                        {note}
+                      </Text>
+                    ))}
+                  </Group>
+                </Disclosure>
               </Section>
             </>
           )}

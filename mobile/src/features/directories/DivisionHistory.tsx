@@ -6,6 +6,7 @@ import {
   Keyboard,
   RefreshControl,
   StyleSheet,
+  View,
   type ListRenderItemInfo,
 } from 'react-native';
 import { router, Stack } from 'expo-router';
@@ -18,6 +19,7 @@ import {
   Group,
   LoadingState,
   LinkRow,
+  BillRow,
   SidebarSafe,
   SourceLine,
   Text,
@@ -45,37 +47,106 @@ const outcomeWords = (outcome: string) =>
         ? outcome[0]!.toUpperCase() + outcome.slice(1)
         : 'Outcome not recorded';
 
+/** The list's items: a bill's line, then its consecutive divisions. */
+export type HistoryItem =
+  | { type: 'bill'; key: string; billKey: string; title: string; count: number }
+  | { type: 'division'; key: string; row: DivisionRow }
+  | { type: 'source'; key: 'source' };
+
+/** The list's source line sits under its first page, not above the rows. */
+export const SOURCE_AFTER = 10;
+
 /**
- * One division: the bill, then its title (the recorded stage), chamber and
- * date, and the outcome with its counts. It opens the bill's divisions,
- * where the question and the party splits are. No icon tile and no ⓘ: the
- * list's one source line holds the notes.
+ * Consecutive divisions of one bill under one line for the bill (pass 5,
+ * P2-10), so a run of divisions is not titled by the same bill four times.
+ * The source line follows the first page of divisions.
+ */
+export function historyItems(rows: readonly DivisionRow[]): HistoryItem[] {
+  const items: HistoryItem[] = [];
+  let divisions = 0;
+  let line: Extract<HistoryItem, { type: 'bill' }> | null = null;
+  for (const row of rows) {
+    if (divisions === SOURCE_AFTER) {
+      items.push({ type: 'source', key: 'source' });
+      // The run picks up again under its bill after the source line.
+      line = null;
+    }
+    if (!line || line.billKey !== row.billKey) {
+      line = {
+        type: 'bill',
+        key: `bill:${row.key}`,
+        billKey: row.billKey,
+        title: row.title,
+        count: 0,
+      };
+      items.push(line);
+    }
+    line.count++;
+    items.push({ type: 'division', key: row.key, row });
+    divisions++;
+  }
+  if (!items.some((item) => item.type === 'source'))
+    items.push({ type: 'source', key: 'source' });
+  return items;
+}
+
+/** How a division row is spoken: stage, outcome and count, where and when, and its bill. */
+export function divisionLabel(item: DivisionRow) {
+  return [
+    item.stage ?? 'Division',
+    outcomeWords(item.outcome),
+    `${formatCount(item.ayes)} ayes, ${formatCount(item.noes)} noes`,
+    divisionWhere(item),
+    item.title,
+  ].join(', ');
+}
+const divisionWhere = (item: DivisionRow) =>
+  [
+    chamberName(item.house, 'federal') ?? CHAMBER_NOT_RECORDED,
+    formatDate(item.date, 'short'),
+  ]
+    .filter(Boolean)
+    .join(' · ');
+
+/**
+ * One division, titled by its stage ("Limitation of debate"), with its
+ * outcome as a status and the count beside it, and "Senate · 20 Aug 2026"
+ * under it. It opens the bill's divisions, where the question and the
+ * party splits are. No icon tile and no ⓘ: the list's one source line
+ * holds the notes.
  */
 const Division = memo(function Division({ item }: { item: DivisionRow }) {
   const key = `${item.billKey}-${item.key.split(':').slice(1).join('-')}`;
   return (
-    <LinkRow
-      title={item.title}
+    <BillRow
+      title={item.stage ?? 'Division'}
+      status={outcomeWords(item.outcome)}
+      date={`${formatCount(item.ayes)} ayes, ${formatCount(item.noes)} noes`}
+      detail={divisionWhere(item)}
+      accessibilityLabel={divisionLabel(item)}
+      accessibilityHint="Opens the bill's divisions"
       testID={`division-history-${key}`}
-      titleTestID={`division-title-${key}`}
-      detailTestID={`division-details-${key}`}
-      detail={[
-        [
-          item.stage,
-          chamberName(item.house, 'federal') ?? CHAMBER_NOT_RECORDED,
-          formatDate(item.date, 'short'),
-        ]
-          .filter(Boolean)
-          .join(' · '),
-        `${outcomeWords(item.outcome)}, ${formatCount(item.ayes)} ayes, ${formatCount(item.noes)} noes`,
-      ].join('\n')}
       onPress={() => router.push(billRoute(item.billKey, 'divisions'))}
     />
   );
 });
-const renderRow = ({ item }: ListRenderItemInfo<DivisionRow>) => (
-  <Division item={item} />
-);
+/** The bill a run of divisions belongs to: a link row to the bill. */
+const BillLine = memo(function BillLine({
+  item,
+}: {
+  item: Extract<HistoryItem, { type: 'bill' }>;
+}) {
+  return (
+    <LinkRow
+      title={item.title}
+      detail={
+        item.count > 1 ? `${formatCount(item.count)} divisions` : undefined
+      }
+      testID={`division-history-bill-${item.billKey}`}
+      onPress={() => router.push(billRoute(item.billKey))}
+    />
+  );
+});
 export default function DivisionHistory() {
   const load = useCallback(
     (refresh: boolean, publish: Parameters<typeof loadDivisionHistory>[1]) =>
@@ -104,6 +175,7 @@ export default function DivisionHistory() {
       ) ?? [],
     [record, query],
   );
+  const items = useMemo(() => historyItems(rows), [rows]);
   const complete = record && record.loaded + record.failed === record.total;
   useEffect(() => {
     if (complete)
@@ -111,6 +183,30 @@ export default function DivisionHistory() {
         `${record.rows.length} division records loaded`,
       );
   }, [complete, record?.rows.length]);
+  const source = record ? (
+    <SourceLine
+      title="About division history"
+      asOf={record.asAt}
+      citation={[catalogSources.bills.label, 'They Vote For You']}
+      licence="They Vote For You: ODbL"
+      licenceDataset="tvfy"
+      savedAt={record.stale ? record.savedAt : null}
+      state={record.partial ? 'partial' : null}
+      notes={[
+        ...divisionNotes,
+        record.partial ? 'Some rows in this export could not be read.' : null,
+      ]}
+      testID="division-history-source"
+    />
+  ) : null;
+  const renderItem = ({ item }: ListRenderItemInfo<HistoryItem>) =>
+    item.type === 'bill' ? (
+      <BillLine item={item} />
+    ) : item.type === 'division' ? (
+      <Division item={item.row} />
+    ) : (
+      <View style={styles.source}>{source}</View>
+    );
   return (
     <>
       <Stack.Screen
@@ -137,9 +233,9 @@ export default function DivisionHistory() {
           refreshControl={
             <RefreshControl refreshing={refreshing} onRefresh={refresh} />
           }
-          data={rows}
-          renderItem={renderRow}
-          keyExtractor={(r) => r.key}
+          data={record && rows.length ? items : []}
+          renderItem={renderItem}
+          keyExtractor={(item) => item.key}
           initialNumToRender={8}
           maxToRenderPerBatch={8}
           windowSize={7}
@@ -172,21 +268,9 @@ export default function DivisionHistory() {
                       {`${formatCount(record.loaded)} of ${formatCount(record.total)} bill files loaded${record.failed ? `; ${formatCount(record.failed)} unavailable` : ''}`}
                     </Text>
                   ) : null}
-                  <SourceLine
-                    title="About division history"
-                    asOf={record.asAt}
-                    citation={[catalogSources.bills.label, 'They Vote For You']}
-                    licence="They Vote For You: ODbL"
-                    savedAt={record.stale ? record.savedAt : null}
-                    state={record.partial ? 'partial' : null}
-                    notes={[
-                      ...divisionNotes,
-                      record.partial
-                        ? 'Some rows in this export could not be read.'
-                        : null,
-                    ]}
-                    testID="division-history-source"
-                  />
+                  {/* With no rows the source line stays here; otherwise it
+                      follows the first page (pass 5, P2-19). */}
+                  {rows.length ? null : source}
                 </Group>
               ) : !error ? (
                 <LoadingState label="Loading division history" />
@@ -223,4 +307,5 @@ const styles = StyleSheet.create({
     paddingBottom: rhythm.section,
   },
   header: { paddingBottom: rhythm.block },
+  source: { paddingVertical: rhythm.heading },
 });

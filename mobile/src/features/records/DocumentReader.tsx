@@ -1,13 +1,11 @@
 import { headerItems } from '../../navigation/chrome';
 import { useCallback, useEffect, useMemo, useState } from 'react';
+import { StyleSheet, View } from 'react-native';
 import { Stack, router, useLocalSearchParams } from 'expo-router';
 import { catalogs } from '../../api/runtime';
 import { passageText, serverPassage } from '../../api/passage-text';
-import type { PersonSlug } from '../../api/catalogs';
 import { chamberName, jurisdictionName } from '../../design/parliament';
 import {
-  AsAtLine,
-  Button,
   EmptyState,
   ErrorState,
   Group,
@@ -17,22 +15,20 @@ import {
   Section,
   Disclosure,
   LinkRow,
-  ViewOriginal,
+  PersonRow,
+  SourceLine,
   Text,
-  errorMessage,
 } from '../../design/primitives';
 import { formatDate } from '../../design/format';
 import { rhythm } from '../../design/tokens';
-import { canonicalUrl } from '../../navigation/external';
 import {
   billRoute,
   billTextRoute,
-  citeRoute,
   docRoute,
   personRoute,
 } from '../../navigation/routes';
-import { shareHeaderItem } from '../../navigation/share';
-import { sponsorSlug } from '../bills/sponsors';
+import { sponsorRows, type SponsorRow } from '../bills/sponsors';
+import { CachedPortrait } from '../CachedPortrait';
 import { DocumentAsk } from '../ask/DocumentAsk';
 import { Records } from './data';
 import { records } from './runtime';
@@ -43,7 +39,8 @@ import {
   type DocumentRecord,
 } from './model';
 import { titleSubject } from './citations';
-import { copyText } from './actions';
+import { RecordActions, recordMenuItem } from './RecordActions';
+import { recordSource } from './source';
 import { ReaderList, readerChunkTarget } from './ReaderList';
 import { useRead } from './useRead';
 import { RecordLoadError } from './RecordLoadError';
@@ -82,20 +79,29 @@ const kindNames: Record<string, string> = {
   research_report: 'Research source note',
   legal: 'Legal record',
 };
-/**
- * The record's own date, named for what it is ("Speech date 9 Feb 1999"),
- * never as an update. Null when the record has no calendar date.
- */
-function recordDate(doc: DocumentRecord, style: 'short' | 'long' = 'short') {
+/** The record's own calendar date (an ISO day), or null. */
+function recordDay(doc: DocumentRecord) {
   const iso = metaString(doc, 'date').slice(0, 10);
-  if (!/^\d{4}-\d{2}-\d{2}$/.test(iso)) return null;
-  const name =
-    doc.labels.kind === 'speech'
-      ? 'Speech date'
-      : doc.labels.kind === 'division'
-        ? 'Division date'
-        : 'Dated';
-  return `${name} ${formatDate(iso, style)}`;
+  return /^\d{4}-\d{2}-\d{2}$/.test(iso) ? iso : null;
+}
+/**
+ * The one line under the title (pass 5, P1-2): what the record is, where and
+ * when, "Speech · House of Representatives · 18 Aug 2026". No kicker above
+ * the title, and no separate date line. A title that is itself the kind and
+ * date ("Speech · 9 February 1999") leaves them off the line.
+ */
+export function metaLine(doc: DocumentRecord) {
+  const titled = !!titleSubject(doc);
+  const day = recordDay(doc);
+  const place = jurisdictionName(doc.labels.state);
+  return [
+    titled ? (kindNames[doc.labels.kind ?? ''] ?? 'Source record') : null,
+    chamberName(doc.labels.chamber),
+    place && place !== 'Federal' ? place : null,
+    titled && day ? formatDate(day, 'short') : null,
+  ]
+    .filter(Boolean)
+    .join(' · ');
 }
 /**
  * The subject when the title has one; a title that is only the speaker and
@@ -121,7 +127,6 @@ export default function DocumentReader({
   const load = useCallback(() => records.document(slug), [slug]);
   const { value, error, retry } = useRead(load);
   const doc = value?.data;
-  const [copied, setCopied] = useState(false);
   const parts = useMemo(
     () =>
       textChunks(
@@ -142,14 +147,10 @@ export default function DocumentReader({
           options={{
             title: 'Record',
             headerTitle: '',
+            // Cite, Copy link and Share under one ⋯ (P1-2).
             ...headerItems(
               doc
-                ? () => [
-                    shareHeaderItem({
-                      path: `/doc/${doc.slug}`,
-                      title: doc.title,
-                    }),
-                  ]
+                ? () => [recordMenuItem({ slug: doc.slug, title: doc.title })]
                 : undefined,
             ),
           }}
@@ -172,71 +173,25 @@ export default function DocumentReader({
             ) : (
               <>
                 <Group gap={rhythm.tight}>
-                  <Text
-                    variant="label"
-                    tone={
-                      doc.labels.kind === 'bill_text'
-                        ? 'billsInk'
-                        : doc.labels.kind === 'division'
-                          ? 'votesInk'
-                          : 'navy'
-                    }
-                  >
-                    {kindNames[doc.labels.kind ?? ''] ?? 'Source record'}
-                  </Text>
                   <Heading level={1} testID="doc-title">
                     {heading(doc)}
                   </Heading>
-                  <Speaker key={`speaker-${doc.slug}`} doc={doc} />
-                  <Text variant="metadata" wordSafe>
-                    {[
-                      chamberName(doc.labels.chamber),
-                      jurisdictionName(doc.labels.state),
-                    ]
-                      .filter(Boolean)
-                      .join(' · ') || 'Jurisdiction not recorded'}
-                  </Text>
-                  {recordDate(doc) && titleSubject(doc) ? (
+                  <View style={styles.meta}>
                     <Text
-                      variant="fine"
+                      variant="metadata"
                       wordSafe
-                      accessibilityLabel={recordDate(doc, 'long') ?? undefined}
-                      testID="doc-date"
+                      style={styles.grow}
+                      testID="doc-meta"
                     >
-                      {recordDate(doc)}
+                      {metaLine(doc) || 'Jurisdiction not recorded'}
                     </Text>
-                  ) : null}
-                  {doc.url ? (
-                    <ViewOriginal
-                      sources={[{ label: 'Original record', url: doc.url }]}
-                      testID="doc-source"
-                    />
-                  ) : null}
-                </Group>
-                <Group
-                  gap={rhythm.tight}
-                  style={{ flexDirection: 'row', flexWrap: 'wrap' }}
-                >
-                  <Button
-                    variant="quiet"
-                    size="compact"
-                    icon="quote.opening"
-                    label="Cite"
-                    onPress={() => router.push(citeRoute(doc.slug))}
-                    testID="doc-cite"
-                  />
-                  <Button
-                    variant="quiet"
-                    size="compact"
-                    icon="link"
-                    label={copied ? 'Link copied' : 'Copy link'}
-                    onPress={() => {
-                      void copyText(canonicalUrl(`/doc/${doc.slug}`)).then(
-                        setCopied,
-                      );
-                    }}
-                    testID="doc-copy-link"
-                  />
+                    {/* A pane has no navigation bar: its ⋯ sits here. */}
+                    {embedded ? (
+                      <RecordActions slug={doc.slug} title={doc.title} />
+                    ) : null}
+                  </View>
+                  <Speaker key={`speaker-${doc.slug}`} doc={doc} />
+                  <RecordSourceLine doc={doc} />
                 </Group>
                 <DocumentAsk doc={doc} />
                 {doc.summary ? (
@@ -258,21 +213,10 @@ export default function DocumentReader({
                 {doc.labels.kind === 'speech' ? (
                   <Similar key={`similar-${doc.slug}`} doc={doc} />
                 ) : null}
+                {/* The text's notes are in the record's source sheet. */}
                 <Section
                   title="Full text"
                   accent={doc.labels.kind === 'division' ? 'votes' : 'bills'}
-                  info={{
-                    title: 'About this text',
-                    notes: [
-                      doc.labels.source === 'openaustralia' &&
-                        'This text is reproduced from a third-party Hansard transcription and may contain concatenation artefacts (“toSenator”); verify wording against the official record before quoting.',
-                      doc.labels.kind === 'bill_text' &&
-                        (doc.metadata.complete === false
-                          ? 'Incomplete extracted bill text. Use the original document for the complete bill.'
-                          : 'Published bill text. Check the original document for authoritative wording and formatting.'),
-                    ],
-                    testID: 'doc-text-info',
-                  }}
                 >
                   {doc.labels.kind === 'bill_text' &&
                   doc.metadata.complete === false ? (
@@ -291,14 +235,32 @@ export default function DocumentReader({
   );
 }
 
+/**
+ * Who spoke, as a person row (portrait, party as a dot and its name, place),
+ * joined to the roster the way a bill's sponsors are. A speaker the roster
+ * cannot name stays plain text, never a link.
+ */
 function Speaker({ doc }: { doc: DocumentRecord }) {
-  const [slug, setSlug] = useState<PersonSlug | null>(null);
+  const [row, setRow] = useState<SponsorRow | null>(null);
   useEffect(() => {
     if (!doc.speaker || doc.labels.speaker_type === 'witness') return;
     let active = true;
-    void Promise.all([catalogs.roster(), catalogs.slugs()])
-      .then(([roster, slugs]) => {
-        if (active) setSlug(sponsorSlug(doc.speaker!, roster.data, slugs.data));
+    void catalogs
+      .directory()
+      .then((found) => {
+        const [match] = sponsorRows(
+          [{ name: doc.speaker!, suffix: '' }],
+          doc.labels.party ?? null,
+          null,
+          {
+            roster: found.roster.data,
+            slugs: found.slugs.data,
+            people: found.people.data,
+            manifest: found.manifest.data,
+            electorates: found.electorates.data,
+          },
+        );
+        if (active && match?.slug) setRow(match);
       })
       .catch(() => {});
     return () => {
@@ -306,21 +268,58 @@ function Speaker({ doc }: { doc: DocumentRecord }) {
     };
   }, [doc]);
   if (!doc.speaker) return null;
-  return slug ? (
-    <LinkRow
-      title={doc.speaker}
+  const slug = row?.slug;
+  return row && slug ? (
+    <PersonRow
+      name={row.name}
+      portrait={<CachedPortrait name={row.name} slug={slug} />}
+      {...(row.party
+        ? {
+            party: row.party.party,
+            partyStatus: row.party.status,
+            formerly: row.party.formerly,
+          }
+        : { party: undefined })}
+      place={row.place}
+      statusShown={!!row.place?.startsWith('Formerly ')}
       dragPath={`/subject/person/${slug}`}
-      detail="More by this speaker"
-      icon="person"
-      accent="people"
       onPress={() => router.push(personRoute(slug))}
       testID="doc-more"
-      titleTestID="doc-speaker"
     />
   ) : (
-    <Text variant="strong" wordSafe>
+    <Text variant="strong" wordSafe testID="doc-speaker-name">
       {doc.speaker}
     </Text>
+  );
+}
+/**
+ * The record's one source line (P1-2): the original opens from its sheet
+ * (no separate "View original"), with the text's notes and the licence.
+ * The meta line above dates the record, so the line names only its source.
+ */
+function RecordSourceLine({ doc }: { doc: DocumentRecord }) {
+  const source = recordSource(doc);
+  return (
+    <SourceLine
+      title="About this record"
+      dateLabel={null}
+      asOf={recordDay(doc)}
+      citation={[source.citation]}
+      originals={
+        doc.url
+          ? [{ label: source.original, url: doc.url, record: doc.title }]
+          : []
+      }
+      notes={[
+        ...source.notes,
+        doc.url
+          ? null
+          : 'No official link is published for this record; it is cited by its title and date.',
+      ]}
+      licence={source.licence}
+      licenceDataset={source.licenceDataset}
+      testID="doc-source"
+    />
   );
 }
 function LinkedBill({ doc }: { doc: DocumentRecord }) {
@@ -411,7 +410,11 @@ function LinkedBill({ doc }: { doc: DocumentRecord }) {
         onPress={() => router.push(billRoute(bill.key))}
         testID="doc-bill-open"
       />
-      <AsAtLine asOf={bill.asAt} citation="ParlInfo bill register" />
+      <SourceLine
+        asOf={bill.asAt}
+        citation="ParlInfo bill register"
+        testID="doc-bill-source"
+      />
     </Section>
   );
 }
@@ -437,8 +440,6 @@ function Similar({ doc }: { doc: DocumentRecord }) {
     <Section>
       <Disclosure
         label="Similar speeches"
-        icon="text.bubble"
-        accent="bills"
         open={open}
         onToggle={(next) => (next ? loadSimilar() : setOpen(false))}
         testID="doc-similar"
@@ -454,27 +455,46 @@ function Similar({ doc }: { doc: DocumentRecord }) {
           {value ? (
             value.data.length ? (
               value.data.map((row, index) => (
-                <Group key={row.slug}>
+                <Group key={row.slug} gap={rhythm.tight}>
                   <LinkRow
                     title={titleSubject(row) || row.title}
+                    detail={[
+                      row.speaker,
+                      row.date ? formatDate(row.date, 'short') : null,
+                    ]
+                      .filter(Boolean)
+                      .join(' · ')}
                     onPress={() => router.push(docRoute(row.slug))}
                     testID={`doc-similar-${index}`}
                     dragPath={`/doc/${row.slug}`}
                   />
-                  <Text variant="metadata">{row.speaker}</Text>
-                  <Text selectable>
+                  <Text variant="record" selectable>
                     {serverPassage(row.snippet) || 'No passage available.'}
                   </Text>
-                  <Text variant="fine">Passage from the record</Text>
-                  <AsAtLine asOf={row.date} citation="Related source record" />
                 </Group>
               ))
             ) : (
               <EmptyState message="No related speeches found for this subject." />
             )
           ) : null}
+          {value?.data.length ? (
+            <SourceLine
+              title="About similar speeches"
+              dateLabel={null}
+              citation="Hansard"
+              notes={[
+                'Speeches on the same subject, found by OPAX search. Each passage is from the record; open a speech for its full text and source.',
+              ]}
+              testID="doc-similar-source"
+            />
+          ) : null}
         </>
       </Disclosure>
     </Section>
   );
 }
+
+const styles = StyleSheet.create({
+  meta: { flexDirection: 'row', alignItems: 'center', gap: rhythm.tight },
+  grow: { flex: 1 },
+});

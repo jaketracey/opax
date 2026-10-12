@@ -68,15 +68,18 @@ name: 30 Scoped Ask drafts from native records; arrival never submits
     visible:
       id: bill-title
     timeout: 60000
+# A bill's Ask is under its header's ⋯ (pass 3C), as on the other records.
 - scrollUntilVisible:
     element:
-      id: bill-ask
+      id: bill-more
+    direction: UP
     centerElement: true
     speed: 20
     timeout: 90000
 - takeScreenshot: ${EVIDENCE}/30-bill-entry
 - tapOn:
-    id: bill-ask
+    id: bill-more
+- tapOn: Ask about this
 - assertVisible:
     id: ask-question
 - takeScreenshot: ${EVIDENCE}/30-bill-draft

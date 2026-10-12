@@ -109,11 +109,16 @@ name: 34 Records, filters, sort, cited summary and explicitly chosen briefs
     centerElement: true
     timeout: 90000
 - takeScreenshot: ${EVIDENCE}/34-applied-filters
-- scrollUntilVisible:
-    element:
-      id: records-sort
-    centerElement: true
-    timeout: 90000
+# The answered form is short (pass 5, P1-1), so after Apply the count line
+# can sit under the navigation bar, where the hierarchy still calls it
+# visible. Bring the top of the page back before tapping the sort.
+- swipe:
+    start: 50%, 35%
+    end: 50%, 85%
+- swipe:
+    start: 50%, 35%
+    end: 50%, 85%
+- waitForAnimationToEnd
 - tapOn:
     id: records-sort
 - scrollUntilVisible:
@@ -151,10 +156,11 @@ name: 34 Records, filters, sort, cited summary and explicitly chosen briefs
     timeout: 10000
 - assertNotVisible:
     id: search-filters-sheet
+# Summarise sits under the first three results (pass 5, P1-1).
 - scrollUntilVisible:
     element:
       id: records-summary
-    direction: UP
+    direction: DOWN
     centerElement: true
     timeout: 90000
 - tapOn:

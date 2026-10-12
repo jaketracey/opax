@@ -258,7 +258,8 @@ export function requestBody(
 export const sampleQuestions = [
   'What has parliament said about housing affordability?',
   'Who funds the Labor Party?',
-  'Who takes the most money from the gambling lobby?',
+  // Evidence-first, not a judgement (pass 5, P3-6).
+  'Who has received the most from gambling industry donors?',
   'What has David Pocock proposed about housing affordability?',
 ];
 export const parties = [

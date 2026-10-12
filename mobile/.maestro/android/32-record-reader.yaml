@@ -24,16 +24,13 @@ name: 32 Bill to native speech, cite BibTeX, similar on tap and roster profile
       id: doc-title
     timeout: 20000
 - takeScreenshot: ${EVIDENCE}/32-reader-header
-- scrollUntilVisible:
-    element:
-      id: doc-cite
-    direction: DOWN
-    centerElement: true
-    speed: 20
-    timeout: 180000
-- waitForAnimationToEnd
-- tapOn:
+# Cite, Copy link and Share live under the header's More (pass 5, P1-2).
+- assertNotVisible:
     id: doc-cite
+- tapOn:
+    id: header-more
+- waitForAnimationToEnd
+- tapOn: Cite
 - extendedWaitUntil:
     visible:
       id: doc-citations

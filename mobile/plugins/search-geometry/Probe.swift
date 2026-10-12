@@ -55,7 +55,10 @@ private enum OpaxSearchGeometryProbe {
       "firstLine": rect(views(screen).first { $0.accessibilityIdentifier == "search-input" }?.superview?.subviews.first ?? views(screen).first { $0.accessibilityIdentifier == "today-screen-message" }, window),
       "keyboardHeight": keyboardHeight,
       "editing": views(screen).contains { $0.isFirstResponder },
-      "results": views(screen).contains { $0.accessibilityIdentifier == "search-cache-state" },
+      // Results are on screen: a catalog or record count line (pass 5).
+      "results": views(screen).contains { ["search-cache-state", "search-count", "records-count"].contains($0.accessibilityIdentifier ?? "") },
+      // The query field itself: an answered search collapses the form below it.
+      "field": rect(views(screen).first { $0.accessibilityIdentifier == "search-input" }, window),
       "askQuestion": rect(askQuestion, window), "askStages": rect(askStages, window), "askError": rect(askError, window),
     ]
     guard let raw = try? JSONSerialization.data(withJSONObject: data, options: [.sortedKeys]), let text = String(data: raw, encoding: .utf8) else { return }

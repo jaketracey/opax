@@ -8,12 +8,12 @@ import {
   RefreshControl,
   StyleSheet,
   View,
+  useWindowDimensions,
   type ListRenderItemInfo,
   type ViewToken,
 } from 'react-native';
 import { router, Stack, useLocalSearchParams } from 'expo-router';
 import {
-  AsAtLine,
   Button,
   Divider,
   EmptyState,
@@ -24,10 +24,9 @@ import {
   Heading,
   LoadingState,
   LinkRow,
-  InfoButton,
   OfflineBanner,
   PersonRow,
-  StaleNotice,
+  SourceLine,
   Text,
   errorMessage,
   LayoutRegion,
@@ -54,7 +53,7 @@ import {
 } from '../../navigation/routes';
 import { shareHeaderItem } from '../../navigation/share';
 import { CachedPortrait } from '../CachedPortrait';
-import { PartialNotice, SavedCopyNotice } from '../CatalogNotice';
+import { savedCopy } from '../search/present';
 import { useCatalogRecord } from '../bills/useCatalogRecord';
 import { seatContext } from '../your-mp/model';
 import { loadDirectory } from './data';
@@ -191,6 +190,10 @@ const DirectoryRow = memo(function DirectoryRow({
   );
 });
 const separator = () => <Divider variant="subtle" />;
+const saved = (record: {
+  stale: boolean;
+  staleReason?: 'unreadable' | 'unavailable';
+}) => savedCopy(record.stale, record.staleReason);
 const rowKey = (item: Row) => ('key' in item ? item.key : item.electorate_id);
 export default function DirectoryScreen() {
   const params = useLocalSearchParams<{ kind: string }>();
@@ -318,6 +321,16 @@ function DirectoryView({ kind }: { kind: keyof typeof titles }) {
       new Map(rows.map((row) => [encodeEntry(entryFor(row)), entryFor(row)])),
     [rows],
   );
+  // iPad landscape: the pane opens on the first row rather than empty (pass
+  // 5, P2-21). A selection, not a navigation: VoiceOver focus stays on the
+  // list, and a cleared selection (`open=`) stays cleared.
+  const window = useWindowDimensions();
+  const landscape = window.width > window.height;
+  const first = rows[0];
+  useEffect(() => {
+    if (!split || !landscape || params.open !== undefined || !first) return;
+    router.setParams({ open: encodeEntry(entryFor(first)) });
+  }, [split, landscape, params.open, first]);
   const list = (
     <FlatList<Row>
       ref={listRef}
@@ -401,42 +414,38 @@ function DirectoryView({ kind }: { kind: keyof typeof titles }) {
           ) : null}
           {record ? (
             <>
-              <View style={styles.summary}>
-                <Text
-                  wordSafe
-                  variant="metadata"
-                  testID="directory-count"
-                  style={styles.grow}
-                >
-                  {count} · {sortSummary(kind, filters.sort)}
-                </Text>
-                <InfoButton
-                  title={`About ${title.toLowerCase()}`}
-                  notes={directoryNotes[kind]}
-                  testID="directory-info"
-                />
-              </View>
-              {record.stale ? (
-                <>
-                  <SavedCopyNotice reason={record.staleReason} />
-                  <StaleNotice
-                    savedAt={record.savedAt}
-                    refreshing={refreshing}
-                  />
-                  <Button label="Try again" onPress={refresh} />
-                </>
-              ) : null}
-              {record.partial ? <PartialNotice /> : null}
-              <AsAtLine
-                asOf={
-                  record.sources
-                    .map((s) => s.asAt)
-                    .filter((date): date is string => !!date)
-                    .sort()[0] ?? null
-                }
-                citation={record.sources.map((s) => s.label)}
+              <Text wordSafe variant="metadata" testID="directory-count">
+                {count} · {sortSummary(kind, filters.sort)}
+              </Text>
+              {/* One source line: the notes the ⓘ held, each source with its
+                  own date, and a saved copy as its state (pass 5, P2-12). */}
+              <SourceLine
+                title={`About ${title.toLowerCase()}`}
+                citation={record.sources.map((s) => ({
+                  label: s.label,
+                  asOf: s.asAt,
+                }))}
                 savedAt={record.stale ? record.savedAt : null}
+                state={record.partial ? 'partial' : saved(record).state}
+                notes={[
+                  ...directoryNotes[kind],
+                  saved(record).note,
+                  record.partial
+                    ? 'Some rows in this export could not be read.'
+                    : null,
+                ]}
+                testID="directory-source"
               />
+              {record.stale ? (
+                <Button
+                  label="Try again"
+                  variant="quiet"
+                  size="compact"
+                  loading={refreshing}
+                  onPress={refresh}
+                  testID="directory-refresh"
+                />
+              ) : null}
             </>
           ) : error ? (
             <>
@@ -519,8 +528,6 @@ const styles = StyleSheet.create({
     paddingBottom: rhythm.section,
   },
   header: { paddingBottom: rhythm.block },
-  summary: { flexDirection: 'row', alignItems: 'center', gap: rhythm.tight },
-  grow: { flex: 1 },
   chips: { flexDirection: 'row', flexWrap: 'wrap', gap: rhythm.tight },
   groupHeading: { paddingTop: rhythm.block, paddingBottom: rhythm.tight },
 });

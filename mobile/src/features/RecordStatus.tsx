@@ -1,4 +1,4 @@
-import { PartialNotice, SavedCopyNotice } from './CatalogNotice';
+import { PartialNotice } from './CatalogNotice';
 import type { RecordResult } from '../api/client';
 import { ApiError } from '../api/errors';
 import {
@@ -7,9 +7,33 @@ import {
   Group,
   LoadingState,
   OfflineBanner,
-  StaleNotice,
+  Text,
   errorMessage,
 } from '../design/primitives';
+import { staleText } from '../design/format';
+
+/**
+ * A saved copy said once (pass 5): why the latest export is not shown and
+ * when the copy was saved, in one sentence rather than a notice and a
+ * separate date line. Offline, the banner says why.
+ */
+export function savedSentence(
+  reason: RecordResult<unknown>['staleReason'],
+  savedAt: number | null,
+  refreshing = false,
+) {
+  return [
+    reason === 'unreadable'
+      ? 'The latest public export could not be read. Showing the saved copy.'
+      : reason === 'unavailable'
+        ? 'The latest public export could not be loaded. Showing the saved copy.'
+        : null,
+    savedAt !== null ? staleText(savedAt) : null,
+    refreshing ? 'Checking for a newer copy.' : null,
+  ]
+    .filter(Boolean)
+    .join(' ');
+}
 
 /**
  * The state of one whole-screen catalog read (useCatalogRecord): loading,
@@ -42,18 +66,19 @@ export function RecordStatus({
   if (record?.stale)
     return (
       <Group>
-        <SavedCopyNotice
-          reason={record.staleReason}
-          testID={`${testID}-${record.staleReason ? 'saved-copy' : 'offline'}`}
-        />
-        {record.partial ? <PartialNotice testID={`${testID}-partial`} /> : null}
-        {record.savedAt !== null ? (
-          <StaleNotice
-            savedAt={record.savedAt}
-            refreshing={refreshing}
-            testID={`${testID}-stale`}
-          />
+        {record.staleReason ? null : (
+          <OfflineBanner testID={`${testID}-offline`} />
+        )}
+        {record.staleReason || record.savedAt !== null ? (
+          <Text
+            wordSafe
+            variant="fine"
+            testID={`${testID}-${record.staleReason ? 'saved-copy' : 'stale'}`}
+          >
+            {savedSentence(record.staleReason, record.savedAt, refreshing)}
+          </Text>
         ) : null}
+        {record.partial ? <PartialNotice testID={`${testID}-partial`} /> : null}
         <Button
           label="Try again"
           onPress={refresh}

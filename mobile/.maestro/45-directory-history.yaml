@@ -177,12 +177,15 @@ name: 45 Electorates, dated representation, bill filters and division history
     speed: 20
     timeout: 300000
 - takeScreenshot: ${EVIDENCE}/45-division-row
-# A row names its bill, then its recorded stage, chamber and date; the
+# A row is titled by its recorded stage, with its outcome and count, then
+# chamber and date; its bill heads the run as one line (pass 5, P2-10). The
 # question is on the bill's divisions, not behind an ⓘ on every row.
 - assertVisible:
     id: division-history-au-federal-r7534-.*
-    text: 'Interactive Gambling \(Cost Recovery Levy\) Bill 2026, Limitation of debate · Senate · 19 Aug 2026[\s\S]*'
+    text: 'Limitation of debate, [\s\S]*Senate · 19 Aug 2026, Interactive Gambling \(Cost Recovery Levy\) Bill 2026'
     index: 0
+- assertVisible:
+    id: division-history-bill-au-federal-r7534
 - scrollUntilVisible:
     element:
       id: division-history-au-federal-r7534-.*

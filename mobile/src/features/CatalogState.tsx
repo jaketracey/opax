@@ -3,13 +3,12 @@ import type { ReactNode } from 'react';
 import type { Block } from '../api/catalogs';
 import { ApiError } from '../api/errors';
 import {
-  AsAtLine,
   EmptyState,
   ErrorState,
   Group,
   LoadingState,
   OfflineBanner,
-  StaleNotice,
+  SourceLine,
   errorMessage,
 } from '../design/primitives';
 
@@ -55,18 +54,9 @@ export function CatalogState<T>({
     );
   return (
     <Group>
-      {block.stale ? (
-        <>
-          <SavedCopyNotice reason={block.staleReason} />
-          {block.savedAt !== null ? (
-            <StaleNotice
-              savedAt={block.savedAt}
-              refreshing={refreshing}
-              testID={`${testID}-stale`}
-            />
-          ) : null}
-        </>
-      ) : null}
+      {/* Why the copy is saved stays drawn; its date is the source line's
+          saved state (pass 5). */}
+      {block.stale ? <SavedCopyNotice reason={block.staleReason} /> : null}
       {block.partial ? <PartialNotice testID={`${testID}-partial`} /> : null}
       {block.data === null ||
       (Array.isArray(block.data) && block.data.length === 0) ? (
@@ -74,10 +64,15 @@ export function CatalogState<T>({
       ) : (
         children(block.data)
       )}
-      <AsAtLine
+      <SourceLine
         asOf={block.asAt}
         citation={[...new Set(block.sources.map((s) => s.label))]}
         savedAt={block.stale ? block.savedAt : null}
+        state={block.partial && !block.stale ? 'partial' : null}
+        notes={[
+          refreshing ? 'Checking for a newer copy.' : null,
+          block.partial ? 'Some rows in this export could not be read.' : null,
+        ]}
         testID={`${testID}-as-at`}
       />
     </Group>
