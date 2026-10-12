@@ -279,8 +279,9 @@ function takePhoto(photos: StoryPhotos, ids: string[], n: number): string | null
   return id
 }
 
-const sourceSlide = (kicker: string, title: string, rows: string[], url: string, path: string, alt: string): StorySlide =>
-  ({ type: 'source', kicker, title, rows: rows.filter(Boolean).slice(0, 4), url, path, alt })
+/** The closing slide shows the edition's own page as its full address, scheme dropped: the one line a reader types. */
+const sourceSlide = (kicker: string, title: string, rows: string[], url: string, alt: string): StorySlide =>
+  ({ type: 'source', kicker, title, rows: rows.filter(Boolean).slice(0, 4), url: url.replace(/^https:\/\//, ''), alt })
 
 /** The grants graph, read once per edition: the recipient shards, the programs and the electorates. */
 interface GrantsGraph {
@@ -419,7 +420,7 @@ async function politicianPost(date: string, sources: DailyPostSources, exclude: 
   const grants = electorateSlide("The electorate's grants", graph, heldSeat, 'Federal grant awards published on GrantConnect, as collected by OPAX.')
   const source = sourceSlide('Read the speeches', `What do ${speeches} speeches actually say?`,
     ['Every speech in the record is cited back to Hansard', 'Topic labels, votes, declared interests and the money map on one page', 'Hansard: Commonwealth copyright, reproduced under CC BY-NC-ND'],
-    url.replace(/^https:\/\//,''), new URL(url).pathname, `Read the speeches at opax.com.au, subject: ${person.name}.`)
+    url, `Read the speeches at opax.com.au, subject: ${person.name}.`)
   return told(post, [cover, count, bars, grants, source], photos)
 }
 
@@ -548,7 +549,7 @@ async function billSlides(sources: DailyPostSources, bill: BillIndexItem, record
   const rows = [...new Map((record?.sources ?? []).filter(src => src.kind && SOURCE_LABELS[src.kind]).map(src => [SOURCE_LABELS[src.kind as string], `${SOURCE_LABELS[src.kind as string]}${src.licence ? `, ${src.licence}` : ''}`])).values()].slice(0, 3)
   if (divisions.length) rows.push('Division record: theyvoteforyou.org.au')
   const source = sourceSlide('Read the bill', 'The bill, its progress and the source documents', rows.length ? rows : ['Bill documents on ParlInfo, Commonwealth copyright'],
-    'opax.com.au/bill', bill.key, `Read the bill at opax.com.au/bill/${bill.key}.`)
+    `${ORIGIN}/bill/${encodeURIComponent(bill.key)}`, `Read the bill at opax.com.au/bill/${bill.key}.`)
   return { slides: [cover, what, timeline, division, touches, source], photos: billPhotos }
 }
 
@@ -666,8 +667,11 @@ export function recipientSegment(id: string): string {
 }
 
 /** The edition for one award record: the same words whether the rotation or an operator chose it. */
+const awardUrl = (grant: GrantPublicationRecord): string =>
+  `${ORIGIN}/money/grants/federal/recipient/${recipientSegment(grant.recipientId)}?award=${encodeURIComponent(grant.id)}`
+
 async function grantEdition(date: string, grant: GrantPublicationRecord, context: GrantContext): Promise<DailyPost> {
-  const url = `${ORIGIN}/money/grants/federal/recipient/${recipientSegment(grant.recipientId)}?award=${encodeURIComponent(grant.id)}`
+  const url = awardUrl(grant)
   const recipientLine = `Recipient: ${clip(shortRecipient(grant.recipient), 60)}. Agreement from ${formatDate(grant.start)} (award value, not payments).`
   const selection = selectionLine(context.award?.sel)
   // How it was chosen outranks the tail of the purpose: the hook gives way (to no less than 80 characters) so it fits.
@@ -708,10 +712,9 @@ async function grantSlides(grant: GrantPublicationRecord, { sources, graph, reci
   const selection = award ? selectionSlide(award, graph) : null
   const siblings = siblingsSlide(recipient)
   const electorate = electorateSlide('The electorate', graph, seat)
-  const abn = grant.recipientId.replace(/^abn:/, '').replace(/(\d{2})(\d{3})(\d{3})(\d{3})/, '$1 $2 $3 $4')
   const source = sourceSlide('Check it', 'Every figure links to its record',
     [`GrantConnect award ${grant.id}, Department of Finance, CC BY 3.0 AU`, 'A published award value, not evidence of payments received', 'Program and electorate totals: GrantConnect awards as collected by OPAX'],
-    'opax.com.au/money/grants', `federal → recipient ABN ${abn} → award ${grant.id}`, `Check it: GrantConnect award ${grant.id}. Every figure links to its record at opax.com.au/money/grants.`)
+    awardUrl(grant), `Check it: GrantConnect award ${grant.id}. Every figure links to its record at opax.com.au/money/grants.`)
   return { slides: [cover, number, purpose, selection, siblings, electorate, source], photos: grantPhotos }
 }
 
@@ -892,7 +895,7 @@ async function programEdition(date: string, p: ProgramRecord, sources: DailyPost
     alt: `The largest recipients: ${p.recipients.slice(0, 4).map(([, n, , v]) => `${n} ${shortMoney(v)}`).join('; ')}.` } : null
   const source = sourceSlide('Check it', 'Every figure links to its record',
     ['GrantConnect awards, Department of Finance, CC BY 3.0 AU', 'Party on the grant date: parliamentary service records and AEC results', 'Award values, not payments'],
-    'opax.com.au/money/grants', `federal → program ${p.id}`, `Check it: ${p.n} on opax.com.au/money/grants. Every figure links to its record.`)
+    url, `Check it: ${p.n} on opax.com.au/money/grants. Every figure links to its record.`)
   // The seat split comes straight after the number: it is the edition's point, and the story frames take the first bars slide.
   return told(post, [cover, number, seats, chosen, ledger, when, recipients, source], photos)
 }
@@ -954,7 +957,7 @@ async function largestPost(date: string, sources: DailyPostSources, exclude: str
     alt: `Number ${i + 1}: ${formatMoney(a.amount)} to ${a.recipient}. ${awardWords(a)}. ${selectionLine(a.selection)} Agreement from ${formatDate(a.start)}, award ${a.id}.`.replace(/\s+/g, ' ').trim() }))
   const source = sourceSlide('Check it', 'Every award links to its record',
     ['GrantConnect awards, Department of Finance, CC BY 3.0 AU', 'Agreement start dates, not announcement dates', 'Award values, not payments'],
-    'opax.com.au/money/grants', `federal → largest → ${month}`, `Check it: the largest grants of ${label} at opax.com.au/money/grants.`)
+    url, `Check it: the largest grants of ${label} at opax.com.au/money/grants.`)
   return told(post, [cover, ledger, ...details, source], photos)
 }
 
@@ -1009,7 +1012,7 @@ async function topicPost(date: string, sources: DailyPostSources, exclude: strin
       alt: `The busiest year: ${formatNumber(peak[1])} speeches in ${peak[0]}, the most in a completed year.` } : null
     const source = sourceSlide('Read the report', 'The arguments, the speakers and the original sources',
       ['Every speech cited back to Hansard or the state record', report.generated_at ? `Report updated ${formatDate(report.generated_at)}` : '', 'Figures describe collected records, not all parliamentary activity'],
-      'opax.com.au/reports', slug, `Read the report at opax.com.au/reports/${slug}.`)
+      url, `Read the report at opax.com.au/reports/${slug}.`)
     return told(post, [cover, number, bars, peakSlide, source], photos)
   }
   return null
