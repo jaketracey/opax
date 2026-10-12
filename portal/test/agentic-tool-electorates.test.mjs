@@ -97,8 +97,7 @@ test('lookup uses exact names or IDs and requires disambiguation across jurisdic
   assert.equal(ambiguous.ok, false);
   assert.match(ambiguous.error, /Ambiguous/);
   assert.equal(ambiguous.data.candidates.length, 3);
-  const noSeat = await electorates(stub(), { indicator: 'median_age', electorate: 'Sample' });
-  assert.equal(noSeat.data.unanswerable, 'no_matching_electorate');
+  await assert.rejects(electorates(stub(), { indicator: 'median_age', electorate: 'Sample' }), error => error.code === -32602);
 });
 
 test('a missing state profile and a conflicting profile yield no invented number', async () => {
@@ -141,14 +140,52 @@ test('data questions route to agentic while ordinary speech questions retain the
     'Which Victorian state electorate has the highest population?', 'median income',
     'What is the median household income in Sample Bay?', 'What is home ownership in Sample Bay?',
     'Which electorate has the most university qualifications?', 'Which electorate has the lowest labour force participation?',
+    'top 3 federal electorates by unemployment rate', 'bottom twenty federal electorates by median income',
   ]) assert.equal(classifyAgentic(question).rule, 'electorate-data', question);
   for (const question of [
     'What did Alex Example say about median income?', 'Show speeches about unemployment in Sample Bay',
     'Which electorate did Alex Example mention in her speech?', 'Who represents Sample Bay?',
     'What grants went to the electorate of Sample Bay?', 'What did the oldest MP say?',
     'What did Alex Example say about renters?', 'Find a quote about 1991 Census figures',
+    'Show parliamentary remarks about unemployment in Fowler',
+    'Find statements about median income in Fowler', 'What was said about unemployment in Fowler?',
+    'Show speeches about median age in Fowler', 'Show debate about renters in Fowler',
+    'Where was unemployment in Fowler mentioned?',
   ]) assert.equal(classifyAgentic(question).route, 'ask', question);
   assert.equal(classifyAgentic('Who made the most speeches about unemployment?').rule, 'ranking');
+});
+
+test('requested ranking counts are honored, including every rendered fact beyond eight', async () => {
+  const deps = { ...stub(), generate: async () => { throw Error('Deterministic ranking must not generate'); } };
+  for (const question of ['top 3 federal electorates by unemployment rate', 'top three federal electorates by unemployment rate', 'Which 3 federal electorates have the highest unemployment rate?']) {
+    assert.equal(electoratePlan(question).steps[0].args.limit, 3, question);
+    const out = await runAgentic(question, deps);
+    assert.equal(out.answered, true, question);
+    assert.deepEqual(out.facts.map(f => f.value), [8.2, 4, 0]);
+    for (const name of ['Alpine', 'Coast', 'Sample Bay']) assert.ok(out.answer.includes(name), question);
+  }
+  const published = { ...deps, asset: async path => JSON.parse(await readFile(new URL('../public' + path, import.meta.url), 'utf8')) };
+  const out = await runAgentic('top 20 federal electorates by unemployment rate', published);
+  assert.equal(out.answered, true);
+  assert.ok(out.facts.length >= 20); // Ties may extend the requested cutoff.
+  assert.ok(out.facts.every(f => out.answer.includes(f.text + ' [' + f.id + ']')));
+  for (const question of ['top 21 federal electorates by unemployment rate', 'top 0 federal electorates by unemployment rate', 'top 3.5 federal electorates by unemployment rate', 'top several federal electorates by unemployment rate']) {
+    assert.equal(electoratePlan(question).shape, 'unanswerable', question);
+    assert.equal((await runAgentic(question, deps)).answered, false, question);
+  }
+});
+
+test('invalid and unknown electorate selectors give Ask non-answers without echoing rejected input', async () => {
+  for (const name of ['<script>alert(1)</script>', '../Fowler', 'Unknown Electorate', 'el_doesnotexist', 'A'.repeat(201), 'Sample\nBay']) {
+    const step = await runTool(stub(), 'electorates', { indicator: 'median_age', electorate: name });
+    assert.equal(step.ok, false, name);
+    assert.equal(step.query, undefined);
+    assert.doesNotMatch(step.error, /<script>|Unknown Electorate/);
+    const out = await runAgentic('What is the median age in ' + name + '?', { ...stub(), generate: async () => { throw Error('No generation fallback'); } });
+    assert.equal(out.answered, false, name);
+    assert.deepEqual(out.facts, []);
+    assert.equal(out.answer, '');
+  }
 });
 
 test('bounded plans distinguish personal/household income and specific population percentages', () => {

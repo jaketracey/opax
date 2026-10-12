@@ -24,6 +24,10 @@ export interface ToolDefinition {
   handler: (env: ToolEnv, args: ToolArgs) => Promise<StructuredToolResult>
   /** Cross-field checks (e.g. min <= max), in addition to JSON Schema validation. */
   validate?: (args: ToolArgs) => boolean
+  /** Additional name/slug/ID selectors (conventional *_name, *_slug, *_id fields are automatic). */
+  identifierFields?: readonly string[]
+  /** Exact published-catalog membership, when the catalog is available. */
+  validateKnown?: (env: ToolEnv, args: ToolArgs) => Promise<boolean>
   /** Temporary compatibility name for an existing Ask plan; never an extra MCP entry. */
   askName?: string
 }

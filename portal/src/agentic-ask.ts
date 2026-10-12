@@ -234,8 +234,8 @@ export function verifyComposition(text: string, _facts: Fact[], _question = ''):
   return { prose: kept.join(' '), cited: [], dropped }
 }
 /** Every answer figure is bound to its entity and metric in factSheet. */
-export function templateAnswer(facts: Fact[], notes: string[]): string {
-  const lines = facts.slice(0, 8).map((f) => `${f.text} [${f.id}]`)
+export function templateAnswer(facts: Fact[], notes: string[], limit = 8): string {
+  const lines = facts.slice(0, limit).map((f) => `${f.text} [${f.id}]`)
   return [lines.join('; ') + '.', ...notes.slice(0, 2)].join(' ')
 }
 
@@ -484,7 +484,7 @@ export async function runAgentic(question: string, deps: AgenticDeps, progress: 
   // No composer call: figures, metric labels, entities and citations are
   // rendered together from the tool rows, so swapping aye/no or party/year
   // values in model text can never affect an answer.
-  let answer = templateAnswer(peakYear ? mainFacts.slice(0, 1) : mainFacts, [])
+  let answer = templateAnswer(peakYear ? mainFacts.slice(0, 1) : mainFacts, [], electorateData ? mainFacts.length : 8)
   if (committeeFacts.length) {
     const ids = facts.filter(f => committeeFacts.some(c => c.text === f.text))
     answer += ' Including committee hearings: ' + ids.map(f => `${f.text.replace(' committee-hearing turns', '')} [${f.id}]`).join(', ') + '.'

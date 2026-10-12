@@ -3,8 +3,10 @@ import { tool as electorates } from './electorates'
 import { ToolInputError, type ToolArgs, type ToolDefinition, type ToolEnv, type StructuredToolResult } from './types'
 import type { ToolDeps, ToolSpec } from '../agentic-tools'
 export * from './types'
+import { validToolIdentifier } from './identifiers'
+export * from './identifiers'
 
-export const TOOL_REGISTRY_VERSION = 'structured-tools-1'
+export const TOOL_REGISTRY_VERSION = 'structured-tools-2'
 /** Add each new data-tool module here once; Ask and MCP both read this catalog. */
 export const tools: readonly ToolDefinition[] = Object.freeze([electorates])
 const names = new Set<string>()
@@ -24,17 +26,25 @@ export function parseToolArgs(name: string, args: unknown): ToolArgs {
   const parsed = schema.safeParse(args)
   if (!parsed.success || !parsed.data || typeof parsed.data !== 'object' || Array.isArray(parsed.data)) throw new ToolInputError(name)
   const data = parsed.data as ToolArgs
+  const identifiers = new Set([...Object.keys(tool.inputSchema.properties ?? {}).filter(key => /(?:^|_)(?:name|slug|id)$/.test(key)), ...tool.identifierFields ?? []])
+  for (const key of identifiers) if (data[key] !== undefined && !validToolIdentifier(data[key])) throw new ToolInputError(name)
   if (tool.validate && !tool.validate(data)) throw new ToolInputError(name)
   return data
 }
 export function validRegisteredArgs(name: string, args: unknown): args is ToolArgs {
   try { parseToolArgs(name, args); return true } catch { return false }
 }
-export async function callTool(env: ToolEnv, name: string, args: unknown): Promise<StructuredToolResult> {
+export async function validateToolArgs(env: ToolEnv, name: string, args: unknown): Promise<ToolArgs> {
   const parsed = parseToolArgs(name, args), tool = getTool(name)!
+  if (tool.validateKnown && !await tool.validateKnown(env, parsed)) throw new ToolInputError(name)
+  return parsed
+}
+export async function callTool(env: ToolEnv, name: string, args: unknown): Promise<StructuredToolResult> {
+  const tool = getTool(name)
   try {
+    const parsed = await validateToolArgs(env, name, args)
     // Canonical wire JSON is identical in Ask and MCP, including optional metadata.
-    return JSON.parse(JSON.stringify(await tool.handler(env, parsed))) as StructuredToolResult
+    return JSON.parse(JSON.stringify(await tool!.handler(env, parsed))) as StructuredToolResult
   } catch (error) {
     if (error instanceof ToolInputError) throw error
     return { rows: [], citations: [], notes: [], error: 'Published tool data is temporarily unavailable.' }

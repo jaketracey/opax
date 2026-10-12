@@ -28,7 +28,8 @@ The example is interface guidance, not a registered tool.
 
 - `tools`: immutable catalog of `ToolDefinition` entries.
 - `getTool(name)`: look up a canonical MCP name; `listTools()` returns name, description and JSON Schema.
-- `parseToolArgs(name, args)`: validate the shared schema and optional cross-field `validate(args)`; throws `ToolInputError` with code `-32602`.
+- `parseToolArgs(name, args)`: validate the shared schema, name/slug/ID selectors and optional cross-field `validate(args)`; throws `ToolInputError` with code `-32602`. Conventional `name`, `slug`, `id` and fields ending in `_name`, `_slug`, `_id` are checked automatically; declare other selectors in `identifierFields`. `validToolIdentifier` allows letters, numbers, spaces, dots, apostrophes, parentheses, underscores and hyphens, capped at 200 characters before and after normalization. Free-text queries are outside this selector check.
+- `validateToolArgs(env, name, args)`: additionally run the module's optional async `validateKnown(env, args)` against its published catalog. MCP calls this after its existing authentication/abuse checks and before SDK dispatch, so unknown electorate selectors return `-32602`. Ask uses the same validation through `callTool` and returns a non-answer. An unavailable catalog remains an operational error.
 - `callTool(env, name, args)`: validate, call the module handler and return canonical JSON. Operational failures return empty rows/citations with an error, never partial leaders or model substitutions.
 - `toolSchema(name)`: the compiled schema used by the existing MCP SDK. JSON Schema remains the module's source of truth; the installed Zod converter is covered by contract tests.
 - `getAskTool(name)` and `askToolSpecs`: thin compatibility adapters for the route lane's existing `ToolSpec`/`ToolResult` interface. A module can declare an optional `askName` for an existing plan; new tools should use their canonical name on both surfaces.
@@ -51,4 +52,14 @@ The route lane was not an ancestor of refreshed `origin/main` when this change b
 
 Other lanes own their classifier and deterministic plan rules. Registry addition needs no hand-written MCP schema or second handler. Each lane must add a contract test, Ask/MCP gold parity tests and its reference entry under `/methods#mcp`.
 
-The final merge preview against route commit `fa7dd6917f45a63706ed1281f746f931ab175a87` merges every source hook automatically. It has one `portal/public/index.html` conflict: the route adds `datatable.css`, `vote-tables.css` and `vote-tables.js` alongside the style import, while this lane updates the style hash. Keep those three incoming imports, this lane's MCP reference section, and the style import; run `npm run stamp` after resolving so the style hash and generated SPA shell match the combined tree. Do not resolve the hunk by dropping the vote-table imports.
+Round 3 merges `origin/main` at `608b824b3`, preserving `localMiniflare` with the isolated root, persistence/runtime paths and unique D1 name. The route branch is deliberately still unmerged while its third fix round finishes. The review's integration table (route preview `4f24c1f67`) supersedes the earlier single-conflict note:
+
+| Conflicting file | Against | Resolution |
+|---|---|---|
+| `portal/public/index.html` | Both | Keep datatable/vote-table imports and MCP docs; regenerate style/app hashes and SPA shell. |
+| `portal/src/agentic-tools.ts` | Route | Keep registry adapters/validation; combine route's `agentic-tools-4` version with `TOOL_REGISTRY_VERSION`. |
+| `portal/src/agentic-ask.ts` | Route | Combine registry facts/labels with round-3 entity binding and scope checks. Census plans skip speech-name resolution and retain Census-only execution. Keep requested ranking limits and render all returned Census rows, including cutoff ties, instead of applying the speech answer's eight-fact limit. |
+| `portal/src/index.ts` | Route | Preserve round-3 scoped cache keys and scope propagation, `toolEnv`, and Census non-answer handling without speech fallback. |
+| `portal/test/table-d1-harness.mjs` | Main | Keep `localMiniflare` plus main's isolated root, persistence/temp paths and unique D1 name (resolved in this lane). |
+
+Ask's deterministic electorate plans honor explicit ranking counts from 1 to 20 (digits or number words) and decline unsupported top/bottom count wording. The tool's MCP limit remains 1–50. Both include every tie at the requested cutoff. Speech intent, including remarks, statements, said, speeches, debate and mentioned, retains speech routing.

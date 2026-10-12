@@ -9,7 +9,7 @@ async function load(entry) {
   return import('data:text/javascript;base64,' + Buffer.from(out.outputFiles[0].text).toString('base64'));
 }
 const { communityMcp } = await load('../src/community-mcp.ts');
-const { tools, listTools, getTool, parseToolArgs, callTool } = await load('../src/tools/index.ts');
+const { tools, listTools, getTool, parseToolArgs, callTool, validToolIdentifier } = await load('../src/tools/index.ts');
 const { runTool, TOOL_SPECS, validToolArgs } = await load('../src/agentic-tools.ts');
 const { runAgentic, fallbackPlan, plannerPrompt } = await load('../src/agentic-ask.ts');
 const originalFetch = globalThis.fetch;
@@ -68,7 +68,8 @@ test('bad registry input returns JSON-RPC -32602 before any asset read', async (
   const f = fixture();
   for (const args of [{}, { indicator: 'invented' }, { indicator: 'median_age', limit: 0 }, { indicator: 'median_age', limit: 1.5 },
     { indicator: 'median_age', operation: 'lookup' }, { indicator: 'median_income', min: 700, max: 500 },
-    { indicator: 'median_income', unknown: true }, { indicator: 'median_age', electorate: '   ' }, []]) {
+    { indicator: 'median_income', unknown: true }, { indicator: 'median_age', electorate: '   ' },
+    ...['<script>alert(1)</script>', '../Fowler', 'Fowler\n', 'Fowler\u0000', 'A'.repeat(201)].map(electorate => ({ indicator: 'median_age', electorate })), []]) {
     const response = await f.send('tools/call', { name: 'electorates_rank', arguments: args });
     assert.equal(response.status, 200);
     const rpc = await response.json();
@@ -78,6 +79,33 @@ test('bad registry input returns JSON-RPC -32602 before any asset read', async (
     assert.throws(() => parseToolArgs('electorates_rank', args), error => error.code === -32602);
   }
   assert.equal(f.state.reads, 0);
+});
+
+test('the shared identifier validator accepts names, slugs and IDs and rejects markup and controls', () => {
+  for (const name of ['Fowler', '  SAMPLE BAY  ', "O’Connor", 'St. George', 'Île Example', 'federal-representatives-nsw-fowler', 'el_c0ffee']) assert.equal(validToolIdentifier(name), true, name);
+  for (const name of ['<script>alert(1)</script>', '../Fowler', 'Fowler\n', 'Fowler\t', 'Fowler\u0000', 'A'.repeat(201), '', '   ']) assert.equal(validToolIdentifier(name), false, name);
+  for (const tool of tools) assert.deepEqual(tool.identifierFields, ['electorate']);
+});
+
+test('unknown published electorate names, slugs and IDs return -32602 on MCP and a failed Ask step', async () => {
+  const f = fixture();
+  for (const electorate of ['Unknown Electorate', 'federal-representatives-nsw-invented', 'el_doesnotexist']) {
+    const args = { indicator: 'median_age', operation: 'lookup', electorate };
+    const rpc = await (await f.send('tools/call', { name: 'electorates_rank', arguments: args })).json();
+    assert.equal(rpc.error.code, -32602, electorate);
+    assert.equal(rpc.result, undefined);
+    assert.ok(!JSON.stringify(rpc).includes(electorate));
+    await assert.rejects(callTool(f.env, 'electorates_rank', args), error => error.code === -32602);
+    const ask = await runTool({ asset, kb: async () => { throw Error('No KB'); } }, 'electorates', args);
+    assert.equal(ask.ok, false);
+    assert.equal(ask.query, undefined);
+  }
+  const manifest = await asset('/electorates/manifest.json'), index = await asset(manifest.index_url);
+  const seat = index.electorates.find(s => s.name === 'Fowler' && s.status === 'current' && s.jurisdiction === 'federal');
+  for (const electorate of [seat.name, seat.slug, seat.electorate_id]) {
+    const rpc = await (await f.send('tools/call', { name: 'electorates_rank', arguments: { indicator: 'median_income', electorate } })).json();
+    assert.equal(rpc.result.structuredContent.rows[0].value, 521);
+  }
 });
 
 for (const q of computeElectorateGold()) test(q.id + ': Ask tool step and MCP return identical gold data', async () => {

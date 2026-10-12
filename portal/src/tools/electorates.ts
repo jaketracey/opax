@@ -1,6 +1,7 @@
 /** Published electorate Census data only. No KB retrieval or model arithmetic. */
 import type { Cite, ToolDeps, ToolResult } from '../agentic-tools'
 import { readToolAsset, ToolInputError, type ToolDefinition, type ToolEnv } from './types'
+import { validToolIdentifier, TOOL_IDENTIFIER_MAX_LENGTH } from './identifiers'
 
 export const ELECTORATE_INDICATORS: Record<string, { label: string; unit: string }> = {
   median_income: { label: 'median personal income', unit: 'AUD/week' },
@@ -32,7 +33,7 @@ const indicatorKey = (s: string) => {
 
 /** Speech retrieval retains its existing classifier, even when it mentions Census metrics. */
 export function isElectorateDataQuestion(question: string): boolean {
-  if (/\b(?:speech(?:es)?|hansard|said|says|say|spoke|spoken|speak\w*|discuss\w*|debate\w*|mention\w*|quote\w*|talk\w*)\b/i.test(question)) return false
+  if (/\b(?:speech(?:es)?|remarks?|statements?|hansard|said|says|say|spoke|spoken|speak\w*|discuss\w*|debate\w*|mention\w*|quote\w*|talk\w*)\b/i.test(question)) return false
   const metric = /\b(?:median[ _](?:household[ _]|personal[ _])?(?:income|age|rent|mortgage)|unemployment(?:[ _]rate)?|renters?|renting|rental(?:[ _]pct)?|population|home[ _]?ownership|university(?:[ _]qualification)?|born overseas|indigenous(?:[ _]pct)?|household size|labour force participation|census|demographics?)\b/i.test(question)
   if (/\b(?:oldest|youngest)\b.*\belectorates?\b|\belectorates?\b.*\b(?:oldest|youngest)\b|\bmost renters\b/i.test(question)) return true
   return metric && (/\belectorates?\b|\b(?:lowest|highest|most|least|fewest|rank|compare|in|for|of)\b/i.test(question) || /\bmedian[ _](?:income|age)\b/i.test(question))
@@ -60,6 +61,11 @@ export function electoratePlan(question: string): { shape: 'ranking' | 'unanswer
   const indicator = /median rent/.test(q) ? 'median_rent_weekly' : metrics.find(([, re]) => re.test(q))?.[0]
   if (!indicator) return null
   const ranked = /\b(?:lowest|highest|oldest|youngest|most|least|fewest|rank|top|bottom)\b/.test(q)
+  const countWords = ['one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten', 'eleven', 'twelve', 'thirteen', 'fourteen', 'fifteen', 'sixteen', 'seventeen', 'eighteen', 'nineteen', 'twenty']
+  const countToken = q.match(/\b(?:top|bottom)\s+(?:the\s+)?(\S+)/)?.[1] ??
+    (ranked ? q.match(/\b(\d+(?:\.\d+)?|one|two|three|four|five|six|seven|eight|nine|ten|eleven|twelve|thirteen|fourteen|fifteen|sixteen|seventeen|eighteen|nineteen|twenty)\s+(?:\w+\s+){0,4}electorates?\b/)?.[1] : undefined)
+  const limit = countToken === undefined ? undefined : /^\d+$/.test(countToken) ? Number(countToken) : countWords.indexOf(countToken) + 1
+  if (limit !== undefined && (!Number.isInteger(limit) || limit < 1 || limit > 20)) return { shape: 'unanswerable', steps: [], reason: 'Ask supports an explicit ranking count from 1 to 20 electorates, including ties at the cutoff.' }
   // Threshold/comparison wording needs the schema-aware planner; never ignore it.
   if (/\b(?:above|below|over|under|between|compare|than)\b/.test(q)) return null
   const states: [string, RegExp][] = [['nsw', /new south wales|\bnsw\b/], ['vic', /victoria\w*|\bvic\b/], ['qld', /queensland|\bqld\b/], ['sa', /south australia\w*|\bsa\b/], ['wa', /western australia\w*|\bwa\b/], ['tas', /tasmania\w*|\btas\b/], ['act', /australian capital territory|\bact\b/], ['nt', /northern territory|\bnt\b/]]
@@ -74,7 +80,7 @@ export function electoratePlan(question: string): { shape: 'ranking' | 'unanswer
   if (!ranked && (!location || states.some(([, re]) => re.test(fold(location))))) return null
   return { shape: 'ranking', steps: [{ tool: 'electorates', args: {
     indicator, jurisdiction, chamber, ...(state && !stateSeats && ranked ? { state } : {}),
-    ...(ranked ? { order: /highest|oldest|most|top/.test(q) ? 'desc' : 'asc' } : { operation: 'lookup', electorate: location }),
+    ...(ranked ? { order: /highest|oldest|most|top/.test(q) ? 'desc' : 'asc', ...(limit === undefined ? {} : { limit }) } : { operation: 'lookup', electorate: location }),
     ...(/historical|abolished/.test(q) ? { status: 'historical' } : {}),
   } }] }
 }
@@ -86,6 +92,7 @@ export function validElectorateArgs(value: unknown): value is Record<string, unk
   if (typeof args.indicator !== 'string' || !Object.hasOwn(ELECTORATE_INDICATORS, indicatorKey(args.indicator))) return false
   const props = tool.inputSchema.properties as Record<string, { type: string; enum?: unknown[]; minimum?: number; maximum?: number }>
   if (args.operation === 'lookup' && (typeof args.electorate !== 'string' || !args.electorate.trim())) return false
+  if (args.electorate !== undefined && !validToolIdentifier(args.electorate)) return false
   if (typeof args.min === 'number' && typeof args.max === 'number' && args.min > args.max) return false
   return Object.entries(args).every(([key, v]) => {
     const prop = props[key]
@@ -127,6 +134,15 @@ async function asset<T>(deps: ToolDeps, path: string): Promise<T> {
   if (!data || typeof data !== 'object') throw new Error(`Electorate asset unavailable: ${path}`)
   return data as T
 }
+async function seatIndex(deps: ToolDeps) {
+  const manifest = await asset<{ index_url: string; release_id: string }>(deps, '/electorates/manifest.json')
+  const base = `/electorates/releases/${manifest.release_id}/`
+  if (manifest.index_url !== `${base}index.json`) throw new Error('Manifest index does not match its release')
+  const index = await asset<{ electorates: Seat[] }>(deps, manifest.index_url)
+  if (!Array.isArray(index.electorates)) throw new Error('Electorate index is invalid')
+  return { manifest, base, index }
+}
+const matchesSeat = (seat: Seat, name: string) => [seat.name, seat.slug, seat.electorate_id, ...(seat.aliases ?? [])].some(v => fold(v) === fold(name))
 
 export async function electorates(deps: ToolDeps, input: ElectoratesInput): Promise<ToolResult> {
   if (typeof input.indicator !== 'string') return failure('indicator is required')
@@ -144,7 +160,7 @@ export async function electorates(deps: ToolDeps, input: ElectoratesInput): Prom
   if (!['current', 'historical', 'all'].includes(status)) return failure('Unknown electorate status')
   if (!['rank', 'filter', 'lookup'].includes(operation) || !['asc', 'desc'].includes(order)) return failure('Invalid operation or order')
   if (operation === 'lookup' && !input.electorate) return failure('electorate is required for lookup')
-  if (input.electorate !== undefined && (typeof input.electorate !== 'string' || !input.electorate.trim())) return failure('Invalid electorate name')
+  if (input.electorate !== undefined && !validToolIdentifier(input.electorate)) throw new ToolInputError('electorates_rank')
   for (const key of ['min', 'max', 'limit'] as const) {
     if (input[key] !== undefined && (typeof input[key] !== 'number' || !Number.isFinite(input[key]))) return failure(`${key} must be a finite number`)
   }
@@ -152,17 +168,14 @@ export async function electorates(deps: ToolDeps, input: ElectoratesInput): Prom
   const limit = input.limit ?? (operation === 'rank' ? 1 : 10)
   if (!Number.isInteger(limit) || limit < 1 || limit > 50) return failure('limit must be an integer from 1 to 50')
 
-  const manifest = await asset<{ index_url: string; release_id: string }>(deps, '/electorates/manifest.json')
-  const base = `/electorates/releases/${manifest.release_id}/`
-  if (manifest.index_url !== `${base}index.json`) return failure('Manifest index does not match its release')
-  const index = await asset<{ electorates: Seat[] }>(deps, manifest.index_url)
-  if (!Array.isArray(index.electorates)) return failure('Electorate index is invalid')
+  const { manifest, base, index } = await seatIndex(deps)
+  if (input.electorate && !index.electorates.some(s => matchesSeat(s, input.electorate!))) throw new ToolInputError('electorates_rank')
   const name = input.electorate ? fold(input.electorate) : null
   const seats = index.electorates.filter((s) =>
     (jurisdiction === 'all' || (jurisdiction === 'state' ? s.jurisdiction !== 'federal' : s.jurisdiction === jurisdiction)) &&
     (!chamber || s.chamber === chamber) && (!input.state || s.state_code === input.state) &&
     (status === 'all' || s.status === status) &&
-    (!name || [s.name, s.slug, s.electorate_id, ...(s.aliases ?? [])].some((v) => fold(v) === name)))
+    (!name || matchesSeat(s, name)))
   if (operation === 'lookup' && seats.length > 1) return {
     ...failure('Ambiguous electorate name; specify jurisdiction and chamber'),
     data: { candidates: seats.map((s) => ({ name: s.name, jurisdiction: s.jurisdiction, chamber: s.chamber, url: s.url })) },
@@ -238,7 +251,7 @@ export const tool: ToolDefinition = {
     jurisdiction: { type: 'string', enum: JURISDICTIONS, description: 'Defaults to federal. vic means Victorian state seats.' },
     chamber: { type: 'string', enum: CHAMBERS, description: 'Defaults to representatives for federal seats.' },
     state: { type: 'string', enum: JURISDICTIONS.slice(1, 9), description: 'Geographic state: federal + state=vic selects federal seats in Victoria.' },
-    electorate: { type: 'string', minLength: 1, maxLength: 200, description: 'Exact electorate name, slug or ID. Required for lookup.' },
+    electorate: { type: 'string', minLength: 1, maxLength: TOOL_IDENTIFIER_MAX_LENGTH, description: 'Exact published electorate name, slug or ID. Letters, numbers, spaces, dots, apostrophes, parentheses, underscores and hyphens only. Required for lookup.' },
     order: { type: 'string', enum: ['asc', 'desc'], description: 'asc for lowest/youngest (default), desc for highest/oldest/most.' },
     min: { type: 'number', description: 'Inclusive minimum value.' }, max: { type: 'number', description: 'Inclusive maximum value; must be at least min.' },
     limit: { type: 'integer', minimum: 1, maximum: 50, description: 'Defaults to 1; includes every tie at the cutoff.' },
@@ -250,6 +263,14 @@ export const tool: ToolDefinition = {
     { indicator: 'median_income', jurisdiction: 'vic', chamber: 'vic_la', order: 'asc' },
   ] },
   validate: validElectorateArgs,
+  identifierFields: ['electorate'],
+  async validateKnown(env, args) {
+    if (!args.electorate) return true
+    let index: { electorates: Seat[] }
+    try { ({ index } = await seatIndex({ asset: path => readToolAsset(env, path), kb: async () => { throw new Error('No speeches') } })) }
+    catch { return true } // An unavailable catalog is an operational failure, never evidence of an unknown name.
+    return index.electorates.some(s => matchesSeat(s, args.electorate as string))
+  },
   stepLabel: electorateStep,
   async handler(env: ToolEnv, args) {
     if (!validElectorateArgs(args)) throw new ToolInputError('electorates_rank')
@@ -259,7 +280,10 @@ export const tool: ToolDefinition = {
         asset: path => readToolAsset(env, path), origin: env.origin ?? env.COMMUNITY_ORIGIN,
         signal: env.signal, kb: async () => { throw new Error('Electorates never searches speeches') },
       }, { ...args, indicator: args.indicator as string })
-    } catch { return { rows: [], citations: [], notes: [], error: 'Electorate asset unavailable.' } }
+    } catch (error) {
+      if (error instanceof ToolInputError) throw error
+      return { rows: [], citations: [], notes: [], error: 'Electorate asset unavailable.' }
+    }
     if (!result.ok) return { rows: [], citations: [], notes: result.notes, error: result.error ?? 'Electorate data unavailable.' }
     const data = result.data!
     return { ...data, rows: Array.isArray(data.rows) ? data.rows : [],

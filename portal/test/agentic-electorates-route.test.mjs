@@ -65,6 +65,17 @@ test('missing state Census values remain an honest non-answer in JSON and SSE wi
   assert.equal(outbound, 0);
 });
 
+test('invalid and unknown electorate names remain non-answers in JSON and SSE', async () => {
+  for (const name of ['<script>alert(1)</script>', 'Unknown Electorate']) for (const streaming of [false, true]) {
+    const payload = await done(await post('What is the median age in ' + name + '?', streaming), streaming);
+    assert.equal(payload.answered, false, JSON.stringify(payload));
+    assert.equal(payload.answer, '');
+    assert.deepEqual(payload.sources, []);
+    await flush();
+  }
+  assert.equal(outbound, 0);
+});
+
 test('unavailable published assets yield a failed step and no speech fallback', async () => {
   unavailable = true;
   const payload = await done(await post('What is the median age in Sample Bay?', true), true);
