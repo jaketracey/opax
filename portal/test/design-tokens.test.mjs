@@ -156,7 +156,6 @@ const TYPE_BASELINE = {
   'public/ballot.css': 2,
   'public/community.css': 5,
   'public/grants.js': 6,
-  'public/home.css': 6,
   'public/ledger.js': 2,
   'public/matrix.js': 1,
   'public/quiz.js': 4,
@@ -276,7 +275,7 @@ test('no new uses of deprecated token names', (t) => {
 // measured without its generated token region. Lower a number when a change
 // lowers the share; the rules other lanes own still count until they move.
 const SHARE_BASELINE = {
-  'public/style.css': 5.3,
+  'public/style.css': 5.1,
   'public/ui-controls.css': 3.2,
   'public/ui-source.css': 7.8,
   'public/voice.css': 3.5,

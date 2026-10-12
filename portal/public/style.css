@@ -945,12 +945,13 @@ button.primary:disabled { opacity: 0.55; cursor: wait; }
 .options-word { white-space: nowrap; }
 
 #ask-options-btn[aria-expanded="true"], #search-options-btn[aria-expanded="true"] { border-color: var(--ink); }
+/* The ask options float as a ui-sheet does: radius 12, raised, a hairline,
+   the one overlay shadow. */
 .ask-options-pop {
-  position: absolute; z-index: 30; top: calc(100% + 6px); right: 0; left: auto;
+  position: absolute; z-index: 30; top: calc(100% + var(--sp-8)); right: 0; left: auto;
   min-width: min(340px, calc(100vw - 2.5rem));
   background: var(--paper-raised); border: var(--border-hairline) solid var(--divider-subtle);
-  border-top: 3px solid var(--bronze); border-radius: var(--radius-sm);
-  padding: var(--sp-16) var(--sp-20); box-shadow: 0 18px 36px rgba(30, 26, 18, 0.14);
+  border-radius: var(--radius-md); padding: var(--sp-16) var(--sp-20); box-shadow: var(--shadow-overlay);
 }
 .ask-pop-rail { flex-direction: column; align-items: stretch; }
 .ask-pop-rail .filter-item { width: 100%; }
@@ -1561,9 +1562,7 @@ html[data-chat="page"] .chat-head {
 /* Except on ask, where the row keeps its line: a chip can arrive from a shared
    link as the page loads, and the answer below must not jump when it does. */
 #ask-filter-chips.is-reserved:empty { display: flex; min-height: 30px; }
-.results { list-style: none; margin: var(--sp-8) 0 0; padding: 0; }
-.results li { border-top: var(--border-hairline) solid var(--divider-subtle); padding: var(--sp-16) 0; }
-.results li:first-child { border-top: none; }
+.results { margin-top: var(--space-tight); }
 button.link.result-title { font: var(--type-subheading); text-decoration: none; }
 button.link.result-title:hover { color: var(--bronze-ink); }
 .snippet {
@@ -1587,32 +1586,23 @@ button.link.result-title:hover { color: var(--bronze-ink); }
    does not push them off centre. */
 .pager {
   display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: var(--sp-8);
-  min-height: 44px; margin-top: var(--sp-24);
+  min-height: var(--size-target); margin-top: var(--sp-24);
   border-top: var(--border-hairline) solid var(--divider-subtle); padding-top: var(--sp-16);
 }
 #pager-prev { justify-self: start; }
 #pager-next { justify-self: end; }
-
-
-
-
-
-
-/* The numbered pages. app.js always hands over the same number of slots once
-   there are that many pages, and an elided run takes a slot the same width as
-   a number, so the row keeps its exact width from page to page. */
+/* The numbered pages: quiet compact ui-buttons (the band carries the size).
+   app.js always hands over the same number of slots once there are that many
+   pages, and an elided run takes a slot the same width as a number, so the row
+   keeps its exact width from page to page. */
 .pager-pages { display: flex; align-items: center; justify-content: center; gap: var(--sp-8); }
-.pager-num, .pager-gap { flex: 0 0 auto; min-width: 2.625rem; }
-.pager-num {
-  justify-content: center; padding: var(--sp-8) var(--sp-8);
-  font-variant-numeric: tabular-nums;
+.pager-num, .pager-gap { flex: 0 0 auto; min-width: var(--ui-height); }
+.pager-num { font-variant-numeric: tabular-nums; }
+/* The page you are on: the one navy in the band, as a chosen segment is.
+   Bronze stays with the record itself. */
+#search-pager .pager-num[aria-current="page"], #search-pager .pager-num[aria-current="page"]:hover {
+  background: var(--navy); color: var(--on-navy); cursor: default;
 }
-/* The page you are on: the same navy the jurisdiction switch uses for the one
-   it is showing. Bronze stays with the record itself. */
-.pager-num[aria-current="page"] {
-  background: var(--navy); border-color: var(--navy); color: var(--on-navy); cursor: default;
-}
-.pager-num[aria-current="page"]:hover { border-color: var(--navy); }
 .pager-gap {
   text-align: center; font: var(--type-metadata); color: var(--ink-faint);
 }
@@ -1626,8 +1616,6 @@ button.link.result-title:hover { color: var(--bronze-ink); }
   .pager-btn-label { display: none; }/* Narrower, but not shorter: a thumb still has to land on them. */
 
   .pager-pages { gap: var(--sp-4); }
-  .pager-num, .pager-gap { min-width: 2.125rem; }
-  .pager-num { padding: var(--sp-8) var(--sp-4); }
 }
 
 /* ---- money map ---------------------------------------------------------- */
@@ -2591,23 +2579,22 @@ a.report-card { display: block; text-decoration: none; }
 /* ---- a division (/doc/division-…): titled by its stage, its bills as link
    rows, the parties and the members in blocks, the question folded, one
    source line (pass 4G). */
-.division-bills { list-style: none; margin: 0 0 var(--space-block); padding: 0; }
-.division-bills li + li { border-top: var(--border-hairline) solid var(--divider-subtle); }
-.division-bills a { display: flex; align-items: center; min-height: var(--size-target); font: var(--type-subheading); }
-/* A division's page has one signature rule, the masthead's: under its head a
-   plain section divider. */
-#panel-doc:has(.division-view) .doc-rule { height: 0; background: none; border-top: var(--border-hairline) solid var(--divider-default); }
+/* The bills it was on: a quiet list under the title, each row a 44px link. */
+#panel-doc:has(.division-view) .doc-bill { margin-top: var(--space-heading); padding-top: 0; border-top: 0; }
+.division-bills { margin: 0 0 var(--space-block); }
+.division-bills > li { padding-block: 0; }
+.division-bills a { display: flex; align-items: center; min-height: var(--size-target); }
+/* Each block below is a ui-section with its own top rule, so the doc page's
+   divider under the head steps aside for the section step. */
+#panel-doc:has(.division-view) .doc-rule { display: none; }
 .division-names .ui-party { margin-left: var(--space-line); }
-.division-view { max-width: 52rem; }
-.division-block + .division-block, .division-view > .division-question { margin-top: var(--space-section); padding-top: var(--space-block); border-top: var(--border-hairline) solid var(--divider-default); }
-.division-view .subject-section-title { font: var(--type-heading); margin: 0 0 var(--space-heading); }
+.division-view { max-width: 52rem; margin-top: var(--space-section); }
 .division-sides { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-group); }
 .division-side { margin: 0 0 var(--space-tight); font: var(--type-subheading); }
 .division-side span { font: var(--type-metadata); color: var(--ink-soft); font-variant-numeric: tabular-nums; }
 .division-names { list-style: none; margin: 0; padding: 0; columns: 2 12rem; column-gap: var(--space-group); font: var(--type-body); }
 .division-names li { break-inside: avoid; padding: var(--space-line) 0; }
 .division-none { margin: 0; font: var(--type-metadata); color: var(--ink-soft); }
-.division-question > summary { display: flex; align-items: center; min-height: var(--size-target); cursor: pointer; font: var(--type-strong); color: var(--ink); }
 .division-question .division-markdown { max-width: var(--size-readable); font: var(--type-record); }
 @media (max-width: 600px) { .division-sides { grid-template-columns: 1fr; } .division-names { columns: 1; } }
 
@@ -3536,11 +3523,11 @@ mark.privacy-confirm {
 #panel-search #search-options-pop {
   position: fixed; inset: auto 0 0; margin: 0; width: 100%; max-width: none;
   min-width: 0; max-height: min(90dvh, 820px); padding: 0;
-  color: var(--ink); background: var(--paper); border: 0; border-top: var(--border-focus) solid var(--bronze);
-  border-radius: var(--radius-md) var(--radius-md) 0 0; box-sizing: border-box; overflow: hidden;
+  color: var(--ink); background: var(--paper-raised); border: 0;
+  border-radius: var(--radius-md) var(--radius-md) 0 0; box-sizing: border-box; overflow: hidden; box-shadow: var(--shadow-overlay);
 }
 #panel-search #search-options-pop[open] { display: flex; flex-direction: column; }
-#panel-search #search-options-pop::backdrop { background: rgb(35 39 31 / 38%); }
+#panel-search #search-options-pop::backdrop { background: color-mix(in srgb, var(--navy) 55%, transparent); }
 body:has(#search-options-pop[open]) { overflow: hidden; }
 #panel-search .search-sheet-head, #panel-search .search-sheet-foot {
   display: flex; align-items: center; justify-content: space-between; gap: var(--sp-12);
@@ -3554,10 +3541,10 @@ body:has(#search-options-pop[open]) { overflow: hidden; }
   display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--sp-16); min-height: 0;
 }
 #panel-search #search-options-pop .filter-item { min-width: 0; }
-#panel-search #search-options-pop label { font-size: var(--text-15); color: var(--ink-soft); }
+#panel-search #search-options-pop label { color: var(--ink-soft); }
 #panel-search #search-options-pop input:not([type="range"]), #panel-search #search-options-pop select {width: 100%;}
 #panel-search #search-options-pop input[type="range"] { height: 44px; }
-#panel-search #search-options-pop .range-cap { font-size: var(--text-15); }
+#panel-search #search-options-pop .range-cap { font: var(--type-fine); }
 /* The actions are one flex item: give the summary its own row before any
    control can be squeezed. Brief availability is part of the summary in
    both reading modes, so it cannot move the controls when toggled. */
@@ -3578,20 +3565,17 @@ body:has(#search-options-pop[open]) { overflow: hidden; }
    equal tap targets beneath them. Wide, it returns to one row (below). */
 #panel-search #search-pager { grid-template-columns: 1fr 1fr; row-gap: var(--sp-16); column-gap: var(--sp-12); }
 #panel-search #pager-pages { grid-column: 1 / -1; grid-row: 1; flex-wrap: wrap; gap: var(--sp-8); }
-#panel-search .pager-num, #panel-search .pager-gap { min-width: 44px; }
-#panel-search .pager-num { padding: var(--sp-8) var(--sp-8); }
-#panel-search #pager-prev, #panel-search #pager-next { grid-row: 2; justify-self: stretch; justify-content: center; min-height: 44px; }
+#panel-search #pager-prev, #panel-search #pager-next { grid-row: 2; justify-self: stretch; justify-content: center; }
 #panel-search #pager-prev { grid-column: 1; }
 #panel-search #pager-next { grid-column: 2; }
 #panel-search .pager-btn-label { display: inline; }
 @media (min-width: 641px) {
-  #panel-search #search-options-pop { inset: 0; margin: auto; width: 540px; max-width: calc(100vw - 40px); border-radius: var(--radius-sm); }
+  #panel-search #search-options-pop { inset: 0; margin: auto; width: 540px; max-width: calc(100vw - 40px); border-radius: var(--radius-md); }
   #panel-search #search-options-pop .filter-rail { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   #panel-search #search-options-pop .filter-item-wide { grid-column: 1 / -1; }
   #panel-search #search-pager { grid-template-columns: 1fr auto 1fr; column-gap: var(--sp-16); }
   #panel-search #pager-pages { grid-column: 2; grid-row: 1; gap: var(--sp-8); flex-wrap: nowrap; }
-  #panel-search .pager-num, #panel-search .pager-gap { min-width: 40px; }
-  #panel-search #pager-prev, #panel-search #pager-next { grid-row: 1; min-height: 0; }
+  #panel-search #pager-prev, #panel-search #pager-next { grid-row: 1; }
   #panel-search #pager-prev { grid-column: 1; justify-self: start; }
   #panel-search #pager-next { grid-column: 3; justify-self: end; }
 }
@@ -3612,17 +3596,15 @@ body:has(#search-options-pop[open]) { overflow: hidden; }
 /* ⋯ rows here carry a second line saying what each export is for. */
 
 #panel-search .search-results-main { min-width: 0; }
-#panel-search #search-results > li { padding: var(--sp-20) 0; border-top: var(--border-hairline) solid var(--divider-subtle); }
-#panel-search .search-result-heading { margin: var(--sp-2) 0 0; font: var(--type-subheading); }
+/* Results are ui-list rows: the kind · date · place line, the title (a 44px
+   link), who spoke, then the record's own passage in the record role. */
 /* A catalog row whose text a model wrote: its machine label above that text. */
 #panel-search .search-result-machine { margin: var(--space-line) 0 0; }
-#panel-search .result-title { display: inline-block; min-height: 44px; color: var(--ink); text-decoration: none; overflow-wrap: anywhere; }
-#panel-search .result-title:hover { color: var(--bronze-ink); text-decoration: underline; }
-#panel-search .result-meta { display: block; margin: 0; font: var(--type-fine); color: var(--ink-soft); }
-#panel-search .result-meta a { display: inline-flex; align-items: center; min-height: 44px; }
+#panel-search #search-results .ui-row-meta { margin: 0; }
+#panel-search #search-results .ui-row-meta a { display: inline-flex; align-items: center; min-height: var(--size-target); }
 #panel-search .snippet, #panel-search .search-result-brief {
-  display: block; max-width: 68ch; padding: 0; margin: var(--sp-8) 0 0; background: none;
-  font: var(--weight-regular) var(--text-16)/var(--leading-loose) var(--serif); color: var(--ink); overflow-wrap: anywhere;
+  display: block; max-width: var(--size-readable); padding: 0; margin: var(--space-tight) 0 0; background: none;
+  font: var(--type-record); color: var(--ink); overflow-wrap: anywhere;
 }
 /* A brief is OPAX's words: the sans, under the list's one machine label. */
 #panel-search .search-result-brief { font: var(--type-body); line-height: var(--leading-loose); }
@@ -3634,7 +3616,6 @@ body:has(#search-options-pop[open]) { overflow: hidden; }
 /* The count on one line; under it, in fine type, what the count leaves out. */
 #panel-search .results-summary { display: block; font: var(--type-fine); color: var(--ink-soft); }
 #panel-search .results-count-main { display: block; font: var(--type-strong); color: var(--ink); font-variant-numeric: tabular-nums; }
-#panel-search .search-answer:not([hidden]) + #search-results > li:first-child { border-top: 0; }
 /* The year facet, inside Filters: the chart above the year fields. */
 #panel-search #search-date-ruler { display: block; margin: 0 0 var(--sp-16); }
 #panel-search #search-date-ruler[hidden] { display: none; }
@@ -3650,8 +3631,7 @@ body:has(#search-options-pop[open]) { overflow: hidden; }
 #panel-search #search-empty .empty-title { font: var(--type-heading); overflow-wrap: anywhere; margin: 0 0 var(--sp-12); }
 #panel-search #search-empty .empty-lede { font: var(--weight-regular) var(--text-16)/var(--leading-loose) var(--serif); max-width: 60ch; margin: 0; }
 #panel-search #search-empty .empty-actions { justify-content: flex-start; gap: var(--sp-8); margin-top: var(--sp-20); }
-#panel-search .search-result-heading .result-title { display: flex; align-items: center; }
-#panel-search .result-meta { margin-top: var(--sp-4); }
+#panel-search .search-result-heading .result-title { display: flex; align-items: center; min-height: var(--size-target); }
 #panel-search .search-result-text.is-collapsed { display: -webkit-box; -webkit-line-clamp: 6; -webkit-box-orient: vertical; overflow: hidden; }
 /* Give the bronze reading action room beneath the faded passage. */
 #panel-search .search-result-text.is-collapsed { position: relative; }
@@ -3705,7 +3685,7 @@ body:has(#search-options-pop[open]) { overflow: hidden; }
 #panel-search #search-answer-sources :is(a, button) { display: inline-flex; align-items: center; min-height: 44px; min-width: 44px; }
 #panel-search #search-answer-sources .source-title { display: block; }
 #panel-search .fchip-clear { min-width: 44px; }
-#panel-search .search-year-band[aria-current] { box-shadow: inset 0 -2px var(--bronze-ink); }
+#panel-search .search-year-band[aria-current] { box-shadow: inset 0 calc(-1 * var(--border-focus)) var(--bronze-ink); }
 #panel-search .search-sheet-foot { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.5fr); }
 #panel-search .search-sheet-foot button {min-width: 0; white-space: normal; height: auto;}
 #panel-search .search-year-fields { grid-template-columns: repeat(auto-fit, minmax(min(100%, 9rem), 1fr)); }
@@ -4131,180 +4111,87 @@ html[data-panel="chat"] footer { display: none; }
    and disclosure clears 44px. ------------------------------------------ */
 
 /* ---- one bill: the head ------------------------------------------------- */
-
-.bill-head { max-width: 68ch; }
-.bill-title { font: var(--type-heading); margin: 0; overflow-wrap: break-word; }
-.bill-short {
-  margin: var(--sp-8) 0 0; font: var(--type-metadata); color: var(--ink-soft);
-}
-.bill-tag { margin-top: var(--sp-8); }
-.bill-tag a { text-decoration: none; border-bottom: var(--border-hairline) solid var(--bronze-rule); }
-.bill-tag a:hover { color: var(--bronze-ink); }
-/* The status is a fact with a date on it; the date is never allowed to leave.
-   It leads the head as a status label (a word with a tone), above the title. */
-.bill-status {
-  display: flex; flex-wrap: wrap; align-items: center; gap: var(--sp-4) var(--sp-8);
-  margin: 0 0 var(--space-tight); max-width: 68ch;
-}
+/* A ui-page-head: the status label (a word with a tone, its date beside it)
+   over the title, the short name and one meta line under it, the actions. */
+.bill-head { max-width: var(--size-readable); }
+.bill-status { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-line) var(--space-tight); margin: 0 0 var(--space-line); }
 .bill-status-as { font: var(--type-fine); color: var(--ink-soft); }
 /* Two drawn actions: Ask as a secondary pill, the rest under ⋯. */
 .bill-head .page-actions { margin-top: var(--space-block); }
 
+/* ---- the sections ------------------------------------------------------- */
+/* Each block is a ui-section (one rule at its top, the category's accent mark
+   where blocks differ by category) on the reading measure. In short's machine
+   label sits beside its heading, not at the far edge. */
+#bill-body .bill-section { max-width: var(--size-readable); }
+/* Sections that arrive in a slot are its first child, and still take the step. */
+#bill-body :is(#bill-text-slot, #bill-sponsor-others) > .ui-section { margin-top: var(--space-section); }
+#bill-body .bill-section > .ui-source:last-child, .division-view .ui-section > .ui-source:last-child { margin-top: var(--space-block); }
+.bill-section-head { justify-content: flex-start; align-items: center; }
+/* A row's meta wraps where its words do; the separators stay with the word before. */
+:is(#bill-body, .division-view) .ui-row-meta { display: block; }
+/* Row links reach 44px into the row's own padding, not by making it taller. */
+:is(.bill-date-what, .bill-section .ui-row-title, .bill-section .ui-row-name) > a { position: relative; }
+:is(.bill-date-what, .bill-section .ui-row-title, .bill-section .ui-row-name) > a::after { content: ""; position: absolute; inset: calc(-1 * var(--sp-12)) calc(-1 * var(--sp-4)); }
+
 /* ---- In short ----------------------------------------------------------- */
-/* No card (principle 2): a section like the others, its machine label once at
-   the top beside the heading. The pill says "written by a model, not the
-   record"; the panel and bronze edge used to say it a second time. */
-
-.bill-summary { max-width: 68ch; }
-.bill-section-head { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-tight) var(--space-heading); margin-bottom: var(--space-heading); }
-#bill-body .bill-section-head .subject-section-title { margin: 0; }
-.bill-sentences p {
-  font: var(--type-record); color: var(--ink); margin: 0 0 var(--sp-12);
-}
+/* A model wrote it, so it is set in the sans (the serif is the record's); its
+   machine label says so once, beside the heading. */
+.bill-sentences p { margin: 0 0 var(--space-row); font: var(--type-record); color: var(--ink); }
+.bill-summary .bill-sentences p { font: var(--type-body); }
 .bill-sentences p:last-child { margin-bottom: 0; }
-.bill-sub {
-  font: var(--weight-strong) var(--text-15)/var(--leading-snug) var(--sans); color: var(--ink-soft); margin: var(--sp-16) 0 var(--sp-8);
-  
-}
-.bill-changes { margin: 0; padding-left: var(--sp-16); }
-.bill-changes li {
-  font: var(--type-metadata); color: var(--ink); margin: 0 0 var(--sp-4);
-}
+.bill-sub { margin: var(--space-block) 0 var(--space-tight); font: var(--type-strong); color: var(--ink); }
+.bill-changes { margin: 0; padding-left: var(--space-block); }
+.bill-changes li { margin: 0 0 var(--space-line); font: var(--type-body); color: var(--ink); }
 .bill-changes li::marker { color: var(--bronze); }
-.bill-affected { margin: 0; font: var(--type-metadata); color: var(--ink); }
+.bill-affected { margin: 0; font: var(--type-body); color: var(--ink); }
 
-/* ---- the timeline: a hairline ruler ------------------------------------- */
-
-/* A section is a top rule and a heading (§5.2); where the page's blocks differ
-   by category the rule carries a 28px accent mark in the category's ink. */
-#bill-body .bill-section {
-  position: relative; max-width: 68ch; margin: var(--space-section) 0 0; padding-top: var(--space-block);
-  border-top: var(--border-hairline) solid var(--divider-default);
-}
-#bill-body .bill-section[data-accent]::before {
-  content: ""; position: absolute; top: -1px; left: 0;
-  width: var(--border-accent-mark-width); height: var(--border-accent-mark-height); background: var(--accent-ink);
-}
-#bill-body .bill-section[data-accent="bills"] { --accent-ink: var(--bills-ink); }
-#bill-body .bill-section[data-accent="votes"] { --accent-ink: var(--votes-ink); }
-#bill-body .bill-section > .subject-section-title { margin: 0 0 var(--space-heading); }
-#bill-body .bill-section > .ui-source:last-child { margin-top: var(--space-block); }
-/* "All 9 stages": the ruler shows the shape, the stages open in place. */
-.bill-stages > summary {
-  display: flex; align-items: center; justify-content: space-between; gap: var(--sp-12);
-  min-height: var(--size-target); cursor: pointer; list-style: none;
-  font: var(--type-strong); color: var(--navy);
-}
-.bill-stages > summary::-webkit-details-marker { display: none; }
-.bill-stages > summary::after {
-  content: ""; width: 8px; height: 8px; margin-right: var(--sp-4); flex: none;
-  border-right: var(--border-hairline) solid currentColor; border-bottom: var(--border-hairline) solid currentColor;
-  transform: translateY(-2px) rotate(45deg);
-}
-.bill-stages[open] > summary::after { transform: translateY(2px) rotate(-135deg); }
-.bill-stages > summary:focus-visible { outline: var(--border-focus) solid var(--bronze-ink); outline-offset: 3px; }
-.bill-ruler { display: block; width: 100%; height: auto; max-width: 680px; margin: var(--sp-12) 0 var(--sp-16); }
-.bill-ruler-axis { stroke: var(--line-control); stroke-width: 1; vector-effect: non-scaling-stroke; }
-.bill-ruler-tick { stroke: var(--bronze-ink); stroke-width: 1.5; vector-effect: non-scaling-stroke; }
-.bill-ruler-label { font: var(--type-fine); fill: var(--ink-faint); }
-.bill-dates { list-style: none; margin: 0; padding: 0; max-width: 68ch; }
-.bill-date {
-  display: grid; grid-template-columns: 6.25rem minmax(0, 1fr); column-gap: var(--sp-12);
-  border-top: var(--border-hairline) solid var(--divider-subtle); padding: var(--space-row) 0;
-}
-.bill-date:first-child { border-top: none; }
-.bill-date-when { color: var(--ink-faint); font: var(--type-fine); }
+/* ---- How it moved: the ruler, then the stages ---------------------------- */
+/* The ruler stretches to the column (its notches keep a hairline at any
+   width); its two ends are named in the fine role under it. */
+.bill-ruler { max-width: 680px; margin: var(--space-row) 0 var(--space-heading); }
+.bill-ruler-marks { display: block; width: 100%; height: var(--sp-32); }
+.bill-ruler-axis { stroke: var(--line-control); stroke-width: var(--border-hairline); vector-effect: non-scaling-stroke; }
+.bill-ruler-tick { stroke: var(--bronze-ink); stroke-width: var(--border-hairline); vector-effect: non-scaling-stroke; }
+.bill-ruler-ends { display: flex; justify-content: space-between; gap: var(--space-block); margin: var(--space-line) 0 0; font: var(--type-fine); color: var(--ink-soft); font-variant-numeric: tabular-nums; }
+.bill-date { display: grid; grid-template-columns: 6.25rem minmax(0, 1fr); column-gap: var(--space-row); }
+.bill-date-when { font: var(--type-fine); color: var(--ink-soft); }
 .bill-date-what { font: var(--type-metadata); color: var(--ink); }
-.bill-date-what a { text-decoration: none; border-bottom: var(--border-hairline) solid var(--bronze-rule); }
-.bill-date-house { display: block; color: var(--ink-faint); font-size: var(--text-13); }
+.bill-date-house, .bill-date-days { display: block; font: var(--type-fine); color: var(--ink-soft); }
 
 /* ---- divisions and their party splits ----------------------------------- */
-
-.bill-division-list { list-style: none; margin: 0; padding: 0; max-width: 68ch; }
-.bill-division { border-top: var(--border-hairline) solid var(--divider-subtle); padding: var(--sp-16) 0 var(--sp-16); }
-.bill-division:first-child { border-top: none; padding-top: var(--sp-8); }
-.bill-division-q {
-  font: var(--type-subheading); display: block;
-  /* A question can be one long editorial note carrying a URL; it wraps inside
-     the column rather than pushing the page sideways. */
-  overflow-wrap: anywhere; max-width: 100%;
-}
-a.bill-division-q { text-decoration: none; }
-a.bill-division-q:hover { color: var(--bronze-ink); }
-.bill-division .result-meta { display: flex; margin-top: var(--sp-4); color: var(--ink-faint); font-size: var(--text-13); }
 /* The outcome leads as a status label with the counts beside it, so ayes and
    noes read at a glance; the title (the recorded stage) follows. */
-.bill-division-out {
-  display: flex; flex-wrap: wrap; align-items: center; gap: var(--sp-4) var(--sp-8);
-  margin: 0 0 var(--sp-4); color: var(--ink);
-}
+.bill-division-out { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-line) var(--space-tight); margin: 0 0 var(--space-line); color: var(--ink); }
 .bill-division-count { font: var(--type-strong); font-variant-numeric: tabular-nums; }
 /* The count on TheyVoteForYou or the state Hansard: the number's own source,
-   on the division's date line, one step from the number. Its 44px target
-   reaches above and below the line without making the line taller. */
-.bill-division-src {
-  position: relative; color: var(--ink-soft);
-  text-decoration: underline; text-decoration-color: var(--line-control); text-underline-offset: 3px;
-}
-.bill-division-src::after { content: ""; position: absolute; inset: -15px -4px; }
-/* Links set in a row's text keep their line height; their 44px target reaches
-   into the row's own padding instead. */
-:is(.bill-date-what, .bill-speeches li, #bill-body .subject-list li) > a { position: relative; }
-:is(.bill-date-what, .bill-speeches li, #bill-body .subject-list li) > a::after { content: ""; position: absolute; inset: -12px -4px; }
+   on the division's date line. Its 44px target reaches above and below the
+   line without making the line taller. */
+.bill-division-src { position: relative; color: var(--ink-soft); text-decoration-color: var(--line-control); }
+.bill-division-src::after { content: ""; position: absolute; inset: calc(-1 * var(--sp-12)) calc(-1 * var(--sp-4)); }
 .bill-division-src:hover { color: var(--bronze-ink); text-decoration-color: var(--bronze-rule); }
 /* "The question · 2 more parties": the rest of the division behind one disclosure. */
-.bill-division-more { margin-top: var(--sp-4); }
-.bill-division-more > summary {
-  display: flex; align-items: center; justify-content: space-between; gap: var(--sp-12);
-  min-height: var(--size-target); cursor: pointer; list-style: none;
-  font: var(--weight-strong) var(--text-15)/var(--leading-normal) var(--sans); color: var(--navy);
-}
-.bill-division-more > summary::-webkit-details-marker { display: none; }
-.bill-division-more > summary::after {
-  content: ""; width: 8px; height: 8px; margin-right: var(--sp-4); flex: none;
-  border-right: var(--border-hairline) solid currentColor; border-bottom: var(--border-hairline) solid currentColor;
-  transform: translateY(-2px) rotate(45deg);
-}
-.bill-division-more[open] > summary::after { transform: translateY(2px) rotate(-135deg); }
-.bill-division-more > summary:focus-visible { outline: var(--border-focus) solid var(--bronze-ink); outline-offset: 3px; }
-.bill-division-more[open] > .bill-division-note { margin-bottom: var(--space-heading); }
-.bill-splits-rest { margin-top: var(--sp-4); }
+.bill-division-more { margin-top: var(--space-line); }
+.bill-splits-rest { margin-top: var(--space-line); }
 
-.bill-splits { list-style: none; margin: 0; padding: 0; }
+/* One key for the block: what the two bars in a party's pair are. */
+.bill-legend > span { display: inline-flex; align-items: center; gap: var(--space-tight); }
+.bill-legend i { display: block; width: var(--sp-16); height: var(--sp-4); border-radius: var(--radius-pill); background: var(--chart-mark); }
+.bill-legend i.bill-key-no, .bill-split .bill-bar-no > i { background: var(--chart-contrast); }
+.bill-splits { list-style: none; margin: var(--space-tight) 0 0; padding: 0; }
 /* Phone: the party names the split, the bars sit under it full width, and the
    two figures stay on the name's line where they can be compared down the column. */
 .bill-split {
   display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: baseline;
-  column-gap: var(--sp-8); row-gap: var(--sp-4); padding: var(--sp-4) 0;
+  column-gap: var(--space-tight); row-gap: var(--space-line); padding: var(--space-line) 0;
 }
 .bill-split-party {
-  display: inline-flex; align-items: baseline; gap: var(--sp-4); min-width: 0;
+  display: inline-flex; align-items: baseline; gap: var(--space-line); min-width: 0;
   font: var(--type-metadata); color: var(--ink); overflow-wrap: anywhere;
 }
-.bill-split-n {
-  font: var(--type-label); color: var(--ink-soft); font-variant-numeric: tabular-nums;
-  white-space: nowrap;
-}
-.bill-split-bars {
-  grid-column: 1 / -1; display: flex; flex-direction: column; gap: var(--sp-2);
-  background: none; min-width: 0;
-}
-.bill-split-bars i {
-  display: block; height: 5px; border-radius: var(--radius-sm); min-width: 2px;
-  background: var(--paper-sunken);
-}
-.bill-split-bars i.bill-bar-aye { background: var(--bronze); }
-.bill-split-bars i.bill-bar-no { background: var(--ink-faint); }
-.bill-split-bars i[style*="width:0.0%"] { background: none; box-shadow: var(--ring-inset-hairline) var(--divider-subtle); }
-.bill-split-none { margin: var(--sp-12) 0 0; }
-.bill-split-partial { margin: var(--sp-12) 0 0; font: var(--type-fine); color: var(--ink-soft); }
-
-/* ---- what was said, and what became law --------------------------------- */
-
-.bill-speech-brief {
-  margin: var(--sp-4) 0 0; font: var(--weight-regular) var(--text-15)/var(--leading-body) var(--serif); color: var(--ink-soft); max-width: 62ch;
-}
-.bill-speeches .source-title { font-family: var(--serif); font-weight: var(--weight-strong); }
+.bill-split-n { font: var(--type-label); color: var(--ink-soft); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.bill-split-bars { grid-column: 1 / -1; display: flex; flex-direction: column; gap: var(--sp-2); min-width: 0; }
+.bill-split-partial { margin: var(--space-row) 0 0; font: var(--type-fine); color: var(--ink-soft); }
 
 /* ---- the /bills index --------------------------------------------------- */
 
@@ -4382,7 +4269,6 @@ a.bill-division-q:hover { color: var(--bronze-ink); }
 /* ---- wider than a phone -------------------------------------------------- */
 
 @media (min-width: 561px) {
-  .bill-title { font-size: var(--text-32); }
   /* Room for the party name beside its bars, so the column of figures reads
      down the division instead of interleaving with the names. */
   .bill-split {
@@ -4394,9 +4280,6 @@ a.bill-division-q:hover { color: var(--bronze-ink); }
   .party-bill .source-title, .party-bill .result-meta { grid-column: 1; }
   .party-bill-bars { grid-column: 2; grid-row: 1 / span 2; margin-top: 0; }
   .party-bill-n { grid-column: 2; grid-row: 3; margin-top: var(--sp-4); text-align: right; }
-}
-@media (min-width: 861px) {
-  .bill-title { font-size: var(--text-32); }
 }
 /* Tiny phones: the date column costs more than it gives, so the stage sits
    under its own date rather than squeezing to two words a line. */
@@ -4426,10 +4309,6 @@ a.bill-division-q:hover { color: var(--bronze-ink); }
    a zero-length bar drawn with no width reads as nothing at all. Both are
    wrong: a party that cast no ayes has an empty track, and the track is what
    says so. The bars sit in it at the division's own scale. */
-.bill-split-bars i {
-  min-width: 0; background: none; box-shadow: none; height: 6px; border-radius: var(--radius-sm);
-  position: relative;
-}
 .bill-split-bar-track { display: block; height: 6px; border-radius: var(--radius-sm); background: var(--paper-sunken); }
 .bill-split-bar-track > i { display: block; height: 6px; border-radius: var(--radius-sm); }
 .bill-split-bars .bill-split-bar-track + .bill-split-bar-track { margin-top: var(--sp-2); }
@@ -4437,10 +4316,6 @@ a.bill-division-q:hover { color: var(--bronze-ink); }
 .bill-split-bar-track > i.bill-bar-no { background: var(--ink-faint); }
 
 /* ---- loop 3 ------------------------------------------------------------- */
-
-/* A stage the register recorded on several sitting days is one entry with its
-   span; this says how many dates that entry stands for. */
-.bill-date-days { display: block; color: var(--ink-faint); font-size: var(--text-13); }
 
 /* The figures belong on the party's own line. The grid always said so, but the
    source order put the bars between a name and its numbers, so "0–22" landed
@@ -4464,7 +4339,7 @@ a.bill-division-q:hover { color: var(--bronze-ink); }
    with the status, so the whole run of them dropped below it and the second
    line opened on a separator. Normal flow wraps where the words do, and the
    separators are tied to the word in front of them. */
-.bill-row-meta, .bill-division .result-meta { display: block; }
+.bill-row-meta { display: block; }
 
 /* ---- one bill, one entry on a party page -------------------------------- */
 /* A party divides on the same bill more than once, and loop 2 gave those rows
@@ -4913,9 +4788,9 @@ a.bill-division-q:hover { color: var(--bronze-ink); }
 }
 
 /* Connected research: one IA, with the map as a primary working surface. */
-.entry-modes, .area-nav { display: flex; gap: var(--space-group); flex-wrap: wrap; margin: 0 0 var(--space-group); border-bottom: var(--border-hairline) solid var(--divider-subtle); }
-.entry-modes a, .area-nav a { color: var(--ink-soft); padding: var(--space-row) 0; min-height: var(--size-target); font: var(--type-body); text-decoration: none; }
-.entry-modes a[aria-current], .area-nav a[aria-current] { color: var(--navy); border-bottom: var(--border-focus) solid var(--navy); font: var(--type-strong); }
+.area-nav { display: flex; gap: var(--space-group); flex-wrap: wrap; margin: 0 0 var(--space-group); border-bottom: var(--border-hairline) solid var(--divider-subtle); }
+.area-nav a { color: var(--ink-soft); padding: var(--space-row) 0; min-height: var(--size-target); font: var(--type-body); text-decoration: none; }
+.area-nav a[aria-current] { color: var(--navy); border-bottom: var(--border-focus) solid var(--navy); font: var(--type-strong); }
 .home-tasks { display: grid; grid-template-columns: repeat(4,1fr); gap: var(--sp-24); margin: var(--sp-32) 0 var(--sp-48); }
 .home-tasks a { border-top: var(--border-hairline) solid var(--divider-subtle); padding: var(--sp-16) 0; color: var(--navy); text-decoration: none; }
 .home-tasks strong, .home-tasks span { display: block; }
@@ -4956,7 +4831,7 @@ a.bill-division-q:hover { color: var(--bronze-ink); }
   .research-summary { gap: var(--sp-8) var(--sp-16); }
   .research-summary .research-period { margin-left: 0; flex-basis: 100%; }
   #panel-money .money-map-root { min-height: 480px; }
-  .entry-modes, .area-nav { gap: var(--space-block); }
+  .area-nav { gap: var(--space-block); }
 }
 @media (prefers-reduced-motion: reduce) { .research-records * { scroll-behavior: auto; } }
 
@@ -5053,8 +4928,8 @@ a.bill-division-q:hover { color: var(--bronze-ink); }
   .agency-supplier-controls .search-sort-picker { flex:1 1 100%; width:100%; }
 }
 
-#panel-search .result-meta a.search-record-kind { color:var(--navy); text-decoration:underline; text-decoration-color:var(--line-control); text-underline-offset:.2em; }
-#panel-search .result-meta a.search-record-kind:hover { color:var(--bronze-ink); text-decoration-color:currentColor; }
+#panel-search .ui-row-meta a.search-record-kind { color:var(--navy); text-decoration:underline; text-decoration-color:var(--line-control); text-underline-offset:.2em; }
+#panel-search .ui-row-meta a.search-record-kind:hover { color:var(--bronze-ink); text-decoration-color:currentColor; }
 
 #panel-subject .topic-arc-open { margin-top: var(--sp-12); }
 
@@ -5488,27 +5363,26 @@ h3, #panel-methods h3, #panel-expenses h3 {
 }
 
 /* Full bill versions sit beside the overview without replacing its summary. */
-.bill-text-reader { margin: var(--space-section) 0; padding: var(--sp-24) 0; border-block: var(--border-hairline) solid var(--divider-subtle); scroll-margin-top: 110px; }
-.bill-text-reader > h3 { margin-top: 0; }
+/* A ui-section like the page's other blocks; its document runs wider than the reading measure. */
+#bill-body .bill-text-reader { max-width: none; scroll-margin-top: calc(var(--header-h) + var(--space-block)); }
 .bill-text-controls, .bill-text-tools, .bill-text-originals { display: flex; flex-wrap: wrap; align-items: end; gap: var(--sp-12) var(--sp-20); }
 .bill-text-controls > a, .bill-text-tools > a, .bill-text-originals > a { display: inline-flex; align-items: center; min-height: 44px; color: var(--bronze-ink); font: var(--type-label); }
 .bill-text-version-field, .bill-text-section-field { display: grid; gap: var(--sp-8); flex: 1 1 20rem; min-width: 0; max-width: 44rem; }
 .bill-text-reader label { color: var(--ink-soft); font: var(--type-label); }
-.bill-text-reader select { width: 100%; min-width: 0; min-height: 44px; padding: var(--sp-8) var(--sp-32) var(--sp-8) var(--sp-12); border: var(--border-hairline) solid var(--line-control); border-radius: var(--radius-sm); background: var(--paper); color: var(--ink); font: var(--type-metadata); }
 .bill-text-reader button { min-height: 44px; }
 .bill-text-notice { margin: var(--sp-12) 0 0; max-width: 78ch; }
 .bill-text-content { margin-top: var(--sp-24); }
 .bill-text-content[hidden] { display: none; }
-.bill-text-warning { padding: var(--sp-12) var(--sp-16); margin: 0 0 var(--sp-16); border-left: 3px solid var(--bronze); background: var(--bronze-wash); font: var(--type-metadata); }
+/* An incomplete or failed extraction: one plain sentence, in the bronze wash a draft status label uses. */
+.bill-text-warning { padding: var(--sp-12) var(--sp-16); margin: 0 0 var(--sp-16); border-radius: var(--radius-sm); background: var(--status-draft-wash); color: var(--ink); font: var(--type-metadata); }
 .bill-text-tools { margin: var(--sp-20) 0 var(--sp-32); }
 .bill-text-document { max-width: 78ch; }
 .bill-text-part { margin: 0 0 var(--sp-40); }
-.bill-text-part h4 { margin: 0 0 var(--sp-16); padding-top: var(--sp-16); border-top: var(--border-hairline) solid var(--divider-subtle); font: var(--type-strong); color: var(--navy); scroll-margin-top: 110px; }
+.bill-text-part h4 { margin: 0 0 var(--sp-16); padding-top: var(--sp-16); border-top: var(--border-hairline) solid var(--divider-subtle); font: var(--type-strong); color: var(--navy); scroll-margin-top: calc(var(--header-h) + var(--space-block)); }
 .bill-text-source { white-space: pre-wrap; overflow-wrap: anywhere; tab-size: 4; font: var(--weight-regular) var(--text-16)/var(--leading-loose) var(--serif); color: var(--ink); }
 .bill-text-skeleton { gap: var(--sp-16); width: 100%; margin: var(--sp-8) 0 var(--sp-24); min-height: 7rem; }
 .bill-text-reader :is(a, button, select, h4):focus-visible { outline: var(--border-focus) solid var(--bronze-ink); outline-offset: 3px; }
 @media (max-width: 600px) {
-  .bill-text-reader select { font-size: var(--text-16); }
   .bill-text-version-field, .bill-text-section-field { flex-basis: 100%; }
   .bill-text-source { font-size: var(--text-15); line-height: var(--leading-loose); }
 }
@@ -5791,17 +5665,17 @@ html[data-panel="search"] .research-app main.compact .hero-intro { display: bloc
 
 /* TVFY division prose uses the same quiet type and quote rule in SPA and SSR. */
 .division-markdown { overflow-wrap: anywhere; }
-.division-markdown > p { margin: 0.65em 0; font: inherit; }
+.division-markdown > p { margin: var(--space-row) 0; font: inherit; }
 .division-markdown > :first-child { margin-top: 0; }
 .division-markdown > :last-child { margin-bottom: 0; }
-.division-markdown .division-markdown-heading { margin-top: 1em; font: inherit; color: var(--ink); }
+.division-markdown .division-markdown-heading { margin-top: var(--space-heading); font: inherit; color: var(--ink); }
 .division-markdown blockquote {
-  margin: 0.75em 0; padding-left: var(--sp-16); font-style: italic; color: var(--ink-soft);
+  margin: var(--space-row) 0; padding-left: var(--sp-16); font-style: italic; color: var(--ink-soft);
   background: linear-gradient(to right, var(--bronze) 0 2px, transparent 2px) no-repeat left / 2px 100%;
 }
-.division-markdown ul, .division-markdown ol { margin: 0.65em 0; padding-left: 1.35em; }
+.division-markdown ul, .division-markdown ol { margin: var(--space-row) 0; padding-left: var(--space-block); }
 .division-markdown ul { list-style: disc; }
-.division-markdown li { margin: 0.3em 0; }
+.division-markdown li { margin: var(--space-line) 0; }
 .division-markdown a { color: var(--ink-soft); text-decoration: none; border-bottom: var(--border-hairline) solid var(--line-control); }
 .division-markdown a:hover { color: var(--bronze-ink); border-color: var(--bronze-rule); }
 

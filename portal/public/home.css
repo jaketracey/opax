@@ -24,7 +24,7 @@
 .hp-page :where(main) a { color: var(--bronze-ink); text-decoration-color: var(--bronze-rule); text-underline-offset: 0.2em; }
 .hp-page :where(main) a:hover { text-decoration-color: currentColor; }
 .hp-page :where(main) :is(a, summary):focus-visible { outline: var(--border-focus) solid var(--bronze-ink); outline-offset: 3px; }
-.hp-skip { position: absolute; top: -100px; left: 20px; padding: 12px; background: var(--paper-raised); z-index: 100; }
+.hp-skip { position: absolute; top: -100px; left: 20px; padding: var(--sp-12); background: var(--paper-raised); z-index: 100; }
 .hp-skip:focus { top: 8px; }
 
 /* ---- Sections: a rule at the top of each; the money map's carries the view's
@@ -36,7 +36,7 @@
 }
 .hp-page :where(main) h2 { font: var(--type-heading); color: var(--ink); }
 .hp-head { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: var(--space-tight) var(--space-block); margin-bottom: var(--space-heading); }
-.hp-head > a { font: var(--type-metadata); font-weight: 600; }
+.hp-head > a { font: var(--type-metadata); font-weight: var(--weight-strong); }
 .hp-lede { font: var(--type-metadata); color: var(--ink-soft); margin-top: var(--space-line); }
 .hp-label { font: var(--type-label); color: var(--ink); margin-bottom: var(--space-tight); }
 .hp-source { margin-top: var(--space-block); }
@@ -45,16 +45,9 @@
 /* ---- 1. Ask or search: purpose beside the one primary action. */
 .hp-research { display: grid; grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.2fr); gap: var(--space-section); align-items: start; padding-block: var(--space-section); }
 .hp-purpose h1 { font: var(--type-title); color: var(--ink); }
-.hp-purpose p { font: var(--type-body); font-size: 1.0625rem; color: var(--ink-soft); max-width: 52ch; margin-top: var(--space-block); }
+.hp-purpose p { font: var(--type-body); font-size: var(--text-17); color: var(--ink-soft); max-width: 52ch; margin-top: var(--space-block); }
 .hp-research-main { min-width: 0; }
-.hp-research-modes { display: flex; gap: var(--space-group); border-bottom: var(--border-hairline) solid var(--divider-subtle); margin-bottom: var(--space-block); }
-.hp-mode {
-  appearance: none; background: transparent; border: 0; border-radius: 0; border-bottom: var(--border-focus) solid transparent;
-  margin-bottom: -1px; padding: 0; min-height: var(--size-target); font: var(--type-control); color: var(--ink-soft); cursor: pointer;
-}
-.hp-mode[aria-pressed="true"] { color: var(--navy); border-bottom-color: var(--navy); }
-.hp-mode:hover { color: var(--navy); }
-.hp-mode:focus-visible { outline: var(--border-focus) solid var(--bronze-ink); outline-offset: 3px; }
+/* Ask | Search is a ui-tabs row (ui-controls.css): the chosen mode is pressed. */
 .hp-query { margin: 0; }
 .hp-query-row { display: flex; align-items: stretch; gap: var(--space-tight); }
 .hp-query-row > .ui-input { flex: 1; min-width: 0; }
@@ -68,7 +61,7 @@
 .hp-page .ask-builder { margin: 0; }
 .hp-guided .ask-builder-modes { flex-wrap: wrap; gap: var(--space-tight); }
 .hp-page .ask-builder-form { justify-content: start; gap: var(--space-block); margin-top: var(--space-block); }
-.hp-page .ask-builder-sentence { flex: 0 1 auto; margin: 0; font-size: 1.125rem; }
+.hp-page .ask-builder-sentence { flex: 0 1 auto; margin: 0; font-size: var(--text-17); }
 .hp-page .ask-builder-form .ui-button { flex-shrink: 0; }
 
 /* ---- 2. Browse: six destinations in one row. */
@@ -92,10 +85,10 @@
 }
 .hp-money-map > p { padding: var(--space-group); }
 .hp-money-map > .ui-button { margin: 0 var(--space-group); }
-.hp-money-map :is(h2, h3) { font-size: 1.25rem; }
-.hp-map-side { grid-area: side; min-width: 0; padding-top: 4.25rem; }
+.hp-money-map :is(h2, h3) { font: var(--type-subheading); }
+.hp-map-side { grid-area: side; min-width: 0; padding-top: calc(var(--sp-64) + var(--sp-4)); }
 .hp-chips { display: flex; flex-wrap: wrap; gap: var(--space-tight); }
-.hp-chip-count { font-weight: 400; color: var(--ink-soft); font-variant-numeric: tabular-nums; }
+.hp-chip-count { font-weight: var(--weight-regular); color: var(--ink-soft); font-variant-numeric: tabular-nums; }
 .ui-chip[aria-pressed="true"] .hp-chip-count { color: inherit; }
 .hp-chips > .ui-chip:disabled { cursor: wait; }
 .hp-map-open { margin-top: var(--space-group); }
@@ -115,20 +108,20 @@
 .hp-person-row { display: grid; grid-template-columns: var(--size-portrait-row) minmax(0, 1fr); gap: var(--space-heading); align-items: start; }
 .hp-portrait {
   display: block; width: var(--size-portrait-row); height: var(--size-portrait-row); border-radius: var(--radius-round);
-  object-fit: cover; background: var(--paper-sunken); box-shadow: inset 0 0 0 1px var(--divider-subtle);
+  object-fit: cover; background: var(--paper-sunken); box-shadow: var(--ring-inset-hairline) var(--divider-subtle);
 }
 .hp-row-body { min-width: 0; }
 .hp-row-who { display: flex; flex-wrap: wrap; align-items: baseline; gap: var(--space-line) var(--space-tight); }
 .hp-page :where(main) .hp-row-name { font: var(--type-strong); }
 .hp-row-text {
-  margin-top: var(--space-line); font: var(--type-body); font-size: 0.9375rem;
+  margin-top: var(--space-line); font: var(--type-body); font-size: var(--text-15);
   display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 3; overflow: hidden;
 }
 
 /* ---- 5. Reports: one card each, the whole card a link. */
 .hp-report-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--space-block); }
 .hp-report {
-  position: relative; padding: var(--space-block) 1.125rem;
+  position: relative; padding: var(--space-block);
   border: var(--border-hairline) solid var(--divider-subtle); border-radius: var(--radius-md); background: var(--paper-raised);
   transition: border-color var(--duration-quick) var(--ease-standard);
 }
@@ -143,7 +136,7 @@
 
 /* ---- Widths. */
 @media (min-width: 801px) {
-  .hp-research { padding-block: 4rem var(--space-section); }
+  .hp-research { padding-block: var(--sp-64) var(--space-section); }
   .hp-research-main { padding-top: var(--space-heading); }
 }
 @media (max-width: 1100px) {
@@ -176,6 +169,5 @@
 @media (forced-colors: active) {
   .hp-report, .hp-money-map { border-color: CanvasText; }
   .hp-section[data-accent]::before { background: CanvasText; }
-  .hp-portrait { border: 1px solid CanvasText; }
-  .hp-mode[aria-pressed="true"] { border-bottom-color: Highlight; }
+  .hp-portrait { border: var(--border-hairline) solid CanvasText; }
 }

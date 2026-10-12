@@ -16,7 +16,7 @@ const source = [
   pick(/\nfunction billRulerHTML\(dates\) \{[\s\S]*?\n\}\n/, "billRulerHTML()"),
 ].join("");
 const billRulerHTML = new Function(`${source}; return billRulerHTML`)();
-const labels = (svg) => [...svg.matchAll(/<text[^>]*text-anchor="(\w+)"[^>]*>([^<]*)<\/text>/g)]
+const labels = (svg) => [...svg.matchAll(/<span class="bill-ruler-label" data-anchor="(\w+)">([^<]*)<\/span>/g)]
   .map(([, anchor, text]) => ({ anchor, text }));
 const ariaLabel = (svg) => /aria-label="([^"]*)"/.exec(svg)?.[1];
 

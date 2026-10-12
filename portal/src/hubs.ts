@@ -52,9 +52,10 @@ export const hubShell = (body: string, config: HubFooterConfig = {}, crumbs: Cru
 }
 const shell = hubShell
 const WEEKS: Crumb = {label:'Sitting weeks',href:'/sitting'}
-/** The page's one title and the one line under it: a lead sentence on the
- *  index, a meta line (chambers, programme status) on a week or estimates. */
-const header = (title: string, line: string, kind: 'lead' | 'meta' = 'lead') => `<h1>${esc(title)}</h1><p class="hub-${kind}">${esc(line)}</p>`
+/** The page's one title and the one line under it (a ui-page-head): a lede on
+ *  the index, a meta line (chambers, programme status) on a week or estimates.
+ *  What dates the page (its source line, a cut-off) stays in the head. */
+const header = (title: string, line: string, kind: 'lead' | 'meta' = 'lead', after = '') => `<div class="ui-page-head"><h1>${esc(title)}</h1><p class="${kind === 'lead' ? 'ui-lede' : 'ui-page-meta'}">${esc(line)}</p>${after}</div>`
 
 export function renderSittingIndex(data: HubIndex, today: string, footer: HubFooterConfig = {}) {
   const weeks = orderedWeeks(data.weeks,today)
@@ -63,9 +64,9 @@ export function renderSittingIndex(data: HubIndex, today: string, footer: HubFoo
   const rows = weeks.map(w => {
     const active = today >= w.start && today <= w.end
     const state = active ? 'Current' : today < w.start ? 'Upcoming' : 'Past'
-    return `<li><div><h2>${link(`/sitting/${w.start}`,range(w.start,w.end))}</h2><p>${esc(w.houses.map(houseName).join(' and '))}</p>${w.estimates ? `<p>${link(`/estimates/${w.estimates}`,'Senate Supplementary Budget Estimates')}</p>` : ''}</div>${statusLabelHTML(state,active ? 'active' : 'ended')}</li>`
+    return `<li><div><h2 class="ui-row-title">${link(`/sitting/${w.start}`,range(w.start,w.end))}</h2><p class="ui-row-meta">${esc(w.houses.map(houseName).join(' and '))}</p>${w.estimates ? `<p class="ui-row-meta">${link(`/estimates/${w.estimates}`,'Senate Supplementary Budget Estimates')}</p>` : ''}</div>${statusLabelHTML(state,active ? 'active' : 'ended')}</li>`
   }).join('')
-  const html = shell(header(title,description)+sourceLineHTML({updated:data.updated,source:'APH sitting calendar',originals:data.sources.map(s => ({href:s.url,label:s.label}))})+`<ul class="hub-weeks">${rows}</ul>`,footer,[{label:'Sitting weeks'}])
+  const html = shell(header(title,description,'lead',sourceLineHTML({updated:data.updated,source:'APH sitting calendar',originals:data.sources.map(s => ({href:s.url,label:s.label}))}))+`<ul class="ui-list hub-weeks" role="list">${rows}</ul>`,footer,[{label:'Sitting weeks'}])
   return {title,description,html,jsonLd:{'@graph':[itemList('/sitting',weeks.map(w => ({href:`/sitting/${w.start}`,name:range(w.start,w.end)})))]}}
 }
 export function renderSittingWeek(data: HubIndex, week: Week, people: SponsorCandidate[], slugs: Map<string,string>, today = sydneyDay(), footer: HubFooterConfig = {}) {
@@ -74,40 +75,41 @@ export function renderSittingWeek(data: HubIndex, week: Week, people: SponsorCan
   const description = 'Bills introduced and divisions held in the federal parliamentary record during this period.'
   const sources = sourceLineHTML({updated:data.updated,source:'APH sitting calendar',originals:data.sources.map(s => ({href:s.url,label:s.label}))})
   // Chambers are the week's meta line, not tags; the cut-off is one plain sentence.
-  let body = header(title,week.houses.map(houseName).join(' and '),'meta')
-  if (week.senate_cutoff) body += `<p>Senate two-thirds cut-off: ${date(week.senate_cutoff)}.</p>`
-  body += sources
-  if (week.estimates) body += `<p>${link(`/estimates/${week.estimates}`,'Senate Supplementary Budget Estimates')} takes place alongside this House sitting week.</p>`
+  let head = ''
+  if (week.senate_cutoff) head += `<p class="ui-page-meta">Senate two-thirds cut-off: ${date(week.senate_cutoff)}.</p>`
+  head += sources
+  if (week.estimates) head += `<p class="ui-lede">${link(`/estimates/${week.estimates}`,'Senate Supplementary Budget Estimates')} takes place alongside this House sitting week.</p>`
+  head += `<p class="ui-lede">Bill details update when Parliament's site allows our crawler</p>`
+  let body = header(title,week.houses.map(houseName).join(' and '),'meta',head)
   const rows: {href:string;name:string}[] = []
-  body += `<p>Bill details update when Parliament's site allows our crawler</p>`
   if (!week.bills.length) body += sourceLineHTML({updated:data.billUpdated,source:'ParlInfo bill records'})
   if (week.bills.length) {
-    body += `<section class="hub-section"><h2>Bills introduced <span class="hub-count">${week.bills.length}</span></h2><ul class="hub-records">` + week.bills.map(b => {
+    body += `<section class="ui-section hub-section"><h2 class="ui-section-title">Bills introduced <span class="hub-count">${week.bills.length}</span></h2><ul class="ui-list hub-records" role="list">` + week.bills.map(b => {
       const href = `/bill/${b.key}`
       rows.push({href,name:b.title})
       const sponsor = b.sponsor ? sponsorPerson(b.sponsor,b.sponsor_person_id,people) : null
       const sponsorText = sponsor && slugs.has(sponsor.name) ? link(`/subject/person/${slugs.get(sponsor.name)}`,sponsor.name) : esc(b.sponsor?.trim() || b.portfolio?.trim() || 'Sponsor not recorded')
       const summaryDate = day(b.summary?.generated_at) || day(b.summary?.as_of)
       const summary = b.summary?.sentences?.length && summaryDate ? `<div class="hub-summary">${machineLabelHTML({pill:true})}<span class="hub-date">${day(b.summary.generated_at) ? 'Written' : 'As at'} ${date(summaryDate)}</span><p>${esc(b.summary.sentences.join(' '))}</p></div>` : ''
-      return `<li><h3>${link(href,b.title)}</h3><p class="hub-meta">Introduced ${date(b.introduced)} · ${esc(houseName(b.originating_house))} · ${sponsorText}</p>${summary}</li>`
+      return `<li><h3 class="ui-row-title">${link(href,b.title)}</h3><p class="ui-row-meta">Introduced ${date(b.introduced)} · ${esc(houseName(b.originating_house))} · ${sponsorText}</p>${summary}</li>`
     }).join('')+'</ul>'
     // One dated source line closes the block; each bill's ParlInfo record is in its sheet.
     const originals = week.bills.flatMap(b => (b.sources || []).filter(s => s.kind === 'billhome').slice(0,1).map(s => ({href:s.url,label:b.title})))
     body += sourceLineHTML({updated:data.billUpdated,source:'ParlInfo bill records',originals})+'</section>'
   }
   if (week.divisions.length) {
-    body += `<section class="hub-section"><h2>Divisions held <span class="hub-count">${week.divisions.length}</span></h2><ul class="hub-records">` + week.divisions.map(d => {
+    body += `<section class="ui-section hub-section"><h2 class="ui-section-title">Divisions held <span class="hub-count">${week.divisions.length}</span></h2><ul class="ui-list hub-records" role="list">` + week.divisions.map(d => {
       const name = divisionPlain(d.title || d.name || d.question || 'Division')
       const href = `/doc/${d.slug}`
       rows.push({href,name})
       const result = ({affirmative:'Agreed',negative:'Not agreed'} as Record<string,string>)[d.result || ''] || d.result || 'Outcome not recorded'
-      return `<li><h3>${link(href,name)}</h3><p class="hub-meta">${date(d.date)} · ${esc(houseName(d.house))}</p><p>${esc(result)} · ${esc(d.ayes ?? 'Unrecorded')} ayes · ${esc(d.noes ?? 'Unrecorded')} noes</p></li>`
+      return `<li><h3 class="ui-row-title">${link(href,name)}</h3><p class="ui-row-meta">${date(d.date)} · ${esc(houseName(d.house))}</p><p class="ui-row-text">${esc(result)} · ${esc(d.ayes ?? 'Unrecorded')} ayes · ${esc(d.noes ?? 'Unrecorded')} noes</p></li>`
     }).join('')+'</ul>'
     const originals = week.divisions.filter(d => d.source_url).map(d => ({href:d.source_url!,label:`${divisionPlain(d.title || d.name || d.question || 'Division')}, ${date(d.date)}`}))
     body += sourceLineHTML({updated:data.snapshotDate,dateLabel:'Published snapshot',source:'Exported division records',originals})+'</section>'
   } else if (today >= week.start) {
     const coverage = data.latestFederalDivision ? `Federal divisions in OPAX's published record currently run to ${date(data.latestFederalDivision)}; divisions held after that date will appear here once the record is updated.` : 'Federal divisions are not available in this OPAX export; they will appear here once the record is updated.'
-    body += `<section class="hub-section"><h2>Divisions</h2><p>${esc(coverage)}</p>${sourceLineHTML({updated:data.snapshotDate,dateLabel:'Published snapshot',source:'Exported division records',originals:[{href:'https://theyvoteforyou.org.au/divisions',label:'They Vote For You divisions'}],notes:['Absence from this export does not establish that no divisions were held.']})}</section>`
+    body += `<section class="ui-section hub-section"><h2 class="ui-section-title">Divisions</h2><p>${esc(coverage)}</p>${sourceLineHTML({updated:data.snapshotDate,dateLabel:'Published snapshot',source:'Exported division records',originals:[{href:'https://theyvoteforyou.org.au/divisions',label:'They Vote For You divisions'}],notes:['Absence from this export does not establish that no divisions were held.']})}</section>`
   }
   return {title,description,html:shell(body,footer,[WEEKS,{label:range(week.start,week.end)}]),jsonLd:{'@graph':[event(path,title,week.start,week.end,data.sources[0].url),itemList(path,rows)]}}
 }
@@ -116,11 +118,11 @@ export function renderEstimates(data: Estimates, footer: HubFooterConfig = {}) {
   const description = 'Committee dates and portfolio agencies, with recent AusTender contracts and GrantConnect awards.'
   const unconfirmed = data.committees.some(c => !c.program)
   // The hearing dates' source line; which agencies a committee lists, and why, sit in its sheet.
-  let body = header(title,data.published_status,'meta')+sourceLineHTML({updated:data.updated,dateLabel:'Checked',source:'APH next hearings',
+  let body = header(title,data.published_status,'meta',sourceLineHTML({updated:data.updated,dateLabel:'Checked',source:'APH next hearings',
     originals:[{href:data.source_url,label:'Dates and hearing programs'},{href:data.portfolio_source_url,label:'Portfolio allocations'}],
     notes:[...(unconfirmed ? ['Portfolio agencies are listed until a committee publishes its hearing program; they are not confirmed hearing appearances.'] : []),
-      `Portfolio allocations checked ${esc(date(data.portfolio_checked))} on the Australian Government Organisations Register.`,esc(data.portfolio_note)]})
-  body += `<nav class="hub-toc" aria-labelledby="hub-toc-head"><p class="hub-toc-head" id="hub-toc-head">On this page</p><ul role="list">${data.groups.map(g => `<li><a href="#group-${esc(g.id)}"><span>Group ${esc(g.id)}</span><span class="hub-meta">${esc(range(g.start,g.end))}</span></a></li>`).join('')}</ul></nav>`
+      `Portfolio allocations checked ${esc(date(data.portfolio_checked))} on the Australian Government Organisations Register.`,esc(data.portfolio_note)]}))
+  body += `<nav class="hub-toc" aria-labelledby="hub-toc-head"><p class="ui-toc-head" id="hub-toc-head">On this page</p><ul class="ui-toc-list" role="list">${data.groups.map(g => `<li><a href="#group-${esc(g.id)}"><span>Group ${esc(g.id)}</span><span class="hub-meta">${esc(range(g.start,g.end))}</span></a></li>`).join('')}</ul></nav>`
   // The money block: its one inline caveat, then one source line for both registers.
   const moneyUpdated = [data.contractUpdated,data.grantUpdated].filter(Boolean).sort()[0] || ''
   body += `<div class="hub-coverage"><p>Contract and grant figures are recorded award values, not payments.</p>${sourceLineHTML({updated:moneyUpdated,source:'AusTender and GrantConnect',
@@ -130,17 +132,17 @@ export function renderEstimates(data: Estimates, footer: HubFooterConfig = {}) {
       `GrantConnect, updated ${esc(date(data.grantUpdated))}: dates are agreement dates. Future agreements beyond the export date are excluded. No donor records are used.`]})}</div>`
   const list = new Map<string,{href:string;name:string}>()
   for (const group of data.groups) {
-    body += `<section class="hub-section" id="group-${group.id}"><h2>Group ${group.id}</h2><p class="hub-meta">${range(group.start,group.end)}</p>`
+    body += `<section class="ui-section hub-section" id="group-${group.id}"><h2 class="ui-section-title">Group ${group.id}</h2><p class="hub-meta">${range(group.start,group.end)}</p>`
     for (const c of data.committees.filter(c => c.group === group.id)) {
       const names = c.program?.agencies || c.portfolios.flatMap(p => p.agencies)
       const agencies = [...new Set(names)].map(n => data.agencies.find(a => a.name === n)!).sort((a,b) => a.name.localeCompare(b.name,'en'))
-      body += `<details class="hub-committee"${c === data.committees[0] ? ' open' : ''}><summary><h3>${esc(c.name)}</h3><span class="hub-meta">${agencies.length} agencies</span></summary><div class="hub-committee-body"><p>${esc(c.portfolios.map(p => p.name).join(' · '))}</p><p class="hub-fallback">${c.program ? link(c.program.source_url,'Published hearing program') : 'Portfolio agencies (program not yet published)'}</p>`
+      body += `<details class="ui-disclosure hub-committee"${c === data.committees[0] ? ' open' : ''}><summary><h3>${esc(c.name)}</h3><span class="hub-meta">${agencies.length} agencies</span></summary><div class="ui-disclosure-body hub-committee-body"><p>${esc(c.portfolios.map(p => p.name).join(' · '))}</p><p class="hub-fallback">${c.program ? link(c.program.source_url,'Published hearing program') : 'Portfolio agencies (program not yet published)'}</p>`
       for (const a of agencies) {
         const href = `/subject/agency/${a.id}`
         list.set(a.id,{href,name:a.name})
         body += `<article class="hub-agency"><h4>${link(href,a.name)}</h4><dl class="hub-totals"><div><dt>Contracts</dt><dd>${count(a.contracts.count)} · ${money(a.contracts.total)}</dd></div><div><dt>Grants</dt><dd>${a.grants.count ? `${count(a.grants.count)} · ${money(a.grants.total)}` : 'No grants in this period'}</dd></div></dl>`
         // Award rows are titled by what was bought or funded; the notice id is meta.
-        if (a.contracts.largest.length || a.grants.largest.length) body += `<details class="hub-largest"><summary>Largest recorded awards, by value</summary>${a.contracts.largest.length ? `<h5>Contracts</h5><ul>${a.contracts.largest.map(r => `<li><p>${link(r.url,r.title || r.id)}${r.link_scope === 'source_register' ? ' (AusTender register)' : ''}</p><p class="hub-meta">${esc(r.supplier)} · ${money(r.amount)} · Published ${date(r.published)} · ${esc(r.id)}</p></li>`).join('')}</ul>` : ''}${a.grants.largest.length ? `<h5>Grants</h5><ul>${a.grants.largest.map(r => `<li><p>${link(r.url,r.title || r.id)}${r.link_scope === 'source_register' ? ' (GrantConnect register)' : ''}</p><p class="hub-meta">${esc(r.recipient)} · ${money(r.value)} · Agreement ${date(r.date)} · ${esc(r.id)}</p></li>`).join('')}</ul>` : ''}</details>`
+        if (a.contracts.largest.length || a.grants.largest.length) body += `<details class="ui-disclosure hub-largest"><summary>Largest recorded awards, by value</summary>${a.contracts.largest.length ? `<h5>Contracts</h5><ul>${a.contracts.largest.map(r => `<li><p>${link(r.url,r.title || r.id)}${r.link_scope === 'source_register' ? ' (AusTender register)' : ''}</p><p class="hub-meta">${esc(r.supplier)} · ${money(r.amount)} · Published ${date(r.published)} · ${esc(r.id)}</p></li>`).join('')}</ul>` : ''}${a.grants.largest.length ? `<h5>Grants</h5><ul>${a.grants.largest.map(r => `<li><p>${link(r.url,r.title || r.id)}${r.link_scope === 'source_register' ? ' (GrantConnect register)' : ''}</p><p class="hub-meta">${esc(r.recipient)} · ${money(r.value)} · Agreement ${date(r.date)} · ${esc(r.id)}</p></li>`).join('')}</ul>` : ''}</details>`
         body += '</article>'
       }
       body += '</div></details>'
