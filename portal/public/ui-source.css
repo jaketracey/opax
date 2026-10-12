@@ -21,7 +21,7 @@
 .ui-source { margin-top: var(--space-row); }
 .ui-source > summary {
   position: relative; display: grid; grid-template-columns: auto minmax(0, 1fr); align-items: center;
-  column-gap: .375rem; min-height: 32px; max-width: 100%; box-sizing: border-box;
+  column-gap: var(--sp-8); min-height: 32px; max-width: 100%; box-sizing: border-box;
   font: var(--type-fine); color: var(--ink-soft);
 }
 .ui-source > summary::after { content: ""; position: absolute; inset: -6px 0; }
@@ -35,7 +35,7 @@
   text-underline-offset: 3px; text-decoration-thickness: 1px;
 }
 .ui-source > summary:hover .ui-source-name, .ui-source[open] .ui-source-name { text-decoration-color: var(--bronze-ink); }
-.ui-source-state { color: var(--ink); font-weight: 600; }
+.ui-source-state { color: var(--ink); font-weight: var(--weight-strong); }
 
 /* ---- MachineLabel: a pill in the bills wash, "✦ Machine-written", once at the
    top of a machine-written block. 26 drawn; the hit area reaches 44. The still
@@ -43,8 +43,8 @@
    summary opens the machine-written text: a details cannot sit in a summary. */
 .ui-machine { display: inline-block; vertical-align: middle; }
 .ui-machine > summary, .ui-machine-pill {
-  position: relative; display: inline-flex; align-items: center; gap: .3rem;
-  min-height: 26px; padding: 0 .625rem; box-sizing: border-box; vertical-align: middle;
+  position: relative; display: inline-flex; align-items: center; gap: var(--sp-4);
+  min-height: 26px; padding: 0 var(--sp-12); box-sizing: border-box; vertical-align: middle;
   border: var(--border-hairline) solid transparent; border-radius: var(--radius-pill);
   background: var(--bills-wash); color: var(--bills-ink); font: var(--type-label); white-space: nowrap;
   transition: background-color var(--duration-quick) var(--ease-standard);
@@ -58,7 +58,7 @@
    floats. Text is fine print; its links are the record's bronze. */
 .ui-sheet {
   box-sizing: border-box; display: grid; gap: var(--space-heading);
-  margin-top: var(--space-tight); padding: 14px 16px;
+  margin-top: var(--space-tight); padding: var(--sp-16) var(--sp-16);
   border: var(--border-hairline) solid var(--divider-subtle); border-radius: var(--radius-md);
   background: var(--paper-raised); color: var(--ink-soft);
   font: var(--type-fine); text-align: left; white-space: normal;
