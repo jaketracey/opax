@@ -63,6 +63,28 @@ def labels(resource):
     return {x['labelset']: x['label'] for x in resource.get('usermetadata', {}).get('classifications', [])}
 
 
+def relabel_status(resources, blast, roles):
+    """Metadata-only repair status, independent of unchanged mixed words."""
+    mixed_ids = {r['resource_id'] for r in blast['documents']}
+    role_rows = {r['resource_id']:r for r in roles['documents']}
+    flagged, unflagged, missing_roles = [], [], []
+    from parli.ingest.speaker_roles import chair_role
+    for resource in resources:
+        rid = resource['id']
+        active = {(c['labelset'],c['label']) for c in resource.get('usermetadata',{}).get('classifications',[])
+                  if not c.get('cancelled_by_user')}
+        if rid in mixed_ids:
+            safe = (('speaker_type','multi_speaker') in active
+                    and resource.get('extra',{}).get('metadata',{}).get('person_id') is None
+                    and resource.get('origin',{}).get('collaborators',[]) == [])
+            (flagged if safe else unflagged).append(resource['slug'])
+        if rid in role_rows and ('chair_role',chair_role(role_rows[rid]['party'])) not in active:
+            missing_roles.append(resource['slug'])
+    return {'confirmed_mixed_documents':len(mixed_ids),'flagged_mixed_documents':len(flagged),
+            'unflagged_mixed_documents':len(unflagged),'missing_chair_role_documents':len(missing_roles),
+            'unflagged_mixed_slugs':sorted(unflagged),'missing_chair_role_slugs':sorted(missing_roles)}
+
+
 def metadata(resource):
     return resource.get('extra', {}).get('metadata', {})
 
@@ -434,6 +456,8 @@ def size_live(args):
               'by_chamber': dict(Counter(confirmed[int(r['slug'][7:])]['chamber'] for r in affected)),
               'by_collaborator': dict(Counter(n for r in affected for n in r['collaborators'])),
               'documents': affected, 'source_evidence': list(confirmed.values())}
+    flags = relabel_status(resources, {'documents': affected}, {'documents': []})
+    result.update({k:flags[k] for k in ('flagged_mixed_documents','unflagged_mixed_documents')})
     dump(args.output / 'blast-radius.json', result)
     print('Source-confirmed affected KB documents', len(affected), 'units', len(confirmed), flush=True)
 
@@ -470,7 +494,10 @@ def role_scan(args):
     rows = []
     for resource in cat['resources']:
         sid = int(resource['slug'][7:])
-        if sid in roles and labels(resource).get('speaker_type') != 'chair':
+        from parli.ingest.speaker_roles import chair_role
+        active_roles = {c['label'] for c in resource.get('usermetadata',{}).get('classifications',[])
+                        if c['labelset']=='chair_role' and not c.get('cancelled_by_user')}
+        if sid in roles and chair_role(roles[sid]['party']) not in active_roles:
             rows.append({'resource_id': resource['id'], 'slug': resource['slug'],
                          'collaborators': resource.get('origin', {}).get('collaborators', []),
                          **roles[sid]})

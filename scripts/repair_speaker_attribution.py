@@ -406,6 +406,8 @@ def verify(output):
 
 
 def sync(args):
+    if args.apply:
+        raise ValueError('Phase 2 is metadata-only. The split/rename/create/delete sync is disabled; use speaker_relabel_apply.py')
     digest=verify(args.output)
     if not args.apply:
         print(json.dumps({'dry_run':True,'artifact_digest':digest,
