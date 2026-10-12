@@ -1357,7 +1357,7 @@ async function openMoneyRecords(kind, params) {
     : 'Disclosed receipts, payer by payer, from federal and state returns';
   const body = $('money-records-body'); body.innerHTML = '<p class="status">Loading the records…</p>';
   try {
-    const mod = await import(grants ? '/grants.js?v=0e9f6992ec' : '/ledger.js?v=e9d685bba5');
+    const mod = await import(grants ? '/grants.js?v=8b05aa8385' : '/ledger.js?v=5da07e3947');
     if (generation !== moneyRecordsGeneration) return;
     body.replaceChildren();
     // Both modules report their shareable state (open file, filters) so the
@@ -1385,7 +1385,7 @@ async function openGrantRecipient(jurisdiction, id, manageFocus) {
   const body = $('money-records-body');
   body.innerHTML = '<div class="grant-recipient-page" aria-busy="true"><p class="visually-hidden" role="status">Loading recipient records</p><div class="answer-skeleton grant-recipient-skeleton" aria-hidden="true"><i style="width:62%;height:2.75rem"></i><i style="width:38%"></i><i style="width:100%;height:6rem"></i><i style="width:84%"></i><i style="width:96%"></i><i style="width:74%"></i></div></div>';
   try {
-    const mod = await import('/grant-recipient.js?v=ff44b38346');
+    const mod = await import('/grant-recipient.js?v=c8560b7117');
     if (generation !== moneyRecordsGeneration) return;
     moneyRecordsHandle = mod.mountGrantRecipient(body, { jurisdiction, id, manageFocus,
       onTitle(name) {
@@ -1963,7 +1963,6 @@ function route() {
       renderAskFilterChips(); // preserve an explicitly shared speech-only scope
       runAsk(q);
     } else if (!q && $("ask-result").hidden) {
-      setFrontPageHidden(true);
       focusEntry("ask-input");
     }
   }
@@ -6703,7 +6702,7 @@ const DIRECTORY_KINDS = {
 };
 let electorateModulePromise;
 function loadElectorateModule() {
-  return electorateModulePromise ??= import("./electorates.js?v=4082917e43").catch((e) => { electorateModulePromise = null; throw e; });
+  return electorateModulePromise ??= import("./electorates.js?v=43347175e4").catch((e) => { electorateModulePromise = null; throw e; });
 }
 const DIR_CHUNK = 60;
 
@@ -9013,9 +9012,9 @@ const GAMES = {
   ballot: { name: "Build your ballot", dialog: "dialog-ballot", body: "explore-ballot", module: "/ballot.js?v=49e7bc6382", mount: "mountBallot" },
   tm: { name: "Time machine", dialog: "dialog-tm", body: "explore-tm", module: "/timemachine.js?v=8e86f26747", mount: "mountTimeMachine" },
   tide: { name: "The tide", dialog: "dialog-tide", body: "explore-tide", module: "/tide.js", mount: "mountTide" },
-  quiz: { name: "The record quiz", dialog: "dialog-quiz", body: "explore-quiz", module: "/quiz.js?v=ef6c859b59", mount: "mountQuiz" },
-  ledger: { name: "The ledger", dialog: "dialog-ledger", body: "explore-ledger", module: "/ledger.js?v=e9d685bba5", mount: "mountLedger" },
-  grants: { name: "Who gets the grants", dialog: "dialog-grants", body: "explore-grants", module: "/grants.js?v=0e9f6992ec", mount: "mountGrants" },
+  quiz: { name: "The record quiz", dialog: "dialog-quiz", body: "explore-quiz", module: "/quiz.js?v=42cb613922", mount: "mountQuiz" },
+  ledger: { name: "The ledger", dialog: "dialog-ledger", body: "explore-ledger", module: "/ledger.js?v=5da07e3947", mount: "mountLedger" },
+  grants: { name: "Who gets the grants", dialog: "dialog-grants", body: "explore-grants", module: "/grants.js?v=8b05aa8385", mount: "mountGrants" },
   matrix: { name: "Who owns which debate", dialog: "dialog-matrix", body: "explore-matrix", module: "/matrix.js?v=25f5793db5", mount: "mountMatrix" },
   wd: { name: "Words per dollar", dialog: "dialog-wd", body: "explore-wd", module: "/wordsdollars.js?v=16a1298a17", mount: "mountWordsDollars" },
   tvn: { name: "Then vs now", dialog: "dialog-tvn", body: "explore-tvn", module: "/thenvsnow.js?v=54e933f28d", mount: "mountThenVsNow" },
@@ -9334,7 +9333,6 @@ async function runAsk(question) {
   $("ask-date-ruler").replaceChildren();
   $("ask-chips").hidden = true;
   setAskBuilderHidden(true);
-  setFrontPageHidden(true);
   setQuoteRail([]);
   resetPeopleRail();
   const started = Date.now();
@@ -9507,7 +9505,6 @@ async function runAsk(question) {
       if ($("ask-result").hidden) {
         if (suggestions.length) $("ask-chips").hidden = false;
         setAskBuilderHidden(false);
-        setFrontPageHidden(false);
       }
     }
   } finally {
@@ -9870,14 +9867,6 @@ function renderMoneyNextSteps(container, answer) {
     nav.appendChild(a);
   }
   container.appendChild(nav);
-}
-
-function setFrontPageHidden(hidden) {
-  hidden = true; // Homepage content belongs to its own document at /.
-  for (const id of ["front-map", "home-tasks", "front-page"]) {
-    const el = $(id);
-    if (el) el.hidden = hidden;
-  }
 }
 
 // --- chat (keep asking) -----------------------------------------------------
