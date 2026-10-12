@@ -38,7 +38,7 @@ const PUBLIC = join(ROOT, 'portal', 'public')
 const INDEX = join(PUBLIC, 'index.html')
 
 /** Assets referenced from index.html with a ?v= stamp. */
-const STAMPED = ['app.js', 'spa-shell.js', 'spa-entry.js', 'style.css', 'analytics.js', 'gtm.js', 'events.js', 'navigation.js', 'quick-search.js', 'voice.css', 'ui-controls.css', 'ui-source.css', 'ui-source.js', 'labels.js']
+const STAMPED = ['app.js', 'spa-shell.js', 'spa-entry.js', 'style.css', 'analytics.js', 'gtm.js', 'events.js', 'navigation.js', 'quick-search.js', 'voice.css', 'ui-controls.css', 'ui-source.css', 'ui-source.js', 'labels.js', 'vote-tables.js', 'vote-tables.css']
 
 const hashOf = (file) =>
   createHash('sha256').update(readFileSync(join(PUBLIC, file))).digest('hex').slice(0, 10)
@@ -137,6 +137,9 @@ export async function refreshFonts({ publicRoot = PUBLIC, fetcher = honestFetch 
  *  agencies.js and suppliers.js import each other: stamp the agencies → suppliers
  *  edge only, then app.js. Keep the reverse edge hand-versioned to avoid a hash cycle. */
 export const MODULE_STAMPS = [
+  ['datatable.js', 'server-csv.js'],
+  ['datatable-workbench.js', 'datatable.js'],
+  ['vote-tables.js', 'labels.js'], ['vote-tables.js', 'division-markdown.js'], ['vote-tables.js', 'datatable.js'],
   ['donor-views.js', 'donor-entity.js'], ['wordsdollars.js','donor-views.js'], ['quiz.js','donor-views.js'], ['ledger.js', 'donor-views.js'], ['home.js', 'donor-views.js'],
   ['ledger.js', 'donor-entity.js'], ['quiz.js', 'donor-entity.js'], ['money-journeys-data.js', 'donor-entity.js'], ['map-research.js','datatable-privacy.js'], ['map-research.js','datatable-query.js'],
   ['datatable.js', 'donor-entity.js'], ['datatable.js', 'donor-views.js'],
@@ -168,6 +171,7 @@ export const MODULE_STAMPS = [
   ['map-page.js', 'money-map.js'], ['agencies.js', 'money-map.js'], ['suppliers.js', 'money-map.js'],
   ['thenvsnow.js', 'wombat.js'], ['thenvsnow.js', 'labels.js'], ['grant-recipient.js', 'grants.js'],
   ['electorates.js', 'labels.js'], ['home-data.js', 'labels.js'],
+  ['app.js', 'vote-tables.js'],
   ['app.js','donor-views.js'], ['app.js','map-research.js'],
   ['ask-person.js', 'labels.js'],
   ['app.js', 'canonical-urls.js'], ['app.js', 'growth-modules.js'], ['app.js', 'ask-person.js'], ['app.js', 'suppliers.js'],
