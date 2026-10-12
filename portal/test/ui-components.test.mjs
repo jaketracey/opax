@@ -99,11 +99,11 @@ test('MachineLabel notRecord: the pill says "not part of the record" in its titl
     `<details class="ui-pop ui-machine"><summary${said}><span class="ui-machine-glyph" aria-hidden="true">✦</span>${name}</summary><div class="ui-sheet"><p>From the EM.</p></div></details>`);
   assert.equal(machineLabelHTML({ pill: true, notRecord: true }), `<span class="ui-machine-pill"${said}><span class="ui-machine-glyph" aria-hidden="true">✦</span>${name}</span>`);
   assert.equal(machineLabelHTML({ inline: true, notRecord: true }), `<span class="ui-machine-inline"${said}><span class="ui-machine-glyph" aria-hidden="true">✦</span>${name}</span>`);
-  // The home page's bills list carries the helper's pill, written into the page.
-  const index = read('index.html');
-  assert.ok(index.includes(machineLabelHTML({ notRecord: true, note: "Each summary is written by a model from the bill's explanatory memorandum. It is not part of the record." })));
+  // (The old in-app front page carried this pill in index.html; it never rendered
+  // and was deleted in the 12 Oct 2026 uplift. / is home.html.)
   // The sentences the pill replaced: the doc page's In brief, the speech's bill
   // panel, the bill peek, the search summary, the home bills note, the year in brief.
+  const index = read('index.html');
   const tm = read('timemachine.js');
   for (const text of [app, index, tm]) {
     assert.doesNotMatch(text, /not by a person, and not part of the record|not part of the original bill text/);
@@ -246,7 +246,8 @@ test('D1: things you press are pills, things you read are 4px', () => {
   }
   assert.match(rulesFor(controls, ':is(button, a, label).ui-chip'), /border-radius:\s*var\(--ui-radius-press\)/);
   for (const sel of ['.ui-tag', '.ui-status']) assert.match(rulesFor(controls, sel), /border-radius:\s*var\(--ui-radius\)/, sel);
-  assert.match(rulesFor(controls, ':is(input, select, textarea).ui-input'), /border-radius:\s*var\(--ui-radius\)/);
+  // Fields hold 12px since the 12 Oct 2026 uplift, so a field and the pill beside it read as one family.
+  assert.match(rulesFor(controls, ':is(input, select, textarea).ui-input'), /border-radius:\s*var\(--radius-md\)/);
   assert.match(rulesFor(sourceCss, '.ui-machine > summary'), /border-radius:\s*var\(--radius-pill\)/);
   assert.match(rulesFor(sourceCss, '.ui-sheet'), /border-radius:\s*var\(--radius-md\)/);
   // Secondary is the navy wash with no outline; the transparent border is forced colours' edge.
@@ -328,12 +329,12 @@ test('focus, touch targets, reduced motion and forced colours cover every contro
   for (const sel of ['.ui-filter-chip', '.ui-chip', '.chip:not(.ui-button)', '.ui-tag', '.topic-chip']) assert.ok(touch.slice(0, touch.indexOf('}\n}')).includes(sel), `${sel} grows to 44px`);
   assert.match(touch, /min-height:\s*var\(--size-target\)/);
   // Summaries that draw smaller than 44px reach it with their hit area.
-  assert.match(sourceCss, /\.ui-source > summary::after \{ content: ""; position: absolute; inset: -6px 0; \}/); // 32 + 12
+  assert.match(sourceCss, /\.ui-source > summary::after \{ content: ""; position: absolute; inset: calc\(-1 \* var\(--sp-8\)\) 0; \}/); // 32 + 16
   assert.match(sourceCss, /\.ui-machine > summary::after \{ content: ""; position: absolute; inset: -10px 0; \}/); // 24 inside the hairline + 20
   assert.match(controls, /@media \(prefers-reduced-motion: reduce\)[\s\S]*transition: none/);
   assert.match(sourceCss, /@media \(prefers-reduced-motion: no-preference\) \{\s*\.ui-pop\[open\] > \.ui-sheet \{ animation/);
   const forced = controls.slice(controls.indexOf('@media (forced-colors: active)'));
-  assert.match(forced, /\[aria-pressed="true"\][\s\S]*outline: 2px solid Highlight/);
+  assert.match(forced, /\[aria-pressed="true"\][\s\S]*outline: (?:2px|var\(--border-focus\)) solid Highlight/);
   assert.match(forced, /:is\(\.ui-party, \.party\) > i \{ background: CanvasText; \}/);
   assert.match(sourceCss, /@media \(forced-colors: active\) \{\s*\.ui-sheet \{ border-color: CanvasText; \}/);
   for (const [name, css] of [['ui-controls.css', controls], ['ui-source.css', sourceCss]]) {

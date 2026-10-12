@@ -5256,10 +5256,10 @@ async function renderPersonTopics(name, sections, onRecord = () => {}) {
       slot.innerHTML = `
         <div class="person-topics-head">
           <h3 class="subject-section-title">What they talk about</h3>
-          <div class="quiet-toggle" role="group" aria-label="Speech era">
-            <button type="button" data-person-era="all" aria-pressed="${era === "all"}">All</button>
-            <button type="button" data-person-era="then" aria-pressed="${era === "then"}">Then</button>
-            <button type="button" data-person-era="now" aria-pressed="${era === "now"}">Now</button>
+          <div class="ui-segmented" data-ui-size="compact" role="group" aria-label="Speech era">
+            <button type="button" class="ui-button" data-person-era="all" aria-pressed="${era === "all"}">All</button>
+            <button type="button" class="ui-button" data-person-era="then" aria-pressed="${era === "then"}">Then</button>
+            <button type="button" class="ui-button" data-person-era="now" aria-pressed="${era === "now"}">Now</button>
           </div>
         </div>
         ${chart}
@@ -6076,8 +6076,8 @@ function topicMoneyHTML(ind) {
   const total = donors.reduce((a, n) => a + (n.total || 0), 0);
   const rankedDonors = donorRows(donors.map(n => [n.label,n.total || 0]), donorViewIndex, 6);
   return `
-    <h3 class="subject-section-title">The money beside the words</h3>
-    <p style="margin:0.2rem 0 0.6rem">While parliament debated this, ${esc(industryLabel(ind))}
+    <h3 class="subject-section-title ui-section-title">The money beside the words</h3>
+    <p class="ui-section-note">While parliament debated this, ${esc(industryLabel(ind))}
       interests disclosed <b>${esc(fmtMoney(total))}</b> in donations to political parties.</p>
     ${barList(rankedDonors, { fmt: fmtMoney, heading: `Largest ${industryLabel(ind)} donors`,
       linkTo: (nm) => subjectHash("donor", nm) })}
@@ -6149,8 +6149,9 @@ function topicTideHTML(data, slug, phrase) {
       <strong>${pct}</strong><small>${Number(point.count || 0).toLocaleString()}</small>
     </a>`;
   }).join("");
-  return `<section class="topic-tide">
-    <figure><figcaption>The share over time</figcaption><div class="topic-tide-bars">${bars}</div></figure>
+  return `<section class="topic-tide ui-section">
+    <h3 class="ui-section-title">The share over time</h3>
+    <figure aria-label="The share over time"><div class="topic-tide-bars">${bars}</div></figure>
     ${coverageRuleHTML(data.decades, "Topic labels cover this share of each decade’s indexed speeches:")}
     <p class="fineprint">Each bar is this topic's share of federal speeches carrying any topic label in that decade; the small figure is the count. Federal is the longest comparable run. Labels are applied so far, and each decade opens the speeches behind it.</p>
   </section>`;
@@ -6226,7 +6227,7 @@ function topicArcItemHTML(item, brief, showYear) {
       </div>
       ${heading ? `<a class="topic-arc-source" ${entityHrefAttr(`/doc/${encodeURIComponent(item.slug)}`)}>${esc(heading)}</a>` : ""}
       ${brief
-        ? `<p class="topic-arc-brief">${machineLabelHTML({ inline: true, className: "topic-arc-tag" })}${esc(brief)}</p><a class="topic-arc-open ui-button" data-ui-size="compact" ${entityHrefAttr(`/doc/${encodeURIComponent(item.slug)}`)}>Read the speech</a>`
+        ? `<p class="topic-arc-brief">${machineLabelHTML({ inline: true, className: "topic-arc-tag" })}${esc(brief)}</p><a class="topic-arc-open" ${entityHrefAttr(`/doc/${encodeURIComponent(item.slug)}`)}>Read the speech</a>`
         : `<a class="topic-arc-passage" ${entityHrefAttr(`/doc/${encodeURIComponent(item.slug)}`)}>${esc(passage || "Open the speech to read the passage.")}</a>`}${excerptNoticeHTML(item)}
     </div>
   </li>`;
@@ -6255,7 +6256,7 @@ function topicArcVoicesHTML(results, briefCount) {
 }
 
 async function renderTopicArc(slug, phrase, key, mount) {
-  mount.innerHTML = `<h3 class="topic-arc-heading">The arc of this debate</h3><p class="status" role="status">Reading the labelled speeches…</p>`;
+  mount.innerHTML = `<h3 class="topic-arc-heading ui-section-title">The arc of this debate</h3><p class="status" role="status">Reading the labelled speeches…</p>`;
   const active = () => currentSubjectKey === key && mount.isConnected;
   try {
     const params = searchQueryParams(phrase, {
@@ -6267,7 +6268,7 @@ async function renderTopicArc(slug, phrase, key, mount) {
     if (!active()) return;
     const results = (data.results || []).filter((item) => item.slug);
     if (!results.length) {
-      mount.innerHTML = `<h3 class="topic-arc-heading">The arc of this debate</h3><p class="status">No dated, labelled speeches are in the search window yet.</p>`;
+      mount.innerHTML = `<h3 class="topic-arc-heading ui-section-title">The arc of this debate</h3><p class="status">No dated, labelled speeches are in the search window yet.</p>`;
       return;
     }
     const briefs = {};
@@ -6300,8 +6301,7 @@ async function renderTopicArc(slug, phrase, key, mount) {
               p.innerHTML = machineLabelHTML({ inline: true, className: "topic-arc-tag" });
               p.appendChild(document.createTextNode(brief));
               const open = document.createElement("a");
-              open.className = "topic-arc-open ui-button";
-              open.dataset.uiSize = "compact";
+              open.className = "topic-arc-open";
               open.href = passage.getAttribute("href");
               open.textContent = "Read the speech";
               passage.replaceWith(p, open);
@@ -6329,17 +6329,17 @@ async function renderTopicArc(slug, phrase, key, mount) {
     const paint = () => {
       const items = sorted().slice(0, visible);
       const briefCount = results.filter((r) => briefs[r.resource]).length;
-      mount.innerHTML = `<div class="topic-arc-head">
-        <h3 class="topic-arc-heading">The arc of this debate</h3>
-        <div class="quiet-toggle" role="group" aria-label="Debate chronology">
-          <button type="button" data-arc-order="newest" aria-pressed="${order === 'newest'}">Newest</button>
-          <button type="button" data-arc-order="oldest" aria-pressed="${order === 'oldest'}">Oldest</button>
+      mount.innerHTML = `<div class="topic-arc-head ui-section-head">
+        <h3 class="topic-arc-heading ui-section-title">The arc of this debate</h3>
+        <div class="ui-segmented" data-ui-size="compact" role="group" aria-label="Debate chronology">
+          <button type="button" class="ui-button" data-arc-order="newest" aria-pressed="${order === 'newest'}">Newest</button>
+          <button type="button" class="ui-button" data-arc-order="oldest" aria-pressed="${order === 'oldest'}">Oldest</button>
         </div></div>
         ${topicArcVoicesHTML(results, briefCount)}
         <ol class="topic-arc-list">${rowsHTML(items)}</ol>
         <p class="fineprint topic-arc-note">Machine briefs are automated summaries and stand in for the passage where one exists; passages are extracts from the record, opened by the title. The window is the search index's newest labelled matches, not the whole debate.</p>
         <div class="topic-arc-footer"><p class="fineprint" role="status">Showing ${items.length} of ${results.length} matches.</p>
-        ${items.length < results.length ? `<button type="button" data-arc-more>Show ${Math.min(30, results.length - items.length)} more</button>` : ''}
+        ${items.length < results.length ? `<button type="button" class="ui-button" data-ui-size="compact" data-arc-more>Show ${Math.min(30, results.length - items.length)} more</button>` : ''}
         <a href="${esc(searchHash(phrase, { topic: slug }, 1, 'newest'))}">Search the full debate</a></div>`;
       mount.querySelectorAll('[data-arc-order]').forEach((button) => button.addEventListener('click', () => {
         if (order === button.dataset.arcOrder) return;
@@ -6370,7 +6370,7 @@ async function renderTopicArc(slug, phrase, key, mount) {
     paint();
     enrich(sorted().slice(0, visible));
   } catch {
-    if (active()) mount.innerHTML = `<h3 class="topic-arc-heading">The arc of this debate</h3><p class="status">The chronological view could not be loaded. <a href="${esc(searchHash(phrase, { topic: slug }, 1, 'newest'))}">Search the labelled speeches instead</a>.</p>`;
+    if (active()) mount.innerHTML = `<h3 class="topic-arc-heading ui-section-title">The arc of this debate</h3><p class="status">The chronological view could not be loaded. <a href="${esc(searchHash(phrase, { topic: slug }, 1, 'newest'))}">Search the labelled speeches instead</a>.</p>`;
   }
 }
 
@@ -6383,8 +6383,7 @@ async function openTopicPage(slug, manageFocus) {
   body.classList.remove("subject-person", "subject-party");
   const name = TOPICS[slug];
   if (!name) {
-    body.innerHTML = `<p class="kicker">Topic</p>
-      <p class="status">No topic called “${esc(slug)}” in the taxonomy.
+    body.innerHTML = `<p class="status">No topic called “${esc(slug)}” in the taxonomy.
       <a href="/subject/topic">All topics</a></p>`;
     return;
   }
@@ -6427,10 +6426,15 @@ async function openTopicPage(slug, manageFocus) {
     <div class="topic-reader-tools">
       <form class="topic-ask-form">
         <label for="topic-question">Ask the record</label>
-        <div><textarea id="topic-question" name="question" required rows="2" placeholder="${esc(`Ask a question about ${phrase}`)}"></textarea><button type="submit">Ask</button></div>
+        <div class="topic-ask-row"><textarea id="topic-question" class="ui-input grow-field" name="question" required rows="1" autocomplete="off" enterkeyhint="send" placeholder="${esc(`Ask a question about ${phrase}`)}"></textarea><button type="submit" class="ui-button" data-variant="primary">Ask</button></div>
       </form>
       <p class="topic-reader-links"><a href="${esc(searchTopic)}">Search this topic</a>${report ? `<a href="/reports/${esc(report.slug)}">Read the ${esc(report.title)} report</a>` : ''}</p>
     </div>`);
+  const topicQuestion = body.querySelector('#topic-question');
+  topicQuestion.addEventListener('input', () => fitQueryField(topicQuestion));
+  topicQuestion.addEventListener('keydown', (event) => {
+    if (event.key === 'Enter' && !event.shiftKey && !event.isComposing) { event.preventDefault(); topicQuestion.form.requestSubmit(); }
+  });
   body.querySelector('.topic-ask-form').addEventListener('submit', (event) => {
     event.preventDefault();
     const question = body.querySelector('#topic-question').value.trim();
@@ -6441,7 +6445,7 @@ async function openTopicPage(slug, manageFocus) {
   // Who speaks on it sits in the card at the right hand: parties, then parliaments.
   const asideBlocks = [];
   if (data?.parties?.length) {
-    asideBlocks.push(`<section class="topic-aside-block">${barList(data.parties.slice(0, 8), {
+    asideBlocks.push(`<section class="topic-aside-block ui-section">${barList(data.parties.slice(0, 8), {
       heading: "Who speaks on it, by party",
       fmt: (v) => Number(v).toLocaleString(),
       linkTo: (nm) => searchHash(phrase, { topic: slug, party: nm }),
@@ -6457,7 +6461,7 @@ async function openTopicPage(slug, manageFocus) {
     const order = ["federal", "nsw", "vic", "sa", "qld", "act"];
     const years = order.filter((state) => coverage[state])
       .map((state) => `${PARLIAMENT_NAMES[state]} ${coverage[state]}`).join(" · ");
-    asideBlocks.push(`<section class="topic-aside-block">${barList(rows, {
+    asideBlocks.push(`<section class="topic-aside-block ui-section">${barList(rows, {
       heading: "Which parliament argues it",
       fmt: (value) => `${(Number(value) * 100).toFixed(2)}%`,
       detail: (_name, _value, row) => Number(row[2]).toLocaleString(),
@@ -6474,7 +6478,7 @@ async function openTopicPage(slug, manageFocus) {
   await moneyPromise;
   if (currentSubjectKey !== key) return;
   const moneyHTML = moneyInd ? topicMoneyHTML(moneyInd) : "";
-  if (moneyHTML) sections.insertAdjacentHTML("beforeend", `<section class="topic-money">${moneyHTML}</section>`);
+  if (moneyHTML) sections.insertAdjacentHTML("beforeend", `<section class="topic-money ui-section">${moneyHTML}</section>`);
 
   if (data) {
     if (count === 0) {
@@ -6495,12 +6499,12 @@ async function openTopicPage(slug, manageFocus) {
   else tideSkel?.remove();
 
   const arc = document.createElement("section");
-  arc.className = "topic-arc";
+  arc.className = "topic-arc ui-section";
   sections.appendChild(arc);
   const addJump = (label, target) => {
     const button = document.createElement('button');
     button.type = 'button';
-    button.className = 'topic-section-jump';
+    button.className = 'topic-section-jump ui-link';
     button.textContent = label;
     button.addEventListener('click', () => {
       const heading = target.querySelector('h3');
@@ -6572,9 +6576,9 @@ async function openTopicsIndex(manageFocus) {
   };
   $("subject-sections").innerHTML = `
     <div class="topic-index-tools">
-      <div class="quiet-toggle topic-index-sort" role="group" aria-label="Order the topics">
-        <button type="button" data-sort="name" aria-pressed="true">A–Z</button>
-        <button type="button" data-sort="count" aria-pressed="false">Most discussed</button>
+      <div class="ui-segmented topic-index-sort" data-ui-size="compact" role="group" aria-label="Order the topics">
+        <button type="button" class="ui-button" data-sort="name" aria-pressed="true">A–Z</button>
+        <button type="button" class="ui-button" data-sort="count" aria-pressed="false">Most discussed</button>
       </div>
       <p class="topic-index-note">Counts are speeches labelled so far. The small bars are each topic’s share of federal speeches by decade, 1993 to 2026, scaled within the topic.</p>
     </div>
