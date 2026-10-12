@@ -2121,7 +2121,7 @@ for (const id of ["ask-input", "search-input"]) {
     field.focus();
   });
 }
-const headerSearch = OpaxQuickSearch.disclosure($('header-search-open'), $('header-search-panel'), $('mast-q'));
+const headerSearch = OpaxQuickSearch.header;
 attachQuickSearch($("mast-q"), $("mast-sugg"), { idPrefix: "ms", beforeGo: () => headerSearch.close() });
 attachQuickSearch($("drawer-q"), $("drawer-sugg"), { idPrefix: "ds", beforeGo: () => closeNavDrawer() });
 
