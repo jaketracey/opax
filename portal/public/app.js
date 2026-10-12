@@ -3609,7 +3609,7 @@ function personSlug(name) {
 }
 
 /** Point each sponsor link at the roster row the bill names (sponsor-person.js: the bill's person ID
- *  decides, never a surname print); a print the roster cannot place keeps its name link. */
+ *  decides, never a surname print); an unresolved sponsor stays plain text. */
 const sponsorSummaries = new Map();
 async function loadSponsorSummary(bill) {
   const path = await growthModules.sponsorSummaryPath(bill);
