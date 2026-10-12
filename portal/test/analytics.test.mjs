@@ -128,14 +128,17 @@ test('GA replays early events once, tracks future events once, and strips privat
   emit('opax:analytics', {event:'opax_search_completed',properties:{result_count:12,query:'private'}});
   runInNewContext(ga, context); runInNewContext(ga, context);
   emit('opax:analytics', {event:'opax_journey',properties:{action:'played',lens:'industry',step:1,step_count:4,recipient:'private'}});
-  const sent = context.window.dataLayer.filter(item => item[0] === 'event');
+  // The adapter's gtag queue is its own: a 'config' in GTM's dataLayer makes GTM load the Google tag twice.
+  const sent = context.window.opaxGaLayer.filter(item => item[0] === 'event');
   assert.deepEqual(Array.from(sent, item => item[1]), ['page_view','opax_search_completed','opax_journey']);
+  assert.ok(!context.window.dataLayer.some(item => item[0] === 'config' || item[0] === 'js'));
   assert.equal(scripts.length, 1);
+  assert.match(scripts[0].src, /gtag\/js\?id=G-EGY7Y5VTEQ&l=opaxGaLayer$/);
   assert.equal(context.window.opaxAnalyticsPending, null);
   assert.ok(!JSON.stringify(sent).includes('private'));
   assert.equal(sent[0][2].page_location, 'https://opax.com.au/search');
   assert.equal(sent[2][2].lens, 'industry');
-  const settings = context.window.dataLayer.find(item => item[0] === 'set')[1];
+  const settings = context.window.opaxGaLayer.find(item => item[0] === 'set')[1];
   assert.equal(settings.send_page_view, false);
   assert.equal(settings.allow_google_signals, false);
 });
@@ -172,6 +175,6 @@ test('footer partners have explicit referral UTMs and fixed tracking identifiers
   emit('opax:analytics', {event:'opax_outbound',properties:{host:'corpuskit.org',partner:'corpuskit',placement:'footer'}});
   assert.deepEqual(captured.map(e=>e.event), ['$pageview','opax_ask_failed','opax_outbound']);
   assert.ok(!JSON.stringify(captured).includes('private'));
-  const ga = context.window.dataLayer.filter(e=>e[0]==='event');
+  const ga = context.window.opaxGaLayer.filter(e=>e[0]==='event');
   for (const key of ['host','partner','placement','page_section']) assert.equal(captured[2].properties[key], ga[2][2][key]);
 });
