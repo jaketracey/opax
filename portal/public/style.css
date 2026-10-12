@@ -487,8 +487,16 @@ header.ui-page-head { position: static; z-index: auto; padding: 0; border: 0; ba
 .ui-row { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: var(--space-line) var(--space-block); align-items: baseline; }
 .ui-row-title { margin: 0; font: var(--type-subheading); color: var(--ink); overflow-wrap: anywhere; }
 .ui-row-name { margin: 0; font: var(--type-strong); color: var(--ink); }
-.ui-row-title a, .ui-row-name a { color: inherit; text-decoration: none; }
-.ui-row-title a:hover, .ui-row-name a:hover { color: var(--bronze-ink); text-decoration: underline; text-decoration-color: var(--bronze-rule); }
+.ui-row-title a, .ui-row-name a, a.ui-byline-name { color: inherit; }
+/* A row's link keeps the link's bronze underline (a phone never hovers), and
+   a row is tappable across its whole height, as a card is: the title, name or
+   byline link stretches over the row, and any other control in the row sits
+   above it. Search results and report sources keep record text selectable
+   (their titles reach 44 on their own). */
+:where(:is(.ui-list > li, li.ui-row, .hub-agency, .audit-list > li, .instrument-list > li):not(:is(#search-results, #panel-reports) *):has(:is(.ui-row-title, .ui-row-name, h2, h3, h4) > a[href], a.ui-byline-name[href])) { position: relative; }
+:where(:is(.ui-list > li, li.ui-row, .hub-agency, .audit-list > li, .instrument-list > li):not(:is(#search-results, #panel-reports) *):has(:is(.ui-row-title, .ui-row-name, h2, h3, h4) > a[href], a.ui-byline-name[href])) :is(:is(.ui-row-title, .ui-row-name, h2, h3, h4) > a[href], a.ui-byline-name[href])::after { content: ""; position: absolute; inset: 0; }
+:where(:is(.ui-list > li, li.ui-row, .hub-agency, .audit-list > li, .instrument-list > li):not(:is(#search-results, #panel-reports) *):has(:is(.ui-row-title, .ui-row-name, h2, h3, h4) > a[href], a.ui-byline-name[href])) :is(a[href], button, summary, input, select, textarea, label):not(:is(.ui-row-title, .ui-row-name, h2, h3, h4) > a, .ui-byline-name) { position: relative; z-index: 1; }
+:where(:is(.ui-list > li, li.ui-row, .hub-agency, .audit-list > li, .instrument-list > li):not(:is(#search-results, #panel-reports) *):has(:is(.ui-row-title, .ui-row-name, h2, h3, h4) > a[href], a.ui-byline-name[href])):hover :is(:is(.ui-row-title, .ui-row-name, h2, h3, h4) > a[href], a.ui-byline-name[href]) { color: var(--bronze-ink); text-decoration-color: var(--bronze-ink); }
 .ui-row-meta { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-line) var(--space-tight); margin: var(--space-line) 0 0; font: var(--type-metadata); color: var(--ink-soft); }
 .ui-row-text { margin: var(--space-line) 0 0; font: var(--type-body); color: var(--ink); }
 .ui-row-figure { font: var(--type-strong); color: var(--ink); font-variant-numeric: tabular-nums; text-align: right; white-space: nowrap; }
@@ -3752,9 +3760,8 @@ html[data-panel="chat"] footer { display: none; }
 .report-part-title:focus-visible { outline: var(--border-focus) solid var(--bronze-ink); outline-offset: var(--sp-4); }
 #panel-reports .ui-section-head + .ui-subsection-title { margin-top: 0; }
 .report-note { margin: 0 0 var(--space-heading); }
-#panel-reports a.ui-byline-name, #panel-reports .meta-party, .report-position-party { text-decoration: none; }
+#panel-reports .meta-party, .report-position-party { text-decoration: none; }
 #panel-reports a.ui-byline-name { position: relative; }
-#panel-reports a.ui-byline-name:hover { color: var(--bronze-ink); text-decoration: underline; text-decoration-color: var(--bronze-rule); }
 /* A name draws one line tall and still reaches 44. */
 #panel-reports a.ui-byline-name::after { content: ""; position: absolute; inset: calc(-1 * var(--sp-12)) 0; }
 
@@ -3868,8 +3875,8 @@ html[data-panel="chat"] footer { display: none; }
 /* A row's meta wraps where its words do; the separators stay with the word before. */
 :is(#bill-body, .division-view) .ui-row-meta { display: block; }
 /* Row links reach 44px into the row's own padding, not by making it taller. */
-:is(.bill-date-what, .bill-section .ui-row-title, .bill-section .ui-row-name) > a { position: relative; }
-:is(.bill-date-what, .bill-section .ui-row-title, .bill-section .ui-row-name) > a::after { content: ""; position: absolute; inset: calc(-1 * var(--sp-12)) calc(-1 * var(--sp-4)); }
+.bill-date-what > a { position: relative; }
+.bill-date-what > a::after { content: ""; position: absolute; inset: calc(-1 * var(--sp-12)) calc(-1 * var(--sp-4)); }
 
 /* ---- In short ----------------------------------------------------------- */
 /* A model wrote it, so it is set in the sans (the serif is the record's); its
@@ -4932,12 +4939,8 @@ html[data-panel="chat"] footer { display: none; }
 .el-election small { display: block; font: var(--type-fine); color: var(--ink-soft); }
 .el-service, .el-related { max-width: var(--size-readable); }
 .el-timeline { max-width: 52rem; }
-#subject-body a.ui-byline-name { text-decoration: none; }
-#subject-body a.ui-byline-name:hover { color: var(--bronze-ink); text-decoration: underline; text-decoration-color: var(--bronze-rule); }
-/* The census: four columns of key and value on a wide screen, two on a phone. */
-.el-demographics { max-width: 52rem; font-variant-numeric: tabular-nums; }
-@media (min-width: 701px) { .el-demographics { grid-template-columns: repeat(2, max-content minmax(0, 1fr)); } }
-@media (max-width: 700px) { .el-demographics { grid-template-columns: minmax(0, 1fr) max-content; } }
+/* The census: a ledger key/value list (ruled rows, figures right). */
+.el-demographics { max-width: 46rem; }
 
 
 /* One page-title role, including older routes that use an h2 for their title. */
