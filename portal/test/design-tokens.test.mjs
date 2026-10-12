@@ -156,7 +156,6 @@ const TYPE_BASELINE = {
   'public/ballot.css': 2,
   'public/community.css': 5,
   'public/grants.js': 6,
-  'public/home.css': 6,
   'public/ledger.js': 2,
   'public/matrix.js': 1,
   'public/quiz.js': 4,
