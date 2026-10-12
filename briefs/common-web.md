@@ -44,6 +44,10 @@ include staged, unstaged and new non-ignored source without changing the lane's
 index. A change during a run invalidates its pass. The captured base SHA is used
 for selection and votes checks; no gate fetches or advances main mid-run.
 The runner-source hash also invalidates passes if shared gate tooling changes.
+Narrow lanes cache generated search fixtures by export JSON blob hashes, the
+catalogue builder's transitive imports, Node, lockfile and runner source. Cached
+fixture files are checked against their checksum inventory; privacy/publication
+and affected tests still run. Presentation edits can reuse that build output.
 
 `ox-heavy.sh` retains the existing `/tmp/opax-heavy.lock` directory/owner-pid
 protocol and nice level 10. If the Mac is occupied and the desktop is free, known
