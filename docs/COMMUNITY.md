@@ -52,6 +52,24 @@ Wrong, malformed, expired, superseded, consumed, unknown, disabled-account and o
 
 At the email cap, the link remains the fallback until the daily window ends. Fixed windows can allow attempts on both sides of a boundary. Carrier NAT still shares the existing IP caps. Rotating the MAC secret invalidates outstanding codes; their links remain usable unless already consumed or superseded.
 
+## Store reviewer sign-in
+
+The code-reviewed allowlist in `portal/src/community-auth.ts` contains only `play-review@opax.com.au` (Google Play) and `app-review@opax.com.au` (Apple). The usual trimmed, lowercase email normalization applies. These accounts can use the reusable eight-digit `REVIEWER_LOGIN_CODE` Worker secret through the existing native request and consume-code flow, without access to an inbox. The app UI and session cookie are unchanged.
+
+With a valid binding, request-code sends no email and stores no one-time code or code MAC. It keeps the normal response and request limits; native challenge metadata still expires after 15 minutes, with the same supersession, five-attempt lockout, per-email and per-IP consume limits. The reusable credential has no expiry: request a fresh challenge each sign-in. After admissions, the Worker compares it in constant time and never falls back to an emailed OTP for an allowlisted address. A successful sign-in uses normal account creation and defaults, and emits `community_reviewer_signin` with timestamp, allowlisted email and Cloudflare colo, never IP or code.
+
+An unset, empty or malformed binding (anything other than exactly eight decimal digits) disables this path: both addresses follow ordinary emailed sign-in. Existing reviewer-only challenges have no OTP and cannot authenticate while it is disabled. Other emails keep their ordinary sign-in flow.
+
+An operator sets the secret interactively, with a separate value for each environment:
+
+```sh
+cd portal && npx wrangler secret put REVIEWER_LOGIN_CODE
+```
+
+For staging, use `cd portal && npx wrangler secret put REVIEWER_LOGIN_CODE --env staging`. Cloudflare secrets are write-only; keep the value in the operator's password manager, never in the repository, fixtures, logs or command arguments. Rotate it by putting a new eight-digit value with the same command and updating the relevant store's reviewer sign-in details from the password manager.
+
+Deleting a reviewer account uses ordinary account deletion, including its emailed deletion proof. Deletion only mutates account database rows; it never writes secrets or vars and cannot change the constant allowlist or env binding. A later reviewer sign-in creates a fresh account with ordinary defaults and allowance.
+
 ## Account deletion (W5 and W6, live since 3 October 2026)
 
 Account deletion went live in production on 3 October 2026, together with native code sign-in. It implements the defaults requested for decision 5 in [IOS-APP.md](IOS-APP.md#11-open-decisions). `/community?view=account` links to an accessible `/community?view=delete-account` flow with a fresh code field, permanent-deletion disclosure, cancel link, loading/status feedback and field errors using the shared controls.
