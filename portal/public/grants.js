@@ -1,4 +1,4 @@
-import {donorNameWithheld,loadDonorViewIndex,donorAggregateDetail,unnamedDonorLabel} from './donor-views.js?v=41f22dd20f';
+import {donorNameWithheld,loadDonorViewIndex,donorAggregateDetail,unnamedDonorLabel} from './donor-views.js?v=77470b1d26';
 import {subjectUrl} from './canonical-urls.js?v=225d5915ea';
 /**
  * OPAX Who gets the grants — every published grant award, resolved to the

@@ -14,8 +14,9 @@ export function loadDonorViewIndex() {
   return memo ??= fetch('/graph/donor-index.json',{cache:"no-cache"})
     .then(r => { if (!r.ok) throw Error('Donor index unavailable'); return r.json(); })
     .then(d => {
-      if (!Array.isArray(d?.organisations) || !Array.isArray(d?.withheld)) throw Error('Donor index malformed');
-      return {organisations:new Set(d.organisations),withheld:new Set(d.withheld)};
+      // The file names organisations only; anything else is withheld by donorNameWithheld.
+      if (!Array.isArray(d?.organisations)) throw Error('Donor index malformed');
+      return {organisations:new Set(d.organisations),withheld:new Set(Array.isArray(d.withheld) ? d.withheld : [])};
     })
     .catch(() => Promise.all(MONEY_GRAPHS.map(loadMoneyGraph)).then(donorPrivacyIndex))
     .catch(() => ({organisations:new Set(),withheld:new Set()}));

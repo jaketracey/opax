@@ -15,11 +15,25 @@ const pub = fileURLToPath(new URL('../public/', import.meta.url));
 const graphs = MONEY_GRAPHS.map((p) => JSON.parse(readFileSync(join(pub, p), 'utf8')));
 const published = JSON.parse(readFileSync(join(pub, 'graph/donor-index.json'), 'utf8'));
 
-test('the published index is the one the four graphs give', () => {
+test('the published index is the organisations the four graphs give, and nothing else', () => {
   const index = donorPrivacyIndex(graphs);
-  assert.deepEqual(published, { organisations: [...index.organisations].sort(), withheld: [...index.withheld].sort() });
+  assert.deepEqual(published, { organisations: [...index.organisations].sort() });
   assert.deepEqual(published, donorIndexFile(pub));
-  for (const label of published.withheld) assert.match(label, /^donor \d+ \(name withheld\)$/);
+  // No placeholder, aggregate or withheld id ever reaches the file (labels are folded to lower case).
+  for (const label of published.organisations) assert.doesNotMatch(label, /\(name withheld\)$|^donors not named|^donor:withheld-/i, label);
+});
+
+test('without the withheld half, every donor label is answered exactly as the full index answers it', () => {
+  const full = donorPrivacyIndex(graphs);
+  const slim = { organisations: new Set(published.organisations), withheld: new Set() };
+  const labels = new Set(graphs.flatMap((g) => g.nodes.filter((n) => n.kind === 'donor').flatMap((n) => [n.label, ...(n.aliases || [])])));
+  let withheld = 0;
+  for (const label of [...labels].flatMap((l) => [l, l.toUpperCase(), l.toLowerCase()]).concat(['Fictional Example Person', 'FICTIONAL EXAMPLE PERSON'])) {
+    const answer = donorNameWithheld(full, label);
+    if (answer) withheld++;
+    assert.equal(donorNameWithheld(slim, label), answer, label);
+  }
+  assert.ok(withheld > 100, `${withheld} withheld answers compared`);
 });
 
 test('the generator refuses graphs that still name a withheld donor', () => {
@@ -47,11 +61,14 @@ test('the browser loader reads the file, falls back to the graphs, then withhold
   };
   const json = (body) => ({ ok: true, json: async () => body });
   const file = await load((url) => json(published));
+  // The organisations-only file is used as is: no fall back to the four graphs.
   assert.deepEqual(file.asked, ['/graph/donor-index.json']);
   const expected = donorPrivacyIndex(graphs);
   assert.deepEqual([...file.index.organisations].sort(), [...expected.organisations].sort());
-  assert.deepEqual([...file.index.withheld].sort(), [...expected.withheld].sort());
+  assert.equal(file.index.withheld.size, 0);
   for (const name of [...expected.organisations].slice(0, 25)) assert.equal(donorNameWithheld(file.index, name), donorNameWithheld(expected, name));
+  const malformed = await load((url) => url.endsWith('donor-index.json') ? json({ withheld: [] }) : json(graphs[MONEY_GRAPHS.indexOf(url)]));
+  assert.deepEqual(malformed.asked, ['/graph/donor-index.json', ...MONEY_GRAPHS]);
 
   const fallback = await load((url) => url.endsWith('donor-index.json') ? { ok: false } : json(graphs[MONEY_GRAPHS.indexOf(url)]));
   assert.deepEqual(fallback.asked, ['/graph/donor-index.json', ...MONEY_GRAPHS]);
