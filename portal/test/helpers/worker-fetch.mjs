@@ -8,7 +8,7 @@ const publicRoot = new URL('../../public/', import.meta.url);
 export const origin = 'https://opax.test';
 
 // The HTMLRewriter operations the Worker's page renderers use, over jsdom.
-class HTMLRewriter {
+export class HTMLRewriter {
   handlers = [];
   on(selector, handler) { this.handlers.push([selector, handler]); return this; }
   transform(response) {

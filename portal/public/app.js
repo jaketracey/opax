@@ -986,21 +986,6 @@ function showPanel(name) {
     moneyMapLoading = null; moneyMapGeneration += 1;
     moneyMapHandle?.setPaused(true);
   } else moneyMapHandle?.setPaused(false);
-  // Methods and the expense-category glossary live under the About menu, so its
-  // trigger stays lit there; the drawer has exact links of its own.
-  const headerName = OpaxNavigation.active('/' + parseHash().segs.join('/'), parseHash().params);
-  for (const t of document.querySelectorAll("#primary-nav [data-panel], #nav-drawer [data-panel]")) {
-    const href = t.getAttribute('href');
-    const active = t.closest('details.drawer-group') && href
-      ? location.pathname === href || location.pathname.startsWith(href + '/')
-      : t.dataset.panel === headerName;
-    t.classList.toggle("active", active);
-    if (t.tagName !== "A") continue; // aria-current marks pages, not disclosure buttons
-    if (active) t.setAttribute("aria-current", "page");
-    else t.removeAttribute("aria-current");
-    // The drawer's sections fold; the one holding the current page opens.
-    if (active) { const group = t.closest("details.drawer-group"); if (group) group.open = true; }
-  }
   for (const p of PANELS) $(`panel-${p}`).hidden = p !== name;
   if (name === "search") foldHero(false);
   document.documentElement.dataset.panel = name; // lets the stylesheet know the page (the chat drops the footer)
@@ -2228,15 +2213,12 @@ document.addEventListener('click', (event) => {
   }
 }, true);
 
-// --- masthead nav: megamenus + mobile drawer --------------------------------
-// Disclosure pattern (button + panel), not role=menu: Enter/Space toggles,
-// Esc closes and returns focus, Tab walks the panel links in DOM order
-// (each panel sits right after its button). Hover opens on fine pointers
-// with a 150ms close delay so diagonal travel to the panel doesn't shut it.
+// --- the band: menus, sheet and current-page marks live in navigation.js ----
+// (one list for the menu bar, the sheet, the footer index and every trail; it
+// marks the current section itself on each "opax:route").
 
 // Report pictograms, keyed by slug: hairline line art on a 24-unit grid, the
-// same stroke and bronze as the house icons. The static menu markup in
-// index.html carries the same drawings; keep the two in step. Unknown slugs
+// same stroke and bronze as the house icons. Unknown slugs
 // get no glyph. First Nations is the continent (Country) with an open ring at
 // its heart: no sacred or ceremonial symbols, no dot-painting imitation.
 const REPORT_GLYPHS = {
@@ -2255,39 +2237,11 @@ function reportGlyph(slug, cls) {
   return `<svg class="${cls}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${d}</svg>`;
 }
 
-function reportsMenuHTML(list) {
-  return '<a class="mm-link" href="/audit"><span class="mm-title">Queensland audit reports</span><span class="mm-blurb">Reports tabled in Parliament and QAO recommendations.</span></a>' + list.map((r) => `
-    <a class="mm-link" href="/reports/${esc(r.slug)}">${reportGlyph(r.slug, "mm-glyph")}
-      <span class="mm-title">${esc(r.title)}</span>
-      <span class="mm-blurb">${esc(r.blurb)}</span>
-    </a>`).join("");
-}
-
-let reportsMenuFilled = false;
-function fillReportsMenu() {
-  // The static links in the markup are the fallback; the live index replaces
-  // them once, lazily, the first time the menu opens.
-  if (reportsMenuFilled) return;
-  reportsMenuFilled = true;
-  loadReportsIndex().then(() => {
-    if (reportsIndex?.length) $("menu-reports-list").innerHTML = reportsMenuHTML(reportsIndex);
-  });
-}
-
-OpaxNavigation.mountDesktop({ onOpen: panel => {
-  if (panel.id === "menu-reports") fillReportsMenu();
-} });
+OpaxNavigation.mountDesktop();
 
 // Shared with the homepage so mobile navigation stays consistent.
 const navDrawer = OpaxNavigation.mountDrawer({ navigate: goRoute });
 function closeNavDrawer() { navDrawer.close(); }
-
-// Time machine / record quiz entries (megamenu + drawer): the link lands on
-// Explore via its href; the game dialog then opens on top of it.
-document.addEventListener("click", (e) => {
-  const game = e.target.closest("[data-game]");
-  if (game) openGame(game.dataset.game);
-});
 
 // --- ask --------------------------------------------------------------------
 
