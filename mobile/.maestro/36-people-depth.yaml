@@ -128,7 +128,10 @@ name: 36 Person topics, speeches, mentions, news, ministerial diary and glossary
     centerElement: true
     timeout: 180000
 - tapOn: { id: person-expense-glossary }
-- assertVisible: Expense category glossary
+# The sheet's own screen, not a title that the profile row behind it shares.
+- extendedWaitUntil:
+    visible: { id: expense-glossary }
+    timeout: 15000
 - takeScreenshot: ${EVIDENCE}/36-glossary
 - scrollUntilVisible:
     element: { id: expense-glossary-end }

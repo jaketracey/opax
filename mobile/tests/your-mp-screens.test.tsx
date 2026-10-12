@@ -106,7 +106,9 @@ beforeEach(() => {
     const path = `/interests/${key}.json`;
     return c.rosterProfileFor(identity, {
       ...catalogs,
-      ...(key && files[path] ? { interest: c.decodeInterest(pinned(path)) } : {}),
+      ...(key && files[path]
+        ? { interest: c.decodeInterest(pinned(path)) }
+        : {}),
     });
   });
 });
@@ -851,9 +853,14 @@ test('Choose state electorate opens the chooser at the top of the page', async (
     c.yourMPFor(id, index, manifest, chosen),
   );
   mock.profileFor.mockImplementation(async (id) => c.profileFor(id, catalogs));
-  const scrollTo = jest.spyOn(ScrollView.prototype, 'scrollTo');
   const r = await render(<YourMP />);
-  scrollTo.mockClear();
+  // A fresh scroll view starts at its rest position under the title; a
+  // negative scrollTo would stop at 0, behind the bar (pass 5).
+  const scrollView = () =>
+    r.root.find(
+      (n) => n.type === ScrollView && n.props.testID === 'your-mp-screen',
+    ).instance;
+  const page = scrollView();
   await act(async () => pressable(r, 'choose-state-seat').props.onPress());
   expect(
     r.root
@@ -867,9 +874,8 @@ test('Choose state electorate opens the chooser at the top of the page', async (
         typeof n.props.onChangeText === 'function',
     ).length,
   ).toBeGreaterThan(0);
-  expect(scrollTo).toHaveBeenCalledTimes(1);
-  expect(scrollTo.mock.calls[0]![0]).toMatchObject({ animated: false });
-  expect((scrollTo.mock.calls[0]![0] as { y: number }).y).toBeLessThanOrEqual(0);
+  const chooser = scrollView();
+  expect(chooser).not.toBe(page);
   // Cancel returns to the page, at its top again.
   await act(async () =>
     r.root
@@ -877,8 +883,7 @@ test('Choose state electorate opens the chooser at the top of the page', async (
       .find((n) => n.props.label === 'Cancel')!
       .props.onPress(),
   );
-  expect(scrollTo).toHaveBeenCalledTimes(2);
-  scrollTo.mockRestore();
+  expect(scrollView()).not.toBe(chooser);
   await act(async () => r.unmount());
 });
 

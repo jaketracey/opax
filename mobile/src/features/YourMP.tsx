@@ -24,8 +24,7 @@ import { phoneCopy } from '../design/phone-copy';
 import { PartialNotice, SavedCopyNotice } from './CatalogNotice';
 import { LocationSuggestion } from './electorate-map/LocationSuggestion';
 import { formatDate } from '../design/format';
-import { useCallback, useEffect, useRef, useState } from 'react';
-import { useHeaderBottom } from '../design/useHeaderBottom';
+import { useCallback, useEffect, useState } from 'react';
 import { router, Stack } from 'expo-router';
 import { openSource } from '../navigation/external';
 import { AndroidFocusBack } from '../navigation/AndroidFocusBack';
@@ -35,7 +34,6 @@ import {
   RefreshControl,
   StyleSheet,
   View,
-  type ScrollView,
 } from 'react-native';
 import { catalogs } from '../api/runtime';
 import type { Electorate } from '../api/catalogs';
@@ -200,38 +198,12 @@ export default function YourMP() {
     }
   }
   const chooser = ready && (!choice || choosing || stateChoosing);
-  // The chooser replaces a long page in place. "Choose state electorate" and
-  // "Change seat" sit near its end, so the short chooser would draw above a
-  // retained offset: a blank screen under the title (TestFlight build 32).
-  // Open (and leave) it at the top, under the native header.
-  const scroll = useRef<ScrollView>(null);
-  const headerBottom = useHeaderBottom();
-  const shown = useRef(chooser);
-  // Closing the chooser reloads the chosen seat: the first scroll lands on a
-  // short loading page, so the drawn page could keep the chooser's offset
-  // (pass 5: "Use my location" sits below the field, so a confirm comes from
-  // further down). Land at the top again once the seat has drawn.
-  const settle = useRef(false);
-  const top = useCallback(
-    () =>
-      scroll.current?.scrollTo({
-        y: Platform.OS === 'ios' ? -headerBottom : 0,
-        animated: false,
-      }),
-    [headerBottom],
-  );
-  useEffect(() => {
-    if (shown.current === chooser) return;
-    shown.current = chooser;
-    // Only a new seat reloads; Cancel closes onto the drawn page.
-    settle.current = !chooser && !view;
-    top();
-  }, [chooser, view, top]);
-  useEffect(() => {
-    if (!settle.current || !view || chooser) return;
-    settle.current = false;
-    top();
-  }, [view, chooser, top]);
+  // The chooser replaces a long page in place, and the chosen seat replaces
+  // the chooser. Each draws in a fresh scroll view, at its rest position
+  // under an expanded title: a kept offset drew the short chooser above a
+  // blank screen (TestFlight build 32), and the chosen seat under the bar
+  // after a confirm from lower in the chooser (pass 5). A negative scrollTo
+  // cannot reach that rest position: it stops at 0, behind the bar.
   const seats = stateChoosing
     ? (view?.verifiedStateSeats ?? [])
     : (directory?.electorates.data.electorates ?? []);
@@ -244,9 +216,9 @@ export default function YourMP() {
   const padTitle = isPad && layout.regular;
   return (
     <Screen
+      key={chooser ? 'chooser' : 'page'}
       column="wide"
       testID="your-mp-screen"
-      scrollRef={scroll}
       refreshControl={<RefreshControl refreshing={busy} onRefresh={retry} />}
     >
       {/* One title: the chosen seat replaces "Your MP" (the tab still says
