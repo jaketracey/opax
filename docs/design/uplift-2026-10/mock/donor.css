@@ -1,0 +1,59 @@
+/* web-design-system Phase 1 mock, layer 2: the donor page (/subject/donor/<name>)
+   on the merged components. CSS only over today's markup; nothing here ships.
+   Scoped to donor pages by the balance block they all carry. */
+
+/* ---- Head and map. The aggregate chip and the year scrubber both sit at the
+   map's bottom-left today, so one hides the other: stack them (Phase 2 fixes
+   graph/index.ts and rebuilds the bundle). */
+/* graph/index.ts writes the chip's position inline (left/bottom 12px), hence !important here. */
+#subject-body:has(.donor-balance) #subject-map .mm-individual-summary { bottom: calc(var(--space-heading) + 64px) !important; border-radius: var(--radius-sm); }
+#subject-body:has(.donor-balance) #subject-map { border-radius: var(--radius-md); }
+#subject-body:has(.donor-balance) #subject-map-hint { margin: var(--space-tight) 0 0; font: var(--type-fine); }
+
+/* The supplier link is a link under the map, not a section of its own; its
+   source line repeats the head's word for word (Phase 2 merges the two sheets). */
+#subject-body:has(.donor-balance) #entry-flows { margin-top: var(--space-block); padding-top: 0; border-top: 0; }
+#subject-body:has(.donor-balance) #entry-flows > .ui-source { display: none; }
+#subject-body:has(.donor-balance) #subject-sections > #entry-flows::before { content: none; }
+#subject-body:has(.donor-balance) #entry-flows .entry-more { font: var(--type-metadata); }
+
+/* ---- Sections: the heading role, one rule, the section step. */
+#subject-body:has(.donor-balance) #subject-sections > section:not(#entry-flows) { padding-top: var(--space-heading); }
+#subject-body:has(.donor-balance) .subject-section-title { margin: 0 0 var(--space-heading); font: var(--type-heading); }
+#subject-body:has(.donor-balance) #subject-sections .ui-source { margin-top: var(--space-block); }
+
+/* The balance: three display figures, a legend in the fine role, and rows
+   without a rule at every election (the year label says it). */
+#subject-body:has(.donor-balance) .balance-tiles { gap: var(--space-group); margin: 0 0 var(--space-block); }
+#subject-body:has(.donor-balance) .balance-tiles .tile b, #subject-body:has(.donor-balance) .balance-tiles .tile b a { font: var(--type-display); }
+#subject-body:has(.donor-balance) .balance-tiles .tile span { font: var(--type-fine); color: var(--ink-soft); }
+#subject-body:has(.donor-balance) .balance-legend { margin-bottom: var(--space-heading); font: var(--type-fine); color: var(--ink-soft); }
+#subject-body:has(.donor-balance) .balance-row.balance-election { border-top: 0; margin-top: var(--space-tight); }
+#subject-body:has(.donor-balance) .balance-year { font: var(--type-fine); color: var(--ink-soft); font-variant-numeric: tabular-nums; }
+#subject-body:has(.donor-balance) .balance-year em { display: inline; margin-left: var(--space-line); font: var(--type-fine); font-style: normal; color: var(--ink); }
+#subject-body:has(.donor-balance) .balance-election .balance-year { color: var(--ink); font-weight: 600; }
+
+/* Across the record: rows on the row role, the record's words in the record role. */
+#subject-body:has(.donor-balance) .evidence-years { margin: var(--space-block) 0; font: var(--type-fine); }
+#subject-body:has(.donor-balance) .evidence-excerpt { padding: var(--space-row) 0; border-top-color: var(--divider-subtle); }
+#subject-body:has(.donor-balance) .evidence-excerpt > summary { padding: var(--space-line) 0; font: var(--type-metadata); }
+#subject-body:has(.donor-balance) .evidence-excerpt blockquote { font: var(--type-record); }
+#subject-body:has(.donor-balance) .evidence-locations > summary { font: var(--type-metadata); }
+
+/* Named in members' registers: the person row (44 portrait, name and party,
+   one tag, the declaration). */
+#subject-body:has(.donor-balance) .donor-ties-list .declared-row { padding: var(--space-block) 0; gap: var(--space-block); border-top-color: var(--divider-subtle); }
+#subject-body:has(.donor-balance) .donor-ties-list .declared-portrait, #subject-body:has(.donor-balance) .donor-ties-list .declared-portrait img { width: var(--size-portrait-row); height: var(--size-portrait-row); border-width: 0; }
+#subject-body:has(.donor-balance) .donor-ties-list .declared-person { font: var(--type-strong); }
+#subject-body:has(.donor-balance) .donor-ties-list .declared-kind { margin: var(--space-line) 0 var(--space-tight); }
+#subject-body:has(.donor-balance) .donor-ties-list .declared-description { font: var(--type-body); }
+#subject-body:has(.donor-balance) .interests-summary { margin: 0 0 var(--space-heading); font: var(--type-body); color: var(--ink-soft); }
+
+/* Plain lists (state commissions, lobbying): the row role. */
+#subject-body:has(.donor-balance) #subject-sections .subject-list > li { padding: var(--space-row) 0; border-top-color: var(--divider-subtle); }
+#subject-body:has(.donor-balance) #subject-sections .subject-list .source-title { font: var(--type-strong); }
+#subject-body:has(.donor-balance) #subject-sections .subject-list .result-meta { font: var(--type-fine); color: var(--ink-soft); }
+
+/* A one-entry "On this page" rail says nothing on a phone, where it stacks above
+   the content (Phase 2: the rail lists every donor section). */
+@media (max-width: 900px) { #subject-body:has(.donor-balance) .entry-rail:not(:has(.entry-rail-list > li + li)) { display: none; } }
