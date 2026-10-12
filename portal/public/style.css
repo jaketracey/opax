@@ -451,6 +451,8 @@ header.ui-page-head { position: static; z-index: auto; padding: 0; border: 0; ba
 .ui-section-head > a { font: var(--type-metadata); font-weight: var(--weight-strong); }
 .ui-subsection-title { margin: var(--space-group) 0 var(--space-tight); font: var(--type-subheading); color: var(--ink); }
 .ui-section-note { margin: var(--space-line) 0 0; max-width: var(--size-readable); font: var(--type-metadata); color: var(--ink-soft); }
+/* A note straight under a section's title opens its content a heading step below. */
+.ui-section > .ui-section-note { margin: 0 0 var(--space-heading); }
 
 /* ---- On this page: a short list of the page's sections. */
 .ui-toc-head { margin: 0 0 var(--space-line); font: var(--type-label); color: var(--ink-soft); }
@@ -4235,7 +4237,6 @@ html[data-panel="chat"] footer { display: none; }
 .supplier-profile-main { min-width: 0; }
 .supplier-section:not(.ui-section) { margin-bottom: var(--sp-40); }
 .supplier-section-note:not(.ui-section-note) { color: var(--ink-soft); font-size: var(--text-13); line-height: var(--leading-body); margin: var(--sp-12) 0 var(--sp-16); }
-.ui-section > .ui-section-note { margin: 0 0 var(--space-heading); }
 /* Ranked bars: the name and its figure on one line, a ui-bar under them. */
 .supplier-bar-head { display: flex; flex-wrap: wrap; justify-content: space-between; gap: var(--space-line) var(--space-heading); margin-bottom: var(--space-tight); }
 .supplier-bar-head > .ui-row-name { min-width: 0; overflow-wrap: anywhere; }
