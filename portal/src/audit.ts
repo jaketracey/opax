@@ -58,11 +58,13 @@ function select(label: string, key: string, values: string[], url: URL) {
   return `<label class="ui-filter-field"><span class="visually-hidden">${label}</span><select name="${key}" class="ui-input"><option value="">${label}: all</option>${values.map(v => `<option value="${esc(v)}"${url.searchParams.get(key) === v ? ' selected' : ''}>${esc(key === 'year' ? v.replace('-', '–') : v)}</option>`).join('')}</select></label>`
 }
 function entities(r: Report) {
-  return r.entities.length ? `<ul>${r.entities.map(name => {
+  return r.entities.length ? `<ul class="ui-list audit-entities" data-density="compact" role="list">${r.entities.map(name => {
     const href = r.entity_links?.[name]
-    return `<li>${href && /^\/subject\/agency\/[^/?#]+$/.test(href) ? `<a href="${esc(href)}">${esc(name)}</a>` : esc(name)}</li>`
-  }).join('')}</ul>` : '<p>Not named on the report’s web page.</p>'
+    return `<li class="ui-row-name">${href && /^\/subject\/agency\/[^/?#]+$/.test(href) ? `<a href="${esc(href)}">${esc(name)}</a>` : esc(name)}</li>`
+  }).join('')}</ul>` : '<p class="ui-empty">Not named on the report’s web page.</p>'
 }
+/** One block of the report page: a ui-section with its title. */
+const section = (title: string, body: string) => `<section class="ui-section audit-section"><h2 class="ui-section-title">${title}</h2>${body}</section>`
 function recommendationText(rec: Report['recommendations'][number]) {
   // Only text structure and a bounded set of source list markers are allowed.
   const marker = '(?: style="list-style-type:(?:disc|circle|square|none|decimal|decimal-leading-zero|lower-alpha|lower-latin|upper-alpha|upper-latin|lower-roman|upper-roman)")?'
@@ -115,10 +117,10 @@ export async function auditPage(id: string | null, url: URL, read: Read, block: 
     }
     const hold = (r.title_privacy_filtered ? '<p class="audit-meta">Names withheld from the title; QAO has the original title.</p>' : '')
       + (r.pdf?.status === 'held' ? `<p class="audit-meta">${esc(pdfHoldNote(r))}</p>` : '')
-    const responseSection = `<h2>Entity responses</h2>${responses.length ? responses.map(response => `<details class="audit-response"><summary>${esc(response.body)} · PDF ${response.page_start === response.page_end ? `p.${response.page_start}` : `pp.${response.page_start}–${response.page_end}`}</summary>${response.recommendation_numbers.length ? `<p class="audit-meta">Names recommendation${response.recommendation_numbers.length > 1 ? 's' : ''} ${response.recommendation_numbers.map(esc).join(', ')}</p>` : ''}<div class="audit-response-text">${esc(response.text)}</div></details>`).join('') : `<p>${r.pdf?.status === 'held' || r.licence.body_skipped ? 'Responses are held with the PDF body.' : 'No separately attributed responses are available.'}</p>`}`
+    const responseSection = section('Entity responses', responses.length ? responses.map(response => `<details class="ui-disclosure audit-response"><summary>${esc(response.body)} · PDF ${response.page_start === response.page_end ? `p.${response.page_start}` : `pp.${response.page_start}–${response.page_end}`}</summary><div class="ui-disclosure-body">${response.recommendation_numbers.length ? `<p class="audit-meta">Names recommendation${response.recommendation_numbers.length > 1 ? 's' : ''} ${response.recommendation_numbers.map(esc).join(', ')}</p>` : ''}<div class="audit-response-text">${esc(response.text)}</div></div></details>`).join('') : `<p class="ui-empty">${r.pdf?.status === 'held' || r.licence.body_skipped ? 'Responses are held with the PDF body.' : 'No separately attributed responses are available.'}</p>`)
     const originals = [{ href: r.canonical_url, label: 'Report on qao.qld.gov.au' }, ...(r.pdf_url ? [{ href: r.pdf_url, label: `Full report (PDF): ${pdfTerms(r)}` }] : [])]
     const pdfLink = r.pdf_url ? `<p class="audit-meta"><a href="${esc(r.pdf_url)}" rel="noopener">Full report (PDF)</a>: ${esc(pdfTerms(r))}</p>` : ''
     return { title: `${r.title} · OPAX`, description, status: 200,
-      prerender: block(r.title, meta, '', [INDEX_CRUMB, { label: r.title }]) + `<section class="wrap audit-content">${r.sectors.length ? `<p class="audit-tags">${r.sectors.map(s => tagHTML(s)).join(' ')}</p>` : ''}<p class="audit-out"><a href="${esc(r.canonical_url)}" rel="noopener">Read the report on qao.qld.gov.au ↗</a></p>${pdfLink}${hold}<h2>Entities audited</h2>${entities(r)}<h2>Recommendations</h2>${recommendations}${responseSection}${source(m, originals, r.licence)}</section>` }
+      prerender: block(r.title, meta, '', [INDEX_CRUMB, { label: r.title }]) + `<section class="wrap audit-content">${r.sectors.length ? `<p class="audit-tags">${r.sectors.map(s => tagHTML(s)).join(' ')}</p>` : ''}<p class="audit-out"><a href="${esc(r.canonical_url)}" rel="noopener">Read the report on qao.qld.gov.au ↗</a></p>${pdfLink}${hold}${section('Entities audited', entities(r))}${section('Recommendations', recommendations)}${responseSection}${source(m, originals, r.licence)}</section>` }
   } catch { return missing() }
 }
