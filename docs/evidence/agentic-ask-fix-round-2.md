@@ -15,11 +15,11 @@ People and parties are matched against the roster, with standard party aliases a
 | Model digits | `portal/test/agentic-fix2.test.mjs` | Counts, years, dollars, percentages, citation ids and Unicode numeric characters are rejected |
 | Dropped speaker | `portal/test/agentic-fix2.test.mjs` | Unscoped Taylor plan declines before counting; constrained plan returns 87; real JSON and SSE use normal Ask fallback |
 | Other named scope | `portal/test/agentic-fix2.test.mjs` | Dropped party, partially scoped people, ambiguous surname and named bill decline |
-| Citation scope | `portal/test/agentic-citations.test.mjs` | Exact dates and venue survive citation URLs, client hydration, pagination, request serialization and the actual search filter |
+| Citation scope | `portal/test/agentic-citations.test.mjs` | Exact dates and venue survive citation URLs, client hydration, cancelled filter drafts, pagination, request serialization and the actual search filter |
 
 Both new test files were copied unchanged into an isolated temporary source tree restored from the reviewed baseline. The baseline produced **9 tests, 0 passes, 9 failures**. The fixed targeted suite passes **49 tests, 0 failures**. The existing deadline regression now uses a manually advanced clock and barriers at the actual stalled tool/fallback fetches, eliminating desktop scheduler amplification. It still fails against the original pre-fix deadline code (`d10c64865`) because fallback fetches remain active at the original 40-second deadline, and passes with both JSON and SSE finishing at exactly 40,000 simulated milliseconds.
 
-The ordinary fixture corpus now includes the reviewer's additional ten questions, for **38** questions. The parity test imports the real `origin/main` Worker and compares response bytes: **38 JSON plus 38 SSE bodies, all 76 identical**, with zero planner calls.
+The ordinary fixture corpus now includes the reviewer's additional ten questions, for **38** questions. The parity test imports the real `origin/main` Worker and compares response bytes: **38 JSON plus 38 SSE bodies, all 76 identical**, with zero planner calls. A refreshed parity run against `d177a33a560e9b815ead3a0be38f71cee19c0705` after main advanced also passes all 76 comparisons.
 
 Desktop gate command: `OPAX_TEST_HOST=::1 ~/opax-work/web-tests-desktop.sh <worktree>`, after pushing only `gate/agentic-fix2`. Mac gates are `npm run check` and `npx wrangler deploy --dry-run` from `portal`. Full gate counts are reported with the tested SHA in the completion report and retained in the desktop worktree's `.gate-test.log`.
 

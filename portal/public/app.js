@@ -11882,10 +11882,13 @@ function searchQueryParams(q, f, page, sort) {
     for (let year = RECORD_FIRST_YEAR; year <= RECORD_LAST_YEAR; year++) select.add(new Option(String(year), String(year)));
     select.value = String(id === "f-from" ? RECORD_FIRST_YEAR : RECORD_LAST_YEAR);
   }
-  let draftBefore = null;
+  let draftBefore = null, draftCitationScope = null;
   const close = (apply = false) => {
     if (!pop?.open) return;
-    if (!apply && draftBefore) for (const id of ids) $(id).value = draftBefore[id];
+    if (!apply && draftBefore) {
+      for (const id of ids) $(id).value = draftBefore[id];
+      searchCitationScope = draftCitationScope || {};
+    }
     if (apply && Number($("f-from").value) > Number($("f-to").value)) {
       const from = $("f-from").value;
       $("f-from").value = $("f-to").value;
@@ -11903,6 +11906,7 @@ function searchQueryParams(q, f, page, sort) {
   };
   btn?.addEventListener("click", () => {
     draftBefore = Object.fromEntries(ids.map((id) => [id, $(id).value]));
+    draftCitationScope = { ...searchCitationScope };
     pop.hidden = false;
     pop.showModal();
     btn.setAttribute("aria-expanded", "true");
