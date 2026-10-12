@@ -870,7 +870,8 @@ const CSS = `
   width: 100%; margin: 0 0 var(--space-heading); padding: 0;
   color: var(--ink); font: var(--type-subheading);
 }
-.qz-decks { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-tight); }
+/* Decks wrap rather than squeeze: a card never drops to a word a line. */
+.qz-decks { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 11rem), 1fr)); gap: var(--space-tight); }
 .qz-deck {
   min-height: 8.25rem; padding: var(--space-block); text-align: left;
   border: var(--border-hairline) solid var(--divider-subtle); border-radius: var(--radius-md);

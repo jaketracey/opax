@@ -569,7 +569,7 @@ header.ui-page-head { position: static; z-index: auto; padding: 0; border: 0; ba
   .ui-card, .ui-plate { border-color: CanvasText; }
   .ui-section[data-accent]::before { background: CanvasText; }
 }
-@media (prefers-reduced-motion: reduce) { .ui-card, .bill-peek-summary::after { transition: none; } }
+@media (prefers-reduced-motion: reduce) { .ui-card, .bill-peek-summary::after, .game-icon { transition: none; } }
 
 a, button.link {
   color: var(--ink); text-decoration: underline;
@@ -1920,13 +1920,20 @@ a.barrow-name:hover { color: var(--bronze-ink); }
    tool, so its words are the title and one line, left-aligned, no icon. */
 .game-grid { margin-top: var(--space-group); }
 @media (min-width: 1100px) { .game-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
-.game-card { display: grid; align-content: start; width: 100%; margin: 0; text-align: left; font: inherit; color: var(--ink); cursor: pointer; }
+.game-card { display: flex; flex-direction: column; align-items: flex-start; width: 100%; margin: 0; text-align: left; font: inherit; color: var(--ink); cursor: pointer; }
 .game-card:hover .ui-card-title { color: var(--bronze-ink); }
 .game-card:focus-visible { outline: var(--border-focus) solid var(--bronze-ink); outline-offset: 3px; }
 
 .game-dialog {
   border: none; border-radius: var(--radius-md); padding: 0;
   width: min(1200px, calc(100vw - 2rem)); max-height: calc(100vh - 3rem);
+/* The engraving: each tool's glyph in hairline bronze on a hairline ring, and
+   its action word at the card's foot (Play, Open), the cue that it opens. */
+.game-icon { display: grid; place-items: center; width: var(--size-control-large); height: var(--size-control-large); margin-bottom: var(--space-heading); border: var(--border-hairline) solid var(--bronze-rule); border-radius: var(--radius-round); color: var(--bronze-ink); transition: border-color var(--duration-quick) var(--ease-standard); }
+.game-icon svg { width: var(--sp-32); height: var(--sp-32); stroke-width: 1.75; }
+.game-card:hover .game-icon { border-color: var(--bronze-ink); }
+.game-cta { margin-top: auto; padding-top: var(--space-heading); font: var(--type-label); color: var(--navy); text-decoration: underline; text-decoration-color: var(--bronze-rule); text-underline-offset: 3px; }
+.game-card:hover .game-cta { text-decoration-color: var(--bronze-ink); }
   background: var(--paper);
   box-shadow: var(--shadow-overlay);
 }
