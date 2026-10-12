@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-require-imports -- Jest factory builds an isolated fixture client before app imports. */
 import { act } from 'react';
-import { Text as NativeText, useWindowDimensions } from 'react-native';
+import { Modal, Text as NativeText, useWindowDimensions } from 'react-native';
 import TestRenderer from 'react-test-renderer';
-import { Stack } from 'expo-router';
+import { Stack, router } from 'expo-router';
 import {
   AsAtLine,
   BigFigure,
@@ -188,6 +188,43 @@ describe('report page', () => {
       .findAllByType(LinkRow)
       .find((row) => row.props.testID === 'report-section-sources-1-cited-0')!;
     expect(first.props.title).toMatch(/^\[\d+\] /);
+    await act(async () => r.unmount());
+  });
+
+  test('a record chosen in a section’s sheet opens once the sheet has gone (journey 38)', async () => {
+    mockParams.slug = 'gambling';
+    jest.mocked(router.push).mockClear();
+    const r = await render(ReportPage);
+    const line = r.root
+      .findAllByType(RecordsLine)
+      .find((l) => l.props.testID === 'report-section-sources-1')!;
+    const press = line.find(
+      (n) =>
+        n.props.testID === 'report-section-sources-1' &&
+        typeof n.props.onPress === 'function',
+    );
+    await act(async () => press.props.onPress());
+    const sheet = line.findByType(Modal);
+    expect(sheet.props.visible).toBe(true);
+    const first = line
+      .findAllByType(LinkRow)
+      .find((row) => row.props.testID === 'report-section-sources-1-cited-0')!;
+    await act(async () => first.props.onPress());
+    // The sheet closes, still mounted, so iOS can report its dismissal; the
+    // reader waits for it rather than landing behind the sheet.
+    expect(line.findByType(Modal)).toBe(sheet);
+    expect(sheet.props.visible).toBe(false);
+    expect(router.push).not.toHaveBeenCalled();
+    await act(async () => sheet.props.onDismiss());
+    expect(router.push).toHaveBeenCalledTimes(1);
+    expect(router.push).toHaveBeenCalledWith(
+      expect.objectContaining({ pathname: '/doc/[slug]' }),
+    );
+    // A dismissal with nothing chosen (Done, a swipe) opens nothing.
+    await act(async () => press.props.onPress());
+    await act(async () => sheet.props.onRequestClose());
+    await act(async () => sheet.props.onDismiss());
+    expect(router.push).toHaveBeenCalledTimes(1);
     await act(async () => r.unmount());
   });
 

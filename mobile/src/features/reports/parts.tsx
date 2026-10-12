@@ -274,23 +274,26 @@ export function RecordsLine({
         onPress={() => setOpen(true)}
         testID={testID}
       />
-      {open ? (
-        <RecordsSheet
-          title={title}
-          sources={sources}
-          asOf={asOf}
-          savedAt={savedAt}
-          citation={citation}
-          notes={notes}
-          onClose={() => setOpen(false)}
-          testID={testID}
-        />
-      ) : null}
+      {/* Mounted throughout, as the source sheet is: a record chosen in it
+          opens from the Modal's onDismiss, which never runs once the
+          sheet is unmounted. A closed Modal draws nothing. */}
+      <RecordsSheet
+        visible={open}
+        title={title}
+        sources={sources}
+        asOf={asOf}
+        savedAt={savedAt}
+        citation={citation}
+        notes={notes}
+        onClose={() => setOpen(false)}
+        testID={testID}
+      />
     </>
   );
 }
 
 function RecordsSheet({
+  visible,
   title,
   sources,
   asOf,
@@ -300,6 +303,7 @@ function RecordsSheet({
   onClose,
   testID,
 }: {
+  visible: boolean;
   title: string;
   sources: Source[];
   asOf?: DateInput | null;
@@ -320,7 +324,7 @@ function RecordsSheet({
   };
   const open = (path: string, name: string) =>
     after(() => openRecord(path, name));
-  useKeyCommand('list-escape', onClose, true);
+  useKeyCommand('list-escape', onClose, visible);
   const flagged = sources.some((s) => s.cited === true);
   const numbered = sources.map((s, i) => ({ s, n: i + 1 }));
   const cited = flagged ? numbered.filter((x) => x.s.cited === true) : numbered;
@@ -329,7 +333,7 @@ function RecordsSheet({
   const date = asOf == null ? '' : formatDate(asOf);
   return (
     <Modal
-      visible
+      visible={visible}
       animationType={reduced ? 'none' : 'slide'}
       presentationStyle="pageSheet"
       onRequestClose={onClose}
