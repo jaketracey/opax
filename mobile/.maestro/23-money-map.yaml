@@ -138,7 +138,7 @@ name: 23 Native money map, held figures, original source and ranked list
       id: money-donor-0
     centerElement: true
     timeout: 120000
-- assertVisible: '1\. Mining and Energy Union, \$4,102,022 disclosed donations.*2024'
+- assertVisible: '1\. Mining and Energy Union, \$4,102,022 disclosed donations.*2024.*'
 - takeScreenshot: ${EVIDENCE}/23-list
 - scrollUntilVisible:
     element:
@@ -179,6 +179,6 @@ name: 23 Native money map, held figures, original source and ranked list
     visible:
       id: money-focus-amount
     timeout: 30000
-- assertVisible: .*held by donors on this map across.*contracts
+- assertVisible: .*held by donors on this map across.*contracts.*
 - takeScreenshot: ${EVIDENCE}/23-list-public-money
 - tapOn: Done
