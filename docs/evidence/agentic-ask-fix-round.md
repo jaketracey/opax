@@ -28,3 +28,5 @@ P2 scoped other-period follow-ups and stale delayed step imports are fixed and t
 Jake's gambling fixture SSE and plain answer remain at `agentic-ask-route-fixture.sse` and `agentic-ask-route-fixture.txt`. The figures are synthetic; the answer uses the existing renderer.
 
 `portal/public/votes.json` remains byte-identical to `origin/main`: SHA-256 `a77128dc0e1e1b3fdaa4bf84501e2c94af3125dea3cf0b2dffbc688a49d68546`.
+
+Desktop gate setup: export `OPAX_TEST_HOST=::1` when calling `web-tests-desktop.sh`. IPv4 loopback times out on this desktop; a direct HTTP probe succeeds on IPv6. `local-miniflare.mjs` selects this host for fixture Workers and uses asynchronous fixture-only SQL requests to native D1, avoiding Miniflare's blocking binding proxy on IPv6. The application Worker, native SQLite constraints, atomic batches, scheduled expiry and voice assertions remain exercised. No test is skipped. The MCP test already supports the same host variable. The operator security sweep now covers the bearer-protected gold route too, and the module stamp sweep follows literal URL constants used by dynamic imports.
