@@ -34,7 +34,7 @@ const splitSpeakers = person => attributionHelpers?.splitSpeakers(person) || [];
 const personScope = person => attributionHelpers?.personScope(person) || person?.speech_scope || null;
 const datedAffiliationParty = (row, person) => attributionHelpers?.datedAffiliationParty(row, person) || null;
 let heldBackHelpers;
-const heldBackReady = import('/held-back-transcripts.js?v=b3f863614c').then(module => { heldBackHelpers = module; });
+const heldBackReady = import('/held-back-transcripts.js?v=5c4e280acb').then(module => { heldBackHelpers = module; });
 
 let saDisplayHelpers;
 let saFullTextFlag = 'false';
@@ -5580,8 +5580,8 @@ async function openSubject(kind, name, manageFocus, params = new URLSearchParams
   const revealGrid = () => grid?.classList.remove("is-settling");
   setTimeout(revealGrid, 4000);
   const unattributed = params.get('attribution') === 'unattributed';
-  const [personData, heldBackCounts] = await Promise.all([
-    loadParliamentarians(), loadHeldBackTranscripts(), heldBackReady,
+  const [personData, heldBackCounts, chairRoleCounts] = await Promise.all([
+    loadParliamentarians(), loadHeldBackTranscripts(), loadChairRoleTranscripts(), heldBackReady,
   ]);
   const people = personData?.people || [];
   const record = splitPerson(people, name) || people.find((p) => p.name.toLowerCase() === String(name).toLowerCase());
@@ -5639,7 +5639,8 @@ async function openSubject(kind, name, manageFocus, params = new URLSearchParams
     document.title = `${roster.full || name} · OPAX`;
     head.insertAdjacentHTML('beforeend', `<p class="person-caveat">Only own-house speeches within the reviewed service dates in the ${esc(roster.speech_scope.state.toUpperCase())} parliamentary chamber are attributed here. <a ${entityHrefAttr(hasEntityId(roster.name) ? subjectHash('person', roster.name) + "?attribution=unattributed" : null)}>Witness testimony and other unattributed records printed as ${esc(roster.name)}</a>.</p>`);
   }
-  head.insertAdjacentHTML('beforeend', heldBackHelpers.heldBackTranscriptsHTML(roster?.pid, heldBackCounts));
+  head.insertAdjacentHTML('beforeend', heldBackHelpers.heldBackTranscriptsHTML(roster?.pid, heldBackCounts)
+    + heldBackHelpers.chairRoleTranscriptsHTML(roster?.pid, chairRoleCounts));
   const witness = !roster && speeches.length > 0 &&
     speeches.every((r) => r.speaker_type === "witness" || (isCommitteeChamber(r.chamber) && r.person_id == null));
   if (witness) {
@@ -6745,6 +6746,15 @@ function loadHeldBackTranscripts() {
       return response.json();
     }).catch(() => { heldBackTranscriptsPromise = null; return null; });
   return heldBackTranscriptsPromise;
+}
+let chairRoleTranscriptsPromise = null;
+function loadChairRoleTranscripts() {
+  chairRoleTranscriptsPromise ??= fetch('/data/chair-role-transcripts.json', { cache: 'no-cache' })
+    .then(response => {
+      if (!response.ok) throw new Error('Chair-role transcript counts unavailable');
+      return response.json();
+    }).catch(() => { chairRoleTranscriptsPromise = null; return null; });
+  return chairRoleTranscriptsPromise;
 }
 let parliamentariansPromise = null;
 function loadParliamentarians() {
