@@ -7,8 +7,18 @@ export function loadMoneyGraph(path) {
   if (!graphs.has(path)) graphs.set(path, fetch(path,{cache:"no-cache"}).then(r => { if (!r.ok) throw Error('Money data unavailable'); return r.json(); }));
   return graphs.get(path);
 }
+/** The index the first render waits for: the published file (scripts/build_donor_index.mjs,
+ *  ~4 KB) rather than every money graph. Without it, computed from the graphs as before;
+ *  failing that, every donor is withheld. */
 export function loadDonorViewIndex() {
-  return memo ??= Promise.all(MONEY_GRAPHS.map(loadMoneyGraph)).then(donorPrivacyIndex).catch(() => ({organisations:new Set(),withheld:new Set()}));
+  return memo ??= fetch('/graph/donor-index.json',{cache:"no-cache"})
+    .then(r => { if (!r.ok) throw Error('Donor index unavailable'); return r.json(); })
+    .then(d => {
+      if (!Array.isArray(d?.organisations) || !Array.isArray(d?.withheld)) throw Error('Donor index malformed');
+      return {organisations:new Set(d.organisations),withheld:new Set(d.withheld)};
+    })
+    .catch(() => Promise.all(MONEY_GRAPHS.map(loadMoneyGraph)).then(donorPrivacyIndex))
+    .catch(() => ({organisations:new Set(),withheld:new Set()}));
 }
 export const unnamedDonorLabel = n => `Donors not named (${n})`;
 export const isUnnamedAggregate = label => /^Donors not named \(\d+\)$/.test(label);
