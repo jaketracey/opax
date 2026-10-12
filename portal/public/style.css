@@ -1727,33 +1727,11 @@ button.link.result-title:hover { color: var(--bronze-ink); }
 
 /* ---- reports ------------------------------------------------------------ */
 
-.report-cards {
-  display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-  gap: var(--space-block); margin-top: var(--space-group);
-}
-/* A report card (§5.2 Card): radius 12, raised, a hairline, no shadow; the
-   whole card is the link. */
-.report-card {
-  display: grid; align-content: start;
-  background: var(--paper-raised); border: var(--border-hairline) solid var(--divider-subtle); border-radius: var(--radius-md);
-  padding: var(--sp-16) var(--sp-20); text-align: left; color: var(--ink); text-decoration: none;
-  transition: border-color var(--duration-quick) var(--ease-standard);
-}
-.report-card:hover { border-color: var(--line-control); }
-.report-card:focus-visible { outline: var(--border-focus) solid var(--bronze-ink); outline-offset: 3px; }
-.report-card:hover .card-title { text-decoration: underline; text-decoration-color: var(--bronze-rule); text-underline-offset: 3px; }
-#reports-index .subject-tag { max-width: var(--size-readable); }
+/* The index is a ui-page-head over a ui-card-grid of reports (the whole card
+   is the link), then one dated source line for the set. */
 #reports-source .ui-source { margin-top: var(--space-group); }
 .card-glyph { display: block; width: var(--size-icon-lg); height: var(--size-icon-lg); margin-bottom: var(--space-tight); color: var(--bronze-ink); }
-.card-title { display: block; font: var(--type-subheading); margin-bottom: var(--space-line); }
-.card-blurb { display: block; color: var(--ink-soft); font: var(--type-metadata); }
-
-/* The report's title is the page's h1 (the title role); the index's is #reports-title. */
-#report-view #report-title { margin: var(--space-line) 0 var(--space-tight); }
-#reports-index #reports-title { margin: var(--space-line) 0 var(--space-tight); }
 .report-glyph { display: inline-block; width: 1.05em; height: 1.05em; vertical-align: -0.15em; margin-right: var(--sp-8); color: var(--bronze-ink); }
-.report-blurb { font: 400 italic 1.125rem/1.5 var(--serif); color: var(--ink-soft); margin: 0 0 var(--sp-8); max-width: 62ch; }
-.report-meta { color: var(--ink-faint); font-size: var(--text-13); margin: 0 0 var(--sp-16); }
 
 /* Figures read as ledger entries, not cards: a short bronze rule, the number
    set in the record's serif beneath it, a muted caption under that. */
@@ -1823,45 +1801,16 @@ a.barrow-name:hover { color: var(--bronze-ink); }
 .report-lead { display: grid; grid-template-columns: 1fr; gap: var(--sp-24) var(--sp-40); align-items: start; }
 @media (min-width: 1100px) {
   .report-lead { grid-template-columns: minmax(0, 1fr) 340px; }
-  #report-figures { position: sticky; top: calc(var(--header-h) + 1rem); }
-  #report-figures .tiles { flex-direction: column; }
-  #report-figures .tile { max-width: none; }
+  #report-figures { position: sticky; top: calc(var(--header-h) + var(--sp-16)); }
+  #report-figures .ui-stats { flex-direction: column; }
 }
 /* In a column of actions the explain button takes the column; beside ⋯ it is a pill. */
 .action-row > button.ui-button[data-explain] { width: 100%; justify-content: flex-start; text-align: left; }
-.tile .tile-source { display: block; margin-top: var(--sp-4); font-size: var(--text-13); line-height: var(--leading-normal); color: var(--ink-faint); }
-.tile .tile-source a { color: var(--ink-faint); }
-.position-list { list-style: none; margin: 0; padding: 0; }
-.position-list { border-top: var(--border-hairline) solid var(--divider-subtle); }
-.position-list li { margin: 0; padding: var(--sp-16) 0; max-width: 78ch; border-bottom: var(--border-hairline) solid var(--divider-subtle); }
-.position-party { margin-right: var(--sp-4); }
-.position-text { font-size: var(--text-16); line-height: var(--leading-loose); }
-.position-list .source-meta { margin-top: var(--sp-4); }
 
-/* The report reading list is one continuous editorial sequence. Speech
-   boundaries come from hairlines and whitespace, never nested cards. */
-.report-reading-note { margin: var(--sp-8) 0 var(--sp-16); max-width: 62ch; }
-.report-reading-list { max-width: 76ch; border-top: var(--border-hairline) solid var(--divider-subtle); }
-.report-reading-item { padding: var(--sp-24) 0; border-bottom: var(--border-hairline) solid var(--divider-subtle); }
-.report-speech-title { margin: 0 0 var(--sp-12); max-width: 62ch; font: var(--type-heading); }
-.report-speech-byline { display: flex; align-items: center; gap: var(--sp-12); min-width: 0; }
-.report-speech-byline .meta-portrait { width: 44px; height: 44px; flex: 0 0 44px; }
-.report-speech-byline .meta-portrait img { width: 44px; height: 44px; border-radius: var(--radius-round); object-fit: cover; display: block; }
-.report-speech-identity { min-width: 0; }
-.report-speech-name-line { display: flex; flex-wrap: wrap; align-items: center; gap: 0 var(--sp-12); }
-.report-speech-name-line > a { display: inline-flex; align-items: center; min-height: 44px; }
-.report-speech-speaker { font: var(--weight-strong) var(--text-15)/var(--leading-snug) var(--sans); text-underline-offset: 3px; }
-.report-speech-name-line .meta-party { text-decoration: none; }
-.report-speech-meta { margin: calc(-1 * var(--sp-4)) 0 0; color: var(--ink-faint); font: var(--type-fine); }
-.report-speech-brief { margin: var(--sp-16) 0 var(--sp-8); max-width: 68ch; font: var(--type-record); }
-.report-speech-link { display: inline-flex; align-items: center; min-height: 44px; font: var(--weight-strong) var(--text-15)/var(--leading-snug) var(--sans); text-underline-offset: 4px; }
-
-#report-view .tile-source a,
-#report-view .position-list .source-meta a,
 #report-view .barrow-name,
-#report-view button.link.source-title { display: inline-flex; align-items: center; min-height: 44px; }
+#report-view button.link.source-title { display: inline-flex; align-items: center; min-height: var(--size-target); }
 #report-view button.link.source-title { text-align: left; }
-#report-view .barrow { min-height: 44px; }
+#report-view .barrow { min-height: var(--size-target); }
 
 /* A report's body sections are headed by a serif h3, which already reads as
    a break, so they take the middle step rather than the full section gap. */
@@ -1871,13 +1820,6 @@ a.barrow-name:hover { color: var(--bronze-ink); }
 #report-moments:not(:empty) + #report-sections .report-section:first-child { margin-top: var(--space-section); }
 
 @media (max-width: 640px) {
-  .report-blurb { font-size: var(--text-17); }
-  .report-meta { line-height: var(--leading-body); }
-  #report-figures .tiles { gap: var(--sp-16); }
-  #report-figures .tile { min-width: 140px; flex-basis: 140px; }
-  .report-speech-title { font-size: var(--text-17); }
-  .report-speech-brief { font-size: var(--text-17); line-height: var(--leading-loose); }
-  .position-text { font-size: var(--text-16); }
   .section-tools { display: grid; grid-template-columns: 1fr; }
   .section-tools .ui-button,
   #report-stats .barrow { grid-template-columns: minmax(0, 1fr) auto; gap: 0 var(--sp-12); margin: var(--sp-8) 0 var(--sp-16); }
@@ -2120,7 +2062,6 @@ a.barrow-name:hover { color: var(--bronze-ink); }
 .news-meta { display: block; margin-top: var(--sp-4); color: var(--ink-faint); font-size: var(--text-13); }
 .news-source { font: var(--type-label); color: var(--ink-soft); }
 
-a.report-card { display: block; text-decoration: none; }
 .tiles-compact { margin-top: var(--sp-8); gap: var(--sp-16) var(--sp-24); }
 .tiles-compact .tile { min-width: 130px; flex-basis: 130px; padding: var(--sp-12) 0 var(--sp-4); }
 .tiles-compact .tile b { font-size: var(--text-24); }
@@ -2592,34 +2533,38 @@ a.report-card { display: block; text-decoration: none; }
     padding-top: var(--space-block); border-top: var(--border-hairline) solid var(--divider-default);
   }
 }
-.about-index-head { margin: 0 0 var(--space-line); font: var(--type-label); color: var(--ink-soft); }
-.about-index ul { list-style: none; margin: 0; padding: 0; }
-.about-index li + li { border-top: var(--border-hairline) solid var(--divider-subtle); }
-.about-index a { display: flex; align-items: center; min-height: var(--size-target); font: var(--type-metadata); color: var(--ink); text-decoration: none; }
-.about-index a:hover { text-decoration: underline; text-decoration-color: var(--bronze-rule); text-underline-offset: 3px; }
-.about-index a:focus-visible { outline: var(--border-focus) solid var(--bronze-ink); outline-offset: 2px; }
+/* The index is the shared On this page list (ui-toc-head, ui-toc-list). */
 
-/* One title (h1), sections (h2), subsections (h3): the type roles below set
-   their faces; these only space them. */
-#panel-about .about-body > h1, #panel-methods > h1 { margin: 0 0 var(--space-group); }
-#panel-about p, #panel-methods p, .about-list li { max-width: 68ch; }
-.about-list { padding-left: var(--sp-20); }
-.about-list li { margin: var(--sp-8) 0; }
+/* ---- reference pages: /about, /methods, /privacy, /support --------------
+   One ui-page-head; then each h2 opens a section with the one rule and the
+   section step, and each h3 a group. The markup stays flat: the Worker copies
+   /privacy and /support whole (panelPrerender), and a nested section would end
+   its pattern early. The text is OPAX's own, so it keeps the body role; lists
+   keep their bullets and draw no rules. */
+.policy-page > h2 {
+  margin: var(--space-section) 0 var(--space-heading); padding-top: var(--space-heading);
+  border-top: var(--border-hairline) solid var(--divider-default); scroll-margin-top: calc(var(--header-h) + var(--sp-16));
+}
+.policy-page > h3 { margin: var(--space-group) 0 var(--space-tight); }
+.policy-page > h2 + h3 { margin-top: 0; }
+.policy-page p, .policy-page li { max-width: var(--size-readable); }
+.policy-page > p { margin-block: var(--space-row); }
+.policy-page code { background: var(--paper-sunken); border-radius: var(--radius-sm); padding: var(--sp-2) var(--sp-4); font-size: var(--text-15); }
+.about-list { margin-block: var(--space-heading); padding-left: var(--sp-20); }
+.about-list li { margin-block: var(--space-tight); }
 .doc-speaker-links { margin: 0; }
 
 /* ---- stats page ---------------------------------------------------------- */
 
-.stat-grid {
-  display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, max-content));
-  gap: var(--sp-20) var(--sp-48); margin: 0 0 var(--sp-24);
-}
-.stat-grid .stat-figure {
-  display: block; font: var(--type-display); color: var(--ink);
-  font-variant-numeric: tabular-nums;
-}
-.stat-grid .stat-label {
-  display: block; margin-top: var(--sp-4); font-size: var(--text-13); color: var(--ink-faint);
-}
+/* The figures (ui-stats) on an even grid: two to a row on a phone. */
+.stats-figures { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 11rem), 1fr)); }
+@media (max-width: 700px) { .stats-figures { grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: var(--space-heading); } }
+#stats-connections .ui-disclosure { max-width: var(--size-readable); }
+@media (max-width: 360px) { .stats-figures { grid-template-columns: minmax(0, 1fr); } }
+#stats-hero .ui-skeleton { width: 5em; }
+/* The coverage tile is a span of years, not a count: proportional digits keep it on one line in a phone column. */
+#stats-hero [data-stat="coverage"] .ui-stat-value { font-variant-numeric: proportional-nums; }
+#panel-stats > .ui-status-line { margin-top: 0; max-width: var(--size-readable); }
 
 .table-scroll { overflow-x: auto; }
 .about-table { border-collapse: collapse; width: 100%; font: var(--type-metadata); }
@@ -2633,7 +2578,6 @@ a.report-card { display: block; text-decoration: none; }
 .about-table .cell-token { white-space: nowrap; }
 .table-scroll.table-fits { overflow-x: clip; }
 .about-table .cell-num { text-align: right; font-variant-numeric: tabular-nums; }
-#panel-methods code { background: var(--paper-sunken); border-radius: var(--radius-sm); padding: 0.1em 0.35em; font-size: 0.875em; }
 
 /* ---- footer ------------------------------------------------------------- */
 
@@ -2791,7 +2735,7 @@ footer #stats:empty { display: none; }
   padding: var(--sp-8) var(--sp-12) var(--sp-12);
   background: var(--paper-raised);
   border: var(--border-hairline) solid var(--divider-subtle); border-top: var(--border-focus) solid var(--bronze); border-radius: var(--radius-sm);
-  box-shadow: 0 6px 22px rgba(35, 39, 31, 0.14);
+  box-shadow: var(--shadow-overlay);
 }
 .term-tip-name { display: block; font: var(--weight-strong) var(--text-15)/var(--leading-snug) var(--sans); color: var(--ink); }
 .term-tip p { margin: var(--sp-4) 0 0; font: var(--type-fine); color: var(--ink-soft); }
@@ -2804,36 +2748,19 @@ footer #stats:empty { display: none; }
 }
 .term-tip-action:hover { background: var(--navy-raised); border-color: var(--navy-raised); color: var(--on-navy); }
 
-#panel-expenses h2 { font: var(--type-heading); margin: var(--sp-4) 0 var(--sp-8); }
-#panel-expenses h3 { font: var(--type-subheading); margin: var(--sp-32) 0 var(--sp-8); }
-#panel-expenses p { max-width: 68ch; }
-#panel-expenses .lede { font: var(--type-record); color: var(--ink); margin: 0 0 var(--sp-8); }
-.defs { margin: var(--sp-12) 0 0; padding: 0; border-top: var(--border-hairline) solid var(--divider-subtle); }
-.defs dt { margin: 0; padding: var(--sp-12) 0 0; font: var(--weight-strong) var(--text-15)/var(--leading-normal) var(--sans); color: var(--ink); }
-.defs dd { margin: 0; padding: 0 0 var(--sp-12); border-bottom: var(--border-hairline) solid var(--divider-subtle); }
-.defs dd p { margin: var(--sp-4) 0 0; font-size: var(--text-15); line-height: var(--leading-body); color: var(--ink-soft); max-width: 68ch; }
-.defs dd .defs-src { font: var(--type-fine); color: var(--ink-faint); }
+/* /expenses: its groups are ui-sections of ui-list rows (a category, what it
+   covers, its IPEA source). */
+.defs { max-width: var(--size-readable); margin-top: var(--space-tight); }
 
-/* /privacy and /support: reference pages, as panels and as the Worker's
-   server-rendered copy (#prerender[data-panel-copy]). Their h1/h2/h3 take the
-   shared heading roles; a hairline rule opens each major section because the
-   pages are long and flat. */
-.policy-page > .kicker { margin-top: 0; }
-.policy-page > h1 { margin: 0 0 var(--sp-16); }
-.policy-page .lede { font: var(--type-record); color: var(--ink); margin: 0 0 var(--sp-12); }
-.policy-page p, .policy-page li { max-width: 68ch; }
-.policy-page p { margin-block: var(--sp-12); line-height: var(--leading-loose); }
-.policy-page > h2 { margin: var(--sp-40) 0 var(--sp-12); padding-top: var(--sp-24); border-top: var(--border-hairline) solid var(--divider-default); }
-.policy-page > h3 { margin: var(--sp-24) 0 var(--sp-8); }
-.policy-page code { background: var(--paper-sunken); border-radius: var(--radius-sm); padding: 0.1em 0.35em; font-size: 0.875em; }
-.privacy-contents { margin: var(--sp-24) 0 0; }
-.privacy-contents .kicker { margin: 0 0 var(--sp-8); }
-.privacy-contents ul { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: var(--sp-8) var(--sp-24); }
-.privacy-contents a { display: inline-block; padding-block: var(--sp-4); }
+/* /privacy's contents: the On this page label over one wrapping line of links,
+   each a 44px target. The pages' own rules sit with /about and /methods. */
+.privacy-contents { margin: var(--space-block) 0 0; }
+.privacy-contents ul { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 0 var(--space-block); }
+.privacy-contents a { display: inline-flex; align-items: center; min-height: var(--size-target); }
 /* A fact or decision the maintainer has not yet confirmed. Visible on purpose:
    the page must not be published while any of these remain. */
 mark.privacy-confirm {
-  background: var(--paper-sunken); color: var(--ink); padding: 0 0.2em; border-radius: var(--radius-sm);
+  background: var(--paper-sunken); color: var(--ink); padding: 0 var(--sp-2); border-radius: var(--radius-sm);
   outline: var(--border-hairline) dashed var(--bronze-ink); outline-offset: 1px;
   -webkit-box-decoration-break: clone; box-decoration-break: clone;
 }
@@ -3067,13 +2994,13 @@ mark.privacy-confirm {
 }
 /* The citation mark sits in the text as a true superscript; its 44px touch
    area is an invisible halo drawn outside the flow, so the line never gaps. */
-#panel-ask .ask-citation, #panel-chat .ask-citation {
+#panel-ask .ask-citation, #panel-chat .ask-citation, #panel-reports .ask-citation {
   display: inline-block; position: relative; vertical-align: super; min-width: 0; min-height: 0;
-  margin: 0 0.05em 0 0.1em; padding: 0 0.15em; border: 0; background: transparent; color: var(--bronze-ink);
+  margin: 0 var(--sp-2); padding: 0 var(--sp-2); border: 0; background: transparent; color: var(--bronze-ink);
   font: var(--type-label); font-variant-numeric: tabular-nums; cursor: pointer;
 }
-#panel-ask .ask-citation::before, #panel-chat .ask-citation::before {
-  content: ""; position: absolute; left: 50%; top: 50%; width: 44px; height: 44px; transform: translate(-50%, -50%);
+#panel-ask .ask-citation::before, #panel-chat .ask-citation::before, #panel-reports .ask-citation::before {
+  content: ""; position: absolute; left: 50%; top: 50%; width: var(--size-target); height: var(--size-target); transform: translate(-50%, -50%);
 }
 #panel-ask .source-list li, #panel-chat .source-list li { border-bottom: var(--border-hairline) solid var(--divider-subtle); padding: var(--sp-12) 0; scroll-margin-block: 90px; }
 #panel-ask .source-list .source-title, #panel-chat .source-list .source-title { min-height: 24px; text-align: left; }
@@ -3125,7 +3052,7 @@ mark.privacy-confirm {
 #panel-ask .ask-options-pop { max-height: calc(100dvh - 180px); overflow-y: auto; overscroll-behavior: contain; }
 
 
-#panel-ask .ask-citation:focus-visible, #panel-chat .ask-citation:focus-visible { outline: var(--border-focus) solid var(--bronze-ink); outline-offset: -3px; border-radius: var(--radius-sm); }
+#panel-ask .ask-citation:focus-visible, #panel-chat .ask-citation:focus-visible, #panel-reports .ask-citation:focus-visible { outline: var(--border-focus) solid var(--bronze-ink); outline-offset: -3px; border-radius: var(--radius-sm); }
 #ask-date-ruler .date-ruler-year { font-variant-numeric: tabular-nums; }
 @media (max-width: 600px) {
   #panel-ask .ask-options-pop { max-height: max(180px, calc(100dvh - 320px)); }
@@ -3770,15 +3697,6 @@ textarea.grow-field:not(.ui-input).is-empty { white-space: nowrap; }
 /* ==== chat: the thread owns the foot of the page ==== */
 html[data-panel="chat"] footer { display: none; }
 
-/* ==== report reading list: byline level with the portrait ==== */
-/* The name keeps a 44px touch area through padding pulled back with margins,
-   so the two text lines together stand as tall as the portrait and sit level
-   with it, instead of the name floating above its midline. */
-.report-speech-byline { align-items: center; }
-.report-speech-name-line { min-height: 0; line-height: var(--leading-snug); }
-.report-speech-name-line > a { min-height: 0; padding: var(--sp-12) 0; margin: calc(-1 * var(--sp-12)) 0; }
-.report-speech-meta { margin: var(--sp-2) 0 0; }
-
 /* ==== explain: no step dots; Previous and Next carry the sequence ==== */
 #dialog-explain .explain-steps { display: none; }
 @media (max-width: 700px) { #dialog-explain .explain-deck { display: none; } }
@@ -3792,297 +3710,131 @@ html[data-panel="chat"] footer { display: none; }
 .tide-view { margin-top: var(--sp-16); }
 
 /* ==== reports-ui ====
-   The v2 report page. A report now reads as two arguments in sequence — what
-   parliament is saying now, and how it got there — so the page is built from
-   parts rather than one long column of sections. Everything here is scoped to
-   the reports panel or to a report- class the v1 page does not use, so a
-   report with no `version` still renders exactly as it did. */
+   The v2 report page on the shared components (12 Oct 2026 uplift): one
+   ui-page-head (the title, the window it reads over as its meta line, the
+   machine label and the lede), a sticky segmented jump, then its parts as
+   ui-sections with ui-subsection titles, ui-stats for figures, ui-lists of
+   bylines for speeches and speakers, and ui-disclosures for the sources.
+   Machine-written prose (the lede, the essays, the positions, the briefs) is
+   OPAX speaking, so it is set in the sans; the record's own words (a retrieved
+   passage, a debate's title) keep the serif (principle 7). What is left here
+   is layout. A report with no `version` (v1) shares the rows and figures. */
 
-/* ---- head: the lede, the window, the two ways in ------------------------- */
+/* ---- head ---------------------------------------------------------------- */
 
-.report-head2 { margin: var(--sp-16) 0 0; }
+.report-head2 { display: grid; justify-items: start; gap: var(--space-heading); margin-top: var(--space-heading); }
 .report-head2[hidden] { display: none; }
+.report-head2 > * { margin: 0; }
+#panel-reports .answer { font: var(--type-body); }
+.report-lede, .report-essay-body { max-width: var(--size-readable); }
+/* The jump control belongs to the head: a block step under it, not a section. */
+.report-head:has(+ .report-jump:not([hidden])) { margin-bottom: var(--space-block); }
 
-/* The lede is the page's reading text, a step above an ordinary answer: it is
-   the paragraph a reader decides on. */
-.report-lede { font: var(--type-record); max-width: var(--size-readable); }
-.report-lede > p:first-child { margin-top: 0; }
-
-/* The window the report covers, said plainly rather than implied by a date
-   range: the whole page rests on which two spans are being compared. */
-.report-window {
-  margin: var(--sp-24) 0 var(--sp-16); max-width: 62ch;
-  font: var(--type-metadata); color: var(--ink-soft);
-}
-
-/* Citations in the flow of a line: a true superscript with an invisible 44px
-   halo, the treatment the ask page settled on. */
-#panel-reports .ask-citation {
-  display: inline-block; position: relative; vertical-align: super; min-width: 0; min-height: 0;
-  margin: 0 0.05em 0 0.1em; padding: 0 0.15em; border: 0; background: transparent;
-  color: var(--bronze-ink); font: var(--type-label);
-  font-variant-numeric: tabular-nums; cursor: pointer;
-}
-#panel-reports .ask-citation::before {
-  /* Keep the touch halo inside the right edge when a citation ends a line. */
-  content: ""; position: absolute; right: 0; top: 50%;
-  width: 44px; height: 44px; transform: translateY(-50%);
-}
+/* Citations are the ask page's mark (page-ask). In the sans the raised box
+   would open up its line, so it is lifted rather than set superscript; the
+   touch halo keeps inside the right edge when a citation ends a line. */
+#panel-reports .ask-citation { vertical-align: baseline; top: -0.5em; }
+#panel-reports .ask-citation::before { left: auto; right: 0; transform: translateY(-50%); }
 #panel-reports .ask-citation:hover { color: var(--ink); }
-#panel-reports .ask-citation:focus-visible {
-  outline: var(--border-focus) solid var(--bronze-ink); outline-offset: -3px; border-radius: var(--radius-sm);
-}
 /* Now, Over time and Money: a segmented control that stays under the
    masthead at every width, its thumb on the part in view. */
-.report-jump {
-  position: sticky; top: var(--header-h); z-index: 5;
-  margin: var(--space-group) 0 0; padding: var(--space-tight) 0; background: var(--paper);
-}
+.report-jump { position: sticky; top: var(--header-h); z-index: 5; padding: var(--space-tight) 0; background: var(--paper); }
 .report-jump[hidden] { display: none; }
-.report-machine { margin: 0 0 var(--space-heading); }
 
-/* The foot: one source line for the report (generated, from what, its data). */
-.report-foot-meta[hidden] { display: none; }
-#report-download .ui-source { margin-top: var(--space-section); }
+/* The foot: every record once (its own section), then one source line. */
+#report-download .ui-source { margin-top: var(--space-group); }
 
 /* ---- parts --------------------------------------------------------------- */
 
-.report-part[hidden] { display: none; }
-.report-part:not([hidden]) { margin-top: var(--space-section); }
-.report-part-title, #report-money-head {
-  margin: 0 0 var(--space-heading); padding-top: var(--space-block);
-  border-top: var(--border-hairline) solid var(--divider-default);
-  font: var(--type-heading); color: var(--ink);
-}
-.report-part-title:focus-visible, #report-money-head:focus-visible {
-  outline: var(--border-focus) solid var(--bronze-ink); outline-offset: 4px;
-}
-#report-stats:not(:empty) { margin-top: var(--space-section); }
-.report-part-note {
-  margin: 0 0 var(--sp-16); max-width: 66ch;
-  font: var(--type-metadata); color: var(--ink-soft);
-}
-.report-sub-title {
-  margin: var(--space-group) 0 var(--sp-12);
-  font: var(--type-subheading); color: var(--ink);
-}
+.report-part-title:focus-visible { outline: var(--border-focus) solid var(--bronze-ink); outline-offset: var(--sp-4); }
+#panel-reports .ui-section-head + .ui-subsection-title { margin-top: 0; }
+.report-note { margin: 0 0 var(--space-heading); }
+#panel-reports a.ui-byline-name, #panel-reports .meta-party, .report-position-party { text-decoration: none; }
+#panel-reports a.ui-byline-name { position: relative; }
+#panel-reports a.ui-byline-name:hover { color: var(--bronze-ink); text-decoration: underline; text-decoration-color: var(--bronze-rule); }
+/* A name draws one line tall and still reaches 44. */
+#panel-reports a.ui-byline-name::after { content: ""; position: absolute; inset: calc(-1 * var(--sp-12)) 0; }
 
 /* ---- the debates the report found --------------------------------------- */
 
 /* A wrapping row, not a scroller: five discovered debates are the shape of
-   the argument, and a reader should see all five without swiping. */
-.report-chips { display: flex; flex-wrap: wrap; gap: var(--space-tight) var(--space-group); margin: 0 0 var(--space-group); padding: 0; list-style: none; }
+   the argument, and a reader should see all five without swiping. Each is a
+   Tag with its tally beside it as text; the tally never starts a line. */
+.report-chips { display: flex; flex-wrap: wrap; gap: var(--space-tight) var(--space-group); margin: 0; padding: 0; list-style: none; }
 .report-chips li { display: inline-flex; align-items: center; gap: var(--space-tight); min-width: 0; }
-/* The count is a column of its own rather than a word after the name: a
-   wrapping name used to push "· 212 speeches" onto the next line, where an
-   interpunct led the line and read as a bullet. The name wraps inside the
-   space left over, and the tally never starts a line. */
-/* Each debate is a Tag (ui-controls.css) with its tally beside it as text. */
 .report-chip { overflow-wrap: anywhere; }
 .report-chip-count { flex: 0 0 auto; white-space: nowrap; font: var(--type-fine); color: var(--ink-soft); font-variant-numeric: tabular-nums; }
 
-/* ---- essays -------------------------------------------------------------- */
+/* ---- essays and their sources -------------------------------------------- */
 
-.report-essay { margin: 0 0 var(--space-section); }
-.report-essay:last-child { margin-bottom: 0; }
-.report-essay-head { display: flex; align-items: start; justify-content: space-between; gap: var(--space-block); max-width: 68ch; margin: 0 0 var(--space-heading); }
-.report-essay-question {
-  margin: 0; max-width: 56ch;
-  font: var(--type-subheading); color: var(--ink);
-}
-.report-essay-body { max-width: 68ch; }
-
-
-/* ---- sources ------------------------------------------------------------- */
-
-.report-sources { margin-top: var(--sp-16); }
-/* Sentence case, not the inherited uppercase eyebrow: a disclosure is a thing
-   a reader is offered, not a label stamped on the section. */
-#panel-reports .report-sources > summary {
-  min-height: 44px; display: inline-flex; align-items: center; gap: var(--sp-8);
-  font: var(--weight-strong) var(--text-15)/var(--leading-normal) var(--sans); color: var(--bronze-ink);
-  text-transform: none; 
-}
-.report-source-list { list-style: none; margin: var(--sp-12) 0 0; padding: 0; border-top: var(--border-hairline) solid var(--divider-subtle); }
-.report-source-row {
-  display: grid; grid-template-columns: 40px minmax(0, 1fr); gap: var(--sp-16);
-  padding: var(--sp-16) 0; border-bottom: var(--border-hairline) solid var(--divider-subtle);
-  scroll-margin-block: calc(var(--header-h) + var(--sp-64));
-}
-/* No speaker in the record, so no portrait slot to hold open. */
-.report-source-row.report-source-unnamed { grid-template-columns: minmax(0, 1fr); }
-.report-source-row:focus-visible { outline: var(--border-focus) solid var(--bronze-ink); outline-offset: 4px; }
-.report-source-face {
-  width: 40px; height: 40px; border-radius: var(--radius-round); overflow: hidden; flex: 0 0 40px;
-  display: inline-flex; align-items: center; justify-content: center;
-  background: var(--paper-sunken); border: var(--border-hairline) solid var(--divider-subtle);
-  font: var(--type-label); color: var(--ink-faint);
-}
-.report-source-face img { display: block; width: 40px; height: 40px; object-fit: cover; }
+.report-essay { margin-top: var(--space-group); }
+.ui-section-head + .report-essay, .report-era > .report-essay { margin-top: 0; }
+.report-essay-head { display: flex; align-items: start; justify-content: space-between; gap: var(--space-block); max-width: var(--size-readable); margin: 0 0 var(--space-tight); }
+.report-sources { max-width: var(--size-readable); margin-top: var(--space-tight); }
+.report-source-row { scroll-margin-block: calc(var(--header-h) + var(--sp-64)); }
+.report-source-row:focus-visible { outline: var(--border-focus) solid var(--bronze-ink); outline-offset: var(--sp-4); }
 .report-source-body { min-width: 0; }
-.report-source-name {
-  display: flex; flex-wrap: wrap; align-items: center; gap: 0 var(--sp-8); margin: 0;
-  font: var(--type-subheading); color: var(--ink); overflow-wrap: anywhere;
-}
-.report-source-name > a { display: inline-flex; align-items: center; min-height: 44px; }
-.report-source-name .meta-speaker {
-  font: var(--type-subheading); color: var(--ink); text-decoration: none;
-}
-.report-source-name .meta-speaker:hover { color: var(--bronze-ink); }
-.report-source-name .meta-party { text-decoration: none; }
-.report-source-where {
-  margin: var(--sp-2) 0 0; color: var(--ink-faint);
-  font: var(--type-fine); font-variant-numeric: tabular-nums;
-}
-.report-source-unnamed .report-source-where { margin-top: var(--sp-8); }
-.report-source-party { margin-right: var(--sp-2); }
-.report-source-debate {
-  margin: var(--sp-8) 0 0; color: var(--ink-soft);
-  font: var(--weight-regular) var(--text-15)/var(--leading-normal) var(--serif); overflow-wrap: anywhere;
-}
-.report-source-passage {
-  margin: var(--sp-12) 0 0; color: var(--ink-soft);
-  font: var(--weight-regular) var(--text-16)/var(--leading-loose) var(--serif); max-width: 62ch;
-}
-.report-source-read {
-  display: inline-flex; align-items: center; min-height: 44px; margin-top: var(--sp-2);
-  font: var(--weight-strong) var(--text-15)/var(--leading-snug) var(--sans); color: var(--bronze-ink);
-  text-decoration: underline; text-decoration-color: var(--bronze-rule);
-  text-decoration-thickness: 1.5px; text-underline-offset: 4px;
-}
-.report-source-read:hover { color: var(--ink); text-decoration-color: var(--bronze-ink); }
-/* The line between what the answer cited and what was merely retrieved. It is
-   a label inside the list, so it takes no rule of its own above the rule the
-   row before it already draws. */
-.report-sources-divider {
-  padding: var(--sp-24) 0 var(--sp-12); color: var(--ink-faint);
-  font: var(--type-fine);
-}
-.report-all-sources { margin-top: var(--space-section); }
-.report-all-sources > summary { font-size: var(--text-15); }
+.report-source-debate { margin: var(--space-tight) 0 0; font: var(--weight-regular) var(--text-15)/var(--leading-normal) var(--serif); color: var(--ink-soft); overflow-wrap: anywhere; }
+.report-source-passage { margin: var(--space-tight) 0 0; font: var(--type-record); color: var(--ink-soft); }
+.report-source-body > .ui-source-link { margin-top: var(--space-line); }
+/* What the answer cited and what was merely retrieved: a label inside the list. */
+.ui-list > .report-sources-divider { padding-block: var(--space-block) var(--space-tight); font: var(--type-fine); color: var(--ink-soft); }
 
 /* ---- the figures --------------------------------------------------------- */
 
-.report-stat-tiles { margin-bottom: var(--sp-24); }
-.report-stat > b { overflow-wrap: anywhere; hyphens: auto; }
-.report-stat .report-stat-label { color: var(--ink); font: var(--type-metadata); }
-.report-stat .report-stat-basis {
-  margin-top: var(--sp-4); color: var(--ink-faint);
-  font: var(--type-fine); font-variant-numeric: tabular-nums;
-}
-.report-stat .tile-source { display: block; margin-top: var(--sp-2); }
-.report-stat .tile-source a {
-  display: inline-flex; align-items: center; min-height: 44px; overflow-wrap: anywhere;
-}
-/* The corpus totals answer "how much record did this read", which is not a
-   money question: they take a line of their own under the part heading. */
-.report-corpus-title { margin-top: var(--sp-16); }
-.report-corpus-tiles { margin-top: 0; }
+.report-stats-grid > .ui-stat { flex: 1 1 12rem; max-width: 22rem; }
+.report-stats-grid .ui-stat-value { overflow-wrap: anywhere; hyphens: auto; }
+.report-stat-source { display: block; margin-top: var(--space-line); }
 
 /* ---- where the parties stand -------------------------------------------- */
 
-.report-position-window {
-  display: block; margin-top: var(--sp-8); color: var(--ink-faint);
-  font: var(--type-fine);
-}
-#panel-reports .report-position-list .source-meta a {
-  display: inline-flex; align-items: center; min-height: 44px;
-}
+.report-position-list { max-width: var(--size-readable); }
+.report-position-party { margin-right: var(--sp-4); }
 
-/* ---- how it has moved: a spine, and an era hung off each notch ----------- */
+/* ---- how it has moved: each era's span over its essay -------------------- */
 
-.report-eras { position: relative; margin: var(--sp-24) 0 var(--space-group); padding-left: var(--sp-20); }
-.report-eras::before {
-  content: ""; position: absolute; left: 3px; top: 0.55rem; bottom: 0.55rem;
-  width: 1px; background: var(--line-control);
-}
-.report-era { position: relative; padding-bottom: var(--space-group); }
-.report-era:last-child { padding-bottom: 0; }
-.report-era::before {
-  content: ""; position: absolute; left: -1.35rem; top: 0.5rem;
-  width: 7px; height: 7px; border-radius: var(--radius-round);
-  background: var(--bronze); box-shadow: 0 0 0 3px var(--paper);
-}
-.report-era-span {
-  margin: 0 0 var(--sp-8); color: var(--ink-soft);
-  font: var(--type-label); font-variant-numeric: tabular-nums;
-}
-.report-era .report-essay { margin-bottom: 0; }
-
-/* ---- the tide ------------------------------------------------------------ */
-
+.report-era + .report-era { margin-top: var(--space-group); }
+.report-era-span { margin: 0 0 var(--space-line); font-variant-numeric: tabular-nums; }
 .report-tide { margin-top: var(--space-group); }
-.report-tide > figure > figcaption {
-  color: var(--ink); font: var(--type-subheading);
-   text-transform: none; margin-bottom: var(--sp-16);
-}
+.report-tide > figure > figcaption { margin: 0 0 var(--space-heading); font: var(--type-subheading); color: var(--ink); }
 .report-tide .topic-tide-label { white-space: normal; }
+
+/* ---- the reading list ---------------------------------------------------- */
+
+.report-reading-list { max-width: var(--size-readable); }
+.report-reading-item > .ui-byline, .report-reading-item > .ui-row-text { margin-top: var(--space-tight); }
+.report-reading-item > .ui-source-link { margin-top: var(--space-line); }
 
 /* ---- who does the talking ------------------------------------------------ */
 
-.report-voices { display: grid; grid-template-columns: 1fr; gap: var(--space-group); }
-.report-voice-heading {
-  margin: 0 0 var(--sp-12); color: var(--ink-soft);
-  font: var(--weight-strong) var(--text-15)/var(--leading-normal) var(--sans);
-}
-.report-voice-list { list-style: none; margin: 0; padding: 0; }
-.report-voice {
-  display: grid; grid-template-columns: 32px minmax(0, 1fr) auto;
-  align-items: center; gap: 0 var(--sp-12);
-  min-height: 44px; padding: var(--sp-8) 0; border-bottom: var(--border-hairline) solid var(--divider-subtle);
-}
-.report-voice-face {
-  width: 32px; height: 32px; border-radius: var(--radius-round); overflow: hidden;
-  display: inline-flex; align-items: center; justify-content: center;
-  background: var(--paper-sunken); border: var(--border-hairline) solid var(--divider-subtle);
-  font: var(--type-label); color: var(--ink-faint);
-}
-.report-voice-face img { display: block; width: 32px; height: 32px; object-fit: cover; }
-.report-voice-body { min-width: 0; }
-.report-voice-name { display: flex; flex-wrap: wrap; align-items: center; gap: 0 var(--sp-8); margin: 0; }
-.report-voice-name a {
-  display: inline-flex; align-items: center; min-height: 44px;
-  font: var(--weight-strong) var(--text-15)/var(--leading-snug) var(--sans); color: var(--ink); text-decoration: none;
-}
-.report-voice-name a:hover { color: var(--bronze-ink); text-decoration: underline; }
-.report-voice-track { display: block; margin: 0 0 var(--sp-2); }
-.report-voice-count {
-  color: var(--ink-soft); font: var(--type-metadata);
-  font-variant-numeric: tabular-nums;
+.report-voices { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--space-group); }
+.report-voices h4 { margin: 0 0 var(--space-tight); }
+.report-voice { display: grid; grid-template-columns: var(--size-portrait-row) minmax(0, 1fr) auto; align-items: center; gap: 0 var(--space-heading); }
+.report-voice .ui-bar { margin-top: var(--space-line); }
+@media (min-width: 900px) {
+  .report-voices { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-section); }
 }
 
-@media (min-width: 900px) {
-  .report-voices { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--sp-40); }
-}
+/* ---- follow the money ---------------------------------------------------- */
+
+.report-map { height: 460px; margin-top: var(--space-heading); }
+.report-money-links { margin-top: var(--space-row); }
+.report-money-links a + a { margin-left: var(--sp-4); }
+.report-words { margin-top: var(--space-row); }
+.report-words .wd-panel { margin-top: 0; }
 
 /* ---- phones -------------------------------------------------------------- */
 
 @media (max-width: 700px) {
-
-  /* The band bleeds to the gutters so prose scrolls under it, not beside it.
-     44px of button and the hairline under it: the whole allowance. */
-  .report-jump {
-    margin-inline: calc(var(--space-screen) * -1);
-    padding-inline: var(--space-screen);
-  }
-  .report-part[hidden] { display: none; }
-  #report-now, #report-overtime, #report-stats { scroll-margin-top: calc(var(--header-h) + var(--sp-48)); }
-
-  .report-source-row { grid-template-columns: 40px minmax(0, 1fr); gap: var(--sp-12); }
-
+  /* The band bleeds to the gutters so prose scrolls under it, not beside it. */
+  .report-jump { margin-inline: calc(var(--space-screen) * -1); padding-inline: var(--space-screen); }
+  #report-now, #report-overtime, #report-money, #report-stats { scroll-margin-top: calc(var(--header-h) + var(--sp-48)); }
 }
-
+@media (max-width: 640px) { .report-map { height: 380px; } }
 @media (prefers-reduced-motion: reduce) {
   #panel-reports * { scroll-behavior: auto; }
 }
 
-/* ==== report: follow the money ==== */
-.report-map { height: 460px; margin-top: var(--sp-16); }
-.report-money-links { margin-top: var(--sp-12); }
-.report-money-links a + a { margin-left: var(--sp-4); }
-@media (max-width: 640px) { .report-map { height: 380px; } }
-.report-words { margin-top: var(--sp-12); }
-.report-words .wd-panel { margin-top: 0; }
 /* ==== bills-ui ============================================================
    The bill page and its touchpoints. Everything here reads in the house
    register: the record's serif for anything the record or a model says about
@@ -4678,29 +4430,9 @@ html[data-panel="chat"] footer { display: none; }
 
 /* ==== refinement loop: quieter indexes and reference pages ============== */
 
-/* Report cards read as one set: dates settle to a common baseline even when
-   the description above is a line longer. The safe min() also lets the grid
-   shrink cleanly below its nominal card width. */
-.report-cards { grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr)); gap: var(--space-block); }
-.report-card { display: flex; flex-direction: column; }
-
 /* Ask suggestions use the same responsive rule. At 320px, a fixed 320px
    minimum plus the page gutters could widen the document. */
 
-/* Reference pages predate the shared rhythm scale. Bring their headings,
-   prose and lists onto the same steps used by entries and reports. */
-#panel-about h2, #panel-methods h2, #panel-expenses h2 {
-  margin: 0 0 var(--space-heading);
-}
-/* About's sections open with a rule; nothing else on the page draws one. */
-#panel-about .about-body > h2:not(:first-child) { margin-top: var(--space-section); padding-top: var(--space-block); border-top: var(--border-hairline) solid var(--divider-default); scroll-margin-top: calc(var(--header-h) + var(--sp-16)); }
-#panel-methods h3, #panel-expenses h3 { margin: var(--space-group) 0 var(--space-tight); }
-#panel-about p, #panel-methods p, #panel-expenses p { margin-block: var(--space-row); line-height: var(--leading-loose); }
-.about-list { margin-block: var(--sp-16); }
-.about-list li { margin-block: var(--sp-12); line-height: var(--leading-loose); }
-.defs { margin-top: var(--sp-16); }
-.defs dt { padding-top: var(--sp-16); }
-.defs dd { padding-bottom: var(--sp-16); }
 
 /* Data tables keep their own scroll area and use the same quiet thumb as the
    charts, instead of making the whole page move sideways. */
@@ -4721,12 +4453,6 @@ html[data-panel="chat"] footer { display: none; }
 }
 
 @media (max-width: 700px) {
-  .report-card { min-height: 0; }
-  
-  /* Two compact figures make the corpus overview scannable without turning
-     each number into a full-screen row. */
-  .stat-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--sp-24) var(--sp-16); }
-  .stat-grid .stat-figure { font-size: var(--text-32); }
 
   footer { line-height: 1.6; }
   .footer-lines { padding-top: var(--space-4); }
@@ -4743,9 +4469,6 @@ html[data-panel="chat"] footer { display: none; }
   .declared-source-link { margin-left: 0; }
 }
 
-@media (max-width: 360px) {
-  .stat-grid { grid-template-columns: minmax(0, 1fr); gap: var(--sp-16); }
-}
 
 /* Connected research: one IA, with the map as a primary working surface. */
 .area-nav { display: flex; gap: var(--space-group); flex-wrap: wrap; margin: 0 0 var(--space-group); border-bottom: var(--border-hairline) solid var(--divider-subtle); }
@@ -4988,7 +4711,7 @@ html[data-panel="chat"] footer { display: none; }
 /* Community grants: places first, with the wider analysis one step away. */
 #report-research { width:100%; min-width:0; }
 .allocation-intro { margin-bottom:var(--sp-24); }
-.allocation-intro h1 { color:var(--navy); font:700 clamp(1.9rem,4vw,3rem)/1.25 var(--serif); margin:0 0 var(--sp-16); }
+.allocation-intro h1 { margin:0 0 var(--sp-16); }
 .allocation-intro > p { color:var(--ink-soft); font-size:var(--text-17); line-height:var(--leading-loose); margin:0; }
 .allocation-explorer { margin-block:var(--sp-40); }
 .allocation-collection { display:grid; gap:var(--sp-8); font:var(--weight-strong) var(--text-15)/var(--leading-normal) var(--sans); max-width:30rem; }
@@ -5117,7 +4840,7 @@ html[data-panel="chat"] footer { display: none; }
 .allocation-year-project span { overflow-wrap:anywhere; }
 .allocation-year-project small { grid-column:1/-1; font-size:var(--text-13); color:var(--bronze-ink); }
 #report-research .allocation-year-project[aria-pressed="true"] { border-color:var(--bronze-ink); }
-#report-research .allocation-example:focus-visible,#report-research .allocation-year-project:focus-visible { outline:3px solid var(--bronze); outline-offset:3px; }
+#report-research .allocation-example:focus-visible,#report-research .allocation-year-project:focus-visible { outline:var(--border-focus) solid var(--bronze-ink); outline-offset:3px; }
 @media(max-width:760px) {
   #allocation-examples { grid-template-columns:1fr; gap:var(--sp-8); }
   #report-research .allocation-example { display:grid; grid-template-columns:1fr auto; padding:var(--sp-12); gap:var(--sp-4) var(--sp-8); font-size:var(--text-13); }
@@ -5129,7 +4852,7 @@ html[data-panel="chat"] footer { display: none; }
 @media(max-width:1000px) { .allocation-results-grid { grid-template-columns:repeat(2,minmax(0,1fr)); } }
 @media(max-width:760px) {
   .allocation-intro { margin-bottom:var(--sp-16); }
-  .allocation-intro h1 { font-size:clamp(1.75rem,5vw,2.4rem); margin-bottom:var(--sp-8); }
+  .allocation-intro h1 { margin-bottom:var(--sp-8); }
   .allocation-explorer { margin-top:var(--sp-16); }
   .allocation-collection select { font-size:var(--text-15); }
   .allocation-timeline { padding:var(--sp-8) var(--sp-12) var(--sp-12); }
@@ -5168,32 +4891,38 @@ html[data-panel="chat"] footer { display: none; }
 .el-face-blank { background: var(--paper-sunken); border: var(--border-hairline) solid var(--divider-subtle); box-sizing: border-box; }
 .el-holders a.el-party { text-decoration: none; }
 .el-directory-row .el-meta { margin: 0; font: var(--type-fine); color: var(--ink-soft); }
-.el-directory-row small, .el-section li > small { display: block; font: var(--type-fine); color: var(--ink-soft); }
-#subject-body .el-intro, #subject-body .el-section { margin-top: var(--space-section); padding-top: var(--space-block); border-top: var(--border-hairline) solid var(--divider-default); }
-.el-intro { display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr); gap: var(--space-group) var(--space-section); align-items: start; }
-#subject-body .el-intro .subject-section-title, #subject-body .el-section .subject-section-title { font: var(--type-heading); margin: 0 0 var(--space-heading); }
+.el-directory-row small { display: block; font: var(--type-fine); color: var(--ink-soft); }
+.el-id { overflow-wrap: anywhere; font: var(--type-fine); }
+@media (max-width: 650px) {
+  .el-directory-row { grid-template-columns: var(--size-portrait-row) minmax(0, 1fr); gap: var(--space-line) var(--space-heading); }
+  .el-directory-row > .el-holders, .el-directory-row > .el-meta { grid-column: 2; }
+}
+
+/* ---- one electorate (/subject/electorate/<slug>) --------------------------
+   A ui-page-head with ⋯ on the title's row; who holds the seat and its
+   boundary side by side as two ui-sections; then the election timeline
+   (ui-list of ui-disclosures), the representation history (ui-list of
+   bylines), the census (ui-stats and ui-kv) and related seats (ui-list).
+   What is left here is layout. */
+.el-head { grid-template-columns: minmax(0, 1fr) auto; column-gap: var(--space-block); }
+.el-head > * { grid-column: 1; }
+.el-head > .page-actions { grid-column: 2; grid-row: 1; align-self: center; }
+.el-intro { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--space-section) var(--space-section); align-items: start; }
+.el-intro > .ui-section { margin-top: 0; }
+@media (min-width: 701px) { .el-intro { grid-template-columns: minmax(0, 3fr) minmax(0, 2fr); } }
 .el-section { scroll-margin-top: calc(var(--header-h) + var(--sp-16)); }
-.el-members { list-style: none; padding: 0; margin: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr)); gap: var(--space-block); }
-.el-members li { display: flex; flex-wrap: wrap; align-items: baseline; gap: var(--space-line) var(--space-tight); }
-.el-members a { font: var(--type-subheading); }
-.el-latest { margin: var(--space-tight) 0 0; font: var(--type-metadata); }
-.el-section-head { display: flex; flex-wrap: wrap; align-items: end; justify-content: space-between; gap: var(--space-tight) var(--space-block); margin-bottom: var(--space-heading); }
-#subject-body .el-section-head .subject-section-title { margin: 0; }
+.el-members { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 16rem), 1fr)); column-gap: var(--space-block); }
+.el-members > li { align-items: center; }
+.el-latest { margin: var(--space-tight) 0 0; }
+.el-outline { margin: 0; max-width: 22rem; color: var(--ink-soft); }
+.el-outline svg { display: block; width: 100%; height: auto; max-height: 13rem; }
+.el-outline path { fill: color-mix(in srgb, currentColor 12%, transparent); stroke: currentColor; stroke-width: 1; }
 .el-asof { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-tight); }
 .el-asof label { font: var(--type-label); color: var(--ink); }
 .el-asof .ui-input { width: auto; min-height: var(--size-control-compact); }
 .el-asof .ui-button { min-height: var(--size-control-compact); }
-.el-outline { margin: 0; color: var(--ink-soft); }
-.el-outline svg { width: 100%; max-height: 220px; }
-.el-outline path { fill: color-mix(in srgb, currentColor 12%, transparent); stroke: currentColor; stroke-width: 1; }
-.el-timeline, .el-service { list-style: none; padding: 0; margin: 0; }
-.el-timeline > li { border-top: var(--border-hairline) solid var(--divider-subtle); }
-.el-timeline > li:first-child { border-top: 0; }
-.el-election > summary { display: list-item; padding: var(--space-row) 0; min-height: var(--size-target); box-sizing: border-box; cursor: pointer; font: var(--type-body); }
-.el-election > summary time { display: inline-block; min-width: 8rem; font: var(--type-metadata); color: var(--ink-soft); }
-.el-election > summary strong { margin-right: var(--space-block); font: var(--type-strong); }
-.el-election > summary span { display: block; margin: var(--space-line) 0 0 var(--space-block); font: var(--type-metadata); color: var(--ink-soft); }
-.el-election-body { padding: 0 0 var(--space-block); }
+/* An election opens in place: its kind, then the date and who won. */
+.el-election-head { display: grid; min-width: 0; }
 .el-election-meta { margin: 0 0 var(--space-tight); font: var(--type-fine); color: var(--ink-soft); }
 .el-table-scroll { overflow-x: auto; }
 .el-election table { width: 100%; border-collapse: collapse; font: var(--type-metadata); }
@@ -5202,49 +4931,30 @@ html[data-panel="chat"] footer { display: none; }
 .el-election th:first-child { text-align: left; min-width: 160px; font-weight: var(--weight-strong); }
 .el-election td { font-variant-numeric: tabular-nums; }
 .el-election small { display: block; font: var(--type-fine); color: var(--ink-soft); }
-.el-service li { padding: 0 0 var(--space-block) var(--space-block); margin-left: var(--space-line); border-left: var(--border-hairline) solid var(--divider-default); }
-.el-service li > div { margin-bottom: var(--space-line); font: var(--type-fine); color: var(--ink-soft); }
-.el-service li > strong { font: var(--type-strong); }
-.el-service li > span { margin-left: var(--space-tight); font: var(--type-metadata); }
-/* Census: population is the block's one figure; the rest reads as a list. */
-.el-figure { margin: 0 0 var(--space-block); display: flex; flex-wrap: wrap; align-items: baseline; gap: var(--space-tight); }
-.el-figure b { font: var(--type-display); font-variant-numeric: tabular-nums; }
-.el-figure span { font: var(--type-metadata); color: var(--ink-soft); }
-.el-demographics { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 var(--space-group); margin: 0; max-width: 46rem; }
-.el-demographics > div { display: flex; justify-content: space-between; gap: var(--space-block); padding: var(--space-tight) 0; border-top: var(--border-hairline) solid var(--divider-subtle); }
-.el-demographics dt { font: var(--type-metadata); color: var(--ink-soft); }
-.el-demographics dd { margin: 0; font: var(--type-strong); font-variant-numeric: tabular-nums; text-align: right; }
-.el-related { margin: 0; padding-left: var(--sp-20); font: var(--type-body); }
-.el-related li { margin: var(--space-tight) 0; }
-.el-empty { margin: 0; font: var(--type-body); color: var(--ink-soft); }
-.el-id { overflow-wrap: anywhere; font: var(--type-fine); }
-@media (max-width: 650px) {
-  .el-directory-row { grid-template-columns: var(--size-portrait-row) minmax(0, 1fr); gap: var(--space-line) var(--space-heading); }
-  .el-directory-row > .el-holders, .el-directory-row > .el-meta { grid-column: 2; }
-  .el-intro { grid-template-columns: 1fr; }
-  .el-intro aside { max-width: 360px; }
-  .el-demographics { grid-template-columns: 1fr; }
-  .el-election > summary time { min-width: 7rem; }
-}
+.el-service, .el-related { max-width: var(--size-readable); }
+.el-timeline { max-width: 52rem; }
+#subject-body a.ui-byline-name { text-decoration: none; }
+#subject-body a.ui-byline-name:hover { color: var(--bronze-ink); text-decoration: underline; text-decoration-color: var(--bronze-rule); }
+/* The census: four columns of key and value on a wide screen, two on a phone. */
+.el-demographics { max-width: 52rem; font-variant-numeric: tabular-nums; }
+@media (min-width: 701px) { .el-demographics { grid-template-columns: repeat(2, max-content minmax(0, 1fr)); } }
+@media (max-width: 700px) { .el-demographics { grid-template-columns: minmax(0, 1fr) max-content; } }
 
 
 /* One page-title role, including older routes that use an h2 for their title. */
-h1, .hero-intro h1, #subject-title, #bill-title, #report-view #report-title,
+h1, .hero-intro h1, #subject-title, #bill-title,
 #panel-doc #doc-title, #panel-declared > h1, .tide-shell > h1,
-.allocation-intro h1, .connections-page h1, .ballot-tool .ballot-intro h2,
-#panel-expenses > h2:first-of-type {
+.allocation-intro h1, .connections-page h1, .ballot-tool .ballot-intro h2 {
   font:var(--type-title); color:var(--ink);
    overflow-wrap:break-word;
 }
 /* Section headings retain their local spacing and share the home-page scale. */
-h2, .subject-section-title, .report-section h3, .report-part-title, #report-money-head, #panel-about h2, #panel-methods h2, #panel-expenses h2, .connections-page h2, .allocation-detail h2, .allocation-comparison h2, .allocation-results-heading, .subject-person #subject-sections .subject-section-title, .person-topics-head h3, .person-topics > h3 {
+h2, .subject-section-title, .report-section h3, .connections-page h2, .allocation-detail h2, .allocation-comparison h2, .allocation-results-heading, .subject-person #subject-sections .subject-section-title, .person-topics-head h3, .person-topics > h3 {
   font:var(--type-heading); color:var(--ink); 
 }
-h3, #panel-methods h3, #panel-expenses h3 {
+h3 {
   font:var(--type-subheading); color:var(--ink); 
 }
-/* A reference page's first heading is its title, not a body section. */
-#panel-expenses > h2:first-of-type { font:var(--type-title);  margin-bottom:var(--sp-24); }
 
 /* Home shortcuts: the same bronze line icons used in navigation and reports. */
 
@@ -5261,7 +4971,7 @@ h3, #panel-methods h3, #panel-expenses h3 {
 }
 
 /* Citation buttons need a real box for keyboard focus and touch hit testing. */
-#panel-ask .ask-citation, #panel-chat .ask-citation { line-height: 1; }
+#panel-ask .ask-citation, #panel-chat .ask-citation, #panel-reports .ask-citation { line-height: 1; }
 
 /* Standalone grant recipients use the same type, records and quiet bronze
    actions as the other public-record detail pages. */
