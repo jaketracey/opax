@@ -19,6 +19,10 @@ export async function pageEntry(request: Request, assets: Pick<Fetcher, 'fetch'>
   }
   url.pathname = '/home'
   url.search = ''
-  const response = await assets.fetch(new Request(url, request))
+  // Unconditional: the Worker rewrites this shell, so a 304 must come from the
+  // rewritten page's validator (src/html-etag.ts), never from the shell's own.
+  const headers = new Headers(request.headers)
+  for (const name of ['if-none-match', 'if-modified-since']) headers.delete(name)
+  const response = await assets.fetch(new Request(url, { method: request.method, headers }))
   return request.method === 'HEAD' ? new Response(null, response) : response
 }

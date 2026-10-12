@@ -7,6 +7,10 @@ on Initialization — All Pages, using a Custom HTML tag containing only the
 external script element. The adapter is audited and built in this repository.
 Do not add a second Google tag or enable enhanced measurement: the adapter
 configures GA and manually forwards page views and the allowlisted events.
+The adapter queues its gtag commands in its own `window.opaxGaLayer` (loaded as
+`gtag/js?id=…&l=opaxGaLayer`), not in GTM's `dataLayer`: GTM acts on any `config`
+command it finds in `dataLayer` and loaded the Google tag a second time
+(`gtag/js?…&cx=c`, ~160 KB per page) until 12 October 2026.
 The older Opax AI property (opax.ai) is a separate product and is not used.
 
 PostHog project: [Opax (507367)](https://us.posthog.com/project/507367).
