@@ -27,6 +27,7 @@ import { BillFeed, billRowText } from '../src/features/today/BillFeed';
 import {
   DeclarationGroup,
   LONG_ENTRY,
+  entryPreview,
   originalLabel,
 } from '../src/features/today/DeclarationRow';
 import { ExploreGrid } from '../src/features/today/ExploreGrid';
@@ -328,7 +329,7 @@ describe('a declaration', () => {
     sheet.mockRestore();
     alert.mockRestore();
   });
-  test('a short entry shows in full; a long one opens from a disclosure, never clamped', () => {
+  test('a short entry shows in full; a long one shows its opening, and the rest from a disclosure, never clamped', () => {
     const short = items.find(
       (i) => (i.description?.length ?? 0) <= LONG_ENTRY,
     )!;
@@ -343,19 +344,47 @@ describe('a declaration', () => {
       [],
     );
     expect(host(folded, 'today-declaration-text-0')).toHaveLength(0);
+    // P3-10: about 140 characters of it first, so the row says what the
+    // entry is, cut at a word.
+    const preview = strings(host(folded, 'today-declaration-preview-0')[0]!);
+    expect(preview).toBe(entryPreview(long.description!));
+    expect(preview.length).toBeLessThanOrEqual(LONG_ENTRY + 1);
+    expect(preview.length).toBeGreaterThan(LONG_ENTRY / 2);
+    expect(preview).toMatch(/…$/);
+    expect(long.description!.replace(/\s+/g, ' ')).toContain(
+      preview.slice(0, -1),
+    );
     const more = host(folded, 'today-declaration-more-0')[0]!;
     expect(more.props.accessibilityState).toMatchObject({ expanded: false });
-    // The entry's own element names the change; the words are the disclosure's.
-    expect(
-      host(folded, 'today-declaration-0')[0]!.props.accessibilityLabel,
-    ).not.toContain(long.description);
+    // The entry's own element names the change and says the opening; the
+    // whole entry is the disclosure's.
+    const label = () =>
+      host(folded, 'today-declaration-0')[0]!.props.accessibilityLabel;
+    expect(label()).toContain(preview);
+    expect(label()).not.toContain(long.description);
     act(() => pressable(folded, 'today-declaration-more-0').props.onPress());
     expect(strings(host(folded, 'today-declaration-text-0')[0]!)).toBe(
       long.description,
     );
+    // Open, the whole entry takes the opening's place: the words once.
+    expect(host(folded, 'today-declaration-preview-0')).toHaveLength(0);
+    expect(label()).not.toContain(preview);
     // Opening only shows the entry; it never leaves Today.
     expect(router.push).not.toHaveBeenCalled();
   });
+});
+
+test('a preview is cut at a word, with an ellipsis, and a short entry is left whole', () => {
+  const words = 'Shareholding in Example Holdings Pty Ltd held by spouse';
+  expect(entryPreview(words)).toBe(words);
+  const long = Array.from({ length: 12 }, () => words).join(', ');
+  const cut = entryPreview(long);
+  expect(cut.length).toBeLessThanOrEqual(LONG_ENTRY + 1);
+  expect(cut).toMatch(/[^\s,]…$/);
+  expect(long.startsWith(cut.slice(0, -1))).toBe(true);
+  expect(long[cut.length - 1]).toMatch(/[\s,]/);
+  // One long word is cut where it must be.
+  expect(entryPreview('x'.repeat(300))).toBe(`${'x'.repeat(LONG_ENTRY)}…`);
 });
 
 describe('explore the record', () => {

@@ -1,4 +1,4 @@
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 import { findNodeHandle, Pressable, StyleSheet, View } from 'react-native';
 import { router } from 'expo-router';
 import type { recentDeclarationsFor } from '../../api/selectors';
@@ -37,6 +37,20 @@ export const originalLabel = (item: Declaration) =>
  * size) sit behind a disclosure on Today; the feed shows every entry in full.
  */
 export const LONG_ENTRY = 140;
+
+/**
+ * A long entry's opening words, before "The entry in full" (P3-10): up to
+ * LONG_ENTRY characters, cut at a word and marked with an ellipsis, so the
+ * row says what the entry is about. A cut string, not a clamp.
+ */
+export function entryPreview(text: string, max = LONG_ENTRY): string {
+  const flat = text.replace(/\s+/g, ' ').trim();
+  if (flat.length <= max) return flat;
+  const head = flat.slice(0, max + 1);
+  const space = head.lastIndexOf(' ');
+  const cut = space > max / 2 ? head.slice(0, space) : flat.slice(0, max);
+  return `${cut.replace(/[\s,;:.\-–—(]+$/, '')}…`;
+}
 
 /**
  * The person who declared, as a PersonRow: portrait, name and party (a dot
@@ -109,7 +123,8 @@ export function DeclarationGroup({ entries }: { entries: DeclarationEntries }) {
 /**
  * One register alteration, in the member's own words, then the category,
  * what changed and when, on one line ("Gift · added 31 Aug"). A long entry
- * is behind a disclosure, never cut short. "View original" (the register
+ * shows its opening words, and the whole of it behind a disclosure, which
+ * takes the opening's place when it opens. "View original" (the register
  * page) is a touch-and-hold action and a VoiceOver action, and the register
  * is listed in the block's source line.
  */
@@ -121,14 +136,16 @@ export function DeclarationEntry({
   index: number;
 }) {
   const long = (item.description?.length ?? 0) > LONG_ENTRY;
+  const preview = long ? entryPreview(item.description!) : null;
+  const [full, setFull] = useState(false);
   const changed = `${registerChangeLabel(item.kind)} ${formatDate(item.date)}`;
   const original = () => void openSource(item.url, originalLabel(item));
   // One element per entry, named, so it reads on its own; a long entry's
-  // words are the disclosure's, said when it opens.
+  // opening is said here, and the whole of it when the disclosure opens.
   const label = [
     item.name,
     `${item.category}, ${changed}`,
-    long ? null : item.description,
+    long ? (full ? null : preview) : item.description,
   ]
     .filter(Boolean)
     .join(', ');
@@ -169,6 +186,9 @@ export function DeclarationEntry({
             {item.description}
           </Text>
         ) : null}
+        {preview && !full ? (
+          <Text testID={`today-declaration-preview-${index}`}>{preview}</Text>
+        ) : null}
         <Text
           wordSafe
           variant="fine"
@@ -180,6 +200,8 @@ export function DeclarationEntry({
       {long ? (
         <Disclosure
           label="The entry in full"
+          open={full}
+          onToggle={setFull}
           testID={`today-declaration-more-${index}`}
         >
           <Text testID={`today-declaration-text-${index}`}>
