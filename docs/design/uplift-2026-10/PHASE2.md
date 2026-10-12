@@ -46,11 +46,11 @@ Hard-coded share of each owned stylesheet (spacing, type, colour, radius, shadow
 
 | File | Before | Now |
 |---|---:|---:|
-| `style.css` | 54.3% (2,289 of 4,214) | 4.6% (159 of 3,473) |
-| `ui-controls.css` | 29.2% (40 of 137) | 3.2% (6 of 187) |
+| `style.css` | 54.3% (2,289 of 4,214) | 4.6% (159 of 3,475) |
+| `ui-controls.css` | 29.2% (40 of 137) | 3.2% (6 of 188) |
 | `ui-source.css` | 16.9% (10 of 59) | 6.5% (4 of 62) |
 | `voice.css` | 74.6% (85 of 114) | 3.5% (4 of 113) |
-| the four together | 53.6% (2,424 of 4,524) | 4.5% (173 of 3,835) |
+| the four together | 53.6% (2,424 of 4,524) | 4.5% (173 of 3,838) |
 
 - **Deprecated token names:** 617 → 5 (counted with the uplift's deprecated list at both commits). The 5 left are in the drawer and footer rules the nav lane owns, and their aliases stay.
 - **Raw type values:** the test's counter went from 799 → 76 repo-wide, and in `style.css` from 652 → 18.
@@ -75,3 +75,14 @@ All shots are in `portal/private/web-design-system/` (private, not committed):
 - `before-live/`: live opax.com.au, read-only GETs, at 390, 820 and 1440. Each route has a full page (`<route>-<width>.png`) and a first screen (`-first.png`).
 - `after/`: the branch on a local Worker, replaying the recorded live API responses in `fixtures/live`, with the same names.
 - `compare/`: before | after pairs, first screen at 1:1 and the full page scaled (`<route>-<width>-first.png`, `-full.png`).
+- `after/audit/` and `before-live/audit/`: a DOM audit per shot.
+
+Across the 122 shots (41 routes × 3 widths) that have a live counterpart:
+- No horizontal overflow, before or after.
+- Text drawn below 13px fell from 1,590 elements to 21.
+- Distinct type sizes, summed per shot, fell from 815 to 648.
+- No uppercase or letter-spaced text.
+
+Known differences that come from the local Worker, not the branch:
+- The report's words-per-dollar block shows its failure state because `/api/matrix` answers 502 locally (it answers live).
+- Search shows "Document search is temporarily unavailable", as live did at the time of the before shots.
