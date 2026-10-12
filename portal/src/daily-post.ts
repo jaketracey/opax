@@ -667,11 +667,8 @@ export function recipientSegment(id: string): string {
 }
 
 /** The edition for one award record: the same words whether the rotation or an operator chose it. */
-const awardUrl = (grant: GrantPublicationRecord): string =>
-  `${ORIGIN}/money/grants/federal/recipient/${recipientSegment(grant.recipientId)}?award=${encodeURIComponent(grant.id)}`
-
 async function grantEdition(date: string, grant: GrantPublicationRecord, context: GrantContext): Promise<DailyPost> {
-  const url = awardUrl(grant)
+  const url = `${ORIGIN}/money/grants/federal/recipient/${recipientSegment(grant.recipientId)}?award=${encodeURIComponent(grant.id)}`
   const recipientLine = `Recipient: ${clip(shortRecipient(grant.recipient), 60)}. Agreement from ${formatDate(grant.start)} (award value, not payments).`
   const selection = selectionLine(context.award?.sel)
   // How it was chosen outranks the tail of the purpose: the hook gives way (to no less than 80 characters) so it fits.
@@ -684,12 +681,12 @@ async function grantEdition(date: string, grant: GrantPublicationRecord, context
       selectionLine(context.award?.sel),
       'What is the funding intended to deliver? Read the award and its original GrantConnect record.',
       'This is a published award value, not evidence of payments received.', url].filter(Boolean).join('\n\n') }
-  const story = await grantSlides(grant, context)
+  const story = await grantSlides(grant, context, url)
   return told(post, story.slides, story.photos)
 }
 
 
-async function grantSlides(grant: GrantPublicationRecord, { sources, graph, recipient, award }: GrantContext): Promise<{ slides: (StorySlide | null)[]; photos: StoryPhotos }> {
+async function grantSlides(grant: GrantPublicationRecord, { sources, graph, recipient, award }: GrantContext, url: string): Promise<{ slides: (StorySlide | null)[]; photos: StoryPhotos }> {
   const catalogue = await photoCatalogue(sources)
   const grantPhotos: StoryPhotos = { catalogue, used: [] }
   const ids = photosFor(catalogue, `grant:${grant.id}`, 'grant')
@@ -714,7 +711,7 @@ async function grantSlides(grant: GrantPublicationRecord, { sources, graph, reci
   const electorate = electorateSlide('The electorate', graph, seat)
   const source = sourceSlide('Check it', 'Every figure links to its record',
     [`GrantConnect award ${grant.id}, Department of Finance, CC BY 3.0 AU`, 'A published award value, not evidence of payments received', 'Program and electorate totals: GrantConnect awards as collected by OPAX'],
-    awardUrl(grant), `Check it: GrantConnect award ${grant.id}. Every figure links to its record at opax.com.au/money/grants.`)
+    url, `Check it: GrantConnect award ${grant.id}. Every figure links to its record at opax.com.au/money/grants.`)
   return { slides: [cover, number, purpose, selection, siblings, electorate, source], photos: grantPhotos }
 }
 
