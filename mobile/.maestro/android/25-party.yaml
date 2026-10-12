@@ -27,7 +27,7 @@ name: 25 Native party members, pinned receipts, bill divisions and web fallback
     direction: DOWN
     speed: 20
     timeout: 180000
-- assertVisible: .* current members with current evidence
+- assertVisible: .* current members
 - scrollUntilVisible:
     element:
       id: party-current-toggle

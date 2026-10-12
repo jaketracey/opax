@@ -7,7 +7,6 @@ import type { RecordResult } from '../../api/client';
 import { serverPassage } from '../../api/passage-text';
 import {
   ChoiceChips,
-  Disclosure,
   LinkRow,
   RowList,
   type InfoNotes,
@@ -62,86 +61,130 @@ const topicNames: Record<string, string> = {
   'foreign-affairs': 'Foreign affairs',
 };
 /**
- * A block read on demand ("Show topics"): its methodology joins the source
- * line the loaded block ends with, so the heading carries no ⓘ.
+ * A block read on demand: a row in "More from the record" until it is
+ * tapped, then its own section. Its methodology joins the source line the
+ * loaded block ends with, so the heading carries no ⓘ.
  */
-export function ActionSection<T>({
-  title,
-  label,
-  id,
-  load,
-  children,
-  accent = 'people',
-}: {
-  accent?: Accent;
-  title: string;
-  label: string;
+export interface MoreItem<T = unknown> {
+  /** The loaded section's test ID; its row is `${id}-toggle`. */
   id: string;
+  /** The loaded section's title: "What they talk about". */
+  title: string;
+  /** The row's title: "Topics". */
+  row: string;
+  accent?: Accent;
   load: () => Promise<T>;
-  children: (data: T) => ReactNode;
+  render: (data: T) => ReactNode;
+}
+/** A typed item as the section holds it: its data is read back by its own render. */
+function moreItem<T>(item: MoreItem<T>): MoreItem {
+  return item as unknown as MoreItem;
+}
+type Read =
+  | { status: 'busy' }
+  | { status: 'error'; message: string }
+  | { status: 'done'; value: unknown };
+
+/**
+ * One section, "More from the record", of rows that each load in place when
+ * tapped (pass 5, P2-1): never a section around a single "Show …" row. A
+ * loaded block replaces its row with its own section, drawn above; the
+ * section goes once every row has loaded. Nothing is read until a row is
+ * tapped, and a block is read once.
+ */
+export function MoreFromRecord({
+  items,
+  testID = 'more-from-record',
+}: {
+  items: readonly MoreItem[];
+  testID?: string;
 }) {
-  const [open, setOpen] = useState(false),
-    [value, setValue] = useState<T | null>(null),
-    [error, setError] = useState<string | null>(null),
-    [busy, setBusy] = useState(false);
+  const [reads, setReads] = useState<Record<string, Read>>({});
   const active = useRef(true),
-    pending = useRef(false);
+    pending = useRef(new Set<string>());
   useEffect(() => {
     active.current = true;
     return () => {
       active.current = false;
     };
   }, []);
-  const read = async () => {
-    if (pending.current) return;
-    pending.current = true;
-    setBusy(true);
-    setError(null);
+  const read = async (item: MoreItem) => {
+    if (pending.current.has(item.id)) return;
+    pending.current.add(item.id);
+    setReads((r) => ({ ...r, [item.id]: { status: 'busy' } }));
     try {
-      const next = await load();
+      const value = await item.load();
       if (active.current) {
-        setValue(next);
-        AccessibilityInfo.announceForAccessibility(title + ' loaded');
+        setReads((r) => ({ ...r, [item.id]: { status: 'done', value } }));
+        AccessibilityInfo.announceForAccessibility(item.title + ' loaded');
       }
     } catch (e) {
       if (active.current) {
-        setError(errorMessage(e));
+        setReads((r) => ({
+          ...r,
+          [item.id]: { status: 'error', message: errorMessage(e) },
+        }));
         AccessibilityInfo.announceForAccessibility(
-          title + ' could not be loaded',
+          item.title + ' could not be loaded',
         );
       }
     } finally {
-      pending.current = false;
-      if (active.current) setBusy(false);
+      pending.current.delete(item.id);
     }
   };
+  const done = (item: MoreItem) => {
+    const r = reads[item.id];
+    return r?.status === 'done' ? r : null;
+  };
+  const rows = items.filter((item) => !done(item));
   return (
-    <Section title={title} testID={id} accent={accent}>
-      <RowList>
-        <Disclosure
-          label={(open ? 'Hide ' : 'Show ') + label}
-          accessibilityLabel={open ? 'Hide ' + label : 'Show ' + label}
-          open={open}
-          testID={id + '-toggle'}
-          onToggle={(next) => {
-            setOpen(next);
-            if (next && value === null && !error) void read();
-          }}
-        >
-          {busy ? (
-            <LoadingState label={'Loading ' + label} />
-          ) : error ? (
-            <ErrorState
-              message={error}
-              onRetry={() => void read()}
-              testID={id + '-error'}
-            />
-          ) : value !== null ? (
-            children(value)
-          ) : null}
-        </Disclosure>
-      </RowList>
-    </Section>
+    <>
+      {items.map((item) => {
+        const loaded = done(item);
+        return loaded ? (
+          <Section
+            key={item.id}
+            title={item.title}
+            testID={item.id}
+            accent={item.accent ?? 'people'}
+          >
+            {item.render(loaded.value)}
+          </Section>
+        ) : null;
+      })}
+      {rows.length ? (
+        <Section title="More from the record" accent="people" testID={testID}>
+          <RowList>
+            {rows.flatMap((item) => {
+              const r = reads[item.id];
+              return [
+                <LinkRow
+                  key={item.id}
+                  title={item.row}
+                  accessibilityHint="Loads here"
+                  disabled={r?.status === 'busy'}
+                  testID={item.id + '-toggle'}
+                  onPress={() => void read(item)}
+                />,
+                r?.status === 'busy' ? (
+                  <LoadingState
+                    key={item.id + '-loading'}
+                    label={'Loading ' + item.row.toLowerCase()}
+                  />
+                ) : r?.status === 'error' ? (
+                  <ErrorState
+                    key={item.id + '-error'}
+                    message={r.message}
+                    onRetry={() => void read(item)}
+                    testID={item.id + '-error'}
+                  />
+                ) : null,
+              ].filter(Boolean);
+            })}
+          </RowList>
+        </Section>
+      ) : null}
+    </>
   );
 }
 /**
@@ -173,17 +216,15 @@ export function ReadDate({
     />
   );
 }
-export function PersonTopics({ name }: { name: string }) {
-  return (
-    <ActionSection
-      title="What they talk about"
-      label="topics"
-      id="person-topics"
-      load={() => peopleDepth.topics(name)}
-    >
-      {(data) => <Topics data={data} />}
-    </ActionSection>
-  );
+/** What they talk about: topic shares, read on demand. */
+export function topicsItem(name: string): MoreItem {
+  return moreItem({
+    id: 'person-topics',
+    title: 'What they talk about',
+    row: 'Topics',
+    load: () => peopleDepth.topics(name),
+    render: (data) => <Topics data={data} />,
+  });
 }
 function Topics({
   data,
@@ -254,13 +295,11 @@ export function openRecord(row: RecordRow) {
   if (native) router.push(native);
   else void openOnWeb(path, displayedRecordTitle(row));
 }
-export function RecordSection({
-  name,
-  kind,
-}: {
-  name: string;
-  kind: 'speeches' | 'mentions' | 'party';
-}) {
+/** Latest speeches, mentions of a person, or a party in parliament. */
+export function recordItem(
+  name: string,
+  kind: 'speeches' | 'mentions' | 'party',
+): MoreItem {
   const title =
     kind === 'speeches'
       ? 'Latest indexed speeches'
@@ -268,139 +307,133 @@ export function RecordSection({
         ? 'In parliament'
         : 'Mentions in parliament';
   const id = kind === 'party' ? 'party-mentions' : 'person-' + kind;
-  return (
-    <ActionSection
-      title={title}
-      label={kind === 'party' ? 'mentions' : kind}
-      id={id}
-      load={() =>
+  return moreItem({
+    id,
+    title,
+    row: kind === 'speeches' ? 'Latest speeches' : 'Mentions in parliament',
+    load: () =>
+      kind === 'speeches'
+        ? peopleDepth.speeches(name)
+        : peopleDepth.mentions(name, kind === 'party'),
+    render: (data) => {
+      const rows =
         kind === 'speeches'
-          ? peopleDepth.speeches(name)
-          : peopleDepth.mentions(name, kind === 'party')
-      }
-    >
-      {(data) => {
-        const rows =
-          kind === 'speeches'
-            ? data.records.data.results
-            : data.records.data.results.slice(0, 5);
-        const brief = (r: RecordRow) => data.briefs[r.resource ?? ''];
-        // One machine-written label for the list. Where briefs and passages
-        // mix, a passage says it is the record's own words.
-        const briefs = rows.filter((r) => brief(r)).length;
-        return (
-          <Group>
-            {briefs ? (
-              <MachineLabel explanation={MACHINE_BRIEF_EXPLANATION} />
-            ) : null}
-            {rows.map((r, i) => (
-              <Group
-                key={r.slug + i}
-                gap={rhythm.tight}
-                testID={id + '-row-' + i}
-              >
-                <LinkRow
-                  title={displayedRecordTitle(r)}
-                  onPress={() => openRecord(r)}
-                  testID={id + '-open-' + i}
-                />
-                <Text wordSafe variant="metadata">
-                  {r.speaker ? r.speaker + ' · ' : ''}
-                  {r.date ? formatDate(r.date) : 'Undated'}
-                  {r.state
-                    ? ' · ' +
-                      (jurisdictionName(r.state) ?? 'Jurisdiction not recorded')
-                    : ''}
-                  {briefs && !brief(r)
-                    ? kind === 'speeches'
-                      ? ' · from the speech'
-                      : ' · from the record'
-                    : ''}
+          ? data.records.data.results
+          : data.records.data.results.slice(0, 5);
+      const brief = (r: RecordRow) => data.briefs[r.resource ?? ''];
+      // One machine-written label for the list. Where briefs and passages
+      // mix, a passage says it is the record's own words.
+      const briefs = rows.filter((r) => brief(r)).length;
+      return (
+        <Group>
+          {briefs ? (
+            <MachineLabel explanation={MACHINE_BRIEF_EXPLANATION} />
+          ) : null}
+          {rows.map((r, i) => (
+            <Group
+              key={r.slug + i}
+              gap={rhythm.tight}
+              testID={id + '-row-' + i}
+            >
+              <LinkRow
+                title={displayedRecordTitle(r)}
+                onPress={() => openRecord(r)}
+                testID={id + '-open-' + i}
+              />
+              <Text wordSafe variant="metadata">
+                {r.speaker ? r.speaker + ' · ' : ''}
+                {r.date ? formatDate(r.date) : 'Undated'}
+                {r.state
+                  ? ' · ' +
+                    (jurisdictionName(r.state) ?? 'Jurisdiction not recorded')
+                  : ''}
+                {briefs && !brief(r)
+                  ? kind === 'speeches'
+                    ? ' · from the speech'
+                    : ' · from the record'
+                  : ''}
+              </Text>
+              {brief(r) ? (
+                <Text wordSafe>{brief(r)}</Text>
+              ) : (
+                <Text wordSafe variant="record">
+                  {(kind === 'speeches'
+                    ? cleanPassage(r.snippet)
+                    : kind === 'party'
+                      ? serverPassage(r.snippet, { max: 240 })
+                      : serverPassage(r.snippet, { max: 220 })) ||
+                    'Open the speech to read the record.'}
                 </Text>
-                {brief(r) ? (
-                  <Text wordSafe>{brief(r)}</Text>
-                ) : (
-                  <Text wordSafe variant="record">
-                    {(kind === 'speeches'
-                      ? cleanPassage(r.snippet)
-                      : kind === 'party'
-                        ? serverPassage(r.snippet, { max: 240 })
-                        : serverPassage(r.snippet, { max: 220 })) ||
-                      'Open the speech to read the record.'}
-                  </Text>
-                )}
-              </Group>
-            ))}
-            {!data.records.data.results.length ? (
-              <EmptyState message="No mentions found in the indexed record." />
-            ) : null}
-            <ReadDate
-              record={data.records}
-              citation="OPAX indexed parliamentary record; each row opens its source record"
-              about={{
-                title: 'About this parliamentary record',
-                notes: [
-                  kind === 'speeches'
-                    ? 'Newest results within the indexed retrieval window.'
-                    : null,
-                  'Machine briefs are automated summaries; passages are extracts from the record.',
-                  data.records.data.coverage,
-                ],
-              }}
-              testID={id + '-source'}
-            />
-          </Group>
-        );
-      }}
-    </ActionSection>
-  );
+              )}
+            </Group>
+          ))}
+          {!data.records.data.results.length ? (
+            <EmptyState message="No mentions found in the indexed record." />
+          ) : null}
+          <ReadDate
+            record={data.records}
+            citation="OPAX indexed parliamentary record; each row opens its source record"
+            about={{
+              title: 'About this parliamentary record',
+              notes: [
+                kind === 'speeches'
+                  ? 'Newest results within the indexed retrieval window.'
+                  : null,
+                'Machine briefs are automated summaries; passages are extracts from the record.',
+                data.records.data.coverage,
+              ],
+            }}
+            testID={id + '-source'}
+          />
+        </Group>
+      );
+    },
+  });
 }
-export function NewsSection({ name }: { name: string }) {
-  return (
-    <ActionSection
-      title="News headlines"
-      label="news"
-      id="people-news"
-      load={() => peopleDepth.news()}
-    >
-      {(data) => {
-        const items = matchingNews(name, data.data.items);
-        return items.length ? (
-          <Group>
-            {items.map((item, i) => (
-              <Group key={item.url} gap={rhythm.line}>
-                <LinkRow
-                  title={item.title}
-                  external
-                  onPress={() => void openSource(item.url, item.title)}
-                  testID={'people-news-' + i}
-                />
-                {item.published ? (
-                  <Text wordSafe variant="fine">
-                    {formatDate(item.published)}
-                  </Text>
-                ) : null}
-              </Group>
-            ))}
-            <ReadDate
-              record={data}
-              citation="ABC News; The Guardian"
-              testID="people-news-source"
-            />
-          </Group>
-        ) : (
-          <Group>
-            <EmptyState message="Nothing in today's politics headlines mentions them." />
-            <ReadDate
-              record={data}
-              citation="ABC News; The Guardian"
-              testID="people-news-source"
-            />
-          </Group>
-        );
-      }}
-    </ActionSection>
-  );
+/** Today's politics headlines that name them. */
+export function newsItem(name: string): MoreItem {
+  return moreItem({
+    id: 'people-news',
+    title: 'News headlines',
+    row: 'News headlines',
+    load: () => peopleDepth.news(),
+    render: (data) => {
+      const items = matchingNews(name, data.data.items);
+      return items.length ? (
+        <Group>
+          {items.map((item, i) => (
+            <Group key={item.url} gap={rhythm.line}>
+              <LinkRow
+                title={item.title}
+                external
+                onPress={() => void openSource(item.url, item.title)}
+                testID={'people-news-' + i}
+              />
+              {item.published ? (
+                <Text wordSafe variant="fine">
+                  {formatDate(item.published)}
+                </Text>
+              ) : null}
+            </Group>
+          ))}
+          <ReadDate
+            record={data}
+            citation="ABC News; The Guardian"
+            testID="people-news-source"
+          />
+        </Group>
+      ) : (
+        <Group>
+          <EmptyState message="Nothing in today's politics headlines mentions them." />
+          <ReadDate
+            record={data}
+            citation="ABC News; The Guardian"
+            testID="people-news-source"
+          />
+        </Group>
+      );
+    },
+  });
 }
 export function PersonDiary({ identity }: { identity: PersonProfile }) {
   const eligible = [

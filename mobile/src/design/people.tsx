@@ -84,7 +84,6 @@ export function Portrait({
   name,
   official = false,
   nameBeside = true,
-  ring,
   onDisplay,
   loading = false,
 }: {
@@ -94,12 +93,6 @@ export function Portrait({
   name?: string;
   official?: boolean;
   nameBeside?: boolean;
-  /**
-   * A party colour drawn as a ring around a profile portrait. Retiring
-   * (pass 5, P1-4: party colour is a dot beside a name, never a ring):
-   * remove once the profile stops passing it.
-   */
-  ring?: string | null;
   onDisplay?: (visible: boolean) => void;
   /** The portrait lookup has not answered yet. */
   loading?: boolean;
@@ -146,7 +139,6 @@ export function Portrait({
           borderRadius: dimension / 2,
           overflow: 'hidden',
         },
-        ring ? { borderWidth: 3, borderColor: ring, padding: 0 } : null,
       ]}
     >
       {uri ? (

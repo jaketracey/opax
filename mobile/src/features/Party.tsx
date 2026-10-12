@@ -1,6 +1,6 @@
 import { partyTimingID } from './people/party-timing';
 import { PartyAccess, PartyFunding } from './people/PartyDepth';
-import { RecordSection, NewsSection } from './people/Sections';
+import { MoreFromRecord, newsItem, recordItem } from './people/Sections';
 import { PageActions } from './people/PageActions';
 import { CachedPortrait } from './CachedPortrait';
 import { profileGrid } from './split/grid';
@@ -235,26 +235,26 @@ export function PartyPage({
                     title: 'About the member count',
                     notes: [
                       'Current members use their current party. A directory snapshot is not a live roster. Undated affiliations appear separately as recorded; former members are excluded.',
+                      // The roster's own date, in the sheet: the line says
+                      // one date (pass 5, P2-6).
+                      view.rosterAsAt
+                        ? `Roster as at ${formatDate(view.rosterAsAt)}.`
+                        : null,
                     ],
-                  }}
-                  line={{
-                    coverage: view.rosterAsAt
-                      ? `Roster as at ${formatDate(view.rosterAsAt, 'short')}`
-                      : null,
                   }}
                 >
                   {(data) => (
                     <>
+                      {/* The figure says the count; the row opens the list. */}
                       <BigFigure
                         value={formatCount(data.currentCount)}
-                        label="current members with current evidence"
-                        accessibilityLabel={`${formatCount(data.currentCount)} current members with current evidence`}
+                        label="current members"
+                        accessibilityLabel={`${formatCount(data.currentCount)} current members`}
                         testID="party-current-count"
                       />
                       <RowList>
                         <Disclosure
-                          label="Current members"
-                          value={formatCount(data.current.length)}
+                          label="Member list"
                           open={membersOpen}
                           onToggle={setMembersOpen}
                           testID="party-current-toggle"
@@ -289,6 +289,9 @@ export function PartyPage({
                   empty="No receipts total is recorded for this party in the money graph."
                   onRetry={retry}
                   testID="party-receipts"
+                  citation="AEC disclosure returns"
+                  licence="CC BY 4.0"
+                  licenceDataset="aec"
                   about={
                     view.moneyMeta
                       ? {
@@ -326,6 +329,7 @@ export function PartyPage({
                         value={formatMoney(data.node.total)}
                         label={partyPageCopy.caption}
                         accessibilityLabel={`${partyPageCopy.caption}, ${formatMoney(data.node.total)}`}
+                        accent="money"
                         testID="party-receipts-total"
                       />
                       <KeyValueList
@@ -414,6 +418,7 @@ export function PartyPage({
                   empty="No associated-entity return is held for this party."
                   onRetry={retry}
                   testID="party-associated"
+                  licenceDataset="aec"
                   about={{
                     title: 'About associated entities',
                     notes: [
@@ -468,6 +473,7 @@ export function PartyPage({
                   testID="party-divisions"
                   citation="They Vote For You"
                   licence="ODbL"
+                  licenceDataset="tvfy"
                   about={{
                     title: 'About these divisions',
                     notes: [
@@ -550,8 +556,10 @@ export function PartyPage({
               </Section>
             </PadGrid>
             <PartyAccess name={view.label} />
-            <RecordSection name={view.label} kind="party" />
-            <NewsSection name={view.label} />
+            <MoreFromRecord
+              testID="party-more"
+              items={[recordItem(view.label, 'party'), newsItem(view.label)]}
+            />
             {/* The page's end, for journeys that scroll to it; nothing drawn. */}
             <View testID="party-end" collapsable={false} style={styles.end} />
           </>
@@ -575,6 +583,7 @@ function PartyBlock<T>({
   line,
   citation,
   licence,
+  licenceDataset,
   originals,
   after,
   children,
@@ -588,6 +597,8 @@ function PartyBlock<T>({
   line?: SourceOverrides;
   citation?: string;
   licence?: string;
+  /** The Sources and licences entry the licence row opens. */
+  licenceDataset?: string;
   originals?: SourceDetails['originals'];
   /** Drawn after the content in every state, before the source line. */
   after?: ReactNode;
@@ -625,6 +636,7 @@ function PartyBlock<T>({
         block={block}
         citation={citation}
         licence={licence}
+        licenceDataset={licenceDataset}
         title={about?.title}
         notes={about?.notes}
         originals={originals}

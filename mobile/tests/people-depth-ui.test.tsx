@@ -4,11 +4,11 @@ import TestRenderer from 'react-test-renderer';
 import { Text as NativeText } from 'react-native';
 import { catalogs, peopleDepth } from '../src/api/runtime';
 import {
-  ActionSection,
-  NewsSection,
-  PersonTopics,
-  RecordSection,
+  MoreFromRecord,
+  newsItem,
   openRecord,
+  recordItem,
+  topicsItem,
 } from '../src/features/people/Sections';
 import { PartyAccess, PartyFunding } from '../src/features/people/PartyDepth';
 import ExpenseGlossary from '../src/features/people/ExpenseGlossary';
@@ -76,29 +76,63 @@ beforeEach(() => {
   jest.mocked(peopleDepth.access).mockResolvedValue(result(access));
   jest.mocked(peopleDepth.funding).mockResolvedValue(result(funding));
 });
-test('paid person/party sections mount collapsed with zero reads; first tap loads, hide/show only changes visibility', async () => {
+const ids = (r: TestRenderer.ReactTestRenderer) =>
+  r.root
+    .findAll((n) => typeof n.props?.testID === 'string')
+    .map((n) => n.props.testID as string);
+test('paid person/party reads wait in one More from the record section; a tap loads its block in place, once', async () => {
   const load = jest.fn(async () => 'Fixture result');
   const r = await render(
-    <ActionSection title="Topics" label="topics" id="fixture" load={load}>
-      {(data) => <NativeText>{data}</NativeText>}
-    </ActionSection>,
+    <MoreFromRecord
+      testID="fixture-more"
+      items={[
+        {
+          id: 'fixture',
+          title: 'Fixture topics',
+          row: 'Topics',
+          load,
+          render: (data) => <NativeText>{String(data)}</NativeText>,
+        },
+        {
+          id: 'other',
+          title: 'Other',
+          row: 'Other rows',
+          load: async () => 'Other result',
+          render: (data) => <NativeText>{String(data)}</NativeText>,
+        },
+      ]}
+    />,
   );
+  // One section of rows, never a section per "Show …" row (pass 5, P2-1).
+  expect(words(r)).toContain('More from the record');
+  expect(words(r)).not.toContain('Show ');
   expect(load).not.toHaveBeenCalled();
   expect(words(r)).not.toContain('Fixture result');
   await press(r, 'fixture-toggle');
   expect(load).toHaveBeenCalledTimes(1);
+  // The loaded block replaces its row with its own section.
+  expect(words(r)).toContain('Fixture topics');
   expect(words(r)).toContain('Fixture result');
-  await press(r, 'fixture-toggle');
-  await press(r, 'fixture-toggle');
+  expect(ids(r)).not.toContain('fixture-toggle');
+  expect(ids(r)).toContain('other-toggle');
+  await press(r, 'other-toggle');
+  // Every row loaded: the section goes.
+  expect(words(r)).not.toContain('More from the record');
   expect(load).toHaveBeenCalledTimes(1);
   await act(async () => r.unmount());
   const all = await render(
     <>
-      <PersonTopics name="Anthony Albanese" />
-      <RecordSection name="Anthony Albanese" kind="speeches" />
-      <RecordSection name="Anthony Albanese" kind="mentions" />
-      <NewsSection name="Anthony Albanese" />
-      <RecordSection name="Labor" kind="party" />
+      <MoreFromRecord
+        items={[
+          topicsItem('Anthony Albanese'),
+          recordItem('Anthony Albanese', 'speeches'),
+          recordItem('Anthony Albanese', 'mentions'),
+          newsItem('Anthony Albanese'),
+        ]}
+      />
+      <MoreFromRecord
+        items={[recordItem('Labor', 'party'), newsItem('Labor')]}
+      />
     </>,
   );
   for (const fn of [
@@ -108,7 +142,34 @@ test('paid person/party sections mount collapsed with zero reads; first tap load
     peopleDepth.news,
   ])
     expect(fn).not.toHaveBeenCalled();
+  expect(words(all)).toContain('Latest speeches');
+  expect(words(all)).toContain('News headlines');
   await act(async () => all.unmount());
+});
+test('a failed read keeps its row with a retry', async () => {
+  const load = jest
+    .fn()
+    .mockRejectedValueOnce(new Error('offline'))
+    .mockResolvedValueOnce('Second try');
+  const r = await render(
+    <MoreFromRecord
+      items={[
+        {
+          id: 'fixture',
+          title: 'Fixture',
+          row: 'Fixture row',
+          load,
+          render: (data) => <NativeText>{String(data)}</NativeText>,
+        },
+      ]}
+    />,
+  );
+  await press(r, 'fixture-toggle');
+  expect(ids(r)).toContain('fixture-error');
+  expect(ids(r)).toContain('fixture-toggle');
+  await press(r, 'fixture-toggle');
+  expect(words(r)).toContain('Second try');
+  await act(async () => r.unmount());
 });
 test('All, Then and Now switch the loaded profiles without another request', async () => {
   const era = (label: string, n: number) => ({
@@ -134,7 +195,9 @@ test('All, Then and Now switch the loaded profiles without another request', asy
       topics: [{ slug: 'housing', count: 10 }],
     }),
   });
-  const r = await render(<PersonTopics name="Fixture Member" />);
+  const r = await render(
+    <MoreFromRecord items={[topicsItem('Fixture Member')]} />,
+  );
   await press(r, 'person-topics-toggle');
   expect(words(r)).toContain('Housing');
   for (const label of ['Then', 'Now', 'All']) {
@@ -165,7 +228,9 @@ test('news has no In the news heading unless a headline matches', async () => {
       }),
     ),
   );
-  const r = await render(<NewsSection name="Anthony Albanese" />);
+  const r = await render(
+    <MoreFromRecord items={[newsItem('Anthony Albanese')]} />,
+  );
   await press(r, 'people-news-toggle');
   expect(words(r)).not.toContain('In the news');
   expect(words(r)).toContain(

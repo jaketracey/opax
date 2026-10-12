@@ -15,6 +15,8 @@ import {
   StatusLabel,
   Text,
   errorMessage,
+  isPad,
+  useLayout,
 } from '../design/primitives';
 import { SeatGrants } from './money-public/Grants';
 import { PayBlock, PartyReceiptsBlock } from './people/FinancialBlocks';
@@ -22,8 +24,7 @@ import { phoneCopy } from '../design/phone-copy';
 import { PartialNotice, SavedCopyNotice } from './CatalogNotice';
 import { LocationSuggestion } from './electorate-map/LocationSuggestion';
 import { formatDate } from '../design/format';
-import { useCallback, useEffect, useRef, useState } from 'react';
-import { useHeaderBottom } from '../design/useHeaderBottom';
+import { useCallback, useEffect, useState } from 'react';
 import { router, Stack } from 'expo-router';
 import { openSource } from '../navigation/external';
 import { AndroidFocusBack } from '../navigation/AndroidFocusBack';
@@ -33,7 +34,6 @@ import {
   RefreshControl,
   StyleSheet,
   View,
-  type ScrollView,
 } from 'react-native';
 import { catalogs } from '../api/runtime';
 import type { Electorate } from '../api/catalogs';
@@ -67,6 +67,7 @@ import {
   type ProfileView,
 } from './your-mp/model';
 export default function YourMP() {
+  const layout = useLayout();
   const [directory, setDirectory] = useState<Directory | null>(null),
     [choice, setChoice] = useState<SeatChoice | null>(null),
     [view, setView] = useState<YourMPView | null>(null);
@@ -197,21 +198,12 @@ export default function YourMP() {
     }
   }
   const chooser = ready && (!choice || choosing || stateChoosing);
-  // The chooser replaces a long page in place. "Choose state electorate" and
-  // "Change seat" sit near its end, so the short chooser would draw above a
-  // retained offset: a blank screen under the title (TestFlight build 32).
-  // Open (and leave) it at the top, under the native header.
-  const scroll = useRef<ScrollView>(null);
-  const headerBottom = useHeaderBottom();
-  const shown = useRef(chooser);
-  useEffect(() => {
-    if (shown.current === chooser) return;
-    shown.current = chooser;
-    scroll.current?.scrollTo({
-      y: Platform.OS === 'ios' ? -headerBottom : 0,
-      animated: false,
-    });
-  }, [chooser, headerBottom]);
+  // The chooser replaces a long page in place, and the chosen seat replaces
+  // the chooser. Each draws in a fresh scroll view, at its rest position
+  // under an expanded title: a kept offset drew the short chooser above a
+  // blank screen (TestFlight build 32), and the chosen seat under the bar
+  // after a confirm from lower in the chooser (pass 5). A negative scrollTo
+  // cannot reach that rest position: it stops at 0, behind the bar.
   const seats = stateChoosing
     ? (view?.verifiedStateSeats ?? [])
     : (directory?.electorates.data.electorates ?? []);
@@ -221,16 +213,31 @@ export default function YourMP() {
       choice?.stateSeatIds.includes(s.electorate_id),
     ) ?? [];
   const seatName = view && !chooser ? view.seat.data!.name : null;
+  const padTitle = isPad && layout.regular;
   return (
     <Screen
+      key={chooser ? 'chooser' : 'page'}
       column="wide"
       testID="your-mp-screen"
-      scrollRef={scroll}
       refreshControl={<RefreshControl refreshing={busy} onRefresh={retry} />}
     >
       {/* One title: the chosen seat replaces "Your MP" (the tab still says
           it); the chooser keeps "Your MP". */}
-      <Stack.Screen options={{ title: seatName ?? 'Your MP' }} />
+      {/* On iPad the title sits in the readable column with the content it
+          heads, not at the detail's far edge (pass 5, P3-16). */}
+      <Stack.Screen
+        options={{
+          title: seatName ?? 'Your MP',
+          ...(padTitle
+            ? { headerLargeTitleEnabled: false, headerTitle: '' }
+            : null),
+        }}
+      />
+      {padTitle ? (
+        <Heading level={1} testID="your-mp-title">
+          {seatName ?? 'Your MP'}
+        </Heading>
+      ) : null}
       {Platform.OS === 'android' ? (
         <AndroidFocusBack
           active={choosing || stateChoosing}
@@ -266,24 +273,6 @@ export default function YourMP() {
           {directory?.electorates.staleReason ? (
             <SavedCopyNotice reason={directory.electorates.staleReason} />
           ) : null}
-          {!stateChoosing && directory ? (
-            <LocationSuggestion
-              seats={directory.electorates.data.electorates}
-              onConfirm={(seat) => void choose(seat)}
-              disabled={saving}
-            />
-          ) : null}
-          {/* The state district from the same tap, on the device against
-              bundled outlines (TestFlight build 32). The name search below
-              stays the fallback, including when permission is denied. */}
-          {stateChoosing && view ? (
-            <LocationSuggestion
-              scope="state"
-              seats={view.verifiedStateSeats}
-              onConfirm={(seat) => void choose(seat)}
-              disabled={saving}
-            />
-          ) : null}
           <Field
             label="Electorate or member’s name"
             hint="Your choice is saved on this device. Device backups may include it."
@@ -294,13 +283,10 @@ export default function YourMP() {
             returnKeyType="done"
             onSubmitEditing={() => Keyboard.dismiss()}
           />
-          {!query.trim() ? (
-            <EmptyState
-              icon="magnifyingglass"
-              message="Search by electorate or member name."
-              testID="seat-empty"
-            />
-          ) : !matches.length ? (
+          {/* The field is the chooser's main task, so it comes first; its
+              label says what to type, with no helper line repeating it
+              (pass 5, P2-20 and P3-1). */}
+          {!query.trim() ? null : !matches.length ? (
             <EmptyState
               message="No matching electorate or member in this release."
               testID="seat-no-results"
@@ -328,6 +314,24 @@ export default function YourMP() {
               ))}
             </RowList>
           )}
+          {!stateChoosing && directory ? (
+            <LocationSuggestion
+              seats={directory.electorates.data.electorates}
+              onConfirm={(seat) => void choose(seat)}
+              disabled={saving}
+            />
+          ) : null}
+          {/* The state district from the same tap, on the device against
+              bundled outlines (TestFlight build 32). The name search below
+              stays the fallback, including when permission is denied. */}
+          {stateChoosing && view ? (
+            <LocationSuggestion
+              scope="state"
+              seats={view.verifiedStateSeats}
+              onConfirm={(seat) => void choose(seat)}
+              disabled={saving}
+            />
+          ) : null}
           {!stateChoosing ? (
             <RowList>
               <LinkRow

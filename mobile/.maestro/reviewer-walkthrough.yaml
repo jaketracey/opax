@@ -112,7 +112,7 @@ name: Submission reviewer reading walkthrough
 - takeScreenshot: ${EVIDENCE}/review-06a-elections
 - scrollUntilVisible:
     element:
-      text: Local context
+      text: Census 2021
     centerElement: true
     timeout: 90000
 - takeScreenshot: ${EVIDENCE}/review-06b-context

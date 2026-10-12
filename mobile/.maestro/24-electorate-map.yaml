@@ -63,26 +63,20 @@ name: 24 Electorate outline and on-device location suggestion
     centerElement: true
     timeout: 300000
 - takeScreenshot: ${EVIDENCE}/24-native-outline
-- scrollUntilVisible:
-    element:
-      id: outline-label
-    centerElement: true
-    timeout: 300000
-- assertVisible: Display outline · 2025 election
-- takeScreenshot: ${EVIDENCE}/24-vintage
-- scrollUntilVisible:
-    element:
-      id: outline-limit
-    centerElement: true
-    timeout: 300000
-- takeScreenshot: ${EVIDENCE}/24-allocation-warning
+# One source line under the outline: the boundary and who drew it; "not for
+# address allocation" and the original are in its sheet (pass 5, P2-7).
 - scrollUntilVisible:
     element:
       id: outline-source
     centerElement: true
     timeout: 300000
+- assertVisible: .*2025 election boundary.*
+- takeScreenshot: ${EVIDENCE}/24-vintage
 - tapOn:
     id: outline-source
+- assertVisible: Not for address allocation.*
+- takeScreenshot: ${EVIDENCE}/24-allocation-warning
+- tapOn: .*Electorate boundary.*
 - assertVisible: https://www.aec.gov.au/Electorates/files/2025/AUS-March-2025-esri.zip
 - takeScreenshot: ${EVIDENCE}/24-source
 - tapOn: OK

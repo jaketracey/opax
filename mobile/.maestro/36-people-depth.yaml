@@ -1,6 +1,9 @@
 appId: au.com.opax.app
 name: 36 Person topics, speeches, mentions, news, ministerial diary and glossary
 ---
+# Topics, speeches, mentions and news are rows of one "More from the record"
+# section at the page's foot; a loaded block stays as its own section above
+# it (pass 5, P2-1), so each row is found scrolling down.
 - launchApp:
     clearState: true
     permissions: {}
@@ -39,13 +42,6 @@ name: 36 Person topics, speeches, mentions, news, ministerial diary and glossary
 - tapOn: Now
 - takeScreenshot: ${EVIDENCE}/36-topics-now
 - scrollUntilVisible:
-    element: { id: person-topics-toggle }
-    direction: UP
-    speed: 20
-    centerElement: true
-    timeout: 180000
-- tapOn: { id: person-topics-toggle }
-- scrollUntilVisible:
     element: { id: person-speeches-toggle }
     direction: DOWN
     speed: 30
@@ -72,13 +68,6 @@ name: 36 Person topics, speeches, mentions, news, ministerial diary and glossary
 - takeScreenshot: ${EVIDENCE}/36-speech-destination
 - tapOn: { id: BackButton }
 - scrollUntilVisible:
-    element: { id: person-speeches-toggle }
-    direction: UP
-    speed: 20
-    centerElement: true
-    timeout: 180000
-- tapOn: { id: person-speeches-toggle }
-- scrollUntilVisible:
     element: { id: person-mentions-toggle }
     direction: DOWN
     speed: 30
@@ -100,7 +89,7 @@ name: 36 Person topics, speeches, mentions, news, ministerial diary and glossary
 - tapOn: { id: BackButton }
 - scrollUntilVisible:
     element: { id: people-news-toggle }
-    direction: UP
+    direction: DOWN
     speed: 30
     centerElement: true
     timeout: 180000
@@ -139,7 +128,10 @@ name: 36 Person topics, speeches, mentions, news, ministerial diary and glossary
     centerElement: true
     timeout: 180000
 - tapOn: { id: person-expense-glossary }
-- assertVisible: Expense category glossary
+# The sheet's own screen, not a title that the profile row behind it shares.
+- extendedWaitUntil:
+    visible: { id: expense-glossary }
+    timeout: 15000
 - takeScreenshot: ${EVIDENCE}/36-glossary
 - scrollUntilVisible:
     element: { id: expense-glossary-end }

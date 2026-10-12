@@ -19,7 +19,6 @@ export function CachedPortrait({
   testID,
   onCredit,
   retryKey = 0,
-  ring,
 }: {
   name: string;
   slug?: string;
@@ -27,8 +26,6 @@ export function CachedPortrait({
   testID?: string;
   onCredit?: (info: PortraitInfo | null) => void;
   retryKey?: number;
-  /** The party colour ring around a profile portrait. */
-  ring?: string | null;
 }) {
   const [saved, setSaved] = useState<{
     localURI: string;
@@ -83,7 +80,6 @@ export function CachedPortrait({
     <Portrait
       key={`${identity}/${retryKey}`}
       size={size}
-      ring={ring}
       name={name}
       localURI={current?.localURI}
       onDisplay={current?.onDisplay}

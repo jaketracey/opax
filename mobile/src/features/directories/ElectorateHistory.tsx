@@ -23,7 +23,7 @@ import {
   type Directory,
   type ElectorateView,
 } from '../your-mp/model';
-import { BlockSource } from '../your-mp/Evidence';
+import { BlockSource, representationBlock } from '../your-mp/Evidence';
 import { CachedPortrait } from '../CachedPortrait';
 import { representationAt, validDate } from './model';
 
@@ -100,7 +100,9 @@ export function ElectorateHistory({
                 return (
                   <PersonRow
                     key={r.person_id}
-                    name={person?.name ?? 'Unresolved person'}
+                    name={
+                      person ? rosterName(person.name) : 'Unresolved person'
+                    }
                     portrait={
                       person ? (
                         <CachedPortrait
@@ -158,11 +160,11 @@ export function ElectorateHistory({
         {terms.map((t, i) => {
           const person = view.people[t.person_id],
             profile = representativeProfile(t.person_id, directory);
-          const span = `${t.start ? formatDate(t.start, 'short') : 'Unknown'} to ${t.end ? formatDate(t.end, 'short') : `end not recorded; observed ${formatDate(t.observed_through, 'short')}`}`;
+          const span = serviceSpan(t);
           return (
             <PersonRow
               key={`${t.person_id}-${t.start}-${i}`}
-              name={person?.name ?? 'Unresolved person'}
+              name={person ? rosterName(person.name) : 'Unresolved person'}
               portrait={
                 person ? (
                   <CachedPortrait name={person.name} slug={profile?.slug} />
@@ -195,10 +197,13 @@ export function ElectorateHistory({
           block={{
             ...view.identity,
             asAt: observed ?? view.identity.asAt,
-            sources: [
-              ...view.identity.sources,
-              ...(selected ? view.representatives.sources : []),
-            ],
+            sources: representationBlock({
+              ...view.identity,
+              sources: [
+                ...view.identity.sources,
+                ...(selected ? view.representatives.sources : []),
+              ],
+            }).sources,
             stale:
               view.identity.stale || (!!selected && view.representatives.stale),
           }}
@@ -221,6 +226,39 @@ export function ElectorateHistory({
         onChoose={choose}
       />
     </Section>
+  );
+}
+
+/**
+ * A service period in words: "2 Mar 1996 to 29 Jan 1996", and an open-ended
+ * one as "Since 2 Mar 1996 (current at 9 Sep 2026)" (pass 5, P3-5).
+ */
+export function serviceSpan(t: {
+  start?: string | null;
+  end?: string | null;
+  observed_through?: string | null;
+}): string {
+  const start = t.start ? formatDate(t.start, 'short') : '';
+  if (t.end)
+    return `${start || 'Start not recorded'} to ${formatDate(t.end, 'short')}`;
+  const observed = t.observed_through
+    ? formatDate(t.observed_through, 'short')
+    : '';
+  const since = start ? `Since ${start}` : 'Start not recorded';
+  return observed ? `${since} (current at ${observed})` : since;
+}
+
+/**
+ * A roster name as people write it: an all-capitals surname from an old
+ * roster ("LEO McLEAY") in title case ("Leo McLeay"), at render. Names
+ * already in mixed case are left alone.
+ */
+export function rosterName(name: string): string {
+  if (!/\b[A-Z]{3,}\b|\b(Mc|Mac)[A-Z]{2,}\b/.test(name)) return name;
+  return name.replace(
+    /\b(Mc|Mac)?([A-Z])([A-Z]+)\b/g,
+    (_, prefix: string | undefined, first: string, rest: string) =>
+      `${prefix ?? ''}${first}${rest.toLowerCase()}`,
   );
 }
 

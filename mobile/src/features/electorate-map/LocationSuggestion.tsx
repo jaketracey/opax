@@ -1,32 +1,41 @@
 import { phoneCopy } from '../../design/phone-copy';
 import { useEffect, useRef, useState } from 'react';
-import { AccessibilityInfo, Platform, StyleSheet, View } from 'react-native';
+import {
+  AccessibilityInfo,
+  Platform,
+  Pressable,
+  StyleSheet,
+  View,
+} from 'react-native';
 import type { Electorate } from '../../api/catalogs';
-import { Button, Group, Text } from '../../design/primitives';
-import { colors, rhythm } from '../../design/tokens';
+import { Button, Group, InfoSheet, Text } from '../../design/primitives';
+import { colors, minimumTarget, radii, rhythm } from '../../design/tokens';
 import { suggestFromLocation, suggestStateFromLocation } from './location';
 import type { Suggestion } from './suggestion';
 type Scope = 'federal' | 'state';
-const messages: Record<Scope, Record<Exclude<Suggestion['kind'], 'suggested'>, string>> = {
+const messages: Record<
+  Scope,
+  Record<Exclude<Suggestion['kind'], 'suggested'>, string>
+> = {
   federal: {
     denied:
-      'Location access is off. Search by electorate or member name below.',
+      'Location access is off. Search by electorate or member name above.',
     border:
-      'Your location may be near a border, or too approximate to suggest one seat. Choose your electorate below.',
+      'Your location may be near a border, or too approximate to suggest one seat. Choose your electorate by name above.',
     'no-match':
-      'No federal display outline matches your location. You may be offshore or outside the covered area. Choose your electorate below.',
+      'No federal display outline matches your location. You may be offshore or outside the covered area. Choose your electorate by name above.',
     unavailable:
-      'A location suggestion is unavailable. Choose your electorate below.',
+      'A location suggestion is unavailable. Choose your electorate by name above.',
   },
   state: {
     denied:
-      'Location access is off. Search by electorate or member name below.',
+      'Location access is off. Search by electorate or member name above.',
     border:
-      'Your location may be near a district border, or too approximate to suggest one district. Choose your electorate below.',
+      'Your location may be near a district border, or too approximate to suggest one district. Choose your electorate by name above.',
     'no-match':
-      'No district in this state matches your location. Choose your electorate below.',
+      'No district in this state matches your location. Choose your electorate by name above.',
     unavailable:
-      'A location suggestion is unavailable. Choose your electorate below.',
+      'A location suggestion is unavailable. Choose your electorate by name above.',
   },
 };
 /**
@@ -51,8 +60,10 @@ export function LocationSuggestion({
   const [busy, setBusy] = useState(false),
     [progress, setProgress] = useState<Progress>({ done: 0, total: 0 }),
     [result, setResult] = useState<Suggestion | null>(null);
+  const [about, setAbout] = useState(false);
   const pending = useRef<AbortController | null>(null);
   useEffect(() => () => pending.current?.abort(), []);
+  const device = Platform.OS === 'android' ? 'phone' : phoneCopy('iPhone');
   async function locate() {
     if (pending.current || disabled) return;
     const controller = new AbortController();
@@ -95,15 +106,40 @@ export function LocationSuggestion({
             : 'Optional. Suggests a federal electorate using a display outline; you confirm the choice.'
         }
       />
-      <Text wordSafe variant="fine">
-        Your location is used once on your{' '}
-        {Platform.OS === 'android' ? 'phone' : phoneCopy('iPhone')} to suggest a{' '}
-        {scope === 'state' ? 'state district' : 'federal seat'}. It is not sent,
-        saved or logged.{' '}
-        {scope === 'state'
-          ? 'District outlines are statistical approximations, not for address allocation.'
-          : 'Display outlines are not for address allocation.'}
-      </Text>
+      {/* One line at standard size, under the button (pass 5, P2-20); the
+          full privacy text is in its sheet. */}
+      <Pressable
+        accessibilityRole="button"
+        accessibilityLabel={`Used once on this ${device}; not sent or saved.`}
+        accessibilityHint="Shows how your location is used"
+        testID={`${id}location-privacy`}
+        onPress={() => setAbout(true)}
+        style={({ pressed }) => [
+          styles.privacy,
+          pressed ? styles.pressed : null,
+        ]}
+      >
+        <Text wordSafe variant="fine">
+          {`Used once on this ${device}; not sent or saved.`}{' '}
+          <Text variant="fine" tone="navy">
+            How it works
+          </Text>
+        </Text>
+      </Pressable>
+      <InfoSheet
+        visible={about}
+        onClose={() => setAbout(false)}
+        title="Your location"
+        notes={[
+          `Your location is used once on your ${device} to suggest a ${
+            scope === 'state' ? 'state district' : 'federal seat'
+          }. It is not sent, saved or logged.`,
+          scope === 'state'
+            ? 'District outlines are statistical approximations, not for address allocation.'
+            : 'Display outlines are not for address allocation.',
+        ]}
+        testID={`${id}location-privacy-sheet`}
+      />
       {busy && scope === 'federal' ? (
         <Group>
           <LocationProgress {...progress} />
@@ -231,6 +267,13 @@ function Reserved({
   );
 }
 const styles = StyleSheet.create({
+  privacy: {
+    alignSelf: 'stretch',
+    minHeight: minimumTarget,
+    justifyContent: 'center',
+    borderRadius: radii.sm,
+  },
+  pressed: { backgroundColor: colors.sunken },
   progress: { gap: rhythm.tight },
   // Every layer takes the full width and sits over the first, so the stack
   // is as tall as its tallest wording.

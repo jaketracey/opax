@@ -1,9 +1,10 @@
 import { PayBlock, PartyReceiptsBlock } from './people/FinancialBlocks';
 import {
-  PersonTopics,
-  RecordSection,
-  NewsSection,
+  MoreFromRecord,
+  newsItem,
   PersonDiary,
+  recordItem,
+  topicsItem,
 } from './people/Sections';
 import { PageActions } from './people/PageActions';
 import { headerItems } from '../navigation/chrome';
@@ -42,6 +43,7 @@ import {
   PadGrid,
   PartyLabel,
   Portrait,
+  ReadableColumn,
   RowList,
   Screen,
   SubSection,
@@ -50,7 +52,7 @@ import {
   useAccessibilitySize,
   useReduceMotion,
 } from '../design/primitives';
-import { formerMember, partyDot } from '../design/party';
+import { formerMember } from '../design/party';
 import { colors, layout, radii, rhythm } from '../design/tokens';
 import { useHeaderBottom } from '../design/useHeaderBottom';
 import {
@@ -67,10 +69,7 @@ import {
 import { profileGrid } from './split/grid';
 import { EvidenceFooter, RecordBlock, votesSource } from './your-mp/Evidence';
 import { DeclaredInterests, registerNotes } from './people/DeclaredInterests';
-import {
-  hasParliamentaryMembership,
-  type ProfileView,
-} from './your-mp/model';
+import { hasParliamentaryMembership, type ProfileView } from './your-mp/model';
 const partialMissing =
   'No readable record was found for this person. Some rows in the latest public export were unreadable.';
 type Jump = 'votes' | 'interests' | 'pay';
@@ -219,7 +218,6 @@ export function ProfileScreen({
                   size="profile"
                   testID="person-portrait"
                   retryKey={retry}
-                  ring={partyDot(identity.party)}
                 />
                 <PageActions
                   kind="person"
@@ -276,15 +274,12 @@ export function ProfileScreen({
                 }}
               />
             </Group>
-            <PadGrid {...profileGrid}>
-              <PartyReceiptsBlock
-                block={b.partyReceipts}
-                retry={refresh}
-                id="person-receipts"
-                jurisdiction={identity.seats[0]?.jurisdiction}
-              />
-              <PersonTopics name={identity.name} />
-            </PadGrid>
+            <PartyReceiptsBlock
+              block={b.partyReceipts}
+              retry={refresh}
+              id="person-receipts"
+              jurisdiction={identity.seats[0]?.jurisdiction}
+            />
             <View
               onLayout={(e) => {
                 blockY.current.votes = e.nativeEvent.layout.y;
@@ -298,6 +293,7 @@ export function ProfileScreen({
                 block={b.votes}
                 missing="No voting summary is held for this person in the release."
                 retry={refresh}
+                licenceDataset="tvfy"
                 line={() => votesSource(b.votes)}
                 about={(v) =>
                   v
@@ -383,81 +379,34 @@ export function ProfileScreen({
               }}
               style={styles.blocks}
             >
-              <PadGrid {...profileGrid}>
-                <RecordBlock
-                  title="Declared interests"
-                  id="person-interests"
-                  accent="interests"
-                  partialMissing={partialMissing}
-                  block={b.interests}
-                  missing="No register file is held for this person in the covered registers."
-                  retry={refresh}
-                  about={(r) =>
-                    r
-                      ? {
-                          title: 'About the register',
-                          notes: registerNotes(r),
-                        }
-                      : null
-                  }
-                  line={(r) => ({ partial: !!r?.unread_pages })}
-                >
-                  {(r) => <DeclaredInterests register={r} figure={false} />}
-                </RecordBlock>
-                <RecordBlock
-                  title="Declared ties"
-                  id="person-ties"
-                  accent="interests"
-                  partialMissing={partialMissing}
-                  block={b.ties}
-                  missing={
-                    b.interests.data
-                      ? 'No declared organisation ties are held in this register file.'
-                      : 'No linked register file is available for declared organisation ties.'
-                  }
-                  retry={refresh}
-                >
-                  {(ties) => (
-                    <Group>
-                      <Text wordSafe variant="metadata">
-                        Declared ties are public disclosures, not findings of
-                        wrongdoing.
-                      </Text>
-                      <RowList>
-                        <Disclosure
-                          label="Declared organisations"
-                          value={formatCount(ties.length)}
-                          testID="person-ties-detail"
-                        >
-                          {() => (
-                            <RowList>
-                              {ties.map((tie, i) => (
-                                <Group key={i} gap={rhythm.line}>
-                                  <Text wordSafe variant="strong">
-                                    {tie.organisation}
-                                  </Text>
-                                  <Text wordSafe variant="fine">
-                                    {tie.kinds.join('; ')}
-                                  </Text>
-                                  {tie.declarations.map((d, j) => (
-                                    <Text wordSafe key={j}>
-                                      {d.category}: {d.description}
-                                    </Text>
-                                  ))}
-                                </Group>
-                              ))}
-                            </RowList>
-                          )}
-                        </Disclosure>
-                      </RowList>
-                    </Group>
-                  )}
-                </RecordBlock>
-              </PadGrid>
+              <RecordBlock
+                title="Declared interests"
+                id="person-interests"
+                accent="interests"
+                partialMissing={partialMissing}
+                block={b.interests}
+                missing="No register file is held for this person in the covered registers."
+                retry={refresh}
+                licenceDataset="interests"
+                about={(r) =>
+                  r
+                    ? {
+                        title: 'About the register',
+                        notes: registerNotes(r),
+                      }
+                    : null
+                }
+                line={(r) => ({ partial: !!r?.unread_pages })}
+              >
+                {(r) => (
+                  <Group>
+                    <DeclaredInterests register={r} figure={false} />
+                    <DeclaredTies block={b.ties} retry={refresh} />
+                  </Group>
+                )}
+              </RecordBlock>
             </View>
-            <RecordSection name={identity.name} kind="speeches" />
             <PersonDiary identity={identity} />
-            <NewsSection name={identity.name} />
             <View
               onLayout={(e) => {
                 blockY.current.pay = e.nativeEvent.layout.y;
@@ -479,6 +428,7 @@ export function ProfileScreen({
                   block={b.expenses}
                   missing="No expense summary is held for this person. IPEA coverage starts in April 2017."
                   retry={refresh}
+                  licenceDataset="ipea"
                   about={(e) =>
                     e
                       ? {
@@ -509,6 +459,7 @@ export function ProfileScreen({
                         value={formatMoney(e.person.total)}
                         spoken={moneyAccessibilityLabel(e.person.total)}
                         label={`Recorded expenses, ${formatYearRange(e.person.from, e.person.to)}`}
+                        accent="money"
                       />
                       <KeyValueList
                         items={[
@@ -603,13 +554,87 @@ export function ProfileScreen({
                 </RecordBlock>
               </PadGrid>
             </View>
-            <RecordSection name={identity.name} kind="mentions" />
+            {/* Read on demand, one row each: never a section around a single
+                "Show …" row (pass 5, P2-1). */}
+            <MoreFromRecord
+              testID="person-more"
+              items={[
+                topicsItem(identity.name),
+                recordItem(identity.name, 'speeches'),
+                recordItem(identity.name, 'mentions'),
+                newsItem(identity.name),
+              ]}
+            />
             {/* The page's end, for journeys that scroll to it; nothing drawn. */}
             <View testID="person-end" collapsable={false} style={styles.end} />
           </>
         ) : null}
       </Screen>
     </>
+  );
+}
+
+/**
+ * Declared organisation ties, inside Declared interests (pass 5, P3-4): one
+ * line when the register file declares none, and no source line of their
+ * own: the register's line dates them.
+ */
+function DeclaredTies({
+  block,
+  retry,
+}: {
+  block: ProfileView['blocks']['ties'];
+  retry: () => void;
+}) {
+  if (block.status === 'unlinked' || block.status === 'loading') return null;
+  if (block.status === 'error')
+    return (
+      <ErrorState
+        message={errorMessage(block.error)}
+        onRetry={retry}
+        testID="person-ties-error"
+      />
+    );
+  const ties = block.data;
+  if (!ties?.length)
+    return (
+      <Text wordSafe variant="metadata" testID="person-ties-missing">
+        No declared organisation ties are held in this register file.
+      </Text>
+    );
+  return (
+    <Group gap={rhythm.tight} testID="person-ties">
+      <Text wordSafe variant="metadata">
+        Declared ties are public disclosures, not findings of wrongdoing.
+      </Text>
+      <RowList>
+        <Disclosure
+          label="Declared organisations"
+          value={formatCount(ties.length)}
+          testID="person-ties-detail"
+        >
+          {() => (
+            <RowList>
+              {ties.map((tie, i) => (
+                <Group key={i} gap={rhythm.line}>
+                  <Text wordSafe variant="strong">
+                    {tie.organisation}
+                  </Text>
+                  <Text wordSafe variant="fine">
+                    {tie.kinds.join('; ')}
+                  </Text>
+                  {tie.declarations.map((d, j) => (
+                    <Text wordSafe key={j}>
+                      {d.category}: {d.description}
+                    </Text>
+                  ))}
+                </Group>
+              ))}
+            </RowList>
+          )}
+        </Disclosure>
+      </RowList>
+    </Group>
   );
 }
 
@@ -735,29 +760,33 @@ function FigureStrip({
       : []),
   ];
   if (!figures.length) return null;
+  // On iPad the strip keeps the readable width, never the detail's 1,000pt
+  // (pass 5, P2-22).
   return (
-    <View
-      style={[styles.strip, stacked ? styles.stripStacked : null]}
-      testID="person-figures"
-    >
-      {figures.map((f) => (
-        <Pressable
-          key={f.to}
-          accessibilityRole="button"
-          accessibilityLabel={`${f.spoken ?? f.value} ${f.label}`}
-          accessibilityHint={`Goes to ${f.section}`}
-          testID={`person-figure-${f.to}`}
-          onPress={() => onJump(f.to)}
-          style={({ pressed }) => [
-            styles.figure,
-            stacked ? null : styles.figureInline,
-            pressed ? styles.pressed : null,
-          ]}
-        >
-          <StripFigure value={f.value} label={f.label} />
-        </Pressable>
-      ))}
-    </View>
+    <ReadableColumn style={styles.stripColumn}>
+      <View
+        style={[styles.strip, stacked ? styles.stripStacked : null]}
+        testID="person-figures"
+      >
+        {figures.map((f) => (
+          <Pressable
+            key={f.to}
+            accessibilityRole="button"
+            accessibilityLabel={`${f.spoken ?? f.value} ${f.label}`}
+            accessibilityHint={`Goes to ${f.section}`}
+            testID={`person-figure-${f.to}`}
+            onPress={() => onJump(f.to)}
+            style={({ pressed }) => [
+              styles.figure,
+              stacked ? null : styles.figureInline,
+              pressed ? styles.pressed : null,
+            ]}
+          >
+            <StripFigure value={f.value} label={f.label} />
+          </Pressable>
+        ))}
+      </View>
+    </ReadableColumn>
   );
 }
 function StripFigure({
@@ -796,6 +825,7 @@ const styles = StyleSheet.create({
   seatFixed: { alignSelf: 'stretch' },
   underline: { textDecorationLine: 'underline' },
   pressed: { backgroundColor: colors.sunken },
+  stripColumn: { alignSelf: 'flex-start' },
   strip: {
     flexDirection: 'row',
     flexWrap: 'wrap',

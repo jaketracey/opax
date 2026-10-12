@@ -90,3 +90,24 @@ The people fixture now includes local resource contract responses for its two
 public speech samples. Their full text is explicitly a local absence notice,
 not invented Hansard. They exercise the records lane’s native reader, reached
 through `fromWebPath`; that reader still owns document fetching and caching.
+
+Design pass 5, lane B (Oct 2026, `docs/design/review-2026-10/pass5-app-critique.md`):
+
+- **No party ring** on the profile portrait (P1-4): the colour is the
+  `PartyLabel` dot; `Portrait` no longer takes `ring`.
+- **More from the record** (P2-1, `MoreFromRecord` in `Sections.tsx`): topics,
+  latest speeches, mentions and news (party: mentions and news) are rows of
+  one section at the page's foot. A tap reads that block once and draws it as
+  its own section above; rows keep their `${id}-toggle` test IDs.
+- **Ties inside Declared interests** (P3-4): one line when none are declared,
+  no source line of their own.
+- **OPAX's own datasets are notes** (P2-4, `BlockSource`): a source on
+  opax.com.au or an app path becomes "Matched to OPAX's people list" in the
+  sheet, never an original; a licence appended to a source name ("…, CC BY
+  4.0") moves to the licence row. Blocks pass `licenceDataset` where one
+  dataset on Sources and licences holds their terms.
+- **Money figures take the money accent** (P3-3): pay, expenses and party
+  receipts, as grants already did.
+- **Party** (P2-6): "193 current members" once, a "Member list" row with no
+  count, one date on the line (the roster's date is in the sheet).
+- Block order is unchanged pending a decision on P2-2 (receipts first).

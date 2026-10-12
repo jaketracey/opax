@@ -127,8 +127,8 @@ these helpers; `src/design` changes only in a shared-component lane.
   tint, as `SheetBody` draws it, never iOS 26's filled done pill.
 - **Party dot** (P3-14): the `PartyLabel` dot grows with text from 10pt to
   16pt (`partyDotSize`).
-- **`Portrait ring`** is retiring (P1-4): no new uses; remove the prop once
-  the profile stops passing it.
+- **`Portrait ring`** is retired (P1-4): party colour is the `PartyLabel`
+  dot; a profile portrait keeps its hairline.
 
 ## UI sweep (Oct 2026): rhythm, colour, licences
 

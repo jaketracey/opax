@@ -44,6 +44,7 @@ export function PayBlock({
       block={block}
       retry={retry}
       accent="money"
+      licenceDataset="pay"
       partialMissing="No readable record was found for this person. Some rows in the latest public export were unreadable."
       unlinked="This release does not link this person's salary entitlements. See the record on opax.com.au."
       missing="No covered federal salary entitlement is held for this person. State pay and service before 7 December 1999 are outside this series."
@@ -65,6 +66,7 @@ export function PayBlock({
                   value={formatMoney(p.person.now.salary)}
                   spoken={moneyAccessibilityLabel(p.person.now.salary)}
                   label="a year"
+                  accent="money"
                   testID={`${id}-salary`}
                 />
               ) : null}
@@ -167,6 +169,7 @@ export function PartyReceiptsBlock({
       block={block}
       retry={retry}
       accent="money"
+      licenceDataset="aec"
       partialMissing="No readable record was found for this person. Some rows in the latest public export were unreadable."
       missing="No receipts projection is linked for this person's party."
       unlinked="This release does not link party receipts for this person's party. See the record on opax.com.au."

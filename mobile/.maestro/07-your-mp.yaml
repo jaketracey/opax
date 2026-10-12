@@ -6,7 +6,7 @@ name: 07 Choose an electorate by member name and restore it after relaunch
 - tapOn:
     id: tab-your-mp
 - assertVisible:
-    id: seat-empty
+    id: seat-search
 - takeScreenshot: ${EVIDENCE}/07-chooser-empty
 - tapOn:
     id: seat-search

@@ -32,7 +32,7 @@ name: 01 Launch, reach every tab and the navigation-bar sheets
 - tapOn:
     id: tab-your-mp
 - assertVisible:
-    id: seat-empty
+    id: seat-search
 - tapOn:
     id: tab-bills
 - extendedWaitUntil:
