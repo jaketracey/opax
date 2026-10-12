@@ -302,7 +302,9 @@ function periodPlan(plan: Plan, period: Period, filters: Record<string, unknown>
     if (!['count_speeches', 'speech_trend', 'find_quotes', 'member_votes'].includes(s.tool)) return s
     const { since: _s, until: _u, term: _t, ...args } = s.args
     const scoped = s.tool === 'member_votes' ? { ...(filters.speaker ? { person: filters.speaker } : {}), ...(filters.party ? { party: filters.party } : {}) } : filters
-    return { ...s, args: { ...args, ...scoped, ...(period.since ? { since: period.since } : {}), ...(period.until ? { until: period.until } : {}) } }
+    const years = s.tool === 'speech_trend' && (args.by ?? 'year') === 'year'
+      ? { from_year: Number(period.since?.slice(0, 4)) || 1993, to_year: Number(period.until?.slice(0, 4)) || 2026 } : {}
+    return { ...s, args: { ...args, ...scoped, ...years, ...(period.since ? { since: period.since } : {}), ...(period.until ? { until: period.until } : {}) } }
   }) }
 }
 /** Fixed labels and bounded plain arguments. The client escapes these as text. */
@@ -342,6 +344,7 @@ export async function runAgentic(question: string, deps: AgenticDeps, progress: 
     const has = (tool: string) => plan!.steps.some(s => s.tool === tool)
     const group = /\bpart(?:y|ies)\b/i.test(question) ? 'party' : 'speaker'
     if (plan.shape === 'ranking' && !plan.steps.some(s => s.tool === 'count_speeches' && s.args.group_by === group) ||
+        /\bwhich year\b.*\bmost\b/i.test(question) && !plan.steps.some(s => s.tool === 'speech_trend' && (s.args.by ?? 'year') === 'year') ||
         plan.shape === 'trend' && !has('count_speeches') && !has('speech_trend') ||
         plan.shape === 'money' && (!has('party_donations') || !has('count_speeches')) ||
         plan.shape === 'comparison' && (!has('count_speeches') || VOTE_WORDS.test(question) && !has('member_votes'))) plan = null
@@ -414,9 +417,11 @@ export async function runAgentic(question: string, deps: AgenticDeps, progress: 
   const tCompose = Date.now()
   let answer = '', source: AgenticPayload['answer_source'] = 'template'
   const mainFacts = facts.filter(f => !committeeFacts.some(c => c.text === f.text))
+  const peakYear = /\bwhich year\b.*\bmost\b/i.test(question)
+  if (peakYear) mainFacts.sort((a, b) => Number(b.cite.value ?? 0) - Number(a.cite.value ?? 0))
   // Ranked numerical rows are copied deterministically; don't pay for prose
   // that would be discarded by their stricter grounding rule.
-  if (left() > 5_000 && plan.shape !== 'ranking' && plan.shape !== 'money') {
+  if (left() > 5_000 && plan.shape !== 'ranking' && plan.shape !== 'money' && !peakYear) {
     try {
       const out = await bounded(signal => deps.generate(question, composerPrompt(question, mainFacts, notes), 600, signal), Math.min(12_000, Math.max(0, left() - 500)), deps.signal)
       usage(out)
@@ -425,7 +430,7 @@ export async function runAgentic(question: string, deps: AgenticDeps, progress: 
       if (v.prose && v.cited.length && !v.dropped && plan.shape !== 'ranking' && plan.shape !== 'money') { answer = v.prose; source = 'model' }
     } catch { /* template below */ }
   }
-  if (!answer) answer = templateAnswer(mainFacts, [])
+  if (!answer) answer = templateAnswer(peakYear ? mainFacts.slice(0, 1) : mainFacts, [])
   if (committeeFacts.length) {
     const ids = facts.filter(f => committeeFacts.some(c => c.text === f.text))
     answer += ' Including committee hearings: ' + ids.map(f => `${f.text.replace(' committee-hearing turns', '')} [${f.id}]`).join(', ') + '.'

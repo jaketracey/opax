@@ -14,7 +14,7 @@ export async function runGold({questions,base,secret,fixture,fetchImpl=fetch}) {
     else {
       // Legacy gold defines unstated periods as whole-record. Make it explicit;
       // current-period fixture evidence is checked separately in the route tests.
-      const period=/\b(?:this term|last term|since|(?:19|20)\d{2})\b/i.test(q.question)?undefined:'all'
+      const period=/\b(?:this term|last term|since|(?:19|20)\d{2}s?)\b/i.test(q.question)?undefined:'all'
       const response=await fetchImpl(new URL('/api/ops/ask-gold',base),{method:'POST',headers:{'content-type':'application/json',authorization:'Bearer '+secret},body:JSON.stringify({question:q.question,...(period?{period}:{} )}),signal:AbortSignal.timeout(45_000)})
       if(!response.ok)throw new Error(`Operator gold route returned HTTP ${response.status} for ${q.id}`)
       payload=await response.json()

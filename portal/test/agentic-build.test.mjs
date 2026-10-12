@@ -111,3 +111,10 @@ test('cached follow-up suggestions use the validated topic and never echo person
  const q=question+'; please email me at private@example.invalid',r=await runAgentic(q,deps),p=agenticAskPayload(r,q);
  assert.equal(p.followups[0].question,'Who has spoken most about gambling across the whole record?');assert.doesNotMatch(JSON.stringify(p),/private@example.invalid|please email me/);
 });
+
+test('the most-active year is selected from DB totals, not ranked by a composer or hidden behind old years',async()=>{
+ let models=0;const r=await runAgentic('Which year had the most speeches about gambling?',{...deps,generate:async()=>{models++;return{text:'{\"shape\":\"trend\",\"steps\":[{\"tool\":\"speech_trend\",\"args\":{\"topic\":\"gambling\",\"by\":\"year\",\"from_year\":2015}}]}'}},kb:async(path,body)=>{
+  const b=JSON.stringify(body),year=/"since":"(\d{4})/.exec(b)?.[1];return{fulltext:{total:b.includes('"label":"gambling"')?(year==='2001'?100:3):1000}};
+ }});
+ assert.equal(r.answered,true);assert.match(r.answer,/^2001: 100 /);assert.equal(models,1);const p=agenticAskPayload(r,'Which year had the most speeches about gambling?');assert.ok(p.sources.every(s=>s.cited));assert.equal(p.sources.length,2);
+});

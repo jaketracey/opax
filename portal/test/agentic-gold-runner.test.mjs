@@ -8,3 +8,8 @@ test('the runner uses only the bearer ops route, and fixture scoring never fetch
  assert.equal((await runGold({questions,base:'https://offline.invalid',secret:'fixture-secret',fetchImpl})).passed,1);assert.equal(calls,1);
  assert.equal((await runGold({questions,fixture:[{id:'R-fixture',payload}],fetchImpl:()=>{throw Error('fixture must be offline')}})).passed,1);
 });
+
+test('legacy gold overrides never erase an explicitly requested decade',async()=>{
+ const questions=[{id:'R-decade',question:'Who spoke most about health in the 2010s?',expected:{kind:'ranking',top:[{name:'Alex Example',count:9}],top_n:1}}];
+ await runGold({questions,base:'https://offline.invalid',secret:'fixture-secret',fetchImpl:async(url,init)=>{assert.equal(JSON.parse(init.body).period,undefined);return Response.json({answered:true,answer:'Alex Example: 9 [1].'})}});
+});

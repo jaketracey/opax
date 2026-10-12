@@ -45,7 +45,7 @@ export function agenticAskPayload(run: AgenticPayload, question: string) {
     ...(run.reason ? { reason: run.reason } : {}),
     answer: run.answered ? answer : '',
     citations: run.answered ? citations : {},
-    sources: run.answered ? sources : [],
+    sources: run.answered ? sources.filter(s => s.cited) : [],
     followups: run.answered && followup ? [{ label: followup, question: followup, kind: 'speech' }] : [],
     agentic: { steps: run.events, ms: run.timings.total_ms },
   }
