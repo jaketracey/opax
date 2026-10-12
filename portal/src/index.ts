@@ -70,7 +70,10 @@ import { melbourneDate, DAILY_POST_KINDS, type DailyPostKind } from './daily-pos
 import { CATALOG_KINDS, searchCatalog } from './catalog-search'
 import { retrieveAskRecords, recordContext, recordSources, RECORD_GROUNDING, integrityQuestion, type AskRecords } from './ask-records'
 import { SEARCH_SORTS, compareSearchResults } from './search-sort'
-import { runAgentic, classifyAgentic, agenticCacheKey, AGENTIC_BUDGET_MS, type AgenticDeps } from './agentic-ask'
+import { runAgentic, classifyAgentic, agenticCacheKey, inferPeriod, AGENTIC_BUDGET_MS, type AgenticDeps, type AgenticPayload, type Progress } from './agentic-ask'
+import { agenticAskPayload } from './agentic-response'
+import { recordAgenticRun } from './agentic-monitor'
+import { AGENTIC_TOOLS_VERSION } from './agentic-tools'
 import type { ToolDeps } from './agentic-tools'
 import { tokens as catalogTokens } from './catalog-query.mjs'
 import { journeyStoryContext, parseJourneyStory, journeyStoryPrompt, JOURNEY_STORY_SYSTEM, STORY_VERSION, type StoryGraph } from './journey-story'
@@ -5665,80 +5668,138 @@ const replayPost = (request: Request, body: string) =>
 
 // ---------------------------------------------------------------------------
 
-/** KB and asset access for the agentic tools (design (i) and the flagged MCP tools). Reads only. */
-function agenticToolDeps(env: Env): ToolDeps {
+/** All tool fetches, including response-body reads, carry the request budget signal. */
+function agenticToolDeps(env: Env, signal?: AbortSignal): ToolDeps {
   return {
-    origin: SITE_ORIGIN,
+    origin: SITE_ORIGIN, signal,
+    withSignal: signal => agenticToolDeps(env, signal),
     kb: async (path, body) => {
-      const res = await kbFetch(env, path, body === undefined ? undefined : { body })
-      if (!res.ok) throw new Error(`kb ${path} ${res.status}`)
-      return await res.json() as Record<string, unknown>
+      signal?.throwIfAborted()
+      const res = await kbFetch(env, path, { ...(body === undefined ? {} : { body }), signal })
+      if (!res.ok) throw new Error('record lookup unavailable')
+      const data = await res.json() as Record<string, unknown>
+      signal?.throwIfAborted(); return data
     },
-    asset: async (path) => {
-      const res = await env.ASSETS.fetch(new Request(new URL(path, SITE_ORIGIN)))
+    asset: async path => {
+      signal?.throwIfAborted()
+      const res = await env.ASSETS.fetch(new Request(new URL(path, SITE_ORIGIN), { signal }))
       if (!res.ok || !(res.headers.get('content-type') ?? '').includes('json')) return null
-      try { return await res.json() } catch { return null }
+      const data = await res.json(); signal?.throwIfAborted(); return data
     },
   }
 }
-
-/**
- * Agentic Ask spike, design (i) (docs/design/agentic-ask-2026-10.md). Off unless
- * AGENTIC_ASK_ENABLED is 'true'. Plans with one model call, counts with the
- * deterministic tools in src/agentic-tools.ts, writes with one more, all on the
- * openai-compatible slot. `force: true` runs a question the route classifier
- * would leave on today's Ask (the spike scores the planner on every question).
- * SSE when the client asks for it: status phases planning -> plan -> step
- * (running/done per tool) -> writing, then `done` with the payload.
- */
-async function apiAskAgentic(request: Request, url: URL, input: Record<string, unknown>, env: Env, ctx: ExecutionContext): Promise<Response> {
-  const question = typeof input.question === 'string' ? input.question.trim() : ''
-  if (!question || question.length > MAX_QUESTION_CHARS) return json({ error: 'question is required' }, 400)
-  const routed = classifyAgentic(question)
-  if (routed.route !== 'agentic' && input.force !== true) return json({ route: 'ask', routed }, 409)
-  const model = env.AGENTIC_MODEL || env.ASK_MODEL || 'openai-compatible'
-  const key = new Request(await agenticCacheKey(question, env.CACHE_EPOCH, model))
-  const wantsStream = (request.headers.get('accept') ?? '').includes('text/event-stream')
-  if (!cacheBypass(request, url)) {
-    const hit = await caches.default.match(key)
-    if (hit) return withCacheStatus(hit, 'HIT', false)
-  }
-  const limited = await rateLimited(env.ASK_LIMITER, request)
-  if (limited) return limited
-  const deps: AgenticDeps = {
-    ...agenticToolDeps(env),
+function agenticDeps(env: Env, signal?: AbortSignal): AgenticDeps {
+  return {
+    ...agenticToolDeps(env, signal),
     generate: async (query, prompt, maxTokens, signal) => {
       const res = await kbFetch(env, '/ask', {
-        body: { query, top_k: 1, reranker: 'noop', generative_model: model, max_tokens: maxTokens, prompt },
-        headers: { 'x-synchronous': 'true', 'x-show-consumption': 'true' },
-        signal,
+        body: { query, top_k: 1, reranker: 'noop', generative_model: env.ASK_MODEL || 'openai-compatible', max_tokens: maxTokens, prompt },
+        headers: { 'x-synchronous': 'true', 'x-show-consumption': 'true' }, signal,
       })
-      if (!res.ok) throw new Error(`ask ${res.status}`)
-      const out = await res.json() as { answer?: string; consumption?: { customer_key_tokens?: { input?: number; output?: number }; normalized_tokens?: { input?: number; output?: number } }; metadata?: { tokens?: { input?: number; output?: number } } }
-      // metadata.tokens holds the slot's real token counts; consumption reads 0/0 for a customer-key model.
+      if (!res.ok) throw new Error('generation unavailable')
+      const out = await res.json() as { answer?: string; metadata?: { tokens?: { input?: number; output?: number } } }
+      signal.throwIfAborted()
       const t = out.metadata?.tokens
-      return { text: out.answer ?? '', tokens: t ? { input: Number(t.input) || 0, output: Number(t.output) || 0 } : undefined }
+      const tokens = t ? { input: Number(t.input) || 0, output: Number(t.output) || 0 } : undefined
+      const inputPrice = Number(env.AGENTIC_INPUT_USD_PER_MILLION), outputPrice = Number(env.AGENTIC_OUTPUT_USD_PER_MILLION)
+      const costUsd = tokens && Number.isFinite(inputPrice) && inputPrice >= 0 && Number.isFinite(outputPrice) && outputPrice >= 0
+        ? (tokens.input * inputPrice + tokens.output * outputPrice) / 1e6 : undefined
+      return { text: out.answer ?? '', tokens, costUsd }
     },
   }
-  const finish = (payload: Record<string, unknown>) => {
-    const res = json({ ...payload, routed })
-    if (payload.answered === true) cacheStore(ctx, key, res.clone(), ASK_CACHE_TTL)
-    return res
+}
+function agenticPeriod(input: Record<string, unknown>) {
+  const inferred = inferPeriod(String(input.question), input.period)
+  if (!input.from && !input.to) return inferred
+  const since = input.from ? `${input.from}-01-01` : undefined, until = input.to ? `${input.to}-12-31` : undefined
+  return { kind: 'window' as const, since, until, label: `Counting speeches${since ? ` from ${since}` : ''}${until ? ` to ${until}` : ' onwards'}.` }
+}
+function agenticFilters(input: Record<string, unknown>): Record<string, unknown> {
+  return Object.fromEntries(['speaker', 'party', 'state', 'chamber', 'topic'].filter(k => typeof input[k] === 'string' && input[k]).map(k => [k, input[k]]))
+}
+function monitorAgentic(env: Env, ctx: ExecutionContext, question: string, run: AgenticPayload) {
+  ctx.waitUntil(recordAgenticRun(env.COMMUNITY_DB, question, run).catch(() => {
+    // Fixed message only: upstream errors can contain private query strings.
+    console.warn('Ask monitoring write unavailable')
+  }))
+}
+async function executeAgentic(input: Record<string, unknown>, env: Env, ctx: ExecutionContext, progress?: Progress, signal?: AbortSignal) {
+  const question = String(input.question).trim()
+  const run = await runAgentic(question, agenticDeps(env, signal), progress, AGENTIC_BUDGET_MS, agenticPeriod(input), agenticFilters(input))
+  monitorAgentic(env, ctx, question, run)
+  return run
+}
+/** Same classifier/tool path as readers; bearer-only, mode-gated and always local on staging. */
+async function apiAgenticGold(request: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
+  if (!await operatorAuthorized(request, env)) return json({ error: 'operator secret required' }, 401)
+  if (request.method !== 'POST') return json({ error: 'Use POST.' }, 405)
+  if (!['route', 'shadow'].includes(String(env.AGENTIC_ASK_MODE))) return json({ error: 'Ask routing is off.' }, 409)
+  const body = await readJsonBody(request)
+  if (body instanceof Response) return body
+  const input = body.value, q = input.question
+  if (typeof q !== 'string' || !q.trim() || q.length > MAX_QUESTION_CHARS) return json({ error: 'question is required' }, 400)
+  if (classifyAgentic(q).route !== 'agentic') return json({ error: 'question is outside the route classifier' }, 409)
+  const bad = validateFilters(k => input[k]); if (bad) return json({ error: bad }, 400)
+  const limited = await rateLimited(env.ASK_LIMITER, request); if (limited) return limited
+  const run = await executeAgentic(input, env, ctx, undefined, request.signal)
+  return json(agenticAskPayload(run, q))
+}
+async function apiAskRouted(request: Request, url: URL, input: Record<string, unknown>, env: Env, ctx: ExecutionContext): Promise<Response> {
+  const started = Date.now()
+  const question = String(input.question).trim()
+  const fallback = () => apiAsk(request.clone(), env, ctx)
+  const mode = env.AGENTIC_ASK_MODE
+  if (!['route', 'shadow'].includes(String(mode)) || classifyAgentic(question).route !== 'agentic' || input.kind && !['speech', 'all'].includes(String(input.kind))) return fallback()
+  // Reuse the existing donor guard before planning; no donor prompt bypass.
+  if (await questionNamesWithheldDonor(env.ASSETS, question)) return fallback()
+  if (mode === 'shadow') {
+    const normal = await fallback()
+    if (normal.ok) ctx.waitUntil(executeAgentic(input, env, ctx).then(() => {}).catch(() => console.warn('Ask background run unavailable')))
+    return normal
   }
-  if (!wantsStream) return withCacheStatus(finish(await runAgentic(question, deps, undefined, AGENTIC_BUDGET_MS) as unknown as Record<string, unknown>), 'MISS', false)
+  const privateTurn = Array.isArray(input.context) && input.context.length > 0
+  const key = new Request(await agenticCacheKey(question, env.CACHE_EPOCH, env.ASK_MODEL || 'openai-compatible', agenticPeriod(input), AGENTIC_TOOLS_VERSION, agenticFilters(input)))
+  const streaming = url.searchParams.get('stream') === '1' || (request.headers.get('accept') ?? '').includes('text/event-stream')
+  if (!privateTurn && !cacheBypass(request, url)) {
+    const hit = await readGenerationCache(env, ctx, key)
+    if (hit) {
+      ctx.waitUntil(recordAgenticRun(env.COMMUNITY_DB, question, {
+        shape: classifyAgentic(question).shape, cost_usd: 0,
+        timings: { plan_ms: 0, tools_ms: 0, compose_ms: 0, total_ms: Date.now() - started },
+      }).catch(() => console.warn('Ask monitoring write unavailable')))
+      return streaming ? replayCachedAsk(hit, ctx) : withCacheStatus(hit, 'HIT', false)
+    }
+  }
+  const limited = await rateLimited(env.ASK_LIMITER, request); if (limited) return limited
+  const finish = (run: AgenticPayload) => {
+    const response = json(agenticAskPayload(run, question))
+    if (run.answered && !run.over_budget && !privateTurn) storeGenerationCache(env, ctx, key, response.clone(), ASK_CACHE_TTL)
+    return response
+  }
+  if (!streaming) {
+    const run = await executeAgentic(input, env, ctx, undefined, request.signal)
+    return run.answered && !run.over_budget ? withCacheStatus(finish(run), 'MISS', false) : fallback()
+  }
+  const { readable, writable } = new TransformStream<Uint8Array, Uint8Array>(), writer = writable.getWriter()
   const encoder = new TextEncoder()
-  const { readable, writable } = new TransformStream<Uint8Array, Uint8Array>()
-  const writer = writable.getWriter()
-  const send = async (event: string, data: unknown) => { await writer.write(encoder.encode(`event: ${event}\ndata: ${JSON.stringify(data)}\n\n`)) }
+  const send: Progress = async (event, data) => { await writer.write(encoder.encode(`event: ${event}\ndata: ${JSON.stringify(data)}\n\n`)) }
   ctx.waitUntil((async () => {
     try {
       await send('status', { phase: 'searching' })
-      const payload = await runAgentic(question, deps, send, AGENTIC_BUDGET_MS) as unknown as Record<string, unknown>
-      finish(payload)
-      await send('done', { ...payload, routed })
-    } catch (err) {
-      await send('error', { error: 'The agentic answer failed.', detail: String(err).slice(0, 200), final: true })
-    } finally { await writer.close() }
+      const run = await executeAgentic(input, env, ctx, send, request.signal)
+      if (run.answered && !run.over_budget) { const response = finish(run); await send('done', await response.json()) }
+      else {
+        const response = await fallback()
+        if ((response.headers.get('content-type') ?? '').includes('text/event-stream')) {
+          const reader = response.body!.getReader()
+          try { while (true) { const { value, done } = await reader.read(); if (done) break; await writer.write(value) } }
+          finally { reader.releaseLock() }
+        } else if (response.ok) await send('done', await response.json())
+        else await send('error', { error: 'The record is temporarily unavailable. Please try again.', final: true })
+      }
+    } catch {
+      try { await send('error', { error: 'The record is temporarily unavailable. Please try again.', final: true }) } catch { /* disconnected */ }
+    } finally { try { await writer.close() } catch { /* disconnected */ } }
   })())
   return new Response(readable, { headers: { ...SSE_HEADERS, 'x-opax-cache': 'MISS' } })
 }
@@ -5781,12 +5842,7 @@ async function route(
         }
         const bad = validateFilters((k) => body.value[k])
         if (bad) return json({ error: bad }, 400)
-        return await apiAsk(replayPost(request, body.text), env, ctx)
-      }
-      if (url.pathname === '/api/ask-agentic' && request.method === 'POST' && env.AGENTIC_ASK_ENABLED === 'true') {
-        const body = await readJsonBody(request)
-        if (body instanceof Response) return body
-        return await apiAskAgentic(request, url, body.value, env, ctx)
+        return await apiAskRouted(replayPost(request, body.text), url, body.value, env, ctx)
       }
       if (url.pathname === '/api/journey-story' && request.method === 'POST') {
         const body = await readJsonBody(request)
@@ -5968,6 +6024,11 @@ export default {
     if (url.pathname === '/api/table/privacy') return withSecurityHeaders(await tablePrivacy(request, env.ASSETS), url)
     const isApi = url.pathname.startsWith('/api/')
     const communityResponse = (response: Response) => { const secured = withSecurityHeaders(response, url); if (env.STAGING_API) secured.headers.set('x-robots-tag', 'noindex, nofollow'); return secured }
+    if (url.pathname === '/api/ops/ask-gold') {
+      const response = await apiAgenticGold(request, env, ctx)
+      response.headers.set('cache-control', 'no-store')
+      return communityResponse(response)
+    }
     if (url.pathname === '/api/ops/reviewer-login') {
       // Same bearer guard as daily-post engagement/run; always local, including staging.
       const response = !await operatorAuthorized(request, env)
@@ -6025,7 +6086,7 @@ export default {
       if (target.pathname === '/api/search-all') return display(await apiUnifiedSearch(local, target, env, ctx), target)
       if (env.STAGING_API) return display(await env.STAGING_API.fetch(local), target)
       return display(await route(local, target, env, ctx), target)
-    }, env.AGENTIC_MCP_TOOLS === 'true' ? agenticToolDeps(env) : undefined))
+    }))
     if (url.pathname === '/api/search-all' && request.method === 'GET') {
       try {
         const response = withSecurityHeaders(await display(await apiUnifiedSearch(request, url, env, ctx)), url)

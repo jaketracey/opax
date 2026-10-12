@@ -1,7 +1,7 @@
 /**
- * Design (i) of the agentic Ask spike: OPAX-owned orchestration in the Worker
- * (docs/design/agentic-ask-2026-10.md). Behind AGENTIC_ASK_ENABLED (off unless
- * set), POST /api/ask-agentic.
+ * OPAX-owned Ask orchestration in the Worker
+ * (docs/design/agentic-ask-2026-10.md). /api/ask uses AGENTIC_ASK_MODE;
+ * it stays off unless the operator selects route or shadow.
  *
  *   classify (rules, no model) -> plan (one model call, JSON) -> run tools
  *   (src/agentic-tools.ts, deterministic) -> compose (one model call over a fact
@@ -12,20 +12,39 @@
  * phrases; it never counts. `answered: false` with a reason when no tool result
  * supports an answer (the web-ask-no-answer contract).
  */
-import { TOOL_SPECS, TOPICS, STATES, CHAMBERS, TERMS, runTool, AGENTIC_TOOLS_VERSION, type ToolDeps, type ToolResult, type Cite } from './agentic-tools'
+import { TOOL_SPECS, TOPICS, STATES, CHAMBERS, TERMS, runTool, validToolArgs, AGENTIC_TOOLS_VERSION, type ToolDeps, type ToolResult, type Cite } from './agentic-tools'
 
-export const AGENTIC_PROMPT_VERSION = 'agentic-ask-1'
+export const AGENTIC_PROMPT_VERSION = 'agentic-ask-2'
 export const AGENTIC_BUDGET_MS = 40_000
 export const AGENTIC_MAX_STEPS = 6
 
 export type Shape = 'ranking' | 'trend' | 'comparison' | 'money'
+export interface Period { kind: 'current' | 'all' | 'window'; since?: string; until?: string; label: string }
+export function inferPeriod(question: string, override?: unknown): Period {
+  const q = question.toLowerCase()
+  if (override === 'all' || /\b(?:whole record|all[ -]time|across the record)\b/.test(q)) return { kind: 'all', label: 'Counting speeches across the whole record.' }
+  if (/\bthis term\b/.test(q) && /\blast term\b/.test(q)) return { kind: 'window', since: TERMS['47th'][0], label: 'Counting speeches in the current and previous parliaments, since July 2022.' }
+  if (override === 'current' || /\b(?:this|current) (?:term|parliament)\b/.test(q)) return { kind: 'current', since: TERMS['48th'][0], label: 'Counting speeches in the current parliament since July 2025.' }
+  if (/\blast (?:term|parliament)\b/.test(q)) return { kind: 'window', since: TERMS['47th'][0], until: TERMS['47th'][1]!, label: 'Counting speeches in the previous parliament, July 2022 to March 2025.' }
+  // A year in a bill's title is not a request to restrict speech history.
+  const years = [...q.replace(/\bbill\s+(?:19|20)\d{2}\b/g, 'bill').matchAll(/\b((?:19|20)\d{2})(s)?\b/g)]
+  if (years.length) {
+    const sorted = years.map(m => Number(m[1])).sort((a, b) => a - b)
+    const since = `${sorted[0]}-01-01`
+    const open = /\bsince\b/.test(q) && years.length === 1 && !years[0][2]
+    const until = open ? undefined : `${sorted.at(-1)! + (years.at(-1)![2] ? 9 : 0)}-12-31`
+    return { kind: 'window', since, until, label: `Counting speeches from ${since}${until ? ` to ${until}` : ' onwards'}.` }
+  }
+  if (/\b(?:is|are)\s+(?:\S+\s+){0,4}(?:making|speaking|debating|discussing|talking)\b|\b(?:speaks|says|mentions|debates|discusses)\b|\b(?:is|are)\s+(?:\S+\s+){0,3}(?:debated|discussed)\b/.test(q)) return { kind: 'current', since: TERMS['48th'][0], label: 'Counting speeches in the current parliament since July 2025.' }
+  return { kind: 'all', label: 'Counting speeches across the whole record.' }
+}
 // ---------------------------------------------------------------- route classifier
 /**
  * Route-only rollout: only these shapes take the agentic path; every other
  * question keeps today's Ask. Rules, not a model, so routing costs nothing and
  * can be tested. Ordered: a money join is also a ranking, so money wins.
  */
-const SPEECH_WORDS = /\b(?:speech(?:es)?|spoke|spoken|speak(?:s|ing)?|said|says|mention(?:s|ed)?|talk(?:s|ed|ing)?|debated?|discuss(?:ed|es)?|raised?)\b/i
+const SPEECH_WORDS = /\b(?:speech(?:es)?|speakers?|spoke|spoken|speak(?:s|ing)?|said|says|mention(?:s|ed)?|talk(?:s|ed|ing)?|debat(?:e|ed|es|ing)|discuss(?:ed|es|ing)?|raised?)\b/i
 const MONEY_WORDS = /\b(?:donat\w*|donors?|gave|giving|funded|money)\b/i
 const VOTE_WORDS = /\bvot(?:e|ed|es|ing)\b/i
 const RANK_WORDS = /\b(?:most|least|more|fewest|top\s+(?:\d+|five|ten|three)|leading|biggest)\b/i
@@ -47,6 +66,46 @@ export function classifyAgentic(question: string): { route: 'agentic' | 'ask'; s
 // ---------------------------------------------------------------- planner
 export interface PlanStep { tool: string; args: Record<string, unknown>; label?: string }
 export interface Plan { shape: Shape | 'unanswerable'; steps: PlanStep[]; reason?: string }
+const TOPIC_RULES: [string, RegExp][] = [
+  ['gambling', /gambl|betting|wagering|pokies|poker machines/], ['climate-environment', /climate|environment/],
+  ['housing', /housing|homes|rental/], ['indigenous-affairs', /indigenous|aboriginal/], ['immigration', /immigra|migration/],
+  ['tax-budget', /\btax\b|budget/], ['defence-security', /defen[cs]e|security/], ['mining-energy', /mining|energy/],
+  ['integrity-democracy', /integrity|democracy|corruption/], ['health', /health/], ['agriculture', /agricultur|farming/],
+  ['education', /education|schools/], ['financial-services', /bank|finance/], ['unions-workplace', /union|workplace/],
+]
+/** A bounded deterministic plan, including the timeout case from the spike. */
+export function fallbackPlan(question: string): Plan | null {
+  const shape = classifyAgentic(question).shape
+  if (!shape) return null
+  const q = question.toLowerCase()
+  const topic = TOPIC_RULES.find(([, re]) => re.test(q))?.[0] ?? TOPICS.find(t => q.includes(t))
+  if (!topic) return null // never replace an unknown subject with overall counts
+  const state = /\bnsw\b|new south wales/.test(q) ? 'nsw' : /victori|\bvic\b/.test(q) ? 'vic' : /\bact\b|legislative assembly/.test(q) ? 'act' : /queensland|\bqld\b/.test(q) ? 'qld' : /south australia|\bsa\b/.test(q) ? 'sa' : /federal|senat|representatives/.test(q) ? 'federal' : undefined
+  const chamber = /senat/.test(q) ? 'senate' : /house of representatives/.test(q) ? 'representatives' : undefined
+  const party = /\bgreens\b/.test(q) ? 'Greens' : /\blabor\b/.test(q) ? 'Labor' : /\bliberal\b/.test(q) ? 'Liberal' : undefined
+  const base = { topic, ...(state ? { state } : {}), ...(chamber ? { chamber } : {}), ...(party ? { party } : {}) }
+  const people = [...question.matchAll(/\b(?:[A-Z][a-z]+\s+){1,2}[A-Z][a-z]+(?:-[A-Z][a-z]+)?\b/g)].map(m => m[0]).filter(n => !/Parliament|Legislative|Assembly|House|Interactive|Gambling|Amendment|Reform|Bill|South|Wales/.test(n))
+  if (shape === 'ranking') return { shape, steps: [{ tool: 'count_speeches', args: { ...base, group_by: /\bpart(?:y|ies)\b/.test(q) ? 'party' : 'speaker' } }] }
+  if (shape === 'trend') {
+    const years = [...q.matchAll(/\b((?:19|20)\d{2})(s)?\b/g)].map(m => Number(m[1]))
+    if (/how many/.test(q) && !/compared|over time|each year|by year/.test(q)) return { shape, steps: [{ tool: 'count_speeches', args: { ...base, ...(people[0] ? { speaker: people[0] } : {}), group_by: 'none' } }] }
+    return { shape, steps: [{ tool: 'speech_trend', args: { ...base, ...(people[0] ? { speaker: people[0] } : {}), by: /\d{4}s/.test(q) ? 'decade' : /term/.test(q) ? 'term' : 'year', ...(years.length ? { from_year: Math.min(...years), to_year: years.length > 1 ? Math.max(...years) : 2026 } : /which year/.test(q) ? { from_year: 1993 } : {}) } }] }
+  }
+  if (shape === 'comparison') {
+    if (!people.length && !party) return null
+    const steps: PlanStep[] = []
+    for (const person of people.length ? people : [null]) {
+      if (VOTE_WORDS.test(q)) steps.push({ tool: 'member_votes', args: { keyword: topic, ...(person ? { person } : { party }) } })
+      steps.push({ tool: 'count_speeches', args: { ...base, ...(person ? { speaker: person } : {}), group_by: 'none' } })
+    }
+    return { shape, steps: steps.slice(0, AGENTIC_MAX_STEPS) }
+  }
+  const industry = topic === 'mining-energy' ? 'mining' : topic
+  if (/each party/.test(q)) return { shape, steps: [{ tool: 'party_donations', args: { industry } }, { tool: 'count_speeches', args: { ...base, group_by: 'party' } }] }
+  if (/received|receive/.test(q)) return { shape, steps: [{ tool: 'party_donations', args: { industry } }, { tool: 'count_speeches', args: { ...base, state: 'federal', party: '$1', group_by: 'none' } }] }
+  if (/party of/.test(q)) return { shape, steps: [{ tool: 'count_speeches', args: { ...base, group_by: 'speaker' } }, { tool: 'find_people', args: { name: '$1' } }, { tool: 'party_donations', args: { party: '$2.party' } }] }
+  return { shape, steps: [{ tool: 'count_speeches', args: { ...base, group_by: 'party' } }, { tool: 'party_donations', args: { party: '$1' } }] }
+}
 const toolCatalogue = () => TOOL_SPECS.map((t) => `- ${t.name}(${Object.keys((t.input.properties ?? {}) as object).join(', ')}): ${t.description}`).join('\n')
 export function plannerPrompt(): { system: string; user: string } {
   const user = [
@@ -85,6 +144,7 @@ export function parsePlan(text: string): Plan | null {
   const shapes = ['ranking', 'trend', 'comparison', 'money', 'unanswerable']
   if (!raw || !shapes.includes(String(raw.shape))) return null
   const names = new Set(TOOL_SPECS.map((t) => t.name))
+  if (raw.shape !== 'unanswerable' && (!Array.isArray(raw.steps) || raw.steps.length > AGENTIC_MAX_STEPS || raw.steps.some((s, i) => !s || !names.has(String(s.tool)) || !validToolArgs(String(s.tool), s.args) || Object.values(s.args!).some(v => typeof v === 'string' && /^\$/.test(v) && (!/^\$\d+(?:\.party)?$/.test(v) || Number(v.match(/\d+/)![0]) > i || Number(v.match(/\d+/)![0]) < 1))))) return null
   const steps = (Array.isArray(raw.steps) ? raw.steps : [])
     .filter((s) => s && names.has(String(s.tool)) && s.args && typeof s.args === 'object')
     .slice(0, AGENTIC_MAX_STEPS)
@@ -120,23 +180,25 @@ export function factSheet(results: ToolResult[]): { facts: Fact[]; notes: string
     const d = r.data as Record<string, unknown>
     if (r.tool === 'count_speeches') {
       const rows = (d.rows as { name: string; count: number }[] | undefined)
-      if (rows?.length) rows.forEach((row, i) => add(`${row.name}: ${row.count} ${d.described}`, r.cite[i]))
+      if (d.committeeSupplement && rows?.length) rows.forEach((row, i) => add(`${row.name}: ${row.count} committee-hearing turns`, r.cite[i]))
+      else if (rows?.length) rows.forEach((row, i) => add(`${row.name}: ${row.count} ${d.described}`, r.cite[i]))
       else if (d.unanswerable) notes.add('The record cannot rank these speeches by party.')
-      else if (typeof d.total === 'number' && r.cite[0]) add(`${d.total} ${d.described}`, r.cite[0])
+      else if (!Array.isArray(rows) && typeof d.total === 'number' && r.cite[0]) add(`${d.total} ${d.described}`, r.cite[0])
     } else if (r.tool === 'speech_trend') {
       ;(d.rows as { period: string; count: number; share: number; labelled: number }[]).forEach((row, i) =>
         add(`${row.period}: ${row.count} ${d.described}${row.labelled ? ` (${(row.share * 100).toFixed(1)}% of ${row.labelled} topic-labelled speeches)` : ''}`, r.cite[i]))
     } else if (r.tool === 'member_votes') {
       const s = d.summary as Record<string, number>
       const who = (d.person ?? d.party) as string
-      const url = r.cite[0]?.url ?? ''
+      if (!s.divisions || !r.cite[0]) { notes.add('The title search found no matching recorded divisions; it does not establish how the member or party voted.'); continue }
+      const url = r.cite[0].url
       if (d.person) add(`${who} voted in ${s.divisions} divisions with "${d.keyword}" in the title: aye ${s.aye}, no ${s.no}`, { kind: 'record', label: `Divisions with "${d.keyword}" in the title`, url })
       else add(`${who} in ${s.divisions} divisions with "${d.keyword}" in the title: all aye in ${s.all_aye}, all no in ${s.all_no}, split in ${s.split}`, { kind: 'record', label: `Divisions with "${d.keyword}" in the title`, url })
     } else if (r.tool === 'party_donations') {
       if (d.party) {
         ;(d.rows as { donor: string; total_aud: number }[]).forEach((row, i) => add(`${row.donor} gave ${d.party} $${row.total_aud.toLocaleString('en-AU')} (federal disclosures)`, r.cite[i + 1]))
         const hidden = d.donors_not_named as { label: string; total_aud: number; donors: number }
-        if (hidden?.donors) notes.add(`${hidden.label} gave $${hidden.total_aud.toLocaleString('en-AU')} in total and are not listed by name.`)
+        if (hidden?.donors) add(`${hidden.label} gave ${d.party} $${hidden.total_aud.toLocaleString('en-AU')} in total (federal disclosures)`, r.cite[0])
       } else (d.rows as { party: string; total_aud: number }[]).forEach((row, i) => add(`${d.industry} donors gave ${row.party} $${row.total_aud.toLocaleString('en-AU')} (federal disclosures)`, r.cite[i]))
     } else if (r.tool === 'find_people') {
       const p = (d.people as { name: string; party: string | null }[])[0]
@@ -168,7 +230,7 @@ export function composerPrompt(question: string, facts: Fact[], notes: string[])
 }
 const NUMBER_TOKENS = (value: string): string[] =>
   (value.match(/\$?\d[\d,]*(?:\.\d+)?%?/g) ?? []).map((t) => t.replace(/[$,%]/g, '').replace(/\.0+$/, ''))
-const CAUSAL = /\b(?:bought|bribe\w*|in exchange for|because of (?:the|these|their) donations?|donations? (?:caused|influenced|explain\w*)|paid for (?:access|votes?|influence))\b/i
+const CAUSAL = /\b(?:bought|bribe\w*|in exchange for|because of (?:the|these|their) donations?|donations? (?:caused|influenced|explain\w*)|paid for (?:access|votes?|influence))\b|\b(?:donat\w*|money|funding)\b.*\b(?:influenc\w*|caus\w*|led to|resulted in|secured)\b/i
 /**
  * Keep a model sentence only if every number in it is a fact figure and it
  * cites a fact whose text holds that number. Returns the kept prose and the
@@ -176,14 +238,15 @@ const CAUSAL = /\b(?:bought|bribe\w*|in exchange for|because of (?:the|these|the
  */
 export function verifyComposition(text: string, facts: Fact[], question = ''): { prose: string; cited: number[]; dropped: number } {
   const byId = new Map(facts.map((f) => [f.id, f]))
-  const allowedQuestion = new Set(NUMBER_TOKENS(question))
   const sentences = String(text ?? '').replace(/\s+/g, ' ').trim().split(/(?<=[.!?\]])\s+(?=[A-Z"'(])/)
   const kept: string[] = []; const cited = new Set<number>(); let dropped = 0
   for (const s of sentences) {
     if (!s.trim()) continue
     if (CAUSAL.test(s) || /^based on\b/i.test(s)) { dropped++; continue }
     const refs = [...s.matchAll(/\[(\d+)\]/g)].map((m) => Number(m[1])).filter((n) => byId.has(n))
-    const nums = NUMBER_TOKENS(s.replace(/\[\d+\]/g, '')).filter((n) => !allowedQuestion.has(n) && !/^(?:19|20)\d\d$/.test(n))
+    const prose = s.replace(/\[\d+\]/g, '')
+    const calendarYears = new Set([...prose.matchAll(/\b(?:in|since|from|to|before|after|for the)\s+((?:19|20)\d{2})(?:s)?\b/gi)].map(m => m[1]))
+    const nums = NUMBER_TOKENS(prose).filter(n => !calendarYears.has(n))
     const factNums = new Set(refs.flatMap((r) => NUMBER_TOKENS(byId.get(r)!.text)))
     if (nums.length && (!refs.length || nums.some((n) => !factNums.has(n)))) { dropped++; continue }
     refs.forEach((r) => cited.add(r))
@@ -200,84 +263,184 @@ export function templateAnswer(facts: Fact[], notes: string[]): string {
 // ---------------------------------------------------------------- orchestration
 export type Progress = (event: string, data: unknown) => Promise<void>
 export interface AgenticDeps extends ToolDeps {
-  /** One model call on the KB's openai-compatible slot; resolves the answer text. */
-  generate: (query: string, prompt: { system: string; user: string }, maxTokens: number, signal: AbortSignal) => Promise<{ text: string; tokens?: { input: number; output: number } }>
+  generate: (query: string, prompt: { system: string; user: string }, maxTokens: number, signal: AbortSignal) => Promise<{ text: string; tokens?: { input: number; output: number }; costUsd?: number }>
 }
+export interface StepEvent { id: number; label: string; arg?: string; state: 'running' | 'done' | 'failed'; ms?: number }
 export interface AgenticPayload {
   answered: boolean
-  reason?: 'declined' | 'no_supported_claim' | 'grounding_failed' | 'over_budget'
+  reason?: 'declined' | 'no_supported_claim' | 'grounding_failed'
   answer: string
   answer_source: 'model' | 'template' | 'none'
   shape: Plan['shape'] | null
+  period: Period
   facts: { id: number; text: string; url: string; kind: string; value?: number | string }[]
   notes: string[]
   steps: { tool: string; args: unknown; ok: boolean; error?: string; ms?: number; label?: string }[]
+  events: StepEvent[]
   timings: { plan_ms: number; tools_ms: number; compose_ms: number; total_ms: number }
   tokens: { input: number; output: number }
+  cost_usd: number | null
+  over_budget: boolean
   version: string
 }
-const stepLabel = (s: PlanStep) => s.label ?? ({
-  count_speeches: 'Counting speeches', speech_trend: 'Counting speeches over time', find_people: 'Looking up the member',
-  member_votes: 'Reading the division records', party_donations: 'Reading the donation returns', find_quotes: 'Finding passages to cite',
-} as Record<string, string>)[s.tool] ?? 'Checking the record'
-
-export async function runAgentic(question: string, deps: AgenticDeps, progress: Progress = async () => {}, budgetMs = AGENTIC_BUDGET_MS): Promise<AgenticPayload> {
-  const t0 = Date.now()
-  const deadline = t0 + budgetMs
+/** Race as well as abort: a stub/provider ignoring cancellation cannot hold the route open. */
+export async function bounded<T>(work: (signal: AbortSignal) => Promise<T>, ms: number, parent?: AbortSignal): Promise<T> {
+  const controller = new AbortController()
+  let timer: ReturnType<typeof setTimeout> | undefined
+  let stop: () => void = () => {}
+  const abort = new Promise<never>((_, reject) => {
+    stop = () => { controller.abort(parent?.reason ?? new DOMException('Budget expired', 'TimeoutError')); reject(controller.signal.reason) }
+    parent?.addEventListener('abort', stop, { once: true })
+    timer = setTimeout(stop, Math.max(0, ms))
+    if (parent?.aborted || ms <= 0) stop()
+  })
+  try { return await Promise.race([controller.signal.aborted ? Promise.reject(controller.signal.reason) : work(controller.signal), abort]) }
+  finally { if (timer !== undefined) clearTimeout(timer); parent?.removeEventListener('abort', stop) }
+}
+function periodPlan(plan: Plan, period: Period, filters: Record<string, unknown>): Plan {
+  return { ...plan, steps: plan.steps.map(s => {
+    if (!['count_speeches', 'speech_trend', 'find_quotes', 'member_votes'].includes(s.tool)) return s
+    const { since: _s, until: _u, term: _t, ...args } = s.args
+    const scoped = s.tool === 'member_votes' ? { ...(filters.speaker ? { person: filters.speaker } : {}), ...(filters.party ? { party: filters.party } : {}) } : filters
+    return { ...s, args: { ...args, ...scoped, ...(period.since ? { since: period.since } : {}), ...(period.until ? { until: period.until } : {}) } }
+  }) }
+}
+/** Fixed labels and bounded plain arguments. The client escapes these as text. */
+export function stepEvent(step: PlanStep, id: number, committee = false): StepEvent {
+  const a = step.args
+  const label = committee ? 'Checking committee hearings' : step.tool === 'count_speeches' ? a.group_by === 'speaker' ? 'Counting by speaker' : a.group_by === 'party' ? 'Counting by party' : 'Searching speeches' : ({ member_votes: 'Checking votes', party_donations: 'Checking donations', speech_trend: 'Comparing years', find_quotes: 'Searching speeches', find_people: 'Searching speeches' } as Record<string, string>)[step.tool]
+  const raw = a.keyword ?? a.party ?? a.industry ?? a.speaker ?? a.topic ?? a.query ?? a.name
+  const arg = typeof raw === 'string' ? raw.replace(/[<>&"'\x00-\x1f]/g, '').slice(0, 40) : undefined
+  return { id, label, ...(arg ? { arg } : {}), state: 'running' }
+}
+export async function runAgentic(question: string, deps: AgenticDeps, progress: Progress = async () => {}, budgetMs = AGENTIC_BUDGET_MS, period = inferPeriod(question), filters: Record<string, unknown> = {}): Promise<AgenticPayload> {
+  const t0 = Date.now(), deadline = t0 + budgetMs
   const tokens = { input: 0, output: 0 }
+  let cost: number | null = null
   const left = () => Math.max(0, deadline - Date.now())
   const timings = { plan_ms: 0, tools_ms: 0, compose_ms: 0, total_ms: 0 }
-  const base = (over: Partial<AgenticPayload>): AgenticPayload => ({
-    answered: false, answer: '', answer_source: 'none', shape: null, facts: [], notes: [], steps: [], tokens, version: `${AGENTIC_PROMPT_VERSION}/${AGENTIC_TOOLS_VERSION}`,
-    ...over, timings: { ...timings, total_ms: Date.now() - t0 },
-  })
-  await progress('status', { phase: 'planning' })
+  const results: ToolResult[] = [], steps: AgenticPayload['steps'] = [], events: StepEvent[] = []
+  const base = (over: Partial<AgenticPayload>): AgenticPayload => ({ answered: false, answer: '', answer_source: 'none', shape: classifyAgentic(question).shape, period, facts: [], notes: [], steps, events, tokens, cost_usd: cost, over_budget: !left(), version: `${AGENTIC_PROMPT_VERSION}/${AGENTIC_TOOLS_VERSION}`, ...over, timings: { ...timings, total_ms: Date.now() - t0 } })
+  // The decade candidate proof supports leaders, not the least active member.
+  if (/\b(?:least|fewest)\b/i.test(question)) return base({ reason: 'declined' })
+  const usage = (out: { tokens?: { input: number; output: number }; costUsd?: number }) => {
+    if (out.tokens) { tokens.input += out.tokens.input; tokens.output += out.tokens.output }
+    if (typeof out.costUsd === 'number') cost = (cost ?? 0) + out.costUsd
+  }
   let plan: Plan | null = null
   try {
-    const out = await deps.generate(question, plannerPrompt(), 700, AbortSignal.timeout(Math.min(15_000, left())))
-    if (out.tokens) { tokens.input += out.tokens.input; tokens.output += out.tokens.output }
-    plan = parsePlan(out.text)
-  } catch { plan = null }
+    const out = await bounded(signal => deps.generate(question, plannerPrompt(), 700, signal), Math.min(15_000, left()), deps.signal)
+    usage(out); plan = parsePlan(out.text)
+  } catch { /* rule plan below */ }
   timings.plan_ms = Date.now() - t0
+  const rulePlan = fallbackPlan(question)
+  // A valid JSON plan must still answer the classified shape and retain its
+  // subject. In particular, never replace topic counts with overall totals.
+  const topic = rulePlan?.steps.find(s => s.args.topic)?.args.topic
+  if (plan && plan.shape !== 'unanswerable') {
+    const has = (tool: string) => plan!.steps.some(s => s.tool === tool)
+    const group = /\bpart(?:y|ies)\b/i.test(question) ? 'party' : 'speaker'
+    if (plan.shape === 'ranking' && !plan.steps.some(s => s.tool === 'count_speeches' && s.args.group_by === group) ||
+        plan.shape === 'trend' && !has('count_speeches') && !has('speech_trend') ||
+        plan.shape === 'money' && (!has('party_donations') || !has('count_speeches')) ||
+        plan.shape === 'comparison' && (!has('count_speeches') || VOTE_WORDS.test(question) && !has('member_votes'))) plan = null
+  }
+  if (plan && (plan.shape === 'unanswerable' && rulePlan || plan.shape !== classifyAgentic(question).shape || topic && plan.steps.filter(s => ['count_speeches', 'speech_trend'].includes(s.tool)).some(s => s.args.topic !== topic))) plan = null
+  plan ??= rulePlan
+  if (!left() || deps.signal?.aborted) return base({ reason: 'declined', over_budget: true })
   if (!plan) return base({ reason: 'declined' })
-  if (plan.shape === 'unanswerable') return base({ reason: 'declined', shape: plan.shape, notes: plan.reason ? [plan.reason] : [] })
-  await progress('status', { phase: 'plan', steps: plan.steps.map((s, i) => ({ id: i + 1, tool: s.tool, label: stepLabel(s) })) })
-  const results: ToolResult[] = []
-  const steps: AgenticPayload['steps'] = []
+  if (plan.shape === 'unanswerable') return base({ reason: 'declined', notes: plan.reason ? [plan.reason] : [] })
+  plan = periodPlan(plan, period, filters)
   const tTools = Date.now()
-  for (const [i, step] of plan.steps.entries()) {
-    if (left() < 8_000) break // keep room to write
+  const execute = async (step: PlanStep, committee = false, custom?: (d: ToolDeps) => Promise<ToolResult>): Promise<ToolResult> => {
+    const event = stepEvent(step, events.length + 1, committee)
+    await progress('status', { phase: 'step', step: event })
+    const started = Date.now()
+    let r: ToolResult
+    try {
+      r = await bounded(async signal => {
+        const scoped: ToolDeps = { ...deps, signal,
+          kb: async (path, body) => { signal.throwIfAborted(); return deps.kb(path, body) },
+          asset: async path => { signal.throwIfAborted(); return deps.asset(path) },
+        }
+        // Adapters use the scoped signal on fetch and body reads.
+        if (deps.withSignal) Object.assign(scoped, deps.withSignal(signal))
+        return custom ? custom(scoped) : runTool(scoped, step.tool, step.args)
+      }, Math.min(12_000, Math.max(0, left() - 5_000)), deps.signal)
+    } catch { r = { tool: step.tool, ok: false, error: 'lookup timed out or unavailable', cite: [], notes: [] } }
+    const ms = Date.now() - started
+    steps.push({ tool: step.tool, args: step.args, ok: r.ok, error: r.error, ms, label: event.label })
+    const done: StepEvent = { ...event, state: r.ok ? 'done' : 'failed', ms }
+    events.push(done); await progress('status', { phase: 'step', step: done })
+    return r
+  }
+  for (const step of plan.steps) {
+    if (left() < 8_000) break
     const args = resolveArgs(step.args, results)
-    await progress('status', { phase: 'step', step: { id: i + 1, tool: step.tool, label: stepLabel(step), state: 'running' } })
-    const r = args ? await runTool(deps, step.tool, args) : { tool: step.tool, ok: false, error: 'an earlier step returned nothing to use', cite: [], notes: [] } as ToolResult
-    results.push(r)
-    steps.push({ tool: step.tool, args: args ?? step.args, ok: r.ok, error: r.error, ms: r.ms, label: stepLabel(step) })
-    await progress('status', { phase: 'step', step: { id: i + 1, tool: step.tool, label: stepLabel(step), state: r.ok ? 'done' : 'error', ms: r.ms } })
+    if (!args) { results.push({ tool: step.tool, ok: false, error: 'unresolved earlier result', cite: [], notes: [] }); continue }
+    results.push(await execute({ ...step, args }))
+  }
+  // A failed join or partial comparison must never imply missing votes or money.
+  if (results.length !== plan.steps.length || results.some(r => !r.ok || r.data?.exact === false ||
+    r.tool === 'member_votes' && !(r.data?.summary as { divisions?: number } | undefined)?.divisions ||
+    r.tool === 'party_donations' && !(r.data?.rows as unknown[] | undefined)?.length && !(r.data?.donors_not_named as { total_aud?: number } | undefined)?.total_aud)) return base({ reason: 'no_supported_claim', over_budget: left() < 8_000 })
+  const rankIndex = plan.steps.findIndex(s => s.tool === 'count_speeches' && ['speaker', 'party'].includes(String(s.args.group_by)) && !s.args.speaker && (s.args.venue ?? 'chamber') === 'chamber' && (!s.args.state || s.args.state === 'federal'))
+  const committeeFacts: Fact[] = []
+  if (rankIndex >= 0 && steps.length < AGENTIC_MAX_STEPS && left() >= 8_000) {
+    const step = plan.steps[rankIndex], chamber = results[rankIndex].data?.rows as { name: string; count: number }[] | undefined
+    const { chamber: _chamber, ...args } = step.args
+    const r = await execute({ tool: 'count_speeches', args }, true, async d => {
+      const all = await runTool(d, 'count_speeches', { ...args, venue: 'all' })
+      if (!all.ok || all.data?.exact === false) return { ...all, ok: false }
+      const allRows = all.data?.rows as { name: string; count: number }[]
+      if (allRows.map(r => r.name).join('|') === chamber?.map(r => r.name).join('|')) return { ...all, data: { unchanged: true } }
+      const committee = await runTool(d, 'count_speeches', { ...args, venue: 'committee', limit: 3 })
+      if (committee.ok) committee.data = { ...committee.data, committeeSupplement: true }
+      return committee
+    })
+    if (r.ok && r.data?.committeeSupplement) {
+      const more = factSheet([r]); results.push(r)
+      committeeFacts.push(...more.facts)
+    }
   }
   timings.tools_ms = Date.now() - tTools
   const { facts, notes } = factSheet(results)
-  const factOut = facts.map((f) => ({ id: f.id, text: f.text, url: f.cite?.url ?? '', kind: f.cite?.kind ?? 'count', value: f.cite?.value }))
-  if (!facts.length) return base({ reason: 'no_supported_claim', shape: plan.shape, notes, steps })
+  const factOut = facts.map(f => ({ id: f.id, text: f.text, url: f.cite?.url ?? '', kind: f.cite?.kind ?? 'count', value: f.cite?.value }))
+  if (!facts.length) return base({ reason: 'no_supported_claim', notes })
   await progress('status', { phase: 'writing' })
   const tCompose = Date.now()
-  let answer = '', source: AgenticPayload['answer_source'] = 'template', cited: number[] = []
+  let answer = '', source: AgenticPayload['answer_source'] = 'template'
+  const mainFacts = facts.filter(f => !committeeFacts.some(c => c.text === f.text))
   if (left() > 5_000) {
     try {
-      const out = await deps.generate(question, composerPrompt(question, facts, notes), 600, AbortSignal.timeout(Math.min(20_000, left())))
-      if (out.tokens) { tokens.input += out.tokens.input; tokens.output += out.tokens.output }
-      const v = verifyComposition(out.text, facts, question)
-      if (v.prose && v.cited.length) { answer = v.prose; cited = v.cited; source = 'model' }
+      const out = await bounded(signal => deps.generate(question, composerPrompt(question, mainFacts, notes), 600, signal), Math.min(12_000, Math.max(0, left() - 500)), deps.signal)
+      usage(out)
+      const v = verifyComposition(out.text, mainFacts, question)
+      // Unverified prose or missing ranked rows gets the deterministic answer.
+      if (v.prose && v.cited.length && !v.dropped && plan.shape !== 'ranking' && plan.shape !== 'money') { answer = v.prose; source = 'model' }
     } catch { /* template below */ }
   }
-  if (!answer) { answer = templateAnswer(facts, notes); cited = facts.slice(0, 8).map((f) => f.id) }
+  if (!answer) answer = templateAnswer(mainFacts, [])
+  if (committeeFacts.length) {
+    const ids = facts.filter(f => committeeFacts.some(c => c.text === f.text))
+    answer += ' Including committee hearings: ' + ids.map(f => `${f.text.replace(' committee-hearing turns', '')} [${f.id}]`).join(', ') + '.'
+  }
+  // These limits belong to the answer sentences; never a separate UI block.
+  answer += ' ' + period.label + (notes.length ? ' ' + notes.join(' ') : '')
   timings.compose_ms = Date.now() - tCompose
-  return base({ answered: true, answer, answer_source: source, shape: plan.shape, facts: factOut.filter((f) => cited.includes(f.id) || source === 'template'), notes, steps })
+  if (!left() || deps.signal?.aborted) return base({ reason: 'declined', over_budget: true })
+  return base({ answered: true, answer, answer_source: source, facts: factOut, notes })
 }
-
-/** Cache key: the normalised question, the corpus epoch, the model pin and the pipeline versions. */
-export async function agenticCacheKey(question: string, epoch: string, model: string): Promise<string> {
-  const norm = question.normalize('NFKC').toLowerCase().replace(/[‘’]/g, "'").replace(/[^\p{L}\p{N}' ]+/gu, ' ').replace(/\s+/g, ' ').trim()
-  const data = new TextEncoder().encode(JSON.stringify({ q: norm, epoch, model, v: AGENTIC_PROMPT_VERSION, t: AGENTIC_TOOLS_VERSION }))
-  const hash = [...new Uint8Array(await crypto.subtle.digest('SHA-256', data))].map((b) => b.toString(16).padStart(2, '0')).join('')
+export function normaliseQuestion(question: string): string {
+  return question.normalize('NFKC').toLowerCase().replace(/[‘’“”]/g, "'").replace(/[^\p{L}\p{N} ]+/gu, ' ').replace(/\s+/g, ' ').trim()
+}
+export async function questionHash(question: string): Promise<string> {
+  return hashText(normaliseQuestion(question))
+}
+async function hashText(text: string): Promise<string> {
+  return [...new Uint8Array(await crypto.subtle.digest('SHA-256', new TextEncoder().encode(text)))].map(b => b.toString(16).padStart(2, '0')).join('')
+}
+export async function agenticCacheKey(question: string, epoch: string, model: string, period = inferPeriod(question), toolsVersion = AGENTIC_TOOLS_VERSION, filters: Record<string, unknown> = {}): Promise<string> {
+  const hash = await hashText(JSON.stringify({ q: normaliseQuestion(question), period, filters, epoch, model, v: AGENTIC_PROMPT_VERSION, t: toolsVersion }))
   return `https://cache.opax.internal/ask-agentic/${hash}`
 }

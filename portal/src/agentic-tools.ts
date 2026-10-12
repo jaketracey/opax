@@ -1,5 +1,5 @@
 /**
- * Structured tools for the agentic Ask spike (docs/design/agentic-ask-2026-10.md).
+ * Structured tools for Ask (docs/design/agentic-ask-2026-10.md).
  *
  * Every number these tools return comes from an index count or a published
  * export, never from a model:
@@ -9,18 +9,15 @@
  *    restricted to the speech body field, one row per speech. /search FACETS are
  *    never used for counts: they disagree with the totals on the same filter.
  *  - votes: portal/public/divisions/<slug>.json, found by KB title search.
- *  - money: portal/public/graph/money.json after withholdIndividualDonors; donors
+ *  - money: portal/public/graph/money.json with exact source-name gates; donors
  *    not named are folded into one "Donors not named (N)" row, never listed.
  * Each result carries `cite` (what a reader can open to check it), `query` (the
  * exact request) and `notes` (coverage limits the answer has to state).
  *
- * The same functions back design (i) (Worker orchestration, src/agentic-ask.ts)
- * and the MCP tools a Nuclia smart agent would call (src/community-mcp.ts,
- * behind AGENTIC_MCP_TOOLS). Nothing here calls a model.
+ * Used by the Worker orchestration (src/agentic-ask.ts). Design (ii) remains
+ * parked in the design note; these tools are not registered on MCP. No models.
  */
-import { withholdIndividualDonors } from '../public/donor-entity.js'
-
-export const AGENTIC_TOOLS_VERSION = 'agentic-tools-1'
+export const AGENTIC_TOOLS_VERSION = 'agentic-tools-2'
 
 export const TOPICS = [
   'gambling', 'financial-services', 'mining-energy', 'climate-environment', 'property-construction', 'housing', 'health',
@@ -47,6 +44,8 @@ export interface ToolDeps {
   /** Read a public asset (e.g. /graph/money.json); resolves parsed JSON or null. */
   asset: (path: string) => Promise<unknown>
   origin?: string
+  signal?: AbortSignal
+  withSignal?: (signal: AbortSignal) => Pick<ToolDeps, 'kb' | 'asset'>
 }
 export interface Cite { kind: 'count' | 'record' | 'export'; label: string; url: string; value?: number | string }
 export interface ToolResult { tool: string; ok: boolean; error?: string; data?: Json; cite: Cite[]; query?: unknown; notes: string[]; ms?: number }
@@ -132,6 +131,7 @@ function searchUrl(origin: string, f: SpeechFilter): string {
   if (f.speaker) p.set('speaker', f.speaker)
   if (f.party) p.set('party', f.party)
   if (f.state) p.set('state', f.state)
+  if (f.chamber) p.set('chamber', f.chamber)
   if (f.since) p.set('from', f.since.slice(0, 4))
   if (f.until) p.set('to', f.until.slice(0, 4))
   return `${origin}/search?${p}`
@@ -140,12 +140,15 @@ function searchUrl(origin: string, f: SpeechFilter): string {
 async function catalog(deps: ToolDeps, c: unknown[], faceted: string[] = []) {
   const body = { filter_expression: { resource: and(c) }, page_size: 0, ...(faceted.length ? { faceted } : {}) }
   const d = await deps.kb('/catalog', body) as { fulltext?: { total?: number; facets?: Record<string, Record<string, number>> } }
-  return { total: d.fulltext?.total ?? 0, facets: d.fulltext?.facets ?? {}, body }
+  if (!Number.isSafeInteger(d.fulltext?.total) || Number(d.fulltext?.total) < 0) throw new Error('catalog count unavailable')
+  for (const values of Object.values(d.fulltext?.facets ?? {})) if (Object.values(values).some(n => !Number.isSafeInteger(n) || n < 0)) throw new Error('facet counts unavailable')
+  return { total: d.fulltext!.total!, facets: d.fulltext?.facets ?? {}, body }
 }
 async function searchTotal(deps: ToolDeps, c: unknown[]) {
   const body = { query: '', features: ['fulltext'], top_k: 1, filter_expression: { field: and([...c, BODY]) } }
   const d = await deps.kb('/search', body) as { fulltext?: { total?: number } }
-  return d.fulltext?.total ?? 0
+  if (!Number.isSafeInteger(d.fulltext?.total) || Number(d.fulltext?.total) < 0) throw new Error('window count unavailable')
+  return d.fulltext!.total!
 }
 /** Exact count for any filter: catalog when there is no date window, body-only /search totals when there is. */
 async function countOne(deps: ToolDeps, f: SpeechFilter, members = true): Promise<number> {
@@ -164,11 +167,12 @@ async function pool<T, R>(items: T[], n: number, fn: (x: T) => Promise<R>): Prom
 }
 function coverageNotes(f: SpeechFilter, groupBy?: string): string[] {
   const notes: string[] = []
-  if (f.topic) notes.push('Topic counts cover speeches the OPAX classifier has labelled: about 89% of 2020s speeches, 91% of the 2010s, 63% of the 2000s and 22% of the 1990s.')
+  if (f.topic) notes.push('Topic counts cover labelled speeches, about 73% of the record: 89% of the 2020s, 91% of the 2010s, 63% of the 2000s and 22% of the 1990s, so older years are undercounted.')
   const fedWindow = (!f.state || f.state === 'federal') && (f.since ?? '0000') <= '2025-06-30' && (f.until ?? '9999') >= '2022-07-01'
-  if (fedWindow && (f.since || f.until)) notes.push('Federal chamber Hansard from mid-2022 to mid-2025 is thin in the record (2,995 speeches in 2023 and 79 in 2024, against about 10,000 in a normal year), so counts in that window understate what was said.')
+  if (fedWindow) notes.push('The federal Hansard gap in 2023–24, within the thin mid-2022 to mid-2025 coverage, understates speeches in that period.')
   if (groupBy === 'party' && f.state && !PARTY_LABELLED_STATES.has(f.state)) notes.push(`Speeches from ${f.state.toUpperCase()} carry no party label in the record, so they cannot be counted by party.`)
   if (groupBy === 'party' && !f.state) notes.push('Only federal and some Queensland speeches carry a party label; state speeches are not counted by party.')
+  if (groupBy === 'party' && f.state === 'qld') notes.push('Only about 27% of Queensland speeches carry a party label, so this party comparison is incomplete.')
   if (f.venue !== 'committee') notes.push('Counts are chamber speeches; committee-hearing turns are separate records and are not included.')
   if (groupBy === 'speaker') notes.push('A speaker name can be a surname-only record for some state members. Some federal debate records hold more than one speaker under one name (a known source fault being repaired).')
   return notes
@@ -191,7 +195,7 @@ export async function countSpeeches(deps: ToolDeps, input: CountInput): Promise<
     return { tool: 'count_speeches', ok: true, data: { total: await countOne(deps, f), rows: [], filter: f, described: describe(f), unanswerable: 'no_party_labels' }, cite: [], notes }
   }
   const facet = group === 'speaker' ? U_O : PARTY
-  const base = clauses(f, group === 'speaker')
+  const base = clauses(f)
   let rows: { name: string; count: number }[]
   let exact = true
   let method: string
@@ -212,8 +216,9 @@ export async function countSpeeches(deps: ToolDeps, input: CountInput): Promise<
     exact = (rows[limit - 1]?.count ?? 0) >= (cands[k]?.count ?? 0)
     method = `exact window counts for the top ${k} ${group === 'speaker' ? 'speakers' : 'parties'} by decade`
   }
-  const total = await countOne(deps, f, group === 'speaker')
+  const total = await countOne(deps, f)
   const top = rows.filter((r) => r.count > 0).slice(0, limit)
+  if (!exact) notes.push('The date-window candidate bound does not prove the complete ranking; these are counts for the leading decade candidates.')
   const cite: Cite[] = top.map((r) => ({
     kind: 'count', label: `${describe({ ...f, ...(group === 'speaker' ? { speaker: r.name } : { party: r.name }) })}`, value: r.count,
     url: searchUrl(origin, { ...f, ...(group === 'speaker' ? { speaker: r.name } : { party: r.name }) }),
@@ -229,23 +234,25 @@ export async function countSpeeches(deps: ToolDeps, input: CountInput): Promise<
 export interface TrendInput extends SpeechFilter { by?: 'year' | 'decade' | 'term'; from_year?: number; to_year?: number }
 export async function speechTrend(deps: ToolDeps, input: TrendInput): Promise<ToolResult> {
   const origin = deps.origin ?? 'https://opax.com.au'
-  const { f, problems } = clean({ ...input, since: null, until: null, term: null })
+  const { f, problems } = clean(input)
   if (problems.length) return { tool: 'speech_trend', ok: false, error: problems.join('; '), cite: [], notes: [] }
   const by = input.by === 'decade' || input.by === 'term' ? input.by : 'year'
   let buckets: { period: string; since: string | null; until: string | null }[]
-  if (by === 'decade') buckets = ['1990s', '2000s', '2010s', '2020s'].map((d) => ({ period: d, since: null, until: null }))
+  if (by === 'decade') buckets = ['1990s', '2000s', '2010s', '2020s'].map((d) => ({ period: d, since: `${d.slice(0, 4)}-01-01`, until: `${Number(d.slice(0, 4)) + 9}-12-31` }))
   else if (by === 'term') buckets = Object.entries(TERMS).map(([k, [a, b]]) => ({ period: `${k} Parliament`, since: a, until: b }))
   else {
     const from = Math.max(1993, Math.min(2026, Number(input.from_year) || 2015)), to = Math.max(from, Math.min(2026, Number(input.to_year) || 2026))
     if (to - from > 33) return { tool: 'speech_trend', ok: false, error: 'at most 34 years', cite: [], notes: [] }
     buckets = Array.from({ length: to - from + 1 }, (_, i) => ({ period: String(from + i), since: `${from + i}-01-01`, until: `${from + i}-12-31` }))
   }
+  buckets = buckets.filter(b => (!f.since || !b.until || b.until >= f.since) && (!f.until || !b.since || b.since <= f.until))
+    .map(b => ({ ...b, since: f.since && (!b.since || f.since > b.since) ? f.since : b.since, until: f.until && (!b.until || f.until < b.until) ? f.until : b.until }))
   const labelled = { ...f, topic: null }
   let rows: { period: string; count: number; labelled: number; share: number }[]
-  if (by === 'decade') {
+  if (by === 'decade' && !windowed(f)) {
     const [c, l] = await Promise.all([
-      catalog(deps, clauses(f, false), [DECADE]),
-      catalog(deps, [...clauses(labelled, false), { prop: 'label', labelset: 'topic' }], [DECADE]),
+      catalog(deps, clauses(f), [DECADE]),
+      catalog(deps, [...clauses(labelled), { prop: 'label', labelset: 'topic' }], [DECADE]),
     ])
     rows = buckets.map((b) => {
       const n = c.facets[DECADE]?.[`${DECADE}/${b.period}`] ?? 0, d = l.facets[DECADE]?.[`${DECADE}/${b.period}`] ?? 0
@@ -255,8 +262,8 @@ export async function speechTrend(deps: ToolDeps, input: TrendInput): Promise<To
     rows = await pool(buckets, 4, async (b) => {
       const w = { ...f, since: b.since, until: b.until }
       const [n, d] = await Promise.all([
-        searchTotal(deps, [...clauses(w, false), created(b.since, b.until)]),
-        f.topic ? searchTotal(deps, [...clauses({ ...w, topic: null }, false), { prop: 'label', labelset: 'topic' }, created(b.since, b.until)]) : Promise.resolve(0),
+        searchTotal(deps, [...clauses(w), created(b.since, b.until)]),
+        f.topic ? searchTotal(deps, [...clauses({ ...w, topic: null }), { prop: 'label', labelset: 'topic' }, created(b.since, b.until)]) : Promise.resolve(0),
       ])
       return { period: b.period, count: n, labelled: d, share: d ? +(n / d).toFixed(4) : 0 }
     })
@@ -293,7 +300,7 @@ export async function findPeople(deps: ToolDeps, input: { name: string; limit?: 
 // ---------------------------------------------------------------- member_votes
 interface DivisionMember { name: string; party?: string; vote: string }
 interface DivisionFile { key: string; date: string; name?: string; house?: string; jurisdiction?: string; ayes?: number; noes?: number; members?: DivisionMember[]; bills?: { key?: string; title?: string }[] }
-export async function memberVotes(deps: ToolDeps, input: { keyword: string; person?: string | null; party?: string | null; limit?: number }): Promise<ToolResult> {
+export async function memberVotes(deps: ToolDeps, input: { keyword: string; person?: string | null; party?: string | null; limit?: number; since?: string; until?: string }): Promise<ToolResult> {
   const origin = deps.origin ?? 'https://opax.com.au'
   const keyword = String(input.keyword ?? '').trim().slice(0, 80)
   if (keyword.length < 3) return { tool: 'member_votes', ok: false, error: 'keyword (a word from the bill or division name) is required', cite: [], notes: [] }
@@ -304,6 +311,7 @@ export async function memberVotes(deps: ToolDeps, input: { keyword: string; pers
   const rows: Json[] = []
   for (const div of files) {
     if (!div?.key || !Array.isArray(div.members)) continue
+    if (input.since && div.date < input.since || input.until && div.date.slice(0, 10) > input.until) continue
     if (input.person) {
       const m = div.members.find((x) => fold(x.name) === fold(String(input.person)))
       if (m) rows.push({ division: `division-${div.key}`, date: div.date, name: div.name, vote: m.vote, result: (div.ayes ?? 0) > (div.noes ?? 0) ? 'passed' : 'defeated' })
@@ -328,17 +336,18 @@ export async function memberVotes(deps: ToolDeps, input: { keyword: string; pers
 }
 
 // ---------------------------------------------------------------- party_donations
-interface MoneyNode { id: string; label: string; kind: string; industry?: string; total?: number; byYear?: Record<string, [number, number]> }
+interface MoneyNode { id: string; label: string; kind: string; industry?: string; aliases?: string[]; jurisdiction?: string; total?: number; byYear?: Record<string, [number, number]> }
 interface MoneyEdge { source: string; target: string; total: number; count: number; byYear?: Record<string, [number, number]>; firstYear?: number; lastYear?: number }
-let moneyCache: { nodes: MoneyNode[]; edges: MoneyEdge[] } | null = null
 async function money(deps: ToolDeps) {
-  if (moneyCache) return moneyCache
   const g = await deps.asset('/graph/money.json') as { nodes: MoneyNode[]; edges: MoneyEdge[] } | null
   if (!g?.nodes) throw new Error('money graph unavailable')
-  moneyCache = withholdIndividualDonors(g as never) as unknown as { nodes: MoneyNode[]; edges: MoneyEdge[] }
-  return moneyCache
+  return g
 }
-const notNamed = (n?: MoneyNode) => !n || /^donor:withheld-/.test(n.id)
+// One exact source-name string in the federal export. Sector and legal form
+// do not decide whether a person is named. Alias merges fail closed.
+const exactName = (s: string) => s.toLowerCase().replace(/\s+/g, ' ').trim()
+const notNamed = (n?: MoneyNode) => !n || !n.label?.trim() || /^donor:withheld-/.test(n.id) || /name withheld|donors? not named/i.test(n.label) ||
+  (n.jurisdiction != null && n.jurisdiction !== 'federal') || (n.aliases ?? []).some(a => exactName(a) !== exactName(n.label))
 function sumYears(e: MoneyEdge, from?: number, to?: number): [number, number] {
   if (!from && !to) return [e.total, e.count]
   let t = 0, c = 0
@@ -430,14 +439,34 @@ export const TOOL_SPECS: ToolSpec[] = [
   { name: 'count_speeches', description: 'Count speeches exactly, optionally ranked by speaker or party. Use for "who speaks most", "which party mentions X most", "how many speeches". Returns counts from the record index, the method, and coverage notes that must be stated.', input: { type: 'object', properties: { ...filterProps, group_by: { type: 'string', enum: ['speaker', 'party', 'none'] }, limit: { type: 'integer', minimum: 1, maximum: 15 } } }, run: (d, a) => countSpeeches(d, a as CountInput) },
   { name: 'speech_trend', description: 'Speech counts over time (by year, decade or federal term) with each period\'s share of topic-labelled speeches. Use for "is X debated more", "how has X changed".', input: { type: 'object', properties: { ...filterProps, by: { type: 'string', enum: ['year', 'decade', 'term'] }, from_year: { type: 'integer' }, to_year: { type: 'integer' } } }, run: (d, a) => speechTrend(d, a as TrendInput) },
   { name: 'find_people', description: 'Resolve a politician name to the name the record indexes speeches under, with party, parliaments and years.', input: { type: 'object', properties: { name: { type: 'string' } }, required: ['name'] }, run: (d, a) => findPeople(d, a as unknown as { name: string }) },
-  { name: 'member_votes', description: 'How a person or party voted in recorded divisions whose title contains a keyword (e.g. "gambling").', input: { type: 'object', properties: { keyword: { type: 'string' }, person: { type: 'string' }, party: { type: 'string' } }, required: ['keyword'] }, run: (d, a) => memberVotes(d, a as unknown as { keyword: string }) },
+  { name: 'member_votes', description: 'How a person or party voted in recorded divisions whose title contains a keyword (e.g. "gambling").', input: { type: 'object', properties: { keyword: { type: 'string' }, person: { type: 'string' }, party: { type: 'string' }, since: { type: 'string' }, until: { type: 'string' }, limit: { type: 'integer', minimum: 1, maximum: 80 } }, required: ['keyword'] }, run: (d, a) => memberVotes(d, a as unknown as { keyword: string }) },
   { name: 'party_donations', description: 'Largest disclosed donors to a federal party, or totals by party for one donor industry (e.g. gambling, mining). Donors not named are aggregated.', input: { type: 'object', properties: { party: { type: 'string' }, industry: { type: 'string' }, from_year: { type: 'integer' }, to_year: { type: 'integer' }, limit: { type: 'integer' } } }, run: (d, a) => partyDonations(d, a as { party?: string }) },
   { name: 'find_quotes', description: 'Find a few cited passages to quote or describe what was said. A ranked sample: never count them.', input: { type: 'object', properties: { ...filterProps, query: { type: 'string' }, limit: { type: 'integer' } }, required: ['query'] }, run: (d, a) => findQuotes(d, a as unknown as SpeechFilter & { query: string }) },
 ]
+/** Schema-check model plans before any lookup. References are validated separately. */
+export function validToolArgs(name: string, args: unknown): args is Json {
+  const spec = TOOL_SPECS.find(t => t.name === name)
+  if (!spec || !args || typeof args !== 'object' || Array.isArray(args)) return false
+  const a = args as Json
+  const props = spec.input.properties as Record<string, { type: string; enum?: unknown[]; minimum?: number; maximum?: number }>
+  if (((spec.input.required ?? []) as string[]).some(k => typeof a[k] !== 'string' || !String(a[k]).trim())) return false
+  for (const [k, v] of Object.entries(a)) {
+    const p = props[k]
+    if (!p || (p.type === 'string' ? typeof v !== 'string' || !v.trim() : typeof v !== 'number' || !Number.isInteger(v))) return false
+    if (p.enum && !p.enum.includes(v)) return false
+    if (typeof v === 'number' && (v < (p.minimum ?? 0) || v > (p.maximum ?? 9999))) return false
+  }
+  for (const k of ['since', 'until']) if (a[k] && (!DATE_RE.test(String(a[k])) || !Number.isFinite(Date.parse(String(a[k]))) || new Date(String(a[k])).toISOString().slice(0, 10) !== a[k])) return false
+  if (a.since && a.until && String(a.since) > String(a.until)) return false
+  if (name === 'member_votes' && (!a.person && !a.party || String(a.keyword).length < 3)) return false
+  if (name === 'party_donations' && !a.party && !a.industry) return false
+  return true
+}
 export async function runTool(deps: ToolDeps, name: string, args: Json): Promise<ToolResult> {
   const spec = TOOL_SPECS.find((t) => t.name === name)
   const t0 = Date.now()
   if (!spec) return { tool: name, ok: false, error: `unknown tool ${name}`, cite: [], notes: [] }
+  if (!validToolArgs(name, args)) return { tool: name, ok: false, error: 'invalid tool arguments', cite: [], notes: [] }
   try { return { ...(await spec.run(deps, args ?? {})), ms: Date.now() - t0 } }
   catch (err) { return { tool: name, ok: false, error: String((err as Error)?.message ?? err).slice(0, 300), cite: [], notes: [], ms: Date.now() - t0 } }
 }
