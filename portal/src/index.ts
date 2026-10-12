@@ -20,6 +20,7 @@ import { slugIndex, personIndex } from './person-slug'
 import { missingEntitySlug } from './crawl-hygiene'
 import { normalizePassage, passageWindow } from './passage-text'
 import { instrumentPage, instrumentReader } from './instruments'
+import { budgetPage, budgetReader } from './budget'
 import { auditPage, auditReader } from './audit'
 import { hubPage } from './hubs'
 import { vicElectionPage, type VicElection } from './vic-election'
@@ -3488,6 +3489,7 @@ const STATIC_PAGES: Record<string, { title: string; description: string; query?:
 type SeoRoute =
   | { kind: 'hub'; hub: 'sitting' | 'estimates' | 'vic-election'; id: string | null }
   | { kind: 'instruments'; id: string | null }
+  | { kind: 'budget' }
   | { kind: 'audit'; id: string | null }
   | { kind: 'static'; page: keyof typeof STATIC_PAGES }
   | { kind: 'report'; slug: string }
@@ -3549,6 +3551,7 @@ function matchSeoRoute(url: URL): SeoRoute | null {
     try { return { kind: 'audit', id: decodeURIComponent(path.slice('/audit/'.length)) } }
     catch { return { kind: 'audit', id: '' } }
   }
+  if (path === '/budget') return { kind: 'budget' }
   if (path === '/instruments') return { kind: 'instruments', id: null }
   if (path === '/instrument' || path.startsWith('/instrument/')) {
     try { return { kind: 'instruments', id: decodeURIComponent(path.slice('/instrument/'.length)) } }
@@ -4065,6 +4068,7 @@ async function buildRouteMeta(route: SeoRoute, url: URL, request: Request, env: 
     }
     case 'audit': return base({ ...await auditPage(route.id, url, auditReader(env.ASSETS), prerenderBlock),
       ...(route.id && AUDIT_ID.test(route.id) ? { canonical: `${SITE_ORIGIN}/audit/${route.id}` } : {}) })
+    case 'budget': return base(await budgetPage(url, budgetReader(env.ASSETS), prerenderBlock))
     case 'instruments': return base(await instrumentPage(route.id, url, instrumentReader(env.ASSETS), prerenderBlock))
     case 'grant-recipient': return grantRecipientMeta(route.jurisdiction, route.id, url, env)
     case 'static': {
@@ -5197,9 +5201,10 @@ async function serveSeoPage(route: SeoRoute, url: URL, request: Request, env: En
   if (route.kind === 'notfound') rewriter.on('script[src]', { element(el) {
     if (/\/(app|spa-entry|spa-shell)\.js(?:\?|$)/.test(el.getAttribute('src') || '')) el.remove()
   } })
-  if (route.kind === 'instruments' || route.kind === 'audit') rewriter.on('script[src]', { element(el) {
+  if (route.kind === 'instruments' || route.kind === 'audit' || route.kind === 'budget') rewriter.on('script[src]', { element(el) {
     if (/\/(app|spa-entry|spa-shell)\.js(?:\?|$)/.test(el.getAttribute('src') || '')) el.remove()
   } }).on('a[href^="/subject/person"]', { element(el) { el.remove() } })
+  if (route.kind === 'budget') rewriter.on('head', { element(el) { el.append('<link rel="stylesheet" href="/datatable.css"><link rel="stylesheet" href="/budget.css"><script type="module" src="/budget.js"></script>', {html:true}) } })
   rewriter.on('main#main', { element(el) { el.setAttribute('data-server-rendered',''); el.setInnerContent(meta.prerender || '', { html: true }) } })
   const out = rewriter.transform(shell)
   const headers = new Headers(out.headers)

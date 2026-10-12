@@ -267,7 +267,7 @@ test('real Worker/D1 applies 0012 with existing content, rolls back deletion fai
  export {testWorker as default};`);
  assert.match(workerScript,/testWorker as default/);
  const outbox=[];
- const mf=new Miniflare(convertV4MiniflareOptions({port:8941,workers:[{name:'deletion',modules:true,script:workerScript,compatibilityDate:'2026-09-01',compatibilityFlags:['nodejs_compat'],d1Databases:{COMMUNITY_DB:'deletion-runtime'},bindings:{COMMUNITY_ENABLED:'true',COMMUNITY_ORIGIN:'https://example.test',COMMUNITY_EMAIL_FROM:'signin@example.test',COMMUNITY_CODE_MAC_SECRET:KEY,VOICE_ENABLED:'false'},serviceBindings:{EMAIL_STUB:async req=>{outbox.push(await req.json());return Response.json({messageId:'test'})}},outboundService:()=>{throw Error('Outbound network forbidden in deletion tests')}}]}));
+ const mf=new Miniflare(convertV4MiniflareOptions({host:process.env.OPAX_TEST_HOST||'127.0.0.1',port:8941,workers:[{name:'deletion',modules:true,script:workerScript,compatibilityDate:'2026-09-01',compatibilityFlags:['nodejs_compat'],d1Databases:{COMMUNITY_DB:'deletion-runtime'},bindings:{COMMUNITY_ENABLED:'true',COMMUNITY_ORIGIN:'https://example.test',COMMUNITY_EMAIL_FROM:'signin@example.test',COMMUNITY_CODE_MAC_SECRET:KEY,VOICE_ENABLED:'false'},serviceBindings:{EMAIL_STUB:async req=>{outbox.push(await req.json());return Response.json({messageId:'test'})}},outboundService:()=>{throw Error('Outbound network forbidden in deletion tests')}}]}));
  try{
   const db=await mf.getD1Database('COMMUNITY_DB','deletion');
   const migrate=async file=>db.batch(sqlFile(file).replace(/^\s*--.*$/gm,'').split(';').map(s=>s.trim()).filter(Boolean).map(s=>db.prepare(s)));

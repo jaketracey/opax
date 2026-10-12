@@ -5,7 +5,7 @@ import {join} from 'node:path';
 import {buildTableSQL} from '../../scripts/load_tables.mjs';
 export async function tableDatabase(options={}) {
   const root=await mkdtemp(join(tmpdir(),'opax-table-d1-'));
-  const mf=new Miniflare(convertV4MiniflareOptions({workers:[{name:"tables",modules:true,script:'export default {fetch(){return new Response("local fixture")}}',compatibilityDate:'2026-09-01',d1Databases:{TABLE_DB:'test-tables'}}]}));
+  const mf=new Miniflare(convertV4MiniflareOptions({host:process.env.OPAX_TEST_HOST||'127.0.0.1',workers:[{name:"tables",modules:true,script:'export default {fetch(){return new Response("local fixture")}}',compatibilityDate:'2026-09-01',d1Databases:{TABLE_DB:'test-tables'}}]}));
   try {
     const db=await mf.getD1Database('TABLE_DB','tables'),manifest=await buildTableSQL({...options,output:root});
     for(const file of manifest.files) {

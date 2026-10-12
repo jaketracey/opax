@@ -1,0 +1,17 @@
+{
+  "url": "https://archive.budget.gov.au/2022-23-october/bp1/download/bp1_2022-23.pdf",
+  "receipt": {
+    "url": "https://archive.budget.gov.au/2022-23-october/bp1/download/bp1_2022-23.pdf",
+    "status": 200,
+    "snapshot": "2026-10-12T21:31:54.052419+00:00",
+    "sha256": "0df9a3630447181b263936ff5732c564564ccc76377a98208dbe8d04d96c779d",
+    "user_agent_policy": "parli/ingest/user-agent.json",
+    "user_agent_sha256": "1100b17c9651df0a8cac3179efbf025b2b55acf7d93bee70876cd24bcd3c0b2b"
+  },
+  "pages": [
+    {
+      "page": 78,
+      "text": "                                                | Budget Paper No. 1\n\n\n\n\nTable 3.1 presents estimates and projections of the key budget aggregates in this Statement.\n\nTable 3.1: Australian Government general government sector budget aggregates\n                                 Actual                Estimates                           Projections\n                             2021-22  2022-23 2023-24 2024-25 2025-26    Total(a)     2032-33\n                                $b      $b      $b      $b      $b       $b  % of GDP\nUnderlying cash balance           -32.0      -36.9    -44.0    -51.3    -49.6     -181.8\nPer cent of GDP                       -1.4       -1.5      -1.8      -2.0      -1.8                      -1.9\n\nReceipts                        584.4     607.2    621.4    642.8    679.0    2,550.5\nPer cent of GDP                    25.4      24.5     25.3     25.1     25.2                   26.0\n\n  Tax receipts                   536.6     562.9    574.3    590.5    629.3    2,356.9\n  Per cent of GDP                  23.4      22.7     23.3     23.0     23.4                   24.1\n\n  Non-tax receipts                 47.8      44.4     47.1     52.4     49.7     193.6\n  Per cent of GDP                    2.1        1.8      1.9      2.0      1.8                     1.9\n\nPayments(b)                     616.3     644.1    665.5    694.2    728.6    2,732.3\nPer cent of GDP                    26.8      25.9     27.0     27.1     27.1                   27.9\n\nGross debt(c)                    895.3     927.0  1,004.0  1,091.0  1,159.0\nPer cent of GDP                    39.0      37.3     40.8     42.5     43.1                   46.9\n\nNet debt(d)                      515.6     572.2    634.1    702.8    766.8\nPer cent of GDP                    22.5      23.0     25.8     27.4     28.5                   31.9\n\nNet interest payments(e)           15.0      13.6     16.6     19.4     26.5      76.1\nPer cent of GDP                      0.7        0.5      0.7      0.8      1.0                     1.5\na)  Total is equal to the sum of amounts from 2022\u201323 to 2025\u201326.\nb)  Equivalent to cash payments for operating activities, purchases of non-financial assets and principal\n   payments of lease liabilities.\nc)  Gross debt measures the face value of Australian Government Securities (AGS) on issue.\nd)  Net debt is the sum of interest bearing liabilities (which includes AGS on issue measured at market\n    value) less the sum of selected financial assets (cash and deposits, advances paid and investments,\n    loans and placements).\ne)  Net interest payments are equal to the difference between interest payments and interest receipts.\n\n\n\n\n\nPage 74  | Statement 3: Fiscal Strategy and Outlook"
+    }
+  ]
+}
