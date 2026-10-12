@@ -12,7 +12,7 @@ sys.path.insert(0, str(ROOT))
 from parli.ingest.qao_reports import Client, Held, LICENCE
 from parli.ingest.qao_bodies import (strict_guard, rights_review, extract_recommendations, extract_responses,
     stage, kb_document, download, SCHEMA)
-from scripts.export_audit import plan_export, check_budget
+from scripts.export_audit import plan_export, check_budget, validate_record
 
 
 def page(n, texts):
@@ -63,6 +63,14 @@ class Tests(unittest.TestCase):
         self.assertEqual(r['recommendations'][0]['text'],'Source HTML advice');self.assertEqual(r['recommendations'][0]['provenance'],'html')
         self.assertEqual(r['responses'],[]);self.assertEqual(counts['kb_units'],0);self.assertEqual(counts['html_recommendations'],1)
         payloads,manifest=plan_export(data);self.assertEqual(manifest['recommendations'],1);self.assertEqual(manifest['bodies'],0)
+        public=json.loads(payloads['reports-1.json'])['records'][0]
+        validate_record(public,public=True)
+        self.assertNotIn('reasons',public['pdf']);self.assertNotIn('no_text_pages',public['pdf'])
+        self.assertNotIn('extraction_holds',public)
+        self.assertEqual(manifest['pdf_holds'],[{'id':r['id'],'document_licence':'CC BY-NC-ND 4.0'}])
+        public['pdf']['reasons']=['no_text_layer']
+        with self.assertRaises(Held):validate_record(public,public=True)
+        self.assertIn('pdf_restrictive_licence',r['pdf']['reasons'])
         r['recommendations'][0]['provenance']='pdf p.4';r['recommendations'][0]['page']=4
         with self.assertRaises(Held):plan_export(data)
         self.assertEqual(r['pdf']['sha256'],'a'*64)
