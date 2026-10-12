@@ -84,9 +84,14 @@ name: 38 Reports, report, Money, section deep link and cited record
 - assertVisible:
     id: doc-title
 - takeScreenshot: ${EVIDENCE}/38-cited-record
-- tapOn:
-    text: Gambling
-    index: 0
+# Back to the section with the native back swipe: on iOS 26 the back
+# button is a bare chevron, with no "Gambling" title to tap.
+- swipe:
+    start: 1%,50%
+    end: 90%,50%
+- extendedWaitUntil:
+    visible: Share Gambling
+    timeout: 30000
 # A section is shared from its own page's header (pass 4B moved the
 # per-section Share buttons there).
 - tapOn: Share Gambling

@@ -37,9 +37,12 @@ name: 55 A bill's sponsor is the standard people row
 - tapOn:
     text: Open
     optional: true
-- extendedWaitUntil:
-    visible:
+# The link reuses the open bill screen, which keeps its scroll position
+# (at AX5 the sponsor row, under the title): scroll up to the new title.
+- scrollUntilVisible:
+    element:
       id: bill-title
+    direction: UP
     timeout: 60000
 - scrollUntilVisible:
     element:
