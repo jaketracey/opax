@@ -55,6 +55,8 @@ import { withholdIndividualDonors, foldDonorName } from '../public/donor-entity.
 import { donorWithheld, namesWithheldDonor, questionNamesWithheldDonor, withheldNameCheck, loadDonorIndex, WITHHELD_DONOR_REPLY } from './donor-index'
 import { canonicalPageRedirect } from './canonical-origin'
 import { pageEntry } from './page-entry'
+import { htmlValidator, notModified } from './html-etag'
+import { cacheKeyParams } from './cache-key'
 import { communityMcp } from './community-mcp'
 import { expireVoiceSessions, voiceRoute } from './voice'
 import { appEdition } from './app-edition'
@@ -483,12 +485,7 @@ async function apiSearch(request: Request, url: URL, env: Env, ctx: ExecutionCon
   // Two keys. The page key carries page/per/sort so page 2 can never be served
   // from page 1's entry; the window key drops them so paging and re-sorting
   // inside one result set costs no upstream call and no rate-limit quota.
-  const keyParams = (drop: string[]) =>
-    new URLSearchParams(
-      [...url.searchParams.entries()]
-        .filter(([k]) => !drop.includes(k))
-        .sort(([a], [b]) => a.localeCompare(b)),
-    ).toString()
+  const keyParams = (drop: string[]) => cacheKeyParams(url.searchParams, drop)
   // Retire windows/pages containing the old unnormalized, character-cut snippets.
   const pageKey = cacheRequest('search', await sha256Hex(`${env.CACHE_EPOCH}\nyears-topics-v3-split-speakers-passage-v3\n${keyParams(['nocache'])}`))
   const windowKey = cacheRequest(
@@ -5212,6 +5209,12 @@ async function serveSeoPage(route: SeoRoute, url: URL, request: Request, env: En
   headers.delete('content-length')
   headers.set('content-type', 'text/html; charset=utf-8')
   headers.set('x-robots-tag', noindex ? 'noindex' : 'all')
+  if (meta.status === 200) {
+    const etag = await htmlValidator([env.CF_VERSION_METADATA?.id ?? '', shell.headers.get('etag'), route.kind, noindex, image, imageAlt, meta])
+    headers.set('etag', etag)
+    const unchanged = notModified(request, etag, headers)
+    if (unchanged) return unchanged
+  }
   return new Response(request.method === 'HEAD' ? null : out.body, { status: meta.status, headers })
 }
 
@@ -5989,7 +5992,9 @@ export default {
       const facts=await renderMoneyAnswer('Money map',<T>(path:string)=>assetJson<T>(env,path))
       const schema=JSON.stringify(buildSchemaGraph({canonical:`${SITE_ORIGIN}/map`,title:'Money map · OPAX'})).replace(/</g,'\\u003c')
       const out=new HTMLRewriter().on('div#crawl-facts',{element(el){el.setInnerContent(facts.html,{html:true})}}).on('head',{element(el){el.append(`<script type="application/ld+json" id="ld-page">${schema}</script>`,{html:true})}}).transform(shell)
-      return communityResponse(new Response(request.method==='HEAD' ? null : out.body,out))
+      const headers=new Headers(out.headers);headers.delete('content-length')
+      if(shell.ok){const etag=await htmlValidator([env.CF_VERSION_METADATA?.id ?? '',shell.headers.get('etag'),facts.html,schema]);headers.set('etag',etag);const unchanged=notModified(request,etag,headers);if(unchanged)return communityResponse(unchanged)}
+      return communityResponse(new Response(request.method==='HEAD' ? null : out.body,{status:out.status,headers}))
     }
     const entry = await pageEntry(request, env.ASSETS)
     if (entry) {
@@ -5997,7 +6002,12 @@ export default {
       if(entry.status===200 && url.pathname==='/') {
         const schema=JSON.stringify(buildSchemaGraph({canonical:`${SITE_ORIGIN}/`,title:SITE_TITLE,description:SITE_DESCRIPTION})).replace(/</g,'\\u003c')
         const money=await renderMoneyAnswer('Public money',<T>(path:string)=>assetJson<T>(env,path)).catch(()=>null)
-        return communityResponse(new HTMLRewriter().on('div#hp-money-map',{element(el){if(money)el.setInnerContent(money.html.replace('id="prerender"','id="prerender-money"').replace('<h1>','<h2>').replace('</h1>','</h2>'),{html:true})}}).on('head',{element(el){el.append(`<script type="application/ld+json" id="ld-page">${schema}</script>`,{html:true})}}).transform(entry))
+        const moneyHtml=money ? money.html.replace('id="prerender"','id="prerender-money"').replace('<h1>','<h2>').replace('</h1>','</h2>') : null
+        const out=new HTMLRewriter().on('div#hp-money-map',{element(el){if(moneyHtml)el.setInnerContent(moneyHtml,{html:true})}}).on('head',{element(el){el.append(`<script type="application/ld+json" id="ld-page">${schema}</script>`,{html:true})}}).transform(entry)
+        const headers=new Headers(out.headers);headers.delete('content-length')
+        const etag=await htmlValidator([env.CF_VERSION_METADATA?.id ?? '',entry.headers.get('etag'),moneyHtml,schema]);headers.set('etag',etag)
+        const unchanged=notModified(request,etag,headers)
+        return communityResponse(unchanged || new Response(request.method==='HEAD' ? null : out.body,{status:out.status,headers}))
       }
       return communityResponse(entry)
     }

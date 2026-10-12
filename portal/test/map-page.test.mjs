@@ -7,7 +7,8 @@ const html = readFileSync(new URL('../public/map.html', import.meta.url), 'utf8'
 const source = readFileSync(new URL('../public/map-page.js', import.meta.url), 'utf8')
 
 test('standalone map starts through a same-origin module allowed by the CSP', () => {
-  assert.match(html, /<script type="module" src="\/map-page.js"><\/script>/)
+  // Content-stamped by scripts/stamp_assets.mjs, so _headers can serve the module immutable.
+  assert.match(html, /<script type="module" src="\/map-page\.js\?v=[0-9a-f]{10}"><\/script>/)
   assert.doesNotMatch(html, /<script\b(?![^>]*\bsrc=)[^>]*>[\s\S]*?\S[\s\S]*?<\/script>/)
 })
 
