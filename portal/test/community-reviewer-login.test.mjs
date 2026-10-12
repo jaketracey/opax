@@ -367,7 +367,7 @@ test('authorized operator status returns only binding readiness without any prov
  const response=await f.status({authorization:'Bearer '+f.env.DAILY_POST_OPERATOR_SECRET});
  assert.equal(response.status,200);assert.equal(response.headers.get('cache-control'),'no-store');assert.equal(response.headers.get('set-cookie'),null);
  assert.deepEqual(await response.json(),{reviewer_login_enabled:true});
- assert.equal(f.outbox.length,0);assert.equal(f.trace.length,0);assert.equal(f.logs.length,0);
+ assert.equal(f.outbox.length,0);assert.deepEqual(f.trace,['constant-time comparison']);assert.equal(f.logs.length,0);
 });
 
 for(const {label,value} of invalidReviewerBindings)test('operator status reports false without echoing an invalid reviewer binding: '+label,async t=>{
@@ -375,7 +375,7 @@ for(const {label,value} of invalidReviewerBindings)test('operator status reports
  const response=await f.status({authorization:'Bearer '+f.env.DAILY_POST_OPERATOR_SECRET});
  assert.equal(response.status,200);assert.equal(response.headers.get('cache-control'),'no-store');assert.equal(response.headers.get('set-cookie'),null);
  assert.deepEqual(await response.json(),{reviewer_login_enabled:false});
- assert.equal(f.outbox.length,0);assert.equal(f.trace.length,0);assert.equal(f.logs.length,0);
+ assert.equal(f.outbox.length,0);assert.deepEqual(f.trace,['constant-time comparison']);assert.equal(f.logs.length,0);
  if(typeof value==='string'&&value)assert.ok(!f.responses.some(line=>line.includes(value)),'operator status echoed the invalid binding');
 });
 
