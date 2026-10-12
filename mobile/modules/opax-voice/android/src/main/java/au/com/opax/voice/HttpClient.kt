@@ -19,6 +19,7 @@ import kotlinx.coroutines.withContext
 import okhttp3.Call
 import okhttp3.Callback
 import okhttp3.Connection
+import okhttp3.ConnectionPool
 import okhttp3.CookieJar
 import okhttp3.EventListener
 import okhttp3.HttpUrl
@@ -619,6 +620,14 @@ class OkHttpTransport(private val policy: RoutePolicy = RoutePolicy()) : HttpTra
     private const val MAX_TRANSPORT_BYTES = 8 * 1024 * 1024
     // URLSession's own retry covers idempotent requests only; POST never.
     private val idempotent = setOf("GET", "HEAD")
+    /**
+     * No connection is reused after this long idle. A server or NAT can drop
+     * an idle connection without the client seeing it (on the emulator, its
+     * NAT hid the fixture's 5 s close from OkHttp's health check), and a POST
+     * on it is never retried, so Start or Send code failed as "could not be
+     * reached". Below Node's 5 s default, and far below any edge's.
+     */
+    internal const val IDLE_REUSE_SECONDS = 4L
 
     internal fun configuration(): OkHttpClient = OkHttpClient.Builder()
       .cookieJar(CookieJar.NO_COOKIES)
@@ -626,6 +635,7 @@ class OkHttpTransport(private val policy: RoutePolicy = RoutePolicy()) : HttpTra
       .followRedirects(false)
       .followSslRedirects(false)
       .retryOnConnectionFailure(false)
+      .connectionPool(ConnectionPool(5, IDLE_REUSE_SECONDS, TimeUnit.SECONDS))
       // Only transport calls carry an Attempt; the relay socket records nothing.
       .eventListenerFactory { call -> call.request().tag(Attempt::class.java)?.let(::AttemptListener) ?: EventListener.NONE }
       .connectTimeout(15, TimeUnit.SECONDS)

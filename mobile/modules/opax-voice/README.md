@@ -276,7 +276,10 @@ android/src/voiceProduction/ production release: the opax.com.au origin and the 
   QA1941): a GET or HEAD whose reused connection failed before any response
   headers is sent once more at once, so a connection the server closed while
   idle never surfaces as "could not be reached". Never a POST, a timeout, a
-  fresh connection's failure or a cancellation, and never twice.
+  fresh connection's failure or a cancellation, and never twice. No
+  connection is reused after 4 s idle: a server or NAT can drop an idle
+  connection unseen (the emulator's NAT hid the fixture's 5 s close), and a
+  POST such as Start or Send code on it would fail with no retry.
   `TransportGuard` is the test and e2e host guard (Swift's `VoiceTestSafety`
   for HTTP).
 - **Call half.** `VoiceCallController` implements `VoiceCore` and is the only

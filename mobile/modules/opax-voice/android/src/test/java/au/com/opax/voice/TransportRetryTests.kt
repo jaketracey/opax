@@ -117,6 +117,19 @@ class TransportRetryTests : SafeVoiceTestCase() {
     assertFalse(sending.isActive)
   }
 
+  /** Run 3: a POST after a pause goes on a new connection, never one a server or NAT may have dropped. */
+  @Test fun aConnectionIdleFourSecondsIsNeverReused() = runBlocking {
+    warm()
+    server.enqueue(ok())
+    assertEquals(200, transport.send(get()).status)
+    assertEquals(1, server.takeRequest().sequenceNumber) // reused within the window
+    Thread.sleep(OkHttpTransport.IDLE_REUSE_SECONDS * 1000 + 600)
+    assertEquals(0, transport.client.connectionPool.idleConnectionCount())
+    server.enqueue(ok().setResponseCode(201))
+    assertEquals(201, transport.send(post()).status)
+    assertEquals(0, server.takeRequest().sequenceNumber) // a new connection
+  }
+
   @Test fun theRelaySocketCarriesNoAttempt() {
     // Only transport calls are tagged; OkHttp's broad retry stays off for all.
     val client = transport.client
