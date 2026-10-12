@@ -5,13 +5,15 @@ const COOKIE='__Host-opax_session'
 const CODE_FAILURE='This code could not be used. Request a new sign-in email or use its link to sign in through your browser.'
 // Reviewed in code only; environment bindings cannot extend this allowlist.
 const REVIEWER_EMAILS:readonly string[]=['play-review@opax.com.au','app-review@opax.com.au']
+const REQUEST_MINIMUM_MS=100
 const encoder=new TextEncoder()
-function reviewerLoginCode(env:Env,email:string):string|null {
+export function reviewerLoginEnabled(env:Env):boolean {
  const code=env.REVIEWER_LOGIN_CODE
- return REVIEWER_EMAILS.includes(email)&&typeof code==='string'&&code.length===8&&/^\d{8}$/.test(code)?code:null
+ return typeof code==='string'&&code.length===8&&/^\d{8}$/.test(code)
 }
 export async function authRoute(req:Request,env:Env,path:string):Promise<Response|null>{
  if(path==='/api/community/auth/request'&&req.method==='POST'){
+  const started=performance.now()
   sameOrigin(req,env);const data=await body(req);const email=text(data.email,3,254,'Email').toLowerCase()
   if(data.client!==undefined&&data.client!=='ios')throw new CommunityError(400,'Use client "ios" for code sign-in.')
   const client=data.client==='ios'?'ios':'web'
@@ -20,14 +22,14 @@ export async function authRoute(req:Request,env:Env,path:string):Promise<Respons
   await limit(env,'login-ip:'+(req.headers.get('cf-connecting-ip')||'local'),15,3600)
   // Both new and existing accounts take the same path and receive the same response.
   await limit(env,'login-email:'+email,5,3600)
-  const reviewerCode=reviewerLoginCode(env,email)
+  const reviewer=REVIEWER_EMAILS.includes(email)
   const token=randomToken(),hash=await digest(token),t=now()
-  const challengeId=client==='ios'?randomToken():null,code=client==='ios'&&!reviewerCode?randomSignInCode():undefined
+  const challengeId=client==='ios'?randomToken():null,code=client==='ios'&&!reviewer?randomSignInCode():undefined
   const codeMac=challengeId&&code?macHex(await signInCodeMac(env,challengeId,code)):null
   // Reviewer rows hold only challenge/lockout metadata, never an OTP or its MAC.
   if(client==='ios')await env.COMMUNITY_DB.prepare('INSERT INTO login_links(token_hash,email,expires_at,created_at,client,challenge_id,code_mac) VALUES (?,?,?,?,?,?,?)').bind(hash,email,t+900,t,client,challengeId,codeMac).run()
-  else if(!reviewerCode)await env.COMMUNITY_DB.prepare('INSERT INTO login_links(token_hash,email,expires_at,used_at,created_at) VALUES (?,?,?,NULL,?)').bind(hash,email,t+900,t).run()
-  if(!reviewerCode){
+  else if(!reviewer)await env.COMMUNITY_DB.prepare('INSERT INTO login_links(token_hash,email,expires_at,used_at,created_at) VALUES (?,?,?,NULL,?)').bind(hash,email,t+900,t).run()
+  if(!reviewer){
    const link=env.COMMUNITY_ORIGIN+'/community?view=signin#token='+token
    try{const delivery=await env.COMMUNITY_EMAIL.send({from:{email:env.COMMUNITY_EMAIL_FROM,name:'Opax'},to:email,...signInEmail(link,code)});console.log(JSON.stringify({event:'community_email_accepted',message_id:delivery?.messageId}))}catch{await env.COMMUNITY_DB.prepare('DELETE FROM login_links WHERE token_hash=?').bind(hash).run();throw new CommunityError(503,'We could not send your sign-in email. Please try again shortly.')}
   }
@@ -38,6 +40,9 @@ export async function authRoute(req:Request,env:Env,path:string):Promise<Respons
    await env.COMMUNITY_DB.prepare("UPDATE login_links SET superseded_at=?,expires_at=? WHERE email=? AND client='ios' AND used_at IS NULL AND superseded_at IS NULL AND rowid<(SELECT rowid FROM login_links WHERE token_hash=?)").bind(acceptedAt,acceptedAt,email,hash).run()
   }
   await env.COMMUNITY_DB.batch([env.COMMUNITY_DB.prepare('DELETE FROM login_links WHERE expires_at<?').bind(t-86400),env.COMMUNITY_DB.prepare('DELETE FROM member_sessions WHERE expires_at<?').bind(t),env.COMMUNITY_DB.prepare('DELETE FROM community_limits WHERE expires_at<?').bind(t-86400)])
+  // Both paths share a floor; email delivery that already takes longer adds no delay.
+  const remaining=REQUEST_MINIMUM_MS-(performance.now()-started)
+  if(remaining>0)await new Promise(resolve=>setTimeout(resolve,remaining))
   return json({sent:true,message:'Check your email for a sign-in link. It expires in 15 minutes.',...(challengeId?{challenge_id:challengeId}:{})})
  }
  if(path==='/api/community/auth/consume'&&req.method==='POST'){
@@ -61,19 +66,18 @@ export async function authRoute(req:Request,env:Env,path:string):Promise<Respons
    await limit(env,'consume-code-email:'+await digest(link.email),10,86400)
    const t=now(),admitted=await env.COMMUNITY_DB.prepare("UPDATE login_links SET attempts=attempts+1 WHERE challenge_id=? AND client='ios' AND used_at IS NULL AND superseded_at IS NULL AND expires_at>? AND attempts<5 RETURNING code_mac").bind(challengeId,t).first<{code_mac:string|null}>()
    if(!admitted||typeof data.code!=='string'||!/^\d{8}$/.test(data.code))throw new CommunityError(400,CODE_FAILURE)
-   const reviewerCode=reviewerLoginCode(env,link.email)
-   if(reviewerCode){
+   const reviewer=REVIEWER_EMAILS.includes(link.email)
+   if(reviewer){
     // Fixed-size native comparison, after every normal admission; no OTP fallback.
-    if(data.code.length!==8||!crypto.subtle.timingSafeEqual(encoder.encode(data.code),encoder.encode(reviewerCode)))throw new CommunityError(400,CODE_FAILURE)
+    if(!reviewerLoginEnabled(env)||data.code.length!==8||!crypto.subtle.timingSafeEqual(encoder.encode(data.code),encoder.encode(env.REVIEWER_LOGIN_CODE!)))throw new CommunityError(400,CODE_FAILURE)
    }else{
-    if(admitted.code_mac===null&&REVIEWER_EMAILS.includes(link.email))throw new CommunityError(400,CODE_FAILURE)
     if(!await matchesSignInCode(env,challengeId!,data.code,admitted.code_mac!))throw new CommunityError(400,CODE_FAILURE)
    }
    // This write competes with link consumption and rechecks expiry and supersession.
    const redeemed=await env.COMMUNITY_DB.prepare("UPDATE login_links SET used_at=? WHERE challenge_id=? AND client='ios' AND used_at IS NULL AND superseded_at IS NULL AND expires_at>? RETURNING email,token_hash").bind(now(),challengeId,now()).first<{email:string,token_hash:string}>()
    if(!redeemed)throw new CommunityError(400,CODE_FAILURE)
    const response=await issueSession(env,redeemed.email,now(),'ios',redeemed.token_hash)
-   if(reviewerCode)console.log(JSON.stringify({event:'community_reviewer_signin',timestamp:new Date().toISOString(),email:link.email,colo:req.cf?.colo??null}))
+   if(reviewer)console.log(JSON.stringify({event:'community_reviewer_signin',timestamp:new Date().toISOString(),email:link.email,colo:req.cf?.colo??null}))
    return response
   }catch(e){if(e instanceof CommunityError)throw new CommunityError(400,CODE_FAILURE);throw e}
  }

@@ -9,13 +9,25 @@ import {pathToFileURL} from 'node:url';
 import {build} from 'esbuild';
 
 const folder=mkdtempSync(join(tmpdir(),'opax-reviewer-login-test-'));
-await build({entryPoints:['community','voice'].map(name=>new URL('../src/'+name+'.ts',import.meta.url).pathname),outdir:folder,bundle:true,platform:'node',format:'esm'});
+const omitImages={name:'omit-image-renderer',setup(b){b.onResolve({filter:/^\.\/og-render$/},()=>({path:'images',namespace:'test'}));b.onLoad({filter:/.*/,namespace:'test'},()=>({contents:'export function renderOgPng(){throw Error("No images in reviewer tests")}; export const renderOgJpeg=renderOgPng; export const renderStoryJpeg=renderOgPng;',loader:'js'}))}};
+await build({entryPoints:['community','voice','index'].map(name=>new URL('../src/'+name+'.ts',import.meta.url).pathname),outdir:folder,bundle:true,platform:'node',format:'esm',plugins:[omitImages]});
 const {communityRoute}=await import(pathToFileURL(join(folder,'community.js')));
 const {voiceRoute}=await import(pathToFileURL(join(folder,'voice.js')));
+const {default:worker}=await import(pathToFileURL(join(folder,'index.js')));
 test.after(()=>rmSync(folder,{recursive:true,force:true}));
 const hash=value=>createHash('sha256').update(value).digest('hex');
 const time=()=>Math.floor(Date.now()/1000);
 const failure={error:'This code could not be used. Request a new sign-in email or use its link to sign in through your browser.'};
+const invalidReviewerBindings=[
+ {label:'unset',value:undefined},{label:'empty',value:''},
+ {label:'short nonnumeric',value:'short'},{label:'short numeric',value:'0'.repeat(7)},
+ {label:'long numeric',value:'0'.repeat(9)},{label:'nondigit',value:'abcdefgh'},
+ {label:'trailing newline',value:'0'.repeat(8)+'\n'},
+ {label:'leading whitespace',value:' '+'0'.repeat(8)},
+ {label:'trailing whitespace',value:'0'.repeat(8)+' '},
+ {label:'null',value:null},{label:'number',value:0}
+];
+function setReviewerBinding(env,value){if(value===undefined)delete env.REVIEWER_LOGIN_CODE;else env.REVIEWER_LOGIN_CODE=value}
 
 function fixture(t){
  // Stable rate-limit windows, wholly local SQLite and email doubles.
@@ -44,12 +56,14 @@ function fixture(t){
  const env={
   COMMUNITY_DB:{prepare:statement,async batch(stmts){db.exec('BEGIN');try{const results=stmts.map(stmt=>stmt.run());db.exec('COMMIT');return results}catch(e){db.exec('ROLLBACK');throw e}}},
   COMMUNITY_ENABLED:'true',COMMUNITY_ORIGIN:'https://opax.test',COMMUNITY_EMAIL_FROM:'signin@example.test',
+  DAILY_POST_OPERATOR_SECRET:'test-only-operator-token-'.repeat(2),
   COMMUNITY_CODE_MAC_SECRET:'fake-test-only-code-mac-key-00000000000000000000000000000000',
   REVIEWER_LOGIN_CODE:'00000000',
   COMMUNITY_EMAIL:{async send(mail){outbox.push(mail);return {messageId:'test-only'}}},
   VOICE_ENABLED:'true',VOICE_AGENT_ID:'test-only-agent',ELEVENLABS_API_KEY:'fake-test-only',VOICE_TOOL_SECRET:'test-only-voice-key-'.repeat(3),VOICE_MONTHLY_SECONDS:'40000'
  };
  const fakeSecret=env.REVIEWER_LOGIN_CODE;
+ const fakeOperator=env.DAILY_POST_OPERATOR_SECRET;
  async function capture(response){
   responses.push(await response.clone().text(),JSON.stringify([...response.headers]));
   return response;
@@ -78,10 +92,16 @@ function fixture(t){
   try{
    // Grep-style leak gate covers every captured response body, header and log.
    assert.ok(![...responses,...logs].some(line=>line.includes(fakeSecret)),'reviewer test credential leaked in an HTTP response or log');
+   assert.ok(![...responses,...logs].some(line=>line.includes(fakeOperator)),'operator test credential leaked in an HTTP response or log');
    for(const table of ['login_links','members','member_sessions','community_limits'])assert.ok(!JSON.stringify(db.prepare('SELECT * FROM '+table).all()).includes(fakeSecret),'reviewer test credential persisted in database rows');
   }finally{db.close()}
  });
- return {db,env,outbox,trace,logs,responses,call,issue,consume,row,counter,seedCounter,voice};
+ const status=async(headers={},method='GET')=>{
+  const forbidden=()=>{throw Error('Operator status must not use assets, database, email, cache or staging proxy')};
+  const statusEnv={...env,ASSETS:{fetch:forbidden},COMMUNITY_DB:{prepare:forbidden,batch:forbidden},COMMUNITY_EMAIL:{send:forbidden},GENERATION_CACHE:{get:forbidden,put:forbidden},STAGING_API:{fetch:forbidden}};
+  return capture(await worker.fetch(new Request('https://opax.test/api/ops/reviewer-login',{method,headers}),statusEnv,{waitUntil:forbidden}));
+ };
+ return {db,env,outbox,trace,logs,responses,call,issue,consume,row,counter,seedCounter,voice,status};
 }
 async function rejected(response){
  assert.equal(response.status,400);
@@ -139,6 +159,25 @@ test('reviewer requests never call the email binding or store an OTP and preserv
  assert.equal(f.db.prepare('SELECT count(*) n FROM members').get().n,0);
 });
 
+test('reviewer and ordinary request responses share a floor with a delayed email double',async t=>{
+ const f=fixture(t),send=f.env.COMMUNITY_EMAIL.send;
+ f.env.COMMUNITY_EMAIL.send=async mail=>{await new Promise(resolve=>setTimeout(resolve,100));return send(mail)};
+ const duration=async email=>{const start=performance.now(),response=await f.call('auth/request',{email,client:'ios'});assert.equal(response.status,200);return performance.now()-start};
+ // Concurrent requests see the same local scheduler delays during the full suite.
+ const [ordinary,reviewer]=await Promise.all([duration('ordinary@example.test'),duration('play-review@opax.com.au')]);
+ assert.ok(ordinary>=95&&reviewer>=95,'both successful requests must reach the common response floor');
+ assert.ok(Math.abs(ordinary-reviewer)<=25,'request timing differs by more than 25 ms');
+ assert.equal(f.outbox.length,1);
+});
+
+test('ordinary email delivery above the floor does not receive another full delay',async t=>{
+ const f=fixture(t),send=f.env.COMMUNITY_EMAIL.send;
+ let accepted;
+ f.env.COMMUNITY_EMAIL.send=async mail=>{await new Promise(resolve=>setTimeout(resolve,150));const result=await send(mail);accepted=performance.now();return result};
+ const response=await f.call('auth/request',{email:'ordinary@example.test',client:'ios'});
+ assert.equal(response.status,200);assert.ok(performance.now()-accepted<75,'ordinary delivery received an unnecessary response delay');
+});
+
 test('reviewer issuance retains the normal email and IP quotas',async t=>{
  const f=fixture(t);
  for(let i=0;i<5;i++)await f.issue();
@@ -185,14 +224,40 @@ test('reviewer email lockout survives challenge reissue and IP changes',async t=
  assert.equal(f.row(fresh).attempts,0);assert.equal(f.counter('consume-code-email:'+hash('play-review@opax.com.au'),86400),11);
 });
 
-for(const binding of [undefined,'','short','0000000','000000000','abcdefgh','00000000\n',' 00000000','00000000 '])test('missing, empty or malformed reviewer binding disables fixed-code sign-in: '+(binding===undefined?'unset':binding===''?'empty':'invalid '+binding.length),async t=>{
- const f=fixture(t);if(binding===undefined)delete f.env.REVIEWER_LOGIN_CODE;else f.env.REVIEWER_LOGIN_CODE=binding;
- const proof=await f.issue(),mail=f.outbox.at(-1);
- assert.equal(f.outbox.length,1);assert.ok(f.row(proof).code_mac);
- const fixedCode='0'.repeat(8);await rejected(await f.consume(proof,fixedCode));
- // With the special path disabled, ordinary emailed OTP sign-in still works.
- const emailedCode=mail.text.match(/app sign-in code: (\d{8})/)[1];
- sessionCookie(await f.consume(proof,emailedCode));assert.ok(!f.logs.some(line=>line.includes('community_reviewer_signin')));
+for(const {label,value} of invalidReviewerBindings)test('invalid reviewer binding rejects every code for both addresses: '+label,async t=>{
+ const f=fixture(t),correctLooking=f.env.REVIEWER_LOGIN_CODE;
+ const addresses=['play-review@opax.com.au','app-review@opax.com.au'],legacy=[];
+ for(let i=0;i<addresses.length;i++){
+  const proof=await f.issue('legacy-'+i+'@example.test');
+  legacy.push({proof,code:f.outbox.at(-1).text.match(/app sign-in code: (\d{8})/)[1]});
+ }
+ setReviewerBinding(f.env,value);
+ const send=t.mock.fn(async()=>{throw Error('Reviewer request must never send email')});
+ f.env.COMMUNITY_EMAIL.send=send;
+ for(let i=0;i<addresses.length;i++){
+  const proof=await f.issue(addresses[i]);
+  assert.equal(f.row(proof).code_mac,null);
+  // Preserve a valid old OTP to prove it is rejected by reviewer policy, not expiry.
+  f.db.prepare('UPDATE login_links SET email=? WHERE challenge_id=?').run(addresses[i],legacy[i].proof.challenge_id);
+  for(const candidate of [correctLooking,legacy[i].code]){
+   await rejected(await f.consume(proof,candidate));
+   await rejected(await f.consume(legacy[i].proof,candidate));
+  }
+  assert.equal(f.row(proof).attempts,2);assert.equal(f.row(legacy[i].proof).attempts,2);
+  const web=await f.call('auth/request',{email:addresses[i]});assert.equal(web.status,200);
+  assert.equal(f.db.prepare("SELECT count(*) n FROM login_links WHERE email=? AND client='web'").get(addresses[i]).n,0);
+ }
+ assert.equal(send.mock.callCount(),0);
+ assert.equal(f.db.prepare('SELECT count(*) n FROM members').get().n,0);
+ assert.equal(f.db.prepare('SELECT count(*) n FROM member_sessions').get().n,0);
+ assert.ok(!f.trace.includes('constant-time comparison'));
+ assert.ok(!f.logs.some(line=>line.includes('community_reviewer_signin')));
+});
+
+test('ordinary emailed sign-in still succeeds with reviewer binding disabled',async t=>{
+ const f=fixture(t);delete f.env.REVIEWER_LOGIN_CODE;
+ const proof=await f.issue('ordinary@example.test'),code=f.outbox.at(-1).text.match(/app sign-in code: (\d{8})/)[1];
+ sessionCookie(await f.consume(proof,code));
 });
 
 test('disabling an existing reviewer challenge fails closed and rotation accepts only the new binding',async t=>{
@@ -215,9 +280,10 @@ test('the reviewer credential cannot authenticate any non-allowlisted address an
 });
 
 test('an enabled reviewer address never falls through to an already stored OTP',async t=>{
- const f=fixture(t),saved=f.env.REVIEWER_LOGIN_CODE;delete f.env.REVIEWER_LOGIN_CODE;
- const proof=await f.issue(),otp=f.outbox.at(-1).text.match(/app sign-in code: (\d{8})/)[1];
- f.env.REVIEWER_LOGIN_CODE=saved;await rejected(await f.consume(proof,otp));sessionCookie(await f.consume(proof));
+ const f=fixture(t),proof=await f.issue('legacy@example.test'),otp=f.outbox.at(-1).text.match(/app sign-in code: (\d{8})/)[1];
+ // Simulate a legacy reviewer row with an otherwise valid challenge-bound OTP.
+ f.db.prepare('UPDATE login_links SET email=? WHERE challenge_id=?').run('play-review@opax.com.au',proof.challenge_id);
+ await rejected(await f.consume(proof,otp));sessionCookie(await f.consume(proof));
 });
 
 test('reviewer case and whitespace use normal email normalization and challenge email controls the allowlist',async t=>{
@@ -284,4 +350,36 @@ test('the reviewer secret test value is absent from all captured responses, head
  const f=fixture(t),proof=await f.issue();await rejected(await f.consume(proof,'00000001'));sessionCookie(await f.consume(proof));await rejected(await f.consume(proof));
  assert.ok(f.responses.length>=8);assert.ok(f.logs.length>0);
  for(const line of [...f.responses,...f.logs])assert.ok(!line.includes(f.env.REVIEWER_LOGIN_CODE),'reviewer test credential found by leak grep');
+});
+
+test('operator status requires the existing bearer token for every method',async t=>{
+ const f=fixture(t),headers={authorization:'Bearer '+f.env.DAILY_POST_OPERATOR_SECRET};
+ for(const supplied of [{},{authorization:'Bearer denied-test-token'}])for(const method of ['GET','POST','HEAD']){
+  const response=await f.status(supplied,method);assert.equal(response.status,401);assert.equal(response.headers.get('cache-control'),'no-store');assert.equal(response.headers.get('set-cookie'),null);
+ }
+ delete f.env.DAILY_POST_OPERATOR_SECRET;
+ const unset=await f.status(headers);assert.equal(unset.status,401);assert.equal(unset.headers.get('cache-control'),'no-store');
+ f.env.DAILY_POST_OPERATOR_SECRET='';assert.equal((await f.status(headers)).status,401);
+});
+
+test('authorized operator status returns only binding readiness without any provider or proxy access',async t=>{
+ const f=fixture(t);f.env.COMMUNITY_ENABLED='false';
+ const response=await f.status({authorization:'Bearer '+f.env.DAILY_POST_OPERATOR_SECRET});
+ assert.equal(response.status,200);assert.equal(response.headers.get('cache-control'),'no-store');assert.equal(response.headers.get('set-cookie'),null);
+ assert.deepEqual(await response.json(),{reviewer_login_enabled:true});
+ assert.equal(f.outbox.length,0);assert.equal(f.trace.length,0);assert.equal(f.logs.length,0);
+});
+
+for(const {label,value} of invalidReviewerBindings)test('operator status reports false without echoing an invalid reviewer binding: '+label,async t=>{
+ const f=fixture(t);setReviewerBinding(f.env,value);
+ const response=await f.status({authorization:'Bearer '+f.env.DAILY_POST_OPERATOR_SECRET});
+ assert.equal(response.status,200);assert.equal(response.headers.get('cache-control'),'no-store');assert.equal(response.headers.get('set-cookie'),null);
+ assert.deepEqual(await response.json(),{reviewer_login_enabled:false});
+ assert.equal(f.outbox.length,0);assert.equal(f.trace.length,0);assert.equal(f.logs.length,0);
+ if(typeof value==='string'&&value)assert.ok(!f.responses.some(line=>line.includes(value)),'operator status echoed the invalid binding');
+});
+
+test('authorized operator status accepts only GET and never falls through to staging',async t=>{
+ const f=fixture(t),response=await f.status({authorization:'Bearer '+f.env.DAILY_POST_OPERATOR_SECRET},'POST');
+ assert.equal(response.status,405);assert.equal(response.headers.get('allow'),'GET');assert.equal(response.headers.get('cache-control'),'no-store');
 });
