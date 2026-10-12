@@ -60,7 +60,7 @@
 <!-- fonts:end -->
 <!-- ?v= is content-hash stamped by scripts/stamp_assets.mjs (npm run deploy),
      which is what lets _headers serve these two immutable. -->
-<link rel="stylesheet" href="/style.css?v=202bc635f4">
+<link rel="stylesheet" href="/style.css?v=fff5599599">
 <link rel="stylesheet" href="/ui-controls.css?v=1956263368">
 <link rel="stylesheet" href="/ui-source.css?v=5d21085448">
 <link rel="stylesheet" href="/voice.css?v=19eea6fcdc">
@@ -682,7 +682,16 @@
       <div id="money-fineprint" class="money-source"></div>
     </section>
 
-    <section id="panel-money-records" class="panel" hidden aria-label="Money records"><div data-money-navigation></div><h1 class="visually-hidden" id="money-records-title">Political receipts</h1><div id="money-records-body"></div></section>
+    <section id="panel-money-records" class="panel" hidden aria-label="Money records">
+      <div data-money-navigation></div>
+      <!-- The index's title (receipts or grants); a recipient file or a month's
+           largest awards brings its own and hides this one (app.js). -->
+      <div class="ui-page-head money-records-head" id="money-records-head">
+        <h1 id="money-records-title" tabindex="-1">Political receipts</h1>
+        <p class="ui-page-meta" id="money-records-meta"></p>
+      </div>
+      <div id="money-records-body"></div>
+    </section>
     <!-- ========================= CONNECTIONS ========================== -->
     <!-- Organisations, programs and places named across the collected records.
          connections.js mounts into #connections-body when the route opens and
@@ -2100,10 +2109,10 @@
 <!-- defer: never block the parser (Lighthouse counted this as render-blocking).
      Deferred scripts still run before DOMContentLoaded, so nothing changes for
      app.js's boot. ?v= is content-hash stamped by scripts/stamp_assets.mjs. -->
-<script src="/spa-shell.js?v=fb1dcc3cc0" defer></script>
+<script src="/spa-shell.js?v=74c39c624b" defer></script>
 <script src="/navigation.js?v=f86ae6aef6" defer></script>
 <script src="/quick-search.js?v=27eac3b2f7" defer></script>
 <script src="/ui-source.js?v=5e7b751ca0" defer></script>
-<script src="/app.js?v=5a62834a37" defer></script>
+<script src="/app.js?v=2fe25c58fd" defer></script>
 </body>
 </html>

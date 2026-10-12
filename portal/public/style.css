@@ -5084,7 +5084,6 @@ a.bill-division-q:hover { color: var(--bronze-ink); }
 .home-parliaments #front-statemap { max-width: 600px; height: 330px; margin: auto; }
 .home-map-industries { margin-top: var(--sp-12); }
 .drawer-primary { min-height: 52px; padding: var(--space-heading); border-bottom: var(--border-hairline) solid var(--divider-subtle); font: var(--type-control); }
-#money-records-body .lg-root { margin-top: var(--sp-24); }
 #panel-money .money-map-root { min-height: 560px; }
 @media (min-width: 1440px) { .masthead-nav { min-width: max-content; } .mast-search { min-width: 180px; } }
 @media (max-width: 700px) {
@@ -5273,7 +5272,7 @@ a.bill-division-q:hover { color: var(--bronze-ink); }
 .connections-page { min-width: 0; }
 /* A hub page's controls open straight under its head: the head's section
    step is the air between them. */
-.connections-head + .ui-filter-bar { margin-top: 0; }
+:is(.connections-head, .money-records-head) + .ui-filter-bar { margin-top: 0; }
 .connections-layout { display: grid; grid-template-columns: minmax(calc(var(--size-control) * 5), 1fr) minmax(0, 2fr); gap: var(--space-group); align-items: start; margin-top: var(--space-heading); }
 .connection-choice { display: grid; gap: var(--space-line); width: 100%; min-height: var(--size-target); margin: 0; padding: 0; border: 0; background: none; color: inherit; text-align: left; cursor: pointer; }
 .connection-choice .ui-row-meta { margin: 0; }

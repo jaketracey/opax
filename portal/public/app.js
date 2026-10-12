@@ -1350,11 +1350,14 @@ async function openMoneyRecords(kind, params) {
   const generation = ++moneyRecordsGeneration;
   moneyRecordsHandle?.destroy(); moneyRecordsHandle = null;
   const grants = kind === 'grants';
-  $('money-records-title').hidden = false;
+  $('money-records-head').hidden = false;
   $('money-records-title').textContent = grants ? 'Government grants' : 'Political receipts';
+  $('money-records-meta').textContent = grants
+    ? 'Published grant awards by recipient, program and electorate, checked against the donor registers'
+    : 'Disclosed receipts, payer by payer, from federal and state returns';
   const body = $('money-records-body'); body.innerHTML = '<p class="status">Loading the records…</p>';
   try {
-    const mod = await import(grants ? '/grants.js?v=bf7c17477c' : '/ledger.js?v=5644afe6e0');
+    const mod = await import(grants ? '/grants.js?v=dc11812995' : '/ledger.js?v=3b1dd49218');
     if (generation !== moneyRecordsGeneration) return;
     body.replaceChildren();
     // Both modules report their shareable state (open file, filters) so the
@@ -1378,11 +1381,11 @@ async function openMoneyRecords(kind, params) {
 async function openGrantRecipient(jurisdiction, id, manageFocus) {
   const generation = ++moneyRecordsGeneration;
   moneyRecordsHandle?.destroy(); moneyRecordsHandle = null;
-  $('money-records-title').hidden = true;
+  $('money-records-head').hidden = true;
   const body = $('money-records-body');
   body.innerHTML = '<div class="grant-recipient-page" aria-busy="true"><p class="visually-hidden" role="status">Loading recipient records</p><div class="answer-skeleton grant-recipient-skeleton" aria-hidden="true"><i style="width:62%;height:2.75rem"></i><i style="width:38%"></i><i style="width:100%;height:6rem"></i><i style="width:84%"></i><i style="width:96%"></i><i style="width:74%"></i></div></div>';
   try {
-    const mod = await import('/grant-recipient.js?v=8abe507dc5');
+    const mod = await import('/grant-recipient.js?v=e930e07c12');
     if (generation !== moneyRecordsGeneration) return;
     moneyRecordsHandle = mod.mountGrantRecipient(body, { jurisdiction, id, manageFocus,
       onTitle(name) {
@@ -1399,7 +1402,7 @@ async function openGrantRecipient(jurisdiction, id, manageFocus) {
 async function openLargestGrants(month, manageFocus) {
   const generation = ++moneyRecordsGeneration;
   moneyRecordsHandle?.destroy(); moneyRecordsHandle = null;
-  $('money-records-title').hidden = true;
+  $('money-records-head').hidden = true;
   const body = $('money-records-body');
   try {
     const mod = await import('/grants-largest.js?v=largest-20260929b');
@@ -1875,7 +1878,7 @@ function route() {
       document.title = 'Grant recipient · OPAX';
       setCrumbs([{ label: 'Money', href: '/money' }, { label: 'Government grants', href: '/money/grants' }, { label: 'Recipient' }]);
       if (hasEntityId(id)) openGrantRecipient(jurisdiction, id, manageFocus);
-      else $("money-records-body").textContent = "Recipient not recorded.";
+      else { $("money-records-head").hidden = true; $("money-records-body").textContent = "Recipient not recorded."; }
     } else if (segs[1] === 'grants' && /^\d{4}-\d{2}$/.test(params.get('largest') || '')) {
       // /money/grants?jur=federal&largest=2026-08: the month's largest awards (the daily edition links here).
       document.title = 'Largest grants · OPAX';
@@ -8965,8 +8968,8 @@ const GAMES = {
   tm: { name: "Time machine", dialog: "dialog-tm", body: "explore-tm", module: "/timemachine.js?v=8e86f26747", mount: "mountTimeMachine" },
   tide: { name: "The tide", dialog: "dialog-tide", body: "explore-tide", module: "/tide.js", mount: "mountTide" },
   quiz: { name: "The record quiz", dialog: "dialog-quiz", body: "explore-quiz", module: "/quiz.js?v=e157a21ae1", mount: "mountQuiz" },
-  ledger: { name: "The ledger", dialog: "dialog-ledger", body: "explore-ledger", module: "/ledger.js?v=5644afe6e0", mount: "mountLedger" },
-  grants: { name: "Who gets the grants", dialog: "dialog-grants", body: "explore-grants", module: "/grants.js?v=bf7c17477c", mount: "mountGrants" },
+  ledger: { name: "The ledger", dialog: "dialog-ledger", body: "explore-ledger", module: "/ledger.js?v=3b1dd49218", mount: "mountLedger" },
+  grants: { name: "Who gets the grants", dialog: "dialog-grants", body: "explore-grants", module: "/grants.js?v=dc11812995", mount: "mountGrants" },
   matrix: { name: "Who owns which debate", dialog: "dialog-matrix", body: "explore-matrix", module: "/matrix.js?v=25f5793db5", mount: "mountMatrix" },
   wd: { name: "Words per dollar", dialog: "dialog-wd", body: "explore-wd", module: "/wordsdollars.js?v=9e390529d6", mount: "mountWordsDollars" },
   tvn: { name: "Then vs now", dialog: "dialog-tvn", body: "explore-tvn", module: "/thenvsnow.js?v=de2fe807c7", mount: "mountThenVsNow" },
