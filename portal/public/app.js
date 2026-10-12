@@ -1473,10 +1473,10 @@ async function mountMoney(jurParam, industry, params = new URLSearchParams()) {
   if (moneyMapHandle) { moneyMapHandle.destroy(); moneyMapHandle = null; moneyMapJur = null; }
   const root = $("money-map-root");
   root.classList.remove("show-key");
-  root.innerHTML = `<p class="status" style="margin:0;padding:1rem 1.25rem">Loading the map…</p>`;
+  root.innerHTML = `<p class="ui-status-line money-map-status" role="status">Loading the map…</p>`;
   const cfg = MONEY_JURISDICTIONS[jur];
   try {
-    const [{ mountMoneyMap }, data, journeysModule, researchModule, recordsModule] = await Promise.all([import("/money-map.js?v=ca923f4f2e"), loadMoneyFile(jur), import("/money-journeys.js?v=mobile-picker-20260908"), import("/map-research.js?v=d4a14d9676"), import("/money-records.js?v=ia-ux-20260908-2")]);
+    const [{ mountMoneyMap }, data, journeysModule, researchModule, recordsModule] = await Promise.all([import("/money-map.js?v=ca923f4f2e"), loadMoneyFile(jur), import("/money-journeys.js?v=wds-money-20261012"), import("/map-research.js?v=cb6307c6fe"), import("/money-records.js?v=ia-ux-20260908-2")]);
     if (moneyMapLoading !== jur || generation !== moneyMapGeneration) return; // switched again while loading
     const fine = $("money-fineprint");
     if (fine) fine.innerHTML = moneyFineprintHTML(jur, data?.meta);
@@ -1505,7 +1505,7 @@ async function mountMoney(jurParam, industry, params = new URLSearchParams()) {
     if (legend) {
       legend.id = 'money-map-key';
       const key = document.createElement('button');
-      key.type = 'button'; key.className = 'mm-key-toggle'; key.textContent = 'Map key';
+      key.type = 'button'; key.className = 'ui-button mm-key-toggle'; key.dataset.uiSize = 'compact'; key.textContent = 'Map key';
       key.setAttribute('aria-expanded', 'false'); key.setAttribute('aria-controls', legend.id);
       legend.inert = true;
       const toggleKey = (open) => {
@@ -1530,8 +1530,8 @@ async function mountMoney(jurParam, industry, params = new URLSearchParams()) {
     if (moneyMapLoading !== jur || generation !== moneyMapGeneration) return;
     root.textContent = "";
     const p = document.createElement("p");
-    p.className = "status error";
-    p.style.cssText = "margin:0;padding:1rem 1.25rem";
+    p.className = "ui-empty money-map-status";
+    p.dataset.variant = "error";
     // A plain sentence and a retry, never the raw message (state rules).
     p.textContent = "The map could not load just now. ";
     const a = document.createElement("a");
@@ -1651,7 +1651,7 @@ async function openConnectionsPage(params, manageFocus) {
   if (status) status.textContent = "Opening the records…";
   if (manageFocus) $("connections-title")?.focus({ preventScroll: true });
   try {
-    const module = await import("/connections.js");
+    const module = await import("/connections.js?v=wds-money-20261012");
     if (generation !== connectionsGeneration) return;
     connectionsPage = module.mountConnections($("connections-body"), {
       params,

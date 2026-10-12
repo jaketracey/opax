@@ -60,9 +60,9 @@
 <!-- fonts:end -->
 <!-- ?v= is content-hash stamped by scripts/stamp_assets.mjs (npm run deploy),
      which is what lets _headers serve these two immutable. -->
-<link rel="stylesheet" href="/style.css?v=d62aa384d3">
-<link rel="stylesheet" href="/ui-controls.css?v=b23d3eeb3d">
-<link rel="stylesheet" href="/ui-source.css?v=8b74f1ee58">
+<link rel="stylesheet" href="/style.css?v=202bc635f4">
+<link rel="stylesheet" href="/ui-controls.css?v=1956263368">
+<link rel="stylesheet" href="/ui-source.css?v=5d21085448">
 <link rel="stylesheet" href="/voice.css?v=19eea6fcdc">
 <!-- labels.js: app.js imports it before its first render. -->
 <link rel="modulepreload" href="/labels.js?v=c6bf994ef7">
@@ -656,10 +656,13 @@
     </section>
 
     <!-- ============================ MONEY MAP ========================== -->
-    <section id="panel-money" class="panel" hidden aria-label="Money map">
-      <h1 class="visually-hidden">3D connections</h1>
+    <section id="panel-money" class="panel" hidden aria-labelledby="money-title">
       <div data-money-navigation></div>
-      <div class="money-workspace-toolbar">
+      <div class="ui-page-head money-head">
+        <h1 id="money-title" tabindex="-1">Money map</h1>
+        <p class="ui-page-meta">Political donations, government contracts and grants, drawn as one map</p>
+      </div>
+      <div class="money-workspace-toolbar" data-ui-size="compact">
         <div id="money-jur"></div>
         <details id="money-journey-picker" class="journey-menu" name="money-tools"><summary>Journeys</summary><div id="money-journey-controls"></div></details>
         <div id="money-research"></div>
@@ -672,7 +675,7 @@
       </div>
       <div id="money-stage" class="money-stage">
         <aside id="money-journey-story" class="journey-story" aria-label="Guided journey" hidden></aside>
-        <div id="money-map-root" class="money-map-root"></div>
+        <div id="money-map-root" class="money-map-root ui-plate"></div>
       </div>
       <div id="money-research-results"></div>
       <!-- The map's one source line (moneyFineprintHTML in app.js). -->
@@ -687,16 +690,18 @@
     <section id="panel-connections" class="panel" hidden aria-labelledby="connections-title">
       <div data-money-navigation></div>
       <div id="connections-body" class="supplier-page connections-page">
-        <!-- The Money sub-nav tab "Programs &amp; places" already names this view; the heading stays for assistive tech, the page title and focus on arrival. -->
-        <h1 id="connections-title" class="visually-hidden" tabindex="-1">Connections in the record</h1>
-        <p class="connections-lede">Explore organisations, programs and places across speeches, official releases and grant records.</p>
-        <div class="ui-toolbar">
-          <label class="ui-field">Find a connection<input class="ui-input" id="connection-search" type="search" placeholder="Name, program or electorate" autocomplete="off"></label>
-          <label class="ui-field">Show<select class="ui-input" id="connection-kind"><option value="">Everything</option><option value="organisation">Organisations</option><option value="program">Programs</option><option value="electorate">Electorates</option><option value="place">Places</option></select></label>
+        <!-- The Money sub-nav tab "Programs &amp; places" names the view; the title says what it holds. -->
+        <div class="ui-page-head connections-head">
+          <h1 id="connections-title" tabindex="-1">Connections in the record</h1>
+          <p class="ui-lede">Explore organisations, programs and places across speeches, official releases and grant records.</p>
         </div>
-        <p id="connection-status" role="status">Opening the records…</p>
+        <div class="ui-filter-bar" data-ui-size="compact">
+          <label class="ui-filter-search"><span class="visually-hidden">Find a connection</span><input class="ui-input" id="connection-search" type="search" placeholder="Find a name, program or electorate" autocomplete="off"></label>
+          <label class="ui-filter-field"><span class="visually-hidden">Show</span><select class="ui-input" id="connection-kind"><option value="">Everything</option><option value="organisation">Organisations</option><option value="program">Programs</option><option value="electorate">Electorates</option><option value="place">Places</option></select></label>
+        </div>
+        <p id="connection-status" class="ui-filter-count" role="status">Opening the records…</p>
         <div class="connections-layout">
-          <div id="connection-list"></div>
+          <ul id="connection-list" class="ui-list" aria-label="Connections"></ul>
           <section id="connection-detail" tabindex="-1" aria-label="Selected connection" hidden></section>
         </div>
       </div>
@@ -2095,10 +2100,10 @@
 <!-- defer: never block the parser (Lighthouse counted this as render-blocking).
      Deferred scripts still run before DOMContentLoaded, so nothing changes for
      app.js's boot. ?v= is content-hash stamped by scripts/stamp_assets.mjs. -->
-<script src="/spa-shell.js?v=e422e996a5" defer></script>
+<script src="/spa-shell.js?v=fb1dcc3cc0" defer></script>
 <script src="/navigation.js?v=f86ae6aef6" defer></script>
 <script src="/quick-search.js?v=27eac3b2f7" defer></script>
 <script src="/ui-source.js?v=5e7b751ca0" defer></script>
-<script src="/app.js?v=fcac2cb4af" defer></script>
+<script src="/app.js?v=5a62834a37" defer></script>
 </body>
 </html>

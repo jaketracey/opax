@@ -505,6 +505,26 @@ a.visually-hidden:focus-visible {
 .ui-kv dt { font: var(--type-label); color: var(--ink-soft); }
 .ui-kv dd { margin: 0; font: var(--type-body); color: var(--ink); overflow-wrap: anywhere; }
 
+/* ---- Table: a static data table (the money hub's receipts, grants and map
+   list). The header in the label role over the one rule; rows a subtle
+   hairline apart; figures right-aligned and tabular (.ui-num). A sortable
+   header is a full-width button in the th. Feature CSS adds only widths and
+   a sticky header inside its own scroller. */
+.ui-table { width: 100%; border-collapse: collapse; font: var(--type-metadata); color: var(--ink); }
+.ui-table > caption { padding: 0 0 var(--space-tight); font: var(--type-strong); color: var(--ink); text-align: start; }
+.ui-table th { padding: var(--space-tight) var(--space-row); border-bottom: var(--border-hairline) solid var(--divider-default); font: var(--type-label); color: var(--ink-soft); text-align: start; vertical-align: bottom; white-space: nowrap; }
+.ui-table td { padding: var(--space-row); border-bottom: var(--border-hairline) solid var(--divider-subtle); vertical-align: baseline; }
+.ui-table tbody tr:last-child > td { border-bottom: 0; }
+.ui-table :is(th, td).ui-num { text-align: end; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.ui-table th:has(> button) { padding: 0; }
+.ui-table th > button {
+  appearance: none; display: flex; align-items: baseline; gap: var(--space-line); width: 100%; min-height: var(--size-target); box-sizing: border-box;
+  margin: 0; padding: var(--space-tight) var(--space-row); border: 0; background: none; font: inherit; color: inherit; text-align: inherit; cursor: pointer;
+}
+.ui-table th.ui-num > button { justify-content: flex-end; }
+.ui-table th > button:hover, .ui-table th[aria-sort] > button { color: var(--ink); }
+.ui-table th > button:focus-visible { outline: var(--border-focus) solid var(--bronze-ink); outline-offset: calc(-1 * var(--border-focus)); }
+
 /* ---- States: empty and error are a sentence (and a way on); loading is a
    still skeleton; a status line is fine print that says what is happening. */
 .ui-empty { margin: var(--space-block) 0 0; max-width: var(--size-readable); font: var(--type-body); color: var(--ink-soft); }
@@ -1632,27 +1652,9 @@ button.link.result-title:hover { color: var(--bronze-ink); }
 
 /* ---- money map ---------------------------------------------------------- */
 
-.money-map-root {
-  position: relative;
-  height: min(72vh, 720px);
-  min-height: 440px;
-  border: var(--border-hairline) solid var(--divider-subtle);
-  border-radius: var(--radius-sm);
-  overflow: hidden;
-  background: var(--paper-raised);
-}
-
-/* Jurisdiction switch above the map: one hairline segmented control, the
-   loaded file in navy. One file per jurisdiction, never summed. */
-.money-jur { display: inline-flex; border: var(--border-hairline) solid var(--line-control); border-radius: var(--radius-sm); overflow: hidden; }
-.money-jur button {
-  font: var(--type-label); color: var(--ink-soft); cursor: pointer;
-  background: var(--paper-raised); border: 0; padding: var(--sp-8) var(--sp-16); min-height: 44px;
-}
-.money-jur button + button { border-left: var(--border-hairline) solid var(--line-control); }
-.money-jur button:hover { background: var(--bronze-wash); color: var(--ink); }
-.money-jur button[aria-pressed="true"] { background: var(--navy); color: var(--on-navy); }
-.money-jur button:focus-visible { outline: var(--border-focus) solid var(--bronze-ink); outline-offset: -2px; }
+/* The map's frame is the shared plate (.ui-plate in index.html); this keeps
+   its height. One file per jurisdiction, never summed (#money-jur). */
+.money-map-root { height: min(72vh, 720px); min-height: 440px; }
 
 .search-results-grid { display: grid; grid-template-columns: 1fr; gap: var(--sp-24) var(--sp-40); align-items: start; margin-top: var(--sp-20); }
 /* A compact overview leads the matching records on every screen size. */
@@ -4832,52 +4834,40 @@ a.bill-division-q:hover { color: var(--bronze-ink); }
 .supplier-money-map > p { padding: var(--sp-16); }
 .supplier-section > .subject-section-title { margin: 0 0 var(--sp-12); }
 
-/* Guided money-map journeys: a short reading rail alongside the 3D scene. */
-.journey-lenses { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--sp-8); margin-bottom: var(--sp-16); }
-.journey-lenses button { text-align: left; border: var(--border-hairline) solid var(--divider-subtle); background: var(--paper-raised); color: var(--ink); border-radius: var(--radius-sm); padding: var(--sp-12) var(--sp-16); cursor: pointer; min-height: 76px; }
-.journey-lenses button span { display: block; font: var(--weight-strong) var(--text-15)/var(--leading-normal) var(--sans); }
-.journey-lenses button small { display: block; font: var(--type-fine); color: var(--ink-soft); margin-top: var(--sp-4); }
-.journey-lenses button:hover { border-color: var(--navy); }
-.journey-lenses button[aria-pressed="true"] { background: var(--navy); color: white; border-color: var(--navy); }
-.journey-lenses button[aria-pressed="true"] small { color: var(--on-navy-soft); }
+/* Guided money-map journeys: a short reading rail joined to the map's plate
+   (raised, one hairline, the plate's radius on its outer corners). */
 .money-stage { display: grid; grid-template-columns: minmax(0, 1fr); align-items: stretch; }
 .money-stage.has-journey { grid-template-columns: minmax(260px, 300px) minmax(0, 1fr); }
-.journey-story { padding: var(--sp-24); background: var(--paper-raised); border: var(--border-hairline) solid var(--divider-subtle); border-right: 0; border-radius: var(--radius-sm) 0 0 var(--radius-sm); display: flex; flex-direction: column; min-width: 0; }
+.journey-story { display: flex; flex-direction: column; min-width: 0; padding: var(--space-block); background: var(--paper-raised); border: var(--border-hairline) solid var(--divider-subtle); border-right: 0; border-radius: var(--radius-md) 0 0 var(--radius-md); }
+.money-stage.has-journey > .money-map-root { border-top-left-radius: 0; border-bottom-left-radius: 0; }
 .journey-story[hidden] { display: none; }
-.journey-story-top { display: flex; align-items: center; justify-content: space-between; gap: var(--sp-12); color: var(--ink-soft); font: var(--type-label); }
-.journey-story-top button { background: none; border: 0; cursor: pointer; font-size: var(--text-24); color: var(--ink-soft); width: 44px; height: 44px; border-radius: var(--radius-sm); }
-.journey-steps { display: flex; gap: var(--sp-12); margin: var(--sp-16) 0 var(--sp-24); }
-.journey-steps button { width: 36px; height: 36px; border: var(--border-hairline) solid var(--line-control); border-radius: var(--radius-round); background: transparent; color: var(--ink-soft); cursor: pointer; font: var(--type-label); }
-.journey-steps button[aria-current="step"] { color: white; background: var(--navy); border-color: var(--navy); }
-.journey-narrative h3 { font: 700 clamp(1.4rem, 2vw, 1.8rem)/1.2 var(--serif); margin: 0 0 var(--sp-16); color: var(--navy); overflow-wrap: anywhere; }
-.journey-metric { border-left: 3px solid var(--bronze); padding-left: var(--sp-12); margin: var(--sp-24) 0; }
-.journey-metric strong { display: block; font: var(--type-display); color: var(--navy); }
-.journey-metric span { display: block; font-size: var(--text-13); margin-top: var(--sp-8); color: var(--ink-soft); }
-.journey-source-links { display: grid; gap: var(--sp-12); font-size: var(--text-13); margin: var(--sp-16) 0 var(--sp-24); }
+.journey-story-top { display: flex; align-items: center; justify-content: space-between; gap: var(--space-row); color: var(--ink-soft); font: var(--type-label); }
+.journey-story-top .ui-icon-button { flex: none; font: var(--weight-regular) var(--text-24)/var(--leading-tight) var(--sans); }
+.journey-steps { display: flex; gap: var(--space-tight); margin: var(--space-heading) 0 var(--space-block); }
+.journey-steps button { width: var(--size-target); height: var(--size-target); border: var(--border-hairline) solid var(--line-control); border-radius: var(--radius-pill); background: transparent; color: var(--ink-soft); font: var(--type-label); cursor: pointer; }
+.journey-steps button:hover { color: var(--ink); background: var(--navy-wash); border-color: transparent; }
+.journey-steps button[aria-current="step"] { color: var(--on-navy); background: var(--navy); border-color: var(--navy); }
+.journey-narrative h3 { margin: 0 0 var(--space-heading); font: var(--type-heading); color: var(--ink); overflow-wrap: anywhere; }
+.journey-narrative p { margin: 0; }
+.journey-metric { margin: var(--space-block) 0; }
+.journey-source-links { display: grid; gap: var(--space-row); margin: var(--space-heading) 0 var(--space-block); font: var(--type-fine); }
 .journey-source-links a { width: fit-content; }
-.journey-playback { display: grid; grid-template-columns: 44px minmax(0, 1fr) 44px; gap: var(--sp-12); margin-top: auto; }
-.journey-playback button { min-height: 44px; padding: var(--sp-8); border: var(--border-hairline) solid var(--line-control); border-radius: var(--radius-sm); background: var(--paper); color: var(--navy); font: var(--type-label); cursor: pointer; }
-.journey-playback [data-action="play"] { background: var(--navy); color: white; border-color: var(--navy); }
-.journey-playback button:disabled { opacity: .45; cursor: default; }
-.journey-progress { height: 3px; background: var(--divider-subtle); margin-top: var(--sp-12); overflow: hidden; }
-.journey-progress span { display: block; width: 100%; height: 100%; background: var(--bronze); transform-origin: left; animation: journey-progress 7s linear; }
-.journey-help { color: var(--ink-soft); font: var(--type-fine); margin: var(--sp-8) 0 0; min-height: 2.1rem; }
-.journey-lenses button:focus-visible, .journey-story button:focus-visible { outline: 3px solid var(--bronze); outline-offset: 3px; }
+.journey-playback { display: grid; grid-template-columns: var(--size-target) minmax(0, 1fr) var(--size-target); gap: var(--space-tight); margin-top: auto; }
+.journey-progress { height: var(--sp-4); margin-top: var(--space-row); overflow: hidden; border-radius: var(--radius-pill); background: var(--chart-baseline); }
+.journey-progress span { display: block; width: 100%; height: 100%; background: var(--chart-mark); transform-origin: left; animation: journey-progress 7s linear; }
+.journey-help { color: var(--ink-soft); font: var(--type-fine); margin: var(--space-tight) 0 0; min-height: 2.1rem; }
 @keyframes journey-progress { from { transform: scaleX(0); } to { transform: scaleX(1); } }
-@media (max-width: 1000px) { .journey-lenses { grid-template-columns: repeat(2, minmax(0, 1fr)); } .money-stage.has-journey { grid-template-columns: 250px minmax(0, 1fr); } }
+@media (max-width: 1000px) { .money-stage.has-journey { grid-template-columns: 250px minmax(0, 1fr); } }
 @media (max-width: 700px) {
-    .journey-lenses { gap: var(--sp-8); }
-  .journey-lenses button { padding: var(--sp-12); min-height: 70px; }
-  .journey-lenses button small { font-size: var(--text-13); }
   .money-stage.has-journey { grid-template-columns: minmax(0, 1fr); }
-  .journey-story { border-right: var(--border-hairline) solid var(--divider-subtle); border-bottom: 0; border-radius: var(--radius-sm) var(--radius-sm) 0 0; padding: var(--sp-16); }
-  .journey-story-top { margin-bottom: var(--sp-8); }
-  .journey-steps { margin: 0 0 var(--sp-12); }
-  .journey-narrative h3 { font-size: var(--text-24); margin-bottom: var(--sp-8); }
-    .journey-metric { margin: var(--sp-12) 0; display: flex; align-items: baseline; gap: var(--sp-8); }
-  .journey-metric strong { font-size: var(--text-24); }
-  .journey-source-links { margin: var(--sp-12) 0; }
-  .journey-help { min-height: 0; }
+  .journey-story { position: relative; padding: var(--space-heading); border-right: var(--border-hairline) solid var(--divider-subtle); border-bottom: 0; border-radius: var(--radius-md) var(--radius-md) 0 0; }
+  .money-stage.has-journey > .money-map-root { border-radius: 0 0 var(--radius-md) var(--radius-md); }
+  .journey-story-top { margin-bottom: var(--space-tight); }
+  .journey-steps { margin: 0 0 var(--space-heading); }
+  .journey-narrative h3 { margin-bottom: var(--space-tight); font: var(--type-subheading); }
+  .journey-metric { margin: var(--space-row) 0; }
+  .journey-source-links { margin: var(--space-row) 0; }
+  .journey-help { min-height: 0; margin-top: var(--space-row); }
   .money-stage.has-journey .money-map-root { height: 45vh; height: 45svh; min-height: 330px; }
 }
 @media (prefers-reduced-motion: reduce) { .journey-progress span { animation: none; } }
@@ -4887,40 +4877,30 @@ a.bill-division-q:hover { color: var(--bronze-ink); }
 .money-stage.has-journey .mm-legend, .money-stage.has-journey .mm-find { display: none; }
 .money-stage.has-journey .mm-scrub { display: none; }
 @media (max-width: 700px) {
-  .journey-story { position: relative; padding: var(--sp-16); }
-  .journey-story-top { position: absolute; right: .3rem; top: .25rem; margin: 0; }
+  .journey-story-top { position: absolute; right: var(--space-line); top: var(--space-line); margin: 0; }
   .journey-story-top > span { display: none; }
-  .journey-steps { margin: 0 0 var(--sp-16); }
-  .journey-steps button { width: 44px; height: 44px; }
-  .journey-narrative h3 { font-size: var(--text-17); }
-    .journey-source-links { font-size: var(--text-13); margin: var(--sp-12) 0; }
-  .journey-help { font-size: var(--text-13); margin-top: var(--sp-12); }
 }
 #money-stage.has-journey .mm-scrub { display: none; }
 #money-stage.has-journey .rp-map3d-label { max-width: 210px; overflow: hidden; text-overflow: ellipsis; }
 @media (max-width: 700px) { #money-stage.has-journey .rp-map3d-label { max-width: 160px; } }
 
 /* A guided lens starts with the reader's choice, not an editorial example. */
-.journey-selector { margin: var(--sp-12) 0 var(--sp-16); min-width: 0; }
-.journey-selector label { display: block; margin-bottom: var(--sp-8); color: var(--ink-soft); font: var(--type-label); }
-.journey-selector select { width: 100%; min-width: 0; min-height: 42px; padding: var(--sp-8) var(--sp-24) var(--sp-8) var(--sp-12); border: var(--border-hairline) solid var(--line-control); border-radius: var(--radius-sm); background: var(--paper); color: var(--navy); font: var(--type-label); text-overflow: ellipsis; }
-.journey-selector select:focus-visible { outline: 3px solid var(--bronze); outline-offset: 2px; }
-.journey-choice-empty h3 { margin: var(--sp-16) 0 var(--sp-12); font: var(--type-heading); color: var(--navy); }
-.journey-choice-empty > p { font-size: var(--text-13); line-height: var(--leading-body); }
-.journey-choice-empty .journey-help { margin-top: var(--sp-20); font-size: var(--text-13); }
-@media (max-width: 700px) { .journey-selector { margin-top: 0; padding-right: var(--sp-40); } .journey-choice-empty h3 { font-size: var(--text-17); } }
+.journey-selector { margin: var(--space-row) 0 var(--space-heading); min-width: 0; }
+.journey-selector label { display: block; margin-bottom: var(--space-tight); color: var(--ink-soft); font: var(--type-label); }
+.journey-choice-empty > p { font: var(--type-fine); }
+.journey-choice-empty .journey-help { margin-top: var(--space-block); }
 
 .journey-picker { position: relative; }
-.journey-picker-trigger { display:flex; align-items:center; justify-content:space-between; gap:var(--sp-8); width:100%; min-height:44px; padding:var(--sp-12) var(--sp-12); border:var(--border-hairline) solid var(--line-control); border-radius:var(--radius-md); background:white; color:var(--navy); font:var(--type-label); text-align:left; cursor:pointer; }
+.journey-picker-trigger { display:flex; align-items:center; justify-content:space-between; gap:var(--space-tight); width:100%; min-height:var(--size-target); padding:var(--space-tight) var(--space-row); border:var(--border-hairline) solid var(--line-control); border-radius:var(--radius-md); background:var(--paper-raised); color:var(--ink); font:var(--type-body); text-align:left; cursor:pointer; }
 .journey-picker-trigger span:first-child { overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
 .journey-picker-trigger[aria-expanded="true"] { border-color:var(--navy); }
-.journey-picker-panel { position:absolute; top:calc(100% + 6px); left:0; width:100%; min-width:min(260px, calc(100vw - 72px)); max-width:calc(100vw - 72px); z-index:30; padding:var(--sp-8); background:var(--paper-raised); border:var(--border-hairline) solid var(--divider-subtle); border-radius:var(--radius-md); box-shadow:var(--shadow-overlay); }
+.journey-picker-panel { position:absolute; top:calc(100% + var(--space-tight)); left:0; width:100%; min-width:min(260px, calc(100vw - 72px)); max-width:calc(100vw - 72px); z-index:30; padding:var(--sp-8); background:var(--paper-raised); border:var(--border-hairline) solid var(--divider-subtle); border-radius:var(--radius-md); box-shadow:var(--shadow-overlay); }
 .journey-picker-panel[hidden] { display:none; }
-.journey-picker-search { width:100%; min-width:0; box-sizing:border-box; min-height:42px; border:var(--border-hairline) solid var(--line-control); border-radius:var(--radius-sm); padding:var(--sp-12); background:var(--paper); color:var(--navy); font:var(--type-fine); }
+.journey-picker-search { width:100%; min-width:0; box-sizing:border-box; min-height:var(--size-target); border:var(--border-hairline) solid var(--line-control); border-radius:var(--radius-md); padding:var(--space-tight) var(--space-row); background:var(--paper-raised); color:var(--ink); font:var(--type-body); }
 .journey-picker-results { max-height:250px; max-height:min(250px, 38dvh); overflow-y:auto; overscroll-behavior:contain; margin-top:var(--sp-8); }
-.journey-picker-option { min-height:44px; display:flex; align-items:center; justify-content:space-between; gap:var(--sp-8); width:100%; padding:var(--sp-12) var(--sp-8); text-align:left; border:0; border-radius:var(--radius-sm); background:white; color:var(--navy); font:var(--type-fine); cursor:pointer; }
+.journey-picker-option { min-height:var(--size-target); display:flex; align-items:center; justify-content:space-between; gap:var(--space-tight); width:100%; padding:var(--space-tight); text-align:left; border:0; border-radius:var(--radius-sm); background:transparent; color:var(--ink); font:var(--type-metadata); cursor:pointer; }
 .journey-picker-option:hover,.journey-picker-option:focus-visible,.journey-picker-option[aria-current] { background:var(--navy-wash); }
-.journey-picker-option small { flex-shrink:0; font-size:var(--text-13); color:var(--ink-soft); background:var(--paper); border:var(--border-hairline) solid var(--divider-subtle); border-radius:var(--radius-sm); padding:var(--sp-2) var(--sp-4); }
+.journey-picker-option small { flex-shrink:0; font:var(--type-label); color:var(--status-ended-ink); background:var(--status-ended-wash); border-radius:var(--radius-sm); padding:var(--sp-2) var(--sp-8); }
 .journey-picker-count { margin:var(--sp-8) var(--sp-8) var(--sp-2); color:var(--ink-soft); font:var(--type-fine); }
 .journey-picker button:focus-visible,.journey-picker input:focus-visible { outline:var(--border-focus) solid var(--bronze); outline-offset:1px; }
 
@@ -4938,8 +4918,8 @@ a.bill-division-q:hover { color: var(--bronze-ink); }
 .journey-connections li + li { margin-top:var(--sp-16); }
 .journey-connection-label { display:flex; align-items:baseline; justify-content:space-between; gap:var(--sp-8); margin-bottom:var(--sp-8); color:var(--navy); font:var(--type-fine); }
 .journey-connection-label strong { flex-shrink:0; font-weight:var(--weight-strong); font-variant-numeric:tabular-nums; }
-.journey-connection-track { height:8px; background:var(--chart-baseline); border-radius:var(--radius-sm); overflow:hidden; }
-.journey-connection-track > span { display:block; height:100%; background:var(--chart-mark); border-radius:var(--radius-sm); }
+.journey-connection-track { height:var(--sp-4); background:var(--chart-baseline); border-radius:var(--radius-pill); overflow:hidden; }
+.journey-connection-track > span { display:block; height:100%; background:var(--chart-mark); border-radius:inherit; }
 
 .doc-reading-layout { display:grid; grid-template-columns:minmax(0,1fr); align-items:start; gap:var(--sp-40); }
 .doc-reading-layout > * { min-width:0; }
@@ -4954,7 +4934,7 @@ a.bill-division-q:hover { color: var(--bronze-ink); }
   .doc-reading-layout > #doc-text { grid-column:1; grid-row:1; }
 }
 .journey-party-link { display:inline-flex; align-items:baseline; gap:var(--sp-8); color:inherit; text-decoration:underline; text-decoration-color:var(--line-control); text-underline-offset:3px; }
-.journey-party-link i { display:inline-block; flex:0 0 8px; width:8px; height:8px; border-radius:var(--radius-round); align-self:center; }
+.journey-party-link i { display:inline-block; flex:0 0 var(--size-party-dot); width:var(--size-party-dot); height:var(--size-party-dot); border-radius:var(--radius-round); align-self:center; }
 .journey-party-link:hover { text-decoration-color:currentColor; }
 .journey-party-link:focus-visible { outline:var(--border-focus) solid var(--bronze); outline-offset:3px; border-radius:var(--radius-sm); }
 .journey-story-status { margin:var(--sp-12) 0 0; font:var(--type-fine); color:var(--ink-soft); }
@@ -4979,12 +4959,6 @@ a.bill-division-q:hover { color: var(--bronze-ink); }
   }
 }
 
-@media (max-width: 540px) {
-    .money-jur { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); width: 100%; }
-  .money-jur button { min-width: 0; padding: var(--sp-12); }
-  .money-jur button:nth-child(odd) { border-left: 0; }
-  .money-jur button:nth-child(n+3) { border-top: var(--border-hairline) solid var(--line-control); }
-}
 .search-brief-status:empty { display: none; }
 
 
@@ -5110,34 +5084,14 @@ a.bill-division-q:hover { color: var(--bronze-ink); }
 .home-parliaments #front-statemap { max-width: 600px; height: 330px; margin: auto; }
 .home-map-industries { margin-top: var(--sp-12); }
 .drawer-primary { min-height: 52px; padding: var(--space-heading); border-bottom: var(--border-hairline) solid var(--divider-subtle); font: var(--type-control); }
-.research-filters { border: var(--border-hairline) solid var(--divider-subtle); border-radius: var(--radius-md); padding: var(--space-heading) var(--space-block); margin: var(--space-block) 0; }
-.research-filters summary { cursor: pointer; font: var(--type-control); color: var(--navy); min-height: 32px; }
-.research-controls { display: grid; grid-template-columns: 1.5fr repeat(4,1fr) auto; gap: var(--sp-12); align-items: end; margin: var(--sp-12) 0; }
-.research-controls label { display: flex; flex-direction: column; gap: var(--space-line); font: var(--type-label); min-width: 0; color: var(--ink-soft); }
-.research-controls input, .research-controls select { min-height: 42px; width: 100%; border: var(--border-hairline) solid var(--line-control); border-radius: var(--radius-sm); padding: var(--space-tight); background: var(--paper-raised); color: var(--ink); font: var(--type-body); }
-.research-summary { display: flex; gap: var(--space-row) var(--space-group); flex-wrap: wrap; font: var(--type-metadata); margin: var(--space-block) 0; align-items: baseline; }
-.research-summary > span { color: var(--ink-soft); }
-.research-summary b { color: var(--ink); font-variant-numeric: tabular-nums; margin-left: var(--sp-8); }
-.research-summary .research-period { margin-left: auto; font: var(--type-fine); }
-.research-summary p { flex-basis: 100%; }
-.research-records { margin: var(--sp-20) 0 var(--sp-32); }
-.research-records table { width: 100%; text-align: left; border-collapse: collapse; font: var(--type-metadata); }
-.research-records td, .research-records th { padding: var(--space-heading); border-bottom: var(--border-hairline) solid var(--divider-subtle); }
-.research-records caption { text-align: left; font: var(--type-strong); padding-bottom: var(--space-block); }
-.research-records .text-link { background: none; border: 0; color: var(--bronze-ink); text-decoration: underline; cursor: pointer; font: inherit; min-height: 44px; }
 #money-records-body .lg-root { margin-top: var(--sp-24); }
 #panel-money .money-map-root { min-height: 560px; }
-#money-journey-controls { margin-top: var(--sp-24); }
 @media (min-width: 1440px) { .masthead-nav { min-width: max-content; } .mast-search { min-width: 180px; } }
-@media (max-width: 1050px) { .research-controls { grid-template-columns: repeat(3,1fr); } }
 @media (max-width: 700px) {
   .home-tasks { grid-template-columns: repeat(2,1fr); gap: var(--sp-16); margin: var(--sp-24) 0; }
   .home-map-stage #front-map-root { height: 460px; min-height: 460px; }
   .home-map-invite { grid-template-columns: minmax(0, 1fr); gap: var(--sp-12); }
   .home-map-journeys > a { padding: var(--sp-4) 0; min-height: 40px; }
-  .research-controls { grid-template-columns: repeat(2,minmax(0,1fr)); }
-  .research-controls label:first-child { grid-column: 1 / -1; }
-  .research-summary { gap: var(--sp-8) var(--sp-16); }
   .research-summary .research-period { margin-left: 0; flex-basis: 100%; }
   #panel-money .money-map-root { min-height: 480px; }
   .entry-modes, .area-nav { gap: var(--space-block); }
@@ -5147,47 +5101,90 @@ a.bill-division-q:hover { color: var(--bronze-ink); }
 .home-map-invite .home-map-open { margin-left: auto;  text-decoration: none; flex-shrink: 0; }
 @media(max-width:700px) { .home-map-invite .home-map-open { width: 100%; justify-content: center; margin-left: 0; } }
 
-/* The map leads. Research controls are opened only when needed: the
-   jurisdiction is a field (4px), the tools that open are pills (D1), and the
-   panels they open float with the one overlay shadow. */
-.money-workspace-toolbar { position: relative; display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-tight); margin: var(--space-tight) 0 var(--space-block); z-index: 12; }
+/* The map leads. Its tools are one row of compact pills (D1), 44 on touch
+   (data-ui-size="compact" on the toolbar): the jurisdiction a pill select,
+   Journeys and Filters pills that open a panel with the one overlay shadow,
+   List a secondary button, and ⋯ at the end of the row. */
+.money-workspace-toolbar { position: relative; z-index: 12; display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-tight); margin: 0 0 var(--space-block); }
 #money-research { display: contents; }
-.money-workspace-toolbar select { min-height: var(--size-target); padding: 0 var(--sp-32) 0 var(--space-heading); border: var(--border-hairline) solid var(--line-control); border-radius: var(--radius-sm); background-color: var(--paper-raised); color: var(--ink); font: var(--type-control); }
-.money-workspace-toolbar #money-jur select { appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16'%3E%3Cpath d='m4 6 4 4 4-4' fill='none' stroke='%2323271F' stroke-width='1.5'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right .8rem center; }
-.money-workspace-toolbar > details:not(.ui-more) > summary, .research-filters > summary {
-  display: inline-flex; align-items: center; gap: var(--space-tight); min-height: var(--size-target); padding: 0 var(--space-block);
-  border: var(--border-hairline) solid transparent; border-radius: var(--radius-pill); background: var(--navy-wash); color: var(--navy);
-  font: var(--type-control); cursor: pointer; list-style: none;
+.money-workspace-toolbar > #money-more { margin-left: auto; }
+.money-workspace-toolbar #money-jur select,
+.money-workspace-toolbar > details:not(.ui-more) > summary,
+.money-workspace-toolbar .research-filters > summary {
+  box-sizing: border-box; display: inline-flex; align-items: center; justify-content: space-between; gap: var(--space-tight);
+  min-height: var(--ui-height); margin: 0; padding: 0 var(--ui-pad); border: var(--border-hairline) solid transparent; border-radius: var(--radius-pill);
+  background-color: var(--ui-wash); color: var(--navy); font: var(--weight-strong) var(--ui-font)/var(--leading-snug) var(--sans);
+  list-style: none; cursor: pointer; transition: background-color var(--ui-motion), color var(--ui-motion);
 }
+.money-workspace-toolbar #money-jur select {
+  appearance: none; padding-right: calc(var(--ui-pad) + var(--size-icon-sm) + var(--space-tight));
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='m4 6 4 4 4-4' fill='none' stroke='%23142A43' stroke-width='1.5'/%3E%3C/svg%3E"); background-repeat: no-repeat;
+  background-position: right var(--ui-pad) center; background-size: var(--size-icon-sm) var(--size-icon-sm);
+}
+.money-workspace-toolbar #money-jur select:hover,
+.money-workspace-toolbar details:not(.ui-more, [open]) > summary:hover { background-color: var(--ui-wash-pressed); }
 .money-workspace-toolbar summary::-webkit-details-marker { display: none; }
-.money-workspace-toolbar > details:not(.ui-more) > summary::after, .research-filters > summary::after { content: ''; flex: 0 0 auto; width: 16px; height: 16px; background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16'%3E%3Cpath d='m4 6 4 4 4-4' fill='none' stroke='%23142A43' stroke-width='1.5'/%3E%3C/svg%3E") center / 16px 16px no-repeat; }
-.money-workspace-toolbar > details:not(.ui-more)[open] > summary, .research-filters[open] > summary { background: var(--navy); color: var(--on-navy); }
-.money-workspace-toolbar > details:not(.ui-more)[open] > summary::after, .research-filters[open] > summary::after { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16'%3E%3Cpath d='m4 10 4-4 4 4' fill='none' stroke='%23FFFFFF' stroke-width='1.5'/%3E%3C/svg%3E"); }
-.money-workspace-toolbar .research-filters { position: static; border: 0; padding: 0; margin: 0; }
-.research-filter-panel, #money-journey-controls { position: absolute; top: calc(100% + var(--space-tight)); left: 0; width: min(650px, 100%); padding: var(--space-block); background: var(--paper-raised); border: var(--border-hairline) solid var(--divider-subtle); border-radius: var(--radius-md); box-shadow: var(--shadow-overlay); margin: 0; box-sizing: border-box; }
-.research-filter-panel .research-controls { grid-template-columns: repeat(2, minmax(0, 1fr)); margin: 0 0 var(--space-tight); }
-.research-filter-panel .research-controls label:first-child { grid-column: 1/-1; }
-.research-filter-panel .fineprint { margin: var(--space-tight) 0 0; }
-#money-journey-controls { width: min(430px, 100%); }
-#money-journey-controls .journey-lenses { display: grid; grid-template-columns: 1fr; margin: 0; gap: var(--space-line); }
-#money-journey-controls .journey-lenses button { min-height: var(--size-target); border: 0; padding: var(--space-row); }
-#money-journey-controls .journey-lenses button small { display: none; }
-#money-research-results .research-records { margin-top: var(--space-block); }
-#money-research-results .research-summary { padding: var(--space-block) 0; margin: 0; }
-#money-research-results [data-export] { margin-bottom: var(--space-heading); }
+.money-workspace-toolbar details:not(.ui-more) > summary::after {
+  content: ''; flex: none; width: var(--size-icon-sm); height: var(--size-icon-sm);
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='m4 6 4 4 4-4' fill='none' stroke='%23142A43' stroke-width='1.5'/%3E%3C/svg%3E") center / var(--size-icon-sm) var(--size-icon-sm) no-repeat;
+}
+.money-workspace-toolbar details:not(.ui-more)[open] > summary { background-color: var(--navy); color: var(--on-navy); }
+.money-workspace-toolbar details:not(.ui-more)[open] > summary::after { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='m4 10 4-4 4 4' fill='none' stroke='%23FFFFFF' stroke-width='1.5'/%3E%3C/svg%3E"); }
+/* The panels the pills open: a sheet under the row, the one overlay shadow. */
+.research-filter-panel, #money-journey-controls {
+  position: absolute; top: calc(100% + var(--space-tight)); left: 0; box-sizing: border-box; width: min(calc(var(--size-control) * 13), 100%); margin: 0;
+  padding: var(--space-block); border: var(--border-hairline) solid var(--divider-subtle); border-radius: var(--radius-md);
+  background: var(--paper-raised); box-shadow: var(--shadow-overlay);
+}
+.research-filter-panel .research-controls { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-heading) var(--space-row); align-items: end; margin: 0; }
+.research-controls label { display: grid; gap: var(--space-line); min-width: 0; font: var(--type-label); color: var(--ink-soft); }
+.research-controls label:first-child { grid-column: 1 / -1; }
+.research-filter-panel .fineprint { margin: var(--space-heading) 0 0; }
+/* Journeys: one option row per journey, its line of description under it. */
+#money-journey-controls { width: min(calc(var(--size-control) * 9), 100%); padding: var(--space-tight); }
+.journey-lenses { display: grid; gap: var(--space-line); margin: 0; }
+.journey-lenses button {
+  display: grid; gap: var(--space-line); min-height: var(--size-target); box-sizing: border-box; padding: var(--space-tight) var(--space-row);
+  border: 0; border-radius: var(--radius-sm); background: transparent; color: var(--ink); text-align: left; cursor: pointer;
+  transition: background-color var(--duration-quick) var(--ease-standard);
+}
+.journey-lenses button span { font: var(--type-strong); }
+.journey-lenses button small { font: var(--type-fine); color: var(--ink-soft); }
+.journey-lenses button:hover { background: var(--navy-wash); }
+.journey-lenses button[aria-pressed="true"] { background: var(--navy); color: var(--on-navy); }
+.journey-lenses button[aria-pressed="true"] small { color: var(--on-navy-soft); }
+/* List: the map's records as one table under it. */
+#money-research-results .research-records { margin: var(--space-block) 0 0; }
+.research-summary { display: flex; flex-wrap: wrap; align-items: baseline; gap: var(--space-line) var(--space-block); margin: 0 0 var(--space-heading); font: var(--type-metadata); color: var(--ink-soft); }
+.research-summary strong, .research-summary b { font-weight: var(--weight-strong); color: var(--ink); font-variant-numeric: tabular-nums; }
+.research-summary b { margin-left: var(--space-line); }
+.research-summary .research-period { margin-left: auto; font: var(--type-fine); }
+.research-summary p { flex-basis: 100%; margin: 0; }
+.research-records .fineprint { margin: var(--space-tight) 0 var(--space-heading); }
+.research-records .table-scroll { margin: 0 0 var(--space-heading); }
+/* "Focus in map" reads as a link; its hit area reaches 44 across the row. */
+.research-records td > .ui-link { position: relative; white-space: nowrap; }
+.research-records td > .ui-link::after { content: ""; position: absolute; inset: calc(-1 * var(--space-row)) 0; }
+/* The map key: a secondary pill over the map that opens the legend as a sheet. */
+#money-map-root { --mm-key-top: calc(var(--space-row) + var(--size-target) + var(--space-tight)); }
+#money-map-root > .mm-key-toggle { position: absolute; top: var(--space-row); left: var(--space-row); z-index: 5; }
+.money-stage.has-journey .mm-key-toggle { display: none; }
 #money-map-root .mm-find { display: none; }
-#money-map-root .mm-legend { display: flex; top: 64px; left: 12px; right: auto; bottom: auto; width: min(280px, calc(100% - 24px)); max-height: calc(100% - 88px); box-sizing: border-box; flex-direction: column; align-items: stretch; overflow: auto; z-index: 12; background: var(--paper-raised); box-shadow: var(--shadow-overlay); visibility: hidden; opacity: 0; transform: translateX(-18px); pointer-events: none; transition: opacity var(--duration-standard) var(--ease-standard), transform var(--duration-standard) var(--ease-standard), visibility 0s linear var(--duration-standard); }
+#money-map-root .mm-legend {
+  display: flex; flex-direction: column; align-items: stretch; top: var(--mm-key-top); left: var(--space-row); right: auto; bottom: auto; z-index: 12;
+  box-sizing: border-box; width: min(calc(var(--size-control) * 6), calc(100% - 2 * var(--space-row))); max-height: calc(100% - var(--mm-key-top) - 2 * var(--space-row)); overflow: auto;
+  background: var(--paper-raised); box-shadow: var(--shadow-overlay);
+  visibility: hidden; opacity: 0; transform: translateX(calc(-1 * var(--space-heading))); pointer-events: none;
+  transition: opacity var(--duration-standard) var(--ease-standard), transform var(--duration-standard) var(--ease-standard), visibility 0s var(--ease-standard) var(--duration-standard);
+}
 #money-map-root .mm-legend-title { display: block; padding: var(--space-tight) var(--space-tight) var(--space-heading); }
 #money-map-root .mm-legend .mm-chip { min-height: var(--size-target); flex-shrink: 0; text-align: left; white-space: normal; }
-#money-map-root.show-key .mm-legend { visibility: visible; opacity: 1; transform: translateX(0); pointer-events: auto; transition-delay: 0s; }
+#money-map-root.show-key .mm-legend { visibility: visible; opacity: 1; transform: none; pointer-events: auto; transition-delay: 0s; }
 @media (prefers-reduced-motion: reduce) { #money-map-root .mm-legend { transition: none; transform: none; } }
-.mm-key-toggle { position: absolute; top: 12px; left: 12px; z-index: 5; min-height: var(--size-target); padding: 0 var(--space-block); border: var(--border-hairline) solid transparent; border-radius: var(--radius-pill); background: var(--navy-wash); color: var(--navy); font: var(--type-control); cursor: pointer; }
-.money-stage.has-journey .mm-key-toggle { display: none; }
+/* The year range and inflation switch float on the map's own paper: no edge. */
+#money-map-root .mm-scrub { border-color: transparent; }
+.money-map-status { margin: 0; padding: var(--space-heading) var(--space-block); }
 #panel-money .journey-choice-empty { padding-top: var(--space-block); }
-#panel-money .journey-story { padding: var(--space-block); }
-@media (max-width: 640px) {
-  .research-filter-panel { max-height: 65vh; overflow-y: auto; }
-  .research-filter-panel .research-controls { grid-template-columns: 1fr 1fr; }
 }
 
 #panel-search .search-record-kind { font-weight: var(--weight-strong); color: var(--navy); }
@@ -5270,17 +5267,26 @@ a.bill-division-q:hover { color: var(--bronze-ink); }
 .evidence-locations {margin-top:var(--sp-24)}
 .evidence-locations li {margin-block:var(--sp-12)}
 .evidence-locations small {display:block;margin-top:var(--sp-4)}
-.connections-page {min-width:0}
-.connections-page .connections-lede {max-width:65ch;margin:0 0 var(--sp-24);color:var(--ink-soft)}
-.connections-layout {display:grid;grid-template-columns:minmax(14rem,1fr) minmax(0,2fr);gap:var(--sp-32);align-items:start}
-.connection-choice {display:block;width:100%;text-align:left;padding:var(--sp-16);border:0;border-bottom:var(--border-hairline) solid var(--divider-subtle);background:transparent;color:inherit;cursor:pointer}
-.connection-choice:hover,.connection-choice:focus-visible {background:var(--paper-sunken)}
-.connection-choice span {display:block;margin-top:var(--sp-8);font-size:var(--text-15)}
-/* The selected connection reads as a panel lifted off the page, the same
-   raised card the contracts detail uses on /discover. */
-#connection-detail {min-width:0;scroll-margin-top:var(--sp-16);background:var(--paper-raised);border:var(--border-hairline) solid var(--divider-subtle);border-radius:var(--radius-md);padding:var(--sp-24)}
-#connection-detail > h2 {margin:0 0 var(--sp-16)}
-@media(max-width:700px){.connections-layout{grid-template-columns:minmax(0,1fr)}#connection-list{max-height:20rem;overflow:auto}.connections-page h1{font-size:var(--text-32)}#connection-detail{padding:var(--sp-16)}}
+/* Programs & places: the list of connections (ui-list rows) beside the open
+   one, which reads as a column of its own, unboxed. One column on a phone,
+   the list a short scroller above the open connection. */
+.connections-page { min-width: 0; }
+/* A hub page's controls open straight under its head: the head's section
+   step is the air between them. */
+.connections-head + .ui-filter-bar { margin-top: 0; }
+.connections-layout { display: grid; grid-template-columns: minmax(calc(var(--size-control) * 5), 1fr) minmax(0, 2fr); gap: var(--space-group); align-items: start; margin-top: var(--space-heading); }
+.connection-choice { display: grid; gap: var(--space-line); width: 100%; min-height: var(--size-target); margin: 0; padding: 0; border: 0; background: none; color: inherit; text-align: left; cursor: pointer; }
+.connection-choice .ui-row-meta { margin: 0; }
+.connection-choice:hover .ui-row-name, .connection-choice[aria-current="true"] .ui-row-name { color: var(--bronze-ink); text-decoration: underline; text-decoration-color: var(--bronze-rule); text-underline-offset: 3px; }
+#connection-detail { min-width: 0; scroll-margin-top: var(--space-heading); }
+#connection-detail > h2 { margin: 0 0 var(--space-heading); font: var(--type-heading); color: var(--ink); overflow-wrap: anywhere; }
+#connection-detail .subject-section-title { margin: var(--space-block) 0 var(--space-tight); font: var(--type-subheading); }
+#connection-detail > .ui-empty { margin: 0; padding-top: var(--space-row); }
+@media (max-width: 700px) {
+  .connections-layout { grid-template-columns: minmax(0, 1fr); }
+  #connection-list { max-height: 20rem; overflow: auto; }
+  .connection-detail-empty { display: none; }
+}
 .evidence-years meter::-webkit-meter-optimum-value {background:var(--chart-mark)}
 .evidence-years meter::-moz-meter-bar {background:var(--chart-mark)}
 .evidence-fields {display:grid;gap:var(--sp-12);margin:var(--sp-20) 0}
@@ -5293,32 +5299,15 @@ a.bill-division-q:hover { color: var(--bronze-ink); }
 .evidence-fields>div {min-width:0}
 .evidence-years svg {display:block;width:100%;height:.6rem}
 
-.connections-page h1 {font:700 clamp(2rem,4vw,3rem)/1.25 var(--serif);color:var(--navy);margin-bottom:var(--sp-24)}
-.connections-page h2 {font:700 clamp(1.4rem,2.5vw,2rem)/1.35 var(--serif);color:var(--navy);overflow-wrap:anywhere}
-.connection-choice {font:var(--type-body)}
-#connection-detail .subject-section-title {margin-top:var(--sp-24)}
 
-/* Keep map actions aligned and distinguish controls from related destinations. */
-.money-workspace-toolbar [data-records] {min-height:42px}
 @media (max-width: 800px) {
   /* On a phone the five money views stay the tab row they are at 1280 (five is
      past a segmented control's three), scrolling sideways on one line. */
   .money-area-nav { flex-wrap: nowrap; gap: var(--space-group); overflow-x: auto; overscroll-behavior-x: contain; scrollbar-width: none; white-space: nowrap; }
   .money-area-nav::-webkit-scrollbar { display: none; }
   .money-area-nav a { flex: none; display: inline-flex; align-items: center; }
-  .money-workspace-toolbar { display: grid; align-items: stretch; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-tight); margin: 0 0 var(--space-heading); }
-  .money-workspace-toolbar :is(#money-jur, .journey-menu, .research-filters) { min-width: 0; }
-  .money-workspace-toolbar #money-jur select,
-  .money-workspace-toolbar > .journey-menu > summary,
-  .money-workspace-toolbar .research-filters > summary,
-  .money-workspace-toolbar [data-records] { box-sizing: border-box; display: flex; align-items: center; justify-content: space-between; gap: var(--space-line); width: 100%; min-height: var(--size-control); margin: 0; }
-  .money-workspace-toolbar #money-jur select { height: 100%; }
-  .money-workspace-toolbar > #money-more { grid-column: 1 / -1; justify-self: end; }
-  .money-workspace-toolbar :is(.research-filter-panel,#money-journey-controls) {box-sizing:border-box;max-height: min(65vh,32rem);max-height:min(65dvh,32rem);overflow-y:auto;overscroll-behavior:contain}
-}
-
-@media (min-width: 600px) and (max-width: 800px) {
-  .money-workspace-toolbar { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  /* The panels the toolbar opens scroll inside themselves on a phone. */
+  .money-workspace-toolbar :is(.research-filter-panel, #money-journey-controls) { max-height: 65vh; max-height: 65dvh; overflow-y: auto; overscroll-behavior: contain; }
 }
 
 /* Retrieved records can contain long source URLs; keep the report within its column. */
