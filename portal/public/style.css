@@ -282,13 +282,7 @@
    one SourceLine with the attribution in its sheet. */
 #prerender:has(+ .audit-content) > h1 + p, #prerender:has(+ .instrument-content) > h1 + p { font: var(--type-metadata); color: var(--ink-soft); }
 .audit-content, .instrument-content { padding-bottom: var(--space-section); }
-.audit-filters, .instrument-filters { display: grid; grid-template-columns: 2fr repeat(3, 1fr) auto; gap: var(--space-block); align-items: end; margin: 0 0 var(--space-group); }
-.instrument-filters { grid-template-columns: 2fr repeat(4, 1fr) auto; }
-.audit-filters label, .instrument-filters label { display: grid; gap: var(--space-tight); min-width: 0; font: var(--type-label); color: var(--ink); }
-.audit-filters input, .audit-filters select, .instrument-filters input, .instrument-filters select { width: 100%; min-width: 0; min-height: var(--size-target); padding: var(--space-row); color: var(--ink); background: var(--paper); border: var(--border-hairline) solid var(--line-control); border-radius: var(--radius-sm); font: var(--type-body); }
-.audit-filter-actions, .instrument-filter-actions { display: flex; align-items: center; gap: var(--space-block); }
-.audit-filter-actions a, .instrument-filter-actions a { display: inline-flex; align-items: center; min-height: var(--size-target); }
-.audit-count, .instrument-count { margin: 0; font: var(--type-metadata); color: var(--ink-soft); }
+.audit-content > .ui-filter-bar:first-child, .instrument-content > .ui-filter-bar:first-child { margin-top: 0; }
 .audit-list, .instrument-list { list-style: none; padding: 0; margin: var(--space-tight) 0 0; }
 .audit-list > li, .instrument-list > li { border-top: var(--border-hairline) solid var(--divider-subtle); padding: var(--space-block) 0; }
 .audit-list h2, .instrument-list h2 { font: var(--type-subheading); margin: 0 0 var(--space-line); overflow-wrap: anywhere; }
@@ -297,18 +291,17 @@
 .audit-tags { display: flex; flex-wrap: wrap; gap: var(--space-tight); margin: var(--space-tight) 0; }
 .audit-out, .instrument-out { margin: var(--space-block) 0; }
 .audit-out a, .instrument-out a { display: inline-flex; align-items: center; min-height: var(--size-target); }
-.audit-content h2, .instrument-content > h2 { font: var(--type-heading); margin: var(--space-section) 0 var(--space-heading); }
+.audit-content > h2, .instrument-content > h2 { font: var(--type-heading); margin: var(--space-section) 0 var(--space-heading); }
 .audit-content > .audit-meta { margin: 0 0 var(--space-tight); }
 .audit-recommendations { padding-left: var(--space-group); max-width: 46rem; }
 .audit-recommendations > li { padding: var(--space-row) 0; white-space: normal; overflow-wrap: anywhere; }
 .audit-recommendations > li > p:first-child { margin-top: 0; }
 .audit-recommendations > .audit-unnumbered { list-style: none; }
-.audit-filters { grid-template-columns: 2fr repeat(4, 1fr) auto; }
 .audit-response { border-top: var(--border-hairline) solid var(--divider-subtle); padding: var(--space-block) 0; max-width: 46rem; }
 .audit-response summary { cursor: pointer; min-height: var(--size-target); font: var(--type-subheading); }
 .audit-response-text { white-space: pre-wrap; overflow-wrap: anywhere; margin-top: var(--space-block); font: var(--type-body); }
 .audit-content nav, .instrument-content nav { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-group); margin: var(--space-group) 0; }
-.audit-content nav a, .instrument-content nav a { display: inline-flex; align-items: center; min-height: var(--size-target); }
+.audit-filter-actions a, .instrument-filter-actions a, .audit-content nav a, .instrument-content nav a { display: inline-flex; align-items: center; min-height: var(--size-target); }
 .audit-content > .ui-source, .instrument-content > .ui-source { margin-top: var(--space-section); }
 .instrument-facts { display: grid; grid-template-columns: minmax(10rem, 1fr) 3fr; gap: var(--space-heading) var(--space-group); max-width: 64rem; margin: 0; }
 .instrument-facts dt { font: var(--type-label); color: var(--ink-soft); }
@@ -324,9 +317,8 @@
 .instrument-disclosure > .instrument-facts { margin-bottom: var(--space-block); }
 .instrument-content pre { white-space: pre-wrap; overflow-wrap: anywhere; font: var(--type-fine); }
 .instrument-content > :not(.instrument-disclosure) + .instrument-disclosure { margin-top: var(--space-group); }
-@media (max-width: 900px) { .audit-filters, .instrument-filters { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 @media (max-width: 540px) {
-  .audit-filters, .instrument-filters, .instrument-facts { grid-template-columns: minmax(0, 1fr); }
+  .instrument-facts { grid-template-columns: minmax(0, 1fr); }
   .instrument-facts { gap: var(--space-line); }
   .instrument-facts dd { margin-bottom: var(--space-heading); }
 }
@@ -2324,72 +2316,52 @@ a.report-card .card-meta { color: var(--ink-soft); }
 /* A directory title stands on its own above the controls: no figures, no
    sentence, just a breath of paper. */
 .dir-head { margin-bottom: var(--space-tight); }
-/* The controls are a row on the paper, not a box (principle 2); each select's
-   first option names it, so no label stands over it. */
-.dir-controls.ui-toolbar { margin: var(--space-group) 0 var(--space-line); padding: 0; border: 0; border-radius: 0; background: none; align-items: center; }
-/* The name box carries its own suggestion panel beneath it. */
+/* Directories (/subject/<kind>), Bills and Declared share the filter bar
+   (ui-filter-bar, ui-controls.css): the search field, each filter a pill
+   select, each toggle a chip. Then the count, the withheld-donor aggregates as
+   compact rows (still shown, never first), then one row per entry. */
 .chat-next-btns .ui-button { width: 100%; justify-content: flex-start; text-align: left; }
-.dir-q-wrap { position: relative; flex: 1 1 240px; min-width: 0; }
+/* The name box carries its own suggestion panel beneath it. */
+.dir-q-wrap { position: relative; }
 .dir-q-wrap input[type="search"] { width: 100%; }
 .dir-sugg {
-  position: absolute; left: 0; right: 0; top: calc(100% + 4px); z-index: 30;
+  position: absolute; left: 0; right: 0; top: calc(100% + var(--sp-4)); z-index: 30;
   background: var(--paper-raised); border: var(--border-hairline) solid var(--divider-subtle); border-radius: var(--radius-md);
   box-shadow: var(--shadow-overlay); padding: var(--space-line);
 }
-.dir-sugg .ms-row { min-height: 44px; font-size: 0.9375rem; }
-.dir-controls input[type="search"] { flex: 1 1 240px; }
-.dir-field { min-width: 0; }
-
-.dir-field select { max-width: 100%; }
-.dir-checks { display: flex; flex-wrap: wrap; gap: 0 var(--sp-16); align-items: center; }
-
-
-.dir-count { margin: var(--space-block) 0 var(--space-line); color: var(--ink-soft); font: var(--type-fine); font-variant-numeric: tabular-nums; }
+.dir-sugg .ms-row { min-height: var(--size-target); font: var(--type-metadata); }
+.dir-individuals { display: grid; margin: var(--space-tight) 0 0; }
+.dir-individuals .donor-aggregate > summary { position: relative; padding-block: var(--sp-4); font: var(--type-fine); color: var(--ink-soft); }
+.dir-individuals .donor-aggregate > summary::after { content: ""; position: absolute; inset: calc(-1 * var(--sp-8)) 0; }
+.dir-list { margin-top: var(--space-block); }
 .dir-list li.dir-row {
   display: grid; grid-template-columns: auto minmax(0, 1fr) auto;
-  gap: var(--sp-4) var(--sp-16); align-items: center; padding: calc(var(--space-row) + var(--sp-4)) 0;
+  gap: var(--space-line) var(--space-heading); align-items: center; padding: var(--space-heading) 0;
 }
 .dir-list li.dir-row-plain { grid-template-columns: minmax(0, 1fr) auto; }
-/* Portraits are 200px squares, so the circle can be generous and stay crisp. */
-.dir-portrait, .dir-mono { width: 64px; height: 64px; border-radius: var(--radius-round); display: grid; place-items: center; }
-.dir-portrait img {
-  width: 100%; height: 100%; border-radius: var(--radius-round); object-fit: cover; display: block;
-  border: var(--border-focus) solid var(--paper-raised); box-shadow: var(--ring-hairline) var(--divider-subtle);
-}
-.dir-mono {
-  background: var(--paper-sunken); color: var(--ink-soft);
-  font: var(--type-heading); box-shadow: var(--ring-inset-hairline) var(--divider-subtle);
-}
+.dir-portrait, .dir-mono { width: var(--size-portrait-row); height: var(--size-portrait-row); border-radius: var(--radius-round); display: grid; place-items: center; }
+.dir-portrait img { width: 100%; height: 100%; border-radius: var(--radius-round); object-fit: cover; display: block; box-shadow: var(--ring-inset-hairline) var(--divider-subtle); }
+.dir-mono { background: var(--paper-sunken); color: var(--ink-soft); font: var(--type-label); box-shadow: var(--ring-inset-hairline) var(--divider-subtle); }
 .dir-main { min-width: 0; }
 .dir-name { font: var(--type-subheading); }
 .dir-name .party-dot-only { margin-right: var(--sp-8); }
-.dir-alt { color: var(--ink-faint); font: var(--type-metadata); margin-left: var(--sp-8); }
-.dir-main .result-meta { display: flex; margin-top: var(--sp-4); font-size: var(--text-13); color: var(--ink-soft); }
-.dir-muted { color: var(--ink-faint); }
+.dir-alt { margin-left: var(--sp-8); font: var(--type-metadata); color: var(--ink-soft); }
+.dir-main .result-meta { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-line) var(--space-tight); margin-top: var(--space-line); font: var(--type-fine); color: var(--ink-soft); }
+.dir-muted { color: var(--ink-soft); }
 .dir-parties .party-dot-only { margin-right: var(--sp-4); }
-.dir-figs { display: flex; flex-wrap: wrap; gap: var(--sp-4) var(--sp-16); justify-content: flex-end; text-align: right; }
-.dir-fig { font: var(--type-fine); color: var(--ink-faint); white-space: nowrap; }
-.dir-fig b { display: block; font: var(--type-subheading); color: var(--ink); font-variant-numeric: tabular-nums; }
-.dir-more-row { margin: var(--sp-16) 0 0; }
-.dir-empty { margin: var(--sp-20) 0 0; color: var(--ink-soft); font-size: var(--text-15); display: flex; flex-wrap: wrap; gap: var(--sp-12) var(--sp-16); align-items: center; }
+.dir-figs { display: flex; flex-wrap: wrap; gap: var(--space-line) var(--space-block); justify-content: flex-end; text-align: right; }
+.dir-fig { font: var(--type-fine); color: var(--ink-soft); white-space: nowrap; }
+.dir-fig b { display: block; font: var(--type-strong); color: var(--ink); font-variant-numeric: tabular-nums; }
+.dir-more-row { margin: var(--space-block) 0 0; }
+.dir-empty { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-row) var(--space-block); margin: var(--space-block) 0 0; font: var(--type-body); color: var(--ink-soft); }
 @media (max-width: 640px) {
-  .dir-controls input[type="search"], .dir-controls .dir-q-wrap { flex-basis: 100%; }
-.dir-field {  flex: 1 1 42%;  }
-  .dir-checks { flex: 1 1 100%; gap: 0 var(--sp-20); }
-.dir-field select { max-width: 100%; }
   .dir-list li.dir-row { grid-template-columns: auto minmax(0, 1fr); }
   .dir-list li.dir-row-plain { grid-template-columns: minmax(0, 1fr); }
   .dir-list li.dir-row .dir-figs { grid-column: 1 / -1; justify-content: flex-start; text-align: left; }
   .dir-list li.dir-row:not(.dir-row-plain) .dir-figs { grid-column: 2; }
-  /* Phones: each entry gets air — taller rows, a breath between the name, the
-     meta line and the figures, and figures that do not crowd each other. */
-  .dir-list li.dir-row { padding: var(--sp-24) 0; row-gap: var(--sp-8); column-gap: var(--sp-16); }
-  .dir-portrait, .dir-mono { width: 72px; height: 72px; }
-  .dir-name { font-size: var(--text-17); line-height: var(--leading-snug); }
-  .dir-main .result-meta { margin-top: var(--sp-4); line-height: var(--leading-loose); }
-  .dir-main .dir-mark { margin: var(--sp-4) var(--sp-4) var(--sp-4) 0; }
-  .dir-list li.dir-row .dir-figs { gap: var(--sp-8) var(--sp-24); margin-top: var(--sp-4); }
-  .dir-fig b { font-size: var(--text-17); }
+  /* Figures read on one line each: the number, then what it counts. */
+  .dir-fig { display: inline-flex; align-items: baseline; gap: var(--space-line); }
+  .dir-fig b { display: inline; }
 }
 /* Declared interests (person pages): a hairline list of register buckets, each
    a chat-sources disclosure with its count at the right; rows are
@@ -2450,7 +2422,6 @@ a.report-card .card-meta { color: var(--ink-soft); }
 .declared-match .result-meta { margin-left: var(--sp-4); }
 #panel-declared { max-width: 920px; }
 #panel-declared > h1 { font: 700 clamp(2rem, 4vw, 3rem)/1.2 var(--serif); margin: 0 0 var(--sp-16); }
-#panel-declared .dir-controls { margin-top: var(--sp-16); }
 .declared-source { margin-top: var(--sp-24); }
 .declared-week { margin-top: var(--sp-24); }
 .declared-week > h3 {
@@ -4521,9 +4492,6 @@ a.bill-division-q:hover { color: var(--bronze-ink); }
 /* At 360 three filter labels were cut off inside their boxes ("All parliam").
    On a phone each control takes the row it needs. */
 @media (max-width: 430px) {
-  #panel-bill .dir-controls { gap: var(--sp-8) var(--sp-12); }
-  #panel-bill .dir-field { flex: 1 1 100%; min-width: 0; }
-  #panel-bill .dir-field select { width: 100%; min-width: 0; }
 }
 
 /* ---- loop 2 ------------------------------------------------------------- */
@@ -5004,21 +4972,7 @@ a.bill-division-q:hover { color: var(--bronze-ink); }
   .footer-lines { padding-top: var(--space-4); }
 }
 
-@media (max-width: 540px) {/* A labelled select gets a row of its own at phone widths. This avoids
-     clipped option text across Bills, Parliamentarians, Parties and Donors. */
-
-.dir-field {  flex: 1 1 100%; width: 100%;  }
-.dir-field select {  width: 100%; max-width: none; min-width: 0;  }
-  .dir-checks { gap: 0 var(--sp-16); }
-
-  /* Keep the portrait/name relationship, then let figures use the full line
-     below rather than squeezing beside a long office or party label. */
-  .dir-list li.dir-row:not(.dir-row-plain) .dir-figs {
-    grid-column: 1 / -1; justify-content: flex-start; text-align: left;
-  }
-  .dir-list li.dir-row { column-gap: var(--sp-16); row-gap: var(--sp-12); }
-  .dir-list li.dir-row .dir-figs { margin-top: 0; }
-  .dir-portrait, .dir-mono { width: 60px; height: 60px; }
+@media (max-width: 540px) {
 
   /* Date, portrait and declaration form a readable two-column card on the
      register ledger; the date no longer consumes a permanent left column. */

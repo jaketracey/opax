@@ -3788,8 +3788,8 @@ async function renderDeclaredPage(params, manageFocus) {
   const buckets = [...new Set(items.map((x) => x.bucket).filter(Boolean))]
     .sort((a, b) => (DECLARED_BUCKET_LABELS[a] || a).localeCompare(DECLARED_BUCKET_LABELS[b] || b));
   const parties = [...new Set(items.map((x) => partyByName.get(String(x.name || "").toLowerCase())).filter(Boolean))].sort();
-  bucketSelect.innerHTML = `<option value="">all categories</option>${buckets.map((b) => `<option value="${esc(b)}">${esc(DECLARED_BUCKET_LABELS[b] || b)}</option>`).join("")}`;
-  partySelect.innerHTML = `<option value="">all parties</option>${parties.map((p) => `<option value="${esc(p)}">${esc(p)}</option>`).join("")}`;
+  bucketSelect.innerHTML = `<option value="">Category: all</option>${buckets.map((b) => `<option value="${esc(b)}">${esc(DECLARED_BUCKET_LABELS[b] || b)}</option>`).join("")}`;
+  partySelect.innerHTML = `<option value="">Party: all</option>${parties.map((p) => `<option value="${esc(p)}">${esc(p)}</option>`).join("")}`;
   bucketSelect.value = buckets.includes(bucket) ? bucket : "";
   partySelect.value = parties.includes(party) ? party : "";
   const result = declaredPage(items, partyByName, {
@@ -6840,8 +6840,8 @@ function renderDirectory(spec) {
   for (const it of spec.items) it._text = foldText(spec.text(it));
 
   const filterHTML = (f) => f.check
-    ? `<label class="dir-check ui-choice"><input type="checkbox" data-filter="${esc(f.key)}"${state[f.key] ? " checked" : ""}>${esc(f.label)}</label>`
-    : `<label class="dir-field ui-field"><span class="visually-hidden">${esc(f.label)}</span>
+    ? `<label class="dir-check ui-filter-toggle"><input type="checkbox" data-filter="${esc(f.key)}"${state[f.key] ? " checked" : ""}>${esc(f.label)}</label>`
+    : `<label class="dir-field ui-filter-field"><span class="visually-hidden">${esc(f.label)}</span>
         <select data-filter="${esc(f.key)}" class="ui-input">
           <option value="">${esc(f.any || `${f.label}: all`)}</option>
           ${f.options.map(([v, l]) => `<option value="${esc(v)}"${state[f.key] === v ? " selected" : ""}>${esc(l)}</option>`).join("")}
@@ -6851,21 +6851,21 @@ function renderDirectory(spec) {
       <h1 id="subject-title" tabindex="-1">${esc(spec.title)}</h1>
       ${spec.lede ? `<p class="subject-tag"><span>${spec.lede}</span></p>` : ""}
     </div>
-    ${spec.aggregateHTML ? `<div class="dir-individuals">${spec.aggregateHTML}</div>` : ""}
-    <form class="dir-controls ui-toolbar" id="dir-controls" role="search" aria-label="Filter the list">
+    <form class="dir-controls ui-filter-bar" id="dir-controls" role="search" aria-label="Filter the list">
       <label class="visually-hidden" for="dir-q">Search ${esc(spec.title.toLowerCase())} by name</label>
-      <span class="dir-q-wrap">
+      <span class="dir-q-wrap ui-filter-search">
         <input id="dir-q" type="search" autocomplete="off" spellcheck="false"
                placeholder="Search by name…" value="${esc(state.q)}"
                role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="dir-sugg" class="ui-input">
         <div class="dir-sugg" id="dir-sugg" role="listbox" aria-label="Matching names" hidden></div>
       </span>
       ${spec.filters.filter((f) => !f.check).map(filterHTML).join("")}
-      <label class="dir-field ui-field"><span class="visually-hidden">Sort</span>
+      <label class="dir-field ui-filter-field"><span class="visually-hidden">Sort</span>
         <select id="dir-sort" class="ui-input">${spec.sorts.map(([v, l]) => `<option value="${esc(v)}"${state.sort === v ? " selected" : ""}>${esc(l)}</option>`).join("")}</select></label>
-      ${spec.filters.some((f) => f.check) ? `<div class="dir-checks">${spec.filters.filter((f) => f.check).map(filterHTML).join("")}</div>` : ""}
+      ${spec.filters.filter((f) => f.check).map(filterHTML).join("")}
     </form>
-    <p class="dir-count" id="dir-count" role="status" aria-live="polite"></p>
+    <p class="dir-count ui-filter-count" id="dir-count" role="status" aria-live="polite"></p>
+    ${spec.aggregateHTML ? `<div class="dir-individuals">${spec.aggregateHTML}</div>` : ""}
     <ul class="subject-list dir-list" id="dir-list" role="list"></ul>
     <div class="dir-empty" id="dir-empty" hidden>
       <span>Nothing in the ${esc(spec.title.toLowerCase())} directory matches that.</span>
@@ -7267,7 +7267,7 @@ async function buildDonorsDirectory() {
       d._fits ? `<span class="dir-mark" title="${esc(`On the Foreign Influence Transparency Scheme register for ${[...new Set(d._fits.map((r) => r.principal).filter(Boolean))].slice(0, 3).join(", ") || "a foreign principal"}`)}">FITS</span>` : "",
     ].filter(Boolean).join(" ");
     const meta = [
-      `<span class="party party-oth" style="--pc:${esc(colour)}"><i aria-hidden="true"></i>${esc(industryLabel(d.industry || d.group || "other"))}</span>`,
+      `<span class="ui-dot-label" style="--pc:${esc(colour)}"><i aria-hidden="true"></i>${esc(industryLabel(d.industry || d.group || "other"))}</span>`,
       d.first < 9999 ? esc(yearSpan(d.first, d.last)) : "",
       partiesHTML,
       marks,
@@ -7368,7 +7368,7 @@ const campaignerKindLabel = (kind) => CAMPAIGNER_KINDS[kind] || "Registered orga
 /** The register chip a campaigner wears wherever it is listed. The four kinds
  *  share one hue on purpose: the words tell them apart, never the colour. */
 const campaignerKindChip = (kind) =>
-  `<span class="party party-oth" style="--pc:var(--bronze)"><i aria-hidden="true"></i>${esc(campaignerKindLabel(kind))}</span>`;
+  `<span class="ui-dot-label" style="--pc:var(--bronze)"><i aria-hidden="true"></i>${esc(campaignerKindLabel(kind))}</span>`;
 
 /** The years an organisation's returns run over, as the AEC writes them. */
 function campaignerSpan(e) {

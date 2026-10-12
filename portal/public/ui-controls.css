@@ -209,6 +209,11 @@ a:is(.ui-tag, .topic-chip):hover { text-decoration: underline; text-underline-of
   width: var(--size-party-dot); height: var(--size-party-dot); flex: 0 0 var(--size-party-dot);
   border-radius: var(--radius-round); background: var(--pc, var(--party-oth));
 }
+/* DotLabel: a category's dot beside its word, in the party label's shape, for
+   things that are not parties (an industry, a campaigner kind). --pc carries
+   the colour; the word always says it. */
+.ui-dot-label { display: inline-flex; align-items: center; gap: var(--sp-8); max-width: 100%; font: var(--type-label); color: var(--ink-soft); vertical-align: baseline; }
+.ui-dot-label > i { width: var(--size-party-dot); height: var(--size-party-dot); flex: 0 0 var(--size-party-dot); border-radius: var(--radius-round); background: var(--pc, var(--ink-faint)); }
 .party-alp { --pc: var(--party-alp); }
 .party-lib { --pc: var(--party-lib); }
 .party-nat { --pc: var(--party-nat); }
@@ -336,5 +341,6 @@ label.ui-chip:has(input:focus-visible) {
   .ui-choice > input[role="switch"]::before { display: none; }
   button.ui-button[aria-busy="true"]::after { border-color: ButtonText; border-right-color: transparent; }
   :is(.ui-party, .party) > i { background: CanvasText; }
+  .ui-dot-label > i { background: CanvasText; }
   .ui-map-filter__dot { forced-color-adjust: none; }
 }

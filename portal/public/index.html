@@ -60,8 +60,8 @@
 <!-- fonts:end -->
 <!-- ?v= is content-hash stamped by scripts/stamp_assets.mjs (npm run deploy),
      which is what lets _headers serve these two immutable. -->
-<link rel="stylesheet" href="/style.css?v=b7c1016315">
-<link rel="stylesheet" href="/ui-controls.css?v=1956263368">
+<link rel="stylesheet" href="/style.css?v=13e8620907">
+<link rel="stylesheet" href="/ui-controls.css?v=ab5e32744e">
 <link rel="stylesheet" href="/ui-source.css?v=5d21085448">
 <link rel="stylesheet" href="/voice.css?v=19eea6fcdc">
 <!-- labels.js: app.js imports it before its first render. -->
@@ -1029,20 +1029,20 @@
     <section id="panel-declared" class="panel" hidden aria-label="Recent alterations to registers of interests">
       <h1 tabindex="-1">Registers of interests</h1>
       <p class="lede">The newest additions and deletions recorded in parliamentarians' registers of interests, in their own words.</p>
-      <form id="declared-filters" class="dir-controls ui-toolbar" aria-label="Filter recent declarations">
-        <span class="ui-field dir-field declared-search">
-          <label for="declared-query">Search</label>
+      <form id="declared-filters" class="dir-controls ui-filter-bar" aria-label="Filter recent declarations">
+        <span class="ui-filter-search declared-search">
+          <label for="declared-query" class="visually-hidden">Search the declarations</label>
           <input class="ui-input" id="declared-query" type="search" placeholder="Name, organisation or interest…">
         </span>
-        <span class="ui-field dir-field">
-          <label for="declared-bucket">Category</label>
-          <select class="ui-input" id="declared-bucket"><option value="">all categories</option></select>
+        <span class="ui-filter-field">
+          <label for="declared-bucket" class="visually-hidden">Category</label>
+          <select class="ui-input" id="declared-bucket"><option value="">Category: all</option></select>
         </span>
-        <span class="ui-field dir-field">
-          <label for="declared-party">Party</label>
-          <select class="ui-input" id="declared-party"><option value="">all parties</option></select>
+        <span class="ui-filter-field">
+          <label for="declared-party" class="visually-hidden">Party</label>
+          <select class="ui-input" id="declared-party"><option value="">Party: all</option></select>
         </span>
-        <button class="ui-button" type="submit">Search</button>
+        <span class="ui-filter-actions"><button class="ui-button" type="submit" data-ui-size="compact">Search</button></span>
       </form>
       <p class="ui-source" id="declared-updated"></p>
       <p class="interests-summary" id="declared-summary" hidden></p>
@@ -2095,10 +2095,10 @@
 <!-- defer: never block the parser (Lighthouse counted this as render-blocking).
      Deferred scripts still run before DOMContentLoaded, so nothing changes for
      app.js's boot. ?v= is content-hash stamped by scripts/stamp_assets.mjs. -->
-<script src="/spa-shell.js?v=e422e996a5" defer></script>
+<script src="/spa-shell.js?v=f2043a3031" defer></script>
 <script src="/navigation.js?v=f86ae6aef6" defer></script>
 <script src="/quick-search.js?v=27eac3b2f7" defer></script>
 <script src="/ui-source.js?v=5e7b751ca0" defer></script>
-<script src="/app.js?v=612f60e9b6" defer></script>
+<script src="/app.js?v=26efc2dccd" defer></script>
 </body>
 </html>

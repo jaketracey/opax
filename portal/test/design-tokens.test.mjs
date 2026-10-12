@@ -162,7 +162,7 @@ const TYPE_BASELINE = {
   'public/quiz.js': 4,
   'public/st-test.html': 1,
   'public/stages.js': 2,
-  'public/style.css': 31,
+  'public/style.css': 30,
   'public/thenvsnow.js': 2,
   'public/timemachine.js': 15,
   'public/ui-controls.css': 2,
@@ -277,7 +277,7 @@ test('no new uses of deprecated token names', (t) => {
 // lowers the share; the rules other lanes own still count until they move.
 const SHARE_BASELINE = {
   'public/style.css': 5.3,
-  'public/ui-controls.css': 3.3,
+  'public/ui-controls.css': 3.2,
   'public/ui-source.css': 7.8,
   'public/voice.css': 3.5,
 };
