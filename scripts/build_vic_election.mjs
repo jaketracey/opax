@@ -23,6 +23,9 @@ export async function buildVicElection(root, configPath = fileURLToPath(new URL(
     read('votes.json'),read('divisions/index.json'),read('interests/index.json'),read('corpus.json'),
   ]);
   const index = await read(manifest.index_url);
+  // Candidates exist only once the VEC publishes them after nominations close (noon 9 November).
+  const nominated = await readFile(sibling('vic-candidates-2026.json'),'utf8').then(JSON.parse,e=>{if(e.code==='ENOENT')return null;throw e;});
+  for (const name of Object.keys({...nominated?.districts,...nominated?.regions})) if (!config.districts.concat(config.regions).some(c=>c.name === name)) throw new Error(`Candidates for an unknown constituency: ${name}`);
   // Canonical people are exactly the already-published roster. The few roster-only
   // members use the existing person paths built by build:crawl, never a new join.
   const pathsSource = await readFile(join(root,'person-paths.js'),'utf8');
@@ -75,10 +78,12 @@ export async function buildVicElection(root, configPath = fileURLToPath(new URL(
         detailed_count:rows.length,divisions:rows.slice(0,5)};
     });
     const result = results.districts[c.name];
+    const list = (c.kind === 'district' ? nominated?.districts : nominated?.regions)?.[c.name];
     return {name:c.name,kind:c.kind,path:`${VIC_ELECTION_PATH}/${personSlug(c.name)}`,source_url:c.source_url,
       region:c.region || null,districts:c.districts || [],boundary_note:c.boundary_note || null,
       formerly:c.formerly || null,created:config.boundaries.created.includes(c.name) && !c.formerly,
       result:result ? {general:contest(result.general),since:contest(result.since) || null} : null,
+      candidates:list?.length ? {published:nominated.published,url:nominated.url,list:list.map(x=>({name:x.name,party:x.party || ''}))} : null,
       electorate_url:seat.url,roster_date:seat.representation_as_of,members};
   });
   const updated = latest([config.updated,roster.meta.generated,roster.meta.representation?.updated,day(corpus.version),...seats.map(s=>s.roster_date)]);

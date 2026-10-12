@@ -115,6 +115,17 @@
 .vic-dates dt { font: var(--type-strong); }
 .vic-dates dd { margin: 0; }
 .vic-date-link { display: block; margin-top: var(--space-line); font: var(--type-metadata); }
+.vic-candidates { display: grid; gap: var(--space-line); max-width: 46rem; margin: var(--space-block) 0 0; padding-left: var(--space-group); }
+.vic-candidates > li { min-height: var(--size-target); padding: var(--space-tight) 0; border-top: var(--border-hairline) solid var(--divider-subtle); }
+.vic-candidates .ui-party { margin-left: var(--space-tight); }
+/* Wide screens: the finder and the key dates side by side above the seat list. */
+@media (min-width: 1000px) {
+  .vic-top { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); align-items: start; gap: var(--space-section); max-width: var(--layout-column-wide); }
+  .vic-top > .vic-finder { margin-top: 0; }
+  .vic-top > .hub-section { margin-top: 0; padding-top: 0; border-top: 0; }
+  .vic-top .vic-dates > div { grid-template-columns: minmax(0, 12rem) minmax(0, 1fr); }
+}
+.vic-top { margin-top: var(--space-group); }
 .vic-about { max-width: 46rem; margin: var(--space-section) 0 0; color: var(--ink-soft); font: var(--type-fine); }
 @media (max-width: 600px) {
   .hub-weeks > li { gap: var(--space-row); }

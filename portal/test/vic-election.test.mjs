@@ -202,6 +202,9 @@ test('seat finder: suburbs, postcodes and council areas from ABS splits, exact n
   const ballarat=findSeats('Ballarat',data,places);assert.equal(names(ballarat)[0],'Council area:Ballarat');assert.ok(names(ballarat).includes('Suburb:Ballarat Central'));
   assert.deepEqual(findSeats('fitzroy',data,places).filter(h=>h.name==='Fitzroy').map(h=>h.seats.map(x=>x.seat.name)),[['Richmond']]);
   assert.equal(names(findSeats('Wendouree',data,places))[0],'District:Wendouree');
+  // One answer per seat named outright; suburbs wholly inside it don't repeat it.
+  assert.deepEqual(names(findSeats('bass',data,places)),['District:Bass']);
+  assert.ok(['Suburb:Ballarat Central','Suburb:Ballarat North','Suburb:Ballarat East'].every(n=>names(ballarat).includes(n)));
   assert.deepEqual(names(findSeats('Mt Waverley',data,places)).slice(0,1),['Suburb:Mount Waverley']);
   assert.deepEqual(findSeats('Addison',data,null).map(h=>`${h.kind}:${h.seats[0].seat.name}`),['Member:Wendouree']);
   assert.deepEqual(findSeats('zzqx',data,places),[]);assert.deepEqual(findSeats('   ',data,places),[]);
@@ -223,6 +226,30 @@ test('Methods carries the coverage detail the election pages link to',async()=>{
   const section=shell.split('<h3 id="vic-election">')[1]?.split('<h3>')[0];assert.ok(section);
   for(const text of ['2026 only','no Victorian register','no Victorian\n        state grants','Federal electorates are different from state districts','CC BY 4.0','Australian Bureau of Statistics','usual residents at the 2021 Census','copyright material without an open licence'])
     assert.ok(section.replace(/\s+/g,' ').includes(text.replace(/\s+/g,' ')),text);
+});
+
+test('candidates appear only from a VEC list, in ballot paper order, with the allowlisted fields',async()=>{
+  assert.ok(data.seats.every(s=>s.candidates===null));
+  assert.doesNotMatch(renderVicElection(data,data.seats.find(s=>s.name==='Lowan')).html,/id="candidates"/);
+  const dir=await mkdtemp(join(tmpdir(),'vic-candidates-'));
+  try {
+    const hubs=new URL('../../scripts/hubs/',import.meta.url);
+    for(const name of ['vic-election-2026.json','vic-results-2022.json','vic-places-2025.json'])await writeFile(join(dir,name),await readFile(new URL(name,hubs)));
+    // Invented names: test fixtures never use real people.
+    await writeFile(join(dir,'vic-candidates-2026.json'),JSON.stringify({published:'2026-11-10',url:'https://www.vec.vic.gov.au/candidates',districts:{Lowan:[{name:'Avery Quill',party:'Independent',email:'x@example.com'},{name:'Rowan Ketch',party:'Liberal'}]}}));
+    const out=await mkdtemp(join(tmpdir(),'vic-candidates-out-'));
+    try {
+      for(const path of ['electorates/manifest.json','parliamentarians.json','votes.json','divisions/index.json','interests/index.json','corpus.json','person-paths.js']){await mkdir(dirname(join(out,path)),{recursive:true});await writeFile(join(out,path),await readFile(new URL(path,root)));}
+      const manifest=await json('electorates/manifest.json');await mkdir(dirname(join(out,manifest.index_url)),{recursive:true});await writeFile(join(out,manifest.index_url),await readFile(new URL(manifest.index_url.slice(1),root)));
+      for(const row of (await json('divisions/index.json')).divisions.filter(d=>/^vic-(la|lc)-/.test(d.key))){await mkdir(join(out,'divisions'),{recursive:true});await writeFile(join(out,`divisions/${row.slug}.json`),await readFile(new URL(`divisions/${row.slug}.json`,root)));}
+      await buildVicElection(out,join(dir,'vic-election-2026.json'));
+      const built=JSON.parse(await readFile(join(out,VIC_ELECTION_ASSET),'utf8'));const lowan=built.seats.find(s=>s.name==='Lowan');
+      assert.deepEqual(lowan.candidates.list,[{name:'Avery Quill',party:'Independent'},{name:'Rowan Ketch',party:'Liberal'}]);
+      const html=renderVicElection(built,lowan).html;assert.match(html,/<h2>Candidates<\/h2><p class="hub-meta">In ballot paper order, as published by the VEC on 10 Nov 2026/);assert.ok(html.indexOf('Avery Quill')<html.indexOf('Rowan Ketch'));
+      await writeFile(join(dir,'vic-candidates-2026.json'),JSON.stringify({published:'2026-11-10',url:'https://www.vec.vic.gov.au/candidates',districts:{Nowhere:[{name:'Avery Quill'}]}}));
+      await assert.rejects(buildVicElection(out,join(dir,'vic-election-2026.json')),/unknown constituency: Nowhere/);
+    } finally {await rm(out,{recursive:true,force:true});}
+  } finally {await rm(dir,{recursive:true,force:true});}
 });
 
 test('election detection identifies state election copy without treating federal records in Victoria as state electoral copy',()=>{
