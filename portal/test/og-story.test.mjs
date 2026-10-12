@@ -15,7 +15,7 @@ import { encode, decode } from 'jpeg-js';
 
 const portal = new URL('../', import.meta.url);
 const built = await build({ entryPoints: [new URL('src/og.ts', portal).pathname], bundle: true, write: false, platform: 'node', format: 'esm' });
-const { storySlideTree, OG_FONT_FILES, PORTRAIT_WIDTH, PORTRAIT_HEIGHT } = await import('data:text/javascript;base64,' + Buffer.from(built.outputFiles[0].text).toString('base64'));
+const { storySlideTree, portraitTree, cardTree, OG_FONT_FILES, PORTRAIT_WIDTH, PORTRAIT_HEIGHT } = await import('data:text/javascript;base64,' + Buffer.from(built.outputFiles[0].text).toString('base64'));
 const storyMod = await build({ entryPoints: [new URL('src/story.ts', portal).pathname], bundle: true, write: false, platform: 'node', format: 'esm' });
 const { validStory, photosFor, photoFor, STORY_VERSION } = await import('data:text/javascript;base64,' + Buffer.from(storyMod.outputFiles[0].text).toString('base64'));
 
@@ -100,6 +100,43 @@ test('the number slide sets the figure at the card statistic size; the ledger an
   const path = texts(source).find(t => t.startsWith('federal'));
   assert.ok(!path.includes('→'), 'no arrow glyph: the faces do not carry one'); assert.ok(path.includes(' · '));
   assert.ok(images(source).some(n => n.props.width === 240 && n.props.style.position === 'absolute'), 'the engraving watermark');
+});
+
+// A rule is a box no taller than a hairline band with a fill and nothing in it.
+const isRule = n => n.type === 'div' && !n.props.children && Number(n.props.style?.height) <= 8 && Boolean(n.props.style?.background);
+const counterText = el => texts(el).filter(t => /^\s*\d+\s*\/\s*\d+\s*$/.test(t));
+const MARK = /^data:image\/svg\+xml;utf8,.*viewBox%3D%220%200%20176%20160%22/;
+
+test('a slide carries the mark and nothing else up top: no counter, no header rule, no rule over the footer', () => {
+  // The run position the route once passed is ignored if a caller still sends it.
+  for (const format of ['feed', 'story']) for (const [name, slide] of Object.entries(slides)) {
+    const imgs = slide.type === 'cover' && slide.photo ? { photo, credit } : slide.type === 'picture' ? { photo, credit } : {};
+    const tree = storySlideTree(slide, { ...imgs, index: 2, total: 7 }, format);
+    assert.deepEqual(counterText(tree), [], `${name} (${format}) draws no "n / N" counter`);
+    const top = [].concat(tree.props.children).filter(n => n && typeof n === 'object');
+    assert.deepEqual(top.filter(isRule), [], `${name} (${format}) has no header or footer rule`);
+    const masthead = top.find(n => n.props.style?.position !== 'absolute' && n.type === 'div');
+    const mark = images(masthead).find(n => MARK.test(n.props.src));
+    assert.ok(mark, `${name} (${format}) keeps the logo`); assert.equal(mark.props.width, 110);
+    assert.deepEqual(texts(masthead), [], `${name} (${format}): the mark stands alone`);
+    const footer = top.at(-1);
+    assert.ok(texts(footer).includes('OPAX.COM.AU'), `${name} (${format}) ends on the wordmark`);
+    assert.equal(footer.props.style.borderTop, undefined, `${name} (${format}) footer has no top border`);
+  }
+  // The ledger's total no longer closes on a rule that read as the footer's border.
+  const total = walk(storySlideTree(slides.ledger)).find(n => texts(n).includes('$11,729,541') && n.props.style?.justifyContent === 'space-between');
+  assert.ok(total.props.style.borderTop, 'the total is still set off from the rows');
+  assert.equal(total.props.style.borderBottom, undefined, 'no rule under the total');
+});
+
+test('the share cards: the portrait card drops its header rule, and neither format draws a counter', () => {
+  const card = { kicker: 'Grant recipient', title: 'Fifteen awards, five departments', lines: ['15 awards in the record'], stat: { value: '$11.7m', label: 'in the record' } };
+  const portrait = portraitTree(card);
+  const top = [].concat(portrait.props.children).filter(n => n && typeof n === 'object');
+  assert.ok(images(top[0]).some(n => MARK.test(n.props.src)), 'the portrait card keeps the logo');
+  assert.ok(!isRule(top[1]), 'no rule under the portrait masthead');
+  assert.deepEqual(counterText(portrait), []);
+  assert.deepEqual(counterText(cardTree(card)), [], 'the landscape card draws no counter');
 });
 
 test('validStory and the catalogue helpers guard what may be posted', () => {
