@@ -43,9 +43,30 @@ uses the VEC source config in `scripts/hubs/vic-election-2026.json`, the exact
 state electorate index, validated roster, existing canonical person-path table,
 `votes.json` and Victorian division shards. It writes the uncommitted,
 deployed `portal/public/hubs/vic-election-2026.json`; run the full search build
-first to refresh canonical person paths. There is no new ingestion, identity
+first to refresh canonical person paths. There is no new identity
 join, cron, candidate list or donor read. The projection uses an explicit field
-allowlist. All 88 Assembly districts have one roster member and all 8 Council
+allowlist.
+
+Two committed source files sit beside the VEC config in `scripts/hubs/`:
+
+- `vic-results-2022.json`, from `python3 -I scripts/fetch_vec_results.py`: each
+  district's 2022 result and any by-election or supplementary election since
+  (Narracan 2023 supplementary; Warrandyte, Mulgrave, Prahran, Werribee and Nepean
+  by-elections), as party shares after preferences and the winning margin (the
+  winner's two-candidate share above 50%). It reads the VEC's final distribution
+  of preferences, or its two-candidate count where the distribution stopped early.
+  Only the elected member's name is kept; other candidates' names are not.
+- `vic-places-2025.json`, from `python3 -I scripts/build_vic_places.py <dir>` over
+  the ABS ASGS Edition 3 allocation files (SED 2025, SAL 2021, POA 2021, LGA 2025)
+  and 2021 Census mesh block counts: every Victorian suburb, postal area and council
+  area split across districts by usual residents. The builder checks that the ABS
+  names and regions match the VEC's 88 districts. ABS data is CC BY 4.0.
+
+The build writes the places into a separate `/hubs/vic-election-2026-places.json`,
+read only by the hub's "Which seat am I in?" finder. The finder is a plain GET form
+(`/vic-election-2026?place=3350`), answered by the Worker without scripts; result
+pages are `noindex` and keep the hub's canonical. Seat and member names match
+without the places file. All 88 Assembly districts have one roster member and all 8 Council
 regions have five, dated to the published roster snapshot.
 
 The VEC's [district list](https://www.vec.vic.gov.au/electoral-boundaries/state-districts)
@@ -79,17 +100,21 @@ the [Victorian caretaker guidelines](https://www.vic.gov.au/guidelines-caretaker
 Speech counts retain their exported years. Counts wholly within 2023–2026 are
 available term records, without a completeness claim. Counts starting in 2022
 cannot isolate the November election cutoff. Mixed federal/Victorian totals are
-withheld, and members without a count show an explicit gap. Historical surname
+withheld; members without a count show none. Historical surname
 aggregates are not merged. Victorian vote totals cover **2026 only**; their
 participation counts can differ from the separately exported detailed division
-pages. No division absence is inferred from a missing row. The five latest
-available detailed divisions carry dates, recorded votes and original sources.
+pages. No division absence is inferred from a missing row. District pages list up to
+three of the latest detailed divisions with a recorded question, skipping
+untitled "Assembly divided on motion" rows.
 Victorian Hansard/divisions have restricted copyright, **no open licence**, as
 recorded in `docs/COVERAGE.md`; only existing counts and links enter the hub.
 
 There is no Victorian interests register or state grants export. Federal
 electorates are different from state districts, so no federal grant allocation
-is made. Every page states these gaps. “An association does not prove influence”
+is made. Since the 13 October usability pass, hub pages drop any section OPAX
+can't fill and end with one "About this data" line; these gaps, the speech and
+division limits and the licence terms are stated once on the Methods page
+(`/methods#vic-election`, in `public/index.html`). “An association does not prove influence”
 belongs alongside an actual money-and-politician pairing; the election hub has
 no such records, so it does not display the line. The tests derive individual
 donor labels with main's `isOrganisationDonor` classifier. A label coinciding

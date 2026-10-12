@@ -4057,8 +4057,9 @@ async function buildRouteMeta(route: SeoRoute, url: URL, request: Request, env: 
   switch (route.kind) {
     case 'hub': {
       if (route.hub === 'vic-election') {
-        const page = await vicElectionPage(route.id,<T>(path: string) => assetJson<T>(env,path),env)
-        return base({title:page.title+' · OPAX',description:page.description,prerender:page.html,jsonLd:page.jsonLd,status:page.status,card:'card' in page ? page.card : null})
+        // ?place= is the seat finder: a search result, never indexed; its canonical is the hub.
+        const page = await vicElectionPage(route.id,<T>(path: string) => assetJson<T>(env,path),env,url.searchParams.get('place'))
+        return base({title:page.title+' · OPAX',description:page.description,prerender:page.html,jsonLd:page.jsonLd,status:page.status,card:'card' in page ? page.card : null,...('noindex' in page && page.noindex ? {noindex:true} : {})})
       }
       const people = route.hub === 'sitting' && route.id ? await loadPeople(env) : null
       const check = await tablePrivacyCheck(env.ASSETS)

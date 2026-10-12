@@ -1919,6 +1919,7 @@ function route() {
     showPanel("methods");
     document.title = TITLES.methods;
     setCrumbs([{ label: "About", href: "/about" }, { label: "Methods & how to cite" }]);
+    landOnSection("panel-methods");
   } else if (view === "stats") {
     showPanel("stats");
     renderEvidenceStats();
@@ -1933,13 +1934,7 @@ function route() {
     showPanel("privacy");
     document.title = TITLES.privacy;
     setCrumbs([{ label: "About", href: "/about" }, { label: "Privacy" }]);
-    // The voice panel's privacy link lands on /privacy#voice. The panel was
-    // hidden when the browser looked for the section, so land on it once it
-    // shows; route() scrolls to the top first, so wait a frame.
-    const section = pendingAnchor || (/^#[\w-]+$/.test(location.hash) ? location.hash.slice(1) : "");
-    pendingAnchor = "";
-    const target = section && $("panel-privacy").querySelector(`[id="${section}"]`);
-    if (target) requestAnimationFrame(() => target.scrollIntoView({ block: "start" }));
+    landOnSection("panel-privacy"); // the voice panel's link is /privacy#voice
   } else if (view === "support") {
     showPanel("support");
     document.title = TITLES.support;
@@ -2198,6 +2193,15 @@ document.addEventListener("click", (e) => {
   goRoute(to);
 });
 let pendingAnchor = "";
+// A panel's #section (/privacy#voice, /methods#vic-election): the panel was
+// hidden when the browser looked for it, so land on it once it shows; route()
+// scrolls to the top first, so wait a frame.
+function landOnSection(panelId) {
+  const section = pendingAnchor || (/^#[\w-]+$/.test(location.hash) ? location.hash.slice(1) : "");
+  pendingAnchor = "";
+  const target = section && $(panelId).querySelector(`[id="${section}"]`);
+  if (target) requestAnimationFrame(() => target.scrollIntoView({ block: "start" }));
+}
 
 // Back and forward now move between real paths, so popstate does the routing.
 // hashchange stays for anything still assigning location.hash (older code, and

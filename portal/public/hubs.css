@@ -62,15 +62,64 @@
   .hub-footer { break-inside: avoid; }
   .hub-footer .hub-corrections a { min-height: 0; }
 }
-.vic-seats { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-line) var(--space-group); list-style: none; padding: 0; }
-.vic-seats a { display: block; padding: var(--space-row) 0; min-height: var(--size-target); }
-.vic-member { padding: var(--space-group) 0; border-top: var(--border-hairline) solid var(--divider-subtle); }
-.vic-member h4 { margin-top: var(--space-block); }
+/* Victorian election: the finder first, then rows a reader can scan for a seat,
+   its member and the last winning margin. Hairlines, no fills except the finder. */
+.vic-hub .hub-lead { max-width: 40rem; }
+.vic-hub .hub-lead a { white-space: nowrap; }
+.vic-kind { margin: 0 0 var(--space-block); color: var(--ink-soft); font: var(--type-metadata); }
+.vic-finder { max-width: 46rem; margin: var(--space-group) 0 0; padding: var(--space-group); border: var(--border-hairline) solid var(--divider-default); border-radius: var(--radius-md); background: var(--paper-raised); scroll-margin-top: calc(var(--header-h) + var(--space-block)); }
+.vic-finder h2 { font: var(--type-heading); margin: 0 0 var(--space-heading); }
+.vic-find-form label, .vic-speech-search label { display: block; margin: 0 0 var(--space-tight); font: var(--type-label); color: var(--ink-soft); }
+.vic-find-row { display: flex; gap: var(--space-tight); }
+.vic-find-row .ui-input { flex: 1 1 auto; }
+.vic-find-row .ui-button { flex: 0 0 auto; }
+.vic-hits { margin: var(--space-group) 0 0; }
+.vic-hits > .hub-meta { margin: var(--space-block) 0 0; }
+.vic-hit + .vic-hit { margin-top: var(--space-group); }
+.vic-hit-place { margin: 0 0 var(--space-line); }
+.vic-hit-place span { margin-left: var(--space-tight); color: var(--ink-soft); font: var(--type-metadata); }
+.vic-seats { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 20rem), 1fr)); column-gap: var(--space-section); list-style: none; margin: var(--space-heading) 0 0; padding: 0; }
+.vic-seats > li { border-top: var(--border-hairline) solid var(--divider-subtle); }
+.vic-seat { display: grid; grid-template-columns: minmax(0, 1fr) auto; grid-template-areas: "name figure" "held when"; align-items: baseline; gap: var(--space-line) var(--space-block); min-height: var(--size-target); padding: var(--space-row) 0; color: var(--ink); text-decoration: none; }
+.vic-seat-name { grid-area: name; font: var(--type-strong); }
+.vic-seat:hover .vic-seat-name, .vic-region:hover .vic-seat-name { text-decoration: underline; text-decoration-color: var(--bronze-rule); text-underline-offset: 3px; }
+.vic-seat-held { grid-area: held; display: flex; flex-wrap: wrap; align-items: center; gap: 0 var(--space-tight); min-width: 0; color: var(--ink-soft); font: var(--type-metadata); }
+.vic-seat-figure { grid-area: figure; text-align: right; font: var(--type-metadata); font-variant-numeric: tabular-nums; }
+.vic-seat-when { grid-area: when; text-align: right; color: var(--ink-soft); font: var(--type-fine); }
+.vic-regions { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 20rem), 1fr)); column-gap: var(--space-section); list-style: none; margin: var(--space-heading) 0 0; padding: 0; }
+.vic-regions > li { border-top: var(--border-hairline) solid var(--divider-subtle); }
+.vic-region { display: block; padding: var(--space-row) 0; color: var(--ink); text-decoration: none; }
+.vic-region-members { display: grid; gap: var(--space-line); margin-top: var(--space-tight); color: var(--ink-soft); font: var(--type-metadata); }
+.vic-region-members > span, .vic-people > li { display: inline-flex; flex-wrap: wrap; align-items: center; gap: 0 var(--space-tight); }
+.vic-facts { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 15rem), 1fr)); gap: var(--space-block) var(--space-section); max-width: 60rem; margin: var(--space-group) 0 0; padding: var(--space-group) 0 0; border-top: var(--border-hairline) solid var(--divider-default); }
+.vic-facts dt { font: var(--type-label); color: var(--ink-soft); }
+.vic-facts dd { margin: var(--space-line) 0 0; font: var(--type-body); }
+.vic-facts dd > a:first-child { font: var(--type-strong); }
+.vic-facts dd .ui-party { margin-left: var(--space-tight); }
+.vic-member + .vic-member { margin-top: var(--space-group); padding-top: var(--space-group); border-top: var(--border-hairline) solid var(--divider-subtle); }
+.vic-members { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 20rem), 1fr)); gap: 0 var(--space-section); }
+.vic-members > .vic-member { margin: 0; padding: var(--space-block) 0 var(--space-group); border-top: var(--border-hairline) solid var(--divider-subtle); }
+.vic-member > h3 { display: flex; flex-wrap: wrap; align-items: center; gap: 0 var(--space-tight); margin: 0 0 var(--space-tight); }
+.vic-stats { display: grid; gap: var(--space-tight); list-style: none; margin: 0; padding: 0; }
+.vic-stats b { font: var(--type-strong); font-variant-numeric: tabular-nums; }
+.vic-speech-search { max-width: 34rem; margin: var(--space-group) 0 var(--space-section); }
+.vic-subhead { font: var(--type-subheading); margin: var(--space-group) 0 var(--space-tight); }
+.vic-votes { list-style: none; max-width: 46rem; margin: 0; padding: 0; }
+.vic-votes li { display: grid; gap: var(--space-line); padding: var(--space-row) 0; border-top: var(--border-hairline) solid var(--divider-subtle); }
+.vic-people { display: flex; flex-wrap: wrap; gap: var(--space-line) var(--space-group); list-style: none; margin: var(--space-block) 0 0; padding: 0; }
+.vic-people > li { min-height: var(--size-target); }
+.vic-more { margin: var(--space-block) 0 0; font: var(--type-metadata); }
+.vic-elsewhere { margin-top: var(--space-section); }
+.vic-dates { max-width: 46rem; margin: 0; }
+.vic-dates > div { display: grid; grid-template-columns: minmax(0, 16rem) minmax(0, 1fr); gap: var(--space-line) var(--space-block); padding: var(--space-row) 0; border-top: var(--border-hairline) solid var(--divider-subtle); }
 .vic-dates dt { font: var(--type-strong); }
-.vic-dates dd { margin: var(--space-tight) 0 var(--space-block); }
+.vic-dates dd { margin: 0; }
+.vic-date-link { display: block; margin-top: var(--space-line); font: var(--type-metadata); }
+.vic-about { max-width: 46rem; margin: var(--space-section) 0 0; color: var(--ink-soft); font: var(--type-fine); }
 @media (max-width: 600px) {
   .hub-weeks > li { gap: var(--space-row); }
   .hub-totals { gap: var(--space-heading); }
   .hub-committee-body { padding-left: 0; }
-  .vic-seats { grid-template-columns: 1fr; }
+  .vic-finder { padding: var(--space-block); }
+  .vic-dates > div { grid-template-columns: 1fr; }
 }

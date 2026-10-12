@@ -279,7 +279,7 @@ test('association caveat requires a rendered money pairing, not an election cove
   for(const {path} of election.pages){
     const r=await worker.fetch(new Request(origin+path),{...env,VIC_ELECTION_HUB_ENABLED:'true'},{});
     assert.equal(r.status,200,path);const html=await r.text();
-    assert.match(html,/<h2>Grants by state electorate<\/h2><p>Not available\./,path);
+    assert.doesNotMatch(html,/Not available|Grants by state electorate/,path);
     assert.doesNotMatch(html,/An association does not prove influence/,path);
   }
   const person=await get('/subject/person/anthony-albanese');

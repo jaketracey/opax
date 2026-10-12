@@ -1,6 +1,7 @@
 export const VIC_ELECTION_HUB_ENABLED: boolean;
 export const VIC_ELECTION_PATH: string;
 export const VIC_ELECTION_ASSET: string;
+export const VIC_ELECTION_PLACES: string;
 export const VIC_ELECTION_SITEMAP: string;
 export const VIC_ELECTION_AUTHORISATION_LINE: string;
 export const VIC_ELECTION_CORRECTIONS_EMAIL: string;
