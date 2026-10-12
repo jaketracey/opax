@@ -14,10 +14,12 @@ name: 02 Search the public people catalog
 # Return submits and dismisses the keyboard; a swipe can land on the
 # keyboard itself at AX5.
 - pressKey: Enter
+# Pass 5 (P1-1): the answered form collapses, so the submit pill goes and
+# the kind becomes the query's scope.
 - scrollUntilVisible:
     element:
-      id: search-submit
-- tapOn:
+      id: search-count
+- assertNotVisible:
     id: search-submit
 - scrollUntilVisible:
     element:
