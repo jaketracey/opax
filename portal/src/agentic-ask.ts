@@ -4,17 +4,16 @@
  * it stays off unless the operator selects route or shadow.
  *
  *   classify (rules, no model) -> plan (one model call, JSON) -> run tools
- *   (src/agentic-tools.ts, deterministic) -> compose (one model call over a fact
- *   sheet; every number checked against the facts, every number cited) ->
- *   template fallback when the prose fails a check.
+ *   (src/agentic-tools.ts, deterministic) -> render bound tool-row templates.
+ *   The model never writes answer text or figures.
  *
- * Counts and rankings only ever come from tool results. The model plans and
- * phrases; it never counts. `answered: false` with a reason when no tool result
- * supports an answer (the web-ask-no-answer contract).
+ * Counts and rankings only ever come from tool results. The model only plans;
+ * it never counts or phrases numerical claims. `answered: false` with a reason
+ * when no tool result supports an answer (the web-ask-no-answer contract).
  */
 import { TOOL_SPECS, TOPICS, STATES, CHAMBERS, TERMS, runTool, validToolArgs, AGENTIC_TOOLS_VERSION, type ToolDeps, type ToolResult, type Cite } from './agentic-tools'
 
-export const AGENTIC_PROMPT_VERSION = 'agentic-ask-2'
+export const AGENTIC_PROMPT_VERSION = 'agentic-ask-3'
 export const AGENTIC_BUDGET_MS = 40_000
 export const AGENTIC_MAX_STEPS = 6
 
@@ -170,9 +169,9 @@ export function resolveArgs(args: Record<string, unknown>, results: ToolResult[]
   return out
 }
 
-// ---------------------------------------------------------------- facts + composer
+// ---------------------------------------------------------------- bound facts
 export interface Fact { id: number; text: string; cite: Cite }
-/** One line per citable figure, numbered: the only numbers the composer may use. */
+/** Each template binds tool-row figures to their entity, metric and citation. */
 export function factSheet(results: ToolResult[]): { facts: Fact[]; notes: string[] } {
   const facts: Fact[] = []
   const notes = new Set<string>()
@@ -212,62 +211,79 @@ export function factSheet(results: ToolResult[]): { facts: Fact[]; notes: string
   }
   return { facts, notes: [...notes] }
 }
-export function composerPrompt(question: string, facts: Fact[], notes: string[]): { system: string; user: string } {
-  const body = [
-    `Question: ${question}`,
-    '',
-    'FACTS (numbered; the only figures you may use, copied exactly):',
-    ...facts.map((f) => `[${f.id}] ${f.text}`),
-    '',
-    'LIMITS (state the ones that bear on the answer, in plain words):',
-    ...notes.map((n) => `- ${n}`),
-    '',
-    'Write the answer in 2 to 5 sentences. Open with the direct answer. Every sentence that contains a figure ends with the fact number(s) it uses in square brackets, like [1] or [2][3]. Use only figures from FACTS; never add, total, average or round them unless the fact states the result. Name people and parties exactly as the facts do. ' +
-    'Never say a donation caused, bought or influenced a vote or speech; recorded money and recorded words sit side by side, nothing more. Do not open with "Based on" or mention facts, data or tools. No headings, bullet points or links.',
-  ].join('\n')
-  return {
-    system: 'You write short, exact answers about the Australian parliamentary record from a numbered fact sheet.',
-    // No {context}: the composer must see the fact sheet and nothing retrieved beside it.
-    user: body.replace(/[{}]/g, (b) => (b === '{' ? '{{' : '}}')),
-  }
-}
-const NUMBER_TOKENS = (value: string): string[] =>
-  (value.match(/\$?\d[\d,]*(?:\.\d+)?%?/g) ?? []).map((t) => t.replace(/[$,%]/g, '').replace(/\.0+$/, ''))
 const CAUSAL = /\b(?:bought|bribe\w*|in exchange for|because of (?:the|these|their) donations?|donations? (?:caused|influenced|explain\w*)|paid for (?:access|votes?|influence))\b|\b(?:donat\w*|money|funding)\b.*\b(?:influenc\w*|caus\w*|led to|resulted in|secured)\b/i
-/**
- * Keep a model sentence only if every number in it is a fact figure and it
- * cites a fact whose text holds that number. Returns the kept prose and the
- * fact ids it cites.
- */
-export function verifyComposition(text: string, facts: Fact[], question = ''): { prose: string; cited: number[]; dropped: number } {
-  const byId = new Map(facts.map((f) => [f.id, f]))
+/** Defensive boundary for any future connective prose. No model-authored
+ * digits, including citation ids, dates, percentages or money, are accepted.
+ * Only the deterministic renderer may introduce them. No placeholders are
+ * supported: answers currently consist entirely of bound tool-row templates. */
+export function verifyComposition(text: string, _facts: Fact[], _question = ''): { prose: string; cited: number[]; dropped: number } {
   const sentences = String(text ?? '').replace(/\s+/g, ' ').trim().split(/(?<=[.!?\]])\s+(?=[A-Z"'(])/)
-  const kept: string[] = []; const cited = new Set<number>(); let dropped = 0
-  for (const s of sentences) {
-    if (!s.trim()) continue
-    if (CAUSAL.test(s) || /^based on\b/i.test(s)) { dropped++; continue }
-    const refs = [...s.matchAll(/\[(\d+)\]/g)].map((m) => Number(m[1])).filter((n) => byId.has(n))
-    const prose = s.replace(/\[\d+\]/g, '')
-    const calendarYears = new Set([...prose.matchAll(/\b(?:in|since|from|to|before|after|for the)\s+((?:19|20)\d{2})(?:s)?\b/gi)].map(m => m[1]))
-    const nums = NUMBER_TOKENS(prose).filter(n => !calendarYears.has(n))
-    const factNums = new Set(refs.flatMap((r) => NUMBER_TOKENS(byId.get(r)!.text)))
-    if (nums.length && (!refs.length || nums.some((n) => !factNums.has(n)))) { dropped++; continue }
-    // A cited number belongs to its row's entity, not a bag of all figures.
-    // Multi-entity numerical prose is deliberately conservative: the exact
-    // tool rows remain available as the deterministic answer.
-    const entity = (f: Fact) => f.text.includes(':') ? f.text.split(':')[0] : /\bby (.+?)(?: in | \(| from | to |$)/.exec(f.text)?.[1]
-    const named = facts.filter(f => { const name = entity(f); return name && prose.includes(name) })
-    if (nums.length && (named.some(f => !refs.includes(f.id) || nums.some(n => !NUMBER_TOKENS(f.text).includes(n))) ||
-      refs.some(id => { const name = entity(byId.get(id)!); return name && !prose.includes(name) }))) { dropped++; continue }
-    refs.forEach((r) => cited.add(r))
-    kept.push(s.trim())
+  const kept: string[] = []; let dropped = 0
+  for (const sentence of sentences) {
+    if (!sentence.trim()) continue
+    if (/\p{N}/u.test(sentence) || CAUSAL.test(sentence) || /^based on\b/i.test(sentence)) { dropped++; continue }
+    kept.push(sentence)
   }
-  return { prose: kept.join(' '), cited: [...cited], dropped }
+  return { prose: kept.join(' '), cited: [], dropped }
 }
-/** The deterministic answer: used when the model is unavailable or its prose fails the checks. */
+/** Every answer figure is bound to its entity and metric in factSheet. */
 export function templateAnswer(facts: Fact[], notes: string[]): string {
   const lines = facts.slice(0, 8).map((f) => `${f.text} [${f.id}]`)
   return [lines.join('; ') + '.', ...notes.slice(0, 2)].join(' ')
+}
+
+// --------------------------------------------------------------- named scope
+export interface NamedScope { people: string[]; parties: string[]; bills: string[]; ambiguous: boolean }
+/** Exact roster/list matching, with a unique surname allowed. Longest names
+ * win over surnames inside another full name. Never ask the model to identify
+ * the entities it must retain. */
+export function extractNamedScope(question: string, roster: unknown, billList: unknown): NamedScope {
+  const publicQuestion = question.replace(/\b[^\s@]+@[^\s@]+\.[^\s@]+\b/g, ' ').replace(/https?:\/\/\S+/gi, ' ')
+  const q = ` ${normaliseQuestion(publicQuestion)} `
+  const mentions = (name: string) => !!name && q.includes(` ${normaliseQuestion(name)} `)
+  const records = (roster as { people?: { name: string; party?: string; party_now?: string }[] } | null)?.people ?? []
+  const people = [...new Set(records.filter(p => typeof p.name === 'string' && mentions(p.name)).map(p => p.name))]
+  let ambiguous = false
+  const remainder = people.reduce((text, name) => text.replace(` ${normaliseQuestion(name)} `, ' '), q)
+  const surnames = new Map<string, Set<string>>()
+  for (const p of records) {
+    if (typeof p.name !== 'string') continue
+    const surname = normaliseQuestion(p.name).split(' ').at(-1)!
+    if (surname.length < 4) continue
+    if (!surnames.has(surname)) surnames.set(surname, new Set())
+    surnames.get(surname)!.add(p.name)
+  }
+  for (const [surname, names] of surnames) if (remainder.includes(` ${surname} `)) {
+    if (names.size === 1) people.push([...names][0]); else ambiguous = true
+  }
+  const aliases: Record<string, string[]> = {
+    Labor: ['Labor', 'Australian Labor Party', 'ALP'], Liberal: ['Liberal', 'Liberal Party'],
+    Greens: ['Greens', 'Australian Greens'], Nationals: ['Nationals', 'National Party'],
+    LNP: ['LNP', 'Liberal National Party'], 'One Nation': ['One Nation'],
+  }
+  for (const p of records) for (const name of [p.party, p.party_now]) if (name) aliases[name] ??= [name]
+  const parties = Object.entries(aliases).filter(([, names]) => names.some(mentions)).map(([name]) => name)
+    .filter(name => name !== 'Liberal' || !mentions('Liberal National Party'))
+  const bills = [...new Set(((billList as { bills?: { key: string; title?: string; short_title?: string }[] } | null)?.bills ?? [])
+    .filter(b => [b.key, b.title, b.short_title, b.title?.replace(/\s+(?:19|20)\d{2}$/, '')].some(name => typeof name === 'string' && mentions(name))).map(b => b.key))]
+  return { people: [...new Set(people)], parties, bills, ambiguous }
+}
+/** A named entity must constrain each applicable numerical lookup, and every
+ * entity must occur in at least one such lookup. Merely resolving a name in a
+ * find_people step does not constrain an overall count. Bill-scoped speech
+ * counts are not supported by these tools, so defer those questions to Ask. */
+export function planRetainsNamedScope(plan: Plan, scope: NamedScope): boolean {
+  if (scope.ambiguous || scope.bills.length) return false
+  const numeric = plan.steps.filter(s => ['count_speeches', 'speech_trend', 'member_votes', 'party_donations'].includes(s.tool))
+  const person = (s: PlanStep) => s.args[s.tool === 'member_votes' ? 'person' : 'speaker']
+  const lookups = plan.steps.filter(s => ['count_speeches', 'speech_trend', 'member_votes', 'find_quotes'].includes(s.tool))
+  if (scope.people.length && (scope.people.some(name => !numeric.some(s => person(s) === name)) ||
+    numeric.some(s => s.tool === 'party_donations') ||
+    lookups.some(s => !scope.people.includes(String(person(s)))) ||
+    plan.steps.some(s => s.tool === 'find_people' && !scope.people.includes(String(s.args.name))))) return false
+  if (scope.parties.length && (scope.parties.some(name => !numeric.some(s => s.args.party === name)) ||
+    [...numeric, ...lookups].some(s => !scope.parties.includes(String(s.args.party))))) return false
+  return true
 }
 
 // ---------------------------------------------------------------- orchestration
@@ -371,9 +387,26 @@ export async function runAgentic(question: string, deps: AgenticDeps, progress: 
   if (!left() || deps.signal?.aborted) return base({ reason: 'declined', over_budget: true })
   if (!plan) return base({ reason: 'declined' })
   if (plan.shape === 'unanswerable') return base({ reason: 'declined', notes: plan.reason ? [plan.reason] : [] })
+  let named: NamedScope
+  try {
+    named = await bounded(async signal => {
+      const assets = deps.withSignal?.(signal) ?? deps
+      const [roster, bills] = await Promise.all([assets.asset('/parliamentarians.json'), assets.asset('/bills/index.json')])
+      signal.throwIfAborted()
+      // If a roster lookup is unavailable, a name-shaped subject cannot safely
+      // become an overall count. Anonymous topic rankings can still proceed.
+      if (!(roster as { people?: unknown[] } | null)?.people && rulePlan.steps.some(s => s.args.speaker || s.args.person)) throw new Error('roster unavailable')
+      if (!(bills as { bills?: unknown[] } | null)?.bills && /\bbill\b/i.test(question)) throw new Error('bill list unavailable')
+      const scope = extractNamedScope(question, roster, bills)
+      if (!scope.people.length && rulePlan.steps.some(s => s.args.speaker || s.args.person)) throw new Error('named speaker not resolved')
+      return scope
+    }, Math.min(4_000, left()), deps.signal)
+  } catch { return base({ reason: 'declined' }) }
   const ruleArgs = rulePlan?.steps.find(s => ['count_speeches', 'speech_trend'].includes(s.tool))?.args ?? {}
-  const explicitScope = Object.fromEntries(['state', 'chamber', 'party'].filter(k => ruleArgs[k] != null).map(k => [k, ruleArgs[k]]))
+  const explicitScope = Object.fromEntries(['state', 'chamber', 'party'].filter(k => ruleArgs[k] != null && (k !== 'party' || named.parties.length <= 1)).map(k => [k, ruleArgs[k]]))
+  if (!planRetainsNamedScope(plan, named)) return base({ reason: 'declined' })
   plan = periodPlan(plan, period, { ...explicitScope, ...filters })
+  if (!planRetainsNamedScope(plan, named)) return base({ reason: 'declined' })
   const tTools = Date.now()
   const execute = async (step: PlanStep, committee = false, custom?: (d: ToolDeps) => Promise<ToolResult>): Promise<ToolResult> => {
     const event = stepEvent(step, events.length + 1, committee)
@@ -432,22 +465,13 @@ export async function runAgentic(question: string, deps: AgenticDeps, progress: 
   if (!facts.length) return base({ reason: 'no_supported_claim', notes })
   await progress('status', { phase: 'writing' })
   const tCompose = Date.now()
-  let answer = '', source: AgenticPayload['answer_source'] = 'template'
   const mainFacts = facts.filter(f => !committeeFacts.some(c => c.text === f.text))
   const peakYear = /\bwhich year\b.*\bmost\b/i.test(question)
   if (peakYear) mainFacts.sort((a, b) => Number(b.cite.value ?? 0) - Number(a.cite.value ?? 0))
-  // Ranked numerical rows are copied deterministically; don't pay for prose
-  // that would be discarded by their stricter grounding rule.
-  if (left() > 5_000 && plan.shape !== 'ranking' && plan.shape !== 'money' && !peakYear) {
-    try {
-      const out = await bounded(signal => deps.generate(question, composerPrompt(question, mainFacts, notes), 600, signal), Math.min(12_000, Math.max(0, left() - 500)), deps.signal)
-      usage(out)
-      const v = verifyComposition(out.text, mainFacts, question)
-      // Unverified prose or missing ranked rows gets the deterministic answer.
-      if (v.prose && v.cited.length && !v.dropped) { answer = v.prose; source = 'model' }
-    } catch { /* template below */ }
-  }
-  if (!answer) answer = templateAnswer(peakYear ? mainFacts.slice(0, 1) : mainFacts, [])
+  // No composer call: figures, metric labels, entities and citations are
+  // rendered together from the tool rows, so swapping aye/no or party/year
+  // values in model text can never affect an answer.
+  let answer = templateAnswer(peakYear ? mainFacts.slice(0, 1) : mainFacts, [])
   if (committeeFacts.length) {
     const ids = facts.filter(f => committeeFacts.some(c => c.text === f.text))
     answer += ' Including committee hearings: ' + ids.map(f => `${f.text.replace(' committee-hearing turns', '')} [${f.id}]`).join(', ') + '.'
@@ -456,7 +480,7 @@ export async function runAgentic(question: string, deps: AgenticDeps, progress: 
   answer += ' ' + period.label + (notes.length ? ' ' + notes.join(' ') : '')
   timings.compose_ms = Date.now() - tCompose
   if (!left() || deps.signal?.aborted) return base({ reason: 'declined', over_budget: true })
-  return base({ answered: true, answer, answer_source: source, facts: factOut, notes })
+  return base({ answered: true, answer, answer_source: 'template', facts: factOut, notes })
 }
 export function normaliseQuestion(question: string): string {
   return question.normalize('NFKC').toLowerCase().replace(/[‘’“”]/g, "'").replace(/[^\p{L}\p{N} ]+/gu, ' ').replace(/\s+/g, ' ').trim()

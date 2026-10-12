@@ -1,4 +1,4 @@
-// Offline evidence generator: synthetic counts, stubbed planner/composer, no fetch.
+// Offline evidence generator: synthetic counts, stubbed planner, deterministic answer, no fetch.
 import {build} from 'esbuild';
 import {readFileSync,mkdirSync,writeFileSync} from 'node:fs';
 import {fileURLToPath} from 'node:url';

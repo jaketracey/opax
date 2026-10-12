@@ -60,11 +60,11 @@ const facts = [
   { id: 2, text: 'Sam Sample: 60 chamber speeches labelled gambling', cite: { kind: 'count', label: 'b', url: 'https://opax.com.au/search?topic=gambling' } },
 ];
 
-test('composition keeps only sentences whose figures are cited facts', () => {
+test('composition rejects every model digit including cited figures and calendar years', () => {
   const v = verifyComposition('Alex Example has made the most, with 87 [1]. Sam Sample follows with 61 [2]. Sam Sample has 60. Donations bought those speeches [1]. Coverage is incomplete for the 1990s.', facts, 'Who speaks most about gambling?');
-  assert.equal(v.prose, 'Alex Example has made the most, with 87 [1]. Coverage is incomplete for the 1990s.');
-  assert.deepEqual(v.cited, [1]);
-  assert.equal(v.dropped, 3);
+  assert.equal(v.prose, '');
+  assert.deepEqual(v.cited, []);
+  assert.equal(v.dropped, 5);
 });
 
 test('a facet ranking is read straight from the facet, every row cited', async () => {

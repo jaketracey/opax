@@ -7,6 +7,6 @@ export const fixtureDeps={
   const collaborator=/"collaborator":"([^"]+)"/.exec(text)?.[1];
   return {fulltext:{total:collaborator?rows[collaborator]??0:Object.values(rows).reduce((a,b)=>a+b,0),facets:{'/u/o':Object.fromEntries(Object.entries(rows).map(([name,n])=>['/u/o/'+name,n]))}}};
  },
- async asset(){return null},
+ async asset(path){return path==='/parliamentarians.json'?{people:['Taylor Example','Pat Example','Alex Example','Sam Sample','Casey Sample'].map(name=>({name,party:'Greens'}))}:path==='/bills/index.json'?{bills:[]}:null},
  async generate(_q,prompt){return {text:prompt.user.includes('Plan the record')?JSON.stringify({shape:'ranking',steps:[{tool:'count_speeches',args:{topic:'gambling',group_by:'speaker'}}]}):'Unsupported 999 [1].',tokens:{input:10,output:5},costUsd:0.001}}
 };

@@ -160,6 +160,9 @@ function filterExpression(f: {
   topic?: string | null
   from?: string | null
   to?: string | null
+  since?: string | null
+  until?: string | null
+  venue?: string | null
 }): Record<string, unknown> | null {
   const clauses: Record<string, unknown>[] = [{ not: { prop: 'label', labelset: 'kind', label: 'news' } }]
   if (f.kind && f.kind !== 'all') {
@@ -169,6 +172,11 @@ function filterExpression(f: {
   }
   if (f.party) clauses.push({ prop: 'label', labelset: 'party', label: f.party })
   if (f.chamber) clauses.push({ prop: 'label', labelset: 'chamber', label: f.chamber })
+  if (f.venue) {
+    const committee = { or: ['senate_committee', 'joint_committee', 'house_committee'].map(label => ({ prop: 'label', labelset: 'chamber', label })) }
+    if (f.venue !== 'all') clauses.push(f.venue === 'committee' ? committee : { not: committee })
+    clauses.push({ not: { prop: 'label', labelset: 'speaker_type', label: 'witness' } })
+  }
   if (f.state) clauses.push({ prop: 'label', labelset: 'state', label: f.state })
   if (f.topic && TOPIC_SLUGS.has(f.topic)) {
     clauses.push({ prop: 'label', labelset: 'topic', label: f.topic })
@@ -179,11 +187,13 @@ function filterExpression(f: {
   const yr = (s: string | null | undefined) => (s && /^\d{4}$/.test(s) ? s : null)
   const from = yr(f.from)
   const to = yr(f.to)
-  if (from || to) {
+  const since = f.since || (from ? `${from}-01-01` : null)
+  const until = f.until || (to ? `${to}-12-31` : null)
+  if (since || until) {
     clauses.push({
       prop: 'created',
-      ...(from ? { since: `${from}-01-01T00:00:00Z` } : {}),
-      ...(to ? { until: `${to}-12-31T23:59:59Z` } : {}),
+      ...(since ? { since: `${since}T00:00:00Z` } : {}),
+      ...(until ? { until: `${until}T23:59:59Z` } : {}),
     })
   }
   // Title ("generic") fields hold only "Name — date". A paragraph match there
@@ -635,6 +645,9 @@ async function searchWindow(
     topic: url.searchParams.get('topic'),
     from: url.searchParams.get('from'),
     to: url.searchParams.get('to'),
+    since: url.searchParams.get('since'),
+    until: url.searchParams.get('until'),
+    venue: url.searchParams.get('venue'),
   })
   if (filters) body.filter_expression = filters
   const attribution = await speakerAttribution(env, url.searchParams.get('speaker'))
@@ -1942,7 +1955,7 @@ async function apiSearchSummary(request: Request, url: URL, env: Env, ctx: Execu
   const sources = summarySources((results.results || []).map(row => saEvidenceRecord(row,env.SA_HANSARD_FULL_TEXT,searchUrl.searchParams.get('q') || '')))
   if (!sources.length) return json({status:'empty', points:[], sources:[]})
   const query = (searchUrl.searchParams.get('q') || '').trim()
-  const filters = Object.fromEntries(['kind','mode','speaker','party','state','topic','from','to'].map(k => [k, searchUrl.searchParams.get(k) || '']))
+  const filters = Object.fromEntries(['kind','mode','speaker','party','state','topic','from','to','chamber','since','until','venue'].map(k => [k, searchUrl.searchParams.get(k) || '']))
   const key = cacheRequest('search-summary', await sha256Hex(JSON.stringify({version:SEARCH_SUMMARY_VERSION, epoch:env.CACHE_EPOCH, query, filters, sources, index:results.index_version})))
   const cached = await readGenerationCache(env, ctx, key)
   if (cached) return withCacheStatus(await sanitiseStoredResponse(cached), 'HIT', false)
@@ -5570,7 +5583,7 @@ const MODES = new Set(['hybrid', 'semantic', 'keyword'])
 // without breaking the encyclopedia the day a new party is indexed.
 const NAME_RE = /^[\p{L}\p{N} .,'’&()\/-]+$/u
 
-const FILTER_KEYS = ['kind', 'speaker', 'party', 'state', 'topic', 'from', 'to'] as const
+const FILTER_KEYS = ['kind', 'speaker', 'party', 'state', 'topic', 'from', 'to', 'chamber', 'since', 'until', 'venue'] as const
 
 /** Allow-list every filter value. Returns a client-safe message, or null. */
 function validateFilters(get: (key: string) => unknown): string | null {
@@ -5581,6 +5594,17 @@ function validateFilters(get: (key: string) => unknown): string | null {
     const v = raw.trim()
     if (!v) continue
     switch (key) {
+      case 'chamber':
+        if (!['representatives', 'senate', 'nsw_la', 'nsw_lc', 'vic_la', 'vic_lc', 'sa_ha', 'sa_lc', 'qld_la', 'act_la', 'senate_committee', 'joint_committee', 'house_committee'].includes(v)) return 'unknown chamber'
+        break
+      case 'venue':
+        if (!['chamber', 'committee', 'all'].includes(v)) return 'unknown venue'
+        break
+      case 'since':
+      case 'until':
+        if (!/^\d{4}-\d{2}-\d{2}$/.test(v) || !Number.isFinite(Date.parse(v)) || new Date(v).toISOString().slice(0, 10) !== v) return `${key} must be a valid ISO date`
+        if (Number(v.slice(0, 4)) < MIN_YEAR || Number(v.slice(0, 4)) > MAX_YEAR) return `${key} is out of range`
+        break
       case 'kind':
         if (!KINDS.has(v)) return 'unknown kind'
         break

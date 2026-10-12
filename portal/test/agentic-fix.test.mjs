@@ -8,7 +8,7 @@ const {classifyAgentic,runAgentic,verifyComposition,agenticCacheKey,inferPeriod}
 const {agenticAskPayload}=await load('../src/agentic-response.ts');
 
 test('P1 classifier: reviewer questions and twenty more ordinary questions must not route',()=>{
- assert.equal(ordinaryQuestions.length,28);
+ assert.equal(ordinaryQuestions.length,38);
  for(const q of ordinaryQuestions)assert.equal(classifyAgentic(q).route,'ask',q);
 });
 test('P1 entity figures: swapped counts fail verification and comparison renders tool rows',async()=>{

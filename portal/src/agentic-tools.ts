@@ -17,7 +17,7 @@
  * Used by the Worker orchestration (src/agentic-ask.ts). Design (ii) remains
  * parked in the design note; these tools are not registered on MCP. No models.
  */
-export const AGENTIC_TOOLS_VERSION = 'agentic-tools-2'
+export const AGENTIC_TOOLS_VERSION = 'agentic-tools-3'
 
 export const TOPICS = [
   'gambling', 'financial-services', 'mining-energy', 'climate-environment', 'property-construction', 'housing', 'health',
@@ -132,8 +132,10 @@ function searchUrl(origin: string, f: SpeechFilter): string {
   if (f.party) p.set('party', f.party)
   if (f.state) p.set('state', f.state)
   if (f.chamber) p.set('chamber', f.chamber)
-  if (f.since) p.set('from', f.since.slice(0, 4))
-  if (f.until) p.set('to', f.until.slice(0, 4))
+  if (f.since) p.set('since', f.since)
+  if (f.until) p.set('until', f.until)
+  p.set('venue', f.venue ?? 'chamber')
+  if (f.topic) p.set('q', f.topic.replace(/-/g, ' '))
   return `${origin}/search?${p}`
 }
 

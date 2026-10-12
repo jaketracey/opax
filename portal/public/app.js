@@ -11805,13 +11805,21 @@ function syncSearchDatasetControls() {
 }
 $("search-kind").addEventListener("change", syncSearchDatasetControls);
 
+// Exact citation scope travels through the existing search view, pagination
+// and copy-link path. Year controls retain their normal behaviour.
+let searchCitationScope = {};
 function currentFilters() {
   // Year sliders mirror the ask popover: crossed thumbs swap, and the full
   // range means "no year filter".
   let from = $("f-from").value.trim(), to = $("f-to").value.trim();
   if (Number(from) > Number(to)) [from, to] = [to, from];
+  const displayFrom = from, displayTo = to;
   if (from === "1993" && to === "2026") { from = ""; to = ""; }
   return {
+    ...Object.fromEntries(Object.entries(searchCitationScope).filter(([key]) =>
+      !["since", "until"].includes(key) ||
+      (!searchCitationScope.since || displayFrom === searchCitationScope.since.slice(0, 4)) &&
+      (!searchCitationScope.until || displayTo === searchCitationScope.until.slice(0, 4)))),
     speaker: $("f-speaker").value.trim(),
     party: $("f-party").value,
     state: $("f-state").value,
@@ -11841,7 +11849,7 @@ function updateSearchYearsLabel() {
 function searchHash(q, f, page, sort) {
   const p = new URLSearchParams({ view: "search" });
   if (q) p.set("q", q);
-  for (const k of ["speaker", "party", "state", "topic", "from", "to"]) if (f[k]) p.set(k, f[k]);
+  for (const k of ["speaker", "party", "state", "topic", "from", "to", "chamber", "since", "until", "venue"]) if (f[k]) p.set(k, f[k]);
   if (f.kind && f.kind !== "all") p.set("kind", f.kind);
   if (f.mode && f.mode !== "hybrid") p.set("mode", f.mode);
   if (sort && sort !== "relevance") p.set("sort", sort);
@@ -11859,7 +11867,7 @@ function searchQueryParams(q, f, page, sort) {
     q: q || f.speaker, kind: f.kind || "all", mode: f.mode || "hybrid",
     page: String(page || 1), per: String(SEARCH_PER_PAGE), sort: sort || "relevance",
   });
-  for (const k of ["speaker", "party", "state", "topic", "from", "to"]) if (f[k]) p.set(k, f[k]);
+  for (const k of ["speaker", "party", "state", "topic", "from", "to", "chamber", "since", "until", "venue"]) if (f[k]) p.set(k, f[k]);
   return p;
 }
 
@@ -11945,7 +11953,7 @@ function recordTypeHref(kind, q = "", f = {}) {
   if (roots[kind]) return roots[kind];
   const p = new URLSearchParams();
   if (q) p.set("q", q);
-  for (const k of ["speaker", "party", "state", "topic", "from", "to"]) if (f[k]) p.set(k, f[k]);
+  for (const k of ["speaker", "party", "state", "topic", "from", "to", "chamber", "since", "until", "venue"]) if (f[k]) p.set(k, f[k]);
   if (f.mode && f.mode !== "hybrid") p.set("mode", f.mode);
   p.set("kind", kind);
   return '/ask?view=search&' + p;
@@ -11976,8 +11984,10 @@ function filterChipSpecs(f) {
   if (f.party) out.push({ id: "party", k: "Party", v: f.party });
   if (f.state) out.push({ id: "state", k: "Parliament", v: STATE_NAMES[f.state] || f.state });
   if (f.topic) out.push({ id: "topic", k: "Topic", v: TOPICS[f.topic] || f.topic });
-  if (f.from || f.to) {
-    const a = f.from || "1993", b = f.to || "2026";
+  if (f.chamber) out.push({ id: "chamber", k: "Chamber", v: f.chamber.replace(/_/g, " ") });
+  if (f.venue && f.venue !== "all") out.push({ id: "venue", k: "Speeches", v: f.venue === "committee" ? "Committee hearings" : "Chamber speeches" });
+  if (f.from || f.to || f.since || f.until) {
+    const a = f.since || f.from || "1993", b = f.until || f.to || "2026";
     out.push({ id: "years", k: "Years", v: a === b ? a : `${a} to ${b}` });
   }
   if (f.kind && f.kind !== (f.scope === "all" ? "all" : "speech")) {
@@ -12028,7 +12038,9 @@ const SEARCH_FILTER_RESETS = {
   party: () => { $("f-party").value = ""; },
   state: () => { $("f-state").value = ""; },
   topic: () => { $("f-topic").value = ""; },
-  years: () => { $("f-from").value = "1993"; $("f-to").value = "2026"; updateSearchYearsLabel(); },
+  chamber: () => { delete searchCitationScope.chamber; },
+  venue: () => { delete searchCitationScope.venue; },
+  years: () => { delete searchCitationScope.since; delete searchCitationScope.until; $("f-from").value = "1993"; $("f-to").value = "2026"; updateSearchYearsLabel(); },
   kind: () => { $("search-kind").value = "all"; },
   mode: () => { $("search-mode").value = "hybrid"; },
 };
@@ -12113,9 +12125,11 @@ function applySearchParams(params) {
   if (key === searchApplied) return;
   searchApplied = key;
   setQueryValue("search-input", params.get("q") || "");
+  searchCitationScope = Object.fromEntries(["chamber", "since", "until", "venue"].filter(key => params.get(key)).map(key => [key, params.get(key)]));
   for (const name of ["speaker", "party", "state", "topic"]) $("f-" + name).value = params.get(name) || "";
   for (const [name, fallback] of [["from", RECORD_FIRST_YEAR], ["to", RECORD_LAST_YEAR]]) {
-    const year = Number(params.get(name)) || fallback;
+    const exact = params.get(name === "from" ? "since" : "until");
+    const year = Number(exact?.slice(0, 4) || params.get(name)) || fallback;
     $("f-" + name).value = String(Math.min(RECORD_LAST_YEAR, Math.max(RECORD_FIRST_YEAR, Math.round(year))));
   }
   updateSearchYearsLabel();
