@@ -272,7 +272,7 @@ test('no new uses of deprecated token names', (t) => {
 // lowers the share; the rules other lanes own still count until they move.
 const SHARE_BASELINE = {
   'public/style.css': 4.6,
-  'public/ui-controls.css': 3.2,
+  'public/ui-controls.css': 3.0,
   'public/ui-source.css': 6.5,
   'public/voice.css': 3.5,
 };
