@@ -24,7 +24,7 @@
   column-gap: var(--sp-8); min-height: 32px; max-width: 100%; box-sizing: border-box;
   font: var(--type-fine); color: var(--ink-soft);
 }
-.ui-source > summary::after { content: ""; position: absolute; inset: -6px 0; }
+.ui-source > summary::after { content: ""; position: absolute; inset: calc(-1 * var(--sp-8)) 0; }
 .ui-source-glyph {
   width: var(--size-icon-sm); height: var(--size-icon-sm); flex: 0 0 var(--size-icon-sm);
   fill: none; stroke: currentColor; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round;
@@ -36,6 +36,12 @@
 }
 .ui-source > summary:hover .ui-source-name, .ui-source[open] .ui-source-name { text-decoration-color: var(--bronze-ink); }
 .ui-source-state { color: var(--ink); font-weight: var(--weight-strong); }
+
+/* ---- A row's own source link: fine print in the record's bronze, for a row
+   whose original is one click away (a declaration, a division, a contract). */
+.ui-source-link { display: inline-flex; align-items: center; gap: var(--sp-4); font: var(--type-fine); color: var(--bronze-ink); text-decoration: underline; text-decoration-color: var(--bronze-rule); text-underline-offset: 3px; text-decoration-thickness: 1px; }
+.ui-source-link:hover { text-decoration-color: var(--bronze-ink); }
+@media (pointer: coarse) { .ui-source-link { min-height: var(--size-target); } }
 
 /* ---- MachineLabel: a pill in the bills wash, "✦ Machine-written", once at the
    top of a machine-written block. 26 drawn; the hit area reaches 44. The still

@@ -8,18 +8,18 @@
    (the source sheet). Colours come from tokens.css only. */
 :root {
   --ui-height: var(--size-control);
-  --ui-font: .9375rem;
+  --ui-font: var(--text-15);
   --ui-radius: var(--radius-sm);
   --ui-radius-press: var(--radius-pill);
-  --ui-pad: 1rem;
+  --ui-pad: var(--sp-16);
   /* The secondary fill and its pressed step: navy wash, a shade deeper. */
   --ui-wash: var(--navy-wash);
   --ui-wash-pressed: color-mix(in srgb, var(--navy) 10%, var(--navy-wash));
   --ui-motion: var(--duration-quick) var(--ease-standard);
 }
-[data-ui-size="compact"] { --ui-height: var(--size-control-compact); --ui-font: .875rem; --ui-pad: .875rem; }
-[data-ui-size="default"] { --ui-height: var(--size-control); --ui-font: .9375rem; --ui-pad: 1rem; }
-[data-ui-size="large"] { --ui-height: var(--size-control-large); --ui-font: 1rem; --ui-pad: 1.25rem; }
+[data-ui-size="compact"] { --ui-height: var(--size-control-compact); --ui-font: var(--text-15); --ui-pad: var(--sp-12); }
+[data-ui-size="default"] { --ui-height: var(--size-control); --ui-font: var(--text-15); --ui-pad: var(--sp-16); }
+[data-ui-size="large"] { --ui-height: var(--size-control-large); --ui-font: var(--text-16); --ui-pad: var(--sp-20); }
 
 /* ---- Button: primary (navy), secondary (navy wash, no outline), quiet, danger.
    The transparent border is what forced colours draws as the button's edge. */
@@ -46,7 +46,7 @@
 }
 :is(button, a).ui-button[data-variant="danger"]:is(:hover, :active) { background: var(--danger); color: var(--on-navy); }
 /* A toggle that is on (Follow, a pressed view) and the chosen choice chip. */
-:is(button, a).ui-button[aria-pressed="true"] { background: var(--navy); color: var(--on-navy); --ui-spinner: var(--on-navy); }
+:is(button, a).ui-button:is([aria-pressed="true"], [aria-selected="true"]) { background: var(--navy); color: var(--on-navy); --ui-spinner: var(--on-navy); }
 .ui-button svg, .ui-control-icon { width: var(--size-icon-md); height: var(--size-icon-md); flex: 0 0 var(--size-icon-md); fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
 /* IconButton: a circle with a required label. */
 :is(button, a).ui-button.ui-icon-button { padding: var(--sp-8); }
@@ -111,7 +111,9 @@ textarea.ui-input.grow-field { display: block; min-height: var(--ui-height); hei
   min-height: calc(var(--ui-height) - 10px); padding-block: var(--sp-4); border-color: transparent; background: transparent; color: var(--ink-soft);
 }
 .ui-segmented > .ui-button:hover { background: transparent; color: var(--ink); }
-.ui-segmented > .ui-button[aria-pressed="true"] { background: var(--paper-raised); border-color: var(--line-control); color: var(--ink); }
+.ui-segmented > .ui-button:is([aria-pressed="true"], [aria-selected="true"]) { background: var(--paper-raised); border-color: var(--line-control); color: var(--ink); }
+/* A segment draws inside the track; on touch its hit area reaches 44. */
+.ui-segmented > .ui-button:not([aria-busy="true"])::after { content: ""; position: absolute; inset: calc(-1 * var(--sp-4)) 0; }
 
 /* ---- Choice chip: pick among peers. Pill, navy wash; navy when chosen.
    36 drawn, 44 on touch. .chip is the retired name for the same thing. */
@@ -224,15 +226,82 @@ a:is(.ui-tag, .topic-chip):hover { text-decoration: underline; text-underline-of
 }
 
 /* ---- Layout helpers. */
-.ui-toolbar { display: flex; flex-wrap: wrap; align-items: end; gap: var(--sp-16); padding: var(--sp-16); margin: var(--sp-24) 0 var(--sp-16); border: var(--border-hairline) solid var(--divider-subtle); border-radius: var(--ui-radius); background: var(--paper-raised); }
+/* A toolbar is a row of controls on the paper; every use had stripped the old box. */
+.ui-toolbar { display: flex; flex-wrap: wrap; align-items: end; gap: var(--space-block); margin: var(--space-block) 0; }
 .ui-toolbar > .ui-field { flex: 1 1 180px; }
 .ui-toolbar > .ui-field:first-child { flex-grow: 2; }
 /* Content dividers: colour encodes hierarchy; the composition owns spacing. */
 .ui-divider { display: block; width: 100%; height: 0; margin: 0; border: 0; border-top: var(--border-hairline) solid var(--divider-default); }
 .ui-divider[data-variant="subtle"] { border-top-color: var(--divider-subtle); }
 
+/* ---- Filter bar (index pages: directories, Bills, Declared, Instruments,
+   Audit, receipts, grants): the search field on a line of its own, then every
+   filter as a compact pill select and every toggle as a chip, one wrapping row.
+   Selects size to their chosen option where field-sizing is supported and keep
+   a line of their own where it is not. */
+.ui-filter-bar { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-tight); margin: var(--space-block) 0 0; }
+.ui-filter-bar > .ui-filter-search { flex: 1 1 100%; min-width: 0; }
+@media (min-width: 1101px) { .ui-filter-bar > .ui-filter-search { flex: 1 1 13rem; max-width: 20rem; } }
+.ui-filter-bar .ui-filter-search .ui-input { border-radius: var(--radius-md); }
+.ui-filter-bar > .ui-filter-field { flex: 0 1 auto; width: auto; max-width: 100%; min-width: 0; }
+.ui-filter-bar select.ui-input, .ui-filter-bar > .ui-filter-field select {
+  field-sizing: content; width: auto; max-width: 100%; min-height: var(--size-control-compact); height: var(--size-control-compact);
+  padding: 0 calc(var(--sp-12) + var(--size-icon-sm) + var(--sp-8)) 0 var(--sp-16);
+  border: var(--border-hairline) solid transparent; border-radius: var(--radius-pill); background-color: var(--ui-wash);
+  color: var(--navy); font: var(--type-label); background-position: right var(--sp-12) center; background-size: var(--size-icon-sm) var(--size-icon-sm);
+}
+.ui-filter-bar select:hover { background-color: var(--ui-wash-pressed); }
+.ui-filter-bar .ui-filter-toggle {
+  display: inline-flex; align-items: center; gap: var(--sp-8); width: auto; min-height: var(--size-control-compact);
+  padding: 0 var(--sp-16) 0 var(--sp-12); border-radius: var(--radius-pill); background: var(--ui-wash); color: var(--navy); font: var(--type-label); cursor: pointer;
+}
+.ui-filter-bar .ui-filter-toggle > input { width: var(--size-icon-sm); height: var(--size-icon-sm); flex: 0 0 var(--size-icon-sm); margin: 0; accent-color: var(--navy); }
+.ui-filter-bar .ui-filter-toggle:has(input:checked) { background: var(--navy); color: var(--on-navy); }
+.ui-filter-bar .ui-filter-toggle:has(input:checked) > input { accent-color: var(--on-navy); }
+.ui-filter-bar > .ui-filter-actions { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-tight) var(--space-block); }
+.ui-filter-count { margin: var(--space-block) 0 0; font: var(--type-fine); color: var(--ink-soft); font-variant-numeric: tabular-nums; }
+
+/* ---- Tabs: two to four views of one page, an underline under the chosen one
+   (Ask | Search, the community tabs). The money hub's row is the nav lane's. */
+.ui-tabs { display: flex; flex-wrap: wrap; gap: var(--space-group); margin: 0 0 var(--space-block); border-bottom: var(--border-hairline) solid var(--divider-subtle); }
+.ui-tabs > :is(a, button) {
+  appearance: none; display: inline-flex; align-items: center; min-height: var(--size-target); margin-bottom: calc(-1 * var(--border-hairline)); padding: 0;
+  border: 0; border-bottom: var(--border-focus) solid transparent; border-radius: 0; background: none;
+  font: var(--type-control); color: var(--ink-soft); text-decoration: none; cursor: pointer;
+}
+.ui-tabs > :is(a, button):hover { color: var(--navy); }
+.ui-tabs > :is([aria-selected="true"], [aria-pressed="true"], [aria-current="page"]) { color: var(--navy); border-bottom-color: var(--navy); }
+
+/* ---- Disclosure: a row that opens in place. The chevron turns; the row
+   keeps a 44px target. */
+.ui-disclosure > summary {
+  display: flex; align-items: center; justify-content: space-between; gap: var(--space-block);
+  min-height: var(--size-target); list-style: none; cursor: pointer; font: var(--type-strong); color: var(--ink);
+}
+.ui-disclosure > summary::-webkit-details-marker { display: none; }
+.ui-disclosure > summary::after {
+  content: ""; flex: none; width: var(--sp-8); height: var(--sp-8); margin-right: var(--sp-4);
+  border-right: var(--border-focus) solid var(--ink-soft); border-bottom: var(--border-focus) solid var(--ink-soft);
+  transform: translateY(-25%) rotate(45deg); transition: transform var(--duration-standard) var(--ease-standard);
+}
+.ui-disclosure[open] > summary::after { transform: translateY(25%) rotate(-135deg); }
+.ui-disclosure > summary:hover { color: var(--bronze-ink); }
+.ui-disclosure-body { padding: 0 0 var(--space-heading); }
+
+/* ---- Link button: an action that reads as a link (bronze underline). */
+button.ui-link {
+  appearance: none; display: inline; padding: 0; margin: 0; border: 0; background: none; cursor: pointer;
+  font: inherit; color: var(--ink); text-align: left; text-decoration: underline;
+  text-decoration-color: var(--bronze-rule); text-underline-offset: 3px; text-decoration-thickness: 1.5px;
+}
+button.ui-link:hover { color: var(--bronze-ink); text-decoration-color: var(--bronze-ink); }
+
+/* ---- Actions: a block's drawn actions on one wrapping row. */
+.ui-actions { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-tight); margin: var(--space-block) 0 0; }
+.ui-actions:empty { display: none; }
+
 /* ---- Focus: one ring, bronze ink on paper, outside the shape. */
-:is(.ui-button, .ui-input, .ui-choice > input, .ui-chip, .chip, .ui-filter-chip, a.ui-tag, a.topic-chip):focus-visible,
+:is(.ui-button, .ui-input, .ui-choice > input, .ui-chip, .chip, .ui-filter-chip, a.ui-tag, a.topic-chip, .ui-tabs > a, .ui-tabs > button, .ui-disclosure > summary, button.ui-link):focus-visible,
 label.ui-chip:has(input:focus-visible) {
   outline: var(--border-focus) solid var(--bronze-ink); outline-offset: 3px;
 }
@@ -241,20 +310,24 @@ label.ui-chip:has(input:focus-visible) {
    Safari does not zoom on focus. */
 @media (pointer: coarse) { [data-ui-size="compact"] { --ui-height: var(--size-target); } }
 @media (max-width: 1000px), (pointer: coarse) {
-  :root, [data-ui-size] { --ui-font: 1rem; }
+  :root, [data-ui-size] { --ui-font: var(--text-16); }
+  .ui-filter-bar select, .ui-filter-bar .ui-filter-toggle { min-height: var(--size-target); height: var(--size-target); }
   [data-ui-size="compact"] { --ui-height: var(--size-target); }
   :is(button, a).ui-filter-chip, :is(button, a, label).ui-chip, :is(button, a).chip:not(.ui-button),
   a:is(.ui-tag, .topic-chip) { min-height: var(--size-target); }
 }
 @media (prefers-reduced-motion: reduce) {
   :is(.ui-button, .ui-chip, .chip, .ui-filter-chip) { transition: none; }
+  .ui-disclosure > summary::after { transition: none; }
   button.ui-button[aria-busy="true"]::after { animation: none; border-style: dotted; }
 }
 /* Forced colours: fills drop away, so every chosen state and every label keeps
    an edge or a system colour of its own. */
 @media (forced-colors: active) {
   :is(.ui-button, .ui-chip, .chip, .ui-filter-chip)[aria-pressed="true"],
-  .ui-segmented > .ui-button[aria-pressed="true"],
+  .ui-segmented > .ui-button:is([aria-pressed="true"], [aria-selected="true"]),
+  .ui-tabs > :is([aria-selected="true"], [aria-pressed="true"], [aria-current="page"]),
+  .ui-filter-bar .ui-filter-toggle:has(input:checked),
   label.ui-chip:has(input:checked) { outline: var(--border-focus) solid Highlight; outline-offset: -4px; }
   select.ui-input:not([multiple]) { appearance: auto; background-image: none !important; }
   .ui-input[aria-invalid="true"] { border: var(--border-focus) dashed CanvasText; }

@@ -401,8 +401,124 @@ a.visually-hidden:focus-visible {
 /* Fine print is the fine role. A block's notes are moving into its source line
    (fineprintSourceHTML in app.js, ui-source.css); pass 3 retires these. */
 .fineprint { font: var(--type-fine); color: var(--ink-soft); max-width: var(--size-readable); margin: var(--sp-12) 0 0; }
-/* The money map's source note sits under a full-width map, so it runs the
-   same width and puts its two ways out on a row of their own. */
+
+/* ==== shared components (12 Oct 2026 web uplift) ==========================
+   docs/design/uplift-2026-10/PROPOSAL.md §2. Generic building blocks on the
+   token scale; feature CSS owns layout, never a component's type, spacing,
+   edges or states. Controls live in ui-controls.css, provenance in
+   ui-source.css. Home's hp-* rules (home.css) are the reference these were
+   drawn from. */
+
+/* ---- Page head: the title, one meta line, an optional lede. */
+.ui-page-head { display: grid; gap: var(--space-line); margin: 0 0 var(--space-section); }
+.ui-page-head > :where(h1) { margin: 0; font: var(--type-title); color: var(--ink); overflow-wrap: anywhere; }
+.ui-page-meta { margin: 0; font: var(--type-metadata); color: var(--ink-soft); }
+.ui-lede { margin: var(--space-heading) 0 0; max-width: var(--size-readable); font: var(--type-body); color: var(--ink-soft); }
+
+/* ---- Section: one rule at the top, the section step above it, an optional
+   accent mark where a view's sections differ by category. */
+.ui-section { position: relative; margin-top: var(--space-section); padding-top: var(--space-heading); border-top: var(--border-hairline) solid var(--divider-default); }
+.ui-section:first-child { margin-top: 0; }
+.ui-section[data-accent]::before {
+  content: ""; position: absolute; top: calc(-1 * var(--border-hairline)); left: 0;
+  width: var(--border-accent-mark-width); height: var(--border-accent-mark-height); background: var(--accent-ink, var(--bronze));
+}
+.ui-section[data-accent="money"] { --accent-ink: var(--money-ink); }
+.ui-section[data-accent="votes"] { --accent-ink: var(--votes-ink); }
+.ui-section[data-accent="interests"] { --accent-ink: var(--interests-ink); }
+.ui-section[data-accent="bills"] { --accent-ink: var(--bills-ink); }
+.ui-section-head { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: var(--space-tight) var(--space-block); margin: 0 0 var(--space-heading); }
+.ui-section-head > :where(h2, h3), .ui-section-title { margin: 0; font: var(--type-heading); color: var(--ink); }
+.ui-section-head > a { font: var(--type-metadata); font-weight: var(--weight-strong); }
+.ui-subsection-title { margin: var(--space-group) 0 var(--space-tight); font: var(--type-subheading); color: var(--ink); }
+.ui-section-note { margin: var(--space-line) 0 0; max-width: var(--size-readable); font: var(--type-metadata); color: var(--ink-soft); }
+
+/* ---- On this page: a short list of the page's sections. */
+.ui-toc-head { margin: 0 0 var(--space-line); font: var(--type-label); color: var(--ink-soft); }
+.ui-toc-list { list-style: none; margin: 0; padding: 0; }
+.ui-toc-list li + li { border-top: var(--border-hairline) solid var(--divider-subtle); }
+.ui-toc-list a { display: flex; align-items: center; min-height: var(--size-target); font: var(--type-strong); color: var(--ink); text-decoration: none; }
+.ui-toc-list a:hover { color: var(--bronze-ink); text-decoration: underline; text-decoration-color: var(--bronze-rule); }
+
+/* ---- Card: a unit you can pick up (radius 12, raised, a hairline, no
+   shadow); the whole card is the link. Plate: a frame for a map or chart. */
+.ui-card {
+  position: relative; padding: var(--space-block); border: var(--border-hairline) solid var(--divider-subtle);
+  border-radius: var(--radius-md); background: var(--paper-raised);
+  transition: border-color var(--duration-quick) var(--ease-standard);
+}
+.ui-card:hover { border-color: var(--line-control); }
+.ui-card-title { margin: 0; font: var(--type-subheading); color: var(--ink); }
+.ui-card-title a { color: inherit; text-decoration: none; }
+.ui-card-title a::after { content: ""; position: absolute; inset: 0; border-radius: inherit; }
+.ui-card:hover .ui-card-title a { color: var(--bronze-ink); text-decoration: underline; text-decoration-color: var(--bronze-rule); }
+.ui-card-text { margin: var(--space-line) 0 0; font: var(--type-metadata); color: var(--ink-soft); }
+.ui-card:has(a:focus-visible) { outline: var(--border-focus) solid var(--bronze-ink); outline-offset: 3px; }
+.ui-card-title a:focus-visible { outline: none; }
+.ui-card-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 15rem), 1fr)); gap: var(--space-block); margin: 0; padding: 0; list-style: none; }
+.ui-plate { position: relative; overflow: hidden; border: var(--border-hairline) solid var(--divider-subtle); border-radius: var(--radius-md); background: var(--paper-raised); }
+
+/* ---- List and row: one hairline between rows, the row step either side.
+   Densities: compact (8), default (12), airy (16). */
+.ui-list { list-style: none; margin: 0; padding: 0; }
+.ui-list > li, .ui-row { padding-block: var(--space-row); }
+.ui-list > li + li { border-top: var(--border-hairline) solid var(--divider-subtle); }
+.ui-list[data-density="compact"] > li { padding-block: var(--sp-8); }
+.ui-list[data-density="airy"] > li { padding-block: var(--sp-16); }
+.ui-list[data-rule="none"] > li + li { border-top: 0; }
+.ui-row { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: var(--space-line) var(--space-block); align-items: baseline; }
+.ui-row-title { margin: 0; font: var(--type-subheading); color: var(--ink); overflow-wrap: anywhere; }
+.ui-row-name { margin: 0; font: var(--type-strong); color: var(--ink); }
+.ui-row-title a, .ui-row-name a { color: inherit; text-decoration: none; }
+.ui-row-title a:hover, .ui-row-name a:hover { color: var(--bronze-ink); text-decoration: underline; text-decoration-color: var(--bronze-rule); }
+.ui-row-meta { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-line) var(--space-tight); margin: var(--space-line) 0 0; font: var(--type-metadata); color: var(--ink-soft); }
+.ui-row-text { margin: var(--space-line) 0 0; font: var(--type-body); color: var(--ink); }
+.ui-row-figure { font: var(--type-strong); color: var(--ink); font-variant-numeric: tabular-nums; text-align: right; white-space: nowrap; }
+
+/* ---- Byline: a 44 portrait (a blank circle when there is none), the name,
+   the party label, and one meta line. */
+.ui-byline { display: grid; grid-template-columns: var(--size-portrait-row) minmax(0, 1fr); gap: var(--space-line) var(--space-heading); align-items: start; }
+.ui-byline-portrait {
+  display: block; width: var(--size-portrait-row); height: var(--size-portrait-row); border-radius: var(--radius-round);
+  object-fit: cover; background: var(--paper-sunken); box-shadow: var(--ring-inset-hairline) var(--divider-subtle);
+}
+.ui-byline-who { display: flex; flex-wrap: wrap; align-items: baseline; gap: var(--space-line) var(--space-tight); }
+.ui-byline-name { font: var(--type-strong); color: var(--ink); }
+.ui-byline-meta { display: block; font: var(--type-fine); color: var(--ink-soft); }
+
+/* ---- Figures: the one number a block is about, its label under it. */
+.ui-stats { display: flex; flex-wrap: wrap; gap: var(--space-block) var(--space-group); margin: 0 0 var(--space-block); }
+.ui-stat { min-width: 0; }
+.ui-stat-value { display: block; font: var(--type-display); color: var(--ink); font-variant-numeric: tabular-nums; }
+.ui-stat-label { display: block; margin-top: var(--space-line); font: var(--type-fine); color: var(--ink-soft); }
+.ui-stat[data-size="compact"] .ui-stat-value { font: var(--weight-strong) var(--text-24)/var(--leading-tight) var(--serif); }
+
+/* ---- Bar: a 4px track, the subject series in bronze. Legend: swatches and
+   words in the fine role. */
+.ui-bar { position: relative; display: block; height: var(--sp-4); border-radius: var(--radius-pill); background: var(--chart-baseline); overflow: hidden; }
+.ui-bar > i { display: block; height: 100%; border-radius: inherit; background: var(--chart-mark); }
+.ui-legend { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-line) var(--space-block); margin: 0 0 var(--space-heading); font: var(--type-fine); color: var(--ink-soft); }
+
+/* ---- Key and value: the keys in the label role. */
+.ui-kv { display: grid; grid-template-columns: max-content minmax(0, 1fr); gap: var(--space-tight) var(--space-block); margin: 0; }
+.ui-kv > div { display: contents; }
+.ui-kv dt { font: var(--type-label); color: var(--ink-soft); }
+.ui-kv dd { margin: 0; font: var(--type-body); color: var(--ink); overflow-wrap: anywhere; }
+
+/* ---- States: empty and error are a sentence (and a way on); loading is a
+   still skeleton; a status line is fine print that says what is happening. */
+.ui-empty { margin: var(--space-block) 0 0; max-width: var(--size-readable); font: var(--type-body); color: var(--ink-soft); }
+.ui-empty[data-variant="error"] { color: var(--danger); }
+.ui-skeleton { display: block; height: 0.9em; border-radius: var(--radius-sm); background: var(--paper-sunken); }
+.ui-status-line { margin: var(--space-block) 0 0; font: var(--type-metadata); color: var(--ink-soft); }
+.ui-status-line:empty { display: none; }
+
+
+@media (forced-colors: active) {
+  .ui-card, .ui-plate { border-color: CanvasText; }
+  .ui-section[data-accent]::before { background: CanvasText; }
+}
+@media (prefers-reduced-motion: reduce) { .ui-card { transition: none; } }
 
 a, button.link {
   color: var(--ink); text-decoration: underline;
@@ -1604,17 +1720,12 @@ button.link.result-title:hover { color: var(--bronze-ink); }
 /* ---- empty record --------------------------------------------------------- */
 /* A pair of empty quotation marks in bronze: the record was asked and had
    nothing to say. Serif title, one plain sentence, then the ways out. */
-.empty-state {
-  margin-top: var(--sp-20); padding: var(--sp-40) var(--sp-24) var(--sp-32); text-align: center;
-  background: var(--paper-raised); border: var(--border-hairline) solid var(--divider-subtle); border-radius: var(--radius-sm);
-}
-.empty-mark {
-  display: block; margin-bottom: var(--sp-12);
-  font: 400 3.25rem/0.8 var(--serif);  color: var(--bronze);
-}
+/* An empty state is a sentence and a way on, not a box. */
+.empty-state { margin-top: var(--space-block); padding: var(--space-group) 0; }
+.empty-mark { display: none; }
 .empty-title { margin: 0 0 var(--sp-8); font: var(--weight-regular) var(--text-24)/var(--leading-snug) var(--serif); color: var(--ink); overflow-wrap: anywhere; }
-.empty-lede { margin: 0 auto; max-width: 54ch; color: var(--ink-soft); font-size: var(--text-15); line-height: var(--leading-body); }
-.empty-actions { display: flex; flex-wrap: wrap; justify-content: center; gap: var(--sp-8); margin-top: var(--sp-24); }
+.empty-lede { margin: 0; max-width: 54ch; color: var(--ink-soft); font-size: var(--text-15); line-height: var(--leading-body); }
+.empty-actions { display: flex; flex-wrap: wrap; gap: var(--sp-8); margin-top: var(--sp-24); }
 .empty-actions:empty { display: none; }
 
 .chat-next-btns { display: flex; flex-wrap: wrap; gap: var(--sp-8); }
@@ -1662,10 +1773,7 @@ button.link.result-title:hover { color: var(--bronze-ink); }
 /* Figures read as ledger entries, not cards: a short bronze rule, the number
    set in the record's serif beneath it, a muted caption under that. */
 .tiles { display: flex; flex-wrap: wrap; gap: var(--sp-16) var(--sp-32); margin: var(--sp-16) 0 var(--sp-12); }
-.tile {
-  padding: var(--sp-12) 0 var(--sp-4); min-width: 150px; flex: 1 1 160px; max-width: 340px;
-  border-top: var(--border-focus) solid var(--bronze);
-}
+.tile { min-width: 150px; flex: 1 1 160px; max-width: 340px; }
 .tile b {
   display: block; font: var(--type-display); color: var(--ink);
   font-variant-numeric: tabular-nums; 
@@ -1673,8 +1781,8 @@ button.link.result-title:hover { color: var(--bronze-ink); }
 .tile span { display: block; margin-top: var(--sp-8); color: var(--ink-soft); font: var(--type-fine); }
 
 .chart {
-  margin: var(--sp-16) 0 0; background: var(--paper-raised); border: var(--border-hairline) solid var(--divider-subtle);
-  border-radius: var(--radius-sm); padding: var(--sp-16) var(--sp-16); max-width: 920px;
+  /* Charts stand on the paper (principle 2); a page that wants a frame asks for ui-plate. */
+  margin: var(--space-block) 0 0; max-width: 920px;
   /* Contain the sr-only data table: tables refuse widths below min-content,
      so on narrow screens it would otherwise widen the page's scroll area. */
   position: relative; overflow: hidden;
@@ -2158,10 +2266,8 @@ a.report-card .card-meta { color: var(--ink-soft); }
 /* Two rows of industry chips arrive with the map's data; hold their space. */
 #front-map-chips { min-height: 76px; }
 @media (max-width: 700px) { #front-map-chips { min-height: 44px; } }
-.infobox {
-  background: var(--paper-raised); border: var(--border-hairline) solid var(--divider-subtle); border-radius: var(--radius-sm);
-  border-top: 3px solid var(--bronze); padding: var(--sp-16) var(--sp-20); position: sticky; top: calc(var(--header-h) + 1rem);
-}
+/* The side column is a column, not a card (principle 2). */
+.infobox { position: sticky; top: calc(var(--header-h) + var(--sp-16)); }
 .infobox dl { margin: var(--sp-8) 0 0; display: grid; grid-template-columns: auto 1fr; gap: var(--sp-4) var(--sp-16); }
 .infobox dt { color: var(--ink-faint); font-size: var(--text-13); }
 .infobox dd { margin: 0; font-size: var(--text-15); font-variant-numeric: tabular-nums; }
