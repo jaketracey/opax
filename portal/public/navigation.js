@@ -205,8 +205,12 @@
 
     return { close };
   }
+  // The page's menus are drawn and wired once, however often this script runs.
+  const initialised = Symbol.for('opax.navigation.page');
+  if (typeof document !== 'undefined' && document[initialised]) return;
   globalThis.OpaxNavigation = { sections, money, active, moneyNav, mountDesktop, mountDrawer };
   if (typeof document === 'undefined') return;
+  document[initialised] = true;
   const instrumentPage = /^\/(?:instruments?|audit)(\/|$)/.test(location.pathname);
   const pageSections = instrumentPage ? sections.map(s => s.children ? { ...s, children: s.children.filter(([href]) => !href.startsWith('/subject/person')) } : s) : sections;
   const desktop = document.querySelector('#primary-nav .nav-list');
@@ -242,10 +246,24 @@
     if (instrumentPage) for (const link of document.querySelectorAll('a[href="/instruments"]')) link.setAttribute('aria-current', 'page');
   }).catch(() => {});
   globalThis.OpaxNavigation.instrumentsReady = instrumentsReady;
-  if (instrumentPage) {
+  // Server-only pages (sitting weeks, estimates, the Victorian election hub,
+  // audit, instruments, not found) have no page script of their own, so their
+  // menus, drawer and header search are wired here. app.js, home.js and
+  // community.js mount the same controls themselves.
+  if (!document.querySelector('script[src^="/app.js"], script[src^="/home.js"], script[src^="/community.js"]')) {
     mountDesktop(); mountDrawer();
-    for (const link of document.querySelectorAll('a[href="/instruments"]')) link.setAttribute('aria-current', 'page');
+    const searchHref = q => `/ask?view=search&q=${encodeURIComponent(q)}`;
+    // Without the app's suggestion engine the field offers one row: search the record.
+    const attachSearch = () => globalThis.OpaxQuickSearch?.attach(document.getElementById('mast-q'), document.getElementById('mast-sugg'), {
+      idPrefix: 'ms', searchHref, navigate: href => location.assign(href),
+      source: async q => [{ label: `Search the record for “${q}”`, type: 'Search', href: searchHref(q) }],
+      beforeGo: () => globalThis.OpaxQuickSearch?.header?.close(),
+    });
+    // quick-search.js is deferred after this script; it has run by DOMContentLoaded.
+    if (globalThis.OpaxQuickSearch) attachSearch();
+    else document.addEventListener('DOMContentLoaded', attachSearch, { once: true });
   }
+  if (instrumentPage) for (const link of document.querySelectorAll('a[href="/instruments"]')) link.setAttribute('aria-current', 'page');
   for (const node of document.querySelectorAll('[data-money-navigation]')) node.innerHTML = moneyNav(location.pathname, new URLSearchParams(location.search).get('jur'));
   // The band's Ask icon on pages the app does not run on (sitting weeks,
   // estimates, audit, instruments, community, not found): the same icon, as a
