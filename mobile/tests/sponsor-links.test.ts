@@ -7,7 +7,22 @@ import {
   sponsorRows,
   sponsorSlug,
 } from '../src/features/bills/sponsors';
-import { bills, index, manifest, people, pinned, roster, slugs } from './pinned';
+import { readFileSync } from 'node:fs';
+import { resolve } from 'node:path';
+import directorySnapshot from '../scripts/fixtures/directory-snapshot.json';
+import { formerMember, partyText } from '../src/design/party';
+import { fixtureBytes } from './fixture-bytes';
+import {
+  bills,
+  index,
+  manifest,
+  people,
+  pinned,
+  roster,
+  slugs,
+} from './pinned';
+
+const directoryBytes = fixtureBytes(directorySnapshot);
 
 const id = (pid: string) => d.rosterId(pid);
 const directory = { roster, slugs, people, manifest, electorates: index };
@@ -69,7 +84,12 @@ describe('sponsor resolver, one row per cause', () => {
     // Hyphenated and compound surnames.
     ['hyphenated', 'Sarah Hanson-Young', '10711', 'sarah-hanson-young'],
     ['hyphen as a space', 'Sarah Hanson Young', '10711', 'sarah-hanson-young'],
-    ['hyphen as a space, no pid', 'Sarah Hanson Young', null, 'sarah-hanson-young'],
+    [
+      'hyphen as a space, no pid',
+      'Sarah Hanson Young',
+      null,
+      'sarah-hanson-young',
+    ],
     // Middle names, initials and short forms need the pid.
     ['short first name', 'Chris Back', '10722', 'christopher-back'],
     ['short first name, no pid', 'Chris Back', null, null],
@@ -78,7 +98,12 @@ describe('sponsor resolver, one row per cause', () => {
     ['initial', 'A Wilkie', '10727', 'andrew-wilkie'],
     // Curly and straight twins (pin: straight has 10496, curly has none).
     ['curly twin with the pid', 'Brendan O’Connor', '10496', 'brendan-oconnor'],
-    ['straight twin with the pid', "Brendan O'Connor", '10496', 'brendan-oconnor'],
+    [
+      'straight twin with the pid',
+      "Brendan O'Connor",
+      '10496',
+      'brendan-oconnor',
+    ],
     ['twins with no pid', 'Brendan O’Connor', null, null],
     // Diacritics, case and spacing.
     ['upper case', 'ANDREW WILKIE', '10727', 'andrew-wilkie'],
@@ -92,9 +117,7 @@ describe('sponsor resolver, one row per cause', () => {
     ['no pid, not in the roster', 'Zhenya Wang', null, null],
     ['an office', 'Minister for Finance', null, null],
   ])('%s: %s', (_cause, name, pid, slug, onRoster = roster) =>
-    expect(
-      sponsorSlug(name, onRoster, slugs, pid ? id(pid) : null),
-    ).toBe(slug),
+    expect(sponsorSlug(name, onRoster, slugs, pid ? id(pid) : null)).toBe(slug),
   );
 
   test('two roster people with one name stay plain text, pid or not', () => {
@@ -119,11 +142,15 @@ describe('sponsor resolver, one row per cause', () => {
     // to the pid's row, whose page is the one slug for that name.
     const namesake = {
       ...roster,
-      people: [...roster.people, twin('99990001'), { name: 'Sam Example', party: null }],
+      people: [
+        ...roster.people,
+        twin('99990001'),
+        { name: 'Sam Example', party: null },
+      ],
     };
-    expect(
-      sponsorSlug('Sam Example', namesake, withSlug, id('99990001')),
-    ).toBe('sam-example');
+    expect(sponsorSlug('Sam Example', namesake, withSlug, id('99990001'))).toBe(
+      'sam-example',
+    );
     expect(sponsorSlug('Sam Example', namesake, withSlug)).toBeNull();
   });
 
@@ -169,7 +196,12 @@ describe('Faruqi on a pinned bill', () => {
   });
 
   test('an unread register print reads as the profile name once linked', () => {
-    const [row] = sponsorRows(one('KATTER, Bob, Jnr, MP'), null, null, directory);
+    const [row] = sponsorRows(
+      one('KATTER, Bob, Jnr, MP'),
+      null,
+      null,
+      directory,
+    );
     expect(row).toMatchObject({ slug: 'bob-katter', name: 'Bob Katter' });
   });
 
@@ -188,4 +220,57 @@ describe('Faruqi on a pinned bill', () => {
     });
     expect(row!.slug).toBeNull();
   });
+});
+
+describe('journey 55’s two bills, on the fixtures the journey runs on', () => {
+  // The journey's unlinked row went stale once Faruqi's bill linked (lane C
+  // device block, 13 Oct): its bills are read from the journey files and
+  // resolved here, so the next change that links its sponsor fails here.
+  const fixtureBill = (key: string) => {
+    const path = `/bills/${key}.json`;
+    const raw = Object.hasOwn(directorySnapshot.files, path)
+      ? JSON.parse(directoryBytes(path).toString())
+      : pinned(path);
+    return d.billFor(d.decodeBill(raw), bills).identity.data!;
+  };
+  const spoken = (row: ReturnType<typeof sponsorRows>[number]) =>
+    [
+      row.name,
+      row.place,
+      formerMember(row.party?.status),
+      row.party ? partyText(row.party).spoken : null,
+      row.slug ? 'profile' : null,
+    ]
+      .filter(Boolean)
+      .join(', ');
+  test.each(['55-bill-sponsor.yaml', '55b-ipad-bill-sponsor.yaml'])(
+    '%s',
+    (file) => {
+      const flow = readFileSync(
+        resolve(__dirname, '../.maestro', file),
+        'utf8',
+      );
+      const keys = [
+        ...flow.matchAll(/opax:\/\/bills?(?:\/|\?bill=)(au-federal-[\w-]+)/g),
+      ].map((m) => m[1]!);
+      const [linked, unlinked] = keys;
+      expect(keys).toHaveLength(2);
+      const rows = (key: string) => {
+        const bill = fixtureBill(key);
+        return sponsorRows(
+          bill.sponsorMembers,
+          bill.sponsorParty,
+          bill.sponsorPersonId,
+          directory,
+        );
+      };
+      const [wilkie] = rows(linked!);
+      expect(wilkie!.slug).toBe('andrew-wilkie');
+      expect(flow).toContain(`id: bill-sponsor-${wilkie!.slug}`);
+      const [plain] = rows(unlinked!);
+      expect(plain!.slug).toBeNull();
+      expect(flow).toContain('id: bill-sponsor-unlinked-0');
+      expect(flow).toContain(`- assertVisible: '${spoken(plain!)}'`);
+    },
+  );
 });

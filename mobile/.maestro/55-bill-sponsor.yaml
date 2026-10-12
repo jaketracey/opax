@@ -2,8 +2,11 @@ appId: au.com.opax.app
 name: 55 A bill's sponsor is the standard people row
 ---
 # iPhone. Run by path at default size and at AX5. The pinned Wilkie bill has
-# a roster sponsor (portrait, seat line, party chip, chevron); the Faruqi bill
-# has a sponsor the roster cannot place (blank circle, no link).
+# a roster sponsor (portrait, seat line, party chip, chevron); the Leyonhjelm
+# bill (a fixture bill-history file) has a sponsor the roster cannot place
+# (blank circle, no link). The Faruqi bill links since the sponsor resolver
+# fix, so it no longer stands for an unlinked sponsor; sponsor-links.test
+# checks both bills against the pinned roster.
 - launchApp:
     permissions: {}
 - extendedWaitUntil:
@@ -30,7 +33,7 @@ name: 55 A bill's sponsor is the standard people row
 # One spoken label for the row: name, seat, party, then "profile".
 - assertVisible: 'Andrew Wilkie, Member for Clark · Tasmania, Independent, profile'
 - takeScreenshot: ${EVIDENCE}/55-sponsor-linked
-- openLink: opax://bill/au-federal-s1479
+- openLink: opax://bill/au-federal-s1085
 - tapOn:
     text: Open
     optional: true
@@ -47,5 +50,5 @@ name: 55 A bill's sponsor is the standard people row
     speed: 20
     timeout: 180000
 - waitForAnimationToEnd
-- assertVisible: 'Mehreen Faruqi, Greens'
+- assertVisible: 'David Leyonhjelm, Liberal Democrats'
 - takeScreenshot: ${EVIDENCE}/55-sponsor-unlinked

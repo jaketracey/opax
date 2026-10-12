@@ -4,8 +4,8 @@ name: 55b iPad, a bill's sponsor in the Bills split pane
 # iPad, portrait, Full-Screen Apps (taps miss under Windowed Apps). The bill
 # opens in the Bills split view's detail pane. Run by path at default size
 # and at AX5. The pinned Wilkie bill has a roster sponsor (portrait, seat
-# line, party chip, chevron); the Faruqi bill has a sponsor the roster cannot
-# place (blank circle, no link).
+# line, party chip, chevron); the Leyonhjelm bill (a fixture bill-history
+# file) has a sponsor the roster cannot place (blank circle, no link).
 # At AX5 the Settings row sits below the fold, so the taps are optional: run
 # at default size first, which leaves the device in Full-Screen Apps.
 - launchApp:
@@ -47,7 +47,7 @@ name: 55b iPad, a bill's sponsor in the Bills split pane
 # One spoken label for the row: name, seat, party, then "profile".
 - assertVisible: 'Andrew Wilkie, Member for Clark · Tasmania, Independent, profile'
 - takeScreenshot: ${EVIDENCE}/55b-ipad-sponsor-linked
-- openLink: opax://bills?bill=au-federal-s1479
+- openLink: opax://bills?bill=au-federal-s1085
 - tapOn:
     text: Open
     optional: true
@@ -64,5 +64,5 @@ name: 55b iPad, a bill's sponsor in the Bills split pane
     speed: 20
     timeout: 180000
 - waitForAnimationToEnd
-- assertVisible: 'Mehreen Faruqi, Greens'
+- assertVisible: 'David Leyonhjelm, Liberal Democrats'
 - takeScreenshot: ${EVIDENCE}/55b-ipad-sponsor-unlinked
