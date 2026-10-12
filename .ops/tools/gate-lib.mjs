@@ -22,6 +22,25 @@ export function identity(root, tree=snapshot(root)) {
   return {tree,node:process.version,lockfile:hash(readFileSync(join(root,'portal/package-lock.json'))),runner:runnerHash()};
 }
 export const cacheKey = id => hash(JSON.stringify(id));
+export function catalogKey(root,id) {
+  const modules=new Set();
+  const visit=file=>{
+    if(modules.has(file))return;modules.add(file);
+    const source=readFileSync(join(root,file),'utf8');
+    for(const match of source.matchAll(/(?:from\s*|import\s*(?:\(\s*)?)["'](\.\.?\/[^"']+)["']/g)) {
+      const path=relative(root,resolve(root,dirname(file),match[1]));
+      if(path.startsWith('../'))continue;
+      for(const candidate of [path,path+'.ts',path+'.mjs',path+'.js'])if(existsSync(join(root,candidate))&&statSync(join(root,candidate)).isFile())visit(candidate);
+    }
+  };
+  visit('scripts/build_search_catalog.mjs');
+  // Export shards are opened through dynamic paths. Include every tracked JSON
+  // blob as well as the builder's import closure, without hashing 700 MB again.
+  const blobs=git(root,['ls-tree','-rz',id.tree,'--','portal/public','portal/src','scripts'],{maxBuffer:16*1024*1024}).split('\0').filter(Boolean).filter(line=>{
+    const file=line.split('\t')[1];return modules.has(file)||file.startsWith('portal/public/')&&file.endsWith('.json');
+  });
+  return hash(JSON.stringify({blobs,node:id.node,lockfile:id.lockfile,runner:id.runner}));
+}
 export function reusable(record,id,tier,base) {
   return record?.success === true && cacheKey(record.identity) === cacheKey(id) &&
     (record.tier === 'merge' || (tier === 'lane' && record.tier === 'lane' && record.base === base));

@@ -4,7 +4,7 @@ import {mkdtempSync,mkdirSync,writeFileSync,readFileSync,rmSync,existsSync,cpSyn
 import {tmpdir} from 'node:os';
 import {join,resolve} from 'node:path';
 import {spawnSync} from 'node:child_process';
-import {snapshot,git,identity,cacheKey,reusable,selectTests,quote} from '../gate-lib.mjs';
+import {snapshot,git,identity,cacheKey,reusable,selectTests,quote,catalogKey} from '../gate-lib.mjs';
 const tools=resolve(import.meta.dirname,'..');
 function fixture(t){const root=mkdtempSync(join(tmpdir(),'opax-gate-test-'));t.after(()=>rmSync(root,{recursive:true,force:true}));return root;}
 function repo(t){const root=fixture(t);git(root,['init','-q']);git(root,['config','user.name','Fixture']);git(root,['config','user.email','fixture@example.invalid']);mkdirSync(join(root,'portal/test'),{recursive:true});writeFileSync(join(root,'portal/package-lock.json'),'{}');writeFileSync(join(root,'.gitignore'),'.ops/gate-cache/\n');git(root,['add','.']);git(root,['commit','-qm','fixture']);return root;}
@@ -42,4 +42,8 @@ test('explicitly staged files survive a local exclude rule in the snapshot',t=>{
 test('reporter records whole-file durations and failed global summaries',async()=>{
  const {default:reporter}=await import('../gate-reporter.mjs');const file=join(process.cwd(),'fixture.test.mjs');async function* events(){yield{type:'test:summary',data:{file,duration_ms:1250,success:true,counts:{tests:2}}};yield{type:'test:summary',data:{duration_ms:1300,success:false,counts:{tests:2,passed:1,failed:1,skipped:0}}};}
  let out='';for await(const value of reporter(events()))out+=value;assert.match(out,/FILE fixture.test.mjs 1.250s PASS/);assert.match(out,/TESTS 2 PASS 1 FAIL 1/);
+});
+test('catalog cache binds export blobs and transitive builder imports; presentation-only changes can reuse fixtures',t=>{
+ const root=repo(t);mkdirSync(join(root,'scripts'));mkdirSync(join(root,'portal/public'));writeFileSync(join(root,'scripts/build_search_catalog.mjs'),"import '../portal/public/catalog-reader.mjs'");writeFileSync(join(root,'portal/public/catalog-reader.mjs'),'export const x=1');writeFileSync(join(root,'portal/public/export.json'),'{}');
+ const key=()=>catalogKey(root,identity(root));const initial=key();writeFileSync(join(root,'portal/public/navigation.js'),'presentation');assert.equal(key(),initial);writeFileSync(join(root,'portal/public/export.json'),'{"new":true}');assert.notEqual(key(),initial);writeFileSync(join(root,'portal/public/export.json'),'{}');assert.equal(key(),initial);writeFileSync(join(root,'portal/public/catalog-reader.mjs'),'export const x=2');assert.notEqual(key(),initial);
 });

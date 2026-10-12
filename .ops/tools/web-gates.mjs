@@ -1,8 +1,8 @@
 import {spawn} from 'node:child_process';
-import {mkdirSync,readFileSync,writeFileSync,existsSync,rmSync} from 'node:fs';
+import {mkdirSync,readFileSync,writeFileSync,existsSync,rmSync,cpSync,renameSync,readdirSync} from 'node:fs';
 import {join,resolve} from 'node:path';
 import {performance} from 'node:perf_hooks';
-import {git,identity,cacheKey,reusable,selectTests} from './gate-lib.mjs';
+import {git,identity,cacheKey,reusable,selectTests,catalogKey,hash} from './gate-lib.mjs';
 
 const args=process.argv.slice(2), tier=args.shift()||'lane';
 const tools=import.meta.dirname;
@@ -28,6 +28,19 @@ const work=join(cache,`work-${key.slice(0,16)}-${process.pid}`);
 const output=join(cache,`run-${Date.now()}-${tier}`);mkdirSync(output);
 const record={identity:id,base,tier:tier==='review'?'merge':tier,host:process.platform,concurrency,success:false,steps:[]};
 let failure;
+const inventory=dir=>readdirSync(dir,{withFileTypes:true}).flatMap(e=>e.isDirectory()?inventory(join(dir,e.name)).map(([file,digest])=>[e.name+'/'+file,digest]):[[e.name,hash(readFileSync(join(dir,e.name)))]]).sort(([a],[b])=>a.localeCompare(b));
+async function searchFixtures(){
+ const key=catalogKey(work,id),saved=join(cache,'catalog-'+key),target=join(work,'portal/public/search-catalog');
+ try {
+   const meta=JSON.parse(readFileSync(join(saved,'inventory.json')));
+   if(meta.key===key&&JSON.stringify(meta.files)===JSON.stringify(inventory(join(saved,'files')))){
+     rmSync(target,{recursive:true,force:true});cpSync(join(saved,'files'),target,{recursive:true});console.log('search-fixtures: cached build inputs PASS');record.steps.push({name:'search-fixtures',seconds:0,code:0,cached:true});return;
+   }
+ }catch{}
+ await run('search-fixtures','node',['../scripts/build_search_catalog.mjs']);
+ const temp=saved+'.'+process.pid;mkdirSync(temp);cpSync(target,join(temp,'files'),{recursive:true});writeFileSync(join(temp,'inventory.json'),JSON.stringify({key,files:inventory(join(temp,'files'))}));
+ if(existsSync(saved))rmSync(saved,{recursive:true,force:true});renameSync(temp,saved);
+}
 async function run(name,cmd,argv,env={}) {
  console.log(`== ${name}`);const then=performance.now();
  const log=join(output,name+'.log');
@@ -60,7 +73,7 @@ try{
  if(full)await run('release','npm',['run','build:release']);
  else {
    for(const builder of config.builders)if(changed.some(f=>new RegExp(builder.pattern).test(f)))await run(builder.script.replace(':','-'),'npm',['run',builder.script]);
-   await run('search-fixtures','node',['../scripts/build_search_catalog.mjs']);
+   await searchFixtures();
    await run('stamp','node',['../scripts/stamp_assets.mjs']);
  }
  await run('check','npm',['run','check']);
