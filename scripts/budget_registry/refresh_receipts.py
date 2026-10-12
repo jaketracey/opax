@@ -63,6 +63,7 @@ def refresh(stage, cache):
     for origin in client.robots:
         url = origin + '/robots.txt'
         fresh[url] = client.receipt(url)
+    previous_robots = [r for r in ledger if r['url'] in fresh and r['url'].endswith('/robots.txt')]
     inventory = refresh_provenance(inventory, fresh)
     inventory['generated_at'] = now()
     aggregates = refresh_provenance(json.loads((stage / 'aggregates.json').read_text()), fresh)
@@ -75,7 +76,8 @@ def refresh(stage, cache):
          'cache': str(cache.relative_to(ROOT)), 'reacquired': len(incomplete),
          'missing_identity_before': len(incomplete),
          'missing_identity_after': sum(not r.get('user_agent_policy') for r in ledger),
-         'sources': evidence, 'robots': [fresh[o + '/robots.txt'] for o in client.robots]})
+         'sources': evidence, 'robots': [fresh[o + '/robots.txt'] for o in client.robots],
+         'previous_robots': previous_robots})
     print(f'Re-acquired {len(incomplete)} source receipts; staged provenance updated', flush=True)
 
 

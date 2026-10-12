@@ -1293,5 +1293,31 @@
       "user_agent_policy": "parli/ingest/user-agent.json",
       "user_agent_sha256": "1100b17c9651df0a8cac3179efbf025b2b55acf7d93bee70876cd24bcd3c0b2b"
     }
+  ],
+  "previous_robots": [
+    {
+      "url": "https://archive.budget.gov.au/robots.txt",
+      "status": 404,
+      "snapshot": "2026-10-12T21:28:26.112863+00:00",
+      "sha256": null,
+      "user_agent_policy": "parli/ingest/user-agent.json",
+      "user_agent_sha256": "1100b17c9651df0a8cac3179efbf025b2b55acf7d93bee70876cd24bcd3c0b2b"
+    },
+    {
+      "url": "https://budget.gov.au/robots.txt",
+      "status": 200,
+      "snapshot": "2026-10-12T21:28:26.745211+00:00",
+      "sha256": "dd26df886d4dceb73070ff3cfa499031f8daa82c1568c1283d4d33d074a30f2d",
+      "user_agent_policy": "parli/ingest/user-agent.json",
+      "user_agent_sha256": "1100b17c9651df0a8cac3179efbf025b2b55acf7d93bee70876cd24bcd3c0b2b"
+    },
+    {
+      "url": "https://treasury.gov.au/robots.txt",
+      "status": 200,
+      "snapshot": "2026-10-12T21:28:27.670577+00:00",
+      "sha256": "3200f655bd0e859a4fb1a7237cc64d4cec38824f6f5ee914c37d0b9de0f9c554",
+      "user_agent_policy": "parli/ingest/user-agent.json",
+      "user_agent_sha256": "1100b17c9651df0a8cac3179efbf025b2b55acf7d93bee70876cd24bcd3c0b2b"
+    }
   ]
 }
