@@ -7,7 +7,7 @@ import {join,dirname} from 'node:path';
 import {loadWorker,offline} from './worker-harness.mjs';
 import {ordinaryQuestions} from './fixtures/agentic-ordinary.mjs';
 
-test('P1 parity: all 38 non-routed questions have byte-identical JSON and SSE to origin/main',async()=>{
+test('P1 parity: all 48 non-routed questions have byte-identical JSON and SSE to origin/main',async()=>{
  const root=new URL('../../',import.meta.url).pathname,scratch=mkdtempSync(join(tmpdir(),'opax-agentic-parity-'));
  const restore=offline(),pending=[],ctx={waitUntil(p){pending.push(p)},passThroughOnException(){}};
  try{

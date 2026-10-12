@@ -13,7 +13,7 @@
  */
 import { TOOL_SPECS, TOPICS, STATES, CHAMBERS, TERMS, runTool, validToolArgs, AGENTIC_TOOLS_VERSION, type ToolDeps, type ToolResult, type Cite } from './agentic-tools'
 
-export const AGENTIC_PROMPT_VERSION = 'agentic-ask-3'
+export const AGENTIC_PROMPT_VERSION = 'agentic-ask-4'
 export const AGENTIC_BUDGET_MS = 40_000
 export const AGENTIC_MAX_STEPS = 6
 
@@ -170,20 +170,23 @@ export function resolveArgs(args: Record<string, unknown>, results: ToolResult[]
 }
 
 // ---------------------------------------------------------------- bound facts
-export interface Fact { id: number; text: string; cite: Cite }
+export interface Fact { id: number; text: string; cite: Cite; entities?: string[] }
 /** Each template binds tool-row figures to their entity, metric and citation. */
 export function factSheet(results: ToolResult[]): { facts: Fact[]; notes: string[] } {
   const facts: Fact[] = []
   const notes = new Set<string>()
-  const add = (text: string, cite: Cite) => facts.push({ id: facts.length + 1, text, cite })
+  let entities: string[] = []
+  const add = (text: string, cite: Cite, bound = entities) => facts.push({ id: facts.length + 1, text, cite, entities: bound })
   for (const r of results) {
     if (!r.ok) continue
     r.notes.forEach((n) => notes.add(n))
     const d = r.data as Record<string, unknown>
+    const filter = (d.filter ?? {}) as Record<string, unknown>
+    entities = [filter.speaker || d.person ? `person:${filter.speaker || d.person}` : '', filter.party || d.party ? `party:${filter.party || d.party}` : ''].filter(Boolean)
     if (r.tool === 'count_speeches') {
       const rows = (d.rows as { name: string; count: number }[] | undefined)
       if (d.committeeSupplement && rows?.length) rows.forEach((row, i) => add(`${row.name}: ${row.count} committee-hearing turns`, r.cite[i]))
-      else if (rows?.length) rows.forEach((row, i) => add(`${row.name}: ${row.count} ${d.described}`, r.cite[i]))
+      else if (rows?.length) rows.forEach((row, i) => add(`${row.name}: ${row.count} ${d.described}`, r.cite[i], [...entities, `${d.group_by === 'party' ? 'party' : 'person'}:${row.name}`]))
       else if (d.unanswerable) notes.add('The record cannot rank these speeches by party.')
       else if (!Array.isArray(rows) && typeof d.total === 'number' && r.cite[0]) add(`${d.total} ${d.described}`, r.cite[0])
     } else if (r.tool === 'speech_trend') {
@@ -201,7 +204,7 @@ export function factSheet(results: ToolResult[]): { facts: Fact[]; notes: string
         ;(d.rows as { donor: string; total_aud: number }[]).forEach((row, i) => add(`${row.donor} gave ${d.party} $${row.total_aud.toLocaleString('en-AU')} (federal disclosures)`, r.cite[i + 1]))
         const hidden = d.donors_not_named as { label: string; total_aud: number; donors: number }
         if (hidden?.donors) add(`${hidden.label} gave ${d.party} $${hidden.total_aud.toLocaleString('en-AU')} in total (federal disclosures)`, r.cite[0])
-      } else (d.rows as { party: string; total_aud: number }[]).forEach((row, i) => add(`${d.industry} donors gave ${row.party} $${row.total_aud.toLocaleString('en-AU')} (federal disclosures)`, r.cite[i]))
+      } else (d.rows as { party: string; total_aud: number }[]).forEach((row, i) => add(`${d.industry} donors gave ${row.party} $${row.total_aud.toLocaleString('en-AU')} (federal disclosures)`, r.cite[i], [`party:${row.party}`]))
     } else if (r.tool === 'find_people') {
       const p = (d.people as { name: string; party: string | null }[])[0]
       if (p) add(`${p.name}: ${p.party ?? 'party not recorded'}`, r.cite[0])
@@ -211,9 +214,11 @@ export function factSheet(results: ToolResult[]): { facts: Fact[]; notes: string
   }
   return { facts, notes: [...notes] }
 }
+const NUMBER_WORD = /\b(?:zero|one|two|three|four|five|six|seven|eight|nine|ten|eleven|twelve|thirteen|fourteen|fifteen|sixteen|seventeen|eighteen|nineteen|twenty|thirty|forty|fifty|sixty|seventy|eighty|ninety|hundreds?|thousands?|millions?|billions?|trillions?|hundredth|thousandth|millionth|billionth|trillionth|half|halves|quarter|quarters|dozen|dozens|twice|thrice|first|second|third|fourth|fifth|sixth|seventh|eighth|ninth|tenth|eleventh|twelfth|\w+teenth|\w+tieth)\b/i
 const CAUSAL = /\b(?:bought|bribe\w*|in exchange for|because of (?:the|these|their) donations?|donations? (?:caused|influenced|explain\w*)|paid for (?:access|votes?|influence))\b|\b(?:donat\w*|money|funding)\b.*\b(?:influenc\w*|caus\w*|led to|resulted in|secured)\b/i
 /** Defensive boundary for any future connective prose. No model-authored
- * digits, including citation ids, dates, percentages or money, are accepted.
+ * numeric characters or number words are accepted, including citation ids,
+ * dates, percentages and money.
  * Only the deterministic renderer may introduce them. No placeholders are
  * supported: answers currently consist entirely of bound tool-row templates. */
 export function verifyComposition(text: string, _facts: Fact[], _question = ''): { prose: string; cited: number[]; dropped: number } {
@@ -221,19 +226,34 @@ export function verifyComposition(text: string, _facts: Fact[], _question = ''):
   const kept: string[] = []; let dropped = 0
   for (const sentence of sentences) {
     if (!sentence.trim()) continue
-    if (/\p{N}/u.test(sentence) || CAUSAL.test(sentence) || /^based on\b/i.test(sentence)) { dropped++; continue }
+    if (/\p{N}/u.test(sentence) || NUMBER_WORD.test(sentence) || CAUSAL.test(sentence) || /^based on\b/i.test(sentence)) { dropped++; continue }
     kept.push(sentence)
   }
   return { prose: kept.join(' '), cited: [], dropped }
 }
 /** Every answer figure is bound to its entity and metric in factSheet. */
 export function templateAnswer(facts: Fact[], notes: string[]): string {
-  const lines = facts.slice(0, 8).map((f) => `${f.text} [${f.id}]`)
+  const lines = facts.map((f) => `${f.text} [${f.id}]`)
   return [lines.join('; ') + '.', ...notes.slice(0, 2)].join(' ')
 }
 
+/** Bound selection budgets each requested entity separately. A missing entity
+ * is a failed answer, never an excuse to render only the other entity. */
+export function selectAnswerFacts(facts: Fact[], scope: NamedScope, peakYear = false): Fact[] | null {
+  const required = [...scope.people.map(n => `person:${n}`), ...scope.parties.map(n => `party:${n}`)]
+  if (!required.length) return peakYear ? facts.slice().sort((a, b) => Number(b.cite.value ?? 0) - Number(a.cite.value ?? 0)).slice(0, 1) : facts.slice(0, 8)
+  const selected = new Set<Fact>()
+  for (const entity of required) {
+    const bound = facts.filter(f => f.entities?.includes(entity))
+    if (!bound.length) return null
+    if (peakYear) bound.sort((a, b) => Number(b.cite.value ?? 0) - Number(a.cite.value ?? 0))
+    bound.slice(0, peakYear ? 1 : 8).forEach(f => selected.add(f))
+  }
+  return facts.filter(f => selected.has(f))
+}
+
 // --------------------------------------------------------------- named scope
-export interface NamedScope { people: string[]; parties: string[]; bills: string[]; ambiguous: boolean }
+export interface NamedScope { people: string[]; parties: string[]; bills: string[]; ambiguous: boolean; unresolved: boolean }
 /** Exact roster/list matching, with a unique surname allowed. Longest names
  * win over surnames inside another full name. Never ask the model to identify
  * the entities it must retain. */
@@ -242,9 +262,14 @@ export function extractNamedScope(question: string, roster: unknown, billList: u
   const q = ` ${normaliseQuestion(publicQuestion)} `
   const mentions = (name: string) => !!name && q.includes(` ${normaliseQuestion(name)} `)
   const records = (roster as { people?: { name: string; party?: string; party_now?: string }[] } | null)?.people ?? []
-  const people = [...new Set(records.filter(p => typeof p.name === 'string' && mentions(p.name)).map(p => p.name))]
+  const people: string[] = []
+  let unmatched = q
+  for (const p of records.filter(p => typeof p.name === 'string').sort((a, b) => b.name.length - a.name.length)) {
+    const name = ` ${normaliseQuestion(p.name)} `
+    if (unmatched.includes(name)) { people.push(p.name); unmatched = unmatched.split(name).join(' ~ ') }
+  }
   let ambiguous = false
-  const remainder = people.reduce((text, name) => text.replace(` ${normaliseQuestion(name)} `, ' '), q)
+  const remainder = unmatched
   const surnames = new Map<string, Set<string>>()
   for (const p of records) {
     if (typeof p.name !== 'string') continue
@@ -266,14 +291,50 @@ export function extractNamedScope(question: string, roster: unknown, billList: u
     .filter(name => name !== 'Liberal' || !mentions('Liberal National Party'))
   const bills = [...new Set(((billList as { bills?: { key: string; title?: string; short_title?: string }[] } | null)?.bills ?? [])
     .filter(b => [b.key, b.title, b.short_title, b.title?.replace(/\s+(?:19|20)\d{2}$/, '')].some(name => typeof name === 'string' && mentions(name))).map(b => b.key))]
-  return { people: [...new Set(people)], parties, bills, ambiguous }
+  // Resolve names without relying on capitals. Mask known entities before
+  // examining person grammar and remaining name-like token spans.
+  const resolvedPeople = [...new Set(people)]
+  const mask = (text: string, phrase: string) => text.split(` ${normaliseQuestion(phrase)} `).join(' ~ ')
+  let unknown = resolvedPeople.reduce((text, name) => mask(mask(text, name), name.split(' ').at(-1)!), q)
+  for (const party of parties) for (const alias of aliases[party]) unknown = mask(unknown, alias)
+  for (const bill of (billList as { bills?: { key: string; title?: string; short_title?: string }[] } | null)?.bills ?? [])
+    if (bills.includes(bill.key)) for (const title of [bill.key, bill.title, bill.short_title]) if (title) unknown = mask(unknown, title)
+  // Grammar also catches an unresolved single name: "has morgan made", "did
+  // morgan say", "speeches by morgan", or "morgan's housing speeches".
+  const words = '[\\p{L}]+(?: [\\p{L}]+){0,5}'
+  const candidates = [
+    ...unknown.matchAll(new RegExp(`\\b(?:has|have|did|does|do) (${words}) (?:made|make|given|give|said|say|spoken|speak|voted|vote)\\b`, 'gu')),
+    ...unknown.matchAll(new RegExp(`\\b(?:speeches|remarks|statements|votes) (?:by|from|of) (${words})`, 'gu')),
+    ...unknown.matchAll(new RegExp(`(${words}) s\\b`, 'gu')),
+  ].map(m => m[1])
+  // These are parliamentary/query words, not guessed identities. Unknown
+  // multi-word subjects conservatively stay on normal Ask as well.
+  const ordinary = new Set(('please email me at call contact send my phone how many who which what where when why is are was were be been being has have had did does do made make making give given gave giving said say spoken spoke speak speaks speaking voted vote votes voting and or versus vs compared compare comparing than more most less least fewest often much the a an of for from by to in on about with into across over per each every all overall total number count counts counting rank ranking ranks top leading changed change changing grown growth debating debated debate discussed discuss mentions mention mentioned statements remarks speeches speech activity their his her its they them he she s senator senators mp mps member members minister ministers party parties parliament parliaments parliamentary chamber chambers committee committees hearing hearings house representatives legislative assembly council federal australian australia new south wales nsw victoria victorian vic queensland qld act sa current previous last this term terms record whole time year years yearly decade decades since until between through before after during now today recent recently reform reforms policy policies bill bills amendment amendments support affordability rental rentals assistance advertising ban bans labelled indexed recorded topic topics gambling housing climate environment change health mining energy coal welfare social financial services bank banks banking finance unions workplace education schools agriculture farming property construction immigration indigenous affairs tax budget media communications hospitality alcohol defence security integrity democracy infrastructure transport justice law foreign affairs fossil fuels donations donation donors donor money industry industries received receive receives receiving gave give giving donated contribute contributions paid funding raised same both similar different difference differences percentage percentages share shares coverage trend trends').split(' '))
+  const isUnknown = (word: string) => !ordinary.has(word) && !/^(?:19|20)\d{2}s?$/.test(word)
+  const unresolvedGrammar = candidates.some(span => span.split(' ').some(isUnknown))
+  const unresolvedSpan = unknown.split(/[^\p{L}\p{N} ]+/u).some(span => {
+    let length = 0
+    return span.trim().split(/\s+/).some(word => { length = isUnknown(word) ? length + 1 : 0; return length >= 2 })
+  })
+  return { people: resolvedPeople, parties, bills, ambiguous, unresolved: unresolvedGrammar || unresolvedSpan }
+}
+/** Public roster resolution is bounded and precedes planning and cache reads. */
+export async function resolveNamedScope(question: string, deps: ToolDeps, ms = 4_000, filters: Record<string, unknown> = {}): Promise<NamedScope> {
+  return bounded(async signal => {
+    const assets = deps.withSignal?.(signal) ?? deps
+    const [roster, bills] = await Promise.all([assets.asset('/parliamentarians.json'), assets.asset('/bills/index.json')])
+    signal.throwIfAborted()
+    const scope = extractNamedScope(question + (filters.speaker ? ` speeches by ${filters.speaker}` : ''), roster, bills)
+    if (!(bills as { bills?: unknown[] } | null)?.bills && /\bbill\b/i.test(question)) scope.unresolved = true
+    return scope
+  }, ms, deps.signal)
 }
 /** A named entity must constrain each applicable numerical lookup, and every
  * entity must occur in at least one such lookup. Merely resolving a name in a
  * find_people step does not constrain an overall count. Bill-scoped speech
  * counts are not supported by these tools, so defer those questions to Ask. */
 export function planRetainsNamedScope(plan: Plan, scope: NamedScope): boolean {
-  if (scope.ambiguous || scope.bills.length) return false
+  if (scope.unresolved || scope.ambiguous || scope.bills.length) return false
   const numeric = plan.steps.filter(s => ['count_speeches', 'speech_trend', 'member_votes', 'party_donations'].includes(s.tool))
   const person = (s: PlanStep) => s.args[s.tool === 'member_votes' ? 'person' : 'speaker']
   const lookups = plan.steps.filter(s => ['count_speeches', 'speech_trend', 'member_votes', 'find_quotes'].includes(s.tool))
@@ -342,7 +403,7 @@ export function stepEvent(step: PlanStep, id: number, committee = false): StepEv
   const arg = typeof raw === 'string' ? raw.replace(/[<>&"'\x00-\x1f]/g, '').slice(0, 40) : undefined
   return { id, label, ...(arg ? { arg } : {}), state: 'running' }
 }
-export async function runAgentic(question: string, deps: AgenticDeps, progress: Progress = async () => {}, budgetMs = AGENTIC_BUDGET_MS, period = inferPeriod(question), filters: Record<string, unknown> = {}): Promise<AgenticPayload> {
+export async function runAgentic(question: string, deps: AgenticDeps, progress: Progress = async () => {}, budgetMs = AGENTIC_BUDGET_MS, period = inferPeriod(question), filters: Record<string, unknown> = {}, resolvedScope?: NamedScope): Promise<AgenticPayload> {
   const t0 = Date.now(), deadline = t0 + budgetMs
   const tokens = { input: 0, output: 0 }
   let cost: number | null = null
@@ -352,6 +413,10 @@ export async function runAgentic(question: string, deps: AgenticDeps, progress: 
   const base = (over: Partial<AgenticPayload>): AgenticPayload => ({ answered: false, answer: '', answer_source: 'none', shape: classifyAgentic(question).shape, period, facts: [], notes: [], steps, events, tokens, cost_usd: cost, over_budget: !left(), version: `${AGENTIC_PROMPT_VERSION}/${AGENTIC_TOOLS_VERSION}`, ...over, timings: { ...timings, total_ms: Date.now() - t0 } })
   // The decade candidate proof supports leaders, not the least active member.
   if (/\b(?:least|fewest)\b/i.test(question)) return base({ reason: 'declined' })
+  let named: NamedScope
+  try { named = resolvedScope ?? await resolveNamedScope(question, deps, Math.min(4_000, left()), filters) }
+  catch { return base({ reason: 'declined' }) }
+  if (named.unresolved || named.ambiguous || named.bills.length) return base({ reason: 'declined' })
   const usage = (out: { tokens?: { input: number; output: number }; costUsd?: number }) => {
     if (out.tokens) { tokens.input += out.tokens.input; tokens.output += out.tokens.output }
     if (typeof out.costUsd === 'number') cost = (cost ?? 0) + out.costUsd
@@ -387,21 +452,6 @@ export async function runAgentic(question: string, deps: AgenticDeps, progress: 
   if (!left() || deps.signal?.aborted) return base({ reason: 'declined', over_budget: true })
   if (!plan) return base({ reason: 'declined' })
   if (plan.shape === 'unanswerable') return base({ reason: 'declined', notes: plan.reason ? [plan.reason] : [] })
-  let named: NamedScope
-  try {
-    named = await bounded(async signal => {
-      const assets = deps.withSignal?.(signal) ?? deps
-      const [roster, bills] = await Promise.all([assets.asset('/parliamentarians.json'), assets.asset('/bills/index.json')])
-      signal.throwIfAborted()
-      // If a roster lookup is unavailable, a name-shaped subject cannot safely
-      // become an overall count. Anonymous topic rankings can still proceed.
-      if (!(roster as { people?: unknown[] } | null)?.people && rulePlan.steps.some(s => s.args.speaker || s.args.person)) throw new Error('roster unavailable')
-      if (!(bills as { bills?: unknown[] } | null)?.bills && /\bbill\b/i.test(question)) throw new Error('bill list unavailable')
-      const scope = extractNamedScope(question, roster, bills)
-      if (!scope.people.length && rulePlan.steps.some(s => s.args.speaker || s.args.person)) throw new Error('named speaker not resolved')
-      return scope
-    }, Math.min(4_000, left()), deps.signal)
-  } catch { return base({ reason: 'declined' }) }
   const ruleArgs = rulePlan?.steps.find(s => ['count_speeches', 'speech_trend'].includes(s.tool))?.args ?? {}
   const explicitScope = Object.fromEntries(['state', 'chamber', 'party'].filter(k => ruleArgs[k] != null && (k !== 'party' || named.parties.length <= 1)).map(k => [k, ruleArgs[k]]))
   if (!planRetainsNamedScope(plan, named)) return base({ reason: 'declined' })
@@ -471,7 +521,9 @@ export async function runAgentic(question: string, deps: AgenticDeps, progress: 
   // No composer call: figures, metric labels, entities and citations are
   // rendered together from the tool rows, so swapping aye/no or party/year
   // values in model text can never affect an answer.
-  let answer = templateAnswer(peakYear ? mainFacts.slice(0, 1) : mainFacts, [])
+  const selected = selectAnswerFacts(mainFacts, named, peakYear)
+  if (!selected?.length) return base({ reason: 'no_supported_claim' })
+  let answer = templateAnswer(selected, [])
   if (committeeFacts.length) {
     const ids = facts.filter(f => committeeFacts.some(c => c.text === f.text))
     answer += ' Including committee hearings: ' + ids.map(f => `${f.text.replace(' committee-hearing turns', '')} [${f.id}]`).join(', ') + '.'
@@ -491,7 +543,9 @@ export async function questionHash(question: string): Promise<string> {
 async function hashText(text: string): Promise<string> {
   return [...new Uint8Array(await crypto.subtle.digest('SHA-256', new TextEncoder().encode(text)))].map(b => b.toString(16).padStart(2, '0')).join('')
 }
-export async function agenticCacheKey(question: string, epoch: string, model: string, period = inferPeriod(question), toolsVersion = AGENTIC_TOOLS_VERSION, filters: Record<string, unknown> = {}, shape = classifyAgentic(question).shape): Promise<string> {
-  const hash = await hashText(JSON.stringify({ q: normaliseQuestion(question), shape, period, filters, epoch, model, v: AGENTIC_PROMPT_VERSION, t: toolsVersion }))
+export async function agenticCacheKey(question: string, epoch: string, model: string, period = inferPeriod(question), toolsVersion = AGENTIC_TOOLS_VERSION, filters: Record<string, unknown> = {}, shape = classifyAgentic(question).shape, scope?: NamedScope): Promise<string> {
+  if (scope?.unresolved || scope?.ambiguous) throw new Error('unresolved cache scope')
+  const entities = { people: [...new Set(scope?.people ?? [])].sort(), parties: [...new Set(scope?.parties ?? [])].sort(), bills: [...new Set(scope?.bills ?? [])].sort() }
+  const hash = await hashText(JSON.stringify({ q: normaliseQuestion(question), shape, period, entities, filters, epoch, model, v: AGENTIC_PROMPT_VERSION, t: toolsVersion }))
   return `https://cache.opax.internal/ask-agentic/${hash}`
 }

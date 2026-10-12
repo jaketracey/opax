@@ -17,7 +17,7 @@
  * Used by the Worker orchestration (src/agentic-ask.ts). Design (ii) remains
  * parked in the design note; these tools are not registered on MCP. No models.
  */
-export const AGENTIC_TOOLS_VERSION = 'agentic-tools-3'
+export const AGENTIC_TOOLS_VERSION = 'agentic-tools-4'
 
 export const TOPICS = [
   'gambling', 'financial-services', 'mining-energy', 'climate-environment', 'property-construction', 'housing', 'health',
@@ -230,7 +230,7 @@ export async function countSpeeches(deps: ToolDeps, input: CountInput): Promise<
   }))
   return {
     tool: 'count_speeches', ok: true,
-    data: { total, rows: top, more: Math.max(0, rows.length - top.length), exact, method, filter: f, described: describe(f) },
+    data: { total, rows: top, group_by: group, more: Math.max(0, rows.length - top.length), exact, method, filter: f, described: describe(f) },
     cite, query: { method, filter: f }, notes,
   }
 }

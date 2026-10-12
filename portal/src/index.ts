@@ -71,7 +71,7 @@ import { melbourneDate, DAILY_POST_KINDS, type DailyPostKind } from './daily-pos
 import { CATALOG_KINDS, searchCatalog } from './catalog-search'
 import { retrieveAskRecords, recordContext, recordSources, RECORD_GROUNDING, integrityQuestion, type AskRecords } from './ask-records'
 import { SEARCH_SORTS, compareSearchResults } from './search-sort'
-import { runAgentic, classifyAgentic, agenticCacheKey, inferPeriod, bounded, AGENTIC_BUDGET_MS, type AgenticDeps, type AgenticPayload, type Progress } from './agentic-ask'
+import { runAgentic, classifyAgentic, agenticCacheKey, resolveNamedScope, type NamedScope, inferPeriod, bounded, AGENTIC_BUDGET_MS, type AgenticDeps, type AgenticPayload, type Progress } from './agentic-ask'
 import { agenticAskPayload } from './agentic-response'
 import { recordAgenticRun } from './agentic-monitor'
 import { AGENTIC_TOOLS_VERSION } from './agentic-tools'
@@ -5761,13 +5761,13 @@ function monitorAgentic(env: Env, ctx: ExecutionContext, question: string, run: 
     console.warn('Ask monitoring write unavailable')
   }))
 }
-async function executeAgentic(input: Record<string, unknown>, env: Env, ctx: ExecutionContext, progress?: Progress, signal?: AbortSignal, budgetMs = AGENTIC_BUDGET_MS) {
+async function executeAgentic(input: Record<string, unknown>, env: Env, ctx: ExecutionContext, progress?: Progress, signal?: AbortSignal, budgetMs = AGENTIC_BUDGET_MS, namedScope?: NamedScope) {
   const question = String(input.question).trim()
   const started = Date.now(), period = agenticPeriod(input)
   let run: AgenticPayload
   try {
     // Covers the whole path, including an SSE writer or provider that stalls.
-    run = await bounded(signal => runAgentic(question, agenticDeps(env, signal), progress, budgetMs, period, agenticFilters(input)), budgetMs, signal)
+    run = await bounded(signal => runAgentic(question, agenticDeps(env, signal), progress, budgetMs, period, agenticFilters(input), namedScope), budgetMs, signal)
   } catch {
     run = { answered: false, reason: 'declined', answer: '', answer_source: 'none', shape: classifyAgentic(question).shape, period,
       facts: [], notes: [], steps: [], events: [], tokens: { input: 0, output: 0 }, cost_usd: null,
@@ -5814,10 +5814,16 @@ async function apiAskRouted(request: Request, url: URL, input: Record<string, un
   try {
     // Reuse the donor guard within the same deadline; no prompt bypass.
     if (await budget.run(() => questionNamesWithheldDonor(env.ASSETS, question))) return await routedFallback()
+    let namedScope: NamedScope
+    try { namedScope = await resolveNamedScope(question, agenticToolDeps(env, budget.signal), Math.min(4_000, budget.remaining), agenticFilters(input)) }
+    catch { namedScope = { people: [], parties: [], bills: [], ambiguous: false, unresolved: true } }
+    // Unresolved scopes still use the normal bounded fallback/stream relay,
+    // but can neither read nor fill the agentic cache. executeAgentic records
+    // the decline without starting a planner or count tool.
     const privateTurn = Array.isArray(input.context) && input.context.length > 0
-    const key = new Request(await agenticCacheKey(question, env.CACHE_EPOCH, env.ASK_MODEL || 'openai-compatible', agenticPeriod(input), AGENTIC_TOOLS_VERSION, agenticFilters(input)))
+    const key = namedScope.unresolved || namedScope.ambiguous || namedScope.bills.length ? undefined : new Request(await agenticCacheKey(question, env.CACHE_EPOCH, env.ASK_MODEL || 'openai-compatible', agenticPeriod(input), AGENTIC_TOOLS_VERSION, agenticFilters(input), classifyAgentic(question).shape, namedScope))
     const streaming = url.searchParams.get('stream') === '1' || (request.headers.get('accept') ?? '').includes('text/event-stream')
-    if (!privateTurn && !cacheBypass(request, url)) {
+    if (key && !privateTurn && !cacheBypass(request, url)) {
       const hit = await budget.run(() => readGenerationCache(env, ctx, key))
       if (hit) {
         ctx.waitUntil(recordAgenticRun(env.COMMUNITY_DB, question, {
@@ -5831,12 +5837,12 @@ async function apiAskRouted(request: Request, url: URL, input: Record<string, un
     quotaTaken = true
     const finish = (run: AgenticPayload) => {
       const response = json(agenticAskPayload(run, question))
-      if (run.answered && !run.over_budget && !privateTurn) storeGenerationCache(env, ctx, key, response.clone(), ASK_CACHE_TTL)
+      if (key && run.answered && !run.over_budget && !privateTurn) storeGenerationCache(env, ctx, key, response.clone(), ASK_CACHE_TTL)
       return response
     }
     if (!streaming) {
       try {
-        const run = await executeAgentic(input, env, ctx, undefined, budget.signal, budget.remaining)
+        const run = await executeAgentic(input, env, ctx, undefined, budget.signal, budget.remaining, namedScope)
         if (request.signal.aborted) return json(agenticAskPayload(run, question))
         budget.signal.throwIfAborted()
         return run.answered && !run.over_budget ? withCacheStatus(finish(run), 'MISS', false) : await routedFallback()
@@ -5855,7 +5861,7 @@ async function apiAskRouted(request: Request, url: URL, input: Record<string, un
         ctx.waitUntil((async () => {
           try {
             await send('status', { phase: 'searching' })
-            const run = await executeAgentic(input, env, ctx, send, budget.signal, budget.remaining)
+            const run = await executeAgentic(input, env, ctx, send, budget.signal, budget.remaining, namedScope)
             if (gone || request.signal.aborted) return
             budget.signal.throwIfAborted()
             if (run.answered && !run.over_budget) { const response = finish(run); await send('done', await response.json()) }
