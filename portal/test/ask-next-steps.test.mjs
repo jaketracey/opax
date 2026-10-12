@@ -6,7 +6,7 @@ const app=readFileSync(new URL('../public/app.js',import.meta.url),'utf8');
 const slice=(from,to)=>app.slice(app.indexOf(from),app.indexOf(to,app.indexOf(from)));
 const element=tag=>({tag,children:[],appendChild(node){this.children.push(node)},setAttribute(key,value){this[key]=value}});
 const context={URL,URLSearchParams,encodeURIComponent,decodeURIComponent,document:{createElement:element},askHash:q=>'/ask?q='+encodeURIComponent(q)};
-runInNewContext(slice('function safeAnswerLink','\n/** Render links')+slice('function moneyNextSteps','\nfunction setFrontPageHidden'),context);
+runInNewContext(slice('function safeAnswerLink','\n/** Render links')+slice('function moneyNextSteps','\nfunction followupPassages'),context);
 const answer=(head,first)=>`**Woodside Energy** has the largest disclosed total to Liberal: **$137,000**.\n\nFinancial years: 2020–21.\n\n| ${head} | Disclosed receipts | Records |\n| --- | ---: | ---: |\n| ${first} | $137,000 | 4 |\n| Santos | $90,000 | 2 |\n\nThese are **party receipts, not personal payments to politicians**.\n\nCoverage: Only receipts included in the map are ranked.\n\n[Explore these records](https://opax.com.au/money?industry=fossil_fuels&party=party%3ALiberal&from=2020&to=2020) · [Download the calculation data](https://opax.com.au/graph/money.json)`;
 const expectedMap='/money?industry=fossil_fuels&party=party%3ALiberal&from=2020&to=2020';
 test('a funding next step preserves the map selection and financial years',()=>{
