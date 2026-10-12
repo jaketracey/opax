@@ -9,7 +9,14 @@ import {
   View,
   type ViewToken,
 } from 'react-native';
-import { Stack, router, useLocalSearchParams } from 'expo-router';
+import {
+  Stack,
+  router,
+  type NativeStackNavigationProp,
+  useIsFocused,
+  useLocalSearchParams,
+  useNavigation,
+} from 'expo-router';
 import { ApiError } from '../../api/errors';
 import { billFacetsFor, billsFor } from '../../api/catalogs';
 import { catalogs } from '../../api/runtime';
@@ -152,15 +159,35 @@ function BillsScreen() {
   // empty. A selection through the route, as a tap makes it, so VoiceOver
   // stays on the list; once per visit, so closing the pane (Escape) keeps
   // it closed. Portrait and the iPhone are unchanged.
+  // The native tabs draw every tab at launch, so this list loads behind
+  // Today: it waits until Bills is the tab in view, and writes to its own
+  // route. (`router.setParams` writes to whichever route is focused, so at
+  // launch it put the bill on Today's route and the pane stayed empty.)
+  const navigation =
+    useNavigation<NativeStackNavigationProp<{ bills: { bill?: string } }>>();
+  const focused = useIsFocused();
   const opened = useRef(false);
   const first = rows[0]?.key;
   useEffect(() => {
     if (selectedKey) opened.current = true;
-    if (opened.current || !isPad || !split || !layout.landscape || !first)
+    if (
+      opened.current ||
+      !focused ||
+      !isPad ||
+      !split ||
+      !layout.landscape ||
+      !first
+    )
       return;
-    opened.current = true;
-    router.setParams({ bill: first });
-  }, [split, layout.landscape, selectedKey, first]);
+    // A tick later: a navigate to /bills (Today's link, ⌘3) applies its own
+    // params after this screen's effects run, and would undo a write made
+    // now. A tab press passes none.
+    const timer = setTimeout(() => {
+      opened.current = true;
+      navigation.setParams({ bill: first });
+    });
+    return () => clearTimeout(timer);
+  }, [navigation, focused, split, layout.landscape, selectedKey, first]);
   const offline = error instanceof ApiError && error.code === 'offline';
   const stacked = useAccessibilitySize();
 
