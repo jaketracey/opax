@@ -2,7 +2,7 @@
 import { shortDate } from './format.js';
 import { isOrganisationDonor } from './donor-entity.js?v=ebb2c972d5';
 export { isOrganisationDonor };
-import { sourceLineHTML } from './labels.js?v=c6bf994ef7';
+import { sourceLineHTML } from './labels.js?v=edf92a9bea';
 import { sponsorPerson, sponsorKey } from './sponsor-person.js?v=74d9a1f8cf';
 const esc = value => String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const text = value => typeof value === 'string' ? value.trim() : '';

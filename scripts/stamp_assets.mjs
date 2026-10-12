@@ -38,7 +38,7 @@ const PUBLIC = join(ROOT, 'portal', 'public')
 const INDEX = join(PUBLIC, 'index.html')
 
 /** Assets referenced from index.html with a ?v= stamp. */
-const STAMPED = ['app.js', 'spa-shell.js', 'spa-entry.js', 'style.css', 'analytics.js', 'gtm.js', 'events.js', 'navigation.js', 'quick-search.js', 'voice.css', 'ui-controls.css', 'ui-source.css', 'ui-source.js', 'labels.js']
+const STAMPED = ['app.js', 'spa-shell.js', 'spa-entry.js', 'style.css', 'analytics.js', 'gtm.js', 'events.js', 'navigation.js', 'quick-search.js', 'voice.css', 'ui-controls.css', 'ui-source.css', 'ui-source.js', 'labels.js', 'page-actions.css']
 
 const hashOf = (file) =>
   createHash('sha256').update(readFileSync(join(PUBLIC, file))).digest('hex').slice(0, 10)
@@ -137,6 +137,8 @@ export async function refreshFonts({ publicRoot = PUBLIC, fetcher = honestFetch 
  *  agencies.js and suppliers.js import each other: stamp the agencies → suppliers
  *  edge only, then app.js. Keep the reverse edge hand-versioned to avoid a hash cycle. */
 export const MODULE_STAMPS = [
+  // ⋯ is labels.js's moreMenuHTML; labels.js is stamped into its importers below.
+  ['labels.js', 'page-actions-menu.js'],
   ['donor-views.js', 'donor-entity.js'], ['wordsdollars.js','donor-views.js'], ['quiz.js','donor-views.js'], ['ledger.js', 'donor-views.js'], ['home.js', 'donor-views.js'],
   ['ledger.js', 'donor-entity.js'], ['quiz.js', 'donor-entity.js'], ['money-journeys-data.js', 'donor-entity.js'], ['map-research.js','donor-entity.js'], ['map-research.js','donor-views.js'],
   ['datatable.js', 'donor-entity.js'], ['datatable.js', 'donor-views.js'],
@@ -178,7 +180,18 @@ export const MODULE_STAMPS = [
 /** Write each MODULE_STAMPS module's content hash into its importer; returns the importers that were stale. */
 function stampModules({ check }) {
   const stale = []
-  for (const importer of [...new Set(MODULE_STAMPS.map(([i]) => i))]) {
+  // An importer is stamped after every module it imports that is itself an
+  // importer, so its hash takes their new stamps (one pass is enough).
+  const importers = [...new Set(MODULE_STAMPS.map(([i]) => i))]
+  const ordered = []
+  const visit = (file, path = new Set()) => {
+    if (ordered.includes(file) || path.has(file)) return
+    path.add(file)
+    for (const [i, mod] of MODULE_STAMPS) if (i === file && importers.includes(mod)) visit(mod, path)
+    ordered.push(file)
+  }
+  for (const importer of importers) visit(importer)
+  for (const importer of ordered) {
     const path = join(PUBLIC, importer)
     const before = readFileSync(path, 'utf8')
     let after = before

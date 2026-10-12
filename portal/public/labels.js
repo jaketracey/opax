@@ -2,8 +2,9 @@
    in one place. app.js imports this at boot, before its first render; the
    homepage (home-data.js) and the electorate pages (electorates.js) import it
    as modules. The markup pairs with ui-controls.css (the labels) and
-   ui-source.css (the source line, the machine-written pill and ⋯);
-   ui-source.js gives the popovers Escape, light dismiss and arrow keys. */
+   ui-source.css (the source line and the machine-written pill);
+   ui-source.js gives those popovers Escape and light dismiss. ⋯ is
+   page-actions-menu.js, with page-actions.css. */
 import { shortDate } from './format.js';
 
 const esc = (value) => String(value ?? '').replace(/[&<>"']/g, (c) =>
@@ -152,24 +153,11 @@ export function fineprintSourceHTML(html, opts = {}) {
 
 // --- ⋯ ------------------------------------------------------------------------------
 
-const MORE_GLYPH = '<svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="4.5" cy="10" r="1.5"/><circle cx="10" cy="10" r="1.5"/><circle cx="15.5" cy="10" r="1.5"/></svg>';
-
 /** ⋯: what a view keeps but does not draw (principle 5: one primary action, the
- *  rest under ⋯). A details popover like the source sheets, so ui-source.js
- *  gives it Escape, light dismiss, one open at a time and arrow keys between
- *  its items. Items are links ({ href, label, detail }) or buttons
- *  ({ action, label, detail }) a page wires through `data-more-action`;
- *  `detail` is a short second line. `id` names the menu for a page that
- *  wires it. */
-export function moreMenuHTML(items, label = 'More actions', { id = '' } = {}) {
-  const line = (it) => it.detail ? `<span>${esc(it.label)}</span><small>${esc(it.detail)}</small>` : esc(it.label);
-  const rows = items.filter(Boolean).map((it) => {
-    if (it.action) return `<li><button type="button" class="ui-more-item" data-more-action="${esc(it.action)}">${line(it)}</button></li>`;
-    const target = linkTarget(it.href);
-    return target ? `<li><a class="ui-more-item" href="${esc(target.href)}"${target.external ? ' rel="noopener" target="_blank"' : ''}>${
-      line(it)}${target.external ? ' <span aria-hidden="true">↗︎</span><span class="visually-hidden">, opens a new tab</span>' : ''}</a></li>` : '';
-  }).filter(Boolean);
-  if (!rows.length) return '';
-  return `<details class="ui-pop ui-more"${id ? ` id="${esc(id)}"` : ''}><summary aria-label="${esc(label)}" title="${esc(label)}">${MORE_GLYPH}</summary>` +
-    `<div class="ui-sheet"><ul class="ui-more-list" role="list">${rows.join('')}</ul></div></details>`;
-}
+ *  rest under ⋯). The page-actions menu: a menu button and a list that floats
+ *  over the page; page-actions-menu.js writes it and runs it, and importing
+ *  this module installs its behaviour. Items are links ({ href, label, detail })
+ *  or buttons ({ action, label, detail }) a page wires through
+ *  `data-more-action`; `detail` is a short second line. `id` names the menu
+ *  for a page that wires it. */
+export { pageMenuHTML as moreMenuHTML } from './page-actions-menu.js?v=7b8653cf77';

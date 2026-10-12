@@ -18,10 +18,10 @@ const divisionMarkdownReady = import('/division-markdown.js?v=5991511166').then(
 // The labels, source lines and ⋯ (labels.js); the first render waits for them.
 let growthModules;
 let askPerson;
-const askPersonReady = import('/ask-person.js?v=a0b3602921').then(module => { askPerson = module; });
-const growthModulesReady = import("/growth-modules.js?v=d8f4fe61c2").then(module => { growthModules = module; });
+const askPersonReady = import('/ask-person.js?v=2c6be15a9f').then(module => { askPerson = module; });
+const growthModulesReady = import("/growth-modules.js?v=6a4a52d4bb").then(module => { growthModules = module; });
 let uiLabels;
-const uiLabelsReady = import('/labels.js?v=c6bf994ef7').then(module => { uiLabels = module; });
+const uiLabelsReady = import('/labels.js?v=edf92a9bea').then(module => { uiLabels = module; });
 let attributionHelpers;
 const attributionReady = Promise.allSettled([divisionMarkdownReady,
   import('./speech-attribution.js?v=20261006-4').then(module => { attributionHelpers = module; })]);
@@ -1611,7 +1611,7 @@ async function openSupplierPage(name, params, manageFocus) {
   body.classList.remove("subject-person", "subject-party");
   body.innerHTML = '<p role="status">Loading suppliers…</p>';
   try {
-    const module = await import("/suppliers.js?v=1d01466ca3");
+    const module = await import("/suppliers.js?v=a5e7961c6a");
     if (generation !== supplierPageGeneration) return;
     const helpers = {
       params,
@@ -6657,7 +6657,7 @@ const DIRECTORY_KINDS = {
 };
 let electorateModulePromise;
 function loadElectorateModule() {
-  return electorateModulePromise ??= import("./electorates.js?v=f60dff0a4b").catch((e) => { electorateModulePromise = null; throw e; });
+  return electorateModulePromise ??= import("./electorates.js?v=2ff73e752f").catch((e) => { electorateModulePromise = null; throw e; });
 }
 const DIR_CHUNK = 60;
 
@@ -8962,14 +8962,14 @@ document.addEventListener("opax:explain", (e) => openExplain(e.detail));
 
 const GAMES = {
   ballot: { name: "Build your ballot", dialog: "dialog-ballot", body: "explore-ballot", module: "/ballot.js?v=49e7bc6382", mount: "mountBallot" },
-  tm: { name: "Time machine", dialog: "dialog-tm", body: "explore-tm", module: "/timemachine.js?v=8e86f26747", mount: "mountTimeMachine" },
+  tm: { name: "Time machine", dialog: "dialog-tm", body: "explore-tm", module: "/timemachine.js?v=5d9a9f2841", mount: "mountTimeMachine" },
   tide: { name: "The tide", dialog: "dialog-tide", body: "explore-tide", module: "/tide.js", mount: "mountTide" },
   quiz: { name: "The record quiz", dialog: "dialog-quiz", body: "explore-quiz", module: "/quiz.js?v=e157a21ae1", mount: "mountQuiz" },
   ledger: { name: "The ledger", dialog: "dialog-ledger", body: "explore-ledger", module: "/ledger.js?v=5644afe6e0", mount: "mountLedger" },
   grants: { name: "Who gets the grants", dialog: "dialog-grants", body: "explore-grants", module: "/grants.js?v=bf7c17477c", mount: "mountGrants" },
   matrix: { name: "Who owns which debate", dialog: "dialog-matrix", body: "explore-matrix", module: "/matrix.js?v=25f5793db5", mount: "mountMatrix" },
   wd: { name: "Words per dollar", dialog: "dialog-wd", body: "explore-wd", module: "/wordsdollars.js?v=9e390529d6", mount: "mountWordsDollars" },
-  tvn: { name: "Then vs now", dialog: "dialog-tvn", body: "explore-tvn", module: "/thenvsnow.js?v=de2fe807c7", mount: "mountThenVsNow" },
+  tvn: { name: "Then vs now", dialog: "dialog-tvn", body: "explore-tvn", module: "/thenvsnow.js?v=4c2d830fe8", mount: "mountThenVsNow" },
 };
 
 async function openGame(which, params = null) {
@@ -12726,7 +12726,7 @@ async function exportSearch(format, btn) {
       ? `# retrieval reaches the ${s.total} strongest matches; the record holds more`
       : `# all matches in the searched public-record snapshot and document retrieval window`,
   ], "opax-search");
-  $("search-more").open = false;
+  window.opaxPageMenus?.close($("search-more"));
 }
 
 // --- document page ----------------------------------------------------------

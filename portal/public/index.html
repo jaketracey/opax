@@ -60,12 +60,13 @@
 <!-- fonts:end -->
 <!-- ?v= is content-hash stamped by scripts/stamp_assets.mjs (npm run deploy),
      which is what lets _headers serve these two immutable. -->
-<link rel="stylesheet" href="/style.css?v=8e5ccd5c26">
+<link rel="stylesheet" href="/style.css?v=7e54120f54">
 <link rel="stylesheet" href="/ui-controls.css?v=f8011bf298">
 <link rel="stylesheet" href="/ui-source.css?v=4f396d8cfc">
+<link rel="stylesheet" href="/page-actions.css?v=a416a2254f">
 <link rel="stylesheet" href="/voice.css?v=a10938b91d">
 <!-- labels.js: app.js imports it before its first render. -->
-<link rel="modulepreload" href="/labels.js?v=c6bf994ef7">
+<link rel="modulepreload" href="/labels.js?v=edf92a9bea">
 </head>
 <body class="research-app">
 <!-- Google Tag Manager (noscript) -->
@@ -691,19 +692,17 @@
               <p id="search-sort-note">Applies across all pages of retrieved matches.</p>
             </div>
           </div>
-          <!-- ⋯: copy the link and the three export formats. A details popover;
-               ui-source.js gives it Escape and light dismiss. -->
-          <details class="ui-pop ui-more" id="search-more">
-            <summary aria-label="Share and export these results" title="Share and export these results"><svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="4.5" cy="10" r="1.5"/><circle cx="10" cy="10" r="1.5"/><circle cx="15.5" cy="10" r="1.5"/></svg></summary>
-            <div class="ui-sheet">
-              <ul class="ui-more-list" role="list">
-                <li><button type="button" class="ui-more-item" id="search-copylink"><span>Copy link</span></button></li>
-                <li><button type="button" class="ui-more-item" data-format="csv"><span>Export CSV</span><small>A spreadsheet of every retrieved match</small></button></li>
-                <li><button type="button" class="ui-more-item" data-format="bibtex"><span>Export BibTeX</span><small>For LaTeX and reference managers</small></button></li>
-                <li><button type="button" class="ui-more-item" data-format="ris"><span>Export RIS</span><small>For Zotero, EndNote and Mendeley</small></button></li>
-              </ul>
-            </div>
-          </details>
+          <!-- ⋯: copy the link and the three export formats. The page-actions
+               menu (page-actions-menu.js, the markup labels.js's moreMenuHTML writes). -->
+          <div class="page-menu" id="search-more">
+            <button type="button" class="page-menu-button" aria-haspopup="menu" aria-expanded="false" aria-controls="search-more-menu" aria-label="Share and export these results" title="Share and export these results"><svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="4.5" cy="10" r="1.5"/><circle cx="10" cy="10" r="1.5"/><circle cx="15.5" cy="10" r="1.5"/></svg></button>
+            <ul class="page-menu-list" id="search-more-menu" role="menu" aria-label="Share and export these results" hidden>
+              <li role="none"><button type="button" class="page-menu-item" role="menuitem" tabindex="-1" id="search-copylink"><span>Copy link</span></button></li>
+              <li role="none"><button type="button" class="page-menu-item" role="menuitem" tabindex="-1" data-format="csv"><span>Export CSV</span><small>A spreadsheet of every retrieved match</small></button></li>
+              <li role="none"><button type="button" class="page-menu-item" role="menuitem" tabindex="-1" data-format="bibtex"><span>Export BibTeX</span><small>For LaTeX and reference managers</small></button></li>
+              <li role="none"><button type="button" class="page-menu-item" role="menuitem" tabindex="-1" data-format="ris"><span>Export RIS</span><small>For Zotero, EndNote and Mendeley</small></button></li>
+            </ul>
+          </div>
         </div>
       </div>
       <!-- Summarise these records: a collapsed row with the machine label. It
@@ -751,11 +750,11 @@
         <details id="money-journey-picker" class="journey-menu" name="money-tools"><summary>Journeys</summary><div id="money-journey-controls"></div></details>
         <div id="money-research"></div>
         <!-- ⋯: the full-screen map and the agency maps. Programs & places is a tab already. -->
-        <details class="ui-pop ui-more" id="money-more"><summary aria-label="More money tools" title="More money tools"><svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="4.5" cy="10" r="1.5"/><circle cx="10" cy="10" r="1.5"/><circle cx="15.5" cy="10" r="1.5"/></svg></summary>
-          <div class="ui-sheet"><ul class="ui-more-list" role="list">
-            <li><a class="ui-more-item" href="/map" data-full-map>Full-screen map</a></li>
-            <li><a class="ui-more-item" href="/subject/agency">Agency contract maps</a></li>
-          </ul></div></details>
+        <div class="page-menu" id="money-more"><button type="button" class="page-menu-button" aria-haspopup="menu" aria-expanded="false" aria-controls="money-more-menu" aria-label="More money tools" title="More money tools"><svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="4.5" cy="10" r="1.5"/><circle cx="10" cy="10" r="1.5"/><circle cx="15.5" cy="10" r="1.5"/></svg></button>
+          <ul class="page-menu-list" id="money-more-menu" role="menu" aria-label="More money tools" hidden>
+            <li role="none"><a class="page-menu-item" role="menuitem" tabindex="-1" href="/map" data-full-map>Full-screen map</a></li>
+            <li role="none"><a class="page-menu-item" role="menuitem" tabindex="-1" href="/subject/agency">Agency contract maps</a></li>
+          </ul></div>
       </div>
       <div id="money-stage" class="money-stage">
         <aside id="money-journey-story" class="journey-story" aria-label="Guided journey" hidden></aside>
@@ -2182,10 +2181,10 @@
 <!-- defer: never block the parser (Lighthouse counted this as render-blocking).
      Deferred scripts still run before DOMContentLoaded, so nothing changes for
      app.js's boot. ?v= is content-hash stamped by scripts/stamp_assets.mjs. -->
-<script src="/spa-shell.js?v=4b86ecea47" defer></script>
+<script src="/spa-shell.js?v=6c32cc77de" defer></script>
 <script src="/navigation.js?v=f86ae6aef6" defer></script>
 <script src="/quick-search.js?v=27eac3b2f7" defer></script>
-<script src="/ui-source.js?v=5e7b751ca0" defer></script>
-<script src="/app.js?v=ee9ff537b9" defer></script>
+<script src="/ui-source.js?v=d594622c13" defer></script>
+<script src="/app.js?v=18af612d1e" defer></script>
 </body>
 </html>
