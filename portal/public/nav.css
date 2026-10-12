@@ -15,7 +15,8 @@
 :root { --header-h: 66px; }
 @media (max-width: 960px) {
   :root { --header-h: 58px; }
-  .site-header { --nav-band: 56px; --nav-mark: 40px; }
+  /* Touch widths: every band control is a full touch target. */
+  .site-header { --nav-band: 56px; --nav-mark: 40px; --nav-pill: var(--size-target); }
 }
 
 /* ---- the band ------------------------------------------------------------ */
@@ -29,9 +30,18 @@
   position: static; display: flex; align-items: center; justify-content: flex-start;
   gap: clamp(var(--space-block), 2vw, var(--space-section)); min-height: var(--nav-band);
 }
-.site-header .masthead-id { position: static; top: 0; flex: none; max-width: none; margin: 0; }
-.site-header .logo { min-width: var(--size-target); min-height: var(--size-target); }
+.site-header .masthead-id { display: flex; align-items: center; position: static; top: 0; flex: none; max-width: none; margin: 0; }
+.site-header .logo {
+  display: inline-flex; align-items: center; justify-content: center;
+  min-width: var(--size-target); min-height: var(--size-target);
+  line-height: 0; color: var(--on-navy); text-decoration: none;
+}
+/* The mark: the continent in bronze, ringed by federation's seven stars. */
 .site-header .logo-mark { width: var(--nav-mark); height: auto; aspect-ratio: 176 / 160; }
+.site-header .logo-mark .logo-land { fill: var(--bronze-bright); }
+.site-header .logo-mark .logo-star { fill: var(--on-navy-soft); }
+.site-header .logo:hover .logo-star { fill: var(--on-navy); }
+.site-header .logo-mark .logo-thread { fill: none; stroke: var(--on-navy-soft); stroke-width: 0.9; stroke-linecap: round; opacity: 0; pointer-events: none; }
 
 /* The menu bar. */
 .site-header .masthead-nav {
@@ -56,6 +66,8 @@
   height: 2px; border-radius: 1px; background: var(--bronze-bright);
 }
 .site-header :focus-visible { outline: var(--border-focus) solid var(--bronze-bright); outline-offset: 2px; }
+/* The search box is paper: its ring is the paper one. */
+.site-header .header-search-panel :focus-visible { outline-color: var(--bronze-ink); }
 .nav-caret { width: 10px; height: 6px; flex: none; opacity: 0.75; }
 .nav-trigger[aria-expanded="true"] .nav-caret { transform: rotate(180deg); }
 
@@ -215,10 +227,22 @@
   background: var(--paper);
 }
 .nav-sheet .drawer-name { margin: 0; font: var(--type-strong); color: var(--ink); }
-.nav-sheet .drawer-close { width: 40px; height: 40px; flex: none; margin-right: -4px; background: var(--paper-sunken); }
+.nav-sheet .drawer-close {
+  display: grid; place-items: center; width: 40px; height: 40px; flex: none; margin: 0 -4px 0 0; padding: 0;
+  border: 0; border-radius: var(--radius-round); background: var(--paper-sunken); color: var(--ink); cursor: pointer;
+}
+.nav-sheet .drawer-close:hover { background: var(--divider-subtle); }
+.nav-sheet .drawer-close:focus { outline: none; }
+.nav-sheet .drawer-close:focus-visible { outline: var(--border-focus) solid var(--bronze-ink); outline-offset: 2px; }
 .nav-sheet .drawer-close .drawer-x { width: 20px; height: 20px; }
 .nav-sheet .drawer-search { position: relative; margin: var(--space-line) 0 var(--space-group); }
-.nav-sheet .drawer-sugg { top: calc(100% + 6px); }
+/* Suggestions drop over the sheet under its search field. */
+.nav-sheet .drawer-sugg {
+  position: absolute; left: 0; right: 0; top: calc(100% + 6px); z-index: 5; max-height: 60vh; overflow-y: auto;
+  padding: var(--space-line); background: var(--paper-raised);
+  border: var(--border-hairline) solid var(--divider-subtle); border-radius: var(--radius-md); box-shadow: var(--shadow-overlay);
+}
+.nav-sheet .drawer-sugg .ms-row { min-height: var(--size-target); font: var(--type-body); }
 .sheet-nav { display: block; }
 
 .sheet-ask {
@@ -314,6 +338,45 @@
   }
 }
 
+/* ---- the trail: one slim strip under the band ---------------------------- */
+/* Where you are, on every page but home: Home › the section › the record.
+   One line always; the current page shortens before its ancestors do, and
+   past that the strip scrolls sideways. The server writes the same strip into
+   <main> (.prerender-crumbs); the app's own replaces it once it runs. */
+.crumbs { background: var(--paper); border-bottom: var(--border-hairline) solid var(--divider-subtle); font: var(--type-fine); }
+.crumbs-list {
+  display: flex; align-items: center; gap: 0.45rem; min-height: 40px;
+  list-style: none; margin: 0 auto; padding-top: 0; padding-bottom: 0;
+  white-space: nowrap; overflow-x: auto; overscroll-behavior-x: contain; scrollbar-width: none;
+}
+.crumbs-list::-webkit-scrollbar { display: none; }
+.crumbs-list li { display: flex; align-items: center; gap: 0.45rem; flex: 0 0 auto; }
+.crumbs-list li.crumb-here { flex: 0 1 auto; min-width: 0; }
+.crumb-sep { width: 6px; height: 10px; flex: none; color: var(--bronze); }
+.crumb-label { display: block; padding: 0.55rem 0; }
+.crumbs-list a.crumb-label { color: var(--ink-soft); text-decoration: none; }
+.crumbs-list a.crumb-label:hover { color: var(--bronze-ink); text-decoration: underline; text-decoration-color: var(--bronze-ink); text-underline-offset: 3px; text-decoration-thickness: 1.5px; }
+.crumbs-list a.crumb-label:focus-visible { outline-offset: -2px; }
+.crumb-here .crumb-label { color: var(--ink); font: var(--type-label); overflow: hidden; text-overflow: ellipsis; }
+.spa-ready .prerender-crumbs, .spa-booting .prerender-crumbs { display: none; }
+
+/* ---- footer: the band's twin at the foot of the page ----------------------- */
+footer {
+  padding: 0 0 var(--space-group); background: var(--navy); color: var(--on-navy-soft);
+  border-top: var(--border-masthead) solid var(--bronze); font: var(--type-fine);
+}
+footer a { color: var(--on-navy); text-decoration-color: var(--bronze-bright); }
+footer a:hover { color: var(--bronze-bright); }
+footer :focus-visible { outline-color: var(--bronze-bright); }
+.footer-lines { padding-top: 1.1rem; }
+.footer-lines p { margin: 0.35rem 0; max-width: 90ch; }
+/* The corpus line arrives with the app (or home.js); until then it takes no room. */
+footer #stats:empty { display: none; }
+@media (max-width: 1439px) {
+  footer { line-height: 1.6; }
+  .footer-lines { padding-top: var(--space-block); }
+}
+
 /* ---- footer: the site index ------------------------------------------------ */
 .footer-index {
   display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: var(--space-group);
@@ -328,5 +391,8 @@ footer .footer-index + .footer-lines { border-top: var(--border-hairline) solid 
 @media (max-width: 640px) { .footer-index { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-group) var(--space-block); } }
 
 @media print {
+  .site-header { position: static; }
   .site-header .masthead-nav, .nav-actions, .footer-index { display: none; }
+  .site-header .logo-mark .logo-land { fill: var(--bronze-ink); }
+  .site-header .logo-mark .logo-star { fill: var(--ink); }
 }
