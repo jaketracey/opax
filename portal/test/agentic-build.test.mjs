@@ -20,12 +20,14 @@ test('period defaults follow tense; explicit windows and whole record override i
  assert.equal(inferPeriod('Is gambling debated more this term than last term?').since,'2022-07-26');
  assert.equal(inferPeriod(question,'all').kind,'all');
 });
-test('junk, timeouts and missing required args use a rule plan with the actual topic',async()=>{
+test('planner junk declines; a timeout uses a complete rule plan with the actual topic',async()=>{
  assert.equal(parsePlan('{"shape":"comparison","steps":[{"tool":"member_votes","args":{"person":"Alex Example"}}]}'),null);
- for(const generate of [async()=>{throw new Error('planner timeout')},async()=>({text:'junk'})]){
+ for(const generate of [async()=>{throw new Error('planner timeout')}]){
   const r=await runAgentic('Who in the ACT Legislative Assembly speaks most about health?',{...deps,generate});
   assert.equal(r.answered,true);assert.equal(r.steps[0].args.topic,'health');assert.equal(r.steps[0].args.state,'act');assert.equal(r.steps[0].args.since,'2025-07-22');
  }
+ const junk=await runAgentic('Who has spoken most about gambling?',{...deps,generate:async()=>({text:'junk'})});
+ assert.equal(junk.answered,false);assert.equal(junk.reason,'declined');assert.equal(junk.steps.length,0);
  assert.equal(fallbackPlan('Who has spoken most about quantum dragons?'),null);
 });
 test('budgets reject providers that ignore abort, stop lookups and preserve the no-answer contract',async()=>{

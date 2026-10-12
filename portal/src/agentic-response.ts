@@ -37,9 +37,11 @@ export function agenticAskPayload(run: AgenticPayload, question: string) {
   // (which can include personal details) in the shared answer's suggestions.
   const speech = run.steps.find(s => ['count_speeches', 'speech_trend'].includes(s.tool))?.args as Record<string, unknown> | undefined
   const topic = typeof speech?.topic === 'string' ? speech.topic.replace(/-/g, ' ') : null
-  const opening = speech?.group_by === 'party' ? 'Which party has made the most speeches' : run.shape === 'trend' ? 'How many speeches have been made' : 'Who has spoken most'
+  const opening = typeof speech?.speaker === 'string' ? `How many speeches has ${speech.speaker} made` : speech?.group_by === 'party' ? 'Which party has made the most speeches' : run.shape === 'trend' ? 'How many speeches have been made' : 'Who has spoken most'
   const place = typeof speech?.state === 'string' ? speech.state === 'federal' ? ' in federal parliament' : ` in ${speech.state.toUpperCase()}` : ''
-  const followup = topic ? `${opening} about ${topic}${place}${run.period.kind === 'all' ? ' in the current parliament' : ' across the whole record'}?` : null
+  const chamber = typeof speech?.chamber === 'string' ? ` in the ${speech.chamber.replace(/_/g, ' ')}` : ''
+  const party = typeof speech?.party === 'string' ? ` for ${speech.party}` : ''
+  const followup = topic ? `${opening} about ${topic}${party}${place}${chamber}${run.period.kind === 'all' ? ' in the current parliament' : ' across the whole record'}?` : null
   return {
     answered: run.answered,
     ...(run.reason ? { reason: run.reason } : {}),

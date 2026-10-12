@@ -45,7 +45,7 @@ export function inferPeriod(question: string, override?: unknown): Period {
  * can be tested. Ordered: a money join is also a ranking, so money wins.
  */
 const SPEECH_WORDS = /\b(?:speech(?:es)?|speakers?|spoke|spoken|speak(?:s|ing)?|said|says|mention(?:s|ed)?|talk(?:s|ed|ing)?|debat(?:e|ed|es|ing)|discuss(?:ed|es|ing)?|raised?)\b/i
-const MONEY_WORDS = /\b(?:donat\w*|donors?|gave|giving|funded|money)\b/i
+const MONEY_WORDS = /\b(?:donat\w*|donors?|funded|money)\b/i
 const VOTE_WORDS = /\bvot(?:e|ed|es|ing)\b/i
 const RANK_WORDS = /\b(?:most|least|more|fewest|top\s+(?:\d+|five|ten|three)|leading|biggest)\b/i
 // "which Greens MPs", "which federal politicians": up to two words between which and the subject.
@@ -53,13 +53,15 @@ const RANK_SUBJECT = /\b(?:who|which\s+(?:[\w'’-]+\s+){0,2}(?:mps?|members?|se
 const TREND_WORDS = /\b(?:more|less|fewer)\b.*\b(?:than|this term|last term|since|in the \d{4}s)\b|\b(?:changed?|trend|over time|which year|each year|by year|increase\w*|decrease\w*|risen|fallen|compared? with \d{4}|in \d{4} compared)\b/i
 const COMPARE_WORDS = /\bcompare\b|\bversus\b|\bvs\.?\b|\bcompared with\b/i
 export function classifyAgentic(question: string): { route: 'agentic' | 'ask'; shape: Shape | null; rule: string } {
-  const q = question.trim()
-  if (MONEY_WORDS.test(q) && SPEECH_WORDS.test(q)) return { route: 'agentic', shape: 'money', rule: 'money+speech' }
-  if (VOTE_WORDS.test(q) && SPEECH_WORDS.test(q)) return { route: 'agentic', shape: 'comparison', rule: 'vote+speech' }
+  const q = normaliseQuestion(question)
+  if (/\b(?:most recently|latest|last speech|knows? most)\b/.test(q)) return { route: 'ask', shape: null, rule: 'ordinary' }
+  if (MONEY_WORDS.test(q) && SPEECH_WORDS.test(q) && /\bmost\b|\bhow much\b/.test(q)) return { route: 'agentic', shape: 'money', rule: 'money+speech' }
+  if (VOTE_WORDS.test(q) && SPEECH_WORDS.test(q) && (COMPARE_WORDS.test(q) || /\bhow often\b|\bhow many\b/.test(q))) return { route: 'agentic', shape: 'comparison', rule: 'vote+speech' }
   if (COMPARE_WORDS.test(q) && /\bhow often\b|\bhow many\b/i.test(q)) return { route: 'agentic', shape: 'comparison', rule: 'compare-counts' }
   if (/\bhow many\b/i.test(q) && SPEECH_WORDS.test(q)) return { route: 'agentic', shape: 'trend', rule: 'how-many' }
-  if (TREND_WORDS.test(q) && SPEECH_WORDS.test(q)) return { route: 'agentic', shape: 'trend', rule: 'trend' }
-  if (RANK_SUBJECT.test(q) && RANK_WORDS.test(q) && (SPEECH_WORDS.test(q) || /\babout\b|\bon\b/i.test(q))) return { route: 'agentic', shape: 'ranking', rule: 'ranking' }
+  if (TREND_WORDS.test(q) && SPEECH_WORDS.test(q) && /\b(?:more|less|fewer|number|count|volume|how many|which year|over time|each year|by year|increase\w*|decrease\w*|risen|fallen)\b/.test(q)) return { route: 'agentic', shape: 'trend', rule: 'trend' }
+  const volumeRank = /\b(?:most|least|fewest) (?:(?:chamber|federal|senate|parliamentary) )?speeches\b|\b(?:spoke|spoken|speaks?|mentioned|discussed|debated|talked)(?: \w+){0,4} (?:most|least)(?= (?:about|on|in|since|during|across|this|last|over|compared)\b|$)|\b(?:top (?:\d+|five|ten|three)|leading) speakers\b/.test(q)
+  if (RANK_SUBJECT.test(q) && RANK_WORDS.test(q) && volumeRank) return { route: 'agentic', shape: 'ranking', rule: 'ranking' }
   return { route: 'ask', shape: null, rule: 'none' }
 }
 
@@ -249,6 +251,13 @@ export function verifyComposition(text: string, facts: Fact[], question = ''): {
     const nums = NUMBER_TOKENS(prose).filter(n => !calendarYears.has(n))
     const factNums = new Set(refs.flatMap((r) => NUMBER_TOKENS(byId.get(r)!.text)))
     if (nums.length && (!refs.length || nums.some((n) => !factNums.has(n)))) { dropped++; continue }
+    // A cited number belongs to its row's entity, not a bag of all figures.
+    // Multi-entity numerical prose is deliberately conservative: the exact
+    // tool rows remain available as the deterministic answer.
+    const entity = (f: Fact) => f.text.includes(':') ? f.text.split(':')[0] : /\bby (.+?)(?: in | \(| from | to |$)/.exec(f.text)?.[1]
+    const named = facts.filter(f => { const name = entity(f); return name && prose.includes(name) })
+    if (nums.length && (named.some(f => !refs.includes(f.id) || nums.some(n => !NUMBER_TOKENS(f.text).includes(n))) ||
+      refs.some(id => { const name = entity(byId.get(id)!); return name && !prose.includes(name) }))) { dropped++; continue }
     refs.forEach((r) => cited.add(r))
     kept.push(s.trim())
   }
@@ -331,12 +340,17 @@ export async function runAgentic(question: string, deps: AgenticDeps, progress: 
     if (typeof out.costUsd === 'number') cost = (cost ?? 0) + out.costUsd
   }
   let plan: Plan | null = null
+  let plannerFailed = false
   try {
     const out = await bounded(signal => deps.generate(question, plannerPrompt(), 700, signal), Math.min(15_000, left()), deps.signal)
     usage(out); plan = parsePlan(out.text)
-  } catch { /* rule plan below */ }
+  } catch { plannerFailed = true }
   timings.plan_ms = Date.now() - t0
   const rulePlan = fallbackPlan(question)
+  // Malformed output is a planner failure, not permission to substitute a
+  // numerical answer. Timeout recovery is limited to a complete rule plan.
+  if (!plan && !plannerFailed) return base({ reason: 'declined' })
+  if (/\b(?:about|on)\b/i.test(question) && !rulePlan) return base({ reason: 'declined' })
   // A valid JSON plan must still answer the classified shape and retain its
   // subject. In particular, never replace topic counts with overall totals.
   const topic = rulePlan?.steps.find(s => s.args.topic)?.args.topic
@@ -349,8 +363,10 @@ export async function runAgentic(question: string, deps: AgenticDeps, progress: 
         plan.shape === 'money' && (!has('party_donations') || !has('count_speeches')) ||
         plan.shape === 'comparison' && (!has('count_speeches') || VOTE_WORDS.test(question) && !has('member_votes'))) plan = null
   }
-  if (plan && (plan.shape === 'unanswerable' && rulePlan || plan.shape !== classifyAgentic(question).shape || topic && plan.steps.filter(s => ['count_speeches', 'speech_trend'].includes(s.tool)).some(s => s.args.topic !== topic))) plan = null
-  plan ??= rulePlan
+  if (plan && plan.shape !== 'unanswerable' && (plan.shape !== classifyAgentic(question).shape || topic && plan.steps.filter(s => ['count_speeches', 'speech_trend'].includes(s.tool)).some(s => s.args.topic !== topic))) plan = null
+  // Schema-valid but semantically incomplete plans also fall back to Ask.
+  // Only a failed/timed-out planner may use the full subject-aware rule plan.
+  if (!plan && plannerFailed) plan = rulePlan
   if (!left() || deps.signal?.aborted) return base({ reason: 'declined', over_budget: true })
   if (!plan) return base({ reason: 'declined' })
   if (plan.shape === 'unanswerable') return base({ reason: 'declined', notes: plan.reason ? [plan.reason] : [] })
@@ -450,7 +466,7 @@ export async function questionHash(question: string): Promise<string> {
 async function hashText(text: string): Promise<string> {
   return [...new Uint8Array(await crypto.subtle.digest('SHA-256', new TextEncoder().encode(text)))].map(b => b.toString(16).padStart(2, '0')).join('')
 }
-export async function agenticCacheKey(question: string, epoch: string, model: string, period = inferPeriod(question), toolsVersion = AGENTIC_TOOLS_VERSION, filters: Record<string, unknown> = {}): Promise<string> {
-  const hash = await hashText(JSON.stringify({ q: normaliseQuestion(question), period, filters, epoch, model, v: AGENTIC_PROMPT_VERSION, t: toolsVersion }))
+export async function agenticCacheKey(question: string, epoch: string, model: string, period = inferPeriod(question), toolsVersion = AGENTIC_TOOLS_VERSION, filters: Record<string, unknown> = {}, shape = classifyAgentic(question).shape): Promise<string> {
+  const hash = await hashText(JSON.stringify({ q: normaliseQuestion(question), shape, period, filters, epoch, model, v: AGENTIC_PROMPT_VERSION, t: toolsVersion }))
   return `https://cache.opax.internal/ask-agentic/${hash}`
 }

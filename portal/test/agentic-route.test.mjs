@@ -8,9 +8,9 @@ const asset=h.env.ASSETS;
 h.env.ASSETS={async fetch(req){const path=new URL(req.url).pathname;if(path.startsWith('/graph/money'))return Response.json({nodes:[],edges:[]});if(path==='/parliamentarians.json')return Response.json({people:[]});return asset.fetch(req)}};
 h.env.COMMUNITY_DB={prepare(sql){return{bind(...values){logs.push({sql,values});return{run:async()=>({success:true})}}}}};
 h.env.GENERATION_CACHE={async get(k){return shared.get(k)??null},async put(k,v){shared.set(k,JSON.parse(v))}};
-h.env.AGENTIC_INPUT_USD_PER_MILLION='0.66';h.env.AGENTIC_OUTPUT_USD_PER_MILLION='1.98';
+h.env.SA_HANSARD_FULL_TEXT='true';h.env.AGENTIC_INPUT_USD_PER_MILLION='0.66';h.env.AGENTIC_OUTPUT_USD_PER_MILLION='1.98';
 globalThis.caches={default:{async match(k){return edge.get(k.url)?.clone()},async put(k,r){edge.set(k.url,new Response(await r.text(),r))}}};
-let mode='ranking',models=0,normalModels=0,quota=0,toolStarted=()=>{};
+let mode='ranking',models=0,normalModels=0,quota=0,toolStarted=()=>{},toolSignal,toolStop=()=>{};
 h.env.ASK_LIMITER={async limit(){quota++;return{success:true}}};
 globalThis.fetch=async(input,init)=>{
  const url=new URL(input);assert.ok(url.hostname.startsWith('offline.'),'no outbound service calls');const b=JSON.parse(init?.body??'{}');
@@ -24,7 +24,7 @@ globalThis.fetch=async(input,init)=>{
   if(b.prompt?.user?.includes('FACTS (numbered')){models++;return Response.json({answer:'Taylor Example: 87 [1]. Pat Example: 60 [2]. Alex Example: 52 [3].',metadata:{tokens:{input:10,output:5}}})}
   normalModels++;const reply={answer:'The retrieved speech called for parliamentary scrutiny.',retrieval_results:{resources:{}}};if(init.headers?.['x-synchronous']==='true')return Response.json(reply);return new Response([{type:'answer',text:reply.answer},{type:'status',code:'0',status:'success'}].map(item=>JSON.stringify({item})).join('\n')+'\n',{headers:{'content-type':'application/x-ndjson'}});
  }
- if(mode==='abort-tools'&&url.pathname.endsWith('/catalog'))return new Promise((resolve,reject)=>{init.signal.addEventListener('abort',()=>reject(init.signal.reason),{once:true});toolStarted()});
+ if(mode==='abort-tools'&&url.pathname.endsWith('/catalog'))return new Promise((resolve,reject)=>{toolSignal=init.signal;toolStop=()=>reject(Error('fixture cleanup'));init.signal.addEventListener('abort',()=>reject(init.signal.reason),{once:true});toolStarted()});
  if(url.pathname.endsWith('/catalog'))return Response.json({fulltext:{total:300,facets:{'/u/o':mode==='empty'?{}:{'/u/o/Taylor Example':87,'/u/o/Pat Example':60,'/u/o/Alex Example':52}}},resources:{}});
  if(url.pathname.endsWith('/search')){
   const text=JSON.stringify(b);return Response.json({fulltext:{total:mode==='empty'?0:text.includes('Pat Example')?60:text.includes('Alex Example')?52:87},resources:{}});
@@ -57,13 +57,36 @@ test('shadow returns the normal answer and starts a monitored run with waitUntil
 });
 test('answered false and exhausted budgets fall back to normal Ask and cannot cache the failure',async()=>{
  h.env.AGENTIC_ASK_MODE='route';shared.clear();edge.clear();mode='empty';const before=normalModels,quotaBefore=quota;const r=await post(question);assert.equal((await r.json()).agentic,undefined);assert.ok(normalModels>before);assert.equal(quota,quotaBefore+1,'fallback shares the original request quota');await flush();assert.ok(![...shared.keys()].some(k=>k.includes('ask-agentic')));
- mode='overrun';const normalBefore=normalModels;const over=await post(question);assert.equal((await over.json()).agentic,undefined);assert.ok(normalModels>normalBefore);await new Promise(r=>setTimeout(r,25));mode='ranking';await flush();
+ mode='overrun';const normalBefore=normalModels;const over=await post(question);assert.equal(over.status,504);assert.equal((await over.json()).agentic,undefined);assert.equal(normalModels,normalBefore,'an exhausted deadline cannot start fallback');await new Promise(r=>setTimeout(r,25));mode='ranking';await flush();
 });
 test('a disconnected reader cancels tools without starting a paid fallback',async()=>{
  h.env.AGENTIC_ASK_MODE='route';shared.clear();edge.clear();mode='abort-tools';
  const controller=new AbortController(),started=new Promise(resolve=>{toolStarted=resolve}),before=normalModels;
  const pendingResponse=h.fetch('/api/ask',{method:'POST',signal:controller.signal,headers:{'content-type':'application/json'},body:JSON.stringify({question,kind:'speech'})});
  await started;controller.abort();const response=await pendingResponse;assert.equal((await response.json()).answered,false);assert.equal(normalModels,before);mode='ranking';await flush();
+});
+test('P1 reader.cancel aborts an in-flight tool and never starts fallback or a composer',async()=>{
+ h.env.AGENTIC_ASK_MODE='route';shared.clear();edge.clear();mode='abort-tools';
+ const started=new Promise(resolve=>{toolStarted=resolve}),before=normalModels,beforeModels=models;
+ const response=await post(question,true),reader=response.body.getReader();
+ let watchdog;
+ try{
+  await reader.read(); // Consume searching, as a connected SSE client does.
+  await started;assert.equal(toolSignal.aborted,false);await reader.cancel();
+  // A cancellation must settle the waitUntil work even when no tool completes.
+  await Promise.race([flush(),new Promise((_,reject)=>{watchdog=setTimeout(()=>reject(Error('tools continued after reader cancellation')),500)})]);
+  assert.equal(toolSignal.aborted,true);assert.equal(normalModels,before);assert.equal(models,beforeModels+1);
+ }finally{clearTimeout(watchdog);toolStop();await Promise.race([flush(),new Promise(resolve=>setTimeout(resolve,100))]);mode='ranking'}
+});
+test('P1 planner junk and unknown subjects actually fall back to normal Ask',async()=>{
+ h.env.AGENTIC_ASK_MODE='route';shared.clear();edge.clear();mode='junk';
+ const previous=globalThis.fetch;globalThis.fetch=async(input,init)=>{
+  const b=JSON.parse(init?.body??'{}');if(new URL(input).pathname.endsWith('/ask')&&b.prompt?.user?.includes('Plan the record'))return Response.json({answer:b.query.includes('quantum dragons')?'{"shape":"ranking","steps":[{"tool":"count_speeches","args":{"group_by":"speaker"}}]}':'junk'});
+  return previous(input,init);
+ };
+ try {for(const q of ['Who has spoken most about gambling?','Who has spoken most about quantum dragons?']){
+  const before=normalModels;const r=await post(q);assert.equal((await r.json()).agentic,undefined);assert.ok(normalModels>before);await flush();
+ }}finally{globalThis.fetch=previous;mode='ranking'}
 });
 test('the gold operator route fails closed without bearer or enabled mode, including staging',async()=>{
  h.env.STAGING_API={fetch(){throw Error('ops route must not proxy to production')}};

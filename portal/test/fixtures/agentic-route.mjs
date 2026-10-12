@@ -8,5 +8,5 @@ export const fixtureDeps={
   return {fulltext:{total:collaborator?rows[collaborator]??0:Object.values(rows).reduce((a,b)=>a+b,0),facets:{'/u/o':Object.fromEntries(Object.entries(rows).map(([name,n])=>['/u/o/'+name,n]))}}};
  },
  async asset(){return null},
- async generate(_q,prompt){return {text:prompt.user.includes('Plan the record')?'junk':'Unsupported 999 [1].',tokens:{input:10,output:5},costUsd:0.001}}
+ async generate(_q,prompt){return {text:prompt.user.includes('Plan the record')?JSON.stringify({shape:'ranking',steps:[{tool:'count_speeches',args:{topic:'gambling',group_by:'speaker'}}]}):'Unsupported 999 [1].',tokens:{input:10,output:5},costUsd:0.001}}
 };

@@ -5723,17 +5723,17 @@ function monitorAgentic(env: Env, ctx: ExecutionContext, question: string, run: 
     console.warn('Ask monitoring write unavailable')
   }))
 }
-async function executeAgentic(input: Record<string, unknown>, env: Env, ctx: ExecutionContext, progress?: Progress, signal?: AbortSignal) {
+async function executeAgentic(input: Record<string, unknown>, env: Env, ctx: ExecutionContext, progress?: Progress, signal?: AbortSignal, budgetMs = AGENTIC_BUDGET_MS) {
   const question = String(input.question).trim()
   const started = Date.now(), period = agenticPeriod(input)
   let run: AgenticPayload
   try {
     // Covers the whole path, including an SSE writer or provider that stalls.
-    run = await bounded(signal => runAgentic(question, agenticDeps(env, signal), progress, AGENTIC_BUDGET_MS, period, agenticFilters(input)), AGENTIC_BUDGET_MS, signal)
+    run = await bounded(signal => runAgentic(question, agenticDeps(env, signal), progress, budgetMs, period, agenticFilters(input)), budgetMs, signal)
   } catch {
     run = { answered: false, reason: 'declined', answer: '', answer_source: 'none', shape: classifyAgentic(question).shape, period,
       facts: [], notes: [], steps: [], events: [], tokens: { input: 0, output: 0 }, cost_usd: null,
-      over_budget: Date.now() - started >= AGENTIC_BUDGET_MS,
+      over_budget: Date.now() - started >= budgetMs,
       timings: { plan_ms: 0, tools_ms: 0, compose_ms: 0, total_ms: Date.now() - started }, version: 'unavailable' }
   }
   monitorAgentic(env, ctx, question, run)
@@ -5761,61 +5761,86 @@ async function apiAskRouted(request: Request, url: URL, input: Record<string, un
   const fallback = () => apiAsk(request.clone(), env, ctx, undefined, undefined, quotaTaken)
   const mode = env.AGENTIC_ASK_MODE
   if (!['route', 'shadow'].includes(String(mode)) || classifyAgentic(question).route !== 'agentic' || input.kind && !['speech', 'all'].includes(String(input.kind))) return fallback()
-  // Reuse the existing donor guard before planning; no donor prompt bypass.
-  if (await questionNamesWithheldDonor(env.ASSETS, question)) return fallback()
   if (mode === 'shadow') {
+    if (await questionNamesWithheldDonor(env.ASSETS, question)) return fallback()
     const normal = await fallback()
     if (normal.ok) ctx.waitUntil(executeAgentic(input, env, ctx).then(() => {}).catch(() => console.warn('Ask background run unavailable')))
     return normal
   }
-  const privateTurn = Array.isArray(input.context) && input.context.length > 0
-  const key = new Request(await agenticCacheKey(question, env.CACHE_EPOCH, env.ASK_MODEL || 'openai-compatible', agenticPeriod(input), AGENTIC_TOOLS_VERSION, agenticFilters(input)))
-  const streaming = url.searchParams.get('stream') === '1' || (request.headers.get('accept') ?? '').includes('text/event-stream')
-  if (!privateTurn && !cacheBypass(request, url)) {
-    const hit = await readGenerationCache(env, ctx, key)
-    if (hit) {
-      ctx.waitUntil(recordAgenticRun(env.COMMUNITY_DB, question, {
-        shape: classifyAgentic(question).shape, cost_usd: 0,
-        timings: { plan_ms: 0, tools_ms: 0, compose_ms: 0, total_ms: Date.now() - started },
-      }).catch(() => console.warn('Ask monitoring write unavailable')))
-      return streaming ? replayCachedAsk(hit, ctx) : withCacheStatus(hit, 'HIT', false)
-    }
-  }
-  const limited = await rateLimited(env.ASK_LIMITER, request); if (limited) return limited
-  quotaTaken = true
-  const finish = (run: AgenticPayload) => {
-    const response = json(agenticAskPayload(run, question))
-    if (run.answered && !run.over_budget && !privateTurn) storeGenerationCache(env, ctx, key, response.clone(), ASK_CACHE_TTL)
-    return response
-  }
-  if (!streaming) {
-    const run = await executeAgentic(input, env, ctx, undefined, request.signal)
-    if (request.signal.aborted) return json(agenticAskPayload(run, question))
-    return run.answered && !run.over_budget ? withCacheStatus(finish(run), 'MISS', false) : fallback()
-  }
-  const { readable, writable } = new TransformStream<Uint8Array, Uint8Array>(), writer = writable.getWriter()
-  const encoder = new TextEncoder()
-  const send: Progress = async (event, data) => { await writer.write(encoder.encode(`event: ${event}\ndata: ${JSON.stringify(data)}\n\n`)) }
-  ctx.waitUntil((async () => {
-    try {
-      await send('status', { phase: 'searching' })
-      const run = await executeAgentic(input, env, ctx, send, request.signal)
-      if (request.signal.aborted) return
-      if (run.answered && !run.over_budget) { const response = finish(run); await send('done', await response.json()) }
-      else {
-        const response = await fallback()
-        if ((response.headers.get('content-type') ?? '').includes('text/event-stream')) {
-          const reader = response.body!.getReader()
-          try { while (true) { const { value, done } = await reader.read(); if (done) break; await writer.write(value) } }
-          finally { reader.releaseLock() }
-        } else if (response.ok) await send('done', await response.json())
-        else await send('error', { error: 'The record is temporarily unavailable. Please try again.', final: true })
+  // One deadline owns planning, tools, fallback and transport. Only routed
+  // requests receive this budget; ordinary Ask keeps its existing bytes.
+  const budget = new AskDeadline(Math.max(0, AGENTIC_BUDGET_MS - (Date.now() - started)), request.signal)
+  const routedFallback = () => budget.run(() => apiAsk(new Request(request, { signal: budget.signal }), env, ctx, undefined, budget, quotaTaken))
+  const expired = () => json({ error: 'The answer took too long. Please try again.' }, 504)
+  let streamOwnsBudget = false
+  try {
+    // Reuse the donor guard within the same deadline; no prompt bypass.
+    if (await budget.run(() => questionNamesWithheldDonor(env.ASSETS, question))) return await routedFallback()
+    const privateTurn = Array.isArray(input.context) && input.context.length > 0
+    const key = new Request(await agenticCacheKey(question, env.CACHE_EPOCH, env.ASK_MODEL || 'openai-compatible', agenticPeriod(input), AGENTIC_TOOLS_VERSION, agenticFilters(input)))
+    const streaming = url.searchParams.get('stream') === '1' || (request.headers.get('accept') ?? '').includes('text/event-stream')
+    if (!privateTurn && !cacheBypass(request, url)) {
+      const hit = await budget.run(() => readGenerationCache(env, ctx, key))
+      if (hit) {
+        ctx.waitUntil(recordAgenticRun(env.COMMUNITY_DB, question, {
+          shape: classifyAgentic(question).shape, cost_usd: 0,
+          timings: { plan_ms: 0, tools_ms: 0, compose_ms: 0, total_ms: Date.now() - started },
+        }).catch(() => console.warn('Ask monitoring write unavailable')))
+        return streaming ? replayCachedAsk(hit, ctx) : withCacheStatus(hit, 'HIT', false)
       }
-    } catch {
-      try { await send('error', { error: 'The record is temporarily unavailable. Please try again.', final: true }) } catch { /* disconnected */ }
-    } finally { try { await writer.close() } catch { /* disconnected */ } }
-  })())
-  return new Response(readable, { headers: { ...SSE_HEADERS, 'x-opax-cache': 'MISS' } })
+    }
+    const limited = await budget.run(() => rateLimited(env.ASK_LIMITER, request)); if (limited) return limited
+    quotaTaken = true
+    const finish = (run: AgenticPayload) => {
+      const response = json(agenticAskPayload(run, question))
+      if (run.answered && !run.over_budget && !privateTurn) storeGenerationCache(env, ctx, key, response.clone(), ASK_CACHE_TTL)
+      return response
+    }
+    if (!streaming) {
+      try {
+        const run = await executeAgentic(input, env, ctx, undefined, budget.signal, budget.remaining)
+        if (request.signal.aborted) return json(agenticAskPayload(run, question))
+        budget.signal.throwIfAborted()
+        return run.answered && !run.over_budget ? withCacheStatus(finish(run), 'MISS', false) : await routedFallback()
+      } catch { return expired() }
+      finally { budget.dispose() }
+    }
+    const encoder = new TextEncoder()
+    let gone = false
+    const readable = new ReadableStream<Uint8Array>({
+      start(controller) {
+        const send: Progress = async (event, data) => {
+          budget.signal.throwIfAborted()
+          if (gone) throw new DOMException('Reader disconnected', 'AbortError')
+          controller.enqueue(encoder.encode(`event: ${event}\ndata: ${JSON.stringify(data)}\n\n`))
+        }
+        ctx.waitUntil((async () => {
+          try {
+            await send('status', { phase: 'searching' })
+            const run = await executeAgentic(input, env, ctx, send, budget.signal, budget.remaining)
+            if (gone || request.signal.aborted) return
+            budget.signal.throwIfAborted()
+            if (run.answered && !run.over_budget) { const response = finish(run); await send('done', await response.json()) }
+            else {
+              const response = await routedFallback()
+              if ((response.headers.get('content-type') ?? '').includes('text/event-stream')) {
+                const reader = response.body!.getReader()
+                try { while (true) { const { value, done } = await budget.run(() => reader.read()); if (done || gone) break; controller.enqueue(value!) } }
+                finally { await reader.cancel().catch(() => {}); reader.releaseLock() }
+              } else if (response.ok) await send('done', await budget.run(() => response.json()))
+              else await send('error', { error: 'The record is temporarily unavailable. Please try again.', final: true })
+            }
+          } catch {
+            if (!gone && !request.signal.aborted) controller.enqueue(encoder.encode('event: error\ndata: {"error":"The answer took too long. Please try again.","final":true}\n\n'))
+          } finally { budget.cancel(); if (!gone) controller.close() }
+        })())
+      },
+      cancel() { gone = true; budget.cancel() },
+    })
+    streamOwnsBudget = true
+    return new Response(readable, { headers: { ...SSE_HEADERS, 'x-opax-cache': 'MISS' } })
+  } catch { budget.dispose(); return expired() }
+  finally { if (!streamOwnsBudget) budget.dispose() }
 }
 
 async function route(

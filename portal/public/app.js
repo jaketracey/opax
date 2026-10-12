@@ -9713,15 +9713,20 @@ function liveAskSteps(container, alive, options) {
 
 /** The finished run as one line ("6 steps · 11 s") that opens the list.
  *  Its height is held before the module lands so the answer never moves. */
-async function renderAskStepsLine(slot, agentic) {
+const askStepsRenderOwners = new WeakMap();
+async function renderAskStepsLine(slot, agentic, alive = () => true) {
   if (!slot) return;
+  const owner = {};
+  askStepsRenderOwners.set(slot, owner);
   if (!agentic?.steps?.length) { slot.replaceChildren(); slot.hidden = true; return; }
   slot.hidden = false;
   slot.style.minHeight = "calc(var(--size-target) + var(--space-tight))";
   try {
-    (await import(ASK_STEPS_JS)).renderStepsLine(slot, agentic);
+    const mod = await import(ASK_STEPS_JS);
+    if (askStepsRenderOwners.get(slot) !== owner || !alive()) return;
+    mod.renderStepsLine(slot, agentic);
   } catch {
-    slot.hidden = true;
+    if (askStepsRenderOwners.get(slot) === owner && alive()) slot.hidden = true;
   }
 }
 
@@ -9964,7 +9969,7 @@ async function runAsk(question) {
     // A stepped answer keeps its run as one line above the answer, drawn from
     // the payload so a cached answer carries it too.
     endAskSteps();
-    await renderAskStepsLine($("ask-steps"), data.agentic);
+    await renderAskStepsLine($("ask-steps"), data.agentic, () => askAbort === myAbort);
     if (askAbort !== myAbort) return;
     setStatus($("ask-status"), needsClarification ? "Please clarify the question before I calculate the answer." : data.answer_status === "evidence_only" ? "Source passages ready. A summary could not be verified." : `Answer ready: ${sources.length} sources.`);
     $("ask-status").classList.add("visually-hidden"); // announced, not displayed
