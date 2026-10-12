@@ -3,6 +3,7 @@ import {shortDate} from '../public/format.js'
 import {VIC_ELECTION_PATH, VIC_ELECTION_ASSET, VIC_ELECTION_AUTHORISATION_LINE, VIC_ELECTION_CORRECTIONS_EMAIL, VIC_ELECTION_CORRECTIONS_RESPONSE, vicElectionEnabled} from '../public/vic-election.js'
 import {escapeHtml as esc, safeHref, type ReadAsset} from './seo-content'
 import {hubShell, type HubFooterConfig} from './hubs'
+import {trail} from './nav-model.mjs'
 
 interface Division { date: string; title: string; href: string; vote: string; source_url: string }
 interface Member {
@@ -53,7 +54,7 @@ export function renderVicElection(d: VicElection, s: Seat | null, footer: HubFoo
   const path = s?.path || VIC_ELECTION_PATH
   const title = s ? `${s.name} ${s.kind} · Victorian election 2026` : 'Victorian election 2026'
   const description = s ? `Sitting ${s.kind === 'district' ? 'member' : 'members'} and the available parliamentary record for ${s.name}, with coverage limits and official election dates.` : 'The 88 Victorian state districts and 8 regions, sitting members and their available parliamentary records.'
-  let body = `${s ? `<nav class="hub-trail" aria-label="Breadcrumb">${link(VIC_ELECTION_PATH,'Victorian election 2026')}</nav>` : tagHTML('State election · 28 November 2026')}<h1>${esc(title)}</h1><p class="hub-lead">${esc(description)}</p><p>Public records for the 2022–2026 parliamentary term, with gaps stated below.</p>`
+  let body = `${s ? '' : tagHTML('State election · 28 November 2026')}<h1>${esc(title)}</h1><p class="hub-lead">${esc(description)}</p><p>Public records for the 2022–2026 parliamentary term, with gaps stated below.</p>`
   body += sourceLineHTML({updated:d.checked,dateLabel:'VEC information checked',source:'Victorian Electoral Commission',originals:[{href:s?.source_url || d.sources.districts,label:s ? 'Official electorate' : 'Official districts'},{href:d.sources.regions,label:'Official regions'}]})
   body += `<nav class="hub-pills" aria-label="On this page">${(s ? [['#members','Members and records']] : [['#districts','88 districts'],['#regions','8 regions']]).concat([['#key-dates','Key dates'],['#coverage','Coverage']]).map(([href,label])=>tagHTML(label,href)).join('')}</nav>`
   if (s) {
@@ -67,11 +68,11 @@ export function renderVicElection(d: VicElection, s: Seat | null, footer: HubFoo
     }
   }
   body += dates(d)+candidates(d,now)+boundary(d,s || undefined)+grants()+coverage(d)+licence(d)
-  return {title,description,html:hubShell(body,approvedFooter(footer)),jsonLd:structured(path,d,s ? s.members.map(m=>({href:m.href,name:m.name})) : d.seats.map(s=>({href:s.path,name:s.name}))),
+  return {title,description,html:hubShell(body,approvedFooter(footer),s ? trail(VIC_ELECTION_PATH,`${s.name} ${s.kind}`) : trail(VIC_ELECTION_PATH)),jsonLd:structured(path,d,s ? s.members.map(m=>({href:m.href,name:m.name})) : d.seats.map(s=>({href:s.path,name:s.name}))),
     card:{kicker:'Victorian election · 28 November 2026',title,lines:[description],authorisation:VIC_ELECTION_AUTHORISATION_LINE}}
 }
 export async function vicElectionPage(id: string | null, read: ReadAsset, config: HubFooterConfig & {VIC_ELECTION_HUB_ENABLED?: string} = {}) {
-  const missing = {title:'Hub not found',description:'This hub is not available.',html:hubShell('<h1>Hub not found</h1><p>This hub is not available.</p>',vicElectionEnabled(config.VIC_ELECTION_HUB_ENABLED) ? approvedFooter(config) : {}),jsonLd:null,status:404}
+  const missing = {title:'Hub not found',description:'This hub is not available.',html:hubShell('<h1>Hub not found</h1><p>This hub is not available.</p>',vicElectionEnabled(config.VIC_ELECTION_HUB_ENABLED) ? approvedFooter(config) : {},vicElectionEnabled(config.VIC_ELECTION_HUB_ENABLED) ? trail(VIC_ELECTION_PATH,'Not found') : []),jsonLd:null,status:404}
   if (!vicElectionEnabled(config.VIC_ELECTION_HUB_ENABLED) || (id !== null && !/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(id))) return missing
   const d = await read<VicElection>(VIC_ELECTION_ASSET)
   if (id === null) return {...renderVicElection(d,null,config),status:200}

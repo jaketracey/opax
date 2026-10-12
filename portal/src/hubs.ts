@@ -4,6 +4,7 @@ import { houseName, orderedWeeks, day, sydneyDay } from '../public/hubs-data.js'
 import { sponsorPerson, type SponsorCandidate } from '../public/sponsor-person.js'
 import { divisionPlain } from '../public/division-markdown.js'
 import { escapeHtml as esc, safeHref, crumbsHTML, type Crumb, type ReadAsset } from './seo-content'
+import { trail } from './nav-model.mjs'
 
 interface Bill {
   key: string; title: string; introduced: string; originating_house: string; sponsor?: string; sponsor_person_id?: string; portfolio?: string;
@@ -51,7 +52,6 @@ export const hubShell = (body: string, config: HubFooterConfig = {}, crumbs: Cru
   return `${crumbsHTML(crumbs)}<section id="prerender" class="wrap hub-page">${body}${lines ? `<div class="hub-footer">${lines}</div>` : ''}</section>`
 }
 const shell = hubShell
-const WEEKS: Crumb = {label:'Sitting weeks',href:'/sitting'}
 /** The page's one title and the one line under it: a lead sentence on the
  *  index, a meta line (chambers, programme status) on a week or estimates. */
 const header = (title: string, line: string, kind: 'lead' | 'meta' = 'lead') => `<h1>${esc(title)}</h1><p class="hub-${kind}">${esc(line)}</p>`
@@ -65,7 +65,7 @@ export function renderSittingIndex(data: HubIndex, today: string, footer: HubFoo
     const state = active ? 'Current' : today < w.start ? 'Upcoming' : 'Past'
     return `<li><div><h2>${link(`/sitting/${w.start}`,range(w.start,w.end))}</h2><p>${esc(w.houses.map(houseName).join(' and '))}</p>${w.estimates ? `<p>${link(`/estimates/${w.estimates}`,'Senate Supplementary Budget Estimates')}</p>` : ''}</div>${statusLabelHTML(state,active ? 'active' : 'ended')}</li>`
   }).join('')
-  const html = shell(header(title,description)+sourceLineHTML({updated:data.updated,source:'APH sitting calendar',originals:data.sources.map(s => ({href:s.url,label:s.label}))})+`<ul class="hub-weeks">${rows}</ul>`,footer,[{label:'Sitting weeks'}])
+  const html = shell(header(title,description)+sourceLineHTML({updated:data.updated,source:'APH sitting calendar',originals:data.sources.map(s => ({href:s.url,label:s.label}))})+`<ul class="hub-weeks">${rows}</ul>`,footer,trail('/sitting'))
   return {title,description,html,jsonLd:{'@graph':[itemList('/sitting',weeks.map(w => ({href:`/sitting/${w.start}`,name:range(w.start,w.end)})))]}}
 }
 export function renderSittingWeek(data: HubIndex, week: Week, people: SponsorCandidate[], slugs: Map<string,string>, today = sydneyDay(), footer: HubFooterConfig = {}) {
@@ -109,7 +109,7 @@ export function renderSittingWeek(data: HubIndex, week: Week, people: SponsorCan
     const coverage = data.latestFederalDivision ? `Federal divisions in OPAX's published record currently run to ${date(data.latestFederalDivision)}; divisions held after that date will appear here once the record is updated.` : 'Federal divisions are not available in this OPAX export; they will appear here once the record is updated.'
     body += `<section class="hub-section"><h2>Divisions</h2><p>${esc(coverage)}</p>${sourceLineHTML({updated:data.snapshotDate,dateLabel:'Published snapshot',source:'Exported division records',originals:[{href:'https://theyvoteforyou.org.au/divisions',label:'They Vote For You divisions'}],notes:['Absence from this export does not establish that no divisions were held.']})}</section>`
   }
-  return {title,description,html:shell(body,footer,[WEEKS,{label:range(week.start,week.end)}]),jsonLd:{'@graph':[event(path,title,week.start,week.end,data.sources[0].url),itemList(path,rows)]}}
+  return {title,description,html:shell(body,footer,trail('/sitting',range(week.start,week.end))),jsonLd:{'@graph':[event(path,title,week.start,week.end,data.sources[0].url),itemList(path,rows)]}}
 }
 export function renderEstimates(data: Estimates, footer: HubFooterConfig = {}) {
   const title = `Senate ${data.name}: ${range(data.start,data.end)}`
@@ -147,10 +147,10 @@ export function renderEstimates(data: Estimates, footer: HubFooterConfig = {}) {
     }
     body += '</section>'
   }
-  return {title,description,html:shell(body,footer,[WEEKS,{label:data.name}]),jsonLd:{'@graph':[event(`/estimates/${data.id}`,title,data.start,data.end,data.source_url),itemList(`/estimates/${data.id}`,[...list.values()])]}}
+  return {title,description,html:shell(body,footer,trail(`/estimates/${data.id}`,data.name)),jsonLd:{'@graph':[event(`/estimates/${data.id}`,title,data.start,data.end,data.source_url),itemList(`/estimates/${data.id}`,[...list.values()])]}}
 }
 export async function hubPage(kind: 'sitting' | 'estimates', id: string | null, read: ReadAsset, people: SponsorCandidate[], slugs: Map<string,string>, today = sydneyDay(), footer: HubFooterConfig = {}) {
-  const missing = {title:'Hub not found',description:'This period is not in the published calendar.',html:shell(header('Hub not found','Browse the published sitting weeks.'),footer,[WEEKS,{label:'Not found'}]),jsonLd:null,status:404}
+  const missing = {title:'Hub not found',description:'This period is not in the published calendar.',html:shell(header('Hub not found','Browse the published sitting weeks.'),footer,trail('/sitting','Not found')),jsonLd:null,status:404}
   if (kind === 'estimates') {
     if (id !== '2026-10') return missing
     const data = await read<Estimates>(`/hubs/estimates-${id}.json`)

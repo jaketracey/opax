@@ -79,6 +79,7 @@ import { renderOgPng, renderOgJpeg, type OgFont } from './og-render'
 // The story renderer is reached through the namespace: tests stub './og-render' with the two card renderers only.
 import * as storyRender from './og-render'
 import { personRole, personTitle, roleLine, billTitle } from './seo-titles'
+import { navGates, pageTrail, trail } from './nav-model.mjs'
 import { answerBlock, associationCaveat, crumbsHTML, panelPrerender, SERVER_PANELS, type Crumb, renderPersonAnswer, renderBillAnswer, renderDivisionAnswer, renderDirectory, renderSupplierAnswer, renderMoneyAnswer, type Division, type ReadAsset } from './seo-content'
 import { buildSchemaGraph, type PersonSchemaIdentity } from './seo-schema'
 import { photoFor, validStory, STORY_VERSION as STORY_SLIDES_VERSION, type PhotoCatalogue, type StoryFormat } from './story'
@@ -3437,7 +3438,7 @@ const STATIC_PAGES: Record<string, { title: string; description: string; query?:
     query: true,
   },
   connections: {
-    title: 'Connections in the record · OPAX',
+    title: 'Programs & places · OPAX',
     description: 'Organisations, programs and places named across speeches, official releases and grant records, each opened to its source excerpts.',
     query: true,
   },
@@ -3446,11 +3447,11 @@ const STATIC_PAGES: Record<string, { title: string; description: string; query?:
     description: 'Standing investigations pairing the money with the words: climate, gambling, housing, immigration, First Nations and media ownership, every claim cited.',
   },
   explore: {
-    title: 'Explore · OPAX',
+    title: 'Interactive tools · OPAX',
     description: 'Play with the parliamentary record: the time machine, the record quiz, the donations ledger, who gets the grants and the money map.',
   },
   discover: {
-    title: 'Discover patterns · OPAX',
+    title: 'Government contracts · OPAX',
     description: 'See which companies take the biggest share of government contracts. Compare suppliers with simple charts, explore political funding connections and check the source records.',
   },
   chat: {
@@ -3458,24 +3459,24 @@ const STATIC_PAGES: Record<string, { title: string; description: string; query?:
     description: 'Follow-up questions on an answer from the Australian parliamentary record, each reply cited to the speeches it draws on.',
   },
   about: {
-    title: 'About · OPAX',
+    title: 'About OPAX',
     description: 'What OPAX is for, who makes it, and how answers are produced from the Australian parliamentary record, disclosed money and the public registers around it.',
   },
   methods: {
-    title: 'Methods · OPAX',
+    title: 'Methods & how to cite · OPAX',
     description: 'How the OPAX corpus is built from Hansard and electoral disclosures, its known limits, and how to cite an answer or a speech.',
   },
   stats: {
-    title: 'Corpus stats · OPAX',
+    title: 'Sources & coverage · OPAX',
     description: 'Live counts for every collection in the OPAX index: speeches, divisions, bills and official statements, by parliament and year.',
   },
   declared: {
-    title: 'Just declared · OPAX',
+    title: 'Declared interests · OPAX',
     description: "The newest additions and deletions on parliamentarians' registers of interests, grouped by week, each entry citing its register source.",
     query: true,
   },
   expenses: {
-    title: 'What the expense categories mean · OPAX',
+    title: 'Expense definitions · OPAX',
     description: 'Plain definitions of every parliamentary work expense category the Independent Parliamentary Expenses Authority publishes, from COMCAR and travel allowance to the private-plated vehicle.',
   },
   support: {
@@ -5161,13 +5162,20 @@ async function serveSeoPage(route: SeoRoute, url: URL, request: Request, env: En
   // The policy pages (privacy, support) name no association between records.
   if (!(route.kind === 'hub' && route.hub === 'vic-election') && !(route.kind === 'static' && SERVER_PANELS.has(route.page)))
     meta.prerender=associationCaveat(meta.prerender || '',`${meta.description} ${meta.prerender || ''}`)
+  // Every page prints its trail in the server HTML too (readers without
+  // scripts, crawlers), from the menus' own list; the app's strip replaces it
+  // once it runs. Server-only pages write theirs into the prerender themselves.
+  if (meta.prerender && !meta.prerender.includes('prerender-crumbs'))
+    meta.prerender = crumbsHTML(pageTrail(url.pathname + url.search, meta.status === 404 ? 'Not found' : meta.card?.title || '')) + meta.prerender
   // JSON-LD sits in a <script>: keep "</script>" from ever appearing in it.
   const ld = meta.jsonLd ? JSON.stringify(meta.jsonLd).replace(/</g, '\\u003c') : null
   // The share image is drawn per route (see "Share images" below); a page
   // with nothing to draw, or nothing to find, shares the home card.
   const image = meta.card && meta.status < 400 ? ogImageFor(meta.canonical) : OG_IMAGE
   const imageAlt = meta.card && meta.status < 400 ? clip(`${meta.card.title} on OPAX`, 120) : OG_IMAGE_ALT
+  const gates = navGates(env)
   const rewriter = new HTMLRewriter()
+    .on('html', { element(el) { if (gates) el.setAttribute('data-nav-gates', gates) } })
     .on('title', new SetText(meta.title))
     .on('meta[name="description"]', new SetAttr('content', meta.description))
     .on('link[rel="canonical"]', { element(el) { if(meta.status>=400 || !meta.canonical) el.remove(); else el.setAttribute('href',meta.canonical) } })
@@ -5839,8 +5847,22 @@ async function route(
       // with a way on), not an empty 404; a missing file (a script, an image) stays plain.
       if (asset.status === 404 && (request.method === 'GET' || request.method === 'HEAD') && pageAddress(url.pathname))
         return await serveSeoPage({ kind: 'notfound' }, url, request, env, ctx)
+      // The community page wears the site band; its menus read the published sections off the page.
+      // Its trail is written here, after the band, as the server writes every other page's.
+      if (asset.ok && request.method === 'GET' && url.pathname === '/community')
+        return withNavGates(new HTMLRewriter().on('header.site-header', { element(el) { el.after(trailHTML('/community'), { html: true }) } }).transform(asset), env)
       return asset
   }
+}
+
+/** The trail strip as the server writes it, from the menus' own list. */
+const trailHTML = (address: string, ...records: string[]): string => crumbsHTML(trail(address, ...records))
+
+/** Marks the optional sections this deployment publishes on <html>, where the
+ *  menus (navigation.js) read them: no request when a menu opens. */
+function withNavGates(res: Response, env: Env): Response {
+  const gates = navGates(env)
+  return gates ? new HTMLRewriter().on('html', { element(el) { el.setAttribute('data-nav-gates', gates) } }).transform(res) : res
 }
 
 /** An address a reader would type or follow: no file extension, or .html. */
@@ -5912,7 +5934,7 @@ export default {
       if(entry.status===200 && url.pathname==='/') {
         const schema=JSON.stringify(buildSchemaGraph({canonical:`${SITE_ORIGIN}/`,title:SITE_TITLE,description:SITE_DESCRIPTION})).replace(/</g,'\\u003c')
         const money=await renderMoneyAnswer('Public money',<T>(path:string)=>assetJson<T>(env,path)).catch(()=>null)
-        return communityResponse(new HTMLRewriter().on('div#hp-money-map',{element(el){if(money)el.setInnerContent(money.html.replace('id="prerender"','id="prerender-money"').replace('<h1>','<h2>').replace('</h1>','</h2>'),{html:true})}}).on('head',{element(el){el.append(`<script type="application/ld+json" id="ld-page">${schema}</script>`,{html:true})}}).transform(entry))
+        return communityResponse(withNavGates(new HTMLRewriter().on('div#hp-money-map',{element(el){if(money)el.setInnerContent(money.html.replace('id="prerender"','id="prerender-money"').replace('<h1>','<h2>').replace('</h1>','</h2>'),{html:true})}}).on('head',{element(el){el.append(`<script type="application/ld+json" id="ld-page">${schema}</script>`,{html:true})}}).transform(entry), env))
       }
       return communityResponse(entry)
     }

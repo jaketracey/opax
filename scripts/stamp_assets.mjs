@@ -30,6 +30,7 @@ import { createHash } from 'node:crypto'
 import { readFileSync, writeFileSync, mkdirSync, readdirSync, unlinkSync } from 'node:fs'
 import { dirname, join, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
+import { runInNewContext } from 'node:vm'
 import { buildSpaShell } from './build_spa_shell.mjs'
 import { buildMethods } from './build_methods.mjs'
 
@@ -200,6 +201,21 @@ function stampModules({ check }) {
   return stale
 }
 
+// The menu bar and the footer's site index before (or without) scripts, drawn
+// from navigation.js's one list: closed gates are left out, and the script
+// draws the full menus over them when it runs.
+function navFallbacks(html) {
+  const context = { URLSearchParams }
+  runInNewContext(readFileSync(join(PUBLIC, 'navigation.js'), 'utf8'), context)
+  const nav = context.OpaxNavigation
+  for (const [name, content] of [['bar', nav.barHTML()], ['index', nav.footerHTML(() => true, { slot: false })]]) {
+    const pattern = new RegExp(`(<!-- nav:${name}:start -->)[\\s\\S]*?(<!-- nav:${name}:end -->)`)
+    if (!pattern.test(html)) throw new Error(`index.html is missing its nav:${name} markers`)
+    html = html.replace(pattern, (_, start, end) => `${start}${content}${end}`)
+  }
+  return html
+}
+
 // Keep the homepage's first-render chrome identical to the application shell.
 // Both documents then use navigation.js for the same menus and interactions.
 function syncHomeChrome(html, shell) {
@@ -223,7 +239,7 @@ function stamp({ check }) {
   const before = readFileSync(INDEX, 'utf8')
   const hashes = Object.fromEntries(STAMPED.map((f) => [f, hashOf(f)]))
   let hits = 0
-  const after = before.replace(
+  const after = navFallbacks(before).replace(
     new RegExp(`/(${STAMPED.map((f) => f.replace('.', '\\.')).join('|')})\\?v=[A-Za-z0-9._-]*`, 'g'),
     (_, file) => {
       hits += 1

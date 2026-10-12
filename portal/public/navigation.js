@@ -1,93 +1,110 @@
 /* The site's one information architecture: five groups, drawn as a menu bar
-   with full-width panels on wide screens and as a sheet on tablets and phones.
-   Search and Ask sit beside the groups on every page. Loaded before app.js
-   (and as a module on the home and community pages). */
+   with full-width panels on wide screens, as a sheet on tablets and phones,
+   and as the footer's site index; the breadcrumb trail of every page comes
+   from the same list. Search and Ask sit beside the groups on every page.
+   Loaded before app.js (and as a module on the home and community pages); the
+   Worker imports it too, for the server's trails and the static fallbacks. */
 (() => {
-  // [href, label, blurb, gate]. A gated link appears only once its gate opens
-  // (see `gates` below); a closed gate never advertises a dead route.
+  // A page: its address, its one name (the menu's, the trail's and the
+  // title's), a line for the menu, and two optional marks. `gate`: an optional
+  // section, kept out of the page until it is known to be published. `record`:
+  // a page inside its column's section (a report inside Reports), not one.
+  const page = (href, label, blurb = '', more = {}) => ({ href, label, blurb, ...more });
   const groups = [
-    { id: 'parliament', label: 'Parliament', sub: 'Sitting weeks, bills and estimates',
+    { id: 'parliament', label: 'Parliament', href: '/sitting', sub: 'Sitting weeks, bills and estimates',
       intro: 'What the chambers are doing, and the laws before them.', feature: 'week', columns: [
         { heading: 'In the chamber', links: [
-          ['/sitting', 'Sitting weeks', 'Bills introduced and divisions held, week by week.'],
-          ['/estimates', 'Senate estimates', 'Hearings, the agencies called and their recent awards.', 'estimates'],
+          page('/sitting', 'Sitting weeks', 'Bills introduced and divisions held, week by week.'),
+          page('/estimates', 'Senate estimates', 'Hearings, the agencies called and their recent awards.', { gate: 'estimates' }),
         ] },
         { heading: 'Laws', links: [
-          ['/bills', 'Bills', 'Federal bills: stages, votes, speeches and summaries.'],
-          ['/instruments', 'Legislative instruments', 'Regulations and rules made under Acts.', 'instruments'],
+          page('/bills', 'Bills', 'Federal bills: stages, votes, speeches and summaries.'),
+          page('/instruments', 'Legislative instruments', 'Regulations and rules made under Acts.', { gate: 'instruments' }),
         ] },
       ] },
-    { id: 'people', label: 'People & places', sub: 'Parliamentarians, parties and electorates',
+    { id: 'people', label: 'People & places', href: '/subject/person', sub: 'Parliamentarians, parties and electorates',
       intro: 'Who represents whom, and what they have declared.', feature: 'vic', columns: [
         { heading: 'People', links: [
-          ['/subject/person', 'Parliamentarians', 'Speeches, recorded votes, pay and declared interests.'],
-          ['/subject/party', 'Parties', 'Members, debate and disclosed receipts.'],
-          ['/declared', 'Declared interests', 'Recent changes in the public registers.'],
+          page('/subject/person', 'Parliamentarians', 'Speeches, recorded votes, pay and declared interests.'),
+          page('/subject/party', 'Parties', 'Members, debate and disclosed receipts.'),
+          page('/declared', 'Declared interests', 'Recent changes in the public registers.'),
         ] },
         { heading: 'Places', links: [
-          ['/subject/electorate', 'Electorates', 'Representatives, election timelines and Census context.'],
-          ['/vic-election-2026', 'Victorian election 2026', '88 districts and 8 regions, voting 28 November.', 'vic-election'],
+          page('/subject/electorate', 'Electorates', 'Representatives, election timelines and Census context.'),
+          page('/vic-election-2026', 'Victorian election 2026', '88 districts and 8 regions, voting 28 November.', { gate: 'vic-election' }),
         ] },
       ] },
-    { id: 'money', label: 'Money', sub: 'Donations, contracts and grants',
+    { id: 'money', label: 'Money', href: '/money', sub: 'Donations, contracts and grants',
       intro: 'Money into politics, and public money out to organisations.', feature: 'money', columns: [
         { heading: 'Political money', links: [
-          ['/money', 'Money map', 'Who funds whom, across 28 years of returns.'],
-          ['/money/receipts', 'Political receipts', 'Every disclosed receipt, sortable and exportable.'],
-          ['/subject/donor', 'Donors', 'Organisations in the disclosure records.'],
-          ['/subject/campaigner', 'Campaigners & third parties', 'Organisations spending on politics.'],
+          page('/money', 'Money map', 'Who funds whom, across 28 years of returns.'),
+          page('/money/receipts', 'Political receipts', 'Every disclosed receipt, sortable and exportable.'),
+          page('/subject/donor', 'Donors', 'Organisations in the disclosure records.'),
+          page('/subject/campaigner', 'Campaigners & third parties', 'Organisations spending on politics.'),
         ] },
         { heading: 'Public money', links: [
-          ['/discover', 'Government contracts', 'Which agencies buy from whom.'],
-          ['/subject/supplier', 'Suppliers', 'The organisations that win government contracts.'],
-          ['/subject/agency', 'Agencies', 'Contract awards, by the agency that made them.'],
-          ['/money/grants', 'Grants', 'Grant awards, resolved to their recipients.'],
-          ['/connections', 'Programs & places', 'Where organisations, programs and places meet.'],
+          page('/discover', 'Government contracts', 'Which agencies buy from whom.'),
+          page('/subject/supplier', 'Suppliers', 'The organisations that win government contracts.'),
+          page('/subject/agency', 'Agencies', 'Contract awards, by the agency that made them.'),
+          page('/money/grants', 'Grants', 'Grant awards, resolved to their recipients.'),
+          page('/connections', 'Programs & places', 'Where organisations, programs and places meet.'),
         ] },
       ] },
-    { id: 'research', label: 'Topics & reports', sub: 'Debates by subject and sourced reports',
+    { id: 'research', label: 'Topics & reports', href: '/reports', sub: 'Debates by subject and sourced reports',
       intro: 'The debate by subject, and long reads built on the record.', columns: [
         { heading: 'Topics', links: [
-          ['/subject/topic', 'Topics A–Z', 'Every debate in the record, by subject.'],
-          ['/explore', 'Interactive tools', 'Time machine, the tide, the record quiz and more.'],
+          page('/subject/topic', 'Topics A–Z', 'Every debate in the record, by subject.'),
+          page('/explore', 'Interactive tools', 'Time machine, the tide, the record quiz and more.'),
         ] },
-        { heading: 'Reports', compact: true, all: ['/reports', 'All reports'], links: [
-          ['/reports/grants-allocation', 'Where community funding goes'],
-          ['/reports/climate', 'Climate & energy'],
-          ['/reports/gambling', 'Gambling'],
-          ['/reports/housing', 'Housing'],
-          ['/reports/immigration', 'Immigration'],
-          ['/reports/indigenous', 'First Nations'],
-          ['/reports/media', 'Media ownership'],
-          ['/audit', 'Queensland audit reports'],
+        // Each report keeps the title its own page gives it.
+        { heading: 'Reports', compact: true, section: page('/reports', 'Reports'), more: 'All reports', links: [
+          page('/reports/grants-allocation', 'Where community funding goes', '', { record: true }),
+          page('/reports/climate', 'Climate & Energy', '', { record: true }),
+          page('/reports/gambling', 'Gambling', '', { record: true }),
+          page('/reports/housing', 'Housing', '', { record: true }),
+          page('/reports/immigration', 'Immigration', '', { record: true }),
+          page('/reports/indigenous', 'First Nations', '', { record: true }),
+          page('/reports/media', 'Media Ownership', '', { record: true }),
+          page('/audit', 'Queensland audit reports'),
         ] },
       ] },
-    { id: 'about', label: 'About', sub: 'Methods, sources and the project',
+    { id: 'about', label: 'About', href: '/about', sub: 'Methods, sources and the project',
       intro: 'Independent and open source. Every answer cites the record.', columns: [
         { heading: 'The project', links: [
-          ['/about', 'About OPAX', 'What OPAX is and how answers are made.'],
-          ['/community', 'Community', 'Reading lists and research, shared.'],
+          page('/about', 'About OPAX', 'What OPAX is and how answers are made.'),
+          page('/community', 'Community', 'Reading lists and research, shared.'),
         ] },
         { heading: 'Using the record', links: [
-          ['/methods', 'Methods & how to cite', 'Sources, limitations and citation formats.'],
-          ['/stats', 'Sources & coverage', 'What the record holds, collection by collection.'],
+          page('/methods', 'Methods & how to cite', 'Sources, limitations and citation formats.'),
+          page('/stats', 'Sources & coverage', 'What the record holds, collection by collection.'),
         ] },
       ] },
   ];
-  // Reached from the footer (and in context), never from the menus.
-  const footerOnly = [['/expenses', 'Expense definitions'], ['/privacy', 'Privacy'], ['/support', 'Support']];
-  // The sheet's first shortcuts: common first tasks, the same for every reader
-  // (nothing about this reader's history is kept). [href, label, week, gate]
+  // In the footer's site index (and the sheet's last line), never the menus.
+  // Privacy is in both on every page: one tap from anywhere.
+  const footerOnly = [page('/expenses', 'Expense definitions'), page('/privacy', 'Privacy'), page('/support', 'Support')];
+  // The sheet's first shortcuts: common first tasks, the same for every reader.
+  // Nothing about a reader's history is kept.
   const shortcuts = [
-    ['/sitting', 'This sitting week', true],
-    ['/subject/electorate', 'Find your electorate'],
-    ['/money', 'Who funds whom'],
-    ['/bills', 'Latest bills'],
-    ['/vic-election-2026', 'Victorian election', false, 'vic-election'],
+    page('/sitting', 'This sitting week', '', { week: true }),
+    page('/subject/electorate', 'Find your electorate'),
+    page('/money', 'Who funds whom'),
+    page('/bills', 'Latest bills'),
+    page('/vic-election-2026', 'Victorian election', '', { gate: 'vic-election' }),
   ];
-  // Compatibility view for callers that read one flat list per group.
-  const sections = groups.map(g => ({ id: g.id, label: g.label, children: g.columns.flatMap(c => c.links) }));
-  const money = [ ['/money', '3D connections'], ['/money/receipts', 'Political receipts'], ['/discover', 'Government contracts'], ['/money/grants', 'Grants'], ['/connections', 'Programs & places'] ];
+  // Pages reached in context (an answer, a result, a record), not from the menus.
+  const ASK = page('/ask', 'Ask');
+  const SEARCH = page('/ask?view=search', 'Search');
+  const CHAT = page('/chat', 'Keep asking');
+  // The About pages sit under About OPAX in the trail.
+  const UNDER_ABOUT = new Set(['/methods', '/stats', '/expenses', '/privacy', '/support', '/community']);
+
+  const menuPages = groups.flatMap(g => g.columns.flatMap(c => [...c.links, ...(c.section ? [c.section] : [])]));
+  const sectionPages = new Map([...menuPages, ...footerOnly].filter(p => !p.record).map(p => [p.href, p]));
+  // Compatibility view for callers that read one flat list per group: [href, label, blurb].
+  const sections = groups.map(g => ({ id: g.id, label: g.label, children: g.columns.flatMap(c => c.links).map(l => [l.href, l.label, l.blurb]) }));
+  const money = [ ['/money', 'Money map'], ['/money/receipts', 'Political receipts'], ['/discover', 'Government contracts'], ['/money/grants', 'Grants'], ['/connections', 'Programs & places'] ];
+
   /** The group a path belongs to; null for Home, Ask, Search and records. */
   const active = (path, params = new URLSearchParams()) => {
     if (/^\/(money|map|discover|connections)(\/|$)/.test(path)) return 'money';
@@ -99,6 +116,46 @@
     if (/^\/(about|methods|stats|expenses|privacy|support|community)(\/|$)/.test(path)) return 'about';
     return null;
   };
+
+  // --- breadcrumbs: Home › the section page › the record ----------------------
+  // Groups are menus, not pages, so they are never a step. Every label is the
+  // page's one name from the list above; the record's own name comes from the
+  // caller (a person, a bill, a report), shortened to keep the strip one line.
+  const clip = (s, max = 60) => { const t = String(s || '').replace(/\s+/g, ' ').trim(); return t.length > max ? `${t.slice(0, max - 1).trimEnd()}…` : t; };
+  function placeOf(path, params) {
+    if (path === '/search' || (path === '/ask' && params.get('view') === 'search')) return { page: SEARCH };
+    if (path === '/ask') return { page: ASK };
+    if (path === '/chat') return { parent: ASK, page: CHAT };
+    if (path.startsWith('/doc/')) return { section: SEARCH };
+    if (path.startsWith('/estimates/')) return { section: sectionPages.get('/sitting') };
+    if (path.startsWith('/instrument/')) return { section: sectionPages.get('/instruments') };
+    if (path.startsWith('/bill/')) return { section: sectionPages.get('/bills') };
+    if (path === '/explore' && params.get('game')) return { section: sectionPages.get('/explore') };
+    const exact = sectionPages.get(path);
+    if (exact) return { page: exact, parent: UNDER_ABOUT.has(path) ? sectionPages.get('/about') : null };
+    // Otherwise the longest section the address sits under: /reports/housing in
+    // Reports, /money/grants/federal/recipient/… in Grants.
+    let best = null;
+    for (const p of sectionPages.values()) if (path.startsWith(p.href + '/') && (!best || p.href.length > best.href.length)) best = p;
+    return best ? { section: best } : null;
+  }
+  /** The trail after Home for an address ("/path?query"): [{ label, href? }].
+   *  Each record step after it is a name, or { label, href } for a step the
+   *  caller can link (a division's bill); the last step is the page itself. */
+  function trail(address = '/', ...records) {
+    const [pathPart, query = ''] = String(address).split('#')[0].split('?');
+    const p = pathPart.replace(/(.)\/+$/, '$1') || '/';
+    if (p === '/') return [];
+    const at = placeOf(p, new URLSearchParams(query));
+    if (!at) return [{ label: 'Page not found' }];
+    const steps = at.parent ? [{ label: at.parent.label, href: at.parent.href }] : [];
+    const tail = records.filter(r => r && (typeof r === 'string' ? r.trim() : r.label))
+      .map(r => typeof r === 'string' ? { label: clip(r) } : { label: clip(r.label), ...(r.href ? { href: r.href } : {}) });
+    if (at.page && !tail.length) return [...steps, { label: at.page.label }];
+    const anchor = at.page || at.section;
+    return [...steps, { label: anchor.label, href: anchor.href }, ...tail];
+  }
+
   // From this width the band draws the menu bar; narrower, the Menu button and its sheet.
   const FULL_NAV = '(min-width: 961px)';
   // From this width the sheet lays every group out open, in columns.
@@ -113,28 +170,32 @@
     return `<nav class="area-nav money-area-nav" aria-label="Money">${money.map(([href,label]) => `<a href="${href}${jur && jur !== 'federal' && !oneJurisdiction.has(href) ? '?jur='+encodeURIComponent(jur) : ''}"${href===path || href==='/money/grants' && path.startsWith('/money/grants/')?' aria-current="page"':''}>${label}</a>`).join('')}</nav>`;
   }
 
-  // --- gates: optional sections that exist only on some deployments ---------
+  // --- gates: optional sections published on some deployments only -----------
+  // The Worker marks the ones it knows (<html data-nav-gates="vic-election">);
+  // the instruments catalogue and the estimates round are read from their data.
   const gates = { instruments: false, 'vic-election': false, estimates: false };
   const gateWaiters = [];
   function openGate(name, href) {
+    if (gates[name] && (!href || gates[name] === href)) return;
     gates[name] = href || true;
     for (const fn of gateWaiters) fn(name);
   }
-  const visible = link => !link[3] || gates[link[3]];
-  const hrefOf = link => typeof gates[link[3]] === 'string' ? gates[link[3]] : link[0];
+  const visible = link => !link.gate || gates[link.gate];
+  const hrefOf = link => typeof gates[link.gate] === 'string' ? gates[link.gate] : link.href;
   // A closed gate draws an empty, hidden slot: no address in the page until it
   // opens, when the slot is filled in place (the drawn controls keep their handlers).
   const slots = new Map();
   let slotSeq = 0;
-  function itemHTML(link, inner, attrs = '') {
-    if (visible(link)) return `<li${attrs}>${inner()}</li>`;
+  function itemHTML(link, inner, { slot = true } = {}) {
+    if (visible(link)) return `<li>${inner()}</li>`;
+    if (!slot) return '';
     slots.set(++slotSeq, inner);
-    return `<li${attrs} data-gate-slot="${link[3]}" data-slot="${slotSeq}" hidden></li>`;
+    return `<li data-gate-slot="${link.gate}" data-slot="${slotSeq}" hidden></li>`;
   }
 
   // --- this week in parliament, from the published sitting calendar ---------
-  // Fetched once, the first time a menu opens (9 KB); every page that draws the
-  // band can show it, and a failure just leaves the plain links.
+  // Fetched once, the first time a menu opens (9 KB); a failure just leaves the
+  // plain links.
   let week = null;
   let weekRequest = null;
   const sydneyDay = () => new Intl.DateTimeFormat('en-CA', { timeZone: 'Australia/Sydney' }).format(new Date());
@@ -145,13 +206,7 @@
   // "12–15 Oct", or "28 Oct – 2 Nov" across a month.
   const dateRange = (a, b) => a.slice(0, 7) === b.slice(0, 7) ? `${day(a)}–${day(b)} ${month(b)}` : `${day(a)} ${month(a)} – ${day(b)} ${month(b)}`;
   const HOUSES = { representatives: 'House of Representatives', senate: 'Senate' };
-  let vicRequest = null;
   function loadWeek() {
-    // The Victorian election hub is published only where its flag is on; its
-    // facts asset answers 404 otherwise. (Prototype: one HEAD on the first open.
-    // The Worker can mark the document instead, which costs no request.)
-    if (document.documentElement.dataset.navGates?.split(' ').includes('vic-election')) openGate('vic-election');
-    else vicRequest ??= fetch('/hubs/vic-election-2026.json', { method: 'HEAD' }).then(r => { if (r.ok) openGate('vic-election'); }).catch(() => {});
     return weekRequest ??= fetch('/hubs/index.json').then(r => r.ok ? r.json() : null).then(index => {
       const today = sydneyDay();
       const weeks = (index?.weeks || []).filter(w => /^\d{4}-\d{2}-\d{2}$/.test(w.start) && w.end >= today).sort((a, b) => a.start.localeCompare(b.start));
@@ -179,21 +234,21 @@
     return '';
   }
   function panelHTML(group, links) {
-    const cols = group.columns.map(col => {
-      const items = col.links.filter(links);
-      if (!items.length && !col.links.some(l => l[3])) return '';
-      return `<div class="nav-col${col.compact ? ' nav-col-compact' : ''}"><p class="nav-col-h">${esc(col.heading)}</p><ul class="nav-links" role="list">${col.links.filter(links).map(l => itemHTML(l, () => `${linkHTML(l, 'nav-item-link')}<span class="nav-item-title">${esc(l[1])}</span>${l[2] && !col.compact ? `<span class="nav-item-blurb">${esc(l[2])}</span>` : ''}</a>`)).join('')}</ul>${col.all ? `<a class="nav-all" href="${col.all[0]}">${esc(col.all[1])}${ARROW}</a>` : ''}</div>`;
-    }).join('');
+    const cols = group.columns.map(col => `<div class="nav-col${col.compact ? ' nav-col-compact' : ''}"><p class="nav-col-h">${esc(col.heading)}</p><ul class="nav-links" role="list">${col.links.filter(links).map(l => itemHTML(l, () => `${linkHTML(l, 'nav-item-link')}<span class="nav-item-title">${esc(l.label)}</span>${l.blurb && !col.compact ? `<span class="nav-item-blurb">${esc(l.blurb)}</span>` : ''}</a>`)).join('')}</ul>${col.section ? `<a class="nav-all" href="${col.section.href}">${esc(col.more)}${ARROW}</a>` : ''}</div>`).join('');
     return `<div class="wrap nav-panel-inner"><div class="nav-intro"><p class="nav-intro-title">${esc(group.label)}</p><p class="nav-intro-text">${esc(group.intro)}</p></div>${cols}<div class="nav-feature-slot" data-feature="${group.feature || ''}">${featureHTML(group)}</div></div>`;
   }
   const desktopHTML = (links) => groups.map(g => `<li class="nav-group" data-group="${g.id}"><button type="button" class="nav-trigger" data-nav-trigger="${g.id}" aria-expanded="false" aria-controls="menu-${g.id}">${esc(g.label)}${CARET}</button><div class="nav-panel" id="menu-${g.id}" data-group="${g.id}" hidden>${panelHTML(g, links)}</div></li>`).join('');
   const sheetHTML = (links) => `<a class="sheet-ask" href="/ask"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 15a2 2 0 0 1-2 2H8l-4 4V5a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2Z"/><path d="M8.5 9.5h7M8.5 12.5h4"/></svg><span><span class="sheet-ask-title">Ask OPAX</span><span class="sheet-ask-sub">Ask a question of the public record</span></span>${ARROW}</a>`
-    + `<section class="sheet-start" aria-labelledby="sheet-start-h"><h2 class="sheet-kicker" id="sheet-start-h">Start here</h2><ul class="sheet-chips" role="list">${shortcuts.filter(s => links(s)).map(s => s[2]
-      ? `<li><a class="sheet-chip" data-week href="${esc(week ? week.href : s[0])}">${esc(s[1])}</a></li>`
-      : itemHTML(s, () => `<a class="sheet-chip" href="${esc(hrefOf(s))}">${esc(s[1])}</a>`)).join('')}</ul></section>`
-    + `<div class="sheet-groups">${groups.map(g => `<section class="sheet-group" data-group="${g.id}"><h2 class="sheet-group-h"><button type="button" class="sheet-group-toggle" aria-expanded="false" aria-controls="sheet-${g.id}"><span class="sheet-group-text"><span class="sheet-group-label">${esc(g.label)}</span><span class="sheet-group-sub">${esc(g.sub)}</span></span>${CARET}</button></h2><div class="sheet-group-body" id="sheet-${g.id}" hidden>${g.columns.map(col => `<p class="sheet-col-h">${esc(col.heading)}</p><ul class="sheet-links" role="list">${col.links.filter(links).map(l => itemHTML(l, () => `${linkHTML(l, 'sheet-link')}${esc(l[1])}</a>`)).join('')}${col.all ? `<li><a class="sheet-link sheet-link-all" href="${col.all[0]}">${esc(col.all[1])}</a></li>` : ''}</ul>`).join('')}</div></section>`).join('')}</div>`
-    + `<p class="sheet-foot">${footerOnly.map(([href, label]) => `<a href="${href}">${esc(label)}</a>`).join('')}</p>`;
-  const footerHTML = (links) => groups.map(g => `<div class="footer-col"><h2 class="footer-col-h">${esc(g.label)}</h2><ul role="list">${g.columns.flatMap(c => c.links).filter(links).map(l => itemHTML(l, () => `${linkHTML(l, 'footer-link')}${esc(l[1])}</a>`)).join('')}${g.id === 'about' ? footerOnly.map(([href, label]) => `<li><a class="footer-link" href="${href}">${esc(label)}</a></li>`).join('') : ''}</ul></div>`).join('');
+    + `<section class="sheet-start" aria-labelledby="sheet-start-h"><h2 class="sheet-kicker" id="sheet-start-h">Start here</h2><ul class="sheet-chips" role="list">${shortcuts.filter(links).map(s => s.week
+      ? `<li><a class="sheet-chip" data-week href="${esc(week ? week.href : s.href)}">${esc(s.label)}</a></li>`
+      : itemHTML(s, () => `<a class="sheet-chip" href="${esc(hrefOf(s))}">${esc(s.label)}</a>`)).join('')}</ul></section>`
+    + `<div class="sheet-groups">${groups.map(g => `<section class="sheet-group" data-group="${g.id}"><h2 class="sheet-group-h"><button type="button" class="sheet-group-toggle" aria-expanded="false" aria-controls="sheet-${g.id}"><span class="sheet-group-text"><span class="sheet-group-label">${esc(g.label)}</span><span class="sheet-group-sub">${esc(g.sub)}</span></span>${CARET}</button></h2><div class="sheet-group-body" id="sheet-${g.id}" hidden>${g.columns.map(col => `<p class="sheet-col-h">${esc(col.heading)}</p><ul class="sheet-links" role="list">${col.links.filter(links).map(l => itemHTML(l, () => `${linkHTML(l, 'sheet-link')}${esc(l.label)}</a>`)).join('')}${col.section ? `<li><a class="sheet-link sheet-link-all" href="${col.section.href}">${esc(col.more)}</a></li>` : ''}</ul>`).join('')}</div></section>`).join('')}</div>`
+    + `<p class="sheet-foot">${footerOnly.map(p => `<a href="${p.href}">${esc(p.label)}</a>`).join('')}</p>`;
+  /** The footer's site index. `slot: false` (the build's static copy) leaves
+   *  closed gates out entirely instead of drawing a slot for them. */
+  const footerHTML = (links = () => true, { slot = true } = {}) => groups.map(g => `<div class="footer-col"><h2 class="footer-col-h">${esc(g.label)}</h2><ul role="list">${g.columns.flatMap(c => c.links).filter(links).map(l => itemHTML(l, () => `${linkHTML(l, 'footer-link')}${esc(l.label)}</a>`, { slot })).join('')}${g.id === 'about' ? footerOnly.map(p => `<li><a class="footer-link" href="${p.href}">${esc(p.label)}</a></li>`).join('') : ''}</ul></div>`).join('');
+  /** The menu bar before (or without) scripts: each group as a link to its first page. */
+  const barHTML = () => groups.map(g => `<li class="nav-group"><a class="nav-trigger" href="${g.href}">${esc(g.label)}</a></li>`).join('');
 
   /** Marks the links to this page and the group that holds it. */
   function markCurrent(root = document) {
@@ -202,8 +257,7 @@
     for (const t of root.querySelectorAll('[data-nav-trigger]')) t.classList.toggle('is-current', t.dataset.navTrigger === group);
     for (const s of root.querySelectorAll('.sheet-group')) s.classList.toggle('is-current', s.dataset.group === group);
     for (const a of root.querySelectorAll('.nav-item-link, .sheet-link, .footer-link, .sheet-chip')) {
-      const href = a.getAttribute('href');
-      const base = href.split('?')[0];
+      const base = a.getAttribute('href').split('?')[0];
       // The page itself, or (one step up) the section page it sits under.
       if (base === path) a.setAttribute('aria-current', 'page');
       else if (base !== '/money' && path.startsWith(base + '/')) a.setAttribute('aria-current', 'true');
@@ -212,8 +266,11 @@
   }
 
   // --- the menu bar: disclosure panels ---------------------------------------
-  // Keyboard, pointer, dismissal and focus return. Hover opens on fine
-  // pointers only; a click right after a hover-open confirms instead of closing.
+  // Each group is a button (aria-expanded, aria-controls) over its panel.
+  // Keyboard: Enter or Space toggles; Down opens at the first link; Left and
+  // Right walk the bar; Up and Down walk a panel's links (Home, End); Escape
+  // closes and returns to the button; tabbing out closes. Hover opens on fine
+  // pointers only, and a click right after a hover-open confirms, not closes.
   const desktopKey = Symbol.for('opax.navigation.desktop');
   function mountDesktop({ onOpen = () => {} } = {}) {
     const nav = document.getElementById('primary-nav');
@@ -227,6 +284,7 @@
     let open = null;
     let timer = 0;
     const hoverFine = matchMedia('(hover: hover) and (pointer: fine)');
+    const linksIn = m => [...m.panel.querySelectorAll('a[href]')].filter(a => !a.closest('[hidden]:not(.nav-panel)'));
     function set(m, on, { focus = false } = {}) {
       clearTimeout(timer);
       if (on) {
@@ -239,7 +297,7 @@
         m.btn.setAttribute('aria-expanded', 'true');
         header?.classList.add('nav-is-open');
         open = m;
-        if (focus) m.panel.querySelector('a:not([hidden])')?.focus();
+        if (focus) linksIn(m)[0]?.focus();
       } else {
         m.panel.hidden = true;
         m.btn.setAttribute('aria-expanded', 'false');
@@ -253,22 +311,33 @@
         set(m, open !== m);
       });
       m.btn.addEventListener('keydown', (e) => {
-        // Down opens the panel at its first link; Left/Right walk the bar.
         if (e.key === 'ArrowDown') { e.preventDefault(); set(m, true, { focus: true }); }
         else if (e.key === 'ArrowRight' || e.key === 'ArrowLeft') {
           e.preventDefault();
           const i = menus.indexOf(m) + (e.key === 'ArrowRight' ? 1 : -1);
           const to = menus[(i + menus.length) % menus.length];
+          // Read before the focus moves: leaving the item closes its panel.
+          const wasOpen = Boolean(open);
           to.btn.focus();
-          if (open) set(to, true);
+          if (wasOpen) set(to, true);
         }
+      });
+      m.panel.addEventListener('keydown', (e) => {
+        if (!['ArrowDown', 'ArrowUp', 'Home', 'End'].includes(e.key)) return;
+        const all = linksIn(m);
+        const i = all.indexOf(document.activeElement);
+        if (i < 0) return;
+        e.preventDefault();
+        if (e.key === 'ArrowUp' && i === 0) { m.btn.focus(); return; }
+        const to = e.key === 'Home' ? 0 : e.key === 'End' ? all.length - 1 : Math.min(all.length - 1, Math.max(0, i + (e.key === 'ArrowDown' ? 1 : -1)));
+        all[to].focus();
       });
       m.item.addEventListener('mouseenter', () => {
         if (!hoverFine.matches) return;
         clearTimeout(timer);
         if (open === m) return;
-        // A short intent delay keeps a pointer crossing the bar from flashing panels;
-        // once one is open, moving along the bar swaps at once.
+        // A short intent delay keeps a pointer crossing the bar from flashing
+        // panels; once one is open, moving along the bar swaps at once.
         timer = setTimeout(() => { set(m, true); m.byHover = true; }, open ? 0 : 90);
       });
       m.item.addEventListener('mouseleave', () => {
@@ -312,7 +381,7 @@
     }
     // Closing animates the sheet out before the dialog actually closes; every
     // close path goes through here so the motion is the same from a link, the
-    // close button, the backdrop or Escape.
+    // close button, the backdrop or Escape. Reduced motion closes at once.
     function close() {
       if (!drawer.open || drawer.classList.contains('is-closing')) return;
       if (reduced()) { drawer.close(); return; }
@@ -320,7 +389,7 @@
       const finish = () => { if (done) return; done = true; drawer.classList.remove('is-closing'); drawer.close(); };
       drawer.classList.add('is-closing');
       drawer.addEventListener('animationend', (e) => { if (e.target === drawer) finish(); }, { once: true });
-      setTimeout(finish, 320); // the animation is 240ms; this is the safety net
+      setTimeout(finish, 320); // the animation is 220ms; this is the safety net
     }
     function show(from, focusSearch) {
       opener = from;
@@ -355,11 +424,11 @@
       // Hold Tab inside the sheet (the native modal does too; this keeps the
       // cycle the same in every engine, the dialog itself included).
       const stops = [...drawer.querySelectorAll('a[href], button:not([disabled]), input:not([disabled]), [tabindex]:not([tabindex="-1"])')]
-        .filter(el => !el.closest('[hidden]') && el.getClientRects().length);
+        .filter(el => !el.closest('[hidden]'));
       if (!stops.length) return;
       const first = stops[0], last = stops[stops.length - 1];
       if (e.shiftKey && (document.activeElement === first || document.activeElement === drawer)) { e.preventDefault(); last.focus(); }
-      else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+      else if (!e.shiftKey && (document.activeElement === last || !drawer.contains(document.activeElement))) { e.preventDefault(); first.focus(); }
     });
     $('drawer-close')?.addEventListener('click', () => close());
     // A search typed into the sheet lands on the Search page with the query.
@@ -387,26 +456,36 @@
     return drawer[drawerKey] = { close, open: () => show(toggle, false) };
   }
 
+  /** "/" opens the header search, unless the reader is typing somewhere. */
+  function slashOpensSearch(e) {
+    if (e.key !== '/' || e.metaKey || e.ctrlKey || e.altKey || e.isComposing || e.defaultPrevented) return false;
+    const t = e.target;
+    if (t?.isContentEditable || t?.closest?.('input, textarea, select, [contenteditable]:not([contenteditable="false"]), dialog[open]')) return false;
+    const open = document.getElementById('header-search-open');
+    if (!open || !open.getClientRects().length || open.getAttribute('aria-expanded') === 'true') return false;
+    e.preventDefault();
+    open.click();
+    return true;
+  }
+
   // The page's menus are drawn and wired once, however often this script runs.
   const initialised = Symbol.for('opax.navigation.page');
   if (typeof document !== 'undefined' && document[initialised]) return;
-  globalThis.OpaxNavigation = { groups, sections, money, active, moneyNav, mountDesktop, mountDrawer, markCurrent, FULL_NAV };
+  globalThis.OpaxNavigation = { groups, footerOnly, shortcuts, sections, money, active, trail, moneyNav, mountDesktop, mountDrawer, markCurrent, footerHTML, barHTML, FULL_NAV };
   if (typeof document === 'undefined') return;
   document[initialised] = true;
+  for (const name of (document.documentElement.dataset.navGates || '').split(/\s+/)) if (name in gates && name !== 'estimates') gates[name] = true;
   // Audit and instrument pages carry no person links (the Worker strips them
   // from the server HTML); the menus drawn here follow the same rule.
   const instrumentPage = /^\/(?:instruments?|audit)(\/|$)/.test(location.pathname);
-  const links = link => !(instrumentPage && link[0].startsWith('/subject/person'));
+  const links = link => !(instrumentPage && link.href.startsWith('/subject/person'));
   const desktop = document.querySelector('#primary-nav .nav-list');
   const mobile = document.querySelector('#nav-drawer .sheet-nav');
   const footer = document.getElementById('footer-index');
-  const draw = () => {
-    if (desktop) desktop.innerHTML = desktopHTML(links);
-    if (mobile) mobile.innerHTML = sheetHTML(links);
-    if (footer) footer.innerHTML = footerHTML(links);
-    markCurrent();
-  };
-  draw();
+  if (desktop) desktop.innerHTML = desktopHTML(links);
+  if (mobile) mobile.innerHTML = sheetHTML(links);
+  if (footer) footer.innerHTML = footerHTML(links);
+  markCurrent();
   // A gate that opens later reveals its links in place: the drawn controls keep
   // their handlers, and nothing moves under a reader mid-menu except the reveal.
   gateWaiters.push((name) => {
@@ -417,13 +496,12 @@
     }
     if (name === 'week') {
       for (const chip of document.querySelectorAll('.sheet-chip[data-week]')) chip.setAttribute('href', week.href);
-      markCurrent();
-      return;
-    }
-    for (const li of document.querySelectorAll(`[data-gate-slot="${name}"]`)) {
-      li.innerHTML = slots.get(Number(li.dataset.slot))?.() || '';
-      li.removeAttribute('data-gate-slot');
-      li.hidden = false;
+    } else {
+      for (const li of document.querySelectorAll(`[data-gate-slot="${name}"]`)) {
+        li.innerHTML = slots.get(Number(li.dataset.slot))?.() || '';
+        li.removeAttribute('data-gate-slot');
+        li.hidden = false;
+      }
     }
     markCurrent();
   });
@@ -467,16 +545,7 @@
     if (globalThis.OpaxQuickSearch) attachSearch();
     else document.addEventListener('DOMContentLoaded', attachSearch, { once: true });
   }
-  // "/" opens the header search from anywhere that is not already a field.
-  document.addEventListener('keydown', (e) => {
-    if (e.key !== '/' || e.metaKey || e.ctrlKey || e.altKey || e.defaultPrevented) return;
-    const t = e.target;
-    if (t.closest?.('input, textarea, select, [contenteditable=""], [contenteditable="true"], dialog[open]')) return;
-    const open = document.getElementById('header-search-open');
-    if (!open || !open.getClientRects().length || open.getAttribute('aria-expanded') === 'true') return;
-    e.preventDefault();
-    open.click();
-  });
+  document.addEventListener('keydown', slashOpensSearch);
   for (const node of document.querySelectorAll('[data-money-navigation]')) node.innerHTML = moneyNav(location.pathname, new URLSearchParams(location.search).get('jur'));
   // The band's Ask control on pages the app does not run on (sitting weeks,
   // estimates, audit, instruments, community, not found): the same control, as

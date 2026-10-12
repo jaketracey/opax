@@ -1019,18 +1019,18 @@ const TITLES = {
   ask: "Ask & search the record · OPAX",
   chat: "Keep asking · OPAX",
   search: "Search Hansard: every parliamentary speech · OPAX",
-  discover: "Discover overlooked patterns · OPAX",
+  discover: "Government contracts · OPAX",
   money: "Political donations & public money map · OPAX",
-  connections: "Connections in the record · OPAX",
+  connections: "Programs & places · OPAX",
   reports: "Reports · OPAX",
   doc: "From the record · OPAX",
   subject: "OPAX encyclopedia",
-  declared: "Registers of interests · OPAX",
-  explore: "Explore · OPAX",
-  about: "About · OPAX",
-  methods: "Methods · OPAX",
-  stats: "Corpus stats · OPAX",
-  expenses: "What the expense categories mean · OPAX",
+  declared: "Declared interests · OPAX",
+  explore: "Interactive tools · OPAX",
+  about: "About OPAX",
+  methods: "Methods & how to cite · OPAX",
+  stats: "Sources & coverage · OPAX",
+  expenses: "Expense definitions · OPAX",
   privacy: "Privacy · OPAX",
   support: "Support · OPAX",
   bill: "Bill · OPAX",
@@ -1388,7 +1388,7 @@ async function openGrantRecipient(jurisdiction, id, manageFocus) {
       onTitle(name) {
         if (generation !== moneyRecordsGeneration) return;
         document.title = `${name} · Government grants · OPAX`;
-        setCrumbs([{ label: 'Money', href: '/money' }, { label: 'Government grants', href: '/money/grants?jur=' + jurisdiction }, { label: name }]);
+        setCrumbs(crumbsFor('/money/grants', name).map((s) => s.href === '/money/grants' ? { ...s, href: '/money/grants?jur=' + jurisdiction } : s));
         syncPathMeta();
       },
     });
@@ -1577,6 +1577,13 @@ function setCrumbs(items) {
   list.scrollLeft = 0;
 }
 
+/** The trail for an address, from the one list in navigation.js: Home › the
+ *  section page › the record. Every label is the page's one name (the menu's);
+ *  a record's own name comes from the caller, as a string or { label, href }. */
+function crumbsFor(address, ...records) {
+  return OpaxNavigation.trail(address, ...records);
+}
+
 /** A label short enough for the strip: the current page, not its full title. */
 function crumbLabel(s, max = 60) {
   const t = String(s || "").replace(/\s+/g, " ").trim();
@@ -1623,7 +1630,7 @@ async function openSupplierPage(name, params, manageFocus) {
       onCanonical(id, label) {
         if (generation !== supplierPageGeneration) return;
         replaceRoute(`/subject/supplier/${encodeURIComponent(id)}${params.get("contract") ? "?"+new URLSearchParams({contract:params.get("contract")}) : ""}`);
-        setCrumbs([{ label: "Suppliers", href: "/subject/supplier" }, { label }]);
+        setCrumbs(crumbsFor("/subject/supplier", label));
       },
       onMentions: (label, container) => subjectMentions(label, container, "In parliament", true),
     };
@@ -1690,7 +1697,7 @@ async function openAgencyPage(name, params, manageFocus) {
       onCanonical(id, label) {
         if (generation !== supplierPageGeneration) return;
         replaceRoute(`/subject/agency/${encodeURIComponent(id)}`);
-        setCrumbs([{ label: "Agencies", href: "/subject/agency" }, { label }]);
+        setCrumbs(crumbsFor("/subject/agency", label));
       },
       onMentions: (label, container) => subjectMentions(label, container, "In parliament", true),
     };
@@ -1762,6 +1769,7 @@ function route() {
   if (frag && !frag.startsWith("/") && !firstRoute) return; // native anchors still need their page rendered on first load
   const { segs, params } = parseHash();
   if (!segs.length) { location.replace('/' + location.search + location.hash); return; }
+  const herePath = "/" + segs.join("/"); // the trail reads the address, not the hash form
   // The script can boot before attribution helpers finish importing. Reveal
   // panels only when this requested route is ready to choose its own panel.
   document.documentElement.classList.add("spa-routed");
@@ -1778,35 +1786,34 @@ function route() {
   if (view !== "subject") { destroySubjectMap(); currentSubjectKey = null; }
   if (view === "subject" && segs[1] === "supplier") {
     showPanel("subject");
-    setCrumbs([{ label: "Suppliers", href: "/subject/supplier" }]);
+    setCrumbs(crumbsFor(herePath));
     openSupplierPage(segs[2] ? decodeURIComponent(segs[2]) : null, params, manageFocus);
   } else if (view === "subject" && segs[1] === "agency") {
     showPanel("subject");
-    setCrumbs([{ label: "Agencies", href: "/subject/agency" }]);
+    setCrumbs(crumbsFor(herePath));
     openAgencyPage(segs[2] ? decodeURIComponent(segs[2]) : null, params, manageFocus);
   } else if (view === "subject" && segs[1] === "topic") {
     showPanel("subject");
     document.title = TITLES.subject;
     if (segs[2]) {
       const slug = decodeURIComponent(segs[2]);
-      setCrumbs([{ label: "Topics", href: "/subject/topic" }, { label: TOPICS[slug] || slug }]);
+      setCrumbs(crumbsFor("/subject/topic", TOPICS[slug] || slug));
       openTopicPage(slug, manageFocus);
     } else {
-      setCrumbs([{ label: "Topics" }]);
+      setCrumbs(crumbsFor("/subject/topic"));
       openTopicsIndex(manageFocus);
     }
   } else if (view === "subject" && segs[1] && segs[2]) {
     showPanel("subject");
     document.title = TITLES.subject;
     const name = decodeURIComponent(segs[2]);
-    // The group step leads to that kind's index (/subject/person etc.).
-    const group = DIRECTORY_KINDS[segs[1]];
-    setCrumbs([group ? { label: group, href: `/subject/${segs[1]}` } : { label: "Encyclopedia" }, ...(segs[1] === "donor" ? [] : [{ label: name }])]);
+    // The kind's index is the section step; a donor's name is never shown.
+    setCrumbs(crumbsFor(herePath, segs[1] === "donor" ? "" : name));
     openSubject(segs[1], name, manageFocus, params);
   } else if (view === "subject" && DIRECTORY_KINDS[segs[1]]) {
     showPanel("subject");
     document.title = `${DIRECTORY_KINDS[segs[1]]} · OPAX`;
-    setCrumbs([{ label: DIRECTORY_KINDS[segs[1]] }]);
+    setCrumbs(crumbsFor(herePath));
     openDirectory(segs[1], params, manageFocus);
   } else if (view === "bill" || view === "bills") {
     showPanel("bill");
@@ -1814,41 +1821,40 @@ function route() {
     const key = view === "bill" && segs[1] ? decodeURIComponent(segs[1]) : null;
     if (key) {
       document.title = TITLES.bill;
-      setCrumbs([{ label: "Bills", href: "/bills" }, { label: "Bill" }]);
+      setCrumbs(crumbsFor("/bills", "Bill"));
       openBill(key, manageFocus);
     } else {
       document.title = TITLES.bills;
-      setCrumbs([{ label: "Bills" }]);
+      setCrumbs(crumbsFor("/bills"));
       openBillsIndex(params, manageFocus);
     }
   } else if (view === "declared") {
     showPanel("declared");
     document.title = TITLES.declared;
-    setCrumbs([{ label: "Registers of interests" }]);
+    setCrumbs(crumbsFor("/declared"));
     renderDeclaredPage(params, manageFocus);
   } else if (view === "doc" && segs[1]) {
     showPanel("doc");
     document.title = TITLES.doc;
     // Provisional until the document loads and names its speaker.
-    setCrumbs([{ label: "Search", href: "/search" },
-      { label: segs[1].split("-")[0] === "division" ? "Division" : "Document" }]);
+    setCrumbs(crumbsFor("/ask?view=search", segs[1].split("-")[0] === "division" ? "Division" : "Document"));
     openDocPage(segs[1], manageFocus);
   } else if (view === "chat") {
     showPanel("chat");
     document.title = TITLES.chat;
-    setCrumbs([lastAsk.question ? { label: "Ask", href: askHash(lastAsk.question) } : { label: "Ask" },
-      { label: "Keep asking" }]);
+    // The Ask step returns to the question this conversation began with.
+    setCrumbs(crumbsFor("/chat").map((s) => s.href === "/ask" && lastAsk.question ? { ...s, href: askHash(lastAsk.question) } : s));
     initChat(manageFocus);
   } else if (view === "search") {
     showPanel("search");
     document.title = TITLES.search;
-    setCrumbs([{ label: "Search" }]);
+    setCrumbs(crumbsFor("/ask?view=search"));
     applySearchParams(params);
     focusEntry("search-input");
   } else if (view === "discover") {
     showPanel("discover");
     document.title = TITLES.discover;
-    setCrumbs([{ label: "Money", href: "/money" }, { label: "Government contracts" }]);
+    setCrumbs(crumbsFor("/discover"));
     renderDiscoveryPage(params, manageFocus);
   } else if (view === "reports") {
     showPanel("reports");
@@ -1857,11 +1863,10 @@ function route() {
       // The index (when loaded) has the title; the slug stands in until the
       // report itself arrives and openReport sets the real one.
       const known = reportsIndex?.find((r) => r.slug === segs[1]);
-      setCrumbs([{ label: "Reports", href: "/reports" },
-        { label: known?.title || segs[1].replace(/-/g, " ").replace(/^./, (c) => c.toUpperCase()) }]);
+      setCrumbs(crumbsFor("/reports", known?.title || segs[1].replace(/-/g, " ").replace(/^./, (c) => c.toUpperCase())));
       openReport(segs[1], segs[3] ? Number(segs[3]) : null, manageFocus);
     } else {
-      setCrumbs([{ label: "Reports" }]);
+      setCrumbs(crumbsFor("/reports"));
       loadReportsList(manageFocus);
     }
   } else if (view === "money" && ["receipts", "grants"].includes(segs[1])) {
@@ -1873,29 +1878,29 @@ function route() {
       try { id = segs[3] === 'recipient' ? decodeURIComponent(segs[4]) : params.get('open'); } catch { id = ''; }
       if (segs[3] !== 'recipient' && hasEntityId(id)) replaceRoute(`/money/grants/${encodeURIComponent(jurisdiction)}/recipient/${encodeURIComponent(id)}`);
       document.title = 'Grant recipient · OPAX';
-      setCrumbs([{ label: 'Money', href: '/money' }, { label: 'Government grants', href: '/money/grants' }, { label: 'Recipient' }]);
+      setCrumbs(crumbsFor('/money/grants', 'Recipient'));
       if (hasEntityId(id)) openGrantRecipient(jurisdiction, id, manageFocus);
       else $("money-records-body").textContent = "Recipient not recorded.";
     } else if (segs[1] === 'grants' && /^\d{4}-\d{2}$/.test(params.get('largest') || '')) {
       // /money/grants?jur=federal&largest=2026-08: the month's largest awards (the daily edition links here).
       document.title = 'Largest grants · OPAX';
-      setCrumbs([{ label: 'Money', href: '/money' }, { label: 'Government grants', href: '/money/grants?jur=federal' }, { label: 'Largest grants' }]);
+      setCrumbs(crumbsFor('/money/grants', 'Largest grants').map((s) => s.href === '/money/grants' ? { ...s, href: '/money/grants?jur=federal' } : s));
       openLargestGrants(params.get('largest'), manageFocus);
     } else {
       const title = segs[1] === 'grants' ? 'Government grants' : 'Political receipts';
       document.title = `${title} · OPAX`;
-      setCrumbs([{ label: 'Money', href: '/money' }, { label: title }]);
+      setCrumbs(crumbsFor(`/money/${segs[1]}`));
       openMoneyRecords(segs[1], params);
     }
   } else if (view === "connections") {
     showPanel("connections");
     document.title = TITLES.connections;
-    setCrumbs([{ label: "Money", href: "/money" }, { label: "Programs & places" }]);
+    setCrumbs(crumbsFor("/connections"));
     openConnectionsPage(params, manageFocus);
   } else if (view === "money") {
     showPanel("money");
     document.title = TITLES.money;
-    setCrumbs([{ label: "Money map" }]);
+    setCrumbs(crumbsFor("/money"));
     mountMoney(params.get("jur"), params.get("industry"), params);
   } else if (view === "explore") {
     showPanel("explore");
@@ -1908,29 +1913,29 @@ function route() {
     document.title = TITLES.explore;
     // A game already open (e.g. reload with its dialog up) keeps its own crumb.
     const open = Object.entries(GAMES).find(([, g]) => $(g.dialog)?.open);
-    setCrumbs(open ? [{ label: "Explore", href: "/explore" }, { label: open[1].name }] : [{ label: "Explore" }]);
+    setCrumbs(crumbsFor("/explore", open?.[1].name || ""));
   } else if (view === "about") {
     showPanel("about");
     document.title = TITLES.about;
-    setCrumbs([{ label: "About" }]);
+    setCrumbs(crumbsFor("/about"));
   } else if (view === "methods") {
     showPanel("methods");
     document.title = TITLES.methods;
-    setCrumbs([{ label: "About", href: "/about" }, { label: "Methods & how to cite" }]);
+    setCrumbs(crumbsFor("/methods"));
   } else if (view === "stats") {
     showPanel("stats");
     renderEvidenceStats();
     document.title = TITLES.stats;
-    setCrumbs([{ label: "About", href: "/about" }, { label: "Corpus stats" }]);
+    setCrumbs(crumbsFor("/stats"));
   } else if (view === "expenses") {
     showPanel("expenses");
     document.title = TITLES.expenses;
-    setCrumbs([{ label: "About", href: "/about" }, { label: "Expense categories" }]);
+    setCrumbs(crumbsFor("/expenses"));
     renderExpenseGlossary();
   } else if (view === "privacy") {
     showPanel("privacy");
     document.title = TITLES.privacy;
-    setCrumbs([{ label: "About", href: "/about" }, { label: "Privacy" }]);
+    setCrumbs(crumbsFor("/privacy"));
     // The voice panel's privacy link lands on /privacy#voice. The panel was
     // hidden when the browser looked for the section, so land on it once it
     // shows; route() scrolls to the top first, so wait a frame.
@@ -1941,15 +1946,14 @@ function route() {
   } else if (view === "support") {
     showPanel("support");
     document.title = TITLES.support;
-    setCrumbs([{ label: "About", href: "/about" }, { label: "Support" }]);
+    setCrumbs(crumbsFor("/support"));
     renderSupport(params);
   } else {
     showPanel("ask");
     document.title = TITLES.ask;
     const q = params.get("q");
     // Ask and Search share a research workspace; unknown paths retain a not-found trail.
-    if (view !== "ask" && view !== "") setCrumbs([{ label: "Not found" }]);
-    else setCrumbs([{ label: "Ask & search" }]);
+    setCrumbs(crumbsFor(view !== "ask" && view !== "" ? herePath : "/ask"));
     if (view === "ask" && q && q !== lastAsk.question) {
       setQueryValue("ask-input", q);
       if ($("ask-wide")) $("ask-wide").checked = params.get("kind") !== "speech";
@@ -5288,7 +5292,7 @@ async function openSubject(kind, name, manageFocus, params = new URLSearchParams
     destroySubjectMap();
     const body = $("subject-body");
     body.innerHTML = '<h1 id="subject-title" tabindex="-1">Donor</h1>';
-    setCrumbs([{label:"Donors",href:"/subject/donor"}]);
+    setCrumbs(crumbsFor("/subject/donor"));
     await donorViewReady;
     const knownCampaigner=kind==='campaigner' && (await loadCampaigners())?.entities?.some(e=>e.name===name || normName(e.name)===normName(name));
     if (kind==='donor'?await donorRouteWithheld(name,donorViewIndex):!knownCampaigner || /^Donor \d+ \(name withheld\)$/.test(name)) {
@@ -5332,7 +5336,7 @@ async function openSubject(kind, name, manageFocus, params = new URLSearchParams
       replaceRoute(`${subjectHash("person", name)}${location.search}${anchor}`);
       syncPathMeta(); // canonical and og:url follow the address bar
     }
-    if (name !== segment) setCrumbs([{ label: DIRECTORY_KINDS.person, href: "/subject/person" }, { label: name }]);
+    if (name !== segment) setCrumbs(crumbsFor("/subject/person", name));
   }
   // A bare surname with one holder in the speaker index ("Albanese"; a state
   // stub the roster has since named, so "Picton" is Chris Picton): open the
@@ -5403,7 +5407,7 @@ async function openSubject(kind, name, manageFocus, params = new URLSearchParams
       replaceRoute(subjectHash(kind, node.label));
       currentSubjectKey = `${kind}:${node.label}`;
       key = currentSubjectKey;
-      setCrumbs([{ label: kind === "party" ? "Parties" : "Donors", href: `/subject/${kind}` }, { label: node.label }]);
+      setCrumbs(crumbsFor(`/subject/${kind}`, node.label));
     }
     const sections = $("subject-sections");
     const box = $("subject-infobox");
@@ -5428,7 +5432,7 @@ async function openSubject(kind, name, manageFocus, params = new URLSearchParams
     const isParty = node.kind === "party";
     // The money data's spelling of the name is the entry's; the trail follows it.
     if (node.label && node.label !== name) {
-      setCrumbs([{ label: isParty ? "Parties" : "Donors", href: `/subject/${node.kind}` }, { label: node.label }]);
+      setCrumbs(crumbsFor(`/subject/${node.kind}`, node.label));
     }
     const donorPrivacy = growthModules.approvedModulePrivacy(await growthModules.loadModuleDonors());
     if (currentSubjectKey !== key) return;
@@ -7566,7 +7570,7 @@ async function renderCampaignerEntry(name, key) {
     replaceRoute(subjectHash("campaigner", e.name));
     currentSubjectKey = `campaigner:${e.name}`;
     key = currentSubjectKey;
-    setCrumbs([{ label: DIRECTORY_KINDS.campaigner, href: "/subject/campaigner" }, { label: e.name }]);
+    setCrumbs(crumbsFor("/subject/campaigner", e.name));
   }
   const kicker = body.querySelector(".kicker");
   if (kicker) kicker.textContent = campaignerKindLabel(e.kind);
@@ -8509,7 +8513,7 @@ async function openBill(key, manageFocus) {
       <p class="action-row">${actionBtn("entry", "/bills", "Open the bill list", { primary: true })}
         ${actionBtn("search", searchHash(key, {}), "Search the record")}</p>`;
     if (manageFocus) $("bill-title")?.focus();
-    setCrumbs([{ label: "Bills", href: "/bills" }, { label: "Not found" }]);
+    setCrumbs(crumbsFor("/bills", "Not found"));
     return;
   }
   bill.exportedAt = billsIndex?.generated_at || "";
@@ -8521,7 +8525,7 @@ async function openBill(key, manageFocus) {
   // name, never cut, with the masthead only when both fit in 70 characters.
   const fullName = String(billName(bill) || "").replace(/\s+/g, " ").trim();
   document.title = bootTitleHere() || (`${fullName} · OPAX`.length <= 70 ? `${fullName} · OPAX` : fullName);
-  setCrumbs([{ label: "Bills", href: "/bills" }, { label: crumbLabel(billName(bill), 48) }]);
+  setCrumbs(crumbsFor("/bills", crumbLabel(billName(bill), 48)));
   const members = billSponsorFromPortfolio(bill.portfolio);
   // Each co-sponsor is a person with an entry of their own, so each is a link.
   const sponsorLinks = bill.sponsor
@@ -8980,7 +8984,7 @@ async function openGame(which, params = null) {
   pauseSubjectMap("dialog", true);
   // The module is a page in its own right while it is up; the trail says so
   // and returns to plain Explore when it closes (see the close listener below).
-  setCrumbs([{ label: "Explore", href: "/explore" }, { label: game.name }]);
+  setCrumbs(crumbsFor("/explore", game.name));
   try {
     if (!explore[which]) {
       const mod = await import(game.module);
@@ -9089,7 +9093,7 @@ for (const dialog of document.querySelectorAll(".game-dialog")) {
       explainReturnCrumbs = [];
       return;
     }
-    if (parseHash().segs[0] === "explore") setCrumbs([{ label: "Explore" }]);
+    if (parseHash().segs[0] === "explore") setCrumbs(crumbsFor("/explore"));
   });
   dialog.addEventListener("click", (e) => {
     // An explanation's profile, search and cited-document links leave the
@@ -9970,7 +9974,7 @@ $("ask-form").addEventListener("submit", (e) => {
   const q = $("ask-input").value.trim();
   if (!q) return;
   replaceRoute(askHash(q, askKind()));
-  setCrumbs([{ label: "Ask" }]); // replaceState fires no hashchange, so the router will not
+  setCrumbs(crumbsFor("/ask")); // replaceState fires no hashchange, so the router will not
   runAsk(q);
 });
 
@@ -10133,7 +10137,7 @@ function initAskBuilder() {
     $("ask-input").value = q;
     $("ask-input").dispatchEvent(new Event("input", { bubbles: true }));
     replaceRoute(askHash(q, askKind()));
-    setCrumbs([{ label: "Ask" }]);
+    setCrumbs(crumbsFor("/ask"));
     runAsk(q);
   });
 }
@@ -10172,7 +10176,7 @@ $("ask-keep-form").addEventListener("submit", (e) => {
 function askSuggestion(q) {
   setQueryValue("ask-input", q);
   replaceRoute(askHash(q));
-  setCrumbs([{ label: "Ask" }]);
+  setCrumbs(crumbsFor("/ask"));
   runAsk(q);
 }
 
@@ -12850,8 +12854,8 @@ function renderDivisionDoc({ d, entry, bills }, slug, manageFocus) {
   const stage = billStage(entry?.stage || "");
   $("doc-title").textContent = recorded || stage || `${house} division`;
   setCrumbs(bills[0]?.key
-    ? [{ label: "Bills", href: "/bills" }, { label: crumbLabel(bills[0].title, 48), href: `/bill/${encodeURIComponent(bills[0].key)}` }, { label: "Division" }]
-    : [{ label: "Search", href: "/search" }, { label: "Division" }]);
+    ? crumbsFor("/bills", { label: crumbLabel(bills[0].title, 48), href: `/bill/${encodeURIComponent(bills[0].key)}` }, "Division")
+    : crumbsFor("/ask?view=search", "Division"));
   const ayes = Number(d.ayes) || 0, noes = Number(d.noes) || 0;
   $("doc-meta").innerHTML = [
     billOutcomeLabelHTML(d.result || entry?.outcome),
@@ -12953,10 +12957,8 @@ async function openDocPage(slug, manageFocus) {
       ? billQuestion(doc.title || doc.name).split(/(?<=[.!?])\s/)[0]
       : doc.speaker || displayTitle(doc);
     // The trail names the page the same way, shortened for the strip.
-    setCrumbs([{ label: "Search", href: "/search" }, {
-      label: (doc.kind || slug.split("-")[0]) === "division"
-        ? "Division" : crumbLabel(doc.speaker || displayTitle(doc), 48),
-    }]);
+    setCrumbs(crumbsFor("/ask?view=search", (doc.kind || slug.split("-")[0]) === "division"
+      ? "Division" : crumbLabel(doc.speaker || displayTitle(doc), 48)));
     // Headshot floats beside the headline; the name is already in the
     // headline, so the image is decorative (alt "").
     if (doc.speaker && !isUnattributed({ ...doc.labels, person_id: doc.metadata?.person_id, speaker_attribution: doc.speaker_attribution })) {
@@ -14635,7 +14637,7 @@ async function openReport(slug, sectionNum, manageFocus) {
     if (!root) { root = document.createElement('div'); root.id = 'report-research'; $('reports-index').after(root); }
     root.hidden = false;
     currentReportSlug = null;
-    setCrumbs([{label:'Reports',href:'/reports'},{label:'Where community funding goes'}]);
+    setCrumbs(crumbsFor('/reports', 'Where community funding goes'));
     const { mountGrantsResearch } = await import('/grants-research.js?v=20260911-clear-projects');
     if (grantsGeneration !== grantsResearchGeneration || !hereRoute().startsWith('/reports/grants-allocation')) return;
     grantsResearchHandle = mountGrantsResearch(root,{focus:manageFocus});
@@ -14647,7 +14649,7 @@ async function openReport(slug, sectionNum, manageFocus) {
   if (currentReportSlug === slug) {
     $("reports-index").hidden = true;
     $("report-view").hidden = false;
-    setCrumbs([{ label: "Reports", href: "/reports" }, { label: $("report-title").textContent.trim() }]);
+    setCrumbs(crumbsFor("/reports", $("report-title").textContent.trim()));
     if (sectionNum) $(`report-s-${sectionNum}`)?.scrollIntoView();
     else if (manageFocus) $("report-title").focus();
     return;
@@ -14668,7 +14670,7 @@ async function openReport(slug, sectionNum, manageFocus) {
   const view = $("report-view");
   view.hidden = false;
   $("report-title").innerHTML = `${reportGlyph(slug, "report-glyph")}${esc(report.title)}`;
-  setCrumbs([{ label: "Reports", href: "/reports" }, { label: report.title }]);
+  setCrumbs(crumbsFor("/reports", report.title));
   $("report-blurb").textContent = report.blurb;
   const provenance =
     `Generated ${fmtDate(report.generated_at || "")} · every claim cited to the record`;

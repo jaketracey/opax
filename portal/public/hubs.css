@@ -9,7 +9,7 @@
 .hub-page h5 { font: var(--type-label); color: var(--ink-soft); margin: var(--space-block) 0 var(--space-tight); }
 .hub-page p { max-width: 46rem; }
 .hub-page a { overflow-wrap: anywhere; }
-.hub-trail, .hub-meta, .hub-date { color: var(--ink-soft); font: var(--type-metadata); }
+.hub-meta, .hub-date { color: var(--ink-soft); font: var(--type-metadata); }
 .hub-lead { font: var(--type-body); margin: 0 0 var(--space-block); }
 /* The one meta line under a week's or an estimates period's title. */
 .hub-page > .hub-meta { margin: 0 0 var(--space-block); }
