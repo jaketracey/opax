@@ -62,11 +62,8 @@ test('canonical state uses JSON filters, normalises order and supports condition
 });
 test('core serializer and D1 API integrate with category and range state',async()=>{
   // Exercise core query exports without replacing its public module.
-  // At merge it is present at ../public/datatable.js; this branch still has the stub.
-  let module=await readFile(process.env.DT_CORE_MODULE_PATH || new URL('../public/datatable.js',import.meta.url),'utf8');
-  if(module.includes('STUB'))module=await readFile(new URL('./fixtures/core-query.mjs',import.meta.url),'utf8');
-  module=module.replace(/from (['"])(\.\/[^'"]+)\1/g,(_,quote,path)=>'from '+JSON.stringify(new URL(path,new URL('../public/datatable.js',import.meta.url)).href));
-  const core=await import('data:text/javascript;base64,'+Buffer.from(module).toString('base64'));
+  // The approved core is imported directly; no contract stub is substituted.
+  const core=await import('../public/datatable.js');
   for(const prefix of [undefined,'t']){
     const query={filters:{jurisdiction:['Group 0'],amount:{min:10,max:20}},sort:{key:'amount',dir:'asc'},pageSize:2,page:2};
     const response=await fetchTable('contracts',core.serializeQuery(query,prefix));assert.equal(response.status,200);
@@ -97,7 +94,7 @@ test('decoded identity variants reject before data SQL across all five money dat
   const spaced='  '+phrase.replaceAll(' ','  \t  ')+'  ';
   for(const [name,config]of Object.entries(TABLE_DATASETS).filter(([,c])=>c.privacy)) {
     const category=config.columns.find(c=>c.type==='category').key;
-    const numeric=config.columns.find(c=>c.type==='money').key;
+    const numeric=config.columns.find(c=>['money','count'].includes(c.type)).key;
     const states=[
       new URLSearchParams({['f.'+category]:'['+escaped(phrase)+']'}),
       new URLSearchParams({['f.'+category]:'['+escaped(identifier)+']'}),
@@ -131,8 +128,9 @@ test('CSV pages are bounded, retryable and retain the 50,000-row export ceiling'
     const response=await tableApi(new Request('https://opax.com.au'+path),env);last=response;
     assert.equal(response.headers.get('x-table-total'),'50100');assert.equal(response.headers.get('x-table-exported'),'10000');assert.equal(response.headers.get('x-table-page'),String(page));assert.equal(response.headers.get('x-table-export-truncated'),'true');
     assert.notEqual(response.headers.get('etag'),previousETag);previousETag=response.headers.get('etag');
-    const records=(await response.text()).split('\r\n');assert.equal(records.length,10003);
-    const note=response.headers.get('x-table-export-note');assert.ok(note.includes('export limited to the first 50,000 rows'));assert.ok(records.at(-2).startsWith('"'+note));
+    const records=(await response.text()).split('\r\n');assert.equal(records.length,page===5 ? 10004 : 10003);
+    const note=response.headers.get('x-table-export-note');assert.ok(note.includes('export limited to the first 50,000 rows'));assert.ok(records[10001].startsWith('"'+note));
+    if(page===5)assert.equal(records[10002],'# Export truncated at 50,000 rows.');
     for(const record of records.slice(1,10001))values.push(Number(record.split(',')[TABLE_DATASETS.votes.columns.findIndex(c=>c.key==='ayes')]));
     const next=/<([^>]+)>; rel="next"/.exec(response.headers.get('link')||'');
     assert.equal(Boolean(next),page<5);if(page<5){path=next[1];assert.equal(new URL(path,'https://opax.com.au').searchParams.get('page'),String(page+1));}

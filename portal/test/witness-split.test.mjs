@@ -179,11 +179,11 @@ test('pending counts cannot credit committee parliamentarians in catalog, descri
 
 test('a failed attribution import still starts routing and the Ask builder', async () => {
   const app = readFileSync(new URL('../public/app.js',import.meta.url),'utf8');
-  const boot = app.slice(app.lastIndexOf('Promise.allSettled([attributionReady, uiLabelsReady, pageMenusReady, growthModulesReady, personUrlsReady, saDisplayReady, donorViewReady])'));
+  const boot = app.slice(app.lastIndexOf('Promise.allSettled([attributionReady, uiLabelsReady, pageMenusReady, growthModulesReady, personUrlsReady, saDisplayReady, donorViewReady, voteTablesReady])'));
   assert.ok(boot.startsWith('Promise.allSettled('), 'the boot statement is where the test looks for it');
   const called = [];
   const ready = Promise.reject(new Error('simulated missing asset'));
-  await scopedContext(boot,{attributionReady:ready,saDisplayReady:Promise.resolve(),donorViewReady:Promise.resolve(),uiLabelsReady:Promise.resolve(),pageMenusReady:Promise.resolve(),personUrlsReady:Promise.resolve(),growthModulesReady:Promise.resolve(),Promise,
+  await scopedContext(boot,{attributionReady:ready,saDisplayReady:Promise.resolve(),donorViewReady:Promise.resolve(),voteTablesReady:Promise.resolve(),uiLabelsReady:Promise.resolve(),pageMenusReady:Promise.resolve(),personUrlsReady:Promise.resolve(),growthModulesReady:Promise.resolve(),Promise,
     loadPersonSlugs:()=>called.push('slugs'),initAskBuilder:()=>called.push('ask'),route:()=>called.push('route')});
   assert.deepEqual(called,['slugs','ask','route']);
 });

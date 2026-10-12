@@ -7,7 +7,7 @@ import { build } from 'esbuild';
 import {VIC_ELECTION_AUTHORISATION_LINE} from '../public/vic-election.js';
 
 const built = await build({ entryPoints: [new URL('../src/og.ts', import.meta.url).pathname], bundle: true, write: false, platform: 'node', format: 'esm' });
-const { portraitTree, cardTree, ogLayout, ogFormat, homeCard, PORTRAIT_WIDTH, PORTRAIT_HEIGHT, OG_WIDTH, OG_HEIGHT, OG_VERSION } = await import('data:text/javascript;base64,' + Buffer.from(built.outputFiles[0].text).toString('base64'));
+const { portraitTree, cardTree, ogLayout, ogFormat, homeCard, PORTRAIT_WIDTH, PORTRAIT_HEIGHT, OG_WIDTH, OG_HEIGHT, OG_VERSION, PORTRAIT_VERSION } = await import('data:text/javascript;base64,' + Buffer.from(built.outputFiles[0].text).toString('base64'));
 
 const PHOTO = 'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAP//////////////////////////////////////////////////////////////////////////////////////wAALCAABAAEBAREA/8QAFAABAAAAAAAAAAAAAAAAAAAACf/EABQQAQAAAAAAAAAAAAAAAAAAAAD/2gAIAQEAAD8AN//Z';
 const politician = { kicker: 'Parliamentarian', title: 'Anthony Albanese', lines: ['Labor · House of Representatives', 'Collected records: 1998 to 2026'], stat: { value: '5,408', label: 'speeches in the Opax record' }, dot: '#D93025', portrait: PHOTO, credit: 'Photo: Commonwealth of Australia, CC BY 3.0 AU, via Wikimedia Commons' };
@@ -130,6 +130,9 @@ test('the Worker draws ?format=portrait at 1080x1350, keys the cache on it and s
   await Promise.all(pending);
   const keys = [...store.keys()];
   assert.equal(keys.filter(k => k.includes('format=portrait')).length, 1, keys.join('\n'));
+  // A portrait redraw moves only the portrait key; landscape keys (and og:image URLs) stay on OG_VERSION.
+  assert.ok(keys.find(k => k.includes('format=portrait')).includes(`pv=${PORTRAIT_VERSION}`), 'the portrait key carries its own version');
+  assert.equal(keys.filter(k => k.includes('pv=')).length, 1, 'no landscape key carries the portrait version');
   assert.equal(keys.length, 3, 'three distinct cache entries');
   const again = await get('https://opax.com.au/og/home.jpg?format=portrait&v=' + OG_VERSION);
   assert.equal(again.headers.get('x-opax-cache'), 'HIT'); assert.equal(again.headers.get('x-opax-format'), 'portrait');

@@ -175,6 +175,9 @@
 /datatable-query.js
   ! Cache-Control
   Cache-Control: public, max-age=31536000, immutable
+/datatable.js
+  ! Cache-Control
+  Cache-Control: public, max-age=31536000, immutable
 /division-markdown.js
   ! Cache-Control
   Cache-Control: public, max-age=31536000, immutable
@@ -238,6 +241,9 @@
 /sa-hansard.js
   ! Cache-Control
   Cache-Control: public, max-age=31536000, immutable
+/server-csv.js
+  ! Cache-Control
+  Cache-Control: public, max-age=31536000, immutable
 /spa-entry.js
   ! Cache-Control
   Cache-Control: public, max-age=31536000, immutable
@@ -257,6 +263,12 @@
   ! Cache-Control
   Cache-Control: public, max-age=31536000, immutable
 /thenvsnow.js
+  ! Cache-Control
+  Cache-Control: public, max-age=31536000, immutable
+/vote-tables.css
+  ! Cache-Control
+  Cache-Control: public, max-age=31536000, immutable
+/vote-tables.js
   ! Cache-Control
   Cache-Control: public, max-age=31536000, immutable
 /wordsdollars.js
