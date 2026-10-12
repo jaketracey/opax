@@ -6,6 +6,7 @@ import {currentSittingPath, sydneyDay} from '../public/hubs-data.js'
 import {isOrganisationDonor, donorPrivacyIndex, donorNameWithheld, foldDonorName, MONEY_GRAPHS, withheldPhrases, namesWithheldPhrase} from '../public/donor-entity.js'
 import {renderDivisionMarkdown, divisionPlain, billNoteRepair, billStripTitle, billStripStage} from '../public/division-markdown.js'
 import {machineLabelHTML} from '../public/labels.js'
+import {heldBackTranscriptsHTML} from '../public/held-back-transcripts.js'
 /** Crawlable answers from the same static projections the application reads.
  * All lists are bounded; source strings and URLs cross one escaping boundary. */
 export type ReadAsset = <T>(path: string) => Promise<T>
@@ -86,7 +87,7 @@ export function answerBlock(title: string, description: string, body = '', crumb
   return `${crumbsHTML(crumbs)}<section id="prerender" class="wrap"><h1>${escapeHtml(title)}</h1><p>${escapeHtml(description)}</p>${body}</section>`
 }
 /** Pages whose whole text is served by the Worker, copied from their panel in index.html. */
-export const SERVER_PANELS: ReadonlySet<string> = new Set(['privacy', 'support'])
+export const SERVER_PANELS: ReadonlySet<string> = new Set(['privacy', 'support', 'methods'])
 /**
  * The server-rendered copy of a policy page (/privacy, /support): the inner
  * markup of its panel in the shell (index.html), so the page a crawler or a
@@ -151,17 +152,18 @@ async function withheldCheckFrom(read: ReadAsset): Promise<WithheldCheck> {
 }
 
 export async function renderPersonAnswer(p: Person, read: ReadAsset, slugs: Map<string,string>, profileUrl?: string, withheld?: WithheldCheck): Promise<RenderedContent> {
-  const [voteData, interests, seats, bills, sponsored, recentData] = await Promise.all([
+  const [voteData, interests, seats, bills, sponsored, recentData, heldBackCounts] = await Promise.all([
     optional<Record<string, Votes | Record<string,string[]>>>(read,'/votes.json'),
     optional<{people: Record<string,unknown>; _by_name: Record<string,string>}>(read,'/interests/index.json'),
     optional<{index_url: string}>(read,'/electorates/manifest.json').then(m => m ? optional<{electorates: Seat[]}>(read,m.index_url) : null),
     optional<{bills: Bill[]}>(read,'/bills/index.json'),
     optional<{sponsored: Record<string,string[]>}>(read,'/seo-links.json'),
     optional<RecentVotes>(read,'/seo/recent-votes.json'),
+    optional<Record<string, number>>(read,'/data/held-back-transcripts.json'),
   ])
   const display = p.full && p.speech_scope ? p.full : p.name
   const description = `${display}. ${partyLine(p)}. ${(p.representation || []).map(r=>`${r.electorate}, ${chamber(r.chamber)}`).join('; ') || p.chambers.map(chamber).join(', ')}.`
-  let body = '<h2>Party and representation</h2><ul>'
+  let body = heldBackTranscriptsHTML(p.pid, heldBackCounts) + '<h2>Party and representation</h2><ul>'
   const party = p.party_now || p.party
   body += `<li>${party ? link(partyUrl(party),partyLine(p)) : 'Party not recorded'}</li>`
   for (const r of p.representation || []) {

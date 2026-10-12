@@ -203,6 +203,9 @@
 /gtm.js
   ! Cache-Control
   Cache-Control: public, max-age=31536000, immutable
+/held-back-transcripts.js
+  ! Cache-Control
+  Cache-Control: public, max-age=31536000, immutable
 /home-data.js
   ! Cache-Control
   Cache-Control: public, max-age=31536000, immutable

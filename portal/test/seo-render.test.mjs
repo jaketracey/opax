@@ -51,6 +51,16 @@ test('mobile voting asset retains schema 1 and the shipped per-person keys',asyn
   const allowed=new Set(['name','party','jurisdiction','house','ayes','noes','divisions_total','years','for','against']);
   for(const [key,person] of Object.entries(data))if(!key.startsWith('_')){assert.ok(person.name);assert.ok(Object.keys(person).every(field=>allowed.has(field)),key);assert.ok(Array.isArray(person.for));assert.ok(Array.isArray(person.against));}
 });
+test('affected person notice is served before JavaScript and its methods link resolves', async () => {
+  const html = await get('/subject/person/anthony-albanese');
+  assert.match(html, /814 earlier transcripts include this member alongside others and aren't counted yet\./);
+  assert.match(html, /href="\/methods#speaker-attribution"/);
+  const methods = await get('/methods');
+  assert.match(methods, /id="speaker-attribution"/);
+  assert.match(methods, /fuller split into individual\s+speaking turns is planned/);
+  const unverified = await get('/subject/person/anthony-albanese?attribution=unattributed');
+  assert.doesNotMatch(unverified, /person-held-back|aren't counted yet/);
+});
 test('recent-vote answers only use the separate OPAX export and omit an empty vote block',async()=>{
   const p={name:'Example Member',pid:'123',party:'Independent',chambers:['senate'],current:true};
   const rows=Array.from({length:10},(_,i)=>({title:`Recorded question ${i}`,date:'2026-09-01',vote:'aye',division_slug:`division-example-${i}`,source_url:`https://example.test/${i}`}));
