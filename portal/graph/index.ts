@@ -922,10 +922,6 @@ export async function mountMoneyMap(
     legendTitle.textContent = 'Industries · click to isolate'
   }
 
-  const individualSummary = donorAggregateDetail('',document)
-  individualSummary.classList.add('mm-individual-summary')
-  container.append(individualSummary)
-  individualSummary.style.cssText='position:absolute;left:12px;bottom:12px;z-index:3;background:var(--paper);padding:8px;font:var(--type-fine)'
   const card = el('div', 'mm-card', container)
   // A short host (the front page's box, any phone) is shorter than the card,
   // which then clips or scrolls. While a card is up the host grows to hold it
@@ -1184,9 +1180,6 @@ export async function mountMoneyMap(
       grants: grantsByNode,
       contracts: contractsByNode,
     }
-    const hiddenTotals=withheldDonorTotals(windowNodes,windowEdges,privacy)
-    individualSummary.hidden=hiddenTotals.count===0
-    individualSummary.querySelector('summary')!.textContent=`${unnamedDonorLabel(hiddenTotals.count)} · ${formatMoney(hiddenTotals.amount)}`
     const activeDonors = new Set(windowEdges.flatMap((e) => [e.source, e.target]))
     const visibleNodes = windowNodes.filter((n) => {
       if(withheld(n)) return false

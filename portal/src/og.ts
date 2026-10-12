@@ -311,7 +311,7 @@ export function cardTree(card: OgCard): El {
 //
 // Instagram's feed and grid are portrait (4:5), and the landscape card dropped
 // in there is cropped to its middle: half a title, no wordmark. This is the same
-// card stood upright, in the same register: masthead and rule at the top, the
+// card stood upright, in the same register: the masthead at the top, the
 // wordmark footer and thick rule at the bottom, and between them the person's
 // portrait large and centred when there is one, the headline set big enough to
 // read as a grid thumbnail, and the statistic as the largest figure on the card.
@@ -348,7 +348,7 @@ export function portraitTree(card: OgCard): El {
 
   const masthead = h(
     'div',
-    { style: { display: 'flex', alignItems: 'center', padding: `56px ${P_PAD}px 0 ${P_PAD}px` } },
+    { style: { display: 'flex', alignItems: 'center', padding: `60px ${P_PAD}px 28px ${P_PAD}px` } },
     h('img', { src: MARK_URI, width: 88, height: 80 }),
     h(
       'div',
@@ -356,8 +356,6 @@ export function portraitTree(card: OgCard): El {
       'Open Parliamentary Accountability Exchange',
     ),
   )
-
-  const rule = h('div', { style: { height: 1, margin: `28px ${P_PAD}px 0 ${P_PAD}px`, background: P_RULE } })
 
   const photoSize = card.stat ? 400 : 480
   const picture = hasPortrait
@@ -444,7 +442,7 @@ export function portraitTree(card: OgCard): El {
       )
     : null
 
-  // Centred in the room between the rules; clipped there rather than into the footer.
+  // Centred in the room between masthead and footer; clipped there rather than into the footer.
   const body = h(
     'div',
     { style: { display: 'flex', flexDirection: 'column', flex: 1, alignItems: 'center', justifyContent: 'center', padding: `0 ${P_PAD}px`, overflow: 'hidden' } },
@@ -469,7 +467,6 @@ export function portraitTree(card: OgCard): El {
     'div',
     { style: { display: 'flex', flexDirection: 'column', width: PORTRAIT_WIDTH, height: PORTRAIT_HEIGHT, background: NAVY, color: WHITE, fontFamily: SANS } },
     masthead,
-    rule,
     body,
     footer,
     bottomRule,
@@ -486,8 +483,9 @@ export function ogLayout(format: OgFormat): { width: number; height: number; tre
 // --- the story: a daily edition as a carousel ---------------------------------------
 //
 // Nine slide types (src/story.ts), all 1080x1350 and all in the portrait card's
-// register: masthead and rule at the top, the wordmark footer and thick rule at
-// the bottom. The cover is the one photograph; every other slide is type on
+// register, without its rules: the mark alone at the top, the wordmark at the
+// foot, and nothing ruled between them and the slide (Instagram draws its own
+// place-in-the-run badge, so the slide carries no counter). The cover is the one photograph; every other slide is type on
 // navy, the way the portrait card is, so a carousel still reads as one account
 // mid-swipe. Photographs arrive as data: URIs already read by the caller; a
 // cover with none is drawn as the engraving card, so a story never fails for
@@ -500,9 +498,6 @@ export interface StoryImages {
   credit?: string | null
   inset?: string | null
   insetCredit?: string | null
-  /** This slide's place in the run, drawn opposite the mark as "2 / 7". */
-  index?: number | null
-  total?: number | null
 }
 
 const S_TITLE_SIZES = [140, 128, 116, 104, 92, 84, 76, 68, 60]
@@ -545,23 +540,17 @@ function fitStoryTitle(text: string, maxSize: number, maxLines: number): { size:
 /** A small chevron for the cover's "Swipe" cue: the sans has no arrow glyph. */
 const ARROW_URI = svgUri(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path d="M3 12h16M13 6l6 6-6 6" fill="none" stroke="${SOFT}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>`)
 
-/** The mark alone on the left (on a story the name is the account, not the masthead) and the slide's place in the run on the right. */
-function storyMasthead(images: StoryImages = {}): El {
-  const counter = images.index && images.total && images.total > 1
-    ? h('div', { style: { fontFamily: SERIF, fontSize: 44, lineHeight: 1, letterSpacing: '0.06em', color: SOFT, opacity: 0.85 } }, `${images.index} / ${images.total}`)
-    : null
+/** The mark alone, top left: on a story the name is the account, not the masthead. Its foot keeps the body clear of it, where the rule used to. */
+function storyMasthead(): El {
   return h(
     'div',
-    { style: { display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: `52px ${P_PAD}px 0 ${P_PAD}px` } },
+    { style: { display: 'flex', alignItems: 'center', padding: `64px ${P_PAD}px 32px ${P_PAD}px` } },
     h('img', { src: MARK_URI, width: 110, height: 100 }),
-    counter,
   )
 }
 
 /** A credit as the slide draws it: author and licence; the caption carries the "via Wikimedia Commons". */
 const slideCredit = (credit: string): string => credit.replace(/,?\s*via Wikimedia Commons/gi, '')
-
-const storyRule = (): El => h('div', { style: { height: 1, margin: `26px ${P_PAD}px 0 ${P_PAD}px`, background: P_RULE } })
 
 function storyFooter(credit?: string | null, swipe = false): El {
   const right = credit || swipe
@@ -575,7 +564,7 @@ function storyFooter(credit?: string | null, swipe = false): El {
     : null
   return h(
     'div',
-    { style: { display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', padding: `24px ${P_PAD}px 52px ${P_PAD}px` } },
+    { style: { display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', padding: `32px ${P_PAD}px 64px ${P_PAD}px` } },
     h('div', { style: { fontFamily: SANS, fontSize: 34, fontWeight: 700, letterSpacing: '0.18em', color: BRONZE_BRIGHT } }, 'OPAX.COM.AU'),
     right,
   )
@@ -606,9 +595,9 @@ function storyNote(text: string | null | undefined, centred = false): El | null 
 
 /** The engraving as a watermark in the lower right, behind the type. */
 const storyEngraving = (width: number, opacity: number, g: StoryGeometry): El =>
-  h('img', { src: ENGRAVING_URI, width, height: Math.round(width * 164 / 180), style: { position: 'absolute', right: P_PAD, bottom: 112 + g.padBottom, opacity } })
+  h('img', { src: ENGRAVING_URI, width, height: Math.round(width * 164 / 180), style: { position: 'absolute', right: P_PAD, bottom: 124 + g.padBottom, opacity } })
 
-/** The body: the room between the rules, centred, clipped there rather than into the footer. */
+/** The body: the room between masthead and footer, centred, clipped there rather than into the footer. */
 function storyBody(children: (El | null)[], opts: { centred?: boolean; end?: boolean } = {}): El {
   return h(
     'div',
@@ -637,8 +626,7 @@ function coverSlide(slide: Extract<StorySlide, { type: 'cover' }>, images: Story
   if (!photo) {
     // No approved photograph: the engraving card, as the portrait card draws it.
     return storyFrame(g, [
-      storyMasthead(images),
-      storyRule(),
+      storyMasthead(),
       storyBody([
         inset,
         storyKicker(slide.kicker),
@@ -660,7 +648,7 @@ function coverSlide(slide: Extract<StorySlide, { type: 'cover' }>, images: Story
   return storyFrame(g, [
     band,
     wash,
-    storyMasthead(images),
+    storyMasthead(),
     h(
       'div',
       { style: { display: 'flex', flexDirection: 'column', flex: 1, alignItems: 'flex-start', justifyContent: 'flex-end', padding: `0 ${P_PAD}px 24px ${P_PAD}px`, overflow: 'hidden' } },
@@ -677,8 +665,7 @@ function numberSlide(slide: Extract<StorySlide, { type: 'number' }>, images: Sto
   const value = storyText(slide.value)
   const valueSize = value.length > 12 ? 104 : value.length > 8 ? 132 : 176
   return storyFrame(g, [
-    storyMasthead(images),
-    storyRule(),
+    storyMasthead(),
     storyEngraving(340, 0.28, g),
     storyBody([
       storyKicker(slide.kicker),
@@ -712,8 +699,7 @@ function pictureSlide(slide: Extract<StorySlide, { type: 'picture' }>, images: S
     : h('div', { style: { height: images.photo ? 40 : 0 } })
   const quote = slide.quote ? storyText(slide.quote) : ''
   return storyFrame(g, [
-    storyMasthead(images),
-    storyRule(),
+    storyMasthead(),
     storyBody([
       frame,
       credit,
@@ -746,8 +732,7 @@ function barsSlide(slide: Extract<StorySlide, { type: 'bars' }>, images: StoryIm
     )
   })
   return storyFrame(g, [
-    storyMasthead(images),
-    storyRule(),
+    storyMasthead(),
     storyBody([
       storyKicker(slide.kicker),
       storyHeadline(slide.title, 92, 3),
@@ -774,14 +759,13 @@ function ledgerSlide(slide: Extract<StorySlide, { type: 'ledger' }>, images: Sto
   const total = slide.total
     ? h(
         'div',
-        { style: { display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', width: P_TEXT_WIDTH, paddingTop: 22, paddingBottom: 22, borderTop: `1px solid ${S_BRONZE_RULE}`, borderBottom: `1px solid ${S_BRONZE_RULE}`, fontFamily: SANS } },
+        { style: { display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', width: P_TEXT_WIDTH, paddingTop: 22, paddingBottom: 22, borderTop: `1px solid ${S_BRONZE_RULE}`, fontFamily: SANS } },
         h('div', { style: { fontSize: SIZE, color: SOFT } }, clipToLines(storyText(slide.total.label), P_TEXT_WIDTH - AMT - GAP, SIZE, SANS_EM, 1)),
         h('div', { style: { fontSize: 44, color: BRONZE_BRIGHT, fontWeight: 700, textAlign: 'right' } }, storyText(slide.total.amount)),
       )
     : null
   return storyFrame(g, [
-    storyMasthead(images),
-    storyRule(),
+    storyMasthead(),
     storyBody([
       storyKicker(slide.kicker),
       storyHeadline(slide.title, 92, 3),
@@ -804,8 +788,7 @@ function timelineSlide(slide: Extract<StorySlide, { type: 'timeline' }>, images:
     ),
   )
   return storyFrame(g, [
-    storyMasthead(images),
-    storyRule(),
+    storyMasthead(),
     storyBody([
       storyKicker(slide.kicker),
       storyHeadline(slide.title, 104, 3),
@@ -837,8 +820,7 @@ function divisionSlide(slide: Extract<StorySlide, { type: 'division' }>, images:
     )
   const ayeWidth = Math.round((P_TEXT_WIDTH - 4) * ayes / total)
   return storyFrame(g, [
-    storyMasthead(images),
-    storyRule(),
+    storyMasthead(),
     storyBody([
       storyKicker(slide.kicker),
       storyHeadline(slide.title, 92, 3),
@@ -866,8 +848,7 @@ function listSlide(slide: Extract<StorySlide, { type: 'list' }>, images: StoryIm
     ),
   )
   return storyFrame(g, [
-    storyMasthead(images),
-    storyRule(),
+    storyMasthead(),
     storyBody([
       storyKicker(slide.kicker),
       storyHeadline(slide.title, 92, 3),
@@ -887,8 +868,7 @@ function sourceSlide(slide: Extract<StorySlide, { type: 'source' }>, images: Sto
     h('div', { style: { display: 'flex', width: P_TEXT_WIDTH, fontFamily: SANS, fontSize: 34, lineHeight: 1.35, color: WHITE, paddingTop: 18, paddingBottom: 18, borderTop: `1px solid ${S_SOFT_RULE}` } }, clipToLines(storyText(r), P_TEXT_WIDTH, 34, SANS_EM, 2)),
   )
   return storyFrame(g, [
-    storyMasthead(images),
-    storyRule(),
+    storyMasthead(),
     storyEngraving(240, 0.38, g),
     storyBody([
       storyKicker(slide.kicker),

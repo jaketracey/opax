@@ -1158,7 +1158,7 @@ async function mountDiscoveryMap(signal) {
     if (!current()) return;
     const donor = data?.nodes?.find((node) => node.kind === "donor" && node.label.trim().toLocaleLowerCase() === signal.entity.trim().toLocaleLowerCase());
     if (!donor) { root.innerHTML = '<p class="status">This organisation isn’t in the money map’s selected donor set. You can still search its name in the record.</p>'; return; }
-    const { mountMoneyMap } = await import("/money-map.js?v=ca923f4f2e");
+    const { mountMoneyMap } = await import("/money-map.js?v=fb33962c2d");
     if (!current()) return;
     root.textContent = "";
     const handle = await mountMoneyMap(root, "/graph/money.json?v=suppliers-1", { focus: donor.id, chrome: "mini", reveal: true, openCard: false,
@@ -1476,7 +1476,7 @@ async function mountMoney(jurParam, industry, params = new URLSearchParams()) {
   root.innerHTML = `<p class="status" style="margin:0;padding:1rem 1.25rem">Loading the map…</p>`;
   const cfg = MONEY_JURISDICTIONS[jur];
   try {
-    const [{ mountMoneyMap }, data, journeysModule, researchModule, recordsModule] = await Promise.all([import("/money-map.js?v=ca923f4f2e"), loadMoneyFile(jur), import("/money-journeys.js?v=mobile-picker-20260908"), import("/map-research.js?v=d4a14d9676"), import("/money-records.js?v=ia-ux-20260908-2")]);
+    const [{ mountMoneyMap }, data, journeysModule, researchModule, recordsModule] = await Promise.all([import("/money-map.js?v=fb33962c2d"), loadMoneyFile(jur), import("/money-journeys.js?v=mobile-picker-20260908"), import("/map-research.js?v=d4a14d9676"), import("/money-records.js?v=ia-ux-20260908-2")]);
     if (moneyMapLoading !== jur || generation !== moneyMapGeneration) return; // switched again while loading
     const fine = $("money-fineprint");
     if (fine) fine.innerHTML = moneyFineprintHTML(jur, data?.meta);
@@ -1611,7 +1611,7 @@ async function openSupplierPage(name, params, manageFocus) {
   body.classList.remove("subject-person", "subject-party");
   body.innerHTML = '<p role="status">Loading suppliers…</p>';
   try {
-    const module = await import("/suppliers.js?v=1d01466ca3");
+    const module = await import("/suppliers.js?v=067a96359f");
     if (generation !== supplierPageGeneration) return;
     const helpers = {
       params,
@@ -3624,7 +3624,7 @@ function personSlug(name) {
 }
 
 /** Point each sponsor link at the roster row the bill names (sponsor-person.js: the bill's person ID
- *  decides, never a surname print); a print the roster cannot place keeps its name link. */
+ *  decides, never a surname print); an unresolved sponsor stays plain text. */
 const sponsorSummaries = new Map();
 async function loadSponsorSummary(bill) {
   const path = await growthModules.sponsorSummaryPath(bill);
@@ -4160,7 +4160,7 @@ async function mountSubjectMap(nodeId, label = "") {
   el.hidden = false;
   $("subject-map-hint").hidden = false;
   try {
-    const { mountMoneyMap } = await import("/money-map.js?v=ca923f4f2e");
+    const { mountMoneyMap } = await import("/money-map.js?v=fb33962c2d");
     if (currentSubjectKey !== key) return; // navigated away while loading
     destroySubjectMap();
     const handle = await mountMoneyMap(el, "/graph/money.json?v=suppliers-1", {
@@ -8937,7 +8937,7 @@ async function openExplain(detail) {
   let waiting = null;
   try {
     const explainModule = import("/explain.js?v=4f577eb978");
-    const wombat = await import("/wombat.js?v=b2936fedf5");
+    const wombat = await import("/wombat.js?v=cb89a88dad");
     if (seq !== explainOpenSeq || !dialog.open) return;
     waiting = wombat.mountWombat(body, { label: "Tracing the disclosed money." });
     const mod = await explainModule;
@@ -8984,7 +8984,7 @@ const GAMES = {
   grants: { name: "Who gets the grants", dialog: "dialog-grants", body: "explore-grants", module: "/grants.js?v=bf7c17477c", mount: "mountGrants" },
   matrix: { name: "Who owns which debate", dialog: "dialog-matrix", body: "explore-matrix", module: "/matrix.js?v=25f5793db5", mount: "mountMatrix" },
   wd: { name: "Words per dollar", dialog: "dialog-wd", body: "explore-wd", module: "/wordsdollars.js?v=9e390529d6", mount: "mountWordsDollars" },
-  tvn: { name: "Then vs now", dialog: "dialog-tvn", body: "explore-tvn", module: "/thenvsnow.js?v=de2fe807c7", mount: "mountThenVsNow" },
+  tvn: { name: "Then vs now", dialog: "dialog-tvn", body: "explore-tvn", module: "/thenvsnow.js?v=54e933f28d", mount: "mountThenVsNow" },
 };
 
 async function openGame(which, params = null) {
@@ -9594,7 +9594,7 @@ async function mountFrontMap() {
   if (!root || frontMapHandle || frontMapLoading) return;
   frontMapLoading = true;
   try {
-    const [mod, data] = await Promise.all([import("/money-map.js?v=ca923f4f2e"), loadMoneyData()]);
+    const [mod, data] = await Promise.all([import("/money-map.js?v=fb33962c2d"), loadMoneyData()]);
     if (!data) throw new Error("money data unavailable");
     root.textContent = "";
     const handle = await mod.mountMoneyMap(root, "/graph/money.json?v=suppliers-1", {
@@ -9651,7 +9651,7 @@ async function showWombat(label) {
   if (!wombat && !wombatLoading) {
     wombatLoading = true;
     try {
-      const mod = await import("/wombat.js?v=b2936fedf5");
+      const mod = await import("/wombat.js?v=cb89a88dad");
       if (!$("ask-wombat").hidden) {
         wombat = mod.mountWombat(slot, { label });
       } else {
@@ -9680,7 +9680,7 @@ async function showLoader(slotId, label, opts) {
   const have = loaders.get(slotId);
   if (have) { have.setLabel(label); return; }
   try {
-    const mod = await import("/wombat.js?v=b2936fedf5");
+    const mod = await import("/wombat.js?v=cb89a88dad");
     if (loaders.get(slotId)) return;
     loaders.set(slotId, mod.mountWombat(slot, { label, ...(opts || {}) }));
   } catch { /* the status text still carries the state */ }
@@ -10708,7 +10708,7 @@ function initChat(manageFocus) {
   // The waiting state's pieces, warmed now so a question's first frame does
   // not wait on a module fetch.
   import("/stages.js?v=5a008f79bb").catch(() => {});
-  import("/wombat.js?v=b2936fedf5").catch(() => {});
+  import("/wombat.js?v=cb89a88dad").catch(() => {});
   try {
     const raw = sessionStorage.getItem("opax-chat-seed");
     if (raw) {
@@ -11283,7 +11283,7 @@ async function sendChat(question, carry) {
   let reading = [];
   let note = "";
   announce(`${STEP_LABEL.question}.`);
-  import("/wombat.js?v=b2936fedf5")
+  import("/wombat.js?v=cb89a88dad")
     .then((mod) => {
       if (!alive()) return;
       trundler = mod.mountWombat(track, { label: "", ...PAGE_LOADER });
@@ -14402,7 +14402,7 @@ async function mountReportWords(el, cfg, slug) {
 
 async function mountReportMap(el, cfg, slug) {
   try {
-    const { mountMoneyMap } = await import("/money-map.js?v=ca923f4f2e");
+    const { mountMoneyMap } = await import("/money-map.js?v=fb33962c2d");
     if (currentReportSlug !== slug || !el.isConnected) return; // moved on while loading
     const handle = await mountMoneyMap(el, "/graph/money.json?v=suppliers-1", {
       chrome: "mini",

@@ -81,7 +81,7 @@ import * as storyRender from './og-render'
 import { personRole, personTitle, roleLine, billTitle } from './seo-titles'
 import { answerBlock, associationCaveat, crumbsHTML, panelPrerender, SERVER_PANELS, type Crumb, renderPersonAnswer, renderBillAnswer, renderDivisionAnswer, renderDirectory, renderSupplierAnswer, renderMoneyAnswer, type Division, type ReadAsset } from './seo-content'
 import { buildSchemaGraph, type PersonSchemaIdentity } from './seo-schema'
-import { photoFor, storyFrames, validStory, STORY_VERSION as STORY_SLIDES_VERSION, type PhotoCatalogue, type StoryFormat } from './story'
+import { photoFor, validStory, STORY_VERSION as STORY_SLIDES_VERSION, type PhotoCatalogue, type StoryFormat } from './story'
 
 interface FindParagraph {
   score: number
@@ -5312,10 +5312,8 @@ async function serveStorySlide(url: URL, request: Request, env: Env, ctx: Execut
       storyImage(env, insetId ? `/photos/jpg/${insetId}.jpg` : null),
       loadOgFonts(env),
     ])
-    // A story frame counts itself among the frames that post, not among every slide.
-    const frames = format === 'story' ? storyFrames(post.slides) : null
-    const images = { photo: photoUri, credit: photoUri ? photo?.credit ?? null : null, inset: insetUri, insetCredit: insetUri && slide.type === 'cover' ? slide.insetCredit ?? null : null,
-      index: frames ? (frames.includes(n) ? frames.indexOf(n) + 1 : null) : n, total: frames ? frames.length : post.slides.length }
+    // No place-in-the-run counter: Instagram badges a carousel and a story with its own.
+    const images = { photo: photoUri, credit: photoUri ? photo?.credit ?? null : null, inset: insetUri, insetCredit: insetUri && slide.type === 'cover' ? slide.insetCredit ?? null : null }
     const jpeg = await storyRender.renderStoryJpeg(slide, images, fonts, format)
     const res = new Response(jpeg, {
       headers: {

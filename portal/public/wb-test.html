@@ -1,5 +1,5 @@
 <!doctype html>
-<!-- Throwaway harness for the loading wombat. Not linked from anywhere; delete freely. -->
+<!-- Throwaway harness for the loading animals. Not linked from anywhere; delete freely. -->
 <html lang="en">
 <head>
   <meta charset="utf-8">
@@ -10,16 +10,11 @@
   <style>
     body { max-width: 860px; margin: 2rem auto; padding: 0 1rem; }
     h2 { margin-top: 2.5rem; }
-    .freeze .wb-trundle, .freeze .wb-sniff, .freeze .wb-rock,
-    .freeze .wb-leg-i, .freeze .wb-eye { animation-play-state: paused !important; }
-    .walkframe .wb-trundle, .walkframe .wb-sniff, .walkframe .wb-rock,
-    .walkframe .wb-leg-i { animation-delay: -4s !important; }
-    .sniffframe .wb-trundle, .sniffframe .wb-sniff, .sniffframe .wb-rock,
-    .sniffframe .wb-leg-i { animation-delay: -7.84s !important; }
-    .edgeframe .wb-trundle, .edgeframe .wb-sniff, .edgeframe .wb-rock,
-    .edgeframe .wb-leg-i { animation-delay: -1.6s !important; }
-    .zoom { transform: scale(2.8); transform-origin: top left; margin-bottom: 180px; }
+    .rigs { display: flex; flex-wrap: wrap; gap: 0 1rem; }
+    .zoom { zoom: 2.8; }
     .zoom .wb-wrap { margin: 0; }
+    .zoom .wb-stage { width: 110px; mask-image: none; }
+    .zoom .wb-label { display: none; }
   </style>
 </head>
 <body>
@@ -28,14 +23,11 @@
   <h2>live (as on the Ask page)</h2>
   <div id="live" role="status"></div>
 
-  <h2>frozen walk frame, 2.8x</h2>
-  <div class="zoom freeze walkframe"><div id="f1"></div></div>
+  <h2>frozen mid-stride, 2.8x</h2>
+  <div class="rigs" id="walk"></div>
 
-  <h2>frozen sniff frame, 2.8x</h2>
-  <div class="zoom freeze sniffframe"><div id="f2"></div></div>
-
-  <h2>frozen edge-entry frame, 2.8x</h2>
-  <div class="zoom freeze edgeframe"><div id="f3"></div></div>
+  <h2>frozen in the pause beat, 2.8x</h2>
+  <div class="rigs" id="beat"></div>
 
   <script type="module">
     import { mountWombat } from '/wombat.js'
@@ -45,9 +37,25 @@
       s++
       if (s >= 10) w.setLabel(`Checking the record — ${s}s. This can take up to a minute.`)
     }, 1000)
-    mountWombat(document.getElementById('f1'), { label: 'walk frame' })
-    mountWombat(document.getElementById('f2'), { label: 'sniff frame' })
-    mountWombat(document.getElementById('f3'), { label: 'edge frame' })
+    // Each rig parks its walker and holds every other part at one moment of the loop.
+    const rig = (row, animal, seconds) => {
+      const box = document.createElement('div')
+      box.className = 'zoom'
+      document.getElementById(row).appendChild(box)
+      mountWombat(box, { label: '', animal })
+      requestAnimationFrame(() => {
+        for (const a of box.getAnimations({ subtree: true })) {
+          if (a.effect.target.classList.contains('wb-trundle')) { a.cancel(); continue }
+          a.pause()
+          a.currentTime = seconds * 1000
+        }
+        Object.assign(box.querySelector('.wb-trundle').style, { animation: 'none', left: '22px' })
+      })
+    }
+    for (const animal of ['emu', 'wombat', 'echidna', 'platypus']) {
+      rig('walk', animal, 3.2)
+      rig('beat', animal, 9.8)
+    }
     window.wombat = w
   </script>
 </body>
