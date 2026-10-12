@@ -276,10 +276,10 @@ test('no new uses of deprecated token names', (t) => {
 // measured without its generated token region. Lower a number when a change
 // lowers the share; the rules other lanes own still count until they move.
 const SHARE_BASELINE = {
-  'public/style.css': 7.2,
-  'public/ui-controls.css': 5.9,
+  'public/style.css': 5.5,
+  'public/ui-controls.css': 4.4,
   'public/ui-source.css': 8.5,
-  'public/voice.css': 4.5,
+  'public/voice.css': 3.5,
 };
 test('the owned stylesheets only move onto the tokens (hard-coded share ratchet)', (t) => {
   const over = [];

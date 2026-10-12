@@ -88,8 +88,10 @@ export function rawLiterals(cat, prop, value) {
       if (prop === 'line-height') return /^(normal|inherit|initial|unset)?$/.test(bare.trim()) ? [] : [bare.trim()];
       if (prop === 'letter-spacing') return nonZero(bare.match(LEN) || []).length || /\d/.test(bare) && !/^0$/.test(bare.trim()) ? [bare.trim()] : [];
       if (prop === 'font-size') return /^(inherit|initial|unset|smaller|larger)?$/.test(bare.trim()) ? [] : [bare.trim()];
-      // font shorthand: raw unless the whole thing is a var()
-      return bare.trim() && !/^(inherit|initial|unset)$/.test(bare.trim()) ? [bare.trim()] : [];
+      // font shorthand: raw unless every part is a var() (the slash between
+      // size and line height, and style keywords, are not values).
+      const rest = bare.replace(/\//g, ' ').replace(/\b(italic|oblique|normal|small-caps)\b/g, ' ').trim();
+      return rest && !/^(inherit|initial|unset)$/.test(rest) ? [rest] : [];
     }
     case 'colour': return colours();
     case 'shadow': return bare.trim() && !/^(none|inherit|initial|unset)$/.test(bare.trim()) && (nonZero(bare.match(LEN) || []).length || colours().length) ? [bare.trim()] : [];

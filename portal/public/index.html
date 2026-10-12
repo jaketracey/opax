@@ -60,10 +60,10 @@
 <!-- fonts:end -->
 <!-- ?v= is content-hash stamped by scripts/stamp_assets.mjs (npm run deploy),
      which is what lets _headers serve these two immutable. -->
-<link rel="stylesheet" href="/style.css?v=8e5ccd5c26">
-<link rel="stylesheet" href="/ui-controls.css?v=f8011bf298">
-<link rel="stylesheet" href="/ui-source.css?v=4f396d8cfc">
-<link rel="stylesheet" href="/voice.css?v=a10938b91d">
+<link rel="stylesheet" href="/style.css?v=d62aa384d3">
+<link rel="stylesheet" href="/ui-controls.css?v=b23d3eeb3d">
+<link rel="stylesheet" href="/ui-source.css?v=8b74f1ee58">
+<link rel="stylesheet" href="/voice.css?v=19eea6fcdc">
 <!-- labels.js: app.js imports it before its first render. -->
 <link rel="modulepreload" href="/labels.js?v=c6bf994ef7">
 </head>
@@ -422,93 +422,6 @@
            below the fold. -->
       <div id="ask-money" hidden></div>
 
-      <nav id="home-tasks" class="home-tasks" aria-label="Start investigating">
-        <a href="/subject/topic"><strong>Browse a topic</strong><span>The debate and its history.</span></a>
-        <a href="/subject/person"><strong>Find a parliamentarian</strong><span>Speeches, votes and interests.</span></a>
-        <a href="/money"><strong>Follow the money</strong><span>Explore the connections in 3D.</span></a>
-        <a href="/bills"><strong>Understand a bill</strong><span>What changes and where it stands.</span></a>
-      </nav>
-      <section class="front-map" id="front-map" aria-label="Explore the money map">
-        <div class="home-map-stage"><div id="front-map-root" class="front-map-root"><p class="status">Loading the money map…</p></div><div class="home-map-invite"><div class="home-map-journeys"><span>Start a guided journey</span><a href="/money?journey=public-money">Contracts &amp; grants</a><a href="/money?journey=multiple-parties">More than one party</a><a href="/money?journey=industry">Explore an industry</a><a href="/money?journey=over-time">Turn back the clock</a></div><a class="home-map-open ui-button" href="/money" data-variant="primary">Open the research map</a></div></div>
-        <nav class="ui-map-filters home-map-industries" data-ui-size="compact" id="front-map-chips" aria-label="Industries on the money map"></nav>
-      </section>
-      <div class="front-grid" id="front-page">
-        <div class="front-main">
-<section class="front-mod" aria-labelledby="h-bills" id="mod-bills" hidden>
-          <h2 class="subject-section-title" id="h-bills">Latest bills</h2>
-          <div class="front-bills-machine"><details class="ui-pop ui-machine"><summary title="Written by a model, not by a person. Not part of the record."><span class="ui-machine-glyph" aria-hidden="true">✦</span>Machine-written<span class="visually-hidden">, not part of the record</span></summary><div class="ui-sheet"><p>Each summary is written by a model from the bill&#39;s explanatory memorandum. It is not part of the record.</p></div></details></div>
-          <ul class="subject-list front-bills" id="front-bills" role="list"></ul>
-          <p class="fineprint" id="front-bills-note"><a href="/bills">All bills, with their divisions and speeches →</a></p>
-        </section>
-<section class="front-mod" aria-labelledby="h-mw" id="mod-mw" hidden>
-          <h2 class="subject-section-title" id="h-mw">Money &amp; words</h2>
-          <div id="front-mw"></div>
-        </section>
-<section class="front-mod" aria-labelledby="h-added" id="mod-added" hidden>
-          <h2 class="subject-section-title" id="h-added">Just added to the record</h2>
-          <div class="split-list" id="front-added"></div>
-          <p class="fineprint">The newest documents to enter the index. The corpus updates as
-          parliaments publish.</p>
-          <p style="margin:0.6rem 0 0"><a class="search-everything ui-button" href="/ask?view=search"><svg class="btn-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="9" r="5.2"/><path d="M13 13l4 4"/></svg><span>Search everything</span></a></p>
-        </section>
-<section class="front-mod" aria-labelledby="h-declared" id="mod-declared" hidden>
-          <h2 class="subject-section-title" id="h-declared">Just declared</h2>
-          <div id="front-declared"></div>
-          <p class="fineprint"><a href="/declared">All recent declarations →</a></p>
-        </section>
-<section class="front-mod" aria-labelledby="h-reports" id="mod-reports" hidden>
-          <h2 class="subject-section-title" id="h-reports">Reports</h2>
-          <p class="fineprint" style="margin:-0.2rem 0 0.6rem">Long-running investigations pairing
-          the money with the words, every claim cited.</p>
-          <div class="report-cards" id="front-reports"></div>
-        </section>
-        </div>
-        <aside class="front-rail">
-        <section class="front-mod home-parliaments" aria-label="Parliamentary record by state">
-          <div id="front-statemap" class="front-map-root"><p class="status">Loading the map…</p></div>
-        </section>
-        <section class="front-mod" aria-labelledby="h-numbers">
-          <h2 class="subject-section-title" id="h-numbers">Today's numbers</h2>
-          <div class="tiles tiles-compact" id="front-numbers"></div>
-          <p class="fineprint" id="front-numbers-note">Live from the search index.
-          <a href="/stats">Full corpus breakdown</a></p>
-        </section>
-<section class="front-mod" aria-labelledby="h-ency" id="mod-ency" hidden>
-          <h2 class="subject-section-title" id="h-ency">From the encyclopedia</h2>
-          <div class="entry-stack" id="front-ency"></div>
-          <p class="fineprint">From AEC disclosures and the speech index. Totals are a floor, not a ceiling.</p>
-        </section>
-<section class="front-mod" aria-labelledby="h-ways">
-          <h2 class="subject-section-title" id="h-ways">More ways in</h2>
-          <div class="entry-stack">
-            <a class="report-card" href="/money">
-              <span class="front-way-heading"><svg class="card-glyph" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="6" cy="7" r="3"/><circle cx="18" cy="5" r="2"/><circle cx="15" cy="18" r="4"/><path d="m8 9 4.5 6M17.5 7l-1.7 7"/></svg><span class="card-kicker">Interactive</span></span>
-              <span class="card-title">The money map</span>
-              <span class="card-blurb">250 donors, 11 parties, 28 years of AEC returns, as territory you can spin.</span>
-              <span class="card-meta">Open →</span>
-            </a>
-            <a class="report-card" href="/bills">
-              <span class="front-way-heading"><svg class="card-glyph" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 3h9l4 4v14H6zM14 3v5h5M9 12h7M9 16h7"/></svg><span class="card-kicker">Encyclopedia</span></span>
-              <span class="card-title">Bills</span>
-              <span class="card-blurb">Every federal bill since 2013: what it changes, who it affects, how the parties divided.</span>
-              <span class="card-meta">Open →</span>
-            </a>
-            <a class="report-card" href="/explore">
-              <span class="front-way-heading"><svg class="card-glyph" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11a9 9 0 1 1 2.6 7.4M3 4v7h7M12 7v6l4 2"/></svg><span class="card-kicker">Explore</span></span>
-              <span class="card-title">Time machine</span>
-              <span class="card-blurb">Dial up any year since 1998 and see what parliament was arguing about.</span>
-              <span class="card-meta">Open →</span>
-            </a>
-            <a class="report-card" href="/explore">
-              <span class="front-way-heading"><svg class="card-glyph" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 3h14v18H5zM9 9a3 3 0 0 1 6 0c0 2-3 2-3 4M12 16v.2"/></svg><span class="card-kicker">Explore</span></span>
-              <span class="card-title">The record quiz</span>
-              <span class="card-blurb">Guess what the numbers say, then see the receipts.</span>
-              <span class="card-meta">Open →</span>
-            </a>
-          </div>
-        </section>
-        </aside>
-                                              </div>
     </section>
 
     <!-- ============================= SEARCH ============================ -->
@@ -2182,10 +2095,10 @@
 <!-- defer: never block the parser (Lighthouse counted this as render-blocking).
      Deferred scripts still run before DOMContentLoaded, so nothing changes for
      app.js's boot. ?v= is content-hash stamped by scripts/stamp_assets.mjs. -->
-<script src="/spa-shell.js?v=4b86ecea47" defer></script>
+<script src="/spa-shell.js?v=e422e996a5" defer></script>
 <script src="/navigation.js?v=f86ae6aef6" defer></script>
 <script src="/quick-search.js?v=27eac3b2f7" defer></script>
 <script src="/ui-source.js?v=5e7b751ca0" defer></script>
-<script src="/app.js?v=95ed62446a" defer></script>
+<script src="/app.js?v=fcac2cb4af" defer></script>
 </body>
 </html>
