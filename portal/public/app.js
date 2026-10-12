@@ -4764,26 +4764,29 @@ async function renderExpenseGlossary() {
   if (!body || expenseGlossaryDone) return;
   const d = await loadExpenseDefs();
   if (!d) {
-    body.innerHTML = '<p class="status error">The category definitions could not be loaded.</p>';
+    body.innerHTML = '<p class="ui-empty" data-variant="error">The category definitions could not be loaded. <a href="/expenses">Try again</a></p>';
     return;
   }
   expenseGlossaryDone = true;
   const meta = d.meta || {};
-  body.innerHTML = (d.groups || []).map((g) => {
-    const rows = d.categories.filter((c) => c.group === g.id);
-    if (!rows.length) return "";
-    return `<h3>${esc(g.title)}</h3>
-      ${g.blurb ? `<p>${esc(g.blurb)}</p>` : ""}
-      <dl class="defs">${rows.map((c) => {
+  // Each group is a section; each category a row: its name, what it covers,
+  // and the IPEA page it comes from.
+  const groups = (d.groups || []).map((g) => [g, d.categories.filter((c) => c.group === g.id)]).filter(([, rows]) => rows.length);
+  const count = groups.reduce((n, [, rows]) => n + rows.length, 0);
+  const line = $("expenses-meta");
+  if (line && count) line.textContent = `Parliamentary expenses · ${count} categories in ${groups.length} groups`;
+  body.innerHTML = groups.map(([g, rows]) => `<section class="ui-section">
+      <h2 class="ui-section-title">${esc(g.title)}</h2>
+      ${g.blurb ? `<p class="ui-section-note">${esc(g.blurb)}</p>` : ""}
+      <ul class="ui-list defs">${rows.map((c) => {
         const url = safeUrl(c.url);
-        return `<dt>${esc(c.name)}</dt>
-          <dd><p>${esc(c.text)}${c.note ? ` ${esc(c.note)}` : ""}</p>
-            <p class="defs-src">${esc(c.source || "")}${url ? ` <a href="${esc(url)}" rel="noopener" target="_blank">source ↗︎</a>` : ""}</p>
-          </dd>`;
-      }).join("")}</dl>`;
-  }).join("") +
+        return `<li><h3 class="ui-row-name">${esc(c.name)}</h3>
+          <p class="ui-row-text">${esc(c.text)}${c.note ? ` ${esc(c.note)}` : ""}</p>
+          <p class="ui-row-meta">${esc(c.source || "")}${url ? ` <a href="${esc(url)}" rel="noopener" target="_blank">source ↗︎</a>` : ""}</p>
+        </li>`;
+      }).join("")}</ul></section>`).join("") +
     (meta.licence_note
-      ? `<h3>Sources and licences</h3><p class="fineprint">${licenceNoteHTML(meta)}</p>`
+      ? `<section class="ui-section"><h2 class="ui-section-title">Sources and licences</h2><p class="fineprint">${licenceNoteHTML(meta)}</p></section>`
       : "");
 }
 
@@ -14341,6 +14344,10 @@ const STATS_PARLIAMENTS = [
 ];
 const STATS_KINDS = [["speech", "Speeches"], ["division", "Recorded divisions"], ["bill", "Bills"], ["press_release", "Government transcripts and releases"], ["legal", "Legislation"], ["grant_invitation", "Grant invitations"], ["grant_award", "Grant award records"], ["election_baseline", "Election baselines"], ["parliamentary_profile", "Recorded representation"], ["research_report", "Research source notes"]];
 
+/** Set when /api/stats fails: the live tiles and the live tables stand down and
+ *  one sentence says so, rather than dots and "Counting…" that never resolve. */
+let liveStatsUnavailable = false;
+
 /** One hero tile per key; the figure element is kept so a live update counts on in place. */
 function renderStatsHero() {
   const hero = $("stats-hero");
@@ -14361,17 +14368,22 @@ function renderStatsHero() {
   for (const t of tiles) {
     let tile = hero.querySelector(`[data-stat="${t.key}"]`);
     if (!tile) {
-      tile = document.createElement("span");
+      tile = document.createElement("div");
+      tile.className = "ui-stat";
       tile.dataset.stat = t.key;
-      tile.innerHTML = `<span class="stat-figure"></span><span class="stat-label"></span>`;
+      tile.innerHTML = `<span class="ui-stat-value"></span><span class="ui-stat-label"></span>`;
       hero.appendChild(tile);
     }
-    const figure = tile.querySelector(".stat-figure");
-    const label = tile.querySelector(".stat-label");
+    const figure = tile.querySelector(".ui-stat-value");
+    const label = tile.querySelector(".ui-stat-label");
+    const waiting = t.value == null && !t.text;
+    // A live figure the index cannot give stands down; one still on its way
+    // holds its place with a still skeleton, never dots.
+    tile.hidden = waiting && liveStatsUnavailable;
     label.textContent = t.label;
-    if (t.live) label.insertAdjacentHTML("beforeend", '<i class="stat-live" title="Read from the live index, refreshed every five minutes">Live</i>');
+    if (t.live && !waiting) label.insertAdjacentHTML("beforeend", '<i class="stat-live" title="Read from the live index, refreshed every five minutes">Live</i>');
     if (t.text) figure.textContent = t.text;
-    else if (t.value == null) figure.textContent = "…"; // live figure still on its way
+    else if (waiting) figure.innerHTML = '<span class="ui-skeleton" aria-hidden="true"></span><span class="visually-hidden">Loading</span>';
     else countUpWhenVisible(figure, t.value);
   }
 }
@@ -14416,8 +14428,8 @@ fetch("/corpus.json").then((r) => r.json()).then((m) => {
 }).catch(() => {
   // Manifest unavailable: keep the page honest with order-of-magnitude copy.
   $("stats-hero").innerHTML =
-    '<span><span class="stat-figure">Half a million</span><span class="stat-label">speeches collected</span></span>' +
-    '<span><span class="stat-figure">5</span><span class="stat-label">parliaments</span></span>';
+    '<div class="ui-stat"><span class="ui-stat-value">Half a million</span><span class="ui-stat-label">speeches collected</span></div>' +
+    '<div class="ui-stat"><span class="ui-stat-value">5</span><span class="ui-stat-label">parliaments</span></div>';
 });
 
 fetch("/suggestions.json").then((r) => r.json()).then((s) => {
@@ -14436,6 +14448,8 @@ function loadLiveStats(attempt = 0) {
   api(attempt ? `/api/stats?retry=${attempt}` : "/api/stats")
     .then((s) => {
       liveStats = s;
+      liveStatsUnavailable = false;
+      if ($("stats-live-index")) $("stats-live-index").hidden = false;
       const line = `${(s.resources ?? 0).toLocaleString()} documents · ` +
         `${(s.paragraphs ?? 0).toLocaleString()} passages indexed · growing daily`;
       $("stats").textContent = line;
@@ -14449,8 +14463,13 @@ function loadLiveStats(attempt = 0) {
     })
     .catch(() => {
       // A failed counter says nothing rather than "loading" for ever (web chrome).
+      // On /stats the live tiles and tables stand down behind one sentence; a
+      // later retry that answers brings them back.
       $("stats").hidden = true;
       $("stats-live").textContent = "Live index figures are unavailable right now.";
+      liveStatsUnavailable = true;
+      if ($("stats-live-index")) $("stats-live-index").hidden = true;
+      renderStatsHero();
       if (attempt < 3) setTimeout(() => loadLiveStats(attempt + 1), 30000);
       else renderStatsLiveTables();
     });
