@@ -45,12 +45,15 @@ function resolved(props, name, seen = []) {
 }
 
 // style.css :root on main before the token source (a3aa6532 lineage), resolved.
-// A pair is [701px and wider, 700px and narrower].
+// A pair is [701px and wider, 700px and narrower]. Colours keep their values;
+// the 12 Oct 2026 web uplift (docs/design/uplift-2026-10) moved the old space
+// and heading names onto the 4/8 scale and the six type sizes, and lightened the
+// row hairline, so those names still resolve, to the new values.
 const SERIF = '"Merriweather", Georgia, "Times New Roman", serif';
 const BEFORE = {
   '--paper': '#FAF9F6', '--paper-raised': '#FFFFFF', '--paper-sunken': '#F1EFE8',
   '--ink': '#23271F', '--ink-soft': '#575C52', '--ink-faint': '#6F7468',
-  '--line': '#DFDCD2', '--line-strong': '#8D897B', '--divider-subtle': '#DFDCD2', '--divider-default': '#B8B4A8',
+  '--line': '#E7E4DD', '--line-strong': '#8D897B', '--divider-subtle': '#E7E4DD', '--divider-default': '#B8B4A8',
   '--bronze-ink': '#8A5A12', '--bronze': '#A0761B',
   '--bronze-wash': 'rgba(160, 118, 27, 0.16)', '--bronze-rule': 'rgba(160, 118, 27, 0.55)',
   '--danger': '#A4262C', '--chart-mark': '#A0761B',
@@ -59,17 +62,17 @@ const BEFORE = {
   '--party-grn': '#2E7D32', '--party-onp': '#BF5B15', '--party-ind': '#3E5B77', '--party-oth': '#7C6690',
   '--serif': SERIF,
   '--sans': '"Public Sans", -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif',
-  '--heading-page': `400 clamp(1.9rem, 4.5vw, 2.75rem)/1.25 ${SERIF}`,
-  '--heading-section': `600 1.4rem/1.35 ${SERIF}`,
-  '--heading-subsection': `600 1.125rem/1.35 ${SERIF}`,
-  '--heading-tracking': '0.005em',
-  '--space-1': '0.25rem', '--space-2': '0.4rem', '--space-3': ['0.65rem', '0.5rem'], '--space-4': '1rem',
-  '--space-5': '1.6rem', '--space-6': ['2.6rem', '2rem'], '--space-7': ['4.2rem', '3.25rem'],
-  '--row-gap': ['0.65rem', '0.5rem'], '--sub-gap': ['2.6rem', '2rem'], '--section-gap': ['4.2rem', '3.25rem'],
+  '--heading-page': `400 clamp(2rem, 1.25rem + 2.2vw, 3rem)/1.15 ${SERIF}`,
+  '--heading-section': `600 1.5rem/1.25 ${SERIF}`,
+  '--heading-subsection': `600 1.0625rem/1.4 ${SERIF}`,
+  '--heading-tracking': '0',
+  '--space-1': '0.25rem', '--space-2': '0.5rem', '--space-3': '0.75rem', '--space-4': '1rem',
+  '--space-5': '1.5rem', '--space-6': ['3rem', '2rem'], '--space-7': ['5rem', '3rem'],
+  '--row-gap': '0.75rem', '--sub-gap': ['3rem', '2rem'], '--section-gap': ['5rem', '3rem'],
   '--header-h': ['107px', '61px'],
 };
 
-test('every name style.css defined before the token source keeps its value', () => {
+test('every name style.css defined before the token source still resolves', () => {
   for (const [width, index] of [[1280, 0], [390, 1]]) {
     const props = customProperties(style, width);
     for (const [name, expected] of Object.entries(BEFORE))
