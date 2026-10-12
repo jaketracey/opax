@@ -854,7 +854,7 @@ main.compact .hero-intro { display: none; }
 
 input[type="text"], input[type="number"], textarea.grow-field:not(.ui-input), select {
   background: var(--paper-raised); color: var(--ink);
-  border: var(--border-hairline) solid var(--line-control); border-radius: var(--radius-sm);
+  border: var(--border-hairline) solid var(--line-control); border-radius: var(--radius-md);
   font: var(--type-body); padding: var(--sp-8) var(--sp-12);
 }
 select { padding-right: var(--sp-24); }

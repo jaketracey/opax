@@ -61,12 +61,13 @@ button.ui-button[aria-busy="true"]::after {
 }
 @keyframes ui-spin { to { transform: rotate(360deg); } }
 
-/* ---- Fields: things you read, so 4px. */
+/* ---- Fields: 12px (12 Oct uplift), so a field and the pill beside it read as
+   one family; tags and status labels stay 4px. */
 .ui-field { display: grid; align-content: start; gap: var(--sp-8); min-width: 0; margin: 0; font: var(--weight-strong) var(--text-15)/var(--leading-normal) var(--sans); color: var(--ink); }
 .ui-field > label { font: inherit; color: inherit; }
 :is(input, select, textarea).ui-input {
   box-sizing: border-box; width: 100%; min-width: 0; min-height: var(--ui-height); margin: 0;
-  padding: var(--sp-8) var(--ui-pad); border: var(--border-hairline) solid var(--line-control); border-radius: var(--ui-radius);
+  padding: var(--sp-8) var(--ui-pad); border: var(--border-hairline) solid var(--line-control); border-radius: var(--radius-md);
   background: var(--paper-raised); color: var(--ink); font: 400 var(--ui-font)/1.5 var(--sans);
 }
 /* Native select behaviour, with an inset chevron that follows the size's padding. */
