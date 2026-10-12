@@ -6980,7 +6980,7 @@ async function openDirectory(kind, params, manageFocus) {
     electorate: async () => { const [module] = await Promise.all([loadElectorateModule(), loadPhotoMap()]); return module.directorySpec({ photoUrlFor, partyChipHTML }); },
   }[kind];
   let spec = null;
-  try { spec = await build(); } catch { /* honest failure below */ }
+  try { spec = await build(); } catch (err) { console.error("[directory]", kind, err); }
   if (currentSubjectKey !== key) return;
   clearPageLoader("subject-loader");
   if (!spec) {
