@@ -14,17 +14,21 @@
     <meta property="og:image" content="https://opax.com.au/og-default.png" />
     <meta name="twitter:card" content="summary_large_image" />
     <link rel="icon" href="/favicon.svg" />
-    <script src="/analytics.js?v=6639c30065" defer></script>
-    <script src="/events.js?v=91cdb45dbe" defer></script>
+    <!-- The two faces home.css declares, fetched with the stylesheets rather than after them. -->
+    <link rel="preload" as="font" type="font/woff2" crossorigin href="/fonts/merriweather-normal-latin.woff2" />
+    <link rel="preload" as="font" type="font/woff2" crossorigin href="/fonts/public-sans-normal-latin.woff2" />
+    <script src="/events.js?v=02bf234aff" defer></script>
     <script src="/gtm.js?v=0764911f84" defer></script>
-    <link rel="stylesheet" href="/style.css?v=7e54120f54" />
+    <link rel="stylesheet" href="/style.css?v=46f7f5ed3a" />
     <link rel="stylesheet" href="/ui-controls.css?v=f8011bf298" />
     <link rel="stylesheet" href="/ui-source.css?v=4f396d8cfc" />
     <link rel="stylesheet" href="/home.css?v=06a8abeecb" />
     <script src="/quick-search.js?v=27eac3b2f7" defer></script>
     <script src="/ui-source.js?v=d594622c13" defer></script>
     <script type="module" id="hp-navigation" src="/navigation.js?v=de99bace2e"></script>
-    <script type="module" src="/home.js?v=ecc020645c"></script>
+    <script type="module" src="/home.js?v=549e9e45c7"></script>
+    <!-- After home.js in execution order; PostHog replays earlier events (analytics/index.js). -->
+    <script src="/analytics.js?v=7a83ce20cf" defer></script>
   </head>
   <body class="hp-page">
     <a class="hp-skip" href="#hp-main">Skip to content</a>

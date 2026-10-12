@@ -411,7 +411,7 @@ export function mountThenVsNow (container, opts = {}) {
   let compareAbort = null
   let waitTimer = 0
   let wombatModPromise = null
-  const loadWombat = () => (wombatModPromise ??= import('/wombat.js?v=b2936fedf5').catch(() => null))
+  const loadWombat = () => (wombatModPromise ??= import('/wombat.js?v=cb89a88dad').catch(() => null))
 
   // ---- static chrome (no live data passes through this template) ----------
   const root = el('section', 'tvn-root')

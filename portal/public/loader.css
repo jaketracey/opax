@@ -1,0 +1,330 @@
+/* loader.css: the loading animals (public/wombat.js mounts them; it links
+   this sheet on first use). One small line-drawn animal walks on along a
+   hairline ground, stops in the middle for one beat, and walks off. Bronze
+   ink on a soft bronze-and-paper fill, one stroke weight throughout.
+
+   The box is the one the page reserves: a 320 x 48 stage and the label under
+   it. Nothing here changes size while it moves. The caller owns the status
+   role and aria-live; the drawing is aria-hidden and the label is plain text.
+
+   Motion: the stage move, the stride envelope and the gaits are generated
+   (scripts/build_loader_gait.mjs, region at the foot of this file). The
+   parts below read the --wb-* numbers it animates and multiply each swing by
+   --wb-amp, which eases to 0 while the animal stands, so the legs settle into
+   the drawn pose rather than freezing mid-step. */
+
+@property --wb-amp { syntax: "<number>"; inherits: true; initial-value: 0; }
+@property --wb-hip { syntax: "<number>"; inherits: true; initial-value: 0; }
+@property --wb-knee { syntax: "<number>"; inherits: true; initial-value: 0; }
+@property --wb-toe { syntax: "<number>"; inherits: true; initial-value: 0; }
+@property --wb-lift { syntax: "<number>"; inherits: true; initial-value: 0; }
+@property --wb-bob { syntax: "<number>"; inherits: true; initial-value: 0; }
+@property --wb-rock { syntax: "<number>"; inherits: true; initial-value: 0; }
+@property --wb-nod { syntax: "<number>"; inherits: true; initial-value: 0; }
+@property --wb-look { syntax: "<number>"; inherits: true; initial-value: 0; }
+
+.wb-wrap {
+  --wb-loop: calc(var(--ambient-loop) * 1.25);
+  --wb-ink: var(--bronze-ink);
+  --wb-fill: color-mix(in srgb, var(--bronze) 13%, var(--paper));
+  --wb-weight: 2.3;
+  display: block;
+  width: fit-content;
+  margin: var(--space-group) auto;
+}
+.wb-stage {
+  position: relative;
+  width: 320px;      /* explicit so the fit-content wrap doesn't shrink-wrap a short label */
+  max-width: 100%;
+  height: 48px;
+  overflow: hidden;
+  /* the animal fades in entering and out leaving, rather than hard-clipping;
+     a mask reads only alpha, so the stops are plain black */
+  mask-image: linear-gradient(to right,
+    transparent, black 30px, black calc(100% - 30px), transparent);
+}
+.wb-stage::after {
+  content: "";
+  position: absolute; left: 4px; right: 4px; bottom: 4px;
+  height: var(--border-hairline);
+  background: var(--line-control);
+  opacity: 0.4;
+}
+.wb-trundle {
+  position: absolute; bottom: 0; left: 0;
+  width: 65px; height: 42px;
+  animation: wb-trundle var(--wb-loop) linear infinite;
+  animation-delay: var(--wb-phase, 0s);
+}
+.wb-svg { display: block; width: 100%; height: 100%; overflow: visible; }
+
+/* ---- the drawing -------------------------------------------------------- */
+.wb-line  { fill: none; stroke: var(--wb-ink); stroke-width: var(--wb-weight); stroke-linecap: round; stroke-linejoin: round; }
+.wb-fill  { fill: var(--wb-fill); }
+.wb-shape { fill: var(--wb-fill); stroke: var(--wb-ink); stroke-width: var(--wb-weight); stroke-linecap: round; stroke-linejoin: round; }
+.wb-solid { fill: var(--wb-ink); }
+.wb-glint { fill: var(--paper); }
+.wb-soft  { opacity: 0.4; }
+.wb-far   { opacity: 0.45; }
+.wb-shade stop { stop-color: var(--wb-ink); }
+
+/* ---- motion: shared ------------------------------------------------------ */
+/* Joints turn about points in the drawing's own units (the initial
+   transform-box, view-box), except where a part simply turns about its own
+   top or middle (fill-box). */
+.wb-eye    { transform-box: fill-box; transform-origin: 50% 50%; }
+.wb-shadow { transform-box: fill-box; transform-origin: 50% 50%;
+  transform: scaleX(calc(1 + var(--wb-amp) * var(--wb-bob) * 0.04)); }
+.wb-leg { animation: var(--wb-gait) var(--wb-step) linear infinite; animation-delay: var(--wb-phase, 0s); }
+/* the second leg (or diagonal pair) is half a stride on */
+.wb-leg.wb-ph-b { animation-delay: calc(var(--wb-phase, 0s) - var(--wb-step) / 2); }
+.wb-eye { animation: wb-blink var(--wb-loop) linear infinite; animation-delay: var(--wb-phase, 0s); }
+
+@keyframes wb-blink {
+  0%, 16%, 17%, 48%, 49%, 81%, 82%, 100% { transform: none; }
+  16.5%, 48.5%, 81.5% { transform: scaleY(0.12); }
+}
+
+/* ---- the emu -------------------------------------------------------------- */
+/* Two-bone legs: thigh about the hip, shin about the backward joint, toes
+   about the heel (the origins are generated with the gait). The body bobs
+   twice a stride; the neck nods a moment behind it. Its beat turns the whole
+   body about the hips (the legs stay planted), so the neck's joins never
+   open: a lean back for a look about, a hold, one small nod forward. */
+.wb-a-emu { --wb-step: 0.8s; --wb-gait: wb-emu-leg; }
+.wb-a-emu .wb-svg {
+  animation: wb-stride var(--wb-loop) linear infinite,
+             wb-emu-body var(--wb-step) linear infinite,
+             wb-emu-beat var(--wb-loop) ease-in-out infinite;
+  animation-delay: var(--wb-phase, 0s);
+}
+.wb-a-emu .wb-body  { transform: translateY(calc(var(--wb-amp) * var(--wb-bob) * 1px)); }
+.wb-a-emu .wb-thigh { transform: rotate(calc(var(--wb-amp) * var(--wb-hip) * 1deg)); }
+.wb-a-emu .wb-shin  { transform: rotate(calc(var(--wb-amp) * var(--wb-knee) * 1deg)); }
+.wb-a-emu .wb-toes  { transform: rotate(calc(var(--wb-amp) * var(--wb-toe) * 1deg)); }
+.wb-a-emu .wb-lean  { transform-origin: 47px 45.5px; transform: rotate(calc(var(--wb-look) * 1deg)); }
+.wb-a-emu .wb-neck  { transform-origin: 59.5px 31.5px; transform: rotate(calc(var(--wb-amp) * var(--wb-nod) * 2.4deg)); }
+
+@keyframes wb-emu-beat {
+  0%, 44.5% { --wb-look: 0; }
+  46.8%     { --wb-look: -5.5; }
+  49.6%     { --wb-look: -5; }
+  51%       { --wb-look: 1.6; }
+  52.6%     { --wb-look: -0.4; }
+  54.2%, 100% { --wb-look: 0; }
+}
+
+/* ---- the short-legged three ------------------------------------------------ */
+/* One shared shuffle (diagonal pairs, a bob and a roll a stride), scaled per
+   animal: --wb-legs is the swing in degrees, --wb-tilt the roll. Each pauses
+   for its own beat: the wombat sniffs the ground, the echidna probes it, the
+   platypus dabbles. The legs stay on the ground; the body rocks above them. */
+.wb-quad { --wb-step: 0.72s; --wb-gait: wb-quad-leg; --wb-lift-h: 1.2; --wb-bob-h: 0.7; }
+.wb-quad .wb-svg {
+  animation: wb-stride var(--wb-loop) linear infinite,
+             wb-quad-body var(--wb-step) linear infinite;
+  animation-delay: var(--wb-phase, 0s);
+}
+.wb-quad .wb-leg {
+  transform-box: fill-box; transform-origin: 50% 0;
+  transform: translateY(calc(var(--wb-amp) * var(--wb-lift) * var(--wb-lift-h) * -1px))
+             rotate(calc(var(--wb-amp) * var(--wb-hip) * var(--wb-legs) * 1deg));
+}
+.wb-quad .wb-rock {
+  transform-box: fill-box; transform-origin: 50% 100%;
+  transform: translateY(calc(var(--wb-amp) * var(--wb-bob) * var(--wb-bob-h) * 1px))
+             rotate(calc(var(--wb-amp) * var(--wb-rock) * var(--wb-tilt) * 1deg));
+}
+.wb-quad .wb-beat { transform-box: fill-box; animation: var(--wb-beat) var(--wb-loop) ease-in-out infinite; animation-delay: var(--wb-phase, 0s); }
+
+.wb-a-wombat   { --wb-legs: 10; --wb-tilt: 1.4; --wb-beat: wb-beat-wombat; }
+.wb-a-echidna  { --wb-legs: 8; --wb-tilt: 2; --wb-bob-h: 0.5; --wb-beat: wb-beat-echidna; }
+.wb-a-platypus { --wb-legs: 9; --wb-tilt: 0.8; --wb-bob-h: 0.4; --wb-beat: wb-beat-platypus; }
+.wb-a-wombat .wb-beat   { transform-origin: 70% 100%; }
+.wb-a-echidna .wb-beat  { transform-origin: 72% 100%; }
+.wb-a-platypus .wb-beat { transform-origin: 72% 100%; }
+/* the platypus's tail sways against the roll */
+.wb-a-platypus .wb-aux {
+  transform-box: fill-box; transform-origin: 96% 45%;
+  transform: rotate(calc(var(--wb-amp) * var(--wb-rock) * -3deg));
+}
+
+@keyframes wb-beat-wombat {
+  0%, 45% { transform: rotate(0deg); }
+  48%     { transform: rotate(7deg); }
+  50.5%   { transform: rotate(6.6deg); }
+  53.5%   { transform: rotate(-0.8deg); }
+  55.5%, 100% { transform: rotate(0deg); }
+}
+@keyframes wb-beat-echidna {
+  0%, 45% { transform: rotate(0deg); }
+  47.5%   { transform: rotate(9deg); }
+  49.5%   { transform: rotate(7.4deg); }
+  51%     { transform: rotate(9.4deg); }
+  53.5%   { transform: rotate(-1deg); }
+  55.5%, 100% { transform: rotate(0deg); }
+}
+@keyframes wb-beat-platypus {
+  0%, 45% { transform: rotate(0deg); }
+  48%     { transform: rotate(5.6deg); }
+  50%     { transform: rotate(4.5deg); }
+  51.5%   { transform: rotate(5.9deg); }
+  54%     { transform: rotate(-0.7deg); }
+  56%, 100% { transform: rotate(0deg); }
+}
+
+/* ---- the label ---------------------------------------------------------- */
+/* The trailing dots count up while the record is being read, so a slow answer
+   still looks like it is moving. The box is a fixed three dots wide and the
+   dots are painted, not inserted, so the sentence above never jogs sideways as
+   they appear. */
+.wb-dots { display: inline-block; width: 1.15em; text-align: left; }
+.wb-dots > i { font-style: normal; opacity: 0; }
+.wb-dots > i:nth-child(1) { animation: wb-dot1 1.6s steps(1, end) infinite; }
+.wb-dots > i:nth-child(2) { animation: wb-dot2 1.6s steps(1, end) infinite; }
+.wb-dots > i:nth-child(3) { animation: wb-dot3 1.6s steps(1, end) infinite; }
+@keyframes wb-dot1 { 0% { opacity: 0 } 25%, 100% { opacity: 1 } }
+@keyframes wb-dot2 { 0% { opacity: 0 } 50%, 100% { opacity: 1 } }
+@keyframes wb-dot3 { 0% { opacity: 0 } 75%, 100% { opacity: 1 } }
+
+.wb-label {
+  margin: var(--space-line) 0 0;
+  max-width: 320px;
+  font: var(--type-metadata);
+  color: var(--ink-soft);
+  text-align: center;
+  text-wrap: balance;
+}
+
+/* ---- standing still ------------------------------------------------------ */
+/* Reduced motion, and the rare browser without registered properties (the
+   joints would jump between keyframes): the animal stands in the middle of
+   the stage in its drawn pose. Under reduced motion it breathes, a slow fade,
+   so a long wait still reads as alive. */
+.wb-still .wb-trundle { animation: none; left: calc(50% - 32.5px); }
+.wb-still .wb-leg, .wb-still .wb-eye,
+.wb-still .wb-a-emu .wb-svg, .wb-still .wb-quad .wb-svg, .wb-still .wb-quad .wb-beat { animation: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  /* each override at least as specific as the rule it stops */
+  .wb-trundle { animation: none; left: calc(50% - 32.5px); }
+  .wb-leg, .wb-eye, .wb-quad .wb-beat { animation: none; }
+  .wb-a-emu .wb-svg, .wb-quad .wb-svg { animation: wb-breathe 4.8s ease-in-out infinite; }
+  .wb-dots > i:nth-child(n) { animation: none; opacity: 1; }
+}
+@keyframes wb-breathe {
+  0%, 100% { opacity: 1; }
+  50%      { opacity: 0.6; }
+}
+
+/* gait:begin (generated by scripts/build_loader_gait.mjs; edit the script, not this region) */
+/* 20.88px/s on the stage; the emu's planted foot covers 18.5 units a step. */
+@keyframes wb-trundle {
+  0%   { transform: translateX(-50px); animation-timing-function: linear; }
+  41%  { transform: translateX(121.24px); animation-timing-function: cubic-bezier(0.333, 0.667, 0.667, 1); }
+  44%  { transform: translateX(127.5px); animation-timing-function: linear; }
+  56%  { transform: translateX(127.5px); animation-timing-function: cubic-bezier(0.333, 0, 0.667, 0.333); }
+  59%  { transform: translateX(133.76px); animation-timing-function: linear; }
+  100% { transform: translateX(305px); }
+}
+@keyframes wb-stride {
+  0%, 41% { --wb-amp: 1; }
+  44%, 56% { --wb-amp: 0; }
+  59%, 100% { --wb-amp: 1; }
+}
+.wb-a-emu .wb-thigh { transform-origin: 47px 45.5px; }
+.wb-a-emu .wb-shin  { transform-origin: 42.41px 56.59px; }
+.wb-a-emu .wb-toes  { transform-origin: 47.5px 68px; }
+@keyframes wb-emu-leg {
+  0%   { --wb-hip: -38.15; --wb-knee: 30.77; --wb-toe: 7.38; }
+  5%   { --wb-hip: -24.54; --wb-knee: 10.07; --wb-toe: 14.47; }
+  10%  { --wb-hip: -16.5; --wb-knee: 1.2; --wb-toe: 15.3; }
+  15%  { --wb-hip: -11.15; --wb-knee: -1.61; --wb-toe: 12.76; }
+  20%  { --wb-hip: -7.91; --wb-knee: 0.04; --wb-toe: 7.87; }
+  25%  { --wb-hip: -6.16; --wb-knee: 4.52; --wb-toe: 1.65; }
+  30%  { --wb-hip: -4.85; --wb-knee: 9.55; --wb-toe: -4.7; }
+  35%  { --wb-hip: -2.55; --wb-knee: 12.46; --wb-toe: -9.91; }
+  40%  { --wb-hip: 1.66; --wb-knee: 11.64; --wb-toe: -13.31; }
+  45%  { --wb-hip: 7.28; --wb-knee: 8.32; --wb-toe: -15.61; }
+  50%  { --wb-hip: 12.84; --wb-knee: 5.36; --wb-toe: -18.2; }
+  55%  { --wb-hip: 16.84; --wb-knee: 5.38; --wb-toe: -22.22; }
+  60%  { --wb-hip: 17.89; --wb-knee: 10.64; --wb-toe: -28.53; }
+  65%  { --wb-hip: 28.34; --wb-knee: -10.07; --wb-toe: -6.03; }
+  70%  { --wb-hip: 31.65; --wb-knee: -24.75; --wb-toe: 15.73; }
+  75%  { --wb-hip: 27.77; --wb-knee: -33.39; --wb-toe: 35.19; }
+  80%  { --wb-hip: 17.44; --wb-knee: -34.42; --wb-toe: 48.98; }
+  85%  { --wb-hip: 3.44; --wb-knee: -27.41; --wb-toe: 53.53; }
+  90%  { --wb-hip: -11.07; --wb-knee: -13.79; --wb-toe: 47.49; }
+  95%  { --wb-hip: -24.42; --wb-knee: 4.69; --wb-toe: 31.98; }
+  100% { --wb-hip: -38.15; --wb-knee: 30.77; --wb-toe: 7.38; }
+}
+@keyframes wb-emu-body {
+  0%   { --wb-bob: 0.28; --wb-nod: -0.54; }
+  5%   { --wb-bob: 0.73; --wb-nod: 0.06; }
+  10%  { --wb-bob: 0.9; --wb-nod: 0.64; }
+  15%  { --wb-bob: 0.73; --wb-nod: 0.97; }
+  20%  { --wb-bob: 0.28; --wb-nod: 0.93; }
+  25%  { --wb-bob: -0.28; --wb-nod: 0.54; }
+  30%  { --wb-bob: -0.73; --wb-nod: -0.06; }
+  35%  { --wb-bob: -0.9; --wb-nod: -0.64; }
+  40%  { --wb-bob: -0.73; --wb-nod: -0.97; }
+  45%  { --wb-bob: -0.28; --wb-nod: -0.93; }
+  50%  { --wb-bob: 0.28; --wb-nod: -0.54; }
+  55%  { --wb-bob: 0.73; --wb-nod: 0.06; }
+  60%  { --wb-bob: 0.9; --wb-nod: 0.64; }
+  65%  { --wb-bob: 0.73; --wb-nod: 0.97; }
+  70%  { --wb-bob: 0.28; --wb-nod: 0.93; }
+  75%  { --wb-bob: -0.28; --wb-nod: 0.54; }
+  80%  { --wb-bob: -0.73; --wb-nod: -0.06; }
+  85%  { --wb-bob: -0.9; --wb-nod: -0.64; }
+  90%  { --wb-bob: -0.73; --wb-nod: -0.97; }
+  95%  { --wb-bob: -0.28; --wb-nod: -0.93; }
+  100% { --wb-bob: 0.28; --wb-nod: -0.54; }
+}
+@keyframes wb-quad-leg {
+  0%   { --wb-hip: -1; --wb-lift: 0; }
+  5%   { --wb-hip: -0.8; --wb-lift: 0; }
+  10%  { --wb-hip: -0.6; --wb-lift: 0; }
+  15%  { --wb-hip: -0.4; --wb-lift: 0; }
+  20%  { --wb-hip: -0.2; --wb-lift: 0; }
+  25%  { --wb-hip: 0; --wb-lift: 0; }
+  30%  { --wb-hip: 0.2; --wb-lift: 0; }
+  35%  { --wb-hip: 0.4; --wb-lift: 0; }
+  40%  { --wb-hip: 0.6; --wb-lift: 0; }
+  45%  { --wb-hip: 0.8; --wb-lift: 0; }
+  50%  { --wb-hip: 1; --wb-lift: 0; }
+  55%  { --wb-hip: 0.95; --wb-lift: 0.31; }
+  60%  { --wb-hip: 0.81; --wb-lift: 0.59; }
+  65%  { --wb-hip: 0.59; --wb-lift: 0.81; }
+  70%  { --wb-hip: 0.31; --wb-lift: 0.95; }
+  75%  { --wb-hip: 0; --wb-lift: 1; }
+  80%  { --wb-hip: -0.31; --wb-lift: 0.95; }
+  85%  { --wb-hip: -0.59; --wb-lift: 0.81; }
+  90%  { --wb-hip: -0.81; --wb-lift: 0.59; }
+  95%  { --wb-hip: -0.95; --wb-lift: 0.31; }
+  100% { --wb-hip: -1; --wb-lift: 0; }
+}
+@keyframes wb-quad-body {
+  0%   { --wb-bob: 0; --wb-rock: 0; }
+  5%   { --wb-bob: -0.31; --wb-rock: 0.31; }
+  10%  { --wb-bob: -0.59; --wb-rock: 0.59; }
+  15%  { --wb-bob: -0.81; --wb-rock: 0.81; }
+  20%  { --wb-bob: -0.95; --wb-rock: 0.95; }
+  25%  { --wb-bob: -1; --wb-rock: 1; }
+  30%  { --wb-bob: -0.95; --wb-rock: 0.95; }
+  35%  { --wb-bob: -0.81; --wb-rock: 0.81; }
+  40%  { --wb-bob: -0.59; --wb-rock: 0.59; }
+  45%  { --wb-bob: -0.31; --wb-rock: 0.31; }
+  50%  { --wb-bob: 0; --wb-rock: 0; }
+  55%  { --wb-bob: -0.31; --wb-rock: -0.31; }
+  60%  { --wb-bob: -0.59; --wb-rock: -0.59; }
+  65%  { --wb-bob: -0.81; --wb-rock: -0.81; }
+  70%  { --wb-bob: -0.95; --wb-rock: -0.95; }
+  75%  { --wb-bob: -1; --wb-rock: -1; }
+  80%  { --wb-bob: -0.95; --wb-rock: -0.95; }
+  85%  { --wb-bob: -0.81; --wb-rock: -0.81; }
+  90%  { --wb-bob: -0.59; --wb-rock: -0.59; }
+  95%  { --wb-bob: -0.31; --wb-rock: -0.31; }
+  100% { --wb-bob: 0; --wb-rock: 0; }
+}
+/* gait:end */
