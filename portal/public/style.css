@@ -5232,32 +5232,38 @@ a.bill-division-q:hover { color: var(--bronze-ink); }
 .el-face-blank { background: var(--paper-sunken); border: var(--border-hairline) solid var(--divider-subtle); box-sizing: border-box; }
 .el-holders a.el-party { text-decoration: none; }
 .el-directory-row .el-meta { margin: 0; font: var(--type-fine); color: var(--ink-soft); }
-.el-directory-row small, .el-section li > small { display: block; font: var(--type-fine); color: var(--ink-soft); }
-#subject-body .el-intro, #subject-body .el-section { margin-top: var(--space-section); padding-top: var(--space-block); border-top: var(--border-hairline) solid var(--divider-default); }
-.el-intro { display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr); gap: var(--space-group) var(--space-section); align-items: start; }
-#subject-body .el-intro .subject-section-title, #subject-body .el-section .subject-section-title { font: var(--type-heading); margin: 0 0 var(--space-heading); }
+.el-directory-row small { display: block; font: var(--type-fine); color: var(--ink-soft); }
+.el-id { overflow-wrap: anywhere; font: var(--type-fine); }
+@media (max-width: 650px) {
+  .el-directory-row { grid-template-columns: var(--size-portrait-row) minmax(0, 1fr); gap: var(--space-line) var(--space-heading); }
+  .el-directory-row > .el-holders, .el-directory-row > .el-meta { grid-column: 2; }
+}
+
+/* ---- one electorate (/subject/electorate/<slug>) --------------------------
+   A ui-page-head with ⋯ on the title's row; who holds the seat and its
+   boundary side by side as two ui-sections; then the election timeline
+   (ui-list of ui-disclosures), the representation history (ui-list of
+   bylines), the census (ui-stats and ui-kv) and related seats (ui-list).
+   What is left here is layout. */
+.el-head { grid-template-columns: minmax(0, 1fr) auto; column-gap: var(--space-block); }
+.el-head > * { grid-column: 1; }
+.el-head > .page-actions { grid-column: 2; grid-row: 1; align-self: center; }
+.el-intro { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--space-section) var(--space-section); align-items: start; }
+.el-intro > .ui-section { margin-top: 0; }
+@media (min-width: 701px) { .el-intro { grid-template-columns: minmax(0, 3fr) minmax(0, 2fr); } }
 .el-section { scroll-margin-top: calc(var(--header-h) + var(--sp-16)); }
-.el-members { list-style: none; padding: 0; margin: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr)); gap: var(--space-block); }
-.el-members li { display: flex; flex-wrap: wrap; align-items: baseline; gap: var(--space-line) var(--space-tight); }
-.el-members a { font: var(--type-subheading); }
-.el-latest { margin: var(--space-tight) 0 0; font: var(--type-metadata); }
-.el-section-head { display: flex; flex-wrap: wrap; align-items: end; justify-content: space-between; gap: var(--space-tight) var(--space-block); margin-bottom: var(--space-heading); }
-#subject-body .el-section-head .subject-section-title { margin: 0; }
+.el-members { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 16rem), 1fr)); column-gap: var(--space-block); }
+.el-members > li { align-items: center; }
+.el-latest { margin: var(--space-tight) 0 0; }
+.el-outline { margin: 0; max-width: 22rem; color: var(--ink-soft); }
+.el-outline svg { display: block; width: 100%; height: auto; max-height: 13rem; }
+.el-outline path { fill: color-mix(in srgb, currentColor 12%, transparent); stroke: currentColor; stroke-width: 1; }
 .el-asof { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-tight); }
 .el-asof label { font: var(--type-label); color: var(--ink); }
 .el-asof .ui-input { width: auto; min-height: var(--size-control-compact); }
 .el-asof .ui-button { min-height: var(--size-control-compact); }
-.el-outline { margin: 0; color: var(--ink-soft); }
-.el-outline svg { width: 100%; max-height: 220px; }
-.el-outline path { fill: color-mix(in srgb, currentColor 12%, transparent); stroke: currentColor; stroke-width: 1; }
-.el-timeline, .el-service { list-style: none; padding: 0; margin: 0; }
-.el-timeline > li { border-top: var(--border-hairline) solid var(--divider-subtle); }
-.el-timeline > li:first-child { border-top: 0; }
-.el-election > summary { display: list-item; padding: var(--space-row) 0; min-height: var(--size-target); box-sizing: border-box; cursor: pointer; font: var(--type-body); }
-.el-election > summary time { display: inline-block; min-width: 8rem; font: var(--type-metadata); color: var(--ink-soft); }
-.el-election > summary strong { margin-right: var(--space-block); font: var(--type-strong); }
-.el-election > summary span { display: block; margin: var(--space-line) 0 0 var(--space-block); font: var(--type-metadata); color: var(--ink-soft); }
-.el-election-body { padding: 0 0 var(--space-block); }
+/* An election opens in place: its kind, then the date and who won. */
+.el-election-head { display: grid; min-width: 0; }
 .el-election-meta { margin: 0 0 var(--space-tight); font: var(--type-fine); color: var(--ink-soft); }
 .el-table-scroll { overflow-x: auto; }
 .el-election table { width: 100%; border-collapse: collapse; font: var(--type-metadata); }
@@ -5266,30 +5272,14 @@ a.bill-division-q:hover { color: var(--bronze-ink); }
 .el-election th:first-child { text-align: left; min-width: 160px; font-weight: var(--weight-strong); }
 .el-election td { font-variant-numeric: tabular-nums; }
 .el-election small { display: block; font: var(--type-fine); color: var(--ink-soft); }
-.el-service li { padding: 0 0 var(--space-block) var(--space-block); margin-left: var(--space-line); border-left: var(--border-hairline) solid var(--divider-default); }
-.el-service li > div { margin-bottom: var(--space-line); font: var(--type-fine); color: var(--ink-soft); }
-.el-service li > strong { font: var(--type-strong); }
-.el-service li > span { margin-left: var(--space-tight); font: var(--type-metadata); }
-/* Census: population is the block's one figure; the rest reads as a list. */
-.el-figure { margin: 0 0 var(--space-block); display: flex; flex-wrap: wrap; align-items: baseline; gap: var(--space-tight); }
-.el-figure b { font: var(--type-display); font-variant-numeric: tabular-nums; }
-.el-figure span { font: var(--type-metadata); color: var(--ink-soft); }
-.el-demographics { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 var(--space-group); margin: 0; max-width: 46rem; }
-.el-demographics > div { display: flex; justify-content: space-between; gap: var(--space-block); padding: var(--space-tight) 0; border-top: var(--border-hairline) solid var(--divider-subtle); }
-.el-demographics dt { font: var(--type-metadata); color: var(--ink-soft); }
-.el-demographics dd { margin: 0; font: var(--type-strong); font-variant-numeric: tabular-nums; text-align: right; }
-.el-related { margin: 0; padding-left: var(--sp-20); font: var(--type-body); }
-.el-related li { margin: var(--space-tight) 0; }
-.el-empty { margin: 0; font: var(--type-body); color: var(--ink-soft); }
-.el-id { overflow-wrap: anywhere; font: var(--type-fine); }
-@media (max-width: 650px) {
-  .el-directory-row { grid-template-columns: var(--size-portrait-row) minmax(0, 1fr); gap: var(--space-line) var(--space-heading); }
-  .el-directory-row > .el-holders, .el-directory-row > .el-meta { grid-column: 2; }
-  .el-intro { grid-template-columns: 1fr; }
-  .el-intro aside { max-width: 360px; }
-  .el-demographics { grid-template-columns: 1fr; }
-  .el-election > summary time { min-width: 7rem; }
-}
+.el-service, .el-related { max-width: var(--size-readable); }
+.el-timeline { max-width: 52rem; }
+#subject-body a.ui-byline-name { text-decoration: none; }
+#subject-body a.ui-byline-name:hover { color: var(--bronze-ink); text-decoration: underline; text-decoration-color: var(--bronze-rule); }
+/* The census: four columns of key and value on a wide screen, two on a phone. */
+.el-demographics { max-width: 52rem; font-variant-numeric: tabular-nums; }
+@media (min-width: 701px) { .el-demographics { grid-template-columns: repeat(2, max-content minmax(0, 1fr)); } }
+@media (max-width: 700px) { .el-demographics { grid-template-columns: minmax(0, 1fr) max-content; } }
 
 
 /* One page-title role, including older routes that use an h2 for their title. */

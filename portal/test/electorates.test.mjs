@@ -118,7 +118,7 @@ test('an electorate page has one visible title and says relation years in words'
   const entry = index.electorates.find((e) => e.name === 'Farrer');
   const data = JSON.parse(readFileSync(publicFile(entry.detail_url)));
   const html = profileHTML({ ...data, relations: [{ related: { slug: 'x', name: 'Elsewhere', chamber: 'senate' }, vintage: '2026 source configuration' }, { related: { slug: 'y', name: 'Other', chamber: 'senate' }, vintage: '2025' }] });
-  assert.match(html, /^<div class="subject-head"><h1 id="subject-title" tabindex="-1">Farrer<\/h1>/);
+  assert.match(html, /^<div class="ui-page-head el-head"><h1 id="subject-title" tabindex="-1">Farrer<\/h1>/);
   assert.doesNotMatch(html, /source configuration/);
   assert.match(html, />Elsewhere<\/a> · Senate · as at 2026<\/li>/);
   assert.match(html, />Other<\/a> · Senate · as at 2025<\/li>/);

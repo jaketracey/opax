@@ -5392,7 +5392,8 @@ async function openSubject(kind, name, manageFocus, params = new URLSearchParams
       const module = await loadElectorateModule();
       if (currentSubjectKey !== key) return;
       await module.renderProfile({ body, slug: name, on: params.get("asof") || "",
-        isActive: () => currentSubjectKey === key, setCrumbs, goRoute, manageFocus });
+        isActive: () => currentSubjectKey === key, setCrumbs, goRoute, manageFocus,
+        loadPhotos: () => loadPhotoMap().then(() => photoUrlFor) });
     } catch {
       if (currentSubjectKey === key) body.innerHTML = `<h1 id="subject-title" tabindex="-1">Electorate</h1><p>The electorate's record could not load just now. <a href="${esc(location.pathname + location.search)}">Try again</a></p>`;
     }
@@ -6669,7 +6670,7 @@ const DIRECTORY_KINDS = {
 };
 let electorateModulePromise;
 function loadElectorateModule() {
-  return electorateModulePromise ??= import("./electorates.js?v=f60dff0a4b").catch((e) => { electorateModulePromise = null; throw e; });
+  return electorateModulePromise ??= import("./electorates.js?v=4082917e43").catch((e) => { electorateModulePromise = null; throw e; });
 }
 const DIR_CHUNK = 60;
 
