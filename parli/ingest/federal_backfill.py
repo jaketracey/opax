@@ -5,14 +5,17 @@ separate staging file. KB sync is opt-in and uses arag_sync's mapper, exclusions
 worker pool and checkpoint. Occupied days never enter the modern load directory.
 """
 from collections import Counter, defaultdict
-from contextlib import redirect_stdout
+from contextlib import redirect_stdout, contextmanager, ExitStack
+import fcntl
 from datetime import date, datetime, timezone
 import hashlib
 import json
+import os
 from pathlib import Path
 import re
 import sqlite3
 import time
+import uuid
 import xml.etree.ElementTree as ET
 
 from . import arag_sync as sync
@@ -22,6 +25,46 @@ from .speech_reconciliation import SpeechReconciler
 from .speeches import load_modern_jsonl
 
 ATTRIBUTION = 'Commonwealth of Australia parliamentary Hansard; XML supplied by OpenAustralia.org.au.'
+
+
+def lock_directory():
+    return Path.home() / '.cache/autoresearch/pipeline'
+
+
+@contextmanager
+def owner_locks():
+    """Same inodes/order as the shell owners; nonblocking, held until all work ends."""
+    directory = lock_directory()
+    directory.mkdir(parents=True, exist_ok=True)
+    with ExitStack() as stack:
+        for name in ('nightly.lock', 'daily_refresh.lock'):
+            lock = stack.enter_context((directory / name).open('a'))
+            try:
+                fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
+            except BlockingIOError:
+                raise ValueError(f'owner lock held: {name}; backfill refused') from None
+        yield
+
+
+def ownership_schema(db):
+    db.executescript('''CREATE TABLE IF NOT EXISTS oa_backfill_runs (
+        run_id TEXT PRIMARY KEY, start TEXT NOT NULL, end TEXT NOT NULL, cap_usd REAL NOT NULL);
+        CREATE TABLE IF NOT EXISTS oa_backfill_owned (
+        run_id TEXT NOT NULL REFERENCES oa_backfill_runs(run_id),
+        speech_id INTEGER PRIMARY KEY REFERENCES speeches(speech_id), gid TEXT,
+        chamber TEXT NOT NULL, date TEXT NOT NULL);
+        CREATE TABLE IF NOT EXISTS oa_backfill_days (run_id TEXT NOT NULL, chamber TEXT NOT NULL,
+        date TEXT NOT NULL, parsed TEXT NOT NULL, issues TEXT NOT NULL, receipt TEXT,
+        PRIMARY KEY(run_id,chamber,date));
+        CREATE INDEX IF NOT EXISTS idx_oa_backfill_owned_run ON oa_backfill_owned(run_id);''')
+
+
+def owned_ids(db, run):
+    """Only INSERT ownership, committed in the same transaction as the speech."""
+    rows = db.execute('SELECT o.speech_id FROM oa_backfill_owned o JOIN speeches s '
+        'ON s.speech_id=o.speech_id WHERE o.run_id=? AND o.chamber=s.chamber AND o.date=s.date '
+        'AND o.gid IS s.gid AND s.enrichment_run_id=? ORDER BY o.speech_id', (run, run)).fetchall()
+    return [r[0] for r in rows]
 
 
 def discover_days(db, available, start, end, max_days):
@@ -152,9 +195,11 @@ def partial_inventory(db, people, archive, held):
     return result
 
 
-def summarize(db, baseline, start, end, parsed, loader, issues, stage, rate):
+def summarize(db, baseline, start, end, parsed, loader, issues, stage, rate, inserted_ids):
     """Measure exactly the rows selected by the production sync specification."""
     db.row_factory = sqlite3.Row
+    db.execute('CREATE TEMP TABLE backfill_inserted_ids (speech_id INTEGER PRIMARY KEY)')
+    db.executemany('INSERT INTO backfill_inserted_ids VALUES (?)', ((sid,) for sid in inserted_ids))
     sync.prepare_dedupe(db, start, baseline)
     counters = defaultdict(Counter)
     for item in parsed:
@@ -175,7 +220,8 @@ def summarize(db, baseline, start, end, parsed, loader, issues, stage, rate):
     payload_file = stage / 'kb-payloads.jsonl'
     scope = []
     with payload_file.open('w', encoding='utf-8') as out:
-        for row in db.execute('SELECT * FROM speeches WHERE speech_id>? ORDER BY speech_id', (baseline,)):
+        for row in db.execute('SELECT s.* FROM speeches s JOIN temp.backfill_inserted_ids i '
+                              'ON i.speech_id=s.speech_id ORDER BY s.speech_id'):
             c = counters[(row['date'][:4], row['chamber'])]
             if len(row['text']) < sync.MIN_SPEECH_CHARS:
                 c['excluded_kb_short'] += 1
@@ -225,8 +271,8 @@ def summarize(db, baseline, start, end, parsed, loader, issues, stage, rate):
             'needs_summaries': docs, 'needs_topic_labels': docs}, scope
 
 
-def checkpoint_scope(db_path, state_path, start, end, gids=()):
-    """Record source GIDs before the first load commit, so interrupted loads resume."""
+def checkpoint_scope(db_path, state_path, start, end, run_id=None, max_usd=40):
+    """The JSON checkpoint identifies a run; SQLite insertion ownership defines scope."""
     path = Path(state_path).expanduser().resolve()
     if path == sync.STATE_PATH.resolve():
         raise ValueError('backfill must use a separate sync-state, not the nightly checkpoint')
@@ -234,11 +280,16 @@ def checkpoint_scope(db_path, state_path, start, end, gids=()):
     previous = state.get('backfill', {})
     if not previous and state.get('tables'):
         raise ValueError('existing sync-state has no backfill scope; use a new dedicated file')
+    if previous and previous.get('version') != 2:
+        raise ValueError('legacy GID checkpoint has no accepted ownership; use a new dedicated file')
     db_path = str(Path(db_path).expanduser().resolve())
     if previous and (previous['db'], previous['start'], previous['end']) != (db_path, start, end):
         raise ValueError('sync-state belongs to a different database or date range')
+    if previous and previous['max_usd'] != max_usd:
+        raise ValueError('enrichment cap cannot change when a run is resumed')
     state['backfill'] = previous | {'db':db_path, 'start':start, 'end':end,
-        'scope_gids':sorted(set(gids) | set(previous.get('scope_gids', [])))}
+        'version':2, 'run_id':previous.get('run_id') or run_id or uuid.uuid4().hex,
+        'max_usd':max_usd}
     xml.atomic(path, json.dumps(state, indent=1))
     return state
 
@@ -248,21 +299,50 @@ def assert_kb_owner():
         raise ValueError('desktop cutover marker present: run the KB push on the nightly KB owner')
 
 
+def assert_enrichment_cap_ready():
+    """Read-only capability probe; refuse loads until discovery enforces the cap."""
+    from parli.arag import load_dotenv, _request
+    load_dotenv(Path.home() / 'opax' / '.env')
+    url, token = os.environ.get('OPAX_ENRICH_URL',''), os.environ.get('ENRICH_ADMIN_TOKEN','')
+    if not url.startswith('https://') or len(token) < 16:
+        raise ValueError('OPAX_ENRICH_URL and ENRICH_ADMIN_TOKEN are required for cap readiness')
+    result = _request('GET', url.rstrip('/') + '/status', {'Authorization':'Bearer '+token})
+    if 'enrichment-run-cap-v1' not in (result or {}).get('capabilities',[]):
+        raise ValueError('enrichment Worker/migration does not enforce run caps; load refused')
+
+
 def push(db_path, ids, state_path, start, end):
     """Use existing checkpointed sync, with a durable bounded row scope."""
     from parli.arag import load_dotenv, AragConfig, KbClient
     assert_kb_owner()
+    assert_enrichment_cap_ready()
     path = Path(state_path).expanduser().resolve()
-    state = checkpoint_scope(db_path, state_path, start, end)
+    saved = json.loads(path.read_text())
+    state = checkpoint_scope(db_path, state_path, start, end, max_usd=saved['backfill']['max_usd'])
     previous = state.get('backfill', {})
     db_path = str(Path(db_path).expanduser().resolve())
-    # Recover rows committed before an interrupted load reached its report/push.
+    # Global GID provenance and JSON IDs are NEVER load ownership.
     with xml.read_only(db_path) as db:
-        db.execute('CREATE TEMP TABLE backfill_gids (gid TEXT PRIMARY KEY)')
-        db.executemany('INSERT INTO backfill_gids VALUES (?)', ((gid,) for gid in previous.get('scope_gids', [])))
-        ids = list(ids) + [r[0] for r in db.execute(
-            'SELECT p.speech_id FROM oa_speech_provenance p JOIN temp.backfill_gids g ON g.gid=p.gid')]
-    ids = sorted(set(ids) | set(previous.get('speech_ids', [])))
+        registry = db.execute('SELECT start,end,cap_usd FROM oa_backfill_runs WHERE run_id=?',
+                              (previous['run_id'],)).fetchone()
+        if not registry or tuple(registry) != (start,end,previous['max_usd']):
+            raise ValueError('checkpoint does not match durable accepted load ownership')
+        owned = set(owned_ids(db, previous['run_id']))
+        if (set(ids) | set(previous.get('speech_ids', []))) - owned:
+            raise ValueError('saved IDs are outside accepted backfill insertion ownership')
+        db.row_factory = sqlite3.Row
+        db.execute('CREATE TEMP TABLE backfill_ids (speech_id INTEGER PRIMARY KEY)')
+        db.executemany('INSERT INTO backfill_ids VALUES (?)', ((sid,) for sid in owned))
+        sync.prepare_dedupe(db, start, min(owned) - 1 if owned else 0)
+        select = sync.TABLES['speeches']['select'].format(since=start).replace('WHERE speech_id > ?',
+            'WHERE speech_id IN (SELECT speech_id FROM temp.backfill_ids) AND speech_id > ?')
+        ids = [r['speech_id'] for r in db.execute(select, (0,len(owned)))]
+    eligible = {f'speech-{sid}' for sid in ids}
+    if set(state['tables']) - {'speeches'} or set(state['tables'].get('speeches',{}).get('failed',{})) - eligible:
+        raise ValueError('failed retries are outside eligible accepted insertion ownership')
+    tstate = state['tables'].get('speeches',{})
+    planned = len({sid for sid in ids if sid > tstate.get('after',0)} |
+                  {int(slug.rsplit('-',1)[1]) for slug in tstate.get('failed',{})})
     state['backfill'] = previous | {'db': db_path, 'start': start, 'end': end, 'speech_ids': ids}
     old = sync.STATE_PATH
     sync.STATE_PATH = path
@@ -276,10 +356,14 @@ def push(db_path, ids, state_path, start, end):
             db.row_factory = sqlite3.Row
             db.execute('CREATE TEMP TABLE backfill_ids (speech_id INTEGER PRIMARY KEY)')
             db.executemany('INSERT INTO backfill_ids VALUES (?)', ((sid,) for sid in ids))
+            db.execute('CREATE TEMP TABLE backfill_retried (speech_id INTEGER PRIMARY KEY)')
+            db.executemany('INSERT INTO backfill_retried VALUES (?)',
+                ((int(slug.rsplit('-',1)[1]),) for slug in state['tables'].get('speeches',{}).get('failed',{})))
             sync.prepare_dedupe(db, start, min(ids) - 1 if ids else 0)
             spec = dict(sync.TABLES['speeches'])
             spec['select'] = spec['select'].replace('WHERE speech_id > ?',
-                'WHERE speech_id IN (SELECT speech_id FROM temp.backfill_ids) AND speech_id > ?')
+                'WHERE speech_id IN (SELECT speech_id FROM temp.backfill_ids) '
+                'AND speech_id NOT IN (SELECT speech_id FROM temp.backfill_retried) AND speech_id > ?')
             kb = KbClient(config)
             # Retry failures from this scope first; do not lose them behind the cursor.
             sync.retry_failed(kb, db, state)
@@ -287,18 +371,26 @@ def push(db_path, ids, state_path, start, end):
         if state['tables'].get('speeches', {}).get('failed'):
             raise ValueError('backfill KB failures retained in checkpoint; rerun to retry')
         return {'checkpoint':str(path), 'resources_confirmed':state['tables']['speeches']['pushed'],
-                'remaining_failures':0}
+                'remaining_failures':0, 'planned_creates_this_run':planned}
     finally:
         sync.STATE_PATH = old
 
 
 def run(args):
+    with owner_locks():
+        return _run(args)
+
+
+def _run(args):
     start, end = args.start, args.end
     if not '2019-01-01' <= start <= end <= '2025-12-31':
         raise ValueError('backfill dates must be within 2019-01-01..2025-12-31')
     date.fromisoformat(start); date.fromisoformat(end)
     if not 1 <= args.max_days <= 1000 or args.ingest_docs_per_second <= 0:
         raise ValueError('max-days must be 1..1000 and ingest rate positive')
+    cap = getattr(args, 'enrichment_max_usd', 40)
+    if not 0 < cap <= 40:
+        raise ValueError('enrichment-max-usd must be positive and at most US$40')
     if args.modern_dir or args.load_divisions:
         raise ValueError('speech backfill cannot publish the nightly cache or load divisions')
     if args.apply and not args.sync_state:
@@ -307,6 +399,8 @@ def run(args):
         raise ValueError('--sync-kb requires --apply and a dedicated --sync-state')
     if args.sync_kb:
         assert_kb_owner()
+    if args.apply:
+        assert_enrichment_cap_ready()
     source = Path(args.db).expanduser().resolve()
     stage = Path(args.stage).expanduser().resolve()
     if stage == xml.DEFAULT_STAGE.resolve():
@@ -319,7 +413,10 @@ def run(args):
         raise ValueError('staging-db must be a NEW file separate from source DB')
     if args.apply:
         # Reject a wrong checkpoint BEFORE modifying the target database.
-        checkpoint_scope(source, args.sync_state, start, end)
+        state = checkpoint_scope(source, args.sync_state, start, end, max_usd=cap)
+        run_id = state['backfill']['run_id']
+    else:
+        run_id = uuid.uuid4().hex
     archive = Archive(stage, args.cache_dir, args.offline)
     began = time.monotonic()
     with xml.read_only(source) as original:
@@ -335,29 +432,45 @@ def run(args):
     # A new run directory prevents stale JSONL entering a changed selection.
     modern = modern / datetime.now(timezone.utc).strftime('%Y%m%dT%H%M%S%fZ')
     modern.mkdir(parents=True)
-    parsed, issues, scope_gids = [], [], []
+    parsed, issues = [], []
     for item in missing:
         house, day = item['chamber'], item['date']
         raw = archive.get(f'raw/{xml.FOLDERS[house]}/{day}.xml')
         records, _, _, bad = xml.parse_day(raw, house, day, people, {})
         for r in records:
             r['source_attribution'] = ATTRIBUTION
-            if r.get('gid'):
-                scope_gids.append(r['gid'])
+            r['enrichment_run_id'], r['enrichment_max_usd'] = run_id, cap
         issues.extend(i | {'date':day, 'chamber':house} for i in bad)
         parsed.append(item | {'xml_turns':len(records) + sum(i['kind'] == 'speech-identity' for i in bad),
             'sha256':hashlib.sha256(raw).hexdigest(), 'bytes':len(raw)})
         xml.atomic(modern / f'{day}_{house}.jsonl',
                    ''.join(json.dumps(r, ensure_ascii=False) + '\n' for r in records))
-    if args.apply:
-        checkpoint_scope(source, args.sync_state, start, end, scope_gids)
     with sqlite3.connect(target) as db, (stage / 'loader.log').open('w') as log, redirect_stdout(log):
+        ownership_schema(db)
+        db.execute('INSERT OR IGNORE INTO oa_backfill_runs VALUES (?,?,?,?)', (run_id,start,end,cap))
+        if tuple(db.execute('SELECT start,end,cap_usd FROM oa_backfill_runs WHERE run_id=?',
+                            (run_id,)).fetchone()) != (start,end,cap):
+            raise ValueError('SQLite load ownership belongs to another run configuration')
+        for item in parsed:
+            day_issues = [i for i in issues if (i['chamber'],i['date']) == (item['chamber'],item['date'])]
+            db.execute('INSERT OR IGNORE INTO oa_backfill_days (run_id,chamber,date,parsed,issues) '
+                       'VALUES (?,?,?,?,?)', (run_id,item['chamber'],item['date'],json.dumps(item),json.dumps(day_issues)))
+        db.commit()
         baseline = db.execute('SELECT COALESCE(MAX(speech_id),0) FROM speeches').fetchone()[0]
         loader = []
         load_modern_jsonl(db, set(), since=start, until=end, report=loader,
-                          modern_dir=modern, missing_days_only=True)
+                          modern_dir=modern, missing_days_only=True, backfill_run=run_id)
+        inserted = [sid for entry in loader for sid in entry.get('inserted_ids', [])]
+        accepted = owned_ids(db, run_id)
+        if set(inserted) - set(accepted):
+            raise ValueError('loader receipt disagrees with durable inserted ownership')
+        history = db.execute('SELECT parsed,issues,receipt FROM oa_backfill_days WHERE run_id=? '
+                             'ORDER BY date,chamber', (run_id,)).fetchall()
+        parsed = [json.loads(p) for p,_,_ in history]
+        issues = [i for _,bad,_ in history for i in json.loads(bad)]
+        loader = [json.loads(receipt) for _,_,receipt in history if receipt]
         receipt, ids = summarize(db, baseline, start, end, parsed, loader, issues, stage,
-                                 args.ingest_docs_per_second)
+                                 args.ingest_docs_per_second, accepted)
         # Partial-day inspection uses only the separate staging DB, never --apply.
         partials = partial_inventory(db, people, archive, held) if not args.apply else None
     for filename, data in [('parsed-days.json',parsed), ('identity-issues.json',issues),
@@ -372,8 +485,11 @@ def run(args):
         'source_cache_hits':archive.hits, 'source_gets':archive.gets,
         'elapsed_seconds':time.monotonic() - began, 'kb_writes':None if args.sync_kb else 0,
         'kb_sync_requested':args.sync_kb, 'enrichment_queued':0})
+    receipt['enrichment_budget'] = {'run_id':run_id, 'max_usd':cap, 'enforcement':'opax-enrich durable run reservations plus daily neuron guard'}
     xml.atomic(stage / 'report.json', json.dumps(receipt, indent=2))
     if args.sync_kb:
         receipt['kb_sync'] = push(source, ids, args.sync_state, start, end)
+        receipt['eligible_documents_in_run'] = receipt['new_documents']
+        receipt['kb_planned_creates_this_run'] = receipt['kb_sync']['planned_creates_this_run']
         xml.atomic(stage / 'report.json', json.dumps(receipt, indent=2))
     return {k:v for k,v in receipt.items() if k != 'counts'}

@@ -4,6 +4,7 @@ import hashlib
 import json
 from pathlib import Path
 import sqlite3
+import fcntl
 
 import pytest
 
@@ -11,6 +12,13 @@ from parli.ingest import federal_backfill as B, openaustralia_xml as X, arag_syn
 from parli.ingest.speeches import load_modern_jsonl
 
 FIXTURES = Path(__file__).parent / 'fixtures/openaustralia'
+CAP_READINESS = B.assert_enrichment_cap_ready
+
+
+@pytest.fixture(autouse=True)
+def fixture_locks(tmp_path, monkeypatch):
+    monkeypatch.setattr(B, 'lock_directory', lambda:tmp_path/'owner-locks')
+    monkeypatch.setattr(B, 'assert_enrichment_cap_ready',lambda:None)
 
 
 def source(path):
@@ -148,6 +156,8 @@ def test_bounded_checkpoint_sync_retries_and_resumes_without_outside_rows(tmp_pa
     monkeypatch.setattr(A.AragConfig, 'from_env', lambda: Namespace(kb_configured=True))
     monkeypatch.setattr(A, 'KbClient', lambda cfg:KB())
     state = stage/'checkpoint.json'
+    run_id = json.loads((stage/'report.json').read_text())['enrichment_budget']['run_id']
+    B.checkpoint_scope(target,state,a.start,a.end,run_id=run_id)
     nightly_before = S.STATE_PATH
     with pytest.raises(ValueError, match='failures retained'):
         B.push(target, ids, state, a.start, a.end)
@@ -161,7 +171,7 @@ def test_bounded_checkpoint_sync_retries_and_resumes_without_outside_rows(tmp_pa
     assert len(attempted) == 3
 
 
-def test_checkpoint_recovers_interrupted_load_from_source_gids(tmp_path, monkeypatch):
+def test_checkpoint_recovers_interrupted_load_from_accepted_insertions(tmp_path, monkeypatch):
     import parli.arag as A
     monkeypatch.setattr(B,'assert_kb_owner',lambda:None)
     a = args(tmp_path)
@@ -169,9 +179,9 @@ def test_checkpoint_recovers_interrupted_load_from_source_gids(tmp_path, monkeyp
     stage = Path(a.stage)
     target = stage/'staging.sqlite'
     documents = [json.loads(l) for l in (stage/'kb-payloads.jsonl').read_text().splitlines()]
-    gids = [d['extra']['metadata']['gid'] for d in documents]
     state = stage/'scope-only.json'
-    B.checkpoint_scope(target, state, a.start, a.end, gids)
+    run_id = json.loads((stage/'report.json').read_text())['enrichment_budget']['run_id']
+    B.checkpoint_scope(target, state, a.start, a.end, run_id=run_id)
     # No saved row IDs: emulate termination after loader commit, before report/sync.
     captured = []
     class KB:
@@ -201,13 +211,15 @@ def test_apply_only_on_invented_fixture_records_scope_and_skips_partial_day(tmp_
     result = B.run(a)
     assert result['new_documents'] == 2 and result['kb_writes'] == 0
     state = json.loads(Path(a.sync_state).read_text())
-    assert len(state['backfill']['scope_gids']) == 5
+    assert 'scope_gids' not in state['backfill']
+    with X.read_only(a.db) as db:
+        assert len(B.owned_ids(db,state['backfill']['run_id'])) == 4
     with X.read_only(a.db) as db:
         assert db.execute("SELECT COUNT(*) FROM speeches WHERE date='2024-02-06'").fetchone()[0] == 1
         assert db.execute('SELECT text FROM speeches WHERE speech_id=41').fetchone()[0] == 'An existing permanent citation'
     again = B.run(a)
-    assert again['selected_missing_days'] == 0 and again['new_documents'] == 0
-    assert json.loads(Path(a.sync_state).read_text())['backfill']['scope_gids'] == state['backfill']['scope_gids']
+    assert again['selected_missing_days'] == 0 and again['new_documents'] == 2
+    assert json.loads(Path(a.sync_state).read_text())['backfill']['run_id'] == state['backfill']['run_id']
 
 
 def test_desktop_cutover_refuses_kb_write_before_checkpoint_or_load(tmp_path, monkeypatch):
@@ -221,3 +233,122 @@ def test_desktop_cutover_refuses_kb_write_before_checkpoint_or_load(tmp_path, mo
     before = Path(a.db).read_bytes()
     with pytest.raises(ValueError, match='nightly KB owner'): B.run(a)
     assert Path(a.db).read_bytes() == before and not Path(a.sync_state).exists()
+
+
+@pytest.mark.parametrize('name',['nightly.lock','daily_refresh.lock'])
+def test_either_owner_lock_refuses_before_discovery_and_releases_other_lock(tmp_path,monkeypatch,name):
+    a=args(tmp_path); before=Path(a.db).read_bytes()
+    directory=B.lock_directory();directory.mkdir()
+    monkeypatch.setattr(B.Archive,'dates',lambda *a:pytest.fail('locked operation must not discover'))
+    with (directory/name).open('a') as lock:
+        fcntl.flock(lock,fcntl.LOCK_EX|fcntl.LOCK_NB)
+        with pytest.raises(ValueError,match='owner lock held'):B.run(a)
+    assert Path(a.db).read_bytes()==before and not Path(a.stage).exists()
+    with B.owner_locks():pass
+
+
+def test_both_locks_cover_discovery_load_and_kb_sync(tmp_path,monkeypatch):
+    import parli.arag as A
+    a=args(tmp_path);a.apply=a.sync_kb=True;a.sync_state=str(tmp_path/'state.json')
+    def locked():
+        for name in ('nightly.lock','daily_refresh.lock'):
+            with (B.lock_directory()/name).open('a') as lock:
+                with pytest.raises(BlockingIOError):fcntl.flock(lock,fcntl.LOCK_EX|fcntl.LOCK_NB)
+    real_dates=B.Archive.dates;real_load=B.load_modern_jsonl
+    def discover(self):locked();return real_dates(self)
+    def load(*args,**kwargs):locked();return real_load(*args,**kwargs)
+    class KB:
+        def create_resource(self,body):locked()
+    monkeypatch.setattr(B.Archive,'dates',discover)
+    monkeypatch.setattr(B,'load_modern_jsonl',load)
+    monkeypatch.setattr(B,'assert_kb_owner',lambda:None)
+    monkeypatch.setattr(A,'load_dotenv',lambda *a:None)
+    monkeypatch.setattr(A.AragConfig,'from_env',lambda:Namespace(kb_configured=True))
+    monkeypatch.setattr(A,'KbClient',lambda cfg:KB())
+    assert B.run(a)['new_documents']==2
+    with B.owner_locks():pass
+
+
+def test_payload_uses_only_inserted_ids_despite_a_noncooperating_writer(tmp_path,monkeypatch):
+    a=args(tmp_path);real=B.load_modern_jsonl;rogue=[]
+    def load(db,*args,**kwargs):
+        count=real(db,*args,**kwargs)
+        rogue.append(db.execute("INSERT INTO speeches(person_id,speaker_name,party,chamber,date,text,source) "
+            "VALUES ('101','Alex Example','Labor','senate','2024-02-06',?,'openaustralia')",('Unrelated writer content '*30,)).lastrowid)
+        db.commit();return count
+    monkeypatch.setattr(B,'load_modern_jsonl',load)
+    r=B.run(a)
+    docs=[json.loads(l) for l in (Path(a.stage)/'kb-payloads.jsonl').read_text().splitlines()]
+    assert r['new_documents']==len(docs)==2
+    assert not set(rogue)&{d['extra']['metadata']['speech_id'] for d in docs}
+
+
+def test_rejected_global_gid_cannot_enter_recovery_saved_ids_or_failed_retries(tmp_path,monkeypatch):
+    import parli.arag as A
+    from parli.ingest.speeches import ensure_xml_columns
+    a=args(tmp_path);a.apply=True;a.sync_state=str(tmp_path/'state.json')
+    gid='uk.org.publicwhip/lords/2019-02-12.1.1'
+    with sqlite3.connect(a.db) as db:
+        ensure_xml_columns(db)
+        db.execute('CREATE TABLE oa_speech_provenance(gid TEXT PRIMARY KEY,speech_id INTEGER NOT NULL)')
+        db.execute('INSERT INTO oa_speech_provenance VALUES (?,41)',(gid,))
+        db.execute('UPDATE speeches SET gid=?,text=? WHERE speech_id=41',(gid,'Existing occupied-day speech '*30))
+    r=B.run(a)
+    log=json.loads((Path(a.stage)/'loader-days.json').read_text())
+    assert any(u['reason']=='gid-chamber-day-conflict' for d in log for u in d['unmatched'])
+    assert r['new_documents']==1
+    captured=[]
+    class KB:
+        def create_resource(self,body):captured.append(body['slug'])
+    monkeypatch.setattr(B,'assert_kb_owner',lambda:None)
+    monkeypatch.setattr(A,'load_dotenv',lambda *a:None)
+    monkeypatch.setattr(A.AragConfig,'from_env',lambda:Namespace(kb_configured=True))
+    monkeypatch.setattr(A,'KbClient',lambda cfg:KB())
+    path=Path(a.sync_state);valid=json.loads(path.read_text())
+    for poison in ('speech_ids','failed'):
+        bad=json.loads(json.dumps(valid))
+        if poison=='speech_ids':bad['backfill']['speech_ids']=[41]
+        else:bad['tables']={'speeches':{'after':41,'pushed':0,'failed':{'speech-41':'503'}}}
+        path.write_text(json.dumps(bad))
+        with pytest.raises(ValueError,match='outside'):B.push(a.db,[],path,a.start,a.end)
+        assert captured==[]
+    path.write_text(json.dumps(valid))
+    B.push(a.db,[],path,a.start,a.end)
+    assert len(captured)==r['new_documents'] and 'speech-41' not in captured
+
+
+def test_insertion_ownership_rolls_back_with_the_uncommitted_speech(tmp_path,monkeypatch):
+    from parli.ingest.speech_reconciliation import SpeechReconciler
+    a=args(tmp_path);a.apply=True;a.sync_state=str(tmp_path/'state.json')
+    original=SpeechReconciler.remember;calls=[]
+    def broken(self,gid,sid):
+        original(self,gid,sid);calls.append(sid)
+        if len(calls)==2:raise ValueError('fixture interruption before day commit')
+    monkeypatch.setattr(SpeechReconciler,'remember',broken)
+    with pytest.raises(ValueError,match='interruption'):B.run(a)
+    with X.read_only(a.db) as db:
+        assert db.execute('SELECT COUNT(*) FROM oa_backfill_owned').fetchone()[0]==0
+        assert db.execute('SELECT COUNT(*) FROM speeches').fetchone()[0]==1
+    monkeypatch.setattr(SpeechReconciler,'remember',original)
+    assert B.run(a)['new_documents']==2
+
+
+def test_load_requires_a_cap_aware_worker_before_any_database_write(tmp_path,monkeypatch):
+    import parli.arag as A
+    a=args(tmp_path);a.apply=True;a.sync_state=str(tmp_path/'state.json')
+    before=Path(a.db).read_bytes();calls=[]
+    monkeypatch.setattr(B,'assert_enrichment_cap_ready',CAP_READINESS)
+    monkeypatch.setattr(A,'load_dotenv',lambda *a:None)
+    monkeypatch.setenv('OPAX_ENRICH_URL','https://fixture.invalid')
+    monkeypatch.setenv('ENRICH_ADMIN_TOKEN','fixture-admin-token-invented')
+    def old_worker(method,url,headers):calls.append((method,url));return {'capabilities':[]}
+    monkeypatch.setattr(A,'_request',old_worker)
+    with pytest.raises(ValueError,match='load refused'):B.run(a)
+    assert Path(a.db).read_bytes()==before and not Path(a.sync_state).exists()
+    assert calls==[('GET','https://fixture.invalid/status')]
+
+
+@pytest.mark.parametrize('cap',[0,-1,41,float('nan')])
+def test_enrichment_ceiling_is_positive_and_cannot_exceed_forty(tmp_path,cap):
+    a=args(tmp_path);a.enrichment_max_usd=cap
+    with pytest.raises(ValueError,match='at most US'):B.run(a)

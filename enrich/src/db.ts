@@ -1,6 +1,7 @@
 // D1 access: the queue, state, spend and error tables (migrations/0001_init.sql).
 // Times are unix milliseconds. Every function takes the database so the tests can
 // run it against a node:sqlite shim.
+import { admit, type AdmissionBudget } from './run-budget.ts'
 
 export type TaskName = 'speech_summary' | 'speech_topics' | 'release_summary'
 export type RowStatus = 'pending' | 'claimed' | 'done' | 'quarantined'
@@ -81,6 +82,7 @@ export interface NewWork {
   /** The resource's `created` time in the box (unix ms), when known. */
   sourceCreated?: number | null
   historicHold?: boolean
+  runBudget?: AdmissionBudget
 }
 
 /** Completed/terminal rows and explicit releases are never held. Clear unfinished
@@ -97,6 +99,13 @@ export function holdHistoricStatement(db: D1Database, rids: readonly string[], n
 /** INSERT OR IGNORE on (rid, task): the queue de-duplicates. Returns how many rows were new. */
 export async function enqueue(db: D1Database, work: readonly NewWork[], now: number): Promise<number> {
   if (work.length === 0) return 0
+  const bounded = work.filter(w => w.runBudget)
+  let admitted=0
+  for (const rid of new Set(bounded.map(w => w.rid))) {
+    const group=bounded.filter(w => w.rid===rid)
+    admitted += await admit(db,group,group[0].runBudget!,now)
+  }
+  if (bounded.length) return admitted + await enqueue(db,work.filter(w => !w.runBudget),now)
   const statements: D1PreparedStatement[] = []
   const inserts = new Set<D1PreparedStatement>()
   for (let i = 0; i < work.length; i += ROWS_PER_INSERT) {

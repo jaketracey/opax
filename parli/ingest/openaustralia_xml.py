@@ -381,6 +381,8 @@ def main():
     mode.add_argument('--dry-run', action='store_true', help='explicit staging-only speech rehearsal (the default)')
     ap.add_argument('--sync-kb', action='store_true', help='checkpointed KB push after --apply (requires a go)')
     ap.add_argument('--sync-state', help='checkpoint file for this bounded KB push')
+    ap.add_argument('--enrichment-max-usd', type=float, default=40,
+                    help='durable per-run enrichment hard cap, USD (positive, at most 40)')
     ap.add_argument('--ingest-docs-per-second', type=float, default=5.0,
                     help='planning assumption; no live write benchmark is run')
     args = ap.parse_args()

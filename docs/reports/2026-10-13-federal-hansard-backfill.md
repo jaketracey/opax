@@ -101,18 +101,18 @@ Transport is the public [House XML archive](https://data.openaustralia.org.au/sc
 
 The first rehearsal fetched live directory listings and the three member mappings. The 2019–2025 source listings exactly match the existing cached sets: **381 House days and 326 Senate days**, with no absent/unlisted cache files. The restarted load used those mappings and cached XML offline. The initial staging attempt was interrupted after exposing missing GID indexes; it had committed no new speech rows. The pristine backup was reused after checking count/max-ID equality, then original full-row equality was checked after loading. Raw file hashes and lengths are in `parsed-days.json`.
 
-The loader rechecks zero-row status while holding a SQLite write lock; an occupied day is skipped even if it appeared after discovery. Citation/GID lookups are indexed. Backfill GIDs are saved before applying any speech rows so an interrupted load can recover its committed rows on a later scoped KB retry. The dedicated checkpoint is rejected if it belongs to another database/date range or is the nightly checkpoint. The default dry run never loads credentials, creates a KB client, writes a checkpoint, or queues enrichment.
+The loader rechecks zero-row status while holding a SQLite write lock; an occupied day is skipped even if it appeared after discovery. Citation/GID lookups are indexed. Accepted insertion ownership is committed atomically with each speech so an interrupted load can recover only its own rows on a later scoped KB retry; global GID provenance cannot authorize publication. The dedicated checkpoint is rejected if it belongs to another database/date range or is the nightly checkpoint. The default dry run never loads credentials, creates a KB client, writes a checkpoint, or queues enrichment.
 
 **Validation: 125 Python fixture tests and 21 enrichment prompt/text/budget tests passed.** Coverage includes the invented-MP XML fixture, both chamber/source discovery gates, <50/<200/procedural exclusions, nested speakers, chair roles, retained original source links, partial-day/citation stability, interrupted-load recovery, failed KB retry, repeat-run idempotence, dedicated checkpoint validation and the desktop cutover guard. KB tests use a stub; test sockets are disabled.
 
 ## Exact command after a go
 
-Run this in the reviewed checkout on the **nightly DB/KB-owning host**, after the speaker relabel lane is idle and with the nightly writer stopped or under its existing exclusive lock. The desktop has `MIGRATED_TO_VM`; this mode honors that guard and refuses desktop KB pushes. Keep the current KB slot/config. Credentials are read from `~/opax/.env` only when `--sync-kb` is requested. Do not move the staging DB into production.
+Run this standalone in the reviewed checkout on the **nightly DB/KB-owning host**, after the speaker relabel lane is idle. The command acquires both owner locks itself and refuses an active nightly/daily writer. Do not wrap it in an already-held owner lock. The desktop has `MIGRATED_TO_VM`; this mode honors that guard and refuses desktop KB pushes. Keep the current KB slot/config. Credentials are read from `~/opax/.env` only when `--sync-kb` is requested. Do not move the staging DB into production.
 
 ```sh
 cd "$HOME/opax"
 "$HOME/opax/.venv/bin/python" -m parli.ingest.openaustralia_xml \
-  --backfill-missing-days --apply --sync-kb \
+  --backfill-missing-days --apply --sync-kb --enrichment-max-usd 40 \
   --db "$HOME/.cache/autoresearch/parli.db" \
   --start 2019-01-01 --end 2025-12-31 --max-days 1000 \
   --stage "$HOME/.cache/autoresearch/federal-backfill-2019-2025" \
@@ -120,11 +120,11 @@ cd "$HOME/opax"
   --sync-state "$HOME/.cache/autoresearch/federal-backfill-2019-2025-sync.json"
 ```
 
-Rerun the same command to recover a failed/interrupted push. The saved source GIDs recover rows from an interrupted DB load even when those days now contain rows. Confirm the owner DB’s discovery receipt before relying on the desktop’s numeric estimate; the command discovers its own current zero-row days. Production citation IDs are allocated there.
+Rerun the same command to recover a failed/interrupted push. Accepted insertion ownership is committed atomically with each speech; global GID provenance cannot authorize a retry. Enrichment admission requires the updated Worker and D1 migration 0005, verified by its authenticated read-only status endpoint before loading. Set the existing OPAX_ENRICH_URL and ENRICH_ADMIN_TOKEN in ~/opax/.env; the command changes no configuration. Confirm the owner DB’s discovery receipt before relying on the desktop’s numeric estimate; the command discovers its own current zero-row days. Production citation IDs are allocated there.
 
 ## Nightly follow-through
 
-Keep the normal 30-day acquisition. Add a **weekly bounded missing-day sweep for 2019–2025** to the owner’s existing single-writer refresh, before its normal checkpointed KB sync. The weekly step should use `--apply` with a dedicated backfill scope file and omit `--sync-kb`, allowing the normal nightly sync to push all appended rows once. Retain the source cache, GID provenance and both checkpoints across transfers.
+Keep the normal 30-day acquisition. Schedule a **standalone weekly bounded missing-day sweep for 2019–2025** outside the owner’s active refresh. It must acquire both owner locks; invoking it from an already-locked nightly will be refused. The weekly step may use `--apply` with a dedicated ownership/checkpoint file and omit `--sync-kb`, allowing the next normal nightly sync to push all appended rows once, with the durable enrichment cap metadata. Retain the source cache, GID provenance and both checkpoints across transfers.
 
 Persist and monitor zero-row days remaining, source refusals, identity holds and the occupied-day reconciliation receipt; alert on nonzero remaining days or failed ingest rather than marking a failed sweep as repaired. Export updated speech/people/search/corpus coverage through the existing nightly groups after ingest. Keep partial-day reconciliation as a separate reviewed task. The mode’s dates are deliberately pinned to 2019–2025; repairing future years outside the rolling window requires extending the reviewed bounds.
 
@@ -133,3 +133,5 @@ No nightly schedule, production data, deployment or published coverage was chang
 ## Retained staging artifacts
 
 `/home/jake/opax-staging/federal-backfill-20261013/` contains `report.json`, `discovery.json`, `parsed-days.json`, `loader-days.json`, `identity-issues.json`, `partial-days.json`, `samples.json`, `kb-payloads.jsonl`, `enrichment-cost.json`, `document-quality.json`, `live-index-validation.json`, `original-evidence-verification.json`, test logs and the staging DB. `artifact-manifest.json` seals the twelve JSON/JSONL artifacts with file sizes and SHA-256 checksums. The report and complete partial-day CSV are versioned; bulk speech payloads remain in staging.
+
+The original measurements above are retained for comparison. [The review fix report](2026-10-13-federal-hansard-backfill-fix.md) records transactional ownership, both owner locks, the US$40 hard cap and the fresh dry run. Its payload is 303,356,332 bytes after adding cap metadata; all document/exclusion counts and enrichment estimates match this report.

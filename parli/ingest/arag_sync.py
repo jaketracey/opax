@@ -242,6 +242,9 @@ def map_speech(row: sqlite3.Row) -> dict:
                    if _optional_column(row, k) is not None},
                 **({"witness_position": witness_position} if witness_position else {}),
                 **({"witness_organisation": witness_organisation} if witness_organisation else {}),
+                **({'enrichment_budget': {'run_id': _optional_column(row, 'enrichment_run_id'),
+                                         'max_usd': float(_optional_column(row, 'enrichment_max_usd'))}}
+                   if _optional_column(row, 'enrichment_run_id') else {}),
             }
         },
     }
