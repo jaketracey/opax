@@ -33,3 +33,14 @@ test('the homepage shell is read unconditionally, so its rewrite is never answer
   await pageEntry(new Request('https://opax.com.au/', { headers: { 'if-none-match': '"shell"' } }), assets);
   assert.deepEqual(seen, [null]);
 });
+
+test('every Worker-assembled page folds the deployed version into its validator', async () => {
+  const { readFile } = await import('node:fs/promises');
+  const source = await readFile(new URL('../src/index.ts', import.meta.url), 'utf8');
+  const calls = [...source.matchAll(/htmlValidator\(\[([^\]]*)\]/g)].map((m) => m[1]);
+  assert.equal(calls.length, 3, 'record/hub pages, /map and the home page');
+  for (const parts of calls) assert.match(parts, /^env\.CF_VERSION_METADATA\?\.id \?\? ''/, parts);
+  // A Worker-only change (same shell, same data) is a new validator.
+  const page = ['"shell"', 'subject', { title: 'A' }];
+  assert.notEqual(await htmlValidator(['version-a', ...page]), await htmlValidator(['version-b', ...page]));
+});

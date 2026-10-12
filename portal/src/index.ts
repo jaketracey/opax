@@ -5208,7 +5208,7 @@ async function serveSeoPage(route: SeoRoute, url: URL, request: Request, env: En
   headers.set('content-type', 'text/html; charset=utf-8')
   headers.set('x-robots-tag', noindex ? 'noindex' : 'all')
   if (meta.status === 200) {
-    const etag = await htmlValidator([shell.headers.get('etag'), route.kind, noindex, image, imageAlt, meta])
+    const etag = await htmlValidator([env.CF_VERSION_METADATA?.id ?? '', shell.headers.get('etag'), route.kind, noindex, image, imageAlt, meta])
     headers.set('etag', etag)
     const unchanged = notModified(request, etag, headers)
     if (unchanged) return unchanged
@@ -5908,7 +5908,7 @@ export default {
       const schema=JSON.stringify(buildSchemaGraph({canonical:`${SITE_ORIGIN}/map`,title:'Money map · OPAX'})).replace(/</g,'\\u003c')
       const out=new HTMLRewriter().on('div#crawl-facts',{element(el){el.setInnerContent(facts.html,{html:true})}}).on('head',{element(el){el.append(`<script type="application/ld+json" id="ld-page">${schema}</script>`,{html:true})}}).transform(shell)
       const headers=new Headers(out.headers);headers.delete('content-length')
-      if(shell.ok){const etag=await htmlValidator([shell.headers.get('etag'),facts.html,schema]);headers.set('etag',etag);const unchanged=notModified(request,etag,headers);if(unchanged)return communityResponse(unchanged)}
+      if(shell.ok){const etag=await htmlValidator([env.CF_VERSION_METADATA?.id ?? '',shell.headers.get('etag'),facts.html,schema]);headers.set('etag',etag);const unchanged=notModified(request,etag,headers);if(unchanged)return communityResponse(unchanged)}
       return communityResponse(new Response(request.method==='HEAD' ? null : out.body,{status:out.status,headers}))
     }
     const entry = await pageEntry(request, env.ASSETS)
@@ -5920,7 +5920,7 @@ export default {
         const moneyHtml=money ? money.html.replace('id="prerender"','id="prerender-money"').replace('<h1>','<h2>').replace('</h1>','</h2>') : null
         const out=new HTMLRewriter().on('div#hp-money-map',{element(el){if(moneyHtml)el.setInnerContent(moneyHtml,{html:true})}}).on('head',{element(el){el.append(`<script type="application/ld+json" id="ld-page">${schema}</script>`,{html:true})}}).transform(entry)
         const headers=new Headers(out.headers);headers.delete('content-length')
-        const etag=await htmlValidator([entry.headers.get('etag'),moneyHtml,schema]);headers.set('etag',etag)
+        const etag=await htmlValidator([env.CF_VERSION_METADATA?.id ?? '',entry.headers.get('etag'),moneyHtml,schema]);headers.set('etag',etag)
         const unchanged=notModified(request,etag,headers)
         return communityResponse(unchanged || new Response(request.method==='HEAD' ? null : out.body,{status:out.status,headers}))
       }

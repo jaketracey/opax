@@ -2,7 +2,8 @@
  * Validators for HTML the Worker assembles (a page shell rewritten with that
  * page's head and server-rendered answer). The shell asset's own ETag names the
  * unrewritten file, so it is never passed on; this one is a digest of every
- * input the rewrite used, and a revisit whose copy still matches is a 304
+ * input the rewrite used (the Worker's deployed version id among them, so new
+ * rewrite code is never answered from an old copy), and a revisit whose copy still matches is a 304
  * instead of the whole page again. Cache-Control stays max-age=0,
  * must-revalidate: the page is checked on every view, just cheaply.
  */
