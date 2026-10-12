@@ -15,6 +15,17 @@ import { resolve, extname } from 'node:path';
 import assert from 'node:assert/strict';
 import { STREAMS } from './fixtures/ask-steps-streams.mjs';
 
+// The route lane's own recorded stream (offline, synthetic counts), replayed
+// as it was sent: the UI must read the route's real frames, not only ours.
+const recorded = await readFile(fileURLToPath(new URL('../../docs/evidence/agentic-ask-route-fixture.sse', import.meta.url)), 'utf8');
+STREAMS.route = {
+  question: 'Who is making the most speeches about gambling reform?',
+  events: recorded.split('\n\n').filter((b) => b.trim()).map((block) => {
+    const event = /^event: (.+)$/m.exec(block)[1];
+    return [event, JSON.parse(/^data: (.+)$/m.exec(block)[1]), 350];
+  }),
+};
+
 const publicDir = fileURLToPath(new URL('../public/', import.meta.url));
 const output = fileURLToPath(new URL('../private/ask-steps/', import.meta.url));
 await mkdir(output, { recursive: true });
@@ -163,6 +174,22 @@ try {
       assert.ok(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), 'no sideways scroll');
       assert.deepEqual(errors, []);
       proof.push({ width, case: 'gambling', line, open: opened.rows, moved, shift: await page.evaluate(() => window.__shift) });
+      await page.close();
+    }
+    // The route's recorded frames.
+    {
+      const { page, errors } = await open(width);
+      await play(page, 'route');
+      const line = await page.textContent('#ask-steps .as-toggle');
+      const steps = STREAMS.route.events.find(([e]) => e === 'done')[1].agentic.steps;
+      assert.match(line, new RegExp(`^${steps.length} steps?`));
+      await page.click('#ask-steps .as-toggle');
+      const rows = await page.evaluate(() => [...document.querySelectorAll('#ask-steps .as-row')].map((r) => [r.querySelector('.as-text').textContent, r.dataset.state]));
+      assert.deepEqual(rows, steps.map((s) => [s.arg ? `${s.label}·, ${s.arg}` : s.label, s.state]));
+      await page.evaluate(() => scrollTo(0, document.getElementById('ask-result').getBoundingClientRect().top + scrollY - 80));
+      await page.screenshot({ path: resolve(output, `route-open-${width}.png`) });
+      assert.deepEqual(errors, []);
+      proof.push({ width, case: 'route', line, rows });
       await page.close();
     }
     // A failed lookup, an answer anyway.
