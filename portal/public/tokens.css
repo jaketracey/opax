@@ -162,6 +162,7 @@
   --weight-regular: 400;
   --weight-strong: 600;
   --weight-bold: 700;
+  --leading-none: 1;
   --leading-tight: 1.15;
   --leading-snug: 1.3;
   --leading-normal: 1.45;

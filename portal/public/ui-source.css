@@ -58,7 +58,7 @@
 /* Placed against the padding box: 24px inside the hairline, plus 20, is 44. */
 .ui-machine > summary::after { content: ""; position: absolute; inset: -10px 0; }
 .ui-machine > summary:hover, .ui-machine[open] > summary { background: color-mix(in srgb, var(--bills-ink) 14%, var(--bills-wash)); }
-.ui-machine-glyph { font-size: .875em; line-height: 1; }
+.ui-machine-glyph { font-size: .875em; line-height: var(--leading-none); }
 
 /* ---- The sheet: radius 12, raised, a hairline; the one overlay shadow when it
    floats. Text is fine print; its links are the record's bronze. */
@@ -71,7 +71,6 @@
 }
 .ui-sheet > * { margin: 0; }
 .ui-sheet p { margin: 0; }
-.ui-sheet-label { font: var(--type-label); color: var(--ink); }
 .ui-sheet-originals { display: grid; gap: var(--space-line); margin: 0; padding: 0; list-style: none; }
 .ui-sheet-originals a { display: inline-flex; align-items: center; min-height: 32px; font: var(--type-label); color: var(--ink); }
 .ui-sheet-notes { display: grid; gap: var(--space-tight); }
