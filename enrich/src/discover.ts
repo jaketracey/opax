@@ -7,6 +7,7 @@
 
 import { enqueue, getState, setState, NEW_CONTENT_PRIORITY, type NewWork, type TaskName } from './db.ts'
 import type { KbApi } from './kb.ts'
+import { isHistoricSpeech } from './historic.ts'
 
 export const DISCOVERY_KINDS: ReadonlyArray<{ kind: string; tasks: readonly TaskName[] }> = [
   { kind: 'speech', tasks: ['speech_summary', 'speech_topics'] },
@@ -34,6 +35,7 @@ export interface DiscoveryOptions {
   startIso: string
   maxPages: number
   overlapS: number
+  historicHold?: boolean
   pageSize?: number
   /** Time box for the whole discovery pass; when it runs out the walk is left partial and resumes next tick. */
   maxMs?: number
@@ -71,7 +73,20 @@ export async function discover(opts: DiscoveryOptions): Promise<DiscoveryResult>
         const got = await opts.kb.catalog(kind, sinceParam(sinceMs), page, opts.pageSize ?? 200)
         pages += 1
         result.seen[kind] += got.rows.length
-        const work: NewWork[] = got.rows.flatMap((r) => tasks.map((task) => ({ rid: r.rid, task, priority: NEW_CONTENT_PRIORITY, sourceCreated: parseCreated(r.created) })))
+        const held = new Set<string>()
+        if (opts.historicHold && kind === 'speech') {
+          // Prefer catalog metadata; if omitted, verify basic metadata before advancing.
+          // A failed/missing read leaves this page unqueued and the cursor unchanged.
+          for (let i = 0; i < got.rows.length; i += 4) {
+            await Promise.all(got.rows.slice(i, i + 4).map(async (r) => {
+              const resource = Array.isArray(r.usermetadata?.classifications) ? { usermetadata: r.usermetadata } : await opts.kb.getBasic(r.rid)
+              if (!resource) throw new Error('discovery metadata unavailable')
+              if (isHistoricSpeech(resource)) held.add(r.rid)
+            }))
+          }
+        }
+        const work: NewWork[] = got.rows.flatMap((r) => tasks.map((task) => ({ rid: r.rid, task, priority: NEW_CONTENT_PRIORITY,
+          sourceCreated: parseCreated(r.created), historicHold: held.has(r.rid) })))
         result.enqueued[kind] += await enqueue(opts.db, work, opts.now)
         for (const r of got.rows) {
           const created = parseCreated(r.created)

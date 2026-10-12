@@ -1,0 +1,32 @@
+{
+  "model": "claude-haiku-5-5",
+  "id": "msg_011CfusnrZRMaWdYiq9dMej6",
+  "type": "message",
+  "role": "assistant",
+  "content": [
+    {
+      "type": "text",
+      "text": "{\"Sample Bus Transport Pty Ltd\": \"transport\", \"Sample Health Clinic Pty Ltd\": \"health\"}"
+    }
+  ],
+  "container": null,
+  "stop_reason": "end_turn",
+  "stop_sequence": null,
+  "stop_details": null,
+  "usage": {
+    "input_tokens": 323,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0,
+    "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 0
+    },
+    "output_tokens": 47,
+    "output_tokens_details": {
+      "thinking_tokens": 0
+    },
+    "service_tier": "batch",
+    "inference_geo": "global"
+  },
+  "diagnostics": null
+}

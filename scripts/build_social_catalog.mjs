@@ -9,7 +9,11 @@
 import { readFileSync, writeFileSync, mkdirSync, existsSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { seatTimelines, programSeatSplit, programEligible, programRecord, largestByMonth, PARTY_GROUPS } from './social_grants_lib.mjs';
+import {readPublicationContext} from './withhold_donor_assets.mjs';
+import {sanitiseSocialCatalog} from './social_publication.mjs';
 const root = fileURLToPath(new URL('../portal/public/', import.meta.url));
+const privacy = readPublicationContext(root);
+const publish = (file, value) => writeFileSync(root + file, JSON.stringify(sanitiseSocialCatalog(file, value, privacy)) + '\n');
 const read = (path) => JSON.parse(readFileSync(root + path.replace(/^\//, ''), 'utf8'));
 const graph = read('graph/grants.federal.json');
 const asOf = graph.meta.generated.slice(0, 10);
@@ -33,7 +37,7 @@ for (let i = 0; i < graph.meta.shards; i++) {
 }
 grants.sort((a, b) => b.start.localeCompare(a.start) || a.id.localeCompare(b.id));
 mkdirSync(root + 'social', { recursive: true });
-writeFileSync(root + 'social/grants.json', JSON.stringify({ asOf, basis: 'Published award values and agreement start dates; not payments.', grants: grants.slice(0, 1500) }) + '\n');
+publish('social/grants.json', { asOf, basis: 'Published award values and agreement start dates; not payments.', grants: grants.slice(0, 1500) });
 console.log(`Social grant shortlist: ${Math.min(grants.length, 1500)} source records, as of ${asOf}`);
 
 // ---------------------------------------------------------------- seats
@@ -69,7 +73,7 @@ for (const row of graph.programs) {
   }
 }
 programs.sort((a, b) => a.key.localeCompare(b.key));
-writeFileSync(root + 'social/programs.json', JSON.stringify({
+publish('social/programs.json', {
   asOf,
   groups: PARTY_GROUPS,
   basis: [
@@ -79,14 +83,14 @@ writeFileSync(root + 'social/programs.json', JSON.stringify({
     'The share of seats is the share of House seats each group held on each grant\'s date, weighted by the grant\'s value.',
   ],
   programs,
-}) + '\n');
+});
 const eras = programs.reduce((acc, p) => ({ ...acc, [p.era]: (acc[p.era] ?? 0) + 1 }), {});
 console.log(`Social programs: ${programs.length} told by seat (${Object.entries(eras).map(([k, v]) => `${k} ${v}`).join(', ')}); skipped ${Object.entries(skipped).map(([k, v]) => `${v} ${k}`).join(', ')}`);
 
 // ---------------------------------------------------------------- largest
 const largest = largestByMonth([...awards.values()], asOf);
 const months = Object.keys(largest).sort();
-writeFileSync(root + 'social/grants-largest.json', JSON.stringify({
+publish('social/grants-largest.json', {
   asOf,
   latest: months.at(-1) ?? null,
   basis: [
@@ -96,5 +100,5 @@ writeFileSync(root + 'social/grants-largest.json', JSON.stringify({
     'Award values, not payments.',
   ],
   months: largest,
-}) + '\n');
+});
 console.log(`Social largest awards: ${months.length} months, latest ${months.at(-1) ?? 'none'}`);

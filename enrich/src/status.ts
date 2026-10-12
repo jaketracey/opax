@@ -24,7 +24,7 @@ export function bearerOk(header: string | null, secret: string | undefined): boo
 export async function buildStatus(db: D1Database, cfg: Config, now: number): Promise<Record<string, unknown>> {
   const day = utcDay(now)
   const { mode: budgetMode, budget } = effectiveBudget(await hasBackfill(db), cfg.dailyBudget, cfg.steadyBudget)
-  const [byStatus, byOutcome, spendToday, spendRecent, states, errors, quarantined, ready] = await Promise.all([
+  const [byStatus, byOutcome, spendToday, spendRecent, states, errors, quarantined, ready, held] = await Promise.all([
     db.prepare('SELECT task, status, COUNT(*) AS n FROM queue GROUP BY task, status').all<{ task: string; status: string; n: number }>(),
     db.prepare("SELECT task, outcome, COUNT(*) AS n FROM queue WHERE status = 'done' GROUP BY task, outcome").all<{ task: string; outcome: string | null; n: number }>(),
     db.prepare('SELECT COALESCE(SUM(neurons), 0) AS neurons, COALESCE(SUM(calls), 0) AS calls FROM spend WHERE day = ?').bind(day).first<{ neurons: number; calls: number }>(),
@@ -32,7 +32,8 @@ export async function buildStatus(db: D1Database, cfg: Config, now: number): Pro
     getStates(db, '%'),
     db.prepare('SELECT ts, rid, task, kind, message FROM errors ORDER BY id DESC LIMIT 10').all<{ ts: number; rid: string | null; task: string | null; kind: string; message: string }>(),
     db.prepare("SELECT rid, task, attempts, model, last_error FROM queue WHERE status = 'quarantined' ORDER BY updated_at DESC LIMIT 5").all(),
-    db.prepare("SELECT COUNT(*) AS n FROM queue WHERE status = 'done' AND outcome IN ('dry', 'unwritten')").first<{ n: number }>(),
+    db.prepare("SELECT COUNT(*) AS n FROM queue WHERE status = 'done' AND terminal_reason IS NULL AND outcome IN ('dry', 'unwritten')").first<{ n: number }>(),
+    db.prepare("SELECT COUNT(*) AS n FROM queue WHERE terminal_reason = 'historic-held'").first<{ n: number }>(),
   ])
 
   const counts: Record<string, Record<string, number>> = {}
@@ -60,6 +61,8 @@ export async function buildStatus(db: D1Database, cfg: Config, now: number): Pro
   return {
     now: new Date(now).toISOString(),
     mode: cfg.live ? 'live' : 'dry',
+    historicHold: cfg.historicHold,
+    heldRows: held?.n ?? 0,
     models: { primary: cfg.primaryModel, escalation: cfg.escalationModel },
     batchSize: cfg.batchSize,
     queue: counts,

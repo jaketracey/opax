@@ -1,5 +1,9 @@
 # Historic Hansard enrichment
 
+`HISTORIC_HOLD="true"` now keeps historic tasks out of the live model. The rules
+below apply to explicit fallback releases or new work discovered with the hold off.
+See the deployment order and T1 preflight near the end of this document.
+
 Only active `kind/speech` resources carrying `source/hansard_hist` enable these rules.
 The summariser selects the longest non-summary text field, squashes whitespace and clips
 very long text with `text.clip`. The short threshold counts Unicode code points of that
@@ -202,56 +206,103 @@ over IPv6 and never uses a remote binding.
 
 The review's differential harness is preserved as `scripts/differential_non_historic.mjs`.
 Run it against an isolated `origin/main` checkout and this worktree, then compare the output
-JSON objects. It covers 13 source labels and 11 scenarios (143 cases), comparing model calls,
-KB requests/state, original queue fields, spend, cursors/backoff and tick stats. Only the new
-historic metadata columns and counters are excluded. **0 differences** were observed again across all 143 cases against `origin/main` at
-`108bbdd0`.
+JSON objects. It covers 13 classified source labels and 11 scenarios (143 cases), comparing
+model calls, KB writes/state, original queue fields, spend, cursors/backoff and tick stats.
+The new historic metadata columns/counters and the single leading basic-metadata read
+required before each saved-result flush are excluded. This read is counted explicitly:
+**39 additional reads** across the 143 cases, with every original request and its order
+still compared. The old empty-source fixture now uses an explicit synthetic non-historic
+source label; missing/partial source metadata is covered by dedicated fail-closed tests,
+because blocking unclassified work is required behavior. Against `5bb219592`, the revised
+cohort has **0/143 differences** with the hold on, and **0/154** with it off (including
+historic cases). Pass `false` as the harness's fourth argument for the latter run.
 
-## Orchestrator deployment
+## Orchestrator deployment: historic hold
 
-1. Apply **`enrich/migrations/0002_historic_rules.sql`** to the existing **opax-enrich D1**
-   database before deploying the new Worker. This unreleased migration replaces the review's
-   table rebuild: it only adds nullable `terminal_reason`, `names_rejected DEFAULT 0` and
-   `historic DEFAULT 0`. There is no row copy, table rewrite, CHECK change or index rebuild.
-   The original worker remains compatible while the migration goes first.
-2. Deploy **opax-enrich** from `enrich/` using its existing `wrangler.jsonc`. Wrangler includes
-   `src/historic-names.json`, `src/historic-words.json`, `src/historic-geography.json`
-   and `src/historic-offices.json` in the Worker bundle. Existing bindings, secrets, budgets, cron
-   and live mode apply. No app or portal deployment is needed. Deploy before pushing T1.
-3. After pushing historic resources, reconcile the successful slugs from the JSONL push log.
-   Set `T1_PUSH_LOG` to that log's absolute path, `OPAX_ENRICH_URL` to the deployed Worker URL,
-   and load the existing `ENRICH_ADMIN_TOKEN` into the environment. Run:
+Historic T1 briefs go through the Haiku batch path. `HISTORIC_HOLD` is set to the
+exact string `"true"` in `wrangler.jsonc`. Discovery still queues both speech tasks
+and advances its cursor, but historic tasks use `status=done` with
+`terminal_reason=historic-held`. Claims, saved-result flushes and canaries skip them
+at every priority. `/status` exposes boolean `historicHold` and integer `heldRows`
+(the number of task rows, normally two per held speech).
+
+Canary receives the hold switch and checks source labels from its existing before
+snapshot. Every saved-result flush reads basic metadata before its first write;
+neither `historic=0` nor `force=1` grants permission. Missing kind/source labels or
+failed reads defer only that resource's write. Classification reads have a five-second
+timeout, never set global KB backoff, and preserve a live processing window after
+failure. The saved result stays unchanged for the next tick; other saved and pending
+rows continue. Historic rows require `historic_released=1` to proceed.
+The same check runs before generation, covering stale claims, validator and transient
+retries, name escalation, forced generation and admin requeues. The worker backfills
+`historic=1` only for observed unfinished historic tasks; completed pilot rows stay
+untouched. There is no bulk census or additional migration.
+
+The deployment order is mandatory; the orchestrator performs these commands, not
+this worktree task:
+
+1. From `enrich/`, apply all pending D1 migrations in sequence:
+   `npx wrangler d1 migrations apply opax-enrich --remote`.
+   If `0002_historic_rules.sql` is not yet applied, it precedes
+   **`0003_historic_hold.sql`**. The new migration only adds
+   `historic_released INTEGER NOT NULL DEFAULT 0`; existing rows, CHECK constraints
+   and index roots stay intact. The old worker remains compatible during this step.
+2. Deploy the new **opax-enrich** worker from `enrich/`:
+   `npx wrangler deploy`. Confirm the deployed configuration includes
+   `HISTORIC_HOLD="true"`. Bindings, secrets, budgets, cron and live mode stay in place.
+3. Before the first T1 push, set `OPAX_ENRICH_URL` and the existing
+   `ENRICH_ADMIN_TOKEN` in the runner environment and invoke:
 
    ```sh
-   node /home/jake/opax-work/wt/enrich-backfill/enrich/scripts/reconcile_historic.ts \
+   node enrich/scripts/check_historic_hold.ts || exit 1
+   ```
+
+   Run this from the repository root. The orchestrator must wire this command into
+   its external T1 runner before its push step. It refuses false, absent or malformed
+   status, HTTP errors, authentication failures and network errors. Only a literal
+   JSON `historicHold: true` permits pushing. An old worker's status therefore fails
+   closed. No T1 units may be pushed before migration, deployment and this gate pass.
+4. Push T1 and reconcile successful slugs from the JSONL push log, in batches of at
+   most 200. From the repository root:
+
+   ```sh
+   node enrich/scripts/reconcile_historic.ts \
      --push-log "$T1_PUSH_LOG" \
      --url "$OPAX_ENRICH_URL"
    ```
 
-   An offline preview uses the same command with `--dry-run`; it makes no network requests.
-   Each JSONL entry must carry `slug` and a successful `status` (`pushed`, `created`, `updated`,
-   `exists`, `ok`, or numeric HTTP 2xx), or `ok: true`. Failed/pending entries are ignored.
-   The script deduplicates slugs, submits batches of at most 200 and prints only aggregate
-   counts. It calls **`POST /backfill/reconcile`**, body **`{"slugs":["invented-slug"]}`**,
-   header **`Authorization: Bearer <ENRICH_ADMIN_TOKEN>`**, using the existing admin auth.
+   `--dry-run` previews the log without network requests. The client submits
+   `POST /backfill/reconcile`, body `{"slugs":["invented-slug"]}` and header
+   `Authorization: Bearer <ENRICH_ADMIN_TOKEN>`. The worker verifies every slug's
+   active historic speech labels using basic metadata before any batch mutation.
+   It inserts missing tasks as held and holds unfinished pending, claimed, dry or
+   unwritten tasks at priority 0. Holding cancels claims and clears unfinished saved
+   results so an old worker cannot flush them. Counters stay intact. Completed pilot
+   writes and other completed/terminal outcomes are untouched. Either discovery order
+   works, and retrying the same log is idempotent.
+5. The Haiku batch path handles historic briefs. Release only fallback slugs (refusals
+   or validator failures) with authenticated `POST /backfill/release`, using the same
+   `{"slugs":["invented-slug"]}` body and 1–200 input limit. The response reports
+   `verified` resources and `released` task rows. Only held tasks become pending at
+   priority 0; completed pilot rows and absent tasks are untouched. The additive
+   release marker prevents subsequent discovery or reconcile retries from holding
+   these tasks again. Releasing a batch twice is harmless.
 
-   The Worker resolves slugs through basic metadata and verifies active historic speech
-   labels before any batch mutation. It inserts absent summary/topics tasks, then sets
-   **priority 0** and the historic marker for unfinished rows: pending, claimed, or saved
-   `done/dry` and `done/unwritten` results. Processing state, claims, attempts, results and
-   timestamps stay intact. Completed writes, empty/no-text outcomes, quarantines and terminal
-   reasons stay intact. Either discovery order works, and re-running the same log is idempotent.
-   This also marks any saved results from an older worker before flushing them. Saved results
-   from other sources require no full-resource read. Newly generated historic writes reuse
-   the text already read for generation; canaries reuse their existing before snapshot.
+For an emergency return to the live model, set `HISTORIC_HOLD="false"` and deploy,
+then explicitly release the held slugs in batches of at most 200. Disabling the
+switch restores existing discovery/reconcile behavior for new work; it does not
+implicitly release already-held rows. No portal or app deployment is required.
 
-The additive migration on **480,000 local D1 rows** took **37.45 ms wall time** (D1 reported
+The earlier **0002** additive migration on **480,000 local D1 rows** took **37.45 ms wall time** (D1 reported
 **1 ms SQL time** across three ALTER statements, with millisecond resolution). Full original
 row hashes and table/index root pages were identical before and after. Old-worker enqueue,
 claim and finish statements succeeded against the migrated schema. Timing is local evidence,
 not a production latency guarantee.
 
-Validation: 167 tests, TypeScript and Worker deploy dry run; the 143-case live-source
-differential again has zero differences. No production KB, Workers AI,
-remote D1 calls, push or deployment were performed. Repository changes are confined to
-`enrich/`; the staged aggregate report was refreshed in place.
+Hold validation: **211 tests**, TypeScript and Worker deploy dry run pass. The
+classified-source differential described above has **0/143** differences with the hold
+enabled and **0/154** with it disabled. The 0003 test preserves original rows and index roots and accepts
+old-worker enqueue/claim/finish statements. An additional offline run of the old
+worker against the migrated schema skipped held work, processed live work and left
+all **2,000 simulated completed pilot units** unchanged. No production KB, Workers
+AI, remote D1 calls, push or deployment were performed. Changes are confined to `enrich/`.

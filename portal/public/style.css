@@ -262,6 +262,10 @@
 .audit-recommendations > li { padding: var(--space-row) 0; white-space: normal; overflow-wrap: anywhere; }
 .audit-recommendations > li > p:first-child { margin-top: 0; }
 .audit-recommendations > .audit-unnumbered { list-style: none; }
+.audit-filters { grid-template-columns: 2fr repeat(4, 1fr) auto; }
+.audit-response { border-top: var(--border-hairline) solid var(--divider-subtle); padding: var(--space-block) 0; max-width: 46rem; }
+.audit-response summary { cursor: pointer; min-height: var(--size-target); font: var(--type-subheading); }
+.audit-response-text { white-space: pre-wrap; overflow-wrap: anywhere; margin-top: var(--space-block); font: var(--type-body); }
 .audit-content nav, .instrument-content nav { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-group); margin: var(--space-group) 0; }
 .audit-content nav a, .instrument-content nav a { display: inline-flex; align-items: center; min-height: var(--size-target); }
 .audit-content > .ui-source, .instrument-content > .ui-source { margin-top: var(--space-section); }

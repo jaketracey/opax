@@ -461,7 +461,7 @@ async function mount() {
     const span = mapSpan(graph.meta);
     if (span) $("hp-map-span").textContent = span;
     const { mountMoneyMap } = await import(
-      "/money-map.js?v=ca923f4f2e"
+      "/money-map.js?v=fb33962c2d"
     );
     if (disposed) return;
     root.replaceChildren();
@@ -532,7 +532,7 @@ window.addEventListener("pagehide", (event) => {
 window.addEventListener("pageshow", pause);
 
 // The compact header keeps the same cross-collection quick search as the app.
-const headerSearch = OpaxQuickSearch.disclosure($('header-search-open'), $('header-search-panel'), $('mast-q'));
+const headerSearch = OpaxQuickSearch.header;
 const searchHref = q => '/ask?' + new URLSearchParams({view:'search', q});
 let headerReferences;
 async function headerSuggestions(q) {

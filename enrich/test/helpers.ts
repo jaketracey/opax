@@ -158,7 +158,7 @@ export class FakeKb implements KbApi {
       .filter((r) => r.kind === kind && Date.parse(`${r.created}Z`) >= sinceMs)
       .sort((a, b) => a.created.localeCompare(b.created))
     const slice = all.slice(page * pageSize, (page + 1) * pageSize)
-    return { rows: slice.map((r) => ({ rid: r.rid, created: r.created })), hasNext: (page + 1) * pageSize < all.length && slice.length > 0 }
+    return { rows: slice.map((r) => ({ rid: r.rid, created: r.created, usermetadata: this.view(r.rid, false)?.usermetadata })), hasNext: (page + 1) * pageSize < all.length && slice.length > 0 }
   }
   writes(): string[] {
     return this.calls.filter((c) => c.startsWith('PATCH'))

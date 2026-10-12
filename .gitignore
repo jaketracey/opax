@@ -60,3 +60,6 @@ portal/public/hubs/
 portal/public/growth/person-bills/
 # Local SEO HTML snapshots, CDP measurements and Wrangler state.
 portal/private/
+
+# Temporary QAO PDFs and local KB review payloads
+/staging/

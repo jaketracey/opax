@@ -52,7 +52,7 @@ REPS_INDEX = "https://www.aph.gov.au/Senators_and_Members/Members/Register"
 SENATE_INDEX = "https://www.aph.gov.au/Parliamentary_Business/Committees/Senate/Senators_Interests/Senators_Interests_Register"
 
 # Haiku model for extraction
-HAIKU_MODEL = "claude-3-haiku-20240307"
+HAIKU_MODEL = "claude-haiku-5-5"
 
 # Interest type mapping from sections
 SECTION_TYPE_MAP = {
@@ -373,6 +373,7 @@ def extract_interests_with_haiku(text: str, api_key: str) -> dict | None:
     try:
         response = client.messages.create(
             model=HAIKU_MODEL,
+            thinking={"type": "disabled"},
             max_tokens=4096,
             messages=[
                 {"role": "user", "content": EXTRACTION_PROMPT + text},
