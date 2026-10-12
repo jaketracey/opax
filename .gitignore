@@ -63,3 +63,6 @@ portal/private/
 
 # Temporary QAO PDFs and local KB review payloads
 /staging/
+
+# Reusable web gate passes, profiles, logs and isolated build worktrees.
+.ops/gate-cache/

@@ -2,10 +2,12 @@ import {Miniflare,convertV4MiniflareOptions} from 'miniflare';
 import {mkdtemp,readFile,rm} from 'node:fs/promises';
 import {tmpdir} from 'node:os';
 import {join} from 'node:path';
+import {randomUUID} from 'node:crypto';
 import {buildTableSQL} from '../../scripts/load_tables.mjs';
 export async function tableDatabase(options={}) {
   const root=await mkdtemp(join(tmpdir(),'opax-table-d1-'));
-  const mf=new Miniflare(convertV4MiniflareOptions({workers:[{name:"tables",modules:true,script:'export default {fetch(){return new Response("local fixture")}}',compatibilityDate:'2026-09-01',d1Databases:{TABLE_DB:'test-tables'}}]}));
+  // Never share a D1 namespace or storage path between files/fixtures.
+  const mf=new Miniflare(convertV4MiniflareOptions({resourcePersistencePath:join(root,'d1'),isolatedResourcePersistencePath:join(root,'isolated'),workers:[{name:"tables",modules:true,script:'export default {fetch(){return new Response("local fixture")}}',compatibilityDate:'2026-09-01',d1Databases:{TABLE_DB:'test-tables-'+randomUUID()}}]}));
   try {
     const db=await mf.getD1Database('TABLE_DB','tables'),manifest=await buildTableSQL({...options,output:root});
     for(const file of manifest.files) {

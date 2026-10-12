@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {readFile} from 'node:fs/promises';
+import {serializeQuery} from '../public/datatable.js';
 import {TABLE_DATASETS} from '../src/table-datasets.mjs';
 import {tableApi,TABLE_REGISTRY_FINGERPRINT} from '../src/table-api.ts';
 import {tableDatabase} from './table-d1-harness.mjs';
@@ -61,15 +61,10 @@ test('canonical state uses JSON filters, normalises order and supports condition
   const cached=await fetchTable('contracts',new URLSearchParams({q:'needle','f.amount':'{"min":10,"max":100}'}),{headers:{'if-none-match':b.headers.get('etag')}});assert.equal(cached.status,304);assert.equal(cached.headers.get('x-robots-tag'),'noindex');
 });
 test('core serializer and D1 API integrate with category and range state',async()=>{
-  // Exercise core query exports without replacing its public module.
-  // At merge it is present at ../public/datatable.js; this branch still has the stub.
-  let module=await readFile(process.env.DT_CORE_MODULE_PATH || new URL('../public/datatable.js',import.meta.url),'utf8');
-  if(module.includes('STUB'))module=await readFile(new URL('./fixtures/core-query.mjs',import.meta.url),'utf8');
-  module=module.replace(/from (['"])(\.\/[^'"]+)\1/g,(_,quote,path)=>'from '+JSON.stringify(new URL(path,new URL('../public/datatable.js',import.meta.url)).href));
-  const core=await import('data:text/javascript;base64,'+Buffer.from(module).toString('base64'));
+  // The core rollout has merged; exercise only the production serializer.
   for(const prefix of [undefined,'t']){
     const query={filters:{jurisdiction:['Group 0'],amount:{min:10,max:20}},sort:{key:'amount',dir:'asc'},pageSize:2,page:2};
-    const response=await fetchTable('contracts',core.serializeQuery(query,prefix));assert.equal(response.status,200);
+    const response=await fetchTable('contracts',serializeQuery(query,prefix));assert.equal(response.status,200);
     const page=await response.json();assert.equal(page.total,5);assert.deepEqual(page.rows.map(r=>r.amount),[14.25,16.25]);
   }
 });
