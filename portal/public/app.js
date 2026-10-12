@@ -11637,8 +11637,8 @@ function renderResults(results) {
       if (r.href) {
         // A row whose text a model wrote (a bill's summary) says so with the
         // machine label above that text, not with a phrase in its meta line.
-        li.innerHTML = `<div class="result-meta">${recordTypeLink(r.kind, lastSearch.query, lastSearch.filters)}${r.dateLabel ? ` · ${esc(r.dateLabel)}` : r.date ? ` · ${esc(fmtDate(r.date))}` : ""}${r.source ? ` · ${esc(r.source)}` : ""}</div>
-          <h3 class="search-result-heading"><a class="result-title" href="${esc(searchResultHref(r))}">${esc(r.title)}</a></h3>
+        li.innerHTML = `<div class="ui-row-meta">${recordTypeLink(r.kind, lastSearch.query, lastSearch.filters)}${r.dateLabel ? ` · ${esc(r.dateLabel)}` : r.date ? ` · ${esc(fmtDate(r.date))}` : ""}${r.source ? ` · ${esc(r.source)}` : ""}</div>
+          <h3 class="ui-row-title search-result-heading"><a class="result-title" href="${esc(searchResultHref(r))}">${esc(r.title)}</a></h3>
           ${r.machine ? machineLabelHTML({ className: "search-result-machine", note: "The summary sentences in this row were written by a model from the bill's explanatory material. They are not the record: open the bill for its own documents." }) : ""}
           <p id="search-passage-${index}" class="search-result-text snippet" data-full="catalog">${highlightHTML(cleanPassage(r.snippet), lastSearch.query)}</p>
           <button type="button" class="search-passage-more" hidden aria-controls="search-passage-${index}" aria-expanded="false">Read more</button>${excerptNoticeHTML(r)}`;
@@ -11671,8 +11671,8 @@ function renderResults(results) {
       const topics = [...new Set((Array.isArray(r.topics) ? r.topics : []).filter((t) => typeof t === "string" && t.trim()))];
       // Opening a speech row loads the whole speech in place, so its button says so.
       const more = r.excerpt ? "Read excerpt" : r.kind === "speech" ? "Read the full speech here" : "Read more";
-      li.innerHTML = `<div class="result-meta">${meta}</div>
-        <h3 class="search-result-heading"><a class="result-title" ${entityHrefAttr(`/doc/${encodeURIComponent(r.slug)}`)}>${esc(title)}</a></h3>
+      li.innerHTML = `<div class="ui-row-meta">${meta}</div>
+        <h3 class="ui-row-title search-result-heading"><a class="result-title" ${entityHrefAttr(`/doc/${encodeURIComponent(r.slug)}`)}>${esc(title)}</a></h3>
         ${byline ? `<div class="result-byline">${byline}</div>` : ""}${text}
         <button type="button" class="search-passage-more" hidden aria-controls="search-passage-${index}" aria-expanded="false" data-more="${esc(more)}"${r.excerpt ? ' data-excerpt="true"' : ''}>${esc(more)}</button>${excerptNoticeHTML(r)}
         ${topics.length ? `<nav class="search-result-topics" aria-label="Topics for ${esc(title)}">${topics.map((topic) => `<a class="ui-tag" ${entityHrefAttr(subjectHash("topic", topic))}>${esc(TOPICS[topic] || topic)}</a>`).join("")}</nav>` : ""}`;
@@ -11776,7 +11776,8 @@ function renderPagerNumbers(s) {
     }
     const b = document.createElement("button");
     b.type = "button";
-    b.className = "pager-btn pager-num";
+    b.className = "pager-btn pager-num ui-button";
+    b.dataset.variant = "quiet";
     b.dataset.page = String(n);
     // A bare digit is no name to hear, and the total is what tells the reader
     // how far a jump is: the same words Previous and Next use.

@@ -60,7 +60,7 @@
 <!-- fonts:end -->
 <!-- ?v= is content-hash stamped by scripts/stamp_assets.mjs (npm run deploy),
      which is what lets _headers serve these two immutable. -->
-<link rel="stylesheet" href="/style.css?v=4ee44ec328">
+<link rel="stylesheet" href="/style.css?v=d69f1e532b">
 <link rel="stylesheet" href="/ui-controls.css?v=1956263368">
 <link rel="stylesheet" href="/ui-source.css?v=5d21085448">
 <link rel="stylesheet" href="/voice.css?v=19eea6fcdc">
@@ -264,7 +264,7 @@
 
     <!-- ============================== ASK ============================== -->
     <section id="panel-ask" class="panel" aria-label="Ask the record">
-      <nav class="entry-modes" aria-label="Research mode"><a href="/ask" aria-current="page">Ask a question</a><a href="/ask?view=search" data-entry-mode="search">Search records</a></nav>
+      <nav class="ui-tabs entry-modes" aria-label="Research mode"><a href="/ask" aria-current="page">Ask a question</a><a href="/ask?view=search" data-entry-mode="search">Search records</a></nav>
       <form id="ask-form" class="ask-row" data-ui-size="large">
         <label for="ask-input" class="visually-hidden">Ask a question of the parliamentary record</label>
         <!-- The box and its clear cross share one wrapper so the cross can sit
@@ -468,7 +468,7 @@
 
     <section id="panel-search" class="panel" hidden aria-label="Search the record">
       <h1 class="visually-hidden">Search all public records</h1>
-      <nav class="entry-modes" aria-label="Research mode"><a href="/ask" data-entry-mode="ask">Ask a question</a><a href="/ask?view=search" aria-current="page">Search records</a></nav>
+      <nav class="ui-tabs entry-modes" aria-label="Research mode"><a href="/ask" data-entry-mode="ask">Ask a question</a><a href="/ask?view=search" aria-current="page">Search records</a></nav>
       <form id="search-form" class="search-grid">
         <div class="query-line" data-ui-size="large">
           <label for="search-input" class="visually-hidden">Find source records</label>
@@ -635,10 +635,10 @@
           <button type="button" class="ui-button" id="search-answer-retry" hidden>Try summary again</button>
         </div>
       </details>
-      <ul id="search-results" class="results" role="list"></ul>
+      <ul id="search-results" class="ui-list results" role="list"></ul>
       <!-- The band keeps its height whether or not there is a second page, so
            arriving at a short last page does not lift the footer. -->
-      <nav id="search-pager" class="pager" aria-label="Result pages" hidden>
+      <nav id="search-pager" class="pager" aria-label="Result pages" data-ui-size="compact" hidden>
         <button type="button" class="pager-btn ui-button" id="pager-prev">
           <svg class="btn-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4l-6 6 6 6"/></svg><span class="pager-btn-label">Previous</span></button>
         <!-- app.js fills this: how many numbers there are, and which runs of
@@ -2095,10 +2095,10 @@
 <!-- defer: never block the parser (Lighthouse counted this as render-blocking).
      Deferred scripts still run before DOMContentLoaded, so nothing changes for
      app.js's boot. ?v= is content-hash stamped by scripts/stamp_assets.mjs. -->
-<script src="/spa-shell.js?v=e422e996a5" defer></script>
+<script src="/spa-shell.js?v=1585a535b0" defer></script>
 <script src="/navigation.js?v=f86ae6aef6" defer></script>
 <script src="/quick-search.js?v=27eac3b2f7" defer></script>
 <script src="/ui-source.js?v=5e7b751ca0" defer></script>
-<script src="/app.js?v=7acd4f5dea" defer></script>
+<script src="/app.js?v=690f8b5e5c" defer></script>
 </body>
 </html>
