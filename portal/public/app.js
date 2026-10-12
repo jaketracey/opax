@@ -2875,29 +2875,30 @@ function sourceItem(s, num, passage = false) {
   return li;
 }
 
+/**
+ * One speech in a report's reading list: the record's title (serif), the
+ * speaker's byline, the brief (OPAX's own sentence, in the sans) and the way
+ * into the record.
+ */
 function keySpeechItem(speech) {
-  const article = document.createElement("article");
-  article.className = "report-reading-item";
+  const item = document.createElement("li");
+  item.className = "report-reading-item";
 
-  const title = document.createElement("h3");
-  title.className = "report-speech-title";
+  const title = document.createElement("h4");
+  title.className = "ui-row-title";
   title.textContent = speech.title || displayTitle(speech);
 
   const byline = document.createElement("div");
-  byline.className = "report-speech-byline";
   if (speech.speaker) {
-    const portrait = document.createElement("span");
-    portrait.className = "meta-portrait";
-    portrait.dataset.speaker = speech.speaker;
-    byline.appendChild(portrait);
+    byline.className = "ui-byline";
+    byline.appendChild(bylinePortrait(speech.speaker));
   }
   const identity = document.createElement("div");
-  identity.className = "report-speech-identity";
   const nameLine = document.createElement("div");
-  nameLine.className = "report-speech-name-line";
+  nameLine.className = "ui-byline-who";
   if (speech.speaker) {
     const speaker = document.createElement("a");
-    speaker.className = "report-speech-speaker";
+    speaker.className = "ui-byline-name";
     if (hasEntityId(speech.speaker)) speaker.href = speakerHref(speech, subjectHash("person", speech.speaker));
     speaker.textContent = speech.speaker;
     nameLine.appendChild(speaker);
@@ -2909,8 +2910,8 @@ function keySpeechItem(speech) {
     party.innerHTML = partyChipHTML(speech.party);
     nameLine.appendChild(party);
   }
-  const quiet = document.createElement("p");
-  quiet.className = "report-speech-meta";
+  const quiet = document.createElement("span");
+  quiet.className = "ui-byline-meta";
   const parliament = speech.state
     ? `${STATE_NAMES[speech.state] || speech.state} Parliament`
     : null;
@@ -2919,17 +2920,25 @@ function keySpeechItem(speech) {
   byline.appendChild(identity);
 
   const brief = document.createElement("p");
-  brief.className = "report-speech-brief";
+  brief.className = "ui-row-text";
   brief.textContent = speech.brief;
 
   const link = document.createElement("a");
-  link.className = "report-speech-link";
+  link.className = "ui-source-link";
   link.href = `/doc/${speech.slug}`;
   link.textContent = "Read the speech";
 
-  article.append(title, byline, brief, link);
-  decorateMetaPortraits(article);
-  return article;
+  item.append(title, byline, brief, link);
+  return item;
+}
+
+/** The reading list: one row per speech, a hairline between (each holds several lines). */
+function reportReadingList(moments) {
+  const list = document.createElement("ol");
+  list.className = "ui-list report-reading-list";
+  list.dataset.density = "airy";
+  list.replaceChildren(...moments.map(keySpeechItem));
+  return list;
 }
 
 // One engraved time scale for answers and searches. The geometry stays fixed
@@ -12819,11 +12828,11 @@ async function loadReportsList(manageFocus) {
     }
   }
   setStatus($("reports-status"), "");
-  // A report is a unit you pick up: a card, and a link (navigation is never a
-  // button). The set has one dated line; each report carries its own date.
-  list.innerHTML = reportsIndex.map((r) => `<a class="report-card" href="/reports/${encodeURIComponent(r.slug)}">${
-    reportGlyph(r.slug, "card-glyph")}<span class="card-title">${esc(r.title)}</span>
-      <span class="card-blurb">${esc(r.blurb)}</span></a>`).join("");
+  // A report is a unit you pick up: a card whose title is the link and whose
+  // whole face is its target (navigation is never a button). The set has one
+  // dated line; each report carries its own date.
+  list.innerHTML = reportsIndex.map((r) => `<li class="ui-card">${reportGlyph(r.slug, "card-glyph")}<h2 class="ui-card-title"><a href="/reports/${
+    encodeURIComponent(r.slug)}">${esc(r.title)}</a></h2><p class="ui-card-text">${esc(r.blurb)}</p></li>`).join("");
   const newest = reportsIndex.map((r) => String(r.updated || "").slice(0, 10)).filter(Boolean).sort().pop() || "";
   $("reports-source").innerHTML = sourceLineHTML({
     updated: newest, source: "Generated from the record",
@@ -13072,12 +13081,6 @@ function renderReportBrief(report) {
     p.textContent = text;
     return p;
   };
-  const docLink = (slug, title) => {
-    const a = document.createElement("a");
-    a.href = `/doc/${slug}`;
-    a.textContent = title || slug;
-    return a;
-  };
 
   const brief = $("report-brief");
   brief.replaceChildren();
@@ -13090,60 +13093,23 @@ function renderReportBrief(report) {
 
   const figures = $("report-figures");
   figures.replaceChildren();
+  // The same figures and positions a v2 report draws (ui-stats, ui-list).
   if (report.key_stats?.length) {
-    const grid = document.createElement("div");
-    grid.className = "tiles";
-    for (const s of report.key_stats) {
-      const t = document.createElement("div");
-      t.className = "tile";
-      const b = document.createElement("b");
-      b.textContent = s.value;
-      const label = document.createElement("span");
-      label.textContent = s.label;
-      const src = document.createElement("span");
-      src.className = "tile-source";
-      src.append("— ", docLink(s.slug, s.source_title));
-      if (s.detail) t.title = s.detail;
-      t.append(b, label, src);
-      grid.appendChild(t);
-    }
-    figures.append(kicker("Key figures: spoken on the record"), grid);
+    figures.append(kicker("Key figures: spoken on the record"), reportStatTiles(report.key_stats));
   }
 
   const positions = $("report-positions");
   positions.replaceChildren();
   if (report.positions?.length) {
-    const list = document.createElement("ul");
-    list.className = "position-list";
-    for (const p of report.positions) {
-      const li = document.createElement("li");
-      const head = document.createElement("span");
-      head.className = "position-party";
-      head.innerHTML = partyChipHTML(p.party); // fixed map lookup, not model text
-      if (!head.firstChild) head.textContent = p.party;
-      const text = document.createElement("span");
-      text.className = "position-text";
-      text.textContent = ` ${p.position} `;
-      const cite = document.createElement("span");
-      cite.className = "source-meta";
-      const who = [p.speaker, fmtDate(p.date || "")].filter(Boolean).join(", ");
-      cite.append(who ? `${who} · ` : "", docLink(p.slug, "read the speech"));
-      li.append(head, text, cite);
-      list.appendChild(li);
-    }
-    positions.append(kicker("Where the parties stand"), list);
+    positions.append(kicker("Where the parties stand"), reportPositions(report.positions));
   }
 
   const moments = $("report-moments");
   moments.replaceChildren();
   if (report.key_moments?.length) {
-    const note = document.createElement("p");
-    note.className = "report-part-note report-reading-note";
-    note.textContent = "Chosen from the labelled record: substantive speeches on the subject, one per speaker, across the years.";
-    const list = document.createElement("div");
-    list.className = "report-reading-list";
-    list.replaceChildren(...report.key_moments.map(keySpeechItem));
-    moments.append(kicker("Start reading: key speeches"), note, list);
+    moments.append(kicker("Start reading: key speeches"),
+      reportNote("Chosen from the labelled record: substantive speeches on the subject, one per speaker, across the years."),
+      reportReadingList(report.key_moments));
   }
 }
 
@@ -13347,27 +13313,21 @@ function reportSourceRow(s, num) {
   const body = document.createElement("div");
   body.className = "report-source-body";
 
-  // A record with a named speaker leads with the person; one without leads
-  // with the title the record itself wrote, rather than an empty portrait and
-  // a party chip attached to nobody.
+  // A record with a named speaker leads with the person (a byline); one
+  // without leads with the title the record itself wrote, rather than an
+  // empty portrait and a party chip attached to nobody.
   if (s.speaker) {
-    const face = document.createElement("span");
-    face.className = "report-source-face";
-    face.setAttribute("aria-hidden", "true"); // blank circle until the portrait lands; never initials
-    loadPhotoMap().then(() => {
-      const url = photoUrlFor(s.speaker);
-      if (url) face.innerHTML = `<img src="${esc(url)}" alt="" width="40" height="40" loading="lazy">`;
-    });
-    li.appendChild(face);
+    li.classList.add("ui-byline");
+    li.appendChild(bylinePortrait(s.speaker));
   } else {
     li.classList.add("report-source-unnamed");
   }
 
-  const name = document.createElement("p");
-  name.className = "report-source-name";
+  const name = document.createElement(s.speaker ? "div" : "p");
   if (s.speaker) {
+    name.className = "ui-byline-who";
     const who = document.createElement("a");
-    who.className = "meta-speaker";
+    who.className = "ui-byline-name";
     if (hasEntityId(s.speaker)) who.href = subjectHash("person", s.speaker);
     who.textContent = s.speaker;
     name.appendChild(who);
@@ -13379,11 +13339,12 @@ function reportSourceRow(s, num) {
       name.appendChild(party);
     }
   } else {
+    name.className = "ui-row-title";
     name.textContent = record.title || s.slug || "";
   }
 
-  const where = document.createElement("p");
-  where.className = "report-source-where";
+  const where = document.createElement("span");
+  where.className = "ui-byline-meta";
   const speech = !s.kind || s.kind === "speech";
   const jurisdiction = s.state ? (speech ? PARLIAMENT_NAMES[s.state] : STATE_NAMES[s.state]) || STATE_NAMES[s.state] || s.state : "";
   const parliament = [!speech ? FILTER_KIND_LABELS[s.kind] || s.kind.replaceAll("_", " ") : "", jurisdiction].filter(Boolean).join(" · ");
@@ -13420,7 +13381,7 @@ function reportSourceRow(s, num) {
   }
 
   const read = document.createElement("a");
-  read.className = "report-source-read";
+  read.className = "ui-source-link";
   read.href = `/doc/${s.slug}`;
   read.textContent = speech ? "Read the speech" : "Read the record";
   body.appendChild(read);
@@ -13428,6 +13389,28 @@ function reportSourceRow(s, num) {
 
   li.appendChild(body); // the portrait, when there is one, is already in place
   return li;
+}
+
+/**
+ * A byline's 44 portrait: a blank circle until the photo map answers, then the
+ * photo in its place; a speaker with no photo keeps the circle (never initials).
+ */
+function bylinePortrait(name) {
+  const blank = document.createElement("span");
+  blank.className = "ui-byline-portrait";
+  blank.setAttribute("aria-hidden", "true");
+  if (name) loadPhotoMap().then(() => {
+    const url = photoUrlFor(name);
+    if (!url || !blank.parentNode) return;
+    const img = document.createElement("img");
+    img.className = "ui-byline-portrait";
+    img.src = url;
+    img.alt = "";
+    img.width = img.height = 44;
+    img.loading = "lazy";
+    blank.replaceWith(img);
+  });
+  return blank;
 }
 
 /**
@@ -13477,13 +13460,13 @@ function reportSourcesFold(sources, label) {
   const cited = flagged ? numbered.filter((r) => r.s.cited === true) : numbered;
   const rest = flagged ? numbered.filter((r) => r.s.cited !== true) : [];
   const det = document.createElement("details");
-  det.className = "chat-sources report-sources";
+  det.className = "ui-disclosure report-sources";
   const sum = document.createElement("summary");
   sum.textContent = flagged
     ? `${label || "Sources"}: ${cited.length} cited, ${rest.length} more retrieved`
     : `${label || "Sources"} (${numbered.length})`;
   const ol = document.createElement("ol");
-  ol.className = "report-source-list";
+  ol.className = "ui-list ui-disclosure-body report-source-list";
   det.append(sum, ol);
   reportFillOnOpen(det, ol, () => {
     const rows = cited.map((r) => reportSourceRow(r.s, r.n));
@@ -13510,7 +13493,7 @@ function reportEssay(item, { id, slug, number } = {}) {
   if (id) sec.id = id;
 
   const heading = document.createElement("h3");
-  heading.className = "report-essay-question";
+  heading.className = "ui-row-title report-essay-question";
   heading.textContent = item.question || item.label || "";
 
   const body = document.createElement("div");
@@ -13616,14 +13599,15 @@ function reportStatAsOf(value) {
 /** The figures the report leans on, each traced to the speech that said it. */
 function reportStatTiles(stats) {
   const grid = document.createElement("div");
-  grid.className = "tiles report-stat-tiles";
+  grid.className = "ui-stats report-stats-grid";
   for (const s of stats) {
     const t = document.createElement("div");
-    t.className = "tile report-stat";
+    t.className = "ui-stat";
     const value = document.createElement("b");
+    value.className = "ui-stat-value";
     value.textContent = s.value;
     const label = document.createElement("span");
-    label.className = "report-stat-label";
+    label.className = "ui-stat-label";
     label.textContent = s.label;
     t.append(value, label);
     const ratio = reportStatRatio(s);
@@ -13631,17 +13615,17 @@ function reportStatTiles(stats) {
     const under = [ratio, scope].filter(Boolean).join(" · ");
     if (under) {
       const q = document.createElement("span");
-      q.className = "report-stat-basis";
+      q.className = "ui-stat-label";
       q.textContent = under;
       t.appendChild(q);
     }
     if (s.detail) t.title = s.detail;
     if (s.slug) {
-      // The link stands on its own line: an "—" text node ahead of a 44px
-      // inline-flex link is left orphaned above it.
+      // The link stands on its own line under the figure it sources.
       const src = document.createElement("span");
-      src.className = "tile-source";
+      src.className = "report-stat-source";
       const a = document.createElement("a");
+      a.className = "ui-source-link";
       a.href = `/doc/${s.slug}`;
       a.textContent = reportSourceLabel(s.source_title, { short: true })
         || "Read the source record";
@@ -13663,33 +13647,37 @@ function reportStatTiles(stats) {
  */
 function reportPositions(positions, win) {
   const list = document.createElement("ul");
-  list.className = "position-list report-position-list";
+  list.className = "ui-list report-position-list";
   for (const p of positions) {
     const li = document.createElement("li");
+    // The party leads the line; the position is the model's sentence (sans).
+    const line = document.createElement("p");
+    line.className = "ui-row-text";
     const head = document.createElement("a");
-    head.className = "position-party";
+    head.className = "report-position-party";
     if (hasEntityId(p.party)) head.href = subjectHash("party", p.party); // the chip opens the party's page
     head.innerHTML = partyChipHTML(p.party); // fixed map lookup, not model text
     if (!head.firstChild) head.textContent = p.party;
-    const text = document.createElement("span");
-    text.className = "position-text";
-    text.textContent = ` ${p.position} `;
-    li.append(head, text);
+    line.append(head, ` ${p.position}`);
+    li.appendChild(line);
     if (p.window) {
-      const scope = document.createElement("span");
-      scope.className = "report-position-window";
+      const scope = document.createElement("p");
+      scope.className = "ui-row-meta";
       scope.textContent = `Their position in the debate ${p.window}`;
       li.appendChild(scope);
     }
-    const cite = document.createElement("span");
-    cite.className = "source-meta report-position-cite";
+    // One meta line: who said it and when, the record, and whether it predates the window.
+    const cite = document.createElement("p");
+    cite.className = "ui-row-meta";
+    const said = document.createElement("span");
     const who = [p.speaker, fmtDate(p.date || "")].filter(Boolean).join(", ");
     const read = document.createElement("a");
     read.href = `/doc/${p.slug}`;
     read.textContent = p.kind && p.kind !== "speech" ? "read the record" : "read the speech";
-    cite.append(who ? `${who} · ` : "", read);
+    said.append(who ? `${who} · ` : "", read);
     const earlier = win?.since && p.date && String(p.date) < String(win.since);
-    if (earlier) cite.append(" · cited from earlier in the record");
+    if (earlier) said.append(" · cited from earlier in the record");
+    cite.appendChild(said);
     li.appendChild(cite);
     list.appendChild(li);
   }
@@ -13732,42 +13720,34 @@ function reportTideHTML(tide, topic) {
   </section>`;
 }
 
-/** One ranked speaker: portrait, name, party, bar, count. */
+/** One ranked speaker: a byline (portrait, name, party), a bar, the count. */
 function reportVoiceRow(v, max) {
   const row = document.createElement("li");
   row.className = "report-voice";
-  const face = document.createElement("span");
-  face.className = "report-voice-face";
-  face.setAttribute("aria-hidden", "true"); // a blank circle until the portrait lands; never initials
-  loadPhotoMap().then(() => {
-    const url = photoUrlFor(v.speaker);
-    if (url) face.innerHTML = `<img src="${esc(url)}" alt="" width="32" height="32" loading="lazy">`;
-  });
   const body = document.createElement("div");
-  body.className = "report-voice-body";
-  const line = document.createElement("p");
-  line.className = "report-voice-name";
+  const line = document.createElement("div");
+  line.className = "ui-byline-who";
   const who = document.createElement("a");
+  who.className = "ui-byline-name";
   if (hasEntityId(v.speaker)) who.href = subjectHash("person", v.speaker);
   who.textContent = v.speaker;
   line.appendChild(who);
   if (v.party) {
     const party = document.createElement("span");
-    party.className = "report-voice-party";
     party.innerHTML = partyChipHTML(v.party); // fixed map lookup, not model text
     if (!party.firstChild) party.textContent = v.party;
     line.appendChild(party);
   }
   const count = Number(v.count || 0);
   const track = document.createElement("span");
-  track.className = "barrow-track report-voice-track";
+  track.className = "ui-bar";
   track.setAttribute("aria-hidden", "true");
   track.innerHTML = `<i style="width:${Math.max((count / max) * 100, 1).toFixed(2)}%"></i>`;
   body.append(line, track);
   const tally = document.createElement("span");
-  tally.className = "report-voice-count";
+  tally.className = "ui-row-figure";
   tally.textContent = count.toLocaleString();
-  row.append(face, body, tally);
+  row.append(bylinePortrait(v.speaker), body, tally);
   return row;
 }
 
@@ -13778,13 +13758,13 @@ function reportVoices(voices, win) {
   const column = (rows, heading) => {
     if (!rows?.length) return;
     const col = document.createElement("div");
-    col.className = "report-voice-column";
     const h = document.createElement("h4");
-    h.className = "report-voice-heading";
+    h.className = "ui-row-name";
     h.textContent = heading;
     const max = Math.max(...rows.map((r) => Number(r.count) || 0), 1);
     const list = document.createElement("ol");
-    list.className = "report-voice-list";
+    list.className = "ui-list report-voice-list";
+    list.dataset.rule = "none";
     list.replaceChildren(...rows.map((r) => reportVoiceRow(r, max)));
     col.append(h, list);
     wrap.appendChild(col);
@@ -13815,24 +13795,43 @@ function reportAllSources(report) {
   const rows = [...seen.values()].sort((a, b) => String(a.date || "").localeCompare(String(b.date || "")));
   if (!rows.length) return null;
   const det = document.createElement("details");
-  det.className = "chat-sources report-sources report-all-sources";
+  det.className = "ui-disclosure report-sources";
   const sum = document.createElement("summary");
   sum.textContent = `Every record behind this report (${rows.length})`;
   const ol = document.createElement("ol");
-  ol.className = "report-source-list";
+  ol.className = "ui-list ui-disclosure-body report-source-list";
   det.append(sum, ol);
   reportFillOnOpen(det, ol, () => rows.map((s) => reportSourceRow(s)));
   return det;
 }
 
-/** A serif section heading with a hairline over it, and the anchor to jump to. */
+/** A part's head (its section carries the rule), and the anchor to jump to. */
 function reportSectionHead(id, text) {
-  const h = document.createElement("h3");
+  const head = document.createElement("div");
+  head.className = "ui-section-head";
+  const h = document.createElement("h2");
   h.className = "report-part-title";
   h.id = `${id}-head`;
   h.tabIndex = -1;
   h.textContent = text;
+  head.appendChild(h);
+  return head;
+}
+
+/** A titled group inside a part. */
+function reportSubTitle(text) {
+  const h = document.createElement("h3");
+  h.className = "ui-subsection-title";
+  h.textContent = text;
   return h;
+}
+
+/** A part's note: OPAX saying what the block below is. */
+function reportNote(text) {
+  const p = document.createElement("p");
+  p.className = "ui-section-note report-note";
+  p.textContent = text;
+  return p;
 }
 
 // --- follow the money: the money map, isolated to the report's industry ------
@@ -13923,10 +13922,8 @@ function renderReportMoney(report, slug) {
   part.hidden = !cfg;
   if (!cfg) return;
   part.append(reportSectionHead("report-money", "Follow the money"));
-  const note = document.createElement("p");
-  note.className = "report-part-note";
-  note.textContent = `Disclosed donations from ${cfg.label} donors to the parties, from the AEC returns. ` +
-    "Drag to orbit, click a donor or a party for its card, and drag the years to watch the money move.";
+  const note = reportNote(`Disclosed donations from ${cfg.label} donors to the parties, from the AEC returns. ` +
+    "Drag to orbit, click a donor or a party for its card, and drag the years to watch the money move.");
   const plate = document.createElement("div");
   plate.className = "subject-map report-map is-waiting";
   plate.id = "report-map";
@@ -13936,12 +13933,8 @@ function renderReportMoney(report, slug) {
   links.className = "entry-more report-money-links";
   links.innerHTML = `<a href="${esc(moneyHash("federal", cfg.group))}">Open the full money map with the ${esc(cfg.label)} isolated</a> · ` +
     `<a href="${esc(askHash(`What has parliament said about ${cfg.ask}?`))}">Ask what parliament said about ${esc(cfg.ask)}</a>`;
-  const wordsHead = document.createElement("h4");
-  wordsHead.className = "report-sub-title";
-  wordsHead.textContent = "Words per dollar";
-  const wordsNote = document.createElement("p");
-  wordsNote.className = "report-part-note";
-  wordsNote.textContent = "What the industry disclosed to each party, beside that party's share of the debate in the labelled record. Comparison, never causation; every number opens the disclosures or speeches behind it.";
+  const wordsHead = reportSubTitle("Words per dollar");
+  const wordsNote = reportNote("What the industry disclosed to each party, beside that party's share of the debate in the labelled record. Comparison, never causation; every number opens the disclosures or speeches behind it.");
   const words = document.createElement("div");
   words.className = "report-words";
   part.append(note, plate, links, wordsHead, wordsNote, words);
@@ -13978,13 +13971,10 @@ function renderReportV2(report, slug) {
   const head = $("report-head2");
   head.replaceChildren();
   head.hidden = false;
-  if (win.sinceLabel) {
-    const covers = document.createElement("p");
-    covers.className = "report-window";
-    covers.textContent =
-      `The debate since ${win.sinceLabel}, and how it has moved since ${win.firstYear}.`;
-    head.appendChild(covers);
-  }
+  const covers = $("report-meta");
+  covers.textContent = win.sinceLabel
+    ? `The debate since ${win.sinceLabel}, and how it has moved since ${win.firstYear}.` : "";
+  covers.hidden = !win.sinceLabel;
   // One machine label for the report, at its top: the opening and every
   // section are machine-written, so no section repeats it (§5.2 MachineLabel).
   head.insertAdjacentHTML("beforeend", machineLabelHTML({ note: REPORT_MODEL_NOTE, className: "report-machine" }));
@@ -14044,11 +14034,9 @@ function renderReportV2(report, slug) {
   if (report.now) {
     now.append(reportSectionHead("report-now", "The debate now"));
     if (report.now.discovered?.length) {
-      const intro = document.createElement("p");
-      intro.className = "report-part-note";
-      intro.textContent = win.sinceLabel
+      const intro = reportNote(win.sinceLabel
         ? `What the chamber has actually been arguing about since ${win.sinceLabel}. Each opens its speeches.`
-        : "What the chamber has actually been arguing about. Each opens its speeches.";
+        : "What the chamber has actually been arguing about. Each opens its speeches.");
       now.append(intro, reportDiscovered(report.now.discovered, win));
     }
     for (const section of report.now.sections || []) {
@@ -14056,16 +14044,10 @@ function renderReportV2(report, slug) {
       now.appendChild(reportEssay(section, { id: `report-s-${number}`, slug, number }));
     }
     if (report.key_stats?.length) {
-      const h = document.createElement("h4");
-      h.className = "report-sub-title";
-      h.textContent = "The figures this turns on";
-      now.append(h, reportStatTiles(report.key_stats));
+      now.append(reportSubTitle("The figures this turns on"), reportStatTiles(report.key_stats));
     }
     if (report.positions?.length) {
-      const h = document.createElement("h4");
-      h.className = "report-sub-title";
-      h.textContent = "Where the parties stand";
-      now.append(h, reportPositions(report.positions, win));
+      now.append(reportSubTitle("Where the parties stand"), reportPositions(report.positions, win));
     }
   }
 
@@ -14084,7 +14066,7 @@ function renderReportV2(report, slug) {
         const step = document.createElement("div");
         step.className = "report-era";
         const span = document.createElement("p");
-        span.className = "report-era-span";
+        span.className = "ui-page-meta report-era-span";
         // The label is already the span ("1993–2009"). Restating it as ISO
         // dates beside itself — "1993–2009 · 1993-01-01–2009-12-31" — says the
         // same thing twice, the second time in machine. The years are drawn
@@ -14101,22 +14083,12 @@ function renderReportV2(report, slug) {
     const tide = reportTideHTML(report.over_time.tide, topic);
     if (tide) over.insertAdjacentHTML("beforeend", tide);
     if (report.over_time.key_moments?.length) {
-      const h = document.createElement("h4");
-      h.className = "report-sub-title";
-      h.textContent = "Start reading: the speeches that moved it";
-      const note = document.createElement("p");
-      note.className = "report-part-note report-reading-note";
-      note.textContent = "Chosen from the labelled record: substantive speeches on the subject, one per speaker, across the years.";
-      const list = document.createElement("div");
-      list.className = "report-reading-list";
-      list.replaceChildren(...report.over_time.key_moments.map(keySpeechItem));
-      over.append(h, note, list);
+      over.append(reportSubTitle("Start reading: the speeches that moved it"),
+        reportNote("Chosen from the labelled record: substantive speeches on the subject, one per speaker, across the years."),
+        reportReadingList(report.over_time.key_moments));
     }
     if (report.voices?.now?.length || report.voices?.all?.length) {
-      const h = document.createElement("h4");
-      h.className = "report-sub-title";
-      h.textContent = "Who does the talking";
-      over.append(h, reportVoices(report.voices, win));
+      over.append(reportSubTitle("Who does the talking"), reportVoices(report.voices, win));
     }
   }
 
@@ -14180,14 +14152,14 @@ async function openReport(slug, sectionNum, manageFocus) {
   const provenance =
     `Generated ${fmtDate(report.generated_at || "")} · every claim cited to the record`;
   $("report-meta").textContent = provenance;
-  $("report-meta2").textContent = provenance;
   // The corpus totals under the money: how much record this report read.
+  const stat = (value, label) => `<div class="ui-stat"><b class="ui-stat-value">${esc(value)}</b><span class="ui-stat-label">${esc(label)}</span></div>`;
   const corpusTotalsHTML = (st) => {
     const don = st?.donations;
     if (!st) return "";
-    return `${tile((st.speech_count ?? 0).toLocaleString(), st.speech_scope === "topic-labelled-corpus" ? "labelled speeches on this topic" : "speeches on the record")}
-      ${tile((st.unique_speakers ?? 0).toLocaleString(), "parliamentarians spoke")}
-      ${don ? tile(fmtMoney(don.total ?? 0), `donations: ${fmtIndustries(don.industries || [])}`) : ""}`;
+    return `${stat((st.speech_count ?? 0).toLocaleString(), st.speech_scope === "topic-labelled-corpus" ? "labelled speeches on this topic" : "speeches on the record")}
+      ${stat((st.unique_speakers ?? 0).toLocaleString(), "parliamentarians spoke")}
+      ${don ? stat(fmtMoney(don.total ?? 0), `donations: ${fmtIndustries(don.industries || [])}`) : ""}`;
   };
   const v2 = reportIsV2(report);
   // A v2 report reads in its own order (now, then how it moved), so the v1
@@ -14195,9 +14167,9 @@ async function openReport(slug, sectionNum, manageFocus) {
   $("report-blurb").hidden = v2;
   $("report-lead").hidden = v2;
   // v2 states its provenance at the foot, beside the download of the data the
-  // line describes; v1 keeps it under the title.
+  // line describes, and its meta line says the window it reads over
+  // (renderReportV2); v1 keeps the provenance under the title.
   $("report-meta").hidden = v2;
-  $("report-meta2").hidden = true;
   $("report-head2").hidden = !v2;
   for (const id of ["report-jump", "report-now", "report-overtime", "report-money", "report-allsources"]) $(id).hidden = !v2;
   if (v2) {
@@ -14210,19 +14182,20 @@ async function openReport(slug, sectionNum, manageFocus) {
   }
   renderStats($("report-stats"), report.stats, report.title,
     { speakers: !(v2 && (report.voices?.now?.length || report.voices?.all?.length)) });
+  $("report-stats").classList.toggle("ui-section", Boolean(v2 && report.stats));
   if (report.stats) {
     if (v2) {
       // No figures rail on a v2 page: the money is its own closing part and
       // the corpus totals lead it under a line of their own, because a speech
       // count is not money and the part heading should not claim it is.
       $("report-stats").insertAdjacentHTML("afterbegin",
-        `<h3 class="report-part-title" id="report-money-head" tabindex="-1">The money beside the words</h3>
-         <h4 class="report-sub-title report-corpus-title">The parliamentary record</h4>
-         <div class="tiles report-corpus-tiles">${corpusTotalsHTML(report.stats)}</div>`);
+        `<div class="ui-section-head"><h2 class="report-part-title" id="report-stats-head" tabindex="-1">The money beside the words</h2></div>
+         <h3 class="ui-subsection-title report-corpus-title">The parliamentary record</h3>
+         <div class="ui-stats">${corpusTotalsHTML(report.stats)}</div>`);
     } else {
       const figures = $("report-figures");
-      const grid = figures.querySelector(".tiles") || figures.appendChild(document.createElement("div"));
-      grid.classList.add("tiles");
+      const grid = figures.querySelector(".ui-stats") || figures.appendChild(document.createElement("div"));
+      grid.classList.add("ui-stats");
       grid.insertAdjacentHTML("beforeend", corpusTotalsHTML(report.stats));
     }
   }

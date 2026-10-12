@@ -60,9 +60,9 @@
 <!-- fonts:end -->
 <!-- ?v= is content-hash stamped by scripts/stamp_assets.mjs (npm run deploy),
      which is what lets _headers serve these two immutable. -->
-<link rel="stylesheet" href="/style.css?v=d62aa384d3">
-<link rel="stylesheet" href="/ui-controls.css?v=b23d3eeb3d">
-<link rel="stylesheet" href="/ui-source.css?v=8b74f1ee58">
+<link rel="stylesheet" href="/style.css?v=638a9975da">
+<link rel="stylesheet" href="/ui-controls.css?v=1956263368">
+<link rel="stylesheet" href="/ui-source.css?v=5d21085448">
 <link rel="stylesheet" href="/voice.css?v=19eea6fcdc">
 <!-- labels.js: app.js imports it before its first render. -->
 <link rel="modulepreload" href="/labels.js?v=c6bf994ef7">
@@ -705,40 +705,42 @@
     <section id="panel-reports" class="panel" hidden aria-label="Reports">
       <!-- The index: one title, the cards, one dated source line for the set. -->
       <div id="reports-index">
-        <div class="subject-head reports-head">
+        <div class="ui-page-head">
           <h1 id="reports-title" tabindex="-1">Reports</h1>
-          <p class="subject-tag"><span>Standing investigations that pair the money with the words, every claim cited to the record.</span></p>
+          <p class="ui-lede">Standing investigations that pair the money with the words, every claim cited to the record.</p>
         </div>
-        <div id="reports-list" class="report-cards"></div>
+        <ul id="reports-list" class="ui-card-grid" role="list"></ul>
         <div id="reports-source"></div>
       </div>
       <div id="reports-status" class="status" role="status"></div>
       <article id="report-view" hidden>
-        <h1 id="report-title" tabindex="-1"></h1>
-        <p id="report-blurb" class="report-blurb"></p>
-        <!-- v2 head: the window the report covers and the lede in reading
-             size. Empty and hidden for a v1 report. -->
-        <div id="report-head2" class="report-head2" hidden></div>
+        <!-- One title block: the title, one meta line (v1: when it was
+             generated; v2: the window it reads over), then the lede. -->
+        <div class="ui-page-head report-head">
+          <h1 id="report-title" tabindex="-1"></h1>
+          <p id="report-meta" class="ui-page-meta"></p>
+          <p id="report-blurb" class="ui-lede"></p>
+          <!-- v2: the machine label and the lede. Empty and hidden for a v1 report. -->
+          <div id="report-head2" class="report-head2" hidden></div>
+        </div>
         <!-- The nav is a child of the article, not of the head: a sticky
              element is bounded by its containing block, and inside the head it
              would unpin one line later. -->
         <nav id="report-jump" class="report-jump" hidden aria-label="Parts of this report"></nav>
-        <p id="report-meta" class="report-meta"></p>
         <div class="report-lead" id="report-lead">
           <div id="report-brief"></div>
           <aside id="report-figures"></aside>
         </div>
         <!-- v2 parts, in reading order, ahead of the money a v1 page also has. -->
-        <section id="report-now" class="report-part" hidden aria-labelledby="report-now-head"></section>
-        <section id="report-overtime" class="report-part" hidden aria-labelledby="report-overtime-head"></section>
-        <section id="report-money" class="report-part" hidden aria-labelledby="report-money-head"></section>
+        <section id="report-now" class="ui-section report-part" hidden aria-labelledby="report-now-head"></section>
+        <section id="report-overtime" class="ui-section report-part" hidden aria-labelledby="report-overtime-head"></section>
+        <section id="report-money" class="ui-section report-part" hidden aria-labelledby="report-money-head"></section>
         <div id="report-stats"></div>
         <div id="report-positions"></div>
         <div id="report-moments"></div>
         <div id="report-sections"></div>
-        <div id="report-allsources" hidden></div>
         <!-- v2 keeps its provenance at the foot, beside the data it describes. -->
-        <p id="report-meta2" class="report-meta report-foot-meta" hidden></p>
+        <div id="report-allsources" class="ui-section" hidden></div>
         <div id="report-download"></div>
       </article>
     </section>
@@ -2095,10 +2097,10 @@
 <!-- defer: never block the parser (Lighthouse counted this as render-blocking).
      Deferred scripts still run before DOMContentLoaded, so nothing changes for
      app.js's boot. ?v= is content-hash stamped by scripts/stamp_assets.mjs. -->
-<script src="/spa-shell.js?v=e422e996a5" defer></script>
+<script src="/spa-shell.js?v=d760f2e2d0" defer></script>
 <script src="/navigation.js?v=f86ae6aef6" defer></script>
 <script src="/quick-search.js?v=27eac3b2f7" defer></script>
 <script src="/ui-source.js?v=5e7b751ca0" defer></script>
-<script src="/app.js?v=fcac2cb4af" defer></script>
+<script src="/app.js?v=3726313eb7" defer></script>
 </body>
 </html>
