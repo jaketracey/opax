@@ -4,7 +4,7 @@ let donorsNotNamedDetail = "OPAX names organisations only. Donors it can't confi
 let donorNameWithheld = () => true;
 let donorRouteWithheld = async(name,index) => donorNameWithheld(index,name);
 let donorViewIndex = {organisations:new Set(),withheld:new Set()};
-const donorViewReady = import('/donor-views.js?v=55a8bd3ae0').then(module => {
+const donorViewReady = import('/donor-views.js?v=77470b1d26').then(module => {
   ({donorRows,isUnnamedAggregate,donorNameWithheld,donorsNotNamedDetail}=module);
   if(typeof module.donorRouteWithheld==='function') donorRouteWithheld=module.donorRouteWithheld;
   return module.loadDonorViewIndex();
@@ -1158,10 +1158,10 @@ async function mountDiscoveryMap(signal) {
     if (!current()) return;
     const donor = data?.nodes?.find((node) => node.kind === "donor" && node.label.trim().toLocaleLowerCase() === signal.entity.trim().toLocaleLowerCase());
     if (!donor) { root.innerHTML = '<p class="status">This organisation isn’t in the money map’s selected donor set. You can still search its name in the record.</p>'; return; }
-    const { mountMoneyMap } = await import("/money-map.js?v=ca923f4f2e");
+    const { mountMoneyMap } = await import("/money-map.js?v=fb33962c2d");
     if (!current()) return;
     root.textContent = "";
-    const handle = await mountMoneyMap(root, "/graph/money.json?v=suppliers-1", { focus: donor.id, chrome: "mini", reveal: true, openCard: false,
+    const handle = await mountMoneyMap(root, "/graph/money.json", { focus: donor.id, chrome: "mini", reveal: true, openCard: false,
       askUrl: (industry) => askHash(`What has parliament said about ${industryLabel(industry)}?`) });
     if (!current()) { handle.destroy(); return; }
     discoveryMapHandle = handle;
@@ -1271,7 +1271,7 @@ const STATE_NOT_SUMMED =
   "State and federal returns are not summed: AEC returns already include state branch receipts.";
 
 const MONEY_JURISDICTIONS = {
-  federal: { label: "Federal", file: "/graph/money.json?v=suppliers-1" },
+  federal: { label: "Federal", file: "/graph/money.json" },
   qld: { label: "Queensland", file: "/graph/money.qld.json" },
   vic: { label: "Victoria", file: "/graph/money.vic.json" },
   tas: { label: "Tasmania", file: "/graph/money.tas.json" },
@@ -1354,7 +1354,7 @@ async function openMoneyRecords(kind, params) {
   $('money-records-title').textContent = grants ? 'Government grants' : 'Political receipts';
   const body = $('money-records-body'); body.innerHTML = '<p class="status">Loading the records…</p>';
   try {
-    const mod = await import(grants ? '/grants.js?v=bf7c17477c' : '/ledger.js?v=5644afe6e0');
+    const mod = await import(grants ? '/grants.js?v=d21ff9dd03' : '/ledger.js?v=ed12180193');
     if (generation !== moneyRecordsGeneration) return;
     body.replaceChildren();
     // Both modules report their shareable state (open file, filters) so the
@@ -1382,7 +1382,7 @@ async function openGrantRecipient(jurisdiction, id, manageFocus) {
   const body = $('money-records-body');
   body.innerHTML = '<div class="grant-recipient-page" aria-busy="true"><p class="visually-hidden" role="status">Loading recipient records</p><div class="answer-skeleton grant-recipient-skeleton" aria-hidden="true"><i style="width:62%;height:2.75rem"></i><i style="width:38%"></i><i style="width:100%;height:6rem"></i><i style="width:84%"></i><i style="width:96%"></i><i style="width:74%"></i></div></div>';
   try {
-    const mod = await import('/grant-recipient.js?v=8abe507dc5');
+    const mod = await import('/grant-recipient.js?v=665a664a0a');
     if (generation !== moneyRecordsGeneration) return;
     moneyRecordsHandle = mod.mountGrantRecipient(body, { jurisdiction, id, manageFocus,
       onTitle(name) {
@@ -1476,7 +1476,7 @@ async function mountMoney(jurParam, industry, params = new URLSearchParams()) {
   root.innerHTML = `<p class="status" style="margin:0;padding:1rem 1.25rem">Loading the map…</p>`;
   const cfg = MONEY_JURISDICTIONS[jur];
   try {
-    const [{ mountMoneyMap }, data, journeysModule, researchModule, recordsModule] = await Promise.all([import("/money-map.js?v=ca923f4f2e"), loadMoneyFile(jur), import("/money-journeys.js?v=mobile-picker-20260908"), import("/map-research.js?v=d4a14d9676"), import("/money-records.js?v=ia-ux-20260908-2")]);
+    const [{ mountMoneyMap }, data, journeysModule, researchModule, recordsModule] = await Promise.all([import("/money-map.js?v=fb33962c2d"), loadMoneyFile(jur), import("/money-journeys.js?v=mobile-picker-20260908"), import("/map-research.js?v=d15f440009"), import("/money-records.js?v=ia-ux-20260908-2")]);
     if (moneyMapLoading !== jur || generation !== moneyMapGeneration) return; // switched again while loading
     const fine = $("money-fineprint");
     if (fine) fine.innerHTML = moneyFineprintHTML(jur, data?.meta);
@@ -1611,7 +1611,7 @@ async function openSupplierPage(name, params, manageFocus) {
   body.classList.remove("subject-person", "subject-party");
   body.innerHTML = '<p role="status">Loading suppliers…</p>';
   try {
-    const module = await import("/suppliers.js?v=1d01466ca3");
+    const module = await import("/suppliers.js?v=c2fae77c87");
     if (generation !== supplierPageGeneration) return;
     const helpers = {
       params,
@@ -3123,7 +3123,7 @@ function setPeopleRail(sources) {
     loadPhotoMap().then(() => {
       for (const slot of card.querySelectorAll(".people-face[data-speaker]")) {
         const url = photoUrlFor(slot.dataset.speaker);
-        if (url) slot.innerHTML = `<img src="${esc(url)}" alt="" width="28" height="28">`;
+        if (url) slot.innerHTML = `<img src="${esc(url)}" alt="" width="28" height="28" loading="lazy" decoding="async">`;
       }
     });
   }
@@ -3271,8 +3271,9 @@ addEventListener("hashchange", () => updateQuoteRail());
 let moneyData = null;
 let moneyDataPromise = null;
 function loadMoneyData() {
-  moneyDataPromise ??= fetch("/graph/money.json?v=suppliers-1",{cache:"no-cache"})
-    .then((r) => r.json()).then((d) => (moneyData = d)).catch(() => null);
+  // The same parse the donor privacy index reads (donor-views.js), not a second download.
+  moneyDataPromise ??= import('/donor-views.js?v=77470b1d26').then((module) => module.loadMoneyGraph("/graph/money.json"))
+    .then((d) => (moneyData = d)).catch(() => null);
   return moneyDataPromise;
 }
 
@@ -3346,7 +3347,7 @@ function renderMoneyPanel(ind) {
     </div>
     <p class="fineprint">${esc(AEC_NOTE)}
       <a href="/money">Explore on the money map</a> ·
-      <a href="/graph/money.json?v=suppliers-1">Download the data</a></p>`;
+      <a href="/graph/money.json">Download the data</a></p>`;
   // Blocks rise in sequence (kicker, each figure, each chart, the note); fresh
   // nodes on every render, so a second question replays it. Motion is CSS-side.
   box.querySelectorAll(":scope > :not(.tiles, .money-charts), :scope > .tiles > .tile, :scope > .money-charts > .chart").forEach((el, i) => {
@@ -3609,7 +3610,7 @@ function personSlug(name) {
 }
 
 /** Point each sponsor link at the roster row the bill names (sponsor-person.js: the bill's person ID
- *  decides, never a surname print); a print the roster cannot place keeps its name link. */
+ *  decides, never a surname print); an unresolved sponsor stays plain text. */
 const sponsorSummaries = new Map();
 async function loadSponsorSummary(bill) {
   const path = await growthModules.sponsorSummaryPath(bill);
@@ -4145,10 +4146,10 @@ async function mountSubjectMap(nodeId, label = "") {
   el.hidden = false;
   $("subject-map-hint").hidden = false;
   try {
-    const { mountMoneyMap } = await import("/money-map.js?v=ca923f4f2e");
+    const { mountMoneyMap } = await import("/money-map.js?v=fb33962c2d");
     if (currentSubjectKey !== key) return; // navigated away while loading
     destroySubjectMap();
-    const handle = await mountMoneyMap(el, "/graph/money.json?v=suppliers-1", {
+    const handle = await mountMoneyMap(el, "/graph/money.json", {
       focus: nodeId,
       subject: nodeId, // this page IS the profile: its own card offers no "Full profile"
       chrome: "mini",
@@ -5481,7 +5482,7 @@ async function openSubject(kind, name, manageFocus, params = new URLSearchParams
     if (!isParty) head.insertAdjacentHTML("beforeend", sourceLineHTML({
       updated: moneyData.meta?.generated || "", source: "AEC annual returns", state: "totals are a floor",
       originals: [{ label: "AEC Transparency Register", href: "https://transparency.aec.gov.au/" },
-        { label: "The money map's data (JSON)", href: "/graph/money.json?v=suppliers-1" }],
+        { label: "The money map's data (JSON)", href: "/graph/money.json" }],
       facts: entryFacts,
       notes: [entryNote],
     }));
@@ -5497,7 +5498,7 @@ async function openSubject(kind, name, manageFocus, params = new URLSearchParams
         askAbout,
         { href: searchHash(`"${node.label}"`, {}), label: "Search mentions in the record" },
         { href: `/money?focus=${encodeURIComponent(node.id)}`, label: "Open the full money map" },
-        { href: "/graph/money.json?v=suppliers-1", label: "Download the map data", detail: "JSON, the whole map" },
+        { href: "/graph/money.json", label: "Download the map data", detail: "JSON, the whole map" },
       ], isParty ? "More about this party" : "More about this donor")}
     </div>`);
     box.classList.add("entry-rail");
@@ -5519,7 +5520,7 @@ async function openSubject(kind, name, manageFocus, params = new URLSearchParams
         updated: moneyData.meta?.generated || "", dateLabel: isParty ? "Map updated" : "Updated", source: "AEC annual returns", state: "totals are a floor",
         originals: [{ label: "AEC Transparency Register", href: "https://transparency.aec.gov.au/" },
           { label: "Funding records", href: `/money/receipts?${new URLSearchParams(isParty ? { party: node.id } : { focus: node.id })}` },
-          isParty && { label: "The money map's data (JSON)", href: "/graph/money.json?v=suppliers-1" }].filter(Boolean),
+          isParty && { label: "The money map's data (JSON)", href: "/graph/money.json" }].filter(Boolean),
         facts: isParty ? entryFacts : [],
         notes: [isParty ? entryNote : "", `The ${isParty ? "donors" : "parties"} with the largest disclosed sums${isParty ? ", party transfers left out" : ""}.${isParty ? "" : ` ${esc(AEC_NOTE)}`}`],
         licence: 'AEC Transparency Register returns, <a href="https://creativecommons.org/licenses/by/4.0/" rel="license noopener" target="_blank">CC BY 4.0 ↗︎</a>.',
@@ -5564,12 +5565,23 @@ async function openSubject(kind, name, manageFocus, params = new URLSearchParams
   // person
   const sections = $("subject-sections");
   const box = $("subject-infobox");
+  // The record waits, unseen, until the head has its final height: the meta
+  // line's second row, the source line and ⋯ arrive with their data, and each
+  // pushed a visible grid down (CLS). Hidden content does not shift. Shown with
+  // the finished head, on any early exit, or after four seconds at the latest.
+  const grid = body.querySelector(".subject-grid");
+  grid?.classList.add("is-settling");
+  const revealGrid = () => grid?.classList.remove("is-settling");
+  setTimeout(revealGrid, 4000);
   const unattributed = params.get('attribution') === 'unattributed';
   const people = (await loadParliamentarians())?.people || [];
   const record = splitPerson(people, name) || people.find((p) => p.name.toLowerCase() === String(name).toLowerCase());
   const roster = unattributed ? null : record;
   const speechSpeaker = splitSpeakers(roster)[0] || name;
   const speechScope = personScope(roster);
+  // The ask block's privacy file, read alongside the speeches: awaited after the
+  // head is drawn, it landed a frame later and pushed the record down (CLS).
+  const privacyReady = roster && !unattributed ? growthModules.loadModulePrivacy("person", growthModules.normalisedName(roster.name || name)) : null;
   if (currentSubjectKey !== key) return;
   loadPhotoMap().then(() => {
     if (currentSubjectKey !== key || unattributed) return;
@@ -5610,6 +5622,7 @@ async function openSubject(kind, name, manageFocus, params = new URLSearchParams
     // The one caveat drawn inline: without it a reader would take these for an MP's speeches.
     head.insertAdjacentHTML('beforeend', `<p class="person-caveat">Evidence printed as ${esc(name)} is kept separate from parliamentary speeches. No MP identity, party or portrait is assigned to these records.</p>`);
     renderPersonSpeeches(name, speeches, chambers, sections, { unattributed: true }).then(() => refreshEntryRail(sections));
+    revealGrid();
     return;
   }
   if (roster?.speech_scope) {
@@ -5620,6 +5633,7 @@ async function openSubject(kind, name, manageFocus, params = new URLSearchParams
   const witness = !roster && speeches.length > 0 &&
     speeches.every((r) => r.speaker_type === "witness" || (isCommitteeChamber(r.chamber) && r.person_id == null));
   if (witness) {
+    revealGrid();
     renderCommitteeWitness(name, key, body, box, sections, speeches, dates);
     return;
   }
@@ -5643,6 +5657,7 @@ async function openSubject(kind, name, manageFocus, params = new URLSearchParams
         <ul class="subject-list" role="list">${holders.map(([n, c]) => `<li><a ${entityHrefAttr(subjectHash("person", n))}>${esc(n)}</a> <span class="meta">${c.toLocaleString()} speeches</span></li>`).join("")}</ul>` : ""}
         ${sourceLineHTML({ source: "Parliamentary Hansard", notes: ["The record names its speakers as the transcripts do, so a person may be indexed under a fuller or shorter form of this name. The search looks across every spelling."] })}`,
     });
+    revealGrid();
     return;
   }
   const q = encodeURIComponent(name);
@@ -5710,7 +5725,7 @@ async function openSubject(kind, name, manageFocus, params = new URLSearchParams
       ], "More about this person")}
     </div>`);
   const promptName = roster?.full || name;
-  const privacy = await growthModules.loadModulePrivacy("person",growthModules.normalisedName(roster?.name || name));
+  const privacy = await (privacyReady || growthModules.loadModulePrivacy("person",growthModules.normalisedName(roster?.name || name)));
   if (currentSubjectKey !== key) return;
   head.insertAdjacentHTML("afterend", growthModules.askBlockHTML({name: promptName, pageType: "person", seed: `What has ${promptName} said in parliament?`,privacy}));
   const askRecord = {name: promptName,privacy};
@@ -5725,6 +5740,7 @@ async function openSubject(kind, name, manageFocus, params = new URLSearchParams
   // source line; on phones it comes before the source line, which keeps clear of the ⋯ button.
   const fitsAnchor = head.querySelector(":scope > .ui-source");
   if (fitsRow) (fitsAnchor || head).insertAdjacentHTML(fitsAnchor ? "beforebegin" : "beforeend", `<p class="person-fits">${fitsRow[1]}</p>`);
+  revealGrid(); // the head is final: meta line, source line, ⋯, fits row and the ask block
   box.innerHTML = entryRailHTML();
   renderPortraitCredit(name, key);
   // The structured record first; the speeches follow it.
@@ -8496,7 +8512,8 @@ async function openBill(key, manageFocus) {
   showPageLoader("bill-loader", "Opening the bill.");
   // The bills export's date dates every block it supplies (principle 4). The
   // index is the export's one dated file, fetched alongside the bill itself.
-  const [bill, billsIndex] = await Promise.all([loadBill(key), loadBillsIndex().catch(() => null)]);
+  // The ask block's privacy file is keyed by the bill, so it is read with it, not after it.
+  const [bill, billsIndex, keyPrivacy] = await Promise.all([loadBill(key), loadBillsIndex().catch(() => null), growthModules.loadModulePrivacy("bill", key)]);
   if (billView !== view || generation !== billTextGeneration) return;
   clearPageLoader("bill-loader");
   if (!bill) {
@@ -8513,7 +8530,7 @@ async function openBill(key, manageFocus) {
     return;
   }
   bill.exportedAt = billsIndex?.generated_at || "";
-  bill.modulePrivacy = await growthModules.loadModulePrivacy("bill",bill.key);
+  bill.modulePrivacy = bill.key === key ? keyPrivacy : await growthModules.loadModulePrivacy("bill",bill.key);
   if (billView !== view || generation !== billTextGeneration) return;
   const title = bill.title || bill.short_title || key;
   // Landed here from outside: keep the Worker's search title (see BOOT_META).
@@ -8922,7 +8939,7 @@ async function openExplain(detail) {
   let waiting = null;
   try {
     const explainModule = import("/explain.js?v=4f577eb978");
-    const wombat = await import("/wombat.js?v=b2936fedf5");
+    const wombat = await import("/wombat.js?v=cb89a88dad");
     if (seq !== explainOpenSeq || !dialog.open) return;
     waiting = wombat.mountWombat(body, { label: "Tracing the disclosed money." });
     const mod = await explainModule;
@@ -8964,12 +8981,12 @@ const GAMES = {
   ballot: { name: "Build your ballot", dialog: "dialog-ballot", body: "explore-ballot", module: "/ballot.js?v=49e7bc6382", mount: "mountBallot" },
   tm: { name: "Time machine", dialog: "dialog-tm", body: "explore-tm", module: "/timemachine.js?v=8e86f26747", mount: "mountTimeMachine" },
   tide: { name: "The tide", dialog: "dialog-tide", body: "explore-tide", module: "/tide.js", mount: "mountTide" },
-  quiz: { name: "The record quiz", dialog: "dialog-quiz", body: "explore-quiz", module: "/quiz.js?v=e157a21ae1", mount: "mountQuiz" },
-  ledger: { name: "The ledger", dialog: "dialog-ledger", body: "explore-ledger", module: "/ledger.js?v=5644afe6e0", mount: "mountLedger" },
-  grants: { name: "Who gets the grants", dialog: "dialog-grants", body: "explore-grants", module: "/grants.js?v=bf7c17477c", mount: "mountGrants" },
+  quiz: { name: "The record quiz", dialog: "dialog-quiz", body: "explore-quiz", module: "/quiz.js?v=ef6c859b59", mount: "mountQuiz" },
+  ledger: { name: "The ledger", dialog: "dialog-ledger", body: "explore-ledger", module: "/ledger.js?v=ed12180193", mount: "mountLedger" },
+  grants: { name: "Who gets the grants", dialog: "dialog-grants", body: "explore-grants", module: "/grants.js?v=d21ff9dd03", mount: "mountGrants" },
   matrix: { name: "Who owns which debate", dialog: "dialog-matrix", body: "explore-matrix", module: "/matrix.js?v=25f5793db5", mount: "mountMatrix" },
-  wd: { name: "Words per dollar", dialog: "dialog-wd", body: "explore-wd", module: "/wordsdollars.js?v=9e390529d6", mount: "mountWordsDollars" },
-  tvn: { name: "Then vs now", dialog: "dialog-tvn", body: "explore-tvn", module: "/thenvsnow.js?v=de2fe807c7", mount: "mountThenVsNow" },
+  wd: { name: "Words per dollar", dialog: "dialog-wd", body: "explore-wd", module: "/wordsdollars.js?v=16a1298a17", mount: "mountWordsDollars" },
+  tvn: { name: "Then vs now", dialog: "dialog-tvn", body: "explore-tvn", module: "/thenvsnow.js?v=54e933f28d", mount: "mountThenVsNow" },
 };
 
 async function openGame(which, params = null) {
@@ -9362,7 +9379,7 @@ async function renderFrontEncy(dayIdx, todayReport, don) {
     const hasVotes = Boolean(v?.for?.length || v?.against?.length);
     return `<article class="report-card ency-card">
       <div class="ency-head">
-        <img class="ency-portrait" src="${esc(photoUrlFor(p.name))}" alt="" width="64" height="64">
+        <img class="ency-portrait" src="${esc(photoUrlFor(p.name))}" alt="" width="64" height="64" loading="lazy" decoding="async">
         <div class="ency-id">
           <span class="card-kicker">Parliamentarian</span>
           <a class="card-title ency-name" ${entityHrefAttr(subjectHash("person", p.name))}>${esc(p.name)}</a>
@@ -9579,10 +9596,10 @@ async function mountFrontMap() {
   if (!root || frontMapHandle || frontMapLoading) return;
   frontMapLoading = true;
   try {
-    const [mod, data] = await Promise.all([import("/money-map.js?v=ca923f4f2e"), loadMoneyData()]);
+    const [mod, data] = await Promise.all([import("/money-map.js?v=fb33962c2d"), loadMoneyData()]);
     if (!data) throw new Error("money data unavailable");
     root.textContent = "";
-    const handle = await mod.mountMoneyMap(root, "/graph/money.json?v=suppliers-1", {
+    const handle = await mod.mountMoneyMap(root, "/graph/money.json", {
       chrome: "mini",
       overview: true,
       pageScroll: true,
@@ -9636,7 +9653,7 @@ async function showWombat(label) {
   if (!wombat && !wombatLoading) {
     wombatLoading = true;
     try {
-      const mod = await import("/wombat.js?v=b2936fedf5");
+      const mod = await import("/wombat.js?v=cb89a88dad");
       if (!$("ask-wombat").hidden) {
         wombat = mod.mountWombat(slot, { label });
       } else {
@@ -9665,7 +9682,7 @@ async function showLoader(slotId, label, opts) {
   const have = loaders.get(slotId);
   if (have) { have.setLabel(label); return; }
   try {
-    const mod = await import("/wombat.js?v=b2936fedf5");
+    const mod = await import("/wombat.js?v=cb89a88dad");
     if (loaders.get(slotId)) return;
     loaders.set(slotId, mod.mountWombat(slot, { label, ...(opts || {}) }));
   } catch { /* the status text still carries the state */ }
@@ -10689,7 +10706,7 @@ function initChat(manageFocus) {
   // The waiting state's pieces, warmed now so a question's first frame does
   // not wait on a module fetch.
   import("/stages.js?v=5a008f79bb").catch(() => {});
-  import("/wombat.js?v=b2936fedf5").catch(() => {});
+  import("/wombat.js?v=cb89a88dad").catch(() => {});
   try {
     const raw = sessionStorage.getItem("opax-chat-seed");
     if (raw) {
@@ -11263,7 +11280,7 @@ async function sendChat(question, carry) {
   let reading = [];
   let note = "";
   announce(`${STEP_LABEL.question}.`);
-  import("/wombat.js?v=b2936fedf5")
+  import("/wombat.js?v=cb89a88dad")
     .then((mod) => {
       if (!alive()) return;
       trundler = mod.mountWombat(track, { label: "", ...PAGE_LOADER });
@@ -14369,7 +14386,7 @@ document.addEventListener("close", (e) => {
 /** Words per dollar for the report's own industry: money beside the debate share, party by party. */
 async function mountReportWords(el, cfg, slug) {
   try {
-    const { mountWordsDollars } = await import("/wordsdollars.js?v=9e390529d6");
+    const { mountWordsDollars } = await import("/wordsdollars.js?v=16a1298a17");
     if (currentReportSlug !== slug || !el.isConnected) return;
     reportWordsHandle = mountWordsDollars(el, { only: [cfg.topic] });
   } catch {
@@ -14379,9 +14396,9 @@ async function mountReportWords(el, cfg, slug) {
 
 async function mountReportMap(el, cfg, slug) {
   try {
-    const { mountMoneyMap } = await import("/money-map.js?v=ca923f4f2e");
+    const { mountMoneyMap } = await import("/money-map.js?v=fb33962c2d");
     if (currentReportSlug !== slug || !el.isConnected) return; // moved on while loading
-    const handle = await mountMoneyMap(el, "/graph/money.json?v=suppliers-1", {
+    const handle = await mountMoneyMap(el, "/graph/money.json", {
       chrome: "mini",
       scrub: true, // the year window: watch the industry's money move
       askUrl: (industry) => askHash(`What has parliament said about ${industry.replace(/_/g, " ")}?`),

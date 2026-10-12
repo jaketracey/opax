@@ -995,6 +995,7 @@ def index_row(d: dict) -> dict:
         "introduced": d["introduced"], "originating_house": d["originating_house"],
         "status": d["status"], "status_as_of": d["status_as_of"],
         "sponsor": d["sponsor"], "sponsor_party": d["sponsor_party"],
+        "sponsor_person_id": d.get("sponsor_person_id"),
         "portfolio": d["portfolio"],
         "has_summary": d["summary"] is not None,
         "summary_version": d["summary"]["version"] if d["summary"] else None,

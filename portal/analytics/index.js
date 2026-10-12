@@ -23,7 +23,7 @@ if (enabled) {
       respect_dnt: true,
       before_send: beforeSend,
     });
-    addEventListener('opax:measured', ({ detail }) => {
+    const send = (detail) => {
       try {
         const clean = cleanEvent(detail?.event, detail?.properties);
         const properties = clean && { ...clean, page_path: detail.properties.page_path, page_section: detail.properties.page_section };
@@ -39,6 +39,11 @@ if (enabled) {
           posthog.capture(detail.event, { ...properties, app: 'opax', environment: 'production' });
         }
       } catch { /* Analytics must never interrupt the application. */ }
-    });
+    };
+    // Loaded after the app's scripts: replay what events.js measured before this ran.
+    const early = window.opaxAnalyticsLog || [];
+    window.opaxAnalyticsLog = null;
+    for (const detail of early) send(detail);
+    addEventListener('opax:measured', ({ detail }) => send(detail));
   } catch { /* Offline, blocked storage or SDK failures must not break Opax. */ }
 }

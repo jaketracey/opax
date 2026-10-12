@@ -8,6 +8,7 @@ import {spawnSync} from 'node:child_process';
 import * as passageText from '../src/passage-text.ts';
 import {compareSearchResults} from '../src/search-sort.ts';
 import {isWitness} from '../public/speech-attribution.js';
+import { cacheKeyParams } from '../src/cache-key.ts';
 
 const fixture = JSON.parse(readFileSync(new URL('../../tests/fixtures/passage-text.json', import.meta.url), 'utf8'));
 const {normalizePassage, passageWindow} = passageText;
@@ -85,7 +86,7 @@ test('Worker /api/search repairs stored name joins and bounds both snippet ends'
   const raw = fixture.speeches.find(s => s.speech_id === 1198151).text_clean;
   let calls = 0;
   const worker = compile(['apiSearch','searchWindow','label','calibrate'], {
-    URL, URLSearchParams, Request, Response, isWitness, compareSearchResults,
+    URL, URLSearchParams, Request, Response, isWitness, compareSearchResults, cacheKeyParams,
     loadPeople:async()=>people, speakerAttribution:async()=>null, filterExpression:()=>null,
     stripListingBoilerplate:evidence.stripListingBoilerplate,
     SLUG_RE:/^(speech|legal|news)-(\d+)$/, DIVISION_SLUG_RE:/^division-/,
