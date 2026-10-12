@@ -34,7 +34,7 @@ How each route is moved onto the tokens and the shared components, for every lan
 
 | Need | Use | Markup |
 |---|---|---|
-| Page title block | `ui-page-head` | `<header class="ui-page-head"><h1>…</h1><p class="ui-page-meta">kind · date · place</p><p class="ui-lede">…</p></header>` |
+| Page title block | `ui-page-head` | `<div class="ui-page-head"><h1>…</h1><p class="ui-page-meta">kind · date · place</p><p class="ui-lede">…</p></div>` (a `div`, not `header`: the masthead owns the bare `header` rule) |
 | A section | `ui-section` (+ `data-accent="money\|votes\|interests\|bills"` where sections differ by category) | `<section class="ui-section"><div class="ui-section-head"><h2>…</h2><a>All …</a></div>…</section>`; a plain title is `.ui-section-title` |
 | A list | `ui-list` (`data-density="compact\|airy"`, `data-rule="none"`) | `<ul class="ui-list"><li class="ui-row">…</li></ul>` |
 | A row | `ui-row` with `ui-row-title` (serif), `ui-row-name` (sans strong), `ui-row-meta`, `ui-row-text`, `ui-row-figure` | |

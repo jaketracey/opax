@@ -269,7 +269,7 @@ function donorBalanceHTML(flows) {
     ? `; other parties here ${otherList.length === 1 ? "is" : "are"} ${otherList.map(esc).join(", ")}`
     : "";
 
-  return `<section class="donor-balance" aria-labelledby="donor-balance-heading">
+  return `<section class="donor-balance" id="donor-balance" aria-labelledby="donor-balance-heading">
     <h3 class="subject-section-title" id="donor-balance-heading">The balance, year by year</h3>
     <div class="tiles balance-tiles">
       <div class="tile"><b>${srcFigure(fmtMoney(totals.coalition), `Total to Coalition parties ${fmtMoney(totals.coalition)}, AEC source`)}</b><span>to Coalition parties</span></div>
@@ -4001,6 +4001,7 @@ async function renderDonorInterests(name, sections) {
   const key = currentSubjectKey;
   const slot = document.createElement("section");
   slot.className = "donor-interests";
+  slot.id = "donor-interests";
   sections.appendChild(slot);
   // The photo map too: photoUrlFor() answers null until it is in, which drew
   // every row here as a blank circle.
@@ -4244,6 +4245,7 @@ async function renderDonorStateMoney(name, sections) {
   const key = currentSubjectKey;
   const slot = document.createElement("section");
   slot.className = "state-money";
+  slot.id = "state-money";
   sections.appendChild(slot);
   const jurs = Object.keys(MONEY_JURISDICTIONS).filter((j) => j !== "federal");
   const files = await Promise.all(jurs.map((j) => loadMoneyFile(j)));
@@ -4291,6 +4293,7 @@ async function renderDonorStateMoney(name, sections) {
 async function renderDonorTaxCharity(name, sections) {
   const key = currentSubjectKey;
   const slot = document.createElement("section");
+  slot.id = "donor-tax";
   slot.hidden = true;
   sections.appendChild(slot);
   try {
@@ -5481,9 +5484,11 @@ async function openSubject(kind, name, manageFocus, params = new URLSearchParams
     if (!isParty) head.insertAdjacentHTML("beforeend", sourceLineHTML({
       updated: moneyData.meta?.generated || "", source: "AEC annual returns", state: "totals are a floor",
       originals: [{ label: "AEC Transparency Register", href: "https://transparency.aec.gov.au/" },
+        { label: "Funding records", href: `/money/receipts?${new URLSearchParams({ focus: node.id })}` },
         { label: "The money map's data (JSON)", href: "/graph/money.json?v=suppliers-1" }],
       facts: entryFacts,
-      notes: [entryNote],
+      notes: [entryNote, "The parties with the largest disclosed sums."],
+      licence: 'AEC Transparency Register returns, <a href="https://creativecommons.org/licenses/by/4.0/" rel="license noopener" target="_blank">CC BY 4.0 ↗︎</a>.',
     }));
     const askAbout = isParty
       ? { href: askHash(`What has parliament said about ${partyAskName(node.label)}?`), label: "Ask what parliament said about them" }
@@ -5515,7 +5520,7 @@ async function openSubject(kind, name, manageFocus, params = new URLSearchParams
         partyDots: !isParty, // donor page rows are parties; party page rows are donors
       })}
       ${!isParty && node.contracts ? `<p class="entry-more"><a href="/subject/supplier?donor=${encodeURIComponent(node.id)}">Their supplier records</a></p>` : ""}
-      ${sourceLineHTML({
+      ${!isParty ? "" /* a donor's one source line is the head's, which carries these originals and notes */ : sourceLineHTML({
         updated: moneyData.meta?.generated || "", dateLabel: isParty ? "Map updated" : "Updated", source: "AEC annual returns", state: "totals are a floor",
         originals: [{ label: "AEC Transparency Register", href: "https://transparency.aec.gov.au/" },
           { label: "Funding records", href: `/money/receipts?${new URLSearchParams(isParty ? { party: node.id } : { focus: node.id })}` },
@@ -5528,23 +5533,24 @@ async function openSubject(kind, name, manageFocus, params = new URLSearchParams
     if (!isParty) sections.insertAdjacentHTML("beforeend", donorBalanceHTML(flows));
     if (!isParty) {
       const evidenceSlot = document.createElement('section');
+      evidenceSlot.id = 'entry-evidence';
       evidenceSlot.hidden = true;
       sections.appendChild(evidenceSlot);
       import('/evidence.js').then(({mountEvidence}) => {
         if (currentSubjectKey === key && evidenceSlot.isConnected)
           return mountEvidence(evidenceSlot, {name: node.label}, {alive: () => currentSubjectKey === key && evidenceSlot.isConnected});
-      }).catch(() => {});
+      }).catch(() => {}).then(() => refreshEntryRail(sections, rail));
     }
-    if (!isParty) renderDonorInterests(node.label, sections);
-    if (!isParty) renderDonorStateMoney(node.label, sections);
-    if (!isParty) renderDonorTaxCharity(node.label, sections);
     const settle = (p) => Promise.resolve(p).then(() => refreshEntryRail(sections, rail));
+    if (!isParty) settle(renderDonorInterests(node.label, sections));
+    if (!isParty) settle(renderDonorStateMoney(node.label, sections));
+    if (!isParty) settle(renderDonorTaxCharity(node.label, sections));
     if (isParty) {
       settle(renderPartyMembers(node.label, body, key));
       settle(renderPartyDebts(node.label, sections));
       settle(renderPartyBillDivisions(node.label, sections, key));
     }
-    renderDonorAccess(node.label, sections);
+    settle(renderDonorAccess(node.label, sections));
     if (isParty) await settle(renderPartyMentions(node.label, sections, key));
     else {
       const mentions = Object.assign(document.createElement("section"), { id: "entry-mentions" });
@@ -5856,7 +5862,11 @@ const PARTY_RAIL = [
   ["party-entities", "Associated entities"], ["party-bills", "Bills they divided on"], ["entry-mentions", "In parliament"],
   ["entry-news", "In the news"],
 ];
-const DONOR_RAIL = [["entry-flows", "Where the money went"], ["entry-mentions", "In parliament"], ["entry-news", "In the news"]];
+const DONOR_RAIL = [
+  ["entry-flows", "Where the money went"], ["donor-balance", "The balance, year by year"], ["entry-evidence", "Across the record"],
+  ["donor-interests", "Named in members' registers"], ["state-money", "State commissions"], ["donor-tax", "Charity and tax"],
+  ["subject-access", "Meetings and lobbying"], ["entry-mentions", "In parliament"], ["entry-news", "In the news"],
+];
 function entryRailHTML({ facts = [], actions = [], extra = "" } = {}) {
   return `<nav class="entry-rail-nav" aria-labelledby="entry-rail-head" hidden>
       <p class="entry-rail-head" id="entry-rail-head">On this page</p>

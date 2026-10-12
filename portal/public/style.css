@@ -411,6 +411,8 @@ a.visually-hidden:focus-visible {
 
 /* ---- Page head: the title, one meta line, an optional lede. */
 .ui-page-head { display: grid; gap: var(--space-line); margin: 0 0 var(--space-section); }
+/* Drawn as a <header>, a page head must not pick up the masthead's bare header rule. */
+header.ui-page-head { position: static; z-index: auto; padding: 0; border: 0; background: none; color: inherit; box-shadow: none; }
 .ui-page-head > :where(h1) { margin: 0; font: var(--type-title); color: var(--ink); overflow-wrap: anywhere; }
 .ui-page-meta { margin: 0; font: var(--type-metadata); color: var(--ink-soft); }
 .ui-lede { margin: var(--space-heading) 0 0; max-width: var(--size-readable); font: var(--type-body); color: var(--ink-soft); }
@@ -2413,22 +2415,24 @@ a.report-card .card-meta { color: var(--ink-soft); }
   font-size: var(--text-15); line-height: var(--leading-normal);
 }
 .tie-declaration.interests-deleted > span:nth-child(2) { text-decoration: line-through; color: var(--ink-faint); }
-.tie-source { display: inline-flex; align-items: center; min-height: 44px; font-size: var(--text-13); white-space: nowrap; }
+/* Inline source links keep their line height and reach 44px with an invisible extension. */
+.tie-source { position: relative; font: var(--type-fine); white-space: nowrap; }
+.tie-source::after, .declared-source-link::after { content: ""; position: absolute; inset: calc(-1 * var(--sp-12)) 0; }
 .tie-flow { margin: var(--sp-4) 0 0; color: var(--ink-soft); font-size: var(--text-15); line-height: var(--leading-body); }
 .tie-flow .party-dot-only { margin-right: var(--sp-4); }
 .donor-ties-list li > span { display: block; margin-top: var(--sp-4); font-size: var(--text-15); line-height: var(--leading-normal); }
 .declared-row {
-  display: grid; grid-template-columns: 6.2rem 48px minmax(0, 1fr);
+  display: grid; grid-template-columns: 6.2rem var(--size-portrait-row) minmax(0, 1fr);
   gap: var(--sp-4) var(--sp-12); align-items: start;
 }
 .declared-row > time { padding-top: var(--sp-2); color: var(--ink-faint); font-size: var(--text-13); font-variant-numeric: tabular-nums; }
-.declared-portrait { grid-column: 2; grid-row: 1; width: 48px; height: 48px; display: grid; place-items: center; }
+.declared-portrait { grid-column: 2; grid-row: 1; width: var(--size-portrait-row); height: var(--size-portrait-row); display: grid; place-items: center; }
 .declared-portrait img {
-  width: 48px; height: 48px; border-radius: var(--radius-round); object-fit: cover; display: block;
-  border: var(--border-focus) solid var(--paper-raised); box-shadow: var(--ring-hairline) var(--divider-subtle);
+  width: var(--size-portrait-row); height: var(--size-portrait-row); border-radius: var(--radius-round); object-fit: cover; display: block;
+  box-shadow: var(--ring-inset-hairline) var(--divider-subtle);
 }
 .declared-portrait > span {
-  width: 48px; height: 48px; border-radius: var(--radius-round); display: grid; place-items: center;
+  width: var(--size-portrait-row); height: var(--size-portrait-row); border-radius: var(--radius-round); display: grid; place-items: center;
   background: var(--paper-sunken); color: var(--ink-soft); box-shadow: var(--ring-inset-hairline) var(--divider-subtle);
   font: var(--weight-bold) var(--text-15)/1 var(--serif);
 }
@@ -2441,7 +2445,7 @@ a.report-card .card-meta { color: var(--ink-soft); }
   margin: var(--sp-4) 0 0; color: var(--ink-soft); font-size: var(--text-15); line-height: var(--leading-normal);
   overflow-wrap: anywhere;
 }
-.declared-source-link { display: inline-flex; align-items: center; min-height: 44px; margin-left: var(--sp-4); white-space: nowrap; }
+.declared-source-link { position: relative; margin-left: var(--sp-4); white-space: nowrap; }
 .declared-match { margin: var(--sp-2) 0 0; color: var(--ink-soft); font-size: var(--text-13); line-height: var(--leading-normal); }
 .declared-match .result-meta { margin-left: var(--sp-4); }
 #panel-declared { max-width: 920px; }
@@ -2511,7 +2515,8 @@ a.report-card .card-meta { color: var(--ink-soft); }
   display: grid; grid-template-columns: 4rem minmax(0, 1fr) minmax(0, 1fr);
   align-items: start; padding: var(--sp-4) 0; font-size: var(--text-13); font-variant-numeric: tabular-nums;
 }
-.balance-election { border-top: var(--border-hairline) solid var(--bronze-rule); margin-top: var(--sp-4); padding-top: var(--sp-8); }
+/* An election year says so in words; it needs no rule of its own. */
+.balance-election { margin-top: var(--sp-8); }
 .balance-election .balance-year { color: var(--bronze-ink); font-weight: var(--weight-strong); }
 .balance-year { color: var(--ink-faint); line-height: 18px; } /* the year's line box matches the bar row, so the bar sits on the year and the election word hangs beneath */
 .balance-year em {
@@ -2568,7 +2573,7 @@ a.report-card .card-meta { color: var(--ink-soft); }
   .tie-declaration { grid-template-columns: 1fr; gap: var(--sp-2); }
   .tie-declaration .interests-holder { padding-top: 0; }
   .tie-source { justify-self: start; }
-  .declared-row { grid-template-columns: 48px minmax(0, 1fr); gap: var(--sp-4) var(--sp-12); }
+  .declared-row { grid-template-columns: var(--size-portrait-row) minmax(0, 1fr); gap: var(--sp-4) var(--sp-12); }
   .declared-row > time { grid-column: 1 / -1; grid-row: auto; padding-top: 0; }
   .declared-portrait { grid-column: 1; grid-row: auto; }
   .declared-entry { grid-column: 2; }
@@ -3495,6 +3500,13 @@ mark.privacy-confirm {
 #subject-sections .entry-section-head .subject-section-title { margin: 0; }
 .entry-section-head > a { display: inline-flex; align-items: center; min-height: var(--size-target); font: var(--type-metadata); font-weight: var(--weight-strong); }
 .entry-more { margin: var(--space-block) 0 0; font: var(--type-metadata); }
+/* A donor's flow bars repeat the map card's split, so wide screens hide them
+   (above); what is left is a link under the map, not a section of its own. */
+@media (min-width: 900px) {
+  .subject-party #subject-map:not([hidden]) ~ #subject-sections > #entry-flows:has(.donor-flow-bars) { margin-top: 0; padding-top: 0; border-top: 0; }
+  .subject-party #subject-map:not([hidden]) ~ #subject-sections > #entry-flows:has(.donor-flow-bars)::before { content: none; }
+  .subject-party #subject-map:not([hidden]) ~ #subject-sections > #entry-flows:has(.donor-flow-bars) > .entry-more { margin-top: var(--space-tight); }
+}
 .entry-subhead { margin: var(--space-group) 0 var(--space-tight); font: var(--type-subheading); color: var(--ink); }
 .news-outlets { margin: var(--space-tight) 0 0; font: var(--type-fine); color: var(--ink-soft); }
 /* The map on a phone: a card that opens the full map. */
@@ -3802,11 +3814,11 @@ body:has(#search-options-pop[open]) { overflow: hidden; }
 
 /* ==== donor-side register rows on the Just declared convention ==== */
 .donor-ties-list { list-style: none; margin: var(--sp-12) 0 0; padding: 0; }
-.donor-ties-list .declared-row { padding: var(--sp-12) 0; border-top: var(--border-hairline) solid var(--divider-subtle); }
+.donor-ties-list .declared-row { padding: var(--space-block) 0; border-top: var(--border-hairline) solid var(--divider-subtle); }
 /* No date column on these lists: the row starts at the portrait, and the entry
    takes the second track (the base rule's third would be an implicit column,
    which is how the register rows once ended up at the right edge). */
-.donor-ties-list .declared-row, .met-list .declared-row { grid-template-columns: 48px minmax(0, 1fr); }
+.donor-ties-list .declared-row, .met-list .declared-row { grid-template-columns: var(--size-portrait-row) minmax(0, 1fr); column-gap: var(--space-heading); }
 .donor-ties-list .declared-portrait, .met-list .declared-portrait { grid-column: 1; }
 .donor-ties-list .declared-entry, .met-list .declared-entry { grid-column: 2; }
 .met-list { margin-top: var(--sp-12); }
@@ -3815,7 +3827,8 @@ body:has(#search-options-pop[open]) { overflow: hidden; }
 .met-list .result-meta { display: flex; margin-top: var(--sp-2); } /* its own line under the name, as the mention rows */
 .met-list .snippet { margin-top: var(--sp-4); }
 .tie-tags { display: flex; flex-wrap: wrap; gap: var(--sp-4); margin-top: var(--sp-4); }
-.donor-ties-list .declared-description { font-family: var(--serif); font-size: var(--text-16); line-height: var(--leading-body); color: var(--ink); }
+/* The register's own words: the record role. */
+.donor-ties-list .declared-description { font: var(--type-record); color: var(--ink); }
 
 /* ==== ask sources tidy ==== */
 .source-list li:has(> .source-num) > .source-num {
@@ -5009,7 +5022,7 @@ a.bill-division-q:hover { color: var(--bronze-ink); }
 
   /* Date, portrait and declaration form a readable two-column card on the
      register ledger; the date no longer consumes a permanent left column. */
-  .declared-row { grid-template-columns: 48px minmax(0, 1fr); gap: var(--sp-8) var(--sp-12); }
+  .declared-row { grid-template-columns: var(--size-portrait-row) minmax(0, 1fr); gap: var(--sp-8) var(--sp-12); }
   .declared-row > time { grid-column: 2; grid-row: 1; }
   .declared-portrait { grid-column: 1; grid-row: 1 / span 2; }
   .declared-entry { grid-column: 2; grid-row: 2; }
