@@ -35,6 +35,7 @@ import {
 import { personRoute } from '../../navigation/routes';
 import { useCatalogRecord } from '../bills/useCatalogRecord';
 import { RecordStatus } from '../RecordStatus';
+import { sourceIndex } from '../money-public/parts';
 import { FeedGroup } from './FeedRow';
 import { FilterSheet } from './FilterSheet';
 import {
@@ -57,8 +58,9 @@ const coverageNote = (rows: number, available: number) =>
  * ("300 declarations · All chambers · Federal") is the Filters control, so
  * the first row follows the field. Consecutive entries by one member sit
  * under one PersonRow, with the member's profile and any name match the
- * export found. One source line at the list's foot dates the export and
- * holds its coverage note.
+ * export found. One source line dates the export and holds its coverage
+ * note: after the first page of rows, as the money lists place theirs (P3-9),
+ * or at the foot of a shorter or empty list.
  */
 export default function Declarations() {
   const load = useCallback(
@@ -91,6 +93,20 @@ export default function Declarations() {
   const summary = filterSummary(filters, facets);
 
   const countLine = `${feedCountLine(rows.length, all.length)} · ${summary}`;
+  // A row here is a member's group of entries; the line follows the tenth.
+  const sourceAt = record ? sourceIndex(runs.length) : -1;
+  const sourceLine = record ? (
+    <View style={styles.foot} testID="declarations-source-foot">
+      <SourceLine
+        title="About these declarations"
+        asOf={record.asAt}
+        citation={record.meta.source}
+        savedAt={record.stale ? record.savedAt : null}
+        notes={[coverageNote(record.meta.rows, record.meta.available)]}
+        testID="declarations-source"
+      />
+    </View>
+  ) : null;
   const header = (
     <Group style={styles.header}>
       <Text wordSafe variant="body" testID="declarations-lede">
@@ -191,15 +207,18 @@ export default function Declarations() {
         automaticallyAdjustKeyboardInsets
         data={runs}
         keyExtractor={(run) => run.key}
-        renderItem={({ item: run }) => {
+        renderItem={({ item: run, index }) => {
           const slug = run.entries[0]!.item.profileSlug;
           return (
-            <FeedGroup
-              entries={run.entries}
-              onOpenPerson={
-                slug ? () => router.push(personRoute(slug)) : undefined
-              }
-            />
+            <>
+              <FeedGroup
+                entries={run.entries}
+                onOpenPerson={
+                  slug ? () => router.push(personRoute(slug)) : undefined
+                }
+              />
+              {index === sourceAt ? sourceLine : null}
+            </>
           );
         }}
         ItemSeparatorComponent={() => <Divider variant="subtle" />}
@@ -229,20 +248,7 @@ export default function Declarations() {
             </Group>
           ) : null
         }
-        ListFooterComponent={
-          record ? (
-            <View style={styles.foot}>
-              <SourceLine
-                title="About these declarations"
-                asOf={record.asAt}
-                citation={record.meta.source}
-                savedAt={record.stale ? record.savedAt : null}
-                notes={[coverageNote(record.meta.rows, record.meta.available)]}
-                testID="declarations-source"
-              />
-            </View>
-          ) : null
-        }
+        ListFooterComponent={sourceAt < 0 ? sourceLine : null}
         initialNumToRender={8}
       />
     </SidebarSafe>

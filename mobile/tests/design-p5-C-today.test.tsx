@@ -2,7 +2,7 @@
 // source lines (P2-3), declarations grouped by member with no clamp
 // (P3-10), and the declarations list's first screen (P2-19, P3-9).
 import { act, type ReactElement } from 'react';
-import { useWindowDimensions } from 'react-native';
+import { FlatList, useWindowDimensions } from 'react-native';
 import TestRenderer, { type ReactTestInstance } from 'react-test-renderer';
 import snapshot from '../scripts/fixture-snapshot.json';
 import { catalogs as runtime } from '../src/api/runtime';
@@ -22,7 +22,6 @@ import {
   Button,
   PartyLabel,
   PersonRow,
-  SourceLine,
   Text,
 } from '../src/design/primitives';
 import Today from '../src/features/Today';
@@ -128,6 +127,13 @@ const strings = (node: ReactTestInstance): string =>
         .filter((c): c is string => typeof c === 'string'),
     )
     .join(' ');
+// Whether a React element (not yet drawn) holds a test ID.
+const holds = (node: unknown, testID: string): boolean => {
+  if (Array.isArray(node)) return node.some((n) => holds(n, testID));
+  if (!node || typeof node !== 'object' || !('props' in node)) return false;
+  const props = (node as { props: Record<string, unknown> }).props;
+  return props.testID === testID || holds(props.children, testID);
+};
 // Host test IDs in drawing order.
 const order = (root: ReactTestInstance) =>
   root
@@ -314,7 +320,7 @@ describe('declarations by one member sit under one PersonRow (P3-10)', () => {
 
 describe('the declarations list’s first screen (P2-19, P3-9)', () => {
   test.each([standard, ax5])(
-    'the count line is the Filters control, and the source line is at the list’s foot',
+    'the count line is the Filters control, and the source line follows the first page',
     async (size) => {
       jest.mocked(useWindowDimensions).mockReturnValue(size);
       const renderer = await renderAsync(<Declarations />);
@@ -340,14 +346,23 @@ describe('the declarations list’s first screen (P2-19, P3-9)', () => {
         accessibilityLabel:
           '300 declarations · All chambers · Federal, Filters',
       });
-      const ids = order(root);
-      expect(ids.indexOf('declarations-source')).toBeGreaterThan(
-        ids.indexOf('declaration-person-0'),
+      // After the tenth member's group, as the money lists place theirs,
+      // not after all 300 rows where nobody reaches it. (Jest draws the
+      // first eight rows, so the rows are read from the list itself.)
+      const list = root.findByType(FlatList);
+      const runs = list.props.data as ReturnType<typeof personRuns>;
+      expect(runs.map((run) => run.key)).toEqual(
+        personRuns(all).map((run) => run.key),
       );
-      expect(ids.indexOf('declarations-source')).toBeGreaterThan(
-        ids.indexOf('declarations-filters'),
-      );
-      expect(root.findAllByType(SourceLine)).toHaveLength(1);
+      expect(runs.length).toBeGreaterThan(10);
+      const withSource = runs
+        .map((item, index) =>
+          holds(list.props.renderItem({ item, index }), 'declarations-source'),
+        )
+        .flatMap((has, index) => (has ? [index] : []));
+      expect(withSource).toEqual([9]);
+      expect(list.props.ListFooterComponent).toBeNull();
+      expect(order(root).indexOf('declarations-source')).toBe(-1);
       act(() => renderer.unmount());
     },
   );
