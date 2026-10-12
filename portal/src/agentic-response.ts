@@ -33,15 +33,20 @@ export function agenticAskPayload(run: AgenticPayload, question: string) {
     citations[`${resource}/t/body/0`] = [[Array.from(answer.slice(0, coverageStart)).length, Array.from(answer).length]]
   }
   // Same follow-up shape used by today's Ask. No switch or new UI wording.
-  const clean = question.replace(/\b(?:across the whole record|across the record|all[ -]time|(?:in|during) the current parliament|(?:this|last|current) term|since (?:19|20)\d{2})\b/gi, '').replace(/[?!.]+$/, '').replace(/\s+/g, ' ').trim()
-  const followup = `${clean}${run.period.kind === 'all' ? ' in the current parliament' : ' across the whole record'}?`
+  // Build from the validated topic, rather than persisting a reader's question
+  // (which can include personal details) in the shared answer's suggestions.
+  const speech = run.steps.find(s => ['count_speeches', 'speech_trend'].includes(s.tool))?.args as Record<string, unknown> | undefined
+  const topic = typeof speech?.topic === 'string' ? speech.topic.replace(/-/g, ' ') : null
+  const opening = speech?.group_by === 'party' ? 'Which party has made the most speeches' : run.shape === 'trend' ? 'How many speeches have been made' : 'Who has spoken most'
+  const place = typeof speech?.state === 'string' ? speech.state === 'federal' ? ' in federal parliament' : ` in ${speech.state.toUpperCase()}` : ''
+  const followup = topic ? `${opening} about ${topic}${place}${run.period.kind === 'all' ? ' in the current parliament' : ' across the whole record'}?` : null
   return {
     answered: run.answered,
     ...(run.reason ? { reason: run.reason } : {}),
     answer: run.answered ? answer : '',
     citations: run.answered ? citations : {},
     sources: run.answered ? sources : [],
-    followups: run.answered ? [{ label: followup, question: followup, kind: 'speech' }] : [],
+    followups: run.answered && followup ? [{ label: followup, question: followup, kind: 'speech' }] : [],
     agentic: { steps: run.events, ms: run.timings.total_ms },
   }
 }

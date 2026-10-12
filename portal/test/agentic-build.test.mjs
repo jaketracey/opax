@@ -106,3 +106,8 @@ test('a valid planner cannot override the parliament explicitly named in the que
  kb:async(path,body)=>{requests.push(JSON.stringify(body));return deps.kb(path,body)}});
  assert.equal(r.answered,true);assert.equal(r.steps[0].args.state,'nsw');assert.ok(requests.every(b=>!b.includes('"label":"vic"')));
 });
+
+test('cached follow-up suggestions use the validated topic and never echo personal question details',async()=>{
+ const q=question+'; please email me at private@example.invalid',r=await runAgentic(q,deps),p=agenticAskPayload(r,q);
+ assert.equal(p.followups[0].question,'Who has spoken most about gambling across the whole record?');assert.doesNotMatch(JSON.stringify(p),/private@example.invalid|please email me/);
+});
