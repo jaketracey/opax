@@ -8922,7 +8922,7 @@ async function openExplain(detail) {
   let waiting = null;
   try {
     const explainModule = import("/explain.js?v=4f577eb978");
-    const wombat = await import("/wombat.js?v=b2936fedf5");
+    const wombat = await import("/wombat.js?v=cb89a88dad");
     if (seq !== explainOpenSeq || !dialog.open) return;
     waiting = wombat.mountWombat(body, { label: "Tracing the disclosed money." });
     const mod = await explainModule;
@@ -8969,7 +8969,7 @@ const GAMES = {
   grants: { name: "Who gets the grants", dialog: "dialog-grants", body: "explore-grants", module: "/grants.js?v=bf7c17477c", mount: "mountGrants" },
   matrix: { name: "Who owns which debate", dialog: "dialog-matrix", body: "explore-matrix", module: "/matrix.js?v=25f5793db5", mount: "mountMatrix" },
   wd: { name: "Words per dollar", dialog: "dialog-wd", body: "explore-wd", module: "/wordsdollars.js?v=9e390529d6", mount: "mountWordsDollars" },
-  tvn: { name: "Then vs now", dialog: "dialog-tvn", body: "explore-tvn", module: "/thenvsnow.js?v=de2fe807c7", mount: "mountThenVsNow" },
+  tvn: { name: "Then vs now", dialog: "dialog-tvn", body: "explore-tvn", module: "/thenvsnow.js?v=54e933f28d", mount: "mountThenVsNow" },
 };
 
 async function openGame(which, params = null) {
@@ -9636,7 +9636,7 @@ async function showWombat(label) {
   if (!wombat && !wombatLoading) {
     wombatLoading = true;
     try {
-      const mod = await import("/wombat.js?v=b2936fedf5");
+      const mod = await import("/wombat.js?v=cb89a88dad");
       if (!$("ask-wombat").hidden) {
         wombat = mod.mountWombat(slot, { label });
       } else {
@@ -9665,7 +9665,7 @@ async function showLoader(slotId, label, opts) {
   const have = loaders.get(slotId);
   if (have) { have.setLabel(label); return; }
   try {
-    const mod = await import("/wombat.js?v=b2936fedf5");
+    const mod = await import("/wombat.js?v=cb89a88dad");
     if (loaders.get(slotId)) return;
     loaders.set(slotId, mod.mountWombat(slot, { label, ...(opts || {}) }));
   } catch { /* the status text still carries the state */ }
@@ -10689,7 +10689,7 @@ function initChat(manageFocus) {
   // The waiting state's pieces, warmed now so a question's first frame does
   // not wait on a module fetch.
   import("/stages.js?v=5a008f79bb").catch(() => {});
-  import("/wombat.js?v=b2936fedf5").catch(() => {});
+  import("/wombat.js?v=cb89a88dad").catch(() => {});
   try {
     const raw = sessionStorage.getItem("opax-chat-seed");
     if (raw) {
@@ -11263,7 +11263,7 @@ async function sendChat(question, carry) {
   let reading = [];
   let note = "";
   announce(`${STEP_LABEL.question}.`);
-  import("/wombat.js?v=b2936fedf5")
+  import("/wombat.js?v=cb89a88dad")
     .then((mod) => {
       if (!alive()) return;
       trundler = mod.mountWombat(track, { label: "", ...PAGE_LOADER });
