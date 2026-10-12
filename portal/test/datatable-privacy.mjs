@@ -1,10 +1,11 @@
 // Shared rollout gate. Names are read at run time; failure messages contain counts only.
 import assert from 'node:assert/strict';
-import {readFile} from 'node:fs/promises';
+import {readFile,readdir} from 'node:fs/promises';
 import {withheldPhrases,namesWithheldPhrase} from '../public/donor-entity.js';
 import {privacySourceGraphs} from '../../scripts/withhold_donor_assets.mjs';
 import {sourceTableDonorIdentities} from '../../scripts/table_identity_source.mjs';
-import {compileIdentityCheck,identityVariants} from '../src/table-identities.mjs';
+import {tableIdentityIndex} from '../../scripts/load_tables.mjs';
+import {isOrganisationRecipient} from '../src/table-recipient.mjs';
 
 export async function tablePrivacyIndex({donorContext=true} = {}) {
   const graphs=privacySourceGraphs();
@@ -15,9 +16,23 @@ export async function tablePrivacyIndex({donorContext=true} = {}) {
     officeHolders.push(...roster.people.flatMap(p=>[p.name,p.full || '']),...Object.values(access.ministers || {}).map(m=>m.name));
   }
   const phrases=withheldPhrases(graphs,officeHolders.filter(Boolean));
-  const source=sourceTableDonorIdentities(),values=[...source.labels,...source.identifiers];
-  const blocked=compileIdentityCheck(new Set(values.flatMap(identityVariants)));
-  return {phrases,values,safe:value=>!blocked(value)&&!namesWithheldPhrase(phrases,`donor receipts ${value}`)};
+  const policy=await tableIdentityIndex(),source=sourceTableDonorIdentities();
+  const recipients=new Set(),recipientABNs=new Set();
+  const add=entity=>{
+    for(const value of [entity.label,entity.name,entity.n,entity.identity?.legal_name,entity.abr?.name,entity.abr?.legal_name,...(entity.aliases || []),...(entity.lookup_names || []),...[entity.id,entity.canonical_id].filter(id=>String(id || '').startsWith('person:')).map(id=>id.slice(7))])if(typeof value==='string'&&value.trim())recipients.add(value);
+    for(const value of [entity.abn,entity.abr?.abn,...[entity.id,entity.canonical_id].filter(id=>/^(?:abn:)?\d{11}$/.test(String(id || '')))]){
+      const digits=String(value || '').replace(/\D/g,'');if(digits.length===11)recipientABNs.add(digits);
+    }
+  };
+  const root=new URL('../public/',import.meta.url);
+  for(const jur of ['federal','qld']){
+    const graph=JSON.parse(await readFile(new URL('graph/grants.'+jur+'.json',root),'utf8'));
+    for(const recipient of graph.recipients)if(!isOrganisationRecipient(recipient))add(recipient);
+    const directory=new URL('grants/'+jur+'/',root);
+    for(const file of (await readdir(directory)).filter(f=>f.startsWith('shard-')&&f.endsWith('.json')))for(const recipient of Object.values(JSON.parse(await readFile(new URL(file,directory),'utf8'))))if(!isOrganisationRecipient(recipient))add(recipient);
+  }
+  const abns=[...new Set([...source.identifiers,...recipientABNs])],values=[...new Set([...source.labels,...recipients,...abns])];
+  return {...policy,values,donors:source.labels,recipients:[...recipients],recipientABNs:[...recipientABNs],abns,safe:value=>!policy.check(value)&&!namesWithheldPhrase(phrases,`donor receipts ${value}`)};
 }
 
 /** CSV must be an actual browser download path. All listed surfaces are mandatory. */

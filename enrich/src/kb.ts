@@ -37,6 +37,7 @@ export class KbHttpError extends Error {
 }
 
 export interface KbResource {
+  extra?: { metadata?: Record<string, unknown> }
   id?: string
   slug?: string
   title?: string
@@ -114,7 +115,7 @@ export class Kb implements KbApi {
   }
 
   getResource(rid: string): Promise<KbResource | null> {
-    return this.call('GET', `/resource/${rid}?show=basic&show=values`, undefined, true)
+    return this.call('GET', `/resource/${rid}?show=basic&show=values&show=extra`, undefined, true)
   }
 
   getEverything(rid: string): Promise<unknown | null> {
@@ -122,7 +123,7 @@ export class Kb implements KbApi {
   }
 
   getBasic(rid: string, timeoutMs = TIMEOUT_MS): Promise<KbResource | null> {
-    return this.call('GET', `/resource/${rid}?show=basic`, undefined, true, timeoutMs)
+    return this.call('GET', `/resource/${rid}?show=basic&show=extra`, undefined, true, timeoutMs)
   }
 
   /** Admin reconciliation resolves only successful push-log slugs. */

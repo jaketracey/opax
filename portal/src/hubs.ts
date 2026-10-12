@@ -2,14 +2,16 @@ import { sourceLineHTML, machineLabelHTML, statusLabelHTML } from '../public/lab
 import { shortDate, shortMoney } from '../public/format.js'
 import { houseName, orderedWeeks, day, sydneyDay } from '../public/hubs-data.js'
 import { sponsorPerson, type SponsorCandidate } from '../public/sponsor-person.js'
-import { divisionPlain } from '../public/division-markdown.js'
+import {divisionTableConfig, divisionRows, voteTableHTML, voteTablePage} from '../public/vote-tables.js'
+import type {Query} from '../public/datatable.js'
+import {tablePrivacyCheckFromRead} from './table-privacy.ts'
 import { escapeHtml as esc, safeHref, crumbsHTML, type Crumb, type ReadAsset } from './seo-content'
 
 interface Bill {
   key: string; title: string; introduced: string; originating_house: string; sponsor?: string; sponsor_person_id?: string; portfolio?: string;
   summary?: { sentences?: string[]; generated_at?: string; as_of?: string }; sources?: {kind: string; url: string}[];
 }
-interface Division { key: string; slug: string; title?: string; name?: string; question?: string; date: string; house: string; result?: string; ayes?: number; noes?: number; source_url?: string }
+interface Division { key: string; slug: string; title?: string; name?: string; stage?:string; question?: string; date: string; house: string; result?: string; ayes?: number; noes?: number; source_url?: string }
 interface Week { start: string; end: string; houses: string[]; senate_cutoff?: string; estimates?: string; bills: Bill[]; divisions: Division[]; lastmod: string }
 export interface HubIndex { updated: string; snapshotDate: string; billUpdated: string; latestFederalDivision: string; sources: { label: string; url: string }[]; weeks: Week[]; pages: {path: string; lastmod: string}[] }
 interface Window { start: string; end: string }
@@ -68,7 +70,7 @@ export function renderSittingIndex(data: HubIndex, today: string, footer: HubFoo
   const html = shell(header(title,description)+sourceLineHTML({updated:data.updated,source:'APH sitting calendar',originals:data.sources.map(s => ({href:s.url,label:s.label}))})+`<ul class="hub-weeks">${rows}</ul>`,footer,[{label:'Sitting weeks'}])
   return {title,description,html,jsonLd:{'@graph':[itemList('/sitting',weeks.map(w => ({href:`/sitting/${w.start}`,name:range(w.start,w.end)})))]}}
 }
-export function renderSittingWeek(data: HubIndex, week: Week, people: SponsorCandidate[], slugs: Map<string,string>, today = sydneyDay(), footer: HubFooterConfig = {}) {
+export function renderSittingWeek(data: HubIndex, week: Week, people: SponsorCandidate[], slugs: Map<string,string>, today = sydneyDay(), footer: HubFooterConfig = {}, tableQuery: Query = {}, privacyCheck: (text: string) => boolean = () => false) {
   const path = `/sitting/${week.start}`
   const title = `Sitting week: ${range(week.start,week.end)}`
   const description = 'Bills introduced and divisions held in the federal parliamentary record during this period.'
@@ -95,19 +97,16 @@ export function renderSittingWeek(data: HubIndex, week: Week, people: SponsorCan
     const originals = week.bills.flatMap(b => (b.sources || []).filter(s => s.kind === 'billhome').slice(0,1).map(s => ({href:s.url,label:b.title})))
     body += sourceLineHTML({updated:data.billUpdated,source:'ParlInfo bill records',originals})+'</section>'
   }
-  if (week.divisions.length) {
-    body += `<section class="hub-section"><h2>Divisions held <span class="hub-count">${week.divisions.length}</span></h2><ul class="hub-records">` + week.divisions.map(d => {
-      const name = divisionPlain(d.title || d.name || d.question || 'Division')
-      const href = `/doc/${d.slug}`
-      rows.push({href,name})
-      const result = ({affirmative:'Agreed',negative:'Not agreed'} as Record<string,string>)[d.result || ''] || d.result || 'Outcome not recorded'
-      return `<li><h3>${link(href,name)}</h3><p class="hub-meta">${date(d.date)} · ${esc(houseName(d.house))}</p><p>${esc(result)} · ${esc(d.ayes ?? 'Unrecorded')} ayes · ${esc(d.noes ?? 'Unrecorded')} noes</p></li>`
-    }).join('')+'</ul>'
-    const originals = week.divisions.filter(d => d.source_url).map(d => ({href:d.source_url!,label:`${divisionPlain(d.title || d.name || d.question || 'Division')}, ${date(d.date)}`}))
-    body += sourceLineHTML({updated:data.snapshotDate,dateLabel:'Published snapshot',source:'Exported division records',originals})+'</section>'
-  } else if (today >= week.start) {
+  {
+    const config = divisionTableConfig({jurisdiction:'federal', start:week.start, end:week.end}, 'Divisions held', 'sitting', privacyCheck)
+    const divisions = divisionRows(week.divisions.filter(d=>privacyCheck(JSON.stringify([d.title,d.name,d.stage,d.question]))))
+    const page = voteTablePage(divisions,config,tableQuery)
+    for (const d of page.rows) if (typeof d.href === 'string') rows.push({href:d.href,name:String(d.title)})
+    body += `<section class="hub-section">${voteTableHTML(config,page)}${sourceLineHTML({updated:data.snapshotDate,dateLabel:'Published snapshot',source:'Exported division records',notes:['Only formal divisions leave a per-member record. Open a division for its question, party tallies, members and original source.']})}</section>`
+  }
+  if (!week.divisions.length && today >= week.start) {
     const coverage = data.latestFederalDivision ? `Federal divisions in OPAX's published record currently run to ${date(data.latestFederalDivision)}; divisions held after that date will appear here once the record is updated.` : 'Federal divisions are not available in this OPAX export; they will appear here once the record is updated.'
-    body += `<section class="hub-section"><h2>Divisions</h2><p>${esc(coverage)}</p>${sourceLineHTML({updated:data.snapshotDate,dateLabel:'Published snapshot',source:'Exported division records',originals:[{href:'https://theyvoteforyou.org.au/divisions',label:'They Vote For You divisions'}],notes:['Absence from this export does not establish that no divisions were held.']})}</section>`
+    body += `<section class="hub-section"><p>${esc(coverage)}</p>${sourceLineHTML({originals:[{href:'https://theyvoteforyou.org.au/divisions',label:'They Vote For You divisions'}],notes:['Absence from this export does not establish that no divisions were held.']})}</section>`
   }
   return {title,description,html:shell(body,footer,[WEEKS,{label:range(week.start,week.end)}]),jsonLd:{'@graph':[event(path,title,week.start,week.end,data.sources[0].url),itemList(path,rows)]}}
 }
@@ -149,8 +148,8 @@ export function renderEstimates(data: Estimates, footer: HubFooterConfig = {}) {
   }
   return {title,description,html:shell(body,footer,[WEEKS,{label:data.name}]),jsonLd:{'@graph':[event(`/estimates/${data.id}`,title,data.start,data.end,data.source_url),itemList(`/estimates/${data.id}`,[...list.values()])]}}
 }
-export async function hubPage(kind: 'sitting' | 'estimates', id: string | null, read: ReadAsset, people: SponsorCandidate[], slugs: Map<string,string>, today = sydneyDay(), footer: HubFooterConfig = {}) {
-  const missing = {title:'Hub not found',description:'This period is not in the published calendar.',html:shell(header('Hub not found','Browse the published sitting weeks.'),footer,[WEEKS,{label:'Not found'}]),jsonLd:null,status:404}
+export async function hubPage(kind: 'sitting' | 'estimates', id: string | null, read: ReadAsset, people: SponsorCandidate[], slugs: Map<string,string>, today = sydneyDay(), footer: HubFooterConfig = {}, tableQuery: Query = {}, privacyCheck?: (text: string) => boolean) {
+  const missing = {title:'Hub not found',description:'This period is not in the published calendar.',html:shell(header('Hub not found','Browse the published sitting weeks.'),footer),jsonLd:null,status:404}
   if (kind === 'estimates') {
     if (id !== '2026-10') return missing
     const data = await read<Estimates>(`/hubs/estimates-${id}.json`)
@@ -160,5 +159,5 @@ export async function hubPage(kind: 'sitting' | 'estimates', id: string | null, 
   const data = await read<HubIndex>('/hubs/index.json')
   if (id === null) return {...renderSittingIndex(data,today,footer),status:200}
   const week = data.weeks.find(w => w.start === id)
-  return week ? {...renderSittingWeek(data,week,people,slugs,today,footer),status:200} : missing
+  return week ? {...renderSittingWeek(data,week,people,slugs,today,footer,tableQuery,privacyCheck ?? await tablePrivacyCheckFromRead(read)),status:200} : missing
 }
