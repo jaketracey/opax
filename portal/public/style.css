@@ -2796,6 +2796,7 @@ a.ency-name:hover, a.ency-name:focus-visible {
 .table-scroll.table-fits { overflow-x: clip; }
 .about-table .cell-num { text-align: right; font-variant-numeric: tabular-nums; }
 #panel-methods code { background: var(--paper-sunken); border-radius: 4px; padding: 0.1em 0.35em; font-size: 0.875em; }
+#mcp-docs pre { max-width: 68ch; white-space: pre-wrap; overflow-wrap: anywhere; margin-block: var(--space-row); }
 
 /* ---- footer ------------------------------------------------------------- */
 

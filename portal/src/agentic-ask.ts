@@ -12,7 +12,8 @@
  * when no tool result supports an answer (the web-ask-no-answer contract).
  */
 import { TOOL_SPECS, TOPICS, STATES, CHAMBERS, TERMS, runTool, validToolArgs, AGENTIC_TOOLS_VERSION, type ToolDeps, type ToolResult, type Cite } from './agentic-tools'
-import { isElectorateDataQuestion, electoratePlan, electorateFacts, electorateStep } from './agentic-tool-electorates'
+import { isElectorateDataQuestion, electoratePlan } from './agentic-tool-electorates'
+import { getAskTool } from './tools'
 
 export const AGENTIC_PROMPT_VERSION = 'agentic-ask-3'
 export const AGENTIC_BUDGET_MS = 40_000
@@ -184,8 +185,8 @@ export function factSheet(results: ToolResult[]): { facts: Fact[]; notes: string
     if (!r.ok) continue
     r.notes.forEach((n) => notes.add(n))
     const d = r.data as Record<string, unknown>
-    if (r.tool === 'electorates') {
-      electorateFacts(r).forEach((f) => add(f.text, f.cite))
+    if (getAskTool(r.tool)) {
+      r.cite.forEach(cite => add(cite.label, cite))
     } else if (r.tool === 'count_speeches') {
       const rows = (d.rows as { name: string; count: number }[] | undefined)
       if (d.committeeSupplement && rows?.length) rows.forEach((row, i) => add(`${row.name}: ${row.count} committee-hearing turns`, r.cite[i]))
@@ -341,7 +342,8 @@ function periodPlan(plan: Plan, period: Period, filters: Record<string, unknown>
 }
 /** Fixed labels and bounded plain arguments. The client escapes these as text. */
 export function stepEvent(step: PlanStep, id: number, committee = false): StepEvent {
-  if (step.tool === 'electorates') return { id, ...electorateStep(step.args), state: 'running' }
+  const registered = getAskTool(step.tool)
+  if (registered) return { id, ...registered.stepLabel(step.args), state: 'running' }
   const a = step.args
   const label = committee ? 'Checking committee hearings' : step.tool === 'count_speeches' ? a.group_by === 'speaker' ? 'Counting by speaker' : a.group_by === 'party' ? 'Counting by party' : 'Searching speeches' : ({ member_votes: 'Checking votes', party_donations: 'Checking donations', speech_trend: 'Comparing years', find_quotes: 'Searching speeches', find_people: 'Searching speeches' } as Record<string, string>)[step.tool]
   const moneyArgs = new Set(['Labor', 'Liberal', 'Greens', 'Nationals', 'LNP', 'Independent', 'One Nation', 'United Australia Party', 'gambling', 'mining', 'fossil_fuels', 'finance', 'property', 'unions', 'health', 'hospitality', 'media', 'tech'])

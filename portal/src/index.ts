@@ -5715,6 +5715,7 @@ function agenticToolDeps(env: Env, signal?: AbortSignal): ToolDeps {
 function agenticDeps(env: Env, signal?: AbortSignal): AgenticDeps {
   return {
     ...agenticToolDeps(env, signal),
+    toolEnv: { ASSETS: env.ASSETS, TABLE_DB: env.TABLE_DB, COMMUNITY_ORIGIN: env.COMMUNITY_ORIGIN },
     generate: async (query, prompt, maxTokens, signal) => {
       const res = await kbFetch(env, '/ask', {
         body: { query, top_k: 1, reranker: 'noop', generative_model: env.ASK_MODEL || 'openai-compatible', max_tokens: maxTokens, prompt },
