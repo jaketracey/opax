@@ -134,7 +134,7 @@ test('the run streams plan and step events, and falls back to the template when 
   assert.equal(out.answered, true);
   assert.equal(out.answer_source, 'template');
   assert.match(out.answer, /Alex Example: 87 chamber speeches labelled gambling \[1\]/);
-  assert.deepEqual(out.tokens, { input: 30, output: 13 });
+  assert.deepEqual(out.tokens, { input: 10, output: 5 });
   assert.deepEqual(events.map(([, d]) => d.phase + (d.step ? `:${d.step.state}` : '')), ['step:running', 'step:done', 'step:running', 'step:done', 'writing']);
   const none = await runAgentic('Who has spoken most about an unknown subject?', { ...deps, generate: async () => ({ text: 'I cannot help' }) });
   assert.equal(none.answered, false);

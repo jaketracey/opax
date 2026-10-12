@@ -414,7 +414,9 @@ export async function runAgentic(question: string, deps: AgenticDeps, progress: 
   const tCompose = Date.now()
   let answer = '', source: AgenticPayload['answer_source'] = 'template'
   const mainFacts = facts.filter(f => !committeeFacts.some(c => c.text === f.text))
-  if (left() > 5_000) {
+  // Ranked numerical rows are copied deterministically; don't pay for prose
+  // that would be discarded by their stricter grounding rule.
+  if (left() > 5_000 && plan.shape !== 'ranking' && plan.shape !== 'money') {
     try {
       const out = await bounded(signal => deps.generate(question, composerPrompt(question, mainFacts, notes), 600, signal), Math.min(12_000, Math.max(0, left() - 500)), deps.signal)
       usage(out)
