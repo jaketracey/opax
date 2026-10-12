@@ -99,3 +99,10 @@ test('least-active rankings and malformed upstream totals fail closed, and bill-
 test('missing speaker facets never become an overall count presented as a ranking',async()=>{
  const r=await runAgentic(question,{...deps,kb:async()=>({fulltext:{total:300,facets:{}}})});assert.equal(r.answered,false);assert.equal(r.reason,'no_supported_claim');assert.equal(r.answer,'');
 });
+
+test('a valid planner cannot override the parliament explicitly named in the question',async()=>{
+ const requests=[];const r=await runAgentic('Who has spoken most about housing in the NSW Parliament?',{...deps,
+ generate:async()=>({text:'{"shape":"ranking","steps":[{"tool":"count_speeches","args":{"topic":"housing","state":"vic","group_by":"speaker"}}]}'}),
+ kb:async(path,body)=>{requests.push(JSON.stringify(body));return deps.kb(path,body)}});
+ assert.equal(r.answered,true);assert.equal(r.steps[0].args.state,'nsw');assert.ok(requests.every(b=>!b.includes('"label":"vic"')));
+});

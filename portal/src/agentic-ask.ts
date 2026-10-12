@@ -351,7 +351,9 @@ export async function runAgentic(question: string, deps: AgenticDeps, progress: 
   if (!left() || deps.signal?.aborted) return base({ reason: 'declined', over_budget: true })
   if (!plan) return base({ reason: 'declined' })
   if (plan.shape === 'unanswerable') return base({ reason: 'declined', notes: plan.reason ? [plan.reason] : [] })
-  plan = periodPlan(plan, period, filters)
+  const ruleArgs = rulePlan?.steps.find(s => ['count_speeches', 'speech_trend'].includes(s.tool))?.args ?? {}
+  const explicitScope = Object.fromEntries(['state', 'chamber', 'party'].filter(k => ruleArgs[k] != null).map(k => [k, ruleArgs[k]]))
+  plan = periodPlan(plan, period, { ...explicitScope, ...filters })
   const tTools = Date.now()
   const execute = async (step: PlanStep, committee = false, custom?: (d: ToolDeps) => Promise<ToolResult>): Promise<ToolResult> => {
     const event = stepEvent(step, events.length + 1, committee)
