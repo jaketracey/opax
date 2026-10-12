@@ -45,12 +45,14 @@ test('detail SSR shows PDF provenance and collapsed verbatim public body respons
  assert.doesNotMatch(files['index.json'],/signature as published|Director-General/);
 });
 
-test('rights and no text layer holds keep metadata and prevent detail body and response reads',async()=>{
- for(const reason of ['pdf_restrictive_licence','no_text_layer']){
-  const row=structuredClone(JSON.parse(files['reports-1.json']).records[0]);row.pdf.status='held';row.pdf.reasons=[reason];row.recommendations=[];row.licence.body_skipped=true;row.licence.exceptions=[reason];
+test('internal holds never render and still prevent body and response reads',async()=>{
+ for(const reason of ['pdf_restrictive_licence','no_text_layer','individual_donor_text_hold','published_redaction_hold']){
+  const row=structuredClone(JSON.parse(files['reports-1.json']).records[0]);row.pdf.status='held';row.pdf.document_licence='CC BY-NC-ND 4.0';row.pdf.reasons=[reason];row.recommendations=[];row.licence.body_skipped=true;row.licence.exceptions=[reason];
   const seen=[];const heldRead=async path=>{seen.push(path);return path.includes('reports-')?{records:[row]}:read(path);};
   const p=await auditPage(id,new URL('https://opax.com.au/audit/'+id),heldRead,block);
-  assert.equal(p.status,200);assert.match(p.prerender,/PDF body held/);assert.match(p.prerender,/not reproduced here/);
+  assert.equal(p.status,200);assert.match(p.prerender,/PDF body held/);assert.match(p.prerender,/don&#39;t allow us to reproduce it here/);
+  assert.doesNotMatch(p.prerender+p.description,/donor|privacy rule|text[ _]layer|redaction|pdf_restrictive_licence/i);
+  assert.ok(p.description.endsWith('PDF body held.'));
   assert.ok(!seen.some(p=>p.includes('responses-')));assert.doesNotMatch(p.prerender,/signature as published|agrees with recommendation 1/);
  }
 });
@@ -64,21 +66,44 @@ test('unknown phase 2 id returns 404 without fetching responses',async()=>{
 test('filtered metadata title is marked while the authoritative report link stays intact',async()=>{
  const row=structuredClone(JSON.parse(files['reports-1.json']).records[0]);row.title_privacy_filtered=true;
  const p=await auditPage(id,new URL('https://opax.com.au/audit/'+id),async path=>path.includes('reports-')?{records:[row]}:read(path),block);
- assert.match(p.prerender,/title has been filtered under OPAX/);
+ assert.match(p.prerender,/Names withheld from the title; QAO has the original title/);
  assert.ok(p.prerender.includes(`href="${row.canonical_url}"`));
 });
 
-test('HTML recommendations stay live beside held PDF terms and the report page source line',async()=>{
- for(const [licence,term] of [['CC BY-NC-ND 4.0','CC BY-NC-ND 4.0'],['Prior written permission required',"reuse needs QAO&#39;s written permission"],['Uncleared document notice; no document grant accepted','reuse grant unverified']]){
+test('HTML recommendations stay live beside each licence-only PDF hold variant',async()=>{
+ for(const [licence,term,note] of [
+  ['CC BY-NC-ND 4.0','CC BY-NC-ND 4.0',"PDF body held: QAO&#39;s terms for this PDF (CC BY-NC-ND 4.0) don&#39;t allow us to reproduce it here."],
+  ['Prior written permission required',"reuse needs QAO&#39;s written permission","PDF body held: QAO&#39;s terms for this PDF require QAO&#39;s written permission."],
+  ['Uncleared document notice; no document grant accepted','reuse grant unverified',"PDF body held: we couldn&#39;t confirm QAO&#39;s terms for this PDF."]]){
   const row=structuredClone(JSON.parse(files['reports-1.json']).records[0]);row.pdf.status='held';row.pdf.reasons=['pdf_restrictive_licence'];row.pdf.document_licence=licence;
   row.licence.body_skipped=false;row.responses_path=undefined;row.response_count=0;
   row.recommendations=[{number:1,text:'Fixture HTML advice.',html:'<p>Fixture HTML advice.</p>',source_text:"QAO's text",provenance:'html',addressed_to:null}];
   const seen=[];const page=await auditPage(id,new URL('https://opax.com.au/audit/'+id),async path=>{seen.push(path);return path.includes('reports-')?{records:[row]}:read(path);},block);
   assert.equal(page.status,200);assert.match(page.prerender,/Fixture HTML advice/);assert.match(page.prerender,/Source: html/);
   assert.match(page.prerender,/Source: Queensland Audit Office report page, CC BY 4.0/);
-  assert.ok(page.prerender.includes(`Full report (PDF)</a>: ${term}`));assert.match(page.prerender,/PDF body held; its full text is not reproduced here/);
+  assert.ok(page.prerender.includes(`Full report (PDF)</a>: ${term}`));assert.ok(page.prerender.includes(`<p class="audit-meta">${note}</p>`));
+  assert.doesNotMatch(page.prerender+page.description,/donor|privacy rule|text[ _]layer|pdf_restrictive_licence/i);
+  assert.ok(page.description.endsWith('PDF body held.'));
   assert.ok(!seen.some(path=>path.includes('responses-')));assert.equal((page.prerender.match(/class="ui-pop ui-source"/g)||[]).length,1);
  }
+});
+
+test('every public audit asset and rendered report omits internal review reasons',async()=>{
+ const publicRoot=new URL('../public/audit/',import.meta.url),publicFiles=Object.fromEntries(readdirSync(publicRoot).map(name=>[name,JSON.parse(readFileSync(new URL(name,publicRoot)))]));
+ const forbidden=/donor|privacy rule|text[ _]layer|published_redaction|extraction_holds/i;
+ for(const value of Object.values(publicFiles))assert.ok(!forbidden.test(JSON.stringify(value)),'Public audit JSON contains no internal review wording');
+ const manifest=publicFiles['manifest.json'],publicRead=async path=>publicFiles[path.replace('/audit/','')];
+ const rows=manifest.chunks.flatMap(chunk=>publicFiles[chunk.path.replace('/audit/','')].records);
+ for(const row of rows){
+  assert.equal('reasons' in row.pdf,false);assert.equal('no_text_pages' in row.pdf,false);
+  const page=await auditPage(row.id,new URL('https://opax.com.au/audit/'+row.id),publicRead,block);
+  assert.equal(page.status,200);assert.ok(!forbidden.test(page.prerender+page.description),'Rendered audit report contains no internal review wording');
+  assert.ok(page.description.endsWith('PDF body held.'));
+ }
+ const directory=await auditPage(null,new URL('https://opax.com.au/audit'),publicRead,block);
+ assert.ok(!forbidden.test(directory.prerender+directory.description));
+ const receipt=JSON.parse(readFileSync(new URL('../../docs/coverage/qao-phase2-receipt.json',import.meta.url)));
+ assert.ok(forbidden.test(JSON.stringify(receipt)),'Internal rights receipt retains its review reasons');
 });
 
 test('accepted catalogue restores all phase 1 HTML recommendations while preserving every PDF hold',()=>{
@@ -99,10 +124,14 @@ test('publication boundary filters HTML identities while refusing altered PDF so
   &&sanitiseDonorAsset({title:`Donation by ${row.label}`},context).title!==`Donation by ${row.label}`);
  assert.ok(Boolean(donor),'Runtime privacy source contains a withheld identity');
  const raw=`A donation by ${donor.label}.`,script=new URL('../../scripts/qao_publication_boundary.mjs',import.meta.url).pathname;
- const run=provenance=>spawnSync(process.execPath,[script],{input:JSON.stringify({'reports-1.json':{records:[{title:'Fixture audit',recommendations:[{number:1,text:raw,html:`<p>${raw}</p>`,provenance}]}]}}),encoding:'utf8'});
+ const run=(provenance,text=raw)=>spawnSync(process.execPath,[script],{input:JSON.stringify({'reports-1.json':{records:[{title:`Audit of ${donor.label}`,recommendations:[{number:1,text,html:`<p>${text}</p>`,provenance}]}]}}),encoding:'utf8'});
  const html=run('html');assert.equal(html.status,0,'HTML follows the shared publication boundary');
  const rec=JSON.parse(html.stdout)['reports-1.json'].records[0].recommendations[0];assert.equal(rec.provenance,'html');assert.equal(rec.privacy_filtered,true);
  assert.ok(!html.stdout.includes(donor.label),'Output contains no withheld identity');
+ assert.ok(!/donor|privacy rule|text layer/i.test(html.stdout),'Withheld labels use neutral public wording');
+ const row=JSON.parse(html.stdout)['reports-1.json'].records[0];assert.equal(row.title_privacy_filtered,true);assert.ok(row.title.includes('Name withheld'));
  const pdf=run('pdf p.4');assert.ok(pdf.status!==0,'Changed PDF source text remains held');
  assert.ok(!pdf.stderr.includes(donor.label),'Diagnostics contain no withheld identity');
+ const masked=run('pdf p.4',sanitiseDonorAsset({text:raw},context).text);
+ assert.ok(masked.status!==0,'Neutral labels cannot silently change verbatim PDF source text');
 });

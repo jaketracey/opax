@@ -18,6 +18,11 @@ every page. Its two image-credit exceptions still hold those pages' text.
 Every detail has one SourceLine naming “Source: Queensland Audit Office report
 page, CC BY 4.0”. Each full-PDF link shows that document's own terms, with its
 reason in the held-body note. The PDF holds and per-report receipts are unchanged.
+The reader's held-body note is one sentence about that PDF's licence: NC-ND,
+written permission, or unverified terms. JSON-LD says only “PDF body held” about
+the body. Privacy, source-text and redaction hold details remain in internal
+snapshots and the rights receipt; the public catalogue excludes those fields.
+The shared publication boundary still withholds names, using a neutral label.
 
 Overlapping holds: restrictive PDF terms **289**; uncleared rights notices
 **296**; document grant not verified **7**; at least one unusable text-layer
@@ -80,9 +85,11 @@ retained at `scripts/state/qao/kb/` before `staging/` cleanup. There is no remot
 KB client or upload operation.
 
 Audit assets were **6 files / 925,593 bytes before** (this branch's starting
-tracked files, including the existing privacy-filtered title), and are **6 files /
-2,259,431 bytes after**, within **150 files / 30,000,000 bytes**. The audit
-sitemap adds one file / 27,037 bytes: **7 files / 2,286,468 bytes combined**.
+tracked files, including the existing privacy-filtered title), and were **6 files /
+2,259,431 bytes after** the HTML projection. The licence-only reader correction
+reduces the public catalogue to **6 files / 1,068,002 bytes**, within
+**150 files / 30,000,000 bytes**. The audit sitemap adds one file / 27,037 bytes:
+**7 files / 1,095,039 bytes combined**. The per-report rights receipt is unchanged.
 Before the HTML projection correction, this lane was 6 files / 1,714,381 bytes.
 The corrected projection restores the separately licensed HTML recommendations.
 Responses use individual report chunks read only on the detail route; the
@@ -141,6 +148,18 @@ projection update made **zero new QAO requests**. Votes remain byte-identical
 at schema 1. HTML recommendation privacy changes: **0**; existing filtered
 titles: **1**. No request to QAO was sent; the uncommitted draft is in the
 completion reply.
+
+The licence-only reader correction passes **1,418 / 1,418 Node tests** in
+**669.63 seconds**, **42 / 42 loader tests**, and **70 Python validation/weekly
+tests with one existing skip**. `build:search`, both release builds,
+`npx tsc --noEmit`, `npm run check` and export validation pass. Local Wrangler
+checks cover the directory, six actual details including all three licence
+variants and the reported example, and a bad ID returning 404/noindex. Audit
+content and JSON-LD contain no internal hold wording. The 313-file privacy
+sweep has zero identity, person-field or signatory-field findings. The rights
+receipt and votes are byte-identical; recommendations and PDF links are
+unchanged. Re-export is byte-idempotent. No new QAO requests were made, and
+owned local Worker state and empty staging were removed.
 
 The native app work remains a plan: both iOS and Android would read a bounded
 schema-1 manifest with `phase: 2`, count/listed reconciliation, a validated report
