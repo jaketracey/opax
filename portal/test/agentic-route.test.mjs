@@ -10,7 +10,7 @@ h.env.COMMUNITY_DB={prepare(sql){return{bind(...values){logs.push({sql,values});
 h.env.GENERATION_CACHE={async get(k){return shared.get(k)??null},async put(k,v){shared.set(k,JSON.parse(v))}};
 h.env.AGENTIC_INPUT_USD_PER_MILLION='0.66';h.env.AGENTIC_OUTPUT_USD_PER_MILLION='1.98';
 globalThis.caches={default:{async match(k){return edge.get(k.url)?.clone()},async put(k,r){edge.set(k.url,new Response(await r.text(),r))}}};
-let mode='ranking',models=0,normalModels=0,quota=0;
+let mode='ranking',models=0,normalModels=0,quota=0,toolStarted=()=>{};
 h.env.ASK_LIMITER={async limit(){quota++;return{success:true}}};
 globalThis.fetch=async(input,init)=>{
  const url=new URL(input);assert.ok(url.hostname.startsWith('offline.'),'no outbound service calls');const b=JSON.parse(init?.body??'{}');
@@ -24,6 +24,7 @@ globalThis.fetch=async(input,init)=>{
   if(b.prompt?.user?.includes('FACTS (numbered')){models++;return Response.json({answer:'Taylor Example: 87 [1]. Pat Example: 60 [2]. Alex Example: 52 [3].',metadata:{tokens:{input:10,output:5}}})}
   normalModels++;const reply={answer:'The retrieved speech called for parliamentary scrutiny.',retrieval_results:{resources:{}}};if(init.headers?.['x-synchronous']==='true')return Response.json(reply);return new Response([{type:'answer',text:reply.answer},{type:'status',code:'0',status:'success'}].map(item=>JSON.stringify({item})).join('\n')+'\n',{headers:{'content-type':'application/x-ndjson'}});
  }
+ if(mode==='abort-tools'&&url.pathname.endsWith('/catalog'))return new Promise((resolve,reject)=>{init.signal.addEventListener('abort',()=>reject(init.signal.reason),{once:true});toolStarted()});
  if(url.pathname.endsWith('/catalog'))return Response.json({fulltext:{total:300,facets:{'/u/o':mode==='empty'?{}:{'/u/o/Taylor Example':87,'/u/o/Pat Example':60,'/u/o/Alex Example':52}}},resources:{}});
  if(url.pathname.endsWith('/search')){
   const text=JSON.stringify(b);return Response.json({fulltext:{total:mode==='empty'?0:text.includes('Pat Example')?60:text.includes('Alex Example')?52:87},resources:{}});
@@ -57,6 +58,12 @@ test('shadow returns the normal answer and starts a monitored run with waitUntil
 test('answered false and exhausted budgets fall back to normal Ask and cannot cache the failure',async()=>{
  h.env.AGENTIC_ASK_MODE='route';shared.clear();edge.clear();mode='empty';const before=normalModels,quotaBefore=quota;const r=await post(question);assert.equal((await r.json()).agentic,undefined);assert.ok(normalModels>before);assert.equal(quota,quotaBefore+1,'fallback shares the original request quota');await flush();assert.ok(![...shared.keys()].some(k=>k.includes('ask-agentic')));
  mode='overrun';const normalBefore=normalModels;const over=await post(question);assert.equal((await over.json()).agentic,undefined);assert.ok(normalModels>normalBefore);await new Promise(r=>setTimeout(r,25));mode='ranking';await flush();
+});
+test('a disconnected reader cancels tools without starting a paid fallback',async()=>{
+ h.env.AGENTIC_ASK_MODE='route';shared.clear();edge.clear();mode='abort-tools';
+ const controller=new AbortController(),started=new Promise(resolve=>{toolStarted=resolve}),before=normalModels;
+ const pendingResponse=h.fetch('/api/ask',{method:'POST',signal:controller.signal,headers:{'content-type':'application/json'},body:JSON.stringify({question,kind:'speech'})});
+ await started;controller.abort();const response=await pendingResponse;assert.equal((await response.json()).answered,false);assert.equal(normalModels,before);mode='ranking';await flush();
 });
 test('the gold operator route fails closed without bearer or enabled mode, including staging',async()=>{
  h.env.STAGING_API={fetch(){throw Error('ops route must not proxy to production')}};

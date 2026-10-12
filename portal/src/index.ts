@@ -70,7 +70,7 @@ import { melbourneDate, DAILY_POST_KINDS, type DailyPostKind } from './daily-pos
 import { CATALOG_KINDS, searchCatalog } from './catalog-search'
 import { retrieveAskRecords, recordContext, recordSources, RECORD_GROUNDING, integrityQuestion, type AskRecords } from './ask-records'
 import { SEARCH_SORTS, compareSearchResults } from './search-sort'
-import { runAgentic, classifyAgentic, agenticCacheKey, inferPeriod, AGENTIC_BUDGET_MS, type AgenticDeps, type AgenticPayload, type Progress } from './agentic-ask'
+import { runAgentic, classifyAgentic, agenticCacheKey, inferPeriod, bounded, AGENTIC_BUDGET_MS, type AgenticDeps, type AgenticPayload, type Progress } from './agentic-ask'
 import { agenticAskPayload } from './agentic-response'
 import { recordAgenticRun } from './agentic-monitor'
 import { AGENTIC_TOOLS_VERSION } from './agentic-tools'
@@ -5664,7 +5664,7 @@ async function readJsonBody(
 
 /** Rebuild a consumed POST so the handler can call request.json() as before. */
 const replayPost = (request: Request, body: string) =>
-  new Request(request.url, { method: 'POST', headers: request.headers, body })
+  new Request(request.url, { method: 'POST', headers: request.headers, body, signal: request.signal })
 
 // ---------------------------------------------------------------------------
 
@@ -5725,7 +5725,17 @@ function monitorAgentic(env: Env, ctx: ExecutionContext, question: string, run: 
 }
 async function executeAgentic(input: Record<string, unknown>, env: Env, ctx: ExecutionContext, progress?: Progress, signal?: AbortSignal) {
   const question = String(input.question).trim()
-  const run = await runAgentic(question, agenticDeps(env, signal), progress, AGENTIC_BUDGET_MS, agenticPeriod(input), agenticFilters(input))
+  const started = Date.now(), period = agenticPeriod(input)
+  let run: AgenticPayload
+  try {
+    // Covers the whole path, including an SSE writer or provider that stalls.
+    run = await bounded(signal => runAgentic(question, agenticDeps(env, signal), progress, AGENTIC_BUDGET_MS, period, agenticFilters(input)), AGENTIC_BUDGET_MS, signal)
+  } catch {
+    run = { answered: false, reason: 'declined', answer: '', answer_source: 'none', shape: classifyAgentic(question).shape, period,
+      facts: [], notes: [], steps: [], events: [], tokens: { input: 0, output: 0 }, cost_usd: null,
+      over_budget: Date.now() - started >= AGENTIC_BUDGET_MS,
+      timings: { plan_ms: 0, tools_ms: 0, compose_ms: 0, total_ms: Date.now() - started }, version: 'unavailable' }
+  }
   monitorAgentic(env, ctx, question, run)
   return run
 }
@@ -5780,6 +5790,7 @@ async function apiAskRouted(request: Request, url: URL, input: Record<string, un
   }
   if (!streaming) {
     const run = await executeAgentic(input, env, ctx, undefined, request.signal)
+    if (request.signal.aborted) return json(agenticAskPayload(run, question))
     return run.answered && !run.over_budget ? withCacheStatus(finish(run), 'MISS', false) : fallback()
   }
   const { readable, writable } = new TransformStream<Uint8Array, Uint8Array>(), writer = writable.getWriter()
@@ -5789,6 +5800,7 @@ async function apiAskRouted(request: Request, url: URL, input: Record<string, un
     try {
       await send('status', { phase: 'searching' })
       const run = await executeAgentic(input, env, ctx, send, request.signal)
+      if (request.signal.aborted) return
       if (run.answered && !run.over_budget) { const response = finish(run); await send('done', await response.json()) }
       else {
         const response = await fallback()
