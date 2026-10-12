@@ -3123,7 +3123,7 @@ function setPeopleRail(sources) {
     loadPhotoMap().then(() => {
       for (const slot of card.querySelectorAll(".people-face[data-speaker]")) {
         const url = photoUrlFor(slot.dataset.speaker);
-        if (url) slot.innerHTML = `<img src="${esc(url)}" alt="" width="28" height="28">`;
+        if (url) slot.innerHTML = `<img src="${esc(url)}" alt="" width="28" height="28" loading="lazy" decoding="async">`;
       }
     });
   }
@@ -9379,7 +9379,7 @@ async function renderFrontEncy(dayIdx, todayReport, don) {
     const hasVotes = Boolean(v?.for?.length || v?.against?.length);
     return `<article class="report-card ency-card">
       <div class="ency-head">
-        <img class="ency-portrait" src="${esc(photoUrlFor(p.name))}" alt="" width="64" height="64">
+        <img class="ency-portrait" src="${esc(photoUrlFor(p.name))}" alt="" width="64" height="64" loading="lazy" decoding="async">
         <div class="ency-id">
           <span class="card-kicker">Parliamentarian</span>
           <a class="card-title ency-name" ${entityHrefAttr(subjectHash("person", p.name))}>${esc(p.name)}</a>
