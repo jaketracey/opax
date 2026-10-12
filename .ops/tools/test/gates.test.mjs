@@ -39,9 +39,14 @@ test('an unavailable desktop falls back to the original Mac waiting protocol',t=
 test('explicitly staged files survive a local exclude rule in the snapshot',t=>{
  const root=repo(t);writeFileSync(join(root,'.git/info/exclude'),'hidden/\n');mkdirSync(join(root,'hidden'));writeFileSync(join(root,'hidden/new.mjs'),'new');git(root,['add','-f','hidden/new.mjs']);assert.match(git(root,['ls-tree','-r','--name-only',snapshot(root)]),/hidden\/new.mjs/);
 });
-test('reporter records whole-file durations and failed global summaries',async()=>{
- const {default:reporter}=await import('../gate-reporter.mjs');const file=join(process.cwd(),'fixture.test.mjs');async function* events(){yield{type:'test:summary',data:{file,duration_ms:1250,success:true,counts:{tests:2}}};yield{type:'test:summary',data:{duration_ms:1300,success:false,counts:{tests:2,passed:1,failed:1,skipped:0}}};}
- let out='';for await(const value of reporter(events()))out+=value;assert.match(out,/FILE fixture.test.mjs 1.250s PASS/);assert.match(out,/TESTS 2 PASS 1 FAIL 1/);
+test('reporter uses parent file duration and records failed global summaries',async()=>{
+ const {default:reporter}=await import('../gate-reporter.mjs');const file=join(process.cwd(),'fixture.test.mjs');async function* events(){yield{type:'test:summary',data:{file,duration_ms:1250,success:true,counts:{tests:2}}};yield{type:'test:complete',data:{file,name:file,nesting:0,details:{duration_ms:1500}}};yield{type:'test:summary',data:{duration_ms:1600,success:false,counts:{tests:2,passed:1,failed:1,skipped:0}}};}
+ let out='';for await(const value of reporter(events()))out+=value;assert.match(out,/FILE fixture.test.mjs 1.500s PASS/);assert.match(out,/TESTS 2 PASS 1 FAIL 1/);
+});
+test('real reporter includes time awaiting top-level fixture setup',t=>{
+ const root=fixture(t),file=join(root,'setup.test.mjs'),report=join(root,'report.json');writeFileSync(file,'import test from "node:test"; await new Promise(r=>setTimeout(r,70)); test("fixture",()=>{});');
+ const env={...process.env,OX_GATE_REPORT:report};delete env.NODE_TEST_CONTEXT;
+ const run=spawnSync(process.execPath,['--test','--test-reporter='+join(tools,'gate-reporter.mjs'),file],{encoding:'utf8',env});assert.equal(run.status,0,run.stderr);const result=JSON.parse(readFileSync(report));assert.ok(result.files[0].duration_ms>=70);assert.ok(result.files[0].duration_ms>result.files[0].test_duration_ms);
 });
 test('catalog cache binds export blobs and transitive builder imports; presentation-only changes can reuse fixtures',t=>{
  const root=repo(t);mkdirSync(join(root,'scripts'));mkdirSync(join(root,'portal/public'));writeFileSync(join(root,'scripts/build_search_catalog.mjs'),"import '../portal/public/catalog-reader.mjs'");writeFileSync(join(root,'portal/public/catalog-reader.mjs'),'export const x=1');writeFileSync(join(root,'portal/public/export.json'),'{}');

@@ -67,7 +67,7 @@ test('additive compact hashes retain all production word hashes and reject every
     assert.equal(match([...value].join(' ')),true,'compact whitespace');
     assert.equal(match('zz'+value+'zz'),value.length>=6,'short-form boundary policy');
   }
-  const local=await tableDatabase({datasets:{},policy});
+  const local=await tableDatabase({datasets:{},policy,memorySQL:true});
   try{
     for(const value of stripped){
       const validation=await tablePrivacy(new Request('https://local.invalid/api/table/privacy',{method:'POST',body:JSON.stringify({text:value})}),assets);assert.equal((await validation.json()).safe,false,'endpoint variant rejection');

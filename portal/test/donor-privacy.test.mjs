@@ -85,7 +85,7 @@ const graphs = await Promise.all(MONEY_GRAPHS.map(path=>sourceRead(root)(path)))
 // as the donation graphs, rather than trusting a prebuilt public snapshot.
 const moneyTables = await tableRows(root, {moneyOnly: true,graphs});
 for (const dataset of ['contracts', 'suppliers', 'grants']) assert.ok(moneyTables.rows[dataset].length > 0, dataset);
-const tablesD1 = await tableDatabase({datasets:moneyTables.rows,policy:moneyTables.policy});
+const tablesD1 = await tableDatabase({datasets:moneyTables.rows,policy:moneyTables.policy,memorySQL:true});
 // Offline fixtures add fictional identities to the release registry. Mark this
 // fixture snapshot for the actual Worker build so its response guards run.
 await tablesD1.db.prepare("UPDATE table_meta SET value=? WHERE key='privacy_fingerprint'").bind(TABLE_REGISTRY_FINGERPRINT).run();
