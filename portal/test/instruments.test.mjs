@@ -225,7 +225,7 @@ test('parsed catalogue is reused per isolate and failed reads can recover', asyn
 test('source block is verbatim, OPAX fields left out, authoritative link unique and licence accurate', async () => {
   const result=await instrumentPage('F2026L00001',new URL('https://opax.com.au/instrument/F2026L00001'),read,block);
   assert.equal((result.prerender.match(/href="https:\/\/www.legislation.gov.au\/F2026L00001\/latest"/g)||[]).length,1);
-  const source=result.prerender.match(/Source metadata<\/summary><pre>(.*?)<\/pre>/s)[1];
+  const source=result.prerender.match(/Source metadata<\/summary><div class="ui-disclosure-body"><pre>(.*?)<\/pre>/s)[1];
   assert.doesNotMatch(source,/canonical_url|_opax_metadata|commencementDate/);
   assert.doesNotMatch(result.prerender,/OPAX-derived fields/);
   assert.deepEqual(unpack(json(manifest.chunks[0].path).records[0],manifest.schemas,manifest.strings).source,fixture.titles[0]);

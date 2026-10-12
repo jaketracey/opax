@@ -47,7 +47,7 @@ function select(label: string, key: string, values: string[], url: URL, unknown 
   return `<label>${label}<select name="${key}"><option value="">All</option>${[...values, ...(unknown && !values.includes('unknown') ? ['unknown'] : [])].map(v => `<option value="${esc(v)}"${url.searchParams.get(key) === v ? ' selected' : ''}>${v === 'unknown' ? 'Not recorded' : esc(key === 'portfolio' || key === 'year' ? clean(v) : words(v))}</option>`).join('')}</select></label>`
 }
 /** Key-value rows; a value the Register does not supply is left out, not drawn as "Not supplied". */
-const facts = (rows: [string, string][]) => `<dl class="instrument-facts">${rows.filter(([, v]) => v).map(([k, v]) => `<dt>${k}</dt><dd>${v}</dd>`).join('')}</dl>`
+const facts = (rows: [string, string][]) => `<dl class="ui-kv instrument-facts">${rows.filter(([, v]) => v).map(([k, v]) => `<div><dt>${k}</dt><dd>${v}</dd></div>`).join('')}</dl>`
 
 export async function instrumentPage(id: string | null, url: URL, read: Read, block: Block) {
   const missing = () => ({ title: 'Instrument not found · OPAX', description: 'No instrument metadata is available for this FRL id.', status: 404, prerender: block('Instrument not found', 'No instrument metadata is available for this FRL id.', '', [INDEX_CRUMB, { label: 'Not found' }]) })
@@ -101,13 +101,13 @@ export async function instrumentPage(id: string | null, url: URL, read: Read, bl
       ['Portfolio', esc(portfolios)], ['Administering department', esc(departments.map(d => clean(d.name)).join('; '))],
       ['Series', esc([r.seriesType, r.optionalSeriesNumber].filter(Boolean).join(' '))],
       ['Year and number', r.year != null && r.number != null ? `${esc(r.year)} No. ${esc(r.number)}` : ''], ['Register id', esc(r.id)]])
-    const versions = sourceVersions.length ? `<details class="instrument-disclosure"><summary>Version</summary><p>The version OPAX holds, which may not be the latest. The Register has the latest text.</p>${sourceVersions.map(v => facts([
+    const versions = sourceVersions.length ? `<details class="ui-disclosure instrument-disclosure"><summary>Version</summary><div class="ui-disclosure-body"><p>The version OPAX holds, which may not be the latest. The Register has the latest text.</p>${sourceVersions.map(v => facts([
       ['Registration id', esc(v.registerId)], ['Version starts', date(v.start)], ['Registered', date(v.registeredAt)], ['Compilation', esc(v.compilationNumber)],
-      ['Latest registered version', v.isLatest ? 'Yes' : 'No'], ['Current version', v.isCurrent ? 'Yes' : 'No']])).join('')}</details>` : ''
+      ['Latest registered version', v.isLatest ? 'Yes' : 'No'], ['Current version', v.isCurrent ? 'Yes' : 'No']])).join('')}</div></details>` : ''
     const notes = ['OPAX shows metadata only; the authoritative legal text is on the Register.',
       'Registered is the as-made registration date. A version’s start date is not necessarily when the whole instrument commenced. In force can include an instrument made but not yet commenced.',
       'No repeal, supersession or disallowance relationships are inferred.']
     return { title: `${r.name} · OPAX`, description, status: 200,
-      prerender: block(r.name, meta, '', [INDEX_CRUMB, { label: r.name }]) + `<section class="wrap instrument-content">${dates}<p class="instrument-out"><a href="${esc(authoritative)}" rel="noopener">Authoritative text on the Federal Register of Legislation ↗</a></p>${r.hasCommencedUnincorporatedAmendments ? '<p>The Register records commenced amendments that are not yet incorporated in this text.</p>' : ''}${r.publishComments ? `<h2>Publisher comments</h2><p>${esc(r.publishComments)}</p>` : ''}${versions}<details class="instrument-disclosure"><summary>Source metadata</summary><pre>${esc(JSON.stringify(r, null, 2))}</pre></details>${sourceLine(manifest, [], notes)}</section>` }
+      prerender: block(r.name, meta, '', [INDEX_CRUMB, { label: r.name }]) + `<section class="wrap instrument-content">${dates}<p class="instrument-out"><a href="${esc(authoritative)}" rel="noopener">Authoritative text on the Federal Register of Legislation ↗</a></p>${r.hasCommencedUnincorporatedAmendments ? '<p>The Register records commenced amendments that are not yet incorporated in this text.</p>' : ''}${r.publishComments ? `<section class="ui-section instrument-section"><h2 class="ui-section-title">Publisher comments</h2><p>${esc(r.publishComments)}</p></section>` : ''}<div class="instrument-disclosures">${versions}<details class="ui-disclosure instrument-disclosure"><summary>Source metadata</summary><div class="ui-disclosure-body"><pre>${esc(JSON.stringify(r, null, 2))}</pre></div></details></div>${sourceLine(manifest, [], notes)}</section>` }
   } catch { return unavailable() }
 }

@@ -154,7 +154,6 @@ const TYPE_BASELINE = {
   'graph/words.ts': 3,
   'public/app.js': 2,
   'public/ballot.css': 2,
-  'public/community.css': 5,
   'public/grants.js': 6,
   'public/ledger.js': 2,
   'public/matrix.js': 1,
