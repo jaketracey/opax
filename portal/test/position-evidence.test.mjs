@@ -7,6 +7,8 @@ import {runInNewContext} from 'node:vm';
 import ts from 'typescript';
 const bundle=await build({entryPoints:[new URL('../src/position-evidence.ts',import.meta.url).pathname],bundle:true,write:false,format:'esm',platform:'node'});
 const helpers=await import('data:text/javascript;base64,'+Buffer.from(bundle.outputFiles[0].text).toString('base64'));
+const summaryBundle=await build({entryPoints:[new URL('../src/search-summary.ts',import.meta.url).pathname],bundle:true,write:false,format:'esm',platform:'node'});
+const {quotedInOrder}=await import('data:text/javascript;base64,'+Buffer.from(summaryBundle.outputFiles[0].text).toString('base64'));
 const {firstSpeechTurn,positionEvidence,positionProposalQuote,normalizePositionDraft}=helpers;
 const proposal='I proposed a five-year GST moratorium on essential building materials for homes up to $1 million to improve housing affordability.';
 const other='Housing affordability is an investor problem, and my home state is Western Australia.';
@@ -71,9 +73,9 @@ function harness({rows,texts={},recover=true,unavailable=false,reasoned}={}){
  // The reasoned fallback's dependencies are only present when a test supplies
  // `reasoned` (what the ordinary prompt would answer); without them the
  // fallback fails closed and the excerpts follow, as every older test expects.
- const reasoning=reasoned?{AbortSignal,ASK_SYNC_TIMEOUT_MS:1000,isRefusal:a=>/does not discuss it/.test(a.answer||''),hasUnsupportedQuotes:()=>false,
+ const reasoning=reasoned?{AbortSignal,ASK_SYNC_TIMEOUT_MS:1000,decodeAskAnswer:a=>a,hasUnsupportedQuotes:()=>false,unsupportedQuotes:()=>[],quotedInOrder,
   buildAskBody:(input,records,options)=>{reasonedOptions=options;return {query:input.question,prompt:{system:'ordinary'}};},
-  kbFetch:async(env,path,{body})=>{reasonedBody=body;return Response.json(reasoned);},
+  kbFetch:async(env,path,{body})=>{reasonedBody=body;return Response.json({answered:true,...reasoned,retrieval_results:{resources:{rid:{slug:'speech-1',fields:{body:{paragraphs:{'rid/t/transcript/0-10':{text:proposal}}}}}}}});},
   askPayload:(answer,records,scope)=>({answer:answer.answer,citations:answer.citations||{},sources:[],scope})}:{};
  const fn=runInNewContext(code+';documentedPositionAnswer',{saEvidenceRecord,saEvidenceText,...helpers,noAnswer:(p,reason)=>({...p,answer:'',answered:false,reason,citations:{}}),looseAnswer:(p)=>({...p,answered:true}),...reasoning,scopeSpeakerBody:async()=>{},loadPeople:async()=>({byFold:new Map()}),URL,Request,evidenceExcerpt:text=>({text}),canonicalSpeaker:s=>s,EVIDENCE_GAP_ANSWER:'This selection does not establish their position on that topic.',
   searchWindow:async(e,args)=>{query=args;return rows===null?null:{results:rows||[{slug:'speech-1',speaker:'Example MP',title:'Example MP — 2025-02-11',date:'2025-02-11',kind:'speech',resource:'rid'}]};},
@@ -84,13 +86,13 @@ function harness({rows,texts={},recover=true,unavailable=false,reasoned}={}){
 }
 test('a failed summary gets one reasoned answer before excerpts, and only a cited one',async()=>{
  // The strict path could not verify a summary: the ordinary prompt answers, cited, and that stands.
- const h=harness({recover:false,reasoned:{answer:'Taken together, the record suggests a cap.',citations:{'rid/t/transcript/0-10':[[0,1]]}}});
- const out=await h.run('surely you could cast him as anti-renter?');
+ const h=harness({recover:false,reasoned:{answer:'Taken together, the record suggests a cap.',citations:{'rid/t/transcript/0-10':[[0,42]]}}});
+ const out=await h.run('What has he said about housing affordability?');
  assert.equal(out.answer_status,'reasoned');assert.equal(out.answer,'Taken together, the record suggests a cap.');assert.equal(out.scope.speaker,'Example MP');
  assert.equal(h.reasonedOptions?.reasoned,true);assert.equal(h.reasonedBody.prompt.system,'ordinary');assert.equal(h.reasonedBody.generative_model,'openai-compatible');
  // Uncited, or a refusal: the excerpts, as before.
  assert.equal((await harness({recover:false,reasoned:{answer:'Unsupported claims.',citations:{}}}).run()).answered,false);
- assert.equal((await harness({recover:false,reasoned:{answer:'The record retrieved for this question does not discuss it.',citations:{'rid':[[0,1]]}}}).run()).answered,false);
+ assert.equal((await harness({recover:false,reasoned:{answered:false,answer:'',citations:{}}}).run()).answered,false);
  // A verified summary never reaches the fallback.
  const verified=harness({recover:true,reasoned:{answer:'Never used.',citations:{'rid':[[0,1]]}}});assert.equal((await verified.run()).answer,'Verified proposal');assert.equal(verified.reasonedBody,undefined);
 });

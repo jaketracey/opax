@@ -1736,23 +1736,17 @@ async function documentedPositionAnswer(input: AskInput, body: Record<string, un
     if(quoted)return quoted
   }
   // A failed summary is not the end: the ordinary reasoning prompt gets one
-  // go at a cited answer before the reader is handed raw excerpts.
+  // go at a cited answer before returning a structured no-answer decision.
   await progress?.('status', { phase: 'writing' })
   return await recoverPositionAnswer(payload,{...body,position_question:input.question},env,progress) || quotedPositionAnswer(payload,query,input.question)
     || await reasonedPositionAnswer(input, payload, env) || noAnswer({...payload,sources:retrievedSources},'grounding_failed')
 }
 
-/**
- * The strict path verifies every point against an original speaking turn and,
- * when it cannot, used to hand over excerpts with "I couldn't verify a summary".
- * A reader asking "surely you could cast her as racist?" is asking to have the
- * dots joined, which is what the ordinary prompt now does. So: the same
- * question and filters, the ordinary prompt, one synchronous call; the answer
- * stands if it cites its passages and quotes nothing the passages do not say.
- * Its sources are the platform's, marked cited or not as usual.
- */
+/** One ordinary-prompt attempt after strict recovery fails. Its cited claims
+ * must pass the same original-turn, topic, number and quotation checks.
+ * Validation leaves accepted answer bytes alone. */
 async function reasonedPositionAnswer(input: AskInput, verified: AskPayload, env: Env): Promise<AskPayload | null> {
-  // One attempt; anything that goes wrong means the excerpts, as before.
+  // One attempt; an unavailable response leaves the no-answer decision intact.
   try {
     const body = buildAskBody(input, undefined, { reasoned: true })
     await scopeSpeakerBody(body, env, input.speaker)
@@ -1760,9 +1754,37 @@ async function reasonedPositionAnswer(input: AskInput, verified: AskPayload, env
     const res = await kbFetch(env, '/ask', { body, headers: { 'x-synchronous': 'true' }, signal: AbortSignal.timeout(ASK_SYNC_TIMEOUT_MS) })
     if (!res.ok) return null
     const answer = (await res.json()) as AskAnswer
-    if (isRefusal(answer)) return null
+    const decision = decodeAskAnswer(answer)
     const payload = askPayload(answer, undefined, verified.scope, await loadPeople(env))
-    if (!Object.keys(payload.citations).length || hasUnsupportedQuotes(payload, answer)) return null
+    if (decision.answered === false) return noAnswer(payload, decision.reason || 'declined')
+    if (!Object.keys(payload.citations).length || hasUnsupportedQuotes(payload, answer)) return noAnswer(payload, 'grounding_failed')
+    // Footnote ranges end at the claim they support. Group references at the
+    // same endpoint, then check each claim against an individually cited
+    // passage from the already verified original speaking turn. Combining
+    // figures from separate speeches cannot make an unsupported claim pass.
+    const endpoints = new Map<number, string[]>()
+    for (const [id, ranges] of Object.entries(payload.citations)) {
+      for (const [, end] of ranges as number[][]) endpoints.set(end, [...(endpoints.get(end) || []), id])
+    }
+    const chars = Array.from(payload.answer)
+    const ends = [...endpoints.keys()].sort((a, b) => a - b)
+    let start = 0
+    for (const end of ends) {
+      const claim = chars.slice(start, end === ends.at(-1) ? chars.length : end).join('')
+      const supported = endpoints.get(end)!.some(id => {
+        const resource = answer.retrieval_results?.resources?.[id.split('/')[0]]
+        const row = verified.sources.find(row => !!row && typeof row === 'object' && 'slug' in row && row.slug === resource?.slug) as {snippet?: string; date?: string} | undefined
+        const paragraph = Object.values(resource?.fields || {}).flatMap(field => Object.entries(field.paragraphs || {})).find(([key]) => key === id)?.[1]
+        const evidence = (paragraph?.text || answer.augmented_context?.paragraphs?.[id]?.text || answer.augmented_context?.fields?.[id]?.text || '')
+          .replace(/\n+DOCUMENT CLASSIFICATION LABELS:[\s\S]*$/, '')
+        return !!row?.snippet && !!evidence && quotedInOrder(evidence, row.snippet) &&
+          !!positionEvidence(evidence, String(body.query || input.question || '')) &&
+          !unsupportedQuotes(claim, [evidence]).length &&
+          positionPointSupported(claim, evidence, input.question || '', row.date, isPositionDetailQuestion(input.question || '') ? '' : row.snippet)
+      })
+      if (!supported) return noAnswer(payload, 'grounding_failed')
+      start = end
+    }
     return { ...looseAnswer(payload, answer), answer_status: 'reasoned' }
   } catch { return null }
 }
@@ -1853,7 +1875,7 @@ async function recoverPositionAnswer(payload: AskPayload, body: Record<string,un
     // Budget ~15k tokens: ten originals at their full 5,600-character evidence
     // windows fit; a 62k template was accepted live.
     const POSITION_PROMPT_CHARS = 60000
-    const attempt = async (repair: string): Promise<{ summary: SearchSummary | null; drafted: string[] }> => {
+    const attempt = async (repair: string): Promise<{ summary: SearchSummary | null; drafted: string[]; declined?: boolean }> => {
       let prompt = makePrompt(repair)
       while (sources.length && prompt.length > POSITION_PROMPT_CHARS) { sources.pop(); prompt = makePrompt(repair) }
       if (!sources.length) return { summary: null, drafted: [] }
@@ -1866,7 +1888,9 @@ async function recoverPositionAnswer(payload: AskPayload, body: Record<string,un
       if (!answer) return { summary: null, drafted: [] }
       let decision: unknown
       try { decision = JSON.parse(answer) } catch { return {summary:null,drafted:[]} }
-      if (!decision || typeof decision !== 'object' || !('answered' in decision) || decision.answered !== true) return {summary:null,drafted:[]}
+      if (!decision || typeof decision !== 'object' || !('answered' in decision)) return {summary:null,drafted:[]}
+      if (decision.answered === false) return {summary:null,drafted:[],declined:true}
+      if (decision.answered !== true) return {summary:null,drafted:[]}
       const draft = normalizePositionDraft(answer, sources)
       // What the model offered before verification, so a failed first attempt
       // can be retried with the reason instead of silently falling back.
@@ -1894,13 +1918,15 @@ async function recoverPositionAnswer(payload: AskPayload, body: Record<string,un
         })).slice(0,4)
       return { summary, drafted }
     }
-    let { summary, drafted } = await attempt('')
+    let { summary, drafted, declined } = await attempt('')
+    if (declined) return noAnswer(payload, 'declined')
     // Every drafted point failed a check (usually a figure outside its excerpt,
     // or an excerpt that is not verbatim): one more try, told what went wrong.
     if (!summary?.points.length && drafted.length) {
       await progress?.('status', { phase: 'writing', attempt: 2 })
-      ;({ summary } = await attempt('\nA previous attempt failed verification and was discarded. Its points were: ' + JSON.stringify(drafted.slice(0, 4)) +
+      ;({ summary, declined } = await attempt('\nA previous attempt failed verification and was discarded. Its points were: ' + JSON.stringify(drafted.slice(0, 4)) +
         ' Write the answer again so that each point is supported by one contiguous verbatim excerpt from its own passage containing every number, year, amount and duration the point states; leave out any point that cannot be quoted that way.'))
+      if (declined) return noAnswer(payload, 'declined')
     }
     if (!summary?.points.length) return null
     const used = new Set(summary.points.flatMap(point => point.source_ids))
@@ -2287,12 +2313,10 @@ function apiAskStream(
           await send('retry', { reason: 'slow' })
           result = await attempt(lighterAsk(body), ASK_STALL_MS * 2)
         }
-        // An empty answer is a reasoning burn whatever the retrieval; a
-        // refusal is only retried over a healthy one (the sync rule) — and
-        // only when the first attempt was quick enough that a second is
-        // not what tips the reader into a two-minute wait.
+        // Match the sync rule: only an empty/malformed response over healthy
+        // retrieval, within the retry budget, gets another attempt.
         const quick = Date.now() - t0 < ASK_RETRY_BUDGET_MS
-        if (isRefusal(result) && decodeAskAnswer(result).reason !== 'declined' && (quick || !(result.answer ?? '').trim()) && (healthyRetrieval(result) || !(result.answer ?? '').trim())) {
+        if (isRefusal(result) && healthyRetrieval(result) && quick) {
           await send('retry', { reason: (result.answer ?? '').trim() ? 'refusal' : 'empty' })
           const again = opts.firstBudget ? await attempt(body,ASK_STALL_MS) : await streamAskOnce(env, body, checkedSend, upstream.signal)
           if (!isRefusal(again)) result = again

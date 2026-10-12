@@ -11,13 +11,24 @@ const bundle=await build({entryPoints:[new URL('../src/search-summary.ts',import
 const helpers=await import('data:text/javascript;base64,'+Buffer.from(bundle.outputFiles[0].text).toString('base64'));
 const evidenceBundle=await build({entryPoints:[new URL('../src/position-evidence.ts',import.meta.url).pathname],bundle:true,write:false,format:'esm',platform:'node'});
 const evidenceHelpers=await import('data:text/javascript;base64,'+Buffer.from(evidenceBundle.outputFiles[0].text).toString('base64'));
+const noAnswer=(p,reason)=>({...p,answer:'',answered:false,reason,citations:{},sources:p.sources.map(s=>({...s,cited:false}))});
 const source=await readFile(new URL('../src/index.ts',import.meta.url),'utf8');
 const start=source.indexOf('async function recoverPositionAnswer(');
 const code=source.slice(start,source.indexOf('/** A short overview grounded',start));
 const quote='I propose a five-year moratorium on GST for essential building materials for homes up to $1 million.';
 const payload={answer:'An uncited draft.',citations:{},scope:{speaker:'Example MP',kind:'speech'},sources:[{resource:'rid',slug:'speech-1',title:'Example MP — 2025-02-11',href:'/doc/speech-1',kind:'speech',speaker:'Example MP',snippet:quote,cited:false}]};
 const draft=(excerpt=quote)=>JSON.stringify({answered:true,points:[{text:'Example MP proposed a five-year GST moratorium for essential building materials for homes up to $1 million.',citations:[{id:'s1',quote:excerpt}]}]});
-function harness(answer){let calls=0,request;const recover=runInNewContext(ts.transpileModule(code,{compilerOptions:{target:ts.ScriptTarget.ES2022}}).outputText+';recoverPositionAnswer',{saEvidenceRecord,saEvidenceText,...helpers,...evidenceHelpers,shortDate,POSITION_GROUNDING:'Ground positions.',AbortSignal,Intl,Date,kbFetch:async(e,p,r)=>{calls++;request=r;return Response.json({answer})}});return {recover,get calls(){return calls},get request(){return request}};}
+function harness(answer){let calls=0,request;const recover=runInNewContext(ts.transpileModule(code,{compilerOptions:{target:ts.ScriptTarget.ES2022}}).outputText+';recoverPositionAnswer',{saEvidenceRecord,saEvidenceText,...helpers,...evidenceHelpers,noAnswer,shortDate,POSITION_GROUNDING:'Ground positions.',AbortSignal,Intl,Date,kbFetch:async(e,p,r)=>{calls++;request=r;return Response.json({answer:Array.isArray(answer)?answer.shift():answer})}});return {recover,get calls(){return calls},get request(){return request}};}
+
+test('explicit declines survive both the first recovery call and a repair',async()=>{
+ for(const responses of [[JSON.stringify({answered:false,points:[]})],[draft('A fabricated excerpt.'),JSON.stringify({answered:false,points:[]})]]) {
+  const expectedCalls=responses.length;
+  const h=harness(responses);
+  const result=await h.recover(payload,{query:'housing'},{});
+  assert.equal(h.calls,expectedCalls); assert.equal(result.answered,false); assert.equal(result.reason,'declined');
+  assert.equal(result.answer,''); assert.equal(result.sources.length,1);
+ }
+});
 
 test('position recovery binds every displayed point to a verified original excerpt and dated record',async()=>{
  const h=harness(draft());const out=await h.recover(payload,{query:'housing'},{});

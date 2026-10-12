@@ -3001,7 +3001,7 @@ function renderAskDateRuler(sources, isCited) {
         ${ticks}${rulerAxisHTML()}
       </svg>
     </div>
-    <p class="date-ruler-key"><span><i class="is-cited"></i>Cited in the answer</span><span><i></i>Retrieved only</span></p>`;
+    <p class="date-ruler-key">${(sources || []).some(source => isCited(source)) ? '<span><i class="is-cited"></i>Cited in the answer</span>' : ''}<span><i></i>Retrieved only</span></p>`;
   box.hidden = false;
 }
 

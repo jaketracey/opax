@@ -15,15 +15,22 @@ export const resource = {
   data: {texts: {body: {value: {body: text}}}},
 };
 export function modelReply(body, mode = 'declined') {
-  if (mode === 'numeric') {
-    return {answer: JSON.stringify(body.prompt?.system?.includes('points-and-citations schema')
-      ? {answered:true,points:[{text:'She stated the housing proposal cost $999999.',citations:[{id:'s1',quote:text}]}]}
-      : {answered:false,answer:''}), retrieval_results:{resources:{fixture:resource}}};
+  if (mode === 'position_declined') {
+    return {answer: JSON.stringify({answered:false,points:[]}), retrieval_results:{resources:{fixture:resource}}};
   }
+  const positionDraft = body.max_tokens === 2600;
+  if (mode === 'position_supported' && positionDraft) {
+    return {answer:JSON.stringify({answered:true,points:[{text:'She called for scrutiny of housing proposals.',citations:[{id:'s1',quote:text}]}]}),retrieval_results:{resources:{fixture:resource}}};
+  }
+  if (['numeric', 'reasoned_quote', 'reasoned_supported'].includes(mode) && positionDraft) {
+    return {answer: JSON.stringify({answered:true,points:[{text:'She stated the housing proposal cost $999999.',citations:[{id:'s1',quote:text}]}]}), retrieval_results:{resources:{fixture:resource}}};
+  }
+  if (mode === 'empty') return {answer:'',retrieval_results:{resources:{fixture:resource}}};
   const records = (body.extra_context || []).map(value => JSON.parse(value));
   const speech = records.findIndex(row => row.kind === 'speech');
   const context = speech >= 0 ? 'USER_CONTEXT_' + speech : id;
-  const answer = mode === 'grounding_failed'
+  const answer = mode === 'numeric' ? 'She stated the housing proposal cost $999999.[^1]\n\n[^1]: block-F1'
+    : mode === 'grounding_failed' || mode === 'reasoned_quote'
     ? 'She said "This quotation is fabricated and is absent from the supplied parliamentary records".[^1]\n\n[^1]: block-F1'
     : mode === 'uncited' ? 'An unsupported summary.'
     : 'She called for scrutiny of housing proposals.[^1]\n\n[^1]: block-F1';

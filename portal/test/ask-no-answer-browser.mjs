@@ -7,7 +7,7 @@ import {fileURLToPath} from 'node:url';
 import {resolve} from 'node:path';
 import {question, speaker} from './fixtures/ask-no-answer.mjs';
 const {chromium} = await import(process.env.OPAX_PLAYWRIGHT_MODULE || 'playwright');
-const origin = 'http://127.0.0.1:8793';
+const origin = 'http://127.0.0.1:8964';
 const output = fileURLToPath(new URL('../private/ask-no-answer/', import.meta.url));
 await mkdir(output, {recursive:true});
 const browser = await chromium.launch({headless:true, executablePath:process.env.OPAX_BROWSER_EXECUTABLE || undefined});
@@ -57,6 +57,7 @@ try {
    assert.ok((await answer.innerText()).includes('Fixture housing debate'));
    assert.equal(await answer.locator(surface==='ask' ? '#ask-sources' : '.chat-sources').evaluate(el=>el.open),true);
    assert.ok(!(await answer.innerText()).includes('fabricated'));
+   if(surface==='ask') assert.ok(!(await page.locator('#ask-date-ruler').innerText()).includes('Cited in the answer'));
    if(surface==='chat') {
     await page.reload({waitUntil:'networkidle'});
     await page.locator('.chat-turn-answer').last().getByText("OPAX couldn't find a clear answer to this in the record.",{exact:true}).waitFor();
