@@ -1,6 +1,6 @@
 /* Client-side agency records, from the same published exports as their pages. */
-import {sourceLineHTML} from './labels.js?v=edf92a9bea';
-import {moduleAttrs, donationRegisterHTML, exactOrganisationDonors, growthSummaryPath, normalisedName, approvedModulePrivacy, loadModuleDonors} from './growth-modules.js?v=6a4a52d4bb';
+import {sourceLineHTML} from './labels.js?v=fc03aa14cf';
+import {moduleAttrs, donationRegisterHTML, exactOrganisationDonors, growthSummaryPath, normalisedName, approvedModulePrivacy, loadModuleDonors} from './growth-modules.js?v=2fe959404b';
 const esc = value => String(value ?? '').replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const money = n => Number(n).toLocaleString('en-AU',{style:'currency',currency:'AUD',maximumFractionDigits:0});
 async function json(url,signal) {const r=await fetch(url,{signal,cache:"no-cache"});if(!r.ok)throw new Error('Records unavailable');return r.json();}

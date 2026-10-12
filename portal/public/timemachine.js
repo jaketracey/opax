@@ -37,7 +37,7 @@ import { personUrl, partyUrl } from './canonical-urls.js?v=225d5915ea';
  */
 
 import { shortMoney as fmtMoney } from './format.js'
-import { machineLabelHTML } from './labels.js?v=edf92a9bea'
+import { machineLabelHTML } from './labels.js?v=fc03aa14cf'
 
 const YEAR_MIN = 1998
 const YEAR_MAX = 2026

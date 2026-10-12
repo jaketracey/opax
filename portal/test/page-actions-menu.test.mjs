@@ -9,7 +9,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { JSDOM } from 'jsdom';
-import { pageMenuHTML, installPageMenus } from '../public/page-actions-menu.js';
+import { pageMenuHTML, initPageMenus } from '../public/page-actions-menu.js';
 
 const read = (name) => readFileSync(new URL(`../public/${name}`, import.meta.url), 'utf8');
 const css = read('page-actions.css');
@@ -33,7 +33,7 @@ function page({ width = 390, height = 800 } = {}) {
   const doc = win.document;
   Object.defineProperty(win, 'innerWidth', { value: width, configurable: true });
   Object.defineProperty(win, 'innerHeight', { value: height, configurable: true });
-  const api = installPageMenus(doc, win);
+  const api = initPageMenus(doc, win);
   const menu = doc.getElementById('bill-more');
   const button = menu.querySelector('.page-menu-button');
   const list = menu.querySelector('.page-menu-list');
@@ -175,7 +175,7 @@ test('one ⋯ open at a time, and opening one closes an open source sheet', () =
   assert.equal(other.querySelector('.page-menu-list').hidden, false);
   api.closeAll();
   assert.equal(other.querySelector('.page-menu-list').hidden, true);
-  assert.equal(installPageMenus(doc, doc.defaultView), api, 'installed once per document');
+  assert.equal(initPageMenus(doc, doc.defaultView), api, 'installed once per document');
 });
 
 test('opening ⋯ changes nothing in the document flow: the list is out of flow and only it and the button change', () => {
@@ -290,6 +290,36 @@ test('every ⋯ on the site is this menu: the static toolbars, the renderers and
   assert.match(app, /window\.opaxPageMenus\?\.close\(\$\("search-more"\)\)/);
   assert.doesNotMatch(app, /\$\("search-more"\)\.open/);
   assert.equal((app.match(/<div class="page-actions[ "]/g) || []).length, 5, 'the five page-action rows in app.js');
-  assert.match(read('labels.js'), /export \{ pageMenuHTML as moreMenuHTML \} from '\.\/page-actions-menu\.js\?v=[0-9a-f]{10}';/);
+  // app.js draws ⋯ with the module's markup and gives every ⋯ its behaviour at boot,
+  // before the first render; electorates.js draws it with the same markup.
+  assert.match(app, /const pageMenusReady = import\('\/page-actions-menu\.js\?v=[0-9a-f]{10}'\)\.then\(module => \{ pageMenus = module; module\.initPageMenus\(document, window\); \}\);/);
+  assert.match(app, /function moreMenuHTML\(items, label, opts\) \{ return pageMenus\.pageMenuHTML\(items, label, opts\); \}/);
+  assert.match(app, /Promise\.allSettled\(\[[^\]]*\bpageMenusReady\b[^\]]*\]\)\.finally/);
+  assert.match(read('electorates.js'), /^import \{ pageMenuHTML as moreMenuHTML \} from '\.\/page-actions-menu\.js\?v=[0-9a-f]{10}';$/m);
   assert.match(read('electorates.js'), /<div class="page-actions">\$\{moreMenuHTML\(/);
+});
+
+test('⋯ stays out of the analytics bundle: importing it does nothing, and labels.js does not reach it', async () => {
+  const source = read('page-actions-menu.js');
+  // No statement at the top level but imports, declarations and exports.
+  for (const line of source.split('\n')) {
+    if (!line || /^[\s/*]/.test(line) || line.startsWith('}')) continue;
+    assert.match(line, /^(export |const |let |function |import )/, `a top-level statement runs on import: ${line}`);
+  }
+  // Importing it into a document adds no listeners and no globals.
+  const dom = new JSDOM('<!doctype html><body></body>', { runScripts: 'outside-only' });
+  let added = 0;
+  for (const target of [dom.window, dom.window.document]) {
+    const add = target.addEventListener.bind(target);
+    target.addEventListener = (...args) => { added += 1; return add(...args); };
+  }
+  dom.window.eval(source.replace(/^export /gm, ''));
+  assert.equal(added, 0);
+  assert.equal(dom.window.opaxPageMenus, undefined);
+  // events.js bundles growth-modules.js, which imports labels.js: ⋯ is in neither.
+  for (const name of ['labels.js', 'growth-modules.js']) {
+    assert.doesNotMatch(read(name), /(?:from\s*|import\(\s*)['"][^'"]*page-actions-menu|moreMenuHTML|class="page-menu/, name);
+  }
+  const events = read('events.js');
+  assert.doesNotMatch(events, /page-menu|opaxPageMenus|aria-haspopup/, 'the built analytics bundle carries no menu code');
 });

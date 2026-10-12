@@ -6,9 +6,11 @@
    A menu button and a list of links and buttons. The list always floats over
    the page, anchored to its button: opening it moves nothing in the document
    flow, at any width (the details sheet it replaces opened in place on a
-   phone and pushed the page down). This module writes the markup
-   (labels.js's moreMenuHTML is this) and, once per document, adds the
-   behaviour:
+   phone and pushed the page down). pageMenuHTML writes the markup and
+   initPageMenus adds the behaviour, once per document; importing the module
+   does nothing else, so no bundle that never draws ⋯ (events.js reaches
+   labels.js) carries it. app.js imports it at boot and calls initPageMenus;
+   electorates.js imports the markup. The behaviour:
    - the button carries aria-haspopup="menu" and aria-expanded; the list is
      role="menu" and its rows role="menuitem";
    - a click, Enter or Space on the button opens it and focuses the first
@@ -62,8 +64,8 @@ const EDGE = 8; // px kept clear of the viewport's edges
 const GAP = 6; // px between the button and the list
 
 /** The behaviour, on the document: menus rendered later need no wiring.
- *  Returns the controls a page may call (open, close, closeAll). */
-export function installPageMenus(doc, win) {
+ *  Idempotent. Returns the controls a page may call (open, close, closeAll). */
+export function initPageMenus(doc = document, win = window) {
   if (doc.opaxPageMenus) return doc.opaxPageMenus;
   const buttonOf = (menu) => menu.querySelector(':scope > .page-menu-button');
   const listOf = (menu) => menu.querySelector(':scope > .page-menu-list');
@@ -194,5 +196,3 @@ export function installPageMenus(doc, win) {
   win.opaxPageMenus = api;
   return api;
 }
-
-if (typeof document !== 'undefined' && typeof window !== 'undefined') installPageMenus(document, window);

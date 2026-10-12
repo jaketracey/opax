@@ -181,8 +181,8 @@ test('MachineLabel: the still pill draws the mark with no sheet, for a row whose
   assert.match(sourceCss, /\.ui-machine > summary, \.ui-machine-pill \{[^}]*border-radius: var\(--radius-pill\)[^}]*background: var\(--bills-wash\)/);
 });
 
-test('⋯: a menu button and a menu of links and buttons; unsafe links are dropped; an empty menu draws nothing', () => {
-  const { moreMenuHTML } = helpers;
+test('⋯: a menu button and a menu of links and buttons; unsafe links are dropped; an empty menu draws nothing', async () => {
+  const { pageMenuHTML: moreMenuHTML } = await import('../public/page-actions-menu.js');
   const html = moreMenuHTML([
     { href: '/subject/party/Labor', label: 'Party page' },
     { href: 'https://www.aph.gov.au/', label: 'Parliament' },
@@ -209,8 +209,8 @@ test('labels.js is the one copy: app.js and the homepage import it, neither keep
   }
   assert.match(app, /import\('\/labels\.js(\?v=[0-9a-f]{10})?'\)/);
   assert.match(homeData, /from '\.\/labels\.js(\?v=[0-9a-f]{10})?';/);
-  // The first render waits for it.
-  assert.match(app, /Promise\.allSettled\(\[attributionReady, uiLabelsReady, growthModulesReady, personUrlsReady, saDisplayReady, donorViewReady\]\)\.finally\(\(\) => \{[^}]*route\(\);/);
+  // The first render waits for it (and for ⋯, page-actions-menu.js).
+  assert.match(app, /Promise\.allSettled\(\[attributionReady, uiLabelsReady, pageMenusReady, growthModulesReady, personUrlsReady, saDisplayReady, donorViewReady\]\)\.finally\(\(\) => \{[^}]*route\(\);/);
   assert.match(read('index.html'), /<link rel="modulepreload" href="\/labels\.js\?v=[0-9a-f]{10}">/);
 });
 

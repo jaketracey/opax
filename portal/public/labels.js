@@ -1,10 +1,12 @@
-/* The five labels, the source line and ⋯ (docs/design/DESIGN-REVIEW-2026-10.md §5.2),
+/* The five labels and the source line (docs/design/DESIGN-REVIEW-2026-10.md §5.2),
    in one place. app.js imports this at boot, before its first render; the
    homepage (home-data.js) and the electorate pages (electorates.js) import it
    as modules. The markup pairs with ui-controls.css (the labels) and
    ui-source.css (the source line and the machine-written pill);
-   ui-source.js gives those popovers Escape and light dismiss. ⋯ is
-   page-actions-menu.js, with page-actions.css. */
+   ui-source.js gives those popovers Escape and light dismiss. ⋯ is not
+   here: it is page-actions-menu.js, with page-actions.css, kept out of this
+   module's graph so the analytics bundle (events.js reaches labels.js through
+   growth-modules.js) never carries it. */
 import { shortDate } from './format.js';
 
 const esc = (value) => String(value ?? '').replace(/[&<>"']/g, (c) =>
@@ -150,14 +152,3 @@ export function sourceLineHTML({ updated = '', dateLabel = 'Updated', source = '
 export function fineprintSourceHTML(html, opts = {}) {
   return sourceLineHTML({ ...opts, notes: [html, ...(opts.notes || [])] });
 }
-
-// --- ⋯ ------------------------------------------------------------------------------
-
-/** ⋯: what a view keeps but does not draw (principle 5: one primary action, the
- *  rest under ⋯). The page-actions menu: a menu button and a list that floats
- *  over the page; page-actions-menu.js writes it and runs it, and importing
- *  this module installs its behaviour. Items are links ({ href, label, detail })
- *  or buttons ({ action, label, detail }) a page wires through
- *  `data-more-action`; `detail` is a short second line. `id` names the menu
- *  for a page that wires it. */
-export { pageMenuHTML as moreMenuHTML } from './page-actions-menu.js?v=7b8653cf77';

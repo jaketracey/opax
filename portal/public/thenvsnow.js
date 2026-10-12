@@ -26,7 +26,7 @@
  * safety: model text and all live data reach the DOM through textContent,
  * never innerHTML.
  */
-import { machineLabelHTML } from './labels.js?v=edf92a9bea'
+import { machineLabelHTML } from './labels.js?v=fc03aa14cf'
 
 const ASK_URL = '/api/ask'
 const SPEAKERS_URL = '/speakers.json'
