@@ -180,7 +180,16 @@ class FieldPatchGuards(unittest.TestCase):
 
 class Helpers(unittest.TestCase):
     def test_owned_labelsets_are_the_speaker_ones(self):
-        self.assertEqual(OWNED_LABELSETS, {"party", "speaker_type"})
+        self.assertEqual(OWNED_LABELSETS, {"party", "speaker_type", "chair_role"})
+
+    def test_chair_role_is_replaced_and_removed_when_returning_to_member(self):
+        before = [C('kind', 'speech'), C('topic', 'health'), C('speaker_type', 'chair'), C('chair_role', 'Speaker')]
+        chair = merge_owned(before, [C('speaker_type', 'chair'), C('chair_role', 'Deputy Speaker')])
+        self.assertIn(C('chair_role', 'Deputy Speaker'), chair)
+        self.assertNotIn(C('chair_role', 'Speaker'), chair)
+        member = merge_owned(chair, [C('speaker_type', 'member')])
+        self.assertFalse(any(c['labelset'] == 'chair_role' for c in member))
+        self.assertIn(C('topic', 'health'), member)
 
     def test_read_classifications_ignores_malformed_entries_and_a_non_dict(self):
         self.assertEqual(read_classifications(None), [])

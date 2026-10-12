@@ -35,6 +35,7 @@ from pathlib import Path
 from typing import Any, Iterator, Optional
 
 from parli.arag import AragConfig, AragError, KbClient, load_dotenv
+from parli.ingest.speaker_roles import chair_role, chair_party_sql
 from parli.ingest.speech_hygiene import (
     clean_party,
     clean_speaker_name,
@@ -67,9 +68,10 @@ JUNK_PREDICATES = " AND NOT (" + " OR ".join([
     # P1 zenodo division roll-calls / incorporated tables (4,074)
     "(source='zenodo' AND COALESCE(speaker_name,'')='stage direction')",
     # P2 presiding-officer procedural rows, all sources (27,233)
-    "(UPPER(COALESCE(speaker_name,'')) LIKE '%SPEAKER%'"
+    "((source='openaustralia' AND " + chair_party_sql() + ") OR (source!='openaustralia' AND ("
+    "UPPER(COALESCE(speaker_name,'')) LIKE '%SPEAKER%'"
     " OR UPPER(COALESCE(speaker_name,'')) LIKE '%PRESIDENT%'"
-    " OR UPPER(COALESCE(speaker_name,'')) LIKE '%CHAIR%')",
+    " OR UPPER(COALESCE(speaker_name,'')) LIKE '%CHAIR%')))",
     # P3 qld whole-day TOC documents (50)
     "(source='qld_hansard' AND text LIKE '%ISSN 1322-0330%')",
     # P4 nsw alphabetical day indexes (119)
@@ -194,6 +196,11 @@ def map_speech(row: sqlite3.Row) -> dict:
     # is at the table. A witness is never a member; the label lets the portal
     # say so, and the position and organisation come from the attendance list.
     speaker_type = _optional_column(row, "speaker_type")
+    role = _optional_column(row, 'chair_role') or (chair_role(row['party']) if row['source'] == 'openaustralia' else None)
+    if role:
+        speaker_type = 'chair'
+        party = None
+        title_bits = [b for b in (role, row['topic'], date) if b]
     is_witness = bool(_optional_column(row, 'witness_name')) or speaker_type == 'witness'
     if is_witness:
         speaker_type = 'witness'
@@ -206,7 +213,7 @@ def map_speech(row: sqlite3.Row) -> dict:
         "texts": _texts(clean_body),
         "origin": {
             "source_id": "opax-parli",
-            "collaborators": [speaker] if speaker else [],
+            "collaborators": [speaker] if speaker and not role else [],
             **({"created": f"{date}T00:00:00Z"} if len(date) == 10 else {}),
         },
         "usermetadata": {
@@ -218,16 +225,20 @@ def map_speech(row: sqlite3.Row) -> dict:
                 ("chamber", row["chamber"]),
                 ("decade", decade),
                 ("speaker_type", speaker_type),
+                ("chair_role", role),
             ])
         },
         "extra": {
             "metadata": {
                 "speech_id": row["speech_id"],
-                "person_id": None if is_witness else row["person_id"],
+                "person_id": None if is_witness or role else row["person_id"],
+                **({'chair_person_id': row['person_id']} if role else {}),
                 "speaker_raw": row["speaker_name"],
                 "electorate": None if is_witness else row["electorate"],
                 "word_count": row["word_count"],
                 "date": date,
+                **{k: _optional_column(row, k) for k in ('gid', 'oa_office_id', 'citation_anchor', 'talktype')
+                   if _optional_column(row, k) is not None},
                 **({"witness_position": witness_position} if witness_position else {}),
                 **({"witness_organisation": witness_organisation} if witness_organisation else {}),
             }

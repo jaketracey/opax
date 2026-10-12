@@ -579,8 +579,9 @@ def selfcheck(args):
                  '<small>(Example, Fictional Party)</small><p>' + text + '</p>'
                  '<p class="speaker"><strong>Morgan Example</strong><p>' + quote + '</p></div>')
     parsed = parse_debate_html(malformed)
-    assert len(parsed) == 1 and parsed[0]['speaker'] == 'Alex Example' and quote in parsed[0]['text']
-    print('Passed: repeated quotation is not misattribution; unique second turn is detected; legacy unclosed paragraph reproduces the parser fault.', flush=True)
+    assert len(parsed) == 2 and parsed[0]['speaker'] == 'Alex Example' and parsed[0]['text'] == text
+    assert parsed[1]['speaker'] == 'Morgan Example' and parsed[1]['text'] == quote
+    print('Passed: repeated quotation is not misattribution; unique second turn is detected; legacy unclosed paragraphs retain separate speakers.', flush=True)
 
 
 def main():

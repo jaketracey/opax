@@ -22,6 +22,7 @@ from .honest_http import HonestHTTP, Refused, Unavailable
 from . import http as source_http
 from .cache_batch import CacheBatch
 from .speaker_names import normalize_speaker
+from .speaker_roles import chair_role
 from .tvfy_bill_links import official_ref
 from .tvfy_refresh import PARTY_CANONICAL
 from .votes_state import Division, Vote, EXT_DDL, DIVISION_COLUMNS, VOTE_COLUMNS, bill_ref, person_key
@@ -130,6 +131,44 @@ def plain(node):
     return ''.join(t.strip() for t in node.itertext())
 
 
+def _own_fragments(node):
+    if node.text:
+        yield node.text
+    for child in node:
+        if child.tag != 'speech':
+            yield from _own_fragments(child)
+        if child.tail:
+            yield child.tail
+
+
+def parse_speech(node, house, day, people, topic=''):
+    """One XML turn, one identity; retain interjections as separate units.
+
+    Nested speeches cannot enter this unit's words. GIDs, paragraph IDs and
+    the established inline-text extraction remain unchanged.
+    """
+    identity = {'person_id': None, 'speaker': node.get('speakername', ''),
+                'party': '', 'electorate': '', 'oa_office_id': node.get('speakerid')}
+    if node.get('speakerid') and node.get('speakerid') != 'unknown':
+        identity = people.resolve(node.get('speakerid'), node.get('speakername'), house, day)
+    role = chair_role(node.get('chair_role') or node.get('party') or identity['party'])
+    paragraphs = []
+    for element in node:
+        if element.tag == 'speech':
+            continue
+        text = ''.join(t.strip() for t in _own_fragments(element))
+        if text:
+            paragraphs.append({'id': element.get('id'), 'text': text})
+    gid = node.get('id')
+    return identity | {'date': day, 'chamber': house, 'topic': topic,
+                       'text': '\n\n'.join(p['text'] for p in paragraphs), 'gid': gid,
+                       'citation_anchor': gid.rsplit('/', 1)[-1] if gid else None,
+                       'source_url': node.get('url'), 'paragraphs': paragraphs,
+                       'talktype': node.get('talktype', 'speech'),
+                       'speaker_type': 'chair' if role else ('member' if identity['person_id'] else 'unknown'),
+                       'chair_role': role}
+
+
 def parse_day(raw, house, day, people, ids):
     date.fromisoformat(day)
     if not raw:
@@ -150,22 +189,14 @@ def parse_day(raw, house, day, people, ids):
             bills = [{'id': b.get('id'), 'official_id': official_ref(b.get('id')), 'title': plain(b), 'url': b.get('url')}
                      for b in node.findall('bill')]
         elif node.tag == 'speech':
-            paragraphs = [plain(p) for p in list(node)]
-            text = '\n\n'.join(p for p in paragraphs if p)
             for p in node.iter('p'):
                 if p.get('pwmotiontext') or re.search(r'\b(?:The question is|Question put|That this|That the)\b', plain(p)):
                     question = plain(p)
-            identity = {'person_id': None, 'speaker': node.get('speakername', ''), 'party': '', 'electorate': ''}
-            if node.get('speakerid') and node.get('speakerid') != 'unknown':
+            for turn in node.iter('speech'):
                 try:
-                    identity = people.resolve(node.get('speakerid'), node.get('speakername'), house, day)
+                    speeches.append(parse_speech(turn, house, day, people, major or minor))
                 except ValueError as exc:
-                    issues.append({'kind': 'speech-identity', 'gid': node.get('id'), 'reason': str(exc)})
-                    continue
-            speeches.append({k: identity[k] for k in ('person_id', 'speaker', 'party', 'electorate')} |
-                            {'date': day, 'chamber': house, 'topic': major or minor,
-                             'text': text, 'gid': node.get('id'), 'oa_office_id': node.get('speakerid'),
-                             'source_url': node.get('url')})
+                    issues.append({'kind': 'speech-identity', 'gid': turn.get('id'), 'reason': str(exc)})
         elif node.tag == 'division':
             if node.get('divdate') != day:
                 raise ValueError('division date differs from chamber-day')
