@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-require-imports -- Jest factory builds an isolated fixture client before app imports. */
 import { act } from 'react';
-import { Text as NativeText, useWindowDimensions } from 'react-native';
+import { Modal, Text as NativeText, useWindowDimensions } from 'react-native';
 import TestRenderer from 'react-test-renderer';
-import { Stack } from 'expo-router';
+import { Stack, router } from 'expo-router';
 import {
   AsAtLine,
   BigFigure,
@@ -191,6 +191,43 @@ describe('report page', () => {
     await act(async () => r.unmount());
   });
 
+  test('a record chosen in a section’s sheet opens once the sheet has gone (journey 38)', async () => {
+    mockParams.slug = 'gambling';
+    jest.mocked(router.push).mockClear();
+    const r = await render(ReportPage);
+    const line = r.root
+      .findAllByType(RecordsLine)
+      .find((l) => l.props.testID === 'report-section-sources-1')!;
+    const press = line.find(
+      (n) =>
+        n.props.testID === 'report-section-sources-1' &&
+        typeof n.props.onPress === 'function',
+    );
+    await act(async () => press.props.onPress());
+    const sheet = line.findByType(Modal);
+    expect(sheet.props.visible).toBe(true);
+    const first = line
+      .findAllByType(LinkRow)
+      .find((row) => row.props.testID === 'report-section-sources-1-cited-0')!;
+    await act(async () => first.props.onPress());
+    // The sheet closes, still mounted, so iOS can report its dismissal; the
+    // reader waits for it rather than landing behind the sheet.
+    expect(line.findByType(Modal)).toBe(sheet);
+    expect(sheet.props.visible).toBe(false);
+    expect(router.push).not.toHaveBeenCalled();
+    await act(async () => sheet.props.onDismiss());
+    expect(router.push).toHaveBeenCalledTimes(1);
+    expect(router.push).toHaveBeenCalledWith(
+      expect.objectContaining({ pathname: '/doc/[slug]' }),
+    );
+    // A dismissal with nothing chosen (Done, a swipe) opens nothing.
+    await act(async () => press.props.onPress());
+    await act(async () => sheet.props.onRequestClose());
+    await act(async () => sheet.props.onDismiss());
+    expect(router.push).toHaveBeenCalledTimes(1);
+    await act(async () => r.unmount());
+  });
+
   test('a section on its own page keeps the title, the label and its records', async () => {
     Object.assign(mockParams, { slug: 'gambling', section: '1' });
     const r = await render(ReportPage);
@@ -231,12 +268,17 @@ test('topics: one list, its notes in the source line, one accent', async () => {
   const r = await render(TopicsIndex);
   for (const recipe of retired)
     expect(r.root.findAllByType(recipe)).toHaveLength(0);
-  // The topics are rows of one list, not a ruled section each.
-  expect(r.root.findAllByType(Section)).toHaveLength(1);
-  const list = r.root.findAllByType(RowList)[0]!;
+  // The topics are rows of one list, not a ruled section each; topics no
+  // speech carries yet are named apart, under "Not yet labelled" (pass 5
+  // P3-12), beside the more links.
+  expect(r.root.findAllByType(Section).map((s) => s.props.testID)).toEqual([
+    'topics-unlabelled',
+    'topics-more',
+  ]);
   expect(
-    list.findAll((n) => String(n.props.testID).startsWith('topic-open-'))
-      .length,
+    r.root
+      .findAll((n) => /^topic-open-/.test(String(n.props.testID)))
+      .filter((n) => n.type === LinkRow).length,
   ).toBeGreaterThan(20);
   const source = r.root
     .findAllByType(SourceLine)

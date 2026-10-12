@@ -5,19 +5,15 @@ import type { LeadEvidence } from '../../design/lead';
 import { leadMetricText } from '../../design/lead';
 import {
   Card,
-  SourceLine,
+  Icon,
+  SourceSheet,
   Text,
   useAccessibilitySize,
   type SourceOriginal,
 } from '../../design/primitives';
-import { colors, rhythm } from '../../design/tokens';
+import { colors, minimumTarget, rhythm } from '../../design/tokens';
 import { leadRoute } from '../../navigation/routes';
-import {
-  exampleRecords,
-  leadCaveat,
-  leadFigures,
-  type LeadView,
-} from './model';
+import { evidenceLink, leadFigure, type LeadView } from './model';
 
 /** "$1,803 from Westpac Banking Corporation to Australian Labor Party (ALP) · AEC annual receipt · FY 2024–25". */
 export function evidenceRecord(item: LeadEvidence): string | undefined {
@@ -31,11 +27,12 @@ export function evidenceRecord(item: LeadEvidence): string | undefined {
 
 /**
  * One lead in the feed, as a card (a unit you can pick up): its category,
- * its title in the export's words, its figure, its one sentence, then one
- * caveat line and one source line. The card's upper part opens the
- * comparison; the source line opens its example records, every caveat and
- * the as-at date. A lead is a reason to look closer, never a finding: the
- * words are the export's, verbatim.
+ * its title in the export's words, its one figure (the subject's), its one
+ * sentence, then "Evidence (n) ›" (design pass 5, P2-13). The card's upper
+ * part opens the comparison; "Evidence" opens a sheet with its example
+ * records, every caveat verbatim and in full, and the as-at date. The
+ * caveats are said there and on the comparison, not on every card. A lead
+ * is a reason to look closer, never a finding: the words are the export's.
  */
 export function LeadFeedCard({
   lead,
@@ -48,12 +45,13 @@ export function LeadFeedCard({
   testID: string;
 }) {
   const [pressed, setPressed] = useState(false);
+  const [sheet, setSheet] = useState(false);
   const stacked = useAccessibilitySize();
-  const figures = leadFigures(lead).map((metric) => ({
-    label: metric.label,
-    ...leadMetricText(metric),
-  }));
-  const caveat = leadCaveat(lead);
+  const metric = leadFigure(lead);
+  const figure = metric
+    ? { label: metric.label, ...leadMetricText(metric) }
+    : null;
+  const evidence = evidenceLink(lead.evidence.length);
   const originals: SourceOriginal[] = lead.evidence.flatMap((item) =>
     item.url
       ? [{ label: item.register, url: item.url, record: evidenceRecord(item) }]
@@ -67,7 +65,7 @@ export function LeadFeedCard({
     );
   const spoken = [
     `Lead, ${lead.categoryLabel}. ${lead.title}`,
-    ...figures.map((figure) => `${figure.label}, ${figure.spoken}`),
+    figure ? `${figure.label}, ${figure.spoken}` : null,
     lead.summary,
   ]
     .filter(Boolean)
@@ -90,72 +88,83 @@ export function LeadFeedCard({
         <Text wordSafe variant="subheading" testID={`${testID}-title`}>
           {lead.title}
         </Text>
-        <View style={[styles.figures, stacked ? styles.stacked : null]}>
-          {figures.map((figure, index) => (
-            <View
-              key={`${figure.label}-${index}`}
-              testID={`${testID}-figure-${index}`}
-              style={stacked ? null : styles.figure}
-            >
-              {/* Word-safe only in the stacked column's fixed frame: a
-                  hugging figure's width follows its own size. */}
-              <Text
-                wordSafe={stacked}
-                variant="heading"
-                tabular
-                tone="bronzeInk"
-              >
-                {figure.text}
-              </Text>
-              <Text wordSafe={stacked} variant="metadata">
-                {figure.label}
-              </Text>
-            </View>
-          ))}
-        </View>
+        {figure ? (
+          <View
+            testID={`${testID}-figure`}
+            style={[styles.figure, stacked ? styles.stacked : null]}
+          >
+            {/* Word-safe only in the stacked column's fixed frame: a
+                hugging figure's width follows its own size. */}
+            <Text wordSafe={stacked} variant="heading" tabular tone="bronzeInk">
+              {figure.text}
+            </Text>
+            <Text wordSafe={stacked} variant="metadata">
+              {figure.label}
+            </Text>
+          </View>
+        ) : null}
         {lead.summary ? (
           <Text wordSafe variant="body" testID={`${testID}-summary`}>
             {lead.summary}
           </Text>
         ) : null}
       </Pressable>
-      <View style={styles.foot}>
-        {caveat ? (
-          <Text
-            wordSafe
-            variant="fine"
-            tone="ink"
-            testID={`${testID}-caveat`}
-          >
-            {caveat}
-          </Text>
-        ) : null}
-        <SourceLine
-          title="Example records and caveats"
-          dateLabel={
-            lead.evidence.length ? exampleRecords(lead.evidence.length) : null
-          }
-          asOf={asOf}
-          citation={lead.citation}
-          originals={originals}
-          notes={[...lead.caveats, ...unlinked]}
-          testID={`${testID}-source`}
-        />
-      </View>
+      <Pressable
+        accessibilityRole="button"
+        accessibilityLabel={evidence.spoken}
+        accessibilityHint="Opens the example records and every caveat"
+        testID={`${testID}-source`}
+        onPress={() => setSheet(true)}
+        hitSlop={{ top: 6, bottom: 6 }}
+        style={({ pressed: down }) => [
+          styles.evidence,
+          stacked ? styles.evidenceStacked : null,
+          down ? styles.evidencePressed : null,
+        ]}
+      >
+        <Text
+          wordSafe={stacked}
+          variant="strong"
+          tone="bronzeInk"
+          accessible={false}
+          style={styles.evidenceText}
+        >
+          {evidence.text}
+        </Text>
+        <Icon name="chevron.right" size={13} tone="bronzeInk" />
+      </Pressable>
+      <SourceSheet
+        visible={sheet}
+        onClose={() => setSheet(false)}
+        title="Evidence and caveats"
+        asOf={asOf}
+        citation={lead.citation}
+        originals={originals}
+        notes={[...lead.caveats, ...unlinked]}
+        testID={`${testID}-source-sheet`}
+      />
     </Card>
   );
 }
 
 const styles = StyleSheet.create({
   head: { gap: rhythm.tight },
-  figures: {
+  figure: { paddingVertical: rhythm.line, alignSelf: 'flex-start' },
+  stacked: { alignSelf: 'stretch' },
+  // "Evidence (2) ›": a 44pt target that hugs its words, the column's full
+  // width at accessibility sizes so its word-safe text has a fixed frame.
+  evidence: {
     flexDirection: 'row',
-    flexWrap: 'wrap',
-    columnGap: rhythm.group,
-    rowGap: rhythm.tight,
-    paddingVertical: rhythm.line,
+    alignItems: 'center',
+    gap: rhythm.line,
+    alignSelf: 'flex-start',
+    minHeight: minimumTarget,
+    marginTop: rhythm.tight,
+    paddingHorizontal: rhythm.line,
+    marginHorizontal: -rhythm.line,
+    borderRadius: rhythm.line,
   },
-  stacked: { flexDirection: 'column', flexWrap: 'nowrap' },
-  figure: { flexShrink: 1 },
-  foot: { gap: rhythm.tight, paddingTop: rhythm.heading },
+  evidenceStacked: { alignSelf: 'stretch' },
+  evidenceText: { flexShrink: 1 },
+  evidencePressed: { backgroundColor: colors.sunken },
 });

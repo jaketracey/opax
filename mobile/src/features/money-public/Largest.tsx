@@ -8,7 +8,14 @@ import { useCatalogRecord } from '../bills/useCatalogRecord';
 import { combine } from './catalog';
 import { largestFor } from './data';
 import { money } from './runtime';
-import { MoneyHeader, MoneyList, RowSource, Title } from './parts';
+import {
+  MoneyHeader,
+  MoneyList,
+  RowSource,
+  Title,
+  moneyCitation,
+  readableDates,
+} from './parts';
 export default function Largest() {
   const { month: initial } = useLocalSearchParams<{ month?: string }>();
   const [selected, setSelected] = useState(initial);
@@ -33,17 +40,26 @@ export default function Largest() {
   const label = monthName(month, true);
   const previous = months[monthIndex + 1],
     next = monthIndex > 0 ? months[monthIndex - 1] : undefined;
-  // "‹ June" and "August ›" on one row; an end of the range says the
-  // direction alone, drawn disabled.
-  const stepFor = (direction: string, target: string | undefined) => ({
-    label: target ? monthName(target, !sameYear(target, month)) : direction,
-    accessibilityLabel: target
-      ? `${direction}, ${monthName(target, true)}`
-      : direction,
-    disabled: !target,
-    onPress: () => setSelected(target),
-    testID: direction === 'Next month' ? 'largest-next' : 'largest-previous',
-  });
+  // "‹ July" and "September ›" on one row (design pass 5, P3-12): each
+  // names its month. An end of the range names the month beside it, drawn
+  // disabled, and says it has no records.
+  const stepFor = (direction: 'Previous month' | 'Next month') => {
+    const target = direction === 'Next month' ? next : previous;
+    const named =
+      target ?? shiftMonth(month, direction === 'Next month' ? 1 : -1);
+    const name = named ? monthName(named, !sameYear(named, month)) : '';
+    return {
+      label: name || direction,
+      accessibilityLabel: target
+        ? `${direction}, ${monthName(target, true)}`
+        : named
+          ? `${direction}, ${monthName(named, true)}, no records`
+          : direction,
+      disabled: !target,
+      onPress: () => setSelected(target),
+      testID: direction === 'Next month' ? 'largest-next' : 'largest-previous',
+    };
+  };
   return (
     <>
       <MoneyHeader
@@ -69,40 +85,40 @@ export default function Largest() {
             />
             {data ? (
               <>
-                <Group gap={rhythm.tight}>
-                  <Text wordSafe>
-                    The largest grant agreements that started in {label}, one
-                    per recipient.
-                  </Text>
-                  <SourceLine
-                    title="About the month’s largest grants"
-                    asOf={data.largest.asOf}
-                    citation="GrantConnect"
-                    savedAt={
-                      status.record?.stale ? status.record.savedAt : null
-                    }
-                    originals={[
-                      {
-                        label: 'GrantConnect',
-                        url: 'https://www.grants.gov.au/',
-                      },
-                    ]}
-                    notes={data.largest.basis}
-                    testID="largest-source"
-                  />
-                </Group>
+                <Text wordSafe>
+                  The largest grant agreements that started in {label}, one per
+                  recipient.
+                </Text>
                 <StepButtons
                   testID="largest-months"
-                  previous={stepFor('Previous month', previous)}
-                  next={stepFor('Next month', next)}
+                  previous={stepFor('Previous month')}
+                  next={stepFor('Next month')}
                 />
               </>
             ) : null}
           </>
         }
+        sourceLine={
+          data ? (
+            <SourceLine
+              title="About the month’s largest grants"
+              asOf={data.largest.asOf}
+              citation={[moneyCitation('GrantConnect')]}
+              savedAt={status.record?.stale ? status.record.savedAt : null}
+              originals={[
+                {
+                  label: 'GrantConnect',
+                  url: 'https://www.grants.gov.au/',
+                },
+              ]}
+              notes={data.largest.basis.map(readableDates)}
+              testID="largest-source"
+            />
+          ) : null
+        }
         render={(r, i) => (
           <Group gap={rhythm.line}>
-            <Text wordSafe variant="strong" tabular>
+            <Text wordSafe variant="strong" tabular tone="moneyInk">
               {formatMoneyCompact(r.value)}
             </Text>
             <Text wordSafe variant="strong" testID={`largest-recipient-${i}`}>
@@ -157,3 +173,10 @@ function monthName(month: string, withYear: boolean) {
     : '';
 }
 const sameYear = (a: string, b: string) => a.slice(0, 4) === b.slice(0, 4);
+/** "2026-08" one month on is "2026-09"; back from January is December. */
+export function shiftMonth(month: string, by: number): string | undefined {
+  if (!MONTH.test(month)) return undefined;
+  const index =
+    Number(month.slice(0, 4)) * 12 + Number(month.slice(5)) - 1 + by;
+  return `${Math.floor(index / 12)}-${String((index % 12) + 1).padStart(2, '0')}`;
+}

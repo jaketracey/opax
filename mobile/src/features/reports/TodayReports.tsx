@@ -9,8 +9,8 @@ import {
   KeyValueList,
   Section,
   ChoiceChips,
+  SourceLine,
   Text,
-  ViewOriginal,
   Card,
 } from '../../design/primitives';
 import { RecordRow } from '../RecordRow';
@@ -96,20 +96,17 @@ export function ReportsEntry() {
 export function TodayCoverage() {
   const read = useRead(reports.corpus);
   return (
-    <Section
-      title="Collection & coverage"
-      accent="votes"
-      info={{
-        title: 'About the coverage',
-        notes: [
-          'Sources cover different periods and record types. Check coverage when comparing parliaments or years.',
-          'Snapshot counts describe collected records. They are not live search totals.',
-        ],
-      }}
-    >
+    <Section title="Collection and coverage" accent="votes">
       <ReadState
         read={read}
         citation="OPAX corpus manifest"
+        sheet={{
+          title: 'About the coverage',
+          notes: [
+            'Sources cover different periods and record types. Check coverage when comparing parliaments or years.',
+            'Snapshot counts describe collected records. They are not live search totals.',
+          ],
+        }}
         testID="today-coverage"
       >
         {(data) => (
@@ -139,7 +136,7 @@ export function TodayCoverage() {
       <RecordRow
         title="Coverage & datasets"
         path="/stats"
-        onPress={() => openRecord('/stats', 'Sources & coverage')}
+        onPress={() => openRecord('/stats', 'Coverage by source')}
         testID="today-stats"
       />
     </Section>
@@ -161,17 +158,7 @@ export function FromRecord() {
     );
   };
   return (
-    <Section
-      title="From the record"
-      accent="bills"
-      testID="today-from-record"
-      info={{
-        title: 'About these previews',
-        notes: [
-          'OPAX static homepage previews. The source supplies no snapshot date.',
-        ],
-      }}
-    >
+    <Section title="From the record" accent="bills" testID="today-from-record">
       <Group>
         <Heading level={3}>{item.name}</Heading>
         {item.blocks
@@ -217,12 +204,7 @@ export function FromRecord() {
             </Group>
           </Disclosure>
         ) : null}
-        {path.startsWith('https://') ? (
-          <ViewOriginal
-            sources={[{ url: path, label: item.name }]}
-            testID="from-record-open"
-          />
-        ) : (
+        {path.startsWith('https://') ? null : (
           <RecordRow
             title="Open the entry"
             path={path}
@@ -230,6 +212,21 @@ export function FromRecord() {
             testID="from-record-open"
           />
         )}
+        {/* One source line for the block: the notes, and the original
+            record when the entry lives off OPAX. */}
+        <SourceLine
+          citation="OPAX homepage previews"
+          title="About these previews"
+          notes={[
+            'OPAX static homepage previews. The source supplies no snapshot date.',
+          ]}
+          originals={
+            path.startsWith('https://')
+              ? [{ url: path, label: item.name }]
+              : undefined
+          }
+          testID="from-record-source"
+        />
         <Text variant="metadata">
           {index + 1} of {previews.length}
         </Text>

@@ -7,15 +7,14 @@ import { openSource, sourceUrl } from '../../navigation/external';
 import { formatCount, formatDate } from '../../design/format';
 import { isPartyLabel, partyDot, partyIdentity } from '../../design/party';
 import {
+  BillRow,
   Disclosure as DisclosureRow,
-  Hoverable,
   Icon,
   MACHINE_BRIEF_EXPLANATION,
   MachineLabel,
   StatusLabel,
   Text,
   useAccessibilitySize,
-  useHover,
 } from '../../design/primitives';
 import {
   colors,
@@ -58,10 +57,11 @@ export function BillStatus({
 }
 
 /**
- * One bill in the list: a single VoiceOver element that opens the bill. Its
- * status is a StatusLabel; the list's one source line dates it.
+ * One bill in the Bills list: the shared `BillRow` (Today draws the same),
+ * one VoiceOver element that opens the bill. Its status is a StatusLabel;
+ * the list's one source line dates it.
  */
-export function BillRow({
+export function BillIndexRow({
   bill,
   onPress,
   selected,
@@ -75,53 +75,20 @@ export function BillRow({
   selected?: boolean;
 }) {
   const text = billRowText(bill);
-  const inSplit = selected !== undefined;
-  const [hovered, onHover] = useHover();
   return (
-    <Hoverable
-      effect="none"
-      onHover={onHover}
-      onActivate={onPress}
-      drag={{ path: `/bill/${bill.key}`, title: text.name }}
-    >
-      <Pressable
-        accessibilityRole="button"
-        accessibilityLabel={text.label}
-        accessibilityState={inSplit ? { selected } : undefined}
-        testID={`bill-row-${bill.key}`}
-        onPress={onPress}
-        style={({ pressed }) => [
-          styles.row,
-          inSplit ? styles.rowInSplit : null,
-          selected
-            ? { backgroundColor: colors.billsWash }
-            : pressed || hovered
-              ? { backgroundColor: colors.sunken }
-              : null,
-        ]}
-      >
-        {selected ? <View style={styles.selectedMark} /> : null}
-        <View style={styles.rowText}>
-          <StatusLabel label={text.status} hidden />
-          <Text variant="strong">{text.name}</Text>
-          {/* Chamber names are long single words at AX5 ("Representatives"):
-              word-safe steps the line down rather than splitting the word. */}
-          {text.where ? (
-            <Text variant="metadata" wordSafe>
-              {text.where}
-            </Text>
-          ) : null}
-          {text.people ? (
-            <Text wordSafe variant="metadata">
-              {text.people}
-            </Text>
-          ) : null}
-        </View>
-        {inSplit ? null : (
-          <Icon name="chevron.right" size={14} tone="inkSoft" />
-        )}
-      </Pressable>
-    </Hoverable>
+    <BillRow
+      title={text.name}
+      status={text.status}
+      date={text.date}
+      by={text.by}
+      party={text.party}
+      detail={text.chamber}
+      onPress={onPress}
+      accessibilityLabel={text.label}
+      testID={`bill-row-${bill.key}`}
+      dragPath={`/bill/${bill.key}`}
+      selected={selected}
+    />
   );
 }
 
@@ -609,31 +576,6 @@ export function RecordedParty({ party }: { party: string }) {
 }
 
 const styles = StyleSheet.create({
-  row: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: rhythm.block,
-    minHeight: minimumTarget,
-    paddingVertical: rhythm.heading,
-  },
-  rowText: { flex: 1, gap: rhythm.line },
-  // The split list: the row bleeds 12pt into the margin so its selected
-  // wash has room around the text, and a 3pt bills-ink mark leads it.
-  rowInSplit: {
-    marginHorizontal: -rhythm.heading,
-    paddingHorizontal: rhythm.heading,
-    borderRadius: radii.md,
-    borderCurve: 'continuous',
-  },
-  selectedMark: {
-    position: 'absolute',
-    left: 0,
-    top: rhythm.heading,
-    bottom: rhythm.heading,
-    width: 3,
-    borderRadius: 1.5,
-    backgroundColor: colors.billsInk,
-  },
   statusLine: {
     flexDirection: 'row',
     flexWrap: 'wrap',

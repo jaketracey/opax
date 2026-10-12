@@ -26,6 +26,7 @@ import {
   SegmentedControl,
   Text,
   errorMessage,
+  useAccessibilitySize,
 } from '../../design/primitives';
 import { formatCount, formatMoney } from '../../design/format';
 import { samePartyLabel } from '../../design/party';
@@ -211,6 +212,17 @@ function MoneyCatalogScreen({
   // the scene reaches past it to the wide column (`breakout`).
   const column = useScreenColumn('readable');
   const { regular } = useLayout();
+  const accessibilitySize = useAccessibilitySize();
+  const summaryAfterMap = accessibilitySize && mode === '3d';
+  const summary =
+    view && filters ? (
+      <Text wordSafe variant="metadata" testID="money-view-summary">
+        Donations and public money · {moneyYears(filters.from, filters.to)} ·{' '}
+        {formatCount(view.nodes.length)} nodes ·{' '}
+        {formatCount(view.edges.length)} recorded flows
+        {filters.industry ? ` · ${filters.industry}` : ''}
+      </Text>
+    ) : null;
   return (
     <SidebarSafe style={styles.screen}>
       <GestureHandlerRootView style={styles.screen}>
@@ -277,19 +289,12 @@ function MoneyCatalogScreen({
                   <>
                     <MoneyRecordStatus record={record} />
                     {/* The map block: one meta line, the scene, the one
-                        caveat a total needs, and one source line. */}
+                        caveat a total needs, and one source line. At
+                        accessibility sizes the meta line runs to several
+                        lines, so it follows the scene (design pass 5,
+                        P3-15): the map starts on the first screen. */}
                     <Group gap={rhythm.tight}>
-                      <Text
-                        wordSafe
-                        variant="metadata"
-                        testID="money-view-summary"
-                      >
-                        Donations and public money ·{' '}
-                        {moneyYears(filters.from, filters.to)} ·{' '}
-                        {formatCount(view.nodes.length)} nodes ·{' '}
-                        {formatCount(view.edges.length)} recorded flows
-                        {filters.industry ? ` · ${filters.industry}` : ''}
-                      </Text>
+                      {summaryAfterMap ? null : summary}
                       {mode === '3d' ? (
                         <View
                           style={
@@ -330,6 +335,7 @@ function MoneyCatalogScreen({
                           )}
                         </View>
                       ) : null}
+                      {summaryAfterMap ? summary : null}
                       <Text wordSafe variant="fine">
                         Totals are a floor.
                       </Text>

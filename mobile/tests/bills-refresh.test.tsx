@@ -20,6 +20,8 @@ jest.mock('expo-router', () => ({
   useSegments: () => [],
   useLocalSearchParams: () => mockParams,
   router: { push: jest.fn() },
+  useNavigation: () => ({ setParams: jest.fn() }),
+  useIsFocused: () => true,
   Stack: { Screen: () => null },
 }));
 jest.mock('../src/api/runtime', () => ({

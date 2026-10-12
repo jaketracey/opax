@@ -1,17 +1,21 @@
 import { useCallback, useMemo } from 'react';
-import { RefreshControl } from 'react-native';
+import { RefreshControl, StyleSheet, View } from 'react-native';
 import { Stack, useLocalSearchParams } from 'expo-router';
 import { catalogs } from '../../api/runtime';
+import { formatCount } from '../../design/format';
+import { LeadEvidenceLink } from '../../design/lead';
 import {
+  Divider,
   EmptyState,
   Group,
   Heading,
-  LeadCard,
+  Icon,
   LinkRow,
   RowList,
   Screen,
   Section,
   SourceLine,
+  SubSection,
   Text,
 } from '../../design/primitives';
 import { chrome, rhythm } from '../../design/tokens';
@@ -24,10 +28,13 @@ import { leadFor } from './model';
 
 /**
  * One lead's comparison, as the web's /discover detail draws it: the
- * heading with "Lead · <category>" as its meta line, the takeaway, the chart
- * (or the two separate money flows) and its note, then the whole lead with
- * every caveat and example record, the web's links, and one source line
- * whose sheet holds "About these numbers" and the export's methodology.
+ * heading with "Lead · <category>" as its meta line, the takeaway and the
+ * chart (or the two separate money flows). Then "How this lead was found"
+ * (design pass 5, P2-13): the comparison's method note, every caveat
+ * verbatim and in full, and the example records, without restating the
+ * lead's title, sentence or figures the top already gives. Then the web's
+ * links and one source line whose sheet holds "About these numbers" and the
+ * export's methodology.
  */
 export default function LeadDetail() {
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -92,15 +99,50 @@ export default function LeadDetail() {
             ) : (
               <OverlapFlows comparison={comparison} testID="lead-flows" />
             )}
-            <Text wordSafe variant="fine" tone="ink" testID="lead-note">
-              {comparison.note}
-            </Text>
-            <Section title="The lead and its caveats">
-              <LeadCard
-                lead={lead}
-                category={lead.categoryLabel}
-                testID="lead-card"
-              />
+            <Section title="How this lead was found" testID="lead-method">
+              <Text wordSafe variant="body" testID="lead-note">
+                {comparison.note}
+              </Text>
+              {lead.caveats.length ? (
+                <View style={styles.caveats}>
+                  {lead.caveats.map((caveat, index) => (
+                    <View key={index} style={styles.caveat}>
+                      <Icon
+                        name="exclamationmark.triangle"
+                        size={13}
+                        tone="inkSoft"
+                      />
+                      <Text
+                        wordSafe
+                        variant="fine"
+                        tone="ink"
+                        testID={`lead-caveat-${index}`}
+                        style={styles.grow}
+                      >
+                        {caveat}
+                      </Text>
+                    </View>
+                  ))}
+                </View>
+              ) : null}
+              {lead.evidence.length ? (
+                <SubSection
+                  title={`Example records (${formatCount(lead.evidence.length)})`}
+                  testID="lead-evidence"
+                >
+                  <View>
+                    {lead.evidence.map((item, index) => (
+                      <View key={index}>
+                        {index > 0 ? <Divider variant="subtle" /> : null}
+                        <LeadEvidenceLink
+                          item={item}
+                          testID={`lead-evidence-${index}`}
+                        />
+                      </View>
+                    ))}
+                  </View>
+                </SubSection>
+              ) : null}
             </Section>
             {links.length ? (
               <Section title="On opax.com.au">
@@ -120,10 +162,7 @@ export default function LeadDetail() {
               </Section>
             ) : null}
             <SourceLine
-              {...leadsSource(
-                discovery,
-                record?.stale ? record.savedAt : null,
-              )}
+              {...leadsSource(discovery, record?.stale ? record.savedAt : null)}
               citation={lead.citation}
               testID="lead-source"
             />
@@ -133,3 +172,9 @@ export default function LeadDetail() {
     </>
   );
 }
+
+const styles = StyleSheet.create({
+  caveats: { gap: rhythm.tight },
+  caveat: { flexDirection: 'row', gap: rhythm.tight, alignItems: 'flex-start' },
+  grow: { flex: 1 },
+});

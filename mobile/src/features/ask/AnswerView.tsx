@@ -218,6 +218,9 @@ export function AnswerView({
   const go = (href: string, title: string) =>
     pane ? pane.open(href, title) : openAnswerLink(href);
   const [sourcesOpen, setSourcesOpen] = useState(false);
+  // Mounted from the first open on, closed by `visible`: a record chosen in
+  // the sheet opens from its onDismiss, which an unmounted sheet never gets.
+  const [sourcesShown, setSourcesShown] = useState(false);
   const [reported, setReported] = useState(false);
   const data = turn.result || {
       answer: turn.text,
@@ -385,7 +388,10 @@ export function AnswerView({
           }
           accessibilityLabel={`Sources: ${viewed}, ${data.sources.length} ${data.sources.length === 1 ? 'record' : 'records'}`}
           accessibilityHint="Opens the sources, passages and notes"
-          onPress={() => setSourcesOpen(true)}
+          onPress={() => {
+            setSourcesShown(true);
+            setSourcesOpen(true);
+          }}
           testID="ask-answer-sources"
         />
         <View ref={more} collapsable={false}>
@@ -413,8 +419,9 @@ export function AnswerView({
           {reportThanks}
         </Text>
       ) : null}
-      {sourcesOpen ? (
+      {sourcesShown ? (
         <AnswerSources
+          visible={sourcesOpen}
           question={question.askedAs || question.text}
           sources={data.sources}
           viewed={viewed}

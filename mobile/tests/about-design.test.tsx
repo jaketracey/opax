@@ -114,12 +114,44 @@ test('web pages are rows that say they leave the app', () => {
   const rows = renderer.root.findAllByType(LinkRow);
   const support = rows.find((node) => node.props.testID === 'about-support')!;
   const privacy = rows.find((node) => node.props.testID === 'about-privacy')!;
-  for (const row of [support, privacy]) expect(row.props.external).toBe(true);
+  const methods = rows.find((node) => node.props.testID === 'about-methods')!;
+  for (const row of [support, privacy, methods])
+    expect(row.props.external).toBe(true);
   act(() => privacy.props.onPress());
   expect(openOnWeb).toHaveBeenLastCalledWith('/privacy', 'Privacy policy');
   // In-app pages keep their chevron.
-  for (const id of ['about-sources-open', 'about-stats', 'about-methods'])
+  for (const id of ['about-sources-open', 'about-stats'])
     expect(
       rows.find((node) => node.props.testID === id)!.props.external,
     ).toBeFalsy();
+});
+
+// Design pass 5, P2-16: each destination once. Sources and licences is the
+// app screen; Methods leaves for opax.com.au; coverage by source sits in the
+// Coverage block it details.
+test('one row per destination: no near-identical sources rows', () => {
+  const sourcesSection = renderer.root
+    .findAllByType(Section)
+    .find((node) => node.props.testID === 'about-sources')!;
+  expect(
+    sourcesSection.findAllByType(LinkRow).map((row) => row.props.title),
+  ).toEqual(['Sources and licences', 'Methods']);
+  const coverage = renderer.root
+    .findAllByType(Section)
+    .find((node) => node.props.testID === 'about-coverage')!;
+  const stats = coverage
+    .findAllByType(LinkRow)
+    .find((row) => row.props.testID === 'about-stats')!;
+  expect(stats.props.title).toBe('Coverage by source');
+  const titles = renderer.root
+    .findAllByType(LinkRow)
+    .map((row) => String(row.props.title));
+  for (const gone of ['Sources & coverage', 'Methods and source terms'])
+    expect(titles).not.toContain(gone);
+  expect(titles.filter((t) => t.includes('&'))).toEqual([]);
+  const methods = renderer.root
+    .findAllByType(LinkRow)
+    .find((row) => row.props.testID === 'about-methods')!;
+  act(() => methods.props.onPress());
+  expect(openOnWeb).toHaveBeenLastCalledWith('/methods', 'Methods');
 });

@@ -112,3 +112,30 @@ export function feedCountLine(shown: number, total: number) {
     ? declarations(total)
     : `${formatCount(shown)} of ${declarations(total)}`;
 }
+
+/** A run of consecutive entries by one person, each with its place in the list. */
+export interface PersonRun<T> {
+  key: string;
+  entries: { item: T; index: number }[];
+}
+/**
+ * Consecutive entries by the same person as one run, so a name heads its
+ * entries once (Today's Just declared and the feed). The register's ID
+ * separates two people who share a printed name.
+ */
+export function personRuns<
+  T extends { id: string | number; name: string; person_id?: string | null },
+>(rows: readonly T[]): PersonRun<T>[] {
+  const runs: PersonRun<T>[] = [];
+  rows.forEach((item, index) => {
+    const last = runs[runs.length - 1]?.entries[0]?.item;
+    if (
+      last &&
+      nameKey(last.name) === nameKey(item.name) &&
+      (last.person_id ?? null) === (item.person_id ?? null)
+    )
+      runs[runs.length - 1]!.entries.push({ item, index });
+    else runs.push({ key: String(item.id), entries: [{ item, index }] });
+  });
+  return runs;
+}

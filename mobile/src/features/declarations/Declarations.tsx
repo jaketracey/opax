@@ -3,6 +3,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import {
   FlatList,
   Keyboard,
+  Pressable,
   RefreshControl,
   StyleSheet,
   View,
@@ -19,15 +20,23 @@ import {
   EmptyState,
   Field,
   Group,
+  Icon,
   SourceLine,
   Text,
 } from '../../design/primitives';
 import { formatCount } from '../../design/format';
-import { chrome, colors, layout, rhythm } from '../../design/tokens';
+import {
+  chrome,
+  colors,
+  layout,
+  minimumTarget,
+  rhythm,
+} from '../../design/tokens';
 import { personRoute } from '../../navigation/routes';
 import { useCatalogRecord } from '../bills/useCatalogRecord';
 import { RecordStatus } from '../RecordStatus';
-import { FeedRow } from './FeedRow';
+import { sourceIndex } from '../money-public/parts';
+import { FeedGroup } from './FeedRow';
 import { FilterSheet } from './FilterSheet';
 import {
   feedCountLine,
@@ -35,6 +44,7 @@ import {
   filterFeed,
   filterSummary,
   noFilters,
+  personRuns,
   type FeedFilters,
 } from './model';
 
@@ -44,11 +54,13 @@ const coverageNote = (rows: number, available: number) =>
 /**
  * The declared-interests feed behind Today's recent declarations: every row
  * of /interests/recent.json, newest first, filtered on the device by member
- * and, in a Filters sheet, by chamber and jurisdiction, with one summary
- * line ("300 declarations · All chambers · Federal"). One source line under
- * the lede dates the export and holds its coverage note. Rows are Today's
- * register rows on the paper, with the member's profile and any name match
- * the export found.
+ * and, in a Filters sheet, by chamber and jurisdiction. The summary line
+ * ("300 declarations · All chambers · Federal") is the Filters control, so
+ * the first row follows the field. Consecutive entries by one member sit
+ * under one PersonRow, with the member's profile and any name match the
+ * export found. One source line dates the export and holds its coverage
+ * note: after the first page of rows, as the money lists place theirs (P3-9),
+ * or at the foot of a shorter or empty list.
  */
 export default function Declarations() {
   const load = useCallback(
@@ -73,31 +85,35 @@ export default function Declarations() {
   const all = useMemo(() => record?.data ?? [], [record]);
   const facets = useMemo(() => feedFacets(all), [all]);
   const rows = useMemo(() => filterFeed(all, filters), [all, filters]);
+  const runs = useMemo(() => personRuns(rows), [rows]);
   const filtered =
     filters.chamber !== 'all' ||
     filters.jurisdiction !== 'all' ||
     !!filters.member;
   const summary = filterSummary(filters, facets);
 
+  const countLine = `${feedCountLine(rows.length, all.length)} · ${summary}`;
+  // A row here is a member's group of entries; the line follows the tenth.
+  const sourceAt = record ? sourceIndex(runs.length) : -1;
+  const sourceLine = record ? (
+    <View style={styles.foot} testID="declarations-source-foot">
+      <SourceLine
+        title="About these declarations"
+        asOf={record.asAt}
+        citation={record.meta.source}
+        savedAt={record.stale ? record.savedAt : null}
+        notes={[coverageNote(record.meta.rows, record.meta.available)]}
+        testID="declarations-source"
+      />
+    </View>
+  ) : null;
   const header = (
     <Group style={styles.header}>
-      <Group gap={rhythm.tight}>
-        <Text wordSafe variant="body" testID="declarations-lede">
-          The newest additions and deletions recorded in parliamentarians’
-          registers of interests, in their own words. Entries are as declared,
-          not verified by OPAX.
-        </Text>
-        {record ? (
-          <SourceLine
-            title="About these declarations"
-            asOf={record.asAt}
-            citation={record.meta.source}
-            savedAt={record.stale ? record.savedAt : null}
-            notes={[coverageNote(record.meta.rows, record.meta.available)]}
-            testID="declarations-source"
-          />
-        ) : null}
-      </Group>
+      <Text wordSafe variant="body" testID="declarations-lede">
+        The newest additions and deletions recorded in parliamentarians’
+        registers of interests, in their own words. Entries are as declared, not
+        verified by OPAX.
+      </Text>
       <RecordStatus
         record={record}
         error={error}
@@ -124,28 +140,38 @@ export default function Declarations() {
             autoCapitalize="words"
             clearButtonMode="while-editing"
           />
-          <View style={[styles.filters, stacked ? styles.stacked : null]}>
-            <Button
-              label="Filters"
-              icon="slider.horizontal.3"
-              size="compact"
-              accessibilityLabel={`Filters: ${summary}`}
-              accessibilityHint="Opens the chamber and jurisdiction filters"
-              testID="declarations-filters"
-              onPress={() => {
-                Keyboard.dismiss();
-                setSheet(true);
-              }}
-            />
+          {/* The count line is the Filters control: one line, not a
+              button beside a caption. */}
+          <Pressable
+            accessibilityRole="button"
+            accessibilityLabel={`${countLine}, Filters`}
+            accessibilityHint="Opens the chamber and jurisdiction filters"
+            testID="declarations-filters"
+            onPress={() => {
+              Keyboard.dismiss();
+              setSheet(true);
+            }}
+            style={({ pressed }) => [
+              styles.filters,
+              stacked ? styles.stacked : null,
+              pressed ? styles.pressed : null,
+            ]}
+          >
             <Text
               wordSafe
               variant="metadata"
               testID="declarations-count"
               style={stacked ? null : styles.grow}
             >
-              {feedCountLine(rows.length, all.length)} · {summary}
+              {countLine}
             </Text>
-          </View>
+            <View style={styles.filtersLabel}>
+              <Icon name="slider.horizontal.3" size={17} tone="navy" />
+              <Text wordSafe variant="control" tone="navy">
+                Filters
+              </Text>
+            </View>
+          </Pressable>
           <FilterSheet
             visible={sheet}
             filters={filters}
@@ -179,19 +205,22 @@ export default function Declarations() {
         keyboardShouldPersistTaps="handled"
         keyboardDismissMode="on-drag"
         automaticallyAdjustKeyboardInsets
-        data={rows}
-        keyExtractor={(row) => String(row.id)}
-        renderItem={({ item, index }) => (
-          <FeedRow
-            item={item}
-            index={index}
-            onOpenPerson={
-              item.profileSlug
-                ? () => router.push(personRoute(item.profileSlug!))
-                : undefined
-            }
-          />
-        )}
+        data={runs}
+        keyExtractor={(run) => run.key}
+        renderItem={({ item: run, index }) => {
+          const slug = run.entries[0]!.item.profileSlug;
+          return (
+            <>
+              <FeedGroup
+                entries={run.entries}
+                onOpenPerson={
+                  slug ? () => router.push(personRoute(slug)) : undefined
+                }
+              />
+              {index === sourceAt ? sourceLine : null}
+            </>
+          );
+        }}
         ItemSeparatorComponent={() => <Divider variant="subtle" />}
         ListHeaderComponent={
           <RegionProvider value={column.inner}>
@@ -219,6 +248,7 @@ export default function Declarations() {
             </Group>
           ) : null
         }
+        ListFooterComponent={sourceAt < 0 ? sourceLine : null}
         initialNumToRender={8}
       />
     </SidebarSafe>
@@ -237,7 +267,17 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: rhythm.heading,
+    minHeight: minimumTarget,
+    paddingVertical: rhythm.line,
   },
-  stacked: { flexDirection: 'column', alignItems: 'stretch' },
+  stacked: { flexDirection: 'column', alignItems: 'flex-start', gap: 0 },
+  pressed: { backgroundColor: colors.sunken },
   grow: { flex: 1 },
+  filtersLabel: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: rhythm.tight,
+    minHeight: minimumTarget,
+  },
+  foot: { paddingTop: rhythm.block },
 });

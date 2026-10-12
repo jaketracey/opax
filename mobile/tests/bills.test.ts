@@ -195,13 +195,17 @@ describe('bill list filters and sort', () => {
     expect(row('au-federal-r6850')).toMatchObject({
       name: 'Commonwealth Electoral Amendment (Cleaning up Political Donations) Bill 2022',
       status: 'Lapsed',
-      where: 'House of Representatives · Introduced 14\u00A0Feb\u00A02022',
-      people: 'Andrew Wilkie · Independent',
+      date: 'Introduced 14\u00A0Feb\u00A02022',
+      chamber: 'House of Representatives',
+      by: 'Andrew Wilkie',
+      party: { party: 'Independent', status: 'unknown' },
     });
     const draft = row('au-federal-ed-online-safety-digital-duty-of-care-2026');
     expect(draft.status).toBe('Exposure draft');
-    expect(draft.where).toBe('Released 8\u00A0Sep\u00A02026');
-    expect(draft.people).toBe('Communications');
+    expect(draft.date).toBe('Released 8\u00A0Sep\u00A02026');
+    expect(draft.chamber).toBeNull();
+    expect(draft.by).toBe('Communications');
+    expect(draft.party).toBeNull();
     expect(draft.label).toContain('Released 8 September 2026');
     const before = row('au-federal-r7549');
     expect(before.asAt).toBe('as at 17\u00A0Sep\u00A02026');
@@ -211,7 +215,7 @@ describe('bill list filters and sort', () => {
     // No raw register tokens reach the reader.
     for (const b of d.billsFor(bills).data!) {
       const text = billRowText(b);
-      expect(`${text.status} ${text.where}`).not.toMatch(
+      expect(`${text.status} ${text.chamber} ${text.date}`).not.toMatch(
         /_|\brepresentatives\b|\bsenate\b/,
       );
     }

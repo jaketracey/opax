@@ -95,8 +95,8 @@ export default function ReportsIndex() {
               testID="reports-topics"
             />
             <RecordRow
-              title="Sources & coverage"
-              onPress={() => openRecord('/stats', 'Sources & coverage')}
+              title="Coverage by source"
+              onPress={() => openRecord('/stats', 'Coverage by source')}
               testID="reports-stats"
             />
             <RecordRow

@@ -17,11 +17,13 @@ import { declarationsRoute } from '../navigation/routes';
 import { FollowingSection } from './follows/FollowingSection';
 import { useFollows } from './follows/store';
 import { BillFeed } from './today/BillFeed';
-import { DeclarationRow } from './today/DeclarationRow';
+import { personRuns } from './declarations/model';
+import { DeclarationGroup } from './today/DeclarationRow';
 import { ExploreGrid } from './today/ExploreGrid';
 import { TodayFoot } from './today/Foot';
 import { Masthead } from './today/Masthead';
 import { Entrance } from './today/parts';
+import { billsSources, declarationsSources } from './today/sources';
 import { TodayBlock } from './today/TodayBlock';
 
 /**
@@ -29,8 +31,8 @@ import { TodayBlock } from './today/TodayBlock';
  * edition, the page's one colour moment; what changed in what you follow
  * (only when you follow something); the newest bills and the newest
  * declarations, as rows on the paper; and one tile grid of every other way
- * into the record. One source line and the independence line close the
- * page. Every block loads on its own and keeps its saved copy offline; a
+ * into the record. Each feed closes with its own source line; the
+ * edition's source and the independence line close the page. Every block loads on its own and keeps its saved copy offline; a
  * pull to refresh revalidates all.
  */
 export default function Today() {
@@ -122,7 +124,7 @@ function TodayCompact({
       <BillsSection data={data} refresh={refresh} />
       <DeclarationsSection data={data} refresh={refresh} />
       <ExploreGrid />
-      <TodayFoot feeds={data} edition={edition} />
+      <TodayFoot edition={edition} />
     </>
   );
 }
@@ -174,7 +176,7 @@ function TodayRegular({
           <DeclarationsSection data={data} refresh={refresh} />
         </View>
       </View>
-      <TodayFoot feeds={data} edition={edition} />
+      <TodayFoot edition={edition} />
     </>
   );
 }
@@ -217,6 +219,8 @@ function BillsSection({ data, refresh }: Pick<FrontProps, 'data' | 'refresh'>) {
         empty="No recently introduced bills are available in this snapshot."
         onRetry={refresh}
         testID="today-bills"
+        sources={billsSources}
+        sourceTitle="About these bills"
       >
         {(bills) => (
           <Entrance>
@@ -252,13 +256,15 @@ function DeclarationsSection({
         empty="No recent declarations are available in this snapshot."
         onRetry={refresh}
         testID="today-declarations"
+        sources={declarationsSources}
+        sourceTitle="About these declarations"
         placeholder="people"
       >
         {(declarations) => (
           <Entrance>
             <RowList>
-              {declarations.map((item, i) => (
-                <DeclarationRow key={item.id} item={item} index={i} />
+              {personRuns(declarations).map((run) => (
+                <DeclarationGroup key={run.key} entries={run.entries} />
               ))}
             </RowList>
           </Entrance>

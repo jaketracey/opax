@@ -69,21 +69,10 @@ export default function Agencies() {
               label="Loading government agencies"
               testID="agencies-status"
             />
-            <Group gap={rhythm.tight}>
-              <Text wordSafe variant="metadata">
-                Who awards Commonwealth contracts, and which companies receive
-                them.
-              </Text>
-              {data ? (
-                <MetaSource
-                  meta={data.meta}
-                  record={status.record}
-                  title="About agencies"
-                  notes={[AGENCY_NAMES]}
-                  testID="agencies-source"
-                />
-              ) : null}
-            </Group>
+            <Text wordSafe variant="metadata">
+              Who awards Commonwealth contracts, and which companies receive
+              them.
+            </Text>
             <Field
               label="Find an agency"
               value={query}
@@ -106,6 +95,17 @@ export default function Agencies() {
               noun="agencies in the available records"
             />
           </>
+        }
+        sourceLine={
+          data ? (
+            <MetaSource
+              meta={data.meta}
+              record={status.record}
+              title="About agencies"
+              notes={[AGENCY_NAMES]}
+              testID="agencies-source"
+            />
+          ) : null
         }
         render={(a, i) => (
           <RecordRow
@@ -281,7 +281,7 @@ export function Agency() {
                 {r.supplier}
               </Text>
               {r.title ? <Text wordSafe>{r.title}</Text> : null}
-              <Text wordSafe variant="strong" tabular>
+              <Text wordSafe variant="strong" tabular tone="moneyInk">
                 {formatMoneyCompact(r.value)}
               </Text>
               <Text wordSafe variant="metadata">

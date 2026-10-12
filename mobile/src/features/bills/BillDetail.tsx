@@ -273,9 +273,9 @@ export default function BillDetail({
 
 /**
  * The bill's identity, said once: its status as a label with the date, the
- * title, one meta line, then the one primary action (Read the bill text),
- * Follow and ⋯ for everything else. The sponsor is the standard people row.
- * The block's source line holds the originals, the register's note and
+ * title, one meta line, the bill text as a row (a navigation, not a button),
+ * then Follow and ⋯ for everything else. The sponsor is the standard people
+ * row. The block's source line holds the originals, the register's note and
  * "Sponsor not recorded".
  */
 function BillHead({
@@ -342,6 +342,14 @@ function BillHead({
           Government exposure draft, not yet introduced
         </Text>
       ) : null}
+      {/* The record names no text version without a read of the text's
+          own index, so the row says "Bill text" and the reader names it. */}
+      <LinkRow
+        title="Bill text"
+        accessibilityHint="Opens the reader"
+        onPress={() => bills.openText(identity.key, name)}
+        testID="bill-read-text"
+      />
       <BillActions
         identity={identity}
         name={name}
@@ -496,9 +504,10 @@ function StatusLine({ identity }: { identity: Identity }) {
 }
 
 /**
- * One primary action, Read the bill text; Follow beside it; everything else
- * (Ask about this, the bill home, the page on opax.com.au) under ⋯. Share
- * stays in the navigation bar, or the pane's bar on iPad.
+ * Follow and ⋯ on one line; everything else (Ask about this, the bill's page
+ * on the Parliament website, the page on opax.com.au) under ⋯. Share stays
+ * in the navigation bar, or the pane's bar on iPad. Stacked at accessibility
+ * sizes.
  */
 function BillActions({
   identity,
@@ -510,20 +519,14 @@ function BillActions({
   /** The bill's home page in the register, when the record links one. */
   home?: { label: string; url: string };
 }) {
-  const bills = useBillNavigation();
   const openAsk = useOpenAsk();
   const stacked = useAccessibilitySize();
   const anchor = useRef<View>(null);
   return (
-    <View style={[styles.actions, stacked ? styles.actionsStacked : null]}>
-      <Button
-        label="Read the bill text"
-        variant="primary"
-        icon="doc.text"
-        size="compact"
-        onPress={() => bills.openText(identity.key, name)}
-        testID="bill-read-text"
-      />
+    <View
+      style={[styles.actions, stacked ? styles.actionsStacked : null]}
+      testID="bill-actions"
+    >
       <FollowToggle
         kind="bill"
         id={identity.key}
@@ -547,7 +550,7 @@ function BillActions({
                 ...(home
                   ? [
                       {
-                        title: 'Open the bill home',
+                        title: 'Open on the Parliament website',
                         onPress: () => void openSource(home.url, home.label),
                       },
                     ]
@@ -644,8 +647,20 @@ function Summary({
   );
 }
 
-/** The ruler's marks: where the bill began, where it crossed, where it ended. */
-function rulerPoints(entries: readonly BillTimelineEntry[]) {
+// Statuses that end a bill's passage. The register files the day a bill
+// lapsed, was withdrawn or was negatived as a stage called "other".
+const TERMINAL_STATUS =
+  /^(?:lapsed|withdrawn|negatived|defeated|discharged|failed|not passed|not proceeded with|removed from the notice paper)\b/i;
+
+/**
+ * The ruler's marks: where the bill began, where it crossed, where it ended.
+ * A last stop the register calls "Other" on a bill whose status ended it
+ * takes the status word ("Lapsed"): that is what the day was.
+ */
+export function rulerPoints(
+  entries: readonly BillTimelineEntry[],
+  status?: string | null,
+) {
   const first = entries[0]!;
   const last = entries[entries.length - 1]!;
   const home = first.stages.find((s) => s.house)?.house ?? null;
@@ -669,9 +684,14 @@ function rulerPoints(entries: readonly BillTimelineEntry[]) {
     const stage = entry.stages.find((s) => s.house && s.house !== home)!;
     points.push({ at: crossed, label: house(stage.house!), date: entry.from });
   }
+  const ended = last.stages[last.stages.length - 1]!.stage;
+  const terminal = status ? billSentenceCase(status) : '';
   points.push({
     at: entries.length - 1,
-    label: last.stages[last.stages.length - 1]!.stage,
+    label:
+      /^other$/i.test(ended.trim()) && TERMINAL_STATUS.test(terminal)
+        ? terminal
+        : ended,
     date: last.to ?? last.from,
   });
   return points;
@@ -682,9 +702,16 @@ function rulerPoints(entries: readonly BillTimelineEntry[]) {
  * named where it began, where it reached the other house and where it
  * ended. At accessibility sizes the marks are a short list instead.
  */
-function StageRuler({ entries }: { entries: readonly BillTimelineEntry[] }) {
+function StageRuler({
+  entries,
+  status,
+}: {
+  entries: readonly BillTimelineEntry[];
+  /** The bill's recorded status, which names an "Other" last stop. */
+  status?: string | null;
+}) {
   const stacked = useAccessibilitySize();
-  const points = rulerPoints(entries);
+  const points = rulerPoints(entries, status);
   const spoken = points
     .map((p) => `${p.label}, ${formatDate(p.date)}`)
     .join('; ');
@@ -794,7 +821,7 @@ function KeyDates({
     <Section title="How it moved" accent="bills" testID="bill-key-dates">
       {entries.length > 1 ? (
         <>
-          <StageRuler entries={entries} />
+          <StageRuler entries={entries} status={view.identity.data?.status} />
           <Disclosure
             label={`All ${formatCount(timeline.runs)} stages`}
             testID="bill-dates-all"

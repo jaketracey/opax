@@ -518,7 +518,7 @@ describe('leads', () => {
 });
 
 describe('the Leads screen', () => {
-  test('opens on the export’s first lead: its title, figures, sentence, one caveat and one source line', async () => {
+  test('opens on the export’s first lead: its title, one figure, its sentence and Evidence (n)', async () => {
     const renderer = await render(<Leads />);
     const root = renderer.root;
     const first = signals[0]!;
@@ -530,35 +530,37 @@ describe('the Leads screen', () => {
     expect(texts(root)).toContain(aboutLede(discovery));
     expect(aboutLede(discovery)).toMatch(/not proof of wrongdoing/);
     // The card's upper part is one element that opens the comparison: the
-    // category, the export's title, the two flows and its one sentence.
+    // category, the export's title, its one figure and its one sentence
+    // (design pass 5, P2-13).
     const open = root.find(
       (n) =>
         n.props.testID === 'lead-0-open' &&
         typeof n.props.onPress === 'function',
     );
     expect(open.props.accessibilityLabel).toBe(
-      `Lead, Companies in both. ${first.title}. Recorded party receipts, 76,984,493 dollars. Recorded contract value, 9,102,500 dollars. ${first.summary}`,
+      `Lead, Companies in both. ${first.title}. Recorded party receipts, 76,984,493 dollars. ${first.summary}`,
     );
     expect(open.props.accessibilityHint).toBe('Opens the comparison');
     expect(texts(root)).toEqual(
-      expect.arrayContaining(['$76,984,493', '$9,102,500', first.summary]),
+      expect.arrayContaining(['$76,984,493', first.summary]),
     );
-    // One caveat line, the export's first, verbatim; the rest are one tap away.
-    expect(byTestID(root, 'lead-0-caveat').props.children).toBe(
-      first.caveats[0],
-    );
-    expect(texts(root)).not.toContain(first.caveats[1]);
-    // The export is dated once, at the top; each card's source line names its
-    // example records and publishers.
+    expect(texts(root)).not.toContain('$9,102,500');
+    // No caveat line on the card: every caveat is in its Evidence sheet.
+    expect(
+      root.findAll((n) => n.props.testID === 'lead-0-caveat'),
+    ).toHaveLength(0);
+    for (const caveat of first.caveats)
+      expect(texts(root)).not.toContain(caveat);
+    // The export is dated once, at the top; each card's foot is
+    // "Evidence (n) ›", read as its example records.
     expect(
       texts(root).filter((t) => t.startsWith('Updated 21 Sep 2026 · ')),
     ).toHaveLength(1);
     expect(labels(root)).toContain(
       'Updated 21 Sep 2026, AEC annual returns and 1 more',
     );
-    expect(labels(root)).toContain(
-      '2 example records, AEC annual returns and 1 more',
-    );
+    expect(texts(root)).toContain('Evidence (2)');
+    expect(labels(root)).toContain('Evidence, 2 example records');
     // No as-at line, methodology or "See the comparison" row per card.
     expect(texts(root).join('\n')).not.toMatch(/As at |See the comparison/);
     for (const method of discovery.methodology)
@@ -612,9 +614,9 @@ describe('the Leads screen', () => {
     expect(open.props.accessibilityLabel).toBe(
       `Lead, Government contracts. ${lead.title}. Largest supplier value, 2,343,038,544 dollars. ${lead.summary}`,
     );
-    expect(byTestID(root, 'lead-2-caveat').props.children).toBe(
-      'This share describes available records only; missing disclosures can materially change it.',
-    );
+    expect(
+      root.findAll((n) => n.props.testID === 'lead-2-caveat'),
+    ).toHaveLength(0);
     act(() => renderer.unmount());
   });
   test('filters by category, sorts concentrations, and counts in the web’s nouns', async () => {

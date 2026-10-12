@@ -41,46 +41,41 @@ name: 27 Leads and the declared-interests feed
     timeout: 180000
     centerElement: true
     speed: 20
+# Leads about a donor not named in OPAX are withheld (donor privacy,
+# 10 Oct): the count says how many are shown, the next line how many not.
 - assertVisible:
     id: leads-count
-    text: 60 leads
+    text: 46 leads
+- assertVisible:
+    id: leads-withheld
+    text: 14 leads about a donor not named in OPAX are not shown\.
 - takeScreenshot: ${EVIDENCE}/27-leads
-# The first lead is the export's first signal: its title, its two money
-# flows and its sentence, as one element that opens the comparison.
+# The first lead is the export's first signal: its title, its one figure
+# and its sentence, as one element that opens the comparison (design pass
+# 5, P2-13: one figure, one sentence, "Evidence (n) ›", no caveat line).
 # pointer: /signals/0/title
 # pointer: /signals/0/metrics/0
-# pointer: /signals/0/metrics/1
 - scrollUntilVisible:
     element:
       id: lead-0-open
-      text: 'Lead, Companies in both\. Westpac Banking Corporation appears in party receipts and contracts\. Recorded party receipts, 76,984,493 dollars\. Recorded contract value, 9,102,500 dollars\. .*'
+      text: 'Lead, Companies in both\. Westpac Banking Corporation appears in party receipts and contracts\. Recorded party receipts, 76,984,493 dollars\. .*'
     direction: DOWN
     timeout: 180000
     visibilityPercentage: 10
     centerElement: true
     speed: 20
 - takeScreenshot: ${EVIDENCE}/27-lead-title
-# One caveat line on the card, the export's first, in its words.
-# pointer: /signals/0/caveats/0
-- scrollUntilVisible:
-    element:
-      id: lead-0-caveat
-      text: Matching names are not verified legal identities; unrelated entities can share a name\.
-    direction: DOWN
-    timeout: 180000
-    visibilityPercentage: 10
-    centerElement: true
-    speed: 20
 - scrollUntilVisible:
     element:
       id: lead-0-source
-      text: 2 example records, AEC annual returns and 1 more
+      text: Evidence, 2 example records
     direction: DOWN
     timeout: 180000
     centerElement: true
     speed: 20
 - takeScreenshot: ${EVIDENCE}/27-lead-caveat
-# The card's source line: its example records, every caveat, the as-at date.
+# The card's Evidence sheet: its example records, every caveat, the as-at
+# date.
 - waitForAnimationToEnd
 - tapOn:
     id: lead-0-source
@@ -112,12 +107,23 @@ name: 27 Leads and the declared-interests feed
     centerElement: true
     speed: 20
 - takeScreenshot: ${EVIDENCE}/27-lead-records
+# The sheet's "As at" heading is followed by the date alone.
 # pointer: /generated_at
 - scrollUntilVisible:
     element:
-      text: As at 21 September 2026
+      text: 21 September 2026
     direction: DOWN
     timeout: 60000
+    centerElement: true
+    speed: 20
+# Every caveat, in the export's words: the card's first, then the third.
+# pointer: /signals/0/caveats/0
+- scrollUntilVisible:
+    element:
+      text: Matching names are not verified legal identities; unrelated entities can share a name\.
+    direction: DOWN
+    timeout: 60000
+    visibilityPercentage: 10
     centerElement: true
     speed: 20
 # pointer: /signals/0/caveats/2
@@ -131,11 +137,22 @@ name: 27 Leads and the declared-interests feed
     speed: 20
 - takeScreenshot: ${EVIDENCE}/27-lead-as-at
 # A source opens once the sheet has gone: e2e builds show the checked
-# address locally.
+# address locally. The sheet holds every caveat (design pass 5, P2-13), so
+# it is closed and reopened at its top rather than swiped back up, which
+# would dismiss it.
+- tapOn:
+    id: lead-0-source-sheet-done
+- waitForAnimationToEnd
+- tapOn:
+    id: lead-0-source
+- extendedWaitUntil:
+    visible:
+      id: lead-0-source-sheet
+    timeout: 15000
 - scrollUntilVisible:
     element:
       id: lead-0-source-sheet-original-0
-    direction: UP
+    direction: DOWN
     timeout: 60000
     visibilityPercentage: 10
     centerElement: true
@@ -215,22 +232,35 @@ name: 27 Leads and the declared-interests feed
     centerElement: true
     speed: 20
 - takeScreenshot: ${EVIDENCE}/27-table
-# The comparison keeps the whole lead: every figure, caveat and record.
-# pointer: /signals/1/metrics/2
+# "How this lead was found": the method note, every caveat and the example
+# records; the title, sentence and figures are said once, at the top.
+# pointer: /signals/1/chart/record_count as count
 - scrollUntilVisible:
     element:
-      id: lead-card-metric-2
-      text: Total recorded value, 158,976,424 dollars
+      id: lead-note
+      text: '973 receipts · .*'
     direction: DOWN
     timeout: 180000
     visibilityPercentage: 10
     centerElement: true
     speed: 20
-# pointer: /signals/1/metrics/3
+- assertNotVisible:
+    id: lead-card
+# pointer: /signals/1/caveats/0
 - scrollUntilVisible:
     element:
-      id: lead-card-metric-3
-      text: Distinct donors, 28
+      id: lead-caveat-0
+      text: This share describes available records only; missing disclosures can materially change it\.
+    direction: DOWN
+    timeout: 180000
+    visibilityPercentage: 10
+    centerElement: true
+    speed: 20
+# pointer: /signals/1/caveats/1
+- scrollUntilVisible:
+    element:
+      id: lead-caveat-1
+      text: At least two positive records and a 25% share are required\. A single reporting period is not imposed\.
     direction: DOWN
     timeout: 180000
     visibilityPercentage: 10
@@ -239,13 +269,14 @@ name: 27 Leads and the declared-interests feed
 # pointer: /signals/1/caveats/2
 - scrollUntilVisible:
     element:
-      id: lead-card-caveat-2
+      id: lead-caveat-2
       text: Annual party receipts are not all verified gifts; source donation_type=direct is an ingestion classification\. State, election and referendum disclosures are excluded\.
     direction: DOWN
     timeout: 180000
     visibilityPercentage: 10
     centerElement: true
     speed: 20
+- takeScreenshot: ${EVIDENCE}/27-lead-method
 # The web's links: this comparison on opax.com.au, and its full money map.
 - scrollUntilVisible:
     element:
@@ -287,10 +318,11 @@ name: 27 Leads and the declared-interests feed
     visible:
       id: today-screen
     timeout: 20000
+# Today keeps its place at the Leads entry, which is below Just declared.
 - scrollUntilVisible:
     element:
       id: today-declarations-all
-    direction: DOWN
+    direction: UP
     timeout: 300000
     visibilityPercentage: 10
     centerElement: true
@@ -304,17 +336,18 @@ name: 27 Leads and the declared-interests feed
     timeout: 30000
 - scrollUntilVisible:
     element:
-      id: declarations-count
+      id: declarations-filters
     direction: DOWN
     timeout: 180000
     centerElement: true
     speed: 20
 - takeScreenshot: ${EVIDENCE}/27-declarations
-# One summary line; the chamber chips are in the Filters sheet.
+# The summary line is the Filters control (pass 5, P2-19); the chamber
+# chips are in its sheet.
 # pointer: /interests/recent.json#/meta/rows as count
 - assertVisible:
-    id: declarations-count
-    text: 300 declarations · All chambers · Federal
+    id: declarations-filters
+    text: 300 declarations · All chambers · Federal, Filters
 - scrollUntilVisible:
     element:
       id: declarations-filters
@@ -340,14 +373,14 @@ name: 27 Leads and the declared-interests feed
     timeout: 15000
 - scrollUntilVisible:
     element:
-      id: declarations-count
+      id: declarations-filters
     direction: DOWN
     timeout: 180000
     centerElement: true
     speed: 20
 - assertVisible:
-    id: declarations-count
-    text: 176 of 300 declarations · House of Representatives · Federal
+    id: declarations-filters
+    text: 176 of 300 declarations · House of Representatives · Federal, Filters
 - takeScreenshot: ${EVIDENCE}/27-declarations-house
 # Every row in the filtered list is a House row. At AX5 a row can be taller
 # than the screen, so its text is matched where a tenth of it shows.
@@ -378,14 +411,14 @@ name: 27 Leads and the declared-interests feed
 - pressKey: Enter
 - scrollUntilVisible:
     element:
-      id: declarations-count
+      id: declarations-filters
     direction: DOWN
     timeout: 180000
     centerElement: true
     speed: 20
 - assertVisible:
-    id: declarations-count
-    text: 3 of 300 declarations · House of Representatives · Federal
+    id: declarations-filters
+    text: 3 of 300 declarations · House of Representatives · Federal, Filters
 - scrollUntilVisible:
     element:
       id: declaration-person-0

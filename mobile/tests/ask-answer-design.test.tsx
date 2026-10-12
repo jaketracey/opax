@@ -1,6 +1,7 @@
 import { act } from 'react';
 import { Modal, Text as NativeText } from 'react-native';
 import TestRenderer from 'react-test-renderer';
+import { router } from 'expo-router';
 import {
   Disclosure,
   Heading,
@@ -57,7 +58,9 @@ const turn: Turn = {
   },
 };
 
-function draw(actions = [{ title: 'Start a new conversation', onPress: jest.fn() }]) {
+function draw(
+  actions = [{ title: 'Start a new conversation', onPress: jest.fn() }],
+) {
   let renderer!: TestRenderer.ReactTestRenderer;
   act(() => {
     renderer = TestRenderer.create(
@@ -222,4 +225,29 @@ test('a report that cannot open is not thanked', async () => {
   expect(
     renderer.root.findAll((n) => n.props.testID === 'ask-report-thanks'),
   ).toHaveLength(0);
+});
+
+test('a record chosen in the sources sheet opens once the sheet has gone', () => {
+  // Journey 38's bug in Ask: the sheet closed by unmounting, so its Modal
+  // never reported the dismissal and the record waiting on it never opened.
+  const { renderer, byId } = draw();
+  jest.mocked(router.push).mockClear();
+  act(() => byId('ask-answer-sources').props.onPress());
+  const sheet = renderer.root.findByType(AnswerSources).findByType(Modal);
+  expect(sheet.props.visible).toBe(true);
+  act(() => byId('ask-source-1').props.onPress());
+  // Closed, still mounted, so iOS can report the dismissal; the record
+  // waits for it rather than landing behind the sheet.
+  expect(renderer.root.findByType(AnswerSources).findByType(Modal)).toBe(sheet);
+  expect(sheet.props.visible).toBe(false);
+  expect(router.push).not.toHaveBeenCalled();
+  act(() => sheet.props.onDismiss());
+  expect(router.push).toHaveBeenCalledTimes(1);
+  // A dismissal with nothing chosen (Done, a swipe) opens nothing.
+  act(() => byId('ask-answer-sources').props.onPress());
+  expect(sheet.props.visible).toBe(true);
+  act(() => sheet.props.onRequestClose());
+  expect(sheet.props.visible).toBe(false);
+  act(() => sheet.props.onDismiss());
+  expect(router.push).toHaveBeenCalledTimes(1);
 });
