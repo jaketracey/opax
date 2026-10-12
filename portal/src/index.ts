@@ -5801,6 +5801,7 @@ async function apiAskRouted(request: Request, url: URL, input: Record<string, un
     // Reuse the donor guard within the same deadline; no prompt bypass.
     if (await budget.run(() => questionNamesWithheldDonor(env.ASSETS, question))) return await routedFallback()
     const privateTurn = Array.isArray(input.context) && input.context.length > 0
+    const electorateData = classifyAgentic(question).rule === 'electorate-data'
     const key = new Request(await agenticCacheKey(question, env.CACHE_EPOCH, env.ASK_MODEL || 'openai-compatible', agenticPeriod(input), AGENTIC_TOOLS_VERSION, agenticFilters(input)))
     const streaming = url.searchParams.get('stream') === '1' || (request.headers.get('accept') ?? '').includes('text/event-stream')
     if (!privateTurn && !cacheBypass(request, url)) {
@@ -5825,7 +5826,7 @@ async function apiAskRouted(request: Request, url: URL, input: Record<string, un
         const run = await executeAgentic(input, env, ctx, undefined, budget.signal, budget.remaining)
         if (request.signal.aborted) return json(agenticAskPayload(run, question))
         budget.signal.throwIfAborted()
-        return run.answered && !run.over_budget ? withCacheStatus(finish(run), 'MISS', false) : await routedFallback()
+        return electorateData || run.answered && !run.over_budget ? withCacheStatus(finish(run), 'MISS', false) : await routedFallback()
       } catch { return expired() }
       finally { budget.dispose() }
     }
@@ -5844,7 +5845,7 @@ async function apiAskRouted(request: Request, url: URL, input: Record<string, un
             const run = await executeAgentic(input, env, ctx, send, budget.signal, budget.remaining)
             if (gone || request.signal.aborted) return
             budget.signal.throwIfAborted()
-            if (run.answered && !run.over_budget) { const response = finish(run); await send('done', await response.json()) }
+            if (electorateData || run.answered && !run.over_budget) { const response = finish(run); await send('done', await response.json()) }
             else {
               const response = await routedFallback()
               if ((response.headers.get('content-type') ?? '').includes('text/event-stream')) {

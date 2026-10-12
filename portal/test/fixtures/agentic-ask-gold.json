@@ -58,6 +58,259 @@
  "attribution_note": "data-speaker-attribution-check (12 Oct 2026): 16,909 KB speech documents carry several speakers' words under one MP (OpenAustralia legacy markup), mostly OpenAustralia-sourced federal House and Senate debate. Sample error rates: Wilkie 13.3%, Hanson-Young 20.0%, Bandt 3.3%, Katter 3.3%, Wong 3.3%. Committee-hearing and state records come from other parsers.",
  "questions": [
   {
+   "id": "E01",
+   "category": "electorates",
+   "question": "What electorate has the lowest median income",
+   "note": "Jake's question (13 Oct). Median income means personal weekly income, separate from household income. Census geography is not redistributed to current boundaries.",
+   "expected": {
+    "kind": "electorates",
+    "indicator": "median_income",
+    "rows": [
+     {
+      "name": "Fowler",
+      "jurisdiction": "federal",
+      "chamber": "representatives",
+      "value": 521,
+      "unit": "AUD/week",
+      "url": "https://opax.com.au/subject/electorate/federal-representatives-nsw-fowler",
+      "source": "2021 Census (ABS)"
+     }
+    ],
+    "names": [
+     "Fowler"
+    ],
+    "numbers": [
+     521
+    ],
+    "source": "2021 Census (ABS)",
+    "unit": "AUD/week",
+    "matched": 150,
+    "available": 149,
+    "missing": [
+     "Bullwinkel"
+    ],
+    "answer": "Fowler (federal, representatives): median personal income 521 AUD/week (2021 Census (ABS)).",
+    "method": "Read published manifest and current electorate detail JSON; select 2021 Census numeric values, then exact extrema or named lookup; include every tie.",
+    "query": {
+     "manifest": "/electorates/manifest.json",
+     "release_id": "b56417062ccc33cf",
+     "indicator": "median_income",
+     "order": "asc",
+     "jurisdiction": "federal",
+     "chamber": "representatives",
+     "status": "current"
+    }
+   }
+  },
+  {
+   "id": "E02",
+   "category": "electorates",
+   "question": "Which federal electorate has the highest unemployment rate?",
+   "note": "Published 2021 Census values; current electorate status only.",
+   "expected": {
+    "kind": "electorates",
+    "indicator": "unemployment_rate",
+    "rows": [
+     {
+      "name": "Blaxland",
+      "jurisdiction": "federal",
+      "chamber": "representatives",
+      "value": 9.2,
+      "unit": "%",
+      "url": "https://opax.com.au/subject/electorate/federal-representatives-nsw-blaxland",
+      "source": "2021 Census (ABS)"
+     }
+    ],
+    "names": [
+     "Blaxland"
+    ],
+    "numbers": [
+     9.2
+    ],
+    "source": "2021 Census (ABS)",
+    "unit": "%",
+    "matched": 150,
+    "available": 149,
+    "missing": [
+     "Bullwinkel"
+    ],
+    "answer": "Blaxland (federal, representatives): unemployment rate 9.2 % (2021 Census (ABS)).",
+    "method": "Read published manifest and current electorate detail JSON; select 2021 Census numeric values, then exact extrema or named lookup; include every tie.",
+    "query": {
+     "manifest": "/electorates/manifest.json",
+     "release_id": "b56417062ccc33cf",
+     "indicator": "unemployment_rate",
+     "order": "desc",
+     "jurisdiction": "federal",
+     "chamber": "representatives",
+     "status": "current"
+    }
+   }
+  },
+  {
+   "id": "E03",
+   "category": "electorates",
+   "question": "What is the median age in Corangamite?",
+   "note": "Published 2021 Census values; current electorate status only.",
+   "expected": {
+    "kind": "electorates",
+    "indicator": "median_age",
+    "rows": [
+     {
+      "name": "Corangamite",
+      "jurisdiction": "federal",
+      "chamber": "representatives",
+      "value": 40,
+      "unit": "years",
+      "url": "https://opax.com.au/subject/electorate/federal-representatives-vic-corangamite",
+      "source": "2021 Census (ABS)"
+     }
+    ],
+    "names": [
+     "Corangamite"
+    ],
+    "numbers": [
+     40
+    ],
+    "source": "2021 Census (ABS)",
+    "unit": "years",
+    "matched": 1,
+    "available": 1,
+    "missing": [],
+    "answer": "Corangamite (federal, representatives): median age 40 years (2021 Census (ABS)).",
+    "method": "Read published manifest and current electorate detail JSON; select 2021 Census numeric values, then exact extrema or named lookup; include every tie.",
+    "query": {
+     "manifest": "/electorates/manifest.json",
+     "release_id": "b56417062ccc33cf",
+     "indicator": "median_age",
+     "operation": "lookup",
+     "electorate": "Corangamite",
+     "jurisdiction": "federal",
+     "chamber": "representatives",
+     "status": "current"
+    }
+   }
+  },
+  {
+   "id": "E04",
+   "category": "electorates",
+   "question": "Which Victorian state electorate has the lowest median income?",
+   "note": "State-seat Census profiles are not imported in this release. Expected honest non-answer; no federal-seat substitution.",
+   "expected": {
+    "kind": "electorates",
+    "indicator": "median_income",
+    "rows": [],
+    "names": [],
+    "numbers": [],
+    "source": "2021 Census (ABS)",
+    "unit": "AUD/week",
+    "matched": 88,
+    "available": 0,
+    "missing": [
+     "Albert Park",
+     "Ashwood",
+     "Bass",
+     "Bayswater",
+     "Bellarine",
+     "Benambra",
+     "Bendigo East",
+     "Bendigo West",
+     "Bentleigh",
+     "Berwick",
+     "Box Hill",
+     "Brighton",
+     "Broadmeadows",
+     "Brunswick",
+     "Bulleen",
+     "Bundoora",
+     "Carrum",
+     "Caulfield",
+     "Clarinda",
+     "Cranbourne",
+     "Croydon",
+     "Dandenong",
+     "Eildon",
+     "Eltham",
+     "Essendon",
+     "Eureka",
+     "Euroa",
+     "Evelyn",
+     "Footscray",
+     "Frankston",
+     "Geelong",
+     "Gippsland East",
+     "Gippsland South",
+     "Glen Waverley",
+     "Greenvale",
+     "Hastings",
+     "Hawthorn",
+     "Ivanhoe",
+     "Kalkallo",
+     "Kew",
+     "Kororoit",
+     "Lara",
+     "Laverton",
+     "Lowan",
+     "Macedon",
+     "Malvern",
+     "Melbourne",
+     "Melton",
+     "Mildura",
+     "Mill Park",
+     "Monbulk",
+     "Mordialloc",
+     "Mornington",
+     "Morwell",
+     "Mulgrave",
+     "Murray Plains",
+     "Narracan",
+     "Narre Warren North",
+     "Narre Warren South",
+     "Nepean",
+     "Niddrie",
+     "Northcote",
+     "Oakleigh",
+     "Ovens Valley",
+     "Pakenham",
+     "Pascoe Vale",
+     "Point Cook",
+     "Polwarth",
+     "Prahran",
+     "Preston",
+     "Richmond",
+     "Ringwood",
+     "Ripon",
+     "Rowville",
+     "Sandringham",
+     "Shepparton",
+     "South Barwon",
+     "South-West Coast",
+     "St Albans",
+     "Sunbury",
+     "Sydenham",
+     "Tarneit",
+     "Thomastown",
+     "Warrandyte",
+     "Wendouree",
+     "Werribee",
+     "Williamstown",
+     "Yan Yean"
+    ],
+    "unanswerable": "no_demographic_data",
+    "answer": "The lowest median personal income cannot be determined: no published 2021 Census (ABS) values are available for current Victorian state electorates.",
+    "method": "Read published manifest and current electorate detail JSON; select 2021 Census numeric values, then exact extrema or named lookup; include every tie.",
+    "query": {
+     "manifest": "/electorates/manifest.json",
+     "release_id": "b56417062ccc33cf",
+     "indicator": "median_income",
+     "jurisdiction": "vic",
+     "chamber": "vic_la",
+     "order": "asc",
+     "status": "current"
+    }
+   }
+  },
+  {
    "id": "R01",
    "category": "ranking",
    "question": "Who is making the most speeches about gambling reform",

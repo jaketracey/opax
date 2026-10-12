@@ -17,7 +17,8 @@
  * Used by the Worker orchestration (src/agentic-ask.ts). Design (ii) remains
  * parked in the design note; these tools are not registered on MCP. No models.
  */
-export const AGENTIC_TOOLS_VERSION = 'agentic-tools-3'
+import { ELECTORATES_TOOL, validElectorateArgs } from './agentic-tool-electorates'
+export const AGENTIC_TOOLS_VERSION = 'agentic-tools-3-electorates-1'
 
 export const TOPICS = [
   'gambling', 'financial-services', 'mining-energy', 'climate-environment', 'property-construction', 'housing', 'health',
@@ -441,6 +442,7 @@ const filterProps: Json = {
   term: { type: 'string', enum: Object.keys(TERMS), description: 'federal parliament term' },
 }
 export const TOOL_SPECS: ToolSpec[] = [
+  ELECTORATES_TOOL,
   { name: 'count_speeches', description: 'Count speeches exactly, optionally ranked by speaker or party. Use for "who speaks most", "which party mentions X most", "how many speeches". Returns counts from the record index, the method, and coverage notes that must be stated.', input: { type: 'object', properties: { ...filterProps, group_by: { type: 'string', enum: ['speaker', 'party', 'none'] }, limit: { type: 'integer', minimum: 1, maximum: 15 } } }, run: (d, a) => countSpeeches(d, a as CountInput) },
   { name: 'speech_trend', description: 'Speech counts over time (by year, decade or federal term) with each period\'s share of topic-labelled speeches. Use for "is X debated more", "how has X changed".', input: { type: 'object', properties: { ...filterProps, by: { type: 'string', enum: ['year', 'decade', 'term'] }, from_year: { type: 'integer' }, to_year: { type: 'integer' } } }, run: (d, a) => speechTrend(d, a as TrendInput) },
   { name: 'find_people', description: 'Resolve a politician name to the name the record indexes speeches under, with party, parliaments and years.', input: { type: 'object', properties: { name: { type: 'string' } }, required: ['name'] }, run: (d, a) => findPeople(d, a as unknown as { name: string }) },
@@ -450,6 +452,7 @@ export const TOOL_SPECS: ToolSpec[] = [
 ]
 /** Schema-check model plans before any lookup. References are validated separately. */
 export function validToolArgs(name: string, args: unknown): args is Json {
+  if (name === 'electorates') return validElectorateArgs(args)
   const spec = TOOL_SPECS.find(t => t.name === name)
   if (!spec || !args || typeof args !== 'object' || Array.isArray(args)) return false
   const a = args as Json
