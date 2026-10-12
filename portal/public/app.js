@@ -11531,12 +11531,11 @@ function closeDock({ restoreFocus = true } = {}) {
 }
 
 $("chat-launcher").addEventListener("click", () => (dockOpen ? closeDock() : openDock()));
-// The launcher is a header icon beside search, so the tab order meets it where
-// the eye does. Nothing floats over the page (design review §4, web chrome): the
-// stylesheet shows it where the band carries the menu button (360 to 800px);
-// wider, the masthead's own Ask link leads the way, and page actions such as
-// "Ask about their speeches" still open the dock.
-$("header-search-open").before($("chat-launcher"));
+// The launcher is the band's Ask control, right after the search box, so the
+// tab order meets it where the eye does. Nothing floats over the page (design
+// review §4, web chrome): nav.css draws it as a pill, an icon on phones, and
+// page actions such as "Ask about their speeches" still open the dock.
+$("header-search-panel").after($("chat-launcher"));
 $("dock-close").addEventListener("click", () => closeDock());
 // The corner is for a question and its answer; a long answer, its sources and
 // the conversation behind it want the page. Same thread, more room.

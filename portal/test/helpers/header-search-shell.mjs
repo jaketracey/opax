@@ -111,7 +111,7 @@ async function run() {
       const drawer = doc.getElementById('nav-drawer');
       doc.getElementById('nav-open').click();
       const drawerOpen = { open: drawer.open, expanded: doc.getElementById('nav-open').getAttribute('aria-expanded') };
-      const trigger = doc.querySelector('#primary-nav .has-menu button[aria-controls]');
+      const trigger = doc.querySelector('#primary-nav [data-nav-trigger]');
       trigger.click();
       const panel = doc.getElementById(trigger.getAttribute('aria-controls'));
       const menuOpen = { expanded: trigger.getAttribute('aria-expanded'), hidden: panel.hidden };

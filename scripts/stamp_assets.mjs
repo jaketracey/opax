@@ -38,7 +38,7 @@ const PUBLIC = join(ROOT, 'portal', 'public')
 const INDEX = join(PUBLIC, 'index.html')
 
 /** Assets referenced from index.html with a ?v= stamp. */
-const STAMPED = ['app.js', 'spa-shell.js', 'spa-entry.js', 'style.css', 'analytics.js', 'gtm.js', 'events.js', 'navigation.js', 'quick-search.js', 'voice.css', 'ui-controls.css', 'ui-source.css', 'ui-source.js', 'labels.js']
+const STAMPED = ['app.js', 'spa-shell.js', 'spa-entry.js', 'style.css', 'analytics.js', 'gtm.js', 'events.js', 'navigation.js', 'quick-search.js', 'voice.css', 'nav.css', 'ui-controls.css', 'ui-source.css', 'ui-source.js', 'labels.js']
 
 const hashOf = (file) =>
   createHash('sha256').update(readFileSync(join(PUBLIC, file))).digest('hex').slice(0, 10)
@@ -204,7 +204,7 @@ function stampModules({ check }) {
 // Both documents then use navigation.js for the same menus and interactions.
 function syncHomeChrome(html, shell) {
   const header = shell.match(/<header class="site-header">[\s\S]*?<\/header>/)?.[0]
-  const drawer = shell.match(/<dialog class="nav-drawer"[\s\S]*?<\/dialog>/)?.[0]
+  const drawer = shell.match(/<dialog class="nav-drawer[^"]*"[\s\S]*?<\/dialog>/)?.[0]
   const footer = shell.match(/<footer>[\s\S]*?<\/footer>/)?.[0]
   if (!header || !drawer || !footer) throw new Error('Shared site chrome is missing from index.html')
   for (const [part, content] of [['header', `${header}\n${drawer}`], ['footer', footer]]) {
@@ -239,7 +239,7 @@ function stamp({ check }) {
   const communityPath = join(PUBLIC, 'community.html')
   const communityBefore = readFileSync(communityPath, 'utf8')
   // The community page wears the site masthead, drawer and footer, synced from index.html as home.html's are.
-  const communityAfter = syncHomeChrome(communityBefore, after).replace(/\/(style\.css|ui-controls\.css|community\.css|community\.js|navigation\.js|quick-search\.js)(?:\?v=[A-Za-z0-9._-]*)?(?=")/g, (_, file) => `/${file}?v=${hashOf(file)}`)
+  const communityAfter = syncHomeChrome(communityBefore, after).replace(/\/(style\.css|ui-controls\.css|nav\.css|community\.css|community\.js|navigation\.js|quick-search\.js)(?:\?v=[A-Za-z0-9._-]*)?(?=")/g, (_, file) => `/${file}?v=${hashOf(file)}`)
   if (!check && communityAfter !== communityBefore) writeFileSync(communityPath, communityAfter)
   const workbenchPath = join(PUBLIC, 'ui-workbench.html')
   const workbenchBefore = readFileSync(workbenchPath, 'utf8')
@@ -247,7 +247,7 @@ function stamp({ check }) {
   if (!check && workbenchAfter !== workbenchBefore) writeFileSync(workbenchPath, workbenchAfter)
   const homePath = join(PUBLIC, 'home.html')
   const homeBefore = readFileSync(homePath, 'utf8')
-  const homeAfter = syncHomeChrome(homeBefore, after).replace(/\/(style\.css|ui-controls\.css|ui-source\.css|ui-source\.js|home\.css|home\.js|navigation\.js|quick-search\.js|analytics\.js|events\.js|gtm\.js)\?v=[A-Za-z0-9._-]*/g, (_, file) => `/${file}?v=${hashOf(file)}`)
+  const homeAfter = syncHomeChrome(homeBefore, after).replace(/\/(style\.css|ui-controls\.css|ui-source\.css|ui-source\.js|home\.css|nav\.css|home\.js|navigation\.js|quick-search\.js|analytics\.js|events\.js|gtm\.js)\?v=[A-Za-z0-9._-]*/g, (_, file) => `/${file}?v=${hashOf(file)}`)
   if (!check && homeAfter !== homeBefore) writeFileSync(homePath, homeAfter)
   if (check) {
     if (staleModules.length || homeAfter !== homeBefore || after !== before || communityAfter !== communityBefore || workbenchAfter !== workbenchBefore) {
