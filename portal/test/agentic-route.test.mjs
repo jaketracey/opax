@@ -71,8 +71,10 @@ test('P1 reader.cancel aborts an in-flight tool and never starts fallback or a c
  const response=await post(question,true),reader=response.body.getReader();
  let watchdog;
  try{
-  await reader.read(); // Consume searching, as a connected SSE client does.
-  await started;assert.equal(toolSignal.aborted,false);await reader.cancel();
+  // Consume progress until the lookup starts, including transports that
+  // apply backpressure on every status frame.
+  while(!await Promise.race([started.then(()=>true),reader.read().then(()=>false)])) {}
+  assert.equal(toolSignal.aborted,false);await reader.cancel();
   // A cancellation must settle the waitUntil work even when no tool completes.
   await Promise.race([flush(),new Promise((_,reject)=>{watchdog=setTimeout(()=>reject(Error('tools continued after reader cancellation')),500)})]);
   assert.equal(toolSignal.aborted,true);assert.equal(normalModels,before);assert.equal(models,beforeModels+1);
