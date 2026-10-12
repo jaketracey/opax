@@ -1,4 +1,4 @@
-import { json, lifecycle, coverageHTML, yearChart, contractHTML, mountYearChart, placeholderContract, procurementSourceHTML, procurementRailHTML, statsHTML } from './suppliers.js?v=bc40559c55';
+import { json, lifecycle, coverageHTML, yearChart, contractHTML, mountYearChart, placeholderContract, procurementSourceHTML, procurementRailHTML, statsHTML } from './suppliers.js?v=4260192232';
 import { procurementGraph } from './procurement-data.js';
 import { shortMoney } from './format.js';
 const esc = value => String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
