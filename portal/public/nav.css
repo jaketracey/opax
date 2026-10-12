@@ -311,6 +311,12 @@
   .sheet-group-sub { display: none; }
 }
 
+/* ---- privacy, one tap from every page -------------------------------------- */
+/* The footer index carries it everywhere but the full conversation page, which
+   drops the footer; there the conversation's own head carries it. */
+.chat-privacy { margin-left: auto; font: var(--type-fine); color: var(--ink-soft); }
+html[data-chat="docked"] .chat-privacy { display: none; }
+
 /* ---- motion: short, and none when the reader asks for less --------------- */
 @media (prefers-reduced-motion: no-preference) {
   .nav-trigger, .site-header .header-search-toggle, .site-header .chat-launcher, .nav-item-link, .sheet-link, .sheet-chip {

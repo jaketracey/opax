@@ -10588,8 +10588,13 @@ function renderChatHistory() {
   const note = document.createElement("p");
   note.className = "fineprint";
   note.textContent = chatMember
-    ? "Saved to your account and in this browser."
-    : "Saved in this browser. Sign in to keep them across devices.";
+    ? "Saved to your account and in this browser. "
+    : "Saved in this browser. Sign in to keep them across devices. ";
+  // Where conversations are kept is a privacy matter: the policy is one tap away.
+  const policy = document.createElement("a");
+  policy.href = "/privacy#privacy-questions";
+  policy.textContent = "Privacy";
+  note.appendChild(policy);
   det.appendChild(note);
   box.appendChild(det);
 }

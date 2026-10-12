@@ -253,3 +253,13 @@ test('every animation and transition in nav.css is off under reduced motion', ()
   assert.doesNotMatch(outside, /(?<![\w-])(animation|transition)(-[\w-]+)?\s*:/);
   assert.doesNotMatch(outside, /@keyframes/);
 });
+
+test('Privacy is one tap from the conversation page and linked wherever data is kept', () => {
+  const html = read('index.html');
+  const chat = html.slice(html.indexOf('<section id="panel-chat"'), html.indexOf('</section>', html.indexOf('<section id="panel-chat"')));
+  assert.match(chat, /<a class="chat-privacy" href="\/privacy#privacy-questions">Privacy<\/a>/, 'the full conversation page drops the footer');
+  assert.match(read('nav.css'), /html\[data-chat="docked"\] \.chat-privacy \{ display: none; \}/, 'docked, the page\'s own footer carries it');
+  const history = read('app.js').slice(read('app.js').indexOf('function renderChatHistory'));
+  assert.match(history.slice(0, history.indexOf('\n}\n')), /policy\.href = "\/privacy#privacy-questions"/, 'saved conversations say where they are kept');
+  assert.match(read('community.js'), /<a href="\/privacy">How we use your account details<\/a>/, 'community sign-in');
+});
