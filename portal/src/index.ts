@@ -76,7 +76,7 @@ import { shortDate, shortMoney as money } from '../public/format.js'
 
 import { SEARCH_SUMMARY_VERSION, SEARCH_SUMMARY_SYSTEM, summarySources, summaryPrompt, parseSearchSummary, summaryModelAnswer, summaryPointValidator, SummaryPointStream, quotedInOrder, type SearchSummary } from './search-summary'
 
-import { OG_FONT_FILES, OG_VERSION, homeCard, ogFormat, type OgCard } from './og'
+import { OG_FONT_FILES, OG_VERSION, PORTRAIT_VERSION, homeCard, ogFormat, type OgCard } from './og'
 import { renderOgPng, renderOgJpeg, type OgFont } from './og-render'
 // The story renderer is reached through the namespace: tests stub './og-render' with the two card renderers only.
 import * as storyRender from './og-render'
@@ -5225,7 +5225,8 @@ async function serveSeoPage(route: SeoRoute, url: URL, request: Request, env: En
 // landscape); the answer carries `x-opax-format: portrait` so the publisher can
 // tell it from a landscape card. Rasterised in wasm (src/og-render.ts),
 // so a MISS costs a few hundred milliseconds of CPU; the result is held in the
-// edge cache for a day under CACHE_EPOCH and OG_VERSION, and a limiter stands in
+// edge cache for a day under CACHE_EPOCH and OG_VERSION (a portrait card also
+// under PORTRAIT_VERSION, its own drawing's), and a limiter stands in
 // front of the MISS path. Whatever cannot be drawn (unknown page, KB down, a
 // render error) is answered with the static home card, never an error: a link
 // preview with no picture is the one outcome to avoid.
@@ -5381,7 +5382,8 @@ async function serveOgImage(url: URL, request: Request, env: Env, ctx: Execution
   const portrait = format === 'portrait'
   const variants = new URLSearchParams()
   for (const [k, v] of cardQuery) variants.set(k, v)
-  if (portrait) variants.set('format', format)
+  // The portrait card carries its own drawing version, so redrawing it never moves a landscape card's key.
+  if (portrait) { variants.set('format', format); variants.set('pv', PORTRAIT_VERSION) }
   const cacheKey = cacheRequest('og', `${encodeURIComponent(env.CACHE_EPOCH)}/sa-full-${saFullText(env.SA_HANSARD_FULL_TEXT)}/${OG_VERSION}/${m[2]}${pagePath}?${variants}`)
   const pageUrl = new URL(`${SITE_ORIGIN}${pagePath}`)
   for (const [k, v] of cardQuery) pageUrl.searchParams.set(k, v)
