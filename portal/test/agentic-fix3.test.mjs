@@ -69,7 +69,8 @@ test('P1 actual JSON/SSE: lowercase then capitalised unknown speaker cannot seed
     const r=await h.fetch('/api/ask'+(stream?'?stream=1':''),{method:'POST',headers:{'content-type':'application/json',...(stream?{accept:'text/event-stream'}:{})},body:JSON.stringify({question:q,kind:'speech'})});
     const text=await r.text();await flush();assert.equal(r.status,200);assert.doesNotMatch(text,/300|"agentic"|"phase":"step"/);
     const done=stream?JSON.parse(text.split('\n\n').find(frame=>frame.startsWith('event: done\n')).split('\ndata: ')[1]):JSON.parse(text);
-    assert.equal(done.answered,false);assert.equal(done.reason,'declined');assert.equal(done.answer,'');
+    // Normal Ask answered the fallback (ask-no-answer's decision fields were reverted 13 Oct); it is never an agentic answer.
+    assert.equal(done.agentic,undefined);
    }
   }
   assert.equal(models,0);assert.ok(normal>=2);assert.equal(counts,0);assert.equal(cacheReads,0);assert.equal(cacheWrites,0);
