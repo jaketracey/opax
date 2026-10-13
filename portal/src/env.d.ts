@@ -71,7 +71,9 @@ interface Env {
   RESEARCH_LOOP_MODEL_ID?: string
   /** OpenRouter provider preferences JSON, e.g. {"sort":"throughput"}. */
   RESEARCH_LOOP_PROVIDER?: string
-  /** Comma list of models operator eval requests may select with x-opax-research-model. */
+  /** OpenRouter reasoning field JSON for the loop model, e.g. {"enabled":false}. */
+  RESEARCH_LOOP_REASONING?: string
+  /** Models operator eval requests may select with x-opax-research-model: a JSON map {slug: {provider?, reasoning?}} or a comma list. */
   RESEARCH_LOOP_MODEL_ALLOW?: string
   RESEARCH_LOOP_SHADOW_RATE?: string
   /** Request-local shadow policy; not a deployed binding. */

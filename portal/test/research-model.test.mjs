@@ -27,3 +27,16 @@ test('cache key differs by model and provider',()=>{
   assert.notEqual(m.researchModelKey('@preset/opax-pro',undefined),m.researchModelKey('deepseek/deepseek-v4-pro','{"sort":"throughput"}'));
   assert.equal(m.researchModelKey(undefined,undefined),'@preset/opax-pro');
 });
+test('JSON allowlist entries carry provider routing and reasoning into the override',()=>{
+  const allow=JSON.stringify({'deepseek/deepseek-v4.1-flash':{provider:{order:['together','baseten'],allow_fallbacks:false,require_parameters:true},reasoning:{enabled:false}},'anthropic/claude-haiku-5.5':{reasoning:{enabled:false}}});
+  assert.deepEqual(m.researchModelOverride('deepseek/deepseek-v4.1-flash',null,allow),{RESEARCH_LOOP_MODEL_ID:'deepseek/deepseek-v4.1-flash',RESEARCH_LOOP_PROVIDER:'{"order":["together","baseten"],"allow_fallbacks":false,"require_parameters":true}',RESEARCH_LOOP_REASONING:'{"enabled":false}'});
+  assert.deepEqual(m.researchModelOverride('anthropic/claude-haiku-5.5','throughput',allow),{RESEARCH_LOOP_MODEL_ID:'anthropic/claude-haiku-5.5',RESEARCH_LOOP_PROVIDER:'{"sort":"throughput"}',RESEARCH_LOOP_REASONING:'{"enabled":false}'});
+  assert.deepEqual(m.researchModelOverride('openai/not-listed',null,allow),{});
+  assert.equal(m.researchModelAllow('{broken').size,0);
+});
+test('reasoning preferences keep only known keys',()=>{
+  assert.deepEqual(m.researchReasoning('{"enabled":false,"x":1}'),{enabled:false});
+  assert.deepEqual(m.researchReasoning({effort:'low',max_tokens:500}),{effort:'low',max_tokens:500});
+  assert.equal(m.researchReasoning('{"effort":"ludicrous"}'),undefined);
+  assert.notEqual(m.researchModelKey('a/b',undefined,'{"enabled":false}'),m.researchModelKey('a/b',undefined,undefined));
+});
