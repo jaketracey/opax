@@ -60,10 +60,11 @@ portal's year scrub can re-sum totals, counts and spans for any window
 instead of only testing whether a lifetime span overlaps it.
 """
 
+
 try:
-    from scripts.donor_public import public_donor_data
+    from scripts.donor_disclosure import attach_donor_disclosures
 except ModuleNotFoundError:
-    from donor_public import public_donor_data
+    from donor_disclosure import attach_donor_disclosures
 
 import os
 import json
@@ -733,7 +734,7 @@ def main() -> None:
         "nodes": nodes,
         "edges": edges,
     }
-    json.dump(public_donor_data(out), sys.stdout, ensure_ascii=False, separators=(",", ":"))
+    json.dump(attach_donor_disclosures(db,out,"federal"), sys.stdout, ensure_ascii=False, separators=(",", ":"))
     sys.stdout.write("\n")
 
 

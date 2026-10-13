@@ -5,14 +5,13 @@ import {pathToFileURL,fileURLToPath} from 'node:url';
 import {sponsorPerson} from '../portal/public/sponsor-person.js';
 import {sponsorSummaryPath,growthSummaryPath,normalisedName,personQuestions,billQuestions,latestBillVotes} from '../portal/public/growth-modules.js';
 import {agencyGrants,publishedSupplierIndex,publishedAgencySuppliers} from '../portal/public/supplier-growth.js';
-import {donorPrivacyIndex,donorNameWithheld,foldDonorName,isOrganisationDonor,MONEY_GRAPHS,withheldPhrases,namesWithheldPhrase} from '../portal/public/donor-entity.js';
 import {TOPIC_NAMES} from '../portal/src/topic-names.mjs';
 export const SUMMARY_BUDGET = 24_000;
 export async function buildGrowth(root=fileURLToPath(new URL('../portal/public',import.meta.url)), {read: sourceRead} = {}) {
  const read=async p=>sourceRead ? sourceRead(p) : JSON.parse(await readFile(join(root,p),'utf8'));
  const output=join(root,'growth');
  await rm(output,{recursive:true,force:true});
- for(const dir of ['sponsors','agencies','person-bills','privacy/person','privacy/bill'])await mkdir(join(output,dir),{recursive:true});
+ for(const dir of ['sponsors','agencies','person-bills'])await mkdir(join(output,dir),{recursive:true});
  const sizes=[];
  const write=async (path,data,budget=SUMMARY_BUDGET)=>{
   const json=JSON.stringify(data)+'\n', bytes=Buffer.byteLength(json);
@@ -20,19 +19,6 @@ export async function buildGrowth(root=fileURLToPath(new URL('../portal/public',
   await writeFile(join(root,path.replace(/^\//,'')),json);sizes.push({path,bytes});
  };
  const [index,roster,money,agencies,supplierDirectory]=await Promise.all(['bills/index.json','parliamentarians.json','graph/money.json','agencies.json','suppliers.json'].map(read));
- const graphs=await Promise.all(MONEY_GRAPHS.map(path=>read(path.slice(1))));
- const access=await read('access.json').catch(()=>({ministers:{}}));
- const phrases=withheldPhrases(graphs,[...roster.people.flatMap(p=>[p.name,p.full]),...Object.values(access.ministers || {}).map(m=>m.name)].filter(Boolean));
- const privacy=(...texts)=>namesWithheldPhrase(phrases,...texts);
- const approvedTexts=(...records)=>{
-  const approved=new Set();
-  const visit=value=>{
-   if(typeof value==='string') {if(value.trim() && !privacy(value))approved.add(value);}
-   else if(Array.isArray(value))value.forEach(visit);
-   else if(value && typeof value==='object')Object.values(value).forEach(visit);
-  };
-  records.forEach(visit);return {approved:[...approved]};
- };
  const publishedSuppliers=publishedSupplierIndex(supplierDirectory.suppliers);
  // The crawl builder requires these same published directory entries to have profiles.
  const supplierShards=new Map();
@@ -40,20 +26,8 @@ export async function buildGrowth(root=fileURLToPath(new URL('../portal/public',
   if(!supplierShards.has(entry.profile_path))supplierShards.set(entry.profile_path,await read(entry.profile_path.replace(/^\//,'')));
   if(!supplierShards.get(entry.profile_path).profiles?.[entry.id])throw new Error('Published supplier profile is missing: '+entry.id);
  }
- const donorIndex=donorPrivacyIndex(graphs);
- const donors=(money.nodes || []).filter(n=>n.kind==='donor' && !donorNameWithheld(donorIndex,n.label) && !privacy(n.label)).map(n=>{
-  const donor=Object.fromEntries(['id','label','kind','abn'].filter(k=>n[k]!=null).map(k=>[k,n[k]]));
-  // Preserve the minimum evidence main's classifier needs, without copying every alias.
-  if(!isOrganisationDonor(donor)) {
-   const evidence=graphs.flatMap(g=>g.nodes).filter(other=>other.kind==='donor' && foldDonorName(other.label)===foldDonorName(n.label)).flatMap(other=>[other.label,...other.aliases || []]);
-   const alias=evidence.find(label=>isOrganisationDonor({...donor,aliases:[label]}));
-   if(alias) donor.aliases=[alias];
-  }
-  if(!isOrganisationDonor(donor))throw new Error('Donor summary lost organisation evidence');
-  return donor;
- });
- // Names and organisation evidence only: no individual rows, amounts or party flows.
- await write('/growth/organisation-donors.json',{donors,approved:donors.map(n=>n.label)},64_000);
+ const donors=(money.nodes || []).filter(n=>n.kind==='donor').map(n=>({...Object.fromEntries(['id','label','kind','abn','source_name','match'].filter(k=>n[k]!=null).map(k=>[k,n[k]])),returnReferences:(n.returnReferences || []).slice(0,1)}));
+ await write('/growth/donors.json',{donors},3_000_000);
  const billRecords=await Promise.all(index.bills.map(b=>read('bills/'+b.key+'.json')));
  const speechesBySpeaker=new Map();
  const billsBySpeaker=new Map();
@@ -75,9 +49,8 @@ export async function buildGrowth(root=fileURLToPath(new URL('../portal/public',
   sponsoredByPerson.get(sponsor.name).push(bill.key);
  }
  for(const bill of billRecords){
-  const questions=billQuestions(bill,roster.people,privacy);
+  const questions=billQuestions(bill,roster.people);
   const parties=(bill.divisions || []).flatMap(d=>Object.keys(d.party_splits || {}));
-  await write(await growthSummaryPath('privacy/bill',bill.key),approvedTexts(bill,questions,parties),120_000);
  }
  const votes=await read('votes.json');
  const interestsIndex=await read('interests/index.json');
@@ -97,7 +70,6 @@ export async function buildGrowth(root=fileURLToPath(new URL('../portal/public',
   for(const key of sponsoredByPerson.get(person.name) || [])if(!linkedBills.has(key))linkedBills.set(key,[]);
   const personBills=[...linkedBills].flatMap(([key,dates])=>{
    const b=billsByKey.get(key);
-   if(privacy(b.title,person.name))return [];
    const speech_dates=[...new Set(dates)].sort().reverse().slice(0,3);
    const sponsored=(sponsoredByPerson.get(person.name) || []).includes(key);
    return [{key:b.key,title:b.title,introduced:b.introduced || '',sponsor:sponsored?person.name:undefined,speech_dates}];
@@ -105,12 +77,11 @@ export async function buildGrowth(root=fileURLToPath(new URL('../portal/public',
   await write(await growthSummaryPath('person-bills',normalisedName(person.name)),{bills:personBills});
   const questions=names.flatMap(name=>[
    `What has ${name} said in parliament?`,
-   ...Object.values(TOPIC_NAMES).flatMap(topic=>personQuestions({name,topics:[{name:topic,count:1}],privacy})),
-   ...personQuestions({name,votes:all,bills:index.bills,interests,privacy}),
+   ...Object.values(TOPIC_NAMES).flatMap(topic=>personQuestions({name,topics:[{name:topic,count:1}]})),
+   ...personQuestions({name,votes:all,bills:index.bills,interests}),
   ]);
   const related=billRecords.filter(b=>latest.some(v=>v.jur===b.jurisdiction && [b.title,...(b.aliases || [])].includes(v.name)));
   const speeches=names.flatMap(name=>speechesBySpeaker.get(normalisedName(name)) || []).sort((a,b)=>String(b.date || '').localeCompare(String(a.date || ''))).slice(0,8);
-  await write(await growthSummaryPath('privacy/person',normalisedName(person.name)),approvedTexts(names,questions,interests,latest,related,speeches),128_000);
  }
  const grouped=new Map();
  // The browser requests summaries from the detail record, including its pid.
@@ -130,9 +101,9 @@ export async function buildGrowth(root=fileURLToPath(new URL('../portal/public',
   const path=await sponsorSummaryPath(bill);if(written.has(path))continue;written.add(path);
   const person=sponsorPerson(bill.sponsor,bill.sponsor_person_id,roster.people);
   const rows=person ? grouped.get(`${bill.jurisdiction}:${person.pid || person.name}`) || [] : [];
-  const bills=[...rows].filter(b=>!privacy(b.title,b.short_title)).sort((a,b)=>String(b.introduced||'').localeCompare(String(a.introduced||''))).slice(0,6)
+  const bills=[...rows].sort((a,b)=>String(b.introduced||'').localeCompare(String(a.introduced||''))).slice(0,6)
    .map(b=>Object.fromEntries(['key','title','short_title','introduced','status','jurisdiction'].map(k=>[k,b[k]])));
-  await write(path,{person:person && !privacy(person.name,person.full)?Object.fromEntries(['name','full','pid'].filter(k=>person[k]!=null).map(k=>[k,person[k]])):null,bills,generated:index.meta?.generated || ''});
+  await write(path,{person:person ?Object.fromEntries(['name','full','pid'].filter(k=>person[k]!=null).map(k=>[k,person[k]])):null,bills,generated:index.meta?.generated || ''});
  }
  // Rank once during the build; browsers fetch only the five awards for one agency.
  const shards=[];

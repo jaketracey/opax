@@ -68,10 +68,6 @@ matches for donor pages. Liabilities and the folded "other" bucket are omitted
 from matching so ordinary bank accounts and mortgages do not become ties.
 """
 
-try:
-    from scripts.donor_public import public_donor_data
-except ModuleNotFoundError:
-    from donor_public import public_donor_data
 
 import argparse
 from collections import defaultdict
@@ -590,10 +586,10 @@ def main():
     if out_dir:
         os.makedirs(out_dir, exist_ok=True)
         with open(os.path.join(out_dir, "index.json"), "w") as f:
-            json.dump(public_donor_data(index), f, **dump)
+            json.dump(index, f, **dump)
         for k, v in people.items():
             with open(os.path.join(out_dir, f"{k}.json"), "w") as f:
-                json.dump(public_donor_data(v), f, **dump)
+                json.dump(v, f, **dump)
         ties_by_donor = {
             "meta": {
                 "generated": date.today().isoformat(),
@@ -606,7 +602,7 @@ def main():
                        for name, rows in sorted(reverse.items())},
         }
         with open(os.path.join(out_dir, "ties-by-donor.json"), "w") as f:
-            json.dump(public_donor_data(ties_by_donor), f, **dump)
+            json.dump(ties_by_donor, f, **dump)
         recent_export = {
             "meta": {
                 "generated": date.today().isoformat(),
@@ -618,7 +614,7 @@ def main():
             "items": recent[:RECENT_LIMIT],
         }
         with open(os.path.join(out_dir, "recent.json"), "w") as f:
-            json.dump(public_donor_data(recent_export), f, **dump)
+            json.dump(recent_export, f, **dump)
         # Corrected source names can change an unmatched slug into a member ID.
         # Remove only obsolete person objects; leave metadata and unrelated files.
         for filename in os.listdir(out_dir):

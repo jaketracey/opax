@@ -95,23 +95,17 @@ test('party rankings for parliaments without party labels say so instead of rank
   assert.ok(factSheet([r]).notes.some((n) => /cannot rank these speeches by party/.test(n)));
 });
 
-test('donors not named are aggregated, never listed or shown as placeholders', async () => {
-  const graph = {
-    nodes: [
-      { id: 'party:Example Party', label: 'Example Party', kind: 'party' },
-      { id: 'donor:acme holdings pty ltd', label: 'Acme Holdings Pty Ltd', kind: 'donor', industry: 'property', aliases: [] },
-      { id: 'donor:withheld-1', label: 'Donor 1 (name withheld)', kind: 'donor', industry: 'individual', aliases: [] },
-    ],
-    edges: [
-      { source: 'donor:acme holdings pty ltd', target: 'party:Example Party', total: 5000, count: 2 },
-      { source: 'donor:withheld-1', target: 'party:Example Party', total: 9000, count: 1 },
-    ],
-  };
-  const r = await partyDonations({ kb: async () => ({}), asset: async () => graph }, { party: 'Example Party' });
-  assert.deepEqual(r.data.rows.map((x) => x.donor), ['Acme Holdings Pty Ltd']);
-  assert.equal(r.data.donors_not_named.label, 'Donors not named (1)');
-  const text = JSON.stringify(r) + JSON.stringify(factSheet([r]));
-  assert.doesNotMatch(text, /Jordan Quill|name withheld/);
+test('MCP money rows name uncertain disclosures without entity links and retain confident links',async()=>{
+ const reference={return_type:'AEC annual return',year:'2024-25',return_id:'FIXTURE-RETURN-1',url:'https://example.test/return/1'};
+ const nodes=[{id:'party:Example Party',label:'Example Party',kind:'party'},
+  {id:'donor:acme',label:'Acme Holdings Pty Ltd',kind:'donor',match:{confidence:1,method:'exact',href:'/subject/donor/Acme'},returnReferences:[reference]},
+  {id:'donor:alex',label:'EXAMPLE, ALEX',kind:'donor',match:{confidence:0.9,method:'rule',href:null},returnReferences:[reference]}];
+ const edges=nodes.slice(1).map((n,i)=>({source:n.id,target:'party:Example Party',total:(i+1)*5000,count:1}));
+ const result=await partyDonations({asset:async()=>({nodes,edges}),kb:async()=>({})},{party:'Example Party'});
+ assert.deepEqual(result.data.rows.map(row=>row.donor),['EXAMPLE, ALEX','Acme Holdings Pty Ltd']);
+ assert.equal(result.data.rows[0].href,null);assert.equal(result.data.rows[1].href,'/subject/donor/Acme');
+ assert.ok(result.data.rows.every(row=>row.return_reference.includes('FIXTURE-RETURN-1')));
+ assert.equal(Object.hasOwn(result.data,'donors_not_named'),false);
 });
 
 test('the cache key follows the question, CACHE_EPOCH and the model pin', async () => {

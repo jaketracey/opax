@@ -4,10 +4,6 @@
 Run after export_suppliers.py: python3 scripts/export_agencies.py
 Agency names remain separate as recorded; no assumed departmental succession.
 """
-try:
-    from scripts.donor_public import public_donor_data
-except ModuleNotFoundError:
-    from donor_public import public_donor_data
 
 import argparse
 import hashlib
@@ -75,7 +71,7 @@ def export_agencies(output):
     for path, data in [("agencies.json", directory), *[("agencies/" + k + ".json", v) for k, v in agencies.items()]]:
         target = output / path
         temporary = target.with_suffix(".json.tmp")
-        temporary.write_text(json.dumps(public_donor_data(data), ensure_ascii=False, allow_nan=False, separators=(",", ":")) + "\n")
+        temporary.write_text(json.dumps(data, ensure_ascii=False, allow_nan=False, separators=(",", ":")) + "\n")
         temporary.replace(target)
     print(f"Exported {len(agencies)} agencies, {sum(a['count'] for a in agencies.values())} contracts")
 

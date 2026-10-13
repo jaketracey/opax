@@ -18,9 +18,7 @@ const compile = async entry => {
   return import('data:text/javascript;base64,'+Buffer.from(compiled.outputFiles[0].text).toString('base64'));
 };
 const {renderSittingWeek: rawSittingWeek,renderSittingIndex,renderEstimates,hubPage} = await compile('../src/hubs.ts');
-import {tablePrivacyIndex} from './datatable-privacy.mjs';
-const tableIndex = await tablePrivacyIndex();
-const renderSittingWeek = (data, week, people, slugs, today, footer, query) => rawSittingWeek(data, week, people, slugs, today, footer, query, tableIndex.safe);
+const renderSittingWeek = (data, week, people, slugs, today, footer, query) => rawSittingWeek(data, week, people, slugs, today, footer, query);
 const period = calendar.periods.find(w => w.start === '2026-10-12');
 const fixtureWeek = deriveWeek(period,records.bills,records.divisions,calendar.updated);
 const data = {...calendar,snapshotDate:calendar.updated,billUpdated:'2026-10-04',latestFederalDivision:'2026-08-20',weeks:[fixtureWeek]};
@@ -161,46 +159,7 @@ test('hubs have their own sitemap type, record lastmods, canonical links and llm
   assert.match(sitemapFiles({hubs:[{path:'/sitting/2026-10-12',lastmod:fixtureWeek.lastmod}]}).files[0].body,/<lastmod>2026-10-15/);
   const llms=await readFile(new URL('crawl/llms.txt',root),'utf8');assert.match(llms,/https:\/\/opax.com.au\/sitting\)/);assert.match(llms,/https:\/\/opax.com.au\/estimates\/2026-10/);
 });
-test('offline build drops individual donor and politician fields even when source fixtures contain them',async()=>{
-  const dir=await mkdtemp(join(tmpdir(),'opax-hubs-'));const configs=join(dir,'config');
-  const sentinels={donor_links:[{name:'Private Donor Sentinel',party:'Named Politician Sentinel'}]};
-  const cfg={id:'2026-10',updated:'2026-10-10',committees:[{program:null,portfolios:[{name:'Finance',agencies:['Fixture Agency']}]}]};
-  const files={
-    'config/sitting-2026.json':calendar,'config/estimates-2026-10.json':cfg,
-    'corpus.json':{version:'2026-10-10'},
-    'bills/index.json':{generated_at:'2026-10-04T16:27:54Z',bills:records.bills},...Object.fromEntries(records.bills.map(b=>[`bills/${b.key}.json`,structuredClone(b)])),
-    'divisions/index.json':{divisions:records.divisions},...Object.fromEntries(records.divisions.map(d=>[`divisions/${d.slug}.json`,{...d,title:null} ])),
-    'agencies.json':{meta:{generated_at:'2026-10-03'},agencies:[{id:'a-fixture',name:'Fixture Agency',profile_path:'/agencies/fixture.json'}]},
-    'agencies/fixture.json':{...sentinels,contracts:[{id:'CN1',title:'Fixture contract',supplier:'Organisation',amount:20,published:'2026-10-02',...sentinels}]},
-    'graph/grants.federal.json':{meta:{generated:'2026-10-03'}},
-    'grants/federal/shard-00.json':{fixture:{id:'person:private-recipient',k:'individual',n:'Private Recipient Sentinel',...sentinels,grants:[{id:'GA1',ag:'Fixture Agency',s:'2026-10-01',v:10,n:'Award',...sentinels}]}},
-  };
-  files['bills/au-federal-senate.json'].portfolio='Fixture portfolio';
-  files['bills/au-federal-senate.json'].introduced='2026-10-15T23:59:00+11:00';
-  files['divisions/index.json'].divisions=structuredClone(records.divisions);
-  files['divisions/index.json'].divisions[1].date='2026-10-15T23:59:00+11:00';
-  files['divisions/index.json'].divisions.push({key:'federal-senate-outside-calendar',date:'2026-12-01'},{key:'nsw-outside-calendar',date:'2026-12-02'});
-  files['divisions/division-federal-reps-example.json'].date='2026-10-15T23:59:00+11:00';
-  try {
-    for (const [path,value] of Object.entries(files)) {await mkdir(dirname(join(dir,path)),{recursive:true});await writeFile(join(dir,path),JSON.stringify(value));}
-    await buildHubs(dir,configs);
-    const output=await readFile(join(dir,'hubs/estimates-2026-10.json'),'utf8');
-    assert.doesNotMatch(output,/Private Donor Sentinel|Named Politician Sentinel|Private Recipient Sentinel|donor_links/);
-    const e=JSON.parse(output);assert.equal(e.agencies[0].grants.total,10);assert.equal(e.agencies[0].grants.largest[0].recipient,'Recipient name withheld');
-    const index=JSON.parse(await readFile(join(dir,'hubs/index.json'),'utf8'));
-    assert.equal(index.snapshotDate,'2026-10-10');
-    assert.equal(index.latestFederalDivision,'2026-12-01');
-    assert.equal(index.pages.find(p=>p.path==='/estimates/2026-10').lastmod,'2026-10-10');
-    const w=index.weeks.find(w=>w.start==='2026-10-12');
-    assert.equal(w.divisions[0].title,'The 2D division title');
-    assert.equal(w.divisions.length,2);assert.equal(w.bills[1].portfolio,'Fixture portfolio');
-    for (const [file,value,expected] of [['agencies.json',{...files['agencies.json'],meta:{generated_at:'2026-10-12T18:00:00Z'}},'2026-10-12'],['graph/grants.federal.json',{meta:{generated:'2026-10-13T02:00:00Z'}},'2026-10-13']]) {
-      await writeFile(join(dir,file),JSON.stringify(value));await buildHubs(dir,configs);
-      const refreshed=JSON.parse(await readFile(join(dir,'hubs/index.json'),'utf8'));
-      assert.equal(refreshed.pages.find(p=>p.path==='/estimates/2026-10').lastmod,expected);
-    }
-  } finally {await rm(dir,{recursive:true,force:true});}
-});
+
 test('bad weeks return a real 404 with noindex; hubs keep SSR and remove SPA startup scripts',async()=>{
   const {default:worker}=await compile('../src/index.ts');
   const previous=globalThis.HTMLRewriter;

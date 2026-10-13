@@ -45,9 +45,8 @@ export async function buildHubs(root, configRoot = fileURLToPath(new URL('./hubs
     for (const recipient of Object.values(shard)) for (const g of recipient.grants || []) {
       const name = names.get(g.ag);
       if (!name) continue;
-      const privateRecipient = ['individual','person','undisclosed'].includes(recipient.k) || recipient.id?.startsWith('person:');
       agencyGrants.get(name).push({ id:g.id,value:g.v,title:g.n || g.pr || g.id,date:g.s,
-        recipient:privateRecipient ? 'Recipient name withheld' : recipient.n,
+        recipient:recipient.n,
         url:g.guid ? `https://www.grants.gov.au/Ga/Show/${encodeURIComponent(g.guid)}` : 'https://www.grants.gov.au/Ga/List',
         link_scope:g.guid ? 'award' : 'source_register' });
     }

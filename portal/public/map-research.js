@@ -1,5 +1,5 @@
-import {donorPrivacyIndex,donorNameWithheld} from './donor-entity.js?v=ebb2c972d5';
-import {donorsNotNamedDetail,withheldDonorTotals,unnamedDonorLabel} from './donor-views.js?v=77470b1d26';
+import {donorDisclosure,donorLookup,donorDisplayText,donorLabelHTML} from './donor-disclosure.js?v=e91ef740e5';
+import {loadDonorViewIndex} from './donor-views.js?v=e93169e00b';
 import { readMoneyFilters, moneyTotals, moneyRecordsCSV, moneyFlowType } from './money-records.js?v=ia-ux-20260908-2';
 import { shortMoney } from './format.js';
 const esc = value => String(value ?? '').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -28,11 +28,8 @@ export function mountMapResearch(container, data, options = {}) {
   function renderRows(){
     if(records.hidden)return;
     const nodes=new Map(current.nodes.map(n=>[n.id,n]));
-    const privacy=donorPrivacyIndex([current]);
-    const hidden=withheldDonorTotals(current.nodes,current.edges,privacy);
-    const edges=current.edges.filter(e=>[nodes.get(e.source),nodes.get(e.target)].every(n=>n && (n.kind!=='donor'||!donorNameWithheld(privacy,n.label)))).sort((a,b)=>b.total-a.total);
-    tbody.innerHTML=edges.slice(0,rowsShown).map(e=>`<tr><td>${labels[moneyFlowType(e,nodes)] || 'Record'}</td><td>${esc(nodes.get(e.source)?.label)}</td><td>${esc(nodes.get(e.target)?.label)}</td><td>${exactMoney(e.total)}</td><td>${esc(e.count)}</td><td>${esc(e.firstYear || 'Undated')}${e.lastYear && e.lastYear!==e.firstYear?'–'+e.lastYear:''}</td><td><button class="text-link" type="button" data-focus="${esc(e.target)}">Focus in map</button></td></tr>`).join('');
-    if(hidden.count)tbody.insertAdjacentHTML('beforeend',`<tr><td>Political receipts</td><td>${`<details class="donor-aggregate"><summary>${unnamedDonorLabel(hidden.count)}</summary><p>${donorsNotNamedDetail}</p></details>`}</td><td>Selected parties</td><td>${exactMoney(hidden.amount)}</td><td colspan=3>Names withheld</td></tr>`);
+    const edges=[...current.edges].sort((a,b)=>b.total-a.total);
+    tbody.innerHTML=edges.slice(0,rowsShown).map(e=>`<tr><td>${labels[moneyFlowType(e,nodes)] || 'Record'}</td><td>${nodes.get(e.source)?.kind==='donor'?donorLabelHTML(nodes.get(e.source)):esc(nodes.get(e.source)?.label)}</td><td>${nodes.get(e.target)?.kind==='donor'?donorLabelHTML(nodes.get(e.target)):esc(nodes.get(e.target)?.label)}</td><td>${exactMoney(e.total)}</td><td>${esc(e.count)}</td><td>${esc(e.firstYear || 'Undated')}${e.lastYear && e.lastYear!==e.firstYear?'–'+e.lastYear:''}</td><td><button class="text-link" type="button" data-focus="${esc(e.target)}">Focus in map</button></td></tr>`).join('');
     records.querySelector('[data-more]').hidden=edges.length<=rowsShown;
   }
   function update(graph, nextFilters, years){

@@ -137,14 +137,17 @@ export async function refreshFonts({ publicRoot = PUBLIC, fetcher = honestFetch 
  *  agencies.js and suppliers.js import each other: stamp the agencies → suppliers
  *  edge only, then app.js. Keep the reverse edge hand-versioned to avoid a hash cycle. */
 export const MODULE_STAMPS = [
+  ...['agencies.js','donor-views.js','ledger.js','quiz.js','money-journeys-data.js','map-research.js','home.js','wordsdollars.js','money-explain.js','grant-recipient.js','grants.js','growth-modules.js','supplier-growth.js'].map(file=>[file,'donor-disclosure.js']),
+  ['donor-disclosure.js','donor-entity.js'],
+  ['money-journeys-data.js','donor-views.js'],['map-research.js','donor-views.js'],
   // ⋯: app.js draws and runs it; electorates.js draws it.
   ['app.js', 'page-actions-menu.js'], ['electorates.js', 'page-actions-menu.js'],
   ['datatable.js', 'server-csv.js'],
   ['datatable-workbench.js', 'datatable.js'],
   ['vote-tables.js', 'labels.js'], ['vote-tables.js', 'division-markdown.js'], ['vote-tables.js', 'datatable.js'],
-  ['donor-views.js', 'donor-entity.js'], ['wordsdollars.js','donor-views.js'], ['quiz.js','donor-views.js'], ['ledger.js', 'donor-views.js'], ['home.js', 'donor-views.js'],
-  ['ledger.js', 'donor-entity.js'], ['quiz.js', 'donor-entity.js'], ['money-journeys-data.js', 'donor-entity.js'], ['map-research.js','donor-entity.js'], ['map-research.js','donor-views.js'],
-  ['datatable.js', 'donor-entity.js'], ['datatable.js', 'donor-views.js'],
+  ['donor-views.js', 'donor-entity.js'], ['wordsdollars.js','donor-views.js'], ['quiz.js','donor-views.js'],  ['home.js', 'donor-views.js'],
+      ['map-research.js','donor-views.js'],
+
   ['datatable.js', 'datatable-query.js'],
   ['growth-modules.js', 'donor-entity.js'], ['growth-modules.js', 'labels.js'], ['growth-modules.js', 'sponsor-person.js'],
   ['supplier-growth.js', 'growth-modules.js'], ['supplier-growth.js', 'labels.js'],

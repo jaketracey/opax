@@ -17,16 +17,7 @@ const exactOrganisationDonors=(supplier,donors)=>core.exactOrganisationDonors(su
 const donationRegisterHTML=(supplier,donors)=>core.donationRegisterHTML(supplier,donors,allow);
 const name='Alex Example';
 const votes=[{name:'Old Bill',date:'2025-01-01'},{name:'New Bill',date:'2026-10-08'},{name:'New Bill',date:'2026-10-07'},{name:'Undated Bill'}];
-test('missing and stale approvals suppress seeds and model text',()=>{
- const question=`What has ${name} said about Housing?`;
- const privacy=core.approvedModulePrivacy({approved:[name,question]});
- assert.equal(core.questionsHTML([question],'person','',privacy).includes('/ask?'),true);
- assert.equal(core.questionsHTML([question+' Updated'],'person','',privacy),'');
- assert.equal(core.questionsHTML([question],'person'),'');
- assert.equal(core.askBlockHTML({name,pageType:'person',seed:question}),'');
- assert.equal(core.approvedBillSummary({sentences:['Unapproved model text.']}),null);
- assert.deepEqual(core.approvedBillSummary({sentences:[question,'Unapproved model text.']},privacy).sentences,[question]);
-});
+
 test('person questions require counted topics, dated bill votes and actual interests',()=>{
  assert.deepEqual(personQuestions({name}),[]);
  assert.deepEqual(personQuestions({name,topics:[{name:'Housing',count:0}],votes:[{name:'No date'}],interests:{total:0,buckets:{}}}),[]);

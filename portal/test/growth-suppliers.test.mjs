@@ -64,7 +64,7 @@ test('published suppliers rejected by the donor classifier never get donor names
  assert.ok(rejected.size>0);
  const donors=[...rejected.values()].map(row=>({kind:'donor',id:'donor:'+row.id,label:row.name,abn:'12345678901'}));
  const prior=globalThis.fetch;
- globalThis.fetch=async url=>{assert.equal(url,'/growth/organisation-donors.json');return {ok:true,json:async()=>({donors})}};
+ globalThis.fetch=async url=>{assert.equal(url,'/growth/donors.json');return {ok:true,json:async()=>({donors})}};
  try {
   for(const row of rejected.values())assert.deepEqual(await supplierDonations({...row,abn:'12345678901',donor_links:[{id:'donor:'+row.id,url:'/subject/donor/'+encodeURIComponent(row.name),method:'abn'}]},{signal:new AbortController().signal}),{html:'',links:[]});
  } finally {globalThis.fetch=prior}

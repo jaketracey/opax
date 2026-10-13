@@ -1,4 +1,4 @@
-import {applyQuery, dataTableHTML, mountDataTable, parseQuery, serializeQuery, toCSV} from './datatable.js?v=808270977b';
+import {applyQuery, dataTableHTML, mountDataTable, parseQuery, serializeQuery, toCSV} from './datatable.js?v=3e6200bc94';
 import {workbenchConfig, workbenchRows} from './datatable-workbench-data.js';
 
 const nativeFetch = window.fetch.bind(window);
@@ -8,9 +8,9 @@ window.fetch = async (input, options = {}) => {
   if (url.pathname !== '/__fixtures/table/receipts') return nativeFetch(input,options);
   if (options.signal?.aborted) throw new DOMException('Aborted','AbortError');
   const query = parseQuery(url.searchParams);
-  const page = applyQuery(workbenchRows,{...workbenchConfig,privacyCheck:()=>true},query);
+  const page = applyQuery(workbenchRows,{...workbenchConfig},query);
   if (url.searchParams.get('format') === 'csv') {
-    const all = applyQuery(workbenchRows,{...workbenchConfig,privacyCheck:()=>true},{...query,page:1,pageSize:50000});
+    const all = applyQuery(workbenchRows,{...workbenchConfig},{...query,page:1,pageSize:50000});
     return new Response(toCSV(all.rows,workbenchConfig),{headers:{'content-type':'text/csv'}});
   }
   return Response.json(page);
@@ -28,7 +28,7 @@ function show(example, reset = false) {
   }
   const config = example === 'server' ? {...workbenchConfig,rows:undefined,source:{endpoint:'/__fixtures/table/receipts',params:{dataset:'fixture'}}} : workbenchConfig;
   // Keep the first server page visible while hydration fetches the stub endpoint.
-  if (reset) host.innerHTML = dataTableHTML({...config,privacyCheck:()=>true},applyQuery(workbenchRows,{...workbenchConfig,privacyCheck:()=>true},{}));
+  if (reset) host.innerHTML = dataTableHTML({...config},applyQuery(workbenchRows,{...workbenchConfig},{}));
   mounted = mountDataTable(host,config);
   for (const button of document.querySelectorAll('[data-example]')) button.setAttribute('aria-pressed',String(button.dataset.example === example));
   document.querySelector('#example-note').textContent = example === 'server' ? 'Server mode · fixture fetch' : 'Client mode · fixture records';

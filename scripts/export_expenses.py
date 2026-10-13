@@ -50,7 +50,7 @@ own (the CC BY 4.0 notice on ipea.gov.au covers the website, not the data).
 import sys as _donor_sys
 from pathlib import Path as _DonorPath
 _donor_sys.path.insert(0, str(_DonorPath(__file__).resolve().parents[1]))
-from scripts.donor_public import public_donor_data
+
 import os
 import json
 import re
@@ -229,7 +229,7 @@ def main():
         "names": names,
         "people": dict(sorted(out_people.items())),
     }
-    blob = json.dumps(public_donor_data(out), ensure_ascii=False, separators=(",", ":")).encode("utf-8")
+    blob = json.dumps(out, ensure_ascii=False, separators=(",", ":")).encode("utf-8")
     sys.stdout.buffer.write(blob)
 
     print(f"people={len(out_people)} rows={rows} quarters={len(periods)} bytes={len(blob)}", file=sys.stderr)

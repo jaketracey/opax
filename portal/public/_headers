@@ -189,6 +189,9 @@
 /division-markdown.js
   ! Cache-Control
   Cache-Control: public, max-age=31536000, immutable
+/donor-disclosure.js
+  ! Cache-Control
+  Cache-Control: public, max-age=31536000, immutable
 /donor-entity.js
   ! Cache-Control
   Cache-Control: public, max-age=31536000, immutable

@@ -1,7 +1,7 @@
+import {donorDisclosure,returnReference,type DonorDisclosureRecord} from '../public/donor-disclosure.js'
 import {financialYear, receiptPeriodQuery, separateReceiptYears} from './receipt-period'
-import {withholdIndividualDonors} from '../public/donor-entity.js'
 
-type Node = { id:string; label:string; kind:string; industry?:string; group?:string; aliases?:string[] }
+type Node = DonorDisclosureRecord & { id:string; label:string; kind:string; industry?:string; group?:string; aliases?:string[] }
 type Edge = { source:string; target:string; total:number; count:number; flow?:string; grant?:boolean; firstYear?:number; lastYear?:number; byYear?:Record<string,number[]> }
 export type ReceiptGraph = { meta:Record<string,unknown>; nodes:Node[]; edges:Edge[] }
 export function isReceiptGraph(data:Record<string,unknown>): data is Record<string,unknown>&ReceiptGraph {
@@ -56,7 +56,7 @@ const companyName = (name:string) => normal(name).replace(/\s+(?:(?:pty|propriet
 export function receiptDonorChoices(graph:ReceiptGraph, fragment:string):Node[] {
   const name=normal(fragment)
   if(name.length<4 || name.split(' ').length>8)return []
-  return graph.nodes.filter(n=>n.kind==='donor' && [n.label,...(n.aliases||[])].some(label=>normal(label)===name || normal(label).startsWith(name+' ')))
+  return graph.nodes.filter(n=>n.kind==='donor' && [n.label,...(n.aliases||[]),...(n.lookup_names||[])].some(label=>normal(label)===name || normal(label).startsWith(name+' ')))
     .sort((a,b)=>a.label.localeCompare(b.label,'en-AU')).slice(0,6)
 }
 
@@ -66,7 +66,7 @@ function exactReceiptDonors(graph:ReceiptGraph, query:string) {
   const q=' '+query+' ',matches:{node:Node;phrase:string;start:number;end:number}[]=[]
   for(const node of donors) {
     const short=companyName(node.label)
-    const phrases=new Set([normal(node.label),...(node.aliases||[]).map(normal),...(short.length>=5&&shortCounts.get(short)===1?[short]:[])])
+    const phrases=new Set([normal(node.label),...[...(node.aliases||[]),...(node.lookup_names||[])].map(normal),...(short.length>=5&&shortCounts.get(short)===1?[short]:[])])
     for(const phrase of phrases) {
       if(!phrase)continue
       let start=q.indexOf(' '+phrase+' ')
@@ -79,7 +79,7 @@ function exactReceiptDonors(graph:ReceiptGraph, query:string) {
     const same= specific.filter(m=>m.start===match.start&&m.end===match.end)
     if(new Set(same.map(m=>m.node.id)).size>1)return {nodes:[],ambiguous:match.phrase}
     // A short alias shared with another organisation's name needs a choice.
-    if(match.phrase!==normal(match.node.label) && receiptDonorChoices(graph,match.phrase).some(n=>n.id!==match.node.id))return {nodes:[],ambiguous:match.phrase}
+    if(receiptDonorChoices(graph,match.phrase).some(n=>n.id!==match.node.id))return {nodes:[],ambiguous:match.phrase}
   }
   // A party word inside an identified organisation is part of the donor's
   // name. Mask that occurrence only; a separate recipient mention remains.
@@ -124,18 +124,13 @@ export function receiptJurisdiction(query:string): string | null {
   return ['federal','qld','vic','tas'].includes(jur) ? jur : null
 }
 
-/** Ordinary questions read one graph. If region words conflict, a complete
- * donor name may explain one of them ("The Federal Group in Tasmania").
- * Check only named, supported regions and require the remaining words to
- * identify that same graph. Never merge jurisdictions or guess from totals.
- * Every answer, tool and choice list reads the graph with unconfirmed donors
- * withheld (public/donor-entity.js): a name typed by the reader is not matched. */
+
 export async function receiptGraphForQuestion(query:string, load:(file:string)=>Promise<ReceiptGraph|null>, state?:string) {
   const direct=state || receiptJurisdiction(query)
   const read=async(jurisdiction:string)=>{
     const file='/graph/'+(jurisdiction==='federal'?'money.json':`money.${jurisdiction}.json`)
     const graph=await load(file)
-    return graph?{graph:withholdIndividualDonors(graph),file,jurisdiction}:null
+    return graph?{graph:(graph),file,jurisdiction}:null
   }
   if(direct&&!state&&direct!=='federal') {
     // A region word inside a complete donor name ("Queensland Nickel Pty Ltd") is
@@ -152,7 +147,8 @@ export async function receiptGraphForQuestion(query:string, load:(file:string)=>
     if(!candidate)continue
     const donor=exactReceiptDonors(candidate.graph,normal(query))
     const remaining=mentionedReceiptRegions(donor.partyQuery??query)
-    if(donor.ambiguous || !donor.nodes.length || remaining.length!==1 || remaining[0]!==jurisdiction)continue
+    const regionMatch=remaining.length===1 && remaining[0]===jurisdiction || jurisdiction==='federal' && remaining.length===0
+    if(donor.ambiguous || !donor.nodes.length || !regionMatch)continue
     if(selected)return null
     selected=candidate
   }
@@ -201,10 +197,10 @@ export function receiptAnswer(graph:ReceiptGraph, query:string, jurisdiction:str
   if(filters.from && /^\d{4}$/.test(filters.from)) from=Number(filters.from)
   if(filters.to && /^\d{4}$/.test(filters.to)) to=Number(filters.to)
   const donorIds=new Set(donors.map(n=>n.id)),partyIds=new Set(parties.map(n=>n.id))
-  const totals=new Map<string,{id:string,name:string,total_aud:number,receipts:number}>()
-  const donorTotals=new Map<string,{id:string,name:string,total_aud:number,receipts:number}>()
-  const industryTotals=new Map<string,{id:string,name:string,total_aud:number,receipts:number}>()
-  const flows: {donor_id:string,donor:string,party_id:string,party:string,total_aud:number,receipts:number}[]=[]
+  const totals=new Map<string,{id:string,name:string,href?:string|null,return_reference?:string,returnReferences?:unknown[],total_aud:number,receipts:number}>()
+  const donorTotals=new Map<string,{id:string,name:string,href?:string|null,return_reference?:string,returnReferences?:unknown[],total_aud:number,receipts:number}>()
+  const industryTotals=new Map<string,{id:string,name:string,href?:string|null,return_reference?:string,returnReferences?:unknown[],total_aud:number,receipts:number}>()
+  const flows: {donor_id:string,donor:string,donor_href:string|null,return_reference:string,party_id:string,party:string,total_aud:number,receipts:number}[]=[]
   let cents=0,count=0,first=Infinity,last=-Infinity,matching=0
   for(const edge of graph.edges) {
     const donor=nodes.get(edge.source),party=nodes.get(edge.target)
@@ -227,13 +223,13 @@ export function receiptAnswer(graph:ReceiptGraph, query:string, jurisdiction:str
     matching++;cents+=amount;count+=receipts
     const previous=totals.get(party.id)||{id:party.id,name:party.label,total_aud:0,receipts:0}
     previous.total_aud+=amount/100;previous.receipts+=receipts;totals.set(party.id,previous)
-    const donorTotal=donorTotals.get(donor.id)||{id:donor.id,name:donor.label,total_aud:0,receipts:0}
+    const donorTotal=donorTotals.get(donor.id)||{id:donor.id,name:donor.label,href:donorDisclosure(donor).href,return_reference:returnReference((donor.returnReferences || []).find(ref=>!from || Number(String(ref.year).slice(0,4))>=from && (!to || Number(String(ref.year).slice(0,4))<=to)) || donor.returnReferences?.[0] || {}),total_aud:0,receipts:0}
     donorTotal.total_aud+=amount/100;donorTotal.receipts+=receipts;donorTotals.set(donor.id,donorTotal)
     if(donor.industry) {
       const industryTotal=industryTotals.get(donor.industry)||{id:donor.industry,name:donor.industry.replaceAll('_',' '),total_aud:0,receipts:0}
       industryTotal.total_aud+=amount/100;industryTotal.receipts+=receipts;industryTotals.set(donor.industry,industryTotal)
     }
-    flows.push({donor_id:donor.id,donor:donor.label,party_id:party.id,party:party.label,total_aud:amount/100,receipts})
+    flows.push({donor_id:donor.id,donor:donor.label,donor_href:donorDisclosure(donor).href,return_reference:returnReference((donor.returnReferences || []).find(ref=>!from || Number(String(ref.year).slice(0,4))>=from && (!to || Number(String(ref.year).slice(0,4))<=to)) || donor.returnReferences?.[0] || {}),party_id:party.id,party:party.label,total_aud:amount/100,receipts})
   }
   const params=new URLSearchParams({jur:jurisdiction,type:'receipts'})
   if(industries.length===1)params.set('industry',industries[0])

@@ -1,4 +1,5 @@
-import {donorNameWithheld,loadDonorViewIndex,donorAggregateDetail,unnamedDonorLabel} from './donor-views.js?v=77470b1d26';
+import {donorDisclosure,donorLookup,donorDisplayText,donorLabelHTML} from './donor-disclosure.js?v=e91ef740e5';
+import {loadDonorViewIndex} from './donor-views.js?v=e93169e00b';
 import {subjectUrl} from './canonical-urls.js?v=225d5915ea';
 /**
  * OPAX Who gets the grants — every published grant award, resolved to the
@@ -802,8 +803,8 @@ function actionRow () {
 // ---------------------------------------------------------------------------
 
 export function mountGrants (container, opts = {}) {
-  let privacy={organisations:new Set(),withheld:new Set()};
-  const privacyReady=loadDonorViewIndex().then(index=>{privacy=index});
+  let donorIndex=new Map();
+  const donorsReady=loadDonorViewIndex().then(index=>{donorIndex=index});
   injectStyles()
   const subjectHash = opts.subjectHash || ((kind, label) => typeof label === 'string' && label.trim() && !/^(null|undefined)$/i.test(label.trim()) ? subjectUrl(kind,label) : null)
   const searchHash = opts.searchHash || ((q) => `/ask?view=search&q=${encodeURIComponent(q)}`)
@@ -1387,7 +1388,7 @@ export function mountGrants (container, opts = {}) {
   }
 
   async function loadDetail (r) {
-    await privacyReady
+    await donorsReady
     const shard = `${state.jur}/shard-${String(r.sh).padStart(2, '0')}`
     let bundle = detailCache.get(shard)
     if (!bundle) {
@@ -1495,13 +1496,14 @@ export function mountGrants (container, opts = {}) {
     const box = el('div', 'gr-donor')
     if (d.d) {
       const p = el('p')
-      const hidden=donorNameWithheld(privacy,d.d.n)
+      const disclosed=donorIndex.get(d.d.n.toLowerCase()) || {label:d.d.n,returnReferences:[{return_type:'AEC disclosure return',year:d.d.y0,url:'https://transparency.aec.gov.au/'}]};
+      box.appendChild(el('p',null,donorDisplayText(disclosed)));
       if(!hidden) p.append(document.createTextNode('Listed as '), link(subjectHash('donor', d.d.n), d.d.n))
       if(!hidden) p.append(document.createTextNode(d.d.m === 'abn' ? ' (matched by ABN).' : d.d.m === 'abr_name' ? ' (matched through a registered business name).' : ' (matched by name).'))
       box.appendChild(p)
       const blocs = donorBlocs(d.d, data.meta.blocs)
-      if (d.d.aec > 0 || hidden) {
-        box.appendChild((hidden ? donorAggregateDetail : (text)=>el('p',null,text))(`AEC returns: ${hidden ? unnamedDonorLabel(1)+' · ' : ''}${fmtMoney(d.d.aec)} disclosed${d.d.y0 ? `, ${d.d.y0}–${d.d.y1 || d.d.y0}` : ''}`))
+      if (d.d.aec > 0) {
+        box.appendChild(((text)=>el('p',null,text))(`AEC returns: ${''}${fmtMoney(d.d.aec)} disclosed${d.d.y0 ? `, ${d.d.y0}–${d.d.y1 || d.d.y0}` : ''}`))
         const ul = el('ul', 'gr-partylist')
         for (const [party, v] of Object.entries(d.d.p || {}).sort((a, b) => b[1] - a[1]).slice(0, 6)) {
           const li = el('li')
@@ -1511,7 +1513,7 @@ export function mountGrants (container, opts = {}) {
         box.appendChild(ul)
       }
       for (const [jur, st] of Object.entries(d.d.st || {})) {
-        box.appendChild((hidden ? donorAggregateDetail : (text)=>el('p',null,text))(`${STATE_REGISTERS[jur] || jur}: ${hidden ? unnamedDonorLabel(1)+' · ' : ''}${fmtMoney(st.t)} in ${NUM.format(st.c)} gifts`))
+        box.appendChild(((text)=>el('p',null,text))(`${STATE_REGISTERS[jur] || jur}: ${''}${fmtMoney(st.t)} in ${NUM.format(st.c)} gifts`))
         const ul = el('ul', 'gr-partylist')
         for (const [party, v] of Object.entries(st.p || {}).sort((a, b) => b[1] - a[1]).slice(0, 4)) {
           const li = el('li')
@@ -1550,7 +1552,7 @@ export function mountGrants (container, opts = {}) {
     }
     const links = actionRow()
     links.appendChild(action(link(searchHash(`"${d.n}"`, {}), 'Search the record for them'), 'primary'))
-    if (d.d && !donorNameWithheld(privacy,d.d.n)) links.appendChild(action(link(subjectHash('donor', d.d.n), 'Donor entry'), 'quiet'))
+    if(d.d){const href=donorDisclosure(donorIndex.get(d.d.n.toLowerCase()) || {label:d.d.n}).href;if(href)links.appendChild(action(link(href,'Donor entry'),'quiet'))}
     const src = action(link(data.meta.source_url, state.jur === 'qld' ? 'Source: data.qld.gov.au' : 'Source: GrantConnect'), 'quiet')
     src.target = '_blank'
     src.rel = 'noopener'
@@ -2269,7 +2271,7 @@ export function mountGrants (container, opts = {}) {
   }
 
   async function load (jur = state.jur) {
-    await privacyReady
+    await donorsReady
     state.jur = JURISDICTIONS[jur] ? jur : 'federal'
     for (const b of root.querySelectorAll('.gr-jur')) b.setAttribute('aria-pressed', b.dataset.jur === state.jur ? 'true' : 'false')
     const token = ++loadSeq

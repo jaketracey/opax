@@ -1,10 +1,9 @@
+import {donorDisclosure,donorDisplayText} from '../public/donor-disclosure.js';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { runInNewContext } from 'node:vm';
 import ts from 'typescript';
-import {donorPrivacyIndex,donorNameWithheld} from '../public/donor-entity.js';
-import {donorAggregateDetail,isUnnamedAggregate,withheldDonorTotals,unnamedDonorLabel} from '../public/donor-views.js';
 import { filterMoneyEdges, readMoneyFilters } from '../public/money-records.js';
 
 const read = name => readFileSync(new URL(`../graph/${name}.ts`, import.meta.url), 'utf8');
@@ -14,10 +13,10 @@ const probe = engine.slice(engine.indexOf('export function webglAvailable'), eng
 test('capability checks require WebGL 2 and release every temporary context', () => {
   const kinds=[]; let released=0;
   const context={getExtension:name=>{assert.equal(name,'WEBGL_lose_context');return {loseContext:()=>released++}}};
-  const available=runInNewContext(`${transpile(probe)}; webglAvailable`,{document:{createElement:()=>({getContext:kind=>{kinds.push(kind);return context}})}});
+  const available=runInNewContext(`${transpile(probe)}; webglAvailable`,{donorDisclosure,donorDisplayText,document:{createElement:()=>({getContext:kind=>{kinds.push(kind);return context}})}});
   assert.equal(available(),true); assert.equal(available(),true);
   assert.deepEqual(kinds,['webgl2','webgl2']); assert.equal(released,2);
-  const unavailable=runInNewContext(`${transpile(probe)}; webglAvailable`,{document:{createElement:()=>({getContext:kind=>kind==='webgl2'?null:context})}});
+  const unavailable=runInNewContext(`${transpile(probe)}; webglAvailable`,{donorDisclosure,donorDisplayText,document:{createElement:()=>({getContext:kind=>kind==='webgl2'?null:context})}});
   assert.equal(unavailable(),false);
 });
 test('a graphics interruption retains the canvas and restores a fresh frame', () => {
@@ -77,7 +76,7 @@ test('desktop selection keeps the quiet focus nudge',()=>{
 
 const windowBlock=adapter.slice(adapter.indexOf('export function windowFigures'),adapter.indexOf('export function buildGraph',adapter.indexOf('export function windowFigures')));
 const fallback=read('connection-fallback').replace(/^import .*\n/gm,'').replaceAll('export function','function');
-const {connectionRows,mountConnectionFallback}=runInNewContext(`${transpile(windowBlock.replace('export ',''))}\n${transpile(fallback)}; ({connectionRows,mountConnectionFallback})`,{donorPrivacyIndex,donorNameWithheld,donorAggregateDetail,isUnnamedAggregate,withheldDonorTotals,unnamedDonorLabel,URLSearchParams,filterMoneyEdges,readMoneyFilters,formatMoney:n=>`$${n}`,document:{createElement:tag=>element(tag)}});
+const {connectionRows,mountConnectionFallback}=runInNewContext(`${transpile(windowBlock.replace('export ',''))}\n${transpile(fallback)}; ({connectionRows,mountConnectionFallback})`,{donorDisclosure,donorDisplayText,URLSearchParams,filterMoneyEdges,readMoneyFilters,formatMoney:n=>`$${n}`,document:{createElement:tag=>element(tag)}});
 function element(tag='div') { return {tagName:tag,children:[],style:{},classList:{remove(){}},append(...items){this.children.push(...items)},replaceChildren(){this.children=[]},setAttribute(){},addEventListener(name,fn){this[name]=fn},remove(){this.removed=true}}; }
 const data={nodes:[{id:'hub',kind:'grantor',flow:'contracts',label:'Contracts'},{id:'a',kind:'donor',label:'Recipient A Pty Ltd'},{id:'p',kind:'party',label:'Party'}],edges:[
   {source:'hub',target:'a',total:100,count:2,byYear:{2022:[40,1],2023:[60,1]}},

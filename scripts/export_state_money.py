@@ -53,10 +53,11 @@ its sibling; the shared constants below are a deliberate copy of
 export_money_graph.py and must be kept in step with it.
 """
 
+
 try:
-    from scripts.donor_public import public_donor_data
+    from scripts.donor_disclosure import attach_donor_disclosures
 except ModuleNotFoundError:
-    from donor_public import public_donor_data
+    from donor_disclosure import attach_donor_disclosures
 
 import os
 import json
@@ -896,7 +897,7 @@ def main() -> None:
         "nodes": nodes,
         "edges": edges,
     }
-    json.dump(public_donor_data(out), sys.stdout, ensure_ascii=False, separators=(",", ":"))
+    json.dump(attach_donor_disclosures(db,out,jur), sys.stdout, ensure_ascii=False, separators=(",", ":"))
     sys.stdout.write("\n")
 
 

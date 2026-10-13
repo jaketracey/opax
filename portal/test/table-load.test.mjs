@@ -3,7 +3,6 @@ import assert from 'node:assert/strict';
 import {readFile} from 'node:fs/promises';
 import {isOrganisationDonor} from '../public/donor-entity.js';
 import {isOrganisationRecipient} from '../src/table-recipient.mjs';
-import {identityVariants,identityCandidates} from '../src/table-identities.mjs';
 import {tableDatabase} from './table-d1-harness.mjs';
 import {TABLE_DATASETS} from '../src/table-datasets.mjs';
 import {tableSchema} from '../../scripts/table-schema.mjs';
@@ -31,11 +30,4 @@ test('the original D1 schema upgrades to the typed record projections',async()=>
     }
     assert.equal((tableSchema().match(/USING fts5/g)||[]).length,10);
   } finally {await local.close();}
-});
-test('private identifier variants are derived from exports and cover spaced and encoded forms',async()=>{
-  const files=JSON.parse(await readFile(new URL('../public/suppliers.json',import.meta.url))).suppliers;
-  const supplier=files.find(s=>s.abn);const value=String(supplier.abn),normal=value.replace(/\D/g,'');
-  assert.ok(identityVariants(value).includes(normal));
-  assert.ok(identityCandidates(normal.split('').join(' '),[1,11]).has(normal));
-  const encoded=encodeURIComponent(org.label);assert.ok(identityCandidates(encoded, [org.label.toLowerCase().replace(/[^a-z0-9]+/g,' ').trim().split(' ').length]).has(identityVariants(org.label)[0]));
 });

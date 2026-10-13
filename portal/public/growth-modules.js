@@ -1,26 +1,14 @@
+import {donorDisclosure,donorLabelHTML} from './donor-disclosure.js?v=e91ef740e5';
 /* Record-based landing modules. No generated answers or guessed identities. */
 import { shortDate } from './format.js';
-import { isOrganisationDonor } from './donor-entity.js?v=ebb2c972d5';
+import { isOrganisationDonor } from './donor-entity.js?v=3fd3e51b56';
 export { isOrganisationDonor };
 import { sourceLineHTML } from './labels.js?v=fc03aa14cf';
 import { sponsorPerson, sponsorKey } from './sponsor-person.js?v=74d9a1f8cf';
 const esc = value => String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const text = value => typeof value === 'string' ? value.trim() : '';
-const deny = () => true;
-/** Only text approved at build time by main's withheld-name detector is published.
- * Missing or stale approvals fail closed; the withheld set never reaches the client. */
-export function approvedModulePrivacy(data) {
-  const approved = new Set(data?.approved || []);
-  return (...texts) => texts.some(value => text(value) && !approved.has(value));
-}
-const privacyFiles = new Map();
-export async function loadModulePrivacy(kind, identity) {
-  const path = await growthSummaryPath('privacy/'+kind,identity);
-  if (!privacyFiles.has(path)) privacyFiles.set(path,fetch(path,{cache:'no-cache'}).then(r=>r.ok?r.json():null).catch(()=>null));
-  return approvedModulePrivacy(await privacyFiles.get(path));
-}
 export async function loadModuleDonors(signal) {
-  return await fetch('/growth/organisation-donors.json',{signal,cache:'no-cache'}).then(r=>r.ok?r.json():null).catch(()=>null) || {donors:[],approved:[]};
+  return await fetch('/growth/donors.json',{signal,cache:'no-cache'}).then(r=>r.ok?r.json():null).catch(()=>null) || {donors:[]};
 }
 export const ASSOCIATION_NOTE = 'An association does not prove influence.';
 export const correctionHTML = () => '<p class="growth-correction"><a href="/support#support-report">Report a data correction</a><span>Response target: 48 hours.</span></p>';
@@ -49,15 +37,14 @@ export function summaryWrittenHTML(summary = {}) {
   const date = shortDate(day);
   return `<p class="fineprint">Summary written <time datetime="${esc(day)}">${esc(date)}</time>.</p>`;
 }
-export function approvedBillSummary(summary, privacy = deny) {
+export function approvedBillSummary(summary) {
   if (!summary) return null;
   const result = {...summary};
-  for (const key of ['sentences', 'changes']) result[key] = (summary[key] || []).filter(t => text(t) && !privacy(t));
-  for (const key of ['affected', 'attribution', 'describes_version']) if (privacy(summary[key])) result[key] = '';
+  for (const key of ['sentences', 'changes']) result[key] = (summary[key] || []).filter(t=>text(t));
   return result.sentences.length || result.changes.length || result.affected ? result : null;
 }
 /** Counted topics only; a topic inferred from a title is not a most-frequent topic. */
-export function personQuestions({name, topics = [], votes = [], bills = [], interests = null, privacy = deny} = {}) {
+export function personQuestions({name, topics = [], votes = [], bills = [], interests = null} = {}) {
   if (!text(name)) return [];
   const questions = [];
   const topic = [...topics].filter(t => text(t.name) && Number(t.count)>0).sort((a,b)=>Number(b.count)-Number(a.count)||a.name.localeCompare(b.name))[0];
@@ -73,9 +60,9 @@ export function personQuestions({name, topics = [], votes = [], bills = [], inte
     questions.push(suggestion(`How did ${name} vote on ${latest.name}?`,`How did ${name} vote on ${short}?`));
   }
   if (Number(interests?.total)>0 && interests?.buckets && Object.values(interests.buckets).some(b=>Number(b.count)>0)) questions.push(suggestion(`What interests has ${name} declared?`));
-  return questions.filter(q=>!privacy(q.question,q.label));
+  return questions;
 }
-export function billQuestions(bill = {}, people = [], privacy = deny) {
+export function billQuestions(bill = {}, people = []) {
   const name = text(bill.title) || text(bill.short_title);
   if (!name) return [];
   const short = text(bill.short_title) || name;
@@ -85,7 +72,7 @@ export function billQuestions(bill = {}, people = [], privacy = deny) {
   if (sponsor && (bill.speeches || []).some(s=>text(s.slug) && [sponsor.name,sponsor.full].filter(Boolean).some(n=>sponsorKey(n)===sponsorKey(s.speaker)))) {
     questions.push(suggestion(`What has ${sponsor.name} said about the ${name}?`,`What has ${sponsor.name} said about the ${short}?`));
   }
-  return questions.filter(q=>!privacy(q.question,q.label)).slice(0,2);
+  return questions.slice(0,2);
 }
 /** Only the drawn label is shortened; Ask receives the complete question. */
 export function questionLabel(value, limit = 100) {
@@ -96,8 +83,8 @@ export function questionLabel(value, limit = 100) {
 }
 const suggestion = (question,label=question) => ({question,label:questionLabel(label)});
 const questionKey = value => text(value).replace(/\s+/g,' ').toLowerCase();
-export function askBlockHTML({name = '', bill = null, questions = [], pageType, seed = '', privacy = deny} = {}) {
-  if (privacy(bill?.title || bill?.short_title || name, bill ? '' : seed)) return '';
+export function askBlockHTML({name = '', bill = null, questions = [], pageType, seed = ''} = {}) {
+
   const heading = bill ? 'Ask about this bill' : `Ask about ${name}`;
   return `<section class="growth-ask" ${moduleAttrs('ask',pageType,1)} aria-labelledby="growth-ask-title">
     <h3 id="growth-ask-title">${esc(heading)}</h3>
@@ -107,14 +94,14 @@ export function askBlockHTML({name = '', bill = null, questions = [], pageType, 
       <input type="hidden" name="from" value="${esc(pageType)}">
       <button class="ui-button" data-variant="primary" type="submit">Ask</button>
     </form>
-    <ul class="growth-questions" role="list">${questionsHTML(questions,pageType,bill ? '' : seed,privacy)}</ul>
+    <ul class="growth-questions" role="list">${questionsHTML(questions,pageType,bill ? '' : seed)}</ul>
   </section>`;
 }
-export function questionsHTML(questions, pageType, seed = '', privacy = deny) {
+export function questionsHTML(questions, pageType, seed = '') {
   const seen = new Set([questionKey(seed)]);
   return questions.flatMap(q=>{
     const {question,label} = typeof q==='string' ? suggestion(q) : q;
-    if (privacy(question,label || question)) return [];
+
     const key = questionKey(question);
     if (seen.has(key)) return [];
     seen.add(key);
@@ -133,28 +120,22 @@ export function recentSittingSpeeches(speeches = []) {
   const week = monday(dated[0].date);
   return {week,speeches:dated.filter(s=>monday(s.date)===week)};
 }
-/** Privacy filtering happens before grouping, names, declarations or party flows. */
-export function publicOrganisationTies(ties = [], privacy = deny) {
-  return ties.filter(tie=>{
-    if (privacy(tie.organisation,tie.register?.description,...(tie.flows || []).map(f=>f.party))) return false;
-    const kinds = tie.kinds || [tie.kind];
-    if (!kinds.includes('donor') && !tie.donor_id) return true;
-    return isOrganisationDonor({...tie,label:tie.organisation});
-  });
+
+export function publicOrganisationTies(ties = []) {
+  return ties.filter(tie=>tie && typeof tie.organisation==='string');
 }
 export const normalisedName = name => String(name || '').normalize('NFKC').toLowerCase().replace(/[^\p{L}\p{N}]+/gu,' ').trim();
 const abnKey = value => String(value || '').replace(/\s/g,'');
-export function exactOrganisationDonors(supplier, donors = [], privacy = deny) {
+export function exactOrganisationDonors(supplier, donors = []) {
   const name = normalisedName(supplier?.name);
   if (!name) return [];
-  return donors.filter(d=>d.kind==='donor' && isOrganisationDonor(d) && !privacy(d.label) && normalisedName(d.label)===name &&
-    (!supplier.abn || !d.abn || abnKey(supplier.abn)===abnKey(d.abn)));
+  return donors.filter(d=>d.kind==='donor' && isOrganisationDonor(d) && normalisedName(d.label)===name && (!supplier.abn || !d.abn || abnKey(supplier.abn)===abnKey(d.abn)));
 }
-export function donationRegisterHTML(supplier, donors, privacy = deny) {
-  const matches = exactOrganisationDonors(supplier,donors,privacy);
+export function donationRegisterHTML(supplier, donors) {
+  const matches = exactOrganisationDonors(supplier,donors);
   // An ambiguous name cannot identify a single donor record.
   if (matches.length !== 1) return '';
-  return `<div class="growth-donor" ${moduleAttrs('donations_register','supplier',3)}><p>Also in the donations register: <a href="/subject/donor/${encodeURIComponent(matches[0].label)}">${esc(matches[0].label)}</a>.</p>${associationHTML()}${sourceLineHTML({source:'AEC annual returns',originals:[{label:'AEC Transparency Register',href:'https://transparency.aec.gov.au/'}],notes:['Exact normalised name, and matching ABN where both registers carry one. Organisation records only.']})}${correctionHTML()}</div>`;
+  return `<div class="growth-donor" ${moduleAttrs('donations_register','supplier',3)}><p>Also in the donations register: ${donorLabelHTML(matches[0])}.</p>${associationHTML()}${sourceLineHTML({source:'AEC annual returns',originals:[{label:'AEC Transparency Register',href:'https://transparency.aec.gov.au/'}],notes:['Exact normalised name, and matching ABN where both registers carry one. Organisation records only.']})}${correctionHTML()}</div>`;
 }
 export function otherSponsorBills(bill, bills, people) {
   const person = sponsorPerson(bill.sponsor,bill.sponsor_person_id,people);

@@ -67,13 +67,6 @@ test('audit detail has numbered verbatim QAO text, one dated meta line, SourceLi
  assert.doesNotMatch(page.prerender,/\/subject\/person|Machine-written/);
 });
 
-test('licence exception detail withholds body and recommendations',async()=> {
- const excepted=structuredClone(fixture); const r=excepted.reports[0];r.entities=[];r.recommendations=[];r.licence={...r.licence,status:'exception',body_skipped:true,exceptions:['All rights reserved.']};
- const exported={...files,'reports-1.json':JSON.stringify({records:excepted.reports})};const read=async path=>JSON.parse(exported[path.replace('/audit/','')]);
- const page=await auditPage(r.id,new URL('https://opax.com.au/audit/'+r.id),read,block);
- assert.equal(page.status,200);assert.match(page.prerender,/not reproduced here/);assert.doesNotMatch(page.prerender,/Keep Jane Citizen/);
-});
-
 test('audit detail preserves alphabetic source markers and leaves unpublished numbers unnumbered',async()=> {
  const record=structuredClone(fixture.reports[0]);record.recommendations[0].html='<p>Source words</p><ol type="a" start="3"><li value="5">A source subpoint.</li></ol>';
  const render=async row=>auditPage(row.id,new URL('https://opax.com.au/audit/'+row.id),async path=>path.includes('reports-')?{records:[row]}:read(path),block);

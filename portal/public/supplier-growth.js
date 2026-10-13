@@ -1,6 +1,7 @@
+import {donorDisclosure,donorLabelHTML} from './donor-disclosure.js?v=e91ef740e5';
 /* Client-side agency records, from the same published exports as their pages. */
 import {sourceLineHTML} from './labels.js?v=fc03aa14cf';
-import {moduleAttrs, donationRegisterHTML, exactOrganisationDonors, growthSummaryPath, normalisedName, approvedModulePrivacy, loadModuleDonors} from './growth-modules.js?v=2fe959404b';
+import {moduleAttrs, donationRegisterHTML, exactOrganisationDonors, growthSummaryPath, normalisedName, loadModuleDonors} from './growth-modules.js?v=ec5f501ce7';
 const esc = value => String(value ?? '').replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const money = n => Number(n).toLocaleString('en-AU',{style:'currency',currency:'AUD',maximumFractionDigits:0});
 async function json(url,signal) {const r=await fetch(url,{signal,cache:"no-cache"});if(!r.ok)throw new Error('Records unavailable');return r.json();}
@@ -61,9 +62,9 @@ export async function mountSupplierGrowth(root,profile,meta,life,suppliers) {
 /** Existing supplier-to-donor hints cannot bypass exact organisation matching. */
 export async function supplierDonations(profile,life) {
   const index=await loadModuleDonors(life.signal);
-  const privacy=approvedModulePrivacy(index);
-  const html=donationRegisterHTML(profile,index.donors || [],privacy);
+  const html=donationRegisterHTML(profile,index.donors || []);
   if(!html) return {html:'',links:[]};
-  const donor=exactOrganisationDonors(profile,index.donors || [],privacy)[0];
-  return {html,links:[{id:donor.id,name:donor.label,url:`/subject/donor/${encodeURIComponent(donor.label)}`,method:'exact_normalized_name'}]};
+  const donor=exactOrganisationDonors(profile,index.donors || [])[0];
+  const href=donorDisclosure(donor).href;
+  return {html,links:href ? [{id:donor.id,name:donor.label,url:href,method:'exact_normalized_name'}] : []};
 }

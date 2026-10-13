@@ -67,7 +67,6 @@ export type OverviewDependencies = {
   original: (speech: OverviewSpeech, theme: string, signal: AbortSignal) => Promise<string | null>;
   bills: (signal: AbortSignal) => Promise<{ key: string; title: string; introduced: string; sponsor?: string; speech_dates?: string[] }[]>;
   peer: (theme: string, signal: AbortSignal) => Promise<string | undefined>;
-  safe: (...values: string[]) => boolean;
   belongs: (speech: OverviewSpeech) => boolean;
 }
 
@@ -136,7 +135,7 @@ export async function buildPersonOverview(
       // reach extra_context or any generation/verifier call. Keep provenance.
       const record = saEvidenceRecord({...input}, saFullTextFlag)
       if (record.kind === 'speech' && !record.snippet.trim()) return
-      if (!deps.safe(record.title, record.snippet) || chars + record.snippet.length > OVERVIEW_CAPS.chars) return
+      if (chars + record.snippet.length > OVERVIEW_CAPS.chars) return
       if (records.some(r => r.slug === record.slug)) return
       records.push(record); chars += record.snippet.length
     }
@@ -145,10 +144,10 @@ export async function buildPersonOverview(
       snippet: JSON.stringify({ name: person.name, speeches: context.speeches, as_of: asOf, recent_from: recentFrom,
         recent_to: asOf, topics, complete, enumeration_complete:enumerationComplete,dates_complete:datesComplete,classifications_complete:classificationsComplete,
         coverage: 'Indexed speeches, not a count of all parliamentary appearances. Speeches can carry multiple topic labels; topic counts overlap. Labels describe subjects, not positions. Recent counts and latest speeches require full enumeration and valid dates and topic classifications for every speech.' }) })
-    const recent = complete ? speeches.filter(s => s.date && s.date <= asOf && deps.safe(s.title))
+    const recent = complete ? speeches.filter(s => s.date && s.date <= asOf)
       .sort((a,b) => b.date.localeCompare(a.date) || a.slug.localeCompare(b.slug)).slice(0, OVERVIEW_CAPS.recent) : []
     const candidates = new Map<string,{speech:OverviewSpeech;theme:string}>()
-    for (const theme of topics) for (const speech of (foundByTheme.get(theme.slug) || []).filter(s=>deps.belongs(s) && deps.safe(s.title)).slice(0,OVERVIEW_CAPS.per_theme)) {
+    for (const theme of topics) for (const speech of (foundByTheme.get(theme.slug) || []).filter(s=>deps.belongs(s)).slice(0,OVERVIEW_CAPS.per_theme)) {
       candidates.set(speech.slug,{speech,theme:theme.name})
     }
     for (const speech of recent) if (!candidates.has(speech.slug)) candidates.set(speech.slug,{speech,theme:''})
@@ -158,10 +157,10 @@ export async function buildPersonOverview(
       originals.set(speech.slug,original ? firstSpeechTurn(original) : null)
     }))
     for (const theme of topics) {
-      const found = (foundByTheme.get(theme.slug) || []).filter(s => deps.belongs(s) && deps.safe(s.title)).slice(0, OVERVIEW_CAPS.per_theme)
+      const found = (foundByTheme.get(theme.slug) || []).filter(s => deps.belongs(s)).slice(0, OVERVIEW_CAPS.per_theme)
       for (const speech of found) {
         const original = originals.get(speech.slug)
-        if (!original || !deps.safe(original)) continue
+        if (!original) continue
         const evidence = positionEvidence(original, theme.name)
         if (!evidence) continue
         add({ kind: 'speech', title: speech.title, href: '/doc/' + speech.slug, slug: speech.slug,
@@ -172,7 +171,7 @@ export async function buildPersonOverview(
     }
     for (const speech of recent) {
       const original = originals.get(speech.slug)
-      if (!original || !deps.safe(original)) continue
+      if (!original) continue
       const existing = records.find(r=>r.slug === speech.slug)
       if (existing) { if (!isSaHansard(existing)) existing.source = 'Hansard · recent speech'; continue }
       add({ kind: 'speech', title: speech.title, href: '/doc/' + speech.slug, slug: speech.slug, resource: '',
@@ -181,12 +180,12 @@ export async function buildPersonOverview(
         snippet: `${person.name}, ${speech.date}. Recent speech in the complete catalogue.\n` + evidenceExcerpt(original, speech.title, 1500, true).text })
     }
     const billDate = (b: {introduced:string;speech_dates?:string[]}) => (b.speech_dates || []).filter(date=>date<=asOf).sort().at(-1) || b.introduced
-    for (const bill of bills.filter(b => (fold(b.sponsor || '') === fold(person.name) || b.speech_dates?.some(date=>date<=asOf)) && billDate(b) && billDate(b) <= asOf && deps.safe(b.title))
+    for (const bill of bills.filter(b => (fold(b.sponsor || '') === fold(person.name) || b.speech_dates?.some(date=>date<=asOf)) && billDate(b) && billDate(b) <= asOf)
       .sort((a,b) => billDate(b).localeCompare(billDate(a))).slice(0, OVERVIEW_CAPS.bills)) {
       add({kind:'bill',title:bill.title,href:'/bill/'+bill.key,slug:'bill-'+bill.key,resource:'',source:'Parliamentary bill register',date:bill.introduced,
         snippet:JSON.stringify({title:bill.title,sponsor:bill.sponsor,introduced:bill.introduced,speaker:person.name,speech_dates:(bill.speech_dates || []).filter(date=>date<=asOf).slice(0,3),date_meaning:'Introduced is the introduction date, not passage or assent. Speech dates are linked Hansard appearances. Neither establishes a vote.'})})
     }
-    if (peer && topics[0] && deps.safe(peer)) context.peer = {name:peer,theme:topics[0].name}
+    if (peer && topics[0]) context.peer = {name:peer,theme:topics[0].name}
     return {context,records:{records,coverage:'Whole-record topic facets; recent speech dates from catalogue metadata. Verbatim evidence retrieved separately by theme. No votes inferred from speeches.',total:records.length}}
   } catch (error) { deadline.cancel(); throw error }
   finally { if (!(parent instanceof AskDeadline)) deadline.dispose() }

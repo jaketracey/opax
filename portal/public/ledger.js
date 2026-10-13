@@ -1,5 +1,4 @@
-import {donorPrivacyIndex,donorNameWithheld} from './donor-entity.js?v=ebb2c972d5';
-import {isUnnamedAggregate,donorAggregateDetail,unnamedDonorLabel,loadDonorViewIndex} from './donor-views.js?v=77470b1d26';
+import {donorDisclosure,donorLookup,donorDisplayText} from './donor-disclosure.js?v=e91ef740e5';
 import {subjectUrl} from './canonical-urls.js?v=225d5915ea';
 import { filterMoneyEdges } from "./money-records.js?v=ia-ux-20260908-2";
 /**
@@ -104,6 +103,9 @@ export function buildFlows (data) {
     return {
       donorId: e.source,
       donor: donor.label || e.source.replace(/^donor:/, ''),
+      donorHref:donorDisclosure(donor).href,
+      return_reference:donorDisclosure(donor).reference,
+      donorRecord:donor,
       industry: donor.industry || 'other',
       colour: donor.colour || groupColour(donor.group),
       party: partyName,
@@ -127,6 +129,7 @@ export function aggregateDonors (flows) {
       d = {
         donorId: f.donorId,
         donor: f.donor,
+        donorHref:f.donorHref,return_reference:f.return_reference,donorRecord:f.donorRecord,
         industry: f.industry,
         colour: f.colour,
         total: 0,
@@ -487,11 +490,13 @@ function dotLabel (colour, node) {
   return wrap
 }
 
-function subjectLink (kind, label) {
-  if(kind==='donor' && isUnnamedAggregate(label)) return donorAggregateDetail(label,document)
-  const a = el('a', null, label)
-  a.href = subjectUrl(kind,label)
-  return a
+function subjectLink (kind, label, donor) {
+  const record=kind==='donor' ? donor : null
+  const presentation=record ? donorDisclosure(record) : {name:label,href:kind==='donor' ? null : subjectUrl(kind,label),reference:''}
+  const node=el(presentation.href ? 'a' : 'span',null,label)
+  if(presentation.href) node.href=presentation.href
+  if(presentation.reference){const reference=el('small','donor-return-reference',presentation.reference);node.append(reference)}
+  return node
 }
 
 function yearsText (r) {
@@ -528,7 +533,7 @@ export function mountLedger (container, opts = {}) {
 
   let flows = []                   // joined edge rows, set once data lands
   let loadedData = null
-  let privacy = {organisations:new Set(),withheld:new Set()}
+  let donors = new Map()
   let editGroup = null
   let pendingUserLoad = false
   let meta = {}                    // the loaded file's meta block (state files describe themselves)
@@ -666,13 +671,7 @@ export function mountLedger (container, opts = {}) {
 
   function computeRows () {
     const passing = filterFlows(flows, state)
-    const hidden=passing.filter(r=>donorNameWithheld(privacy,r.donor));
-    const visible=passing.filter(r=>!donorNameWithheld(privacy,r.donor));
-    const rows = state.view === 'flows'
-      ? visible.filter((r) => r.total >= state.min)
-      : aggregateDonors(visible).filter((d) => d.total >= state.min)
-    if(hidden.length){const combined=aggregateDonors(hidden.map(r=>({...r,donorId:'donor:not-named'})))[0];
-      rows.push({...hidden[0],...combined,donor:unnamedDonorLabel(loadedData.nodes.filter(n=>n.kind==='donor'&&hidden.some(r=>r.donorId===n.id)).length),industry:'withheld',party:'All selected parties',partyColour:'var(--party-oth)'});}
+    const rows=state.view==='flows' ? passing.filter(r=>r.total>=state.min) : aggregateDonors(passing).filter(d=>d.total>=state.min)
     const sort = state.sort[state.view]
     return { flowCount: passing.length, rows: sortRows(rows, sort.key, sort.dir) }
   }
@@ -723,7 +722,7 @@ export function mountLedger (container, opts = {}) {
   // ---- table body ---------------------------------------------------------
 
   function renderCellsFlows (tr, r) {
-    tr.appendChild(el('td')).appendChild(subjectLink('donor', r.donor))
+    tr.appendChild(el('td')).appendChild(subjectLink('donor',r.donor,r.donorRecord))
     tr.appendChild(el('td'))
       .appendChild(dotLabel(r.colour, document.createTextNode(industryLabel(r.industry))))
     tr.appendChild(el('td'))
@@ -734,7 +733,7 @@ export function mountLedger (container, opts = {}) {
   }
 
   function renderCellsDonors (tr, r) {
-    tr.appendChild(el('td')).appendChild(subjectLink('donor', r.donor))
+    tr.appendChild(el('td')).appendChild(subjectLink('donor',r.donor,r.donorRecord))
     tr.appendChild(el('td'))
       .appendChild(dotLabel(r.colour, document.createTextNode(industryLabel(r.industry))))
     tr.appendChild(el('td', 'lg-num', AUD.format(r.total)))
@@ -753,7 +752,7 @@ export function mountLedger (container, opts = {}) {
     const top = el('div', 'lg-card-top')
     const payer = el('div')
     payer.appendChild(el('span', 'lg-card-label', 'From'))
-    const donor = subjectLink('donor', r.donor)
+    const donor = subjectLink('donor',r.donor,r.donorRecord)
     donor.className = 'lg-card-donor'
     payer.appendChild(donor)
     const amount = el('div', 'lg-card-value')
@@ -1134,8 +1133,8 @@ export function mountLedger (container, opts = {}) {
     statusEl.textContent = 'Loading the ledger…'
     tableEl.hidden = true
     try {
-      const [data,index] = await Promise.all([fetchData(state.jur),loadDonorViewIndex()])
-      privacy=index
+      const data = await fetchData(state.jur)
+      donors=donorLookup(data.nodes.filter(n=>n.kind==='donor'))
       if (token !== loadSeq) return
       loading = false
       loadedData = data
@@ -1166,7 +1165,6 @@ export function mountLedger (container, opts = {}) {
         }
       }
       const focus=data.nodes.find(n=>n.id===state.focusDonorId);
-      if(focus?.kind==='donor'&&donorNameWithheld(privacy,focus.label)){paramError='This donor is not named in OPAX.';state.focusDonorId='';state.focusDonor='';}
       populateSelects(data)
       renderFineprint(data)
       statusEl.hidden = true

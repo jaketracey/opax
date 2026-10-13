@@ -1,14 +1,13 @@
-import {sanitiseStoredResponse} from './donor-stored-response'
-import {sanitiseStoredDonors} from './donor-hashes.mjs'
+import {loadDonorIndex} from './donor-index'
+import {donorDisclosure,donorLabelHTML,type DonorDisclosureRecord} from '../public/donor-disclosure.js'
 import sourceIdentity from '../../parli/ingest/user-agent.json'
 import { SA_EXCERPT_LABEL, isSaHansard, saFullText, saOfficialUrl } from '../public/sa-hansard.js'
 import { saPublicResponse, saEventPayload } from './sa-hansard'
 import { saEvidenceText, saEvidenceRecord, saGenerationResponse, saConversationInput } from './sa-evidence'
-import {memoisedCheck, tablePrivacy, tablePrivacyCheck} from './table-privacy'
 import {ServerTiming, timed, withTiming} from './server-timing'
 import { divisionPlain } from '../public/division-markdown.js'
 import {guardTableURL, divisionTableConfig, voteTableConfig} from '../public/vote-tables.js'
-import { tableApi, TABLE_REGISTRY_FINGERPRINT } from './table-api'
+import { tableApi } from './table-api'
 import { pageCacheKey, pageForStorage, pageFromStorage } from './page-cache'
 import { runSocialPublication, socialStatus, socialEngagement, publicationCopy, previewPublication, todayRedirect, CHANNELS, type Channel } from './social-publication'
 import { positionEvidence, positionProposalQuote, positionEligibilityQuotes, positionCostQuote, isPositionEligibilityQuestion, isPositionCostQuestion, isPositionDetailQuestion, positionPointSupported, normalizePositionDraft } from './position-evidence'
@@ -56,8 +55,7 @@ import { reviewerLoginEnabled } from './community-auth'
 import { operatorAuthorized } from './operator-auth'
 import { deliverReplyEmails, REPLY_EMAIL_CRON } from './community-notifications'
 import { partyUrl, personUrl, personNameKey } from '../public/canonical-urls.js'
-import { withholdIndividualDonors, foldDonorName } from '../public/donor-entity.js'
-import { donorWithheld, namesWithheldDonor, questionNamesWithheldDonor, withheldNameCheck, loadDonorIndex, WITHHELD_DONOR_REPLY } from './donor-index'
+import {foldDonorName} from '../public/donor-entity.js'
 import { canonicalPageRedirect } from './canonical-origin'
 import { pageEntry } from './page-entry'
 import { htmlValidator, notModified } from './html-etag'
@@ -394,7 +392,7 @@ function withCacheStatus(res: Response, status: CacheStatus, browserCache = true
 function cacheStore(ctx: ExecutionContext, key: Request, res: Response, maxAge: number): void {
   res.headers.set('cache-control', `public, max-age=${maxAge}`)
   res.headers.set('x-opax-cached-at', new Date().toISOString())
-  ctx.waitUntil(sanitiseStoredResponse(res.clone()).then(safe=>caches.default.put(key, safe)))
+  ctx.waitUntil(Promise.resolve(res.clone()).then(safe=>caches.default.put(key, safe)))
 }
 
 /**
@@ -516,7 +514,7 @@ async function apiSearch(request: Request, url: URL, env: Env, ctx: ExecutionCon
   const bypass = cacheBypass(request, url)
   if (!bypass) {
     const hit = await caches.default.match(pageKey)
-    if (hit) return withCacheStatus(await sanitiseStoredResponse(hit), 'HIT')
+    if (hit) return withCacheStatus(await Promise.resolve(hit), 'HIT')
   }
 
   const mode = url.searchParams.get('mode') ?? 'hybrid'
@@ -525,7 +523,7 @@ async function apiSearch(request: Request, url: URL, env: Env, ctx: ExecutionCon
   let win: SearchWindow | null = null
   if (!bypass) {
     const cached = await caches.default.match(windowKey)
-    if (cached) win = sanitiseStoredDonors(await cached.json()) as SearchWindow
+    if (cached) win = await cached.json() as SearchWindow
   }
   if (!win) {
     const limited = await rateLimited(env.SEARCH_LIMITER, request)
@@ -1292,7 +1290,7 @@ async function moneyOverview(facts: MoneyFacts, env: Env, ctx: ExecutionContext,
   const model = env.MONEY_OVERVIEW_MODEL || env.ASK_MODEL || 'openai-compatible'
   const key = cacheRequest('money-overview', await sha256Hex(JSON.stringify({ epoch: env.CACHE_EPOCH, model, facts })))
   const hit = await caches.default.match(key)
-  if (hit) return { overview: sanitiseStoredDonors(await hit.json<{ overview?: string }>()).overview || '', why: 'hit' }
+  if (hit) return { overview: (await hit.json<{ overview?: string }>()).overview || '', why: 'hit' }
   // A paid call, so it spends the reader's Ask quota like any other answer; past
   // the limit the calculated answer goes out without its opening paragraph.
   if (await rateLimited(env.ASK_LIMITER, request)) return { overview: '', why: 'rate-limited' }
@@ -1314,7 +1312,7 @@ async function moneyOverview(facts: MoneyFacts, env: Env, ctx: ExecutionContext,
 }
 
 /** Emit progress before roster, cache, catalogue or original reads. No reader
- * text or model output leaves this transport before the normal privacy checks. */
+ * text or model output leaves this transport before response validation. */
 function earlyOverviewStream(work: () => Promise<Response>, budget: AskDeadline, ctx: ExecutionContext): Response {
   const encoder = new TextEncoder()
   let gone = false
@@ -1377,11 +1375,6 @@ async function apiAsk(request: Request, env: Env, ctx: ExecutionContext, prepare
     return res
   }
   if (!rawInput.question?.trim()) return json({ error: 'question is required' }, 400)
-  // A question naming a withheld donor, now or in the reader's earlier turns, gets
-  // one fixed reply before any ranking, rewrite or model call can echo the name.
-  if (await questionNamesWithheldDonor(env.ASSETS, rawInput.question, ...readerTurns(rawInput))) return timed(json(withheldDonorAnswer()))
-  // Resolve receipt conversations from user turns before speech inference can
-  // apply calendar-year or parliamentarian filters. No model call is needed.
   try {
     const ranked = await rankedMoneyAnswer(rawInput, env.ASSETS)
     if (ranked) {
@@ -1457,12 +1450,12 @@ async function apiAsk(request: Request, env: Env, ctx: ExecutionContext, prepare
   if (cacheKey && !bypass) {
     const hit = await readGenerationCache(env, ctx, cacheKey)
     if (hit) {
-      const safe = await saPublicResponse(await sanitiseStoredResponse(hit), env.SA_HANSARD_FULL_TEXT, async slug => {
+      const safe = await saPublicResponse(await Promise.resolve(hit), env.SA_HANSARD_FULL_TEXT, async slug => {
         const resourceUrl=new URL('/api/resource/'+slug,url)
         const response=await apiResource(new Request(resourceUrl),resourceUrl,slug,env,ctx)
         return response.ok ? await response.json() as Record<string,unknown> : null
       })
-      return wantStream ? replayCachedAsk(await sanitiseStoredResponse(safe), ctx) : withCacheStatus(await sanitiseStoredResponse(safe), 'HIT', false)
+      return wantStream ? replayCachedAsk(await Promise.resolve(safe), ctx) : withCacheStatus(await Promise.resolve(safe), 'HIT', false)
     }
   }
   const status: CacheStatus = bypass ? 'BYPASS' : 'MISS'
@@ -1590,9 +1583,6 @@ async function buildOverviewPack(input: AskInput, env: Env, ctx: ExecutionContex
   const person = people.byFold.get(foldName(input.speaker || ''))
   if (!person) throw new Error('Person unavailable')
   const attribution = personScope(person)
-  const withheld = await withheldNameCheck(env.ASSETS)
-  const safe = (...values: string[]) => !withheld(...values)
-  if (!safe(person.name,person.party_now || person.party || '',...(person.representation || []).map(r=>r.electorate))) throw new Error('Person context unavailable')
   const corpus = await assetJson<{version: string}>(env, '/corpus.json')
   const asOf = corpus.version.slice(0,10)
   // Catalogue accepts resource predicates only. Field exclusions belong to find.
@@ -1613,7 +1603,7 @@ async function buildOverviewPack(input: AskInput, env: Env, ctx: ExecutionContex
   const belongs = (s: OverviewSpeech) => /^speech-\d+$/.test(s.slug) &&
     (attribution ? belongsToScope({...s,kind:'speech'},attribution) : foldName(s.speaker) === foldName(person.name))
   return buildPersonOverview(person,asOf,personPath(people,person.name),{
-    safe,belongs,
+    belongs,
     catalogue: async (page,signal) => {
       const response = await kbFetch(env,'/catalog',{signal,body:{filter_expression:filter,faceted:[TOPIC_FILTER_PREFIX],page_size:OVERVIEW_CAPS.page_size,page_number:page,show:['basic','origin','extra']}})
       if (!response.ok) throw new Error('Speech catalogue unavailable')
@@ -1652,38 +1642,22 @@ async function buildOverviewPack(input: AskInput, env: Env, ctx: ExecutionContex
       if (!response.ok) throw new Error('Topic collaborator catalogue unavailable')
       const data = await response.json() as CatalogPage
       return Object.entries(data.fulltext?.facets?.['/origin.collaborators'] || {}).sort((a,b)=>b[1]-a[1]).map(([path])=>path.replace(/^\/origin\.collaborators\//,''))
-        .find(name=>name!==person.name && people.byName.has(name) && safe(name))
+        .find(name=>name!==person.name && people.byName.has(name))
     },
   },!!attribution,deadline,env.SA_HANSARD_FULL_TEXT)
 }
 
 async function overviewPayload(payload: AskPayload, pack: OverviewPack | undefined, env: Env, overviewIntent = true, personIntent = overviewIntent): Promise<AskPayload> {
   if (!pack && !personIntent) return {...payload,is_overview_intent:false}
-  const withheld = await withheldNameCheck(env.ASSETS)
-  if (withheld(payload.answer)) return {...withheldDonorAnswer(),is_overview_intent:overviewIntent} as AskPayload
-  const sources = payload.sources.filter((source) => {
-    const row = source as {title?:string;snippet?:string;speaker?:string}
-    return !withheld(row.title,row.snippet,row.speaker)
-  })
-  const ids = new Set(sources.map(source=>(source as {resource:string}).resource))
-  const citations = Object.fromEntries(Object.entries(payload.citations).filter(([id])=>ids.has(id.split('/')[0])))
-  if (Object.keys(payload.citations).length && !Object.keys(citations).length) return {...withheldDonorAnswer(),is_overview_intent:overviewIntent} as AskPayload
-  payload = {...payload,sources,citations}
   if (!pack) return {...payload,is_overview_intent:overviewIntent}
   return {...payload,is_overview_intent:overviewIntent,subject_context:pack.context,
-    followups:personFollowups(payload.answer,payload.sources as {title:string;cited?:boolean;kind?:string}[],pack.context,(...values)=>!withheld(...values))}
+    followups:personFollowups(payload.answer,payload.sources as {title:string;cited?:boolean;kind?:string}[],pack.context)}
 }
 
 /** The reader's own earlier turns: what a follow-up can inherit a name from. */
 function readerTurns(input: AskInput): string[] {
   return (Array.isArray(input.context) ? input.context : [])
     .filter(t => t && (t.author === 'user' || t.author === 'question') && typeof t.text === 'string').map(t => t.text as string)
-}
-
-/** The fixed reply to a question naming a withheld donor (src/donor-index.ts): no
- * sources, citations or follow-ups, and nothing from the question echoed back. */
-function withheldDonorAnswer(): Record<string, unknown> {
-  return { answer: WITHHELD_DONOR_REPLY, citations: {}, sources: [], answer_status: 'withheld' }
 }
 
 /** The payload with the question as it was understood, when a follow-up was rewritten. */
@@ -1955,8 +1929,6 @@ async function recoverPositionAnswer(payload: AskPayload, body: Record<string,un
 
 /** A short overview grounded only in the same filtered public search results. */
 async function apiSearchSummary(request: Request, url: URL, env: Env, ctx: ExecutionContext): Promise<Response> {
-  // No overview, and no search, for a query naming a withheld donor (src/donor-index.ts).
-  if (await questionNamesWithheldDonor(env.ASSETS, url.searchParams.get('q') || '')) return json({status:'empty', points:[], sources:[]})
   const searchUrl = new URL(url)
   searchUrl.pathname = '/api/search-all'
   searchUrl.searchParams.set('page', '1')
@@ -1971,7 +1943,7 @@ async function apiSearchSummary(request: Request, url: URL, env: Env, ctx: Execu
   const filters = Object.fromEntries(['kind','mode','speaker','party','state','topic','from','to','chamber','since','until','venue'].map(k => [k, searchUrl.searchParams.get(k) || '']))
   const key = cacheRequest('search-summary', await sha256Hex(JSON.stringify({version:SEARCH_SUMMARY_VERSION, epoch:env.CACHE_EPOCH, query, filters, sources, index:results.index_version})))
   const cached = await readGenerationCache(env, ctx, key)
-  if (cached) return withCacheStatus(await sanitiseStoredResponse(cached), 'HIT', false)
+  if (cached) return withCacheStatus(await Promise.resolve(cached), 'HIT', false)
   const limited = await rateLimited(env.FOLLOWUPS_LIMITER, request)
   if (limited) return limited
   const unavailable = 'A cited summary is unavailable. Your matching records are still below.'
@@ -2068,8 +2040,7 @@ async function apiJourneyStory(request: Request, input: Record<string, unknown>,
   const files: Record<string,string> = {federal:'/graph/money.json',qld:'/graph/money.qld.json',vic:'/graph/money.vic.json',tas:'/graph/money.tas.json'}
   const { jurisdiction, lens, focus } = input
   if (typeof jurisdiction !== 'string' || !Object.hasOwn(files,jurisdiction) || typeof lens !== 'string' || typeof focus !== 'string' || focus.length > 500) return json({error:'Invalid journey'},400)
-  // Unconfirmed donors are withheld from the narration (public/donor-entity.js).
-  const graph = withholdIndividualDonors(await assetJson<StoryGraph>(env,files[jurisdiction]))
+  const graph = (await assetJson<StoryGraph>(env,files[jurisdiction]))
   const context = journeyStoryContext(graph,lens,focus)
   if (!context) return json({error:'Journey not available'},404)
   const key = cacheRequest('journey-story',await sha256Hex(JSON.stringify({version:STORY_VERSION,epoch:env.CACHE_EPOCH,context})))
@@ -2597,9 +2568,6 @@ async function apiFollowups(request: Request, env: Env, ctx: ExecutionContext): 
   }
   // Always 200 with a possibly-empty list: follow-ups are an extra, never an error.
   if (!question?.trim() || !answer?.trim()) return json({ questions: [] })
-  // Never suggest a next question about a withheld donor (src/donor-index.ts).
-  if (await questionNamesWithheldDonor(env.ASSETS, question, answer)) return json({ questions: [] })
-  const withheld = await withheldNameCheck(env.ASSETS)
   const inputPassages = (Array.isArray(passages) ? passages : []).filter(p => p && typeof p === 'object' && !Array.isArray(p))
   const restricted = inputPassages.some(p => isSaHansard(p) || (!p.kind && !p.source && !p.state && !p.labels))
   // Older clients may send a previous answer containing full source quotations.
@@ -2612,14 +2580,14 @@ async function apiFollowups(request: Request, env: Env, ctx: ExecutionContext): 
       kind: p?.kind === 'speech' || p?.kind === 'bill' ? p.kind : undefined,
       cited: p?.cited === true,
     }))
-    .filter((p) => p.text.trim().length > 0 && !withheld(p.title,p.text))
+    .filter((p) => p.text.trim().length > 0)
     .slice(0, 12)
   const context = passageContext(clean)
-  if (personName && !withheld(personName)) {
+  if (personName) {
     const person = (await loadPeople(env)).byFold.get(foldName(personName))
     if (person) {
       const topics = Object.entries(TOPIC_NAMES).filter(([,name])=>answer.toLowerCase().includes(name.toLowerCase())).map(([slug,name])=>({slug,name,count:0,recent_count:null}))
-      const questions = personFollowups(answer,clean,{name:person.name,party:null,electorate:'',speeches:0,topics,recent_from:'',as_of:'',complete:false,profile:'',votes:'',interests:''},(...texts)=>!withheld(...texts))
+      const questions = personFollowups(answer,clean,{name:person.name,party:null,electorate:'',speeches:0,topics,recent_from:'',as_of:'',complete:false,profile:'',votes:'',interests:''})
       if (questions.length >= 2) return json({questions})
     }
   }
@@ -2638,7 +2606,7 @@ async function apiFollowups(request: Request, env: Env, ctx: ExecutionContext): 
   const bypass = cacheBypass(request, url)
   if (!bypass) {
     const hit = await caches.default.match(cacheKey)
-    if (hit) return withCacheStatus(await sanitiseStoredResponse(hit), 'HIT', false)
+    if (hit) return withCacheStatus(await Promise.resolve(hit), 'HIT', false)
   }
   const limited = await rateLimited(env.FOLLOWUPS_LIMITER, request)
   if (limited) return limited
@@ -2692,7 +2660,7 @@ async function apiFollowups(request: Request, env: Env, ctx: ExecutionContext): 
     if (!res.ok) return withCacheStatus(json({ questions: [] }), cacheStatus, false)
     const data = (await res.json()) as { answer?: string }
     const candidates = parseFollowUpLines(data.answer ?? '')
-    const questions = selectFollowUps(candidates, question, clean, context).filter(item=>!withheld(item.question,item.evidence))
+    const questions = selectFollowUps(candidates, question, clean, context)
     const out = json({ questions })
     // An empty list may be a model stumble — never pin that for a day.
     if (questions.length > 0) cacheStore(ctx, cacheKey, out, FOLLOWUPS_CACHE_TTL)
@@ -2729,7 +2697,7 @@ async function apiResource(request: Request, url: URL, slug: string, env: Env, c
   const bypass = cacheBypass(request, url)
   if (!bypass) {
     const hit = await caches.default.match(cacheKey)
-    if (hit) return withCacheStatus(await sanitiseStoredResponse(hit), 'HIT')
+    if (hit) return withCacheStatus(await Promise.resolve(hit), 'HIT')
   }
   const res = await kbFetch(
     env,
@@ -2847,7 +2815,7 @@ async function apiNews(): Promise<Response> {
   const cache = caches.default
   const cacheKey = new Request('https://opax.com.au/api/news')
   const cached = await cache.match(cacheKey)
-  if (cached) return withCacheStatus(await sanitiseStoredResponse(cached), 'HIT')
+  if (cached) return withCacheStatus(await Promise.resolve(cached), 'HIT')
 
   // Order matters: CDATA first, numeric refs, then named — so a literal
   // "&amp;#39;" decodes to "&#39;" and no further.
@@ -2960,11 +2928,10 @@ async function apiNews(): Promise<Response> {
   const res = json({ fetched_at: new Date().toISOString(), items })
   if (items.length) {
     res.headers.set('cache-control', 'public, max-age=900')
-    await cache.put(cacheKey, await sanitiseStoredResponse(res.clone()))
+    await cache.put(cacheKey, await Promise.resolve(res.clone()))
   }
-  return withCacheStatus(await sanitiseStoredResponse(res), 'MISS')
+  return withCacheStatus(await Promise.resolve(res), 'MISS')
 }
-
 
 /**
  * The newest documents to enter the index, straight from the KB catalog
@@ -2976,7 +2943,7 @@ async function apiRecent(env: Env): Promise<Response> {
   const cache = caches.default
   const cacheKey = new Request('https://opax.com.au/api/recent')
   const cached = await cache.match(cacheKey)
-  if (cached) return withCacheStatus(await sanitiseStoredResponse(cached), 'HIT')
+  if (cached) return withCacheStatus(await Promise.resolve(cached), 'HIT')
   const res = await kbFetch(
     env,
     '/catalog?page_number=0&page_size=14&sort_field=created&sort_order=desc',
@@ -3004,8 +2971,8 @@ async function apiRecent(env: Env): Promise<Response> {
     .slice(0, 12)
   const out = json({ items })
   out.headers.set('cache-control', `public, max-age=${RECENT_CACHE_TTL}`)
-  await cache.put(cacheKey, await sanitiseStoredResponse(out.clone()))
-  return withCacheStatus(await sanitiseStoredResponse(out), 'MISS')
+  await cache.put(cacheKey, await Promise.resolve(out.clone()))
+  return withCacheStatus(await Promise.resolve(out), 'MISS')
 }
 
 /**
@@ -3026,7 +2993,7 @@ async function apiBrief(url: URL, env: Env): Promise<Response> {
   const cache = caches.default
   const cacheKey = new Request(`https://opax.com.au/api/brief?rids=${rids.join(',')}`)
   const cached = await cache.match(cacheKey)
-  if (cached) return withCacheStatus(await sanitiseStoredResponse(cached), 'HIT')
+  if (cached) return withCacheStatus(await Promise.resolve(cached), 'HIT')
   const briefs: Record<string, string> = {}
   await Promise.all(
     rids.map(async (rid) => {
@@ -3043,8 +3010,8 @@ async function apiBrief(url: URL, env: Env): Promise<Response> {
   )
   const out = json({ briefs })
   out.headers.set('cache-control', 'public, max-age=3600')
-  await cache.put(cacheKey, await sanitiseStoredResponse(out.clone()))
-  return withCacheStatus(await sanitiseStoredResponse(out), 'MISS')
+  await cache.put(cacheKey, await Promise.resolve(out.clone()))
+  return withCacheStatus(await Promise.resolve(out), 'MISS')
 }
 
 // --- topic pages ------------------------------------------------------------
@@ -3081,13 +3048,13 @@ async function cachedJson(
   const cache = caches.default
   const cacheKey = new Request(`https://opax.com.au${cachePath}`)
   const cached = await cache.match(cacheKey)
-  if (cached) return withCacheStatus(await sanitiseStoredResponse(cached), 'HIT')
+  if (cached) return withCacheStatus(await Promise.resolve(cached), 'HIT')
   const out = await build()
   if (out.ok) {
     out.headers.set('cache-control', `public, max-age=${maxAge}`)
-    await cache.put(cacheKey, await sanitiseStoredResponse(out.clone()))
+    await cache.put(cacheKey, await Promise.resolve(out.clone()))
   }
-  return withCacheStatus(await sanitiseStoredResponse(out), 'MISS')
+  return withCacheStatus(await Promise.resolve(out), 'MISS')
 }
 
 /** All 21 topics with live counts, plus how many speeches carry any topic label. */
@@ -3393,13 +3360,7 @@ async function apiMatrix(env: Env): Promise<Response> {
 const SITE_ORIGIN = 'https://opax.com.au'
 const OG_IMAGE = `${SITE_ORIGIN}/og-default.png`
 const OG_IMAGE_ALT = 'OPAX: ask what your politicians actually said'
-/**
- * The share image for a page is its canonical URL under /og with .png on the
- * end, so /subject/person/anthony-albanese shares
- * /og/subject/person/anthony-albanese.png?v=2. A question or search never
- * reaches the image (it can name a withheld donor). The version is the drawing's (src/og.ts), not the data's: a
- * crawler caches by URL, so a redesign has to move.
- */
+
 function ogImageFor(canonical: string): string {
   const u = new URL(canonical)
   const out = new URL(`${SITE_ORIGIN}/og${u.pathname}.png`)
@@ -3466,8 +3427,6 @@ const STATIC_PAGES: Record<string, { title: string; description: string; query?:
     description: 'Who gives money to Australian political parties: every disclosed receipt by donor, party, industry and year, from AEC and state electoral commission returns.',
     query: true,
   },
-  // One flow explained from the disclosure data; the query names graph IDs and is
-  // never echoed here (a withheld donor's flow is rewritten client-side).
   'money/explain': {
     title: 'Explain a money flow · OPAX',
     description: 'One disclosed flow of political money explained from the returns: how much, when, how it compares, and what the disclosure rules leave out.',
@@ -3683,7 +3642,7 @@ async function scopeSpeakerBody(body: Record<string, unknown>, env: Env, raw: st
     typeof s !== 'object' || s === null || !('name' in s) || s.name !== 'prequeries')
 }
 
-interface MoneyNode {
+interface MoneyNode extends DonorDisclosureRecord {
   id: string
   label: string
   kind: 'donor' | 'party'
@@ -3811,7 +3770,7 @@ function loadPeople(env: Env): Promise<PeopleData> {
 let moneyMemo: Promise<MoneyData> | null = null
 function loadMoney(env: Env): Promise<MoneyData> {
   moneyMemo ??= Promise.all(
-    ['/graph/money.json', '/graph/money.qld.json', '/graph/money.vic.json'].map((p) =>
+    ['/graph/money.json', '/graph/money.qld.json', '/graph/money.vic.json', '/graph/money.tas.json'].map((p) =>
       assetJson<{ meta?: { generated?: string; sourceShort?: string }; nodes: MoneyNode[] }>(env, p),
     ),
   )
@@ -3831,7 +3790,12 @@ function loadMoney(env: Env): Promise<MoneyData> {
           // Federal (first file) wins; a state-only node stands in otherwise.
           // Jurisdictions are never summed (see money.qld.json meta.not_summed).
           if (!prev || (i === 0 && prev.sourceShort !== 'AEC returns')) {
-            map.set(key, { ...n, sourceShort, generated: gen })
+            const entry = { ...n, sourceShort, generated: gen }
+            map.set(key, entry)
+            if (n.kind === 'donor') for (const alias of [...n.aliases || [], ...n.lookup_names || []]) {
+              const aliasKey=foldName(alias)
+              if (!map.has(aliasKey)) map.set(aliasKey,entry)
+            }
           }
         }
       })
@@ -4107,9 +4071,8 @@ async function buildRouteMeta(route: SeoRoute, url: URL, request: Request, env: 
         return base({title:page.title+' · OPAX',description:page.description,prerender:page.html,jsonLd:page.jsonLd,status:page.status,card:'card' in page ? page.card : null,...('noindex' in page && page.noindex ? {noindex:true} : {})})
       }
       const people = route.hub === 'sitting' && route.id ? await loadPeople(env) : null
-      const check = memoisedCheck(await tablePrivacyCheck(env.ASSETS))
-      const query = guardTableURL(divisionTableConfig({},'Divisions','sitting',check),url).query
-      const page = await hubPage(route.hub,route.id,<T>(path: string) => assetJson<T>(env,path),people?.people || [],people?.slugOf || new Map(),undefined,env,query,check)
+      const query = guardTableURL(divisionTableConfig({},'Divisions','sitting'),url).query
+      const page = await hubPage(route.hub,route.id,<T>(path: string) => assetJson<T>(env,path),people?.people || [],people?.slugOf || new Map(),undefined,env,query)
       return base({title:page.title+' · OPAX',description:page.description,prerender:page.html,jsonLd:page.jsonLd,status:page.status})
     }
     case 'audit': return base({ ...await auditPage(route.id, url, auditReader(env.ASSETS), prerenderBlock),
@@ -4127,8 +4090,6 @@ async function buildRouteMeta(route: SeoRoute, url: URL, request: Request, env: 
       const page = STATIC_PAGES[researchSearch ? 'search' : route.page]
       const q = url.searchParams.get('q')?.trim()
       const canonical = canonicalFor(url, Boolean(page.query))
-      // A question or search is never echoed into the title, description, share card
-      // or its image: it can name a withheld donor (src/donor-index.ts) or anything else.
       if (route.page === 'ask' && !researchSearch && q) {
         return base({
           title: 'Ask OPAX',
@@ -4295,10 +4256,8 @@ async function buildMeta(route: SeoRoute, url: URL, request: Request, env: Env, 
       if (p) {
         const profiles=await read<{people:Record<string,PersonSchemaIdentity>;by_name:Record<string,PersonSchemaIdentity>}>('/profile-links.json').catch(()=>null)
         const identity={...profiles?.by_name[foldName(p.name)],...profiles?.people[p.pid || '']}
-        const check = memoisedCheck(await tablePrivacyCheck(env.ASSETS))
-        const query = guardTableURL(voteTableConfig(p.pid || '',undefined,check),url).query
-        const withheld = await withheldNameCheck(env.ASSETS)
-        const content = await timed('person-render', () => renderPersonAnswer(p,read,people.slugOf,identity.aphProfileUrl || undefined,withheld,query,check))
+          const query = guardTableURL(voteTableConfig(p.pid || ''),url).query
+        const content = await timed('person-render', () => renderPersonAnswer(p,read,people.slugOf,identity.aphProfileUrl || undefined,query))
         meta.prerender = content.html
         if(content.description) meta.description=clip(content.description)
         const photos=await loadPhotos(env).catch(()=>null)
@@ -4313,9 +4272,8 @@ async function buildMeta(route: SeoRoute, url: URL, request: Request, env: Env, 
       const bill=await read<Parameters<typeof renderBillAnswer>[0]>(`/bills/${route.key}.json`).catch(()=>null)
       if(bill){
         const related=await read<{bills:Parameters<typeof renderBillAnswer>[0][]}>('/bills/index.json')
-        const check = memoisedCheck(await tablePrivacyCheck(env.ASSETS))
-        const query = guardTableURL(divisionTableConfig({bill:bill.key},undefined,undefined,check),url).query
-        meta.prerender=renderBillAnswer(bill,people?.people || [],people?.slugOf || new Map(),related.bills,query,check).html;billIdentity={identifier:bill.key,status:bill.status}}
+          const query = guardTableURL(divisionTableConfig({bill:bill.key}),url).query
+        meta.prerender=renderBillAnswer(bill,people?.people || [],people?.slugOf || new Map(),related.bills,query).html;billIdentity={identifier:bill.key,status:bill.status}}
     } else if(route.kind==='subject' && route.dir==='supplier') {
       const content=await renderSupplierAnswer(meta.canonical.split('/').at(-1)!,read)
       if(content) meta.prerender=content.html
@@ -4845,25 +4803,14 @@ async function supplierMeta(name: string, url: URL, env: Env): Promise<PageMeta>
   }
 }
 
-/**
- * The page of an individual donor, or of a campaigner registered under a
- * withheld donor's name: reachable, noindex, and nobody named in the title,
- * description, structured data, share card or prerendered body. Without
- * positive organisation evidence a donor counts as an individual
- * (public/donor-entity.js, src/donor-index.ts).
- */
+
 const SUBJECT_UNKNOWN: Record<'person' | 'donor' | 'party' | 'campaigner', [string, string]> = {
   person: ['Not in the parliamentary roster', "This person isn't in OPAX's parliamentary roster."],
   donor: ['Donor not found', "This donor isn't in OPAX's money data."],
   party: ['Party not found', "This party isn't in OPAX's record."],
   campaigner: ['Campaigner not found', 'No entry with this name is on the AEC register of associated entities, third parties, significant third parties and political campaigners.'],
 }
-/**
- * A subject route for a name OPAX does not hold: a 404 (a 503 when the records
- * could not be read) that never repeats the requested name, in the title,
- * description, structured data, share card or canonical. A typed name can be
- * anyone's, a withheld donor's included (src/donor-index.ts).
- */
+
 function unknownSubjectMeta(kind: keyof typeof SUBJECT_UNKNOWN, loaded: boolean): PageMeta {
   const [title, description] = loaded ? SUBJECT_UNKNOWN[kind] : ['Temporarily unavailable', 'These records could not be loaded. Please try again.']
   return { title: `${title} · OPAX`, description, canonical: `${SITE_ORIGIN}/subject/${kind}`, ogType: 'website', status: loaded ? 404 : 503, jsonLd: null, prerender: null, card: null }
@@ -4877,27 +4824,11 @@ async function partyFor(name: string, env: Env): Promise<{ node: MoneyEntry | nu
   return { node, label, loaded: !!moneyData }
 }
 
-/** Whether any money graph (Tasmania's included) holds a donor of this name. */
-async function donorKnown(name: string, env: Env): Promise<boolean | null> {
-  const index = await loadDonorIndex(env.ASSETS).catch(() => null)
-  if (!index) return null
-  const key = foldDonorName(name)
-  return index.organisations.has(key) || index.withheld.has(key)
-}
-
-function withheldMeta(dir: 'donor' | 'campaigner', canonical: string): PageMeta {
-  const [heading, sentence] = dir === 'donor'
-    ? ['Donor', 'This donor is not named in OPAX.']
-    : ['Campaigner', 'An entry on the AEC register of campaigners, third parties and associated entities. Every return it filed, year by year.']
-  return { title: `${heading} · OPAX`, description: sentence, canonical: '', ogType: 'profile', status: 200, jsonLd: null,
-    prerender: prerenderBlock(heading, sentence), card: null, noindex: true }
-}
-
 async function moneySubjectMeta(dir: 'party' | 'donor', name: string, url: URL, env: Env): Promise<PageMeta> {
-  if(dir==='donor' && await donorWithheld(env.ASSETS,name)) return withheldMeta('donor','')
   const [moneyData, people] = await Promise.all([loadMoney(env).catch(() => null), loadPeople(env).catch(() => null)])
   // A name no record holds is never repeated back (unknownSubjectMeta).
   let node: MoneyEntry | null, display: string
+  let disclosureRecord: DonorDisclosureRecord | null = null
   if (dir === 'party') {
     const party = await partyFor(name, env)
     if (!party.label) return unknownSubjectMeta('party', party.loaded)
@@ -4905,16 +4836,16 @@ async function moneySubjectMeta(dir: 'party' | 'donor', name: string, url: URL, 
     display = party.label
   } else {
     node = moneyData?.donors.get(foldName(name)) ?? null
-    const known = node ? true : await donorKnown(name, env)
+    disclosureRecord = node ?? (await loadDonorIndex(env.ASSETS).catch(()=>null))?.get(foldName(name)) ?? null
+    const known = Boolean(disclosureRecord)
     if (!known) return unknownSubjectMeta('donor', known !== null)
-    display = node?.label ?? name
+    display = disclosureRecord ? donorDisclosure(disclosureRecord).name : name
   }
-  const canonical = dir==='party' ? `${SITE_ORIGIN}${partyUrl(display)}` : `${SITE_ORIGIN}/subject/${dir}/${encodeURIComponent(display)}`
-  if (dir === 'donor' && await donorWithheld(env.ASSETS, display)) return withheldMeta('donor', canonical)
+  const canonical = dir==='party' ? `${SITE_ORIGIN}${partyUrl(display)}` : node && donorDisclosure(node).href ? new URL(donorDisclosure(node).href!,SITE_ORIGIN).href : `${SITE_ORIGIN}/subject/${dir}/${encodeURIComponent(display)}`
   const title = `${display} · OPAX`
   let facts: string
   let tail = ''
-  const ldType = 'Organization'
+  const ldType = dir==='donor' ? 'Dataset' : 'Organization'
   let card: CardSpec
   if (dir === 'party') {
     const members = people?.people.filter((p) => p.party && foldName(p.party) === foldName(display)) ?? []
@@ -4941,11 +4872,11 @@ async function moneySubjectMeta(dir: 'party' | 'donor', name: string, url: URL, 
     card = {
       kicker: `Donor · ${industryLabel(node.industry)}`,
       title: display,
-      lines: [`${money(node.total)} across ${num(node.count)} receipts, ${years(node.firstYear, node.lastYear)} (${node.sourceShort})`, 'Which parties it funded, year by year.'],
+      lines: [`${money(node.total)} across ${num(node.count)} receipts, ${years(node.firstYear,node.lastYear)} (${node.sourceShort})`,donorDisclosure(node).reference],
     }
   } else {
-    facts = `${display}: not among the top disclosed donors in the OPAX money data. Search the parliamentary record for mentions.`
-    card = { kicker: 'Donor', title: display, lines: ['Not among the top disclosed donors in the OPAX money data. Search the parliamentary record for mentions.'] }
+    facts = disclosureRecord?.kind==='reference' ? `${display}: source reference; no matching electoral donation established.` : `${display}: disclosed electoral returns outside the bounded money-map selection.`
+    card = {kicker:disclosureRecord?.kind==='reference'?'Source reference':'Donor',title:display,lines:[facts,disclosureRecord ? donorDisclosure(disclosureRecord).reference : '']}
   }
   const sentence = tail ? `${facts} ${tail}` : facts
   const description = withTail(facts, tail)
@@ -4956,7 +4887,7 @@ async function moneySubjectMeta(dir: 'party' | 'donor', name: string, url: URL, 
     ogType: 'profile',
     status: 200,
     jsonLd: { '@context': 'https://schema.org', '@type': ldType, name: display, url: canonical, description },
-    prerender: prerenderBlock(display, sentence),
+    prerender: prerenderBlock(display,sentence,dir==='donor' && disclosureRecord ? `<p>${donorLabelHTML(disclosureRecord)}</p>${indexLinks()}` : indexLinks()),
     card,
   }
 }
@@ -4977,7 +4908,6 @@ async function campaignerMeta(name: string, url: URL, env: Env): Promise<PageMet
   // and it gives way before the masthead does.
   const title = `${clip(display, 90)} · OPAX`
   if (!c) return unknownSubjectMeta('campaigner', !!data)
-  if (await namesWithheldDonor(env.ASSETS, display)) return withheldMeta('campaigner', canonical)
   const linked = c.parties.length ? `; disclosed relationship: ${andList(c.parties.slice(0, 3))}` : ''
   const parts: string[] = []
   if (c.filings) parts.push(`${num(c.filings)} annual return${c.filings === 1 ? '' : 's'}, ${yearSpan(c.firstYear, c.lastYear)}`)
@@ -5222,7 +5152,7 @@ async function serveCachedPage(route: SeoRoute, url: URL, request: Request, env:
   const target = new URL(url); target.searchParams.delete('nocache')
   const shell = await timed('shell', () => env.ASSETS.fetch(new Request(`${SITE_ORIGIN}/`)))
   if (!shell.ok) return shell
-  const key = await pageCacheKey({epoch: env.CACHE_EPOCH ?? '', workerVersion: env.CF_VERSION_METADATA?.id ?? '', assets: shell.headers.get('etag') ?? '', registry: TABLE_REGISTRY_FINGERPRINT, url: target})
+  const key = await pageCacheKey({epoch: env.CACHE_EPOCH ?? '', workerVersion: env.CF_VERSION_METADATA?.id ?? '', assets: shell.headers.get('etag') ?? '', url: target})
   // Rendered unconditionally (no If-None-Match), so what is stored is the whole
   // page; the shell is read once, by whichever render runs.
   const render = () => renderSeoPage(route, target, new Request(target, {method: 'GET'}), env, ctx, shell)
@@ -5455,14 +5385,7 @@ async function serveStorySlide(url: URL, request: Request, env: Env, ctx: Execut
   }
 }
 
-/**
- * Route kinds whose path names a subject, by a typed name or an id: person,
- * party, donor, campaigner, supplier, agency and electorate pages, grant
- * recipients and topics. Their card is drawn only for a subject the page itself
- * would show (a 200 with a card, indexable), and that is checked before any
- * cache read: a card cached before a subject was withheld, or one for a name no
- * record holds, is never replayed.
- */
+
 const NAMED_CARD_ROUTES = new Set<SeoRoute['kind']>(['subject', 'grant-recipient', 'topic'])
 async function cardRefused(route: SeoRoute | null, pageUrl: URL, request: Request, env: Env, ctx: ExecutionContext): Promise<boolean> {
   // Check the election gate before replaying a card cached while publication was enabled.
@@ -5567,7 +5490,6 @@ async function llmsTxt(env: Env): Promise<Response> {
   const policy = saFullText(env.SA_HANSARD_FULL_TEXT) ? '' : `\nSouth Australian Hansard: ${SA_EXCERPT_LABEL} /api/resource and MCP read_record provide at most 120 words per record, with its official source_url. Machine summaries are OPAX text.\n`
   return new Response((await asset.text()) + policy + (vicElectionEnabled(env.VIC_ELECTION_HUB_ENABLED) ? '\n' + vicElectionLlms : ''), { headers: { 'content-type': 'text/plain; charset=utf-8', 'cache-control': 'public, max-age=3600' } })
 }
-
 
 // Router-level hardening
 //
@@ -5879,7 +5801,6 @@ async function apiAskRouted(request: Request, url: URL, input: Record<string, un
   const mode = env.AGENTIC_ASK_MODE
   if (!['route', 'shadow'].includes(String(mode)) || classifyAgentic(question).route !== 'agentic' || input.kind && !['speech', 'all'].includes(String(input.kind))) return fallback()
   if (mode === 'shadow') {
-    if (await questionNamesWithheldDonor(env.ASSETS, question)) return fallback()
     const normal = await fallback()
     if (normal.ok) ctx.waitUntil(executeAgentic(input, env, ctx).then(() => {}).catch(() => console.warn('Ask background run unavailable')))
     return normal
@@ -5892,7 +5813,6 @@ async function apiAskRouted(request: Request, url: URL, input: Record<string, un
   let streamOwnsBudget = false
   try {
     // Reuse the donor guard within the same deadline; no prompt bypass.
-    if (await budget.run(() => questionNamesWithheldDonor(env.ASSETS, question))) return await routedFallback()
     const electorateData = classifyAgentic(question).rule === 'electorate-data'
     let namedScope: NamedScope = { people: [], parties: [], bills: [], ambiguous: false, unresolved: false }
     if (!electorateData) {
@@ -6168,11 +6088,11 @@ export default {
     const url = new URL(request.url)
     const display = (response: Response, target = url) => {
       if (!/^\/api\/(?:resource\/[^/]+|search|search-all|search-summary|ask)$/.test(target.pathname) && !/^\/reports\/[^/]+\.json$/.test(target.pathname)) return Promise.resolve(response)
-      return sanitiseStoredResponse(response).then(safe => saPublicResponse(safe, env.SA_HANSARD_FULL_TEXT, async slug => {
+      return Promise.resolve(response).then(safe => saPublicResponse(safe, env.SA_HANSARD_FULL_TEXT, async slug => {
         const sourceUrl = new URL(`/api/resource/${slug}`, url)
         const result = await apiResource(new Request(sourceUrl), sourceUrl, slug, env, ctx)
         return result.ok ? await result.json() as Record<string, unknown> : null
-      }, target.searchParams.get('q') || '')).then(sanitiseStoredResponse)
+      }, target.searchParams.get('q') || ''))
     }
     if (!vicElectionEnabled(env.VIC_ELECTION_HUB_ENABLED) && vicElectionPublicationPath(url.pathname))
       return withSecurityHeaders(new Response(request.method === 'HEAD' ? null : 'Not found', {status:404,headers:{'x-robots-tag':'noindex','cache-control':'no-store','content-type':'text/plain; charset=utf-8'}}), url)
@@ -6187,7 +6107,6 @@ export default {
     if (url.pathname === '/.well-known/atproto-did') return /^did:plc:[a-z2-7]{24}$/.test(env.BSKY_DID ?? '')
       ? new Response(env.BSKY_DID, { headers: { 'content-type': 'text/plain; charset=utf-8', 'cache-control': 'public, max-age=300' } })
       : new Response('Not found', { status: 404 })
-    if (url.pathname === '/api/table/privacy') return withSecurityHeaders(await tablePrivacy(request, env.ASSETS), url)
     const isApi = url.pathname.startsWith('/api/')
     const communityResponse = (response: Response) => { const secured = withSecurityHeaders(response, url); if (env.STAGING_API) secured.headers.set('x-robots-tag', 'noindex, nofollow'); return secured }
     if (url.pathname === '/api/ops/ask-gold') {

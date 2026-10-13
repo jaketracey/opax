@@ -6150,3 +6150,6 @@ html:not([data-chat="docked"]) #panel-chat.has-person-context .chat-composer { m
 .speech-participant .meta-portrait { display: inline-block; flex-shrink: 0; width: 24px; height: 24px; }
 .speech-participant .meta-portrait:empty { display: none; }
 .speech-participant-role { color: var(--ink-soft); }
+
+/* Source return references accompany disclosure names across record surfaces. */
+.donor-return-reference { display: block; font: var(--type-fine); color: var(--ink-soft); overflow-wrap: anywhere; }

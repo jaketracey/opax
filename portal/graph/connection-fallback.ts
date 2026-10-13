@@ -1,13 +1,12 @@
-import {donorPrivacyIndex,donorNameWithheld} from '../public/donor-entity.js'
-import {withheldDonorTotals,donorAggregateDetail,isUnnamedAggregate,unnamedDonorLabel} from '../public/donor-views.js'
+import {donorDisclosure,donorDisplayText} from '../public/donor-disclosure.js'
 import type { MoneyGraph, MoneyMapHandle, MoneyMapOptions, MoneyScene } from './index.ts'
 import { windowFigures } from './index.ts'
 import { filterMoneyEdges, readMoneyFilters, type MoneyFilters } from '../public/money-records.js'
 import { formatMoney } from './map-types.ts'
 
 /** The fallback uses the same directed edges and year windows as the 3D scene. */
-export function connectionRows(data: MoneyGraph, scene?: MoneyScene, group?: string | null, privacy = donorPrivacyIndex([data]), includeWithheld = false) {
-  const nodes = new Map(data.nodes.filter(node=>includeWithheld || node.kind!=='donor'||!donorNameWithheld(privacy,node.label)).map(node => [node.id, node]))
+export function connectionRows(data: MoneyGraph, scene?: MoneyScene, group?: string | null) {
+  const nodes = new Map(data.nodes.map(node => [node.id, node]))
   const pairs = scene?.edges ? new Set(scene.edges.map(edge => JSON.stringify([edge.source, edge.target]))) : null
   return data.edges.filter(edge => {
     if (!nodes.has(edge.source) || !nodes.has(edge.target)) return false
@@ -20,7 +19,7 @@ export function connectionRows(data: MoneyGraph, scene?: MoneyScene, group?: str
 }
 
 /** A readable, keyboard-accessible graph when this device cannot create WebGL 2. */
-export function mountConnectionFallback(container: HTMLElement, data: MoneyGraph, options: MoneyMapOptions = {}, privacy = donorPrivacyIndex([data])): MoneyMapHandle {
+export function mountConnectionFallback(container: HTMLElement, data: MoneyGraph, options: MoneyMapOptions = {}): MoneyMapHandle {
   const root = document.createElement('div')
   root.className = 'mm-connections'
   root.setAttribute('role', 'region')
@@ -52,10 +51,8 @@ export function mountConnectionFallback(container: HTMLElement, data: MoneyGraph
     add('p', root, 'Showing a lighter map for this browser.').className = 'mm-connections-note'
     const window = period()
     const windowed = { ...data, edges: data.edges.map(e => windowFigures(e, window.from, window.to, window.cpi)).filter(e => e.byYear || (e.firstYear ?? yearMin) <= window.to && (e.lastYear ?? yearMax) >= window.from) }
-    const allRows = filterMoneyEdges({ ...data, edges: connectionRows({ ...windowed, edges: windowed.edges.map(e => ({ ...e, byYear: undefined })) }, current ? { ...current, from: undefined, to: undefined } : undefined, group, privacy, true) }, filters)
-    const rows=allRows.filter(e=>[nodes.get(e.source),nodes.get(e.target)].every(n=>n && (n.kind!=='donor'||!donorNameWithheld(privacy,n.label))))
-    const hidden=withheldDonorTotals(data.nodes,allRows,privacy)
-    if(hidden.count) root.append(donorAggregateDetail(`${unnamedDonorLabel(hidden.count)} · ${formatMoney(hidden.amount)}`,document))
+    const allRows = filterMoneyEdges({ ...data, edges: connectionRows({ ...windowed, edges: windowed.edges.map(e => ({ ...e, byYear: undefined })) }, current ? { ...current, from: undefined, to: undefined } : undefined, group) }, filters)
+    const rows=allRows
     const ids = new Set(allRows.flatMap(e => [e.source, e.target]))
     options.onViewChange?.({ ...data, nodes: data.nodes.filter(n => ids.has(n.id)), edges: allRows }, { ...filters, industry: group || '' }, window)
     const shown = rows.slice(0, 24)
@@ -71,13 +68,14 @@ export function mountConnectionFallback(container: HTMLElement, data: MoneyGraph
         const node = nodes.get(id)!
         // One control per name: a node with a profile page is a link to it;
         // one without is a button that narrows the list to its connections.
-        const profile = node.profileUrl && /^\/subject\/(agency|supplier)\//.test(node.profileUrl) ? node.profileUrl : null
-        const control = add(profile ? 'a' : 'button', labels) as HTMLAnchorElement | HTMLButtonElement
+        const donorProfile=node.kind==='donor' ? donorDisclosure(node).href : null
+        const profile = donorProfile || (node.profileUrl && /^\/subject\/(agency|supplier)\//.test(node.profileUrl) ? node.profileUrl : null)
+        const control = add(profile ? 'a' : node.kind==='donor' ? 'span' : 'button', labels) as HTMLAnchorElement | HTMLButtonElement
         const dot = add('i', control)
         dot.setAttribute('aria-hidden', 'true')
         // A node without a colour of its own takes the stylesheet's neutral dot.
         if (/^#[0-9a-f]{6}$/i.test(node.colour ?? '')) dot.style.background = node.colour!
-        add('span', control, node.label)
+        add('span', control, node.kind==='donor' ? donorDisplayText(node) : node.label)
         if (profile) {
           (control as HTMLAnchorElement).href = profile
         } else {
@@ -102,7 +100,7 @@ export function mountConnectionFallback(container: HTMLElement, data: MoneyGraph
   return {
     setFilters: (value, nextRoute) => { if (nextRoute) route = nextRoute; current = undefined; filters = { ...value }; group = value.industry || null; render() },
     presentScene: scene => {
-      if (destroyed || !nodes.has(scene.focusId) || nodes.get(scene.focusId)?.kind==='donor' && donorNameWithheld(privacy,nodes.get(scene.focusId)!.label)) return false
+      if (destroyed || !nodes.has(scene.focusId)) return false
       current = scene
       route = new URLSearchParams()
       filters = {}

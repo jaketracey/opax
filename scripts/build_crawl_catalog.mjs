@@ -8,8 +8,7 @@ import { personNameKey } from '../portal/public/canonical-urls.js';
 import { splitSpeakers } from '../portal/public/speech-attribution.js';
 import { TOPIC_NAMES } from '../portal/src/topic-names.mjs';
 import { fileKey } from '../portal/public/grants.js';
-import { donorPrivacyIndex, donorNameWithheld, foldDonorName } from '../portal/public/donor-entity.js';
-import { renderPersonAnswer, INTEREST_OMITTED_MARK } from '../portal/src/seo-content.ts';
+import { renderPersonAnswer } from '../portal/src/seo-content.ts';
 
 import { catalogueComplete, unpack } from '../portal/public/instruments.js';
 import { auditComplete } from '../portal/public/audit.js';
@@ -198,24 +197,16 @@ export async function buildCrawl(root, {read: sourceRead} = {}) {
     const interest = p.pid ? await optional(`interests/${p.pid}.json`) : null;
     const record=votes[p.pid];
     add('people',path,latestDate([p.last_changed_at,p.updated_at,p.last_speech_date,interest?.as_at,...Object.values(interest?.buckets || {}).flatMap(b=>b.items?.map(i=>i.date) || []),...(record?.for || []).map(v=>v.date),...(record?.against || []).map(v=>v.date),...(recent?.people?.[p.pid]?.recent || []).map(v=>v.date),p.rosterOnly?.asOf],peopleDate),undefined,peopleDate);
-    // A person page's fingerprint carries the donor names its "Donors to their party"
-    // block shows, so any change in who is named re-pings it and nothing else in that
-    // block does; and whether a declared-interest entry is left out (a withheld donor).
-    // A page naming no donors keeps the plain fingerprint.
     const base = {person:p,votes:votes[p.pid] || null,interest};
     const html = (p.party_now || p.party || interest) ? (await renderPersonAnswer(p,cachedRead,slugs)).html : '';
     const named = namedDonors(html);
-    snapshot.set(path,hash({...base,...(named.length ? {donors:named} : {}),...(html.includes(INTEREST_OMITTED_MARK) ? {interestsWithheld:true} : {})}));
+    snapshot.set(path,hash({...base,...(named.length ? {donors:named} : {})}));
   }
   const partyLabels = new Map(), donors = new Map();
-  // Unconfirmed donors stay out of the sitemap, as individual grant recipients do.
-  // The industry tag does not say who is a person: public/donor-entity.js.
-  const donorIndex = donorPrivacyIndex((await Promise.all(['money.json','money.qld.json','money.vic.json','money.tas.json'].map(name => optional(`graph/${name}`)))).filter(Boolean));
   for (const name of ['money.json','money.qld.json','money.vic.json']) {
     const money = await read(`graph/${name}`);
     for (const n of money.nodes) {
       if (!validId(n.label)) continue;
-      if (n.kind === 'donor' && donorNameWithheld(donorIndex, n.label)) continue;
       const map = n.kind === 'party' ? partyLabels : n.kind === 'donor' ? donors : null;
       if (map && !map.has(fold(n.label))) map.set(fold(n.label),{label:n.label,date:money.meta.generated});
     }
@@ -276,8 +267,7 @@ export async function buildCrawl(root, {read: sourceRead} = {}) {
     add('agencies',`/subject/agency/${encodeURIComponent(a.id)}`,latestDate([profile.updated_at,...(profile.contracts || []).flatMap(c=>[c.published,c.start_date])],agencies.meta.generated_at),undefined,agencies.meta.generated_at);
   }
   const campaignerNames = new Map();
-  // A campaigner registered under a withheld donor's name is noindex and unlisted.
-  for (const c of campaigners?.entities || []) if (validId(c.name) && c.name.length <= 200 && !donorIndex.withheld.has(foldDonorName(c.name))) {
+  for (const c of campaigners?.entities || []) if (validId(c.name) && c.name.length <= 200) {
     const previous = campaignerNames.get(fold(c.name));
     if (!previous || (c.years?.length || 0) > (previous.years?.length || 0)) campaignerNames.set(fold(c.name),c);
   }

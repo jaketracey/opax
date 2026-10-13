@@ -1,4 +1,5 @@
-import {sanitiseStoredDonors} from './donor-hashes.mjs'
+import {foldDonorName} from '../public/donor-entity.js'
+import {donorDisclosure,donorLookup,returnReference,type DonorDisclosureRecord} from '../public/donor-disclosure.js'
 /**
  * A daily source-based edition: politician statistics, bills, grants and topics.
  * All facts come from the site's published records; no model runs at post time.
@@ -32,6 +33,8 @@ const FALLBACK: Record<DailyPostKind, DailyPostKind[]> = {
 }
 
 export interface DailyPost {
+  donor?: DonorDisclosureRecord
+
   date: string
   kind: DailyPostKind
   /** Stable id used to avoid featuring the same subject twice in a season. */
@@ -205,7 +208,6 @@ export function prettyParty(raw: string | null | undefined): string {
   return text
 }
 
-
 // ---------------------------------------------------------------- the story
 
 /** A headline's dollars: the site's one short form from a million up ($11.3m, $1.45bn), exact below ($77,770). */
@@ -299,7 +301,7 @@ async function grantsGraph(sources: DailyPostSources): Promise<GrantsGraph | nul
 
 /** One award as the recipient's source shard records it. */
 interface ShardAward { id: string; v: number; n?: string; desc?: string; s?: string; guid?: string; ag?: string; pr?: string; cat?: string; fy?: string; sel?: string; el?: string }
-interface ShardRecipient { n?: string; t?: number; c?: number; abr?: { state?: string }; grants?: ShardAward[] }
+interface ShardRecipient { d?: {n?:string}; n?: string; t?: number; c?: number; abr?: { state?: string }; grants?: ShardAward[] }
 
 async function recipientShard(sources: DailyPostSources, graph: GrantsGraph | null, recipientId: string): Promise<ShardRecipient | null> {
   const recipient = graph?.recipients?.find(r => r.id === recipientId)
@@ -523,7 +525,6 @@ const SOURCE_LABELS: Record<string, string> = {
   billhome: 'Bill home page on ParlInfo', frl_act: 'The Act on the Federal Register of Legislation', frl: 'The Federal Register of Legislation',
 }
 
-
 async function billSlides(sources: DailyPostSources, bill: BillIndexItem, record: BillFile | null, sentences: string[], words: { sponsor: string; party: string; statusShort: string }): Promise<{ slides: (StorySlide | null)[]; photos: StoryPhotos }> {
   const catalogue = await photoCatalogue(sources)
   const billPhotos: StoryPhotos = { catalogue, used: [] }
@@ -596,6 +597,8 @@ function divisionSlide(d: BillDivision, count: number): StorySlide | null {
 }
 
 export interface GrantPublicationRecord {
+  donor?: DonorDisclosureRecord
+
   id: string; recipientId: string; recipient: string; amount: number; start: string
   purpose: string; agency?: string; program?: string; category?: string; sourceUrl: string
 }
@@ -671,13 +674,18 @@ export function recipientSegment(id: string): string {
 
 /** The edition for one award record: the same words whether the rotation or an operator chose it. */
 async function grantEdition(date: string, grant: GrantPublicationRecord, context: GrantContext): Promise<DailyPost> {
+  if(!grant.donor && context.recipient?.d?.n){
+    const index=await context.sources.asset('/graph/donor-index.json').catch(()=>null) as {donors:DonorDisclosureRecord[]} | null
+    const donor=index?.donors && donorLookup(index.donors).get('federal:'+foldDonorName(context.recipient.d.n))
+    if(donor)grant={...grant,donor}
+  }
   const url = `${ORIGIN}/money/grants/federal/recipient/${recipientSegment(grant.recipientId)}?award=${encodeURIComponent(grant.id)}`
   const recipientLine = `Recipient: ${clip(shortRecipient(grant.recipient), 60)}. Agreement from ${formatDate(grant.start)} (award value, not payments).`
   const selection = selectionLine(context.award?.sel)
   // How it was chosen outranks the tail of the purpose: the hook gives way (to no less than 80 characters) so it fits.
   const hookRoom = selection ? Math.max(80, X_LIMIT - xLength([recipientLine, selection, url].join('\n\n')) - 3) : 140
   const hook = `${clip(grantHook(grant.amount, grant.purpose), Math.min(140, hookRoom))}.`.replace(/…\.$/, '…')
-  const post: DailyPost = { date, kind: 'grant', subject: `grant:${grant.id}`, title: `${grant.id}: ${grant.recipient}`, url,
+  const post: DailyPost = {...(grant.donor ? {donor:grant.donor} : {}), date, kind:'grant', subject: `grant:${grant.id}`, title: `${grant.id}: ${grant.recipient}`, url,
     text: fit([hook, recipientLine], [selection, grant.program ? `Program: ${clip(grant.program, 70)}.` : ''], url),
     caption: [`Follow the grant: ${formatMoney(grant.amount)} in published grant funding for ${grant.recipient}.`, grant.purpose,
       [grant.program ? `Program: ${grant.program}` : '', grant.agency ? `Agency: ${grant.agency}` : '', `Agreement starts: ${formatDate(grant.start)}`, `Award: ${grant.id}`].filter(Boolean).join('\n'),
@@ -687,7 +695,6 @@ async function grantEdition(date: string, grant: GrantPublicationRecord, context
   const story = await grantSlides(grant, context, url)
   return told(post, story.slides, story.photos)
 }
-
 
 async function grantSlides(grant: GrantPublicationRecord, { sources, graph, recipient, award }: GrantContext, url: string): Promise<{ slides: (StorySlide | null)[]; photos: StoryPhotos }> {
   const catalogue = await photoCatalogue(sources)
@@ -1025,18 +1032,37 @@ const COMPOSERS: Record<DailyPostKind, (date: string, sources: DailyPostSources,
 /** Composes the post for a date; falls back through the other kinds if one has nothing to say. */
 export async function composeDailyPost(date: string, sources: DailyPostSources, kind: DailyPostKind = kindFor(date), subject?: string): Promise<DailyPost | null> {
   // A named subject is an operator's choice: only the grant form exists so far.
-  if (subject) { const post = subject.startsWith('grant:') ? await grantPostFor(date, sources, subject) : null; return post ? authoriseVicPost(sanitiseStoredDonors(post)) : null }
+  if (subject) { const post = subject.startsWith('grant:') ? await grantPostFor(date, sources, subject) : null; return post ? authoriseVicPost(post) : null }
   const recent = await sources.recent()
   const order = [kind, ...FALLBACK[kind]]
   for (const k of order) {
     const post = await COMPOSERS[k](date, sources, recent)
-    if (post) return authoriseVicPost(sanitiseStoredDonors(post))
+    if (post) return authoriseVicPost(post)
   }
   return null
 }
 
 /** Apply after composition so fitting optional copy can never drop the approved line. */
 export function authoriseVicPost(post: DailyPost, victorianMember = false): DailyPost {
+  if(post.donor){
+    const donor=donorDisclosure(post.donor)
+    const reference=`${post.donor.kind==='reference' ? 'Source reference' : 'Disclosed donor'}: ${donor.name} — ${returnReference(donor.returns[0] || {}) || donor.reference}`
+    const nameLink=donor.href ? new URL(donor.href,ORIGIN).href : null
+    const source=post.donor.returnReferences?.[0]?.url || `${ORIGIN}/money/receipts`
+    const url=/\/subject\/(?:donor|person|organisation)\//.test(post.url) ? nameLink || source : post.url
+    const append=(text:string)=>text.includes(reference) ? text : [reference,text].filter(Boolean).join(' — ')
+    const slides=post.slides?.map(slide=>{
+      const shown=slide.type==='cover' || slide.type==='division' ? {...slide,line:append(slide.line || '')}
+        : slide.type==='source' ? {...slide,rows:slide.rows.includes(reference) ? slide.rows : [reference,...slide.rows],url}
+        : slide.type==='list' ? {...slide,note:append(slide.note || '')}
+        : {...slide,lines:slide.lines.includes(reference) ? slide.lines : [reference,...slide.lines]}
+      return {...shown,alt:append(slide.alt)} as StorySlide
+    })
+    const caption=post.caption || post.text
+    const text=post.text.includes(reference) ? post.text : fit([reference],[post.text.replaceAll(post.url,'').trim()],url)
+    post={...post,donor:{...post.donor,match:post.donor.match ? {...post.donor.match,href:donor.href} : undefined},url,text,
+      caption:caption.includes(reference)?caption:caption+'\n\n'+reference,slides}
+  }
   const material = [post.title, post.text, post.caption, post.url, JSON.stringify(post.slides ?? [])].join(' ')
   if (!victorianMember && !post.authorisation && !vicElectionMaterial(material)) return post
   const line = VIC_ELECTION_AUTHORISATION_LINE

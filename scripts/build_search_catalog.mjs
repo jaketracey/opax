@@ -2,13 +2,12 @@ import { readFile, readdir, mkdir, writeFile, rm } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
 import { resolve, join } from 'node:path';
 import { createHash } from 'node:crypto';
-import {containsWithheldLookupPhrase} from '../portal/src/donor-sanitise.mjs';
 import { normalize, tokens, bucket } from '../portal/src/catalog-query.mjs';
 import { personNameKey, personUrl } from '../portal/public/canonical-urls.js';
 import { recordPathIndex } from '../portal/public/record-paths.js';
 import { personSlug, personIndex } from '../portal/src/person-slug.ts';
+import {donorDisclosure,donorLookup} from '../portal/public/donor-disclosure.js';
 import { moneyFlowType } from '../portal/public/money-records.js';
-import { donorPrivacyIndex, donorNameWithheld, foldDonorName, withheldPhrases, namesWithheldPhrase } from '../portal/public/donor-entity.js';
 import { recordsWithLocations } from '../portal/public/grants-research.js';
 import { auditComplete } from '../portal/public/audit.js';
 import { payPersonRecord, payPersonOrder, payGeneralRecords } from '../portal/src/pay-records.mjs';
@@ -19,7 +18,6 @@ const docs = [], ids = new Set(), counts = {};
 const cash = n => Number(n).toLocaleString('en-AU',{style:'currency',currency:'AUD',maximumFractionDigits:2});
 let canonicalPeople=new Map(), canonicalAliases=new Map();
 const personHref = n => { const slug=canonicalPeople.get(n) || canonicalAliases.get(personNameKey(n)); return slug ? '/subject/person/'+slug : personUrl(n); };
-const donorHref = n => '/subject/donor/'+encodeURIComponent(n);
 const supplierHref = n => '/subject/supplier/'+encodeURIComponent(n);
 const year = d => Number(String(d || '').slice(0,4)) || 0;
 const period = (a,b) => a && b ? (a===b?String(a):`${a}–${b}`) : '';
@@ -77,22 +75,24 @@ export function personSpeechCount(p) {
  return p.speech_count_basis ? 'Count pending exact export; own-house, in-service speeches.' : `${p.speeches.toLocaleString()} indexed speeches.`;
 }
 
+export function donorSearchRecord(jur, node) {
+ const disclosure=donorDisclosure(node);
+ return {key:jur+':'+node.id,kind:'donor',title:disclosure.name,href:disclosure.href,
+  snippet:node.kind==='reference' ? `${disclosure.reference} ${node.source_note}` : `${disclosure.reference} ${(node.industry||'').replaceAll('_',' ')}. ${cash(node.total||0)} in disclosed political receipts across ${(node.count||0).toLocaleString()} records.`,
+  extra:{aliases:[...(node.aliases||[]),...(node.lookup_names||[]),node.abn||''].join(' '),from:node.firstYear,to:node.lastYear,state:jur,source:jur==='federal'?'AEC disclosure records':`${jur.toUpperCase()} disclosure records`,dateLabel:period(node.firstYear,node.lastYear),url:disclosure.returns[0]?.url || null,...(node.source_note?{source_note:node.source_note}:{})}};
+}
+
 async function main() {
  const roster = await read('parliamentarians.json');
  const identity=personIndex(roster.people); canonicalPeople=identity.slugOf; canonicalAliases=new Map([...identity.byFold].map(([name,p])=>[name,identity.slugOf.get(p.name)]));
  for(const p of roster.people) add('person:'+p.name,'person',p.full||p.name,personHref(p.name),`${p.party_now||p.party||''}. ${(p.states||[]).join(', ')}. ${personSpeechCount(p)}${p.representation?.length?' Recorded representation: '+p.representation.map(r=>`${r.electorate}${r.state?', '+r.state:''}, ${r.jurisdiction}, ${r.chamber}`).join('; ')+'. Roster affiliations may include past seats and do not establish current tenure.':''}`,{aliases:p.name,from:p.first,to:p.last,state:p.states,parties:[p.party_now||p.party||''],speakers:[p.name],source:'Parliamentarian directory',dateLabel:p.speech_scope?'':(p.speech_count_basis?'Transcript years: ':'')+period(p.first,p.last)});
- // Unconfirmed donors stay out of search entities: public/donor-entity.js.
- const moneyGraphs=await Promise.all(['money.json','money.qld.json','money.vic.json','money.tas.json'].map(file=>read('graph/'+file)));
- const donorIndex=donorPrivacyIndex(moneyGraphs);
- const withheld=name=>donorIndex.withheld.has(foldDonorName(name));
- // Free text (a declared-interest entry) naming a withheld donor; office holders are named as such.
- const officeHolders=[...roster.people.flatMap(p=>[p.name,p.full||'']),...Object.values((await read('access.json')).ministers||{}).map(m=>m.name)].filter(Boolean);
- const textPhrases=withheldPhrases(moneyGraphs,officeHolders);
- const namesWithheld=(...texts)=>namesWithheldPhrase(textPhrases,...texts);
+ const donorRecords=[];
  for(const [jur,file] of [['federal','money.json'],['qld','money.qld.json'],['vic','money.vic.json'],['tas','money.tas.json']]) {
   const graph=await read('graph/'+file), byId=new Map(graph.nodes.map(n=>[n.id,n]));
-  for(const n of graph.nodes.filter(n=>(n.kind==='donor'&&!donorNameWithheld(donorIndex,n.label))||n.kind==='party')) {
-   add(jur+':'+n.id,n.kind==='donor'?'donor':'party',n.label,n.kind==='party'?'/subject/party/'+personSlug(n.label):jur==='federal'?donorHref(n.label):'/money?'+new URLSearchParams({jur,q:n.label}),`${(n.industry||'').replaceAll('_',' ')}. ${cash(n.total||0)} in disclosed political receipts across ${(n.count||0).toLocaleString()} records.`,{aliases:[...(n.aliases||[]),n.abn||''].join(' '),from:n.firstYear,to:n.lastYear,state:jur,parties:n.kind==='party'?[n.label]:[],source:jur==='federal'?'AEC disclosure records':`${jur.toUpperCase()} disclosure records`,dateLabel:period(n.firstYear,n.lastYear)});
+  donorRecords.push(...graph.nodes.filter(n=>n.kind==='donor').map(n=>({...n,jurisdiction:jur})));
+  for(const n of graph.nodes.filter(n=>n.kind==='donor'||n.kind==='party')) {
+   if(n.kind==='donor'){const r=donorSearchRecord(jur,n);add(r.key,r.kind,r.title,r.href,r.snippet,r.extra);continue;}
+   add(jur+':'+n.id,n.kind==='donor'?'donor':'party',n.label,n.kind==='party'?'/subject/party/'+personSlug(n.label):donorDisclosure(n).href,`${n.kind==='donor'?donorDisclosure(n).reference:''} ${(n.industry||'').replaceAll('_',' ')}. ${cash(n.total||0)} in disclosed political receipts across ${(n.count||0).toLocaleString()} records.`,{aliases:[...(n.aliases||[]),n.abn||''].join(' '),from:n.firstYear,to:n.lastYear,state:jur,parties:n.kind==='party'?[n.label]:[],source:jur==='federal'?'AEC disclosure records':`${jur.toUpperCase()} disclosure records`,dateLabel:period(n.firstYear,n.lastYear)});
   }
   for(const [i,e] of graph.edges.entries()) {
    const a=byId.get(e.source),b=byId.get(e.target), flow=moneyFlowType(e,byId); if(!a||!b||!flow)continue;
@@ -101,10 +101,10 @@ async function main() {
     add(`${jur}:${flow}-connection:${i}`,kind,`${b.label} — ${kind} connection`,'/money?'+new URLSearchParams({jur,q:b.label,type:flow}),`${cash(e.total)} across ${e.count||0} ${kind} records from ${a.label}. Aggregated map connection; individual notices may also appear separately in search.`,{aliases:[...(b.aliases||[]),b.abn||''].join(' '),from:e.firstYear,to:e.lastYear,state:jur,source:flow==='contracts'?'Public contract map aggregate':'Public grant map aggregate',dateLabel:period(e.firstYear,e.lastYear)});
     continue;
    }
-   if(a.kind==='donor'&&donorNameWithheld(donorIndex,a.label))continue;
-   add(`${jur}:receipt:${i}`,'receipt',`${a.label} → ${b.label}`,'/money?'+new URLSearchParams({jur,q:a.label,party:b.id,type:'receipts'}),`${cash(e.total)} in disclosed political receipts; ${e.count||0} records. Aggregated connection, not an individual gift. ${(a.industry||'').replaceAll('_',' ')}.`,{aliases:(a.aliases||[]).join(' '),from:e.firstYear,to:e.lastYear,state:jur,parties:[b.label],source:jur==='federal'?'AEC disclosure records':`${jur.toUpperCase()} disclosure records`,dateLabel:period(e.firstYear,e.lastYear)});
+   add(`${jur}:receipt:${i}`,'receipt',`${a.label} → ${b.label}`,'/money?'+new URLSearchParams({jur,q:a.label,party:b.id,type:'receipts'}),`${donorDisclosure(a).reference} ${cash(e.total)} in disclosed political receipts; ${e.count||0} records. Aggregated connection, not an individual gift. ${(a.industry||'').replaceAll('_',' ')}.`,{aliases:(a.aliases||[]).join(' '),from:e.firstYear,to:e.lastYear,state:jur,parties:[b.label],source:jur==='federal'?'AEC disclosure records':`${jur.toUpperCase()} disclosure records`,dateLabel:period(e.firstYear,e.lastYear)});
   }
  }
+ for(const node of (await read('graph/donor-index.json')).donors || []){const r=donorSearchRecord(node.jurisdiction || 'federal',node);add(r.key,r.kind,r.title,r.href,r.snippet,r.extra);}
  const suppliers=await read('suppliers.json');
  for(const s of suppliers.suppliers) add('supplier:'+s.id,'supplier',s.name,supplierHref(s.id),`${cash(s.total)} in recorded contract awards across ${s.count} contracts and ${s.agency_count} agencies. ABN ${s.abn||'not recorded'}.`,{aliases:(s.aliases||[]).join(' ')+' '+(s.abn||''),from:s.first_year,to:s.last_year,state:'federal',source:'AusTender supplier profile',dateLabel:period(s.first_year,s.last_year)});
  for(const file of await files('suppliers')) for(const s of Object.values((await read('suppliers/'+file)).profiles)) {
@@ -134,13 +134,12 @@ async function main() {
   // Speakers below the directory's floor still have profiles under their exact
   // corpus name. Only names absent from both indexes need the official register.
   const href=interestHref(p,person,speakerNames);
-  // An entry naming a withheld donor is left out whole (the register's own words, CC BY-NC-ND).
-  for(const [category,b] of Object.entries(p.buckets||{})) for(const [i,item] of (b.items||[]).entries()) if(!namesWithheld(item.description,item.holder||'')) {
+  for(const [category,b] of Object.entries(p.buckets||{})) for(const [i,item] of (b.items||[]).entries()) {
    add(`interest:${file}:${category}:${i}`,'interest',`${p.name} — ${category.replaceAll('_',' ')}`,href,`${item.description}. ${item.holder||''}. ${item.kind||''}.`,{aliases:person?.name||'',date:item.date||null,from:year(item.date||p.as_at),to:year(item.date||p.as_at),dateLabel:item.date?undefined:(p.as_at?'Register as at '+p.as_at:undefined),state:p.jurisdiction,speakers:[...new Set([p.name,person?.name].filter(Boolean))],parties:[person?.party_now||person?.party||''],source:'Register of interests',url:p.source_url});
   }
  }
  const recent=await read('interests/recent.json');
- for(const x of recent.items) if(!namesWithheld(x.description)) add('alteration:'+x.id,'interest',`${x.name} — ${x.kind}`, '/declared?'+new URLSearchParams({person:x.name}),x.description,{date:x.date,state:x.jurisdiction,speakers:[x.name],source:'Register alteration',url:x.url});
+ for(const x of recent.items) add('alteration:'+x.id,'interest',`${x.name} — ${x.kind}`, '/declared?'+new URLSearchParams({person:x.name}),x.description,{date:x.date,state:x.jurisdiction,speakers:[x.name],source:'Register alteration',url:x.url});
  // What each parliamentarian is paid for the posts held (docs/DATA-PAY.md). The
  // rows are written by src/pay-records.mjs, which also hands the closest ones to
  // the model when a pay question is too loose for the calculated answer.
@@ -149,18 +148,16 @@ async function main() {
  const expenses=await read('expenses.json');
  for(const [id,p] of Object.entries(expenses.people)) add('expenses:'+id,'expense',`${p.name} — parliamentary expenses`,personHref(p.name),`${cash(p.total)} reported expenditure. ${(p.by_category||[]).map(([n,v])=>`${n}: ${cash(v)}`).join('; ')}.`,{speakers:[p.name],state:'federal',from:p.from,to:p.to,source:'Independent Parliamentary Expenses Authority',url:expenses.meta.source_url,dateLabel:period(p.from,p.to)});
  const campaigners=await read('graph/campaigners.json');
- for(const e of campaigners.entities) if(!withheld(e.name)) add('campaigner:'+e.name,'campaigner',e.name,'/subject/campaigner/'+encodeURIComponent(e.name),`${e.kind.replaceAll('_',' ')}. ${(e.return_types||[]).join('; ')}. ${(e.associated_parties||[]).join(', ')}.`,{aliases:e.abn||'',from:year(e.years?.[0]?.[0]),to:year(e.latest_year),state:'federal',parties:e.associated_parties||[],source:'AEC annual returns',dateLabel:e.latest_year});
- const access=await read('access.json');
- // Meetings and lobbying records of a withheld donor would name them and link
- // their donor page: they are left out, as their donor entity is.
- for(const [name,d] of Object.entries(access.donors)) if(!withheld(name)) {
-  for(const [i,m] of (d.meetings||[]).entries()) add(`meeting:${name}:${i}`,'access',`${name} — meeting with ${m.minister}`,donorHref(name),m.purpose||'Recorded ministerial meeting',{date:m.date,state:m.jurisdiction,speakers:[m.minister],source:'Ministerial diary'});
-  for(const [i,l] of (d.lobbyists||[]).entries()) add(`lobbyist:${name}:${i}`,'access',`${name} — ${l.firm}`,donorHref(name),`Registered lobbying client. ${l.ceased?'Ceased':'Listed'} registration.`,{state:normalize(l.jurisdiction)==='federal'?'federal':normalize(l.jurisdiction),date:l.registered,source:'Lobbyist register'});
+ for(const e of campaigners.entities) add('campaigner:'+e.name,'campaigner',e.name,'/subject/campaigner/'+encodeURIComponent(e.name),`${e.kind.replaceAll('_',' ')}. ${(e.return_types||[]).join('; ')}. ${(e.associated_parties||[]).join(', ')}.`,{aliases:e.abn||'',from:year(e.years?.[0]?.[0]),to:year(e.latest_year),state:'federal',parties:e.associated_parties||[],source:'AEC annual returns',dateLabel:e.latest_year});
+ const access=await read('access.json'),donorNames=donorLookup(donorRecords);
+ const accessDonor=name=>donorDisclosure(donorNames.get(normalize(name)) || {label:name});
+ for(const [name,d] of Object.entries(access.donors)) {
+  for(const [i,m] of (d.meetings||[]).entries()) add(`meeting:${name}:${i}`,'access',`${name} — meeting with ${m.minister}`,accessDonor(name).href,[accessDonor(name).reference,m.purpose||'Recorded ministerial meeting'].filter(Boolean).join(' · '),{date:m.date,state:m.jurisdiction,speakers:[m.minister],source:'Ministerial diary'});
+  for(const [i,l] of (d.lobbyists||[]).entries()) add(`lobbyist:${name}:${i}`,'access',`${name} — ${l.firm}`,accessDonor(name).href,`${accessDonor(name).reference} Registered lobbying client. ${l.ceased?'Ceased':'Listed'} registration.`,{state:normalize(l.jurisdiction)==='federal'?'federal':normalize(l.jurisdiction),date:l.registered,source:'Lobbyist register'});
  }
- // A diary entry naming a withheld donor as the other party is left out too.
- for(const [id,m] of Object.entries(access.ministers)) for(const [i,r] of (m.recent||[]).entries()) if(!withheld(r.org)) add(`minister-meeting:${id}:${i}`,'access',`${m.name} — ${r.org}`,personHref(m.page||m.name),r.purpose||'Recorded ministerial meeting',{date:r.date,state:m.jurisdiction,speakers:[m.name],source:'Ministerial diary'});
+ for(const [id,m] of Object.entries(access.ministers)) for(const [i,r] of (m.recent||[]).entries()) add(`minister-meeting:${id}:${i}`,'access',`${m.name} — ${r.org}`,personHref(m.page||m.name),r.purpose||'Recorded ministerial meeting',{date:r.date,state:m.jurisdiction,speakers:[m.name],source:'Ministerial diary'});
  const fits=await read('fits.json');
- for(const list of [...Object.values(fits.by_entity),...Object.values(fits.people)]) for(const r of list) if(!withheld(r.registrant)&&!withheld(r.principal)) add(`fits:${r.registrant}:${r.principal}:${r.from}`,'access',`${r.registrant} — ${r.principal}`,r.url,`${r.country}. ${(r.activities||[]).join('; ')}. ${r.status}.`,{date:r.from,state:'federal',source:'Foreign Influence Transparency Scheme',url:r.url});
+ for(const list of [...Object.values(fits.by_entity),...Object.values(fits.people)]) for(const r of list) add(`fits:${r.registrant}:${r.principal}:${r.from}`,'access',`${r.registrant} — ${r.principal}`,r.url,`${r.country}. ${(r.activities||[]).join('; ')}. ${r.status}.`,{date:r.from,state:'federal',source:'Foreign Influence Transparency Scheme',url:r.url});
  for(const file of await files('reports')) {
   if(file==='index.json')continue;const r=await read('reports/'+file);
   add('report:'+r.slug,'report',r.title,'/reports/'+r.slug,r.blurb,{date:r.generated_at?.slice(0,10),source:'OPAX research report'});
@@ -189,15 +186,12 @@ async function main() {
  }
  // Rebuild postings from sanitised document tokens; block contained aliases before
  // both release hashing and writing; unrelated record IDs stay intact.
- const registry=JSON.parse(await readFile(new URL('../portal/src/donor-withheld.json',import.meta.url),'utf8'));
- const publicTerm=term=>!containsWithheldLookupPhrase(term,registry);
- for(const doc of docs){doc.titleTokens=doc.titleTokens.filter(publicTerm);doc.bodyTokens=doc.bodyTokens.filter(publicTerm);}
  const meta=docs.map(d=>d.meta), postings=Array.from({length:64},()=>Object.create(null));
  for(const [id,d] of docs.entries()) {
   const weights=new Map(d.bodyTokens.map(t=>[t,1])); for(const t of d.titleTokens)weights.set(t,8);
   for(const [term,weight] of weights){const p=postings[bucket(term)];(p[term]??=[]).push(id,weight);}
  }
- const publicPaths=recordPathIndex(docs.map(d=>d.key.includes(':grant-recipient:')?{...d.record,owner:true}:d.record)).map(shard=>Object.fromEntries(Object.entries(shard).filter(([path])=>!containsWithheldLookupPhrase(path,registry))));
+ const publicPaths=recordPathIndex(docs.map(d=>d.key.includes(':grant-recipient:')?{...d.record,owner:true}:d.record));
  const version=createHash('sha256').update(JSON.stringify([docs.map(d=>[d.record,d.meta,d.titleTokens,d.bodyTokens]),publicPaths])).digest('hex').slice(0,16);
  const output=join(root,'search-catalog'); await mkdir(output,{recursive:true});
  // This directory contains generated search assets only.

@@ -1,3 +1,5 @@
+import {donorDisclosure,donorLookup,donorDisplayText,donorLabelHTML} from './donor-disclosure.js?v=e91ef740e5';
+import {loadDonorViewIndex} from './donor-views.js?v=e93169e00b';
 // /money/explain: one disclosed-money flow, explained from the data alone.
 //
 // Every figure here is summed from the year cells of the money graph
@@ -9,13 +11,11 @@
 //
 // The address carries graph node IDs, never names. A donor OPAX does not name
 // (donor-entity.js, failing closed) is never shown, never echoed and never left
-// in the address bar: its flow is rewritten to the neutral "Donors not named"
 // aggregate for the same recipient before anything renders. Unknown IDs and
 // repeated keys fail closed rather than widening, as the ledger's do.
 //
 // Styles: money-explain.css, loaded with the module.
 
-import { donorNameWithheld, loadDonorViewIndex, unnamedDonorLabel, donorsNotNamedDetail } from './donor-views.js?v=77470b1d26';
 import { sourceLineHTML, partyLabelHTML } from './labels.js?v=fc03aa14cf';
 import { subjectUrl } from './canonical-urls.js?v=225d5915ea';
 import { shortMoney, shortDate } from './format.js?v=9fcab43d8d';
@@ -68,10 +68,7 @@ const STATE_LINES = {
 
 const FEDERAL_META = { jurisdictionLabel: 'Federal', commission: 'Australian Electoral Commission', sourceShort: 'AEC returns', source_url: 'https://transparency.aec.gov.au/' };
 export const JURISDICTIONS = ['federal', 'qld', 'vic', 'tas'];
-/** A presentation rule, not a safeguard: when every giver in a view is a donor
- *  OPAX doesn't name and there are fewer than this many, the page gives the
- *  total and the count only. (The served money files still carry each such
- *  donor's figures under a placeholder; what is withheld is the name.) */
+
 export const AGGREGATE_FLOOR = 5;
 /** The industry tag the graphs give donors recorded as people: the not-named group, never an industry view. */
 const PERSON_TAGS = new Set(['individual', 'individuals']);
@@ -92,7 +89,6 @@ export function pctText(part, whole) {
   return p < 10 ? `${p.toFixed(1).replace(/\.0$/, '')}%` : `${Math.round(p)}%`;
 }
 const isDonation = (edge) => edge && !edge.grant && !edge.flow;
-const isWithheldNode = (node, index) => node?.kind === 'donor' && (/^donor:withheld-\d+$/.test(node.id) || donorNameWithheld(index, node.label));
 
 /** "2018–19": a financial year from the year it starts. */
 export const fyLabel = (year) => `${year}–${String((Number(year) + 1) % 100).padStart(2, '0')}`;
@@ -142,16 +138,7 @@ export function explainJurisdiction(params) {
   return JURISDICTIONS.includes(jur) ? jur : null;
 }
 
-/**
- * Read /money/explain's query against one jurisdiction's graph.
- * - `from` is a donor node ID, `to` a party node ID, `industry` an industry or
- *   cluster key the graph uses, `donors=unnamed` the not-named aggregate.
- * - A `from` naming a donor OPAX withholds becomes `donors=unnamed` for the
- *   same recipient (`withheld: true`), so the address never keeps it.
- * - Unknown IDs, repeated keys and mixed subjects fail closed. Other keys are
- *   ignored and dropped from the canonical address.
- * @returns {{ok: true, state: object, withheld: boolean, empty?: boolean} | {ok: false, error: string}}
- */
+
 export function parseExplainParams(params, graph, index) {
   const fail = (error) => ({ ok: false, error });
   for (const key of EXPLAIN_KEYS) if (params.getAll(key).length > 1) return fail('An explanation takes one value for each filter.');
@@ -161,40 +148,27 @@ export function parseExplainParams(params, graph, index) {
   const get = (key) => (params.get(key) || '').trim();
   const fromId = get('from'), toId = get('to'), industry = get('industry'), donors = get('donors');
   const state = { jur };
-  if (!fromId && !toId && !industry && !donors) return { ok: true, state, withheld: false, empty: true };
+  if (!fromId && !toId && !industry && !donors) return { ok: true, state, empty: true };
   if ([fromId, industry, donors].filter(Boolean).length > 1) return fail('An explanation follows one giver at a time.');
   if (toId) {
     const party = nodes.find((n) => n.kind === 'party' && n.id === toId);
     if (!party) return fail('That recipient is not in OPAX’s money data.');
     state.to = party.id;
   }
-  if (donors) {
-    if (donors !== 'unnamed') return fail('That filter is not one OPAX supports.');
-    state.unnamed = true;
-    return { ok: true, state, withheld: false };
-  }
+  if(donors) return fail('Use a donor name, industry or recipient filter.');
   if (industry) {
     const known = nodes.some((n) => n.kind === 'donor' && (n.industry === industry || n.group === industry));
     if (!known) return fail('That industry is not in OPAX’s money data.');
-    if (PERSON_TAGS.has(industry)) {
-      const out = { jur, unnamed: true };
-      if (state.to) out.to = state.to;
-      return { ok: true, state: out, withheld: true };
-    }
     state.industry = industry;
-    return { ok: true, state, withheld: false };
+    return { ok: true, state };
   }
   if (fromId) {
     const donor = nodes.find((n) => n.kind === 'donor' && n.id === fromId);
     if (!donor) return fail('That donor is not in OPAX’s money data.');
-    if (isWithheldNode(donor, index)) {
-      const out = { jur, unnamed: true };
-      if (state.to) out.to = state.to;
-      return { ok: true, state: out, withheld: true };
-    }
+
     state.from = donor.id;
   }
-  return { ok: true, state, withheld: false };
+  return { ok: true, state };
 }
 
 /** The one address for a state: keys in a fixed order, federal left implicit. */
@@ -203,7 +177,6 @@ export function explainPath(state) {
   if (state.jur && state.jur !== 'federal') p.set('jur', state.jur);
   if (state.from) p.set('from', state.from);
   if (state.industry) p.set('industry', state.industry);
-  if (state.unnamed) p.set('donors', 'unnamed');
   if (state.to) p.set('to', state.to);
   const q = p.toString();
   return q ? `/money/explain?${q}` : '/money/explain';
@@ -231,18 +204,13 @@ export function explainHrefFor(detail, graph, index) {
   }
   if (detail.kind === 'donor') {
     const donor = byLabel('donor', detail.from);
-    if (donor && !isWithheldNode(donor, index)) state.from = donor.id;
-    // A withheld donor, or a name the graph lacks that would not pass as an
-    // organisation: the neutral aggregate. Never the name.
-    else if (donor || donorNameWithheld(index, String(detail.from || ''))) state.unnamed = true;
-    else return null;
+    if(donor)state.from=donor.id;else return null;
   } else if (detail.kind === 'industry') {
     const key = fold(detail.from);
     const hit = nodes.find((n) => n.kind === 'donor' && (fold(n.industry) === key || fold(n.group) === key));
     if (!hit) return null;
     const industry = fold(hit.industry) === key ? hit.industry : hit.group;
-    if (PERSON_TAGS.has(industry)) state.unnamed = true;
-    else state.industry = industry;
+    state.industry = industry;
   } else if (!state.to) return null;
   return explainPath(state);
 }
@@ -265,10 +233,7 @@ function partyReturns(aec, partyLabel) {
   return out;
 }
 
-/**
- * Everything the page says about one state, computed once. Withheld donors
- * stay in totals and counts and never in a named row.
- */
+
 export function resolveFlow(state, graph, index, { aec = null, electionYears = [] } = {}) {
   const nodes = graph.nodes || [];
   const byId = new Map(nodes.map((n) => [n.id, n]));
@@ -277,11 +242,9 @@ export function resolveFlow(state, graph, index, { aec = null, electionYears = [
   const donor = state.from ? byId.get(state.from) : null;
   const meta = { ...(state.jur === 'federal' ? FEDERAL_META : {}), ...(graph.meta || {}) };
   const inIndustry = (n) => n?.kind === 'donor' && (n.industry === state.industry || n.group === state.industry);
-  const withheld = (n) => isWithheldNode(n, index);
 
   let kind, givers;
-  if (state.unnamed) { kind = 'unnamed'; givers = (e) => withheld(byId.get(e.source)); }
-  else if (donor) { kind = party ? 'pair' : 'donor'; givers = (e) => e.source === donor.id; }
+  if (donor) { kind = party ? 'pair' : 'donor'; givers = (e) => e.source === donor.id; }
   else if (state.industry) { kind = 'industry'; givers = (e) => inIndustry(byId.get(e.source)); }
   else { kind = 'party'; givers = (e) => byId.get(e.source)?.kind === 'donor'; }
   const context = donation.filter(givers); // the givers' money to every party
@@ -298,11 +261,10 @@ export function resolveFlow(state, graph, index, { aec = null, electionYears = [
     row.total += Number(e.total) || 0; row.count += Number(e.count) || 0;
     giverTotals.set(e.source, row);
   }
-  const named = [], unnamed = { donors: 0, total: 0, count: 0 };
+  const named = [];
   for (const row of giverTotals.values()) {
     if (!row.node) continue;
-    if (withheld(row.node)) { unnamed.donors += 1; unnamed.total += row.total; unnamed.count += row.count; }
-    else named.push(row);
+    named.push(row);
   }
   named.sort((a, b) => b.total - a.total);
 
@@ -357,7 +319,7 @@ export function resolveFlow(state, graph, index, { aec = null, electionYears = [
   const flow = {
     state, kind, jur: state.jur, meta, graph, electionYears,
     donor, party, industry: state.industry || (donor ? donor.industry : null),
-    edges, context, parties, contextTotal, named, unnamed, industries,
+    edges, context, parties, contextTotal, named, industries,
     total: sums.total, count: sums.count, years: sums.years, undated: sums.undated,
     dated, firstYear: dated[0]?.[0] ?? null, lastYear: last?.[0] ?? null,
     peak: peak ? { year: peak[0], amount: peak[1][0], count: peak[1][1] } : null,
@@ -365,13 +327,6 @@ export function resolveFlow(state, graph, index, { aec = null, electionYears = [
     recipientShare, donorShare, aecLatest: state.jur === 'federal' ? aec?.meta?.latest_year || null : null,
     coarse: false,
   };
-  // The floor follows who is in the view, not the address that asked for it:
-  // a not-named group, an industry or a party whose givers are all donors OPAX
-  // doesn't name, fewer than the floor, gets its total and count only.
-  if (!named.length && unnamed.donors > 0 && unnamed.donors < AGGREGATE_FLOOR) Object.assign(flow, {
-    coarse: true, years: new Map(), undated: [0, 0], dated: [], firstYear: null, lastYear: null,
-    peak: null, latest: null, recipientShare: null, industries: [], parties: [], contextTotal: 0,
-  });
   return flow;
 }
 
@@ -385,7 +340,6 @@ export function comparableFlows(flow, index, limit = 3) {
   if (flow.coarse && flow.kind === 'industry') return { rule: '', rows: [] };
   const byId = new Map(graph.nodes.map((n) => [n.id, n]));
   const donation = graph.edges.filter(isDonation);
-  const withheld = (n) => isWithheldNode(n, index);
   const size = (t) => Math.abs(Math.log10(Math.max(t, 1)) - Math.log10(Math.max(flow.total, 1)));
   const out = [];
   if (flow.kind === 'donor') {
@@ -393,7 +347,7 @@ export function comparableFlows(flow, index, limit = 3) {
     const totals = new Map();
     for (const e of donation) {
       const d = byId.get(e.source);
-      if (d?.kind !== 'donor' || d.id === flow.donor.id || d.industry !== ind || withheld(d)) continue;
+      if (d?.kind !== 'donor' || d.id === flow.donor.id || d.industry !== ind) continue;
       const row = totals.get(d.id) || { d, total: 0, count: 0 };
       row.total += Number(e.total) || 0; row.count += Number(e.count) || 0;
       totals.set(d.id, row);
@@ -406,7 +360,7 @@ export function comparableFlows(flow, index, limit = 3) {
     const ind = flow.donor.industry;
     const pool = donation.filter((e) => e.source !== flow.donor.id && (!flow.party || e.target === flow.party.id))
       .map((e) => ({ e, d: byId.get(e.source), p: byId.get(e.target) }))
-      .filter((r) => r.d?.kind === 'donor' && r.p?.kind === 'party' && !withheld(r.d));
+      .filter(r=>r.d?.kind === 'donor' && r.p?.kind === 'party');
     const pick = (rows) => rows.sort((a, b) => size(a.e.total) - size(b.e.total));
     const sameIndustry = pick(pool.filter((r) => r.d.industry === ind));
     const rows = sameIndustry.slice(0, limit);
@@ -430,13 +384,7 @@ export function comparableFlows(flow, index, limit = 3) {
     }).filter((r) => r.total > 0).sort((a, b) => b.total - a.total).slice(0, limit);
     return { rule: 'The other parties in this file, largest first', rows };
   }
-  if (flow.kind === 'unnamed') {
-    const rows = graph.nodes.filter((n) => n.kind === 'party' && n.id !== flow.party?.id).map((p) => {
-      const s = sumEdges(donation.filter((e) => e.target === p.id && withheld(byId.get(e.source))));
-      return { label: `Donors not named → ${p.label}`, total: s.total, count: s.count, href: explainPath({ jur: state.jur, unnamed: true, to: p.id }) };
-    }).filter((r) => r.total > 0).sort((a, b) => b.total - a.total).slice(0, flow.party ? limit : 0);
-    return { rule: 'Donors not named, to the other parties in this file, largest first', rows };
-  }
+
   // An industry: the same industry to the other parties, or (all parties) the other industries.
   if (flow.party) {
     const rows = flow.parties.filter((r) => r.node.id !== flow.party.id).slice(0, limit)
@@ -533,11 +481,10 @@ export function partyOnBill(bill, partyLabel, firstYear, lastYear) {
 
 /** The page's title. */
 export function flowTitle(flow, partyName = (l) => l) {
-  const { kind, donor, party, state, unnamed } = flow;
+  const { kind, donor, party, state } = flow;
   if (kind === 'pair') return `${donor.label} → ${party.label}`;
   if (kind === 'donor') return `Where ${possessive(donor.label)} money went`;
   if (kind === 'party') return `Where ${possessive(partyName(party.label))} disclosed money comes from`;
-  if (kind === 'unnamed') return party ? `${unnamedDonorLabel(unnamed.donors)} → ${party.label}` : unnamedDonorLabel(unnamed.donors);
   return party ? `${industryName(state.industry)} → ${party.label}` : `Where ${industryName(state.industry).toLowerCase()} money went`;
 }
 
@@ -551,7 +498,7 @@ const span = (flow) => (flow.firstYear == null ? '' : flow.firstYear === flow.la
  */
 export function narrative(flow, { partyName = (l) => l } = {}) {
   const money = shortMoney;
-  const { kind, donor, party, total, count, peak, latest, unnamed } = flow;
+  const { kind, donor, party, total, count, peak, latest } = flow;
   const out = [];
   const to = party ? partyName(party.label) : 'political parties';
   const when = span(flow);
@@ -560,12 +507,10 @@ export function narrative(flow, { partyName = (l) => l } = {}) {
   if (kind === 'pair' || kind === 'donor') {
     out.push(`${recordedIn(flow)} ${money(total)} from ${donor.label} to ${to} across ${plural(count, 'receipt')}${when ? `, from ${when}` : ''}, with money in ${plural(yearsWithMoney, 'financial year')}.`);
   } else if (kind === 'party') {
-    const givers = flow.named.length + unnamed.donors;
+    const givers = flow.named.length;
     out.push(`${recordedIn(flow)} ${money(total)} to ${to} from ${givers === 1 ? 'the one donor' : `the ${plural(givers, 'donor')}`} on OPAX’s map, across ${plural(count, 'receipt')}${when ? `, from ${when}` : ''}.`);
-  } else if (kind === 'unnamed') {
-    out.push(`OPAX names organisations only. ${plural(unnamed.donors, 'donor')} it can’t confirm ${unnamed.donors === 1 ? 'is an organisation accounts' : 'are organisations account'} for ${money(total)} to ${to} across ${plural(count, 'receipt')}${when ? `, from ${when}` : ''}. They are counted here, not named.`);
   } else {
-    const givers = flow.named.length + unnamed.donors;
+    const givers = flow.named.length;
     out.push(`${plural(givers, `${industryName(flow.state.industry).toLowerCase()} donor`)} on OPAX’s map ${givers === 1 ? 'accounts' : 'account'} for ${money(total)} to ${to} across ${plural(count, 'receipt')}${when ? `, from ${when}` : ''}.`);
   }
   if (flow.coarse) out.push(`${kind === 'unnamed' ? '' : 'OPAX names organisations only, and none of these donors is named, so they are shown as a group. '}For a group of fewer than ${AGGREGATE_FLOOR} donors this page gives the total and the count only.`);
@@ -740,21 +685,12 @@ function limitsHTML(flow, partyName) {
     if (meta.not_summed) item('State and federal figures are separate', esc(meta.not_summed));
     if (meta.coverage) item('The years this file covers', esc(`The ${meta.sourceShort || 'register'} file covers ${meta.coverage}.`));
   }
-  const notNamed = flow.kind === 'unnamed' ? null : flow.unnamed;
-  item('Donors OPAX doesn’t name',
-    esc(`${donorsNotNamedDetail} `) + (notNamed?.donors
-      ? esc(`In this view that is ${unnamedDonorLabel(notNamed.donors)}, with ${shortMoney(notNamed.total)} across ${plural(notNamed.count, 'receipt')}; their amounts are in every total above.`)
-      : flow.kind === 'unnamed'
-        ? esc('This page shows them as a group.')
-        : esc('None of the money in this view comes from them.')));
   const top = federal ? 'The map holds the 250 largest donors by lifetime total, plus donors holding $50m or more in Commonwealth contracts and grants' : 'The map holds the 250 largest donors by lifetime total in this jurisdiction';
   item('Smaller donors are not on the map',
     esc(`${top}. The flow totals in this explanation count only those donors and leave out internal party transfers; a party’s own return totals count everything it received.`));
   // The first notes stay in view; the rest sit under one disclosure that the
   // mount opens on wide screens, so a phone reads three notes, not eight.
   const SHOWN = 3;
-  const notNamedAt = items.findIndex((i) => i.includes('Donors OPAX doesn’t name'));
-  if ((flow.kind === 'unnamed' || flow.coarse) && notNamedAt > 0) items.unshift(...items.splice(notNamedAt, 1));
   const rest = items.slice(SHOWN);
   return `<ul class="mx-limits">${items.slice(0, SHOWN).join('')}</ul>${rest.length ? `<details class="mx-disclose mx-limits-more">
       <summary>${esc(`${rest.length} more ${rest.length === 1 ? 'note' : 'notes'} on this record`)}</summary>
@@ -809,7 +745,7 @@ function registersHTML(flow, matches) {
     matches.registrations ? plural(matches.registrations, 'Foreign Influence Transparency Scheme registration') : '',
   ].filter(Boolean);
   const links = [
-    flow.jur === 'federal' ? `<a href="${esc(subjectUrl('donor', flow.donor.label))}">${esc(`Listed on ${possessive(flow.donor.label)} donor page`)}</a>` : '',
+    donorDisclosure(flow.donor).href ? `<a href="${esc(donorDisclosure(flow.donor).href)}">${esc(`Listed on ${possessive(flow.donor.label)} donor page`)}</a>` : esc(donorDisclosure(flow.donor).reference),
     matches.registrations && matches.fitsUrl ? `<a href="${esc(matches.fitsUrl)}" rel="noopener" target="_blank">${esc('Foreign Influence Transparency Scheme register ↗︎')}</a>` : '',
   ].filter(Boolean);
   return `<div class="mx-compare"><h3 class="mx-subhead">Other registers</h3>
@@ -825,12 +761,12 @@ function nextStepsHTML(flow) {
   if (donor) q.set('focus', donor.id);
   if (party) q.set('party', party.id);
   if (state.industry) q.set('industry', state.industry);
-  if (flow.kind !== 'unnamed' && !flow.coarse) links.push({ href: `/money/receipts${q.toString() ? `?${q}` : ''}`, label: 'Open these receipts in the ledger' });
+  if (!flow.coarse) links.push({ href: `/money/receipts${q.toString() ? `?${q}` : ''}`, label: 'Open these receipts in the ledger' });
   const map = new URLSearchParams();
   if (jur !== 'federal') map.set('jur', jur);
   if (donor || party) map.set('focus', (donor || party).id);
   links.push({ href: `/money${map.toString() ? `?${map}` : ''}`, label: 'See it on the money map' });
-  if (donor && jur === 'federal') links.push({ href: subjectUrl('donor', donor.label), label: `${possessive(donor.label)} donor page` });
+  if(donor && donorDisclosure(donor).href) links.push({href:donorDisclosure(donor).href, label: `${possessive(donor.label)} donor page` });
   if (party) links.push({ href: subjectUrl('party', party.label), label: `${possessive(party.label)} party page` });
   return `<ul class="mx-next">${links.map((l) => `<li><a href="${esc(l.href)}">${esc(l.label)}</a></li>`).join('')}</ul>`;
 }
@@ -875,6 +811,7 @@ export function pageHTML(flow, { index, partyName = (l) => l, access = null, fit
     <div class="mx-head">
       <p class="mx-kicker">Explain this flow</p>
       <h1 class="mx-title" id="mx-title" tabindex="-1">${esc(flowTitle(flow, partyName))}</h1>
+      ${flow.donor ? `<p class="donor-return-reference">${esc(donorDisclosure(flow.donor).reference)}</p>` : ''}
       <p class="mx-meta">${metaParts.join('<span aria-hidden="true"> · </span>')}</p>
     </div>
     <section class="mx-section mx-shows" aria-labelledby="mx-shows-h">
@@ -911,7 +848,7 @@ export function pageHTML(flow, { index, partyName = (l) => l, access = null, fit
 export function landingHTML(graph, index, jur) {
   const byId = new Map(graph.nodes.map((n) => [n.id, n]));
   const rows = graph.edges.filter(isDonation).map((e) => ({ e, d: byId.get(e.source), p: byId.get(e.target) }))
-    .filter((r) => r.d?.kind === 'donor' && r.p?.kind === 'party' && !isWithheldNode(r.d, index))
+    .filter(r=>r.d?.kind === 'donor' && r.p?.kind === 'party')
     .sort((a, b) => b.e.total - a.e.total).slice(0, 6);
   return `<article class="mx-page" aria-labelledby="mx-title">
     <div class="mx-head"><p class="mx-kicker">Explain this flow</p>
@@ -940,13 +877,13 @@ function ensureStyles(doc) {
  * Mount the explanation for the address's query.
  * @param {HTMLElement} root
  * @param {{params: URLSearchParams, loadMoney: (jur: string) => Promise<any>, loadAecExtras?: () => Promise<any>,
- *   loadBillsIndex?: () => Promise<any>, loadBill?: (key: string) => Promise<any>, loadPrivacyIndex?: () => Promise<any>,
+ *   loadBillsIndex?: () => Promise<any>, loadBill?: (key: string) => Promise<any>, loadDonorIndex?: () => Promise<any>,
  *   onAddress?: (path: string) => void, onTitle?: (title: string) => void, partyName?: (label: string) => string,
  *   electionYears?: number[], manageFocus?: boolean}} options
  */
 export function mountMoneyExplain(root, options) {
   const { params, loadMoney, loadAecExtras = async () => null, loadBillsIndex = async () => null, loadBill = async () => null,
-    loadPrivacyIndex = loadDonorViewIndex, onAddress = () => {}, onTitle = () => {}, partyName = (l) => l,
+    loadDonorIndex = loadDonorViewIndex, onAddress = () => {}, onTitle = () => {}, partyName = (l) => l,
     loadAccess = async () => null, loadFits = async () => null, normName = normFallback,
     electionYears = [], manageFocus = false } = options;
   let destroyed = false;
@@ -960,12 +897,11 @@ export function mountMoneyExplain(root, options) {
   const ready = (async () => {
     const jur = explainJurisdiction(params);
     if (!jur) { onAddress('/money/explain'); onTitle('Explain this flow'); settle(errorHTML('OPAX does not hold money data for that jurisdiction.')); return; }
-    const [graph, index] = await Promise.all([loadMoney(jur), loadPrivacyIndex()]);
+    const [graph, index] = await Promise.all([loadMoney(jur), loadDonorIndex()]);
     if (destroyed) return;
     if (!graph?.nodes?.length) { settle(errorHTML('The disclosed-money data could not be read just now.')); return; }
     const parsed = parseExplainParams(params, graph, index);
-    // The address is settled before anything is drawn: a rejected or withheld
-    // identity leaves the bar here, not after the page has rendered.
+    // Validate and canonicalise the address before rendering.
     if (!parsed.ok) { onAddress(explainPath({ jur })); onTitle('Explain this flow'); settle(errorHTML(parsed.error)); return; }
     onAddress(explainPath(parsed.state));
     if (parsed.empty) { onTitle('Explain a money flow'); settle(landingHTML(graph, index, jur)); return; }
@@ -981,13 +917,11 @@ export function mountMoneyExplain(root, options) {
     settle(pageHTML(flow, { index, partyName, access, fits, normName }));
     const wide = doc.defaultView?.matchMedia?.('(min-width: 701px)');
     if (wide?.matches) root.querySelector('.mx-limits-more')?.setAttribute('open', '');
-    if (parsed.withheld) root.querySelector('.mx-head')?.insertAdjacentHTML('beforeend',
-      `<p class="mx-note" role="note">${esc('OPAX names organisations only, so donors it doesn’t name are shown here as a group.')}</p>`);
     await renderParliament(flow);
   })().catch(() => { if (!destroyed) settle(errorHTML('The disclosed-money data could not be read just now.')); });
 
   async function renderParliament(flow) {
-    if (flow.jur !== 'federal' || !flow.party || flow.kind === 'unnamed' || flow.kind === 'party' || flow.firstYear == null) return;
+    if (flow.jur !== 'federal' || !flow.party || flow.kind === 'party' || flow.firstYear == null) return;
     const key = flow.kind === 'industry' ? flow.state.industry : flow.donor?.industry;
     const words = billWordsFor(key);
     if (!words.length) return;

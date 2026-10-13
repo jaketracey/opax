@@ -1,5 +1,4 @@
-import {donorNameWithheld,donorPrivacyIndex} from '../public/donor-entity.js'
-import {donorAggregateDetail,isUnnamedAggregate,unnamedDonorLabel,withheldDonorTotals,loadDonorViewIndex} from '../public/donor-views.js'
+import {donorDisclosure,donorLookup,donorDisplayText,type DonorDisclosureRecord} from '../public/donor-disclosure.js'
 import {partyUrl} from '../public/canonical-urls.js'
 // ---------------------------------------------------------------------------
 // OPAX Money Map - public entry.
@@ -70,7 +69,7 @@ export type GrantsBlock = {
   jur?: string
 }
 
-export type MoneyNode = {
+export type MoneyNode = DonorDisclosureRecord & {
   id: string
   label: string
   /** 'grantor' is the central node public money flows out of. */
@@ -725,7 +724,7 @@ export type CardActionContext = {
 export function planCardActions(node: MoneyNode, ctx: CardActionContext): CardActions {
   const own = node.id === ctx.subject
   const profile = (kind: 'donor' | 'party') =>
-    own ? null : { label: 'View profile', href: kind==='party' ? partyUrl(node.label) : `/subject/donor/${encodeURIComponent(node.label)}` }
+    own || kind==='donor' && !donorDisclosure(node).href ? null : { label:'View profile', href:kind==='party' ? partyUrl(node.label) : donorDisclosure(node).href! }
   if (node.kind === 'agency' || node.kind === 'supplier') {
     const hasProfile = !!node.profileUrl && /^\/subject\/(agency|supplier)\//.test(node.profileUrl)
     return { primary: hasProfile && !own ? { label: 'View profile', href: node.profileUrl! } : null, actions: [] }
@@ -803,10 +802,8 @@ export async function mountMoneyMap(
     raw = await response.json() as MoneyGraph
   } else raw = dataUrl
 
-  const privacy = typeof fetch === 'function' ? await loadDonorViewIndex() : donorPrivacyIndex([raw])
-  const withheld = (node: MoneyNode) => node.kind === 'donor' && donorNameWithheld(privacy,node.label)
 
-  if (!webglAvailable()) return mountConnectionFallback(container, raw, opts, privacy)
+  if (!webglAvailable()) return mountConnectionFallback(container, raw, opts)
 
   const graph = buildGraph(raw)
   const byId = new Map(raw.nodes.map((n) => [n.id, n]))
@@ -1072,7 +1069,7 @@ export async function mountMoneyMap(
     )
   } catch {
     container.replaceChildren()
-    return mountConnectionFallback(container, raw, opts, privacy)
+    return mountConnectionFallback(container, raw, opts)
   }
   engine.setOverviewMode(opts.overview === true)
   engine.onEdgePick = (edge) => setEdgeSelection(edge)
@@ -1182,7 +1179,6 @@ export async function mountMoneyMap(
     }
     const activeDonors = new Set(windowEdges.flatMap((e) => [e.source, e.target]))
     const visibleNodes = windowNodes.filter((n) => {
-      if(withheld(n)) return false
       if (n.kind === 'grantor') return grantsOn && activeDonors.has(n.id)
       if (n.group === 'parties') return windowEdges.length > 0 && (researchFilters.party ? n.id === researchFilters.party : activeDonors.has(n.id))
       if (activeGroup !== null && n.group !== activeGroup && n.industry !== activeGroup) return false
@@ -1361,7 +1357,7 @@ export async function mountMoneyMap(
           const score = at === 0 ? 0 : label.includes(` ${q}`) ? 1 : at > 0 ? 2 : -1
           return { n, score, at }
         })
-        .filter((s) => s.score >= 0 && !withheld(s.n))
+        .filter((s) => s.score >= 0)
         .sort((a, b) => a.score - b.score || a.n.label.length - b.n.label.length)
         .slice(0, 8)
       for (const { n } of scored) {
@@ -1511,7 +1507,6 @@ export async function mountMoneyMap(
     onClick: (() => void) | null,
   ) => {
     const item = el('li', '', parent)
-    if (isUnnamedAggregate(name)) { item.append(donorAggregateDetail(`${name} · ${formatMoney(amount)}`,document)); return }
     const body = el('button', 'mm-row', item)
     body.type = 'button'
     // The row's pieces run together as one string otherwise ("Westpac$55.2m1998–2024").
@@ -1523,7 +1518,8 @@ export async function mountMoneyMap(
       dot.style.background = colour
     }
     const label = el('span', 'mm-row-name', body)
-    label.textContent = name
+    const disclosed=raw.nodes.find(n=>n.kind==='donor' && n.label===name)
+    label.textContent = disclosed ? donorDisplayText(disclosed) : name
     const amt = el('span', 'mm-row-amt', body)
     amt.textContent = formatMoney(amount)
     if (years) {
@@ -1778,6 +1774,7 @@ export async function mountMoneyMap(
             ? `Held by donors on this map across ${node.count.toLocaleString()} contracts · ${span}`
             : `Awarded to donors on this map across ${node.count.toLocaleString()} grants · ${span}`)
           : `Given across ${node.count.toLocaleString()} donations · ${span}`
+    if(node.kind==='donor') { const reference=el('p','mm-card-fine donor-return-reference',card); reference.textContent=donorDisclosure(node).reference; }
     inflationFineprint(card)
 
     const listTitle = el('div', 'mm-card-section', card)
@@ -1785,7 +1782,7 @@ export async function mountMoneyMap(
     if (node.kind === 'donor') {
       listTitle.textContent = 'Where it went'
       const out = view.edges
-        .filter((e) => e.source === node.id && !withheld(view.nodes.get(e.target)!))
+        .filter((e) => e.source === node.id)
         .sort((a, b) => b.total - a.total)
       for (const edge of out) {
         const party = view.nodes.get(edge.target)
@@ -1838,12 +1835,8 @@ export async function mountMoneyMap(
       listTitle.textContent = contracts
         ? 'Largest contractors among the donors on this map'
         : 'Largest recipients among the donors on this map'
-      const hiddenOutgoing=view.edges.filter(e=>e.source===node.id && view.nodes.has(e.target) && withheld(view.nodes.get(e.target)!))
-      const hiddenTargets=new Set(hiddenOutgoing.map(e=>e.target))
-      const hiddenCount=[...view.nodes.values()].filter(n=>n.kind==='donor'&&hiddenTargets.has(n.id)).length
-      if(hiddenCount) row(list,null,unnamedDonorLabel(hiddenCount),hiddenOutgoing.reduce((sum,e)=>sum+e.total,0),'',null)
       const outgoing = view.edges
-        .filter((e) => e.source === node.id && !withheld(view.nodes.get(e.target)!))
+        .filter((e) => e.source === node.id)
         .sort((a, b) => b.total - a.total)
         .slice(0, 15)
       for (const edge of outgoing) {
@@ -1869,10 +1862,8 @@ export async function mountMoneyMap(
     } else {
       listTitle.textContent = 'Top donors shown on the map'
       const allIncoming=view.edges.filter(e=>e.target===node.id)
-      const hiddenTotals=withheldDonorTotals([...view.nodes.values()],allIncoming,privacy)
-      if(hiddenTotals.count) row(list,null,unnamedDonorLabel(hiddenTotals.count),hiddenTotals.amount,'',null)
       const incoming = view.edges
-        .filter((e) => e.target === node.id && !withheld(view.nodes.get(e.source)!))
+        .filter((e) => e.target === node.id)
         .sort((a, b) => b.total - a.total)
         .slice(0, 15)
       for (const edge of incoming) {
@@ -1914,6 +1905,7 @@ export async function mountMoneyMap(
     const donors = edge.count ?? 0
     sub.textContent = `From ${donors === 1 ? '1 donor' : `${donors.toLocaleString()} donors`} shown` +
       `${span ? ` · ${span}` : ''}`
+    if(node.kind==='donor') { const reference=el('p','mm-card-fine donor-return-reference',card); reference.textContent=donorDisclosure(node).reference; }
     inflationFineprint(card)
 
     const listTitle = el('div', 'mm-card-section', card)
@@ -1956,6 +1948,7 @@ export async function mountMoneyMap(
     const sub = el('div', 'mm-card-sub', card)
     const span = yearSpan(edge.firstYear ?? null, edge.lastYear ?? null)
     sub.textContent = `Across ${(edge.count ?? 0).toLocaleString()} grants${span ? ` · ${span}` : ''}`
+    if(node.kind==='donor') { const reference=el('p','mm-card-fine donor-return-reference',card); reference.textContent=donorDisclosure(node).reference; }
     inflationFineprint(card)
     const list = el('ul', 'mm-rows', card)
     row(list, hubColour(grantor), grantor.label, grantor.total, '',
@@ -2014,6 +2007,7 @@ export async function mountMoneyMap(
     const span = yearSpan(edge.firstYear ?? null, edge.lastYear ?? null)
     sub.textContent =
       `Across ${(edge.count ?? 0).toLocaleString()} donations${span ? ` · ${span}` : ''}`
+    if(node.kind==='donor') { const reference=el('p','mm-card-fine donor-return-reference',card); reference.textContent=donorDisclosure(node).reference; }
     inflationFineprint(card)
 
     const list = el('ul', 'mm-rows', card)
@@ -2152,7 +2146,6 @@ export async function mountMoneyMap(
    * focus seed, handle.select and filter-driven clears stay silent.
    */
   function setSelection(id: string | null, { user = false } = {}) {
-    if (id && byId.has(id) && withheld(byId.get(id)!)) id = null
     if (user) cancelReveal()
     selectedId = id
     selectedEdge = null

@@ -1,5 +1,5 @@
 // Division and voting-record rollout using the shared server-mode core.
-import {dataTableHTML, mountDataTable, applyQuery, guardTableURL} from './datatable.js?v=808270977b';
+import {dataTableHTML, mountDataTable, applyQuery, guardTableURL} from './datatable.js?v=3e6200bc94';
 // Guard and render must share the core module's rejection-state registry.
 export {guardTableURL};
 import {shortDate} from './format.js';
@@ -26,32 +26,18 @@ export const voteColumns = [
   {key:'party_position', label:'Party position', type:'category', facet:'chips'},
 ];
 
-const tableRow = row => typeof row?.title === 'string' && typeof row.date === 'string';
-export async function votePrivacyCheck(text) {
-  try {
-    const response = await fetch('/api/table/privacy', {method:'POST', headers:{'content-type':'application/json'}, body:JSON.stringify({text})});
-    return response.ok && (await response.json()).safe === true;
-  } catch { return false; }
-}
-// Votes and divisions are parliamentary record from public exports (the build's
-// donor sweep, and votes.json served whole): rows are shape-checked only. The
-// reader's own search, filter and URL text is still checked before it is echoed.
-function privacy(check) {
-  return {privacy:'echo', privacyCheck:check, rowPrivacyCheck:tableRow};
-}
-
-export function divisionTableConfig(params = {}, caption = 'Divisions', pageType = 'bill', check = votePrivacyCheck) {
+export function divisionTableConfig(params = {}, caption = 'Divisions', pageType = 'bill') {
   const scope = {};
   if (params.bill) scope['f.bill'] = JSON.stringify([params.bill]);
   if (params.jurisdiction) scope['f.jurisdiction'] = JSON.stringify([params.jurisdiction]);
   if (params.start) scope['f.sitting'] = JSON.stringify([params.start]);
-  return {...privacy(check), id:'division-table', caption, columns:divisionColumns, source:{endpoint:'/api/table/divisions', params:scope},
+  return {id:'division-table', caption, columns:divisionColumns, source:{endpoint:'/api/table/divisions', params:scope},
     pageSize:25, defaultSort:{key:'date', dir:'desc'}, primaryLink:row => safeLink(row.href),
     export:{filename:'divisions.csv'}, urlKey:'dv', pageType};
 }
-export function voteTableConfig(person, caption = 'Voting record', check = votePrivacyCheck) {
+export function voteTableConfig(person, caption = 'Voting record') {
   const people = [...new Set((Array.isArray(person) ? person : [person]).filter(Boolean))];
-  return {...privacy(check), id:'vote-table', caption, columns:voteColumns, source:{endpoint:'/api/table/votes', params:{'f.person':JSON.stringify(people)}},
+  return {id:'vote-table', caption, columns:voteColumns, source:{endpoint:'/api/table/votes', params:{'f.person':JSON.stringify(people)}},
     pageSize:25, defaultSort:{key:'date', dir:'desc'}, primaryLink:row => safeLink(row.href),
     export:{filename:'voting-record.csv'}, urlKey:'vr', pageType:'person'};
 }
@@ -113,8 +99,6 @@ export function voteTablePage(rows, config, query = {}) {
 // Presentation stays outside the core: the contract has no cell-render callback.
 function outcomeCell(html) {
   return html.replace(/(<td\b[^>]*data-label="Outcome"[^>]*>)([\s\S]*?)(<\/td>)/g, (_, start, cell, end) => {
-    // Read only the core's filtered, escaped cell. Original row positions may
-    // differ after privacy filtering; looking back into page.rows could leak.
     const encoded = cell.match(/<span class="dt-value">([\s\S]*?)<\/span>/)?.[1] || '';
     const word = encoded && encoded !== '—' ? encoded.replace(/&(?:amp|lt|gt|quot|#39);/g,
       entity => ({'&amp;':'&','&lt;':'<','&gt;':'>','&quot;':'"','&#39;':"'"}[entity])) : 'Not recorded';
@@ -138,7 +122,6 @@ export function mountVoteTables(root = document) {
     if (el.closest('#prerender') && el.ownerDocument.querySelector('script[src^="/app.js"]')) continue;
     const config = JSON.parse(el.querySelector('[data-vote-config]').textContent);
     config.primaryLink = row => safeLink(row.href);
-    Object.assign(config, privacy(votePrivacyCheck));
     const table = el.querySelector('[data-datatable]');
     const decorate = () => {
       for (const cell of el.querySelectorAll('td[data-label="Outcome"]')) {

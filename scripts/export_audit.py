@@ -162,22 +162,9 @@ def export(snapshot_path, out):
     jurisdiction = {"Commonwealth": "federal", "Queensland": "qld"}.get(agency_index.get("meta", {}).get("scope"))
     agencies = [{**a, "jurisdiction": a.get("jurisdiction", jurisdiction)} for a in agency_index["agencies"]]
     payloads, manifest = plan_export(snapshot, agencies)
-    # Apply the same boundary as build:privacy before any accepted asset write.
-    # Body source text is held if the boundary would alter it.
-    boundary = subprocess.run(['node', str(ROOT / 'scripts/qao_publication_boundary.mjs')],
-        input=json.dumps({name:json.loads(body) for name,body in payloads.items()}, ensure_ascii=False),
-        cwd=ROOT, capture_output=True, text=True)
-    if boundary.returncode: raise Held('QAO publication privacy gate failed; accepted assets kept')
-    projected = json.loads(boundary.stdout)
+    projected = {name:json.loads(body) for name,body in payloads.items()}
     manifest = projected['manifest.json']
     for chunk in manifest['chunks']: chunk['bytes'] = len(encoded(projected[Path(chunk['path']).name]))
-    manifest['title_privacy_filtered'] = sum(bool(r.get('title_privacy_filtered')) for r in projected['index.json']['records'])
-    manifest['recommendation_privacy_filtered'] = sum(bool(rec.get('privacy_filtered')) for chunk in manifest['chunks']
-        for row in projected[Path(chunk['path']).name]['records'] for rec in row['recommendations'])
-    if manifest['title_privacy_filtered']:
-        manifest['attribution']['changes'] += ' Titles with names withheld are marked; QAO has the original title.'
-    if manifest['recommendation_privacy_filtered']:
-        manifest['attribution']['changes'] += ' HTML recommendations with names withheld are marked; QAO has the original text.'
     payloads = {name:encoded(body) for name,body in projected.items()}
     check_budget(payloads)
     out.mkdir(parents=True, exist_ok=True)

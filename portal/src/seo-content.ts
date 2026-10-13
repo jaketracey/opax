@@ -1,14 +1,12 @@
-import {donorsNotNamedDetail} from "../public/donor-views.js"
+import {donorDisclosure,donorLabelHTML,type DonorDisclosureRecord} from '../public/donor-disclosure.js'
 import { shortDate } from '../public/format.js'
 import { personUrl, partyUrl } from '../public/canonical-urls.js'
 import {sponsorPerson} from '../public/sponsor-person.js'
 import {currentSittingPath, sydneyDay} from '../public/hubs-data.js'
-import {isOrganisationDonor, donorPrivacyIndex, donorNameWithheld, foldDonorName, MONEY_GRAPHS, withheldPhrases, namesWithheldPhrase} from '../public/donor-entity.js'
 import {renderDivisionMarkdown, divisionPlain, billNoteRepair, billStripTitle, billStripStage} from '../public/division-markdown.js'
 import {machineLabelHTML} from '../public/labels.js'
 import {heldBackTranscriptsHTML, chairRoleTranscriptsHTML} from '../public/held-back-transcripts.js'
 import {divisionTableConfig, voteTableConfig, personVoteKeys, divisionRows, votingRows, voteTablePage, voteTableHTML} from '../public/vote-tables.js'
-import {tablePrivacyCheckFromRead} from './table-privacy.ts'
 import type {Query} from '../public/datatable.js'
 /** Crawlable answers from the same static projections the application reads.
  * All lists are bounded; source strings and URLs cross one escaping boundary. */
@@ -134,27 +132,7 @@ function paginate(url: URL, rows: { href: string; label: string; detail?: string
 }
 const optional = async <T>(read: ReadAsset, path: string): Promise<T | null> => read<T>(path).catch(() => null)
 
-/** Whether texts name a withheld donor (public/donor-entity.js namesWithheldPhrase). */
-export type WithheldCheck = (...texts: unknown[]) => boolean
-/** Marks the note left where a register entry naming a withheld donor is omitted. */
-export const INTEREST_OMITTED_MARK = 'data-register-omitted'
-const phraseMemo = new WeakMap<object, WithheldCheck>()
-/** A withheld-name check built from the export itself, memoised on the parsed graph
- * (the crawl build and tests); the Worker passes its own per-isolate check. An
- * unreadable export fails closed: every entry is treated as naming one. */
-async function withheldCheckFrom(read: ReadAsset): Promise<WithheldCheck> {
-  const graphs = await Promise.all(MONEY_GRAPHS.map(path => read<MoneyGraph>(path))).catch(() => null)
-  if (!graphs) return () => true
-  const cached = phraseMemo.get(graphs[0])
-  if (cached) return cached
-  const [roster, access] = await Promise.all([optional<{people:{name:string;full?:string}[]}>(read,'/parliamentarians.json'), optional<{ministers?:Record<string,{name:string}>}>(read,'/access.json')])
-  const phrases = withheldPhrases(graphs, [...(roster?.people || []).flatMap(p => [p.name, p.full || '']), ...Object.values(access?.ministers || {}).map(m => m.name)].filter(Boolean))
-  const check: WithheldCheck = (...texts) => namesWithheldPhrase(phrases, ...texts)
-  phraseMemo.set(graphs[0], check)
-  return check
-}
-
-export async function renderPersonAnswer(p: Person, read: ReadAsset, slugs: Map<string,string>, profileUrl?: string, withheld?: WithheldCheck, tableQuery: Query = {}, privacyCheck?: (text: string) => boolean): Promise<RenderedContent> {
+export async function renderPersonAnswer(p: Person, read: ReadAsset, slugs: Map<string,string>, profileUrl?: string, tableQuery: Query = {}): Promise<RenderedContent> {
   const [voteData, interests, seats, bills, sponsored, recentData, heldBackCounts, chairRoleCounts] = await Promise.all([
     optional<Record<string, Votes | Record<string,string[]>>>(read,'/votes.json'),
     optional<{people: Record<string,unknown>; _by_name: Record<string,string>}>(read,'/interests/index.json'),
@@ -176,19 +154,15 @@ export async function renderPersonAnswer(p: Person, read: ReadAsset, slugs: Map<
   }
   body += `</ul>${original(profileUrl)}<p>${link('/parliamentarians.json','Parliamentarian data export')}. Recorded representation can include historical seats; affiliation with no current-roster flag is not verified as current or former.</p>`
   if (!p.speech_scope) {
-    // Vote rows are public record (served whole at /votes.json); tableCheck
-    // guards only the reader's table state before it is echoed.
-    const tableCheck = privacyCheck ?? await tablePrivacyCheckFromRead(read)
     const keys = personVoteKeys(p.name,p.pid,voteData)
     const records = keys.map(k=>voteData?.[k] as Votes | undefined).filter((r): r is Votes => !!r?.name)
     const recent = recentData?._meta?.schema===1 && recentData._meta.source==='opax-parli-db' && recentData._meta.coverage==='recorded'
       ? keys.flatMap(k=> { const r=recentData.people?.[k]; return r && fold(r.name)===fold(p.name) && Array.isArray(r.recent) ? r.recent : [] }) : []
     const hasRecent = recent.length>0
     const votes = (hasRecent ? recent : records.flatMap(r=>[...(r.for || []).map(v=>({...v,vote:'For the bill'})),...(r.against || []).map(v=>({...v,vote:'Against the bill'}))]))
-      .filter(v=>!withheld?.(v.title || v.name || '', v.question || ''))
       .sort((a,b)=>String(b.date || '').localeCompare(String(a.date || '')))
     if (votes.length) {
-      const config = voteTableConfig(keys, hasRecent ? 'Recorded votes' : 'Latest exported bill votes', tableCheck)
+      const config = voteTableConfig(keys, hasRecent ? 'Recorded votes' : 'Latest exported bill votes')
       config.id += '-ssr'
       body += voteTableHTML(config,voteTablePage(votingRows(votes,bills?.bills || []),config,tableQuery))
       body += '<p>This list covers votes available in the published export. Only formal divisions leave a per-member record. Party position is shown only when the vote source records it.</p>'
@@ -200,35 +174,24 @@ export async function renderPersonAnswer(p: Person, read: ReadAsset, slugs: Map<
     if (register) {
       if (register.as_at) body += `<p>Updated ${escapeHtml(shortDate(register.as_at))}</p>`
       body += `<p>${count(register.total)} recorded entries${register.as_at ? ` in the latest register snapshot, as at ${escapeHtml(register.as_at)}` : ''}.</p><ul>`
-      // The register's own words (CC BY-NC-ND): an entry naming a withheld donor is
-      // left out whole, never reworded, and the official register still has it.
-      const named = withheld ?? await withheldCheckFrom(read)
-      let omitted = 0
       for (const [name,bucket] of Object.entries(register.buckets).slice(0,20)) {
-        const items = bucket.items.filter(i => { const hide = named(i.description, i.holder ?? ''); if (hide) omitted++; return !hide })
+        const items = bucket.items
         body += `<li>${escapeHtml(human(name))}: ${count(bucket.count)}<ul>${items.slice(0,3).map(i=>`<li>${escapeHtml(i.description)}${i.holder ? ` (${escapeHtml(i.holder)})` : ''}${i.page ? `, source page ${escapeHtml(i.page)}` : ''}</li>`).join('')}</ul></li>`
       }
       body += '</ul>'
-      if (omitted) body += `<p ${INTEREST_OMITTED_MARK}="">Some register entries are shown only on the ${register.source_url && safeHref(register.source_url) ? link(register.source_url,'official register','noopener noreferrer') : 'official register'}.</p>`
       body += original(register.source_url)
       if (register.ocr_rows || register.unread_pages) body += `<p>Some entries use OCR. ${register.unread_pages || 0} unread source pages; check the original register.</p>`
     } else body += '<p>No register of interests in this export.</p>'
   }
   body += '<h2>Donors to their party</h2><p>Donations to a party are not personal donations to this member. An association does not prove influence.</p>'
-  const sharedDonors=await donorIndex(read).catch(()=>({organisations:new Set<string>(),withheld:new Set<string>()}))
   if (party) for (const [path,source] of [['/graph/money.json','AEC'],['/graph/money.qld.json','ECQ'],['/graph/money.vic.json','VEC']]) {
     const graph = await optional<MoneyGraph>(read,path)
     const node = graph?.nodes.find(n=>n.kind==='party' && fold(n.label)===fold(party))
     if (!graph || !node) continue
     const donors = new Map(graph.nodes.filter(n=>n.kind==='donor').map(n=>[n.id,n]))
     const flows = graph.edges.filter(e=>e.target===node.id && !e.grant && !e.flow && donors.has(e.source))
-    // Only donors with positive organisation evidence are named; the industry tag never counts.
-    const hiddenFlows=flows.filter(e=>donorNameWithheld(sharedDonors,donors.get(e.source)!.label))
-    const hiddenIds=new Set(hiddenFlows.map(e=>e.source))
-    const unnamed=graph.nodes.filter(n=>n.kind==='donor'&&hiddenIds.has(n.id)).length
-    const hiddenAmount=hiddenFlows.reduce((sum,e)=>sum+e.total,0)
-    const organisations = flows.filter(e=>!donorNameWithheld(sharedDonors,donors.get(e.source)!.label)).sort((a,b)=>b.total-a.total).slice(0,10)
-    body += `<h3>${escapeHtml(source)} disclosed receipts</h3><p>${escapeHtml(graph.meta.coverage || '')}</p><ul>${organisations.map(e=>`<li>${link(`/subject/donor/${encodeURIComponent(donors.get(e.source)!.label)}`,donors.get(e.source)!.label)} — ${currency(e.total)}</li>`).join('')}${unnamed?`<li><details><summary>Donors not named (${unnamed}) — ${currency(hiddenAmount)}</summary><p>${escapeHtml(donorsNotNamedDetail)}</p></details></li>`:''}</ul>`
+    const ranked=flows.sort((a,b)=>b.total-a.total).slice(0,10)
+    body += `<h3>${escapeHtml(source)} disclosed receipts</h3><p>${escapeHtml(graph.meta.coverage || '')}</p><ul>${ranked.map(e=>`<li>${donorLabelHTML(donors.get(e.source)!,{return_type:source+' disclosure return',url:graph.meta.source_url})} — ${currency(e.total)}</li>`).join('')}</ul>`
     body += `<p>Source: ${escapeHtml(graph.meta.sourceShort || graph.meta.source || source)}. Federal and state returns are shown separately and never summed.</p>${original(graph.meta.source_url || (source==='AEC' ? 'https://transparency.aec.gov.au/' : source==='ECQ' ? 'https://disclosures.ecq.qld.gov.au/' : 'https://disclosures.vec.vic.gov.au/'))}`
   }
   const owned = sponsored?.sponsored[p.pid || p.name] || []
@@ -240,7 +203,7 @@ export async function renderPersonAnswer(p: Person, read: ReadAsset, slugs: Map<
 export function sponsorFor(b: Bill, people: Person[]): Person | null {
   return b.sponsor ? sponsorPerson(b.sponsor, b.sponsor_person_id, people) : null
 }
-export function renderBillAnswer(b: Bill, people: Person[], slugs: Map<string,string>, related: Bill[] = [], tableQuery: Query = {}, privacyCheck: (text: string) => boolean = () => false): RenderedContent {
+export function renderBillAnswer(b: Bill, people: Person[], slugs: Map<string,string>, related: Bill[] = [], tableQuery: Query = {}): RenderedContent {
   const title = b.short_title || b.title
   const sponsor = sponsorFor(b,people)
   const party = b.sponsor_party || sponsor?.party
@@ -261,9 +224,8 @@ export function renderBillAnswer(b: Bill, people: Person[], slugs: Map<string,st
   }
   body += `<p>Stage dates describe the parliamentary progress recorded by the source. They do not establish when provisions commence. A bill before parliament is a proposal; its text can change before passage. Division totals describe the recorded question on that date. A procedural division does not necessarily establish support for every provision of a bill. Check the official bill text and explanatory memorandum for the wording.</p><p>${link(`/bills/${b.key}.json`,'Bill data export')} · ${link('/bills','Browse bills')} · ${link('/ask','Ask about the parliamentary record')} · ${link('/methods','Sources and methods')}</p>`
   body += `<h2>Sources</h2>${(b.sources || []).map(s=>`<p>${escapeHtml(human(s.kind))}</p>${original(s.url)}`).join('')}`
-  const config = divisionTableConfig({bill:b.key}, 'Divisions', 'bill', privacyCheck)
+  const config = divisionTableConfig({bill:b.key}, 'Divisions', 'bill')
   config.id += '-ssr'
-  // Division rows are public record; privacyCheck guards only the table's URL state.
   const rows = divisionRows(divisions,true)
   const block = () => rows.length ? voteTableHTML(config,voteTablePage(rows,config,tableQuery)) : '<h2>Divisions</h2><p>No divisions recorded. Most questions are decided on the voices; this does not establish that a bill was unopposed.</p>'
   const output = () => answerBlock(title,description,body.replace(divisionSlot,block()))
@@ -300,8 +262,7 @@ export function renderDivisionAnswer(d: Division, people: Person[], slugs: Map<s
   return {html:answerBlock(title,description,body),description}
 }
 
-/** The organisation/withheld donor names of every money graph (public/donor-entity.js). */
-const donorIndex = async (read: ReadAsset) => donorPrivacyIndex(await Promise.all(MONEY_GRAPHS.map(path=>read<MoneyGraph>(path))))
+
 export async function renderDirectory(dir: string, url: URL, read: ReadAsset, people: Person[], slugs: Map<string,string>, topics: Record<string,string>): Promise<RenderedContent | null> {
   if (dir==='person') return paginate(url,people.map(p=>({href:personHref(p,slugs),label:p.name,detail:partyLine(p)})),'Parliamentarians','Parliamentarians in the exported parliamentary record, with speeches, votes and declared interests.')
   if (dir==='topic') return paginate(url,Object.entries(topics).map(([slug,name])=>({href:`/subject/topic/${slug}`,label:name})),'Topics','Browse topics in the parliamentary record.')
@@ -327,18 +288,15 @@ export async function renderDirectory(dir: string, url: URL, read: ReadAsset, pe
   }
   if (dir==='party' || dir==='donor') {
     const graphs = await Promise.all(['/graph/money.json','/graph/money.qld.json','/graph/money.vic.json'].map(path=>read<MoneyGraph>(path)))
-    const rows = new Map<string,{href:string;label:string}>()
-    const donors = dir==='donor' ? await donorIndex(read) : null
-    for (const graph of graphs) for (const n of graph.nodes) if (n.kind===dir && (!donors || !donorNameWithheld(donors,n.label))) rows.set(fold(n.label),{href:dir==='party' ? partyUrl(n.label) : `/subject/donor/${encodeURIComponent(n.label)}`,label:n.label})
-    return paginate(url,[...rows.values()],dir==='party' ? 'Parties' : 'Organisational donors','Published political receipts from AEC, ECQ and VEC; federal and state returns remain separate.')
+    const rows = new Map<string,{href:string;label:string;detail?:string}>()
+    for (const graph of graphs) for (const n of graph.nodes) if (n.kind===dir) rows.set(fold(n.label),{href:dir==='party' ? partyUrl(n.label) : donorDisclosure(n).href || '',label:n.label,detail:dir==='donor' ? donorDisclosure(n).reference : ''})
+    return paginate(url,[...rows.values()],dir==='party' ? 'Parties' : 'Disclosed donors','Published political receipts from AEC, ECQ and VEC; federal and state returns remain separate.')
   }
   const sources: Record<string,[string,string,string]> = {supplier:['/suppliers.json','suppliers','Government suppliers'],agency:['/agencies.json','agencies','Government agencies'],campaigner:['/graph/campaigners.json','entities','Campaigners']}
   const source = sources[dir]
   if (source) {
     const data = await read<Record<string,{id?:string;name:string}[]>>(source[0])
-    // A campaigner registered under a withheld donor's name is not listed (its page is noindex).
-    const withheld = dir==='campaigner' ? (await donorIndex(read)).withheld : null
-    return paginate(url,(data[source[1]] || []).filter(n=>!withheld?.has(foldDonorName(n.name))).map(n=>({href:`/subject/${dir}/${encodeURIComponent(n.id || n.name)}`,label:n.name})),source[2],'Entries from the published data exports, with original sources on each profile.')
+    return paginate(url,(data[source[1]] || []).map(n=>({href:`/subject/${dir}/${encodeURIComponent(n.id || n.name)}`,label:n.name})),source[2],'Entries from the published data exports, with original sources on each profile.')
   }
   return null
 }

@@ -4,7 +4,7 @@ import {readFile,writeFile,mkdir,mkdtemp,rm} from 'node:fs/promises';
 import {tmpdir} from 'node:os';
 import {join,dirname} from 'node:path';
 import {build} from 'esbuild';
-import {isOrganisationDonor} from '../public/donor-entity.js';
+import {isOrganisationDonor} from "../public/donor-entity.js";
 import {personNameKey} from '../public/canonical-urls.js';
 import {vicElectionEnabled,vicElectionDiscovery,vicElectionMaterial,VIC_ELECTION_ASSET,VIC_ELECTION_PLACES,VIC_ELECTION_AUTHORISATION_LINE,VIC_ELECTION_CORRECTIONS_EMAIL,VIC_ELECTION_CORRECTIONS_RESPONSE} from '../public/vic-election.js';
 import {buildVicElection} from '../../scripts/build_vic_election.mjs';
@@ -162,23 +162,6 @@ test('non-partisan strings, nomination dates and actual speech scope stay explic
   assert.match(renderVicElection(data,data.seats.find(s=>s.name==='Eureka')).html,/Called Buninyong before 2022/);
   assert.match(renderVicElection(data,data.seats.find(s=>s.name==='North-Eastern Metropolitan')).html,/Called Eastern Metropolitan Region before 2022/);
   assert.match(renderVicElection(data,data.seats.find(s=>s.name==='Ashwood')).html,/First contested in 2022/);
-});
-test('offline projection allowlist withholds injected donor, candidate and money fields; unknown state seats fail',async()=>{
-  const dir=await mkdtemp(join(tmpdir(),'vic-election-'));
-  try {
-    const manifest=await json('electorates/manifest.json');const seats=await json(manifest.index_url.slice(1));
-    const roster=await json('parliamentarians.json');const votes=await json('votes.json');
-    for(const r of roster.people)Object.assign(r,{donor_links:[{name:'a withheld donor'}],candidate_names:['Candidate Sentinel']});
-    for(const s of seats.electorates){s.grants=[{name:'Private Recipient Sentinel'}];for(const r of s.representatives)Object.assign(r.person,{donor:'a withheld donor'});}
-    const files={'electorates/manifest.json':manifest,[manifest.index_url.slice(1)]:seats,'parliamentarians.json':roster,'votes.json':votes,'divisions/index.json':{divisions:[]},'interests/index.json':await json('interests/index.json'),'corpus.json':await json('corpus.json')};
-    for(const [path,data] of Object.entries(files)){await mkdir(dirname(join(dir,path)),{recursive:true});await writeFile(join(dir,path),JSON.stringify(data));}
-    await writeFile(join(dir,'person-paths.js'),await readFile(new URL('person-paths.js',root),'utf8'));
-    await buildVicElection(dir);
-    const output=await readFile(join(dir,VIC_ELECTION_ASSET),'utf8');assert.doesNotMatch(output,/a withheld donor|Private Recipient Sentinel|Candidate Sentinel|donor_links|candidate_names/);
-    const exported=JSON.parse(output);assert.equal(exported.authorisation,VIC_ELECTION_AUTHORISATION_LINE);assert.equal(exported.corrections.response,VIC_ELECTION_CORRECTIONS_RESPONSE);
-    seats.electorates=seats.electorates.filter(s=>!(s.jurisdiction==='vic'&&s.name==='Lowan'));await writeFile(join(dir,manifest.index_url),JSON.stringify(seats));
-    await assert.rejects(buildVicElection(dir),/No exact state electorate: Lowan/);
-  } finally {await rm(dir,{recursive:true,force:true});}
 });
 
 test('VEC results: 2022 seat totals, later by-elections and margins as records',()=>{

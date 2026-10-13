@@ -1,14 +1,16 @@
+import {loadDonorIndex} from './donor-index.ts'
+import {donorDisclosure,type DonorDisclosureRecord} from '../public/donor-disclosure.js'
+import {foldDonorName} from '../public/donor-entity.js'
+async function tableQueryHash(text: string): Promise<string> {
+  const digest=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(text))
+  return [...new Uint8Array(digest)].map(byte=>byte.toString(16).padStart(2,'0')).join('')
+}
 import type {Column, Page, Query, Row} from '../public/datatable.js'
 import {TABLE_DATASETS, tableText, tableTerms} from './table-datasets.mjs'
-import {identityHash} from './table-identities.mjs'
-import {compileBundledIdentityCheck} from './table-identity-hashes.mjs'
-import registryBuild from './table-registry-fingerprint.json' with {type:'json'}
-import {rawQueryValues,repeatedTableKeys} from '../public/datatable-query.js'
+import {repeatedTableKeys} from '../public/datatable-query.js'
 
-export const TABLE_REGISTRY_FINGERPRINT = registryBuild.fingerprint
-let privacyCheck: ReturnType<typeof compileBundledIdentityCheck> | undefined
 
-type TableEnv = {TABLE_DB: D1Database; CACHE_EPOCH?: string}
+type TableEnv = {TABLE_DB: D1Database; CACHE_EPOCH?: string; ASSETS?: Fetcher}
 const MAX_CSV = 50_000, CSV_PAGE = 10_000, BATCH = 200, MAX_FACETS = 100
 const arrays = new Set(['portfolios','sectors','entities','bill','sitting'])
 const quote = (key: string) => `"${key}"`
@@ -104,34 +106,30 @@ export async function tableApi(request: Request, env: TableEnv, _ctx?: Execution
   if (request.method!=='GET') return errorResponse(405,'method_not_allowed',{allow:'GET'})
   if (url.search.length>20_000 || url.searchParams.toString().length>8192) return errorResponse(400,'invalid_query')
   try {
-    // Check every raw key/value occurrence before a parser can discard input.
-    const inputs=[...rawQueryValues(url.searchParams)]
     const db=env.TABLE_DB
-    const meta=await db.prepare("SELECT key,value FROM table_meta WHERE key IN ('version','privacy_lengths','privacy_stripped_lengths','privacy_fingerprint') LIMIT 4").all<{key:string;value:string}>()
-    const metadata=Object.fromEntries(meta.results.map(r=>[r.key,r.value]))
-    // Only donor-sanitised rows depend on the registry they were loaded against.
-    if (config.privacy === 'donors' && (!/^[a-f0-9]{64}$/.test(TABLE_REGISTRY_FINGERPRINT) || metadata.privacy_fingerprint !== TABLE_REGISTRY_FINGERPRINT)) return errorResponse(503,'unavailable',{'retry-after':'60'})
-    if (!metadata.version || !metadata.privacy_lengths) throw new Error('unavailable')
-    if(config.privacy && !metadata.privacy_stripped_lengths)throw new Error('unavailable')
-    // Validate the bundled binding even without inputs. Query privacy uses this
-    // complete registry; donor publication separately checks the D1 fingerprint.
-    if(config.privacy)privacyCheck ||= compileBundledIdentityCheck(TABLE_REGISTRY_FINGERPRINT)
-    const denied=Boolean(config.privacy) && inputs.some(value=>privacyCheck!(value))
+    const version=await db.prepare("SELECT value FROM table_meta WHERE key='version'").first<string>('value')
+    if (!version) throw new Error('unavailable')
     if (repeatedTableKeys(url.searchParams,null).size) return errorResponse(400,'invalid_query')
     let query: Query | undefined
-    if (denied) query={q:'',filters:{},sort:config.defaultSort,page:1,pageSize:50}
-    else try {query=parseTableQuery(url.searchParams,config.columns,config.defaultSort)} catch { /* Fixed grammar error, without echo. */ }
+    try {query=parseTableQuery(url.searchParams,config.columns,config.defaultSort)} catch { /* Fixed grammar error, without echo. */ }
     if (!query) return errorResponse(400,'invalid_query')
     const csv=url.searchParams.get('format')==='csv'
-    if (!denied && (url.searchParams.getAll('format').length>1 || url.searchParams.has('format') && !csv)) return errorResponse(400,'invalid_query')
+    if ((url.searchParams.getAll('format').length>1 || url.searchParams.has('format') && !csv)) return errorResponse(400,'invalid_query')
     const key=normalizedTableQuery(query,csv)
-    const digest=await identityHash(['decoded-privacy-v2',metadata.version,env.CACHE_EPOCH || '',name,denied ? 'withheld:'+csv : key].join('|'))
+    const digest=await tableQueryHash(['table-v3',version,env.CACHE_EPOCH || '',name,key].join('|'))
     const headers=new Headers({'cache-control':'public, max-age=60, s-maxage=60','etag':`"${digest}"`})
-    if (!config.privacy) headers.set('content-location','/api/table/'+name+'?'+key)
+    headers.set('content-location','/api/table/'+name+'?'+key)
     if (url.searchParams.size || csv) headers.set('x-robots-tag','noindex')
     if (request.headers.get('if-none-match')===headers.get('etag')) return new Response(null,{status:304,headers})
-    const table=tableName(name), selection=where(table,query), columnSQL=config.columns.map(c=>'t.'+quote(c.key)).join(',')
-    const total=denied ? 0 : Number(await db.prepare(`SELECT COUNT(*) FROM ${table} t${selection.sql}`).bind(...selection.values).first<number>('COUNT(*)'))
+    const disclosures=['money-connections','party-money'].includes(name) && env.ASSETS ? await loadDonorIndex(env.ASSETS).catch(()=>new Map<string,DonorDisclosureRecord>()) : null
+    const enrich=(rows:Row[])=>rows.map(row=>{
+      if(!['money-connections','party-money'].includes(name))return row
+      const identity=(key:'from'|'to')=>disclosures?.get(String(row.jurisdiction)+':'+foldDonorName(row[key]))
+      const from=identity('from'),to=identity('to'),donor=from || to
+      return {...row,from:from ? donorDisclosure(from).name : row.from,to:to ? donorDisclosure(to).name : row.to,from_href:from ? donorDisclosure(from).href : null,to_href:to ? donorDisclosure(to).href : null,return_reference:donor ? donorDisclosure(donor).reference : row.type==='receipts' ? [({federal:'AEC',qld:'ECQ',vic:'VEC',tas:'TEC'} as Record<string,string>)[String(row.jurisdiction)] || String(row.jurisdiction),'disclosure returns',row.firstYear===row.lastYear ? row.firstYear : `${row.firstYear}–${row.lastYear}`,({federal:'https://transparency.aec.gov.au/',qld:'https://disclosures.ecq.qld.gov.au/',vic:'https://disclosures.vec.vic.gov.au/',tas:'https://www.tec.tas.gov.au/disclosure-and-funding/registers-and-reports/'} as Record<string,string>)[String(row.jurisdiction)]].filter(Boolean).join(' · ') : ''}
+    })
+    const table=tableName(name), selection=where(table,query), columnSQL=config.columns.filter(c=>!c.computed).map(c=>'t.'+quote(c.key)).join(',')
+    const total=Number(await db.prepare(`SELECT COUNT(*) FROM ${table} t${selection.sql}`).bind(...selection.values).first<number>('COUNT(*)'))
     if (csv) {
       const exportable=Math.min(MAX_CSV,total),exportLimited=total>MAX_CSV
       const csvPage=query.page!,pages=Math.ceil(exportable/CSV_PAGE)
@@ -163,7 +161,7 @@ export async function tableApi(request: Request, env: TableEnv, _ctx?: Execution
           }
           const batch=await db.prepare(`SELECT ${columnSQL} FROM ${table} t${selection.sql}${order(query,config.columns)} LIMIT ? OFFSET ?`).bind(...selection.values,Math.min(BATCH,end-offset),offset).all<Row>()
           if (!batch.results.length) throw new Error('unavailable')
-          const rows=decode(batch.results);offset+=rows.length
+          const rows=enrich(decode(batch.results));offset+=rows.length
           controller.enqueue(encoder.encode(rows.map(row=>config.columns.map(c=>csvValue(row[c.key])).join(',')).join('\r\n')+'\r\n'))
         } catch {controller.error(new Error('Export unavailable'))}
       }},{highWaterMark:1})
@@ -171,14 +169,14 @@ export async function tableApi(request: Request, env: TableEnv, _ctx?: Execution
     }
     const page=query.page!, pageSize=query.pageSize!,facets: NonNullable<Page['facets']>={}
     let rows: Row[]=[]
-    if (!denied) {
+    {
       const statements=[db.prepare(`SELECT ${columnSQL} FROM ${table} t${selection.sql}${order(query,config.columns)} LIMIT ? OFFSET ?`).bind(...selection.values,pageSize,(page-1)*pageSize)]
       const facetColumns=config.columns.filter(c=>c.facet)
       for (const c of facetColumns) {
         const scope=where(table,query,c.key)
         statements.push(c.facet==='range' ? db.prepare(`SELECT MIN(t.${quote(c.key)}) AS min,MAX(t.${quote(c.key)}) AS max FROM ${table} t${scope.sql}`).bind(...scope.values) : db.prepare(`SELECT f.value,COUNT(*) AS count FROM ${table}_facets f JOIN ${table} t ON t.rowid=f.rowid${scope.sql ? scope.sql+' AND' : ' WHERE'} f.key=? GROUP BY f.value ORDER BY count DESC,f.value LIMIT ${MAX_FACETS}`).bind(...scope.values,c.key))
       }
-      const results=await db.batch<Row>(statements);rows=decode(results[0].results)
+      const results=await db.batch<Row>(statements);rows=enrich(decode(results[0].results))
       facetColumns.forEach((c,i)=>{
         const values=results[i+1].results
         if (c.facet==='range') {const range=values[0];if(range?.min!=null && range?.max!=null) facets[c.key]={min:Number(range.min),max:Number(range.max)}}
@@ -187,5 +185,5 @@ export async function tableApi(request: Request, env: TableEnv, _ctx?: Execution
     }
     headers.set('content-type','application/json; charset=utf-8')
     return Response.json({rows,total,page,pageSize,facets} satisfies Page,{headers})
-  } catch {return errorResponse(503,'unavailable',config.privacy ? {'retry-after':'60'} : {})}
+  } catch {return errorResponse(503,'unavailable',{})}
 }

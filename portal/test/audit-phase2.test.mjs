@@ -63,13 +63,6 @@ test('unknown phase 2 id returns 404 without fetching responses',async()=>{
  // Worker noindex headers are exercised by audit.test.mjs against the route dispatcher.
 });
 
-test('filtered metadata title is marked while the authoritative report link stays intact',async()=>{
- const row=structuredClone(JSON.parse(files['reports-1.json']).records[0]);row.title_privacy_filtered=true;
- const p=await auditPage(id,new URL('https://opax.com.au/audit/'+id),async path=>path.includes('reports-')?{records:[row]}:read(path),block);
- assert.match(p.prerender,/Names withheld from the title; QAO has the original title/);
- assert.ok(p.prerender.includes(`href="${row.canonical_url}"`));
-});
-
 test('HTML recommendations stay live beside each licence-only PDF hold variant',async()=>{
  for(const [licence,term,note] of [
   ['CC BY-NC-ND 4.0','CC BY-NC-ND 4.0',"PDF body held: QAO&#39;s terms for this PDF (CC BY-NC-ND 4.0) don&#39;t allow us to reproduce it here."],
@@ -113,25 +106,4 @@ test('accepted catalogue restores all phase 1 HTML recommendations while preserv
  assert.equal(rows.reduce((n,row)=>n+row.recommendations.length,0),647);assert.ok(rows.every(row=>row.recommendations.every(rec=>rec.provenance==='html')));
  assert.equal(rows.filter(row=>row.licence.body_skipped).length,2);assert.ok(rows.every(row=>row.pdf.status==='held'));
  assert.equal(manifest.bodies,0);assert.equal(manifest.responses,0);assert.equal(manifest.pdf_recommendations,0);
-});
-
-test('publication boundary filters HTML identities while refusing altered PDF source text',async()=>{
- const {readPublicationContext,privacySourceGraphs,privacySourceDonorRecords,sanitiseDonorAsset}=await import('../../scripts/withhold_donor_assets.mjs');
- const {isOrganisationDonor}=await import('../public/donor-entity.js');
- const context=readPublicationContext();
- const candidates=[...privacySourceDonorRecords(),...privacySourceGraphs().flatMap(graph=>graph.nodes)];
- const donor=candidates.find(row=>row.kind==='donor'&&!isOrganisationDonor(row)&&row.label&&!/name withheld/i.test(row.label)
-  &&sanitiseDonorAsset({title:`Donation by ${row.label}`},context).title!==`Donation by ${row.label}`);
- assert.ok(Boolean(donor),'Runtime privacy source contains a withheld identity');
- const raw=`A donation by ${donor.label}.`,script=new URL('../../scripts/qao_publication_boundary.mjs',import.meta.url).pathname;
- const run=(provenance,text=raw)=>spawnSync(process.execPath,[script],{input:JSON.stringify({'reports-1.json':{records:[{title:`Audit of ${donor.label}`,recommendations:[{number:1,text,html:`<p>${text}</p>`,provenance}]}]}}),encoding:'utf8'});
- const html=run('html');assert.equal(html.status,0,'HTML follows the shared publication boundary');
- const rec=JSON.parse(html.stdout)['reports-1.json'].records[0].recommendations[0];assert.equal(rec.provenance,'html');assert.equal(rec.privacy_filtered,true);
- assert.ok(!html.stdout.includes(donor.label),'Output contains no withheld identity');
- assert.ok(!/donor|privacy rule|text layer/i.test(html.stdout),'Withheld labels use neutral public wording');
- const row=JSON.parse(html.stdout)['reports-1.json'].records[0];assert.equal(row.title_privacy_filtered,true);assert.ok(row.title.includes('Name withheld'));
- const pdf=run('pdf p.4');assert.ok(pdf.status!==0,'Changed PDF source text remains held');
- assert.ok(!pdf.stderr.includes(donor.label),'Diagnostics contain no withheld identity');
- const masked=run('pdf p.4',sanitiseDonorAsset({text:raw},context).text);
- assert.ok(masked.status!==0,'Neutral labels cannot silently change verbatim PDF source text');
 });

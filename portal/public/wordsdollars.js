@@ -1,4 +1,5 @@
-import {donorPrivacyIndex,donorNameWithheld,loadDonorViewIndex,donorAggregateDetail,unnamedDonorLabel} from './donor-views.js?v=77470b1d26';
+import {donorDisclosure,donorLookup,donorDisplayText,donorLabelHTML} from './donor-disclosure.js?v=e91ef740e5';
+import {loadDonorViewIndex} from './donor-views.js?v=e93169e00b';
 /**
  * OPAX Words per dollar — the site's thesis in one view: per industry, who
  * takes the money and who does the talking.
@@ -265,11 +266,9 @@ function partyChip (party) {
  * One panel's worth of numbers: the pairing's donors aggregated per party
  * (verbatim canonical names) beside the topic's matrix cells.
  */
-function buildPanel (pairing, matrix, money, privacy = donorPrivacyIndex([money])) {
+function buildPanel (pairing, matrix, money) {
   const donors = (money.nodes || []).filter(
     (n) => n.kind === 'donor' && pairing.industries.includes(n.industry))
-  const hidden=donors.filter(n=>donorNameWithheld(privacy,n.label));
-  const individualDonors={count:hidden.length,amount:hidden.reduce((sum,n)=>sum+(n.total||0),0)};
   const donorIds = new Set(donors.map((n) => n.id))
   const moneyByParty = new Map()
   for (const e of money.edges || []) {
@@ -307,7 +306,7 @@ function buildPanel (pairing, matrix, money, privacy = donorPrivacyIndex([money]
     speechKnown: majors.includes(party),
   }))
   return {
-    ...pairing, donors: donors.length, moneyTotal, firstYear, individualDonors,
+    ...pairing, donors: donors.length, moneyTotal, firstYear,
     speechTotal, rows,
   }
 }
@@ -439,7 +438,6 @@ export function mountWordsDollars (container, opts = {}) {
       lead.append(`; the labelling pass has not reached the ${phrase} debate yet.`)
     }
     section.appendChild(lead)
-    if(panel.individualDonors.count)section.appendChild(donorAggregateDetail(`${unnamedDonorLabel(panel.individualDonors.count)} · ${fmtMoney(panel.individualDonors.amount)}`,document))
 
     const rowsEl = el('div', 'wd-rows')
     const maxMoney = Math.max(...panel.rows.map((r) => r.money), 1)

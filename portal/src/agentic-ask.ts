@@ -208,9 +208,7 @@ export function factSheet(results: ToolResult[]): { facts: Fact[]; notes: string
       else add(`${who} in ${s.divisions} divisions with "${d.keyword}" in the title: all aye in ${s.all_aye}, all no in ${s.all_no}, split in ${s.split}`, { kind: 'record', label: `Divisions with "${d.keyword}" in the title`, url })
     } else if (r.tool === 'party_donations') {
       if (d.party) {
-        ;(d.rows as { donor: string; total_aud: number }[]).forEach((row, i) => add(`${row.donor} gave ${d.party} $${row.total_aud.toLocaleString('en-AU')} (federal disclosures)`, r.cite[i + 1]))
-        const hidden = d.donors_not_named as { label: string; total_aud: number; donors: number }
-        if (hidden?.donors) add(`${hidden.label} gave ${d.party} $${hidden.total_aud.toLocaleString('en-AU')} in total (federal disclosures)`, r.cite[0])
+        ;(d.rows as { donor: string; total_aud: number; return_reference?:string }[]).forEach((row, i) => add(`${row.donor} gave ${d.party} $${row.total_aud.toLocaleString('en-AU')} (federal disclosures)${row.return_reference ? " — "+row.return_reference : ""}`, r.cite[i + 1]))
       } else (d.rows as { party: string; total_aud: number }[]).forEach((row, i) => add(`${d.industry} donors gave ${row.party} $${row.total_aud.toLocaleString('en-AU')} (federal disclosures)`, r.cite[i], [`party:${row.party}`]))
     } else if (r.tool === 'find_people') {
       const p = (d.people as { name: string; party: string | null }[])[0]
@@ -520,7 +518,7 @@ export async function runAgentic(question: string, deps: AgenticDeps, progress: 
   // A failed join or partial comparison must never imply missing votes or money.
   if (results.length !== plan.steps.length || results.some(r => !r.ok || r.data?.exact === false ||
     r.tool === 'member_votes' && !(r.data?.summary as { divisions?: number } | undefined)?.divisions ||
-    r.tool === 'party_donations' && !(r.data?.rows as unknown[] | undefined)?.length && !(r.data?.donors_not_named as { total_aud?: number } | undefined)?.total_aud)) return base({ reason: 'no_supported_claim', over_budget: left() < 8_000 })
+    r.tool === 'party_donations' && !(r.data?.rows as unknown[] | undefined)?.length)) return base({ reason: 'no_supported_claim', over_budget: left() < 8_000 })
   const rankIndex = plan.steps.findIndex(s => s.tool === 'count_speeches' && ['speaker', 'party'].includes(String(s.args.group_by)) && !s.args.speaker && (s.args.venue ?? 'chamber') === 'chamber' && (!s.args.state || s.args.state === 'federal'))
   const committeeFacts: Fact[] = []
   if (rankIndex >= 0 && steps.length < AGENTIC_MAX_STEPS && left() >= 8_000) {

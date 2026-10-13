@@ -1,3 +1,4 @@
+import {donorDisclosure,returnReference,type DonorDisclosureRecord} from '../public/donor-disclosure.js'
 /**
  * Structured tools for Ask (docs/design/agentic-ask-2026-10.md).
  *
@@ -9,8 +10,8 @@
  *    restricted to the speech body field, one row per speech. /search FACETS are
  *    never used for counts: they disagree with the totals on the same filter.
  *  - votes: portal/public/divisions/<slug>.json, found by KB title search.
- *  - money: portal/public/graph/money.json with exact source-name gates; donors
- *    not named are folded into one "Donors not named (N)" row, never listed.
+ *  - money: published disclosure names and return references; only confident
+ *    identity matches carry a profile link.
  * Each result carries `cite` (what a reader can open to check it), `query` (the
  * exact request) and `notes` (coverage limits the answer has to state).
  *
@@ -345,18 +346,14 @@ export async function memberVotes(deps: ToolDeps, input: { keyword: string; pers
 }
 
 // ---------------------------------------------------------------- party_donations
-interface MoneyNode { id: string; label: string; kind: string; industry?: string; aliases?: string[]; jurisdiction?: string; total?: number; byYear?: Record<string, [number, number]> }
+interface MoneyNode extends DonorDisclosureRecord { id: string; label: string; kind: string; industry?: string; aliases?: string[]; jurisdiction?: string; total?: number; byYear?: Record<string, [number, number]> }
 interface MoneyEdge { source: string; target: string; total: number; count: number; byYear?: Record<string, [number, number]>; firstYear?: number; lastYear?: number }
 async function money(deps: ToolDeps) {
   const g = await deps.asset('/graph/money.json') as { nodes: MoneyNode[]; edges: MoneyEdge[] } | null
   if (!g?.nodes) throw new Error('money graph unavailable')
   return g
 }
-// One exact source-name string in the federal export. Sector and legal form
-// do not decide whether a person is named. Alias merges fail closed.
-const exactName = (s: string) => s.toLowerCase().replace(/\s+/g, ' ').trim()
-const notNamed = (n?: MoneyNode) => !n || !n.label?.trim() || /^donor:withheld-/.test(n.id) || /name withheld|donors? not named/i.test(n.label) ||
-  (n.jurisdiction != null && n.jurisdiction !== 'federal') || (n.aliases ?? []).some(a => exactName(a) !== exactName(n.label))
+// Disclosure names remain visible independently of resolver confidence.
 function sumYears(e: MoneyEdge, from?: number, to?: number): [number, number] {
   if (!from && !to) return [e.total, e.count]
   let t = 0, c = 0
@@ -375,13 +372,16 @@ export async function partyDonations(deps: ToolDeps, input: { party?: string | n
     if (!node.has(pid)) return { tool: 'party_donations', ok: false, error: `no party "${input.party}" in the money record; parties: ${g.nodes.filter((n) => n.kind === 'party').map((n) => n.label).join(', ')}`, cite: [], notes }
     const edges = g.edges.filter((e) => e.target === pid && node.get(e.source)?.kind === 'donor' && (!input.industry || node.get(e.source)?.industry === input.industry))
     const sized = edges.map((e) => ({ e, v: sumYears(e, from, to) })).filter((x) => x.v[0] > 0)
-    const named = sized.filter((x) => !notNamed(node.get(x.e.source))).sort((a, b) => b.v[0] - a.v[0])
-    const hidden = sized.filter((x) => notNamed(node.get(x.e.source)))
-    const rows = named.slice(0, limit).map(({ e, v }) => ({ donor: node.get(e.source)!.label, industry: node.get(e.source)!.industry ?? null, total_aud: v[0], receipts: v[1] }))
+    const ranked = sized.sort((a,b)=>b.v[0]-a.v[0])
+    const rows = ranked.slice(0,limit).map(({e,v})=>{
+      const donor=node.get(e.source)!,view=donorDisclosure(donor)
+      const reference=(donor.returnReferences || []).find(ref=>(!from || Number(String(ref.year).slice(0,4))>=from) && (!to || Number(String(ref.year).slice(0,4))<=to))
+      return {donor:view.name,href:view.href,return_reference:reference ? returnReference(reference) : view.reference,industry:donor.industry ?? null,total_aud:v[0],receipts:v[1]}
+    })
     return {
       tool: 'party_donations', ok: true,
-      data: { party: input.party, industry: input.industry ?? null, years: [from ?? null, to ?? null], rows, donors_not_named: { label: `Donors not named (${hidden.length})`, donors: hidden.length, total_aud: hidden.reduce((s, x) => s + x.v[0], 0) } },
-      cite: [{ kind: 'export', label: `Donations to ${input.party} (AEC returns)`, url: `${origin}/money/party/${encodeURIComponent(input.party)}` }, ...rows.map((r) => ({ kind: 'export' as const, label: `${r.donor} to ${input.party}`, value: r.total_aud, url: `${origin}/money/donor/${encodeURIComponent(r.donor)}` }))],
+      data: {party:input.party,industry:input.industry ?? null,years:[from ?? null,to ?? null],rows},
+      cite: [{kind:'export',label:`Donations to ${input.party} (AEC returns)`,url:`${origin}/money/party/${encodeURIComponent(input.party)}`},...rows.map(r=>({kind:'export' as const,label:`${r.donor} to ${input.party} — ${r.return_reference}`,value:r.total_aud,url:r.href ? new URL(r.href,origin).href : 'https://transparency.aec.gov.au/'}))],
       query: { file: '/graph/money.json', party: input.party, industry: input.industry ?? null, from, to }, notes,
     }
   }
@@ -450,7 +450,7 @@ export const TOOL_SPECS: ToolSpec[] = [
   { name: 'speech_trend', description: 'Speech counts over time (by year, decade or federal term) with each period\'s share of topic-labelled speeches. Use for "is X debated more", "how has X changed".', input: { type: 'object', properties: { ...filterProps, by: { type: 'string', enum: ['year', 'decade', 'term'] }, from_year: { type: 'integer' }, to_year: { type: 'integer' } } }, run: (d, a) => speechTrend(d, a as TrendInput) },
   { name: 'find_people', description: 'Resolve a politician name to the name the record indexes speeches under, with party, parliaments and years.', input: { type: 'object', properties: { name: { type: 'string' } }, required: ['name'] }, run: (d, a) => findPeople(d, a as unknown as { name: string }) },
   { name: 'member_votes', description: 'How a person or party voted in recorded divisions whose title contains a keyword (e.g. "gambling").', input: { type: 'object', properties: { keyword: { type: 'string' }, person: { type: 'string' }, party: { type: 'string' }, since: { type: 'string' }, until: { type: 'string' }, limit: { type: 'integer', minimum: 1, maximum: 80 } }, required: ['keyword'] }, run: (d, a) => memberVotes(d, a as unknown as { keyword: string }) },
-  { name: 'party_donations', description: 'Largest disclosed donors to a federal party, or totals by party for one donor industry (e.g. gambling, mining). Donors not named are aggregated.', input: { type: 'object', properties: { party: { type: 'string' }, industry: { type: 'string' }, from_year: { type: 'integer' }, to_year: { type: 'integer' }, limit: { type: 'integer' } } }, run: (d, a) => partyDonations(d, a as { party?: string }) },
+  { name: 'party_donations', description: 'Largest disclosed donors to a federal party, or totals by party for one donor industry (e.g. gambling, mining). Names follow source disclosure spelling; uncertain identity matches have no profile link.', input: { type: 'object', properties: { party: { type: 'string' }, industry: { type: 'string' }, from_year: { type: 'integer' }, to_year: { type: 'integer' }, limit: { type: 'integer' } } }, run: (d, a) => partyDonations(d, a as { party?: string }) },
   { name: 'find_quotes', description: 'Find a few cited passages to quote or describe what was said. A ranked sample: never count them.', input: { type: 'object', properties: { ...filterProps, query: { type: 'string' }, limit: { type: 'integer' } }, required: ['query'] }, run: (d, a) => findQuotes(d, a as unknown as SpeechFilter & { query: string }) },
 ]
 /** Schema-check model plans before any lookup. References are validated separately. */

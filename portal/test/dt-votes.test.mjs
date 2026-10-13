@@ -1,7 +1,5 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {tablePrivacyIndex} from './datatable-privacy.mjs';
-const index = await tablePrivacyIndex();
 import {readFileSync} from 'node:fs';
 import {divisionColumns, voteColumns, divisionRows, votingRows, divisionTableConfig, voteTableConfig, voteTableHTML, voteTablePage} from '../public/vote-tables.js';
 import {guardTableURL} from '../public/vote-tables.js';
@@ -17,9 +15,9 @@ test('division and voting configs use scoped server sources and the frozen colum
   assert.deepEqual(divisionColumns.map(c=>[c.key,c.type]), [['title','text'],['date','date'],['chamber','category'],['outcome','category'],['ayes','count'],['noes','count']]);
   assert.deepEqual(voteColumns.map(c=>c.key), ['title','date','vote','party_position']);
   for (const config of [divisions,votes]) {
-    assert.equal(config.privacy,'echo');
-    assert.equal(typeof config.privacyCheck,'function');
-    assert.equal(typeof config.rowPrivacyCheck,'function');
+    assert.equal(config.privacy,undefined);
+
+
     assert.equal(config.rows,undefined);
     assert.deepEqual(config.defaultSort,{key:'date',dir:'desc'});
     assert.equal(config.columns[0].primary,true);
@@ -27,38 +25,8 @@ test('division and voting configs use scoped server sources and the frozen colum
   }
 });
 
-test('both rollouts check the reader\'s query echoes, not the public-record rows', () => {
-  // Vote and division rows come from exports the build's donor sweep already
-  // sanitised; only text a reader supplies (search, filters, URL state) is checked.
-  const configs = [divisionTableConfig({},'Divisions','bill',index.safe),voteTableConfig('fixture','Voting record',index.safe)];
-  for (const config of configs) {
-    const checked = [];
-    const counting = {...config,privacyCheck:text=>{checked.push(text);return index.safe(text);}};
-    const facet = config.urlKey === 'dv' ? 'outcome' : 'party_position';
-    const publicRow = {title:'Recorded division',date:'2026-08-19',[facet]:'Recorded',href:'/doc/division-fixture'};
-    const rows = Array.from({length:40},(_,i)=>({...publicRow,title:`Recorded division ${i}`}));
-    const page = voteTablePage(rows,counting);
-    assert.equal(page.total,40);
-    voteTableHTML(counting,page);
-    assert.deepEqual(checked.filter(text=>text.includes('Recorded division') || text.includes('/doc/')),[],'public-record rows are not run through the donor matcher');
-    assert.ok(checked.length<=12,'only the short table state is checked');
-    for (const value of index.values) {
-      const rejected = voteTablePage(rows,config,{q:value});
-      assert.equal(rejected.total,0,'Rejected searches must return no rows');
-      const rejectedFacet = voteTablePage(rows,config,{filters:{[facet]:[value]}});
-      assert.equal(rejectedFacet.total,0,'Rejected facets must return no rows');
-      assert.ok(index.safe(voteTableHTML(config,rejected)),'SSR must not reflect rejected query text');
-      const url = new URL('https://local.test/record');url.searchParams.set(config.urlKey+'.q',value);
-      const guarded = guardTableURL(config,url);
-      assert.equal(guarded.rejected,true,'a crafted share link is rejected');
-      assert.ok(index.safe(guarded.url.href),'the rejected text leaves the URL');
-      assert.ok(index.safe(voteTableHTML(config,voteTablePage(rows,config,guarded.query))),'SSR never echoes the crafted text');
-    }
-  }
-});
-
 test('division bars use the core column range across server pages', () => {
-  const config = divisionTableConfig({},'Divisions','bill',index.safe);
+  const config = divisionTableConfig({},'Divisions','bill');
   const rows = divisionRows(Array.from({length:64},(_,i)=>({key:`fixture-${i}`,stage:'Second reading',date:'2026-08-19',ayes:i+1,noes:128-i})));
   for (const number of [1,2,3]) {
     const page = voteTablePage(rows,config,{page:number});
@@ -68,49 +36,6 @@ test('division bars use the core column range across server pages', () => {
     assert.match(html,/class="dt-scale">0–64/);
     assert.match(html,/class="dt-scale">0–128/);
     assert.ok(html.includes(`--dt-bar:${Math.round(page.rows[0].ayes/64*100)}%`));
-  }
-});
-
-test('rollout paging retains the shared URL guard rejection through SSR', () => {
-  for(const config of [divisionTableConfig({},'Divisions','bill',index.safe),voteTableConfig('fixture','Voting record',index.safe)]) {
-    const rows=[{title:'Recorded division',date:'2026-08-19',vote:'Aye',chamber:'Senate',outcome:'Agreed',party_position:'Not recorded'}];
-    const url=new URL('https://local.test/record');url.searchParams.append(config.urlKey+'.q','recorded');url.searchParams.append(config.urlKey+'.q',index.recipients[0]);
-    const guarded=guardTableURL(config,url);
-    assert.equal(guarded.rejected,true);
-    const page=voteTablePage(rows,config,guarded.query);
-    assert.equal(page.total,0,'the adapter must preserve the core rejection marker');
-    assert.ok(index.safe(url.href));
-    assert.ok(index.safe(voteTableHTML(config,page)));
-    assert.match(voteTableHTML(config,page),/data-export disabled/);
-  }
-});
-
-test('the shared recipient policy rejects every derived name, alias and registration identifier', () => {
-  assert.ok(index.recipients.length>=151,'recipient aliases covered');
-  assert.ok(index.abns.length>=21,'recipient registration identifiers covered');
-  for (const value of [...index.recipients,...index.abns]) {
-    assert.equal(index.safe(value),false,'recipient identity is private');
-    assert.equal(index.safe(encodeURIComponent(value)),false,'encoded identity is private');
-    if (/^\d{11}$/.test(value)) assert.equal(index.safe('ABN '+value.split('').join(' ')),false,'spaced identifiers are private');
-  }
-});
-
-test('sitting structured data uses the same paged division rows as SSR, and never echoes a rejected query', () => {
-  const publicDivision={key:'fixture-public',slug:'fixture-public',title:'Recorded division',date:'2026-09-14',house:'senate',ayes:1,noes:0};
-  const week={start:'2026-09-14',end:'2026-09-17',houses:['senate'],bills:[],divisions:[],lastmod:'2026-09-17'};
-  const data={updated:'2026-09-17',snapshotDate:'2026-09-17',latestFederalDivision:'2026-09-17',sources:[{label:'Register',url:'https://www.aph.gov.au/'}],weeks:[week],pages:[]};
-  const second={...publicDivision,key:'fixture-second',slug:'fixture-second',title:'Second recorded division'};
-  const result=renderSittingWeek(data,{...week,divisions:[publicDivision,second]},[],new Map(),'2026-10-01',{},{},index.safe);
-  const list=result.jsonLd['@graph'][1];
-  assert.equal(list.numberOfItems,2,'structured data and visible rows agree');
-  assert.deepEqual(list.itemListElement.map(i=>i.url).sort(),['https://opax.com.au/doc/division-fixture-public','https://opax.com.au/doc/division-fixture-second']);
-  const config=divisionTableConfig({},'Divisions','sitting',index.safe);
-  for (const value of index.values) {
-    const url=new URL('https://local.test/sitting');url.searchParams.set('dv.q',value);
-    const {query}=guardTableURL(config,url);
-    const rejected=renderSittingWeek(data,{...week,divisions:[publicDivision,second]},[],new Map(),'2026-10-01',{},query,index.safe);
-    assert.ok(index.safe(rejected.html),'SSR never echoes the crafted query');
-    assert.ok(index.safe(JSON.stringify(rejected.jsonLd)),'structured data never echoes the crafted query');
   }
 });
 
@@ -146,7 +71,7 @@ test('voting records show only explicitly sourced party positions and safe prima
 });
 
 test('SSR shows linked dated divisions and Status labels without embedding all server rows', () => {
-  const config = divisionTableConfig({bill:'au-federal-fixture'}, 'Divisions', 'bill', index.safe);
+  const config = divisionTableConfig({bill:'au-federal-fixture'}, 'Divisions', 'bill');
   const rows = divisionRows(Array.from({length:40},(_,i)=>({key:`fixture-${i}`, stage:'Third reading', date:'2026-08-19', house:'senate', ayes:1200+i, noes:0, outcome:'affirmative'})));
   const page = voteTablePage(rows,config);
   const html = voteTableHTML(config,page);

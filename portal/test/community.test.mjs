@@ -96,25 +96,6 @@ test('source links stay optional and limited to Opax record pages',()=>{
 test('disabled accounts cannot retain sessions',async()=>{const f=fixture(),a=await f.login();f.db.exec('UPDATE members SET disabled=1');assert.equal((await f.call('lists','GET',undefined,a.cookie)).status,401);f.db.close()});
 test.after(()=>rmSync(folder,{recursive:true,force:true}));
 
-test('MCP search and connection tools give one fixed reply to a query naming a withheld donor',async()=>{
- const f=fixture(),a=await f.login();
- const {token}=await (await f.call('keys','POST',{name:'Privacy checks'},a.cookie)).json();
- const assets=f.env.ASSETS.fetch;
- f.env.ASSETS.fetch=async request=>new URL(request.url).pathname==='/graph/money.json'?Response.json({nodes:[{id:'donor:quentin fixtureman',label:'Quentin Fixtureman',kind:'donor',industry:'media'},{id:'donor:fixture holdings',label:'Fixture Holdings Pty Ltd',kind:'donor',industry:'property'}],edges:[]}):assets(request);
- const reads=[];
- const send=async(name,args)=>{const r=await communityMcp(new Request('https://opax.test/mcp',{method:'POST',headers:{authorization:'Bearer '+token,accept:'application/json, text/event-stream','content-type':'application/json'},body:JSON.stringify({jsonrpc:'2.0',id:3,method:'tools/call',params:{name,arguments:args}})}),f.env,async path=>{reads.push(path);return Response.json({results:[]})});assert.equal(r.status,200);return (await r.json()).result};
- for(const [name,args] of [['search_records',{query:'Quentin Fixtureman donations'}],['search_records',{query:'how much did quentin  FIXTUREMAN give',kind:'speech'}],['find_connections',{query:'Quentin Fixtureman'}]]){
-  const out=await send(name,args);
-  assert.deepEqual(JSON.parse(out.content[0].text),{answer:"This donor is not named in OPAX. Party-level totals are on the party's page."});
-  assert.doesNotMatch(out.content[0].text,/fixtureman/i);
- }
- assert.deepEqual(reads,[],'no search ran for a withheld name');
- // An organisation is unaffected.
- await send('search_records',{query:'Fixture Holdings Pty Ltd donations'});
- assert.equal(reads.length,1);
- f.db.close();
-});
-
 test('MCP tools return usable record citations and bound oversized responses',async()=>{
  const f=fixture(),a=await f.login();
  const {token,id}=await (await f.call('keys','POST',{name:'Tool checks'},a.cookie)).json();

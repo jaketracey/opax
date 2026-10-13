@@ -64,12 +64,10 @@ test('sitemap index and every type file have export lastmod, unique canonical UR
   assert.equal(manifest.lastmodFallbacks.divisions,0);
   const grantsXml = read('crawl/sitemaps/grant-recipients-1.xml');
   for (const r of recipients.filter(r=>['individual','person'].includes(r.k))) assert.ok(!grantsXml.includes(encodeURIComponent(r.id)));
-  const donorsXml = read('crawl/sitemaps/donors-1.xml');
-  // A label with organisation evidence in any map (the federal node, with its aliases, wins) may be listed.
-  const organisations = new Set(['money.json','money.qld.json','money.vic.json'].flatMap(name=>json(`graph/${name}`).nodes.filter(n=>n.kind==='donor'&&isOrganisationDonor(n)).map(n=>n.label)));
-  for (const name of ['money.json','money.qld.json','money.vic.json'])
-    for (const n of json(`graph/${name}`).nodes.filter(n=>n.kind==='donor'&&!organisations.has(n.label)))
-      assert.ok(!donorsXml.includes(`/subject/donor/${encodeURIComponent(n.label)}<`), `individual donor in sitemap: ${name}`);
+  const donorsXml=read('crawl/sitemaps/donors-1.xml').replaceAll('&apos;', "'").replaceAll('&amp;','&');
+  const listed=new Set([...donorsXml.matchAll(/<loc>https:\/\/opax\.com\.au\/subject\/donor\/([^<]+)<\/loc>/g)].map(m=>decodeURIComponent(m[1]).toLowerCase().replace(/\s+/g,' ').trim()));
+  for(const file of ['money.json','money.qld.json','money.vic.json'])for(const node of json(`graph/${file}`).nodes.filter(n=>n.kind==='donor' && n.label.length<=120))
+    assert.ok(listed.has(node.label.toLowerCase().replace(/\s+/g,' ').trim()),`disclosed donor absent: ${file}`);
   const robots = await (await get('/robots.txt')).text();
   assert.match(robots,/Sitemap: https:\/\/opax.com.au\/sitemap.xml/);
 });

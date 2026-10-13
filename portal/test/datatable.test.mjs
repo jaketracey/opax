@@ -6,7 +6,7 @@ import {workbenchConfig,workbenchRows as rows} from '../public/datatable-workben
 import {cleanEvent} from '../analytics/privacy.mjs';
 import {tableHarness} from './datatable-harness.mjs';
 
-const config={...workbenchConfig,privacyCheck:()=>true};
+const config={...workbenchConfig};
 const all = query => applyQuery(rows,config,{...query,pageSize:100});
 test('query round trips namespaces, lists, ranges and a colon in the sort key',()=>{
   const query = {q:'Works & services',filters:{region:['Victoria','Queensland'],amount:{min:0,max:500000}},sort:{key:'total:amount',dir:'desc'},page:3,pageSize:25};
@@ -103,19 +103,7 @@ test('analytics allow only the contracted table and page identifiers',()=>{
   for (const event of ['table_sort','table_filter','table_export']) assert.deepEqual(cleanEvent(event,{table_id:'workbench-money',page_type:'workbench',q:'private input',row:'private input'}),{table_id:'workbench-money',page_type:'workbench'});
 });
 
-test('neutral individual aggregates carry only counts and numeric totals, without links',()=>{
-  const aggregate={aggregate:{kind:'individual-donors',count:12},name:'untrusted label',id:'unsafe-id',aliases:['untrusted alias'],amount:12345.67,count:20,industry:'untrusted sector'};
-  const page=applyQuery([rows[0],aggregate],config,{});
-  const row=page.rows.find(r=>r.aggregate);
-  assert.deepEqual(row,{aggregate:{kind:'individual-donors',count:12},name:'Donors not named (12)',amount:12345.67,count:20});
-  const html=dataTableHTML(config,page);
-  assert.match(html,/Donors not named \(12\)/); assert.match(html,/<details class="donor-aggregate">/); assert.match(html,/OPAX names organisations only/); assert.ok(!html.includes('unsafe-id')); assert.ok(!html.includes('untrusted'));
-  assert.ok(!html.includes('href="#undefined"'));
-  assert.match(toCSV(page.rows,config),/Donors not named \(12\),,,12345.67,20/); assert.ok(!toCSV(page.rows,config).includes('OPAX names organisations only'));
-  assert.equal(toCSV([aggregate],{...config,privacy:undefined}),toCSV([aggregate],config));
-  const numericPrimary={...config,columns:config.columns.map(c=>({...c,primary:c.key === 'amount'}))};
-  assert.equal(toCSV([aggregate],numericPrimary),toCSV([aggregate],config));
-});
+
 test('unprefixed hydration and popstate preserve unrelated and unrecognised prefixed state',async ()=>{
   const harness=tableHarness('http://localhost/table?q=works&page=2&campaign=fixture&f.unrelated=%5B%22keep%22%5D&t.other=keep');
   const mounted=mountDataTable(harness.root,{...config,urlKey:undefined}); await new Promise(setImmediate);
@@ -156,7 +144,7 @@ test('query engine uses its row argument for server facet options and isolates c
   assert.equal(applyQuery(reverse,unsorted,{}).rows[0].id,'organisation-9');
 });
 
-test('server hydration validates pending state while preserving approved facet selections',async()=>{
+test('server hydration preserves selected facets without a validation POST',async()=>{
   const h=tableHarness('http://localhost/table?t.f.region='+encodeURIComponent(JSON.stringify(['Victoria'])));
   const page={rows:[rows[0]],total:9,page:1,pageSize:5,facets:{region:[{value:'Victoria',count:4}]}};
   h.root.querySelector=selector=>selector==='[data-dt-page]'?{textContent:JSON.stringify(page)}:null;

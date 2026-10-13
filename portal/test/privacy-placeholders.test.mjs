@@ -57,9 +57,7 @@ test('the command exits 1 on single-quoted and unquoted markers and 0 on a fille
   assert.equal(clean.status, 0, clean.stderr);
 });
 
-test('check and both deploy scripts run the guard, the deploys before anything else', () => {
-  const { scripts } = JSON.parse(readFileSync(new URL('../package.json', import.meta.url), 'utf8'));
-  const guard = 'node ../scripts/check_privacy_placeholders.mjs';
-  assert.ok(scripts.check.split(' && ').includes(guard), scripts.check);
-  for (const name of ['deploy', 'deploy:staging']) assert.equal(scripts[name].split(' && ')[0], guard, name);
+test('release scripts contain no donor withholding or privacy re-checks',()=>{
+ const {scripts}=JSON.parse(readFileSync(new URL('../package.json',import.meta.url),'utf8'));
+ for(const name of ['check','deploy','deploy:staging','deploy:built','build:search','build:release'])assert.doesNotMatch(scripts[name],/build:privacy|test:privacy|withhold_donor_assets|check_privacy_placeholders/);
 });

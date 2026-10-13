@@ -3,9 +3,8 @@
 // public policy text. While it was drafted, every fact or decision the
 // repository could not settle was left as a visible placeholder:
 // <mark class="privacy-confirm" data-confirm="P…">[To confirm: …]</mark>. This
-// check fails while any remain, so an unfinished policy cannot ship. It runs at
-// the end of `npm run check` and first in `npm run deploy` and
-// `npm run deploy:staging` (the GitHub deploy workflow uses `npm run deploy`).
+// Standalone draft-copy check: it reports remaining policy placeholders.
+// It has no release or deploy hook.
 // See docs/PRIVACY.md.
 //
 // It fails closed: besides placeholder elements in any attribute quoting, any

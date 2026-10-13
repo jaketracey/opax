@@ -1,10 +1,8 @@
 // The real Worker over an export directory, offline: disk-backed ASSETS, a
-// minimal HTMLRewriter, an empty Cache API and a refused network. Shared by
-// test/donor-privacy.test.mjs and scripts/donor_privacy_changed_urls.mjs.
+// minimal HTMLRewriter, an empty Cache API and a refused network.
 import {readFileSync, existsSync} from 'node:fs';
 import {join} from 'node:path';
 import {build} from 'esbuild';
-import {identityBundlePlugin} from './helpers/table-identity-bundle.mjs';
 
 const esc = v => String(v).replace(/[&<>"']/g, c => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'}[c]));
 /** Only the transformations the Worker's SEO and share-card code use. */
@@ -46,12 +44,11 @@ export function offline() {
 
 /** Bundle a Worker entry and serve it over `root`. Share cards are not drawn: the
  * card's spec comes back as JSON bytes, so tests can read every word on a card. */
-// Third/fourth arguments: an ExecutionContext (has waitUntil) and/or {identityBundle}, in either order.
+// An optional ExecutionContext captures background cache work.
 export async function loadWorker(entry, root, third, fourth) {
   const executionContext = [third, fourth].find(a => a && typeof a.waitUntil === 'function');
-  const {identityBundle} = [third, fourth].find(a => a && typeof a.waitUntil !== 'function') || {};
   const compiled = await build({entryPoints: [entry], bundle: true, platform: 'browser', format: 'esm', write: false, external: ['node:*'],
-    plugins: [...(identityBundle ? [identityBundlePlugin(identityBundle)] : []),{name: 'omit-images', setup(b) { b.onResolve({filter: /^\.\/og-render$/}, () => ({path: 'images', namespace: 'harness'})); b.onLoad({filter: /.*/, namespace: 'harness'}, () => ({contents: 'const spec=card=>new TextEncoder().encode(JSON.stringify(card));export const renderOgPng=spec;export const renderOgJpeg=spec;', loader: 'js'})); }}]});
+    plugins: [{name: 'omit-images', setup(b) { b.onResolve({filter: /^\.\/og-render$/}, () => ({path: 'images', namespace: 'harness'})); b.onLoad({filter: /.*/, namespace: 'harness'}, () => ({contents: 'const spec=card=>new TextEncoder().encode(JSON.stringify(card));export const renderOgPng=spec;export const renderOgJpeg=spec;export const renderStoryJpeg=spec;', loader: 'js'})); }}]});
   const {default: worker} = await import('data:text/javascript;base64,' + Buffer.from(compiled.outputFiles[0].text).toString('base64'));
   const files = new Map(), parsed = new Map();
   const at = path => join(root, path.replace(/^\//, ''));

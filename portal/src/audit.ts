@@ -12,11 +12,10 @@ interface Manifest {
 }
 interface Report extends AuditRow {
   pdf_url: string | null; entity_links: Record<string, string>
-  recommendations: { number: number | null; text: string; html: string; addressed_to: string | null; source_text: string; provenance?: string; page?: number; privacy_filtered?: boolean }[]
+  recommendations: { number: number | null; text: string; html: string; addressed_to: string | null; source_text: string; provenance?: string; page?: number }[]
   licence: { status: string; body_skipped: boolean; exceptions: string[] }
   pdf?: { status: string; sha256: string | null; page_count: number; document_licence?: string }
   responses_path?: string; response_count?: number
-  title_privacy_filtered?: boolean
 }
 interface EntityResponse { id: string; body: string; text: string; page_start: number; page_end: number; recommendation_numbers: number[] }
 type Read = <T>(path: string) => Promise<T>
@@ -105,7 +104,7 @@ export async function auditPage(id: string | null, url: URL, read: Read, block: 
     // The recommendation's own words name who it is addressed to; the parsed
     // addressee is not drawn (the export's addressed_to is not reliable).
     const recommendations = r.licence.body_skipped ? `<p>This report page has an uncleared copyright exception, so its recommendations are not reproduced here. Read QAO’s report for the original text.</p>`
-      : r.recommendations.length ? `<p class="audit-meta">In the Queensland Audit Office’s words.</p><ol class="audit-recommendations">${r.recommendations.map(rec => `<li${rec.number === null ? ' class="audit-unnumbered"' : ` value="${rec.number}"`}>${recommendationText(rec)}<p class="audit-meta">Source: ${esc(rec.provenance || 'html')}${rec.privacy_filtered ? ' · Names withheld; QAO has the original text.' : ''}</p></li>`).join('')}</ol>`
+      : r.recommendations.length ? `<p class="audit-meta">In the Queensland Audit Office’s words.</p><ol class="audit-recommendations">${r.recommendations.map(rec => `<li${rec.number === null ? ' class="audit-unnumbered"' : ` value="${rec.number}"`}>${recommendationText(rec)}<p class="audit-meta">Source: ${esc(rec.provenance || 'html')}</p></li>`).join('')}</ol>`
       : '<p>No recommendations are reproduced for this report.</p>'
     let responses: EntityResponse[] = []
     if (!r.licence.body_skipped && r.pdf?.status === 'ready' && r.responses_path === `/audit/responses-${id}.json`) {
@@ -113,8 +112,7 @@ export async function auditPage(id: string | null, url: URL, read: Read, block: 
       if (data.report_id !== id || data.records.length !== r.response_count) return missing()
       responses = data.records
     }
-    const hold = (r.title_privacy_filtered ? '<p class="audit-meta">Names withheld from the title; QAO has the original title.</p>' : '')
-      + (r.pdf?.status === 'held' ? `<p class="audit-meta">${esc(pdfHoldNote(r))}</p>` : '')
+    const hold = (r.pdf?.status === 'held' ? `<p class="audit-meta">${esc(pdfHoldNote(r))}</p>` : '')
     const responseSection = `<h2>Entity responses</h2>${responses.length ? responses.map(response => `<details class="audit-response"><summary>${esc(response.body)} · PDF ${response.page_start === response.page_end ? `p.${response.page_start}` : `pp.${response.page_start}–${response.page_end}`}</summary>${response.recommendation_numbers.length ? `<p class="audit-meta">Names recommendation${response.recommendation_numbers.length > 1 ? 's' : ''} ${response.recommendation_numbers.map(esc).join(', ')}</p>` : ''}<div class="audit-response-text">${esc(response.text)}</div></details>`).join('') : `<p>${r.pdf?.status === 'held' || r.licence.body_skipped ? 'Responses are held with the PDF body.' : 'No separately attributed responses are available.'}</p>`}`
     const originals = [{ href: r.canonical_url, label: 'Report on qao.qld.gov.au' }, ...(r.pdf_url ? [{ href: r.pdf_url, label: `Full report (PDF): ${pdfTerms(r)}` }] : [])]
     const pdfLink = r.pdf_url ? `<p class="audit-meta"><a href="${esc(r.pdf_url)}" rel="noopener">Full report (PDF)</a>: ${esc(pdfTerms(r))}</p>` : ''

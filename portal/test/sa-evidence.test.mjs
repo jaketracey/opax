@@ -144,7 +144,7 @@ test('follow-up prompts cap both SA evidence and legacy copied answers before ge
   const followups=runInNewContext(ts.transpile(code)+';apiFollowups',{
     saEvidenceRecord,saEvidenceText,isSaHansard,Response,URL,AbortSignal,
     FOLLOWUP_MIN_CONTEXT:200,FOLLOWUP_WANT:3,FOLLOWUP_ANSWER_BUDGET:2500,FOLLOWUP_PASSAGE_BUDGET:6000,
-    json:Response.json,questionNamesWithheldDonor:async()=>false,withheldNameCheck:async()=>()=>false,cacheRequest:()=>new Request('https://cache.test/followup'),sha256Hex:async()=>'',cacheBypass:()=>true,rateLimited:async()=>null,
+    json:Response.json,cacheRequest:()=>new Request('https://cache.test/followup'),sha256Hex:async()=>'',cacheBypass:()=>true,rateLimited:async()=>null,
     withCacheStatus:r=>r,kbFetch:async(_env,_path,init)=>{request=init.body;return Response.json({answer:''});},parseFollowUpLines:()=>[],selectFollowUps:()=>[],
   });
   const req=()=>new Request('https://opax.test/api/followups',{method:'POST',body:JSON.stringify({question:'statement 30',answer:sa.text,passages:[null,{...sa,title:'SA record',text:sa.text}]})});

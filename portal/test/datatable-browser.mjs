@@ -5,7 +5,6 @@ import {readFile,mkdir,writeFile} from 'node:fs/promises';
 import {createRequire} from 'node:module';
 import {fileURLToPath} from 'node:url';
 import {resolve} from 'node:path';
-import {registerTablePrivacy,tablePrivacyIndex} from './datatable-privacy.mjs';
 import {SERVER_CSV_NOTE,assertServerCSVCap} from './datatable-endpoint-contract.mjs';
 const {chromium}=createRequire(resolve(process.env.DT_BROWSER_TOOLS || '/tmp/opax-dt-tools','package.json'))('playwright-core');
 const outputDir=fileURLToPath(new URL('../private/dt-core/',import.meta.url));
@@ -14,8 +13,7 @@ const base='http://127.0.0.1:9754';
 const dev=spawn(process.execPath,['node_modules/wrangler/bin/wrangler.js','dev','--local','--ip','127.0.0.1','--port','9754','--inspector-port','9755','--log-level','error','--show-interactive-dev-session=false','--var','INDEXNOW_ENABLED:false','--var','INDEXNOW_DRY_RUN:true'],{cwd:fileURLToPath(new URL('../',import.meta.url)),env:{...process.env,WRANGLER_SEND_METRICS:'false'},stdio:['ignore','pipe','pipe']});
 let devLog='',browser;
 dev.stdout.on('data',value=>{devLog+=value;});dev.stderr.on('data',value=>{devLog+=value;});
-const errors=[],blocked=[],privacyRollouts=[];
-registerTablePrivacy(privacyRollouts,{id:'workbench-money',path:'/datatable-workbench.html',module:'/datatable-workbench-data.js',configExport:'workbenchConfig',rowsExport:'workbenchRows',host:'#table-example',facet:'industry',urlKey:'t',serverExample:'server',endpoint:'/__fixtures/table/receipts'});
+const errors=[],blocked=[];
 try {
   let ready=false;
   for(let i=0;i<240;i++) {
@@ -79,18 +77,15 @@ try {
   await page.evaluate(()=>{window.fetch=window.fixtureFetch;});await page.locator('[data-retry]').click();await settled();assert.equal(await page.locator('.dt-count').textContent(),'Showing 1–5 of 9');
   await page.evaluate(note=>{const original=window.fetch;window.fetch=async(input,options)=>new URL(input,location.href).searchParams.get('format') === 'csv' ? new Response('Organisation,Amount\r\n'+Array.from({length:50000},()=> 'Fixture organisation Pty Ltd,1.25').join('\r\n')+'\r\n'+note,{headers:{'x-table-export-truncated':'true'}}) : original(input,options);},SERVER_CSV_NOTE);
   const capped=page.waitForEvent('download');await page.locator('[data-export]').click();assertServerCSVCap(await readFile(await (await capped).path(),'utf8'));await page.waitForFunction(()=>document.querySelector('.dt-count').textContent.includes('Export limited to 50,000 rows.'));
-  const index=await tablePrivacyIndex(),privacy=[];for(const run of privacyRollouts) privacy.push(await run({page,base,index,outputDir}));
-  await load('server');await page.evaluate(value=>{const original=window.fetch;window.fetch=async(input,options)=>new URL(input,location.href).searchParams.get('format') === 'csv' ? new Response(value) : original(input,options);},index.values[0]);
-  let unsafeDownload=false;page.once('download',()=>{unsafeDownload=true;});await page.locator('[data-export]').click();await page.waitForFunction(()=>document.querySelector('.dt-count').textContent.startsWith('Could not export'));assert.equal(unsafeDownload,false);
   await page.goto(base+'/__fixtures/document');await page.evaluate(async()=>{
     document.querySelector('meta[name="robots"]').setAttribute('content','index, follow');const link=document.createElement('link');link.rel='canonical';link.href=location.origin+'/money?campaign=fixture&q=old&f.region=old&f.unrelated=keep';document.head.append(link);
     history.replaceState(null,'',location.pathname+'?q=works&f.unrelated=keep&campaign=fixture');
-    const {mountDataTable}=await import('/datatable.js'),{workbenchConfig}=await import('/datatable-workbench-data.js');const host=document.createElement('div');host.id='unprefixed';document.body.append(host);window.unprefixed=mountDataTable(host,{...workbenchConfig,id:'optional-prefix',privacy:undefined,urlKey:undefined});
+    const {mountDataTable}=await import('/datatable.js'),{workbenchConfig}=await import('/datatable-workbench-data.js');const host=document.createElement('div');host.id='unprefixed';document.body.append(host);window.unprefixed=mountDataTable(host,{...workbenchConfig,id:'optional-prefix',urlKey:undefined});
   });
   assert.equal(await page.locator('#unprefixed .dt-count').textContent(),'Showing 1–2 of 2');assert.equal(new URL(page.url()).searchParams.get('campaign'),'fixture');assert.equal(new URL(page.url()).searchParams.get('f.unrelated'),'keep');assert.equal(await page.locator('link[rel="canonical"]').getAttribute('href'),base+'/money?campaign=fixture&f.unrelated=keep');assert.equal(await page.locator('meta[name="robots"]').getAttribute('content'),'noindex, follow');
   await page.evaluate(()=>{const u=new URL(location.href);u.searchParams.set('q','zero matches');history.replaceState(null,'',u);dispatchEvent(new PopStateEvent('popstate'));});assert.equal(await page.locator('#unprefixed .dt-count').textContent(),'Showing 0–0 of 0');await page.locator('#unprefixed [data-clear]').click();assert.equal(new URL(page.url()).searchParams.has('q'),false);
   await load('default');const timings=await page.evaluate(async()=>{
-    const {mountDataTable,applyQuery}=await import('/datatable.js'),{workbenchConfig,workbenchRows}=await import('/datatable-workbench-data.js');const rows=Array.from({length:2000},(_,i)=>({...workbenchRows[i%workbenchRows.length],id:'bench-'+i}));const config={...workbenchConfig,id:'bench',rows,urlKey:'bench',pageSize:50,privacyCheck:()=>true};const host=document.createElement('div');document.body.append(host);
+    const {mountDataTable,applyQuery}=await import('/datatable.js'),{workbenchConfig,workbenchRows}=await import('/datatable-workbench-data.js');const rows=Array.from({length:2000},(_,i)=>({...workbenchRows[i%workbenchRows.length],id:'bench-'+i}));const config={...workbenchConfig,id:'bench',rows,urlKey:'bench',pageSize:50};const host=document.createElement('div');document.body.append(host);
     const wait=async()=>{while(host.hasAttribute('aria-busy')) await new Promise(done=>setTimeout(done,0));};let start=performance.now();const mounted=mountDataTable(host,config);await wait();const hydration=performance.now()-start,pure=[],filter=[];
     for(let i=0;i<10;i++) {const q={q:i%2 ? 'works' : 'services',filters:{region:[i%2 ? 'Victoria' : 'Queensland']}};start=performance.now();applyQuery(rows,config,q);pure.push(performance.now()-start);const url=new URL(location.href);url.searchParams.set('bench.q',q.q);url.searchParams.set('bench.f.region',JSON.stringify(q.filters.region));history.replaceState(null,'',url);start=performance.now();dispatchEvent(new PopStateEvent('popstate'));await wait();await new Promise(done=>requestAnimationFrame(done));filter.push(performance.now()-start);}
     mounted.destroy();host.remove();return {rows:2000,hydration,pure,filter};
@@ -99,7 +94,7 @@ try {
   await page.setViewportSize({width:390,height:1000});await load('default');await page.locator('[data-sort-select]').selectOption('amount:asc');await settled();
   for(const label of ['Amount','Returns','Year']) assert.equal(await page.locator(`td[data-label="${label}"]`).first().evaluate(el=>getComputedStyle(el).textAlign),'start');assert.equal(await page.locator('.dt-bar-track').first().evaluate(el=>getComputedStyle(el).display),'none');assert.equal(await page.locator('.dt-number').first().evaluate(el=>getComputedStyle(el).fontVariantNumeric),'tabular-nums');
   assert.deepEqual(errors,[]);assert.deepEqual(blocked,[]);
-  const result={server:'wrangler dev --local',screenshots:8,viewports:[390,1280],privacy,timings,checks:['served fonts','sort/icons','facet retention/focus','row menu Escape/identity','search','ranges/chips','paging/live region','density/visibility','unprefixed URL/popstate/canonical/noindex','actual client/server CSV','server cap/note','blocked unsafe CSV','analytics','failure/retry','phone alignment/bars','2000-row performance'],pageErrors:errors,blockedExternalRequests:blocked.length};await writeFile(resolve(outputDir,'browser-results.json'),JSON.stringify(result,null,2)+'\n');console.log(JSON.stringify(result));
+  const result={server:'wrangler dev --local',screenshots:8,viewports:[390,1280],timings,checks:['served fonts','sort/icons','facet retention/focus','row menu Escape/identity','search','ranges/chips','paging/live region','density/visibility','unprefixed URL/popstate/canonical/noindex','actual client/server CSV','server cap/note','analytics','failure/retry','phone alignment/bars','2000-row performance'],pageErrors:errors,blockedExternalRequests:blocked.length};await writeFile(resolve(outputDir,'browser-results.json'),JSON.stringify(result,null,2)+'\n');console.log(JSON.stringify(result));
 } finally {
   await browser?.close();dev.kill('SIGTERM');await Promise.race([new Promise(done=>dev.once('exit',done)),new Promise(done=>setTimeout(done,5000))]);if(dev.exitCode == null && dev.signalCode == null) dev.kill('SIGKILL');await writeFile(resolve(outputDir,'wrangler-dev.log'),devLog);
 }
