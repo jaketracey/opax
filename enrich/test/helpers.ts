@@ -10,22 +10,38 @@ import type { TickDeps } from '../src/tick.ts'
 
 // ---------------------------------------------------------------- D1 over node:sqlite
 
+export interface D1Limits {
+  maxCompoundTerms: number
+  maxParameters: number
+}
+export const WORKER_D1_LIMITS: D1Limits = { maxCompoundTerms: 5, maxParameters: 100 }
+export interface D1StatementObservation { sql: string; parameters: number; compoundTerms: number }
+
 class Stmt {
   readonly db: DatabaseSync
   readonly sql: string
   readonly params: unknown[]
-  constructor(db: DatabaseSync, sql: string, params: unknown[] = []) {
+  readonly limits: D1Limits
+  readonly observations: D1StatementObservation[]
+  constructor(db: DatabaseSync, sql: string, params: unknown[] = [], limits = WORKER_D1_LIMITS, observations: D1StatementObservation[] = []) {
     this.db = db
     this.sql = sql
     this.params = params
+    this.limits = limits
+    this.observations = observations
   }
   bind(...params: unknown[]): Stmt {
-    return new Stmt(this.db, this.sql, params.map((p) => (p === undefined ? null : p)))
+    return new Stmt(this.db, this.sql, params.map((p) => (p === undefined ? null : p)), this.limits, this.observations)
   }
   private isRead(): boolean {
     return /^\s*(select|with)\b/i.test(this.sql)
   }
   exec(): { results: any[]; meta: { changes: number } } {
+    const compounds = (this.sql.match(/\b(?:UNION(?:\s+ALL)?|INTERSECT|EXCEPT)\b/gi)?.length ?? 0) + 1
+    this.observations.push({ sql: this.sql, parameters: this.params.length, compoundTerms: compounds })
+    if (compounds > this.limits.maxCompoundTerms) throw new Error('D1_ERROR: too many terms in compound SELECT: SQLITE_ERROR')
+    if (this.params.length > this.limits.maxParameters || (this.sql.match(/\?/g)?.length ?? 0) > this.limits.maxParameters)
+      throw new Error('D1_ERROR: too many SQL variables: SQLITE_ERROR')
     const stmt = this.db.prepare(this.sql)
     if (this.isRead()) return { results: stmt.all(...(this.params as any[])) as any[], meta: { changes: 0 } }
     const r = stmt.run(...(this.params as any[]))
@@ -43,13 +59,15 @@ class Stmt {
   }
 }
 
-export function makeD1(): { d1: D1Database; raw: DatabaseSync } {
+export function makeD1(limits: D1Limits = WORKER_D1_LIMITS): { d1: D1Database; raw: DatabaseSync; statements: D1StatementObservation[]; batches: number[] } {
   const raw = new DatabaseSync(':memory:')
   const migrations = join(import.meta.dirname, '..', 'migrations')
   for (const file of readdirSync(migrations).filter((f) => f.endsWith('.sql')).sort()) raw.exec(readFileSync(join(migrations, file), 'utf8'))
+  const statements: D1StatementObservation[] = [], batches: number[] = []
   const d1 = {
-    prepare: (sql: string) => new Stmt(raw, sql),
+    prepare: (sql: string) => new Stmt(raw, sql, [], limits, statements),
     async batch(stmts: Stmt[]) {
+      batches.push(stmts.length)
       raw.exec('BEGIN')
       try {
         const out = stmts.map((s) => ({ success: true, ...s.exec() }))
@@ -61,7 +79,7 @@ export function makeD1(): { d1: D1Database; raw: DatabaseSync } {
       }
     },
   }
-  return { d1: d1 as unknown as D1Database, raw }
+  return { d1: d1 as unknown as D1Database, raw, statements, batches }
 }
 
 export const rows = (raw: DatabaseSync, sql: string, ...params: any[]): any[] => raw.prepare(sql).all(...params) as any[]

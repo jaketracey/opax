@@ -189,7 +189,7 @@ test('queue failures checkpoint only previous queued chunks and replay safely', 
   for (let i = 0; i < 8; i++) speech(kb, `r${i}`, START + 1000)
   let inserts = 0
   const failing = { ...d1, prepare(sql: string) {
-    if (sql.startsWith('INSERT OR IGNORE INTO queue') && ++inserts === 2) throw new Error('fixture D1 down')
+    if (sql.startsWith('INSERT OR IGNORE INTO queue') && ++inserts === 9) throw new Error('fixture D1 down')
     return d1.prepare(sql)
   } } as D1Database
   const first = await discover(options(failing, kb))
