@@ -1,6 +1,6 @@
 import { readMoneyFilters } from './money-records.js?v=ia-ux-20260908-2';
-import {mountDataTable, guardTableURL} from './datatable.js?v=39ece8c488';
-import {prepareMoneyConnectionsConfig} from './money-connections.js?v=c49726045c';
+import {mountDataTable, guardTableURL} from './datatable.js?v=5d11e1a424';
+import {prepareMoneyConnectionsConfig} from './money-connections.js?v=726869be72';
 import {createTablePrivacyValidator} from './datatable-privacy.js?v=de6469a26a';
 import {rawQueryValues} from './datatable-query.js?v=6dd55aab38';
 const esc = value => String(value ?? '').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
