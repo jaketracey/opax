@@ -1,5 +1,5 @@
 import {applyQuery} from '../public/datatable.js'
-import {tablePrivacyCheck} from './table-privacy.ts'
+import {memoisedCheck,tablePrivacyCheck} from './table-privacy.ts'
 import {interestTableData, interestTableConfig, type InterestRegister} from '../public/register-tables.js'
 
 /** A complete public projection for client tables. No query, paging or remote calls. */
@@ -12,9 +12,10 @@ export async function interestRegisterResponse(request: Request, assets: Fetcher
     const response = await assets.fetch(new Request(`https://opax.com.au/interests/${pid}.json`))
     if (!response.ok) throw new Error('unavailable')
     const register = await response.json() as InterestRegister
-    const safe = await tablePrivacyCheck(assets)
-    const data = interestTableData(register,(...texts)=>texts.some(text=>!safe(String(text))),safe)
-    const rows=applyQuery(data.rows,interestTableConfig(data.rows,safe),{pageSize:50_000}).rows
+    const safe = memoisedCheck(await tablePrivacyCheck(assets))
+    const safeRows = memoisedCheck(await tablePrivacyCheck(assets,'row'))
+    const data = interestTableData(register,(...texts)=>texts.some(text=>!safeRows(String(text))),safeRows)
+    const rows=applyQuery(data.rows,interestTableConfig(data.rows,safe,safeRows),{pageSize:50_000}).rows
     return request.method === 'HEAD' ? new Response(null,{headers}) : Response.json({rows,omitted:data.omitted+data.rows.length-rows.length},{headers})
   } catch { return Response.json({error:'Register unavailable'},{status:503,headers}) }
 }

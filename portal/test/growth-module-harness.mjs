@@ -54,11 +54,12 @@ export async function* moduleOutputs(root,withheld,readAsset) {
  const roster=JSON.parse(readFileSync(join(root,'parliamentarians.json'),'utf8'));
  const localModules={...modules,loadModulePrivacy:async(kind,id)=>modules.approvedModulePrivacy(await read(await modules.growthSummaryPath('privacy/'+kind,id)))};
  const donorViewIndex=donorPrivacyIndex(await Promise.all(MONEY_GRAPHS.map(read)));
- const context={voteTables:localVoteTables,URLSearchParams,isOrganisationDonor,donorNameWithheld,donorViewIndex,unnamedDonorLabel,isUnnamedAggregate,donorsNotNamedDetail,growthModules:localModules,registerTables:{...registerTables,hydrateRegisterTables(){}},registerTablesReady:Promise.resolve(),esc,safeUrl:v=>v || '',fmtDate:v=>v || '',fmtMoney:String,industryLabel:String,partyDotHTML:()=>'',
+ const context={voteTables:localVoteTables,URLSearchParams,isOrganisationDonor,donorNameWithheld,donorViewIndex,unnamedDonorLabel,isUnnamedAggregate,donorsNotNamedDetail,growthModules:localModules,registerTables:{...registerTables,hydrateRegisterTables(){}},registerTablesReady:Promise.resolve(),esc,safeUrl:v=>v || '',fmtDate:v=>v || '',fmtMoney:String,industryLabel:String,partyDotHTML:()=>'',attributionHelpers:attribution,photoUrlFor:()=>'',
   sourceLineHTML,excerptNoticeHTML,entityHrefAttr:href=>`href="${esc(href)}"`,subjectHash:(kind,name)=>`/subject/${kind}/${encodeURIComponent(name)}`,fetch:fetchAsset,currentSubjectKey:'fixture',
   document:{createElement:()=>({dataset:{},isConnected:true,remove(){},querySelectorAll:()=>[]})},searchHash:q=>'/ask?view=search&'+new URLSearchParams({q}),STATE_NAMES:{},billQuestion:v=>v,
   machineLabelHTML:({note=''})=>`<span>${esc(note)}</span>`,partyChipHTML:esc,
  };
+ Object.assign(context,runInNewContext(region('const isWitness =','let heldBackHelpers;')+';({isWitness,isUnattributed,belongsToScope,speakerHref,isMultiSpeaker,speakerLabel,splitPerson,splitSpeakers,personScope,datedAffiliationParty})',context));
  Object.assign(context,runInNewContext(region('function groupAvatarHTML(','/** Swap .meta-portrait')+';({groupAvatarHTML,participantLinksHTML,speechIdentityHTML})',context));
  const interestVM=runInNewContext(region('async function renderPersonInterests(','let interestsTiesPromise')+';({renderPersonInterests})',context);
  const tiesVM=runInNewContext(region('function declaredTieHTML(','function declaredRowHTML(')+';({declaredTieHTML})',context);

@@ -62,7 +62,7 @@ const interestRow = row => typeof row.item === 'string' && typeof row.category =
 
 export function interestTableConfig(rows, privacyCheck, privacyRowCheck = privacyCheck) {
   return {id:'interests-table',caption:'Register entries',pageType:'person',urlKey:'interests',pageSize:50,
-    rows,privacy:'donors',privacyRowCheck,rowPrivacyCheck:row=>interestRow(row) && (!privacyCheck || privacyCheck(JSON.stringify(row)) === true),privacyCheck,defaultSort:{key:'category',dir:'asc'},export:{filename:'declared-interests.csv'},
+    rows,privacy:'donors',privacyRowCheck,rowPrivacyCheck:interestRow,privacyCheck,defaultSort:{key:'category',dir:'asc'},export:{filename:'declared-interests.csv'},
     columns:[{key:'category',label:'Category',type:'category',facet:'multi'},{key:'item',label:'Item',type:'text',primary:true},
       {key:'date',label:'Date',type:'date'}],primaryLink:row=>href(row.source)};
 }

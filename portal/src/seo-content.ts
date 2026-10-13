@@ -1,4 +1,4 @@
-import {tablePrivacyCheckFrom} from './table-privacy.ts'
+import {memoisedCheck,tablePrivacyCheckFrom} from './table-privacy.ts'
 import { shortDate } from '../public/format.js'
 import { personUrl, partyUrl } from '../public/canonical-urls.js'
 import {sponsorPerson} from '../public/sponsor-person.js'
@@ -140,14 +140,11 @@ const optional = async <T>(read: ReadAsset, path: string): Promise<T | null> => 
 export type WithheldCheck = (...texts: unknown[]) => boolean
 /** Marks the note left where a register entry naming a withheld donor is omitted. */
 export const INTEREST_OMITTED_MARK = 'data-register-omitted'
-async function withheldMoneyCheckFrom(read: ReadAsset): Promise<WithheldCheck> {
- try {const safe=await tablePrivacyCheckFrom(read);return (...texts)=>texts.some(text=>!safe(String(text)))}
- catch {return ()=>true}
-}
-
-export async function renderPersonAnswer(p: Person, read: ReadAsset, slugs: Map<string,string>, profileUrl?: string, withheld?: WithheldCheck, tableState: URLSearchParams | Query = new URLSearchParams(), tableSafe?: (text:string)=>boolean): Promise<RenderedContent> {
+export async function renderPersonAnswer(p: Person, read: ReadAsset, slugs: Map<string,string>, profileUrl?: string, withheld?: WithheldCheck, tableState: URLSearchParams | Query = new URLSearchParams(), tableSafe?: (text:string)=>boolean, tableRowSafe?: (text:string)=>boolean): Promise<RenderedContent> {
   const tableParams=tableState instanceof URLSearchParams ? tableState : new URLSearchParams(serializeQuery(tableState,'vr'))
-  const privacyCheck=tableSafe
+  const privacyCheck=tableSafe ?? await tablePrivacyCheckFromRead(read)
+  const rowSafe=memoisedCheck(tableRowSafe ?? tableSafe ?? await tablePrivacyCheckFrom(read,'row'))
+  const named=(...texts:unknown[])=>texts.some(text=>!rowSafe(String(text)))
   const initialTableParams=new URLSearchParams(tableParams)
   const registerHTML=(config:DataTableConfig)=>{
     const tableURL=new URL('https://local.invalid/?'+initialTableParams)
@@ -178,7 +175,7 @@ export async function renderPersonAnswer(p: Person, read: ReadAsset, slugs: Map<
   if (!p.speech_scope) {
     // Vote rows are public record (served whole at /votes.json); tableCheck
     // guards only the reader's table state before it is echoed.
-    const tableCheck = privacyCheck ?? await tablePrivacyCheckFromRead(read)
+    const tableCheck = privacyCheck
     const keys = personVoteKeys(p.name,p.pid,voteData)
     const records = keys.map(k=>voteData?.[k] as Votes | undefined).filter((r): r is Votes => !!r?.name)
     const recent = recentData?._meta?.schema===1 && recentData._meta.source==='opax-parli-db' && recentData._meta.coverage==='recorded'
@@ -206,9 +203,8 @@ export async function renderPersonAnswer(p: Person, read: ReadAsset, slugs: Map<
       body += `<p>${count(register.total)} recorded entries${register.as_at ? ` in the latest register snapshot, as at ${escapeHtml(register.as_at)}` : ''}.</p>`
       // The register's own words (CC BY-NC-ND): an entry naming a withheld donor is
       // left out whole, never reworded, and the official register still has it.
-      const named = tableSafe ? (...texts:unknown[])=>texts.some(text=>!tableSafe(String(text))) : await withheldMoneyCheckFrom(read)
-      const {rows,omitted} = interestTableData(register,named,text=>!named(text))
-      const config = interestTableConfig(rows,text=>!named(text))
+      const {rows,omitted} = interestTableData(register,named,rowSafe)
+      const config = interestTableConfig(rows,privacyCheck,rowSafe)
       config.id = 'ssr-interests-table'
       body += registerHTML(config)
       body += '<p>Date is the notification date where supplied, otherwise the register snapshot date. Check the official entry for holders and alterations.</p>'
@@ -223,9 +219,8 @@ export async function renderPersonAnswer(p: Person, read: ReadAsset, slugs: Map<
     const graph = await optional<MoneyGraph>(read,path)
     const node = graph?.nodes.find(n=>n.kind==='party' && fold(n.label)===fold(party))
     if (!graph || !node) continue
-    const named = tableSafe ? (...texts:unknown[])=>texts.some(text=>!tableSafe(String(text))) : await withheldMoneyCheckFrom(read)
-    const {rows,aggregate} = partyMoneyData(graph,node.id,named,text=>!named(text))
-    const config = partyMoneyTableConfig(rows,aggregate,`person-party-money-${source.toLowerCase()}`,`partyMoney${source}`,'person',text=>!named(text))
+    const {rows,aggregate} = partyMoneyData(graph,node.id,named,rowSafe)
+    const config = partyMoneyTableConfig(rows,aggregate,`person-party-money-${source.toLowerCase()}`,`partyMoney${source}`,'person',privacyCheck,rowSafe)
     body += `<h3>${escapeHtml(source)} disclosed receipts</h3><p>${escapeHtml(graph.meta.coverage || '')}</p>${registerHTML(config)}`
     body += `<p>Source: ${escapeHtml(graph.meta.sourceShort || graph.meta.source || source)}. Federal and state returns are shown separately and never summed.</p>${original(graph.meta.source_url || (source==='AEC' ? 'https://transparency.aec.gov.au/' : source==='ECQ' ? 'https://disclosures.ecq.qld.gov.au/' : 'https://disclosures.vec.vic.gov.au/'))}`
   }

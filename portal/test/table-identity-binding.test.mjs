@@ -14,7 +14,7 @@ const registry=JSON.parse(await readFile(new URL('../public/table-private-identi
 const digest=value=>createHash('sha256').update(value).digest('hex');
 async function callers(bundle) {
   const compiled=await build({stdin:{resolveDir:new URL('../src/',import.meta.url).pathname,contents:
-    "export {tablePrivacy,tablePrivacyCheckFromRead} from './table-privacy.ts';export {tableApi} from './table-api.ts';"},
+    "export {tablePrivacy,tablePrivacyCheckFromRead,tablePrivacyCheckFrom} from './table-privacy.ts';export {tableApi} from './table-api.ts';"},
     bundle:true,platform:'node',format:'esm',write:false,external:['node:*'],plugins:[identityBundlePlugin(bundle)]});
   return import('data:text/javascript;base64,'+Buffer.from(compiled.outputFiles[0].text).toString('base64'));
 }
@@ -27,6 +27,8 @@ for(const [reason,invalidPrefilter] of invalid)test(reason+' private prefilter d
   const api=await callers({prefilter:invalidPrefilter,binding,fingerprint:binding.registryFingerprint});
   const safe=await api.tablePrivacyCheckFromRead(async()=>registry);
   assert.equal(safe('ordinary public search'),false,'SSR denial');
+  const safeRows=await api.tablePrivacyCheckFrom(async()=>registry,'row');
+  assert.equal(safeRows('ordinary public row'),false,'SSR row denial');
   const response=await api.tablePrivacy(new Request('https://fixture.invalid/api/table/privacy',{method:'POST',body:JSON.stringify({text:'ordinary public search'})}),{fetch:async()=>Response.json(registry)});
   assert.equal((await response.json()).safe,false,'privacy endpoint denial');
   let dataReads=0;
@@ -40,6 +42,18 @@ for(const [reason,invalidPrefilter] of invalid)test(reason+' private prefilter d
     assert.equal(result.status,503,'D1 guard denial');assert.deepEqual(await result.json(),{error:'unavailable'});
   }
   assert.equal(dataReads,0,'invalid prefilter reached data SQL');
+});
+
+test('the private binding includes row provenance as well as the identity hashes',async()=>{
+  const api=await callers({prefilter,binding,fingerprint:binding.registryFingerprint});
+  const altered=structuredClone(registry);
+  const entry=altered.identities.find(e=>e.row==='token');
+  assert.ok(entry,'registry contains a row identity');
+  entry.row=false;
+  for(const mode of ['query','row']) {
+    const safe=await api.tablePrivacyCheckFrom(async()=>altered,mode);
+    assert.equal(safe('ordinary public text'),false,'changed row provenance fails closed');
+  }
 });
 
 test('49 positive fixture forms remain denied through all callers after a checksum-recomputed alteration',async t=>{

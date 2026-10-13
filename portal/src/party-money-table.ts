@@ -1,4 +1,4 @@
-import {tablePrivacyCheck} from './table-privacy.ts'
+import {memoisedCheck,tablePrivacyCheck} from './table-privacy.ts'
 import {partyMoneyData,type PartyGraph} from '../public/register-tables.js'
 /** Organisation-only input; withheld source IDs contribute to neutral totals. */
 export async function partyMoneyResponse(request:Request,assets:Fetcher):Promise<Response> {
@@ -11,7 +11,7 @@ export async function partyMoneyResponse(request:Request,assets:Fetcher):Promise
   if(!response.ok)throw Error('unavailable')
   const graph=await response.json() as PartyGraph
   if(!graph.nodes.some(node=>node.kind==='party'&&node.id===id))return Response.json({error:'Party unavailable'},{status:404,headers})
-  const safe=await tablePrivacyCheck(assets),data=partyMoneyData(graph,id,(...texts)=>texts.some(text=>!safe(String(text))),safe)
+  const safeRows=memoisedCheck(await tablePrivacyCheck(assets,'row')),data=partyMoneyData(graph,id,(...texts)=>texts.some(text=>!safeRows(String(text))),safeRows)
   return request.method==='HEAD'?new Response(null,{headers}):Response.json(data,{headers})
  }catch{return Response.json({error:'Party unavailable'},{status:503,headers})}
 }

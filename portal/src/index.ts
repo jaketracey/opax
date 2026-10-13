@@ -4123,7 +4123,7 @@ async function buildRouteMeta(route: SeoRoute, url: URL, request: Request, env: 
     case 'instruments': return base(await instrumentPage(route.id, url, instrumentReader(env.ASSETS), prerenderBlock, route.id===null ? await tablePrivacyCheck(env.ASSETS) : undefined, env.TABLE_DB ? async query=>{
       const endpoint=new URL('/api/table/instruments',url)
       endpoint.search=serializeQuery({...query,sort:query.sort || {key:'title',dir:'asc'}})
-      const response=await tableApi(new Request(endpoint),{TABLE_DB:env.TABLE_DB!,CACHE_EPOCH:env.CACHE_EPOCH})
+      const response=await timed('table-query',()=>tableApi(new Request(endpoint),{TABLE_DB:env.TABLE_DB!,CACHE_EPOCH:env.CACHE_EPOCH}))
       if(!response.ok)throw new Error('Instrument table unavailable')
       return await response.json() as Page
     } : undefined))
@@ -4309,7 +4309,8 @@ async function buildMeta(route: SeoRoute, url: URL, request: Request, env: Env, 
         const identity={...profiles?.by_name[foldName(p.name)],...profiles?.people[p.pid || '']}
         const check = memoisedCheck(await tablePrivacyCheck(env.ASSETS))
         const withheld = await withheldNameCheck(env.ASSETS)
-        const content = await timed('person-render', () => renderPersonAnswer(p,read,people.slugOf,identity.aphProfileUrl || undefined,withheld,url.searchParams,check))
+        const rowCheck = await tablePrivacyCheck(env.ASSETS,'row')
+        const content = await timed('person-render', () => renderPersonAnswer(p,read,people.slugOf,identity.aphProfileUrl || undefined,withheld,url.searchParams,check,rowCheck))
         meta.prerender = content.html
         if(content.description) meta.description=clip(content.description)
         const photos=await loadPhotos(env).catch(()=>null)
@@ -4966,9 +4967,10 @@ async function moneySubjectMeta(dir: 'party' | 'donor', name: string, url: URL, 
     const graph = await read<Parameters<typeof partyMoneyData>[0]>('/graph/money.json').catch(()=>null)
     const party = graph?.nodes.find(n=>n.kind === 'party' && foldName(n.label) === foldName(display))
     if (graph && party) {
-      const privacyCheck = await tablePrivacyCheck(env.ASSETS)
-      const {rows,aggregate} = partyMoneyData(graph,party.id,text=>!privacyCheck(String(text)),privacyCheck)
-      const config = partyMoneyTableConfig(rows,aggregate,undefined,undefined,undefined,privacyCheck,await tablePrivacyCheck(env.ASSETS,'row'))
+      const privacyCheck = memoisedCheck(await tablePrivacyCheck(env.ASSETS))
+      const privacyRowCheck = memoisedCheck(await tablePrivacyCheck(env.ASSETS,'row'))
+      const {rows,aggregate} = partyMoneyData(graph,party.id,text=>!privacyRowCheck(String(text)),privacyRowCheck)
+      const config = partyMoneyTableConfig(rows,aggregate,undefined,undefined,undefined,privacyCheck,privacyRowCheck)
       config.id = 'ssr-party-money-table'
       table = `<section class="wrap"><h2>Where it came from</h2>${registerTableHTML(config,undefined,url)}<p>Party transfers and grants are excluded. Source: <a href="https://transparency.aec.gov.au/">AEC Transparency Register</a>.</p></section>`
     }

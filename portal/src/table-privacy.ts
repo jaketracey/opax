@@ -9,7 +9,9 @@ export function memoisedCheck(check:(text:string)=>boolean):(text:string)=>boole
   return text=>{
     if(results.has(text))return results.get(text)!
     const safe=check(text)
-    if(results.size>=256)results.clear()
+    // A person page scans several registers more than once. Retain their
+    // working set without clearing approvals for every field at the limit.
+    if(results.size>=4096)results.delete(results.keys().next().value!)
     results.set(text,safe)
     return safe
   }
