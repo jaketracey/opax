@@ -6,6 +6,9 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {createHash} from 'node:crypto';
 import {readFile} from 'node:fs/promises';
+import {mkdtempSync, mkdirSync, rmSync, writeFileSync} from 'node:fs';
+import {tmpdir} from 'node:os';
+import {join} from 'node:path';
 import {fileURLToPath} from 'node:url';
 import {moduleReferences, immutableModules} from '../../scripts/stamp_assets.mjs';
 
@@ -46,7 +49,37 @@ test('every generated immutable module is referenced only by its content stamp',
     for (const r of refs.get(file)) assert.equal(r.stamp, h, `${r.from} loads /${file} without ?v=${h}`);
   }
   // A module referenced bare stays on the 300-second module default.
-  assert.ok(!immutableModules(fileURLToPath(pub), fileURLToPath(new URL('../src/', import.meta.url))).includes('format.js'));
+  assert.ok(!immutableModules(fileURLToPath(pub), fileURLToPath(new URL('../src/', import.meta.url)), {references: refs}).includes('format.js'));
+});
+
+test('one reference inventory hashes each module once, including modules with multiple importers', () => {
+  const references = new Map([
+    ['fixture.js', [{from: 'a.html', stamp: 'fixture-hash'}, {from: 'b.js', stamp: 'fixture-hash'}]],
+    ['bare.js', [{from: 'a.html', stamp: null}]],
+    ['unused.js', []],
+  ]);
+  const calls = [];
+  const modules = immutableModules('', '', {references, hashFile: file => {calls.push(file); return 'fixture-hash';}});
+  assert.deepEqual(modules, ['fixture.js']);
+  assert.deepEqual(calls, ['fixture.js', 'bare.js']);
+});
+
+test('new inventories reject changed bytes and newly added bare references', t => {
+  const root = mkdtempSync(join(tmpdir(), 'opax-module-inventory-'));
+  t.after(() => rmSync(root, {recursive: true, force: true}));
+  const publicRoot = join(root, 'public'), srcRoot = join(root, 'src');
+  mkdirSync(publicRoot); mkdirSync(srcRoot);
+  const bytes = 'export const fixture=1;';
+  const stamp = createHash('sha256').update(bytes).digest('hex').slice(0, 10);
+  writeFileSync(join(publicRoot, 'fixture.js'), bytes);
+  writeFileSync(join(publicRoot, 'index.html'), `<script src="/fixture.js?v=${stamp}"></script>`);
+  assert.deepEqual(immutableModules(publicRoot, srcRoot), ['fixture.js']);
+  writeFileSync(join(publicRoot, 'fixture.js'), 'export const fixture=2;');
+  assert.deepEqual(immutableModules(publicRoot, srcRoot), []);
+  writeFileSync(join(publicRoot, 'fixture.js'), bytes);
+  assert.deepEqual(immutableModules(publicRoot, srcRoot), ['fixture.js']);
+  writeFileSync(join(srcRoot, 'fixture.ts'), "const fixture='/fixture.js';");
+  assert.deepEqual(immutableModules(publicRoot, srcRoot), []);
 });
 
 test('the money map page loads its shared stylesheet by content stamp', async () => {

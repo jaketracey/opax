@@ -1,0 +1,182 @@
+{
+  "date": "2026-10-13",
+  "approval": "Jake 20:15, checks audit 12-15",
+  "baseline": "ea5a53af95ca9937a7ddbbe0ec896b1cfdd586b1",
+  "gateToolsSource": "6569871fd6998c3be0d68356fb6eabac5823aa77",
+  "equivalence": {
+    "baseline": "ea5a53af95ca9937a7ddbbe0ec896b1cfdd586b1",
+    "releaseFilesCompared": 27301,
+    "allSrcAndTypesFilesCompared": 27404,
+    "categories": {
+      "sqlAndManifest": 90,
+      "public": 27206,
+      "generatedSrc": 5
+    },
+    "added": [],
+    "missing": [],
+    "differences": [],
+    "releaseInventoryDigest": "87d454b6e8b88aba68d9991777d12ff221b517e60686f1620f9bd478b4fd1c93",
+    "allOutputInventoryDigest": "faa65d6e79e97acf94b073692217e071d78fd06164d8e1e235c70cba39d3a992",
+    "votesSha256": "a77128dc0e1e1b3fdaa4bf84501e2c94af3125dea3cf0b2dffbc688a49d68546",
+    "steps": {
+      "old": [
+        {
+          "name": "shell",
+          "seconds": 0.786,
+          "code": 0
+        },
+        {
+          "name": "release",
+          "seconds": 232.575,
+          "code": 0
+        },
+        {
+          "name": "check",
+          "seconds": 3.475,
+          "code": 0
+        }
+      ],
+      "new": [
+        {
+          "name": "dependencies-cold",
+          "seconds": 7.768,
+          "code": 0
+        },
+        {
+          "name": "dependencies-existing",
+          "seconds": 1.865,
+          "code": 0
+        },
+        {
+          "name": "types",
+          "seconds": 0.669,
+          "code": 0
+        },
+        {
+          "name": "release",
+          "seconds": 239.693,
+          "code": 0
+        },
+        {
+          "name": "check",
+          "seconds": 2.757,
+          "code": 0
+        }
+      ]
+    }
+  },
+  "dependencyCache": [
+    {
+      "name": "dependencies-cold",
+      "seconds": 9.033,
+      "code": 0
+    },
+    {
+      "name": "dependencies-restore",
+      "seconds": 4.401,
+      "code": 0
+    },
+    {
+      "name": "dependencies-existing",
+      "seconds": 2.135,
+      "code": 0
+    },
+    {
+      "name": "dependencies-byte-equivalence",
+      "filesCompared": 19207,
+      "differences": 0,
+      "key": "0f6096982fa10d9018f8865d496c6ec076b862e413046645184b89defd3f89b4"
+    }
+  ],
+  "stampCheckProfile": {
+    "runs": [
+      {
+        "name": "old",
+        "run": 1,
+        "seconds": 2.204
+      },
+      {
+        "name": "old",
+        "run": 2,
+        "seconds": 1.636
+      },
+      {
+        "name": "old",
+        "run": 3,
+        "seconds": 1.638
+      },
+      {
+        "name": "old",
+        "run": 4,
+        "seconds": 1.621
+      },
+      {
+        "name": "old",
+        "run": 5,
+        "seconds": 1.654
+      },
+      {
+        "name": "new",
+        "run": 1,
+        "seconds": 1.383
+      },
+      {
+        "name": "new",
+        "run": 2,
+        "seconds": 1.352
+      },
+      {
+        "name": "new",
+        "run": 3,
+        "seconds": 1.344
+      },
+      {
+        "name": "new",
+        "run": 4,
+        "seconds": 1.357
+      },
+      {
+        "name": "new",
+        "run": 5,
+        "seconds": 1.344
+      }
+    ],
+    "medianSeconds": {
+      "old": 1.638,
+      "new": 1.352
+    }
+  },
+  "localGates": [
+    {
+      "name": "targeted-tests",
+      "seconds": 1.745,
+      "code": 0
+    },
+    {
+      "name": "check",
+      "seconds": 3.752,
+      "code": 0
+    },
+    {
+      "name": "dry-run",
+      "seconds": 9.937,
+      "code": 0
+    }
+  ],
+  "targetedTests": {
+    "passed": 23,
+    "failed": 0,
+    "skipped": 0
+  },
+  "runnerSelfTests": {
+    "passed": 23,
+    "failed": 0,
+    "skipped": 0
+  },
+  "limitations": [
+    "Whole-build samples (232.575s and 239.693s) are under changing host load; no whole-build speedup is claimed.",
+    "Privacy-sweep removal is owned by web/remove-donor-matcher. This addendum does not change the sweeps.",
+    "CI already installs dependencies and generates types once; deploy.yml is unchanged."
+  ],
+  "desktopFullGate": "The exact committed candidate is validated separately; receipts are retained in .ops/gate-cache without changing that tree."
+}

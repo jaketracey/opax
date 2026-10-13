@@ -1,0 +1,102 @@
+{
+  "smoke": [
+    "portal/test/analytics.test.mjs",
+    "portal/test/community.test.mjs",
+    "portal/test/datatable-endpoint.test.mjs",
+    "portal/test/datatable.test.mjs",
+    "portal/test/directory-render.test.mjs",
+    "portal/test/donor-deploy-build.test.mjs",
+    "portal/test/donor-entity.test.mjs",
+    "portal/test/donor-privacy.test.mjs",
+    "portal/test/donor-publication.test.mjs",
+    "portal/test/donor-stored-response.test.mjs",
+    "portal/test/donor-view-index.test.mjs",
+    "portal/test/dt-votes-alias.test.mjs",
+    "portal/test/dt-votes-api.test.mjs",
+    "portal/test/dt-votes.test.mjs",
+    "portal/test/posthog-proxy.test.mjs",
+    "portal/test/privacy-placeholders.test.mjs",
+    "portal/test/table-api.test.mjs",
+    "portal/test/table-derived-privacy.test.mjs",
+    "portal/test/table-load.test.mjs",
+    "portal/test/table-publication-privacy.test.mjs",
+    "portal/test/table-raw-query-privacy.test.mjs"
+  ],
+  "fullBuildPatterns": [
+    "^scripts/",
+    "^portal/(?:src|public)/.*(?:donor|privacy|table-)",
+    "^portal/public/.*\\.json$"
+  ],
+  "builders": [
+    {
+      "pattern": "^docs/design/design-tokens\\.json$",
+      "script": "build:tokens"
+    },
+    {
+      "pattern": "^portal/analytics/",
+      "script": "build:analytics"
+    },
+    {
+      "pattern": "^portal/voice/",
+      "script": "build:voice"
+    },
+    {
+      "pattern": "^portal/grants-map/",
+      "script": "build:grants-map"
+    }
+  ],
+  "map": [
+    {
+      "pattern": "^portal/public/(?:style|tokens|ui-.*|nav|loader)\\.css$",
+      "tests": [
+        "(?:design-tokens|ui-components|loader|header-search|directory-render|page-entry)\\.test"
+      ]
+    },
+    {
+      "pattern": "^portal/public/(?:index|home|community)\\.html$",
+      "tests": [
+        "(?:home-|page-entry|header-search|directory-render|seo-render|crawl-seo|privacy-placeholders)"
+      ]
+    },
+    {
+      "pattern": "^portal/(?:package.*\\.json|tsconfig\\.json|wrangler\\.jsonc)$|^\\.ops/tools/|^\\.github/",
+      "tests": [
+        "\\.test\\.mjs$"
+      ]
+    },
+    {
+      "pattern": "^portal/(?:public|src)/.*(?:donor|privacy)|^scripts/(?:withhold_donor|build_donor|donor_|check_privacy)",
+      "tests": [
+        "(?:donor|privacy|table-|money-|social-|indexnow)"
+      ]
+    },
+    {
+      "pattern": "^portal/(?:public/.*\\.json|public/(?:search-catalog|crawl|hubs|growth)/)",
+      "tests": [
+        "\\.test\\.mjs$"
+      ]
+    },
+    {
+      "pattern": "^portal/(?:graph|grants-map|voice|analytics)/",
+      "tests": [
+        "(?:map|graph|journey|voice|analytics|donor|grants)"
+      ]
+    },
+    {
+      "pattern": "^scripts/.*(?:build_|stamp_|load_tables|photo_identity)",
+      "tests": [
+        "(?:deploy|donor|publication|directory|photo|graph|growth|table|seo|grants|home|map|tokens)"
+      ]
+    }
+  ],
+  "mandatoryPatterns": [
+    "(?:^|/)[^/]*(?:donor|privacy|table|dt-votes)[^/]*\\.test\\.mjs$"
+  ],
+  "laneFixtures": [
+    "build:crawl",
+    "build:vic-election"
+  ],
+  "optionalSmoke": [
+    "portal/test/table-d1-harness.test.mjs"
+  ]
+}
