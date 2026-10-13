@@ -24,7 +24,10 @@ from urllib.robotparser import RobotFileParser
 from zoneinfo import ZoneInfo
 
 import requests
-from bs4 import BeautifulSoup, Comment, NavigableString, Tag
+try:
+    from bs4 import BeautifulSoup, Comment, NavigableString, Tag
+except ImportError:  # validators import this module for its constants and public_body only; HTML parsing needs bs4
+    BeautifulSoup = Comment = NavigableString = Tag = None
 
 ROOT = Path(__file__).resolve().parents[2]
 SITE = "https://www.qao.qld.gov.au"
