@@ -1,5 +1,5 @@
 import { generateText, jsonSchema, tool, isStepCount, type LanguageModel, type ToolSet } from 'ai'
-import { TOOL_SPECS, validToolArgs, type ToolDeps, type ToolResult } from './agentic-tools'
+import { TOOL_SPECS, validToolArgs, toolArgProblem, type ToolDeps, type ToolResult } from './agentic-tools'
 import { classifyAgentic, factSheet, resolveArgs, type PlanStep } from './agentic-ask'
 import { firstSpeechTurn } from './position-evidence'
 import type { ResearchContext } from './research-types'
@@ -51,7 +51,7 @@ export function createResearch(options: ResearchOptions): Research {
     const stats: ResearchStats = { rounds: 0, tokens: { input: 0, output: 0 }, turns: [], cachedByTurn: [], rejections: [] }
     const steps: PlanStep[] = [], results: ToolResult[] = [], passages = new Map<string, Passage>()
     const cache = new Map<string, Promise<unknown>>()
-    let calls = 0, round = 0, answerAttempts = 0, finished = false, repeated = false, numericalAnswer = false
+    let calls = 0, round = 0, answerAttempts = 0, argRepairs = 0, finished = false, repeated = false, numericalAnswer = false
     let selected: number[] = [], qualitative: ReturnType<typeof verifyResearchAnswer> = null
     let reservedInput = 0, reservedOutput = 0
     let turnStarted = started
@@ -86,7 +86,11 @@ export function createResearch(options: ResearchOptions): Research {
       const resolved = resolveArgs(rawStep.args, results)
       if (!resolved) return fail('malformed_args')
       const step = terminal || !TOOL_SPECS.some(t => t.name === rawStep.tool) ? { ...rawStep, args: resolved } : context.scope({ ...rawStep, args: resolved })
-      const malformed = !terminal && TOOL_SPECS.some(t => t.name === rawStep.tool) && !validToolArgs(rawStep.tool, resolved)
+      const problem = !terminal && TOOL_SPECS.some(t => t.name === rawStep.tool) ? toolArgProblem(rawStep.tool, resolved) : null
+      // One slip in the model's own arguments (an enum miss, an out-of-range limit) is answered with the reason and
+      // may be corrected next turn; a second invalid call, or arguments the request scope makes invalid, still ends the run.
+      if (problem && argRepairs++ === 0) return output(errorResult(rawStep.tool, `invalid tool arguments: ${problem}; call it again with corrected arguments`))
+      const malformed = !!problem
       const key = step.tool === 'answer' ? 'answer#' + Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256', new TextEncoder().encode(stable(step))))).map(b => b.toString(16).padStart(2, '0')).join('') : stable(step)
       const prior = cache.get(key)
       // prepareStep also restricts a repeating model to the two terminal tools.
@@ -140,7 +144,8 @@ export function createResearch(options: ResearchOptions): Research {
     const tools: ToolSet = Object.fromEntries(TOOL_SPECS.map(spec => [spec.name, tool({
       description: spec.description,
       inputSchema: jsonSchema<Record<string, unknown>>(spec.input),
-      execute: args => invoke({ tool: spec.name, args }),
+      // A null or empty optional argument means "not set"; models send them for unused filters.
+      execute: args => invoke({ tool: spec.name, args: Object.fromEntries(Object.entries(object(args)).filter(([, v]) => v !== null && v !== '')) }),
     })]))
     tools.search = tool({ description: 'Search original corpus passages. A bounded ranked sample, never an exhaustive count. Returns only passages verified in their original speaking turn; cite them by id.',
       inputSchema: jsonSchema<{ query: string; limit?: number }>({ type: 'object', properties: { query: { type: 'string', minLength: 2, maxLength: 300 }, limit: { type: 'integer', minimum: 1, maximum: 8 } }, required: ['query'], additionalProperties: false }),

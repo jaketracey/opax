@@ -245,15 +245,15 @@ export function templateAnswer(facts: Fact[], notes: string[]): string {
 
 /** Bound selection budgets each requested entity separately. A missing entity
  * is a failed answer, never an excuse to render only the other entity. */
-export function selectAnswerFacts(facts: Fact[], scope: NamedScope, peakYear = false): Fact[] | null {
+export function selectAnswerFacts(facts: Fact[], scope: NamedScope, peakYear = false, cap = 8): Fact[] | null {
   const required = [...scope.people.map(n => `person:${n}`), ...scope.parties.map(n => `party:${n}`)]
-  if (!required.length) return peakYear ? facts.slice().sort((a, b) => Number(b.cite.value ?? 0) - Number(a.cite.value ?? 0)).slice(0, 1) : facts.slice(0, 8)
+  if (!required.length) return peakYear ? facts.slice().sort((a, b) => Number(b.cite.value ?? 0) - Number(a.cite.value ?? 0)).slice(0, 1) : facts.slice(0, cap)
   const selected = new Set<Fact>()
   for (const entity of required) {
     const bound = facts.filter(f => f.entities?.includes(entity))
     if (!bound.length) return null
     if (peakYear) bound.sort((a, b) => Number(b.cite.value ?? 0) - Number(a.cite.value ?? 0))
-    bound.slice(0, peakYear ? 1 : 8).forEach(f => selected.add(f))
+    bound.slice(0, peakYear ? 1 : cap).forEach(f => selected.add(f))
   }
   return facts.filter(f => selected.has(f))
 }
@@ -334,7 +334,7 @@ export function extractNamedScope(question: string, roster: unknown, billList: u
   })
   // These are parliamentary/query words, not guessed identities. Unknown
   // multi-word subjects conservatively stay on normal Ask as well.
-  const ordinary = new Set(('please email me at call contact send my phone how many who which what where when why is are was were be been being has have had did does do made make making give given gave giving said say spoken spoke speak speaks speaking voted vote votes voting and or versus vs compared compare comparing than more most less least fewest often much the a an of for from by to in on about with into across over per each every all overall total number count counts counting rank ranking ranks top leading changed change changing grown growth debating debated debate discussed discuss mentions mention mentioned statements remarks speeches speech activity their his her its they them he she s senator senators mp mps member members minister ministers party parties parliament parliaments parliamentary chamber chambers committee committees hearing hearings house representatives legislative assembly council federal australian australia new south wales nsw victoria victorian vic queensland qld act sa current previous last this term terms record whole time year years yearly decade decades since until between through before after during now today recent recently reform reforms policy policies bill bills amendment amendments support affordability rental rentals assistance advertising ban bans labelled indexed recorded topic topics gambling housing climate environment change health mining energy coal welfare social financial services bank banks banking finance unions workplace education schools agriculture farming property construction immigration indigenous affairs tax budget media communications hospitality alcohol defence security integrity democracy infrastructure transport justice law foreign affairs fossil fuels donations donation donors donor money industry industries received receive receives receiving gave give giving donated contribute contributions paid funding raised same both similar different difference differences percentage percentages share shares coverage trend trends').split(' '))
+  const ordinary = new Set(('please email me at call contact send my phone how many who which what where when why is are was were be been being has have had did does do made make making give given gave giving said say spoken spoke speak speaks speaking voted vote votes voting and or versus vs compared compare comparing than more most less least fewest often much the a an of for from by to in on about with into across over per each every all overall total number count counts counting rank ranking ranks top leading changed change changing grown growth debating debated debate discussed discuss mentions mention mentioned statements remarks speeches speech activity their his her its they them he she s senator senators mp mps member members minister ministers party parties parliament parliaments parliamentary chamber chambers committee committees hearing hearings house representatives legislative assembly council federal australian australia new south wales nsw victoria victorian vic queensland qld act sa current previous last this term terms record whole time year years yearly decade decades since until between through before after during now today recent recently reform reforms policy policies bill bills amendment amendments support affordability rental rentals assistance advertising ban bans labelled indexed recorded topic topics gambling housing climate environment change health mining energy coal welfare social financial services bank banks banking finance unions workplace education schools agriculture farming property construction immigration indigenous affairs tax budget media communications hospitality alcohol defence security integrity democracy infrastructure transport justice law foreign affairs fossil fuels donations donation donors donor money industry industries received receive receives receiving gave give giving donated contribute contributions paid funding raised same both similar different difference differences percentage percentages share shares coverage trend trends it that there led lead leads drove drive drives driven driving behind peak peaked peaks rose risen fell fallen up down').split(' '))
   // Quantifiers and rank descriptions (including normalized "twenty-one")
   // describe groups, not guessed people. Explicit person slots above still
   // require either a resolved roster identity or a complete collective phrase.
@@ -646,7 +646,8 @@ async function runAgenticAttempt(question: string, deps: AgenticDeps, progress: 
   // rendered together from the tool rows, so swapping aye/no or party/year
   // values in model text can never affect an answer.
   const chosen = researched ? mainFacts.filter(f => researched!.selected.includes(f.id)) : mainFacts
-  const selected = electorateData ? chosen : selectAnswerFacts(chosen, named, peakYear)
+  // The loop's finish already bounds its own selection (30 ids): a year-by-year trend keeps every year it chose.
+  const selected = electorateData ? chosen : selectAnswerFacts(chosen, named, peakYear, researched ? 30 : 8)
   if (!selected?.length) return base({ reason: 'no_supported_claim' })
   let answer = templateAnswer(selected, [])
   if (committeeFacts.length) {

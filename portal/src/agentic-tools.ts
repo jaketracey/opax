@@ -455,24 +455,31 @@ export const TOOL_SPECS: ToolSpec[] = [
 ]
 /** Schema-check model plans before any lookup. References are validated separately. */
 export function validToolArgs(name: string, args: unknown): args is Json {
+  return toolArgProblem(name, args) === null
+}
+/** The first invalid argument as a short repair hint for the model, or null when the arguments are valid. */
+export function toolArgProblem(name: string, args: unknown): string | null {
   const registered = getAskTool(name)
-  if (registered) return validRegisteredArgs(registered.name, args)
+  if (registered) return validRegisteredArgs(registered.name, args) ? null : 'arguments do not match the tool schema'
   const spec = TOOL_SPECS.find(t => t.name === name)
-  if (!spec || !args || typeof args !== 'object' || Array.isArray(args)) return false
+  if (!spec) return `unknown tool ${name}`
+  if (!args || typeof args !== 'object' || Array.isArray(args)) return 'arguments must be an object'
   const a = args as Json
   const props = spec.input.properties as Record<string, { type: string; enum?: unknown[]; minimum?: number; maximum?: number }>
-  if (((spec.input.required ?? []) as string[]).some(k => typeof a[k] !== 'string' || !String(a[k]).trim())) return false
+  for (const k of (spec.input.required ?? []) as string[]) if (typeof a[k] !== 'string' || !String(a[k]).trim()) return `${k} is required`
   for (const [k, v] of Object.entries(a)) {
     const p = props[k]
-    if (!p || (p.type === 'string' ? typeof v !== 'string' || !v.trim() : typeof v !== 'number' || !Number.isInteger(v))) return false
-    if (p.enum && !p.enum.includes(v)) return false
-    if (typeof v === 'number' && (v < (p.minimum ?? 0) || v > (p.maximum ?? 9999))) return false
+    if (!p) return `unknown argument ${k}`
+    if (p.type === 'string' ? typeof v !== 'string' || !v.trim() : typeof v !== 'number' || !Number.isInteger(v)) return `${k} must be ${p.type === 'string' ? 'a non-empty string' : 'an integer'}`
+    if (p.enum && !p.enum.includes(v)) return `${k} must be one of ${p.enum.join(', ')}`
+    if (typeof v === 'number' && (v < (p.minimum ?? 0) || v > (p.maximum ?? 9999))) return `${k} must be between ${p.minimum ?? 0} and ${p.maximum ?? 9999}`
   }
-  for (const k of ['since', 'until']) if (a[k] && (!DATE_RE.test(String(a[k])) || !Number.isFinite(Date.parse(String(a[k]))) || new Date(String(a[k])).toISOString().slice(0, 10) !== a[k])) return false
-  if (a.since && a.until && String(a.since) > String(a.until)) return false
-  if (name === 'member_votes' && (!a.person && !a.party || String(a.keyword).length < 3)) return false
-  if (name === 'party_donations' && !a.party && !a.industry) return false
-  return true
+  for (const k of ['since', 'until']) if (a[k] && (!DATE_RE.test(String(a[k])) || !Number.isFinite(Date.parse(String(a[k]))) || new Date(String(a[k])).toISOString().slice(0, 10) !== a[k])) return `${k} must be a real YYYY-MM-DD date`
+  if (a.since && a.until && String(a.since) > String(a.until)) return 'since must not be after until'
+  if (name === 'member_votes' && !a.person && !a.party) return 'member_votes needs person or party'
+  if (name === 'member_votes' && String(a.keyword).length < 3) return 'keyword must be at least 3 characters'
+  if (name === 'party_donations' && !a.party && !a.industry) return 'party_donations needs party or industry'
+  return null
 }
 export async function runTool(deps: ToolDeps, name: string, args: Json): Promise<ToolResult> {
   const spec = TOOL_SPECS.find((t) => t.name === name)
