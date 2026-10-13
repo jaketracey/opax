@@ -75,7 +75,7 @@ test('a matching map rule with zero targets requires every file and gives a reas
 });
 test('documentation-only lanes include every current and newly added donor, privacy and table file',t=>{
  const config=JSON.parse(readFileSync(join(tools,'gate-map.json')));
- const realRoot=resolve(tools,'../..'),selection=selectTests(realRoot,['briefs/note.md'],config);
+ const realRoot=git(process.cwd(),['rev-parse','--show-toplevel']),selection=selectTests(realRoot,['briefs/note.md'],config);
  for(const file of selectTests(realRoot,['unmapped/source'],config).files.filter(file=>/donor|privacy|table|dt-votes/.test(file)))assert.ok(selection.files.includes(file),file);
  assert.ok(selection.files.includes('portal/test/donor-view-index.test.mjs'));
  const root=repo(t);for(const file of ['donor-new','new-privacy','table-new','datatable-new','dt-votes-new','unrelated'])writeFileSync(join(root,'portal/test',file+'.test.mjs'),'');
