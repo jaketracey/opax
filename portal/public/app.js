@@ -3897,9 +3897,9 @@ function declaredPage(items, partyByName, { category = "", party = "", person = 
 }
 
 async function renderDeclaredPage(params, manageFocus) {
-  await growthModulesReady;
   const root = $("declared-list");
   root.innerHTML = `<p class="status">Opening the register ledger…</p>`;
+  await growthModulesReady;
   const [data, roster] = await Promise.all([loadRecentInterests(), loadParliamentarians(), loadPhotoMap()]);
   $("declared-updated").innerHTML = sourceLineHTML({updated:data?.meta?.generated || "",source:"Registers of interests"});
   const items = Array.isArray(data?.items) ? data.items : [];
@@ -5418,7 +5418,6 @@ async function renderPersonTopics(name, sections, onRecord = () => {}) {
 const DONOR_PLACEHOLDER = /\(name withheld\)|^Donor \d+\b/i;
 
 async function openSubject(kind, name, manageFocus, params = new URLSearchParams()) {
-  await Promise.allSettled([growthModulesReady,voteTablesReady]);
   if (kind === "donor" || kind === "campaigner") {
     destroySubjectMap();
     const body = $("subject-body");
@@ -5509,6 +5508,8 @@ async function openSubject(kind, name, manageFocus, params = new URLSearchParams
   // it is.
   if (kind === "electorate" || kind === "party") $("subject-title").innerHTML = `<span class="visually-hidden">Loading ${kind === "party" ? "party" : "electorate"}</span><span class="answer-skeleton subject-skel title-skel" aria-hidden="true"><i></i></span>`;
   if (manageFocus) $("subject-title")?.focus();
+  await Promise.allSettled([growthModulesReady,voteTablesReady]);
+  if (currentSubjectKey !== key) return;
 
   if (kind === "electorate") {
     try {
@@ -7135,7 +7136,6 @@ function renderDirectory(spec) {
 }
 
 async function openDirectory(kind, params, manageFocus) {
-  await growthModulesReady;
   const key = `dir:${kind}`;
   if (currentSubjectKey === key) {
     activeDirectory?.setParams(params);
@@ -7154,6 +7154,8 @@ async function openDirectory(kind, params, manageFocus) {
     </div>`;
   if (manageFocus) $("subject-title")?.focus();
   showPageLoader("subject-loader", "Opening the directory.");
+  await growthModulesReady;
+  if (currentSubjectKey !== key) return;
   const build = {
     person: buildPeopleDirectory, party: buildPartiesDirectory,
     donor: buildDonorsDirectory, campaigner: buildCampaignersDirectory,
@@ -8100,7 +8102,6 @@ function billPartyName(raw) {
 }
 
 async function openBillsIndex(params, manageFocus) {
-  await growthModulesReady;
   if (billView === "index") {
     activeDirectory?.setParams(params);
     if (manageFocus) $("subject-title")?.focus();
@@ -8116,6 +8117,8 @@ async function openBillsIndex(params, manageFocus) {
     </div>`;
   if (manageFocus) $("subject-title")?.focus();
   showPageLoader("bill-loader", "Opening the bill list.");
+  await growthModulesReady;
+  if (billView !== "index") return;
   const idx = await loadBillsIndex();
   if (billView !== "index") return;
   clearPageLoader("bill-loader");

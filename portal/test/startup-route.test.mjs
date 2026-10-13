@@ -37,3 +37,15 @@ test('late menus preserve default arguments, input state and accessible controls
   assert.equal(dom.window.document.querySelector('a').getAttribute('href'),'/methods');
   assert.equal(dom.window.document.querySelector('[data-pending-page-menu]'),null);
 });
+test('a pending growth module leaves a visible directory frame and cannot resurrect a departed route',async()=>{
+  let arrive;const ready=new Promise(resolve=>arrive=resolve);
+  const body={classList:{remove(){}},innerHTML:''};
+  const start=app.indexOf('async function openDirectory('),end=app.indexOf('\n}',start)+2;
+  let built=0;
+  const context={growthModulesReady:ready,currentSubjectKey:null,activeDirectory:null,destroySubjectMap(){},$:()=>body,esc:String,DIRECTORY_KINDS:{person:'Parliamentarians'},showPageLoader(){},buildPeopleDirectory:()=>{built++;},buildPartiesDirectory(){},buildDonorsDirectory(){},buildCampaignersDirectory(){}};
+  const open=runInNewContext(app.slice(start,end)+';openDirectory',context);
+  const pending=open('person',new URLSearchParams(),false);
+  assert.match(body.innerHTML,/Parliamentarians/);assert.equal(built,0);
+  context.currentSubjectKey=null;arrive();await pending;
+  assert.equal(built,0,'the late module does not restart an old navigation');
+});
