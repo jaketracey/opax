@@ -11,7 +11,7 @@ import {build} from 'esbuild';
 crypto.subtle.timingSafeEqual ??= timingSafeEqual;
 const folder=mkdtempSync(join(tmpdir(),'opax-deletion-test-'));
 const omitImages={name:'omit-image-renderer',setup(b){b.onResolve({filter:/^\.\/og-render$/},()=>({path:'images',namespace:'test'}));b.onLoad({filter:/.*/,namespace:'test'},()=>({contents:'export async function renderOgPng(){throw Error("No images in this test")}; export const renderOgJpeg=renderOgPng; export const renderStoryJpeg=renderOgPng;',loader:'js'}))}};
-await build({entryPoints:['community','voice','index'].map(n=>new URL('../src/'+n+'.ts',import.meta.url).pathname),outdir:folder,outExtension:{'.js':'.mjs'},bundle:true,platform:'node',format:'esm',plugins:[omitImages]});
+await build({entryPoints:['community','voice','index'].map(n=>new URL('../src/'+n+'.ts',import.meta.url).pathname),outdir:folder,outExtension:{'.js':'.mjs'},bundle:true,platform:'node',format:'esm',banner:{js:"import {createRequire as __opaxCreateRequire} from 'node:module';const require=__opaxCreateRequire(import.meta.url);"},plugins:[omitImages]});
 const {communityRoute}=await import(pathToFileURL(join(folder,'community.mjs')));
 const {reserveVoiceSession,claimVoiceSession,reconcileVoiceSession,expireVoiceSessions,voiceRoute}=await import(pathToFileURL(join(folder,'voice.mjs')));
 const {default:worker}=await import(pathToFileURL(join(folder,'index.mjs')));
