@@ -7,7 +7,7 @@ Census, joining the two by mesh block. All inputs are ABS, CC BY 4.0:
   ASGS Edition 3 allocation files SED_2025, SAL_2021, POA_2021 and LGA_2025;
   Census of Population and Housing: Mesh Block Counts, 2021.
 SED 2025 follows the VEC districts in force since 1 November 2022. Postal
-areas (POA) are the ABS's approximation of Australia Post postcodes.
+areas (POA) are the ABS's approximation of delivery postcodes.
 
     python3 -I scripts/build_vic_places.py <dir holding the five .xlsx files>
 """
@@ -110,7 +110,7 @@ def main():
     OUT.write_text(json.dumps({
         'source': 'Australian Bureau of Statistics', 'licence': 'CC BY 4.0',
         'attribution': 'Source: Australian Bureau of Statistics, ASGS Edition 3 allocation files and 2021 Census mesh block counts (CC BY 4.0).',
-        'note': 'Places are split by usual residents at the 2021 Census. Postcodes are ABS postal areas, an approximation of Australia Post postcodes.',
+        'note': 'Places are split by usual residents at the 2021 Census. Postcodes are ABS postal areas, an approximation of delivery postcodes.',
         'files': FILES, 'sha256': digest, 'districts': order,
         'columns': ['name', '[[district index, share in tenths of a percent]]', 'usual residents 2021'],
         **out,
