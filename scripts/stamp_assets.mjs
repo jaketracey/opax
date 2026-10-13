@@ -266,6 +266,9 @@ function syncHomeChrome(html, shell) {
   const drawer = shell.match(/<dialog class="nav-drawer[^"]*"[\s\S]*?<\/dialog>/)?.[0]
   const footer = shell.match(/<footer>[\s\S]*?<\/footer>/)?.[0]
   if (!header || !drawer || !footer) throw new Error('Shared site chrome is missing from index.html')
+  // nav.css is the band's only stylesheet (style.css lost the old masthead rules
+  // on 13 Oct); a merge that drops the link leaves the band as bare lists (14 Oct, /community).
+  if (!/<link rel="stylesheet" href="\/nav\.css(?:\?v=[A-Za-z0-9._-]*)?"/.test(html)) throw new Error('A page with the site chrome must link /nav.css')
   for (const [part, content] of [['header', `${header}\n${drawer}`], ['footer', footer]]) {
     const pattern = new RegExp(`<!-- site-${part}:start -->[\\s\\S]*?<!-- site-${part}:end -->`)
     if (!pattern.test(html)) throw new Error(`Homepage site-${part} markers are missing`)

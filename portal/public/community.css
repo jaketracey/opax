@@ -11,7 +11,9 @@
 :where(.community-main) h3{font:var(--type-subheading);color:var(--ink);margin:0 0 var(--space-tight)}
 :where(.community-main) p{font:var(--type-body);max-width:var(--size-readable);margin:0 0 var(--space-block)}
 :where(.community-main) :is(p,h3,a,strong){overflow-wrap:anywhere}
-.community-lede{color:var(--ink-soft)}
+/* A page's intro is a ui-lede in its ui-page-head (style.css); a lede that
+   stays inline (a member's bio, an account email) reads in the same ink. */
+.community-lede{color:var(--ink)}
 .community-form small,.community-small{font:var(--type-fine);color:var(--ink-soft)}
 .community-meta{font:var(--type-metadata);color:var(--ink-soft);margin:var(--space-line) 0}
 /* Action labels keep whole words; narrow groups reflow instead of squeezing controls. */
@@ -76,8 +78,13 @@
 .community-byline time{color:var(--ink-soft)}
 
 /* ---- Discussions feed. */
-.community-welcome{padding-bottom:var(--space-group);margin-bottom:var(--space-group);border-bottom:var(--border-hairline) solid var(--divider-default)}
-.community-welcome h1{max-width:24ch}
+/* Signed out, the page opens on a ui-page-head: the title, the lede at its
+   reading measure, then the one way in. The feed under it opens as a
+   ui-section does: the section step, one rule, the heading step. */
+.community-head-actions{display:flex;flex-wrap:wrap;align-items:center;gap:var(--space-heading);margin-top:var(--space-block)}
+.community-welcome+.community-feed-layout{padding-top:var(--space-heading);border-top:var(--border-hairline) solid var(--divider-default)}
+/* A head with a form straight under it keeps the block step, as a filter bar does. */
+.community-main .ui-page-head:has(+.community-form){margin-bottom:var(--space-block)}
 .community-feed-layout{display:grid;grid-template-columns:minmax(0,1fr) 250px;gap:var(--space-section);align-items:start}
 .community-sidebar{padding-left:var(--space-group);border-left:var(--border-hairline) solid var(--divider-subtle)}
 .community-sidebar section+section{margin-top:var(--space-group)}
@@ -97,7 +104,8 @@
 .community-social-count{display:inline-flex;gap:var(--space-tight);align-items:center;padding-right:var(--space-tight);min-height:var(--size-control-compact);font:var(--type-fine);color:var(--ink-soft)}
 
 /* ---- One discussion. Members' words are interface sans: they are not the record. */
-.community-discussion{max-width:50rem;margin-inline:auto}
+/* The discussion keeps a reading column, set on the masthead's left edge like every page. */
+.community-discussion{max-width:50rem}
 .community-discussion-header,.community-profile-header,.community-conversation-header{position:static;top:auto;z-index:auto;background:transparent;border:0;padding:0}
 .community-discussion-header{margin-bottom:var(--space-group)}
 .community-discussion-header h1{max-width:28ch}

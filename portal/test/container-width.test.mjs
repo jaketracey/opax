@@ -6,6 +6,9 @@
 // .wrap, and each page's panel and top-level blocks carry no max-width, width
 // or side margin, so they fill the wrap's content box at every width.
 // scripts/measure_container_edges.mjs measures the same edges in Chrome.
+// /community (14 Oct) is its own document, community.html: a merge dropped its
+// nav.css link, so the band drew as bare lists over the page. Its <main> is the
+// .wrap, and its heads are ui-page-heads on the same grid.
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
@@ -15,8 +18,8 @@ const read = (path) => readFileSync(new URL(path, import.meta.url), 'utf8');
 const css = read('../public/style.css') + '\n' + read('../public/money-explain.css');
 
 // Every rule, with the ones inside @media and @supports lifted to the top.
-function flatSheet() {
-  const { document } = new JSDOM(`<!doctype html><style>${css}</style>`).window;
+function flatSheet(text = css) {
+  const { document } = new JSDOM(`<!doctype html><style>${text}</style>`).window;
   const out = [];
   const MEDIA = 4, SUPPORTS = 12;
   const walk = (rules) => { for (const r of rules) [MEDIA, SUPPORTS].includes(r.type) ? walk(r.cssRules) : out.push(r.cssText); };
@@ -122,3 +125,36 @@ for (const [name, { panel, blocks }] of Object.entries(TEMPLATES)) {
     for (const selector of blocks) fills(window, selector);
   });
 }
+
+test('/community links the band\'s stylesheet and runs its page on the masthead\'s grid', () => {
+  const html = read('../public/community.html');
+  for (const sheet of ['style.css', 'ui-controls.css', 'nav.css', 'community.css']) {
+    assert.match(html, new RegExp(`<link rel="stylesheet" href="/${sheet.replace('.', '\\.')}\\?v=`), `community.html links ${sheet}`);
+  }
+  assert.ok(html.includes('<div class="wrap masthead">'), 'community.html wears the synced masthead');
+  assert.ok(html.includes('<main id="community-main" class="wrap community-main"'), 'its <main> is the page\'s .wrap');
+  const js = read('../public/community.js');
+  for (const markup of ['class="ui-page-head community-welcome"', 'class="ui-page-head community-list-head"', '<div class="community-discussion">']) {
+    assert.ok(js.includes(markup), `community.js still draws ${markup}`);
+  }
+
+  const sheet = flatSheet(read('../public/style.css') + '\n' + read('../public/nav.css') + '\n' + read('../public/community.css'));
+  const { window } = new JSDOM(`<!doctype html><html><head><style>${sheet}</style></head><body class="community-site">
+    <header class="site-header"><div class="wrap masthead"><a class="logo" href="/">OPAX</a></div></header>
+    <main id="community-main" class="wrap community-main"><nav class="ui-tabs community-nav"><a href="/community">Discussions</a></nav>
+      <div id="community-content"><div class="ui-page-head community-welcome"><h1>Title</h1><p class="ui-lede">Lede.</p></div>
+      <div class="community-feed-layout"><section></section><aside class="community-sidebar"></aside></div>
+      <div class="community-discussion"></div></div></main></body></html>`).window;
+  const head = window.getComputedStyle(window.document.querySelector('header .wrap'));
+  const main = window.getComputedStyle(window.document.querySelector('#community-main'));
+  for (const prop of ['maxWidth', 'paddingLeft', 'paddingRight', 'marginLeft', 'marginRight', 'width', 'boxSizing']) {
+    assert.equal(main[prop], head[prop], `#community-main ${prop} matches the masthead's`);
+  }
+  fills(window, '.community-nav');
+  fills(window, '.community-welcome');
+  fills(window, '.community-feed-layout');
+  // The lede keeps its reading measure; the discussion keeps a reading column on the left edge, never centred.
+  assert.equal(window.getComputedStyle(window.document.querySelector('.community-welcome .ui-lede')).maxWidth, 'var(--size-readable)');
+  const discussion = window.getComputedStyle(window.document.querySelector('.community-discussion'));
+  for (const side of ['marginLeft', 'marginRight']) assert.ok(['0', '0px', ''].includes(discussion[side]), `.community-discussion ${side} is ${discussion[side]}`);
+});

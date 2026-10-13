@@ -28,6 +28,7 @@ const PAGES = [
   ['sitting', '/sitting'], ['estimates', '/estimates/2026-10'], ['vic election', '/vic-election-2026'],
   ['electorate', '/subject/electorate/federal-representatives-nsw-bennelong'],
   ['search', '/search?q=housing'], ['ask', '/ask'], ['about', '/about'], ['methods', '/methods'], ['declared', '/declared'],
+  ['community', '/community'], ['community guidelines', '/community?view=guidelines'],
 ]
 
 const args = process.argv.slice(2)
