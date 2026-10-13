@@ -31,6 +31,7 @@ import { AUDIT_ID } from '../public/audit.js'
 import { runIndexNow, INDEXNOW_CRON } from './indexnow'
 import { type MoneyFacts, moneyOverviewPrompt, verifiedOverview } from './ask-money-overview'
 import {readGenerationCache, storeGenerationCache} from './generation-cache'
+import {speechPresentation, joinMixedSpeakers, type Participant} from './mixed-speakers'
 import { isWitness, isUnattributed, belongsToScope, scopeFilter, speakerHref, splitSpeakers, personScope, scopedCollaborators, type SpeechScope } from '../public/speech-attribution.js'
 /**
  * OPAX portal Worker — thin proxy over the Progress Agentic RAG knowledge box.
@@ -456,6 +457,9 @@ interface SearchResult {
   person_id: number | string | null
   /** 'member' | 'witness' | 'chair' | 'unknown' on committee transcripts; null elsewhere. */
   speaker_type: string | null
+  participants?: Participant[]
+  debate?: string
+  speaker_display?: string
   /** A witness's position and organisation from the hearing's attendance list. */
   role: string | null
   organisation: string | null
@@ -488,10 +492,10 @@ async function apiSearch(request: Request, url: URL, env: Env, ctx: ExecutionCon
   // inside one result set costs no upstream call and no rate-limit quota.
   const keyParams = (drop: string[]) => cacheKeyParams(url.searchParams, drop)
   // Retire windows/pages containing the old unnormalized, character-cut snippets.
-  const pageKey = cacheRequest('search', await sha256Hex(`${env.CACHE_EPOCH}\nyears-topics-v3-split-speakers-passage-v3\n${keyParams(['nocache'])}`))
+  const pageKey = cacheRequest('search', await sha256Hex(`${env.CACHE_EPOCH}\nyears-topics-v3-split-speakers-passage-v3-mixed-speakers-v1\n${keyParams(['nocache'])}`))
   const windowKey = cacheRequest(
     'search-window',
-    await sha256Hex(`${env.CACHE_EPOCH}\ntopics-v2-split-speakers-passage-v3\n${topK}\n${keyParams(['nocache', 'page', 'per', 'sort', 'top_k'])}`),
+    await sha256Hex(`${env.CACHE_EPOCH}\ntopics-v2-split-speakers-passage-v3-mixed-speakers-v1\n${topK}\n${keyParams(['nocache', 'page', 'per', 'sort', 'top_k'])}`),
   )
   const bypass = cacheBypass(request, url)
   if (!bypass) {
@@ -716,6 +720,7 @@ async function searchWindow(
       person_id: witness || outside ? null : typeof meta.person_id === 'number' || (typeof meta.person_id === 'string' && meta.person_id !== '') ? meta.person_id : null,
       speaker_type: witness ? 'witness' : label(resource, 'speaker_type'),
       speaker_attribution: witness || outside ? 'unattributed' : null,
+      ...speechPresentation(label(resource, 'speaker_type'), meta, resource.title ?? slug),
       role: typeof meta.witness_position === 'string' ? meta.witness_position : null,
       organisation: typeof meta.witness_organisation === 'string' ? meta.witness_organisation : null,
       // Divisions carry their date on origin.created rather than in metadata.
@@ -736,6 +741,7 @@ async function searchWindow(
     const separate = url.searchParams.get('attribution') === 'unattributed'
     for (let i = results.length - 1; i >= 0; i--) if (belongsToScope(results[i], attribution) === separate) results.splice(i, 1)
   }
+  await joinMixedSpeakers(results, env.ASSETS)
   results.sort((a, b) => b.score - a.score)
   // A full batch means retrieval hit its ceiling, not that the record is spent.
   return { total: results.length, truncated: (found.best_matches?.length ?? 0) >= topK, results }
@@ -1009,6 +1015,7 @@ function askPayload(answer: AskAnswer, records: AskRecords = { records: [], cove
         speaker_type: witness ? 'witness' : label(r, 'speaker_type'),
         person_id: witness || outside ? null : typeof meta.person_id === 'string' || typeof meta.person_id === 'number' ? meta.person_id : null,
         speaker_attribution: witness || outside ? 'unattributed' : null,
+        ...speechPresentation(label(r, 'speaker_type'), meta, r.title ?? r.slug ?? rid),
         state: label(r, 'state'),
         chamber: label(r, 'chamber'),
         date: (meta.date as string) ?? null,
@@ -1169,7 +1176,7 @@ function askCacheInput(input: AskInput, epoch: string): string | null {
     epoch,
     pipeline: ASK_PIPELINE_VERSION + (input.speaker && input.kind === 'speech' && isPositionBody(buildAskBody(input)) ? ':original-turns-v7' + (input.from || input.to ? ':dated-topic-v1' : '') : '')
       // Pay evidence arrived on 2026-09-17: answers written without it retire, and only those.
-      + (mentionsPay(input.question) ? ':pay-v1' : '') + ':witness-split-v1',
+      + (mentionsPay(input.question) ? ':pay-v1' : '') + ':witness-split-v1:mixed-speakers-v1',
     question: str(input.question).toLowerCase(),
     kind: kind && kind !== 'all' ? kind : 'all',
     speaker: str(input.speaker) ? canonicalSpeaker(input.speaker as string) : '',
@@ -1494,6 +1501,7 @@ async function apiAsk(request: Request, env: Env, ctx: ExecutionContext, prepare
     if (wantStream) return streamPositionAnswer(input, body, env, ctx, { onDone: store, cacheStatus: status, askedAs })
     try {
       const payload = await withNoAnswerLink(withAskedAs(await documentedPositionAnswer(input, body, env, ctx), askedAs), env)
+      await joinMixedSpeakers(payload.sources as SearchResult[], env.ASSETS)
       mark('position')
       store(payload)
       return timed(withCacheStatus(json(payload), status, false))
@@ -1540,6 +1548,7 @@ async function apiAsk(request: Request, env: Env, ctx: ExecutionContext, prepare
   payload = withAskedAs(payload, askedAs)
   payload = await overviewPayload(payload, overview, env, overviewIntent, overviewIntent || recentIntent)
   payload = await withNoAnswerLink(payload, env, input.speaker)
+  await joinMixedSpeakers(payload.sources as SearchResult[], env.ASSETS)
   store(payload)
   return timed(withCacheStatus(json(payload), status, false))
 }
@@ -2340,6 +2349,7 @@ function apiAskStream(
         payload = withAskedAs(payload, opts.askedAs)
         payload = await overviewPayload(payload, opts.overview, env, opts.overviewIntent, opts.overviewIntent || opts.recentIntent)
         payload = await withNoAnswerLink(payload, env, opts.speaker)
+        await joinMixedSpeakers(payload.sources as SearchResult[], env.ASSETS)
         await send('done', payload)
         // Cached from the `done` payload — the same bytes the reader got —
         // even when the reader left early (the answer was paid for).
@@ -2392,6 +2402,7 @@ function streamPositionAnswer(
       try {
         await send('status', { phase: 'searching' })
         const payload = await withNoAnswerLink(withAskedAs(await documentedPositionAnswer(input, body, env, ctx, send), opts.askedAs), env)
+        await joinMixedSpeakers(payload.sources as SearchResult[], env.ASSETS)
         await send('done', payload)
         // Cached from the `done` payload even when the reader left early.
         opts.onDone?.(payload)
@@ -2706,7 +2717,7 @@ async function apiResource(request: Request, url: URL, slug: string, env: Env, c
       }
     }
   }
-  const cacheKey = cacheRequest('resource-body-v3-witness-passage-v3', `${encodeURIComponent(env.CACHE_EPOCH)}/${slug}`)
+  const cacheKey = cacheRequest('resource-body-v3-witness-passage-v3-mixed-speakers-v1', `${encodeURIComponent(env.CACHE_EPOCH)}/${slug}`)
   const bypass = cacheBypass(request, url)
   if (!bypass) {
     const hit = await caches.default.match(cacheKey)
@@ -2720,6 +2731,7 @@ async function apiResource(request: Request, url: URL, slug: string, env: Env, c
   if (res.status === 404) return json({ error: 'not found' }, 404)
   if (!res.ok) return json({ error: `resource fetch failed (${res.status})` }, 502)
   const r = (await res.json()) as {
+    id?: string
     title?: string
     origin?: { collaborators?: string[]; url?: string }
     usermetadata?: { classifications?: { labelset: string; label: string }[] }
@@ -2765,6 +2777,9 @@ async function apiResource(request: Request, url: URL, slug: string, env: Env, c
   // Machine summary written by the enrichment pass (ask-task, destination
   // "summary"): lands as the text field "da-summary-t-body". Optional.
   const brief = texts['da-summary-t-body']?.value?.body?.trim() || null
+  const [presentation] = await joinMixedSpeakers([{resource: r.id || '', speaker_type: labels.speaker_type,
+    ...speechPresentation(labels.speaker_type, metadata, r.title || slug)}], env.ASSETS)
+  if (labels.speaker_type === 'multi_speaker') { delete labels.party; metadata.person_id = null; metadata.electorate = null }
   const out = json({
     slug,
     title: r.title ?? slug,
@@ -2774,6 +2789,7 @@ async function apiResource(request: Request, url: URL, slug: string, env: Env, c
     labels, // kind / source / party / state / chamber — for chips + provenance caveats
     topics, // machine topic labels (multi-label; empty until the pass reaches this doc)
     metadata,
+    ...presentation,
     summary: brief,
     text: labels.kind === 'bill_text' || slug.startsWith('bill-text-') ? bodyText : normalizePassage(bodyText),
   })
@@ -5030,6 +5046,8 @@ async function docMeta(slug: string, url: URL, request: Request, env: Env, ctx: 
     title: string
     speaker: string | null
     speaker_attribution?: string | null
+    debate?: string
+    speaker_display?: string
     labels: Record<string, string>
     metadata: Record<string, unknown>
     summary: string | null
@@ -5113,7 +5131,8 @@ async function docMeta(slug: string, url: URL, request: Request, env: Env, ctx: 
       jsonLd: { '@context': 'https://schema.org', '@type': 'DigitalDocument', name: r.title, description, url: canonical, publisher },
       card: { kicker: 'Original bill text', title: r.title, lines: ['Read the bill and its source version on OPAX.'] } }
   }
-  const speaker = r.speaker ?? 'Unknown speaker'
+  const mixed = r.labels.speaker_type === 'multi_speaker'
+  const speaker = mixed ? 'Several speakers' : r.speaker ?? 'Unknown speaker'
   // A committee transcript's speaker may be a witness, named as the transcript
   // names them (often surname only); their words are evidence, not a speech.
   const committee = r.labels.speaker_type === 'witness' || /committee/.test(String(r.labels.chamber ?? ''))
@@ -5148,7 +5167,7 @@ async function docMeta(slug: string, url: URL, request: Request, env: Env, ctx: 
       title: speaker,
       // The KB's title for a speech is "speaker, date", which the card already
       // says: the second line is the summary when the record has one, else the length.
-      lines: [[r.labels.party, chamber].filter(Boolean).join(' · '), r.summary?.trim() || `${words[0].toUpperCase()}${words.slice(1)} from ${recordOf}.`],
+      lines: [mixed ? r.debate || 'Parliamentary debate' : [r.labels.party, chamber].filter(Boolean).join(' · '), r.summary?.trim() || `${words[0].toUpperCase()}${words.slice(1)} from ${recordOf}.`],
       ...(saRestricted ? {sourceNotice:{label:SA_EXCERPT_LABEL,url:saOfficialUrl(r)}} : {}),
       dot: partyColour(moneyData, r.labels.party),
       portraitId,

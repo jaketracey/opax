@@ -1,9 +1,11 @@
+import {speechPresentation, joinMixedSpeakers} from '../src/mixed-speakers.ts';
+const runInNewContext = (code, context = {}, options) => { context.speechPresentation ??= speechPresentation; context.joinMixedSpeakers ??= joinMixedSpeakers; return baseVM(code, context, options); };
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import {createHash} from 'node:crypto';
 import {build} from 'esbuild';
-import {runInNewContext} from 'node:vm';
+import {runInNewContext as baseVM} from 'node:vm';
 import ts from 'typescript';
 import * as passage from '../src/passage-text.ts';
 import {SA_EXCERPT_LABEL, isSaHansard, saExcerpt, saDisplayRecord, saDisplayPayload} from '../public/sa-hansard.js';
