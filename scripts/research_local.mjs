@@ -119,16 +119,18 @@ try {
     const answer = String(d.answer ?? d.text ?? d.error ?? '').replace(/\s+/g, ' ');
     console.log(`  answer: ${answer.slice(0, 420)}${answer.length > 420 ? '…' : ''}`);
     if (r.rejections) console.log(`  rejected: ${r.rejections.join(" | ")}`);
+    const a = r.answer_stats;
+    if (a) console.log(`  points: ${a.points_kept}/${a.points_in} kept (${a.mode ?? 'points'})  repairs ${JSON.stringify(a.repairs)}  drops ${JSON.stringify(a.drops)}`);
     console.log(`  checks: loop=${c.loop} quotes=${c.quotes} verbatim=${c.verbatim} unbound-markers=${c.unbound} placeholder=${c.placeholder}`);
-    rows.push({id: q.id, kind: q.kind, s: (ms / 1000).toFixed(1), mode: r.mode ?? '-', failure: r.failure ?? '', cost: r.cost_usd ?? null, ...c});
+    rows.push({id: q.id, kind: q.kind, s: (ms / 1000).toFixed(1), mode: r.mode ?? '-', failure: r.failure ?? '', cost: r.cost_usd ?? null, kept: r.answer_stats ? `${r.answer_stats.points_kept}/${r.answer_stats.points_in}` : '-', ...c});
     dump.push({q, status, ms, payload: d});
   }
 } finally {
   if (server && !keep) server.stop();
 }
-console.log('\nid    kind          s     mode     failure            $       quotes verbatim unbound placeholder');
+console.log('\nid    kind          s     mode     failure            $       kept   quotes verbatim unbound placeholder');
 for (const r of rows)
-  console.log(`${r.id.padEnd(5)} ${r.kind.padEnd(13)} ${String(r.s).padStart(5)} ${r.mode.padEnd(8)} ${String(r.failure).padEnd(18)} ${r.cost == null ? '   -   ' : r.cost.toFixed(4)}  ${String(r.quotes).padStart(6)} ${String(r.verbatim).padStart(8)} ${String(r.unbound).padStart(7)} ${r.placeholder}`);
+  console.log(`${r.id.padEnd(5)} ${r.kind.padEnd(13)} ${String(r.s).padStart(5)} ${r.mode.padEnd(8)} ${String(r.failure).padEnd(18)} ${r.cost == null ? '   -   ' : r.cost.toFixed(4)}  ${String(r.kept).padStart(5)} ${String(r.quotes).padStart(6)} ${String(r.verbatim).padStart(8)} ${String(r.unbound).padStart(7)} ${r.placeholder}`);
 const loops = rows.filter(r => r.mode === 'loop').length, cost = rows.reduce((a, r) => a + (r.cost ?? 0), 0);
 console.log(`loop answered ${loops}/${rows.length}  total $${cost.toFixed(4)}  model ${model}`);
 if (jsonOut) writeFileSync(jsonOut, JSON.stringify(dump, null, 1));

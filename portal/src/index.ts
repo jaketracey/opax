@@ -90,7 +90,7 @@ import { recordAgenticRun } from './agentic-monitor'
 import { AGENTIC_TOOLS_VERSION } from './agentic-tools'
 import { createOpenRouter } from '@openrouter/ai-sdk-provider'
 import { createResearch, researchLimits } from './research-loop'
-import { recordResearchComparison, recordResearchFailure } from './research-monitor'
+import { recordResearchAnswer, recordResearchComparison, recordResearchFailure } from './research-monitor'
 import { withPlannerResearch, withResearchEval } from './research-response'
 import { researchDailyBudget, researchReservationUsd, unmeteredResearchBudget } from './research-budget'
 import { ResearchError, type ResearchPayload } from './research-types'
@@ -5961,6 +5961,7 @@ function agenticDeps(env: Env, ctx: ExecutionContext, signal?: AbortSignal, inpu
         },
       }),
       onResearchFailure: error => recordResearchFailure(String(input.question ?? ''), error),
+      onResearchAnswer: tally => recordResearchAnswer(String(input.question ?? ''), tally),
     } : {}),
     toolEnv: { ASSETS: env.ASSETS, TABLE_DB: env.TABLE_DB, COMMUNITY_ORIGIN: env.COMMUNITY_ORIGIN },
     generate: async (query, prompt, maxTokens, signal) => {

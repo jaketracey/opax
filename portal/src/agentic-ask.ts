@@ -14,6 +14,7 @@
 import { TOOL_SPECS, TOPICS, STATES, CHAMBERS, TERMS, runTool, validToolArgs, AGENTIC_TOOLS_VERSION, type ToolDeps, type ToolResult, type Cite } from './agentic-tools'
 import { isElectorateDataQuestion, electoratePlan } from './agentic-tool-electorates'
 import { getAskTool } from './tools'
+import type { AnswerTally } from './research-evidence'
 import { ResearchError, researchSources, type Research, type ResearchPayload, type QualitativeAnswer, type ResearchResult } from './research-types'
 
 export const AGENTIC_PROMPT_VERSION = 'agentic-ask-7-research'
@@ -383,6 +384,8 @@ export interface AgenticDeps extends ToolDeps {
   research?: Research
   plannerTrail?: boolean
   onResearchFailure?: (error: ResearchError) => Promise<void>
+  /** Labels and counts of a loop answer's repairs and drops, for monitoring. */
+  onResearchAnswer?: (tally: AnswerTally) => Promise<void>
 }
 export interface StepEvent { id: number; label: string; arg?: string; state: 'running' | 'done' | 'failed' | 'error'; ms?: number; tool?: string; round?: number; results?: number }
 export interface AgenticPayload {
@@ -560,9 +563,10 @@ async function runAgenticAttempt(question: string, deps: AgenticDeps, progress: 
     plan = { shape: classifyAgentic(question).shape ?? 'ranking', steps: researched.steps }
     if (researched.qualitative) {
       timings.plan_ms = Date.now() - t0
+      if (researched.answer) await deps.onResearchAnswer?.(researched.answer).catch(() => {})
       await progress('status', { phase: 'writing' })
       return base({ answered: true, answer: researched.qualitative.answer, answer_source: 'model', qualitative: researched.qualitative,
-        research: { mode: 'loop', rounds: researched.rounds, trail: researchTrail(events, steps), turns: researched.turns, cached_input_by_turn: researched.turns?.map(turn => turn.cached_input), sources: researched.qualitative.sources.map(s => ({ title: s.title, url: s.url, kind: s.kind, ...(s.date ? { date: s.date } : {}), ...(s.speaker ? { speaker: s.speaker } : {}) })) } })
+        research: { mode: 'loop', rounds: researched.rounds, trail: researchTrail(events, steps), turns: researched.turns, cached_input_by_turn: researched.turns?.map(turn => turn.cached_input), ...(researched.answer ? { answer_stats: researched.answer } : {}), sources: researched.qualitative.sources.map(s => ({ title: s.title, url: s.url, kind: s.kind, ...(s.date ? { date: s.date } : {}), ...(s.speaker ? { speaker: s.speaker } : {}) })) } })
     }
   }
   let plannerFailed = false

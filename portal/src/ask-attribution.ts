@@ -6,7 +6,7 @@ const escape = (value: string) => value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
 // The export also has partial bylines ("Liddle", "David", "On"). They
 // are aliases or transcription fragments, not additional roster identities.
 const personRoster = (roster: unknown) => ({ people: ((roster as { people?: { name: string }[] } | null)?.people ?? []).filter(p => typeof p.name === 'string' && p.name.trim().split(/\s+/).length >= 2) })
-function personMentions(text: string, roster: unknown) {
+export function personMentions(text: string, roster: unknown) {
   const people = personRoster(roster).people
   const mentions: { name: string; start: number; end: number }[] = []
   const folded = text.toLowerCase()

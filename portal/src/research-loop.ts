@@ -5,7 +5,7 @@ import { classifyAgentic, factSheet, resolveArgs, type PlanStep } from './agenti
 import { firstSpeechTurn } from './position-evidence'
 import type { ResearchContext } from './research-types'
 import { originalContext } from './ask-evidence'
-import { verifyResearchAnswer, verifyResearchPoints, unresolvedPersonAsked, type AnswerDraft, type AnswerPoint } from './research-evidence'
+import { verifyResearchAnswer, verifyResearchPoints, unresolvedPersonAsked, recordPassagesAnswer, emptyTally, type AnswerDraft, type AnswerPoint } from './research-evidence'
 import { ResearchError, type Passage, type QualitativeAnswer, type Research, type ResearchStats, type ResearchStop } from './research-types'
 import type { ResearchDailyBudget, ResearchReservation } from './research-budget'
 import { researchReservationUsd, researchTurnReservationUsd } from './research-budget'
@@ -176,7 +176,7 @@ export function createResearch(options: ResearchOptions): Research {
             if (!originalContext(id) || id.split('/')[0] !== rid || typeof para.text !== 'string' || picked.length >= limit) continue
             const text = options.evidenceText?.(resource, para.text) ?? para.text
             if (!text.trim()) continue
-            const passage: Passage = { id, resource: rid, slug: resource.slug, title: String(resource.title ?? resource.slug), text: text.slice(0, 1200), url: `${deps.origin ?? 'https://opax.com.au'}/doc/${encodeURIComponent(resource.slug)}`, kind: String(meta.kind ?? 'speech'),
+            const passage: Passage = { id, resource: rid, slug: resource.slug, title: String(resource.title ?? resource.slug), text: text.slice(0, 1200), query: args.query, url: `${deps.origin ?? 'https://opax.com.au'}/doc/${encodeURIComponent(resource.slug)}`, kind: String(meta.kind ?? 'speech'),
               ...(typeof origin.created === 'string' ? { date: origin.created.slice(0, 10) } : {}), ...(Array.isArray(origin.collaborators) && typeof origin.collaborators[0] === 'string' ? { speaker: origin.collaborators[0] } : {}) }
             picked.push(passage)
           }
@@ -278,9 +278,14 @@ export function createResearch(options: ResearchOptions): Research {
         const reasons: string[] = [], why = (reason: string) => { if (reasons.length < 12) reasons.push(reason) }
         // Up to 15 record facts are rendered, in the order chosen.
         const facts = args.facts == null ? [] : idList(args.facts).length ? factLines(idList(args.facts).slice(0, 15), why) : (why('invalid fact ids'), [])
-        const points = Array.isArray(args.points) ? verifyResearchPoints(args.points, passages, question, context.named, options.positionQuery, roster, why)
+        const tally = stats.answer = emptyTally()
+        const points = Array.isArray(args.points) ? verifyResearchPoints(args.points, passages, question, context.named, options.positionQuery, roster, why, tally)
           : typeof args.text === 'string' && Array.isArray(args.citations) ? verifyResearchAnswer(args as AnswerDraft, passages, question, context.named, options.positionQuery, roster, why) : null
         stats.rejections!.push(...reasons.slice(0, 24 - stats.rejections!.length))
+        // Nothing written survived: the best verified passages answer in their own words, with no further turn.
+        const record = !facts.length && !points ? recordPassagesAnswer(passages, question, context.named, options.positionQuery) : null
+        if (record) { tally.mode = 'record_list'; qualitative = compose([], record); finished = true; return { tool: 'answer', ok: true, data: { passages: qualitative.sources }, cite: [], notes: [] } }
+        if (!points && facts.length) tally.mode = 'facts'
         if (!facts.length && !points) return errorResult('answer', `grounding failed (${reasons.join('; ') || 'no supported point or fact'}); repair once with record fact ids, or claims that restate a search passage and quotes copied exactly from it`)
         qualitative = compose(facts, points)
         finished = true
