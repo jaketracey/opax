@@ -188,7 +188,7 @@ test('stats keeps its partial cold response but never overwrites complete stale 
   assert.equal(h.rows.get('https://opax.com.au/api/stats'), previous);
 });
 
-test('existing five-minute scheduled handler force-warms stats, topics and all 21 topics with at most four upstream calls', async () => {
+test('existing five-minute scheduled handler warms every stale or missing aggregate with at most four upstream calls; fresh entries cost nothing', async () => {
   let active = 0, peak = 0;
   // Keep connections counted until the response body is consumed, as Workers does.
   const tracked = harness({upstream: async path => {
@@ -202,7 +202,9 @@ test('existing five-minute scheduled handler force-warms stats, topics and all 2
   tracked.seed('/api/stats', {old: true}, 0); tracked.seed('/api/topics', {old: true}, 0);
   await tracked.api.worker.scheduled({cron: '*/5 * * * *', scheduledTime: Date.now()}, tracked.env, tracked.ctx);
   assert.equal(peak, 4); assert.equal(active, 0);
-  assert.equal(tracked.calls.length, 3 + 2 + 21 * 4); assert.equal(tracked.writes.length, 23);
+  // Stats and topics were seeded fresh (age 0), so only the 21 missing topic pages are built.
+  assert.equal(tracked.calls.length, 21 * 4); assert.equal(tracked.writes.length, 21);
+  assert.deepEqual(await tracked.rows.get('https://opax.com.au/api/stats').clone().json(), {old: true});
   assert.deepEqual(tracked.jobs, ['indexnow', 'expiry', 'email']);
   assert.equal(tracked.waits.length, 0, 'cron awaits the whole warm-up');
   for (const slug of tracked.api.TOPIC_SLUGS) assert.ok(tracked.rows.has('https://opax.com.au/api/topic/' + slug));
@@ -246,6 +248,7 @@ test('overlapping warm-up ticks share one run per isolate and release the lock w
   const second = h.api.warmCatalog(h.env, h.ctx);
   gate.resolve(); await Promise.all([first, second]);
   assert.equal(h.calls.length, 89); assert.equal(h.writes.length, 23);
+  // A later tick finds every entry fresh and makes no upstream calls.
   await h.api.warmCatalog(h.env, h.ctx);
-  assert.equal(h.calls.length, 178); assert.equal(h.writes.length, 46);
+  assert.equal(h.calls.length, 89); assert.equal(h.writes.length, 23);
 });

@@ -3136,9 +3136,11 @@ async function cachedJson(
     cachedJsonRefreshes.set(cacheKey.url, task)
     return task
   }
-  if (cached && !refresh) {
-    const builtAt = Date.parse(cached.headers.get('x-opax-cached-at') ?? '')
-    const stale = !Number.isFinite(builtAt) || Date.now() - builtAt >= maxAge * 1000
+  const builtAt = Date.parse(cached?.headers.get('x-opax-cached-at') ?? '')
+  const stale = !Number.isFinite(builtAt) || Date.now() - builtAt >= maxAge * 1000
+  // The scheduled warm-up rebuilds only entries past their soft TTL, so a fresh
+  // entry costs it no upstream facet queries.
+  if (cached && (!refresh || !stale)) {
     if (stale) {
       ctx.waitUntil(rebuild().then(() => {}, () => {
         console.error(JSON.stringify({ event: 'catalog_refresh_failed', path: cachePath }))
