@@ -1526,7 +1526,7 @@ export function mountTimeMachine(container, opts = {}) {
       for (const slot of scope.querySelectorAll('.tm-portrait[data-speaker]')) {
         const id = map && map[String(slot.dataset.speaker).trim().toLowerCase()]
         // No portrait on file: an empty ring holds the column so names align.
-        if (!id) { if (slot.closest('.speech-participant')) slot.remove(); else { slot.classList.add('tm-portrait-none'); slot.removeAttribute('data-speaker') } continue }
+        if (!id) { slot.classList.add('tm-portrait-none'); slot.removeAttribute('data-speaker'); continue }
         const size = slot.classList.contains('tm-portrait-sm') ? '24' : '32'
         const img = el('img', null, { src: `/photos/${id}.webp`, alt: '', width: size, height: size, loading: 'lazy' })
         slot.appendChild(img)
