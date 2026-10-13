@@ -3379,7 +3379,7 @@ mark.privacy-confirm {
 @media (min-width: 701px) {
   .subject-person .subject-head:has(.subject-portrait) {
     grid-template-columns: max-content minmax(0, 1fr) auto;
-    grid-template-areas: "portrait title actions" "portrait meta meta" "portrait source source" "portrait fits fits" "portrait caveat caveat";
+    grid-template-areas: "portrait title actions" "portrait meta meta" "portrait source source" "portrait heldback heldback" "portrait chair chair" "portrait fits fits" "portrait caveat caveat";
     align-items: start; row-gap: 0;
   }
   .subject-person .subject-head:has(.subject-portrait) .subject-portrait { grid-area: portrait; grid-row: 1 / -1; align-self: start; }
@@ -3388,6 +3388,8 @@ mark.privacy-confirm {
   .subject-person .subject-head:has(.subject-portrait) > .ui-source { grid-area: source; }
   .subject-person .subject-head:has(.subject-portrait) > .person-caveat { grid-area: caveat; }
   .subject-person .subject-head:has(.subject-portrait) > .person-fits { grid-area: fits; }
+  .subject-person .subject-head:has(.subject-portrait) > .person-held-back { grid-area: heldback; }
+  .subject-person .subject-head:has(.subject-portrait) > .person-chair-role { grid-area: chair; }
   .subject-person .subject-head:has(.subject-portrait) > .person-actions { grid-area: actions; margin: 0; align-self: center; justify-content: flex-end; }
 }
 .person-caveat { margin: var(--space-tight) 0 0; max-width: 68ch; font: var(--type-fine); color: var(--ink-soft); }
@@ -6139,3 +6141,13 @@ html:not([data-chat="docked"]) #panel-chat.has-person-context .chat-composer { m
 .ask-person-context nav { display: grid; gap: 8px; border-top: 1px solid var(--divider-subtle); margin-top: 20px; padding-top: 16px; font: var(--type-fine); }
 .ask-person-context nav a { min-height: 28px; }
 .ask-person-context .fineprint { color: var(--ink-soft); margin-top: 20px; }
+
+/* Mixed source spans have participants, never a personal byline. */
+.speech-identity { display: inline-flex; align-items: center; gap: .45rem; vertical-align: middle; }
+.speech-identity .speech-group-avatar { width: 24px; height: 24px; flex-shrink: 0; }
+.topic-arc-face-group { display: flex; align-items: center; justify-content: center; color: var(--ink-soft); background: var(--paper-sunken); }
+.speech-participants { display: block; margin-top: .3rem; line-height: 1.7; font-size: .875rem; overflow-wrap: anywhere; }
+.speech-participant { display: inline-flex; align-items: center; gap: .25rem; vertical-align: middle; flex-wrap: wrap; }
+.speech-participant .meta-portrait { display: inline-block; flex-shrink: 0; width: 24px; height: 24px; }
+.speech-participant .meta-portrait:empty { display: none; }
+.speech-participant-role { color: var(--ink-soft); }

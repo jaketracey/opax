@@ -1,0 +1,23 @@
+// Offline evidence generator: synthetic counts, stubbed planner, deterministic answer, no fetch.
+import {build} from 'esbuild';
+import {readFileSync,mkdirSync,writeFileSync} from 'node:fs';
+import {fileURLToPath} from 'node:url';
+import {resolve,dirname} from 'node:path';
+import {JSDOM} from 'jsdom';
+import vm from 'node:vm';
+import {question,fixtureDeps} from './agentic-route.mjs';
+const root=resolve(dirname(fileURLToPath(import.meta.url)),'../../..');
+const load=async file=>{const b=await build({entryPoints:[resolve(root,file)],bundle:true,write:false,platform:'node',format:'esm'});return import('data:text/javascript;base64,'+Buffer.from(b.outputFiles[0].text).toString('base64'))};
+const {runAgentic}=await load('portal/src/agentic-ask.ts'),{agenticAskPayload}=await load('portal/src/agentic-response.ts');
+const frames=[];const send=async(event,data)=>frames.push({event,data});await send('status',{phase:'searching'});
+const run=await runAgentic(question,fixtureDeps,send);const payload=agenticAskPayload(run,question);await send('done',payload);
+const dir=resolve(root,'docs/evidence');mkdirSync(dir,{recursive:true});
+writeFileSync(resolve(dir,'agentic-ask-route-fixture.sse'),frames.map(f=>`event: ${f.event}\ndata: ${JSON.stringify(f.data)}\n\n`).join(''));
+const app=readFileSync(resolve(root,'portal/public/app.js'),'utf8'),slice=(a,b)=>app.slice(app.indexOf(a),app.indexOf(b,app.indexOf(a)));
+const dom=new JSDOM('<main id="ask-result"><div id="answer" class="answer-prose"></div></main>',{url:'https://opax.com.au'});
+const context={document:dom.window.document,NodeFilter:dom.window.NodeFilter,URL,Node:dom.window.Node,tableFit:{observe(){}},displayTitle:s=>s.title,renderEvidenceAnswer(){throw Error('ordinary answer required')}};
+vm.createContext(context);vm.runInContext(slice('function normaliseAnswerBullets','function safeAnswerLink')+slice('function safeAnswerLink','function renderEvidenceAnswer')+slice('function renderAnswer(container','function renderAskDateRuler'),context);
+const box=context.document.querySelector('#answer');box.askEvidence=payload.sources.map(s=>({...s,answerRanges:Object.entries(payload.citations).filter(([key])=>key.split('/')[0]===s.resource).flatMap(([,v])=>v)}));context.renderAnswer(box,payload.answer,payload);
+writeFileSync(resolve(dir,'agentic-ask-route-fixture.html'),'<!doctype html><html lang="en"><meta charset="utf-8"><title>Ask fixture</title><link rel="stylesheet" href="https://opax.com.au/app.css"><body>'+context.document.body.innerHTML+'</body></html>');
+writeFileSync(resolve(dir,'agentic-ask-route-fixture.txt'),payload.answer+'\n');
+console.log(JSON.stringify({frames:frames.length,steps:payload.agentic.steps.length,answered:payload.answered}));
