@@ -25,6 +25,7 @@ import { normalizePassage, passageWindow } from './passage-text'
 import { instrumentPage, instrumentReader } from './instruments'
 import { auditPage, auditReader } from './audit'
 import { hubPage } from './hubs'
+import { VIC_ELECTION_AUTHORISATION_LINE, vicElectionFooterHTML } from '../public/vic-election.js'
 import { vicElectionPage, type VicElection } from './vic-election'
 import { vicElectionEnabled, vicElectionPublicationPath, vicElectionDiscovery, vicElectionLlms, VIC_ELECTION_ASSET, VIC_ELECTION_SITEMAP } from '../public/vic-election.js'
 import { AUDIT_ID } from '../public/audit.js'
@@ -4112,8 +4113,9 @@ async function buildRouteMeta(route: SeoRoute, url: URL, request: Request, env: 
   switch (route.kind) {
     case 'hub': {
       if (route.hub === 'vic-election') {
-        const page = await vicElectionPage(route.id,<T>(path: string) => assetJson<T>(env,path),env)
-        return base({title:page.title+' · OPAX',description:page.description,prerender:page.html,jsonLd:page.jsonLd,status:page.status,card:'card' in page ? page.card : null})
+        // ?place= is the seat finder: a search result, never indexed; its canonical is the hub.
+        const page = await vicElectionPage(route.id,<T>(path: string) => assetJson<T>(env,path),env,url.searchParams.get('place'))
+        return base({title:page.title+' · OPAX',description:page.description,prerender:page.html,jsonLd:page.jsonLd,status:page.status,card:'card' in page ? page.card : null,...('noindex' in page && page.noindex ? {noindex:true} : {})})
       }
       const people = route.hub === 'sitting' && route.id ? await loadPeople(env) : null
       const check = memoisedCheck(await tablePrivacyCheck(env.ASSETS))
@@ -4467,8 +4469,8 @@ async function electorateMeta(name: string, url: URL, env: Env): Promise<PageMet
   return {
     title: `${e.name} · Electorate · OPAX`, description: clip(facts), canonical, ogType: 'website', status: 200,
     jsonLd: { '@context': 'https://schema.org', '@type': 'Place', name: e.name, identifier: e.electorate_id, url: canonical, description: facts },
-    prerender: prerenderBlock(e.name, facts),
-    card: { kicker: 'Electorate', title: e.name, lines: [representation, `${e.election_count} indexed election contests · ${e.state_code.toUpperCase()}`] },
+    prerender: prerenderBlock(e.name, facts) + (e.jurisdiction === 'vic' ? vicElectionFooterHTML() : ''),
+    card: { kicker: 'Electorate', title: e.name, lines: [representation, `${e.election_count} indexed election contests · ${e.state_code.toUpperCase()}`], ...(e.jurisdiction === 'vic' ? {authorisation: VIC_ELECTION_AUTHORISATION_LINE} : {}) },
   }
 }
 
@@ -4645,7 +4647,7 @@ async function personMeta(name: string, url: URL, env: Env): Promise<PageMeta> {
     return { title, description, canonical, ogType: 'profile', status: 200,
       jsonLd: { '@context': 'https://schema.org', '@type': 'Person', name: display, url: canonical, jobTitle: 'Parliamentarian' },
       prerender: prerenderBlock(display, description),
-      card: { kicker: 'Parliamentarian', title: display, lines: [description], portraitId, credit } }
+      card: { kicker: 'Parliamentarian', title: display, lines: [description], portraitId, credit, ...(p.representation?.some(r => r.jurisdiction === 'vic') ? {authorisation: VIC_ELECTION_AUTHORISATION_LINE} : {}) } }
   }
   const federal = p.states.includes('federal')
   // The title a search result shows: their role and seat as the parliament
@@ -4680,6 +4682,7 @@ async function personMeta(name: string, url: URL, env: Env): Promise<PageMeta> {
       title: display,
       lines: [[p.party, where].filter(Boolean).join(' · '), ...(p.speech_scope ? [] : [`${p.speech_count_basis ? 'Transcript aggregate' : 'Collected records'}: ${years(p.first, p.last)}`])],
       ...(p.speech_count_basis ? {} : { stat: { value: num(p.speeches ?? 0), label: 'speeches in the Opax record' } }),
+      ...(p.representation?.some(r => r.jurisdiction === 'vic') ? {authorisation: VIC_ELECTION_AUTHORISATION_LINE} : {}),
       dot: partyColour(moneyData, p.party),
       portraitId,
       credit,

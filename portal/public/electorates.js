@@ -1,3 +1,4 @@
+import { vicElectionFooterHTML } from './vic-election.js';
 import { personUrl, partyUrl } from './canonical-urls.js?v=225d5915ea';
 /* Electorate reference pages. Independently loadable; no funding-data dependency. */
 import { shortDate } from './format.js';
@@ -195,7 +196,7 @@ export function profileHTML(detail, on = '') {
       ${line(service, { source: 'Service records', notes: ['Dated service records, newest first. Party changes may create a new period. Open-ended records are not proof of current membership.'] })}` : '<p class="el-empty">Historical service has not yet been imported.</p>'}</section>
     <section id="el-context" class="el-section"><h3 class="subject-section-title">Census context</h3>${detail.demographics.length ? `${detail.demographics.map(censusHTML).join('')}
       ${line(census, { source: detail.demographics.map((d) => d.vintage).join('; '), notes: detail.demographics.map((d) => esc(d.note)) })}` : '<p class="el-empty">Census indicators have not yet been imported for this electorate.</p>'}</section>
-    ${detail.relations.length ? `<section class="el-section"><h3 class="subject-section-title">Related constituencies</h3><ul class="el-related">${detail.relations.map((r) => `<li><a href="/subject/electorate/${esc(r.related.slug)}">${esc(r.related.name)}</a> · ${esc(CHAMBERS[r.related.chamber] || r.related.chamber)}${relatedAsAt(r.vintage)}</li>`).join('')}</ul></section>` : ''}`;
+    ${detail.relations.length ? `<section class="el-section"><h3 class="subject-section-title">Related constituencies</h3><ul class="el-related">${detail.relations.map((r) => `<li><a href="/subject/electorate/${esc(r.related.slug)}">${esc(r.related.name)}</a> · ${esc(CHAMBERS[r.related.chamber] || r.related.chamber)}${relatedAsAt(r.vintage)}</li>`).join('')}</ul></section>` : ''}${detail.jurisdiction === 'vic' ? vicElectionFooterHTML() : ''}`;
 }
 export async function renderProfile({ body, slug, on, isActive, setCrumbs, goRoute, manageFocus }) {
   try {
