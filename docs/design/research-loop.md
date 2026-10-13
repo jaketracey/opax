@@ -19,7 +19,8 @@ The provider uses `@preset/opax-pro` and the optional Worker secret
 `OPENROUTER_API_KEY`. Jake provisions that secret. A missing key immediately falls
 back; it does not create a credential or use a different provider. Tests use
 `ai/test`'s `MockLanguageModelV4`; route tests replace the provider factory with a
-fake. Production and staging remain off in this lane.
+fake. The hub confirmed the production key is set. The release configuration now
+defaults to `shadow`; this lane does not deploy it or call production Ask.
 
 Every existing registered tool, including `electorates`, is available, together
 with `search`, `read_passage`, `finish` and `answer`. Tool execution is serialized
@@ -69,6 +70,7 @@ not a general semantic entailment model.
 | Actual tool calls | 6, including terminal tools | Duplicates reuse output |
 | `RESEARCH_LOOP_MS` | 20,000 ms | 30,000 ms; also limited to request time minus 8,000 ms |
 | `RESEARCH_LOOP_TOKENS` | 32,000 cumulative loop tokens | 64,000 |
+| `RESEARCH_LOOP_DAILY_USD` | US$5 per UTC day | Atomic D1 admission before every loop turn; invalid/zero disables inference |
 | Output per turn | 1,800 tokens | Reduced by remaining token reserve |
 | Tool result entering context | 16,384 UTF-8 bytes | Includes the current fact sheet |
 | Tool execution | Existing 12,000 ms bound | Also bounded by request and loop signals |
@@ -80,14 +82,36 @@ accumulated and checked again before client-side tools. Missing usage is charged
 against the reserved input and output rather than treated as zero. Cached input and reasoning
 tokens are included by the SDK's total usage. The cap governs the loop attempt;
 the fallback retains its existing planner/RAG token limit and shared request
-wall budget. This is not an account-level daily dollar cap.
+wall budget.
 
 `modelBudgetSpent`/`MODEL_LIMITER` is checked in the awaited `prepareStep` before
 **every** provider call, with `maxRetries: 0`. This is intentionally not a throwing
 telemetry callback: SDK 7 lifecycle callbacks may swallow callback errors. The
 existing fallback calls still pass through `kbFetch`'s aggregate limiter.
 Provider-reported cost is preferred; configured input/output prices supply an
-estimate when cost is absent. No new paid budget service is introduced.
+estimate when cost is absent (defaults US$1 input / US$3 output per million).
+
+The separate daily dollar guard uses `COMMUNITY_DB`, with migration
+`0017_research_daily_budget.sql`. An atomic `INSERT ... ON CONFLICT ... RETURNING`
+reserves the entire remaining request token allowance before each model call.
+The reservation price per million tokens is the maximum of configured prices
+and US$10. This is a conservative admission ceiling, not a provider price
+guarantee; keep configured prices at or above the preset's rates.
+A known provider receipt refunds unused reservation; an estimate cannot refund
+the ledger. Without a receipt the full reservation stays charged. Unknown cost after timeout,
+disconnect or crash retains the reservation. The ledger stores only UTC day and
+integer microdollars, shared across isolates and locations. Missing table, D1
+failure, or exhausted daily allowance refuses loop inference and falls back.
+This limits direct research-provider admission, independently of the OpenRouter
+key's credit limit; the existing old path keeps its own admission controls.
+The orchestrator must apply migration 0017 before the first shadow deployment.
+
+HTTP 402 and wrapped credit/insufficient-balance errors immediately fall back,
+with no loop retry. They log `reason: 'research_credit_exhausted'` and open a
+15-minute aggregate circuit breaker in that isolate. Further loop attempts skip
+the provider until cooldown ends. A different isolate can encounter the limit
+once before opening its own breaker. Refund cleanup uses `waitUntil`, so an
+unavailable refund cannot delay the old answer or bypass the reserved charge.
 
 The request signal and SSE reader cancellation abort model requests, tool fetches
 and body reads. A Promise race also bounds a non-cooperative fake/provider.
@@ -111,7 +135,9 @@ added. Free model text is not streamed before verification.
 research: {
   mode: 'loop' | 'planner', rounds: number,
   trail: [{id, tool, label, arg?, results?, ms, ok}],
-  sources: [{title, url, date?, kind}]
+  sources: [{title, url, date?, kind}],
+  ms?: number, tokens?: {input: number, output: number} | null,
+  cost_usd?: number | null
 }
 ```
 
@@ -120,6 +146,22 @@ qualitative claims. The planner fallback uses its executed steps. An ordinary
 RAG fallback has no planner steps: its trail is empty and used sources are copied
 from its existing payload. Its existing fields survive unchanged. Cache hit/miss
 headers and SSE cached replay remain in the current cache transport.
+
+For operator evaluation, `/api/ask` accepts `x-opax-research: loop|old` only when
+the existing `operatorAuthorized` bearer guard succeeds. `loop` forces route
+within every cap; `old` serves the pre-loop planner/RAG route and suppresses
+research shadow. Unauthenticated or invalid headers are ignored. Override JSON
+and SSE responses carry `cache-control: no-store` and `x-opax-cache: BYPASS`, and
+neither read nor write the edge or shared KV answer caches. Validation errors are
+also no-store. Resource caches retain their existing behavior.
+
+Each override's final `research` includes mode, latency, input/output tokens and
+estimated USD. Usage includes failed loop turns and any subsequent old-path model
+calls. A bounded observer reads old-provider consumption metadata while forwarding
+the response bytes unchanged. If an old generation omits consumption, total tokens
+and cost are `null`; missing usage is never presented as free inference. Existing
+app fields and event names survive, and both native decoder fixtures accept the
+override JSON and SSE payloads.
 
 The native apps use the React Native Ask decoder and SSE parser in
 `mobile/src/features/ask/{model,stream}.ts`. The iOS checkout and the Android parity
@@ -137,7 +179,8 @@ Ask uses the shared TypeScript decoder. Neither app worktree was edited.
 
 ## Flag, cache and shadow monitoring
 
-`RESEARCH_LOOP=off` (including unset/unknown values) takes today's route unchanged.
+`RESEARCH_LOOP=shadow` is the release default. The orchestrator flips it to `route`
+after evaluation. `off` (including unset/unknown values) takes today's route unchanged.
 Both prompt and tools versions are bumped. Loop cache keys additionally include
 mode, preset, caps and record kind so planner/off answers cannot populate the
 loop's cache. Conversation/prior-source requests remain unshared. Only complete,

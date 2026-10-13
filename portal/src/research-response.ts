@@ -1,4 +1,5 @@
 import type { ResearchPayload } from './research-types'
+import type { researchEvalUsage } from './research-eval'
 
 function plannerPayload(payload: Record<string, unknown>): Record<string, unknown> {
   if (payload.research) return payload
@@ -11,13 +12,27 @@ function plannerPayload(payload: Record<string, unknown>): Record<string, unknow
 
 /** Add metadata only at the boundary. Existing JSON and SSE fields survive. */
 export async function withPlannerResearch(response: Response): Promise<Response> {
+  return mapResearchResponse(response, plannerPayload)
+}
+
+export async function withResearchEval(response: Response, usage: () => ReturnType<typeof researchEvalUsage>): Promise<Response> {
+  const headers = new Headers(response.headers)
+  headers.set('cache-control', 'no-store')
+  headers.set('x-opax-cache', 'BYPASS')
+  return mapResearchResponse(new Response(response.body, { status: response.status, statusText: response.statusText, headers }), payload => {
+    const augmented = plannerPayload(payload)
+    return { ...augmented, research: { ...augmented.research as ResearchPayload, ...usage() } }
+  })
+}
+
+async function mapResearchResponse(response: Response, augment: (payload: Record<string, unknown>) => Record<string, unknown>): Promise<Response> {
   if (!response.ok) return response
-  if (!(response.headers.get('content-type') ?? '').includes('text/event-stream')) return new Response(JSON.stringify(plannerPayload(await response.json() as Record<string, unknown>)), response)
+  if (!(response.headers.get('content-type') ?? '').includes('text/event-stream')) return new Response(JSON.stringify(augment(await response.json() as Record<string, unknown>)), response)
   const decoder = new TextDecoder(), encoder = new TextEncoder()
   let pending = ''
   const frame = (value: string) => {
     if (!/^event: done$/m.test(value)) return value
-    return value.replace(/^data: (.+)$/m, (_line, data: string) => 'data: ' + JSON.stringify(plannerPayload(JSON.parse(data))))
+    return value.replace(/^data: (.+)$/m, (_line, data: string) => 'data: ' + JSON.stringify(augment(JSON.parse(data))))
   }
   return new Response(response.body!.pipeThrough(new TransformStream<Uint8Array, Uint8Array>({
     transform(chunk, controller) {

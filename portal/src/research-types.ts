@@ -6,6 +6,9 @@ export interface ResearchPayload {
   rounds: number
   trail: { id: number; tool: string; label: string; arg?: string; results?: number; ms: number; ok: boolean }[]
   sources: { title: string; url: string; date?: string; kind: string }[]
+  ms?: number
+  tokens?: { input: number; output: number } | null
+  cost_usd?: number | null
 }
 export interface Passage {
   id: string; resource: string; slug: string; title: string; text: string; url: string
@@ -35,8 +38,8 @@ export interface ResearchResult {
   qualitative?: QualitativeAnswer
 }
 export type Research = (question: string, context: ResearchContext) => Promise<ResearchResult>
-export interface ResearchStats { rounds: number; tokens: { input: number; output: number }; costUsd?: number }
-export type ResearchStop = 'error' | 'timeout' | 'steps' | 'tokens' | 'limiter' | 'aborted' | 'malformed_args' | 'grounding' | 'no_supported_claim' | 'no_finish' | 'missing_key' | 'result_size'
+export interface ResearchStats { rounds: number; tokens: { input: number; output: number }; costUsd?: number; usageUnknown?: boolean }
+export type ResearchStop = 'error' | 'timeout' | 'steps' | 'tokens' | 'limiter' | 'aborted' | 'malformed_args' | 'grounding' | 'no_supported_claim' | 'no_finish' | 'missing_key' | 'result_size' | 'daily_budget' | 'daily_budget_unavailable' | 'research_credit_exhausted'
 export class ResearchError extends Error {
   constructor(readonly reason: ResearchStop, readonly stats: ResearchStats = { rounds: 0, tokens: { input: 0, output: 0 } }) {
     super('Research loop stopped: ' + reason)

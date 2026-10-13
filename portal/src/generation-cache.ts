@@ -2,7 +2,7 @@
 // copy. Callers own eligibility and include corpus/prompt versions in the key.
 // Private conversations and account responses must never use this cache.
 
-type CacheEnv = Pick<Env, 'GENERATION_CACHE'>
+type CacheEnv = Pick<Env, 'GENERATION_CACHE' | 'RESEARCH_EVAL'>
 type StoredGeneration = { version: 1; body: string; cachedAt: string; expiresAt: number }
 const MAX_BYTES = 1_000_000
 const MAX_TTL = 7 * 24 * 3600
@@ -33,6 +33,7 @@ async function persist(env: CacheEnv, key: string, response: Response, expiresAt
 }
 
 export async function readGenerationCache(env: CacheEnv, ctx: ExecutionContext, key: Request): Promise<Response | undefined> {
+  if (env.RESEARCH_EVAL) return undefined
   const id = storageKey(key)
   if (!id) return undefined
   try {
@@ -83,6 +84,7 @@ export async function readGenerationCache(env: CacheEnv, ctx: ExecutionContext, 
 }
 
 export function storeGenerationCache(env: CacheEnv, ctx: ExecutionContext, key: Request, response: Response, ttl: number): void {
+  if (env.RESEARCH_EVAL) return
   const id = storageKey(key)
   if (!id || response.status !== 200 || response.headers.has('set-cookie') || ttl < 60 || ttl > MAX_TTL) return
   const saved = Date.now()

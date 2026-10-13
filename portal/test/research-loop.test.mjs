@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {build} from 'esbuild';
 import {MockLanguageModelV4} from 'ai/test';
-const built=await build({stdin:{contents:"export * from './src/agentic-ask';export * from './src/agentic-response';export * from './src/research-loop';export * from './src/research-types';export * from './src/research-evidence';",resolveDir:new URL('../',import.meta.url).pathname},bundle:true,write:false,platform:'browser',format:'esm',external:['node:*']});
+const built=await build({stdin:{contents:"export * from './src/agentic-ask';export * from './src/agentic-response';export * from './src/research-loop';export * from './src/research-types';export * from './src/research-evidence';export * from './src/research-credit';",resolveDir:new URL('../',import.meta.url).pathname},bundle:true,write:false,platform:'browser',format:'esm',external:['node:*']});
 const api=await import('data:text/javascript;base64,'+Buffer.from(built.outputFiles[0].text).toString('base64'));
 const call=(name,args,id='fixture')=>({type:'tool-call',toolName:name,toolCallId:id,input:typeof args==='string'?args:JSON.stringify(args)});
 const reply=(calls,input=10,output=5)=>({content:calls,finishReason:{unified:'tool-calls',raw:'tool_calls'},usage:{inputTokens:{total:input,noCache:input,cacheRead:0,cacheWrite:0},outputTokens:{total:output,text:output,reasoning:0}},warnings:[]});
@@ -10,7 +10,7 @@ const question='Who speaks most about gambling in NSW across the whole record?',
 const model=responses=>new MockLanguageModelV4({doGenerate:responses});
 function fixtures(m,options={}) {
  let plannerCalls=0,lookups=0,turns=0;const events=[],failures=[];
- const deps={signal:options.signal,asset:async()=>null,kb:async()=>{lookups++;return {fulltext:{total:100,facets:{'/u/o':{'/u/o/Taylor Example':87,'/u/o/Pat Example':13}}}}},generate:async()=>{plannerCalls++;return {text:JSON.stringify(plan),tokens:{input:3,output:2}}},research:api.createResearch({model:m,modelBudgetSpent:async()=>{turns++;return options.refuseAt===turns},...options}),onResearchFailure:async e=>failures.push(e)};
+ const deps={signal:options.signal,asset:async()=>null,kb:async()=>{lookups++;return {fulltext:{total:100,facets:{'/u/o':{'/u/o/Taylor Example':87,'/u/o/Pat Example':13}}}}},generate:async()=>{plannerCalls++;return {text:JSON.stringify(plan),tokens:{input:3,output:2}}},research:api.createResearch({model:m,modelBudgetSpent:async()=>{turns++;return options.refuseAt===turns},dailyBudget:{reserve:async()=>({settle:async()=>{}})},creditCooldown:api.createResearchCreditCooldown(),...options}),onResearchFailure:async e=>failures.push(e)};
  return {deps,events,failures,run:()=>api.runAgentic(question,deps,async(e,d)=>events.push(d),40_000,api.inferPeriod(question),{},emptyScope),get plannerCalls(){return plannerCalls},get lookups(){return lookups},get turns(){return turns}};
 }
 test('multi-round happy path, finish maps selected facts to templates and matching step events',async()=>{
@@ -38,6 +38,35 @@ test('token cap refuses inference and detects reported overspend before tools',a
 });
 test('MODEL_LIMITER checks every turn and refuses the next provider call',async()=>{
  const m=model([reply([call('count_speeches',args)]),reply([call('finish',{facts:[1]})])]),f=fixtures(m,{refuseAt:2});await f.run();assert.equal(f.turns,2);assert.equal(m.doGenerateCalls.length,1);assert.equal(f.failures[0].reason,'limiter');assert.equal(f.plannerCalls,1);
+});
+test('daily dollar admission refuses inference and fails closed when its ledger is unavailable',async()=>{
+ for(const [reserve,reason] of [[async()=>null,'daily_budget'],[async()=>{throw Error('private D1 details')},'daily_budget_unavailable']]){
+  const m=model([reply([call('count_speeches',args)])]),f=fixtures(m,{dailyBudget:{reserve}}),run=await f.run();
+  assert.equal(m.doGenerateCalls.length,0);assert.equal(f.failures[0].reason,reason);assert.equal(run.research.mode,'planner');assert.equal(f.plannerCalls,1);
+ }
+});
+test('each turn reserves remaining token cost; estimates cannot refund unknown billing',async()=>{
+ const reserved=[],settled=[],m=model([reply([call('count_speeches',args)]),reply([call('finish',{facts:[1]})])]);
+ const f=fixtures(m,{inputPrice:0.66,outputPrice:1.98,dailyBudget:{reserve:async amount=>{reserved.push(amount);return{settle:async actual=>settled.push(actual)}}}});
+ const run=await f.run();assert.equal(run.research.mode,'loop');assert.deepEqual(reserved,[32000*10/1e6,31985*10/1e6]);assert.deepEqual(settled,[undefined,undefined]);assert.equal(run.cost_usd,2*(10*0.66+5*1.98)/1e6);
+});
+test('provider billing receipts allow settlement refunds and own the reported cost',async()=>{
+ const settled=[],responses=[reply([call('count_speeches',args)]),reply([call('finish',{facts:[1]})])].map(r=>({...r,providerMetadata:{openrouter:{usage:{cost:0.00002}}}}));
+ const f=fixtures(model(responses),{dailyBudget:{reserve:async()=>({settle:async actual=>settled.push(actual)})}}),run=await f.run();assert.deepEqual(settled,[0.00002,0.00002]);assert.equal(run.cost_usd,0.00004);
+});
+test('credit exhaustion falls back without retry, blocks further turns for 15 minutes, then recovers',async()=>{
+ for(const failure of [Object.assign(Error('payment refused'),{statusCode:402}),Error('Your credit balance is too low'),{cause:{responseBody:JSON.stringify({error:{message:'Insufficient credits'}})}}]){
+  let now=0,refund;const cooldown=api.createResearchCreditCooldown(()=>now),m=model(()=>{throw failure});
+  const f=fixtures(m,{creditCooldown:cooldown,dailyBudget:{reserve:async()=>({settle:async actual=>{refund=actual}})}});
+  assert.equal((await f.run()).research.mode,'planner');assert.equal(f.failures[0].reason,'research_credit_exhausted');assert.equal(m.doGenerateCalls.length,1);assert.equal(refund,0);
+  await f.run();assert.equal(m.doGenerateCalls.length,1);assert.equal(f.failures[1].reason,'research_credit_exhausted');assert.equal(f.plannerCalls,2);
+  now=api.RESEARCH_CREDIT_COOLDOWN_MS;await f.run();assert.equal(m.doGenerateCalls.length,2);
+ }
+ assert.equal(api.isResearchCreditError(Error('generic network failure')),false);
+});
+test('a credit refund that stalls cannot delay the planner fallback',async()=>{
+ const pending=[],m=model(()=>{throw Object.assign(Error('402'),{statusCode:402})}),f=fixtures(m,{cleanup:work=>pending.push(work),dailyBudget:{reserve:async()=>({settle:()=>new Promise(()=>{})})}});
+ const started=Date.now();const run=await f.run();assert.ok(Date.now()-started<1000);assert.equal(run.research.mode,'planner');assert.equal(pending.length,1);assert.equal(m.doGenerateCalls.length,1);
 });
 test('disconnect aborts the model without a paid fallback',async()=>{
  const controller=new AbortController();let providerSignal,start;const started=new Promise(r=>start=r),m=model(options=>{providerSignal=options.abortSignal;start();return new Promise(()=>{})}),f=fixtures(m,{signal:controller.signal});const work=f.run();await started;controller.abort();await assert.rejects(work);assert.equal(providerSignal.aborted,true);assert.equal(f.plannerCalls,0);assert.equal(f.failures[0].reason,'aborted');

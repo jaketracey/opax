@@ -89,7 +89,9 @@ import { AGENTIC_TOOLS_VERSION } from './agentic-tools'
 import { createOpenRouter } from '@openrouter/ai-sdk-provider'
 import { createResearch } from './research-loop'
 import { recordResearchComparison, recordResearchFailure } from './research-monitor'
-import { withPlannerResearch } from './research-response'
+import { withPlannerResearch, withResearchEval } from './research-response'
+import { researchDailyBudget } from './research-budget'
+import { researchEvalState, researchEvalUsage, captureLoopUsage, observeEvalModelResponse, researchPrices } from './research-eval'
 import type { ToolDeps } from './agentic-tools'
 import { tokens as catalogTokens } from './catalog-query.mjs'
 import { journeyStoryContext, parseJourneyStory, journeyStoryPrompt, JOURNEY_STORY_SYSTEM, STORY_VERSION, type StoryGraph } from './journey-story'
@@ -264,17 +266,22 @@ async function kbFetch(
   init?: { method?: string; body?: unknown; headers?: Record<string, string>; signal?: AbortSignal },
 ): Promise<Response> {
   if (path.startsWith('/ask') && await modelBudgetSpent(env)) return modelBudgetResponse()
-  const call = (target: string, body: unknown = init?.body, headers = init?.headers) => fetch(`${ragBase(env)}${target}`, {
-    method: init?.method ?? (init?.body === undefined ? 'GET' : 'POST'),
-    headers: {
-      'content-type': 'application/json',
-      'user-agent': sourceIdentity.user_agent,
-      'x-nuclia-serviceaccount': `Bearer ${env.ARAG_KB_TOKEN}`,
-      ...headers,
-    },
-    body: body === undefined ? undefined : JSON.stringify(body),
-    signal: init?.signal,
-  })
+  const call = async (target: string, body: unknown = init?.body, headers = init?.headers) => {
+    const generation = env.RESEARCH_EVAL && (target === '/predict/chat' || target === '/ask' && (body as Record<string, unknown> | undefined)?.generate_answer !== false)
+    const response = await fetch(`${ragBase(env)}${target}`, {
+      method: init?.method ?? (init?.body === undefined ? 'GET' : 'POST'),
+      headers: {
+        'content-type': 'application/json',
+        'user-agent': sourceIdentity.user_agent,
+        'x-nuclia-serviceaccount': `Bearer ${env.ARAG_KB_TOKEN}`,
+        ...headers,
+        ...(generation ? { 'x-show-consumption': 'true' } : {}),
+      },
+      body: body === undefined ? undefined : JSON.stringify(body),
+      signal: init?.signal,
+    })
+    return generation ? observeEvalModelResponse(response, env.RESEARCH_EVAL!, researchPrices(env.AGENTIC_INPUT_USD_PER_MILLION, env.AGENTIC_OUTPUT_USD_PER_MILLION), headers?.accept === 'application/x-ndjson') : response
+  }
   if (path === '/ask' && init?.body && typeof init.body === 'object') return saGenerationResponse(init.body as Record<string,unknown>, env.SA_HANSARD_FULL_TEXT, (target, body, stream) => {
     const headers = {...init.headers}
     if (stream) { delete headers['x-synchronous']; headers.accept = 'application/x-ndjson' }
@@ -5918,11 +5925,15 @@ function agenticToolDeps(env: Env, signal?: AbortSignal): ToolDeps {
 function agenticDeps(env: Env, ctx: ExecutionContext, signal?: AbortSignal, input: Record<string, unknown> = {}): AgenticDeps {
   return {
     ...agenticToolDeps(env, signal),
+    ...(env.RESEARCH_EVAL ? { plannerTrail: true } : {}),
     ...(env.RESEARCH_LOOP === 'route' ? {
       research: createResearch({
         model: env.OPENROUTER_API_KEY ? createOpenRouter({ apiKey: env.OPENROUTER_API_KEY })('@preset/opax-pro', { usage: { include: true } }) : undefined,
         steps: env.RESEARCH_LOOP_STEPS, wallMs: env.RESEARCH_LOOP_MS, tokens: env.RESEARCH_LOOP_TOKENS,
         modelBudgetSpent: () => modelBudgetSpent(env),
+        dailyBudget: researchDailyBudget(env.COMMUNITY_DB, env.RESEARCH_LOOP_DAILY_USD),
+        cleanup: work => ctx.waitUntil(work),
+        ...(env.RESEARCH_EVAL ? { onUsage: stats => captureLoopUsage(env.RESEARCH_EVAL!, stats) } : {}),
         inputPrice: Number(env.AGENTIC_INPUT_USD_PER_MILLION) || undefined, outputPrice: Number(env.AGENTIC_OUTPUT_USD_PER_MILLION) || undefined,
         conversation: saConversationInput(input, env.SA_HANSARD_FULL_TEXT).context,
         positionQuery: isPositionBody(buildAskBody(input)) ? String(buildAskBody(input).query || input.question || '') : undefined,
@@ -6009,7 +6020,24 @@ async function apiAgenticGold(request: Request, env: Env, ctx: ExecutionContext)
   const run = await executeAgentic(input, env, ctx, undefined, request.signal)
   return json(agenticAskPayload(run, q))
 }
-async function apiAskRouted(request: Request, url: URL, input: Record<string, unknown>, env: Env, ctx: ExecutionContext, onRun?: (run: AgenticPayload) => void): Promise<Response> {
+async function apiAskRouted(request: Request, url: URL, env: Env, ctx: ExecutionContext): Promise<Response> {
+  const override = request.headers.get('x-opax-research')
+  const usage = (override === 'loop' || override === 'old') && await operatorAuthorized(request, env) ? researchEvalState() : undefined
+  const selected = usage ? { ...env, RESEARCH_LOOP: override === 'loop' ? 'route' as const : 'off' as const, RESEARCH_EVAL: usage } : env
+  const serve = async () => {
+    const body = await readJsonBody(request)
+    if (body instanceof Response) return body
+    const question = body.value.question
+    if (typeof question !== 'string' || !question.trim()) return json({ error: 'question is required' }, 400)
+    if (question.length > MAX_QUESTION_CHARS) return json({ error: `question must be ${MAX_QUESTION_CHARS} characters or fewer` }, 400)
+    const bad = validateFilters(k => body.value[k])
+    if (bad) return json({ error: bad }, 400)
+    return apiAskRoutedCore(replayPost(request, body.text), url, body.value, selected, ctx)
+  }
+  const response = await serve()
+  return usage ? withResearchEval(response, () => researchEvalUsage(usage)) : response
+}
+async function apiAskRoutedCore(request: Request, url: URL, input: Record<string, unknown>, env: Env, ctx: ExecutionContext, onRun?: (run: AgenticPayload) => void): Promise<Response> {
   const started = Date.now()
   const question = String(input.question).trim()
   let quotaTaken = false
@@ -6021,7 +6049,7 @@ async function apiAskRouted(request: Request, url: URL, input: Record<string, un
     request.signal.addEventListener('abort', disconnect, { once: true })
     if (request.signal.aborted) disconnect()
     let planner: AgenticPayload | undefined
-    const response = await apiAskRouted(request, url, input, { ...env, RESEARCH_LOOP: 'off' }, ctx, run => { planner = run })
+    const response = await apiAskRoutedCore(request, url, input, { ...env, RESEARCH_LOOP: 'off' }, ctx, run => { planner = run })
     if (response.ok) {
       const copy = response.clone()
       ctx.waitUntil((async () => {
@@ -6174,18 +6202,7 @@ async function route(
         return await apiSearchSummary(request, url, env, ctx)
       }
       if (url.pathname === '/api/ask' && request.method === 'POST') {
-        const body = await readJsonBody(request)
-        if (body instanceof Response) return body
-        const question = body.value.question
-        if (typeof question !== 'string' || !question.trim()) {
-          return json({ error: 'question is required' }, 400)
-        }
-        if (question.length > MAX_QUESTION_CHARS) {
-          return json({ error: `question must be ${MAX_QUESTION_CHARS} characters or fewer` }, 400)
-        }
-        const bad = validateFilters((k) => body.value[k])
-        if (bad) return json({ error: bad }, 400)
-        return await apiAskRouted(replayPost(request, body.text), url, body.value, env, ctx)
+        return await apiAskRouted(request, url, env, ctx)
       }
       if (url.pathname === '/api/journey-story' && request.method === 'POST') {
         const body = await readJsonBody(request)

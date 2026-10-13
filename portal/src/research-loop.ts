@@ -6,6 +6,8 @@ import type { ResearchContext } from './research-types'
 import { originalContext } from './ask-evidence'
 import { verifyResearchAnswer, type AnswerDraft } from './research-evidence'
 import { ResearchError, type Passage, type Research, type ResearchStats, type ResearchStop } from './research-types'
+import type { ResearchDailyBudget, ResearchReservation } from './research-budget'
+import { researchCreditCooldown, isResearchCreditError, type ResearchCreditCooldown } from './research-credit'
 
 export const RESEARCH_MAX_ROUNDS = 6
 export const RESEARCH_MAX_CALLS = 6
@@ -30,6 +32,10 @@ export interface ResearchOptions {
   positionQuery?: string
   conversation?: unknown
   inputPrice?: number; outputPrice?: number
+  dailyBudget: ResearchDailyBudget
+  creditCooldown?: ResearchCreditCooldown
+  onUsage?: (stats: ResearchStats) => void
+  cleanup?: (work: Promise<void>) => void
 }
 
 /** Fetch-based SDK loop. All provider and tool state belongs to this request. */
@@ -46,6 +52,15 @@ export function createResearch(options: ResearchOptions): Research {
     let calls = 0, round = 0, answerAttempts = 0, finished = false, repeated = false
     let selected: number[] = [], qualitative: ReturnType<typeof verifyResearchAnswer> = null
     let reservedInput = 0, reservedOutput = 0
+    const credits = options.creditCooldown ?? researchCreditCooldown
+    const price = (value: number | undefined, fallback: number) => typeof value === 'number' && Number.isFinite(value) && value >= 0 ? value : fallback
+    const inputPrice = price(options.inputPrice, 1), outputPrice = price(options.outputPrice, 3)
+    let reservation: ResearchReservation | null = null, turnCost: number | undefined
+    const settle = async () => {
+      const previous = reservation
+      reservation = null
+      if (previous) { try { await previous.settle(turnCost) } catch { fail('daily_budget_unavailable') } }
+    }
     let failed: ResearchStop | undefined, queue = Promise.resolve()
     const fail = (reason: ResearchStop): never => { failed = reason; throw new ResearchError(reason, stats) }
     const check = () => {
@@ -177,13 +192,16 @@ export function createResearch(options: ResearchOptions): Research {
     void stopped.catch(() => {})
     try {
       check()
+      if (credits.blocked()) fail('research_credit_exhausted')
       if (!options.model) fail('missing_key')
       await Promise.race([generateText({
         model: options.model!, instructions, tools, toolChoice: 'required',
         prompt: JSON.stringify({ question, period: context.period, namedScope: context.named, conversation: options.conversation ?? [] }),
         maxRetries: 0, abortSignal: controller.signal, stopWhen: [isStepCount(limits.rounds), () => finished || !!failed],
         prepareStep: async ({ stepNumber, messages }) => {
+          await settle()
           check(); round = stepNumber + 1
+          if (credits.blocked()) fail('research_credit_exhausted')
           if (round > limits.rounds) fail('steps')
           const stepInstructions = instructions + ` Turn ${round}/${limits.rounds}. Already executed: ${[...cache.keys()].join('; ')}. Do not repeat identical calls.`
           const inputReserve = bytes(messages) + bytes(TOOL_SPECS.map(s => ({ name: s.name, description: s.description, schema: s.input }))) + bytes(stepInstructions) + 4096
@@ -195,20 +213,35 @@ export function createResearch(options: ResearchOptions): Research {
           stats.rounds = round
           if (await options.modelBudgetSpent()) return fail('limiter')
           check()
+          // Reserve the entire remaining token budget at a conservative price
+          // ceiling, not just the predicted prompt. D1 admits atomically.
+          const ceiling = Math.max(10, inputPrice, outputPrice)
+          const maxUsd = (limits.tokens - stats.tokens.input - stats.tokens.output) * ceiling / 1e6
+          try { reservation = await options.dailyBudget.reserve(maxUsd) } catch { return fail('daily_budget_unavailable') }
+          if (!reservation) return fail('daily_budget')
+          turnCost = undefined
+          check()
           return { maxOutputTokens: reservedOutput,
             ...(repeated || answerAttempts ? { activeTools: answerAttempts ? ['answer'] : ['finish', 'answer'] } : {}),
             instructions: stepInstructions }
         },
         onLanguageModelCallStart: async () => {
           check()
+          stats.usageUnknown = true
           await context.progress('status', { phase: 'reading' })
         },
         onLanguageModelCallEnd: event => {
+          stats.usageUnknown = false
           stats.tokens.input += event.usage.inputTokens ?? reservedInput; stats.tokens.output += event.usage.outputTokens ?? reservedOutput
           const usage = object(object(event.providerMetadata?.openrouter).usage)
-          const cost = typeof usage.cost === 'number' ? usage.cost : options.inputPrice != null && options.outputPrice != null
-            ? ((event.usage.inputTokens ?? 0) * options.inputPrice + (event.usage.outputTokens ?? 0) * options.outputPrice) / 1e6 : undefined
+          const receipt = typeof usage.cost === 'number' && Number.isFinite(usage.cost) && usage.cost >= 0 ? usage.cost : undefined
+          const input = event.usage.inputTokens ?? reservedInput, output = event.usage.outputTokens ?? reservedOutput
+          const cost = receipt ?? (input * inputPrice + output * outputPrice) / 1e6
+          // Estimates belong in telemetry. Only a provider receipt permits a
+          // refund; absent billing data keeps the full ceiling charged.
+          turnCost = receipt
           if (cost != null && Number.isFinite(cost) && cost >= 0) stats.costUsd = (stats.costUsd ?? 0) + cost
+          options.onUsage?.(stats)
           if (stats.tokens.input + stats.tokens.output > limits.tokens) fail('tokens')
           check()
         },
@@ -223,11 +256,24 @@ export function createResearch(options: ResearchOptions): Research {
       }), stopped])
       check()
       if (!finished) fail(stats.rounds >= limits.rounds || calls >= RESEARCH_MAX_CALLS ? 'steps' : answerAttempts ? 'grounding' : 'no_finish')
+      await Promise.race([settle(), stopped])
       return { steps, results, selected, ...stats, ...(qualitative ? { qualitative } : {}) }
     } catch (error) {
+      if (!(error instanceof ResearchError) && isResearchCreditError(error)) {
+        credits.exhaust(); failed = 'research_credit_exhausted'; turnCost = 0; stats.usageUnknown = false
+      }
       controller.abort(error)
       throw error instanceof ResearchError ? error : new ResearchError(failed ?? (context.signal.aborted ? 'aborted' : 'error'), stats)
     } finally {
+      // A provider timeout/disconnect has unknown cost: keep its reservation.
+      // Cleanup failure also keeps the charge; it never permits more spend.
+      if (reservation) {
+        const previous = reservation as ResearchReservation; reservation = null
+        const work = previous.settle(turnCost).catch(() => { /* ceiling stays charged */ })
+        if (options.cleanup) options.cleanup(work)
+        else await work
+      }
+      options.onUsage?.(stats)
       clearTimeout(timer); context.signal.removeEventListener('abort', abortParent); controller.signal.removeEventListener('abort', rejectAbort)
     }
   }
