@@ -87,15 +87,20 @@ function displayAnswer(payload, sources, originals, budgets) {
   const key = typeof payload.answer === 'string' ? 'answer' : 'text';
   if (!restricted.length || typeof payload[key] !== 'string') return payload;
   const original = payload[key], edits = [], selected = new Map();
-  const add = (start, end, source, quoted = false) => {
-    if (edits.some(e => e.start < end && e.end > start)) return;
+  // An omitted quotation is replaced whole, marks included, by an editorial note,
+  // so the placeholder can never read as words someone said.
+  const OMITTED = '[SA Hansard excerpt omitted; see the official record]';
+  const add = (start, end, source, quoted = false, outer = null) => {
+    const span = outer || {start, end};
+    if (edits.some(e => e.start < span.end && e.end > span.start)) return;
     const id = source.resource || source.id || source.slug;
     const remaining = SA_EXCERPT_WORDS - (budgets.get(id) || 0);
     const body = original.slice(start, end);
     const text = saOfficialUrl(source) ? saExcerpt(body, '', remaining) : '';
     budgets.set(id, (budgets.get(id) || 0) + words(text.replace(/…/g, '')).length);
     if (text) selected.set(id, [...(selected.get(id) || []), text]);
-    edits.push({start, end, text: text || (quoted ? 'Excerpt omitted; see the official record.' : '')});
+    if (text) edits.push({start, end, text});
+    else edits.push(quoted ? {start: span.start, end: span.end, text: OMITTED} : {start, end, text: ''});
   };
   // Evidence-only answers can reproduce a passage without quotation marks.
   for (const source of restricted) {
@@ -122,11 +127,16 @@ function displayAnswer(payload, sources, originals, budgets) {
     }
   }
   // Quotes may exceed the retrieved snippet. A cited SA answer must still cap them.
+  const textOf = s => String(s.snippet || s.passage || '');
+  const unrestricted = sources.filter(s => !isSaHansard(s));
   for (const m of original.matchAll(/“([^”]+)”|"([^"\n]+)"|^>\s*(.+(?:\n>\s*.+)*)/gm)) {
-    const quote = m[1] || m[2] || m[3];
-    const source = restricted.find(s => String(s.snippet || s.passage || '').includes(quote.slice(0, 40))) || restricted[0];
+    const quote = m[1] || m[2] || m[3], head = quote.slice(0, 40);
+    const saSource = restricted.find(s => textOf(s).includes(head));
+    // A quote found verbatim in a non-SA source is not SA content; unknown quotes still fail closed to SA.
+    if (!saSource && unrestricted.some(s => textOf(s).includes(head))) continue;
+    const source = saSource || restricted[0];
     const offset = m[0].indexOf(quote);
-    add(m.index + offset, m.index + offset + quote.length, source, true);
+    add(m.index + offset, m.index + offset + quote.length, source, true, {start: m.index, end: m.index + m[0].length});
   }
   // If originals are unavailable, fail closed on a potentially copied long answer.
   if (restricted.some(s => !originals.has(s.resource || s.id || s.slug)) && words(original).length > SA_EXCERPT_WORDS) {
