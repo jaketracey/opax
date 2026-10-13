@@ -4,7 +4,7 @@ import type { researchEvalUsage } from './research-eval'
 function plannerPayload(payload: Record<string, unknown>, previous?: ResearchPayload): Record<string, unknown> {
   if (payload.research) return payload
   const sources = Array.isArray(payload.sources) ? payload.sources as Record<string, unknown>[] : []
-  const research: ResearchPayload = { mode: 'planner', rounds: previous?.rounds ?? 0, trail: previous?.trail ?? [], sources: sources.filter(s => s.cited === true).map(s => ({
+  const research: ResearchPayload = { ...previous, mode: 'planner', rounds: previous?.rounds ?? 0, trail: previous?.trail ?? [], sources: sources.filter(s => s.cited === true).map(s => ({
     title: String(s.title ?? ''), url: String(s.href ?? s.url ?? ''), kind: String(s.kind ?? 'record'), ...(typeof s.date === 'string' ? { date: s.date } : {}), ...(typeof s.speaker === 'string' ? { speaker: s.speaker } : {}),
   })) }
   return { ...payload, research }

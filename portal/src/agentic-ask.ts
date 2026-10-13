@@ -16,7 +16,7 @@ import { isElectorateDataQuestion, electoratePlan } from './agentic-tool-elector
 import { getAskTool } from './tools'
 import { ResearchError, researchSources, type Research, type ResearchPayload, type QualitativeAnswer, type ResearchResult } from './research-types'
 
-export const AGENTIC_PROMPT_VERSION = 'agentic-ask-6-research'
+export const AGENTIC_PROMPT_VERSION = 'agentic-ask-7-research'
 export const AGENTIC_BUDGET_MS = 40_000
 export const AGENTIC_MAX_STEPS = 6
 
@@ -455,7 +455,7 @@ export async function runAgentic(question: string, deps: AgenticDeps, progress: 
   }
   try {
     const run = await runAgenticAttempt(question, deps, deps.research ? loopProgress : progress, budgetMs, period, filters, resolvedScope)
-    if (deps.research && !run.answered) throw new ResearchError(run.reason === 'no_supported_claim' ? 'no_supported_claim' : 'grounding', { rounds: run.research?.rounds ?? 0, tokens: run.tokens, ...(run.cost_usd != null ? { costUsd: run.cost_usd } : {}) })
+    if (deps.research && !isElectorateDataQuestion(question) && !run.answered) throw new ResearchError(run.reason === 'no_supported_claim' ? 'no_supported_claim' : 'grounding', { rounds: run.research?.rounds ?? 0, tokens: run.tokens, turns: run.research?.turns, ...(run.cost_usd != null ? { costUsd: run.cost_usd } : {}) })
     return run
   }
   catch (error) {
@@ -463,13 +463,13 @@ export async function runAgentic(question: string, deps: AgenticDeps, progress: 
     const failure = error instanceof ResearchError ? error : new ResearchError(deps.signal?.aborted ? 'aborted' : error instanceof Error && error.name === 'TimeoutError' ? 'timeout' : 'error')
     await deps.onResearchFailure?.(failure)
     if (deps.signal?.aborted) throw error
-    if (deps.researchShadow || failure.reason === 'timeout' || classifyAgentic(question).route !== 'agentic') {
+    if (deps.researchShadow || failure.reason === 'timeout' || !classifyAgentic(question).shape) {
       const steps = attempted.map(event => ({ tool: event.tool ?? 'search', args: {}, ok: event.state === 'done', ms: event.ms ?? 0, label: event.label }))
       return { answered: false, reason: 'declined', answer: '', answer_source: 'none', shape: classifyAgentic(question).shape, period,
         facts: [], notes: [], steps, events: attempted, tokens: { ...failure.stats.tokens }, cost_usd: failure.stats.costUsd ?? null,
         over_budget: Date.now() - started >= budgetMs, version: `${AGENTIC_PROMPT_VERSION}/${AGENTIC_TOOLS_VERSION}`,
         timings: { plan_ms: Date.now() - started, tools_ms: 0, compose_ms: 0, total_ms: Date.now() - started },
-        research: { mode: 'planner', rounds: failure.stats.rounds, trail: researchTrail(attempted, steps), sources: [] }, research_failure: failure.reason }
+        research: { mode: 'planner', rounds: failure.stats.rounds, trail: researchTrail(attempted, steps), sources: [], failure: failure.reason, ms: Date.now() - started, tokens: { ...failure.stats.tokens }, cost_usd: failure.stats.usageUnknown ? null : failure.stats.costUsd ?? 0, turns: failure.stats.turns, cached_input_by_turn: failure.stats.turns?.map(turn => turn.cached_input) }, research_failure: failure.reason }
     }
     const offset = attempted.length
     const shifted: Progress = async (event, data) => {
@@ -479,6 +479,7 @@ export async function runAgentic(question: string, deps: AgenticDeps, progress: 
     const fallback = await runAgenticAttempt(question, { ...deps, research: undefined, plannerTrail: true }, shifted, Math.max(0, budgetMs - (Date.now() - started)), period, filters, resolvedScope)
     fallback.events = fallback.events.map(e => ({ ...e, id: e.id + offset }))
     if (fallback.research) fallback.research.trail = fallback.research.trail.map(e => ({ ...e, id: e.id + offset }))
+    if (fallback.research) Object.assign(fallback.research, { failure: failure.reason, turns: failure.stats.turns, cached_input_by_turn: failure.stats.turns?.map(turn => turn.cached_input) })
     fallback.tokens.input += failure.stats.tokens.input; fallback.tokens.output += failure.stats.tokens.output
     if (failure.stats.costUsd != null) fallback.cost_usd = (fallback.cost_usd ?? 0) + failure.stats.costUsd
     fallback.timings.total_ms = Date.now() - started
@@ -491,7 +492,7 @@ async function runAgenticAttempt(question: string, deps: AgenticDeps, progress: 
   if (electorateData) period = { kind: 'all', label: 'Figures use published Census geography.' }
   const t0 = Date.now(), deadline = t0 + budgetMs
   const tokens = { input: 0, output: 0 }
-  let cost: number | null = null
+  let cost: number | null = electorateData ? 0 : null
   const left = () => Math.max(0, deadline - Date.now())
   const timings = { plan_ms: 0, tools_ms: 0, compose_ms: 0, total_ms: 0 }
   const results: ToolResult[] = [], steps: AgenticPayload['steps'] = [], events: StepEvent[] = []
@@ -499,7 +500,7 @@ async function runAgenticAttempt(question: string, deps: AgenticDeps, progress: 
   let executionSignal = deps.signal
   const base = (over: Partial<AgenticPayload>): AgenticPayload => ({ answered: false, answer: '', answer_source: 'none', shape: classifyAgentic(question).shape, period, facts: [], notes: [], steps, events, tokens, cost_usd: cost, over_budget: !left(), version: `${AGENTIC_PROMPT_VERSION}/${AGENTIC_TOOLS_VERSION}`,
     ...(deps.plannerTrail ? { research: { mode: 'planner', rounds: 1, trail: researchTrail(events, steps), sources: [] } as ResearchPayload } : {}),
-    ...(researched ? { research: { mode: 'loop', rounds: researched.rounds, trail: researchTrail(events, steps), sources: [] } as ResearchPayload } : {}),
+    ...(researched ? { research: { mode: 'loop', rounds: researched.rounds, trail: researchTrail(events, steps), sources: [], turns: researched.turns, cached_input_by_turn: researched.turns?.map(turn => turn.cached_input) } as ResearchPayload } : {}),
     ...over, timings: { ...timings, total_ms: Date.now() - t0 } })
   // The decade candidate proof supports leaders, not the least active member.
   if (!electorateData && /\b(?:least|fewest)\b/i.test(question)) return base({ reason: 'declined' })
@@ -537,7 +538,7 @@ async function runAgenticAttempt(question: string, deps: AgenticDeps, progress: 
     return r
   }
   let plan: Plan | null = electorateData ? electoratePlan(question) : null
-  if (deps.research) {
+  if (deps.research && !electorateData) {
     const rules = fallbackPlan(question)?.steps.find(s => ['count_speeches', 'speech_trend'].includes(s.tool))?.args ?? {}
     const explicit = Object.fromEntries(['state', 'chamber', 'party'].filter(k => rules[k] != null && (k !== 'party' || named.parties.length <= 1)).map(k => [k, rules[k]]))
     researched = await bounded(signal => { executionSignal = signal; return deps.research!(question, {
@@ -553,7 +554,7 @@ async function runAgenticAttempt(question: string, deps: AgenticDeps, progress: 
       timings.plan_ms = Date.now() - t0
       await progress('status', { phase: 'writing' })
       return base({ answered: true, answer: researched.qualitative.answer, answer_source: 'model', qualitative: researched.qualitative,
-        research: { mode: 'loop', rounds: researched.rounds, trail: researchTrail(events, steps), sources: researched.qualitative.sources.map(s => ({ title: s.title, url: s.url, kind: s.kind, ...(s.date ? { date: s.date } : {}), ...(s.speaker ? { speaker: s.speaker } : {}) })) } })
+        research: { mode: 'loop', rounds: researched.rounds, trail: researchTrail(events, steps), turns: researched.turns, cached_input_by_turn: researched.turns?.map(turn => turn.cached_input), sources: researched.qualitative.sources.map(s => ({ title: s.title, url: s.url, kind: s.kind, ...(s.date ? { date: s.date } : {}), ...(s.speaker ? { speaker: s.speaker } : {}) })) } })
     }
   }
   let plannerFailed = false
@@ -649,7 +650,7 @@ async function runAgenticAttempt(question: string, deps: AgenticDeps, progress: 
   timings.compose_ms = Date.now() - tCompose
   if (!left() || deps.signal?.aborted) return base({ reason: 'declined', over_budget: true })
   return base({ answered: true, answer, answer_source: 'template', facts: factOut, notes,
-    ...(researched || deps.plannerTrail ? { chosen_facts: selected.map(f => f.id), research: { mode: researched ? 'loop' : 'planner', rounds: researched?.rounds ?? 1, trail: researchTrail(events, steps), sources: researchSources([...selected, ...facts.filter(f => committeeFacts.some(c => c.text === f.text))]) } } : {}) })
+    ...(researched || deps.plannerTrail ? { chosen_facts: selected.map(f => f.id), research: { mode: researched ? 'loop' : 'planner', rounds: researched?.rounds ?? 1, trail: researchTrail(events, steps), turns: researched?.turns, cached_input_by_turn: researched?.turns?.map(turn => turn.cached_input), sources: researchSources([...selected, ...facts.filter(f => committeeFacts.some(c => c.text === f.text))]) } } : {}) })
 }
 export function normaliseQuestion(question: string): string {
   return question.normalize('NFKC').toLowerCase().replace(/[‘’“”]/g, "'").replace(/[^\p{L}\p{N} ]+/gu, ' ').replace(/\s+/g, ' ').trim()

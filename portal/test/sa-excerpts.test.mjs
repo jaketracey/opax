@@ -1,5 +1,6 @@
+import {guardAnswerAttribution} from './fixtures/ask-attribution.mjs';
 import {speechPresentation, joinMixedSpeakers} from '../src/mixed-speakers.ts';
-const runInNewContext = (code, context = {}, options) => { context.speechPresentation ??= speechPresentation; context.joinMixedSpeakers ??= joinMixedSpeakers; return baseVM(code, context, options); };
+const runInNewContext = (code, context = {}, options) => { context.speechPresentation ??= speechPresentation; context.joinMixedSpeakers ??= joinMixedSpeakers; context.guardAnswerAttribution ??= guardAnswerAttribution; return baseVM(code, context, options); };
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
@@ -92,7 +93,7 @@ test('Ask quotes and evidence-only answers are capped and citations retain valid
 test('multiple quoted passages share one budget, and missing or untrusted official links withhold source text',async()=>{
   const quote = sa.text.split('. ').slice(0,7).join('. ')+'.';
   const result=await protect({answer:`“${quote}” Then “${quote}” Then “${quote}”`,sources:[row]});
-  const quotes=[...result.answer.matchAll(/“([^”]+)”/g)].map(m=>m[1]).filter(t=>!t.startsWith('Excerpt omitted'));
+  const quotes=[...result.answer.matchAll(/“([^”]+)”/g)].map(m=>m[1]);
   capped(quotes.join(' '));
   for(const url of ['', 'https://example.test/full-text.pdf','https://parliament.sa.gov.au.example.test/record']) {
     const record={...row,url}; assert.equal(saDisplayRecord(record,'false').snippet,'');
@@ -184,4 +185,17 @@ test('both share-card formats retain the complete excerpt notice and official re
   for(const tree of [cardTree(card),portraitTree(card)]) {
     const rendered=text(tree);assert.ok(rendered.includes(SA_EXCERPT_LABEL));assert.ok(rendered.includes(sa.url));assert.ok(rendered.includes('The speech discusses'));
   }
+});
+
+test('an omitted SA quotation never reads as speech, and federal quotes are left alone', async () => {
+  const {saDisplayPayload} = await import('../public/sa-hansard.js');
+  const sa = {resource: 'sa-1', source: 'sa_hansard', jurisdiction: 'sa', snippet: 'alpha bravo charlie delta echo foxtrot golf hotel', url: 'https://hansard.parliament.sa.gov.au/x'};
+  const fed = {resource: 'fed-1', source: 'federal_hansard', snippet: 'We will reform poker machines this term and that is a promise', url: 'https://www.aph.gov.au/x'};
+  const long = Array.from({length: 400}, (_, i) => 'word' + i).join(' ');
+  const payload = {answer: `The member said “${long}”. The minister said “We will reform poker machines this term and that is a promise”.`, sources: [sa, fed]};
+  // The SA source's excerpt budget is already spent, so its quote must be omitted.
+  const out = saDisplayPayload(payload, 'false', '', new Map([['sa-1', long]]), new Map(), new Map([['sa-1', 120]]));
+  const text = out.answer ?? out.text;
+  assert.doesNotMatch(text, /“[^”]*omitted[^”]*”/i, 'no placeholder inside quotation marks');
+  assert.match(text, /“We will reform poker machines this term and that is a promise”/, 'federal quote kept');
 });

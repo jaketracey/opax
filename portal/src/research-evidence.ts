@@ -1,6 +1,8 @@
 import { originalContext, unsupportedQuotes, guardPositionAnswer, EVIDENCE_GAP_ANSWER } from './ask-evidence'
 import { firstSpeechTurn, positionEvidence, positionPointSupported, isPositionEligibilityQuestion, positionEligibilityQuotes } from './position-evidence'
-import { CAUSAL, extractNamedScope, type NamedScope } from './agentic-ask'
+import { CAUSAL, type NamedScope } from './agentic-ask'
+import { claimMatchesSpeaker } from './ask-attribution'
+import { withoutSaPlaceholder } from '../public/sa-hansard.js'
 import type { Passage, QualitativeAnswer } from './research-types'
 
 export interface AnswerCitation { id: string; quote: string; start: number; end: number }
@@ -15,6 +17,7 @@ function unresolvedPersonQuestion(question: string): boolean {
 /** The same original-context, literal-quote and position gates used by Ask.
  * This boundary rejects a whole invalid draft; it never unquotes a misquote. */
 export function verifyResearchAnswer(draft: AnswerDraft, passages: Map<string, Passage>, question: string, named: NamedScope, positionQuery?: string, roster?: unknown): QualitativeAnswer | null {
+  if (typeof draft.text !== 'string' || withoutSaPlaceholder(draft.text) !== draft.text || draft.citations?.some(c => withoutSaPlaceholder(c.quote) !== c.quote)) return null
   // The numerical resolver's unknown-topic vocabulary also marks ordinary
   // prose as unresolved. Keep explicit person requests strict without using
   // that numerical vocabulary to reject every new qualitative subject.
@@ -31,8 +34,7 @@ export function verifyResearchAnswer(draft: AnswerDraft, passages: Map<string, P
     const evidence = position ? firstSpeechTurn(passage.text) : passage.text
     if (!normal(evidence).includes(normal(citation.quote))) return null
     const claim = points.slice(citation.start, citation.end).join('')
-    const claimNames = extractNamedScope(claim, roster, null), quoteNames = extractNamedScope(citation.quote, roster, null).people
-    if (claimNames.ambiguous || claimNames.people.some(name => normal(name).toLowerCase() !== normal(passage.speaker ?? '').toLowerCase() && !quoteNames.includes(name))) return null
+    if (!claimMatchesSpeaker(claim, passage.speaker, roster)) return null
     if (unsupportedQuotes(claim, [citation.quote]).length) return null
     // Check short quotations too: the general Ask helper deliberately ignores
     // short spans, but a terminal research draft must keep every quote literal.

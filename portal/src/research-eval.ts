@@ -2,7 +2,7 @@ import type { ResearchStats } from './research-types'
 
 export interface ResearchEvalState {
   started: number
-  loop: { tokens: { input: number; output: number } | null; cost: number | null; cachedByTurn?: number[]; turns?: ResearchStats['turns'] }
+  loop: { tokens: { input: number; output: number } | null; cost: number | null; cachedByTurn?: (number | null)[]; turns?: ResearchStats['turns'] }
   legacy: { calls: number; measured: number; tokens: { input: number; output: number }; cost: number }
 }
 export function researchEvalState(): ResearchEvalState {

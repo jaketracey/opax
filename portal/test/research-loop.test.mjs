@@ -92,9 +92,9 @@ test('quote, causation, bound ranges and position verifiers reject unsupported p
  const passages=new Map([[id,p]]);assert.ok(api.verifyResearchAnswer(valid,passages,'housing',emptyScope));for(const phrase of ['The donations bought votes.','"Fake short quote"','‘Fake single quote’',"'Fake ASCII quote'",'Housing costs $999.'])assert.equal(api.verifyResearchAnswer({text:phrase,citations:[{id,quote:text,start:0,end:phrase.length}]},passages,'housing',emptyScope),null);assert.equal(api.verifyResearchAnswer(valid,passages,'What was the position on defence?',emptyScope,'defence'),null);assert.equal(api.verifyResearchAnswer({...valid,text:text+' Uncited extra claim.'},passages,'housing',emptyScope),null);
 });
 
-test('numerical tool answers also work outside the old classifier',async()=>{
- const f=fixtures(model([reply([call('count_speeches',args)]),reply([call('finish',{facts:[1]})])])),q='Summarise the indexed gambling volume for NSW speakers.';
- assert.equal(api.classifyAgentic(q).shape,null);const run=await api.runAgentic(q,f.deps,async()=>{},40_000,api.inferPeriod(q),{},emptyScope);assert.equal(run.research.mode,'loop');assert.match(run.answer,/Taylor Example: 87/);assert.equal(f.plannerCalls,0);
+test('unclassified prose exposes no structured speech tools and goes straight to ordinary fallback on a misroute',async()=>{
+ const f=fixtures(model([reply([call('count_speeches',args)])])),q='Summarise the indexed gambling volume for NSW speakers.';
+ assert.equal(api.classifyAgentic(q).shape,null);const run=await api.runAgentic(q,f.deps,async()=>{},40_000,api.inferPeriod(q),{},emptyScope);assert.equal(run.research.mode,'planner');assert.equal(run.answered,false);assert.equal(f.plannerCalls,0);assert.deepEqual(f.model.doGenerateCalls[0].tools.map(t=>t.name),['search','read_passage']);assert.equal(run.research.failure,'malformed_args');
 });
 test('realistic four-turn usage survives token admission; search notes stay out of numerical answers',async()=>{
  const m=model([reply([call('search',{query:'gambling',limit:4})],3000,500),reply([call('count_speeches',args)],7000,500),reply([call('count_speeches',{...args,limit:1})],11000,500),reply([call('finish',{facts:[3]})],15000,500)]),f=fixtures(m),oldKb=f.deps.kb;
@@ -112,11 +112,11 @@ test('repair instructions contain an answer hash, never the rejected text or quo
  // The conversation retains its draft; high-priority instructions use a hash.
  const instructions=JSON.stringify(f.model.doGenerateCalls[3].prompt.filter(p=>['system','developer'].includes(p.role)));assert.match(instructions,/answer#[a-f0-9]{64}/);assert.doesNotMatch(instructions,/DRAFT MUST|FABRICATED REPAIR/);
 });
-test('wrong roster-person attribution is rejected; speaker and quoted people remain valid',()=>{
+test('wrong roster-person attribution is rejected even when the other name is in the quote',()=>{
  const roster={people:[{name:'Taylor Example'},{name:'Pat Example'}]},passages=new Map([[id,{...p,speaker:'Pat Example'}]]);
  const draft=name=>({text:name+' told the House: "'+text+'"',citations:[{id,quote:text,start:0,end:Array.from(name+' told the House: "'+text+'"').length}]});
  assert.equal(api.verifyResearchAnswer(draft('Taylor Example'),passages,'housing',emptyScope,undefined,roster),null);assert.ok(api.verifyResearchAnswer(draft('Pat Example'),passages,'housing',emptyScope,undefined,roster));
- const quoted='Taylor Example called for housing safeguards.',quotedPassages=new Map([[id,{...p,text:quoted,speaker:'Pat Example'}]]),claim={text:quoted,citations:[{id,quote:quoted,start:0,end:quoted.length}]};assert.ok(api.verifyResearchAnswer(claim,quotedPassages,'housing',emptyScope,undefined,roster));
+ const quoted='Taylor Example called for housing safeguards.',quotedPassages=new Map([[id,{...p,text:quoted,speaker:'Pat Example'}]]),claim={text:quoted,citations:[{id,quote:quoted,start:0,end:quoted.length}]};assert.equal(api.verifyResearchAnswer(claim,quotedPassages,'housing',emptyScope,undefined,roster),null);
 });
 test('ordinary failures and shadow failures skip discarded planner calls',async()=>{
  const f=fixtures(model(()=>{throw Error('fixture provider failure')})),ordinary='What does the record say about housing?';
@@ -133,4 +133,18 @@ test('rebuilt JSON removes content-length and stepped old answers always retain 
 test('committee checks retain the final model round in live events and cached trails',async()=>{
  const federal={...args,state:'federal'},f=fixtures(model([reply([call('count_speeches',federal)]),reply([call('finish',{facts:[1]})])])),q='Who speaks most about gambling in federal parliament across the whole record?';
  const run=await api.runAgentic(q,f.deps,async(e,d)=>f.events.push(d),40000,api.inferPeriod(q),{},emptyScope),body=api.agenticAskPayload(run,q);assert.equal(run.answered,true);assert.deepEqual(body.research.trail.map(t=>t.round),[1,2,2]);assert.equal(run.events.at(-1).tool,'count_speeches');assert.equal(run.events.at(-1).round,2);
+});
+
+test('qualitative six-round trace searches twice, reads, repairs, then answers with only qualitative tools',async()=>{
+ const f=qualitativeFixture([reply([call('search',{query:'housing'})],3500,500),reply([call('search',{query:'affordability safeguards'})],6000,500),reply([call('read_passage',{id})],9000,500),reply([call('read_passage',{id})],11500,500),reply([call('answer',{...valid,citations:[{...valid.citations[0],quote:'fabricated'}]})],14000,500),reply([call('answer',valid)],16000,500)]);
+ const run=await f.run();assert.equal(run.research.mode,'loop');assert.equal(run.research.rounds,6);assert.equal(f.plannerCalls,0);assert.equal(f.failures.length,0);assert.equal(run.answer,text);assert.deepEqual(run.tokens,{input:60000,output:3000});
+ assert.deepEqual(f.model.doGenerateCalls.map(c=>c.tools.map(t=>t.name)),[['search','read_passage'],['search','read_passage'],['read_passage'],['read_passage','answer'],['read_passage','answer'],['answer']]);
+ assert.deepEqual(f.events.filter(e=>e.step?.state!=='running'&&e.step).map(e=>[e.step.round,e.step.tool,e.step.state]),[[1,'search','done'],[2,'search','done'],[3,'read_passage','done'],[5,'answer','failed'],[6,'answer','done']]);
+});
+test('reported per-turn input and cached tokens are separate from bytes/4 reserve, including realistic 60k usage',async()=>{
+ const responses=[reply([call('count_speeches',args)],18000,2000),reply([call('count_speeches',{...args,limit:1})],19000,2000),reply([call('finish',{facts:[3]})],20000,2000)];
+ responses.forEach((r,i)=>{r.usage.inputTokens.cacheRead=10000+i*1000;r.usage.inputTokens.noCache=r.usage.inputTokens.total-r.usage.inputTokens.cacheRead;r.usage.outputTokens.reasoning=1500;r.usage.outputTokens.text=500;r.providerMetadata={openrouter:{provider:'fixture-host'}};});
+ const f=fixtures(model(responses)),run=await f.run();assert.equal(run.research.mode,'loop');assert.equal(run.research.failure,undefined);assert.deepEqual(run.tokens,{input:57000,output:6000});assert.deepEqual(run.research.cached_input_by_turn,[10000,11000,12000]);
+ assert.deepEqual(run.research.turns.map(t=>[t.round,t.input,t.output,t.cached_input]),[[1,18000,2000,10000],[2,19000,2000,11000],[3,20000,2000,12000]]);assert.ok(run.research.turns.every(t=>t.input_reserve>0&&t.input_reserve<18000));
+ assert.deepEqual(run.research.turns.map(t=>[t.provider,t.reasoning,t.cached]),[['fixture-host',1500,10000],['fixture-host',1500,11000],['fixture-host',1500,12000]]);
 });

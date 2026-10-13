@@ -59,7 +59,7 @@
     // OPENROUTER_API_KEY is provisioned by the hub, never by local tooling.
     "RESEARCH_LOOP": "shadow",
     "RESEARCH_LOOP_STEPS": "5",
-    "RESEARCH_LOOP_MS": "28000",
+    "RESEARCH_LOOP_MS": "8000",
     "RESEARCH_LOOP_TOKENS": "96000",
     "RESEARCH_LOOP_DAILY_USD": "5",
     "RESEARCH_LOOP_MODEL_ID": "@preset/opax-pro",

@@ -6,7 +6,7 @@ export type AugmentedContext = {
   fields?: Record<string, { id?: string; text?: string; parent?: string }>
 }
 
-export const ASK_PIPELINE_VERSION = '2026-10-10-person-overview-v3-sa-cap-cancel-passage-v3'
+export const ASK_PIPELINE_VERSION = '2026-10-14-speaker-bound-sa-clean-citations-v4'
 
 /** A deliberately scoped evidence gap is a valid answer, not a missing citation. */
 export const EVIDENCE_GAP_ANSWER = 'This selection does not establish their position on that topic.'
@@ -104,7 +104,8 @@ export function normaliseFootnotes(
   let cursor = 0
   let length = 0
   for (const match of prose.matchAll(/\[\^?([^\]\r\n]+)\]/g)) {
-    if (!definitions.has(match[1]) && !Object.hasOwn(mapping, match[1]) && !match[0].startsWith('[^')) continue
+    if (!definitions.has(match[1]) && !Object.hasOwn(mapping, match[1]) && !match[0].startsWith('[^') && !/^\d+$/.test(match[1])) continue
+    if (prose[match.index! + match[0].length] === '(') continue // a Markdown link label, not a citation
     const fragment = prose.slice(cursor, match.index)
     answer = (answer + fragment).trimEnd()
     length = Array.from(answer).length

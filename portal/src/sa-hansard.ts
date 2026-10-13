@@ -8,6 +8,10 @@ function containsSa(value: unknown): boolean {
   if (isSaHansard(value)) return true
   return Object.values(value).some(containsSa)
 }
+function containsPlaceholder(value: unknown): boolean {
+  return typeof value === 'string' ? /Excerpt omitted;\s*see the official record[.\]]/i.test(value)
+    : !!value && typeof value === 'object' && Object.values(value).some(containsPlaceholder)
+}
 
 /** Old report citations lack URLs. Resolve provenance without changing retrieval. */
 async function sourceLinks(value: unknown, read: ReadRecord, answers = true): Promise<Map<string, string>> {
@@ -36,25 +40,25 @@ async function sourceLinks(value: unknown, read: ReadRecord, answers = true): Pr
 
 /** Called before encoding done/sources, never for a delta or point. */
 export async function saEventPayload<T>(event: string, payload: T, flag: string | undefined, read: ReadRecord, match = ''): Promise<T> {
-  if (!['done','sources'].includes(event) || saFullText(flag) || !containsSa(payload)) return payload
-  await sourceLinks(payload, read, false)
+  if (!['done','sources'].includes(event) || !containsPlaceholder(payload) && (saFullText(flag) || !containsSa(payload))) return payload
+  if (!saFullText(flag)) await sourceLinks(payload, read, false)
   return saDisplayStreamPayload(payload, flag, match)
 }
 
 /** Every public API/cache/MCP/static-report exit passes through this boundary. */
 export async function saPublicResponse(response: Response, flag: string | undefined, read: ReadRecord, match = ''): Promise<Response> {
-  if (saFullText(flag) || !response.ok || !response.body) return response
+  if (!response.ok || !response.body) return response
   const type = response.headers.get('content-type') || ''
   // SSE is protected at the evidence and event-building boundaries. Preserve
   // its original stream, chunk timing, bytes and headers without a transform.
   if (!type.includes('application/json')) return response
-  const body = await response.text(), payload: unknown = JSON.parse(body)
-  if (!containsSa(payload)) return new Response(body, response)
+  const body = await response.clone().text(), payload: unknown = JSON.parse(body)
+  if (!containsPlaceholder(payload) && (saFullText(flag) || !containsSa(payload))) return response
   const headers = new Headers(response.headers)
   headers.delete('content-length')
   headers.delete('etag')
   // Raw retrieval caches stay internal. Browsers must revalidate the current policy.
   headers.set('cache-control', 'no-store')
-  const originals = await sourceLinks(payload, read)
+  const originals = saFullText(flag) ? new Map<string, string>() : await sourceLinks(payload, read)
   return new Response(JSON.stringify(saDisplayPayload(payload, flag, match, originals)), {status:response.status, headers})
 }

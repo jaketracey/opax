@@ -168,3 +168,103 @@ before merging so both suites remain intact. Both merges completed cleanly.
 
 All checks used fake providers/offline fixtures. No production migration,
 deployment, Ask, auth, or model call was made.
+
+## Round 4: production-eval follow-up
+
+Read Fable's offline 30-request report in the research-evals worktree. Its verdict
+remains **do not route**. Merged `origin/main` (`bb1f74703ddb30f200406bc7f71ffec8dbf5ac0d`)
+with merge commit `00226409f`, then integrated the advanced shared main through
+`f17d37eaded172a4c2df53f06ac79a5f27beb87e`. Resolved the six telemetry/SA/stamp
+conflicts, retaining the operator model/provider allowlist, reasoning config,
+single-host pins, per-turn host/reasoning/cache fields and existing
+`research.failure` API. The incoming SA fix preserves federal quotations in
+mixed-source answers; the stricter round-4 boundary removes all omission labels
+instead of introducing substitute quotations.
+This handoff changes local implementation only; no production requests or
+deployment were made.
+
+1. **Qualitative reachability:** unclassified prose offers only search/read/answer,
+   never structured speech or person tools. Six rounds; after two searches, read
+   is required before answer becomes available. The final round is answer-only.
+2. **Timeouts/ordinary fallback:** Worker loop wall is enforced at 8 seconds,
+   including if configured higher. Non-numerical failures and all timeouts skip
+   the planner. Ordinary Ask receives a fresh client-linked 90-second envelope
+   for its two existing 40-second attempts and verification. An upstream outage
+   returns a controlled 503/error event. A fake 45-second ordinary response now
+   succeeds in JSON and SSE, with one timeout reason and no planner call.
+3. **Deterministic routing:** electorate questions use `electoratePlan` directly,
+   alongside the existing money/pay paths. Valid Census answers and missing
+   profiles invoke neither provider nor planner, with zero reported model cost.
+4. **Token units/telemetry:** retain the bytes/4 next-input estimate and 96,000-token
+   allowance (160,000 ceiling). Tests succeed with 63,000 cumulative reported
+   tokens and cached input, independent of reserve units. `research.turns` and
+   `cached_input_by_turn` retain per-turn input/output, cache reads, input reserve
+   in tokens, latency and cost, retaining main's serving `provider`, `reasoning`
+   tokens and `cached` field. A timed-out provider turn records null usage,
+   while an HTTP 402 records zero provider consumption.
+5. **H04 attribution:** full names, surnames and possessives bind to the cited
+   passage's speaker in both loop and ordinary Ask. A name in a quote is no
+   exception. Partial bylines in the public export are aliases, not distinct
+   identities. Verified overview records retain speaker provenance. Valid
+   two-speaker paragraphs keep separate citation claims.
+6. **SA placeholder:** the omission label is removed from model passage text,
+   supplied source records and previous assistant turns for both engines, with
+   either full-text flag. It is never introduced as a substitute quotation.
+   Final JSON, stream done and cache storage remove placeholder quotes and
+   their citation ranges with correct Unicode offsets.
+7. **H02 rendering:** 581 unmapped numeric markers disappear from ordinary JSON
+   and streamed text; numeric Markdown links remain intact.
+8. **Failures:** every loop fallback attaches one fixed `research.failure` and
+   emits one compact `research_loop_fallback` record. Tests check error, timeout,
+   steps, grounding, tokens, limiter, unavailable ledger/key, malformed args and
+   credit exhaustion. Loop trails, rounds and telemetry survive ordinary fallback.
+
+### Fake-model trace
+
+Question: `What does the record say about housing affordability?`
+Provider: `MockLanguageModelV4`; all retrieval and passage reads are offline.
+
+| Round | Model call | Executed event | Reported input / output tokens |
+| --- | --- | --- | ---: |
+| 1 | search(housing) | running → done | 3,500 / 500 |
+| 2 | search(affordability safeguards) | running → done | 6,000 / 500 |
+| 3 | read_passage(original id) | running → done | 9,000 / 500 |
+| 4 | identical read_passage | deduplicated; no second fetch/event | 11,500 / 500 |
+| 5 | answer(fabricated supporting quote) | running → failed; one repair | 14,000 / 500 |
+| 6 | answer(verbatim evidence, bound citation) | running → done | 16,000 / 500 |
+
+Result: `research.mode=loop`, 6 turns, 60,000 input + 3,000 output tokens,
+zero planner calls. Answer: `The committee called for stronger housing
+affordability safeguards.` Its original passage id owns citation range `[0,67]`
+(the executable test asserts the actual code-point length). A direct three-round
+search/read/answer happy path also passes.
+
+### Round 4 gates and size
+
+- `npm run check`: passed.
+- `npm run build:release`: passed; photo identity and asset stamps checked.
+- `node --test --test-concurrency=4 test/research-*.test.mjs test/agentic*.test.mjs test/ask*.test.mjs test/sa-evidence.test.mjs test/sa-excerpts.test.mjs`: **452 passed**, no failures/skips.
+- Pinned Wrangler `deploy --dry-run --env=""`: passed; release default remains
+  `RESEARCH_LOOP=shadow`, five numerical turns, six qualitative, 8-second wall,
+  96,000 tokens and US$5 daily D1 admission.
+- `git diff --check`: passed. `votes.json` SHA remains unchanged.
+
+Pre-final-main-merge bundle: **6,931.73 KiB raw / 1,928.95 KiB gzip**,
++721.35 / +145.11 KiB against the initial baseline. The final integrated
+bundle measurement is recorded after the last dry-run below. The live
+quality eval must be rerun by the orchestrator before route is enabled. Existing
+D1 migration requirements and the operator-auth/no-store eval override remain
+unchanged. The parity tests remain scoped to `off`; quote and citation integrity
+tests exercise loop answers. No desktop full suite was run.
+
+Round 4 adds `ask-attribution.ts`, its offline fixture and
+`research-grounding-round4.test.mjs`; changes the loop/router, evidence and SA
+boundaries, overview speaker provenance, usage/failure payloads, focused tests,
+Wrangler wall configuration and design docs. Release stamping updates only the
+SA module import and app stamp.
+
+Final integrated round-4 bundle, pinned Wrangler dry-run: **6,932.93 KiB raw /
+1,929.23 KiB gzip**. Delta against the initial baseline: **+722.55 KiB raw /
++145.39 KiB gzip**; against round 3: +18.20 / +5.69 KiB. Raw size is about
+6.77 MiB, below Cloudflare's currently documented 64 MiB uncompressed limit.
+The final integrated test run passed all 452 cases in 9.78 seconds.

@@ -42,17 +42,20 @@ export interface ResearchOptions {
 /** Fetch-based SDK loop. All provider and tool state belongs to this request. */
 export function createResearch(options: ResearchOptions): Research {
   return async (question, context) => {
-    const limits = researchLimits(options), started = Date.now()
+    const qualitativeRun = !classifyAgentic(question).shape
+    const limits = researchLimits({ ...options, ...(qualitativeRun ? { steps: 6 } : {}) }), started = Date.now()
     const controller = new AbortController(), abortParent = () => controller.abort(context.signal.reason)
     context.signal.addEventListener('abort', abortParent, { once: true })
     if (context.signal.aborted) abortParent()
     const timer = setTimeout(() => controller.abort(new DOMException('Research wall cap', 'TimeoutError')), limits.wallMs)
-    const stats: ResearchStats = { rounds: 0, tokens: { input: 0, output: 0 } }
+    const stats: ResearchStats = { rounds: 0, tokens: { input: 0, output: 0 }, turns: [], cachedByTurn: [] }
     const steps: PlanStep[] = [], results: ToolResult[] = [], passages = new Map<string, Passage>()
     const cache = new Map<string, Promise<unknown>>()
     let calls = 0, round = 0, answerAttempts = 0, finished = false, repeated = false, numericalAnswer = false
     let selected: number[] = [], qualitative: ReturnType<typeof verifyResearchAnswer> = null
     let reservedInput = 0, reservedOutput = 0
+    let turnStarted = started
+    let pendingTurn: number | undefined
     const credits = options.creditCooldown ?? researchCreditCooldown
     const price = (value: number | undefined, fallback: number) => typeof value === 'number' && Number.isFinite(value) && value >= 0 ? value : fallback
     const inputPrice = price(options.inputPrice, 1), outputPrice = price(options.outputPrice, 3)
@@ -199,7 +202,6 @@ export function createResearch(options: ResearchOptions): Research {
       check()
       if (credits.blocked()) fail('research_credit_exhausted')
       if (!options.model) fail('missing_key')
-    let callStarted = Date.now()
       await Promise.race([generateText({
         model: options.model!, instructions, tools, toolChoice: 'required',
         prompt: JSON.stringify({ question, period: context.period, namedScope: context.named, conversation: options.conversation ?? [] }),
@@ -228,25 +230,26 @@ export function createResearch(options: ResearchOptions): Research {
           if (!reservation) return fail('daily_budget')
           turnCost = undefined
           check()
+          const searches = steps.filter(step => step.tool === 'search').length
+          const qualitativeTools = answerAttempts || round === limits.rounds && passages.size ? ['answer']
+            : searches >= 2 ? passages.size ? ['read_passage', 'answer'] : ['read_passage']
+            : passages.size ? ['search', 'read_passage', 'answer'] : ['search', 'read_passage']
           return { maxOutputTokens: reservedOutput,
-            ...(numericalAnswer || repeated || answerAttempts ? { activeTools: numericalAnswer ? ['finish'] : answerAttempts ? ['answer'] : ['finish', 'answer'] } : {}),
+            ...(qualitativeRun ? { activeTools: qualitativeTools } : numericalAnswer || repeated || answerAttempts ? { activeTools: numericalAnswer ? ['finish'] : answerAttempts ? ['answer'] : ['finish', 'answer'] } : {}),
             instructions: stepInstructions }
         },
         onLanguageModelCallStart: async () => {
           check()
-          callStarted = Date.now()
+          turnStarted = Date.now()
           stats.usageUnknown = true
+          pendingTurn = stats.turns!.length
+          stats.turns!.push({ round, input: null, output: null, cached_input: null, input_reserve: reservedInput, ms: 0, cost_usd: null, provider: '', reasoning: null, cached: null })
+          stats.cachedByTurn!.push(null)
           await context.progress('status', { phase: 'reading' })
         },
         onLanguageModelCallEnd: event => {
           stats.usageUnknown = false
           stats.tokens.input += event.usage.inputTokens ?? reservedInput; stats.tokens.output += event.usage.outputTokens ?? reservedOutput
-          stats.cachedByTurn = [...(stats.cachedByTurn ?? []), event.usage.inputTokenDetails?.cacheReadTokens ?? 0]
-          const served = object(event.providerMetadata?.openrouter).provider
-          stats.turns = [...(stats.turns ?? []), { ms: Date.now() - callStarted, provider: typeof served === 'string' ? served.slice(0, 40) : '',
-            input: event.usage.inputTokens ?? 0, output: event.usage.outputTokens ?? 0,
-            reasoning: event.usage.outputTokenDetails?.reasoningTokens ?? 0,
-            cached: event.usage.inputTokenDetails?.cacheReadTokens ?? 0 }]
           const usage = object(object(event.providerMetadata?.openrouter).usage)
           const receipt = typeof usage.cost === 'number' && Number.isFinite(usage.cost) && usage.cost >= 0 ? usage.cost : undefined
           const input = event.usage.inputTokens ?? reservedInput, output = event.usage.outputTokens ?? reservedOutput
@@ -254,6 +257,15 @@ export function createResearch(options: ResearchOptions): Research {
           // Estimates belong in telemetry. Only a provider receipt permits a
           // refund; absent billing data keeps the full ceiling charged.
           turnCost = receipt
+          const served = object(event.providerMetadata?.openrouter).provider
+          const cached = event.usage.inputTokenDetails?.cacheReadTokens ?? 0
+          const turn = { round, input, output, cached_input: cached, cached,
+            provider: typeof served === 'string' ? served.slice(0, 40) : '', reasoning: event.usage.outputTokenDetails?.reasoningTokens ?? 0,
+            input_reserve: reservedInput, ms: Math.max(0, Date.now() - turnStarted), cost_usd: cost }
+          if (pendingTurn === undefined) stats.turns!.push(turn)
+          else stats.turns![pendingTurn] = turn
+          stats.cachedByTurn = stats.turns!.map(t => t.cached_input)
+          pendingTurn = undefined
           if (cost != null && Number.isFinite(cost) && cost >= 0) stats.costUsd = (stats.costUsd ?? 0) + cost
           options.onUsage?.(stats)
           if (stats.tokens.input + stats.tokens.output > limits.tokens) fail('tokens')
@@ -275,10 +287,12 @@ export function createResearch(options: ResearchOptions): Research {
     } catch (error) {
       if (!(error instanceof ResearchError) && isResearchCreditError(error)) {
         credits.exhaust(); failed = 'research_credit_exhausted'; turnCost = 0; stats.usageUnknown = false
+        if (pendingTurn !== undefined) Object.assign(stats.turns![pendingTurn], { input: 0, output: 0, cached: 0, cached_input: 0, reasoning: 0, cost_usd: 0 })
       }
       controller.abort(error)
       throw error instanceof ResearchError ? error : new ResearchError(failed ?? (context.signal.aborted ? 'aborted' : 'error'), stats)
     } finally {
+      if (pendingTurn !== undefined) stats.turns![pendingTurn].ms = Math.max(0, Date.now() - turnStarted)
       // A provider timeout/disconnect has unknown cost: keep its reservation.
       // Cleanup failure also keeps the charge; it never permits more spend.
       if (reservation) {
@@ -287,6 +301,7 @@ export function createResearch(options: ResearchOptions): Research {
         if (options.cleanup) options.cleanup(work)
         else await work
       }
+      stats.cachedByTurn = stats.turns!.map(t => t.cached_input)
       options.onUsage?.(stats)
       clearTimeout(timer); context.signal.removeEventListener('abort', abortParent); controller.signal.removeEventListener('abort', rejectAbort)
     }

@@ -1,5 +1,6 @@
+import {guardAnswerAttribution} from './fixtures/ask-attribution.mjs';
 import {speechPresentation, joinMixedSpeakers} from '../src/mixed-speakers.ts';
-const runInNewContext = (code, context = {}, options) => { context.speechPresentation ??= speechPresentation; context.joinMixedSpeakers ??= joinMixedSpeakers; return baseVM(code, context, options); };
+const runInNewContext = (code, context = {}, options) => { context.speechPresentation ??= speechPresentation; context.joinMixedSpeakers ??= joinMixedSpeakers; context.guardAnswerAttribution ??= guardAnswerAttribution; return baseVM(code, context, options); };
 import * as passageText from '../src/passage-text.ts';
 import test from 'node:test';
 import assert from 'node:assert/strict';
@@ -31,7 +32,7 @@ test('original-turn and witness-split versions expire unsafe answers',()=>{
  for(const input of [{question:'Who funds Labor?'},{...position,kind:'all'}])assert.equal(JSON.parse(api.askCacheInput(input,'epoch')).pipeline,exports.ASK_PIPELINE_VERSION+':witness-split-v1:mixed-speakers-v1');
 });
 test('footnotes resolve through provider mappings with Unicode offsets',()=>{const p=api.askPayload(fixture());assert.equal(p.answer,'😀 A fact. Another fact.');assert.deepEqual(plain(p.citations[id]),[[7,8]]);assert.deepEqual(plain(p.citations[neighbour]),[[21,22]]);assert.equal(p.sources[0].cited,true)});
-test('live plain numbering, multiple blocks and repeated citations work',()=>{const p=normaliseFootnotes('Fact [1]. More [1][2].\n[1]: block-AA, block-AB\n[2]: block-AA',{'block-AA':id,'block-AB':neighbour},new Set([id,neighbour]));assert.equal(p.answer,'Fact. More.');assert.equal(p.citations[id].length,2);assert.equal(p.citations[neighbour].length,2);assert.equal(normaliseFootnotes('Schedule [42] applies.',{},new Set()).answer,'Schedule [42] applies.')});
+test('live plain numbering, multiple blocks and repeated citations work',()=>{const p=normaliseFootnotes('Fact [1]. More [1][2].\n[1]: block-AA, block-AB\n[2]: block-AA',{'block-AA':id,'block-AB':neighbour},new Set([id,neighbour]));assert.equal(p.answer,'Fact. More.');assert.equal(p.citations[id].length,2);assert.equal(p.citations[neighbour].length,2);assert.equal(normaliseFootnotes('Schedule [42] applies.',{},new Set()).answer,'Schedule applies.')});
 test('invented and generated references never become citations',()=>{const f=fixture();f.citation_footnote_to_context={'block-AA':generated,'block-AB':'unknown/t/body/0-20'};f.retrieval_results.resources.r1.fields['t/da-summary']={paragraphs:{[generated]:{text:'Generated summary',score:1,score_type:'RERANKER'}}};const p=api.askPayload(f);assert.equal(Object.keys(p.citations).length,0);assert.equal(p.sources[0].cited,false);assert.equal(p.sources[0].snippet,'Original passage')});
 test('unquoting a misquote shifts every citation after each removed mark, by code point',()=>{
  const answer='😀 She said “this is not in any passage at all, believe me” and then [x]. Then “neither is this second long quotation here” too.';
@@ -187,4 +188,14 @@ test('mixed Ask/chat sources carry a debate and participants with no first-speak
  const row=api.askPayload(f).sources[0];assert.equal(row.speaker,null);assert.equal(row.person_id,null);assert.equal(row.party,null);
  assert.equal(row.speaker_display,'Several speakers');assert.equal(row.debate,'Questions without Notice');
  assert.deepEqual(plain(row.participants),[{name:'Example MP',person_id:'123'}]);assert.equal(row.snippet,'Original passage');
+});
+
+// H02: Nuclia emitted hundreds of numbered markers without a mapping. They
+// are not source citations and must not survive either JSON or streamed prose.
+test('H02 strips 581 unmapped markers while preserving numeric markdown links',()=>{
+ const answer='An uncited fallback answer.'+Array.from({length:581},(_,i)=>`[${i+1}]`).join('');
+ const payload=api.askPayload({answer,retrieval_results:{resources:{}}});
+ assert.equal(payload.answer,'An uncited fallback answer.');assert.deepEqual(plain(payload.citations),{});
+ assert.equal(normaliseFootnotes('[42](https://example.test/record) is a link.',{},new Set()).answer,'[42](https://example.test/record) is a link.');
+ const stream=new FootnoteStream();let visible='';for(let i=0;i<answer.length;i+=7)visible+=stream.push(answer.slice(i,i+7));visible+=stream.push('',true);assert.equal(visible,payload.answer);
 });
