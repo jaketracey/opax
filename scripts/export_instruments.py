@@ -14,7 +14,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 from parli.ingest.frl_instruments import Held, ID, LICENCE, SCOPE, guard_drift_evidence, guard_reconciliation, local_path, validate_title, tail_summary
 
-MAX_FILES, MAX_BYTES, CHUNK_ROWS = 400, 25_000_000, 512
+CHUNK_ROWS = 512
 SOURCE = "Source: Federal Register of Legislation (legislation.gov.au), CC BY 4.0"
 
 
@@ -148,15 +148,7 @@ def plan_export(snapshot):
                                       "count_start": count_start, "count_end": count_end, "drift": drift, "tail_sweep": tail_summary(sweep),
                                       "exported": exported, "unresolved_gap": gap, "gap_pages": pages,
                                       "export_date": generated[:10]})
-    check_budget(payloads)
     return payloads, manifest
-
-
-def check_budget(payloads):
-    size = sum(len(v) for v in payloads.values())
-    if len(payloads) > MAX_FILES or size > MAX_BYTES:
-        raise Held(f"Asset budget exceeded: {len(payloads)} files, {size} bytes")
-    return len(payloads), size
 
 
 def export(snapshot_path, out):
@@ -166,7 +158,7 @@ def export(snapshot_path, out):
     guard_reconciliation(snapshot.get("exported", snapshot["count"]), snapshot["odata_count"],
                          snapshot.get("unresolved_gap", 0), snapshot.get("gap_pages", []), old.get("exported", old.get("count", 0)), snapshot.get('count_start'))
     payloads, manifest = plan_export(snapshot)
-    # Validate the complete plan and budget before touching the last good export.
+    # Validate the complete plan before touching the last good export.
     out.mkdir(parents=True, exist_ok=True)
     for name, body in payloads.items():
         path = out / name
@@ -174,7 +166,7 @@ def export(snapshot_path, out):
         tmp = out / (name + ".tmp"); tmp.write_bytes(body); tmp.replace(path)
     for p in out.glob("*.json"):
         if p.name not in payloads: p.unlink()
-    files, size = check_budget(payloads)
+    files, size = len(payloads), sum(map(len, payloads.values()))
     print(json.dumps({"rows": manifest["exported"], "listed": manifest["count"], "unresolved_gap": manifest["unresolved_gap"], "files": files, "bytes": size}))
     return manifest
 

@@ -193,7 +193,7 @@ export async function buildCrawl(root, {read: sourceRead} = {}) {
   const peopleDate = [roster.meta.generated,roster.meta.representation?.updated,seatManifest.generated].filter(Boolean).sort().at(-1);
   const recent=await optional('seo/recent-votes.json');
   for (const p of people) {
-    if (!validId(p.name) || p.name.length > 120) continue;
+    if (!validId(p.name)) continue;
     const path = `/subject/person/${slugs.get(p.name) || personSlug(p.name)}`;
     const interest = p.pid ? await optional(`interests/${p.pid}.json`) : null;
     const record=votes[p.pid];

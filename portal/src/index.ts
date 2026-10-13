@@ -3568,17 +3568,7 @@ interface PageMeta {
   noindex?: boolean
 }
 
-// How long a /subject/<dir>/<name> segment may be. A person, a party or a donor
-// is named in a few words; an AEC entity is named in its own registered legal
-// title, and the longest on the register runs to 127 characters ("Transport
-// Workers Union of Australia NSW QLD Interim Governance Branch formerly ...").
-// The bound is still a bound, and sitemapXml applies the same one so it can
-// never list a page this function would refuse.
-const SUBJECT_NAME_MAX = 120
-const CAMPAIGNER_NAME_MAX = 200
-const SUPPLIER_NAME_MAX = 500
-// A bill key is jurisdiction plus source identity, lowercase and hyphenated.
-const BILL_KEY_MAX = 64
+// Published indexes resolve identities; route grammar rejects malformed paths.
 const BILL_KEY_RE = /^[a-z][a-z0-9-]*$/
 const GRANT_RECIPIENT_ID_RE = /^(?:abn:\d{11}|name:[a-z0-9 .&'()-]{2,120}|person:[a-z0-9 .'-]{2,120})$/
 
@@ -3625,8 +3615,7 @@ function matchSeoRoute(url: URL): SeoRoute | null {
     const dir = dec[1]
     if (isDirectoryKind(dir)) {
       if (segs.length === 2) return { kind: 'index', dir }
-      const max = dir === 'campaigner' ? CAMPAIGNER_NAME_MAX : (dir === 'supplier' || dir === 'agency') ? SUPPLIER_NAME_MAX : SUBJECT_NAME_MAX
-      if (segs.length === 3 && dec[2].trim() && dec[2].length <= max) {
+      if (segs.length === 3 && dec[2].trim()) {
         return { kind: 'subject', dir, name: dec[2].trim() }
       }
     }
@@ -3637,8 +3626,8 @@ function matchSeoRoute(url: URL): SeoRoute | null {
   }
   // /bill/<bill_key>. The keys the projection mints are au-federal-r7531 and
   // au-federal-alrc-1270 (docs/BILLS-CONTRACT.md), with au-nsw-18524 and kin to
-  // come; BILL_KEY_MAX is the shape bound, and index.json decides what exists.
-  if (dec[0] === 'bill' && segs.length === 2 && dec[1].length <= BILL_KEY_MAX && BILL_KEY_RE.test(dec[1])) {
+  // come; index.json decides what exists.
+  if (dec[0] === 'bill' && segs.length === 2 && BILL_KEY_RE.test(dec[1])) {
     return { kind: 'bill', key: dec[1] }
   }
   return null

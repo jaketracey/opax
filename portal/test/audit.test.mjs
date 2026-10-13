@@ -27,9 +27,7 @@ test('QAO weekly refresh stays held before catalogue promotion and preserves a h
  execFileSync('python3',[new URL('../../scripts/vm/test_qao_refresh.py',import.meta.url).pathname],{cwd:checkout,encoding:'utf8'});
 });
 
-test('audit export file/byte budget, source URLs, attribution and exact agency-only joins',()=> {
- assert.ok(Object.keys(files).length <= 40);
- assert.ok(Object.values(files).reduce((n,b)=>n+Buffer.byteLength(b),0) <= 10_000_000);
+test('audit export reconciles source URLs, attribution and exact agency-only joins',()=> {
  assert.equal(manifest.count,index.records.length); assert.equal(manifest.listed,manifest.count);
  assert.equal(manifest.attribution.source,'Source: Queensland Audit Office, CC BY 4.0');
  assert.match(manifest.attribution.copyright_notice,/State of Queensland/);
@@ -138,10 +136,8 @@ test('audit Worker routes give bad/unknown ids a 404 and noindex without externa
  assert.equal(CATALOG_KINDS.has('audit report'),true);
 });
 
-test('accepted worktree audit assets reconcile their live sitemap, counts and budget',()=> {
+test('accepted worktree audit assets reconcile their live sitemap and counts',()=> {
  // Run only after acquisition/export, independently of the offline parser tests.
- const names=readdirSync(new URL('audit/',publicRoot));assert.ok(names.length<=150);
- const size=names.reduce((n,name)=>n+readFileSync(new URL('audit/'+name,publicRoot)).byteLength,0);assert.ok(size<=30_000_000);
  const actual=JSON.parse(readFileSync(new URL('audit/manifest.json',publicRoot)));
  assert.equal(auditCrawlEntries(actual).length,actual.count);
  const crawl=JSON.parse(readFileSync(new URL('crawl/manifest.json',publicRoot)));

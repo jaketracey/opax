@@ -27,7 +27,7 @@ const uiLabelsReady = import('/labels.js?v=fc03aa14cf').then(module => { uiLabel
 // ⋯, the page-actions menu: its markup for the renderers, and its behaviour
 // for every ⋯ on the page, the toolbars' static ones included.
 let pageMenus;
-const pageMenusReady = import('/page-actions-menu.js?v=8640c3d1ca').then(module => { pageMenus = module; module.initPageMenus(document, window); });
+const pageMenusReady = import('/page-actions-menu.js?v=8640c3d1ca').then(module => { pageMenus = module; module.initPageMenus(document, window); mountPendingPageMenus(); });
 let attributionHelpers;
 const attributionReady = Promise.allSettled([divisionMarkdownReady,
   import('./speech-attribution.js?v=1350457c5d').then(module => { attributionHelpers = module; })]);
@@ -321,7 +321,15 @@ function machineLabelHTML(opts) { return uiLabels.machineLabelHTML(opts); }
 function sourceLineHTML(opts) { return uiLabels.sourceLineHTML(opts); }
 function fineprintSourceHTML(html, opts) { return uiLabels.fineprintSourceHTML(html, opts); }
 // A ⋯ whose module failed to load draws nothing; the page still renders.
-function moreMenuHTML(items, label, opts) { return pageMenus?.pageMenuHTML(items, label, opts) ?? ""; }
+function moreMenuHTML(items, label, opts) {
+  return pageMenus?.pageMenuHTML(items, label, opts) ?? `<span data-pending-page-menu="${esc(JSON.stringify([items,label,opts]))}"></span>`;
+}
+function mountPendingPageMenus() {
+  for (const node of document.querySelectorAll('[data-pending-page-menu]')) {
+    const args = JSON.parse(node.dataset.pendingPageMenu);
+    node.outerHTML = pageMenus.pageMenuHTML(...args);
+  }
+}
 
 /* A party's name as a sentence says it: "the Labor Party", "the Greens", "One
    Nation". The money data's short labels ("Labor", "Liberal") take an article
@@ -612,7 +620,7 @@ async function readAskStream(body, signal, on) {
 async function askRecord(body, signal, on = {}) {
   const started = performance.now();
   const from_section = location.pathname.split("/")[1] || "home";
-  trackOutcome("opax_ask_started", { from_section, page_type: growthModules.askPageType(location.href) });
+  trackOutcome("opax_ask_started", { from_section, page_type: growthModules?.askPageType(location.href) || "ask" });
   try {
     const data = await askRecordRequest(body, signal, on);
     trackOutcome("opax_ask_completed", { from_section, duration_ms: Math.round(performance.now() - started), source_count: data.sources?.length || 0, has_answer: !!data.answer?.trim(), is_overview_intent: data.is_overview_intent === true });
@@ -1861,10 +1869,26 @@ function parseHash() {
   return { segs, params };
 }
 
-function route() {
+let routeRequest = 0;
+function routePrerequisites(segs) {
+  const [view] = segs;
+  const needsRecords = ['subject','bill','bills','doc','search','declared','reports','chat'].includes(view) || view === 'ask';
+  const needsDonorIdentity = view === 'subject' || view === 'money' || view === 'reports';
+  return [uiLabelsReady,
+    ...(needsRecords ? [attributionReady,personUrlsReady] : []),
+    ...(needsDonorIdentity ? [donorViewReady] : []),
+    // Historical chat turns are the only client-side SA payload transformation.
+    // Fresh Ask/search/resource responses already apply policy in the Worker.
+    ...(view === 'chat' ? [saDisplayReady] : []),
+  ];
+}
+async function route() {
   const frag = rawFragment();
   if (frag && !frag.startsWith("/") && !firstRoute) return; // native anchors still need their page rendered on first load
   const { segs, params } = parseHash();
+  const requested = ++routeRequest;
+  await Promise.allSettled(routePrerequisites(segs));
+  if (requested !== routeRequest) return;
   if (!segs.length) { location.replace('/' + location.search + location.hash); return; }
   // The script can boot before attribution helpers finish importing. Reveal
   // panels only when this requested route is ready to choose its own panel.
@@ -3907,6 +3931,7 @@ function declaredPage(items, partyByName, { category = "", party = "", person = 
 }
 
 async function renderDeclaredPage(params, manageFocus) {
+  await growthModulesReady;
   const root = $("declared-list");
   root.innerHTML = `<p class="status">Opening the register ledger…</p>`;
   const [data, roster] = await Promise.all([loadRecentInterests(), loadParliamentarians(), loadPhotoMap()]);
@@ -5424,6 +5449,7 @@ async function renderPersonTopics(name, sections, onRecord = () => {}) {
 }
 
 async function openSubject(kind, name, manageFocus, params = new URLSearchParams()) {
+  await Promise.allSettled([growthModulesReady,voteTablesReady]);
   if (kind === "donor" || kind === "campaigner") {
     destroySubjectMap();
     const body = $("subject-body");
@@ -7133,6 +7159,7 @@ function renderDirectory(spec) {
 }
 
 async function openDirectory(kind, params, manageFocus) {
+  await growthModulesReady;
   const key = `dir:${kind}`;
   if (currentSubjectKey === key) {
     activeDirectory?.setParams(params);
@@ -8097,6 +8124,7 @@ function billPartyName(raw) {
 }
 
 async function openBillsIndex(params, manageFocus) {
+  await growthModulesReady;
   if (billView === "index") {
     activeDirectory?.setParams(params);
     if (manageFocus) $("subject-title")?.focus();
@@ -8675,6 +8703,8 @@ async function openBill(key, manageFocus) {
   // The bills export's date dates every block it supplies (principle 4). The
   // index is the export's one dated file, fetched alongside the bill itself.
   // The ask block's privacy file is keyed by the bill, so it is read with it, not after it.
+  await Promise.all([growthModulesReady,voteTablesReady]);
+  if (generation !== billTextGeneration) return;
   const [bill, billsIndex, keyPrivacy] = await Promise.all([loadBill(key), loadBillsIndex().catch(() => null), growthModules.loadModulePrivacy("bill", key)]);
   if (billView !== view || generation !== billTextGeneration) return;
   clearPageLoader("bill-loader");
@@ -15312,9 +15342,9 @@ function syncPathMeta() {
   }
 }
 
-// The first render waits for labels, attribution helpers and the canonical
-// person URL lookup, so links use the roster's aliases from the first render.
-Promise.allSettled([attributionReady, uiLabelsReady, pageMenusReady, growthModulesReady, personUrlsReady, saDisplayReady, donorViewReady, voteTablesReady]).finally(() => {
+// Each navigation waits only for the helpers used by its own renderer.
+// Menus mount when their import arrives; they never hold the first route.
+uiLabelsReady.finally(() => {
   loadPersonSlugs();
   initAskBuilder();
   route();
