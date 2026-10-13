@@ -23,7 +23,7 @@ import {moduleOutputs} from './growth-module-harness.mjs';
 import {applyQuery, dataTableHTML, mountDataTable, toCSV} from '../public/datatable.js';
 import {queryValues} from '../public/datatable-query.js';
 import {tableHarness} from './datatable-harness.mjs';
-import {tableRows,tableIdentityHashes} from '../../scripts/load_tables.mjs';
+import {tableRows,tableIdentityHashes,tableIdentityPrefilter} from '../../scripts/load_tables.mjs';
 import {tableDatabase} from './table-d1-harness.mjs';
 import {TABLE_REGISTRY_FINGERPRINT} from '../src/table-api.ts';
 import {isOrganisationRecipient} from '../src/table-recipient.mjs';
@@ -215,7 +215,8 @@ test.after(offline());
 const {env, fetch: fetchWorker} = await loadWorker(new URL('../src/index.ts', import.meta.url).pathname, root);
 env.TABLE_DB = tablesD1.db;
 const originalAssets = env.ASSETS.fetch.bind(env.ASSETS);
-env.ASSETS.fetch = request => new URL(request.url).pathname === '/table-private-identities.json' ? Promise.resolve(Response.json({version:1,identities:tableIdentityHashes(moneyTables.policy),strippedLengths:moneyTables.policy.strippedLengths})) : originalAssets(request);
+const moneyIdentityRegistry={version:1,identities:tableIdentityHashes(moneyTables.policy),strippedLengths:moneyTables.policy.strippedLengths,prefilter:tableIdentityPrefilter(moneyTables.policy)};
+env.ASSETS.fetch = request => new URL(request.url).pathname === '/table-private-identities.json' ? Promise.resolve(Response.json(moneyIdentityRegistry)) : originalAssets(request);
 const ownUrl = (html, path) => entities(html).replaceAll(path, '');
 
 function assertCleanCSV(where, csv) {

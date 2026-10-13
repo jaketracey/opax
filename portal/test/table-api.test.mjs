@@ -7,11 +7,18 @@ import {tableDatabase} from './table-d1-harness.mjs';
 import {tableIdentityIndex} from '../../scripts/load_tables.mjs';
 import {identityHash} from '../src/table-identities.mjs';
 import {registerServerCSVContract} from './datatable-endpoint-contract.mjs';
+import {performanceRow} from './helpers/table-identity-corpus.mjs';
 
 const rows=Object.fromEntries(Object.entries(TABLE_DATASETS).map(([name,c])=>[name,Array.from({length:260},(_,i)=>({row:Object.fromEntries(c.columns.map(col=>[col.key,col.key==='id' ? 'item-'+i : ['money','count'].includes(col.type) ? i+0.25 : col.type==='year' ? 2000+i : col.type==='category' ? (['portfolios','sectors','entities'].includes(col.key) ? ['Group '+i%2] : 'Group '+i%2) : col.type==='date' ? '2024-01-01' : col.key==='abn' ? '' : i===3 ? 'Needle record' : 'Record '+i]))}))]));
 const local=await tableDatabase({datasets:rows});test.after(()=>local.close());
 const env={TABLE_DB:local.db,CACHE_EPOCH:'test'};
 const fetchTable=(name,query='',init)=>tableApi(new Request('https://opax.com.au/api/table/'+name+'?'+query,init),env);
+test('ordinary long queries skip cryptographic privacy lookups through the bundled prefilter',async()=>{
+  let privacyReads=0;
+  const db={prepare(sql){if(/FROM\s+table_private_identity\b/i.test(sql))privacyReads++;return local.db.prepare(sql);},batch:local.db.batch.bind(local.db)};
+  const response=await tableApi(new Request('https://local.invalid/api/table/contracts?'+new URLSearchParams({q:performanceRow})),{TABLE_DB:db});
+  assert.equal(response.status,200);assert.equal(privacyReads,0,'safe query bypasses SHA-256/D1 confirmation');
+});
 for(const [name,config]of Object.entries(TABLE_DATASETS))test(name+': paging, sorting, facets, CSV and caps',async()=>{
   let r=await fetchTable(name,'page=2&pageSize=200');assert.equal(r.status,200);let page=await r.json();assert.equal(page.total,260);assert.equal(page.rows.length,60);assert.equal(page.page,2);
   const numeric=config.columns.find(c=>['money','count','year'].includes(c.type));

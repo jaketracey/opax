@@ -5,6 +5,7 @@ import {createHash} from 'node:crypto';
 import {TABLE_DATASETS} from '../portal/src/table-datasets.mjs';
 import {isOrganisationRecipient} from '../portal/src/table-recipient.mjs';
 import {identityVariants, compileIdentityCheck, strippedLengths} from '../portal/src/table-identities.mjs';
+import {buildIdentityPrefilter} from '../portal/src/table-identity-prefilter.mjs';
 import {tableSchema,tableName,quote,arrayColumns} from './table-schema.mjs';
 import {MONEY_GRAPHS, isOrganisationDonor, withheldPhrases} from '../portal/public/donor-entity.js';
 import {moneyFlowType} from '../portal/public/money-records.js';
@@ -163,6 +164,9 @@ export function tableIdentityHashes(policy) {
 export function tableRegistryFingerprint(policy) {
   return createHash('sha256').update(tableIdentityHashes(policy).map(e=>e.hash).join('\n')).digest('hex');
 }
+export function tableIdentityPrefilter(policy) {
+  return buildIdentityPrefilter(policy.phrases,tableRegistryFingerprint(policy));
+}
 
 const literal = value => value == null ? 'NULL' : typeof value === 'number' && Number.isFinite(value) ? String(value) : "'" + String(value).replaceAll("'","''") + "'";
 
@@ -218,7 +222,10 @@ if (process.argv[1] && resolve(process.argv[1])===fileURLToPath(import.meta.url)
   try {
     const loaded=await tableRows();
     const result=await buildTableSQL({datasets:loaded.rows,policy:loaded.policy});
-    await writeFile(join(defaultRoot,'table-private-identities.json'),JSON.stringify({version:1,identities:tableIdentityHashes(loaded.policy),strippedLengths:loaded.policy.strippedLengths})+'\n');
+    const prefilter=tableIdentityPrefilter(loaded.policy);
+    await writeFile(join(defaultRoot,'table-private-identities.json'),JSON.stringify({version:1,identities:tableIdentityHashes(loaded.policy),strippedLengths:loaded.policy.strippedLengths,prefilter})+'\n');
+    // The D1 guard accelerates existing databases without a migration/reload.
+    await writeFile(fileURLToPath(new URL('../portal/src/table-identity-prefilter.json',import.meta.url)),JSON.stringify(prefilter)+'\n');
     await writeFile(fileURLToPath(new URL('../portal/src/table-registry-fingerprint.json',import.meta.url)),JSON.stringify({fingerprint:result.privacyFingerprint})+'\n');
     console.log(JSON.stringify({sqlFiles:result.files.length,bytes:result.bytes,rows:result.counts,privateIdentityHashes:result.privateIdentities,publicTableAssets:0,publicPrivacyAssets:1}));
   } catch {console.error('Table load preparation failed; no source identities are logged.');process.exitCode=1;}

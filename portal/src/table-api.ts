@@ -1,10 +1,13 @@
 import type {Column, Page, Query, Row} from '../public/datatable.js'
 import {TABLE_DATASETS, tableText, tableTerms} from './table-datasets.mjs'
-import {identityCandidates, identityHash} from './table-identities.mjs'
+import {identityHash} from './table-identities.mjs'
+import {compileIdentityPrefilter} from './table-identity-prefilter.mjs'
+import identityPrefilter from './table-identity-prefilter.json' with {type:'json'}
 import registryBuild from './table-registry-fingerprint.json' with {type:'json'}
 import {rawQueryValues,repeatedTableKeys} from '../public/datatable-query.js'
 
 export const TABLE_REGISTRY_FINGERPRINT = registryBuild.fingerprint
+const privacyCandidates = compileIdentityPrefilter(identityPrefilter,TABLE_REGISTRY_FINGERPRINT)
 
 type TableEnv = {TABLE_DB: D1Database; CACHE_EPOCH?: string}
 const MAX_CSV = 50_000, CSV_PAGE = 10_000, BATCH = 200, MAX_FACETS = 100
@@ -70,7 +73,7 @@ export function normalizedTableQuery(query: Query, csv = false): string {
 
 async function blocked(db: D1Database, values: Iterable<string>, lengths: number[], strippedLengths: number[]): Promise<boolean> {
   for (const value of values) {
-    const candidates=[...identityCandidates(value,lengths,strippedLengths)]
+    const candidates=[...privacyCandidates(value,lengths,strippedLengths)]
     for (let start=0;start<candidates.length;start+=90) {
       const hashes=await Promise.all(candidates.slice(start,start+90).map(identityHash))
       if (hashes.length && await db.prepare(`SELECT 1 AS found FROM table_private_identity WHERE hash IN (${hashes.map(()=>'?').join(',')}) LIMIT 1`).bind(...hashes).first()) return true

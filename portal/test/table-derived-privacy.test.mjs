@@ -20,7 +20,7 @@ const root=new URL('../public/',import.meta.url),source=sourceTableDonorIdentiti
 const read=async file=>JSON.parse(await readFile(new URL(file,root),'utf8'));
 const registry=await read('table-private-identities.json');
 const old=JSON.parse(execFileSync('git',['show','35ba00f5f7f442be61b4902face4c2d43ac6c618:portal/public/table-private-identities.json'],{cwd:new URL('../../',import.meta.url),maxBuffer:2000000}));
-const oldCheck=compileHashedIdentityCheck(old.identities),blocked=compileHashedIdentityCheck(registry.identities,registry.strippedLengths);
+const oldCheck=compileHashedIdentityCheck(old.identities),blocked=compileHashedIdentityCheck(registry.identities,registry.strippedLengths,registry.prefilter);
 const assets={fetch:async()=>Response.json(registry)},safe=await tablePrivacyCheck(assets);
 const recipientSet=new Set();
 for(const jur of ['federal','qld'])for(const file of (await readdir(new URL(`grants/${jur}/`,root))).filter(f=>f.startsWith('shard-')&&f.endsWith('.json')))for(const row of Object.values(await read(`grants/${jur}/${file}`)))if(!isOrganisationRecipient(row))for(const value of [row.n,row.abn,row.abr?.abn,row.identity?.legal_name,row.abr?.name,...row.aliases||[],...row.lookup_names||[]])if((typeof value==='string'||typeof value==='number')&&String(value).trim())recipientSet.add(String(value));
