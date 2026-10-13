@@ -1951,6 +1951,17 @@ a.barrow-name:hover { color: var(--bronze-ink); }
   scrollbar-width: thin; scrollbar-color: var(--bronze-rule) transparent;
 }
 .game-dialog ::-webkit-scrollbar, .game-dialog::-webkit-scrollbar,
+/* /money/explain (money-explain.css) on the uplift's scale: its head opens a
+   group step under the money tab row, as every money page's does, and its
+   sections are one section step apart (48/64/80; it set 1.5 steps against the
+   old 36/56 scale, which grew to 120px at 1440). */
+article.mx-page { margin-top: 0; }
+article.mx-page .mx-section { margin-top: var(--space-section); }
+/* The shared data table (datatable.css, the votes and table lanes') keeps the
+   density it was approved at: its cells, caption and toolbar are spaced by the
+   block, heading and row roles, and the uplift's larger steps pushed a bill's
+   six columns past its column ("Noes" cut off at 1440). */
+.dt-root { --space-block: var(--sp-16); --space-heading: var(--sp-12); --space-row: calc(var(--sp-8) + var(--sp-2)); }
 /* The money map's floating card (graph bundle, not on the uplift's scale)
    keeps the density it has live: the larger block, heading and row steps
    squeezed its fixed 330px column, wrapping "Commonwealth contracts" and
