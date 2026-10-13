@@ -157,7 +157,7 @@ export const MODULE_STAMPS = [
   ['supplier-growth.js', 'growth-modules.js'], ['supplier-growth.js', 'labels.js'],
 
   ['canonical-urls.js', 'person-paths.js'],
-  ['money-connections.js', 'donor-disclosure.js'], ['money-connections.js', 'canonical-urls.js'],
+  ['money-connections.js', 'donor-disclosure.js'], ['money-connections.js', 'canonical-urls.js'], ['money-connections.js', 'datatable.js'],
   ['map-research.js','datatable.js'],
   ['map-research.js','money-connections.js'],
   ['ballot.js', 'canonical-urls.js'],

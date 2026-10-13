@@ -40,6 +40,11 @@ async function run() {
   }
   let evaluationQueue = Promise.resolve();
   function evaluateModule(url) {
+    // A module that already ran resolves at once, as in the browser: home.js
+    // awaits import(navigation.js) during its own top-level evaluation, and
+    // queueing that behind home.js would deadlock.
+    const evaluated = modules.get(url);
+    if (evaluated?.status === 'evaluated') return Promise.resolve(evaluated);
     // Several table entry points import the same core while app.js starts.
     // Complete one module graph before another graph links its shared dependencies.
     const evaluation = evaluationQueue.then(async () => {

@@ -188,6 +188,9 @@
 /datatable-query.js
   ! Cache-Control
   Cache-Control: public, max-age=31536000, immutable
+/datatable.js
+  ! Cache-Control
+  Cache-Control: public, max-age=31536000, immutable
 /division-markdown.js
   ! Cache-Control
   Cache-Control: public, max-age=31536000, immutable
