@@ -1,5 +1,5 @@
 {
-  "merge_base": "608b824b3",
+  "merge_base": "608b824b3bee3f8bb01d7e1872d51db4f12571c9",
   "filler_rows": {
     "before": 252,
     "after": 0,
@@ -73,6 +73,13 @@
     "missing_identity_after": 0,
     "unchanged_body_hashes": true,
     "minimum_measured_interval_seconds": 1.0000604459783062,
-    "pacing_violations": 0
+    "pacing_violations": 0,
+    "http_200": 24,
+    "http_404": 1,
+    "successful_body_hashes_unchanged": 24,
+    "unchanged_fiscal_values": 805,
+    "updated_fiscal_snapshots": 52,
+    "fresh_robots": 3,
+    "previous_robots_preserved": 3
   }
 }
