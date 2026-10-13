@@ -181,23 +181,24 @@ test('MachineLabel: the still pill draws the mark with no sheet, for a row whose
   assert.match(sourceCss, /\.ui-machine > summary, \.ui-machine-pill \{[^}]*border-radius: var\(--radius-pill\)[^}]*background: var\(--bills-wash\)/);
 });
 
-test('⋯: a details popover of links and buttons; unsafe links are dropped; an empty menu draws nothing', () => {
-  const { moreMenuHTML } = helpers;
+test('⋯: a menu button and a menu of links and buttons; unsafe links are dropped; an empty menu draws nothing', async () => {
+  const { pageMenuHTML: moreMenuHTML } = await import('../public/page-actions-menu.js');
   const html = moreMenuHTML([
     { href: '/subject/party/Labor', label: 'Party page' },
     { href: 'https://www.aph.gov.au/', label: 'Parliament' },
     { action: 'copy', label: 'Copy link', detail: 'To this page' },
     { href: 'javascript:alert(1)', label: 'x' }, null,
   ], 'More about Labor', { id: 'party-more' });
-  assert.match(html, /^<details class="ui-pop ui-more" id="party-more"><summary aria-label="More about Labor" title="More about Labor"><svg/);
-  assert.match(html, /<li><a class="ui-more-item" href="\/subject\/party\/Labor">Party page<\/a><\/li>/);
-  assert.match(html, /<a class="ui-more-item" href="https:\/\/www\.aph\.gov\.au\/" rel="noopener" target="_blank">Parliament <span aria-hidden="true">↗︎<\/span><span class="visually-hidden">, opens a new tab<\/span><\/a>/);
-  assert.match(html, /<button type="button" class="ui-more-item" data-more-action="copy"><span>Copy link<\/span><small>To this page<\/small><\/button>/);
+  assert.match(html, /^<div class="page-menu" id="party-more"><button type="button" class="page-menu-button" aria-haspopup="menu" aria-expanded="false" aria-controls="party-more-menu" aria-label="More about Labor" title="More about Labor"><svg/);
+  assert.match(html, /<ul class="page-menu-list" id="party-more-menu" role="menu" aria-label="More about Labor" hidden>/);
+  assert.match(html, /<li role="none"><a class="page-menu-item" role="menuitem" tabindex="-1" href="\/subject\/party\/Labor">Party page<\/a><\/li>/);
+  assert.match(html, /<a class="page-menu-item" role="menuitem" tabindex="-1" href="https:\/\/www\.aph\.gov\.au\/" rel="noopener" target="_blank">Parliament <span aria-hidden="true">↗︎<\/span><span class="visually-hidden">, opens a new tab<\/span><\/a>/);
+  assert.match(html, /<button type="button" class="page-menu-item" role="menuitem" tabindex="-1" data-more-action="copy"><span>Copy link<\/span><small>To this page<\/small><\/button>/);
   assert.doesNotMatch(html, /javascript:/);
   assert.equal(moreMenuHTML([{ href: '//evil.example', label: 'x' }]), '');
-  // One component: ui-source.css draws it, style.css only places it.
-  assert.match(sourceCss, /\.ui-more > summary \{[^}]*width: var\(--size-target\); height: var\(--size-target\)/);
-  assert.doesNotMatch(style + read('index.html') + app, /page-more/);
+  // One component: page-actions.css draws it; no ⋯ is a details sheet any more.
+  assert.match(read('page-actions.css'), /\.page-menu-button \{[^}]*width: var\(--size-target\); height: var\(--size-target\)/);
+  assert.doesNotMatch(style + read('index.html') + app + read('electorates.js'), /page-more|ui-pop ui-more|ui-more-item/);
 });
 
 test('labels.js is the one copy: app.js and the homepage import it, neither keeps its own', () => {
@@ -208,8 +209,8 @@ test('labels.js is the one copy: app.js and the homepage import it, neither keep
   }
   assert.match(app, /import\('\/labels\.js(\?v=[0-9a-f]{10})?'\)/);
   assert.match(homeData, /from '\.\/labels\.js(\?v=[0-9a-f]{10})?';/);
-  // The first render waits for it.
-  assert.match(app, /Promise\.allSettled\(\[attributionReady, uiLabelsReady, growthModulesReady, personUrlsReady, saDisplayReady, donorViewReady, voteTablesReady\]\)\.finally\(\(\) => \{[^}]*route\(\);/);
+  // The first render waits for it (and for ⋯, page-actions-menu.js).
+  assert.match(app, /Promise\.allSettled\(\[attributionReady, uiLabelsReady, pageMenusReady, growthModulesReady, personUrlsReady, saDisplayReady, donorViewReady, voteTablesReady\]\)\.finally\(\(\) => \{[^}]*route\(\);/);
   assert.match(read('index.html'), /<link rel="modulepreload" href="\/labels\.js\?v=[0-9a-f]{10}">/);
 });
 
@@ -536,43 +537,6 @@ test('SourceLine: tabbing past a floating sheet closes it; a click on its text o
   pop.floating = false; // a phone: the sheet opens in place
   on('focusout').handler(event({ target: link, relatedTarget: outside }));
   assert.equal(pop.open, true);
-});
-
-test('⋯: the arrows move between its items and wrap; an arrow on the closed circle opens it at an end', () => {
-  const { make, on, event, doc } = page();
-  const { pop, summary, sheet, link } = make(['ui-pop', 'ui-more']);
-  const second = new Node(doc, 'button');
-  const third = new Node(doc, 'a');
-  sheet.append(second, third);
-  const keydown = on('keydown').handler;
-  const down = event({ key: 'ArrowDown', target: summary });
-  keydown(down);
-  assert.equal(pop.open, true);
-  assert.equal(doc.activeElement, link);
-  assert.ok(down.defaultPrevented);
-  keydown(event({ key: 'ArrowDown', target: link }));
-  assert.equal(doc.activeElement, second);
-  keydown(event({ key: 'End', target: second }));
-  assert.equal(doc.activeElement, third);
-  keydown(event({ key: 'ArrowDown', target: third }));
-  assert.equal(doc.activeElement, link, 'wraps at the end');
-  keydown(event({ key: 'ArrowUp', target: link }));
-  assert.equal(doc.activeElement, third, 'and at the start');
-  keydown(event({ key: 'Home', target: third }));
-  assert.equal(doc.activeElement, link);
-  pop.open = false;
-  keydown(event({ key: 'ArrowUp', target: summary }));
-  assert.equal(doc.activeElement, third, 'ArrowUp opens it at the last item');
-  // Home on a closed circle, and arrows in a source line, are left to the page.
-  pop.open = false;
-  const home = event({ key: 'Home', target: summary });
-  keydown(home);
-  assert.ok(!pop.open && !home.defaultPrevented);
-  const line = make();
-  line.pop.open = true;
-  const inLine = event({ key: 'ArrowDown', target: line.link });
-  keydown(inLine);
-  assert.ok(!inLine.defaultPrevented);
 });
 
 test('SourceLine: a floating sheet that would cross the right edge aligns to its line’s end', () => {

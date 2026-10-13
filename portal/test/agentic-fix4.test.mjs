@@ -95,7 +95,9 @@ test('P2 parsed index preserves every main script, including the analytics loade
  // The only shell changes are the intended loader containers and asset stamps:
  // the head and everything after <main> (scripts, footer) match main. The
  // panels inside <main> are other lanes' to restyle, so they are not compared.
- const normalise=html=>html.replace(/^\s*<div id="ask-steps(?:-live)?" hidden><\/div>\n/gm,'').replace(/\?v=[a-f0-9]+/g,'?v=STAMP');
+ // Stylesheet links are other lanes' to add (page actions, data tables); the
+ // scripts above are checked one by one.
+ const normalise=html=>html.replace(/^\s*<div id="ask-steps(?:-live)?" hidden><\/div>\n/gm,'').replace(/^\s*<link rel="stylesheet"[^>]*>\n/gm,'').replace(/\?v=[a-f0-9]+/g,'?v=STAMP');
  const shell=html=>{const n=normalise(html);return [n.split('</head>')[0],n.slice(n.lastIndexOf('</main>'))]};
  assert.deepEqual(shell(current),shell(main));
 });

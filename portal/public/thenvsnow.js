@@ -26,7 +26,7 @@
  * safety: model text and all live data reach the DOM through textContent,
  * never innerHTML.
  */
-import { machineLabelHTML } from './labels.js?v=c6bf994ef7'
+import { machineLabelHTML } from './labels.js?v=fc03aa14cf'
 import {personUrl} from './canonical-urls.js?v=225d5915ea';
 import {isMultiSpeaker, isUnattributed, speakerLabel, resolvedParticipants, groupAvatarHTML} from './speech-attribution.js?v=1350457c5d';
 
