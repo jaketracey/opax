@@ -2,7 +2,7 @@ import {spawn} from 'node:child_process';
 import {mkdirSync,readFileSync,writeFileSync,existsSync,rmSync,cpSync,renameSync,readdirSync} from 'node:fs';
 import {join,resolve} from 'node:path';
 import {performance} from 'node:perf_hooks';
-import {git,gateBase,identity,cacheKey,cleanCheckout,reusable,persistPass,selectTests,catalogKey,hash} from './gate-lib.mjs';
+import {git,gateBase,identity,cacheKey,reusable,persistPass,selectTests,catalogKey,hash} from './gate-lib.mjs';
 
 const args=process.argv.slice(2), tier=args.shift()||'lane';
 const tools=import.meta.dirname;
@@ -13,15 +13,13 @@ const base=gateBase(root,tier,value('--base'));
 const concurrency=Number(value('--concurrency',process.env.OX_TEST_CONCURRENCY||(process.platform==='linux'?'6':'4')));
 if(!Number.isInteger(concurrency)||concurrency<1||concurrency>16)throw Error('Concurrency must be 1..16');
 const started=performance.now(), id=identity(root), key=cacheKey(id);
-const clean=cleanCheckout(root);
 const cache=resolve(process.env.OX_GATE_CACHE||join(root,'.ops/gate-cache'));mkdirSync(cache,{recursive:true});
 const passFile=join(cache,`${key}.json`);
 let previous;try{previous=JSON.parse(readFileSync(passFile));}catch{}
-if(clean&&!args.includes('--force')&&tier!=='profile'&&reusable(previous,id,tier,base)){
+if(!args.includes('--force')&&tier!=='profile'&&reusable(previous,id,tier,base)){
  git(root,['diff','--exit-code',base,id.tree,'--','portal/public/votes.json'],{stdio:'pipe'});
  console.log(`CACHED PASS ${id.tree} ${id.node} ${id.lockfile} (${previous.tier}, ${previous.host})`);process.exit(0);
 }
-if(!clean)console.log('CACHE BYPASS: working tree has tracked changes or untracked files');
 if(args.includes('--cache-only'))process.exit(3);
 const matrix=value('--matrix',String(concurrency)).split(',').map(Number);
 if(matrix.some(n=>!Number.isInteger(n)||n<1||n>16))throw Error('Matrix concurrency must be 1..16');
@@ -94,14 +92,14 @@ try{
  // The gate uses the captured base, never fetches or advances main during a run.
  git(work,['diff','--exit-code',base,'--','portal/public/votes.json'],{stdio:'pipe'});
  const votes=JSON.parse(readFileSync(join(work,'portal/public/votes.json')));if(votes._meta?.schema!==1)throw Error('votes.json must stay schema 1');
- if(identity(root).tree!==id.tree)throw Error('Source tree changed while gate ran; pass is not reusable');
+ if(cacheKey(identity(root))!==key)throw Error('Source tree changed while gate ran; pass is not reusable');
  record.success=true;
  if(full&&selection.files.length===selection.total)record.tier='merge';
 }catch(error){failure=error;console.error(error.message);}
 finally{
  record.seconds=(performance.now()-started)/1000;
  writeFileSync(join(output,'result.json'),JSON.stringify(record,null,2)+'\n');
- if(record.success&&cleanCheckout(root))persistPass(passFile,record);
+ if(record.success)persistPass(passFile,record);
  if(existsSync(work))git(root,['worktree','remove','--force',work]);
  console.log(`GATES ${record.success?'OK':'FAILED'} ${record.seconds.toFixed(2)}s tree=${id.tree}; ${output}`);
 }

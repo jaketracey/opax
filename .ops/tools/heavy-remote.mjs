@@ -1,7 +1,7 @@
 import {spawn,execFileSync} from 'node:child_process';
 import {writeFileSync,mkdirSync} from 'node:fs';
 import {join,basename} from 'node:path';
-import {git,gateCommit,gateBase,snapshot,quote,identity,cacheKey,cleanCheckout,persistPass,runnerFiles} from './gate-lib.mjs';
+import {git,gateCommit,gateBase,snapshot,quote,identity,cacheKey,persistPass,runnerFiles} from './gate-lib.mjs';
 const args=process.argv.slice(2),mode=args[0];
 const host=process.env.OX_HEAVY_HOST||'desktop';
 const remoteRepo=process.env.OX_HEAVY_REPO||'opax-work/opax';
@@ -38,8 +38,6 @@ execFileSync('git',['push','--quiet',`${host}:${remoteRepo}`,`${commit}:${ref}`]
 const toolsArchive=execFileSync('tar',['-cf','-',...runnerFiles],{cwd:import.meta.dirname});
 ssh(`mkdir -p "$HOME/opax-work/gate-tools/${id.runner}" && tar -xf - -C "$HOME/opax-work/gate-tools/${id.runner}"`,{input:toolsArchive,stdio:['pipe','ignore','inherit']});
 const forwarded=tierArgs.filter((arg,i)=>arg!=='--base'&&tierArgs[i-1]!=='--base');
-// A clean disposable remote checkout must not disguise a dirty caller.
-if(!cleanCheckout(root)&&!forwarded.includes('--force'))forwarded.push('--force');
 const script=`set -uo pipefail
 export PATH="$HOME/.nvm/versions/node/v24.21.0/bin:$PATH"
 export npm_config_prefix="$HOME/.nvm/versions/node/v24.21.0"
@@ -91,5 +89,5 @@ const status=await new Promise((done,reject)=>{
 });
 const output=Buffer.concat(log).toString();writeFileSync(join(cache,`remote-${label}.log`),output);
 const match=/REMOTE_PASS_BEGIN\n([\s\S]*?)\nREMOTE_PASS_END/.exec(output);
-if(status===0&&match){const record=JSON.parse(match[1]);if(record.success&&cacheKey(record.identity)===cacheKey(id)&&snapshot(root)===tree&&cleanCheckout(root))persistPass(join(cache,`${cacheKey(id)}.json`),record);}
+if(status===0&&match){const record=JSON.parse(match[1]);if(record.success&&cacheKey(record.identity)===cacheKey(id)&&cacheKey(identity(root))===cacheKey(id))persistPass(join(cache,`${cacheKey(id)}.json`),record);}
 process.exitCode=status??1;

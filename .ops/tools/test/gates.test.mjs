@@ -16,23 +16,22 @@ test('snapshot includes unstaged, staged and new source without changing real in
 test('cache binds successful full pass to tree, Node and lockfile; lane passes cannot satisfy review',()=>{
  const id={tree:'abc',node:'v24.21.0',lockfile:'123'},full={identity:id,tier:'merge',success:true};assert.ok(reusable(full,id,'review'));assert.ok(reusable(full,id,'lane'));for(const field of Object.keys(id))assert.ok(!reusable(full,{...id,[field]:'changed'},'review'));assert.ok(!reusable({...full,success:false},id,'review'));assert.ok(!reusable({...full,tier:'lane'},id,'review'));assert.ok(!reusable({...full,tier:'lane',base:'a'},id,'lane','b'));
 });
-test('CLI cache refuses matching passes for modified, staged and untracked source trees',t=>{
+test('tracked edits and changing untracked contents change the key; identical dirty inputs reuse a full pass',t=>{
  const root=repo(t),cache=join(root,'.ops/gate-cache');mkdirSync(cache,{recursive:true});
- mkdirSync(join(root,'portal/public'));
- writeFileSync(join(root,'portal/public/votes.json'),'{"_meta":{"schema":1}}');git(root,['add','.']);git(root,['commit','-qm','votes fixture']);
- const env={...process.env,OX_GATE_CACHE:cache};delete env.NODE_TEST_CONTEXT;
- const run=()=>{
-  const id=identity(root);writeFileSync(join(cache,cacheKey(id)+'.json'),JSON.stringify({identity:id,success:true,tier:'merge',host:'fixture'}));
-  return spawnSync(process.execPath,[join(tools,'web-gates.mjs'),'review','--base','HEAD','--cache-only'],{cwd:root,env,encoding:'utf8'});
- };
- assert.ok(cleanCheckout(root));assert.match(run().stdout,/CACHED PASS/);
- writeFileSync(join(root,'portal/package-lock.json'),'{"modified":true}');assert.ok(!cleanCheckout(root));
- let result=run();assert.equal(result.status,3,result.stderr);assert.doesNotMatch(result.stdout,/CACHED PASS/);assert.match(result.stdout,/CACHE BYPASS/);
- git(root,['add','portal/package-lock.json']);result=run();assert.equal(result.status,3);assert.doesNotMatch(result.stdout,/CACHED PASS/);
+ mkdirSync(join(root,'portal/public'));writeFileSync(join(root,'portal/public/votes.json'),'{"_meta":{"schema":1}}');
+ git(root,['add','.']);git(root,['commit','-qm','votes fixture']);
+ const env={...process.env,OX_GATE_CACHE:cache,OX_GATE_REMOTE:'0'};delete env.NODE_TEST_CONTEXT;
+ const run=()=>spawnSync(process.execPath,[join(tools,'web-gates.mjs'),'review','--base','HEAD','--cache-only'],{cwd:root,env,encoding:'utf8'});
+ const save=()=>{const id=identity(root);writeFileSync(join(cache,cacheKey(id)+'.json'),JSON.stringify({identity:id,success:true,tier:'merge',host:'fixture'}));return cacheKey(id);};
+ const original=save(),index=git(root,['write-tree']);assert.match(run().stdout,/CACHED PASS/);
+ writeFileSync(join(root,'portal/package-lock.json'),'{"modified":true}');assert.notEqual(cacheKey(identity(root)),original);assert.equal(run().status,3);
+ save();assert.match(run().stdout,/CACHED PASS/);git(root,['add','portal/package-lock.json']);assert.match(run().stdout,/CACHED PASS/);
  git(root,['restore','--source=HEAD','--staged','--worktree','portal/package-lock.json']);
- writeFileSync(join(root,'portal/untracked-source.mjs'),'export const source=true');assert.ok(!cleanCheckout(root));
- result=run();assert.equal(result.status,3,result.stderr);assert.doesNotMatch(result.stdout,/CACHED PASS/);assert.match(result.stdout,/CACHE BYPASS/);
- rmSync(join(root,'portal/untracked-source.mjs'));assert.ok(cleanCheckout(root));assert.match(run().stdout,/CACHED PASS/);
+ const source=join(root,'portal/untracked-source.mjs');writeFileSync(source,'export const source=1');const first=save();
+ assert.notEqual(first,original);assert.ok(!cleanCheckout(root));assert.match(run().stdout,/CACHED PASS/);
+ writeFileSync(source,'export const source=2');assert.notEqual(cacheKey(identity(root)),first);assert.equal(run().status,3);
+ save();assert.match(run().stdout,/CACHED PASS/);assert.equal(git(root,['write-tree']),index);
+ rmSync(source);assert.equal(cacheKey(identity(root)),original);assert.match(run().stdout,/CACHED PASS/);
 });
 test('desktop snapshot transfers a captured base beyond HEAD into a local bare fixture, without changing source',t=>{
  const root=repo(t),head=git(root,['rev-parse','HEAD']),tree=git(root,['write-tree']);
@@ -90,7 +89,7 @@ test('desktop probes use an independent SSH connection with protocol keepalives'
  const run=spawnSync(process.execPath,[join(tools,'heavy-remote.mjs'),'--available','node','web-gates.mjs','merge'],{encoding:'utf8',env:{...process.env,PATH:root+':'+process.env.PATH,OX_TEST_SSH_ARGS:log}});
  assert.equal(run.status,0,run.stderr);const args=readFileSync(log,'utf8').split('\n');for(const option of ['ControlMaster=no','ControlPath=none','ServerAliveInterval=30','ServerAliveCountMax=3'])assert.ok(args.includes(option));
 });
-test('a dirty desktop caller forces a fresh gate despite its clean remote snapshot',t=>{
+test('desktop carries the exact dirty snapshot identity without forcing a rerun',t=>{
  const root=repo(t),bin=join(root,'.ops/gate-cache/bin'),log=join(root,'.ops/gate-cache/remote-script');mkdirSync(bin,{recursive:true});
  git(root,['update-ref','refs/remotes/origin/main',git(root,['rev-parse','HEAD'])]);
  const realGit=spawnSync('which',['git'],{encoding:'utf8'}).stdout.trim();assert.ok(realGit);
@@ -99,8 +98,8 @@ test('a dirty desktop caller forces a fresh gate despite its clean remote snapsh
  const env={...process.env,PATH:bin+':'+process.env.PATH,OX_TEST_REMOTE_SCRIPT:log,OX_GATE_LABEL:'dirty-cache-fixture'};delete env.NODE_TEST_CONTEXT;
  const run=()=>{const result=spawnSync(process.execPath,[join(tools,'heavy-remote.mjs'),'--tier','merge'],{cwd:root,env,encoding:'utf8'});assert.equal(result.status,0,result.stderr);return readFileSync(log,'utf8');};
  assert.doesNotMatch(run(),/'--force'/);
- writeFileSync(join(root,'portal/package-lock.json'),'{"changed":true}');assert.match(run(),/'--force'/);
- git(root,['restore','portal/package-lock.json']);writeFileSync(join(root,'portal/untracked.mjs'),'source');assert.match(run(),/'--force'/);
+ writeFileSync(join(root,'portal/package-lock.json'),'{"changed":true}');assert.doesNotMatch(run(),/'--force'/);
+ git(root,['restore','portal/package-lock.json']);writeFileSync(join(root,'portal/untracked.mjs'),'source');assert.doesNotMatch(run(),/'--force'/);
 });
 test('busy Mac routes recognised gates, keeps owner unchanged and forwards remote exit; LOCAL override bypasses routing',t=>{
  const root=fixture(t),mockTools=join(root,'tools');mkdirSync(mockTools);cpSync(join(tools,'ox-heavy.sh'),join(mockTools,'ox-heavy.sh'));writeFileSync(join(mockTools,'ox-heavy-remote.sh'),'#!/usr/bin/env bash\nif [ "$1" = --available ]; then exit 0; fi\nexit 19\n',{mode:0o755});mkdirSync(join(root,'lock'));writeFileSync(join(root,'lock/pid'),String(process.pid));
