@@ -64,7 +64,7 @@
 <script type="module" src="/register-tables-entry.js?v=2add8dd1bf"></script>
 <link rel="stylesheet" href="/vote-tables.css?v=d727aad769">
 <script type="module" src="/vote-tables.js?v=e3a3583537"></script>
-<link rel="stylesheet" href="/style.css?v=19bc974594">
+<link rel="stylesheet" href="/style.css?v=c5deb81833">
 <link rel="stylesheet" href="/ui-controls.css?v=ce29178242">
 <link rel="stylesheet" href="/ui-source.css?v=78ddb8fc1b">
 <link rel="stylesheet" href="/page-actions.css?v=a416a2254f">
@@ -287,6 +287,7 @@
           <p id="ask-calculation-note" class="fineprint" hidden>OPAX calculated these totals from selected public disclosure records. Open a source to explore the supporting funding records. Receipts include more than gifts, and this selection does not cover every donor.</p>
           <div id="ask-date-ruler" class="date-ruler" hidden></div>
           <ol id="ask-cited-list" class="source-list"></ol>
+          <div id="ask-research-sources" class="ask-research-sources" hidden></div>
           <details id="ask-retrieved" hidden>
             <summary>Also retrieved, not cited in the answer</summary>
             <ol id="ask-retrieved-list" class="source-list"></ol>
@@ -296,6 +297,9 @@
           Answers may be cached. Cite the sources, not this text.
           <a href="/methods">How answers work</a></p>
         </details>
+        <!-- How the answer was researched: the lookups behind it, folded
+             (ask-steps.js renderResearchTrail, from done.research). -->
+        <div id="ask-research" hidden></div>
         <!-- The example questions come back under the answer, so a reader who
              has one answer has somewhere to go besides the follow-ups. -->
         <section id="ask-again" class="chat-next ask-again" aria-label="Ask something else" hidden>
@@ -2113,11 +2117,11 @@
 <!-- defer: never block the parser (Lighthouse counted this as render-blocking).
      Deferred scripts still run before DOMContentLoaded, so nothing changes for
      app.js's boot. ?v= is content-hash stamped by scripts/stamp_assets.mjs. -->
-<script src="/spa-shell.js?v=56dd397208" defer></script>
+<script src="/spa-shell.js?v=7d51240887" defer></script>
 <script src="/navigation.js?v=32c5b65527" defer></script>
 <script src="/quick-search.js?v=27eac3b2f7" defer></script>
 <script src="/ui-source.js?v=d594622c13" defer></script>
-<script src="/app.js?v=3c418a552f" defer></script>
+<script src="/app.js?v=900927bdc5" defer></script>
 <!-- PostHog runs after the app (defer order) so the first route is not queued behind it; it replays the events measured before it (analytics/index.js). -->
 <script src="/analytics.js?v=7a83ce20cf" defer></script>
 </body>

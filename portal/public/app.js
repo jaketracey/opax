@@ -2958,6 +2958,78 @@ function wireAskCitations(container, sources) {
   }
 }
 
+/* The records the research drew on (done.research.sources) join the
+   answer's own sources block: one panel, nothing listed twice. A record that
+   is already there, cited or retrieved, is left out by its address; the rest
+   follow the citations as compact rows, a title with its kind and date. */
+const RESEARCH_KINDS = {
+  speech: "Speech", committee: "Committee hearing", hearing: "Committee hearing", vote: "Vote", division: "Division",
+  donation: "Donation", donor: "Donor", grant: "Grant", contract: "Contract", bill: "Bill", interest: "Declared interest",
+  interests: "Declared interests", expense: "Expense", expenses: "Expenses", person: "Person", party: "Party",
+  electorate: "Electorate", press_release: "Press release", report: "Report", record: "Record",
+};
+function researchKindLabel(kind) {
+  const k = String(kind || "").trim().toLowerCase();
+  if (!k) return "";
+  if (RESEARCH_KINDS[k]) return RESEARCH_KINDS[k];
+  const words = k.replace(/[_-]+/g, " ");
+  return words.charAt(0).toUpperCase() + words.slice(1);
+}
+function researchHrefKey(href) {
+  try {
+    const u = new URL(href, location.origin);
+    return `${u.origin === location.origin ? "" : u.origin}${u.pathname.replace(/\/+$/, "")}${u.search}`;
+  } catch { return ""; }
+}
+function researchSourceExtras(research, sources) {
+  const list = Array.isArray(research?.sources) ? research.sources : [];
+  if (!list.length) return [];
+  const have = new Set();
+  for (const s of sources) {
+    for (const href of [searchResultHref(s), s.url]) if (typeof href === "string" && href) have.add(researchHrefKey(href));
+  }
+  const extras = [];
+  for (const r of list) {
+    const title = String(r?.title || "").replace(/\s+/g, " ").trim();
+    const url = typeof r?.url === "string" ? r.url.trim() : "";
+    const key = url && researchHrefKey(url);
+    if (!title || !key || have.has(key)) continue;
+    have.add(key);
+    extras.push({ title, url, date: r.date, kind: r.kind });
+  }
+  return extras;
+}
+function researchSourceItem(r) {
+  const li = document.createElement("li");
+  li.className = "ask-research-source";
+  let target = null;
+  try { target = new URL(r.url, location.origin); } catch { /* shown, not linked */ }
+  const linked = target && (target.protocol === "https:" || (target.protocol === "http:" && target.origin === location.origin));
+  const title = document.createElement(linked ? "a" : "span");
+  title.className = "ask-research-source-title";
+  title.textContent = r.title;
+  if (linked) title.href = target.href;
+  const meta = document.createElement("span");
+  meta.className = "ask-research-source-meta";
+  meta.textContent = [researchKindLabel(r.kind), r.date ? fmtDate(r.date) : ""].filter(Boolean).join(" · ");
+  li.append(title, meta);
+  return li;
+}
+/** The research's own records in a sources block, under its citations. */
+function renderResearchSources(container, extras, { alone = false } = {}) {
+  if (!container) return;
+  if (!extras.length) { container.replaceChildren(); container.hidden = true; return; }
+  const head = document.createElement("p");
+  head.className = "ask-research-sources-head";
+  head.textContent = alone ? "Records the research used" : "Also used in the research";
+  const list = document.createElement("ol");
+  list.className = "ask-research-source-list";
+  list.setAttribute("aria-label", head.textContent);
+  list.append(...extras.map(researchSourceItem));
+  container.replaceChildren(head, list);
+  container.hidden = false;
+}
+
 function sourceItem(s, num, passage = false) {
   const li = document.createElement("li");
   const btn = document.createElement("a");
@@ -9307,7 +9379,7 @@ function endAskSteps() {
    each lookup as status events with phase "step", and ask-steps.js lists
    them under the waiting animal as they happen. Ordinary answers send no
    steps, so nothing here mounts and their waiting state is as it was. */
-const ASK_STEPS_JS = "/ask-steps.js?v=99d5ce363d";
+const ASK_STEPS_JS = "/ask-steps.js?v=4a81c674dc";
 
 /** The live list: events that land before the module are kept and replayed. */
 function liveAskSteps(container, alive, options) {
@@ -9353,6 +9425,38 @@ async function renderAskStepsLine(slot, agentic, alive = () => true) {
   } catch {
     if (askStepsRenderOwners.get(slot) === owner && alive()) slot.hidden = true;
   }
+}
+
+/* "How this was researched", under the answer: done.research's trail,
+   folded (ask-steps.js renderResearchTrail). Its line's height is held
+   while the module lands, as the steps line's is. */
+const askResearchRenderOwners = new WeakMap();
+async function renderAskResearch(slot, research, ms, alive = () => true) {
+  if (!slot) return;
+  const owner = {};
+  askResearchRenderOwners.set(slot, owner);
+  if (!research?.trail?.length) { slot.replaceChildren(); slot.hidden = true; return; }
+  slot.hidden = false;
+  slot.style.minHeight = "var(--size-target)";
+  try {
+    const mod = await import(ASK_STEPS_JS);
+    if (askResearchRenderOwners.get(slot) !== owner || !alive()) return;
+    mod.renderResearchTrail(slot, research, { ms });
+    slot.style.minHeight = "";
+  } catch {
+    if (askResearchRenderOwners.get(slot) === owner && alive()) slot.hidden = true;
+  }
+}
+
+/* done.research as the page keeps it: the trail rows take their round from
+   the live step events by id when the payload's rows do not carry one, so
+   a saved answer groups its rounds as the live list did. */
+function researchOf(data, liveSteps = []) {
+  const research = data?.research;
+  if (!research || !Array.isArray(research.trail) || !research.trail.length) return undefined;
+  const rounds = new Map(liveSteps.filter((s) => Number(s?.round) > 0).map((s) => [Number(s.id), Number(s.round)]));
+  if (!rounds.size) return research;
+  return { ...research, trail: research.trail.map((t) => (t?.round || !rounds.has(Number(t?.id)) ? t : { ...t, round: rounds.get(Number(t.id)) })) };
 }
 
 // The same menagerie for any other waiting slot (search results, the
@@ -9478,6 +9582,7 @@ async function runAsk(question) {
   $("ask-result").hidden = true;
   endAskSteps();
   renderAskStepsLine($("ask-steps"), null);
+  renderAskResearch($("ask-research"), null);
   import(ASK_STEPS_JS).catch(() => {}); // warmed, so a finished run's line draws at once
   $("ask-date-ruler").hidden = true;
   $("ask-date-ruler").replaceChildren();
@@ -9515,6 +9620,9 @@ async function runAsk(question) {
     // on the first words. Sources, stamp and rail wait for the final payload.
     const live = streamRenderer($("ask-answer"), () => askAbort === myAbort);
     let streamed = false;
+    // The steps the live list showed, kept for the trail's rounds once the
+    // list has folded away.
+    let liveSteps = [];
     const data = await askRecord(askBody, myAbort.signal, {
       status(payload) {
         if (askAbort !== myAbort) return;
@@ -9531,9 +9639,13 @@ async function runAsk(question) {
         if (!streamed) {
           streamed = true;
           hideWombat();
-          // The run folds into its line above the answer as the words begin.
+          // The run folds away as the words begin. What it did is drawn from
+          // the final payload: under the answer as "How this was researched"
+          // (done.research, loop or planner), or as the older line above it
+          // when a payload has no research. Nothing is drawn above the words
+          // while they arrive only to be taken away again.
           if (askSteps) {
-            renderAskStepsLine($("ask-steps"), { steps: askSteps.steps(), ms: Date.now() - started });
+            liveSteps = askSteps.steps();
             endAskSteps();
           }
           // The result block still holds the previous answer and its
@@ -9584,7 +9696,10 @@ async function runAsk(question) {
     $("ask-answer").askEvidence = citedList;
     // The speaker this answer was actually filtered to (chosen in Options or
     // read out of the question), so "Continue in a conversation" keeps it.
-    lastAsk = { question, answer: answerText, sources, agentic: data.agentic, answered: data.answered, reason: data.reason, next_step: data.next_step, is_overview_intent: data.is_overview_intent, next: data.followups, subject_context: data.subject_context, kind: askKind(), speaker: askFilters().speaker || speakerFilter || data.scope?.speaker || data.subject_context?.name || "", answer_status: data.answer_status, evidence_excerpts: data.evidence_excerpts, money_question: data.money_question, money_ranking: data.money_ranking, money_context: data.money_context, money_overview: data.money_overview, pay_answer: data.pay_answer, pay_next: data.pay_next };
+    if (askSteps) liveSteps = askSteps.steps();
+    const research = researchOf(data, liveSteps);
+    const researchExtras = researchSourceExtras(research, sources);
+    lastAsk = { question, answer: answerText, sources, agentic: data.agentic, research, answered: data.answered, reason: data.reason, next_step: data.next_step, is_overview_intent: data.is_overview_intent, next: data.followups, subject_context: data.subject_context, kind: askKind(), speaker: askFilters().speaker || speakerFilter || data.scope?.speaker || data.subject_context?.name || "", answer_status: data.answer_status, evidence_excerpts: data.evidence_excerpts, money_question: data.money_question, money_ranking: data.money_ranking, money_context: data.money_context, money_overview: data.money_overview, pay_answer: data.pay_answer, pay_next: data.pay_next };
     // A calculated answer carries its own fixed next steps, not generated ones.
     const calculated = !!(data.money_ranking || data.pay_answer);
     if (!calculated && !noAnswer) prefetchAskFollowups(lastAsk);
@@ -9592,10 +9707,12 @@ async function runAsk(question) {
     if (calculated) { $("ask-money").hidden = true; $("ask-register-note").hidden = true; }
     hideWombat();
     // A stepped answer keeps its run as one line above the answer, drawn from
-    // the payload so a cached answer carries it too.
+    // the payload so a cached answer carries it too. A researched answer
+    // carries it under the answer instead, as "How this was researched".
     endAskSteps();
-    await renderAskStepsLine($("ask-steps"), data.agentic, () => askAbort === myAbort);
+    await renderAskStepsLine($("ask-steps"), research ? null : data.agentic, () => askAbort === myAbort);
     if (askAbort !== myAbort) return;
+    renderAskResearch($("ask-research"), research, data.agentic?.ms ?? (liveSteps.length ? Date.now() - started : undefined), () => askAbort === myAbort);
     setStatus($("ask-status"), noAnswer ? "No clear answer found. Retrieved sources are ready." : needsClarification ? "Please clarify the question before I calculate the answer." : data.answer_status === "evidence_only" ? "Source passages ready. A summary could not be verified." : `Answer ready: ${sources.length} sources.`);
     $("ask-status").classList.add("visually-hidden"); // announced, not displayed
     revealAskResult();
@@ -9639,10 +9756,11 @@ async function runAsk(question) {
         ? ` · filtered: ${askFilterSummary(askFilters()) || `${speakerFilter}'s speeches`}` : "");
     renderAskDateRuler(sources, isCited);
     $("ask-cited-list").replaceChildren(...citedList.map((s, i) => sourceItem(s, i + 1, true)));
+    renderResearchSources($("ask-research-sources"), researchExtras, { alone: !sources.length });
     $("ask-retrieved").open = false;
     $("ask-retrieved").hidden = !alsoList.length;
     $("ask-retrieved-list").replaceChildren(...alsoList.map((s) => sourceItem(s, null, true)));
-    $("ask-sources-sum").textContent = `Sources (${sources.length})`;
+    $("ask-sources-sum").textContent = `Sources (${sources.length + researchExtras.length})`;
     // The field to keep asking is there as soon as there is an answer to
     // follow; the suggested questions join it when the Worker has written them.
     $("ask-keep").hidden = needsClarification;
@@ -9650,7 +9768,7 @@ async function runAsk(question) {
     $("ask-calculation-note").textContent = data.pay_answer ? PAY_CALCULATION_NOTE : MONEY_CALCULATION_NOTE;
     $("ask-retrieval-note").hidden = calculated;
     $("ask-sources").open = noAnswer; // Sources are the reading path when no answer was supported.
-    $("ask-sources").hidden = !sources.length;
+    $("ask-sources").hidden = !sources.length && !researchExtras.length;
     // The finished answer replaces the streamed one: let that settle before a
     // shift in the page counts as the reader deciding to move on. People first,
     // so the rail opens on them rather than flashing a quote on the way.
@@ -10433,7 +10551,7 @@ function initChat(manageFocus) {
           store.active = null;
           chatThread = [
             { role: "user", text: seed.question, fundingQuestion: seed.money_question },
-            { role: "answer", text: seed.answer, sources: seed.sources || [], agentic: seed.agentic, answered: seed.answered, reason: seed.reason, next_step: seed.next_step, is_overview_intent: seed.is_overview_intent, next: seed.next || undefined, subject_context: seed.subject_context, answer_status: seed.answer_status, evidence_excerpts: seed.evidence_excerpts, money_ranking: seed.money_ranking, money_context: seed.money_context, money_overview: seed.money_overview, pay_answer: seed.pay_answer, pay_next: seed.pay_next },
+            { role: "answer", text: seed.answer, sources: seed.sources || [], agentic: seed.agentic, research: seed.research, answered: seed.answered, reason: seed.reason, next_step: seed.next_step, is_overview_intent: seed.is_overview_intent, next: seed.next || undefined, subject_context: seed.subject_context, answer_status: seed.answer_status, evidence_excerpts: seed.evidence_excerpts, money_ranking: seed.money_ranking, money_context: seed.money_context, money_overview: seed.money_overview, pay_answer: seed.pay_answer, pay_next: seed.pay_next },
           ];
           chatKind = seed.kind === "speech" ? "speech" : "all";
           // An ask that was filtered to one speaker hands that filter on: the
@@ -10742,7 +10860,9 @@ function syncAskChatViewport() {
 function chatAnswerEl(msg) {
   const wrap = document.createElement("div");
   wrap.className = "chat-turn chat-turn-answer";
-  if (msg.agentic?.steps?.length) {
+  // A researched answer carries its run under the answer (below); an older
+  // stepped one keeps its line above.
+  if (msg.agentic?.steps?.length && !msg.research?.trail?.length) {
     const line = document.createElement("div");
     wrap.appendChild(line);
     renderAskStepsLine(line, msg.agentic);
@@ -10762,7 +10882,8 @@ function chatAnswerEl(msg) {
   if (msg.pay_answer) renderPayNextSteps(body, msg.pay_next);
   wrap.appendChild(body);
   const sources = msg.sources || [];
-  if (sources.length) {
+  const researchExtras = researchSourceExtras(msg.research, sources);
+  if (sources.length || researchExtras.length) {
     // Collapsed by default: in a running conversation the sources are a
     // reference, not the reading path between an answer and the composer.
     const cited = sources.filter((s) => s.cited);
@@ -10772,7 +10893,7 @@ function chatAnswerEl(msg) {
     det.className = "chat-sources";
     det.open = msg.answered === false;
     const sum = document.createElement("summary");
-    sum.textContent = `Sources (${sources.length})`;
+    sum.textContent = `Sources (${sources.length + researchExtras.length})`;
     det.appendChild(sum);
     if (msg.pay_answer || msg.money_ranking || shown.some(s => /^receipt-(?:ranking|comparison|years)-/.test(s.resource || ""))) {
       const note = document.createElement("p");
@@ -10784,6 +10905,12 @@ function chatAnswerEl(msg) {
     ol.className = "source-list chat-source-list";
     shown.forEach((s, i) => ol.appendChild(sourceItem(s, i + 1, true)));
     det.appendChild(ol);
+    if (researchExtras.length) {
+      const used = document.createElement("div");
+      used.className = "ask-research-sources";
+      renderResearchSources(used, researchExtras, { alone: !sources.length });
+      det.appendChild(used);
+    }
     if (rest.length) {
       const more = document.createElement("details");
       const summary = document.createElement("summary");
@@ -10796,6 +10923,11 @@ function chatAnswerEl(msg) {
       more.appendChild(ol2);
     }
     wrap.appendChild(det);
+  }
+  if (msg.research?.trail?.length) {
+    const trail = document.createElement("div");
+    wrap.appendChild(trail);
+    renderAskResearch(trail, msg.research, msg.agentic?.ms);
   }
   if (msg.carried) {
     const p = document.createElement("p");
@@ -11123,6 +11255,7 @@ async function sendChat(question, carry) {
       role: "answer",
       text: (data.answer || "").trim() || "(no answer)",
       agentic: data.agentic,
+      research: researchOf(data, steps?.steps()),
       next: data.followups,
       is_overview_intent: data.is_overview_intent,
       subject_context: data.subject_context || (chatSpeaker ? [...chatThread].reverse().find(msg => msg.subject_context?.name === chatSpeaker)?.subject_context : undefined),

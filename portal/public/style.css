@@ -2739,6 +2739,26 @@ mark.privacy-confirm {
 #panel-ask .chat-sources > summary, #panel-chat .chat-sources > summary {
   min-height: 44px; font: var(--type-strong); text-transform: none;
 }
+/* The records the research drew on that the citations above do not already
+   list (app.js renderResearchSources): compact rows, a record title that
+   holds to two lines and its kind and date at the right, no passage. */
+.ask-research-sources { margin: var(--space-block) 0 var(--space-tight); }
+.ask-research-sources-head { margin: 0 0 var(--space-line); font: var(--type-label); color: var(--ink-soft); }
+.ask-research-source-list { list-style: none; margin: 0; padding: 0; }
+.ask-research-source {
+  display: grid; grid-template-columns: minmax(0, 1fr) auto; column-gap: var(--space-heading);
+  align-items: baseline; padding: var(--space-tight) 0;
+}
+.ask-research-source-title {
+  font: var(--weight-regular) var(--text-15)/var(--leading-snug) var(--serif); color: var(--ink); text-decoration: none;
+  display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; overflow: hidden;
+}
+a.ask-research-source-title:hover { color: var(--bronze-ink); text-decoration: underline; text-decoration-color: var(--bronze-rule); }
+.ask-research-source-meta { font: var(--type-fine); color: var(--ink-faint); white-space: nowrap; font-variant-numeric: tabular-nums; }
+@media (max-width: 600px) {
+  .ask-research-source { grid-template-columns: minmax(0, 1fr); }
+  .ask-research-source-meta { margin-top: var(--space-line); white-space: normal; }
+}
 #ask-date-ruler { margin: var(--sp-8) 0 var(--sp-20); }
 #ask-date-ruler .date-ruler-heading { font: var(--weight-strong) var(--text-16)/var(--leading-normal) var(--serif); text-transform: none;  }
 #panel-chat .chat-turn-user { justify-content: flex-start; margin: var(--sp-32) 0 var(--sp-20); }
