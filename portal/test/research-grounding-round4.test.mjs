@@ -6,7 +6,7 @@ import {saEvidenceText,saEvidenceRecord,saGenerationContext,saConversationInput}
 import {saDisplayPayload,saExcerpt} from '../public/sa-hansard.js';
 import {saPublicResponse,saEventPayload} from '../src/sa-hansard.ts';
 const built=await build({entryPoints:[new URL('../src/research-evidence.ts',import.meta.url).pathname],bundle:true,write:false,platform:'node',format:'esm'});
-const {verifyResearchAnswer}=await import('data:text/javascript;base64,'+Buffer.from(built.outputFiles[0].text).toString('base64'));
+const {verifyResearchAnswer,verifyResearchPoints}=await import('data:text/javascript;base64,'+Buffer.from(built.outputFiles[0].text).toString('base64'));
 const roster={people:[{name:'Jacqui Lambie'},{name:'Kerrynne Liddle'},{name:'Pat Lee'},{name:'Taylor Lee'},{name:'Liddle'},{name:'On'},{name:'David'}]},id='r1/t/body/0-200',quote='I am proud to call Alice Springs home. Housing safeguards are needed.';
 const passage={id,resource:'r1',slug:'speech-1',title:'Housing debate',url:'https://opax.com.au/doc/speech-1',text:quote,kind:'speech',speaker:'Kerrynne Liddle'};
 const scope={people:[],parties:[],bills:[],ambiguous:false,unresolved:false};
@@ -55,4 +55,14 @@ test('SA placeholder quotes and their citations disappear at JSON, stream done a
  }
  assert.doesNotMatch(JSON.stringify(guardAnswerAttribution(payload,roster)),/Excerpt omitted/);
  const limited=saDisplayPayload({answer:'“'+quote+'”',sources:[{...payload.sources[0],url:'https://example.test/not-official'}]},'false');assert.doesNotMatch(limited.answer,/Excerpt omitted|“”/);
+});
+
+test('a named speaker\'s bare surname is written in full; another member\'s name still fails; "X government" is not a speaker',()=>{
+ const pat={...passage,speaker:'Pat Lee',text:quote},passages=new Map([[id,pat]]),named={...scope,people:['Pat Lee']};
+ const out=verifyResearchPoints([{claim:'Lee said housing safeguards are needed.',id,quote:'Housing safeguards are needed.'}],passages,'What has Pat Lee said about housing?',named,undefined,roster);
+ assert.ok(out);assert.match(out.answer,/^- Pat Lee said housing/);
+ assert.equal(verifyResearchPoints([{claim:'Lee said housing safeguards are needed.',id,quote:'Housing safeguards are needed.'}],passages,'What has been said about housing?',scope,undefined,roster),null,'unnamed in the question: the ambiguous surname still fails');
+ assert.equal(verifyResearchPoints([{claim:'Taylor Lee said housing safeguards are needed.',id,quote:'Housing safeguards are needed.'}],passages,'What has Pat Lee said about housing?',named,undefined,roster),null);
+ assert.equal(claimMatchesSpeaker('She said the Liddle government failed on housing.','Jacqui Lambie',roster),true);
+ assert.equal(claimMatchesSpeaker('She said Kerrynne Liddle failed on housing.','Jacqui Lambie',roster),false);
 });

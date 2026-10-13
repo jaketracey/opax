@@ -34,9 +34,11 @@ function personMentions(text: string, roster: unknown) {
 /** Bind roster names, including possessive/unique surnames, to the speaker.
  * A name merely appearing in a quotation does not establish its authorship. */
 export function claimMatchesSpeaker(claim: string, speaker: string | undefined | null, roster: unknown): boolean {
-  const scope = extractNamedScope(claim, personRoster(roster), null)
+  // "the Gillard government" names a government, not a speaker; every person named in the claim still counts.
+  const text = claim.replace(/(?<![\p{L}])\p{Lu}[\p{L}'’-]+(?:['’]s)?\s+(?:government|governments|ministry|era|years|administration|cabinet)\b/gu, 'the government')
+  const scope = extractNamedScope(text, personRoster(roster), null)
   if (scope.ambiguous || scope.people.some(name => normaliseQuestion(name) !== normaliseQuestion(speaker ?? ''))) return false
-  return personMentions(claim, roster).every(m => normaliseQuestion(m.name) === normaliseQuestion(speaker ?? ''))
+  return personMentions(text, roster).every(m => normaliseQuestion(m.name) === normaliseQuestion(speaker ?? ''))
 }
 
 /** Footnote citations mark the end of a claim, often a single code point.

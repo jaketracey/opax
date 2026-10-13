@@ -8,6 +8,7 @@ import type { Passage, QualitativeAnswer } from './research-types'
 export interface AnswerCitation { id: string; quote: string; start: number; end: number }
 export interface AnswerDraft { text: string; citations: AnswerCitation[] }
 const normal = (text: string) => text.normalize('NFC').replace(/\s+/g, ' ').trim()
+const TITLE = /^(?:Mr|Mrs|Ms|Miss|Dr|Prof|Senator|Minister|Treasurer|Premier|Member|Hon)\.?$/
 const CLAIM_VERB = /\b(?:said|says|say|argued?|argues|supported?|supports|opposed?|opposes|voted?|votes|called|calls|proposed?|proposes|announced?|claimed?|claims|stated?|states|described?|describes|warned?|warns|critici[sz]ed?|backed|backs|rejected?|rejects|committed|promised?|promises|believes?|wants?|urged?|urges|is|was|were|are|has|had|have|will|would)\b/i
 function unresolvedPersonQuestion(question: string): boolean {
   const subject = /\b(?:has|have|did|does|do)\s+([\p{L}'’-]+(?:\s+[\p{L}'’-]+){0,7})\s+(?:said|say|says|spoken|spoke|speak|propos\w*|argu\w*|voted?)\b/iu.exec(question)?.[1]
@@ -48,8 +49,9 @@ export function verifyResearchAnswer(draft: AnswerDraft, passages: Map<string, P
     // short spans, but a terminal research draft must keep every quote literal.
     for (const quote of claim.matchAll(/["“]([^"”\n]+)["”]|‘([^’\n]+)’|(?:^|[\s(])'([^'\n]+)'(?=$|[\s.,;:!?)])|(?:^|\n)>\s*([^\n]+)/g)) if (!normal(citation.quote).includes(normal(quote[1] || quote[2] || quote[3] || quote[4]))) return reject('claim_quote_not_literal')
     if (position) {
-      const guarded = guardPositionAnswer({ answer: claim, augmented_context: { paragraphs: { [passage.id]: { text: citation.quote } } } }, { query: topic, prompt: { system: 'You explain Australian politicians’ documented positions from primary records.' } })
-      if (guarded.answer === EVIDENCE_GAP_ANSWER || !positionEvidence(citation.quote, topic)) return reject('position_evidence_gap')
+      // Topic relevance is judged on the cited speaking turn, not only the short quote ("pokies" quotes on a poker machine question).
+      const guarded = guardPositionAnswer({ answer: claim, augmented_context: { paragraphs: { [passage.id]: { text: evidence } } } }, { query: topic, prompt: { system: 'You explain Australian politicians’ documented positions from primary records.' } })
+      if (guarded.answer === EVIDENCE_GAP_ANSWER || !positionEvidence(evidence, topic)) return reject('position_evidence_gap')
       if (isPositionEligibilityQuestion(question)) {
         if (!positionEligibilityQuotes(evidence, topic).some(quote => normal(citation.quote).includes(normal(quote))) || !normal(claim).includes(normal(citation.quote))) return reject('position_eligibility')
       } else if (!positionPointSupported(claim, citation.quote, question, passage.date, evidence)) return reject('position_point_unsupported')
@@ -91,6 +93,15 @@ export function verifyResearchPoints(points: unknown, passages: Map<string, Pass
   if (!Array.isArray(points) || !points.length || points.length > 12) return null
   const valid = points.filter((p): p is AnswerPoint => !!p && typeof p === 'object' && typeof p.claim === 'string' && typeof p.id === 'string' && typeof p.quote === 'string' &&
     !!p.claim.trim() && !/\n/.test(p.claim) && p.claim.length <= 1200 && !!p.quote.trim() && p.quote.length <= 4000)
+  // When the question named the speaker, a bare or titled surname in a claim ("Wilkie supported", "Mr Wilkie")
+  // is that speaker: write the full name so a reader is never left with an ambiguous surname.
+  const fullName = (claim: string, speaker?: string) => {
+    const full = speaker?.trim() ?? '', surname = full.split(/\s+/).at(-1) ?? ''
+    if (!full.includes(' ') || !named.people.some(n => normal(n).toLowerCase() === normal(full).toLowerCase())) return claim
+    const at = new RegExp(`(?<![\\p{L}])(\\p{Lu}[\\p{L}'’.-]*\\s+)?${surname.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}(?![\\p{L}])`, 'gu')
+    return claim.replace(at, (match, before?: string) => !before ? full : TITLE.test(before.trim()) ? full : match)
+  }
+  for (const point of valid) point.claim = fullName(point.claim, passages.get(point.id)?.speaker)
   const kept = valid.filter(point => {
     const speaker = passages.get(point.id)?.speaker
     // With several named people a point speaks for one of them; the whole-answer check below still requires all.

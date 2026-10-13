@@ -58,7 +58,8 @@ test('RESEARCH_LOOP=off: legacy fields remain byte-identical; stepped research m
   const scopeOf=async entry=>{const out=await build({entryPoints:[entry],bundle:true,platform:'node',format:'esm',write:false});return (await import('data:text/javascript;base64,'+Buffer.from(out.outputFiles[0].text).toString('base64'))).extractNamedScope};
   const roster=JSON.parse(readFileSync(root+'portal/public/parliamentarians.json')),[scopeNow,scopeMain]=await Promise.all([scopeOf(root+'portal/src/agentic-ask.ts'),scopeOf(join(scratch,'portal/src/agentic-ask.ts'))]);
   const SURNAME_FIX=new Set(gold.filter(q=>JSON.stringify(scopeNow(q.question,roster,{bills:[]}))!==JSON.stringify(scopeMain(q.question,roster,{bills:[]}))).map(q=>q.id));
-  assert.ok(SURNAME_FIX.has('R07')&&SURNAME_FIX.size<=6,[...SURNAME_FIX].join());
+  // Empty once origin/main carries the fix (deployed 14 Oct); while it differs, R07 must be among at most six.
+  assert.ok(SURNAME_FIX.size<=6&&(!SURNAME_FIX.size||SURNAME_FIX.has('R07')),[...SURNAME_FIX].join());
   for(const q of gold)if(SURNAME_FIX.has(q.id))assert.ok(scopeNow(q.question,roster,{bills:[]}).people.every(name=>name.includes(' ')),q.id);
   globalThis.fetch=async(input,init)=>{
    const u=new URL(input);assert.ok(u.hostname.startsWith('offline.'));const b=JSON.parse(init?.body??'{}');
