@@ -23,13 +23,17 @@ name: 39 Topics A–Z, topic, stats and Methods
 - assertVisible:
     id: topics-screen
 - takeScreenshot: ${EVIDENCE}/39-topics
+# A tap target: centred at speed 20 (about half a screen per swipe), the
+# whole row in view. At the default speed the centring swipe left the row
+# under the navigation bar once pass 5 split the list (integration-p5 gate).
 - scrollUntilVisible:
     element:
       id: topic-open-gambling
     direction: DOWN
     timeout: 300000
-    visibilityPercentage: 10
+    visibilityPercentage: 100
     centerElement: true
+    speed: 20
 - takeScreenshot: ${EVIDENCE}/39-topic-row
 - tapOn:
     id: topic-open-gambling
