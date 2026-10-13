@@ -64,3 +64,17 @@ Passage names and crawl outputs use [actions/cache](https://github.com/actions/c
 Expect roughly **12 minutes instead of 15 minutes 40 seconds**, with normal runner/network variation. CI will use metadata-only tables, concurrent independent builds, exact-key deterministic caches and faster hash memo eviction. Both privacy barriers, `test:privacy`, the exact-SHA test-skipping workflow and restamp commit remain in place. Actual Wrangler upload time was not measured or changed by dispatching a deploy.
 
 Machine-readable measurements and inventory digests: [deploy-speed-2026-10-13.json](deploy-speed-2026-10-13.json).
+
+**Fast privacy matcher integration**
+
+The integration merges main `b69257a871c1f46dd6632c586cb17094d5843189` and the approved matcher `af8bc8c52a52d6b2d0f01c3002156dc8e24a775f`. The original timing table above describes the earlier benchmark commit. Table builds now also emit the server-only `portal/src/table-identity-prefilter.generated.mjs` in both SQL and metadata-only modes, using the matcher's unchanged `identityPrefilterModule` serializer. Its prefilter, complete SHA registry, binding and fingerprint all come from the same policy.
+
+The reported `d2fae609…` binding belongs to the metadata test's three invented identities. Adding a hard-coded write to the release module let that fixture replace the 17,518-entry release bundle, whose fingerprint is `f620d6a1…`. The runtime correctly failed closed against this mismatch. The bundle destination now follows the fingerprint destination, so fixture output stays in its temporary directory. The regression test compares both modes' module bytes, rejects the fixture binding against the release registry and verifies that neither mode alters the release bundle.
+
+`tableRows().policy` and `tableIdentityIndex()` produce identical registries and identical modules from the captured inputs. Both modes reproduce the fetched matcher branch's committed module byte for byte (SHA-256 `aac68d10b85f0ac8b7eed261e2f763e9cf8ffa25ca060a0be2e594f71d410653`). The worker test harness also retains main's execution-context hooks alongside the matcher's fixture bundle injection.
+
+A fresh comparison runs the matcher's original loader and serial release pipeline against the integrated release pipeline in the same checkout, restoring the same merged inputs before each run. All **27,301 output files** match exactly: 27,206 public files, five generated source files including the private module and its declaration, and 90 SQL/manifest files. The real metadata-only build matches all **27,211 public/generated source files**, produces no SQL and emits the identical private module. All 27,211 files remain unchanged after local gates. `votes.json` remains byte-identical to captured main (SHA-256 `a77128dc0e1e1b3fdaa4bf84501e2c94af3125dea3cf0b2dffbc688a49d68546`).
+
+All 154 table/privacy tests pass with zero failures or skips. The integrated `build:release`, `check` and local Wrangler dry-run pass. The complete desktop merge-gate record is retained separately under ignored `.ops/gate-cache/` for the final candidate. No upstream push or production deployment is part of this integration.
+
+[Integration evidence](deploy-speed-matcher-integration-2026-10-13.json).
