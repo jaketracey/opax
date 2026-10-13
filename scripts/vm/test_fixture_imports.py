@@ -56,7 +56,8 @@ class FixtureImportTests(unittest.TestCase):
                   "scripts/bills_registry/bills_stages.py", "parli/__init__.py", "parli/arag.py",
                   "parli/ingest/__init__.py", "parli/ingest/arag_sync.py",
                   "parli/ingest/http.py", "parli/ingest/user-agent.json",
-                  "parli/ingest/speech_hygiene.py", "parli/ingest/speaker_names.py")
+                  "parli/ingest/speech_hygiene.py", "parli/ingest/speaker_names.py",
+                  "parli/ingest/speaker_roles.py")
         result = self.check("scripts/export_bills.py", "scripts/export_parliamentarians.py")
         self.assertEqual(result.returncode, 0, result.stderr)
         self.assertEqual(result.stdout, "")
