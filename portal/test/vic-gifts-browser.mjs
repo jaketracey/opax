@@ -7,7 +7,7 @@ import assert from 'node:assert/strict';
 
 const {chromium}=createRequire(resolve(process.env.OPAX_VIC_GIFTS_BROWSER_TOOLS || '/tmp/opax-dt-tools','package.json'))('playwright-core');
 const browser=await chromium.launch({executablePath:'/usr/bin/google-chrome',headless:true,args:['--no-sandbox','--disable-dev-shm-usage']});
-const base=`http://[::1]:${port}`,out=resolve(root,'docs/coverage/vic-gifts');
+const base=`http://[::1]:${port}`,out=resolve(root,process.env.OPAX_VIC_GIFTS_BROWSER_OUT || 'docs/coverage/vic-gifts');
 await mkdir(out,{recursive:true});
 const context=await browser.newContext();await context.route('**/*',route=>new URL(route.request().url()).origin===base?route.continue():route.abort());
 const page=await context.newPage(),errors=[],results=[];page.on('pageerror',e=>errors.push(e.message));
@@ -33,14 +33,43 @@ try{
  await page.locator('[data-clear]').click();await page.waitForFunction(()=>JSON.parse(document.querySelector('[data-dt-page]').textContent).total===282);
  await page.locator('[data-page="2"]').click();await page.waitForFunction(()=>JSON.parse(document.querySelector('[data-dt-page]').textContent).page===2);
  const download=page.waitForEvent('download');await page.locator('[data-export]').click();const csv=await readFile(await(await download).path(),'utf8');
- for(const value of ['SHA-256','Snapshot','Source row','Licence','Not published'])assert.ok(csv.includes(value));
+ for(const value of ['SHA-256','Snapshot','Source row','Licence'])assert.ok(csv.includes(value));
+ assert.doesNotMatch(csv,/Not published|Date as published|Estimated value as published|Action taken as published/);
  const staticContext=await browser.newContext({javaScriptEnabled:false});await staticContext.route('**/*',route=>new URL(route.request().url()).origin===base?route.continue():route.abort());
  const staticPage=await staticContext.newPage();await staticPage.goto(base+'/register/vic-gifts');assert.ok(await staticPage.locator('[data-datatable] tbody tr').count()>0);assert.ok(await staticPage.locator('.vic-gifts-totals li').count()>0);
  const personResponse=await staticPage.goto(base+'/subject/person/jacinta-allan');assert.equal(personResponse.status(),200);assert.equal(await staticPage.locator('#subject-vic-gifts').count(),1);
- assert.match(await staticPage.locator('#subject-vic-gifts').textContent(),/CC BY 4.0/);await staticContext.close();
+ assert.match(await staticPage.locator('#subject-vic-gifts').textContent(),/CC BY 4.0/);
+ assert.match(await staticPage.locator('#subject-vic-gifts').textContent(),/© Copyright State Government of Victoria/);await staticContext.close();
+ // Run the actual person-page application, using local stubs for unrelated APIs.
+ const personContext=await browser.newContext(),personRequests=[];
+ await personContext.route('**/*',async route=>{
+  const url=new URL(route.request().url());
+  if(url.origin!==base)return route.abort();
+  if(!url.pathname.startsWith('/api/'))return route.continue();
+  if(url.pathname==='/api/register/vic-gifts'){personRequests.push(url.search);return route.continue();}
+  const fixtures={
+   '/api/display-policy':{SA_HANSARD_FULL_TEXT:'false'},
+   '/api/stats':{resources:1,paragraphs:1,kinds:{},speeches_by_state:{}},
+   '/api/person-slugs':{slugs:{'jacinta-allan':'Jacinta Allan'}},
+   '/api/parties':{parties:[]},
+   '/api/session':{user:null},
+  };
+  return route.fulfill({status:200,contentType:'application/json',body:JSON.stringify(fixtures[url.pathname] || {results:[],total:0,rows:[],page:1,pageSize:50,facets:{}})});
+ });
+ const personPage=await personContext.newPage();personPage.on('pageerror',e=>errors.push(e.message));
+ const dynamicResponse=await personPage.goto(base+'/subject/person/jacinta-allan');assert.equal(dynamicResponse.status(),200);
+ await personPage.waitForFunction(()=>document.querySelector('#subject-sections #subject-vic-gifts [data-datatable]'));
+ assert.ok(personRequests.some(query=>new URLSearchParams(query).get('view')==='person'));
+ const personSection=personPage.locator('#subject-sections #subject-vic-gifts');assert.equal(await personSection.count(),1);
+ assert.match(await personSection.textContent(),/32 published entries/);
+ assert.match(await personSection.textContent(),/© Copyright State Government of Victoria/);
+ for(const field of ['date','estimated_value','action_taken'])assert.equal(await personSection.locator(`[data-column="${field}"]`).count(),0);
+ await personSection.locator('[data-search]').fill('Mushroom Group');
+ await personPage.waitForFunction(()=>JSON.parse(document.querySelector('#subject-sections #subject-vic-gifts [data-dt-page]').textContent).total===0);
+ assert.equal(await personSection.count(),1);await personContext.close();
  const html=await(await fetch(base+'/register/vic-gifts')).text();assert.ok(!html.includes('src="/app.js'));assert.equal(errors.length,0);
  const hash=async p=>createHash('sha256').update(await readFile(resolve(root,p))).digest('hex');
  const codeHashes=Object.fromEntries(await Promise.all(['portal/src/index.ts','portal/src/vic-gifts.ts','portal/public/register-tables.js','portal/public/register-tables-entry.js','portal/public/app.js','portal/public/vic-gifts.css'].map(async p=>[p,await hash(p)])));
- await writeFile(resolve(out,'browser-results.json'),JSON.stringify({preview:'Local Worker; staged in-memory asset binding; no production bindings',stagedSha256:await hash('data/staged/vic-gifts/hub.json'),codeHashes,results,officialSearch,giverSearchHits:0,csvReceipts:true,ssr:true,personSSR:true,pageErrors:errors},null,2)+'\n');
- console.log(JSON.stringify({results,officialSearch,giverSearchHits:0,csvReceipts:true,personSSR:true,pageErrors:errors}));
+ await writeFile(resolve(out,'browser-results.json'),JSON.stringify({preview:'Local Worker; staged in-memory asset binding; no production bindings',stagedSha256:await hash('data/staged/vic-gifts/hub.json'),codeHashes,results,officialSearch,giverSearchHits:0,csvReceipts:true,absentColumnsOmitted:true,ssr:true,personSSR:true,personJS:true,personRequests,pageErrors:errors},null,2)+'\n');
+ console.log(JSON.stringify({results,officialSearch,giverSearchHits:0,csvReceipts:true,absentColumnsOmitted:true,personSSR:true,personJS:true,pageErrors:errors}));
 }finally{await browser.close();await close();}

@@ -50,7 +50,7 @@ export function interestTableConfig(rows) {
 }
 
 /** This source keeps givers record-only. Its endpoint searches official fields. */
-export function vicGiftsTableConfig(params = {}) {
+export function vicGiftsTableConfig(params = {}, populatedFields = []) {
   return {id:'vic-gifts-table',caption:'Published gifts, benefits and hospitality',pageType:'vic-gifts',urlKey:'vicGifts',pageSize:25,
     source:{endpoint:'/api/register/vic-gifts',params},defaultSort:{key:'office_holder',dir:'asc'},export:{filename:'vic-gifts.csv'},
     columnsVisible:['office_holder','role','portfolio','description','giver','source_locator'],
@@ -68,7 +68,9 @@ export function vicGiftsTableConfig(params = {}) {
       {key:'snapshot',label:'Snapshot',type:'text',sortable:false},
       {key:'sha256',label:'SHA-256',type:'text',sortable:false},
       {key:'licence',label:'Licence',type:'text',sortable:false},
-      {key:'licence_url',label:'Licence URL',type:'text',sortable:false}],primaryLink:row=>row.href || null};
+      {key:'licence_url',label:'Licence URL',type:'text',sortable:false}]
+      .filter(column=>!['date','estimated_value','action_taken'].includes(column.key) || populatedFields.includes(column.key)),
+    primaryLink:row=>row.href || null};
 }
 
 /** No giver, description or action text participates in search or facets. */
@@ -132,7 +134,7 @@ export function hydrateRegisterTables(root = document) {
     if (config.id === 'instruments-table') Object.assign(config,instrumentTableConfig());
     else if (config.id === 'audit-table') Object.assign(config,{columns:auditTableConfig([]).columns,primaryLink:row=>`/audit/${row.id}`});
     else if (config.urlKey === 'interests') Object.assign(config,{primaryLink:row=>href(row.source)});
-    else if (config.urlKey === 'vicGifts') { const factory=vicGiftsTableConfig(config.source?.params); Object.assign(config,{columns:factory.columns,primaryLink:factory.primaryLink}); }
+    else if (config.urlKey === 'vicGifts') { const factory=vicGiftsTableConfig(config.source?.params,config.columns.map(column=>column.key)); Object.assign(config,{columns:factory.columns,primaryLink:factory.primaryLink}); }
     else Object.assign(config,{primaryLink:row=>row.href || null});
     script.remove();
     const mounted = mountRegisterTable(el,config);

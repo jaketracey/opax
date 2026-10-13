@@ -4,7 +4,7 @@ import {readFileSync} from 'node:fs';
 import {JSDOM} from 'jsdom';
 import {build} from 'esbuild';
 import {clearedGiftRegisters,vicGiftsPage,vicGiftsResponse,vicGiftsPersonBlock} from '../src/vic-gifts.ts';
-import {hydrateRegisterTables} from '../public/register-tables.js';
+import {hydrateRegisterTables,vicGiftsTableConfig} from '../public/register-tables.js';
 
 const cc='https://creativecommons.org/licenses/by/4.0/',sha='a'.repeat(64),snapshot='2026-10-14T00:00:00Z';
 const source='https://www.vic.gov.au/2024-25-ministerial-register-gifts-benefits-and-hospitality';
@@ -24,7 +24,45 @@ test('SSR renders periods, totals, source, licence and a real shared table',asyn
  assert.ok(doc.body.textContent.includes(row.giver));assert.ok(doc.body.textContent.includes(row.description));assert.match(doc.body.textContent,/Snapshot.*2026/);assert.match(doc.body.textContent,/SHA-256 a{64}/);assert.match(doc.body.textContent,/CC BY 4.0/);
  assert.equal(doc.querySelectorAll('a[href^="/subject/person"]').length,0);
  const csv=await(await api('?format=csv')).text();for(const value of [row.giver,row.description,sha,'Snapshot','Licence','Source row'])assert.ok(csv.includes(value));
- assert.match(csv,/Not published/);
+ assert.doesNotMatch(csv,/Not published|Date as published|Estimated value as published|Action taken as published/);
+ for(const receipt of doc.querySelectorAll('.vic-gifts-receipt'))assert.ok(receipt.textContent.includes('© Copyright State Government of Victoria'));
+});
+
+test('wholly absent fields are omitted from SSR, hydration, CSV and the API table definition',async()=>{
+ const absent=['date','estimated_value','action_taken'];
+ assert.ok(vicGiftsTableConfig().columns.every(column=>!absent.includes(column.key)));
+ for(const url of ['https://opax.test/register/vic-gifts',...staged.registers.map(r=>'https://opax.test/register/vic-gifts?period='+r.document.period.id)]){
+  const page=await vicGiftsPage(new URL(url),async()=>staged,block),dom=new JSDOM(page.prerender,{url});
+  const config=JSON.parse(dom.window.document.querySelector('[data-register-config]').textContent).config;
+  assert.ok(config.columns.every(column=>!absent.includes(column.key)));
+  const previous=globalThis.MutationObserver;globalThis.MutationObserver=dom.window.MutationObserver;
+  try{
+   hydrateRegisterTables(dom.window.document);await new Promise(setImmediate);
+   for(const field of absent)assert.equal(dom.window.document.querySelector(`[data-column="${field}"]`),null);
+   assert.ok(!dom.window.document.body.textContent.includes('Not published'));
+  }finally{dom.window.document.body.replaceChildren();await new Promise(setImmediate);globalThis.MutationObserver=previous;dom.window.close();}
+ }
+ const href=staged.registers[0].rows[0].official.href;
+ for(const query of ['', '?person='+encodeURIComponent(href), '?period='+staged.registers[0].document.period.id]){
+  const csv=await(await api(query+(query?'&':'?')+'format=csv',async()=>staged)).text();
+  assert.doesNotMatch(csv,/Not published|Date as published|Estimated value as published|Action taken as published/);
+ }
+});
+
+test('source fields with published values remain available and missing cells stay blank',async()=>{
+ const h=structuredClone(fixture);Object.assign(h.registers[0].rows[0],{date:'2 March 2025',estimated_value:'$250 (estimated)',action_taken:'Retained'});
+ h.registers[0].rows.push({...row,id:registerId+'/table-1/row-2',source_locator:'table-1/row-2'});
+ const url='https://opax.test/register/vic-gifts',page=await vicGiftsPage(new URL(url),async()=>h,block),dom=new JSDOM(page.prerender,{url});
+ const config=JSON.parse(dom.window.document.querySelector('[data-register-config]').textContent).config;
+ const optional=['date','estimated_value','action_taken'];assert.ok(optional.every(key=>config.columns.some(column=>column.key===key)));
+ const previous=globalThis.MutationObserver;globalThis.MutationObserver=dom.window.MutationObserver;
+ try{
+  hydrateRegisterTables(dom.window.document);await new Promise(setImmediate);
+  for(const field of optional)assert.ok(dom.window.document.querySelector(`[data-column="${field}"]`));
+ }finally{dom.window.document.body.replaceChildren();await new Promise(setImmediate);globalThis.MutationObserver=previous;dom.window.close();}
+ const csv=await(await api('?format=csv',async()=>h)).text();
+ for(const text of ['Date as published','Estimated value as published','Action taken as published','2 March 2025','$250 (estimated)','Retained'])assert.ok(csv.includes(text));
+ assert.ok(!csv.includes('Not published'));
 });
 
 test('licence and snapshot rejection exclude rows from HTML, hydration and CSV',async()=>{
@@ -54,6 +92,9 @@ test('staged periods reconcile exactly and person sections use only staged roste
  for(const r of all){const p=await vicGiftsPage(new URL('https://opax.test/register/vic-gifts?period='+r.document.period.id),async()=>staged,block);assert.equal(p.status,200);assert.match(p.description,new RegExp('^'+r.rows.length+' '));}
  const href=all[0].rows[0].official.href,expected=all.flatMap(r=>r.rows).filter(r=>r.official?.href===href).length;
  const html=await vicGiftsPersonBlock(href,async()=>staged,new URL('https://opax.test'+href));assert.match(html,new RegExp(expected+' published entries'));assert.match(html,/Snapshot/);assert.match(html,/CC BY 4.0/);
+ const personDoc=new JSDOM(html).window.document;
+ for(const receipt of personDoc.querySelectorAll('.vic-gifts-receipt'))assert.ok(receipt.textContent.includes('© Copyright State Government of Victoria'));
+ assert.ok(!html.includes('Not published'));
  const response=await api('?person='+encodeURIComponent(href),async()=>staged);assert.equal((await response.json()).total,expected);
  assert.equal(await vicGiftsPersonBlock('/subject/person/unlinked',async()=>staged,new URL('https://opax.test/subject/person/unlinked')),'');
  const h=structuredClone(staged);h.registers[0].rows[0].official.href='/subject/person/other-fixture';assert.equal(clearedGiftRegisters(h)[0].rows[0].official,null);

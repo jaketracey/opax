@@ -1,0 +1,70 @@
+{
+  "base_sha": "f31e9caf4cf007877a337579504df724c14ff8ca",
+  "merge_sha": "0e7dcb8427029bba782a110ab860a0b0a4d4dcb7",
+  "reviewed_sha": "860aa1a7cc60f981225a8bf55863c90c4e56f77e",
+  "fixes": [
+    "Client representation uses the verified roster, as on the server; actual JavaScript-enabled person-page rendering retains and hydrates the gifts section.",
+    "Every register receipt includes © Copyright State Government of Victoria, including person sections.",
+    "Wholly absent date/value/action fields are omitted from SSR, hydration, API table configuration and CSV; published fields remain supported with blank missing cells."
+  ],
+  "gates": {
+    "targeted": {
+      "command": "OPAX_TEST_HOST=::1 node --test test/vic-gifts.test.mjs test/register-tables.test.mjs test/datatable.test.mjs",
+      "exit_code": 0,
+      "tests": 38,
+      "pass": 38,
+      "fail": 0,
+      "skipped": 0
+    },
+    "browser": {
+      "command": "OPAX_VIC_GIFTS_BROWSER_OUT=docs/coverage/vic-gifts/fix-round1 node portal/test/vic-gifts-browser.mjs",
+      "exit_code": 0,
+      "person_js": true,
+      "person_ssr": true,
+      "page_errors": []
+    },
+    "check": {
+      "command": "OPAX_TEST_HOST=::1 WRANGLER_SEND_METRICS=false npm run check, in the normal desktop clean loopback namespace",
+      "exit_code": 0
+    },
+    "tsc": {
+      "command": "npx --no-install tsc --noEmit",
+      "exit_code": 0
+    }
+  },
+  "staged_data_byte_identical": true,
+  "votes_sha256": "a77128dc0e1e1b3fdaa4bf84501e2c94af3125dea3cf0b2dffbc688a49d68546",
+  "code_hashes": {
+    "portal/src/index.ts": "8a6fba6d1c929394e3b88f95a9bd781829b693f784995cf9e7e784cc75bb4812",
+    "portal/src/vic-gifts.ts": "c9550f7f761a349d4f271e51660a7bef1bb924c943ea43df39b600ad7c54f5fd",
+    "portal/public/register-tables.js": "58ad18bbeea270cf94ea0da5cb53a7560e999d4c9d24c89830a410d1813c3639",
+    "portal/public/register-tables-entry.js": "fc2e993ec1ad9d8000f99ed7e074e5f680bde12aca4dc07254941d7662aeaa8c",
+    "portal/public/app.js": "61b629304a0895cccef47ac86b73a7c5a7baddca270ef94aa662fcacf0edb256",
+    "portal/public/vic-gifts.css": "3a19e204b428bc8da1e51883f7580cea6a4be4d6958c804aa0f31422625d5ca8"
+  },
+  "local_logs": {
+    "fix-round1-targeted.log": {
+      "path": ".ops/gate-cache/vic-gifts/fix-round1-targeted.log",
+      "sha256": "68fff086adc5990499c81c59bad03f56b33fff7f01125a3f7cf23d30b213c751"
+    },
+    "fix-round1-stamp.log": {
+      "path": ".ops/gate-cache/vic-gifts/fix-round1-stamp.log",
+      "sha256": "7d523e88494287b6f2a2a712a4da43ae232b2eadb8e523b6f46c2cdbfbea1aa5"
+    },
+    "fix-round1-browser.log": {
+      "path": ".ops/gate-cache/vic-gifts/fix-round1-browser.log",
+      "sha256": "aa3b00c8f0f28e4150651172edde6385ac17b8d01156838fc681c2e2669e713c"
+    },
+    "fix-round1-check.log": {
+      "path": ".ops/gate-cache/vic-gifts/fix-round1-check.log",
+      "sha256": "be60d468f72ca0cf92cbd4dfdfee9cbdc48e0170ce583f7126f53206d5d6350a"
+    },
+    "fix-round1-tsc.log": {
+      "path": ".ops/gate-cache/vic-gifts/fix-round1-tsc.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  },
+  "production_writes": 0,
+  "pushes": 0,
+  "deploys": 0
+}

@@ -56,17 +56,17 @@ function selected(hub:GiftsHub,period:string|null,person:string|null) {
   if(person)registers=registers.map(r=>({...r,rows:r.rows.filter(row=>row.official?.href===person)})).filter(r=>r.rows.length)
   return registers
 }
-const tableRows=(registers:GiftsRegister[]):Row[]=>registers.flatMap(r=>r.rows.map(row=>({...row,href:row.official?.href || null,
-  date:row.date ?? 'Not published',estimated_value:row.estimated_value ?? 'Not published',action_taken:row.action_taken ?? 'Not published'})))
+const tableRows=(registers:GiftsRegister[]):Row[]=>registers.flatMap(r=>r.rows.map(row=>({...row,href:row.official?.href || null})))
+const populatedFields=(rows:Row[])=>['date','estimated_value','action_taken'].filter(key=>rows.some(row=>row[key]!=null && row[key]!==''))
 
 const receiptHTML=(register:GiftsRegister)=>{
   const d=register.document
-  return `<p class="vic-gifts-receipt"><a href="${esc(d.url)}">Original register · ${esc(d.period.label)}</a> · Snapshot ${esc(d.receipt.snapshot)} · <a href="${CC}">${esc(d.licence.name)}</a><br><span>SHA-256 ${esc(d.receipt.sha256)}</span></p>`
+  return `<p class="vic-gifts-receipt"><a href="${esc(d.url)}">Original register · ${esc(d.period.label)}</a> · Snapshot ${esc(d.receipt.snapshot)} · <a href="${CC}">${esc(d.licence.name)}</a> · © Copyright State Government of Victoria<br><span>SHA-256 ${esc(d.receipt.sha256)}</span></p>`
 }
 function tableHTML(registers:GiftsRegister[],params:Record<string,string>,url:URL,id='vic-gifts-table') {
-  const config={...vicGiftsTableConfig(params),id}
+  const rows=tableRows(registers),config={...vicGiftsTableConfig(params,populatedFields(rows)),id}
   const guarded=guardTableURL(config,url)
-  const page=guarded.rejected?{rows:[],total:0,page:1,pageSize:25}:vicGiftsQuery(tableRows(registers),config,guarded.query)
+  const page=guarded.rejected?{rows:[],total:0,page:1,pageSize:25}:vicGiftsQuery(rows,config,guarded.query)
   const payload=JSON.stringify({config}).replace(/</g,'\\u003c')
   return `<div data-register-table="${id}">${dataTableHTML(config,page,url)}<script type="application/json" data-register-config>${payload}</script></div>`
 }
@@ -112,9 +112,9 @@ export async function vicGiftsResponse(request:Request,read:GiftsReader):Promise
     if(!registers.length)return Response.json({error:'Register not found'},{status:404,headers})
     if(person && url.searchParams.get('view')==='person')return Response.json({html:await vicGiftsPersonBlock(person,async()=>hub,url)},{headers})
     // The shared client sends unprefixed API state; browser URLs use vicGifts.*.
-    const config={...vicGiftsTableConfig(),urlKey:undefined},guarded=guardTableURL(config,url)
+    const rows=tableRows(registers),config={...vicGiftsTableConfig({},populatedFields(rows)),urlKey:undefined},guarded=guardTableURL(config,url)
     if(guarded.rejected)return Response.json({error:'Invalid query'},{status:400,headers})
-    const query:Query=guarded.query,rows=tableRows(registers)
+    const query:Query=guarded.query
     if(url.searchParams.get('format')==='csv'){
       const page=vicGiftsQuery(rows,config,{...query,page:1,pageSize:50000})
       return new Response(request.method==='HEAD'?null:toCSV(page.rows,config),{headers:{...headers,'content-type':'text/csv; charset=utf-8','content-disposition':'attachment; filename="vic-gifts.csv"'}})
