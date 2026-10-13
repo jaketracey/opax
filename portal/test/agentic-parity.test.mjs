@@ -53,6 +53,13 @@ test('RESEARCH_LOOP=off: legacy fields remain byte-identical; stepped research m
   const {fallbackPlan}=await import('data:text/javascript;base64,'+Buffer.from(compiled.outputFiles[0].text).toString('base64'));
   const gold=JSON.parse(readFileSync(root+'portal/test/fixtures/agentic-ask-gold.json')).questions;
   let expected={};
+  // 14 Oct: origin/main read lowercase words as surname-only people ("speakers on defence" -> "On",
+  // "than last term" -> "Last"). Only questions whose named scope differs between the two trees may differ.
+  const scopeOf=async entry=>{const out=await build({entryPoints:[entry],bundle:true,platform:'node',format:'esm',write:false});return (await import('data:text/javascript;base64,'+Buffer.from(out.outputFiles[0].text).toString('base64'))).extractNamedScope};
+  const roster=JSON.parse(readFileSync(root+'portal/public/parliamentarians.json')),[scopeNow,scopeMain]=await Promise.all([scopeOf(root+'portal/src/agentic-ask.ts'),scopeOf(join(scratch,'portal/src/agentic-ask.ts'))]);
+  const SURNAME_FIX=new Set(gold.filter(q=>JSON.stringify(scopeNow(q.question,roster,{bills:[]}))!==JSON.stringify(scopeMain(q.question,roster,{bills:[]}))).map(q=>q.id));
+  assert.ok(SURNAME_FIX.has('R07')&&SURNAME_FIX.size<=6,[...SURNAME_FIX].join());
+  for(const q of gold)if(SURNAME_FIX.has(q.id))assert.ok(scopeNow(q.question,roster,{bills:[]}).people.every(name=>name.includes(' ')),q.id);
   globalThis.fetch=async(input,init)=>{
    const u=new URL(input);assert.ok(u.hostname.startsWith('offline.'));const b=JSON.parse(init?.body??'{}');
    if(u.pathname.endsWith('/ask')) {
@@ -74,7 +81,12 @@ test('RESEARCH_LOOP=off: legacy fields remain byte-identical; stepped research m
    expected=q.expected;
    const post=h=>h.fetch('/api/ask'+(stream?'?stream=1':''),{method:'POST',headers:{'content-type':'application/json','x-opax-nocache':'1',...(stream?{accept:'text/event-stream'}:{})},body:JSON.stringify({question:q.question,kind:'speech',period:'all'})});
    const a=await post(main),b=await post(current);assert.equal(b.status,a.status,q.id);
-   assert.equal(legacyBody(await b.text(),stream),legacyBody(await a.text(),stream),`gold ${q.id} (${stream?'SSE':'JSON'})`);
+   const [after,before]=[legacyBody(await b.text(),stream),legacyBody(await a.text(),stream)];
+   // 14 Oct: origin/main read lowercase words as surname-only people ("speakers on defence" -> "On") and
+   // declined these; the capitalised-surname rule now answers them from tool rows. Every other body stays byte-identical.
+   if(q.id==='R07'){assert.match(after,/"answered":true/,`gold R07 (${stream?'SSE':'JSON'})`);assert.match(after,/Scott Morrison: 133/);}
+   else if(SURNAME_FIX.has(q.id))assert.match(after,/"answer":/,`gold ${q.id} (${stream?'SSE':'JSON'})`);
+   else assert.equal(after,before,`gold ${q.id} (${stream?'SSE':'JSON'})`);
    while(pending.length)await Promise.all(pending.splice(0));
   }
   assert.equal(gold.length,34);t.diagnostic('34 agentic gold questions, 68 JSON/SSE bodies: 0 legacy-field differences; optional research metadata rebaselined.');

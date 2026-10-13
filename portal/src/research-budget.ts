@@ -4,6 +4,12 @@ export interface ResearchDailyBudget {
   available: (maxUsd: number) => Promise<boolean>
 }
 export const researchReservationUsd = (tokens: number, inputPrice = 1, outputPrice = 3) => tokens * Math.max(10, inputPrice, outputPrice) / 1e6
+/** One model call's ceiling: its reserved input and output at the configured prices, doubled for safety.
+ *  Reserving the whole remaining request budget per turn charged ~US$1 per timed-out turn and exhausted the daily cap. */
+export const researchTurnReservationUsd = (inputTokens: number, outputTokens: number, inputPrice = 1, outputPrice = 3) =>
+  2 * (inputTokens * Math.max(inputPrice, 0.1) + outputTokens * Math.max(outputPrice, 0.3)) / 1e6
+/** Operator eval requests: per-request caps still apply, but they never draw on the shared production ledger. */
+export const unmeteredResearchBudget: ResearchDailyBudget = { reserve: async () => ({ settle: async () => {} }), available: async () => true }
 const micros = (value: number) => Math.ceil(value * 1_000_000)
 
 /** One atomic primary write admits each turn across all isolates/locations.

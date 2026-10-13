@@ -42,7 +42,7 @@ function localConfig() {
   cfg.kv_namespaces = (cfg.kv_namespaces || []).map(k => ({...k, remote: true}));
   // wrangler dev holds every asset file open: the full public/ (~22.5k files) stalls at the fd limit
   // or fails with spawn EBADF. Serve a symlinked subset without the bulk folders Ask never reads.
-  const slim = portal + '.research-assets/', skip = new Set(['divisions', 'bills', 'growth', 'photos', 'search-catalog', 'grants']);
+  const slim = portal + '.research-assets/', skip = new Set(['divisions', 'bills', 'growth', 'photos', 'grants']);
   rmSync(slim, {recursive: true, force: true}); mkdirSync(slim);
   for (const name of readdirSync(portal + 'public')) if (!skip.has(name)) symlinkSync(portal + 'public/' + name, slim + name);
   cfg.assets = {...cfg.assets, directory: './.research-assets'};
@@ -118,6 +118,7 @@ try {
       console.log(`  r${s.round ?? '?'} ${String(s.tool).padEnd(16)} ${short(s.arg ?? '', 34).padEnd(34)} ${String(s.ms ?? '').padStart(5)} ms  results ${s.results ?? '-'}  ${s.ok === false ? 'FAILED' : ''}`);
     const answer = String(d.answer ?? d.text ?? d.error ?? '').replace(/\s+/g, ' ');
     console.log(`  answer: ${answer.slice(0, 420)}${answer.length > 420 ? '…' : ''}`);
+    if (r.rejections) console.log(`  rejected: ${r.rejections.join(" | ")}`);
     console.log(`  checks: loop=${c.loop} quotes=${c.quotes} verbatim=${c.verbatim} unbound-markers=${c.unbound} placeholder=${c.placeholder}`);
     rows.push({id: q.id, kind: q.kind, s: (ms / 1000).toFixed(1), mode: r.mode ?? '-', failure: r.failure ?? '', cost: r.cost_usd ?? null, ...c});
     dump.push({q, status, ms, payload: d});

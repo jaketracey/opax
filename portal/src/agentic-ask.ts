@@ -269,9 +269,14 @@ export function extractNamedScope(question: string, roster: unknown, billList: u
   const mentions = (name: string) => !!name && q.includes(` ${normaliseQuestion(name)} `)
   const records = (roster as { people?: { name: string; party?: string; party_now?: string }[] } | null)?.people ?? []
   const people: string[] = []
+  // A lone surname is an ordinary word as often as a name ("nuclear power", "differ on"): when the
+  // asker uses capitals at all, a one-word match must be capitalised as written in the roster.
+  const cased = /\p{Lu}/u.test(publicQuestion)
+  const capitalised = (word: string) => !cased || new RegExp(`(?<![\\p{L}])${word.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}(?![\\p{L}])`, 'u').test(publicQuestion)
   let unmatched = q
   for (const p of records.filter(p => typeof p.name === 'string').sort((a, b) => b.name.length - a.name.length)) {
     const name = ` ${normaliseQuestion(p.name)} `
+    if (!p.name.trim().includes(' ') && !capitalised(p.name.trim())) continue
     if (unmatched.includes(name)) { people.push(p.name); unmatched = unmatched.split(name).join(' ~ ') }
   }
   let ambiguous = false
@@ -284,7 +289,7 @@ export function extractNamedScope(question: string, roster: unknown, billList: u
     if (!surnames.has(surname)) surnames.set(surname, new Set())
     surnames.get(surname)!.add(p.name)
   }
-  for (const [surname, names] of surnames) if (remainder.includes(` ${surname} `)) {
+  for (const [surname, names] of surnames) if (remainder.includes(` ${surname} `) && capitalised([...names][0].trim().split(' ').at(-1)!)) {
     if (names.size === 1) people.push([...names][0]); else ambiguous = true
   }
   const aliases: Record<string, string[]> = {
@@ -514,9 +519,12 @@ async function runAgenticAttempt(question: string, deps: AgenticDeps, progress: 
     if (out.tokens) { tokens.input += out.tokens.input; tokens.output += out.tokens.output }
     if (typeof out.costUsd === 'number') cost = (cost ?? 0) + out.costUsd
   }
+  // Research turns may run several lookups at once: number each step when it starts, not when it lands.
+  let begun = 0
   const execute = async (step: PlanStep, committee = false, custom?: (d: ToolDeps) => Promise<ToolResult>, round?: number, parentSignal = executionSignal): Promise<ToolResult> => {
     const turn = round ?? researched?.rounds
-    const event = { ...stepEvent(step, steps.length + 1, committee), ...(turn ? { tool: step.tool, round: turn } : {}) }
+    begun = Math.max(begun, steps.length) + 1
+    const event = { ...stepEvent(step, begun, committee), ...(turn ? { tool: step.tool, round: turn } : {}) }
     await progress('status', { phase: 'step', step: event })
     const started = Date.now()
     let r: ToolResult

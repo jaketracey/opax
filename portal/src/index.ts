@@ -92,7 +92,7 @@ import { createOpenRouter } from '@openrouter/ai-sdk-provider'
 import { createResearch, researchLimits } from './research-loop'
 import { recordResearchComparison, recordResearchFailure } from './research-monitor'
 import { withPlannerResearch, withResearchEval } from './research-response'
-import { researchDailyBudget, researchReservationUsd } from './research-budget'
+import { researchDailyBudget, researchReservationUsd, unmeteredResearchBudget } from './research-budget'
 import { ResearchError, type ResearchPayload } from './research-types'
 import { researchEvalState, researchEvalUsage, captureLoopUsage, observeEvalModelResponse, researchPrices } from './research-eval'
 import type { ToolDeps } from './agentic-tools'
@@ -5935,9 +5935,9 @@ function agenticDeps(env: Env, ctx: ExecutionContext, signal?: AbortSignal, inpu
     ...(env.RESEARCH_LOOP === 'route' ? {
       research: createResearch({
         model: env.OPENROUTER_API_KEY ? createOpenRouter({ apiKey: env.OPENROUTER_API_KEY })(researchModelId(env.RESEARCH_LOOP_MODEL_ID), { usage: { include: true }, ...(researchProvider(env.RESEARCH_LOOP_PROVIDER) ? { provider: researchProvider(env.RESEARCH_LOOP_PROVIDER) } : {}), ...(researchReasoning(env.RESEARCH_LOOP_REASONING) ? { extraBody: { reasoning: researchReasoning(env.RESEARCH_LOOP_REASONING) } } : {}) }) : undefined,
-        steps: env.RESEARCH_LOOP_STEPS, wallMs: Math.min(researchLimits({ wallMs: env.RESEARCH_LOOP_MS }).wallMs, 8_000), tokens: env.RESEARCH_LOOP_TOKENS,
+        steps: env.RESEARCH_LOOP_STEPS, wallMs: researchLimits({ wallMs: env.RESEARCH_LOOP_MS }).wallMs, tokens: env.RESEARCH_LOOP_TOKENS,
         modelBudgetSpent: () => modelBudgetSpent(env),
-        dailyBudget: researchDailyBudget(env.COMMUNITY_DB, env.RESEARCH_LOOP_DAILY_USD),
+        dailyBudget: env.RESEARCH_EVAL ? unmeteredResearchBudget : researchDailyBudget(env.COMMUNITY_DB, env.RESEARCH_LOOP_DAILY_USD),
         cleanup: work => ctx.waitUntil(work),
         ...(env.RESEARCH_EVAL ? { onUsage: stats => captureLoopUsage(env.RESEARCH_EVAL!, stats) } : {}),
         inputPrice: Number(env.AGENTIC_INPUT_USD_PER_MILLION) || undefined, outputPrice: Number(env.AGENTIC_OUTPUT_USD_PER_MILLION) || undefined,
@@ -5946,7 +5946,8 @@ function agenticDeps(env: Env, ctx: ExecutionContext, signal?: AbortSignal, inpu
         searchBody: (query, limit, context) => {
           const scoped = { ...input,
             ...(context.named.people.length === 1 ? { speaker: context.named.people[0] } : {}),
-            ...(context.named.parties.length === 1 ? { party: context.named.parties[0] } : {}),
+            // "Labor and the Coalition" resolves only Labor; a one-party filter would hide the other side.
+            ...(context.named.parties.length === 1 && !/\b(?:coalition|opposition|government|crossbench\w*)\b/i.test(String(input.question ?? '')) ? { party: context.named.parties[0] } : {}),
             ...(context.period.since ? { since: context.period.since } : {}), ...(context.period.until ? { until: context.period.until } : {}),
           }
           return { query, top_k: limit, features: ['keyword', 'semantic'], reranker: 'predict', show: ['basic', 'origin', 'extra'], filter_expression: filterExpression(scoped) }
