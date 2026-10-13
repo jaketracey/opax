@@ -1,8 +1,10 @@
 /* /money/explain (money-explain.js): one disclosed-money flow, explained.
-   One reading column, generous air between sections and no rules between
-   them; hairlines only between rows of a list. Tokens only (tokens.css). */
+   Generous air between sections and no rules between them; hairlines only
+   between rows of a list. Tokens only (tokens.css). The page takes the content
+   column, edge to edge with the masthead like every page; the reading measure
+   sits on its paragraphs, not on a centred box. */
 
-.mx-page { max-width: 48rem; margin: var(--space-section) auto calc(var(--space-section) * 2); min-width: 0; }
+.mx-page { margin: var(--space-section) 0 calc(var(--space-section) * 2); min-width: 0; }
 .mx-page[aria-busy="true"] { min-height: 40vh; }
 
 /* The head: a kicker, the flow, one meta line. */
@@ -97,7 +99,6 @@
   .mx-trend-chart { height: 11rem; }
 }
 @media (min-width: 1100px) {
-  .mx-page { max-width: 52rem; }
   .mx-limits { grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: var(--space-section); row-gap: var(--space-section); }
 }
 

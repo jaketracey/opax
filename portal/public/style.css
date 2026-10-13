@@ -288,10 +288,10 @@
 .audit-content nav, .instrument-content nav { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-group); margin: var(--space-group) 0; }
 .audit-content nav a, .instrument-content nav a { display: inline-flex; align-items: center; min-height: var(--size-target); }
 .audit-content > .ui-source, .instrument-content > .ui-source { margin-top: var(--space-section); }
-.instrument-facts { display: grid; grid-template-columns: minmax(10rem, 1fr) 3fr; gap: var(--space-heading) var(--space-group); max-width: 64rem; margin: 0; }
+.instrument-facts { display: grid; grid-template-columns: minmax(10rem, 1fr) 3fr; gap: var(--space-heading) var(--space-group); margin: 0; }
 .instrument-facts dt { font: var(--type-label); color: var(--ink-soft); }
 .instrument-facts dd { margin: 0; overflow-wrap: anywhere; }
-/* The disclosures' rules span the column under the title; the facts keep their 64rem grid. */
+/* The facts and the disclosures' rules span the column under the title. */
 .instrument-disclosure { border-top: var(--border-hairline) solid var(--divider-subtle); }
 .instrument-disclosure:last-of-type { border-bottom: var(--border-hairline) solid var(--divider-subtle); }
 .instrument-disclosure > summary { display: flex; align-items: center; justify-content: space-between; gap: var(--space-block); min-height: var(--size-target); cursor: pointer; list-style: none; font: var(--type-strong); }
@@ -2432,7 +2432,6 @@ a.ency-name:hover, a.ency-name:focus-visible {
 .declared-source-link { display: inline-flex; align-items: center; min-height: 44px; margin-left: 0.2rem; white-space: nowrap; }
 .declared-match { margin: 0.1rem 0 0; color: var(--ink-soft); font-size: 0.8125rem; line-height: 1.5; }
 .declared-match .result-meta { margin-left: 0.2rem; }
-#panel-declared { max-width: 920px; }
 #panel-declared > h1 { font: 700 clamp(2rem, 4vw, 3rem)/1.2 var(--serif); margin: 0 0 1rem; }
 #panel-declared .dir-controls { margin-top: var(--space-4); }
 .declared-source { margin-top: var(--space-5); }
@@ -2442,7 +2441,7 @@ a.ency-name:hover, a.ency-name:focus-visible {
   font: 600 1.35rem/1.3 var(--serif); color: var(--ink);
 }
 .declared-day > h4 { display: none; }
-.party-receipts { margin-top: var(--section-gap); max-width: 920px; }
+.party-receipts { margin-top: var(--section-gap); }
 .party-receipts .subject-section-title { margin-top: 0; }
 .receipts-legend {
   display: flex; flex-wrap: wrap; gap: 0.4rem 1rem; margin: 0.4rem 0 var(--space-3);
@@ -2514,7 +2513,7 @@ a.ency-name:hover, a.ency-name:focus-visible {
 .balance-right > span { display: flex; align-items: center; gap: 0.35rem; width: 100%; }
 .balance-label { color: var(--ink); font-size: 0.6875rem; white-space: nowrap; }
 /* Pay for the posts held (person page): dated rows, newest first. */
-#person-pay { margin-top: var(--space-5); max-width: 920px; }
+#person-pay { margin-top: var(--space-5); }
 .pay-lead { margin: 0.2rem 0 0.6rem; }
 .pay-rows { list-style: none; margin: var(--space-4) 0 var(--space-3); padding: 0; border-top: 1px solid var(--line); }
 .pay-row {
@@ -3013,7 +3012,7 @@ mark.privacy-confirm {
 /* The topic page reads in two columns: the money, the tide and the debate at
    left; who speaks on it in the card at the reader's right hand. The card is
    not sticky — two charts run taller than a screen. */
-#panel-subject .topic-page-grid { grid-template-columns: minmax(0, 1fr) 360px; column-gap: var(--space-7); max-width: 1190px; }
+#panel-subject .topic-page-grid { grid-template-columns: minmax(0, 1fr) 360px; column-gap: var(--space-7); }
 #panel-subject .topic-page-grid .infobox { position: static; padding: var(--space-4) 1.2rem var(--space-4); }
 #panel-subject .topic-page-grid .infobox .chart { margin: 0; padding: 0; border: 0; border-radius: 0; background: none; max-width: none; overflow: visible; }
 #panel-subject .topic-page-grid .infobox .chart figcaption { font: 600 1.125rem/1.35 var(--serif); margin-bottom: var(--space-2); }
@@ -3085,10 +3084,11 @@ mark.privacy-confirm {
    One line per topic across a page, as a broadsheet would set a table: the
    subject and its scope, the count, a bar for its weight in the record, and
    four decade marks for its tide. The columns share one grid so the header
-   and every row align. */
+   and every row align. The ledger spans the content column, edge to edge with
+   the masthead; only the lede, the note and the descriptions keep a measure. */
 #panel-subject .topic-index-head {
   display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: var(--space-4) var(--space-6);
-  align-items: end; margin: 0 0 var(--space-6); max-width: 1120px;
+  align-items: end; margin: 0 0 var(--space-6);
 }
 #panel-subject .topic-index-head h1 { margin: 0; }
 #panel-subject .topic-index-lede { margin: var(--space-3) 0 0; max-width: 60ch; font: 400 1.0625rem/1.65 var(--serif); color: var(--ink-soft); }
@@ -3099,14 +3099,13 @@ mark.privacy-confirm {
 
 #panel-subject .topic-index-tools {
   display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: var(--space-3) var(--space-5);
-  max-width: 1120px; padding-bottom: var(--space-4); border-bottom: 1px solid var(--line-strong);
+  padding-bottom: var(--space-4); border-bottom: 1px solid var(--line-strong);
 }
 #panel-subject .topic-index-note { margin: 0; max-width: 64ch; font: 400 .8125rem/1.5 var(--sans); color: var(--ink-faint); }
 #panel-subject .topic-index-cols, #panel-subject .topic-index-row {
   display: grid; grid-template-columns: minmax(0, 1fr) 7rem minmax(150px, 15rem) 5.5rem;
   column-gap: var(--space-6); align-items: center;
 }
-#panel-subject .topic-index-cols, #panel-subject .topic-index-list { max-width: 1120px; }
 #panel-subject .topic-index-cols {
   padding: var(--space-3) 0; border-bottom: 1px solid var(--line);
   font: var(--type-label); color: var(--ink-soft);
@@ -3131,7 +3130,6 @@ mark.privacy-confirm {
 #panel-subject .topic-index-spark i:last-child { opacity: 1; }
 #panel-subject .topic-index-row:hover .topic-index-name { color: var(--bronze-ink); text-decoration: underline; text-underline-offset: 3px; text-decoration-color: var(--bronze-rule); }
 #panel-subject .topic-index-row:hover .topic-index-share i::before { background: var(--bronze-ink); }
-#panel-subject .topic-index-coverage { max-width: 1120px; }
 @media (max-width: 1099px) {
   #panel-subject .topic-index-cols, #panel-subject .topic-index-row { grid-template-columns: minmax(0, 1fr) 6rem minmax(130px, 11rem) 4.5rem; column-gap: var(--space-5); }
 }
@@ -4065,6 +4063,12 @@ html[data-panel="chat"] footer { display: none; }
   outline: 2px solid var(--bronze-ink); outline-offset: 4px;
 }
 #report-stats:not(:empty) { margin-top: var(--section-gap); }
+/* Two charts a row once the column holds two at their drawn size (640 wide):
+   one 920px chart stack stopped well short of the masthead's right edge. */
+@media (min-width: 1280px) {
+  #report-stats:not(:empty) { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: var(--space-group); align-items: start; }
+  #report-stats > .chart { max-width: none; }
+}
 .report-part-note {
   margin: 0 0 var(--space-4); max-width: 66ch;
   font: 400 0.9375rem/1.6 var(--sans); color: var(--ink-soft);
@@ -5597,7 +5601,10 @@ a.bill-division-q:hover { color: var(--bronze-ink); }
 .el-figure { margin: 0 0 var(--space-block); display: flex; flex-wrap: wrap; align-items: baseline; gap: var(--space-tight); }
 .el-figure b { font: var(--type-display); font-variant-numeric: tabular-nums; }
 .el-figure span { font: var(--type-metadata); color: var(--ink-soft); }
-.el-demographics { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 var(--space-group); margin: 0; max-width: 46rem; }
+/* As many label-and-figure columns as the content column holds (four at desktop,
+   two on a tablet), so the rows' rules span the column without a figure
+   drifting a half-page from its label. */
+.el-demographics { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 18rem), 1fr)); gap: 0 var(--space-group); margin: 0; }
 .el-demographics > div { display: flex; justify-content: space-between; gap: var(--space-block); padding: var(--space-tight) 0; border-top: var(--border-hairline) solid var(--divider-subtle); }
 .el-demographics dt { font: var(--type-metadata); color: var(--ink-soft); }
 .el-demographics dd { margin: 0; font: var(--type-strong); font-variant-numeric: tabular-nums; text-align: right; }
