@@ -141,7 +141,9 @@ export function positionPointSupported(text: string, evidence: string, question:
   // 2026"), never as a policy quantity ("2025 per year").
   const year = /^\d{4}/.exec(date)?.[0]
   const months = '(?:jan(?:uary)?|feb(?:ruary)?|mar(?:ch)?|apr(?:il)?|may|june?|july?|aug(?:ust)?|sep(?:t(?:ember)?)?|oct(?:ober)?|nov(?:ember)?|dec(?:ember)?)'
-  const claim = year ? text.replace(new RegExp(`\\b(?:(?:in|from|the|his|her|their|of|since|before|after|during|by|until|a|on|at)\\s+(?:(?:his|her|their|the|early|mid|late)[ -])?(?:\\d{1,2}\\s+)?(?:${months}\\.?\\s+)?(?:\\d{1,2},?\\s+)?${year}|${months}\\.?\\s+${year})\\b`, 'gi'), '') : text
+  // A parenthetical source year ("Andrew Wilkie (2011)", "(Independent, 2011)") is the same date phrase.
+  const dated = year ? text.replace(new RegExp(`\\((?:[^()\\n]{0,40},\\s*)?${year}\\)`, 'g'), '') : text
+  const claim = year ? dated.replace(new RegExp(`\\b(?:(?:in|from|the|his|her|their|of|since|before|after|during|by|until|a|on|at)\\s+(?:(?:his|her|their|the|early|mid|late)[ -])?(?:\\d{1,2}\\s+)?(?:${months}\\.?\\s+)?(?:\\d{1,2},?\\s+)?${year}|${months}\\.?\\s+${year})\\b`, 'gi'), '') : text
   if (numbers(claim).some(number => !allowed.has(number))) return false
   if (isPositionDurationQuestion(question)) {
     const durations=proposalDurations(text),supported=new Set(proposalDurations(evidence))

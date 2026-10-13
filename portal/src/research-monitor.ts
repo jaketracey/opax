@@ -1,11 +1,18 @@
 import { questionHash, type AgenticPayload } from './agentic-ask'
 import type { ResearchError } from './research-types'
+import type { AnswerTally } from './research-evidence'
 
 /** Existing Workers observability sink; never log source text, args or errors. */
 export async function recordResearchFailure(question: string, failure: ResearchError): Promise<void> {
   console.log(JSON.stringify({ kind: 'research_loop_fallback', question_hash: await questionHash(question), reason: failure.reason,
     rounds: failure.stats.rounds, tokens: failure.stats.tokens, cost_usd: failure.stats.costUsd ?? null,
-    turns: failure.stats.turns ?? [], cached_input_by_turn: failure.stats.turns?.map(turn => turn.cached_input) ?? [] }))
+    turns: failure.stats.turns ?? [], cached_input_by_turn: failure.stats.turns?.map(turn => turn.cached_input) ?? [], ...answerCounts(failure.stats.answer) }))
+}
+const answerCounts = (tally?: AnswerTally) => tally ? { points_in: tally.points_in, points_kept: tally.points_kept, repairs: tally.repairs, drops: tally.drops, ...(tally.mode ? { answer_mode: tally.mode } : {}) } : {}
+/** Every loop qualitative answer: how many points the model wrote, how many were kept, and the repair and drop
+ * labels with their counts. Labels and counts only. */
+export async function recordResearchAnswer(question: string, tally: AnswerTally): Promise<void> {
+  console.log(JSON.stringify({ kind: 'research_loop_answer', question_hash: await questionHash(question), mode: tally.mode ?? 'points', ...answerCounts(tally) }))
 }
 const selectedFacts = (run: AgenticPayload) => run.facts.filter(f => (run.chosen_facts ?? [...run.answer.matchAll(/\[(\d+)\]/g)].map(m => Number(m[1]))).includes(f.id))
 const stats = (run: AgenticPayload) => ({

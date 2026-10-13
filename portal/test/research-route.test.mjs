@@ -13,7 +13,10 @@ const id='a'.repeat(32)+'/t/body/0-90',resource=id.split('/')[0],text='The commi
 const call=(toolName,args,toolCallId='fake')=>({type:'tool-call',toolName,toolCallId,input:JSON.stringify(args)});
 const reply=calls=>({content:calls,finishReason:{unified:'tool-calls',raw:'tool_calls'},usage:{inputTokens:{total:10,noCache:10,cacheRead:0,cacheWrite:0},outputTokens:{total:5,text:5,reasoning:0}},providerMetadata:{openrouter:{usage:{cost:(10*0.66+5*1.98)/1e6}}},warnings:[]});
 const counted=()=>new MockLanguageModelV4({doGenerate:[reply([call('count_speeches',countArgs)]),reply([call('finish',{facts:[1]})])]});
-const qualitative=(bad=false)=>new MockLanguageModelV4({doGenerate:[reply([call('search',{query:'housing'})]),...Array.from({length:bad?2:1},()=>reply([call('answer',{text,citations:[{id:bad?'unbound/t/body/0':id,quote:text,start:0,end:text.length}]})]))]});
+// A failed draft over an off-topic passage leaves nothing usable, so the loop really falls back (repair contract: a
+// usable verified passage would answer in its own words instead).
+let passageText=text;
+const qualitative=(bad=false)=>(passageText=bad?'The committee adjourned until Tuesday morning.':text,new MockLanguageModelV4({doGenerate:[reply([call('search',{query:'housing'})]),...Array.from({length:bad?2:1},()=>reply([call('answer',{text,citations:[{id:bad?'unbound/t/body/0':id,quote:text,start:0,end:text.length}]})]))]}));
 let plannerCalls=0,ordinaryCalls=0,quota=0,modelQuota=0;
 h.env.OPENROUTER_API_KEY='test-only-placeholder';h.env.AGENTIC_ASK_MODE='route';h.env.AGENTIC_INPUT_USD_PER_MILLION='0.66';h.env.AGENTIC_OUTPUT_USD_PER_MILLION='1.98';h.env.SA_HANSARD_FULL_TEXT='true';h.env.RESEARCH_LOOP_SHADOW_RATE='1';
 const daily=budgetDatabase();h.env.COMMUNITY_DB=daily.db;
@@ -29,8 +32,8 @@ globalThis.fetch=async(input,init)=>{
   return init.headers?.['x-synchronous']==='true'?Response.json(raw):new Response([{type:'answer',text:raw.answer},{type:'metadata',tokens:raw.metadata.tokens},{type:'status',code:'0',status:'success'}].map(item=>JSON.stringify({item})).join('\n')+'\n',{headers:{'content-type':'application/x-ndjson'}});
  }
  if(url.pathname.endsWith('/catalog')||url.pathname.endsWith('/search'))return Response.json({fulltext:{total:100,facets:{'/u/o':{'/u/o/Taylor Example':87,'/u/o/Pat Example':13}}},resources:{}});
- if(url.pathname.endsWith('/find'))return Response.json({resources:{[resource]:{slug:'speech-1',title:'Housing debate',fields:{body:{paragraphs:{[id]:{text}}}}}}});
- if(url.pathname.includes('/slug/speech-1'))return Response.json({id:resource,title:'Housing debate',extra:{metadata:{date:'2023-05-01'}},data:{texts:{body:{value:{body:text}}}},usermetadata:{classifications:[{labelset:'kind',label:'speech'}]}});
+ if(url.pathname.endsWith('/find'))return Response.json({resources:{[resource]:{slug:'speech-1',title:'Housing debate',fields:{body:{paragraphs:{[id]:{text:passageText}}}}}}});
+ if(url.pathname.includes('/slug/speech-1'))return Response.json({id:resource,title:'Housing debate',extra:{metadata:{date:'2023-05-01'}},data:{texts:{body:{value:{body:passageText}}}},usermetadata:{classifications:[{labelset:'kind',label:'speech'}]}});
  throw Error('unexpected fixture service path');
 };
 const q='Who speaks most about gambling in NSW across the whole record?';
