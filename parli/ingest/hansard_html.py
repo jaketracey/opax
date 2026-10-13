@@ -1,101 +1,47 @@
-"""The established OpenAustralia HTML -> JSONL speech parser."""
+"""Legacy HTML fallback. XML is the authoritative source of turn identities."""
 import re
 from bs4 import BeautifulSoup
+from .speaker_roles import chair_role
+
 
 def parse_debate_html(html: str) -> list[dict]:
-    """
-    Parse a debate page HTML to extract complete speeches.
+    # libxml closes a paragraph when the next <p> starts. html.parser leaves
+    # the legacy unclosed byline around later speakers and their paragraphs.
+    soup = BeautifulSoup(html, 'lxml')
+    main = soup.find('div', class_='main')
+    if main is None:
+        return []
+    speeches, current, paragraphs = [], None, []
 
-    Returns a list of dicts with keys: speaker, party, electorate, text.
-    This is the exact same logic as scrape_debate_page() in the sync version.
-    """
-    soup = BeautifulSoup(html, "html.parser")
-    speeches = []
+    def flush():
+        if current is not None and paragraphs:
+            speeches.append(current | {'text': '\n\n'.join(paragraphs)})
 
-    main = soup.find("div", class_="main")
-    if not main:
-        return speeches
-
-    children = list(main.children)
-
-    current_speaker = ""
-    current_party = ""
-    current_electorate = ""
-    current_paragraphs = []
-
-    def _flush():
-        if current_paragraphs:
-            text = "\n\n".join(current_paragraphs)
-            if text.strip():
-                speeches.append(
-                    {
-                        "speaker": current_speaker,
-                        "party": current_party,
-                        "electorate": current_electorate,
-                        "text": text,
-                    }
-                )
-
-    for el in children:
-        if not hasattr(el, "name") or el.name is None:
-            continue
-
-        if el.name == "p" and "speaker" in (el.get("class") or []):
-            _flush()
-            current_paragraphs = []
-
-            strong = el.find("strong")
-            current_speaker = strong.get_text(strip=True) if strong else ""
-
-            current_party = ""
-            current_electorate = ""
-            small = el.find("small")
-            if small:
-                small_text = small.get_text(strip=True)
-                paren = re.search(r"\(([^)]+)\)", small_text)
-                if paren:
-                    parts = [p.strip() for p in paren.group(1).split(",")]
-                    if len(parts) >= 2:
-                        current_electorate = parts[0]
-                        current_party = parts[1]
-                    elif len(parts) == 1:
-                        current_party = parts[0]
-
-            inner_ps = el.find_all("p")
-            for ip in inner_ps:
-                ip_classes = ip.get("class") or []
-                if "speaker" in ip_classes:
-                    continue
-                ip_text = ip.get_text(strip=True)
-                if ip_text:
-                    current_paragraphs.append(ip_text)
-
-            continue
-
-        if el.name == "p":
-            el_text = el.get_text(strip=True)
-            if re.match(r"^\d{1,2}:\d{2}\s*(am|pm)$", el_text):
-                continue
-            if el_text:
-                current_paragraphs.append(el_text)
-
-    _flush()
-
-    if not speeches:
-        all_ps = main.find_all("p")
-        all_text = "\n\n".join(
-            p.get_text(strip=True)
-            for p in all_ps
-            if p.get_text(strip=True) and "speaker" not in (p.get("class") or [])
-        )
-        if all_text:
-            speeches.append(
-                {
-                    "speaker": "",
-                    "party": "",
-                    "electorate": "",
-                    "text": all_text,
-                }
-            )
-
+    # Source order; never recursively collect a byline's descendants as body.
+    for el in main.find_all('p'):
+        if 'speaker' in (el.get('class') or []):
+            flush()
+            paragraphs = []
+            strong, small = el.find('strong'), el.find('small')
+            speaker = strong.get_text(strip=True) if strong else ''
+            party = electorate = ''
+            match = re.search(r'\(([^)]+)\)', small.get_text(strip=True) if small else '')
+            if match:
+                parts = [p.strip() for p in match[1].split(',')]
+                party = parts[1] if len(parts) > 1 else parts[0]
+                electorate = parts[0] if len(parts) > 1 else ''
+            role = chair_role(party)
+            anchor = el.find('a', attrs={'name': True})
+            current = {'speaker': speaker, 'party': party, 'electorate': electorate,
+                       'speaker_type': 'chair' if role else 'member', 'chair_role': role,
+                       'citation_anchor': el.get('id') or (anchor.get('name') if anchor else None)}
+        else:
+            value = el.get_text(strip=True)
+            if value and not re.fullmatch(r'\d{1,2}:\d{2}\s*(?:am|pm)', value) and not value.startswith('View the PC OA website'):
+                paragraphs.append(value)
+    flush()
+    if not speeches and current is None and paragraphs:
+        speeches.append({'speaker': '', 'party': '', 'electorate': '',
+                         'speaker_type': 'unknown', 'chair_role': None,
+                         'text': '\n\n'.join(paragraphs)})
     return speeches

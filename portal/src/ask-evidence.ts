@@ -6,9 +6,46 @@ export type AugmentedContext = {
   fields?: Record<string, { id?: string; text?: string; parent?: string }>
 }
 
-export const ASK_PIPELINE_VERSION = '2026-10-10-person-overview-v3-sa-cap-cancel-passage-v3'
+export const ASK_PIPELINE_VERSION = '2026-10-12-ask-answer-decision-v1'
 
-/** A deliberately scoped evidence gap is a valid answer, not a missing citation. */
+export type NoAnswerReason = 'declined' | 'no_supported_claim' | 'grounding_failed'
+
+// Prompt-level JSON is intentional: this BYOK preset rejects answer_json_schema,
+// and the platform cannot combine it with llm_footnotes. Validate it ourselves.
+export const ASK_ANSWER_SCHEMA = {
+  type: 'object', required: ['answered', 'answer'], additionalProperties: false,
+  properties: {
+    answered: { type: 'boolean' },
+    answer: { type: 'string', description: 'The cited Markdown answer, or an empty string when declined.' },
+  },
+} as const
+export const ANSWER_DECISION_INSTRUCTIONS =
+  'Return only a JSON object matching this schema: ' + JSON.stringify(ASK_ANSWER_SCHEMA) + '. ' +
+  'Set answered to true only when at least one provided original passage supports a factual claim that answers the question, including the requested speaker attribution. ' +
+  'Put the usual cited Markdown, including footnote definitions, inside the answer string. ' +
+  'If no passage supports an answer, set answered to false and answer to an empty string. Do not substitute nearby topics, a limitation paragraph or loosely related passages for an answer. '
+
+/** Read contract data only. Never infer a decision from the wording of prose. */
+export function decodeAskAnswer<T extends { answer?: string; answered?: boolean; reason?: NoAnswerReason }>(raw: T): T {
+  if (typeof raw.answered === 'boolean') return raw
+  try {
+    const value: unknown = JSON.parse(raw.answer || '')
+    if (value && typeof value === 'object' && !Array.isArray(value) &&
+      'answered' in value && typeof value.answered === 'boolean' &&
+      'answer' in value && typeof value.answer === 'string') {
+      return { ...raw, answered: value.answered, answer: value.answer,
+        ...(value.answered ? {} : { reason: 'declined' as const }) }
+    }
+  } catch { /* Missing or malformed contract fails closed. */ }
+  return { ...raw, answered: false, reason: 'grounding_failed' }
+}
+
+export function noAnswer<T extends { answer: string; citations: Record<string, unknown>; sources: unknown[] }>(payload: T, reason: NoAnswerReason): T & { answered: false; reason: NoAnswerReason } {
+  return { ...payload, answer: '', answered: false, reason, citations: {},
+    sources: payload.sources.map(source => source && typeof source === 'object' ? { ...source, cited: false } : source) }
+}
+
+/** Legacy fixture wording; decisions never depend on this prose. */
 export const EVIDENCE_GAP_ANSWER = 'This selection does not establish their position on that topic.'
 export const isEvidenceGap = (answer: string): boolean => answer.trim().replace(/[.]$/, '').toLowerCase() === EVIDENCE_GAP_ANSWER.slice(0, -1).toLowerCase()
 
@@ -201,7 +238,7 @@ export function unsupportedQuotes(answer: string, evidence: string[]): string[] 
 /** Position summaries cannot substitute another topic just because it has citations. */
 export const isPositionBody = (body: Record<string, unknown>): boolean =>
   String((body.prompt as {system?:string})?.system || '').startsWith('You explain Australian politicians’ documented positions from primary records.')
-export function guardPositionAnswer<T extends {answer?:string; retrieval_results?:{resources?:Record<string,any>}; augmented_context?:AugmentedContext}>(raw: T, body: Record<string,unknown>): T {
+export function guardPositionAnswer<T extends {answer?:string; retrieval_results?:{resources?:Record<string,any>}; augmented_context?:AugmentedContext}>(raw: T, body: Record<string,unknown>): T & {answered?: boolean; reason?: NoAnswerReason} {
   if (!isPositionBody(body)) return raw
   const topic = String(body.query || '').toLowerCase()
   const terms = [...new Set((topic.match(/[\p{L}\p{N}]+/gu) || []).filter(t => t.length > 2 && !EXCERPT_STOP.has(t)))]
@@ -222,5 +259,5 @@ export function guardPositionAnswer<T extends {answer?:string; retrieval_results
   const present = (w: string) => words.has(w) || (stem(w).length >= 5 && wordList.some(word => word.startsWith(stem(w))))
   const matches = terms.filter(t => [t,...(synonyms[t] || [])].some(present)).length
   if (matches >= Math.ceil(terms.length / 2)) return raw
-  return {...raw,answer:EVIDENCE_GAP_ANSWER,citations:{},citation_footnote_to_context:{},footnote_to_context:{},retrieval_results:{resources:{}},augmented_context:{}}
+  return {...raw,answered:false,reason:'grounding_failed',answer:'',citations:{},citation_footnote_to_context:{},footnote_to_context:{}}
 }

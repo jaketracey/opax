@@ -117,6 +117,11 @@
   ! Cache-Control
   Cache-Control: public, max-age=31536000, immutable
 
+# Reviewed participant snapshot is frozen; a replacement needs a new namespace.
+/mixed-speakers/*
+  ! Cache-Control
+  Cache-Control: public, max-age=31536000, immutable
+
 /community
   Cache-Control: public, max-age=0, must-revalidate
   ! Referrer-Policy
@@ -191,9 +196,6 @@
 /events.js
   ! Cache-Control
   Cache-Control: public, max-age=31536000, immutable
-/explain.js
-  ! Cache-Control
-  Cache-Control: public, max-age=31536000, immutable
 /grant-recipient.js
   ! Cache-Control
   Cache-Control: public, max-age=31536000, immutable
@@ -204,6 +206,9 @@
   ! Cache-Control
   Cache-Control: public, max-age=31536000, immutable
 /gtm.js
+  ! Cache-Control
+  Cache-Control: public, max-age=31536000, immutable
+/held-back-transcripts.js
   ! Cache-Control
   Cache-Control: public, max-age=31536000, immutable
 /home-data.js
@@ -222,6 +227,12 @@
   ! Cache-Control
   Cache-Control: public, max-age=31536000, immutable
 /matrix.js
+  ! Cache-Control
+  Cache-Control: public, max-age=31536000, immutable
+/money-explain.css
+  ! Cache-Control
+  Cache-Control: public, max-age=31536000, immutable
+/money-explain.js
   ! Cache-Control
   Cache-Control: public, max-age=31536000, immutable
 /money-map.js
@@ -243,6 +254,9 @@
   ! Cache-Control
   Cache-Control: public, max-age=31536000, immutable
 /spa-shell.js
+  ! Cache-Control
+  Cache-Control: public, max-age=31536000, immutable
+/speech-attribution.js
   ! Cache-Control
   Cache-Control: public, max-age=31536000, immutable
 /sponsor-person.js

@@ -14,7 +14,7 @@ const donorViewReady = import('/donor-views.js?v=77470b1d26').then(module => {
 
 "use strict";
 let voteTables;
-const voteTablesReady = import("/vote-tables.js?v=2df85485a3").then(module => { voteTables = module; });
+const voteTablesReady = import("/vote-tables.js?v=1484e7c649").then(module => { voteTables = module; });
 let divisionMarkdown;
 const divisionMarkdownReady = import('/division-markdown.js?v=5991511166').then(module => { divisionMarkdown = module; });
 // The labels, source lines and ⋯ (labels.js); the first render waits for them.
@@ -26,15 +26,19 @@ let uiLabels;
 const uiLabelsReady = import('/labels.js?v=c6bf994ef7').then(module => { uiLabels = module; });
 let attributionHelpers;
 const attributionReady = Promise.allSettled([divisionMarkdownReady,
-  import('./speech-attribution.js?v=20261006-4').then(module => { attributionHelpers = module; })]);
+  import('./speech-attribution.js?v=1350457c5d').then(module => { attributionHelpers = module; })]);
 const isWitness = row => attributionHelpers ? attributionHelpers.isWitness(row) : true;
 const isUnattributed = row => attributionHelpers ? attributionHelpers.isUnattributed(row) : true;
 const belongsToScope = (row, scope) => attributionHelpers ? attributionHelpers.belongsToScope(row, scope) : false;
 const speakerHref = (row, href) => attributionHelpers ? attributionHelpers.speakerHref(row, href) : `${href}?attribution=unattributed`;
+const isMultiSpeaker = row => row?.speaker_type === 'multi_speaker' || row?.labels?.speaker_type === 'multi_speaker';
+const speakerLabel = row => attributionHelpers?.speakerLabel(row) || (isMultiSpeaker(row) ? 'Several speakers' : row?.speaker || 'Speaker not named');
 const splitPerson = (people, name) => attributionHelpers?.splitPerson(people, name) || null;
 const splitSpeakers = person => attributionHelpers?.splitSpeakers(person) || [];
 const personScope = person => attributionHelpers?.personScope(person) || person?.speech_scope || null;
 const datedAffiliationParty = (row, person) => attributionHelpers?.datedAffiliationParty(row, person) || null;
+let heldBackHelpers;
+const heldBackReady = import('/held-back-transcripts.js?v=5c4e280acb').then(module => { heldBackHelpers = module; });
 
 let saDisplayHelpers;
 let saFullTextFlag = 'false';
@@ -155,6 +159,7 @@ function titleDateForms(value) {
  * own ("Budget — the reply") comes back exactly as the record wrote it.
  */
 function titleSubject(rec) {
+  if (isMultiSpeaker(rec)) return rec.debate || rec.metadata?.topic || rec.metadata?.debate || 'Parliamentary debate';
   const parts = String(rec?.title ?? "").trim().split(/(\s+—\s+)/);
   if (rec?.speaker && titleKey(parts[0]) === titleKey(rec.speaker)) parts.splice(0, 2);
   else if (rec?.labels?.kind === "press_release" && rec?.metadata?.role &&
@@ -423,14 +428,38 @@ function metaHTML(item, { linkSpeaker = false, linkParty = false, portrait = fal
       ? `<a class="meta-party" ${entityHrefAttr(subjectHash("party", item.party))}>${partyChipHTML(item.party)}</a>`
       : partyChipHTML(item.party));
   }
-  if (item.speaker && !hideSpeaker) {
+  if (item.speaker && !hideSpeaker && !isMultiSpeaker(item)) {
     bits.push(linkSpeaker
       ? `<a class="meta-speaker" ${entityHrefAttr(speakerHref(item, subjectHash("person", item.speaker)))}>${esc(item.speaker)}</a>`
       : esc(item.speaker));
   }
+  if ((item.kind === 'speech' || isMultiSpeaker(item)) && !hideSpeaker && (isMultiSpeaker(item) || !item.speaker || isWitness(item) || item.speaker_type === 'chair')) {
+    bits.splice(item.speaker && !isMultiSpeaker(item) ? bits.length - 1 : bits.length, item.speaker && !isMultiSpeaker(item) ? 1 : 0, speechIdentityHTML(item));
+  }
   if (item.state) bits.push(esc(STATE_NAMES[item.state] || item.state));
   if (item.date) bits.push(esc(fmtDate(item.date)));
   return slot + bits.join(" · ");
+}
+
+function groupAvatarHTML() {
+  return '<svg class="speech-group-avatar" viewBox="0 0 40 40" width="40" height="40" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="20" cy="13" r="4"/><path d="M12 30v-3a8 8 0 0 1 16 0v3M9 10a3.5 3.5 0 0 0 0 7M5 29v-3a7 7 0 0 1 5-6M31 10a3.5 3.5 0 0 1 0 7M35 29v-3a7 7 0 0 0-5-6"/></g></svg>';
+}
+
+function participantLinksHTML(row) {
+  if (!isMultiSpeaker(row)) return '';
+  const participants = attributionHelpers?.resolvedParticipants(row.participants || row.metadata?.speaker_participants) || [];
+  if (!participants.length) return '';
+  return `<span class="speech-participants" aria-label="Participants in the debate">${participants.map(p => {
+    const portrait = photoUrlFor(p.name);
+    return `<a class="speech-participant" ${entityHrefAttr(subjectHash('person', p.name))}><span class="meta-portrait" data-speaker="${esc(p.name)}">${portrait ? `<img src="${esc(portrait)}" alt="" width="24" height="24" loading="lazy">` : ''}</span>${esc(p.name)}${p.role ? ` <span class="speech-participant-role">(${esc(p.role)})</span>` : ''}</a>`;
+  }).join('<span aria-hidden="true">, </span>')}</span>`;
+}
+
+function speechIdentityHTML(row) {
+  const label = speakerLabel(row);
+  if (isMultiSpeaker(row)) return `<span class="speech-identity">${groupAvatarHTML()}<span>Several speakers</span></span>${participantLinksHTML(row)}`;
+  const name = row.speaker ? `<a ${entityHrefAttr(speakerHref(row, subjectHash('person', row.speaker)))}>${esc(label)}</a>` : esc(label);
+  return name + (isWitness(row) ? ' <span class="topic-arc-witness">witness</span>' : '');
 }
 
 /** Swap .meta-portrait slots for the speaker's headshot once the map is in. */
@@ -1160,7 +1189,7 @@ async function mountDiscoveryMap(signal) {
     if (!current()) return;
     const donor = data?.nodes?.find((node) => node.kind === "donor" && node.label.trim().toLocaleLowerCase() === signal.entity.trim().toLocaleLowerCase());
     if (!donor) { root.innerHTML = '<p class="status">This organisation isn’t in the money map’s selected donor set. You can still search its name in the record.</p>'; return; }
-    const { mountMoneyMap } = await import("/money-map.js?v=fb33962c2d");
+    const { mountMoneyMap } = await import("/money-map.js?v=b41a0591dd");
     if (!current()) return;
     root.textContent = "";
     const handle = await mountMoneyMap(root, "/graph/money.json", { focus: donor.id, chrome: "mini", reveal: true, openCard: false,
@@ -1377,6 +1406,27 @@ async function openMoneyRecords(kind, params) {
     else if (grants && (params.get('open') || params.get('jur'))) moneyRecordsHandle.open?.(params.get('open'), params.get('jur') || undefined);
   } catch { if (generation === moneyRecordsGeneration) body.innerHTML = '<p role="alert">These records could not load. <a href="'+(grants?'/money/grants':'/money/receipts')+'">Try again</a>.</p>'; }
 }
+/** /money/explain?…: one disclosed-money flow, explained from the data alone
+ *  (money-explain.js). The module settles the address before it draws: graph
+ *  IDs only, and a donor OPAX withholds becomes the not-named aggregate. */
+async function openMoneyExplain(params, manageFocus) {
+  const generation = ++moneyRecordsGeneration;
+  moneyRecordsHandle?.destroy(); moneyRecordsHandle = null;
+  $('money-records-title').hidden = true;
+  const body = $('money-records-body');
+  try {
+    const mod = await import('/money-explain.js?v=d6d3e50c00');
+    if (generation !== moneyRecordsGeneration) return;
+    const current = () => generation === moneyRecordsGeneration && location.pathname === '/money/explain';
+    moneyRecordsHandle = mod.mountMoneyExplain(body, {
+      params, manageFocus, loadMoney: loadMoneyFile, loadAecExtras, loadBillsIndex, loadBill, loadAccess, loadFits, normName,
+      partyName: partyAskName, electionYears: [...BALANCE_ELECTION_YEARS],
+      onAddress(path) { if (current() && path !== location.pathname + location.search) replaceRoute(path); },
+      // After syncPathMeta: on the landed URL it restores the Worker's generic title.
+      onTitle(title) { if (current()) { syncPathMeta(); document.title = `${title} · OPAX`; } },
+    });
+  } catch { if (generation === moneyRecordsGeneration) body.innerHTML = '<p role="alert">This explanation could not load. <a href="/money">Open the money map</a>.</p>'; }
+}
 async function openGrantRecipient(jurisdiction, id, manageFocus) {
   const generation = ++moneyRecordsGeneration;
   moneyRecordsHandle?.destroy(); moneyRecordsHandle = null;
@@ -1478,7 +1528,7 @@ async function mountMoney(jurParam, industry, params = new URLSearchParams()) {
   root.innerHTML = `<p class="status" style="margin:0;padding:1rem 1.25rem">Loading the map…</p>`;
   const cfg = MONEY_JURISDICTIONS[jur];
   try {
-    const [{ mountMoneyMap }, data, journeysModule, researchModule, recordsModule] = await Promise.all([import("/money-map.js?v=fb33962c2d"), loadMoneyFile(jur), import("/money-journeys.js?v=mobile-picker-20260908"), import("/map-research.js?v=d15f440009"), import("/money-records.js?v=ia-ux-20260908-2")]);
+    const [{ mountMoneyMap }, data, journeysModule, researchModule, recordsModule] = await Promise.all([import("/money-map.js?v=b41a0591dd"), loadMoneyFile(jur), import("/money-journeys.js?v=mobile-picker-20260908"), import("/map-research.js?v=d15f440009"), import("/money-records.js?v=ia-ux-20260908-2")]);
     if (moneyMapLoading !== jur || generation !== moneyMapGeneration) return; // switched again while loading
     const fine = $("money-fineprint");
     if (fine) fine.innerHTML = moneyFineprintHTML(jur, data?.meta);
@@ -1613,7 +1663,7 @@ async function openSupplierPage(name, params, manageFocus) {
   body.classList.remove("subject-person", "subject-party");
   body.innerHTML = '<p role="status">Loading suppliers…</p>';
   try {
-    const module = await import("/suppliers.js?v=c2fae77c87");
+    const module = await import("/suppliers.js?v=e76f8c3c95");
     if (generation !== supplierPageGeneration) return;
     const helpers = {
       params,
@@ -1866,6 +1916,11 @@ function route() {
       setCrumbs([{ label: "Reports" }]);
       loadReportsList(manageFocus);
     }
+  } else if (view === "money" && segs[1] === "explain") {
+    showPanel("money-records");
+    document.title = "Explain this flow · OPAX";
+    setCrumbs([{ label: "Money", href: "/money" }, { label: "Explain this flow" }]);
+    openMoneyExplain(params, manageFocus);
   } else if (view === "money" && ["receipts", "grants"].includes(segs[1])) {
     showPanel("money-records");
     const isGrantRecipient = segs[1] === 'grants' && ((segs[3] === 'recipient' && segs[4]) || (params.get('open') && !params.get('program')));
@@ -1919,7 +1974,10 @@ function route() {
     showPanel("methods");
     document.title = TITLES.methods;
     setCrumbs([{ label: "About", href: "/about" }, { label: "Methods & how to cite" }]);
-    landOnSection("panel-methods");
+    const section = pendingAnchor || (/^#[\w-]+$/.test(location.hash) ? location.hash.slice(1) : "");
+    pendingAnchor = "";
+    const target = section && $(section);
+    if (target && $("panel-methods").contains(target)) requestAnimationFrame(() => target.scrollIntoView({ block: "start" }));
   } else if (view === "stats") {
     showPanel("stats");
     renderEvidenceStats();
@@ -1934,7 +1992,13 @@ function route() {
     showPanel("privacy");
     document.title = TITLES.privacy;
     setCrumbs([{ label: "About", href: "/about" }, { label: "Privacy" }]);
-    landOnSection("panel-privacy"); // the voice panel's link is /privacy#voice
+    // The voice panel's privacy link lands on /privacy#voice. The panel was
+    // hidden when the browser looked for the section, so land on it once it
+    // shows; route() scrolls to the top first, so wait a frame.
+    const section = pendingAnchor || (/^#[\w-]+$/.test(location.hash) ? location.hash.slice(1) : "");
+    pendingAnchor = "";
+    const target = section && $("panel-privacy").querySelector(`[id="${section}"]`);
+    if (target) requestAnimationFrame(() => target.scrollIntoView({ block: "start" }));
   } else if (view === "support") {
     showPanel("support");
     document.title = TITLES.support;
@@ -2193,15 +2257,6 @@ document.addEventListener("click", (e) => {
   goRoute(to);
 });
 let pendingAnchor = "";
-// A panel's #section (/privacy#voice, /methods#vic-election): the panel was
-// hidden when the browser looked for it, so land on it once it shows; route()
-// scrolls to the top first, so wait a frame.
-function landOnSection(panelId) {
-  const section = pendingAnchor || (/^#[\w-]+$/.test(location.hash) ? location.hash.slice(1) : "");
-  pendingAnchor = "";
-  const target = section && $(panelId).querySelector(`[id="${section}"]`);
-  if (target) requestAnimationFrame(() => target.scrollIntoView({ block: "start" }));
-}
 
 // Back and forward now move between real paths, so popstate does the routing.
 // hashchange stays for anything still assigning location.hash (older code, and
@@ -2612,7 +2667,22 @@ const tableFit = new ResizeObserver((entries) => {
   for (const { target } of entries) target.classList.toggle("table-fits", target.scrollWidth - target.clientWidth <= 2);
 });
 
+function renderNoAnswer(container, response) {
+  const line = document.createElement("p");
+  line.textContent = "OPAX couldn't find a clear answer to this in the record.";
+  const link = document.createElement("a");
+  const step = response.next_step;
+  const profile = typeof step?.href === "string" && /^\/subject\/person\/[^?#]+$/.test(step.href);
+  link.href = profile ? step.href : "/ask?view=search";
+  link.textContent = profile ? step.label : "Search records";
+  const browse = document.createElement("p");
+  browse.appendChild(link);
+  container.classList.remove("answer-evidence");
+  container.replaceChildren(line, browse);
+}
+
 function renderAnswer(container, text, response = {}) {
+  if (response.answered === false) { renderNoAnswer(container, response); return; }
   container.classList.toggle("answer-evidence", response.answer_status === "evidence_only");
   if (response.answer_status === "evidence_only" && Array.isArray(response.evidence_excerpts)) {
     renderEvidenceAnswer(container, text, response);
@@ -2805,7 +2875,7 @@ function sourceItem(s, num, passage = false) {
   // rather than the name twice and an ISO date in the title.
   const receiptCalculation = /^receipt-(?:ranking|comparison|years)-/.test(s.resource || "");
   const subject = titleSubject(s);
-  const nameOnly = !subject && s.speaker;
+  const nameOnly = !isMultiSpeaker(s) && !subject && s.speaker;
   btn.textContent = subject || String(s.title || s.slug || "");
   if (nameOnly) li.classList.add("source-name-only");
   const target = new URL(searchResultHref(s), location.origin);
@@ -2837,7 +2907,7 @@ function sourceItem(s, num, passage = false) {
     const where = [STATE_NAMES[s.state] || (s.state ? String(s.state) : "Federal"), s.date ? fmtDate(s.date) : ""].filter(Boolean).join(" · ");
     by.innerHTML = `<span class="source-face" aria-hidden="true"></span>
       <span class="source-byline-text">
-        <span class="source-byline-name"><a class="meta-speaker" ${entityHrefAttr(speakerHref(s, subjectHash("person", s.speaker)))}>${esc(s.speaker)}</a>${s.party && !isUnattributed(s) ? ` <a class="meta-party" ${entityHrefAttr(subjectHash("party", s.party))}>${partyChipHTML(s.party)}</a>` : ""}</span>
+        <span class="source-byline-name"><a class="meta-speaker" ${entityHrefAttr(speakerHref(s, subjectHash("person", s.speaker)))}>${esc(s.speaker)}</a>${isWitness(s) ? ` <span class="topic-arc-witness">witness</span>` : ""}${s.party && !isUnattributed(s) ? ` <a class="meta-party" ${entityHrefAttr(subjectHash("party", s.party))}>${partyChipHTML(s.party)}</a>` : ""}</span>
         <span class="source-byline-sub">${esc(where)}</span>
       </span>`;
     li.appendChild(by);
@@ -2878,6 +2948,7 @@ function sourceItem(s, num, passage = false) {
     li.appendChild(read);
   }
   if (passage) li.insertAdjacentHTML("beforeend", excerptNoticeHTML(s));
+  if (isMultiSpeaker(s)) decorateMetaPortraits(li);
   return li;
 }
 
@@ -2887,11 +2958,11 @@ function keySpeechItem(speech) {
 
   const title = document.createElement("h3");
   title.className = "report-speech-title";
-  title.textContent = speech.title || displayTitle(speech);
+  title.textContent = isMultiSpeaker(speech) ? displayTitle(speech) : speech.title || displayTitle(speech);
 
   const byline = document.createElement("div");
   byline.className = "report-speech-byline";
-  if (speech.speaker) {
+  if (speech.speaker && !isUnattributed(speech)) {
     const portrait = document.createElement("span");
     portrait.className = "meta-portrait";
     portrait.dataset.speaker = speech.speaker;
@@ -2901,14 +2972,17 @@ function keySpeechItem(speech) {
   identity.className = "report-speech-identity";
   const nameLine = document.createElement("div");
   nameLine.className = "report-speech-name-line";
-  if (speech.speaker) {
+  if (speech.speaker && !isMultiSpeaker(speech)) {
     const speaker = document.createElement("a");
     speaker.className = "report-speech-speaker";
     if (hasEntityId(speech.speaker)) speaker.href = speakerHref(speech, subjectHash("person", speech.speaker));
     speaker.textContent = speech.speaker;
     nameLine.appendChild(speaker);
   }
-  if (speech.party) {
+  if (isMultiSpeaker(speech)) nameLine.innerHTML = speechIdentityHTML(speech);
+  else if (!speech.speaker) nameLine.innerHTML = speechIdentityHTML(speech);
+  else if (isWitness(speech)) nameLine.insertAdjacentHTML('beforeend', ' <span class="topic-arc-witness">witness</span>');
+  if (speech.party && !isUnattributed(speech)) {
     const party = document.createElement("a");
     party.className = "meta-party";
     if (hasEntityId(speech.party)) party.href = subjectHash("party", speech.party);
@@ -2992,7 +3066,7 @@ function renderAskDateRuler(sources, isCited) {
         ${ticks}${rulerAxisHTML()}
       </svg>
     </div>
-    <p class="date-ruler-key"><span><i class="is-cited"></i>Cited in the answer</span><span><i></i>Retrieved only</span></p>`;
+    <p class="date-ruler-key">${(sources || []).some(source => isCited(source)) ? '<span><i class="is-cited"></i>Cited in the answer</span>' : ''}<span><i></i>Retrieved only</span></p>`;
   box.hidden = false;
 }
 
@@ -3044,8 +3118,8 @@ const quoteRail = { sources: [], idx: -1, raf: 0 };
 function quoteCardHTML(s, i, n) {
   const full = (s.snippet || "").trim().replace(/\s+/g, " ");
   const meta = [
-    s.speaker ? `<span class="quote-speaker">${esc(s.speaker)}</span>` : "",
-    s.party ? partyChipHTML(s.party) : "",
+    s.kind === "speech" || isMultiSpeaker(s) ? speechIdentityHTML(s) : s.speaker ? `<span class="quote-speaker">${esc(s.speaker)}</span>` : "",
+    s.party && !isUnattributed(s) ? partyChipHTML(s.party) : "",
     s.date ? esc(fmtDate(s.date)) : "",
   ].filter(Boolean).join(" · ");
   // Quote marks only around a real passage; with no snippet the title stands in.
@@ -3054,7 +3128,7 @@ function quoteCardHTML(s, i, n) {
     : esc(displayTitle(s));
   return `<span class="kicker">From the record · ${i + 1} of ${n}</span>` +
     `<blockquote>${body}</blockquote>` +
-    (meta ? `<span class="quote-meta"><span class="quote-portrait"></span><span>${meta}</span></span>` : "") + excerptNoticeHTML(s);
+    (meta ? `<span class="quote-meta">${isMultiSpeaker(s) ? "" : `<span class="quote-portrait"></span>`}<span>${meta}</span></span>` : "") + excerptNoticeHTML(s);
 }
 
 function setQuoteRail(sources) {
@@ -3247,7 +3321,7 @@ function updateQuoteRail() {
     void card.offsetWidth; // restart the fade-up from the bottom
     card.classList.add("shown");
     loadPhotoMap().then(() => {
-      const url = photoUrlFor(s.speaker);
+      const url = !isUnattributed(s) ? photoUrlFor(s.speaker) : null;
       const slot = card.querySelector(".quote-portrait");
       if (url && slot && quoteRail.idx === idx) {
         slot.innerHTML = `<img src="${esc(url)}" alt="" width="28" height="28">`;
@@ -3516,10 +3590,16 @@ function actionBtn(icon, href, label, { external = false, primary = false } = {}
     `${iconSvg(icon)}<span>${esc(label)}${external ? " ↗︎" : ""}</span></a>`;
 }
 
-/** One inert-looking page action, routed through the single delegated explain handler. */
-function explainBtn(detail, label, { primary = false } = {}) {
-  return `<button type="button" class="ui-button"${primary ? ' data-variant="primary"' : ""} ` +
-    `data-explain="${esc(JSON.stringify(detail))}">${iconSvg("map")}<span>${esc(label)}</span></button>`;
+/** A page's "Explain" action: a link to /money/explain for the graph IDs it names (money-explain.js).
+ *  Its look in an action column lives in money-explain.css, linked once here. */
+function explainBtn(query, label, { primary = false } = {}) {
+  if (!document.querySelector("link[data-money-explain]")) {
+    const sheet = Object.assign(document.createElement("link"), { rel: "stylesheet", href: "/money-explain.css?v=39bdb46509" });
+    sheet.dataset.moneyExplain = "";
+    document.head.append(sheet);
+  }
+  return `<a class="ui-button"${primary ? ' data-variant="primary"' : ""} data-explain-link href="${esc(`/money/explain?${new URLSearchParams(query)}`)}">` +
+    `${iconSvg("map")}<span>${esc(label)}</span></a>`;
 }
 
 
@@ -4152,7 +4232,7 @@ async function mountSubjectMap(nodeId, label = "") {
   el.hidden = false;
   $("subject-map-hint").hidden = false;
   try {
-    const { mountMoneyMap } = await import("/money-map.js?v=fb33962c2d");
+    const { mountMoneyMap } = await import("/money-map.js?v=b41a0591dd");
     if (currentSubjectKey !== key) return; // navigated away while loading
     destroySubjectMap();
     const handle = await mountMoneyMap(el, "/graph/money.json", {
@@ -5498,7 +5578,7 @@ async function openSubject(kind, name, manageFocus, params = new URLSearchParams
         ? { href: askHash(`What has parliament said about ${node.label}?`), label: "Ask what parliament said about this donor" }
         : { href: askHash(`What has parliament said about ${industryLabel(node.industry)}?`), label: "Ask what parliament said about this industry" };
     head.insertAdjacentHTML("beforeend", `<div class="page-actions entry-actions">
-      ${explainBtn(isParty ? { kind: "party", to: node.label, jurisdiction: "federal" } : { kind: "donor", from: node.label, jurisdiction: "federal" },
+      ${explainBtn(isParty ? { to: node.id } : { from: node.id },
         isParty ? "Explain where the money comes from" : "Explain this money")}
       ${moreMenuHTML([
         askAbout,
@@ -5580,7 +5660,10 @@ async function openSubject(kind, name, manageFocus, params = new URLSearchParams
   const revealGrid = () => grid?.classList.remove("is-settling");
   setTimeout(revealGrid, 4000);
   const unattributed = params.get('attribution') === 'unattributed';
-  const people = (await loadParliamentarians())?.people || [];
+  const [personData, heldBackCounts, chairRoleCounts] = await Promise.all([
+    loadParliamentarians(), loadHeldBackTranscripts(), loadChairRoleTranscripts(), heldBackReady,
+  ]);
+  const people = personData?.people || [];
   const record = splitPerson(people, name) || people.find((p) => p.name.toLowerCase() === String(name).toLowerCase());
   const roster = unattributed ? null : record;
   const speechSpeaker = splitSpeakers(roster)[0] || name;
@@ -5636,6 +5719,8 @@ async function openSubject(kind, name, manageFocus, params = new URLSearchParams
     document.title = `${roster.full || name} · OPAX`;
     head.insertAdjacentHTML('beforeend', `<p class="person-caveat">Only own-house speeches within the reviewed service dates in the ${esc(roster.speech_scope.state.toUpperCase())} parliamentary chamber are attributed here. <a ${entityHrefAttr(hasEntityId(roster.name) ? subjectHash('person', roster.name) + "?attribution=unattributed" : null)}>Witness testimony and other unattributed records printed as ${esc(roster.name)}</a>.</p>`);
   }
+  head.insertAdjacentHTML('beforeend', heldBackHelpers.heldBackTranscriptsHTML(roster?.pid, heldBackCounts)
+    + heldBackHelpers.chairRoleTranscriptsHTML(roster?.pid, chairRoleCounts));
   const witness = !roster && speeches.length > 0 &&
     speeches.every((r) => r.speaker_type === "witness" || (isCommitteeChamber(r.chamber) && r.person_id == null));
   if (witness) {
@@ -5978,7 +6063,7 @@ async function renderPersonSpeeches(name, fallback, chambers, sections, opts = {
           <time datetime="${esc(String(r.date || "").slice(0, 10))}">${esc(r.date ? fmtDate(r.date) : "Undated")}${esc(where)}</time>
           <span class="person-speech-body"><span class="speech-debate">${esc(safeText(titleSubject(r)) || (opts.evidence ? "Evidence" : "Speech"))}</span>
             ${rowText(brief, r)}
-          </span></a>${excerptNoticeHTML(r)}</li>`;
+          </span></a>${isMultiSpeaker(r) ? speechIdentityHTML(r) : ""}${excerptNoticeHTML(r)}</li>`;
       }).join("")}</ul>
       ${opts.unattributed ? '' : `<p class="person-more"><a href="${esc(opts.scope ? splitSpeechSearch(name) : searchHash("", { speaker: name }, 1, "newest"))}">View all their ${noun}</a></p>`}
       ${sourceLineHTML({
@@ -6103,9 +6188,7 @@ function topicMoneyHTML(ind) {
       interests disclosed <b>${esc(fmtMoney(total))}</b> in donations to political parties.</p>
     ${barList(rankedDonors, { fmt: fmtMoney, heading: `Largest ${industryLabel(ind)} donors`,
       linkTo: (nm) => subjectHash("donor", nm) })}
-    <p class="action-row">${explainBtn({
-      kind: "industry", from: industryLabel(ind), jurisdiction: "federal",
-    }, "Explain this flow", { primary: true })}</p>
+    <p class="action-row">${explainBtn({ industry: ind }, "Explain this flow", { primary: true })}</p>
     <p class="fineprint">${esc(AEC_NOTE)} <a href="/money">Explore on the money map</a></p>`;
 }
 
@@ -6231,7 +6314,7 @@ function topicArcItemHTML(item, brief, showYear) {
   // says nothing about the speech, so it rides on the byline instead of standing as a heading.
   const subject = committee ? committeeShortTitle(titleSubject(item) || item.title) : titleSubject(item);
   const generic = !committee && GENERIC_DEBATE_RE.test(subject.trim());
-  const heading = generic ? "" : subject;
+  const heading = generic && !isMultiSpeaker(item) ? "" : subject;
   const passage = cleanPassage(item.snippet);
   const portrait = item.speaker && !isUnattributed(item) ? photoUrlFor(item.speaker) : null;
   const where = PARLIAMENT_NAMES[item.state] || STATE_NAMES[item.state] || item.state || "";
@@ -6240,10 +6323,11 @@ function topicArcItemHTML(item, brief, showYear) {
     <time class="topic-arc-year"${date ? ` datetime="${esc(date)}"` : ""}${showYear ? "" : ' aria-hidden="true"'}>${showYear ? esc(year) : ""}</time>
     <div class="topic-arc-entry">
       <div class="topic-arc-who">
-        ${item.speaker ? `<a class="topic-arc-face" ${entityHrefAttr(speakerHref(item, subjectHash('person', item.speaker)))} aria-hidden="true" tabindex="-1">${portrait ? `<img src="${esc(portrait)}" alt="" width="40" height="40" loading="lazy">` : ""}</a>` : `<span class="topic-arc-face topic-arc-face-none" aria-hidden="true"></span>`}
+        ${isMultiSpeaker(item) ? `<span class="topic-arc-face topic-arc-face-group" aria-hidden="true">${groupAvatarHTML()}</span>` : item.speaker ? `<a class="topic-arc-face" ${entityHrefAttr(speakerHref(item, subjectHash('person', item.speaker)))} aria-hidden="true" tabindex="-1">${portrait ? `<img src="${esc(portrait)}" alt="" width="40" height="40" loading="lazy">` : ""}</a>` : `<span class="topic-arc-face topic-arc-face-none" aria-hidden="true"></span>`}
         <span class="topic-arc-byline">
-          <span class="topic-arc-name">${item.speaker ? `<a ${entityHrefAttr(speakerHref(item, subjectHash('person', item.speaker)))}>${esc(item.speaker)}</a>` : "Speaker not named"}${item.party ? ` ${partyChipHTML(item.party)}` : ""}${witness ? ` <span class="topic-arc-witness">witness</span>` : ""}</span>
-          <span class="topic-arc-when">${role ? `${esc(role)} · ` : ""}${esc(where)}${committee ? " · committee" : ""}${date ? ` · <time datetime="${esc(date)}">${esc(fmtDate(date))}</time>` : ""}${generic ? ` · ${esc(subject.trim())}` : ""}</span>
+          <span class="topic-arc-name">${isMultiSpeaker(item) ? 'Several speakers' : speechIdentityHTML(item)}${item.party && !isUnattributed(item) ? ` ${partyChipHTML(item.party)}` : ""}</span>
+          ${participantLinksHTML(item)}
+          <span class="topic-arc-when">${role ? `${esc(role)} · ` : ""}${esc(where)}${committee ? " · committee" : ""}${date ? ` · <time datetime="${esc(date)}">${esc(fmtDate(date))}</time>` : ""}${generic && !isMultiSpeaker(item) ? ` · ${esc(subject.trim())}` : ""}</span>
         </span>
       </div>
       ${heading ? `<a class="topic-arc-source" ${entityHrefAttr(`/doc/${encodeURIComponent(item.slug)}`)}>${esc(heading)}</a>` : ""}
@@ -6733,6 +6817,24 @@ function anyPartyDotHTML(label, colours) {
   return `<span class="party party-oth party-dot-only"${c ? ` style="--pc:${esc(c)}"` : ""}><i aria-hidden="true"></i></span>`;
 }
 
+let heldBackTranscriptsPromise = null;
+function loadHeldBackTranscripts() {
+  heldBackTranscriptsPromise ??= fetch('/data/held-back-transcripts.json', { cache: 'no-cache' })
+    .then(response => {
+      if (!response.ok) throw new Error('Held-back transcript counts unavailable');
+      return response.json();
+    }).catch(() => { heldBackTranscriptsPromise = null; return null; });
+  return heldBackTranscriptsPromise;
+}
+let chairRoleTranscriptsPromise = null;
+function loadChairRoleTranscripts() {
+  chairRoleTranscriptsPromise ??= fetch('/data/chair-role-transcripts.json', { cache: 'no-cache' })
+    .then(response => {
+      if (!response.ok) throw new Error('Chair-role transcript counts unavailable');
+      return response.json();
+    }).catch(() => { chairRoleTranscriptsPromise = null; return null; });
+  return chairRoleTranscriptsPromise;
+}
 let parliamentariansPromise = null;
 function loadParliamentarians() {
   parliamentariansPromise ??= fetch("/parliamentarians.json", { cache: "no-cache" })
@@ -8394,9 +8496,10 @@ function billSpeechesHTML(bill) {
   // date is what opens it, rather than nine rows all reading the same absence.
   const rows = speeches.slice(0, 24).map((s) => `<li>
     <a class="source-title" ${entityHrefAttr(`/doc/${encodeURIComponent(s.slug)}`)}>${
-      s.speaker ? esc(s.speaker) : `Speech${s.date ? ` on ${esc(fmtDate(s.date))}` : ", speaker not named"}`}</a>
+      isMultiSpeaker(s) ? `${groupAvatarHTML()} ${esc(speakerLabel(s))} · ${esc(titleSubject(s))}` : s.speaker ? esc(s.speaker) : `Speech${s.date ? ` on ${esc(fmtDate(s.date))}` : ", speaker not named"}`}</a>
+    ${participantLinksHTML(s)}
     <span class="result-meta">${[
-      s.party ? partyChipHTML(s.party) : "",
+      s.party && !isUnattributed(s) ? partyChipHTML(s.party) : "",
       s.state && s.state !== "federal" ? esc(STATE_NAMES[s.state] || s.state) : "",
       s.stage_hint ? esc(billStage(s.stage_hint)) : "",
       s.speaker && s.date ? esc(fmtDate(s.date)) : "",
@@ -8898,68 +9001,17 @@ document.querySelector(".about-index")?.addEventListener("click", (event) => {
 
 const explore = { ballot: null, tm: null, tide: null, quiz: null, ledger: null, grants: null, matrix: null, wd: null, tvn: null };
 
-let explainInstance = null;
-let explainOpenSeq = 0;
-let explainReturnCrumbs = [];
-
-function readCrumbs() {
-  return [...document.querySelectorAll("#crumbs li")].slice(1).map((li) => {
-    const link = li.querySelector("a");
-    return { label: li.querySelector(".crumb-label")?.textContent || "", ...(link ? { href: link.getAttribute("href") } : {}) };
-  }).filter((item) => item.label);
-}
-
-/** The one shell entry point for map events and every data-explain button. */
-document.getElementById("dialog-explain")?.addEventListener("opax:explain-close", () => closeGame($("dialog-explain")));
+/** The map's cards (and any data-explain markup) name a flow by its labels; the
+ *  explainer resolves them to graph IDs, withheld donors to the not-named
+ *  aggregate, and the reader lands on /money/explain. */
 async function openExplain(detail) {
   if (!detail || !["industry", "donor", "party"].includes(detail.kind)) return;
-  const clean = {
-    kind: detail.kind,
-    ...(typeof detail.from === "string" && detail.from.trim() ? { from: detail.from.trim() } : {}),
-    ...(typeof detail.to === "string" && detail.to.trim() ? { to: detail.to.trim() } : {}),
-    jurisdiction: MONEY_JURISDICTIONS[detail.jurisdiction] ? detail.jurisdiction : "federal",
-  };
-  const dialog = $("dialog-explain");
-  const body = $("explain-body");
-  const seq = ++explainOpenSeq;
-  explainInstance?.destroy?.();
-  explainInstance = null;
-  explainReturnCrumbs = readCrumbs();
-  setCrumbs([...explainReturnCrumbs, { label: "Explain this flow" }]);
-  body.replaceChildren();
-  if (!dialog.open) dialog.showModal();
-  pauseSubjectMap("dialog", true);
-
-  let waiting = null;
+  const jur = MONEY_JURISDICTIONS[detail.jurisdiction] ? detail.jurisdiction : "federal";
   try {
-    const explainModule = import("/explain.js?v=4f577eb978");
-    const wombat = await import("/wombat.js?v=cb89a88dad");
-    if (seq !== explainOpenSeq || !dialog.open) return;
-    waiting = wombat.mountWombat(body, { label: "Tracing the disclosed money." });
-    const mod = await explainModule;
-    if (seq !== explainOpenSeq || !dialog.open) { waiting?.destroy?.(); return; }
-    waiting?.destroy?.();
-    body.replaceChildren();
-    explainInstance = mod.mountExplain(body, clean, {
-      displayTitle, searchHash, askHash, subjectHash, partyChipHTML, fmtMoney,
-      money: clean.jurisdiction === "federal" ? moneyData : null,
-      loadMoney: loadMoneyFile,
-      loadAccess,
-      loadFits,
-      askRecord,
-      renderAnswer,
-      normName,
-      industryLabel,
-      portraitFor: async (name) => { await loadPhotoMap(); return photoUrlFor(name) || null; },
-      electionYears: [...BALANCE_ELECTION_YEARS],
-      aecNote: AEC_NOTE,
-      stateNotSummed: STATE_NOT_SUMMED,
-    });
-  } catch (err) {
-    waiting?.destroy?.();
-    if (seq !== explainOpenSeq || !dialog.open) return;
-    body.innerHTML = `<p class="status error">This explanation could not load just now. Close it and try again.</p>`;
-  }
+    const [mod, graph] = await Promise.all([import("/money-explain.js?v=d6d3e50c00"), loadMoneyFile(jur)]);
+    const { loadDonorViewIndex } = await import("/donor-views.js?v=77470b1d26");
+    goRoute(mod.explainHrefFor({ ...detail, jurisdiction: jur }, graph, await loadDonorViewIndex()) || "/money/explain");
+  } catch { goRoute("/money/explain"); }
 }
 
 // All page hook points carry plain JSON and converge here; the map sends the
@@ -8973,14 +9025,14 @@ document.addEventListener("opax:explain", (e) => openExplain(e.detail));
 
 const GAMES = {
   ballot: { name: "Build your ballot", dialog: "dialog-ballot", body: "explore-ballot", module: "/ballot.js?v=49e7bc6382", mount: "mountBallot" },
-  tm: { name: "Time machine", dialog: "dialog-tm", body: "explore-tm", module: "/timemachine.js?v=8e86f26747", mount: "mountTimeMachine" },
+  tm: { name: "Time machine", dialog: "dialog-tm", body: "explore-tm", module: "/timemachine.js?v=cfe3913e9e", mount: "mountTimeMachine" },
   tide: { name: "The tide", dialog: "dialog-tide", body: "explore-tide", module: "/tide.js", mount: "mountTide" },
   quiz: { name: "The record quiz", dialog: "dialog-quiz", body: "explore-quiz", module: "/quiz.js?v=ef6c859b59", mount: "mountQuiz" },
   ledger: { name: "The ledger", dialog: "dialog-ledger", body: "explore-ledger", module: "/ledger.js?v=ed12180193", mount: "mountLedger" },
   grants: { name: "Who gets the grants", dialog: "dialog-grants", body: "explore-grants", module: "/grants.js?v=d21ff9dd03", mount: "mountGrants" },
   matrix: { name: "Who owns which debate", dialog: "dialog-matrix", body: "explore-matrix", module: "/matrix.js?v=25f5793db5", mount: "mountMatrix" },
   wd: { name: "Words per dollar", dialog: "dialog-wd", body: "explore-wd", module: "/wordsdollars.js?v=16a1298a17", mount: "mountWordsDollars" },
-  tvn: { name: "Then vs now", dialog: "dialog-tvn", body: "explore-tvn", module: "/thenvsnow.js?v=54e933f28d", mount: "mountThenVsNow" },
+  tvn: { name: "Then vs now", dialog: "dialog-tvn", body: "explore-tvn", module: "/thenvsnow.js?v=37340eeb91", mount: "mountThenVsNow" },
 };
 
 async function openGame(which, params = null) {
@@ -9092,24 +9144,9 @@ for (const dialog of document.querySelectorAll(".game-dialog")) {
   // Closed by any route (button, backdrop, Esc): the trail is Explore's again,
   // unless the page underneath has already moved on.
   dialog.addEventListener("close", () => {
-    if (dialog.id === "dialog-explain") {
-      explainOpenSeq++;
-      explainInstance?.destroy?.();
-      explainInstance = null;
-      if (explainReturnCrumbs) setCrumbs(explainReturnCrumbs);
-      explainReturnCrumbs = [];
-      return;
-    }
     if (parseHash().segs[0] === "explore") setCrumbs([{ label: "Explore" }]);
   });
   dialog.addEventListener("click", (e) => {
-    // An explanation's profile, search and cited-document links leave the
-    // modal before the shell router paints their destination underneath it.
-    if (dialog.id === "dialog-explain" && e.target instanceof Element && e.target.closest("a[href]")) {
-      explainReturnCrumbs = null;
-      dialog.close();
-      return;
-    }
     // Only the dialog itself is the backdrop; a click on anything inside it
     // is never a dismissal. Without this guard a keyboard-activated button
     // (Enter, or the quiz's 1/2/3 shortcuts calling click()) reports
@@ -9590,7 +9627,7 @@ async function mountFrontMap() {
   if (!root || frontMapHandle || frontMapLoading) return;
   frontMapLoading = true;
   try {
-    const [mod, data] = await Promise.all([import("/money-map.js?v=fb33962c2d"), loadMoneyData()]);
+    const [mod, data] = await Promise.all([import("/money-map.js?v=b41a0591dd"), loadMoneyData()]);
     if (!data) throw new Error("money data unavailable");
     root.textContent = "";
     const handle = await mod.mountMoneyMap(root, "/graph/money.json", {
@@ -9854,6 +9891,7 @@ async function runAsk(question) {
     // Trim before every use: a whitespace-only answer is truthy and would
     // otherwise slip past the "(no answer)" fallback and render nothing.
     const answerText = (data.answer || "").trim();
+    const noAnswer = data.answered === false;
     const needsClarification = ["needs_scope", "needs_period"].includes(data.answer_status);
     const sources = (data.sources || []).map((source) => ({
       ...source,
@@ -9876,22 +9914,25 @@ async function runAsk(question) {
     $("ask-answer").askEvidence = citedList;
     // The speaker this answer was actually filtered to (chosen in Options or
     // read out of the question), so "Continue in a conversation" keeps it.
-    lastAsk = { question, answer: answerText, sources, is_overview_intent: data.is_overview_intent, next: data.followups, subject_context: data.subject_context, kind: askKind(), speaker: askFilters().speaker || speakerFilter || data.scope?.speaker || data.subject_context?.name || "", answer_status: data.answer_status, evidence_excerpts: data.evidence_excerpts, money_question: data.money_question, money_ranking: data.money_ranking, money_context: data.money_context, money_overview: data.money_overview, pay_answer: data.pay_answer, pay_next: data.pay_next };
+    lastAsk = { question, answer: answerText, sources, answered: data.answered, reason: data.reason, next_step: data.next_step, is_overview_intent: data.is_overview_intent, next: data.followups, subject_context: data.subject_context, kind: askKind(), speaker: askFilters().speaker || speakerFilter || data.scope?.speaker || data.subject_context?.name || "", answer_status: data.answer_status, evidence_excerpts: data.evidence_excerpts, money_question: data.money_question, money_ranking: data.money_ranking, money_context: data.money_context, money_overview: data.money_overview, pay_answer: data.pay_answer, pay_next: data.pay_next };
     // A calculated answer carries its own fixed next steps, not generated ones.
     const calculated = !!(data.money_ranking || data.pay_answer);
-    if (!calculated) prefetchAskFollowups(lastAsk);
+    if (!calculated && !noAnswer) prefetchAskFollowups(lastAsk);
 
     if (calculated) { $("ask-money").hidden = true; $("ask-register-note").hidden = true; }
     hideWombat();
-    setStatus($("ask-status"), needsClarification ? "Please clarify the question before I calculate the answer." : data.answer_status === "evidence_only" ? "Source passages ready. A summary could not be verified." : `Answer ready: ${sources.length} sources.`);
+    setStatus($("ask-status"), noAnswer ? "No clear answer found. Retrieved sources are ready." : needsClarification ? "Please clarify the question before I calculate the answer." : data.answer_status === "evidence_only" ? "Source passages ready. A summary could not be verified." : `Answer ready: ${sources.length} sources.`);
     $("ask-status").classList.add("visually-hidden"); // announced, not displayed
     revealAskResult();
-    $("ask-result").querySelector(".action-row").hidden = needsClarification;
-    $("ask-stamp").hidden = needsClarification;
-    $("ask-result").querySelector(".kicker").textContent = needsClarification ? "Choose the scope" : data.answer_status === "calculated" ? (data.pay_answer ? "From the pay determinations" : "From disclosed receipts") : data.answer_status === "evidence_only" ? "From the record" : data.answer_status === "uncited" ? "Answer, without citations" : "Answer";
+    $("ask-result").querySelector(".action-row").hidden = needsClarification || noAnswer;
+    $("ask-stamp").hidden = needsClarification || noAnswer;
+    $("ask-result").querySelector(".kicker").textContent = noAnswer ? "Records found" : needsClarification ? "Choose the scope" : data.answer_status === "calculated" ? (data.pay_answer ? "From the pay determinations" : "From disclosed receipts") : data.answer_status === "evidence_only" ? "From the record" : data.answer_status === "uncited" ? "Answer, without citations" : "Answer";
     renderAnswerOverview($("ask-overview"), data.money_overview);
-    if (data.is_overview_intent) { $("ask-overview").innerHTML = machineLabelHTML(); $("ask-overview").hidden = false; }
-    if (answerText) {
+    if (data.is_overview_intent && !noAnswer) { $("ask-overview").innerHTML = machineLabelHTML(); $("ask-overview").hidden = false; }
+    if (noAnswer) {
+      $("ask-overview").hidden = true;
+      renderNoAnswer($("ask-answer"), data);
+    } else if (answerText) {
       // Final rendering uses the complete citation ranges, including cache hits.
       renderAnswer($("ask-answer"), answerText, { ...data, onRetry: () => runAsk(question) });
       // A calculated money answer gets no generated follow-ups, so it carries
@@ -9933,7 +9974,7 @@ async function runAsk(question) {
     $("ask-calculation-note").hidden = !calculated;
     $("ask-calculation-note").textContent = data.pay_answer ? PAY_CALCULATION_NOTE : MONEY_CALCULATION_NOTE;
     $("ask-retrieval-note").hidden = calculated;
-    $("ask-sources").open = false; // each new answer starts folded
+    $("ask-sources").open = noAnswer; // Sources are the reading path when no answer was supported.
     $("ask-sources").hidden = !sources.length;
     // The finished answer replaces the streamed one: let that settle before a
     // shift in the page counts as the reader deciding to move on. People first,
@@ -10357,7 +10398,7 @@ function normaliseFollowups(data) {
     .filter((item) => item && typeof item.question === "string" && item.question.trim());
 }
 function prefetchAskFollowups(ask) {
-  if (!ask?.question || !ask?.answer) return;
+  if (!ask?.question || !ask?.answer || ask.answered === false) return;
   if (ask.next?.length) {
     renderFollowups(ask.next, $("ask-followups"), item => { if (openConversationFrom(ask)) sendChat(item.question, item); });
     return;
@@ -10721,7 +10762,7 @@ function initChat(manageFocus) {
           store.active = null;
           chatThread = [
             { role: "user", text: seed.question, fundingQuestion: seed.money_question },
-            { role: "answer", text: seed.answer, sources: seed.sources || [], is_overview_intent: seed.is_overview_intent, next: seed.next || undefined, subject_context: seed.subject_context, answer_status: seed.answer_status, evidence_excerpts: seed.evidence_excerpts, money_ranking: seed.money_ranking, money_context: seed.money_context, money_overview: seed.money_overview, pay_answer: seed.pay_answer, pay_next: seed.pay_next },
+            { role: "answer", text: seed.answer, sources: seed.sources || [], answered: seed.answered, reason: seed.reason, next_step: seed.next_step, is_overview_intent: seed.is_overview_intent, next: seed.next || undefined, subject_context: seed.subject_context, answer_status: seed.answer_status, evidence_excerpts: seed.evidence_excerpts, money_ranking: seed.money_ranking, money_context: seed.money_context, money_overview: seed.money_overview, pay_answer: seed.pay_answer, pay_next: seed.pay_next },
           ];
           chatKind = seed.kind === "speech" ? "speech" : "all";
           // An ask that was filtered to one speaker hands that filter on: the
@@ -11030,7 +11071,7 @@ function syncAskChatViewport() {
 function chatAnswerEl(msg) {
   const wrap = document.createElement("div");
   wrap.className = "chat-turn chat-turn-answer";
-  if (msg.is_overview_intent) wrap.insertAdjacentHTML('beforeend', machineLabelHTML());
+  if (msg.is_overview_intent && msg.answered !== false) wrap.insertAdjacentHTML('beforeend', machineLabelHTML());
   if (msg.money_overview) {
     const overview = document.createElement("div");
     overview.className = "answer-overview";
@@ -11053,6 +11094,7 @@ function chatAnswerEl(msg) {
     const rest = sources.filter((s) => !shown.includes(s));
     const det = document.createElement("details");
     det.className = "chat-sources";
+    det.open = msg.answered === false;
     const sum = document.createElement("summary");
     sum.textContent = `Sources (${sources.length})`;
     det.appendChild(sum);
@@ -11117,7 +11159,7 @@ async function requestChatFollowups() {
   if (chatFollowAbort) chatFollowAbort.abort();
   const last = chatThread[chatThread.length - 1];
   const asked = chatThread[chatThread.length - 2];
-  if (!last || last.role !== "answer" || asked?.role !== "user") return;
+  if (!last || last.role !== "answer" || asked?.role !== "user" || last.answered === false) return;
   if (last.next?.length) { renderChatNext(last.next); return; } // generated once, kept on the message
   const passages = followupPassages(last.sources);
   if (!passages.length) return; // no passages, no follow-ups — never a spinner
@@ -11392,6 +11434,9 @@ async function sendChat(question, carry) {
       next: data.followups,
       is_overview_intent: data.is_overview_intent,
       subject_context: data.subject_context || (chatSpeaker ? [...chatThread].reverse().find(msg => msg.subject_context?.name === chatSpeaker)?.subject_context : undefined),
+      answered: data.answered,
+      reason: data.reason,
+      next_step: data.next_step,
       answer_status: data.answer_status,
       money_ranking: data.money_ranking,
       money_context: data.money_context,
@@ -12141,7 +12186,8 @@ function renderResults(results) {
         // A row whose text a model wrote (a bill's summary) says so with the
         // machine label above that text, not with a phrase in its meta line.
         li.innerHTML = `<div class="result-meta">${recordTypeLink(r.kind, lastSearch.query, lastSearch.filters)}${r.dateLabel ? ` · ${esc(r.dateLabel)}` : r.date ? ` · ${esc(fmtDate(r.date))}` : ""}${r.source ? ` · ${esc(r.source)}` : ""}</div>
-          <h3 class="search-result-heading"><a class="result-title" href="${esc(searchResultHref(r))}">${esc(r.title)}</a></h3>
+          <h3 class="search-result-heading"><a class="result-title" href="${esc(searchResultHref(r))}">${esc(isMultiSpeaker(r) ? displayTitle(r) : r.title)}</a></h3>
+          ${r.kind === "speech" ? `<div class="result-byline">${speechIdentityHTML(r)}</div>` : ""}
           ${r.machine ? machineLabelHTML({ className: "search-result-machine", note: "The summary sentences in this row were written by a model from the bill's explanatory material. They are not the record: open the bill for its own documents." }) : ""}
           <p id="search-passage-${index}" class="search-result-text snippet" data-full="catalog">${highlightHTML(cleanPassage(r.snippet), lastSearch.query)}</p>
           <button type="button" class="search-passage-more" hidden aria-controls="search-passage-${index}" aria-expanded="false">Read more</button>${excerptNoticeHTML(r)}`;
@@ -12168,8 +12214,8 @@ function renderResults(results) {
         where,
       ].filter(Boolean).join('<span class="search-meta-separator" aria-hidden="true"> · </span>');
       const byline = [
-        r.speaker ? `<a ${entityHrefAttr(speakerHref(r, subjectHash("person", r.speaker)))}>${esc(r.speaker)}</a>` : "",
-        r.party ? partyChipHTML(r.party) : "",
+        r.kind === "speech" ? speechIdentityHTML(r) : "",
+        r.party && !isUnattributed(r) ? partyChipHTML(r.party) : "",
       ].filter(Boolean).join(" ");
       const topics = [...new Set((Array.isArray(r.topics) ? r.topics : []).filter((t) => typeof t === "string" && t.trim()))];
       // Opening a speech row loads the whole speech in place, so its button says so.
@@ -12182,6 +12228,7 @@ function renderResults(results) {
       return li;
     }),
   );
+  decorateMetaPortraits($("search-results"));
   requestAnimationFrame(refreshSearchPassageFolds);
 }
 
@@ -13020,12 +13067,16 @@ async function openDocPage(slug, manageFocus) {
     // Ways into this speaker's wider record. External links are SEARCHES, so
     // a shared name shows candidates rather than asserting the wrong person.
     const speakerLinks = $("doc-speaker-links");
-    const docWitness = doc.labels?.speaker_type === "witness" || (isCommitteeChamber(doc.labels?.chamber) && doc.metadata?.person_id == null);
+    const docWitness = !isMultiSpeaker(doc) && (doc.labels?.speaker_type === "witness" || (isCommitteeChamber(doc.labels?.chamber) && doc.metadata?.person_id == null));
     if (docWitness && (doc.metadata?.witness_position || doc.metadata?.witness_organisation)) {
       $("doc-meta").insertAdjacentHTML("afterbegin",
         `${[doc.metadata.witness_position, doc.metadata.witness_organisation].filter(Boolean).map(esc).join(", ")}&nbsp;· `);
     }
-    if (doc.speaker && (docWitness || doc.speaker_attribution === 'unattributed')) {
+    if (isMultiSpeaker(doc)) {
+      speakerLinks.innerHTML = speechIdentityHTML({...doc, speaker_type: doc.labels.speaker_type});
+      speakerLinks.hidden = false;
+      decorateMetaPortraits(speakerLinks);
+    } else if (doc.speaker && (docWitness || doc.speaker_attribution === 'unattributed')) {
       speakerLinks.innerHTML = `${docWitness ? 'Committee witness' : 'Unattributed speaker'}, named as the transcript names them. <a ${entityHrefAttr(hasEntityId(doc.speaker) ? subjectHash("person", doc.speaker) + "?attribution=unattributed" : null)}>Their evidence on OPAX</a>`;
       speakerLinks.hidden = false;
     } else if (doc.speaker) {
@@ -13860,7 +13911,7 @@ function reportSourceRow(s, num) {
     face.className = "report-source-face";
     face.setAttribute("aria-hidden", "true"); // blank circle until the portrait lands; never initials
     loadPhotoMap().then(() => {
-      const url = photoUrlFor(s.speaker);
+      const url = !isUnattributed(s) ? photoUrlFor(s.speaker) : null;
       if (url) face.innerHTML = `<img src="${esc(url)}" alt="" width="40" height="40" loading="lazy">`;
     });
     li.appendChild(face);
@@ -14390,7 +14441,7 @@ async function mountReportWords(el, cfg, slug) {
 
 async function mountReportMap(el, cfg, slug) {
   try {
-    const { mountMoneyMap } = await import("/money-map.js?v=fb33962c2d");
+    const { mountMoneyMap } = await import("/money-map.js?v=b41a0591dd");
     if (currentReportSlug !== slug || !el.isConnected) return; // moved on while loading
     const handle = await mountMoneyMap(el, "/graph/money.json", {
       chrome: "mini",
