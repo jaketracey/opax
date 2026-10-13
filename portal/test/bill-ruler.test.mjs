@@ -16,7 +16,7 @@ const source = [
   pick(/\nfunction billRulerHTML\(dates\) \{[\s\S]*?\n\}\n/, "billRulerHTML()"),
 ].join("");
 const billRulerHTML = new Function(`${source}; return billRulerHTML`)();
-const labels = (svg) => [...svg.matchAll(/<span class="bill-ruler-label" data-anchor="(\w+)">([^<]*)<\/span>/g)]
+const labels = (svg) => [...svg.matchAll(/<text[^>]*text-anchor="(\w+)"[^>]*>([^<]*)<\/text>/g)]
   .map(([, anchor, text]) => ({ anchor, text }));
 const ariaLabel = (svg) => /aria-label="([^"]*)"/.exec(svg)?.[1];
 
@@ -39,6 +39,16 @@ test("a bill whose every stage fell on one day gets one date, not two on top of 
   assert.deepEqual(labels(svg), [{ anchor: "start", text: "17 Sep 2026" }]);
   assert.equal(ariaLabel(svg), "The recorded stages of this bill, all on 17 Sep 2026");
   assert.equal(svg.match(/bill-ruler-tick/g).length, 2, "every recorded date is still a tick");
+});
+
+test("the ruler spans its section and its dates keep their size: percentages, no viewBox", () => {
+  const svg = billRulerHTML([{ date: "2026-02-12" }, { date: "2026-06-25" }, { date: "2026-09-18" }]);
+  // A viewBox scaled the 11px dates with the ruler: 6px on a phone, 21px across a desktop column.
+  assert.doesNotMatch(svg, /viewBox/);
+  assert.match(svg, /<svg class="bill-ruler" width="100%" height="52"/);
+  const ticks = [...svg.matchAll(/class="bill-ruler-tick" x1="([^"]*)"/g)].map((m) => m[1]);
+  assert.deepEqual([ticks[0], ticks[2]], ["1.00%", "99.00%"]);
+  assert.match(svg, /class="bill-ruler-axis" x1="1%" x2="99%"/);
 });
 
 test("fewer than two dated stages draw no ruler", () => {

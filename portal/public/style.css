@@ -329,9 +329,10 @@
 /* The Register's facts are a ui-kv; Version and Source metadata open in place. */
 .instrument-facts { max-width: 64rem; }
 .instrument-facts dd { font: var(--type-body); }
-.instrument-disclosures { max-width: 64rem; margin-top: var(--space-group); }
+/* The disclosures' rules span the column under the title; the facts keep their 64rem measure. */
+.instrument-disclosures { margin-top: var(--space-group); }
 .instrument-disclosure + .instrument-disclosure { border-top: var(--border-hairline) solid var(--divider-subtle); }
-.instrument-disclosure p { font: var(--type-metadata); color: var(--ink-soft); }
+.instrument-disclosure p { max-width: var(--size-readable); font: var(--type-metadata); color: var(--ink-soft); }
 .instrument-disclosure .instrument-facts { margin-bottom: var(--space-block); }
 .instrument-content pre { white-space: pre-wrap; overflow-wrap: anywhere; font: var(--type-fine); }
 html {
@@ -2616,6 +2617,7 @@ article.mx-page .mx-section { margin-top: var(--space-section); }
 .about-table .cell-token { white-space: nowrap; }
 .table-scroll.table-fits { overflow-x: clip; }
 .about-table .cell-num { text-align: right; font-variant-numeric: tabular-nums; }
+#mcp-docs pre { max-width: var(--size-readable); margin-block: var(--space-row); white-space: pre-wrap; overflow-wrap: anywhere; }
 
 /* ---- footer ------------------------------------------------------------- */
 
@@ -3372,7 +3374,6 @@ mark.privacy-confirm {
 .subject-party #subject-sections .tile { border: 0; padding: 0; }
 .subject-party #subject-sections .tile b { font: var(--type-display); }
 .subject-party #subject-sections .tile span { font: var(--type-fine); }
-.subject-party #subject-sections .subject-list { max-width: var(--size-readable); }
 .entry-section-head { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: var(--space-tight) var(--space-block); margin-bottom: var(--space-heading); }
 #subject-sections .entry-section-head .subject-section-title { margin: 0; }
 .entry-section-head > a { display: inline-flex; align-items: center; min-height: var(--size-target); font: var(--type-metadata); font-weight: var(--weight-strong); }
@@ -3882,8 +3883,9 @@ html[data-panel="chat"] footer { display: none; }
 
 /* ---- one bill: the head ------------------------------------------------- */
 /* A ui-page-head: the status label (a word with a tone, its date beside it)
-   over the title, the short name and one meta line under it, the actions. */
-.bill-head { max-width: var(--size-readable); }
+   over the title, the short name and one meta line under it, the actions.
+   The head takes the page's content column; the reading measure sits on its words. */
+.bill-title, .bill-short, .bill-related { max-width: var(--size-readable); }
 .bill-status { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-line) var(--space-tight); margin: 0 0 var(--space-line); }
 .bill-status-as { font: var(--type-fine); color: var(--ink-soft); }
 /* Two drawn actions: Ask as a secondary pill, the rest under ⋯. */
@@ -3891,9 +3893,10 @@ html[data-panel="chat"] footer { display: none; }
 
 /* ---- the sections ------------------------------------------------------- */
 /* Each block is a ui-section (one rule at its top, the category's accent mark
-   where blocks differ by category) on the reading measure. In short's machine
+   where blocks differ by category), spanning the content column with the
+   reading measure on their words. In short's machine
    label sits beside its heading, not at the far edge. */
-#bill-body .bill-section { max-width: var(--size-readable); }
+#bill-body .bill-section > :is(p, .ui-section-note, .ui-legend) { max-width: var(--size-readable); }
 /* Sections that arrive in a slot are its first child, and still take the step. */
 #bill-body :is(#bill-text-slot, #bill-sponsor-others) > .ui-section { margin-top: var(--space-section); }
 #bill-body .bill-section > .ui-source:last-child, .division-view .ui-section > .ui-source:last-child { margin-top: var(--space-block); }
@@ -3909,6 +3912,7 @@ html[data-panel="chat"] footer { display: none; }
    machine label says so once, beside the heading. */
 .bill-sentences p { margin: 0 0 var(--space-row); font: var(--type-record); color: var(--ink); }
 .bill-summary .bill-sentences p { font: var(--type-body); }
+.bill-summary :is(.bill-sentences, .bill-changes, .bill-affected) { max-width: var(--size-readable); }
 .bill-sentences p:last-child { margin-bottom: 0; }
 .bill-sub { margin: var(--space-block) 0 var(--space-tight); font: var(--type-strong); color: var(--ink); }
 .bill-changes { margin: 0; padding-left: var(--space-block); }
@@ -3917,13 +3921,12 @@ html[data-panel="chat"] footer { display: none; }
 .bill-affected { margin: 0; font: var(--type-body); color: var(--ink); }
 
 /* ---- How it moved: the ruler, then the stages ---------------------------- */
-/* The ruler stretches to the column (its notches keep a hairline at any
-   width); its two ends are named in the fine role under it. */
-.bill-ruler { max-width: 680px; margin: var(--space-row) 0 var(--space-heading); }
-.bill-ruler-marks { display: block; width: 100%; height: var(--sp-32); }
+/* The ruler spans the section; its marks sit at percentages, so its two end
+   dates keep the fine role's size at every width. */
+.bill-ruler { display: block; width: 100%; height: calc(var(--sp-48) + var(--sp-4)); margin: var(--space-row) 0 var(--space-heading); }
 .bill-ruler-axis { stroke: var(--line-control); stroke-width: var(--border-hairline); vector-effect: non-scaling-stroke; }
 .bill-ruler-tick { stroke: var(--bronze-ink); stroke-width: var(--border-hairline); vector-effect: non-scaling-stroke; }
-.bill-ruler-ends { display: flex; justify-content: space-between; gap: var(--space-block); margin: var(--space-line) 0 0; font: var(--type-fine); color: var(--ink-soft); font-variant-numeric: tabular-nums; }
+.bill-ruler-label { font: var(--type-fine); fill: var(--ink-soft); font-variant-numeric: tabular-nums; }
 .bill-date { display: grid; grid-template-columns: 6.25rem minmax(0, 1fr); column-gap: var(--space-row); }
 .bill-date-when { font: var(--type-fine); color: var(--ink-soft); }
 .bill-date-what { font: var(--type-metadata); color: var(--ink); }

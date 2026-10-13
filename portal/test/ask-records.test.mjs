@@ -84,8 +84,8 @@ test('Ask defaults to all documents and includes structured evidence without uns
 test('external citation offsets and document citations share one source payload with working destinations',()=>{
  const rows=[{kind:'receipt',title:'Company → Party',snippet:'$123',href:'/money?type=receipts',slug:'catalog-1'},
  {kind:'donor',title:'Uncited company',snippet:'$456',href:'/subject/donor/Other',slug:'catalog-2'}];
- const citations={USER_CONTEXT_0:[[0,12]],'rid/t/body/0-20':[[13,23]]};
- const payload=worker.askPayload({answered:true,answer:'Party received funding.',citations,retrieval_results:{resources:{rid:{slug:'bill-c1234',title:'A bill',fields:{'t/body':{paragraphs:{'rid/t/body/0-20':{text:'Original bill text',score:0.8,score_type:'RERANKER'}}}}},news:{slug:'news-1'}}}},{records:rows,coverage:'',total:2});
+ const citations={USER_CONTEXT_0:[[0,12]],'rid/t/body/0-20':[[13,25]]};
+ const payload=worker.askPayload({answer:'Party received funding.',citations,retrieval_results:{resources:{rid:{slug:'bill-c1234',title:'A bill',fields:{'t/body':{paragraphs:{'rid/t/body/0-20':{text:'Original bill text',score:0.8,score_type:'RERANKER'}}}}},news:{slug:'news-1'}}}},{records:rows,coverage:'',total:2});
  assert.deepEqual(plain(payload.citations),citations);
  assert.equal(payload.sources.length,3);
  assert.equal(payload.sources[0].resource,'USER_CONTEXT_0');

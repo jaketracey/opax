@@ -23,9 +23,9 @@ import {moduleOutputs} from './growth-module-harness.mjs';
 import {applyQuery, dataTableHTML, mountDataTable, toCSV} from '../public/datatable.js';
 import {queryValues} from '../public/datatable-query.js';
 import {tableHarness} from './datatable-harness.mjs';
-import {tableRows,tableIdentityHashes} from '../../scripts/load_tables.mjs';
+import {tableRows,tableIdentityHashes,tableIdentityPrefilter,tableRegistryFingerprint} from '../../scripts/load_tables.mjs';
 import {tableDatabase} from './table-d1-harness.mjs';
-import {TABLE_REGISTRY_FINGERPRINT} from '../src/table-api.ts';
+import {identityPrefilterBinding} from '../src/table-identity-prefilter.mjs';
 import {isOrganisationRecipient} from '../src/table-recipient.mjs';
 import {moneyFlowType} from '../public/money-records.js';
 import {TABLE_DATASETS} from '../src/table-datasets.mjs';
@@ -88,9 +88,8 @@ const graphs = await Promise.all(MONEY_GRAPHS.map(path=>sourceRead(root)(path)))
 const moneyTables = await tableRows(root, {moneyOnly: true,graphs});
 for (const dataset of ['contracts', 'suppliers', 'grants']) assert.ok(moneyTables.rows[dataset].length > 0, dataset);
 const tablesD1 = await tableDatabase({datasets:moneyTables.rows,policy:moneyTables.policy});
-// Offline fixtures add fictional identities to the release registry. Mark this
-// fixture snapshot for the actual Worker build so its response guards run.
-await tablesD1.db.prepare("UPDATE table_meta SET value=? WHERE key='privacy_fingerprint'").bind(TABLE_REGISTRY_FINGERPRINT).run();
+const fixturePrefilter=tableIdentityPrefilter(moneyTables.policy);
+const identityBundle={prefilter:fixturePrefilter,binding:identityPrefilterBinding(fixturePrefilter),fingerprint:tableRegistryFingerprint(moneyTables.policy),identityHashes:tableIdentityHashes(moneyTables.policy).map(e=>e.hash)};
 test.after(()=>tablesD1.close());
 const index = donorPrivacyIndex(graphs);
 const donorNodes = graphs.flatMap(g => g.nodes.filter(n => n.kind === 'donor'));
@@ -212,10 +211,11 @@ function assertClean(where, text) {
 // Any model or knowledge-box call is recorded and refused: no production calls, and
 // what would have been sent to a model is checked like any other output.
 test.after(offline());
-const {env, fetch: fetchWorker} = await loadWorker(new URL('../src/index.ts', import.meta.url).pathname, root);
+const {env, fetch: fetchWorker} = await loadWorker(new URL('../src/index.ts', import.meta.url).pathname, root, {identityBundle});
 env.TABLE_DB = tablesD1.db;
 const originalAssets = env.ASSETS.fetch.bind(env.ASSETS);
-env.ASSETS.fetch = request => new URL(request.url).pathname === '/table-private-identities.json' ? Promise.resolve(Response.json({version:1,identities:tableIdentityHashes(moneyTables.policy),strippedLengths:moneyTables.policy.strippedLengths})) : originalAssets(request);
+const moneyIdentityRegistry={version:1,identities:tableIdentityHashes(moneyTables.policy),strippedLengths:moneyTables.policy.strippedLengths};
+env.ASSETS.fetch = request => new URL(request.url).pathname === '/table-private-identities.json' ? Promise.resolve(Response.json(moneyIdentityRegistry)) : originalAssets(request);
 const ownUrl = (html, path) => entities(html).replaceAll(path, '');
 
 function assertCleanCSV(where, csv) {

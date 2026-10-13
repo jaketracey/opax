@@ -15,6 +15,7 @@
 import fs from 'node:fs'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
+import { score as scorePublishedGold } from './agentic_ask_score.mjs'
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
 const GOLD = JSON.parse(fs.readFileSync(path.join(ROOT, 'portal/test/fixtures/agentic-ask-gold.json'), 'utf8'))
@@ -22,13 +23,14 @@ const OUT_DIR = path.join(ROOT, 'portal/private/agentic-ask-spike')
 const OUT = path.join(OUT_DIR, 'results.json')
 const args = process.argv.slice(2)
 const mode = args[0]
+const liveCLI = process.argv[1] && import.meta.url === `file://${process.argv[1]}` && (mode === 'i' || mode === 'ii')
 const opt = (k, d) => { const i = args.indexOf(`--${k}`); return i >= 0 ? args[i + 1] : d }
 const only = opt('only', '') ? new Set(opt('only', '').split(',')) : null
 const CAP_USD = Number(opt('cap', '10'))
 // DeepSeek first-party price on OpenRouter for deepseek-v4-pro-0813 (12 Oct 2026); peak windows double it.
 const PRICE = { input: 0.66 / 1e6, output: 1.98 / 1e6, peak_multiplier: 2 }
 
-const vars = Object.fromEntries(fs.readFileSync(path.join(ROOT, 'portal/.dev.vars'), 'utf8').split('\n')
+const vars = Object.fromEntries((liveCLI ? fs.readFileSync(path.join(ROOT, 'portal/.dev.vars'), 'utf8') : '').split('\n')
   .filter((l) => l.includes('=') && !l.startsWith('#')).map((l) => [l.slice(0, l.indexOf('=')), l.slice(l.indexOf('=') + 1).trim()]))
 function orKey() {
   // The KB's BYOK OpenRouter key: read for its usage counter only, never printed.
@@ -39,7 +41,7 @@ function orKey() {
   }
   return null
 }
-const OR_KEY = orKey()
+const OR_KEY = liveCLI ? orKey() : null
 async function orUsage() {
   if (!OR_KEY) return null
   try { const r = await fetch('https://openrouter.ai/api/v1/key', { headers: { authorization: `Bearer ${OR_KEY}` } }); return (await r.json()).data?.usage ?? null } catch { return null }
@@ -141,6 +143,7 @@ export function score(q, answer, answered = true) {
   const e = q.expected
   const text = String(answer ?? '')
   const r = { id: q.id, kind: e.kind, pass: false, checks: {} }
+  if (e.kind === 'electorates') return scorePublishedGold(q, answer, answered)
   if (e.kind === 'decline') {
     const partyCount = /\b(?:Labor|Liberal|Nationals|Greens|One Nation|Independent)\b[^.]{0,40}\b\d{2,}\b/.test(text)
     r.checks = { declined: !answered || LIMIT.test(text), no_party_count: !partyCount }
