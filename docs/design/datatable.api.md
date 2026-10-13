@@ -110,9 +110,11 @@ The production and staging `TABLE_DB` bindings both name the configured
 `opax-tables` database. Rebuild the sanitised manifest and verify its local
 privacy sweep before deployment. Release order is **deploy, reload, verify**:
 deploy the Worker built from these release exports, then apply every manifest
-file in order, then verify the fingerprint and privacy endpoints. Privacy
-datasets return 503 with `Retry-After: 60` between deployment and the completed
-reload. Instruments and audit do not require this fingerprint. The orchestrator loads:
+file in order, then verify the fingerprint and privacy endpoints. Donor-privacy
+datasets (`privacy: 'donors'`: money-connections, party-money, contracts,
+suppliers, grants) return 503 with `Retry-After: 60` between deployment and the
+completed reload. Votes and divisions (`privacy: 'echo'`), instruments, audit
+reports and interests do not require this fingerprint. The orchestrator loads:
 
 ```sh
 cd portal || exit
@@ -230,8 +232,27 @@ Divisions expose optional title/chamber/outcome/href and bill/sitting scope
 arrays alongside the original columns. Votes expose individual records with
 optional title/date/vote/party_position/href/person alongside compatible metadata.
 Use the existing JSON-array grammar (f.bill, f.person, f.sitting, f.jurisdiction),
-not bare scope parameters. Both datasets enforce the full source-derived privacy
-index. Migration 0002 adds record columns; a table load rebuilds their projections.
+not bare scope parameters. Migration 0002 adds record columns; a table load
+rebuilds their projections.
+
+Since 13 Oct 2026 both datasets use `privacy: 'echo'`. Their rows are
+parliamentary record (bill titles, division questions, dates, votes, tallies, MP
+names) from public exports: `publishDonorAssets` sanitises `seo/recent-votes.json`
+and the division exports at build time, and `votes.json` is deliberately left
+byte-identical (schema 1) and served whole at `/votes.json`. Per-row matching would
+hide nothing that is not already public, so no row is run through the donor
+matcher: not by the API, not in SSR (person, bill and sitting pages), not in the
+client. The reader's own text is still checked, once per request, before anything
+echoes it: `q`, filter values and every raw URL key/value, against the same hashed
+registry (`table_private_identity` at the API; `/api/table/privacy` or the Worker's
+registry in SSR). A crafted share link such as `?vr.q=<withheld name>` returns the
+neutral empty result and is scrubbed from the URL. Echo datasets have no
+fingerprint gate, so they keep serving through a reload or a stale registry. The
+loader and the local sweep still sanitise and check their stored rows as before.
+The per-row matcher had cost about 3 ms per row in Node, and far more in
+production, which made person pages 8–12 s. Its separator-stripped substring forms
+also hid 141 of 7,479 exported vote rows on six ordinary bills (for example,
+"Aged Care Bill 2024").
 
 The final capped CSV continuation additionally ends with the separate record
 # Export truncated at 50,000 rows. The core joins up to five continuation pages,
@@ -239,7 +260,7 @@ removes repeated headers and range trailers, and preserves that final record.
 The shared contract registration certifies the combined real endpoint export.
 ## Complete publication registry
 
-The table loader seeds the complete donor registry from raw source identities held in memory, including compact-block numeric identifiers, and adds private recipient and supplier identities. The Worker reads `/table-private-identities.json`, containing only `{hash, words}` entries. Existing SHA-256 inputs and word counts are unchanged: `identityVariants` produces NFKD accent-insensitive and legacy NFKC lowercase ASCII word phrases, inverted-name variants, and eleven-digit identifier variants; `words` remains the phrase word count. A full rebuild and ordered D1 reload is required to install the additional hashes, not a schema migration. The build also emits `src/table-registry-fingerprint.json` for the Worker and records `privacy_fingerprint` in D1's `table_meta`, published in the last SQL file. This fingerprint is SHA-256 of the sorted identity hashes joined by a newline, with no trailing newline. The API requires an exact match before any privacy dataset SQL or cached response. Missing or stale metadata returns 503 with `Retry-After: 60`, no rows and no echo. Additional compact forms use NFKC, case folding and letters/digits only, with the SHA-256 input `stripped:v1:` followed by that form. Their `words` field is 1. Minimum length is 4; lengths 4–5 require token boundaries and lengths 6+ also match substrings after separator removal. `/table-private-identities.json` adds `strippedLengths`; D1 adds the `privacy_stripped_lengths` metadata row. The D1 schema stays unchanged, and the fingerprint includes both hash domains. All previous hashes and word counts remain unchanged. The orchestrator uses the remote manifest loop above after merge deployment; this lane uses local D1 only. The local sweep resolves TABLE_DB’s production database_id from wrangler.jsonc and rejects an empty store.
+The table loader seeds the complete donor registry from raw source identities held in memory, including compact-block numeric identifiers, and adds private recipient and supplier identities. The Worker reads `/table-private-identities.json`, containing only `{hash, words}` entries. Existing SHA-256 inputs and word counts are unchanged: `identityVariants` produces NFKD accent-insensitive and legacy NFKC lowercase ASCII word phrases, inverted-name variants, and eleven-digit identifier variants; `words` remains the phrase word count. A full rebuild and ordered D1 reload is required to install the additional hashes, not a schema migration. The build also emits `src/table-registry-fingerprint.json` for the Worker and records `privacy_fingerprint` in D1's `table_meta`, published in the last SQL file. This fingerprint is SHA-256 of the sorted identity hashes joined by a newline, with no trailing newline. The API requires an exact match before any donor-privacy dataset SQL or cached response. Missing or stale metadata returns 503 with `Retry-After: 60`, no rows and no echo. Additional compact forms use NFKC, case folding and letters/digits only, with the SHA-256 input `stripped:v1:` followed by that form. Their `words` field is 1. Minimum length is 4; lengths 4–5 require token boundaries and lengths 6+ also match substrings after separator removal. `/table-private-identities.json` adds `strippedLengths`; D1 adds the `privacy_stripped_lengths` metadata row. The D1 schema stays unchanged, and the fingerprint includes both hash domains. All previous hashes and word counts remain unchanged. The orchestrator uses the remote manifest loop above after merge deployment; this lane uses local D1 only. The local sweep resolves TABLE_DB’s production database_id from wrangler.jsonc and rejects an empty store.
 
 After the ordered reload, verify the published metadata (hashes only):
 
@@ -248,7 +269,7 @@ npx wrangler d1 execute opax-tables --remote --command "SELECT key,value FROM ta
 node --input-type=module -e "import build from './src/table-registry-fingerprint.json' with {type:'json'}; console.log(build.fingerprint)"
 ```
 
-The D1 fingerprint must equal the build fingerprint. Then verify the five privacy
+The D1 fingerprint must equal the build fingerprint. Then verify the five donor-privacy
 page and CSV endpoints and the complete runtime rejection set against the
 release, using counts-only diagnostics. An interrupted reload must finish before
 these datasets can serve; the fingerprint marker is written last.

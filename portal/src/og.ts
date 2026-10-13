@@ -598,15 +598,15 @@ function storyNote(text: string | null | undefined, centred = false): El | null 
   return t ? h('div', { style: { fontFamily: SANS, fontSize: S_NOTE, lineHeight: 1.4, color: SOFT, opacity: 0.85, marginTop: 40, width: P_TEXT_WIDTH, textAlign: centred ? 'center' : 'left' } }, clipToLines(t, P_TEXT_WIDTH, S_NOTE, SANS_EM, 3)) : null
 }
 
-/** The engraving as a watermark in the lower right, behind the type. */
-const storyEngraving = (width: number, opacity: number, g: StoryGeometry): El =>
-  h('img', { src: ENGRAVING_URI, width, height: Math.round(width * 164 / 180), style: { position: 'absolute', right: P_PAD, bottom: 124 + g.padBottom, opacity } })
+/** The engraving as a watermark in the lower right, behind the type; `bottom` clears the footer unless a slide has none. */
+const storyEngraving = (width: number, opacity: number, g: StoryGeometry, bottom = 124): El =>
+  h('img', { src: ENGRAVING_URI, width, height: Math.round(width * 164 / 180), style: { position: 'absolute', right: P_PAD, bottom: bottom + g.padBottom, opacity } })
 
 /** The body: the room between masthead and footer, centred, clipped there rather than into the footer. */
-function storyBody(children: (El | null)[], opts: { centred?: boolean; end?: boolean } = {}): El {
+function storyBody(children: (El | null)[], opts: { centred?: boolean; end?: boolean; foot?: number } = {}): El {
   return h(
     'div',
-    { style: { display: 'flex', flexDirection: 'column', flex: 1, alignItems: opts.centred ? 'center' : 'flex-start', justifyContent: opts.end ? 'flex-end' : 'center', padding: `0 ${P_PAD}px`, overflow: 'hidden' } },
+    { style: { display: 'flex', flexDirection: 'column', flex: 1, alignItems: opts.centred ? 'center' : 'flex-start', justifyContent: opts.end ? 'flex-end' : 'center', padding: `0 ${P_PAD}px ${opts.foot ?? 0}px ${P_PAD}px`, overflow: 'hidden' } },
     ...children,
   )
 }
@@ -864,17 +864,54 @@ function listSlide(slide: Extract<StorySlide, { type: 'list' }>, images: StoryIm
   ])
 }
 
+/** Public Sans Bold advance widths, per 1000 em, for the characters an address uses (measured from
+ *  public-sans-latin-700-normal.woff). Digits run wide (0.65 em) and slashes narrow, so a flat
+ *  per-character estimate either wastes the line or lets satori break it somewhere of its own choosing. */
+const CTA_ADVANCE: Record<string, number> = {
+  a: 567, b: 609, c: 547, d: 609, e: 577, f: 397, g: 629, h: 593, i: 267, j: 289, k: 580, l: 329, m: 896,
+  n: 593, o: 576, p: 607, q: 607, r: 412, s: 527, t: 417, u: 595, v: 521, w: 789, x: 588, y: 563, z: 497,
+  0: 645, 1: 428, 2: 635, 3: 665, 4: 656, 5: 675, 6: 661, 7: 626, 8: 671, 9: 659,
+  '.': 270, '/': 381, ':': 270, '?': 535, '&': 784, '=': 589, '-': 393, '_': 553, '%': 939,
+}
+/** A line's width at `size`, with the 0.01em tracking it is set with and 3% to spare; capitals and anything unlisted count as an M-ish 0.8 em. */
+const ctaWidth = (line: string, size: number): number =>
+  [...line].reduce((w, c) => w + (CTA_ADVANCE[c] ?? 800) / 1000 + 0.01, 0) * size * 1.03
+
+/** An address in lines no wider than the call to action, broken only after a "/" or before a "?" or "&": never inside a name. */
+function ctaLines(url: string, size: number): string[] {
+  const lines: string[] = []
+  for (const part of url.split(/(?<=\/)|(?=[?&])/)) {
+    const last = lines.length - 1
+    if (last >= 0 && ctaWidth(lines[last] + part, size) <= S_CTA_WIDTH) lines[last] += part
+    else lines.push(part)
+  }
+  return lines
+}
+
+/** The largest size that sets the address on one line (48px at least), else two (40px), else three (34px). */
+function fitCta(url: string): { size: number; lines: string[] } {
+  for (const [rows, max, min] of [[1, 64, 48], [2, 56, 40], [3, 56, 34]]) {
+    for (let size = max; size >= min; size -= 2) {
+      const lines = ctaLines(url, size)
+      if (lines.length <= rows && lines.every((l) => ctaWidth(l, size) <= S_CTA_WIDTH)) return { size, lines }
+    }
+  }
+  return { size: 34, lines: ctaLines(url, 34) }
+}
+
 function sourceSlide(slide: Extract<StorySlide, { type: 'source' }>, images: StoryImages, g: StoryGeometry): El {
-  // The address is the largest type on the slide and must never break mid-path:
-  // sized to one line on a bold-width estimate (0.6em a character), 40px at least.
+  // The page's address closes the run, the last thing on the slide: no path under
+  // it and no wordmark below (the address carries the domain). It never breaks
+  // inside a name or a slug.
   const url = storyText(slide.url)
-  const urlSize = Math.max(40, Math.min(64, Math.floor(S_CTA_WIDTH / (Math.max(1, url.length) * 0.6))))
+  const cta = fitCta(url)
   const rows = slide.rows.slice(0, 4).map((r) =>
     h('div', { style: { display: 'flex', width: P_TEXT_WIDTH, fontFamily: SANS, fontSize: 34, lineHeight: 1.35, color: WHITE, paddingTop: 18, paddingBottom: 18, borderTop: `1px solid ${S_SOFT_RULE}` } }, clipToLines(storyText(r), P_TEXT_WIDTH, 34, SANS_EM, 2)),
   )
+  // With no footer, the engraving drops to the corner the wordmark held and the body keeps the same foot as the masthead's head.
   return storyFrame(g, [
     storyMasthead(),
-    storyEngraving(240, 0.38, g),
+    storyEngraving(240, 0.38, g, 64),
     storyBody([
       storyKicker(slide.kicker),
       storyHeadline(slide.title, 92, 3),
@@ -884,11 +921,9 @@ function sourceSlide(slide: Extract<StorySlide, { type: 'source' }>, images: Sto
         'div',
         { style: { display: 'flex', flexDirection: 'column', width: S_CTA_WIDTH, marginTop: 52 } },
         h('div', { style: { width: 120, height: 1, background: P_RULE, marginBottom: 30 } }),
-        h('div', { style: { fontFamily: SANS, fontSize: urlSize, fontWeight: 700, lineHeight: 1.1, letterSpacing: '0.01em', color: BRONZE_BRIGHT, width: S_CTA_WIDTH } }, url),
-        h('div', { style: { fontFamily: SANS, fontSize: 34, lineHeight: 1.35, color: SOFT, marginTop: 14, width: S_CTA_WIDTH } }, clipToLines(storyText(slide.path), S_CTA_WIDTH, 34, SANS_EM, 2)),
+        ...cta.lines.map((line) => h('div', { style: { fontFamily: SANS, fontSize: cta.size, fontWeight: 700, lineHeight: 1.15, letterSpacing: '0.01em', color: BRONZE_BRIGHT, width: S_CTA_WIDTH } }, line)),
       ),
-    ]),
-    storyFooter(),
+    ], { foot: 112 }),
   ])
 }
 

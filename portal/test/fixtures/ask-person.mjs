@@ -48,5 +48,5 @@ export function stubModel(body){
   `> ${q(speechIndex('Integrity & democracy'))}${cite(speechIndex('Integrity & democracy'))}`,
   `> ${q(speechIndex('Housing'))}${cite(speechIndex('Housing'))}`,
  ].join('\n\n')+'\n\n'+Object.keys(footnotes).map((block,i)=>`[^${i+1}]: ${block}`).join('\n');
- return {answer,citation_footnote_to_context:footnotes,retrieval_results:{resources:{}}};
+ return {answered:true,answer,citation_footnote_to_context:footnotes,retrieval_results:{resources:{}}};
 }

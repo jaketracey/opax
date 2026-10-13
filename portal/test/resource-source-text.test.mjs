@@ -1,8 +1,10 @@
+import {speechPresentation, joinMixedSpeakers} from '../src/mixed-speakers.ts';
+const runInNewContext = (code, context = {}, options) => { context.speechPresentation ??= speechPresentation; context.joinMixedSpeakers ??= joinMixedSpeakers; return baseVM(code, context, options); };
 import * as passageText from '../src/passage-text.ts';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
-import {runInNewContext} from 'node:vm';
+import {runInNewContext as baseVM} from 'node:vm';
 import ts from 'typescript';
 import { isWitness, belongsToScope } from '../public/speech-attribution.js';
 
@@ -23,6 +25,21 @@ async function readSource(texts,slug='research-cpi-mlci-2026',overrides={}) {
   return (await api(request,new URL(request.url),slug,{CACHE_EPOCH:'test'},{})).json();
 }
 const field=body=>({value:{body}});
+
+test('mixed resource/native envelope preserves participants without a personal identity',async()=>{
+  const result=await readSource({body:field('Original mixed passage.')},'speech-125',{
+    id:'a'.repeat(32),title:'Example MP — Questions without Notice — 2026-09-17',
+    origin:{collaborators:['Example MP']},
+    usermetadata:{classifications:[{labelset:'kind',label:'speech'},{labelset:'speaker_type',label:'multi_speaker'},{labelset:'party',label:'Labor'}]},
+    extra:{metadata:{person_id:'123',electorate:'Example seat',date:'2026-09-17',legacy_speaker_raw:'Example MP',
+      speaker_participants:[{name:'Example MP',person_id:'123',speaker_type:'member'},{name:'Another MP',person_id:'124',speaker_type:'member'}]}},
+  });
+  assert.equal(result.speaker,null);assert.equal(result.metadata.person_id,null);assert.equal(result.metadata.electorate,null);
+  assert.equal(result.labels.party,undefined);assert.equal(result.speaker_display,'Several speakers');
+  assert.equal(result.speaker_type,'multi_speaker');assert.equal(result.debate,'Questions without Notice');
+  assert.deepEqual(result.participants,[{name:'Example MP',person_id:'123'},{name:'Another MP',person_id:'124'}]);
+  assert.equal(result.text,'Original mixed passage.');
+});
 
 test('new corpus source pages show t-body text and keep machine summaries separate',async()=>{
   const result=await readSource({'t-body':field('Invitations are not awarded grants.'),'da-summary-t-body':field('Machine summary')});

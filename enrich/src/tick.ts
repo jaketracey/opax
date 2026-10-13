@@ -1,6 +1,7 @@
 // One cron tick: discover, then process a bounded batch of claimed resources.
 
 import { budgetView, effectiveBudget, utcDay, type BudgetMode } from './budget.ts'
+import { admitWaiting, ownedBudget, assertBudgetOwnership, resourceBudget, reserveCall, settleCall, callUpper, releaseUnusedAdmission } from './run-budget.ts'
 import { hasTopicLabels, readClassifications } from './classify.ts'
 import {
   MAX_TRANSIENT,
@@ -151,6 +152,7 @@ export async function runTick(d: TickDeps): Promise<TickStats> {
 
     if (!ctl.stop) {
       await reclaimStale(d.db, t0)
+      await admitWaiting(d.db,d.now())
 
       // 2. Live mode first delivers results already read (dry-run results, or writes that met backpressure).
       if (d.cfg.live) await flush(d, ctl, stats)
@@ -171,6 +173,8 @@ export async function runTick(d: TickDeps): Promise<TickStats> {
             stats.transient += 1
             await logError(d.db, d.now(), 'exception', errText(err), rid)
             await finishRows(d.db, group.map((row) => retryOrQuarantine(row, `unexpected: ${errText(err)}`, 0)), d.now())
+          } finally {
+            await releaseUnusedAdmission(d.db,rid)
           }
         })
       }
@@ -194,6 +198,7 @@ export async function runTick(d: TickDeps): Promise<TickStats> {
         historicHold: d.cfg.historicHold,
         maxMs: d.cfg.discoveryMaxMs,
         clock: d.now,
+        config:d.cfg,
       })
       stats.discovered = found.enqueued
       stats.discoveryPartial = found.partial
@@ -324,6 +329,10 @@ async function processRid(d: TickDeps, ctl: Ctl, day: string, rid: string, rows:
     historic,
     nameText: historic ? text : undefined,
   }
+  const declaredBudget=resourceBudget(resource), savedBudget=await ownedBudget(d.db,rid)
+  assertBudgetOwnership(savedBudget,declaredBudget)
+  const runBudget=savedBudget ?? declaredBudget
+  let reservation: string|null=null
   const gen: Generation = await generate({
     ai: d.ai,
     record,
@@ -333,12 +342,21 @@ async function processRid(d: TickDeps, ctl: Ctl, day: string, rid: string, rows:
     maxTokens: d.cfg.maxTokens,
     priorNamesRejected: todo.some((r) => isSummaryTask(r.task) && r.names_rejected === 1),
     mayContinue: () => mayContinue(d, ctl),
+    beforeCall:runBudget ? async (model,body) => {
+      reservation=await reserveCall(d.db,rid,runBudget,callUpper(model,body),day,ctl.budget)
+      return reservation!==null
+    } : undefined,
     onReject: (info) => logRejection(d.db, d.now(), rid, info.task, info.model, info.attempt, info.reasons.join('; '), historic ? '' : info.sample),
     onSpend: async (spend) => {
-      ctl.spent += spend.neurons
-      ctl.neuronsTick += spend.neurons
+      let charged=spend.neurons
+      if (runBudget) {
+        if (!reservation) throw new Error('missing durable enrichment spend reservation')
+        charged=await settleCall(d.db,reservation,spend.model,spend.neurons,spend.promptTokens,spend.completionTokens,spend.billingVerified)
+        reservation=null
+      } else await addSpend(d.db, day, spend.model, spend.neurons, spend.promptTokens, spend.completionTokens)
+      ctl.spent += charged
+      ctl.neuronsTick += charged
       if (ctl.spent >= ctl.budget) ctl.stop ??= 'budget'
-      await addSpend(d.db, day, spend.model, spend.neurons, spend.promptTokens, spend.completionTokens)
     },
   })
 
