@@ -1515,6 +1515,14 @@
       manifest, including per-source counts and the current corpus version, is at
       <a href="/corpus.json">corpus.json</a>.</p>
 
+      <h3 id="speaker-attribution">Speaker attribution</h3>
+      <p>Some earlier OpenAustralia transcripts combine several speakers' words in one document.
+      These mixed transcripts are not credited to any one member or included in their speech
+      count until each person's words can be attributed reliably. A fuller split into individual
+      speaking turns is planned; person pages show how many earlier transcripts include that
+      member alongside others and are not counted yet. Chair-role transcripts record a member
+      presiding over proceedings and are not counted as that member's own speeches.</p>
+
       <h3>Retrieval and generation</h3>
       <p>Search runs hybrid semantic + keyword retrieval with a reranking pass. Answers are
       generated only from retrieved passages, with citations. Embeddings:
@@ -2174,7 +2182,7 @@
 <!-- defer: never block the parser (Lighthouse counted this as render-blocking).
      Deferred scripts still run before DOMContentLoaded, so nothing changes for
      app.js's boot. ?v= is content-hash stamped by scripts/stamp_assets.mjs. -->
-<script src="/spa-shell.js?v=4b86ecea47" defer></script>
+<script src="/spa-shell.js?v=d96b555db2" defer></script>
 <script src="/navigation.js?v=de99bace2e" defer></script>
 <script src="/quick-search.js?v=27eac3b2f7" defer></script>
 <script src="/ui-source.js?v=5e7b751ca0" defer></script>
