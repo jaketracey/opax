@@ -52,7 +52,15 @@ export const STALE_CLAIM_MS = 10 * 60 * 1000
 /** Infrastructure failures a row may absorb before it is set aside. */
 export const MAX_TRANSIENT = 8
 
-const ROWS_PER_INSERT = 10 // Up to 10 bound parameters a row; D1 allows 100 per statement
+const STATEMENTS_PER_BATCH = 50
+const RIDS_PER_STATEMENT = 50 // Plus at most three fixed parameters, below D1's 100.
+
+async function batchStatements(db: D1Database, statements: D1PreparedStatement[]): Promise<D1Result[]> {
+  const results: D1Result[] = []
+  for (let i = 0; i < statements.length; i += STATEMENTS_PER_BATCH)
+    results.push(...await db.batch(statements.slice(i, i + STATEMENTS_PER_BATCH)))
+  return results
+}
 
 // ---------------------------------------------------------------- state
 
@@ -88,12 +96,21 @@ export interface NewWork {
 /** Completed/terminal rows and explicit releases are never held. Clear unfinished
  * saved results so even an old worker cannot flush held work during rollout. */
 export function holdHistoricStatement(db: D1Database, rids: readonly string[], now: number): D1PreparedStatement {
+  if (rids.length > RIDS_PER_STATEMENT) throw new Error('historic hold requires resource chunks of at most 50')
   return db.prepare(`UPDATE queue SET status = 'done', terminal_reason = 'historic-held', historic = 1,
     outcome = NULL, result = NULL, claim_token = NULL, claimed_at = NULL, done_at = NULL, updated_at = ?
     WHERE rid IN (${rids.map(() => '?').join(',')}) AND task IN ('speech_summary', 'speech_topics')
       AND historic_released = 0 AND terminal_reason IS NULL
       AND (status IN ('pending', 'claimed') OR (status = 'done' AND outcome IN ('dry', 'unwritten')))`)
     .bind(now, ...rids)
+}
+
+/** Bound the IN list independently of how many resources the catalog returned. */
+export function holdHistoricStatements(db: D1Database, rids: readonly string[], now: number): D1PreparedStatement[] {
+  const statements: D1PreparedStatement[] = []
+  for (let i = 0; i < rids.length; i += RIDS_PER_STATEMENT)
+    statements.push(holdHistoricStatement(db, rids.slice(i, i + RIDS_PER_STATEMENT), now))
+  return statements
 }
 
 /** INSERT OR IGNORE on (rid, task): the queue de-duplicates. Returns how many rows were new. */
@@ -117,25 +134,22 @@ export async function enqueue(db: D1Database, work: readonly NewWork[], now: num
     if (budget && !group.every(w=>w.historicHold)) admitted += await admit(db,group,budget,now)
     else unbounded.push(...group)
   }
-  const statements: D1PreparedStatement[] = []
-  const inserts = new Set<D1PreparedStatement>()
-  for (let i = 0; i < unbounded.length; i += ROWS_PER_INSERT) {
-    const chunk = unbounded.slice(i, i + ROWS_PER_INSERT)
+  let inserted = 0
+  // One statement per task avoids workerd's FIVE-term compound SELECT limit.
+  // Leave one batch slot for the chunk's historic hold update.
+  for (let i = 0; i < unbounded.length; i += STATEMENTS_PER_BATCH - 1) {
+    const chunk = unbounded.slice(i, i + STATEMENTS_PER_BATCH - 1)
     // Recheck ownership atomically with insertion, in case it appeared after
     // the lookup above. Such a resource will resume via bounded admission.
-    const values = chunk.map(w => `SELECT ?, ?, ?, ?, ?, ?, ?, ?, ?${w.historicHold ? '' : ' WHERE NOT EXISTS(SELECT 1 FROM enrichment_units WHERE rid=?)'}`).join(' UNION ALL ')
-    const params = chunk.flatMap((w) => [w.rid, w.task, w.historicHold ? 'done' : 'pending', w.priority,
-      w.sourceCreated ?? null, w.historicHold ? 1 : 0, w.historicHold ? 'historic-held' : null, now, now,...(w.historicHold ? [] : [w.rid])])
-    const insert = db.prepare(`INSERT OR IGNORE INTO queue (rid, task, status, priority, source_created, historic, terminal_reason, created_at, updated_at) ${values}`).bind(...params)
-    statements.push(insert)
-    inserts.add(insert)
+    const statements = chunk.map(w => db.prepare(`INSERT OR IGNORE INTO queue (rid, task, status, priority, source_created, historic, terminal_reason, created_at, updated_at)
+      SELECT ?, ?, ?, ?, ?, ?, ?, ?, ?${w.historicHold ? '' : ' WHERE NOT EXISTS(SELECT 1 FROM enrichment_units WHERE rid=?)'}`)
+      .bind(w.rid, w.task, w.historicHold ? 'done' : 'pending', w.priority,
+        w.sourceCreated ?? null, w.historicHold ? 1 : 0, w.historicHold ? 'historic-held' : null,
+        now, now, ...(w.historicHold ? [] : [w.rid])))
     const held = [...new Set(chunk.filter(w => w.historicHold).map(w => w.rid))]
-    if (held.length) statements.push(holdHistoricStatement(db, held, now))
-  }
-  let inserted = 0
-  for (let i = 0; i < statements.length; i += 50) {
-    const results = await db.batch(statements.slice(i, i + 50))
-    results.forEach((r, index) => { if (inserts.has(statements[i + index])) inserted += r.meta?.changes ?? 0 })
+    statements.push(...holdHistoricStatements(db, held, now))
+    const results = await db.batch(statements)
+    inserted += results.slice(0, chunk.length).reduce((n, r) => n + (r.meta?.changes ?? 0), 0)
   }
   return admitted + inserted
 }
@@ -168,12 +182,15 @@ export async function claimRids(db: D1Database, n: number, now: number, token: s
     if (rids.length >= n) break
   }
   if (rids.length === 0) return []
-  await db
-    .prepare(
-      `UPDATE queue SET status = 'claimed', claim_token = ?, claimed_at = ?, updated_at = ? WHERE status = 'pending' AND terminal_reason IS NULL AND rid IN (${rids.map(() => '?').join(',')})`,
+  const statements: D1PreparedStatement[] = []
+  for (let i = 0; i < rids.length; i += RIDS_PER_STATEMENT) {
+    const chunk = rids.slice(i, i + RIDS_PER_STATEMENT)
+    statements.push(db.prepare(
+      `UPDATE queue SET status = 'claimed', claim_token = ?, claimed_at = ?, updated_at = ? WHERE status = 'pending' AND terminal_reason IS NULL AND rid IN (${chunk.map(() => '?').join(',')})`,
     )
-    .bind(token, now, now, ...rids)
-    .run()
+    .bind(token, now, now, ...chunk))
+  }
+  await batchStatements(db, statements)
   const { results } = await db.prepare("SELECT * FROM queue WHERE claim_token = ? AND status = 'claimed' AND terminal_reason IS NULL").bind(token).all<QueueRow>()
   return results
 }
@@ -239,7 +256,7 @@ export async function finishRows(db: D1Database, updates: readonly RowUpdate[], 
         u.task,
       ),
   )
-  await db.batch(statements)
+  await batchStatements(db, statements)
 }
 
 // ---------------------------------------------------------------- dry results awaiting a live write

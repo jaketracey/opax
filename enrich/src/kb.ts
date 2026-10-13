@@ -61,7 +61,7 @@ export interface CatalogPage {
 /** What the pipeline needs from the box; the tests supply an in-memory fake. */
 export interface KbApi {
   /** The resource with its text values, or null when it does not exist (404). */
-  getResource(rid: string): Promise<KbResource | null>
+  getResource(rid: string, timeoutMs?: number): Promise<KbResource | null>
   /** The resource's basic view (classifications) without text values, or null on 404. */
   getBasic(rid: string, timeoutMs?: number): Promise<KbResource | null>
   /** Everything the box will show for a resource (basic, values, origin, extra, relations, errors), or null on 404. */
@@ -71,14 +71,14 @@ export interface KbApi {
   patchSummary(rid: string, body: string): Promise<void>
   /** Replaces usermetadata.classifications: callers pass the FULL merged list. */
   patchClassifications(rid: string, classifications: Classification[]): Promise<void>
-  catalog(kind: string, sinceIso: string, page: number, pageSize?: number): Promise<CatalogPage>
+  catalog(kind: string, sinceIso: string, page: number, pageSize?: number, untilIso?: string, timeoutMs?: number): Promise<CatalogPage>
 }
 
 const TIMEOUT_MS = 30_000
 /** Classification-only reads must leave time for unrelated live work. */
 export const HOLD_METADATA_TIMEOUT_MS = 5_000
 /** The catalog is only discovery: a slow answer is abandoned and retried next tick. */
-const CATALOG_TIMEOUT_MS = 20_000
+export const CATALOG_TIMEOUT_MS = 20_000
 
 export class Kb implements KbApi {
   private readonly base: string
@@ -94,6 +94,7 @@ export class Kb implements KbApi {
 
   private async call(method: string, path: string, body?: unknown, allow404 = false, timeoutMs = TIMEOUT_MS): Promise<any> {
     let res: Response
+    let raw: string
     try {
       res = await this.fetcher(this.base + path, {
         method,
@@ -101,11 +102,14 @@ export class Kb implements KbApi {
         body: body === undefined ? undefined : JSON.stringify(body),
         signal: AbortSignal.timeout(timeoutMs),
       })
+      if (res.status === 404 && allow404) {
+        await res.body?.cancel()
+        return null
+      }
+      raw = await res.text()
     } catch (err) {
       throw new KbBackpressure(`${method} ${scrub(path)} -> ${(err as Error)?.message ?? err}`, 0)
     }
-    if (res.status === 404 && allow404) return null
-    const raw = await res.text()
     if (res.ok) return raw ? JSON.parse(raw) : {}
     const snippet = raw.slice(0, 200)
     if (res.status === 429 || res.status >= 500) {
@@ -114,8 +118,8 @@ export class Kb implements KbApi {
     throw new KbHttpError(`${method} ${scrub(path)} -> ${res.status}: ${snippet}`, res.status)
   }
 
-  getResource(rid: string): Promise<KbResource | null> {
-    return this.call('GET', `/resource/${rid}?show=basic&show=values&show=extra`, undefined, true)
+  getResource(rid: string, timeoutMs = TIMEOUT_MS): Promise<KbResource | null> {
+    return this.call('GET', `/resource/${rid}?show=basic&show=values&show=extra`, undefined, true, timeoutMs)
   }
 
   getEverything(rid: string): Promise<unknown | null> {
@@ -145,12 +149,12 @@ export class Kb implements KbApi {
     await this.call('PATCH', `/resource/${rid}`, { usermetadata: { classifications } })
   }
 
-  async catalog(kind: string, sinceIso: string, page: number, pageSize = 200): Promise<CatalogPage> {
+  async catalog(kind: string, sinceIso: string, page: number, pageSize = 200, untilIso?: string, timeoutMs = CATALOG_TIMEOUT_MS): Promise<CatalogPage> {
     const filter = {
       resource: {
         and: [
           { prop: 'label', labelset: 'kind', label: kind },
-          { prop: 'created', since: sinceIso },
+          { prop: 'created', since: sinceIso, ...(untilIso ? { until: untilIso } : {}) },
         ],
       },
     }
@@ -160,7 +164,7 @@ export class Kb implements KbApi {
       page_size: pageSize,
       page_number: page,
       sort: { field: 'created', order: 'asc' },
-    }, false, CATALOG_TIMEOUT_MS)
+    }, false, timeoutMs)
     const resources = (r?.resources ?? {}) as Record<string, KbResource>
     const rows = Object.entries(resources).map(([rid, v]) => ({ rid, created: typeof v?.created === 'string' ? v.created : null, usermetadata: v.usermetadata }))
     return { rows, hasNext: Boolean(r?.fulltext?.next_page) && rows.length > 0 }
