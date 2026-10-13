@@ -104,7 +104,7 @@ const graphs = await Promise.all(MONEY_GRAPHS.map(path=>sourceRead(root)(path)))
 // as the donation graphs, rather than trusting a prebuilt public snapshot.
 const moneyTables = await tableRows(root, {moneyOnly: true,graphs});
 for (const dataset of ['contracts', 'suppliers', 'grants']) assert.ok(moneyTables.rows[dataset].length > 0, dataset);
-const tablesD1 = await tableDatabase({datasets:moneyTables.rows,policy:moneyTables.policy});
+const tablesD1 = await tableDatabase({datasets:moneyTables.rows,policy:moneyTables.policy,memorySQL:true});
 const fixturePrefilter=tableIdentityPrefilter(moneyTables.policy);
 const identityBundle={prefilter:fixturePrefilter,binding:identityPrefilterBinding(fixturePrefilter),fingerprint:tableRegistryFingerprint(moneyTables.policy),identityHashes:tableIdentityHashes(moneyTables.policy).map(e=>e.hash)};
 test.after(()=>tablesD1.close());

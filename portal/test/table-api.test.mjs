@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {readFile} from 'node:fs/promises';
+import {serializeQuery} from '../public/datatable.js';
 import {TABLE_DATASETS} from '../src/table-datasets.mjs';
 import {tableApi,TABLE_REGISTRY_FINGERPRINT} from '../src/table-api.ts';
 import {tableDatabase} from './table-d1-harness.mjs';
@@ -87,12 +87,10 @@ test('echo snapshots with older candidate lengths still serve scoped queries usi
   }
 });
 test('core serializer and D1 API integrate with category and range state',async()=>{
-  // Exercise core query exports without replacing its public module.
-  // The approved core is imported directly; no contract stub is substituted.
-  const core=await import('../public/datatable.js');
+  // Exercise the production serializer without a copied fixture.
   for(const prefix of [undefined,'t']){
     const query={filters:{jurisdiction:['Group 0'],amount:{min:10,max:20}},sort:{key:'amount',dir:'asc'},pageSize:2,page:2};
-    const response=await fetchTable('contracts',core.serializeQuery(query,prefix));assert.equal(response.status,200);
+    const response=await fetchTable('contracts',serializeQuery(query,prefix));assert.equal(response.status,200);
     const page=await response.json();assert.equal(page.total,5);assert.deepEqual(page.rows.map(r=>r.amount),[14.25,16.25]);
   }
 });

@@ -32,7 +32,7 @@ test('the published table registry rejects the complete runtime donor and recipi
   t.diagnostic(JSON.stringify({donorLabels:source.labels.length,donorLabelsRejected:source.labels.filter(blocked).length,donorIdentifiers:source.identifiers.length,donorIdentifiersRejected:source.identifiers.filter(blocked).length,recipientInputs:new Set(recipients).size,misses:0,rowMisses:0,csvMisses:0}));
 });
 test('all financial endpoints and CSV reject every runtime donor and recipient input after publication',async()=>{
-  const local=await tableDatabase({datasets:{},policy});
+  const local=await tableDatabase({datasets:{},policy,memorySQL:true});
   try{
     for(const[name,config]of Object.entries(TABLE_DATASETS).filter(([,c])=>c.privacy))for(const value of probes)for(const csv of [false,true]){
       const params=new URLSearchParams({q:value});if(csv)params.set('format','csv');

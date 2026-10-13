@@ -55,7 +55,7 @@ test('SSR guards every raw source label, alias and identifier before rendering o
   }
 });
 test('financial API checks raw keys and all repeated occurrences before dataset SQL',async t=>{
-  const local=await tableDatabase({datasets:{},policy});let tested=0;
+  const local=await tableDatabase({datasets:{},policy,memorySQL:true});let tested=0;
   try{
     for(const value of source.identifiers)for(const kind of rawProbeKinds)for(const namespace of ['t','']){
       let reads=0;const db={prepare(sql){if(/FROM\s+table_(?!meta\b|private_identity\b)/i.test(sql))reads++;return local.db.prepare(sql);}};

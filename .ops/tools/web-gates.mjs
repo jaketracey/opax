@@ -1,10 +1,9 @@
-import {validateVotes} from './votes-validation.mjs';
 import {spawn} from 'node:child_process';
 import {mkdirSync,readFileSync,writeFileSync,existsSync,rmSync,cpSync,renameSync,readdirSync} from 'node:fs';
-import {join,resolve} from 'node:path';
+import {join} from 'node:path';
 import {performance} from 'node:perf_hooks';
-import {pathToFileURL} from 'node:url';
-import {git,gateBase,identity,cacheKey,cleanCheckout,reusable,persistPass,selectTests,catalogKey,hash} from './gate-lib.mjs';
+import {git,gateBase,identity,cacheKey,reusable,persistPass,selectTests,catalogKey,hash} from './gate-lib.mjs';
+import {cacheDirectory,pullPass,publishPass,authoritative,claimPass,readPass} from './gate-cache-lib.mjs';
 
 const args=process.argv.slice(2), tier=args.shift()||'lane';
 const tools=import.meta.dirname;
@@ -15,24 +14,25 @@ const base=gateBase(root,tier,value('--base'));
 const concurrency=Number(value('--concurrency',process.env.OX_TEST_CONCURRENCY||(process.platform==='linux'?'6':'4')));
 if(!Number.isInteger(concurrency)||concurrency<1||concurrency>16)throw Error('Concurrency must be 1..16');
 const started=performance.now(), id=identity(root), key=cacheKey(id);
-const clean=cleanCheckout(root);
-const cache=resolve(process.env.OX_GATE_CACHE||join(root,'.ops/gate-cache'));mkdirSync(cache,{recursive:true});
+if(process.env.OX_GATE_EXPECTED_ID&&cacheKey(JSON.parse(process.env.OX_GATE_EXPECTED_ID))!==key)throw Error('Transferred tree/toolchain identity does not match this runner');
+const cache=cacheDirectory(root);mkdirSync(cache,{recursive:true});
 const passFile=join(cache,`${key}.json`);
 let previous;try{previous=JSON.parse(readFileSync(passFile));}catch{}
-if(clean&&!args.includes('--force')&&tier!=='profile'&&reusable(previous,id,tier,base)){
- validateVotes(JSON.parse(readFileSync(join(root,'portal/public/votes.json'))));
- if(args.includes('--unchanged-votes'))git(root,['diff','--exit-code',base,id.tree,'--','portal/public/votes.json'],{stdio:'pipe'});
+const canReuse=record=>reusable(record,id,tier,base)&&(record.tier!=='merge'||authoritative(record,id));
+if(!args.includes('--force')&&tier!=='profile'&&!canReuse(previous))previous=pullPass(cache,id)||previous;
+if(!args.includes('--force')&&tier!=='profile'&&canReuse(previous)){
+ git(root,['diff','--exit-code',base,id.tree,'--','portal/public/votes.json'],{stdio:'pipe'});
+ if(cacheKey(identity(root))!==key)throw Error('Source identity changed during cache lookup');
  console.log(`CACHED PASS ${id.tree} ${id.node} ${id.lockfile} (${previous.tier}, ${previous.host})`);process.exit(0);
 }
-if(!clean)console.log('CACHE BYPASS: working tree has tracked changes or untracked files');
 if(args.includes('--cache-only'))process.exit(3);
 const matrix=value('--matrix',String(concurrency)).split(',').map(Number);
 if(matrix.some(n=>!Number.isInteger(n)||n<1||n>16))throw Error('Matrix concurrency must be 1..16');
 const commit=git(root,['commit-tree',id.tree,'-p','HEAD','-m','Isolated web gate snapshot']);
 const work=join(cache,`work-${key.slice(0,16)}-${process.pid}`);
 const output=join(cache,`run-${Date.now()}-${tier}`);mkdirSync(output);
-const record={identity:id,base,tier:tier==='lane'?'lane':'merge',profiling:tier==='profile',host:process.platform,concurrency,success:false,steps:[]};
-let failure;
+const record={schema:2,identity:id,base,tier:tier==='lane'?'lane':'merge',profiling:tier==='profile',host:process.platform,concurrency,success:false,steps:[]};
+let failure,releaseClaim;
 const inventory=dir=>readdirSync(dir,{withFileTypes:true}).flatMap(e=>e.isDirectory()?inventory(join(dir,e.name)).map(([file,digest])=>[e.name+'/'+file,digest]):[[e.name,hash(readFileSync(join(dir,e.name)))]]).sort(([a],[b])=>a.localeCompare(b));
 async function searchFixtures(){
  const key=catalogKey(work,id),saved=join(cache,'catalog-'+key),target=join(work,'portal/public/search-catalog');
@@ -68,12 +68,24 @@ try{
  const changed=git(work,['diff','--name-only',base,id.tree]).split('\n').filter(Boolean);
  const selection=selectTests(work,tier==='lane'?changed:['portal/package.json'],config);
  record.selection=selection;console.log(`Selected ${selection.files.length}/${selection.total} files`);for(const reason of selection.reasons)console.log(reason);
+ const full=tier!=='lane'||selection.files.length===selection.total||changed.some(f=>config.fullBuildPatterns.some(pattern=>new RegExp(pattern).test(f)));
+ if(full&&selection.files.length===selection.total&&!args.includes('--force')&&tier!=='profile'){
+   releaseClaim=await claimPass(id);
+   const saved=pullPass(cache,id)||readPass(passFile);
+   if(authoritative(saved,id)){
+     git(root,['diff','--exit-code',base,id.tree,'--','portal/public/votes.json'],{stdio:'pipe'});
+     if(cacheKey(identity(root))!==key)throw Error('Source identity changed while waiting for pass');
+     console.log(`CACHED PASS ${id.tree} ${id.node} ${id.lockfile} (${saved.tier}, ${saved.host})`);
+     record.reused=true;
+   }
+ }
+ if(!record.reused){
  await run('scripts-tests','node',['--test',join(tools,'test/gates.test.mjs')]);
- await run('install','node',['../scripts/gate_dependencies.mjs'],{OPAX_DEPENDENCY_CACHE_DIR:join(cache,'dependencies')});
+ await run('install','npm',['ci','--no-audit','--no-fund']);
  await run('runtime-types','npx',['--no-install','wrangler','types']);
  // Merge/fallback: build every deploy writer. Narrow lanes regenerate only the
  // ignored search fixtures, then stamp; untouched served assets are the snapshot.
- const full=tier!=='lane'||selection.files.length===selection.total||changed.some(f=>config.fullBuildPatterns.some(pattern=>new RegExp(pattern).test(f)));
+ await run('shell','node',['../scripts/build_spa_shell.mjs']);
  if(full)await run('release','npm',['run','build:release']);
  else {
    for(const builder of config.builders)if(changed.some(f=>new RegExp(builder.pattern).test(f)))await run(builder.script.replace(':','-'),'npm',['run',builder.script]);
@@ -83,9 +95,7 @@ try{
    for(const script of config.laneFixtures||[])await run(script.replace(':','-'),'npm',['run',script]);
    await run('stamp','node',['../scripts/stamp_assets.mjs']);
  }
- // Runtime types were already generated above. Standalone `check` still
- // generates them; this gate runs all remaining checks without a second write.
- await run('check','npm',['run','check:built']);
+ await run('check','npm',['run','check']);
  const reporter=join(tools,'gate-reporter.mjs');
  record.profiles=[];
  for(const limit of matrix){
@@ -95,22 +105,24 @@ try{
    if(!record.test.summary?.success || record.test.files.length!==selection.files.length)throw Error('Missing/failed test summaries');
  }
  await run('dry-run','npx',['--no-install','wrangler','deploy','--dry-run']);
- // Validate the captured export itself; main can advance independently.
- await run('votes','node',[join(tools,'votes-validation.mjs'),join(work,'portal/public/votes.json')]);
- if(args.includes('--unchanged-votes')){
-   git(work,['diff','--exit-code',base,'--','portal/public/votes.json'],{stdio:'pipe'});
-   record.votesBytesUnchanged=true;
-   record.votesSha256=hash(readFileSync(join(work,'portal/public/votes.json')));
- }
- if(identity(root).tree!==id.tree)throw Error('Source tree changed while gate ran; pass is not reusable');
+ // The gate uses the captured base, never fetches or advances main during a run.
+ git(work,['diff','--exit-code',base,'--','portal/public/votes.json'],{stdio:'pipe'});
+ const votes=JSON.parse(readFileSync(join(work,'portal/public/votes.json')));if(votes._meta?.schema!==1)throw Error('votes.json must stay schema 1');
+ if(cacheKey(identity(root))!==key)throw Error('Source tree changed while gate ran; pass is not reusable');
+ releaseClaim?.assertHeld?.();
  record.success=true;
  if(full&&selection.files.length===selection.total)record.tier='merge';
+ }
 }catch(error){failure=error;console.error(error.message);}
 finally{
  record.seconds=(performance.now()-started)/1000;
  writeFileSync(join(output,'result.json'),JSON.stringify(record,null,2)+'\n');
- if(record.success&&cleanCheckout(root))persistPass(passFile,record);
+ if(record.success&&!record.reused){
+   persistPass(passFile,record);
+   if(authoritative(record,id))try{publishPass(record);}catch(error){failure=error;console.error('Full pass saved locally; desktop publication failed: '+error.message);}
+ }
+ if(releaseClaim)try{await releaseClaim();}catch(error){failure=error;console.error(error.message);}
  if(existsSync(work))git(root,['worktree','remove','--force',work]);
- console.log(`GATES ${record.success?'OK':'FAILED'} ${record.seconds.toFixed(2)}s tree=${id.tree}; ${output}`);
+ console.log(`GATES ${record.success||record.reused?'OK':'FAILED'} ${record.seconds.toFixed(2)}s tree=${id.tree}; ${output}`);
 }
 process.exitCode=failure?1:0;
