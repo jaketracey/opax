@@ -4,6 +4,8 @@
   "term_end": "2026-11-28",
   "election_day": "2026-11-28",
   "nominations_close": "2026-11-09T12:00:00+11:00",
+  "enrolment_close": "2026-11-03T20:00:00+11:00",
+  "postal_close": "2026-11-25T18:00:00+11:00",
   "sources": {
     "districts": "https://www.vec.vic.gov.au/electoral-boundaries/state-districts",
     "regions": "https://www.vec.vic.gov.au/electoral-boundaries/state-regions",
@@ -14,7 +16,12 @@
     "timeline": "https://www.vec.vic.gov.au/voting/types-of-elections/state-elections",
     "voting": "https://www.vec.vic.gov.au/voting/2026-state-election/voting-options",
     "caretaker": "https://www.vic.gov.au/guidelines-caretaker-conventions/introduction",
-    "licence": "https://www.vec.vic.gov.au/legal"
+    "licence": "https://www.vec.vic.gov.au/legal",
+    "enrol": "https://www.vec.vic.gov.au/enrolment/enrol-to-vote",
+    "enrolment": "https://www.vec.vic.gov.au/enrolment/check-my-enrolment",
+    "address": "https://www.vec.vic.gov.au/electoral-boundaries/which-boundaries-cover-where-i-live",
+    "map": "https://maps.vec.vic.gov.au/",
+    "results": "https://www.vec.vic.gov.au/results/state-election-results/2022-state-election-results"
   },
   "licence": {
     "name": "Creative Commons Attribution 4.0 International",
@@ -49,6 +56,18 @@
     {
       "name": "ebc-report",
       "sha256": "aaed11d69f233d39771502c39a0c852ef0b034805e647ef564637924143cd945"
+    },
+    {
+      "name": "election-2026-10-13",
+      "sha256": "1922b1e6166d827bef085b5862897cc1500739e3bdc0bab0093030bfbf8f9c5e"
+    },
+    {
+      "name": "voting-options-2026-10-13",
+      "sha256": "7c9d27cdb6ac0ff3396e03b7fb1badda8cc995251bcbab47e1af3289fe24986f"
+    },
+    {
+      "name": "which-boundaries-2026-10-13",
+      "sha256": "e30d58d5028056066e35b687f7e8dd71b94dc5593421b973baacf74228eb5b75"
     }
   ],
   "districts": [
@@ -209,7 +228,8 @@
       "kind": "district",
       "source_url": "https://www.vec.vic.gov.au/electoral-boundaries/state-districts/eureka-district",
       "region": "Western Victoria",
-      "boundary_note": "The EBC final report changed Buninyong District\u2019s name to Eureka District, with boundary changes, effective 1 November 2022. This predates the 2022\u20132026 term."
+      "boundary_note": "The EBC final report changed Buninyong District\u2019s name to Eureka District, with boundary changes, effective 1 November 2022. This predates the 2022\u20132026 term.",
+      "formerly": "Buninyong"
     },
     {
       "name": "Euroa",
@@ -626,7 +646,8 @@
         "Ringwood",
         "Warrandyte"
       ],
-      "boundary_note": "Eastern Metropolitan Region was renamed North-Eastern Metropolitan Region in the 2021 redivision, effective 1 November 2022. This predates the 2022\u20132026 term."
+      "boundary_note": "Eastern Metropolitan Region was renamed North-Eastern Metropolitan Region in the 2021 redivision, effective 1 November 2022. This predates the 2022\u20132026 term.",
+      "formerly": "Eastern Metropolitan"
     },
     {
       "name": "Northern Metropolitan",

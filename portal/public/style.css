@@ -3354,10 +3354,9 @@ mark.privacy-confirm {
   #panel-doc .doc-toolbar-btns { flex-wrap: wrap; min-width: 0; }
 }
 /* ==== page actions: one secondary pill and ⋯ (person, bill, search) ====
-   Principle 5: one drawn action per view besides ⋯ (ui-source.css draws ⋯). */
+   Principle 5: one drawn action per view besides ⋯ (page-actions.css draws ⋯;
+   its menu floats over the page at every width, so this row never grows). */
 .page-actions { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-tight); }
-/* On a phone ⋯'s sheet opens in place under its row. */
-@media (max-width: 600px) { .page-actions > .ui-more[open] { flex-basis: 100%; } .page-actions > .ui-more[open] > summary { margin-left: auto; display: grid; } }
 
 /* ==== page-person: Person entry pages (/subject/person/<name>) ==== */
 .subject-person #subject-sections { min-width: 0; }
@@ -3775,7 +3774,6 @@ body:has(#search-options-pop[open]) { overflow: hidden; }
   #panel-search #search-readbar .ui-segmented { display: flex; flex: 1 1 auto; }
   #panel-search #search-readbar .ui-segmented > .ui-button { flex: 1 1 0; }
   #panel-search .results-actions select { width: 100%; padding-inline: 8px 24px; }
-  #panel-search #search-more[open] { flex-basis: 100%; order: 2; }
 }
 /* ⋯ rows here carry a second line saying what each export is for. */
 

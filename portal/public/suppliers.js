@@ -6,8 +6,8 @@ import { shortDate, shortMoney } from "./format.js";
 import { contractTitle, placeholderContract, mountContractsTable, remotePrivacyCheck } from "./contracts-table.js?v=57b3bcb468";
 export { contractTitle, placeholderContract } from "./contracts-table.js?v=57b3bcb468";
 
-import { mountSupplierGrowth, supplierDonations } from "./supplier-growth.js?v=86e58f592c";
-import { sourceLineHTML } from "./labels.js?v=c6bf994ef7";
+import { mountSupplierGrowth, supplierDonations } from "./supplier-growth.js?v=a8ee413d78";
+import { sourceLineHTML } from "./labels.js?v=fc03aa14cf";
 import { partyUrl } from "./canonical-urls.js?v=225d5915ea";
 const esc = (value) => String(value ?? "").replace(/[&<>"']/g, (char) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[char]);
 const number = (value) => (Number(value) || 0).toLocaleString("en-AU");

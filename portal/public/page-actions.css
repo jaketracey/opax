@@ -1,0 +1,62 @@
+/* ⋯: the page-actions menu (page-actions-menu.js writes it and runs it).
+   A 44px navy-wash circle and a list that floats under it: radius 12, raised,
+   a hairline and the one overlay shadow. The list is out of the document flow
+   at every width, so opening it moves nothing on the page. Its rows are one
+   hairline apart and may carry a short second line. Tokens only. */
+
+.page-menu { position: relative; display: inline-flex; flex: none; vertical-align: middle; }
+
+.page-menu-button {
+  display: inline-grid; place-items: center; width: var(--size-target); height: var(--size-target);
+  margin: 0; padding: 0; box-sizing: border-box; cursor: pointer;
+  border: var(--border-hairline) solid transparent; border-radius: var(--radius-pill);
+  background: var(--navy-wash); color: var(--navy);
+  transition: background-color var(--duration-quick) var(--ease-standard);
+}
+.page-menu-button:hover, .page-menu.is-open > .page-menu-button { background: color-mix(in srgb, var(--navy) 10%, var(--navy-wash)); }
+.page-menu-button:focus-visible { outline: var(--border-focus) solid var(--bronze-ink); outline-offset: 3px; }
+.page-menu-button svg { width: var(--size-icon-md); height: var(--size-icon-md); fill: currentColor; }
+
+/* Under the button, from its start; page-actions-menu.js aligns it to the
+   button's end (data-align), shifts it in (--page-menu-shift) or opens it
+   upward (data-side) to keep it inside the viewport. */
+.page-menu-list {
+  position: absolute; z-index: 40; top: calc(100% + 6px); left: 0;
+  box-sizing: border-box; width: max-content; min-width: min(16rem, calc(100vw - 16px)); max-width: min(22rem, calc(100vw - 16px));
+  margin: 0; padding: 6px 16px; list-style: none;
+  border: var(--border-hairline) solid var(--divider-subtle); border-radius: var(--radius-md);
+  background: var(--paper-raised); box-shadow: var(--shadow-overlay);
+  translate: var(--page-menu-shift, 0) 0;
+  text-align: left; white-space: normal;
+}
+.page-menu-list[hidden] { display: none; }
+.page-menu[data-align="end"] > .page-menu-list { left: auto; right: 0; }
+.page-menu[data-side="top"] > .page-menu-list { top: auto; bottom: calc(100% + 6px); }
+.page-menu-list li { margin: 0; }
+.page-menu-list li + li { border-top: var(--border-hairline) solid var(--divider-subtle); }
+
+.page-menu-item {
+  display: flex; align-items: center; gap: .35rem; width: 100%; min-height: var(--size-target); box-sizing: border-box;
+  margin: 0; padding: 0; border: 0; background: none; cursor: pointer;
+  font: var(--type-strong); color: var(--ink); text-align: left; text-decoration: none;
+}
+.page-menu-item:has(> small) { flex-direction: column; align-items: flex-start; justify-content: center; gap: 0; padding-block: 6px; }
+.page-menu-item > small { font: var(--type-fine); color: var(--ink-soft); }
+.page-menu-item:hover { color: var(--bronze-ink); text-decoration: underline; text-decoration-color: var(--bronze-rule); text-underline-offset: 3px; }
+.page-menu-item:focus-visible { outline: var(--border-focus) solid var(--bronze-ink); outline-offset: 2px; }
+.page-menu-item[disabled] { cursor: default; color: var(--ink-soft); }
+
+/* Restrained: a short fade and a 4px drop on opening, nothing on closing. */
+@media (prefers-reduced-motion: no-preference) {
+  .page-menu-list:not([hidden]) { animation: page-menu-in var(--duration-quick) var(--ease-standard); }
+}
+@keyframes page-menu-in { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: none; } }
+@media (prefers-reduced-motion: reduce) {
+  .page-menu-button { transition: none; }
+}
+
+/* Forced colours keep the circle's edge and the list's. */
+@media (forced-colors: active) {
+  .page-menu-button { border-color: ButtonText; }
+  .page-menu-list { border-color: CanvasText; }
+}
