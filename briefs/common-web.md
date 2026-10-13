@@ -37,8 +37,9 @@ pass is never a merge/review pass. Merge candidates run the complete production
 release build, check, full suite, local Wrangler dry-run and votes schema/byte
 checks once on the captured candidate tree. Re-review the identical tree with
 `review`; a recorded full pass skips both the tests and the heavy queue.
-Narrow lanes regenerate ignored search fixtures and stamps; the full release
-build remains a merge/pre-deploy gate.
+Narrow lanes regenerate ignored search fixtures, canonical crawl/IndexNow output,
+the Victorian election hub and stamps, so exhaustive privacy cases have their
+baseline assets. The full release build remains a merge/pre-deploy gate.
 
 Passes live in ignored `.ops/gate-cache/`, keyed by the snapshot's `git write-tree`
 hash, exact Node version and SHA-256 of `portal/package-lock.json`. Snapshots

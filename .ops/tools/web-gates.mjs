@@ -76,6 +76,9 @@ try{
  else {
    for(const builder of config.builders)if(changed.some(f=>new RegExp(builder.pattern).test(f)))await run(builder.script.replace(':','-'),'npm',['run',builder.script]);
    await searchFixtures();
+   // Exhaustive mandatory privacy tests compare canonical crawl fingerprints
+   // and election pages. These ignored assets must exist even on a docs lane.
+   for(const script of config.laneFixtures||[])await run(script.replace(':','-'),'npm',['run',script]);
    await run('stamp','node',['../scripts/stamp_assets.mjs']);
  }
  await run('check','npm',['run','check']);

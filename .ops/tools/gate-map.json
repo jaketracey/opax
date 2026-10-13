@@ -92,5 +92,9 @@
   ],
   "mandatoryPatterns": [
     "(?:^|/)[^/]*(?:donor|privacy|table|dt-votes)[^/]*\\.test\\.mjs$"
+  ],
+  "laneFixtures": [
+    "build:crawl",
+    "build:vic-election"
   ]
 }

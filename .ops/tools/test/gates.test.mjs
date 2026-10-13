@@ -135,15 +135,17 @@ test('catalog cache binds exports, source registries and transitive builder impo
 test('a narrow CLI gate executes every privacy case and supplies the full publication corpus',t=>{
  const root=repo(t),localTools=join(root,'.ops/tools'),bin=join(root,'.ops/gate-cache/bin');
  mkdirSync(localTools,{recursive:true});cpSync(tools,localTools,{recursive:true});mkdirSync(bin,{recursive:true});mkdirSync(join(root,'scripts'));mkdirSync(join(root,'portal/public'));
- const config={smoke:['portal/test/donor-privacy.test.mjs','portal/test/donor-publication.test.mjs'],smokePatterns:{'portal/test/donor-privacy.test.mjs':'^case 0$'},smokeMinimum:{'portal/test/donor-privacy.test.mjs':1},fullBuildPatterns:[],builders:[],map:[]};
+ const config={smoke:['portal/test/donor-privacy.test.mjs','portal/test/donor-publication.test.mjs'],smokePatterns:{'portal/test/donor-privacy.test.mjs':'^case 0$'},smokeMinimum:{'portal/test/donor-privacy.test.mjs':1},fullBuildPatterns:[],builders:[],laneFixtures:['build:crawl','build:vic-election'],map:[]};
  writeFileSync(join(localTools,'gate-map.json'),JSON.stringify(config));
- writeFileSync(join(root,'portal/test/donor-privacy.test.mjs'),'import test from "node:test"; for(let i=0;i<26;i++)test("case "+i,()=>{});');
+ writeFileSync(join(root,'portal/test/donor-privacy.test.mjs'),'import test from "node:test"; import assert from "node:assert/strict"; import {readFileSync} from "node:fs"; for(let i=0;i<26;i++)test("case "+i,()=>{if(i===0){for(const file of ["crawl/indexnow.json","hubs/vic-election-2026.json"])assert.ok(JSON.parse(readFileSync(new URL("../public/"+file,import.meta.url))).fixture);}});');
  writeFileSync(join(root,'portal/test/donor-publication.test.mjs'),'import test from "node:test"; import assert from "node:assert/strict"; test("full corpus",()=>assert.ok(!process.env.OX_GATE_PUBLICATION_CHANGED));');
  writeFileSync(join(root,'portal/test/unrelated.test.mjs'),'import test from "node:test"; test("unrelated",()=>{});');
  writeFileSync(join(root,'portal/public/votes.json'),'{"_meta":{"schema":1}}');
  for(const file of ['build_spa_shell.mjs','stamp_assets.mjs'])writeFileSync(join(root,'scripts',file),'');
  writeFileSync(join(root,'scripts/build_search_catalog.mjs'),'import {mkdirSync,writeFileSync} from "node:fs"; const dir=new URL("../portal/public/search-catalog/",import.meta.url); mkdirSync(dir,{recursive:true});writeFileSync(new URL("index.json",dir),"{}");');
- for(const cmd of ['npm','npx'])writeFileSync(join(bin,cmd),'#!/usr/bin/env bash\nexit 0\n',{mode:0o755});
+ for(const [script,file] of [['build_crawl_catalog.mjs','crawl/indexnow.json'],['build_vic_election.mjs','hubs/vic-election-2026.json']])writeFileSync(join(root,'scripts',script),`import {mkdirSync,writeFileSync} from 'node:fs';const target=new URL('../portal/public/${file}',import.meta.url);mkdirSync(new URL('.',target),{recursive:true});writeFileSync(target,JSON.stringify({fixture:true}));`);
+ writeFileSync(join(bin,'npx'),'#!/usr/bin/env bash\nexit 0\n',{mode:0o755});
+ writeFileSync(join(bin,'npm'),`#!/usr/bin/env bash\nif [ "$1" = run ]; then\ncase "$2" in\nbuild:crawl) exec ${quote(process.execPath)} ../scripts/build_crawl_catalog.mjs ;;\nbuild:vic-election) exec ${quote(process.execPath)} ../scripts/build_vic_election.mjs ;;\nesac\nfi\nexit 0\n`,{mode:0o755});
  writeFileSync(join(bin,'node'),`#!/usr/bin/env bash\nif [ "$1" = --test ] && [[ "$2" = */test/gates.test.mjs ]]; then exit 0; fi\nexec ${quote(process.execPath)} "$@"\n`,{mode:0o755});
  git(root,['add','.']);git(root,['commit','-qm','complete privacy CLI fixture']);
  const env={...process.env,PATH:bin+':'+process.env.PATH};delete env.NODE_TEST_CONTEXT;delete env.OX_GATE_CACHE;delete env.OX_GATE_PUBLICATION_CHANGED;
