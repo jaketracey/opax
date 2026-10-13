@@ -7,6 +7,8 @@ export function instrumentTableConfig(): DataTableConfig;
 export function auditTableConfig(records: AuditRow[]): DataTableConfig;
 export function interestTableData(register: InterestRegister): {rows:Row[];omitted:number};
 export function interestTableConfig(rows: Row[]): DataTableConfig;
+export function vicGiftsTableConfig(params?:Record<string,string>,populatedFields?:string[]): DataTableConfig;
+export function vicGiftsQuery(rows:Row[],config:DataTableConfig,query?:Query): import('./datatable.js').Page;
 export function partyMoneyData(graph: PartyGraph, partyId: string): {rows:Row[]};
 export function partyMoneyTableConfig(rows:Row[],id?:string,urlKey?:string,pageType?:string): DataTableConfig;
 export function registerTableHTML(config:DataTableConfig,query?:Query,requestURL?:string|URL): string;

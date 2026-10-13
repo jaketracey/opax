@@ -1,0 +1,137 @@
+{
+  "source_index": "https://www.vic.gov.au/ministerial-gifts-benefits-and-hospitality-register",
+  "counts": {
+    "periods": 3,
+    "html_pages": 3,
+    "tables": 6,
+    "rows": 282,
+    "roles": {
+      "Minister": 235,
+      "Parliamentary secretary": 47
+    },
+    "linked_rows": 275,
+    "unlinked_rows": 7,
+    "holds": 0,
+    "source_receipts": 8
+  },
+  "documents": [
+    {
+      "id": "vic-gifts-2026-02-01_2026-06-30",
+      "period": {
+        "id": "2026-02-01_2026-06-30",
+        "start": "2026-02-01",
+        "end": "2026-06-30",
+        "label": "1 February 2026 to 30 June 2026"
+      },
+      "url": "https://www.vic.gov.au/ministerial-register-gifts-benefits-and-hospitality-february-june-2026",
+      "title": "Ministerial register of gifts, benefits and hospitality: February to June 2026",
+      "format": "HTML",
+      "licence": {
+        "status": "open",
+        "name": "CC BY 4.0",
+        "url": "https://creativecommons.org/licenses/by/4.0/",
+        "policy_url": "https://www.vic.gov.au/copyright",
+        "content_owner": "State Government of Victoria; Department of Premier and Cabinet register",
+        "scope": "Same-site website-material grant; DGS ownership sentence is not a DGS-only licence restriction.",
+        "exceptions": [
+          "images and branding, including Coat of Arms and government logo",
+          "content supplied by third parties"
+        ],
+        "reason": "Period page links the site-wide grant; DPC publishes the register as State Government material. No table-specific exception found.",
+        "policy_receipt": {
+          "sha256": "e035f491dd7362a20c701d05774351fc4e69acb0ba468332d7b63668550d1237",
+          "snapshot": "2026-10-13T21:33:58.994901+00:00"
+        }
+      },
+      "status": "cleared",
+      "receipt": {
+        "sha256": "4718a88e1490979dc54292096f003aaa1849edbc110caa8de399b2d4a3b2e8ba",
+        "snapshot": "2026-10-13T21:34:01.901929+00:00"
+      },
+      "row_count": 63,
+      "role_counts": {
+        "Minister": 56,
+        "Parliamentary secretary": 7
+      }
+    },
+    {
+      "id": "vic-gifts-2025-07-01_2026-01-31",
+      "period": {
+        "id": "2025-07-01_2026-01-31",
+        "start": "2025-07-01",
+        "end": "2026-01-31",
+        "label": "1 July 2025 to 31 January 2026"
+      },
+      "url": "https://www.vic.gov.au/ministerial-register-gifts-benefits-and-hospitality-july-2025-january-2026",
+      "title": "Ministerial register of gifts, benefits and hospitality: July 2025 to January 2026",
+      "format": "HTML",
+      "licence": {
+        "status": "open",
+        "name": "CC BY 4.0",
+        "url": "https://creativecommons.org/licenses/by/4.0/",
+        "policy_url": "https://www.vic.gov.au/copyright",
+        "content_owner": "State Government of Victoria; Department of Premier and Cabinet register",
+        "scope": "Same-site website-material grant; DGS ownership sentence is not a DGS-only licence restriction.",
+        "exceptions": [
+          "images and branding, including Coat of Arms and government logo",
+          "content supplied by third parties"
+        ],
+        "reason": "Period page links the site-wide grant; DPC publishes the register as State Government material. No table-specific exception found.",
+        "policy_receipt": {
+          "sha256": "e035f491dd7362a20c701d05774351fc4e69acb0ba468332d7b63668550d1237",
+          "snapshot": "2026-10-13T21:33:58.994901+00:00"
+        }
+      },
+      "status": "cleared",
+      "receipt": {
+        "sha256": "a45e306fa5dd8db79b8179acb7dce13a43b8966aa43cdb12c72a198466e82257",
+        "snapshot": "2026-10-13T21:35:44.069254+00:00"
+      },
+      "row_count": 135,
+      "role_counts": {
+        "Minister": 110,
+        "Parliamentary secretary": 25
+      }
+    },
+    {
+      "id": "vic-gifts-2025-02-01_2025-06-30",
+      "period": {
+        "id": "2025-02-01_2025-06-30",
+        "start": "2025-02-01",
+        "end": "2025-06-30",
+        "label": "1 February 2025 to 30 June 2025"
+      },
+      "url": "https://www.vic.gov.au/2024-25-ministerial-register-gifts-benefits-and-hospitality",
+      "title": "Ministerial register of gifts, benefits and hospitality: February to June 2025",
+      "format": "HTML",
+      "licence": {
+        "status": "open",
+        "name": "CC BY 4.0",
+        "url": "https://creativecommons.org/licenses/by/4.0/",
+        "policy_url": "https://www.vic.gov.au/copyright",
+        "content_owner": "State Government of Victoria; Department of Premier and Cabinet register",
+        "scope": "Same-site website-material grant; DGS ownership sentence is not a DGS-only licence restriction.",
+        "exceptions": [
+          "images and branding, including Coat of Arms and government logo",
+          "content supplied by third parties"
+        ],
+        "reason": "Period page links the site-wide grant; DPC publishes the register as State Government material. No table-specific exception found.",
+        "policy_receipt": {
+          "sha256": "e035f491dd7362a20c701d05774351fc4e69acb0ba468332d7b63668550d1237",
+          "snapshot": "2026-10-13T21:33:58.994901+00:00"
+        }
+      },
+      "status": "cleared",
+      "receipt": {
+        "sha256": "b1fcc52785ca8d10701512dc584c3be1b548d812f0d6e53a31e661c0327fd76c",
+        "snapshot": "2026-10-13T21:35:46.128512+00:00"
+      },
+      "row_count": 84,
+      "role_counts": {
+        "Minister": 69,
+        "Parliamentary secretary": 15
+      }
+    }
+  ],
+  "holds": []
+}

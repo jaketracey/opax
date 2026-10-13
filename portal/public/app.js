@@ -20,7 +20,7 @@ const divisionMarkdownReady = import('/division-markdown.js?v=5991511166').then(
 let growthModules;
 const growthModulesReady = import("/growth-modules.js?v=ec5f501ce7").then(module => { growthModules = module; });
 let registerTables;
-const registerTablesReady = import('/register-tables.js?v=fbb4ee58ad').then(module => { registerTables = module; });
+const registerTablesReady = import('/register-tables.js?v=58ad18bbee').then(module => { registerTables = module; });
 let askPerson;
 const askPersonReady = import('/ask-person.js?v=7cb76e395c').then(module => { askPerson = module; });
 let uiLabels;
@@ -4091,6 +4091,19 @@ async function renderDeclaredPage(params, manageFocus) {
 // CC BY-NC-ND). Federal people are keyed by the portrait id; QLD and unmatched
 // members by a name slug the index resolves. The slot is placed synchronously
 // so the section keeps its position however long the fetches take.
+async function renderPersonVicGifts(name, sections, roster) {
+  if (!roster?.representation?.some(r => r.jurisdiction === 'vic')) return;
+  const key = currentSubjectKey, slot = document.createElement('div');
+  sections.appendChild(slot);
+  await Promise.all([personUrlsReady, registerTablesReady]);
+  const path = personUrl(name);
+  const response = await fetch('/api/register/vic-gifts?' + new URLSearchParams({person:path,view:'person'})).catch(() => null);
+  const data = response?.ok ? await response.json().catch(() => null) : null;
+  if (currentSubjectKey !== key || !slot.isConnected || !data?.html) { slot.remove(); return; }
+  slot.innerHTML = data.html;
+  registerTables.hydrateRegisterTables(slot);
+}
+
 async function renderPersonInterests(name, personId, sections, onRecord = () => {}) {
   const key = currentSubjectKey;
   const slot = document.createElement("div");
@@ -5989,6 +6002,7 @@ async function openSubject(kind, name, manageFocus, params = new URLSearchParams
   // Records by the roster's verified pid (none for a print that holds more than one person).
   const voteQuestions = renderPersonVotes(name, roster?.pid ?? null, sections, updateQuestions).then(() => refreshEntryRail(sections));
   const interestQuestions = renderPersonInterests(name, roster?.pid ?? null, sections, updateQuestions).then(() => refreshEntryRail(sections));
+  renderPersonVicGifts(name, sections, roster).then(() => refreshEntryRail(sections));
   Promise.allSettled([topicQuestions, voteQuestions, interestQuestions]).then(() => {
     if (currentSubjectKey === key) body.querySelector(".growth-ask")?.setAttribute("data-questions-ready", "true");
   });

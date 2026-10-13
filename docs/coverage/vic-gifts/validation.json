@@ -1,0 +1,191 @@
+{
+  "checked_at": "2026-10-13T21:51:09.497701+00:00",
+  "branch": "coverage/vic-gifts",
+  "base_sha": "d390b2f94b71f7b4d86db245ae466a49fb6834da",
+  "environment": {
+    "host": "desktop Linux",
+    "node": "v24.21.0",
+    "OPAX_TEST_HOST": "::1",
+    "loopback": "Clean user/network namespace for suite, runtime types and check, as in desktop gate tooling. Browser preview uses IPv6 loopback."
+  },
+  "gates": {
+    "desktop_suite": {
+      "command": "OPAX_TEST_HOST=::1 WRANGLER_SEND_METRICS=false unshare -Urn sh -c <bring loopback up and exec> node --test --test-concurrency=6 test/*.test.mjs",
+      "exit_code": 0,
+      "tests": 1968,
+      "pass": 1968,
+      "fail": 0,
+      "skipped": 0
+    },
+    "tsc": {
+      "command": "npx --no-install tsc --noEmit",
+      "exit_code": 0
+    },
+    "check": {
+      "command": "npm run check, in a clean loopback namespace",
+      "exit_code": 0
+    },
+    "release": {
+      "command": "npm run build:release",
+      "exit_code": 0
+    },
+    "worker_dry_run": {
+      "command": "WRANGLER_SEND_METRICS=false npx --no-install wrangler deploy --dry-run --env ''",
+      "exit_code": 0
+    },
+    "stage_dry_run": {
+      "command": "python3 -m scripts.vic_gifts.stage --dry-run",
+      "exit_code": 0,
+      "staged_files_byte_identical": true
+    },
+    "python": {
+      "command": "python3 -m unittest tests.test_vic_gifts",
+      "exit_code": 0,
+      "tests": 8
+    },
+    "targeted_portal": {
+      "command": "OPAX_TEST_HOST=::1 node --test test/vic-gifts.test.mjs",
+      "exit_code": 0,
+      "tests": 7
+    },
+    "browser": {
+      "command": "node portal/test/vic-gifts-browser.mjs",
+      "exit_code": 0,
+      "widths": [
+        390,
+        1440
+      ],
+      "page_errors": []
+    }
+  },
+  "initial_failed_attempts": [
+    {
+      "gate": "runtime types on host IPv4 loopback",
+      "reason": "Local Miniflare fetch failed; later unmodified CLI passed in the normal desktop clean loopback namespace."
+    },
+    {
+      "gate": "suite before release fixture generation",
+      "tests": 1896,
+      "pass": 1848,
+      "fail": 45,
+      "skipped": 3,
+      "reason": "Ignored search/crawl/hub fixtures absent; final full run passed after release build."
+    }
+  ],
+  "counts": {
+    "periods": 3,
+    "html_pages": 3,
+    "tables": 6,
+    "rows": 282,
+    "roles": {
+      "Minister": 235,
+      "Parliamentary secretary": 47
+    },
+    "linked_rows": 275,
+    "unlinked_rows": 7,
+    "holds": 0,
+    "source_receipts": 8
+  },
+  "production_writes": 0,
+  "pushes": 0,
+  "deploys": 0,
+  "votes_sha256": "a77128dc0e1e1b3fdaa4bf84501e2c94af3125dea3cf0b2dffbc688a49d68546",
+  "code_hashes": {
+    "portal/src/index.ts": "b36a421b7758f02b7e6fd7e76e6e26b8983508b23f18ae2994ad3ea0f1cd4d1d",
+    "portal/src/vic-gifts.ts": "618c669a33fe2174e8284138f2932924062dfc10ae0cb5fd95a3aa327fba513e",
+    "portal/public/register-tables.js": "1926756d1c1a77de60f28b268262240c520656b6b58c4c4ee0f7a9d5a0330511",
+    "portal/public/register-tables-entry.js": "c29952fdd1dcff1f0b693a9645fb8e68e32b93a640ef4fbd8f6a1bdb80c90f3e",
+    "portal/public/app.js": "8da46248efafb83c5e5ab3481b77dd0b2bc8f99e6e4f82c2ea12cd80abb7a1f8",
+    "portal/public/index.html": "f854ce793cd5f9de2d2f78018a97385488f10f957a1a0aac971cb882cca7d279",
+    "portal/public/vic-gifts.css": "3a19e204b428bc8da1e51883f7580cea6a4be4d6958c804aa0f31422625d5ca8",
+    "portal/wrangler.jsonc": "3db98554960e9620473dfc745a1c04273096604792d041e581abce2cd34691f5",
+    "scripts/vic_gifts/acquire.py": "471fd21e7f82e5e04add88629034b6bd8c68334b567a8757dd9c05c32efc4af8",
+    "scripts/vic_gifts/stage.py": "57ca364248b2c26f6a764c9aad119a17fd0135ce1423c9a66e39bf7aeb61ca92",
+    "portal/test/vic-gifts.test.mjs": "f19d6640edb9ef4e812ed4a81dbc0d8b28bd7a6ac5b8519d2cff1c22cabc54ce",
+    "tests/test_vic_gifts.py": "e53fe00ab3bd0f3c8a9c83b5a6a9bfe8b249f21debbc596fed84b2a7ced964b3"
+  },
+  "staged_hashes": {
+    "data/staged/vic-gifts/receipts.json": "5791af1a4e4d20591b6a016eb8f5a409b12d0aba247cfca1f858d9c525746716",
+    "data/staged/vic-gifts/hub.json": "ef0b7067f69d949d4604478c77b33f408b2c977f31aafc83bd54ef31eafba404",
+    "data/staged/vic-gifts/inventory.json": "c60b5dbac4911ea009cd5e492d70ecf0dad1b370e58f57abe5710677885c6e54",
+    "data/staged/vic-gifts/snapshots/a45e306fa5dd8db79b8179acb7dce13a43b8966aa43cdb12c72a198466e82257.html": "a45e306fa5dd8db79b8179acb7dce13a43b8966aa43cdb12c72a198466e82257",
+    "data/staged/vic-gifts/snapshots/5cb3b6ced4808a911fbdd52621263ba8c3ab54eb45fd01c977eb056b12469c0d.html": "5cb3b6ced4808a911fbdd52621263ba8c3ab54eb45fd01c977eb056b12469c0d",
+    "data/staged/vic-gifts/snapshots/5fa7fc97e6a032f531224b7b83270d60ed214ef37f67e16e2ea7be0d098caf4d.txt": "5fa7fc97e6a032f531224b7b83270d60ed214ef37f67e16e2ea7be0d098caf4d",
+    "data/staged/vic-gifts/snapshots/e035f491dd7362a20c701d05774351fc4e69acb0ba468332d7b63668550d1237.html": "e035f491dd7362a20c701d05774351fc4e69acb0ba468332d7b63668550d1237",
+    "data/staged/vic-gifts/snapshots/3284e271b7cbac110ff4fec897df2e442d2374ec5d8a76db8cb778805e778fb5.html": "3284e271b7cbac110ff4fec897df2e442d2374ec5d8a76db8cb778805e778fb5",
+    "data/staged/vic-gifts/snapshots/b1fcc52785ca8d10701512dc584c3be1b548d812f0d6e53a31e661c0327fd76c.html": "b1fcc52785ca8d10701512dc584c3be1b548d812f0d6e53a31e661c0327fd76c",
+    "data/staged/vic-gifts/snapshots/4718a88e1490979dc54292096f003aaa1849edbc110caa8de399b2d4a3b2e8ba.html": "4718a88e1490979dc54292096f003aaa1849edbc110caa8de399b2d4a3b2e8ba",
+    "data/staged/vic-gifts/snapshots/a9e2f65021ea25052a45f0cc72574bcc9549674c89d1dec5b965e63fa09aa7cf.html": "a9e2f65021ea25052a45f0cc72574bcc9549674c89d1dec5b965e63fa09aa7cf",
+    "data/staged/vic-gifts/registers/vic-gifts-2025-02-01_2025-06-30.json": "14af87a6342d394c2b69790f9de74db78e02f2f888a84a1ca9dd393046537f88",
+    "data/staged/vic-gifts/registers/vic-gifts-2026-02-01_2026-06-30.json": "fe0c4d75a8de7bf0d67f43b3e13c7d4d0edc6023761fe468c55940f354105f03",
+    "data/staged/vic-gifts/registers/vic-gifts-2025-07-01_2026-01-31.json": "f41b61c7a7404bd058d42d2022bdd62b0a3f3ad4c08de770124e54a6b21755e2"
+  },
+  "screenshots": {
+    "vic-gifts-1440.png": "f0f5a40df40db583f23896fb250fc82cc37f6d386e0cebdda504062c4560cb06",
+    "vic-gifts-390.png": "f5f22aa59970366adf1a292966fcf7ffe292b1732ca59ccca9e52e576ce4ec54",
+    "vic-gifts-1440-viewport.png": "cc775d2dbf02ee066d99f19b7f5e2b652fc86d48c0f6cbc35bfd2785830e6360",
+    "vic-gifts-390-viewport.png": "cd5ed7dbadc971eb6e1f83320dba4e7a700881e9e59aece99538ae5eecdbfae1"
+  },
+  "local_log_receipts": {
+    "check.log": {
+      "path": ".ops/gate-cache/vic-gifts/check.log",
+      "sha256": "be60d468f72ca0cf92cbd4dfdfee9cbdc48e0170ce583f7126f53206d5d6350a"
+    },
+    "release.log": {
+      "path": ".ops/gate-cache/vic-gifts/release.log",
+      "sha256": "ad3aeec8173dc54a0143ceadda4c76ccff583a8d3516d635e9a019278c293a94"
+    },
+    "stamp.log": {
+      "path": ".ops/gate-cache/vic-gifts/stamp.log",
+      "sha256": "0095f932493c86dd3cba06be3733b58ce759abbcf97fa97c3e846e55a91e614d"
+    },
+    "page-tests.log": {
+      "path": ".ops/gate-cache/vic-gifts/page-tests.log",
+      "sha256": "d07e33d690a01026a389368c76e57090ef62fd20cb7cceef0262a5af4028f677"
+    },
+    "worker-dry-run.log": {
+      "path": ".ops/gate-cache/vic-gifts/worker-dry-run.log",
+      "sha256": "ed52850ba9f082d5a8358c41106406fab6fa094b0396f8bf07e534c08fceb04d"
+    },
+    "parser-tests.log": {
+      "path": ".ops/gate-cache/vic-gifts/parser-tests.log",
+      "sha256": "641490da2cf13ef12655fd6e05640259a05bd62e7b79b211972389869aa6c860"
+    },
+    "register-tests.log": {
+      "path": ".ops/gate-cache/vic-gifts/register-tests.log",
+      "sha256": "3ed4e7f98cc9eea1b48a766e6854bfff18fb4bb324522a0a0a0ca26c5ba90dca"
+    },
+    "desktop-suite-final.log": {
+      "path": ".ops/gate-cache/vic-gifts/desktop-suite-final.log",
+      "sha256": "0b1d9647289064fc8bf1b0d22ff73c0371464b8184e8abb7309af8cbad7762d4"
+    },
+    "tsc-final.log": {
+      "path": ".ops/gate-cache/vic-gifts/tsc-final.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "browser.log": {
+      "path": ".ops/gate-cache/vic-gifts/browser.log",
+      "sha256": "f3c993394d5b4d979ae0e12eb57dc7bbfc968a9f954b1def492b2cf086f5cc7e"
+    },
+    "tsc.log": {
+      "path": ".ops/gate-cache/vic-gifts/tsc.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "types.log": {
+      "path": ".ops/gate-cache/vic-gifts/types.log",
+      "sha256": "4d0d99f0850b2a57f83642e45f359a246dd62a5c691521785d8e706c5aec15f6"
+    },
+    "npm.log": {
+      "path": ".ops/gate-cache/vic-gifts/npm.log",
+      "sha256": "72c23698a475fbae4d02a9ed67dd4b50db6cade8c12a764f771e695a98554f19"
+    },
+    "desktop-suite.log": {
+      "path": ".ops/gate-cache/vic-gifts/desktop-suite.log",
+      "sha256": "97bd78f55e0b9a2fbcd0056cb9cf0c1cc089332c01a54d5ed790dfb88e1cf08f"
+    },
+    "stage-dry-run.log": {
+      "path": ".ops/gate-cache/vic-gifts/stage-dry-run.log",
+      "sha256": "0e8010468edded7fb47a13653f9d318b57a574614302e6973c364a98544b8bab"
+    }
+  }
+}
