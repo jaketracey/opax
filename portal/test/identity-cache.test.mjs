@@ -78,8 +78,13 @@ test('every module that loads identity files itself is content-stamped where it 
         refs++;
         assert.equal(url.replace(/^\.\//,'/'), `/${mod}?v=${hash}`, `${file} imports ${mod} without its current stamp: run node scripts/stamp_assets.mjs`);
       }
+      // Dynamic imports may share one stamped URL constant across callers.
+      for (const [, name, url] of src.matchAll(new RegExp(`\\bconst\\s+(\\w+)\\s*=\\s*["'\`](\\.?/${mod.replace('.', '\\.')}[^"'\`]*)["'\`]`, 'g'))) {
+        if (!new RegExp(`\\bimport\\(\\s*${name}\\s*\\)`).test(src)) continue;
+        refs++;
+        assert.equal(url.replace(/^\.\//,'/'), `/${mod}?v=${hash}`, `${file} imports ${mod} through ${name} without its current stamp`);
+      }
     }
     assert.ok(refs >= 1, `${importer} imports /${mod}`);
   }
 });
-
