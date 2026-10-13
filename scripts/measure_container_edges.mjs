@@ -6,7 +6,8 @@
 //   header    the masthead .wrap's content box (logo left edge to the header's right edge);
 //   container the page's panel (or, for Worker-rendered pages, its .wrap) content box;
 //   content   the drawn extent of the page: text, rules, backgrounds, media;
-//   capped    blocks left-aligned in the column but held narrower by a max-width.
+//   capped    blocks left-aligned in the column but held narrower by a max-width;
+//   title     the top of the page's visible h1, to compare where each page's title opens.
 // A container that differs from the header by more than 4px, or a capped block,
 // is flagged. Running text (an essay, a speech, a lede) is meant to keep its
 // reading measure, so read the capped list rather than treating it as a failure;
@@ -73,7 +74,8 @@ const MEASURE = `(() => {
     if (el.parentElement && el.parentElement.getBoundingClientRect().width < colW - 4) continue; // the outermost cap only
     capped.push(el.tagName.toLowerCase() + (el.id ? '#' + el.id : '') + '.' + String(el.className).trim().split(/\\s+/).slice(0, 2).join('.') + ' ' + Math.round(b.left) + '–' + Math.round(b.right) + ' (max ' + cs.maxWidth + ')');
   }
-  return { H, C, X: Number.isFinite(L) ? { l: Math.round(L), r: Math.round(R) } : null, capped: [...new Set(capped)].slice(0, 6) };
+  const h1 = [...main.querySelectorAll('h1')].find((el) => vis(el) && !skip(el));
+  return { H, C, X: Number.isFinite(L) ? { l: Math.round(L), r: Math.round(R) } : null, T: h1 ? Math.round(h1.getBoundingClientRect().top + scrollY) : null, capped: [...new Set(capped)].slice(0, 6) };
 })()`
 
 const chromePath = process.env.CHROME || '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome'
@@ -109,14 +111,14 @@ let mismatches = 0
 try {
   for (let t = 0; t < 50; t++) { try { await fetch(`http://127.0.0.1:${port}/json/version`); break } catch { await sleep(200) } }
   const edge = (o) => (o ? `${o.l}–${o.r}` : '—')
-  console.log(['page', 'width', 'header', 'container', 'content', 'flag', 'capped'].join('\t'))
+  console.log(['page', 'width', 'header', 'container', 'content', 'title', 'flag', 'capped'].join('\t'))
   for (const [name, path] of PAGES.filter(([name]) => !only.length || only.includes(name))) {
     for (const width of widths) {
       const m = await measure(new URL(path, base).href, width).catch((e) => ({ error: e.message }))
       if (!m || m.error) { console.log([name, width, 'error', m?.error || 'no result'].join('\t')); continue }
       const off = m.H && m.C ? Math.max(Math.abs(m.H.l - m.C.l), Math.abs(m.H.r - m.C.r)) : 0
       if (off > 4) mismatches++
-      console.log([name, width, edge(m.H), edge(m.C), edge(m.X), (off > 4 ? 'CONTAINER≠HEADER ' : '') + (m.capped.length ? 'capped' : ''), m.capped.join('; ')].join('\t'))
+      console.log([name, width, edge(m.H), edge(m.C), edge(m.X), m.T ?? '—', (off > 4 ? 'CONTAINER≠HEADER ' : '') + (m.capped.length ? 'capped' : ''), m.capped.join('; ')].join('\t'))
     }
   }
 } finally {

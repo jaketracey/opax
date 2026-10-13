@@ -35,7 +35,7 @@ const noOverflow=async page=>assert.equal(await page.evaluate(()=>document.docum
 for(const width of [320,390,768,1280]){
  const f=await fixture(width),p=f.page;
  await noOverflow(p);
- assert.equal(await p.locator('.setup-intro').evaluate(el=>getComputedStyle(el).backgroundColor),'rgba(0, 0, 0, 0)');
+ assert.equal(await p.locator('#community-content > .ui-page-head').evaluate(el=>getComputedStyle(el).backgroundColor),'rgba(0, 0, 0, 0)');
  await p.screenshot({path:join(tmpdir(),`opax-tools-before-${browserType}-${width}.png`),fullPage:true});
  await p.getByRole('radio',{name:'Claude Code',exact:true}).focus();
  await p.keyboard.press('ArrowRight');
