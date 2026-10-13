@@ -1,4 +1,5 @@
 import type { AgenticPayload } from './agentic-ask'
+import { isElectorateDataQuestion } from './agentic-tool-electorates'
 
 /** Adapt numbered tool facts to the existing Ask source ranges and renderer. */
 export function agenticAskPayload(run: AgenticPayload, question: string) {
@@ -48,7 +49,7 @@ export function agenticAskPayload(run: AgenticPayload, question: string) {
     answer: run.answered ? answer : '',
     citations: run.answered ? citations : {},
     sources: run.answered ? sources.filter(s => s.cited) : [],
-    followups: run.answered && followup ? [{ label: followup, question: followup, kind: 'speech' }] : [],
+    followups: run.answered && followup && !isElectorateDataQuestion(question) ? [{ label: followup, question: followup, kind: 'speech' }] : [],
     agentic: { steps: run.events, ms: run.timings.total_ms },
   }
 }
