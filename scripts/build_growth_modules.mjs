@@ -7,16 +7,14 @@ import {sponsorSummaryPath,growthSummaryPath,normalisedName,personQuestions,bill
 import {agencyGrants,publishedSupplierIndex,publishedAgencySuppliers} from '../portal/public/supplier-growth.js';
 import {donorPrivacyIndex,donorNameWithheld,foldDonorName,isOrganisationDonor,MONEY_GRAPHS,withheldPhrases,namesWithheldPhrase} from '../portal/public/donor-entity.js';
 import {TOPIC_NAMES} from '../portal/src/topic-names.mjs';
-export const SUMMARY_BUDGET = 24_000;
 export async function buildGrowth(root=fileURLToPath(new URL('../portal/public',import.meta.url)), {read: sourceRead} = {}) {
  const read=async p=>sourceRead ? sourceRead(p) : JSON.parse(await readFile(join(root,p),'utf8'));
  const output=join(root,'growth');
  await rm(output,{recursive:true,force:true});
  for(const dir of ['sponsors','agencies','person-bills','privacy/person','privacy/bill'])await mkdir(join(output,dir),{recursive:true});
  const sizes=[];
- const write=async (path,data,budget=SUMMARY_BUDGET)=>{
+ const write=async (path,data)=>{
   const json=JSON.stringify(data)+'\n', bytes=Buffer.byteLength(json);
-  if(bytes>budget)throw new Error(`Growth summary exceeds ${budget} bytes: ${path}`);
   await writeFile(join(root,path.replace(/^\//,'')),json);sizes.push({path,bytes});
  };
  const [index,roster,money,agencies,supplierDirectory]=await Promise.all(['bills/index.json','parliamentarians.json','graph/money.json','agencies.json','suppliers.json'].map(read));

@@ -100,12 +100,33 @@ export function saGenerationContext(body: Data, retrieved: Data, flag: string | 
 
 type Call = (path: string, body: Data, stream: boolean) => Promise<Response>
 
+/** Only a mandatory, known non-SA jurisdiction clause proves this scope safe.
+ * Unknown scopes, ORs containing SA, prior queries and supplied context keep
+ * the retrieval-first safeguard. A speaker's name alone proves nothing.
+ */
+export function nonSaGenerationScope(body: Data): boolean {
+  if (Array.isArray(body.extra_context) && body.extra_context.length || body.prequeries ||
+      Array.isArray(body.chat_history) && body.chat_history.length) return false
+  // Prior resource queries have their own scope and can retrieve SA material
+  // even when the main request is restricted to another jurisdiction.
+  if (Array.isArray(body.rag_strategies) && body.rag_strategies.some(strategy =>
+      !['neighbouring_paragraphs','metadata_extension'].includes(String(object(strategy).name)))) return false
+  const excludesSa = (value: unknown): boolean => {
+    const node = object(value)
+    if (Array.isArray(node.and)) return node.and.some(excludesSa)
+    if (Array.isArray(node.or)) return node.or.length > 0 && node.or.every(excludesSa)
+    return node.prop === 'label' && node.labelset === 'state' &&
+      ['federal','nsw','vic','qld','wa','tas','act','nt'].includes(String(node.label))
+  }
+  return excludesSa(object(body.filter_expression).field)
+}
+
 /** Retrieve with generation disabled, then cap before the Predict model call.
  * Non-SA and flag-on calls use the existing /ask request/response unchanged.
  * Predict /chat takes explicit query_context and performs no KB retrieval.
  */
 export async function saGenerationResponse(body: Data, flag: string | undefined, call: Call, stream: boolean): Promise<Response> {
-  if (saFullText(flag) || body.generate_answer === false) return call('/ask',body,stream)
+  if (saFullText(flag) || body.generate_answer === false || nonSaGenerationScope(body)) return call('/ask',body,stream)
   const found = await call('/ask',{...body,generate_answer:false,debug:true},false)
   if (!found.ok) return found
   const retrieved = await found.json() as Data

@@ -20,7 +20,7 @@ def main():
     if errors:
         print("FRL RELEASE HELD: " + "; ".join(errors), file=sys.stderr)
         return 1
-    print("FRL RELEASE OK: complete catalogue reconciled and within budget")
+    print("FRL RELEASE OK: complete catalogue reconciled")
     return 0
 
 
