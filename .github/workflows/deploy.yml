@@ -34,6 +34,10 @@ on:
         description: "Skip the test suite (emergency only: a data refresh is blocked by a red test)"
         type: boolean
         default: false
+      gate_receipt:
+        description: "Trusted full gate receipt JSON exported by gate-cache.mjs for this exact main tree"
+        type: string
+        default: ""
 
 concurrency:
   group: deploy-production
@@ -50,6 +54,9 @@ jobs:
     if: ${{ github.event_name != 'push' || github.actor != 'github-actions[bot]' }}
     runs-on: ubuntu-latest
     timeout-minutes: 60
+    env:
+      OX_GATE_REMOTE: ${{ vars.OX_GATE_REGISTRY_HOST || '0' }}
+      OX_HEAVY_HOST: ${{ vars.OX_GATE_REGISTRY_HOST || 'desktop' }}
     defaults:
       run:
         working-directory: portal
@@ -63,20 +70,59 @@ jobs:
       - name: Set up Node 24
         uses: actions/setup-node@v4
         with:
-          node-version: 24
+          node-version: 24.21.0
           cache: npm
           cache-dependency-path: portal/package-lock.json
 
       - name: Install
         run: npm ci
 
+      # Capture source identity before release writers modify generated assets.
+      - name: Capture gate identity
+        id: gate
+        working-directory: .
+        run: |
+          mkdir -p .ops/gate-cache
+          node .ops/tools/gate-cache.mjs identity --out .ops/gate-cache/ci-identity.json
+          node --input-type=module -e 'import {readFileSync,appendFileSync} from "node:fs"; const id=JSON.parse(readFileSync(".ops/gate-cache/ci-identity.json")); appendFileSync(process.env.GITHUB_OUTPUT,"key="+id.key+"\n");'
+
+      - name: Restore exact full gate receipt
+        if: ${{ !inputs.skip_tests }}
+        uses: actions/cache/restore@v4
+        with:
+          path: .ops/gate-cache/${{ steps.gate.outputs.key }}.json
+          key: opax-full-gate-v2-${{ steps.gate.outputs.key }}
+
+      - name: Configure desktop registry connection
+        if: ${{ !inputs.skip_tests && env.OX_GATE_REMOTE != '0' }}
+        working-directory: .
+        env:
+          GATE_SSH_KEY: ${{ secrets.OX_GATE_SSH_KEY }}
+          GATE_KNOWN_HOSTS: ${{ secrets.OX_GATE_KNOWN_HOSTS }}
+        run: |
+          test -n "$GATE_SSH_KEY" && test -n "$GATE_KNOWN_HOSTS"
+          install -d -m 700 "$HOME/.ssh"
+          printf '%s\n' "$GATE_SSH_KEY" > "$HOME/.ssh/id_ed25519"
+          chmod 600 "$HOME/.ssh/id_ed25519"
+          printf '%s\n' "$GATE_KNOWN_HOSTS" > "$HOME/.ssh/known_hosts"
+
+      - name: Reuse or obtain one authoritative full pass
+        if: ${{ !inputs.skip_tests }}
+        working-directory: .
+        env:
+          OX_GATE_RECEIPT_JSON: ${{ inputs.gate_receipt }}
+        run: bash .ops/tools/ci-gates.sh
+
+      - name: Save exact full gate receipt
+        if: ${{ !inputs.skip_tests }}
+        uses: actions/cache/save@v4
+        with:
+          path: .ops/gate-cache/${{ steps.gate.outputs.key }}.json
+          key: opax-full-gate-v2-${{ steps.gate.outputs.key }}
+
       # Use the same complete asset pipeline as a local deploy.
       - name: Build and sanitise all release assets
         run: npm run build:release
-
-      - name: Test
-        if: ${{ !inputs.skip_tests }}
-        run: npm test
 
       - name: Types
         run: npx wrangler types && npx tsc --noEmit

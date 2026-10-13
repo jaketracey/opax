@@ -44,12 +44,13 @@ baseline assets. The full release build remains a merge/pre-deploy gate.
 Passes live in ignored `.ops/gate-cache/`, keyed by the snapshot's `git write-tree`
 hash, exact Node version and SHA-256 of `portal/package-lock.json`. Snapshots
 include staged, unstaged and new non-ignored source without changing the lane's
-index. Cache reuse requires an empty `git status --porcelain --untracked-files=all`;
-tracked changes, staged changes and untracked source always bypass it, even if a
-matching pass exists. A dirty caller forces a fresh desktop run rather than
-letting its clean disposable checkout reuse a pass. Dirty callers do not save
-reusable local passes. A change during a run invalidates its pass. The captured base SHA is used
-for selection and votes checks; no gate fetches or advances main mid-run.
+index. Changing an untracked source file's contents changes the key (covered by
+runner regressions). Identical dirty inputs can reuse a full pass; a tracked,
+staged or untracked content edit invalidates it. Ignored dependencies, credentials
+and gate-cache outputs are excluded from both the snapshot and desktop transfer.
+A change to the tree, lockfile, Node or runner during execution invalidates its pass.
+The captured base SHA is used for selection and votes checks; no gate fetches or
+advances main mid-run.
 The runner-source hash also invalidates passes if shared gate tooling changes.
 Narrow lanes cache generated search fixtures by export/source/script JSON blob hashes, the
 catalogue builder's transitive imports, Node, lockfile and runner source. Cached
@@ -78,14 +79,57 @@ Linux runtime/type/test steps use an isolated user/network namespace with a clea
 loopback (`unshare -Urn`), leaving host interfaces and other jobs alone. Runtime
 types are checked before the expensive release build so runner failures fail early.
 
+Full passes are shared through the desktop's `~/opax-work/gate-cache/`. Mac
+full runs publish a compact receipt atomically; desktop runs return the same
+receipt, and Mac reviews pull it before entering either heavy queue. The receipt
+binds the exact tree, Node 24.21.0, lockfile and runner hash, plus the full file
+inventory, successful steps and zero failed/cancelled/skipped cases. Partial,
+incomplete or mismatched receipts cannot satisfy a full gate. Same-tree commits
+with different messages reuse the pass. Desktop runs verify the transferred
+identity before any builds. A separate per-key claim under `gate-cache/claims/`
+prevents simultaneous connected Mac/desktop full runs from duplicating a pass:
+wait, then check again. Claims use the desktop owner PID, clear only dead owners
+and release on EOF; neither existing heavy lock changes. `--force` and `profile`
+explicitly request fresh measurement.
+
+CI uses the same Node patch and receipt verifier before its local release build.
+The release build still supplies the deploy runner's local assets and its existing
+privacy/security deploy guard. CI saves receipts in an exact-key Actions cache
+(no partial restore keys), so repeated CI jobs reuse their full pass. The deploy
+job stays on `ubuntu-latest`.
+
+For a release orchestrator handing an existing pass to CI (commands prepare
+inputs; they do not start a deployment):
+
+```sh
+node .ops/tools/gate-cache.mjs pull
+node .ops/tools/gate-cache.mjs verify
+node .ops/tools/gate-cache.mjs export .ops/gate-cache/release-pass.json
+node --input-type=module -e 'import {readFileSync,writeFileSync} from "node:fs"; writeFileSync(".ops/gate-cache/deploy-inputs.json",JSON.stringify({gate_receipt:readFileSync(".ops/gate-cache/release-pass.json","utf8"),skip_tests:false}));'
+```
+
+Supply `deploy-inputs.json` to the existing dispatch's JSON input after the
+candidate is on main. A different merge tree is rejected and needs its own gate.
+To connect hosted CI automatically, set repository variable
+`OX_GATE_REGISTRY_HOST` to the SSH-reachable desktop host (optionally user@host),
+and Actions secrets `OX_GATE_SSH_KEY` and `OX_GATE_KNOWN_HOSTS`. Then CI pulls
+existing desktop/Mac passes and routes cache misses to the desktop under the same
+heavy lock and per-tree claim. No such secrets or hosted runner were provisioned
+by this lane. Without the connection, provide the receipt for a previously tested
+candidate; CI cache misses without a receipt obtain their own full pass.
+The trusted dispatch and registry must remain restricted to release maintainers;
+receipts contain no credentials or fixture output. `OX_GATE_REMOTE=0` explicitly
+uses only the local cache (for offline/fixture work); connected full gates require
+the desktop claim to guarantee one authoritative run.
+
 Migration: install the versioned `.ops/tools/` scripts beside the existing shared
 wrapper after its script tests pass, retaining an `ox-heavy.sh.pre-desktop` backup.
 Replace the wrapper by renaming a prepared temporary copy into place atomically.
 Already-running jobs retain their existing owner PID/lock and finish normally.
 Make new desktop heavy jobs use this wrapper; older manually started desktop
 jobs must finish before benchmarking the new runner. Roll back the wrapper from
-the backup without removing or altering a live lock. Deploy scripts/workflows do
-not change. The only Git transfer is to the desktop's gate ref, never upstream.
+the backup without removing or altering a live lock. The only Git transfer is to
+the desktop's gate ref, never upstream. No deploy command moves to the desktop.
 
 For profiling, all runs are niced and use a whole-file Node reporter (includes
 fixture setup and hooks):
@@ -107,7 +151,9 @@ idle-host speed recommendation. All gates remain at nice level 10.
 
 Full-suite privacy and MCP coverage is mandatory. Retired donor-policy assertions
 are replaced by the confident-match lane together with its production classifier;
-gate-speed must not remove them ahead of that integration. Check
+gate-speed must not remove them ahead of that integration. The donor-matcher
+removal lane may retire its withholding-only test files when those deletions are
+integrated; every remaining donor/privacy/table test stays mandatory. Check
 `web/donor-withhold` and `briefs/donor-confident-match-r4.md` before changing that
 coverage. Feature tests are retired only once the removal is present on main.
 The committed confident-match implementation is on `web/donor-failclosed`
