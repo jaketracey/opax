@@ -3159,6 +3159,7 @@ async function warmCatalog(env: Env, ctx: ExecutionContext): Promise<void> {
     const refreshes = [
       () => apiStats(env, ctx, true),
       () => apiTopics(env, ctx, true),
+      () => apiParties(env, ctx, true),
       ...[...TOPIC_SLUGS].map(slug => () => apiTopic(slug, env, ctx, true)),
     ]
     for (const refresh of refreshes) {
@@ -3202,22 +3203,21 @@ async function apiTopics(env: Env, ctx: ExecutionContext, refresh = false): Prom
  * whole speeches and `labelled` (the bare labelset filter's total) is their
  * honest denominator. Cached 10 minutes like /api/topics.
  */
-async function apiParties(env: Env, ctx: ExecutionContext): Promise<Response> {
+async function apiParties(env: Env, ctx: ExecutionContext, refresh = false): Promise<Response> {
+  const wait = refresh ? AGGREGATE_WARM_TIMEOUT_MS : AGGREGATE_UPSTREAM_TIMEOUT_MS
   return cachedJson('/api/parties', async () => {
-    const [facetedRes, anyRes] = await Promise.all([
-      aggregateFetch(env, `/catalog?faceted=${PARTY_FACET}&page_size=0`),
-      aggregateFetch(env, `/catalog?filters=${PARTY_FACET}&page_size=0`),
-    ])
-    if (!facetedRes.ok || !anyRes.ok) return json({ error: 'catalog failed' }, 502)
+    // One faceted read. A speech carries at most one party label, so the facet counts sum to the labelled
+    // total; the bare `filters=` total stopped returning once the corpus passed ~1M resources (14 Oct).
+    const facetedRes = await aggregateFetch(env, `/catalog?faceted=${PARTY_FACET}&page_size=0`, undefined, wait)
+    if (!facetedRes.ok) return json({ error: 'catalog failed' }, 502)
     const faceted = (await facetedRes.json()) as CatalogPage
-    const any = (await anyRes.json()) as CatalogPage
     const facet = faceted.fulltext?.facets?.[PARTY_FACET] ?? {}
     const parties = Object.entries(facet)
       .map(([path, count]) => ({ label: path.slice(`${PARTY_FACET}/`.length), count }))
       .filter((p) => p.label && p.count > 0)
       .sort((a, b) => b.count - a.count || a.label.localeCompare(b.label))
-    return json({ labelled: any.fulltext?.total ?? 0, parties })
-  }, ctx)
+    return json({ labelled: parties.reduce((sum, p) => sum + p.count, 0), parties })
+  }, ctx, 600, refresh)
 }
 
 /**
