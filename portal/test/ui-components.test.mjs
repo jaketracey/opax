@@ -387,7 +387,7 @@ test('the Ask launcher is a header icon, never a pill floating over the page', (
   assert.match(nav, /location\.pathname !== '\/' && !document\.querySelector\('script\[src\^="\/app\.js"\]'\)/);
   assert.match(nav, /<a class="chat-launcher" href="\/ask"><svg[^`']*<span>Ask OPAX<\/span><\/a>/);
   assert.doesNotMatch(style + app, /assistant-ready/);
-  assert.match(app, /\$\("header-search-open"\)\.before\(\$\("chat-launcher"\)\);/);
+  assert.match(app, /\$\("header-search-panel"\)\.after\(\$\("chat-launcher"\)\);/);
   assert.doesNotMatch(app, /home\.after\(launcher\)/);
   // The dock no longer leaves room above a pill.
   assert.match(style, /html\[data-chat="docked"\] #panel-chat \{\n  position: fixed; z-index: 70;\n  right: max\(20px, env\(safe-area-inset-right, 0px\)\);\n  bottom: max\(18px, env\(safe-area-inset-bottom, 0px\)\);/);

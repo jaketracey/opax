@@ -1,6 +1,6 @@
-import {isUnnamedAggregate} from './donor-views.js?v=77470b1d26';
+import {isUnnamedAggregate} from './donor-views.js?v=4fcbbb78cf';
 import {donorPrivacyIndex,donorNameWithheld} from './donor-entity.js?v=ebb2c972d5';
-import {loadDonorViewIndex} from './donor-views.js?v=77470b1d26';
+import {loadDonorViewIndex} from './donor-views.js?v=4fcbbb78cf';
 import {subjectUrl} from './canonical-urls.js?v=225d5915ea';
 /*
  * The record quiz — a MindMaze-spirited quiz over OPAX's real data.

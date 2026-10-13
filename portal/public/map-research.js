@@ -1,5 +1,5 @@
 import {donorPrivacyIndex,donorNameWithheld} from './donor-entity.js?v=ebb2c972d5';
-import {donorsNotNamedDetail,withheldDonorTotals,unnamedDonorLabel} from './donor-views.js?v=77470b1d26';
+import {donorsNotNamedDetail,withheldDonorTotals,unnamedDonorLabel} from './donor-views.js?v=4fcbbb78cf';
 import { readMoneyFilters, moneyTotals, moneyRecordsCSV, moneyFlowType } from './money-records.js?v=ia-ux-20260908-2';
 import { shortMoney } from './format.js';
 const esc = value => String(value ?? '').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));

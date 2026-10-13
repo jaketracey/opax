@@ -2,8 +2,8 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync, readdirSync } from 'node:fs';
 import { execFileSync } from 'node:child_process';
-import { runInNewContext } from 'node:vm';
 import { build } from 'esbuild';
+import { JSDOM } from 'jsdom';
 import { instrumentCrawlEntries, addInstrumentDiscovery, llmsText, sitemapFiles } from '../../scripts/build_crawl_catalog.mjs';
 import { catalogueComplete, reconciledCounts, filterInstruments, unpack } from '../public/instruments.js';
 import { instrumentPage, instrumentReader } from '../src/instruments.ts';
@@ -186,23 +186,28 @@ test('missing and incomplete catalogues omit sitemap type and llms discovery', (
   assert.match(llmsText(corpus,grants,manifest),/https:\/\/opax.com.au\/instruments/);
 });
 
-test('navigation reads only the tiny readiness flag and preserves menus', async () => {
+test('navigation reads only the tiny readiness flag and reveals the link only when the catalogue is ready', async () => {
   const source=readFileSync(new URL('navigation.js',root),'utf8');
   const ready=json('instruments/ready.json');
   for(const m of [null,{...ready,complete:false},{...ready,complete:'true'},{...ready,unresolved_gap:11},
     {...ready,drift:51},{...ready,tail_sweep:{...ready.tail_sweep,complete:false}},ready]) {
-    const inserted=[];
-    const bills={closest(){return this},insertAdjacentHTML(where,html){inserted.push(html)}};
-    const desktop={innerHTML:'',querySelector(){return bills}},mobile={innerHTML:'',querySelector(){return bills}};
+    const dom=new JSDOM('<header class="site-header"><nav id="primary-nav"><ul class="nav-list"></ul></nav></header><dialog id="nav-drawer"><nav class="sheet-nav"></nav></dialog><footer><nav id="footer-index"></nav></footer>',{url:'https://opax.test/bills',runScripts:'outside-only'});
+    const {window}=dom;
     const requested=[];
-    const context={URLSearchParams,location:{pathname:'/',search:''},document:{querySelector(s){return s.includes('primary-nav')?desktop:mobile},querySelectorAll(){return []}},fetch:async path=>{requested.push(path);return {ok:m!==null,json:async()=>m}}};
-    runInNewContext(source,context);
-    await context.OpaxNavigation.instrumentsReady;
+    window.fetch=async path=>{requested.push(path);return {ok:m!==null,json:async()=>m}};
+    window.matchMedia=()=>({matches:false,addEventListener(){}});
+    window.eval(source);
+    const links=()=>[...window.document.querySelectorAll('a[href="/instruments"]')];
+    // Drawn menus carry no address for the catalogue until its flag passes.
+    assert.equal(links().length,0);
+    await window.OpaxNavigation.instrumentsReady;
     assert.deepEqual(requested,['/instruments/ready.json']);
-    assert.doesNotMatch(desktop.innerHTML,/href="\/instruments"/);
-    assert.equal(inserted.length,m===ready?2:0);
-    assert.equal(context.OpaxNavigation.sections.some(s=>s.id==='instruments'),m===ready);
-    if(m===ready) assert.ok(inserted.every(s=>s.includes('href="/instruments"')));
+    // Revealed in place: the menu bar's panel, the sheet and the footer index.
+    assert.equal(links().length,m===ready?3:0);
+    assert.ok(links().every(a=>a.closest('li').hidden===false));
+    assert.equal(window.document.querySelectorAll('[data-gate-slot="instruments"]').length,m===ready?0:3);
+    assert.ok(window.document.querySelector('#primary-nav [data-nav-trigger="parliament"]'),'the menus were drawn and kept');
+    window.close();
   }
 });
 

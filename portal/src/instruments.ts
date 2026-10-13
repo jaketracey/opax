@@ -3,6 +3,7 @@ import { catalogueReader } from './catalogue-reader.mjs'
 import { sourceLineHTML } from '../public/labels.js'
 import { shortDate } from '../public/format.js'
 import type { Crumb } from './seo-content'
+import { trail } from './nav-model.mjs'
 
 interface Attribution { source: string; source_url: string; licence_url: string; dated: string; changes: string; exceptions: string; endorsement: string }
 interface Manifest {
@@ -32,7 +33,6 @@ export const words = (v: unknown) => clean(v).split(' · ').map(part => WORDS[pa
 const date = (v: string | null) => v ? esc(shortDate(v)) : ''
 export const instrumentReader = catalogueReader
 const REGISTER = 'Federal Register of Legislation'
-const INDEX_CRUMB: Crumb = { label: 'Instruments', href: '/instruments' }
 
 /** One source line for the catalogue: the date of the export, the Register, and
  *  the attribution the CC BY licence asks for in its sheet. */
@@ -50,10 +50,10 @@ function select(label: string, key: string, values: string[], url: URL, unknown 
 const facts = (rows: [string, string][]) => `<dl class="ui-kv instrument-facts" data-stack="phone">${rows.filter(([, v]) => v).map(([k, v]) => `<div><dt>${k}</dt><dd>${v}</dd></div>`).join('')}</dl>`
 
 export async function instrumentPage(id: string | null, url: URL, read: Read, block: Block) {
-  const missing = () => ({ title: 'Instrument not found · OPAX', description: 'No instrument metadata is available for this FRL id.', status: 404, prerender: block('Instrument not found', 'No instrument metadata is available for this FRL id.', '', [INDEX_CRUMB, { label: 'Not found' }]) })
+  const missing = () => ({ title: 'Instrument not found · OPAX', description: 'No instrument metadata is available for this FRL id.', status: 404, prerender: block('Instrument not found', 'No instrument metadata is available for this FRL id.', '', trail('/instruments', 'Not found')) })
   if (id === null && url.pathname.replace(/\/+$/, '') !== '/instruments') return missing()
   if (id !== null && !FRL_ID.test(id)) return missing()
-  const unavailable = () => ({ title: 'Instrument catalogue not yet available · OPAX', description: 'Instrument metadata is not yet available.', status: 404, prerender: block('Instrument catalogue not yet available', 'Instrument metadata is not yet available.', '', [{ label: 'Instruments' }]) })
+  const unavailable = () => ({ title: 'Instrument catalogue not yet available · OPAX', description: 'Instrument metadata is not yet available.', status: 404, prerender: block('Instrument catalogue not yet available', 'Instrument metadata is not yet available.', '', trail('/instruments')) })
   try {
     const manifest = await read<Manifest>('/instruments/manifest.json')
     if (!catalogueComplete(manifest)) return unavailable()
@@ -78,7 +78,7 @@ export async function instrumentPage(id: string | null, url: URL, read: Read, bl
         'The Register’s in-force listing includes instruments made but not yet commenced. A version’s start date is not the same as commencement; a date the Register does not supply is left out.',
       ]
       return { title: 'Federal legislative instruments · OPAX', description, status: 200,
-        prerender: block('Federal legislative instruments', description, '', [{ label: 'Instruments' }]) + `<section class="wrap instrument-content">${form}${list}${pagination}${sourceLine(manifest, [], notes)}</section>` }
+        prerender: block('Federal legislative instruments', description, '', trail('/instruments')) + `<section class="wrap instrument-content">${form}${list}${pagination}${sourceLine(manifest, [], notes)}</section>` }
     }
     const chunk = manifest.lookup[id]
     if (!Number.isInteger(chunk) || !manifest.chunks[chunk]) return missing()
@@ -108,6 +108,6 @@ export async function instrumentPage(id: string | null, url: URL, read: Read, bl
       'Registered is the as-made registration date. A version’s start date is not necessarily when the whole instrument commenced. In force can include an instrument made but not yet commenced.',
       'No repeal, supersession or disallowance relationships are inferred.']
     return { title: `${r.name} · OPAX`, description, status: 200,
-      prerender: block(r.name, meta, '', [INDEX_CRUMB, { label: r.name }]) + `<section class="wrap instrument-content">${dates}<p class="instrument-out"><a href="${esc(authoritative)}" rel="noopener">Authoritative text on the Federal Register of Legislation ↗</a></p>${r.hasCommencedUnincorporatedAmendments ? '<p>The Register records commenced amendments that are not yet incorporated in this text.</p>' : ''}${r.publishComments ? `<section class="ui-section instrument-section"><h2 class="ui-section-title">Publisher comments</h2><p>${esc(r.publishComments)}</p></section>` : ''}<div class="instrument-disclosures">${versions}<details class="ui-disclosure instrument-disclosure"><summary>Source metadata</summary><div class="ui-disclosure-body"><pre>${esc(JSON.stringify(r, null, 2))}</pre></div></details></div>${sourceLine(manifest, [], notes)}</section>` }
+      prerender: block(r.name, meta, '', trail('/instruments', r.name)) + `<section class="wrap instrument-content">${dates}<p class="instrument-out"><a href="${esc(authoritative)}" rel="noopener">Authoritative text on the Federal Register of Legislation ↗</a></p>${r.hasCommencedUnincorporatedAmendments ? '<p>The Register records commenced amendments that are not yet incorporated in this text.</p>' : ''}${r.publishComments ? `<section class="ui-section instrument-section"><h2 class="ui-section-title">Publisher comments</h2><p>${esc(r.publishComments)}</p></section>` : ''}<div class="instrument-disclosures">${versions}<details class="ui-disclosure instrument-disclosure"><summary>Source metadata</summary><div class="ui-disclosure-body"><pre>${esc(JSON.stringify(r, null, 2))}</pre></div></details></div>${sourceLine(manifest, [], notes)}</section>` }
   } catch { return unavailable() }
 }

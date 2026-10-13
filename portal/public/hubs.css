@@ -9,7 +9,7 @@
 .hub-page h5 { font: var(--type-label); color: var(--ink-soft); margin: var(--space-block) 0 var(--space-tight); }
 .hub-page p { max-width: 46rem; }
 .hub-page a { overflow-wrap: anywhere; }
-.hub-trail, .hub-meta, .hub-date { color: var(--ink-soft); font: var(--type-metadata); }
+.hub-meta, .hub-date { color: var(--ink-soft); font: var(--type-metadata); }
 .hub-page .ui-page-head > .ui-source { margin-top: var(--space-row); }
 .hub-page .ui-section > .ui-source { margin-top: var(--space-block); }
 
