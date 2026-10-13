@@ -20,7 +20,7 @@ import {donorDisclosure,returnReference,type DonorDisclosureRecord} from '../pub
  */
 import { askToolSpecs, getAskTool, validRegisteredArgs, TOOL_REGISTRY_VERSION } from './tools'
 import type { ToolEnv } from './tools'
-export const AGENTIC_TOOLS_VERSION = 'agentic-tools-4/' + TOOL_REGISTRY_VERSION
+export const AGENTIC_TOOLS_VERSION = 'agentic-tools-5-research/' + TOOL_REGISTRY_VERSION
 
 export const TOPICS = [
   'gambling', 'financial-services', 'mining-energy', 'climate-environment', 'property-construction', 'housing', 'health',

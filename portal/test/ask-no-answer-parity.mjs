@@ -1,3 +1,4 @@
+// Rollback-only pin: RESEARCH_LOOP=off. Route answers intentionally change.
 // Offline gate against origin/main. Preserve all successful response bytes,
 // allowing only the additive answered:true field required by this lane.
 import assert from 'node:assert/strict';
@@ -24,6 +25,7 @@ try {
   const assets = join(root,'portal/public');
   const current = await loadWorker(join(root,'portal/src/index.ts'),assets);
   const main = await loadWorker(join(scratch,'portal/src/index.ts'),assets);
+  current.env.RESEARCH_LOOP='off';main.env.RESEARCH_LOOP='off';
   const proof = [];
   const cases = [
     {name:'named overview',question},

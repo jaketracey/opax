@@ -14,8 +14,9 @@
 import { TOOL_SPECS, TOPICS, STATES, CHAMBERS, TERMS, runTool, validToolArgs, AGENTIC_TOOLS_VERSION, type ToolDeps, type ToolResult, type Cite } from './agentic-tools'
 import { isElectorateDataQuestion, electoratePlan } from './agentic-tool-electorates'
 import { getAskTool } from './tools'
+import { ResearchError, researchSources, type Research, type ResearchPayload, type QualitativeAnswer, type ResearchResult } from './research-types'
 
-export const AGENTIC_PROMPT_VERSION = 'agentic-ask-4'
+export const AGENTIC_PROMPT_VERSION = 'agentic-ask-5-research'
 export const AGENTIC_BUDGET_MS = 40_000
 export const AGENTIC_MAX_STEPS = 6
 
@@ -220,7 +221,7 @@ export function factSheet(results: ToolResult[]): { facts: Fact[]; notes: string
   return { facts, notes: [...notes] }
 }
 const NUMBER_WORD = /\b(?:zero|one|two|three|four|five|six|seven|eight|nine|ten|eleven|twelve|thirteen|fourteen|fifteen|sixteen|seventeen|eighteen|nineteen|twenty|thirty|forty|fifty|sixty|seventy|eighty|ninety|hundreds?|thousands?|millions?|billions?|trillions?|hundredth|thousandth|millionth|billionth|trillionth|half|halves|quarter|quarters|dozen|dozens|twice|thrice|first|second|third|fourth|fifth|sixth|seventh|eighth|ninth|tenth|eleventh|twelfth|\w+teenth|\w+tieth)\b/i
-const CAUSAL = /\b(?:bought|bribe\w*|in exchange for|because of (?:the|these|their) donations?|donations? (?:caused|influenced|explain\w*)|paid for (?:access|votes?|influence))\b|\b(?:donat\w*|money|funding)\b.*\b(?:influenc\w*|caus\w*|led to|resulted in|secured)\b/i
+export const CAUSAL = /\b(?:bought|bribe\w*|in exchange for|because of (?:the|these|their) donations?|donations? (?:caused|influenced|explain\w*)|paid for (?:access|votes?|influence))\b|\b(?:donat\w*|money|funding)\b.*\b(?:influenc\w*|caus\w*|led to|resulted in|secured)\b/i
 /** Defensive boundary for any future connective prose. No model-authored
  * numeric characters or number words are accepted, including citation ids,
  * dates, percentages and money.
@@ -372,8 +373,11 @@ export function planRetainsNamedScope(plan: Plan, scope: NamedScope): boolean {
 export type Progress = (event: string, data: unknown) => Promise<void>
 export interface AgenticDeps extends ToolDeps {
   generate: (query: string, prompt: { system: string; user: string }, maxTokens: number, signal: AbortSignal) => Promise<{ text: string; tokens?: { input: number; output: number }; costUsd?: number }>
+  research?: Research
+  plannerTrail?: boolean
+  onResearchFailure?: (error: ResearchError) => Promise<void>
 }
-export interface StepEvent { id: number; label: string; arg?: string; state: 'running' | 'done' | 'failed'; ms?: number }
+export interface StepEvent { id: number; label: string; arg?: string; state: 'running' | 'done' | 'failed' | 'error'; ms?: number; tool?: string; round?: number; results?: number }
 export interface AgenticPayload {
   answered: boolean
   reason?: 'declined' | 'no_supported_claim' | 'grounding_failed'
@@ -390,6 +394,10 @@ export interface AgenticPayload {
   cost_usd: number | null
   over_budget: boolean
   version: string
+  research?: ResearchPayload
+  qualitative?: QualitativeAnswer
+  chosen_facts?: number[]
+  research_failure?: string
 }
 /** Race as well as abort: a stub/provider ignoring cancellation cannot hold the route open. */
 export async function bounded<T>(work: (signal: AbortSignal) => Promise<T>, ms: number, parent?: AbortSignal): Promise<T> {
@@ -405,7 +413,7 @@ export async function bounded<T>(work: (signal: AbortSignal) => Promise<T>, ms: 
   try { return await Promise.race([controller.signal.aborted ? Promise.reject(controller.signal.reason) : work(controller.signal), abort]) }
   finally { if (timer !== undefined) clearTimeout(timer); parent?.removeEventListener('abort', stop) }
 }
-function periodPlan(plan: Plan, period: Period, filters: Record<string, unknown>): Plan {
+export function periodPlan(plan: Plan, period: Period, filters: Record<string, unknown>): Plan {
   return { ...plan, steps: plan.steps.map(s => {
     if (!['count_speeches', 'speech_trend', 'find_quotes', 'member_votes'].includes(s.tool)) return s
     const { since: _s, until: _u, term: _t, ...args } = s.args
@@ -420,13 +428,55 @@ export function stepEvent(step: PlanStep, id: number, committee = false): StepEv
   const registered = getAskTool(step.tool)
   if (registered) return { id, ...registered.stepLabel(step.args), state: 'running' }
   const a = step.args
-  const label = committee ? 'Checking committee hearings' : step.tool === 'count_speeches' ? a.group_by === 'speaker' ? 'Counting by speaker' : a.group_by === 'party' ? 'Counting by party' : 'Searching speeches' : ({ member_votes: 'Checking votes', party_donations: 'Checking donations', speech_trend: 'Comparing years', find_quotes: 'Searching speeches', find_people: 'Searching speeches' } as Record<string, string>)[step.tool]
+  const label = committee ? 'Checking committee hearings' : step.tool === 'count_speeches' ? a.group_by === 'speaker' ? 'Counting by speaker' : a.group_by === 'party' ? 'Counting by party' : 'Searching speeches' : ({ member_votes: 'Checking votes', party_donations: 'Checking donations', speech_trend: 'Comparing years', find_quotes: 'Searching speeches', find_people: 'Searching speeches', search: 'Searching the record', read_passage: 'Reading a passage', finish: 'Selecting record facts', answer: 'Checking the answer' } as Record<string, string>)[step.tool]
   const moneyArgs = new Set(['Labor', 'Liberal', 'Greens', 'Nationals', 'LNP', 'Independent', 'One Nation', 'United Australia Party', 'gambling', 'mining', 'fossil_fuels', 'finance', 'property', 'unions', 'health', 'hospitality', 'media', 'tech'])
   const raw = step.tool === 'party_donations' ? [a.party, a.industry].find(v => typeof v === 'string' && moneyArgs.has(v)) : a.keyword ?? a.party ?? a.industry ?? a.speaker ?? a.topic ?? a.query ?? a.name
   const arg = typeof raw === 'string' ? raw.replace(/[<>&"'\x00-\x1f]/g, '').slice(0, 40) : undefined
   return { id, label, ...(arg ? { arg } : {}), state: 'running' }
 }
+export function resultCount(result: ToolResult): number {
+  for (const key of ['rows', 'passages', 'people', 'facts']) if (Array.isArray(result.data?.[key])) return (result.data![key] as unknown[]).length
+  return result.ok ? result.cite.length : 0
+}
+function researchTrail(events: StepEvent[], steps: AgenticPayload['steps']): ResearchPayload['trail'] {
+  return events.map((event, i) => ({ id: event.id, tool: event.tool ?? steps[i]?.tool ?? 'search', label: event.label,
+    ...(event.arg ? { arg: event.arg } : {}), ...(event.results != null ? { results: event.results } : {}), ms: event.ms ?? 0, ok: event.state === 'done' }))
+}
+/** Loop failures retain the old planner, inside the original request deadline. */
 export async function runAgentic(question: string, deps: AgenticDeps, progress: Progress = async () => {}, budgetMs = AGENTIC_BUDGET_MS, period = inferPeriod(question), filters: Record<string, unknown> = {}, resolvedScope?: NamedScope): Promise<AgenticPayload> {
+  const started = Date.now()
+  const attempted: StepEvent[] = []
+  const loopProgress: Progress = async (event, data) => {
+    const step = (data as { step?: StepEvent })?.step
+    if (step && step.state !== 'running') attempted.push(step)
+    await progress(event, data)
+  }
+  try {
+    const run = await runAgenticAttempt(question, deps, deps.research ? loopProgress : progress, budgetMs, period, filters, resolvedScope)
+    if (deps.research && !run.answered) throw new ResearchError(run.reason === 'no_supported_claim' ? 'no_supported_claim' : 'grounding', { rounds: run.research?.rounds ?? 0, tokens: run.tokens, ...(run.cost_usd != null ? { costUsd: run.cost_usd } : {}) })
+    return run
+  }
+  catch (error) {
+    if (!deps.research) throw error
+    const failure = error instanceof ResearchError ? error : new ResearchError(deps.signal?.aborted ? 'aborted' : 'error')
+    await deps.onResearchFailure?.(failure)
+    if (deps.signal?.aborted) throw error
+    const offset = attempted.length
+    const shifted: Progress = async (event, data) => {
+      const value = data as { step?: StepEvent }
+      await progress(event, value?.step ? { ...value, step: { ...value.step, id: value.step.id + offset } } : data)
+    }
+    const fallback = await runAgenticAttempt(question, { ...deps, research: undefined, plannerTrail: true }, shifted, Math.max(0, budgetMs - (Date.now() - started)), period, filters, resolvedScope)
+    fallback.events = fallback.events.map(e => ({ ...e, id: e.id + offset }))
+    if (fallback.research) fallback.research.trail = fallback.research.trail.map(e => ({ ...e, id: e.id + offset }))
+    fallback.tokens.input += failure.stats.tokens.input; fallback.tokens.output += failure.stats.tokens.output
+    if (failure.stats.costUsd != null) fallback.cost_usd = (fallback.cost_usd ?? 0) + failure.stats.costUsd
+    fallback.timings.total_ms = Date.now() - started
+    fallback.research_failure = failure.reason
+    return fallback
+  }
+}
+async function runAgenticAttempt(question: string, deps: AgenticDeps, progress: Progress, budgetMs: number, period: Period, filters: Record<string, unknown>, resolvedScope?: NamedScope): Promise<AgenticPayload> {
   const electorateData = isElectorateDataQuestion(question)
   if (electorateData) period = { kind: 'all', label: 'Figures use published Census geography.' }
   const t0 = Date.now(), deadline = t0 + budgetMs
@@ -435,60 +485,26 @@ export async function runAgentic(question: string, deps: AgenticDeps, progress: 
   const left = () => Math.max(0, deadline - Date.now())
   const timings = { plan_ms: 0, tools_ms: 0, compose_ms: 0, total_ms: 0 }
   const results: ToolResult[] = [], steps: AgenticPayload['steps'] = [], events: StepEvent[] = []
-  const base = (over: Partial<AgenticPayload>): AgenticPayload => ({ answered: false, answer: '', answer_source: 'none', shape: classifyAgentic(question).shape, period, facts: [], notes: [], steps, events, tokens, cost_usd: cost, over_budget: !left(), version: `${AGENTIC_PROMPT_VERSION}/${AGENTIC_TOOLS_VERSION}`, ...over, timings: { ...timings, total_ms: Date.now() - t0 } })
+  let researched: ResearchResult | undefined
+  let executionSignal = deps.signal
+  const base = (over: Partial<AgenticPayload>): AgenticPayload => ({ answered: false, answer: '', answer_source: 'none', shape: classifyAgentic(question).shape, period, facts: [], notes: [], steps, events, tokens, cost_usd: cost, over_budget: !left(), version: `${AGENTIC_PROMPT_VERSION}/${AGENTIC_TOOLS_VERSION}`,
+    ...(deps.plannerTrail ? { research: { mode: 'planner', rounds: 1, trail: researchTrail(events, steps), sources: [] } as ResearchPayload } : {}),
+    ...(researched ? { research: { mode: 'loop', rounds: researched.rounds, trail: researchTrail(events, steps), sources: [] } as ResearchPayload } : {}),
+    ...over, timings: { ...timings, total_ms: Date.now() - t0 } })
   // The decade candidate proof supports leaders, not the least active member.
   if (!electorateData && /\b(?:least|fewest)\b/i.test(question)) return base({ reason: 'declined' })
   let named: NamedScope = { people: [], parties: [], bills: [], ambiguous: false, unresolved: false }
   if (!electorateData) {
     try { named = resolvedScope ?? await resolveNamedScope(question, deps, Math.min(4_000, left()), filters) }
     catch { return base({ reason: 'declined' }) }
-    if (named.unresolved || named.ambiguous || named.bills.length) return base({ reason: 'declined' })
+    if (!deps.research && (named.unresolved || named.ambiguous || named.bills.length)) return base({ reason: 'declined' })
   }
   const usage = (out: { tokens?: { input: number; output: number }; costUsd?: number }) => {
     if (out.tokens) { tokens.input += out.tokens.input; tokens.output += out.tokens.output }
     if (typeof out.costUsd === 'number') cost = (cost ?? 0) + out.costUsd
   }
-  let plan: Plan | null = electorateData ? electoratePlan(question) : null
-  let plannerFailed = false
-  try {
-    if (!plan) {
-      const out = await bounded(signal => deps.generate(question, plannerPrompt(), 700, signal), Math.min(15_000, left()), deps.signal)
-      usage(out); plan = parsePlan(out.text)
-    }
-  } catch { plannerFailed = true }
-  timings.plan_ms = Date.now() - t0
-  const rulePlan = fallbackPlan(question)
-  // Malformed output is a planner failure, not permission to substitute a
-  // numerical answer. Timeout recovery is limited to a complete rule plan.
-  if (!plan && !plannerFailed) return base({ reason: 'declined' })
-  if (!rulePlan && !electorateData) return base({ reason: 'declined' })
-  // A valid JSON plan must still answer the classified shape and retain its
-  // subject. In particular, never replace topic counts with overall totals.
-  const topic = rulePlan?.steps.find(s => s.args.topic)?.args.topic
-  if (plan && plan.shape !== 'unanswerable') {
-    const has = (tool: string) => plan!.steps.some(s => s.tool === tool)
-    const group = /\bpart(?:y|ies)\b/i.test(question) ? 'party' : 'speaker'
-    if (electorateData && plan.steps.some(s => s.tool !== 'electorates') || plan.shape === 'ranking' && !electorateData && !plan.steps.some(s => s.tool === 'count_speeches' && s.args.group_by === group) ||
-        /\bwhich year\b.*\bmost\b/i.test(question) && !plan.steps.some(s => s.tool === 'speech_trend' && (s.args.by ?? 'year') === 'year') ||
-        plan.shape === 'trend' && !has('count_speeches') && !has('speech_trend') ||
-        plan.shape === 'money' && (!has('party_donations') || !has('count_speeches')) ||
-        plan.shape === 'comparison' && (!has('count_speeches') || VOTE_WORDS.test(question) && !has('member_votes'))) plan = null
-  }
-  if (plan && plan.shape !== 'unanswerable' && (plan.shape !== classifyAgentic(question).shape || topic && plan.steps.filter(s => ['count_speeches', 'speech_trend'].includes(s.tool)).some(s => s.args.topic !== topic))) plan = null
-  // Schema-valid but semantically incomplete plans also fall back to Ask.
-  // Only a failed/timed-out planner may use the full subject-aware rule plan.
-  if (!plan && plannerFailed) plan = rulePlan
-  if (!left() || deps.signal?.aborted) return base({ reason: 'declined', over_budget: true })
-  if (!plan) return base({ reason: 'declined' })
-  if (plan.shape === 'unanswerable') return base({ reason: 'declined', notes: plan.reason ? [plan.reason] : [] })
-  const ruleArgs = rulePlan?.steps.find(s => ['count_speeches', 'speech_trend'].includes(s.tool))?.args ?? {}
-  const explicitScope = Object.fromEntries(['state', 'chamber', 'party'].filter(k => ruleArgs[k] != null && (k !== 'party' || named.parties.length <= 1)).map(k => [k, ruleArgs[k]]))
-  if (!planRetainsNamedScope(plan, named)) return base({ reason: 'declined' })
-  plan = periodPlan(plan, period, { ...explicitScope, ...filters })
-  if (!planRetainsNamedScope(plan, named)) return base({ reason: 'declined' })
-  const tTools = Date.now()
-  const execute = async (step: PlanStep, committee = false, custom?: (d: ToolDeps) => Promise<ToolResult>): Promise<ToolResult> => {
-    const event = stepEvent(step, events.length + 1, committee)
+  const execute = async (step: PlanStep, committee = false, custom?: (d: ToolDeps) => Promise<ToolResult>, round?: number, parentSignal = executionSignal): Promise<ToolResult> => {
+    const event = { ...stepEvent(step, steps.length + 1, committee), ...(round ? { tool: step.tool, round } : {}) }
     await progress('status', { phase: 'step', step: event })
     const started = Date.now()
     let r: ToolResult
@@ -501,15 +517,73 @@ export async function runAgentic(question: string, deps: AgenticDeps, progress: 
         // Adapters use the scoped signal on fetch and body reads.
         if (deps.withSignal) Object.assign(scoped, deps.withSignal(signal))
         return custom ? custom(scoped) : runTool(scoped, step.tool, step.args)
-      }, Math.min(12_000, Math.max(0, left() - 5_000)), deps.signal)
+      }, Math.min(12_000, Math.max(0, left() - 5_000)), parentSignal)
     } catch { r = { tool: step.tool, ok: false, error: 'lookup timed out or unavailable', cite: [], notes: [] } }
     const ms = Date.now() - started
     steps.push({ tool: step.tool, args: step.args, ok: r.ok, error: r.error, ms, label: event.label })
-    const done: StepEvent = { ...event, state: r.ok ? 'done' : 'failed', ms }
+    const done: StepEvent = { ...event, state: r.ok ? 'done' : round ? 'error' : 'failed', ms, ...(round && r.ok ? { results: resultCount(r) } : {}) }
     events.push(done); await progress('status', { phase: 'step', step: done })
     return r
   }
-  for (const step of plan.steps) {
+  let plan: Plan | null = electorateData ? electoratePlan(question) : null
+  if (deps.research) {
+    const rules = fallbackPlan(question)?.steps.find(s => ['count_speeches', 'speech_trend'].includes(s.tool))?.args ?? {}
+    const explicit = Object.fromEntries(['state', 'chamber', 'party'].filter(k => rules[k] != null && (k !== 'party' || named.parties.length <= 1)).map(k => [k, rules[k]]))
+    researched = await bounded(signal => { executionSignal = signal; return deps.research!(question, {
+      deps, period, named, signal, progress,
+      scope: step => periodPlan({ shape: classifyAgentic(question).shape ?? 'ranking', steps: [step] }, period, { ...explicit, ...filters }).steps[0],
+      execute: (step, round, custom, signal) => execute(step, false, custom, round, signal),
+    }) }, Math.max(0, Math.min(30_000, left() - 8_000)), deps.signal)
+    executionSignal = deps.signal
+    usage(researched)
+    results.push(...researched.results)
+    plan = { shape: classifyAgentic(question).shape ?? 'ranking', steps: researched.steps }
+    if (researched.qualitative) {
+      timings.plan_ms = Date.now() - t0
+      await progress('status', { phase: 'writing' })
+      return base({ answered: true, answer: researched.qualitative.answer, answer_source: 'model', qualitative: researched.qualitative,
+        research: { mode: 'loop', rounds: researched.rounds, trail: researchTrail(events, steps), sources: researched.qualitative.sources.map(s => ({ title: s.title, url: s.url, kind: s.kind, ...(s.date ? { date: s.date } : {}) })) } })
+    }
+  }
+  let plannerFailed = false
+  try {
+    if (!plan && !researched) {
+      const out = await bounded(signal => deps.generate(question, plannerPrompt(), 700, signal), Math.min(15_000, left()), deps.signal)
+      usage(out); plan = parsePlan(out.text)
+    }
+  } catch { plannerFailed = true }
+  timings.plan_ms = Date.now() - t0
+  const rulePlan = fallbackPlan(question)
+  // Malformed output is a planner failure, not permission to substitute a
+  // numerical answer. Timeout recovery is limited to a complete rule plan.
+  if (!plan && !plannerFailed) return base({ reason: 'declined' })
+  if (!rulePlan && !electorateData && !researched) return base({ reason: 'declined' })
+  // A valid JSON plan must still answer the classified shape and retain its
+  // subject. In particular, never replace topic counts with overall totals.
+  const topic = rulePlan?.steps.find(s => s.args.topic)?.args.topic
+  if (plan && plan.shape !== 'unanswerable' && (!researched || classifyAgentic(question).shape)) {
+    const has = (tool: string) => plan!.steps.some(s => s.tool === tool)
+    const group = /\bpart(?:y|ies)\b/i.test(question) ? 'party' : 'speaker'
+    if (electorateData && plan.steps.some(s => s.tool !== 'electorates') || plan.shape === 'ranking' && !electorateData && !plan.steps.some(s => s.tool === 'count_speeches' && s.args.group_by === group) ||
+        /\bwhich year\b.*\bmost\b/i.test(question) && !plan.steps.some(s => s.tool === 'speech_trend' && (s.args.by ?? 'year') === 'year') ||
+        plan.shape === 'trend' && !has('count_speeches') && !has('speech_trend') ||
+        plan.shape === 'money' && (!has('party_donations') || !has('count_speeches')) ||
+        plan.shape === 'comparison' && (!has('count_speeches') || VOTE_WORDS.test(question) && !has('member_votes'))) plan = null
+  }
+  if (plan && plan.shape !== 'unanswerable' && ((!researched && plan.shape !== classifyAgentic(question).shape) || topic && plan.steps.filter(s => ['count_speeches', 'speech_trend'].includes(s.tool)).some(s => s.args.topic !== topic))) plan = null
+  // Schema-valid but semantically incomplete plans also fall back to Ask.
+  // Only a failed/timed-out planner may use the full subject-aware rule plan.
+  if (!plan && plannerFailed) plan = rulePlan
+  if (!left() || deps.signal?.aborted) return base({ reason: 'declined', over_budget: true })
+  if (!plan) return base({ reason: 'declined' })
+  if (plan.shape === 'unanswerable') return base({ reason: 'declined', notes: plan.reason ? [plan.reason] : [] })
+  const ruleArgs = rulePlan?.steps.find(s => ['count_speeches', 'speech_trend'].includes(s.tool))?.args ?? {}
+  const explicitScope = Object.fromEntries(['state', 'chamber', 'party'].filter(k => ruleArgs[k] != null && (k !== 'party' || named.parties.length <= 1)).map(k => [k, ruleArgs[k]]))
+  if (!planRetainsNamedScope(plan, named)) return base({ reason: 'declined' })
+  plan = periodPlan(plan, period, { ...explicitScope, ...filters })
+  if (!planRetainsNamedScope(plan, named)) return base({ reason: 'declined' })
+  const tTools = Date.now()
+  for (const step of researched ? [] : plan.steps) {
     if (left() < 8_000) break
     const args = resolveArgs(step.args, results)
     if (!args) { results.push({ tool: step.tool, ok: false, error: 'unresolved earlier result', cite: [], notes: [] }); continue }
@@ -550,7 +624,8 @@ export async function runAgentic(question: string, deps: AgenticDeps, progress: 
   // No composer call: figures, metric labels, entities and citations are
   // rendered together from the tool rows, so swapping aye/no or party/year
   // values in model text can never affect an answer.
-  const selected = electorateData ? mainFacts : selectAnswerFacts(mainFacts, named, peakYear)
+  const chosen = researched ? mainFacts.filter(f => researched!.selected.includes(f.id)) : mainFacts
+  const selected = electorateData ? chosen : selectAnswerFacts(chosen, named, peakYear)
   if (!selected?.length) return base({ reason: 'no_supported_claim' })
   let answer = templateAnswer(selected, [])
   if (committeeFacts.length) {
@@ -561,7 +636,8 @@ export async function runAgentic(question: string, deps: AgenticDeps, progress: 
   answer += ' ' + period.label + (notes.length ? ' ' + notes.join(' ') : '')
   timings.compose_ms = Date.now() - tCompose
   if (!left() || deps.signal?.aborted) return base({ reason: 'declined', over_budget: true })
-  return base({ answered: true, answer, answer_source: 'template', facts: factOut, notes })
+  return base({ answered: true, answer, answer_source: 'template', facts: factOut, notes,
+    ...(researched || deps.plannerTrail ? { chosen_facts: selected.map(f => f.id), research: { mode: researched ? 'loop' : 'planner', rounds: researched?.rounds ?? 1, trail: researchTrail(events, steps), sources: researchSources([...selected, ...facts.filter(f => committeeFacts.some(c => c.text === f.text))]) } } : {}) })
 }
 export function normaliseQuestion(question: string): string {
   return question.normalize('NFKC').toLowerCase().replace(/[‘’“”]/g, "'").replace(/[^\p{L}\p{N} ]+/gu, ' ').replace(/\s+/g, ' ').trim()
@@ -576,7 +652,7 @@ export async function agenticCacheKey(question: string, epoch: string, model: st
   if (scope?.unresolved || scope?.ambiguous) throw new Error('unresolved cache scope')
   const entities = { people: [...new Set(scope?.people ?? [])].sort(), parties: [...new Set(scope?.parties ?? [])].sort(), bills: [...new Set(scope?.bills ?? [])].sort() }
   // Invalid Census selectors must not share a key with validated names.
-  const cacheQuestion = isElectorateDataQuestion(question) ? question.normalize('NFKC').toLowerCase().trim() : normaliseQuestion(question)
+  const cacheQuestion = isElectorateDataQuestion(question) || shape === null && toolsVersion.includes('/loop/') ? question.normalize('NFKC').toLowerCase().trim() : normaliseQuestion(question)
   const hash = await hashText(JSON.stringify({ q: cacheQuestion, shape, period, entities, filters, epoch, model, v: AGENTIC_PROMPT_VERSION, t: toolsVersion }))
   return `https://cache.opax.internal/ask-agentic/${hash}`
 }

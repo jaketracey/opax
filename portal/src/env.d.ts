@@ -62,6 +62,12 @@ interface Env {
   MONEY_OVERVIEW_MODEL?: string
   /** Default off. Orchestrator sets route after review; shadow remains available. */
   AGENTIC_ASK_MODE?: 'off' | 'shadow' | 'route'
+  RESEARCH_LOOP?: 'off' | 'shadow' | 'route'
+  RESEARCH_LOOP_STEPS?: string
+  RESEARCH_LOOP_MS?: string
+  RESEARCH_LOOP_TOKENS?: string
+  /** Provisioned by Jake; optional so missing configuration falls back. */
+  OPENROUTER_API_KEY?: string
   /** Optional operator-configured token prices, USD per million, for monitoring. */
   AGENTIC_INPUT_USD_PER_MILLION?: string
   AGENTIC_OUTPUT_USD_PER_MILLION?: string

@@ -86,6 +86,10 @@ import { runAgentic, classifyAgentic, agenticCacheKey, resolveNamedScope, type N
 import { agenticAskPayload } from './agentic-response'
 import { recordAgenticRun } from './agentic-monitor'
 import { AGENTIC_TOOLS_VERSION } from './agentic-tools'
+import { createOpenRouter } from '@openrouter/ai-sdk-provider'
+import { createResearch } from './research-loop'
+import { recordResearchComparison, recordResearchFailure } from './research-monitor'
+import { withPlannerResearch } from './research-response'
 import type { ToolDeps } from './agentic-tools'
 import { tokens as catalogTokens } from './catalog-query.mjs'
 import { journeyStoryContext, parseJourneyStory, journeyStoryPrompt, JOURNEY_STORY_SYSTEM, STORY_VERSION, type StoryGraph } from './journey-story'
@@ -5911,9 +5915,35 @@ function agenticToolDeps(env: Env, signal?: AbortSignal): ToolDeps {
     },
   }
 }
-function agenticDeps(env: Env, signal?: AbortSignal): AgenticDeps {
+function agenticDeps(env: Env, ctx: ExecutionContext, signal?: AbortSignal, input: Record<string, unknown> = {}): AgenticDeps {
   return {
     ...agenticToolDeps(env, signal),
+    ...(env.RESEARCH_LOOP === 'route' ? {
+      research: createResearch({
+        model: env.OPENROUTER_API_KEY ? createOpenRouter({ apiKey: env.OPENROUTER_API_KEY })('@preset/opax-pro', { usage: { include: true } }) : undefined,
+        steps: env.RESEARCH_LOOP_STEPS, wallMs: env.RESEARCH_LOOP_MS, tokens: env.RESEARCH_LOOP_TOKENS,
+        modelBudgetSpent: () => modelBudgetSpent(env),
+        inputPrice: Number(env.AGENTIC_INPUT_USD_PER_MILLION) || undefined, outputPrice: Number(env.AGENTIC_OUTPUT_USD_PER_MILLION) || undefined,
+        conversation: saConversationInput(input, env.SA_HANSARD_FULL_TEXT).context,
+        positionQuery: isPositionBody(buildAskBody(input)) ? String(buildAskBody(input).query || input.question || '') : undefined,
+        searchBody: (query, limit, context) => {
+          const scoped = { ...input,
+            ...(context.named.people.length === 1 ? { speaker: context.named.people[0] } : {}),
+            ...(context.named.parties.length === 1 ? { party: context.named.parties[0] } : {}),
+            ...(context.period.since ? { since: context.period.since } : {}), ...(context.period.until ? { until: context.period.until } : {}),
+          }
+          return { query, top_k: limit, features: ['keyword', 'semantic'], reranker: 'predict', show: ['basic', 'origin', 'extra'], filter_expression: filterExpression(scoped) }
+        },
+        evidenceText: (record, text) => saEvidenceText(record, text, env.SA_HANSARD_FULL_TEXT, String(input.question ?? '')),
+        readRecord: async (slug, signal) => {
+          const url = new URL('/api/resource/' + encodeURIComponent(slug), SITE_ORIGIN)
+          const response = await apiResource(new Request(url, { signal }), url, slug, env, ctx)
+          if (!response.ok) throw new Error('original record unavailable')
+          const record = await response.json() as Record<string, unknown>; signal.throwIfAborted(); return record
+        },
+      }),
+      onResearchFailure: error => recordResearchFailure(String(input.question ?? ''), error),
+    } : {}),
     toolEnv: { ASSETS: env.ASSETS, TABLE_DB: env.TABLE_DB, COMMUNITY_ORIGIN: env.COMMUNITY_ORIGIN },
     generate: async (query, prompt, maxTokens, signal) => {
       const res = await kbFetch(env, '/ask', {
@@ -5947,13 +5977,13 @@ function monitorAgentic(env: Env, ctx: ExecutionContext, question: string, run: 
     console.warn('Ask monitoring write unavailable')
   }))
 }
-async function executeAgentic(input: Record<string, unknown>, env: Env, ctx: ExecutionContext, progress?: Progress, signal?: AbortSignal, budgetMs = AGENTIC_BUDGET_MS, namedScope?: NamedScope) {
+async function executeAgentic(input: Record<string, unknown>, env: Env, ctx: ExecutionContext, progress?: Progress, signal?: AbortSignal, budgetMs = AGENTIC_BUDGET_MS, namedScope?: NamedScope, onRun?: (run: AgenticPayload) => void) {
   const question = String(input.question).trim()
   const started = Date.now(), period = agenticPeriod(input)
   let run: AgenticPayload
   try {
     // Covers the whole path, including an SSE writer or provider that stalls.
-    run = await bounded(signal => runAgentic(question, agenticDeps(env, signal), progress, budgetMs, period, agenticFilters(input), namedScope), budgetMs, signal)
+    run = await bounded(signal => runAgentic(question, agenticDeps(env, ctx, signal, input), progress, budgetMs, period, agenticFilters(input), namedScope), budgetMs, signal)
   } catch {
     run = { answered: false, reason: 'declined', answer: '', answer_source: 'none', shape: classifyAgentic(question).shape, period,
       facts: [], notes: [], steps: [], events: [], tokens: { input: 0, output: 0 }, cost_usd: null,
@@ -5961,6 +5991,7 @@ async function executeAgentic(input: Record<string, unknown>, env: Env, ctx: Exe
       timings: { plan_ms: 0, tools_ms: 0, compose_ms: 0, total_ms: Date.now() - started }, version: 'unavailable' }
   }
   monitorAgentic(env, ctx, question, run)
+  onRun?.(run)
   return run
 }
 /** Same classifier/tool path as readers; bearer-only, mode-gated and always local on staging. */
@@ -5978,13 +6009,51 @@ async function apiAgenticGold(request: Request, env: Env, ctx: ExecutionContext)
   const run = await executeAgentic(input, env, ctx, undefined, request.signal)
   return json(agenticAskPayload(run, q))
 }
-async function apiAskRouted(request: Request, url: URL, input: Record<string, unknown>, env: Env, ctx: ExecutionContext): Promise<Response> {
+async function apiAskRouted(request: Request, url: URL, input: Record<string, unknown>, env: Env, ctx: ExecutionContext, onRun?: (run: AgenticPayload) => void): Promise<Response> {
   const started = Date.now()
   const question = String(input.question).trim()
   let quotaTaken = false
   const fallback = () => apiAsk(request.clone(), env, ctx, undefined, undefined, quotaTaken)
-  const mode = env.AGENTIC_ASK_MODE
-  if (!['route', 'shadow'].includes(String(mode)) || classifyAgentic(question).route !== 'agentic' || input.kind && !['speech', 'all'].includes(String(input.kind))) return fallback()
+  const loopRoute = env.RESEARCH_LOOP === 'route'
+  if (env.RESEARCH_LOOP === 'shadow') {
+    const shadowClient = new AbortController()
+    const disconnect = () => shadowClient.abort(request.signal.reason)
+    request.signal.addEventListener('abort', disconnect, { once: true })
+    if (request.signal.aborted) disconnect()
+    let planner: AgenticPayload | undefined
+    const response = await apiAskRouted(request, url, input, { ...env, RESEARCH_LOOP: 'off' }, ctx, run => { planner = run })
+    if (response.ok) {
+      const copy = response.clone()
+      ctx.waitUntil((async () => {
+        const shadow = new AskDeadline(28_000, shadowClient.signal)
+        try {
+          const [loop, served] = await Promise.all([
+            executeAgentic(input, { ...env, RESEARCH_LOOP: 'route' }, ctx, undefined, shadow.signal, shadow.remaining),
+            shadow.run(async () => {
+              const text = await copy.text()
+              if (!(copy.headers.get('content-type') ?? '').includes('text/event-stream')) return JSON.parse(text) as Record<string, unknown>
+              const frame = text.split(/\r?\n\r?\n/).find(frame => /^event: done$/m.test(frame))
+              return frame ? JSON.parse(frame.split(/\r?\n/).find(line => line.startsWith('data: '))!.slice(6)) as Record<string, unknown> : {}
+            }),
+          ])
+          await recordResearchComparison(question, planner, served, loop)
+        } catch { console.warn('Research shadow unavailable') }
+        finally { shadow.cancel(); request.signal.removeEventListener('abort', disconnect) }
+      })())
+    } else request.signal.removeEventListener('abort', disconnect)
+    if (!response.body) return response
+    const reader = response.body.getReader()
+    return new Response(new ReadableStream<Uint8Array>({
+      async pull(controller) {
+        const { value, done } = await reader.read()
+        if (done) { reader.releaseLock(); controller.close() }
+        else controller.enqueue(value!)
+      },
+      async cancel(reason) { shadowClient.abort(reason); await reader.cancel(reason); reader.releaseLock() },
+    }), response)
+  }
+  const mode = loopRoute ? 'route' : env.AGENTIC_ASK_MODE
+  if (!loopRoute && (!['route', 'shadow'].includes(String(mode)) || classifyAgentic(question).route !== 'agentic' || input.kind && !['speech', 'all'].includes(String(input.kind)))) return fallback()
   if (mode === 'shadow') {
     const normal = await fallback()
     if (normal.ok) ctx.waitUntil(executeAgentic(input, env, ctx).then(() => {}).catch(() => console.warn('Ask background run unavailable')))
@@ -5993,11 +6062,14 @@ async function apiAskRouted(request: Request, url: URL, input: Record<string, un
   // One deadline owns planning, tools, fallback and transport. Only routed
   // requests receive this budget; ordinary Ask keeps its existing bytes.
   const budget = new AskDeadline(Math.max(0, AGENTIC_BUDGET_MS - (Date.now() - started)), request.signal)
-  const routedFallback = () => budget.run(() => apiAsk(new Request(request, { signal: budget.signal }), env, ctx, undefined, budget, quotaTaken))
+  const routedFallback = () => budget.run(async () => {
+    const response = await apiAsk(new Request(request, { signal: budget.signal }), env, ctx, undefined, budget, quotaTaken)
+    return loopRoute ? withPlannerResearch(response) : response
+  })
   const expired = () => json({ error: 'The answer took too long. Please try again.' }, 504)
   let streamOwnsBudget = false
   try {
-    // Reuse the donor guard within the same deadline; no prompt bypass.
+    // Resolve the reader's named scope within the same request deadline.
     const electorateData = classifyAgentic(question).rule === 'electorate-data'
     let namedScope: NamedScope = { people: [], parties: [], bills: [], ambiguous: false, unresolved: false }
     if (!electorateData) {
@@ -6005,10 +6077,11 @@ async function apiAskRouted(request: Request, url: URL, input: Record<string, un
       catch { namedScope = { people: [], parties: [], bills: [], ambiguous: false, unresolved: true } }
     }
     // Unresolved scopes still use the normal bounded fallback/stream relay,
-    // but can neither read nor fill the agentic cache. executeAgentic records
-    // the decline without starting a planner or count tool.
+    // but can neither read nor fill the agentic cache. The numerical path
+    // declines unsafe scopes; qualitative research verifies original passages.
     const privateTurn = Array.isArray(input.context) && input.context.length > 0
-    const key = namedScope.unresolved || namedScope.ambiguous || namedScope.bills.length ? undefined : new Request(await agenticCacheKey(question, env.CACHE_EPOCH, env.ASK_MODEL || 'openai-compatible', agenticPeriod(input), AGENTIC_TOOLS_VERSION, agenticFilters(input), classifyAgentic(question).shape, namedScope))
+    const loopVersion = loopRoute ? `${AGENTIC_TOOLS_VERSION}/loop/@preset/opax-pro/${env.RESEARCH_LOOP_STEPS ?? '4'}/${env.RESEARCH_LOOP_TOKENS ?? '32000'}/${env.RESEARCH_LOOP_MS ?? '20000'}/${String(input.kind ?? 'all')}` : AGENTIC_TOOLS_VERSION
+    const key = namedScope.unresolved || namedScope.ambiguous || namedScope.bills.length || loopRoute && Array.isArray(input.prior_resources) && input.prior_resources.length ? undefined : new Request(await agenticCacheKey(question, env.CACHE_EPOCH, env.ASK_MODEL || 'openai-compatible', agenticPeriod(input), loopVersion, agenticFilters(input), classifyAgentic(question).shape, namedScope))
     const streaming = url.searchParams.get('stream') === '1' || (request.headers.get('accept') ?? '').includes('text/event-stream')
     if (key && !privateTurn && !cacheBypass(request, url)) {
       const hit = await budget.run(() => readGenerationCache(env, ctx, key))
@@ -6029,7 +6102,7 @@ async function apiAskRouted(request: Request, url: URL, input: Record<string, un
     }
     if (!streaming) {
       try {
-        const run = await executeAgentic(input, env, ctx, undefined, budget.signal, budget.remaining, namedScope)
+        const run = await executeAgentic(input, env, ctx, undefined, budget.signal, budget.remaining, namedScope, onRun)
         if (request.signal.aborted) return json(agenticAskPayload(run, question))
         budget.signal.throwIfAborted()
         return electorateData || run.answered && !run.over_budget ? withCacheStatus(finish(run), 'MISS', false) : await routedFallback()
@@ -6048,7 +6121,7 @@ async function apiAskRouted(request: Request, url: URL, input: Record<string, un
         ctx.waitUntil((async () => {
           try {
             await send('status', { phase: 'searching' })
-            const run = await executeAgentic(input, env, ctx, send, budget.signal, budget.remaining, namedScope)
+            const run = await executeAgentic(input, env, ctx, send, budget.signal, budget.remaining, namedScope, onRun)
             if (gone || request.signal.aborted) return
             budget.signal.throwIfAborted()
             if (electorateData || run.answered && !run.over_budget) { const response = finish(run); await send('done', await response.json()) }

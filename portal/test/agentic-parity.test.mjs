@@ -8,7 +8,9 @@ import {loadWorker,offline} from './worker-harness.mjs';
 import {ordinaryQuestions} from './fixtures/agentic-ordinary.mjs';
 import {build} from 'esbuild';
 
-test('ordinary Ask (96 unscoped and 96 non-SA bodies) and all 34 agentic gold questions stay byte-identical to main',async t=>{
+// Retired as a RESEARCH_LOOP route gate by Jake, 14 Oct 04:00.
+// This pin now proves the rollback path only, with the new flag explicitly off.
+test('RESEARCH_LOOP=off: ordinary bodies and agentic gold remain byte-identical to main',async t=>{
  const root=new URL('../../',import.meta.url).pathname,scratch=mkdtempSync(join(tmpdir(),'opax-agentic-parity-'));
  let goldMode=false;const realNow=Date.now;
  const restore=offline(),pending=[],ctx={waitUntil(p){pending.push(p)},passThroughOnException(){}};
@@ -18,6 +20,7 @@ test('ordinary Ask (96 unscoped and 96 non-SA bodies) and all 34 agentic gold qu
   symlinkSync(join(root,'portal/node_modules'),join(scratch,'portal/node_modules'));
   const current=await loadWorker(root+'portal/src/index.ts',root+'portal/public',ctx),main=await loadWorker(join(scratch,'portal/src/index.ts'),root+'portal/public',ctx);
   for(const h of [current,main]){
+   h.env.RESEARCH_LOOP='off';
    const assets=h.env.ASSETS;h.env.ASSETS={fetch(req){const p=new URL(req.url).pathname;if(!goldMode&&p.startsWith('/graph/money'))return Response.json({nodes:[],edges:[]});if(!goldMode&&p==='/parliamentarians.json')return Response.json({people:[]});return assets.fetch(req)}};
    h.env.AGENTIC_ASK_MODE='route';h.env.ASK_LIMITER={limit:async()=>({success:true})};
   }

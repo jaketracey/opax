@@ -3,6 +3,11 @@ import { isElectorateDataQuestion } from './agentic-tool-electorates'
 
 /** Adapt numbered tool facts to the existing Ask source ranges and renderer. */
 export function agenticAskPayload(run: AgenticPayload, question: string) {
+  if (run.qualitative) return {
+    answered: run.answered, ...(run.reason ? { reason: run.reason } : {}),
+    ...run.qualitative, followups: [], agentic: { steps: run.events, ms: run.timings.total_ms },
+    ...(run.research ? { research: run.research } : {}),
+  }
   const citations: Record<string, [number, number][]> = {}
   const sources = run.facts.map(f => ({ resource: `fact-${f.id}`, slug: '', kind: f.kind, title: f.text, href: f.url, url: f.url, snippet: f.text, cited: false }))
   let answer = ''
@@ -51,5 +56,6 @@ export function agenticAskPayload(run: AgenticPayload, question: string) {
     sources: run.answered ? sources.filter(s => s.cited) : [],
     followups: run.answered && followup && !isElectorateDataQuestion(question) ? [{ label: followup, question: followup, kind: 'speech' }] : [],
     agentic: { steps: run.events, ms: run.timings.total_ms },
+    ...(run.research ? { research: run.research } : {}),
   }
 }

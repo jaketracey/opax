@@ -55,6 +55,12 @@
     "VIC_ELECTION_HUB_ENABLED": "true",
     // Agentic Ask (Jake, 13 Oct: "just ship it and turn it on"). off | shadow | route; unset or unknown = off.
     "AGENTIC_ASK_MODE": "route",
+    // Shared research engine: off | shadow | route. Jake provisions the
+    // existing OPENROUTER_API_KEY secret; lanes never create credentials.
+    "RESEARCH_LOOP": "off",
+    "RESEARCH_LOOP_STEPS": "4",
+    "RESEARCH_LOOP_MS": "20000",
+    "RESEARCH_LOOP_TOKENS": "32000",
     "AUTHORISATION_LINE": "Authorised by Jake Tracey, Noice Pty Ltd, Level 6, 608/343 Little Collins Street, Melbourne VIC 3000.",
     "CORRECTION_CONTACT": "mailto:corrections@opax.com.au",
     // SA Hansard is excerpt-only until Parliament grants full-text permission.
