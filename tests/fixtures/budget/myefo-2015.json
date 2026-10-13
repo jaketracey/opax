@@ -1,0 +1,49 @@
+{
+  "url": "https://archive.budget.gov.au/2015-16/myefo/MYEFO_2015-16_Final.pdf",
+  "receipt": {
+    "url": "https://archive.budget.gov.au/2015-16/myefo/MYEFO_2015-16_Final.pdf",
+    "status": 200,
+    "snapshot": "2026-10-12T23:06:22.750403+00:00",
+    "sha256": "d44e6e2d54042a7162a1cb93d927012f4176f491d376e65a9f4a4c31f7b32c88",
+    "requests": [
+      {
+        "url": "https://archive.budget.gov.au/2015-16/myefo/MYEFO_2015-16_Final.pdf",
+        "started_at": "2026-10-12T23:06:21.759550+00:00",
+        "minimum_interval_seconds": 1.0,
+        "previous_started_at": "2026-10-12T23:06:20.759432+00:00",
+        "interval_seconds": 1.000114919967018,
+        "robots": {
+          "url": "https://archive.budget.gov.au/robots.txt",
+          "status": 404,
+          "snapshot": "2026-10-12T23:06:18.485885+00:00",
+          "sha256": null,
+          "decision": "allowed",
+          "crawl_delay_seconds": null,
+          "request_rate": null,
+          "fallback": "HTTP 404: no published rules; allow"
+        },
+        "status": 200,
+        "user_agent_policy": "parli/ingest/user-agent.json",
+        "user_agent_sha256": "1100b17c9651df0a8cac3179efbf025b2b55acf7d93bee70876cd24bcd3c0b2b"
+      }
+    ],
+    "robots": {
+      "url": "https://archive.budget.gov.au/robots.txt",
+      "status": 404,
+      "snapshot": "2026-10-12T23:06:18.485885+00:00",
+      "sha256": null,
+      "decision": "allowed",
+      "crawl_delay_seconds": null,
+      "request_rate": null,
+      "fallback": "HTTP 404: no published rules; allow"
+    },
+    "user_agent_policy": "parli/ingest/user-agent.json",
+    "user_agent_sha256": "1100b17c9651df0a8cac3179efbf025b2b55acf7d93bee70876cd24bcd3c0b2b"
+  },
+  "pages": [
+    {
+      "page": 39,
+      "text": "                                                       Part 3: Fiscal Strategy and Outlook\n\nTable 3.3: Australian Government general government sector budget aggregates\n                                                                   Estimates\n                                                    2015-16                  2016-17\n                                                Budget    MYEFO       Budget    MYEFO\n                                                  $b         $b          $b         $b\n Receipts                                           398.0        394.9         422.5        415.3\n Per cent of GDP                                       24.0         23.9          24.2         24.1\n Payments(a)                                        429.8        428.3         444.9        445.3\n Per cent of GDP                                       25.9         25.9          25.5         25.8\n Net Future Fund earnings                                  3.3           4.0            3.4           3.7\n Underlying cash balance(b)                             -35.1         -37.4          -25.8         -33.7\n Per cent of GDP                                             -2.1           -2.3            -1.5           -2.0\nRevenue                                           405.4        401.0         433.4        423.2\n Per cent of GDP                                       24.5         24.3          24.8         24.5\nExpenses                                          434.5        432.2         452.7        451.2\n Per cent of GDP                                       26.2         26.2          25.9         26.1\n Net operating balance                                    -29.1         -31.3          -19.2         -28.0\n Net capital investment                                     3.9           4.5            4.2           4.7\n Fiscal balance                                          -33.0         -35.8          -23.4         -32.8\n Per cent of GDP                                             -2.0           -2.2            -1.3           -1.9\nMemorandum item:\n Headline cash balance                                   -44.8         -48.2          -43.9         -48.9\n                                                                         Projections\n                                                    2017-18                  2018-19\n                                                Budget    MYEFO       Budget    MYEFO\n                                                  $b         $b          $b         $b\n Receipts                                           453.6        440.9         488.2        473.5\n Per cent of GDP                                       24.7         24.3          25.2         24.8\n Payments(a)                                        464.3        459.9         491.1        483.3\n Per cent of GDP                                       25.3         25.3          25.3         25.3\n Net Future Fund earnings                                  3.7           4.0            4.0           4.5\n Underlying cash balance(b)                             -14.4         -23.0            -6.9         -14.2\n Per cent of GDP                                             -0.8           -1.3            -0.4           -0.7\n Revenue                                           466.2        452.6         501.3        487.1\n Per cent of GDP                                       25.4         24.9          25.9         25.5\n Expenses                                          471.8        465.9         499.4        491.4\n Per cent of GDP                                       25.7         25.7          25.8         25.7\n Net operating balance                                       -5.6         -13.3            1.9           -4.3\n Net capital investment                                     3.6           4.1            5.1           5.9\n Fiscal balance                                              -9.2         -17.4            -3.2         -10.2\n Per cent of GDP                                             -0.5           -1.0            -0.2           -0.5\n Memorandum item:\n Headline cash balance                                   -24.7         -32.3          -17.3         -23.8\n(a) Equivalent  to cash payments  for operating  activities, purchases  of  non-financial assets and net\n    acquisition of assets under finance leases.\n(b) Excludes expected net Future Fund earnings.\n\n\n\n\n\n                                  29"
+    }
+  ]
+}

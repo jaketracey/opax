@@ -1,0 +1,32 @@
+.budget-content{padding-block:var(--space-section);color:var(--ink)}
+.budget-content section{margin-block:var(--space-section);border-top:1px solid var(--divider-default);padding-top:var(--space-group)}
+.budget-content h2{font:var(--type-heading);margin-bottom:var(--space-block)}
+.budget-years{display:flex;flex-wrap:wrap;gap:var(--space-tight)}
+.budget-years a{padding:var(--space-tight) var(--space-row);border:1px solid var(--divider-subtle);border-radius:var(--radius-sm)}
+.budget-years [aria-current]{background:var(--navy);color:var(--on-navy)}
+.budget-cards{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:var(--space-block);margin-block:var(--space-group)}
+.budget-cards article{padding:var(--space-block);background:var(--paper-raised);border:1px solid var(--divider-subtle)}
+.budget-cards h3{font:var(--type-strong);margin:0 0 var(--space-row)}
+.budget-cards p,.budget-receipt{font:var(--type-fine);color:var(--ink-soft)}
+.budget-cards .budget-amount{font:var(--type-display);font-variant-numeric:tabular-nums;color:var(--ink);margin:0}
+.budget-amount span{font:var(--type-fine)}
+.budget-receipt{margin-block:var(--space-tight);overflow-wrap:anywhere}
+.budget-receipt summary{cursor:pointer}
+.budget-hash{overflow-wrap:anywhere;font:var(--type-fine)}
+.budget-chart-scroll{overflow-x:auto}
+.budget-chart{width:100%;border-collapse:collapse;table-layout:fixed;margin-block:var(--space-block)}
+.budget-chart caption{text-align:left;font:var(--type-strong);margin-bottom:var(--space-row)}
+.budget-chart th,.budget-chart td{padding:var(--space-row);border-bottom:1px solid var(--divider-subtle);text-align:left;vertical-align:top}
+.budget-chart th:first-child{width:18%}
+.budget-chart strong{font-variant-numeric:tabular-nums}
+.budget-chart-track{display:block;position:relative;height:1rem;margin-block:var(--space-tight);background:linear-gradient(to right,transparent 49.7%,var(--divider-default) 49.7%,var(--divider-default) 50.3%,transparent 50.3%)}
+.budget-chart-bar{position:absolute;height:100%;background:var(--chart-mark)}
+.budget-chart-bar.budget-actual{background:var(--chart-contrast)}
+.budget-legend{display:flex;gap:var(--space-group);font:var(--type-fine)}
+.budget-legend span:before{content:'';display:inline-block;width:.75rem;height:.75rem;margin-right:var(--space-tight);background:var(--chart-mark)}
+.budget-legend span+span:before{background:var(--chart-contrast)}
+.budget-papers{list-style:none;padding:0}
+.budget-papers li{padding-block:var(--space-row);border-bottom:1px solid var(--divider-subtle)}
+.budget-papers p,.budget-note{color:var(--ink-soft);font:var(--type-fine)}
+@media(max-width:760px){.budget-cards{grid-template-columns:repeat(2,minmax(0,1fr))}.budget-cards .budget-amount{font:var(--type-heading)}.budget-chart th,.budget-chart td{padding:var(--space-tight)}.budget-chart th:first-child{width:24%}.budget-chart .budget-receipt{font:var(--type-fine)}}
+@media(max-width:420px){.budget-cards{grid-template-columns:1fr}.budget-chart-track{display:none}}
