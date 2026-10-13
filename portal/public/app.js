@@ -1947,6 +1947,7 @@ async function route() {
   const view = segs[0] === 'search' || (segs[0] === 'ask' && params.get('view') === 'search') ? 'search' : segs[0];
   const manageFocus = !firstRoute;
   firstRoute = false;
+  if (view !== "chat") chatAskOnArrival = null; // a follow-up is asked only where it was headed
   destroySupplierPage();
   destroyConnectionsPage();
   settleOn.stop?.(); // a landing still settling belongs to the page being left
@@ -9997,19 +9998,32 @@ mountExportMenu($("ask-export-picker"), (format) => {
 
 /** The answer on the page becomes the first exchange of a conversation, and
  *  the reader's next question is asked there. What the "Continue in a
- *  conversation" button did, now what any follow-up on the page does. */
-function openConversationFrom(ask) {
+ *  conversation" button did, now what any follow-up on the page does.
+ *  route() is async, so the question cannot be sent here: it would land in
+ *  the thread before initChat seeds it, and the seed would replace it (one
+ *  tap opened the conversation, a second asked). It waits for initChat. */
+let chatAskOnArrival = null; // {question, carry}: asked once the seeded thread is drawn
+function openConversationFrom(ask, question, carry) {
   if (!ask?.question || !ask?.answer) return false;
   try { sessionStorage.setItem("opax-chat-seed", JSON.stringify(ask)); } catch { /* still usable unseeded */ }
+  chatAskOnArrival = question ? { question, carry } : null;
   goRoute("/chat");
   return true;
+}
+function takeChatArrival() {
+  const arriving = chatAskOnArrival;
+  chatAskOnArrival = null;
+  return arriving;
+}
+/** A follow-up chosen under the answer on the Ask page. */
+function askFollowupHandler(ask) {
+  return (item) => openConversationFrom(ask, item.question, item);
 }
 $("ask-keep-form").addEventListener("submit", (e) => {
   e.preventDefault();
   const q = $("ask-keep-input").value.trim();
   if (!q) return;
-  $("ask-keep-input").value = "";
-  if (openConversationFrom(lastAsk)) sendChat(q);
+  if (openConversationFrom(lastAsk, q)) $("ask-keep-input").value = "";
 });
 
 /** A suggested question, chosen: into the box, into the URL, and asked. */
@@ -10184,7 +10198,7 @@ function normaliseFollowups(data) {
 function prefetchAskFollowups(ask) {
   if (!ask?.question || !ask?.answer || ask.answered === false) return;
   if (ask.next?.length) {
-    renderFollowups(ask.next, $("ask-followups"), item => { if (openConversationFrom(ask)) sendChat(item.question, item); });
+    renderFollowups(ask.next, $("ask-followups"), askFollowupHandler(ask));
     return;
   }
   const passages = followupPassages(ask.sources);
@@ -10197,9 +10211,7 @@ function prefetchAskFollowups(ask) {
     const questions = normaliseFollowups(data);
     if (questions.length && lastAsk === ask) {
       ask.next = questions;
-      renderFollowups(questions, $("ask-followups"), (item) => {
-        if (openConversationFrom(ask)) sendChat(item.question, item);
-      });
+      renderFollowups(questions, $("ask-followups"), askFollowupHandler(ask));
     }
     return questions;
   }).catch(() => []);
@@ -10509,6 +10521,7 @@ function startNewConversation() {
   chatStoreWrite();
   chatThread = [];
   chatSpeaker = ""; // a new conversation is with the whole record again
+  chatAskOnArrival = null;
   try { sessionStorage.removeItem("opax-chat-seed"); } catch { /* nothing stored to forget */ }
   if (dockOpen) {
     chatFollower.stop();
@@ -10565,7 +10578,10 @@ function initChat(manageFocus) {
   } catch { /* a bad seed leaves the existing thread standing */ }
   renderChatThread();
   renderChatHistory();
-  requestChatFollowups();
+  // A follow-up chosen on the Ask page is asked now, into the seeded thread.
+  const arriving = takeChatArrival();
+  if (arriving) sendChat(arriving.question, arriving.carry);
+  else requestChatFollowups();
   chatSyncPull();
   // Land at the end of the thread: the history above is context, the last
   // answer, its chips and the input are the point of this view. The composer
@@ -11095,7 +11111,8 @@ async function sendChat(question, carry) {
   chatThread.push(userTurn);
   saveChatSession();
   renderChatThread();
-  $("chat-input").value = "";
+  // A chosen follow-up leaves a half-typed question in the box alone.
+  if ($("chat-input").value.trim() === q) $("chat-input").value = "";
   $("chat-send").disabled = true;
   // The waiting state: the animal on its track, and beneath it the steps the
   // answer moves through (stages.js) as the Worker reports them - the stream
