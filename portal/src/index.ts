@@ -91,6 +91,7 @@ import { AGENTIC_TOOLS_VERSION } from './agentic-tools'
 import { createOpenRouter } from '@openrouter/ai-sdk-provider'
 import { createResearch, researchLimits } from './research-loop'
 import { recordResearchAnswer, recordResearchComparison, recordResearchFailure } from './research-monitor'
+import { cachedKbLookup } from './kb-cache'
 import { withPlannerResearch, withResearchEval } from './research-response'
 import { researchDailyBudget, researchReservationUsd, unmeteredResearchBudget } from './research-budget'
 import { ResearchError, type ResearchPayload } from './research-types'
@@ -5908,15 +5909,18 @@ const replayPost = (request: Request, body: string) =>
 // ---------------------------------------------------------------------------
 
 /** All tool fetches, including response-body reads, carry the request budget signal. */
-function agenticToolDeps(env: Env, signal?: AbortSignal): ToolDeps {
+function agenticToolDeps(env: Env, signal?: AbortSignal, ctx?: ExecutionContext): ToolDeps {
   return {
     origin: SITE_ORIGIN, signal,
-    withSignal: signal => agenticToolDeps(env, signal),
+    withSignal: signal => agenticToolDeps(env, signal, ctx),
     kb: async (path, body) => {
       signal?.throwIfAborted()
-      const res = await kbFetch(env, path, { ...(body === undefined ? {} : { body }), signal })
-      if (!res.ok) throw new Error('record lookup unavailable')
-      const data = await res.json() as Record<string, unknown>
+      // Repeated searches and counts within the hour come from the edge cache; operator evals always read the KB.
+      const data = await cachedKbLookup(path, body, env.RESEARCH_EVAL ? undefined : env.CACHE_EPOCH, async () => {
+        const res = await kbFetch(env, path, { ...(body === undefined ? {} : { body }), signal })
+        if (!res.ok) throw new Error('record lookup unavailable')
+        return await res.json() as Record<string, unknown>
+      }, ctx ? work => ctx.waitUntil(work) : undefined)
       signal?.throwIfAborted(); return data
     },
     asset: async path => {
@@ -5929,7 +5933,7 @@ function agenticToolDeps(env: Env, signal?: AbortSignal): ToolDeps {
 }
 function agenticDeps(env: Env, ctx: ExecutionContext, signal?: AbortSignal, input: Record<string, unknown> = {}): AgenticDeps {
   return {
-    ...agenticToolDeps(env, signal),
+    ...agenticToolDeps(env, signal, ctx),
     ...(env.RESEARCH_SHADOW ? { researchShadow: true } : {}),
     plannerTrail: true,
     ...(env.RESEARCH_LOOP === 'route' ? {
