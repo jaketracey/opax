@@ -1,0 +1,8 @@
+[
+  {"id": "Q1", "kind": "person-quote", "question": "What has Andrew Wilkie said about poker machine reform?"},
+  {"id": "Q2", "kind": "person-quote", "question": "What has Penny Wong said about the Pacific?"},
+  {"id": "Q3", "kind": "topic-over-time", "question": "How has the number of gambling speeches changed each year since 2015, and who led it?"},
+  {"id": "Q4", "kind": "comparison", "question": "How do Labor and the Coalition differ on nuclear power?"},
+  {"id": "Q5", "kind": "money", "question": "Who are the biggest donors to the Nationals?"},
+  {"id": "Q6", "kind": "ranking", "question": "Which party has spoken most about housing affordability since 2022?"}
+]

@@ -36,7 +36,8 @@
     "build:donors": "node ../scripts/build_donor_index.mjs",
     "build:independent": "node ../scripts/build_parallel.mjs",
     "build:registers": "node scripts/build-register-tables.mjs",
-    "check:built": "node ../scripts/check_built.mjs"
+    "check:built": "node ../scripts/check_built.mjs",
+    "research:local": "node ../scripts/research_local.mjs"
   },
   "devDependencies": {
     "@types/three": "^0.185.4",

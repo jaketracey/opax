@@ -3,3 +3,7 @@ node_modules/
 .wrangler/
 worker-configuration.d.ts
 .og-preview/
+research-local.wrangler.jsonc
+research-local-nodata.wrangler.jsonc
+.research-assets/
+research-local-slim.wrangler.jsonc
