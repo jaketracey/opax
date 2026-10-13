@@ -327,8 +327,8 @@ function moreMenuHTML(items, label, opts) {
 }
 function mountPendingPageMenus() {
   for (const node of document.querySelectorAll('[data-pending-page-menu]')) {
-    const args = JSON.parse(node.dataset.pendingPageMenu);
-    node.outerHTML = pageMenus.pageMenuHTML(...args);
+    const [items,label,opts] = JSON.parse(node.dataset.pendingPageMenu);
+    node.outerHTML = pageMenus.pageMenuHTML(items,label ?? undefined,opts ?? undefined);
   }
 }
 
@@ -13117,7 +13117,10 @@ function renderDivisionDoc({ d, entry, bills }, slug, manageFocus) {
       ], "More about this division")}
     </div>`;
   $("doc-bill").hidden = false;
-  $("doc-bill").querySelector('[data-more-action="copy-division"]')?.addEventListener("click", (e) => copyText(siteUrl(`/doc/${slug}`), e.currentTarget));
+  pageMenusReady.then(() => {
+    if (currentDocSlug !== slug) return;
+    $("doc-bill").querySelector('[data-more-action="copy-division"]')?.addEventListener("click", (e) => copyText(siteUrl(`/doc/${slug}`), e.currentTarget));
+  });
   const members = (Array.isArray(d.members) ? d.members : []).filter((m) => m?.name);
   const absent = members.filter((m) => m.vote === "absent").length;
   const split = entry ? billSplitParts(entry) : null;
@@ -14269,8 +14272,10 @@ function reportEssay(item, { id, slug, number } = {}) {
       { action: "copy-section", label: "Copy link to this section" },
       { href: askHash(item.question || item.label || ""), label: "Ask the record about this" },
     ], "More about this section"));
-    top.querySelector('[data-more-action="copy-section"]')?.addEventListener("click", (e) =>
-      copyText(siteUrl(`/reports/${slug}/s/${number}`), e.currentTarget));
+    pageMenusReady.then(() => {
+      top.querySelector('[data-more-action="copy-section"]')?.addEventListener("click", (e) =>
+        copyText(siteUrl(`/reports/${slug}/s/${number}`), e.currentTarget));
+    });
   }
   sec.append(top, body);
   if (sources.length) sec.append(reportSourcesFold(sources, "Sources"));
