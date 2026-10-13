@@ -54,8 +54,13 @@ const TEMPLATES = {
   },
   'topic page': {
     panel: `<section id="panel-subject" class="panel"><div id="subject-body">
-      <div class="subject-grid topic-page-grid"><div class="subject-main"></div><aside class="infobox"></aside></div></div></section>`,
-    blocks: ['#panel-subject', '.topic-page-grid'],
+      <div class="topic-reader-tools"><form class="topic-ask-form"></form></div>
+      <div class="subject-grid topic-page-grid"><div class="subject-main">
+        <section class="topic-money"><figure class="chart"></figure></section>
+        <section class="topic-tide"><figure></figure></section><section class="topic-arc"><ol></ol></section>
+      </div><aside class="infobox"></aside></div></div></section>`,
+    // The main column's blocks fill their grid track, which runs from the grid's own width.
+    blocks: ['#panel-subject', '.topic-reader-tools', '.topic-page-grid', '.topic-money', '.topic-page-grid .chart', '.topic-tide', '.topic-arc'],
   },
   bill: {
     panel: `<section id="panel-bill" class="panel"><div id="bill-body">
@@ -92,6 +97,7 @@ test('the selectors here are the ones the pages draw', () => {
   const drawn = [
     ['app', 'class="subject-head topic-index-head"'], ['app', 'class="topic-index-tools"'], ['app', 'class="topic-index-cols"'],
     ['app', 'class="topic-index-list"'], ['app', 'class="topic-index-coverage"'], ['app', 'classList.add("topic-page-grid")'],
+    ['app', 'class="topic-reader-tools"'], ['app', 'class="topic-money"'], ['app', '<section class="topic-tide">'],
     ['app', '<div class="subject-head bill-head">'], ['app', 'class="party-receipts"'], ['app', 'slot.id = "person-pay"'],
     ['explain', 'class="mx-page"'], ['electorates', 'class="el-demographics"'], ['shell', '<section id="panel-declared" class="panel"'],
     ['shell', 'id="report-stats"'], ['shell', '<div class="wrap masthead">'], ['instruments', 'class="instrument-facts"'],
