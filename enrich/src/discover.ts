@@ -8,6 +8,9 @@
 import { enqueue, getState, setState, NEW_CONTENT_PRIORITY, type NewWork, type TaskName } from './db.ts'
 import type { KbApi } from './kb.ts'
 import { isHistoricSpeech } from './historic.ts'
+import { ownedBudget, assertBudgetOwnership, resourceBudget, admissionBudget, type AdmissionBudget } from './run-budget.ts'
+import { readConfig, type Config } from './env.ts'
+import { readClassifications } from './classify.ts'
 
 export const DISCOVERY_KINDS: ReadonlyArray<{ kind: string; tasks: readonly TaskName[] }> = [
   { kind: 'speech', tasks: ['speech_summary', 'speech_topics'] },
@@ -40,6 +43,7 @@ export interface DiscoveryOptions {
   /** Time box for the whole discovery pass; when it runs out the walk is left partial and resumes next tick. */
   maxMs?: number
   clock?: () => number
+  config?: Config
 }
 
 export interface DiscoveryResult {
@@ -85,8 +89,31 @@ export async function discover(opts: DiscoveryOptions): Promise<DiscoveryResult>
             }))
           }
         }
+        const budgets=new Map<string,AdmissionBudget>()
+        if (kind==='speech') {
+          // Catalog classifications do not carry extra.metadata. Always inspect
+          // basic+extra so an automatic discovery cannot bypass a run's cap.
+          for (const row of got.rows) {
+            if (held.has(row.rid)) continue
+            const saved=await ownedBudget(opts.db,row.rid)
+            const basic=await opts.kb.getBasic(row.rid)
+            if (!saved && basic && readClassifications(basic).some(c=>c.labelset==='source' && c.label==='openaustralia')
+                && !basic.extra?.metadata) throw new Error('OpenAustralia budget metadata unavailable')
+            const declared=basic ? resourceBudget(basic) : null
+            assertBudgetOwnership(saved,declared)
+            if (saved) budgets.set(row.rid,saved)
+            else if (declared) {
+              const full=await opts.kb.getResource(row.rid)
+              if (!full) throw new Error('bounded resource unavailable')
+              assertBudgetOwnership(declared,resourceBudget(full))
+              const b=admissionBudget(full,row.rid,opts.config ?? readConfig({}))
+              if (!b) throw new Error('bounded resource metadata changed')
+              budgets.set(row.rid,b)
+            }
+          }
+        }
         const work: NewWork[] = got.rows.flatMap((r) => tasks.map((task) => ({ rid: r.rid, task, priority: NEW_CONTENT_PRIORITY,
-          sourceCreated: parseCreated(r.created), historicHold: held.has(r.rid) })))
+          sourceCreated: parseCreated(r.created), historicHold: held.has(r.rid), runBudget:budgets.get(r.rid) })))
         result.enqueued[kind] += await enqueue(opts.db, work, opts.now)
         for (const r of got.rows) {
           const created = parseCreated(r.created)

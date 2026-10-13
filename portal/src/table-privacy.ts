@@ -1,6 +1,33 @@
 import {compileHashedIdentityCheck} from './table-identity-hashes.mjs'
 
 const indices = new WeakMap<Fetcher, Promise<(text: string) => boolean>>()
+const readers = new WeakMap<Function, Fetcher>()
+const readChecks = new WeakMap<Fetcher, Promise<(text: string) => boolean>>()
+/** Adapt SSR's read boundary to the same complete hashed registry. */
+export function tablePrivacyCheckFromRead(read: (path: string) => Promise<unknown>): Promise<(text: string) => boolean> {
+  let assets = readers.get(read)
+  if (!assets) {
+    assets = {fetch: async (request: Request) => Response.json(await read(new URL(request.url).pathname))} as Fetcher
+    readers.set(read, assets)
+  }
+  let pending = readChecks.get(assets)
+  if (!pending) {
+    pending = tablePrivacyCheck(assets).then(check => {
+      // The shared index is immutable for this reader. Bound repeated row,
+      // scalar and facet checks to this render without duplicating its policy.
+      const results = new Map<string, boolean>()
+      return text => {
+        if (results.has(text)) return results.get(text)!
+        const safe = check(text)
+        if (results.size >= 256) results.clear()
+        results.set(text, safe)
+        return safe
+      }
+    })
+    readChecks.set(assets, pending)
+  }
+  return pending
+}
 /** Complete build-time registry: donor, recipient and supplier identities.
  * Only hashes are served; anonymised graphs cannot reconstruct this index. */
 export async function tablePrivacyCheck(assets: Fetcher): Promise<(text: string) => boolean> {

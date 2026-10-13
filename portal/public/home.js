@@ -1,4 +1,4 @@
-import {donorNameWithheld,loadDonorViewIndex} from './donor-views.js?v=55a8bd3ae0';
+import {donorNameWithheld,loadDonorViewIndex} from './donor-views.js?v=77470b1d26';
 let donorPrivacy={organisations:new Set(),withheld:new Set()};
 loadDonorViewIndex().then(index=>{donorPrivacy=index});
 import { personUrl, partyUrl } from './canonical-urls.js?v=225d5915ea';
@@ -383,7 +383,7 @@ renderBuilder();
 const root = $("hp-money-map");
 const chipGroup = $("hp-industries");
 const chips = () => [...chipGroup.querySelectorAll("[data-industry]")];
-const MAP_DATA = "/graph/money.json?v=suppliers-1";
+const MAP_DATA = "/graph/money.json";
 let handle;
 let visible = false;
 let started = false;
@@ -461,7 +461,7 @@ async function mount() {
     const span = mapSpan(graph.meta);
     if (span) $("hp-map-span").textContent = span;
     const { mountMoneyMap } = await import(
-      "/money-map.js?v=ca923f4f2e"
+      "/money-map.js?v=fb33962c2d"
     );
     if (disposed) return;
     root.replaceChildren();
@@ -532,7 +532,7 @@ window.addEventListener("pagehide", (event) => {
 window.addEventListener("pageshow", pause);
 
 // The compact header keeps the same cross-collection quick search as the app.
-const headerSearch = OpaxQuickSearch.disclosure($('header-search-open'), $('header-search-panel'), $('mast-q'));
+const headerSearch = OpaxQuickSearch.header;
 const searchHref = q => '/ask?' + new URLSearchParams({view:'search', q});
 let headerReferences;
 async function headerSuggestions(q) {

@@ -17,7 +17,10 @@ const compile = async entry => {
   const compiled = await build({entryPoints:[new URL(entry,import.meta.url).pathname],bundle:true,platform:'browser',format:'esm',write:false,external:['node:*'],plugins:[{name:'omit-og',setup(b){b.onResolve({filter:/^\.\/og-render$/},()=>({path:'renderer',namespace:'hub-test'}));b.onLoad({filter:/.*/,namespace:'hub-test'},()=>({contents:'export const renderOgPng=async()=>null; export const renderOgJpeg=renderOgPng;',loader:'js'}));}}]});
   return import('data:text/javascript;base64,'+Buffer.from(compiled.outputFiles[0].text).toString('base64'));
 };
-const {renderSittingWeek,renderSittingIndex,renderEstimates,hubPage} = await compile('../src/hubs.ts');
+const {renderSittingWeek: rawSittingWeek,renderSittingIndex,renderEstimates,hubPage} = await compile('../src/hubs.ts');
+import {tablePrivacyIndex} from './datatable-privacy.mjs';
+const tableIndex = await tablePrivacyIndex();
+const renderSittingWeek = (data, week, people, slugs, today, footer, query) => rawSittingWeek(data, week, people, slugs, today, footer, query, tableIndex.safe);
 const period = calendar.periods.find(w => w.start === '2026-10-12');
 const fixtureWeek = deriveWeek(period,records.bills,records.divisions,calendar.updated);
 const data = {...calendar,snapshotDate:calendar.updated,billUpdated:'2026-10-04',latestFederalDivision:'2026-08-20',weeks:[fixtureWeek]};
@@ -37,7 +40,9 @@ test('week fixtures use introduction dates and division dates, exclude states, a
 test('SSR week uses the validated sponsor, dated Machine-written label and 2D title with outcome and tally',()=>{
   const page = renderSittingWeek(data,fixtureWeek,people,slugs);
   assert.match(page.html,/href="\/subject\/person\/mehreen-faruqi">Mehreen Faruqi/);
-  for (const text of ['Machine-written','Written 13 Oct 2026','A model summary.','The 2D division title','Agreed · 40 ayes · 20 noes','Not agreed · 50 ayes · 80 noes','Senate two-thirds cut-off','14 Oct 2026']) assert.ok(page.html.includes(text),text);
+  for (const text of ['Machine-written','Written 13 Oct 2026','A model summary.','The 2D division title','Agreed','Not agreed','Senate two-thirds cut-off','14 Oct 2026']) assert.ok(page.html.includes(text),text);
+  assert.match(page.html,/data-label="Ayes"[^>]*>[\s\S]*?class="dt-value">40<\/span>/);
+  assert.match(page.html,/data-label="Noes"[^>]*>[\s\S]*?class="dt-value">80<\/span>/);
   assert.doesNotMatch(page.html,/Fallback title/);
   assert.equal(page.jsonLd['@graph'][0]['@type'],'Event');
   assert.equal(page.jsonLd['@graph'][1].numberOfItems,4);
@@ -48,13 +53,16 @@ test('SSR week uses the validated sponsor, dated Machine-written label and 2D ti
   malicious.bills[0].title='<img src=x onerror=bad>';
   malicious.bills[0].sources=[{kind:'billhome',url:'javascript:alert(1)'}];
   malicious.divisions[0].ayes='<script>bad</script>';
-  assert.doesNotMatch(renderSittingWeek(data,malicious,people,slugs).html,/<img|<script|javascript:/);
+  assert.doesNotMatch(renderSittingWeek(data,malicious,people,slugs).html,/<img|<script>|javascript:/);
 });
-test('empty week has calendar facts and arrival text, with no loading text or empty record sections',()=>{
+test('empty week retains calendar facts and a zero-row division table',()=>{
   const week = deriveWeek(period,[],[],calendar.updated);
   const page = renderSittingWeek({...data,weeks:[week]},week,[],new Map(),'2026-10-10');
   for (const fact of ['12 Oct 2026','15 Oct 2026','House of Representatives','Senate','14 Oct 2026',"Bill details update when Parliament's site allows our crawler"]) assert.ok(page.html.includes(fact),fact);
-  assert.doesNotMatch(page.html,/loading|opening|placeholder|<h2>Bills introduced|<h2>Divisions held|<ul class="hub-records">/i);
+  assert.doesNotMatch(page.html,/loading|opening|<h2>Bills introduced|<h2>Divisions held|<ul class="hub-records">/i);
+  assert.match(page.html,/data-vote-table/);
+  assert.match(page.html,/Showing 0–0 of 0/);
+  assert.match(page.html,/data-export disabled/);
   assert.equal(week.lastmod,calendar.updated);
 });
 test('bill rows have one introduction meta line, portfolio fallback and no missing-summary placeholder',()=>{
@@ -216,7 +224,8 @@ test('hubs carry the breadcrumb, one dated source line per records block, and th
   const page = renderSittingWeek(data,fixtureWeek,people,slugs);
   assert.match(page.html,/^<nav class="crumbs prerender-crumbs"[^>]*>[\s\S]*href="\/sitting">Sitting weeks<\/a>[\s\S]*aria-current="page"><svg[^]*?<span class="crumb-label">12 Oct 2026 – 15 Oct 2026<\/span>/);
   assert.match(page.html,/<h1>[^<]+<\/h1><p class="hub-meta">House of Representatives and Senate<\/p>/);
-  const sections = page.html.match(/<section class="hub-section">[\s\S]*?<\/section>/g);
+  // The shared table contains its own section; inspect each complete hub block.
+  const sections = page.html.split('<section class="hub-section">').slice(1);
   assert.equal(sections.length,2);
   for (const section of sections) {
     const lines = section.match(/<span class="ui-source-text">[^]*?<\/span><\/span>/g)||[];

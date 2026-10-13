@@ -1,4 +1,6 @@
 interface Env {
+  /** Read-only DataTable queries; data loading is a separate local operation. */
+  TABLE_DB: D1Database
   /** Publication waits for Jake's election authorisation decision. Exact "true" only. */
   VIC_ELECTION_HUB_ENABLED?: string
   AUTHORISATION_LINE?: string
@@ -7,6 +9,8 @@ interface Env {
   APP_MINIMUM_VERSION?: string
   /** HMAC-SHA-256 key for sign-in and member-bound deletion codes. Separate Worker secret in each environment. */
   COMMUNITY_CODE_MAC_SECRET?: string
+  /** Optional eight-digit store reviewer credential; code-reviewed emails only. */
+  REVIEWER_LOGIN_CODE?: string
   /** Present only on staging: the existing public API, with secrets kept in its Worker. */
   STAGING_API?: Fetcher;
   ARAG_KB_ID: string
@@ -60,9 +64,13 @@ interface Env {
 
 declare namespace Cloudflare {
   interface Env {
+  /** Read-only DataTable queries; data loading is a separate local operation. */
+  TABLE_DB: D1Database
     APP_MINIMUM_VERSION?: string
     /** HMAC-SHA-256 key for sign-in and member-bound deletion codes. Separate Worker secret in each environment. */
     COMMUNITY_CODE_MAC_SECRET?: string
+    /** Optional eight-digit store reviewer credential; code-reviewed emails only. */
+    REVIEWER_LOGIN_CODE?: string
   /** Present only on staging: the existing public API, with secrets kept in its Worker. */
   STAGING_API?: Fetcher;
   ARAG_KB_ID: string

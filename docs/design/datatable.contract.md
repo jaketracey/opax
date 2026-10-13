@@ -116,3 +116,14 @@ links. No fields in the shared TypeScript contract change.
 
 - All derived UI uses rows that pass the same whole-row privacy check: chips, facets, counts, bars, SSR, accessible attributes and CSV. Unvalidated `config.rows` never supplies constant chips; rejected views have no derived chips. Browser checks validate every row and scalar before approving it.
 - Identity checks retain the existing word hashes and add NFKC, case-folded letters-and-digits forms in the `stripped:v1:` hash domain. Minimum compact length is 4. Forms of length 4 or 5 require alphanumeric token boundaries; forms of length 6 or more also match substrings of the separator-stripped input.
+
+Division and voting rollout compatibility
+
+`DataTableConfig.rowPrivacyCheck?` remains an optional synchronous row predicate;
+true admits the source row shape. The shared registry still checks the whole row
+and every scalar before rows, facets, bars or chips are derived.
+
+The core consumes CSV continuation pages using the existing server CSV helper and
+preserves the final truncation record. Empty tables keep export disabled.
+Division and vote projections retain title/date/link and bill/sitting/person
+scopes through standard JSON-array filters. No additional contract fields.

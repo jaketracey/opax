@@ -1,6 +1,7 @@
 // D1 access: the queue, state, spend and error tables (migrations/0001_init.sql).
 // Times are unix milliseconds. Every function takes the database so the tests can
 // run it against a node:sqlite shim.
+import { admit, ownedBudget, assertBudgetOwnership, type AdmissionBudget } from './run-budget.ts'
 
 export type TaskName = 'speech_summary' | 'speech_topics' | 'release_summary'
 export type RowStatus = 'pending' | 'claimed' | 'done' | 'quarantined'
@@ -51,7 +52,7 @@ export const STALE_CLAIM_MS = 10 * 60 * 1000
 /** Infrastructure failures a row may absorb before it is set aside. */
 export const MAX_TRANSIENT = 8
 
-const ROWS_PER_INSERT = 10 // 9 bound parameters a row; D1 allows 100 per statement
+const ROWS_PER_INSERT = 10 // Up to 10 bound parameters a row; D1 allows 100 per statement
 
 // ---------------------------------------------------------------- state
 
@@ -81,6 +82,7 @@ export interface NewWork {
   /** The resource's `created` time in the box (unix ms), when known. */
   sourceCreated?: number | null
   historicHold?: boolean
+  runBudget?: AdmissionBudget
 }
 
 /** Completed/terminal rows and explicit releases are never held. Clear unfinished
@@ -97,14 +99,34 @@ export function holdHistoricStatement(db: D1Database, rids: readonly string[], n
 /** INSERT OR IGNORE on (rid, task): the queue de-duplicates. Returns how many rows were new. */
 export async function enqueue(db: D1Database, work: readonly NewWork[], now: number): Promise<number> {
   if (work.length === 0) return 0
+  let admitted=0
+  const unbounded: NewWork[]=[]
+  const groups=new Map<string,NewWork[]>()
+  for (const w of work) {
+    const group=groups.get(w.rid) ?? []
+    group.push(w)
+    groups.set(w.rid,group)
+  }
+  for (const [rid,group] of groups) {
+    // This also protects manual/admin seeds that did not read KB metadata.
+    // Historic holds create terminal rows and never authorize model calls.
+    const saved=await ownedBudget(db,rid)
+    const declared=group.find(w=>w.runBudget)?.runBudget ?? null
+    assertBudgetOwnership(saved,declared)
+    const budget=saved ?? declared
+    if (budget && !group.every(w=>w.historicHold)) admitted += await admit(db,group,budget,now)
+    else unbounded.push(...group)
+  }
   const statements: D1PreparedStatement[] = []
   const inserts = new Set<D1PreparedStatement>()
-  for (let i = 0; i < work.length; i += ROWS_PER_INSERT) {
-    const chunk = work.slice(i, i + ROWS_PER_INSERT)
-    const values = chunk.map(() => '(?, ?, ?, ?, ?, ?, ?, ?, ?)').join(', ')
+  for (let i = 0; i < unbounded.length; i += ROWS_PER_INSERT) {
+    const chunk = unbounded.slice(i, i + ROWS_PER_INSERT)
+    // Recheck ownership atomically with insertion, in case it appeared after
+    // the lookup above. Such a resource will resume via bounded admission.
+    const values = chunk.map(w => `SELECT ?, ?, ?, ?, ?, ?, ?, ?, ?${w.historicHold ? '' : ' WHERE NOT EXISTS(SELECT 1 FROM enrichment_units WHERE rid=?)'}`).join(' UNION ALL ')
     const params = chunk.flatMap((w) => [w.rid, w.task, w.historicHold ? 'done' : 'pending', w.priority,
-      w.sourceCreated ?? null, w.historicHold ? 1 : 0, w.historicHold ? 'historic-held' : null, now, now])
-    const insert = db.prepare(`INSERT OR IGNORE INTO queue (rid, task, status, priority, source_created, historic, terminal_reason, created_at, updated_at) VALUES ${values}`).bind(...params)
+      w.sourceCreated ?? null, w.historicHold ? 1 : 0, w.historicHold ? 'historic-held' : null, now, now,...(w.historicHold ? [] : [w.rid])])
+    const insert = db.prepare(`INSERT OR IGNORE INTO queue (rid, task, status, priority, source_created, historic, terminal_reason, created_at, updated_at) ${values}`).bind(...params)
     statements.push(insert)
     inserts.add(insert)
     const held = [...new Set(chunk.filter(w => w.historicHold).map(w => w.rid))]
@@ -115,7 +137,7 @@ export async function enqueue(db: D1Database, work: readonly NewWork[], now: num
     const results = await db.batch(statements.slice(i, i + 50))
     results.forEach((r, index) => { if (inserts.has(statements[i + index])) inserted += r.meta?.changes ?? 0 })
   }
-  return inserted
+  return admitted + inserted
 }
 
 // ---------------------------------------------------------------- claiming
