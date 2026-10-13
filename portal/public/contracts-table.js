@@ -1,5 +1,5 @@
-import { applyQuery, dataTableHTML, mountDataTable, guardTableURL, parseQuery, serializeQuery } from './datatable.js?v=a29b28e72e';
-import {isOrganisationRecipient} from './recipient-entity.js?v=33f5c5486d';
+import { applyQuery, dataTableHTML, mountDataTable, guardTableURL, parseQuery, serializeQuery } from './datatable.js?v=2b14267bc6';
+import {isOrganisationRecipient} from './recipient-entity.js?v=cda52f7295';
 import {rawQueryValues} from './datatable-query.js?v=6dd55aab38';
 
 // Pass 5 lane B: references read by what was bought, then by the counterpart.

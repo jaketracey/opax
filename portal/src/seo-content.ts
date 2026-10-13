@@ -1,5 +1,6 @@
 import {isOrganisationRecipient} from '../public/recipient-entity.js'
 import {supplierContractsHTML} from '../public/contracts-table.js'
+import { decodeHTMLStrict } from 'entities'
 import {donorsNotNamedDetail} from "../public/donor-views.js"
 import { shortDate } from '../public/format.js'
 import { personUrl, partyUrl } from '../public/canonical-urls.js'
@@ -73,16 +74,38 @@ const CRUMB_SEP = '<svg class="crumb-sep" viewBox="0 0 6 10" aria-hidden="true">
  *  under the masthead; once the app takes a page over it is hidden with
  *  #prerender and the app's own #crumbs speaks instead. No trail, no strip. */
 export function crumbsHTML(items: Crumb[] = []): string {
-  if (!items.length) return ''
-  const trail: Crumb[] = [{ label: 'Home', href: '/' }, ...items]
-  const label = (s: string) => { const t = String(s || '').replace(/\s+/g, ' ').trim(); return t.length > 60 ? `${t.slice(0, 59).trimEnd()}…` : t }
+  const trail = crumbSteps(items)
+  if (!trail.length) return ''
   const steps = trail.map((it, i) => {
-    const here = i === trail.length - 1, href = !here && it.href ? safeHref(it.href) : null
-    const text = escapeHtml(label(it.label))
-    const el = href ? `<a class="crumb-label" href="${escapeHtml(href)}">${text}</a>` : `<span class="crumb-label">${text}</span>`
+    const here = i === trail.length - 1
+    const text = escapeHtml(it.label)
+    const el = it.href ? `<a class="crumb-label" href="${escapeHtml(it.href)}">${text}</a>` : `<span class="crumb-label">${text}</span>`
     return `<li${here ? ' class="crumb-here" aria-current="page"' : ''}>${i ? CRUMB_SEP : ''}${el}</li>`
   }).join('')
   return `<nav class="crumbs prerender-crumbs" aria-label="Breadcrumb"><ol class="wrap crumbs-list">${steps}</ol></nav>`
+}
+/** A trail as it is shown, Home first: each label on one line (60 characters
+ *  at most), each ancestor's address checked, the page itself unlinked. The
+ *  strip and the page's BreadcrumbList both read it, so they cannot differ. */
+export function crumbSteps(items: Crumb[] = []): { label: string; href: string | null }[] {
+  if (!items.length) return []
+  const trail: Crumb[] = [{ label: 'Home', href: '/' }, ...items]
+  const label = (s: string) => { const t = String(s || '').replace(/\s+/g, ' ').trim(); return t.length > 60 ? `${t.slice(0, 59).trimEnd()}…` : t }
+  return trail.map((it, i) => ({ label: label(it.label), href: i < trail.length - 1 && it.href ? safeHref(it.href) || null : null }))
+}
+/** The trail a renderer already printed into its block (server-only pages
+ *  write their own strip), after Home; null when the block has none. */
+export function printedTrail(html: string | null | undefined): Crumb[] | null {
+  const strip = /<nav class="crumbs prerender-crumbs"[^>]*>([\s\S]*?)<\/nav>/.exec(html || '')?.[1]
+  if (!strip) return null
+  const steps = [...strip.matchAll(/<(a|span) class="crumb-label"(?: href="([^"]*)")?>([\s\S]*?)<\/\1>/g)]
+    .map(([, , href, text]) => ({ label: decodeHTMLStrict(text.replace(/<[^>]+>/g, '')), ...(href ? { href: decodeHTMLStrict(href) } : {}) }))
+  return steps.slice(1)
+}
+/** The text of a block's first heading: the name the page gives itself. */
+export function headingOf(html: string | null | undefined): string {
+  const h1 = /<h1\b[^>]*>([\s\S]*?)<\/h1>/.exec(html || '')?.[1]
+  return h1 ? decodeHTMLStrict(h1.replace(/<[^>]+>/g, '')).replace(/\s+/g, ' ').trim() : ''
 }
 /** The crawlable answer: one title, one sentence, the body. No kicker: the
  *  title says what the page is once (principle 3), and a server-only page's

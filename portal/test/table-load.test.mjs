@@ -13,6 +13,10 @@ test('individual type evidence overrides organisation-looking names',()=>{
   assert.equal(isOrganisationRecipient({name:org.label,identity:{type:'IND',kind:'company'}}),false);
   assert.equal(isOrganisationRecipient({name:org.label,abr:{etype:'IND'}}),false);
   assert.equal(isOrganisationRecipient({name:org.label,id:'person:fixture-id',kind:'company'}),false);
+  assert.equal(isOrganisationRecipient({name:org.label,supplier_id:'person:fixture-id',recipient_kind:'organisation'}),false);
+  for(const field of ['recipient_kind','supplierKind','supplier_kind']) assert.equal(isOrganisationRecipient({name:org.label,kind:'company',[field]:'sole_trader'}),false);
+  for(const field of ['supplierABNType','supplier_abn_type']) assert.equal(isOrganisationRecipient({name:org.label,recipient_kind:'organisation',[field]:'IND'}),false);
+  assert.equal(isOrganisationRecipient({recipient_kind:'organisation'}),true);
   assert.equal(isOrganisationRecipient({name:org.label,kind:'company'}),true);
   assert.equal(isOrganisationRecipient({}),false);
 });
@@ -21,16 +25,17 @@ test('the original migration retains the dataset FTS tables',async()=>{
   assert.equal((checked.match(/USING fts5/g)||[]).length,10);
   assert.equal((tableSchema().match(/USING fts5/g)||[]).length,10);
 });
-test('the original D1 schema upgrades to the typed record projections',async()=>{
-  const checked=await readFile(new URL('../table-migrations/0001_tables.sql',import.meta.url),'utf8');
-  const upgrade=await readFile(new URL('../table-migrations/0002_vote_records.sql',import.meta.url),'utf8');
+test('the original D1 schema upgrades to grants and voting record projections',async()=>{
   const local=await tableDatabase({datasets:{}});
   try {
-    for(const name of ['divisions','votes']) {
+    for(const name of ['grants','divisions','votes']) {
       await local.db.exec(`DROP TABLE table_${name}_fts;\nDROP TABLE table_${name}_facets;\nDROP TABLE table_${name};`);
     }
-    await local.db.exec(checked); await local.db.exec(upgrade);
-    for(const name of ['divisions','votes']) {
+    for(const file of ['0001_tables.sql','0002_grants_projection.sql','0002_vote_records.sql']) {
+      const sql=await readFile(new URL('../table-migrations/'+file,import.meta.url),'utf8');
+      for(const statement of sql.replace(/^--.*$/gm,'').split(';').filter(v=>v.trim())) await local.db.prepare(statement).run();
+    }
+    for(const name of ['grants','divisions','votes']) {
       const columns=await local.db.prepare(`PRAGMA table_info(table_${name})`).all();
       assert.deepEqual(new Set(columns.results.map(c=>c.name)),new Set(['rowid','search',...TABLE_DATASETS[name].columns.map(c=>c.key)]));
     }

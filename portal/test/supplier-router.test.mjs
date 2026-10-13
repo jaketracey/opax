@@ -10,7 +10,7 @@ const code = app.slice(app.indexOf('let supplierPage ='), app.indexOf('function 
 function harness(loadModule) {
   const body = { innerHTML: '', classList: { remove() {} } };
   const context = { loadModule, currentSubjectKey: null, activeDirectory: null,
-    $: () => body, destroySubjectMap() {}, document: {}, replaceRoute() {}, setCrumbs() {}, subjectMentions() {} };
+    $: () => body, destroySubjectMap() {}, document: {}, replaceRoute() {}, setCrumbs() {}, crumbsFor:()=>[], subjectMentions() {} };
   runInNewContext(code, context);
   return { context, body };
 }

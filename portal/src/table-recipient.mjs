@@ -1,1 +1,1 @@
-export {isOrganisationRecipient} from '../public/recipient-entity.js';
+export {isOrganisationRecipient} from '../public/recipient-privacy.js';
