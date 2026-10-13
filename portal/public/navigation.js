@@ -10,15 +10,18 @@
   // section, kept out of the page until it is known to be published. `record`:
   // a page inside its column's section (a report inside Reports), not one.
   const page = (href, label, blurb = '', more = {}) => ({ href, label, blurb, ...more });
+  // Parliament holds the chamber's business and its laws. Divisions and votes
+  // have no index of their own: they live in each sitting week, each bill and
+  // each parliamentarian's voting record, which is what these entries say.
   const groups = [
-    { id: 'parliament', label: 'Parliament', href: '/sitting', sub: 'Sitting weeks, bills and estimates',
-      intro: 'What the chambers are doing, and the laws before them.', feature: 'week', columns: [
+    { id: 'parliament', label: 'Parliament', href: '/sitting', sub: 'Sitting weeks, votes, bills and instruments',
+      intro: 'What the chambers sat on and voted on, and the laws before them.', feature: 'week', columns: [
         { heading: 'In the chamber', links: [
-          page('/sitting', 'Sitting weeks', 'Bills introduced and divisions held, week by week.'),
+          page('/sitting', 'Sitting weeks', 'Every division and every new bill, week by week.'),
           page('/estimates', 'Senate estimates', 'Hearings, the agencies called and their recent awards.', { gate: 'estimates' }),
         ] },
         { heading: 'Laws', links: [
-          page('/bills', 'Bills', 'Federal bills: stages, votes, speeches and summaries.'),
+          page('/bills', 'Bills', 'Each bill\'s stages, its votes, the debate and a summary.'),
           page('/instruments', 'Legislative instruments', 'Regulations and rules made under Acts.', { gate: 'instruments' }),
         ] },
       ] },

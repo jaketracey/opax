@@ -396,3 +396,16 @@ test('Privacy is one tap from the conversation page and linked wherever data is 
   assert.match(history.slice(0, history.indexOf('\n}\n')), /policy\.href = "\/privacy#privacy-questions"/, 'saved conversations say where they are kept');
   assert.match(read('community.js'), /<a href="\/privacy">How we use your account details<\/a>/, 'community sign-in');
 });
+
+test('Instruments sits under Parliament with Bills, never on the top level, and lights Parliament', () => {
+  assert.deepEqual(nav.groups.map(g => g.label), ['Parliament', 'People & places', 'Money', 'Topics & reports', 'About']);
+  const parliament = nav.groups.find(g => g.id === 'parliament');
+  const laws = parliament.columns.find(c => c.heading === 'Laws');
+  assert.deepEqual(laws.links.map(l => l.href), ['/bills', '/instruments']);
+  assert.deepEqual(parliament.columns.find(c => c.heading === 'In the chamber').links.map(l => l.href), ['/sitting', '/estimates']);
+  // The static bar (no scripts) carries the five groups only.
+  assert.doesNotMatch(nav.barHTML(), /instruments/i);
+  for (const path of ['/instruments', '/instrument/F2026L00001', '/bills', '/bill/au-federal-r1', '/sitting', '/estimates/2026-10']) assert.equal(nav.active(path), 'parliament', path);
+  assert.equal(label(nav.trail('/instruments')), 'Legislative instruments');
+  assert.equal(label(nav.trail('/instrument/F2026L00001', 'An instrument')), 'Legislative instruments › An instrument');
+});
