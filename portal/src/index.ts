@@ -4,10 +4,12 @@ import sourceIdentity from '../../parli/ingest/user-agent.json'
 import { SA_EXCERPT_LABEL, isSaHansard, saFullText, saOfficialUrl } from '../public/sa-hansard.js'
 import { saPublicResponse, saEventPayload } from './sa-hansard'
 import { saEvidenceText, saEvidenceRecord, saGenerationResponse, saConversationInput } from './sa-evidence'
-import {tablePrivacy, tablePrivacyCheck} from './table-privacy'
+import {memoisedCheck, tablePrivacy, tablePrivacyCheck} from './table-privacy'
+import {ServerTiming, timed, withTiming} from './server-timing'
 import { divisionPlain } from '../public/division-markdown.js'
 import {guardTableURL, divisionTableConfig, voteTableConfig} from '../public/vote-tables.js'
-import { tableApi } from './table-api'
+import { tableApi, TABLE_REGISTRY_FINGERPRINT } from './table-api'
+import { pageCacheKey, pageForStorage, pageFromStorage } from './page-cache'
 import { runSocialPublication, socialStatus, socialEngagement, publicationCopy, previewPublication, todayRedirect, CHANNELS, type Channel } from './social-publication'
 import { positionEvidence, positionProposalQuote, positionEligibilityQuotes, positionCostQuote, isPositionEligibilityQuestion, isPositionCostQuestion, isPositionDetailQuestion, positionPointSupported, normalizePositionDraft } from './position-evidence'
 import { rankedMoneyAnswer } from './ask-money'
@@ -3749,9 +3751,11 @@ const foldName = (s: string): string =>
   personNameKey(s)
 
 async function assetJson<T>(env: Env, path: string): Promise<T> {
-  const res = await env.ASSETS.fetch(new Request(`${SITE_ORIGIN}${path}`))
-  if (!res.ok) throw new Error(`asset ${path} ${res.status}`)
-  return (await res.json()) as T
+  return timed('assets', async () => {
+    const res = await env.ASSETS.fetch(new Request(`${SITE_ORIGIN}${path}`))
+    if (!res.ok) throw new Error(`asset ${path} ${res.status}`)
+    return (await res.json()) as T
+  })
 }
 
 let peopleMemo: Promise<PeopleData> | null = null
@@ -4078,7 +4082,7 @@ async function buildRouteMeta(route: SeoRoute, url: URL, request: Request, env: 
         return base({title:page.title+' · OPAX',description:page.description,prerender:page.html,jsonLd:page.jsonLd,status:page.status,card:'card' in page ? page.card : null})
       }
       const people = route.hub === 'sitting' && route.id ? await loadPeople(env) : null
-      const check = await tablePrivacyCheck(env.ASSETS)
+      const check = memoisedCheck(await tablePrivacyCheck(env.ASSETS))
       const query = guardTableURL(divisionTableConfig({},'Divisions','sitting',check),url).query
       const page = await hubPage(route.hub,route.id,<T>(path: string) => assetJson<T>(env,path),people?.people || [],people?.slugOf || new Map(),undefined,env,query,check)
       return base({title:page.title+' · OPAX',description:page.description,prerender:page.html,jsonLd:page.jsonLd,status:page.status})
@@ -4266,9 +4270,10 @@ async function buildMeta(route: SeoRoute, url: URL, request: Request, env: Env, 
       if (p) {
         const profiles=await read<{people:Record<string,PersonSchemaIdentity>;by_name:Record<string,PersonSchemaIdentity>}>('/profile-links.json').catch(()=>null)
         const identity={...profiles?.by_name[foldName(p.name)],...profiles?.people[p.pid || '']}
-        const check = await tablePrivacyCheck(env.ASSETS)
+        const check = memoisedCheck(await tablePrivacyCheck(env.ASSETS))
         const query = guardTableURL(voteTableConfig(p.pid || '',undefined,check),url).query
-        const content = await renderPersonAnswer(p,read,people.slugOf,identity.aphProfileUrl || undefined,await withheldNameCheck(env.ASSETS),query,check)
+        const withheld = await withheldNameCheck(env.ASSETS)
+        const content = await timed('person-render', () => renderPersonAnswer(p,read,people.slugOf,identity.aphProfileUrl || undefined,withheld,query,check))
         meta.prerender = content.html
         if(content.description) meta.description=clip(content.description)
         const photos=await loadPhotos(env).catch(()=>null)
@@ -4283,7 +4288,7 @@ async function buildMeta(route: SeoRoute, url: URL, request: Request, env: Env, 
       const bill=await read<Parameters<typeof renderBillAnswer>[0]>(`/bills/${route.key}.json`).catch(()=>null)
       if(bill){
         const related=await read<{bills:Parameters<typeof renderBillAnswer>[0][]}>('/bills/index.json')
-        const check = await tablePrivacyCheck(env.ASSETS)
+        const check = memoisedCheck(await tablePrivacyCheck(env.ASSETS))
         const query = guardTableURL(divisionTableConfig({bill:bill.key},undefined,undefined,check),url).query
         meta.prerender=renderBillAnswer(bill,people?.people || [],people?.slugOf || new Map(),related.bills,query,check).html;billIdentity={identifier:bill.key,status:bill.status}}
     } else if(route.kind==='subject' && route.dir==='supplier') {
@@ -5167,10 +5172,59 @@ function legacyConnectionsRedirect(url: URL): Response {
   return new Response(null, { status: 301, headers: { location: `/connections${url.search}`, 'cache-control': 'public, max-age=86400' } })
 }
 
-async function serveSeoPage(route: SeoRoute, url: URL, request: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
+function serveSeoPage(route: SeoRoute, url: URL, request: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
+  const timing = new ServerTiming()
+  return withTiming(timing, async () => {
+    // Person and supplier pages are the SSR routes measured over a second.
+    const res = route.kind === 'subject' && (route.dir === 'person' || route.dir === 'supplier') && (request.method === 'GET' || request.method === 'HEAD')
+      ? await serveCachedPage(route, url, request, env, ctx)
+      : await renderSeoPage(route, url, request, env, ctx)
+    const out = new Response(res.body, res)
+    out.headers.set('server-timing', timing.header())
+    return out
+  })
+}
+
+/** Person and supplier pages from the edge cache (src/page-cache.ts); `?nocache=1` or
+ * `x-opax-nocache: 1` skips the read and stores the fresh render. */
+async function serveCachedPage(route: SeoRoute, url: URL, request: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
+  const bypass = cacheBypass(request, url)
+  // The bypass flag is not page state: the render and its key never see it.
+  const target = new URL(url); target.searchParams.delete('nocache')
+  const shell = await timed('shell', () => env.ASSETS.fetch(new Request(`${SITE_ORIGIN}/`)))
+  if (!shell.ok) return shell
+  const key = await pageCacheKey({epoch: env.CACHE_EPOCH ?? '', workerVersion: env.CF_VERSION_METADATA?.id ?? '', assets: shell.headers.get('etag') ?? '', registry: TABLE_REGISTRY_FINGERPRINT, url: target})
+  // Rendered unconditionally (no If-None-Match), so what is stored is the whole
+  // page; the shell is read once, by whichever render runs.
+  const render = () => renderSeoPage(route, target, new Request(target, {method: 'GET'}), env, ctx, shell)
+  // Fail open: without a usable edge cache the page is simply rendered.
+  const cache = typeof caches === 'undefined' ? null : caches.default
+  const store = async (page: Response) => { if (cache) await cache.put(key, await pageForStorage(page)); else await page.body?.cancel() }
+  let page: Response | undefined
+  if (!bypass && cache) {
+    const hit = await timed('cache', () => cache.match(key)).catch(() => undefined)
+    if (hit) {
+      const {response, stale} = await pageFromStorage(hit)
+      if (stale) ctx.waitUntil(render().then(fresh => fresh.status === 200 ? store(fresh) : fresh.body?.cancel()).catch(() => {}))
+      page = response
+    }
+  }
+  if (!page) {
+    const fresh = await render()
+    if (fresh.status === 200 && cache) ctx.waitUntil(store(fresh.clone()).catch(() => {}))
+    page = new Response(fresh.body, fresh)
+    page.headers.set('x-opax-cache', bypass ? 'BYPASS' : 'MISS')
+  }
+  const etag = page.headers.get('etag')
+  const unchanged = page.status === 200 && etag ? notModified(request, etag, page.headers) : null
+  if (unchanged || request.method === 'HEAD') void page.body?.cancel().catch(() => {})
+  return unchanged ?? (request.method === 'HEAD' ? new Response(null, page) : page)
+}
+
+async function renderSeoPage(route: SeoRoute, url: URL, request: Request, env: Env, ctx: ExecutionContext, shellResponse?: Response): Promise<Response> {
   const [shell, meta] = await Promise.all([
-    env.ASSETS.fetch(new Request(`${SITE_ORIGIN}/`)),
-    buildMeta(route, url, request, env, ctx),
+    shellResponse ?? timed('shell', () => env.ASSETS.fetch(new Request(`${SITE_ORIGIN}/`))),
+    timed('meta', () => buildMeta(route, url, request, env, ctx)),
   ])
   if (!shell.ok) return shell
   const tableKey = route.kind === 'bill' || route.kind === 'hub' && route.hub === 'sitting' ? 'dv' : route.kind === 'subject' && route.dir === 'person' ? 'vr' : null
