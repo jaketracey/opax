@@ -35,7 +35,7 @@ test('bad dataset is 404; invalid state and methods return fixed JSON errors',as
   for(const q of ['page=0','sort=not-a-column:desc','f.amount.min=4','f.amount=%5B%224%22%5D','format=bad','f.agency=literal','q=a&q=b'])assert.equal((await fetchTable('contracts',q)).status,400,q);
   const response=await fetchTable('contracts','',{method:'POST'});assert.equal(response.status,405);assert.deepEqual(await response.json(),{error:'method_not_allowed'});
 });
-test('privacy datasets stay dark for a missing or stale registry fingerprint; public datasets keep serving',async()=>{
+test('donor datasets stay dark for a missing or stale registry fingerprint; echo and public datasets keep serving',async()=>{
   assert.equal(local.manifest.privacyFingerprint,TABLE_REGISTRY_FINGERPRINT);
   const version=await local.db.prepare("SELECT value FROM table_meta WHERE key='version'").first('value');
   try {
@@ -45,14 +45,15 @@ test('privacy datasets stay dark for a missing or stale registry fingerprint; pu
       else await local.db.prepare("INSERT OR REPLACE INTO table_meta VALUES ('privacy_fingerprint',?)").bind(fingerprint).run();
       let reads=0;
       const db={prepare(sql){if(/FROM\s+table_(?!meta\b|private_identity\b)/i.test(sql))reads++;return local.db.prepare(sql);},batch:local.db.batch.bind(local.db)};
-      for(const [name,c]of Object.entries(TABLE_DATASETS).filter(([,c])=>c.privacy))for(const csv of [false,true]) {
+      assert.deepEqual(Object.entries(TABLE_DATASETS).filter(([,c])=>c.privacy==='donors').map(([name])=>name).sort(),['contracts','grants','money-connections','party-money','suppliers']);
+      for(const [name,c]of Object.entries(TABLE_DATASETS).filter(([,c])=>c.privacy==='donors'))for(const csv of [false,true]) {
         const response=await tableApi(new Request('https://local.invalid/api/table/'+name+(csv?'?format=csv':'')),{TABLE_DB:db});
         assert.equal(response.status,503);assert.equal(response.headers.get('retry-after'),'60');
         assert.equal(response.headers.get('cache-control'),'no-store');assert.equal(response.headers.get('link'),null);
         assert.deepEqual(await response.json(),{error:'unavailable'});
       }
       assert.equal(reads,0,'mismatched publication reached data SQL');
-      for(const name of ['instruments','audit-reports']) {
+      for(const name of ['instruments','audit-reports','votes','divisions']) {
         const response=await tableApi(new Request('https://local.invalid/api/table/'+name),{TABLE_DB:db});
         assert.equal(response.status,200);assert.equal((await response.json()).total,260);
       }
