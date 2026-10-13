@@ -1,5 +1,9 @@
 export interface ResearchReservation { settle: (actualUsd?: number) => Promise<void> }
-export interface ResearchDailyBudget { reserve: (maxUsd: number) => Promise<ResearchReservation | null> }
+export interface ResearchDailyBudget {
+  reserve: (maxUsd: number) => Promise<ResearchReservation | null>
+  available: (maxUsd: number) => Promise<boolean>
+}
+export const researchReservationUsd = (tokens: number, inputPrice = 1, outputPrice = 3) => tokens * Math.max(10, inputPrice, outputPrice) / 1e6
 const micros = (value: number) => Math.ceil(value * 1_000_000)
 
 /** One atomic primary write admits each turn across all isolates/locations.
@@ -9,6 +13,13 @@ export function researchDailyBudget(db: D1Database, configuredCap?: string, now:
   const cap = configuredCap === undefined ? 5 : Number(configuredCap)
   const capMicros = Number.isFinite(cap) && cap >= 0 && Number.isSafeInteger(Math.floor(cap * 1_000_000)) ? Math.floor(cap * 1_000_000) : 0
   return {
+    async available(maxUsd) {
+      if (!Number.isFinite(maxUsd) || maxUsd <= 0 || !Number.isSafeInteger(micros(maxUsd))) return false
+      const day = new Date(now()).toISOString().slice(0, 10)
+      const row = await db.prepare(`SELECT CASE WHEN COALESCE((SELECT charged_microusd FROM research_daily_spend
+        WHERE utc_day = ?), 0) + ? <= ? THEN 1 ELSE 0 END AS allowed`).bind(day, micros(maxUsd), capMicros).first<{ allowed: number }>()
+      return row?.allowed === 1
+    },
     async reserve(maxUsd) {
       if (!Number.isFinite(maxUsd) || maxUsd <= 0 || !Number.isSafeInteger(micros(maxUsd))) throw new Error('research budget unavailable')
       const amount = micros(maxUsd), day = new Date(now()).toISOString().slice(0, 10)

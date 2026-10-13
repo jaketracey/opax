@@ -67,6 +67,9 @@ interface Env {
   RESEARCH_LOOP_MS?: string
   RESEARCH_LOOP_TOKENS?: string
   RESEARCH_LOOP_DAILY_USD?: string
+  RESEARCH_LOOP_SHADOW_RATE?: string
+  /** Request-local shadow policy; not a deployed binding. */
+  RESEARCH_SHADOW?: boolean
   /** Request-local policy, created only after operatorAuthorized passes. */
   RESEARCH_EVAL?: import('./research-eval').ResearchEvalState
   /** Provisioned by Jake; optional so missing configuration falls back. */

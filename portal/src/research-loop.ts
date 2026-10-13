@@ -7,6 +7,7 @@ import { originalContext } from './ask-evidence'
 import { verifyResearchAnswer, type AnswerDraft } from './research-evidence'
 import { ResearchError, type Passage, type Research, type ResearchStats, type ResearchStop } from './research-types'
 import type { ResearchDailyBudget, ResearchReservation } from './research-budget'
+import { researchReservationUsd } from './research-budget'
 import { researchCreditCooldown, isResearchCreditError, type ResearchCreditCooldown } from './research-credit'
 
 export const RESEARCH_MAX_ROUNDS = 6
@@ -14,9 +15,9 @@ export const RESEARCH_MAX_CALLS = 6
 export const RESEARCH_RESULT_BYTES = 16_384
 const boundedInt = (value: unknown, fallback: number, max: number) => Number.isFinite(Number(value)) && Number(value) > 0 ? Math.min(max, Math.max(1, Math.floor(Number(value)))) : fallback
 export const researchLimits = (options: { steps?: unknown; wallMs?: unknown; tokens?: unknown }) => ({
-  rounds: boundedInt(options.steps, 4, RESEARCH_MAX_ROUNDS),
-  wallMs: boundedInt(options.wallMs, 20_000, 30_000),
-  tokens: boundedInt(options.tokens, 32_000, 64_000),
+  rounds: boundedInt(options.steps, 5, RESEARCH_MAX_ROUNDS),
+  wallMs: boundedInt(options.wallMs, 12_000, 30_000),
+  tokens: boundedInt(options.tokens, 96_000, 160_000),
 })
 const object = (value: unknown): Record<string, unknown> => value && typeof value === 'object' && !Array.isArray(value) ? value as Record<string, unknown> : {}
 const stable = (value: unknown): string => JSON.stringify(value, (_key, v) => v && typeof v === 'object' && !Array.isArray(v) ? Object.fromEntries(Object.entries(v).sort(([a], [b]) => a.localeCompare(b))) : v)
@@ -49,7 +50,7 @@ export function createResearch(options: ResearchOptions): Research {
     const stats: ResearchStats = { rounds: 0, tokens: { input: 0, output: 0 } }
     const steps: PlanStep[] = [], results: ToolResult[] = [], passages = new Map<string, Passage>()
     const cache = new Map<string, Promise<unknown>>()
-    let calls = 0, round = 0, answerAttempts = 0, finished = false, repeated = false
+    let calls = 0, round = 0, answerAttempts = 0, finished = false, repeated = false, numericalAnswer = false
     let selected: number[] = [], qualitative: ReturnType<typeof verifyResearchAnswer> = null
     let reservedInput = 0, reservedOutput = 0
     const credits = options.creditCooldown ?? researchCreditCooldown
@@ -62,6 +63,7 @@ export function createResearch(options: ResearchOptions): Research {
       if (previous) { try { await previous.settle(turnCost) } catch { fail('daily_budget_unavailable') } }
     }
     let failed: ResearchStop | undefined, queue = Promise.resolve()
+    // SDK tool throws become tool-error parts; retain failure for stopWhen/check.
     const fail = (reason: ResearchStop): never => { failed = reason; throw new ResearchError(reason, stats) }
     const check = () => {
       if (controller.signal.aborted) fail(context.signal.aborted ? 'aborted' : 'timeout')
@@ -74,13 +76,13 @@ export function createResearch(options: ResearchOptions): Research {
       if (bytes(value) > RESEARCH_RESULT_BYTES) fail('result_size')
       return value
     }
-    const invoke = (rawStep: PlanStep, action?: (deps: ToolDeps) => Promise<ToolResult>, terminal = false) => {
+    const invoke = async (rawStep: PlanStep, action?: (deps: ToolDeps) => Promise<ToolResult>, terminal = false) => {
       check()
       const resolved = resolveArgs(rawStep.args, results)
       if (!resolved) return fail('malformed_args')
       const step = terminal || !TOOL_SPECS.some(t => t.name === rawStep.tool) ? { ...rawStep, args: resolved } : context.scope({ ...rawStep, args: resolved })
       const malformed = !terminal && TOOL_SPECS.some(t => t.name === rawStep.tool) && !validToolArgs(rawStep.tool, resolved)
-      const key = stable(step)
+      const key = step.tool === 'answer' ? 'answer#' + Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256', new TextEncoder().encode(stable(step))))).map(b => b.toString(16).padStart(2, '0')).join('') : stable(step)
       const prior = cache.get(key)
       // prepareStep also restricts a repeating model to the two terminal tools.
       if (prior && !terminal) { repeated = true; return prior }
@@ -98,7 +100,7 @@ export function createResearch(options: ResearchOptions): Research {
         }, controller.signal)
         check()
         if (invalid) fail('malformed_args')
-        if (!result.ok && !(terminal && step.tool === 'answer' && answerAttempts === 1)) fail(step.tool === 'answer' ? 'grounding' : 'error')
+        if (!result.ok && !(terminal && step.tool === 'answer' && (numericalAnswer || answerAttempts === 1))) fail(step.tool === 'answer' ? 'grounding' : 'error')
         if (!terminal) { steps.push(step); results.push(result) }
         return output(result)
       })
@@ -171,10 +173,13 @@ export function createResearch(options: ResearchOptions): Research {
     })
     tools.answer = tool({ description: 'Finish a qualitative answer. Cite every claim with read_passage ids, a verbatim supporting quote, and Unicode code point start/end offsets into text. Quotes must be literal; no causation claims. One repair is allowed.',
       inputSchema: jsonSchema<AnswerDraft>({ type: 'object', properties: { text: { type: 'string', minLength: 1, maxLength: 8000 }, citations: { type: 'array', minItems: 1, maxItems: 12, items: { type: 'object', properties: { id: { type: 'string' }, quote: { type: 'string', minLength: 1, maxLength: 4000 }, start: { type: 'integer', minimum: 0 }, end: { type: 'integer', minimum: 1 } }, required: ['id', 'quote', 'start', 'end'], additionalProperties: false } } }, required: ['text', 'citations'], additionalProperties: false }),
-      execute: args => invoke({ tool: 'answer', args: { ...args } }, async () => {
+      execute: args => invoke({ tool: 'answer', args: { ...args } }, async deps => {
+        if (classifyAgentic(question).shape || steps.some(s => ['count_speeches', 'speech_trend', 'party_donations', 'member_votes', 'electorates'].includes(s.tool))) {
+          numericalAnswer = true; return errorResult('answer', 'use finish for numerical facts')
+        }
         answerAttempts++
-        if (classifyAgentic(question).shape || steps.some(s => ['count_speeches', 'speech_trend', 'party_donations', 'member_votes', 'electorates'].includes(s.tool))) return errorResult('answer', 'use finish for numerical facts')
-        qualitative = verifyResearchAnswer(args, passages, question, context.named, options.positionQuery)
+        const roster = await deps.asset('/parliamentarians.json')
+        qualitative = verifyResearchAnswer(args, passages, question, context.named, options.positionQuery, roster)
         if (!qualitative) return errorResult('answer', 'grounding failed; repair once using only read original passages and literal quotes')
         finished = true
         return { tool: 'answer', ok: true, data: { passages: qualitative.sources }, cite: [], notes: [] }
@@ -204,7 +209,9 @@ export function createResearch(options: ResearchOptions): Research {
           if (credits.blocked()) fail('research_credit_exhausted')
           if (round > limits.rounds) fail('steps')
           const stepInstructions = instructions + ` Turn ${round}/${limits.rounds}. Already executed: ${[...cache.keys()].join('; ')}. Do not repeat identical calls.`
-          const inputReserve = bytes(messages) + bytes(TOOL_SPECS.map(s => ({ name: s.name, description: s.description, schema: s.input }))) + bytes(stepInstructions) + 4096
+          // Estimate this call's input in tokens, then add it once to the
+          // cumulative reported usage of previous calls.
+          const inputReserve = Math.ceil((bytes(messages) + bytes(TOOL_SPECS.map(s => ({ name: s.name, description: s.description, schema: s.input }))) + bytes(stepInstructions) + 4096) / 4)
           const remaining = limits.tokens - stats.tokens.input - stats.tokens.output - inputReserve
           if (remaining <= 0) fail('tokens')
           reservedInput = inputReserve; reservedOutput = Math.min(1800, remaining)
@@ -215,14 +222,13 @@ export function createResearch(options: ResearchOptions): Research {
           check()
           // Reserve the entire remaining token budget at a conservative price
           // ceiling, not just the predicted prompt. D1 admits atomically.
-          const ceiling = Math.max(10, inputPrice, outputPrice)
-          const maxUsd = (limits.tokens - stats.tokens.input - stats.tokens.output) * ceiling / 1e6
+          const maxUsd = researchReservationUsd(limits.tokens - stats.tokens.input - stats.tokens.output, inputPrice, outputPrice)
           try { reservation = await options.dailyBudget.reserve(maxUsd) } catch { return fail('daily_budget_unavailable') }
           if (!reservation) return fail('daily_budget')
           turnCost = undefined
           check()
           return { maxOutputTokens: reservedOutput,
-            ...(repeated || answerAttempts ? { activeTools: answerAttempts ? ['answer'] : ['finish', 'answer'] } : {}),
+            ...(numericalAnswer || repeated || answerAttempts ? { activeTools: numericalAnswer ? ['finish'] : answerAttempts ? ['answer'] : ['finish', 'answer'] } : {}),
             instructions: stepInstructions }
         },
         onLanguageModelCallStart: async () => {

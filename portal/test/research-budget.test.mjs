@@ -25,3 +25,6 @@ test('invalid or disabled caps fail closed, default is US$5, and missing table r
  await assert.rejects(researchDailyBudget(f.db).reserve(NaN));
  f.sqlite.exec('DROP TABLE research_daily_spend');await assert.rejects(researchDailyBudget(f.db).reserve(0.01));
 });
+test('shadow availability checks the same UTC ledger and fails closed when unavailable',async t=>{
+ const f=budgetDatabase();t.after(f.close);const budget=researchDailyBudget(f.db,'1');assert.equal(await budget.available(0.96),true);const lease=await budget.reserve(0.96);assert.equal(await budget.available(0.96),false);await lease.settle(0.01);assert.equal(await budget.available(0.96),true);assert.equal(await researchDailyBudget(f.db,'0').available(0.01),false);f.sqlite.exec('DROP TABLE research_daily_spend');await assert.rejects(budget.available(0.01));
+});

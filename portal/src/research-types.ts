@@ -4,8 +4,8 @@ import type { ToolDeps, ToolResult } from './agentic-tools'
 export interface ResearchPayload {
   mode: 'loop' | 'planner'
   rounds: number
-  trail: { id: number; tool: string; label: string; arg?: string; results?: number; ms: number; ok: boolean }[]
-  sources: { title: string; url: string; date?: string; kind: string }[]
+  trail: { id: number; tool: string; round: number; label: string; arg?: string; results?: number; ms: number; ok: boolean }[]
+  sources: { title: string; url: string; date?: string; kind: string; speaker?: string }[]
   ms?: number
   tokens?: { input: number; output: number } | null
   cost_usd?: number | null

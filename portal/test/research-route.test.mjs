@@ -14,7 +14,7 @@ const reply=calls=>({content:calls,finishReason:{unified:'tool-calls',raw:'tool_
 const counted=()=>new MockLanguageModelV4({doGenerate:[reply([call('count_speeches',countArgs)]),reply([call('finish',{facts:[1]})])]});
 const qualitative=(bad=false)=>new MockLanguageModelV4({doGenerate:[reply([call('search',{query:'housing'})]),reply([call('read_passage',{id})]),...Array.from({length:bad?2:1},()=>reply([call('answer',{text,citations:[{id:bad?'unbound/t/body/0':id,quote:text,start:0,end:text.length}]})]))]});
 let plannerCalls=0,ordinaryCalls=0,quota=0,modelQuota=0;
-h.env.OPENROUTER_API_KEY='test-only-placeholder';h.env.AGENTIC_ASK_MODE='route';h.env.AGENTIC_INPUT_USD_PER_MILLION='0.66';h.env.AGENTIC_OUTPUT_USD_PER_MILLION='1.98';h.env.SA_HANSARD_FULL_TEXT='true';
+h.env.OPENROUTER_API_KEY='test-only-placeholder';h.env.AGENTIC_ASK_MODE='route';h.env.AGENTIC_INPUT_USD_PER_MILLION='0.66';h.env.AGENTIC_OUTPUT_USD_PER_MILLION='1.98';h.env.SA_HANSARD_FULL_TEXT='true';h.env.RESEARCH_LOOP_SHADOW_RATE='1';
 const daily=budgetDatabase();h.env.COMMUNITY_DB=daily.db;
 const previousComparator=crypto.subtle.timingSafeEqual;crypto.subtle.timingSafeEqual=timingSafeEqual;
 h.env.ASK_LIMITER={limit:async()=>{quota++;return{success:true}}};h.env.MODEL_LIMITER={limit:async()=>{modelQuota++;return{success:true}}};
@@ -35,6 +35,7 @@ globalThis.fetch=async(input,init)=>{
 const q='Who speaks most about gambling in NSW across the whole record?';
 const post=(question=q,stream=false,extra={})=>h.fetch('/api/ask'+(stream?'?stream=1':''),{method:'POST',headers:{'content-type':'application/json','x-opax-nocache':'1'},body:JSON.stringify({question,kind:'speech',...extra})});
 const flush=async()=>{while(pending.length)await Promise.all(pending.splice(0))};
+test.beforeEach(async()=>{await flush();daily.sqlite.exec('DELETE FROM research_daily_spend')});
 const decodeStream=raw=>{const parser=new AskStream({stage(){},delta(){},retry(){}});for(let i=0;i<raw.length;i+=17)parser.push(raw.slice(i,i+17));parser.push('',true);return parser.result();};
 const native=body=>{const decoded=decodeAnswer(body);assert.ok(decoded.answer);assert.equal(decoded.sources.length,body.sources.length);for(const source of decoded.sources)assert.equal(typeof source.href,'string');return decoded;};
 const oldLog=console.log;console.log=value=>{try{logs.push(JSON.parse(value))}catch{oldLog(value)}};
@@ -54,7 +55,11 @@ test('ordinary and non-speech questions go through qualitative search/read/answe
  h.env.RESEARCH_LOOP='route';for(const kind of ['speech','all','bill'])for(const stream of [false,true]){globalThis.__researchModel=qualitative();const before=ordinaryCalls,response=await post('What does the record say about housing affordability?',stream,{kind}),raw=await response.text(),body=stream?decodeStream(raw):JSON.parse(raw);native(body);assert.equal(body.research.mode,'loop',JSON.stringify(logs.filter(r=>r.kind==='research_loop_fallback')));assert.equal(body.answer,text);assert.deepEqual(body.citations,{[id]:[[0,text.length]]});assert.equal(body.sources[0].resource,resource);assert.equal(body.research.sources[0].kind,'speech');assert.equal(body.research.sources[0].date,'2023-05-01');assert.equal(ordinaryCalls,before);await flush();}
 });
 test('failed qualitative repair falls back additively in JSON and SSE and app decoders still work',async()=>{
- h.env.RESEARCH_LOOP='route';for(const stream of [false,true]){globalThis.__researchModel=qualitative(true);const before=ordinaryCalls,response=await post('What does the record say about housing affordability?',stream),raw=await response.text(),body=stream?decodeStream(raw):JSON.parse(raw);native(body);assert.equal(body.research.mode,'planner');assert.match(body.answer,/parliamentary scrutiny/);assert.equal(ordinaryCalls,before+1);await flush();}
+ h.env.RESEARCH_LOOP='route';for(const stream of [false,true]){globalThis.__researchModel=qualitative(true);const before=ordinaryCalls,plans=plannerCalls,response=await post('What does the record say about housing affordability?',stream),raw=await response.text(),body=stream?decodeStream(raw):JSON.parse(raw);native(body);assert.equal(body.research.mode,'planner');assert.match(body.answer,/parliamentary scrutiny/);assert.equal(ordinaryCalls,before+1);assert.equal(plannerCalls,plans);assert.deepEqual(body.research.trail.map(t=>t.round),[1,2,3,4]);await flush();}
+});
+test('stepped old-path failures retain their executed research trail in ordinary fallback',async()=>{
+ h.env.RESEARCH_LOOP='off';const fetchFixture=globalThis.fetch;globalThis.fetch=(input,init)=>new URL(input).pathname.endsWith('/catalog')?Promise.resolve(new Response('fixture unavailable',{status:503})):fetchFixture(input,init);
+ try{for(const stream of [false,true]){const response=await post(q,stream),raw=await response.text(),body=stream?decodeStream(raw):JSON.parse(raw);native(body);assert.equal(body.research.mode,'planner');assert.ok(body.research.trail.length);assert.ok(body.research.trail.every(t=>t.round===1));assert.ok(body.research.trail.some(t=>t.ok===false));await flush();}}finally{globalThis.fetch=fetchFixture;}
 });
 test('shadow serves the planner and logs the loop facts, figures, time, tokens and cost',async()=>{
  h.env.RESEARCH_LOOP='off';const previous=Date.now;Date.now=()=>1791900000000;let baseline;
@@ -72,7 +77,7 @@ test('loop caches replay JSON and SSE without model calls and never collide with
  try{
   const first=await uncached(false),body=await first.json();assert.equal(body.research.mode,'loop');await flush();const count=modelQuota;
   for(const stream of [false,true]){const hit=await uncached(stream),raw=await hit.text(),decoded=stream?decodeStream(raw):JSON.parse(raw);assert.equal(hit.headers.get('x-opax-cache'),'HIT');assert.deepEqual(decoded,body);native(decoded);assert.equal(modelQuota,count);}
-  h.env.RESEARCH_LOOP='off';const previous=plannerCalls;const old=await uncached(false);assert.equal((await old.json()).research,undefined);assert.equal(plannerCalls,previous+1);await flush();
+  h.env.RESEARCH_LOOP='off';const previous=plannerCalls;const old=await uncached(false);assert.equal((await old.json()).research.mode,'planner');assert.equal(plannerCalls,previous+1);await flush();
  }finally{globalThis.caches=previousCaches;delete h.env.GENERATION_CACHE;}
 });
 test('shadow reader cancellation also aborts its background loop',async()=>{
@@ -127,11 +132,40 @@ test('authenticated overrides mark validation errors no-store and enforce the da
 });
 test('override wall timeout preserves planner fallback and reports unknown inference usage honestly',async()=>{
  h.env.RESEARCH_LOOP_MS='15';const fake=new MockLanguageModelV4({doGenerate:()=>new Promise(()=>{})});globalThis.__researchModel=fake;
- try{const response=await evalPost('loop'),body=await response.json();native(body);assert.equal(body.research.mode,'planner');assert.equal(body.research.tokens,null);assert.equal(body.research.cost_usd,null);assert.equal(fake.doGenerateCalls.length,1);assert.ok(logs.some(r=>r.reason==='timeout'));await flush();}finally{delete h.env.RESEARCH_LOOP_MS;}
+ try{const plans=plannerCalls,ordinary=ordinaryCalls,response=await evalPost('loop'),body=await response.json();native(body);assert.equal(body.research.mode,'planner');assert.equal(body.research.tokens,null);assert.equal(body.research.cost_usd,null);assert.equal(fake.doGenerateCalls.length,1);assert.equal(plannerCalls,plans);assert.equal(ordinaryCalls,ordinary+1);assert.ok(logs.some(r=>r.reason==='timeout'));await flush();}finally{delete h.env.RESEARCH_LOOP_MS;}
 });
 test('authenticated SSE override cancellation aborts inference without an old-path call',async()=>{
  let start,signal;const started=new Promise(r=>start=r);globalThis.__researchModel=new MockLanguageModelV4({doGenerate:options=>{signal=options.abortSignal;start();return new Promise(()=>{})}});
  const before=plannerCalls+ordinaryCalls,response=await evalPost('loop',true),reader=response.body.getReader();await started;await reader.cancel();await flush();assert.equal(signal.aborted,true);assert.equal(plannerCalls+ordinaryCalls,before);
+});
+test('shadow skips answer cache HITs without taking reader quota or calling the fake model',async()=>{
+ const previous=globalThis.caches,edge=new Map();globalThis.caches={default:{match:async key=>edge.get(key.url)?.clone(),put:async(key,response)=>edge.set(key.url,new Response(await response.text(),response))}};
+ const request=stream=>h.fetch('/api/ask'+(stream?'?stream=1':''),{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({question:q,kind:'speech'})});
+ try{
+  h.env.RESEARCH_LOOP='off';await(await request(false)).text();await flush();h.env.RESEARCH_LOOP='shadow';const fake=counted();globalThis.__researchModel=fake;
+  const calls=quota;for(const stream of [false,true]){const response=await request(stream);assert.equal(response.headers.get('x-opax-cache'),'HIT');await response.text();await flush();}assert.equal(quota,calls);assert.equal(fake.doGenerateCalls.length,0);
+ }finally{globalThis.caches=previous;}
+});
+test('shadow skips unmetered requests, samples at default 0.2, and fails closed on its daily gate',async()=>{
+ h.env.RESEARCH_LOOP='shadow';const limiter=h.env.ASK_LIMITER,db=h.env.COMMUNITY_DB,random=Math.random;
+ const attempt=async()=>{const fake=counted();globalThis.__researchModel=fake;await(await post()).text();await flush();return fake.doGenerateCalls.length};
+ try{
+  delete h.env.ASK_LIMITER;assert.equal(await attempt(),0);h.env.ASK_LIMITER={limit:async()=>{throw Error('fixture limiter unavailable')}};assert.equal(await attempt(),0);h.env.ASK_LIMITER=limiter;
+  delete h.env.RESEARCH_LOOP_SHADOW_RATE;Math.random=()=>0.2;assert.equal(await attempt(),0);Math.random=()=>0.19;assert.equal(await attempt(),2);
+  h.env.RESEARCH_LOOP_SHADOW_RATE='0';assert.equal(await attempt(),0);h.env.RESEARCH_LOOP_SHADOW_RATE='invalid';assert.equal(await attempt(),0);h.env.RESEARCH_LOOP_SHADOW_RATE='1';
+  h.env.RESEARCH_LOOP_DAILY_USD='0';assert.equal(await attempt(),0);delete h.env.RESEARCH_LOOP_DAILY_USD;
+  h.env.COMMUNITY_DB={prepare(){throw Error('fixture unavailable ledger')}};assert.equal(await attempt(),0);assert.ok(logs.some(r=>r.reason==='daily_budget_unavailable'));
+ }finally{h.env.ASK_LIMITER=limiter;h.env.COMMUNITY_DB=db;h.env.RESEARCH_LOOP_SHADOW_RATE='1';delete h.env.RESEARCH_LOOP_DAILY_USD;Math.random=random;}
+});
+test('failed shadow inference never invokes a second planner',async()=>{
+ h.env.RESEARCH_LOOP='shadow';const fake=new MockLanguageModelV4({doGenerate:()=>{throw Error('fixture provider failure')}});globalThis.__researchModel=fake;const before=plannerCalls;
+ await(await post()).text();await flush();assert.equal(plannerCalls,before+1);assert.equal(fake.doGenerateCalls.length,1);assert.equal(logs.findLast(r=>r.kind==='research_loop_shadow').loop.failure,'error');
+});
+test('route money and pay answers use published calculations before inference in JSON and SSE',async()=>{
+ const fixtures=h.env.ASSETS;h.env.ASSETS=realAssets;h.env.RESEARCH_LOOP='route';
+ try{for(const [question,flag] of [['Who gets the most from mining?','money_ranking'],['Who is the highest paid politician?','pay_answer']])for(const stream of [false,true]){
+  const fake=counted();globalThis.__researchModel=fake;const models=modelQuota,plans=plannerCalls,ordinary=ordinaryCalls,response=await post(question,stream,{kind:'all'}),raw=await response.text(),body=stream?decodeStream(raw):JSON.parse(raw);native(body);assert.equal(body[flag],true);assert.equal(body.answer_status,'calculated');assert.equal(body.research.mode,'planner');assert.deepEqual(body.research.tokens,{input:0,output:0});assert.equal(body.research.cost_usd,0);assert.equal(fake.doGenerateCalls.length,0);assert.equal(modelQuota,models);assert.equal(plannerCalls,plans);assert.equal(ordinaryCalls,ordinary);assert.equal(body.money_facts,undefined);await flush();
+ }}finally{h.env.ASSETS=fixtures;}
 });
 test('402 override falls back at once, logs research_credit_exhausted, and short-circuits the next loop',async()=>{
  const fake=new MockLanguageModelV4({doGenerate:()=>{throw Object.assign(Error('private provider credit error'),{statusCode:402})}});globalThis.__researchModel=fake;

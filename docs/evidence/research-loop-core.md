@@ -3,18 +3,19 @@
 Branch: `web/research-loop`. Baseline commit:
 `7ebabb229fdb03b793d46407721fb3cab172f9e2`.
 Implementation and app compatibility follow the orchestrator's 04:00 contract and
-the later operator-eval/credit follow-up. This is a local handoff, not a deployment
+the operator-eval/credit follow-up and round 3 grounding review. This is a local handoff, not a deployment
 receipt. The release default is `RESEARCH_LOOP=shadow`; the orchestrator owns rollout.
 
 ## Gates
 
 - `npm run check`: passed (runtime types, TypeScript, tokens, stamps, donor index).
-- `npm run build:release`: passed on final source (search/release assets, stamps,
+- `npm run build:release`: passed for the merged release assets (search/release assets, stamps,
   photo identity check). The generated grants-map licence line-ending change was
   restored; no unrelated generated asset is committed.
 - `node --test --test-concurrency=4 test/research*.test.mjs test/agentic*.test.mjs test/ask*.test.mjs test/generation-cache.test.mjs test/model-budget.test.mjs`:
-  **373 passed, 0 failed/cancelled/skipped**, approximately 9.5 seconds.
-- Worktree-local `npx wrangler deploy --dry-run --outdir .wrangler/research-loop-followup`: passed.
+  **413 passed, 0 failed/cancelled/skipped**, approximately 9.7 seconds. Includes
+  `ask-steps`, `ask-research-sources`, and the merged eval harness tests.
+- Worktree-local `npx --no-install wrangler deploy --dry-run --env="" --outdir .wrangler/research-loop-round3`: passed.
 - `git diff --check`: passed.
 - `votes.json`: byte-identical to baseline; SHA-256
   `a77128dc0e1e1b3fdaa4bf84501e2c94af3125dea3cf0b2dffbc688a49d68546`.
@@ -33,10 +34,10 @@ JavaScript and bundled WASM; static asset directory size is not Worker size.
 | | Raw KiB | Gzip KiB |
 | --- | ---: | ---: |
 | Baseline | 6,210.38 | 1,783.84 |
-| Research loop including eval/budget follow-up | 6,908.91 | 1,922.27 |
-| Delta | **+698.53** | **+138.43** |
+| Integrated research loop, UI and evals | 6,914.73 | 1,923.54 |
+| Delta | **+704.35** | **+139.70** |
 
-The follow-up adds 11.71 KiB raw / 2.91 KiB gzip to the initial loop implementation.
+Round 3 adds 5.82 KiB raw / 1.27 KiB gzip to the round 2 Worker bundle.
 The final raw bundle is about 6.75 MiB, below the current
 [64 MiB uncompressed limit](https://developers.cloudflare.com/workers/platform/limits/).
 Gzip is a comparison metric, not a current deployment limit.
@@ -53,11 +54,15 @@ Gzip is a comparison metric, not a current deployment limit.
 - Daily ledger: `portal/migrations/0017_research_daily_budget.sql`.
 - Tests: `portal/test/research-loop.test.mjs`, `research-route.test.mjs`,
   `fixtures/research-app-decoders.mjs`, `agentic-parity.test.mjs`,
-  `ask-no-answer-parity.mjs`, `research-budget.test.mjs`, `research-eval.test.mjs`,
+  `ask-no-answer-parity.mjs`, `research-budget.test.mjs`, `research-eval-usage.test.mjs`,
   `fixtures/research-budget.mjs`.
+- Merged UI: `portal/public/{app.js,ask-steps.js,style.css}` and stamped pages;
+  `ask-steps.test.mjs`, `ask-research-sources.test.mjs`, stream/browser fixtures.
+- Merged evals: `scripts/research_eval.mjs`, `research_eval_grade.mjs`,
+  `portal/test/research-eval.test.mjs`, `fixtures/research-evals*.json`.
 - Design and evidence: `docs/design/research-loop.md`, this file.
 
-The 40 research cases cover multi-round execution; fact selection and deterministic
+The research cases cover multi-round execution; fact selection and deterministic
 rendering; dedupe; round/call ceilings; wall/token caps; per-turn limiter refusal;
 provider errors and malformed args; request dates; quote/citation rejection,
 repair and fallback; off identity; route and shadow cancellation; all-question
@@ -69,8 +74,9 @@ unauthorized headers, complete or unavailable usage, eval timeout/cancellation,
 402/credit errors, no retry, and 15-minute cooldown/expiry.
 
 The parity pins are **scoped to `RESEARCH_LOOP=off`**, not imposed on route output.
-The focused run verified 192 ordinary and 68 agentic JSON/SSE bodies unchanged in
-that rollback mode. The old standalone no-answer parity script is explicitly off
+The focused run verified 192 ordinary bodies unchanged and all legacy fields in
+68 agentic JSON/SSE bodies unchanged. The newly required optional `research`
+metadata is the sole gold-body rebaseline. The old standalone no-answer parity script is explicitly off
 as well; the test gate runs the maintained `agentic-parity.test.mjs`.
 
 ## Native compatibility and monitoring
@@ -113,10 +119,52 @@ Only actual billing receipts permit refunds; estimates and unknown costs retain
 the conservative charge. Missing/unavailable ledger fails closed for loop calls.
 The existing fallback path retains its own model controls.
 
-**Before shadow deployment:** the orchestrator must apply migration 0017 to the
-existing community database. This lane applied it only in local SQLite tests.
+**Before shadow deployment:** the orchestrator must apply migration 0017 to
+production `COMMUNITY_DB`, **`opax-community`** (id
+`ea0ca399-189f-4fc0-83f8-66a41204a180`). This lane applied it only in local SQLite tests.
+From this worktree's `portal/` directory, the exact pinned-CLI command is:
+
+```sh
+npx --no-install wrangler d1 migrations apply opax-community --remote --env=""
+```
+
+The empty environment selects the top-level production binding. The command
+applies pending migrations, including 0017. It was documented, not executed.
 The hub has confirmed the production provider secret is set; this lane did not
 read, create or modify it.
 
 The orchestrator owns secret readiness, quality evals, the five-question production
 probe, merge and deployment. Roll back through `RESEARCH_LOOP=off`.
+
+## Round 3 integration and grounding fixes
+
+Merged `web/research-ui` at `a088d8417` and `web/research-evals` at `aa137bdd5`
+into this branch. The core usage tests were renamed to `research-eval-usage.test.mjs`
+before merging so both suites remain intact. Both merges completed cleanly.
+
+- F1/F12: estimate next-call tokens as bytes/4; defaults 96,000 tokens (160,000
+  ceiling), five rounds (six ceiling), 12-second wall. A realistic four-turn
+  search/count/count/finish case reports 36,000 input + 2,000 output and succeeds.
+- F2/F13: shadow skips cache HITs and requests without successful reader quota;
+  samples at 0.2; checks the same fail-closed daily ledger before starting and
+  reserves atomically in every `prepareStep`. Failed shadow runs never pay for
+  another planner. Tests cover absent/failed limiters, thresholds, zero/malformed
+  rates, daily refusal and unavailable D1.
+- F3: covered claims cannot introduce another roster person unless the name is
+  in the supporting quote; accepted `research.sources` carries `speaker`.
+- F4/F5: numerical `answer` misroutes preserve `finish` and do not consume repair;
+  rejected terminal drafts are referenced in instructions only by a SHA-256 hash.
+- F6/F7/F8: ordinary loop failures and timeouts go directly to ordinary Ask;
+  deterministic money/pay answers precede route inference with zero model calls.
+- F9–F11/F14: filter search/read notes from numerical prose; emit `failed` for
+  existing web clients; delete stale JSON content-length; remember SDK-swallowed
+  tool errors and stop before another model call.
+- Every stepped payload now has `research`, and every trail row has `round`,
+  including committee checks. Fallback retains the executed trail; cached JSON
+  and SSE retain grouping. This includes old-path failed tool steps that proceed
+  to ordinary Ask. Prompt/tool versions are bumped to 6.
+- Eval `--operator` and `--prod` send bearer auth plus `x-opax-research: old|loop`
+  to the same base's `/api/ask`; no unused body mode hint or secret in reports.
+
+All checks used fake providers/offline fixtures. No production migration,
+deployment, Ask, auth, or model call was made.

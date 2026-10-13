@@ -16,7 +16,7 @@ import { isElectorateDataQuestion, electoratePlan } from './agentic-tool-elector
 import { getAskTool } from './tools'
 import { ResearchError, researchSources, type Research, type ResearchPayload, type QualitativeAnswer, type ResearchResult } from './research-types'
 
-export const AGENTIC_PROMPT_VERSION = 'agentic-ask-5-research'
+export const AGENTIC_PROMPT_VERSION = 'agentic-ask-6-research'
 export const AGENTIC_BUDGET_MS = 40_000
 export const AGENTIC_MAX_STEPS = 6
 
@@ -372,6 +372,8 @@ export function planRetainsNamedScope(plan: Plan, scope: NamedScope): boolean {
 // ---------------------------------------------------------------- orchestration
 export type Progress = (event: string, data: unknown) => Promise<void>
 export interface AgenticDeps extends ToolDeps {
+  /** A comparison run must never pay for a second old-path planner. */
+  researchShadow?: boolean
   generate: (query: string, prompt: { system: string; user: string }, maxTokens: number, signal: AbortSignal) => Promise<{ text: string; tokens?: { input: number; output: number }; costUsd?: number }>
   research?: Research
   plannerTrail?: boolean
@@ -438,8 +440,8 @@ export function resultCount(result: ToolResult): number {
   for (const key of ['rows', 'passages', 'people', 'facts']) if (Array.isArray(result.data?.[key])) return (result.data![key] as unknown[]).length
   return result.ok ? result.cite.length : 0
 }
-function researchTrail(events: StepEvent[], steps: AgenticPayload['steps']): ResearchPayload['trail'] {
-  return events.map((event, i) => ({ id: event.id, tool: event.tool ?? steps[i]?.tool ?? 'search', label: event.label,
+export function researchTrail(events: StepEvent[], steps: AgenticPayload['steps']): ResearchPayload['trail'] {
+  return events.map((event, i) => ({ id: event.id, tool: event.tool ?? steps[i]?.tool ?? 'search', round: event.round ?? 1, label: event.label,
     ...(event.arg ? { arg: event.arg } : {}), ...(event.results != null ? { results: event.results } : {}), ms: event.ms ?? 0, ok: event.state === 'done' }))
 }
 /** Loop failures retain the old planner, inside the original request deadline. */
@@ -458,9 +460,17 @@ export async function runAgentic(question: string, deps: AgenticDeps, progress: 
   }
   catch (error) {
     if (!deps.research) throw error
-    const failure = error instanceof ResearchError ? error : new ResearchError(deps.signal?.aborted ? 'aborted' : 'error')
+    const failure = error instanceof ResearchError ? error : new ResearchError(deps.signal?.aborted ? 'aborted' : error instanceof Error && error.name === 'TimeoutError' ? 'timeout' : 'error')
     await deps.onResearchFailure?.(failure)
     if (deps.signal?.aborted) throw error
+    if (deps.researchShadow || failure.reason === 'timeout' || classifyAgentic(question).route !== 'agentic') {
+      const steps = attempted.map(event => ({ tool: event.tool ?? 'search', args: {}, ok: event.state === 'done', ms: event.ms ?? 0, label: event.label }))
+      return { answered: false, reason: 'declined', answer: '', answer_source: 'none', shape: classifyAgentic(question).shape, period,
+        facts: [], notes: [], steps, events: attempted, tokens: { ...failure.stats.tokens }, cost_usd: failure.stats.costUsd ?? null,
+        over_budget: Date.now() - started >= budgetMs, version: `${AGENTIC_PROMPT_VERSION}/${AGENTIC_TOOLS_VERSION}`,
+        timings: { plan_ms: Date.now() - started, tools_ms: 0, compose_ms: 0, total_ms: Date.now() - started },
+        research: { mode: 'planner', rounds: failure.stats.rounds, trail: researchTrail(attempted, steps), sources: [] }, research_failure: failure.reason }
+    }
     const offset = attempted.length
     const shifted: Progress = async (event, data) => {
       const value = data as { step?: StepEvent }
@@ -504,7 +514,8 @@ async function runAgenticAttempt(question: string, deps: AgenticDeps, progress: 
     if (typeof out.costUsd === 'number') cost = (cost ?? 0) + out.costUsd
   }
   const execute = async (step: PlanStep, committee = false, custom?: (d: ToolDeps) => Promise<ToolResult>, round?: number, parentSignal = executionSignal): Promise<ToolResult> => {
-    const event = { ...stepEvent(step, steps.length + 1, committee), ...(round ? { tool: step.tool, round } : {}) }
+    const turn = round ?? researched?.rounds
+    const event = { ...stepEvent(step, steps.length + 1, committee), ...(turn ? { tool: step.tool, round: turn } : {}) }
     await progress('status', { phase: 'step', step: event })
     const started = Date.now()
     let r: ToolResult
@@ -521,7 +532,7 @@ async function runAgenticAttempt(question: string, deps: AgenticDeps, progress: 
     } catch { r = { tool: step.tool, ok: false, error: 'lookup timed out or unavailable', cite: [], notes: [] } }
     const ms = Date.now() - started
     steps.push({ tool: step.tool, args: step.args, ok: r.ok, error: r.error, ms, label: event.label })
-    const done: StepEvent = { ...event, state: r.ok ? 'done' : round ? 'error' : 'failed', ms, ...(round && r.ok ? { results: resultCount(r) } : {}) }
+    const done: StepEvent = { ...event, state: r.ok ? 'done' : 'failed', ms, ...(turn && r.ok ? { results: resultCount(r) } : {}) }
     events.push(done); await progress('status', { phase: 'step', step: done })
     return r
   }
@@ -542,7 +553,7 @@ async function runAgenticAttempt(question: string, deps: AgenticDeps, progress: 
       timings.plan_ms = Date.now() - t0
       await progress('status', { phase: 'writing' })
       return base({ answered: true, answer: researched.qualitative.answer, answer_source: 'model', qualitative: researched.qualitative,
-        research: { mode: 'loop', rounds: researched.rounds, trail: researchTrail(events, steps), sources: researched.qualitative.sources.map(s => ({ title: s.title, url: s.url, kind: s.kind, ...(s.date ? { date: s.date } : {}) })) } })
+        research: { mode: 'loop', rounds: researched.rounds, trail: researchTrail(events, steps), sources: researched.qualitative.sources.map(s => ({ title: s.title, url: s.url, kind: s.kind, ...(s.date ? { date: s.date } : {}), ...(s.speaker ? { speaker: s.speaker } : {}) })) } })
     }
   }
   let plannerFailed = false
@@ -613,7 +624,8 @@ async function runAgenticAttempt(question: string, deps: AgenticDeps, progress: 
     }
   }
   timings.tools_ms = Date.now() - tTools
-  const { facts, notes } = factSheet(results)
+  const { facts } = factSheet(results)
+  const { notes } = factSheet(researched ? results.filter(r => !['search', 'read_passage'].includes(r.tool)) : results)
   const factOut = facts.map(f => ({ id: f.id, text: f.text, url: f.cite?.url ?? '', kind: f.cite?.kind ?? 'count', value: f.cite?.value }))
   if (!facts.length) return base({ reason: 'no_supported_claim', notes })
   await progress('status', { phase: 'writing' })

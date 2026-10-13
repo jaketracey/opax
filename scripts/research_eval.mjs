@@ -11,14 +11,14 @@
 //
 // Flags: --mode planner|loop|both (both) · --limit N (12, max 50) · --set research|gold|all (research)
 //        --route auto|ops|ask (auto) · --planner-base URL · --loop-base URL · --fixture FILE · --out DIR
-//        --price-in / --price-out US$ per million tokens (0.44 / 1.32, the BYOK DeepSeek rate) · --timeout ms · --prod
+//        --price-in / --price-out US$ per million tokens (0.44 / 1.32, the BYOK DeepSeek rate) · --timeout ms · --prod · --operator
 //
 // Hard limits: one request per question per mode, never a retry; --limit caps the questions; the run
 // refuses opax.com.au unless --prod is passed; HTTPS or local http only; reserved ports 8910/8961 refused.
-// Mode selection: RESEARCH_LOOP is a deployment var, so each mode has its own base URL (--planner-base /
-// --loop-base default to <baseUrl>). The body also carries research_mode for servers that honour a hint;
-// the payload's research.mode is recorded and a mismatch is counted in the summary.
-// Routes: auto = the bearer ops route (/api/ops/ask-gold, DAILY_POST_OPERATOR_SECRET) for gold rows and
+// --prod / --operator select the engine per request on /api/ask using the existing
+// operator bearer guard and x-opax-research: old|loop. The secret is never reported.
+// Local non-operator runs can still use separately configured fixture servers.
+// Outside operator mode, auto = the bearer ops route (/api/ops/ask-gold, DAILY_POST_OPERATOR_SECRET) for gold rows and
 // questions the route classifier accepts; /api/ask for ordinary questions. A 409 is recorded, not re-sent.
 import { readFile, writeFile, mkdir } from 'node:fs/promises'
 import { fileURLToPath } from 'node:url'
@@ -33,12 +33,13 @@ export const PROD_HOSTS = /(^|\.)opax\.com\.au$/i
 export const LEGACY_PERIOD = /\b(?:this term|last term|since|(?:19|20)\d{2}s?)\b/i
 
 export function parseArgs(argv) {
-  const opts = { mode: 'both', limit: DEFAULT_LIMIT, set: 'research', route: 'auto', prod: false, prices: { ...DEFAULT_PRICES }, timeoutMs: DEFAULT_TIMEOUT_MS, out: resolve(ROOT, 'portal/private/research-evals') }
+  const opts = { mode: 'both', limit: DEFAULT_LIMIT, set: 'research', route: 'auto', prod: false, operator: false, prices: { ...DEFAULT_PRICES }, timeoutMs: DEFAULT_TIMEOUT_MS, out: resolve(ROOT, 'portal/private/research-evals') }
   const rest = []
   for (let i = 0; i < argv.length; i++) {
     const a = argv[i]
     const val = () => { const v = argv[++i]; if (v === undefined) throw new Error(`${a} needs a value`); return v }
     if (a === '--prod') opts.prod = true
+    else if (a === '--operator') opts.operator = true
     else if (a === '--mode') opts.mode = val()
     else if (a === '--limit') opts.limit = Number(val())
     else if (a === '--set') opts.set = val()
@@ -97,22 +98,24 @@ export async function loadRoster(file = resolve(ROOT, 'portal/public/parliamenta
 }
 
 /** The one request a (question, mode) pair sends. */
-export function requestFor(q, mode, { route = 'auto', secret } = {}) {
-  const ops = route === 'ops' || (route === 'auto' && Boolean(secret) && (q.gold === true || q.old_route !== 'ordinary'))
-  const body = { question: q.question, ...(q.request ?? {}), research_mode: mode }
+export function requestFor(q, mode, { route = 'auto', secret, operator = false, prod = false } = {}) {
+  const override = operator || prod
+  const ops = !override && (route === 'ops' || (route === 'auto' && Boolean(secret) && (q.gold === true || q.old_route !== 'ordinary')))
+  const body = { question: q.question, ...(q.request ?? {}) }
   // Legacy gold defines unstated periods as whole-record (scripts/agentic_ask_shadow.mjs).
   if (q.gold && !LEGACY_PERIOD.test(q.question) && body.period === undefined) body.period = 'all'
   const headers = { 'content-type': 'application/json', accept: 'application/json' }
-  if (ops) {
+  if (override || ops) {
     if (!secret) throw new Error('DAILY_POST_OPERATOR_SECRET must be set for the ops route.')
     headers.authorization = 'Bearer ' + secret
   }
+  if (override) headers['x-opax-research'] = mode === 'loop' ? 'loop' : 'old'
   return { path: ops ? '/api/ops/ask-gold' : '/api/ask', body, headers }
 }
 
 /** Exactly one fetch. Any failure becomes an error row; nothing is re-sent. */
-export async function runOne({ q, mode, base, route, secret, fetchImpl = fetch, timeoutMs = DEFAULT_TIMEOUT_MS }) {
-  const { path, body, headers } = requestFor(q, mode, { route, secret })
+export async function runOne({ q, mode, base, route, secret, operator, prod, fetchImpl = fetch, timeoutMs = DEFAULT_TIMEOUT_MS }) {
+  const { path, body, headers } = requestFor(q, mode, { route, secret, operator, prod })
   const t0 = performance.now()
   const elapsed = () => Math.round(performance.now() - t0)
   try {
@@ -137,7 +140,7 @@ export async function runEval(opts) {
         const hit = fixture.find((x) => x.id === q.id && (x.mode ?? mode) === mode)
         r = hit ? { route: 'fixture', ms: hit.ms ?? 0, server_ms: hit.server_ms ?? null, payload: hit.payload, error: hit.error } : { route: 'fixture', ms: 0, error: 'missing fixture' }
       } else {
-        r = await runOne({ q, mode, base: opts.bases[mode], route: opts.route, secret: opts.secret, fetchImpl, timeoutMs })
+        r = await runOne({ q, mode, base: opts.bases[mode], route: opts.route, secret: opts.secret, operator: opts.operator, prod: opts.prod, fetchImpl, timeoutMs })
       }
       const row = { id: q.id, set: q.set, kind: q.kind, mode, route: r.route, ms: r.ms, server_ms: r.server_ms ?? r.payload?.research?.ms ?? r.payload?.agentic?.ms ?? null }
       if (r.error || !r.payload || typeof r.payload !== 'object') row.error = r.error ?? 'empty payload'
@@ -176,15 +179,15 @@ async function main() {
     if (!fixture) throw new Error('The fixture must be an array of {id, mode, payload} rows, or {rows: [...]}.')
   } else {
     const main = guardBase(opts.base, opts)
-    bases.planner = guardBase(opts.plannerBase ?? opts.base, opts).href
-    bases.loop = guardBase(opts.loopBase ?? opts.base, opts).href
+    bases.planner = opts.operator || opts.prod ? main.href : guardBase(opts.plannerBase ?? opts.base, opts).href
+    bases.loop = opts.operator || opts.prod ? main.href : guardBase(opts.loopBase ?? opts.base, opts).href
     baseHost = main.host
   }
   const secret = process.env.DAILY_POST_OPERATOR_SECRET
-  if (!fixture && opts.route === 'ops' && !secret) throw new Error('DAILY_POST_OPERATOR_SECRET must be set for --route ops.')
+  if (!fixture && (opts.route === 'ops' || opts.operator || opts.prod) && !secret) throw new Error('DAILY_POST_OPERATOR_SECRET must be set for operator evaluation.')
   const questions = await loadQuestions(opts.set)
   const { roster, parties } = await loadRoster()
-  const { report, summary } = await runEval({ questions, modes: opts.modes, bases, baseHost, route: opts.route, secret, fixture, limit: opts.limit, prices: opts.prices, timeoutMs: opts.timeoutMs, roster, parties, set: opts.set })
+  const { report, summary } = await runEval({ questions, modes: opts.modes, bases, baseHost, route: opts.route, secret, operator: opts.operator, prod: opts.prod, fixture, limit: opts.limit, prices: opts.prices, timeoutMs: opts.timeoutMs, roster, parties, set: opts.set })
   const written = await writeReports(report, opts.out)
   // Counts only on stdout: no question or answer text.
   const brief = Object.fromEntries(Object.entries(summary).map(([m, s]) => [m, { n: s.n, errors: s.errors, pass: s.overall.pass, partial: s.overall.partial, fail: s.overall.fail, p50_ms: s.latency_ms.p50, p95_ms: s.latency_ms.p95, mean_cost_usd: s.cost_usd.mean }]))

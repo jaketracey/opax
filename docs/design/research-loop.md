@@ -31,6 +31,13 @@ share their first result; `prepareStep` tells the model what already ran and
 restricts a repeating model to terminal tools. No tool accepts an arbitrary URL or
 writes to an external system.
 
+Route mode first tries the existing published money and pay calculations. They
+return their cited calculations in JSON/SSE with zero model usage, without calling
+the money overview generator. Questions those calculations cannot answer proceed
+to the loop. A numerical `answer` misroute leaves only `finish` active and does not
+consume the qualitative repair allowance. Terminal drafts appear in subsequent
+instructions only as `answer#<SHA256>`, never as full draft text or quotes.
+
 `search` performs bounded Nuclia `/find` retrieval with the existing Ask filter
 builder. `read_passage` accepts only an id returned by this request's search,
 bounds search passages to 1,200 characters, reads the original record through the existing resource handler, and verifies
@@ -61,23 +68,28 @@ A rejected draft gets one repair turn with only `answer` available; another
 failure returns to the old path. No unsupported quote is silently unquoted.
 This verifies citation/quote integrity and existing position constraints; it is
 not a general semantic entailment model.
+Each citation's covered claim is also checked against the public roster: named
+people must match the passage speaker or occur in the supporting quote. Accepted
+sources carry the passage speaker into `research.sources`.
 
 ## Caps and fallback
 
 | Control | Default | Ceiling / behavior |
 | --- | --- | --- |
-| `RESEARCH_LOOP_STEPS` | 4 model turns | 6 |
+| `RESEARCH_LOOP_STEPS` | 5 model turns | 6 |
 | Actual tool calls | 6, including terminal tools | Duplicates reuse output |
-| `RESEARCH_LOOP_MS` | 20,000 ms | 30,000 ms; also limited to request time minus 8,000 ms |
-| `RESEARCH_LOOP_TOKENS` | 32,000 cumulative loop tokens | 64,000 |
+| `RESEARCH_LOOP_MS` | 12,000 ms | 30,000 ms; also limited to request time minus 8,000 ms |
+| `RESEARCH_LOOP_TOKENS` | 96,000 cumulative loop tokens | 160,000 |
 | `RESEARCH_LOOP_DAILY_USD` | US$5 per UTC day | Atomic D1 admission before every loop turn; invalid/zero disables inference |
+| `RESEARCH_LOOP_SHADOW_RATE` | 0.2 | Metered cache misses only; invalid/zero disables shadow |
 | Output per turn | 1,800 tokens | Reduced by remaining token reserve |
 | Tool result entering context | 16,384 UTF-8 bytes | Includes the current fact sheet |
 | Tool execution | Existing 12,000 ms bound | Also bounded by request and loop signals |
 | Retry / repair | Provider retries disabled | One qualitative answer repair, within all caps |
 
-Token admission reserves a conservative byte-based bound for messages, schemas,
-instructions and framing before each turn; reported input and output usage is
+Token admission estimates the next call in tokens using `ceil(UTF-8 bytes / 4)`
+for messages, schemas, instructions and framing. This estimate is added once to
+cumulative reported usage from previous calls; reported input and output usage is
 accumulated and checked again before client-side tools. Missing usage is charged
 against the reserved input and output rather than treated as zero. Cached input and reasoning
 tokens are included by the SDK's total usage. The cap governs the loop attempt;
@@ -106,6 +118,19 @@ This limits direct research-provider admission, independently of the OpenRouter
 key's credit limit; the existing old path keeps its own admission controls.
 The orchestrator must apply migration 0017 before the first shadow deployment.
 
+Production `COMMUNITY_DB` is **`opax-community`**, database id
+`ea0ca399-189f-4fc0-83f8-66a41204a180`, in the top-level Wrangler configuration.
+The orchestrator applies pending migrations, including 0017, with the worktree's
+installed Wrangler (the empty environment explicitly selects top level):
+
+```sh
+cd /Users/jake/Projects/opax-ios-wt/research-loop/portal
+npx --no-install wrangler d1 migrations apply opax-community --remote --env=""
+```
+
+This lane does not execute that production write. Command syntax is supported by
+the [current D1 CLI documentation](https://developers.cloudflare.com/workers/wrangler/commands/d1/).
+
 HTTP 402 and wrapped credit/insufficient-balance errors immediately fall back,
 with no loop retry. They log `reason: 'research_credit_exhausted'` and open a
 15-minute aggregate circuit breaker in that isolate. Further loop attempts skip
@@ -115,27 +140,31 @@ unavailable refund cannot delay the old answer or bypass the reserved charge.
 
 The request signal and SSE reader cancellation abort model requests, tool fetches
 and body reads. A Promise race also bounds a non-cooperative fake/provider.
-After disconnect no paid fallback is started. Errors, malformed args, caps,
-failed grounding and missing configuration invoke the old planner once, then the
-existing ordinary fallback if needed, within the original deadline. A timeout
-inside the loop leaves time for that fallback; an expired request cannot start it.
+After disconnect no paid fallback is started. Ordinary-question loop failures
+and every loop timeout go directly to ordinary Ask inside the remaining deadline.
+Other failures on an agentic question can invoke its old planner once, followed
+by ordinary Ask if needed. A shadow failure records the failed attempt without
+calling the already-served planner again. An expired request cannot start fallback.
+SDK tool errors are remembered in `failed` before throwing because the SDK treats
+tool throws as tool-error parts; `stopWhen` and the final check prevent another turn.
 
 ## Payload and app compatibility
 
 SSE keeps `status`, `delta`, `retry`, `done` and `error`, and existing status shapes.
 Tools emit `status {phase:'step', step}` with the same id for `running` and
-`done`/`error`. Labels remain fixed plain language; arguments are sanitized and
+`done`/`failed`, retaining the shipped web client's failure state. Labels remain fixed plain language; arguments are sanitized and
 capped at 40 characters. Optional `tool`, `round`, `results` and `ms` fields are
 added. Free model text is not streamed before verification.
 
 `agenticAskPayload` retains `answer`, `answered`, optional `reason`, `citations`,
-`sources`, `followups` and `agentic`. It adds only:
+`sources`, `followups` and `agentic`. Every stepped answer, including the old
+planner and fallback, carries the additive metadata:
 
 ```ts
 research: {
   mode: 'loop' | 'planner', rounds: number,
-  trail: [{id, tool, label, arg?, results?, ms, ok}],
-  sources: [{title, url, date?, kind}],
+  trail: [{id, tool, round, label, arg?, results?, ms, ok}],
+  sources: [{title, url, date?, kind, speaker?}],
   ms?: number, tokens?: {input: number, output: number} | null,
   cost_usd?: number | null
 }
@@ -143,9 +172,14 @@ research: {
 
 Research sources contain only evidence used by selected facts or accepted
 qualitative claims. The planner fallback uses its executed steps. An ordinary
-RAG fallback has no planner steps: its trail is empty and used sources are copied
-from its existing payload. Its existing fields survive unchanged. Cache hit/miss
+RAG fallback preserves any executed loop trail rather than paying for a discarded
+planner; a direct ordinary response has no tool trail. Used sources are copied
+from the served payload. Numerical prose omits search/read-only sampling notes
+while retaining the numerical tools' coverage notes. Existing fields survive unchanged. Cache hit/miss
 headers and SSE cached replay remain in the current cache transport.
+Every trail item carries its round, including post-loop committee checks, so a
+cached response retains grouping without live events. Rebuilt JSON deletes its
+old `content-length` header.
 
 For operator evaluation, `/api/ask` accepts `x-opax-research: loop|old` only when
 the existing `operatorAuthorized` bearer guard succeeds. `loop` forces route
@@ -162,6 +196,13 @@ the response bytes unchanged. If an old generation omits consumption, total toke
 and cost are `null`; missing usage is never presented as free inference. Existing
 app fields and event names survive, and both native decoder fixtures accept the
 override JSON and SSE payloads.
+
+The merged `scripts/research_eval.mjs` uses those headers with the environment's
+`DAILY_POST_OPERATOR_SECRET` when `--operator` or `--prod` is supplied. Both modes
+use the same base URL and `/api/ask`; the request header selects old versus loop.
+The secret is never printed or added to the report. Local non-operator runs may
+still use separate configured fixture servers. The offline fixture runner, UI
+round/count loader, research disclosure and merged source panel are integrated.
 
 The native apps use the React Native Ask decoder and SSE parser in
 `mobile/src/features/ask/{model,stream}.ts`. The iOS checkout and the Android parity
@@ -186,9 +227,14 @@ mode, preset, caps and record kind so planner/off answers cannot populate the
 loop's cache. Conversation/prior-source requests remain unshared. Only complete,
 cited successful results are eligible for storage under existing rules.
 
-`shadow` serves the old response, byte for byte. A capped loop runs alongside it
+`shadow` serves the old response, including its additive stepped metadata. Cache
+HITs and requests without a successful reader limiter token never run a shadow.
+The remaining requests are sampled at 20% by default, then the primary D1 ledger
+must have room for the first reservation. D1 failure fails closed in this gate;
+the atomic `prepareStep` reservation still enforces admission under concurrency.
+A capped loop runs alongside a sampled miss
 with `waitUntil`; the background deadline is 28 seconds and the loop wall cap is
-20 seconds by default, fitting the Workers post-response window. The loop result
+12 seconds by default, fitting the Workers post-response window. The loop result
 is never exposed to the reader. The existing Workers observability sink receives
 an allowlisted compact record:
 
@@ -217,7 +263,9 @@ tokens and optional cost. Existing D1 latency/cost monitoring remains in place.
 Rollback is **set `RESEARCH_LOOP=off`**, then deploy through the orchestrator.
 `AGENTIC_ASK_MODE` retains its previous meaning. `agentic-parity.test.mjs` and the
 legacy no-answer parity script are explicitly scoped to `RESEARCH_LOOP=off`;
-byte pins are no longer gates on loop-route answers. The focused fake-model tests
+ordinary byte pins and agentic legacy fields remain unchanged; the gold comparison
+rebaselines only the newly required optional `research` property. Byte pins are
+no longer gates on loop-route answers. The focused fake-model tests
 keep quote/citation integrity and rollback identity. `votes.json` is untouched.
 
 ## Phase 2

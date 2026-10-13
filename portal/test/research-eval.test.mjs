@@ -159,17 +159,27 @@ test('arguments: limit defaults to 12 and is capped, modes and sets are closed, 
   assert.equal(parseArgs(['http://127.0.0.1:8962', '--price-in', '0.5', '--price-out', '1.5']).prices.output, 1.5)
 })
 
-test('requests: ops route for classifier questions and gold when the secret is set, /api/ask otherwise, research_mode in the body', () => {
+test('requests: ops route for classifier questions and gold when the secret is set, /api/ask otherwise, no unused research_mode body hint', () => {
   const ops = requestFor(q('H01'), 'loop', { secret: 's' })
-  assert.equal(ops.path, '/api/ops/ask-gold'); assert.equal(ops.headers.authorization, 'Bearer s'); assert.equal(ops.body.research_mode, 'loop'); assert.equal(ops.body.period, undefined)
+  assert.equal(ops.path, '/api/ops/ask-gold'); assert.equal(ops.headers.authorization, 'Bearer s'); assert.equal(ops.body.research_mode, undefined); assert.equal(ops.body.period, undefined)
   const ask = requestFor(q('Q01'), 'planner', { secret: 's' })
-  assert.equal(ask.path, '/api/ask'); assert.equal(ask.headers.authorization, undefined); assert.equal(ask.body.research_mode, 'planner')
+  assert.equal(ask.path, '/api/ask'); assert.equal(ask.headers.authorization, undefined); assert.equal(ask.body.research_mode, undefined)
   assert.equal(requestFor(q('H01'), 'loop', {}).path, '/api/ask')
   assert.equal(requestFor(q('Q01'), 'loop', { route: 'ops', secret: 's' }).path, '/api/ops/ask-gold')
   assert.throws(() => requestFor(q('Q01'), 'loop', { route: 'ops' }), /DAILY_POST_OPERATOR_SECRET/)
   const gold = { id: 'R01', gold: true, question: 'Who is making the most speeches about gambling reform', old_route: 'ranking' }
   assert.equal(requestFor(gold, 'planner', { secret: 's' }).body.period, 'all')
   assert.equal(requestFor({ ...gold, question: 'Who spoke most about health in the 2010s?' }, 'planner', { secret: 's' }).body.period, undefined)
+})
+test('--operator and --prod choose the engine per request on /api/ask with the bearer guard',async()=>{
+ assert.equal(parseArgs(['http://127.0.0.1:8962','--operator']).operator,true);
+ const secret='FAKE-OPERATOR-MUST-NOT-APPEAR-IN-REPORTS',calls=[];
+ for(const policy of [{operator:true},{prod:true}])for(const mode of ['planner','loop']){
+  const request=requestFor(q('H01'),mode,{...policy,route:'ops',secret});assert.equal(request.path,'/api/ask');assert.equal(request.headers.authorization,'Bearer '+secret);assert.equal(request.headers['x-opax-research'],mode==='loop'?'loop':'old');assert.equal(request.body.research_mode,undefined);
+  assert.throws(()=>requestFor(q('H01'),mode,policy),/DAILY_POST_OPERATOR_SECRET/);
+ }
+ const result=await runEval({questions:[q('H01')],modes:['planner','loop'],bases:{planner:'http://127.0.0.1:8962',loop:'http://127.0.0.1:8962'},operator:true,secret,fetchImpl:async(url,init)=>{calls.push({url:String(url),headers:init.headers});return Response.json(payload('H01',init.headers['x-opax-research']==='loop'?'loop':'planner'))},roster,parties});
+ assert.deepEqual(calls.map(c=>c.headers['x-opax-research']),['old','loop']);assert.ok(calls.every(c=>c.url.endsWith('/api/ask')));assert.doesNotMatch(JSON.stringify(result),new RegExp(secret));
 })
 
 test('one fetch per question and mode; failures are recorded, never re-sent; prod is never contacted', async () => {
@@ -185,7 +195,7 @@ test('one fetch per question and mode; failures are recorded, never re-sent; pro
   assert.equal(rows[0].error, 'network'); assert.equal(rows[1].error, 'HTTP 409'); assert.ok(rows[2].grade && rows[3].grade)
   assert.ok(calls[0].url.startsWith('http://127.0.0.1:8962/api/ops/ask-gold')); assert.ok(calls[1].url.startsWith('http://127.0.0.1:8963/api/ops/ask-gold'))
   assert.ok(calls[2].url.startsWith('http://127.0.0.1:8962/api/ask')); assert.ok(calls[3].url.startsWith('http://127.0.0.1:8963/api/ask'))
-  assert.deepEqual(calls.map((c) => c.body.research_mode), ['planner', 'loop', 'planner', 'loop'])
+  assert.ok(calls.every(c => c.body.research_mode === undefined))
   assert.equal(summary.planner.errors, 1); assert.equal(summary.loop.errors, 1)
   const limited = await runEval({ questions: evals.questions, modes: ['loop'], fixture: canned, limit: 2, roster, parties, set: 'research' })
   assert.equal(limited.rows.length, 2)

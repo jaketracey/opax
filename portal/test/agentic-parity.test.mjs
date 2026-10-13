@@ -10,7 +10,7 @@ import {build} from 'esbuild';
 
 // Retired as a RESEARCH_LOOP route gate by Jake, 14 Oct 04:00.
 // This pin now proves the rollback path only, with the new flag explicitly off.
-test('RESEARCH_LOOP=off: ordinary bodies and agentic gold remain byte-identical to main',async t=>{
+test('RESEARCH_LOOP=off: legacy fields remain byte-identical; stepped research metadata is additive',async t=>{
  const root=new URL('../../',import.meta.url).pathname,scratch=mkdtempSync(join(tmpdir(),'opax-agentic-parity-'));
  let goldMode=false;const realNow=Date.now;
  const restore=offline(),pending=[],ctx={waitUntil(p){pending.push(p)},passThroughOnException(){}};
@@ -66,13 +66,17 @@ test('RESEARCH_LOOP=off: ordinary bodies and agentic gold remain byte-identical 
   // Response bodies include runtime milliseconds. Freeze the fixture clock,
   // rather than deleting or normalising any fields from the comparison.
   Date.now=()=>Date.UTC(2026,9,13,10,0,0);
+  const legacyBody = (text, stream) => {
+   const legacy = data => { const payload = JSON.parse(data); delete payload.research; return JSON.stringify(payload) };
+   return stream ? text.replace(/(event: done\r?\ndata: )([^\r\n]+)/g, (_all, frame, data) => frame + legacy(data)) : legacy(text);
+  };
   for(const q of gold)for(const stream of [false,true]) {
    expected=q.expected;
    const post=h=>h.fetch('/api/ask'+(stream?'?stream=1':''),{method:'POST',headers:{'content-type':'application/json','x-opax-nocache':'1',...(stream?{accept:'text/event-stream'}:{})},body:JSON.stringify({question:q.question,kind:'speech',period:'all'})});
    const a=await post(main),b=await post(current);assert.equal(b.status,a.status,q.id);
-   assert.equal(await b.text(),await a.text(),`gold ${q.id} (${stream?'SSE':'JSON'})`);
+   assert.equal(legacyBody(await b.text(),stream),legacyBody(await a.text(),stream),`gold ${q.id} (${stream?'SSE':'JSON'})`);
    while(pending.length)await Promise.all(pending.splice(0));
   }
-  assert.equal(gold.length,34);t.diagnostic('34 agentic gold questions, 68 JSON/SSE bodies: 0 differences (offline provider fixtures).');
+  assert.equal(gold.length,34);t.diagnostic('34 agentic gold questions, 68 JSON/SSE bodies: 0 legacy-field differences; optional research metadata rebaselined.');
  }finally{Date.now=realNow;restore();rmSync(scratch,{recursive:true,force:true})}
 });

@@ -1,13 +1,17 @@
 import type { AgenticPayload } from './agentic-ask'
+import { researchTrail } from './agentic-ask'
 import { isElectorateDataQuestion } from './agentic-tool-electorates'
 
 /** Adapt numbered tool facts to the existing Ask source ranges and renderer. */
 export function agenticAskPayload(run: AgenticPayload, question: string) {
-  const research = run.research ? { research: { ...run.research, ms: run.timings.total_ms, tokens: run.tokens, cost_usd: run.cost_usd } } : {}
+  const researchFor = (sources: { title: string; url: string; kind: string; date?: string; speaker?: string }[]) => ({ research: {
+    ...(run.research ?? { mode: 'planner' as const, rounds: run.steps.length ? 1 : 0, trail: researchTrail(run.events, run.steps), sources }),
+    ms: run.timings.total_ms, tokens: run.tokens, cost_usd: run.cost_usd,
+  } })
   if (run.qualitative) return {
     answered: run.answered, ...(run.reason ? { reason: run.reason } : {}),
     ...run.qualitative, followups: [], agentic: { steps: run.events, ms: run.timings.total_ms },
-    ...research,
+    ...researchFor(run.qualitative.sources),
   }
   const citations: Record<string, [number, number][]> = {}
   const sources = run.facts.map(f => ({ resource: `fact-${f.id}`, slug: '', kind: f.kind, title: f.text, href: f.url, url: f.url, snippet: f.text, cited: false }))
@@ -57,6 +61,6 @@ export function agenticAskPayload(run: AgenticPayload, question: string) {
     sources: run.answered ? sources.filter(s => s.cited) : [],
     followups: run.answered && followup && !isElectorateDataQuestion(question) ? [{ label: followup, question: followup, kind: 'speech' }] : [],
     agentic: { steps: run.events, ms: run.timings.total_ms },
-    ...research,
+    ...researchFor(sources.filter(s => s.cited).map(s => ({ title: s.title, url: s.url, kind: s.kind }))),
   }
 }

@@ -58,10 +58,11 @@
     // First release runs shadow; the orchestrator promotes route after eval.
     // OPENROUTER_API_KEY is provisioned by the hub, never by local tooling.
     "RESEARCH_LOOP": "shadow",
-    "RESEARCH_LOOP_STEPS": "4",
-    "RESEARCH_LOOP_MS": "20000",
-    "RESEARCH_LOOP_TOKENS": "32000",
+    "RESEARCH_LOOP_STEPS": "5",
+    "RESEARCH_LOOP_MS": "12000",
+    "RESEARCH_LOOP_TOKENS": "96000",
     "RESEARCH_LOOP_DAILY_USD": "5",
+    "RESEARCH_LOOP_SHADOW_RATE": "0.2",
     "AUTHORISATION_LINE": "Authorised by Jake Tracey, Noice Pty Ltd, Level 6, 608/343 Little Collins Street, Melbourne VIC 3000.",
     "CORRECTION_CONTACT": "mailto:corrections@opax.com.au",
     // SA Hansard is excerpt-only until Parliament grants full-text permission.
