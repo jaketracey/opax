@@ -5950,7 +5950,7 @@ function agenticDeps(env: Env, ctx: ExecutionContext, signal?: AbortSignal, inpu
         searchBody: (query, limit, context, filters) => {
           // A party scope is the model's search argument (one side of a comparison at a time), not an implicit filter.
           const scoped = { ...input,
-            ...(context.named.people.length === 1 ? { speaker: context.named.people[0] } : {}),
+            ...(filters.speaker ? { speaker: filters.speaker } : context.named.people.length === 1 ? { speaker: context.named.people[0] } : {}),
             ...(context.period.since ? { since: context.period.since } : {}), ...(context.period.until ? { until: context.period.until } : {}),
           }
           const expression = filterExpression(scoped) as { field: unknown }

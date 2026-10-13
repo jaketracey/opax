@@ -438,9 +438,9 @@ export function stepEvent(step: PlanStep, id: number, committee = false): StepEv
   const registered = getAskTool(step.tool)
   if (registered) return { id, ...registered.stepLabel(step.args), state: 'running' }
   const a = step.args
-  const label = committee ? 'Checking committee hearings' : step.tool === 'count_speeches' ? a.group_by === 'speaker' ? 'Counting by speaker' : a.group_by === 'party' ? 'Counting by party' : 'Searching speeches' : ({ member_votes: 'Checking votes', party_donations: 'Checking donations', speech_trend: 'Comparing years', find_quotes: 'Searching speeches', find_people: 'Searching speeches', search: 'Searching the record', read_passage: 'Reading a passage', finish: 'Selecting record facts', answer: 'Checking the answer' } as Record<string, string>)[step.tool]
+  const label = committee ? 'Checking committee hearings' : step.tool === 'count_speeches' ? a.group_by === 'speaker' ? 'Counting by speaker' : a.group_by === 'party' ? 'Counting by party' : 'Searching speeches' : ({ member_votes: 'Checking votes', party_donations: 'Checking donations', speech_trend: 'Comparing years', find_quotes: 'Searching speeches', find_people: 'Searching speeches', search: 'Searching the record', person_quotes: 'Reading their speeches', read_passage: 'Reading a passage', finish: 'Selecting record facts', answer: 'Checking the answer' } as Record<string, string>)[step.tool]
   const moneyArgs = new Set(['Labor', 'Liberal', 'Greens', 'Nationals', 'LNP', 'Independent', 'One Nation', 'United Australia Party', 'gambling', 'mining', 'fossil_fuels', 'finance', 'property', 'unions', 'health', 'hospitality', 'media', 'tech'])
-  const raw = step.tool === 'party_donations' ? [a.party, a.industry].find(v => typeof v === 'string' && moneyArgs.has(v)) : a.keyword ?? a.party ?? a.industry ?? a.speaker ?? a.topic ?? a.query ?? a.name
+  const raw = step.tool === 'party_donations' ? [a.party, a.industry].find(v => typeof v === 'string' && moneyArgs.has(v)) : a.keyword ?? a.party ?? a.industry ?? a.speaker ?? a.person ?? a.topic ?? a.query ?? a.name
   const arg = typeof raw === 'string' ? raw.replace(/[<>&"'\x00-\x1f]/g, '').slice(0, 40) : undefined
   return { id, label, ...(arg ? { arg } : {}), state: 'running' }
 }

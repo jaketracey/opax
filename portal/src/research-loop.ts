@@ -2,6 +2,7 @@ import { generateText, jsonSchema, tool, isStepCount, ToolChoiceViolationError, 
 import { TOOL_SPECS, validToolArgs, toolArgProblem, type ToolDeps, type ToolResult } from './agentic-tools'
 import { getAskTool } from './tools'
 import { searchPartyLabels } from './party-labels'
+import { rosterPerson } from './roster-person'
 import { classifyAgentic, factSheet, resolveArgs, type PlanStep } from './agentic-ask'
 import { firstSpeechTurn } from './position-evidence'
 import type { ResearchContext } from './research-types'
@@ -30,7 +31,7 @@ export interface ResearchOptions {
   model?: LanguageModel
   steps?: unknown; wallMs?: unknown; tokens?: unknown
   modelBudgetSpent: () => Promise<boolean>
-  searchBody?: (query: string, limit: number, context: ResearchContext, filters: { party?: string[] }) => Record<string, unknown>
+  searchBody?: (query: string, limit: number, context: ResearchContext, filters: { party?: string[]; speaker?: string }) => Record<string, unknown>
   readRecord?: (slug: string, signal: AbortSignal) => Promise<Record<string, unknown>>
   evidenceText?: (resource: Record<string, unknown>, text: string) => string
   positionQuery?: string
@@ -137,15 +138,17 @@ export function createResearch(options: ResearchOptions): Research {
     // A passage is citable once its original record confirms it inside the speaking turn. Search verifies
     // every hit in parallel, so the model can answer straight after searching; one fetch per record.
     const records = new Map<string, Promise<Record<string, unknown>>>()
-    const verify = async (known: Passage, signal: AbortSignal) => {
+    const verify = async (known: Passage, signal: AbortSignal, own?: string) => {
       if (!options.readRecord) return false
       let pending = records.get(known.slug)
       if (!pending) { pending = options.readRecord(known.slug, signal); records.set(known.slug, pending) }
       const record = await pending
       const text = options.evidenceText?.(record, String(record.text ?? '')) ?? String(record.text ?? '')
       const normal = (v: string) => v.replace(/\s+/g, ' ').trim()
-      const original = context.named.people.length || options.positionQuery ? firstSpeechTurn(text) : text
-      if (!original || !normal(original).includes(normal(known.text)) || context.named.people.length && record.speaker_attribution === 'unattributed') return false
+      // A person's own words: their first speaking turn, attributed, and spoken by them.
+      const original = own || context.named.people.length || options.positionQuery ? firstSpeechTurn(text) : text
+      if (!original || !normal(original).includes(normal(known.text)) || (own || context.named.people.length) && record.speaker_attribution === 'unattributed') return false
+      if (own && (typeof record.speaker !== 'string' || normal(record.speaker).toLowerCase() !== normal(own).toLowerCase())) return false
       if (typeof record.speaker === 'string') known.speaker = record.speaker
       const kind = object(record.labels).kind, date = object(record.metadata).date, party = object(record.metadata).party_on_day ?? object(record.labels).party
       if (typeof kind === 'string') known.kind = kind
@@ -161,6 +164,24 @@ export function createResearch(options: ResearchOptions): Research {
       // A null or empty optional argument means "not set"; models send them for unused filters.
       execute: args => invoke({ tool: spec.name, args: Object.fromEntries(Object.entries(object(args)).filter(([, v]) => v !== null && v !== '')) }),
     })]))
+    // Passages from a /find response: original-context paragraphs only, at most `limit` (one per speech when asked).
+    const collect = (found: Record<string, unknown>, limit: number, query: string, origin?: string, perSpeech = false) => {
+      const picked: Passage[] = []
+      for (const [rid, raw] of Object.entries(object(found.resources))) {
+        const resource = object(raw), from = object(resource.origin), meta = object(object(resource.extra).metadata)
+        if (typeof resource.slug !== 'string' || /^(?:da-|news-)/.test(resource.slug)) continue
+        for (const field of Object.values(object(resource.fields))) for (const [id, rawPara] of Object.entries(object(object(field).paragraphs))) {
+          const para = object(rawPara)
+          if (!originalContext(id) || id.split('/')[0] !== rid || typeof para.text !== 'string' || picked.length >= limit) continue
+          if (perSpeech && picked.some(p => p.slug === resource.slug)) continue
+          const text = options.evidenceText?.(resource, para.text) ?? para.text
+          if (!text.trim()) continue
+          picked.push({ id, resource: rid, slug: resource.slug, title: String(resource.title ?? resource.slug), text: text.slice(0, 1200), query, url: `${origin ?? 'https://opax.com.au'}/doc/${encodeURIComponent(resource.slug)}`, kind: String(meta.kind ?? 'speech'),
+            ...(typeof from.created === 'string' ? { date: from.created.slice(0, 10) } : {}), ...(Array.isArray(from.collaborators) && typeof from.collaborators[0] === 'string' ? { speaker: from.collaborators[0] } : {}) })
+        }
+      }
+      return picked
+    }
     tools.search = tool({ description: 'Search Hansard and other original corpus passages: what was said. A bounded ranked sample, never an exhaustive count. Returns only passages verified in their original speaking turn, with speaker, party on the day and date; cite them by id. For one person, put their name in the query; for one party\'s view, pass party (Coalition means Liberal, Nationals, LNP and CLP); two complementary queries (different wording or angle) find more distinct speeches.',
       inputSchema: jsonSchema<{ query: string; limit?: number; party?: string }>({ type: 'object', properties: { query: { type: 'string', minLength: 2, maxLength: 300 }, limit: { type: 'integer', minimum: 1, maximum: 8 }, party: { type: 'string', minLength: 2, maxLength: 60, description: 'Only speeches by members of this party on the day: Labor, Liberal, Nationals, LNP, Greens, Independent, One Nation, or Coalition.' } }, required: ['query'], additionalProperties: false }),
       execute: args => invoke({ tool: 'search', args }, async deps => {
@@ -170,24 +191,26 @@ export function createResearch(options: ResearchOptions): Research {
         // Six passages per search keep the answer turn's prompt small; models routinely ask for eight.
         const limit = Math.min(args.limit ?? 4, 6)
         const found = await deps.kb('/find', options.searchBody?.(args.query, limit, context, party ? { party } : {}) ?? { query: args.query, top_k: limit, features: ['keyword', 'semantic'], reranker: 'predict', show: ['basic', 'origin', 'extra'], filter_expression: { field: { prop: 'field', type: 'text', name: 'body' } } })
-        const picked: Passage[] = []
-        for (const [rid, raw] of Object.entries(object(found.resources))) {
-          const resource = object(raw), origin = object(resource.origin), meta = object(object(resource.extra).metadata)
-          if (typeof resource.slug !== 'string' || /^(?:da-|news-)/.test(resource.slug)) continue
-          for (const field of Object.values(object(resource.fields))) for (const [id, rawPara] of Object.entries(object(object(field).paragraphs))) {
-            const para = object(rawPara)
-            if (!originalContext(id) || id.split('/')[0] !== rid || typeof para.text !== 'string' || picked.length >= limit) continue
-            const text = options.evidenceText?.(resource, para.text) ?? para.text
-            if (!text.trim()) continue
-            const passage: Passage = { id, resource: rid, slug: resource.slug, title: String(resource.title ?? resource.slug), text: text.slice(0, 1200), query: args.query, url: `${deps.origin ?? 'https://opax.com.au'}/doc/${encodeURIComponent(resource.slug)}`, kind: String(meta.kind ?? 'speech'),
-              ...(typeof origin.created === 'string' ? { date: origin.created.slice(0, 10) } : {}), ...(Array.isArray(origin.collaborators) && typeof origin.collaborators[0] === 'string' ? { speaker: origin.collaborators[0] } : {}) }
-            picked.push(passage)
-          }
-        }
+        const picked = collect(found, limit, args.query, deps.origin)
         const checked = await Promise.all(picked.map(p => verify(p, deps.signal!).catch(() => false)))
         const citable = picked.filter((_, i) => checked[i])
         if (!citable.length) return errorResult('search', picked.length ? 'no passage could be verified in its original speaking turn; try another query' : 'no passages found; try another query')
         return { tool: 'search', ok: true, data: { passages: citable }, cite: citable.map(p => ({ kind: 'record', label: p.title, url: p.url })), notes: ['Retrieved passages are a ranked sample, not the whole record.'] }
+      }),
+    })
+    tools.person_quotes = tool({ description: 'What one parliamentarian said about a topic: only their own speeches, newest first, one passage per speech, each verified in their own speaking turn; cite by id. Use for "what has X said about Y" and for each person in a comparison between people.',
+      inputSchema: jsonSchema<{ person: string; topic: string; limit?: number }>({ type: 'object', properties: { person: { type: 'string', minLength: 2, maxLength: 120, description: 'Their name, e.g. "Penny Wong".' }, topic: { type: 'string', minLength: 2, maxLength: 200 }, limit: { type: 'integer', minimum: 1, maximum: 8 } }, required: ['person', 'topic'], additionalProperties: false }),
+      execute: args => invoke({ tool: 'person_quotes', args }, async deps => {
+        if (typeof args.person !== 'string' || typeof args.topic !== 'string' || args.person.trim().length < 2 || args.topic.trim().length < 2 || args.limit != null && (!Number.isInteger(args.limit) || args.limit < 1 || args.limit > 8)) return errorResult('person_quotes', 'invalid tool arguments')
+        const person = rosterPerson(await deps.asset('/parliamentarians.json'), args.person)
+        if (!person) return errorResult('person_quotes', `no parliamentarian named "${args.person.slice(0, 60)}" in the roster; try find_people`)
+        const limit = Math.min(args.limit ?? 5, 6)
+        const found = await deps.kb('/find', options.searchBody?.(args.topic, 12, context, { speaker: person }) ?? { query: args.topic, top_k: 12, features: ['keyword', 'semantic'], reranker: 'predict', show: ['basic', 'origin', 'extra'] })
+        const picked = collect(found, 12, args.topic, deps.origin, true)
+        const checked = await Promise.all(picked.map(p => verify(p, deps.signal!, person).catch(() => false)))
+        const citable = picked.filter((_, i) => checked[i]).sort((a, b) => String(b.date ?? '').localeCompare(String(a.date ?? ''))).slice(0, limit)
+        if (!citable.length) return errorResult('person_quotes', `no passage by ${person} on this topic could be verified in their own speaking turn; try other topic words`)
+        return { tool: 'person_quotes', ok: true, data: { person, passages: citable }, cite: citable.map(p => ({ kind: 'record', label: p.title, url: p.url })), notes: ['Newest first, one passage per speech: a ranked sample of their speeches, not all of them.'] }
       }),
     })
     tools.read_passage = tool({ description: 'Fetch one original passage by its exact id from search. Only read passages may support answer citations.',
@@ -200,7 +223,7 @@ export function createResearch(options: ResearchOptions): Research {
       }),
     })
     // Record facts are rows from the structured tools, bound by factSheet; passages (search, read) are cited as points.
-    const PASSAGE_TOOLS = ['find_people', 'find_quotes', 'search', 'read_passage']
+    const PASSAGE_TOOLS = ['find_people', 'find_quotes', 'search', 'person_quotes', 'read_passage']
     const recordFacts = () => {
       const all = factSheet(results).facts, tools = new Map<number, string>()
       let previous = 0
@@ -343,8 +366,8 @@ export function createResearch(options: ResearchOptions): Research {
           // One stable tool list on every turn (a byte-identical prompt prefix for the provider cache). A turn that
           // must end the run names its terminal tool instead: after two lookup rounds, on the last round, when the
           // wall clock is nearly spent, after a repeated call or for a repair.
-          // Two searches already give the passages a what-was-said answer needs; record lookups may take a second round.
-          const hansardOnly = () => steps.filter(step => step.tool === 'search').length >= 2 && steps.every(step => ['search', 'read_passage', 'find_people'].includes(step.tool))
+          // Two searches (or one person's own speeches) give a what-was-said answer its passages; record lookups may take a second round.
+          const hansardOnly = () => (steps.filter(step => step.tool === 'search').length >= 2 || steps.some(step => step.tool === 'person_quotes')) && steps.every(step => ['search', 'person_quotes', 'read_passage', 'find_people'].includes(step.tool))
           const evidence = passages.size > 0 || recordFacts().tools.size > 0, terminal = qualitativeRun ? 'answer' : 'finish'
           const late = Date.now() - started > limits.wallMs - 6_500
           const forced = numericalAnswer ? 'finish' : answerAttempts ? 'answer'

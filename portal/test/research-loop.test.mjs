@@ -202,3 +202,14 @@ test('search takes a party argument as KB labels (Coalition is its member partie
  assert.deepEqual(seen.map(s=>(s.party??[]).slice().sort()),[['Country Liberal Party','LNP','Liberal','Nationals']]);
  assert.match(JSON.stringify(f.model.doGenerateCalls[1].prompt),/unknown party/);
 });
+test('person_quotes: the named member\'s own speeches only, newest first, one passage per speech, verified in their own turn',async()=>{
+ const seen=[],res=(n,date)=>['e'.repeat(31)+n,{slug:'speech-'+n,title:'Debate '+n,origin:{created:date+'T00:00:00Z',collaborators:[n==='3'?'Casey Sample':'Pat Example']},fields:{body:{paragraphs:{['e'.repeat(31)+n+'/t/body/0-60']:{text:'Housing affordability safeguards are needed now '+n+'.'},['e'.repeat(31)+n+'/t/body/61-90']:{text:'A second paragraph about housing '+n+'.'}}}}}];
+ const f=fixtures(model([reply([call('person_quotes',{person:'Pat Example',topic:'housing affordability'})]),reply([call('answer',valid)])]),{searchBody:(query,limit,context,filters)=>{seen.push(filters);return {query,top_k:limit}},readRecord:async slug=>({text:'Housing affordability safeguards are needed now '+slug.split('-')[1]+'. A second paragraph about housing '+slug.split('-')[1]+'.',speaker:slug==='speech-3'?'Casey Sample':'Pat Example'})});
+ f.deps.kb=async()=>({resources:Object.fromEntries([res('1','2011-01-01'),res('2','2024-06-01'),res('3','2025-01-01')])});
+ f.deps.asset=async path=>path==='/parliamentarians.json'?{people:[{name:'Pat Example'},{name:'Casey Sample'}]}:null;
+ await api.runAgentic('What has Pat Example said about housing affordability?',f.deps,async()=>{},40_000,api.inferPeriod('housing'),{},emptyScope);
+ assert.deepEqual(seen,[{speaker:'Pat Example'}]);
+ const out=JSON.stringify(f.model.doGenerateCalls[1].prompt).replace(/\\"/g,'"');
+ const ids=[...out.matchAll(/"slug":"(speech-\d)"/g)].map(m=>m[1]);assert.deepEqual([...new Set(ids)],['speech-2','speech-1']);
+ assert.equal((out.match(/A second paragraph about housing/g)||[]).length,0,'one passage per speech');
+});
