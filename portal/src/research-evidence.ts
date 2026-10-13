@@ -16,6 +16,27 @@ function unresolvedPersonQuestion(question: string): boolean {
   return !!subject && !collective.test(subject) || /\b(?:speeches|remarks|statements|votes)\s+(?:by|from|of)\s+(?!the\b|all\b)[\p{L}'’-]+/iu.test(question)
 }
 
+// A claim that describes its speaker by party ("A Labor member said", "Coalition senators argued") must match the
+// speaker's party on the day in the original record. Content about a party ("Labor's platform") is not a descriptor.
+const PARTY_FAMILY: [RegExp, RegExp][] = [
+  [/^(?:labor|alp)$/i, /\b(?:labor|labour|alp)\b/i],
+  [/^liberals?$/i, /\b(?:liberal|lnp|country liberal|clp)\b/i],
+  [/^(?:nationals?|national party)$/i, /\b(?:national|nationals|lnp|country party|npa)\b/i],
+  [/^coalition$/i, /\b(?:liberal|national|nationals|lnp|country|clp|npa)\b/i],
+  [/^greens?$/i, /\bgreens?\b/i],
+  [/^democrats?$/i, /\bdemocrats?\b/i],
+  [/^one nation$/i, /\bone nation\b/i],
+  [/^independents?$/i, /\bindependent\b/i],
+]
+const PARTY_DESCRIPTOR = /(?:^|[.;:]\s+|\b(?:a|an|another|one|the|two|several|other|fellow)\s+)(labor|alp|liberals?|nationals?|national party|coalition|greens?|democrats?|one nation|independents?)\s+(?:members?|mps?|senators?|ministers?|speakers?|figures?|backbenchers?|frontbenchers?|spokesp\w+|representatives?|politicians?|leaders?|voices?)\b/gi
+export function claimMatchesParty(claim: string, party: string | undefined): boolean {
+  for (const match of claim.matchAll(PARTY_DESCRIPTOR)) {
+    const family = PARTY_FAMILY.find(([name]) => name.test(match[1].trim()))?.[1]
+    if (!family || !party || !family.test(party)) return false
+  }
+  return true
+}
+
 /** "unresolved" also marks unknown topic words; only an unresolved person slot (a name the roster could not
  * resolve, in "what has X said" grammar) blocks an answer about that person. */
 export function unresolvedPersonAsked(question: string, named: NamedScope): boolean {
@@ -49,6 +70,7 @@ export function verifyResearchAnswer(draft: AnswerDraft, passages: Map<string, P
     if (!normal(evidence).includes(normal(citation.quote))) return reject('quote_not_in_passage')
     const claim = points.slice(citation.start, citation.end).join('')
     if (!claimMatchesSpeaker(claim, passage.speaker, roster)) return reject('claim_speaker_mismatch')
+    if (!claimMatchesParty(claim, passage.party)) return reject('claim_party_mismatch')
     if (unsupportedQuotes(claim, [citation.quote]).length) return reject('claim_quote_unsupported')
     // Check short quotations too: the general Ask helper deliberately ignores
     // short spans, but a terminal research draft must keep every quote literal.

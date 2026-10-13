@@ -17,6 +17,8 @@ export interface ResearchTurn { round: number; input: number | null; output: num
 export interface Passage {
   id: string; resource: string; slug: string; title: string; text: string; url: string
   date?: string; speaker?: string; kind: string
+  /** The speaker's party on the day, from the original record. */
+  party?: string
 }
 export interface QualitativeAnswer {
   answer: string

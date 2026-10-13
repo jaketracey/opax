@@ -23,6 +23,8 @@ function personMentions(text: string, roster: unknown) {
     if (surname.length < 2) continue
     const short = new RegExp(`(?<![\\p{L}\\p{N}])${escape(surname)}(?![\\p{L}\\p{N}])`, surname.length < 4 ? 'gu' : 'giu')
     for (const match of text.matchAll(short)) {
+      // A surname alone is a name only when capitalised ("Small", "SMALL"); "small modular reactors" names nobody.
+      if (!/^\p{Lu}/u.test(match[0])) continue
       if (!fullNames.some(m => match.index >= m.start && match.index + match[0].length <= m.end)) {
         mentions.push({ name: person.name, start: match.index, end: match.index + match[0].length })
       }
