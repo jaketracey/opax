@@ -123,3 +123,17 @@ test('an electorate page has one visible title and says relation years in words'
   assert.match(html, />Elsewhere<\/a> · Senate · as at 2026<\/li>/);
   assert.match(html, />Other<\/a> · Senate · as at 2025<\/li>/);
 });
+
+test('every Victorian electorate profile keeps Jake’s exact authorisation after client rendering', () => {
+  const line = 'Authorised by Jake Tracey, Noice Pty Ltd, Level 6, 608/343 Little Collins Street, Melbourne VIC 3000.';
+  const seats = index.electorates.filter(e => e.jurisdiction === 'vic');
+  assert.ok(seats.length >= 96);
+  for (const seat of seats) {
+    const html = profileHTML(JSON.parse(readFileSync(publicFile(seat.detail_url))));
+    assert.ok(html.includes(line), seat.url);
+    assert.match(html, /href="mailto:corrections@opax.com.au"/);
+    assert.match(html, /We aim to respond within 2 business days\./);
+  }
+  const federal = index.electorates.find(e => e.jurisdiction === 'federal');
+  assert.ok(!profileHTML(JSON.parse(readFileSync(publicFile(federal.detail_url)))).includes(line));
+});

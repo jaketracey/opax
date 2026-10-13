@@ -1,3 +1,4 @@
+import { vicElectionFooterHTML } from './vic-election.js';
 import { personUrl, partyUrl } from './canonical-urls.js?v=225d5915ea';
 /* Electorate reference pages. Independently loadable; no funding-data dependency. */
 import { shortDate } from './format.js';
@@ -207,7 +208,7 @@ export function profileHTML(detail, on = '', { photoUrlFor = () => null } = {}) 
       ${line(service, { source: 'Service records', notes: ['Dated service records, newest first. Party changes may create a new period. Open-ended records are not proof of current membership.'] })}` : '<p class="ui-empty">Historical service has not yet been imported.</p>'}</section>
     <section id="el-context" class="ui-section el-section"><h2 class="ui-section-title">Census context</h2>${detail.demographics.length ? `${detail.demographics.map(censusHTML).join('')}
       ${line(census, { source: detail.demographics.map((d) => d.vintage).join('; '), notes: detail.demographics.map((d) => esc(d.note)) })}` : '<p class="ui-empty">Census indicators have not yet been imported for this electorate.</p>'}</section>
-    ${detail.relations.length ? `<section class="ui-section el-section"><h2 class="ui-section-title">Related constituencies</h2><ul class="ui-list el-related" data-rule="none">${detail.relations.map((r) => `<li><a href="/subject/electorate/${esc(r.related.slug)}">${esc(r.related.name)}</a> · ${esc(CHAMBERS[r.related.chamber] || r.related.chamber)}${relatedAsAt(r.vintage)}</li>`).join('')}</ul></section>` : ''}`;
+    ${detail.relations.length ? `<section class="ui-section el-section"><h2 class="ui-section-title">Related constituencies</h2><ul class="ui-list el-related" data-rule="none">${detail.relations.map((r) => `<li><a href="/subject/electorate/${esc(r.related.slug)}">${esc(r.related.name)}</a> · ${esc(CHAMBERS[r.related.chamber] || r.related.chamber)}${relatedAsAt(r.vintage)}</li>`).join('')}</ul></section>` : ''}${detail.jurisdiction === 'vic' ? vicElectionFooterHTML() : ''}`;
 }
 export async function renderProfile({ body, slug, on, isActive, setCrumbs, goRoute, manageFocus, loadPhotos = null }) {
   try {
