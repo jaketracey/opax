@@ -1,4 +1,4 @@
-# Mixed speech cards — local implementation and participant dry run
+# Mixed speech cards — render and reviewed participant bundle
 
 A speech with `speaker_type=multi_speaker` displays **Several speakers**, a neutral group avatar and its structured debate heading. Search, topic arcs, person evidence, Ask/chat sources and quotes, report/bill reading modules, Time Machine, Then vs Now, and the money explainer share this treatment. Witnesses retain their witness label; chair, member and unknown types do not fall through to “Speaker not named”. No UI byline is recovered from a title or body.
 
@@ -13,15 +13,45 @@ The local artifacts under ignored `portal/private/mixed-speakers/` contain:
 - `participants.json`: all **16,512 original resource IDs**, with **100% coverage**, **80,953 participant memberships** and **7,350 chair memberships**. Each value contains `participants: [{name, person_id, role?}]` and the database debate heading.
 - `participants-dry-run.json`: the original set plus five later reviewed short motions and the source report.
 - `participants-report.json`: coverage, source checksums, withheld IDs and the publication candidate inventory. Across both sets, 377 resolved people all exist in the legacy members table; 7,608 unresolved turn memberships are excluded.
-- `publication-candidate/`: a manifest and 16 RID-prefix JSON shards, **16,508 reviewed resources**, about **5.27 MB**. Nine original identity-conflict resources are held out, and five later reviewed motions are included.
+- `publication-candidate/`: a manifest and 16 RID-prefix JSON shards, **16,508 reviewed resources**. Nine original identity-conflict resources are held out, and five later reviewed motions are included. The public validation additionally excludes 27 memberships for seven XML-resolved parliamentarians absent from the published roster; their entries remain in the private export. All resources still have participants.
 
 Participants describe the reviewed source span. Expanded or revised XML turns can differ from the unchanged KB body; the source ledger records those revisions. This list must not be used for person counts or to assign all words to every participant.
 
 ## Publication recommendation
 
-Use the **reviewed static asset bundle**, copied only after approval to `portal/public/mixed-speakers/` in an ordinary release with a cache-epoch change. It supplies database debate headings, requires no KB writes, is easy to inspect and roll back, and is keyed by resource ID rather than ambiguous duplicate slugs. The Worker probes the optional manifest, fetches only relevant advertised shards, validates the presentation fields, and joins them only onto `multi_speaker` records. Missing, malformed, or HTML fallback assets leave the response usable. The existing published `speaker_participants` metadata is forwarded as the fallback, so participant names do not depend on a new publication. No static participant asset has been placed in `portal/public/` in this round.
+The **approved static asset bundle** is now in `portal/public/mixed-speakers/` for the orchestrator's ordinary release: **17 files, 5,266,216 bytes**, covering **16,508 resources**, **80,842 participant memberships**, **370 roster identities** and **7,347 chair memberships**. It supplies database debate headings, requires no KB writes, is easy to inspect and roll back, and is keyed by resource ID rather than ambiguous duplicate slugs. The Worker probes the optional manifest, fetches only relevant advertised shards, validates the presentation fields, and joins them only onto `multi_speaker` records. Missing, malformed, or HTML fallback assets leave the response usable. The existing published `speaker_participants` metadata remains the fallback.
+
+`/mixed-speakers/*` detaches the generic JSON cache header and uses the same `public, max-age=31536000, immutable` policy as `/electorates/releases/*`. This reviewed snapshot is frozen. A later participant replacement must use a new namespace and update the Worker join/cache version, rather than overwrite browser-cached URLs.
 
 A metadata alternative is a reviewed, preconditioned metadata patch through `scripts/speaker_relabel_apply.py`, keeping collaborators empty and `person_id` null. It is unnecessary here: the prior approved relabel already wrote `speaker_participants`. Neither path changes attribution or facets.
+
+## Reproduce the bundle
+
+Run these commands from the repository root. The first executes the exporter on the desktop database read-only and redirects the complete identity ledger into the ignored private directory on the Mac; it performs no desktop database or KB writes. The reviewed plan is the source of the GID membership, since that desktop database lacks the newer provenance schema.
+
+```sh
+mkdir -p portal/private/mixed-speakers
+ssh desktop python3 - \
+  --database /home/jake/.cache/autoresearch/parli.db \
+  --plan /home/jake/opax-work/evidence/speaker-attribution-relabel-20261013/plan \
+  < scripts/build_mixed_speaker_participants.py \
+  > portal/private/mixed-speakers/participants-dry-run.json
+python3 scripts/build_mixed_speaker_participants.py \
+  --input portal/private/mixed-speakers/participants-dry-run.json \
+  --roster portal/public/parliamentarians.json \
+  --output portal/private/mixed-speakers/publication-candidate
+```
+
+The second command prints counts only. It excludes the reviewed held resources, includes the supplementary reviewed motions, filters to published roster IDs, and writes sorted deterministic RID-prefix shards. Validate a replacement privately before approval; for this approved initial bundle, copy the 17 files and run the public validation:
+
+```sh
+mkdir -p portal/public/mixed-speakers
+cp portal/private/mixed-speakers/publication-candidate/*.json portal/public/mixed-speakers/
+node --test portal/test/mixed-speaker-bundle.test.mjs
+node scripts/stamp_assets.mjs
+```
+
+The test scans every shard, reports counts only, requires roster membership or an explicit chair/Speaker label, rejects witness/unresolved fields and names, verifies all sixteen Worker joins preserve null personal credit, and checks the immutable header. The exporter also rejects unreviewed participant fields and chair roles before writing any bundle files. Roster exports and their speech counts are inputs, never modified by this process.
 
 ## Nightly finding
 

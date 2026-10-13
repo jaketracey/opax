@@ -117,6 +117,11 @@
   ! Cache-Control
   Cache-Control: public, max-age=31536000, immutable
 
+# Reviewed participant snapshot is frozen; a replacement needs a new namespace.
+/mixed-speakers/*
+  ! Cache-Control
+  Cache-Control: public, max-age=31536000, immutable
+
 /community
   Cache-Control: public, max-age=0, must-revalidate
   ! Referrer-Policy

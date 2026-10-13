@@ -12,6 +12,54 @@ from pathlib import Path
 import re
 import sqlite3
 
+CHAIR_ROLES = {'Chair', 'Speaker', 'Deputy Speaker', 'Acting Speaker',
+               'President', 'Deputy President', 'Acting President'}
+
+
+def publish_bundle(artifact, roster, destination):
+    """Write only roster-resolved parliamentarians to local, deterministic shards.
+
+    The complete source export stays private. This never adds roster identities
+    or credits a document to its participants.
+    """
+    roster_ids = {str(p['pid']) for p in roster['people'] if p.get('pid')}
+    held = set(artifact['report']['withheld_resource_ids'])
+    resources = {rid: entry for rid, entry in {**artifact['resources'], **artifact['supplementary']}.items()
+                 if rid not in held}
+    shards = {s: {} for s in '0123456789abcdef'}
+    excluded, excluded_people = 0, set()
+    for rid, entry in sorted(resources.items()):
+        if not re.fullmatch('[0-9a-f]{32}', rid):
+            raise ValueError('Invalid resource ID')
+        approved = []
+        for p in entry['participants']:
+            name = str(p.get('name', '')).strip()
+            if (set(p) - {'name', 'person_id', 'role'} or not name
+                    or re.search(r'\b(witness|unresolved|unknown)\b|speaker not named', name, re.I)
+                    or not str(p.get('person_id', '')).isdigit()):
+                raise ValueError('Invalid participant fields')
+            if p.get('role') and p['role'] not in CHAIR_ROLES:
+                raise ValueError('Unrecognised chair role')
+            if str(p.get('person_id')) not in roster_ids:
+                excluded += 1
+                excluded_people.add(p.get('person_id'))
+                continue
+            approved.append(p)
+        if not approved:
+            raise ValueError('No roster-resolved participants for resource')
+        shards[rid[0]][rid] = {'participants': approved, 'debate': entry['debate']}
+    destination.mkdir(parents=True, exist_ok=True)
+    files = {'index.json': {'schema': 1, 'shards': list(shards)},
+             **{s + '.json': {'schema': 1, 'resources': rows} for s, rows in shards.items()}}
+    for filename, data in files.items():
+        (destination / filename).write_text(json.dumps(data, ensure_ascii=False, separators=(',', ':')) + '\n')
+    ps = [p for rows in shards.values() for entry in rows.values() for p in entry['participants']]
+    return {'resources': len(resources), 'shards': len(shards), 'files': len(files),
+            'bytes': sum((destination / filename).stat().st_size for filename in files),
+            'participants': len(ps), 'resolved_people': len({p['person_id'] for p in ps}),
+            'chair_memberships': sum(bool(p.get('role')) for p in ps),
+            'excluded_roster_memberships': excluded, 'excluded_roster_people': len(excluded_people)}
+
 
 def gid_order(gid):
     return tuple(int(n) for n in re.findall(r'\d+', gid))
@@ -92,7 +140,18 @@ def build(database, plan):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--database', required=True)
-    parser.add_argument('--plan', type=Path, required=True)
+    parser.add_argument('--database')
+    parser.add_argument('--plan', type=Path)
+    parser.add_argument('--input', type=Path, help='Private source export to shard locally')
+    parser.add_argument('--roster', type=Path, help='Published parliamentarians.json')
+    parser.add_argument('--output', type=Path, help='Local public bundle directory; prints counts only')
     args = parser.parse_args()
-    print(json.dumps(build(args.database, args.plan), ensure_ascii=False, separators=(',', ':')))
+    if args.input:
+        if not args.roster or not args.output or args.database or args.plan:
+            parser.error('--input requires --roster and --output, without --database/--plan')
+        result = publish_bundle(json.loads(args.input.read_text()), json.loads(args.roster.read_text()), args.output)
+    else:
+        if not args.database or not args.plan or args.roster or args.output:
+            parser.error('source export requires --database and --plan')
+        result = build(args.database, args.plan)
+    print(json.dumps(result, ensure_ascii=False, separators=(',', ':')))
