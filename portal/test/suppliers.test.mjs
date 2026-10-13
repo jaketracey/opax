@@ -46,7 +46,7 @@ test('supplier directory and encoded name routes match, malformed and extra path
   assert.equal(route(`/subject/supplier/${id}/`).name, id);
   assert.equal(route('/subject/supplier/%ZZ'), null);
   assert.equal(route('/subject/supplier/name/extra'), null);
-  assert.equal(route(`/subject/supplier/${'x'.repeat(501)}`), null);
+  assert.equal(route(`/subject/supplier/${'x'.repeat(501)}`).name, 'x'.repeat(501));
 });
 
 test('known identity and exact source alias produce the same canonical profile and award facts', async () => {

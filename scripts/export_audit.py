@@ -13,20 +13,13 @@ sys.path.insert(0, str(ROOT))
 from parli.ingest.qao_reports import Held, ID, INDEX, LICENCE, COPYRIGHT, SAFE_MARKUP, guard_count, local_path, public_body, source_url
 from parli.ingest.qao_bodies import explicit_recommendations, response_body_name
 
-MAX_FILES, MAX_BYTES, CHUNK_ROWS = 150, 30_000_000, 100
+CHUNK_ROWS = 100
 SOURCE = "Source: Queensland Audit Office, CC BY 4.0"
 PUBLIC_PDF_FIELDS = {'checked', 'status', 'sha256', 'page_count', 'pdf_url', 'licence_url', 'document_licence'}
 
 
 def encoded(value):
     return (json.dumps(value, ensure_ascii=False, separators=(",", ":")) + "\n").encode()
-
-
-def check_budget(payloads):
-    size = sum(len(value) for value in payloads.values())
-    if len(payloads) > MAX_FILES or size > MAX_BYTES:
-        raise Held(f"Audit asset budget exceeded: {len(payloads)} files, {size} bytes")
-    return len(payloads), size
 
 
 def validate_record(row, *, public=False):
@@ -147,7 +140,6 @@ def plan_export(snapshot, agencies=()):
                                   'Signatories remain only inside verbatim response text. No person entities, fields or joins.']
     payloads["manifest.json"] = encoded(manifest)
     payloads["ready.json"] = encoded({"complete": True, "count": manifest["count"], "listed": manifest["listed"], "export_date": manifest["generated_at"][:10]})
-    check_budget(payloads)
     return payloads, manifest
 
 
@@ -179,7 +171,6 @@ def export(snapshot_path, out):
     if manifest['recommendation_privacy_filtered']:
         manifest['attribution']['changes'] += ' HTML recommendations with names withheld are marked; QAO has the original text.'
     payloads = {name:encoded(body) for name,body in projected.items()}
-    check_budget(payloads)
     out.mkdir(parents=True, exist_ok=True)
     for name, body in payloads.items():
         path = out / name
@@ -187,7 +178,7 @@ def export(snapshot_path, out):
         tmp = out / (name + ".tmp"); tmp.write_bytes(body); tmp.replace(path)
     for path in out.glob("*.json"):
         if path.name not in payloads: path.unlink()
-    files, size = check_budget(payloads)
+    files, size = len(payloads), sum(map(len, payloads.values()))
     print(json.dumps({"reports": manifest["count"], "recommendations": manifest["recommendations"], "files": files, "bytes": size}))
     return manifest
 

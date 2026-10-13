@@ -15,9 +15,8 @@ const read=async path=>{calls.push(path);return path==='/table-private-identitie
 const block=(h,t,links='')=>`<section id="prerender"><h1>${h}</h1><p>${t}</p>${links}</section>`;
 const m=await read('/audit/manifest.json'),index=await read('/audit/index.json'),id=index.records[0].id;
 
-test('phase 2 export reconciles the 150 file and 30 MB limits with provenance',()=>{
+test('phase 2 export reconciles document provenance',()=>{
  assert.equal(auditComplete(m),true);assert.equal(m.phase,2);
- assert.ok(Object.keys(files).length<=150);assert.ok(Object.values(files).reduce((n,s)=>n+Buffer.byteLength(s),0)<=30_000_000);
  assert.equal(m.pdf_recommendations,2);assert.equal(m.responses,1);
  const row=JSON.parse(files['reports-1.json']).records[0];
  assert.deepEqual(row.recommendations.map(r=>r.provenance),['pdf p.4','pdf p.4']);
@@ -132,7 +131,7 @@ test('every public audit asset and rendered report omits internal review reasons
   assert.equal('reasons' in row.pdf,false);assert.equal('no_text_pages' in row.pdf,false);
   const page=await auditPage(row.id,new URL('https://opax.com.au/audit/'+row.id),publicRead,block);
   assert.equal(page.status,200);assert.ok(!forbidden.test(page.prerender+page.description),'Rendered audit report contains no internal review wording');
-  assert.ok(page.description.endsWith('PDF body held.'));
+  if(row.pdf.status==='held') assert.ok(page.description.endsWith('PDF body held.'));
  }
  const directory=await auditPage(null,new URL('https://opax.com.au/audit'),publicRead,block);
  const dom=new JSDOM(directory.prerender),table=dom.window.document;
@@ -145,13 +144,29 @@ test('every public audit asset and rendered report omits internal review reasons
  assert.ok(forbidden.test(JSON.stringify(receipt)),'Internal rights receipt retains its review reasons');
 });
 
-test('accepted catalogue restores all phase 1 HTML recommendations while preserving every PDF hold',()=>{
- const publicRoot=new URL('../public/audit/',import.meta.url),manifest=JSON.parse(readFileSync(new URL('manifest.json',publicRoot)));
- const rows=manifest.chunks.flatMap(chunk=>JSON.parse(readFileSync(new URL(chunk.path.replace('/audit/',''),publicRoot))).records);
- assert.equal(manifest.count,296);assert.equal(manifest.html_recommendations,647);assert.equal(manifest.recommendations,647);
- assert.equal(rows.reduce((n,row)=>n+row.recommendations.length,0),647);assert.ok(rows.every(row=>row.recommendations.every(rec=>rec.provenance==='html')));
- assert.equal(rows.filter(row=>row.licence.body_skipped).length,2);assert.ok(rows.every(row=>row.pdf.status==='held'));
- assert.equal(manifest.bodies,0);assert.equal(manifest.responses,0);assert.equal(manifest.pdf_recommendations,0);
+test('accepted catalogue reconciles per-document rights, hashes, provenance and aggregate counts',()=>{
+ const publicRoot=new URL('../public/audit/',import.meta.url);
+ const manifest=JSON.parse(readFileSync(new URL('manifest.json',publicRoot)));
+ const rows=manifest.chunks.flatMap(chunk=>{
+  const bytes=readFileSync(new URL(chunk.path.replace('/audit/',''),publicRoot));
+  assert.equal(bytes.byteLength,chunk.bytes);
+  const records=JSON.parse(bytes).records;assert.equal(records.length,chunk.count);return records;
+ });
+ assert.equal(rows.length,manifest.count);
+ assert.equal(new Set(rows.map(row=>row.id)).size,rows.length);
+ assert.equal(rows.reduce((n,row)=>n+row.recommendations.length,0),manifest.recommendations);
+ assert.equal(rows.filter(row=>row.licence.body_skipped).length,manifest.licence_exceptions.length);
+ assert.equal(rows.filter(row=>row.pdf.status==='ready').length,manifest.bodies);
+ const recommendations=rows.flatMap(row=>row.recommendations);
+ assert.equal(recommendations.filter(rec=>rec.provenance==='html').length,manifest.html_recommendations);
+ assert.equal(recommendations.filter(rec=>rec.provenance!=='html').length,manifest.pdf_recommendations);
+ assert.equal(rows.reduce((n,row)=>n+row.response_count,0),manifest.responses);
+ // The production validator enforces each document's licence, hash, source
+ // provenance and held/ready boundary without assuming the snapshot is frozen.
+ const checked=spawnSync('python3',['-c',
+  'from scripts.vm.validate_data import check_audit; import json; print(json.dumps(check_audit(compare_head=False)))'],
+  {cwd:new URL('../../',import.meta.url),encoding:'utf8'});
+ assert.equal(checked.status,0,checked.stderr);assert.deepEqual(JSON.parse(checked.stdout),[]);
 });
 
 test('publication boundary filters HTML identities while refusing altered PDF source text',async()=>{

@@ -159,12 +159,31 @@ test('reviewer requests never call the email binding or store an OTP and preserv
  assert.equal(f.db.prepare('SELECT count(*) n FROM members').get().n,0);
 });
 
-test('reviewer and ordinary request responses share a floor with a delayed email double',async t=>{
+test('reviewer and ordinary request responses share a floor with a delayed email double',{timeout:10000},async t=>{
  const f=fixture(t),send=f.env.COMMUNITY_EMAIL.send;
+ // Compare the requested delays on a controlled clock. CPU contention in the
+ // full suite must not be mistaken for a difference in the admission policy.
+ let elapsed=0,scheduled=[],finished=false;
+ const ready=Promise.withResolvers();let wake=Promise.withResolvers();
+ t.mock.method(performance,'now',()=>elapsed);
+ t.mock.method(globalThis,'setTimeout',(callback,delay,...args)=>{
+  scheduled.push({at:elapsed+delay,callback,args});
+  if(scheduled.length===2)ready.resolve();
+  wake.resolve();return scheduled.length;
+ });
  f.env.COMMUNITY_EMAIL.send=async mail=>{await new Promise(resolve=>setTimeout(resolve,100));return send(mail)};
  const duration=async email=>{const start=performance.now(),response=await f.call('auth/request',{email,client:'ios'});assert.equal(response.status,200);return performance.now()-start};
- // Concurrent requests see the same local scheduler delays during the full suite.
- const [ordinary,reviewer]=await Promise.all([duration('ordinary@example.test'),duration('play-review@opax.com.au')]);
+ const requests=Promise.all([duration('ordinary@example.test'),duration('play-review@opax.com.au')]);
+ const finish=()=>{finished=true;wake.resolve()};requests.then(finish,finish);
+ await ready.promise;
+ assert.deepEqual(scheduled.map(timer=>timer.at).sort((a,b)=>a-b),[100,100],'email delivery and reviewer response must use the same floor');
+ while(!finished){
+  if(!scheduled.length){await wake.promise;wake=Promise.withResolvers();continue;}
+  elapsed=Math.min(...scheduled.map(timer=>timer.at));
+  const due=scheduled.filter(timer=>timer.at===elapsed);scheduled=scheduled.filter(timer=>timer.at!==elapsed);
+  for(const timer of due)timer.callback(...timer.args);
+ }
+ const [ordinary,reviewer]=await requests;
  assert.ok(ordinary>=95&&reviewer>=95,'both successful requests must reach the common response floor');
  assert.ok(Math.abs(ordinary-reviewer)<=25,'request timing differs by more than 25 ms');
  assert.equal(f.outbox.length,1);

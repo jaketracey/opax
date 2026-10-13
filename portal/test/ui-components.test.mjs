@@ -209,8 +209,9 @@ test('labels.js is the one copy: app.js and the homepage import it, neither keep
   }
   assert.match(app, /import\('\/labels\.js(\?v=[0-9a-f]{10})?'\)/);
   assert.match(homeData, /from '\.\/labels\.js(\?v=[0-9a-f]{10})?';/);
-  // The first render waits for it (and for ⋯, page-actions-menu.js).
-  assert.match(app, /Promise\.allSettled\(\[attributionReady, uiLabelsReady, pageMenusReady, growthModulesReady, personUrlsReady, saDisplayReady, donorViewReady, voteTablesReady\]\)\.finally\(\(\) => \{[^}]*route\(\);/);
+  // Every route needs labels; menus mount when their import arrives.
+  assert.match(app, /uiLabelsReady\.finally\(\(\) => \{[^}]*route\(\);/);
+  assert.match(app, /return \[uiLabelsReady,/);
   assert.match(read('index.html'), /<link rel="modulepreload" href="\/labels\.js\?v=[0-9a-f]{10}">/);
 });
 

@@ -48,11 +48,12 @@ export function offline() {
 
 /** Bundle a Worker entry and serve it over `root`. Share cards are not drawn: the
  * card's spec comes back as JSON bytes, so tests can read every word on a card. */
-// Third/fourth arguments: an ExecutionContext and/or bundle options, in either order.
+// Third/fourth arguments: an ExecutionContext and/or bundle options, in either order;
+// options may also carry the context as options.executionContext.
 export async function loadWorker(entry, root, ctxOrOptions, optionsOrCtx) {
   const isContext=value=>typeof value?.waitUntil === "function";
-  const executionContext=[ctxOrOptions,optionsOrCtx].find(isContext);
   const options=[ctxOrOptions,optionsOrCtx].find(value=>value&&!isContext(value)) || {};
+  const executionContext=[ctxOrOptions,optionsOrCtx].find(isContext) ?? options.executionContext;
   const compiled = await build({entryPoints: [entry], bundle: true, platform: 'browser', format: 'esm', write: false, external: ['node:*'],
     plugins: [...(options.plugins || []), ...(options.identityBundle ? [identityBundlePlugin(options.identityBundle)] : []), {name: 'omit-images', setup(b) { b.onResolve({filter: /^\.\/og-render$/}, () => ({path: 'images', namespace: 'harness'})); b.onLoad({filter: /.*/, namespace: 'harness'}, () => ({contents: 'const spec=card=>new TextEncoder().encode(JSON.stringify(card));export const renderOgPng=spec;export const renderOgJpeg=spec;', loader: 'js'})); }}]});
   const {default: worker} = await import('data:text/javascript;base64,' + Buffer.from(compiled.outputFiles[0].text).toString('base64'));

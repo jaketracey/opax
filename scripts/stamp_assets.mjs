@@ -316,12 +316,25 @@ export function moduleReferences(publicRoot = PUBLIC, srcRoot = SRC) {
 }
 
 /** Files every reference of which carries the current content hash. */
-export function immutableModules(publicRoot = PUBLIC, srcRoot = SRC) {
-  const hash = (f) => createHash('sha256').update(readFileSync(join(publicRoot, f))).digest('hex').slice(0, 10)
-  return [...moduleReferences(publicRoot, srcRoot)]
-    .filter(([file, refs]) => refs.length && refs.every((r) => r.stamp === hash(file)))
+export function immutableModules(publicRoot = PUBLIC, srcRoot = SRC, {references, hashFile = assetHasher(publicRoot)} = {}) {
+  return [...(references ?? moduleReferences(publicRoot, srcRoot))]
+    .filter(([file, refs]) => {
+      if (!refs.length) return false
+      const expected = hashFile(file)
+      return refs.every((r) => r.stamp === expected)
+    })
     .map(([file]) => file)
     .sort()
+}
+
+// A fresh cache for one inventory evaluation, after all page/module writes.
+// Never retain these hashes across stamping or independent --check invocations.
+function assetHasher(publicRoot) {
+  const hashes = new Map()
+  return file => {
+    if (!hashes.has(file)) hashes.set(file, createHash('sha256').update(readFileSync(join(publicRoot, file))).digest('hex').slice(0, 10))
+    return hashes.get(file)
+  }
 }
 
 /** Single-file rules in the hand-written part of _headers that set immutable. */
@@ -343,14 +356,17 @@ function stampHeaders({ check }) {
   // A hand-written immutable rule is only safe while every reader-facing page
   // loads the file stamped (map.html once loaded /ui-controls.css bare).
   const refs = moduleReferences()
+  const hashFile = assetHasher(PUBLIC)
   for (const file of hand) {
-    const bare = (refs.get(file) || []).filter((r) => !DEV_ONLY.test(r.from) && r.stamp !== hashOf(file))
+    const loads = (refs.get(file) || []).filter((r) => !DEV_ONLY.test(r.from))
+    const expected = loads.length ? hashFile(file) : null
+    const bare = loads.filter((r) => r.stamp !== expected)
     if (bare.length) {
       console.error(`stamp_assets: _headers serves /${file} immutable, but ${bare.map((r) => r.from).join(', ')} loads it without its content stamp.`)
       process.exit(1)
     }
   }
-  const files = immutableModules().filter((f) => !hand.has(f) && !DEV_ONLY.test(f))
+  const files = immutableModules(PUBLIC, SRC, {references: refs, hashFile}).filter((f) => !hand.has(f) && !DEV_ONLY.test(f))
   const block = [
     HEADERS_BEGIN,
     '# Each file here is referenced only as ?v=<content hash> (scripts/stamp_assets.mjs',
