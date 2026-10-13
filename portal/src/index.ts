@@ -19,6 +19,7 @@ import { rankedMoneyAnswer } from './ask-money'
 import { paidAnswer, mentionsPay } from './ask-pay'
 import { rewriteFollowUp, clarifyPayload, REWRITE_SYSTEM, type FollowUpRewrite } from './ask-rewrite'
 import { buildPersonOverview, isPersonOverviewCandidate, isPersonOverviewIntent, isPersonRecentCandidate, isPersonRecentIntent, OVERVIEW_INSTRUCTIONS, OVERVIEW_CAPS, OVERVIEW_RETRIEVAL_MS, OVERVIEW_FIRST_ANSWER_MS, OVERVIEW_VERIFICATION_MS, type OverviewPack, type OverviewSpeech, type PersonContext } from './ask-person-overview'
+import { researchModelId, researchProvider, researchReasoning, researchModelOverride, researchModelKey } from './research-model'
 import { AskDeadline, AskPackCache } from './ask-deadline'
 import { personFollowups } from '../public/ask-person.js'
 import { firstSpeechTurn } from './position-evidence'
@@ -5930,7 +5931,7 @@ function agenticDeps(env: Env, ctx: ExecutionContext, signal?: AbortSignal, inpu
     plannerTrail: true,
     ...(env.RESEARCH_LOOP === 'route' ? {
       research: createResearch({
-        model: env.OPENROUTER_API_KEY ? createOpenRouter({ apiKey: env.OPENROUTER_API_KEY })('@preset/opax-pro', { usage: { include: true } }) : undefined,
+        model: env.OPENROUTER_API_KEY ? createOpenRouter({ apiKey: env.OPENROUTER_API_KEY })(researchModelId(env.RESEARCH_LOOP_MODEL_ID), { usage: { include: true }, ...(researchProvider(env.RESEARCH_LOOP_PROVIDER) ? { provider: researchProvider(env.RESEARCH_LOOP_PROVIDER) } : {}), ...(researchReasoning(env.RESEARCH_LOOP_REASONING) ? { extraBody: { reasoning: researchReasoning(env.RESEARCH_LOOP_REASONING) } } : {}) }) : undefined,
         steps: env.RESEARCH_LOOP_STEPS, wallMs: env.RESEARCH_LOOP_MS, tokens: env.RESEARCH_LOOP_TOKENS,
         modelBudgetSpent: () => modelBudgetSpent(env),
         dailyBudget: researchDailyBudget(env.COMMUNITY_DB, env.RESEARCH_LOOP_DAILY_USD),
@@ -6025,7 +6026,9 @@ async function apiAgenticGold(request: Request, env: Env, ctx: ExecutionContext)
 async function apiAskRouted(request: Request, url: URL, env: Env, ctx: ExecutionContext): Promise<Response> {
   const override = request.headers.get('x-opax-research')
   const usage = (override === 'loop' || override === 'old') && await operatorAuthorized(request, env) ? researchEvalState() : undefined
-  const selected = usage ? { ...env, RESEARCH_LOOP: override === 'loop' ? 'route' as const : 'off' as const, RESEARCH_EVAL: usage } : env
+  // Operator evals may also pick a model from RESEARCH_LOOP_MODEL_ALLOW and a provider sort for this request only.
+  const modelOverride = usage ? researchModelOverride(request.headers.get('x-opax-research-model'), request.headers.get('x-opax-research-provider'), env.RESEARCH_LOOP_MODEL_ALLOW) : {}
+  const selected = usage ? { ...env, ...modelOverride, RESEARCH_LOOP: override === 'loop' ? 'route' as const : 'off' as const, RESEARCH_EVAL: usage } : env
   const serve = async () => {
     const body = await readJsonBody(request)
     if (body instanceof Response) return body
@@ -6037,7 +6040,8 @@ async function apiAskRouted(request: Request, url: URL, env: Env, ctx: Execution
     return apiAskRoutedCore(replayPost(request, body.text), url, body.value, selected, ctx)
   }
   const response = await serve()
-  return usage ? withResearchEval(response, () => researchEvalUsage(usage)) : response
+  // Operator evals also see which model and routing the loop used.
+  return usage ? withResearchEval(response, () => ({ ...researchEvalUsage(usage), model: researchModelKey(selected.RESEARCH_LOOP_MODEL_ID, selected.RESEARCH_LOOP_PROVIDER, selected.RESEARCH_LOOP_REASONING) })) : response
 }
 async function apiAskRoutedCore(request: Request, url: URL, input: Record<string, unknown>, env: Env, ctx: ExecutionContext, onRun?: (run: AgenticPayload) => void): Promise<Response> {
   const started = Date.now()
@@ -6147,7 +6151,7 @@ async function apiAskRoutedCore(request: Request, url: URL, input: Record<string
     // but can neither read nor fill the agentic cache. The numerical path
     // declines unsafe scopes; qualitative research verifies original passages.
     const privateTurn = Array.isArray(input.context) && input.context.length > 0
-    const loopVersion = loopRoute ? `${AGENTIC_TOOLS_VERSION}/loop/@preset/opax-pro/${env.RESEARCH_LOOP_STEPS ?? '5'}/${env.RESEARCH_LOOP_TOKENS ?? '96000'}/${env.RESEARCH_LOOP_MS ?? '12000'}/${String(input.kind ?? 'all')}` : AGENTIC_TOOLS_VERSION
+    const loopVersion = loopRoute ? `${AGENTIC_TOOLS_VERSION}/loop/${researchModelKey(env.RESEARCH_LOOP_MODEL_ID, env.RESEARCH_LOOP_PROVIDER, env.RESEARCH_LOOP_REASONING)}/${env.RESEARCH_LOOP_STEPS ?? '5'}/${env.RESEARCH_LOOP_TOKENS ?? '96000'}/${env.RESEARCH_LOOP_MS ?? '12000'}/${String(input.kind ?? 'all')}` : AGENTIC_TOOLS_VERSION
     const key = namedScope.unresolved || namedScope.ambiguous || namedScope.bills.length || loopRoute && Array.isArray(input.prior_resources) && input.prior_resources.length ? undefined : new Request(await agenticCacheKey(question, env.CACHE_EPOCH, env.ASK_MODEL || 'openai-compatible', agenticPeriod(input), loopVersion, agenticFilters(input), classifyAgentic(question).shape, namedScope))
     const streaming = url.searchParams.get('stream') === '1' || (request.headers.get('accept') ?? '').includes('text/event-stream')
     if (key && !privateTurn && !cacheBypass(request, url)) {

@@ -15,7 +15,7 @@ export async function withPlannerResearch(response: Response, previous?: Researc
   return mapResearchResponse(response, payload => plannerPayload(payload, previous))
 }
 
-export async function withResearchEval(response: Response, usage: () => ReturnType<typeof researchEvalUsage>): Promise<Response> {
+export async function withResearchEval(response: Response, usage: () => ReturnType<typeof researchEvalUsage> & { model?: string }): Promise<Response> {
   const headers = new Headers(response.headers)
   headers.set('cache-control', 'no-store')
   headers.set('x-opax-cache', 'BYPASS')

@@ -10,7 +10,7 @@ import ts from 'typescript';
 
 const folder=mkdtempSync(join(tmpdir(),'opax-operator-auth-test-'));
 const omitImages={name:'omit-image-renderer',setup(b){b.onResolve({filter:/^\.\/og-render$/},()=>({path:'images',namespace:'test'}));b.onLoad({filter:/.*/,namespace:'test'},()=>({contents:'export function renderOgPng(){throw Error("No images in operator tests")}; export const renderOgJpeg=renderOgPng; export const renderStoryJpeg=renderOgPng;',loader:'js'}))}};
-await build({entryPoints:['operator-auth','index'].map(name=>new URL('../src/'+name+'.ts',import.meta.url).pathname),outdir:folder,bundle:true,platform:'node',format:'esm',plugins:[omitImages]});
+await build({entryPoints:['operator-auth','index'].map(name=>new URL('../src/'+name+'.ts',import.meta.url).pathname),outdir:folder,bundle:true,platform:'node',format:'esm',banner:{js:"import {createRequire as __opaxCreateRequire} from 'node:module';const require=__opaxCreateRequire(import.meta.url);"},plugins:[omitImages]});
 const {operatorAuthorized}=await import(pathToFileURL(join(folder,'operator-auth.js')));
 const {default:worker}=await import(pathToFileURL(join(folder,'index.js')));
 test.after(()=>rmSync(folder,{recursive:true,force:true}));
@@ -120,6 +120,9 @@ test('the constant-time comparator result governs authorization without a raw st
  assert.equal(await operatorAuthorized(f.request(routes[0],f.headers('x'+secret.slice(1))),f.env),true);
 });
 
+// /api/ask accepts an operator-only x-opax-research engine override (eval); unauthenticated requests ignore the header
+// instead of getting 401, so it is not an operator route, but it must still use the shared guard (checked below).
+function insideAskEvalOverride(node){let p=node.parent;while(p&&!ts.isFunctionDeclaration(p))p=p.parent;return p?.name?.text==='apiAskRouted';}
 test('all four operator routes use the shared constant-time guard and contain no inline credential reads',()=>{
  const helper=readFileSync(new URL('../src/operator-auth.ts',import.meta.url),'utf8');
  assert.match(helper,/crypto\.subtle\.timingSafeEqual\(/);
@@ -129,7 +132,7 @@ test('all four operator routes use the shared constant-time guard and contain no
  function visit(node){
   if(ts.isPropertyAccessExpression(node)&&node.name.text==='DAILY_POST_OPERATOR_SECRET')secretReads.push(node);
   if(ts.isElementAccessExpression(node)&&ts.isStringLiteral(node.argumentExpression)&&node.argumentExpression.text==='DAILY_POST_OPERATOR_SECRET')secretReads.push(node);
-  if(ts.isCallExpression(node)&&ts.isIdentifier(node.expression)&&node.expression.text==='operatorAuthorized'){
+  if(ts.isCallExpression(node)&&ts.isIdentifier(node.expression)&&node.expression.text==='operatorAuthorized'&&!insideAskEvalOverride(node)){
    let parent=node.parent;
    while(parent&&(!ts.isIfStatement(parent)||!routes.some(route=>parent.expression.getText(source).includes(route.path)))&&(!ts.isFunctionDeclaration(parent)||!routes.some(route=>route.handler===parent.name?.text)))parent=parent.parent;
    assert.ok(parent,'operator guard must belong to a known operator route');

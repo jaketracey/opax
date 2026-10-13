@@ -67,6 +67,14 @@ interface Env {
   RESEARCH_LOOP_MS?: string
   RESEARCH_LOOP_TOKENS?: string
   RESEARCH_LOOP_DAILY_USD?: string
+  /** OpenRouter model for the research loop: a preset or a slug (default @preset/opax-pro). */
+  RESEARCH_LOOP_MODEL_ID?: string
+  /** OpenRouter provider preferences JSON, e.g. {"sort":"throughput"}. */
+  RESEARCH_LOOP_PROVIDER?: string
+  /** OpenRouter reasoning field JSON for the loop model, e.g. {"enabled":false}. */
+  RESEARCH_LOOP_REASONING?: string
+  /** Models operator eval requests may select with x-opax-research-model: a JSON map {slug: {provider?, reasoning?}} or a comma list. */
+  RESEARCH_LOOP_MODEL_ALLOW?: string
   RESEARCH_LOOP_SHADOW_RATE?: string
   /** Request-local shadow policy; not a deployed binding. */
   RESEARCH_SHADOW?: boolean

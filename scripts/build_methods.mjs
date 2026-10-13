@@ -30,7 +30,12 @@ export function methodsModels({vars, models}) {
   const embeddings = typeof models.embeddings === 'string' && models.embeddings.trim()
     ? `<code>${escapeHtml(models.embeddings)}</code>`
     : "the knowledge box's embedding model";
-  return {generation, embeddings};
+  // The Ask research loop calls OpenRouter directly; name its model while the loop runs (shadow or route).
+  const loop = vars.RESEARCH_LOOP === 'shadow' || vars.RESEARCH_LOOP === 'route';
+  const research = loop
+    ? `The Ask research loop uses <code>${escapeHtml(vars.RESEARCH_LOOP_MODEL_ID || '@preset/opax-pro')}</code> via OpenRouter${vars.RESEARCH_LOOP === 'shadow' ? ' (being evaluated; answers still come from the generation model above)' : ''}.`
+    : '';
+  return {generation, embeddings, research};
 }
 
 export function renderMethodsModels(html, config) {

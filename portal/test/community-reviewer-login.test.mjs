@@ -10,7 +10,7 @@ import {build} from 'esbuild';
 
 const folder=mkdtempSync(join(tmpdir(),'opax-reviewer-login-test-'));
 const omitImages={name:'omit-image-renderer',setup(b){b.onResolve({filter:/^\.\/og-render$/},()=>({path:'images',namespace:'test'}));b.onLoad({filter:/.*/,namespace:'test'},()=>({contents:'export function renderOgPng(){throw Error("No images in reviewer tests")}; export const renderOgJpeg=renderOgPng; export const renderStoryJpeg=renderOgPng;',loader:'js'}))}};
-await build({entryPoints:['community','voice','index'].map(name=>new URL('../src/'+name+'.ts',import.meta.url).pathname),outdir:folder,bundle:true,platform:'node',format:'esm',plugins:[omitImages]});
+await build({entryPoints:['community','voice','index'].map(name=>new URL('../src/'+name+'.ts',import.meta.url).pathname),outdir:folder,bundle:true,platform:'node',format:'esm',banner:{js:"import {createRequire as __opaxCreateRequire} from 'node:module';const require=__opaxCreateRequire(import.meta.url);"},plugins:[omitImages]});
 const {communityRoute}=await import(pathToFileURL(join(folder,'community.js')));
 const {voiceRoute}=await import(pathToFileURL(join(folder,'voice.js')));
 const {default:worker}=await import(pathToFileURL(join(folder,'index.js')));

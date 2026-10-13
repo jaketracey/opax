@@ -17,12 +17,13 @@ import { JSDOM } from 'jsdom';
 const read = (path) => readFileSync(new URL(path, import.meta.url), 'utf8');
 const css = read('../public/style.css') + '\n' + read('../public/money-explain.css');
 
-// Every rule, with the ones inside @media and @supports lifted to the top.
-function flatSheet(text = css) {
+// Every rule, with the ones inside @media and @supports lifted to the top
+// (or, with media: false, the rules outside @media only: the widest screen).
+function flatSheet(text = css, { media = true } = {}) {
   const { document } = new JSDOM(`<!doctype html><style>${text}</style>`).window;
   const out = [];
   const MEDIA = 4, SUPPORTS = 12;
-  const walk = (rules) => { for (const r of rules) [MEDIA, SUPPORTS].includes(r.type) ? walk(r.cssRules) : out.push(r.cssText); };
+  const walk = (rules) => { for (const r of rules) r.type === SUPPORTS || (media && r.type === MEDIA) ? walk(r.cssRules) : r.type === MEDIA || out.push(r.cssText); };
   walk(document.styleSheets[0].cssRules);
   assert.ok(out.length > 2000, `the stylesheets read whole (${out.length} rules)`);
   return out.join('\n');
@@ -134,17 +135,31 @@ test('/community links the band\'s stylesheet and runs its page on the masthead\
   assert.ok(html.includes('<div class="wrap masthead">'), 'community.html wears the synced masthead');
   assert.ok(html.includes('<main id="community-main" class="wrap community-main"'), 'its <main> is the page\'s .wrap');
   const js = read('../public/community.js');
-  for (const markup of ['class="ui-page-head community-welcome"', 'class="ui-page-head community-list-head"', '<div class="community-discussion">']) {
+  for (const markup of ['class="ui-page-head community-welcome"', 'class="ui-page-head community-list-head"', 'class="ui-page-head community-discussion-head"', '<div class="community-discussion">', '<nav class="ui-tabs community-nav" id="community-navigation" aria-label="Community">']) {
     assert.ok(js.includes(markup), `community.js still draws ${markup}`);
   }
+  // Each view's title opens the page, as on every other page: the community
+  // tabs, the account tabs and no back link come before it (14 Oct, round 2).
+  assert.ok((js.match(/\$\{tabs\(\)\}|\+tabs\(\)\+/g) || []).length >= 20, 'every view draws the tabs after its head');
+  assert.doesNotMatch(js, /`\$\{(?:state\.member\?)?accountNav\(\)|accountNav\(\)\+'<h1|community-back/, 'no tab row or back link above a title');
+  assert.doesNotMatch(html.slice(html.indexOf('<main id="community-main"')), /^<main[^>]*><nav/, 'the shell does not open on the tabs either');
 
-  const sheet = flatSheet(read('../public/style.css') + '\n' + read('../public/nav.css') + '\n' + read('../public/community.css'));
-  const { window } = new JSDOM(`<!doctype html><html><head><style>${sheet}</style></head><body class="community-site">
+  const sources = read('../public/style.css') + '\n' + read('../public/nav.css') + '\n' + read('../public/community.css');
+  const sheet = flatSheet(sources);
+  const page = (rules) => new JSDOM(`<!doctype html><html><head><style>${rules}</style></head><body class="community-site">
     <header class="site-header"><div class="wrap masthead"><a class="logo" href="/">OPAX</a></div></header>
-    <main id="community-main" class="wrap community-main"><nav class="ui-tabs community-nav"><a href="/community">Discussions</a></nav>
+    <main id="community-main" class="wrap community-main"><div id="community-message"></div>
       <div id="community-content"><div class="ui-page-head community-welcome"><h1>Title</h1><p class="ui-lede">Lede.</p></div>
+      <nav class="ui-tabs community-nav" id="community-navigation"><a href="/community">Discussions</a></nav>
       <div class="community-feed-layout"><section></section><aside class="community-sidebar"></aside></div>
-      <div class="community-discussion"></div></div></main></body></html>`).window;
+      <div class="community-discussion"></div></div></main>
+    <main class="compact"></main></body></html>`).window;
+  const window = page(sheet);
+  // The title opens where every page's does: the community's top step is main.compact's, wide and narrow.
+  for (const [width, w] of [['narrow', window], ['wide', page(flatSheet(sources, { media: false }))]]) {
+    const top = (sel) => w.getComputedStyle(w.document.querySelector(sel)).paddingTop;
+    assert.equal(top('#community-main'), top('main.compact'), `${width}: #community-main opens on main.compact's top step`);
+  }
   const head = window.getComputedStyle(window.document.querySelector('header .wrap'));
   const main = window.getComputedStyle(window.document.querySelector('#community-main'));
   for (const prop of ['maxWidth', 'paddingLeft', 'paddingRight', 'marginLeft', 'marginRight', 'width', 'boxSizing']) {
