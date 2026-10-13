@@ -1,4 +1,4 @@
-import { isSaHansard, saExcerpt, saFullText, saOfficialUrl } from '../public/sa-hansard.js'
+import { isSaHansard, saExcerpt, saFullText, saOfficialUrl, withoutSaPlaceholder } from '../public/sa-hansard.js'
 import { normalizePassage } from './passage-text'
 
 type Data = Record<string, unknown>
@@ -6,6 +6,7 @@ const object = (value: unknown): Data => value && typeof value === 'object' && !
 
 /** The KB remains complete; only a copy selected for the model is bounded. */
 export function saEvidenceText(record: unknown, text: string, flag: string | undefined, match = '', unknownSource = false): string {
+  text = withoutSaPlaceholder(text)
   if (saFullText(flag) || (!unknownSource && !isSaHansard(record))) return text
   // Streamed quotations need the same official provenance as citation panels.
   if (isSaHansard(record) && !saOfficialUrl(record)) return ''
@@ -13,6 +14,10 @@ export function saEvidenceText(record: unknown, text: string, flag: string | und
 }
 
 export function saEvidenceRecord<T extends Data>(record: T, flag: string | undefined, match = '', unknownSource = false): T {
+  const cleaned: Data = {}
+  for (const key of ['text','snippet','passage','quote','body','record']) if (typeof record[key] === 'string' && withoutSaPlaceholder(record[key]) !== record[key]) cleaned[key] = withoutSaPlaceholder(record[key])
+  for (const key of ['quotes','evidence']) if (Array.isArray(record[key]) && record[key].some(value => typeof value === 'string' && withoutSaPlaceholder(value) !== value)) cleaned[key] = record[key].map(value => typeof value === 'string' ? withoutSaPlaceholder(value) : value).filter(Boolean)
+  if (Object.keys(cleaned).length) record = { ...record, ...cleaned }
   if (saFullText(flag) || (!unknownSource && !isSaHansard(record))) return record
   const raw = String(record.text || record.snippet || record.passage || record.record || '')
   const excerpt = saEvidenceText(record, raw, flag, match, unknownSource)
@@ -24,12 +29,14 @@ export function saEvidenceRecord<T extends Data>(record: T, flag: string | undef
  * Current clients carry provenance; older assistant turns are conservative.
  */
 export function saConversationInput<T extends Data>(input: T, flag: string | undefined): T {
-  if (saFullText(flag) || !Array.isArray(input.context)) return input
-  return {...input,context:input.context.map(turn => {
+  if (!Array.isArray(input.context)) return input
+  const context = input.context.map(turn => {
     const row = object(turn), sources = Array.isArray(row.sources) ? row.sources : []
-    if (row.author !== 'answer' || typeof row.text !== 'string' || sources.length && !sources.some(isSaHansard)) return turn
+    if (row.author !== 'answer' || typeof row.text !== 'string') return turn
+    if (saFullText(flag) || sources.length && !sources.some(isSaHansard)) return withoutSaPlaceholder(row.text) === row.text ? turn : { ...row, text: withoutSaPlaceholder(row.text) }
     return {...row,text:saEvidenceText({},row.text,flag,'',true)}
-  })}
+  })
+  return context.every((turn, i) => turn === (input.context as unknown[])[i]) ? input : {...input,context}
 }
 
 /** Reuse one matched SA passage for each record across all context blocks. */
@@ -65,10 +72,11 @@ export function saGenerationContext(body: Data, retrieved: Data, flag: string | 
   for (const [i,text] of (Array.isArray(body.extra_context) ? body.extra_context : []).entries()) if (typeof text === 'string') {
     let record: Data = {}; try { record = object(JSON.parse(text)) } catch { /* supplied prose */ }
     hasSa ||= isSaHansard(record)
-    contexts[`USER_CONTEXT_${i}`] = isSaHansard(record) ? JSON.stringify(saEvidenceRecord(record,flag,String(body.query || ''))) : text
+    contexts[`USER_CONTEXT_${i}`] = Object.keys(record).length ? JSON.stringify(saEvidenceRecord(record,flag,String(body.query || ''))) : withoutSaPlaceholder(text)
   }
   const excerpts = new Map<string,string>()
   const bound = (id: string, text: string): string => {
+    text = withoutSaPlaceholder(text)
     const rid = id.split('/')[0], resource = resources[rid]
     if (!isSaHansard(resource) || saFullText(flag)) return text
     if (!excerpts.has(rid)) excerpts.set(rid, saEvidenceText(resource,text,flag,String(body.query || '')))
@@ -76,7 +84,6 @@ export function saGenerationContext(body: Data, retrieved: Data, flag: string | 
   }
   for (const [id,text] of Object.entries(contexts)) contexts[id] = bound(id,text)
   for (const [rid,resource] of Object.entries(resources)) {
-    if (!isSaHansard(resource) || saFullText(flag)) continue
     const row = object(resource)
     resources[rid] = {...row, fields:Object.fromEntries(Object.entries(object(row.fields)).map(([key,field]) => [key, {...object(field), paragraphs:Object.fromEntries(Object.entries(object(object(field).paragraphs)).map(([id,para]) => [id,{...object(para),text:bound(id,String(object(para).text || ''))}]))}]))}
   }
@@ -92,7 +99,7 @@ export function saGenerationContext(body: Data, retrieved: Data, flag: string | 
     ...(body.answer_json_schema !== undefined ? {json_schema:body.answer_json_schema} : {}),
     ...(Array.isArray(body.chat_history) ? {chat_history:body.chat_history.map(turn => {
       const row=object(turn)
-      return !saFullText(flag) && row.author === 'NUCLIA' && typeof row.text === 'string' ? {...row,text:saExcerpt(row.text)} : row
+      return row.author === 'NUCLIA' && typeof row.text === 'string' ? {...row,text:saFullText(flag) ? withoutSaPlaceholder(row.text) : saExcerpt(row.text)} : row
     })} : {}),
   }
   return {request, retrieval:{...object(retrieved.retrieval_results),resources}, augmented:{paragraphs}, hasSa}

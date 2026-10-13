@@ -8,6 +8,7 @@ import sourceIdentity from '../../parli/ingest/user-agent.json'
 import { SA_EXCERPT_LABEL, isSaHansard, saFullText, saOfficialUrl } from '../public/sa-hansard.js'
 import { saPublicResponse, saEventPayload } from './sa-hansard'
 import { saEvidenceText, saEvidenceRecord, saGenerationResponse, saConversationInput } from './sa-evidence'
+import { guardAnswerAttribution } from './ask-attribution'
 import {ServerTiming, timed, withTiming} from './server-timing'
 import { divisionPlain } from '../public/division-markdown.js'
 import {guardTableURL, divisionTableConfig, voteTableConfig} from '../public/vote-tables.js'
@@ -1000,7 +1001,7 @@ function askPayload(answer: AskAnswer, records: AskRecords = { records: [], cove
     if (resources[id.split('/')[0]] && originalContext(id) && typeof block.text === 'string') knownContexts.add(id)
   }
   const footnotes = answer.citation_footnote_to_context ?? answer.footnote_to_context
-  const normalised = (footnotes && Object.keys(footnotes).length > 0) || /\[\^|\[\d+\]:\s*block-/.test(answer.answer ?? '')
+  const normalised = (footnotes && Object.keys(footnotes).length > 0) || /\[\^|\[\d+\](?!\()/.test(answer.answer ?? '')
     ? normaliseFootnotes(answer.answer ?? '', footnotes ?? {}, knownContexts)
     : { answer: answer.answer ?? '', citations: Object.fromEntries(
         Object.entries(answer.citations ?? {}).filter(([id]) => knownContexts.has(id)),
@@ -1582,6 +1583,7 @@ async function apiAsk(request: Request, env: Env, ctx: ExecutionContext, prepare
   payload = withAskedAs(payload, askedAs)
   payload = await overviewPayload(payload, overview, env, overviewIntent, overviewIntent || recentIntent)
   await joinMixedSpeakers(payload.sources as SearchResult[], env.ASSETS)
+  payload = guardAnswerAttribution(payload, await loadPeople(env))
   store(payload)
   return timed(withCacheStatus(json(payload), status, false))
 }
@@ -2353,6 +2355,7 @@ function apiAskStream(
         payload = withAskedAs(payload, opts.askedAs)
         payload = await overviewPayload(payload, opts.overview, env, opts.overviewIntent, opts.overviewIntent || opts.recentIntent)
         await joinMixedSpeakers(payload.sources as SearchResult[], env.ASSETS)
+        payload = guardAnswerAttribution(payload, await loadPeople(env))
         await send('done', payload)
         // Cached from the `done` payload — the same bytes the reader got —
         // even when the reader left early (the answer was paid for).
@@ -5932,7 +5935,7 @@ function agenticDeps(env: Env, ctx: ExecutionContext, signal?: AbortSignal, inpu
     ...(env.RESEARCH_LOOP === 'route' ? {
       research: createResearch({
         model: env.OPENROUTER_API_KEY ? createOpenRouter({ apiKey: env.OPENROUTER_API_KEY })(researchModelId(env.RESEARCH_LOOP_MODEL_ID), { usage: { include: true }, ...(researchProvider(env.RESEARCH_LOOP_PROVIDER) ? { provider: researchProvider(env.RESEARCH_LOOP_PROVIDER) } : {}), ...(researchReasoning(env.RESEARCH_LOOP_REASONING) ? { extraBody: { reasoning: researchReasoning(env.RESEARCH_LOOP_REASONING) } } : {}) }) : undefined,
-        steps: env.RESEARCH_LOOP_STEPS, wallMs: env.RESEARCH_LOOP_MS, tokens: env.RESEARCH_LOOP_TOKENS,
+        steps: env.RESEARCH_LOOP_STEPS, wallMs: Math.min(researchLimits({ wallMs: env.RESEARCH_LOOP_MS }).wallMs, 8_000), tokens: env.RESEARCH_LOOP_TOKENS,
         modelBudgetSpent: () => modelBudgetSpent(env),
         dailyBudget: researchDailyBudget(env.COMMUNITY_DB, env.RESEARCH_LOOP_DAILY_USD),
         cleanup: work => ctx.waitUntil(work),
@@ -5995,14 +5998,22 @@ async function executeAgentic(input: Record<string, unknown>, env: Env, ctx: Exe
   const question = String(input.question).trim()
   const started = Date.now(), period = agenticPeriod(input)
   let run: AgenticPayload
+  let failure: ResearchError | undefined
+  const deps = agenticDeps(env, ctx, signal, input), report = deps.onResearchFailure
+  if (report) deps.onResearchFailure = async error => { failure = error; await report(error) }
   try {
     // Covers the whole path, including an SSE writer or provider that stalls.
-    run = await bounded(signal => runAgentic(question, agenticDeps(env, ctx, signal, input), progress, budgetMs, period, agenticFilters(input), namedScope), budgetMs, signal)
-  } catch {
+    run = await bounded(signal => runAgentic(question, { ...deps, signal, ...deps.withSignal?.(signal) }, progress, budgetMs, period, agenticFilters(input), namedScope), budgetMs, signal)
+  } catch (error) {
+    if (env.RESEARCH_LOOP === 'route' && !failure) {
+      failure = new ResearchError(signal?.aborted ? 'aborted' : error instanceof Error && error.name === 'TimeoutError' ? 'timeout' : 'error')
+      await report?.(failure)
+    }
     run = { answered: false, reason: 'declined', answer: '', answer_source: 'none', shape: classifyAgentic(question).shape, period,
       facts: [], notes: [], steps: [], events: [], tokens: { input: 0, output: 0 }, cost_usd: null,
       over_budget: Date.now() - started >= budgetMs,
-      timings: { plan_ms: 0, tools_ms: 0, compose_ms: 0, total_ms: Date.now() - started }, version: 'unavailable' }
+      timings: { plan_ms: 0, tools_ms: 0, compose_ms: 0, total_ms: Date.now() - started }, version: 'unavailable',
+      ...(failure ? { research_failure: failure.reason, research: { mode: 'planner', rounds: failure.stats.rounds, trail: [], sources: [], failure: failure.reason, turns: failure.stats.turns } } : {}) }
   }
   monitorAgentic(env, ctx, question, run)
   onRun?.(run)
@@ -6111,13 +6122,30 @@ async function apiAskRoutedCore(request: Request, url: URL, input: Record<string
     if (normal.ok) ctx.waitUntil(executeAgentic(input, env, ctx).then(() => {}).catch(() => console.warn('Ask background run unavailable')))
     return normal
   }
-  // One deadline owns planning, tools, fallback and transport. Only routed
-  // requests receive this budget; ordinary Ask keeps its existing bytes.
-  const budget = new AskDeadline(Math.max(0, AGENTIC_BUDGET_MS - (Date.now() - started)), request.signal)
-  const routedFallback = (research?: ResearchPayload) => budget.run(async () => {
-    const response = await apiAsk(new Request(request, { signal: budget.signal }), env, ctx, undefined, budget, quotaTaken)
-    return loopRoute || research?.trail.length ? withPlannerResearch(response, research) : response
-  })
+  // The loop attempt is bounded separately; failed research must not subtract
+  // its wall time from the old path's two 40s attempts plus verification.
+  let budget = new AskDeadline(Math.max(0, AGENTIC_BUDGET_MS - (Date.now() - started)), request.signal)
+  let lastResearch: ResearchPayload | undefined, failureLogged = false
+  const trackRun = (run: AgenticPayload) => { lastResearch = run.research; failureLogged ||= !!run.research_failure; onRun?.(run) }
+  const routedFallback = async (research?: ResearchPayload) => {
+    if (loopRoute && !research?.failure) {
+      const failure = new ResearchError(request.signal.aborted ? 'aborted' : budget.signal.aborted ? 'timeout' : 'grounding')
+      research = { ...research, mode: 'planner', rounds: research?.rounds ?? 0, trail: research?.trail ?? [], sources: research?.sources ?? [], failure: failure.reason }
+      if (!failureLogged) { failureLogged = true; await recordResearchFailure(question, failure) }
+    }
+    if (request.signal.aborted) return json({ error: 'The request was cancelled.', research }, 503)
+    if (loopRoute) { budget.dispose(); budget = new AskDeadline(90_000, request.signal) }
+    try { return await budget.run(async () => {
+      const response = await apiAsk(new Request(request, { signal: budget.signal }), env, ctx, undefined, budget, quotaTaken)
+      const safe = loopRoute && response.status === 504 ? new Response(response.body, { status: 503, headers: response.headers }) : response
+      // Ordinary RAG consumption is observed for operator evals. Otherwise,
+      // keep total usage unknown; per-turn telemetry still describes the loop.
+      return loopRoute || research?.trail.length ? withPlannerResearch(safe, research ? { ...research, ms: Date.now() - started, tokens: null, cost_usd: null } : undefined) : safe
+    }) } catch (error) {
+      if (!loopRoute || request.signal.aborted) throw error
+      return json({ error: 'The record is temporarily unavailable. Please try again.', research: { ...research, mode: 'planner', failure: research?.failure ?? 'timeout' } }, 503)
+    }
+  }
   const expired = () => json({ error: 'The answer took too long. Please try again.' }, 504)
   let streamOwnsBudget = false
   try {
@@ -6151,7 +6179,7 @@ async function apiAskRoutedCore(request: Request, url: URL, input: Record<string
     // but can neither read nor fill the agentic cache. The numerical path
     // declines unsafe scopes; qualitative research verifies original passages.
     const privateTurn = Array.isArray(input.context) && input.context.length > 0
-    const loopVersion = loopRoute ? `${AGENTIC_TOOLS_VERSION}/loop/${researchModelKey(env.RESEARCH_LOOP_MODEL_ID, env.RESEARCH_LOOP_PROVIDER, env.RESEARCH_LOOP_REASONING)}/${env.RESEARCH_LOOP_STEPS ?? '5'}/${env.RESEARCH_LOOP_TOKENS ?? '96000'}/${env.RESEARCH_LOOP_MS ?? '12000'}/${String(input.kind ?? 'all')}` : AGENTIC_TOOLS_VERSION
+    const loopVersion = loopRoute ? `${AGENTIC_TOOLS_VERSION}/loop/${researchModelKey(env.RESEARCH_LOOP_MODEL_ID, env.RESEARCH_LOOP_PROVIDER, env.RESEARCH_LOOP_REASONING)}/${env.RESEARCH_LOOP_STEPS ?? '5'}/${env.RESEARCH_LOOP_TOKENS ?? '96000'}/${env.RESEARCH_LOOP_MS ?? '8000'}/${String(input.kind ?? 'all')}` : AGENTIC_TOOLS_VERSION
     const key = namedScope.unresolved || namedScope.ambiguous || namedScope.bills.length || loopRoute && Array.isArray(input.prior_resources) && input.prior_resources.length ? undefined : new Request(await agenticCacheKey(question, env.CACHE_EPOCH, env.ASK_MODEL || 'openai-compatible', agenticPeriod(input), loopVersion, agenticFilters(input), classifyAgentic(question).shape, namedScope))
     const streaming = url.searchParams.get('stream') === '1' || (request.headers.get('accept') ?? '').includes('text/event-stream')
     if (key && !privateTurn && !cacheBypass(request, url)) {
@@ -6173,11 +6201,11 @@ async function apiAskRoutedCore(request: Request, url: URL, input: Record<string
     }
     if (!streaming) {
       try {
-        const run = await executeAgentic(input, env, ctx, undefined, budget.signal, budget.remaining, namedScope, onRun)
+        const run = await executeAgentic(input, env, ctx, undefined, budget.signal, budget.remaining, namedScope, trackRun)
         if (request.signal.aborted) return json(agenticAskPayload(run, question))
-        budget.signal.throwIfAborted()
+        if (!loopRoute || run.answered && !run.over_budget) budget.signal.throwIfAborted()
         return electorateData || run.answered && !run.over_budget ? withCacheStatus(finish(run), 'MISS', false) : await routedFallback(run.research)
-      } catch { return expired() }
+      } catch { return loopRoute ? await routedFallback(lastResearch) : expired() }
       finally { budget.dispose() }
     }
     const encoder = new TextEncoder()
@@ -6192,9 +6220,9 @@ async function apiAskRoutedCore(request: Request, url: URL, input: Record<string
         ctx.waitUntil((async () => {
           try {
             await send('status', { phase: 'searching' })
-            const run = await executeAgentic(input, env, ctx, send, budget.signal, budget.remaining, namedScope, onRun)
+            const run = await executeAgentic(input, env, ctx, send, budget.signal, budget.remaining, namedScope, trackRun)
             if (gone || request.signal.aborted) return
-            budget.signal.throwIfAborted()
+            if (!loopRoute || run.answered && !run.over_budget) budget.signal.throwIfAborted()
             if (electorateData || run.answered && !run.over_budget) { const response = finish(run); await send('done', await response.json()) }
             else {
               const response = await routedFallback(run.research)
@@ -6214,7 +6242,7 @@ async function apiAskRoutedCore(request: Request, url: URL, input: Record<string
     })
     streamOwnsBudget = true
     return new Response(readable, { headers: { ...SSE_HEADERS, 'x-opax-cache': 'MISS' } })
-  } catch { budget.dispose(); return expired() }
+  } catch { return loopRoute ? await routedFallback(lastResearch).finally(() => budget.dispose()) : expired() }
   finally { if (!streamOwnsBudget) budget.dispose() }
 }
 

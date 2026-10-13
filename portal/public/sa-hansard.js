@@ -2,6 +2,10 @@
 export const SA_EXCERPT_WORDS = 120;
 export const SA_EXCERPT_LABEL = "Excerpt. The full record is on the Parliament of South Australia's site.";
 export const saFullText = flag => flag === 'true';
+const OMITTED = /["“‘']?Excerpt omitted;\s*see the official record\.["”’']?/gi;
+/** A display-policy placeholder is never primary evidence. */
+export const withoutSaPlaceholder = value => String(value || '').replace(OMITTED, '');
+const containsOmission = value => typeof value === 'string' ? withoutSaPlaceholder(value) !== value : !!value && typeof value === 'object' && Object.values(value).some(containsOmission);
 const obj = value => value && typeof value === 'object' && !Array.isArray(value) ? value : {};
 const words = text => String(text || '').match(/\S+/gu) || [];
 const endExcerpt = text => text.trimEnd().replace(/(?:\.{1,}|…+)$/u, '') + '…';
@@ -31,7 +35,7 @@ export function saOfficialUrl(record) {
 
 /** Sentence window around a match; a single overlong sentence is word-capped. */
 export function saExcerpt(value, match = '', cap = SA_EXCERPT_WORDS) {
-  const text = String(value || '').replace(/\s+/gu, ' ').trim();
+  const text = withoutSaPlaceholder(value).replace(/\s+/gu, ' ').trim();
   if (!text || cap <= 0) return '';
   if (words(text).length <= cap) return text;
   const sentences = [...new Intl.Segmenter('en-AU', {granularity:'sentence'}).segment(text)];
@@ -66,6 +70,8 @@ const sourceKeys = new Set(['text', 'text_clean', 'body', 'snippet', 'passage', 
 
 /** One canonical passage per record prevents parallel fields extending the cap. */
 export function saDisplayRecord(record, flag, match = '', preferredText) {
+  const cleaned = Object.fromEntries(Object.entries(record).filter(([key, value]) => sourceKeys.has(key) && typeof value === 'string' && withoutSaPlaceholder(value) !== value).map(([key, value]) => [key, withoutSaPlaceholder(value)]));
+  if (Object.keys(cleaned).length) record = {...record, ...cleaned};
   if (saFullText(flag) || !isSaHansard(record)) return record;
   const url = saOfficialUrl(record);
   const raw = preferredText ?? (record.text || record.snippet || record.passage || record.quote || (Array.isArray(record.evidence) ? record.evidence.join(' ') : '') || '');
@@ -82,11 +88,13 @@ export function saDisplayRecord(record, flag, match = '', preferredText) {
 }
 
 /** Restrict copied answer passages and remap Unicode citation offsets. */
-function displayAnswer(payload, sources, originals, budgets) {
-  const restricted = sources.filter(isSaHansard);
+function displayAnswer(payload, sources, originals, budgets, fullText = false) {
+  const restricted = fullText ? [] : sources.filter(isSaHansard);
   const key = typeof payload.answer === 'string' ? 'answer' : 'text';
-  if (!restricted.length || typeof payload[key] !== 'string') return payload;
+  if (typeof payload[key] !== 'string') return payload;
   const original = payload[key], edits = [], selected = new Map();
+  for (const match of original.matchAll(new RegExp(OMITTED.source, 'gi'))) edits.push({start:match.index,end:match.index+match[0].length,text:''});
+  if (!restricted.length && !edits.length) return payload;
   const add = (start, end, source, quoted = false) => {
     if (edits.some(e => e.start < end && e.end > start)) return;
     const id = source.resource || source.id || source.slug;
@@ -95,7 +103,9 @@ function displayAnswer(payload, sources, originals, budgets) {
     const text = saOfficialUrl(source) ? saExcerpt(body, '', remaining) : '';
     budgets.set(id, (budgets.get(id) || 0) + words(text.replace(/…/g, '')).length);
     if (text) selected.set(id, [...(selected.get(id) || []), text]);
-    edits.push({start, end, text: text || (quoted ? 'Excerpt omitted; see the official record.' : '')});
+    // Omitted quotations disappear as a whole, including their quote marks.
+    if (!text && /["“‘']/.test(original[start-1] || '') && /["”’']/.test(original[end] || '')) { start--; end++; }
+    edits.push({start, end, text});
   };
   // Evidence-only answers can reproduce a passage without quotation marks.
   for (const source of restricted) {
@@ -123,6 +133,7 @@ function displayAnswer(payload, sources, originals, budgets) {
   }
   // Quotes may exceed the retrieved snippet. A cited SA answer must still cap them.
   for (const m of original.matchAll(/“([^”]+)”|"([^"\n]+)"|^>\s*(.+(?:\n>\s*.+)*)/gm)) {
+    if (!restricted.length) continue;
     const quote = m[1] || m[2] || m[3];
     const source = restricted.find(s => String(s.snippet || s.passage || '').includes(quote.slice(0, 40))) || restricted[0];
     const offset = m[0].indexOf(quote);
@@ -147,19 +158,26 @@ function displayAnswer(payload, sources, originals, budgets) {
     }
     return position + delta;
   };
-  const ranges = spans => spans.map(([start,end]) => [offset(start),offset(end)]).filter(([start,end]) => end > start);
+  const ranges = spans => spans.filter(([start,end]) => !edits.some(e => !e.text &&
+    start < Array.from(original.slice(0,e.end)).length && end > Array.from(original.slice(0,e.start)).length))
+    .map(([start,end]) => [offset(start),offset(end)]).filter(([start,end]) => end > start);
+  const citations = payload.citations ? Object.fromEntries(Object.entries(payload.citations).map(([id,spans]) => [id,ranges(spans)]).filter(([,spans]) => spans.length)) : null;
   return {...payload, [key]:answer,
-    ...(payload.citations ? {citations:Object.fromEntries(Object.entries(payload.citations).map(([id, spans]) => [id, ranges(spans)]))} : {}),
+    ...(citations ? {citations} : {}),
     ...(payload.sources ? {sources:sources.map(s => ({...s,
+      ...(citations ? {cited:Object.keys(citations).some(id => id.split('/')[0] === (s.resource || s.id || s.slug))} : {}),
       ...(selected.has(s.resource || s.id || s.slug) ? {snippet:selected.get(s.resource || s.id || s.slug).join(' ')} : {}),
       ...(s.answer_ranges ? {answer_ranges:ranges(s.answer_ranges)} : {}), ...(s.answerRanges ? {answerRanges:ranges(s.answerRanges)} : {})}))} : {})};
 }
 
 export function saDisplayPayload(value, flag, match = '', originals = new Map(), excerpts = new Map(), budgets = new Map(), answers = true) {
-  if (saFullText(flag) || !value || typeof value !== 'object') return value;
+  if (typeof value === 'string') return withoutSaPlaceholder(value);
+  if (!value || typeof value !== 'object') return value;
+  if (saFullText(flag) && !containsOmission(value)) return value;
   if (Array.isArray(value)) return value.map(v => saDisplayPayload(v, flag, match, originals, excerpts, budgets, answers));
   const sources = Array.isArray(value.sources) ? value.sources : [];
-  const answered = {...(answers ? displayAnswer(value, sources, originals, budgets) : value)};
+  const hasPlaceholder = /Excerpt omitted;\s*see the official record\./i.test(String(value.answer || value.text || ''));
+  const answered = {...(answers || hasPlaceholder ? displayAnswer(value, sources, originals, budgets, saFullText(flag)) : value)};
   const displayedSources = answered.sources || sources;
   const displayRecord = record => {
     const id = record.slug || record.resource || record.id;
@@ -169,7 +187,7 @@ export function saDisplayPayload(value, flag, match = '', originals = new Map(),
   };
   if (Array.isArray(answered.points)) answered.points = answered.points.map(point => {
     const selected = sources.filter(s => point.source_ids?.includes(s.id));
-    const safe = {...(answers ? displayAnswer(point, selected, originals, budgets) : point)};
+    const safe = {...(answers ? displayAnswer(point, selected, originals, budgets, saFullText(flag)) : point)};
     // Supporting quotes are another view of the same bounded source passage.
     if (safe.evidence) safe.evidence = Object.fromEntries(Object.entries(safe.evidence).map(([id,quotes]) => {
       const source = displayedSources.find(s => s.id === id);

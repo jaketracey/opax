@@ -164,6 +164,7 @@ export async function buildPersonOverview(
         const evidence = positionEvidence(original, theme.name)
         if (!evidence) continue
         add({ kind: 'speech', title: speech.title, href: '/doc/' + speech.slug, slug: speech.slug,
+          speaker: speech.speaker,
           resource: '', source: isSaHansard(speech) ? 'Parliament of South Australia' : 'Hansard · verified speaking turn', date: speech.date, url: speech.url,
           state: speech.state, chamber: speech.chamber, source_url: speech.source_url,
           snippet: `${person.name}, ${speech.date}. Topic label: ${theme.name}.\n` + evidenceExcerpt(evidence, theme.name, 1500, true).text })
@@ -175,6 +176,7 @@ export async function buildPersonOverview(
       const existing = records.find(r=>r.slug === speech.slug)
       if (existing) { if (!isSaHansard(existing)) existing.source = 'Hansard · recent speech'; continue }
       add({ kind: 'speech', title: speech.title, href: '/doc/' + speech.slug, slug: speech.slug, resource: '',
+        speaker: speech.speaker,
         source: isSaHansard(speech) ? 'Parliament of South Australia' : 'Hansard · recent speech', date: speech.date, url: speech.url,
         state: speech.state, chamber: speech.chamber, source_url: speech.source_url,
         snippet: `${person.name}, ${speech.date}. Recent speech in the complete catalogue.\n` + evidenceExcerpt(original, speech.title, 1500, true).text })

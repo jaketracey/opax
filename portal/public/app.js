@@ -48,7 +48,7 @@ const heldBackReady = import('/held-back-transcripts.js?v=5c4e280acb').then(modu
 let saDisplayHelpers;
 let saFullTextFlag = 'false';
 const saDisplayReady = Promise.all([
-  import('/sa-hansard.js?v=ebd30b6d90').then(module => { saDisplayHelpers = module; }),
+  import('/sa-hansard.js?v=69a7f05d42').then(module => { saDisplayHelpers = module; }),
   fetch('/api/display-policy').then(response => response.json()).then(policy => { saFullTextFlag = policy.SA_HANSARD_FULL_TEXT === 'true' ? 'true' : 'false'; }).catch(() => {}),
 ]);
 

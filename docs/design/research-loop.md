@@ -9,8 +9,10 @@ OpenRouter requests were used to build or test this lane.
 ## Request path
 
 `apiAskRouted` selects `off`, `shadow` or `route`. In route mode it retains the
-existing request validation, per-IP admission, cache transport and 40-second
-`AskDeadline`. It calls `runAgentic` with `deps.research`, implemented by
+existing request validation, per-IP admission and cache transport. The loop
+phase uses a 40-second request envelope and an eight-second research wall; an
+ordinary fallback gets a fresh 90-second envelope for its existing two 40-second
+attempts and verification, linked directly to the client signal. It calls `runAgentic` with `deps.research`, implemented by
 `createResearch` using AI SDK `generateText`. The exact dependencies are
 `ai@7.0.139` and `@openrouter/ai-sdk-provider@3.1.0`. The SDK accepts the existing
 `TOOL_SPECS` through `jsonSchema`; no new Zod dependency is added.
@@ -22,8 +24,13 @@ back; it does not create a credential or use a different provider. Tests use
 fake. The hub confirmed the production key is set. The release configuration now
 defaults to `shadow`; this lane does not deploy it or call production Ask.
 
-Every existing registered tool, including `electorates`, is available, together
-with `search`, `read_passage`, `finish` and `answer`. Tool execution is serialized
+Classified numerical/agentic questions can use the registered tools, including
+`electorates`, together with `search`, `read_passage`, `finish` and `answer`.
+Unclassified qualitative questions expose only `search`, `read_passage` and
+`answer`: structured speech/count/person tools are hidden. They get six model
+rounds. After two searches, `prepareStep.activeTools` restricts the next turn to
+reading original passages; after a read it offers read/answer, and the last round
+is answer-only. No answer is offered before an original passage is read. Tool execution is serialized
 so fact ids and progress ids remain ordered even when a model returns several
 parallel calls. Request dates and explicit scopes pass through `periodPlan` before
 execution. Original and scoped arguments are validated. Identical scoped calls
@@ -31,7 +38,10 @@ share their first result; `prepareStep` tells the model what already ran and
 restricts a repeating model to terminal tools. No tool accepts an arbitrary URL or
 writes to an external system.
 
-Route mode first tries the existing published money and pay calculations. They
+Route mode first tries the existing published money and pay calculations, and
+electorate questions execute the existing deterministic `electoratePlan` directly
+without invoking research. Unavailable electorate profiles remain honest
+non-answers without inference or speech substitution. They
 return their cited calculations in JSON/SSE with zero model usage, without calling
 the money overview generator. Questions those calculations cannot answer proceed
 to the loop. A numerical `answer` misroute leaves only `finish` active and does not
@@ -69,16 +79,30 @@ failure returns to the old path. No unsupported quote is silently unquoted.
 This verifies citation/quote integrity and existing position constraints; it is
 not a general semantic entailment model.
 Each citation's covered claim is also checked against the public roster: named
-people must match the passage speaker or occur in the supporting quote. Accepted
-sources carry the passage speaker into `research.sources`.
+people must match the passage speaker, including surname-only and possessive
+mentions. A name inside a quotation cannot establish its authorship. Partial
+roster bylines are treated as aliases, not additional people. Accepted sources
+carry the passage speaker into `research.sources`. The ordinary Ask JSON/SSE
+fallback uses the same attribution check, including footnote-at-end claim
+ranges. Overview speech sources now retain their verified speaker. A subject
+heading or aggregate/bill paragraph can use the unanimously verified speaker;
+it cannot introduce another person.
+
+The SA display omission label is never evidence. Intake cleans passage text,
+structured excerpts and prior assistant turns before either engine sees them,
+including with full-text permission. Final/cache boundaries remove any legacy
+placeholder quotation and its citation ranges without corrupting Unicode
+offsets. The sanitiser no longer inserts a quotable placeholder. Bare unmapped
+numeric markers are stripped from both ordinary JSON and streamed text, including
+the H02 pattern of 581 markers; numeric Markdown links remain valid.
 
 ## Caps and fallback
 
 | Control | Default | Ceiling / behavior |
 | --- | --- | --- |
-| `RESEARCH_LOOP_STEPS` | 5 model turns | 6 |
+| `RESEARCH_LOOP_STEPS` | 5 numerical/agentic model turns; 6 qualitative | 6 |
 | Actual tool calls | 6, including terminal tools | Duplicates reuse output |
-| `RESEARCH_LOOP_MS` | 12,000 ms | 30,000 ms; also limited to request time minus 8,000 ms |
+| `RESEARCH_LOOP_MS` | 8,000 ms | Ask route enforces 8,000 ms even if configured higher; standalone loop ceiling 30,000 ms |
 | `RESEARCH_LOOP_TOKENS` | 96,000 cumulative loop tokens | 160,000 |
 | `RESEARCH_LOOP_DAILY_USD` | US$5 per UTC day | Atomic D1 admission before every loop turn; invalid/zero disables inference |
 | `RESEARCH_LOOP_SHADOW_RATE` | 0.2 | Metered cache misses only; invalid/zero disables shadow |
@@ -93,8 +117,8 @@ cumulative reported usage from previous calls; reported input and output usage i
 accumulated and checked again before client-side tools. Missing usage is charged
 against the reserved input and output rather than treated as zero. Cached input and reasoning
 tokens are included by the SDK's total usage. The cap governs the loop attempt;
-the fallback retains its existing planner/RAG token limit and shared request
-wall budget.
+the fallback retains its existing planner/RAG token limit. Ordinary fallback
+receives its own wall envelope so a loop failure cannot consume its budget.
 
 `modelBudgetSpent`/`MODEL_LIMITER` is checked in the awaited `prepareStep` before
 **every** provider call, with `maxRetries: 0`. This is intentionally not a throwing
@@ -141,10 +165,14 @@ unavailable refund cannot delay the old answer or bypass the reserved charge.
 The request signal and SSE reader cancellation abort model requests, tool fetches
 and body reads. A Promise race also bounds a non-cooperative fake/provider.
 After disconnect no paid fallback is started. Ordinary-question loop failures
-and every loop timeout go directly to ordinary Ask inside the remaining deadline.
-Other failures on an agentic question can invoke its old planner once, followed
+and every loop timeout go directly to ordinary Ask with its full fallback
+budget. Other failures on a numerical/agentic question can invoke its old planner
+once, followed
 by ordinary Ask if needed. A shadow failure records the failed attempt without
-calling the already-served planner again. An expired request cannot start fallback.
+calling the already-served planner again. A client disconnect cannot start
+fallback. A spent loop deadline does not abort the fresh ordinary deadline.
+If ordinary upstream service itself exhausts its allowance, route returns a
+controlled 503/error event instead of a research-caused 504.
 SDK tool errors are remembered in `failed` before throwing because the SDK treats
 tool throws as tool-error parts; `stopWhen` and the final check prevent another turn.
 
@@ -166,7 +194,9 @@ research: {
   trail: [{id, tool, round, label, arg?, results?, ms, ok}],
   sources: [{title, url, date?, kind, speaker?}],
   ms?: number, tokens?: {input: number, output: number} | null,
-  cost_usd?: number | null
+  cost_usd?: number | null, failure?: ResearchStop,
+  turns?: [{round, input, output, cached_input, input_reserve, ms, cost_usd}],
+  cached_input_by_turn?: (number | null)[]
 }
 ```
 
@@ -177,6 +207,12 @@ planner; a direct ordinary response has no tool trail. Used sources are copied
 from the served payload. Numerical prose omits search/read-only sampling notes
 while retaining the numerical tools' coverage notes. Existing fields survive unchanged. Cache hit/miss
 headers and SSE cached replay remain in the current cache transport.
+Every fallback retains one fixed `research.failure` code and emits one compact
+`research_loop_fallback` record. Per-turn input/output, cached input, elapsed
+time, input reserve in tokens, and reported/estimated USD make admission
+decisions observable. An unfinished provider call reports null usage, not zero.
+Normal ordinary fallbacks leave combined usage unknown; authenticated evals
+observe and combine both engines' consumption.
 Every trail item carries its round, including post-loop committee checks, so a
 cached response retains grouping without live events. Rebuilt JSON deletes its
 old `content-length` header.
@@ -221,7 +257,8 @@ Ask uses the shared TypeScript decoder. Neither app worktree was edited.
 ## Flag, cache and shadow monitoring
 
 `RESEARCH_LOOP=shadow` is the release default. The orchestrator flips it to `route`
-after evaluation. `off` (including unset/unknown values) takes today's route unchanged.
+only after the production quality eval passes; the 30-request round-4 report
+explicitly says not to route. `off` (including unset/unknown values) takes today's route unchanged.
 Both prompt and tools versions are bumped. Loop cache keys additionally include
 mode, preset, caps and record kind so planner/off answers cannot populate the
 loop's cache. Conversation/prior-source requests remain unshared. Only complete,

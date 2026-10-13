@@ -4,6 +4,7 @@ import {MockLanguageModelV4} from 'ai/test';
 import {loadWorker,offline} from './worker-harness.mjs';
 import {decodeAnswer,AskStream} from './fixtures/research-app-decoders.mjs';
 import {budgetDatabase} from './fixtures/research-budget.mjs';
+import {readFileSync} from 'node:fs';
 import {timingSafeEqual} from 'node:crypto';
 const restore=offline(),pending=[],logs=[],ctx={waitUntil:p=>pending.push(p),passThroughOnException(){}};
 const plugin={name:'fake-openrouter-only',setup(b){b.onResolve({filter:/^@openrouter\/ai-sdk-provider$/},()=>({path:'fake',namespace:'research-test'}));b.onLoad({filter:/.*/,namespace:'research-test'},()=>({contents:'export const createOpenRouter=()=>()=>globalThis.__researchModel;',loader:'js'}));}};
@@ -132,7 +133,7 @@ test('authenticated overrides mark validation errors no-store and enforce the da
 });
 test('override wall timeout preserves planner fallback and reports unknown inference usage honestly',async()=>{
  h.env.RESEARCH_LOOP_MS='15';const fake=new MockLanguageModelV4({doGenerate:()=>new Promise(()=>{})});globalThis.__researchModel=fake;
- try{const plans=plannerCalls,ordinary=ordinaryCalls,response=await evalPost('loop'),body=await response.json();native(body);assert.equal(body.research.mode,'planner');assert.equal(body.research.tokens,null);assert.equal(body.research.cost_usd,null);assert.equal(fake.doGenerateCalls.length,1);assert.equal(plannerCalls,plans);assert.equal(ordinaryCalls,ordinary+1);assert.ok(logs.some(r=>r.reason==='timeout'));await flush();}finally{delete h.env.RESEARCH_LOOP_MS;}
+ try{const plans=plannerCalls,ordinary=ordinaryCalls,response=await evalPost('loop'),body=await response.json();native(body);assert.equal(body.research.mode,'planner');assert.equal(body.research.tokens,null);assert.equal(body.research.cost_usd,null);assert.equal(fake.doGenerateCalls.length,1);assert.equal(plannerCalls,plans);assert.equal(ordinaryCalls,ordinary+1);assert.ok(logs.some(r=>r.reason==='timeout'));assert.equal(body.research.failure,'timeout');assert.equal(body.research.turns.length,1);assert.equal(body.research.turns[0].input,null);assert.ok(body.research.turns[0].input_reserve>0);await flush();}finally{delete h.env.RESEARCH_LOOP_MS;}
 });
 test('authenticated SSE override cancellation aborts inference without an old-path call',async()=>{
  let start,signal;const started=new Promise(r=>start=r);globalThis.__researchModel=new MockLanguageModelV4({doGenerate:options=>{signal=options.abortSignal;start();return new Promise(()=>{})}});
@@ -166,6 +167,35 @@ test('route money and pay answers use published calculations before inference in
  try{for(const [question,flag] of [['Who gets the most from mining?','money_ranking'],['Who is the highest paid politician?','pay_answer']])for(const stream of [false,true]){
   const fake=counted();globalThis.__researchModel=fake;const models=modelQuota,plans=plannerCalls,ordinary=ordinaryCalls,response=await post(question,stream,{kind:'all'}),raw=await response.text(),body=stream?decodeStream(raw):JSON.parse(raw);native(body);assert.equal(body[flag],true);assert.equal(body.answer_status,'calculated');assert.equal(body.research.mode,'planner');assert.deepEqual(body.research.tokens,{input:0,output:0});assert.equal(body.research.cost_usd,0);assert.equal(fake.doGenerateCalls.length,0);assert.equal(modelQuota,models);assert.equal(plannerCalls,plans);assert.equal(ordinaryCalls,ordinary);assert.equal(body.money_facts,undefined);await flush();
  }}finally{h.env.ASSETS=fixtures;}
+});
+test('route Census answers use the deterministic electorate tool with no model call in JSON and SSE',async()=>{
+ const previous=h.env.ASSETS,assets=JSON.parse(readFileSync(new URL('./fixtures/agentic-electorates.json',import.meta.url))).assets;h.env.RESEARCH_LOOP='route';
+ h.env.ASSETS={fetch:req=>assets[new URL(req.url).pathname]?Response.json(assets[new URL(req.url).pathname]):previous.fetch(req)};
+ try{for(const question of ['What electorate has the lowest median income?','Which NSW state electorate has the lowest median income?'])for(const stream of [false,true]){
+  const fake=counted();globalThis.__researchModel=fake;const models=modelQuota,plans=plannerCalls,ordinary=ordinaryCalls,response=await post(question,stream),raw=await response.text(),body=stream?decodeStream(raw):JSON.parse(raw);
+  assert.equal(body.research.mode,'planner');assert.deepEqual(body.research.tokens,{input:0,output:0});assert.equal(body.research.cost_usd,0);assert.equal(fake.doGenerateCalls.length,0);assert.equal(modelQuota,models);assert.equal(plannerCalls,plans);assert.equal(ordinaryCalls,ordinary);assert.equal(body.research.failure,undefined);assert.ok(body.research.trail.some(t=>t.tool==='electorates'));await flush();
+ }}finally{h.env.ASSETS=previous;}
+});
+test('ordinary loop timeout gives fallback its full budget beyond the former 40s request deadline, JSON and SSE',async()=>{
+ const fetchFixture=globalThis.fetch,oldNow=Date.now;h.env.RESEARCH_LOOP='route';h.env.RESEARCH_LOOP_MS='15';
+ try{for(const stream of [false,true]){
+  let advanced=0;Date.now=()=>oldNow()+advanced;globalThis.__researchModel=new MockLanguageModelV4({doGenerate:()=>new Promise(()=>{})});
+  globalThis.fetch=async(input,init)=>{const body=JSON.parse(init?.body??'{}'),response=await fetchFixture(input,init);if(new URL(input).pathname.endsWith('/ask')&&!body.prompt?.user?.includes('Plan the record'))advanced+=45000;return response;};
+  const plans=plannerCalls,ordinary=ordinaryCalls,failures=logs.filter(r=>r.kind==='research_loop_fallback').length,response=await post('What does the record say about housing affordability?',stream),raw=await response.text(),body=stream?decodeStream(raw):JSON.parse(raw);
+  assert.equal(response.status,200,raw);native(body);assert.equal(body.research.failure,'timeout');assert.equal(body.research.mode,'planner');assert.equal(plannerCalls,plans);assert.equal(ordinaryCalls,ordinary+1);await flush();assert.equal(logs.filter(r=>r.kind==='research_loop_fallback').length,failures+1);
+ }}finally{Date.now=oldNow;globalThis.fetch=fetchFixture;delete h.env.RESEARCH_LOOP_MS;}
+});
+test('every ordinary fallback carries exactly one failure code and one compact log',async()=>{
+ h.env.RESEARCH_LOOP='route';
+ for(const [reason,configure] of [
+  ['error',()=>{globalThis.__researchModel=new MockLanguageModelV4({doGenerate:()=>{throw Error('fixture failure')}})}],
+  ['steps',()=>{globalThis.__researchModel=new MockLanguageModelV4({doGenerate:[reply([call('search',{query:'housing'})]),reply([call('read_passage',{id})]),reply([call('search',{query:'affordability'})]),reply([call('read_passage',{id})]),reply([call('read_passage',{id})]),reply([call('answer',{text,citations:[{id:'unbound/t/body/0',quote:text,start:0,end:text.length}]})])]})}],
+  ['grounding',()=>{globalThis.__researchModel=qualitative(true)}],
+  ['tokens',()=>{h.env.RESEARCH_LOOP_TOKENS='1';globalThis.__researchModel=qualitative()}],
+  ['limiter',()=>{let calls=0;h.env.MODEL_LIMITER={limit:async()=>({success:++calls>1})};globalThis.__researchModel=qualitative()}],
+ ]){const limiter=h.env.MODEL_LIMITER;configure();const before=logs.filter(r=>r.kind==='research_loop_fallback').length,plans=plannerCalls;
+  try{const response=await post('What does the record say about housing affordability?'),body=await response.json();assert.equal(response.status,200);assert.equal(body.research.failure,reason);assert.equal(plannerCalls,plans);await flush();const after=logs.filter(r=>r.kind==='research_loop_fallback');assert.equal(after.length,before+1);assert.equal(after.at(-1).reason,reason);}finally{h.env.MODEL_LIMITER=limiter;delete h.env.RESEARCH_LOOP_TOKENS;}
+ }
 });
 test('402 override falls back at once, logs research_credit_exhausted, and short-circuits the next loop',async()=>{
  const fake=new MockLanguageModelV4({doGenerate:()=>{throw Object.assign(Error('private provider credit error'),{statusCode:402})}});globalThis.__researchModel=fake;
