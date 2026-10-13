@@ -213,3 +213,11 @@ test('person_quotes: the named member\'s own speeches only, newest first, one pa
  const ids=[...out.matchAll(/"slug":"(speech-\d)"/g)].map(m=>m[1]);assert.deepEqual([...new Set(ids)],['speech-2','speech-1']);
  assert.equal((out.match(/A second paragraph about housing/g)||[]).length,0,'one passage per speech');
 });
+test('prompt cache: every turn sends a byte-identical prefix (instructions and tools), and messages only grow',async()=>{
+ const f=qualitativeFixture([reply([call('search',{query:'housing'})]),reply([call('search',{query:'affordability safeguards'})]),reply([call('answer',valid)])]);await f.run();
+ const calls=f.model.doGenerateCalls;assert.equal(calls.length,3);
+ const prefix=c=>JSON.stringify({system:c.prompt.filter(m=>['system','developer'].includes(m.role)),tools:c.tools});
+ for(const c of calls.slice(1))assert.equal(prefix(c),prefix(calls[0]));
+ const rest=c=>c.prompt.filter(m=>!['system','developer'].includes(m.role)).map(m=>JSON.stringify(m));
+ for(let i=1;i<calls.length;i++){const before=rest(calls[i-1]),after=rest(calls[i]);assert.ok(after.length>before.length);assert.deepEqual(after.slice(0,before.length),before,'append-only messages');}
+});
