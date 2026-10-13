@@ -88,7 +88,7 @@ export class FakeKb implements KbApi {
   dropOnWrite: string | null = null
   catalogRows: Array<{ kind: string; rid: string; created: string }> = []
   catalogPageSize = 200
-  catalogCalls: Array<{ kind: string; since: string; page: number }> = []
+  catalogCalls: Array<{ kind: string; since: string; until?: string; page: number; pageSize: number }> = []
 
   add(rid: string, r: Partial<FakeResource> & { texts: Record<string, string> }): void {
     this.resources.set(rid, {
@@ -153,11 +153,14 @@ export class FakeKb implements KbApi {
     // After the "loss" the repair write goes through untouched.
     this.dropOnWrite = null
   }
-  async catalog(kind: string, since: string, page: number, pageSize = this.catalogPageSize): Promise<CatalogPage> {
-    this.catalogCalls.push({ kind, since, page })
+  async catalog(kind: string, since: string, page: number, pageSize = this.catalogPageSize, until?: string): Promise<CatalogPage> {
+    this.catalogCalls.push({ kind, since, until, page, pageSize })
     const sinceMs = Date.parse(since)
     const all = this.catalogRows
-      .filter((r) => r.kind === kind && Date.parse(`${r.created}Z`) >= sinceMs)
+      .filter((r) => {
+        const ms = Date.parse(/(?:Z|[+-]\d\d:?\d\d)$/.test(r.created) ? r.created : `${r.created}Z`)
+        return r.kind === kind && ms >= sinceMs && (!until || ms <= Date.parse(until))
+      })
       .sort((a, b) => a.created.localeCompare(b.created))
     const slice = all.slice(page * pageSize, (page + 1) * pageSize)
     return { rows: slice.map((r) => ({ rid: r.rid, created: r.created, usermetadata: this.view(r.rid, false)?.usermetadata })), hasNext: (page + 1) * pageSize < all.length && slice.length > 0 }
@@ -200,7 +203,7 @@ export class FakeAi {
 
 export function makeDeps(opts: { kb: FakeKb; ai: FakeAi; env?: Record<string, string>; now?: () => number; d1?: { d1: D1Database; raw: DatabaseSync } }) {
   const db = opts.d1 ?? makeD1()
-  const cfg: Config = readConfig({ ARAG_ZONE: 'z', DISCOVERY_START: '2026-09-20T00:00:00Z', ...opts.env } as any)
+  const cfg: Config = readConfig({ ARAG_ZONE: 'z', DISCOVERY_START: '2026-09-28T10:00:00Z', ...opts.env } as any)
   const logs: Array<Record<string, unknown>> = []
   let t = Date.parse('2026-09-28T12:00:00Z')
   let n = 0

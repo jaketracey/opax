@@ -23,7 +23,7 @@ import {
   type QueueRow,
   type RowUpdate,
 } from './db.ts'
-import { discover } from './discover.ts'
+import { countedDb, discover, DISCOVERY_KINDS, DISCOVERY_SUBREQUESTS } from './discover.ts'
 import type { AiLike, Config } from './env.ts'
 import { MAX_ATTEMPTS, generate, type Generation } from './generate.ts'
 import { isHistoricSpeech, skipHistoricShort } from './historic.ts'
@@ -49,6 +49,7 @@ export interface TickStats {
   discovered: Record<string, number>
   discoveryPartial: string[]
   discoveryErrors: string[]
+  discoveryRequests: { catalog: number; basic: number; resource: number; d1: number }
   claimed: number
   rids: number
   written: number
@@ -104,6 +105,10 @@ async function pool<T>(items: readonly T[], n: number, fn: (item: T) => Promise<
 }
 
 export async function runTick(d: TickDeps): Promise<TickStats> {
+  let queries = 0
+  // Processing spends some of this invocation's 1,000 D1 queries. Discovery
+  // uses only what remains, keeping thirty for logging and final cleanup.
+  d = { ...d, db: countedDb(d.db, n => { queries += n }) }
   const t0 = d.now()
   const day = utcDay(t0)
   const stats: TickStats = {
@@ -112,6 +117,7 @@ export async function runTick(d: TickDeps): Promise<TickStats> {
     discovered: {},
     discoveryPartial: [],
     discoveryErrors: [],
+    discoveryRequests: { catalog: 0, basic: 0, resource: 0, d1: 0 },
     claimed: 0,
     rids: 0,
     written: 0,
@@ -188,7 +194,11 @@ export async function runTick(d: TickDeps): Promise<TickStats> {
     //    tick's model time (seen on the first remote tick). Rows found here are claimed next tick.
     //    It is cheap, and independent of the model budget and of KB write backoff.
     try {
-      const found = await discover({
+      const maxSubrequests = Math.min(DISCOVERY_SUBREQUESTS, 1000 - queries - 30)
+      const found = maxSubrequests < 32 ? {
+        enqueued: Object.fromEntries(DISCOVERY_KINDS.map(k => [k.kind, 0])),
+        partial: DISCOVERY_KINDS.map(k => k.kind), errors: [], requests: stats.discoveryRequests,
+      } : await discover({
         db: d.db,
         kb: d.kb,
         now: d.now(),
@@ -197,12 +207,14 @@ export async function runTick(d: TickDeps): Promise<TickStats> {
         overlapS: d.cfg.discoveryOverlapS,
         historicHold: d.cfg.historicHold,
         maxMs: d.cfg.discoveryMaxMs,
+        maxSubrequests,
         clock: d.now,
         config:d.cfg,
       })
       stats.discovered = found.enqueued
       stats.discoveryPartial = found.partial
       stats.discoveryErrors = found.errors
+      stats.discoveryRequests = found.requests
       for (const e of found.errors) await logError(d.db, d.now(), 'discovery', e)
     } catch (err) {
       stats.discoveryErrors.push(errText(err))
