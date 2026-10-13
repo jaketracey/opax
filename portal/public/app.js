@@ -10153,8 +10153,7 @@ function initAskBuilder() {
 $("ask-copylink").addEventListener("click", (e) => {
   const q = lastAsk.question || $("ask-input").value.trim();
   if (!q) return;
-  copyText(siteUrl(askHash(q, askKind())), e.currentTarget.querySelector("span") || e.target,
-    "Copied. Opening it re-asks the question; wording may vary");
+  copyText(siteUrl(askHash(q, askKind())), e.currentTarget.querySelector("span") || e.target);
 });
 
 mountExportMenu($("ask-export-picker"), (format) => {
