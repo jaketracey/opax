@@ -164,7 +164,7 @@ export const MODULE_STAMPS = [
   // The money map's bundle names its chunks by content, so an importer holding
   // an old money-map.js would ask for chunks the build has removed.
   ['map-page.js', 'money-map.js'], ['agencies.js', 'money-map.js'], ['suppliers.js', 'money-map.js'],
-  ['thenvsnow.js', 'wombat.js'], ['thenvsnow.js', 'labels.js'], ['grant-recipient.js', 'grants.js'],
+  ['thenvsnow.js', 'wombat.js'], ['thenvsnow.js', 'labels.js'], ['thenvsnow.js', 'canonical-urls.js'], ['grant-recipient.js', 'grants.js'],
   ['electorates.js', 'labels.js'], ['home-data.js', 'labels.js'],
   ['app.js', 'vote-tables.js'],
   ['app.js','donor-views.js'], ['app.js','map-research.js'],
