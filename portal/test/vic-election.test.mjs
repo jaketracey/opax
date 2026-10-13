@@ -164,6 +164,43 @@ test('non-partisan strings, nomination dates and actual speech scope stay explic
   assert.match(renderVicElection(data,data.seats.find(s=>s.name==='Ashwood')).html,/First contested in 2022/);
 });
 
+test('page template: shared head and sections, link rows as touch targets, ballot rows, no empty sections',async()=>{
+  const essendon=data.seats.find(s=>s.name==='Essendon'),region=data.seats.find(s=>s.kind==='region');
+  const pages={hub:renderVicElection(data,null).html,district:renderVicElection(data,essendon).html,region:renderVicElection(data,region).html};
+  for(const [kind,html] of Object.entries(pages)){
+    // One title in the shared page head; every section is a ui-section with a ui-section-title.
+    assert.equal(html.match(/<h1>/g).length,1,kind);assert.match(html,/<div class="ui-page-head"><h1>/,kind);
+    const sections=html.match(/<section class="ui-section hub-section" id="[a-z-]+"><h2 class="ui-section-title">/g)||[];
+    assert.equal(sections.length,(html.match(/<section class="[^"]*hub-section/g)||[]).length,kind);assert.ok(sections.length>=2,kind);
+    // Onward links sit in hub-links rows (each a 44px target), never middot-joined text.
+    assert.doesNotMatch(html,/class="vic-more"|class="vic-kind"|class="hub-lead"|<\/a> · <a/,kind);
+    // Heading levels never skip.
+    const levels=[...html.matchAll(/<h([1-6])[ >]/g)].map(m=>+m[1]);for(let i=1;i<levels.length;i++)assert.ok(levels[i]<=levels[i-1]+1,kind+': h'+levels[i-1]+' then h'+levels[i]);
+    assert.doesNotMatch(html,/Not available|No data|Unknown|\bN\/A\b/,kind);
+  }
+  assert.match(pages.hub,/<p class="ui-lede">Victorians vote on Saturday 28 November\./);
+  assert.match(pages.district,/<p class="ui-page-meta">Lower house district in <a href="\/vic-election-2026\/northern-metropolitan">Northern Metropolitan Region<\/a>\.<\/p>/);
+  assert.match(pages.district,/<ul class="hub-links"><li><a href="\/subject\/person\/[a-z-]+">Full profile<\/a><\/li><li><a href="https:\/\/www\.parliament\.vic\.gov\.au\/[^"]+">Parliament of Victoria profile<\/a><\/li><\/ul><\/article>/);
+  assert.match(pages.district,/<div class="vic-elsewhere"><ul class="hub-links"><li><a [^>]+>District map and profile \(VEC\)<\/a><\/li><li><a href="\/vic-election-2026#find">Find another seat<\/a><\/li><\/ul><\/div>/);
+  assert.match(pages.region,/<li><a [^>]+>Full profile<\/a><\/li><li><a href="\/ask\?[^"]+">Speeches<\/a><\/li>/);
+  // No candidates yet: no Candidates section at all. Published: ballot order, number in its own column.
+  assert.doesNotMatch(pages.district,/id="candidates"/);
+  const list=[{name:'Avery Quill',party:'Independent'},{name:'Marisol Featherstonehaugh-Vandersloot',party:'Shooters, Fishers and Farmers Party Victoria'},{name:'Wren Halloway',party:''}];
+  const named=renderVicElection(data,{...essendon,candidates:{published:'2026-11-10',url:'https://www.vec.vic.gov.au/candidates',list}}).html;
+  const ballot=named.match(/<ol class="vic-candidates" role="list">([\s\S]*?)<\/ol>/)?.[1];assert.ok(ballot);
+  assert.deepEqual([...ballot.matchAll(/<li><span class="vic-candidate-no" aria-hidden="true">(\d+)<\/span><span class="vic-candidate"><span class="vic-candidate-name">([^<]+)<\/span>/g)].map(m=>[+m[1],m[2]]),[[1,'Avery Quill'],[2,'Marisol Featherstonehaugh-Vandersloot'],[3,'Wren Halloway']]);
+  assert.match(ballot,/Wren Halloway<\/span><\/span><\/li>/);assert.ok(named.indexOf('id="candidates"')<named.indexOf('id="record"'));
+  // A member with no speech or vote counts keeps the search and links, with no empty stats list or votes heading.
+  const sparse=renderVicElection(data,data.seats.find(s=>s.name==='Bendigo West')).html;
+  assert.doesNotMatch(sparse,/class="vic-stats"|Recent votes/);assert.match(sparse,/class="vic-speech-search"/);
+  // The stylesheet keeps the shared touch target and column rules these classes rely on.
+  const css=await readFile(new URL('hubs.css',root),'utf8');
+  assert.match(css,/\.hub-links a \{[^}]*min-height: var\(--size-target\)/);assert.match(css,/\.vic-date-link a \{[^}]*min-height: var\(--size-target\)/);
+  assert.match(css,/\.vic-candidates > li \{[^}]*grid-template-columns: 2\.5ch minmax\(0, 1fr\)/);
+  assert.match(css,/\.vic-seats, \.vic-regions, \.vic-people \{ display: grid; grid-template-columns: repeat\(auto-fill, minmax\(min\(100%, 20rem\), 1fr\)\)/);
+  assert.doesNotMatch(css,/\.vic-more|\.vic-kind|\.vic-subhead|\.hub-lead/);
+});
+
 test('VEC results: 2022 seat totals, later by-elections and margins as records',()=>{
   const districts=data.seats.filter(s=>s.kind==='district');
   const won={};for(const s of districts)won[s.result.general.party]=(won[s.result.general.party]||0)+1;
@@ -229,7 +266,7 @@ test('candidates appear only from a VEC list, in ballot paper order, with the al
       await buildVicElection(out,join(dir,'vic-election-2026.json'));
       const built=JSON.parse(await readFile(join(out,VIC_ELECTION_ASSET),'utf8'));const lowan=built.seats.find(s=>s.name==='Lowan');
       assert.deepEqual(lowan.candidates.list,[{name:'Avery Quill',party:'Independent'},{name:'Rowan Ketch',party:'Liberal'}]);
-      const html=renderVicElection(built,lowan).html;assert.match(html,/<h2>Candidates<\/h2><p class="hub-meta">In ballot paper order, as published by the VEC on 10 Nov 2026/);assert.ok(html.indexOf('Avery Quill')<html.indexOf('Rowan Ketch'));
+      const html=renderVicElection(built,lowan).html;assert.match(html,/<h2 class="ui-section-title">Candidates<\/h2><p class="ui-section-note">In ballot paper order, as published by the VEC on 10 Nov 2026/);assert.ok(html.indexOf('Avery Quill')<html.indexOf('Rowan Ketch'));
       await writeFile(join(dir,'vic-candidates-2026.json'),JSON.stringify({published:'2026-11-10',url:'https://www.vec.vic.gov.au/candidates',districts:{Nowhere:[{name:'Avery Quill'}]}}));
       await assert.rejects(buildVicElection(out,join(dir,'vic-election-2026.json')),/unknown constituency: Nowhere/);
     } finally {await rm(out,{recursive:true,force:true});}

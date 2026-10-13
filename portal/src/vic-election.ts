@@ -44,6 +44,10 @@ const pct = (n: number) => `${n.toFixed(1)}%`
 const points = (n: number) => n.toFixed(1)
 const past = (iso: string, now: Date) => now.getTime() >= Date.parse(iso)
 const party = (name: string | null) => name ? partyLabelHTML(name) : ''
+/** A section in the site's shared shape (ui-section): its rule, its title, an optional note. */
+const section = (id: string, title: string, body: string, note = '') => `<section class="ui-section hub-section" id="${id}"><h2 class="ui-section-title">${title}</h2>${note ? `<p class="ui-section-note">${note}</p>` : ''}${body}</section>`
+/** A block's onward links on one wrapping row, each a full touch target. */
+const links = (items: string[]) => `<ul class="hub-links">${items.map(x=>`<li>${x}</li>`).join('')}</ul>`
 
 /** The result a reader asks about: the latest contest for the seat. */
 const latest = (s: Seat) => s.result ? s.result.since || s.result.general : null
@@ -60,7 +64,7 @@ function keyDates(d: VicElection, now: Date) {
     ['Early voting', '18–27 November 2026, 9 am to 6 pm. Closed Sunday 22 November', link(d.sources.voting,'Where and how to vote')],
     ['Election day', 'Saturday 28 November 2026, 8 am to 6 pm', ''],
   ]
-  return `<section class="hub-section" id="key-dates"><h2>Key dates</h2><dl class="vic-dates">${rows.map(([label,when,more])=>`<div><dt>${esc(label)}</dt><dd>${esc(when)}${more ? `<span class="vic-date-link">${more}</span>` : ''}</dd></div>`).join('')}</dl></section>`
+  return section('key-dates','Key dates',`<dl class="vic-dates">${rows.map(([label,when,more])=>`<div><dt>${esc(label)}</dt><dd>${esc(when)}${more ? `<span class="vic-date-link">${more}</span>` : ''}</dd></div>`).join('')}</dl>`)
 }
 
 /** A seat as one tappable row: name, who holds it, and the last winning margin
@@ -103,14 +107,16 @@ function record(m: Member, opts: {search: boolean; heading: string}) {
   // "Assembly divided on motion" says nothing about what was decided: only titled questions are listed.
   const titled = m.divisions.filter((r,i,all)=>!/^(?:assembly|council) divided on /i.test(r.title) && all.findIndex(x=>x.title === r.title) === i).slice(0,3)
   const votes = opts.search && titled.length
-    ? `<h3 class="vic-subhead">Recent votes</h3><ul class="vic-votes">${titled.map(r=>`<li><a href="${esc(r.href)}">${esc(r.title)}</a><span class="hub-meta">${esc(shortDate(r.date))} · ${esc(voteWord(r.vote))}</span></li>`).join('')}</ul>`
+    ? `<h3 class="ui-subsection-title">Recent votes</h3><ul class="vic-votes">${titled.map(r=>`<li><a href="${esc(r.href)}">${esc(r.title)}</a><span class="hub-meta">${esc(shortDate(r.date))} · ${esc(voteWord(r.vote))}</span></li>`).join('')}</ul>`
     : ''
-  return `<article class="vic-member">${opts.heading}${stats.length ? `<ul class="vic-stats">${stats.join('')}</ul>` : ''}${search}${votes}<p class="vic-more">${link(m.href,'Full profile')}${opts.search ? '' : ` · ${link(speeches,'Speeches')}`} · ${link(m.source_url,'Parliament of Victoria profile')}</p></article>`
+  return `<article class="vic-member">${opts.heading}${stats.length ? `<ul class="vic-stats">${stats.join('')}</ul>` : ''}${search}${votes}${links([link(m.href,'Full profile'),...opts.search ? [] : [link(speeches,'Speeches')],link(m.source_url,'Parliament of Victoria profile')])}</article>`
 }
 
 /** Candidates as the VEC publishes them after nominations close: ballot paper order, no other ordering. */
+// The ballot number sits in its own column, so names and parties start on one line however many there are.
 const candidates = (s: Seat) => s.candidates?.list.length
-  ? `<section class="hub-section" id="candidates"><h2>Candidates</h2><p class="hub-meta">In ballot paper order, as published by the VEC on ${esc(shortDate(s.candidates.published))}. ${link(s.candidates.url,'VEC candidate list')}</p><ol class="vic-candidates">${s.candidates.list.map(c=>`<li>${esc(c.name)} ${c.party ? party(c.party) : ''}</li>`).join('')}</ol></section>`
+  ? section('candidates','Candidates',`<ol class="vic-candidates" role="list">${s.candidates.list.map((c,i)=>`<li><span class="vic-candidate-no" aria-hidden="true">${i+1}</span><span class="vic-candidate"><span class="vic-candidate-name">${esc(c.name)}</span>${c.party ? party(c.party) : ''}</span></li>`).join('')}</ol>`,
+    `In ballot paper order, as published by the VEC on ${esc(shortDate(s.candidates.published))}. ${link(s.candidates.url,'VEC candidate list')}`)
   : ''
 
 function resultFacts(s: Seat) {
@@ -181,35 +187,35 @@ export function renderVicElection(d: VicElection, s: Seat | null, footer: HubFoo
     title = 'Victorian election 2026'
     description = 'Find your Victorian state seat by suburb or postcode, see who holds it, the last winning margin and what they have done in Parliament. Election day is Saturday 28 November 2026.'
     crumbs = trail(VIC_ELECTION_PATH)
-    body = `<h1>${esc(title)}</h1>`
-      + `<p class="hub-lead">Victorians vote on Saturday 28 November. ${past(d.enrolment_close,now) ? 'Enrolment closed at 8 pm on Tuesday 3 November.' : `Enrol or update your details by 8 pm on Tuesday 3 November. ${link(d.sources.enrolment,'Check your enrolment')}`}</p>`
+    body = `<div class="ui-page-head"><h1>${esc(title)}</h1>`
+      + `<p class="ui-lede">Victorians vote on Saturday 28 November. ${past(d.enrolment_close,now) ? 'Enrolment closed at 8 pm on Tuesday 3 November.' : `Enrol or update your details by 8 pm on Tuesday 3 November. ${link(d.sources.enrolment,'Check your enrolment')}`}</p></div>`
       // Side by side on wide screens, so the seat list starts in the first screen.
       + `<div class="vic-top">${finder(d,find?.place ?? null,find?.hits ?? null)}${keyDates(d,now)}</div>`
-      + `<section class="hub-section" id="districts"><h2>Lower house: 88 districts</h2><p class="hub-meta">Each row shows the member and the winning margin at the 2022 election, in percentage points, unless a later by-election is named.</p>${seatList(districts.map(x=>seatRow(x)).join(''),'Districts')}</section>`
-      + `<section class="hub-section" id="regions"><h2>Upper house: 8 regions</h2><p class="hub-meta">Each region elects five members.</p><ul class="vic-regions">${regions.map(r=>`<li><a class="vic-region" href="${esc(r.path)}"><span class="vic-seat-name">${esc(r.name)}</span><span class="vic-region-members">${r.members.map(m=>`<span>${esc(m.name)} ${party(m.party)}</span>`).join('')}</span></a></li>`).join('')}</ul></section>`
+      + section('districts','Lower house: 88 districts',seatList(districts.map(x=>seatRow(x)).join(''),'Districts'),'Each row shows the member and the winning margin at the 2022 election, in percentage points, unless a later by-election is named.')
+      + section('regions','Upper house: 8 regions',`<ul class="vic-regions">${regions.map(r=>`<li><a class="vic-region" href="${esc(r.path)}"><span class="vic-seat-name">${esc(r.name)}</span><span class="vic-region-members">${r.members.map(m=>`<span>${esc(m.name)} ${party(m.party)}</span>`).join('')}</span></a></li>`).join('')}</ul>`,'Each region elects five members.')
   } else if (s.kind === 'district') {
     const m = s.members[0], region = d.seats.find(r=>r.kind === 'region' && r.name === s.region)!
     title = `${s.name} district · Victorian election 2026`
     const r = latest(s)
     description = `Who holds ${s.name}, ${r ? `the ${contestName(r)} result and winning margin, ` : ''}and what ${m.name} has done in Parliament. Victorian election, Saturday 28 November 2026.`
     crumbs = trail(VIC_ELECTION_PATH, s.name)
-    body = `<h1>${esc(s.name)}</h1><p class="vic-kind">Lower house district in ${link(region.path,region.name+' Region')}${s.formerly ? `. Called ${esc(s.formerly)} before 2022` : s.created ? '. First contested in 2022' : ''}.</p>`
+    body = `<div class="ui-page-head"><h1>${esc(s.name)}</h1><p class="ui-page-meta">Lower house district in ${link(region.path,region.name+' Region')}${s.formerly ? `. Called ${esc(s.formerly)} before 2022` : s.created ? '. First contested in 2022' : ''}.</p></div>`
       + `<dl class="vic-facts"><div><dt>Held by</dt><dd>${link(m.href,m.name)} ${party(m.party)}</dd></div>${resultFacts(s)}</dl>`
       + candidates(s)
-      + `<section class="hub-section" id="record"><h2>What ${esc(m.name)} has done</h2>${record(m,{search:true,heading:''})}</section>`
-      + `<section class="hub-section" id="region"><h2>Upper house: ${esc(region.name)} Region</h2><p class="hub-meta">Voters in ${esc(s.name)} also elect this region’s five upper house members.</p><ul class="vic-people">${region.members.map(x=>`<li>${link(x.href,x.name)} ${party(x.party)}</li>`).join('')}</ul><p class="vic-more">${link(region.path,`${region.name} Region: members and their records`)}</p></section>`
+      + section('record',`What ${esc(m.name)} has done`,record(m,{search:true,heading:''}))
+      + section('region',`Upper house: ${esc(region.name)} Region`,`<ul class="vic-people">${region.members.map(x=>`<li>${link(x.href,x.name)} ${party(x.party)}</li>`).join('')}</ul>${links([link(region.path,`${region.name} Region: members and their records`)])}`,`Voters in ${esc(s.name)} also elect this region’s five upper house members.`)
       + keyDates(d,now)
-      + `<p class="vic-more vic-elsewhere">${link(s.source_url,'District map and profile (VEC)')} · ${link(VIC_ELECTION_PATH+'#find','Find another seat')}</p>`
+      + `<div class="vic-elsewhere">${links([link(s.source_url,'District map and profile (VEC)'),link(VIC_ELECTION_PATH+'#find','Find another seat')])}</div>`
   } else {
     title = `${s.name} Region · Victorian election 2026`
     description = `The five upper house members for ${s.name} Region, what they have done in Parliament, and its 11 districts. Victorian election, Saturday 28 November 2026.`
     crumbs = trail(VIC_ELECTION_PATH, s.name+' Region')
-    body = `<h1>${esc(s.name)} Region</h1><p class="vic-kind">Upper house region with five members and 11 districts${s.formerly ? `. Called ${esc(s.formerly)} Region before 2022` : ''}.</p>`
+    body = `<div class="ui-page-head"><h1>${esc(s.name)} Region</h1><p class="ui-page-meta">Upper house region with five members and 11 districts${s.formerly ? `. Called ${esc(s.formerly)} Region before 2022` : ''}.</p></div>`
       + candidates(s)
-      + `<section class="hub-section" id="members"><h2>Members</h2><div class="vic-members">${s.members.map(m=>record(m,{search:false,heading:`<h3>${link(m.href,m.name)} ${party(m.party)}</h3>`})).join('')}</div></section>`
-      + `<section class="hub-section" id="districts"><h2>Districts in this region</h2><p class="hub-meta">Each row shows the member and the winning margin at the 2022 election, in percentage points, unless a later by-election is named.</p>${seatList(s.districts.map(name=>seatRow(memberOf(d,name))).join(''),'Districts')}</section>`
+      + section('members','Members',`<div class="vic-members">${s.members.map(m=>record(m,{search:false,heading:`<h3>${link(m.href,m.name)} ${party(m.party)}</h3>`})).join('')}</div>`)
+      + section('districts','Districts in this region',seatList(s.districts.map(name=>seatRow(memberOf(d,name))).join(''),'Districts'),'Each row shows the member and the winning margin at the 2022 election, in percentage points, unless a later by-election is named.')
       + keyDates(d,now)
-      + `<p class="vic-more vic-elsewhere">${link(s.source_url,'Region map and profile (VEC)')} · ${link(VIC_ELECTION_PATH+'#find','Find your seat')}</p>`
+      + `<div class="vic-elsewhere">${links([link(s.source_url,'Region map and profile (VEC)'),link(VIC_ELECTION_PATH+'#find','Find your seat')])}</div>`
   }
   body += about()
   return {title,description,html:hubShell(`<div class="vic-hub">${body}</div>`,approvedFooter(footer),crumbs),jsonLd:structured(path,d,s ? s.members.map(m=>({href:m.href,name:m.name})) : d.seats.map(x=>({href:x.path,name:x.name}))),

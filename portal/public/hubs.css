@@ -5,6 +5,7 @@
 .hub-page { padding-top: var(--space-group); padding-bottom: var(--space-section); }
 .hub-page h1 { text-wrap: balance; }
 .hub-page h3 { font: var(--type-subheading); margin: 0; }
+.hub-page h3.ui-subsection-title { margin: var(--space-group) 0 var(--space-tight); }
 .hub-page h4 { font: var(--type-strong); margin: 0; }
 .hub-page h5 { font: var(--type-label); color: var(--ink-soft); margin: var(--space-block) 0 var(--space-tight); }
 .hub-page p { max-width: 46rem; }
@@ -55,6 +56,10 @@ div.hub-coverage { margin-top: var(--space-group); }
 .hub-authorisation { border-top: var(--border-hairline) solid var(--divider-default); margin-top: var(--space-section); padding-top: var(--space-block); font: var(--type-fine); }
 /* Contact follows the hub's fine-text role and shared touch-target token. */
 .hub-footer .hub-corrections a { display: inline-flex; align-items: center; min-height: var(--size-target); }
+/* The footer's rule runs the width of the section rules above it, and the
+   corrections contact closes the authorisation block under that one rule. */
+.hub-page .hub-authorisation { max-width: none; }
+.hub-authorisation + .hub-corrections { margin-top: var(--space-block); padding-top: 0; border-top: 0; }
 .hub-corrections > span { display: block; font: var(--type-fine); margin-top: var(--space-line); }
 @media print {
   .hub-footer { break-inside: avoid; }
@@ -62,77 +67,83 @@ div.hub-coverage { margin-top: var(--space-group); }
 }
 .hub-section { scroll-margin-top: calc(var(--header-h) + var(--space-block)); }
 /* Victorian election: the finder first, then rows a reader can scan for a seat,
-   its member and the last winning margin. Hairlines, no fills except the finder. */
-/* The title sits like every hub's page head: no browser margin (0.67em grew
-   to 32px with the larger title), the lede a heading step under it. */
-.vic-hub > h1 { margin: 0; }
-.vic-hub .hub-lead { max-width: 40rem; }
-.vic-hub .hub-lead a { white-space: nowrap; }
-.vic-kind { margin: 0 0 var(--space-block); color: var(--ink-soft); font: var(--type-metadata); }
-.vic-finder { max-width: 46rem; margin: var(--space-group) 0 0; padding: var(--space-group); border: var(--border-hairline) solid var(--divider-default); border-radius: var(--radius-md); background: var(--paper-raised); scroll-margin-top: calc(var(--header-h) + var(--space-block)); }
+   its member and the last winning margin. The head and sections are the shared
+   ui-page-head and ui-section; hairlines, no fills except the finder. */
+.vic-hub { overflow-wrap: break-word; hyphens: manual; }
+.vic-hub .ui-lede a { white-space: nowrap; }
+/* A block's onward links: one wrapping row, each link a full touch target
+   (its slack is the air above the row). */
+.hub-links { display: flex; flex-wrap: wrap; gap: 0 var(--space-block); margin: var(--space-tight) 0 0; padding: 0; list-style: none; font: var(--type-metadata); }
+.hub-links a { display: inline-flex; align-items: center; min-height: var(--size-target); }
+.vic-finder { max-width: 46rem; padding: var(--space-group); border: var(--border-hairline) solid var(--divider-default); border-radius: var(--radius-md); background: var(--paper-raised); scroll-margin-top: calc(var(--header-h) + var(--space-block)); }
 .vic-finder h2 { font: var(--type-heading); margin: 0 0 var(--space-heading); }
 .vic-find-form label, .vic-speech-search label { display: block; margin: 0 0 var(--space-tight); font: var(--type-label); color: var(--ink-soft); }
 .vic-find-row { display: flex; gap: var(--space-tight); }
-.vic-find-row .ui-input { flex: 1 1 auto; }
+.vic-find-row .ui-input { flex: 1 1 auto; min-width: 0; }
 .vic-find-row .ui-button { flex: 0 0 auto; }
 .vic-hits { margin: var(--space-group) 0 0; }
 .vic-hits > .hub-meta { margin: var(--space-block) 0 0; }
 .vic-hit + .vic-hit { margin-top: var(--space-group); }
 .vic-hit-place { margin: 0 0 var(--space-line); }
 .vic-hit-place span { margin-left: var(--space-tight); color: var(--ink-soft); font: var(--type-metadata); }
-.vic-seats { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 20rem), 1fr)); column-gap: var(--space-section); list-style: none; margin: var(--space-heading) 0 0; padding: 0; }
-.vic-seats > li { border-top: var(--border-hairline) solid var(--divider-subtle); }
+/* Seat, region and member grids share one column step, so rows line up across sections. */
+.vic-seats, .vic-regions, .vic-people { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 20rem), 1fr)); column-gap: var(--space-section); list-style: none; margin: 0; padding: 0; }
+.vic-hits .vic-seats { margin-top: var(--space-heading); }
+:is(.vic-seats, .vic-regions, .vic-people) > li { border-top: var(--border-hairline) solid var(--divider-subtle); }
 .vic-seat { display: grid; grid-template-columns: minmax(0, 1fr) auto; grid-template-areas: "name figure" "held when"; align-items: baseline; gap: var(--space-line) var(--space-block); min-height: var(--size-target); padding: var(--space-row) 0; color: var(--ink); text-decoration: none; }
 .vic-seat-name { grid-area: name; font: var(--type-strong); }
 .vic-seat:hover .vic-seat-name, .vic-region:hover .vic-seat-name { text-decoration: underline; text-decoration-color: var(--bronze-rule); text-underline-offset: 3px; }
 .vic-seat-held { grid-area: held; display: flex; flex-wrap: wrap; align-items: center; gap: 0 var(--space-tight); min-width: 0; color: var(--ink-soft); font: var(--type-metadata); }
 .vic-seat-figure { grid-area: figure; text-align: right; font: var(--type-metadata); font-variant-numeric: tabular-nums; }
 .vic-seat-when { grid-area: when; text-align: right; color: var(--ink-soft); font: var(--type-fine); }
-.vic-regions { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 20rem), 1fr)); column-gap: var(--space-section); list-style: none; margin: var(--space-heading) 0 0; padding: 0; }
-.vic-regions > li { border-top: var(--border-hairline) solid var(--divider-subtle); }
-.vic-region { display: block; padding: var(--space-row) 0; color: var(--ink); text-decoration: none; }
+.vic-region { display: block; height: 100%; box-sizing: border-box; padding: var(--space-row) 0; color: var(--ink); text-decoration: none; }
 .vic-region-members { display: grid; gap: var(--space-line); margin-top: var(--space-tight); color: var(--ink-soft); font: var(--type-metadata); }
-.vic-region-members > span, .vic-people > li { display: inline-flex; flex-wrap: wrap; align-items: center; gap: 0 var(--space-tight); }
-.vic-facts { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 15rem), 1fr)); gap: var(--space-block) var(--space-section); max-width: 60rem; margin: var(--space-group) 0 0; padding: var(--space-group) 0 0; border-top: var(--border-hairline) solid var(--divider-default); }
+.vic-region-members > span, .vic-people > li, .vic-candidate { display: flex; flex-wrap: wrap; align-items: center; gap: 0 var(--space-tight); }
+.vic-people > li { min-height: var(--size-target); padding-block: var(--space-line); }
+.vic-people a, .vic-member > h3 a { display: inline-flex; align-items: center; min-height: var(--size-target); }
+/* The seat's facts: one rule over them, as a section has, then up to four across. */
+.vic-facts { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 14rem), 1fr)); gap: var(--space-block) var(--space-group); margin: 0; padding: var(--space-heading) 0 0; border-top: var(--border-hairline) solid var(--divider-default); }
 .vic-facts dt { font: var(--type-label); color: var(--ink-soft); }
-.vic-facts dd { margin: var(--space-line) 0 0; font: var(--type-body); }
+.vic-facts dd { margin: var(--space-line) 0 0; font: var(--type-body); text-wrap: pretty; }
+.vic-facts dd:has(> .ui-party) { display: flex; flex-wrap: wrap; align-items: center; gap: 0 var(--space-tight); margin-top: 0; }
 .vic-facts dd > a:first-child { font: var(--type-strong); }
-.vic-facts dd .ui-party { margin-left: var(--space-tight); }
-.vic-member + .vic-member { margin-top: var(--space-group); padding-top: var(--space-group); border-top: var(--border-hairline) solid var(--divider-subtle); }
+.vic-facts dd:has(> .ui-party) > a:first-child { display: inline-flex; align-items: center; min-height: var(--size-target); }
+/* Region members: cards in a grid, their links on each card's last line. */
 .vic-members { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 20rem), 1fr)); gap: 0 var(--space-section); }
-.vic-members > .vic-member { margin: 0; padding: var(--space-block) 0 var(--space-group); border-top: var(--border-hairline) solid var(--divider-subtle); }
+.vic-members > .vic-member { display: flex; flex-direction: column; padding: var(--space-tight) 0 var(--space-group); border-top: var(--border-hairline) solid var(--divider-subtle); }
+.vic-members > .vic-member > .hub-links { margin-top: auto; padding-top: var(--space-tight); }
 .vic-member > h3 { display: flex; flex-wrap: wrap; align-items: center; gap: 0 var(--space-tight); margin: 0 0 var(--space-tight); }
 .vic-stats { display: grid; gap: var(--space-tight); list-style: none; margin: 0; padding: 0; }
 .vic-stats b { font: var(--type-strong); font-variant-numeric: tabular-nums; }
-.vic-speech-search { max-width: 34rem; margin: var(--space-group) 0 var(--space-section); }
-.vic-subhead { font: var(--type-subheading); margin: var(--space-group) 0 var(--space-tight); }
+.vic-speech-search { max-width: 34rem; margin: var(--space-block) 0 0; }
+.vic-stats + .vic-speech-search { margin-top: var(--space-group); }
 .vic-votes { list-style: none; max-width: 46rem; margin: 0; padding: 0; }
 .vic-votes li { display: grid; gap: var(--space-line); padding: var(--space-row) 0; border-top: var(--border-hairline) solid var(--divider-subtle); }
-.vic-people { display: flex; flex-wrap: wrap; gap: var(--space-line) var(--space-group); list-style: none; margin: var(--space-block) 0 0; padding: 0; }
-.vic-people > li { min-height: var(--size-target); }
-.vic-more { margin: var(--space-block) 0 0; font: var(--type-metadata); }
-.vic-elsewhere { margin-top: var(--space-section); }
+.vic-elsewhere > .hub-links { margin-top: var(--space-group); }
 .vic-dates { max-width: 46rem; margin: 0; }
 .vic-dates > div { display: grid; grid-template-columns: minmax(0, 16rem) minmax(0, 1fr); gap: var(--space-line) var(--space-block); padding: var(--space-row) 0; border-top: var(--border-hairline) solid var(--divider-subtle); }
 .vic-dates dt { font: var(--type-strong); }
-.vic-dates dd { margin: 0; }
-.vic-date-link { display: block; margin-top: var(--space-line); font: var(--type-metadata); }
-.vic-candidates { display: grid; gap: var(--space-line); max-width: 46rem; margin: var(--space-block) 0 0; padding-left: var(--space-group); }
-.vic-candidates > li { min-height: var(--size-target); padding: var(--space-tight) 0; border-top: var(--border-hairline) solid var(--divider-subtle); }
-.vic-candidates .ui-party { margin-left: var(--space-tight); }
-/* Wide screens: the finder and the key dates side by side above the seat list. */
+.vic-dates dd { margin: 0; text-wrap: pretty; }
+.vic-date-link { display: block; font: var(--type-metadata); }
+.vic-date-link a { display: inline-flex; align-items: center; min-height: var(--size-target); }
+/* Ballot order: the number in its own tabular column, the rule across the row. */
+.vic-candidates { max-width: 46rem; margin: 0; padding: 0; list-style: none; }
+.vic-candidates > li { display: grid; grid-template-columns: 2.5ch minmax(0, 1fr); align-items: baseline; gap: var(--space-tight); min-height: var(--size-target); box-sizing: border-box; padding: var(--space-row) 0; border-top: var(--border-hairline) solid var(--divider-subtle); }
+.vic-candidate-no { color: var(--ink-soft); font: var(--type-metadata); font-variant-numeric: tabular-nums; text-align: right; }
+.vic-candidate-name { font: var(--type-strong); }
+/* Wide screens: the finder and the key dates side by side above the seat list,
+   their titles on one line. */
 @media (min-width: 1000px) {
   .vic-top { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); align-items: start; gap: var(--space-section); max-width: var(--layout-column-wide); }
-  .vic-top > .vic-finder { margin-top: 0; }
-  .vic-top > .hub-section { margin-top: 0; padding-top: 0; border-top: 0; }
+  .vic-top > .ui-section { margin-top: 0; padding-top: calc(var(--space-group) + var(--border-hairline)); border-top: 0; }
   .vic-top .vic-dates > div { grid-template-columns: minmax(0, 12rem) minmax(0, 1fr); }
 }
-.vic-top { margin-top: var(--space-group); }
-.vic-about { max-width: 46rem; margin: var(--space-section) 0 0; color: var(--ink-soft); font: var(--type-fine); }
+.vic-about { max-width: 46rem; margin: var(--space-group) 0 0; color: var(--ink-soft); font: var(--type-fine); }
 @media (max-width: 600px) {
   .hub-weeks > li { gap: var(--space-row); }
   .hub-totals { gap: var(--space-heading); }
   .hub-committee-body { padding-left: 0; }
   .vic-finder { padding: var(--space-block); }
   .vic-dates > div { grid-template-columns: 1fr; }
+  .vic-facts { gap: var(--space-row); }
 }
