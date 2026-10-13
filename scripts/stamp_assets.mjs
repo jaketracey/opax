@@ -147,6 +147,7 @@ export const MODULE_STAMPS = [
   ['ledger.js', 'donor-entity.js'], ['quiz.js', 'donor-entity.js'], ['money-journeys-data.js', 'donor-entity.js'], ['map-research.js','donor-entity.js'], ['map-research.js','donor-views.js'],
   ['datatable.js', 'donor-entity.js'], ['datatable.js', 'donor-views.js'],
   ['datatable.js', 'datatable-query.js'],
+  ['grants-table.js', 'recipient-privacy.js'], ['grants-table.js', 'datatable.js'],
   ['growth-modules.js', 'donor-entity.js'], ['growth-modules.js', 'labels.js'], ['growth-modules.js', 'sponsor-person.js'],
   ['supplier-growth.js', 'growth-modules.js'], ['supplier-growth.js', 'labels.js'],
 
@@ -169,6 +170,7 @@ export const MODULE_STAMPS = [
   ['map-page.js', 'money-map.js'], ['agencies.js', 'money-map.js'], ['suppliers.js', 'money-map.js'],
   ['thenvsnow.js', 'wombat.js'], ['thenvsnow.js', 'labels.js'], ['thenvsnow.js', 'canonical-urls.js'], ['grant-recipient.js', 'grants.js'],
   ['electorates.js', 'labels.js'], ['home-data.js', 'labels.js'],
+  ['app.js', 'grants-table.js'],
   ['app.js', 'vote-tables.js'],
   ['app.js','donor-views.js'], ['app.js','map-research.js'],
   ['ask-person.js', 'labels.js'],

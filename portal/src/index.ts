@@ -24,6 +24,8 @@ import { missingEntitySlug } from './crawl-hygiene'
 import { normalizePassage, passageWindow } from './passage-text'
 import { instrumentPage, instrumentReader } from './instruments'
 import { auditPage, auditReader } from './audit'
+import {grantsHTML} from './grants-table'
+import {GRANTS_COVERAGE} from '../public/grants-table.js'
 import { hubPage } from './hubs'
 import { VIC_ELECTION_AUTHORISATION_LINE, vicElectionFooterHTML } from '../public/vic-election.js'
 import { vicElectionPage, type VicElection } from './vic-election'
@@ -4326,6 +4328,11 @@ async function buildMeta(route: SeoRoute, url: URL, request: Request, env: Env, 
       if(content) meta.prerender=content.html
     } else if(route.kind==='static' && ['money','connections','explore'].includes(route.page)) {
       meta.prerender=(await renderMoneyAnswer(meta.title.replace(/ · OPAX$/,''),read).catch(()=>null))?.html || answerBlock(meta.title.replace(/ · OPAX$/,''),meta.description)
+    } else if (route.kind === 'static' && route.page === 'money/grants' && !url.searchParams.has('program') && !url.searchParams.has('open') && !url.searchParams.has('largest')) {
+      const hadState = Boolean(url.search)
+      meta.prerender = answerBlock('Government grants', GRANTS_COVERAGE, await grantsHTML(url, env).catch(() => '<p role="alert">Grant records are temporarily unavailable.</p>'))
+      meta.canonical = `${SITE_ORIGIN}/money/grants`
+      meta.noindex = hadState
     } else {
       const directory=route.kind==='index' ? route.dir : route.kind==='topics' ? 'topic' : route.kind==='static' && route.page==='bills' ? 'bills' : route.kind==='static' && route.page==='money/grants' && !url.searchParams.has('program') && !url.searchParams.has('open') && !url.searchParams.has('largest') ? 'grants' : null
       if(directory){
@@ -5338,6 +5345,7 @@ async function renderSeoPage(route: SeoRoute, url: URL, request: Request, env: E
     .on('head', {
       element(el) {
         if (noindex) el.append('<meta name="robots" content="noindex">', { html: true })
+        if (route.kind === 'static' && route.page === 'money/grants' && !url.searchParams.has('program') && !url.searchParams.has('open') && !url.searchParams.has('largest')) el.append('<link rel="stylesheet" href="/grants-table.css" data-grants-table-style>', {html: true})
         for(const [rel,href] of [['prev',meta.prev],['next',meta.next]]) if(href) el.append(`<link rel="${rel}" href="${escHtml(href)}">`,{html:true})
       },
     })

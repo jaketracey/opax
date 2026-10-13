@@ -15,7 +15,7 @@ const donorViewReady = import('/donor-views.js?v=4fcbbb78cf').then(module => {
 
 "use strict";
 let voteTables;
-const voteTablesReady = import("/vote-tables.js?v=0408fa2aba").then(module => { voteTables = module; });
+const voteTablesReady = import("/vote-tables.js?v=2f00093b0b").then(module => { voteTables = module; });
 let divisionMarkdown;
 const divisionMarkdownReady = import('/division-markdown.js?v=5991511166').then(module => { divisionMarkdown = module; });
 // The labels and source lines (labels.js); the first render waits for them.
@@ -1423,6 +1423,17 @@ async function openMoneyRecords(kind, params) {
   $('money-records-title').textContent = grants ? 'Government grants' : 'Political receipts';
   const body = $('money-records-body'); body.innerHTML = '<p class="status">Loading the records…</p>';
   try {
+    if (grants && !params.has('program') && !params.has('open') && !params.has('largest')) {
+      const mod = await import('/grants-table.js?v=184ef74ed7');
+      if (generation !== moneyRecordsGeneration) return;
+      const controller = new AbortController();
+      moneyRecordsHandle = {destroy() {controller.abort();}};
+      const handle = await mod.mountGrantsTable(body, params, {signal: controller.signal});
+      if (generation !== moneyRecordsGeneration) {handle.destroy(); return;}
+      $('money-records-title').hidden = true;
+      moneyRecordsHandle = handle;
+      return;
+    }
     const mod = await import(grants ? '/grants.js?v=14051595db' : '/ledger.js?v=6add761bc8');
     if (generation !== moneyRecordsGeneration) return;
     body.replaceChildren();
