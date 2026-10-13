@@ -1,7 +1,7 @@
 import {TABLE_DATASETS} from '../portal/src/table-datasets.mjs';
 export const tableName = name => 'table_' + name.replaceAll('-', '_');
 export const quote = value => '"' + value.replaceAll('"','""') + '"';
-export const arrayColumns = new Set(['portfolios','sectors','entities']);
+export const arrayColumns = new Set(['portfolios','sectors','entities','bill','sitting']);
 export function tableSchema() {
   const sql = ['CREATE TABLE IF NOT EXISTS table_private_identity (hash TEXT PRIMARY KEY, words INTEGER NOT NULL) WITHOUT ROWID;', 'CREATE TABLE IF NOT EXISTS table_meta (key TEXT PRIMARY KEY, value TEXT NOT NULL) WITHOUT ROWID;'];
   for (const [name,config] of Object.entries(TABLE_DATASETS)) {

@@ -59,6 +59,8 @@ export async function buildStatus(db: D1Database, cfg: Config, now: number): Pro
   }
 
   return {
+    capabilities:['enrichment-run-cap-v1'],
+    enrichmentRuns:(await db.prepare('SELECT * FROM enrichment_runs').all()).results,
     now: new Date(now).toISOString(),
     mode: cfg.live ? 'live' : 'dry',
     historicHold: cfg.historicHold,

@@ -1,8 +1,9 @@
 // Shared, dependency-free table renderer and query engine. Safe to import in a Worker.
 import {isOrganisationDonor} from './donor-entity.js?v=ebb2c972d5';
-import {unnamedDonorLabel,isUnnamedAggregate,donorsNotNamedDetail} from './donor-views.js?v=783b253885';
+import {unnamedDonorLabel,isUnnamedAggregate,donorsNotNamedDetail} from './donor-views.js?v=4fcbbb78cf';
 import {shortDate} from './format.js';
 import {queryValues,rawQueryValues,scrubQuery} from './datatable-query.js?v=6dd55aab38';
+import {readServerCSV} from './server-csv.js?v=47fc2aba1d';
 
 const esc = value => String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;'}[c]));
 const numeric = column => ['money', 'count', 'year'].includes(column.type);
@@ -62,17 +63,24 @@ function candidateRows(rows, config) {
       }
       return [safe];
     }
+    try { if (config.rowPrivacyCheck) return config.rowPrivacyCheck(row) === true ? [row] : []; } catch { return []; }
     return config.privacy !== 'donors' || isOrganisationDonor(donorNode(row)) ? [row] : [];
   });
 }
 const donorColumn = column => /^(?:donor(?:_?name)?|label|name)$/i.test(column.key) || column.primary;
+// 'donors' checks rows and everything a reader supplies. 'echo' (parliamentary
+// record: votes, divisions) checks only the reader's own text (search, filter
+// values, URL state) before it is echoed; its rows are already public exports.
+const checksEcho = config => config.privacy === 'donors' || config.privacy === 'echo';
 const allowedText = (config, value) => {
-  if (config.privacy !== 'donors') return true;
+  if (!checksEcho(config)) return true;
   try { return config.privacyCheck?.(value) === true; } catch { return false; }
 };
+const allowedRowText = (config, value) => config.privacy !== 'donors' || allowedText(config,value);
 // A row is approved as a whole and by every decoded scalar, before any UI derives
 // options, counts, chips or bars from it. Async browser checks populate approvals.
 function rowPrivacyCheck(row, config) {
+  if (config.privacy !== 'donors') return true;
   return allowedText(config,JSON.stringify(row)) && [...queryValues(row)].every(value=>allowedText(config,value));
 }
 const publicRows = (rows,config) => candidateRows(rows,config).filter(row=>rowPrivacyCheck(row,config));
@@ -101,7 +109,7 @@ function cleanQuery(query = {}, config, page) {
     if (Array.isArray(value)) {
       const options = config.rows ? publicRows(config.rows,config).map(row=>text(row[key]))
         : Array.isArray(page?.facets?.[key]) ? page.facets[key].map(f=>f.value) : [];
-      const safe = value.filter(v=>options.includes(v) && (config.privacy !== 'donors' || allowedText(config,v)));
+      const safe = value.filter(v=>options.includes(v) && allowedText(config,v));
       if (safe.length) out.filters[key] = safe; else delete out.filters[key];
     } else if (column.facet !== 'range') delete out.filters[key];
   }
@@ -248,12 +256,12 @@ function safePage(page, config) {
     if (Array.isArray(values)) {
       facets[key]=values.filter(v=>v && typeof v.value === 'string' && Number.isFinite(v.count) && v.count >= 0)
         .filter(v=>config.privacy !== 'donors' || (donorColumn(column) ? isOrganisationDonor({label:v.value}) || isUnnamedAggregate(v.value) : true)
-          && [...queryValues(v)].every(value=>allowedText(config,value)))
+          && [...queryValues(v)].every(value=>allowedRowText(config,value)))
         .map(v=>({value:v.value,count:v.count}));
-    } else if (values && Number.isFinite(values.min) && Number.isFinite(values.max) && [...queryValues(values)].every(value=>allowedText(config,value))) facets[key]={min:values.min,max:values.max};
+    } else if (values && Number.isFinite(values.min) && Number.isFinite(values.max) && [...queryValues(values)].every(value=>allowedRowText(config,value))) facets[key]={min:values.min,max:values.max};
   }
   // Unknown endpoint fields must never enter the hydration payload.
-  const result={rows,total:Number.isSafeInteger(page.total) && page.total >= 0 && allowedText(config,String(page.total)) ? page.total : rows.length,page:allowedText(config,String(page.page)) ? integer(page.page,1) : 1,pageSize:allowedText(config,String(page.pageSize)) ? integer(page.pageSize,config.pageSize || 50) : config.pageSize || 50,facets};
+  const result={rows,total:Number.isSafeInteger(page.total) && page.total >= 0 && allowedRowText(config,String(page.total)) ? page.total : rows.length,page:allowedRowText(config,String(page.page)) ? integer(page.page,1) : 1,pageSize:allowedRowText(config,String(page.pageSize)) ? integer(page.pageSize,config.pageSize || 50) : config.pageSize || 50,facets};
   if (rows.length !== page.rows.length) return {...result,total:rows.length,page:1,facets:applyQuery(rows,config).facets};
   return result;
 }
@@ -351,7 +359,7 @@ function render(config, page, query = {}, view = {}, error = '') {
   const count = `Showing ${decimal.format(start)}–${decimal.format(page.total ? start + page.rows.length - 1 : 0)} of ${decimal.format(page.total)}`;
   const data = JSON.stringify(page).replace(/</g,'\\u003c').replace(/&/g,'\\u0026');
   return `<section class="dt-root" data-datatable="${esc(config.id)}" data-density="${esc(view.density || config.density || 'comfortable')}" aria-label="${esc(config.caption)}">
-<div class="dt-toolbar"><form role="search"><label class="dt-sr" for="${esc(config.id)}-search">Search ${esc(config.caption)}</label><input id="${esc(config.id)}-search" type="search" data-search data-focus="search" placeholder="Search" value="${esc(query.q || '')}" autocomplete="off"></form><select class="dt-phone-sort" data-sort-select aria-label="Sort">${config.columns.filter(sortable).map(c => ['asc','desc'].map(dir => `<option value="${esc(c.key)}:${dir}"${sort?.key === c.key && sort.dir === dir ? ' selected' : ''}>${esc(c.label)} ${dir === 'asc' ? 'ascending' : 'descending'}</option>`).join('')).join('')}</select><details class="dt-panel dt-filters" data-panel="filters">${summary('Filters')}<div class="dt-tools">${controls.join('')}<details class="dt-panel" data-panel="columns">${summary('Columns')}<fieldset><legend class="dt-sr">Visible columns</legend>${config.columns.map(c => `<label class="dt-choice"><input type="checkbox" data-column="${esc(c.key)}"${columns.includes(c) ? ' checked' : ''}${columns.length === 1 && columns[0] === c ? ' disabled' : ''}>${esc(c.label)}</label>`).join('')}</fieldset></details>${button('Compact', `data-density-toggle aria-pressed="${(view.density || config.density) === 'compact'}"`)}</div></details>${config.export === false ? '' : button('Export CSV', `data-export${view.rejected ? ' disabled' : ''}`)}</div>
+<div class="dt-toolbar"><form role="search"><label class="dt-sr" for="${esc(config.id)}-search">Search ${esc(config.caption)}</label><input id="${esc(config.id)}-search" type="search" data-search data-focus="search" placeholder="Search" value="${esc(query.q || '')}" autocomplete="off"></form><select class="dt-phone-sort" data-sort-select aria-label="Sort">${config.columns.filter(sortable).map(c => ['asc','desc'].map(dir => `<option value="${esc(c.key)}:${dir}"${sort?.key === c.key && sort.dir === dir ? ' selected' : ''}>${esc(c.label)} ${dir === 'asc' ? 'ascending' : 'descending'}</option>`).join('')).join('')}</select><details class="dt-panel dt-filters" data-panel="filters">${summary('Filters')}<div class="dt-tools">${controls.join('')}<details class="dt-panel" data-panel="columns">${summary('Columns')}<fieldset><legend class="dt-sr">Visible columns</legend>${config.columns.map(c => `<label class="dt-choice"><input type="checkbox" data-column="${esc(c.key)}"${columns.includes(c) ? ' checked' : ''}${columns.length === 1 && columns[0] === c ? ' disabled' : ''}>${esc(c.label)}</label>`).join('')}</fieldset></details>${button('Compact', `data-density-toggle aria-pressed="${(view.density || config.density) === 'compact'}"`)}</div></details>${config.export === false ? '' : button('Export CSV', `data-export${view.rejected || page.total === 0 ? ' disabled' : ''}`)}</div>
 <div class="dt-chips" aria-label="Applied filters">${active.join('')}${query.q || Object.keys(query.filters || {}).length || redactedSearch || redactedFilters || view.rejected ? button('Clear all', 'data-clear') : ''}</div>
 <div class="dt-scroll"><table class="dt" id="${esc(config.id)}" role="table"><caption>${esc(config.caption)}</caption><thead role="rowgroup"><tr role="row">${columns.map(column => `<th role="columnheader" scope="col" data-align="${esc(column.align || (numeric(column) ? 'end' : 'start'))}"${sortable(column) ? ` aria-sort="${sort?.key === column.key ? sort.dir === 'asc' ? 'ascending' : 'descending' : 'none'}"` : ''}>${sortable(column) ? button(`${esc(column.label)} ${icon(sort?.key === column.key ? sort.dir : 'unsorted')}`, `data-sort="${esc(column.key)}"`) : esc(column.label)}${column.bar && maxima[column.key] ? `<small class="dt-scale">0–${esc(formatCell(maxima[column.key],column))}</small>` : ''}</th>`).join('')}${config.actions?.length ? '<th scope="col"><span class="dt-sr">Actions</span></th>' : ''}</tr></thead><tbody role="rowgroup">${error ? `<tr><td colspan="${columns.length + (config.actions?.length ? 1 : 0)}"><div class="dt-empty" role="alert">${esc(error)} ${button('Try again','data-retry')}</div></td></tr>` : body || `<tr><td colspan="${columns.length + (config.actions?.length ? 1 : 0)}"><div class="dt-empty">No results. Try another search or clear the filters.</div></td></tr>`}</tbody></table></div>
 <div class="dt-footer"><p class="dt-count" role="status" aria-live="polite" aria-atomic="true">${error ? 'Table unavailable' : count}</p><div class="dt-paging">${button('Previous', `data-page="${page.page - 1}"${page.page <= 1 || error ? ' disabled' : ''}`)}<span>Page ${page.page}</span>${button('Next', `data-page="${page.page + 1}"${page.page * page.pageSize >= page.total || error ? ' disabled' : ''}`)}<label class="dt-page-size" for="${esc(config.id)}-size">Rows per page <select id="${esc(config.id)}-size" data-page-size aria-label="Rows per page">${[...new Set([10,25,50,100,page.pageSize])].sort((a,b)=>a-b).map(size => `<option${size === page.pageSize ? ' selected' : ''}>${size}</option>`).join('')}</select></label></div></div>
@@ -391,7 +399,7 @@ export function mountDataTable(el, config) {
   const doc = root.ownerDocument, win = doc.defaultView;
   let query = {}, rawURL, rawPage, lastURL, rawRejected = false;
   const rawConfig = config, approvals = new Map();
-  if (config.privacy === 'donors') config = {...config,privacyCheck:value=>approvals.get(value) === true};
+  if (checksEcho(config)) config = {...config,privacyCheck:value=>approvals.get(value) === true};
   const view = {density:config.density || 'comfortable', columnsVisible:config.columnsVisible || config.columns.map(c=>c.key), constantsVisible:[]};
   let page;
   try { page = JSON.parse(root.querySelector('[data-dt-page]')?.textContent || 'null'); } catch { /* Client rows below. */ }
@@ -484,7 +492,7 @@ export function mountDataTable(el, config) {
     win.dispatchEvent(new win.CustomEvent('opax:analytics', {detail:{event, properties:{table_id:config.id, page_type:config.pageType}}}));
   }
   async function permit(value) {
-    if (config.privacy !== 'donors') return true;
+    if (!checksEcho(config)) return true;
     if (approvals.has(value)) return approvals.get(value);
     let safe=false;
     try {
@@ -511,7 +519,7 @@ export function mountDataTable(el, config) {
     if (rawURL) {
       const captured=rawURL;
       root.setAttribute('aria-busy','true'); paint();
-      if (config.privacy === 'donors') await permitSet([...rawQueryValues(captured.searchParams),...linkInputs()]);
+      if (checksEcho(config)) await permitSet([...rawQueryValues(captured.searchParams),...linkInputs()]);
       if (destroyed || version !== revision) return;
       const guarded=guardTableURL(config,captured);
       rawURL=undefined; rawRejected=guarded.rejected; query=guarded.query;
@@ -519,10 +527,10 @@ export function mountDataTable(el, config) {
     }
     const pending=structuredClone(query), previousPage=rawPage || page;
     rawPage=undefined;
-    if (config.privacy === 'donors') {
+    if (checksEcho(config)) {
       const values=[...queryValues(pending),...rawQueryValues(new URLSearchParams(serializeQuery(pending,config.urlKey)))];
-      const data=config.rows ? engine(config.rows,config) : null;
-      const needsValidation=values.some(value=>!approvals.has(value)) || (data ? data.rowJSON.some(row=>!approvals.has(row)) : page.rows.some(row=>!approvals.has(JSON.stringify(row))));
+      const data=config.rows && config.privacy === 'donors' ? engine(config.rows,config) : null;
+      const needsValidation=values.some(value=>!approvals.has(value)) || config.privacy === 'donors' && (data ? data.rowJSON.some(row=>!approvals.has(row)) : page.rows.some(row=>!approvals.has(JSON.stringify(row))));
       // Pending query values never render against old SSR rows. Already approved state can
       // retain its controls and focus while fetching, avoiding a second redraw.
       if (needsValidation) {
@@ -544,7 +552,7 @@ export function mountDataTable(el, config) {
     }
     if (!config.source) {
       page=applyQuery(config.rows || [],config,query);
-      await permitSet([...queryValues({page:page.page,pageSize:page.pageSize,total:page.total,facets:page.facets}),...rawQueryValues(new URLSearchParams(serializeQuery({...query,page:page.page},config.urlKey)))]);
+      await permitSet([...queryValues(config.privacy === 'donors' ? {page:page.page,pageSize:page.pageSize,total:page.total,facets:page.facets} : {page:page.page,pageSize:page.pageSize}),...rawQueryValues(new URLSearchParams(serializeQuery({...query,page:page.page},config.urlKey)))]);
       if (destroyed || version !== revision) return;
       query.page=page.page;
       paint(); delete view.searchSelection; urlState(); root.removeAttribute('aria-busy'); return;
@@ -563,7 +571,7 @@ export function mountDataTable(el, config) {
         await permitSet(texts);
         // Invalid rows are dropped; safePage recomputes counts and facets from
         // the surviving rows instead of trusting metadata for rejected records.
-      }
+      } else if (config.privacy === 'echo') await permitSet([...queryValues({page:candidate.page,pageSize:candidate.pageSize}),...rawQueryValues(new URLSearchParams(serializeQuery({...query,page:candidate.page},config.urlKey)))]);
       if (destroyed || version !== revision) return;
       page=safePage(candidate,config); query.page=page.page;
       paint(); delete view.searchSelection; urlState();
@@ -585,7 +593,7 @@ export function mountDataTable(el, config) {
     // any export request, even when the mounted parsed state has not changed.
     if (win.location.href !== lastURL) { captureURL(); void refresh(); return; }
     if (root.getAttribute('aria-busy') === 'true') return;
-    if (view.rejected) return;
+    if (view.rejected || page.total === 0) return;
     const requested=structuredClone(query), exportRevision=revision;
     const control = root.querySelector('[data-export]'); control.disabled = true;
     exportController?.abort(); exportController = new win.AbortController();
@@ -596,13 +604,10 @@ export function mountDataTable(el, config) {
       const state=cleanQuery(requested,config,page);
       let csv, truncated=false;
       if (config.source) {
-        const response = await win.fetch(endpoint(true,state),{signal:exportController.signal});
-        if (!response.ok) throw new Error('Export failed');
-        truncated=response.headers.get('x-table-export-truncated') === 'true';
-        csv = await response.text();
-
+        const exported = await readServerCSV(endpoint(true,state),win.fetch.bind(win),exportController.signal);
+        csv = exported.csv; truncated = exported.truncated;
       } else csv = toCSV(filteredRows(config.rows || [],config,state),config);
-      if (!await permit(csv)) throw new Error('Unsafe table export');
+      if (config.privacy === 'donors' && !await permit(csv)) throw new Error('Unsafe table export');
       if (destroyed || revision !== exportRevision || view.rejected) return;
       const url = win.URL.createObjectURL(new win.Blob([csv],{type:'text/csv;charset=utf-8'}));
       const a = doc.createElement('a'); a.href = url; a.download = config.export?.filename || `${config.id}.csv`;
@@ -610,7 +615,7 @@ export function mountDataTable(el, config) {
       if (truncated) root.querySelector('.dt-count').textContent='Export limited to 50,000 rows. Narrow the filters to export more.';
     } catch (error) {
       if (!destroyed && error?.name !== 'AbortError') root.querySelector('.dt-count').textContent = 'Could not export this table. Try again.';
-    } finally { if (!destroyed) control.disabled = Boolean(view.rejected); }
+    } finally { if (!destroyed) control.disabled = Boolean(view.rejected || page.total === 0); }
   }
   function click(event) {
     const target = event.target.closest('button');

@@ -100,6 +100,8 @@
   const ASK = page('/ask', 'Ask');
   const SEARCH = page('/ask?view=search', 'Search');
   const CHAT = page('/chat', 'Keep asking');
+  // Reached from a money page's Explain action; it sits under the money map.
+  const EXPLAIN = page('/money/explain', 'Explain this flow');
   // The About pages sit under About OPAX in the trail.
   const UNDER_ABOUT = new Set(['/methods', '/stats', '/expenses', '/privacy', '/support', '/community']);
 
@@ -130,6 +132,7 @@
     if (path === '/search' || (path === '/ask' && params.get('view') === 'search')) return { page: SEARCH };
     if (path === '/ask') return { page: ASK };
     if (path === '/chat') return { parent: ASK, page: CHAT };
+    if (path === EXPLAIN.href) return { parent: sectionPages.get('/money'), page: EXPLAIN };
     if (path.startsWith('/doc/')) return { section: SEARCH };
     if (path.startsWith('/estimates/')) return { section: sectionPages.get('/sitting') };
     if (path.startsWith('/instrument/')) return { section: sectionPages.get('/instruments') };

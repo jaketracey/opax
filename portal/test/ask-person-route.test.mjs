@@ -52,7 +52,7 @@ globalThis.fetch=async (input,init)=>{
  if(url.pathname.endsWith('/ask')){
   if(mode==='failing-model')return Response.json({error:'Fixture generation failure'},{status:500});
   const reply=body.extra_context?.[0]?.includes('speech topic counts') ? stubModel(body) : {
-   answer:'The retrieved speech called for parliamentary scrutiny.[^1]\n\n[^1]: block-F1',citation_footnote_to_context:{'block-F1':'fallback/t/body/0-100'},retrieval_results:{resources:{fallback:{slug:'speech-90000',title:'Fixture parliamentary speech',fields:{body:{paragraphs:{'fallback/t/body/0-100':{text:'The retrieved speech called for parliamentary scrutiny.',score:1,score_type:'RERANKER'}}}}}}},
+   answered:true,answer:'The retrieved speech called for parliamentary scrutiny.[^1]\n\n[^1]: block-F1',citation_footnote_to_context:{'block-F1':'fallback/t/body/0-100'},retrieval_results:{resources:{fallback:{slug:'speech-90000',title:'Fixture parliamentary speech',fields:{body:{paragraphs:{'fallback/t/body/0-100':{text:'The retrieved speech called for parliamentary scrutiny.',score:1,score_type:'RERANKER'}}}}}}},
   };
   if(mode==='verification')reply.answer=reply.answer.replace('indexed speeches','indexed speeches. He said "This unsupported wording is absent from the original" in the record of');
   // The provider can return its ordinary ranked background as well as the
@@ -60,7 +60,7 @@ globalThis.fetch=async (input,init)=>{
   reply.retrieval_results.resources.background={slug:'speech-99999',title:'Other indexed speaker',origin:{collaborators:['Other Member']},fields:{body:{paragraphs:{'background/t/body/0-100':{text:'An unrelated reply from another indexed speaker.',score:1,score_type:'RERANKER'}}}}};
   if(init.headers?.['x-synchronous']==='true')return Response.json(reply);
   return new Response([
-   {type:'answer',text:reply.answer},
+   {type:'answer',text:JSON.stringify({answered:reply.answered,answer:reply.answer})},
    {type:'retrieval',results:reply.retrieval_results},
    {type:'footnote_citations',footnote_to_context:reply.citation_footnote_to_context},
    {type:'status',code:'0',status:'success'},
@@ -124,7 +124,7 @@ test('a slow verification recovery is cancelled within its two-second first-answ
  const start=performance.now();const response=await post('/api/ask?stream=1');const text=await response.text();const elapsed=performance.now()-start;
  const done=text.split('\n\n').find(block=>block.startsWith('event: done'));assert.ok(done);const data=JSON.parse(done.split('\ndata: ')[1]);
  assert.ok(elapsed<3000,`verification ${elapsed}ms`);assert.equal(aborted,1);assert.equal(modelCalls().length,2);
- assert.ok(!data.answer.includes('"This unsupported wording'));assert.ok(Object.keys(data.citations).length>0);assert.ok(!text.includes('event: delta'));
+ assert.equal(data.answered,false);assert.equal(data.reason,'grounding_failed');assert.equal(data.answer,'');assert.equal(Object.keys(data.citations).length,0);assert.ok(!text.includes('event: delta'));
  timings.push({scenario:'verification',answer_ms:Math.round(elapsed),cancelled_calls:aborted});mode='fast';
 });
 

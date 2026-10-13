@@ -8,9 +8,8 @@
 <meta name="theme-color" content="#142A43">
 <!-- Google Tag Manager (container GTM-PNDM87LW). The loader and the site's
      own dataLayer events live in /gtm.js so no inline script is needed. -->
-<script src="/analytics.js?v=6639c30065" defer></script>
-<script src="/spa-entry.js?v=e49dbf19f7"></script>
-<script src="/events.js?v=3b8a8448ac" defer></script>
+<script src="/spa-entry.js?v=347a573b03"></script>
+<script src="/events.js?v=08151d5d9b" defer></script>
 <script src="/gtm.js?v=0764911f84" defer></script>
 <!-- Home page values. On a real path (/subject/person/slug, /reports/gambling)
      the Worker rewrites these per route; app.js keeps canonical and og:url in
@@ -60,7 +59,10 @@
 <!-- fonts:end -->
 <!-- ?v= is content-hash stamped by scripts/stamp_assets.mjs (npm run deploy),
      which is what lets _headers serve these two immutable. -->
-<link rel="stylesheet" href="/style.css?v=8e5ccd5c26">
+<link rel="stylesheet" href="/datatable.css">
+<link rel="stylesheet" href="/vote-tables.css?v=d727aad769">
+<script type="module" src="/vote-tables.js?v=cb915fed8b"></script>
+<link rel="stylesheet" href="/style.css?v=2f41309e9e">
 <link rel="stylesheet" href="/ui-controls.css?v=f8011bf298">
 <link rel="stylesheet" href="/ui-source.css?v=4f396d8cfc">
 <link rel="stylesheet" href="/voice.css?v=a10938b91d">
@@ -1395,6 +1397,14 @@
       manifest, including per-source counts and the current corpus version, is at
       <a href="/corpus.json">corpus.json</a>.</p>
 
+      <h3 id="speaker-attribution">Speaker attribution</h3>
+      <p>Some earlier OpenAustralia transcripts combine several speakers' words in one document.
+      These mixed transcripts are not credited to any one member or included in their speech
+      count until each person's words can be attributed reliably. A fuller split into individual
+      speaking turns is planned; person pages show how many earlier transcripts include that
+      member alongside others and are not counted yet. Chair-role transcripts record a member
+      presiding over proceedings and are not counted as that member's own speeches.</p>
+
       <h3>Retrieval and generation</h3>
       <p>Search runs hybrid semantic + keyword retrieval with a reranking pass. Answers are
       generated only from retrieved passages, with citations. Embeddings:
@@ -2028,16 +2038,6 @@
   </div>
 </main>
 
-<!-- Lives outside the route panels because money explanations can open from
-     the map, an encyclopedia entry, or a topic page. The shared game-dialog
-     wiring supplies Escape, backdrop dismissal and the 44px close target. -->
-<dialog class="game-dialog explain-dialog" id="dialog-explain" aria-label="Explain this flow">
-  <div class="game-dialog-head">
-    <button type="button" class="game-close" data-close="dialog-explain" aria-label="Close">✕</button>
-  </div>
-  <div id="explain-body" class="game-dialog-body explain-dialog-body"></div>
-</dialog>
-
 <!-- The assistant's launcher. app.js shows it on every route but /chat, where
      the conversation IS the page. -->
 <button type="button" id="chat-launcher" class="chat-launcher" hidden
@@ -2067,10 +2067,12 @@
 <!-- defer: never block the parser (Lighthouse counted this as render-blocking).
      Deferred scripts still run before DOMContentLoaded, so nothing changes for
      app.js's boot. ?v= is content-hash stamped by scripts/stamp_assets.mjs. -->
-<script src="/spa-shell.js?v=ff4c2abbc7" defer></script>
-<script src="/navigation.js?v=29ae783cc0" defer></script>
+<script src="/spa-shell.js?v=7d71ef2971" defer></script>
+<script src="/navigation.js?v=1e1405d63b" defer></script>
 <script src="/quick-search.js?v=27eac3b2f7" defer></script>
 <script src="/ui-source.js?v=5e7b751ca0" defer></script>
-<script src="/app.js?v=2b50e7be57" defer></script>
+<script src="/app.js?v=58a8428fcb" defer></script>
+<!-- PostHog runs after the app (defer order) so the first route is not queued behind it; it replays the events measured before it (analytics/index.js). -->
+<script src="/analytics.js?v=7a83ce20cf" defer></script>
 </body>
 </html>

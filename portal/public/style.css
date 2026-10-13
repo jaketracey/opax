@@ -235,6 +235,25 @@
 .spa-booting:not(.spa-ready) #main .panel,
 .spa-booting:not(.spa-routed) #main .panel,
 .spa-failed #main .panel { display: none; }
+/* Boot frame (perf lane, CLS): spa-entry.js marks the frame the route will
+   draw, so the first paint already has it. The breadcrumb strip (41px: its
+   40px list and hairline) is held while hidden; route() unhides it in the
+   same task that sets spa-routed. A compact panel takes main.compact's top
+   space and, except Search, no hero. */
+.spa-booting:not(.spa-routed) #crumbs[hidden] { display: block !important; visibility: hidden; }
+.spa-booting.spa-boot-compact:not(.spa-routed) #main { padding-top: var(--space-5); }
+.spa-booting.spa-boot-compact:not(.spa-boot-search):not(.spa-routed) #hero-intro { display: none; }
+/* In its place, the start of the page's own server answer: the Worker's h1
+   (the person, bill or party named) and the summary under it. A true first
+   paint, not the Ask hero. Every rule here needs .spa-booting: if the app
+   never boots, spa-entry.js drops it and the whole server answer shows. */
+.spa-booting.spa-boot-compact:not(.spa-boot-search):not(.spa-routed) #prerender { display: block; }
+.spa-booting.spa-boot-compact:not(.spa-boot-search):not(.spa-routed) #prerender > * { display: none; }
+.spa-booting.spa-boot-compact:not(.spa-boot-search):not(.spa-routed) #prerender > h1,
+.spa-booting.spa-boot-compact:not(.spa-boot-search):not(.spa-routed) #prerender > h1 + p { display: block; }
+@media (max-width: 860px) { .spa-booting.spa-boot-compact:not(.spa-routed) #main { padding-top: var(--space-4); } }
+/* A person's record stays unseen while its head settles (app.js revealGrid). */
+.subject-grid.is-settling { visibility: hidden; }
 #prerender { padding-bottom: 1.5rem; }
 /* Audit reports and legislative instruments: server-only record pages. The
    sentence under the title is the page's one meta line; each page closes in
@@ -3359,7 +3378,7 @@ mark.privacy-confirm {
 @media (min-width: 701px) {
   .subject-person .subject-head:has(.subject-portrait) {
     grid-template-columns: max-content minmax(0, 1fr) auto;
-    grid-template-areas: "portrait title actions" "portrait meta meta" "portrait source source" "portrait fits fits" "portrait caveat caveat";
+    grid-template-areas: "portrait title actions" "portrait meta meta" "portrait source source" "portrait heldback heldback" "portrait chair chair" "portrait fits fits" "portrait caveat caveat";
     align-items: start; row-gap: 0;
   }
   .subject-person .subject-head:has(.subject-portrait) .subject-portrait { grid-area: portrait; grid-row: 1 / -1; align-self: start; }
@@ -3368,6 +3387,8 @@ mark.privacy-confirm {
   .subject-person .subject-head:has(.subject-portrait) > .ui-source { grid-area: source; }
   .subject-person .subject-head:has(.subject-portrait) > .person-caveat { grid-area: caveat; }
   .subject-person .subject-head:has(.subject-portrait) > .person-fits { grid-area: fits; }
+  .subject-person .subject-head:has(.subject-portrait) > .person-held-back { grid-area: heldback; }
+  .subject-person .subject-head:has(.subject-portrait) > .person-chair-role { grid-area: chair; }
   .subject-person .subject-head:has(.subject-portrait) > .person-actions { grid-area: actions; margin: 0; align-self: center; justify-content: flex-end; }
 }
 .person-caveat { margin: var(--space-tight) 0 0; max-width: 68ch; font: var(--type-fine); color: var(--ink-soft); }

@@ -43,6 +43,7 @@ const ROUTES = [
   { route: '/doc/division-x', way: 'context', entry: 'search results, bill pages and cited sources', from: '/ask?view=search' },
   { route: '/map', way: 'context', entry: 'the money map\'s full-screen control', from: '/money' },
   { route: '/today', way: 'context', entry: 'the daily edition\'s social posts (a redirect)', from: '/' },
+  { route: '/money/explain', way: 'context', entry: 'the Explain action on money pages and the money map', from: '/money' },
 ];
 // The app's panels, each by an address it opens on.
 const PANEL_ROUTES = { 'money-records': '/money/receipts', connections: '/connections', discover: '/discover', ask: '/ask', chat: '/chat',
@@ -125,6 +126,7 @@ const TRAILS = [
   ['/ask', 'Ask'],
   ['/ask?view=search', 'Search'],
   ['/chat', 'Ask › Keep asking'],
+  ['/money/explain', 'Money map › Explain this flow'],
   ['/no-such-page', 'Page not found'],
 ];
 const serverTrail = async (path, env, assets) => {
@@ -285,10 +287,9 @@ test('a donor\'s trail names a donor the page names, and never a placeholder', a
 
 test('the app sets every trail through the shared list', () => {
   const app = read('app.js');
-  // Literal trails remain only where no section page exists (committee
-  // witnesses) or another lane's page composes its own return trail.
+  // A literal trail remains only where no section page exists (committee witnesses).
   const literal = [...app.matchAll(/setCrumbs\(\[\s*(?:\.\.\.)?\{?\s*([^\n]{0,60})/g)].map(m => m[1]);
-  assert.deepEqual(literal.map(l => l.slice(0, 26)).sort(), ['explainReturnCrumbs, { lab', 'label: "Committee witnesse'].sort());
+  assert.deepEqual(literal.map(l => l.slice(0, 26)), ['label: "Committee witnesse']);
   for (const [, address] of app.matchAll(/crumbsFor\(\s*["'`]([^"'`$]+)["'`]/g))
     assert.notEqual(nav.trail(address).at(0)?.label, 'Page not found', `crumbsFor("${address}") names a section`);
   assert.doesNotMatch(app, /label:\s*"(Registers of interests|Corpus stats|Expense categories|Ask & search|Encyclopedia)"/);
