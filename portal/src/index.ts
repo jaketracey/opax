@@ -367,7 +367,7 @@ const FOLLOWUPS_CACHE_TTL = ASK_CACHE_TTL
 // same ranking share one paid call, and CACHE_EPOCH retires them together.
 const MONEY_OVERVIEW_CACHE_TTL = ASK_CACHE_TTL
 const MONEY_OVERVIEW_TIMEOUT_MS = 20000
-const STATS_CACHE_TTL = 300
+const STATS_CACHE_TTL = 3600
 const RECENT_CACHE_TTL = 300
 
 type CacheStatus = 'HIT' | 'MISS' | 'BYPASS' | 'STALE'
@@ -2790,11 +2790,12 @@ async function apiResource(request: Request, url: URL, slug: string, env: Env, c
  * than what the manifest said at the last sync. Cached five minutes.
  */
 async function apiStats(env: Env, ctx: ExecutionContext, refresh = false): Promise<Response> {
+  const wait = refresh ? AGGREGATE_WARM_TIMEOUT_MS : AGGREGATE_UPSTREAM_TIMEOUT_MS
   return cachedJson('/api/stats', async () => {
     const [countersRes, kindsRes, statesRes] = await aggregateBatch([
-      aggregateFetch(env, '/counters'),
-      aggregateFetch(env, `/catalog?faceted=${KIND_FACET}&page_size=0`),
-      aggregateFetch(env, `/catalog?faceted=${STATE_FACET}&filters=${SPEECH_FILTER}&page_size=0`),
+      aggregateFetch(env, '/counters', undefined, wait),
+      aggregateFetch(env, `/catalog?faceted=${KIND_FACET}&page_size=0`, undefined, wait),
+      aggregateFetch(env, `/catalog?faceted=${STATE_FACET}&filters=${SPEECH_FILTER}&page_size=0`, undefined, wait),
     ])
     if (!countersRes.ok) return json({ error: `counters failed (${countersRes.status})` }, 502)
     const counters = (await countersRes.json()) as Record<string, unknown>
@@ -3052,15 +3053,18 @@ interface CatalogPage {
   fulltext?: { total?: number; facets?: Record<string, Record<string, number>> }
 }
 
-const AGGREGATE_UPSTREAM_TIMEOUT_MS = 25_000
+// A visitor's cold miss waits up to a minute (HTTP requests have no wall limit while the client
+// is connected); the scheduled warm-up has 15 minutes, so it waits longer for slow KB facets.
+const AGGREGATE_UPSTREAM_TIMEOUT_MS = 60_000
+const AGGREGATE_WARM_TIMEOUT_MS = 180_000
 const CACHED_JSON_HARD_TTL = 7 * 24 * 60 * 60
 // Only in-flight aggregate rebuilds are shared within this isolate.
 const cachedJsonRefreshes = new Map<string, Promise<Response>>()
 let catalogWarmup: Promise<void> | undefined
 
 /** Bound aggregate reads without changing kbFetch or any Ask caller. */
-async function aggregateFetch(env: Env, path: string, init?: { body?: unknown }): Promise<Response> {
-  const out = await kbFetch(env, path, { ...init, signal: AbortSignal.timeout(AGGREGATE_UPSTREAM_TIMEOUT_MS) })
+async function aggregateFetch(env: Env, path: string, init?: { body?: unknown }, timeoutMs = AGGREGATE_UPSTREAM_TIMEOUT_MS): Promise<Response> {
+  const out = await kbFetch(env, path, { ...init, signal: AbortSignal.timeout(timeoutMs) })
   // These page_size=0/count responses are small. Consume even error bodies so
   // a warm-up never advances while an unread response holds a connection open.
   return new Response(await out.arrayBuffer(), out)
@@ -3153,10 +3157,11 @@ async function warmCatalog(env: Env, ctx: ExecutionContext): Promise<void> {
 
 /** All 21 topics with live counts, plus how many speeches carry any topic label. */
 async function apiTopics(env: Env, ctx: ExecutionContext, refresh = false): Promise<Response> {
+  const wait = refresh ? AGGREGATE_WARM_TIMEOUT_MS : AGGREGATE_UPSTREAM_TIMEOUT_MS
   return cachedJson('/api/topics', async () => {
     const [facetedRes, anyRes] = await aggregateBatch([
-      aggregateFetch(env, `/catalog?faceted=${TOPIC_FILTER_PREFIX}&page_size=0`),
-      aggregateFetch(env, `/catalog?filters=${TOPIC_FILTER_PREFIX}&page_size=0`),
+      aggregateFetch(env, `/catalog?faceted=${TOPIC_FILTER_PREFIX}&page_size=0`, undefined, wait),
+      aggregateFetch(env, `/catalog?filters=${TOPIC_FILTER_PREFIX}&page_size=0`, undefined, wait),
     ])
     if (!facetedRes.ok || !anyRes.ok) return json({ error: 'catalog failed' }, 502)
     const faceted = (await facetedRes.json()) as CatalogPage
@@ -3169,7 +3174,7 @@ async function apiTopics(env: Env, ctx: ExecutionContext, refresh = false): Prom
     // Every topic renders even before the pass reaches it — zero is honest.
     const topics = [...TOPIC_SLUGS].map((slug) => ({ slug, count: counts.get(slug) ?? 0 }))
     return json({ labelled: any.fulltext?.total ?? 0, topics })
-  }, ctx, 600, refresh)
+  }, ctx, 3600, refresh)
 }
 
 /**
@@ -3205,13 +3210,14 @@ async function apiParties(env: Env, ctx: ExecutionContext): Promise<Response> {
  */
 async function apiTopic(slug: string, env: Env, ctx: ExecutionContext, refresh = false): Promise<Response> {
   if (!TOPIC_SLUGS.has(slug)) return json({ error: 'unknown topic' }, 404)
+  const wait = refresh ? AGGREGATE_WARM_TIMEOUT_MS : AGGREGATE_UPSTREAM_TIMEOUT_MS
   return cachedJson(`/api/topic/${slug}`, async () => {
     const filter = `filters=${TOPIC_FILTER_PREFIX}/${slug}`
     const [partyRes, anyRes, stateRes, stateTotalsRes] = await aggregateBatch([
-      aggregateFetch(env, `/catalog?faceted=${PARTY_FACET}&${filter}&page_size=0`),
-      aggregateFetch(env, `/catalog?filters=${TOPIC_FILTER_PREFIX}&page_size=0`),
-      aggregateFetch(env, `/catalog?faceted=${STATE_FACET}&${filter}&page_size=0`),
-      aggregateFetch(env, `/catalog?faceted=${STATE_FACET}&filters=${TOPIC_FILTER_PREFIX}&page_size=0`),
+      aggregateFetch(env, `/catalog?faceted=${PARTY_FACET}&${filter}&page_size=0`, undefined, wait),
+      aggregateFetch(env, `/catalog?filters=${TOPIC_FILTER_PREFIX}&page_size=0`, undefined, wait),
+      aggregateFetch(env, `/catalog?faceted=${STATE_FACET}&${filter}&page_size=0`, undefined, wait),
+      aggregateFetch(env, `/catalog?faceted=${STATE_FACET}&filters=${TOPIC_FILTER_PREFIX}&page_size=0`, undefined, wait),
     ])
     if (!partyRes.ok || !anyRes.ok || !stateRes.ok || !stateTotalsRes.ok) {
       return json({ error: 'catalog failed' }, 502)
@@ -3240,7 +3246,7 @@ async function apiTopic(slug: string, env: Env, ctx: ExecutionContext, refresh =
       parties,
       states,
     })
-  }, ctx, 600, refresh)
+  }, ctx, 3600, refresh)
 }
 
 const TIDE_DECADES = [

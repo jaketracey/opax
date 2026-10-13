@@ -8,7 +8,7 @@ const source = readFileSync(new URL('../src/index.ts', import.meta.url), 'utf8')
 const fixture = JSON.parse(readFileSync(new URL('./fixtures/catalog-swr.json', import.meta.url), 'utf8'));
 const parsed = ts.createSourceFile('index.ts', source, ts.ScriptTarget.Latest, true, ts.ScriptKind.TS);
 const names = new Set(['cachedJson', 'cachedJsonRefreshes', 'catalogWarmup', 'CACHED_JSON_HARD_TTL',
-  'AGGREGATE_UPSTREAM_TIMEOUT_MS', 'aggregateFetch', 'aggregateBatch', 'warmCatalog', 'withCacheStatus',
+  'AGGREGATE_UPSTREAM_TIMEOUT_MS', 'AGGREGATE_WARM_TIMEOUT_MS', 'aggregateFetch', 'aggregateBatch', 'warmCatalog', 'withCacheStatus',
   'apiStats', 'apiTopics', 'apiTopic', 'apiParties', 'apiTide', 'apiPersonTopics', 'apiMatrix',
   'TOPIC_SLUGS', 'STATS_CACHE_TTL', 'TOPIC_FILTER_PREFIX', 'PARTY_FACET', 'STATE_FACET',
   'KIND_FACET', 'SPEECH_FILTER', 'DECADE_FILTER_PREFIX', 'TIDE_DECADES', 'MATRIX_PARTY_CAP']);
@@ -53,7 +53,7 @@ function harness({upstream, timeout = AbortSignal.timeout.bind(AbortSignal)} = {
   };
   runInNewContext(code, context);
   const ctx = {waitUntil(promise) {waits.push(promise);}};
-  const seed = (path, value = {count: 10}, age = 601, headers = {}) => rows.set('https://opax.com.au' + path,
+  const seed = (path, value = {count: 10}, age = 3601, headers = {}) => rows.set('https://opax.com.au' + path,
     Response.json(value, {headers: {'cache-control': 'public, max-age=604800',
       'x-opax-cached-at': new Clock(now - age * 1000).toISOString(), ...headers}}));
   return {api: context.api, rows, calls, writes, waits, jobs, ctx, env, seed,
@@ -61,10 +61,10 @@ function harness({upstream, timeout = AbortSignal.timeout.bind(AbortSignal)} = {
 }
 
 test('fresh hit returns identical data and browser TTL without rebuilding or exposing storage TTL', async () => {
-  const h = harness(); h.seed('/api/stats', {resources: 10}, 299);
+  const h = harness(); h.seed('/api/stats', {resources: 10}, 3599);
   const out = await h.api.apiStats(h.env, h.ctx);
   assert.equal(out.headers.get('x-opax-cache'), 'HIT');
-  assert.equal(out.headers.get('cache-control'), 'public, max-age=300');
+  assert.equal(out.headers.get('cache-control'), 'public, max-age=3600');
   assert.deepEqual(await out.json(), {resources: 10});
   assert.equal(h.calls.length, 0); assert.equal(h.waits.length, 0); assert.equal(h.writes.length, 0);
 });
@@ -109,7 +109,7 @@ test('cold upstream non-OK and exceptions return the existing 502 JSON and are n
   }
 });
 
-test('cold aggregate timeout is set to 25 seconds and an abort becomes 502', async () => {
+test('cold aggregate timeout is set to 60 seconds and an abort becomes 502', async () => {
   const controller = new AbortController(), deadlines = [], started = deferred();
   const h = harness({timeout: ms => {deadlines.push(ms); return controller.signal;},
     upstream: (_path, {signal}) => new Promise((resolve, reject) => {
@@ -118,7 +118,7 @@ test('cold aggregate timeout is set to 25 seconds and an abort becomes 502', asy
   const request = h.api.apiTopic('housing', h.env, h.ctx);
   await started.promise; controller.abort(new DOMException('Timed out', 'TimeoutError'));
   const out = await request;
-  assert.deepEqual(deadlines, [25000, 25000, 25000, 25000]);
+  assert.deepEqual(deadlines, [60000, 60000, 60000, 60000]);
   assert.equal(out.status, 502); assert.deepEqual(await out.json(), {error: 'catalog failed'});
   assert.equal(h.writes.length, 0);
 });
@@ -132,7 +132,7 @@ test('concurrent stale requests share one four-call topic rebuild per key, and a
   for (const out of responses) {assert.equal(out.headers.get('x-opax-cache'), 'STALE'); assert.deepEqual(await out.json(), {count: 10});}
   await h.api.apiTopic('health', h.env, h.ctx); assert.equal(h.calls.length, 8);
   gate.resolve(); await h.drain(); assert.equal(h.writes.length, 2);
-  h.advance(601000); await h.api.apiTopic('housing', h.env, h.ctx); await h.drain();
+  h.advance(3601000); await h.api.apiTopic('housing', h.env, h.ctx); await h.drain();
   assert.equal(h.calls.length, 12, 'completed work leaves no lock behind');
 });
 
@@ -180,7 +180,7 @@ test('stats keeps its partial cold response but never overwrites complete stale 
   assert.equal(partial.status, 200);
   assert.deepEqual(await partial.json(), {...fixture.counters, kinds: null, speeches_by_state: null});
   assert.equal(h.writes.length, 0);
-  h.seed('/api/stats', {resources: 120, kinds: {speech: 100}}, 301);
+  h.seed('/api/stats', {resources: 120, kinds: {speech: 100}}, 3601);
   const previous = h.rows.get('https://opax.com.au/api/stats');
   const stale = await h.api.apiStats(h.env, h.ctx);
   assert.equal(stale.headers.get('x-opax-cache'), 'STALE'); await h.drain();
@@ -231,7 +231,7 @@ test('warm-up waits for sibling reads after an early rejection and consumes non-
 
 test('scheduled warming continues after one endpoint fails and stays out of the social schedule', async () => {
   const h = harness({upstream: async path => path === '/counters' ? new Response(null, {status: 503}) : Response.json(fixture.catalog)});
-  h.seed('/api/stats', {resources: 10}, 301);
+  h.seed('/api/stats', {resources: 10}, 3601);
   await h.api.worker.scheduled({cron: '*/5 * * * *'}, h.env, h.ctx);
   assert.equal(h.writes.length, 22);
   assert.deepEqual(await h.rows.get('https://opax.com.au/api/stats').clone().json(), {resources: 10});
