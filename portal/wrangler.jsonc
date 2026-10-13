@@ -62,6 +62,8 @@
     "RESEARCH_LOOP_MS": "28000",
     "RESEARCH_LOOP_TOKENS": "96000",
     "RESEARCH_LOOP_DAILY_USD": "5",
+    "RESEARCH_LOOP_MODEL_ID": "@preset/opax-pro",
+    "RESEARCH_LOOP_MODEL_ALLOW": "deepseek/deepseek-v4-pro",
     "RESEARCH_LOOP_SHADOW_RATE": "0.2",
     "AUTHORISATION_LINE": "Authorised by Jake Tracey, Noice Pty Ltd, Level 6, 608/343 Little Collins Street, Melbourne VIC 3000.",
     "CORRECTION_CONTACT": "mailto:corrections@opax.com.au",

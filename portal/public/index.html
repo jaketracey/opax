@@ -1358,7 +1358,7 @@
       <p>Search runs hybrid semantic + keyword retrieval with a reranking pass. Answers are
       generated only from retrieved passages, with citations. Embeddings:
       <span id="methods-embeddings"><code>multilingual-2024-05-06</code></span>. Generation model (pinned):
-      <span id="methods-generation"><code>DeepSeek V4 Pro</code> via OpenRouter preset <code>@preset/opax-pro</code> (<code>openai-compatible</code>)</span>. Model identity may change between corpus versions and
+      <span id="methods-generation"><code>DeepSeek V4 Pro</code> via OpenRouter preset <code>@preset/opax-pro</code> (<code>openai-compatible</code>)</span>. <span id="methods-research">The Ask research loop uses <code>@preset/opax-pro</code> via OpenRouter (being evaluated; answers still come from the generation model above).</span> Model identity may change between corpus versions and
       is recorded in the manifest.</p>
 
       <h2>Reproducibility</h2>
@@ -2117,7 +2117,7 @@
 <!-- defer: never block the parser (Lighthouse counted this as render-blocking).
      Deferred scripts still run before DOMContentLoaded, so nothing changes for
      app.js's boot. ?v= is content-hash stamped by scripts/stamp_assets.mjs. -->
-<script src="/spa-shell.js?v=7d51240887" defer></script>
+<script src="/spa-shell.js?v=ee62c1489e" defer></script>
 <script src="/navigation.js?v=32c5b65527" defer></script>
 <script src="/quick-search.js?v=27eac3b2f7" defer></script>
 <script src="/ui-source.js?v=d594622c13" defer></script>
