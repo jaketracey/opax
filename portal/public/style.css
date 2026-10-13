@@ -2427,7 +2427,7 @@ a.ency-name:hover, a.ency-name:focus-visible {
 .declared-kind { margin-top: 0.15rem; color: var(--ink-faint); font-size: 0.75rem; }
 .declared-description {
   margin: 0.25rem 0 0; color: var(--ink-soft); font-size: 0.9375rem; line-height: 1.5;
-  overflow-wrap: anywhere;
+  overflow-wrap: anywhere; max-width: var(--size-readable);
 }
 .declared-source-link { display: inline-flex; align-items: center; min-height: 44px; margin-left: 0.2rem; white-space: nowrap; }
 .declared-match { margin: 0.1rem 0 0; color: var(--ink-soft); font-size: 0.8125rem; line-height: 1.5; }
