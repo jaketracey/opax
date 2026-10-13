@@ -602,6 +602,10 @@ test('a Victorian member edition carries the exact line in short copy, caption a
   assert.ok(post.text.includes(line)); assert.ok(xLength(post.text) <= X_LIMIT);
   assert.ok(post.caption.includes(line)); assert.equal(post.authorisation, line);
   assert.ok(validStory(post.slides));
+  const cta = post.slides.find(slide => slide.type === 'source');
+  assert.ok(cta, 'the Victorian post includes its closing source slide');
+  assert.equal(cta.url, post.url.replace(/^https?:\/\//, ''), 'the current sourceSlide signature carries the page address');
+  assert.equal(cta.path, undefined, 'no separate path line in new editions');
   for (const slide of post.slides) assert.equal(slide.authorisation, line);
   for (const n of storyFrames(post.slides)) assert.equal(post.slides[n - 1].authorisation, line);
 });

@@ -127,6 +127,22 @@ test('the closing slide is the page address alone: no path line under it, no wor
   }
 });
 
+test('the Victorian CTA keeps the address-only design and the exact small authorisation outside its clipped body', () => {
+  const line = 'Authorised by Jake Tracey, Noice Pty Ltd, Level 6, 608/343 Little Collins Street, Melbourne VIC 3000.';
+  assert.equal(STORY_VERSION, 4, 'changed electoral drawings invalidate the version 3 cache');
+  const slide = {...slides.source, path: 'legacy path must not be drawn', authorisation: line};
+  for (const format of ['feed', 'story']) {
+    const tree = storySlideTree(slide, {}, format);
+    assert.equal(ctaLines(tree).map(n => n.props.children).join(''), slide.url);
+    assert.ok(!texts(tree).includes('OPAX.COM.AU'));
+    assert.ok(!texts(tree).includes(slide.path));
+    const footer = tree.props.children.filter(n => n && typeof n === 'object').at(-1);
+    assert.equal(footer.props.children, line, 'authorisation is outside the clipped body');
+    assert.equal(footer.props.style.fontSize, 22);
+    assert.equal(footer.props.style.overflow, undefined);
+  }
+});
+
 // A rule is a box no taller than a hairline band with a fill and nothing in it.
 const isRule = n => n.type === 'div' && !n.props.children && Number(n.props.style?.height) <= 8 && Boolean(n.props.style?.background);
 const counterText = el => texts(el).filter(t => /^\s*\d+\s*\/\s*\d+\s*$/.test(t));
@@ -266,7 +282,16 @@ test('all nine electoral slide templates draw the exact line without clipping in
     assert.equal(authorisation.props.style.textOverflow, undefined);
     assert.equal(authorisation.props.style.overflow, undefined);
     // Exercise real font layout for each template; no missing glyph/overflow fallback.
-    const svg = await satori(tree, {...(format === 'story' ? {width:1080,height:1920} : {width:1080,height:1350}), fonts});
-    assert.ok(svg.includes('<svg'));
+    const svg = await satori(tree, {...(format === 'story' ? {width:1080,height:1920} : {width:1080,height:1350}), fonts, embedFont: false});
+    const rendered = [...svg.matchAll(/<text\b([^>]*)>([^<]*)<\/text>/g)].map(m => ({attrs: m[1], text: m[2]}));
+    const start = rendered.findIndex(n => n.text.startsWith('Authorised'));
+    assert.ok(start >= 0, `${name} (${format}): visible authorisation`);
+    const author = rendered.slice(start).filter(n => /font-size="22"/.test(n.attrs));
+    assert.equal(author.map(n => n.text).join(''), line, `${name} (${format}): full rendered line`);
+    const maximum = format === 'story' ? 1670 : 1350;
+    for (const part of author) {
+      const y = Number(/\by="([^"]+)"/.exec(part.attrs)?.[1]);
+      assert.ok(Number.isFinite(y) && y <= maximum, `${name} (${format}): inside the image and story safe area`);
+    }
   }
 });
