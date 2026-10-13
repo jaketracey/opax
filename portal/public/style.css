@@ -4071,6 +4071,8 @@ html[data-panel="chat"] footer { display: none; }
 @media (min-width: 1280px) {
   #report-stats:not(:empty) { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: var(--space-group); align-items: start; }
   #report-stats > .chart { max-width: none; }
+  /* The part's heading, its sub-heading and the figure tiles run the full row. */
+  #report-stats > :not(.chart) { grid-column: 1 / -1; }
 }
 .report-part-note {
   margin: 0 0 var(--space-4); max-width: 66ch;
