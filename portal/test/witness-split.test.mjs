@@ -8,6 +8,7 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { runInNewContext as baseVM } from 'node:vm';
 import ts from 'typescript';
+import {build} from 'esbuild';
 import { personSpeechCount } from '../../scripts/build_search_catalog.mjs';
 import { isWitness, isUnattributed, belongsToScope, scopeFilter, speakerHref, splitSpeakers, splitPerson, personScope, scopedCollaborators } from '../public/speech-attribution.js';
 
@@ -19,6 +20,8 @@ const scope = { state: 'qld', chamber: 'qld_la' };
 const plain = x => JSON.parse(JSON.stringify(x));
 const roster = JSON.parse(readFileSync(new URL('../public/parliamentarians.json', import.meta.url), 'utf8'));
 const fixture = JSON.parse(readFileSync(new URL('../../tests/fixtures/roster-export/witness-split-8e1977cf.json', import.meta.url), 'utf8'));
+const evidenceBundle = await build({stdin:{contents:"export * from './src/ask-evidence.ts'; export * from './src/position-evidence.ts'; export * from './src/search-summary.ts';",resolveDir:new URL('../',import.meta.url).pathname},bundle:true,write:false,format:'esm',platform:'node'});
+const evidence = await import('data:text/javascript;base64,'+Buffer.from(evidenceBundle.outputFiles[0].text).toString('base64'));
 
 test('13 QLD review cases restore named parties; witnesses are conserved separately and carry no MP fields', () => {
   for (const name of fixture.qld_review_names) {
@@ -93,7 +96,7 @@ test('real search code sends own-house filters and drops witness or other-house 
 
 test('real answer source cards preserve own-house attribution and clear testimony or other-house MP fields',()=>{
  const api=scopedContext(ts.transpile(select(['askPayload','foldName']))+';askPayload',{
-  ...passageText,isWitness,belongsToScope,recordSources:()=>[],
+  ...passageText,isWitness,belongsToScope,recordSources:()=>[],decodeAskAnswer:r=>r,
   label:(r,key)=>r.usermetadata.classifications.find(c=>c.labelset===key)?.label,
  });
  const resource=(chamber,speaker_type,metadata={})=>({slug:'speech-1',origin:{collaborators:['Stewart']},
@@ -112,13 +115,17 @@ test('real answer source cards preserve own-house attribution and clear testimon
 
 test('Ask scope and topic catalog use the same partition; prior citations cannot reintroduce witnesses', async () => {
   const calls = [];
+  const snippet = 'I propose a housing inquiry to examine shortages and improve local housing.';
+  const answer = 'He proposed a housing inquiry.';
+  const id = 'p/t/body/0-100';
   const api = scopedContext(ts.transpile(select(['scopeSpeakerBody', 'reasonedPositionAnswer', 'apiPersonTopics', 'speakerAttribution', 'foldName', 'canonicalSpeaker', 'TOPIC_SLUGS'])) + ';({scopeSpeakerBody,reasonedPositionAnswer,apiPersonTopics})', {
+    ...evidence,
     URL, AbortSignal, scopeFilter, personScope, scopedCollaborators, MAX_SPEAKER_CHARS: 160, NAME_RE: /^[\w ]+$/, TOPIC_FILTER_PREFIX: '/classification.labels/topic', ASK_SYNC_TIMEOUT_MS:1000,
-    buildAskBody:()=>({rag_strategies:[{name:'prequeries'}]}),isRefusal:()=>false,hasUnsupportedQuotes:()=>false,
-    askPayload:()=>({answer:'Grounded answer.',citations:{p:[[0,1]]},sources:[]}),
+    buildAskBody:()=>({query:'housing',rag_strategies:[{name:'prequeries'}]}),hasUnsupportedQuotes:()=>false,looseAnswer:p=>p,
+    askPayload:()=>({answer,answered:true,citations:{[id]:[[0,answer.length]]},sources:[]}),
     loadPeople: async () => ({ byFold: new Map([['stewart', { speech_scope: scope }]]) }),
     cachedJson: async (_key, fn) => fn(), json: x => Response.json(x),
-    kbFetch: async (_env, _path, {body}) => { calls.push(body); return Response.json({ fulltext: { total: 0, facets: {} } }); },
+    kbFetch: async (_env, _path, {body}) => { calls.push(body); return Response.json({answered:true,answer,retrieval_results:{resources:{p:{slug:'speech-1',fields:{body:{paragraphs:{[id]:{text:snippet}}}}}}},fulltext: { total: 0, facets: {} } }); },
   });
   const body = { filter_expression: { field: { prop: 'origin_collaborator', collaborator: 'Stewart' } },
     rag_strategies: [{ name: 'prequeries', queries: ['old-witness-resource'] }, { name: 'neighbouring_paragraphs' }] };
@@ -128,7 +135,7 @@ test('Ask scope and topic catalog use the same partition; prior citations cannot
   await api.apiPersonTopics(new URL('https://local.test/api/person-topics?name=Stewart'), {});
   assert.equal(calls.length, 4);
   for (const call of calls) assert.match(JSON.stringify(call.filter_expression), /qld_la/);
-  const fallback=await api.reasonedPositionAnswer({speaker:'Stewart',question:'Why?'},{scope:{speaker:'Stewart'}},{});
+  const fallback=await api.reasonedPositionAnswer({speaker:'Stewart',question:'Why?'},{scope:{speaker:'Stewart'},sources:[{slug:'speech-1',snippet}]},{});
   assert.equal(fallback.answer_status,'reasoned');
   assert.match(JSON.stringify(calls[4].filter_expression), /qld_la/);
   assert.deepEqual(plain(calls[4].rag_strategies),[]);
