@@ -13,7 +13,7 @@ export interface ResearchPayload {
   turns?: ResearchTurn[]
   cached_input_by_turn?: (number | null)[]
 }
-export interface ResearchTurn { round: number; input: number | null; output: number | null; cached_input: number | null; input_reserve: number; ms: number; cost_usd: number | null }
+export interface ResearchTurn { round: number; input: number | null; output: number | null; cached_input: number | null; input_reserve: number; ms: number; cost_usd: number | null; provider?: string; reasoning?: number | null; cached?: number | null }
 export interface Passage {
   id: string; resource: string; slug: string; title: string; text: string; url: string
   date?: string; speaker?: string; kind: string
@@ -43,7 +43,7 @@ export interface ResearchResult {
   turns?: ResearchTurn[]
 }
 export type Research = (question: string, context: ResearchContext) => Promise<ResearchResult>
-export interface ResearchStats { rounds: number; tokens: { input: number; output: number }; costUsd?: number; usageUnknown?: boolean; turns?: ResearchTurn[] }
+export interface ResearchStats { rounds: number; tokens: { input: number; output: number }; costUsd?: number; usageUnknown?: boolean; turns?: ResearchTurn[]; cachedByTurn?: (number | null)[] }
 export type ResearchStop = 'error' | 'timeout' | 'steps' | 'tokens' | 'limiter' | 'aborted' | 'malformed_args' | 'grounding' | 'no_supported_claim' | 'no_finish' | 'missing_key' | 'result_size' | 'daily_budget' | 'daily_budget_unavailable' | 'research_credit_exhausted'
 export class ResearchError extends Error {
   constructor(readonly reason: ResearchStop, readonly stats: ResearchStats = { rounds: 0, tokens: { input: 0, output: 0 } }) {

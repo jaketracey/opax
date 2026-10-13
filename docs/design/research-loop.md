@@ -195,7 +195,7 @@ research: {
   sources: [{title, url, date?, kind, speaker?}],
   ms?: number, tokens?: {input: number, output: number} | null,
   cost_usd?: number | null, failure?: ResearchStop,
-  turns?: [{round, input, output, cached_input, input_reserve, ms, cost_usd}],
+  turns?: [{round, input, output, provider, reasoning, cached, cached_input, input_reserve, ms, cost_usd}],
   cached_input_by_turn?: (number | null)[]
 }
 ```

@@ -42,6 +42,7 @@ test('SA placeholders are removed from evidence before either model, with or wit
   assert.doesNotMatch(JSON.stringify(saConversationInput({context:[{author:'answer',text:raw,sources:[record]}]},flag)),/Excerpt omitted/);
  }
  assert.equal(saExcerpt(omitted),'');
+ assert.equal(saExcerpt('[SA Hansard excerpt omitted; see the official record]'),'');
  const poisoned={...draft('Liddle'),text:omitted,citations:[{id,quote:omitted,start:0,end:omitted.length}]};
  assert.equal(verifyResearchAnswer(poisoned,new Map([[id,{...passage,text:omitted}]]),'housing',scope,undefined,roster),null);
 });

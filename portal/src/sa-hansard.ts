@@ -9,7 +9,7 @@ function containsSa(value: unknown): boolean {
   return Object.values(value).some(containsSa)
 }
 function containsPlaceholder(value: unknown): boolean {
-  return typeof value === 'string' ? /Excerpt omitted;\s*see the official record\./i.test(value)
+  return typeof value === 'string' ? /Excerpt omitted;\s*see the official record[.\]]/i.test(value)
     : !!value && typeof value === 'object' && Object.values(value).some(containsPlaceholder)
 }
 

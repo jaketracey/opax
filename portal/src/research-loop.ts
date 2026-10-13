@@ -48,7 +48,7 @@ export function createResearch(options: ResearchOptions): Research {
     context.signal.addEventListener('abort', abortParent, { once: true })
     if (context.signal.aborted) abortParent()
     const timer = setTimeout(() => controller.abort(new DOMException('Research wall cap', 'TimeoutError')), limits.wallMs)
-    const stats: ResearchStats = { rounds: 0, tokens: { input: 0, output: 0 }, turns: [] }
+    const stats: ResearchStats = { rounds: 0, tokens: { input: 0, output: 0 }, turns: [], cachedByTurn: [] }
     const steps: PlanStep[] = [], results: ToolResult[] = [], passages = new Map<string, Passage>()
     const cache = new Map<string, Promise<unknown>>()
     let calls = 0, round = 0, answerAttempts = 0, finished = false, repeated = false, numericalAnswer = false
@@ -243,7 +243,8 @@ export function createResearch(options: ResearchOptions): Research {
           turnStarted = Date.now()
           stats.usageUnknown = true
           pendingTurn = stats.turns!.length
-          stats.turns!.push({ round, input: null, output: null, cached_input: null, input_reserve: reservedInput, ms: 0, cost_usd: null })
+          stats.turns!.push({ round, input: null, output: null, cached_input: null, input_reserve: reservedInput, ms: 0, cost_usd: null, provider: '', reasoning: null, cached: null })
+          stats.cachedByTurn!.push(null)
           await context.progress('status', { phase: 'reading' })
         },
         onLanguageModelCallEnd: event => {
@@ -256,10 +257,14 @@ export function createResearch(options: ResearchOptions): Research {
           // Estimates belong in telemetry. Only a provider receipt permits a
           // refund; absent billing data keeps the full ceiling charged.
           turnCost = receipt
-          const turn = { round, input, output, cached_input: event.usage.inputTokenDetails?.cacheReadTokens ?? null,
+          const served = object(event.providerMetadata?.openrouter).provider
+          const cached = event.usage.inputTokenDetails?.cacheReadTokens ?? 0
+          const turn = { round, input, output, cached_input: cached, cached,
+            provider: typeof served === 'string' ? served.slice(0, 40) : '', reasoning: event.usage.outputTokenDetails?.reasoningTokens ?? 0,
             input_reserve: reservedInput, ms: Math.max(0, Date.now() - turnStarted), cost_usd: cost }
           if (pendingTurn === undefined) stats.turns!.push(turn)
           else stats.turns![pendingTurn] = turn
+          stats.cachedByTurn = stats.turns!.map(t => t.cached_input)
           pendingTurn = undefined
           if (cost != null && Number.isFinite(cost) && cost >= 0) stats.costUsd = (stats.costUsd ?? 0) + cost
           options.onUsage?.(stats)
@@ -282,7 +287,7 @@ export function createResearch(options: ResearchOptions): Research {
     } catch (error) {
       if (!(error instanceof ResearchError) && isResearchCreditError(error)) {
         credits.exhaust(); failed = 'research_credit_exhausted'; turnCost = 0; stats.usageUnknown = false
-        if (pendingTurn !== undefined) Object.assign(stats.turns![pendingTurn], { input: 0, output: 0, cost_usd: 0 })
+        if (pendingTurn !== undefined) Object.assign(stats.turns![pendingTurn], { input: 0, output: 0, cached: 0, cached_input: 0, reasoning: 0, cost_usd: 0 })
       }
       controller.abort(error)
       throw error instanceof ResearchError ? error : new ResearchError(failed ?? (context.signal.aborted ? 'aborted' : 'error'), stats)
@@ -296,6 +301,7 @@ export function createResearch(options: ResearchOptions): Research {
         if (options.cleanup) options.cleanup(work)
         else await work
       }
+      stats.cachedByTurn = stats.turns!.map(t => t.cached_input)
       options.onUsage?.(stats)
       clearTimeout(timer); context.signal.removeEventListener('abort', abortParent); controller.signal.removeEventListener('abort', rejectAbort)
     }

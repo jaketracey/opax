@@ -173,8 +173,13 @@ deployment, Ask, auth, or model call was made.
 
 Read Fable's offline 30-request report in the research-evals worktree. Its verdict
 remains **do not route**. Merged `origin/main` (`bb1f74703ddb30f200406bc7f71ffec8dbf5ac0d`)
-with merge commit `00226409f`, retaining the operator model/provider allowlist,
-reasoning configuration, single-host pins and existing `research.failure` API.
+with merge commit `00226409f`, then integrated the advanced shared main through
+`f17d37eaded172a4c2df53f06ac79a5f27beb87e`. Resolved the six telemetry/SA/stamp
+conflicts, retaining the operator model/provider allowlist, reasoning config,
+single-host pins, per-turn host/reasoning/cache fields and existing
+`research.failure` API. The incoming SA fix preserves federal quotations in
+mixed-source answers; the stricter round-4 boundary removes all omission labels
+instead of introducing substitute quotations.
 This handoff changes local implementation only; no production requests or
 deployment were made.
 
@@ -194,7 +199,8 @@ deployment were made.
    allowance (160,000 ceiling). Tests succeed with 63,000 cumulative reported
    tokens and cached input, independent of reserve units. `research.turns` and
    `cached_input_by_turn` retain per-turn input/output, cache reads, input reserve
-   in tokens, latency and cost. A timed-out provider turn records null usage,
+   in tokens, latency and cost, retaining main's serving `provider`, `reasoning`
+   tokens and `cached` field. A timed-out provider turn records null usage,
    while an HTTP 402 records zero provider consumption.
 5. **H04 attribution:** full names, surnames and possessives bind to the cited
    passage's speaker in both loop and ordinary Ask. A name in a quote is no
@@ -237,7 +243,7 @@ search/read/answer happy path also passes.
 
 - `npm run check`: passed.
 - `npm run build:release`: passed; photo identity and asset stamps checked.
-- `node --test --test-concurrency=4 test/research-*.test.mjs test/agentic*.test.mjs test/ask*.test.mjs test/sa-evidence.test.mjs test/sa-excerpts.test.mjs`: **451 passed**, no failures/skips.
+- `node --test --test-concurrency=4 test/research-*.test.mjs test/agentic*.test.mjs test/ask*.test.mjs test/sa-evidence.test.mjs test/sa-excerpts.test.mjs`: **452 passed**, no failures/skips.
 - Pinned Wrangler `deploy --dry-run --env=""`: passed; release default remains
   `RESEARCH_LOOP=shadow`, five numerical turns, six qualitative, 8-second wall,
   96,000 tokens and US$5 daily D1 admission.
@@ -256,3 +262,9 @@ Round 4 adds `ask-attribution.ts`, its offline fixture and
 boundaries, overview speaker provenance, usage/failure payloads, focused tests,
 Wrangler wall configuration and design docs. Release stamping updates only the
 SA module import and app stamp.
+
+Final integrated round-4 bundle, pinned Wrangler dry-run: **6,932.93 KiB raw /
+1,929.23 KiB gzip**. Delta against the initial baseline: **+722.55 KiB raw /
++145.39 KiB gzip**; against round 3: +18.20 / +5.69 KiB. Raw size is about
+6.77 MiB, below Cloudflare's currently documented 64 MiB uncompressed limit.
+The final integrated test run passed all 452 cases in 9.78 seconds.

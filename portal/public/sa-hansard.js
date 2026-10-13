@@ -2,7 +2,7 @@
 export const SA_EXCERPT_WORDS = 120;
 export const SA_EXCERPT_LABEL = "Excerpt. The full record is on the Parliament of South Australia's site.";
 export const saFullText = flag => flag === 'true';
-const OMITTED = /["“‘']?Excerpt omitted;\s*see the official record\.["”’']?/gi;
+const OMITTED = /["“‘']?(?:Excerpt omitted;\s*see the official record\.|\[SA Hansard excerpt omitted;\s*see the official record\])["”’']?/gi;
 /** A display-policy placeholder is never primary evidence. */
 export const withoutSaPlaceholder = value => String(value || '').replace(OMITTED, '');
 const containsOmission = value => typeof value === 'string' ? withoutSaPlaceholder(value) !== value : !!value && typeof value === 'object' && Object.values(value).some(containsOmission);
@@ -95,8 +95,9 @@ function displayAnswer(payload, sources, originals, budgets, fullText = false) {
   const original = payload[key], edits = [], selected = new Map();
   for (const match of original.matchAll(new RegExp(OMITTED.source, 'gi'))) edits.push({start:match.index,end:match.index+match[0].length,text:''});
   if (!restricted.length && !edits.length) return payload;
-  const add = (start, end, source, quoted = false) => {
-    if (edits.some(e => e.start < end && e.end > start)) return;
+  const add = (start, end, source, quoted = false, outer = null) => {
+    const span = outer || {start, end};
+    if (edits.some(e => e.start < span.end && e.end > span.start)) return;
     const id = source.resource || source.id || source.slug;
     const remaining = SA_EXCERPT_WORDS - (budgets.get(id) || 0);
     const body = original.slice(start, end);
@@ -104,7 +105,8 @@ function displayAnswer(payload, sources, originals, budgets, fullText = false) {
     budgets.set(id, (budgets.get(id) || 0) + words(text.replace(/…/g, '')).length);
     if (text) selected.set(id, [...(selected.get(id) || []), text]);
     // Omitted quotations disappear as a whole, including their quote marks.
-    if (!text && /["“‘']/.test(original[start-1] || '') && /["”’']/.test(original[end] || '')) { start--; end++; }
+    if (!text && outer) { start = outer.start; end = outer.end; }
+    else if (!text && /["“‘']/.test(original[start-1] || '') && /["”’']/.test(original[end] || '')) { start--; end++; }
     edits.push({start, end, text});
   };
   // Evidence-only answers can reproduce a passage without quotation marks.
@@ -132,12 +134,17 @@ function displayAnswer(payload, sources, originals, budgets, fullText = false) {
     }
   }
   // Quotes may exceed the retrieved snippet. A cited SA answer must still cap them.
+  const textOf = s => String(s.snippet || s.passage || '');
+  const unrestricted = sources.filter(s => !isSaHansard(s));
   for (const m of original.matchAll(/“([^”]+)”|"([^"\n]+)"|^>\s*(.+(?:\n>\s*.+)*)/gm)) {
     if (!restricted.length) continue;
-    const quote = m[1] || m[2] || m[3];
-    const source = restricted.find(s => String(s.snippet || s.passage || '').includes(quote.slice(0, 40))) || restricted[0];
+    const quote = m[1] || m[2] || m[3], head = quote.slice(0, 40);
+    const saSource = restricted.find(s => textOf(s).includes(head));
+    // A verbatim federal/state quote keeps its own source's permission.
+    if (!saSource && unrestricted.some(s => textOf(s).includes(head))) continue;
+    const source = saSource || restricted[0];
     const offset = m[0].indexOf(quote);
-    add(m.index + offset, m.index + offset + quote.length, source, true);
+    add(m.index + offset, m.index + offset + quote.length, source, true, {start:m.index,end:m.index+m[0].length});
   }
   // If originals are unavailable, fail closed on a potentially copied long answer.
   if (restricted.some(s => !originals.has(s.resource || s.id || s.slug)) && words(original).length > SA_EXCERPT_WORDS) {
@@ -176,7 +183,7 @@ export function saDisplayPayload(value, flag, match = '', originals = new Map(),
   if (saFullText(flag) && !containsOmission(value)) return value;
   if (Array.isArray(value)) return value.map(v => saDisplayPayload(v, flag, match, originals, excerpts, budgets, answers));
   const sources = Array.isArray(value.sources) ? value.sources : [];
-  const hasPlaceholder = /Excerpt omitted;\s*see the official record\./i.test(String(value.answer || value.text || ''));
+  const hasPlaceholder = withoutSaPlaceholder(String(value.answer || value.text || '')) !== String(value.answer || value.text || '');
   const answered = {...(answers || hasPlaceholder ? displayAnswer(value, sources, originals, budgets, saFullText(flag)) : value)};
   const displayedSources = answered.sources || sources;
   const displayRecord = record => {
