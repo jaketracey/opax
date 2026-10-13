@@ -1,0 +1,34 @@
+{
+  "preview": "Local Worker; staged in-memory asset binding; no production bindings",
+  "stagedSha256": "ef0b7067f69d949d4604478c77b33f408b2c977f31aafc83bd54ef31eafba404",
+  "codeHashes": {
+    "portal/src/index.ts": "b36a421b7758f02b7e6fd7e76e6e26b8983508b23f18ae2994ad3ea0f1cd4d1d",
+    "portal/src/vic-gifts.ts": "618c669a33fe2174e8284138f2932924062dfc10ae0cb5fd95a3aa327fba513e",
+    "portal/public/register-tables.js": "1926756d1c1a77de60f28b268262240c520656b6b58c4c4ee0f7a9d5a0330511",
+    "portal/public/register-tables-entry.js": "c29952fdd1dcff1f0b693a9645fb8e68e32b93a640ef4fbd8f6a1bdb80c90f3e",
+    "portal/public/app.js": "8da46248efafb83c5e5ab3481b77dd0b2bc8f99e6e4f82c2ea12cd80abb7a1f8",
+    "portal/public/vic-gifts.css": "3a19e204b428bc8da1e51883f7580cea6a4be4d6958c804aa0f31422625d5ca8"
+  },
+  "results": [
+    {
+      "width": 390,
+      "status": 200,
+      "horizontalOverflow": false,
+      "total": 282,
+      "holderTotals": 43
+    },
+    {
+      "width": 1440,
+      "status": 200,
+      "horizontalOverflow": false,
+      "total": 282,
+      "holderTotals": 43
+    }
+  ],
+  "officialSearch": 32,
+  "giverSearchHits": 0,
+  "csvReceipts": true,
+  "ssr": true,
+  "personSSR": true,
+  "pageErrors": []
+}

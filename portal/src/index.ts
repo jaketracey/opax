@@ -30,6 +30,7 @@ import { normalizePassage, passageWindow } from './passage-text'
 import { instrumentPage, instrumentReader } from './instruments'
 import { budgetPage, budgetReader } from './budget'
 import { auditPage, auditReader } from './audit'
+import { vicGiftsPage, vicGiftsReader, vicGiftsPersonBlock, vicGiftsResponse } from './vic-gifts'
 import {parseQuery,serializeQuery,type Page} from '../public/datatable.js'
 import {partyMoneyData,partyMoneyTableConfig,registerTableHTML} from '../public/register-tables.js'
 import {grantsHTML} from './grants-table'
@@ -3610,6 +3611,7 @@ type SeoRoute =
   | { kind: 'hub'; hub: 'sitting' | 'estimates' | 'vic-election'; id: string | null }
   | { kind: 'instruments'; id: string | null }
   | { kind: 'budget' }
+  | { kind: 'vic-gifts' }
   | { kind: 'audit'; id: string | null }
   | { kind: 'static'; page: keyof typeof STATIC_PAGES }
   | { kind: 'report'; slug: string }
@@ -3666,6 +3668,7 @@ function matchSeoRoute(url: URL): SeoRoute | null {
     catch { return { kind: 'audit', id: '' } }
   }
   if (path === '/budget') return { kind: 'budget' }
+  if (path === '/register/vic-gifts') return { kind: 'vic-gifts' }
   if (path === '/instruments') return { kind: 'instruments', id: null }
   if (path === '/instrument' || path.startsWith('/instrument/')) {
     try { return { kind: 'instruments', id: decodeURIComponent(path.slice('/instrument/'.length)) } }
@@ -4191,6 +4194,7 @@ async function buildRouteMeta(route: SeoRoute, url: URL, request: Request, env: 
     case 'audit': return base({ ...await auditPage(route.id, url, auditReader(env.ASSETS), prerenderBlock),
       ...(route.id && AUDIT_ID.test(route.id) ? { canonical: `${SITE_ORIGIN}/audit/${route.id}` } : {}) })
     case 'budget': return base(await budgetPage(url, budgetReader(env.ASSETS), prerenderBlock))
+    case 'vic-gifts': return base(await vicGiftsPage(url, vicGiftsReader(env.ASSETS), prerenderBlock))
     case 'instruments': return base(await instrumentPage(route.id, url, instrumentReader(env.ASSETS), prerenderBlock, env.TABLE_DB ? async query=>{
       const endpoint=new URL('/api/table/instruments',url)
       endpoint.search=serializeQuery({...query,sort:query.sort || {key:'title',dir:'asc'}})
@@ -4378,7 +4382,7 @@ async function buildMeta(route: SeoRoute, url: URL, request: Request, env: Env, 
         const identity={...profiles?.by_name[foldName(p.name)],...profiles?.people[p.pid || '']}
           const query = guardTableURL(voteTableConfig(p.pid || ''),url).query
         const content = await timed('person-render', () => renderPersonAnswer(p,read,people.slugOf,identity.aphProfileUrl || undefined,url.searchParams))
-        meta.prerender = content.html
+        meta.prerender = content.html + (p.representation?.some(r=>r.jurisdiction==='vic') ? `<div class="wrap">${await vicGiftsPersonBlock(new URL(meta.canonical).pathname,vicGiftsReader(env.ASSETS),url)}</div>` : '')
         if(content.description) meta.description=clip(content.description)
         const photos=await loadPhotos(env).catch(()=>null)
         personIdentity={...identity,portraitId:photoIdFor(photos,p.name)}
@@ -5437,6 +5441,10 @@ async function renderSeoPage(route: SeoRoute, url: URL, request: Request, env: E
     if (/\/(app|spa-entry|spa-shell)\.js(?:\?|$)/.test(el.getAttribute('src') || '')) el.remove()
   } }).on('a[href^="/subject/person"]', { element(el) { el.remove() } })
   if (route.kind === 'budget') rewriter.on('head', { element(el) { el.append('<link rel="stylesheet" href="/datatable.css"><link rel="stylesheet" href="/budget.css"><script type="module" src="/budget.js"></script>', {html:true}) } })
+  if (route.kind === 'vic-gifts') rewriter.on('script[src]', { element(el) {
+    if (/\/(app|spa-entry|spa-shell)\.js(?:\?|$)/.test(el.getAttribute('src') || '')) el.remove()
+  } })
+  if (route.kind === 'vic-gifts' || route.kind === 'subject' && route.dir === 'person') rewriter.on('head', { element(el) { el.append('<link rel="stylesheet" href="/vic-gifts.css">',{html:true}) } })
   rewriter.on('main#main', { element(el) { el.setAttribute('data-server-rendered',''); el.setInnerContent(meta.prerender || '', { html: true }) } })
   const out = rewriter.transform(shell)
   const headers = new Headers(out.headers)
@@ -6466,6 +6474,7 @@ export default {
     const url = new URL(request.url)
     if (url.pathname === '/api/register/party-money') return withSecurityHeaders(await partyMoneyResponse(request,env.ASSETS),url)
     if (url.pathname === '/api/register/interests') return withSecurityHeaders(await interestRegisterResponse(request,env.ASSETS),url)
+    if (url.pathname === '/api/register/vic-gifts') return withSecurityHeaders(await vicGiftsResponse(request,vicGiftsReader(env.ASSETS)),url)
     const display = (response: Response, target = url) => {
       if (!/^\/api\/(?:resource\/[^/]+|search|search-all|search-summary|ask)$/.test(target.pathname) && !/^\/reports\/[^/]+\.json$/.test(target.pathname)) return Promise.resolve(response)
       return Promise.resolve(response).then(safe => saPublicResponse(safe, env.SA_HANSARD_FULL_TEXT, async slug => {

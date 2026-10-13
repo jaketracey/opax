@@ -49,6 +49,34 @@ export function interestTableConfig(rows) {
       {key:'date',label:'Date',type:'date'}],primaryLink:row=>href(row.source)};
 }
 
+/** This source keeps givers record-only. Its endpoint searches official fields. */
+export function vicGiftsTableConfig(params = {}) {
+  return {id:'vic-gifts-table',caption:'Published gifts, benefits and hospitality',pageType:'vic-gifts',urlKey:'vicGifts',pageSize:25,
+    source:{endpoint:'/api/register/vic-gifts',params},defaultSort:{key:'office_holder',dir:'asc'},export:{filename:'vic-gifts.csv'},
+    columnsVisible:['office_holder','role','portfolio','description','giver','source_locator'],
+    columns:[{key:'office_holder',label:'Office holder',type:'text',primary:true},
+      {key:'role',label:'Role',type:'category',facet:'multi'},
+      {key:'portfolio',label:'Portfolio',type:'text'},
+      {key:'period',label:'Period',type:'category',facet:'multi'},
+      {key:'description',label:'Description',type:'text',sortable:false},
+      {key:'giver',label:'Giver as published',type:'text',sortable:false},
+      {key:'date',label:'Date as published',type:'text',sortable:false},
+      {key:'estimated_value',label:'Estimated value as published',type:'text',sortable:false},
+      {key:'action_taken',label:'Action taken as published',type:'text',sortable:false},
+      {key:'source_locator',label:'Source row',type:'text',href:row=>href(row.source_url)},
+      {key:'source_url',label:'Source URL',type:'text',sortable:false},
+      {key:'snapshot',label:'Snapshot',type:'text',sortable:false},
+      {key:'sha256',label:'SHA-256',type:'text',sortable:false},
+      {key:'licence',label:'Licence',type:'text',sortable:false},
+      {key:'licence_url',label:'Licence URL',type:'text',sortable:false}],primaryLink:row=>row.href || null};
+}
+
+/** No giver, description or action text participates in search or facets. */
+export function vicGiftsQuery(rows, config, query = {}) {
+  const searched = query.q ? applyQuery(rows,{...config,columns:config.columns.filter(c=>['office_holder','role','portfolio','period','date'].includes(c.key))},{q:query.q,pageSize:50000}).rows : rows;
+  return applyQuery(searched,config,{...query,q:undefined});
+}
+
 /** Keep every disclosed donor; party transfers and grants are excluded. */
 export function partyMoneyData(graph, partyId) {
   const donors = new Map(graph.nodes.filter(node=>node.kind === 'donor').map(node=>[node.id,node]));
@@ -104,6 +132,7 @@ export function hydrateRegisterTables(root = document) {
     if (config.id === 'instruments-table') Object.assign(config,instrumentTableConfig());
     else if (config.id === 'audit-table') Object.assign(config,{columns:auditTableConfig([]).columns,primaryLink:row=>`/audit/${row.id}`});
     else if (config.urlKey === 'interests') Object.assign(config,{primaryLink:row=>href(row.source)});
+    else if (config.urlKey === 'vicGifts') { const factory=vicGiftsTableConfig(config.source?.params); Object.assign(config,{columns:factory.columns,primaryLink:factory.primaryLink}); }
     else Object.assign(config,{primaryLink:row=>row.href || null});
     script.remove();
     const mounted = mountRegisterTable(el,config);

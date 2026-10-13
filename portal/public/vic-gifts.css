@@ -1,0 +1,11 @@
+.vic-gifts-content{padding-block:var(--space-section);color:var(--ink);--money-ink:var(--interests-ink);--money-wash:var(--interests-wash)}
+.vic-gifts-content section{margin-block:var(--space-section);border-top:1px solid var(--divider-default);padding-top:var(--space-group)}
+.vic-gifts-content h2{font:var(--type-heading);margin-bottom:var(--space-block)}
+.vic-gifts-periods{display:flex;flex-wrap:wrap;gap:var(--space-tight);margin-bottom:var(--space-group)}
+.vic-gifts-periods a{padding:var(--space-tight) var(--space-row);border:1px solid var(--divider-subtle);border-radius:var(--radius-sm)}
+.vic-gifts-periods [aria-current]{background:var(--navy);color:var(--on-navy)}
+.vic-gifts-totals{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,18rem),1fr));gap:var(--space-row) var(--space-group);list-style:none;padding:0}
+.vic-gifts-totals li{display:flex;justify-content:space-between;gap:var(--space-row);border-bottom:1px solid var(--divider-subtle);padding-block:var(--space-tight)}
+.vic-gifts-totals span{white-space:nowrap;font-variant-numeric:tabular-nums;color:var(--ink-soft)}
+.vic-gifts-receipt{font:var(--type-fine);color:var(--ink-soft);overflow-wrap:anywhere;margin-block:var(--space-row)}
+.vic-gifts-content [data-register-table]{margin-block:var(--space-group)}
