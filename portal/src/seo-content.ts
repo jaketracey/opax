@@ -1,9 +1,12 @@
+import {decodeHTMLStrict} from 'entities'
 import {donorDisclosure,donorLabelHTML,type DonorDisclosureRecord} from '../public/donor-disclosure.js'
 import { shortDate } from '../public/format.js'
 import { personUrl, partyUrl } from '../public/canonical-urls.js'
 import {sponsorPerson} from '../public/sponsor-person.js'
 import {currentSittingPath, sydneyDay} from '../public/hubs-data.js'
 import {renderDivisionMarkdown, divisionPlain, billNoteRepair, billStripTitle, billStripStage} from '../public/division-markdown.js'
+import {guardTableURL,parseQuery,serializeQuery,type DataTableConfig} from '../public/datatable.js'
+import {interestTableData,interestTableConfig,partyMoneyData,partyMoneyTableConfig,registerTableHTML} from '../public/register-tables.js'
 import {machineLabelHTML} from '../public/labels.js'
 import {heldBackTranscriptsHTML, chairRoleTranscriptsHTML} from '../public/held-back-transcripts.js'
 import {divisionTableConfig, voteTableConfig, personVoteKeys, divisionRows, votingRows, voteTablePage, voteTableHTML} from '../public/vote-tables.js'
@@ -40,7 +43,7 @@ interface Votes { name: string; jurisdiction: string; for?: Vote[]; against?: Vo
 interface RecentVotes { _meta: { schema: number; source: string; coverage: string }; people: Record<string, { name: string; jurisdiction: string; recent: Vote[] }> }
 interface Interest {
   source_url?: string; total: number; as_at?: string; ocr_rows?: number; unread_pages?: number;
-  buckets: Record<string, { count: number; items: { description: string; holder?: string; page?: number }[] }>;
+  buckets: Record<string, { count: number; items: { description: string; holder?: string; page?: number; date?: string; url?: string }[] }>;
 }
 interface MoneyNode { id: string; label: string; kind: string; industry?: string; aliases?: string[]; total: number }
 interface MoneyGraph { meta: { sourceShort?: string; source?: string; coverage?: string; source_url?: string }; nodes: MoneyNode[]; edges: { source: string; target: string; total: number; grant?: boolean; flow?: string }[] }
@@ -69,16 +72,38 @@ const CRUMB_SEP = '<svg class="crumb-sep" viewBox="0 0 6 10" aria-hidden="true">
  *  under the masthead; once the app takes a page over it is hidden with
  *  #prerender and the app's own #crumbs speaks instead. No trail, no strip. */
 export function crumbsHTML(items: Crumb[] = []): string {
-  if (!items.length) return ''
-  const trail: Crumb[] = [{ label: 'Home', href: '/' }, ...items]
-  const label = (s: string) => { const t = String(s || '').replace(/\s+/g, ' ').trim(); return t.length > 60 ? `${t.slice(0, 59).trimEnd()}…` : t }
+  const trail = crumbSteps(items)
+  if (!trail.length) return ''
   const steps = trail.map((it, i) => {
-    const here = i === trail.length - 1, href = !here && it.href ? safeHref(it.href) : null
-    const text = escapeHtml(label(it.label))
-    const el = href ? `<a class="crumb-label" href="${escapeHtml(href)}">${text}</a>` : `<span class="crumb-label">${text}</span>`
+    const here = i === trail.length - 1
+    const text = escapeHtml(it.label)
+    const el = it.href ? `<a class="crumb-label" href="${escapeHtml(it.href)}">${text}</a>` : `<span class="crumb-label">${text}</span>`
     return `<li${here ? ' class="crumb-here" aria-current="page"' : ''}>${i ? CRUMB_SEP : ''}${el}</li>`
   }).join('')
   return `<nav class="crumbs prerender-crumbs" aria-label="Breadcrumb"><ol class="wrap crumbs-list">${steps}</ol></nav>`
+}
+/** A trail as it is shown, Home first: each label on one line (60 characters
+ *  at most), each ancestor's address checked, the page itself unlinked. The
+ *  strip and the page's BreadcrumbList both read it, so they cannot differ. */
+export function crumbSteps(items: Crumb[] = []): { label: string; href: string | null }[] {
+  if (!items.length) return []
+  const trail: Crumb[] = [{ label: 'Home', href: '/' }, ...items]
+  const label = (s: string) => { const t = String(s || '').replace(/\s+/g, ' ').trim(); return t.length > 60 ? `${t.slice(0, 59).trimEnd()}…` : t }
+  return trail.map((it, i) => ({ label: label(it.label), href: i < trail.length - 1 && it.href ? safeHref(it.href) || null : null }))
+}
+/** The trail a renderer already printed into its block (server-only pages
+ *  write their own strip), after Home; null when the block has none. */
+export function printedTrail(html: string | null | undefined): Crumb[] | null {
+  const strip = /<nav class="crumbs prerender-crumbs"[^>]*>([\s\S]*?)<\/nav>/.exec(html || '')?.[1]
+  if (!strip) return null
+  const steps = [...strip.matchAll(/<(a|span) class="crumb-label"(?: href="([^"]*)")?>([\s\S]*?)<\/\1>/g)]
+    .map(([, , href, text]) => ({ label: decodeHTMLStrict(text.replace(/<[^>]+>/g, '')), ...(href ? { href: decodeHTMLStrict(href) } : {}) }))
+  return steps.slice(1)
+}
+/** The text of a block's first heading: the name the page gives itself. */
+export function headingOf(html: string | null | undefined): string {
+  const h1 = /<h1\b[^>]*>([\s\S]*?)<\/h1>/.exec(html || '')?.[1]
+  return h1 ? decodeHTMLStrict(h1.replace(/<[^>]+>/g, '')).replace(/\s+/g, ' ').trim() : ''
 }
 /** The crawlable answer: one title, one sentence, the body. No kicker: the
  *  title says what the page is once (principle 3), and a server-only page's
@@ -132,7 +157,10 @@ function paginate(url: URL, rows: { href: string; label: string; detail?: string
 }
 const optional = async <T>(read: ReadAsset, path: string): Promise<T | null> => read<T>(path).catch(() => null)
 
-export async function renderPersonAnswer(p: Person, read: ReadAsset, slugs: Map<string,string>, profileUrl?: string, tableQuery: Query = {}): Promise<RenderedContent> {
+export async function renderPersonAnswer(p: Person, read: ReadAsset, slugs: Map<string,string>, profileUrl?: string, tableState: URLSearchParams | Query = {}): Promise<RenderedContent> {
+  const tableParams=tableState instanceof URLSearchParams ? tableState : new URLSearchParams(serializeQuery(tableState,'vr'))
+  const tableQuery=parseQuery(tableParams,'vr')
+  const registerHTML=(config:DataTableConfig)=>registerTableHTML(config,undefined,new URL('https://local.invalid/?'+tableParams))
   const [voteData, interests, seats, bills, sponsored, recentData, heldBackCounts, chairRoleCounts] = await Promise.all([
     optional<Record<string, Votes | Record<string,string[]>>>(read,'/votes.json'),
     optional<{people: Record<string,unknown>; _by_name: Record<string,string>}>(read,'/interests/index.json'),
@@ -173,12 +201,12 @@ export async function renderPersonAnswer(p: Person, read: ReadAsset, slugs: Map<
     body += '<h2>Declared interests</h2>'
     if (register) {
       if (register.as_at) body += `<p>Updated ${escapeHtml(shortDate(register.as_at))}</p>`
-      body += `<p>${count(register.total)} recorded entries${register.as_at ? ` in the latest register snapshot, as at ${escapeHtml(register.as_at)}` : ''}.</p><ul>`
-      for (const [name,bucket] of Object.entries(register.buckets).slice(0,20)) {
-        const items = bucket.items
-        body += `<li>${escapeHtml(human(name))}: ${count(bucket.count)}<ul>${items.slice(0,3).map(i=>`<li>${escapeHtml(i.description)}${i.holder ? ` (${escapeHtml(i.holder)})` : ''}${i.page ? `, source page ${escapeHtml(i.page)}` : ''}</li>`).join('')}</ul></li>`
-      }
-      body += '</ul>'
+      body += `<p>${count(register.total)} recorded entries${register.as_at ? ` in the latest register snapshot, as at ${escapeHtml(register.as_at)}` : ''}.</p>`
+      const {rows} = interestTableData(register)
+      const config = interestTableConfig(rows)
+      config.id = 'ssr-interests-table'
+      body += registerHTML(config)
+      body += '<p>Date is the notification date where supplied, otherwise the register snapshot date. Check the official entry for holders and alterations.</p>'
       body += original(register.source_url)
       if (register.ocr_rows || register.unread_pages) body += `<p>Some entries use OCR. ${register.unread_pages || 0} unread source pages; check the original register.</p>`
     } else body += '<p>No register of interests in this export.</p>'
@@ -188,10 +216,9 @@ export async function renderPersonAnswer(p: Person, read: ReadAsset, slugs: Map<
     const graph = await optional<MoneyGraph>(read,path)
     const node = graph?.nodes.find(n=>n.kind==='party' && fold(n.label)===fold(party))
     if (!graph || !node) continue
-    const donors = new Map(graph.nodes.filter(n=>n.kind==='donor').map(n=>[n.id,n]))
-    const flows = graph.edges.filter(e=>e.target===node.id && !e.grant && !e.flow && donors.has(e.source))
-    const ranked=flows.sort((a,b)=>b.total-a.total).slice(0,10)
-    body += `<h3>${escapeHtml(source)} disclosed receipts</h3><p>${escapeHtml(graph.meta.coverage || '')}</p><ul>${ranked.map(e=>`<li>${donorLabelHTML(donors.get(e.source)!,{return_type:source+' disclosure return',url:graph.meta.source_url})} — ${currency(e.total)}</li>`).join('')}</ul>`
+    const {rows} = partyMoneyData(graph,node.id)
+    const config = partyMoneyTableConfig(rows,`person-party-money-${source.toLowerCase()}`,`partyMoney${source}`,'person')
+    body += `<h3>${escapeHtml(source)} disclosed receipts</h3><p>${escapeHtml(graph.meta.coverage || '')}</p>${registerHTML(config)}`
     body += `<p>Source: ${escapeHtml(graph.meta.sourceShort || graph.meta.source || source)}. Federal and state returns are shown separately and never summed.</p>${original(graph.meta.source_url || (source==='AEC' ? 'https://transparency.aec.gov.au/' : source==='ECQ' ? 'https://disclosures.ecq.qld.gov.au/' : 'https://disclosures.vec.vic.gov.au/'))}`
   }
   const owned = sponsored?.sponsored[p.pid || p.name] || []
@@ -229,15 +256,9 @@ export function renderBillAnswer(b: Bill, people: Person[], slugs: Map<string,st
   const rows = divisionRows(divisions,true)
   const block = () => rows.length ? voteTableHTML(config,voteTablePage(rows,config,tableQuery)) : '<h2>Divisions</h2><p>No divisions recorded. Most questions are decided on the voices; this does not establish that a bill was unopposed.</p>'
   const output = () => answerBlock(title,description,body.replace(divisionSlot,block()))
-  let html=output()
-  if (!billBodyFits(html)) html=answerBlock(title,description,`<p>This record exceeds the page display limit. Stages, division tallies and model attribution are available in the ${link(`/bills/${b.key}.json`,'complete bill export')}.</p>`)
-  return {html}
+  return {html:output()}
 }
-export const BILL_MAX_INTERNAL_LINKS = 300
-export const BILL_MAX_BODY_BYTES = 80_000
 export const internalLinkCount = (html: string) => (html.match(/<a\b[^>]*href="(?:\/(?!\/)|https:\/\/opax\.com\.au\/)/g) || []).length
-// Leave room for the shell's navigation/footer links in the 300-link page ceiling.
-const billBodyFits = (html: string) => internalLinkCount(html)<=BILL_MAX_INTERNAL_LINKS-70 && new TextEncoder().encode(html).length<=BILL_MAX_BODY_BYTES
 function divisionVotes(d: Division, people: Person[], slugs: Map<string,string>, full=true, partyLinks=true): string {
   const members=d.members || []
   const parties=d.party_tallies || [...new Set(members.filter(m=>m.party).map(m=>m.party!))].map(party=>({party,votes:Object.fromEntries([...new Set(members.filter(m=>m.party===party).map(m=>m.vote))].map(vote=>[vote,members.filter(m=>m.party===party && m.vote===vote).length]))}))

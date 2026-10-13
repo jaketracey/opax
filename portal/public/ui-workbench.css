@@ -3,18 +3,20 @@
 .ui-workbench-page { scroll-padding-top: 1rem; }
 .wb-header .logo-mark { width: var(--size-control-large); height: var(--size-control-large); }
 .workbench { max-width: 1180px; width: 100%; margin: auto; padding: 0 clamp(1.25rem, 5vw, 4rem) 4rem; }
-.wb-header { background: var(--navy); color: var(--on-navy); padding: 1.25rem clamp(1.25rem, 5vw, 4rem); display: flex; align-items: center; justify-content: space-between; gap: 1rem; border-bottom: 3px solid var(--bronze-bright); }
+.wb-header { position: sticky; top: 0; z-index: 50; background: var(--navy); color: var(--on-navy); padding: 1.25rem clamp(1.25rem, 5vw, 4rem); display: flex; align-items: center; justify-content: space-between; gap: 1rem; border-bottom: 3px solid var(--bronze-bright); }
+/* Pinned, with its rings on navy, as when style.css's bare header rule drew it. */
+.wb-header :focus-visible { outline-color: var(--bronze-bright); }
 .wb-header a { color: inherit; text-decoration: none; font: 700 1.2rem var(--serif); }
 .wb-header span { color: var(--on-navy-soft); font-size: .8125rem; }
 .wb-intro { padding: 3rem 0 2rem; }
-.wb-intro h1 { font: var(--heading-page); margin: .5rem 0 1rem; max-width: none; }
+.wb-intro h1 { font: var(--type-title); margin: .5rem 0 1rem; max-width: none; }
 .wb-intro > p:last-child { max-width: 65ch; color: var(--ink-soft); font-size: 1.0625rem; }
-.wb-nav { display: flex; flex-wrap: wrap; gap: .5rem 1.5rem; padding: 1rem 0; border-block: 1px solid var(--line); }
+.wb-nav { display: flex; flex-wrap: wrap; gap: .5rem 1.5rem; padding: 1rem 0; border-block: 1px solid var(--divider-subtle); }
 .wb-nav a { color: var(--ink); font-size: .875rem; text-underline-offset: .3em; }
 .wb-section { padding-top: 3rem; scroll-margin-top: 1rem; }
-.wb-section h2 { font: var(--heading-section); margin: .4rem 0 .75rem; }
+.wb-section h2 { font: var(--type-heading); margin: .4rem 0 .75rem; }
 .wb-section > p { color: var(--ink-soft); max-width: 72ch; }
-.wb-panel { padding: clamp(1rem, 3vw, 2rem); background: var(--paper-raised); border: 1px solid var(--line); border-radius: 6px; margin-top: 1.25rem; min-width: 0; }
+.wb-panel { padding: clamp(1rem, 3vw, 2rem); background: var(--paper-raised); border: 1px solid var(--divider-subtle); border-radius: 6px; margin-top: 1.25rem; min-width: 0; }
 .wb-caption { display: block; color: var(--ink-soft); font: 600 .75rem/1.5 var(--sans); margin: 0 0 .9rem; letter-spacing: .025em; }
 .wb-stack { display: grid; gap: 1.75rem; }
 .wb-row { display: flex; align-items: center; flex-wrap: wrap; gap: .75rem; }
@@ -25,7 +27,7 @@
 .wb-sizes { display: grid; gap: 1.5rem; }
 .wb-sizes .ui-field { width: min(100%, 300px); }
 .wb-sizes .wb-row { align-items: end; }
-.wb-foot { background: transparent; margin-top: 3rem; padding-top: 1.5rem; border-top: 1px solid var(--line); color: var(--ink-soft); font-size: .875rem; }
+.wb-foot { background: transparent; margin-top: 3rem; padding-top: 1.5rem; border-top: 1px solid var(--divider-subtle); color: var(--ink-soft); font-size: .875rem; }
 @media (max-width: 640px) {
   .wb-grid { grid-template-columns: minmax(0, 1fr); }
   .wb-intro { padding-top: 2rem; }

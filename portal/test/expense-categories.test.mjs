@@ -40,7 +40,7 @@ test('/expenses renders the note with working links to both works and both licen
   const context = {$: id => (id === 'expenses-defs' ? body : null), loadExpenseDefs: async () => defs};
   runInNewContext(source + '\nthis.render = renderExpenseGlossary;', context);
   await context.render();
-  const section = body.innerHTML.split('<h3>Sources and licences</h3>')[1];
+  const section = body.innerHTML.split('<h2 class="ui-section-title">Sources and licences</h2>')[1];
   assert.ok(section, 'the sources section renders');
   const links = [...section.matchAll(/<a href="([^"]+)" rel="([^"]+)" target="_blank">([^<]+)<\/a>/g)]
     .map(([, href, rel, label]) => [href, rel, label]);

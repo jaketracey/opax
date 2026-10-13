@@ -20,7 +20,7 @@ import { sourceLineHTML, partyLabelHTML } from './labels.js?v=fc03aa14cf';
 import { subjectUrl } from './canonical-urls.js?v=225d5915ea';
 import { shortMoney, shortDate } from './format.js?v=9fcab43d8d';
 
-const STYLE_HREF = '/money-explain.css?v=39bdb46509';
+const STYLE_HREF = '/money-explain.css?v=7738084ea5';
 
 // --- sources -------------------------------------------------------------------
 // The pages behind the "what the record does and doesn't show" notes. Each was
@@ -513,7 +513,7 @@ export function narrative(flow, { partyName = (l) => l } = {}) {
     const givers = flow.named.length;
     out.push(`${plural(givers, `${industryName(flow.state.industry).toLowerCase()} donor`)} on OPAX’s map ${givers === 1 ? 'accounts' : 'account'} for ${money(total)} to ${to} across ${plural(count, 'receipt')}${when ? `, from ${when}` : ''}.`);
   }
-  if (flow.coarse) out.push(`${kind === 'unnamed' ? '' : 'OPAX names organisations only, and none of these donors is named, so they are shown as a group. '}For a group of fewer than ${AGGREGATE_FLOOR} donors this page gives the total and the count only.`);
+  if (flow.coarse) out.push(`${kind === 'unnamed' ? '' : ''}For a group of fewer than ${AGGREGATE_FLOOR} donors this page gives the total and the count only.`);
   if (peak && yearsWithMoney > 1) {
     const latestPart = latest && latest.year !== peak.year ? ` The latest year with money is ${yearPhrase(latest.year, flow.jur, flow.electionYears)}: ${money(latest.amount)}.` : '';
     out.push(`The largest year was ${yearPhrase(peak.year, flow.jur, flow.electionYears)}: ${money(peak.amount)} across ${plural(peak.count, 'receipt')}, ${pctText(peak.amount, total)} of the flow.${latestPart}`);
@@ -522,7 +522,7 @@ export function narrative(flow, { partyName = (l) => l } = {}) {
   if ((kind === 'party' || kind === 'industry') && flow.named.length) {
     const top = flow.named.slice(0, 3).map((r) => `${r.node.label} (${money(r.total)})`);
     const lead = top.length === 1 ? top[0] : `${top.slice(0, -1).join(', ')} and ${top.at(-1)}`;
-    out.push(`The largest named ${top.length === 1 ? 'giver is' : 'givers are'} ${lead}.${unnamed.donors ? ` ${unnamedDonorLabel(unnamed.donors)} account for ${money(unnamed.total)}.` : ''}`);
+    out.push(`The largest ${top.length === 1 ? 'giver is' : 'givers are'} ${lead}.`);
   }
   if ((kind === 'donor' || (kind === 'industry' && !party)) && flow.parties.length) {
     const top = flow.parties[0];

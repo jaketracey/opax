@@ -6,7 +6,7 @@ import {readFileSync,writeFileSync} from 'node:fs';
 import {runInNewContext as baseVM} from 'node:vm';
 import ts from 'typescript';
 import {build} from 'esbuild';
-import {saEvidenceText,saEvidenceRecord,saGenerationContext,saGenerationResponse,saConversationInput} from './sa-evidence-harness.mjs';
+import {saEvidenceText,saEvidenceRecord,saGenerationContext,saGenerationResponse,saConversationInput,nonSaGenerationScope} from './sa-evidence-harness.mjs';
 import {saEventPayload,saPublicResponse} from '../src/sa-hansard.ts';
 import {SA_EXCERPT_LABEL,isSaHansard} from '../public/sa-hansard.js';
 import sourceIdentity from '../../parli/ingest/user-agent.json' with {type:'json'};
@@ -184,4 +184,21 @@ test('voice and MCP tool evidence contains only the protected SA excerpt before 
   const tool=runInNewContext(ts.transpile(builder)+';result',{readPublic:read,env:{COMMUNITY_ORIGIN:'https://opax.test'},Uint8Array,TextDecoder});
   const output=await tool('/api/resource/'+sa.slug),record=JSON.parse(output.content[0].text);
   cap(record.text);assert.equal(record.excerpt_label,SA_EXCERPT_LABEL);assert.equal(record.source_url,sa.url);
+});
+
+
+test('provably non-SA scopes retrieve once with identical request and response bytes',async()=>{
+ const state=label=>({prop:'label',labelset:'state',label});
+ const field={and:[{prop:'label',labelset:'kind',label:'speech'},state('federal')]};
+ for(const stream of [false,true]) {
+  const body={query:'housing',filter_expression:{field}},calls=[];
+  const original=new Response('unchanged upstream bytes');
+  const result=await saGenerationResponse(body,'false',async(path,input,sse)=>{calls.push({path,input,sse});return original},stream);
+  assert.equal(result,original);assert.deepEqual(calls,[{path:'/ask',input:body,sse:stream}]);
+ }
+ for(const field of [state('sa'),state('unknown'),{or:[state('federal'),state('sa')]},{not:state('federal')},{}])
+  assert.equal(nonSaGenerationScope({filter_expression:{field}}),false);
+ assert.equal(nonSaGenerationScope({filter_expression:{field:{or:[state('federal'),state('vic')]}}}),true);
+ for(const extra of [{extra_context:['unclassified quotation']},{prequeries:{prior:{}}},{rag_strategies:[{name:'prequeries',queries:[{request:{resource_filters:['sa-record']}}]}]},{chat_history:[{author:'NUCLIA',text:'legacy answer'}]}])
+  assert.equal(nonSaGenerationScope({filter_expression:{field},...extra}),false);
 });

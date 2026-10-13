@@ -4,7 +4,7 @@ import {readFileSync, existsSync} from 'node:fs';
 import {runInNewContext} from 'node:vm';
 import ts from 'typescript';
 import {build} from 'esbuild';
-import {sitemapFiles, exportDate, latestDate, billLastmod} from '../../scripts/build_crawl_catalog.mjs';
+import {namedDonors, sitemapFiles, exportDate, latestDate, billLastmod} from '../../scripts/build_crawl_catalog.mjs';
 import {grantRecipientUrl} from '../public/grants.js';
 import {awardHref} from '../public/grants-largest.js';
 import {personUrl} from '../public/canonical-urls.js';
@@ -176,4 +176,10 @@ test('a division absent from every bill is discoverable and export fallbacks are
     assert.ok(xml.includes('/doc/division-federal-senate-orphan</loc><lastmod>2026-09-03</lastmod>'));
     assert.equal(manifest.lastmodFallbacks.divisions,0);
   } finally {await rm(fixture,{recursive:true,force:true});}
+});
+
+test('crawl donor names include unlinked source records without a privacy mode',()=>{
+ const payload=JSON.stringify({config:{rows:[{label:'EXAMPLE, ALEX',href:null},{label:'Fixture Organisation Pty Ltd',href:'/subject/donor/fixture'}]}});
+ const html='<h2>Donors to their party</h2><script data-register-config>'+payload+'</script><h2>Bills sponsored</h2>';
+ assert.deepEqual(namedDonors(html),['EXAMPLE, ALEX','Fixture Organisation Pty Ltd']);
 });

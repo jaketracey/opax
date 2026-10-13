@@ -112,8 +112,8 @@ test('real answer source cards preserve own-house attribution and clear testimon
 
 test('Ask scope and topic catalog use the same partition; prior citations cannot reintroduce witnesses', async () => {
   const calls = [];
-  const api = scopedContext(ts.transpile(select(['scopeSpeakerBody', 'reasonedPositionAnswer', 'apiPersonTopics', 'speakerAttribution', 'foldName', 'canonicalSpeaker', 'TOPIC_SLUGS'])) + ';({scopeSpeakerBody,reasonedPositionAnswer,apiPersonTopics})', {
-    URL, AbortSignal, scopeFilter, personScope, scopedCollaborators, MAX_SPEAKER_CHARS: 160, NAME_RE: /^[\w ]+$/, TOPIC_FILTER_PREFIX: '/classification.labels/topic', ASK_SYNC_TIMEOUT_MS:1000,
+  const api = scopedContext(ts.transpile(select(['scopeSpeakerBody', 'reasonedPositionAnswer', 'apiPersonTopics', 'aggregateFetch', 'AGGREGATE_UPSTREAM_TIMEOUT_MS', 'speakerAttribution', 'foldName', 'canonicalSpeaker', 'TOPIC_SLUGS'])) + ';({scopeSpeakerBody,reasonedPositionAnswer,apiPersonTopics})', {
+    URL, Response, AbortSignal, scopeFilter, personScope, scopedCollaborators, MAX_SPEAKER_CHARS: 160, NAME_RE: /^[\w ]+$/, TOPIC_FILTER_PREFIX: '/classification.labels/topic', ASK_SYNC_TIMEOUT_MS:1000,
     buildAskBody:()=>({rag_strategies:[{name:'prequeries'}]}),isRefusal:()=>false,hasUnsupportedQuotes:()=>false,
     askPayload:()=>({answer:'Grounded answer.',citations:{p:[[0,1]]},sources:[]}),
     loadPeople: async () => ({ byFold: new Map([['stewart', { speech_scope: scope }]]) }),
@@ -179,15 +179,11 @@ test('pending counts cannot credit committee parliamentarians in catalog, descri
   }
 });
 
-test('a failed attribution import still starts routing and the Ask builder', async () => {
+test('routing retains conservative attribution fallbacks and no universal startup barrier', async () => {
   const app = readFileSync(new URL('../public/app.js',import.meta.url),'utf8');
-  const boot = app.slice(app.lastIndexOf('Promise.allSettled([attributionReady, uiLabelsReady, pageMenusReady, growthModulesReady, personUrlsReady, saDisplayReady, donorViewReady, voteTablesReady])'));
-  assert.ok(boot.startsWith('Promise.allSettled('), 'the boot statement is where the test looks for it');
-  const called = [];
-  const ready = Promise.reject(new Error('simulated missing asset'));
-  await scopedContext(boot,{attributionReady:ready,saDisplayReady:Promise.resolve(),donorViewReady:Promise.resolve(),voteTablesReady:Promise.resolve(),uiLabelsReady:Promise.resolve(),pageMenusReady:Promise.resolve(),personUrlsReady:Promise.resolve(),growthModulesReady:Promise.resolve(),Promise,
-    loadPersonSlugs:()=>called.push('slugs'),initAskBuilder:()=>called.push('ask'),route:()=>called.push('route')});
-  assert.deepEqual(called,['slugs','ask','route']);
+  assert.match(app,/Promise\.allSettled\(routePrerequisites\(segs\)\)/);
+  assert.match(app,/const isWitness = row => attributionHelpers \? attributionHelpers\.isWitness\(row\) : true/);
+  assert.doesNotMatch(app,/Promise\.allSettled\(\[attributionReady, uiLabelsReady, pageMenusReady/);
 });
 
 test('full-name and reviewed KB aliases resolve to one scoped print, including Pugh and Crawford', () => {

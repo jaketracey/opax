@@ -11,7 +11,7 @@ export function catalogueReader(assets) {
       if(!response.ok) throw new Error('Catalogue unavailable');
       return response.json();
     });
-    if(/^\/(?:instruments|audit)\/(?:manifest|index)\.json$/.test(path)) {
+    if(/^\/(?:instruments|audit)\/(?:manifest|index|registered)\.json$/.test(path)) {
       cache.set(path,{expires:Date.now()+300_000,value});
       void value.catch(()=>{if(cache.get(path)?.value === value)cache.delete(path)});
     }

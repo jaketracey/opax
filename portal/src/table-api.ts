@@ -95,6 +95,7 @@ function order(query: Query, columns: Column[]) {
   return ` ORDER BY t.${quote(c.key)}${['text','category'].includes(c.type) ? ' COLLATE NOCASE' : ''} ${query.sort!.dir} NULLS LAST,t.rowid ${query.sort!.dir}`
 }
 const decode = (rows: Row[]) => rows.map(row => {
+  if (/^aggregate:grants:(?:federal|qld):$/.test(String(row.id)) && row.recipientKind === 'aggregate' && Number.isSafeInteger(row.recipientCount) && Number(row.recipientCount) >= 0) row.aggregate = {kind: 'individual-donors', count: Number(row.recipientCount), subject: 'recipients'};
   for (const key of arrays) if (typeof row[key]==='string') {try {row[key]=JSON.parse(row[key] as string)} catch {row[key]=[]}}
   return row
 })

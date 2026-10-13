@@ -121,9 +121,19 @@ export function outlineHTML(boundary, name) {
   const path = polygons.map((rings) => rings.map((ring) => ring.map(([x, y], i) => `${i ? 'L' : 'M'}${(10 + (280 - width * scale) / 2 + (x * cos - x0) * scale).toFixed(2)},${(10 + (180 - height * scale) / 2 + (-y - y0) * scale).toFixed(2)}`).join(' ') + ' Z').join(' ')).join(' ');
   return `<figure class="el-outline"><svg viewBox="0 0 300 200" role="img" aria-label="${esc(name)} boundary outline"><path d="${path}" fill-rule="evenodd"/></svg></figure>`;
 }
-function memberHTML(m, people) {
-  const p = people[m.person_id] || m.person;
-  return `<li>${p ? `<a href="${esc(personURL(p))}">${esc(displayName(p.name))}</a>` : 'Unresolved person'}${m.party ? ` ${partyLabelHTML(m.party)}` : ''}</li>`;
+/** A 44 portrait for a byline: the photo when the map has one, else a blank circle (never initials). */
+const portraitHTML = (name, photoUrlFor) => {
+  const src = name ? photoUrlFor(name) : null;
+  return src ? `<img class="ui-byline-portrait" src="${esc(src)}" alt="" width="44" height="44" loading="lazy">` : '<span class="ui-byline-portrait" aria-hidden="true"></span>';
+};
+/** A person as a byline row: portrait, name, party label(s), one meta line. */
+function bylineHTML(p, parties, meta, photoUrlFor) {
+  const name = p ? displayName(p.name) : '';
+  const who = p ? `<a class="ui-byline-name" href="${esc(personURL(p))}">${esc(name)}</a>` : '<span class="ui-byline-name">Unresolved person</span>';
+  return `<li class="ui-byline">${portraitHTML(p?.name, photoUrlFor)}<div><div class="ui-byline-who">${who}${parties ? ` ${parties}` : ''}</div>${meta ? `<span class="ui-byline-meta">${meta}</span>` : ''}</div></li>`;
+}
+function memberHTML(m, people, photoUrlFor) {
+  return bylineHTML(people[m.person_id] || m.person, m.party ? partyLabelHTML(m.party) : '', '', photoUrlFor);
 }
 /** A relation's vintage in words: the year it was recorded for, never the
  *  pipeline's own label ("2026 source configuration"). */
@@ -147,7 +157,7 @@ function electionHTML(c, people) {
     const v = p.votes.find((v) => v.kind === kind);
     return v ? `${number(v.votes)}${v.denominator ? `<small>${(100 * v.votes / v.denominator).toFixed(2)}%</small>` : ''}` : '—';
   };
-  return `<li><details class="el-election"><summary><time datetime="${esc(c.election.poll_date)}">${esc(date(c.election.poll_date))}</time><strong>${c.election.kind === 'by_election' ? 'By-election' : 'General election'}</strong><span>${esc(winner || 'No elected candidate recorded')}</span></summary><div class="el-election-body"><p class="el-election-meta">${esc(c.status)} result · ${esc(c.voting_system)} · ${c.vacancies} ${c.vacancies === 1 ? 'vacancy' : 'vacancies'}${c.boundary_version_id ? '' : ' · Boundary version not yet indexed'}</p><div class="el-table-scroll" tabindex="0" role="region" aria-label="Candidate results for ${esc(date(c.election.poll_date))}"><table><caption>${esc(c.election.name)}: ${c.candidates.length} candidates</caption><thead><tr><th scope="col">Candidate and party</th>${kinds.map((k) => `<th scope="col">${label[k]}</th>`).join('')}</tr></thead><tbody>${c.candidates.map((p) => `<tr><th scope="row">${p.person_id && people[p.person_id] ? `<a href="${esc(personURL(people[p.person_id]))}">${esc(p.name)}</a>` : esc(p.name)}${p.elected ? ` ${statusLabelHTML('Elected', 'done')}` : ''}<small>${esc(p.party)}</small></th>${kinds.map((k) => `<td>${value(p, k)}</td>`).join('')}</tr>`).join('')}</tbody></table></div></div></details></li>`;
+  return `<li><details class="ui-disclosure el-election"><summary><span class="el-election-head"><span class="ui-row-name">${c.election.kind === 'by_election' ? 'By-election' : 'General election'}</span><span class="ui-row-meta"><span><time datetime="${esc(c.election.poll_date)}">${esc(date(c.election.poll_date))}</time> · ${esc(winner || 'No elected candidate recorded')}</span></span></span></summary><div class="ui-disclosure-body el-election-body"><p class="el-election-meta">${esc(c.status)} result · ${esc(c.voting_system)} · ${c.vacancies} ${c.vacancies === 1 ? 'vacancy' : 'vacancies'}${c.boundary_version_id ? '' : ' · Boundary version not yet indexed'}</p><div class="el-table-scroll" tabindex="0" role="region" aria-label="Candidate results for ${esc(date(c.election.poll_date))}"><table><caption>${esc(c.election.name)}: ${c.candidates.length} candidates</caption><thead><tr><th scope="col">Candidate and party</th>${kinds.map((k) => `<th scope="col">${label[k]}</th>`).join('')}</tr></thead><tbody>${c.candidates.map((p) => `<tr><th scope="row">${p.person_id && people[p.person_id] ? `<a href="${esc(personURL(people[p.person_id]))}">${esc(p.name)}</a>` : esc(p.name)}${p.elected ? ` ${statusLabelHTML('Elected', 'done')}` : ''}<small>${esc(p.party)}</small></th>${kinds.map((k) => `<td>${value(p, k)}</td>`).join('')}</tr>`).join('')}</tbody></table></div></div></details></li>`;
 }
 const INDICATORS = {
   population: ['Population', 'people'], median_age: ['Median age', 'years'], median_household_income_weekly: ['Median household income', '$/week'], median_rent_weekly: ['Median rent', '$/week'], median_mortgage_monthly: ['Median mortgage', '$/month'], homeownership_pct: ['Home ownership', '%'], rental_pct: ['Renting', '%'], unemployment_rate: ['Unemployment', '%'], university_pct: ['University qualification', '%'], born_overseas_pct: ['Born overseas', '%'], indigenous_pct: ['Aboriginal and Torres Strait Islander', '%'], average_household_size: ['Average household size', 'people'],
@@ -156,15 +166,16 @@ const unitOf = (value, unit) => unit === '%' ? `${number(value)}%` : unit.starts
 /** Census context: population is the block's one figure; the rest is a key/value list. */
 function censusHTML(d) {
   const rows = Object.entries(INDICATORS).filter(([key]) => key !== 'population' && d.indicators[key] != null);
-  return `${d.indicators.population != null ? `<p class="el-figure"><b>${number(d.indicators.population)}</b><span>people, ${esc(d.vintage)}</span></p>` : ''}
-    <dl class="el-demographics">${rows.map(([key, [label, unit]]) => `<div><dt>${esc(label)}</dt><dd>${esc(unitOf(d.indicators[key], unit))}</dd></div>`).join('')}</dl>`;
+  return `${d.indicators.population != null ? `<div class="ui-stats"><p class="ui-stat"><b class="ui-stat-value">${number(d.indicators.population)}</b><span class="ui-stat-label">people, ${esc(d.vintage)}</span></p></div>` : ''}
+    <dl class="ui-kv el-demographics" data-variant="ledger">${rows.map(([key, [label, unit]]) => `<div><dt>${esc(label)}</dt><dd>${esc(unitOf(d.indicators[key], unit))}</dd></div>`).join('')}</dl>`;
 }
-/* One title and one meta line (no kicker); then blocks, each ending in one
-   source line that opens its originals, dates, notes and licences. The date
-   control lives in Representation history, the census is one figure and a
-   key/value list, and the downloads and reference ID sit under ⋯ and in the
-   representation sheet. */
-export function profileHTML(detail, on = '') {
+/* One title and one meta line (no kicker), ⋯ on the title's row; then
+   sections (ui-section), each ending in one source line that opens its
+   originals, dates, notes and licences. Who holds the seat and its boundary sit
+   side by side; the date control lives in Representation history, a list of
+   bylines; the census is one figure and a key/value list; the downloads and
+   reference ID sit under ⋯ and in the representation sheet. */
+export function profileHTML(detail, on = '', { photoUrlFor = () => null } = {}) {
   const selected = on ? representationAt(detail, on) : { status: detail.representation_status, members: detail.representatives, as_of: detail.representation_as_of };
   const title = on ? `Representation on ${date(on)}` : 'Latest verified representation';
   const boundary = [...detail.boundaries].filter((b) => b.geometry).sort((a, b) => Number(b.geometry_kind === 'official') - Number(a.geometry_kind === 'official') || String(b.applicable_election_date || b.effective_from || b.vintage || '').localeCompare(String(a.applicable_election_date || a.effective_from || a.vintage || '')))[0];
@@ -176,41 +187,43 @@ export function profileHTML(detail, on = '') {
   const service = sourcesOf(detail, ['terms']);
   const census = sourcesOf(detail, ['demographics']);
   const line = (list, opts) => sourceLineHTML({ updated: retrieved(list), dateLabel: 'Retrieved', originals: originalsOf(list), licence: licences(list), ...opts });
-  return `<div class="subject-head"><h1 id="subject-title" tabindex="-1">${esc(detail.name)}</h1><p class="subject-tag"><span>${esc(CHAMBERS[detail.chamber] || detail.chamber)} · ${esc(detail.state_code.toUpperCase())}${detail.capacity > 1 ? ` · ${detail.capacity} seats` : ''}${detail.status === 'historical' ? ' · Historical electorate' : ''}</span></p>
+  return `<div class="ui-page-head el-head"><h1 id="subject-title" tabindex="-1">${esc(detail.name)}</h1><p class="ui-page-meta">${esc(CHAMBERS[detail.chamber] || detail.chamber)} · ${esc(detail.state_code.toUpperCase())}${detail.capacity > 1 ? ` · ${detail.capacity} seats` : ''}${detail.status === 'historical' ? ' · Historical electorate' : ''}</p>
     <div class="page-actions">${moreMenuHTML([
       { href: detail.detail_url, label: 'Download this electorate', detail: 'JSON, every record on this page with its sources' },
       { href: '/subject/electorate', label: 'All electorates' },
     ], 'More about this electorate')}</div></div>
-    <div class="el-intro"><section id="el-held"><h3 class="subject-section-title">${esc(title)}</h3>${selected.status === 'conflicting' ? '<p>Conflicting service records require review.</p>' : selected.members.length ? `<ul class="el-members">${selected.members.map((m) => memberHTML(m, people)).join('')}</ul>` : `<p>${selected.status === 'verified' ? 'Vacant at this observation.' : 'Representation has not yet been verified for this date.'}</p>`}${on ? `<p class="el-latest"><a href="${esc(detail.url)}">Latest check</a></p>` : ''}
+    <div class="el-intro"><section id="el-held" class="ui-section"><h2 class="ui-section-title">${esc(title)}</h2>${selected.status === 'conflicting' ? '<p class="ui-empty">Conflicting service records require review.</p>' : selected.members.length ? `<ul class="ui-list el-members" data-rule="none">${selected.members.map((m) => memberHTML(m, people, photoUrlFor)).join('')}</ul>` : `<p class="ui-empty">${selected.status === 'verified' ? 'Vacant at this observation.' : 'Representation has not yet been verified for this date.'}</p>`}${on ? `<p class="el-latest"><a href="${esc(detail.url)}">Latest check</a></p>` : ''}
       ${sourceLineHTML({ updated: selected.as_of || '', dateLabel: 'As at', source: 'Electoral and parliamentary records',
         state: selected.status === 'partial' ? 'partial' : '',
         originals: originalsOf(held), licence: licences(held),
         facts: [['Reference ID', `<code class="el-id">${esc(detail.electorate_id)}</code>`]],
         notes: [selected.status === 'historical' ? 'From dated service records; coverage may be incomplete.' : selected.status === 'partial' ? 'Partial roster; other members may be missing.' : 'Election winners and present-day representation can differ.',
           'Representation is shown only as recorded in the dated release.'] })}</section>
-    ${boundary ? `<aside class="el-outline-block">${outlineHTML(boundary, detail.name)}${line(outline, { source: `${boundary.geometry_kind === 'official' ? 'AEC election boundary' : 'ABS statistical outline'}, ${boundary.vintage}`, notes: [esc(boundary.note), 'Simplified for display.', on ? 'This outline is not a reconstruction of the selected date.' : ''] })}</aside>` : ''}</div>
-    <section id="el-elections" class="el-section"><h3 class="subject-section-title">Election timeline</h3>${detail.elections.length ? `<ol class="el-timeline">${detail.elections.map((c) => electionHTML(c, people)).join('')}</ol>
-      ${line(contests, { source: 'AEC results', notes: [`${detail.elections.length} indexed ${detail.elections.length === 1 ? 'contest' : 'contests'}; gaps are missing coverage.`, 'Percentages use each count’s recorded denominator. “—” means no result for that candidate in that count. TCP and TPP are distinct counts.'] })}` : '<p class="el-empty">Election results have not yet been imported for this electorate.</p>'}</section>
-    <section id="el-history" class="el-section"><div class="el-section-head"><h3 class="subject-section-title">Representation history</h3>
+    ${boundary ? `<section class="ui-section el-outline-block"><h2 class="ui-section-title">Boundary</h2>${outlineHTML(boundary, detail.name)}${line(outline, { source: `${boundary.geometry_kind === 'official' ? 'AEC election boundary' : 'ABS statistical outline'}, ${boundary.vintage}`, notes: [esc(boundary.note), 'Simplified for display.', on ? 'This outline is not a reconstruction of the selected date.' : ''] })}</section>` : ''}</div>
+    <section id="el-elections" class="ui-section el-section"><h2 class="ui-section-title">Election timeline</h2>${detail.elections.length ? `<ol class="ui-list el-timeline">${detail.elections.map((c) => electionHTML(c, people)).join('')}</ol>
+      ${line(contests, { source: 'AEC results', notes: [`${detail.elections.length} indexed ${detail.elections.length === 1 ? 'contest' : 'contests'}; gaps are missing coverage.`, 'Percentages use each count’s recorded denominator. “—” means no result for that candidate in that count. TCP and TPP are distinct counts.'] })}` : '<p class="ui-empty">Election results have not yet been imported for this electorate.</p>'}</section>
+    <section id="el-history" class="ui-section el-section"><div class="ui-section-head"><h2>Representation history</h2>
       <form id="el-asof-form" class="el-asof"><label for="el-asof">On a date</label><input id="el-asof" class="ui-input" name="asof" type="date" value="${esc(on)}" required><button type="submit" class="ui-button">Show</button></form></div>
-      ${terms.length ? `<ol class="el-service">${terms.map((t) => `<li><div><time>${esc(date(t.start))}</time> – ${t.end ? `<time>${esc(date(t.end))}</time> (exclusive)` : `end not recorded${t.observed_through ? `; observed ${esc(date(t.observed_through))}` : ''}`}</div><strong>${people[t.person_id] ? `<a href="${esc(personURL(people[t.person_id]))}">${esc(displayName(people[t.person_id].name))}</a>` : 'Unresolved person'}</strong><span>${(t.party_periods || []).map((p) => partyLabelHTML(p.party) || esc(p.party || '')).filter(Boolean).join(' → ')}</span></li>`).join('')}</ol>
-      ${line(service, { source: 'Service records', notes: ['Dated service records, newest first. Party changes may create a new period. Open-ended records are not proof of current membership.'] })}` : '<p class="el-empty">Historical service has not yet been imported.</p>'}</section>
-    <section id="el-context" class="el-section"><h3 class="subject-section-title">Census context</h3>${detail.demographics.length ? `${detail.demographics.map(censusHTML).join('')}
-      ${line(census, { source: detail.demographics.map((d) => d.vintage).join('; '), notes: detail.demographics.map((d) => esc(d.note)) })}` : '<p class="el-empty">Census indicators have not yet been imported for this electorate.</p>'}</section>
-    ${detail.relations.length ? `<section class="el-section"><h3 class="subject-section-title">Related constituencies</h3><ul class="el-related">${detail.relations.map((r) => `<li><a href="/subject/electorate/${esc(r.related.slug)}">${esc(r.related.name)}</a> · ${esc(CHAMBERS[r.related.chamber] || r.related.chamber)}${relatedAsAt(r.vintage)}</li>`).join('')}</ul></section>` : ''}${detail.jurisdiction === 'vic' ? vicElectionFooterHTML() : ''}`;
+      ${terms.length ? `<ol class="ui-list el-service">${terms.map((t) => bylineHTML(people[t.person_id], (t.party_periods || []).map((p) => partyLabelHTML(p.party) || esc(p.party || '')).filter(Boolean).join(' → '),
+        `<time>${esc(date(t.start))}</time> – ${t.end ? `<time>${esc(date(t.end))}</time> (exclusive)` : `end not recorded${t.observed_through ? `; observed ${esc(date(t.observed_through))}` : ''}`}`, photoUrlFor)).join('')}</ol>
+      ${line(service, { source: 'Service records', notes: ['Dated service records, newest first. Party changes may create a new period. Open-ended records are not proof of current membership.'] })}` : '<p class="ui-empty">Historical service has not yet been imported.</p>'}</section>
+    <section id="el-context" class="ui-section el-section"><h2 class="ui-section-title">Census context</h2>${detail.demographics.length ? `${detail.demographics.map(censusHTML).join('')}
+      ${line(census, { source: detail.demographics.map((d) => d.vintage).join('; '), notes: detail.demographics.map((d) => esc(d.note)) })}` : '<p class="ui-empty">Census indicators have not yet been imported for this electorate.</p>'}</section>
+    ${detail.relations.length ? `<section class="ui-section el-section"><h2 class="ui-section-title">Related constituencies</h2><ul class="ui-list el-related" data-rule="none">${detail.relations.map((r) => `<li><a href="/subject/electorate/${esc(r.related.slug)}">${esc(r.related.name)}</a> · ${esc(CHAMBERS[r.related.chamber] || r.related.chamber)}${relatedAsAt(r.vintage)}</li>`).join('')}</ul></section>` : ''}${detail.jurisdiction === 'vic' ? vicElectionFooterHTML() : ''}`;
 }
-export async function renderProfile({ body, slug, on, isActive, setCrumbs, goRoute, manageFocus }) {
+export async function renderProfile({ body, slug, on, isActive, setCrumbs, goRoute, manageFocus, loadPhotos = null }) {
   try {
     const data = await loadIndex();
     if (!isActive()) return;
     const entry = data.electorates.find((e) => e.slug === slug || e.electorate_id === slug);
     if (!entry) { body.innerHTML = '<h1 id="subject-title" tabindex="-1">Electorate not found</h1><p>No electorate has this address. <a href="/subject/electorate">Browse electorates</a></p>'; return; }
-    const detail = await json(entry.detail_url);
+    // Portraits for the bylines: the photo map in parallel, never blocking the page on it.
+    const [detail, photoUrlFor] = await Promise.all([json(entry.detail_url), loadPhotos ? loadPhotos().catch(() => null) : null]);
     if (!isActive()) return;
     if (on && !validDate(on)) { body.innerHTML = `<h1 id="subject-title" tabindex="-1">Invalid date</h1><p><a href="${esc(entry.url)}">Return to ${esc(entry.name)}</a></p>`; return; }
     document.title = `${entry.name} · Electorate · OPAX`;
     setCrumbs([{ label: 'Electorates', href: '/subject/electorate' }, { label: entry.name }]);
-    body.innerHTML = profileHTML(detail, on);
+    body.innerHTML = profileHTML(detail, on, photoUrlFor ? { photoUrlFor } : {});
     body.querySelector('#el-asof-form').addEventListener('submit', (event) => { event.preventDefault(); const value = body.querySelector('#el-asof').value; if (validDate(value)) goRoute(`${entry.url}?asof=${value}`); });
     if (manageFocus) body.querySelector('#subject-title')?.focus();
   } catch {

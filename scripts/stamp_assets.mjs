@@ -17,7 +17,7 @@ import { honestFetch, USER_AGENT, pauseSource, runSource } from './lib/http.mjs'
  * WHY IT MUST RUN: `wrangler deploy` on its own ships an unstamped index.html
  * against immutable Cache-Control. Deploy with `npm run deploy`, never by hand.
  *
- * Most modules app.js import()s at runtime (money-map.js, statemap.js, voice.js,
+ * Most modules app.js import()s at runtime (money-map.js, voice.js,
  * ...) are fetched by a path written into app.js, with a hand-bumped ?v= where it
  * matters; _headers gives them max-age=300 + a day of stale-while-revalidate.
  * The modules in MODULE_STAMPS are the exception: they load the who-is-who files
@@ -30,6 +30,7 @@ import { createHash } from 'node:crypto'
 import { readFileSync, writeFileSync, mkdirSync, readdirSync, unlinkSync, statSync } from 'node:fs'
 import { dirname, join, relative, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
+import { runInNewContext } from 'node:vm'
 import { buildSpaShell } from './build_spa_shell.mjs'
 import { buildMethods } from './build_methods.mjs'
 
@@ -38,7 +39,7 @@ const PUBLIC = join(ROOT, 'portal', 'public')
 const INDEX = join(PUBLIC, 'index.html')
 
 /** Assets referenced from index.html with a ?v= stamp. */
-const STAMPED = ['app.js', 'spa-shell.js', 'spa-entry.js', 'style.css', 'analytics.js', 'gtm.js', 'events.js', 'navigation.js', 'quick-search.js', 'voice.css', 'ui-controls.css', 'ui-source.css', 'ui-source.js', 'labels.js', 'page-actions.css', 'vote-tables.js', 'vote-tables.css']
+const STAMPED = ['app.js', 'spa-shell.js', 'spa-entry.js', 'style.css', 'analytics.js', 'gtm.js', 'events.js', 'navigation.js', 'quick-search.js', 'voice.css', 'nav.css', 'ui-controls.css', 'ui-source.css', 'ui-source.js', 'labels.js', 'page-actions.css', 'register-tables.css', 'register-tables-entry.js', 'vote-tables.js', 'vote-tables.css']
 
 const hashOf = (file) =>
   createHash('sha256').update(readFileSync(join(PUBLIC, file))).digest('hex').slice(0, 10)
@@ -137,31 +138,37 @@ export async function refreshFonts({ publicRoot = PUBLIC, fetcher = honestFetch 
  *  agencies.js and suppliers.js import each other: stamp the agencies → suppliers
  *  edge only, then app.js. Keep the reverse edge hand-versioned to avoid a hash cycle. */
 export const MODULE_STAMPS = [
-  ...['agencies.js','donor-views.js','ledger.js','quiz.js','money-journeys-data.js','map-research.js','home.js','wordsdollars.js','money-explain.js','grant-recipient.js','grants.js','growth-modules.js','supplier-growth.js'].map(file=>[file,'donor-disclosure.js']),
+  ...['agencies.js','donor-views.js','ledger.js','quiz.js','money-journeys-data.js','home.js','wordsdollars.js','money-explain.js','grant-recipient.js','grants.js','growth-modules.js','supplier-growth.js'].map(file=>[file,'donor-disclosure.js']),
   ['donor-disclosure.js','donor-entity.js'],
-  ['money-journeys-data.js','donor-views.js'],['map-research.js','donor-views.js'],
+  ['money-journeys-data.js','donor-views.js'],
   // ⋯: app.js draws and runs it; electorates.js draws it.
   ['app.js', 'page-actions-menu.js'], ['electorates.js', 'page-actions-menu.js'],
   ['datatable.js', 'server-csv.js'],
+
   ['datatable-workbench.js', 'datatable.js'],
+  ['register-tables.js', 'donor-disclosure.js'], ['register-tables.js', 'datatable.js'], ['register-tables-entry.js', 'register-tables.js'], ['app.js', 'register-tables.js'],
   ['vote-tables.js', 'labels.js'], ['vote-tables.js', 'division-markdown.js'], ['vote-tables.js', 'datatable.js'],
   ['donor-views.js', 'donor-entity.js'], ['wordsdollars.js','donor-views.js'], ['quiz.js','donor-views.js'],  ['home.js', 'donor-views.js'],
-      ['map-research.js','donor-views.js'],
 
   ['datatable.js', 'datatable-query.js'],
+   ['grants-table.js', 'datatable.js'],
+  ['budget.js', 'datatable.js'], ['budget.js', 'budget-table.js'],
   ['growth-modules.js', 'donor-entity.js'], ['growth-modules.js', 'labels.js'], ['growth-modules.js', 'sponsor-person.js'],
   ['supplier-growth.js', 'growth-modules.js'], ['supplier-growth.js', 'labels.js'],
 
   ['canonical-urls.js', 'person-paths.js'],
+  ['money-connections.js', 'donor-disclosure.js'], ['money-connections.js', 'canonical-urls.js'],
+  ['map-research.js','datatable.js'],
+  ['map-research.js','money-connections.js'],
   ['ballot.js', 'canonical-urls.js'],
   ['electorates.js', 'canonical-urls.js'],
   ['evidence.js', 'canonical-urls.js'],
   ['grants.js', 'donor-views.js'], ['grant-recipient.js', 'donor-views.js'],
-  ['grants.js', 'canonical-urls.js'],
+  ['grants.js', 'canonical-urls.js'], ['grants.js', 'labels.js'],
   ['grant-recipient.js', 'canonical-urls.js'],
   ['home-data.js', 'canonical-urls.js'],
   ['home.js', 'canonical-urls.js'],
-  ['ledger.js', 'canonical-urls.js'],
+  ['ledger.js', 'canonical-urls.js'], ['ledger.js', 'labels.js'],
   ['money-journeys.js', 'canonical-urls.js'],
   ['quiz.js', 'canonical-urls.js'],
   ['suppliers.js', 'canonical-urls.js'], ['suppliers.js', 'labels.js'], ['suppliers.js', 'supplier-growth.js'], ['agencies.js', 'suppliers.js'],
@@ -171,6 +178,7 @@ export const MODULE_STAMPS = [
   ['map-page.js', 'money-map.js'], ['agencies.js', 'money-map.js'], ['suppliers.js', 'money-map.js'],
   ['thenvsnow.js', 'wombat.js'], ['thenvsnow.js', 'labels.js'], ['thenvsnow.js', 'canonical-urls.js'], ['grant-recipient.js', 'grants.js'],
   ['electorates.js', 'labels.js'], ['home-data.js', 'labels.js'],
+  ['app.js', 'grants-table.js'],
   ['app.js', 'vote-tables.js'],
   ['app.js','donor-views.js'], ['app.js','map-research.js'],
   ['ask-person.js', 'labels.js'],
@@ -184,7 +192,7 @@ export const MODULE_STAMPS = [
   ['money-explain.js', 'labels.js'], ['money-explain.js', 'canonical-urls.js'],
   // The Explore tools and the loaders, restyled on tokens in pass 4G.
   ['app.js', 'ballot.js'], ['app.js', 'grants.js'], ['app.js', 'ledger.js'], ['app.js', 'matrix.js'], ['app.js', 'wordsdollars.js'],
-  ['app.js', 'thenvsnow.js'], ['app.js', 'statemap.js'], ['app.js', 'stages.js'], ['app.js', 'wombat.js'], ['app.js', 'ask-steps.js'],
+  ['app.js', 'thenvsnow.js'], ['app.js', 'stages.js'], ['app.js', 'wombat.js'], ['app.js', 'ask-steps.js'],
   ['home.js', 'home-data.js'], ['home.js', 'electorates.js'], ['home.js', 'money-map.js'],
 ]
 
@@ -234,11 +242,26 @@ function stampPass({ check }) {
   return stale
 }
 
+// The menu bar and the footer's site index before (or without) scripts, drawn
+// from navigation.js's one list: closed gates are left out, and the script
+// draws the full menus over them when it runs.
+function navFallbacks(html) {
+  const context = { URLSearchParams }
+  runInNewContext(readFileSync(join(PUBLIC, 'navigation.js'), 'utf8'), context)
+  const nav = context.OpaxNavigation
+  for (const [name, content] of [['bar', nav.barHTML()], ['index', nav.footerHTML(() => true, { slot: false })]]) {
+    const pattern = new RegExp(`(<!-- nav:${name}:start -->)[\\s\\S]*?(<!-- nav:${name}:end -->)`)
+    if (!pattern.test(html)) throw new Error(`index.html is missing its nav:${name} markers`)
+    html = html.replace(pattern, (_, start, end) => `${start}${content}${end}`)
+  }
+  return html
+}
+
 // Keep the homepage's first-render chrome identical to the application shell.
 // Both documents then use navigation.js for the same menus and interactions.
 function syncHomeChrome(html, shell) {
   const header = shell.match(/<header class="site-header">[\s\S]*?<\/header>/)?.[0]
-  const drawer = shell.match(/<dialog class="nav-drawer"[\s\S]*?<\/dialog>/)?.[0]
+  const drawer = shell.match(/<dialog class="nav-drawer[^"]*"[\s\S]*?<\/dialog>/)?.[0]
   const footer = shell.match(/<footer>[\s\S]*?<\/footer>/)?.[0]
   if (!header || !drawer || !footer) throw new Error('Shared site chrome is missing from index.html')
   for (const [part, content] of [['header', `${header}\n${drawer}`], ['footer', footer]]) {
@@ -291,12 +314,25 @@ export function moduleReferences(publicRoot = PUBLIC, srcRoot = SRC) {
 }
 
 /** Files every reference of which carries the current content hash. */
-export function immutableModules(publicRoot = PUBLIC, srcRoot = SRC) {
-  const hash = (f) => createHash('sha256').update(readFileSync(join(publicRoot, f))).digest('hex').slice(0, 10)
-  return [...moduleReferences(publicRoot, srcRoot)]
-    .filter(([file, refs]) => refs.length && refs.every((r) => r.stamp === hash(file)))
+export function immutableModules(publicRoot = PUBLIC, srcRoot = SRC, {references, hashFile = assetHasher(publicRoot)} = {}) {
+  return [...(references ?? moduleReferences(publicRoot, srcRoot))]
+    .filter(([file, refs]) => {
+      if (!refs.length) return false
+      const expected = hashFile(file)
+      return refs.every((r) => r.stamp === expected)
+    })
     .map(([file]) => file)
     .sort()
+}
+
+// A fresh cache for one inventory evaluation, after all page/module writes.
+// Never retain these hashes across stamping or independent --check invocations.
+function assetHasher(publicRoot) {
+  const hashes = new Map()
+  return file => {
+    if (!hashes.has(file)) hashes.set(file, createHash('sha256').update(readFileSync(join(publicRoot, file))).digest('hex').slice(0, 10))
+    return hashes.get(file)
+  }
 }
 
 /** Single-file rules in the hand-written part of _headers that set immutable. */
@@ -318,14 +354,17 @@ function stampHeaders({ check }) {
   // A hand-written immutable rule is only safe while every reader-facing page
   // loads the file stamped (map.html once loaded /ui-controls.css bare).
   const refs = moduleReferences()
+  const hashFile = assetHasher(PUBLIC)
   for (const file of hand) {
-    const bare = (refs.get(file) || []).filter((r) => !DEV_ONLY.test(r.from) && r.stamp !== hashOf(file))
+    const loads = (refs.get(file) || []).filter((r) => !DEV_ONLY.test(r.from))
+    const expected = loads.length ? hashFile(file) : null
+    const bare = loads.filter((r) => r.stamp !== expected)
     if (bare.length) {
       console.error(`stamp_assets: _headers serves /${file} immutable, but ${bare.map((r) => r.from).join(', ')} loads it without its content stamp.`)
       process.exit(1)
     }
   }
-  const files = immutableModules().filter((f) => !hand.has(f) && !DEV_ONLY.test(f))
+  const files = immutableModules(PUBLIC, SRC, {references: refs, hashFile}).filter((f) => !hand.has(f) && !DEV_ONLY.test(f))
   const block = [
     HEADERS_BEGIN,
     '# Each file here is referenced only as ?v=<content hash> (scripts/stamp_assets.mjs',
@@ -355,7 +394,7 @@ function stamp({ check }) {
   const before = readFileSync(INDEX, 'utf8')
   const hashes = Object.fromEntries(STAMPED.map((f) => [f, hashOf(f)]))
   let hits = 0
-  const after = before.replace(
+  const after = navFallbacks(before).replace(
     new RegExp(`/(${STAMPED.map((f) => f.replace('.', '\\.')).join('|')})\\?v=[A-Za-z0-9._-]*`, 'g'),
     (_, file) => {
       hits += 1
@@ -371,7 +410,7 @@ function stamp({ check }) {
   const communityPath = join(PUBLIC, 'community.html')
   const communityBefore = readFileSync(communityPath, 'utf8')
   // The community page wears the site masthead, drawer and footer, synced from index.html as home.html's are.
-  const communityAfter = syncHomeChrome(communityBefore, after).replace(/\/(style\.css|ui-controls\.css|community\.css|community\.js|navigation\.js|quick-search\.js)(?:\?v=[A-Za-z0-9._-]*)?(?=")/g, (_, file) => `/${file}?v=${hashOf(file)}`)
+  const communityAfter = syncHomeChrome(communityBefore, after).replace(/\/(style\.css|ui-controls\.css|nav\.css|community\.css|community\.js|navigation\.js|quick-search\.js)(?:\?v=[A-Za-z0-9._-]*)?(?=")/g, (_, file) => `/${file}?v=${hashOf(file)}`)
   if (!check && communityAfter !== communityBefore) writeFileSync(communityPath, communityAfter)
   const workbenchPath = join(PUBLIC, 'ui-workbench.html')
   const workbenchBefore = readFileSync(workbenchPath, 'utf8')
@@ -379,7 +418,7 @@ function stamp({ check }) {
   if (!check && workbenchAfter !== workbenchBefore) writeFileSync(workbenchPath, workbenchAfter)
   const homePath = join(PUBLIC, 'home.html')
   const homeBefore = readFileSync(homePath, 'utf8')
-  const homeAfter = syncHomeChrome(homeBefore, after).replace(/\/(style\.css|ui-controls\.css|ui-source\.css|ui-source\.js|home\.css|home\.js|navigation\.js|quick-search\.js|analytics\.js|events\.js|gtm\.js)\?v=[A-Za-z0-9._-]*/g, (_, file) => `/${file}?v=${hashOf(file)}`)
+  const homeAfter = syncHomeChrome(homeBefore, after).replace(/\/(style\.css|ui-controls\.css|ui-source\.css|ui-source\.js|home\.css|nav\.css|home\.js|navigation\.js|quick-search\.js|analytics\.js|events\.js|gtm\.js)\?v=[A-Za-z0-9._-]*/g, (_, file) => `/${file}?v=${hashOf(file)}`)
   if (!check && homeAfter !== homeBefore) writeFileSync(homePath, homeAfter)
   // /map is served from map.html. ui-controls.css is immutable, so a bare link
   // there would keep a returning reader on an old stylesheet for a year.

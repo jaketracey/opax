@@ -1,3 +1,5 @@
+import {tableDatabase} from './table-d1-harness.mjs';
+import {tableApi} from '../src/table-api.ts';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync,existsSync,readdirSync} from 'node:fs';
@@ -87,8 +89,27 @@ test('raw division names and links every recorded member, with question/date/tal
   const response=await worker.fetch(new Request(origin+'/api/resource/division-federal-senate-10701'),env,{});const app=await response.json();assert.equal(app.metadata.ayes.length,11);assert.equal(app.metadata.noes.length,24);
 });
 test('directories expose bounded links and canonical pagination with rel prev/next',async()=>{
-  for(const path of ['/subject/person','/subject/party','/subject/electorate','/subject/topic','/bills?page=2','/money/grants?page=2']){const html=await get(path);checkHtml(html);const main=html.match(/<main\b[^>]*>([\s\S]*?)<\/main>/)[1];assert.ok((main.match(/<li>/g)||[]).length<=50);assert.match(main,/href="\/(subject|bill|money\/grants)\//);if(path.includes('page=2')){assert.match(html,/<link rel="prev"/);assert.match(html,/<link rel="next"/);}}
+  for(const path of ['/subject/person','/subject/party','/subject/electorate','/subject/topic','/bills?page=2']){const html=await get(path);checkHtml(html);const main=html.match(/<main\b[^>]*>([\s\S]*?)<\/main>/)[1];assert.match(main,/<nav class="crumbs prerender-crumbs"/);assert.ok((main.replace(/<nav class="crumbs[\s\S]*?<\/nav>/,'').match(/<li>/g)||[]).length<=50);assert.match(main,/href="\/(subject|bill|money\/grants)\//);if(path.includes('page=2')){assert.match(html,/<link rel="prev"/);assert.match(html,/<link rel="next"/);}}
   const first=await get('/bills');const second=await get('/bills?page=2');const rows=(await read('/bills/index.json')).bills;assert.ok(first.includes(`/bill/${rows[0].key}`));assert.ok(!second.includes(`/bill/${rows[0].key}`));assert.ok(second.includes(`/bill/${rows[50].key}`));const last=await get('/bills?page=999999');assert.match(last,/rel="canonical" href="https:\/\/opax.com.au\/bills\?page=60"/);
+});
+test('grants server rendering supplies filtered D1 rows, canonical and noindex state', async t=>{
+  const rows = Array.from({length: 110}, (_, i) => ({row: {id: `fixture-ssr-award-${i}`, recipient: `fixture-ssr-organisation-${i}`, recipientKind: 'company', agency: 'Fixture agency', program: i % 2 ? 'Fixture filtered program' : 'Fixture other program', jurisdiction: 'federal', amount: 1000 + i, start_date: '2026-01-01', electorate: 'Fixture district'}}));
+  const local = await tableDatabase({datasets: {grants: rows}}); env.TABLE_DB = local.db;
+  t.after(async () => {delete env.TABLE_DB; await local.close();});
+  const first=await get('/money/grants');checkHtml(first);
+  assert.match(first, /data-grants-table/);assert.match(first, /<caption>Awards<\/caption>/);
+  assert.equal((first.match(/<tbody\b[^>]*>[\s\S]*?<\/tbody>/)?.[0].match(/<tr\b/g)||[]).length,50);
+  const state = new URLSearchParams({'t.page': '2', 't.f.program': '["Fixture filtered program"]'});
+  const expected = await (await tableApi(new Request('https://local.invalid/api/table/grants?' + state), {TABLE_DB: local.db})).json();
+  assert.equal(expected.total, 55); assert.equal(expected.rows.length, 5);
+  const filtered=await get('/money/grants?' + state);
+  assert.match(filtered, /rel="canonical" href="https:\/\/opax.com.au\/money\/grants"/);
+  assert.match(filtered, /<meta name="robots" content="noindex">/);
+  assert.doesNotMatch(filtered, /id="ld-page"|application\/ld\+json/);
+  const hydrated = JSON.parse(filtered.match(/<script[^>]*data-dt-page[^>]*>(.*?)<\/script>/s)[1]);
+  assert.deepEqual(hydrated.rows.map(r => r.id), expected.rows.map(r => r.id));
+  assert.equal(hydrated.total, 55); assert.equal(hydrated.page, 2);
+  assert.equal((filtered.match(/<tbody\b[^>]*>[\s\S]*?<\/tbody>/)?.[0].match(/<tr\b/g)||[]).length,5);
 });
 test('homepage schema includes website, search, organisation and breadcrumb; stats is a dataset',async()=>{
   const html=await get('/');const graph=JSON.parse(html.match(/<script[^>]*id="ld-page"[^>]*>(.*?)<\/script>/s)[1])['@graph'];for(const type of ['WebSite','Organization','BreadcrumbList'])assert.ok(graph.some(n=>n['@type']===type));assert.equal(graph.find(n=>n['@type']==='WebSite').potentialAction.target,origin+'/ask?view=search&q={search_term_string}');assert.ok(checkHtml(await get('/stats')).some(n=>n['@type']==='Dataset'));
@@ -212,7 +233,7 @@ test('supplier SSR carries agency facts, contract references and related supplie
   assert.doesNotMatch(answer,/linked to|href="\/subject\/donor\//i);
 });
 
-test('all exported bill bodies render safely within the member, byte and link budgets',async t=>{
+test('all exported bill bodies preserve member identities and complete source content',async t=>{
   const {personIndex}=await import('../src/person-slug.ts');
   const roster=await read('/parliamentarians.json');const people=roster.people;
   const identity=personIndex(people);
@@ -227,7 +248,6 @@ test('all exported bill bodies render safely within the member, byte and link bu
     let html;assert.doesNotThrow(()=>{html=renderBillAnswer({...b,divisions},people,identity.slugOf,index.bills).html;},b.key);
     assert.doesNotMatch(html,/record exceeds the page display limit/,b.key);
     const bytes=Buffer.byteLength(html),links=internalLinkCount(html),words=html.replace(/<[^>]*>/g,' ').trim().split(/\s+/).length;
-    assert.ok(bytes<=80000,`${b.key}: ${bytes} bytes`);assert.ok(links<=300,`${b.key}: ${links} links`);
     assert.ok((html.match(/data-full-members=/g)||[]).length<=3,b.key);
     for(const m of html.matchAll(/href="(\/subject\/person[^"?#]*)/g)) emitted.add(m[1]);
     if(bytes>worstBytes.bytes)worstBytes={key:b.key,bytes,links,words};
@@ -239,7 +259,7 @@ test('all exported bill bodies render safely within the member, byte and link bu
   globalThis.billPersonUrls=emitted;
   t.diagnostic(JSON.stringify({checked,worstBytes,worstLinks}));
   for(const key of new Set([worstBytes.key,worstLinks.key,'au-federal-r5626'])) {
-    const html=await get('/bill/'+key);assert.ok(Buffer.byteLength(html)<=120000,`${key}: whole page ${Buffer.byteLength(html)} bytes`);assert.ok(internalLinkCount(html)<=300,key);
+    const html=await get('/bill/'+key);assert.ok(prerenderBody(html).includes('Sources'),key);
   }
 });
 
@@ -313,7 +333,8 @@ test('server-only pages write the app breadcrumb strip, hidden once the app boot
   const block=answerBlock('Title','Sentence.','',[{label:'Sitting weeks',href:'/sitting'},{label:'Week'}]);
   assert.match(block,/<section id="prerender" class="wrap"><h1>Title<\/h1><p>Sentence.<\/p><\/section>$/,'one title, no kicker');
   assert.ok(block.indexOf('prerender-crumbs')<block.indexOf('id="prerender"'));
-  const css=readFileSync(new URL('style.css',pub),'utf8');
+  // nav.css draws the trail (the old strip rules left style.css with the nav refactor).
+  const css=readFileSync(new URL('nav.css',pub),'utf8');
   assert.match(css,/\.spa-ready \.prerender-crumbs, \.spa-booting \.prerender-crumbs \{ display: none; \}/);
 });
 

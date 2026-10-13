@@ -50,11 +50,12 @@ test('methods uses an unnamed embedding fallback and escapes manifest text', () 
   assert.match(models.generation, /<code>&lt;fixture&gt;<\/code>/);
 });
 
-test('methods checks run during search builds and stamp gates', () => {
+test('methods builds once at stamping and remains validated by standalone checks', () => {
   const pkg = JSON.parse(readFileSync(new URL('../package.json', import.meta.url), 'utf8'));
   const stamp = readFileSync(new URL('../../scripts/stamp_assets.mjs', import.meta.url), 'utf8');
-  assert.match(pkg.scripts['build:search'], /npm run build:methods/);
-  assert.match(pkg.scripts.check, /stamp_assets\.mjs --check/);
+  assert.doesNotMatch(pkg.scripts['build:search'], /npm run build:methods/);
+  assert.match(pkg.scripts.check, /^wrangler types && .*stamp_assets\.mjs --check/);
+  assert.equal(pkg.scripts['check:built'], 'node ../scripts/check_built.mjs');
   // Deploy may share its build pipeline with CI; follow npm script references
   // so this checks the executed stamp gate rather than its inline spelling.
   const expand = (name, parents = []) => {

@@ -5,9 +5,31 @@ import {applyQuery,dataTableHTML,formatCell,mountDataTable,parseQuery,serializeQ
 import {workbenchConfig,workbenchRows as rows} from '../public/datatable-workbench-data.js';
 import {cleanEvent} from '../analytics/privacy.mjs';
 import {tableHarness} from './datatable-harness.mjs';
+import {guardTableURL} from '../public/datatable.js';
 
 const config={...workbenchConfig};
 const all = query => applyQuery(rows,config,{...query,pageSize:100});
+test('declared facet options retain empty choices without a donor matcher',()=>{
+ const columns=[{key:'title',label:'Title',type:'text'},{key:'responses',label:'Responses',type:'category',facet:'multi',facetOptions:['Yes','No']}];
+ const table={id:'facet-options-fixture',caption:'Fixture reports',pageType:'audit',columns};
+ const rows=[{title:'Fixture public report',responses:'No'}];
+ const page=applyQuery(rows,table,{filters:{responses:['Yes']}});
+ assert.equal(page.total,0);assert.deepEqual(page.facets.responses,[{value:'No',count:1},{value:'Yes',count:0}]);
+ assert.ok(dataTableHTML(table,page).includes('Yes'));
+ assert.deepEqual(applyQuery([],table,{}).facets.responses,[{value:'No',count:0},{value:'Yes',count:0}]);
+});
+test('raw query guard keeps names and rejects duplicate table keys and length overflow',()=>{
+ const table={id:'fixture',caption:'Fixture',columns:[],pageType:'money',urlKey:'receipts'};
+ const name='EXAMPLE, ALEX';
+ const valid=guardTableURL(table,new URL('https://fixture.test/?receipts.q='+encodeURIComponent(name)));
+ assert.equal(valid.rejected,false);assert.equal(valid.query.q,name);
+ for(const key of ['q','receipts.q']) {
+  const url=new URL('https://fixture.test/');url.searchParams.append(key,'first');url.searchParams.append(key,'second');
+  const result=guardTableURL(table,url);assert.equal(result.rejected,true);assert.equal(result.url.searchParams.has(key),false);
+ }
+ const large=guardTableURL(table,new URL('https://fixture.test/?future='+'x'.repeat(8193)));
+ assert.equal(large.rejected,true);
+});
 test('query round trips namespaces, lists, ranges and a colon in the sort key',()=>{
   const query = {q:'Works & services',filters:{region:['Victoria','Queensland'],amount:{min:0,max:500000}},sort:{key:'total:amount',dir:'desc'},page:3,pageSize:25};
   const encoded = serializeQuery(query,'receipts');
@@ -155,4 +177,22 @@ test('server hydration preserves selected facets without a validation POST',asyn
   assert.equal(request.searchParams.get('f.region'),JSON.stringify(['Victoria']));
   assert.equal(new URL(h.win.location.href).searchParams.get('t.f.region'),JSON.stringify(['Victoria']));
   mounted.destroy();
+});
+
+test('legacy query adapters remove keys only after the shared raw URL guard',async()=>{
+  for (const repeated of [false,true]) {
+    const h=tableHarness('http://localhost/table?q=accepted&year=2025&campaign=fixture'+(repeated?'&q=second':''));
+    const mounted=mountDataTable(h.root,{...config,initialQuery:{q:'accepted'},initialQueryKeys:['q','year']});
+    await new Promise(setImmediate);
+    const url=new URL(h.win.location.href);
+    assert.equal(url.searchParams.has('q'),false);
+    assert.equal(url.searchParams.has('year'),false);
+    assert.equal(url.searchParams.get('campaign'),'fixture');
+    if (repeated) {
+      assert.equal(url.searchParams.has('t.q'),false);
+      assert.match(h.html(),/Showing 0–0 of 0/);
+      assert.match(h.html(),/data-export disabled/);
+    } else assert.equal(url.searchParams.get('t.q'),'accepted');
+    mounted.destroy();
+  }
 });

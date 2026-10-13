@@ -3,23 +3,24 @@ import assert from 'node:assert/strict';
 import {readFileSync,readdirSync,statSync} from 'node:fs';
 import {runInNewContext} from 'node:vm';
 import {isOrganisationDonor} from '../public/donor-entity.js';
+import * as registerTables from '../public/register-tables.js';
 import * as growthModules from '../public/growth-modules.js';
 import {supplierDonations,mountSupplierGrowth} from '../public/supplier-growth.js';
 import {cleanEvent,safePath} from '../analytics/privacy.mjs';
 const read=f=>readFileSync(new URL(f,import.meta.url),'utf8');
 const app=read('../public/app.js');
 const json=f=>JSON.parse(read(f));
-const roslyn={id:'donor:fixture-person',kind:'donor',label:'Quillon Fixturewright',industry:'media'};
+const withheldFixture={id:"donor:fixture-person",kind:"donor",label:json("../public/graph/money.json").nodes.find(n=>n.kind === "donor" && n.industry === "individual" && !isOrganisationDonor(n)).label,industry:"media"};
 const company={id:'donor:acme',kind:'donor',label:'Acme Pty Ltd'};
 test('donor privacy uses entity evidence, never industry, including ABN sole traders',()=>{
- assert.equal(isOrganisationDonor(roslyn),false);
- assert.equal(isOrganisationDonor({...roslyn,industry:'individual'}),false);
- assert.equal(isOrganisationDonor({label:'Alex Example',donor_type:'sole trader',abn:'12345678901'}),false);
- assert.equal(isOrganisationDonor({label:'Alex Example',donor_type:'individual',abn:'12345678901'}),false);
- for(const record of [company,{label:'United Workers Union'},{label:'Example Family Trust'},{label:'Example Association'},{label:'Example Council'},{label:'Example',aliases:['Example Services']}])assert.equal(isOrganisationDonor(record),true);
- assert.equal(isOrganisationDonor({label:'Unknown name',industry:'construction'}),false);
- assert.equal(isOrganisationDonor({label:'Alex Example',abn:'12345678901'}),false);
- assert.equal(isOrganisationDonor({label:'Alex Example',acn:'123456789'}),false);
+ assert.equal(isOrganisationDonor(withheldFixture),false);
+ assert.equal(isOrganisationDonor({...withheldFixture,industry:'individual'}),false);
+ assert.equal(isOrganisationDonor({label:withheldFixture.label,donor_type:'sole trader',abn:'12345678901'}),false);
+ assert.equal(isOrganisationDonor({label:withheldFixture.label,donor_type:'individual',abn:'12345678901'}),false);
+ for(const record of [company,{label:'United Workers Union'},{label:'Example Family Trust'},{label:'Example Association'},{label:'Example Council'},{label:withheldFixture.label,aliases:['Example Services']}])assert.equal(isOrganisationDonor(record),true);
+ assert.equal(isOrganisationDonor({label:withheldFixture.label,industry:'construction'}),false);
+ assert.equal(isOrganisationDonor({label:withheldFixture.label,abn:'12345678901'}),false);
+ assert.equal(isOrganisationDonor({label:withheldFixture.label,acn:'123456789'}),false);
 });
 
 test('an enacted bill without divisions cannot be described as not yet voted',()=>{

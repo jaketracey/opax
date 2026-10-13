@@ -1,10 +1,12 @@
 import {readFile, readdir, mkdir, writeFile, rm} from 'node:fs/promises';
 import {fileURLToPath} from 'node:url';
-import {join, resolve} from 'node:path';
+import {join, resolve, dirname} from 'node:path';
 import {createHash} from 'node:crypto';
 import {TABLE_DATASETS} from '../portal/src/table-datasets.mjs';
 import {tableSchema,tableName,quote,arrayColumns} from './table-schema.mjs';
 import {moneyFlowType} from '../portal/public/money-records.js';
+import {instrumentTableRows} from '../portal/public/instruments.js';
+import {categoryMembers} from '../portal/public/register-tables.js';
 import {donorDisclosure} from '../portal/public/donor-disclosure.js';
 import {divisionRows,votingRows} from '../portal/public/vote-tables.js';
 
@@ -17,14 +19,15 @@ export async function interestTableRows(root) {
     const v = await read('interests/' + file);
     for (const [category, bucket] of Object.entries(v.buckets || {})) for (const [i, item] of (bucket.items || []).entries()) {
       const date = item.date || v.as_at || null;
-      rows.push({row: {id: `${file.slice(0, -5)}:${category}:${i}`, name: v.name, category, holder: item.holder || '', jurisdiction: v.jurisdiction, chamber: v.chamber, description: item.description || '', date, year: Number(String(date || '').slice(0, 4)) || null, url: v.source_url || ''}});
+      const row = {id: `${file.slice(0, -5)}:${category}:${i}`, name: v.name, category, holder: item.holder || '', jurisdiction: v.jurisdiction, chamber: v.chamber, description: item.description || '', date, year: Number(String(date || '').slice(0, 4)) || null, url: v.source_url || ''};
+      rows.push({row});
     }
   }
   return rows;
 }
 
 /** Read existing public snapshots only. No database or network operations. */
-export async function tableRows(root = defaultRoot, {moneyOnly = false, graphs: suppliedGraphs} = {}) {
+export async function tableRows(root = defaultRoot, {moneyOnly = false, graphs: suppliedGraphs, observe} = {}) {
   const read = async name => JSON.parse(await readFile(join(root, name), 'utf8'));
   const files = async name => (await readdir(join(root, name))).filter(f => f.endsWith('.json')).sort();
   const graphs = suppliedGraphs || await Promise.all(['/graph/money.json','/graph/money.qld.json','/graph/money.vic.json','/graph/money.tas.json'].map(name => read(name.slice(1))));
@@ -49,8 +52,12 @@ export async function tableRows(root = defaultRoot, {moneyOnly = false, graphs: 
     contractIds.add(c.id);
     add('contracts', {id: c.id, title: c.title || c.id, supplier: s.name, agency: c.agency || '', procurement_method: c.procurement_method || '', jurisdiction: 'federal', amount: c.amount, start_date: c.start_date || null, end_date: c.end_date || null, description: c.description || '', url: c.url || ''});
   }
-  for (const jur of ['federal', 'qld']) for (const file of (await files('grants/' + jur)).filter(f => f.startsWith('shard-'))) for (const r of Object.values(await read(`grants/${jur}/${file}`))) for (const [i, g] of (r.grants || []).entries()) {
-    add('grants', {id: String(g.id ?? `${r.id}:${i}`), title: g.n || g.pr || g.id || '', recipient: r.n, agency: g.ag || '', program: g.pr || '', category: g.cat || '', jurisdiction: jur, amount: g.v, year: Number(String(g.fy || g.s || '').slice(0, 4)) || null, start_date: g.s || null, description: g.desc || '', url: g.guid ? `https://www.grants.gov.au/Ga/Show/${g.guid}` : ''});
+  for (const jur of ['federal', 'qld']) {
+    const index = await read(`graph/grants.${jur}.json`).catch(()=>({recipients:[]}));
+    const profiles = new Set((index.recipients || []).map(r => String(r.id)));
+    for (const file of (await files('grants/' + jur)).filter(f => f.startsWith('shard-'))) for (const r of Object.values(await read(`grants/${jur}/${file}`))) for (const [i, g] of (r.grants || []).entries()) {
+      add('grants', {id: String(g.id ?? `${r.id}:${i}`), title: g.n || g.pr || g.id || '', recipient: r.n, agency: g.ag || '', program: g.pr || '', category: g.cat || '', jurisdiction: jur, amount: g.v, year: Number(String(g.fy || g.s || '').slice(0, 4)) || null, start_date: g.s || null, description: g.desc || '', url: g.guid ? `https://www.grants.gov.au/Ga/Show/${g.guid}` : '', electorate: g.el || 'Not recorded', recipientId: r.id, recipientKind: r.k || r.identity?.kind || '', recipientABNType: r.abr?.etype || r.abr?.type || r.identity?.type || '', recipientAvailable: profiles.has(String(r.id)) ? 1 : 0});
+    }
   }
   if (moneyOnly) return {rows};
   const bills = (await read('bills/index.json')).bills, billScopes = new Map(), stages = new Map();
@@ -78,11 +85,12 @@ export async function tableRows(root = defaultRoot, {moneyOnly = false, graphs: 
     for (const [i,record] of votingRows(records,bills).entries()) add('votes', {...record,id:`${person}:${i}`,person,name:v.name,party:v.party,jurisdiction:v.jurisdiction,house:v.house,ayes:v.ayes,noes:v.noes,divisions_total:v.divisions_total,first_year:v.years?.[0] ?? null,last_year:v.years?.at(-1) ?? null});
   }
   const instruments = await read('instruments/index.json');
+  const projected = new Map((await instrumentTableRows(path=>read(path.slice(1)),await read('instruments/manifest.json'),instruments.records)).map(row=>[row.id,row]));
   for (const values of instruments.records) {
     const v = Object.fromEntries(instruments.fields.map((field, i) => [field, values[i]]));
-    add('instruments', {id: v.id, title: v.title, portfolios: v.portfolios, type: v.type, status: v.status, commenced: v.commenced || null, year: Number(String(v.commenced || '').slice(0, 4)) || null});
+    add('instruments', {id: v.id, title: v.title, portfolios: projected.get(v.id).portfolios, type: v.type, status: v.status, commenced: v.commenced || null, year: projected.get(v.id).year, registered:projected.get(v.id).registered});
   }
-  for (const v of (await read('audit/index.json')).records) add('audit-reports', {id: v.id, title: v.title, report_label: v.report_label, sectors: v.sectors, entities: v.entities, jurisdiction: 'qld', number: v.number, year: Number(String(v.year).slice(0, 4)) || null, tabled_date: v.tabled_date, canonical_url: v.canonical_url});
+  for (const v of (await read('audit/index.json')).records) add('audit-reports', {id: v.id, title: v.title, report_label: v.report_label, sectors: categoryMembers(v.sectors), entities: v.entities, jurisdiction: 'qld', number: v.number, year: Number(String(v.year).slice(0, 4)) || null, tabled_date: v.tabled_date, canonical_url: v.canonical_url});
   for (const entry of await interestTableRows(root)) add('interests',entry.row);
   return {rows};
 }
@@ -110,7 +118,7 @@ export async function buildTableSQL({root=defaultRoot,output=fileURLToPath(new U
     for (const {row} of datasets[name] || []) {
       const rowid=++counts[name];
       const values=config.columns.filter(c=>!c.computed).map(c=>arrayColumns.has(c.key) && Array.isArray(row[c.key]) ? JSON.stringify(row[c.key]) : row[c.key] ?? null);
-      const search=config.columns.filter(c=>!c.computed && !['url','canonical_url'].includes(c.key)).map(c=>Array.isArray(row[c.key]) ? row[c.key].join(' ') : row[c.key] ?? '').join(' ');
+      const search=config.columns.filter(c=>!c.computed && (config.searchKeys ? config.searchKeys.includes(c.key) : !['url','canonical_url'].includes(c.key))).map(c=>Array.isArray(row[c.key]) ? row[c.key].join(' ') : row[c.key] ?? '').join(' ');
       insert(`INSERT INTO ${table} (rowid,${config.columns.filter(c=>!c.computed).map(c=>quote(c.key)).join(',')},search)`,`(${rowid},${[...values,search].map(literal).join(',')})`);
       const facets=config.columns.filter(c=>c.facet==='multi'||c.facet==='chips').flatMap(c=>[...new Set([row[c.key]].flat().filter(v=>v!=null&&v!==''))].map(value=>`(${literal(c.key)},${literal(value)},${rowid})`));
       for(const facet of facets)insert(`INSERT INTO ${table}_facets (key,value,rowid)`,facet);
@@ -126,10 +134,20 @@ export async function buildTableSQL({root=defaultRoot,output=fileURLToPath(new U
   await writeFile(join(output,'manifest.json'),JSON.stringify(manifest,null,2)+'\n');
   return manifest;
 }
+// CI uses metadata-only releases to skip private reload SQL preparation.
+// --sql remains available to the separate table reload lane.
+export function tableMetadataOnly(argv = process.argv.slice(2), env = process.env) {
+  if (argv.includes('--metadata-only') && argv.includes('--sql')) throw new Error('Conflicting table build modes');
+  return !argv.includes('--sql') && (argv.includes('--metadata-only') || env.OPAX_TABLE_METADATA_ONLY === '1');
+}
+export async function buildTableAssets({root=defaultRoot, output, metadataOnly=false, datasets}={}) {
+  if (metadataOnly) return {publicAssets:0};
+  datasets ||= (await tableRows(root)).rows;
+  return buildTableSQL({root,output,datasets});
+}
 if (process.argv[1] && resolve(process.argv[1])===fileURLToPath(import.meta.url)) {
   try {
-    const loaded=await tableRows();
-    const result=await buildTableSQL({datasets:loaded.rows});
-    console.log(JSON.stringify({sqlFiles:result.files.length,bytes:result.bytes,rows:result.counts,publicTableAssets:0,publicPrivacyAssets:0}));
+    const result=await buildTableAssets({metadataOnly:tableMetadataOnly()});
+    console.log(JSON.stringify({sqlFiles:result.files?.length || 0,bytes:result.bytes || 0,...(result.counts?{rows:result.counts}:{}),publicTableAssets:0}));
   } catch {console.error('Table load preparation failed; no source identities are logged.');process.exitCode=1;}
 }

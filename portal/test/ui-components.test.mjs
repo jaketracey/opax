@@ -99,11 +99,11 @@ test('MachineLabel notRecord: the pill says "not part of the record" in its titl
     `<details class="ui-pop ui-machine"><summary${said}><span class="ui-machine-glyph" aria-hidden="true">✦</span>${name}</summary><div class="ui-sheet"><p>From the EM.</p></div></details>`);
   assert.equal(machineLabelHTML({ pill: true, notRecord: true }), `<span class="ui-machine-pill"${said}><span class="ui-machine-glyph" aria-hidden="true">✦</span>${name}</span>`);
   assert.equal(machineLabelHTML({ inline: true, notRecord: true }), `<span class="ui-machine-inline"${said}><span class="ui-machine-glyph" aria-hidden="true">✦</span>${name}</span>`);
-  // The home page's bills list carries the helper's pill, written into the page.
-  const index = read('index.html');
-  assert.ok(index.includes(machineLabelHTML({ notRecord: true, note: "Each summary is written by a model from the bill's explanatory memorandum. It is not part of the record." })));
+  // (The old in-app front page carried this pill in index.html; it never rendered
+  // and was deleted in the 12 Oct 2026 uplift. / is home.html.)
   // The sentences the pill replaced: the doc page's In brief, the speech's bill
   // panel, the bill peek, the search summary, the home bills note, the year in brief.
+  const index = read('index.html');
   const tm = read('timemachine.js');
   for (const text of [app, index, tm]) {
     assert.doesNotMatch(text, /not by a person, and not part of the record|not part of the original bill text/);
@@ -209,8 +209,9 @@ test('labels.js is the one copy: app.js and the homepage import it, neither keep
   }
   assert.match(app, /import\('\/labels\.js(\?v=[0-9a-f]{10})?'\)/);
   assert.match(homeData, /from '\.\/labels\.js(\?v=[0-9a-f]{10})?';/);
-  // The first render waits for it (and for ⋯, page-actions-menu.js).
-  assert.match(app, /Promise\.allSettled\(\[attributionReady, uiLabelsReady, pageMenusReady, growthModulesReady, personUrlsReady, saDisplayReady, donorViewReady, voteTablesReady\]\)\.finally\(\(\) => \{[^}]*route\(\);/);
+  // Every route needs labels; menus mount when their import arrives.
+  assert.match(app, /uiLabelsReady\.finally\(\(\) => \{[^}]*route\(\);/);
+  assert.match(app, /return \[uiLabelsReady,/);
   assert.match(read('index.html'), /<link rel="modulepreload" href="\/labels\.js\?v=[0-9a-f]{10}">/);
 });
 
@@ -247,7 +248,8 @@ test('D1: things you press are pills, things you read are 4px', () => {
   }
   assert.match(rulesFor(controls, ':is(button, a, label).ui-chip'), /border-radius:\s*var\(--ui-radius-press\)/);
   for (const sel of ['.ui-tag', '.ui-status']) assert.match(rulesFor(controls, sel), /border-radius:\s*var\(--ui-radius\)/, sel);
-  assert.match(rulesFor(controls, ':is(input, select, textarea).ui-input'), /border-radius:\s*var\(--ui-radius\)/);
+  // Fields hold 12px since the 12 Oct 2026 uplift, so a field and the pill beside it read as one family.
+  assert.match(rulesFor(controls, ':is(input, select, textarea).ui-input'), /border-radius:\s*var\(--radius-md\)/);
   assert.match(rulesFor(sourceCss, '.ui-machine > summary'), /border-radius:\s*var\(--radius-pill\)/);
   assert.match(rulesFor(sourceCss, '.ui-sheet'), /border-radius:\s*var\(--radius-md\)/);
   // Secondary is the navy wash with no outline; the transparent border is forced colours' edge.
@@ -329,12 +331,12 @@ test('focus, touch targets, reduced motion and forced colours cover every contro
   for (const sel of ['.ui-filter-chip', '.ui-chip', '.chip:not(.ui-button)', '.ui-tag', '.topic-chip']) assert.ok(touch.slice(0, touch.indexOf('}\n}')).includes(sel), `${sel} grows to 44px`);
   assert.match(touch, /min-height:\s*var\(--size-target\)/);
   // Summaries that draw smaller than 44px reach it with their hit area.
-  assert.match(sourceCss, /\.ui-source > summary::after \{ content: ""; position: absolute; inset: -6px 0; \}/); // 32 + 12
+  assert.match(sourceCss, /\.ui-source > summary::after \{ content: ""; position: absolute; inset: calc\(-1 \* var\(--sp-8\)\) 0; \}/); // 32 + 16
   assert.match(sourceCss, /\.ui-machine > summary::after \{ content: ""; position: absolute; inset: -10px 0; \}/); // 24 inside the hairline + 20
   assert.match(controls, /@media \(prefers-reduced-motion: reduce\)[\s\S]*transition: none/);
   assert.match(sourceCss, /@media \(prefers-reduced-motion: no-preference\) \{\s*\.ui-pop\[open\] > \.ui-sheet \{ animation/);
   const forced = controls.slice(controls.indexOf('@media (forced-colors: active)'));
-  assert.match(forced, /\[aria-pressed="true"\][\s\S]*outline: 2px solid Highlight/);
+  assert.match(forced, /\[aria-pressed="true"\][\s\S]*outline: (?:2px|var\(--border-focus\)) solid Highlight/);
   assert.match(forced, /:is\(\.ui-party, \.party\) > i \{ background: CanvasText; \}/);
   assert.match(sourceCss, /@media \(forced-colors: active\) \{\s*\.ui-sheet \{ border-color: CanvasText; \}/);
   for (const [name, css] of [['ui-controls.css', controls], ['ui-source.css', sourceCss]]) {
@@ -364,21 +366,24 @@ test('the Ask block rule never touches the page actions above it', () => {
   assert.match(style, /\n\.growth-ask \{ margin: var\(--space-group\) 0 var\(--space-section\);/);
 });
 
+// nav.css draws the band (the old masthead rules left style.css with the nav refactor).
+const navCss = read('nav.css');
 test('the compact band keeps the mark left and its icons together on the right', () => {
-  const band = style.slice(style.indexOf('@media (max-width: 960px) {\n  .site-header .masthead { justify-content: flex-start;'));
-  assert.match(band, /^@media \(max-width: 960px\) \{\n  \.site-header \.masthead \{ justify-content: flex-start; gap: var\(--space-tight\); \}/);
-  assert.match(band.slice(0, band.indexOf('}\n}')), /\.site-header \.masthead-id \{ margin-right: auto; \}/);
+  const band = navCss.slice(navCss.indexOf('@media (max-width: 960px) {\n  .site-header .masthead { gap: var(--space-tight); }'));
+  assert.match(band, /^@media \(max-width: 960px\) \{\n  \.site-header \.masthead \{ gap: var\(--space-tight\); \}/);
+  assert.match(band.slice(0, band.indexOf('\n}\n')), /\.site-header \.masthead-id \{ margin-right: auto; \}/);
+  assert.match(navCss, /\.site-header \.masthead \{\n[^}]*justify-content: flex-start;/);
+  assert.doesNotMatch(style, /(^|\n)(header|\.masthead|\.site-header[^{]*) \{/, 'style.css keeps no band rules');
 });
 
 test('the Ask launcher is a header icon, never a pill floating over the page', () => {
-  const launcherRules = [...style.matchAll(/([^{}]*\.chat-launcher[^{}]*)\{([^{}]*)\}/g)];
+  const launcherRules = [...(style + navCss).matchAll(/([^{}]*\.chat-launcher[^{}]*)\{([^{}]*)\}/g)];
   assert.ok(launcherRules.length > 0);
   for (const [, sel, body] of launcherRules) assert.doesNotMatch(body, /position:\s*fixed|box-shadow:\s*0/, sel.trim());
-  assert.match(style, /\n\.chat-launcher \{ display: none; \}/);
-  // It shows exactly where the band carries the menu button: below 961px (navigation.js FULL_NAV).
-  const band = style.slice(style.indexOf('@media (min-width: 360px) and (max-width: 960px) {\n  .site-header .chat-launcher'));
-  assert.match(band, /^@media \(min-width: 360px\) and \(max-width: 960px\) \{\n  \.site-header \.chat-launcher:not\(\[hidden\]\) \{\s*display: flex/);
-  assert.match(style, /@media \(max-width: 960px\) \{\n  \.site-header \.masthead-nav \{ display: none; \}/);
+  assert.doesNotMatch(style, /\.chat-launcher/, 'the launcher is drawn by nav.css alone');
+  // In the band at every width: a pill beside search, the icon alone on a phone.
+  assert.match(navCss, /\n\.site-header \.chat-launcher:not\(\[hidden\]\) \{\n  display: inline-flex;/);
+  assert.match(navCss, /@media \(max-width: 960px\) \{\n[^@]*\.site-header \.masthead-nav \{ display: none; \}/);
   const nav = read('navigation.js');
   assert.match(nav, /const FULL_NAV = '\(min-width: 961px\)';/);
   assert.doesNotMatch(nav, /801px/);
@@ -386,7 +391,7 @@ test('the Ask launcher is a header icon, never a pill floating over the page', (
   assert.match(nav, /location\.pathname !== '\/' && !document\.querySelector\('script\[src\^="\/app\.js"\]'\)/);
   assert.match(nav, /<a class="chat-launcher" href="\/ask"><svg[^`']*<span>Ask OPAX<\/span><\/a>/);
   assert.doesNotMatch(style + app, /assistant-ready/);
-  assert.match(app, /\$\("header-search-open"\)\.before\(\$\("chat-launcher"\)\);/);
+  assert.match(app, /\$\("header-search-panel"\)\.after\(\$\("chat-launcher"\)\);/);
   assert.doesNotMatch(app, /home\.after\(launcher\)/);
   // The dock no longer leaves room above a pill.
   assert.match(style, /html\[data-chat="docked"\] #panel-chat \{\n  position: fixed; z-index: 70;\n  right: max\(20px, env\(safe-area-inset-right, 0px\)\);\n  bottom: max\(18px, env\(safe-area-inset-bottom, 0px\)\);/);

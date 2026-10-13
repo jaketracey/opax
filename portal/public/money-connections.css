@@ -1,0 +1,7 @@
+/* Shared table styles come from datatable.css. */
+.research-records { margin-block: var(--space-group) var(--space-section); }
+.research-records h2 { font: var(--type-heading); margin: 0 0 var(--space-line); }
+.research-records .mc-explainer { margin: 0 0 var(--space-tight); max-width: var(--size-readable); }
+.research-records .research-period { margin-block: var(--space-tight) var(--space-block); color: var(--ink-soft); }
+.money-connections-table { min-width: 0; color: var(--ink); }
+.money-connections-table caption { position: absolute; inline-size: var(--border-hairline); block-size: var(--border-hairline); overflow: hidden; clip-path: inset(50%); white-space: nowrap; }

@@ -105,7 +105,6 @@ test('the layout table and the format parser leave the landscape card untouched'
   assert.equal(ogFormat('portrait'), 'portrait');
   const home = cardTree(homeCard());
   assert.equal(home.props.style.width, 1200); assert.equal(home.props.style.height, 630);
-  assert.equal(OG_VERSION, '8', 'electoral authorisation changes the card, so crawlers and the edge fetch the new version');
 });
 
 test('the Worker draws ?format=portrait at 1080x1350, keys the cache on it and says so in a header', async () => {
@@ -144,4 +143,29 @@ test('the Worker draws ?format=portrait at 1080x1350, keys the cache on it and s
   const again = await get('https://opax.com.au/og/home.jpg?format=portrait&v=' + OG_VERSION);
   assert.equal(again.headers.get('x-opax-cache'), 'HIT'); assert.equal(again.headers.get('x-opax-format'), 'portrait');
   assert.equal(renders.length, 3, 'a HIT does not draw again');
+});
+
+
+test('a drawing version change makes changed card bytes miss the old cache',async()=>{
+ const {readFileSync}=await import('node:fs');
+ const store=new Map(),previous=globalThis.caches;
+ globalThis.caches={default:{match:async req=>store.get(req.url)?.clone(),put:async(req,res)=>store.set(req.url,res)}};
+ try {
+  const compile=async changed=>{
+   const compiled=await build({entryPoints:[new URL('../src/index.ts',import.meta.url).pathname],bundle:true,platform:'browser',format:'esm',write:false,external:['node:*'],plugins:[{name:'changed-card',setup(b){
+    b.onLoad({filter:/\/og\.ts$/},()=>({contents:readFileSync(new URL('../src/og.ts',import.meta.url),'utf8').replace(/export const OG_VERSION = '[^']+'/,
+      `export const OG_VERSION = '${OG_VERSION}${changed?'-fixture-change':''}'`),loader:'ts'}));
+    b.onResolve({filter:/^\.\/og-render$/},()=>({path:'bytes',namespace:'card-change'}));
+    b.onLoad({filter:/.*/,namespace:'card-change'},()=>({contents:`export const renderOgPng=async()=>new Uint8Array([137,80,78,71,${changed?2:1}]);export const renderOgJpeg=renderOgPng;`,loader:'js'}));
+   }}]});
+   return (await import('data:text/javascript;base64,'+Buffer.from(compiled.outputFiles[0].text).toString('base64'))).default;
+  };
+  const [oldWorker,newWorker]=await Promise.all([compile(false),compile(true)]),pending=[];
+  const env={CACHE_EPOCH:'same-epoch',ASSETS:{fetch:async()=>new Response(new Uint8Array(8))}},ctx={waitUntil:p=>pending.push(p)};
+  const get=worker=>worker.fetch(new Request('https://opax.com.au/og/home.png'),env,ctx);
+  const before=await get(oldWorker);assert.equal(before.headers.get('x-opax-cache'),'MISS');const oldBytes=await before.arrayBuffer();await Promise.all(pending.splice(0));
+  assert.equal((await get(oldWorker)).headers.get('x-opax-cache'),'HIT');
+  const after=await get(newWorker);assert.equal(after.headers.get('x-opax-cache'),'MISS');assert.notDeepEqual(await after.arrayBuffer(),oldBytes);await Promise.all(pending.splice(0));
+  assert.equal(store.size,2);
+ }finally{globalThis.caches=previous;}
 });

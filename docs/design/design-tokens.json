@@ -44,7 +44,7 @@
     },
     "line": {
       "dividerDefault": { "$value": "#B8B4A8", "dark": "#4C5047", "$description": "The top rule of a section; major content boundaries. Decorative (1.97:1)." },
-      "dividerSubtle": { "$value": "#DFDCD2", "dark": "#30342D", "highContrast": "{dividerDefault}", "$description": "Between rows, under subheadings, card outlines. Decorative (1.30:1)." },
+      "dividerSubtle": { "$value": "#DFDCD2", "dark": "#30342D", "highContrast": "{dividerDefault}", "web": { "value": "#E7E4DD" }, "$description": "Between rows, under subheadings, card outlines. Decorative (1.30:1)." },
       "lineControl": { "$value": "#8D897B", "dark": "#7E8378", "$description": "Field and segmented-control boundaries only (3.33:1). Never a content divider." }
     },
     "feedback": {
@@ -141,30 +141,39 @@
   },
 
   "type": {
-    "$description": "Eleven roles over six sizes (34, 22, 18, 17 (16 on the web), 15, 13), plus the page title's fluid web size and its iPad step. Sentence case everywhere: no uppercase or letter-spaced labels. `ramp` is the iOS Dynamic Type ramp a role scales with, to AX5, uncapped. Figures and tables use tabular numbers. Web sizes are written in rem (px / 16) and line heights as ratios.",
-    "title": { "family": "serif", "weight": 400, "size": 34, "lineHeight": 42, "ramp": "largeTitle", "color": "ink", "web": { "size": "clamp(1.9rem, 4.5vw, 2.75rem)", "lineHeight": 1.25 }, "regular": { "size": 42, "lineHeight": 52 }, "$description": "The page's one title: a person's name, a bill title, a screen name." },
-    "display": { "family": "serif", "weight": 700, "size": 34, "lineHeight": 42, "ramp": "largeTitle", "color": "ink", "tabular": true, "$description": "The one number a block is about. Serif, because large Public Sans tabular digits read as monospace. May take the view's accent ink." },
-    "heading": { "family": "serif", "weight": 700, "size": 22, "lineHeight": 30, "ramp": "title2", "color": "ink", "web": { "weight": 600 }, "$description": "Section heading." },
-    "subheading": { "family": "serif", "weight": 700, "size": 18, "lineHeight": 24, "ramp": "title3", "color": "ink", "web": { "weight": 600 }, "$description": "A row title that leads a block: a bill in a list, a division, a report card." },
-    "record": { "family": "serif", "weight": 400, "size": 17, "lineHeight": 29, "ramp": "body", "color": "ink", "web": { "lineHeight": 1.75 }, "$description": "The words of the record and long reading: speeches, report essays, In short." },
+    "$description": "Eleven roles over six sizes (34, 22, 18, 17 (16 on the web), 15, 13), plus the page title's fluid web size and its iPad step. Sentence case everywhere: no uppercase or letter-spaced labels. `ramp` is the iOS Dynamic Type ramp a role scales with, to AX5, uncapped. Figures and tables use tabular numbers. Web sizes are written in rem (px / 16) and line heights as ratios. Web (12 Oct 2026 uplift): six sizes, 32, 24, 17, 16, 15, 13, and the fluid title (32 to 48); subheading joins the record at 17, heading is 24, display is 32 at weight 600. The app keeps its own sizes.",
+    "title": { "family": "serif", "weight": 400, "size": 34, "lineHeight": 42, "ramp": "largeTitle", "color": "ink", "web": { "size": "clamp(2rem, 1.25rem + 2.2vw, 3rem)", "lineHeight": 1.15 }, "regular": { "size": 42, "lineHeight": 52 }, "$description": "The page's one title: a person's name, a bill title, a screen name." },
+    "display": { "family": "serif", "weight": 700, "size": 34, "lineHeight": 42, "ramp": "largeTitle", "color": "ink", "tabular": true, "web": { "weight": 600, "size": 32, "lineHeight": 1.2 }, "$description": "The one number a block is about. Serif, because large Public Sans tabular digits read as monospace. May take the view's accent ink." },
+    "heading": { "family": "serif", "weight": 700, "size": 22, "lineHeight": 30, "ramp": "title2", "color": "ink", "web": { "weight": 600, "size": 24, "lineHeight": 1.25 }, "$description": "Section heading." },
+    "subheading": { "family": "serif", "weight": 700, "size": 18, "lineHeight": 24, "ramp": "title3", "color": "ink", "web": { "weight": 600, "size": 17, "lineHeight": 1.4 }, "$description": "A row title that leads a block: a bill in a list, a division, a report card." },
+    "record": { "family": "serif", "weight": 400, "size": 17, "lineHeight": 29, "ramp": "body", "color": "ink", "web": { "lineHeight": 1.7 }, "$description": "The words of the record and long reading: speeches, report essays, In short." },
     "body": { "family": "sans", "weight": 400, "size": 17, "lineHeight": 25, "ramp": "body", "color": "ink", "web": { "size": 16, "lineHeight": 1.55 }, "$description": "Interface and OPAX's own sentences." },
     "strong": { "family": "sans", "weight": 600, "size": 17, "lineHeight": 25, "ramp": "body", "color": "ink", "web": { "size": 16, "lineHeight": 1.55 }, "$description": "Names in rows, values in key-value lists, inline figures (with tabular)." },
-    "metadata": { "family": "sans", "weight": 400, "size": 15, "lineHeight": 21, "ramp": "subheadline", "color": "inkSoft", "$description": "The one meta line under a title: kind · date · place." },
-    "fine": { "family": "sans", "weight": 400, "size": 13, "lineHeight": 18, "ramp": "footnote", "color": "inkSoft", "$description": "Source lines, saved-copy notices, one short caveat. Never below 13." },
-    "label": { "family": "sans", "weight": 600, "size": 13, "lineHeight": 18, "ramp": "footnote", "color": "inkSoft", "$description": "Tags, status labels, party labels, field labels. Replaces kicker, tag and chip." },
+    "metadata": { "family": "sans", "weight": 400, "size": 15, "lineHeight": 21, "ramp": "subheadline", "color": "inkSoft", "web": { "lineHeight": 1.45 }, "$description": "The one meta line under a title: kind · date · place." },
+    "fine": { "family": "sans", "weight": 400, "size": 13, "lineHeight": 18, "ramp": "footnote", "color": "inkSoft", "web": { "lineHeight": 1.45 }, "$description": "Source lines, saved-copy notices, one short caveat. Never below 13." },
+    "label": { "family": "sans", "weight": 600, "size": 13, "lineHeight": 18, "ramp": "footnote", "color": "inkSoft", "web": { "lineHeight": 1.45 }, "$description": "Tags, status labels, party labels, field labels. Replaces kicker, tag and chip." },
     "control": { "family": "sans", "weight": 600, "size": 17, "lineHeight": 22, "ramp": "body", "color": "ink", "web": { "size": 16, "lineHeight": 1.25 }, "$description": "Button, chip and segment labels." }
   },
 
   "space": {
-    "$description": "One vertical rhythm for both platforms (the app's rhythm, adopted by the web). Section and screen steps grow at regular width (iPad regular, web 701px and over).",
+    "$description": "One vertical rhythm for both platforms (the app's rhythm, adopted by the web). Section and screen steps grow at regular width (iPad regular, web 701px and over). Web (12 Oct 2026 uplift): one 4/8 scale, row 12, heading 16, block 24, group 32, section 48 / 64 at 701px / 80 at 1101px; the app keeps its rhythm.",
     "line": { "$value": 4, "$description": "A line bound to the line above: a date under a title." },
     "tight": { "$value": 8, "$description": "Inside a row or group: a name to its party line." },
-    "row": { "$value": 10, "$description": "Either side of a row hairline (content rows). Control rows own their 44pt and sit 2pt from the hairline." },
-    "heading": { "$value": 12, "$description": "A section heading to its first block." },
-    "block": { "$value": 16, "$description": "Between blocks inside a section." },
-    "group": { "$value": 24, "$description": "A second list or group inside a section." },
-    "section": { "$value": 36, "regular": 56, "$description": "Between sections; the rule sits at the top of each." },
+    "row": { "$value": 10, "web": { "value": 12 }, "$description": "Either side of a row hairline (content rows). Control rows own their 44pt and sit 2pt from the hairline." },
+    "heading": { "$value": 12, "web": { "value": 16 }, "$description": "A section heading to its first block." },
+    "block": { "$value": 16, "web": { "value": 24 }, "$description": "Between blocks inside a section." },
+    "group": { "$value": 24, "web": { "value": 32 }, "$description": "A second list or group inside a section." },
+    "section": { "$value": 36, "regular": 56, "web": { "value": 48, "regular": 64, "wide": 80 }, "$description": "Between sections; the rule sits at the top of each." },
     "screen": { "$value": 20, "regular": 32, "web": { "value": "clamp(1.25rem, 4vw, 4.5rem)" }, "$description": "Screen edge to content. The web column's padding is fluid at every width." }
+  },
+
+  "webScale": {
+    "$description": "Web-only primitives (12 Oct 2026 uplift): the steps the roles are built from, for component internals that have no role of their own. Written as --sp-<px>, --text-<px>, --weight-*, --leading-* and --ring-*; never in the app. Prefer a role where one fits.",
+    "space": [2, 4, 8, 12, 16, 20, 24, 32, 40, 48, 64, 80],
+    "text": [13, 15, 16, 17, 24, 32],
+    "weight": { "regular": 400, "strong": 600, "bold": 700 },
+    "leading": { "none": 1, "tight": 1.15, "snug": 1.3, "normal": 1.45, "body": 1.55, "loose": 1.7 },
+    "ring": { "hairline": "0 0 0 var(--border-hairline)", "focus": "0 0 0 var(--border-focus)", "insetHairline": "inset 0 0 0 var(--border-hairline)" }
   },
 
   "radius": {
@@ -265,19 +274,19 @@
       "--line": { "alias": "--divider-subtle" },
       "--line-strong": { "alias": "--line-control" },
       "--heading-page": { "alias": "--type-title" },
-      "--heading-section": { "value": "600 1.4rem/1.35 var(--serif)", "use": "--type-heading", "change": "22.4px/1.35 to 22px/1.364" },
-      "--heading-subsection": { "value": "600 1.125rem/1.35 var(--serif)", "use": "--type-subheading", "change": "line height 1.35 to 1.333" },
-      "--heading-tracking": { "value": "0.005em", "use": "no letter-spacing", "change": "0.005em to 0" },
-      "--space-1": { "alias": "--space-line" },
-      "--space-2": { "value": "0.4rem", "use": "--space-tight or --space-line", "change": "6.4px to 8px or 4px" },
-      "--space-3": { "value": "0.65rem", "compact": "0.5rem", "use": "--space-row", "change": "10.4px (8px under 701px) to 10px" },
-      "--space-4": { "alias": "--space-block" },
-      "--space-5": { "value": "1.6rem", "use": "--space-group", "change": "25.6px to 24px" },
-      "--space-6": { "value": "2.6rem", "compact": "2rem", "use": "--space-group or --space-section", "change": "41.6px (32px under 701px) to 24px or 36px" },
-      "--space-7": { "value": "4.2rem", "compact": "3.25rem", "use": "--space-section", "change": "67.2px (52px under 701px) to 56px (36px under 701px)" },
-      "--row-gap": { "value": "var(--space-3)", "use": "--space-row", "change": "10.4px (8px under 701px) to 10px" },
-      "--sub-gap": { "value": "var(--space-6)", "use": "--space-group", "change": "41.6px (32px under 701px) to 24px" },
-      "--section-gap": { "value": "var(--space-7)", "use": "--space-section", "change": "67.2px (52px under 701px) to 56px (36px under 701px)" }
+      "--heading-section": { "alias": "--type-heading" },
+      "--heading-subsection": { "alias": "--type-subheading" },
+      "--heading-tracking": { "value": "0", "use": "no letter-spacing", "change": "none" },
+      "--space-1": { "alias": "--sp-4" },
+      "--space-2": { "alias": "--sp-8" },
+      "--space-3": { "alias": "--sp-12" },
+      "--space-4": { "alias": "--sp-16" },
+      "--space-5": { "alias": "--sp-24" },
+      "--space-6": { "value": "var(--sp-48)", "compact": "var(--sp-32)", "use": "--sp-48 (--sp-32 under 701px)", "change": "none" },
+      "--space-7": { "alias": "--space-section" },
+      "--row-gap": { "alias": "--space-row" },
+      "--sub-gap": { "value": "var(--sp-48)", "compact": "var(--sp-32)", "use": "--sp-48 (--sp-32 under 701px)", "change": "none" },
+      "--section-gap": { "alias": "--space-section" }
     },
     "app": {
       "roles": {

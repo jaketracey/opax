@@ -12,7 +12,7 @@ sys.path.insert(0, str(ROOT))
 from parli.ingest.qao_reports import Client, Held, LICENCE
 from parli.ingest.qao_bodies import (strict_guard, rights_review, extract_recommendations, extract_responses,
     stage, kb_document, download, SCHEMA)
-from scripts.export_audit import plan_export, check_budget, validate_record
+from scripts.export_audit import plan_export, validate_record
 
 
 def page(n, texts):
@@ -138,7 +138,7 @@ class Tests(unittest.TestCase):
         row,doc,_=fixture();doc['pages'][6]['text']='Response from Queensland Health\nWe agree with the advice.\nDirector-General'
         records,_,_=extract_responses(row,doc['pages']);self.assertEqual(records[0]['recommendation_numbers'],[])
 
-    def test_kb_envelope_and_export_budget(self):
+    def test_kb_envelope_and_export_provenance(self):
         data,counts=self.staged();row=data['reports'][0];r=kb_document(row,row['body_units'][0],1)
         self.assertEqual(r['texts']['body']['format'],'PLAIN');self.assertIn({'labelset':'kind','label':'audit_report'},r['usermetadata']['classifications'])
         self.assertEqual(r['extra']['metadata']['document_sha256'],row['pdf']['sha256'])
@@ -146,8 +146,17 @@ class Tests(unittest.TestCase):
         self.assertIn('page',r['extra']['metadata']);files,m=plan_export(data)
         self.assertEqual(m['phase'],2);self.assertEqual(m['responses'],1);self.assertNotIn('body_units',files['reports-1.json'].decode())
         self.assertNotIn('[signature as published]',files['index.json'].decode())
-        for files in [{str(i):b'x' for i in range(151)},{'x':b'x'*30_000_001}]:
-            with self.assertRaises(Held):check_budget(files)
+
+    def test_growing_licensed_catalogue_passes_beyond_the_old_file_ceiling(self):
+        data,_=self.staged();template=data['reports'][0]
+        data['reports']=[{**copy.deepcopy(template),'id':f'qao-2000-01-{n}','number':n} for n in range(1,152)]
+        data['count']=data['listed']=len(data['reports'])
+        with patch('scripts.export_audit.CHUNK_ROWS',1):
+            files,m=plan_export(data)
+        self.assertGreater(len(files),150)
+        self.assertEqual(m['count'],151)
+        self.assertEqual(m['bodies'],151)
+        self.assertEqual(m['responses'],151)
 
     def test_staging_is_idempotent(self):
         row,doc,snap=fixture();root=self.temp();(root/(row['id']+'.json')).write_text(json.dumps(doc))

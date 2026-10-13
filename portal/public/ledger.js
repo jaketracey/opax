@@ -1,6 +1,7 @@
 import {donorDisclosure,donorLookup,donorDisplayText} from './donor-disclosure.js?v=e91ef740e5';
 import {subjectUrl} from './canonical-urls.js?v=225d5915ea';
 import { filterMoneyEdges } from "./money-records.js?v=ia-ux-20260908-2";
+import { sourceLineHTML } from './labels.js?v=fc03aa14cf';
 /**
  * OPAX Ledger — an analyst-grade table over the donor→party money flows.
  *
@@ -39,6 +40,9 @@ const JURISDICTIONS = {
   vic: { label: 'Victoria', file: '/graph/money.vic.json' },
   tas: { label: 'Tasmania', file: '/graph/money.tas.json' },
 }
+/** Text into the source line's HTML fields (labels.js escapes only its own text fields). */
+const esc = (value) => String(value ?? '').replace(/[&<>"']/g, (c) =>
+  ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c])
 const NOT_SUMMED =
   'State and federal returns are not summed: AEC returns already include state branch receipts.'
 const YEAR_MIN = 1998
@@ -364,102 +368,74 @@ const COLUMNS = {
 const CSS = `
 .lg-root { font-family: var(--sans); color: var(--ink); }
 .lg-root [hidden] { display: none !important; }
-.lg-root :focus-visible { outline: var(--border-focus) solid var(--bronze-ink); outline-offset: 3px; }
 
-.lg-selection { margin: 0 0 var(--space-line); font: var(--type-strong); color: var(--navy); overflow-wrap: anywhere; }
-/* The filters are one sheet behind a disclosure: it holds a form, so radius 12. */
-.lg-filters { margin: var(--space-heading) 0; border: var(--border-hairline) solid var(--divider-subtle); border-radius: var(--radius-md); background: var(--paper-raised); }
-.lg-filters > summary { min-height: var(--size-target); padding: var(--space-heading) var(--space-block); box-sizing: border-box; cursor: pointer; font: var(--type-control); color: var(--navy); }
-.lg-filters[open] > summary { border-bottom: var(--border-hairline) solid var(--divider-subtle); }
-.lg-filters .lg-toolbar { padding: var(--space-block); margin: 0; }
-.lg-filters .lg-year-help { padding: 0 var(--space-block) var(--space-block); margin: 0; }
-.lg-results-tools { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: var(--space-tight) var(--space-block); margin: var(--space-heading) 0; }
-.lg-results-tools .lg-actions { flex-wrap: wrap; margin-left: 0; }
-.lg-copy-status { margin: var(--space-tight) 0; font: var(--type-fine); color: var(--ink-soft); }
-.lg-root .lg-copy-fallback { width: 100%; margin: var(--space-tight) 0; }
-.lg-toolbar { display: flex; flex-wrap: wrap; gap: var(--space-heading) var(--space-block); align-items: flex-end; margin-bottom: var(--space-heading); }
-.lg-field { display: flex; flex-direction: column; gap: var(--space-line); min-width: 0; }
-.lg-label { font: var(--type-label); color: var(--ink-soft); }
-.lg-root .lg-search { width: 15rem; max-width: 100%; }
-.lg-root .lg-year { width: 6rem; font-variant-numeric: tabular-nums; }
-.lg-yearrow { display: flex; align-items: center; gap: var(--space-line); }
-.lg-yearrow span { color: var(--ink-faint); }
-.lg-choice { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-line); min-height: var(--ui-height); }
+/* Filters: the shared filter bar (ui-controls.css). The return years are one
+   field of two short inputs, labelled; the hint for them sits under the bar. */
+.lg-years { display: inline-flex; align-items: center; gap: var(--space-tight); }
+.lg-years-label { font: var(--type-label); color: var(--ink-soft); }
+.lg-root .lg-year { width: calc(var(--size-control) * 2); padding-block: 0; font-variant-numeric: tabular-nums; }
+.lg-years > span[aria-hidden] { color: var(--ink-faint); }
+.lg-year-help { margin: var(--space-tight) 0 0; max-width: var(--size-readable); }
+.lg-root > .lg-filter-bar:first-child { margin-top: 0; }
+.lg-scope { display: flex; flex-wrap: wrap; gap: var(--space-tight); margin: var(--space-heading) 0 0; }
 
-.lg-actions { display: flex; gap: var(--space-tight); margin-left: auto; align-items: flex-end; }
+/* Above the table: the view switch, then the block's actions. */
+.lg-results-tools { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--space-tight) var(--space-block); margin: var(--space-block) 0 0; }
+.lg-results-tools > .ui-actions { margin: 0; }
+.lg-copy-status { margin: var(--space-tight) 0 0; font: var(--type-fine); color: var(--ink-soft); }
+.lg-root .lg-copy-fallback { width: 100%; margin: var(--space-tight) 0 0; }
 
-.lg-summary { margin: 0 0 var(--space-tight); font: var(--type-metadata); color: var(--ink-soft); font-variant-numeric: tabular-nums; }
-.lg-summary b { font-weight: 600; color: var(--ink); }
-.lg-scope { display: flex; flex-wrap: wrap; gap: var(--space-tight); margin: 0 0 var(--space-row); }
+/* What the table shows: the selection, the count and total, the years. */
+.lg-selection { margin: var(--space-block) 0 0; font: var(--type-strong); color: var(--ink); overflow-wrap: anywhere; }
+.lg-summary { margin: var(--space-line) 0 var(--space-heading); font: var(--type-metadata); color: var(--ink-soft); font-variant-numeric: tabular-nums; }
+.lg-summary b { font-weight: var(--weight-strong); color: var(--ink); }
+.lg-period { display: block; margin-top: var(--space-line); font: var(--type-fine); }
 
-/* The table: no box, a rule above and below. */
-.lg-tablewrap { overflow: auto; max-height: min(65vh, 850px); border-block: var(--border-hairline) solid var(--divider-default); }
-.lg-table { border-collapse: collapse; width: 100%; min-width: 760px; font: var(--type-metadata); }
-.lg-table thead th { position: sticky; top: 0; z-index: 2; padding: 0; background: var(--paper); border-bottom: var(--border-hairline) solid var(--divider-default); text-align: left; white-space: nowrap; }
-.lg-sort { display: flex; gap: var(--space-line); align-items: baseline; width: 100%; padding: var(--space-tight) var(--space-row); border: 0; background: none; color: var(--ink-soft); font: var(--type-label); text-align: inherit; cursor: pointer; }
-.lg-sort:hover, th[aria-sort] .lg-sort { color: var(--ink); }
+/* The table: the shared table look (.ui-table); the header sticks inside its
+   scroller and keeps its rule while the rows pass under it. */
+.lg-tablewrap { overflow: auto; max-height: min(65vh, 850px); border-bottom: var(--border-hairline) solid var(--divider-subtle); }
+.lg-table { min-width: 760px; }
+.lg-table thead th { position: sticky; top: 0; z-index: 2; border-bottom: 0; background: var(--paper); box-shadow: inset 0 calc(-1 * var(--border-hairline)) 0 var(--divider-default); }
 .lg-arrow { color: var(--bronze-ink); }
-.lg-th-num { text-align: right; }
-.lg-th-num .lg-sort { justify-content: flex-end; }
-.lg-table td { padding: var(--space-tight) var(--space-row); border-bottom: var(--border-hairline) solid var(--divider-subtle); vertical-align: baseline; }
 .lg-table tbody tr:hover td { background: var(--paper-sunken); }
-.lg-num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
 .lg-cell-label { display: inline-flex; align-items: baseline; gap: var(--space-tight); }
 /* A dot beside its name: the industry's chart hue, or the party's own colour. */
 .lg-dot {
   flex: none; align-self: center; width: var(--size-party-dot); height: var(--size-party-dot); border-radius: var(--radius-round);
-  border: var(--border-hairline) solid color-mix(in srgb, var(--ink) 25%, transparent);
+  box-shadow: var(--ring-inset-hairline) color-mix(in srgb, var(--ink) 25%, transparent);
 }
-.lg-table a { color: inherit; text-decoration: underline; text-decoration-color: var(--bronze-rule); text-underline-offset: 2px; }
-.lg-table a:hover { color: var(--bronze-ink); }
+.lg-table a, .lg-cards a { color: inherit; text-decoration: underline; text-decoration-color: var(--bronze-rule); text-underline-offset: 3px; }
+.lg-table a:hover, .lg-cards a:hover { color: var(--bronze-ink); }
 .lg-share { color: var(--ink-faint); }
 .lg-empty { padding: var(--space-group) var(--space-row); text-align: center; color: var(--ink-soft); }
-.lg-status { padding: var(--space-group) var(--space-row); font: var(--type-body); color: var(--ink-soft); }
+.lg-status { padding: var(--space-group) 0; font: var(--type-body); color: var(--ink-soft); }
 .lg-root .lg-status .ui-button { margin-left: var(--space-tight); }
-
-.lg-fineprint, .lg-year-help { margin: var(--space-row) 0 0; max-width: var(--size-readable); font: var(--type-fine); color: var(--ink-soft); }
-.lg-year-help { margin: 0 0 var(--space-heading); }
-.lg-period { display: block; margin-top: var(--space-line); }
-.lg-fineprint p { margin: 0; }
-.lg-fineprint a, .lg-fine-notes summary { color: var(--bronze-ink); }
-.lg-fine-notes summary { cursor: pointer; padding: var(--space-line) 0; }
-.lg-fine-notes p { margin-top: var(--space-line); }
+.lg-fineprint { margin-top: var(--space-block); }
 
 .lg-visually-hidden {
   position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0;
   overflow: hidden; clip-path: inset(50%); white-space: nowrap; border: 0;
 }
 
-.lg-cards, .lg-compact-sort { display: none; }
+/* Narrower than the table: one row per record (ui-list), its figure in the
+   strong role beside the payer, and a sort control in place of the headers. */
+.lg-cards, .lg-root .lg-compact-sort { display: none; }
 @media (max-width: 960px) {
   .lg-table { display: none; }
   .lg-tablewrap { overflow-x: hidden; }
-  .lg-compact-sort { display: flex; align-items: flex-end; gap: var(--space-tight); margin: 0; flex: 1 1 100%; }
-  .lg-compact-sort .lg-field { flex: 1; }
-  .lg-root .lg-compact-sort .ui-button { min-width: 7.5rem; }
-  .lg-cards:not([hidden]) { display: block; list-style: none; margin: 0; padding: 0; }
-  .lg-card { padding: var(--space-block) 0; border-bottom: var(--border-hairline) solid var(--divider-subtle); }
-  .lg-card:last-child { border-bottom: 0; }
-  .lg-card-top { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: var(--space-tight) var(--space-block); align-items: start; }
+  .lg-root .lg-compact-sort { display: flex; flex: 1 1 100%; margin: 0; }
+  .lg-sort-label { font: var(--type-label); color: var(--ink-soft); }
+  .lg-cards:not([hidden]) { display: block; }
+  .lg-card-top { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: var(--space-line) var(--space-block); align-items: start; }
   .lg-card-label { display: block; font: var(--type-fine); color: var(--ink-soft); }
-  .lg-card a { color: var(--navy); text-decoration-color: var(--bronze-rule); text-underline-offset: 3px; }
   .lg-card-donor { display: inline-flex; align-items: center; min-height: var(--size-target); font: var(--type-strong); overflow-wrap: anywhere; }
   .lg-card-value { text-align: right; }
   .lg-card-value strong { display: block; padding-top: var(--space-line); font: var(--type-heading); font-variant-numeric: tabular-nums; white-space: nowrap; }
-  .lg-card-recipient { margin-top: var(--space-heading); }
+  .lg-card-recipient { margin-top: var(--space-tight); }
   .lg-card-recipient .lg-cell-label { display: flex; align-items: center; min-width: 0; }
-  .lg-card-recipient a { display: inline-flex; align-items: center; min-height: var(--size-target); font-weight: 600; overflow-wrap: anywhere; }
+  .lg-card-recipient a { display: inline-flex; align-items: center; min-height: var(--size-target); overflow-wrap: anywhere; }
   .lg-card-share { display: block; font: var(--type-fine); color: var(--ink-soft); }
   .lg-card-meta { display: flex; flex-wrap: wrap; gap: var(--space-line) var(--space-block); margin-top: var(--space-tight); font: var(--type-fine); color: var(--ink-soft); }
-}
-
-@media (max-width: 640px) {
-  .lg-root .lg-year { width: 5.5rem; }
-  .lg-field[aria-label="Jurisdiction"] { flex: 1 1 100%; }
-  .lg-field:has(> #lg-industry), .lg-field:has(> #lg-party) { flex: 1 1 calc(50% - var(--space-tight)); }
-  .lg-root .lg-search { width: 100%; }
-  .lg-field-search { flex: 1 1 100%; }
-  .lg-actions { margin-left: 0; }
 }
 `
 
@@ -550,82 +526,60 @@ export function mountLedger (container, opts = {}) {
   const root = el('section', 'lg-root')
   root.setAttribute('aria-label', 'Political receipts: disclosed records, payer by payer')
   root.innerHTML = `
-    <p class="lg-selection"></p>
-    <p class="lg-summary" aria-live="polite" aria-atomic="true"></p>
-    <div class="lg-scope" id="lg-scope-chip" hidden></div>
-    <details class="lg-filters">
-    <summary>Change filters<span id="lg-filter-count"></span></summary>
-    <div class="lg-toolbar" role="group" aria-label="Ledger filters" data-ui-size="compact">
-      <div class="lg-field" role="group" aria-label="Jurisdiction">
-        <span class="lg-label" aria-hidden="true">Jurisdiction</span>
-        <div class="lg-choice">
-          ${Object.entries(JURISDICTIONS).map(([k, j]) =>
-            `<button type="button" class="ui-chip lg-jur" data-jur="${k}" aria-pressed="${k === state.jur ? 'true' : 'false'}">${j.label}</button>`).join('')}
-        </div>
-      </div>
-      <div class="lg-field" role="group" aria-label="View">
-        <span class="lg-label" aria-hidden="true">View</span>
-        <div class="lg-views ui-segmented">
-          <button type="button" class="ui-button lg-view" data-view="flows" aria-pressed="true">Flows</button>
-          <button type="button" class="ui-button lg-view" data-view="donors" aria-pressed="false">By donor</button>
-        </div>
-      </div>
-      <div class="lg-field lg-field-search">
-        <label class="lg-label" for="lg-q">Filter donor or party</label>
-        <input class="ui-input lg-search" id="lg-q" type="search" autocomplete="off"
-               placeholder="e.g. Mineralogy, Labor" />
-      </div>
-      <div class="lg-field">
-        <label class="lg-label" for="lg-industry">Industry</label>
-        <select class="ui-input" id="lg-industry"><option value="">All industries</option></select>
-      </div>
-      <div class="lg-field">
-        <label class="lg-label" for="lg-party">Party</label>
-        <select class="ui-input" id="lg-party"><option value="">All parties</option></select>
-      </div>
-      <div class="lg-field">
-        <span class="lg-label" id="lg-years-label">Return years</span>
-        <div class="lg-yearrow" role="group" aria-labelledby="lg-years-label">
-          <input class="ui-input lg-year" id="lg-year-from" type="number" inputmode="numeric"
-                 min="${YEAR_MIN}" max="${YEAR_MAX}" placeholder="${YEAR_MIN}" aria-label="From return year" aria-describedby="lg-year-help" />
-          <span aria-hidden="true">–</span>
-          <input class="ui-input lg-year" id="lg-year-to" type="number" inputmode="numeric"
-                 min="${YEAR_MIN}" max="${YEAR_MAX}" placeholder="${YEAR_MAX}" aria-label="To return year" aria-describedby="lg-year-help" />
-        </div>
-      </div>
-      <div class="lg-field">
-        <label class="lg-label" for="lg-min">Min total</label>
+    <div class="ui-filter-bar lg-filter-bar" role="group" aria-label="Receipt filters" data-ui-size="compact">
+      <label class="ui-filter-search"><span class="lg-visually-hidden">Filter donor or party</span>
+        <input class="ui-input lg-search" id="lg-q" type="search" autocomplete="off" placeholder="Filter by donor or party" /></label>
+      <label class="ui-filter-field"><span class="lg-visually-hidden">Jurisdiction</span>
+        <select class="ui-input" id="lg-jur">${Object.entries(JURISDICTIONS).map(([k, j]) =>
+          `<option value="${k}"${k === state.jur ? ' selected' : ''}>${j.label}</option>`).join('')}</select></label>
+      <label class="ui-filter-field"><span class="lg-visually-hidden">Industry</span>
+        <select class="ui-input" id="lg-industry"><option value="">All industries</option></select></label>
+      <label class="ui-filter-field"><span class="lg-visually-hidden">Party</span>
+        <select class="ui-input" id="lg-party"><option value="">All parties</option></select></label>
+      <label class="ui-filter-field"><span class="lg-visually-hidden">Minimum total</span>
         <select class="ui-input" id="lg-min">
           <option value="0">Any amount</option>
           <option value="100000">$100K+</option>
           <option value="1000000">$1M+</option>
           <option value="10000000">$10M+</option>
-        </select>
+        </select></label>
+      <div class="ui-filter-field lg-years" role="group" aria-labelledby="lg-years-label">
+        <span class="lg-years-label" id="lg-years-label">Return years</span>
+        <input class="ui-input lg-year" id="lg-year-from" type="number" inputmode="numeric"
+               min="${YEAR_MIN}" max="${YEAR_MAX}" placeholder="${YEAR_MIN}" aria-label="From return year" aria-describedby="lg-year-help" />
+        <span aria-hidden="true">–</span>
+        <input class="ui-input lg-year" id="lg-year-to" type="number" inputmode="numeric"
+               min="${YEAR_MIN}" max="${YEAR_MAX}" placeholder="${YEAR_MAX}" aria-label="To return year" aria-describedby="lg-year-help" />
+      </div>
+      <div class="ui-filter-actions">
+        <button type="button" class="ui-button" data-variant="quiet" id="lg-clear" hidden>Clear filters</button>
       </div>
     </div>
-
-    <p class="lg-year-help" id="lg-year-help">Use the first year of a financial year (2020 for 2020–21), or the polling year for election returns.</p>
-    </details>
+    <p class="ui-hint lg-year-help" id="lg-year-help">Return years: use the first year of a financial year (2020 for 2020–21), or the polling year for election returns.</p>
+    <div class="lg-scope" id="lg-scope-chip" hidden></div>
     <div class="lg-results-tools" data-ui-size="compact">
-    <div class="lg-actions">
-      <button type="button" class="ui-button" data-variant="quiet" id="lg-clear" hidden>Clear filters</button>
-      <button type="button" class="ui-button" id="lg-copy" disabled>Copy link</button>
-      <button type="button" class="ui-button lg-export" id="lg-export" disabled>Export CSV</button>
-    </div>
-    <div class="lg-compact-sort">
-      <div class="lg-field">
-        <label class="lg-label" for="lg-compact-sort">Sort by</label>
-        <select class="ui-input" id="lg-compact-sort" disabled></select>
+      <div class="lg-views ui-segmented" role="group" aria-label="View">
+        <button type="button" class="ui-button lg-view" data-view="flows" aria-pressed="true">Flows</button>
+        <button type="button" class="ui-button lg-view" data-view="donors" aria-pressed="false">By donor</button>
       </div>
-      <button type="button" class="ui-button" id="lg-sort-direction" disabled>High to low</button>
-    </div>
+      <div class="ui-actions">
+        <button type="button" class="ui-button" id="lg-copy" disabled>Copy link</button>
+        <button type="button" class="ui-button lg-export" id="lg-export" disabled>Export CSV</button>
+      </div>
+      <div class="lg-compact-sort ui-filter-bar">
+        <span class="lg-sort-label" aria-hidden="true">Sort by</span>
+        <select class="ui-input" id="lg-compact-sort" aria-label="Sort by" disabled></select>
+        <button type="button" class="ui-button" id="lg-sort-direction" disabled>High to low</button>
+      </div>
     </div>
     <p class="lg-copy-status" role="status" hidden></p>
     <input class="ui-input lg-copy-fallback" aria-label="Link to these receipts" readonly hidden />
+    <p class="lg-selection"></p>
+    <p class="lg-summary" aria-live="polite" aria-atomic="true"></p>
     <div class="lg-tablewrap" role="region" tabindex="0" aria-label="Political receipts (scrollable)">
       <div class="lg-status" role="status">Loading the ledger…</div>
-      <ul class="lg-cards" hidden></ul>
-      <table class="lg-table" hidden>
+      <ul class="lg-cards ui-list" hidden></ul>
+      <table class="lg-table ui-table" hidden>
         <caption class="lg-visually-hidden"></caption>
         <thead><tr></tr></thead>
         <tbody></tbody>
@@ -636,10 +590,8 @@ export function mountLedger (container, opts = {}) {
   `
 
   const $ = (sel) => root.querySelector(sel)
-  const filtersEl = $('.lg-filters')
-  filtersEl.open = window.matchMedia('(min-width: 961px)').matches
   const selectionEl = $('.lg-selection')
-  const filterCountEl = $('#lg-filter-count')
+  const jurEl = $('#lg-jur')
   const copyBtn = $('#lg-copy')
   const copyStatus = $('.lg-copy-status')
   const copyFallback = $('.lg-copy-fallback')
@@ -685,7 +637,7 @@ export function mountLedger (container, opts = {}) {
       const option = el('option', null, col.label)
       option.value = col.key
       compactSortEl.appendChild(option)
-      const th = el('th', col.numeric ? 'lg-th-num' : null)
+      const th = el('th', col.numeric ? 'ui-num' : null)
       th.scope = 'col'
       const btn = el('button', 'lg-sort')
       btn.type = 'button'
@@ -727,18 +679,18 @@ export function mountLedger (container, opts = {}) {
       .appendChild(dotLabel(r.colour, document.createTextNode(industryLabel(r.industry))))
     tr.appendChild(el('td'))
       .appendChild(dotLabel(r.partyColour, subjectLink('party', r.party)))
-    tr.appendChild(el('td', 'lg-num', AUD.format(r.total)))
-    tr.appendChild(el('td', 'lg-num', NUM.format(r.count)))
-    tr.appendChild(el('td', 'lg-num', yearsText(r)))
+    tr.appendChild(el('td', 'ui-num', AUD.format(r.total)))
+    tr.appendChild(el('td', 'ui-num', NUM.format(r.count)))
+    tr.appendChild(el('td', 'ui-num', yearsText(r)))
   }
 
   function renderCellsDonors (tr, r) {
     tr.appendChild(el('td')).appendChild(subjectLink('donor',r.donor,r.donorRecord))
     tr.appendChild(el('td'))
       .appendChild(dotLabel(r.colour, document.createTextNode(industryLabel(r.industry))))
-    tr.appendChild(el('td', 'lg-num', AUD.format(r.total)))
-    tr.appendChild(el('td', 'lg-num', NUM.format(r.parties)))
-    tr.appendChild(el('td', 'lg-num', yearsText(r)))
+    tr.appendChild(el('td', 'ui-num', AUD.format(r.total)))
+    tr.appendChild(el('td', 'ui-num', NUM.format(r.parties)))
+    tr.appendChild(el('td', 'ui-num', yearsText(r)))
     const cell = tr.appendChild(el('td'))
     const wrap = dotLabel(r.topPartyColour, subjectLink('party', r.topParty))
     wrap.appendChild(el('span', 'lg-share', ` · ${Math.round(r.topShare * 100)}%`))
@@ -775,8 +727,6 @@ export function mountLedger (container, opts = {}) {
     copyStatus.hidden = copyFallback.hidden = true
     copyBtn.textContent = 'Copy link'
     selectionEl.textContent = [JURISDICTIONS[state.jur].label, state.party ? `To ${state.party}` : 'All parties', state.industry ? industryLabel(state.industry) : '', state.q ? `Matching “${state.q}”` : '', state.min ? `${AUD.format(state.min)} or more` : ''].filter(Boolean).join(' · ')
-    const filterCount = [state.q.trim(), state.industry, state.party, state.focusDonorId, state.yearFrom != null || state.yearTo != null, state.min > 0].filter(Boolean).length
-    filterCountEl.textContent = filterCount ? ` (${filterCount})` : ''
     if (loading || loadError || paramError) {
       copyBtn.disabled = exportBtn.disabled = true
       compactSortEl.disabled = directionBtn.disabled = true
@@ -788,7 +738,6 @@ export function mountLedger (container, opts = {}) {
         statusEl.hidden = false
         statusEl.textContent = paramError
         clearBtn.hidden = false
-        filtersEl.open = true
         selectionEl.textContent = 'Check the filters in this link'
       }
       return
@@ -807,7 +756,6 @@ export function mountLedger (container, opts = {}) {
     compactSortEl.disabled = directionBtn.disabled = !!error
     if (error) {
       currentRows = []
-      filtersEl.open = true
       summaryEl.textContent = error
       statusEl.textContent = 'Update the years to see matching receipts.'
       clearBtn.hidden = false
@@ -878,7 +826,7 @@ export function mountLedger (container, opts = {}) {
       path.setAttribute('d', 'm4 4 8 8M12 4l-8 8')
       cross.appendChild(path)
       remove.append(text, cross)
-      remove.addEventListener('click', () => { state.focusDonorId = ''; state.focusDonor = ''; paramError = ''; changed(); filtersEl.open = true; searchEl.focus() })
+      remove.addEventListener('click', () => { state.focusDonorId = ''; state.focusDonor = ''; paramError = ''; changed(); searchEl.focus() })
       scopeEl.appendChild(remove)
     }
   }
@@ -968,7 +916,6 @@ export function mountLedger (container, opts = {}) {
     state.min = 0; minEl.value = '0'
     paramError = ''
     changed()
-    filtersEl.open = true
     searchEl.focus()
   })
 
@@ -1003,14 +950,12 @@ export function mountLedger (container, opts = {}) {
     changed()
   })
 
-  for (const btn of root.querySelectorAll('.lg-jur')) {
-    btn.addEventListener('click', () => {
-      if (state.jur === btn.dataset.jur) return
-      pendingUserLoad = true
-      editGroup = null
-      load(btn.dataset.jur)
-    })
-  }
+  jurEl.addEventListener('change', () => {
+    if (state.jur === jurEl.value) return
+    pendingUserLoad = true
+    editGroup = null
+    load(jurEl.value)
+  })
 
   for (const btn of root.querySelectorAll('.lg-view')) {
     btn.addEventListener('click', () => {
@@ -1068,29 +1013,34 @@ export function mountLedger (container, opts = {}) {
     partyEl.value = state.party
   }
 
-  /** Fineprint from the file itself: state exports name their commission,
-   *  threshold and licence in meta; the federal file predates those fields.
-   *  One short line (source, coverage, the floor caveat, the ways in); the
-   *  threshold, exclusions and licence keep every word one tap below it. */
+  /** The block's one source line (labels.js, ui-source.css), from the file
+   *  itself: state exports name their commission, threshold and licence in
+   *  meta; the federal file predates those fields. The line carries the date,
+   *  the source and the floor caveat; its sheet keeps every other word: the
+   *  coverage, the threshold, the exclusions, the licence and the ways in. */
   function renderFineprint (data) {
     const m = data.meta || {}
     const donors = data.nodes.filter((n) => n.kind === 'donor').length
-    const line = el('p', 'lg-fine-line', m.jurisdiction
-      ? `${m.commission} (${m.sourceShort}), ${m.coverage}, top ${NUM.format(donors)} disclosed donors. Totals are a floor, not a ceiling. `
-      : `AEC disclosures ${YEAR_MIN}–${YEAR_MAX}, top ${NUM.format(donors)} disclosed donors. Totals are a floor, not a ceiling. `)
-    const methods = el('a', null, 'Methodology')
-    methods.href = '#/methods'
-    const rawLink = el('a', null, 'Raw data')
-    rawLink.href = JURISDICTIONS[state.jur].file
-    line.append(methods, ' · ', rawLink)
-    const notes = el('details', 'lg-fine-notes')
-    notes.append(el('summary', null, m.jurisdiction ? 'Notes, caveats and licence' : 'Notes and caveats'), el('p', null, m.jurisdiction
-      ? `${m.threshold} Only records assigned to a party are included; ` +
-        `public funding and internal party transfers excluded. ${m.not_summed || NOT_SUMMED} ` +
-        `Licence: ${m.licence}.`
-      : 'Donations under the disclosure threshold are not reported. ' +
-        `Public electoral funding and internal party transfers excluded. ${NOT_SUMMED}`))
-    fineEl.replaceChildren(line, notes)
+    const register = m.jurisdiction
+      ? { label: m.commission, href: /^https?:\/\//i.test(m.source_url || '') ? m.source_url : '/methods' }
+      : { label: 'AEC Transparency Register', href: 'https://transparency.aec.gov.au/' }
+    fineEl.innerHTML = sourceLineHTML({
+      updated: m.generated || '',
+      source: m.jurisdiction ? (m.sourceShort || m.commission) : 'AEC annual returns',
+      state: 'totals are a floor',
+      originals: [{ label: 'Download the data (JSON)', href: JURISDICTIONS[state.jur].file }, register, { label: 'Methodology', href: '/methods' }],
+      facts: [
+        ['Coverage', esc(m.jurisdiction ? `${m.commission} (${m.sourceShort}), ${m.coverage}` : `AEC disclosures ${YEAR_MIN}–${YEAR_MAX}`)],
+        ['Shown', esc(`Top ${NUM.format(donors)} disclosed donors`)],
+      ],
+      notes: [
+        'Totals are a floor, not a ceiling.',
+        esc(m.jurisdiction
+          ? `${m.threshold} Only records assigned to a party are included; public funding and internal party transfers excluded. ${m.not_summed || NOT_SUMMED}`
+          : `Donations under the disclosure threshold are not reported. Public electoral funding and internal party transfers excluded. ${NOT_SUMMED}`),
+      ],
+      licence: m.licence ? esc(`Licence: ${m.licence}.`) : '',
+    })
   }
 
   async function fetchData (jur) {
@@ -1107,9 +1057,7 @@ export function mountLedger (container, opts = {}) {
     const previousJur = state.jur
     state.jur = Object.hasOwn(JURISDICTIONS, jur) ? jur : 'federal'
     const switchedJurisdiction = previousJur !== state.jur
-    for (const b of root.querySelectorAll('.lg-jur')) {
-      b.setAttribute('aria-pressed', b.dataset.jur === state.jur ? 'true' : 'false')
-    }
+    jurEl.value = state.jur
     const token = ++loadSeq
     loading = true
     loadError = false

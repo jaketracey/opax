@@ -8,25 +8,25 @@
    (the source sheet). Colours come from tokens.css only. */
 :root {
   --ui-height: var(--size-control);
-  --ui-font: .9375rem;
+  --ui-font: var(--text-15);
   --ui-radius: var(--radius-sm);
   --ui-radius-press: var(--radius-pill);
-  --ui-pad: 1rem;
+  --ui-pad: var(--sp-16);
   /* The secondary fill and its pressed step: navy wash, a shade deeper. */
   --ui-wash: var(--navy-wash);
   --ui-wash-pressed: color-mix(in srgb, var(--navy) 10%, var(--navy-wash));
   --ui-motion: var(--duration-quick) var(--ease-standard);
 }
-[data-ui-size="compact"] { --ui-height: var(--size-control-compact); --ui-font: .875rem; --ui-pad: .875rem; }
-[data-ui-size="default"] { --ui-height: var(--size-control); --ui-font: .9375rem; --ui-pad: 1rem; }
-[data-ui-size="large"] { --ui-height: var(--size-control-large); --ui-font: 1rem; --ui-pad: 1.25rem; }
+[data-ui-size="compact"] { --ui-height: var(--size-control-compact); --ui-font: var(--text-15); --ui-pad: var(--sp-12); }
+[data-ui-size="default"] { --ui-height: var(--size-control); --ui-font: var(--text-15); --ui-pad: var(--sp-16); }
+[data-ui-size="large"] { --ui-height: var(--size-control-large); --ui-font: var(--text-16); --ui-pad: var(--sp-20); }
 
 /* ---- Button: primary (navy), secondary (navy wash, no outline), quiet, danger.
    The transparent border is what forced colours draws as the button's edge. */
 :is(button, a).ui-button {
   position: relative; display: inline-flex; align-items: center; justify-content: center;
-  gap: .5rem; min-height: var(--ui-height); min-width: var(--ui-height);
-  padding: .55rem var(--ui-pad); margin: 0; border: var(--border-hairline) solid transparent;
+  gap: var(--sp-8); min-height: var(--ui-height); min-width: var(--ui-height);
+  padding: var(--sp-8) var(--ui-pad); margin: 0; border: var(--border-hairline) solid transparent;
   border-radius: var(--ui-radius-press); background: var(--ui-wash); color: var(--navy);
   font: 600 var(--ui-font)/1.4 var(--sans); text-align: center; text-decoration: none;
   overflow-wrap: anywhere; cursor: pointer; vertical-align: middle;
@@ -46,33 +46,34 @@
 }
 :is(button, a).ui-button[data-variant="danger"]:is(:hover, :active) { background: var(--danger); color: var(--on-navy); }
 /* A toggle that is on (Follow, a pressed view) and the chosen choice chip. */
-:is(button, a).ui-button[aria-pressed="true"] { background: var(--navy); color: var(--on-navy); --ui-spinner: var(--on-navy); }
+:is(button, a).ui-button:is([aria-pressed="true"], [aria-selected="true"]) { background: var(--navy); color: var(--on-navy); --ui-spinner: var(--on-navy); }
 .ui-button svg, .ui-control-icon { width: var(--size-icon-md); height: var(--size-icon-md); flex: 0 0 var(--size-icon-md); fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
 /* IconButton: a circle with a required label. */
-:is(button, a).ui-button.ui-icon-button { padding: .5rem; }
+:is(button, a).ui-button.ui-icon-button { padding: var(--sp-8); }
 button.ui-button:disabled, .ui-button[aria-disabled="true"] { opacity: .5; cursor: not-allowed; }
 .ui-button[aria-disabled="true"] { pointer-events: none; }
 /* Busy keeps its width and its label, so a screen reader still hears the action. */
 button.ui-button[aria-busy="true"] { color: transparent; cursor: wait; opacity: 1; }
 button.ui-button[aria-busy="true"]::after {
   content: ""; position: absolute; width: 18px; height: 18px;
-  border: 2px solid var(--ui-spinner); border-right-color: transparent; border-radius: var(--radius-round);
+  border: var(--border-focus) solid var(--ui-spinner); border-right-color: transparent; border-radius: var(--radius-round);
   animation: ui-spin .8s linear infinite;
 }
 @keyframes ui-spin { to { transform: rotate(360deg); } }
 
-/* ---- Fields: things you read, so 4px. */
-.ui-field { display: grid; align-content: start; gap: .5rem; min-width: 0; margin: 0; font: 600 .875rem/1.5 var(--sans); color: var(--ink); }
+/* ---- Fields: 12px (12 Oct uplift), so a field and the pill beside it read as
+   one family; tags and status labels stay 4px. */
+.ui-field { display: grid; align-content: start; gap: var(--sp-8); min-width: 0; margin: 0; font: var(--weight-strong) var(--text-15)/var(--leading-normal) var(--sans); color: var(--ink); }
 .ui-field > label { font: inherit; color: inherit; }
 :is(input, select, textarea).ui-input {
   box-sizing: border-box; width: 100%; min-width: 0; min-height: var(--ui-height); margin: 0;
-  padding: .5rem var(--ui-pad); border: var(--border-hairline) solid var(--line-control); border-radius: var(--ui-radius);
+  padding: var(--sp-8) var(--ui-pad); border: var(--border-hairline) solid var(--line-control); border-radius: var(--radius-md);
   background: var(--paper-raised); color: var(--ink); font: 400 var(--ui-font)/1.5 var(--sans);
 }
 /* Native select behaviour, with an inset chevron that follows the size's padding. */
 select.ui-input:not([multiple]) {
   appearance: none;
-  padding-right: calc(var(--ui-pad) + 1.5rem);
+  padding-right: calc(var(--ui-pad) + var(--sp-24));
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='none' stroke='%2323271F' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m5 7.5 5 5 5-5'/%3E%3C/svg%3E");
   background-repeat: no-repeat;
   background-position: right var(--ui-pad) center;
@@ -80,7 +81,7 @@ select.ui-input:not([multiple]) {
 }
 textarea.ui-input { min-height: 128px; resize: vertical; }
 /* Auto-growing composers share the same single-line height as their actions. */
-textarea.ui-input.grow-field { display: block; min-height: var(--ui-height); height: auto; resize: none; overflow: hidden; padding-block: calc((var(--ui-height) - 2px - 1.5em) / 2); }
+textarea.ui-input.grow-field { display: block; min-height: var(--ui-height); height: auto; resize: none; overflow: hidden; padding-block: calc((var(--ui-height) - var(--sp-2) - 1.5em) / 2); }
 .ui-input::placeholder { color: var(--ink-faint); opacity: 1; }
 .ui-input[readonly] { background: var(--paper-sunken); }
 .ui-input:disabled { opacity: .6; cursor: not-allowed; }
@@ -89,11 +90,11 @@ textarea.ui-input.grow-field { display: block; min-height: var(--ui-height); hei
 .ui-error { color: var(--danger); }
 .ui-input-wrap { position: relative; display: flex; align-items: center; min-width: 0; }
 .ui-input-wrap > .ui-control-icon { position: absolute; left: var(--ui-pad); color: var(--ink-soft); pointer-events: none; }
-.ui-input-wrap > .ui-control-icon + .ui-input { padding-left: calc(var(--ui-pad) + 1.8rem); }
-.ui-input-wrap > .ui-input:has(+ .ui-button) { padding-right: calc(var(--ui-height) + .25rem); }
+.ui-input-wrap > .ui-control-icon + .ui-input { padding-left: calc(var(--ui-pad) + var(--sp-32)); }
+.ui-input-wrap > .ui-input:has(+ .ui-button) { padding-right: calc(var(--ui-height) + var(--sp-4)); }
 .ui-input-wrap > .ui-button { position: absolute; right: 3px; min-height: calc(var(--ui-height) - 6px); min-width: calc(var(--ui-height) - 6px); }
 
-.ui-choice { display: flex; align-items: center; gap: .65rem; min-height: var(--size-target); width: fit-content; max-width: 100%; color: var(--ink); font: 400 .9375rem/1.5 var(--sans); cursor: pointer; }
+.ui-choice { display: flex; align-items: center; gap: var(--sp-12); min-height: var(--size-target); width: fit-content; max-width: 100%; color: var(--ink); font: var(--type-metadata); cursor: pointer; }
 .ui-choice > input { width: 20px; height: 20px; margin: 0; flex: 0 0 20px; accent-color: var(--navy); }
 .ui-choice:has(input:disabled) { opacity: .55; cursor: not-allowed; }
 .ui-choice > input[role="switch"] { appearance: none; width: 40px; height: 24px; flex-basis: 40px; border: var(--border-hairline) solid var(--line-control); border-radius: var(--radius-pill); background: var(--paper-sunken); position: relative; cursor: inherit; }
@@ -104,22 +105,24 @@ textarea.ui-input.grow-field { display: block; min-height: var(--ui-height); hei
 /* ---- Segmented control: a sunken pill track with a raised pill thumb. The
    thumb's control-line edge (3.33:1) is what says which view is chosen.
    Size the whole group, including its 8px padding and 2px border. */
-.ui-segmented { box-sizing: border-box; display: inline-flex; flex-wrap: nowrap; min-height: var(--ui-height); gap: 4px; padding: 4px; border: var(--border-hairline) solid transparent; border-radius: var(--ui-radius-press); background: var(--paper-sunken); }
+.ui-segmented { box-sizing: border-box; display: inline-flex; flex-wrap: nowrap; min-height: var(--ui-height); gap: var(--sp-4); padding: var(--sp-4); border: var(--border-hairline) solid transparent; border-radius: var(--ui-radius-press); background: var(--paper-sunken); }
 .ui-segmented > .ui-button {
   flex: 0 0 auto; min-width: max-content;
   white-space: nowrap; overflow-wrap: normal; word-break: normal;
-  min-height: calc(var(--ui-height) - 10px); padding-block: .25rem; border-color: transparent; background: transparent; color: var(--ink-soft);
+  min-height: calc(var(--ui-height) - 10px); padding-block: var(--sp-4); border-color: transparent; background: transparent; color: var(--ink-soft);
 }
 .ui-segmented > .ui-button:hover { background: transparent; color: var(--ink); }
-.ui-segmented > .ui-button[aria-pressed="true"] { background: var(--paper-raised); border-color: var(--line-control); color: var(--ink); }
+.ui-segmented > .ui-button:is([aria-pressed="true"], [aria-selected="true"]) { background: var(--paper-raised); border-color: var(--line-control); color: var(--ink); }
+/* A segment draws inside the track; on touch its hit area reaches 44. */
+.ui-segmented > .ui-button:not([aria-busy="true"])::after { content: ""; position: absolute; inset: min(calc(-1 * var(--sp-4)), calc(50% - var(--size-target) / 2)) 0; }
 
 /* ---- Choice chip: pick among peers. Pill, navy wash; navy when chosen.
    36 drawn, 44 on touch. .chip is the retired name for the same thing. */
 :is(button, a, label).ui-chip, :is(button, a).chip:not(.ui-button) {
-  position: relative; display: inline-flex; align-items: center; gap: .4rem; max-width: 100%;
-  min-height: 36px; margin: 0; padding: .375rem .875rem; box-sizing: border-box;
+  position: relative; display: inline-flex; align-items: center; gap: var(--sp-8); max-width: 100%;
+  min-height: 36px; margin: 0; padding: var(--sp-8) var(--sp-16); box-sizing: border-box;
   border: var(--border-hairline) solid transparent; border-radius: var(--ui-radius-press);
-  background: var(--ui-wash); color: var(--navy); font: 600 .9375rem/1.3 var(--sans);
+  background: var(--ui-wash); color: var(--navy); font: var(--weight-strong) var(--text-15)/var(--leading-snug) var(--sans);
   text-align: left; text-decoration: none; cursor: pointer;
   transition: background-color var(--ui-motion), color var(--ui-motion);
 }
@@ -132,23 +135,23 @@ button.ui-chip:disabled { opacity: .5; cursor: not-allowed; }
 /* ---- Filter chip: an applied filter, "Key Value ✕". The whole chip removes it.
    40 drawn, 44 on touch. Map categories share the shell as choice chips. */
 :is(button, a).ui-filter-chip {
-  position: relative; display: inline-flex; align-items: center; gap: .5rem; max-width: 100%; min-height: 40px;
-  margin: 0; padding: .4rem .75rem .4rem .875rem; border: var(--border-hairline) solid transparent; border-radius: var(--ui-radius-press);
-  background: var(--ui-wash); color: var(--navy); font: 400 .8125rem/1.4 var(--sans);
+  position: relative; display: inline-flex; align-items: center; gap: var(--sp-8); max-width: 100%; min-height: 40px;
+  margin: 0; padding: var(--sp-8) var(--sp-12) var(--sp-8) var(--sp-16); border: var(--border-hairline) solid transparent; border-radius: var(--ui-radius-press);
+  background: var(--ui-wash); color: var(--navy); font: var(--type-fine);
   text-align: left; text-decoration: none; cursor: pointer;
   transition: background-color var(--ui-motion), color var(--ui-motion);
 }
 .ui-filter-chip__text { min-width: 0; overflow-wrap: anywhere; }
 .ui-filter-chip__key { color: var(--ink-soft); margin-right: .35em; }
-.ui-filter-chip__value { font-weight: 600; }
+.ui-filter-chip__value { font-weight: var(--weight-strong); }
 .ui-filter-chip svg { width: var(--size-icon-sm); height: var(--size-icon-sm); flex: 0 0 var(--size-icon-sm); fill: none; stroke: currentColor; stroke-width: 1.5; stroke-linecap: round; }
 :is(button, a).ui-filter-chip:hover { background: var(--ui-wash-pressed); }
 button.ui-filter-chip:disabled { opacity: .5; cursor: not-allowed; }
-.ui-map-filters { display: flex; flex-wrap: wrap; align-items: center; gap: .5rem; }
-:is(button, a).ui-map-filter { justify-content: flex-start; font-weight: 600; }
+.ui-map-filters { display: flex; flex-wrap: wrap; align-items: center; gap: var(--sp-8); }
+:is(button, a).ui-map-filter { justify-content: flex-start; font-weight: var(--weight-strong); }
 button.ui-map-filter[aria-pressed="true"] { background: var(--navy); color: var(--on-navy); }
-.ui-map-filter__dot { width: 9px; height: 9px; flex: 0 0 9px; border-radius: var(--radius-round); box-shadow: 0 0 0 1px color-mix(in srgb, var(--ink) 12%, transparent); }
-.ui-map-filter__count { color: var(--ink-soft); font-weight: 400; font-variant-numeric: tabular-nums; }
+.ui-map-filter__dot { width: 9px; height: 9px; flex: 0 0 9px; border-radius: var(--radius-round); box-shadow: var(--ring-hairline) color-mix(in srgb, var(--ink) 12%, transparent); }
+.ui-map-filter__count { color: var(--ink-soft); font-weight: var(--weight-regular); font-variant-numeric: tabular-nums; }
 .ui-map-filter[aria-pressed="true"] .ui-map-filter__count { color: inherit; }
 
 /* ==== The five labels, sentence case, never letter-spaced ====================
@@ -178,8 +181,8 @@ button.ui-map-filter[aria-pressed="true"] { background: var(--navy); color: var(
 /* Tag: radius 4, bronze wash, bronze-ink label; a link or plain. 28 drawn, 44 on
    touch when it is a link. */
 .ui-tag, .topic-chip, .tie-tag {
-  display: inline-flex; align-items: center; gap: .35rem; max-width: 100%; min-height: 28px; box-sizing: border-box;
-  padding: .25rem .5rem; border: var(--border-hairline) solid transparent; border-radius: var(--ui-radius);
+  display: inline-flex; align-items: center; gap: var(--sp-4); max-width: 100%; min-height: 28px; box-sizing: border-box;
+  padding: var(--sp-4) var(--sp-8); border: var(--border-hairline) solid transparent; border-radius: var(--ui-radius);
   background: var(--bronze-wash); color: var(--bronze-ink);
   font: var(--type-label); text-decoration: none; overflow-wrap: anywhere;
 }
@@ -188,7 +191,7 @@ a:is(.ui-tag, .topic-chip):hover { text-decoration: underline; text-underline-of
 /* StatusLabel: radius 4, a tone's wash and ink, always a word. One per row. */
 .ui-status, .doc-brief-tag, .tie-tag-holder, .dir-mark, .el-elected, .stat-live {
   display: inline-flex; align-items: center; max-width: 100%; min-height: 22px; box-sizing: border-box;
-  padding: .0625rem .4rem; border: var(--border-hairline) solid transparent; border-radius: var(--ui-radius);
+  padding: var(--border-hairline) var(--sp-8); border: var(--border-hairline) solid transparent; border-radius: var(--ui-radius);
   background: var(--status-ended-wash); color: var(--status-ended-ink);
   font: var(--type-label); font-style: normal; white-space: nowrap; vertical-align: baseline;
 }
@@ -199,13 +202,18 @@ a:is(.ui-tag, .topic-chip):hover { text-decoration: underline; text-underline-of
 /* PartyLabel: a 10px dot beside the party's name, no fill. Party colour is never
    alone: the dot-only form carries the name in its title and label. */
 .ui-party, .party {
-  display: inline-flex; align-items: center; gap: .375rem; max-width: 100%;
+  display: inline-flex; align-items: center; gap: var(--sp-8); max-width: 100%;
   font: var(--type-label); color: var(--ink-soft); vertical-align: baseline;
 }
 :is(.ui-party, .party) > i {
   width: var(--size-party-dot); height: var(--size-party-dot); flex: 0 0 var(--size-party-dot);
   border-radius: var(--radius-round); background: var(--pc, var(--party-oth));
 }
+/* DotLabel: a category's dot beside its word, in the party label's shape, for
+   things that are not parties (an industry, a campaigner kind). --pc carries
+   the colour; the word always says it. */
+.ui-dot-label { display: inline-flex; align-items: center; gap: var(--sp-8); max-width: 100%; font: var(--type-label); color: var(--ink-soft); vertical-align: baseline; }
+.ui-dot-label > i { width: var(--size-party-dot); height: var(--size-party-dot); flex: 0 0 var(--size-party-dot); border-radius: var(--radius-round); background: var(--pc, var(--ink-faint)); }
 .party-alp { --pc: var(--party-alp); }
 .party-lib { --pc: var(--party-lib); }
 .party-nat { --pc: var(--party-nat); }
@@ -219,48 +227,137 @@ a:is(.ui-tag, .topic-chip):hover { text-decoration: underline; text-underline-of
    where a pill per row would be one press too many. Pass 3/4 hoists these to
    one label at the top of the list. The pill form is in ui-source.css. */
 .ui-machine-inline {
-  display: inline-flex; align-items: baseline; gap: .3rem;
+  display: inline-flex; align-items: baseline; gap: var(--sp-4);
   font: var(--type-label); color: var(--bills-ink); font-style: normal;
 }
 
 /* ---- Layout helpers. */
-.ui-toolbar { display: flex; flex-wrap: wrap; align-items: end; gap: 1rem; padding: 1rem; margin: var(--space-5) 0 var(--space-4); border: var(--border-hairline) solid var(--divider-subtle); border-radius: var(--ui-radius); background: var(--paper-raised); }
+/* A toolbar is a row of controls on the paper; every use had stripped the old box. */
+.ui-toolbar { display: flex; flex-wrap: wrap; align-items: end; gap: var(--space-block); margin: var(--space-block) 0; }
 .ui-toolbar > .ui-field { flex: 1 1 180px; }
 .ui-toolbar > .ui-field:first-child { flex-grow: 2; }
 /* Content dividers: colour encodes hierarchy; the composition owns spacing. */
 .ui-divider { display: block; width: 100%; height: 0; margin: 0; border: 0; border-top: var(--border-hairline) solid var(--divider-default); }
 .ui-divider[data-variant="subtle"] { border-top-color: var(--divider-subtle); }
 
+/* ---- Filter bar (index pages: directories, Bills, Declared, Instruments,
+   Audit, receipts, grants): the search field on a line of its own, then every
+   filter as a compact pill select and every toggle as a chip, one wrapping row.
+   Selects size to their chosen option where field-sizing is supported and keep
+   a line of their own where it is not. */
+.ui-filter-bar { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-tight); margin: var(--space-block) 0 0; }
+.ui-filter-bar > .ui-filter-search { flex: 1 1 100%; min-width: 0; }
+@media (min-width: 1101px) { .ui-filter-bar > .ui-filter-search { flex: 1 1 13rem; max-width: 20rem; } }
+.ui-filter-bar .ui-filter-search .ui-input { border-radius: var(--radius-md); }
+.ui-filter-bar > .ui-filter-field { flex: 0 1 auto; width: auto; max-width: 100%; min-width: 0; }
+.ui-filter-bar select.ui-input, .ui-filter-bar > .ui-filter-field select {
+  field-sizing: content; width: auto; max-width: 100%; min-height: var(--size-control-compact); height: var(--size-control-compact);
+  padding: 0 calc(var(--sp-12) + var(--size-icon-sm) + var(--sp-8)) 0 var(--sp-16);
+  border: var(--border-hairline) solid transparent; border-radius: var(--radius-pill); background-color: var(--ui-wash);
+  color: var(--navy); font: var(--type-label); background-position: right var(--sp-12) center; background-size: var(--size-icon-sm) var(--size-icon-sm);
+}
+.ui-filter-bar select:hover { background-color: var(--ui-wash-pressed); }
+/* A keyed pill keeps its key in view once a value is chosen ("Year: 2019"):
+   the field is the pill, its key the first word, the select the value. A
+   chosen value adds the control line's edge. */
+.ui-filter-bar > .ui-filter-field:has(> .ui-filter-key) {
+  display: inline-flex; align-items: center; padding-left: var(--sp-16);
+  border: var(--border-hairline) solid transparent; border-radius: var(--radius-pill); background: var(--ui-wash); color: var(--navy);
+}
+.ui-filter-bar > .ui-filter-field:has(> .ui-filter-key):hover { background: var(--ui-wash-pressed); }
+.ui-filter-key { font: var(--type-label); color: var(--ink-soft); white-space: nowrap; cursor: pointer; }
+.ui-filter-key::after { content: ":"; }
+.ui-filter-bar > .ui-filter-field:has(> .ui-filter-key) select { padding-left: var(--sp-4); border-color: transparent; background-color: transparent; }
+.ui-filter-bar > .ui-filter-field:has(> .ui-filter-key):has(option[value=""]):not(:has(option[value=""]:checked)) { border-color: var(--line-control); }
+.ui-filter-bar > .ui-filter-field:has(> .ui-filter-key):has(select:focus-visible) { outline: var(--border-focus) solid var(--bronze-ink); outline-offset: 3px; }
+.ui-filter-bar > .ui-filter-field:has(> .ui-filter-key) select:focus-visible { outline: none; }
+.ui-filter-bar .ui-filter-toggle {
+  display: inline-flex; align-items: center; gap: var(--sp-8); width: auto; min-height: var(--size-control-compact);
+  padding: 0 var(--sp-16) 0 var(--sp-12); border-radius: var(--radius-pill); background: var(--ui-wash); color: var(--navy); font: var(--type-label); cursor: pointer;
+}
+.ui-filter-bar .ui-filter-toggle > input { width: var(--size-icon-sm); height: var(--size-icon-sm); flex: 0 0 var(--size-icon-sm); margin: 0; accent-color: var(--navy); }
+.ui-filter-bar .ui-filter-toggle:has(input:checked) { background: var(--navy); color: var(--on-navy); }
+.ui-filter-bar .ui-filter-toggle:has(input:checked) > input { accent-color: var(--on-navy); }
+.ui-filter-bar > .ui-filter-actions { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-tight) var(--space-block); }
+.ui-filter-count { margin: var(--space-block) 0 0; font: var(--type-fine); color: var(--ink-soft); font-variant-numeric: tabular-nums; }
+
+/* ---- Tabs: two to four views of one page, an underline under the chosen one
+   (Ask | Search, the community tabs). The money hub's row is the nav lane's. */
+.ui-tabs { display: flex; flex-wrap: wrap; gap: var(--space-group); margin: 0 0 var(--space-block); border-bottom: var(--border-hairline) solid var(--divider-subtle); }
+.ui-tabs > :is(a, button) {
+  appearance: none; display: inline-flex; align-items: center; min-height: var(--size-target); margin-bottom: calc(-1 * var(--border-hairline)); padding: 0;
+  border: 0; border-bottom: var(--border-focus) solid transparent; border-radius: 0; background: none;
+  font: var(--type-control); color: var(--ink-soft); text-decoration: none; cursor: pointer;
+}
+.ui-tabs > :is(a, button):hover { color: var(--navy); }
+.ui-tabs > :is([aria-selected="true"], [aria-pressed="true"], [aria-current="page"]) { color: var(--navy); border-bottom-color: var(--navy); }
+
+/* ---- Disclosure: a row that opens in place. The chevron turns; the row
+   keeps a 44px target. */
+.ui-disclosure > summary {
+  display: flex; align-items: center; justify-content: space-between; gap: var(--space-block);
+  min-height: var(--size-target); list-style: none; cursor: pointer; font: var(--type-strong); color: var(--ink);
+}
+.ui-disclosure > summary::-webkit-details-marker { display: none; }
+.ui-disclosure > summary::after {
+  content: ""; flex: none; width: var(--sp-8); height: var(--sp-8); margin-right: var(--sp-4);
+  border-right: var(--border-focus) solid var(--ink-soft); border-bottom: var(--border-focus) solid var(--ink-soft);
+  transform: translateY(-25%) rotate(45deg); transition: transform var(--duration-standard) var(--ease-standard);
+}
+.ui-disclosure[open] > summary::after { transform: translateY(25%) rotate(-135deg); }
+.ui-disclosure > summary:hover { color: var(--bronze-ink); }
+.ui-disclosure-body { padding: 0 0 var(--space-heading); }
+
+/* ---- Link button: an action that reads as a link (bronze underline). */
+button.ui-link {
+  appearance: none; display: inline; padding: 0; margin: 0; border: 0; background: none; cursor: pointer;
+  font: inherit; color: var(--ink); text-align: left; text-decoration: underline;
+  text-decoration-color: var(--bronze-rule); text-underline-offset: 3px; text-decoration-thickness: 1.5px;
+}
+button.ui-link:hover { color: var(--bronze-ink); text-decoration-color: var(--bronze-ink); }
+
+/* ---- Actions: a block's drawn actions on one wrapping row. */
+.ui-actions { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-tight); margin: var(--space-block) 0 0; }
+.ui-actions:empty { display: none; }
+
 /* ---- Focus: one ring, bronze ink on paper, outside the shape. */
-:is(.ui-button, .ui-input, .ui-choice > input, .ui-chip, .chip, .ui-filter-chip, a.ui-tag, a.topic-chip):focus-visible,
-label.ui-chip:has(input:focus-visible) {
+:is(.ui-button, .ui-input, .ui-choice > input, .ui-chip, .chip, .ui-filter-chip, a.ui-tag, a.topic-chip, .ui-tabs > a, .ui-tabs > button, .ui-disclosure > summary, button.ui-link):focus-visible,
+label.ui-chip:has(input:focus-visible), .ui-filter-bar .ui-filter-toggle:has(input:focus-visible) {
   outline: var(--border-focus) solid var(--bronze-ink); outline-offset: 3px;
 }
+.ui-filter-bar .ui-filter-toggle > input:focus-visible { outline: none; }
 
 /* ---- Touch: every pressable thing is at least 44px. Mobile fields stay 16px so
    Safari does not zoom on focus. */
 @media (pointer: coarse) { [data-ui-size="compact"] { --ui-height: var(--size-target); } }
+/* A pill select keeps the label size on screen, but 16 on touch so Safari does not zoom when it opens. */
+@media (pointer: coarse) { .ui-filter-bar select.ui-input, .ui-filter-bar > .ui-filter-field select { font-size: var(--text-16); } }
 @media (max-width: 1000px), (pointer: coarse) {
-  :root, [data-ui-size] { --ui-font: 1rem; }
+  :root, [data-ui-size] { --ui-font: var(--text-16); }
+  .ui-filter-bar select.ui-input, .ui-filter-bar > .ui-filter-field select, .ui-filter-bar .ui-filter-toggle { min-height: var(--size-target); height: var(--size-target); }
   [data-ui-size="compact"] { --ui-height: var(--size-target); }
   :is(button, a).ui-filter-chip, :is(button, a, label).ui-chip, :is(button, a).chip:not(.ui-button),
   a:is(.ui-tag, .topic-chip) { min-height: var(--size-target); }
 }
 @media (prefers-reduced-motion: reduce) {
   :is(.ui-button, .ui-chip, .chip, .ui-filter-chip) { transition: none; }
+  .ui-disclosure > summary::after { transition: none; }
   button.ui-button[aria-busy="true"]::after { animation: none; border-style: dotted; }
 }
 /* Forced colours: fills drop away, so every chosen state and every label keeps
    an edge or a system colour of its own. */
 @media (forced-colors: active) {
   :is(.ui-button, .ui-chip, .chip, .ui-filter-chip)[aria-pressed="true"],
-  .ui-segmented > .ui-button[aria-pressed="true"],
-  label.ui-chip:has(input:checked) { outline: 2px solid Highlight; outline-offset: -4px; }
+  .ui-segmented > .ui-button:is([aria-pressed="true"], [aria-selected="true"]),
+  .ui-tabs > :is([aria-selected="true"], [aria-pressed="true"], [aria-current="page"]),
+  .ui-filter-bar .ui-filter-toggle:has(input:checked),
+  label.ui-chip:has(input:checked) { outline: var(--border-focus) solid Highlight; outline-offset: -4px; }
   select.ui-input:not([multiple]) { appearance: auto; background-image: none !important; }
-  .ui-input[aria-invalid="true"] { border: 2px dashed CanvasText; }
+  .ui-input[aria-invalid="true"] { border: var(--border-focus) dashed CanvasText; }
   .ui-choice > input[role="switch"] { appearance: auto; }
   .ui-choice > input[role="switch"]::before { display: none; }
   button.ui-button[aria-busy="true"]::after { border-color: ButtonText; border-right-color: transparent; }
   :is(.ui-party, .party) > i { background: CanvasText; }
+  .ui-dot-label > i { background: CanvasText; }
   .ui-map-filter__dot { forced-color-adjust: none; }
 }

@@ -1,56 +1,14 @@
-import { readFileSync, existsSync } from 'node:fs';
+import { readFileSync } from 'node:fs';
 import { Script, SourceTextModule } from 'node:vm';
 import { parentPort, workerData } from 'node:worker_threads';
-import { build } from 'esbuild';
 import { JSDOM } from 'jsdom';
+import { workerFetch, origin } from './worker-fetch.mjs';
 
 const publicRoot = new URL('../../public/', import.meta.url);
-const origin = 'https://opax.test';
 
-// Use the real Worker to decide which scripts each server-rendered family keeps.
-// This adapter supplies the HTMLRewriter operations used by its page renderer.
-class HTMLRewriter {
-  handlers = [];
-  on(selector, handler) { this.handlers.push([selector, handler]); return this; }
-  transform(response) {
-    const handlers = this.handlers;
-    return new Response(new ReadableStream({ async start(controller) {
-      const dom = new JSDOM(await response.text());
-      for (const [selector, handler] of handlers) {
-        for (const node of dom.window.document.querySelectorAll(selector)) {
-          handler.element({
-            getAttribute: name => node.getAttribute(name),
-            setAttribute: (name, value) => node.setAttribute(name, value),
-            setInnerContent(value, options) { if (options?.html) node.innerHTML = value; else node.textContent = value; },
-            append: value => node.insertAdjacentHTML('beforeend', value),
-            remove: () => node.remove(),
-          });
-        }
-      }
-      controller.enqueue(new TextEncoder().encode(dom.serialize()));
-      controller.close();
-      dom.window.close();
-    } }), response);
-  }
-}
-
+// The page as the real Worker serves it (its scripts decided per page family).
 async function shell(path) {
-  const compiled = await build({
-    entryPoints: [new URL('../../src/index.ts', import.meta.url).pathname],
-    bundle: true, platform: 'browser', format: 'esm', write: false, external: ['node:*'],
-    plugins: [{ name: 'omit-images', setup(builder) {
-      builder.onResolve({ filter: /^\.\/og-render$/ }, () => ({ path: 'images', namespace: 'header-search-test' }));
-      builder.onLoad({ filter: /.*/, namespace: 'header-search-test' }, () => ({ contents: 'export const renderOgPng=()=>{}; export const renderOgJpeg=()=>{}; export const renderStoryJpeg=()=>{};' }));
-    } }],
-  });
-  globalThis.HTMLRewriter = HTMLRewriter;
-  const { default: worker } = await import('data:text/javascript;base64,' + Buffer.from(compiled.outputFiles[0].text).toString('base64'));
-  const env = { COMMUNITY_ORIGIN: origin, VIC_ELECTION_HUB_ENABLED: 'true', ASSETS: { async fetch(request) {
-    const pathname = new URL(request.url).pathname;
-    const file = new URL(pathname === '/' ? 'index.html' : pathname === '/home' ? 'home.html' : pathname.slice(1), publicRoot);
-    return existsSync(file) ? new Response(readFileSync(file), { headers: { 'content-type': pathname.endsWith('.json') ? 'application/json' : 'text/html' } }) : new Response('Missing', { status: 404 });
-  } } };
-  const response = await worker.fetch(new Request(origin + path), env, { waitUntil() {} });
+  const response = await workerFetch(path, workerData.env || {});
   if (response.status !== 200) throw Error('Shell returned ' + response.status);
   return response.text();
 }
@@ -61,13 +19,15 @@ async function run() {
   const context = dom.getInternalVMContext();
   // No network. Keep unrelated hydration pending; the actual script bodies,
   // module imports, DOM operations and event listeners all execute.
-  window.fetch = () => new Promise(() => {});
+  const requests = [];
+  window.fetch = (url, init) => { requests.push(`${init?.method || 'GET'} ${url}`); return new Promise(() => {}); };
   window.document.fonts = { ready: new Promise(() => {}) };
-  window.matchMedia = () => ({ matches: false, addEventListener() {}, removeEventListener() {} });
+  // Media queries match only where a probe asks (e.g. reduced motion).
+  window.matchMedia = query => ({ matches: (workerData.media || []).some(m => query.includes(m)), media: query, addEventListener() {}, removeEventListener() {} });
   window.ResizeObserver = window.IntersectionObserver = class { observe() {} unobserve() {} disconnect() {} };
   window.scrollTo = () => {};
   window.HTMLDialogElement.prototype.showModal = function () { this.open = true; };
-  window.HTMLDialogElement.prototype.close = function () { this.open = false; };
+  window.HTMLDialogElement.prototype.close = function () { if (!this.open) return; this.open = false; this.dispatchEvent(new window.Event('close')); };
   const modules = new Map();
   const resolve = (specifier, importer = origin + '/') => new URL(specifier, importer).href;
   const source = url => readFileSync(new URL(new URL(url).pathname.slice(1), publicRoot), 'utf8');
@@ -78,11 +38,18 @@ async function run() {
     }));
     return modules.get(url);
   }
-  async function evaluateModule(url) {
-    const module = moduleFor(url);
-    if (module.status === 'unlinked') await module.link((specifier, importer) => moduleFor(resolve(specifier, importer.identifier)));
-    if (module.status === 'linked') await module.evaluate();
-    return module;
+  let evaluationQueue = Promise.resolve();
+  function evaluateModule(url) {
+    // Several table entry points import the same core while app.js starts.
+    // Complete one module graph before another graph links its shared dependencies.
+    const evaluation = evaluationQueue.then(async () => {
+      const module = moduleFor(url);
+      if (module.status === 'unlinked') await module.link((specifier, importer) => moduleFor(resolve(specifier, importer.identifier)));
+      if (module.status === 'linked') await module.evaluate();
+      return module;
+    });
+    evaluationQueue = evaluation.catch(() => {});
+    return evaluation;
   }
   function classic(url) {
     new Script(source(url), { filename: url, importModuleDynamically: specifier => evaluateModule(resolve(specifier, url)) }).runInContext(context);
@@ -104,6 +71,10 @@ async function run() {
       else classic(script.src);
     }
     for (const url of deferredModules) await evaluateModule(url);
+    if (workerData.probe && workerData.probe !== 'menus') {
+      window.document.dispatchEvent(new window.Event('DOMContentLoaded'));
+      return await probes[workerData.probe](window, requests);
+    }
     if (workerData.probe === 'menus') {
       window.document.dispatchEvent(new window.Event('DOMContentLoaded'));
       // The band's menus on this page: does each control actually open something?
@@ -111,7 +82,7 @@ async function run() {
       const drawer = doc.getElementById('nav-drawer');
       doc.getElementById('nav-open').click();
       const drawerOpen = { open: drawer.open, expanded: doc.getElementById('nav-open').getAttribute('aria-expanded') };
-      const trigger = doc.querySelector('#primary-nav .has-menu button[aria-controls]');
+      const trigger = doc.querySelector('#primary-nav [data-nav-trigger]');
       trigger.click();
       const panel = doc.getElementById(trigger.getAttribute('aria-controls'));
       const menuOpen = { expanded: trigger.getAttribute('aria-expanded'), hidden: panel.hidden };
@@ -160,6 +131,97 @@ async function run() {
     return { scripts: scripts.map(node => new URL(node.src).pathname), body: window.document.body.className, initialBindings, finalBindings: clickBindings(), initialEscapeBindings, finalEscapeBindings: escapeBindings(), sameController: controller === window.OpaxQuickSearch.header, first, second, escape, escapeWithSuggestions, outside, focusOutside };
   } finally { dom.window.close(); }
 }
+
+const wait = ms => new Promise(r => setTimeout(r, ms));
+const key = (window, target, k, more = {}) => target.dispatchEvent(new window.KeyboardEvent('keydown', { key: k, bubbles: true, cancelable: true, ...more }));
+const probes = {
+  // The sheet: open, Tab held inside, a group folding, Escape closing it and focus going home.
+  async sheet(window) {
+    const doc = window.document;
+    const drawer = doc.getElementById('nav-drawer');
+    const toggle = doc.getElementById('nav-open');
+    toggle.focus();
+    toggle.click();
+    const opened = { open: drawer.open, expanded: toggle.getAttribute('aria-expanded'), focus: doc.activeElement === drawer };
+    const stops = [...drawer.querySelectorAll('a[href], button:not([disabled]), input:not([disabled])')].filter(el => !el.closest('[hidden]'));
+    const first = stops[0], last = stops.at(-1);
+    last.focus(); key(window, last, 'Tab');
+    const wrapsForward = doc.activeElement === first;
+    first.focus(); key(window, first, 'Tab', { shiftKey: true });
+    const wrapsBack = doc.activeElement === last;
+    drawer.focus(); key(window, drawer, 'Tab', { shiftKey: true });
+    const fromDialogBack = doc.activeElement === last;
+    const group = drawer.querySelector('.sheet-group-toggle');
+    const groupBefore = group.getAttribute('aria-expanded');
+    group.click();
+    const groupAfter = { expanded: group.getAttribute('aria-expanded'), hidden: doc.getElementById(group.getAttribute('aria-controls')).hidden };
+    first.focus(); key(window, first, 'Escape');
+    const closingClass = drawer.classList.contains('is-closing');
+    const openRightAfterEscape = drawer.open;
+    await wait(400);
+    return { opened, stopCount: stops.length, wrapsForward, wrapsBack, fromDialogBack, groupBefore, groupAfter, closingClass, openRightAfterEscape,
+      closed: { open: drawer.open, expanded: toggle.getAttribute('aria-expanded'), focus: doc.activeElement?.id } };
+  },
+  // The menu bar's keyboard model.
+  async 'panel-keys'(window) {
+    const doc = window.document;
+    const triggers = [...doc.querySelectorAll('#primary-nav [data-nav-trigger]')];
+    const panelOf = t => doc.getElementById(t.getAttribute('aria-controls'));
+    const links = t => [...panelOf(t).querySelectorAll('a[href]')].filter(a => !a.closest('li[hidden]'));
+    const [a, b] = triggers;
+    a.focus(); key(window, a, 'ArrowDown');
+    const down = { expanded: a.getAttribute('aria-expanded'), hidden: panelOf(a).hidden, focusFirst: doc.activeElement === links(a)[0] };
+    key(window, doc.activeElement, 'ArrowDown');
+    const second = doc.activeElement === links(a)[1];
+    key(window, doc.activeElement, 'End');
+    const end = doc.activeElement === links(a).at(-1);
+    key(window, doc.activeElement, 'Home');
+    const home = doc.activeElement === links(a)[0];
+    key(window, doc.activeElement, 'ArrowUp');
+    const upToTrigger = doc.activeElement === a;
+    key(window, a, 'ArrowRight');
+    const right = { focus: doc.activeElement === b, nextOpen: b.getAttribute('aria-expanded'), previousOpen: a.getAttribute('aria-expanded'), previousHidden: panelOf(a).hidden };
+    key(window, b, 'ArrowLeft');
+    const left = doc.activeElement === a;
+    key(window, a, 'Escape');
+    const escape = { expanded: a.getAttribute('aria-expanded'), hidden: panelOf(a).hidden, focus: doc.activeElement === a, anyOpen: triggers.some(t => t.getAttribute('aria-expanded') === 'true') };
+    a.click();
+    const click = a.getAttribute('aria-expanded');
+    a.click();
+    const clickAgain = a.getAttribute('aria-expanded');
+    return { count: triggers.length, down, second, end, home, upToTrigger, right, left, escape, click, clickAgain };
+  },
+  // "/" opens the header search, and never while the reader types in a field.
+  async slash(window) {
+    const doc = window.document;
+    window.Element.prototype.getClientRects = function () { return [{}]; }; // jsdom has no layout
+    const toggle = doc.getElementById('header-search-open');
+    const main = doc.querySelector('main') || doc.body;
+    main.insertAdjacentHTML('beforeend', '<input id="probe-input"><textarea id="probe-area"></textarea><div id="probe-edit" contenteditable="true"></div>');
+    const typed = {};
+    for (const id of ['probe-input', 'probe-area', 'probe-edit', 'mast-q', 'drawer-q']) {
+      const el = doc.getElementById(id);
+      if (!el) continue;
+      key(window, el, '/');
+      typed[id] = toggle.getAttribute('aria-expanded');
+    }
+    key(window, doc.body, '/', { metaKey: true });
+    const withMeta = toggle.getAttribute('aria-expanded');
+    const opened = key(window, doc.body, '/') === false;
+    return { typed, withMeta, opened: { prevented: opened, expanded: toggle.getAttribute('aria-expanded'), focus: doc.activeElement?.id } };
+  },
+  // Optional sections: what the page draws at load, and what opening the menus asks for.
+  async gates(window, requests) {
+    const doc = window.document;
+    const count = sel => doc.querySelectorAll(sel).length;
+    const vic = 'a[href="/vic-election-2026"]';
+    const atLoad = { menus: count(`#primary-nav .nav-item-link${vic.slice(1)}`), sheet: count(`#nav-drawer .sheet-link${vic.slice(1)}`), chip: count(`#nav-drawer .sheet-chip${vic.slice(1)}`), footer: count(`#footer-index ${vic}`), slots: count('[data-gate-slot="vic-election"]') };
+    const before = requests.length;
+    doc.querySelector('#primary-nav [data-nav-trigger="people"]')?.click();
+    doc.getElementById('nav-open')?.click();
+    return { gatesAttr: doc.documentElement.getAttribute('data-nav-gates'), atLoad, onOpen: requests.slice(before), feature: count('.nav-feature[href="/vic-election-2026"]') };
+  },
+};
 
 try { parentPort.postMessage({ result: await run() }); }
 catch (error) { parentPort.postMessage({ error: error.stack }); }

@@ -14,7 +14,7 @@ ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT))
 from parli.ingest import frl_instruments as loader
 from parli.ingest.frl_instruments import acquire, atomic_json, Held, PoliteSession, SCOPE, quiet_window
-from scripts.export_instruments import check_budget, plan_export, export
+from scripts.export_instruments import plan_export, export
 sys.path.insert(0, str(ROOT / 'scripts/vm'))
 from validate_data import check_instruments
 
@@ -690,14 +690,19 @@ class FRLTests(unittest.TestCase):
             self.assertGreaterEqual(session.delay,10)
             self.assertEqual(store.call_args.args[2][0]['act_id'],row['id'])
 
-    def test_export_budget_projection_and_release_gate(self):
+    def test_growing_catalogue_passes_beyond_the_old_file_ceiling(self):
+        rows=[title(i) for i in range(1,402)]
+        with patch('scripts.export_instruments.CHUNK_ROWS',1):
+            payloads,manifest=plan_export(snapshot(rows))
+        self.assertGreater(len(payloads),400)
+        self.assertEqual(manifest['exported'],401)
+        self.assertEqual(len(manifest['lookup']),401)
+
+    def test_export_projection_and_release_reconciliation(self):
         row = title(1); staged = snapshot([row])
         payloads, manifest = plan_export(staged)
-        self.assertLessEqual(len(payloads), 400); self.assertLessEqual(sum(map(len, payloads.values())), 25_000_000)
         self.assertEqual(manifest['lookup'], {'F2026L00001': 0})
         self.assertEqual(json.loads(payloads['index.json'])['records'][0][4], None)
-        with self.assertRaises(Held): check_budget({str(i): b'{}' for i in range(401)})
-        with self.assertRaises(Held): check_budget({'big': b'x' * 25_000_001})
         atomic_json(self.out, staged); dest = self.base / 'export'; export(self.out, dest)
         self.assertEqual(check_instruments(dest, compare_head=False), [])
         ready=json.loads((dest / 'ready.json').read_text())

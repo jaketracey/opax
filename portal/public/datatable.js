@@ -1,6 +1,6 @@
 // Shared, dependency-free table renderer and query engine. Safe to import in a Worker.
 import {shortDate} from './format.js';
-import {repeatedTableKeys} from './datatable-query.js?v=6dd55aab38';
+import {repeatedTableKeys} from './datatable-query.js?v=3853f95c92';
 import {readServerCSV} from './server-csv.js?v=47fc2aba1d';
 
 const esc = value => String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;'}[c]));
@@ -11,7 +11,10 @@ const number = value => value == null || value === '' || !Number.isFinite(Number
 const collator = new Intl.Collator('en-AU', {numeric:true, sensitivity:'base'});
 const decimal = new Intl.NumberFormat('en-AU', {maximumFractionDigits:20});
 const money = new Intl.NumberFormat('en-AU', {style:'currency', currency:'AUD', minimumFractionDigits:2, maximumFractionDigits:20});
-const text = value => String(value ?? '');
+const text = value => Array.isArray(value) ? value.join('; ') : String(value ?? '');
+const members = value => [...new Set((Array.isArray(value) ? value : [value]).filter(v=>v != null && v !== '').map(text))];
+const pageQueries = new WeakMap();
+const facetMembers = (row,column) => column?.facetValues ? members(column.facetValues(row)) : members(row[column.key]);
 const prefix = key => key ? `${key}.` : '';
 const own = (object, key) => Object.hasOwn(object, key);
 const recognised = (key,config) => {
@@ -72,8 +75,9 @@ function cleanQuery(query = {}, config, page) {
     const column = config.columns.find(c => c.key === key && c.facet);
     if (!column) { delete out.filters[key]; continue; }
     if (Array.isArray(value)) {
-      const options = config.rows ? publicRows(config.rows,config).map(row=>text(row[key]))
+      const options = config.rows ? publicRows(config.rows,config).flatMap(row=>facetMembers(row,column))
         : Array.isArray(page?.facets?.[key]) ? page.facets[key].map(f=>f.value) : [];
+      options.push(...(column.facetOptions || []).filter(validText));
       const safe = value.filter(v=>options.includes(v) && validText(v));
       if (safe.length) out.filters[key] = safe; else delete out.filters[key];
     } else if (column.facet !== 'range') delete out.filters[key];
@@ -136,13 +140,20 @@ export function serializeQuery(query = {}, urlKey) {
 }
 
 const engines = new WeakMap();
+const facetFunctions = new WeakMap();
+let nextFacetFunction = 0;
+const facetFunctionId = fn => {
+  if (!fn) return 0;
+  if (!facetFunctions.has(fn)) facetFunctions.set(fn,++nextFacetFunction);
+  return facetFunctions.get(fn);
+};
 function engine(rows, config) {
   let byColumns = engines.get(rows);
   if (!byColumns) engines.set(rows,byColumns = new Map());
-  const key = JSON.stringify(config.columns.map(c=>[c.key,c.type,c.facet,c.hideWhenConstant,c.sortable,c.primary]));
+  const key = JSON.stringify(config.columns.map(c=>[c.key,c.type,c.facet,c.facetOptions,c.hideWhenConstant,c.sortable,c.primary,facetFunctionId(c.facetValues)]));
   if (byColumns.has(key)) return byColumns.get(key);
   const candidates = candidateRows(rows,config);
-  const result = {candidates, rowJSON:candidates.map(row=>JSON.stringify(row)), search:candidates.map(row=>config.columns.map(c=>text(row[c.key])).join('\n').normalize('NFKC').toLowerCase()), results:new Map()};
+  const result = {candidates, search:candidates.map(row=>config.columns.map(c=>text(row[c.key])).join('\n').normalize('NFKC').toLowerCase()), results:new Map()};
   byColumns.set(key,result);
   return result;
 }
@@ -161,14 +172,14 @@ function resultFor(rows, config, query) {
     const row = data.candidates[i], failed = [];
     for (const [key,filter] of filters) {
       const n = number(row[key]);
-      if (filter instanceof Set ? !filter.has(text(row[key])) : n == null || (filter.min != null && n < filter.min) || (filter.max != null && n > filter.max)) failed.push(key);
+      if (filter instanceof Set ? !facetMembers(row,config.columns.find(c=>c.key===key)).some(value=>filter.has(value)) : n == null || (filter.min != null && n < filter.min) || (filter.max != null && n > filter.max)) failed.push(key);
     }
     if (!failed.length) selected.push(row);
     for (const c of facetColumns) {
       if (failed.length && (failed.length !== 1 || failed[0] !== c.key)) continue;
       const value = row[c.key], count = counts.get(c.key);
       if (c.facet === 'range') { const n=number(value); if (n != null) { count.min=Math.min(count.min,n); count.max=Math.max(count.max,n); } }
-      else if (value != null && value !== '') count.set(text(value),(count.get(text(value)) || 0)+1);
+      else for (const member of facetMembers(row,c)) count.set(member,(count.get(member) || 0)+1);
     }
   }
   const sort = query.sort || config.defaultSort, column = config.columns.find(c=>c.key === sort?.key && sortable(c));
@@ -184,7 +195,10 @@ function resultFor(rows, config, query) {
   for (const c of facetColumns) {
     const count=counts.get(c.key);
     if (c.facet === 'range') { if (Number.isFinite(count.min)) facets[c.key]=count; }
-    else facets[c.key]=[...count].sort(([a],[b])=>collator.compare(a,b)).map(([value,count])=>({value,count}));
+    else {
+      if (!rejected) for (const value of c.facetOptions || []) if (validText(value) && !count.has(value)) count.set(value,0);
+      facets[c.key]=[...count].sort(([a],[b])=>collator.compare(a,b)).map(([value,count])=>({value,count}));
+    }
   }
   const result={rows:selected,facets};
   // Bounded cache; inputs are immutable for a mounted table.
@@ -195,10 +209,16 @@ function resultFor(rows, config, query) {
 const filteredRows = (rows,config,query) => resultFor(rows,config,query).rows;
 export function applyQuery(rows, config, query = {}) {
   const result=resultFor(rows,config,query);
-  if (blockedQuery(config,query)) return {rows:[],total:0,page:1,pageSize:config.pageSize || 50,facets:{}};
+  if (blockedQuery(config,query)) {
+    const value={rows:[],total:0,page:1,pageSize:config.pageSize || 50,facets:{}};
+    pageQueries.set(value,query);
+    return value;
+  }
   const pageSize=integer(query.pageSize,integer(config.pageSize,50));
   const page=Math.min(integer(query.page,1),Math.max(1,Math.ceil(result.rows.length/pageSize)));
-  return {rows:result.rows.slice((page-1)*pageSize,page*pageSize),total:result.rows.length,page,pageSize,facets:result.facets};
+  const value={rows:result.rows.slice((page-1)*pageSize,page*pageSize),total:result.rows.length,page,pageSize,facets:result.facets};
+  pageQueries.set(value,query);
+  return value;
 }
 
 export function toCSV(rows, config) {
@@ -226,8 +246,8 @@ function constants(config, page, query) {
   return config.columns.filter(c => c.hideWhenConstant ?? c.type === 'category').flatMap(column => {
     const selected = query.filters?.[column.key];
     const facet = page.facets?.[column.key];
-    const values = Array.isArray(selected) && selected.length === 1 && page.total > 0 ? selected
-      : Array.isArray(facet) ? facet.map(v => v.value)
+    const values = Array.isArray(facet) ? facet.map(v => v.value)
+      : Array.isArray(selected) && selected.length === 1 && page.total > 0 ? selected
       : facet && facet.min === facet.max ? [text(facet.min)] : [];
     return values.length === 1 && values[0] ? [{column, value:values[0]}] : [];
   });
@@ -258,7 +278,7 @@ function chip(label, key, value, removable = true, title = label) {
 
 function render(config, page, query = {}, view = {}, error = '') {
   const requested = query, rejected=blockedQuery(config,query);
-  if (rejected) { page={rows:[],total:0,page:1,pageSize:config.pageSize || 50,facets:{}}; view={...view,rejected:true}; }
+  if (rejected || view.rejected) { page={rows:[],total:0,page:1,pageSize:config.pageSize || 50,facets:{}}; view={...view,rejected:true}; }
   page = safePage(page, config);
   query = cleanQuery(query, config, page);
   const redactedSearch = Boolean(requested.q && !query.q);
@@ -276,14 +296,14 @@ function render(config, page, query = {}, view = {}, error = '') {
   for (const [key, filter] of Object.entries(query.filters || {})) {
     const column = config.columns.find(c => c.key === key);
     if (!column) continue;
-    if (Array.isArray(filter)) for (const value of filter) active.push(chip(`${column.label}: ${value}`, key, value));
+    if (Array.isArray(filter)) for (const value of filter) active.push(chip(`${column.facetLabel || column.label}: ${value}`, key, value));
     else active.push(chip(`${column.label}: ${filter.min == null ? 'Any' : formatCell(filter.min,column)} – ${filter.max == null ? 'Any' : formatCell(filter.max,column)}`, key, ''));
   }
   for (const {column,value} of constant) if (!query.filters?.[column.key]) active.push(chip(`${column.label}: ${formatCell(value,column)}`, column.key, value, false, formatCell(value,{...column,format:'exact'})));
   for (const column of config.columns.filter(c => c.facet)) {
     const facet = page.facets?.[column.key], selected = query.filters?.[column.key];
     if (column.facet === 'range') {
-      controls.push(`<details class="dt-panel" data-panel="facet-${esc(column.key)}">${summary(column.label)}<fieldset><legend class="dt-sr">${esc(column.label)}</legend>${['min','max'].map(bound => `<label>${bound === 'min' ? 'From' : 'To'}<input type="number" step="any" data-range="${esc(column.key)}" data-bound="${bound}" data-focus="${esc(column.key)}-${bound}" value="${esc(selected?.[bound] ?? '')}" placeholder="${esc(facet?.[bound] ?? '')}"></label>`).join('')}</fieldset></details>`);
+      controls.push(`<details class="dt-panel" data-panel="facet-${esc(column.key)}">${summary(column.facetLabel || column.label)}<fieldset><legend class="dt-sr">${esc(column.facetLabel || column.label)}</legend>${['min','max'].map(bound => `<label>${bound === 'min' ? 'From' : 'To'}<input type="number" step="any" data-range="${esc(column.key)}" data-bound="${bound}" data-focus="${esc(column.key)}-${bound}" value="${esc(selected?.[bound] ?? '')}" placeholder="${esc(facet?.[bound] ?? '')}"></label>`).join('')}</fieldset></details>`);
     } else if (Array.isArray(facet) && facet.length) {
       const choices = facet.map(({value,count}) => {
         const checked = Array.isArray(selected) && selected.includes(value);
@@ -291,7 +311,7 @@ function render(config, page, query = {}, view = {}, error = '') {
           ? button(`${esc(value)} <span class="dt-muted">${decimal.format(count)}</span>`, `data-facet="${esc(column.key)}" data-value="${esc(value)}" aria-pressed="${checked}"`)
           : `<label class="dt-choice"><input type="checkbox" data-facet="${esc(column.key)}" value="${esc(value)}"${checked ? ' checked' : ''}>${esc(value)} <span class="dt-muted">${decimal.format(count)}</span></label>`;
       }).join('');
-      controls.push(`<details class="dt-panel" data-panel="facet-${esc(column.key)}">${summary(column.label)}<fieldset><legend class="dt-sr">${esc(column.label)}</legend>${choices}</fieldset></details>`);
+      controls.push(`<details class="dt-panel" data-panel="facet-${esc(column.key)}">${summary(column.facetLabel || column.label)}<fieldset><legend class="dt-sr">${esc(column.facetLabel || column.label)}</legend>${choices}</fieldset></details>`);
     }
   }
   const prominence = columns.find(c => c.type === 'money' || c.type === 'count');
@@ -303,7 +323,7 @@ function render(config, page, query = {}, view = {}, error = '') {
   const body = page.rows.map(row => `<tr role="row">${columns.map(column => {
     const value = row[column.key], display = formatCell(value,column), n = number(value);
     const exact = numeric(column) && n != null ? column.type === 'money' ? money.format(n) : decimal.format(n) : display;
-    const link = column.primary && config.primaryLink ? href(config.primaryLink(row),config) : null;
+    const link = column.href ? href(column.href(row),config) : column.primary && config.primaryLink ? href(config.primaryLink(row),config) : null;
     const bar = column.bar && n != null && maxima[column.key] ? `<span class="dt-bar-track" aria-hidden="true"><span class="dt-bar" style="--dt-bar:${Math.min(100,Math.round(Math.abs(n) / maxima[column.key] * 100))}%"></span></span>` : '';
     return `<td role="cell" data-label="${esc(column.label)}" data-align="${esc(column.align || (numeric(column) ? 'end' : 'start'))}"${column.primary ? ' data-primary' : ''}${column === prominence ? ' data-prominent' : ''}${numeric(column) ? ' class="dt-number"' : ''} title="${esc(exact)}"><span class="dt-value">${link ? `<a href="${esc(link)}">${esc(display)}</a>` : esc(display) || '—'}</span>${bar}</td>`;
   }).join('')}${config.actions?.length ? `<td role="cell" class="dt-actions"><details class="dt-panel" data-panel="action-${menuIdentity(row,menuIdentities)}"><summary aria-label="Actions" title="Actions"><span aria-hidden="true">⋯</span></summary><div>${config.actions.map(action => {
@@ -322,8 +342,11 @@ function render(config, page, query = {}, view = {}, error = '') {
 }
 
 export function dataTableHTML(config, page, requestURL) {
-  if (!requestURL) return render(config,page,{sort:config.defaultSort});
-  const {query,rejected}=guardTableURL(config,requestURL);
+  if (!requestURL) {
+    const query=pageQueries.get(page) || {sort:config.defaultSort};
+    return render(config,page,query,{rejected:blockedQuery(config,query) || Boolean(config.initialRejected)});
+  }
+  const guarded=guardTableURL(config,requestURL),query=guarded.query,rejected=guarded.rejected || Boolean(config.initialRejected);
   if (rejected) page={rows:[],total:0,page:1,pageSize:config.pageSize || 50,facets:{}};
   return render(config,page,query,{rejected});
 }
@@ -352,7 +375,7 @@ export function mountDataTable(el, config) {
   const root = el.matches?.('[data-datatable]') ? el : el.matches?.('table') ? el.closest('[data-datatable]') : el;
   if (!root) throw new Error('Mount the SSR table or its container');
   const doc = root.ownerDocument, win = doc.defaultView;
-  let query = {}, rawURL, rawPage, lastURL, rawRejected = false;
+  let query = {}, rawURL, rawPage, lastURL, rawRejected = Boolean(config.initialRejected), initialRejected = rawRejected, firstQuery = config.initialQuery;
   const view = {density:config.density || 'comfortable', columnsVisible:config.columnsVisible || config.columns.map(c=>c.key), constantsVisible:[]};
   let page;
   try { page = JSON.parse(root.querySelector('[data-dt-page]')?.textContent || 'null'); } catch { /* Client rows below. */ }
@@ -426,7 +449,8 @@ export function mountDataTable(el, config) {
     const encoded = serializeQuery(state,config.urlKey);
     for (const [key,value] of new URLSearchParams(encoded)) url.searchParams.set(key,value);
     replaceURL(url);
-    setRobots(doc,root,Boolean(encoded));
+    const tableState=[...url.searchParams.keys()].some(key=>/^(?:.+\.)?(?:q|sort|page|pageSize|f\..+)$/.test(key));
+    setRobots(doc,root,view.rejected || Boolean(encoded) || tableState);
     scrubHead();
   }
   function endpoint(csv = false, state = query) {
@@ -450,8 +474,18 @@ export function mountDataTable(el, config) {
       root.setAttribute('aria-busy','true'); paint();
       if (destroyed || version !== revision) return;
       const guarded=guardTableURL(config,captured);
-      rawURL=undefined; rawRejected=guarded.rejected; query=guarded.query;
+      rawURL=undefined; rawRejected=guarded.rejected || initialRejected; initialRejected=false; query=guarded.query;
+      if (firstQuery) {
+        if (!rawRejected) query=firstQuery;
+        for (const key of config.initialQueryKeys || []) guarded.url.searchParams.delete(key);
+      }
+      firstQuery=undefined;
       replaceURL(guarded.url); scrubHead();
+    }
+    if (rawRejected) {
+      page={rows:[],total:0,page:1,pageSize:config.pageSize || 50,facets:{}};
+      view.rejected=true;query={};rawPage=undefined;
+      paint();urlState();root.removeAttribute('aria-busy');return;
     }
     const pending=structuredClone(query), previousPage=rawPage || page;
     rawPage=undefined;
@@ -473,11 +507,12 @@ export function mountDataTable(el, config) {
       if (!response.ok) throw new Error('Table request failed');
       const result=await response.json();
       if (!Array.isArray(result.rows) || !Number.isSafeInteger(result.total) || result.total < 0 || !integer(result.page,null) || !integer(result.pageSize,null)) throw new Error('Invalid table page');
-      const candidate={rows:candidateRows(result.rows,config),total:result.total,page:result.page,pageSize:result.pageSize};
+      const candidate={rows:result.rows,total:result.total,page:result.page,pageSize:result.pageSize};
       // Validate all supplied facet text, including options outside this page.
       candidate.facets=result.facets || {};
       if (destroyed || version !== revision) return;
-      page=safePage(candidate,config); query.page=page.page;
+      page=safePage(candidate,config);
+      query.page=page.page;
       paint(); delete view.searchSelection; urlState();
     } catch (error) {
       if (error?.name !== 'AbortError' && !destroyed && version === revision) paint('Could not load this table.');

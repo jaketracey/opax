@@ -502,9 +502,6 @@ def check_instruments(directory=None, compare_head=True) -> list[str]:
         old = head_bytes("portal/public/instruments/manifest.json") if compare_head else None
         if old and exported < json.loads(old).get("exported", json.loads(old)["count"]) * .98:
             return ["instruments snapshot shrank more than 2%"]
-        files = list(directory.glob("*.json"))
-        if len(files) > 400 or sum(p.stat().st_size for p in files) > 25_000_000:
-            return ["instruments asset budget exceeded"]
         schemas, strings, ids = manifest["schemas"], manifest.get("strings", []), set()
         def unpack(value):
             if isinstance(value, list): return [unpack(v) for v in value]
@@ -544,7 +541,7 @@ def check_audit(directory=None, compare_head=True) -> list[str]:
     """Bounded, licensed QAO export; no database or source requests."""
     directory = Path(directory) if directory is not None else ROOT / PUBLIC / "audit"
     try:
-        from scripts.export_audit import check_budget, validate_record
+        from scripts.export_audit import validate_record
         from parli.ingest.qao_reports import guard_count
         manifest = json.loads((directory / "manifest.json").read_text())
         index = json.loads((directory / "index.json").read_text())["records"]
@@ -554,7 +551,6 @@ def check_audit(directory=None, compare_head=True) -> list[str]:
         if manifest.get("complete") is not True or manifest.get("phase") not in (1,2): return ["audit catalogue incomplete"]
         if ready != {"complete": True, "count": manifest["count"], "listed": manifest["listed"], "export_date": manifest["generated_at"][:10]}:
             return ["audit readiness receipt mismatch"]
-        check_budget({p.name: p.read_bytes() for p in directory.iterdir() if p.is_file()})
         seen, recommendations, exceptions, response_count, body_count, pdf_holds = set(), 0, [], 0, 0, []
         for i, chunk in enumerate(manifest["chunks"]):
             name = Path(chunk["path"]).name
@@ -582,7 +578,6 @@ def check_audit(directory=None, compare_head=True) -> list[str]:
                 if row["licence"]["body_skipped"]: exceptions.append(row["id"])
                 projected = {k: row[k] for k in ("id", "number", "year", "report_label", "title", "tabled_date", "sectors", "entities", "canonical_url")}
                 if manifest['phase'] == 2: projected['has_responses'] = row.get('has_responses',False)
-                if row.get('title_privacy_filtered'): projected['title_privacy_filtered'] = True
                 if projected not in index: return ["audit index does not match detail"]
         if len(index) != manifest["count"] or len(seen) != manifest["count"] or set(manifest["lookup"]) != seen: return ["audit counts do not reconcile"]
         if recommendations != manifest["recommendations"] or exceptions != manifest["licence_exceptions"]: return ["audit licence/recommendation counts mismatch"]

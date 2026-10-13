@@ -1,0 +1,1323 @@
+{
+  "generated_at": "2026-10-12T23:06:45.056281+00:00",
+  "cache": ".cache/budget-receipt-repair-2026-10-13-v2",
+  "reacquired": 25,
+  "missing_identity_before": 25,
+  "missing_identity_after": 0,
+  "sources": [
+    {
+      "url": "https://archive.budget.gov.au/",
+      "previous_snapshot": "2026-10-12T21:24:17.401474+00:00",
+      "previous_sha256": "9f9a99f54193c74a3a4320fb1df105f8b6ca4476251175749d11f7d77e277ae9",
+      "receipt": {
+        "url": "https://archive.budget.gov.au/",
+        "status": 200,
+        "snapshot": "2026-10-12T23:06:19.000465+00:00",
+        "sha256": "9f9a99f54193c74a3a4320fb1df105f8b6ca4476251175749d11f7d77e277ae9",
+        "requests": [
+          {
+            "url": "https://archive.budget.gov.au/",
+            "started_at": "2026-10-12T23:06:18.759267+00:00",
+            "minimum_interval_seconds": 1.0,
+            "previous_started_at": "2026-10-12T23:06:17.759160+00:00",
+            "interval_seconds": 1.0001059719943441,
+            "robots": {
+              "url": "https://archive.budget.gov.au/robots.txt",
+              "status": 404,
+              "snapshot": "2026-10-12T23:06:18.485885+00:00",
+              "sha256": null,
+              "decision": "allowed",
+              "crawl_delay_seconds": null,
+              "request_rate": null,
+              "fallback": "HTTP 404: no published rules; allow"
+            },
+            "status": 200,
+            "user_agent_policy": "parli/ingest/user-agent.json",
+            "user_agent_sha256": "1100b17c9651df0a8cac3179efbf025b2b55acf7d93bee70876cd24bcd3c0b2b"
+          }
+        ],
+        "robots": {
+          "url": "https://archive.budget.gov.au/robots.txt",
+          "status": 404,
+          "snapshot": "2026-10-12T23:06:18.485885+00:00",
+          "sha256": null,
+          "decision": "allowed",
+          "crawl_delay_seconds": null,
+          "request_rate": null,
+          "fallback": "HTTP 404: no published rules; allow"
+        },
+        "user_agent_policy": "parli/ingest/user-agent.json",
+        "user_agent_sha256": "1100b17c9651df0a8cac3179efbf025b2b55acf7d93bee70876cd24bcd3c0b2b"
+      },
+      "bytes_unchanged": true,
+      "licence_recheck": null
+    },
+    {
+      "url": "https://archive.budget.gov.au/2015-16/bp1/BP1_consolidated.pdf",
+      "previous_snapshot": "2026-10-12T21:25:25.358699+00:00",
+      "previous_sha256": null,
+      "receipt": {
+        "url": "https://archive.budget.gov.au/2015-16/bp1/BP1_consolidated.pdf",
+        "status": 404,
+        "snapshot": "2026-10-12T23:06:20.402914+00:00",
+        "sha256": null,
+        "requests": [
+          {
+            "url": "https://archive.budget.gov.au/2015-16/bp1/BP1_consolidated.pdf",
+            "started_at": "2026-10-12T23:06:19.759342+00:00",
+            "minimum_interval_seconds": 1.0,
+            "previous_started_at": "2026-10-12T23:06:18.759267+00:00",
+            "interval_seconds": 1.0000768110039644,
+            "robots": {
+              "url": "https://archive.budget.gov.au/robots.txt",
+              "status": 404,
+              "snapshot": "2026-10-12T23:06:18.485885+00:00",
+              "sha256": null,
+              "decision": "allowed",
+              "crawl_delay_seconds": null,
+              "request_rate": null,
+              "fallback": "HTTP 404: no published rules; allow"
+            },
+            "status": 404,
+            "user_agent_policy": "parli/ingest/user-agent.json",
+            "user_agent_sha256": "1100b17c9651df0a8cac3179efbf025b2b55acf7d93bee70876cd24bcd3c0b2b"
+          }
+        ],
+        "robots": {
+          "url": "https://archive.budget.gov.au/robots.txt",
+          "status": 404,
+          "snapshot": "2026-10-12T23:06:18.485885+00:00",
+          "sha256": null,
+          "decision": "allowed",
+          "crawl_delay_seconds": null,
+          "request_rate": null,
+          "fallback": "HTTP 404: no published rules; allow"
+        },
+        "user_agent_policy": "parli/ingest/user-agent.json",
+        "user_agent_sha256": "1100b17c9651df0a8cac3179efbf025b2b55acf7d93bee70876cd24bcd3c0b2b"
+      },
+      "bytes_unchanged": true,
+      "licence_recheck": null
+    },
+    {
+      "url": "https://archive.budget.gov.au/2015-16/index.htm",
+      "previous_snapshot": "2026-10-12T21:25:07.397822+00:00",
+      "previous_sha256": "c5d30e722c1dea5ae46a3adfd6c6668caa55213e92716045d3e0545e1c38dd21",
+      "receipt": {
+        "url": "https://archive.budget.gov.au/2015-16/index.htm",
+        "status": 200,
+        "snapshot": "2026-10-12T23:06:20.840982+00:00",
+        "sha256": "c5d30e722c1dea5ae46a3adfd6c6668caa55213e92716045d3e0545e1c38dd21",
+        "requests": [
+          {
+            "url": "https://archive.budget.gov.au/2015-16/index.htm",
+            "started_at": "2026-10-12T23:06:20.759432+00:00",
+            "minimum_interval_seconds": 1.0,
+            "previous_started_at": "2026-10-12T23:06:19.759342+00:00",
+            "interval_seconds": 1.0000888149952516,
+            "robots": {
+              "url": "https://archive.budget.gov.au/robots.txt",
+              "status": 404,
+              "snapshot": "2026-10-12T23:06:18.485885+00:00",
+              "sha256": null,
+              "decision": "allowed",
+              "crawl_delay_seconds": null,
+              "request_rate": null,
+              "fallback": "HTTP 404: no published rules; allow"
+            },
+            "status": 200,
+            "user_agent_policy": "parli/ingest/user-agent.json",
+            "user_agent_sha256": "1100b17c9651df0a8cac3179efbf025b2b55acf7d93bee70876cd24bcd3c0b2b"
+          }
+        ],
+        "robots": {
+          "url": "https://archive.budget.gov.au/robots.txt",
+          "status": 404,
+          "snapshot": "2026-10-12T23:06:18.485885+00:00",
+          "sha256": null,
+          "decision": "allowed",
+          "crawl_delay_seconds": null,
+          "request_rate": null,
+          "fallback": "HTTP 404: no published rules; allow"
+        },
+        "user_agent_policy": "parli/ingest/user-agent.json",
+        "user_agent_sha256": "1100b17c9651df0a8cac3179efbf025b2b55acf7d93bee70876cd24bcd3c0b2b"
+      },
+      "bytes_unchanged": true,
+      "licence_recheck": null
+    },
+    {
+      "url": "https://archive.budget.gov.au/2015-16/myefo/MYEFO_2015-16_Final.pdf",
+      "previous_snapshot": "2026-10-12T21:25:41.880277+00:00",
+      "previous_sha256": "d44e6e2d54042a7162a1cb93d927012f4176f491d376e65a9f4a4c31f7b32c88",
+      "receipt": {
+        "url": "https://archive.budget.gov.au/2015-16/myefo/MYEFO_2015-16_Final.pdf",
+        "status": 200,
+        "snapshot": "2026-10-12T23:06:22.750403+00:00",
+        "sha256": "d44e6e2d54042a7162a1cb93d927012f4176f491d376e65a9f4a4c31f7b32c88",
+        "requests": [
+          {
+            "url": "https://archive.budget.gov.au/2015-16/myefo/MYEFO_2015-16_Final.pdf",
+            "started_at": "2026-10-12T23:06:21.759550+00:00",
+            "minimum_interval_seconds": 1.0,
+            "previous_started_at": "2026-10-12T23:06:20.759432+00:00",
+            "interval_seconds": 1.000114919967018,
+            "robots": {
+              "url": "https://archive.budget.gov.au/robots.txt",
+              "status": 404,
+              "snapshot": "2026-10-12T23:06:18.485885+00:00",
+              "sha256": null,
+              "decision": "allowed",
+              "crawl_delay_seconds": null,
+              "request_rate": null,
+              "fallback": "HTTP 404: no published rules; allow"
+            },
+            "status": 200,
+            "user_agent_policy": "parli/ingest/user-agent.json",
+            "user_agent_sha256": "1100b17c9651df0a8cac3179efbf025b2b55acf7d93bee70876cd24bcd3c0b2b"
+          }
+        ],
+        "robots": {
+          "url": "https://archive.budget.gov.au/robots.txt",
+          "status": 404,
+          "snapshot": "2026-10-12T23:06:18.485885+00:00",
+          "sha256": null,
+          "decision": "allowed",
+          "crawl_delay_seconds": null,
+          "request_rate": null,
+          "fallback": "HTTP 404: no published rules; allow"
+        },
+        "user_agent_policy": "parli/ingest/user-agent.json",
+        "user_agent_sha256": "1100b17c9651df0a8cac3179efbf025b2b55acf7d93bee70876cd24bcd3c0b2b"
+      },
+      "bytes_unchanged": true,
+      "licence_recheck": {
+        "status": "open",
+        "name": "CC BY 3.0 AU",
+        "url": "https://creativecommons.org/licenses/by/3.0/au/",
+        "exceptions": [
+          "Commonwealth Coat of Arms",
+          "where otherwise stated",
+          "third-party content"
+        ],
+        "page": 2,
+        "evidence": "© Commonwealth of Australia 2015\nISSN 2205-6750 (print)\nISSN 2205-6769 (online)\nThis  publication  is  available  for  your  use  under  a  Creative Commons BY\nAttribution 3.0 Australia  licence, with the exception of the Commonwealth Coat\nof Arms, third party content and where otherwise stated. The full licence terms are\navailable from http://creativecommons.org/licenses/by/3.0/au/legalcode.\n\n\n\nUse  of Commonwealth  of  Australia  material under a  Creative Commons BY\nAttribution 3.0 Australia licence requires you to attribute the work (but not in any way\nthat suggests that the Commonwealth of Australia endorses you or your use of the\nwork).\n      Commonwealth of Australia material used ‘as supplied’.\nProvided you have not modified or transformed Commonwealth of Australia material\nin any way including, for example, by changing the Commonwealth of Australia text;\ncalculating percentage changes; graphing or charting data; or deriving new statistics\nfrom published statistics — then the Commonwealth of Australia prefers the following\nattribution:\n        Source: The Commonwealth of Australia.\n\nDerivative material\nIf you have modified or transformed Commonwealth of Australia material, or derived\nnew material from those of the Commonwealth of Australia in any way, then the\nCommonwealth of Australia prefers the following attribution:\n        Based on Commonwealth of Australia data.\n\nUse of the Coat of Arms\nThe terms under which the Coat of Arms can be used are set out on the It’s an Honour\nwebsite (see www.itsanhonour.gov.au).\nOther uses\nEnquiries regarding this licence and any other use of this document are welcome at:\n      Manager\n       Communications\n      The Treasury\n       Langton Crescent Parkes ACT 2600\n        Email: medialiaison@treasury.gov.au\n\nInternet\nA copy of this document is available on the central Budget website at:\nwww.budget.gov.au.\nPrinted by CanPrint Communications Pty Ltd."
+      }
+    },
+    {
+      "url": "https://archive.budget.gov.au/2016-17/index.htm",
+      "previous_snapshot": "2026-10-12T21:25:06.921476+00:00",
+      "previous_sha256": "5d16be3fde751a2f0f7837599adfb38bae2de82ea83aac8fdaadad255855c082",
+      "receipt": {
+        "url": "https://archive.budget.gov.au/2016-17/index.htm",
+        "status": 200,
+        "snapshot": "2026-10-12T23:06:22.952651+00:00",
+        "sha256": "5d16be3fde751a2f0f7837599adfb38bae2de82ea83aac8fdaadad255855c082",
+        "requests": [
+          {
+            "url": "https://archive.budget.gov.au/2016-17/index.htm",
+            "started_at": "2026-10-12T23:06:22.869064+00:00",
+            "minimum_interval_seconds": 1.0,
+            "previous_started_at": "2026-10-12T23:06:21.759550+00:00",
+            "interval_seconds": 1.109518145036418,
+            "robots": {
+              "url": "https://archive.budget.gov.au/robots.txt",
+              "status": 404,
+              "snapshot": "2026-10-12T23:06:18.485885+00:00",
+              "sha256": null,
+              "decision": "allowed",
+              "crawl_delay_seconds": null,
+              "request_rate": null,
+              "fallback": "HTTP 404: no published rules; allow"
+            },
+            "status": 200,
+            "user_agent_policy": "parli/ingest/user-agent.json",
+            "user_agent_sha256": "1100b17c9651df0a8cac3179efbf025b2b55acf7d93bee70876cd24bcd3c0b2b"
+          }
+        ],
+        "robots": {
+          "url": "https://archive.budget.gov.au/robots.txt",
+          "status": 404,
+          "snapshot": "2026-10-12T23:06:18.485885+00:00",
+          "sha256": null,
+          "decision": "allowed",
+          "crawl_delay_seconds": null,
+          "request_rate": null,
+          "fallback": "HTTP 404: no published rules; allow"
+        },
+        "user_agent_policy": "parli/ingest/user-agent.json",
+        "user_agent_sha256": "1100b17c9651df0a8cac3179efbf025b2b55acf7d93bee70876cd24bcd3c0b2b"
+      },
+      "bytes_unchanged": true,
+      "licence_recheck": null
+    },
+    {
+      "url": "https://archive.budget.gov.au/2017-18/index.htm",
+      "previous_snapshot": "2026-10-12T21:25:05.789591+00:00",
+      "previous_sha256": "ceb8466a01a6318b057428b96e701257803cdc16690c779a3723204e0b67eae8",
+      "receipt": {
+        "url": "https://archive.budget.gov.au/2017-18/index.htm",
+        "status": 200,
+        "snapshot": "2026-10-12T23:06:24.173135+00:00",
+        "sha256": "ceb8466a01a6318b057428b96e701257803cdc16690c779a3723204e0b67eae8",
+        "requests": [
+          {
+            "url": "https://archive.budget.gov.au/2017-18/index.htm",
+            "started_at": "2026-10-12T23:06:23.869393+00:00",
+            "minimum_interval_seconds": 1.0,
+            "previous_started_at": "2026-10-12T23:06:22.869064+00:00",
+            "interval_seconds": 1.0003283270052634,
+            "robots": {
+              "url": "https://archive.budget.gov.au/robots.txt",
+              "status": 404,
+              "snapshot": "2026-10-12T23:06:18.485885+00:00",
+              "sha256": null,
+              "decision": "allowed",
+              "crawl_delay_seconds": null,
+              "request_rate": null,
+              "fallback": "HTTP 404: no published rules; allow"
+            },
+            "status": 200,
+            "user_agent_policy": "parli/ingest/user-agent.json",
+            "user_agent_sha256": "1100b17c9651df0a8cac3179efbf025b2b55acf7d93bee70876cd24bcd3c0b2b"
+          }
+        ],
+        "robots": {
+          "url": "https://archive.budget.gov.au/robots.txt",
+          "status": 404,
+          "snapshot": "2026-10-12T23:06:18.485885+00:00",
+          "sha256": null,
+          "decision": "allowed",
+          "crawl_delay_seconds": null,
+          "request_rate": null,
+          "fallback": "HTTP 404: no published rules; allow"
+        },
+        "user_agent_policy": "parli/ingest/user-agent.json",
+        "user_agent_sha256": "1100b17c9651df0a8cac3179efbf025b2b55acf7d93bee70876cd24bcd3c0b2b"
+      },
+      "bytes_unchanged": true,
+      "licence_recheck": null
+    },
+    {
+      "url": "https://archive.budget.gov.au/2018-19/index.htm",
+      "previous_snapshot": "2026-10-12T21:25:04.984904+00:00",
+      "previous_sha256": "69e51a8215c29a4301b56bc63238efea24a9e545c4cf3a98127e01364867f3a4",
+      "receipt": {
+        "url": "https://archive.budget.gov.au/2018-19/index.htm",
+        "status": 200,
+        "snapshot": "2026-10-12T23:06:25.132700+00:00",
+        "sha256": "69e51a8215c29a4301b56bc63238efea24a9e545c4cf3a98127e01364867f3a4",
+        "requests": [
+          {
+            "url": "https://archive.budget.gov.au/2018-19/index.htm",
+            "started_at": "2026-10-12T23:06:24.869507+00:00",
+            "minimum_interval_seconds": 1.0,
+            "previous_started_at": "2026-10-12T23:06:23.869393+00:00",
+            "interval_seconds": 1.0001144330017269,
+            "robots": {
+              "url": "https://archive.budget.gov.au/robots.txt",
+              "status": 404,
+              "snapshot": "2026-10-12T23:06:18.485885+00:00",
+              "sha256": null,
+              "decision": "allowed",
+              "crawl_delay_seconds": null,
+              "request_rate": null,
+              "fallback": "HTTP 404: no published rules; allow"
+            },
+            "status": 200,
+            "user_agent_policy": "parli/ingest/user-agent.json",
+            "user_agent_sha256": "1100b17c9651df0a8cac3179efbf025b2b55acf7d93bee70876cd24bcd3c0b2b"
+          }
+        ],
+        "robots": {
+          "url": "https://archive.budget.gov.au/robots.txt",
+          "status": 404,
+          "snapshot": "2026-10-12T23:06:18.485885+00:00",
+          "sha256": null,
+          "decision": "allowed",
+          "crawl_delay_seconds": null,
+          "request_rate": null,
+          "fallback": "HTTP 404: no published rules; allow"
+        },
+        "user_agent_policy": "parli/ingest/user-agent.json",
+        "user_agent_sha256": "1100b17c9651df0a8cac3179efbf025b2b55acf7d93bee70876cd24bcd3c0b2b"
+      },
+      "bytes_unchanged": true,
+      "licence_recheck": null
+    },
+    {
+      "url": "https://archive.budget.gov.au/2019-20/index.htm",
+      "previous_snapshot": "2026-10-12T21:25:03.359487+00:00",
+      "previous_sha256": "8ed2ec06319a52020c8424d21897453428e236f4287f472e0cf3146201a983c9",
+      "receipt": {
+        "url": "https://archive.budget.gov.au/2019-20/index.htm",
+        "status": 200,
+        "snapshot": "2026-10-12T23:06:25.958979+00:00",
+        "sha256": "8ed2ec06319a52020c8424d21897453428e236f4287f472e0cf3146201a983c9",
+        "requests": [
+          {
+            "url": "https://archive.budget.gov.au/2019-20/index.htm",
+            "started_at": "2026-10-12T23:06:25.869577+00:00",
+            "minimum_interval_seconds": 1.0,
+            "previous_started_at": "2026-10-12T23:06:24.869507+00:00",
+            "interval_seconds": 1.0000699369702488,
+            "robots": {
+              "url": "https://archive.budget.gov.au/robots.txt",
+              "status": 404,
+              "snapshot": "2026-10-12T23:06:18.485885+00:00",
+              "sha256": null,
+              "decision": "allowed",
+              "crawl_delay_seconds": null,
+              "request_rate": null,
+              "fallback": "HTTP 404: no published rules; allow"
+            },
+            "status": 200,
+            "user_agent_policy": "parli/ingest/user-agent.json",
+            "user_agent_sha256": "1100b17c9651df0a8cac3179efbf025b2b55acf7d93bee70876cd24bcd3c0b2b"
+          }
+        ],
+        "robots": {
+          "url": "https://archive.budget.gov.au/robots.txt",
+          "status": 404,
+          "snapshot": "2026-10-12T23:06:18.485885+00:00",
+          "sha256": null,
+          "decision": "allowed",
+          "crawl_delay_seconds": null,
+          "request_rate": null,
+          "fallback": "HTTP 404: no published rules; allow"
+        },
+        "user_agent_policy": "parli/ingest/user-agent.json",
+        "user_agent_sha256": "1100b17c9651df0a8cac3179efbf025b2b55acf7d93bee70876cd24bcd3c0b2b"
+      },
+      "bytes_unchanged": true,
+      "licence_recheck": null
+    },
+    {
+      "url": "https://archive.budget.gov.au/2020-21/index.htm",
+      "previous_snapshot": "2026-10-12T21:25:02.326341+00:00",
+      "previous_sha256": "253dc9e2ac6adf3cdc836ca7d247c62536918ccc4b3f21992c7ea8412b2cbbd2",
+      "receipt": {
+        "url": "https://archive.budget.gov.au/2020-21/index.htm",
+        "status": 200,
+        "snapshot": "2026-10-12T23:06:26.945642+00:00",
+        "sha256": "253dc9e2ac6adf3cdc836ca7d247c62536918ccc4b3f21992c7ea8412b2cbbd2",
+        "requests": [
+          {
+            "url": "https://archive.budget.gov.au/2020-21/index.htm",
+            "started_at": "2026-10-12T23:06:26.869652+00:00",
+            "minimum_interval_seconds": 1.0,
+            "previous_started_at": "2026-10-12T23:06:25.869577+00:00",
+            "interval_seconds": 1.0000754600041546,
+            "robots": {
+              "url": "https://archive.budget.gov.au/robots.txt",
+              "status": 404,
+              "snapshot": "2026-10-12T23:06:18.485885+00:00",
+              "sha256": null,
+              "decision": "allowed",
+              "crawl_delay_seconds": null,
+              "request_rate": null,
+              "fallback": "HTTP 404: no published rules; allow"
+            },
+            "status": 200,
+            "user_agent_policy": "parli/ingest/user-agent.json",
+            "user_agent_sha256": "1100b17c9651df0a8cac3179efbf025b2b55acf7d93bee70876cd24bcd3c0b2b"
+          }
+        ],
+        "robots": {
+          "url": "https://archive.budget.gov.au/robots.txt",
+          "status": 404,
+          "snapshot": "2026-10-12T23:06:18.485885+00:00",
+          "sha256": null,
+          "decision": "allowed",
+          "crawl_delay_seconds": null,
+          "request_rate": null,
+          "fallback": "HTTP 404: no published rules; allow"
+        },
+        "user_agent_policy": "parli/ingest/user-agent.json",
+        "user_agent_sha256": "1100b17c9651df0a8cac3179efbf025b2b55acf7d93bee70876cd24bcd3c0b2b"
+      },
+      "bytes_unchanged": true,
+      "licence_recheck": null
+    },
+    {
+      "url": "https://archive.budget.gov.au/2021-22/index.htm",
+      "previous_snapshot": "2026-10-12T21:25:01.853670+00:00",
+      "previous_sha256": "183e54c7b2741e9bdad13e6b88cd8a8c5216da9980bc775056053ad702487a15",
+      "receipt": {
+        "url": "https://archive.budget.gov.au/2021-22/index.htm",
+        "status": 200,
+        "snapshot": "2026-10-12T23:06:28.056580+00:00",
+        "sha256": "183e54c7b2741e9bdad13e6b88cd8a8c5216da9980bc775056053ad702487a15",
+        "requests": [
+          {
+            "url": "https://archive.budget.gov.au/2021-22/index.htm",
+            "started_at": "2026-10-12T23:06:27.869980+00:00",
+            "minimum_interval_seconds": 1.0,
+            "previous_started_at": "2026-10-12T23:06:26.869652+00:00",
+            "interval_seconds": 1.000328633992467,
+            "robots": {
+              "url": "https://archive.budget.gov.au/robots.txt",
+              "status": 404,
+              "snapshot": "2026-10-12T23:06:18.485885+00:00",
+              "sha256": null,
+              "decision": "allowed",
+              "crawl_delay_seconds": null,
+              "request_rate": null,
+              "fallback": "HTTP 404: no published rules; allow"
+            },
+            "status": 200,
+            "user_agent_policy": "parli/ingest/user-agent.json",
+            "user_agent_sha256": "1100b17c9651df0a8cac3179efbf025b2b55acf7d93bee70876cd24bcd3c0b2b"
+          }
+        ],
+        "robots": {
+          "url": "https://archive.budget.gov.au/robots.txt",
+          "status": 404,
+          "snapshot": "2026-10-12T23:06:18.485885+00:00",
+          "sha256": null,
+          "decision": "allowed",
+          "crawl_delay_seconds": null,
+          "request_rate": null,
+          "fallback": "HTTP 404: no published rules; allow"
+        },
+        "user_agent_policy": "parli/ingest/user-agent.json",
+        "user_agent_sha256": "1100b17c9651df0a8cac3179efbf025b2b55acf7d93bee70876cd24bcd3c0b2b"
+      },
+      "bytes_unchanged": true,
+      "licence_recheck": null
+    },
+    {
+      "url": "https://archive.budget.gov.au/2022-23-october/index.htm",
+      "previous_snapshot": "2026-10-12T21:25:00.087292+00:00",
+      "previous_sha256": "a22e5dbf841f3609ca8a3e311bf63dca1778ffd35571ca7e4f0a09009e868519",
+      "receipt": {
+        "url": "https://archive.budget.gov.au/2022-23-october/index.htm",
+        "status": 200,
+        "snapshot": "2026-10-12T23:06:28.975769+00:00",
+        "sha256": "a22e5dbf841f3609ca8a3e311bf63dca1778ffd35571ca7e4f0a09009e868519",
+        "requests": [
+          {
+            "url": "https://archive.budget.gov.au/2022-23-october/index.htm",
+            "started_at": "2026-10-12T23:06:28.870086+00:00",
+            "minimum_interval_seconds": 1.0,
+            "previous_started_at": "2026-10-12T23:06:27.869980+00:00",
+            "interval_seconds": 1.0001037390320562,
+            "robots": {
+              "url": "https://archive.budget.gov.au/robots.txt",
+              "status": 404,
+              "snapshot": "2026-10-12T23:06:18.485885+00:00",
+              "sha256": null,
+              "decision": "allowed",
+              "crawl_delay_seconds": null,
+              "request_rate": null,
+              "fallback": "HTTP 404: no published rules; allow"
+            },
+            "status": 200,
+            "user_agent_policy": "parli/ingest/user-agent.json",
+            "user_agent_sha256": "1100b17c9651df0a8cac3179efbf025b2b55acf7d93bee70876cd24bcd3c0b2b"
+          }
+        ],
+        "robots": {
+          "url": "https://archive.budget.gov.au/robots.txt",
+          "status": 404,
+          "snapshot": "2026-10-12T23:06:18.485885+00:00",
+          "sha256": null,
+          "decision": "allowed",
+          "crawl_delay_seconds": null,
+          "request_rate": null,
+          "fallback": "HTTP 404: no published rules; allow"
+        },
+        "user_agent_policy": "parli/ingest/user-agent.json",
+        "user_agent_sha256": "1100b17c9651df0a8cac3179efbf025b2b55acf7d93bee70876cd24bcd3c0b2b"
+      },
+      "bytes_unchanged": true,
+      "licence_recheck": null
+    },
+    {
+      "url": "https://archive.budget.gov.au/2022-23/index.htm",
+      "previous_snapshot": "2026-10-12T21:25:00.316147+00:00",
+      "previous_sha256": "a48b64b421e5b2fd001c5c5451f42b3cd27c8c6c79f99ecd298516a93f322bf9",
+      "receipt": {
+        "url": "https://archive.budget.gov.au/2022-23/index.htm",
+        "status": 200,
+        "snapshot": "2026-10-12T23:06:29.952972+00:00",
+        "sha256": "a48b64b421e5b2fd001c5c5451f42b3cd27c8c6c79f99ecd298516a93f322bf9",
+        "requests": [
+          {
+            "url": "https://archive.budget.gov.au/2022-23/index.htm",
+            "started_at": "2026-10-12T23:06:29.870169+00:00",
+            "minimum_interval_seconds": 1.0,
+            "previous_started_at": "2026-10-12T23:06:28.870086+00:00",
+            "interval_seconds": 1.0000849439529702,
+            "robots": {
+              "url": "https://archive.budget.gov.au/robots.txt",
+              "status": 404,
+              "snapshot": "2026-10-12T23:06:18.485885+00:00",
+              "sha256": null,
+              "decision": "allowed",
+              "crawl_delay_seconds": null,
+              "request_rate": null,
+              "fallback": "HTTP 404: no published rules; allow"
+            },
+            "status": 200,
+            "user_agent_policy": "parli/ingest/user-agent.json",
+            "user_agent_sha256": "1100b17c9651df0a8cac3179efbf025b2b55acf7d93bee70876cd24bcd3c0b2b"
+          }
+        ],
+        "robots": {
+          "url": "https://archive.budget.gov.au/robots.txt",
+          "status": 404,
+          "snapshot": "2026-10-12T23:06:18.485885+00:00",
+          "sha256": null,
+          "decision": "allowed",
+          "crawl_delay_seconds": null,
+          "request_rate": null,
+          "fallback": "HTTP 404: no published rules; allow"
+        },
+        "user_agent_policy": "parli/ingest/user-agent.json",
+        "user_agent_sha256": "1100b17c9651df0a8cac3179efbf025b2b55acf7d93bee70876cd24bcd3c0b2b"
+      },
+      "bytes_unchanged": true,
+      "licence_recheck": null
+    },
+    {
+      "url": "https://archive.budget.gov.au/2023-24/index.htm",
+      "previous_snapshot": "2026-10-12T21:24:58.186316+00:00",
+      "previous_sha256": "a76428afeda2ecc7c530561f7b2704402d34721f9ce7271408f24aabfb50e002",
+      "receipt": {
+        "url": "https://archive.budget.gov.au/2023-24/index.htm",
+        "status": 200,
+        "snapshot": "2026-10-12T23:06:31.103849+00:00",
+        "sha256": "a76428afeda2ecc7c530561f7b2704402d34721f9ce7271408f24aabfb50e002",
+        "requests": [
+          {
+            "url": "https://archive.budget.gov.au/2023-24/index.htm",
+            "started_at": "2026-10-12T23:06:30.884121+00:00",
+            "minimum_interval_seconds": 1.0,
+            "previous_started_at": "2026-10-12T23:06:29.870169+00:00",
+            "interval_seconds": 1.0139523830148391,
+            "robots": {
+              "url": "https://archive.budget.gov.au/robots.txt",
+              "status": 404,
+              "snapshot": "2026-10-12T23:06:18.485885+00:00",
+              "sha256": null,
+              "decision": "allowed",
+              "crawl_delay_seconds": null,
+              "request_rate": null,
+              "fallback": "HTTP 404: no published rules; allow"
+            },
+            "status": 200,
+            "user_agent_policy": "parli/ingest/user-agent.json",
+            "user_agent_sha256": "1100b17c9651df0a8cac3179efbf025b2b55acf7d93bee70876cd24bcd3c0b2b"
+          }
+        ],
+        "robots": {
+          "url": "https://archive.budget.gov.au/robots.txt",
+          "status": 404,
+          "snapshot": "2026-10-12T23:06:18.485885+00:00",
+          "sha256": null,
+          "decision": "allowed",
+          "crawl_delay_seconds": null,
+          "request_rate": null,
+          "fallback": "HTTP 404: no published rules; allow"
+        },
+        "user_agent_policy": "parli/ingest/user-agent.json",
+        "user_agent_sha256": "1100b17c9651df0a8cac3179efbf025b2b55acf7d93bee70876cd24bcd3c0b2b"
+      },
+      "bytes_unchanged": true,
+      "licence_recheck": null
+    },
+    {
+      "url": "https://archive.budget.gov.au/2024-25/index.htm",
+      "previous_snapshot": "2026-10-12T21:24:57.780818+00:00",
+      "previous_sha256": "2ffd519915c8ebebaa6796e01a2cf7f5eee89e350ac5ed88ba060a719c809b27",
+      "receipt": {
+        "url": "https://archive.budget.gov.au/2024-25/index.htm",
+        "status": 200,
+        "snapshot": "2026-10-12T23:06:32.123643+00:00",
+        "sha256": "2ffd519915c8ebebaa6796e01a2cf7f5eee89e350ac5ed88ba060a719c809b27",
+        "requests": [
+          {
+            "url": "https://archive.budget.gov.au/2024-25/index.htm",
+            "started_at": "2026-10-12T23:06:31.884284+00:00",
+            "minimum_interval_seconds": 1.0,
+            "previous_started_at": "2026-10-12T23:06:30.884121+00:00",
+            "interval_seconds": 1.0001601520343684,
+            "robots": {
+              "url": "https://archive.budget.gov.au/robots.txt",
+              "status": 404,
+              "snapshot": "2026-10-12T23:06:18.485885+00:00",
+              "sha256": null,
+              "decision": "allowed",
+              "crawl_delay_seconds": null,
+              "request_rate": null,
+              "fallback": "HTTP 404: no published rules; allow"
+            },
+            "status": 200,
+            "user_agent_policy": "parli/ingest/user-agent.json",
+            "user_agent_sha256": "1100b17c9651df0a8cac3179efbf025b2b55acf7d93bee70876cd24bcd3c0b2b"
+          }
+        ],
+        "robots": {
+          "url": "https://archive.budget.gov.au/robots.txt",
+          "status": 404,
+          "snapshot": "2026-10-12T23:06:18.485885+00:00",
+          "sha256": null,
+          "decision": "allowed",
+          "crawl_delay_seconds": null,
+          "request_rate": null,
+          "fallback": "HTTP 404: no published rules; allow"
+        },
+        "user_agent_policy": "parli/ingest/user-agent.json",
+        "user_agent_sha256": "1100b17c9651df0a8cac3179efbf025b2b55acf7d93bee70876cd24bcd3c0b2b"
+      },
+      "bytes_unchanged": true,
+      "licence_recheck": null
+    },
+    {
+      "url": "https://archive.budget.gov.au/2025-26/index.htm",
+      "previous_snapshot": "2026-10-12T21:24:56.640812+00:00",
+      "previous_sha256": "0ecdb23831953456807f34c72d061d66777c40a49492b1001f1509de46c64bb2",
+      "receipt": {
+        "url": "https://archive.budget.gov.au/2025-26/index.htm",
+        "status": 200,
+        "snapshot": "2026-10-12T23:06:32.997544+00:00",
+        "sha256": "0ecdb23831953456807f34c72d061d66777c40a49492b1001f1509de46c64bb2",
+        "requests": [
+          {
+            "url": "https://archive.budget.gov.au/2025-26/index.htm",
+            "started_at": "2026-10-12T23:06:32.890325+00:00",
+            "minimum_interval_seconds": 1.0,
+            "previous_started_at": "2026-10-12T23:06:31.884284+00:00",
+            "interval_seconds": 1.0060404279502109,
+            "robots": {
+              "url": "https://archive.budget.gov.au/robots.txt",
+              "status": 404,
+              "snapshot": "2026-10-12T23:06:18.485885+00:00",
+              "sha256": null,
+              "decision": "allowed",
+              "crawl_delay_seconds": null,
+              "request_rate": null,
+              "fallback": "HTTP 404: no published rules; allow"
+            },
+            "status": 200,
+            "user_agent_policy": "parli/ingest/user-agent.json",
+            "user_agent_sha256": "1100b17c9651df0a8cac3179efbf025b2b55acf7d93bee70876cd24bcd3c0b2b"
+          }
+        ],
+        "robots": {
+          "url": "https://archive.budget.gov.au/robots.txt",
+          "status": 404,
+          "snapshot": "2026-10-12T23:06:18.485885+00:00",
+          "sha256": null,
+          "decision": "allowed",
+          "crawl_delay_seconds": null,
+          "request_rate": null,
+          "fallback": "HTTP 404: no published rules; allow"
+        },
+        "user_agent_policy": "parli/ingest/user-agent.json",
+        "user_agent_sha256": "1100b17c9651df0a8cac3179efbf025b2b55acf7d93bee70876cd24bcd3c0b2b"
+      },
+      "bytes_unchanged": true,
+      "licence_recheck": null
+    },
+    {
+      "url": "https://budget.gov.au/content/bp1/",
+      "previous_snapshot": "2026-10-12T21:24:19.321339+00:00",
+      "previous_sha256": "582ee89ea9cbc6f109ac4db770ce5099c9c846cef2192f89cb2f58f5b64c0668",
+      "receipt": {
+        "url": "https://budget.gov.au/content/bp1/",
+        "status": 200,
+        "snapshot": "2026-10-12T23:06:35.057723+00:00",
+        "sha256": "582ee89ea9cbc6f109ac4db770ce5099c9c846cef2192f89cb2f58f5b64c0668",
+        "requests": [
+          {
+            "url": "https://budget.gov.au/content/bp1/",
+            "started_at": "2026-10-12T23:06:34.896128+00:00",
+            "minimum_interval_seconds": 1.0,
+            "previous_started_at": "2026-10-12T23:06:33.892210+00:00",
+            "interval_seconds": 1.003919503011275,
+            "robots": {
+              "url": "https://budget.gov.au/robots.txt",
+              "status": 200,
+              "snapshot": "2026-10-12T23:06:34.048539+00:00",
+              "sha256": "dd26df886d4dceb73070ff3cfa499031f8daa82c1568c1283d4d33d074a30f2d",
+              "decision": "allowed",
+              "crawl_delay_seconds": null,
+              "request_rate": null,
+              "fallback": null
+            },
+            "status": 200,
+            "user_agent_policy": "parli/ingest/user-agent.json",
+            "user_agent_sha256": "1100b17c9651df0a8cac3179efbf025b2b55acf7d93bee70876cd24bcd3c0b2b"
+          }
+        ],
+        "robots": {
+          "url": "https://budget.gov.au/robots.txt",
+          "status": 200,
+          "snapshot": "2026-10-12T23:06:34.048539+00:00",
+          "sha256": "dd26df886d4dceb73070ff3cfa499031f8daa82c1568c1283d4d33d074a30f2d",
+          "decision": "allowed",
+          "crawl_delay_seconds": null,
+          "request_rate": null,
+          "fallback": null
+        },
+        "user_agent_policy": "parli/ingest/user-agent.json",
+        "user_agent_sha256": "1100b17c9651df0a8cac3179efbf025b2b55acf7d93bee70876cd24bcd3c0b2b"
+      },
+      "bytes_unchanged": true,
+      "licence_recheck": null
+    },
+    {
+      "url": "https://budget.gov.au/content/bp1/download/bp1_2026-27.pdf",
+      "previous_snapshot": "2026-10-12T21:25:27.068204+00:00",
+      "previous_sha256": "866add61b185cc98e493714800b129e33079baccdd3d7bf107764c4001199bd0",
+      "receipt": {
+        "url": "https://budget.gov.au/content/bp1/download/bp1_2026-27.pdf",
+        "status": 200,
+        "snapshot": "2026-10-12T23:06:36.336910+00:00",
+        "sha256": "866add61b185cc98e493714800b129e33079baccdd3d7bf107764c4001199bd0",
+        "requests": [
+          {
+            "url": "https://budget.gov.au/content/bp1/download/bp1_2026-27.pdf",
+            "started_at": "2026-10-12T23:06:35.896716+00:00",
+            "minimum_interval_seconds": 1.0,
+            "previous_started_at": "2026-10-12T23:06:34.896128+00:00",
+            "interval_seconds": 1.0005861920071766,
+            "robots": {
+              "url": "https://budget.gov.au/robots.txt",
+              "status": 200,
+              "snapshot": "2026-10-12T23:06:34.048539+00:00",
+              "sha256": "dd26df886d4dceb73070ff3cfa499031f8daa82c1568c1283d4d33d074a30f2d",
+              "decision": "allowed",
+              "crawl_delay_seconds": null,
+              "request_rate": null,
+              "fallback": null
+            },
+            "status": 200,
+            "user_agent_policy": "parli/ingest/user-agent.json",
+            "user_agent_sha256": "1100b17c9651df0a8cac3179efbf025b2b55acf7d93bee70876cd24bcd3c0b2b"
+          }
+        ],
+        "robots": {
+          "url": "https://budget.gov.au/robots.txt",
+          "status": 200,
+          "snapshot": "2026-10-12T23:06:34.048539+00:00",
+          "sha256": "dd26df886d4dceb73070ff3cfa499031f8daa82c1568c1283d4d33d074a30f2d",
+          "decision": "allowed",
+          "crawl_delay_seconds": null,
+          "request_rate": null,
+          "fallback": null
+        },
+        "user_agent_policy": "parli/ingest/user-agent.json",
+        "user_agent_sha256": "1100b17c9651df0a8cac3179efbf025b2b55acf7d93bee70876cd24bcd3c0b2b"
+      },
+      "bytes_unchanged": true,
+      "licence_recheck": {
+        "status": "open",
+        "name": "CC BY 4.0",
+        "url": "https://creativecommons.org/licenses/by/4.0/",
+        "exceptions": [
+          "Commonwealth Coat of Arms",
+          "where otherwise stated",
+          "third-party content"
+        ],
+        "page": 4,
+        "evidence": "© Commonwealth of Australia 2026\n\nISSN 0728 7194 (print); 1326 4133 (online)\n\nThis publication is available for your use under a Creative Commons Attribution 4.0\nInternational licence, with the exception of the Commonwealth Coat of Arms, third-party\ncontent and where otherwise stated. The full licence terms are available from\nhttp://creativecommons.org/licenses/by/4.0/legalcode.\n\n\n\nUse of Commonwealth of Australia material under Creative Commons Attribution 4.0\nInternational licence requires you to attribute the work (but not in any way that suggests\nthat the Commonwealth of Australia endorses you or your use of the work).\n\nCommonwealth of Australia material used ‘as supplied’.\n\nProvided you have not modified or transformed Commonwealth of Australia material in\nany way including, for example, by changing the Commonwealth of Australia text;\ncalculating percentage changes; graphing or charting data; or deriving new statistics from\npublished statistics – then the Commonwealth of Australia prefers the following\nattribution:\n\n       Source: The Commonwealth of Australia.\n\nDerivative material\n\nIf you have modified or transformed Commonwealth of Australia material, or derived new\nmaterial from those of the Commonwealth of Australia in any way, then the\nCommonwealth of Australia prefers the following attribution:\n\n      Based on Commonwealth of Australia data.\n\nUse of the Coat of Arms\n\nThe terms under which the Coat of Arms can be used are set out on\nthe Department of the Prime Minister and Cabinet website\n(see www.pmc.gov.au/honours-and-symbols/commonwealth-coat-arms).\n\nOther uses\n\nEnquiries regarding this licence and any other use of this document are welcome at:\n\n     Manager\n     Media Unit\n     The Treasury\n      Langton Crescent\n      Parkes ACT 2600\n      Email: media@treasury.gov.au\n\nInternet\n\nA copy of this document is available on the central Budget website at: www.budget.gov.au.\nPrinted by CanPrint Communications Pty Ltd."
+      }
+    },
+    {
+      "url": "https://budget.gov.au/content/bp2/",
+      "previous_snapshot": "2026-10-12T21:24:20.325329+00:00",
+      "previous_sha256": "0962de13bf12f882f78fd4af0a08ffcd6c3b023daefb42746fb3959cdb45ef35",
+      "receipt": {
+        "url": "https://budget.gov.au/content/bp2/",
+        "status": 200,
+        "snapshot": "2026-10-12T23:06:37.046251+00:00",
+        "sha256": "0962de13bf12f882f78fd4af0a08ffcd6c3b023daefb42746fb3959cdb45ef35",
+        "requests": [
+          {
+            "url": "https://budget.gov.au/content/bp2/",
+            "started_at": "2026-10-12T23:06:36.896809+00:00",
+            "minimum_interval_seconds": 1.0,
+            "previous_started_at": "2026-10-12T23:06:35.896716+00:00",
+            "interval_seconds": 1.0000906979548745,
+            "robots": {
+              "url": "https://budget.gov.au/robots.txt",
+              "status": 200,
+              "snapshot": "2026-10-12T23:06:34.048539+00:00",
+              "sha256": "dd26df886d4dceb73070ff3cfa499031f8daa82c1568c1283d4d33d074a30f2d",
+              "decision": "allowed",
+              "crawl_delay_seconds": null,
+              "request_rate": null,
+              "fallback": null
+            },
+            "status": 200,
+            "user_agent_policy": "parli/ingest/user-agent.json",
+            "user_agent_sha256": "1100b17c9651df0a8cac3179efbf025b2b55acf7d93bee70876cd24bcd3c0b2b"
+          }
+        ],
+        "robots": {
+          "url": "https://budget.gov.au/robots.txt",
+          "status": 200,
+          "snapshot": "2026-10-12T23:06:34.048539+00:00",
+          "sha256": "dd26df886d4dceb73070ff3cfa499031f8daa82c1568c1283d4d33d074a30f2d",
+          "decision": "allowed",
+          "crawl_delay_seconds": null,
+          "request_rate": null,
+          "fallback": null
+        },
+        "user_agent_policy": "parli/ingest/user-agent.json",
+        "user_agent_sha256": "1100b17c9651df0a8cac3179efbf025b2b55acf7d93bee70876cd24bcd3c0b2b"
+      },
+      "bytes_unchanged": true,
+      "licence_recheck": null
+    },
+    {
+      "url": "https://budget.gov.au/content/bp2/download/bp2_2026-27.pdf",
+      "previous_snapshot": "2026-10-12T21:25:36.672397+00:00",
+      "previous_sha256": "10cd9fae6f980fa7d5fd6be8e896da2ca870287687c5bd99f78d563319bdd98d",
+      "receipt": {
+        "url": "https://budget.gov.au/content/bp2/download/bp2_2026-27.pdf",
+        "status": 200,
+        "snapshot": "2026-10-12T23:06:38.093763+00:00",
+        "sha256": "10cd9fae6f980fa7d5fd6be8e896da2ca870287687c5bd99f78d563319bdd98d",
+        "requests": [
+          {
+            "url": "https://budget.gov.au/content/bp2/download/bp2_2026-27.pdf",
+            "started_at": "2026-10-12T23:06:37.896882+00:00",
+            "minimum_interval_seconds": 1.0,
+            "previous_started_at": "2026-10-12T23:06:36.896809+00:00",
+            "interval_seconds": 1.0000760030234233,
+            "robots": {
+              "url": "https://budget.gov.au/robots.txt",
+              "status": 200,
+              "snapshot": "2026-10-12T23:06:34.048539+00:00",
+              "sha256": "dd26df886d4dceb73070ff3cfa499031f8daa82c1568c1283d4d33d074a30f2d",
+              "decision": "allowed",
+              "crawl_delay_seconds": null,
+              "request_rate": null,
+              "fallback": null
+            },
+            "status": 200,
+            "user_agent_policy": "parli/ingest/user-agent.json",
+            "user_agent_sha256": "1100b17c9651df0a8cac3179efbf025b2b55acf7d93bee70876cd24bcd3c0b2b"
+          }
+        ],
+        "robots": {
+          "url": "https://budget.gov.au/robots.txt",
+          "status": 200,
+          "snapshot": "2026-10-12T23:06:34.048539+00:00",
+          "sha256": "dd26df886d4dceb73070ff3cfa499031f8daa82c1568c1283d4d33d074a30f2d",
+          "decision": "allowed",
+          "crawl_delay_seconds": null,
+          "request_rate": null,
+          "fallback": null
+        },
+        "user_agent_policy": "parli/ingest/user-agent.json",
+        "user_agent_sha256": "1100b17c9651df0a8cac3179efbf025b2b55acf7d93bee70876cd24bcd3c0b2b"
+      },
+      "bytes_unchanged": true,
+      "licence_recheck": {
+        "status": "open",
+        "name": "CC BY 4.0",
+        "url": "https://creativecommons.org/licenses/by/4.0/",
+        "exceptions": [
+          "Commonwealth Coat of Arms",
+          "where otherwise stated",
+          "third-party content"
+        ],
+        "page": 4,
+        "evidence": "© Commonwealth of Australia 2026\n\nISSN 0728 7194 (print); 1326 4133 (online)\n\nThis publication is available for your use under a Creative Commons Attribution 4.0\nInternational licence, with the exception of the Commonwealth Coat of Arms, third-party\ncontent and where otherwise stated. The full licence terms are available from\nhttp://creativecommons.org/licenses/by/4.0/legalcode.\n\n\n\nUse of Commonwealth of Australia material under a Creative Commons Attribution 4.0\nInternational licence requires you to attribute the work (but not in any way that suggests\nthat the Commonwealth of Australia endorses you or your use of the work).\n\nCommonwealth of Australia material used ‘as supplied’.\n\nProvided you have not modified or transformed Commonwealth of Australia material in\nany way including, for example, by changing the Commonwealth of Australia text;\ncalculating percentage changes; graphing or charting data; or deriving new statistics from\npublished statistics – then the Commonwealth of Australia prefers the\nfollowing attribution:\n\n      Source: The Commonwealth of Australia.\n\nDerivative material\n\nIf you have modified or transformed Commonwealth of Australia material, or derived new\nmaterial from those of the Commonwealth of Australia in any way, then the\nCommonwealth of Australia prefers the following attribution:\n\n      Based on Commonwealth of Australia data.\n\nUse of the Coat of Arms\n\nThe terms under which the Coat of Arms can be used are set out on\nthe Department of the Prime Minister and Cabinet website (see www.pmc.gov.au/\nhonours-and-symbols/commonwealth-coat-arms).\n\nOther uses\n\nEnquiries regarding this licence and any other use of this document are welcome at:\n\n     Manager\n     Media Unit\n     The Treasury\n      Langton Crescent\n      Parkes ACT 2600\n      Email: media@treasury.gov.au\n\nInternet\n\nA copy of this document is available on the central Budget website at: www.budget.gov.au.\nPrinted by CanPrint Communications Pty Ltd."
+      }
+    },
+    {
+      "url": "https://budget.gov.au/content/bp3/",
+      "previous_snapshot": "2026-10-12T21:24:21.311075+00:00",
+      "previous_sha256": "822da30b05f8c947da8c1242c0389a7bb401753dfffc631798cad65627b0f987",
+      "receipt": {
+        "url": "https://budget.gov.au/content/bp3/",
+        "status": 200,
+        "snapshot": "2026-10-12T23:06:39.054825+00:00",
+        "sha256": "822da30b05f8c947da8c1242c0389a7bb401753dfffc631798cad65627b0f987",
+        "requests": [
+          {
+            "url": "https://budget.gov.au/content/bp3/",
+            "started_at": "2026-10-12T23:06:38.897122+00:00",
+            "minimum_interval_seconds": 1.0,
+            "previous_started_at": "2026-10-12T23:06:37.896882+00:00",
+            "interval_seconds": 1.0002371050068177,
+            "robots": {
+              "url": "https://budget.gov.au/robots.txt",
+              "status": 200,
+              "snapshot": "2026-10-12T23:06:34.048539+00:00",
+              "sha256": "dd26df886d4dceb73070ff3cfa499031f8daa82c1568c1283d4d33d074a30f2d",
+              "decision": "allowed",
+              "crawl_delay_seconds": null,
+              "request_rate": null,
+              "fallback": null
+            },
+            "status": 200,
+            "user_agent_policy": "parli/ingest/user-agent.json",
+            "user_agent_sha256": "1100b17c9651df0a8cac3179efbf025b2b55acf7d93bee70876cd24bcd3c0b2b"
+          }
+        ],
+        "robots": {
+          "url": "https://budget.gov.au/robots.txt",
+          "status": 200,
+          "snapshot": "2026-10-12T23:06:34.048539+00:00",
+          "sha256": "dd26df886d4dceb73070ff3cfa499031f8daa82c1568c1283d4d33d074a30f2d",
+          "decision": "allowed",
+          "crawl_delay_seconds": null,
+          "request_rate": null,
+          "fallback": null
+        },
+        "user_agent_policy": "parli/ingest/user-agent.json",
+        "user_agent_sha256": "1100b17c9651df0a8cac3179efbf025b2b55acf7d93bee70876cd24bcd3c0b2b"
+      },
+      "bytes_unchanged": true,
+      "licence_recheck": null
+    },
+    {
+      "url": "https://budget.gov.au/content/bp4/",
+      "previous_snapshot": "2026-10-12T21:24:22.324560+00:00",
+      "previous_sha256": "64a36b3e05218811c7473c8afb754740a19de7d922dc773f83a23b99635791d8",
+      "receipt": {
+        "url": "https://budget.gov.au/content/bp4/",
+        "status": 200,
+        "snapshot": "2026-10-12T23:06:40.145294+00:00",
+        "sha256": "64a36b3e05218811c7473c8afb754740a19de7d922dc773f83a23b99635791d8",
+        "requests": [
+          {
+            "url": "https://budget.gov.au/content/bp4/",
+            "started_at": "2026-10-12T23:06:39.897253+00:00",
+            "minimum_interval_seconds": 1.0,
+            "previous_started_at": "2026-10-12T23:06:38.897122+00:00",
+            "interval_seconds": 1.0001320110168308,
+            "robots": {
+              "url": "https://budget.gov.au/robots.txt",
+              "status": 200,
+              "snapshot": "2026-10-12T23:06:34.048539+00:00",
+              "sha256": "dd26df886d4dceb73070ff3cfa499031f8daa82c1568c1283d4d33d074a30f2d",
+              "decision": "allowed",
+              "crawl_delay_seconds": null,
+              "request_rate": null,
+              "fallback": null
+            },
+            "status": 200,
+            "user_agent_policy": "parli/ingest/user-agent.json",
+            "user_agent_sha256": "1100b17c9651df0a8cac3179efbf025b2b55acf7d93bee70876cd24bcd3c0b2b"
+          }
+        ],
+        "robots": {
+          "url": "https://budget.gov.au/robots.txt",
+          "status": 200,
+          "snapshot": "2026-10-12T23:06:34.048539+00:00",
+          "sha256": "dd26df886d4dceb73070ff3cfa499031f8daa82c1568c1283d4d33d074a30f2d",
+          "decision": "allowed",
+          "crawl_delay_seconds": null,
+          "request_rate": null,
+          "fallback": null
+        },
+        "user_agent_policy": "parli/ingest/user-agent.json",
+        "user_agent_sha256": "1100b17c9651df0a8cac3179efbf025b2b55acf7d93bee70876cd24bcd3c0b2b"
+      },
+      "bytes_unchanged": true,
+      "licence_recheck": null
+    },
+    {
+      "url": "https://budget.gov.au/content/copyright/",
+      "previous_snapshot": "2026-10-12T21:24:24.271790+00:00",
+      "previous_sha256": "ccd1f0eb87ac147c602a1352b77d7395f7d50fd4eac739ee3e3d3f5b7669e0e7",
+      "receipt": {
+        "url": "https://budget.gov.au/content/copyright/",
+        "status": 200,
+        "snapshot": "2026-10-12T23:06:41.091063+00:00",
+        "sha256": "ccd1f0eb87ac147c602a1352b77d7395f7d50fd4eac739ee3e3d3f5b7669e0e7",
+        "requests": [
+          {
+            "url": "https://budget.gov.au/content/copyright/",
+            "started_at": "2026-10-12T23:06:40.897343+00:00",
+            "minimum_interval_seconds": 1.0,
+            "previous_started_at": "2026-10-12T23:06:39.897253+00:00",
+            "interval_seconds": 1.0000916139688343,
+            "robots": {
+              "url": "https://budget.gov.au/robots.txt",
+              "status": 200,
+              "snapshot": "2026-10-12T23:06:34.048539+00:00",
+              "sha256": "dd26df886d4dceb73070ff3cfa499031f8daa82c1568c1283d4d33d074a30f2d",
+              "decision": "allowed",
+              "crawl_delay_seconds": null,
+              "request_rate": null,
+              "fallback": null
+            },
+            "status": 200,
+            "user_agent_policy": "parli/ingest/user-agent.json",
+            "user_agent_sha256": "1100b17c9651df0a8cac3179efbf025b2b55acf7d93bee70876cd24bcd3c0b2b"
+          }
+        ],
+        "robots": {
+          "url": "https://budget.gov.au/robots.txt",
+          "status": 200,
+          "snapshot": "2026-10-12T23:06:34.048539+00:00",
+          "sha256": "dd26df886d4dceb73070ff3cfa499031f8daa82c1568c1283d4d33d074a30f2d",
+          "decision": "allowed",
+          "crawl_delay_seconds": null,
+          "request_rate": null,
+          "fallback": null
+        },
+        "user_agent_policy": "parli/ingest/user-agent.json",
+        "user_agent_sha256": "1100b17c9651df0a8cac3179efbf025b2b55acf7d93bee70876cd24bcd3c0b2b"
+      },
+      "bytes_unchanged": true,
+      "licence_recheck": null
+    },
+    {
+      "url": "https://budget.gov.au/content/pbs/",
+      "previous_snapshot": "2026-10-12T21:24:23.245469+00:00",
+      "previous_sha256": "f77eb64039f6c24ffe0a95787edd48950dc0f4f2c6f91dd9c83fd86e02bdbe09",
+      "receipt": {
+        "url": "https://budget.gov.au/content/pbs/",
+        "status": 200,
+        "snapshot": "2026-10-12T23:06:42.092534+00:00",
+        "sha256": "f77eb64039f6c24ffe0a95787edd48950dc0f4f2c6f91dd9c83fd86e02bdbe09",
+        "requests": [
+          {
+            "url": "https://budget.gov.au/content/pbs/",
+            "started_at": "2026-10-12T23:06:41.897431+00:00",
+            "minimum_interval_seconds": 1.0,
+            "previous_started_at": "2026-10-12T23:06:40.897343+00:00",
+            "interval_seconds": 1.0000869189971127,
+            "robots": {
+              "url": "https://budget.gov.au/robots.txt",
+              "status": 200,
+              "snapshot": "2026-10-12T23:06:34.048539+00:00",
+              "sha256": "dd26df886d4dceb73070ff3cfa499031f8daa82c1568c1283d4d33d074a30f2d",
+              "decision": "allowed",
+              "crawl_delay_seconds": null,
+              "request_rate": null,
+              "fallback": null
+            },
+            "status": 200,
+            "user_agent_policy": "parli/ingest/user-agent.json",
+            "user_agent_sha256": "1100b17c9651df0a8cac3179efbf025b2b55acf7d93bee70876cd24bcd3c0b2b"
+          }
+        ],
+        "robots": {
+          "url": "https://budget.gov.au/robots.txt",
+          "status": 200,
+          "snapshot": "2026-10-12T23:06:34.048539+00:00",
+          "sha256": "dd26df886d4dceb73070ff3cfa499031f8daa82c1568c1283d4d33d074a30f2d",
+          "decision": "allowed",
+          "crawl_delay_seconds": null,
+          "request_rate": null,
+          "fallback": null
+        },
+        "user_agent_policy": "parli/ingest/user-agent.json",
+        "user_agent_sha256": "1100b17c9651df0a8cac3179efbf025b2b55acf7d93bee70876cd24bcd3c0b2b"
+      },
+      "bytes_unchanged": true,
+      "licence_recheck": null
+    },
+    {
+      "url": "https://treasury.gov.au/copyright-disclaimer",
+      "previous_snapshot": "2026-10-12T21:25:09.207071+00:00",
+      "previous_sha256": "3d27e974e220fcbdb7225bcda0a2b52c7f9b19b51ae63b8dd410de1cb33c0615",
+      "receipt": {
+        "url": "https://treasury.gov.au/copyright-disclaimer",
+        "status": 200,
+        "snapshot": "2026-10-12T23:06:44.000008+00:00",
+        "sha256": "3d27e974e220fcbdb7225bcda0a2b52c7f9b19b51ae63b8dd410de1cb33c0615",
+        "requests": [
+          {
+            "url": "https://treasury.gov.au/copyright-disclaimer",
+            "started_at": "2026-10-12T23:06:43.897585+00:00",
+            "minimum_interval_seconds": 1.0,
+            "previous_started_at": "2026-10-12T23:06:42.897528+00:00",
+            "interval_seconds": 1.0000604459783062,
+            "robots": {
+              "url": "https://treasury.gov.au/robots.txt",
+              "status": 200,
+              "snapshot": "2026-10-12T23:06:42.991419+00:00",
+              "sha256": "3200f655bd0e859a4fb1a7237cc64d4cec38824f6f5ee914c37d0b9de0f9c554",
+              "decision": "allowed",
+              "crawl_delay_seconds": null,
+              "request_rate": null,
+              "fallback": null
+            },
+            "status": 200,
+            "user_agent_policy": "parli/ingest/user-agent.json",
+            "user_agent_sha256": "1100b17c9651df0a8cac3179efbf025b2b55acf7d93bee70876cd24bcd3c0b2b"
+          }
+        ],
+        "robots": {
+          "url": "https://treasury.gov.au/robots.txt",
+          "status": 200,
+          "snapshot": "2026-10-12T23:06:42.991419+00:00",
+          "sha256": "3200f655bd0e859a4fb1a7237cc64d4cec38824f6f5ee914c37d0b9de0f9c554",
+          "decision": "allowed",
+          "crawl_delay_seconds": null,
+          "request_rate": null,
+          "fallback": null
+        },
+        "user_agent_policy": "parli/ingest/user-agent.json",
+        "user_agent_sha256": "1100b17c9651df0a8cac3179efbf025b2b55acf7d93bee70876cd24bcd3c0b2b"
+      },
+      "bytes_unchanged": true,
+      "licence_recheck": null
+    },
+    {
+      "url": "https://treasury.gov.au/treasury-portfolio-budget-papers",
+      "previous_snapshot": "2026-10-12T21:24:26.188346+00:00",
+      "previous_sha256": "bcf3f9a742c1d87f773d7f0853568a4eca86b1f81c3934e3a3981e92d2ae047d",
+      "receipt": {
+        "url": "https://treasury.gov.au/treasury-portfolio-budget-papers",
+        "status": 200,
+        "snapshot": "2026-10-12T23:06:45.024358+00:00",
+        "sha256": "bcf3f9a742c1d87f773d7f0853568a4eca86b1f81c3934e3a3981e92d2ae047d",
+        "requests": [
+          {
+            "url": "https://treasury.gov.au/treasury-portfolio-budget-papers",
+            "started_at": "2026-10-12T23:06:44.898994+00:00",
+            "minimum_interval_seconds": 1.0,
+            "previous_started_at": "2026-10-12T23:06:43.897585+00:00",
+            "interval_seconds": 1.0014070440083742,
+            "robots": {
+              "url": "https://treasury.gov.au/robots.txt",
+              "status": 200,
+              "snapshot": "2026-10-12T23:06:42.991419+00:00",
+              "sha256": "3200f655bd0e859a4fb1a7237cc64d4cec38824f6f5ee914c37d0b9de0f9c554",
+              "decision": "allowed",
+              "crawl_delay_seconds": null,
+              "request_rate": null,
+              "fallback": null
+            },
+            "status": 200,
+            "user_agent_policy": "parli/ingest/user-agent.json",
+            "user_agent_sha256": "1100b17c9651df0a8cac3179efbf025b2b55acf7d93bee70876cd24bcd3c0b2b"
+          }
+        ],
+        "robots": {
+          "url": "https://treasury.gov.au/robots.txt",
+          "status": 200,
+          "snapshot": "2026-10-12T23:06:42.991419+00:00",
+          "sha256": "3200f655bd0e859a4fb1a7237cc64d4cec38824f6f5ee914c37d0b9de0f9c554",
+          "decision": "allowed",
+          "crawl_delay_seconds": null,
+          "request_rate": null,
+          "fallback": null
+        },
+        "user_agent_policy": "parli/ingest/user-agent.json",
+        "user_agent_sha256": "1100b17c9651df0a8cac3179efbf025b2b55acf7d93bee70876cd24bcd3c0b2b"
+      },
+      "bytes_unchanged": true,
+      "licence_recheck": null
+    }
+  ],
+  "robots": [
+    {
+      "url": "https://archive.budget.gov.au/robots.txt",
+      "status": 404,
+      "snapshot": "2026-10-12T23:06:18.485885+00:00",
+      "sha256": null,
+      "requests": [
+        {
+          "url": "https://archive.budget.gov.au/robots.txt",
+          "started_at": "2026-10-12T23:06:17.759160+00:00",
+          "minimum_interval_seconds": 1.0,
+          "previous_started_at": null,
+          "interval_seconds": null,
+          "robots": {
+            "decision": "policy request"
+          },
+          "status": 404,
+          "user_agent_policy": "parli/ingest/user-agent.json",
+          "user_agent_sha256": "1100b17c9651df0a8cac3179efbf025b2b55acf7d93bee70876cd24bcd3c0b2b"
+        }
+      ],
+      "robots": {
+        "decision": "policy request"
+      },
+      "user_agent_policy": "parli/ingest/user-agent.json",
+      "user_agent_sha256": "1100b17c9651df0a8cac3179efbf025b2b55acf7d93bee70876cd24bcd3c0b2b"
+    },
+    {
+      "url": "https://budget.gov.au/robots.txt",
+      "status": 200,
+      "snapshot": "2026-10-12T23:06:34.048539+00:00",
+      "sha256": "dd26df886d4dceb73070ff3cfa499031f8daa82c1568c1283d4d33d074a30f2d",
+      "requests": [
+        {
+          "url": "https://budget.gov.au/robots.txt",
+          "started_at": "2026-10-12T23:06:33.892210+00:00",
+          "minimum_interval_seconds": 1.0,
+          "previous_started_at": "2026-10-12T23:06:32.890325+00:00",
+          "interval_seconds": 1.0018869520281442,
+          "robots": {
+            "decision": "policy request"
+          },
+          "status": 200,
+          "user_agent_policy": "parli/ingest/user-agent.json",
+          "user_agent_sha256": "1100b17c9651df0a8cac3179efbf025b2b55acf7d93bee70876cd24bcd3c0b2b"
+        }
+      ],
+      "robots": {
+        "decision": "policy request"
+      },
+      "user_agent_policy": "parli/ingest/user-agent.json",
+      "user_agent_sha256": "1100b17c9651df0a8cac3179efbf025b2b55acf7d93bee70876cd24bcd3c0b2b"
+    },
+    {
+      "url": "https://treasury.gov.au/robots.txt",
+      "status": 200,
+      "snapshot": "2026-10-12T23:06:42.991419+00:00",
+      "sha256": "3200f655bd0e859a4fb1a7237cc64d4cec38824f6f5ee914c37d0b9de0f9c554",
+      "requests": [
+        {
+          "url": "https://treasury.gov.au/robots.txt",
+          "started_at": "2026-10-12T23:06:42.897528+00:00",
+          "minimum_interval_seconds": 1.0,
+          "previous_started_at": "2026-10-12T23:06:41.897431+00:00",
+          "interval_seconds": 1.0000959190074354,
+          "robots": {
+            "decision": "policy request"
+          },
+          "status": 200,
+          "user_agent_policy": "parli/ingest/user-agent.json",
+          "user_agent_sha256": "1100b17c9651df0a8cac3179efbf025b2b55acf7d93bee70876cd24bcd3c0b2b"
+        }
+      ],
+      "robots": {
+        "decision": "policy request"
+      },
+      "user_agent_policy": "parli/ingest/user-agent.json",
+      "user_agent_sha256": "1100b17c9651df0a8cac3179efbf025b2b55acf7d93bee70876cd24bcd3c0b2b"
+    }
+  ],
+  "previous_robots": [
+    {
+      "url": "https://archive.budget.gov.au/robots.txt",
+      "status": 404,
+      "snapshot": "2026-10-12T21:28:26.112863+00:00",
+      "sha256": null,
+      "user_agent_policy": "parli/ingest/user-agent.json",
+      "user_agent_sha256": "1100b17c9651df0a8cac3179efbf025b2b55acf7d93bee70876cd24bcd3c0b2b"
+    },
+    {
+      "url": "https://budget.gov.au/robots.txt",
+      "status": 200,
+      "snapshot": "2026-10-12T21:28:26.745211+00:00",
+      "sha256": "dd26df886d4dceb73070ff3cfa499031f8daa82c1568c1283d4d33d074a30f2d",
+      "user_agent_policy": "parli/ingest/user-agent.json",
+      "user_agent_sha256": "1100b17c9651df0a8cac3179efbf025b2b55acf7d93bee70876cd24bcd3c0b2b"
+    },
+    {
+      "url": "https://treasury.gov.au/robots.txt",
+      "status": 200,
+      "snapshot": "2026-10-12T21:28:27.670577+00:00",
+      "sha256": "3200f655bd0e859a4fb1a7237cc64d4cec38824f6f5ee914c37d0b9de0f9c554",
+      "user_agent_policy": "parli/ingest/user-agent.json",
+      "user_agent_sha256": "1100b17c9651df0a8cac3179efbf025b2b55acf7d93bee70876cd24bcd3c0b2b"
+    }
+  ]
+}

@@ -17,10 +17,12 @@ interface Column {
   type: ColumnType;
   sortable?: boolean;          // default true for money/count/year/date/text
   facet?: 'chips' | 'multi' | 'range' | null;   // category→chips|multi, money/count/year→range
+  facetOptions?: string[];     // optional valid choices retained with zero matches
   align?: 'start' | 'end';     // default end for money/count/year
   bar?: boolean;               // inline scale bar in numeric cells
   hideWhenConstant?: boolean;  // default true for category: hidden column, value shown as a facet chip
   format?: 'compact' | 'exact';// money/count display; tooltip + CSV always exact
+  href?: (row: Row) => string | null; // optional link on a non-primary cell
   primary?: boolean;           // the cell that carries primaryLink
 }
 interface Action { icon: string; label: string; href: (row: Row) => string | null }

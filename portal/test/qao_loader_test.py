@@ -9,7 +9,7 @@ ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT))
 from parli.ingest.qao_reports import Client, Held, INDEX, SITE, COPYRIGHT, acquire, guard_count, parse_index, parse_report
 from parli.ingest.qao_reports import reparse_cache
-from scripts.export_audit import check_budget, plan_export
+from scripts.export_audit import plan_export
 from unittest.mock import patch
 
 
@@ -86,14 +86,12 @@ class Tests(unittest.TestCase):
         federal, _ = plan_export(data, [{'id':'wrong-jurisdiction','name':'Queensland Health','jurisdiction':'federal'}])
         self.assertEqual(json.loads(federal['reports-1.json'])['records'][0]['entity_links'], {})
         self.assertEqual(manifest['licence_exceptions'], ['qao-2025-26-2'])
-        self.assertEqual(check_budget(payloads)[0], 4)
+        self.assertEqual(len(payloads), 4)
 
-    def test_shrink_guard_and_budget(self):
+    def test_shrink_guard_preserves_the_last_complete_snapshot(self):
         guard_count(98, 98, 100)
         for args in [(0,0,0), (97,97,100), (3,4,0)]:
             with self.assertRaises(Held): guard_count(*args)
-        with self.assertRaises(Held): check_budget({str(i): b'x' for i in range(151)})
-        with self.assertRaises(Held): check_budget({'large': b'x' * 30_000_001})
         with self.assertRaises(Held): parse_index('<html>empty</html>', INDEX)
         root = self.temp(); out = root / 'snapshot.json'
         out.write_text('{"count":100,"keep":"last good snapshot"}')
