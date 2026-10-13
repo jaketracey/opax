@@ -3,7 +3,7 @@ import {execFileSync} from 'node:child_process';
 import {existsSync, readFileSync, writeFileSync, renameSync, readdirSync, mkdtempSync, rmSync,statSync} from 'node:fs';
 import {join, dirname, resolve, relative} from 'node:path';
 import {tmpdir} from 'node:os';
-export const runnerFiles=['gate-lib.mjs','gate-map.json','gate-reporter.mjs','gate-publication-files.mjs','heavy-remote.mjs','ox-heavy-remote.sh','ox-heavy.sh','web-gates.mjs','web-gates.sh','test/gates.test.mjs'];
+export const runnerFiles=['gate-lib.mjs','gate-map.json','gate-reporter.mjs','heavy-remote.mjs','ox-heavy-remote.sh','ox-heavy.sh','web-gates.mjs','web-gates.sh','test/gates.test.mjs'];
 export const runnerHash=()=>hash(runnerFiles.map(f=>f+'\0'+readFileSync(join(import.meta.dirname,f))).join('\0'));
 export const hash = value => createHash('sha256').update(value).digest('hex');
 export const git = (root,args,options={}) => execFileSync('git',args,{cwd:root,encoding:'utf8',...options}).trim();
@@ -29,6 +29,7 @@ export function identity(root, tree=snapshot(root)) {
   return {tree,node:process.version,lockfile:hash(readFileSync(join(root,'portal/package-lock.json'))),runner:runnerHash()};
 }
 export const cacheKey = id => hash(JSON.stringify(id));
+export const cleanCheckout = root => git(root,['status','--porcelain','--untracked-files=all']) === '';
 export function catalogKey(root,id) {
   const modules=new Set();
   const visit=file=>{
@@ -67,6 +68,7 @@ export function selectTests(root,changed,config) {
   const files=walk(join(root,'portal/test')).filter(f=>f.endsWith('.test.mjs')).map(f=>relative(root,f)).sort();
   const chosen=new Set(config.smoke);
   for(const file of config.optionalSmoke||[])if(files.includes(file))chosen.add(file);
+  for(const file of files)if((config.mandatoryPatterns||[]).some(pattern=>new RegExp(pattern).test(file)))chosen.add(file);
   const affected=new Set();
   for(const file of config.smoke) if(!files.includes(file)) throw Error(`Missing smoke test: ${file}`);
   // Read references as well as imports: many tests load assets via fs/URL/vm.
@@ -91,7 +93,14 @@ export function selectTests(root,changed,config) {
     if(/^(?:briefs\/|docs\/|[^/]+\.md$)/.test(path)&&/\.md$/.test(path))continue;
     let matched=false;
     for(const file of files)if(deps.get(file).has(path)||file===path){chosen.add(file);affected.add(file);matched=true;}
-    for(const rule of config.map)if(new RegExp(rule.pattern).test(path)) {for(const file of files)if(rule.tests.some(pattern=>new RegExp(pattern).test(file))){chosen.add(file);affected.add(file);}matched=true;}
+    for(const rule of config.map)if(new RegExp(rule.pattern).test(path)) {
+      const targets=files.filter(file=>rule.tests.some(pattern=>new RegExp(pattern).test(file)));
+      if(!targets.length){
+        reasons.push(`Map rule for ${path} matched zero test files; full suite required`);
+        for(const file of files){chosen.add(file);affected.add(file);}
+      }else for(const file of targets){chosen.add(file);affected.add(file);}
+      matched=true;
+    }
     if(!matched){reasons.push(`Unmapped change: ${path}; full suite required`);for(const file of files){chosen.add(file);affected.add(file);}}
   }
   return {files:[...chosen].sort(),affected:[...affected].sort(),reasons,total:files.length};

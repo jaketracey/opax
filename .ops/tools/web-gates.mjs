@@ -2,7 +2,7 @@ import {spawn} from 'node:child_process';
 import {mkdirSync,readFileSync,writeFileSync,existsSync,rmSync,cpSync,renameSync,readdirSync} from 'node:fs';
 import {join,resolve} from 'node:path';
 import {performance} from 'node:perf_hooks';
-import {git,gateBase,identity,cacheKey,reusable,persistPass,selectTests,catalogKey,hash} from './gate-lib.mjs';
+import {git,gateBase,identity,cacheKey,cleanCheckout,reusable,persistPass,selectTests,catalogKey,hash} from './gate-lib.mjs';
 
 const args=process.argv.slice(2), tier=args.shift()||'lane';
 const tools=import.meta.dirname;
@@ -13,13 +13,15 @@ const base=gateBase(root,tier,value('--base'));
 const concurrency=Number(value('--concurrency',process.env.OX_TEST_CONCURRENCY||(process.platform==='linux'?'6':'4')));
 if(!Number.isInteger(concurrency)||concurrency<1||concurrency>16)throw Error('Concurrency must be 1..16');
 const started=performance.now(), id=identity(root), key=cacheKey(id);
+const clean=cleanCheckout(root);
 const cache=resolve(process.env.OX_GATE_CACHE||join(root,'.ops/gate-cache'));mkdirSync(cache,{recursive:true});
 const passFile=join(cache,`${key}.json`);
 let previous;try{previous=JSON.parse(readFileSync(passFile));}catch{}
-if(!args.includes('--force')&&tier!=='profile'&&reusable(previous,id,tier,base)){
+if(clean&&!args.includes('--force')&&tier!=='profile'&&reusable(previous,id,tier,base)){
  git(root,['diff','--exit-code',base,id.tree,'--','portal/public/votes.json'],{stdio:'pipe'});
  console.log(`CACHED PASS ${id.tree} ${id.node} ${id.lockfile} (${previous.tier}, ${previous.host})`);process.exit(0);
 }
+if(!clean)console.log('CACHE BYPASS: working tree has tracked changes or untracked files');
 if(args.includes('--cache-only'))process.exit(3);
 const matrix=value('--matrix',String(concurrency)).split(',').map(Number);
 if(matrix.some(n=>!Number.isInteger(n)||n<1||n>16))throw Error('Matrix concurrency must be 1..16');
@@ -80,19 +82,9 @@ try{
  const reporter=join(tools,'gate-reporter.mjs');
  record.profiles=[];
  for(const limit of matrix){
-   const sampled=full?[]:selection.files.filter(f=>config.smokePatterns?.[f]&&!selection.affected.includes(f));
-   const reports=[];
-   for(const file of sampled){
-     const smokeReport=join(output,`smoke-${limit}-${file.split('/').at(-1)}.json`);
-     await run(`tests-smoke-${limit}-${file.split('/').at(-1)}`,'node',['--test','--test-concurrency=1',`--test-name-pattern=${config.smokePatterns[file]}`,`--test-reporter=${reporter}`,file.replace(/^portal\//,'')],{OX_GATE_REPORT:smokeReport});
-     const smoke=JSON.parse(readFileSync(smokeReport));
-     if(smoke.summary?.counts.passed<(config.smokeMinimum?.[file]||1))throw Error(`Smoke pattern matched too few cases in ${file}; update the map with the policy/feature change`);
-     reports.push(smoke);
-   }
    const report=join(output,`profile-${limit}.json`);
-   await run(`tests-${limit}`,'node',['--test',`--test-concurrency=${limit}`,`--test-reporter=${reporter}`,...selection.files.filter(f=>!sampled.includes(f)).map(f=>f.replace(/^portal\//,''))],{OX_GATE_REPORT:report,OX_GATE_PUBLICATION_CHANGED:full||selection.affected.includes('portal/test/donor-publication.test.mjs')?'':JSON.stringify(changed)});
-   reports.push(JSON.parse(readFileSync(report)));
-   record.test={files:reports.flatMap(r=>r.files),summary:{success:reports.every(r=>r.summary?.success),duration_ms:reports.reduce((n,r)=>n+r.summary.duration_ms,0),counts:Object.fromEntries(Object.keys(reports[0].summary.counts).map(k=>[k,reports.reduce((n,r)=>n+r.summary.counts[k],0)]))}};record.profiles.push({concurrency:limit,...record.test});
+   await run(`tests-${limit}`,'node',['--test',`--test-concurrency=${limit}`,`--test-reporter=${reporter}`,...selection.files.map(f=>f.replace(/^portal\//,''))],{OX_GATE_REPORT:report});
+   record.test=JSON.parse(readFileSync(report));record.profiles.push({concurrency:limit,...record.test});
    if(!record.test.summary?.success || record.test.files.length!==selection.files.length)throw Error('Missing/failed test summaries');
  }
  await run('dry-run','npx',['--no-install','wrangler','deploy','--dry-run']);
@@ -106,7 +98,7 @@ try{
 finally{
  record.seconds=(performance.now()-started)/1000;
  writeFileSync(join(output,'result.json'),JSON.stringify(record,null,2)+'\n');
- if(record.success)persistPass(passFile,record);
+ if(record.success&&cleanCheckout(root))persistPass(passFile,record);
  if(existsSync(work))git(root,['worktree','remove','--force',work]);
  console.log(`GATES ${record.success?'OK':'FAILED'} ${record.seconds.toFixed(2)}s tree=${id.tree}; ${output}`);
 }

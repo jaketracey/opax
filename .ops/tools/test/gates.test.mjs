@@ -4,8 +4,7 @@ import {mkdtempSync,mkdirSync,writeFileSync,readFileSync,rmSync,existsSync,cpSyn
 import {tmpdir} from 'node:os';
 import {join,resolve} from 'node:path';
 import {spawnSync} from 'node:child_process';
-import {snapshot,git,gateCommit,gateBase,identity,cacheKey,reusable,persistPass,selectTests,quote,catalogKey} from '../gate-lib.mjs';
-import {publicationGateFiles} from '../gate-publication-files.mjs';
+import {snapshot,git,gateCommit,gateBase,identity,cacheKey,cleanCheckout,reusable,persistPass,selectTests,quote,catalogKey} from '../gate-lib.mjs';
 const tools=resolve(import.meta.dirname,'..');
 function fixture(t){const root=mkdtempSync(join(tmpdir(),'opax-gate-test-'));t.after(()=>rmSync(root,{recursive:true,force:true}));return root;}
 function repo(t){const root=fixture(t);git(root,['init','-q']);git(root,['config','user.name','Fixture']);git(root,['config','user.email','fixture@example.invalid']);mkdirSync(join(root,'portal/test'),{recursive:true});writeFileSync(join(root,'portal/package-lock.json'),'{}');writeFileSync(join(root,'.gitignore'),'.ops/gate-cache/\n');git(root,['add','.']);git(root,['commit','-qm','fixture']);return root;}
@@ -16,6 +15,24 @@ test('snapshot includes unstaged, staged and new source without changing real in
 });
 test('cache binds successful full pass to tree, Node and lockfile; lane passes cannot satisfy review',()=>{
  const id={tree:'abc',node:'v24.21.0',lockfile:'123'},full={identity:id,tier:'merge',success:true};assert.ok(reusable(full,id,'review'));assert.ok(reusable(full,id,'lane'));for(const field of Object.keys(id))assert.ok(!reusable(full,{...id,[field]:'changed'},'review'));assert.ok(!reusable({...full,success:false},id,'review'));assert.ok(!reusable({...full,tier:'lane'},id,'review'));assert.ok(!reusable({...full,tier:'lane',base:'a'},id,'lane','b'));
+});
+test('CLI cache refuses matching passes for modified, staged and untracked source trees',t=>{
+ const root=repo(t),cache=join(root,'.ops/gate-cache');mkdirSync(cache,{recursive:true});
+ mkdirSync(join(root,'portal/public'));
+ writeFileSync(join(root,'portal/public/votes.json'),'{"_meta":{"schema":1}}');git(root,['add','.']);git(root,['commit','-qm','votes fixture']);
+ const env={...process.env,OX_GATE_CACHE:cache};delete env.NODE_TEST_CONTEXT;
+ const run=()=>{
+  const id=identity(root);writeFileSync(join(cache,cacheKey(id)+'.json'),JSON.stringify({identity:id,success:true,tier:'merge',host:'fixture'}));
+  return spawnSync(process.execPath,[join(tools,'web-gates.mjs'),'review','--base','HEAD','--cache-only'],{cwd:root,env,encoding:'utf8'});
+ };
+ assert.ok(cleanCheckout(root));assert.match(run().stdout,/CACHED PASS/);
+ writeFileSync(join(root,'portal/package-lock.json'),'{"modified":true}');assert.ok(!cleanCheckout(root));
+ let result=run();assert.equal(result.status,3,result.stderr);assert.doesNotMatch(result.stdout,/CACHED PASS/);assert.match(result.stdout,/CACHE BYPASS/);
+ git(root,['add','portal/package-lock.json']);result=run();assert.equal(result.status,3);assert.doesNotMatch(result.stdout,/CACHED PASS/);
+ git(root,['restore','--source=HEAD','--staged','--worktree','portal/package-lock.json']);
+ writeFileSync(join(root,'portal/untracked-source.mjs'),'export const source=true');assert.ok(!cleanCheckout(root));
+ result=run();assert.equal(result.status,3,result.stderr);assert.doesNotMatch(result.stdout,/CACHED PASS/);assert.match(result.stdout,/CACHE BYPASS/);
+ rmSync(join(root,'portal/untracked-source.mjs'));assert.ok(cleanCheckout(root));assert.match(run().stdout,/CACHED PASS/);
 });
 test('desktop snapshot transfers a captured base beyond HEAD into a local bare fixture, without changing source',t=>{
  const root=repo(t),head=git(root,['rev-parse','HEAD']),tree=git(root,['write-tree']);
@@ -50,6 +67,20 @@ test('affected selection follows transitive imports, URL/fs references, deletion
  const root=repo(t);mkdirSync(join(root,'portal/public'));writeFileSync(join(root,'portal/public/leaf.js'),'export const x=1');writeFileSync(join(root,'portal/public/parent.js'),"import './leaf.js'");for(const [file,content]of [['a',"import '../public/parent.js'"],['b',"new URL('../public/view.html',import.meta.url)"],['smoke','']])writeFileSync(join(root,'portal/test',file+'.test.mjs'),content);
  const config={smoke:['portal/test/smoke.test.mjs'],map:[]};assert.deepEqual(selectTests(root,['portal/public/leaf.js'],config).files,['portal/test/a.test.mjs','portal/test/smoke.test.mjs']);assert.equal(selectTests(root,['portal/public/deleted.js'],config).files.length,3);assert.equal(selectTests(root,['new/unmapped.js'],config).files.length,3);assert.equal(selectTests(root,['briefs/note.md'],config).files.length,1);assert.throws(()=>selectTests(root,[],{...config,smoke:['missing']}));
 });
+test('a matching map rule with zero targets requires every file and gives a reason even with another resolved rule',t=>{
+ const root=repo(t);for(const file of ['smoke','current','unrelated'])writeFileSync(join(root,'portal/test',file+'.test.mjs'),'');
+ const config={smoke:['portal/test/smoke.test.mjs'],map:[{pattern:'^portal/public/feature.js$',tests:['renamed-away\\.test']},{pattern:'^portal/public/feature.js$',tests:['current\\.test']}]};
+ const selection=selectTests(root,['portal/public/feature.js'],config);assert.equal(selection.files.length,3);assert.equal(selection.affected.length,3);
+ assert.deepEqual(selection.reasons,['Map rule for portal/public/feature.js matched zero test files; full suite required']);
+});
+test('documentation-only lanes include every current and newly added donor, privacy and table file',t=>{
+ const config=JSON.parse(readFileSync(join(tools,'gate-map.json')));
+ const realRoot=resolve(tools,'../..'),selection=selectTests(realRoot,['briefs/note.md'],config);
+ for(const file of selectTests(realRoot,['unmapped/source'],config).files.filter(file=>/donor|privacy|table|dt-votes/.test(file)))assert.ok(selection.files.includes(file),file);
+ assert.ok(selection.files.includes('portal/test/donor-view-index.test.mjs'));
+ const root=repo(t);for(const file of ['donor-new','new-privacy','table-new','datatable-new','dt-votes-new','unrelated'])writeFileSync(join(root,'portal/test',file+'.test.mjs'),'');
+ const added=selectTests(root,['briefs/note.md'],{...config,smoke:[]});assert.equal(added.files.length,5);assert.ok(!added.files.includes('portal/test/unrelated.test.mjs'));
+});
 test('local lock stores owner PID, preserves status and clears on normal completion',t=>{const root=fixture(t);const run=heavy(root,['bash','-c','test -s "$OX_HEAVY_LOCK/pid"; exit 17']);assert.equal(run.status,17);assert.ok(!existsSync(join(root,'lock')));});
 test('dead owner clears; live owner and ownerless locks remain untouched',t=>{const root=fixture(t);mkdirSync(join(root,'lock'));writeFileSync(join(root,'lock/pid'),'999999999');assert.equal(heavy(root,['true']).status,0);mkdirSync(join(root,'lock'));writeFileSync(join(root,'lock/pid'),String(process.pid));assert.equal(heavy(root,['true']).status,75);assert.equal(readFileSync(join(root,'lock/pid'),'utf8'),String(process.pid));rmSync(join(root,'lock/pid'));assert.equal(heavy(root,['true']).status,75);assert.ok(existsSync(join(root,'lock')));});
 test('shell quoting preserves spaces, quotes and literal substitutions',()=>{const value="a ' b $(false) `false`";assert.equal(spawnSync('bash',['-c',`printf %s ${quote(value)}`],{encoding:'utf8'}).stdout,value);});
@@ -58,6 +89,18 @@ test('desktop probes use an independent SSH connection with protocol keepalives'
  const root=fixture(t),log=join(root,'ssh-args');writeFileSync(join(root,'ssh'),'#!/usr/bin/env bash\nprintf "%s\\n" "$@" > "$OX_TEST_SSH_ARGS"\n',{mode:0o755});
  const run=spawnSync(process.execPath,[join(tools,'heavy-remote.mjs'),'--available','node','web-gates.mjs','merge'],{encoding:'utf8',env:{...process.env,PATH:root+':'+process.env.PATH,OX_TEST_SSH_ARGS:log}});
  assert.equal(run.status,0,run.stderr);const args=readFileSync(log,'utf8').split('\n');for(const option of ['ControlMaster=no','ControlPath=none','ServerAliveInterval=30','ServerAliveCountMax=3'])assert.ok(args.includes(option));
+});
+test('a dirty desktop caller forces a fresh gate despite its clean remote snapshot',t=>{
+ const root=repo(t),bin=join(root,'.ops/gate-cache/bin'),log=join(root,'.ops/gate-cache/remote-script');mkdirSync(bin,{recursive:true});
+ git(root,['update-ref','refs/remotes/origin/main',git(root,['rev-parse','HEAD'])]);
+ const realGit=spawnSync('which',['git'],{encoding:'utf8'}).stdout.trim();assert.ok(realGit);
+ writeFileSync(join(bin,'git'),`#!/usr/bin/env bash\nif [ "$1" = push ]; then exit 0; fi\nexec ${quote(realGit)} "$@"\n`,{mode:0o755});
+ writeFileSync(join(bin,'ssh'),'#!/usr/bin/env bash\nlast="${@: -1}"\nif [ "$last" = "bash -s" ]; then cat > "$OX_TEST_REMOTE_SCRIPT"; else cat > /dev/null; fi\n',{mode:0o755});
+ const env={...process.env,PATH:bin+':'+process.env.PATH,OX_TEST_REMOTE_SCRIPT:log,OX_GATE_LABEL:'dirty-cache-fixture'};delete env.NODE_TEST_CONTEXT;
+ const run=()=>{const result=spawnSync(process.execPath,[join(tools,'heavy-remote.mjs'),'--tier','merge'],{cwd:root,env,encoding:'utf8'});assert.equal(result.status,0,result.stderr);return readFileSync(log,'utf8');};
+ assert.doesNotMatch(run(),/'--force'/);
+ writeFileSync(join(root,'portal/package-lock.json'),'{"changed":true}');assert.match(run(),/'--force'/);
+ git(root,['restore','portal/package-lock.json']);writeFileSync(join(root,'portal/untracked.mjs'),'source');assert.match(run(),/'--force'/);
 });
 test('busy Mac routes recognised gates, keeps owner unchanged and forwards remote exit; LOCAL override bypasses routing',t=>{
  const root=fixture(t),mockTools=join(root,'tools');mkdirSync(mockTools);cpSync(join(tools,'ox-heavy.sh'),join(mockTools,'ox-heavy.sh'));writeFileSync(join(mockTools,'ox-heavy-remote.sh'),'#!/usr/bin/env bash\nif [ "$1" = --available ]; then exit 0; fi\nexit 19\n',{mode:0o755});mkdirSync(join(root,'lock'));writeFileSync(join(root,'lock/pid'),String(process.pid));
@@ -89,7 +132,21 @@ test('catalog cache binds exports, source registries and transitive builder impo
  for(const file of ['portal/src/donor-withheld.json','scripts/catalog-config.json']){writeFileSync(join(root,file),'{"new":true}');assert.notEqual(key(),initial);writeFileSync(join(root,file),'{}');assert.equal(key(),initial);}
  writeFileSync(join(root,'portal/public/catalog-reader.mjs'),'export const x=2');assert.notEqual(key(),initial);
 });
-test('narrow publication scope covers changed assets and each real jurisdiction; full scope retains every file',()=>{
- const root='/fixture/public',files=['app.js','graph/money.json','graph/money.qld.json','graph/money.vic.json','graph/money.tas.json','changed.js','other.json'].map(f=>join(root,f));
- assert.equal(publicationGateFiles(root,files,'').length,files.length);const selected=publicationGateFiles(root,files,JSON.stringify(['portal/public/changed.js']));assert.ok(selected.includes(join(root,'changed.js')));assert.equal(selected.filter(f=>f.includes('/graph/')).length,4);assert.ok(!selected.includes(join(root,'other.json')));assert.throws(()=>publicationGateFiles(root,files,'{}'));
+test('a narrow CLI gate executes every privacy case and supplies the full publication corpus',t=>{
+ const root=repo(t),localTools=join(root,'.ops/tools'),bin=join(root,'.ops/gate-cache/bin');
+ mkdirSync(localTools,{recursive:true});cpSync(tools,localTools,{recursive:true});mkdirSync(bin,{recursive:true});mkdirSync(join(root,'scripts'));mkdirSync(join(root,'portal/public'));
+ const config={smoke:['portal/test/donor-privacy.test.mjs','portal/test/donor-publication.test.mjs'],smokePatterns:{'portal/test/donor-privacy.test.mjs':'^case 0$'},smokeMinimum:{'portal/test/donor-privacy.test.mjs':1},fullBuildPatterns:[],builders:[],map:[]};
+ writeFileSync(join(localTools,'gate-map.json'),JSON.stringify(config));
+ writeFileSync(join(root,'portal/test/donor-privacy.test.mjs'),'import test from "node:test"; for(let i=0;i<26;i++)test("case "+i,()=>{});');
+ writeFileSync(join(root,'portal/test/donor-publication.test.mjs'),'import test from "node:test"; import assert from "node:assert/strict"; test("full corpus",()=>assert.ok(!process.env.OX_GATE_PUBLICATION_CHANGED));');
+ writeFileSync(join(root,'portal/test/unrelated.test.mjs'),'import test from "node:test"; test("unrelated",()=>{});');
+ writeFileSync(join(root,'portal/public/votes.json'),'{"_meta":{"schema":1}}');
+ for(const file of ['build_spa_shell.mjs','stamp_assets.mjs'])writeFileSync(join(root,'scripts',file),'');
+ writeFileSync(join(root,'scripts/build_search_catalog.mjs'),'import {mkdirSync,writeFileSync} from "node:fs"; const dir=new URL("../portal/public/search-catalog/",import.meta.url); mkdirSync(dir,{recursive:true});writeFileSync(new URL("index.json",dir),"{}");');
+ for(const cmd of ['npm','npx'])writeFileSync(join(bin,cmd),'#!/usr/bin/env bash\nexit 0\n',{mode:0o755});
+ writeFileSync(join(bin,'node'),`#!/usr/bin/env bash\nif [ "$1" = --test ] && [[ "$2" = */test/gates.test.mjs ]]; then exit 0; fi\nexec ${quote(process.execPath)} "$@"\n`,{mode:0o755});
+ git(root,['add','.']);git(root,['commit','-qm','complete privacy CLI fixture']);
+ const env={...process.env,PATH:bin+':'+process.env.PATH};delete env.NODE_TEST_CONTEXT;delete env.OX_GATE_CACHE;delete env.OX_GATE_PUBLICATION_CHANGED;
+ const result=spawnSync(process.execPath,[join(localTools,'web-gates.mjs'),'lane','--base','HEAD','--force'],{cwd:root,encoding:'utf8',env});
+ assert.equal(result.status,0,result.stderr+'\n'+result.stdout);assert.match(result.stdout,/Selected 2\/3 files/);assert.match(result.stdout,/TESTS 27 PASS 27 FAIL 0 SKIP 0/);
 });

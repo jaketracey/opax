@@ -25,14 +25,14 @@ OX_HEAVY_LOCAL=1 .ops/tools/web-gates.sh merge --force
 .ops/tools/ox-heavy-remote.sh --tier merge --force
 ```
 
-Lane gates select changed-file dependants (imports and asset references) plus the
-fixed donor privacy/publication, directory, MCP, analytics and deploy-chain smoke
-set in `.ops/tools/gate-map.json`. Narrow lanes check changed served assets and
-representative privacy assets from every jurisdiction; the complete publication
-corpus sweep is a merge/pre-deploy gate. For unchanged donor code, four privacy smoke
-cases run; a donor-related change runs its exhaustive file. A missing/renamed
-smoke case fails the gate until the maintained map is updated. Unknown changes
-require the full suite. A lane
+Lane gates select changed-file dependants (imports and asset references) plus
+every donor, privacy and table test file and the directory, MCP, analytics and
+deploy-chain smoke set in `.ops/tools/gate-map.json`. Mandatory filename patterns
+also include new donor/privacy/table and dt-votes files as they are added.
+Every selected file runs all of its cases. Privacy is never sampled; publication
+always sweeps the complete corpus, including for documentation-only lanes.
+Unknown changes and matching map rules with zero test targets require the full
+suite and print a reason. A lane
 pass is never a merge/review pass. Merge candidates run the complete production
 release build, check, full suite, local Wrangler dry-run and votes schema/byte
 checks once on the captured candidate tree. Re-review the identical tree with
@@ -43,7 +43,11 @@ build remains a merge/pre-deploy gate.
 Passes live in ignored `.ops/gate-cache/`, keyed by the snapshot's `git write-tree`
 hash, exact Node version and SHA-256 of `portal/package-lock.json`. Snapshots
 include staged, unstaged and new non-ignored source without changing the lane's
-index. A change during a run invalidates its pass. The captured base SHA is used
+index. Cache reuse requires an empty `git status --porcelain --untracked-files=all`;
+tracked changes, staged changes and untracked source always bypass it, even if a
+matching pass exists. A dirty caller forces a fresh desktop run rather than
+letting its clean disposable checkout reuse a pass. Dirty callers do not save
+reusable local passes. A change during a run invalidates its pass. The captured base SHA is used
 for selection and votes checks; no gate fetches or advances main mid-run.
 The runner-source hash also invalidates passes if shared gate tooling changes.
 Narrow lanes cache generated search fixtures by export/source/script JSON blob hashes, the
@@ -106,6 +110,6 @@ gate-speed must not remove them ahead of that integration. Check
 `web/donor-withhold` and `briefs/donor-confident-match-r4.md` before changing that
 coverage. Feature tests are retired only once the removal is present on main.
 The committed confident-match implementation is on `web/donor-failclosed`
-(`298fa84cd` at this audit). Its `donor-confidence` and `donor-provenance` tests
-join the always-run smoke set when present, and its money-conservation smoke name
-is recognised. Retired withholding cases remain that lane's responsibility.
+(`298fa84cd` at the first audit). Its `donor-confidence` and `donor-provenance`
+files automatically join the mandatory set when present. Retired withholding
+cases remain that lane's responsibility; all current cases run without sampling.
