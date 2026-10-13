@@ -1,0 +1,309 @@
+{
+  "schema": 1,
+  "generated": "2026-10-14",
+  "purpose": "Quality eval for the research loop as the engine for ALL Ask (briefs/research-loop-contract.md). Thirteen questions: seven ordinary qualitative shapes and six multi-hop shapes. Graded structurally by scripts/research_eval_grade.mjs; the markdown report puts old and new answers side by side for the Fable judge.",
+  "gold": {
+    "file": "agentic-ask-gold.json",
+    "route": "/api/ops/ask-gold",
+    "note": "The 34-question agentic gold set is included with --set gold or --set all. Its rows are graded by scripts/agentic_ask_score.mjs (deterministic, record-computed expectations) plus the generic grounding checks below."
+  },
+  "tools": {
+    "structured": ["count_speeches", "speech_trend", "find_people", "member_votes", "party_donations", "find_quotes", "electorates"],
+    "research": ["search", "read_passage"],
+    "terminal": ["finish", "answer"],
+    "note": "expected_tools is the ideal order. The loop may choose differently; the harness reports the trail against it (subsequence = pass, all present in another order = partial) but does not fold it into the grade."
+  },
+  "rubric": {
+    "usefulness": {
+      "pass": "Answered (no refusal or decline) and every part of the question is covered by a fact or a cited source.",
+      "partial": "Answered, but at least one part of the question has no fact or source behind it.",
+      "fail": "Refused, declined, empty, or no part covered."
+    },
+    "citations": {
+      "pass": "At least one cited source; every citation key resolves to a cited source; every sentence with a figure carries a citation; every quotation of 30+ characters and 6+ words is found verbatim in the evidence.",
+      "partial": "At least one cited source, but a figure sentence lacks a citation or a quotation cannot be found in the 600-character source window (ordinary payloads only carry windows).",
+      "fail": "No cited source, a citation key that resolves to nothing, or (when the evidence is complete fact text) a quotation that is not in the evidence."
+    },
+    "correctness": {
+      "pass": "Every must check passes; no figure or roster name in the answer is absent from the facts and sources; no causal donation wording.",
+      "partial": "At least half of the must checks pass and nothing is invented, or a figure or name is missing only from a windowed snippet in a cited sentence.",
+      "fail": "An invented figure or name (absent from complete fact evidence, or in an uncited sentence), causal wording, or fewer than half of the must checks."
+    },
+    "overall": "fail if any axis fails; pass if all three pass; otherwise partial."
+  },
+  "defaults": {
+    "must_not": [
+      { "type": "unbound_figures", "why": "The model never writes figures: every number and amount must appear in the facts or cited sources." },
+      { "type": "unbound_names", "why": "No politician may be named unless a fact, cited source or the question names them." },
+      { "type": "causal", "why": "No causation wording beside donations, votes or speeches." },
+      { "type": "refusal", "why": "A refusal or decline is a usefulness fail unless the question expects one." }
+    ]
+  },
+  "questions": [
+    {
+      "id": "H01",
+      "kind": "multi_hop",
+      "shape": "ranking+vote",
+      "question": "Which party's senators spoke most about housing since 2022, and how did they vote on the HAFF bill?",
+      "old_route": "ranking",
+      "expected_tools": ["count_speeches", "member_votes", "finish"],
+      "must": [
+        { "part": "ranking", "type": "fact", "match": "^[A-Z][^:]+: \\d+ .*speech", "min": 2, "figure_in_answer": true, "why": "party rows with exact counts, and at least one count rendered" },
+        { "part": "ranking", "type": "mentions", "any": ["Labor", "Liberal", "Greens", "Nationals", "LNP", "Independent", "One Nation"], "why": "the leading party is named" },
+        { "part": "votes", "type": "fact", "match": "Housing Australia Future Fund", "min": 1, "why": "a division or bill record for the HAFF bill is in the facts" },
+        { "part": "votes", "type": "fact", "match": "divisions? .*(aye|no)", "min": 1, "figure_in_answer": true, "why": "a vote tally for the leading party, rendered in the answer" },
+        { "type": "period", "since": "2022", "why": "the period is inferred from the question, never chosen by the model" },
+        { "type": "caveat", "why": "the federal Hansard gap mid-2022 to mid-2025 must be stated" }
+      ],
+      "must_not": [],
+      "rubric": {
+        "usefulness": "pass: names the leading party with its Senate housing count and that party's recorded votes on HAFF divisions; partial: ranking only (the one-shot planner's ceiling) or votes only; fail: refusal or neither part.",
+        "citations": "pass: every count and tally cites a count link or division record; partial: a tally sentence lacks a citation; fail: no citations.",
+        "correctness": "pass: counts and tallies match the facts, period since 2022, coverage caveat present; fail: any figure or party absent from the facts, or a vote attributed to a party the facts do not cover."
+      }
+    },
+    {
+      "id": "H02",
+      "kind": "multi_hop",
+      "shape": "trend+leader",
+      "question": "How has the number of gambling speeches changed each year since 2015, and who led it?",
+      "old_route": "trend",
+      "expected_tools": ["speech_trend", "count_speeches", "finish"],
+      "must": [
+        { "part": "trend", "type": "fact", "match": "^\\d{4}: \\d+", "min": 8, "why": "one row per year from the trend tool" },
+        { "part": "trend", "type": "years", "from": 2015, "to": 2026, "min": 8, "why": "at least eight of the twelve years are rendered" },
+        { "part": "leader", "type": "fact", "match": "^[A-Z][^:]+: \\d+ .*speech", "min": 1, "figure_in_answer": true, "why": "a speaker row with an exact count, rendered" },
+        { "part": "leader", "type": "names", "min": 1, "why": "the leading speaker is a roster name bound to a fact" },
+        { "type": "period", "since": "2015" },
+        { "type": "caveat", "why": "the window crosses the federal gap" }
+      ],
+      "must_not": [],
+      "rubric": {
+        "usefulness": "pass: a year-by-year series since 2015 and the leading speaker with a count; partial: the series without a leader (the planner's usual result) or a leader without the series; fail: refusal.",
+        "citations": "pass: year rows and the leader cite reproducible count links; fail: none.",
+        "correctness": "pass: every year figure and the leader's count match the facts, no invented peak or percentage; fail: a figure not in the facts."
+      }
+    },
+    {
+      "id": "H03",
+      "kind": "multi_hop",
+      "shape": "comparison",
+      "question": "Compare how often Labor and the Greens spoke about climate change in the Senate since 2022, and who was each party's most frequent speaker.",
+      "old_route": "comparison",
+      "expected_tools": ["count_speeches", "count_speeches", "count_speeches", "finish"],
+      "must": [
+        { "part": "parties", "type": "mentions", "all": ["Labor", "Greens"], "why": "both parties named" },
+        { "part": "parties", "type": "fact", "match": "^(Labor|Greens): \\d+ .*speech", "min": 2, "figure_in_answer": true, "why": "a count for each party, rendered" },
+        { "part": "leaders", "type": "names", "min": 2, "why": "a leading senator for each party, bound to a fact" },
+        { "type": "period", "since": "2022" },
+        { "type": "caveat" }
+      ],
+      "must_not": [],
+      "rubric": {
+        "usefulness": "pass: both party counts and a leading senator for each; partial: party counts only; fail: refusal or one party missing.",
+        "citations": "pass: every count cites a count link; fail: none.",
+        "correctness": "pass: counts match the facts and both named entities keep their own count (planRetainsNamedScope); fail: a party dropped from a count, or an invented name."
+      }
+    },
+    {
+      "id": "H04",
+      "kind": "multi_hop",
+      "shape": "votes+speeches",
+      "question": "How did Jacqui Lambie vote on gambling divisions, and what has she said about gambling in the Senate?",
+      "old_route": "ordinary",
+      "expected_tools": ["member_votes", "search", "read_passage", "answer"],
+      "must": [
+        { "part": "votes", "type": "fact", "match": "Jacqui Lambie .*divisions", "min": 1, "figure_in_answer": true, "why": "a vote tally from the divisions record, rendered" },
+        { "part": "said", "type": "sources", "min": 1, "kind": "speech", "speaker_any": ["Jacqui Lambie"], "why": "at least one cited Lambie speech" },
+        { "type": "mentions", "all": ["Jacqui Lambie"] },
+        { "type": "terms", "any": ["gambling", "gaming", "pokies", "poker machine", "wager", "betting"] }
+      ],
+      "must_not": [],
+      "rubric": {
+        "usefulness": "pass: a recorded-vote tally and cited speech evidence; partial: speeches only (today's ordinary Ask cannot read divisions) or votes only; fail: refusal.",
+        "citations": "pass: the tally cites division records and every quotation is verbatim in a cited speech; partial: a quotation outside the snippet window; fail: no citations or an invented quotation.",
+        "correctness": "pass: tally figures match the facts, speeches attributed to Lambie only; fail: a vote figure not in the facts or a position attributed without a source."
+      }
+    },
+    {
+      "id": "H05",
+      "kind": "multi_hop",
+      "shape": "money",
+      "question": "Which donors gave the most to the Nationals, and how many speeches about agriculture have Nationals MPs made since 2022?",
+      "old_route": "money",
+      "expected_tools": ["party_donations", "count_speeches", "finish"],
+      "must": [
+        { "part": "donors", "type": "fact", "match": "gave Nationals \\$", "min": 1, "amount_in_answer": true, "why": "disclosed donor rows with amounts, one rendered" },
+        { "part": "speeches", "type": "fact", "match": "\\d+ .*speech.*agricultur", "min": 1, "figure_in_answer": true, "why": "the Nationals' agriculture count, rendered" },
+        { "type": "mentions", "all": ["Nationals"] },
+        { "type": "period", "since": "2022" },
+        { "type": "caveat" }
+      ],
+      "must_not": [],
+      "rubric": {
+        "usefulness": "pass: named donors with amounts and the speech count; partial: one of the two; fail: refusal.",
+        "citations": "pass: donor rows cite return references or the party money page, the count cites a count link; fail: none.",
+        "correctness": "pass: amounts and count match the facts, donors spelt as disclosed, no causal wording; fail: an amount not in the facts, a donor not in the facts, or any suggestion the money bought the speeches."
+      }
+    },
+    {
+      "id": "H06",
+      "kind": "multi_hop",
+      "shape": "ranking+vote",
+      "question": "Which Greens senator spoke most about gambling since 2022, and how did they vote on the Interactive Gambling Amendment (Gambling Reform) Bill 2026?",
+      "old_route": "ranking",
+      "expected_tools": ["count_speeches", "member_votes", "finish"],
+      "must": [
+        { "part": "ranking", "type": "fact", "match": "^[A-Z][^:]+: \\d+ .*speech", "min": 1, "figure_in_answer": true, "why": "a speaker row with an exact count, rendered" },
+        { "part": "ranking", "type": "names", "min": 1, "why": "the leading senator is a roster name bound to a fact" },
+        { "part": "vote", "type": "fact", "match": "voted in \\d+ divisions .*Gambling", "min": 1, "figure_in_answer": true, "why": "that senator's tally on divisions titled with the bill, rendered" },
+        { "type": "period", "since": "2022" },
+        { "type": "caveat" }
+      ],
+      "must_not": [],
+      "rubric": {
+        "usefulness": "pass: the leading Greens senator with a count and their aye/no tally on the bill's divisions; partial: ranking only; fail: refusal or a non-Greens leader.",
+        "citations": "pass: count link and division records cited; fail: none.",
+        "correctness": "pass: the count and tally match the facts, the vote belongs to the same senator the ranking named; fail: a tally for a different person or an invented figure."
+      }
+    },
+    {
+      "id": "Q01",
+      "kind": "qualitative",
+      "shape": "what-has-x-said",
+      "question": "What has Andrew Wilkie said about poker machine reform?",
+      "old_route": "ordinary",
+      "expected_tools": ["search", "read_passage", "answer"],
+      "must": [
+        { "part": "said", "type": "sources", "min": 2, "kind": "speech", "speaker_any": ["Andrew Wilkie"], "why": "at least two cited Wilkie speeches" },
+        { "part": "said", "type": "mentions", "all": ["Andrew Wilkie"] },
+        { "type": "terms", "any": ["poker", "pokies", "gaming machine", "gambling"] }
+      ],
+      "must_not": [],
+      "rubric": {
+        "usefulness": "pass: a grounded account of his positions with at least two cited speeches; partial: one speech or a vague summary; fail: refusal.",
+        "citations": "pass: every quotation verbatim in a cited passage, claims cited; partial: a quotation outside the window; fail: none or invented.",
+        "correctness": "pass: nothing attributed that the cited passages do not say, no figures beyond the passages; fail: an invented figure, date or name."
+      }
+    },
+    {
+      "id": "Q02",
+      "kind": "qualitative",
+      "shape": "position-over-time",
+      "question": "How has Penny Wong's position on recognising a Palestinian state changed over time?",
+      "old_route": "ordinary",
+      "expected_tools": ["search", "read_passage", "search", "answer"],
+      "must": [
+        { "part": "position", "type": "sources", "min": 2, "speaker_any": ["Penny Wong"], "why": "at least two cited Wong records" },
+        { "part": "over_time", "type": "sources", "min": 2, "speaker_any": ["Penny Wong"], "years_span_min": 2, "why": "cited records at least two years apart" },
+        { "type": "mentions", "all": ["Penny Wong"] },
+        { "type": "terms", "any": ["Palestin"] }
+      ],
+      "must_not": [],
+      "rubric": {
+        "usefulness": "pass: an evidenced sequence of what she said, dated, across at least two years; partial: a single-period position; fail: refusal or the evidence-gap reply when the record holds speeches.",
+        "citations": "pass: each dated statement cites a Wong record and quotations are verbatim; partial: a quotation outside the window; fail: none.",
+        "correctness": "pass: dates and statements match the cited records, the position verifiers accept it; fail: a statement attributed without a record or a change asserted the records do not show."
+      }
+    },
+    {
+      "id": "Q03",
+      "kind": "qualitative",
+      "shape": "party-comparison",
+      "question": "How do Labor and the Coalition differ on nuclear power?",
+      "old_route": "ordinary",
+      "expected_tools": ["search", "search", "read_passage", "answer"],
+      "must": [
+        { "part": "labor", "type": "mentions", "all": ["Labor"] },
+        { "part": "coalition", "type": "mentions", "any": ["Coalition", "Liberal", "Nationals"] },
+        { "part": "evidence", "type": "sources", "min": 2, "distinct_speakers_min": 2, "why": "cited speeches from at least two speakers" },
+        { "type": "source_parties", "groups": [["Labor"], ["Liberal", "Nationals", "LNP"]], "why": "cited speakers from both sides (soft: unknown when the sources carry no speaker)" },
+        { "type": "terms", "any": ["nuclear"] }
+      ],
+      "must_not": [],
+      "rubric": {
+        "usefulness": "pass: each side's position with cited speeches from that side; partial: one side evidenced; fail: refusal.",
+        "citations": "pass: claims cited to speeches by the party they describe; fail: none.",
+        "correctness": "pass: positions match what the cited speakers said, party labels correct; fail: a position attributed to the wrong party or an invented name."
+      }
+    },
+    {
+      "id": "Q04",
+      "kind": "qualitative",
+      "shape": "bill-position",
+      "question": "What did David Pocock say about the Interactive Gambling Amendment (Gambling Reform) Bill 2026?",
+      "old_route": "ordinary",
+      "expected_tools": ["search", "read_passage", "answer"],
+      "must": [
+        { "part": "said", "type": "sources", "min": 1, "kind": "speech", "speaker_any": ["David Pocock"], "date_from": "2026-01-01", "why": "a cited 2026 Pocock speech" },
+        { "type": "mentions", "all": ["David Pocock"] },
+        { "type": "terms", "any": ["gambling", "wager", "betting"] }
+      ],
+      "must_not": [],
+      "rubric": {
+        "usefulness": "pass: what he argued on the bill with a cited 2026 speech; partial: general gambling remarks from other years; fail: refusal.",
+        "citations": "pass: quotations verbatim in cited 2026 speeches; partial: outside the window; fail: none.",
+        "correctness": "pass: statements match the cited speech; fail: an invented amendment, vote or figure."
+      }
+    },
+    {
+      "id": "Q05",
+      "kind": "qualitative",
+      "shape": "position-over-time",
+      "question": "How has Barnaby Joyce talked about climate change over the years?",
+      "old_route": "ordinary",
+      "expected_tools": ["search", "read_passage", "search", "answer"],
+      "must": [
+        { "part": "said", "type": "sources", "min": 2, "speaker_any": ["Barnaby Joyce"] },
+        { "part": "over_years", "type": "sources", "min": 2, "speaker_any": ["Barnaby Joyce"], "years_span_min": 3, "why": "cited records at least three years apart" },
+        { "type": "mentions", "all": ["Barnaby Joyce"] },
+        { "type": "terms", "any": ["climate", "emission", "net zero", "carbon"] }
+      ],
+      "must_not": [],
+      "rubric": {
+        "usefulness": "pass: a dated account across several years with cited speeches; partial: one period; fail: refusal.",
+        "citations": "pass: each dated statement cites a Joyce speech, quotations verbatim; fail: none.",
+        "correctness": "pass: nothing beyond the cited speeches; fail: invented figures or statements."
+      }
+    },
+    {
+      "id": "Q06",
+      "kind": "qualitative",
+      "shape": "party-comparison",
+      "question": "How do the Greens and One Nation differ on immigration?",
+      "old_route": "ordinary",
+      "expected_tools": ["search", "search", "read_passage", "answer"],
+      "must": [
+        { "part": "greens", "type": "mentions", "all": ["Greens"] },
+        { "part": "one_nation", "type": "mentions", "all": ["One Nation"] },
+        { "part": "evidence", "type": "sources", "min": 2, "distinct_speakers_min": 2 },
+        { "type": "source_parties", "groups": [["Greens"], ["One Nation"]] },
+        { "type": "terms", "any": ["immigra", "migra"] }
+      ],
+      "must_not": [],
+      "rubric": {
+        "usefulness": "pass: each party's position with cited speeches from its own members; partial: one side; fail: refusal.",
+        "citations": "pass: claims cited to the party's speakers; fail: none.",
+        "correctness": "pass: positions match the cited speeches; fail: a position attributed to the wrong party or an invented name."
+      }
+    },
+    {
+      "id": "Q07",
+      "kind": "qualitative",
+      "shape": "arguments-for-against",
+      "question": "What arguments have been made in the Senate for and against a ban on gambling advertising?",
+      "old_route": "ordinary",
+      "expected_tools": ["search", "read_passage", "read_passage", "answer"],
+      "must": [
+        { "part": "for_against", "type": "sources", "min": 2, "distinct_speakers_min": 2, "why": "at least two speakers cited" },
+        { "type": "terms", "any": ["advertis"] }
+      ],
+      "must_not": [],
+      "rubric": {
+        "usefulness": "pass: arguments on both sides, each cited to a Senate speaker; partial: one side; fail: refusal.",
+        "citations": "pass: every argument cited, quotations verbatim; fail: none.",
+        "correctness": "pass: arguments match the cited speeches and are attributed to the right speakers; fail: invented speakers or figures."
+      }
+    }
+  ]
+}
