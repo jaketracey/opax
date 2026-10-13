@@ -68,10 +68,10 @@ name: 14 About, coverage, privacy, then Sources and licences with source terms a
 - assertVisible: .*Hansard is reproduced under CC BY-NC-ND terms.*
 - scrollUntilVisible:
     element:
-      text: Copyright and disclaimer
+      text: "View original: Copyright and disclaimer"
     centerElement: true
     timeout: 90000
-- tapOn: Copyright and disclaimer
+- tapOn: "View original: Copyright and disclaimer"
 - assertVisible: https://www.aph.gov.au/Help/Disclaimer_Privacy_Copyright
 - takeScreenshot: ${EVIDENCE}/14-source-alert
 - tapOn: OK
