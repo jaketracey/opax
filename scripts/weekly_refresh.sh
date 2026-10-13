@@ -44,7 +44,7 @@ ALLOW_FAIL=",${OPAX_ALLOW_FAIL:-},"
 # exit 3 from these means the source refused to change the register (empty or shrunken upstream; for ipea, a
 # quarter whose data.gov.au licence changed): the last good rows are kept, so it is reported as stale, not failed
 # (periodic-refresh.md, exit codes)
-STALE_OK=",frl_acts,frl_instruments,x_instruments,qao_reports,x_audit,donations_qld,donations_vic,donations_tas,donations_apply,lobbyists_fetch,lobbyists_apply,fits_fetch,fits_apply,rosters_fetch,qld_contracts,ipea,x_people,"
+STALE_OK=",frl_acts,frl_instruments,x_instruments,qao_reports,qao_bodies,x_audit,donations_qld,donations_vic,donations_tas,donations_apply,lobbyists_fetch,lobbyists_apply,fits_fetch,fits_apply,rosters_fetch,qld_contracts,ipea,x_people,"
 
 # log, count, run_step, FAILED_STEPS, STEP_DELTA (shared with daily_refresh.sh)
 . "$REPO/scripts/lib/refresh_lib.sh"
@@ -85,12 +85,22 @@ log "===== weekly refresh start (groups: $*; timeout/step=$STEP_TIMEOUT, host=$(
 
 if [ "$want_weekly" = 1 ]; then
   # --- loaders ------------------------------------------------------------------------------------------
-  # QAO phase 1. Inert until merged with the first accepted catalogue.
+  # QAO phase 1. Phase 2 is inert until its loader and phase-2 catalogue are tracked.
   if [ -z "$(git ls-tree --name-only HEAD -- portal/public/audit 2>/dev/null)" ]; then
     log "[qao_reports/x_audit] SKIP: catalogue not yet tracked on main"
   elif run_step qao_reports "" "$PY" -m parli.ingest.qao_reports --quiet-hours; then
-    run_step x_audit "" "$EXPORT" dir portal/public/audit -- \
-      "$PY" scripts/export_audit.py
+    if git cat-file -e HEAD:parli/ingest/qao_bodies.py 2>/dev/null && \
+       git show HEAD:portal/public/audit/manifest.json | "$PY" -c 'import json,sys;sys.exit(json.load(sys.stdin).get("phase") != 2)'; then
+      if run_step qao_bodies "" "$PY" -m parli.ingest.qao_bodies --quiet-hours --with-html-run; then
+        run_step x_audit "" "$EXPORT" dir portal/public/audit -- \
+          "$PY" scripts/export_audit.py --snapshot scripts/state/qao/bodies.json
+      else
+        log "[x_audit] SKIP: QAO body acquisition held; last good export kept"
+      fi
+    else
+      run_step x_audit "" "$EXPORT" dir portal/public/audit -- \
+        "$PY" scripts/export_audit.py
+    fi
   else
     log "[x_audit] SKIP: QAO acquisition held; last good export kept"
   fi

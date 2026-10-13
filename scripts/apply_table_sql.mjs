@@ -17,9 +17,9 @@ for (const [i,file] of manifest.files.entries()) {
     const child=spawn(process.execPath,[portal+'node_modules/wrangler/bin/wrangler.js','d1','execute','opax-tables','--local','--file',dir+file],{cwd:portal,stdio:['ignore','pipe','pipe']});
     let diagnostic='';
     child.stdout.on('data',b=>{diagnostic+=b;});child.stderr.on('data',b=>{diagnostic+=b;});
-    child.on('error',()=>reject(new Error('Local SQL application failed')));child.on('close',code=>{
+    child.on('error',()=>reject(new Error('Local SQL application failed')));child.on('close',(code,signal)=>{
       if(code===0)resolve();else{
-        console.error(JSON.stringify({fileIndex:i,statementLimit:/too (?:large|long)|length|100.*(?:kb|000)/i.test(diagnostic),syntax:/syntax/i.test(diagnostic),unique:/unique/i.test(diagnostic),errorCodes:[...diagnostic.matchAll(/\b(?:SQLITE_[A-Z_]+|D1_[A-Z_]+|ERR_[A-Z_]+)\b/g)].map(m=>m[0])}));
+        console.error(JSON.stringify({fileIndex:i,exitCode:code,signal,runtime:/runtime|Miniflare/i.test(diagnostic),memory:/memory|ENOMEM|heap/i.test(diagnostic),locked:/locked|busy/i.test(diagnostic),statementLimit:/too (?:large|long)|length|100.*(?:kb|000)/i.test(diagnostic),syntax:/syntax/i.test(diagnostic),unique:/unique/i.test(diagnostic),errorCodes:[...diagnostic.matchAll(/\b(?:SQLITE_[A-Z_]+|D1_[A-Z_]+|ERR_[A-Z_]+)\b/g)].map(m=>m[0])}));
         reject(new Error('Local SQL application failed'));
       }
     });

@@ -1,4 +1,4 @@
-import {applyQuery, dataTableHTML, guardTableURL, mountDataTable, parseQuery} from './datatable.js?v=a16bcc4d46';
+import {applyQuery, dataTableHTML, guardTableURL, mountDataTable, parseQuery} from './datatable.js?v=ed019b2532';
 import {isOrganisationDonor} from './donor-entity.js?v=ebb2c972d5';
 import {privacyTexts,privacyCSVFields} from './datatable-privacy-fields.js?v=7a6c85a822';
 import {queryValues} from './datatable-query.js?v=91898b0c1f';
@@ -29,8 +29,9 @@ export function auditTableConfig(records, privacyCheck, privacyRowCheck = privac
     columnsVisible:['title','tabled_date','sectors','entities'],
     columns:[{key:'title',label:'Title',type:'text',primary:true},{key:'tabled_date',label:'Tabled',type:'date'},
       {key:'sectors',label:'Sector',type:'category',facet:'multi'},{key:'entities',label:'Entities',type:'text',facet:'multi'},
-      {key:'year',label:'Report year',type:'year',facet:'range'}],
-    rows:records.map(row=>({id:row.id,title:row.title,tabled_date:date(row.tabled_date),year:Number(String(row.year).slice(0,4)) || null,sectors:categoryMembers(row.sectors),entities:row.entities})),
+      {key:'year',label:'Report year',type:'year',facet:'range'},
+      {key:'responses',label:'Has entity responses',type:'category',facet:'multi'}],
+    rows:records.map(row=>({id:row.id,title:row.title,tabled_date:date(row.tabled_date),year:Number(String(row.year).slice(0,4)) || null,sectors:categoryMembers(row.sectors),entities:row.entities,responses:row.has_responses || Number(row.response_count)>0 ? 'Yes':'No'})),
     primaryLink:row=>/^qao-\d{4}(?:-\d{2})?-\d+$/.test(String(row.id)) ? `/audit/${row.id}` : null};
 }
 
@@ -119,7 +120,7 @@ export function registerTableHTML(config, query, requestURL) {
 export function mountRegisterTable(el, config) {
   if (['instruments','audit'].includes(config.urlKey)) {
     const url=new URL(el.ownerDocument.defaultView.location.href),query=registerTableQuery(url.searchParams,config);
-    config={...config,initialQuery:query,initialQueryKeys:['q','portfolio','type','status','sector','entity','year']};
+    config={...config,initialQuery:query,initialQueryKeys:['q','portfolio','type','status','sector','entity','year','responses']};
   }
   return mountDataTable(el,config);
 }
@@ -162,6 +163,9 @@ export function registerTableQuery(params,config) {
  const aliases=config.urlKey==='instruments'?{portfolio:'portfolios',type:'type',status:'status'}:{sector:'sectors',entity:'entities'};
  for(const [legacy,column] of Object.entries(aliases))if(params.get(legacy) && !query.filters?.[column]){
   query.filters ||= {};query.filters[column]=[params.get(legacy)==='unknown'?'Not supplied':params.get(legacy)];
+ }
+ if(config.urlKey==='audit' && params.get('responses')==='yes' && !query.filters?.responses){
+  query.filters ||= {};query.filters.responses=['Yes'];
  }
  if(params.get('year') && !query.filters?.year){
   const value=params.get('year');query.filters ||= {};

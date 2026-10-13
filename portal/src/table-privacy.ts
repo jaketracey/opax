@@ -2,6 +2,25 @@ import {compileHashedIdentityCheck,csvIdentityCheck} from './table-identity-hash
 
 const indices = new WeakMap<Fetcher, Map<string, Promise<(text: string) => boolean>>>()
 const readers = new WeakMap<(path:string)=>Promise<unknown>, Fetcher>()
+const readChecks = new WeakMap<(path:string)=>Promise<unknown>, Promise<(text:string)=>boolean>>()
+/** Cache repeated reader checks against the same strict shared query guard. */
+export function tablePrivacyCheckFromRead(read:(path:string)=>Promise<unknown>):Promise<(text:string)=>boolean> {
+  let pending=readChecks.get(read)
+  if (!pending) {
+    pending=tablePrivacyCheckFrom(read).then(check=>{
+      const results=new Map<string,boolean>()
+      return text=>{
+        if (results.has(text)) return results.get(text)!
+        const safe=check(text)
+        if (results.size>=256) results.clear()
+        results.set(text,safe)
+        return safe
+      }
+    })
+    readChecks.set(read,pending)
+  }
+  return pending
+}
 /** Readers use the same complete registry and query/row policy as the worker. */
 export function tablePrivacyCheckFrom(read:(path:string)=>Promise<unknown>, mode: 'query' | 'row' = 'query'):Promise<(text:string)=>boolean> {
   let assets=readers.get(read)

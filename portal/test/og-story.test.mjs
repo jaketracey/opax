@@ -15,7 +15,7 @@ import { encode, decode } from 'jpeg-js';
 
 const portal = new URL('../', import.meta.url);
 const built = await build({ entryPoints: [new URL('src/og.ts', portal).pathname], bundle: true, write: false, platform: 'node', format: 'esm' });
-const { storySlideTree, OG_FONT_FILES, PORTRAIT_WIDTH, PORTRAIT_HEIGHT } = await import('data:text/javascript;base64,' + Buffer.from(built.outputFiles[0].text).toString('base64'));
+const { storySlideTree, portraitTree, cardTree, OG_FONT_FILES, PORTRAIT_WIDTH, PORTRAIT_HEIGHT } = await import('data:text/javascript;base64,' + Buffer.from(built.outputFiles[0].text).toString('base64'));
 const storyMod = await build({ entryPoints: [new URL('src/story.ts', portal).pathname], bundle: true, write: false, platform: 'node', format: 'esm' });
 const { validStory, photosFor, photoFor, STORY_VERSION } = await import('data:text/javascript;base64,' + Buffer.from(storyMod.outputFiles[0].text).toString('base64'));
 
@@ -46,7 +46,7 @@ const slides = {
   timeline: { type: 'timeline', kicker: 'How it moved', title: 'Fifty-five days', lines: [], events: [{ date: '2 Jul 2026', text: 'Introduced in the House of Representatives' }, { date: '26 Aug 2026', text: 'Royal Assent · Act C2026A00069' }], alt: 'How it moved.' },
   division: { type: 'division', kicker: 'The only recorded division', title: 'Limiting debate, 34 to 26', ayes: 34, noes: 26, ayeParties: [['Labor', 24], ['Greens', 9], ['Independent', 1]], noParties: [['Liberal', 19], ['LNP', 3], ['One Nation', 3], ['Nationals', 1]], line: 'Senate, 20 Aug 2026. Party split from They Vote For You.', alt: 'The division.' },
   list: { type: 'list', kicker: 'What it does', title: 'In three sentences', items: ['The bill would create a legal framework for regulating cash distribution services in Australia.', 'The ACCC and the RBA would administer the framework.', 'The bill would commence the day after Royal Assent.'], note: 'Written by a model from the explanatory memorandum; not the record.', alt: 'What it does.' },
-  source: { type: 'source', kicker: 'Check it', title: 'Every figure links to its record', rows: ['GrantConnect award GA34203, Department of Finance, CC BY 3.0 AU', 'A published award value, not evidence of payments received'], url: 'opax.com.au/money/grants', path: 'federal → recipient ABN 97 694 995 462 → award GA34203', alt: 'Check it.' },
+  source: { type: 'source', kicker: 'Check it', title: 'Every figure links to its record', rows: ['GrantConnect award GA34203, Department of Finance, CC BY 3.0 AU', 'A published award value, not evidence of payments received'], url: 'opax.com.au/money/grants/federal/recipient/abn:97694995462?award=GA34203', alt: 'Check it.' },
 };
 
 // Flatten an element tree in document order; children are a string, one element or an array.
@@ -88,7 +88,7 @@ test('the cover draws the photograph as a full-width band with the credit and a 
   assert.ok(texts(withInset).some(t => t.includes('Portrait: Parliament of Australia')), 'both credits');
 });
 
-test('the number slide sets the figure at the card statistic size; the ledger and source clip long text on a word', () => {
+test('the number slide sets the figure at the card statistic size; the ledger clips long text on a word', () => {
   const number = storySlideTree(slides.number);
   const value = walk(number).find(n => n.props?.children === '$11.3m');
   assert.equal(value.props.style.fontSize, 176); assert.equal(value.props.style.color, '#D9A84A');
@@ -96,10 +96,80 @@ test('the number slide sets the figure at the card statistic size; the ledger an
   const c2 = texts(ledger).find(t => t.startsWith('Protecting National'));
   assert.ok(c2.endsWith('…'), 'a long description is clipped to two lines');
   assert.ok(texts(ledger).includes('$11,729,541'));
-  const source = storySlideTree(slides.source);
-  const path = texts(source).find(t => t.startsWith('federal'));
-  assert.ok(!path.includes('→'), 'no arrow glyph: the faces do not carry one'); assert.ok(path.includes(' · '));
-  assert.ok(images(source).some(n => n.props.width === 240 && n.props.style.position === 'absolute'), 'the engraving watermark');
+});
+
+// The address lines on a closing slide: bronze, bold, tracked, in document order.
+const ctaLines = tree => walk(tree).filter(n => n.props?.style?.color === '#D9A84A' && n.props.style.fontWeight === 700 && n.props.style.letterSpacing === '0.01em' && typeof n.props.children === 'string');
+
+test('the closing slide is the page address alone: no path line under it, no wordmark below it', () => {
+  // A slide stored before STORY_VERSION 3 still carries the path the old drawing set in grey; it is not drawn.
+  const legacy = { ...slides.source, url: 'opax.com.au/money/grants', path: 'federal → recipient ABN 97 694 995 462 → award GA34203' };
+  for (const format of ['feed', 'story']) for (const slide of [slides.source, legacy]) {
+    const tree = storySlideTree(slide, {}, format);
+    const lines = ctaLines(tree);
+    assert.equal(lines.map(n => n.props.children).join(''), slide.url, `${format}: the full address is drawn, in order`);
+    assert.ok(!texts(tree).some(t => t.includes('federal ·') || t.includes('→') || t === slide.path), `${format}: no grey path line`);
+    assert.ok(!texts(tree).includes('OPAX.COM.AU'), `${format}: no footer wordmark (the address carries the domain)`);
+    const top = [].concat(tree.props.children).filter(n => n && typeof n === 'object');
+    assert.ok(!texts(top.at(-1)).includes('OPAX.COM.AU') && ctaLines(top.at(-1)).length, `${format}: the slide ends on the address`);
+    assert.ok(images(tree).some(n => n.props.width === 240 && n.props.style.position === 'absolute' && n.props.style.bottom === 64 + (format === 'story' ? 250 : 0)), `${format}: the engraving keeps the corner the wordmark held`);
+    assert.ok(walk(tree).some(n => n.props?.style?.width === 120 && n.props.style.height === 1), `${format}: the short accent rule above the address stays`);
+  }
+  // Every carousel kind's address: broken only after a "/" or before a "?" or "&", never inside a name, and never smaller than 34px.
+  for (const url of ['opax.com.au/subject/person/anthony-albanese', 'opax.com.au/subject/person/alex-example-3fa9c2d1', 'opax.com.au/bill/au-federal-r7537',
+    'opax.com.au/money/grants/federal/recipient/abn:97694995462?award=GA34203-A1', 'opax.com.au/money/grants?jur=federal&program=GO3202',
+    'opax.com.au/money/grants?jur=federal&largest=2026-09', 'opax.com.au/reports/climate']) {
+    const lines = ctaLines(storySlideTree({ ...slides.source, url })).map(n => n.props);
+    assert.equal(lines.map(p => p.children).join(''), url);
+    assert.ok(lines.length <= 3, `${url}: at most three lines`);
+    lines.slice(0, -1).forEach((p, i) => assert.ok(p.children.endsWith('/') || /^[?&]/.test(lines[i + 1].children), `${url}: breaks at a separator, not "${p.children}"`));
+    assert.ok(lines.every(p => p.style.fontSize >= 34 && p.style.fontSize === lines[0].style.fontSize), `${url}: one size, 34px or more`);
+  }
+});
+
+// A rule is a box no taller than a hairline band with a fill and nothing in it.
+const isRule = n => n.type === 'div' && !n.props.children && Number(n.props.style?.height) <= 8 && Boolean(n.props.style?.background);
+const counterText = el => texts(el).filter(t => /^\s*\d+\s*\/\s*\d+\s*$/.test(t));
+const MARK = /^data:image\/svg\+xml;utf8,.*viewBox%3D%220%200%20176%20160%22/;
+
+test('a slide carries the mark and nothing else up top: no counter, no header rule, no rule over the footer', () => {
+  // The run position the route once passed is ignored if a caller still sends it.
+  for (const format of ['feed', 'story']) for (const [name, slide] of Object.entries(slides)) {
+    const imgs = slide.type === 'cover' && slide.photo ? { photo, credit } : slide.type === 'picture' ? { photo, credit } : {};
+    const tree = storySlideTree(slide, { ...imgs, index: 2, total: 7 }, format);
+    assert.deepEqual(counterText(tree), [], `${name} (${format}) draws no "n / N" counter`);
+    const top = [].concat(tree.props.children).filter(n => n && typeof n === 'object');
+    assert.deepEqual(top.filter(isRule), [], `${name} (${format}) has no header or footer rule`);
+    const masthead = top.find(n => n.props.style?.position !== 'absolute' && n.type === 'div');
+    const mark = images(masthead).find(n => MARK.test(n.props.src));
+    assert.ok(mark, `${name} (${format}) keeps the logo`); assert.equal(mark.props.width, 110);
+    assert.deepEqual(texts(masthead), [], `${name} (${format}): the mark stands alone`);
+    const footer = top.at(-1);
+    // The closing slide ends on the page address instead (its own test below); every other slide keeps the wordmark footer.
+    if (slide.type !== 'source') assert.ok(texts(footer).includes('OPAX.COM.AU'), `${name} (${format}) ends on the wordmark`);
+    assert.equal(footer.props.style.borderTop, undefined, `${name} (${format}) footer has no top border`);
+  }
+  // The ledger's total no longer closes on a rule that read as the footer's border.
+  const total = walk(storySlideTree(slides.ledger)).find(n => texts(n).includes('$11,729,541') && n.props.style?.justifyContent === 'space-between');
+  assert.ok(total.props.style.borderTop, 'the total is still set off from the rows');
+  assert.equal(total.props.style.borderBottom, undefined, 'no rule under the total');
+});
+
+test('the share cards: the portrait card has no header rule or bronze band, and neither format draws a counter', () => {
+  const card = { kicker: 'Grant recipient', title: 'Fifteen awards, five departments', lines: ['15 awards in the record'], stat: { value: '$11.7m', label: 'in the record' } };
+  const portrait = portraitTree(card);
+  const top = [].concat(portrait.props.children).filter(n => n && typeof n === 'object');
+  assert.ok(images(top[0]).some(n => MARK.test(n.props.src)), 'the portrait card keeps the logo');
+  assert.ok(!isRule(top[1]), 'no rule under the portrait masthead');
+  assert.deepEqual(top.filter(isRule), [], 'no rule or band anywhere on the portrait card, the foot included');
+  const foot = top.at(-1);
+  assert.ok(texts(foot).includes('OPAX.COM.AU'), 'the portrait card ends on the wordmark');
+  assert.match(foot.props.style.padding, / 52px /, 'the foot takes the band\'s 8px, so the wordmark does not move');
+  assert.deepEqual(counterText(portrait), []);
+  const landscape = cardTree(card);
+  assert.deepEqual(counterText(landscape), [], 'the landscape card draws no counter');
+  const landscapeTop = [].concat(landscape.props.children).filter(n => n && typeof n === 'object');
+  assert.ok(isRule(landscapeTop.at(-1)) && landscapeTop.at(-1).props.style.height === 6, 'the landscape card keeps its bronze band');
 });
 
 test('validStory and the catalogue helpers guard what may be posted', () => {

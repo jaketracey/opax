@@ -121,3 +121,13 @@ links. No fields in the shared TypeScript contract change.
 - Optional `DataTableConfig.initialQueryKeys?: string[]` lists legacy URL keys to remove after the core validates every raw key/value occurrence on first mount. This lets `initialQuery` translate legacy filters without hiding duplicates or private values from the shared guard. Later navigation uses normal core URL state.
 
 `privacyFields?: string[]` optionally scopes row and CSV identity matching to explicitly person-bearing fields of institutional-document datasets. Query validation remains strict over all raw query keys and values. Omission of this field checks every row field.
+Division and voting rollout compatibility
+
+`DataTableConfig.rowPrivacyCheck?` remains an optional synchronous row predicate;
+true admits the source row shape. The shared registry still checks the whole row
+and every scalar before rows, facets, bars or chips are derived.
+
+The core consumes CSV continuation pages using the existing server CSV helper and
+preserves the final truncation record. Empty tables keep export disabled.
+Division and vote projections retain title/date/link and bill/sitting/person
+scopes through standard JSON-array filters. No additional contract fields.

@@ -311,8 +311,9 @@ export function cardTree(card: OgCard): El {
 //
 // Instagram's feed and grid are portrait (4:5), and the landscape card dropped
 // in there is cropped to its middle: half a title, no wordmark. This is the same
-// card stood upright, in the same register: masthead and rule at the top, the
-// wordmark footer and thick rule at the bottom, and between them the person's
+// card stood upright, in the same register: the masthead at the top, the
+// wordmark footer at the bottom (no rule or band, as on the carousel slides),
+// and between them the person's
 // portrait large and centred when there is one, the headline set big enough to
 // read as a grid thumbnail, and the statistic as the largest figure on the card.
 // The engraving is drawn only when a card has neither a portrait nor a
@@ -321,6 +322,12 @@ export function cardTree(card: OgCard): El {
 
 export const PORTRAIT_WIDTH = 1080
 export const PORTRAIT_HEIGHT = 1350
+
+/** Bump when the portrait card alone is redrawn: folded into its cache key only,
+ *  so the edge draws it afresh while every landscape og:image URL (OG_VERSION)
+ *  stays put. A posted card is Instagram's copy and is never fetched again.
+ *  1: no bronze band along the foot, to match the carousel slides. */
+export const PORTRAIT_VERSION = '1'
 
 export type OgFormat = 'landscape' | 'portrait'
 
@@ -348,7 +355,7 @@ export function portraitTree(card: OgCard): El {
 
   const masthead = h(
     'div',
-    { style: { display: 'flex', alignItems: 'center', padding: `56px ${P_PAD}px 0 ${P_PAD}px` } },
+    { style: { display: 'flex', alignItems: 'center', padding: `60px ${P_PAD}px 28px ${P_PAD}px` } },
     h('img', { src: MARK_URI, width: 88, height: 80 }),
     h(
       'div',
@@ -356,8 +363,6 @@ export function portraitTree(card: OgCard): El {
       'Open Parliamentary Accountability Exchange',
     ),
   )
-
-  const rule = h('div', { style: { height: 1, margin: `28px ${P_PAD}px 0 ${P_PAD}px`, background: P_RULE } })
 
   const photoSize = card.stat ? 400 : 480
   const picture = hasPortrait
@@ -444,7 +449,7 @@ export function portraitTree(card: OgCard): El {
       )
     : null
 
-  // Centred in the room between the rules; clipped there rather than into the footer.
+  // Centred in the room between masthead and footer; clipped there rather than into the footer.
   const body = h(
     'div',
     { style: { display: 'flex', flexDirection: 'column', flex: 1, alignItems: 'center', justifyContent: 'center', padding: `0 ${P_PAD}px`, overflow: 'hidden' } },
@@ -456,23 +461,20 @@ export function portraitTree(card: OgCard): El {
 
   const footer = h(
     'div',
-    { style: { display: 'flex', flexDirection: 'column', padding: `24px ${P_PAD}px 44px ${P_PAD}px` } },
+    // The foot is the old 44px plus the 8px band it replaces, so the wordmark stays where it was.
+    { style: { display: 'flex', flexDirection: 'column', padding: `24px ${P_PAD}px 52px ${P_PAD}px` } },
     h('div', { style: { fontFamily: SANS, fontSize: 28, fontWeight: 700, letterSpacing: card.authorisation ? 0 : '0.16em', color: BRONZE_BRIGHT } }, card.authorisation ? 'opax.com.au' : 'OPAX.COM.AU'),
     card.authorisation ? h('div', { style: { fontFamily: SANS, fontSize: 22, lineHeight: 1.4, color: SOFT, marginTop: 16 } }, card.authorisation) : null,
     card.sourceNotice ? h('div', { style: { fontFamily: SANS, fontSize: 22, lineHeight: 1.4, color: SOFT, marginTop: 16 } }, card.sourceNotice.label) : null,
     card.sourceNotice?.url ? h('div', { style: { fontFamily: SANS, fontSize: 18, lineHeight: 1.4, color: SOFT, marginTop: 4 } }, card.sourceNotice.url) : null,
   )
 
-  const bottomRule = h('div', { style: { height: 8, background: BRONZE } })
-
   return h(
     'div',
     { style: { display: 'flex', flexDirection: 'column', width: PORTRAIT_WIDTH, height: PORTRAIT_HEIGHT, background: NAVY, color: WHITE, fontFamily: SANS } },
     masthead,
-    rule,
     body,
     footer,
-    bottomRule,
   )
 }
 
@@ -486,8 +488,9 @@ export function ogLayout(format: OgFormat): { width: number; height: number; tre
 // --- the story: a daily edition as a carousel ---------------------------------------
 //
 // Nine slide types (src/story.ts), all 1080x1350 and all in the portrait card's
-// register: masthead and rule at the top, the wordmark footer and thick rule at
-// the bottom. The cover is the one photograph; every other slide is type on
+// register, without its rules: the mark alone at the top, the wordmark at the
+// foot, and nothing ruled between them and the slide (Instagram draws its own
+// place-in-the-run badge, so the slide carries no counter). The cover is the one photograph; every other slide is type on
 // navy, the way the portrait card is, so a carousel still reads as one account
 // mid-swipe. Photographs arrive as data: URIs already read by the caller; a
 // cover with none is drawn as the engraving card, so a story never fails for
@@ -500,9 +503,6 @@ export interface StoryImages {
   credit?: string | null
   inset?: string | null
   insetCredit?: string | null
-  /** This slide's place in the run, drawn opposite the mark as "2 / 7". */
-  index?: number | null
-  total?: number | null
 }
 
 const S_TITLE_SIZES = [140, 128, 116, 104, 92, 84, 76, 68, 60]
@@ -545,23 +545,17 @@ function fitStoryTitle(text: string, maxSize: number, maxLines: number): { size:
 /** A small chevron for the cover's "Swipe" cue: the sans has no arrow glyph. */
 const ARROW_URI = svgUri(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path d="M3 12h16M13 6l6 6-6 6" fill="none" stroke="${SOFT}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>`)
 
-/** The mark alone on the left (on a story the name is the account, not the masthead) and the slide's place in the run on the right. */
-function storyMasthead(images: StoryImages = {}): El {
-  const counter = images.index && images.total && images.total > 1
-    ? h('div', { style: { fontFamily: SERIF, fontSize: 44, lineHeight: 1, letterSpacing: '0.06em', color: SOFT, opacity: 0.85 } }, `${images.index} / ${images.total}`)
-    : null
+/** The mark alone, top left: on a story the name is the account, not the masthead. Its foot keeps the body clear of it, where the rule used to. */
+function storyMasthead(): El {
   return h(
     'div',
-    { style: { display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: `52px ${P_PAD}px 0 ${P_PAD}px` } },
+    { style: { display: 'flex', alignItems: 'center', padding: `64px ${P_PAD}px 32px ${P_PAD}px` } },
     h('img', { src: MARK_URI, width: 110, height: 100 }),
-    counter,
   )
 }
 
 /** A credit as the slide draws it: author and licence; the caption carries the "via Wikimedia Commons". */
 const slideCredit = (credit: string): string => credit.replace(/,?\s*via Wikimedia Commons/gi, '')
-
-const storyRule = (): El => h('div', { style: { height: 1, margin: `26px ${P_PAD}px 0 ${P_PAD}px`, background: P_RULE } })
 
 function storyFooter(credit?: string | null, swipe = false): El {
   const right = credit || swipe
@@ -575,7 +569,7 @@ function storyFooter(credit?: string | null, swipe = false): El {
     : null
   return h(
     'div',
-    { style: { display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', padding: `24px ${P_PAD}px 52px ${P_PAD}px` } },
+    { style: { display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', padding: `32px ${P_PAD}px 64px ${P_PAD}px` } },
     h('div', { style: { fontFamily: SANS, fontSize: 34, fontWeight: 700, letterSpacing: '0.18em', color: BRONZE_BRIGHT } }, 'OPAX.COM.AU'),
     right,
   )
@@ -604,15 +598,15 @@ function storyNote(text: string | null | undefined, centred = false): El | null 
   return t ? h('div', { style: { fontFamily: SANS, fontSize: S_NOTE, lineHeight: 1.4, color: SOFT, opacity: 0.85, marginTop: 40, width: P_TEXT_WIDTH, textAlign: centred ? 'center' : 'left' } }, clipToLines(t, P_TEXT_WIDTH, S_NOTE, SANS_EM, 3)) : null
 }
 
-/** The engraving as a watermark in the lower right, behind the type. */
-const storyEngraving = (width: number, opacity: number, g: StoryGeometry): El =>
-  h('img', { src: ENGRAVING_URI, width, height: Math.round(width * 164 / 180), style: { position: 'absolute', right: P_PAD, bottom: 112 + g.padBottom, opacity } })
+/** The engraving as a watermark in the lower right, behind the type; `bottom` clears the footer unless a slide has none. */
+const storyEngraving = (width: number, opacity: number, g: StoryGeometry, bottom = 124): El =>
+  h('img', { src: ENGRAVING_URI, width, height: Math.round(width * 164 / 180), style: { position: 'absolute', right: P_PAD, bottom: bottom + g.padBottom, opacity } })
 
-/** The body: the room between the rules, centred, clipped there rather than into the footer. */
-function storyBody(children: (El | null)[], opts: { centred?: boolean; end?: boolean } = {}): El {
+/** The body: the room between masthead and footer, centred, clipped there rather than into the footer. */
+function storyBody(children: (El | null)[], opts: { centred?: boolean; end?: boolean; foot?: number } = {}): El {
   return h(
     'div',
-    { style: { display: 'flex', flexDirection: 'column', flex: 1, alignItems: opts.centred ? 'center' : 'flex-start', justifyContent: opts.end ? 'flex-end' : 'center', padding: `0 ${P_PAD}px`, overflow: 'hidden' } },
+    { style: { display: 'flex', flexDirection: 'column', flex: 1, alignItems: opts.centred ? 'center' : 'flex-start', justifyContent: opts.end ? 'flex-end' : 'center', padding: `0 ${P_PAD}px ${opts.foot ?? 0}px ${P_PAD}px`, overflow: 'hidden' } },
     ...children,
   )
 }
@@ -637,8 +631,7 @@ function coverSlide(slide: Extract<StorySlide, { type: 'cover' }>, images: Story
   if (!photo) {
     // No approved photograph: the engraving card, as the portrait card draws it.
     return storyFrame(g, [
-      storyMasthead(images),
-      storyRule(),
+      storyMasthead(),
       storyBody([
         inset,
         storyKicker(slide.kicker),
@@ -660,7 +653,7 @@ function coverSlide(slide: Extract<StorySlide, { type: 'cover' }>, images: Story
   return storyFrame(g, [
     band,
     wash,
-    storyMasthead(images),
+    storyMasthead(),
     h(
       'div',
       { style: { display: 'flex', flexDirection: 'column', flex: 1, alignItems: 'flex-start', justifyContent: 'flex-end', padding: `0 ${P_PAD}px 24px ${P_PAD}px`, overflow: 'hidden' } },
@@ -677,8 +670,7 @@ function numberSlide(slide: Extract<StorySlide, { type: 'number' }>, images: Sto
   const value = storyText(slide.value)
   const valueSize = value.length > 12 ? 104 : value.length > 8 ? 132 : 176
   return storyFrame(g, [
-    storyMasthead(images),
-    storyRule(),
+    storyMasthead(),
     storyEngraving(340, 0.28, g),
     storyBody([
       storyKicker(slide.kicker),
@@ -712,8 +704,7 @@ function pictureSlide(slide: Extract<StorySlide, { type: 'picture' }>, images: S
     : h('div', { style: { height: images.photo ? 40 : 0 } })
   const quote = slide.quote ? storyText(slide.quote) : ''
   return storyFrame(g, [
-    storyMasthead(images),
-    storyRule(),
+    storyMasthead(),
     storyBody([
       frame,
       credit,
@@ -746,8 +737,7 @@ function barsSlide(slide: Extract<StorySlide, { type: 'bars' }>, images: StoryIm
     )
   })
   return storyFrame(g, [
-    storyMasthead(images),
-    storyRule(),
+    storyMasthead(),
     storyBody([
       storyKicker(slide.kicker),
       storyHeadline(slide.title, 92, 3),
@@ -774,14 +764,13 @@ function ledgerSlide(slide: Extract<StorySlide, { type: 'ledger' }>, images: Sto
   const total = slide.total
     ? h(
         'div',
-        { style: { display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', width: P_TEXT_WIDTH, paddingTop: 22, paddingBottom: 22, borderTop: `1px solid ${S_BRONZE_RULE}`, borderBottom: `1px solid ${S_BRONZE_RULE}`, fontFamily: SANS } },
+        { style: { display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', width: P_TEXT_WIDTH, paddingTop: 22, paddingBottom: 22, borderTop: `1px solid ${S_BRONZE_RULE}`, fontFamily: SANS } },
         h('div', { style: { fontSize: SIZE, color: SOFT } }, clipToLines(storyText(slide.total.label), P_TEXT_WIDTH - AMT - GAP, SIZE, SANS_EM, 1)),
         h('div', { style: { fontSize: 44, color: BRONZE_BRIGHT, fontWeight: 700, textAlign: 'right' } }, storyText(slide.total.amount)),
       )
     : null
   return storyFrame(g, [
-    storyMasthead(images),
-    storyRule(),
+    storyMasthead(),
     storyBody([
       storyKicker(slide.kicker),
       storyHeadline(slide.title, 92, 3),
@@ -804,8 +793,7 @@ function timelineSlide(slide: Extract<StorySlide, { type: 'timeline' }>, images:
     ),
   )
   return storyFrame(g, [
-    storyMasthead(images),
-    storyRule(),
+    storyMasthead(),
     storyBody([
       storyKicker(slide.kicker),
       storyHeadline(slide.title, 104, 3),
@@ -837,8 +825,7 @@ function divisionSlide(slide: Extract<StorySlide, { type: 'division' }>, images:
     )
   const ayeWidth = Math.round((P_TEXT_WIDTH - 4) * ayes / total)
   return storyFrame(g, [
-    storyMasthead(images),
-    storyRule(),
+    storyMasthead(),
     storyBody([
       storyKicker(slide.kicker),
       storyHeadline(slide.title, 92, 3),
@@ -866,8 +853,7 @@ function listSlide(slide: Extract<StorySlide, { type: 'list' }>, images: StoryIm
     ),
   )
   return storyFrame(g, [
-    storyMasthead(images),
-    storyRule(),
+    storyMasthead(),
     storyBody([
       storyKicker(slide.kicker),
       storyHeadline(slide.title, 92, 3),
@@ -878,18 +864,54 @@ function listSlide(slide: Extract<StorySlide, { type: 'list' }>, images: StoryIm
   ])
 }
 
+/** Public Sans Bold advance widths, per 1000 em, for the characters an address uses (measured from
+ *  public-sans-latin-700-normal.woff). Digits run wide (0.65 em) and slashes narrow, so a flat
+ *  per-character estimate either wastes the line or lets satori break it somewhere of its own choosing. */
+const CTA_ADVANCE: Record<string, number> = {
+  a: 567, b: 609, c: 547, d: 609, e: 577, f: 397, g: 629, h: 593, i: 267, j: 289, k: 580, l: 329, m: 896,
+  n: 593, o: 576, p: 607, q: 607, r: 412, s: 527, t: 417, u: 595, v: 521, w: 789, x: 588, y: 563, z: 497,
+  0: 645, 1: 428, 2: 635, 3: 665, 4: 656, 5: 675, 6: 661, 7: 626, 8: 671, 9: 659,
+  '.': 270, '/': 381, ':': 270, '?': 535, '&': 784, '=': 589, '-': 393, '_': 553, '%': 939,
+}
+/** A line's width at `size`, with the 0.01em tracking it is set with and 3% to spare; capitals and anything unlisted count as an M-ish 0.8 em. */
+const ctaWidth = (line: string, size: number): number =>
+  [...line].reduce((w, c) => w + (CTA_ADVANCE[c] ?? 800) / 1000 + 0.01, 0) * size * 1.03
+
+/** An address in lines no wider than the call to action, broken only after a "/" or before a "?" or "&": never inside a name. */
+function ctaLines(url: string, size: number): string[] {
+  const lines: string[] = []
+  for (const part of url.split(/(?<=\/)|(?=[?&])/)) {
+    const last = lines.length - 1
+    if (last >= 0 && ctaWidth(lines[last] + part, size) <= S_CTA_WIDTH) lines[last] += part
+    else lines.push(part)
+  }
+  return lines
+}
+
+/** The largest size that sets the address on one line (48px at least), else two (40px), else three (34px). */
+function fitCta(url: string): { size: number; lines: string[] } {
+  for (const [rows, max, min] of [[1, 64, 48], [2, 56, 40], [3, 56, 34]]) {
+    for (let size = max; size >= min; size -= 2) {
+      const lines = ctaLines(url, size)
+      if (lines.length <= rows && lines.every((l) => ctaWidth(l, size) <= S_CTA_WIDTH)) return { size, lines }
+    }
+  }
+  return { size: 34, lines: ctaLines(url, 34) }
+}
+
 function sourceSlide(slide: Extract<StorySlide, { type: 'source' }>, images: StoryImages, g: StoryGeometry): El {
-  // The address is the largest type on the slide and must never break mid-path:
-  // sized to one line on a bold-width estimate (0.6em a character), 40px at least.
+  // The page's address closes the run, the last thing on the slide: no path under
+  // it and no wordmark below (the address carries the domain). It never breaks
+  // inside a name or a slug.
   const url = storyText(slide.url)
-  const urlSize = Math.max(40, Math.min(64, Math.floor(S_CTA_WIDTH / (Math.max(1, url.length) * 0.6))))
+  const cta = fitCta(url)
   const rows = slide.rows.slice(0, 4).map((r) =>
     h('div', { style: { display: 'flex', width: P_TEXT_WIDTH, fontFamily: SANS, fontSize: 34, lineHeight: 1.35, color: WHITE, paddingTop: 18, paddingBottom: 18, borderTop: `1px solid ${S_SOFT_RULE}` } }, clipToLines(storyText(r), P_TEXT_WIDTH, 34, SANS_EM, 2)),
   )
+  // With no footer, the engraving drops to the corner the wordmark held and the body keeps the same foot as the masthead's head.
   return storyFrame(g, [
-    storyMasthead(images),
-    storyRule(),
-    storyEngraving(240, 0.38, g),
+    storyMasthead(),
+    storyEngraving(240, 0.38, g, 64),
     storyBody([
       storyKicker(slide.kicker),
       storyHeadline(slide.title, 92, 3),
@@ -899,11 +921,9 @@ function sourceSlide(slide: Extract<StorySlide, { type: 'source' }>, images: Sto
         'div',
         { style: { display: 'flex', flexDirection: 'column', width: S_CTA_WIDTH, marginTop: 52 } },
         h('div', { style: { width: 120, height: 1, background: P_RULE, marginBottom: 30 } }),
-        h('div', { style: { fontFamily: SANS, fontSize: urlSize, fontWeight: 700, lineHeight: 1.1, letterSpacing: '0.01em', color: BRONZE_BRIGHT, width: S_CTA_WIDTH } }, url),
-        h('div', { style: { fontFamily: SANS, fontSize: 34, lineHeight: 1.35, color: SOFT, marginTop: 14, width: S_CTA_WIDTH } }, clipToLines(storyText(slide.path), S_CTA_WIDTH, 34, SANS_EM, 2)),
+        ...cta.lines.map((line) => h('div', { style: { fontFamily: SANS, fontSize: cta.size, fontWeight: 700, lineHeight: 1.15, letterSpacing: '0.01em', color: BRONZE_BRIGHT, width: S_CTA_WIDTH } }, line)),
       ),
-    ]),
-    storyFooter(),
+    ], { foot: 112 }),
   ])
 }
 

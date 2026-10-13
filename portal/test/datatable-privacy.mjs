@@ -1,6 +1,6 @@
 // Shared rollout gate. Names are read at run time; failure messages contain counts only.
 import assert from 'node:assert/strict';
-import {readFile} from 'node:fs/promises';
+import {readFile,readdir} from 'node:fs/promises';
 import {createHash} from 'node:crypto';
 import {MONEY_GRAPHS,withheldPhrases,namesWithheldPhrase} from '../public/donor-entity.js';
 import {privacySourceGraphs} from '../../scripts/withhold_donor_assets.mjs';
@@ -12,7 +12,7 @@ import {privacyCSVFields} from '../public/datatable-privacy-fields.js';
 import {isOrganisationRecipient} from '../src/table-recipient.mjs';
 const read=async path=>JSON.parse(await readFile(new URL(`../public${path}`,import.meta.url),'utf8'));
 let pendingIndex;
-export async function tablePrivacyIndex() {
+export async function tablePrivacyIndex(_options = {}) {
  pendingIndex ||= (async()=>{
   const sharedSafe=await tablePrivacyCheckFrom(read),rowSafe=await tablePrivacyCheckFrom(read,'row'),blocked=value=>!sharedSafe(String(value));
   const approved=new Map();let approvedBytes=0;
@@ -28,17 +28,23 @@ export async function tablePrivacyIndex() {
     return true;
   };
   // Raw values are derived only for negative probes, never for the guard.
-  const policy=await registryIdentityIndex(),source=sourceTableDonorIdentities(),donors=[...new Set([...source.labels,...source.identifiers])],grantValues=new Set();
+  const policy=await registryIdentityIndex(),source=sourceTableDonorIdentities(),donors=[...new Set([...source.labels,...source.identifiers])],grantValues=new Set(),recipients=new Set(),recipientABNs=new Set();
+  const add=entity=>{
+    for(const value of [entity.label,entity.name,entity.n,entity.identity?.legal_name,entity.abr?.name,entity.abr?.legal_name,...(entity.aliases || []),...(entity.lookup_names || []),...[entity.id,entity.canonical_id].filter(id=>String(id || '').startsWith('person:')).map(id=>id.slice(7))])if(typeof value==='string'&&value.trim()){recipients.add(value);grantValues.add(value);}
+    for(const value of [entity.abn,entity.abr?.abn,...[entity.id,entity.canonical_id].filter(id=>/^(?:abn:)?\d{11}$/.test(String(id || '')))]){
+      const digits=String(value || '').replace(/\D/g,'');if(digits.length===11){recipientABNs.add(digits);grantValues.add(digits);}
+    }
+  };
   for(const jur of ['federal','qld']) {
    const graph=await read(`/graph/grants.${jur}.json`);
-   for(const recipient of graph.recipients.filter(r=>!isOrganisationRecipient(r)))for(const value of [recipient.n,...(recipient.aliases||[])])if(value)grantValues.add(value);
-   for(const sh of new Set(graph.recipients.map(r=>r.sh).filter(Number.isInteger)))for(const recipient of Object.values(await read(`/grants/${jur}/shard-${String(sh).padStart(2,'0')}.json`)))if(!isOrganisationRecipient(recipient))for(const value of [recipient.n,recipient.abn,recipient.abr?.abn,recipient.identity?.legal_name,recipient.abr?.name,...recipient.aliases || [],...recipient.lookup_names || []])if(value)grantValues.add(String(value));
+   for(const recipient of graph.recipients.filter(r=>!isOrganisationRecipient(r)))add(recipient);
+   for(const file of (await readdir(new URL(`../public/grants/${jur}/`,import.meta.url))).filter(f=>f.startsWith('shard-')&&f.endsWith('.json')))for(const recipient of Object.values(await read(`/grants/${jur}/${file}`)))if(!isOrganisationRecipient(recipient))add(recipient);
   }
   const roster=await read('/parliamentarians.json'),access=await read('/access.json');
   const exempt=withheldPhrases(privacySourceGraphs(),[...roster.people.flatMap(p=>[p.name,p.full||'']),...Object.values(access.ministers||{}).map(m=>m.name)]);
   const officeValues=source.labels.filter(value=>!namesWithheldPhrase(exempt,`donor receipts ${value}`) && !safe(value));
   const probes=[...new Set([...donors,...officeValues,...grantValues])].filter(value=>!safe(value));
-  return {safeRows:rowSafe,phrases:withheldPhrases(privacySourceGraphs(),[]),values:[...policy.phrases],safe,check:blocked,probes,grantProbes:[...grantValues].filter(value=>!safe(value)),officeProbes:officeValues};
+  return {safeRows:rowSafe,phrases:withheldPhrases(privacySourceGraphs(),[]),values:[...policy.phrases],donors:source.labels,recipients:[...recipients],recipientABNs:[...recipientABNs],abns:[...new Set([...source.identifiers,...recipientABNs])],safe,check:blocked,probes,grantProbes:[...grantValues].filter(value=>!safe(value)),officeProbes:officeValues};
  })();
  return pendingIndex;
 }

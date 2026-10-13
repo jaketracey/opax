@@ -27,8 +27,8 @@ import { honestFetch, USER_AGENT, pauseSource, runSource } from './lib/http.mjs'
  * (docs/PHOTOS.md, "Caches"). `--check` fails when one of those stamps is stale.
  */
 import { createHash } from 'node:crypto'
-import { readFileSync, writeFileSync, mkdirSync, readdirSync, unlinkSync } from 'node:fs'
-import { dirname, join, resolve } from 'node:path'
+import { readFileSync, writeFileSync, mkdirSync, readdirSync, unlinkSync, statSync } from 'node:fs'
+import { dirname, join, relative, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { buildSpaShell } from './build_spa_shell.mjs'
 import { buildMethods } from './build_methods.mjs'
@@ -38,7 +38,7 @@ const PUBLIC = join(ROOT, 'portal', 'public')
 const INDEX = join(PUBLIC, 'index.html')
 
 /** Assets referenced from index.html with a ?v= stamp. */
-const STAMPED = ['app.js', 'spa-shell.js', 'spa-entry.js', 'style.css', 'analytics.js', 'gtm.js', 'events.js', 'navigation.js', 'quick-search.js', 'voice.css', 'ui-controls.css', 'ui-source.css', 'ui-source.js', 'labels.js', 'register-tables.css', 'register-tables-entry.js']
+const STAMPED = ['app.js', 'spa-shell.js', 'spa-entry.js', 'style.css', 'analytics.js', 'gtm.js', 'events.js', 'navigation.js', 'quick-search.js', 'voice.css', 'ui-controls.css', 'ui-source.css', 'ui-source.js', 'labels.js', 'register-tables.css', 'register-tables-entry.js', 'vote-tables.js', 'vote-tables.css']
 
 const hashOf = (file) =>
   createHash('sha256').update(readFileSync(join(PUBLIC, file))).digest('hex').slice(0, 10)
@@ -142,6 +142,8 @@ export const MODULE_STAMPS = [
   ['datatable.js', 'donor-entity.js'],
   ['datatable-workbench.js', 'datatable.js'],
   ['register-tables.js', 'donor-entity.js'], ['register-tables.js', 'datatable.js'], ['register-tables.js', 'datatable-query.js'], ['register-tables.js', 'datatable-privacy-fields.js'], ['register-tables-entry.js', 'register-tables.js'], ['app.js', 'register-tables.js'],
+  ['datatable.js', 'server-csv.js'],
+  ['vote-tables.js', 'labels.js'], ['vote-tables.js', 'division-markdown.js'], ['vote-tables.js', 'datatable.js'],
   ['donor-views.js', 'donor-entity.js'], ['wordsdollars.js','donor-views.js'], ['quiz.js','donor-views.js'], ['ledger.js', 'donor-views.js'], ['home.js', 'donor-views.js'],
   ['ledger.js', 'donor-entity.js'], ['quiz.js', 'donor-entity.js'], ['money-journeys-data.js', 'donor-entity.js'], ['map-research.js','donor-entity.js'], ['map-research.js','donor-views.js'],
   ['datatable.js', 'donor-entity.js'], ['datatable.js', 'donor-views.js'],
@@ -168,26 +170,51 @@ export const MODULE_STAMPS = [
   ['map-page.js', 'money-map.js'], ['agencies.js', 'money-map.js'], ['suppliers.js', 'money-map.js'],
   ['thenvsnow.js', 'wombat.js'], ['thenvsnow.js', 'labels.js'], ['grant-recipient.js', 'grants.js'],
   ['electorates.js', 'labels.js'], ['home-data.js', 'labels.js'],
+  ['app.js', 'vote-tables.js'],
   ['app.js','donor-views.js'], ['app.js','map-research.js'],
   ['ask-person.js', 'labels.js'],
   ['app.js', 'canonical-urls.js'], ['app.js', 'growth-modules.js'], ['app.js', 'ask-person.js'], ['app.js', 'suppliers.js'],
   ['app.js', 'labels.js'], ['app.js', 'electorates.js'], ['app.js', 'division-markdown.js'], ['app.js', 'quiz.js'], ['app.js', 'timemachine.js'],
   ['app.js', 'sa-hansard.js'],
-  ['app.js', 'money-map.js'], ['app.js', 'explain.js'], ['app.js', 'grant-recipient.js'],
+  ['app.js', 'money-map.js'], ['app.js', 'grant-recipient.js'],
+  // /money/explain: the explainer, its stylesheet and the modules it reads.
+  ['app.js', 'money-explain.js'], ['money-explain.js', 'donor-views.js'],
+  ['money-explain.js', 'labels.js'], ['money-explain.js', 'canonical-urls.js'],
   // The Explore tools and the loaders, restyled on tokens in pass 4G.
   ['app.js', 'ballot.js'], ['app.js', 'grants.js'], ['app.js', 'ledger.js'], ['app.js', 'matrix.js'], ['app.js', 'wordsdollars.js'],
   ['app.js', 'thenvsnow.js'], ['app.js', 'statemap.js'], ['app.js', 'stages.js'], ['app.js', 'wombat.js'],
   ['home.js', 'home-data.js'], ['home.js', 'electorates.js'], ['home.js', 'money-map.js'],
 ]
 
-/** Write each MODULE_STAMPS module's content hash into its importer; returns the importers that were stale. */
+// Files stamped the same way that are not MODULE_STAMPS imports: a stylesheet
+// a script links itself, and a shared helper whose other importers stay
+// unstamped (identity-cache.test.mjs requires every importer of a
+// MODULE_STAMPS module to carry the stamp).
+const ASSET_STAMPS = [
+  ['money-explain.js', 'money-explain.css'], ['money-explain.js', 'format.js'], ['app.js', 'money-explain.css'],
+  ['wombat.js', 'loader.css'],
+]
+
+/** Write each MODULE_STAMPS module's content hash into its importer; returns the importers that were stale.
+ *  A write repeats until nothing changes, so a chain (app.js → module → its stylesheet) settles in one run. */
 function stampModules({ check }) {
+  if (check) return stampPass({ check })
+  const stale = new Set()
+  for (let pass = 0; pass < 4; pass++) {
+    const changed = stampPass({ check })
+    if (!changed.length) break
+    for (const file of changed) stale.add(file)
+  }
+  return [...stale]
+}
+function stampPass({ check }) {
   const stale = []
-  for (const importer of [...new Set(MODULE_STAMPS.map(([i]) => i))]) {
+  const stamps = [...ASSET_STAMPS, ...MODULE_STAMPS]
+  for (const importer of [...new Set(stamps.map(([i]) => i))]) {
     const path = join(PUBLIC, importer)
     const before = readFileSync(path, 'utf8')
     let after = before
-    for (const [, mod] of MODULE_STAMPS.filter(([i]) => i === importer)) {
+    for (const [, mod] of stamps.filter(([i]) => i === importer)) {
       // A site path or a relative one ("./labels.js": Node's tests resolve it too).
       const pattern = new RegExp(`(["'])(\\.?)/${mod.replace('.', '\\.')}(?:\\?v=[A-Za-z0-9._-]*)?\\1`, 'g')
       let hits = 0
@@ -218,6 +245,104 @@ function syncHomeChrome(html, shell) {
     html = html.replace(pattern, () => `<!-- site-${part}:start -->\n${content}\n<!-- site-${part}:end -->`)
   }
   return html
+}
+
+// --- immutable stamped modules ---------------------------------------------
+// A top-level module whose every reference carries ?v=<its content hash> only
+// ever reaches a browser under a URL that changes with its bytes, so _headers
+// can serve it immutable instead of the 300-second module default. One bare or
+// hand-versioned reference anywhere (a page, another module, a dev harness, a
+// tag the Worker writes) keeps it off the list, so a module that later gains
+// such a reference drops back to the default on the next stamp. Self-references
+// (usage comments) are not loads.
+
+const HEADERS = join(PUBLIC, '_headers')
+const HEADERS_BEGIN = '# --- stamped modules: generated by scripts/stamp_assets.mjs, do not edit ---'
+const HEADERS_END = '# --- end stamped modules ---'
+const SRC = join(ROOT, 'portal', 'src')
+const HEADER_RULE_LIMIT = 100
+// Local tools that are never a reader's page: .assetsignore keeps the workbench
+// off the deploy, and the *-test.html harnesses are opened by hand.
+const DEV_ONLY = /(?:^|\/)(?:[a-z]+-test\.html|ui-workbench\.[a-z]+|datatable-workbench[\w.-]*)$/
+
+const walkFiles = (dir) => readdirSync(dir, { withFileTypes: true })
+  .flatMap((e) => (e.isDirectory() ? walkFiles(join(dir, e.name)) : [join(dir, e.name)]))
+
+/** Every reference to each top-level .js/.css file: [file, [{from, stamp}]]. */
+export function moduleReferences(publicRoot = PUBLIC, srcRoot = SRC) {
+  const texts = [
+    ...walkFiles(publicRoot).filter((p) => /\.(?:html|js|mjs|css)$/.test(p)),
+    ...walkFiles(srcRoot).filter((p) => p.endsWith('.ts')),
+  ].map((p) => [relative(publicRoot, p), readFileSync(p, 'utf8')])
+  const files = readdirSync(publicRoot).filter((f) => /\.(?:js|css)$/.test(f) && statSync(join(publicRoot, f)).isFile())
+  return new Map(files.map((file) => {
+    // A path in quotes or parentheses: "/labels.js?v=…", './labels.js', url(/x.css).
+    // Not an attribute selector such as script[src^="/app.js"], which loads nothing.
+    const pattern = new RegExp(`(?<=["'\`(])(?<!\\^=["'])(?:\\.{0,2}/)+${file.replace(/\./g, '\\.')}(?:\\?v=([A-Za-z0-9._-]*))?(?=["'\`)\\s#?])`, 'g')
+    const refs = []
+    for (const [from, text] of texts) {
+      if (from === file) continue
+      for (const m of text.matchAll(pattern)) refs.push({ from, stamp: m[1] ?? null })
+    }
+    return [file, refs]
+  }))
+}
+
+/** Files every reference of which carries the current content hash. */
+export function immutableModules(publicRoot = PUBLIC, srcRoot = SRC) {
+  const hash = (f) => createHash('sha256').update(readFileSync(join(publicRoot, f))).digest('hex').slice(0, 10)
+  return [...moduleReferences(publicRoot, srcRoot)]
+    .filter(([file, refs]) => refs.length && refs.every((r) => r.stamp === hash(file)))
+    .map(([file]) => file)
+    .sort()
+}
+
+/** Single-file rules in the hand-written part of _headers that set immutable. */
+function handImmutable(headers) {
+  const hand = headers.replace(new RegExp(`${HEADERS_BEGIN}[\\s\\S]*?${HEADERS_END}\\n?`), '')
+  const out = []
+  let path = null
+  for (const line of hand.split('\n')) {
+    if (/^\//.test(line)) path = line.trim()
+    else if (path && /^\s+Cache-Control:.*immutable/i.test(line) && /^\/[\w.-]+\.(?:js|css)$/.test(path)) out.push(path.slice(1))
+  }
+  return out
+}
+
+/** Rewrite the generated block; returns true when it was stale. */
+function stampHeaders({ check }) {
+  const before = readFileSync(HEADERS, 'utf8')
+  const hand = new Set(handImmutable(before))
+  // A hand-written immutable rule is only safe while every reader-facing page
+  // loads the file stamped (map.html once loaded /ui-controls.css bare).
+  const refs = moduleReferences()
+  for (const file of hand) {
+    const bare = (refs.get(file) || []).filter((r) => !DEV_ONLY.test(r.from) && r.stamp !== hashOf(file))
+    if (bare.length) {
+      console.error(`stamp_assets: _headers serves /${file} immutable, but ${bare.map((r) => r.from).join(', ')} loads it without its content stamp.`)
+      process.exit(1)
+    }
+  }
+  const files = immutableModules().filter((f) => !hand.has(f) && !DEV_ONLY.test(f))
+  const block = [
+    HEADERS_BEGIN,
+    '# Each file here is referenced only as ?v=<content hash> (scripts/stamp_assets.mjs',
+    '# immutableModules), so a changed file is always a new URL.',
+    ...files.flatMap((f) => [`/${f}`, '  ! Cache-Control', '  Cache-Control: public, max-age=31536000, immutable']),
+    HEADERS_END,
+  ].join('\n')
+  const start = before.indexOf(HEADERS_BEGIN)
+  const end = before.indexOf(HEADERS_END)
+  if (start < 0 || end < 0) throw new Error('stamped-module markers missing from public/_headers')
+  const after = before.slice(0, start) + block + before.slice(end + HEADERS_END.length)
+  // Workers Assets reads at most 100 rules; past that the deploy fails or rules drop.
+  const rules = after.split('\n').filter((line) => /^\//.test(line)).length
+  if (rules > HEADER_RULE_LIMIT) {
+    console.error(`stamp_assets: public/_headers would hold ${rules} rules; Workers Assets allows ${HEADER_RULE_LIMIT}. Fold hand-written rules or stamp fewer modules.`)
+    process.exit(1)
+  }
+  if (!check && after !== before) writeFileSync(HEADERS, after)
+  return after !== before
 }
 
 function stamp({ check }) {
@@ -254,15 +379,28 @@ function stamp({ check }) {
   const homeBefore = readFileSync(homePath, 'utf8')
   const homeAfter = syncHomeChrome(homeBefore, after).replace(/\/(style\.css|ui-controls\.css|ui-source\.css|ui-source\.js|home\.css|home\.js|navigation\.js|quick-search\.js|analytics\.js|events\.js|gtm\.js)\?v=[A-Za-z0-9._-]*/g, (_, file) => `/${file}?v=${hashOf(file)}`)
   if (!check && homeAfter !== homeBefore) writeFileSync(homePath, homeAfter)
+  // /map is served from map.html. ui-controls.css is immutable, so a bare link
+  // there would keep a returning reader on an old stylesheet for a year.
+  const mapPath = join(PUBLIC, 'map.html')
+  const mapBefore = readFileSync(mapPath, 'utf8')
+  const mapAfter = mapBefore.replace(/\/(tokens\.css|ui-controls\.css|map-page\.js)(?:\?v=[A-Za-z0-9._-]*)?(?=")/g, (_, file) => `/${file}?v=${hashOf(file)}`)
+  if (!check && mapAfter !== mapBefore) writeFileSync(mapPath, mapAfter)
+  const pagesStale = staleModules.length || homeAfter !== homeBefore || after !== before || communityAfter !== communityBefore || workbenchAfter !== workbenchBefore || mapAfter !== mapBefore
+  if (check && pagesStale) {
+    console.error('stamp_assets: entry-page stamps or shared chrome are stale — run `node scripts/stamp_assets.mjs`.')
+    process.exit(1)
+  }
+  if (!check && after !== before) writeFileSync(INDEX, after)
+  // References are read from disk, so the immutable list follows the pages written above.
+  const headersStale = stampHeaders({ check })
   if (check) {
-    if (staleModules.length || homeAfter !== homeBefore || after !== before || communityAfter !== communityBefore || workbenchAfter !== workbenchBefore) {
-      console.error('stamp_assets: entry-page stamps or shared chrome are stale — run `node scripts/stamp_assets.mjs`.')
+    if (headersStale) {
+      console.error('stamp_assets: the stamped-module block in public/_headers is stale — run `node scripts/stamp_assets.mjs`.')
       process.exit(1)
     }
     console.log('stamp_assets: stamps are current.')
     return
   }
-  if (after !== before) writeFileSync(INDEX, after)
   for (const f of STAMPED) console.log(`  stamp ${f.padEnd(38)} v=${hashes[f]}`)
   console.log(after === before ? 'stamp_assets: already current.' : 'stamp_assets: index.html updated.')
 }

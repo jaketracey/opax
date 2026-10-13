@@ -111,7 +111,9 @@ Accepted values go through `writeItem`, exactly as a tick does: a fresh existing
 brief check, fresh classification merge, preservation of non-topic labels,
 read-back repair, and the historic short/name checks. Partial delivery is recorded
 per task; retries preserve earlier completed tasks. A 15-minute writer lease
-prevents overlapping delivery and live release. Backpressure retains paid results
+**per resource** prevents overlapping delivery and live release of that resource.
+`batch_items.rid` is the primary key and every lease update is scoped to `rid` and
+`run_id`; resources in the same run can write concurrently. Backpressure retains paid results
 for another write attempt. Active writer contention returns **423** with
 `lease_until`; the controller saves `retry_at`, retains the paid result, and retries
 the same delivery after expiry. It also defers cancellation until that lease
@@ -157,6 +159,106 @@ the lifetime ledger. No multi-host spend coordination is claimed. Default daily
 and lifetime caps are both US$3; raising either requires the orchestrator's run
 configuration. API keys and admin tokens are never stored in the spool.
 
+## Parallel delivery and its latency budget
+
+`OPAX_BATCH_DELIVERY_CONCURRENCY` controls delivery lanes, independently of
+`OPAX_BATCH_CONCURRENCY` (Anthropic batches in flight). Its default is **6**;
+only integers **1–12** are accepted. A lane owns one unit until its result and any
+cancel/release requests settle. Each eligible unit is attempted once per `step`;
+`retry-write` and dry results stay ready for a later step. Due `retry_at` values
+still gate result and cancellation requests.
+
+The controller's SQLite lock still covers the whole command. On an unexpected
+error the pool stops dispatching and drains every active lane before returning
+the error and releasing that lock. Saves remain synchronous: each settled unit
+writes the whole run to a temporary file, fsyncs, renames atomically and fsyncs
+the directory. Concurrent HTTP completions cannot overlap filesystem writes.
+Reconciliation on restart discovers writes whose acknowledgements were lost;
+the same paid payload is retained for incomplete units and idempotent replay.
+423 saves `retry_at` without releasing the paid result; 409 saves the release
+stage before cancellation and live release. Delivery does not alter submissions,
+receipts, spend reservations or the ledger.
+
+For a fresh unit with both tasks and nonempty topics, delivery is one admin HTTP
+request, **six sequential KB calls** and **six sequential D1 statements**, followed
+by one local atomic save. The steps are:
+
+| Operation | KB calls | KB latency at 150–300 ms/call |
+| --- | ---: | ---: |
+| Read full source, hash it and run unchanged validators | 1 | 150–300 ms |
+| Summary: fresh existing-brief read, then PATCH | 2 | 300–600 ms |
+| Topics: fresh basic read, merged PATCH, read-back | 3 | 450–900 ms |
+| Total before D1, HTTP and spool overhead | 6 | 900–1,800 ms |
+| Optional non-topic label repair | +1 | +150–300 ms |
+
+The D1 statements are owner read, queue read, resource lease acquisition, two
+task settlements and final job settlement. Validation and the historic name
+guard are local CPU work. `writeItem` uses the already-read full resource for its
+historic checks, while keeping its fresh summary/classification reads. Empty
+topics need no topic KB calls, so summary plus empty topics costs three KB calls;
+summary-only costs three, nonempty topics-only costs four. A completed replay
+costs two D1 reads and one basic KB read, with no PATCH or new lease.
+
+Preparation is separate from delivery: selection reads one full KB resource per
+candidate, and first-time reserve re-reads it (one more KB call, plus three D1
+statements: owner read, queue read and conditional insert). This does not repeat
+for ready paid results. Normal result delivery never repeats reservation.
+
+The live observation of about 18 results/minute is about 3.33 seconds per result.
+Six serial KB calls account for 0.9–1.8 seconds at the requested latency range;
+the remaining 1.53–2.43 seconds cannot be assigned precisely without live traces.
+It includes admin network time, D1 round trips, validation and durable saves.
+This is a code-based latency budget, not production profiling. At that observed
+per-result time, six independent lanes project about 6,480/hour and twelve about
+12,960/hour before shared KB contention/backpressure. The 6,000/hour target allows
+3.6 seconds per result with six lanes.
+
+The local benchmark runs the unchanged `src/index.ts` HTTP result route in
+Miniflare, real local D1 with migrations 0001–0004, and an invented KB whose every
+call waits 150, 225 or 300 ms. Each cell delivers 72 fresh summary/nonempty-topic
+results and fsyncs a 1,000-unit run after every result. It asserts six KB calls per
+result, every job done, and peak KB requests equal to the configured limit.
+Every outbound Worker fetch goes to the fixture; no production binding or API is
+used. Reproduce from `enrich/` with
+`node scripts/benchmark_delivery.ts batch-delivery-measurements.json`.
+
+Measured results per hour:
+
+| KB latency per call | 1 lane | 6 lanes (default) | 12 lanes |
+| --- | ---: | ---: | ---: |
+| 150 ms | 3,672 | 21,082 | 33,752 |
+| 225 ms | 2,527 | 14,719 | 25,625 |
+| 300 ms | 1,920 | 11,128 | 19,527 |
+
+Six lanes exceeded 6,000/hour at every tested KB latency. Raw durations and call
+counts are recorded in [batch-delivery-measurements.json](batch-delivery-measurements.json).
+These are delivery capacity measurements, not end-to-end production rates:
+generation/poll intervals, remote D1/network latency, KB ingestion/backpressure,
+repairs and validator fallbacks can lower the realised rate.
+
+### Switching a run already in flight
+
+This delivery change is **controller-only**. No worker deploy or D1 migration
+has to come first: the running batch route already has per-resource leases,
+idempotent results, reservation reads and 423 responses. The deployment steps
+below describe the original batch-path installation, not this switch-over.
+
+1. Have the driver stop gracefully at a loop boundary, after its current
+   `prepare`/`step` finishes and all active delivery lanes have drained. Wait for
+   the driver to exit before moving its worktree; never start a second driver.
+2. Move the desktop controller worktree to the approved delivery commit on
+   `data/enrich-batch-delivery`. Do not edit or recreate any existing run/receipt
+   files or the controller database.
+3. Restart the same driver with **the same `OPAX_BATCH_STATE_DIR`**, existing run
+   IDs, daily/lifetime caps, 1,000-unit batches and two-batch generation limit.
+   Set `OPAX_BATCH_DELIVERY_CONCURRENCY=6` (or leave it unset for that default).
+   Its normal `step` first reconciles reservations, then resumes paid results.
+4. Observe completed delivery counts and backpressure before raising to 12.
+   To return to serial delivery, restart at another loop boundary with
+   `OPAX_BATCH_DELIVERY_CONCURRENCY=1`; the spool and ledger remain compatible.
+   A hard crash remains recoverable; outstanding worker leases may defer the
+   same paid result until their saved expiry, up to 15 minutes.
+
 ## Projection and run plan
 
 The reference generation cost is the complete bake-off's US$0.099287225 per
@@ -185,12 +287,13 @@ guaranteed. Monitor both ledgers. At zero fallback, T2/T3 save about US$432
 against the pilot qwen3 reference; at 3% fallback, about US$416.
 
 Start with 1,000 eligible units per batch, two Anthropic batches in flight, and
-one controller. This means roughly 171 T1 initial batches, plus corrective batches
-only for rejected tasks. Poll/step every five minutes. For planning, allow
-30–60 minutes per initial/corrective batch and additional serial KB delivery time:
-roughly 4–8 days for T1; 16–32 days for T2 at the same settings. These are workload
-assumptions, not a measured SLA. Measure the first 1,000 units before increasing
-batch size or concurrency; the client supports up to 5,000 units and four active
+one controller with six delivery lanes. This means roughly 171 T1 initial batches,
+plus corrective batches only for rejected tasks. Poll/step every five minutes.
+For planning, allow 30–60 minutes per initial/corrective batch. At the delivery
+target of 6,000/hour, T1's delivery alone is about 28.5 hours, T2 about 123.5 hours;
+generation, polling and fallback time are additional. These are workload
+assumptions, not a measured SLA. Observe the first parallel 1,000-unit delivery
+before increasing concurrency; the client supports up to 5,000 units and four active
 batches, within the 250 MB conservative request limit and spend reservations.
 
 [Anthropic's batch documentation](https://platform.claude.com/docs/en/build-with-claude/batch-processing)
@@ -219,7 +322,8 @@ are discarded. If the POST is ambiguous, reconcile/adopt first.
    `ANTHROPIC_API_KEY` from `/home/jake/opax/.env`. Supply `OPAX_ENRICH_URL` and
    the existing `ENRICH_ADMIN_TOKEN` in the controller environment.
 4. Use a permanent `OPAX_BATCH_STATE_DIR`, `OPAX_BATCH_UNITS=1000`, and
-   `OPAX_BATCH_CONCURRENCY=2`. For the approved T1 run, configure an Anthropic
+   `OPAX_BATCH_CONCURRENCY=2`, and `OPAX_BATCH_DELIVERY_CONCURRENCY=6`.
+   For the approved T1 run, configure an Anthropic
    lifetime cap of US$20 and a daily cap such as US$10, then monitor qwen3 fallback
    separately. The lane's test defaults remain US$3. Subsequent tranches need an
    explicitly configured cumulative lifetime allowance; preserve the ledger.
@@ -228,7 +332,14 @@ are discarded. If the POST is ambiguous, reconcile/adopt first.
    done/released and its pending-batch count is zero. Prepare the next run when
    capacity permits. `status` prints only aggregate counts, run IDs and costs.
 
-Offline gates: 247 worker tests, `npx tsc --noEmit`, Wrangler deploy dry-run,
+Parallel-delivery gates: 252 tests, `npx tsc --noEmit`, Wrangler deploy dry-run.
+New fixtures cover bounded 1/6/12 delivery, concurrent 200/423/409 responses,
+failure draining, and SIGKILL during parallel delivery with an acknowledged write,
+a remotely committed write with its acknowledgement lost, and incomplete paid
+results. Restarting the real CLI with the same atomic spool proves lock recovery,
+no duplicate PATCH, retained paid results and unchanged spend reservations.
+
+Original batch-path gates: 247 worker tests, `npx tsc --noEmit`, Wrangler deploy dry-run,
 and 0/143 non-historic differences against `5bb21959`. The differential includes
 original queue fields, model requests, KB requests/resource hashes, spend, and
 tick counters, excluding added historic/batch metadata/counters and the hold

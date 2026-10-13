@@ -12,6 +12,8 @@ import * as registerTables from '../public/register-tables.js';
 import {supplierRecordsHTML,agencyGrantsHTML,publishedSupplierIndex} from '../public/supplier-growth.js';
 import {sourceLineHTML} from '../public/labels.js';
 import * as divisionMarkdown from '../public/division-markdown.js';
+import {tablePrivacyIndex} from './datatable-privacy.mjs';
+import * as voteTables from '../public/vote-tables.js';
 const app=readFileSync(new URL('../public/app.js',import.meta.url),'utf8');
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const decode=s=>s.replace(/&amp;/g,'&').replace(/&quot;/g,'"').replace(/&#39;/g,"'").replace(/&lt;/g,'<').replace(/&gt;/g,'>');
@@ -22,6 +24,8 @@ const questionsIn=html=>[
 const region=(start,end)=>app.slice(app.indexOf(start),app.indexOf(end,app.indexOf(start)));
 const excerptNoticeHTML=runInNewContext(region('function excerptNoticeHTML(', '// Categories and counts only:')+';excerptNoticeHTML',{esc,safeUrl:v=>v || ''});
 export async function* moduleOutputs(root,withheld,readAsset) {
+ const tableIndex=await tablePrivacyIndex();
+ const localVoteTables={...voteTables, divisionTableConfig:(params,caption,pageType)=>voteTables.divisionTableConfig(params,caption,pageType,tableIndex.safe), voteTableConfig:(person,caption)=>voteTables.voteTableConfig(person,caption,tableIndex.safe), mountVoteTables(){}};
  const cache=new Map();
  const read=async path=>{
   path=path.replace(/^\//,'');

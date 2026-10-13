@@ -8,6 +8,7 @@ import { SA_EXCERPT_LABEL, isSaHansard, saFullText, saOfficialUrl } from '../pub
 import { saPublicResponse, saEventPayload } from './sa-hansard'
 import { saEvidenceText, saEvidenceRecord, saGenerationResponse, saConversationInput } from './sa-evidence'
 import { divisionPlain } from '../public/division-markdown.js'
+import {guardTableURL, divisionTableConfig, voteTableConfig} from '../public/vote-tables.js'
 import { tableApi } from './table-api'
 import { runSocialPublication, socialStatus, socialEngagement, publicationCopy, previewPublication, todayRedirect, CHANNELS, type Channel } from './social-publication'
 import { positionEvidence, positionProposalQuote, positionEligibilityQuotes, positionCostQuote, isPositionEligibilityQuestion, isPositionCostQuestion, isPositionDetailQuestion, positionPointSupported, normalizePositionDraft } from './position-evidence'
@@ -52,12 +53,16 @@ import { isWitness, isUnattributed, belongsToScope, scopeFilter, speakerHref, sp
 import { ASK_PIPELINE_VERSION, EVIDENCE_GAP_ANSWER, isEvidenceGap, isPositionBody, guardPositionAnswer, FOOTNOTE_INSTRUCTIONS, legacyCitationsAsk, quoteRecoveryAsk, evidenceExcerpt, stripListingBoilerplate, FootnoteStream, normaliseFootnotes, originalContext, unsupportedQuotes, type AugmentedContext } from './ask-evidence'
 import { resolveAskScope, needsAskPeople, askRetrievalQuery, isNamedPositionQuestion, POSITION_GROUNDING, type AskScope } from './ask-scope'
 import { communityRoute } from './community'
+import { reviewerLoginEnabled } from './community-auth'
+import { operatorAuthorized } from './operator-auth'
 import { deliverReplyEmails, REPLY_EMAIL_CRON } from './community-notifications'
 import { partyUrl, personUrl, personNameKey } from '../public/canonical-urls.js'
 import { withholdIndividualDonors, foldDonorName } from '../public/donor-entity.js'
 import { donorWithheld, namesWithheldDonor, questionNamesWithheldDonor, withheldNameCheck, loadDonorIndex, WITHHELD_DONOR_REPLY } from './donor-index'
 import { canonicalPageRedirect } from './canonical-origin'
 import { pageEntry } from './page-entry'
+import { htmlValidator, notModified } from './html-etag'
+import { cacheKeyParams } from './cache-key'
 import { communityMcp } from './community-mcp'
 import { expireVoiceSessions, voiceRoute } from './voice'
 import { appEdition } from './app-edition'
@@ -77,14 +82,14 @@ import { shortDate, shortMoney as money } from '../public/format.js'
 
 import { SEARCH_SUMMARY_VERSION, SEARCH_SUMMARY_SYSTEM, summarySources, summaryPrompt, parseSearchSummary, summaryModelAnswer, summaryPointValidator, SummaryPointStream, quotedInOrder, type SearchSummary } from './search-summary'
 
-import { OG_FONT_FILES, OG_VERSION, homeCard, ogFormat, type OgCard } from './og'
+import { OG_FONT_FILES, OG_VERSION, PORTRAIT_VERSION, homeCard, ogFormat, type OgCard } from './og'
 import { renderOgPng, renderOgJpeg, type OgFont } from './og-render'
 // The story renderer is reached through the namespace: tests stub './og-render' with the two card renderers only.
 import * as storyRender from './og-render'
 import { personRole, personTitle, roleLine, billTitle } from './seo-titles'
 import { answerBlock, associationCaveat, crumbsHTML, panelPrerender, SERVER_PANELS, type Crumb, renderPersonAnswer, renderBillAnswer, renderDivisionAnswer, renderDirectory, renderSupplierAnswer, renderMoneyAnswer, type Division, type ReadAsset } from './seo-content'
 import { buildSchemaGraph, type PersonSchemaIdentity } from './seo-schema'
-import { photoFor, storyFrames, validStory, STORY_VERSION as STORY_SLIDES_VERSION, type PhotoCatalogue, type StoryFormat } from './story'
+import { photoFor, validStory, STORY_VERSION as STORY_SLIDES_VERSION, type PhotoCatalogue, type StoryFormat } from './story'
 
 interface FindParagraph {
   score: number
@@ -484,12 +489,7 @@ async function apiSearch(request: Request, url: URL, env: Env, ctx: ExecutionCon
   // Two keys. The page key carries page/per/sort so page 2 can never be served
   // from page 1's entry; the window key drops them so paging and re-sorting
   // inside one result set costs no upstream call and no rate-limit quota.
-  const keyParams = (drop: string[]) =>
-    new URLSearchParams(
-      [...url.searchParams.entries()]
-        .filter(([k]) => !drop.includes(k))
-        .sort(([a], [b]) => a.localeCompare(b)),
-    ).toString()
+  const keyParams = (drop: string[]) => cacheKeyParams(url.searchParams, drop)
   // Retire windows/pages containing the old unnormalized, character-cut snippets.
   const pageKey = cacheRequest('search', await sha256Hex(`${env.CACHE_EPOCH}\nyears-topics-v3-split-speakers-passage-v3\n${keyParams(['nocache'])}`))
   const windowKey = cacheRequest(
@@ -3434,6 +3434,12 @@ const STATIC_PAGES: Record<string, { title: string; description: string; query?:
     description: 'Who gives money to Australian political parties: every disclosed receipt by donor, party, industry and year, from AEC and state electoral commission returns.',
     query: true,
   },
+  // One flow explained from the disclosure data; the query names graph IDs and is
+  // never echoed here (a withheld donor's flow is rewritten client-side).
+  'money/explain': {
+    title: 'Explain a money flow · OPAX',
+    description: 'One disclosed flow of political money explained from the returns: how much, when, how it compares, and what the disclosure rules leave out.',
+  },
   'money/grants': {
     title: 'Who gets government grants · OPAX',
     description: 'Every published federal and Queensland grant award by recipient, program and electorate: which seats got the money, who held them, and which recipients also donate.',
@@ -3569,7 +3575,7 @@ function matchSeoRoute(url: URL): SeoRoute | null {
     return null
   }
   if (segs.length === 5 && dec[0] === 'money' && dec[1] === 'grants' && (dec[2] === 'federal' || dec[2] === 'qld') && dec[3] === 'recipient' && GRANT_RECIPIENT_ID_RE.test(dec[4])) return { kind: 'grant-recipient', jurisdiction: dec[2], id: dec[4] }
-  if (segs.length === 2 && dec[0] === 'money' && ['receipts', 'grants'].includes(dec[1])) return { kind: 'static', page: dec.join('/') }
+  if (segs.length === 2 && dec[0] === 'money' && ['receipts', 'grants', 'explain'].includes(dec[1])) return { kind: 'static', page: dec.join('/') }
   if (segs.length === 1 && dec[0] in STATIC_PAGES) return { kind: 'static', page: dec[0] }
   if (dec[0] === 'reports' && /^[a-z][a-z0-9-]*$/.test(dec[1] ?? '')) {
     // /reports/<slug> and its section deep links /reports/<slug>/s/<n>
@@ -4066,7 +4072,9 @@ async function buildRouteMeta(route: SeoRoute, url: URL, request: Request, env: 
         return base({title:page.title+' · OPAX',description:page.description,prerender:page.html,jsonLd:page.jsonLd,status:page.status,card:'card' in page ? page.card : null})
       }
       const people = route.hub === 'sitting' && route.id ? await loadPeople(env) : null
-      const page = await hubPage(route.hub,route.id,<T>(path: string) => assetJson<T>(env,path),people?.people || [],people?.slugOf || new Map(),undefined,env)
+      const check = await tablePrivacyCheck(env.ASSETS)
+      const query = guardTableURL(divisionTableConfig({},'Divisions','sitting',check),url).query
+      const page = await hubPage(route.hub,route.id,<T>(path: string) => assetJson<T>(env,path),people?.people || [],people?.slugOf || new Map(),undefined,env,query,check)
       return base({title:page.title+' · OPAX',description:page.description,prerender:page.html,jsonLd:page.jsonLd,status:page.status})
     }
     case 'audit': return base({ ...await auditPage(route.id, url, auditReader(env.ASSETS), prerenderBlock, route.id===null ? await tablePrivacyCheck(env.ASSETS) : undefined, route.id===null ? await tablePrivacyCheck(env.ASSETS,'row') : undefined),
@@ -4272,11 +4280,10 @@ async function buildMeta(route: SeoRoute, url: URL, request: Request, env: Env, 
     } else if (route.kind === 'bill') {
       const bill=await read<Parameters<typeof renderBillAnswer>[0]>(`/bills/${route.key}.json`).catch(()=>null)
       if(bill){
-        const recent=new Set([...(bill.divisions || [])].sort((a,b)=>String(b.date || '').localeCompare(String(a.date || ''))).slice(0,3).map(d=>d.key))
-        const summaries=await loadDivisionSummaries(env)
-        const divisions=await Promise.all((bill.divisions || []).map(async d=>({...d,...summaries.get(d.key.replace(/^division-/,'')),...(recent.has(d.key) ? await read<Division>(`/divisions/${d.key.startsWith('division-') ? d.key : `division-${d.key}`}.json`).catch(()=>null) : {})})))
         const related=await read<{bills:Parameters<typeof renderBillAnswer>[0][]}>('/bills/index.json')
-        meta.prerender=renderBillAnswer({...bill,divisions},people?.people || [],people?.slugOf || new Map(),related.bills).html;billIdentity={identifier:bill.key,status:bill.status}}
+        const check = await tablePrivacyCheck(env.ASSETS)
+        const query = guardTableURL(divisionTableConfig({bill:bill.key},undefined,undefined,check),url).query
+        meta.prerender=renderBillAnswer(bill,people?.people || [],people?.slugOf || new Map(),related.bills,query,check).html;billIdentity={identifier:bill.key,status:bill.status}}
     } else if(route.kind==='subject' && route.dir==='supplier') {
       const content=await renderSupplierAnswer(meta.canonical.split('/').at(-1)!,read)
       if(content) meta.prerender=content.html
@@ -5182,7 +5189,8 @@ async function serveSeoPage(route: SeoRoute, url: URL, request: Request, env: En
     originalQuery.size ? tablePrivacyCheck(env.ASSETS).then(safe=>scrubQuery(originalQuery,safe,null).noindex) : false,
   ])
   if (!shell.ok) return shell
-  const tableState = [...url.searchParams.keys()].some(key=>/^(?:instruments|audit|interests|partyMoney(?:AEC|ECQ|VEC)?)\./.test(key))
+  const tableKey = route.kind === 'bill' || route.kind === 'hub' && route.hub === 'sitting' ? 'dv' : route.kind === 'subject' && route.dir === 'person' ? 'vr' : null
+  const tableState = [...url.searchParams.keys()].some(key=>/^(?:instruments|audit|interests|partyMoney(?:AEC|ECQ|VEC)?)\./.test(key)) || Boolean(tableKey && [...url.searchParams].some(([key,value])=>key.startsWith(tableKey+'.') && value !== ''))
   const noindex = meta.noindex || meta.status >= 400 || originalQueryNoindex || originalTableState || tableState || (['/ask', '/search'].includes(url.pathname.replace(/\/+$/, '')) && Boolean(url.search))
   // Election coverage names unavailable grants, but renders no financial records.
   // Its renderer owns any future caveat alongside an actual political money pairing.
@@ -5238,6 +5246,12 @@ async function serveSeoPage(route: SeoRoute, url: URL, request: Request, env: En
   headers.delete('content-length')
   headers.set('content-type', 'text/html; charset=utf-8')
   headers.set('x-robots-tag', noindex ? 'noindex' : 'all')
+  if (meta.status === 200) {
+    const etag = await htmlValidator([env.CF_VERSION_METADATA?.id ?? '', shell.headers.get('etag'), route.kind, noindex, image, imageAlt, meta])
+    headers.set('etag', etag)
+    const unchanged = notModified(request, etag, headers)
+    if (unchanged) return unchanged
+  }
   return new Response(request.method === 'HEAD' ? null : out.body, { status: meta.status, headers })
 }
 
@@ -5250,7 +5264,8 @@ async function serveSeoPage(route: SeoRoute, url: URL, request: Request, env: En
 // landscape); the answer carries `x-opax-format: portrait` so the publisher can
 // tell it from a landscape card. Rasterised in wasm (src/og-render.ts),
 // so a MISS costs a few hundred milliseconds of CPU; the result is held in the
-// edge cache for a day under CACHE_EPOCH and OG_VERSION, and a limiter stands in
+// edge cache for a day under CACHE_EPOCH and OG_VERSION (a portrait card also
+// under PORTRAIT_VERSION, its own drawing's), and a limiter stands in
 // front of the MISS path. Whatever cannot be drawn (unknown page, KB down, a
 // render error) is answered with the static home card, never an error: a link
 // preview with no picture is the one outcome to avoid.
@@ -5353,10 +5368,8 @@ async function serveStorySlide(url: URL, request: Request, env: Env, ctx: Execut
       storyImage(env, insetId ? `/photos/jpg/${insetId}.jpg` : null),
       loadOgFonts(env),
     ])
-    // A story frame counts itself among the frames that post, not among every slide.
-    const frames = format === 'story' ? storyFrames(post.slides) : null
-    const images = { photo: photoUri, credit: photoUri ? photo?.credit ?? null : null, inset: insetUri, insetCredit: insetUri && slide.type === 'cover' ? slide.insetCredit ?? null : null,
-      index: frames ? (frames.includes(n) ? frames.indexOf(n) + 1 : null) : n, total: frames ? frames.length : post.slides.length }
+    // No place-in-the-run counter: Instagram badges a carousel and a story with its own.
+    const images = { photo: photoUri, credit: photoUri ? photo?.credit ?? null : null, inset: insetUri, insetCredit: insetUri && slide.type === 'cover' ? slide.insetCredit ?? null : null }
     const jpeg = await storyRender.renderStoryJpeg(slide, images, fonts, format)
     const res = new Response(jpeg, {
       headers: {
@@ -5408,7 +5421,8 @@ async function serveOgImage(url: URL, request: Request, env: Env, ctx: Execution
   const portrait = format === 'portrait'
   const variants = new URLSearchParams()
   for (const [k, v] of cardQuery) variants.set(k, v)
-  if (portrait) variants.set('format', format)
+  // The portrait card carries its own drawing version, so redrawing it never moves a landscape card's key.
+  if (portrait) { variants.set('format', format); variants.set('pv', PORTRAIT_VERSION) }
   const cacheKey = cacheRequest('og', `${encodeURIComponent(env.CACHE_EPOCH)}/sa-full-${saFullText(env.SA_HANSARD_FULL_TEXT)}/${OG_VERSION}/${m[2]}${pagePath}?${variants}`)
   const pageUrl = new URL(`${SITE_ORIGIN}${pagePath}`)
   for (const [k, v] of cardQuery) pageUrl.searchParams.set(k, v)
@@ -5764,8 +5778,7 @@ async function route(
         // An operator's read of what the platforms report for the account and
         // the latest editions (docs/INSIGHTS.md). Bearer-guarded like the run
         // route; cached ten minutes because every platform read is metered.
-        const secret = env.DAILY_POST_OPERATOR_SECRET
-        if (!secret || request.headers.get('authorization') !== `Bearer ${secret}`) return json({ error: 'operator secret required' }, 401)
+        if (!await operatorAuthorized(request, env)) return json({ error: 'operator secret required' }, 401)
         const key = 'daily-post:engagement'
         const cached = url.searchParams.has('fresh') ? null : await env.GENERATION_CACHE.get(key)
         const result = cached ? JSON.parse(cached) as unknown : await socialEngagement(env)
@@ -5779,8 +5792,7 @@ async function route(
         // subject such as grant:GA34203@abn:97694995462) under a journal date
         // and deliver it to chosen channels, or dry-run it. Bearer-guarded by
         // DAILY_POST_OPERATOR_SECRET; the journal prevents double delivery.
-        const secret = env.DAILY_POST_OPERATOR_SECRET
-        if (!secret || request.headers.get('authorization') !== `Bearer ${secret}`) return json({ error: 'operator secret required' }, 401)
+        if (!await operatorAuthorized(request, env)) return json({ error: 'operator secret required' }, 401)
         const body = await readJsonBody(request)
         if (body instanceof Response) return body
         const v = body.value as Record<string, unknown>
@@ -5914,6 +5926,17 @@ export default {
     if (url.pathname === '/api/table/privacy') return withSecurityHeaders(await tablePrivacy(request, env.ASSETS), url)
     const isApi = url.pathname.startsWith('/api/')
     const communityResponse = (response: Response) => { const secured = withSecurityHeaders(response, url); if (env.STAGING_API) secured.headers.set('x-robots-tag', 'noindex, nofollow'); return secured }
+    if (url.pathname === '/api/ops/reviewer-login') {
+      // Same bearer guard as daily-post engagement/run; always local, including staging.
+      const response = !await operatorAuthorized(request, env)
+        ? json({ error: 'operator secret required' }, 401)
+        : request.method !== 'GET'
+          ? json({ error: 'Use GET for reviewer login status.' }, 405)
+          : json({ reviewer_login_enabled: reviewerLoginEnabled(env) })
+      response.headers.set('cache-control', 'no-store')
+      if (response.status === 405) response.headers.set('allow', 'GET')
+      return communityResponse(response)
+    }
     if (url.pathname === '/api/display-policy' && request.method === 'GET') return communityResponse(new Response(JSON.stringify({SA_HANSARD_FULL_TEXT:saFullText(env.SA_HANSARD_FULL_TEXT) ? 'true' : 'false'}), {headers:{'content-type':'application/json','cache-control':'no-store'}}))
     if (url.pathname === '/table-index' || url.pathname.startsWith('/table-index/')) return communityResponse(new Response(null, {status:404,headers:{'cache-control':'no-store','x-robots-tag':'noindex'}}))
     if (url.pathname.startsWith('/api/table/')) return communityResponse(await tableApi(request, env, ctx))
@@ -5927,7 +5950,9 @@ export default {
       const facts=await renderMoneyAnswer('Money map',<T>(path:string)=>assetJson<T>(env,path))
       const schema=JSON.stringify(buildSchemaGraph({canonical:`${SITE_ORIGIN}/map`,title:'Money map · OPAX'})).replace(/</g,'\\u003c')
       const out=new HTMLRewriter().on('div#crawl-facts',{element(el){el.setInnerContent(facts.html,{html:true})}}).on('head',{element(el){el.append(`<script type="application/ld+json" id="ld-page">${schema}</script>`,{html:true})}}).transform(shell)
-      return communityResponse(new Response(request.method==='HEAD' ? null : out.body,out))
+      const headers=new Headers(out.headers);headers.delete('content-length')
+      if(shell.ok){const etag=await htmlValidator([env.CF_VERSION_METADATA?.id ?? '',shell.headers.get('etag'),facts.html,schema]);headers.set('etag',etag);const unchanged=notModified(request,etag,headers);if(unchanged)return communityResponse(unchanged)}
+      return communityResponse(new Response(request.method==='HEAD' ? null : out.body,{status:out.status,headers}))
     }
     const entry = await pageEntry(request, env.ASSETS)
     if (entry) {
@@ -5935,7 +5960,12 @@ export default {
       if(entry.status===200 && url.pathname==='/') {
         const schema=JSON.stringify(buildSchemaGraph({canonical:`${SITE_ORIGIN}/`,title:SITE_TITLE,description:SITE_DESCRIPTION})).replace(/</g,'\\u003c')
         const money=await renderMoneyAnswer('Public money',<T>(path:string)=>assetJson<T>(env,path)).catch(()=>null)
-        return communityResponse(new HTMLRewriter().on('div#hp-money-map',{element(el){if(money)el.setInnerContent(money.html.replace('id="prerender"','id="prerender-money"').replace('<h1>','<h2>').replace('</h1>','</h2>'),{html:true})}}).on('head',{element(el){el.append(`<script type="application/ld+json" id="ld-page">${schema}</script>`,{html:true})}}).transform(entry))
+        const moneyHtml=money ? money.html.replace('id="prerender"','id="prerender-money"').replace('<h1>','<h2>').replace('</h1>','</h2>') : null
+        const out=new HTMLRewriter().on('div#hp-money-map',{element(el){if(moneyHtml)el.setInnerContent(moneyHtml,{html:true})}}).on('head',{element(el){el.append(`<script type="application/ld+json" id="ld-page">${schema}</script>`,{html:true})}}).transform(entry)
+        const headers=new Headers(out.headers);headers.delete('content-length')
+        const etag=await htmlValidator([env.CF_VERSION_METADATA?.id ?? '',entry.headers.get('etag'),moneyHtml,schema]);headers.set('etag',etag)
+        const unchanged=notModified(request,etag,headers)
+        return communityResponse(unchanged || new Response(request.method==='HEAD' ? null : out.body,{status:out.status,headers}))
       }
       return communityResponse(entry)
     }

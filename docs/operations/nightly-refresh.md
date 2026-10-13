@@ -977,3 +977,45 @@ reload (`donations.py` deletes every source's rows unless `--no-clear`; see `doc
 grant research, bill texts and other one-off research builds, and any source that needs a browser or a licence gate. The
 manifest's hand-kept sections describe those and are left alone. `docs/operations/2026-09-21-corpus-refresh.md` is the
 last full manual refresh.
+
+**QAO phase 2 (`data/qao-phase2`).** The weekly `audit` group runs the body
+loader only when both `parli/ingest/qao_bodies.py` and a phase-2 audit manifest
+are tracked in HEAD. It stays inert on phase-1 main until this lane is merged.
+After successful HTML acquisition, `qao_bodies --quiet-hours --with-html-run` verifies the
+live listing, fetches newly tabled full PDFs, and reuses hash-checked local text
+receipts. It reads document imprints and third-party notices before any body
+projection; document terms govern PDF material. HTML recommendations retain the
+separate report-page CC BY 4.0 grant and original two page exceptions. Existing
+rights holds remain held. There is no OCR, model, database or remote KB client.
+Any missing report, empty catalogue, source refusal, challenge, incomplete
+acquisition or body-stage failure preserves the last accepted export. The
+body loader rejects **any** loss of accepted report IDs; its request transport
+counts each retry, uses at least two seconds between requests, observes robots,
+and backs off on 429/5xx. The body step reconciles the preceding HTML run receipt
+and uses only the remaining allowance, so both steps together stay within 800
+requests. The locked Python dependency `pymupdf==1.28.2` supplies text-layer and
+redaction-geometry inspection; the standard `uv sync --frozen` installs it.
+
+Reviewed recommendations carry `html` or `pdf p.N` provenance; simultaneous
+HTML/PDF differences are receipts, never silently merged. Responses are
+separate public-body source records with PDF page ranges and explicit-only
+recommendation links. Their chunks are read on report details; the directory
+uses only a boolean. `validate_data.py audit` checks phase 1 or 2, the
+**150 files / 30,000,000 bytes** ceiling, body and response counts, response
+identity, source pages and permitted fields. `export_step.sh dir` retains its
+keep-if-unchanged behavior. The group owns only `portal/public/audit`.
+The exporter applies the shared donor publication boundary before writing assets.
+Filtered metadata titles and HTML recommendation text are marked. PDF donor-text
+holds stay local to PDF material; they do not suppress cleared HTML pages.
+PDF source text stays held if the boundary would change it.
+
+Full PDFs are temporary files in ignored `staging/pdfs/`. Text receipts remain
+in `scripts/state/qao/pdf-text/`, with document and extracted-text SHA-256s.
+The local reviewed snapshot is `scripts/state/qao/bodies.json`. KB resource
+JSONL is staged in `staging/kb/qao-bodies.jsonl` with `counts.json`, then retained
+under `scripts/state/qao/kb/` before temporary PDF cleanup. Neither weekly
+refresh nor this loader uploads KB documents; the orchestrator reviews and
+publishes authorised units separately. With the current document-level
+rights holds, the KB JSONL is empty. Full body publication requires clearance
+of those specific report terms first; the website's CC BY 4.0 policy alone
+does not clear them.

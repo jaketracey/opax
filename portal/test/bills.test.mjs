@@ -15,7 +15,7 @@ assert.ok(existsSync(billsDir), `${billsDir} exists`);
 
 const INDEX_KEYS = [
   "key", "title", "short_title", "jurisdiction", "parliament", "introduced",
-  "originating_house", "status", "status_as_of", "sponsor", "sponsor_party",
+  "originating_house", "status", "status_as_of", "sponsor", "sponsor_party", "sponsor_person_id",
   "portfolio", "has_summary", "summary_version", "divisions", "speeches", "acts",
 ];
 const BILL_KEYS = [
@@ -61,6 +61,7 @@ for (const file of files) {
 
   const row = indexByKey.get(doc.key);
   assert.ok(row, `${where} is listed in index.json`);
+  assert.equal(row.sponsor_person_id, doc.sponsor_person_id, `${where} sponsor identity agrees with the index`);
   assert.equal(row.divisions, doc.divisions.length, `${where} division count agrees with the index`);
   assert.equal(row.speeches, doc.speeches.length, `${where} speech count agrees with the index`);
   assert.equal(row.acts, doc.acts.length, `${where} act count agrees with the index`);
