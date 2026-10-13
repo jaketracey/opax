@@ -24,6 +24,13 @@ function walk(el, out = []) {
 }
 const textNode = (el, text) => walk(el).find(n => n.props?.children === text);
 
+test('electoral wording in any ordinary share-card template receives Jake’s exact line',()=>{
+  const line='Authorised by Jake Tracey, Noice Pty Ltd, Level 6, 608/343 Little Collins Street, Melbourne VIC 3000.';
+  for(const tree of [cardTree,portraitTree]) {
+    const card=tree({kicker:'Report',title:'Victorian state election 2026',lines:['Official dates and exported records.']});
+    assert.ok(textNode(card,line));
+  }
+});
 test('electoral share cards retain the complete authorisation in both formats',()=>{
   const card={kicker:'Victorian election',title:'Victorian election 2026',lines:['Official districts, regions and parliamentary records.'],authorisation:VIC_ELECTION_AUTHORISATION_LINE};
   for(const tree of [cardTree(card),portraitTree(card)]) {
@@ -98,7 +105,7 @@ test('the layout table and the format parser leave the landscape card untouched'
   assert.equal(ogFormat('portrait'), 'portrait');
   const home = cardTree(homeCard());
   assert.equal(home.props.style.width, 1200); assert.equal(home.props.style.height, 630);
-  assert.equal(OG_VERSION, '7', 'electoral authorisation changes the card, so crawlers and the edge fetch the new version');
+  assert.equal(OG_VERSION, '8', 'electoral authorisation changes the card, so crawlers and the edge fetch the new version');
 });
 
 test('the Worker draws ?format=portrait at 1080x1350, keys the cache on it and says so in a header', async () => {

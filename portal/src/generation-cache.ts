@@ -11,7 +11,7 @@ const encoder = new TextEncoder()
 
 function storageKey(key: Request): string | null {
   const url = new URL(key.url)
-  return url.origin === 'https://cache.opax.internal' && /^\/(ask|search-summary|journey-story)\/[a-f0-9]{64}$/.test(url.pathname)
+  return url.origin === 'https://cache.opax.internal' && /^\/(ask|ask-agentic|search-summary|journey-story)\/[a-f0-9]{64}$/.test(url.pathname)
     ? 'v1' + url.pathname : null
 }
 

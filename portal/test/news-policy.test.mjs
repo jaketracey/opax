@@ -1,7 +1,9 @@
+import {speechPresentation, joinMixedSpeakers} from '../src/mixed-speakers.ts';
+const runInNewContext = (code, context = {}, options) => { context.speechPresentation ??= speechPresentation; context.joinMixedSpeakers ??= joinMixedSpeakers; return baseVM(code, context, options); };
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
-import { runInNewContext } from 'node:vm';
+import { runInNewContext as baseVM } from 'node:vm';
 import ts from 'typescript';
 const source = readFileSync(new URL('../src/index.ts', import.meta.url), 'utf8');
 const parsed = ts.createSourceFile('index.ts', source, ts.ScriptTarget.Latest, true, ts.ScriptKind.TS);

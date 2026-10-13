@@ -1,0 +1,3983 @@
+{
+ "schema": 1,
+ "generated": "2026-10-12T12:15:08.681Z",
+ "kb_calls": 140,
+ "definitions": {
+  "speech": "a KB resource labelled kind/speech (one Hansard or committee contribution)",
+  "about_topic": "carries the OPAX topic label (21-topic enrichment classifier); not every speech is labelled, see coverage",
+  "members_only": "speaker rankings exclude committee witnesses (speaker_type/witness)",
+  "chamber_speeches": "a speech is a chamber record; committee-hearing turns (senate_committee, joint_committee, house_committee) are counted separately because each question-and-answer turn is its own record",
+  "speaker": "the resource collaborator name (one per speech); see attribution notes",
+  "period": "exact speech dates via /search created filter; decades via the decade label",
+  "parliaments": "every parliament in the record unless the question names one (federal, NSW, Victoria, SA, Queensland, ACT)",
+  "terms": {
+   "47th": [
+    "2022-07-26",
+    "2025-03-28"
+   ],
+   "48th": [
+    "2025-07-22",
+    null
+   ]
+  },
+  "money": "federal AEC donation returns (portal/public/graph/money.json, top 250 donors); individual donors not named are aggregated, never ranked by name"
+ },
+ "coverage": {
+  "speeches": 873200,
+  "topic_labelled": 633948,
+  "federal_chamber_speeches_by_year": {
+   "2019": 8556,
+   "2020": 10203,
+   "2021": 11562,
+   "2022": 3611,
+   "2023": 2995,
+   "2024": 79,
+   "2025": 4828,
+   "2026": 6805
+  },
+  "federal_gap": "Federal chamber Hansard from mid-2022 to mid-2025 is thin in the source data itself (parli.db: Wilkie 14 speeches in 2023, 1 in 2024), not only in the KB.",
+  "by_decade": {
+   "1990s": {
+    "speeches": 145491,
+    "labelled": 32164
+   },
+   "2000s": {
+    "speeches": 181644,
+    "labelled": 114658
+   },
+   "2010s": {
+    "speeches": 175451,
+    "labelled": 158806
+   },
+   "2020s": {
+    "speeches": 370614,
+    "labelled": 328320
+   }
+  }
+ },
+ "attribution_note": "data-speaker-attribution-check (12 Oct 2026): 16,909 KB speech documents carry several speakers' words under one MP (OpenAustralia legacy markup), mostly OpenAustralia-sourced federal House and Senate debate. Sample error rates: Wilkie 13.3%, Hanson-Young 20.0%, Bandt 3.3%, Katter 3.3%, Wong 3.3%. Committee-hearing and state records come from other parsers.",
+ "questions": [
+  {
+   "id": "E01",
+   "category": "electorates",
+   "question": "What electorate has the lowest median income",
+   "note": "Jake's question (13 Oct). Median income means personal weekly income, separate from household income. Census geography is not redistributed to current boundaries.",
+   "expected": {
+    "kind": "electorates",
+    "indicator": "median_income",
+    "rows": [
+     {
+      "name": "Fowler",
+      "jurisdiction": "federal",
+      "chamber": "representatives",
+      "value": 521,
+      "unit": "AUD/week",
+      "url": "https://opax.com.au/subject/electorate/federal-representatives-nsw-fowler",
+      "source": "2021 Census (ABS)"
+     }
+    ],
+    "names": [
+     "Fowler"
+    ],
+    "numbers": [
+     521
+    ],
+    "source": "2021 Census (ABS)",
+    "unit": "AUD/week",
+    "matched": 150,
+    "available": 149,
+    "missing": [
+     "Bullwinkel"
+    ],
+    "answer": "Fowler (federal, representatives): median personal income 521 AUD/week (2021 Census (ABS)).",
+    "method": "Read published manifest and current electorate detail JSON; select 2021 Census numeric values, then exact extrema or named lookup; include every tie.",
+    "query": {
+     "manifest": "/electorates/manifest.json",
+     "release_id": "b56417062ccc33cf",
+     "indicator": "median_income",
+     "order": "asc",
+     "jurisdiction": "federal",
+     "chamber": "representatives",
+     "status": "current"
+    }
+   }
+  },
+  {
+   "id": "E02",
+   "category": "electorates",
+   "question": "Which federal electorate has the highest unemployment rate?",
+   "note": "Published 2021 Census values; current electorate status only.",
+   "expected": {
+    "kind": "electorates",
+    "indicator": "unemployment_rate",
+    "rows": [
+     {
+      "name": "Blaxland",
+      "jurisdiction": "federal",
+      "chamber": "representatives",
+      "value": 9.2,
+      "unit": "%",
+      "url": "https://opax.com.au/subject/electorate/federal-representatives-nsw-blaxland",
+      "source": "2021 Census (ABS)"
+     }
+    ],
+    "names": [
+     "Blaxland"
+    ],
+    "numbers": [
+     9.2
+    ],
+    "source": "2021 Census (ABS)",
+    "unit": "%",
+    "matched": 150,
+    "available": 149,
+    "missing": [
+     "Bullwinkel"
+    ],
+    "answer": "Blaxland (federal, representatives): unemployment rate 9.2 % (2021 Census (ABS)).",
+    "method": "Read published manifest and current electorate detail JSON; select 2021 Census numeric values, then exact extrema or named lookup; include every tie.",
+    "query": {
+     "manifest": "/electorates/manifest.json",
+     "release_id": "b56417062ccc33cf",
+     "indicator": "unemployment_rate",
+     "order": "desc",
+     "jurisdiction": "federal",
+     "chamber": "representatives",
+     "status": "current"
+    }
+   }
+  },
+  {
+   "id": "E03",
+   "category": "electorates",
+   "question": "What is the median age in Corangamite?",
+   "note": "Published 2021 Census values; current electorate status only.",
+   "expected": {
+    "kind": "electorates",
+    "indicator": "median_age",
+    "rows": [
+     {
+      "name": "Corangamite",
+      "jurisdiction": "federal",
+      "chamber": "representatives",
+      "value": 40,
+      "unit": "years",
+      "url": "https://opax.com.au/subject/electorate/federal-representatives-vic-corangamite",
+      "source": "2021 Census (ABS)"
+     }
+    ],
+    "names": [
+     "Corangamite"
+    ],
+    "numbers": [
+     40
+    ],
+    "source": "2021 Census (ABS)",
+    "unit": "years",
+    "matched": 1,
+    "available": 1,
+    "missing": [],
+    "answer": "Corangamite (federal, representatives): median age 40 years (2021 Census (ABS)).",
+    "method": "Read published manifest and current electorate detail JSON; select 2021 Census numeric values, then exact extrema or named lookup; include every tie.",
+    "query": {
+     "manifest": "/electorates/manifest.json",
+     "release_id": "b56417062ccc33cf",
+     "indicator": "median_age",
+     "operation": "lookup",
+     "electorate": "Corangamite",
+     "jurisdiction": "federal",
+     "chamber": "representatives",
+     "status": "current"
+    }
+   }
+  },
+  {
+   "id": "E04",
+   "category": "electorates",
+   "question": "Which Victorian state electorate has the lowest median income?",
+   "note": "State-seat Census profiles are not imported in this release. Expected honest non-answer; no federal-seat substitution.",
+   "expected": {
+    "kind": "electorates",
+    "indicator": "median_income",
+    "rows": [],
+    "names": [],
+    "numbers": [],
+    "source": "2021 Census (ABS)",
+    "unit": "AUD/week",
+    "matched": 88,
+    "available": 0,
+    "missing": [
+     "Albert Park",
+     "Ashwood",
+     "Bass",
+     "Bayswater",
+     "Bellarine",
+     "Benambra",
+     "Bendigo East",
+     "Bendigo West",
+     "Bentleigh",
+     "Berwick",
+     "Box Hill",
+     "Brighton",
+     "Broadmeadows",
+     "Brunswick",
+     "Bulleen",
+     "Bundoora",
+     "Carrum",
+     "Caulfield",
+     "Clarinda",
+     "Cranbourne",
+     "Croydon",
+     "Dandenong",
+     "Eildon",
+     "Eltham",
+     "Essendon",
+     "Eureka",
+     "Euroa",
+     "Evelyn",
+     "Footscray",
+     "Frankston",
+     "Geelong",
+     "Gippsland East",
+     "Gippsland South",
+     "Glen Waverley",
+     "Greenvale",
+     "Hastings",
+     "Hawthorn",
+     "Ivanhoe",
+     "Kalkallo",
+     "Kew",
+     "Kororoit",
+     "Lara",
+     "Laverton",
+     "Lowan",
+     "Macedon",
+     "Malvern",
+     "Melbourne",
+     "Melton",
+     "Mildura",
+     "Mill Park",
+     "Monbulk",
+     "Mordialloc",
+     "Mornington",
+     "Morwell",
+     "Mulgrave",
+     "Murray Plains",
+     "Narracan",
+     "Narre Warren North",
+     "Narre Warren South",
+     "Nepean",
+     "Niddrie",
+     "Northcote",
+     "Oakleigh",
+     "Ovens Valley",
+     "Pakenham",
+     "Pascoe Vale",
+     "Point Cook",
+     "Polwarth",
+     "Prahran",
+     "Preston",
+     "Richmond",
+     "Ringwood",
+     "Ripon",
+     "Rowville",
+     "Sandringham",
+     "Shepparton",
+     "South Barwon",
+     "South-West Coast",
+     "St Albans",
+     "Sunbury",
+     "Sydenham",
+     "Tarneit",
+     "Thomastown",
+     "Warrandyte",
+     "Wendouree",
+     "Werribee",
+     "Williamstown",
+     "Yan Yean"
+    ],
+    "unanswerable": "no_demographic_data",
+    "answer": "The lowest median personal income cannot be determined: no published 2021 Census (ABS) values are available for current Victorian state electorates.",
+    "method": "Read published manifest and current electorate detail JSON; select 2021 Census numeric values, then exact extrema or named lookup; include every tie.",
+    "query": {
+     "manifest": "/electorates/manifest.json",
+     "release_id": "b56417062ccc33cf",
+     "indicator": "median_income",
+     "jurisdiction": "vic",
+     "chamber": "vic_la",
+     "order": "asc",
+     "status": "current"
+    }
+   }
+  },
+  {
+   "id": "R01",
+   "category": "ranking",
+   "question": "Who is making the most speeches about gambling reform",
+   "note": "Jake's question (12 Oct). Read as: chamber speeches carrying the gambling topic label, members only, whole record, every parliament; committee-hearing turns reported beside it.",
+   "expected": {
+    "kind": "ranking",
+    "top": [
+     {
+      "name": "Justin Field",
+      "count": 87
+     },
+     {
+      "name": "Andrew Wilkie",
+      "count": 60
+     },
+     {
+      "name": "Paterson",
+      "count": 52
+     },
+     {
+      "name": "Cate Faehrmann",
+      "count": 47
+     },
+     {
+      "name": "Connie Bonaros",
+      "count": 46
+     }
+    ],
+    "total": 3416,
+    "exact": true,
+    "method": "catalog facet /u/o over every matching speech",
+    "query": {
+     "endpoint": "POST /catalog",
+     "body": {
+      "filter_expression": {
+       "resource": {
+        "and": [
+         {
+          "prop": "label",
+          "labelset": "kind",
+          "label": "speech"
+         },
+         {
+          "not": {
+           "prop": "label",
+           "labelset": "speaker_type",
+           "label": "witness"
+          }
+         },
+         {
+          "not": {
+           "or": [
+            {
+             "prop": "label",
+             "labelset": "chamber",
+             "label": "senate_committee"
+            },
+            {
+             "prop": "label",
+             "labelset": "chamber",
+             "label": "joint_committee"
+            },
+            {
+             "prop": "label",
+             "labelset": "chamber",
+             "label": "house_committee"
+            }
+           ]
+          }
+         },
+         {
+          "prop": "label",
+          "labelset": "topic",
+          "label": "gambling"
+         }
+        ]
+       }
+      },
+      "page_size": 0,
+      "faceted": [
+       "/u/o"
+      ]
+     }
+    },
+    "attribution": [
+     {
+      "name": "Justin Field",
+      "count": 87,
+      "openaustralia": 0,
+      "openaustralia_share": 0
+     },
+     {
+      "name": "Andrew Wilkie",
+      "count": 60,
+      "openaustralia": 2,
+      "openaustralia_share": 0.033
+     },
+     {
+      "name": "Paterson",
+      "count": 52,
+      "openaustralia": 0,
+      "openaustralia_share": 0
+     },
+     {
+      "name": "Cate Faehrmann",
+      "count": 47,
+      "openaustralia": 0,
+      "openaustralia_share": 0
+     },
+     {
+      "name": "Connie Bonaros",
+      "count": 46,
+      "openaustralia": 0,
+      "openaustralia_share": 0
+     }
+    ],
+    "committee_top": [
+     {
+      "name": "David Pocock",
+      "count": 130
+     },
+     {
+      "name": "Sarah Henderson",
+      "count": 94
+     },
+     {
+      "name": "Sarah Hanson-Young",
+      "count": 65
+     }
+    ],
+    "committee_total": 464
+   }
+  },
+  {
+   "id": "R02",
+   "category": "ranking",
+   "question": "Which federal politicians have made the most speeches about gambling since 2022?",
+   "note": "Window crosses the federal 2023-24 coverage gap.",
+   "expected": {
+    "kind": "ranking",
+    "top": [
+     {
+      "name": "David Pocock",
+      "count": 4
+     },
+     {
+      "name": "Andrew Wilkie",
+      "count": 3
+     },
+     {
+      "name": "Kate Chaney",
+      "count": 3
+     },
+     {
+      "name": "Rebekha Sharkie",
+      "count": 3
+     },
+     {
+      "name": "Sarah Hanson-Young",
+      "count": 3
+     }
+    ],
+    "total": 64,
+    "exact": true,
+    "method": "candidates: catalog facet /u/o over decades 2020s (top 30); counts: /search fulltext body-only totals with created 2022-01-01..now",
+    "query": {
+     "candidates": {
+      "endpoint": "POST /catalog",
+      "body": {
+       "filter_expression": {
+        "resource": {
+         "and": [
+          {
+           "prop": "label",
+           "labelset": "kind",
+           "label": "speech"
+          },
+          {
+           "not": {
+            "prop": "label",
+            "labelset": "speaker_type",
+            "label": "witness"
+           }
+          },
+          {
+           "not": {
+            "or": [
+             {
+              "prop": "label",
+              "labelset": "chamber",
+              "label": "senate_committee"
+             },
+             {
+              "prop": "label",
+              "labelset": "chamber",
+              "label": "joint_committee"
+             },
+             {
+              "prop": "label",
+              "labelset": "chamber",
+              "label": "house_committee"
+             }
+            ]
+           }
+          },
+          {
+           "prop": "label",
+           "labelset": "topic",
+           "label": "gambling"
+          },
+          {
+           "prop": "label",
+           "labelset": "state",
+           "label": "federal"
+          },
+          {
+           "prop": "label",
+           "labelset": "decade",
+           "label": "2020s"
+          }
+         ]
+        }
+       },
+       "page_size": 0,
+       "faceted": [
+        "/u/o"
+       ]
+      }
+     },
+     "per_candidate": {
+      "endpoint": "POST /search",
+      "template": {
+       "query": "",
+       "features": [
+        "fulltext"
+       ],
+       "top_k": 1,
+       "filter_expression": {
+        "field": {
+         "and": [
+          {
+           "prop": "label",
+           "labelset": "kind",
+           "label": "speech"
+          },
+          {
+           "not": {
+            "prop": "label",
+            "labelset": "speaker_type",
+            "label": "witness"
+           }
+          },
+          {
+           "not": {
+            "or": [
+             {
+              "prop": "label",
+              "labelset": "chamber",
+              "label": "senate_committee"
+             },
+             {
+              "prop": "label",
+              "labelset": "chamber",
+              "label": "joint_committee"
+             },
+             {
+              "prop": "label",
+              "labelset": "chamber",
+              "label": "house_committee"
+             }
+            ]
+           }
+          },
+          {
+           "prop": "label",
+           "labelset": "topic",
+           "label": "gambling"
+          },
+          {
+           "prop": "label",
+           "labelset": "state",
+           "label": "federal"
+          },
+          {
+           "prop": "origin_collaborator",
+           "collaborator": "<NAME>"
+          },
+          {
+           "prop": "created",
+           "since": "2022-01-01T00:00:00Z"
+          },
+          {
+           "prop": "field",
+           "type": "text",
+           "name": "body"
+          }
+         ]
+        }
+       }
+      }
+     }
+    },
+    "coverage_caveat": true
+   }
+  },
+  {
+   "id": "R03",
+   "category": "ranking",
+   "question": "Who has given the most speeches about housing in the NSW Parliament?",
+   "expected": {
+    "kind": "ranking",
+    "top": [
+     {
+      "name": "Jenny Leong",
+      "count": 156
+     },
+     {
+      "name": "Scott Farlow",
+      "count": 135
+     },
+     {
+      "name": "Alex Greenwich",
+      "count": 115
+     },
+     {
+      "name": "Abigail Boyd",
+      "count": 92
+     },
+     {
+      "name": "Mark Latham",
+      "count": 86
+     }
+    ],
+    "total": 4876,
+    "exact": true,
+    "method": "catalog facet /u/o over every matching speech",
+    "query": {
+     "endpoint": "POST /catalog",
+     "body": {
+      "filter_expression": {
+       "resource": {
+        "and": [
+         {
+          "prop": "label",
+          "labelset": "kind",
+          "label": "speech"
+         },
+         {
+          "not": {
+           "prop": "label",
+           "labelset": "speaker_type",
+           "label": "witness"
+          }
+         },
+         {
+          "not": {
+           "or": [
+            {
+             "prop": "label",
+             "labelset": "chamber",
+             "label": "senate_committee"
+            },
+            {
+             "prop": "label",
+             "labelset": "chamber",
+             "label": "joint_committee"
+            },
+            {
+             "prop": "label",
+             "labelset": "chamber",
+             "label": "house_committee"
+            }
+           ]
+          }
+         },
+         {
+          "prop": "label",
+          "labelset": "topic",
+          "label": "housing"
+         },
+         {
+          "prop": "label",
+          "labelset": "state",
+          "label": "nsw"
+         }
+        ]
+       }
+      },
+      "page_size": 0,
+      "faceted": [
+       "/u/o"
+      ]
+     }
+    }
+   }
+  },
+  {
+   "id": "R04",
+   "category": "ranking",
+   "question": "Which senators have made the most Senate speeches about climate and the environment?",
+   "note": "Senate floor only (chamber label senate; committee hearings excluded).",
+   "expected": {
+    "kind": "ranking",
+    "top": [
+     {
+      "name": "Bob Brown",
+      "count": 285
+     },
+     {
+      "name": "Robert Murray Hill",
+      "count": 190
+     },
+     {
+      "name": "Ian Macdonald",
+      "count": 108
+     },
+     {
+      "name": "Lyn Allison",
+      "count": 104
+     },
+     {
+      "name": "Christine Milne",
+      "count": 103
+     }
+    ],
+    "total": 3564,
+    "exact": true,
+    "method": "catalog facet /u/o over every matching speech",
+    "query": {
+     "endpoint": "POST /catalog",
+     "body": {
+      "filter_expression": {
+       "resource": {
+        "and": [
+         {
+          "prop": "label",
+          "labelset": "kind",
+          "label": "speech"
+         },
+         {
+          "not": {
+           "prop": "label",
+           "labelset": "speaker_type",
+           "label": "witness"
+          }
+         },
+         {
+          "not": {
+           "or": [
+            {
+             "prop": "label",
+             "labelset": "chamber",
+             "label": "senate_committee"
+            },
+            {
+             "prop": "label",
+             "labelset": "chamber",
+             "label": "joint_committee"
+            },
+            {
+             "prop": "label",
+             "labelset": "chamber",
+             "label": "house_committee"
+            }
+           ]
+          }
+         },
+         {
+          "prop": "label",
+          "labelset": "topic",
+          "label": "climate-environment"
+         },
+         {
+          "prop": "label",
+          "labelset": "chamber",
+          "label": "senate"
+         }
+        ]
+       }
+      },
+      "page_size": 0,
+      "faceted": [
+       "/u/o"
+      ]
+     }
+    }
+   }
+  },
+  {
+   "id": "R05",
+   "category": "ranking",
+   "question": "Who has spoken most about immigration in the House of Representatives?",
+   "expected": {
+    "kind": "ranking",
+    "top": [
+     {
+      "name": "Philip Ruddock",
+      "count": 1233
+     },
+     {
+      "name": "Scott Morrison",
+      "count": 728
+     },
+     {
+      "name": "Peter Dutton",
+      "count": 541
+     },
+     {
+      "name": "Julia Gillard",
+      "count": 491
+     },
+     {
+      "name": "Laurie Ferguson",
+      "count": 351
+     }
+    ],
+    "total": 16241,
+    "exact": true,
+    "method": "catalog facet /u/o over every matching speech",
+    "query": {
+     "endpoint": "POST /catalog",
+     "body": {
+      "filter_expression": {
+       "resource": {
+        "and": [
+         {
+          "prop": "label",
+          "labelset": "kind",
+          "label": "speech"
+         },
+         {
+          "not": {
+           "prop": "label",
+           "labelset": "speaker_type",
+           "label": "witness"
+          }
+         },
+         {
+          "not": {
+           "or": [
+            {
+             "prop": "label",
+             "labelset": "chamber",
+             "label": "senate_committee"
+            },
+            {
+             "prop": "label",
+             "labelset": "chamber",
+             "label": "joint_committee"
+            },
+            {
+             "prop": "label",
+             "labelset": "chamber",
+             "label": "house_committee"
+            }
+           ]
+          }
+         },
+         {
+          "prop": "label",
+          "labelset": "topic",
+          "label": "immigration"
+         },
+         {
+          "prop": "label",
+          "labelset": "chamber",
+          "label": "representatives"
+         }
+        ]
+       }
+      },
+      "page_size": 0,
+      "faceted": [
+       "/u/o"
+      ]
+     }
+    }
+   }
+  },
+  {
+   "id": "R06",
+   "category": "ranking",
+   "question": "Who has made the most speeches about Indigenous affairs in the Victorian Parliament?",
+   "expected": {
+    "kind": "ranking",
+    "top": [
+     {
+      "name": "Chris Couzens",
+      "count": 77
+     },
+     {
+      "name": "Natalie Hutchins",
+      "count": 48
+     },
+     {
+      "name": "Sheena Watt",
+      "count": 43
+     },
+     {
+      "name": "Anasina Gray-Barberio",
+      "count": 35
+     },
+     {
+      "name": "Lizzie Blandthorn",
+      "count": 35
+     }
+    ],
+    "total": 1593,
+    "exact": true,
+    "method": "catalog facet /u/o over every matching speech",
+    "query": {
+     "endpoint": "POST /catalog",
+     "body": {
+      "filter_expression": {
+       "resource": {
+        "and": [
+         {
+          "prop": "label",
+          "labelset": "kind",
+          "label": "speech"
+         },
+         {
+          "not": {
+           "prop": "label",
+           "labelset": "speaker_type",
+           "label": "witness"
+          }
+         },
+         {
+          "not": {
+           "or": [
+            {
+             "prop": "label",
+             "labelset": "chamber",
+             "label": "senate_committee"
+            },
+            {
+             "prop": "label",
+             "labelset": "chamber",
+             "label": "joint_committee"
+            },
+            {
+             "prop": "label",
+             "labelset": "chamber",
+             "label": "house_committee"
+            }
+           ]
+          }
+         },
+         {
+          "prop": "label",
+          "labelset": "topic",
+          "label": "indigenous-affairs"
+         },
+         {
+          "prop": "label",
+          "labelset": "state",
+          "label": "vic"
+         }
+        ]
+       }
+      },
+      "page_size": 0,
+      "faceted": [
+       "/u/o"
+      ]
+     }
+    }
+   }
+  },
+  {
+   "id": "R07",
+   "category": "ranking",
+   "question": "Who are the top five speakers on defence and security since 2020?",
+   "note": "Since 2020 = the 2020s decade label, exact via catalog.",
+   "expected": {
+    "kind": "ranking",
+    "top": [
+     {
+      "name": "Scott Morrison",
+      "count": 133
+     },
+     {
+      "name": "Peter Dutton",
+      "count": 122
+     },
+     {
+      "name": "Yasmin Catley",
+      "count": 93
+     },
+     {
+      "name": "Hugh McDermott",
+      "count": 80
+     },
+     {
+      "name": "Luke Gosling",
+      "count": 79
+     }
+    ],
+    "total": 10396,
+    "exact": true,
+    "method": "catalog facet /u/o over every matching speech",
+    "query": {
+     "endpoint": "POST /catalog",
+     "body": {
+      "filter_expression": {
+       "resource": {
+        "and": [
+         {
+          "prop": "label",
+          "labelset": "kind",
+          "label": "speech"
+         },
+         {
+          "not": {
+           "prop": "label",
+           "labelset": "speaker_type",
+           "label": "witness"
+          }
+         },
+         {
+          "not": {
+           "or": [
+            {
+             "prop": "label",
+             "labelset": "chamber",
+             "label": "senate_committee"
+            },
+            {
+             "prop": "label",
+             "labelset": "chamber",
+             "label": "joint_committee"
+            },
+            {
+             "prop": "label",
+             "labelset": "chamber",
+             "label": "house_committee"
+            }
+           ]
+          }
+         },
+         {
+          "prop": "label",
+          "labelset": "topic",
+          "label": "defence-security"
+         },
+         {
+          "prop": "label",
+          "labelset": "decade",
+          "label": "2020s"
+         }
+        ]
+       }
+      },
+      "page_size": 0,
+      "faceted": [
+       "/u/o"
+      ]
+     }
+    },
+    "top_n": 5
+   }
+  },
+  {
+   "id": "R08",
+   "category": "ranking",
+   "question": "Which Greens MPs have spoken most about mining and energy?",
+   "expected": {
+    "kind": "ranking",
+    "top": [
+     {
+      "name": "Adam Bandt",
+      "count": 189
+     },
+     {
+      "name": "Bob Brown",
+      "count": 127
+     },
+     {
+      "name": "Scott Ludlam",
+      "count": 69
+     },
+     {
+      "name": "Diane Elizabeth Margetts",
+      "count": 56
+     },
+     {
+      "name": "Christine Milne",
+      "count": 55
+     }
+    ],
+    "total": 707,
+    "exact": true,
+    "method": "catalog facet /u/o over every matching speech",
+    "query": {
+     "endpoint": "POST /catalog",
+     "body": {
+      "filter_expression": {
+       "resource": {
+        "and": [
+         {
+          "prop": "label",
+          "labelset": "kind",
+          "label": "speech"
+         },
+         {
+          "not": {
+           "prop": "label",
+           "labelset": "speaker_type",
+           "label": "witness"
+          }
+         },
+         {
+          "not": {
+           "or": [
+            {
+             "prop": "label",
+             "labelset": "chamber",
+             "label": "senate_committee"
+            },
+            {
+             "prop": "label",
+             "labelset": "chamber",
+             "label": "joint_committee"
+            },
+            {
+             "prop": "label",
+             "labelset": "chamber",
+             "label": "house_committee"
+            }
+           ]
+          }
+         },
+         {
+          "prop": "label",
+          "labelset": "topic",
+          "label": "mining-energy"
+         },
+         {
+          "prop": "label",
+          "labelset": "party",
+          "label": "Greens"
+         }
+        ]
+       }
+      },
+      "page_size": 0,
+      "faceted": [
+       "/u/o"
+      ]
+     }
+    }
+   }
+  },
+  {
+   "id": "R09",
+   "category": "ranking",
+   "question": "Who spoke most about tax and the budget in the 2010s?",
+   "expected": {
+    "kind": "ranking",
+    "top": [
+     {
+      "name": "Scott Morrison",
+      "count": 956
+     },
+     {
+      "name": "Joe Hockey",
+      "count": 931
+     },
+     {
+      "name": "Wayne Swan",
+      "count": 783
+     },
+     {
+      "name": "Tony Abbott",
+      "count": 739
+     },
+     {
+      "name": "Malcolm Turnbull",
+      "count": 727
+     }
+    ],
+    "total": 23320,
+    "exact": true,
+    "method": "catalog facet /u/o over every matching speech",
+    "query": {
+     "endpoint": "POST /catalog",
+     "body": {
+      "filter_expression": {
+       "resource": {
+        "and": [
+         {
+          "prop": "label",
+          "labelset": "kind",
+          "label": "speech"
+         },
+         {
+          "not": {
+           "prop": "label",
+           "labelset": "speaker_type",
+           "label": "witness"
+          }
+         },
+         {
+          "not": {
+           "or": [
+            {
+             "prop": "label",
+             "labelset": "chamber",
+             "label": "senate_committee"
+            },
+            {
+             "prop": "label",
+             "labelset": "chamber",
+             "label": "joint_committee"
+            },
+            {
+             "prop": "label",
+             "labelset": "chamber",
+             "label": "house_committee"
+            }
+           ]
+          }
+         },
+         {
+          "prop": "label",
+          "labelset": "topic",
+          "label": "tax-budget"
+         },
+         {
+          "prop": "label",
+          "labelset": "decade",
+          "label": "2010s"
+         }
+        ]
+       }
+      },
+      "page_size": 0,
+      "faceted": [
+       "/u/o"
+      ]
+     }
+    }
+   }
+  },
+  {
+   "id": "R10",
+   "category": "ranking",
+   "question": "Who in the ACT Legislative Assembly speaks most about health?",
+   "expected": {
+    "kind": "ranking",
+    "top": [
+     {
+      "name": "Stephen-Smith",
+      "count": 516
+     },
+     {
+      "name": "Castley",
+      "count": 125
+     },
+     {
+      "name": "Paterson",
+      "count": 109
+     },
+     {
+      "name": "Parton",
+      "count": 98
+     },
+     {
+      "name": "Steel",
+      "count": 84
+     }
+    ],
+    "total": 1760,
+    "exact": true,
+    "method": "catalog facet /u/o over every matching speech",
+    "query": {
+     "endpoint": "POST /catalog",
+     "body": {
+      "filter_expression": {
+       "resource": {
+        "and": [
+         {
+          "prop": "label",
+          "labelset": "kind",
+          "label": "speech"
+         },
+         {
+          "not": {
+           "prop": "label",
+           "labelset": "speaker_type",
+           "label": "witness"
+          }
+         },
+         {
+          "not": {
+           "or": [
+            {
+             "prop": "label",
+             "labelset": "chamber",
+             "label": "senate_committee"
+            },
+            {
+             "prop": "label",
+             "labelset": "chamber",
+             "label": "joint_committee"
+            },
+            {
+             "prop": "label",
+             "labelset": "chamber",
+             "label": "house_committee"
+            }
+           ]
+          }
+         },
+         {
+          "prop": "label",
+          "labelset": "topic",
+          "label": "health"
+         },
+         {
+          "prop": "label",
+          "labelset": "state",
+          "label": "act"
+         }
+        ]
+       }
+      },
+      "page_size": 0,
+      "faceted": [
+       "/u/o"
+      ]
+     }
+    }
+   }
+  },
+  {
+   "id": "P01",
+   "category": "ranking",
+   "question": "Which party has made the most speeches about gambling since 2022?",
+   "expected": {
+    "kind": "ranking",
+    "top": [
+     {
+      "name": "Labor",
+      "count": 21
+     },
+     {
+      "name": "Independent",
+      "count": 18
+     },
+     {
+      "name": "Liberal",
+      "count": 14
+     },
+     {
+      "name": "Greens",
+      "count": 10
+     },
+     {
+      "name": "LNP",
+      "count": 10
+     }
+    ],
+    "total": 1308,
+    "exact": true,
+    "method": "candidates: catalog facet /classification.labels/party over decades 2020s (top 20); counts: /search fulltext body-only totals with created 2022-01-01..now",
+    "query": {
+     "candidates": {
+      "endpoint": "POST /catalog",
+      "body": {
+       "filter_expression": {
+        "resource": {
+         "and": [
+          {
+           "prop": "label",
+           "labelset": "kind",
+           "label": "speech"
+          },
+          {
+           "not": {
+            "or": [
+             {
+              "prop": "label",
+              "labelset": "chamber",
+              "label": "senate_committee"
+             },
+             {
+              "prop": "label",
+              "labelset": "chamber",
+              "label": "joint_committee"
+             },
+             {
+              "prop": "label",
+              "labelset": "chamber",
+              "label": "house_committee"
+             }
+            ]
+           }
+          },
+          {
+           "prop": "label",
+           "labelset": "topic",
+           "label": "gambling"
+          },
+          {
+           "prop": "label",
+           "labelset": "decade",
+           "label": "2020s"
+          }
+         ]
+        }
+       },
+       "page_size": 0,
+       "faceted": [
+        "/classification.labels/party"
+       ]
+      }
+     },
+     "per_candidate": {
+      "endpoint": "POST /search",
+      "template": {
+       "query": "",
+       "features": [
+        "fulltext"
+       ],
+       "top_k": 1,
+       "filter_expression": {
+        "field": {
+         "and": [
+          {
+           "prop": "label",
+           "labelset": "kind",
+           "label": "speech"
+          },
+          {
+           "not": {
+            "or": [
+             {
+              "prop": "label",
+              "labelset": "chamber",
+              "label": "senate_committee"
+             },
+             {
+              "prop": "label",
+              "labelset": "chamber",
+              "label": "joint_committee"
+             },
+             {
+              "prop": "label",
+              "labelset": "chamber",
+              "label": "house_committee"
+             }
+            ]
+           }
+          },
+          {
+           "prop": "label",
+           "labelset": "topic",
+           "label": "gambling"
+          },
+          {
+           "prop": "label",
+           "labelset": "party",
+           "label": "<PARTY>"
+          },
+          {
+           "prop": "created",
+           "since": "2022-01-01T00:00:00Z"
+          },
+          {
+           "prop": "field",
+           "type": "text",
+           "name": "body"
+          }
+         ]
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  {
+   "id": "P02",
+   "category": "ranking",
+   "question": "Which party has mentioned housing most in federal parliament since 2022?",
+   "note": "Window crosses the federal 2023-24 coverage gap.",
+   "expected": {
+    "kind": "ranking",
+    "top": [
+     {
+      "name": "Labor",
+      "count": 277
+     },
+     {
+      "name": "Liberal",
+      "count": 154
+     },
+     {
+      "name": "Greens",
+      "count": 47
+     },
+     {
+      "name": "Independent",
+      "count": 38
+     },
+     {
+      "name": "LNP",
+      "count": 37
+     }
+    ],
+    "total": 759,
+    "exact": true,
+    "method": "candidates: catalog facet /classification.labels/party over decades 2020s (top 20); counts: /search fulltext body-only totals with created 2022-01-01..now",
+    "query": {
+     "candidates": {
+      "endpoint": "POST /catalog",
+      "body": {
+       "filter_expression": {
+        "resource": {
+         "and": [
+          {
+           "prop": "label",
+           "labelset": "kind",
+           "label": "speech"
+          },
+          {
+           "not": {
+            "or": [
+             {
+              "prop": "label",
+              "labelset": "chamber",
+              "label": "senate_committee"
+             },
+             {
+              "prop": "label",
+              "labelset": "chamber",
+              "label": "joint_committee"
+             },
+             {
+              "prop": "label",
+              "labelset": "chamber",
+              "label": "house_committee"
+             }
+            ]
+           }
+          },
+          {
+           "prop": "label",
+           "labelset": "topic",
+           "label": "housing"
+          },
+          {
+           "prop": "label",
+           "labelset": "state",
+           "label": "federal"
+          },
+          {
+           "prop": "label",
+           "labelset": "decade",
+           "label": "2020s"
+          }
+         ]
+        }
+       },
+       "page_size": 0,
+       "faceted": [
+        "/classification.labels/party"
+       ]
+      }
+     },
+     "per_candidate": {
+      "endpoint": "POST /search",
+      "template": {
+       "query": "",
+       "features": [
+        "fulltext"
+       ],
+       "top_k": 1,
+       "filter_expression": {
+        "field": {
+         "and": [
+          {
+           "prop": "label",
+           "labelset": "kind",
+           "label": "speech"
+          },
+          {
+           "not": {
+            "or": [
+             {
+              "prop": "label",
+              "labelset": "chamber",
+              "label": "senate_committee"
+             },
+             {
+              "prop": "label",
+              "labelset": "chamber",
+              "label": "joint_committee"
+             },
+             {
+              "prop": "label",
+              "labelset": "chamber",
+              "label": "house_committee"
+             }
+            ]
+           }
+          },
+          {
+           "prop": "label",
+           "labelset": "topic",
+           "label": "housing"
+          },
+          {
+           "prop": "label",
+           "labelset": "state",
+           "label": "federal"
+          },
+          {
+           "prop": "label",
+           "labelset": "party",
+           "label": "<PARTY>"
+          },
+          {
+           "prop": "created",
+           "since": "2022-01-01T00:00:00Z"
+          },
+          {
+           "prop": "field",
+           "type": "text",
+           "name": "body"
+          }
+         ]
+        }
+       }
+      }
+     }
+    },
+    "coverage_caveat": true
+   }
+  },
+  {
+   "id": "P03",
+   "category": "ranking",
+   "question": "Which party has made the most speeches about integrity and democracy in federal parliament?",
+   "expected": {
+    "kind": "ranking",
+    "top": [
+     {
+      "name": "Labor",
+      "count": 15174
+     },
+     {
+      "name": "Liberal",
+      "count": 10822
+     },
+     {
+      "name": "Nationals",
+      "count": 1290
+     },
+     {
+      "name": "Independent",
+      "count": 815
+     },
+     {
+      "name": "Greens",
+      "count": 667
+     }
+    ],
+    "total": 31531,
+    "exact": true,
+    "method": "catalog facet /classification.labels/party",
+    "query": {
+     "endpoint": "POST /catalog",
+     "body": {
+      "filter_expression": {
+       "resource": {
+        "and": [
+         {
+          "prop": "label",
+          "labelset": "kind",
+          "label": "speech"
+         },
+         {
+          "not": {
+           "or": [
+            {
+             "prop": "label",
+             "labelset": "chamber",
+             "label": "senate_committee"
+            },
+            {
+             "prop": "label",
+             "labelset": "chamber",
+             "label": "joint_committee"
+            },
+            {
+             "prop": "label",
+             "labelset": "chamber",
+             "label": "house_committee"
+            }
+           ]
+          }
+         },
+         {
+          "prop": "label",
+          "labelset": "topic",
+          "label": "integrity-democracy"
+         },
+         {
+          "prop": "label",
+          "labelset": "state",
+          "label": "federal"
+         }
+        ]
+       }
+      },
+      "page_size": 0,
+      "faceted": [
+       "/classification.labels/party"
+      ]
+     }
+    }
+   }
+  },
+  {
+   "id": "P04",
+   "category": "decline",
+   "question": "Which parties speak most about agriculture in the NSW Parliament?",
+   "note": "Expected behaviour: decline. A speaker ranking is acceptable alongside the limit.",
+   "expected": {
+    "kind": "decline",
+    "reason": "no_party_labels",
+    "party_labelled": 0,
+    "total": 5773,
+    "query": {
+     "endpoint": "POST /catalog",
+     "body": {
+      "filter_expression": {
+       "resource": {
+        "and": [
+         {
+          "prop": "label",
+          "labelset": "kind",
+          "label": "speech"
+         },
+         {
+          "not": {
+           "or": [
+            {
+             "prop": "label",
+             "labelset": "chamber",
+             "label": "senate_committee"
+            },
+            {
+             "prop": "label",
+             "labelset": "chamber",
+             "label": "joint_committee"
+            },
+            {
+             "prop": "label",
+             "labelset": "chamber",
+             "label": "house_committee"
+            }
+           ]
+          }
+         },
+         {
+          "prop": "label",
+          "labelset": "topic",
+          "label": "agriculture"
+         },
+         {
+          "prop": "label",
+          "labelset": "state",
+          "label": "nsw"
+         }
+        ]
+       }
+      },
+      "page_size": 0,
+      "faceted": [
+       "/classification.labels/party"
+      ]
+     }
+    },
+    "method": "NSW, Victorian, SA and ACT speeches carry no party label; a party ranking needs a roster join that the tools do not do yet. The right answer says so (answered: false or an explicit limit), never a ranking."
+   }
+  },
+  {
+   "id": "T01",
+   "category": "trend",
+   "question": "Is gambling debated more in federal parliament this term than last term?",
+   "note": "Raw counts differ in window length; the share of labelled speeches is the like-for-like comparison.",
+   "expected": {
+    "kind": "numbers",
+    "coverage_caveat": true,
+    "numbers": [
+     24,
+     37
+    ],
+    "answer": "more (by share of labelled speeches)",
+    "last_term": {
+     "since": "2022-07-26",
+     "until": "2025-03-28",
+     "gambling": 24,
+     "labelled": 3567,
+     "share": 0.00673,
+     "query": {
+      "endpoint": "POST /search",
+      "body": {
+       "query": "",
+       "features": [
+        "fulltext"
+       ],
+       "top_k": 1,
+       "filter_expression": {
+        "field": {
+         "and": [
+          {
+           "prop": "label",
+           "labelset": "kind",
+           "label": "speech"
+          },
+          {
+           "not": {
+            "or": [
+             {
+              "prop": "label",
+              "labelset": "chamber",
+              "label": "senate_committee"
+             },
+             {
+              "prop": "label",
+              "labelset": "chamber",
+              "label": "joint_committee"
+             },
+             {
+              "prop": "label",
+              "labelset": "chamber",
+              "label": "house_committee"
+             }
+            ]
+           }
+          },
+          {
+           "prop": "label",
+           "labelset": "state",
+           "label": "federal"
+          },
+          {
+           "prop": "label",
+           "labelset": "topic",
+           "label": "gambling"
+          },
+          {
+           "prop": "created",
+           "since": "2022-07-26T00:00:00Z",
+           "until": "2025-03-28T23:59:59Z"
+          },
+          {
+           "prop": "field",
+           "type": "text",
+           "name": "body"
+          }
+         ]
+        }
+       }
+      }
+     }
+    },
+    "this_term": {
+     "since": "2025-07-22",
+     "until": null,
+     "gambling": 37,
+     "labelled": 4374,
+     "share": 0.00846,
+     "query": {
+      "endpoint": "POST /search",
+      "body": {
+       "query": "",
+       "features": [
+        "fulltext"
+       ],
+       "top_k": 1,
+       "filter_expression": {
+        "field": {
+         "and": [
+          {
+           "prop": "label",
+           "labelset": "kind",
+           "label": "speech"
+          },
+          {
+           "not": {
+            "or": [
+             {
+              "prop": "label",
+              "labelset": "chamber",
+              "label": "senate_committee"
+             },
+             {
+              "prop": "label",
+              "labelset": "chamber",
+              "label": "joint_committee"
+             },
+             {
+              "prop": "label",
+              "labelset": "chamber",
+              "label": "house_committee"
+             }
+            ]
+           }
+          },
+          {
+           "prop": "label",
+           "labelset": "state",
+           "label": "federal"
+          },
+          {
+           "prop": "label",
+           "labelset": "topic",
+           "label": "gambling"
+          },
+          {
+           "prop": "created",
+           "since": "2025-07-22T00:00:00Z"
+          },
+          {
+           "prop": "field",
+           "type": "text",
+           "name": "body"
+          }
+         ]
+        }
+       }
+      }
+     }
+    },
+    "method": "47th Parliament 2022-07-26..2025-03-28 vs 48th from 2025-07-22: gambling-labelled federal speeches and their share of topic-labelled speeches"
+   }
+  },
+  {
+   "id": "T02",
+   "category": "trend",
+   "question": "How has the number of speeches about housing changed since 2015?",
+   "note": "Coverage grows over the period (state sources join), so counts are not shares.",
+   "expected": {
+    "kind": "numbers",
+    "numbers": [
+     580,
+     3257
+    ],
+    "peak_year": 2025,
+    "years": [
+     {
+      "year": 2015,
+      "count": 580
+     },
+     {
+      "year": 2016,
+      "count": 845
+     },
+     {
+      "year": 2017,
+      "count": 782
+     },
+     {
+      "year": 2018,
+      "count": 1062
+     },
+     {
+      "year": 2019,
+      "count": 806
+     },
+     {
+      "year": 2020,
+      "count": 1685
+     },
+     {
+      "year": 2021,
+      "count": 1958
+     },
+     {
+      "year": 2022,
+      "count": 1228
+     },
+     {
+      "year": 2023,
+      "count": 762
+     },
+     {
+      "year": 2024,
+      "count": 1668
+     },
+     {
+      "year": 2025,
+      "count": 3257
+     },
+     {
+      "year": 2026,
+      "count": 2252
+     }
+    ],
+    "method": "/search body-only totals per calendar year, housing label, every parliament",
+    "query": {
+     "endpoint": "POST /search",
+     "template": "created <year>-01-01..<year>-12-31 + topic housing + kind speech + body field"
+    }
+   }
+  },
+  {
+   "id": "T03",
+   "category": "trend",
+   "question": "Is climate change discussed more in the 2020s than in the 2010s?",
+   "expected": {
+    "kind": "numbers",
+    "numbers": [
+     19582,
+     20100
+    ],
+    "decades": [
+     {
+      "decade": "2010s",
+      "count": 19582,
+      "labelled": 158806,
+      "share": 0.12331
+     },
+     {
+      "decade": "2020s",
+      "count": 20100,
+      "labelled": 182079,
+      "share": 0.11039
+     }
+    ],
+    "answer": "less by share",
+    "method": "catalog decade facet, climate-environment label; denominators = topic-labelled speeches per decade",
+    "query": {
+     "endpoint": "POST /catalog",
+     "body": {
+      "filter_expression": {
+       "resource": {
+        "and": [
+         {
+          "prop": "label",
+          "labelset": "kind",
+          "label": "speech"
+         },
+         {
+          "not": {
+           "or": [
+            {
+             "prop": "label",
+             "labelset": "chamber",
+             "label": "senate_committee"
+            },
+            {
+             "prop": "label",
+             "labelset": "chamber",
+             "label": "joint_committee"
+            },
+            {
+             "prop": "label",
+             "labelset": "chamber",
+             "label": "house_committee"
+            }
+           ]
+          }
+         },
+         {
+          "prop": "label",
+          "labelset": "topic",
+          "label": "climate-environment"
+         }
+        ]
+       }
+      },
+      "page_size": 0,
+      "faceted": [
+       "/classification.labels/decade"
+      ]
+     }
+    }
+   }
+  },
+  {
+   "id": "T04",
+   "category": "trend",
+   "question": "Which year had the most speeches about gambling?",
+   "expected": {
+    "kind": "numbers",
+    "numbers": [
+     439
+    ],
+    "years_expected": [
+     2025
+    ],
+    "peak_year": 2025,
+    "years": [
+     {
+      "year": 1993,
+      "count": 3
+     },
+     {
+      "year": 1994,
+      "count": 7
+     },
+     {
+      "year": 1995,
+      "count": 1
+     },
+     {
+      "year": 1996,
+      "count": 3
+     },
+     {
+      "year": 1997,
+      "count": 11
+     },
+     {
+      "year": 1998,
+      "count": 24
+     },
+     {
+      "year": 1999,
+      "count": 57
+     },
+     {
+      "year": 2000,
+      "count": 49
+     },
+     {
+      "year": 2001,
+      "count": 85
+     },
+     {
+      "year": 2002,
+      "count": 10
+     },
+     {
+      "year": 2003,
+      "count": 17
+     },
+     {
+      "year": 2004,
+      "count": 9
+     },
+     {
+      "year": 2005,
+      "count": 6
+     },
+     {
+      "year": 2006,
+      "count": 8
+     },
+     {
+      "year": 2007,
+      "count": 6
+     },
+     {
+      "year": 2008,
+      "count": 12
+     },
+     {
+      "year": 2009,
+      "count": 11
+     },
+     {
+      "year": 2010,
+      "count": 17
+     },
+     {
+      "year": 2011,
+      "count": 47
+     },
+     {
+      "year": 2012,
+      "count": 134
+     },
+     {
+      "year": 2013,
+      "count": 36
+     },
+     {
+      "year": 2014,
+      "count": 15
+     },
+     {
+      "year": 2015,
+      "count": 90
+     },
+     {
+      "year": 2016,
+      "count": 243
+     },
+     {
+      "year": 2017,
+      "count": 208
+     },
+     {
+      "year": 2018,
+      "count": 249
+     },
+     {
+      "year": 2019,
+      "count": 194
+     },
+     {
+      "year": 2020,
+      "count": 225
+     },
+     {
+      "year": 2021,
+      "count": 331
+     },
+     {
+      "year": 2022,
+      "count": 279
+     },
+     {
+      "year": 2023,
+      "count": 136
+     },
+     {
+      "year": 2024,
+      "count": 155
+     },
+     {
+      "year": 2025,
+      "count": 439
+     },
+     {
+      "year": 2026,
+      "count": 299
+     }
+    ],
+    "method": "/search body-only totals per calendar year, gambling label, every parliament"
+   }
+  },
+  {
+   "id": "T05",
+   "category": "trend",
+   "question": "How many speeches about immigration were made in federal parliament in 2024 compared with 2023?",
+   "expected": {
+    "kind": "numbers",
+    "coverage_caveat": true,
+    "numbers": [
+     0,
+     85
+    ],
+    "y2023": 85,
+    "y2024": 0,
+    "query": {
+     "endpoint": "POST /search",
+     "body": {
+      "query": "",
+      "features": [
+       "fulltext"
+      ],
+      "top_k": 1,
+      "filter_expression": {
+       "field": {
+        "and": [
+         {
+          "prop": "label",
+          "labelset": "kind",
+          "label": "speech"
+         },
+         {
+          "not": {
+           "or": [
+            {
+             "prop": "label",
+             "labelset": "chamber",
+             "label": "senate_committee"
+            },
+            {
+             "prop": "label",
+             "labelset": "chamber",
+             "label": "joint_committee"
+            },
+            {
+             "prop": "label",
+             "labelset": "chamber",
+             "label": "house_committee"
+            }
+           ]
+          }
+         },
+         {
+          "prop": "label",
+          "labelset": "state",
+          "label": "federal"
+         },
+         {
+          "prop": "label",
+          "labelset": "topic",
+          "label": "immigration"
+         },
+         {
+          "prop": "created",
+          "since": "2024-01-01T00:00:00Z",
+          "until": "2024-12-31T23:59:59Z"
+         },
+         {
+          "prop": "field",
+          "type": "text",
+          "name": "body"
+         }
+        ]
+       }
+      }
+     }
+    },
+    "method": "/search body-only totals per year"
+   }
+  },
+  {
+   "id": "T06",
+   "category": "trend",
+   "question": "Did Andrew Wilkie speak more about gambling in the 2010s or the 2020s?",
+   "expected": {
+    "kind": "numbers",
+    "numbers": [
+     45,
+     15
+    ],
+    "names": [
+     "Andrew Wilkie"
+    ],
+    "answer": "2010s",
+    "query": {
+     "endpoint": "POST /catalog",
+     "body": {
+      "filter_expression": {
+       "resource": {
+        "and": [
+         {
+          "prop": "label",
+          "labelset": "kind",
+          "label": "speech"
+         },
+         {
+          "not": {
+           "or": [
+            {
+             "prop": "label",
+             "labelset": "chamber",
+             "label": "senate_committee"
+            },
+            {
+             "prop": "label",
+             "labelset": "chamber",
+             "label": "joint_committee"
+            },
+            {
+             "prop": "label",
+             "labelset": "chamber",
+             "label": "house_committee"
+            }
+           ]
+          }
+         },
+         {
+          "prop": "label",
+          "labelset": "topic",
+          "label": "gambling"
+         },
+         {
+          "prop": "origin_collaborator",
+          "collaborator": "Andrew Wilkie"
+         }
+        ]
+       }
+      },
+      "page_size": 0,
+      "faceted": [
+       "/classification.labels/decade"
+      ]
+     }
+    },
+    "method": "catalog decade facet for one speaker"
+   }
+  },
+  {
+   "id": "C01",
+   "category": "comparison",
+   "question": "How did Andrew Wilkie vote on gambling bills compared with what he said about gambling?",
+   "expected": {
+    "kind": "comparison",
+    "names": [
+     "Andrew Wilkie"
+    ],
+    "numbers": [
+     14,
+     9,
+     60
+    ],
+    "votes": {
+     "divisions": 23,
+     "aye": 14,
+     "no": 9,
+     "paired": 0,
+     "rows": [
+      {
+       "division": "division-federal-representatives-2710",
+       "date": "2012-11-29",
+       "name": "National Gambling Reform Bill 2012 \u2014 Second Reading \u2014 Read a second time",
+       "vote": "aye"
+      },
+      {
+       "division": "division-federal-representatives-2711",
+       "date": "2012-11-29",
+       "name": "National Gambling Reform Bill 2012 \u2014 Consideration in Detail \u2014 Delay the deadline for precommitment capability in poker machines",
+       "vote": "aye"
+      },
+      {
+       "division": "division-federal-representatives-2712",
+       "date": "2012-11-29",
+       "name": "National Gambling Reform Bill 2012 - Consideration in Detail - Agree to the bill",
+       "vote": "aye"
+      },
+      {
+       "division": "division-federal-representatives-3514",
+       "date": "2012-11-29",
+       "name": "Private Members' Business \u2014 Gambling",
+       "vote": "aye"
+      },
+      {
+       "division": "division-federal-representatives-4519",
+       "date": "2017-02-08",
+       "name": "Interactive Gambling Amendment Bill 2016 - Second Reading - Phase out ads relating to betting or gambling",
+       "vote": "aye"
+      },
+      {
+       "division": "division-federal-representatives-4520",
+       "date": "2017-02-08",
+       "name": "Bills \u2014 Interactive Gambling Amendment Bill 2016; Consideration in Detail",
+       "vote": "aye"
+      },
+      {
+       "division": "division-federal-representatives-4521",
+       "date": "2017-02-08",
+       "name": "Bills \u2014 Interactive Gambling Amendment Bill 2016; Consideration in Detail",
+       "vote": "aye"
+      },
+      {
+       "division": "division-federal-representatives-8140",
+       "date": "2023-06-14",
+       "name": "Business - Rearrangement - Broadcasting Services Amendment (Prohibition of Gambling Advertisements) Bill 2023",
+       "vote": "no"
+      },
+      {
+       "division": "division-federal-representatives-8454",
+       "date": "2023-11-14",
+       "name": "Interactive Gambling Amendment (Credit and Other Measures) Bill 2023 - Consideration in Detail - Methods of payment",
+       "vote": "no"
+      },
+      {
+       "division": "division-federal-representatives-8455",
+       "date": "2023-11-14",
+       "name": "Interactive Gambling Amendment (Credit and Other Measures) Bill 2023 - Consideration in Detail - Other amendments",
+       "vote": "aye"
+      },
+      {
+       "division": "division-federal-representatives-9279",
+       "date": "2024-11-28",
+       "name": "Motions - Gambling Advertising - Adjourn debate",
+       "vote": "no"
+      },
+      {
+       "division": "division-federal-representatives-9280",
+       "date": "2024-11-28",
+       "name": "Motions - Gambling Advertising - Adjourn debate",
+       "vote": "no"
+      },
+      {
+       "division": "division-federal-representatives-10268",
+       "date": "2026-06-22",
+       "name": "Motions \u2014 Gambling Advertising",
+       "vote": "no"
+      },
+      {
+       "division": "division-federal-representatives-10602",
+       "date": "2026-08-18",
+       "name": "Bills \u2014 Interactive Gambling Amendment (Gambling Reform) Bill 2026; Second Reading",
+       "vote": "aye"
+      },
+      {
+       "division": "division-federal-representatives-10603",
+       "date": "2026-08-18",
+       "name": "Bills \u2014 Interactive Gambling Amendment (Gambling Reform) Bill 2026; Second Reading",
+       "vote": "aye"
+      },
+      {
+       "division": "division-federal-representatives-10604",
+       "date": "2026-08-18",
+       "name": "Bills \u2014 Interactive Gambling Amendment (Gambling Reform) Bill 2026; Consideration in Detail",
+       "vote": "no"
+      },
+      {
+       "division": "division-federal-representatives-10605",
+       "date": "2026-08-18",
+       "name": "Bills \u2014 Interactive Gambling Amendment (Gambling Reform) Bill 2026; Consideration in Detail",
+       "vote": "no"
+      },
+      {
+       "division": "division-federal-representatives-10606",
+       "date": "2026-08-18",
+       "name": "Bills \u2014 Interactive Gambling Amendment (Gambling Reform) Bill 2026; Consideration in Detail",
+       "vote": "aye"
+      },
+      {
+       "division": "division-federal-representatives-10607",
+       "date": "2026-08-18",
+       "name": "Bills \u2014 Interactive Gambling Amendment (Gambling Reform) Bill 2026; Consideration in Detail",
+       "vote": "aye"
+      },
+      {
+       "division": "division-federal-representatives-10608",
+       "date": "2026-08-18",
+       "name": "Bills \u2014 Interactive Gambling Amendment (Gambling Reform) Bill 2026; Consideration in Detail",
+       "vote": "aye"
+      },
+      {
+       "division": "division-federal-representatives-10609",
+       "date": "2026-08-18",
+       "name": "Bills \u2014 Interactive Gambling Amendment (Gambling Reform) Bill 2026; Consideration in Detail",
+       "vote": "aye"
+      },
+      {
+       "division": "division-federal-representatives-10610",
+       "date": "2026-08-18",
+       "name": "Bills \u2014 Interactive Gambling Amendment (Gambling Reform) Bill 2026; Consideration in Detail",
+       "vote": "no"
+      },
+      {
+       "division": "division-federal-representatives-10611",
+       "date": "2026-08-18",
+       "name": "Bills \u2014 Interactive Gambling Amendment (Gambling Reform) Bill 2026; Third Reading",
+       "vote": "no"
+      }
+     ]
+    },
+    "speeches": 60,
+    "method": "division files matching /gambl|wagering|betting|poker machine|pokies/ in the division or bill name; speeches = gambling label"
+   }
+  },
+  {
+   "id": "C02",
+   "category": "comparison",
+   "question": "How did David Pocock vote on the Interactive Gambling Amendment (Gambling Reform) Bill 2026, and how often has he spoken about gambling?",
+   "expected": {
+    "kind": "comparison",
+    "names": [
+     "David Pocock"
+    ],
+    "numbers": [
+     8,
+     4,
+     4
+    ],
+    "votes": {
+     "divisions": 12,
+     "aye": 8,
+     "no": 4,
+     "paired": 0,
+     "rows": [
+      {
+       "division": "division-federal-senate-10701",
+       "date": "2026-08-19",
+       "name": "Sue Lines Pursuant to the order agreed to on 18 August, the time allotted for the second reading of the interactive gambling bills has expired. I will now put the question before the chair and then put the remaining questions required to complete the second reading stage. I will first deal with the amendment moved by Senator David Pocock.The question is that the amendment on sheet 4005 be agreed to.",
+       "vote": "aye"
+      },
+      {
+       "division": "division-federal-senate-10702",
+       "date": "2026-08-19",
+       "name": "Bills \u2014 Interactive Gambling Amendment (Gambling Reform) Bill 2026, National Self-Exclusion Register (Cost Recovery Levy) Amendment Bill 2026, Interactive Gambling (Cost Recovery Levy) Bill 2026; Limitation of Debate",
+       "vote": "aye"
+      },
+      {
+       "division": "division-federal-senate-10703",
+       "date": "2026-08-19",
+       "name": "Bills \u2014 Interactive Gambling Amendment (Gambling Reform) Bill 2026, National Self-Exclusion Register (Cost Recovery Levy) Amendment Bill 2026, Interactive Gambling (Cost Recovery Levy) Bill 2026; Limitation of Debate",
+       "vote": "no"
+      },
+      {
+       "division": "division-federal-senate-10704",
+       "date": "2026-08-19",
+       "name": "Bills \u2014 Interactive Gambling Amendment (Gambling Reform) Bill 2026, National Self-Exclusion Register (Cost Recovery Levy) Amendment Bill 2026, Interactive Gambling (Cost Recovery Levy) Bill 2026; in Committee",
+       "vote": "aye"
+      },
+      {
+       "division": "division-federal-senate-10705",
+       "date": "2026-08-19",
+       "name": "Bills \u2014 Interactive Gambling Amendment (Gambling Reform) Bill 2026, National Self-Exclusion Register (Cost Recovery Levy) Amendment Bill 2026, Interactive Gambling (Cost Recovery Levy) Bill 2026; Limitation of Debate",
+       "vote": "aye"
+      },
+      {
+       "division": "division-federal-senate-10706",
+       "date": "2026-08-19",
+       "name": "Bills \u2014 Interactive Gambling Amendment (Gambling Reform) Bill 2026, National Self-Exclusion Register (Cost Recovery Levy) Amendment Bill 2026, Interactive Gambling (Cost Recovery Levy) Bill 2026; Limitation of Debate",
+       "vote": "aye"
+      },
+      {
+       "division": "division-federal-senate-10707",
+       "date": "2026-08-19",
+       "name": "Bills \u2014 Interactive Gambling Amendment (Gambling Reform) Bill 2026, National Self-Exclusion Register (Cost Recovery Levy) Amendment Bill 2026, Interactive Gambling (Cost Recovery Levy) Bill 2026; Limitation of Debate",
+       "vote": "aye"
+      },
+      {
+       "division": "division-federal-senate-10708",
+       "date": "2026-08-19",
+       "name": "Bills \u2014 Interactive Gambling Amendment (Gambling Reform) Bill 2026, National Self-Exclusion Register (Cost Recovery Levy) Amendment Bill 2026, Interactive Gambling (Cost Recovery Levy) Bill 2026; Limitation of Debate",
+       "vote": "aye"
+      },
+      {
+       "division": "division-federal-senate-10709",
+       "date": "2026-08-19",
+       "name": "Bills \u2014 Interactive Gambling Amendment (Gambling Reform) Bill 2026, National Self-Exclusion Register (Cost Recovery Levy) Amendment Bill 2026, Interactive Gambling (Cost Recovery Levy) Bill 2026; Limitation of Debate",
+       "vote": "no"
+      },
+      {
+       "division": "division-federal-senate-10710",
+       "date": "2026-08-19",
+       "name": "Bills \u2014 Interactive Gambling Amendment (Gambling Reform) Bill 2026, National Self-Exclusion Register (Cost Recovery Levy) Amendment Bill 2026, Interactive Gambling (Cost Recovery Levy) Bill 2026; Limitation of Debate",
+       "vote": "no"
+      },
+      {
+       "division": "division-federal-senate-10711",
+       "date": "2026-08-19",
+       "name": "Bills \u2014 Interactive Gambling Amendment (Gambling Reform) Bill 2026, National Self-Exclusion Register (Cost Recovery Levy) Amendment Bill 2026, Interactive Gambling (Cost Recovery Levy) Bill 2026; Limitation of Debate",
+       "vote": "aye"
+      },
+      {
+       "division": "division-federal-senate-10712",
+       "date": "2026-08-19",
+       "name": "Bills \u2014 Interactive Gambling Amendment (Gambling Reform) Bill 2026, National Self-Exclusion Register (Cost Recovery Levy) Amendment Bill 2026, Interactive Gambling (Cost Recovery Levy) Bill 2026; Limitation of Debate",
+       "vote": "no"
+      }
+     ]
+    },
+    "speeches": 4,
+    "method": "divisions linked to bill au-federal-r7520"
+   }
+  },
+  {
+   "id": "C03",
+   "category": "comparison",
+   "question": "How did Sarah Hanson-Young vote on gambling legislation versus what she said about it?",
+   "expected": {
+    "kind": "comparison",
+    "names": [
+     "Sarah Hanson-Young"
+    ],
+    "numbers": [
+     30,
+     10,
+     3
+    ],
+    "votes": {
+     "divisions": 40,
+     "aye": 30,
+     "no": 10,
+     "paired": 0,
+     "rows": [
+      {
+       "division": "division-federal-senate-2220",
+       "date": "2012-02-09",
+       "name": "Documents \u2014 Gambling; Order for the Production of Documents",
+       "vote": "aye"
+      },
+      {
+       "division": "division-federal-senate-3515",
+       "date": "2012-11-29",
+       "name": "Bills \u2014 National Gambling Reform Bill 2012, National Gambling Reform (Related Matters) Bill (No. 1) 2012, National Gambling Reform (Related Matters) Bill (No. 2) 2012; Second Reading",
+       "vote": "aye"
+      },
+      {
+       "division": "division-federal-senate-3516",
+       "date": "2012-11-29",
+       "name": "Bills \u2014 National Gambling Reform Bill 2012, National Gambling Reform (Related Matters) Bill (No. 1) 2012, National Gambling Reform (Related Matters) Bill (No. 2) 2012; in Committee",
+       "vote": "aye"
+      },
+      {
+       "division": "division-federal-senate-3517",
+       "date": "2012-11-29",
+       "name": "Bills \u2014 National Gambling Reform Bill 2012, National Gambling Reform (Related Matters) Bill (No. 1) 2012, National Gambling Reform (Related Matters) Bill (No. 2) 2012; in Committee",
+       "vote": "aye"
+      },
+      {
+       "division": "division-federal-senate-3518",
+       "date": "2012-11-29",
+       "name": "Bills \u2014 National Gambling Reform Bill 2012, National Gambling Reform (Related Matters) Bill (No. 1) 2012, National Gambling Reform (Related Matters) Bill (No. 2) 2012; in Committee",
+       "vote": "aye"
+      },
+      {
+       "division": "division-federal-senate-3519",
+       "date": "2012-11-29",
+       "name": "Bills \u2014 National Gambling Reform Bill 2012, National Gambling Reform (Related Matters) Bill (No. 1) 2012, National Gambling Reform (Related Matters) Bill (No. 2) 2012; Third Reading",
+       "vote": "aye"
+      },
+      {
+       "division": "division-federal-senate-3159",
+       "date": "2014-03-05",
+       "name": "Social Services and Other Legislation Amendment Bill 2013 \u2014 In Committee \u2014 Keep schedule 1 (on gambling) unchanged",
+       "vote": "no"
+      },
+      {
+       "division": "division-federal-senate-3428",
+       "date": "2014-09-22",
+       "name": "Omnibus Repeal Day (Autumn 2014) Bill 2014 - in Committee - Interactive Gambling Act and ACMA",
+       "vote": "no"
+      },
+      {
+       "division": "division-federal-senate-4285",
+       "date": "2016-09-12",
+       "name": "Motions - Gambling - Against gambling advertising",
+       "vote": "aye"
+      },
+      {
+       "division": "division-federal-senate-4619",
+       "date": "2017-03-20",
+       "name": "Bills \u2014 Interactive Gambling Amendment Bill 2016; Second Reading",
+       "vote": "aye"
+      },
+      {
+       "division": "division-federal-senate-4620",
+       "date": "2017-03-20",
+       "name": "Bills \u2014 Interactive Gambling Amendment Bill 2016; in Committee",
+       "vote": "aye"
+      },
+      {
+       "division": "division-federal-senate-4621",
+       "date": "2017-03-21",
+       "name": "Bills \u2014 Interactive Gambling Amendment Bill 2016; in Committee",
+       "vote": "aye"
+      },
+      {
+       "division": "division-federal-senate-4622",
+       "date": "2017-03-21",
+       "name": "Bills \u2014 Interactive Gambling Amendment Bill 2016; in Committee",
+       "vote": "no"
+      },
+      {
+       "division": "division-federal-senate-4623",
+       "date": "2017-03-21",
+       "name": "Bills \u2014 Interactive Gambling Amendment Bill 2016; in Committee",
+       "vote": "aye"
+      },
+      {
+       "division": "division-federal-senate-4660",
+       "date": "2017-03-29",
+       "name": "Motions - Gambling - Apply the National Consumer Protection Framework",
+       "vote": "aye"
+      },
+      {
+       "division": "division-federal-senate-5138",
+       "date": "2018-02-14",
+       "name": "Motions - Gambling - Phase out poker machines",
+       "vote": "aye"
+      },
+      {
+       "division": "division-federal-senate-5177",
+       "date": "2018-03-26",
+       "name": "Communications Legislation Amendment (Online Content Services and Other Measures) Bill 2017 - Second Reading - Prohibit betting on lottery outcome",
+       "vote": "aye"
+      },
+      {
+       "division": "division-federal-senate-5180",
+       "date": "2018-03-27",
+       "name": "Communications Legislation Amendment (Online Content Services and Other Measures) Bill 2017 - in Committee - Gambling ads",
+       "vote": "aye"
+      },
+      {
+       "division": "division-federal-senate-5674",
+       "date": "2019-02-13",
+       "name": "Motions - Gambling - Introduced restrictions",
+       "vote": "aye"
+      },
+      {
+       "division": "division-federal-senate-5809",
+       "date": "2019-07-29",
+       "name": "Motions - Gambling - A new inquiry",
+       "vote": "aye"
+      },
+      {
+       "division": "division-federal-senate-8190",
+       "date": "2023-06-22",
+       "name": "Broadcasting Services Amendment (Ban on Gambling Advertisements During Live Sport) Bill 2023 - Second Reading - Speed things along",
+       "vote": "no"
+      },
+      {
+       "division": "division-federal-senate-8615",
+       "date": "2023-12-06",
+       "name": "Interactive Gambling Amendment (Credit and Other Measures) Bill 2023 - Second Reading - Political influence of wagering industry",
+       "vote": "aye"
+      },
+      {
+       "division": "division-federal-senate-8616",
+       "date": "2023-12-06",
+       "name": "Interactive Gambling Amendment (Credit and Other Measures) Bill 2023 - Committee of the Whole - Methods of payment",
+       "vote": "no"
+      },
+      {
+       "division": "division-federal-senate-9480",
+       "date": "2024-07-04",
+       "name": "Communications Legislation Amendment (Prominence and Anti-Siphoning) Bill 2024 - Second Reading - Online gambling advertising",
+       "vote": "aye"
+      },
+      {
+       "division": "division-federal-senate-9050",
+       "date": "2024-08-14",
+       "name": "Matters of Urgency - Gambling Advertising - Ban",
+       "vote": "aye"
+      },
+      {
+       "division": "division-federal-senate-9163",
+       "date": "2024-10-08",
+       "name": "Motions - Gambling Advertising - Ban",
+       "vote": "aye"
+      },
+      {
+       "division": "division-federal-senate-9260",
+       "date": "2024-11-26",
+       "name": "Documents - Gambling Advertising - Order for the Production of Documents",
+       "vote": "aye"
+      },
+      {
+       "division": "division-federal-senate-9744",
+       "date": "2025-09-02",
+       "name": "Documents \u2014 Gambling; Order for the Production of Documents",
+       "vote": "aye"
+      },
+      {
+       "division": "division-federal-senate-10701",
+       "date": "2026-08-19",
+       "name": "Sue Lines Pursuant to the order agreed to on 18 August, the time allotted for the second reading of the interactive gambling bills has expired. I will now put the question before the chair and then put the remaining questions required to complete the second reading stage. I will first deal with the amendment moved by Senator David Pocock.The question is that the amendment on sheet 4005 be agreed to.",
+       "vote": "aye"
+      },
+      {
+       "division": "division-federal-senate-10702",
+       "date": "2026-08-19",
+       "name": "Bills \u2014 Interactive Gambling Amendment (Gambling Reform) Bill 2026, National Self-Exclusion Register (Cost Recovery Levy) Amendment Bill 2026, Interactive Gambling (Cost Recovery Levy) Bill 2026; Limitation of Debate",
+       "vote": "aye"
+      },
+      {
+       "division": "division-federal-senate-10703",
+       "date": "2026-08-19",
+       "name": "Bills \u2014 Interactive Gambling Amendment (Gambling Reform) Bill 2026, National Self-Exclusion Register (Cost Recovery Levy) Amendment Bill 2026, Interactive Gambling (Cost Recovery Levy) Bill 2026; Limitation of Debate",
+       "vote": "no"
+      },
+      {
+       "division": "division-federal-senate-10704",
+       "date": "2026-08-19",
+       "name": "Bills \u2014 Interactive Gambling Amendment (Gambling Reform) Bill 2026, National Self-Exclusion Register (Cost Recovery Levy) Amendment Bill 2026, Interactive Gambling (Cost Recovery Levy) Bill 2026; in Committee",
+       "vote": "aye"
+      },
+      {
+       "division": "division-federal-senate-10705",
+       "date": "2026-08-19",
+       "name": "Bills \u2014 Interactive Gambling Amendment (Gambling Reform) Bill 2026, National Self-Exclusion Register (Cost Recovery Levy) Amendment Bill 2026, Interactive Gambling (Cost Recovery Levy) Bill 2026; Limitation of Debate",
+       "vote": "aye"
+      },
+      {
+       "division": "division-federal-senate-10706",
+       "date": "2026-08-19",
+       "name": "Bills \u2014 Interactive Gambling Amendment (Gambling Reform) Bill 2026, National Self-Exclusion Register (Cost Recovery Levy) Amendment Bill 2026, Interactive Gambling (Cost Recovery Levy) Bill 2026; Limitation of Debate",
+       "vote": "no"
+      },
+      {
+       "division": "division-federal-senate-10707",
+       "date": "2026-08-19",
+       "name": "Bills \u2014 Interactive Gambling Amendment (Gambling Reform) Bill 2026, National Self-Exclusion Register (Cost Recovery Levy) Amendment Bill 2026, Interactive Gambling (Cost Recovery Levy) Bill 2026; Limitation of Debate",
+       "vote": "aye"
+      },
+      {
+       "division": "division-federal-senate-10708",
+       "date": "2026-08-19",
+       "name": "Bills \u2014 Interactive Gambling Amendment (Gambling Reform) Bill 2026, National Self-Exclusion Register (Cost Recovery Levy) Amendment Bill 2026, Interactive Gambling (Cost Recovery Levy) Bill 2026; Limitation of Debate",
+       "vote": "aye"
+      },
+      {
+       "division": "division-federal-senate-10709",
+       "date": "2026-08-19",
+       "name": "Bills \u2014 Interactive Gambling Amendment (Gambling Reform) Bill 2026, National Self-Exclusion Register (Cost Recovery Levy) Amendment Bill 2026, Interactive Gambling (Cost Recovery Levy) Bill 2026; Limitation of Debate",
+       "vote": "no"
+      },
+      {
+       "division": "division-federal-senate-10710",
+       "date": "2026-08-19",
+       "name": "Bills \u2014 Interactive Gambling Amendment (Gambling Reform) Bill 2026, National Self-Exclusion Register (Cost Recovery Levy) Amendment Bill 2026, Interactive Gambling (Cost Recovery Levy) Bill 2026; Limitation of Debate",
+       "vote": "no"
+      },
+      {
+       "division": "division-federal-senate-10711",
+       "date": "2026-08-19",
+       "name": "Bills \u2014 Interactive Gambling Amendment (Gambling Reform) Bill 2026, National Self-Exclusion Register (Cost Recovery Levy) Amendment Bill 2026, Interactive Gambling (Cost Recovery Levy) Bill 2026; Limitation of Debate",
+       "vote": "aye"
+      },
+      {
+       "division": "division-federal-senate-10712",
+       "date": "2026-08-19",
+       "name": "Bills \u2014 Interactive Gambling Amendment (Gambling Reform) Bill 2026, National Self-Exclusion Register (Cost Recovery Levy) Amendment Bill 2026, Interactive Gambling (Cost Recovery Levy) Bill 2026; Limitation of Debate",
+       "vote": "no"
+      }
+     ]
+    },
+    "speeches": 3,
+    "method": "division files matching /gambl|wagering|betting|poker machine|pokies/ in the division or bill name; speeches = gambling label"
+   }
+  },
+  {
+   "id": "C04",
+   "category": "comparison",
+   "question": "How did the Greens vote on gambling divisions compared with how often they spoke about gambling?",
+   "expected": {
+    "kind": "comparison",
+    "names": [
+     "Greens"
+    ],
+    "numbers": [
+     45,
+     19,
+     33
+    ],
+    "votes": {
+     "divisions_voted": 64,
+     "all_aye": 45,
+     "all_no": 19,
+     "split": 0,
+     "not_present": 0,
+     "rows": [
+      {
+       "division": "division-federal-representatives-10268",
+       "date": "2026-06-22",
+       "aye": 0,
+       "no": 1,
+       "side": "no"
+      },
+      {
+       "division": "division-federal-representatives-10602",
+       "date": "2026-08-18",
+       "aye": 1,
+       "no": 0,
+       "side": "aye"
+      },
+      {
+       "division": "division-federal-representatives-10603",
+       "date": "2026-08-18",
+       "aye": 1,
+       "no": 0,
+       "side": "aye"
+      },
+      {
+       "division": "division-federal-representatives-10604",
+       "date": "2026-08-18",
+       "aye": 0,
+       "no": 1,
+       "side": "no"
+      },
+      {
+       "division": "division-federal-representatives-10605",
+       "date": "2026-08-18",
+       "aye": 0,
+       "no": 1,
+       "side": "no"
+      },
+      {
+       "division": "division-federal-representatives-10606",
+       "date": "2026-08-18",
+       "aye": 1,
+       "no": 0,
+       "side": "aye"
+      },
+      {
+       "division": "division-federal-representatives-10607",
+       "date": "2026-08-18",
+       "aye": 1,
+       "no": 0,
+       "side": "aye"
+      },
+      {
+       "division": "division-federal-representatives-10608",
+       "date": "2026-08-18",
+       "aye": 1,
+       "no": 0,
+       "side": "aye"
+      },
+      {
+       "division": "division-federal-representatives-10609",
+       "date": "2026-08-18",
+       "aye": 1,
+       "no": 0,
+       "side": "aye"
+      },
+      {
+       "division": "division-federal-representatives-10610",
+       "date": "2026-08-18",
+       "aye": 0,
+       "no": 1,
+       "side": "no"
+      },
+      {
+       "division": "division-federal-representatives-10611",
+       "date": "2026-08-18",
+       "aye": 0,
+       "no": 1,
+       "side": "no"
+      },
+      {
+       "division": "division-federal-representatives-2710",
+       "date": "2012-11-29",
+       "aye": 1,
+       "no": 0,
+       "side": "aye"
+      },
+      {
+       "division": "division-federal-representatives-2711",
+       "date": "2012-11-29",
+       "aye": 1,
+       "no": 0,
+       "side": "aye"
+      },
+      {
+       "division": "division-federal-representatives-2712",
+       "date": "2012-11-29",
+       "aye": 1,
+       "no": 0,
+       "side": "aye"
+      },
+      {
+       "division": "division-federal-representatives-3514",
+       "date": "2012-11-29",
+       "aye": 1,
+       "no": 0,
+       "side": "aye"
+      },
+      {
+       "division": "division-federal-representatives-4519",
+       "date": "2017-02-08",
+       "aye": 1,
+       "no": 0,
+       "side": "aye"
+      },
+      {
+       "division": "division-federal-representatives-4520",
+       "date": "2017-02-08",
+       "aye": 1,
+       "no": 0,
+       "side": "aye"
+      },
+      {
+       "division": "division-federal-representatives-4521",
+       "date": "2017-02-08",
+       "aye": 1,
+       "no": 0,
+       "side": "aye"
+      },
+      {
+       "division": "division-federal-representatives-8140",
+       "date": "2023-06-14",
+       "aye": 0,
+       "no": 4,
+       "side": "no"
+      },
+      {
+       "division": "division-federal-representatives-8454",
+       "date": "2023-11-14",
+       "aye": 0,
+       "no": 3,
+       "side": "no"
+      },
+      {
+       "division": "division-federal-representatives-8455",
+       "date": "2023-11-14",
+       "aye": 3,
+       "no": 0,
+       "side": "aye"
+      },
+      {
+       "division": "division-federal-representatives-9279",
+       "date": "2024-11-28",
+       "aye": 0,
+       "no": 4,
+       "side": "no"
+      },
+      {
+       "division": "division-federal-representatives-9280",
+       "date": "2024-11-28",
+       "aye": 0,
+       "no": 4,
+       "side": "no"
+      },
+      {
+       "division": "division-federal-senate-10701",
+       "date": "2026-08-19",
+       "aye": 9,
+       "no": 0,
+       "side": "aye"
+      },
+      {
+       "division": "division-federal-senate-10702",
+       "date": "2026-08-19",
+       "aye": 9,
+       "no": 0,
+       "side": "aye"
+      },
+      {
+       "division": "division-federal-senate-10703",
+       "date": "2026-08-19",
+       "aye": 0,
+       "no": 9,
+       "side": "no"
+      },
+      {
+       "division": "division-federal-senate-10704",
+       "date": "2026-08-19",
+       "aye": 9,
+       "no": 0,
+       "side": "aye"
+      },
+      {
+       "division": "division-federal-senate-10705",
+       "date": "2026-08-19",
+       "aye": 9,
+       "no": 0,
+       "side": "aye"
+      },
+      {
+       "division": "division-federal-senate-10706",
+       "date": "2026-08-19",
+       "aye": 0,
+       "no": 9,
+       "side": "no"
+      },
+      {
+       "division": "division-federal-senate-10707",
+       "date": "2026-08-19",
+       "aye": 9,
+       "no": 0,
+       "side": "aye"
+      },
+      {
+       "division": "division-federal-senate-10708",
+       "date": "2026-08-19",
+       "aye": 9,
+       "no": 0,
+       "side": "aye"
+      },
+      {
+       "division": "division-federal-senate-10709",
+       "date": "2026-08-19",
+       "aye": 0,
+       "no": 9,
+       "side": "no"
+      },
+      {
+       "division": "division-federal-senate-10710",
+       "date": "2026-08-19",
+       "aye": 0,
+       "no": 9,
+       "side": "no"
+      },
+      {
+       "division": "division-federal-senate-10711",
+       "date": "2026-08-19",
+       "aye": 9,
+       "no": 0,
+       "side": "aye"
+      },
+      {
+       "division": "division-federal-senate-10712",
+       "date": "2026-08-19",
+       "aye": 0,
+       "no": 9,
+       "side": "no"
+      },
+      {
+       "division": "division-federal-senate-2220",
+       "date": "2012-02-09",
+       "aye": 9,
+       "no": 0,
+       "side": "aye"
+      },
+      {
+       "division": "division-federal-senate-3159",
+       "date": "2014-03-05",
+       "aye": 0,
+       "no": 8,
+       "side": "no"
+      },
+      {
+       "division": "division-federal-senate-3428",
+       "date": "2014-09-22",
+       "aye": 0,
+       "no": 9,
+       "side": "no"
+      },
+      {
+       "division": "division-federal-senate-3515",
+       "date": "2012-11-29",
+       "aye": 9,
+       "no": 0,
+       "side": "aye"
+      },
+      {
+       "division": "division-federal-senate-3516",
+       "date": "2012-11-29",
+       "aye": 9,
+       "no": 0,
+       "side": "aye"
+      },
+      {
+       "division": "division-federal-senate-3517",
+       "date": "2012-11-29",
+       "aye": 9,
+       "no": 0,
+       "side": "aye"
+      },
+      {
+       "division": "division-federal-senate-3518",
+       "date": "2012-11-29",
+       "aye": 9,
+       "no": 0,
+       "side": "aye"
+      },
+      {
+       "division": "division-federal-senate-3519",
+       "date": "2012-11-29",
+       "aye": 9,
+       "no": 0,
+       "side": "aye"
+      },
+      {
+       "division": "division-federal-senate-4285",
+       "date": "2016-09-12",
+       "aye": 9,
+       "no": 0,
+       "side": "aye"
+      },
+      {
+       "division": "division-federal-senate-4619",
+       "date": "2017-03-20",
+       "aye": 8,
+       "no": 0,
+       "side": "aye"
+      },
+      {
+       "division": "division-federal-senate-4620",
+       "date": "2017-03-20",
+       "aye": 8,
+       "no": 0,
+       "side": "aye"
+      },
+      {
+       "division": "division-federal-senate-4621",
+       "date": "2017-03-21",
+       "aye": 8,
+       "no": 0,
+       "side": "aye"
+      },
+      {
+       "division": "division-federal-senate-4622",
+       "date": "2017-03-21",
+       "aye": 0,
+       "no": 8,
+       "side": "no"
+      },
+      {
+       "division": "division-federal-senate-4623",
+       "date": "2017-03-21",
+       "aye": 8,
+       "no": 0,
+       "side": "aye"
+      },
+      {
+       "division": "division-federal-senate-4660",
+       "date": "2017-03-29",
+       "aye": 7,
+       "no": 0,
+       "side": "aye"
+      },
+      {
+       "division": "division-federal-senate-5138",
+       "date": "2018-02-14",
+       "aye": 9,
+       "no": 0,
+       "side": "aye"
+      },
+      {
+       "division": "division-federal-senate-5177",
+       "date": "2018-03-26",
+       "aye": 9,
+       "no": 0,
+       "side": "aye"
+      },
+      {
+       "division": "division-federal-senate-5180",
+       "date": "2018-03-27",
+       "aye": 9,
+       "no": 0,
+       "side": "aye"
+      },
+      {
+       "division": "division-federal-senate-5674",
+       "date": "2019-02-13",
+       "aye": 9,
+       "no": 0,
+       "side": "aye"
+      },
+      {
+       "division": "division-federal-senate-5809",
+       "date": "2019-07-29",
+       "aye": 9,
+       "no": 0,
+       "side": "aye"
+      },
+      {
+       "division": "division-federal-senate-8190",
+       "date": "2023-06-22",
+       "aye": 0,
+       "no": 9,
+       "side": "no"
+      },
+      {
+       "division": "division-federal-senate-8615",
+       "date": "2023-12-06",
+       "aye": 8,
+       "no": 0,
+       "side": "aye"
+      },
+      {
+       "division": "division-federal-senate-8616",
+       "date": "2023-12-06",
+       "aye": 0,
+       "no": 8,
+       "side": "no"
+      },
+      {
+       "division": "division-federal-senate-9050",
+       "date": "2024-08-14",
+       "aye": 9,
+       "no": 0,
+       "side": "aye"
+      },
+      {
+       "division": "division-federal-senate-9163",
+       "date": "2024-10-08",
+       "aye": 9,
+       "no": 0,
+       "side": "aye"
+      },
+      {
+       "division": "division-federal-senate-9260",
+       "date": "2024-11-26",
+       "aye": 10,
+       "no": 0,
+       "side": "aye"
+      },
+      {
+       "division": "division-federal-senate-9480",
+       "date": "2024-07-04",
+       "aye": 9,
+       "no": 0,
+       "side": "aye"
+      },
+      {
+       "division": "division-federal-senate-9595",
+       "date": "2025-02-12",
+       "aye": 9,
+       "no": 0,
+       "side": "aye"
+      },
+      {
+       "division": "division-federal-senate-9744",
+       "date": "2025-09-02",
+       "aye": 10,
+       "no": 0,
+       "side": "aye"
+      }
+     ]
+    },
+    "speeches": 33,
+    "method": "per division: Greens all aye / all no / split among those present"
+   }
+  },
+  {
+   "id": "C05",
+   "category": "comparison",
+   "question": "Compare how often Peter Dutton and Anthony Albanese spoke about immigration.",
+   "expected": {
+    "kind": "comparison",
+    "names": [
+     "Peter Dutton",
+     "Anthony Albanese"
+    ],
+    "numbers": [
+     541,
+     174
+    ],
+    "dutton": 541,
+    "albanese": 174,
+    "method": "catalog totals, immigration label, per speaker"
+   }
+  },
+  {
+   "id": "M01",
+   "category": "money",
+   "question": "Who donated most to the party whose MPs made the most speeches about gambling?",
+   "note": "Federal speeches, because the money graph is federal AEC returns.",
+   "expected": {
+    "kind": "money",
+    "party": "Liberal",
+    "names": [
+     "Liberal"
+    ],
+    "party_ranking": [
+     {
+      "name": "Liberal",
+      "count": 335
+     },
+     {
+      "name": "Labor",
+      "count": 327
+     },
+     {
+      "name": "Independent",
+      "count": 103
+     }
+    ],
+    "numbers": [
+     335
+    ],
+    "donors": {
+     "party": "Liberal",
+     "top": [
+      {
+       "name": "Westpac Banking Corporation",
+       "total_aud": 40608922,
+       "receipts": 433,
+       "years": [
+        1998,
+        2024
+       ]
+      },
+      {
+       "name": "Vapold Pty Ltd",
+       "total_aud": 33999963,
+       "receipts": 43,
+       "years": [
+        1999,
+        2024
+       ]
+      },
+      {
+       "name": "National Australia Bank",
+       "total_aud": 20896422,
+       "receipts": 182,
+       "years": [
+        1998,
+        2024
+       ]
+      }
+     ],
+     "donors_not_named": {
+      "donors": 58,
+      "total_aud": 59159890
+     },
+     "query": {
+      "file": "portal/public/graph/money.json",
+      "select": "edges where target = party:Liberal, donor nodes after withholdIndividualDonors, sorted by total"
+     }
+    },
+    "method": "federal gambling speeches by party (catalog), then donors to that party (money.json)",
+    "query": {
+     "endpoint": "POST /catalog",
+     "body": {
+      "filter_expression": {
+       "resource": {
+        "and": [
+         {
+          "prop": "label",
+          "labelset": "kind",
+          "label": "speech"
+         },
+         {
+          "not": {
+           "or": [
+            {
+             "prop": "label",
+             "labelset": "chamber",
+             "label": "senate_committee"
+            },
+            {
+             "prop": "label",
+             "labelset": "chamber",
+             "label": "joint_committee"
+            },
+            {
+             "prop": "label",
+             "labelset": "chamber",
+             "label": "house_committee"
+            }
+           ]
+          }
+         },
+         {
+          "prop": "label",
+          "labelset": "topic",
+          "label": "gambling"
+         },
+         {
+          "prop": "label",
+          "labelset": "state",
+          "label": "federal"
+         }
+        ]
+       }
+      },
+      "page_size": 0,
+      "faceted": [
+       "/classification.labels/party"
+      ]
+     }
+    }
+   }
+  },
+  {
+   "id": "M02",
+   "category": "money",
+   "question": "Which donors gave the most to the party that made the most federal speeches about mining and energy?",
+   "expected": {
+    "kind": "money",
+    "party": "Liberal",
+    "names": [
+     "Liberal"
+    ],
+    "party_ranking": [
+     {
+      "name": "Liberal",
+      "count": 7173
+     },
+     {
+      "name": "Labor",
+      "count": 6273
+     },
+     {
+      "name": "Nationals",
+      "count": 1903
+     }
+    ],
+    "numbers": [
+     7173
+    ],
+    "donors": {
+     "party": "Liberal",
+     "top": [
+      {
+       "name": "Westpac Banking Corporation",
+       "total_aud": 40608922,
+       "receipts": 433,
+       "years": [
+        1998,
+        2024
+       ]
+      },
+      {
+       "name": "Vapold Pty Ltd",
+       "total_aud": 33999963,
+       "receipts": 43,
+       "years": [
+        1999,
+        2024
+       ]
+      },
+      {
+       "name": "National Australia Bank",
+       "total_aud": 20896422,
+       "receipts": 182,
+       "years": [
+        1998,
+        2024
+       ]
+      }
+     ],
+     "donors_not_named": {
+      "donors": 58,
+      "total_aud": 59159890
+     },
+     "query": {
+      "file": "portal/public/graph/money.json",
+      "select": "edges where target = party:Liberal, donor nodes after withholdIndividualDonors, sorted by total"
+     }
+    },
+    "query": {
+     "endpoint": "POST /catalog",
+     "body": {
+      "filter_expression": {
+       "resource": {
+        "and": [
+         {
+          "prop": "label",
+          "labelset": "kind",
+          "label": "speech"
+         },
+         {
+          "not": {
+           "or": [
+            {
+             "prop": "label",
+             "labelset": "chamber",
+             "label": "senate_committee"
+            },
+            {
+             "prop": "label",
+             "labelset": "chamber",
+             "label": "joint_committee"
+            },
+            {
+             "prop": "label",
+             "labelset": "chamber",
+             "label": "house_committee"
+            }
+           ]
+          }
+         },
+         {
+          "prop": "label",
+          "labelset": "topic",
+          "label": "mining-energy"
+         },
+         {
+          "prop": "label",
+          "labelset": "state",
+          "label": "federal"
+         }
+        ]
+       }
+      },
+      "page_size": 0,
+      "faceted": [
+       "/classification.labels/party"
+      ]
+     }
+    }
+   }
+  },
+  {
+   "id": "M03",
+   "category": "money",
+   "question": "How much did gambling-industry donors give to each party, and which party's MPs spoke most about gambling?",
+   "expected": {
+    "kind": "money",
+    "party": "Liberal",
+    "names": [
+     "Labor",
+     "Liberal"
+    ],
+    "industry": {
+     "industry": "gambling",
+     "rows": [
+      {
+       "party": "Labor",
+       "total_aud": 10763834
+      },
+      {
+       "party": "Liberal",
+       "total_aud": 9024407
+      },
+      {
+       "party": "Nationals",
+       "total_aud": 1558802
+      },
+      {
+       "party": "LNP",
+       "total_aud": 530324
+      },
+      {
+       "party": "One Nation",
+       "total_aud": 3000
+      }
+     ],
+     "query": {
+      "file": "portal/public/graph/money.json",
+      "select": "sum edge.total by target party where donor.industry = gambling"
+     }
+    },
+    "party_ranking": [
+     {
+      "name": "Liberal",
+      "count": 335
+     },
+     {
+      "name": "Labor",
+      "count": 327
+     },
+     {
+      "name": "Independent",
+      "count": 103
+     }
+    ],
+    "numbers": [
+     335
+    ],
+    "amounts": [
+     10763834,
+     9024407
+    ]
+   }
+  },
+  {
+   "id": "M04",
+   "category": "money",
+   "question": "Who donated most to the party of the federal MP who made the most speeches about housing?",
+   "expected": {
+    "kind": "money",
+    "party": "Liberal",
+    "names": [
+     "Scott Morrison",
+     "Liberal"
+    ],
+    "speaker_ranking": [
+     {
+      "name": "Scott Morrison",
+      "count": 203
+     },
+     {
+      "name": "Tanya Plibersek",
+      "count": 185
+     },
+     {
+      "name": "Malcolm Turnbull",
+      "count": 157
+     }
+    ],
+    "numbers": [
+     203
+    ],
+    "donors": {
+     "party": "Liberal",
+     "top": [
+      {
+       "name": "Westpac Banking Corporation",
+       "total_aud": 40608922,
+       "receipts": 433,
+       "years": [
+        1998,
+        2024
+       ]
+      },
+      {
+       "name": "Vapold Pty Ltd",
+       "total_aud": 33999963,
+       "receipts": 43,
+       "years": [
+        1999,
+        2024
+       ]
+      },
+      {
+       "name": "National Australia Bank",
+       "total_aud": 20896422,
+       "receipts": 182,
+       "years": [
+        1998,
+        2024
+       ]
+      }
+     ],
+     "donors_not_named": {
+      "donors": 58,
+      "total_aud": 59159890
+     },
+     "query": {
+      "file": "portal/public/graph/money.json",
+      "select": "edges where target = party:Liberal, donor nodes after withholdIndividualDonors, sorted by total"
+     }
+    },
+    "query": {
+     "endpoint": "POST /catalog",
+     "body": {
+      "filter_expression": {
+       "resource": {
+        "and": [
+         {
+          "prop": "label",
+          "labelset": "kind",
+          "label": "speech"
+         },
+         {
+          "not": {
+           "prop": "label",
+           "labelset": "speaker_type",
+           "label": "witness"
+          }
+         },
+         {
+          "not": {
+           "or": [
+            {
+             "prop": "label",
+             "labelset": "chamber",
+             "label": "senate_committee"
+            },
+            {
+             "prop": "label",
+             "labelset": "chamber",
+             "label": "joint_committee"
+            },
+            {
+             "prop": "label",
+             "labelset": "chamber",
+             "label": "house_committee"
+            }
+           ]
+          }
+         },
+         {
+          "prop": "label",
+          "labelset": "topic",
+          "label": "housing"
+         },
+         {
+          "prop": "label",
+          "labelset": "state",
+          "label": "federal"
+         }
+        ]
+       }
+      },
+      "page_size": 0,
+      "faceted": [
+       "/u/o"
+      ]
+     }
+    },
+    "method": "top federal housing speaker; party = the party label on that speaker's housing speeches"
+   }
+  },
+  {
+   "id": "M05",
+   "category": "money",
+   "question": "Which party received the most from mining-industry donors, and how many federal speeches about mining and energy have its MPs made since 2022?",
+   "expected": {
+    "kind": "money",
+    "coverage_caveat": true,
+    "party": "United Australia Party",
+    "names": [
+     "United Australia Party"
+    ],
+    "industry": {
+     "industry": "mining",
+     "rows": [
+      {
+       "party": "United Australia Party",
+       "total_aud": 155465435
+      },
+      {
+       "party": "Liberal",
+       "total_aud": 17280120
+      },
+      {
+       "party": "Labor",
+       "total_aud": 7611596
+      },
+      {
+       "party": "Nationals",
+       "total_aud": 4589204
+      },
+      {
+       "party": "LNP",
+       "total_aud": 4091841
+      },
+      {
+       "party": "Family First",
+       "total_aud": 300000
+      },
+      {
+       "party": "Katter's Australian Party",
+       "total_aud": 201000
+      },
+      {
+       "party": "One Nation",
+       "total_aud": 30000
+      }
+     ],
+     "query": {
+      "file": "portal/public/graph/money.json",
+      "select": "sum edge.total by target party where donor.industry = mining"
+     }
+    },
+    "numbers": [
+     4
+    ],
+    "amounts": [
+     155465435
+    ],
+    "speeches_since_2022": 4,
+    "query": {
+     "endpoint": "POST /search",
+     "body": {
+      "query": "",
+      "features": [
+       "fulltext"
+      ],
+      "top_k": 1,
+      "filter_expression": {
+       "field": {
+        "and": [
+         {
+          "prop": "label",
+          "labelset": "kind",
+          "label": "speech"
+         },
+         {
+          "not": {
+           "or": [
+            {
+             "prop": "label",
+             "labelset": "chamber",
+             "label": "senate_committee"
+            },
+            {
+             "prop": "label",
+             "labelset": "chamber",
+             "label": "joint_committee"
+            },
+            {
+             "prop": "label",
+             "labelset": "chamber",
+             "label": "house_committee"
+            }
+           ]
+          }
+         },
+         {
+          "prop": "label",
+          "labelset": "state",
+          "label": "federal"
+         },
+         {
+          "prop": "label",
+          "labelset": "topic",
+          "label": "mining-energy"
+         },
+         {
+          "prop": "label",
+          "labelset": "party",
+          "label": "United Australia Party"
+         },
+         {
+          "prop": "created",
+          "since": "2022-01-01T00:00:00Z"
+         },
+         {
+          "prop": "field",
+          "type": "text",
+          "name": "body"
+         }
+        ]
+       }
+      }
+     }
+    }
+   }
+  }
+ ]
+}

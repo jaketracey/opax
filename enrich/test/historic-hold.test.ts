@@ -20,7 +20,7 @@ const labels = [{ labelset: 'kind', label: 'speech' }, { labelset: 'source', lab
 const resource = { id: rid, usermetadata: { classifications: labels } }
 const slugKb = { getBySlug: async (_slug: string) => resource }
 const discovery = (db: D1Database, kb: FakeKb, historicHold = true) => discover({
-  db, kb, historicHold, now: 1, startIso: '2026-09-20T00:00:00Z', maxPages: 2, overlapS: 120,
+  db, kb, historicHold, now: Date.parse('2026-09-28T12:00:00Z'), startIso: '2026-09-28T10:00:00Z', maxPages: 2, overlapS: 120,
 })
 function catalogKb(): FakeKb {
   const kb = new FakeKb()
@@ -34,7 +34,7 @@ test('historic discovery advances its cursor and spends no neurons on held tasks
   const ai = new FakeAi(() => JSON.stringify({ summary: GOOD_SUMMARY, topics: ['housing'] }))
   const { deps, d1, raw } = makeDeps({ kb, ai, env: { HISTORIC_HOLD: 'true', WRITE_MODE: 'live' } })
   await runTick(deps)
-  assert.equal(await getState(d1, 'cursor:speech'), '2026-09-28T11:00:00.000Z')
+  assert.equal(await getState(d1, 'cursor:speech'), '2026-09-28T12:00:00.000Z')
   assert.ok(rows(raw, 'SELECT * FROM queue').every(r => r.status === 'done' && r.terminal_reason === 'historic-held' && r.historic === 1))
   raw.exec('UPDATE queue SET priority = 999999')
   assert.deepEqual(await claimRids(d1, 90, 2, 'token'), [])

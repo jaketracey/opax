@@ -7,11 +7,18 @@ import {tableDatabase} from './table-d1-harness.mjs';
 import {tableIdentityIndex} from '../../scripts/load_tables.mjs';
 import {identityHash} from '../src/table-identities.mjs';
 import {registerServerCSVContract} from './datatable-endpoint-contract.mjs';
+import {performanceRow} from './helpers/table-identity-corpus.mjs';
 
 const rows=Object.fromEntries(Object.entries(TABLE_DATASETS).map(([name,c])=>[name,Array.from({length:260},(_,i)=>({row:Object.fromEntries(c.columns.map(col=>[col.key,col.key==='id' ? 'item-'+i : ['money','count'].includes(col.type) ? i+0.25 : col.type==='year' ? 2000+i : col.type==='category' ? (['portfolios','sectors','entities'].includes(col.key) ? ['Group '+i%2] : 'Group '+i%2) : col.type==='date' ? '2024-01-01' : col.key==='abn' ? '' : i===3 ? 'Needle record' : 'Record '+i]))}))]));
 const local=await tableDatabase({datasets:rows});test.after(()=>local.close());
 const env={TABLE_DB:local.db,CACHE_EPOCH:'test'};
 const fetchTable=(name,query='',init)=>tableApi(new Request('https://opax.com.au/api/table/'+name+'?'+query,init),env);
+test('ordinary long queries skip cryptographic privacy lookups through the bundled prefilter',async()=>{
+  let privacyReads=0;
+  const db={prepare(sql){if(/FROM\s+table_private_identity\b/i.test(sql))privacyReads++;return local.db.prepare(sql);},batch:local.db.batch.bind(local.db)};
+  const response=await tableApi(new Request('https://local.invalid/api/table/contracts?'+new URLSearchParams({q:performanceRow})),{TABLE_DB:db});
+  assert.equal(response.status,200);assert.equal(privacyReads,0,'safe query bypasses SHA-256/D1 confirmation');
+});
 for(const [name,config]of Object.entries(TABLE_DATASETS))test(name+': paging, sorting, facets, CSV and caps',async()=>{
   let r=await fetchTable(name,'page=2&pageSize=200');assert.equal(r.status,200);let page=await r.json();assert.equal(page.total,260);assert.equal(page.rows.length,60);assert.equal(page.page,2);
   const numeric=config.columns.find(c=>['money','count','year'].includes(c.type));
@@ -28,7 +35,7 @@ test('bad dataset is 404; invalid state and methods return fixed JSON errors',as
   for(const q of ['page=0','sort=not-a-column:desc','f.amount.min=4','f.amount=%5B%224%22%5D','format=bad','f.agency=literal','q=a&q=b'])assert.equal((await fetchTable('contracts',q)).status,400,q);
   const response=await fetchTable('contracts','',{method:'POST'});assert.equal(response.status,405);assert.deepEqual(await response.json(),{error:'method_not_allowed'});
 });
-test('privacy datasets stay dark for a missing or stale registry fingerprint; public datasets keep serving',async()=>{
+test('donor datasets stay dark for a missing or stale registry fingerprint; echo and public datasets keep serving',async()=>{
   assert.equal(local.manifest.privacyFingerprint,TABLE_REGISTRY_FINGERPRINT);
   const version=await local.db.prepare("SELECT value FROM table_meta WHERE key='version'").first('value');
   try {
@@ -38,16 +45,21 @@ test('privacy datasets stay dark for a missing or stale registry fingerprint; pu
       else await local.db.prepare("INSERT OR REPLACE INTO table_meta VALUES ('privacy_fingerprint',?)").bind(fingerprint).run();
       let reads=0;
       const db={prepare(sql){if(/FROM\s+table_(?!meta\b|private_identity\b)/i.test(sql))reads++;return local.db.prepare(sql);},batch:local.db.batch.bind(local.db)};
-      for(const [name,c]of Object.entries(TABLE_DATASETS).filter(([,c])=>c.privacy))for(const csv of [false,true]) {
+      assert.deepEqual(Object.entries(TABLE_DATASETS).filter(([,c])=>c.privacy==='donors').map(([name])=>name).sort(),['contracts','grants','money-connections','party-money','suppliers']);
+      for(const [name,c]of Object.entries(TABLE_DATASETS).filter(([,c])=>c.privacy==='donors'))for(const csv of [false,true]) {
         const response=await tableApi(new Request('https://local.invalid/api/table/'+name+(csv?'?format=csv':'')),{TABLE_DB:db});
         assert.equal(response.status,503);assert.equal(response.headers.get('retry-after'),'60');
         assert.equal(response.headers.get('cache-control'),'no-store');assert.equal(response.headers.get('link'),null);
         assert.deepEqual(await response.json(),{error:'unavailable'});
       }
       assert.equal(reads,0,'mismatched publication reached data SQL');
-      for(const name of ['instruments','audit-reports']) {
+      for(const name of ['instruments','audit-reports','votes','divisions']) {
         const response=await tableApi(new Request('https://local.invalid/api/table/'+name),{TABLE_DB:db});
         assert.equal(response.status,200);assert.equal((await response.json()).total,260);
+        if(TABLE_DATASETS[name].privacy==='echo') {
+          const guarded=await tableApi(new Request('https://local.invalid/api/table/'+name+'?q=ordinary'),{TABLE_DB:db});
+          assert.equal(guarded.status,200,'echo query privacy uses the complete Worker registry');
+        }
       }
     }
   } finally {
@@ -59,6 +71,20 @@ test('canonical state uses JSON filters, normalises order and supports condition
   const a=await fetchTable('contracts',new URLSearchParams({'f.amount':'{"max":100,"min":10}',q:' NEEDLE '}));
   const b=await fetchTable('contracts',new URLSearchParams({q:'needle','f.amount':'{"min":10,"max":100}'}));assert.equal(a.headers.get('etag'),b.headers.get('etag'));
   const cached=await fetchTable('contracts',new URLSearchParams({q:'needle','f.amount':'{"min":10,"max":100}'}),{headers:{'if-none-match':b.headers.get('etag')}});assert.equal(cached.status,304);assert.equal(cached.headers.get('x-robots-tag'),'noindex');
+});
+test('echo snapshots with older candidate lengths still serve scoped queries using the complete Worker registry',async()=>{
+  const stored=await local.db.prepare("SELECT key,value FROM table_meta WHERE key IN ('privacy_lengths','privacy_stripped_lengths')").all();
+  try {
+    await local.db.prepare("UPDATE table_meta SET value='[]' WHERE key IN ('privacy_lengths','privacy_stripped_lengths')").run();
+    for(const name of ['votes','divisions']) {
+      assert.equal((await fetchTable(name)).status,200,'echo snapshot without input');
+      assert.equal((await fetchTable(name,'q=ordinary')).status,200,'echo query uses the bound Worker registry');
+      const response=await fetchTable(name,'q='+encodeURIComponent(performanceRow));
+      assert.equal(response.status,200);
+    }
+  } finally {
+    await local.db.batch(stored.results.map(({key,value})=>local.db.prepare('UPDATE table_meta SET value=? WHERE key=?').bind(value,key)));
+  }
 });
 test('core serializer and D1 API integrate with category and range state',async()=>{
   // Exercise core query exports without replacing its public module.

@@ -26,7 +26,9 @@
  * safety: model text and all live data reach the DOM through textContent,
  * never innerHTML.
  */
-import { machineLabelHTML } from './labels.js?v=c6bf994ef7'
+import { machineLabelHTML } from './labels.js?v=fc03aa14cf'
+import {personUrl} from './canonical-urls.js?v=225d5915ea';
+import {isMultiSpeaker, isUnattributed, speakerLabel, resolvedParticipants, groupAvatarHTML} from './speech-attribution.js?v=1350457c5d';
 
 const ASK_URL = '/api/ask'
 const SPEAKERS_URL = '/speakers.json'
@@ -378,17 +380,31 @@ function sourceRow (s, label) {
   const li = el('li')
   const line = el('div')
   line.appendChild(el('span', 'tvn-src-date', s.date ? fmtDate(s.date) : 'Undated'))
-  const a = el('a', null, label || s.title || s.slug)
+  const a = el('a', null, isMultiSpeaker(s) ? s.debate || 'Parliamentary debate' : label || s.title || s.slug)
   a.href = `#/doc/${s.slug}`
   line.appendChild(a)
   const meta = el('span', 'tvn-src-meta')
-  if (s.party) {
+  if (s.party && !isUnattributed(s)) {
     meta.append(' · ')
     meta.appendChild(partyChip(s.party))
   }
   if (s.state) meta.append(` · ${STATE_NAMES[s.state] || s.state}`)
   line.appendChild(meta)
   li.appendChild(line)
+  if (s.kind === 'speech' || isMultiSpeaker(s)) {
+    const byline = el('div')
+    if (isMultiSpeaker(s)) { const group=el('span'); group.innerHTML=groupAvatarHTML(); byline.append(group) }
+    byline.append(speakerLabel(s) + (s.speaker_type === 'witness' ? ' · witness' : ''))
+    for (const p of isMultiSpeaker(s) ? resolvedParticipants(s.participants) : []) {
+      const a=el('a', 'speech-participant', p.name + (p.role ? ` (${p.role})` : '')); a.href=personUrl(p.name)
+      byline.append(' · ', a)
+      fetch('/photos/people.json', {cache:'no-cache'}).then(r=>r.json()).then(map=>{
+        const id=map[p.name.toLowerCase()]; if (!id) return
+        const image=el('img'); image.src=`/photos/${id}.webp`; image.alt=''; image.width=24; image.height=24; image.loading='lazy'; a.prepend(image)
+      }).catch(()=>{})
+    }
+    li.append(byline)
+  }
   const snippet = (s.snippet || '').trim().replace(/\s+/g, ' ')
   if (snippet) {
     li.appendChild(el('blockquote', 'tvn-src-quote',
