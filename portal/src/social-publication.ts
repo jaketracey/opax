@@ -1,4 +1,3 @@
-import {sanitiseStoredDonors} from './donor-hashes.mjs'
 /** One frozen edition per Melbourne day, independent delivery receipts per channel.
  * Claims are atomic in D1. An uncertain write is held for review, never blindly retried.
  */
@@ -43,7 +42,7 @@ export function readiness(env: SocialEnv): Record<Channel, { enabled: boolean; r
  * edition. X keeps the single card; so does any edition stored before stories.
  */
 export function publicationCopy(post: DailyPost, channel: Channel): { text: string; link: string; image: string; slides?: string[]; frames?: number[] } {
-  post = authoriseVicPost(sanitiseStoredDonors(post))
+  post = authoriseVicPost((post))
   const link = new URL(post.url)
   if (link.origin !== 'https://opax.com.au') throw new Error('Publication requires an Opax source page')
   link.searchParams.set('utm_source', channel)
@@ -114,7 +113,7 @@ export async function todayRedirect(env: Pick<Env, 'COMMUNITY_DB'>, url: URL, da
   let content = 'home'
   try {
     const row = await env.COMMUNITY_DB.prepare('SELECT date, post_json FROM social_editions WHERE date<=? ORDER BY date DESC LIMIT 1').bind(date).first<{ date: string; post_json: string }>()
-    const post = row ? sanitiseStoredDonors(JSON.parse(row.post_json)) as Partial<DailyPost> : null
+    const post = row ? (JSON.parse(row.post_json)) as Partial<DailyPost> : null
     const page = post?.url ? new URL(post.url) : null
     if (page && page.origin === 'https://opax.com.au') { target = page; content = row!.date }
   } catch { /* the journal is optional here: fall back to home */ }
@@ -189,7 +188,7 @@ export async function socialStatus(env: SocialEnv, date = melbourneDate()): Prom
 export async function previewPublication(env: SocialEnv, date: string, personTopics: (name: string) => Promise<Response>, kind?: DailyPostKind, subject?: string): Promise<DailyPost | null> {
   if (!kind && !subject) {
     const existing = await env.COMMUNITY_DB.prepare('SELECT post_json FROM social_editions WHERE date=?').bind(date).first<{ post_json: string }>()
-    if (existing) return authoriseVicPost(sanitiseStoredDonors(JSON.parse(existing.post_json)) as DailyPost)
+    if (existing) return authoriseVicPost((JSON.parse(existing.post_json)) as DailyPost)
   }
   const sources = envSources(env, personTopics)
   const since = new Date(Date.parse(date + 'T12:00:00Z') - 90 * 86400000).toISOString().slice(0, 10)
@@ -223,11 +222,11 @@ export async function runSocialPublication(env: SocialEnv, options: {
   if (!edition) {
     const post = await previewPublication(env, date, options.personTopics, options.kind, options.subject)
     if (!post) return { status: 'skipped', reason: 'no unfeatured source records' }
-    await db.prepare('INSERT OR IGNORE INTO social_editions(date,subject,post_json,created_at) VALUES(?,?,?,?)').bind(date, post.subject, JSON.stringify(sanitiseStoredDonors(post)), at).run()
+    await db.prepare('INSERT OR IGNORE INTO social_editions(date,subject,post_json,created_at) VALUES(?,?,?,?)').bind(date, post.subject, JSON.stringify((post)), at).run()
     edition = await db.prepare('SELECT post_json FROM social_editions WHERE date=?').bind(date).first<{ post_json: string }>()
   }
   if (!edition) throw new Error('Edition could not be stored')
-  const post = authoriseVicPost(sanitiseStoredDonors(JSON.parse(edition.post_json)) as DailyPost)
+  const post = authoriseVicPost((JSON.parse(edition.post_json)) as DailyPost)
   const results: Record<string, string> = {}
   for (const channel of channels) {
     // Preserve the previous runner's sent receipts during rollout.

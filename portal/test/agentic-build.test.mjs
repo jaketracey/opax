@@ -58,15 +58,16 @@ test('steps are real-time, fixed text and escaped/bounded args; the answer keeps
  assert.equal(stepEvent({tool:'party_donations',args:{party:'Jordan Private Name'}},1).arg,undefined);
  const safe=stepEvent({tool:'member_votes',args:{keyword:'<script>'+('x'.repeat(80))}},1);assert.ok(safe.arg.length<=40);assert.doesNotMatch(safe.arg,/[<>]/);
 });
-test('confident exact-name individuals are named; alias merges and placeholders are aggregated without names',async()=>{
+test('confident individual donors retain links; uncertain matches retain names and return references',async()=>{
+ const ref={return_type:'AEC annual return',year:'2024-25',return_id:'FIXTURE-7',url:'https://example.test/return/7'};
  const nodes=[{id:'party:Example',label:'Example',kind:'party'},
- {id:'donor:jordan quill',label:'Jordan Quill',kind:'donor',aliases:[' jordan  quill '],industry:'individual'},
- {id:'donor:merged',label:'Merged Private Name',kind:'donor',aliases:['Another Spelling']},
- {id:'donor:withheld-7',label:'Donor 7 (name withheld)',kind:'donor'}];
+  {id:'donor:jordan',label:'JORDAN QUILL',kind:'donor',match:{confidence:1,method:'curated',href:'/subject/donor/JORDAN%20QUILL'},returnReferences:[ref]},
+  {id:'donor:uncertain',label:'Quill, Jordan',kind:'donor',match:{confidence:0.9,method:'rule',href:null},returnReferences:[ref]}];
  const edges=nodes.slice(1).map((n,i)=>({source:n.id,target:'party:Example',total:(i+1)*100,count:1}));
- const r=await partyDonations({asset:async()=>({nodes,edges}),kb:async()=>({})},{party:'Example'});
- assert.deepEqual(r.data.rows.map(r=>r.donor),['Jordan Quill']);assert.equal(r.data.donors_not_named.donors,2);
- assert.doesNotMatch(JSON.stringify(r),/Merged Private Name|Another Spelling|name withheld/);
+ const result=await partyDonations({asset:async()=>({nodes,edges}),kb:async()=>({})},{party:'Example'});
+ assert.deepEqual(result.data.rows.map(row=>row.donor),['Quill, Jordan','JORDAN QUILL']);
+ assert.equal(result.data.rows[0].href,null);assert.equal(result.data.rows[1].href,'/subject/donor/JORDAN%20QUILL');
+ assert.ok(result.data.rows.every(row=>row.return_reference.includes('FIXTURE-7')));
 });
 
 // The exact existing renderer and its source-range wiring, without editing app.js.

@@ -1,8 +1,7 @@
 // Successful public generations get an edge cache plus a shared, expiring KV
 // copy. Callers own eligibility and include corpus/prompt versions in the key.
 // Private conversations and account responses must never use this cache.
-import {sanitiseStoredDonors} from './donor-hashes.mjs'
-import {sanitiseStoredResponse} from './donor-stored-response'
+
 type CacheEnv = Pick<Env, 'GENERATION_CACHE'>
 type StoredGeneration = { version: 1; body: string; cachedAt: string; expiresAt: number }
 const MAX_BYTES = 1_000_000
@@ -23,7 +22,7 @@ async function persist(env: CacheEnv, key: string, response: Response, expiresAt
   const remaining = Math.floor((expiresAt - Date.now()) / 1000)
   if (!env.GENERATION_CACHE || remaining < 60 || remaining > MAX_TTL) return false
   // These responses are bounded, validated generation payloads, not upstream streams.
-  const safe = await sanitiseStoredResponse(response)
+  const safe = await Promise.resolve(response)
   if (safe.status !== 200) return false
   const body = await safe.text()
   if (encoder.encode(body).byteLength > MAX_BYTES) return false
@@ -38,7 +37,7 @@ export async function readGenerationCache(env: CacheEnv, ctx: ExecutionContext, 
   if (!id) return undefined
   try {
     const cached = await caches.default.match(key)
-    const hit = cached ? await sanitiseStoredResponse(cached) : undefined
+    const hit = cached ? await Promise.resolve(cached) : undefined
     if (hit?.status === 200) {
       metric(key, 'edge_hit')
       const out = new Response(hit.body, hit)
@@ -68,7 +67,7 @@ export async function readGenerationCache(env: CacheEnv, ctx: ExecutionContext, 
       const remaining = entry && Math.floor((entry.expiresAt - Date.now()) / 1000)
       if (entry?.version === 1 && typeof entry.body === 'string' && encoder.encode(entry.body).byteLength <= MAX_BYTES &&
           typeof remaining === 'number' && remaining > 0 && remaining <= MAX_TTL && Number.isFinite(Date.parse(entry.cachedAt))) {
-        const body = JSON.stringify(sanitiseStoredDonors(JSON.parse(entry.body)))
+        const body = JSON.stringify((JSON.parse(entry.body)))
         const out = new Response(body, {headers: {
           'content-type': 'application/json; charset=utf-8', 'cache-control': `public, max-age=${remaining}`,
           'x-opax-cached-at': entry.cachedAt, 'x-opax-shared-cache': '1', 'x-opax-cache-tier': 'shared',
@@ -89,12 +88,12 @@ export function storeGenerationCache(env: CacheEnv, ctx: ExecutionContext, key: 
   const saved = Date.now()
   response.headers.set('cache-control', `public, max-age=${ttl}`)
   response.headers.set('x-opax-cached-at', new Date(saved).toISOString())
-  ctx.waitUntil(sanitiseStoredResponse(response.clone()).then(safe=>caches.default.put(key, safe)).catch(() => metric(key, 'edge_write_error')))
+  ctx.waitUntil(Promise.resolve(response.clone()).then(safe=>caches.default.put(key, safe)).catch(() => metric(key, 'edge_write_error')))
   const marked = response.clone()
   ctx.waitUntil(persist(env, id, response.clone(), saved + ttl * 1000).then(async stored => {
     if (!stored) return
     marked.headers.set('x-opax-shared-cache', '1')
     marked.headers.set('cache-control', `public, max-age=${Math.max(0, Math.floor((saved + ttl * 1000 - Date.now()) / 1000))}`)
-    await caches.default.put(key, await sanitiseStoredResponse(marked))
+    await caches.default.put(key, await Promise.resolve(marked))
   }).catch(() => metric(key, 'write_error')))
 }

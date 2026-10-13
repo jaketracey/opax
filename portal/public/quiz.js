@@ -1,6 +1,5 @@
-import {isUnnamedAggregate} from './donor-views.js?v=4fcbbb78cf';
-import {donorPrivacyIndex,donorNameWithheld} from './donor-entity.js?v=ebb2c972d5';
-import {loadDonorViewIndex} from './donor-views.js?v=4fcbbb78cf';
+import {donorDisclosure,donorLookup,donorDisplayText,donorLabelHTML} from './donor-disclosure.js?v=e91ef740e5';
+import {loadDonorViewIndex} from './donor-views.js?v=e93169e00b';
 import {subjectUrl} from './canonical-urls.js?v=225d5915ea';
 /*
  * The record quiz — a MindMaze-spirited quiz over OPAX's real data.
@@ -81,7 +80,7 @@ const INDUSTRY_LABELS = {
   telecom: "Telecommunications", legal: "Legal services", health: "Health",
   defence: "Defence", transport: "Transport", security: "Security",
   waste_management: "Waste management", lobbying: "Lobbying",
-  individual: "Donors not named",
+  individual: "Individuals",
 };
 
 const DONOR_PHRASES = {
@@ -99,8 +98,7 @@ function industryLabel(key) {
 
 export function makeQuizContext(data) {
   const money = data.money || { nodes: [], edges: [], meta: {} };
-  const privacy=data.donorPrivacy || donorPrivacyIndex([money]);
-  const donors = money.nodes.filter((n) => n.kind === 'donor' && !isUnnamedAggregate(n.label) && !donorNameWithheld(privacy,n.label));
+  const donors = money.nodes.filter(n=>n.kind === 'donor');
   const donorsById = new Map(donors.map((d) => [d.id, d]));
   const parties = money.nodes.filter((n) => n.kind === "party");
 
@@ -116,7 +114,7 @@ export function makeQuizContext(data) {
   }
 
   const reports = Object.entries(data.reports || {})
-    .map(([slug, r]) => ({ slug, title: r.title || slug, stats: {...r.stats,donations:r.stats?.donations?{...r.stats.donations,top_donors:(r.stats.donations.top_donors||[]).filter(row=>!donorNameWithheld(privacy,row[0]))}:undefined} }))
+    .map(([slug, r]) => ({ slug, title: r.title || slug, stats: {...r.stats,donations:r.stats?.donations?{...r.stats.donations,top_donors:(r.stats.donations.top_donors||[])}:undefined} }))
     .filter((r) => r.stats.speech_count > 0);
 
   // Faces come from the portrait map (photos/people.json), never from a roster pid:
@@ -145,6 +143,7 @@ function moneyLink(industry) {
     ? { href: "/money?industry=" + encodeURIComponent(industry), label: "Open this industry on the money map" }
     : MONEY_LINK;
 }
+function donorProof(record) {const view=donorDisclosure(record);return {href:view.href || '/graph/money.json',label:view.href ? 'Donor disclosure profile' : view.reference || 'Disclosure data export'}}
 function subjectLink(kind, label) {
   return { href: subjectUrl(kind,label), label: "Open " + label + " in the record" };
 }
@@ -440,12 +439,12 @@ const TEMPLATES = [
             { label: "Higher", correct: isHigher },
             { label: "Lower", correct: !isHigher },
           ],
-          fact: factLine(hidden.label, fmtMoney(hidden.total)),
+          fact: factLine(donorDisplayText(hidden),fmtMoney(hidden.total)),
           explanation:
             shown.label + " disclosed " + fmtMoney(shown.total) + ", so the second figure is " +
             (isHigher ? "higher" : "lower") + ".",
           source: "AEC disclosures via OPAX's money data",
-          link: subjectLink("donor", hidden.label),
+          link: donorProof(hidden),
         };
       }
       return null;
@@ -469,7 +468,7 @@ const TEMPLATES = [
           explanation:
             "The ranking uses each donor's full disclosed total across the years covered by the money map.",
           source: "AEC disclosures via OPAX's money data",
-          link: subjectLink("donor", trio[0].label),
+          link: donorProof(trio[0]),
         };
       }
       return null;
@@ -491,11 +490,11 @@ const TEMPLATES = [
           template: this.id, deck: this.deck, kind: "slider",
           prompt: "How much has " + donor.label + " disclosed in total?",
           answer: donor.total, min, max, scale: "log", format: "money",
-          fact: factLine(donor.label, fmtMoney(donor.total)),
+          fact: factLine(donorDisplayText(donor), fmtMoney(donor.total)),
           explanation: "The range is set by real " + industryLabel(donor.industry).toLowerCase() +
             " donor totals, and this is the donor's lifetime disclosed figure.",
           source: "AEC disclosures via OPAX's money data",
-          link: subjectLink("donor", donor.label),
+          link: donorProof(donor),
         };
       }
       return null;
@@ -814,7 +813,7 @@ async function loadData(signal) {
       catch (e) { if (e && e.name === "AbortError") throw e; /* year questions degrade */ }
     }),
   ]);
-  return { money, reports, corpus, photos, years, donorPrivacy:await loadDonorViewIndex() };
+  return { money, reports, corpus, photos, years };
 }
 
 /* ---------------------------------------------------------------- *
@@ -870,7 +869,8 @@ const CSS = `
   width: 100%; margin: 0 0 var(--space-heading); padding: 0;
   color: var(--ink); font: var(--type-subheading);
 }
-.qz-decks { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-tight); }
+/* Decks wrap rather than squeeze: a card never drops to a word a line. */
+.qz-decks { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 11rem), 1fr)); gap: var(--space-tight); }
 .qz-deck {
   min-height: 8.25rem; padding: var(--space-block); text-align: left;
   border: var(--border-hairline) solid var(--divider-subtle); border-radius: var(--radius-md);

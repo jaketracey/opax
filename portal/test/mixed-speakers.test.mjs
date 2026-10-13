@@ -8,7 +8,7 @@ import * as attribution from '../public/speech-attribution.js';
 import {speechPresentation, joinMixedSpeakers} from '../src/mixed-speakers.ts';
 
 const app = ts.createSourceFile('app.js', readFileSync(new URL('../public/app.js',import.meta.url),'utf8'),ts.ScriptTarget.Latest,true);
-const functions = ['groupAvatarHTML','participantLinksHTML','speechIdentityHTML','metaHTML','topicArcItemHTML','sourceItem','keySpeechItem','quoteCardHTML','renderResults','billSpeechesHTML'];
+const functions = ['groupAvatarHTML','participantLinksHTML','speechIdentityHTML','metaHTML','topicArcItemHTML','sourceItem','keySpeechItem','quoteCardHTML','renderResults','billSpeechesHTML','bylinePortrait'];
 const declarations = app.statements.filter(n=>ts.isFunctionDeclaration(n)&&functions.includes(n.name?.text)).map(n=>n.getText(app)).join('\n');
 const plain = x=>JSON.parse(JSON.stringify(x));
 function renderers(row) {

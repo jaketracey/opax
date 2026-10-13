@@ -3,7 +3,6 @@ import assert from 'node:assert/strict';
 import {readFile} from 'node:fs/promises';
 import {isOrganisationDonor} from '../public/donor-entity.js';
 import {isOrganisationRecipient} from '../src/table-recipient.mjs';
-import {identityVariants,identityCandidates} from '../src/table-identities.mjs';
 import {tableDatabase} from './table-d1-harness.mjs';
 import {TABLE_DATASETS} from '../src/table-datasets.mjs';
 import {tableSchema} from '../../scripts/table-schema.mjs';
@@ -13,51 +12,23 @@ test('individual type evidence overrides organisation-looking names',()=>{
   assert.equal(isOrganisationRecipient({name:org.label,identity:{type:'IND',kind:'company'}}),false);
   assert.equal(isOrganisationRecipient({name:org.label,abr:{etype:'IND'}}),false);
   assert.equal(isOrganisationRecipient({name:org.label,id:'person:fixture-id',kind:'company'}),false);
-  assert.equal(isOrganisationRecipient({name:org.label,supplier_id:'person:fixture-id',recipient_kind:'organisation'}),false);
-  for(const field of ['recipient_kind','supplierKind','supplier_kind']) assert.equal(isOrganisationRecipient({name:org.label,kind:'company',[field]:'sole_trader'}),false);
-  for(const field of ['supplierABNType','supplier_abn_type']) assert.equal(isOrganisationRecipient({name:org.label,recipient_kind:'organisation',[field]:'IND'}),false);
-  assert.equal(isOrganisationRecipient({recipient_kind:'organisation'}),true);
   assert.equal(isOrganisationRecipient({name:org.label,kind:'company'}),true);
   assert.equal(isOrganisationRecipient({}),false);
 });
-test('the original migration retains the dataset FTS tables',async()=>{
-  const checked=await readFile(new URL('../table-migrations/0001_tables.sql',import.meta.url),'utf8');
-  assert.equal((checked.match(/USING fts5/g)||[]).length,10);
-  assert.equal((tableSchema().match(/USING fts5/g)||[]).length,10);
-});
-test('the original D1 schema upgrades to grants and voting record projections',async()=>{
+test('the original D1 schema upgrades to grants, voting and register projections',async()=>{
   const local=await tableDatabase({datasets:{}});
   try {
-    for(const name of ['grants','divisions','votes']) {
+    for(const name of ['grants','divisions','votes','instruments']) {
       await local.db.exec(`DROP TABLE table_${name}_fts;\nDROP TABLE table_${name}_facets;\nDROP TABLE table_${name};`);
     }
-    for(const file of ['0001_tables.sql','0002_grants_projection.sql','0002_vote_records.sql']) {
+    for(const file of ['0001_tables.sql','0002_grants_projection.sql','0002_vote_records.sql','0002_instrument_registered.sql']) {
       const sql=await readFile(new URL('../table-migrations/'+file,import.meta.url),'utf8');
       for(const statement of sql.replace(/^--.*$/gm,'').split(';').filter(v=>v.trim())) await local.db.prepare(statement).run();
     }
-    for(const name of ['grants','divisions','votes']) {
+    for(const name of ['grants','divisions','votes','instruments']) {
       const columns=await local.db.prepare(`PRAGMA table_info(table_${name})`).all();
       assert.deepEqual(new Set(columns.results.map(c=>c.name)),new Set(['rowid','search',...TABLE_DATASETS[name].columns.map(c=>c.key)]));
     }
     assert.equal((tableSchema().match(/USING fts5/g)||[]).length,10);
   } finally {await local.close();}
-});
-test('private identifier variants are derived from exports and cover spaced and encoded forms',async()=>{
-  const files=JSON.parse(await readFile(new URL('../public/suppliers.json',import.meta.url))).suppliers;
-  const supplier=files.find(s=>s.abn);const value=String(supplier.abn),normal=value.replace(/\D/g,'');
-  assert.ok(identityVariants(value).includes(normal));
-  assert.ok(identityCandidates(normal.split('').join(' '),[1,11]).has(normal));
-  const encoded=encodeURIComponent(org.label);assert.ok(identityCandidates(encoded, [org.label.toLowerCase().replace(/[^a-z0-9]+/g,' ').trim().split(' ').length]).has(identityVariants(org.label)[0]));
-});
-
-test('private encoded identifiers remain rejected beside a literal percent sign',async()=>{
-  const {tableIdentityIndex}=await import('../../scripts/load_tables.mjs');
-  const policy=await tableIdentityIndex();
-  const value=[...policy.recipientPhrases].find(p=>p.includes(' ') && /[a-z]/.test(p));
-  assert.ok(value,'runtime recipient identity coverage');
-  assert.equal(policy.check('100% '+encodeURIComponent(value)),true);
-  assert.equal(policy.check('100% '+encodeURIComponent(encodeURIComponent(value))),true);
-  const encoded=[...new TextEncoder().encode(value)].map(n=>'%'+n.toString(16).padStart(2,'0')).join('');
-  assert.equal(policy.check('%FF'+encoded),true);
-  assert.equal(policy.check(encodeURIComponent('%FF'+encoded)),true);
 });

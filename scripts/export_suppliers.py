@@ -4,10 +4,6 @@
 python3 scripts/export_suppliers.py --ssh desktop --output portal/public
 Source DB is read-only; the export never rebuilds registers or alters source rows.
 """
-try:
-    from scripts.donor_public import public_donor_data
-except ModuleNotFoundError:
-    from donor_public import public_donor_data
 
 import os
 import argparse
@@ -190,8 +186,11 @@ def build_export(db, graph, published_since=None):
                         method = info['donor_method']
                         confidence = info.get('donor_confidence')
             for node in linked:
-                p['donor_links'].append({'id': node['id'], 'name': node['label'],
-                    'url': '/subject/donor/' + quote(node['label'], safe=''), 'method': method,
+                evidence=node.get('match', {})
+                confident=evidence.get('confidence') == 1 and evidence.get('method') in {'exact','curated'}
+                p['donor_links'].append({'id': node['id'], 'name': node['label'], 'source_name':node.get('source_name',node['label']),
+                    'url': evidence.get('href') if confident else None, 'match':evidence,
+                    'returnReferences':node.get('returnReferences',[])[:1], 'method': method,
                     'confidence': confidence})
             profiles[pid] = p
         p = profiles[pid]
@@ -269,11 +268,11 @@ def write_export(result, output):
         target = output / relative.lstrip('/')
         target.parent.mkdir(parents=True, exist_ok=True)
         temporary = target.with_suffix('.json.tmp')
-        temporary.write_text(json.dumps(public_donor_data(data), ensure_ascii=False, allow_nan=False, separators=(',', ':')) + '\n')
+        temporary.write_text(json.dumps(data, ensure_ascii=False, allow_nan=False, separators=(',', ':')) + '\n')
         temporary.replace(target)
     target = output / 'suppliers.json'
     temporary = target.with_suffix('.json.tmp')
-    temporary.write_text(json.dumps(public_donor_data(result['index']), ensure_ascii=False, allow_nan=False, separators=(',', ':')) + '\n')
+    temporary.write_text(json.dumps(result['index'], ensure_ascii=False, allow_nan=False, separators=(',', ':')) + '\n')
     temporary.replace(target)
 
 

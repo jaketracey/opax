@@ -8,7 +8,7 @@
 //    field (one row per speech). /search facets are NOT used: they disagree with
 //    the filtered totals (Pocock 132 vs 134 on the same filter).
 //  - votes from portal/public/divisions/*.json, money from portal/public/graph/money.json
-//    after withholdIndividualDonors (donors not named are never ranked by name).
+//    with original disclosure names and confidence-based identity links.
 // Each question keeps the exact query that produced its answer, so a reader can
 // re-run it. Speaker counts carry an attribution-risk note: the share of the
 // speaker's matching documents that come from the OpenAustralia source, where
@@ -21,7 +21,6 @@
 import fs from 'node:fs'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
-import { withholdIndividualDonors } from '../portal/public/donor-entity.js'
 import { computeElectorateGold } from './agentic_ask_electorates_gold.mjs'
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
@@ -185,17 +184,14 @@ function partyVotes(party, test) {
 }
 
 // ---- money (portal/public/graph/money.json, federal AEC returns) ----
-const MONEY = withholdIndividualDonors(JSON.parse(fs.readFileSync(path.join(PUBLIC, 'graph/money.json'), 'utf8')))
+const MONEY = JSON.parse(fs.readFileSync(path.join(PUBLIC,'graph/money.json'),'utf8'))
 const NODE = new Map(MONEY.nodes.map((n) => [n.id, n]))
-const isWithheld = (n) => /^donor:withheld-/.test(n?.id ?? '')
 function topDonors(party, n = 3) {
   const edges = MONEY.edges.filter((e) => e.target === `party:${party}` && NODE.get(e.source)?.kind === 'donor')
-  const named = edges.filter((e) => !isWithheld(NODE.get(e.source))).sort((a, b) => b.total - a.total)
-  const withheld = edges.filter((e) => isWithheld(NODE.get(e.source)))
+  const named = edges.sort((a, b) => b.total - a.total)
   return {
     party, top: named.slice(0, n).map((e) => ({ name: NODE.get(e.source).label, total_aud: e.total, receipts: e.count, years: [e.firstYear, e.lastYear] })),
-    donors_not_named: { donors: withheld.length, total_aud: withheld.reduce((s, e) => s + e.total, 0) },
-    query: { file: 'portal/public/graph/money.json', select: `edges where target = party:${party}, donor nodes after withholdIndividualDonors, sorted by total` },
+    query: { file: 'portal/public/graph/money.json', select: `edges where target = party:${party}, disclosed donor nodes, sorted by total` },
   }
 }
 function industryByParty(industry) {

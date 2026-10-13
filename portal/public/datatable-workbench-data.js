@@ -11,7 +11,7 @@ export const workbenchRows = [
   ['Western Services Limited','Services','Victoria',12450.75,19,2024,'2024-10-14'],
 ].map(([name,industry,region,amount,count,year,date], i) => ({id:`organisation-${i + 1}`,name,industry,region,amount,count,year,date,jurisdiction:'Federal'}));
 export const workbenchConfig = {
-  id:'workbench-money', caption:'Disclosed receipts', pageType:'workbench', privacy:'donors',
+  id:'workbench-money', caption:'Disclosed receipts', pageType:'workbench',
   rows:workbenchRows, pageSize:5, urlKey:'t', defaultSort:{key:'amount',dir:'desc'},
   export:{filename:'receipts.csv'}, primaryLink:row=>`#${row.id}`,
   columns:[

@@ -1,0 +1,38 @@
+{
+  "snapshotSha256": "5e755a7f18c295b9d8c5d84087fad43e47a5a5952fddd598b07e12b47f9af4a8",
+  "codeHashes": {
+    "portal/src/index.ts": "bb81b4196941cfdd595814236c5a0b737b5c7c3358cae044426f5c736512ae5c",
+    "portal/src/budget.ts": "10ca76e21ec1ffeba651908dfe1748111132ebddc3504b4ba51ca935e2d532a6",
+    "portal/public/budget.css": "89208912cb08f370dc61092fdc6d9cfc4cc245cb5b93ae71b61935e4592c3131",
+    "portal/public/budget.js": "a1ff685313d18e945819a53fd6865b8b35d271f657d8da23d140c1376ff749a5",
+    "portal/public/budget-table.js": "0611aafd79a5b3079888bf7a3cb48762bf44baf060437e1d4b013d97f8b8c16e"
+  },
+  "preview": "Local Worker, in-memory staged asset binding; no production bindings",
+  "results": [
+    {
+      "width": 390,
+      "status": 200,
+      "horizontalOverflow": false,
+      "headlineCards": 4,
+      "cashYears": 12,
+      "archivedPortfolioLinks": 0,
+      "archivedFillerRows": 0
+    },
+    {
+      "width": 1440,
+      "status": 200,
+      "horizontalOverflow": false,
+      "headlineCards": 4,
+      "cashYears": 12,
+      "archivedPortfolioLinks": 0,
+      "archivedFillerRows": 0
+    }
+  ],
+  "search": {
+    "before": 56,
+    "after": 17
+  },
+  "csvReceipts": true,
+  "ssr": true,
+  "pageErrors": []
+}

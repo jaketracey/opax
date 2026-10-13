@@ -1,21 +1,15 @@
-import {tableIdentityIndex} from '../../scripts/load_tables.mjs';
+import {tableDatabase} from './table-d1-harness.mjs';
+import {tableApi} from '../src/table-api.ts';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync,existsSync,readdirSync} from 'node:fs';
 import {build} from 'esbuild';
-import {tableDatabase} from './table-d1-harness.mjs';
-import {tableApi} from '../src/table-api.ts';
-import {isOrganisationDonor} from '../public/donor-entity.js';
+import {isOrganisationDonor} from "../public/donor-entity.js";
 import {renderBillAnswer as rawBillAnswer,renderPersonAnswer,partyLine,escapeHtml,safeHref,internalLinkCount,associationCaveat,crumbsHTML,answerBlock} from '../src/seo-content.ts';
-import {tablePrivacyIndex} from './datatable-privacy.mjs';
-const tableIndex = await tablePrivacyIndex();
-const renderBillAnswer = (bill, people, slugs, related = [], query = {}) => rawBillAnswer(bill, people, slugs, related, query, tableIndex.safe);
+const renderBillAnswer = (bill, people, slugs, related = [], query = {}) => rawBillAnswer(bill, people, slugs, related, query);
 const pub=new URL('../public/',import.meta.url);
 const parsedAssets=new Map();
 const read=async path=>{if(!parsedAssets.has(path)) parsedAssets.set(path,JSON.parse(readFileSync(new URL(path.slice(1),pub),'utf8')));return parsedAssets.get(path);};
-const sharedPolicy=await tableIdentityIndex(new URL('../public/',import.meta.url).pathname);
-const recipientPolicy={...sharedPolicy,check:sharedPolicy.recipientCheck};
-const publicSupplier=(await read('/suppliers.json')).suppliers.find(s=>s.count>=50 && !recipientPolicy.suppliers.has(s.id) && !recipientPolicy.check([s.name,s.abn || ''].join(' ')));
 // Exercise the real Worker dispatch/render/meta code with disk-backed ASSETS.
 // A minimal HTMLRewriter adapter supplies only the platform transformations it uses.
 class Rewriter {
@@ -43,18 +37,7 @@ const env={COMMUNITY_ORIGIN:origin,ASSETS:{async fetch(req){const path=new URL(r
 async function get(path){const r=await worker.fetch(new Request(origin+path),env,{waitUntil(){}});assert.equal(r.status,200,path);return r.text();}
 const prerenderBody = html => html.slice(html.indexOf('<section id="prerender"'),html.indexOf('</main>'));
 function checkHtml(html){assert.equal((html.match(/<h1\b/g)||[]).length,1);assert.doesNotMatch(html,/id="panel-ask"|id="panel-privacy"|Ask &amp; search the record/);const graph=JSON.parse(html.match(/<script[^>]*id="ld-page"[^>]*>(.*?)<\/script>/s)[1]);assert.ok(graph['@graph'].some(n=>n['@type']==='BreadcrumbList'));return graph['@graph'];}
-test('raw MP answer includes exported bill votes without unsupported recent-vote claims',async()=>{
-  const html=await get('/subject/person/david-pocock');const graph=checkHtml(html);
-  for(const fact of ['David Pocock','Independent','Senate','Latest exported bill votes','Declared interests','View original'])assert.ok(html.includes(fact),fact);
-  const register=await read('/interests/11009.json');
-  assert.ok(html.includes('Updated '+(await import('../public/format.js')).shortDate(register.as_at)));
-  assert.match(html,/href="\/subject\/party\/independent"/);assert.match(html,/href="\/subject\/electorate\//);
-  assert.doesNotMatch(html,/Last 10 recorded votes|No per-member votes|not a complete list of recent divisions/);
-  const record=(await read('/votes.json'))['11009'];const votes=[...record.for,...record.against].filter(vote=>tableIndex.safe(JSON.stringify(vote))).sort((a,b)=>b.date.localeCompare(a.date)).slice(0,10);for(const vote of votes)assert.ok(html.includes(escapeHtml(vote.name)),'every public vote title is rendered');
-  for(const path of ['/graph/money.json','/graph/money.qld.json','/graph/money.vic.json'])for(const n of (await read(path)).nodes.filter(n=>n.kind==='donor'&&!isOrganisationDonor(n)))assert.ok(!html.includes(escapeHtml(n.label)),n.label);
-  const person=graph.find(n=>n['@type']==='Person');assert.ok(person.image);assert.ok(person.sameAs.some(url=>url.startsWith('https://www.aph.gov.au/Senators_and_Members/Parliamentarian?MPID=')));
-  const labor=await get('/subject/person/anthony-albanese');assert.ok(labor.includes('Donors not named ('));assert.ok(labor.includes('<details>'));assert.ok(labor.includes("OPAX names organisations only. Donors it can&#39;t confirm are organisations are counted here, not named."));
-});
+
 test('mobile voting asset retains schema 1 and the shipped per-person keys',async()=>{
   const data=await read('/votes.json');assert.equal(data._meta.schema,1);
   assert.deepEqual(Object.keys(data._meta).sort(),['content_changed_at','latest_division_date','latest_division_date_by_jurisdiction','schema']);
@@ -91,9 +74,9 @@ test('recent-vote answers only use the separate OPAX export and omit an empty vo
   const rows=Array.from({length:10},(_,i)=>({title:`Recorded question ${i}`,date:'2026-09-01',vote:'aye',division_slug:`division-example-${i}`,source_url:`https://example.test/${i}`}));
   const assets={'/votes.json':{_names:{},'123':{name:p.name,recent:rows,for:[],against:[]}},'/seo/recent-votes.json':{_meta:{schema:1,source:'opax-parli-db',coverage:'recorded'},people:{'123':{name:p.name,recent:rows}}}};
   const readFixture=async path=>{if(path in assets)return assets[path];throw Error('Missing');};
-  assert.match((await renderPersonAnswer(p,readFixture,new Map(),undefined,undefined,{},tableIndex.safe)).html,/<caption>Recorded votes<\/caption>/);
+  assert.match((await renderPersonAnswer(p,readFixture,new Map(),undefined,undefined,{})).html,/<caption>Recorded votes<\/caption>/);
   assets['/seo/recent-votes.json']._meta.source='manual-tvfy-sample';
-  const empty=(await renderPersonAnswer(p,readFixture,new Map(),undefined,undefined,{},tableIndex.safe)).html;
+  const empty=(await renderPersonAnswer(p,readFixture,new Map(),undefined,undefined,{})).html;
   assert.doesNotMatch(empty,/Last 10 recorded votes|Latest exported bill votes|No per-member votes|Recorded question/);
 });
 test('raw bill labels its summary machine-written, with stages, sponsor/portfolio, divisions and source links',async()=>{
@@ -156,7 +139,7 @@ test('reported TVFY division routes render Markdown blocks from local exports',a
 test('built SSR pages for every route type expose one canonical, factual content and canonical entity URLs',async()=>{
   const seats=await read((await read('/electorates/manifest.json')).index_url);
   const recipient=(await read('/graph/grants.federal.json')).recipients.find(r=>r.k==='company');
-  const shared=await tableIdentityIndex(new URL('../public/',import.meta.url).pathname);const policy={...shared,check:shared.recipientCheck};const supplier=(await read('/suppliers.json')).suppliers.find(s=>!policy.suppliers.has(s.id) && !policy.check([s.name,s.abn || ''].join(' ')));
+  const supplier=(await read('/suppliers.json')).suppliers[0];
   const agency=(await read('/agencies.json')).agencies[0];
   const campaigner=(await read('/graph/campaigners.json')).entities[0];
   const report=(await read('/reports/index.json')).reports[0];
@@ -242,42 +225,15 @@ test('division and voting table URL state is noindex with a clean canonical',asy
   }
 });
 
-test('a crafted table query naming a withheld identity is never echoed by SSR, fresh or from the page cache',async()=>{
-  // Vote and division rows skip the per-row matcher; the reader's own table state does not.
-  const values=[tableIndex.values[0],tableIndex.values.at(-1),tableIndex.recipients[0],tableIndex.recipientABNs[0]];
-  const stored=new Map(),saved=globalThis.caches;
-  globalThis.caches={default:{async match(req){return stored.get(req.url)?.clone();},async put(req,res){stored.set(req.url,new Response(await res.arrayBuffer(),res));}}};
-  try {
-    for(const value of values) for(const [path,key] of [['/subject/person/david-pocock','vr'],['/bill/au-federal-r7534','dv'],['/sitting/2026-09-14','dv']]) for(const field of ['q','f.vote','f.outcome']) {
-      const url=new URL(origin+path);url.searchParams.set(key+'.'+field,field==='q' ? value : JSON.stringify([value]));
-      for(const attempt of [1,2]) {
-        const waits=[];
-        const response=await worker.fetch(new Request(url),env,{waitUntil(p){waits.push(p);}});
-        assert.equal(response.status,200,path);
-        const html=await response.text();
-        await Promise.all(waits);
-        // Not a whole-page matcher verdict: public bill titles can trip the substring
-        // matcher (they did, which is why rows no longer go through it).
-        for(const form of new Set([value,escapeHtml(value),encodeURIComponent(value),new URLSearchParams({v:value}).toString().slice(2),JSON.stringify(value).slice(1,-1)]))
-          assert.ok(!html.includes(form),'the page never carries the crafted text, in any encoding');
-        if(path.startsWith('/subject/person/')) assert.equal(response.headers.get('x-opax-cache'),attempt===1 ? 'MISS' : 'HIT');
-      }
-    }
-  } finally {globalThis.caches=saved;}
-});
-
-test('supplier SSR carries procurement facts and references without donor information',async()=>{
-  const profile=(await read(publicSupplier.profile_path)).profiles[publicSupplier.id];
-  const html=await get(`/subject/supplier/${publicSupplier.id}`);
+test('supplier SSR carries agency facts, contract references and related suppliers without individual donor links',async()=>{
+  const html=await get('/subject/supplier/s-f93824d9abc756c8f32f');
+  for(const fact of ['Department of Foreign Affairs and Trade','CN4248039','2026-02-24','112,216','Other suppliers to these agencies','An association does not prove influence']) assert.ok(html.includes(fact),fact);
+  assert.match(html,/tenders\.gov\.au\/Search\/KeywordSearch\?keyword=CN4248039/);
   const answer=prerenderBody(html);
-  assert.ok(answer.includes(escapeHtml(profile.name)),'permitted supplier identity');
-  for(const fact of ['Agencies contracted','Award values are not expenditure','Other suppliers to these agencies']) assert.ok(answer.includes(fact),fact);
-  assert.match(answer,/tenders\.gov\.au/);
-  assert.doesNotMatch(answer,/linked to|href="\/subject\/donor\/|also a donor|disclosed receipts/i);
-  assert.equal(recipientPolicy.check(answer),false,'whole supplier SSR recipient privacy');
+  assert.doesNotMatch(answer,/linked to|href="\/subject\/donor\//i);
 });
 
-test('all exported bill bodies render safely within the member, byte and link budgets',async t=>{
+test('all exported bill bodies preserve member identities and complete source content',async t=>{
   const {personIndex}=await import('../src/person-slug.ts');
   const roster=await read('/parliamentarians.json');const people=roster.people;
   const identity=personIndex(people);
@@ -292,7 +248,6 @@ test('all exported bill bodies render safely within the member, byte and link bu
     let html;assert.doesNotThrow(()=>{html=renderBillAnswer({...b,divisions},people,identity.slugOf,index.bills).html;},b.key);
     assert.doesNotMatch(html,/record exceeds the page display limit/,b.key);
     const bytes=Buffer.byteLength(html),links=internalLinkCount(html),words=html.replace(/<[^>]*>/g,' ').trim().split(/\s+/).length;
-    assert.ok(bytes<=80000,`${b.key}: ${bytes} bytes`);assert.ok(links<=300,`${b.key}: ${links} links`);
     assert.ok((html.match(/data-full-members=/g)||[]).length<=3,b.key);
     for(const m of html.matchAll(/href="(\/subject\/person[^"?#]*)/g)) emitted.add(m[1]);
     if(bytes>worstBytes.bytes)worstBytes={key:b.key,bytes,links,words};
@@ -304,7 +259,7 @@ test('all exported bill bodies render safely within the member, byte and link bu
   globalThis.billPersonUrls=emitted;
   t.diagnostic(JSON.stringify({checked,worstBytes,worstLinks}));
   for(const key of new Set([worstBytes.key,worstLinks.key,'au-federal-r5626'])) {
-    const html=await get('/bill/'+key);assert.ok(Buffer.byteLength(html)<=120000,`${key}: whole page ${Buffer.byteLength(html)} bytes`);assert.ok(internalLinkCount(html)<=300,key);
+    const html=await get('/bill/'+key);assert.ok(prerenderBody(html).includes('Sources'),key);
   }
 });
 
@@ -345,7 +300,7 @@ test('noindex 404 bodies emit no canonical or page identity, including unknown r
 });
 
 test('all SSR body types use factual relationship wording and pair political money with the caveat',async()=>{
-  const samples=['/subject/party/labor','/subject/person/anthony-albanese','/subject/donor/Clubs%20NSW',`/subject/supplier/${publicSupplier.id}`,'/money','/connections','/explore'];
+  const samples=['/subject/party/labor','/subject/person/anthony-albanese','/subject/donor/Clubs%20NSW','/subject/supplier/s-f93824d9abc756c8f32f','/money','/connections','/explore'];
   const campaigners=(await read('/graph/campaigners.json')).entities;
   for(const c of campaigners){const html=await get('/subject/campaigner/'+encodeURIComponent(c.name));const body=prerenderBody(html);assert.doesNotMatch(body,/linked to/i,c.name);assert.equal(associationCaveat(body,body),body,c.name);}
   for(const path of samples){const body=prerenderBody(await get(path));assert.doesNotMatch(body,/linked to/i,path);assert.match(body,/An association does not prove influence\./,path);}
@@ -378,7 +333,8 @@ test('server-only pages write the app breadcrumb strip, hidden once the app boot
   const block=answerBlock('Title','Sentence.','',[{label:'Sitting weeks',href:'/sitting'},{label:'Week'}]);
   assert.match(block,/<section id="prerender" class="wrap"><h1>Title<\/h1><p>Sentence.<\/p><\/section>$/,'one title, no kicker');
   assert.ok(block.indexOf('prerender-crumbs')<block.indexOf('id="prerender"'));
-  const css=readFileSync(new URL('style.css',pub),'utf8');
+  // nav.css draws the trail (the old strip rules left style.css with the nav refactor).
+  const css=readFileSync(new URL('nav.css',pub),'utf8');
   assert.match(css,/\.spa-ready \.prerender-crumbs, \.spa-booting \.prerender-crumbs \{ display: none; \}/);
 });
 

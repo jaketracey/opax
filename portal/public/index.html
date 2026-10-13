@@ -8,8 +8,8 @@
 <meta name="theme-color" content="#142A43">
 <!-- Google Tag Manager (container GTM-PNDM87LW). The loader and the site's
      own dataLayer events live in /gtm.js so no inline script is needed. -->
-<script src="/spa-entry.js?v=347a573b03"></script>
-<script src="/events.js?v=02bf234aff" defer></script>
+<script src="/spa-entry.js?v=6d1168d62e"></script>
+<script src="/events.js?v=d368569474" defer></script>
 <script src="/gtm.js?v=0764911f84" defer></script>
 <!-- Home page values. On a real path (/subject/person/slug, /reports/gambling)
      the Worker rewrites these per route; app.js keeps canonical and og:url in
@@ -60,14 +60,16 @@
 <!-- ?v= is content-hash stamped by scripts/stamp_assets.mjs (npm run deploy),
      which is what lets _headers serve these two immutable. -->
 <link rel="stylesheet" href="/datatable.css">
+<link rel="stylesheet" href="/register-tables.css?v=b98ab37c03">
+<script type="module" src="/register-tables-entry.js?v=2add8dd1bf"></script>
 <link rel="stylesheet" href="/vote-tables.css?v=d727aad769">
-<script type="module" src="/vote-tables.js?v=1e9aa3a2df"></script>
-<link rel="stylesheet" href="/style.css?v=822baf7b1b">
-<link rel="stylesheet" href="/ui-controls.css?v=f8011bf298">
-<link rel="stylesheet" href="/ui-source.css?v=4f396d8cfc">
+<script type="module" src="/vote-tables.js?v=e3a3583537"></script>
+<link rel="stylesheet" href="/style.css?v=19bc974594">
+<link rel="stylesheet" href="/ui-controls.css?v=ce29178242">
+<link rel="stylesheet" href="/ui-source.css?v=78ddb8fc1b">
 <link rel="stylesheet" href="/page-actions.css?v=a416a2254f">
-<link rel="stylesheet" href="/voice.css?v=a10938b91d">
-<link rel="stylesheet" href="/nav.css?v=e1a79637a2">
+<link rel="stylesheet" href="/voice.css?v=19eea6fcdc">
+<link rel="stylesheet" href="/nav.css?v=c9fd988ea9">
 <!-- labels.js: app.js imports it before its first render. -->
 <link rel="modulepreload" href="/labels.js?v=fc03aa14cf">
 </head>
@@ -147,14 +149,14 @@
 
     <!-- ============================== ASK ============================== -->
     <section id="panel-ask" class="panel" aria-label="Ask the record">
-      <nav class="entry-modes" aria-label="Research mode"><a href="/ask" aria-current="page">Ask a question</a><a href="/ask?view=search" data-entry-mode="search">Search records</a></nav>
-      <form id="ask-form" class="ask-row" data-ui-size="large">
+      <nav class="ui-tabs" aria-label="Research mode"><a href="/ask" aria-current="page">Ask a question</a><a href="/ask?view=search" data-entry-mode="search">Search records</a></nav>
+      <form id="ask-form" class="ask-row" data-ui-size="large" action="/ask" method="get">
         <label for="ask-input" class="visually-hidden">Ask a question of the parliamentary record</label>
         <!-- The box and its clear cross share one wrapper so the cross can sit
              inside the field at any width; the wrapper takes the row rules the
              bare textarea used to. -->
         <div class="ask-field ui-input-wrap">
-          <textarea id="ask-input" class="grow-field ui-input" rows="1" autocomplete="off" enterkeyhint="search" spellcheck="false"></textarea>
+          <textarea id="ask-input" name="q" class="grow-field ui-input" rows="1" autocomplete="off" enterkeyhint="search" spellcheck="false"></textarea>
           <button type="button" class="field-clear ui-button ui-icon-button" id="ask-clear" aria-label="Clear the question" data-variant="quiet"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="m5 5 10 10M15 5 5 15"/></svg></button>
         </div>
         <button type="submit" class="ui-button" id="ask-submit" data-variant="primary">Ask the record</button>
@@ -307,93 +309,6 @@
            below the fold. -->
       <div id="ask-money" hidden></div>
 
-      <nav id="home-tasks" class="home-tasks" aria-label="Start investigating">
-        <a href="/subject/topic"><strong>Browse a topic</strong><span>The debate and its history.</span></a>
-        <a href="/subject/person"><strong>Find a parliamentarian</strong><span>Speeches, votes and interests.</span></a>
-        <a href="/money"><strong>Follow the money</strong><span>Explore the connections in 3D.</span></a>
-        <a href="/bills"><strong>Understand a bill</strong><span>What changes and where it stands.</span></a>
-      </nav>
-      <section class="front-map" id="front-map" aria-label="Explore the money map">
-        <div class="home-map-stage"><div id="front-map-root" class="front-map-root"><p class="status">Loading the money map…</p></div><div class="home-map-invite"><div class="home-map-journeys"><span>Start a guided journey</span><a href="/money?journey=public-money">Contracts &amp; grants</a><a href="/money?journey=multiple-parties">More than one party</a><a href="/money?journey=industry">Explore an industry</a><a href="/money?journey=over-time">Turn back the clock</a></div><a class="home-map-open ui-button" href="/money" data-variant="primary">Open the research map</a></div></div>
-        <nav class="ui-map-filters home-map-industries" data-ui-size="compact" id="front-map-chips" aria-label="Industries on the money map"></nav>
-      </section>
-      <div class="front-grid" id="front-page">
-        <div class="front-main">
-<section class="front-mod" aria-labelledby="h-bills" id="mod-bills" hidden>
-          <h2 class="subject-section-title" id="h-bills">Latest bills</h2>
-          <div class="front-bills-machine"><details class="ui-pop ui-machine"><summary title="Written by a model, not by a person. Not part of the record."><span class="ui-machine-glyph" aria-hidden="true">✦</span>Machine-written<span class="visually-hidden">, not part of the record</span></summary><div class="ui-sheet"><p>Each summary is written by a model from the bill&#39;s explanatory memorandum. It is not part of the record.</p></div></details></div>
-          <ul class="subject-list front-bills" id="front-bills" role="list"></ul>
-          <p class="fineprint" id="front-bills-note"><a href="/bills">All bills, with their divisions and speeches →</a></p>
-        </section>
-<section class="front-mod" aria-labelledby="h-mw" id="mod-mw" hidden>
-          <h2 class="subject-section-title" id="h-mw">Money &amp; words</h2>
-          <div id="front-mw"></div>
-        </section>
-<section class="front-mod" aria-labelledby="h-added" id="mod-added" hidden>
-          <h2 class="subject-section-title" id="h-added">Just added to the record</h2>
-          <div class="split-list" id="front-added"></div>
-          <p class="fineprint">The newest documents to enter the index. The corpus updates as
-          parliaments publish.</p>
-          <p style="margin:0.6rem 0 0"><a class="search-everything ui-button" href="/ask?view=search"><svg class="btn-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="9" r="5.2"/><path d="M13 13l4 4"/></svg><span>Search everything</span></a></p>
-        </section>
-<section class="front-mod" aria-labelledby="h-declared" id="mod-declared" hidden>
-          <h2 class="subject-section-title" id="h-declared">Just declared</h2>
-          <div id="front-declared"></div>
-          <p class="fineprint"><a href="/declared">All recent declarations →</a></p>
-        </section>
-<section class="front-mod" aria-labelledby="h-reports" id="mod-reports" hidden>
-          <h2 class="subject-section-title" id="h-reports">Reports</h2>
-          <p class="fineprint" style="margin:-0.2rem 0 0.6rem">Long-running investigations pairing
-          the money with the words, every claim cited.</p>
-          <div class="report-cards" id="front-reports"></div>
-        </section>
-        </div>
-        <aside class="front-rail">
-        <section class="front-mod home-parliaments" aria-label="Parliamentary record by state">
-          <div id="front-statemap" class="front-map-root"><p class="status">Loading the map…</p></div>
-        </section>
-        <section class="front-mod" aria-labelledby="h-numbers">
-          <h2 class="subject-section-title" id="h-numbers">Today's numbers</h2>
-          <div class="tiles tiles-compact" id="front-numbers"></div>
-          <p class="fineprint" id="front-numbers-note">Live from the search index.
-          <a href="/stats">Full corpus breakdown</a></p>
-        </section>
-<section class="front-mod" aria-labelledby="h-ency" id="mod-ency" hidden>
-          <h2 class="subject-section-title" id="h-ency">From the encyclopedia</h2>
-          <div class="entry-stack" id="front-ency"></div>
-          <p class="fineprint">From AEC disclosures and the speech index. Totals are a floor, not a ceiling.</p>
-        </section>
-<section class="front-mod" aria-labelledby="h-ways">
-          <h2 class="subject-section-title" id="h-ways">More ways in</h2>
-          <div class="entry-stack">
-            <a class="report-card" href="/money">
-              <span class="front-way-heading"><svg class="card-glyph" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="6" cy="7" r="3"/><circle cx="18" cy="5" r="2"/><circle cx="15" cy="18" r="4"/><path d="m8 9 4.5 6M17.5 7l-1.7 7"/></svg><span class="card-kicker">Interactive</span></span>
-              <span class="card-title">The money map</span>
-              <span class="card-blurb">250 donors, 11 parties, 28 years of AEC returns, as territory you can spin.</span>
-              <span class="card-meta">Open →</span>
-            </a>
-            <a class="report-card" href="/bills">
-              <span class="front-way-heading"><svg class="card-glyph" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 3h9l4 4v14H6zM14 3v5h5M9 12h7M9 16h7"/></svg><span class="card-kicker">Encyclopedia</span></span>
-              <span class="card-title">Bills</span>
-              <span class="card-blurb">Every federal bill since 2013: what it changes, who it affects, how the parties divided.</span>
-              <span class="card-meta">Open →</span>
-            </a>
-            <a class="report-card" href="/explore">
-              <span class="front-way-heading"><svg class="card-glyph" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11a9 9 0 1 1 2.6 7.4M3 4v7h7M12 7v6l4 2"/></svg><span class="card-kicker">Explore</span></span>
-              <span class="card-title">Time machine</span>
-              <span class="card-blurb">Dial up any year since 1998 and see what parliament was arguing about.</span>
-              <span class="card-meta">Open →</span>
-            </a>
-            <a class="report-card" href="/explore">
-              <span class="front-way-heading"><svg class="card-glyph" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 3h14v18H5zM9 9a3 3 0 0 1 6 0c0 2-3 2-3 4M12 16v.2"/></svg><span class="card-kicker">Explore</span></span>
-              <span class="card-title">The record quiz</span>
-              <span class="card-blurb">Guess what the numbers say, then see the receipts.</span>
-              <span class="card-meta">Open →</span>
-            </a>
-          </div>
-        </section>
-        </aside>
-                                              </div>
     </section>
 
     <!-- ============================= SEARCH ============================ -->
@@ -442,7 +357,7 @@
 
     <section id="panel-search" class="panel" hidden aria-label="Search the record">
       <h1 class="visually-hidden">Search all public records</h1>
-      <nav class="entry-modes" aria-label="Research mode"><a href="/ask" data-entry-mode="ask">Ask a question</a><a href="/ask?view=search" aria-current="page">Search records</a></nav>
+      <nav class="ui-tabs" aria-label="Research mode"><a href="/ask" data-entry-mode="ask">Ask a question</a><a href="/ask?view=search" aria-current="page">Search records</a></nav>
       <form id="search-form" class="search-grid">
         <div class="query-line" data-ui-size="large">
           <label for="search-input" class="visually-hidden">Find source records</label>
@@ -607,10 +522,10 @@
           <button type="button" class="ui-button" id="search-answer-retry" hidden>Try summary again</button>
         </div>
       </details>
-      <ul id="search-results" class="results" role="list"></ul>
+      <ul id="search-results" class="ui-list results" role="list"></ul>
       <!-- The band keeps its height whether or not there is a second page, so
            arriving at a short last page does not lift the footer. -->
-      <nav id="search-pager" class="pager" aria-label="Result pages" hidden>
+      <nav id="search-pager" class="pager" aria-label="Result pages" data-ui-size="compact" hidden>
         <button type="button" class="pager-btn ui-button" id="pager-prev">
           <svg class="btn-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4l-6 6 6 6"/></svg><span class="pager-btn-label">Previous</span></button>
         <!-- app.js fills this: how many numbers there are, and which runs of
@@ -628,10 +543,13 @@
     </section>
 
     <!-- ============================ MONEY MAP ========================== -->
-    <section id="panel-money" class="panel" hidden aria-label="Money map">
-      <h1 class="visually-hidden">Money map</h1>
+    <section id="panel-money" class="panel" hidden aria-labelledby="money-title">
       <div data-money-navigation></div>
-      <div class="money-workspace-toolbar">
+      <div class="ui-page-head money-head">
+        <h1 id="money-title" tabindex="-1">Money map</h1>
+        <p class="ui-page-meta">Political donations, government contracts and grants, drawn as one map</p>
+      </div>
+      <div class="money-workspace-toolbar" data-ui-size="compact">
         <div id="money-jur"></div>
         <details id="money-journey-picker" class="journey-menu" name="money-tools"><summary>Journeys</summary><div id="money-journey-controls"></div></details>
         <div id="money-research"></div>
@@ -644,14 +562,23 @@
       </div>
       <div id="money-stage" class="money-stage">
         <aside id="money-journey-story" class="journey-story" aria-label="Guided journey" hidden></aside>
-        <div id="money-map-root" class="money-map-root"></div>
+        <div id="money-map-root" class="money-map-root ui-plate"></div>
       </div>
       <div id="money-research-results"></div>
       <!-- The map's one source line (moneyFineprintHTML in app.js). -->
       <div id="money-fineprint" class="money-source"></div>
     </section>
 
-    <section id="panel-money-records" class="panel" hidden aria-label="Money records"><div data-money-navigation></div><h1 class="visually-hidden" id="money-records-title">Political receipts</h1><div id="money-records-body"></div></section>
+    <section id="panel-money-records" class="panel" hidden aria-label="Money records">
+      <div data-money-navigation></div>
+      <!-- The index's title (receipts or grants); a recipient file or a month's
+           largest awards brings its own and hides this one (app.js). -->
+      <div class="ui-page-head money-records-head" id="money-records-head">
+        <h1 id="money-records-title" tabindex="-1">Political receipts</h1>
+        <p class="ui-page-meta" id="money-records-meta"></p>
+      </div>
+      <div id="money-records-body"></div>
+    </section>
     <!-- ========================= CONNECTIONS ========================== -->
     <!-- Organisations, programs and places named across the collected records.
          connections.js mounts into #connections-body when the route opens and
@@ -659,16 +586,18 @@
     <section id="panel-connections" class="panel" hidden aria-labelledby="connections-title">
       <div data-money-navigation></div>
       <div id="connections-body" class="supplier-page connections-page">
-        <!-- The Money sub-nav tab "Programs &amp; places" already names this view; the heading stays for assistive tech, the page title and focus on arrival. -->
-        <h1 id="connections-title" class="visually-hidden" tabindex="-1">Programs &amp; places</h1>
-        <p class="connections-lede">Explore organisations, programs and places across speeches, official releases and grant records.</p>
-        <div class="ui-toolbar">
-          <label class="ui-field">Find a connection<input class="ui-input" id="connection-search" type="search" placeholder="Name, program or electorate" autocomplete="off"></label>
-          <label class="ui-field">Show<select class="ui-input" id="connection-kind"><option value="">Everything</option><option value="organisation">Organisations</option><option value="program">Programs</option><option value="electorate">Electorates</option><option value="place">Places</option></select></label>
+        <!-- One name in the menu, the Money sub-nav tab, the title and the trail. -->
+        <div class="ui-page-head connections-head">
+          <h1 id="connections-title" tabindex="-1">Programs &amp; places</h1>
+          <p class="ui-lede">Explore organisations, programs and places across speeches, official releases and grant records.</p>
         </div>
-        <p id="connection-status" role="status">Opening the records…</p>
+        <div class="ui-filter-bar" data-ui-size="compact">
+          <label class="ui-filter-search"><span class="visually-hidden">Find a connection</span><input class="ui-input" id="connection-search" type="search" placeholder="Find a name, program or electorate" autocomplete="off"></label>
+          <label class="ui-filter-field"><span class="visually-hidden">Show</span><select class="ui-input" id="connection-kind"><option value="">Everything</option><option value="organisation">Organisations</option><option value="program">Programs</option><option value="electorate">Electorates</option><option value="place">Places</option></select></label>
+        </div>
+        <p id="connection-status" class="ui-filter-count" role="status">Opening the records…</p>
         <div class="connections-layout">
-          <div id="connection-list"></div>
+          <ul id="connection-list" class="ui-list" aria-label="Connections"></ul>
           <section id="connection-detail" tabindex="-1" aria-label="Selected connection" hidden></section>
         </div>
       </div>
@@ -677,40 +606,42 @@
     <section id="panel-reports" class="panel" hidden aria-label="Reports">
       <!-- The index: one title, the cards, one dated source line for the set. -->
       <div id="reports-index">
-        <div class="subject-head reports-head">
+        <div class="ui-page-head">
           <h1 id="reports-title" tabindex="-1">Reports</h1>
-          <p class="subject-tag"><span>Standing investigations that pair the money with the words, every claim cited to the record.</span></p>
+          <p class="ui-lede">Standing investigations that pair the money with the words, every claim cited to the record.</p>
         </div>
-        <div id="reports-list" class="report-cards"></div>
+        <ul id="reports-list" class="ui-card-grid" role="list"></ul>
         <div id="reports-source"></div>
       </div>
       <div id="reports-status" class="status" role="status"></div>
       <article id="report-view" hidden>
-        <h1 id="report-title" tabindex="-1"></h1>
-        <p id="report-blurb" class="report-blurb"></p>
-        <!-- v2 head: the window the report covers and the lede in reading
-             size. Empty and hidden for a v1 report. -->
-        <div id="report-head2" class="report-head2" hidden></div>
+        <!-- One title block: the title, one meta line (v1: when it was
+             generated; v2: the window it reads over), then the lede. -->
+        <div class="ui-page-head report-head">
+          <h1 id="report-title" tabindex="-1"></h1>
+          <p id="report-meta" class="ui-page-meta"></p>
+          <p id="report-blurb" class="ui-lede"></p>
+          <!-- v2: the machine label and the lede. Empty and hidden for a v1 report. -->
+          <div id="report-head2" class="report-head2" hidden></div>
+        </div>
         <!-- The nav is a child of the article, not of the head: a sticky
              element is bounded by its containing block, and inside the head it
              would unpin one line later. -->
         <nav id="report-jump" class="report-jump" hidden aria-label="Parts of this report"></nav>
-        <p id="report-meta" class="report-meta"></p>
         <div class="report-lead" id="report-lead">
           <div id="report-brief"></div>
           <aside id="report-figures"></aside>
         </div>
         <!-- v2 parts, in reading order, ahead of the money a v1 page also has. -->
-        <section id="report-now" class="report-part" hidden aria-labelledby="report-now-head"></section>
-        <section id="report-overtime" class="report-part" hidden aria-labelledby="report-overtime-head"></section>
-        <section id="report-money" class="report-part" hidden aria-labelledby="report-money-head"></section>
+        <section id="report-now" class="ui-section report-part" hidden aria-labelledby="report-now-head"></section>
+        <section id="report-overtime" class="ui-section report-part" hidden aria-labelledby="report-overtime-head"></section>
+        <section id="report-money" class="ui-section report-part" hidden aria-labelledby="report-money-head"></section>
         <div id="report-stats"></div>
         <div id="report-positions"></div>
         <div id="report-moments"></div>
         <div id="report-sections"></div>
-        <div id="report-allsources" hidden></div>
         <!-- v2 keeps its provenance at the foot, beside the data it describes. -->
-        <p id="report-meta2" class="report-meta report-foot-meta" hidden></p>
+        <div id="report-allsources" class="ui-section" hidden></div>
         <div id="report-download"></div>
       </article>
     </section>
@@ -773,7 +704,7 @@
     <section id="panel-discover" class="panel" hidden aria-labelledby="discover-title">
       <h1 class="visually-hidden" id="discover-title">Government contracts</h1>
       <div data-money-navigation></div>
-      <section class="supplier-section" id="contracts-hub-table" data-contracts-table></section>
+      <section class="ui-section supplier-section" id="contracts-hub-table" data-contracts-table></section>
       <div class="discovery-view-control">
         <label for="discover-categories">View</label>
         <select id="discover-categories">
@@ -797,18 +728,18 @@
 
     <!-- ============================ EXPLORE ============================ -->
     <section id="panel-explore" class="panel" hidden aria-label="Explore">
-      <div class="subject-head">
+      <div class="ui-page-head">
         <h2 id="explore-title" tabindex="-1">Interactive tools</h2>
-        <p class="subject-tag"><span>Tools and games built on the public record: speeches, votes, money and grants.</span></p>
+        <p class="ui-lede">Tools and games built on the public record: speeches, votes, money and grants.</p>
       </div>
-      <div class="game-grid">
-        <button type="button" class="game-card" id="explore-ballot-btn">
+      <div class="ui-card-grid game-grid">
+        <button type="button" class="ui-card game-card" id="explore-ballot-btn">
           <span class="game-icon" aria-hidden="true"><svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><rect x="10" y="5" width="28" height="38" rx="2"/><path d="M17 14h3v4h-3zM17 25h3v4h-3zM26 16h6M26 27h6M17 36h15"/></svg></span>
-          <span class="game-title">Build your ballot</span>
-          <span class="game-blurb">Research the candidates and arrange your own preferences with a practice ballot from the 2025 federal election.</span>
+          <span class="ui-card-title game-title">Build your ballot</span>
+          <span class="ui-card-text game-blurb">Research the candidates and arrange your own preferences with a practice ballot from the 2025 federal election.</span>
           <span class="game-cta">Build a practice ballot</span>
         </button>
-        <button type="button" class="game-card" id="explore-tm-btn">
+        <button type="button" class="ui-card game-card" id="explore-tm-btn">
           <span class="game-icon" aria-hidden="true">
             <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.6"
                  stroke-linecap="round" stroke-linejoin="round">
@@ -818,12 +749,12 @@
               <path d="M39 10.5L33 6l-1 7.5"/>
             </svg>
           </span>
-          <span class="game-title">Time machine</span>
-          <span class="game-blurb">Spin the dial through 29 years and see what parliament
+          <span class="ui-card-title game-title">Time machine</span>
+          <span class="ui-card-text game-blurb">Spin the dial through 29 years and see what parliament
           was arguing about, with the real speeches to prove it.</span>
           <span class="game-cta">Play</span>
         </button>
-        <button type="button" class="game-card" id="explore-tide-btn">
+        <button type="button" class="ui-card game-card" id="explore-tide-btn">
           <span class="game-icon" aria-hidden="true">
             <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.6"
                  stroke-linecap="round" stroke-linejoin="round">
@@ -832,12 +763,12 @@
               <path d="M8 20c7-1 10-8 17-7s8 7 15 3"/>
             </svg>
           </span>
-          <span class="game-title">The tide</span>
-          <span class="game-blurb">Twenty-one debates across four decades, sorted by what is
+          <span class="ui-card-title game-title">The tide</span>
+          <span class="ui-card-text game-blurb">Twenty-one debates across four decades, sorted by what is
           rising, fading or largest now—with the labelling coverage in view.</span>
           <span class="game-cta">Open</span>
         </button>
-        <button type="button" class="game-card" id="explore-quiz-btn">
+        <button type="button" class="ui-card game-card" id="explore-quiz-btn">
           <span class="game-icon" aria-hidden="true">
             <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.6"
                  stroke-linecap="round" stroke-linejoin="round">
@@ -845,12 +776,12 @@
               <path d="M18 36.5L15 44M30 36.5L33 44"/>
             </svg>
           </span>
-          <span class="game-title">The record quiz</span>
-          <span class="game-blurb">Eight quick questions computed straight from the public
+          <span class="ui-card-title game-title">The record quiz</span>
+          <span class="ui-card-text game-blurb">Eight quick questions computed straight from the public
           record. Every answer comes with its source.</span>
           <span class="game-cta">Play</span>
         </button>
-        <button type="button" class="game-card" id="explore-ledger-btn">
+        <button type="button" class="ui-card game-card" id="explore-ledger-btn">
           <span class="game-icon" aria-hidden="true">
             <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.6"
                  stroke-linecap="round" stroke-linejoin="round">
@@ -859,12 +790,12 @@
               <path d="M19 6v36"/>
             </svg>
           </span>
-          <span class="game-title">The ledger</span>
-          <span class="game-blurb">Every disclosed donation flow in one sortable table.
+          <span class="ui-card-title game-title">The ledger</span>
+          <span class="ui-card-text game-blurb">Every disclosed donation flow in one sortable table.
           Filter it, follow it, take it home as CSV.</span>
           <span class="game-cta">Open</span>
         </button>
-        <button type="button" class="game-card" id="explore-grants-btn">
+        <button type="button" class="ui-card game-card" id="explore-grants-btn">
           <span class="game-icon" aria-hidden="true">
             <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.6"
                  stroke-linecap="round" stroke-linejoin="round">
@@ -875,12 +806,12 @@
               <path d="M30.5 39l-1.5 5 4-2 4 2-1.5-5"/>
             </svg>
           </span>
-          <span class="game-title">Who gets the grants</span>
-          <span class="game-blurb">Every published grant award, resolved to the organisations that
+          <span class="ui-card-title game-title">Who gets the grants</span>
+          <span class="ui-card-text game-blurb">Every published grant award, resolved to the organisations that
           receive it and checked against the donor registers. Programs, seats and the money.</span>
           <span class="game-cta">Open</span>
         </button>
-        <button type="button" class="game-card" id="explore-matrix-btn">
+        <button type="button" class="ui-card game-card" id="explore-matrix-btn">
           <span class="game-icon" aria-hidden="true">
             <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.6"
                  stroke-linecap="round" stroke-linejoin="round">
@@ -892,12 +823,12 @@
               <circle cx="35.5" cy="13.25" r="2.1" fill="currentColor" stroke="none"/>
             </svg>
           </span>
-          <span class="game-title">Who owns which debate</span>
-          <span class="game-blurb">Every party's share of every debate in one shaded grid,
+          <span class="ui-card-title game-title">Who owns which debate</span>
+          <span class="ui-card-text game-blurb">Every party's share of every debate in one shaded grid,
           live from the labelled record. Each cell opens the speeches behind it.</span>
           <span class="game-cta">Open</span>
         </button>
-        <button type="button" class="game-card" id="explore-wd-btn">
+        <button type="button" class="ui-card game-card" id="explore-wd-btn">
           <span class="game-icon" aria-hidden="true">
             <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.6"
                  stroke-linecap="round" stroke-linejoin="round">
@@ -909,12 +840,12 @@
               <circle cx="7" cy="39" r="2.1" fill="currentColor" stroke="none"/>
             </svg>
           </span>
-          <span class="game-title">Words per dollar</span>
-          <span class="game-blurb">Each industry's disclosed donations beside each party's
+          <span class="ui-card-title game-title">Words per dollar</span>
+          <span class="ui-card-text game-blurb">Each industry's disclosed donations beside each party's
           share of the matching debate. Comparison, not causation.</span>
           <span class="game-cta">Open</span>
         </button>
-        <button type="button" class="game-card" id="explore-tvn-btn">
+        <button type="button" class="ui-card game-card" id="explore-tvn-btn">
           <span class="game-icon" aria-hidden="true">
             <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.6"
                  stroke-linecap="round" stroke-linejoin="round">
@@ -924,8 +855,8 @@
               <path d="M30 22h9M30 28h9M30 34h6"/>
             </svg>
           </span>
-          <span class="game-title">Then vs now</span>
-          <span class="game-blurb">Pick a speaker and a topic, then read what they said in
+          <span class="ui-card-title game-title">Then vs now</span>
+          <span class="ui-card-text game-blurb">Pick a speaker and a topic, then read what they said in
           two eras side by side, with dated quotes from the record.</span>
           <span class="game-cta">Open</span>
         </button>
@@ -1002,20 +933,20 @@
     <section id="panel-declared" class="panel" hidden aria-label="Recent alterations to registers of interests">
       <h1 tabindex="-1">Declared interests</h1>
       <p class="lede">The newest additions and deletions recorded in parliamentarians' registers of interests, in their own words.</p>
-      <form id="declared-filters" class="dir-controls ui-toolbar" aria-label="Filter recent declarations">
-        <span class="ui-field dir-field declared-search">
-          <label for="declared-query">Search</label>
+      <form id="declared-filters" class="dir-controls ui-filter-bar" aria-label="Filter recent declarations">
+        <span class="ui-filter-search declared-search">
+          <label for="declared-query" class="visually-hidden">Search the declarations</label>
           <input class="ui-input" id="declared-query" type="search" placeholder="Name, organisation or interest…">
         </span>
-        <span class="ui-field dir-field">
-          <label for="declared-bucket">Category</label>
-          <select class="ui-input" id="declared-bucket"><option value="">all categories</option></select>
+        <span class="ui-filter-field">
+          <label for="declared-bucket" class="ui-filter-key">Category</label>
+          <select class="ui-input" id="declared-bucket"><option value="">All</option></select>
         </span>
-        <span class="ui-field dir-field">
-          <label for="declared-party">Party</label>
-          <select class="ui-input" id="declared-party"><option value="">all parties</option></select>
+        <span class="ui-filter-field">
+          <label for="declared-party" class="ui-filter-key">Party</label>
+          <select class="ui-input" id="declared-party"><option value="">All</option></select>
         </span>
-        <button class="ui-button" type="submit">Search</button>
+        <span class="ui-filter-actions"><button class="ui-button" type="submit" data-ui-size="compact">Search</button></span>
       </form>
       <p class="ui-source" id="declared-updated"></p>
       <p class="interests-summary" id="declared-summary" hidden></p>
@@ -1026,9 +957,12 @@
 
     <!-- ============================= ABOUT ============================= -->
     <!-- ============================== STATS ============================ -->
-    <section id="panel-stats" class="panel" hidden aria-label="Corpus statistics">
-      <p class="kicker">The corpus in numbers</p>
-      <div class="stat-grid" id="stats-hero"><!-- filled from corpus.json --></div>
+    <section id="panel-stats" class="panel" hidden aria-labelledby="stats-title">
+      <div class="ui-page-head">
+        <h1 id="stats-title">The corpus in numbers</h1>
+        <p class="ui-page-meta" id="stats-version"></p>
+      </div>
+      <div class="ui-stats stats-figures" id="stats-hero"><!-- filled from corpus.json --></div>
       <div class="corpus-meter" id="corpus-meter" hidden>
         <p id="corpus-meter-text"></p>
         <div class="meter-track" role="meter" aria-valuemin="0" aria-valuemax="100"
@@ -1036,38 +970,43 @@
           <i></i>
         </div>
       </div>
-      <p class="fineprint" id="stats-live">corpus loading…</p>
-      <section id="stats-connections" class="supplier-section" hidden></section>
+      <!-- One plain sentence: which figures are live, or that the live index
+           is unavailable (its tiles and tables then stand down). -->
+      <p class="ui-status-line" id="stats-live" role="status"></p>
+      <section id="stats-connections" class="ui-section" hidden></section>
 
-      <p class="kicker">In the live index</p>
-      <div class="table-scroll"><table class="about-table stats-live-table">
-        <thead><tr><th>Speeches by parliament</th><th>Speeches</th></tr></thead>
-        <tbody id="stats-parliaments"><tr><td colspan="2">Counting…</td></tr></tbody>
-        <thead><tr><th>Documents by kind</th><th>Documents</th></tr></thead>
-        <tbody id="stats-kinds"><tr><td colspan="2">Counting…</td></tr></tbody>
-      </table></div>
+      <section class="ui-section" id="stats-live-index" aria-labelledby="stats-live-title">
+        <h2 class="ui-section-title" id="stats-live-title">In the live index</h2>
+        <div class="table-scroll"><table class="about-table stats-live-table">
+          <thead><tr><th>Speeches by parliament</th><th>Speeches</th></tr></thead>
+          <tbody id="stats-parliaments"><tr><td colspan="2">Counting…</td></tr></tbody>
+          <thead><tr><th>Documents by kind</th><th>Documents</th></tr></thead>
+          <tbody id="stats-kinds"><tr><td colspan="2">Counting…</td></tr></tbody>
+        </table></div>
+      </section>
 
-      <p class="kicker">Sources loaded</p>
-      <div class="table-scroll"><table class="about-table">
-        <thead><tr><th>Source</th><th>Documents</th><th>Coverage</th></tr></thead>
-        <tbody id="stats-sources"><!-- filled from corpus.json --></tbody>
-      </table></div>
-      <p class="fineprint" id="stats-version"></p>
-      <p><a href="/audit">Queensland Audit Office reports to Parliament</a> is a separate
-      catalogue of report metadata and HTML recommendations, with separate page and PDF rights reviews. Source: Queensland Audit Office,
-      <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>, with State of Queensland
-      attribution and <a href="https://www.qao.qld.gov.au/copyright">per-report exceptions</a>.
-      Its report count is shown in the directory and is separate from corpus document totals.</p>
-      <p class="fineprint">How the corpus is collected and what is known to be missing:
-        <a href="/methods">Methods</a> · <a href="/about">About OPAX</a> · <a href="https://x.com/OpaxAustralia" target="_blank" rel="noopener noreferrer">OPAX on X</a> · <a href="https://www.facebook.com/OpaxAustralia/" target="_blank" rel="noopener noreferrer">OPAX on Facebook</a> · <a href="https://www.instagram.com/opaxaustralia/" target="_blank" rel="noopener noreferrer">OPAX on Instagram</a></p>
+      <section class="ui-section" aria-labelledby="stats-sources-title">
+        <h2 class="ui-section-title" id="stats-sources-title">Sources loaded</h2>
+        <div class="table-scroll"><table class="about-table">
+          <thead><tr><th>Source</th><th>Documents</th><th>Coverage</th></tr></thead>
+          <tbody id="stats-sources"><!-- filled from corpus.json --></tbody>
+        </table></div>
+        <p><a href="/audit">Queensland Audit Office reports to Parliament</a> is a separate
+        catalogue of report metadata and HTML recommendations, with separate page and PDF rights reviews. Source: Queensland Audit Office,
+        <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>, with State of Queensland
+        attribution and <a href="https://www.qao.qld.gov.au/copyright">per-report exceptions</a>.
+        Its report count is shown in the directory and is separate from corpus document totals.</p>
+        <p class="fineprint">How the corpus is collected and what is known to be missing:
+          <a href="/methods">Methods</a> · <a href="/about">About OPAX</a> · <a href="https://x.com/OpaxAustralia" target="_blank" rel="noopener noreferrer">OPAX on X</a> · <a href="https://www.facebook.com/OpaxAustralia/" target="_blank" rel="noopener noreferrer">OPAX on Facebook</a> · <a href="https://www.instagram.com/opaxaustralia/" target="_blank" rel="noopener noreferrer">OPAX on Instagram</a></p>
+      </section>
     </section>
 
     <section id="panel-about" class="panel" hidden aria-label="About OPAX">
       <!-- At regular width the page's sections are listed beside it (design
            review: About keeps its prose and gains an index). -->
       <nav class="about-index" aria-labelledby="about-index-head">
-        <p class="about-index-head" id="about-index-head">On this page</p>
-        <ul role="list">
+        <p class="ui-toc-head" id="about-index-head">On this page</p>
+        <ul class="ui-toc-list" role="list">
           <li><a href="#about-use">What you can do here</a></li>
           <li><a href="#about-record">The record</a></li>
           <li><a href="#about-money">The money</a></li>
@@ -1082,22 +1021,24 @@
           <li><a href="#about-contact">How to reach us</a></li>
         </ul>
       </nav>
-      <div class="about-body">
-      <h1>What OPAX is</h1>
-      <p>OPAX, the Open Parliamentary Accountability Exchange, has one intent: to put as much of
-      the open data about Australian politics as possible in one place, cross-referenced and
-      citable, so that the blind spots become findable. What a politician said on the record, how
-      they voted, what they declared, who gave money to their party, who lobbied whom, which
-      grants and contracts followed: each of these is published somewhere, in its own format,
-      under its own terms, and almost never beside the others. Put side by side, a politician who
-      gives two hundred speeches about a problem but votes against every reform, or an industry
-      that donates millions while its regulation stalls, leaves a paper trail. OPAX makes that
-      trail searchable and citable. It started as speeches and donations; it now also carries the
-      votes those speeches led to, the bills those votes decided, the government grants and
-      contracts that sometimes follow the same money, and the registers that record who lobbies
-      whom. Every claim on the site links back to the primary record it came from, because a
-      blind spot is only worth finding if someone else can check it.</p>
-      <p class="fineprint">OPAX contains the names and images of people who have died.</p>
+      <div class="about-body policy-page">
+      <div class="ui-page-head">
+        <h1>What OPAX is</h1>
+        <p class="ui-lede">OPAX, the Open Parliamentary Accountability Exchange, has one intent: to put as much of
+        the open data about Australian politics as possible in one place, cross-referenced and
+        citable, so that the blind spots become findable. What a politician said on the record, how
+        they voted, what they declared, who gave money to their party, who lobbied whom, which
+        grants and contracts followed: each of these is published somewhere, in its own format,
+        under its own terms, and almost never beside the others. Put side by side, a politician who
+        gives two hundred speeches about a problem but votes against every reform, or an industry
+        that donates millions while its regulation stalls, leaves a paper trail. OPAX makes that
+        trail searchable and citable. It started as speeches and donations; it now also carries the
+        votes those speeches led to, the bills those votes decided, the government grants and
+        contracts that sometimes follow the same money, and the registers that record who lobbies
+        whom. Every claim on the site links back to the primary record it came from, because a
+        blind spot is only worth finding if someone else can check it.</p>
+        <p class="fineprint">OPAX contains the names and images of people who have died.</p>
+      </div>
 
       <h2 id="about-use">What you can do here</h2>
       <ul class="about-list">
@@ -1382,15 +1323,17 @@
     </section>
 
     <!-- ============================ METHODS ============================ -->
-    <section id="panel-methods" class="panel" hidden aria-label="Methods">
-      <h1>How OPAX works, and how to cite it</h1>
+    <section id="panel-methods" class="panel policy-page" hidden aria-labelledby="methods-title">
+      <div class="ui-page-head">
+        <h1 id="methods-title">How OPAX works, and how to cite it</h1>
+      </div>
 
-      <h3>What OPAX is, and is not</h3>
+      <h2>What OPAX is, and is not</h2>
       <p>OPAX is a retrieval and analysis layer over public records. It is not the official
       record. Before publishing a quote, verify the wording at the source link on the document
       page. Every document links to its official origin where one exists.</p>
 
-      <h3>Corpus construction</h3>
+      <h2>Corpus construction</h2>
       <p>Speeches are included from <strong>13 March 1993</strong>, the election that seated the
       longest-serving current federal parliamentarian, so nothing in the corpus predates a
       currently serving member. Speeches under 200 characters are excluded (procedural fragments),
@@ -1399,7 +1342,7 @@
       manifest, including per-source counts and the current corpus version, is at
       <a href="/corpus.json">corpus.json</a>.</p>
 
-      <h3 id="speaker-attribution">Speaker attribution</h3>
+      <h2 id="speaker-attribution">Speaker attribution</h2>
       <p>Some earlier OpenAustralia transcripts combine several speakers' words in one document.
       These mixed transcripts are not credited to any one member or included in their speech
       count until each person's words can be attributed reliably. A fuller split into individual
@@ -1407,20 +1350,20 @@
       member alongside others and are not counted yet. Chair-role transcripts record a member
       presiding over proceedings and are not counted as that member's own speeches.</p>
 
-      <h3>Retrieval and generation</h3>
+      <h2>Retrieval and generation</h2>
       <p>Search runs hybrid semantic + keyword retrieval with a reranking pass. Answers are
       generated only from retrieved passages, with citations. Embeddings:
       <span id="methods-embeddings"><code>multilingual-2024-05-06</code></span>. Generation model (pinned):
       <span id="methods-generation"><code>DeepSeek V4 Pro</code> via OpenRouter preset <code>@preset/opax-pro</code> (<code>openai-compatible</code>)</span>. Model identity may change between corpus versions and
       is recorded in the manifest.</p>
 
-      <h3>Reproducibility</h3>
+      <h2>Reproducibility</h2>
       <p>Searches are reproducible given a query, filters and corpus version: every export file
       embeds all three. Generated answers are <strong>not</strong> reproducible and must not be
       quoted as data. The supported method for a paper: state the question, cite the returned
       documents by their permanent OPAX links, and archive the export file.</p>
 
-      <h3>Citing instruments and audit reports</h3>
+      <h2>Citing instruments and audit reports</h2>
       <p>Federal legislative instruments are a separate metadata catalogue. Cite the FRL id and
       the authoritative version linked on its page. OPAX shows metadata only; version start,
       registration and commencement are distinct dates. Source: Federal Register of Legislation
@@ -1432,7 +1375,7 @@
       © The State of Queensland (Queensland Audit Office) 2026. Copyright exceptions are recorded
       per report and their bodies withheld.</p>
 
-      <h3 id="vic-election">Victorian election 2026</h3>
+      <h2 id="vic-election">Victorian election 2026</h2>
       <p>The election pages bring together official election facts and the records OPAX already holds.
       They show records only: no predictions, polls or rankings.</p>
       <ul class="about-list">
@@ -1529,7 +1472,7 @@
       Victorian state seats have no published Census profiles, so their ranking is unavailable.</p>
       </div>
 
-      <h3>Known limitations</h3>
+      <h2>Known limitations</h2>
       <ul class="about-list" id="methods-defects"><!-- filled from corpus.json --></ul>
       <ul class="about-list">
         <li>Hansard is a revised record ("substantially verbatim"), not a raw transcript.</li>
@@ -1537,7 +1480,7 @@
         <li>State coverage windows differ by parliament (QLD only from 2024, NSW/VIC from 2015).</li>
       </ul>
 
-      <h3>Corrections</h3>
+      <h2>Corrections</h2>
       <ul class="about-list">
         <li><strong>30 September 2026, grants by seat.</strong> Grant program pages now take each
         seat's member and party on the grant date from the parliamentary service records, which date
@@ -1548,25 +1491,27 @@
         programs; award totals did not change.</li>
       </ul>
 
-      <h3>Licence, code and corrections</h3>
+      <h2>Licence, code and corrections</h2>
       <p>AGPL-3.0. Source and issue tracker:
       <a href="https://github.com/jaketracey/opax" rel="noopener">github.com/jaketracey/opax</a>.
       Data errors are corrections we want, so please report them.</p>
     </section>
 
     <!-- ====================== EXPENSE CATEGORIES ======================= -->
-    <section id="panel-expenses" class="panel" hidden aria-label="Expense definitions">
-      <p class="kicker">Parliamentary expenses</p>
-      <h2>Expense definitions</h2>
-      <p class="lede">Every parliamentarian page on OPAX splits claimed expenses by category. Those
+    <section id="panel-expenses" class="panel" hidden aria-labelledby="expenses-title">
+      <div class="ui-page-head">
+      <h1 id="expenses-title">Expense definitions</h1>
+      <p class="ui-page-meta" id="expenses-meta">Parliamentary expenses</p>
+      <p class="ui-lede">Every parliamentarian page on OPAX splits claimed expenses by category. Those
       category names are the Independent Parliamentary Expenses Authority's own, reproduced
       unchanged from its quarterly expenditure reports, so a figure here can be checked line by
       line against the published source. This page says what each one covers.</p>
-      <p class="fineprint">Some of these are not expense types at all. IPEA records the purpose of
+      <p class="ui-lede">Some of these are not expense types at all. IPEA records the purpose of
       a trip against transport lines, so labels such as parliamentary duties or electorate duties
       answer why the travel happened, not what was bought. Others are entitlements paid at a set
       rate rather than reimbursements of receipts. Both are marked below.</p>
-      <div id="expenses-defs"><p class="status">Loading definitions…</p></div>
+      </div>
+      <div id="expenses-defs"><p class="ui-status-line" role="status">Loading the definitions</p></div>
     </section>
 
     <!-- ============================ PRIVACY ============================ -->
@@ -1575,14 +1520,15 @@
          are marked placeholders; scripts/check_privacy_placeholders.mjs fails
          `npm run check` and the deploy scripts while any remain. -->
     <section id="panel-privacy" class="panel policy-page" hidden aria-labelledby="privacy-title">
-      <p class="kicker">Privacy</p>
+      <div class="ui-page-head">
       <h1 id="privacy-title">What OPAX collects and who receives it</h1>
-      <p class="lede">The Open Parliamentary Accountability Exchange (OPAX) publishes the public
+      <p class="ui-page-meta">Last updated 10 October 2026. This page covers the OPAX website and the
+      OPAX app for iPhone, iPad and Android.</p>
+      <p class="ui-lede">The Open Parliamentary Accountability Exchange (OPAX) publishes the public
       record of Australian politics. Reading it needs no account. This page sets out what the OPAX
       website and the OPAX app for iPhone, iPad and Android collect when you use them, which other companies
       receive it, how long it is kept and how to have it deleted.</p>
-      <p class="fineprint">Last updated 10 October 2026. This page covers the OPAX website and the
-      OPAX app for iPhone, iPad and Android.</p>
+      </div>
 
       <h2 id="privacy-summary">In short</h2>
       <ul class="about-list">
@@ -1605,7 +1551,7 @@
       </ul>
 
       <nav class="privacy-contents" aria-labelledby="privacy-contents-title">
-        <p class="kicker" id="privacy-contents-title">On this page</p>
+        <p class="ui-toc-head" id="privacy-contents-title">On this page</p>
         <ul>
           <li><a href="#privacy-reading">Reading the record</a></li>
           <li><a href="#privacy-app">In the iPhone and iPad app</a></li>
@@ -2036,15 +1982,16 @@
          GitHub issue, only when the path is exactly a published record's page
          (renderSupport in app.js, public/record-paths.js). -->
     <section id="panel-support" class="panel policy-page" hidden aria-labelledby="support-title">
-      <p class="kicker">Support</p>
+      <div class="ui-page-head">
       <h1 id="support-title">Help with OPAX</h1>
-      <p class="lede">Help with the OPAX website and the OPAX app for iPhone and iPad: how to reach
+      <p class="ui-lede">Help with the OPAX website and the OPAX app for iPhone and iPad: how to reach
       us, how to report a correction, signing in, and deleting your account.</p>
-      <p>The Open Parliamentary Accountability Exchange brings together Australian parliamentary
+      <p class="ui-lede">The Open Parliamentary Accountability Exchange brings together Australian parliamentary
       speeches, votes, political funding and public disclosures, and links each record to its
       original source. OPAX is independent and non-partisan. It is not a government service and
       is not affiliated with any parliament, government or political party.
       <a href="/about">More about OPAX</a>.</p>
+      </div>
 
       <h2 id="support-contact">Get help</h2>
       <ul class="about-list">
@@ -2166,11 +2113,11 @@
 <!-- defer: never block the parser (Lighthouse counted this as render-blocking).
      Deferred scripts still run before DOMContentLoaded, so nothing changes for
      app.js's boot. ?v= is content-hash stamped by scripts/stamp_assets.mjs. -->
-<script src="/spa-shell.js?v=8544b857fa" defer></script>
+<script src="/spa-shell.js?v=56dd397208" defer></script>
 <script src="/navigation.js?v=32c5b65527" defer></script>
 <script src="/quick-search.js?v=27eac3b2f7" defer></script>
 <script src="/ui-source.js?v=d594622c13" defer></script>
-<script src="/app.js?v=3194e0b2bc" defer></script>
+<script src="/app.js?v=3c418a552f" defer></script>
 <!-- PostHog runs after the app (defer order) so the first route is not queued behind it; it replays the events measured before it (analytics/index.js). -->
 <script src="/analytics.js?v=7a83ce20cf" defer></script>
 </body>

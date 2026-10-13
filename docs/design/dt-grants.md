@@ -1,43 +1,23 @@
 # Grants table rollout
 
-`/money/grants` uses main's server DataTable and `/api/table/grants` D1 query
-engine. SSR calls that engine, obtains `tablePrivacyCheck(env.ASSETS)`, and
-passes the original request URL to `dataTableHTML`. Browser hydration uses
-main's shared `/api/table/privacy` validator. There is no fixture route,
-fixture SSR reader, lane rejection index or lane query validator.
+The grants page uses the shared DataTable and D1 query engine. SSR and hydration
+keep ordinary query grammar, type, length and duplicate-key validation. Every
+source recipient is shown; there is no donor matcher, privacy POST, withholding
+mode, anonymous aggregate or fingerprint requirement.
 
-The six visible fields are `recipient`, `program`, `agency`, `amount`,
-`start_date` and `electorate`. Search indexes only recipient, program and
-agency names. Category filters use JSON arrays; value filters use numeric
-ranges. Facets apply every other filter while retaining their own alternatives.
-The shared column-wide value scale spans the full filtered result. CSV uses
-main's paginated D1 export with its 50,000-row cap.
+The six visible fields are recipient, program, agency, value, date and electorate.
+Search indexes recipient, program and agency names. Category filters use JSON
+arrays; numeric filters use ranges. Each facet keeps alternatives while applying
+the other filters. The value scale covers the full filtered result. CSV retains
+the shared paginated export and 50,000-row ceiling.
 
-The minimal optional additions in `table-datasets.mjs` project `electorate`,
-`recipientId`, `recipientKind`, `recipientABNType`, `recipientAvailable` and
-`recipientCount`. Missing metadata remains null. `recipientAvailable` is 1
-only when the recipient exists in both the jurisdiction's profile index and
-its shard. Migration `0002_grants_projection.sql` upgrades main's existing
-schema; apply migrations before importing the regenerated table SQL.
-Optional `searchKeys` limits the grants FTS projection to the three name fields.
+Recipient IDs, kind, ABN type and availability remain source metadata. A recipient
+links only when its exact ID exists in the jurisdiction's profile index and
+shard. Otherwise the source name remains plain text. The ordinary grants schema
+migration remains part of the table reload lane. CI metadata-only releases skip
+private SQL preparation and write no identity or fingerprint artifacts.
 
-The loader and browser share main's recipient evidence classifier. The loader
-checks all original entity-kind and ABN-type evidence before projection;
-individual and sole-trader evidence overrides labels. Main's complete hashed
-registry checks every field, including programs, facets, IDs and profile links.
-Rejected queries return zero rows and cannot broaden initial hydration.
-
-The previously approved optional core `rowPrivacyCheck` and
-`aggregate.subject: 'recipients'` fields remain additive. Entity classification
-runs alongside main's whole-row hashed guard. Anonymous grants use the core's
-neutral aggregate shape and fixed `Recipients not named (N)` wording; IDs,
-links and categories are removed from its hydration and rendered row.
-
-Current `origin/main` (`80bf798c8`) includes the DataTable core round-two work,
-shared table API, hashed registry, raw-query validation and fingerprint gate.
-The obsolete grants fixture and its privacy validator have been removed.
-Tests derive source identities in memory and use synthetic fixture IDs.
-Organisation controls must survive API, HTML and actual CSV downloads.
-Local gates block non-local hosts and production model, voice and auth calls.
-Screenshots are kept privately under `portal/private/dt-grants/` at 390 and
-1280 pixels.
+Tests cover source names including individuals, exact amounts, existing profile
+links, facet alternatives, name-only search, real D1 CSV and hydration without a
+validation POST. See [the API contract](datatable.api.md) and
+[the shared contract](datatable.contract.md).

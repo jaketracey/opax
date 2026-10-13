@@ -51,7 +51,7 @@ Rules
 import sys as _donor_sys
 from pathlib import Path as _DonorPath
 _donor_sys.path.insert(0, str(_DonorPath(__file__).resolve().parents[1]))
-from scripts.donor_public import public_donor_data
+
 import os
 import json
 import re
@@ -194,7 +194,7 @@ def export_campaigners() -> None:
         },
         "entities": roster,
     }
-    json.dump(public_donor_data(out), sys.stdout, ensure_ascii=False, separators=(",", ":"))
+    json.dump(out, sys.stdout, ensure_ascii=False, separators=(",", ":"))
     sys.stdout.write("\n")
 
 
@@ -334,7 +334,7 @@ def main() -> None:
         "parties": dict(sorted(parties.items())),
         "entities": roster,
     }
-    json.dump(public_donor_data(out), sys.stdout, ensure_ascii=False, separators=(",", ":"))
+    json.dump(out, sys.stdout, ensure_ascii=False, separators=(",", ":"))
     sys.stdout.write("\n")
 
 

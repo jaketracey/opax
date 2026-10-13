@@ -9,7 +9,7 @@ export function mountConnections(root, helpers = {}) {
  const query=root.querySelector('#connection-search'),kind=root.querySelector('#connection-kind'),status=root.querySelector('#connection-status');
  const params=helpers.params || new URLSearchParams();
  const controller=new AbortController();
- let entries=[],selected=0,active=true;
+ let entries=[],selected=0,active=true,currentId='';
  const alive=()=>active && root.isConnected;
  function address(entity){
   const next=new URLSearchParams();
@@ -25,14 +25,27 @@ export function mountConnections(root, helpers = {}) {
   status.textContent=`${found.length.toLocaleString('en-AU')} connections${found.length>40?' · Showing the first 40. Search to narrow the list.':''}`;
   list.replaceChildren();
   for(const entry of found.slice(0,40)){
-   const button=document.createElement('button');button.type='button';button.className='connection-choice';
-   const label=document.createElement('strong');label.textContent=entry.name;
-   const meta=document.createElement('span');meta.textContent=`${entry.records.toLocaleString('en-AU')} records · ${entry.kind}`;
-   button.append(label,meta);button.addEventListener('click',()=>open(entry));list.append(button);
+   // One row per connection (ui-list); the open one is marked current.
+   const item=document.createElement('li');
+   const button=document.createElement('button');button.type='button';button.className='connection-choice';button.dataset.entity=entry.id;
+   if(entry.id===currentId)button.setAttribute('aria-current','true');
+   const label=document.createElement('span');label.className='ui-row-name';label.textContent=entry.name;
+   const meta=document.createElement('span');meta.className='ui-row-meta';meta.textContent=`${entry.records.toLocaleString('en-AU')} records · ${entry.kind}`;
+   button.append(label,meta);button.addEventListener('click',()=>open(entry));item.append(button);list.append(item);
   }
  }
+ function choose(id){
+  currentId=id;
+  for(const button of list.querySelectorAll('.connection-choice')){if(button.dataset.entity===id)button.setAttribute('aria-current','true');else button.removeAttribute('aria-current');}
+ }
+ // Until one is chosen the column beside the list says what it will hold.
+ function emptyDetail(){
+  const note=document.createElement('p');note.className='ui-empty connection-detail-empty';
+  note.textContent='Choose a connection to read the source excerpts that name it.';
+  detail.replaceChildren(note);detail.hidden=false;
+ }
  async function open(entry){
-  const request=++selected;detail.hidden=false;detail.textContent='Opening source excerpts…';
+  const request=++selected;choose(entry.id);detail.hidden=false;detail.textContent='Opening source excerpts…';
   try{
    const response=await fetch(`/evidence/${entry.id.slice(0,2)}.json`,{signal:controller.signal});if(!response.ok)throw new Error();
    const data=await response.json();if(request!==selected || !alive())return;
@@ -47,14 +60,14 @@ export function mountConnections(root, helpers = {}) {
  const onKind=()=>{render();address(null);};
  query.addEventListener('input',onInput);kind.addEventListener('change',onKind);
  query.value=params.get('q') || '';kind.value=params.get('kind') || '';
- status.textContent='Opening the records…';list.replaceChildren();detail.hidden=true;detail.replaceChildren();
+ status.textContent='Opening the records…';list.replaceChildren();emptyDetail();
  (async()=>{
   try{
    const response=await fetch('/evidence/index.json',{signal:controller.signal});if(!response.ok)throw new Error();
    const data=await response.json();if(!alive())return;
    entries=(data.entities||[]).sort((a,b)=>b.records-a.records || a.name.localeCompare(b.name));
    render();const initial=entries.find(e=>e.id===params.get('entity'));if(initial)open(initial);
-  }catch{if(alive())status.textContent='Connection records are unavailable. Please try again later.';}
+  }catch{if(alive()){status.textContent='Connection records are unavailable. Please try again later.';detail.hidden=true;}}
  })();
  return {
   destroy(){

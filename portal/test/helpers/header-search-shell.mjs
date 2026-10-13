@@ -38,11 +38,23 @@ async function run() {
     }));
     return modules.get(url);
   }
-  async function evaluateModule(url) {
-    const module = moduleFor(url);
-    if (module.status === 'unlinked') await module.link((specifier, importer) => moduleFor(resolve(specifier, importer.identifier)));
-    if (module.status === 'linked') await module.evaluate();
-    return module;
+  let evaluationQueue = Promise.resolve();
+  function evaluateModule(url) {
+    // A module that already ran resolves at once, as in the browser: home.js
+    // awaits import(navigation.js) during its own top-level evaluation, and
+    // queueing that behind home.js would deadlock.
+    const evaluated = modules.get(url);
+    if (evaluated?.status === 'evaluated') return Promise.resolve(evaluated);
+    // Several table entry points import the same core while app.js starts.
+    // Complete one module graph before another graph links its shared dependencies.
+    const evaluation = evaluationQueue.then(async () => {
+      const module = moduleFor(url);
+      if (module.status === 'unlinked') await module.link((specifier, importer) => moduleFor(resolve(specifier, importer.identifier)));
+      if (module.status === 'linked') await module.evaluate();
+      return module;
+    });
+    evaluationQueue = evaluation.catch(() => {});
+    return evaluation;
   }
   function classic(url) {
     new Script(source(url), { filename: url, importModuleDynamically: specifier => evaluateModule(resolve(specifier, url)) }).runInContext(context);

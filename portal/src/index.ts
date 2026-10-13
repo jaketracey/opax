@@ -1,18 +1,17 @@
-import {suppliersTableHTML} from '../public/suppliers-table.js'
-import {serializeQuery,parseQuery,guardTableURL as guardProcurementURL} from '../public/datatable.js'
 import {contractsHubHTML} from '../public/contracts-table.js'
-import {memoisedCheck, tablePrivacy, tablePrivacyGuard, tablePrivacyCheck} from './table-privacy'
-import {sanitiseStoredResponse} from './donor-stored-response'
-import {sanitiseStoredDonors} from './donor-hashes.mjs'
+import {suppliersTableHTML} from '../public/suppliers-table.js'
+import {partyMoneyResponse} from './party-money-table'
+import {interestRegisterResponse} from './interest-register'
+import {loadDonorIndex} from './donor-index'
+import {donorDisclosure,donorLabelHTML,type DonorDisclosureRecord} from '../public/donor-disclosure.js'
 import sourceIdentity from '../../parli/ingest/user-agent.json'
 import { SA_EXCERPT_LABEL, isSaHansard, saFullText, saOfficialUrl } from '../public/sa-hansard.js'
 import { saPublicResponse, saEventPayload } from './sa-hansard'
 import { saEvidenceText, saEvidenceRecord, saGenerationResponse, saConversationInput } from './sa-evidence'
-
 import {ServerTiming, timed, withTiming} from './server-timing'
 import { divisionPlain } from '../public/division-markdown.js'
 import {guardTableURL, divisionTableConfig, voteTableConfig} from '../public/vote-tables.js'
-import { tableApi, TABLE_REGISTRY_FINGERPRINT } from './table-api'
+import { tableApi } from './table-api'
 import { pageCacheKey, pageForStorage, pageFromStorage } from './page-cache'
 import { runSocialPublication, socialStatus, socialEngagement, publicationCopy, previewPublication, todayRedirect, CHANNELS, type Channel } from './social-publication'
 import { positionEvidence, positionProposalQuote, positionEligibilityQuotes, positionCostQuote, isPositionEligibilityQuestion, isPositionCostQuestion, isPositionDetailQuestion, positionPointSupported, normalizePositionDraft } from './position-evidence'
@@ -27,7 +26,10 @@ import { slugIndex, personIndex } from './person-slug'
 import { missingEntitySlug } from './crawl-hygiene'
 import { normalizePassage, passageWindow } from './passage-text'
 import { instrumentPage, instrumentReader } from './instruments'
+import { budgetPage, budgetReader } from './budget'
 import { auditPage, auditReader } from './audit'
+import {parseQuery,serializeQuery,type Page} from '../public/datatable.js'
+import {partyMoneyData,partyMoneyTableConfig,registerTableHTML} from '../public/register-tables.js'
 import {grantsHTML} from './grants-table'
 import {GRANTS_COVERAGE} from '../public/grants-table.js'
 import { hubPage } from './hubs'
@@ -62,8 +64,7 @@ import { reviewerLoginEnabled } from './community-auth'
 import { operatorAuthorized } from './operator-auth'
 import { deliverReplyEmails, REPLY_EMAIL_CRON } from './community-notifications'
 import { partyUrl, personUrl, personNameKey } from '../public/canonical-urls.js'
-import { withholdIndividualDonors, foldDonorName } from '../public/donor-entity.js'
-import { donorWithheld, namesWithheldDonor, questionNamesWithheldDonor, withheldNameCheck, loadDonorIndex, WITHHELD_DONOR_REPLY } from './donor-index'
+import {foldDonorName} from '../public/donor-entity.js'
 import { canonicalPageRedirect } from './canonical-origin'
 import { pageEntry } from './page-entry'
 import { htmlValidator, notModified } from './html-etag'
@@ -100,6 +101,7 @@ import { personRole, personTitle, roleLine, billTitle } from './seo-titles'
 import { navGates, pageTrail, trail } from './nav-model.mjs'
 import { answerBlock, associationCaveat, crumbSteps, printedTrail, headingOf, crumbsHTML, panelPrerender, SERVER_PANELS, type Crumb, renderPersonAnswer, renderBillAnswer, renderDivisionAnswer, renderDirectory, renderSupplierAnswer, renderMoneyAnswer, type Division, type ReadAsset } from './seo-content'
 import { buildSchemaGraph, serializeSchemaGraph, type PersonSchemaIdentity } from './seo-schema'
+import {renderMoneyConnectionsTable} from './money-connections-table'
 import { photoFor, validStory, STORY_VERSION as STORY_SLIDES_VERSION, type PhotoCatalogue, type StoryFormat } from './story'
 
 interface FindParagraph {
@@ -367,10 +369,10 @@ const FOLLOWUPS_CACHE_TTL = ASK_CACHE_TTL
 // same ranking share one paid call, and CACHE_EPOCH retires them together.
 const MONEY_OVERVIEW_CACHE_TTL = ASK_CACHE_TTL
 const MONEY_OVERVIEW_TIMEOUT_MS = 20000
-const STATS_CACHE_TTL = 300
+const STATS_CACHE_TTL = 3600
 const RECENT_CACHE_TTL = 300
 
-type CacheStatus = 'HIT' | 'MISS' | 'BYPASS'
+type CacheStatus = 'HIT' | 'MISS' | 'BYPASS' | 'STALE'
 
 async function sha256Hex(text: string): Promise<string> {
   const digest = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(text))
@@ -401,7 +403,7 @@ function withCacheStatus(res: Response, status: CacheStatus, browserCache = true
 function cacheStore(ctx: ExecutionContext, key: Request, res: Response, maxAge: number): void {
   res.headers.set('cache-control', `public, max-age=${maxAge}`)
   res.headers.set('x-opax-cached-at', new Date().toISOString())
-  ctx.waitUntil(sanitiseStoredResponse(res.clone()).then(safe=>caches.default.put(key, safe)))
+  ctx.waitUntil(Promise.resolve(res.clone()).then(safe=>caches.default.put(key, safe)))
 }
 
 /**
@@ -523,7 +525,7 @@ async function apiSearch(request: Request, url: URL, env: Env, ctx: ExecutionCon
   const bypass = cacheBypass(request, url)
   if (!bypass) {
     const hit = await caches.default.match(pageKey)
-    if (hit) return withCacheStatus(await sanitiseStoredResponse(hit), 'HIT')
+    if (hit) return withCacheStatus(await Promise.resolve(hit), 'HIT')
   }
 
   const mode = url.searchParams.get('mode') ?? 'hybrid'
@@ -532,7 +534,7 @@ async function apiSearch(request: Request, url: URL, env: Env, ctx: ExecutionCon
   let win: SearchWindow | null = null
   if (!bypass) {
     const cached = await caches.default.match(windowKey)
-    if (cached) win = sanitiseStoredDonors(await cached.json()) as SearchWindow
+    if (cached) win = await cached.json() as SearchWindow
   }
   if (!win) {
     const limited = await rateLimited(env.SEARCH_LIMITER, request)
@@ -1299,7 +1301,7 @@ async function moneyOverview(facts: MoneyFacts, env: Env, ctx: ExecutionContext,
   const model = env.MONEY_OVERVIEW_MODEL || env.ASK_MODEL || 'openai-compatible'
   const key = cacheRequest('money-overview', await sha256Hex(JSON.stringify({ epoch: env.CACHE_EPOCH, model, facts })))
   const hit = await caches.default.match(key)
-  if (hit) return { overview: sanitiseStoredDonors(await hit.json<{ overview?: string }>()).overview || '', why: 'hit' }
+  if (hit) return { overview: (await hit.json<{ overview?: string }>()).overview || '', why: 'hit' }
   // A paid call, so it spends the reader's Ask quota like any other answer; past
   // the limit the calculated answer goes out without its opening paragraph.
   if (await rateLimited(env.ASK_LIMITER, request)) return { overview: '', why: 'rate-limited' }
@@ -1321,7 +1323,7 @@ async function moneyOverview(facts: MoneyFacts, env: Env, ctx: ExecutionContext,
 }
 
 /** Emit progress before roster, cache, catalogue or original reads. No reader
- * text or model output leaves this transport before the normal privacy checks. */
+ * text or model output leaves this transport before response validation. */
 function earlyOverviewStream(work: () => Promise<Response>, budget: AskDeadline, ctx: ExecutionContext): Response {
   const encoder = new TextEncoder()
   let gone = false
@@ -1384,11 +1386,6 @@ async function apiAsk(request: Request, env: Env, ctx: ExecutionContext, prepare
     return res
   }
   if (!rawInput.question?.trim()) return json({ error: 'question is required' }, 400)
-  // A question naming a withheld donor, now or in the reader's earlier turns, gets
-  // one fixed reply before any ranking, rewrite or model call can echo the name.
-  if (await questionNamesWithheldDonor(env.ASSETS, rawInput.question, ...readerTurns(rawInput))) return timed(json(withheldDonorAnswer()))
-  // Resolve receipt conversations from user turns before speech inference can
-  // apply calendar-year or parliamentarian filters. No model call is needed.
   try {
     const ranked = await rankedMoneyAnswer(rawInput, env.ASSETS)
     if (ranked) {
@@ -1464,12 +1461,12 @@ async function apiAsk(request: Request, env: Env, ctx: ExecutionContext, prepare
   if (cacheKey && !bypass) {
     const hit = await readGenerationCache(env, ctx, cacheKey)
     if (hit) {
-      const safe = await saPublicResponse(await sanitiseStoredResponse(hit), env.SA_HANSARD_FULL_TEXT, async slug => {
+      const safe = await saPublicResponse(await Promise.resolve(hit), env.SA_HANSARD_FULL_TEXT, async slug => {
         const resourceUrl=new URL('/api/resource/'+slug,url)
         const response=await apiResource(new Request(resourceUrl),resourceUrl,slug,env,ctx)
         return response.ok ? await response.json() as Record<string,unknown> : null
       })
-      return wantStream ? replayCachedAsk(await sanitiseStoredResponse(safe), ctx) : withCacheStatus(await sanitiseStoredResponse(safe), 'HIT', false)
+      return wantStream ? replayCachedAsk(await Promise.resolve(safe), ctx) : withCacheStatus(await Promise.resolve(safe), 'HIT', false)
     }
   }
   const status: CacheStatus = bypass ? 'BYPASS' : 'MISS'
@@ -1597,9 +1594,6 @@ async function buildOverviewPack(input: AskInput, env: Env, ctx: ExecutionContex
   const person = people.byFold.get(foldName(input.speaker || ''))
   if (!person) throw new Error('Person unavailable')
   const attribution = personScope(person)
-  const withheld = await withheldNameCheck(env.ASSETS)
-  const safe = (...values: string[]) => !withheld(...values)
-  if (!safe(person.name,person.party_now || person.party || '',...(person.representation || []).map(r=>r.electorate))) throw new Error('Person context unavailable')
   const corpus = await assetJson<{version: string}>(env, '/corpus.json')
   const asOf = corpus.version.slice(0,10)
   // Catalogue accepts resource predicates only. Field exclusions belong to find.
@@ -1620,7 +1614,7 @@ async function buildOverviewPack(input: AskInput, env: Env, ctx: ExecutionContex
   const belongs = (s: OverviewSpeech) => /^speech-\d+$/.test(s.slug) &&
     (attribution ? belongsToScope({...s,kind:'speech'},attribution) : foldName(s.speaker) === foldName(person.name))
   return buildPersonOverview(person,asOf,personPath(people,person.name),{
-    safe,belongs,
+    belongs,
     catalogue: async (page,signal) => {
       const response = await kbFetch(env,'/catalog',{signal,body:{filter_expression:filter,faceted:[TOPIC_FILTER_PREFIX],page_size:OVERVIEW_CAPS.page_size,page_number:page,show:['basic','origin','extra']}})
       if (!response.ok) throw new Error('Speech catalogue unavailable')
@@ -1659,38 +1653,22 @@ async function buildOverviewPack(input: AskInput, env: Env, ctx: ExecutionContex
       if (!response.ok) throw new Error('Topic collaborator catalogue unavailable')
       const data = await response.json() as CatalogPage
       return Object.entries(data.fulltext?.facets?.['/origin.collaborators'] || {}).sort((a,b)=>b[1]-a[1]).map(([path])=>path.replace(/^\/origin\.collaborators\//,''))
-        .find(name=>name!==person.name && people.byName.has(name) && safe(name))
+        .find(name=>name!==person.name && people.byName.has(name))
     },
   },!!attribution,deadline,env.SA_HANSARD_FULL_TEXT)
 }
 
 async function overviewPayload(payload: AskPayload, pack: OverviewPack | undefined, env: Env, overviewIntent = true, personIntent = overviewIntent): Promise<AskPayload> {
   if (!pack && !personIntent) return {...payload,is_overview_intent:false}
-  const withheld = await withheldNameCheck(env.ASSETS)
-  if (withheld(payload.answer)) return {...withheldDonorAnswer(),is_overview_intent:overviewIntent} as AskPayload
-  const sources = payload.sources.filter((source) => {
-    const row = source as {title?:string;snippet?:string;speaker?:string}
-    return !withheld(row.title,row.snippet,row.speaker)
-  })
-  const ids = new Set(sources.map(source=>(source as {resource:string}).resource))
-  const citations = Object.fromEntries(Object.entries(payload.citations).filter(([id])=>ids.has(id.split('/')[0])))
-  if (Object.keys(payload.citations).length && !Object.keys(citations).length) return {...withheldDonorAnswer(),is_overview_intent:overviewIntent} as AskPayload
-  payload = {...payload,sources,citations}
   if (!pack) return {...payload,is_overview_intent:overviewIntent}
   return {...payload,is_overview_intent:overviewIntent,subject_context:pack.context,
-    followups:personFollowups(payload.answer,payload.sources as {title:string;cited?:boolean;kind?:string}[],pack.context,(...values)=>!withheld(...values))}
+    followups:personFollowups(payload.answer,payload.sources as {title:string;cited?:boolean;kind?:string}[],pack.context)}
 }
 
 /** The reader's own earlier turns: what a follow-up can inherit a name from. */
 function readerTurns(input: AskInput): string[] {
   return (Array.isArray(input.context) ? input.context : [])
     .filter(t => t && (t.author === 'user' || t.author === 'question') && typeof t.text === 'string').map(t => t.text as string)
-}
-
-/** The fixed reply to a question naming a withheld donor (src/donor-index.ts): no
- * sources, citations or follow-ups, and nothing from the question echoed back. */
-function withheldDonorAnswer(): Record<string, unknown> {
-  return { answer: WITHHELD_DONOR_REPLY, citations: {}, sources: [], answer_status: 'withheld' }
 }
 
 /** The payload with the question as it was understood, when a follow-up was rewritten. */
@@ -1962,8 +1940,6 @@ async function recoverPositionAnswer(payload: AskPayload, body: Record<string,un
 
 /** A short overview grounded only in the same filtered public search results. */
 async function apiSearchSummary(request: Request, url: URL, env: Env, ctx: ExecutionContext): Promise<Response> {
-  // No overview, and no search, for a query naming a withheld donor (src/donor-index.ts).
-  if (await questionNamesWithheldDonor(env.ASSETS, url.searchParams.get('q') || '')) return json({status:'empty', points:[], sources:[]})
   const searchUrl = new URL(url)
   searchUrl.pathname = '/api/search-all'
   searchUrl.searchParams.set('page', '1')
@@ -1978,7 +1954,7 @@ async function apiSearchSummary(request: Request, url: URL, env: Env, ctx: Execu
   const filters = Object.fromEntries(['kind','mode','speaker','party','state','topic','from','to','chamber','since','until','venue'].map(k => [k, searchUrl.searchParams.get(k) || '']))
   const key = cacheRequest('search-summary', await sha256Hex(JSON.stringify({version:SEARCH_SUMMARY_VERSION, epoch:env.CACHE_EPOCH, query, filters, sources, index:results.index_version})))
   const cached = await readGenerationCache(env, ctx, key)
-  if (cached) return withCacheStatus(await sanitiseStoredResponse(cached), 'HIT', false)
+  if (cached) return withCacheStatus(await Promise.resolve(cached), 'HIT', false)
   const limited = await rateLimited(env.FOLLOWUPS_LIMITER, request)
   if (limited) return limited
   const unavailable = 'A cited summary is unavailable. Your matching records are still below.'
@@ -2075,8 +2051,7 @@ async function apiJourneyStory(request: Request, input: Record<string, unknown>,
   const files: Record<string,string> = {federal:'/graph/money.json',qld:'/graph/money.qld.json',vic:'/graph/money.vic.json',tas:'/graph/money.tas.json'}
   const { jurisdiction, lens, focus } = input
   if (typeof jurisdiction !== 'string' || !Object.hasOwn(files,jurisdiction) || typeof lens !== 'string' || typeof focus !== 'string' || focus.length > 500) return json({error:'Invalid journey'},400)
-  // Unconfirmed donors are withheld from the narration (public/donor-entity.js).
-  const graph = withholdIndividualDonors(await assetJson<StoryGraph>(env,files[jurisdiction]))
+  const graph = (await assetJson<StoryGraph>(env,files[jurisdiction]))
   const context = journeyStoryContext(graph,lens,focus)
   if (!context) return json({error:'Journey not available'},404)
   const key = cacheRequest('journey-story',await sha256Hex(JSON.stringify({version:STORY_VERSION,epoch:env.CACHE_EPOCH,context})))
@@ -2604,9 +2579,6 @@ async function apiFollowups(request: Request, env: Env, ctx: ExecutionContext): 
   }
   // Always 200 with a possibly-empty list: follow-ups are an extra, never an error.
   if (!question?.trim() || !answer?.trim()) return json({ questions: [] })
-  // Never suggest a next question about a withheld donor (src/donor-index.ts).
-  if (await questionNamesWithheldDonor(env.ASSETS, question, answer)) return json({ questions: [] })
-  const withheld = await withheldNameCheck(env.ASSETS)
   const inputPassages = (Array.isArray(passages) ? passages : []).filter(p => p && typeof p === 'object' && !Array.isArray(p))
   const restricted = inputPassages.some(p => isSaHansard(p) || (!p.kind && !p.source && !p.state && !p.labels))
   // Older clients may send a previous answer containing full source quotations.
@@ -2619,14 +2591,14 @@ async function apiFollowups(request: Request, env: Env, ctx: ExecutionContext): 
       kind: p?.kind === 'speech' || p?.kind === 'bill' ? p.kind : undefined,
       cited: p?.cited === true,
     }))
-    .filter((p) => p.text.trim().length > 0 && !withheld(p.title,p.text))
+    .filter((p) => p.text.trim().length > 0)
     .slice(0, 12)
   const context = passageContext(clean)
-  if (personName && !withheld(personName)) {
+  if (personName) {
     const person = (await loadPeople(env)).byFold.get(foldName(personName))
     if (person) {
       const topics = Object.entries(TOPIC_NAMES).filter(([,name])=>answer.toLowerCase().includes(name.toLowerCase())).map(([slug,name])=>({slug,name,count:0,recent_count:null}))
-      const questions = personFollowups(answer,clean,{name:person.name,party:null,electorate:'',speeches:0,topics,recent_from:'',as_of:'',complete:false,profile:'',votes:'',interests:''},(...texts)=>!withheld(...texts))
+      const questions = personFollowups(answer,clean,{name:person.name,party:null,electorate:'',speeches:0,topics,recent_from:'',as_of:'',complete:false,profile:'',votes:'',interests:''})
       if (questions.length >= 2) return json({questions})
     }
   }
@@ -2645,7 +2617,7 @@ async function apiFollowups(request: Request, env: Env, ctx: ExecutionContext): 
   const bypass = cacheBypass(request, url)
   if (!bypass) {
     const hit = await caches.default.match(cacheKey)
-    if (hit) return withCacheStatus(await sanitiseStoredResponse(hit), 'HIT', false)
+    if (hit) return withCacheStatus(await Promise.resolve(hit), 'HIT', false)
   }
   const limited = await rateLimited(env.FOLLOWUPS_LIMITER, request)
   if (limited) return limited
@@ -2699,7 +2671,7 @@ async function apiFollowups(request: Request, env: Env, ctx: ExecutionContext): 
     if (!res.ok) return withCacheStatus(json({ questions: [] }), cacheStatus, false)
     const data = (await res.json()) as { answer?: string }
     const candidates = parseFollowUpLines(data.answer ?? '')
-    const questions = selectFollowUps(candidates, question, clean, context).filter(item=>!withheld(item.question,item.evidence))
+    const questions = selectFollowUps(candidates, question, clean, context)
     const out = json({ questions })
     // An empty list may be a model stumble — never pin that for a day.
     if (questions.length > 0) cacheStore(ctx, cacheKey, out, FOLLOWUPS_CACHE_TTL)
@@ -2736,7 +2708,7 @@ async function apiResource(request: Request, url: URL, slug: string, env: Env, c
   const bypass = cacheBypass(request, url)
   if (!bypass) {
     const hit = await caches.default.match(cacheKey)
-    if (hit) return withCacheStatus(await sanitiseStoredResponse(hit), 'HIT')
+    if (hit) return withCacheStatus(await Promise.resolve(hit), 'HIT')
   }
   const res = await kbFetch(
     env,
@@ -2819,12 +2791,13 @@ async function apiResource(request: Request, url: URL, slug: string, env: Env, c
  * by parliament, so the stats page can show what is indexed right now rather
  * than what the manifest said at the last sync. Cached five minutes.
  */
-async function apiStats(env: Env): Promise<Response> {
+async function apiStats(env: Env, ctx: ExecutionContext, refresh = false): Promise<Response> {
+  const wait = refresh ? AGGREGATE_WARM_TIMEOUT_MS : AGGREGATE_UPSTREAM_TIMEOUT_MS
   return cachedJson('/api/stats', async () => {
-    const [countersRes, kindsRes, statesRes] = await Promise.all([
-      kbFetch(env, '/counters'),
-      kbFetch(env, `/catalog?faceted=${KIND_FACET}&page_size=0`),
-      kbFetch(env, `/catalog?faceted=${STATE_FACET}&filters=${SPEECH_FILTER}&page_size=0`),
+    const [countersRes, kindsRes, statesRes] = await aggregateBatch([
+      aggregateFetch(env, '/counters', undefined, wait),
+      aggregateFetch(env, `/catalog?faceted=${KIND_FACET}&page_size=0`, undefined, wait),
+      aggregateFetch(env, `/catalog?faceted=${STATE_FACET}&filters=${SPEECH_FILTER}&page_size=0`, undefined, wait),
     ])
     if (!countersRes.ok) return json({ error: `counters failed (${countersRes.status})` }, 502)
     const counters = (await countersRes.json()) as Record<string, unknown>
@@ -2836,8 +2809,12 @@ async function apiStats(env: Env): Promise<Response> {
       return Object.fromEntries(Object.entries(facet).map(([path, n]) => [path.slice(prefix.length + 1), n]))
     }
     const [kinds, speechesByState] = await Promise.all([facetOf(kindsRes, KIND_FACET), facetOf(statesRes, STATE_FACET)])
-    return json({ ...counters, kinds, speeches_by_state: speechesByState })
-  }, STATS_CACHE_TTL)
+    const out = json({ ...counters, kinds, speeches_by_state: speechesByState })
+    // Preserve the existing partial-counter response on a cold miss, but do
+    // not replace complete cached counts when either facet is unavailable.
+    if (!kindsRes.ok || !statesRes.ok) out.headers.set('cache-control', 'no-store')
+    return out
+  }, ctx, STATS_CACHE_TTL, refresh)
 }
 
 /**
@@ -2854,7 +2831,7 @@ async function apiNews(): Promise<Response> {
   const cache = caches.default
   const cacheKey = new Request('https://opax.com.au/api/news')
   const cached = await cache.match(cacheKey)
-  if (cached) return withCacheStatus(await sanitiseStoredResponse(cached), 'HIT')
+  if (cached) return withCacheStatus(await Promise.resolve(cached), 'HIT')
 
   // Order matters: CDATA first, numeric refs, then named — so a literal
   // "&amp;#39;" decodes to "&#39;" and no further.
@@ -2967,11 +2944,10 @@ async function apiNews(): Promise<Response> {
   const res = json({ fetched_at: new Date().toISOString(), items })
   if (items.length) {
     res.headers.set('cache-control', 'public, max-age=900')
-    await cache.put(cacheKey, await sanitiseStoredResponse(res.clone()))
+    await cache.put(cacheKey, await Promise.resolve(res.clone()))
   }
-  return withCacheStatus(await sanitiseStoredResponse(res), 'MISS')
+  return withCacheStatus(await Promise.resolve(res), 'MISS')
 }
-
 
 /**
  * The newest documents to enter the index, straight from the KB catalog
@@ -2983,7 +2959,7 @@ async function apiRecent(env: Env): Promise<Response> {
   const cache = caches.default
   const cacheKey = new Request('https://opax.com.au/api/recent')
   const cached = await cache.match(cacheKey)
-  if (cached) return withCacheStatus(await sanitiseStoredResponse(cached), 'HIT')
+  if (cached) return withCacheStatus(await Promise.resolve(cached), 'HIT')
   const res = await kbFetch(
     env,
     '/catalog?page_number=0&page_size=14&sort_field=created&sort_order=desc',
@@ -3011,8 +2987,8 @@ async function apiRecent(env: Env): Promise<Response> {
     .slice(0, 12)
   const out = json({ items })
   out.headers.set('cache-control', `public, max-age=${RECENT_CACHE_TTL}`)
-  await cache.put(cacheKey, await sanitiseStoredResponse(out.clone()))
-  return withCacheStatus(await sanitiseStoredResponse(out), 'MISS')
+  await cache.put(cacheKey, await Promise.resolve(out.clone()))
+  return withCacheStatus(await Promise.resolve(out), 'MISS')
 }
 
 /**
@@ -3033,7 +3009,7 @@ async function apiBrief(url: URL, env: Env): Promise<Response> {
   const cache = caches.default
   const cacheKey = new Request(`https://opax.com.au/api/brief?rids=${rids.join(',')}`)
   const cached = await cache.match(cacheKey)
-  if (cached) return withCacheStatus(await sanitiseStoredResponse(cached), 'HIT')
+  if (cached) return withCacheStatus(await Promise.resolve(cached), 'HIT')
   const briefs: Record<string, string> = {}
   await Promise.all(
     rids.map(async (rid) => {
@@ -3050,8 +3026,8 @@ async function apiBrief(url: URL, env: Env): Promise<Response> {
   )
   const out = json({ briefs })
   out.headers.set('cache-control', 'public, max-age=3600')
-  await cache.put(cacheKey, await sanitiseStoredResponse(out.clone()))
-  return withCacheStatus(await sanitiseStoredResponse(out), 'MISS')
+  await cache.put(cacheKey, await Promise.resolve(out.clone()))
+  return withCacheStatus(await Promise.resolve(out), 'MISS')
 }
 
 // --- topic pages ------------------------------------------------------------
@@ -3079,30 +3055,115 @@ interface CatalogPage {
   fulltext?: { total?: number; facets?: Record<string, Record<string, number>> }
 }
 
-/** Whole-route cache for the GET aggregates (no per-request input). X-OPAX-Cache says HIT or MISS. */
+// A visitor's cold miss waits up to a minute (HTTP requests have no wall limit while the client
+// is connected); the scheduled warm-up has 15 minutes, so it waits longer for slow KB facets.
+const AGGREGATE_UPSTREAM_TIMEOUT_MS = 60_000
+const AGGREGATE_WARM_TIMEOUT_MS = 180_000
+const CACHED_JSON_HARD_TTL = 7 * 24 * 60 * 60
+// Only in-flight aggregate rebuilds are shared within this isolate.
+const cachedJsonRefreshes = new Map<string, Promise<Response>>()
+let catalogWarmup: Promise<void> | undefined
+
+/** Bound aggregate reads without changing kbFetch or any Ask caller. */
+async function aggregateFetch(env: Env, path: string, init?: { body?: unknown }, timeoutMs = AGGREGATE_UPSTREAM_TIMEOUT_MS): Promise<Response> {
+  const out = await kbFetch(env, path, { ...init, signal: AbortSignal.timeout(timeoutMs) })
+  // These page_size=0/count responses are small. Consume even error bodies so
+  // a warm-up never advances while an unread response holds a connection open.
+  return new Response(await out.arrayBuffer(), out)
+}
+
+async function aggregateBatch(reads: Promise<Response>[]): Promise<Response[]> {
+  // A rejected read must not leave its sibling calls running into the next
+  // warm-up route, which could exceed the four-call concurrency limit.
+  const results = await Promise.allSettled(reads)
+  return results.map(result => {
+    if (result.status === 'rejected') throw result.reason
+    return result.value
+  })
+}
+
+/** GET aggregates: long storage TTL, the existing browser TTL, and background refresh. */
 async function cachedJson(
   cachePath: string,
   build: () => Promise<Response>,
+  ctx: ExecutionContext,
   maxAge = 600,
+  refresh = false,
 ): Promise<Response> {
   const cache = caches.default
   const cacheKey = new Request(`https://opax.com.au${cachePath}`)
   const cached = await cache.match(cacheKey)
-  if (cached) return withCacheStatus(await sanitiseStoredResponse(cached), 'HIT')
-  const out = await build()
-  if (out.ok) {
-    out.headers.set('cache-control', `public, max-age=${maxAge}`)
-    await cache.put(cacheKey, await sanitiseStoredResponse(out.clone()))
+  const rebuild = (): Promise<Response> => {
+    const pending = cachedJsonRefreshes.get(cacheKey.url)
+    if (pending) return pending
+    const task = (async () => {
+      let out: Response
+      try {
+        out = await build()
+      } catch {
+        return json({ error: 'catalog failed' }, 502)
+      }
+      if (out.ok && out.headers.get('cache-control') !== 'no-store') {
+        out.headers.set('x-opax-cached-at', new Date().toISOString())
+        const stored = out.clone()
+        stored.headers.set('cache-control', `public, max-age=${CACHED_JSON_HARD_TTL}`)
+        await cache.put(cacheKey, stored)
+        out.headers.set('cache-control', `public, max-age=${maxAge}`)
+      }
+      return out
+    })().finally(() => cachedJsonRefreshes.delete(cacheKey.url))
+    cachedJsonRefreshes.set(cacheKey.url, task)
+    return task
   }
-  return withCacheStatus(await sanitiseStoredResponse(out), 'MISS')
+  const builtAt = Date.parse(cached?.headers.get('x-opax-cached-at') ?? '')
+  const stale = !Number.isFinite(builtAt) || Date.now() - builtAt >= maxAge * 1000
+  // The scheduled warm-up rebuilds only entries past their soft TTL, so a fresh
+  // entry costs it no upstream facet queries.
+  if (cached && (!refresh || !stale)) {
+    if (stale) {
+      ctx.waitUntil(rebuild().then(() => {}, () => {
+        console.error(JSON.stringify({ event: 'catalog_refresh_failed', path: cachePath }))
+      }))
+    }
+    const out = withCacheStatus(cached, stale ? 'STALE' : 'HIT')
+    out.headers.set('cache-control', `public, max-age=${maxAge}`)
+    return out
+  }
+  return withCacheStatus((await rebuild()).clone(), 'MISS')
+}
+
+/** Cache API entries are per-colo. One route at a time keeps upstream reads at four. */
+async function warmCatalog(env: Env, ctx: ExecutionContext): Promise<void> {
+  if (!env.ARAG_KB_ID || !env.ARAG_KB_TOKEN) return
+  // Slow ticks can overlap the next five-minute tick; share the whole warm-up
+  // within this isolate as well as each individual key's rebuild.
+  if (catalogWarmup) return catalogWarmup
+  catalogWarmup = (async () => {
+    const refreshes = [
+      () => apiStats(env, ctx, true),
+      () => apiTopics(env, ctx, true),
+      ...[...TOPIC_SLUGS].map(slug => () => apiTopic(slug, env, ctx, true)),
+    ]
+    for (const refresh of refreshes) {
+      try {
+        const out = await refresh()
+        // Consume the small aggregate before the next route opens connections.
+        await out.arrayBuffer()
+      } catch {
+        console.error(JSON.stringify({ event: 'catalog_warm_failed' }))
+      }
+    }
+  })().finally(() => { catalogWarmup = undefined })
+  return catalogWarmup
 }
 
 /** All 21 topics with live counts, plus how many speeches carry any topic label. */
-async function apiTopics(env: Env): Promise<Response> {
+async function apiTopics(env: Env, ctx: ExecutionContext, refresh = false): Promise<Response> {
+  const wait = refresh ? AGGREGATE_WARM_TIMEOUT_MS : AGGREGATE_UPSTREAM_TIMEOUT_MS
   return cachedJson('/api/topics', async () => {
-    const [facetedRes, anyRes] = await Promise.all([
-      kbFetch(env, `/catalog?faceted=${TOPIC_FILTER_PREFIX}&page_size=0`),
-      kbFetch(env, `/catalog?filters=${TOPIC_FILTER_PREFIX}&page_size=0`),
+    const [facetedRes, anyRes] = await aggregateBatch([
+      aggregateFetch(env, `/catalog?faceted=${TOPIC_FILTER_PREFIX}&page_size=0`, undefined, wait),
+      aggregateFetch(env, `/catalog?filters=${TOPIC_FILTER_PREFIX}&page_size=0`, undefined, wait),
     ])
     if (!facetedRes.ok || !anyRes.ok) return json({ error: 'catalog failed' }, 502)
     const faceted = (await facetedRes.json()) as CatalogPage
@@ -3115,7 +3176,7 @@ async function apiTopics(env: Env): Promise<Response> {
     // Every topic renders even before the pass reaches it — zero is honest.
     const topics = [...TOPIC_SLUGS].map((slug) => ({ slug, count: counts.get(slug) ?? 0 }))
     return json({ labelled: any.fulltext?.total ?? 0, topics })
-  })
+  }, ctx, 3600, refresh)
 }
 
 /**
@@ -3124,11 +3185,11 @@ async function apiTopics(env: Env): Promise<Response> {
  * whole speeches and `labelled` (the bare labelset filter's total) is their
  * honest denominator. Cached 10 minutes like /api/topics.
  */
-async function apiParties(env: Env): Promise<Response> {
+async function apiParties(env: Env, ctx: ExecutionContext): Promise<Response> {
   return cachedJson('/api/parties', async () => {
     const [facetedRes, anyRes] = await Promise.all([
-      kbFetch(env, `/catalog?faceted=${PARTY_FACET}&page_size=0`),
-      kbFetch(env, `/catalog?filters=${PARTY_FACET}&page_size=0`),
+      aggregateFetch(env, `/catalog?faceted=${PARTY_FACET}&page_size=0`),
+      aggregateFetch(env, `/catalog?filters=${PARTY_FACET}&page_size=0`),
     ])
     if (!facetedRes.ok || !anyRes.ok) return json({ error: 'catalog failed' }, 502)
     const faceted = (await facetedRes.json()) as CatalogPage
@@ -3139,7 +3200,7 @@ async function apiParties(env: Env): Promise<Response> {
       .filter((p) => p.label && p.count > 0)
       .sort((a, b) => b.count - a.count || a.label.localeCompare(b.label))
     return json({ labelled: any.fulltext?.total ?? 0, parties })
-  })
+  }, ctx)
 }
 
 /**
@@ -3149,15 +3210,16 @@ async function apiParties(env: Env): Promise<Response> {
  * record. Speech chronology comes from /find, whose metadata date is the
  * speech date; catalog `created` is only index time and is never used here.
  */
-async function apiTopic(slug: string, env: Env): Promise<Response> {
+async function apiTopic(slug: string, env: Env, ctx: ExecutionContext, refresh = false): Promise<Response> {
   if (!TOPIC_SLUGS.has(slug)) return json({ error: 'unknown topic' }, 404)
+  const wait = refresh ? AGGREGATE_WARM_TIMEOUT_MS : AGGREGATE_UPSTREAM_TIMEOUT_MS
   return cachedJson(`/api/topic/${slug}`, async () => {
     const filter = `filters=${TOPIC_FILTER_PREFIX}/${slug}`
-    const [partyRes, anyRes, stateRes, stateTotalsRes] = await Promise.all([
-      kbFetch(env, `/catalog?faceted=${PARTY_FACET}&${filter}&page_size=0`),
-      kbFetch(env, `/catalog?filters=${TOPIC_FILTER_PREFIX}&page_size=0`),
-      kbFetch(env, `/catalog?faceted=${STATE_FACET}&${filter}&page_size=0`),
-      kbFetch(env, `/catalog?faceted=${STATE_FACET}&filters=${TOPIC_FILTER_PREFIX}&page_size=0`),
+    const [partyRes, anyRes, stateRes, stateTotalsRes] = await aggregateBatch([
+      aggregateFetch(env, `/catalog?faceted=${PARTY_FACET}&${filter}&page_size=0`, undefined, wait),
+      aggregateFetch(env, `/catalog?filters=${TOPIC_FILTER_PREFIX}&page_size=0`, undefined, wait),
+      aggregateFetch(env, `/catalog?faceted=${STATE_FACET}&${filter}&page_size=0`, undefined, wait),
+      aggregateFetch(env, `/catalog?faceted=${STATE_FACET}&filters=${TOPIC_FILTER_PREFIX}&page_size=0`, undefined, wait),
     ])
     if (!partyRes.ok || !anyRes.ok || !stateRes.ok || !stateTotalsRes.ok) {
       return json({ error: 'catalog failed' }, 502)
@@ -3186,7 +3248,7 @@ async function apiTopic(slug: string, env: Env): Promise<Response> {
       parties,
       states,
     })
-  })
+  }, ctx, 3600, refresh)
 }
 
 const TIDE_DECADES = [
@@ -3202,7 +3264,7 @@ const TIDE_DECADES = [
  * at ingest. Federal is the default comparable run; `scope=all` includes all
  * five parliaments and keeps its unequal source windows visible in coverage.
  */
-async function apiTide(url: URL, env: Env): Promise<Response> {
+async function apiTide(url: URL, env: Env, ctx: ExecutionContext): Promise<Response> {
   const scope = url.searchParams.get('scope') ?? 'federal'
   if (scope !== 'federal' && scope !== 'all') return json({ error: 'bad scope' }, 400)
   return cachedJson(`/api/tide?scope=${scope}`, async () => {
@@ -3215,7 +3277,7 @@ async function apiTide(url: URL, env: Env): Promise<Response> {
       ]
     })
     const parseCatalog = async (path: string): Promise<CatalogPage> => {
-      const response = await kbFetch(env, path)
+      const response = await aggregateFetch(env, path)
       if (!response.ok) throw new Error(`catalog ${response.status}`)
       return (await response.json()) as CatalogPage
     }
@@ -3244,11 +3306,11 @@ async function apiTide(url: URL, env: Env): Promise<Response> {
       })
     }
     return json({ scope, decades, topics })
-  })
+  }, ctx)
 }
 
 /** A person's topic mix overall and in the two comparable recent decades. */
-async function apiPersonTopics(url: URL, env: Env): Promise<Response> {
+async function apiPersonTopics(url: URL, env: Env, ctx: ExecutionContext): Promise<Response> {
   const raw = url.searchParams.get('name')?.trim() ?? ''
   if (!raw || raw.length > MAX_SPEAKER_CHARS || !NAME_RE.test(raw)) {
     return json({ error: 'bad name' }, 400)
@@ -3260,7 +3322,7 @@ async function apiPersonTopics(url: URL, env: Env): Promise<Response> {
     const speakerClauses = [attribution ? scopedCollaborators(collaborator, attribution) as Record<string, unknown> : collaborator,
       ...(attribution ? [scopeFilter(attribution)] : [])]
     const topic = { prop: 'label', labelset: 'topic' }
-    const catalog = (clauses: Record<string, unknown>[], faceted = true) => kbFetch(env, '/catalog', {
+    const catalog = (clauses: Record<string, unknown>[], faceted = true) => aggregateFetch(env, '/catalog', {
       body: {
         filter_expression: { resource: clauses.length === 1 ? clauses[0] : { and: clauses } },
         ...(faceted ? { faceted: [TOPIC_FILTER_PREFIX] } : {}),
@@ -3300,7 +3362,7 @@ async function apiPersonTopics(url: URL, env: Env): Promise<Response> {
         now: profile(now, '2020–26', 2020, 2026),
       },
     })
-  })
+  }, ctx)
 }
 
 /**
@@ -3314,7 +3376,7 @@ async function apiPersonTopics(url: URL, env: Env): Promise<Response> {
  */
 const MATRIX_PARTY_CAP = 7
 
-async function apiMatrix(env: Env): Promise<Response> {
+async function apiMatrix(env: Env, ctx: ExecutionContext): Promise<Response> {
   return cachedJson('/api/matrix', async () => {
     const slugs = [...TOPIC_SLUGS]
     // Workers cap simultaneous open connections at 6, and a response body
@@ -3322,7 +3384,7 @@ async function apiMatrix(env: Env): Promise<Response> {
     // with "Response closed due to connection limit" (local dev does not
     // enforce it). Fetch AND parse in batches of five.
     const parseCatalog = async (path: string): Promise<CatalogPage> => {
-      const r = await kbFetch(env, path)
+      const r = await aggregateFetch(env, path)
       if (!r.ok) throw new Error(`catalog ${r.status}`)
       return (await r.json()) as CatalogPage
     }
@@ -3378,7 +3440,7 @@ async function apiMatrix(env: Env): Promise<Response> {
       cells,
       totals,
     })
-  }, 900)
+  }, ctx, 900)
 }
 
 // ---------------------------------------------------------------------------
@@ -3400,13 +3462,7 @@ async function apiMatrix(env: Env): Promise<Response> {
 const SITE_ORIGIN = 'https://opax.com.au'
 const OG_IMAGE = `${SITE_ORIGIN}/og-default.png`
 const OG_IMAGE_ALT = 'OPAX: ask what your politicians actually said'
-/**
- * The share image for a page is its canonical URL under /og with .png on the
- * end, so /subject/person/anthony-albanese shares
- * /og/subject/person/anthony-albanese.png?v=2. A question or search never
- * reaches the image (it can name a withheld donor). The version is the drawing's (src/og.ts), not the data's: a
- * crawler caches by URL, so a redesign has to move.
- */
+
 function ogImageFor(canonical: string): string {
   const u = new URL(canonical)
   const out = new URL(`${SITE_ORIGIN}/og${u.pathname}.png`)
@@ -3473,8 +3529,6 @@ const STATIC_PAGES: Record<string, { title: string; description: string; query?:
     description: 'Who gives money to Australian political parties: every disclosed receipt by donor, party, industry and year, from AEC and state electoral commission returns.',
     query: true,
   },
-  // One flow explained from the disclosure data; the query names graph IDs and is
-  // never echoed here (a withheld donor's flow is rewritten client-side).
   'money/explain': {
     title: 'Explain a money flow · OPAX',
     description: 'One disclosed flow of political money explained from the returns: how much, when, how it compares, and what the disclosure rules leave out.',
@@ -3539,6 +3593,7 @@ const STATIC_PAGES: Record<string, { title: string; description: string; query?:
 type SeoRoute =
   | { kind: 'hub'; hub: 'sitting' | 'estimates' | 'vic-election'; id: string | null }
   | { kind: 'instruments'; id: string | null }
+  | { kind: 'budget' }
   | { kind: 'audit'; id: string | null }
   | { kind: 'static'; page: keyof typeof STATIC_PAGES }
   | { kind: 'report'; slug: string }
@@ -3579,17 +3634,7 @@ interface PageMeta {
   trail?: Crumb[]
 }
 
-// How long a /subject/<dir>/<name> segment may be. A person, a party or a donor
-// is named in a few words; an AEC entity is named in its own registered legal
-// title, and the longest on the register runs to 127 characters ("Transport
-// Workers Union of Australia NSW QLD Interim Governance Branch formerly ...").
-// The bound is still a bound, and sitemapXml applies the same one so it can
-// never list a page this function would refuse.
-const SUBJECT_NAME_MAX = 120
-const CAMPAIGNER_NAME_MAX = 200
-const SUPPLIER_NAME_MAX = 500
-// A bill key is jurisdiction plus source identity, lowercase and hyphenated.
-const BILL_KEY_MAX = 64
+// Published indexes resolve identities; route grammar rejects malformed paths.
 const BILL_KEY_RE = /^[a-z][a-z0-9-]*$/
 const GRANT_RECIPIENT_ID_RE = /^(?:abn:\d{11}|name:[a-z0-9 .&'()-]{2,120}|person:[a-z0-9 .'-]{2,120})$/
 
@@ -3604,6 +3649,7 @@ function matchSeoRoute(url: URL): SeoRoute | null {
     try { return { kind: 'audit', id: decodeURIComponent(path.slice('/audit/'.length)) } }
     catch { return { kind: 'audit', id: '' } }
   }
+  if (path === '/budget') return { kind: 'budget' }
   if (path === '/instruments') return { kind: 'instruments', id: null }
   if (path === '/instrument' || path.startsWith('/instrument/')) {
     try { return { kind: 'instruments', id: decodeURIComponent(path.slice('/instrument/'.length)) } }
@@ -3636,8 +3682,7 @@ function matchSeoRoute(url: URL): SeoRoute | null {
     const dir = dec[1]
     if (isDirectoryKind(dir)) {
       if (segs.length === 2) return { kind: 'index', dir }
-      const max = dir === 'campaigner' ? CAMPAIGNER_NAME_MAX : (dir === 'supplier' || dir === 'agency') ? SUPPLIER_NAME_MAX : SUBJECT_NAME_MAX
-      if (segs.length === 3 && dec[2].trim() && dec[2].length <= max) {
+      if (segs.length === 3 && dec[2].trim()) {
         return { kind: 'subject', dir, name: dec[2].trim() }
       }
     }
@@ -3648,8 +3693,8 @@ function matchSeoRoute(url: URL): SeoRoute | null {
   }
   // /bill/<bill_key>. The keys the projection mints are au-federal-r7531 and
   // au-federal-alrc-1270 (docs/BILLS-CONTRACT.md), with au-nsw-18524 and kin to
-  // come; BILL_KEY_MAX is the shape bound, and index.json decides what exists.
-  if (dec[0] === 'bill' && segs.length === 2 && dec[1].length <= BILL_KEY_MAX && BILL_KEY_RE.test(dec[1])) {
+  // come; index.json decides what exists.
+  if (dec[0] === 'bill' && segs.length === 2 && BILL_KEY_RE.test(dec[1])) {
     return { kind: 'bill', key: dec[1] }
   }
   return null
@@ -3694,7 +3739,7 @@ async function scopeSpeakerBody(body: Record<string, unknown>, env: Env, raw: st
     typeof s !== 'object' || s === null || !('name' in s) || s.name !== 'prequeries')
 }
 
-interface MoneyNode {
+interface MoneyNode extends DonorDisclosureRecord {
   id: string
   label: string
   kind: 'donor' | 'party'
@@ -3822,7 +3867,7 @@ function loadPeople(env: Env): Promise<PeopleData> {
 let moneyMemo: Promise<MoneyData> | null = null
 function loadMoney(env: Env): Promise<MoneyData> {
   moneyMemo ??= Promise.all(
-    ['/graph/money.json', '/graph/money.qld.json', '/graph/money.vic.json'].map((p) =>
+    ['/graph/money.json', '/graph/money.qld.json', '/graph/money.vic.json', '/graph/money.tas.json'].map((p) =>
       assetJson<{ meta?: { generated?: string; sourceShort?: string }; nodes: MoneyNode[] }>(env, p),
     ),
   )
@@ -3842,7 +3887,12 @@ function loadMoney(env: Env): Promise<MoneyData> {
           // Federal (first file) wins; a state-only node stands in otherwise.
           // Jurisdictions are never summed (see money.qld.json meta.not_summed).
           if (!prev || (i === 0 && prev.sourceShort !== 'AEC returns')) {
-            map.set(key, { ...n, sourceShort, generated: gen })
+            const entry = { ...n, sourceShort, generated: gen }
+            map.set(key, entry)
+            if (n.kind === 'donor') for (const alias of [...n.aliases || [], ...n.lookup_names || []]) {
+              const aliasKey=foldName(alias)
+              if (!map.has(aliasKey)) map.set(aliasKey,entry)
+            }
           }
         }
       })
@@ -4118,14 +4168,20 @@ async function buildRouteMeta(route: SeoRoute, url: URL, request: Request, env: 
         return base({title:page.title+' · OPAX',description:page.description,prerender:page.html,jsonLd:page.jsonLd,status:page.status,card:'card' in page ? page.card : null,...('noindex' in page && page.noindex ? {noindex:true} : {})})
       }
       const people = route.hub === 'sitting' && route.id ? await loadPeople(env) : null
-      const check = memoisedCheck(await tablePrivacyCheck(env.ASSETS))
-      const query = guardTableURL(divisionTableConfig({},'Divisions','sitting',check),url).query
-      const page = await hubPage(route.hub,route.id,<T>(path: string) => assetJson<T>(env,path),people?.people || [],people?.slugOf || new Map(),undefined,env,query,check)
+      const query = guardTableURL(divisionTableConfig({},'Divisions','sitting'),url).query
+      const page = await hubPage(route.hub,route.id,<T>(path: string) => assetJson<T>(env,path),people?.people || [],people?.slugOf || new Map(),undefined,env,query)
       return base({title:page.title+' · OPAX',description:page.description,prerender:page.html,jsonLd:page.jsonLd,status:page.status})
     }
     case 'audit': return base({ ...await auditPage(route.id, url, auditReader(env.ASSETS), prerenderBlock),
       ...(route.id && AUDIT_ID.test(route.id) ? { canonical: `${SITE_ORIGIN}/audit/${route.id}` } : {}) })
-    case 'instruments': return base(await instrumentPage(route.id, url, instrumentReader(env.ASSETS), prerenderBlock))
+    case 'budget': return base(await budgetPage(url, budgetReader(env.ASSETS), prerenderBlock))
+    case 'instruments': return base(await instrumentPage(route.id, url, instrumentReader(env.ASSETS), prerenderBlock, env.TABLE_DB ? async query=>{
+      const endpoint=new URL('/api/table/instruments',url)
+      endpoint.search=serializeQuery({...query,sort:query.sort || {key:'title',dir:'asc'}})
+      const response=await timed('table-query',()=>tableApi(new Request(endpoint),{TABLE_DB:env.TABLE_DB!,CACHE_EPOCH:env.CACHE_EPOCH}))
+      if(!response.ok)throw new Error('Instrument table unavailable')
+      return await response.json() as Page
+    } : undefined))
     case 'grant-recipient': return grantRecipientMeta(route.jurisdiction, route.id, url, env)
     case 'static': {
       // Existing shared query links retain their behavior and point search engines
@@ -4138,8 +4194,6 @@ async function buildRouteMeta(route: SeoRoute, url: URL, request: Request, env: 
       const page = STATIC_PAGES[researchSearch ? 'search' : route.page]
       const q = url.searchParams.get('q')?.trim()
       const canonical = canonicalFor(url, Boolean(page.query))
-      // A question or search is never echoed into the title, description, share card
-      // or its image: it can name a withheld donor (src/donor-index.ts) or anything else.
       if (route.page === 'ask' && !researchSearch && q) {
         return base({
           title: 'Ask OPAX',
@@ -4306,10 +4360,8 @@ async function buildMeta(route: SeoRoute, url: URL, request: Request, env: Env, 
       if (p) {
         const profiles=await read<{people:Record<string,PersonSchemaIdentity>;by_name:Record<string,PersonSchemaIdentity>}>('/profile-links.json').catch(()=>null)
         const identity={...profiles?.by_name[foldName(p.name)],...profiles?.people[p.pid || '']}
-        const check = memoisedCheck(await tablePrivacyCheck(env.ASSETS))
-        const query = guardTableURL(voteTableConfig(p.pid || '',undefined,check),url).query
-        const withheld = await withheldNameCheck(env.ASSETS)
-        const content = await timed('person-render', () => renderPersonAnswer(p,read,people.slugOf,identity.aphProfileUrl || undefined,withheld,query,check))
+          const query = guardTableURL(voteTableConfig(p.pid || ''),url).query
+        const content = await timed('person-render', () => renderPersonAnswer(p,read,people.slugOf,identity.aphProfileUrl || undefined,url.searchParams))
         meta.prerender = content.html
         if(content.description) meta.description=clip(content.description)
         const photos=await loadPhotos(env).catch(()=>null)
@@ -4324,28 +4376,29 @@ async function buildMeta(route: SeoRoute, url: URL, request: Request, env: Env, 
       const bill=await read<Parameters<typeof renderBillAnswer>[0]>(`/bills/${route.key}.json`).catch(()=>null)
       if(bill){
         const related=await read<{bills:Parameters<typeof renderBillAnswer>[0][]}>('/bills/index.json')
-        const check = memoisedCheck(await tablePrivacyCheck(env.ASSETS))
-        const query = guardTableURL(divisionTableConfig({bill:bill.key},undefined,undefined,check),url).query
-        meta.prerender=renderBillAnswer(bill,people?.people || [],people?.slugOf || new Map(),related.bills,query,check).html;billIdentity={identifier:bill.key,status:bill.status}}
+          const query = guardTableURL(divisionTableConfig({bill:bill.key}),url).query
+        meta.prerender=renderBillAnswer(bill,people?.people || [],people?.slugOf || new Map(),related.bills,query).html;billIdentity={identifier:bill.key,status:bill.status}}
     } else if(route.kind==='subject' && route.dir==='supplier') {
-      const content=await renderSupplierAnswer(meta.canonical.split('/').at(-1)!,read,url.searchParams,await tablePrivacyGuard(env.ASSETS))
+      const content=await renderSupplierAnswer(meta.canonical.split('/').at(-1)!,read,url.searchParams)
       if(content) meta.prerender=content.html
     } else if(route.kind==='index' && route.dir==='supplier') {
-      const guard=await tablePrivacyGuard(env.ASSETS)
       const params=new URLSearchParams(url.searchParams)
       if(params.has('q')) params.set('t.q',params.get('q')!)
-      const guarded=guardProcurementURL({id:'suppliers-table',caption:'Suppliers',pageType:'suppliers',columns:[],privacy:'donors',privacyCheck:value=>!guard(value),urlKey:'t'},new URL('https://local.invalid/?'+params))
-      const rejected=guarded.rejected
-      const query=new URLSearchParams(serializeQuery(guarded.query))
-      if(guarded.url.searchParams.has('donor')) query.set('donor',guarded.url.searchParams.get('donor')!)
-      const response=rejected ? null : await tableApi(new Request('https://opax.com.au/api/table/suppliers?'+query),env)
-      const page=!response?.ok ? {rows:[],total:0,page:1,pageSize:50,facets:{}} : await response.json() as import('../public/datatable.js').Page
-      meta.prerender=answerBlock('Government suppliers','Recorded Commonwealth contract awards. Values are commitments, not verified payments.',suppliersTableHTML(page,guard,params))
+      const query=new URLSearchParams(serializeQuery(parseQuery(params,'t')))
+      if(params.has('donor')) query.set('donor',params.get('donor')!)
+      const response=await timed('table-query',()=>tableApi(new Request('https://local.invalid/api/table/suppliers?'+query),env))
+      const page=!response.ok ? {rows:[],total:0,page:1,pageSize:50,facets:{}} : await response.json() as Page
+      meta.prerender=answerBlock('Government suppliers','Recorded Commonwealth contract awards. Values are commitments, not verified payments.',suppliersTableHTML(page,params))
     } else if(route.kind==='static' && route.page==='discover') {
       const facts=await renderMoneyAnswer('Government contracts',read)
-      meta.prerender=facts.html.replace('</section>',await contractsHubHTML(async query => {const response=await tableApi(new Request('https://opax.com.au/api/table/contracts?'+serializeQuery(query)),env); if(!response.ok) return {rows:[],total:0,page:1,pageSize:50,facets:{}}; return response.json()},url.searchParams,await tablePrivacyGuard(env.ASSETS))+'</section>')
+      meta.prerender=facts.html.replace('</section>',await contractsHubHTML(async query=>{
+        const response=await timed('table-query',()=>tableApi(new Request('https://local.invalid/api/table/contracts?'+serializeQuery(query)),env))
+        if(!response.ok) return {rows:[],total:0,page:1,pageSize:50,facets:{}}
+        return response.json()
+      },url.searchParams)+'</section>')
     } else if(route.kind==='static' && ['money','connections','explore'].includes(route.page)) {
       meta.prerender=(await renderMoneyAnswer(meta.title.replace(/ · OPAX$/,''),read).catch(()=>null))?.html || answerBlock(meta.title.replace(/ · OPAX$/,''),meta.description)
+      if(route.page==='money')meta.prerender+=await renderMoneyConnectionsTable(url,read).catch(()=> '')
     } else if (route.kind === 'static' && route.page === 'money/grants' && !url.searchParams.has('program') && !url.searchParams.has('open') && !url.searchParams.has('largest')) {
       const hadState = Boolean(url.search)
       meta.prerender = answerBlock('Government grants', GRANTS_COVERAGE, await grantsHTML(url, env).catch(() => '<p role="alert">Grant records are temporarily unavailable.</p>'))
@@ -4851,15 +4904,12 @@ async function agencyMeta(name: string, url: URL, env: Env): Promise<PageMeta> {
 
 async function supplierMeta(name: string, url: URL, env: Env): Promise<PageMeta> {
   const data = await loadSuppliers(env).catch(() => null)
-  if(!data) return {title:'Supplier temporarily unavailable · OPAX',description:'The supplier index could not be loaded. Please try again.',canonical:`${SITE_ORIGIN}/subject/supplier`,ogType:'website',status:503,jsonLd:null,prerender:null,card:null}
-  const guard=await tablePrivacyGuard(env.ASSETS)
   const supplier = data?.byId.get(name) ?? data?.byName.get(supplierNameKey(name)) ?? null
-  if(guard.supplierWithheld(supplier?.id || '') || !guard.recipientCheck(supplier ? [supplier.name,supplier.abn || ''].join(' ') : name)) return {title:'Supplier not named · OPAX',description:'Individual recipient details are withheld. Their award values are included in aggregate procurement totals.',canonical:`${SITE_ORIGIN}/subject/supplier`,ogType:'website',status:404,jsonLd:null,card:null,prerender:prerenderBlock('Supplier not named','Individual recipient details are withheld. Browse aggregate procurement totals.')}
   if (!supplier && data?.byName.has(supplierNameKey(name))) {
     const candidates = data.suppliers.filter((entry) => [entry.name, ...(entry.aliases ?? []), ...(entry.lookup_names ?? [])]
       .some((alias) => supplierNameKey(alias) === supplierNameKey(name)))
     const description = 'More than one government supplier uses this name. Check the ABN and choose the matching contract profile.'
-    const links = candidates.filter(entry=>!guard.supplierWithheld(entry.id) && guard.recipientCheck(entry.name)).map((entry) => `<li><a href="/subject/supplier/${encodeURIComponent(entry.id)}">${escHtml(entry.name)}</a> · ${entry.abn ? `ABN ${escHtml(entry.abn)}` : 'No ABN recorded'}</li>`).join('')
+    const links = candidates.map((entry) => `<li><a href="/subject/supplier/${encodeURIComponent(entry.id)}">${escHtml(entry.name)}</a> · ${entry.abn ? `ABN ${escHtml(entry.abn)}` : 'No ABN recorded'}</li>`).join('')
     return { title: 'Choose a supplier · OPAX', description, canonical: canonicalFor(url, false),
       ogType: 'website', status: 200, jsonLd: null, card: null,
       prerender: `<section id="prerender" class="wrap"><h1>Choose a supplier</h1><p>${description}</p><ul>${links}</ul>${indexLinks()}</section>` }
@@ -4887,25 +4937,14 @@ async function supplierMeta(name: string, url: URL, env: Env): Promise<PageMeta>
   }
 }
 
-/**
- * The page of an individual donor, or of a campaigner registered under a
- * withheld donor's name: reachable, noindex, and nobody named in the title,
- * description, structured data, share card or prerendered body. Without
- * positive organisation evidence a donor counts as an individual
- * (public/donor-entity.js, src/donor-index.ts).
- */
+
 const SUBJECT_UNKNOWN: Record<'person' | 'donor' | 'party' | 'campaigner', [string, string]> = {
   person: ['Not in the parliamentary roster', "This person isn't in OPAX's parliamentary roster."],
   donor: ['Donor not found', "This donor isn't in OPAX's money data."],
   party: ['Party not found', "This party isn't in OPAX's record."],
   campaigner: ['Campaigner not found', 'No entry with this name is on the AEC register of associated entities, third parties, significant third parties and political campaigners.'],
 }
-/**
- * A subject route for a name OPAX does not hold: a 404 (a 503 when the records
- * could not be read) that never repeats the requested name, in the title,
- * description, structured data, share card or canonical. A typed name can be
- * anyone's, a withheld donor's included (src/donor-index.ts).
- */
+
 function unknownSubjectMeta(kind: keyof typeof SUBJECT_UNKNOWN, loaded: boolean): PageMeta {
   const [title, description] = loaded ? SUBJECT_UNKNOWN[kind] : ['Temporarily unavailable', 'These records could not be loaded. Please try again.']
   return { title: `${title} · OPAX`, description, canonical: `${SITE_ORIGIN}/subject/${kind}`, ogType: 'website', status: loaded ? 404 : 503, jsonLd: null, prerender: null, card: null }
@@ -4919,27 +4958,11 @@ async function partyFor(name: string, env: Env): Promise<{ node: MoneyEntry | nu
   return { node, label, loaded: !!moneyData }
 }
 
-/** Whether any money graph (Tasmania's included) holds a donor of this name. */
-async function donorKnown(name: string, env: Env): Promise<boolean | null> {
-  const index = await loadDonorIndex(env.ASSETS).catch(() => null)
-  if (!index) return null
-  const key = foldDonorName(name)
-  return index.organisations.has(key) || index.withheld.has(key)
-}
-
-function withheldMeta(dir: 'donor' | 'campaigner', canonical: string): PageMeta {
-  const [heading, sentence] = dir === 'donor'
-    ? ['Donor', 'This donor is not named in OPAX.']
-    : ['Campaigner', 'An entry on the AEC register of campaigners, third parties and associated entities. Every return it filed, year by year.']
-  return { title: `${heading} · OPAX`, description: sentence, canonical: '', ogType: 'profile', status: 200, jsonLd: null,
-    prerender: prerenderBlock(heading, sentence), card: null, noindex: true }
-}
-
 async function moneySubjectMeta(dir: 'party' | 'donor', name: string, url: URL, env: Env): Promise<PageMeta> {
-  if(dir==='donor' && await donorWithheld(env.ASSETS,name)) return withheldMeta('donor','')
   const [moneyData, people] = await Promise.all([loadMoney(env).catch(() => null), loadPeople(env).catch(() => null)])
   // A name no record holds is never repeated back (unknownSubjectMeta).
   let node: MoneyEntry | null, display: string
+  let disclosureRecord: DonorDisclosureRecord | null = null
   if (dir === 'party') {
     const party = await partyFor(name, env)
     if (!party.label) return unknownSubjectMeta('party', party.loaded)
@@ -4947,16 +4970,16 @@ async function moneySubjectMeta(dir: 'party' | 'donor', name: string, url: URL, 
     display = party.label
   } else {
     node = moneyData?.donors.get(foldName(name)) ?? null
-    const known = node ? true : await donorKnown(name, env)
+    disclosureRecord = node ?? (await loadDonorIndex(env.ASSETS).catch(()=>null))?.get(foldName(name)) ?? null
+    const known = Boolean(disclosureRecord)
     if (!known) return unknownSubjectMeta('donor', known !== null)
-    display = node?.label ?? name
+    display = disclosureRecord ? donorDisclosure(disclosureRecord).name : name
   }
-  const canonical = dir==='party' ? `${SITE_ORIGIN}${partyUrl(display)}` : `${SITE_ORIGIN}/subject/${dir}/${encodeURIComponent(display)}`
-  if (dir === 'donor' && await donorWithheld(env.ASSETS, display)) return withheldMeta('donor', canonical)
+  const canonical = dir==='party' ? `${SITE_ORIGIN}${partyUrl(display)}` : node && donorDisclosure(node).href ? new URL(donorDisclosure(node).href!,SITE_ORIGIN).href : `${SITE_ORIGIN}/subject/${dir}/${encodeURIComponent(display)}`
   const title = `${display} · OPAX`
   let facts: string
   let tail = ''
-  const ldType = 'Organization'
+  const ldType = dir==='donor' ? 'Dataset' : 'Organization'
   let card: CardSpec
   if (dir === 'party') {
     const members = people?.people.filter((p) => p.party && foldName(p.party) === foldName(display)) ?? []
@@ -4983,14 +5006,26 @@ async function moneySubjectMeta(dir: 'party' | 'donor', name: string, url: URL, 
     card = {
       kicker: `Donor · ${industryLabel(node.industry)}`,
       title: display,
-      lines: [`${money(node.total)} across ${num(node.count)} receipts, ${years(node.firstYear, node.lastYear)} (${node.sourceShort})`, 'Which parties it funded, year by year.'],
+      lines: [`${money(node.total)} across ${num(node.count)} receipts, ${years(node.firstYear,node.lastYear)} (${node.sourceShort})`,donorDisclosure(node).reference],
     }
   } else {
-    facts = `${display}: not among the top disclosed donors in the OPAX money data. Search the parliamentary record for mentions.`
-    card = { kicker: 'Donor', title: display, lines: ['Not among the top disclosed donors in the OPAX money data. Search the parliamentary record for mentions.'] }
+    facts = disclosureRecord?.kind==='reference' ? `${display}: source reference; no matching electoral donation established.` : `${display}: disclosed electoral returns outside the bounded money-map selection.`
+    card = {kicker:disclosureRecord?.kind==='reference'?'Source reference':'Donor',title:display,lines:[facts,disclosureRecord ? donorDisclosure(disclosureRecord).reference : '']}
   }
   const sentence = tail ? `${facts} ${tail}` : facts
   const description = withTail(facts, tail)
+  let table = ''
+  if (dir === 'party') {
+    const read = <T>(path:string)=>assetJson<T>(env,path)
+    const graph = await read<Parameters<typeof partyMoneyData>[0]>('/graph/money.json').catch(()=>null)
+    const party = graph?.nodes.find(n=>n.kind === 'party' && foldName(n.label) === foldName(display))
+    if (graph && party) {
+      const {rows} = partyMoneyData(graph,party.id)
+      const config = partyMoneyTableConfig(rows)
+      config.id = 'ssr-party-money-table'
+      table = `<section class="wrap"><h2>Where it came from</h2>${registerTableHTML(config,undefined,url)}<p>Party transfers and grants are excluded. Source: <a href="https://transparency.aec.gov.au/">AEC Transparency Register</a>.</p></section>`
+    }
+  }
   return {
     title,
     description,
@@ -4998,7 +5033,7 @@ async function moneySubjectMeta(dir: 'party' | 'donor', name: string, url: URL, 
     ogType: 'profile',
     status: 200,
     jsonLd: { '@context': 'https://schema.org', '@type': ldType, name: display, url: canonical, description },
-    prerender: prerenderBlock(display, sentence),
+    prerender: prerenderBlock(display,sentence,dir==='donor' && disclosureRecord ? `<p>${donorLabelHTML(disclosureRecord)}</p>${indexLinks()}` : indexLinks()) + table,
     card,
   }
 }
@@ -5019,7 +5054,6 @@ async function campaignerMeta(name: string, url: URL, env: Env): Promise<PageMet
   // and it gives way before the masthead does.
   const title = `${clip(display, 90)} · OPAX`
   if (!c) return unknownSubjectMeta('campaigner', !!data)
-  if (await namesWithheldDonor(env.ASSETS, display)) return withheldMeta('campaigner', canonical)
   const linked = c.parties.length ? `; disclosed relationship: ${andList(c.parties.slice(0, 3))}` : ''
   const parts: string[] = []
   if (c.filings) parts.push(`${num(c.filings)} annual return${c.filings === 1 ? '' : 's'}, ${yearSpan(c.firstYear, c.lastYear)}`)
@@ -5290,7 +5324,7 @@ async function serveCachedPage(route: SeoRoute, url: URL, request: Request, env:
   const target = new URL(url); target.searchParams.delete('nocache')
   const shell = await timed('shell', () => env.ASSETS.fetch(new Request(`${SITE_ORIGIN}/`)))
   if (!shell.ok) return shell
-  const key = await pageCacheKey({epoch: env.CACHE_EPOCH ?? '', workerVersion: env.CF_VERSION_METADATA?.id ?? '', assets: shell.headers.get('etag') ?? '', registry: TABLE_REGISTRY_FINGERPRINT, url: target})
+  const key = await pageCacheKey({epoch: env.CACHE_EPOCH ?? '', workerVersion: env.CF_VERSION_METADATA?.id ?? '', assets: shell.headers.get('etag') ?? '', url: target})
   // Rendered unconditionally (no If-None-Match), so what is stored is the whole
   // page; the shell is read once, by whichever render runs.
   const render = () => renderSeoPage(route, target, new Request(target, {method: 'GET'}), env, ctx, shell)
@@ -5319,14 +5353,17 @@ async function serveCachedPage(route: SeoRoute, url: URL, request: Request, env:
 }
 
 async function renderSeoPage(route: SeoRoute, url: URL, request: Request, env: Env, ctx: ExecutionContext, shellResponse?: Response): Promise<Response> {
+  // Rendering may scrub shared URL state; robots retain the original decision.
+  const originalTableState = [...url.searchParams.keys()].some(key=>/^(?:instruments|audit|interests|partyMoney(?:AEC|ECQ|VEC)?)\./.test(key))
+  const moneyTableState=url.pathname.replace(/\/+$/, '') === '/money' && [...url.searchParams.keys()].some(key => key.startsWith('c.'))
   const [shell, meta] = await Promise.all([
     shellResponse ?? timed('shell', () => env.ASSETS.fetch(new Request(`${SITE_ORIGIN}/`))),
     timed('meta', () => buildMeta(route, url, request, env, ctx)),
   ])
   if (!shell.ok) return shell
   const tableKey = route.kind === 'bill' || route.kind === 'hub' && route.hub === 'sitting' ? 'dv' : route.kind === 'subject' && route.dir === 'person' ? 'vr' : null
-  const tableState = tableKey && [...url.searchParams].some(([key,value])=>key.startsWith(tableKey+'.') && value !== '')
-  const noindex = meta.noindex || meta.status >= 400 || tableState || (['/ask', '/search'].includes(url.pathname.replace(/\/+$/, '')) && Boolean(url.search))
+  const tableState = [...url.searchParams.keys()].some(key=>/^(?:instruments|audit|interests|partyMoney(?:AEC|ECQ|VEC)?)\./.test(key)) || Boolean(tableKey && [...url.searchParams].some(([key,value])=>key.startsWith(tableKey+'.') && value !== ''))
+  const noindex = meta.noindex || meta.status >= 400 || originalTableState || tableState || moneyTableState || (['/ask', '/search'].includes(url.pathname.replace(/\/+$/, '')) && Boolean(url.search))
   // Election coverage names unavailable grants, but renders no financial records.
   // Its renderer owns any future caveat alongside an actual political money pairing.
   // The policy pages (privacy, support) name no association between records.
@@ -5366,6 +5403,7 @@ async function renderSeoPage(route: SeoRoute, url: URL, request: Request, env: E
     })
     .on('head', {
       element(el) {
+        if(route.kind==='static' && route.page==='money')el.append('<link rel="stylesheet" href="/datatable.css"><link rel="stylesheet" href="/money-connections.css?v=dt-money-2">', { html: true })
         if (noindex) el.append('<meta name="robots" content="noindex">', { html: true })
         if (route.kind === 'static' && route.page === 'money/grants' && !url.searchParams.has('program') && !url.searchParams.has('open') && !url.searchParams.has('largest')) el.append('<link rel="stylesheet" href="/grants-table.css" data-grants-table-style>', {html: true})
         for(const [rel,href] of [['prev',meta.prev],['next',meta.next]]) if(href) el.append(`<link rel="${rel}" href="${escHtml(href)}">`,{html:true})
@@ -5379,9 +5417,10 @@ async function renderSeoPage(route: SeoRoute, url: URL, request: Request, env: E
   if (route.kind === 'notfound') rewriter.on('script[src]', { element(el) {
     if (/\/(app|spa-entry|spa-shell)\.js(?:\?|$)/.test(el.getAttribute('src') || '')) el.remove()
   } })
-  if (route.kind === 'instruments' || route.kind === 'audit') rewriter.on('script[src]', { element(el) {
+  if (route.kind === 'instruments' || route.kind === 'audit' || route.kind === 'budget') rewriter.on('script[src]', { element(el) {
     if (/\/(app|spa-entry|spa-shell)\.js(?:\?|$)/.test(el.getAttribute('src') || '')) el.remove()
   } }).on('a[href^="/subject/person"]', { element(el) { el.remove() } })
+  if (route.kind === 'budget') rewriter.on('head', { element(el) { el.append('<link rel="stylesheet" href="/datatable.css"><link rel="stylesheet" href="/budget.css"><script type="module" src="/budget.js"></script>', {html:true}) } })
   rewriter.on('main#main', { element(el) { el.setAttribute('data-server-rendered',''); el.setInnerContent(meta.prerender || '', { html: true }) } })
   const out = rewriter.transform(shell)
   const headers = new Headers(out.headers)
@@ -5486,7 +5525,7 @@ async function serveStorySlide(url: URL, request: Request, env: Env, ctx: Execut
   if (!Number.isFinite(Date.parse(date + 'T12:00:00Z')) || new Date(date + 'T12:00:00Z').toISOString().slice(0, 10) !== date) return new Response('Not found', { status: 404 })
   if (!Number.isInteger(n) || n < 1 || n > 10) return new Response('Not found', { status: 404 })
   let post: Awaited<ReturnType<typeof previewPublication>> = null
-  try { post = await previewPublication(env, date, name => personTopicsFor(name, env)) } catch (err) {
+  try { post = await previewPublication(env, date, name => personTopicsFor(name, env, ctx)) } catch (err) {
     console.error(JSON.stringify({ level: 'error', path: url.pathname, message: `story edition failed: ${String(err)}` }))
     return new Response('Slide unavailable', { status: 503 })
   }
@@ -5531,14 +5570,7 @@ async function serveStorySlide(url: URL, request: Request, env: Env, ctx: Execut
   }
 }
 
-/**
- * Route kinds whose path names a subject, by a typed name or an id: person,
- * party, donor, campaigner, supplier, agency and electorate pages, grant
- * recipients and topics. Their card is drawn only for a subject the page itself
- * would show (a 200 with a card, indexable), and that is checked before any
- * cache read: a card cached before a subject was withheld, or one for a name no
- * record holds, is never replayed.
- */
+
 const NAMED_CARD_ROUTES = new Set<SeoRoute['kind']>(['subject', 'grant-recipient', 'topic'])
 async function cardRefused(route: SeoRoute | null, pageUrl: URL, request: Request, env: Env, ctx: ExecutionContext): Promise<boolean> {
   // Check the election gate before replaying a card cached while publication was enabled.
@@ -5643,7 +5675,6 @@ async function llmsTxt(env: Env): Promise<Response> {
   const policy = saFullText(env.SA_HANSARD_FULL_TEXT) ? '' : `\nSouth Australian Hansard: ${SA_EXCERPT_LABEL} /api/resource and MCP read_record provide at most 120 words per record, with its official source_url. Machine summaries are OPAX text.\n`
   return new Response((await asset.text()) + policy + (vicElectionEnabled(env.VIC_ELECTION_HUB_ENABLED) ? '\n' + vicElectionLlms : ''), { headers: { 'content-type': 'text/plain; charset=utf-8', 'cache-control': 'public, max-age=3600' } })
 }
-
 
 // Router-level hardening
 //
@@ -5955,7 +5986,6 @@ async function apiAskRouted(request: Request, url: URL, input: Record<string, un
   const mode = env.AGENTIC_ASK_MODE
   if (!['route', 'shadow'].includes(String(mode)) || classifyAgentic(question).route !== 'agentic' || input.kind && !['speech', 'all'].includes(String(input.kind))) return fallback()
   if (mode === 'shadow') {
-    if (await questionNamesWithheldDonor(env.ASSETS, question)) return fallback()
     const normal = await fallback()
     if (normal.ok) ctx.waitUntil(executeAgentic(input, env, ctx).then(() => {}).catch(() => console.warn('Ask background run unavailable')))
     return normal
@@ -5968,7 +5998,6 @@ async function apiAskRouted(request: Request, url: URL, input: Record<string, un
   let streamOwnsBudget = false
   try {
     // Reuse the donor guard within the same deadline; no prompt bypass.
-    if (await budget.run(() => questionNamesWithheldDonor(env.ASSETS, question))) return await routedFallback()
     const electorateData = classifyAgentic(question).rule === 'electorate-data'
     let namedScope: NamedScope = { people: [], parties: [], bills: [], ambiguous: false, unresolved: false }
     if (!electorateData) {
@@ -6103,7 +6132,7 @@ async function route(
       }
       if (url.pathname === '/api/person-slugs' && request.method === 'GET') return await apiPersonSlugs(env)
       if (url.pathname === '/api/stats' && request.method === 'GET') {
-        return await apiStats(env)
+        return await apiStats(env, ctx)
       }
       if (url.pathname === '/api/recent' && request.method === 'GET') {
         return await apiRecent(env)
@@ -6144,13 +6173,13 @@ async function route(
         const subject = typeof v.subject === 'string' && v.subject.length <= 120 ? v.subject : undefined
         const channels = Array.isArray(v.channels) ? v.channels.filter((c): c is Channel => (CHANNELS as readonly string[]).includes(String(c))) : undefined
         if (v.dry_run) {
-          const post = await previewPublication(env, date, name => personTopicsFor(name, env), kind, subject)
+          const post = await previewPublication(env, date, name => personTopicsFor(name, env, ctx), kind, subject)
           const response = json(post ? { ...post, publication: { x: publicationCopy(post, 'x'), bluesky: publicationCopy(post, 'bluesky'), facebook: publicationCopy(post, 'facebook'), instagram: publicationCopy(post, 'instagram') } } : { error: 'nothing to post' }, post ? 200 : 404)
           response.headers.set('cache-control', 'no-store')
           return response
         }
         const result = await runSocialPublication(env, {
-          personTopics: name => personTopicsFor(name, env), date, kind, subject, channels,
+          personTopics: name => personTopicsFor(name, env, ctx), date, kind, subject, channels,
           sourceResponse: async (target, method = 'HEAD') => {
             const u = new URL(target)
             const head = new Request(target, { method })
@@ -6172,29 +6201,29 @@ async function route(
         if (!/^\d{4}-\d{2}-\d{2}$/.test(date) || !Number.isFinite(Date.parse(date + 'T12:00:00Z')) || new Date(date + 'T12:00:00Z').toISOString().slice(0, 10) !== date) return json({ error: 'bad date' }, 400)
         const kindParam = url.searchParams.get('kind')
         const kind = (DAILY_POST_KINDS as readonly string[]).includes(kindParam ?? '') ? kindParam as DailyPostKind : undefined
-        const post = await previewPublication(env, date, name => personTopicsFor(name, env), kind)
+        const post = await previewPublication(env, date, name => personTopicsFor(name, env, ctx), kind)
         const response = json(post ? { ...post, publication: { x: publicationCopy(post, 'x'), bluesky: publicationCopy(post, 'bluesky'), facebook: publicationCopy(post, 'facebook'), instagram: publicationCopy(post, 'instagram') } } : { error: 'nothing to post' }, post ? 200 : 404)
         response.headers.set('cache-control', 'no-store')
         return response
       }
       if (url.pathname === '/api/topics' && request.method === 'GET') {
-        return await apiTopics(env)
+        return await apiTopics(env, ctx)
       }
       if (url.pathname === '/api/parties' && request.method === 'GET') {
-        return await apiParties(env)
+        return await apiParties(env, ctx)
       }
       const topicMatch = url.pathname.match(/^\/api\/topic\/([a-z][a-z-]*)$/)
       if (topicMatch && request.method === 'GET') {
-        return await apiTopic(topicMatch[1], env)
+        return await apiTopic(topicMatch[1], env, ctx)
       }
       if (url.pathname === '/api/tide' && request.method === 'GET') {
-        return await apiTide(url, env)
+        return await apiTide(url, env, ctx)
       }
       if (url.pathname === '/api/person-topics' && request.method === 'GET') {
-        return await apiPersonTopics(url, env)
+        return await apiPersonTopics(url, env, ctx)
       }
       if (url.pathname === '/api/matrix' && request.method === 'GET') {
-        return await apiMatrix(env)
+        return await apiMatrix(env, ctx)
       }
       if (url.pathname === '/api/news' && request.method === 'GET') {
         return await apiNews()
@@ -6266,20 +6295,22 @@ function pageAddress(pathname: string): boolean {
   return !/\.[a-z0-9]{1,8}$/i.test(last) || /\.html$/i.test(last)
 }
 
-function personTopicsFor(name: string, env: Env): Promise<Response> {
-  return apiPersonTopics(new URL(`${env.COMMUNITY_ORIGIN}/api/person-topics?name=${encodeURIComponent(name)}`), env)
+function personTopicsFor(name: string, env: Env, ctx: ExecutionContext): Promise<Response> {
+  return apiPersonTopics(new URL(`${env.COMMUNITY_ORIGIN}/api/person-topics?name=${encodeURIComponent(name)}`), env, ctx)
 }
 
 export default {
   async fetch(request, env, ctx): Promise<Response> {
     const url = new URL(request.url)
+    if (url.pathname === '/api/register/party-money') return withSecurityHeaders(await partyMoneyResponse(request,env.ASSETS),url)
+    if (url.pathname === '/api/register/interests') return withSecurityHeaders(await interestRegisterResponse(request,env.ASSETS),url)
     const display = (response: Response, target = url) => {
       if (!/^\/api\/(?:resource\/[^/]+|search|search-all|search-summary|ask)$/.test(target.pathname) && !/^\/reports\/[^/]+\.json$/.test(target.pathname)) return Promise.resolve(response)
-      return sanitiseStoredResponse(response).then(safe => saPublicResponse(safe, env.SA_HANSARD_FULL_TEXT, async slug => {
+      return Promise.resolve(response).then(safe => saPublicResponse(safe, env.SA_HANSARD_FULL_TEXT, async slug => {
         const sourceUrl = new URL(`/api/resource/${slug}`, url)
         const result = await apiResource(new Request(sourceUrl), sourceUrl, slug, env, ctx)
         return result.ok ? await result.json() as Record<string, unknown> : null
-      }, target.searchParams.get('q') || '')).then(sanitiseStoredResponse)
+      }, target.searchParams.get('q') || ''))
     }
     if (!vicElectionEnabled(env.VIC_ELECTION_HUB_ENABLED) && vicElectionPublicationPath(url.pathname))
       return withSecurityHeaders(new Response(request.method === 'HEAD' ? null : 'Not found', {status:404,headers:{'x-robots-tag':'noindex','cache-control':'no-store','content-type':'text/plain; charset=utf-8'}}), url)
@@ -6294,7 +6325,6 @@ export default {
     if (url.pathname === '/.well-known/atproto-did') return /^did:plc:[a-z2-7]{24}$/.test(env.BSKY_DID ?? '')
       ? new Response(env.BSKY_DID, { headers: { 'content-type': 'text/plain; charset=utf-8', 'cache-control': 'public, max-age=300' } })
       : new Response('Not found', { status: 404 })
-    if (url.pathname === '/api/table/privacy') return withSecurityHeaders(await tablePrivacy(request, env.ASSETS), url)
     const isApi = url.pathname.startsWith('/api/')
     const communityResponse = (response: Response) => { const secured = withSecurityHeaders(response, url); if (env.STAGING_API) secured.headers.set('x-robots-tag', 'noindex, nofollow'); return secured }
     if (url.pathname === '/api/ops/ask-gold') {
@@ -6417,10 +6447,11 @@ export default {
       // Expiry and provider-ID cleanup also run while voice/community are paused.
       try {await expireVoiceSessions(env)} catch {console.error(JSON.stringify({event:'voice_housekeeping_failed'}))}
       try {console.log('community-reply-emails', JSON.stringify(await deliverReplyEmails(env)))} catch {console.error(JSON.stringify({event:'community_reply_email_dispatch_failed'}))}
+      await warmCatalog(env, _ctx)
       return
     }
     const result = await runSocialPublication(env, {
-      now: controller.scheduledTime, personTopics: name => personTopicsFor(name, env),
+      now: controller.scheduledTime, personTopics: name => personTopicsFor(name, env, _ctx),
       sourceResponse: async (target, method = 'HEAD') => {
         const url = new URL(target)
         const request = new Request(target, { method })

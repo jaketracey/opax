@@ -1,279 +1,84 @@
 # DataTable D1 endpoint
 
-`GET /api/table/<dataset>` reads `TABLE_DB` (`opax-tables`). The frozen
-DataTable declarations are unchanged; the contract has an additive CSV
-continuation clarification. No table data or indexes
-are uploaded as static assets. Legacy `/table-index/*` requests return 404 and
-the asset ignore file excludes that directory even if an old build recreates it.
-Existing source exports remain the loader's input; `votes.json` is untouched.
+`GET /api/table/<dataset>` reads `TABLE_DB` (`opax-tables`). Published source
+exports feed the loader; `votes.json` remains unchanged. Table SQL and indexes
+stay under ignored `portal/private/dt-api/sql/`, outside the asset directory.
+Legacy `/table-index/*` requests return 404.
 
 ## Query and export
 
-The endpoint accepts the shared core's `serializeQuery` output: `q`,
-`f.<column>=["value",…]`, `f.<numeric>={"min":…,"max":…}`, `sort=key:asc|desc`,
-`page` and `pageSize`. A consistent optional URL-key prefix is accepted.
-Identifiers are validated against the dataset schema; SQL values are bound.
-Page size is capped at 200. Search uses FTS5 token prefixes, ANDed across terms.
-Category facets exclude their own filter and return the 100 most frequent
-values; numeric facets use SQL MIN/MAX. Every row read uses LIMIT/OFFSET.
+The endpoint accepts the core serializer's `q`, `f.<column>=["value",…]`,
+`f.<numeric>={"min":…,"max":…}`, `sort=key:asc|desc`, `page` and `pageSize`.
+A consistent optional URL-key prefix is accepted. Dataset column names are
+allowlisted and SQL values are bound. Duplicate keys, malformed types, invalid
+numeric bounds and excessive input lengths return fixed 400 JSON errors.
+Page size is capped at 200. Search uses FTS5 token prefixes ANDed across terms.
+Category facets exclude their own filter and return up to 100 values; numeric
+facets use MIN/MAX. Row reads use LIMIT/OFFSET.
 
-`format=csv` streams batches of 200 rows, up to 10,000 per response, preserving
-underlying numeric values. The complete filtered export still has a 50,000-row
-ceiling. CSV `page=1` through `page=5` selects successive chunks; the fixed CSV
-page size is independent of JSON `pageSize`. `Link` headers supply next/previous
-URLs preserving filters and sort. Each partial response ends with a CSV record
-showing its range and full matching count, the logical ceiling when applicable,
-and a next URL when available. `X-Table-Total`, `X-Table-Exported`, `X-Table-Page`,
-`X-Table-Truncated` and `X-Table-Export-Note` describe that response.
-`X-Table-Export-Truncated` is true only when the matching set exceeds 50,000,
-keeping core round two's existing ceiling message accurate.
-Its shared privacy assertion is used
-for all five financial datasets, extended with recipient/supplier identities
-and ABNs. Its CSV endpoint registration runs against this actual D1 handler;
-optional test-helper note and chunk-size overrides check the exact-total trailer.
-No public core module is replaced here. The query integration test imports the
-merged core module, or its query exports while this branch carries the stub;
-it was also run against the round-two module at `7a57261b`.
+`format=csv` streams batches of 200 rows, up to 10,000 per response and 50,000
+per logical export. CSV pages 1–5 select consecutive chunks, independently of
+JSON page size. `Link` headers preserve filters and sorting. Partial responses
+include a CSV range/count note and a continuation URL where available.
+`X-Table-Total`, `X-Table-Exported`, `X-Table-Page`, `X-Table-Truncated` and
+`X-Table-Export-Note` describe the response; `X-Table-Export-Truncated` indicates
+a matching set exceeding 50,000. The client retains escaping and inert formula
+handling, cancellation, scoped URL state, keyboard focus and retry behavior.
 
-Responses have a versioned ETag and a 60-second public max-age. Money datasets
-omit Content-Location; other datasets use normalised Content-Location.
-Filtered and CSV responses include `X-Robots-Tag: noindex` on
-production as well as staging. Errors are fixed JSON without internal details.
+Responses use a versioned ETag, normalised Content-Location and a 60-second
+public max-age. Filtered and CSV responses carry `X-Robots-Tag: noindex`.
+Unsupported methods return 405; unknown datasets return 404; unavailable D1
+returns a fixed 503 without database details.
 
-## Schema
+## Disclosure names and links
 
-`portal/table-migrations/0001_tables.sql` is generated from
-`scripts/table-schema.mjs` and `portal/src/table-datasets.mjs`.
-Each of the ten datasets has:
+There is no runtime donor privacy matcher, privacy mode, privacy POST endpoint,
+identity hash registry, fingerprint binding or fingerprint-mismatch reload trap.
+The loader publishes names and values from the disclosure exports without
+withholding or anonymous aggregate rows. Donor identity resolution remains a
+data-quality step, separate from what the disclosure source says.
 
-- `table_<dataset>`: INTEGER rowid, unique TEXT id, typed public columns
-  (REAL money, INTEGER counts/years, TEXT dates/text/categories) and search text.
-- A B-tree index for each facet/sort column, with rowid for stable ordering.
-- `table_<dataset>_fts`: FTS5 unicode61 index with 1/2/3-character prefix indexes,
-  linked to the typed table; the loader rebuilds it after inserting public rows.
-- `table_<dataset>_facets`: indexed `(key,value,rowid)` plus `(rowid,key,value)`;
-  arrays such as portfolios have one entry per category value.
+`money-connections` and `party-money` include `return_reference`, `from_href`
+and `to_href`. These are computed output fields, excluded from SQL schema,
+SELECTs, facets and sorting. They require no new D1 columns or reload gate.
+The API enriches rows from `/graph/donor-index.json` by jurisdiction and name. The index also includes
+source-backed identities referenced beyond the bounded maps. Source-only hints
+carry their original record reference, no monetary claim and no profile link.
+Missing enrichment metadata leaves names visible with no guessed identity link
+and supplies the source register, return category and period for receipts.
 
-Hyphens become underscores in SQL names. `table_meta` holds version and
-privacy phrase lengths. `table_private_identity` holds only SHA-256 hashes and
-phrase lengths, indexed by hash; it never contains plaintext identities.
+Only exact or curated matches at confidence 1 carry the existing profile link.
+An uncertain match shows the original disclosure spelling as plain text and
+its return type, year and source return/transaction identifier or URL. A shared
+ambiguous spelling never chooses a profile by iteration order. JSON, rendered
+tables and CSV follow the same rule. Source-published redactions remain source
+values; OPAX no longer creates donor name placeholders.
 
-## Privacy
+## Schema and loading
 
-The loader reads every donor graph, supplier summary/profile and federal/QLD
-recipient summary/profile. Donors pass `isOrganisationDonor`; recipients and
-suppliers use kind and ABR entity type first, with individual/sole-trader
-classification overriding names, then fail-closed organisation evidence.
-Labels, aliases, legal names, person IDs and ABNs form a shared rejection set.
-A second scan checks all fields of each financial row, including descriptions
-and links. A denied row's value is retained only in a neutral dataset/jurisdiction
-aggregate (also grouped by flow type for money), with no original identity,
-ABN, alias or link. Non-additive aggregate fields are null. Named rows retain
-exact source values; aggregates preserve source monetary totals.
+`scripts/table-schema.mjs` generates the schema from
+`portal/src/table-datasets.mjs`. Hyphens become underscores in table names.
+Each dataset has a typed `table_<dataset>` table with unique id, stable INTEGER
+rowid and search text; B-tree sort/facet indexes; an FTS5 unicode61 index with
+1/2/3-character prefixes; and an indexed category facet table. Array categories
+have one entry per value. `table_meta.version` is the cache identity; no privacy
+fingerprint, stripped lengths or private identity publication is written/read.
+Historical private-identity migration objects are unused and need no destructive
+migration to remove the runtime dependency.
 
-Queries naming a denied identity return an empty page/export. Before any dataset
-query or response header is built, filters are decoded and every nested string
-and numeric value is checked. Numeric values use canonical decimal digits,
-including scientific-notation bounds. The rejection index normalises case,
-whitespace, diacritics and spaced ABNs. Money responses omit Content-Location
-entirely. Denied requests have no continuation links; body, CSV, ETag and other
-headers do not contain their state. Malformed input and database failures also
-use fixed errors. There is no asset read in the table query path.
+`npm run build:tables` prepares batched SQL plus a manifest under
+`portal/private/dt-api/sql/`. Preparation is repeatable; application replaces
+rows, facets and FTS content. The version is written last. Run a data reload to
+publish refreshed disclosure names, as for any data update; its completion is
+not a code/registry synchronisation requirement. The production loader is not
+invoked by this change's local validation.
 
-## Local preparation and loading
+## Validation
 
-From the repository root, with Node 24:
-
-```sh
-cd portal
-npm ci
-npm run build:search
-cd ..
-unshare -rn sh -c 'ip link set lo up; node scripts/apply_table_sql.mjs --local'
-unshare -rn sh -c 'ip link set lo up; node scripts/sweep_table_privacy.mjs'
-```
-
-`npm run build:tables` runs `scripts/load_tables.mjs`. It creates sanitised,
-batched SQL and a manifest under ignored `portal/private/dt-api/sql/`, never
-under public/. SQL statements are kept below 80 KB where possible. No raw
-source snapshot or withheld identity is written to SQL. The local helper accepts
-only `--local` and never prints SQL or source identities. Preparation is
-repeatable; applying the manifest replaces table data and rebuilds FTS indexes.
-Rebuild and reload the manifest for this revision: it adds separator-stripped
-rejection hashes while retaining every earlier hash and its word count.
-Run the load to completion before exposing the binding: a partial load is not a
-published snapshot. D1 fixtures in the tests use Miniflare, never production.
-
-## Merge orchestrator only: production setup
-
-The production and staging `TABLE_DB` bindings both name the configured
-`opax-tables` database. Rebuild the sanitised manifest and verify its local
-privacy sweep before deployment. Release order is **deploy, reload, verify**:
-deploy the Worker built from these release exports, then apply every manifest
-file in order, then verify the fingerprint and privacy endpoints. Donor-privacy
-datasets (`privacy: 'donors'`: money-connections, party-money, contracts,
-suppliers, grants) return 503 with `Retry-After: 60` between deployment and the
-completed reload. Votes and divisions (`privacy: 'echo'`), instruments, audit
-reports and interests do not require this fingerprint. The orchestrator loads:
-
-```sh
-cd portal || exit
-node --input-type=module <<'JS'
-import {readFile} from 'node:fs/promises';
-import {spawnSync} from 'node:child_process';
-const dir='private/dt-api/sql/';
-const {files}=JSON.parse(await readFile(dir+'manifest.json','utf8'));
-for (const file of files) {
-  const result=spawnSync('npx',['wrangler','d1','execute','opax-tables',
-    '--remote','--file',dir+file],{stdio:'inherit'});
-  if (result.status!==0) process.exit(result.status || 1);
-}
-JS
-```
-
-These remote commands are documentation for the orchestrator; this lane performs
-only local database writes, with no push or deployment. The SQL includes schema
-creation, so applying the separate schema migration is optional on first load.
-
-## Initial D1 validation (10 October 2026)
-
-The local database was loaded with all ten real exports. Preparation produced
-103 sanitised SQL files, 168,626,461 bytes; the largest statement is 79,996 bytes.
-The privacy sweep checked 236,909 financial rows plus their category facets
-against 8,054 derived identity hashes and found **zero withheld identities**.
-Neutral aggregate totals match the original exports.
-
-The deploy dry-run reads 25,533 files before ignore rules. The eligible asset
-set is **25,455 files / 911,834,594 bytes**, down 577 files / 141,188,473 bytes
-from the reviewed build. There are **zero public table data/index files**.
-`votes.json` is byte-identical (SHA-256
-`a77128dc0e1e1b3fdaa4bf84501e2c94af3125dea3cf0b2dffbc688a49d68546`).
-
-`scripts/measure_tables.mjs` profiles the actual Worker under local workerd,
-with the real local D1 binding, for `q=a`. Run it from the repository root:
-
-```sh
-unshare -rn sh -c 'ip link set lo up; node scripts/measure_tables.mjs'
-```
-
-| Dataset | Response | Matching / returned rows | Sampled peak heap (MiB) | Sampled CPU (ms) | Local wall (s) |
-| --- | --- | ---: | ---: | ---: | ---: |
-| contracts | page | 73,359 / 200 | 13.70 | 145 | 1.48 |
-| contracts | csv | 73,359 / 50,000 | 13.74 | 405 | 65.85 |
-| grants | page | 118,605 / 200 | 13.78 | 82 | 0.81 |
-| grants | csv | 118,605 / 50,000 | 13.85 | 358 | 65.11 |
-
-Heap figures use a baseline workerd heap snapshot (including native backing
-objects) plus V8 live-allocation sampling at 16 KiB, requested every 20 ms.
-These are sampled estimates, not a hard bound on all transient allocations.
-CPU counts active 1 ms V8 samples, excluding idle samples, and includes profiler
-overhead; local D1 execution and streaming account for most wall time. All four
-heap estimates are below the approximately 60 MiB target. Raw heap snapshots
-stay in memory; Wrangler disk debug logging is disabled and only numeric results
-and local connection metadata are retained.
-
-After `npm run build:search`, all 1,248 Node tests passed, including the
-shared round-two privacy assertion and real D1 CSV cap registration. The
-serializer integration also passed against the actual round-two core module.
-`npx tsc --noEmit`, `npm run check` and `npx wrangler deploy --dry-run` passed.
-The declarations remain byte-identical to the contract lane. The original
-contract text is retained with the additive CSV continuation clarification above.
-
-Numeric evidence and screenshots are retained in ignored
-`portal/private/dt-api/`: `memory-cpu.json`, `privacy-sweep.json`,
-`suppliers-390.png` and `suppliers-1280.png`. Screenshots use headless Chrome
-with non-local hosts blocked, displaying the local D1 response with design tokens.
-No contract fields were added.
-
-The memory measurements above describe the earlier 50,000-row single-response
-export. The current response cap is 10,000 rows, with the same 200-row streaming
-batches and bounded SQL query path.
-
-## Re-review validation (11 October 2026)
-
-The rebuilt manifest contains 103 sanitised SQL files, 168,627,250 bytes and
-8,065 rejection hashes. Dataset row counts and the public asset set are unchanged.
-Regression coverage includes Unicode-escaped JSON values, mixed case, whitespace,
-composed/decomposed diacritics, spaced ABNs and scientific-notation numeric bounds
-on all five money datasets, for page and CSV requests. It also checks nested
-arrays/objects before grammar errors, no dataset SQL for denied state, and clean
-response headers. The shared privacy gate separately exercises escaped donor,
-recipient, supplier, alias and identifier values through the actual Worker.
-CSV tests follow all five continuation pages, verify stable sort/filter state,
-distinct cache keys and exactly 50,000 unique rows across a capped export.
-
-The real local D1 database was reloaded completely. Its privacy sweep checked
-236,909 financial rows and their facets with the updated rejection index and
-found **zero withheld identities** (`p1-privacy-sweep.json`).
-
-Local workerd was profiled again with `q=a`, using the same sampling method:
-
-| Dataset | Response | Matching / returned rows | Sampled peak heap (MiB) | Sampled CPU (ms) | Local wall (s) |
-| --- | --- | ---: | ---: | ---: | ---: |
-| contracts | page | 73,359 / 200 | 13.63 | 120 | 1.58 |
-| contracts | csv | 73,359 / 10,000 | 13.69 | 216 | 14.40 |
-| grants | page | 118,605 / 200 | 13.71 | 177 | 6.73 |
-| grants | csv | 118,605 / 10,000 | 13.77 | 255 | 11.70 |
-
-Numeric evidence is in ignored `portal/private/dt-api/memory-cpu.json` and
-`p1-memory-cpu.log`. No raw heap snapshot or private identity was written.
-
-After the search build, all **1,250 Node tests passed**, including the shared
-privacy gate, decoded-value regressions, CSV continuation tests and integration
-with the actual round-two core module. `npx tsc --noEmit`, `npm run check` and
-`npx wrangler deploy --dry-run` passed. The eligible assets remain
-25,455 files / 911,834,594 bytes, with zero public table data/index files.
-`votes.json` was compared byte for byte again and is unchanged.
-
-
-Divisions/voting rollout alignment
-
-Divisions expose optional title/chamber/outcome/href and bill/sitting scope
-arrays alongside the original columns. Votes expose individual records with
-optional title/date/vote/party_position/href/person alongside compatible metadata.
-Use the existing JSON-array grammar (f.bill, f.person, f.sitting, f.jurisdiction),
-not bare scope parameters. Migration 0002 adds record columns; a table load
-rebuilds their projections.
-
-Since 13 Oct 2026 both datasets use `privacy: 'echo'`. Their rows are
-parliamentary record (bill titles, division questions, dates, votes, tallies, MP
-names) from public exports: `publishDonorAssets` sanitises `seo/recent-votes.json`
-and the division exports at build time, and `votes.json` is deliberately left
-byte-identical (schema 1) and served whole at `/votes.json`. Per-row matching would
-hide nothing that is not already public, so no row is run through the donor
-matcher: not by the API, not in SSR (person, bill and sitting pages), not in the
-client. The reader's own text is still checked, once per request, before anything
-echoes it: `q`, filter values and every raw URL key/value, against the same hashed
-registry (`table_private_identity` at the API; `/api/table/privacy` or the Worker's
-registry in SSR). A crafted share link such as `?vr.q=<withheld name>` returns the
-neutral empty result and is scrubbed from the URL. Echo datasets have no
-fingerprint gate, so they keep serving through a reload or a stale registry. The
-loader and the local sweep still sanitise and check their stored rows as before.
-The per-row matcher had cost about 3 ms per row in Node, and far more in
-production, which made person pages 8–12 s. Its separator-stripped substring forms
-also hid 141 of 7,479 exported vote rows on six ordinary bills (for example,
-"Aged Care Bill 2024").
-
-The final capped CSV continuation additionally ends with the separate record
-# Export truncated at 50,000 rows. The core joins up to five continuation pages,
-removes repeated headers and range trailers, and preserves that final record.
-The shared contract registration certifies the combined real endpoint export.
-## Complete publication registry
-
-The table loader seeds the complete donor registry from raw source identities held in memory, including compact-block numeric identifiers, and adds private recipient and supplier identities. The Worker reads `/table-private-identities.json`, containing only `{hash, words}` entries. Existing SHA-256 inputs and word counts are unchanged: `identityVariants` produces NFKD accent-insensitive and legacy NFKC lowercase ASCII word phrases, inverted-name variants, and eleven-digit identifier variants; `words` remains the phrase word count. A full rebuild and ordered D1 reload is required to install the additional hashes, not a schema migration. The build also emits `src/table-registry-fingerprint.json` for the Worker and records `privacy_fingerprint` in D1's `table_meta`, published in the last SQL file. This fingerprint is SHA-256 of the sorted identity hashes joined by a newline, with no trailing newline. The API requires an exact match before any donor-privacy dataset SQL or cached response. Missing or stale metadata returns 503 with `Retry-After: 60`, no rows and no echo. Additional compact forms use NFKC, case folding and letters/digits only, with the SHA-256 input `stripped:v1:` followed by that form. Their `words` field is 1. Minimum length is 4; lengths 4–5 require token boundaries and lengths 6+ also match substrings after separator removal. `/table-private-identities.json` adds `strippedLengths`; D1 adds the `privacy_stripped_lengths` metadata row. The D1 schema stays unchanged, and the fingerprint includes both hash domains. All previous hashes and word counts remain unchanged. The orchestrator uses the remote manifest loop above after merge deployment; this lane uses local D1 only. The local sweep resolves TABLE_DB’s production database_id from wrangler.jsonc and rejects an empty store.
-
-After the ordered reload, verify the published metadata (hashes only):
-
-```sh
-npx wrangler d1 execute opax-tables --remote --command "SELECT key,value FROM table_meta WHERE key IN ('version','privacy_fingerprint','privacy_stripped_lengths');"
-node --input-type=module -e "import build from './src/table-registry-fingerprint.json' with {type:'json'}; console.log(build.fingerprint)"
-```
-
-The D1 fingerprint must equal the build fingerprint. Then verify the five donor-privacy
-page and CSV endpoints and the complete runtime rejection set against the
-release, using counts-only diagnostics. An interrupted reload must finish before
-these datasets can serve; the fingerprint marker is written last.
-
-Round 7 adds compact hashes to the same ordered manifest reload; no command or schema migration changes. The build fingerprint is `f620d6a19ecb395c34e4f2f2e6a8b2a1e07e5524510c3b48ec962d7359b6ffd7`. Deploy, reload every manifest file using the remote loop above, then verify this fingerprint and the privacy endpoints. Privacy tables stay unavailable until the new fingerprint is installed.
-
-The ordinary-query regression sample contains 53 distinct terms derived from existing tests and fictional workbench fixtures. Compact matching rejects one additional term (1/53, 1.89%); this ambiguous compact identity remains blocked. The 751 reviewer-derived donor and recipient compact variants are all rejected. Every prior 8,766 word hash and word count is retained; the new registry contains 17,518 hashes.
+`table-api.test.mjs` covers paging, sorting, search, facets, query validation,
+conditional caching and all five CSV continuation pages. `dt-votes-api` and
+core vote suites preserve alias IDs, source schema, search and filters.
+`donor-disclosure.test.mjs` exercises uncertain/confident links across money
+surfaces, legacy SQL compatibility without privacy metadata, and zero generated
+donor placeholders in built output. Optional browser runners retain interaction,
+responsive layout, hydration and actual CSV coverage without donor matcher gates.

@@ -1,0 +1,52 @@
+/* web-design-system Phase 1 mock, layer 1: the proposed web token values.
+   Injected after every stylesheet by sweep.mjs --overlay; nothing here ships.
+   Phase 2 writes these as `web` overrides in docs/design/design-tokens.json,
+   so the app's generated tokens do not move. */
+:root {
+  /* Spacing: one 4/8 scale (4 8 12 16 24 32 48 64 80). Roles keep their names. */
+  --space-line: 4px;
+  --space-tight: 8px;
+  --space-row: 12px;      /* 10 -> 12 */
+  --space-heading: 16px;  /* 12 -> 16 */
+  --space-block: 24px;    /* 16 -> 24 */
+  --space-group: 32px;    /* 24 -> 32 */
+  --space-section: 48px;  /* 36 -> 48 on phones; 64 tablet, 80 desktop below */
+
+  /* The deprecated names (617 uses) snap onto the scale instead of drawing
+     6.4 / 10.4 / 25.6 / 41.6 / 67.2. */
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-5: 24px;
+  --space-6: 32px;
+  --space-7: var(--space-section);
+  --row-gap: var(--space-row);
+  --sub-gap: var(--space-group);
+  --section-gap: var(--space-section);
+
+  /* Type: six sizes, 13 / 15 / 16 / 17 / 24 / 32, and the fluid title (32 -> 48).
+     Subheading joins the record at 17 (weight tells them apart); the serif
+     ladder 17 / 24 / 32 / 48 steps by about x1.4. */
+  --type-title: 400 clamp(2rem, 1.25rem + 2.2vw, 3rem)/1.15 var(--serif);
+  --type-display: 600 2rem/1.2 var(--serif);
+  --type-heading: 600 1.5rem/1.25 var(--serif);
+  --type-subheading: 600 1.0625rem/1.4 var(--serif);
+  --type-record: 400 1.0625rem/1.7 var(--serif);
+  --type-metadata: 400 0.9375rem/1.45 var(--sans);
+  --type-fine: 400 0.8125rem/1.45 var(--sans);
+  --type-label: 600 0.8125rem/1.45 var(--sans);
+  --heading-page: var(--type-title);
+  --heading-section: var(--type-heading);
+  --heading-subsection: var(--type-subheading);
+  --heading-tracking: 0;
+
+  /* Lines recede: row hairlines a step lighter; section rules unchanged. */
+  --divider-subtle: #E7E4DD;
+}
+@media (min-width: 701px) {
+  :root {
+    --space-section: 64px;
+    --space-6: 48px;
+  }
+}
+@media (min-width: 1101px) { :root { --space-section: 80px; } }
+@media (max-width: 700px) { :root { --space-3: 12px; --space-6: 32px; --space-7: var(--space-section); } }

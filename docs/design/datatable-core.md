@@ -2,7 +2,7 @@
 
 The dependency-free ES module serves Worker SSR and browser hydration. Import
 `datatable.css` alongside the design-system tokens and served `fonts.css`. The
-review adds only the optional `privacyCheck` configuration field and optional
+implementation uses the same query grammar and optional
 neutral `aggregate` row metadata; the original exports and fields remain.
 
 `dataTableHTML(config, page)` emits a real captioned table and escaped hydration
@@ -35,59 +35,11 @@ Analytics contain `{table_id, page_type}` only.
 
 ## Donor rollout requirements
 
-Use `privacy: 'donors'` and the shared index independently of client input. Worker
-renderers and endpoint query engines install its synchronous predicate:
-
-```ts
-import {tablePrivacyCheck} from './table-privacy'
-const config = {...tableConfig, privacy: 'donors',
-  privacyCheck: await tablePrivacyCheck(env.ASSETS)}
-```
-
-This index uses `withheldPhrases` from the shared donor module across all four
-money graphs, without office-holder exemptions in donor context. Do not publish
-index contents. Browser hydration defaults to the read-only, no-store
-`POST /api/table/privacy` validator; custom predicates must consult the same index.
-Without a synchronous predicate, pure `applyQuery` rejects donor searches.
-Hydration validates before matching or reflecting state. Pending names clear old
-SSR rows immediately; rejected searches have zero rows and export only a header.
-Facet selections must belong to public options and pass the index. Server pages,
-facet strings and downloaded CSV are validated before use. Unknown endpoint
-fields and malformed range facets never enter hydration HTML. Organisation rows
-use the shared fail-closed donor gate, and neutral aggregates use a separate shape.
-
-Emit aggregates with numeric column keys and this optional metadata:
-
-```js
-{aggregate: {kind: 'individual-donors', count: 12}, amount: 12345.67, count: 20}
-```
-
-The core generates `Donors not named (12)` in the primary/name column. It keeps
-only numeric counts/totals, removes identifying fields, aliases, categories and
-IDs, and emits no primary link or action menu. The row survives HTML and CSV.
-Do not emit an ordinary donor row with an aggregate-looking label.
-
-Every rollout registers its actual public input and both modes with
-`registerTablePrivacy` from `portal/test/datatable-privacy.mjs`. Supply `id`, `path`,
-`module`, `configExport`, `rowsExport`, `host`, `facet`, `urlKey`, `serverExample`
-and `endpoint`; the core registration is in `test/datatable-browser.mjs`. Run the
-registration against local Wrangler with Playwright. The hook derives withheld
-names/aliases at run time, injects search and secondary-facet URL state independently
-of public rows, and checks input, server responses, actual downloaded files,
-URL, rendered/accessibility text and analytics. Failure messages contain no names.
-`assertTablePrivacy` is exported for rollout adapters with different page flows;
-all seven surfaces, including an actual `csvPath`, are mandatory. Donor-enabled
-configurations also exercise withheld queries/facets with the strict index; other
-registrations use the shared public-office exemptions for legitimate vote/office
-records and still assert all seven surfaces.
-
-The server owns the 50,000-row CSV cap. dt-api must register
-`registerServerCSVContract` from `test/datatable-endpoint-contract.mjs` with its
-real request handler and a seeded dataset. The gate requires 50,000 data rows for
-50,001 matches, a final truncation note and `x-table-export-truncated: true`.
-The core announces a fixed note after download. The reference endpoint and actual
-browser download tests prove the contract/harness, not an absent dt-api endpoint.
-See the additive notes in `datatable.contract.md`.
+Tables validate types, length, numeric bounds and duplicate query keys. They do
+not run a donor privacy matcher, request a private registry, or POST validation
+to the Worker. Client and server queries share the serializer and query engine.
+Donor adapters preserve disclosure spelling and return references, with profile
+links supplied only by confident match evidence. See [API](datatable.api.md).
 
 ## Size and measurements
 

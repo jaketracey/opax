@@ -1,22 +1,24 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {execFileSync} from 'node:child_process';
-import {mkdtempSync,mkdirSync,writeFileSync,symlinkSync,rmSync} from 'node:fs';
+import {readFileSync,mkdtempSync,mkdirSync,writeFileSync,symlinkSync,rmSync} from 'node:fs';
 import {tmpdir} from 'node:os';
 import {join,dirname} from 'node:path';
 import {loadWorker,offline} from './worker-harness.mjs';
 import {ordinaryQuestions} from './fixtures/agentic-ordinary.mjs';
+import {build} from 'esbuild';
 
-test('P1 parity: all 48 non-routed questions have byte-identical JSON and SSE with the agentic route on and off',async()=>{
+test('ordinary Ask (96 unscoped and 96 non-SA bodies) and all 34 agentic gold questions stay byte-identical to main',async t=>{
  const root=new URL('../../',import.meta.url).pathname,scratch=mkdtempSync(join(tmpdir(),'opax-agentic-parity-'));
+ let goldMode=false;const realNow=Date.now;
  const restore=offline(),pending=[],ctx={waitUntil(p){pending.push(p)},passThroughOnException(){}};
  try{
   const files=execFileSync('git',['ls-tree','-r','--name-only','origin/main','portal/src','portal/public','parli/ingest/user-agent.json'],{cwd:root,encoding:'utf8',maxBuffer:20*1024*1024}).trim().split('\n').filter(f=>f.startsWith('portal/src/')||/^portal\/public\/[^/]+\.js$/.test(f)||f==='parli/ingest/user-agent.json');
   for(const f of files){const target=join(scratch,f);mkdirSync(dirname(target),{recursive:true});writeFileSync(target,execFileSync('git',['show',`origin/main:${f}`],{cwd:root,maxBuffer:20*1024*1024}));}
   symlinkSync(join(root,'portal/node_modules'),join(scratch,'portal/node_modules'));
-  const current=await loadWorker(root+'portal/src/index.ts',root+'portal/public',ctx),main=await loadWorker(root+'portal/src/index.ts',root+'portal/public',ctx); // same code, route off (13 Oct: no longer pinned to origin/main)
+  const current=await loadWorker(root+'portal/src/index.ts',root+'portal/public',ctx),main=await loadWorker(join(scratch,'portal/src/index.ts'),root+'portal/public',ctx);
   for(const h of [current,main]){
-   const assets=h.env.ASSETS;h.env.ASSETS={fetch(req){const p=new URL(req.url).pathname;if(p.startsWith('/graph/money'))return Response.json({nodes:[],edges:[]});if(p==='/parliamentarians.json')return Response.json({people:[]});return assets.fetch(req)}};
+   const assets=h.env.ASSETS;h.env.ASSETS={fetch(req){const p=new URL(req.url).pathname;if(!goldMode&&p.startsWith('/graph/money'))return Response.json({nodes:[],edges:[]});if(!goldMode&&p==='/parliamentarians.json')return Response.json({people:[]});return assets.fetch(req)}};
    h.env.AGENTIC_ASK_MODE='route';h.env.ASK_LIMITER={limit:async()=>({success:true})};
   }
   main.env.AGENTIC_ASK_MODE='off';
@@ -33,12 +35,41 @@ test('P1 parity: all 48 non-routed questions have byte-identical JSON and SSE wi
    if(u.pathname.endsWith('/search'))return Response.json({fulltext:{total:87},resources:{}});
    throw Error('unexpected offline fixture route');
   };
-  for(const q of ordinaryQuestions)for(const stream of [false,true]){
-   const post=h=>h.fetch('/api/ask'+(stream?'?stream=1':''),{method:'POST',headers:{'content-type':'application/json',...(stream?{accept:'text/event-stream'}:{})},body:JSON.stringify({question:q,kind:'speech'})});
+  let bodies=0;
+  for(const state of [undefined,'federal'])for(const q of ordinaryQuestions)for(const stream of [false,true]){
+   const post=h=>h.fetch('/api/ask'+(stream?'?stream=1':''),{method:'POST',headers:{'content-type':'application/json',...(stream?{accept:'text/event-stream'}:{})},body:JSON.stringify({question:q,kind:'speech',...(state?{state}:{})})});
    const a=await post(main),b=await post(current);assert.equal(b.status,a.status,q);
-   assert.equal(await b.text(),await a.text(),`${q} (${stream?'SSE':'JSON'})`);
+   assert.equal(await b.text(),await a.text(),`${q} (${stream?'SSE':'JSON'}, ${state || 'unscoped'})`);bodies++;
   }
+  assert.equal(bodies,192,'96 ordinary bodies plus 96 explicitly non-SA bodies');
   assert.equal(plannerCalls,0,'ordinary questions cannot silently execute a planner and then fall back');
   while(pending.length)await Promise.all(pending.splice(0));
- }finally{restore();rmSync(scratch,{recursive:true,force:true})}
+  t.diagnostic('192 ordinary bodies: 0 differences (96 unscoped, 96 federal).');
+  goldMode=true;main.env.AGENTIC_ASK_MODE='route';
+  const compiled=await build({entryPoints:[root+'portal/src/agentic-ask.ts'],bundle:true,platform:'node',format:'esm',write:false});
+  const {fallbackPlan}=await import('data:text/javascript;base64,'+Buffer.from(compiled.outputFiles[0].text).toString('base64'));
+  const gold=JSON.parse(readFileSync(root+'portal/test/fixtures/agentic-ask-gold.json')).questions;
+  let expected={};
+  globalThis.fetch=async(input,init)=>{
+   const u=new URL(input);assert.ok(u.hostname.startsWith('offline.'));const b=JSON.parse(init?.body??'{}');
+   if(u.pathname.endsWith('/ask')) {
+    if(b.prompt?.user?.includes('Plan the record'))return Response.json({answer:JSON.stringify(fallbackPlan(b.query))});
+    return Response.json({answer:'Fixture composition.',retrieval_results:{resources:{}}});
+   }
+   const top=expected.top || expected.party_ranking?.top || expected.speaker_ranking?.top || [{name:'Taylor Example',count:87}];
+   if(u.pathname.endsWith('/catalog')||u.pathname.endsWith('/search'))return Response.json({fulltext:{total:expected.total || 147,facets:{'/u/o':Object.fromEntries(top.map(row=>['/u/o/'+row.name,row.count])),'/l/party':{'/l/party/Labor':87,'/l/party/Greens':60},'/l/year':{'/l/year/2023':87,'/l/year/2024':60}}},resources:{}});
+   return Response.json({resources:{}});
+  };
+  // Response bodies include runtime milliseconds. Freeze the fixture clock,
+  // rather than deleting or normalising any fields from the comparison.
+  Date.now=()=>Date.UTC(2026,9,13,10,0,0);
+  for(const q of gold)for(const stream of [false,true]) {
+   expected=q.expected;
+   const post=h=>h.fetch('/api/ask'+(stream?'?stream=1':''),{method:'POST',headers:{'content-type':'application/json','x-opax-nocache':'1',...(stream?{accept:'text/event-stream'}:{})},body:JSON.stringify({question:q.question,kind:'speech',period:'all'})});
+   const a=await post(main),b=await post(current);assert.equal(b.status,a.status,q.id);
+   assert.equal(await b.text(),await a.text(),`gold ${q.id} (${stream?'SSE':'JSON'})`);
+   while(pending.length)await Promise.all(pending.splice(0));
+  }
+  assert.equal(gold.length,34);t.diagnostic('34 agentic gold questions, 68 JSON/SSE bodies: 0 differences (offline provider fixtures).');
+ }finally{Date.now=realNow;restore();rmSync(scratch,{recursive:true,force:true})}
 });

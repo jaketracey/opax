@@ -1,14 +1,14 @@
 import {machineLabelHTML} from './labels.js?v=fc03aa14cf';
 
 // Suggestions use only this answer and its public-record context. No model call.
-export function personFollowups(answer, sources = [], context, safe = () => false) {
-  if (!context?.name || !answer?.trim() || !safe(answer, context.name)) return [];
+export function personFollowups(answer, sources = [], context) {
+  if (!context?.name || !answer?.trim()) return [];
   const lower = answer.toLowerCase();
   const cited = sources.filter(s => s.cited);
   if (!cited.length) return [];
   const items = [];
   const add = (label, question, kind) => {
-    if (safe(label, question)) items.push({label, question, kind});
+    items.push({label, question, kind});
   };
   for (const theme of context.topics || []) {
     if (!lower.includes(theme.name.toLowerCase())) continue;
@@ -30,10 +30,10 @@ export function personFollowups(answer, sources = [], context, safe = () => fals
 }
 
 /** textContent and validated same-site destinations keep model text out of HTML. */
-export function renderPersonContext(slot, context, {portrait = '', partyDot, safe = () => false} = {}) {
+export function renderPersonContext(slot, context, {portrait = '', partyDot} = {}) {
   slot.replaceChildren();
   slot.hidden = true;
-  if (!context?.name || !safe(context.name, context.party, context.electorate)) return;
+  if (!context?.name) return;
   const node = (tag, text, cls) => {
     const el = document.createElement(tag);
     if (text != null) el.textContent = text;
@@ -60,7 +60,6 @@ export function renderPersonContext(slot, context, {portrait = '', partyDot, saf
   slot.appendChild(topicsHeading);
   const list = node('ul');
   for (const topic of context.topics || []) {
-    if (!safe(topic.name)) continue;
     const li = node('li');
     const link = node('a', topic.name); link.href = '/subject/topic/' + encodeURIComponent(topic.slug);
     li.appendChild(link); li.appendChild(node('span', Number(topic.count).toLocaleString())); list.appendChild(li);

@@ -9,21 +9,15 @@ const nav = globalThis.OpaxNavigation
 /** Home › the section page › the record, after Home. */
 export const trail = (address, ...records) => nav.trail(address, ...records)
 
-/** A page's trail, given the record's name when the page is one. A section
- *  page ignores the name (its trail is itself), as does a record whose name is
- *  only its section's (a tool opened on /explore). Donors follow the 12 Oct
- *  rule: a confident-match donor is named, and a placeholder never is. So a
- *  donor's trail carries the name only when the caller says the page itself
- *  names the donor (`donorNamed`: an indexable page; the Worker withholds a
- *  donor on a noindex page that names nobody), and never a placeholder. */
+/** Record trails use names supplied by source metadata. Both confident and
+ * uncertain donor matches are named once the caller finds the record. */
 export function pageTrail(address, record = '', { donorNamed = false } = {}) {
   const base = trail(address)
   const section = base.at(-1)
   const path = String(address).split(/[?#]/)[0]
   const name = String(record || '').trim()
   const donor = path.startsWith('/subject/donor/')
-  const placeholder = /\(name withheld\)|^Donor \d+\b/i.test(name)
-  const named = section?.href && name && name !== section.label && !placeholder && (!donor || donorNamed)
+  const named = section?.href && name && name !== section.label && (!donor || donorNamed)
   return named ? trail(address, name) : base
 }
 

@@ -1,15 +1,13 @@
-import {sanitiseStoredResponse} from './donor-stored-response.ts'
-
 /**
  * Edge cache for server-rendered person and supplier pages (caches.default,
  * per colo). Such a page is a pure function of the deployed code, its static assets, the
  * Worker vars and the URL: nothing per-reader (no cookie, nonce, CSRF token or
  * experiment bucket) enters it. The key names every one of those inputs, so a
- * deploy, a data refresh (CACHE_EPOCH) or a privacy-registry change can never
+ * deploy, a data refresh (CACHE_EPOCH) can never
  * be answered from an older render. Browsers still revalidate every view
  * (max-age=0, must-revalidate) and get a 304 from the stored ETag.
  */
-export const PAGE_CACHE_VERSION = 'page-v1'
+export const PAGE_CACHE_VERSION = 'page-v2'
 /** Fresh for six hours; for one more hour a stored copy is served while a new render runs. */
 export const PAGE_CACHE_TTL = 6 * 3600
 export const PAGE_CACHE_STALE = 3600
@@ -24,8 +22,6 @@ export interface PageCacheInputs {
   workerVersion: string
   /** The shell asset's ETag, which moves with every stamped asset. */
   assets: string
-  /** TABLE_REGISTRY_FINGERPRINT: the private-identity registry the checks used. */
-  registry: string
   url: URL
 }
 
@@ -37,7 +33,7 @@ export function pageCacheSearch(url: URL): string {
 }
 
 export async function pageCacheKey(inputs: PageCacheInputs): Promise<Request> {
-  const parts = [PAGE_CACHE_VERSION, inputs.epoch, inputs.workerVersion, inputs.assets, inputs.registry, inputs.url.pathname, pageCacheSearch(inputs.url)]
+  const parts = [PAGE_CACHE_VERSION, inputs.epoch, inputs.workerVersion, inputs.assets, inputs.url.pathname, pageCacheSearch(inputs.url)]
   const digest = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(JSON.stringify(parts)))
   const hex = [...new Uint8Array(digest)].map(b => b.toString(16).padStart(2, '0')).join('')
   return new Request(`${PAGE_CACHE_ORIGIN}/page/${hex}`)
@@ -45,7 +41,7 @@ export async function pageCacheKey(inputs: PageCacheInputs): Promise<Request> {
 
 /** The stored copy: the edge holds it for the TTL plus the stale window; the browser's own header rides along. */
 export async function pageForStorage(response: Response, now = Date.now()): Promise<Response> {
-  const safe = await sanitiseStoredResponse(response)
+  const safe = await Promise.resolve(response)
   const headers = new Headers(safe.headers)
   headers.set(BROWSER_CACHE, safe.headers.get('cache-control') ?? 'public, max-age=0, must-revalidate')
   headers.set('cache-control', `public, max-age=${PAGE_CACHE_TTL + PAGE_CACHE_STALE}`)
@@ -56,7 +52,7 @@ export async function pageForStorage(response: Response, now = Date.now()): Prom
 
 /** A stored copy as a reader gets it, and whether it is past its fresh window. */
 export async function pageFromStorage(hit: Response, now = Date.now()): Promise<{response: Response; stale: boolean}> {
-  const safe = await sanitiseStoredResponse(hit)
+  const safe = await Promise.resolve(hit)
   const headers = new Headers(safe.headers)
   const cachedAt = Date.parse(headers.get(CACHED_AT) ?? '')
   headers.set('cache-control', headers.get(BROWSER_CACHE) ?? 'public, max-age=0, must-revalidate')

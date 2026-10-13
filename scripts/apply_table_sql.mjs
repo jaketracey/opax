@@ -5,6 +5,13 @@ const portal=fileURLToPath(new URL('../portal/',import.meta.url));
 const dir=process.env.OPAX_TABLE_SQL_DIR || fileURLToPath(new URL('../portal/private/dt-api/sql/',import.meta.url));
 if (process.argv.slice(2).join(' ')!=='--local') throw new Error('This helper requires --local; production is reserved for the merge orchestrator.');
 const manifest=JSON.parse(await readFile(dir+'manifest.json','utf8'));
+// Apply additive schema changes before loading a newly built projection.
+await new Promise((resolve,reject)=>{
+  const child=spawn(process.execPath,[portal+'node_modules/wrangler/bin/wrangler.js','d1','migrations','apply','opax-tables','--local'],{cwd:portal,stdio:['ignore','pipe','pipe']});
+  child.stdout.resume();child.stderr.resume();
+  child.on('error',()=>reject(new Error('Local table migration failed')));
+  child.on('close',code=>code===0 ? resolve() : reject(new Error('Local table migration failed')));
+});
 for (const [i,file] of manifest.files.entries()) {
   await new Promise((resolve,reject)=>{
     const child=spawn(process.execPath,[portal+'node_modules/wrangler/bin/wrangler.js','d1','execute','opax-tables','--local','--file',dir+file],{cwd:portal,stdio:['ignore','pipe','pipe']});

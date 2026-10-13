@@ -17,10 +17,12 @@ interface Column {
   type: ColumnType;
   sortable?: boolean;          // default true for money/count/year/date/text
   facet?: 'chips' | 'multi' | 'range' | null;   // category→chips|multi, money/count/year→range
+  facetOptions?: string[];     // optional valid choices retained with zero matches
   align?: 'start' | 'end';     // default end for money/count/year
   bar?: boolean;               // inline scale bar in numeric cells
   hideWhenConstant?: boolean;  // default true for category: hidden column, value shown as a facet chip
   format?: 'compact' | 'exact';// money/count display; tooltip + CSV always exact
+  href?: (row: Row) => string | null; // optional link on a non-primary cell
   primary?: boolean;           // the cell that carries primaryLink
 }
 interface Action { icon: string; label: string; href: (row: Row) => string | null }
@@ -48,7 +50,6 @@ interface DataTableConfig {
   density?: 'comfortable' | 'compact';
   columnsVisible?: string[];
   pageType: string;              // analytics page_type
-  privacy?: 'donors';            // money tables: rows/facets/CSV/URL pass isOrganisationDonor (portal/public/donor-entity.js)
 }
 type Row = Record<string, unknown>;
 ```
@@ -74,58 +75,22 @@ type Row = Record<string, unknown>;
   - `audit-reports`;
   - `interests`;
   - `party-money`.
-- **Money datasets** enforce `isOrganisationDonor` server-side. A withheld donor never appears in rows, facets, the CSV or echoed query values. A query naming one returns zero rows, with no echo.
+- **Money datasets** publish disclosure names and return references. Only confident identity matches carry profile links.
 - **Caching:** responses are cached by the normalised query; there are no production writes.
 
-## Privacy regression (blocking)
-The shared derived test, `portal/test/donor-privacy.test.mjs`, covers every table in every mode. That includes the rows, facets, CSV and URL state of each.
+## Disclosure regression
+`portal/test/donor-disclosure.test.mjs` covers confident and uncertain names across money surfaces. Core and endpoint suites retain validation, facets, search, CSV and URL-state checks.
 
-## Optional recipient privacy fields
+## Disclosure and query validation (13 October 2026)
 
-- `DataTableConfig.rowPrivacyCheck?` is a synchronous `(row: Row) => boolean` organisation policy for money rows. True means public; exceptions and non-boolean results fail closed. Without it the donor label policy applies. Grants use the shared recipient classifier with source entity kind and ABN type projected after the shared loader has checked all evidence. Text validation remains separate and must use the withheld index.
-- Neutral rows can carry optional `aggregate.subject: 'recipients'` alongside `aggregate: {kind: 'individual-donors', count: number}`. The core generates fixed `Recipients not named (N)` wording, retains only configured numeric values and removes IDs, aliases, categories and links. Other subject values are discarded. The default donor wording remains unchanged.
+Privacy modes, row/text matcher callbacks, the shared hash registry and the
+privacy validation endpoint have been removed. The core keeps input type and
+length validation, numeric bounds, duplicate-key handling, escaping, inert CSV
+formulas, scoped URLs and fetch cancellation. Votes and divisions retain their
+search and facets; `votes.json` remains schema 1.
 
-## Additive privacy and endpoint notes (review follow-up)
-
-- `DataTableConfig.privacyCheck?` accepts `(text: string) => boolean | Promise<boolean>`; true means safe against the shared withheld index, independently of table rows. SSR and `applyQuery` require a synchronous predicate; absent or asynchronous validation fails closed for rows and searches. Worker renderers use `await tablePrivacyCheck(env.ASSETS)` from `src/table-privacy.ts`, which reads the complete hash-only `/table-private-identities.json` registry generated before identities are lost to publication, with no donor-context office-holder exemptions. Browser hydration defaults to the read-only, no-store `POST /api/table/privacy` validator and waits before reflecting state. The served registry contains SHA-256 hashes, word counts and compact-form length metadata only; never serve raw identities. A custom validator must use that same shared index; an organisation-only input is insufficient.
-- `DataTableConfig.rowPrivacyCheck?` supplies a synchronous typed publication check for non-donor financial rows such as procurement recipients; false, an absent required type, or a thrown check fails closed.
-- `DataTableConfig.dataPrivacyCheck?` optionally validates published rows, facets and CSV against the shared recipient scope while `privacyCheck` continues to validate the whole query state against the complete registry. The core keeps these approvals separate.
-- A row may optionally carry `aggregate: {kind: 'individual-donors', count: number}`. Counts must be nonnegative safe integers. For this neutral aggregate the core generates `Donors not named (N)` in the primary/name column and keeps only configured numeric counts/totals; it removes identifying fields, aliases, IDs, categories and links/actions. Money rollouts must emit this shape, rather than a donor-shaped text label, to retain anonymous totals in HTML and CSV. Only the aggregate’s detail disclosure includes: "OPAX names organisations only. Donors it can't confirm are organisations are counted here, not named."
-- An omitted `urlKey` uses unprefixed `q`, `f.<facet>`, `sort`, `page` and `pageSize`, with the same popstate/canonical/noindex behavior. Safe unrelated parameters survive, including repeated unrelated parameters.
-- Raw query validation precedes parsing. Every decoded key and value occurrence is checked, including unknown keys, unknown filter keys, unprefixed keys and repeated values. JSON scalar values and object keys are also checked. Any private input rejects the entire table: zero rows, disabled export, no echo in HTML, live text, links or URL. Each offending pair is removed synchronously; async browser validation temporarily removes unapproved pairs before the first paint and restores only safe pairs after validation. Initial hydration, popstate and export all use this guard.
-- Repeated table keys are rejected, even when all values are safe: `q`, `sort`, `page`, `pageSize` and any `f.*`, both unprefixed and in the table's namespace. All occurrences of a repeated table key are removed. The API returns a fixed `400 invalid_query` with no CSV; the core shows zero rows and disables export. Parsing never chooses a first or last repeated value.
-- SSR callers pass their request `URL` to `dataTableHTML(config, page, requestURL)`, or call `guardTableURL(config, requestURL)` before parsing. The guard mutates that URL to remove offending pairs; canonical and any request-derived links must use this cleaned URL. Its returned `query` is empty on rejection. SSR uses a synchronous shared registry predicate; the core also guards query parameters in primary and action links before rendering them.
-- Server CSV cap is an endpoint boundary obligation. With 50,001 matching rows, return exactly the first 50,000 data records, then the separate final CSV record `# Export truncated at 50,000 rows.`, and the response header `x-table-export-truncated: true`. The core announces a fixed truncation message after the download. dt-api must register `registerServerCSVContract` from `portal/test/datatable-endpoint-contract.mjs` with its real handler and seeded dataset before server rollouts; the core's reference endpoint test cannot certify dt-api.
-- Every rollout registers `registerTablePrivacy` from `portal/test/datatable-privacy.mjs` in its local Chrome gate. The registration names its actual public input module, table host, secondary facet and server example/endpoint. The hook derives withheld values at run time and asserts public client input, server responses, actual downloaded files, URL state, rendered and accessible text, and analytics in both modes. Core registration lives in `portal/test/datatable-browser.mjs`.
-
-## Server CSV continuation (11 Oct 2026, additive clarification)
-
-The 50,000-row limit remains the ceiling for one filtered export. Each CSV
-response contains at most 10,000 data rows; `format=csv&page=1` starts that
-export, and `page=2` through `page=5` continue it. CSV page size is fixed and
-independent of the JSON `pageSize`. `Link` headers provide `rel="next"` and
-`rel="prev"` URLs preserving the filters and sort. Each partial CSV includes a
-trailer record showing its row range, the full matching count, the 50,000-row
-ceiling when applicable, and the next export URL when available.
-
-`X-Table-Total`, `X-Table-Exported`, `X-Table-Page`, `X-Table-Truncated` and
-`X-Table-Export-Note` describe the current CSV. `X-Table-Export-Truncated` is
-true only when the matching set exceeds the logical 50,000-row export ceiling,
-so clients announcing that ceiling continue to report it accurately.
-Money dataset responses omit `Content-Location`; decoded queries containing
-withheld identities produce empty results with no echoed state or continuation
-links. No fields in the shared TypeScript contract change.
-
-- All derived UI uses rows that pass the same whole-row privacy check: chips, facets, counts, bars, SSR, accessible attributes and CSV. Unvalidated `config.rows` never supplies constant chips; rejected views have no derived chips. Browser checks validate every row and scalar before approving it.
-- Identity checks retain the existing word hashes and add NFKC, case-folded letters-and-digits forms in the `stripped:v1:` hash domain. Minimum compact length is 4. Forms of length 4 or 5 require alphanumeric token boundaries; forms of length 6 or more also match substrings of the separator-stripped input.
-
-Division and voting rollout compatibility
-
-`DataTableConfig.rowPrivacyCheck?` remains an optional synchronous row predicate;
-true admits the source row shape. The shared registry still checks the whole row
-and every scalar before rows, facets, bars or chips are derived.
-
-The core consumes CSV continuation pages using the existing server CSV helper and
-preserves the final truncation record. Empty tables keep export disabled.
-Division and vote projections retain title/date/link and bill/sitting/person
-scopes through standard JSON-array filters. No additional contract fields.
+Donor names are disclosure strings. Confident exact/curated matches retain their
+profile links. Uncertain matches show a plain-text name and return reference.
+The monetary API's reference and href fields are computed from published donor
+metadata; they add no D1 column or fingerprint requirement. See
+[API contract](datatable.api.md).

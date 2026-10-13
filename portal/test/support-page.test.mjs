@@ -62,7 +62,7 @@ const fetchIndex = served(index.version, index.shards);
 
 test('built catalog links and support index keys publish canonical OPAX entity paths', { skip: !catalog && 'no search catalog built' }, () => {
   const urls=[...catalog.records.map(r=>r.href),...catalog.shards.flatMap(shard=>Object.keys(shard))];
-  for(const href of urls) {
+  for(const href of urls.filter(href=>typeof href==='string')) {
     assert.doesNotMatch(href,/https?:\/\/www\.opax\.com\.au/);
     if(/^\/subject\/(person|party)\//.test(href)) assert.match(href,/^\/subject\/(person|party)\/[a-z0-9]+(?:-[a-z0-9]+)*(?:[?#].*)?$/);
   }

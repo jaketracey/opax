@@ -1286,8 +1286,8 @@ def write_outputs(data: dict, out: Path, jur: str) -> dict:
     Stale files (a recipient or program that fell off the list) are removed so
     each directory is exactly the listed set. Returns what was written.
     """
-    from scripts.donor_public import public_donor_data
-    data = public_donor_data(data)
+
+    data = data
     graph = out / "graph"
     graph.mkdir(parents=True, exist_ok=True)
     index_path = graph / f"grants.{jur}.json"

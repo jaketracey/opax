@@ -52,7 +52,7 @@ person is in the roster (OpenAustralia's people.csv carries the APH id).
 import sys as _donor_sys
 from pathlib import Path as _DonorPath
 _donor_sys.path.insert(0, str(_DonorPath(__file__).resolve().parents[1]))
-from scripts.donor_public import public_donor_data
+
 import sys as _http_sys
 from pathlib import Path as _HttpPath
 _http_sys.path.insert(0, str(_HttpPath(__file__).resolve().parents[1]))
@@ -619,7 +619,7 @@ def main():
     parser.add_argument("--out", default=str(OUT))
     args = parser.parse_args()
     out = build(args)
-    Path(args.out).write_text(json.dumps(public_donor_data(out), ensure_ascii=False, separators=(",", ":")) + "\n")
+    Path(args.out).write_text(json.dumps(out, ensure_ascii=False, separators=(",", ":")) + "\n")
     top = ", ".join(f"{row['name']} ${row['salary']:,}" for row in out["current"][:3])
     print(f"{args.out}: {out['meta']['people']} people, {out['meta']['sitting']} sitting; top: {top}", file=sys.stderr)
 

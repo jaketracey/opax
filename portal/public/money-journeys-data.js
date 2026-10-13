@@ -1,4 +1,5 @@
-import {donorPrivacyIndex,donorNameWithheld} from './donor-entity.js?v=ebb2c972d5';
+import {donorDisclosure,donorLookup,donorDisplayText,donorLabelHTML} from './donor-disclosure.js?v=e91ef740e5';
+import {loadDonorViewIndex} from './donor-views.js?v=e93169e00b';
 /** Guided views derived only from exported graph relationships and year cells. */
 const EXCLUDED_INDUSTRIES = new Set(['individual', 'individuals', 'unions', 'party_internal', 'government', 'other', 'unidentified']);
 const COMPANY_WORD = /\b(?:pty|ltd|limited|corporation|corp|bank|banking|group|holdings|plc)\b/i;
@@ -19,10 +20,9 @@ const scene = (focusId, nodes, edges, dates = {}) => ({ focusId, withIds: unique
 const rankedEdges = edges => [...edges].sort((a, b) => b.total - a.total || a.target.localeCompare(b.target, 'en'));
 
 function dataView(data) {
-  const privacy=donorPrivacyIndex([{nodes:Array.isArray(data?.nodes)?data.nodes:[]}]);
   const nodes = new Map();
   for (const node of Array.isArray(data?.nodes) ? data.nodes : []) {
-    if (typeof node?.id === 'string' && typeof node.label === 'string' && (node.kind!=='donor'||!donorNameWithheld(privacy,node.label))) nodes.set(node.id, node);
+    if (typeof node?.id === 'string' && typeof node.label === 'string') nodes.set(node.id, node);
   }
   // The scene API identifies edges by endpoints. Ignore ambiguous duplicate
   // pairs rather than inflating them or displaying an unspecified relationship.

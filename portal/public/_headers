@@ -173,6 +173,9 @@
 /ballot.js
   ! Cache-Control
   Cache-Control: public, max-age=31536000, immutable
+/budget-table.js
+  ! Cache-Control
+  Cache-Control: public, max-age=31536000, immutable
 /canonical-urls.js
   ! Cache-Control
   Cache-Control: public, max-age=31536000, immutable
@@ -192,6 +195,9 @@
   ! Cache-Control
   Cache-Control: public, max-age=31536000, immutable
 /division-markdown.js
+  ! Cache-Control
+  Cache-Control: public, max-age=31536000, immutable
+/donor-disclosure.js
   ! Cache-Control
   Cache-Control: public, max-age=31536000, immutable
 /donor-entity.js
@@ -242,6 +248,9 @@
 /matrix.js
   ! Cache-Control
   Cache-Control: public, max-age=31536000, immutable
+/money-connections.js
+  ! Cache-Control
+  Cache-Control: public, max-age=31536000, immutable
 /money-explain.css
   ! Cache-Control
   Cache-Control: public, max-age=31536000, immutable
@@ -260,10 +269,13 @@
 /person-paths.js
   ! Cache-Control
   Cache-Control: public, max-age=31536000, immutable
-/recipient-entity.js
+/register-tables-entry.js
   ! Cache-Control
   Cache-Control: public, max-age=31536000, immutable
-/recipient-privacy.js
+/register-tables.css
+  ! Cache-Control
+  Cache-Control: public, max-age=31536000, immutable
+/register-tables.js
   ! Cache-Control
   Cache-Control: public, max-age=31536000, immutable
 /sa-hansard.js
@@ -282,9 +294,6 @@
   ! Cache-Control
   Cache-Control: public, max-age=31536000, immutable
 /sponsor-person.js
-  ! Cache-Control
-  Cache-Control: public, max-age=31536000, immutable
-/statemap.js
   ! Cache-Control
   Cache-Control: public, max-age=31536000, immutable
 /supplier-growth.js

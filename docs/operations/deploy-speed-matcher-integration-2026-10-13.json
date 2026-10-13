@@ -1,0 +1,121 @@
+{
+  "mainSHA": "b69257a871c1f46dd6632c586cb17094d5843189",
+  "matcherSHA": "af8bc8c52a52d6b2d0f01c3002156dc8e24a775f",
+  "sourceMergeSHA": "b436f5440264fa216fafef2ef5a609c8a8294a6c",
+  "cause": {
+    "fixtureFingerprint": "d2fae6092af80c0f15e69e9aebb6a8e68aafee79227ddce728a88c06202b0246",
+    "fixtureIdentities": 3,
+    "releaseFingerprint": "f620d6a19ecb395c34e4f2f2e6a8b2a1e07e5524510c3b48ec962d7359b6ffd7",
+    "releaseIdentities": 17518,
+    "description": "Hard-coded release bundle destination let fixture table builds overwrite the complete bound module. Custom fingerprint outputs now place the private module beside that fingerprint."
+  },
+  "policyComparison": {
+    "tableRowsAndTableIdentityIndexSameRegistry": true,
+    "tableRowsAndTableIdentityIndexSameModule": true,
+    "moduleMatchesCommittedMatcher": true,
+    "moduleSHA256": "aac68d10b85f0ac8b7eed261e2f763e9cf8ffa25ca060a0be2e594f71d410653"
+  },
+  "referenceBuild": {
+    "run": "reference",
+    "seconds": 228.3954775831662,
+    "exit": 0,
+    "files": 27301,
+    "prefilterIdenticalToCommittedMatcher": true
+  },
+  "integratedFullBuild": {
+    "run": "full",
+    "seconds": 229.50249008298852,
+    "exit": 0,
+    "files": 27301,
+    "prefilterIdenticalToCommittedMatcher": true
+  },
+  "fullEquivalence": {
+    "files": 27301,
+    "differences": 0,
+    "referenceInventorySHA256": "92272dfa35197f9718aa6edd72b49db8a97ca95c2ff7db812df94c1928cdab41",
+    "integratedInventorySHA256": "92272dfa35197f9718aa6edd72b49db8a97ca95c2ff7db812df94c1928cdab41"
+  },
+  "metadataEquivalence": {
+    "files": 27211,
+    "differences": 0,
+    "referenceInventorySHA256": "182dc0e54d266a809d6634ecbfdb537264a5cafa6a59d676171574bdb307ec71",
+    "metadataInventorySHA256": "182dc0e54d266a809d6634ecbfdb537264a5cafa6a59d676171574bdb307ec71",
+    "sqlProduced": false,
+    "prefilterIdenticalToCommittedMatcher": true
+  },
+  "afterLocalGatesEquivalence": {
+    "files": 27211,
+    "differences": 0,
+    "releaseBundleUntouchedBySuites": true
+  },
+  "votes": {
+    "sha256": "a77128dc0e1e1b3fdaa4bf84501e2c94af3125dea3cf0b2dffbc688a49d68546",
+    "gitBlob": "f82a4cdcf742e2078fb2c5c0ddef62a9a0dd146f",
+    "mainBlob": "f82a4cdcf742e2078fb2c5c0ddef62a9a0dd146f"
+  },
+  "localGates": {
+    "table-privacy": {
+      "gate": "table-privacy",
+      "seconds": 259.5574742080644,
+      "exit": 0,
+      "testFiles": [
+        "test/datatable-endpoint.test.mjs",
+        "test/datatable.test.mjs",
+        "test/donor-deploy-build.test.mjs",
+        "test/donor-entity.test.mjs",
+        "test/donor-privacy.test.mjs",
+        "test/donor-publication.test.mjs",
+        "test/donor-stored-response.test.mjs",
+        "test/donor-view-index.test.mjs",
+        "test/privacy-placeholders.test.mjs",
+        "test/release-privacy-order.test.mjs",
+        "test/table-api.test.mjs",
+        "test/table-build-metadata.test.mjs",
+        "test/table-derived-privacy.test.mjs",
+        "test/table-identity-binding.test.mjs",
+        "test/table-identity-matcher.test.mjs",
+        "test/table-load.test.mjs",
+        "test/table-publication-privacy.test.mjs",
+        "test/table-raw-query-privacy.test.mjs"
+      ]
+    },
+    "check": {
+      "gate": "check",
+      "seconds": 3.8086689999327064,
+      "exit": 0,
+      "testFiles": []
+    },
+    "dry-run": {
+      "gate": "dry-run",
+      "seconds": 6.5552642501425,
+      "exit": 0,
+      "testFiles": []
+    }
+  },
+  "tablePrivacyTestCounts": {
+    "tests": 154,
+    "pass": 154,
+    "fail": 0,
+    "skipped": 0
+  },
+  "desktopFullGate": {
+    "runner": "/Users/jake/Projects/opax-ios-wt/deploy-speed/.ops/tools/ox-heavy-remote.sh",
+    "tier": "merge",
+    "base": "b69257a871c1f46dd6632c586cb17094d5843189",
+    "force": true,
+    "recordDirectory": ".ops/gate-cache/",
+    "note": "The complete desktop gate record is retained separately in ignored gate cache; final validation refers to the candidate commit containing this evidence.",
+    "runnerCommit": "e52c6380be1745c8739ce065e7120c6653599234"
+  },
+  "reviewerTimingTest": {
+    "cause": "The full desktop run exposed a 25 ms wall-clock comparison failing under concurrent scheduler load.",
+    "fix": "Controlled performance clock and delayed-email timers; unchanged 95 ms minimum and 25 ms equivalence thresholds, plus an exact 100 ms floor assertion.",
+    "localTestCounts": {
+      "tests": 43,
+      "pass": 43,
+      "fail": 0,
+      "skipped": 0
+    },
+    "applicationAuthLogicChanged": false
+  }
+}

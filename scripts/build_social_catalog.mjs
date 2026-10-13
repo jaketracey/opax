@@ -1,3 +1,5 @@
+import {donorLookup} from '../portal/public/donor-disclosure.js';
+import {foldDonorName} from '../portal/public/donor-entity.js';
 // The daily edition's grant files, drawn only from records the site already publishes.
 // Dates are agreement start dates, never inferred publication or payment dates.
 //   social/grants.json          a shortlist of recent organisation awards (the `grant` kind)
@@ -9,13 +11,11 @@
 import { readFileSync, writeFileSync, mkdirSync, existsSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { seatTimelines, programSeatSplit, programEligible, programRecord, largestByMonth, PARTY_GROUPS } from './social_grants_lib.mjs';
-import {readPublicationContext} from './withhold_donor_assets.mjs';
-import {sanitiseSocialCatalog} from './social_publication.mjs';
 const root = fileURLToPath(new URL('../portal/public/', import.meta.url));
-const privacy = readPublicationContext(root);
-const publish = (file, value) => writeFileSync(root + file, JSON.stringify(sanitiseSocialCatalog(file, value, privacy)) + '\n');
+const publish = (file, value) => writeFileSync(root + file, JSON.stringify(value) + '\n');
 const read = (path) => JSON.parse(readFileSync(root + path.replace(/^\//, ''), 'utf8'));
 const graph = read('graph/grants.federal.json');
+const donors=donorLookup(read('graph/donor-index.json').donors || []);
 const asOf = graph.meta.generated.slice(0, 10);
 const until = Date.parse(asOf + 'T00:00:00Z');
 const grants = [];
@@ -31,7 +31,7 @@ for (let i = 0; i < graph.meta.shards; i++) {
       const start = Date.parse(g.s + 'T00:00:00Z');
       const purpose = String(g.desc || g.n || '').replace(/\s+/g, ' ').trim();
       if (!/^GA\d+(?:-A\d+)?$/.test(g.id) || !g.guid || !Number.isFinite(g.v) || g.v <= 0 || purpose.length < 55 || !Number.isFinite(start) || start > until || until - start > 365 * 86400000) continue;
-      grants.push({ id: g.id, recipientId: recipient.id, recipient: recipient.n, amount: g.v, start: g.s, purpose, agency: g.ag, program: g.pr, category: g.cat, sourceUrl: `https://www.grants.gov.au/Ga/Show/${encodeURIComponent(g.guid)}` });
+      grants.push({...(recipient.d?.n && donors.get('federal:'+foldDonorName(recipient.d.n)) ? {donor:donors.get('federal:'+foldDonorName(recipient.d.n))} : {}), id: g.id, recipientId: recipient.id, recipient: recipient.n, amount: g.v, start: g.s, purpose, agency: g.ag, program: g.pr, category: g.cat, sourceUrl: `https://www.grants.gov.au/Ga/Show/${encodeURIComponent(g.guid)}` });
     }
   }
 }

@@ -147,7 +147,10 @@ function comparedMoneyAnswer(result:ReceiptTotals, graph:ReceiptGraph, query:str
   answer+=`\n\n${context}`
   answer+=`\n\n| ${partyComparison?'Recipient party':'Donor industry'} | Disclosed receipts | Records |\n| --- | ---: | ---: |`
   for(const row of rows) {
-    answer+=`\n| ${plain(row.name)} | ${aud(row.total_aud)} | ${row.receipts.toLocaleString('en-AU')} |`
+    const identity=result.by_donor.find(d=>d.id===row.id);
+      const donorName=identity ? (identity.href ? `[${plain(row.name)}](${identity.href})` : plain(row.name)) : plain(row.name);
+      const reference=identity?.return_reference ? ' — '+plain(identity.return_reference) : '';
+      answer+=`\n| ${donorName}${reference} | ${aud(row.total_aud)} | ${row.receipts.toLocaleString('en-AU')} |`
     const params=new URLSearchParams(new URL(result.sources[0].url).search)
     if(partyComparison)params.set('party',graph.nodes.find(n=>n.kind==='party'&&n.label===row.name)?.id||row.id)
     else params.set('industry',row.id)
@@ -230,7 +233,10 @@ export async function rankedMoneyAnswer(input: RecordQuestion, assets: Fetcher) 
   if(rows.length){
     answer+=`\n\n| ${allFlows?'Donor → party':fromDonors?'Donor':'Recipient party'} | Disclosed receipts | Records |\n| --- | ---: | ---: |`
     for(const row of rows){
-      answer+=`\n| ${plain(row.name)} | ${aud(row.total_aud)} | ${row.receipts.toLocaleString('en-AU')} |`
+      const identity=result.by_donor.find(d=>d.id===row.id);
+      const donorName=identity ? (identity.href ? `[${plain(row.name)}](${identity.href})` : plain(row.name)) : plain(row.name);
+      const reference=identity?.return_reference ? ' — '+plain(identity.return_reference) : '';
+      answer+=`\n| ${donorName}${reference} | ${aud(row.total_aud)} | ${row.receipts.toLocaleString('en-AU')} |`
       const params=new URLSearchParams(new URL(result.sources[0].url).search)
       if(row.party)params.set('party',graph.nodes.find(n=>n.kind==='party'&&n.label===row.party)?.id||row.party)
       if(fromDonors||allFlows)params.set('focus',row.id)

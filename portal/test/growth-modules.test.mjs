@@ -17,16 +17,7 @@ const exactOrganisationDonors=(supplier,donors)=>core.exactOrganisationDonors(su
 const donationRegisterHTML=(supplier,donors)=>core.donationRegisterHTML(supplier,donors,allow);
 const name='Alex Example';
 const votes=[{name:'Old Bill',date:'2025-01-01'},{name:'New Bill',date:'2026-10-08'},{name:'New Bill',date:'2026-10-07'},{name:'Undated Bill'}];
-test('missing and stale approvals suppress seeds and model text',()=>{
- const question=`What has ${name} said about Housing?`;
- const privacy=core.approvedModulePrivacy({approved:[name,question]});
- assert.equal(core.questionsHTML([question],'person','',privacy).includes('/ask?'),true);
- assert.equal(core.questionsHTML([question+' Updated'],'person','',privacy),'');
- assert.equal(core.questionsHTML([question],'person'),'');
- assert.equal(core.askBlockHTML({name,pageType:'person',seed:question}),'');
- assert.equal(core.approvedBillSummary({sentences:['Unapproved model text.']}),null);
- assert.deepEqual(core.approvedBillSummary({sentences:[question,'Unapproved model text.']},privacy).sentences,[question]);
-});
+
 test('person questions require counted topics, dated bill votes and actual interests',()=>{
  assert.deepEqual(personQuestions({name}),[]);
  assert.deepEqual(personQuestions({name,topics:[{name:'Housing',count:0}],votes:[{name:'No date'}],interests:{total:0,buckets:{}}}),[]);
@@ -115,11 +106,15 @@ test('donation matches require an organisation and exact normalised name, with A
  assert.match(donationRegisterHTML(supplier,[donor]),/Also in the donations register/);
  assert.ok(donationRegisterHTML(supplier,[donor]).includes(ASSOCIATION_NOTE));
 });
-test('supplier funding is gated by the shared publication policy',()=>{
+test('live individual-donor fixture cannot enter the supplier donations or funding path',async()=>{
+ const {supplierDonations}=await import('../public/supplier-growth.js');
+ const prior=globalThis.fetch;
+ globalThis.fetch=async()=>({ok:true,json:async()=>({donors:[{kind:'donor',label:'Alex Example',abn:donor.abn,id:'donor:alex'}]})});
+ try {assert.deepEqual(await supplierDonations({...supplier,name:'Alex Example',donor_links:[{id:'donor:alex',url:'/subject/donor/Acme',method:'abn'}]},{signal:new AbortController().signal}),{html:'',links:[]});}finally{globalThis.fetch=prior;}
  const source=read('../public/suppliers.js');
- assert.match(source,/if \(profile\.politicalMoneyAllowed\) supplierDonations/);
- assert.match(source,/supplier-evidence/);
- assert.match(source,/supplier-taxcharity/);
+ assert.match(source,/supplierDonations\(profile, life\).then\(donations =>/);
+ assert.match(source,/const donorLinks = donations.links/);
+ assert.doesNotMatch(source,/profile.donor_links[^\n]*filter/);
 });
 test('other bills use the shared sponsor-person identity rule, with no surname guesses',()=>{
  const roster=[{name:'Andrew Gee',pid:'1',speeches:1}];

@@ -29,7 +29,7 @@ export function evidenceHTML(entry) {
   const max=Math.max(1,...years.map(([,n])=>n));
   const recent=years.slice(-12);
   return `<h3 class="subject-section-title">Across the record</h3>
-    <p>${Number(entry.records).toLocaleString('en-AU')} ${entry.privacySample ? (entry.records===1?'procurement excerpt':'procurement excerpts') : entry.records===1?'record':'records'} connected to this ${entry.kind==='program'?'program':entry.kind==='electorate'?'electorate':entry.kind==='place'?'place':'organisation'}.</p>
+    <p>${Number(entry.records).toLocaleString('en-AU')} ${entry.records===1?'record':'records'} connected to this ${entry.kind==='program'?'program':entry.kind==='electorate'?'electorate':entry.kind==='place'?'place':'organisation'}.</p>
     ${recent.length>1?`<div class="evidence-years" aria-label="Records by year">${recent.map(([year,n])=>`<div><span>${esc(year)}</span><svg viewBox="0 0 100 5" preserveAspectRatio="none" aria-hidden="true"><rect width="100" height="5" rx="2" style="fill:var(--chart-baseline)"/><rect width="${(n/max*100).toFixed(2)}" height="5" rx="2" style="fill:var(--chart-mark)"/></svg><strong>${Number(n).toLocaleString('en-AU')}</strong></div>`).join('')}</div>`:''}
     ${entry.years?.Undated?`<p class="fineprint">${Number(entry.years.Undated).toLocaleString('en-AU')} records have no recorded start date.</p>`:''}
     <div class="evidence-excerpts">${(entry.excerpts || []).slice(0,6).map(row=>`<details class="supplier-contract evidence-excerpt"><summary><span><strong>${esc(row.details?.source_fields?.recipient ? 'Grant to '+row.details.source_fields.recipient : row.source_kind)}</strong><small>${esc(displayDate(row.date))}</small></span></summary>${sourceContent(row)}${safeURL(row.source_url)?`<a href="${esc(safeURL(row.source_url))}" target="_blank" rel="noopener noreferrer">Open the source</a>`:`<a href="/ask?view=search&kind=speech&q=${encodeURIComponent('"'+row.matched_text+'"')}">Search the indexed speeches</a>`}<details class="evidence-provenance"><summary>Why this connection appears</summary>${row.source_table==='government_grants'?`<p>${row.predicate==='grant_program'?'Program named in the grant record.':'Location recorded with the grant.'} ${esc(row.details?.allocation_note || '')}</p><p>Record ${esc(row.source_id)}${row.details?.candidate_electorates>1?' · This postcode crosses electorate boundaries.':''}</p>`:`<p>Matching name: <strong>${esc(row.matched_text)}</strong></p><p>Record ${esc(row.source_id)} · Exact recorded name · Text positions ${Number(row.start)}–${Number(row.end)}</p>`}</details></details>`).join('')}</div>
@@ -55,19 +55,8 @@ export async function mountEvidence(root, identity, options={}) {
       if (!nameLookup?.[name]?.includes(ids[0])) return false;
     }
     const data=await read(`/evidence/${ids[0].slice(0,2)}.json`,options.signal);
-    let entry=data?.entries?.[ids[0]];
+    const entry=data?.entries?.[ids[0]];
     if (!entry || options.alive && !options.alive()) return false;
-    if (options.allowPolitical === false) {
-      const political = row => /donor|donat|receipt|funding|political|money/i.test([row.source_kind,row.source_table,row.predicate].join(' '));
-      const excerpts = (entry.excerpts || []).filter(row=>!political(row));
-      if (!excerpts.length) return false;
-      if (excerpts.length !== (entry.excerpts || []).length) {
-        // Mixed source totals cannot describe the remaining procurement sample.
-        entry = {...entry, excerpts, years:{}, records:excerpts.length, privacySample:true, identity_links:[]};
-      } else entry = {...entry, identity_links:[]};
-    }
-    if (options.publicationCheck && !await options.publicationCheck(JSON.stringify(entry))) return false;
-    if (options.alive && !options.alive()) return false;
     root.innerHTML=evidenceHTML(options.compact ? {...entry, years:{},locations:[],excerpts:entry.excerpts.slice(0,2)} : entry);
     root.hidden=false;
     return true;
@@ -82,5 +71,6 @@ export function evidenceStatsHTML(meta) {
   if (!meta?.complete) return '';
   const number=value=>Number(value||0).toLocaleString('en-AU');
   const checked=Object.values(meta.source_records||{}).reduce((sum,value)=>sum+Number(value),0);
-  return `<h2>Connections in the collected records</h2><div class="stat-grid"><span><span class="stat-figure">${number(checked)}</span><span class="stat-label">source records checked</span></span><span><span class="stat-figure">${number(meta.published_record_matches)}</span><span class="stat-label">connections to source records</span></span><span><span class="stat-figure">${number(meta.entities_with_connections)}</span><span class="stat-label">organisations, programs and places</span></span><span><span class="stat-figure">${number(meta.identity_decisions?.accepted)}</span><span class="stat-label">reviewed identity matches</span></span></div><p>One record can connect to several entries. This dataset includes collected material that is not yet searchable in the live index.</p><p><a href="/connections">Explore the connections</a></p><details><summary>Coverage and matching</summary><ul><li>${number(meta.source_records?.speeches)} speech records</li><li>${number(meta.source_records?.ext_press_releases)} official releases</li><li>${number(meta.source_records?.government_grants)} grant records</li></ul><p>Names are matched conservatively. Shared postcodes retain all overlapping electorates. Unresolved identities are held for review.</p><p><a href="/evidence/stats.json">Download coverage figures</a> · <a href="/evidence/identity-links.json">Download identity matches</a></p></details>`;
+  const stat=(value,label)=>`<div class="ui-stat"><span class="ui-stat-value">${value}</span><span class="ui-stat-label">${label}</span></div>`;
+  return `<h2 class="ui-section-title">Connections in the collected records</h2><div class="ui-stats stats-figures">${stat(number(checked),'source records checked')}${stat(number(meta.published_record_matches),'connections to source records')}${stat(number(meta.entities_with_connections),'organisations, programs and places')}${stat(number(meta.identity_decisions?.accepted),'reviewed identity matches')}</div><p>One record can connect to several entries. This dataset includes collected material that is not yet searchable in the live index.</p><p><a href="/connections">Explore the connections</a></p><details class="ui-disclosure"><summary>Coverage and matching</summary><div class="ui-disclosure-body"><ul><li>${number(meta.source_records?.speeches)} speech records</li><li>${number(meta.source_records?.ext_press_releases)} official releases</li><li>${number(meta.source_records?.government_grants)} grant records</li></ul><p>Names are matched conservatively. Shared postcodes retain all overlapping electorates. Unresolved identities are held for review.</p><p><a href="/evidence/stats.json">Download coverage figures</a> · <a href="/evidence/identity-links.json">Download identity matches</a></p></div></details>`;
 }

@@ -1,5 +1,3 @@
-import {sanitiseStoredResponse} from './donor-stored-response'
-import {sanitiseStoredDonors} from './donor-hashes.mjs'
 /** Read-only delivery of complete, published original bill texts. */
 type Metadata = Record<string, unknown>
 type Resource = {
@@ -156,12 +154,12 @@ export async function handleBillText(request: Request, deps: BillTextDependencie
   }
   if (!bypass) {
     const hit = await cache.match(cacheKey)
-    if (hit) return respond(await sanitiseStoredResponse(hit), 'HIT')
+    if (hit) return respond(await Promise.resolve(hit), 'HIT')
   }
   try {
     const data = id === 'index' ? await manifest(key, deps) : await fullVersion(key, id, deps)
     if (!data) return null
-    const response = json(sanitiseStoredDonors(data))
+    const response = json((data))
     response.headers.set('cache-control', bypass ? 'no-store' : `public, max-age=${ttl}`)
     if (!bypass) deps.waitUntil(cache.put(cacheKey, response.clone()))
     return respond(response, bypass ? 'BYPASS' : 'MISS')

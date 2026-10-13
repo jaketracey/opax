@@ -223,25 +223,12 @@ test('a speech page sits under Search by its speaker, on the server and in its B
   assert.match(read('app.js'), /setCrumbs\(crumbsFor\("\/ask\?view=search", \(doc\.kind \|\| slug\.split\("-"\)\[0\]\) === "division"\s*\? "Division" : doc\.speaker \|\| displayTitle\(doc\)\)\);/);
 });
 
-test('the app names a donor exactly where the server does: the record confirms them, never a placeholder', async () => {
-  const app = read('app.js');
-  const model = readFileSync(new URL('../src/nav-model.mjs', import.meta.url), 'utf8');
-  // One placeholder rule on both sides.
-  const appRule = app.match(/const DONOR_PLACEHOLDER = (\/.+\/i);/)[1];
-  assert.ok(model.includes(appRule.replace(/\\/g, '\\\\')) || model.includes(appRule), 'the server keeps the same placeholder pattern');
-  // The app names the money record's spelling, else a known organisation; nothing before the withheld check.
-  assert.match(app, /const named = node\?\.label \|\| \(donorOrganisationKnown\(name, donorViewIndex\) \? name : ""\);\n\s*if \(named && !DONOR_PLACEHOLDER\.test\(named\)\) setCrumbs\(crumbsFor\("\/subject\/donor", named\)\);/);
-  assert.match(app, /setCrumbs\(crumbsFor\(herePath, segs\[1\] === "donor" \? "" : name\)\);/);
-  assert.match(app, /let donorOrganisationKnown = \(\) => false;/, 'fail-closed before donor-views.js loads');
-  const { donorOrganisationKnown, loadDonorViewIndex } = await import('../public/donor-views.js');
-  const { donorPrivacyIndex, isOrganisationDonor } = await import('../public/donor-entity.js');
-  const graph = JSON.parse(read('graph/money.json'));
-  const index = donorPrivacyIndex([graph]);
-  const organisation = graph.nodes.find(n => n.kind === 'donor' && !/name withheld/i.test(n.label) && isOrganisationDonor(n));
-  const placeholder = graph.nodes.find(n => n.kind === 'donor' && /name withheld/i.test(n.label));
-  assert.equal(donorOrganisationKnown(organisation.label, index), true);
-  assert.equal(donorOrganisationKnown(placeholder.label, index), false);
-  assert.equal(typeof loadDonorViewIndex, 'function');
+test('donor navigation reads source metadata without organisation or placeholder gates',async()=>{
+ const app=read('app.js');assert.doesNotMatch(app,/DONOR_PLACEHOLDER|donorOrganisationKnown|donorPrivacyIndex/);
+ const {donorLookup,donorDisclosure}=await import('../public/donor-disclosure.js');
+ const graph=JSON.parse(read('graph/money.json')),index=donorLookup(graph.nodes.filter(n=>n.kind==='donor'));
+ assert.ok(index.size>0);
+ for(const record of graph.nodes.filter(n=>n.kind==='donor'))assert.equal(donorDisclosure(record).name,record.source_name || record.label);
 });
 
 test('the reports in the menus are the published reports, by their own titles', () => {
@@ -267,22 +254,16 @@ test('every control in the sheet is a full touch target', () => {
   assert.match(css, /\.sheet-link \{[^}]*min-height: var\(--size-target\)/);
 });
 
-test('a donor\'s trail names a donor the page names, and never a placeholder', async () => {
-  const { isOrganisationDonor } = await import('../public/donor-entity.js');
-  // Derived from the published graph, never typed: one confidently named
-  // organisation, and one placeholder the publication withholds.
-  const donors = JSON.parse(read('graph/money.json')).nodes.filter(n => n.kind === 'donor');
-  const named = donors.find(n => !/name withheld/i.test(n.label) && isOrganisationDonor(n));
-  const placeholder = donors.find(n => /name withheld/i.test(n.label));
-  const shown = await serverTrail(`/subject/donor/${encodeURIComponent(named.label)}`);
-  assert.equal(shown.status, 200);
-  assert.equal(shown.doc.querySelector('meta[name="robots"]'), null, 'a named donor\'s page is indexable');
-  assert.deepEqual(shown.items.map(i => i.label), ['Home', 'Donors', nav.trail('/subject/donor', named.label)[1].label]);
-  assertSameTrail(shown, 'a named donor');
-  const hidden = await serverTrail(`/subject/donor/${encodeURIComponent(placeholder.label)}`);
-  assert.deepEqual(hidden.items.map(i => i.label), ['Home', 'Donors']);
-  assert.ok(!hidden.doc.querySelector('.prerender-crumbs').textContent.includes(placeholder.label));
-  assert.equal(label(nav.trail('/subject/donor/someone')), 'Donors');
+test('donor trails name confident and uncertain source records',async()=>{
+ const {confidentDonorMatch,donorDisclosure}=await import('../public/donor-disclosure.js');
+ const donors=JSON.parse(read('graph/money.json')).nodes.filter(n=>n.kind==='donor');
+ for(const confident of [false,true]){
+  const donor=donors.find(record=>confidentDonorMatch(record)===confident);assert.ok(donor);
+  const shown=await serverTrail('/subject/donor/'+encodeURIComponent(donor.label)),name=donorDisclosure(donor).name;
+  assert.equal(shown.status,200);assert.equal(shown.doc.querySelector('meta[name="robots"]'),null);
+  assert.deepEqual(shown.items.map(item=>item.label),['Home','Donors',nav.trail('/subject/donor',name)[1].label]);assertSameTrail(shown,'source-named donor');
+ }
+ assert.equal(label(nav.trail('/subject/donor/someone')),'Donors');
 });
 
 test('the app sets every trail through the shared list', () => {

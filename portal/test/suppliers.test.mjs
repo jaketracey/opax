@@ -24,7 +24,7 @@ const supplier = (overrides = {}) => ({ id, name: 'Acme Pty Ltd', abn: '12345678
 
 function harness(rows = [supplier()], loader) {
   let requests = 0;
-  const context = {tablePrivacyGuard:async()=>Object.assign(()=>false,{recipientCheck:()=>true,supplierWithheld:()=>false}),
+  const context = {
     vicElectionEnabled, vicElectionDiscovery, VIC_ELECTION_ASSET, VIC_ELECTION_SITEMAP,
     money: shortMoney, URL, Request, Response, SITE_ORIGIN: 'https://opax.com.au', SITE_TITLE: 'OPAX', SITE_DESCRIPTION: 'Parliamentary records', TOPIC_NAMES: {},
     assetJson: async (_env, path) => { assert.equal(path, '/suppliers.json'); requests++; return loader ? loader() : { meta: { generated_at: '2026-09-07T00:00:00Z' }, suppliers: rows }; },
@@ -46,7 +46,7 @@ test('supplier directory and encoded name routes match, malformed and extra path
   assert.equal(route(`/subject/supplier/${id}/`).name, id);
   assert.equal(route('/subject/supplier/%ZZ'), null);
   assert.equal(route('/subject/supplier/name/extra'), null);
-  assert.equal(route(`/subject/supplier/${'x'.repeat(501)}`), null);
+  assert.equal(route(`/subject/supplier/${'x'.repeat(501)}`).name, 'x'.repeat(501));
 });
 
 test('known identity and exact source alias produce the same canonical profile and award facts', async () => {

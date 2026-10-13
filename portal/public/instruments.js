@@ -61,3 +61,19 @@ export function catalogueComplete(m) {
       && Number.isInteger(c.count) && c.count > 0 && c.count <= 512)
     && m.chunks.reduce((n,c) => n + c.count, 0) === (m.exported ?? m.count);
 }
+
+export async function instrumentTableRows(read, manifest, records) {
+  let registered = await read('/instruments/registered.json').catch(()=>null)
+  // Offline fixtures and older exports can derive the same field from source metadata.
+  if (!registered || records.some(row=>!Object.hasOwn(registered,row[0]))) {
+    registered = {}
+    for (let start=0;start<manifest.chunks.length;start+=4) {
+      const chunks = await Promise.all(manifest.chunks.slice(start,start+4).map(chunk=>read(chunk.path)))
+      for (const chunk of chunks) for (const value of chunk.records) {
+        const record = unpack(value,manifest.schemas,manifest.strings)
+        registered[record.source.id] = /^\d{4}-\d{2}-\d{2}/.test(String(record.source.asMadeRegisteredAt || '')) ? record.source.asMadeRegisteredAt.slice(0,10) : null
+      }
+    }
+  }
+  return records.map(row=>{const portfolios=[...new Set(row[2].flatMap(value=>value.split(';').map(v=>v.trim()).filter(Boolean)))];return {id:row[0],title:row[1],portfolios:portfolios.length ? portfolios : ['Not supplied'],type:row[3],year:Number(registered[row[0]]?.slice(0,4)) || null,registered:registered[row[0]] ?? null,status:row[5]}})
+}

@@ -1,9 +1,11 @@
-import { AUDIT_ID, auditComplete, filterAudit, type AuditRow } from '../public/audit.js'
-import { sourceLineHTML, tagHTML } from '../public/labels.js'
+import { AUDIT_ID, auditComplete, type AuditRow } from '../public/audit.js'
+import { sourceLineHTML, tagHTML, statusLabelHTML } from '../public/labels.js'
 import { shortDate } from '../public/format.js'
 import type { Crumb } from './seo-content'
 import { trail } from './nav-model.mjs'
 import { catalogueReader } from './catalogue-reader.mjs'
+import {auditTableConfig, registerTableHTML, registerTableQuery} from '../public/register-tables.js'
+import {guardTableURL} from '../public/datatable.js'
 
 interface Manifest {
   count: number; listed: number; generated_at: string; index_url: string; lookup: Record<string, number>
@@ -13,11 +15,10 @@ interface Manifest {
 }
 interface Report extends AuditRow {
   pdf_url: string | null; entity_links: Record<string, string>
-  recommendations: { number: number | null; text: string; html: string; addressed_to: string | null; source_text: string; provenance?: string; page?: number; privacy_filtered?: boolean }[]
+  recommendations: { number: number | null; text: string; html: string; addressed_to: string | null; source_text: string; provenance?: string; page?: number }[]
   licence: { status: string; body_skipped: boolean; exceptions: string[] }
   pdf?: { status: string; sha256: string | null; page_count: number; document_licence?: string }
   responses_path?: string; response_count?: number
-  title_privacy_filtered?: boolean
 }
 interface EntityResponse { id: string; body: string; text: string; page_start: number; page_end: number; recommendation_numbers: number[] }
 type Read = <T>(path: string) => Promise<T>
@@ -55,14 +56,16 @@ function pdfHoldNote(r: Report) {
   }
 }
 function select(label: string, key: string, values: string[], url: URL) {
-  return `<label>${label}<select name="${key}"><option value="">All</option>${values.map(v => `<option value="${esc(v)}"${url.searchParams.get(key) === v ? ' selected' : ''}>${esc(key === 'year' ? v.replace('-', '–') : v)}</option>`).join('')}</select></label>`
+  return `<label class="ui-filter-field"><span class="ui-filter-key">${label}</span><select name="${key}" class="ui-input"><option value="">All</option>${values.map(v => `<option value="${esc(v)}"${url.searchParams.get(key) === v ? ' selected' : ''}>${esc(key === 'year' ? v.replace('-', '–') : v)}</option>`).join('')}</select></label>`
 }
 function entities(r: Report) {
-  return r.entities.length ? `<ul>${r.entities.map(name => {
+  return r.entities.length ? `<ul class="ui-list audit-entities" data-density="compact" role="list">${r.entities.map(name => {
     const href = r.entity_links?.[name]
-    return `<li>${href && /^\/subject\/agency\/[^/?#]+$/.test(href) ? `<a href="${esc(href)}">${esc(name)}</a>` : esc(name)}</li>`
-  }).join('')}</ul>` : '<p>Not named on the report’s web page.</p>'
+    return `<li class="ui-row-name">${href && /^\/subject\/agency\/[^/?#]+$/.test(href) ? `<a href="${esc(href)}">${esc(name)}</a>` : esc(name)}</li>`
+  }).join('')}</ul>` : '<p class="ui-empty">Not named on the report’s web page.</p>'
 }
+/** One block of the report page: a ui-section with its title. */
+const section = (title: string, body: string) => `<section class="ui-section audit-section"><h2 class="ui-section-title">${title}</h2>${body}</section>`
 function recommendationText(rec: Report['recommendations'][number]) {
   // Only text structure and a bounded set of source list markers are allowed.
   const marker = '(?: style="list-style-type:(?:disc|circle|square|none|decimal|decimal-leading-zero|lower-alpha|lower-latin|upper-alpha|upper-latin|lower-roman|upper-roman)")?'
@@ -81,19 +84,12 @@ export async function auditPage(id: string | null, url: URL, read: Read, block: 
     if (id === null) {
       const index = await read<{ records: AuditRow[] }>(m.index_url)
       if (index.records.length !== m.count) return missing()
-      const matches = filterAudit(index.records, url.searchParams)
-      const pages = Math.ceil(matches.length / 50) || 1
-      const page = Math.max(1, Math.min(pages, Math.trunc(Number(url.searchParams.get('page')) || 1)))
-      const rows = matches.slice((page - 1) * 50, page * 50)
+      const config = auditTableConfig(index.records)
+      const requestURL=new URL(url)
+      const guarded=guardTableURL(config,url)
       const description = `${m.count} Queensland Audit Office reports tabled in Parliament.${typeof m.html_recommendations === 'number' ? ` ${m.html_recommendations} recommendations from report pages.` : ''}${typeof m.bodies === 'number' ? ` ${m.bodies} cleared PDF bodies, ${m.count - m.bodies} held PDF bodies and ${m.responses || 0} entity responses.` : ' With source recommendations.'}`
-      const href = (n: number) => { const next = new URL(url); next.searchParams.set('page', String(n)); return next.pathname + next.search }
-      const form = `<form class="audit-filters" action="/audit" method="get"><label>Title text<input type="search" name="q" value="${esc(url.searchParams.get('q') || '')}"></label>${select('Report year', 'year', m.facets.year, url)}${select('Sector', 'sector', m.facets.sector, url)}${select('Entity audited', 'entity', m.facets.entity, url)}<label>Has entity responses<select name="responses"><option value="">All</option><option value="yes"${url.searchParams.get('responses') === 'yes' ? ' selected' : ''}>Yes</option></select></label><div class="audit-filter-actions"><button type="submit" class="ui-button">Filter</button><a href="/audit">Reset</a></div></form>`
-      const filtered = ['q', 'year', 'sector', 'entity', 'responses'].some(k => url.searchParams.get(k))
-      const counted = filtered ? `${matches.length} of ${m.count} reports match` : `${m.count} reports`
-      const list = `<p class="audit-count">${counted}</p><ul class="audit-list">${rows.map(r => `<li><h2><a href="/audit/${r.id}">${esc(r.title)}</a></h2><p class="audit-meta">${esc(metaLine(r))}</p>${r.sectors.length ? `<p class="audit-tags">${r.sectors.map(s => tagHTML(s)).join(' ')}</p>` : ''}${r.entities.length ? `<p class="audit-meta">Audited: ${esc(r.entities.join('; '))}</p>` : ''}</li>`).join('')}</ul>`
-      const navigation = `<nav aria-label="Audit catalogue pages">${page > 1 ? `<a rel="prev" href="${esc(href(page - 1))}">Previous</a>` : ''}<span>Page ${page} of ${pages}</span>${page < pages ? `<a rel="next" href="${esc(href(page + 1))}">Next</a>` : ''}</nav>`
-      return { title: 'Queensland audit reports · OPAX', description, status: 200,
-        prerender: block('Queensland audit reports', description, '', trail('/audit')) + `<section class="wrap audit-content">${form}${list}${navigation}${source(m, [{ href: m.attribution.source_url, label: 'Reports to Parliament' }])}</section>` }
+      return { title: 'Queensland audit reports · OPAX', description, status: 200,noindex:guarded.rejected || Boolean(url.search),
+        prerender: block('Queensland audit reports', description, '', trail('/audit')) + `<section class="wrap audit-content">${registerTableHTML(config,registerTableQuery(url.searchParams,config),requestURL)}${source(m, [{href:m.attribution.source_url,label:'Reports to Parliament'}])}</section>` }
     }
     const chunk = m.lookup[id]
     if (!Number.isInteger(chunk) || !m.chunks[chunk]) return missing()
@@ -105,7 +101,7 @@ export async function auditPage(id: string | null, url: URL, read: Read, block: 
     // The recommendation's own words name who it is addressed to; the parsed
     // addressee is not drawn (the export's addressed_to is not reliable).
     const recommendations = r.licence.body_skipped ? `<p>This report page has an uncleared copyright exception, so its recommendations are not reproduced here. Read QAO’s report for the original text.</p>`
-      : r.recommendations.length ? `<p class="audit-meta">In the Queensland Audit Office’s words.</p><ol class="audit-recommendations">${r.recommendations.map(rec => `<li${rec.number === null ? ' class="audit-unnumbered"' : ` value="${rec.number}"`}>${recommendationText(rec)}<p class="audit-meta">Source: ${esc(rec.provenance || 'html')}${rec.privacy_filtered ? ' · Names withheld; QAO has the original text.' : ''}</p></li>`).join('')}</ol>`
+      : r.recommendations.length ? `<p class="audit-meta">In the Queensland Audit Office’s words.</p><ol class="audit-recommendations">${r.recommendations.map(rec => `<li${rec.number === null ? ' class="audit-unnumbered"' : ` value="${rec.number}"`}>${recommendationText(rec)}<p class="audit-meta">Source: ${esc(rec.provenance || 'html')}</p></li>`).join('')}</ol>`
       : '<p>No recommendations are reproduced for this report.</p>'
     let responses: EntityResponse[] = []
     if (!r.licence.body_skipped && r.pdf?.status === 'ready' && r.responses_path === `/audit/responses-${id}.json`) {
@@ -113,12 +109,11 @@ export async function auditPage(id: string | null, url: URL, read: Read, block: 
       if (data.report_id !== id || data.records.length !== r.response_count) return missing()
       responses = data.records
     }
-    const hold = (r.title_privacy_filtered ? '<p class="audit-meta">Names withheld from the title; QAO has the original title.</p>' : '')
-      + (r.pdf?.status === 'held' ? `<p class="audit-meta">${esc(pdfHoldNote(r))}</p>` : '')
-    const responseSection = `<h2>Entity responses</h2>${responses.length ? responses.map(response => `<details class="audit-response"><summary>${esc(response.body)} · PDF ${response.page_start === response.page_end ? `p.${response.page_start}` : `pp.${response.page_start}–${response.page_end}`}</summary>${response.recommendation_numbers.length ? `<p class="audit-meta">Names recommendation${response.recommendation_numbers.length > 1 ? 's' : ''} ${response.recommendation_numbers.map(esc).join(', ')}</p>` : ''}<div class="audit-response-text">${esc(response.text)}</div></details>`).join('') : `<p>${r.pdf?.status === 'held' || r.licence.body_skipped ? 'Responses are held with the PDF body.' : 'No separately attributed responses are available.'}</p>`}`
+    const hold = (r.pdf?.status === 'held' ? `<p class="audit-meta">${esc(pdfHoldNote(r))}</p>` : '')
+    const responseSection = section('Entity responses', responses.length ? responses.map(response => `<details class="ui-disclosure audit-response"><summary>${esc(response.body)} · PDF ${response.page_start === response.page_end ? `p.${response.page_start}` : `pp.${response.page_start}–${response.page_end}`}</summary><div class="ui-disclosure-body">${response.recommendation_numbers.length ? `<p class="audit-meta">Names recommendation${response.recommendation_numbers.length > 1 ? 's' : ''} ${response.recommendation_numbers.map(esc).join(', ')}</p>` : ''}<div class="audit-response-text">${esc(response.text)}</div></div></details>`).join('') : `<p class="ui-empty">${r.pdf?.status === 'held' || r.licence.body_skipped ? 'Responses are held with the PDF body.' : 'No separately attributed responses are available.'}</p>`)
     const originals = [{ href: r.canonical_url, label: 'Report on qao.qld.gov.au' }, ...(r.pdf_url ? [{ href: r.pdf_url, label: `Full report (PDF): ${pdfTerms(r)}` }] : [])]
     const pdfLink = r.pdf_url ? `<p class="audit-meta"><a href="${esc(r.pdf_url)}" rel="noopener">Full report (PDF)</a>: ${esc(pdfTerms(r))}</p>` : ''
     return { title: `${r.title} · OPAX`, description, status: 200,
-      prerender: block(r.title, meta, '', trail('/audit', r.title)) + `<section class="wrap audit-content">${r.sectors.length ? `<p class="audit-tags">${r.sectors.map(s => tagHTML(s)).join(' ')}</p>` : ''}<p class="audit-out"><a href="${esc(r.canonical_url)}" rel="noopener">Read the report on qao.qld.gov.au ↗</a></p>${pdfLink}${hold}<h2>Entities audited</h2>${entities(r)}<h2>Recommendations</h2>${recommendations}${responseSection}${source(m, originals, r.licence)}</section>` }
+      prerender: block(r.title, meta, '', trail('/audit', r.title)) + `<section class="wrap audit-content">${r.sectors.length ? `<p class="audit-tags">${r.sectors.map(s => tagHTML(s)).join(' ')}</p>` : ''}<p class="audit-out"><a href="${esc(r.canonical_url)}" rel="noopener">Read the report on qao.qld.gov.au ↗</a></p>${pdfLink}${hold}${section('Entities audited', entities(r))}${section('Recommendations', recommendations)}${responseSection}${source(m, originals, r.licence)}</section>` }
   } catch { return missing() }
 }

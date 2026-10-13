@@ -2,7 +2,6 @@ import { readFileSync } from 'node:fs';
 import { Script, SourceTextModule } from 'node:vm';
 import { parentPort, workerData } from 'node:worker_threads';
 import { JSDOM, VirtualConsole } from 'jsdom';
-import {tablePrivacy} from '../../src/table-privacy.ts';
 
 const publicRoot = new URL('../../public/', import.meta.url);
 const origin = 'https://opax.test';
@@ -13,7 +12,7 @@ const describe = value => value?.stack || String(value);
 process.on('unhandledRejection', error => errors.push(`unhandled rejection: ${describe(error)}`));
 
 // Read built snapshots locally. Boot and supplier table APIs use deterministic
-// fixtures; privacy requests use the shared handler and local hashed registry.
+// fixtures.
 // No request is passed to the network or a running Worker.
 const read = pathname => readFileSync(new URL('.' + pathname, publicRoot), 'utf8');
 const json = pathname => JSON.parse(read(pathname));
@@ -26,11 +25,10 @@ const apiFixtures = {
   '/api/stats': { resources: 1, paragraphs: 1, kinds: {}, speeches_by_state: {} },
   '/api/person-slugs': {},
   '/api/parties': { parties: [...partyCounts].map(([label, count]) => ({ label, count })) },
-  '/api/table/suppliers': {rows:[{id:'s-00000000000000000001',name:'Fixture supplier Pty Ltd',recipient_kind:'organisation',
+  '/api/table/suppliers': {rows:[{id:'s-00000000000000000001',name:'Fixture supplier Pty Ltd',
     jurisdiction:'federal',total:100,count:2,agency_count:1,abn:null}],total:1,page:1,pageSize:50,
     facets:{total:{min:100,max:100},jurisdiction:[{value:'federal',count:1}]}},
 };
-const privacyAssets={fetch:async request=>Response.json(json(new URL(request.url).pathname))};
 
 async function run() {
   const virtualConsole = new VirtualConsole();
@@ -48,7 +46,6 @@ async function run() {
     const method = init.method || input.method || 'GET';
     try {
       if (url.origin !== origin) throw Error(`Unexpected request: ${method} ${url.origin}${url.pathname}`);
-      if(url.pathname==='/api/table/privacy' && method==='POST')return tablePrivacy(new Request(url,init),privacyAssets);
       if(method !== 'GET')throw Error(`Unexpected request: ${method} ${url.origin}${url.pathname}`);
       if (Object.hasOwn(apiFixtures, url.pathname)) return Response.json(apiFixtures[url.pathname]);
       if (url.pathname.startsWith('/api/')) throw Error(`Missing API fixture: ${url.pathname}`);

@@ -9,10 +9,6 @@ Speech stats approximate the migrating corpus (date >= 1993-03-13, >= 200
 chars); donation stats cover the full AEC dataset with industry classification.
 """
 
-try:
-    from scripts.donor_public import public_donor_data
-except ModuleNotFoundError:
-    from donor_public import public_donor_data
 
 import os
 import json
@@ -140,7 +136,7 @@ def main() -> None:
             }
         out[slug] = stats
 
-    print(json.dumps(public_donor_data(out), indent=1))
+    print(json.dumps(out, indent=1))
 
 
 if __name__ == "__main__":

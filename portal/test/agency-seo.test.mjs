@@ -28,7 +28,8 @@ test('agency aliases resolve to canonical stable IDs and escaped metadata', asyn
 test('long agency source names are supported but malformed paths are rejected', () => {
   const c=harness();
   assert.ok(c.matchSeoRoute(new URL(`https://opax.com.au/subject/agency/${'a'.repeat(180)}`)));
-  for (const suffix of ['%ZZ','name/extra','x'.repeat(501)]) assert.equal(c.matchSeoRoute(new URL(`https://opax.com.au/subject/agency/${suffix}`)),null);
+  assert.ok(c.matchSeoRoute(new URL(`https://opax.com.au/subject/agency/${'x'.repeat(501)}`)));
+  for (const suffix of ['%ZZ','name/extra']) assert.equal(c.matchSeoRoute(new URL(`https://opax.com.au/subject/agency/${suffix}`)),null);
 });
 test('unknown agencies are 404 and export failure is retryable 503', async () => {
   const url=new URL('https://opax.com.au/subject/agency/missing');

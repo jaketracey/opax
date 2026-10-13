@@ -5,9 +5,31 @@ import {applyQuery,dataTableHTML,formatCell,mountDataTable,parseQuery,serializeQ
 import {workbenchConfig,workbenchRows as rows} from '../public/datatable-workbench-data.js';
 import {cleanEvent} from '../analytics/privacy.mjs';
 import {tableHarness} from './datatable-harness.mjs';
+import {guardTableURL} from '../public/datatable.js';
 
-const config={...workbenchConfig,privacyCheck:()=>true};
+const config={...workbenchConfig};
 const all = query => applyQuery(rows,config,{...query,pageSize:100});
+test('declared facet options retain empty choices without a donor matcher',()=>{
+ const columns=[{key:'title',label:'Title',type:'text'},{key:'responses',label:'Responses',type:'category',facet:'multi',facetOptions:['Yes','No']}];
+ const table={id:'facet-options-fixture',caption:'Fixture reports',pageType:'audit',columns};
+ const rows=[{title:'Fixture public report',responses:'No'}];
+ const page=applyQuery(rows,table,{filters:{responses:['Yes']}});
+ assert.equal(page.total,0);assert.deepEqual(page.facets.responses,[{value:'No',count:1},{value:'Yes',count:0}]);
+ assert.ok(dataTableHTML(table,page).includes('Yes'));
+ assert.deepEqual(applyQuery([],table,{}).facets.responses,[{value:'No',count:0},{value:'Yes',count:0}]);
+});
+test('raw query guard keeps names and rejects duplicate table keys and length overflow',()=>{
+ const table={id:'fixture',caption:'Fixture',columns:[],pageType:'money',urlKey:'receipts'};
+ const name='EXAMPLE, ALEX';
+ const valid=guardTableURL(table,new URL('https://fixture.test/?receipts.q='+encodeURIComponent(name)));
+ assert.equal(valid.rejected,false);assert.equal(valid.query.q,name);
+ for(const key of ['q','receipts.q']) {
+  const url=new URL('https://fixture.test/');url.searchParams.append(key,'first');url.searchParams.append(key,'second');
+  const result=guardTableURL(table,url);assert.equal(result.rejected,true);assert.equal(result.url.searchParams.has(key),false);
+ }
+ const large=guardTableURL(table,new URL('https://fixture.test/?future='+'x'.repeat(8193)));
+ assert.equal(large.rejected,true);
+});
 test('query round trips namespaces, lists, ranges and a colon in the sort key',()=>{
   const query = {q:'Works & services',filters:{region:['Victoria','Queensland'],amount:{min:0,max:500000}},sort:{key:'total:amount',dir:'desc'},page:3,pageSize:25};
   const encoded = serializeQuery(query,'receipts');
@@ -103,19 +125,7 @@ test('analytics allow only the contracted table and page identifiers',()=>{
   for (const event of ['table_sort','table_filter','table_export']) assert.deepEqual(cleanEvent(event,{table_id:'workbench-money',page_type:'workbench',q:'private input',row:'private input'}),{table_id:'workbench-money',page_type:'workbench'});
 });
 
-test('neutral individual aggregates carry only counts and numeric totals, without links',()=>{
-  const aggregate={aggregate:{kind:'individual-donors',count:12},name:'untrusted label',id:'unsafe-id',aliases:['untrusted alias'],amount:12345.67,count:20,industry:'untrusted sector'};
-  const page=applyQuery([rows[0],aggregate],config,{});
-  const row=page.rows.find(r=>r.aggregate);
-  assert.deepEqual(row,{aggregate:{kind:'individual-donors',count:12},name:'Donors not named (12)',amount:12345.67,count:20});
-  const html=dataTableHTML(config,page);
-  assert.match(html,/Donors not named \(12\)/); assert.match(html,/<details class="donor-aggregate">/); assert.match(html,/OPAX names organisations only/); assert.ok(!html.includes('unsafe-id')); assert.ok(!html.includes('untrusted'));
-  assert.ok(!html.includes('href="#undefined"'));
-  assert.match(toCSV(page.rows,config),/Donors not named \(12\),,,12345.67,20/); assert.ok(!toCSV(page.rows,config).includes('OPAX names organisations only'));
-  assert.equal(toCSV([aggregate],{...config,privacy:undefined}),toCSV([aggregate],config));
-  const numericPrimary={...config,columns:config.columns.map(c=>({...c,primary:c.key === 'amount'}))};
-  assert.equal(toCSV([aggregate],numericPrimary),toCSV([aggregate],config));
-});
+
 test('unprefixed hydration and popstate preserve unrelated and unrecognised prefixed state',async ()=>{
   const harness=tableHarness('http://localhost/table?q=works&page=2&campaign=fixture&f.unrelated=%5B%22keep%22%5D&t.other=keep');
   const mounted=mountDataTable(harness.root,{...config,urlKey:undefined}); await new Promise(setImmediate);
@@ -156,7 +166,7 @@ test('query engine uses its row argument for server facet options and isolates c
   assert.equal(applyQuery(reverse,unsorted,{}).rows[0].id,'organisation-9');
 });
 
-test('server hydration validates pending state while preserving approved facet selections',async()=>{
+test('server hydration preserves selected facets without a validation POST',async()=>{
   const h=tableHarness('http://localhost/table?t.f.region='+encodeURIComponent(JSON.stringify(['Victoria'])));
   const page={rows:[rows[0]],total:9,page:1,pageSize:5,facets:{region:[{value:'Victoria',count:4}]}};
   h.root.querySelector=selector=>selector==='[data-dt-page]'?{textContent:JSON.stringify(page)}:null;
@@ -169,36 +179,20 @@ test('server hydration validates pending state while preserving approved facet s
   mounted.destroy();
 });
 
-test('row privacy adapters fail closed and do not reuse approval across policies',()=>{
-  const input=[{id:'CN1',title:'Public contract',amount:100}];
-  const base={id:'contracts-privacy',caption:'Contracts',privacy:'donors',privacyCheck:()=>true,
-    columns:[{key:'title',label:'Title',type:'text',primary:true},{key:'amount',label:'Value',type:'money'}]};
-  assert.equal(applyQuery(input,{...base,rowPrivacyCheck:()=>true},{}).total,1);
-  assert.equal(applyQuery(input,{...base,rowPrivacyCheck:()=>false},{}).total,0);
-  assert.equal(applyQuery(input,{...base,rowPrivacyCheck:()=>{throw Error('unavailable');}},{}).total,0);
-  assert.equal(applyQuery(input,base,{}).total,0);
-});
-
-test('initial SSR rejection stays empty until the reader clears it',async()=>{
-  const harness=tableHarness('http://localhost/table?campaign=fixture');
-  harness.root.setAttribute('data-dt-rejected','');
-  const mounted=mountDataTable(harness.root,config);
-  await new Promise(setImmediate);
-  assert.ok(harness.html().includes('Showing 0–0 of 0'));
-  assert.ok(harness.html().includes('Search unavailable'));
-  assert.equal(new URL(harness.win.location.href).searchParams.get('campaign'),'fixture');
-  const button={dataset:{clear:''},disabled:false};harness.root.contains=target=>target===button;
-  const event=new Event('click');Object.defineProperty(event,'target',{value:{closest:()=>button}});
-  harness.root.dispatchEvent(event);await new Promise(setImmediate);
-  assert.ok(!harness.html().includes('Showing 0–0 of 0'));
-  mounted.destroy();
-});
-
-test('procurement data approval does not approve the same text as search state',async()=>{
-  const harness=tableHarness('http://localhost/table?t.q=Organisation&campaign=fixture');
-  const c={...config,urlKey:'t',privacyCheck:()=>false,dataPrivacyCheck:()=>true};
-  const mounted=mountDataTable(harness.root,c);await new Promise(setImmediate);
-  assert.equal(new URL(harness.win.location.href).searchParams.has('t.q'),false);
-  assert.ok(harness.html().includes('Showing 0–0 of 0'));
-  mounted.destroy();
+test('legacy query adapters remove keys only after the shared raw URL guard',async()=>{
+  for (const repeated of [false,true]) {
+    const h=tableHarness('http://localhost/table?q=accepted&year=2025&campaign=fixture'+(repeated?'&q=second':''));
+    const mounted=mountDataTable(h.root,{...config,initialQuery:{q:'accepted'},initialQueryKeys:['q','year']});
+    await new Promise(setImmediate);
+    const url=new URL(h.win.location.href);
+    assert.equal(url.searchParams.has('q'),false);
+    assert.equal(url.searchParams.has('year'),false);
+    assert.equal(url.searchParams.get('campaign'),'fixture');
+    if (repeated) {
+      assert.equal(url.searchParams.has('t.q'),false);
+      assert.match(h.html(),/Showing 0–0 of 0/);
+      assert.match(h.html(),/data-export disabled/);
+    } else assert.equal(url.searchParams.get('t.q'),'accepted');
+    mounted.destroy();
+  }
 });

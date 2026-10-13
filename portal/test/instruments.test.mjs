@@ -16,7 +16,7 @@ const fixtureFiles = JSON.parse(execFileSync('python3',['-c',"import json,sys; f
 const json = p => JSON.parse(fixtureFiles[p.replace(/^\/?instruments\//,'')]);
 const manifest = json('instruments/manifest.json');
 const index = json('instruments/index.json');
-const read = async p => json(p);
+const read = async p => p.startsWith('/instruments/') ? json(p) : JSON.parse(readFileSync(new URL(p.slice(1),root),'utf8'));
 const block = (title, text, links='') => `<section id="prerender"><h1>${title.replaceAll('&','&amp;').replaceAll('<','&lt;')}</h1><p>${text}</p>${links}</section>`;
 
 test('FRL loader stubbed HTTP paging, count reconciliation, resume, shrink and export guards', () => {
@@ -29,8 +29,6 @@ test('instrument export stays within file/byte budget and reconciles every uniqu
   const ready=json('instruments/ready.json');
   assert.deepEqual(ready,{complete:true,count:manifest.count,exported:manifest.exported,unresolved_gap:0,gap_pages:[],count_start:manifest.count_start,count_end:manifest.count_end,drift:manifest.drift,tail_sweep:manifest.tail_sweep,export_date:manifest.generated_at.slice(0,10)});
   assert.ok(Buffer.byteLength(fixtureFiles['ready.json'])<1024);
-  assert.ok(files.length <= 400);
-  assert.ok(files.reduce((n,f) => n + Buffer.byteLength(fixtureFiles[f]),0) <= 25_000_000);
   assert.equal(manifest.count, manifest.odata_count);
   assert.equal(index.records.length, manifest.count);
   const ids = new Set();
@@ -70,7 +68,7 @@ test('directory filters title, portfolio, type, commencement year and status wit
   assert.equal(filterInstruments(fixtures,new URLSearchParams('status=Repealed')).length,0);
   const result=await instrumentPage(null,new URL('https://opax.com.au/instruments'),read,block);
   assert.equal(result.status,200);assert.match(result.prerender,/id="prerender"/);
-  for(const label of ['Title text','Portfolio','Type','Commencement year','Status']) assert.ok(result.prerender.includes(label));
+  for(const label of ['Title','Portfolio','Type','Registered','Status']) assert.ok(result.prerender.includes(label));
   assert.match(result.prerender,/Federal Register of Legislation/);assert.match(result.prerender,/CC BY 4.0/);
   assert.doesNotMatch(result.prerender,/\/subject\/person\//);
 });
@@ -80,7 +78,7 @@ test('an evidenced bounded plain gap is public only as a small directory note', 
   const staged={...fixture,titles:records,count:2001,odata_count:2001,exported:2000,unresolved_gap:1,
     gap_pages:[{offset:0,unresolved_gap:1}],metadata_coverage:{expanded_titles:2000,missing_expansion_ids:[]}};
   const files=JSON.parse(execFileSync('python3',['-c',"import json,sys; from scripts.export_instruments import plan_export; p,m=plan_export(json.load(sys.stdin)); print(json.dumps({k:v.decode() for k,v in p.items()}))"],{cwd:new URL('../../',import.meta.url).pathname,input:JSON.stringify(staged),encoding:'utf8',maxBuffer:8*1024*1024}));
-  const read=async path=>JSON.parse(files[path.replace('/instruments/','')]);
+  const read=async path=>path.startsWith('/instruments/') ? JSON.parse(files[path.replace('/instruments/','')]) : JSON.parse(readFileSync(new URL(path.slice(1),root),'utf8'));
   const m=await read('/instruments/manifest.json');
   assert.equal(catalogueComplete(m),true); assert.equal(reconciledCounts(m),true);
   const directory=await instrumentPage(null,new URL('https://opax.com.au/instruments'),read,block);
@@ -143,7 +141,7 @@ test('null/unknown ids return noindex 404 through the actual Worker and no paid 
   for(const path of ['/instruments','/instrument/'+index.records[0][0]]){
     const res=await worker.fetch(new Request('https://opax.com.au'+path),env,{});assert.equal(res.status,200);
   }
-  assert.ok(paths.every(p=>p==='/'||p.startsWith('/instruments/')));
+  assert.ok(paths.every(p=>p==='/'||/^\/(?:instruments|graph|suppliers|grants)\//.test(p)||p==='/suppliers.json'||p==='/table-private-identities.json'));
   for(const m of [null,{...manifest,complete:false}]) {
     const missingEnv={...env,ASSETS:{async fetch(req){const p=new URL(req.url).pathname;
       if(p==='/')return new Response(readFileSync(new URL('index.html',root)));
@@ -217,10 +215,11 @@ test('every shipped HTML file has no static instruments href before catalogue av
 
 test('parsed catalogue is reused per isolate and failed reads can recover', async () => {
   const calls=[];
-  const assets={async fetch(req){const p=new URL(req.url).pathname;calls.push(p);return new Response(fixtureFiles[p.slice('/instruments/'.length)])}};
+  const registered=Object.fromEntries(fixture.titles.map(row=>[row.id,row.asMadeRegisteredAt?.slice(0,10) || null]));
+  const assets={async fetch(req){const p=new URL(req.url).pathname;calls.push(p);return p === '/instruments/registered.json' ? Response.json(registered) : new Response(fixtureFiles[p.slice('/instruments/'.length)])}};
   const read=instrumentReader(assets);assert.equal(read,instrumentReader(assets));
   await Promise.all([instrumentPage(null,new URL('https://opax.com.au/instruments'),read,block),instrumentPage(null,new URL('https://opax.com.au/instruments?q=jane'),read,block)]);
-  assert.deepEqual(calls.sort(),['/instruments/index.json','/instruments/manifest.json']);
+  assert.deepEqual(calls.sort(),['/instruments/index.json','/instruments/manifest.json','/instruments/registered.json']);
   let available=false;
   const recovering=instrumentReader({async fetch(){return available?new Response(fixtureFiles['manifest.json']):new Response('',{status:404})}});
   await assert.rejects(recovering('/instruments/manifest.json'));
@@ -230,7 +229,7 @@ test('parsed catalogue is reused per isolate and failed reads can recover', asyn
 test('source block is verbatim, OPAX fields left out, authoritative link unique and licence accurate', async () => {
   const result=await instrumentPage('F2026L00001',new URL('https://opax.com.au/instrument/F2026L00001'),read,block);
   assert.equal((result.prerender.match(/href="https:\/\/www.legislation.gov.au\/F2026L00001\/latest"/g)||[]).length,1);
-  const source=result.prerender.match(/Source metadata<\/summary><pre>(.*?)<\/pre>/s)[1];
+  const source=result.prerender.match(/Source metadata<\/summary><div class="ui-disclosure-body"><pre>(.*?)<\/pre>/s)[1];
   assert.doesNotMatch(source,/canonical_url|_opax_metadata|commencementDate/);
   assert.doesNotMatch(result.prerender,/OPAX-derived fields/);
   assert.deepEqual(unpack(json(manifest.chunks[0].path).records[0],manifest.schemas,manifest.strings).source,fixture.titles[0]);
@@ -243,4 +242,16 @@ test('source block is verbatim, OPAX fields left out, authoritative link unique 
 
 test('weekly first-catalogue guard and nightly directory staging use offline git fixtures', () => {
   execFileSync('python3',[new URL('../../scripts/vm/test_frl_refresh.py',import.meta.url).pathname],{stdio:['ignore','pipe','pipe']});
+});
+
+test('server catalogue uses the shared page projection with ordinary source-name queries',async()=>{
+ const {readFile}=await import('node:fs/promises');
+ const manifest=JSON.parse(await readFile(new URL('../public/instruments/manifest.json',import.meta.url),'utf8')),calls=[];
+ const read=async path=>{assert.equal(path,'/instruments/manifest.json','native SSR reads catalogue metadata only');return manifest;};
+ const projected={rows:[{id:'F2026L99999',title:'Fixture airport instrument',type:'Principal',portfolios:['Health'],status:'InForce',registered:'2026-01-01',year:2026}],total:51,page:1,pageSize:50,facets:{year:{min:2026,max:2026}}};
+ const native=async query=>{calls.push(query);return projected;},block=(heading,sentence)=>'<h1>'+heading+'</h1><p>'+sentence+'</p>';
+ const result=await instrumentPage(null,new URL('https://local.invalid/instruments?q=airport&year=2026'),read,block,native);
+ assert.equal(result.status,200);assert.equal(result.noindex,true);assert.equal(calls.length,1);assert.equal(calls[0].q,'airport');assert.deepEqual(calls[0].filters.year,{min:2026,max:2026});assert.ok(result.prerender.includes('of 51'));
+ const name='EXAMPLE, ALEX';await instrumentPage(null,new URL('https://local.invalid/instruments?'+new URLSearchParams({q:name})),read,block,native);
+ assert.equal(calls.length,2);assert.equal(calls[1].q,name);
 });

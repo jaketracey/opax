@@ -41,8 +41,8 @@ export function billTextDefault(manifest, requested) {
 export function mountBillText(container, { bill, requestedVersion = null, open = false, onVersion = () => {} }) {
   const aborter = new AbortController();
   let destroyed = false, generation = 0, manifest, selected, loadedId, loadedComplete = false, textAborter, downloadUrl;
-  const root = element('section', null, 'bill-text-reader'); root.id = 'bill-full-text'; root.setAttribute('aria-labelledby', 'bill-text-title');
-  const title = element('h3', 'Bill text', 'subject-section-title'); title.id = 'bill-text-title'; title.tabIndex = -1;
+  const root = element('section', null, 'ui-section bill-section bill-text-reader'); root.id = 'bill-full-text'; root.setAttribute('aria-labelledby', 'bill-text-title');
+  const title = element('h3', 'Bill text', 'ui-section-title'); title.id = 'bill-text-title'; title.tabIndex = -1;
   const controls = element('div', null, 'bill-text-controls');
   const notice = element('p', null, 'fineprint bill-text-notice'); notice.setAttribute('role', 'status');
   const content = element('div', null, 'bill-text-content'); content.id = 'bill-text-content';
@@ -71,7 +71,7 @@ export function mountBillText(container, { bill, requestedVersion = null, open =
   function versionControls(autoOpen = false) {
     clearVersion(); controls.replaceChildren();
     const label = element('label', 'Version'); label.htmlFor = 'bill-text-version';
-    const select = element('select'); select.id = 'bill-text-version';
+    const select = element('select', null, 'ui-input'); select.id = 'bill-text-version';
     if (!selected) { const placeholder = element('option', 'Choose a published version'); placeholder.value = ''; placeholder.disabled = true; placeholder.selected = true; select.append(placeholder); }
     for (const version of manifest.versions) { const option = element('option', billTextVersionLabel(version)); option.value = version.id; option.selected = selected?.id === version.id; select.append(option); }
     select.addEventListener('change', () => {

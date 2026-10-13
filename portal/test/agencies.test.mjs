@@ -2,7 +2,6 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { runInNewContext } from 'node:vm';
-import {contractTitle, placeholderContract} from '../public/contracts-table.js';
 import { procurementGraph } from '../public/procurement-data.js';
 import { filterMoneyEdges, moneyTotals } from '../public/money-records.js';
 import { buildGraph } from '../public/money-map.js';
@@ -10,7 +9,7 @@ import { shortDate, shortMoney } from '../public/format.js';
 import { sourceLineHTML } from '../public/labels.js';
 
 const source = readFileSync(new URL('../public/agencies.js', import.meta.url), 'utf8').replace(/^import .*;$/gm, '').replaceAll('export async function ', 'async function ').replaceAll('export function ', 'function ');
-const shared = readFileSync(new URL('../public/suppliers.js', import.meta.url), 'utf8').replace(/^export \{.*\} from .*;$/gm, '').replace(/^import .*;$/gm, '').replaceAll('export async function ', 'async function ').replaceAll('export function ', 'function ');
+const shared = readFileSync(new URL('../public/suppliers.js', import.meta.url), 'utf8').replace(/^import .*;$/gm, '').replaceAll('export async function ', 'async function ').replaceAll('export function ', 'function ');
 const tick = () => new Promise(resolve => setImmediate(resolve));
 function node() {
   const children = new Map();
@@ -20,8 +19,8 @@ function node() {
     querySelectorAll() { return []; }, focus() {} };
 }
 function harness(fetch) {
-  const context = {contractTitle, placeholderContract, fetch, AbortController, URLSearchParams, history: { replaceState() {} }, procurementGraph, shortDate, shortMoney, sourceLineHTML };
-  runInNewContext(`Object.assign(this, (() => { ${shared}; return { json, lifecycle, coverageHTML, yearChart, contractHTML, mountYearChart, placeholderContract, procurementSourceHTML, procurementRailHTML }; })());`, context);
+  const context = { fetch, AbortController, URLSearchParams, history: { replaceState() {} }, procurementGraph, shortDate, shortMoney, sourceLineHTML };
+  runInNewContext(`Object.assign(this, (() => { ${shared}; return { json, lifecycle, coverageHTML, yearChart, contractHTML, mountYearChart, placeholderContract, procurementSourceHTML, procurementRailHTML, statsHTML }; })());`, context);
   runInNewContext(source, context); return context;
 }
 const id = 'a-0123456789abcdef0123';

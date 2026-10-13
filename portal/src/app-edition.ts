@@ -1,7 +1,6 @@
 /** W13: the journal is the sole source. Runtime imports must stay pure. */
 import {appJson, appRead, melbourneDay, readOnly, validDate, APP_CACHE} from './app-http'
 import type {DailyPost} from './daily-post'
-import {sanitiseStoredDonors} from './donor-hashes.mjs'
 
 type EditionEnv = Pick<Env, 'COMMUNITY_DB'>
 type EditionRow = {date: string; subject: string; post_json: string; created_at: string}
@@ -49,7 +48,7 @@ export async function appEdition(req: Request, env: EditionEnv, at = Date.now())
         WHERE d.edition_date=e.date AND d.status='posted' AND d.post_id IS NOT NULL AND d.post_id!='')`)
     const row = await query.bind(date).first<EditionRow>()
     if (!row) return missing()
-    return await appRead(req, {schema_version:1, date:row.date, created_at:row.created_at, edition:sanitiseStoredDonors(storedEdition(row))},
+    return await appRead(req, {schema_version:1, date:row.date, created_at:row.created_at, edition:(storedEdition(row))},
       value === 'today' || value === 'latest' ? APP_CACHE : 'public, max-age=86400, must-revalidate')
   } catch {
     return appJson(req, {error:'edition_unavailable'}, 503, {'retry-after':'60'})
