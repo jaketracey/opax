@@ -741,17 +741,64 @@ function download(filename, mime, text) {
   setTimeout(() => URL.revokeObjectURL(a.href), 2000);
 }
 
-async function copyText(text, btn, doneLabel) {
+/** Copy a link and say so: the label (a button's text span, so its icon stays,
+ *  or a text-only button) reads "Copied" and nothing more, then reverts. The
+ *  button holds its resting width and height meanwhile, so the shorter word
+ *  moves nothing, and a polite live region announces "Copied". A second press
+ *  while it shows restarts the moment instead of taking "Copied" for the label. */
+async function copyText(text, label) {
   try {
     await navigator.clipboard.writeText(text);
-    if (btn) {
-      const old = btn.textContent;
-      btn.textContent = doneLabel || "Copied";
-      setTimeout(() => (btn.textContent = old), 1600);
-    }
   } catch {
     window.prompt("Copy this link:", text);
+    return;
   }
+  if (label) showCopied(label);
+}
+
+const COPIED = "Copied";
+const COPIED_MS = 1600;
+function showCopied(label) {
+  const button = label.closest("button, a") || label;
+  if (!copiedState.has(label)) {
+    const box = button.getBoundingClientRect();
+    copiedState.set(label, {
+      text: label.textContent,
+      style: button.getAttribute("style"),
+    });
+    // Its resting border box, pinned in every layout it sits in: a flex row
+    // that sizes by basis and min-content (the document foot at 390) would
+    // otherwise shrink it to the shorter word.
+    if (box.width && box.height) {
+      const w = `${box.width}px`, h = `${box.height}px`;
+      for (const [p, v] of [["box-sizing", "border-box"], ["width", w], ["min-width", w], ["max-width", w], ["flex", `0 0 ${w}`],
+        ["height", h], ["min-height", h], ["max-height", h]]) button.style.setProperty(p, v);
+    }
+  }
+  const state = copiedState.get(label);
+  label.textContent = COPIED;
+  clearTimeout(state.timer);
+  state.timer = setTimeout(() => {
+    label.textContent = state.text;
+    if (state.style === null) button.removeAttribute("style"); else button.setAttribute("style", state.style);
+    copiedState.delete(label);
+    if (copyStatus().textContent === COPIED) copyStatus().textContent = "";
+  }, COPIED_MS);
+  // Emptied first, so a second copy is announced again.
+  const status = copyStatus();
+  status.textContent = "";
+  setTimeout(() => { status.textContent = COPIED; }, 50);
+}
+const copiedState = new WeakMap();
+function copyStatus() {
+  let status = document.getElementById("copy-status");
+  if (!status) {
+    status = Object.assign(document.createElement("p"), { id: "copy-status", className: "visually-hidden" });
+    status.setAttribute("role", "status");
+    status.setAttribute("aria-live", "polite");
+    document.body.appendChild(status);
+  }
+  return status;
 }
 
 function corpusVersion() {
@@ -10198,7 +10245,7 @@ function initAskBuilder() {
 $("ask-copylink").addEventListener("click", (e) => {
   const q = lastAsk.question || $("ask-input").value.trim();
   if (!q) return;
-  copyText(siteUrl(askHash(q, askKind())), e.currentTarget.querySelector("span") || e.target);
+  copyText(siteUrl(askHash(q, askKind())), e.currentTarget.querySelector("span") || e.currentTarget);
 });
 
 mountExportMenu($("ask-export-picker"), (format) => {
