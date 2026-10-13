@@ -6,6 +6,7 @@ import {currentSittingPath, sydneyDay} from '../public/hubs-data.js'
 import {isOrganisationDonor, donorPrivacyIndex, donorNameWithheld, foldDonorName, MONEY_GRAPHS, withheldPhrases, namesWithheldPhrase} from '../public/donor-entity.js'
 import {renderDivisionMarkdown, divisionPlain, billNoteRepair, billStripTitle, billStripStage} from '../public/division-markdown.js'
 import {machineLabelHTML} from '../public/labels.js'
+import {heldBackTranscriptsHTML, chairRoleTranscriptsHTML} from '../public/held-back-transcripts.js'
 import {divisionTableConfig, voteTableConfig, personVoteKeys, divisionRows, votingRows, voteTablePage, voteTableHTML} from '../public/vote-tables.js'
 import {tablePrivacyCheckFromRead} from './table-privacy.ts'
 import type {Query} from '../public/datatable.js'
@@ -89,7 +90,7 @@ export function answerBlock(title: string, description: string, body = '', crumb
   return `${crumbsHTML(crumbs)}<section id="prerender" class="wrap"><h1>${escapeHtml(title)}</h1><p>${escapeHtml(description)}</p>${body}</section>`
 }
 /** Pages whose whole text is served by the Worker, copied from their panel in index.html. */
-export const SERVER_PANELS: ReadonlySet<string> = new Set(['privacy', 'support'])
+export const SERVER_PANELS: ReadonlySet<string> = new Set(['privacy', 'support', 'methods'])
 /**
  * The server-rendered copy of a policy page (/privacy, /support): the inner
  * markup of its panel in the shell (index.html), so the page a crawler or a
@@ -154,17 +155,19 @@ async function withheldCheckFrom(read: ReadAsset): Promise<WithheldCheck> {
 }
 
 export async function renderPersonAnswer(p: Person, read: ReadAsset, slugs: Map<string,string>, profileUrl?: string, withheld?: WithheldCheck, tableQuery: Query = {}, privacyCheck?: (text: string) => boolean): Promise<RenderedContent> {
-  const [voteData, interests, seats, bills, sponsored, recentData] = await Promise.all([
+  const [voteData, interests, seats, bills, sponsored, recentData, heldBackCounts, chairRoleCounts] = await Promise.all([
     optional<Record<string, Votes | Record<string,string[]>>>(read,'/votes.json'),
     optional<{people: Record<string,unknown>; _by_name: Record<string,string>}>(read,'/interests/index.json'),
     optional<{index_url: string}>(read,'/electorates/manifest.json').then(m => m ? optional<{electorates: Seat[]}>(read,m.index_url) : null),
     optional<{bills: Bill[]}>(read,'/bills/index.json'),
     optional<{sponsored: Record<string,string[]>}>(read,'/seo-links.json'),
     optional<RecentVotes>(read,'/seo/recent-votes.json'),
+    optional<Record<string, number>>(read,'/data/held-back-transcripts.json'),
+    optional<Record<string, number>>(read,'/data/chair-role-transcripts.json'),
   ])
   const display = p.full && p.speech_scope ? p.full : p.name
   const description = `${display}. ${partyLine(p)}. ${(p.representation || []).map(r=>`${r.electorate}, ${chamber(r.chamber)}`).join('; ') || p.chambers.map(chamber).join(', ')}.`
-  let body = '<h2>Party and representation</h2><ul>'
+  let body = heldBackTranscriptsHTML(p.pid, heldBackCounts) + chairRoleTranscriptsHTML(p.pid, chairRoleCounts) + '<h2>Party and representation</h2><ul>'
   const party = p.party_now || p.party
   body += `<li>${party ? link(partyUrl(party),partyLine(p)) : 'Party not recorded'}</li>`
   for (const r of p.representation || []) {
@@ -173,6 +176,8 @@ export async function renderPersonAnswer(p: Person, read: ReadAsset, slugs: Map<
   }
   body += `</ul>${original(profileUrl)}<p>${link('/parliamentarians.json','Parliamentarian data export')}. Recorded representation can include historical seats; affiliation with no current-roster flag is not verified as current or former.</p>`
   if (!p.speech_scope) {
+    // Vote rows are public record (served whole at /votes.json); tableCheck
+    // guards only the reader's table state before it is echoed.
     const tableCheck = privacyCheck ?? await tablePrivacyCheckFromRead(read)
     const keys = personVoteKeys(p.name,p.pid,voteData)
     const records = keys.map(k=>voteData?.[k] as Votes | undefined).filter((r): r is Votes => !!r?.name)
@@ -181,7 +186,6 @@ export async function renderPersonAnswer(p: Person, read: ReadAsset, slugs: Map<
     const hasRecent = recent.length>0
     const votes = (hasRecent ? recent : records.flatMap(r=>[...(r.for || []).map(v=>({...v,vote:'For the bill'})),...(r.against || []).map(v=>({...v,vote:'Against the bill'}))]))
       .filter(v=>!withheld?.(v.title || v.name || '', v.question || ''))
-      .filter(v=>tableCheck(JSON.stringify(v)))
       .sort((a,b)=>String(b.date || '').localeCompare(String(a.date || '')))
     if (votes.length) {
       const config = voteTableConfig(keys, hasRecent ? 'Recorded votes' : 'Latest exported bill votes', tableCheck)
@@ -259,7 +263,8 @@ export function renderBillAnswer(b: Bill, people: Person[], slugs: Map<string,st
   body += `<h2>Sources</h2>${(b.sources || []).map(s=>`<p>${escapeHtml(human(s.kind))}</p>${original(s.url)}`).join('')}`
   const config = divisionTableConfig({bill:b.key}, 'Divisions', 'bill', privacyCheck)
   config.id += '-ssr'
-  const rows = divisionRows(divisions.filter(d=>privacyCheck(JSON.stringify([d.stage,d.question]))),true)
+  // Division rows are public record; privacyCheck guards only the table's URL state.
+  const rows = divisionRows(divisions,true)
   const block = () => rows.length ? voteTableHTML(config,voteTablePage(rows,config,tableQuery)) : '<h2>Divisions</h2><p>No divisions recorded. Most questions are decided on the voices; this does not establish that a bill was unopposed.</p>'
   const output = () => answerBlock(title,description,body.replace(divisionSlot,block()))
   let html=output()
