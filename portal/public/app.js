@@ -14,7 +14,7 @@ const donorViewReady = import('/donor-views.js?v=77470b1d26').then(module => {
 
 "use strict";
 let voteTables;
-const voteTablesReady = import("/vote-tables.js?v=2df85485a3").then(module => { voteTables = module; });
+const voteTablesReady = import("/vote-tables.js?v=1484e7c649").then(module => { voteTables = module; });
 let divisionMarkdown;
 const divisionMarkdownReady = import('/division-markdown.js?v=5991511166').then(module => { divisionMarkdown = module; });
 // The labels, source lines and ⋯ (labels.js); the first render waits for them.

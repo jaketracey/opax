@@ -117,7 +117,8 @@ export async function tableApi(request: Request, env: TableEnv, _ctx?: Execution
     const db=env.TABLE_DB
     const meta=await db.prepare("SELECT key,value FROM table_meta WHERE key IN ('version','privacy_lengths','privacy_stripped_lengths','privacy_fingerprint') LIMIT 4").all<{key:string;value:string}>()
     const metadata=Object.fromEntries(meta.results.map(r=>[r.key,r.value]))
-    if (config.privacy && (!/^[a-f0-9]{64}$/.test(TABLE_REGISTRY_FINGERPRINT) || metadata.privacy_fingerprint !== TABLE_REGISTRY_FINGERPRINT)) return errorResponse(503,'unavailable',{'retry-after':'60'})
+    // Only donor-sanitised rows depend on the registry they were loaded against.
+    if (config.privacy === 'donors' && (!/^[a-f0-9]{64}$/.test(TABLE_REGISTRY_FINGERPRINT) || metadata.privacy_fingerprint !== TABLE_REGISTRY_FINGERPRINT)) return errorResponse(503,'unavailable',{'retry-after':'60'})
     if (!metadata.version || !metadata.privacy_lengths) throw new Error('unavailable')
     if(config.privacy && !metadata.privacy_stripped_lengths)throw new Error('unavailable')
     const denied=Boolean(config.privacy) && await blocked(db,inputs,JSON.parse(metadata.privacy_lengths),JSON.parse(metadata.privacy_stripped_lengths || '[]'))
