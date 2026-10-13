@@ -1,10 +1,12 @@
 import type {Column, Page, Query, Row} from '../public/datatable.js'
 import {TABLE_DATASETS, tableText, tableTerms} from './table-datasets.mjs'
-import {identityCandidates, identityHash} from './table-identities.mjs'
+import {identityHash} from './table-identities.mjs'
+import {compileBundledIdentityCheck} from './table-identity-hashes.mjs'
 import registryBuild from './table-registry-fingerprint.json' with {type:'json'}
 import {rawQueryValues,repeatedTableKeys} from '../public/datatable-query.js'
 
 export const TABLE_REGISTRY_FINGERPRINT = registryBuild.fingerprint
+let privacyCheck: ReturnType<typeof compileBundledIdentityCheck> | undefined
 
 type TableEnv = {TABLE_DB: D1Database; CACHE_EPOCH?: string; ASSETS?: Fetcher}
 const MAX_CSV = 50_000, CSV_PAGE = 10_000, BATCH = 200, MAX_FACETS = 100
@@ -68,16 +70,6 @@ export function normalizedTableQuery(query: Query, csv = false): string {
   return params.toString()
 }
 
-async function blocked(db: D1Database, values: Iterable<string>, lengths: number[], strippedLengths: number[]): Promise<boolean> {
-  for (const value of values) {
-    const candidates=[...identityCandidates(value,lengths,strippedLengths)]
-    for (let start=0;start<candidates.length;start+=90) {
-      const hashes=await Promise.all(candidates.slice(start,start+90).map(identityHash))
-      if (hashes.length && await db.prepare(`SELECT 1 AS found FROM table_private_identity WHERE hash IN (${hashes.map(()=>'?').join(',')}) LIMIT 1`).bind(...hashes).first()) return true
-    }
-  }
-  return false
-}
 /** Resolve the existing funding-profile link without publishing directory identities. */
 async function donorSupplierIds(assets: Fetcher | undefined, donor: string): Promise<string[]> {
   if (!assets) throw new Error('unavailable')
@@ -140,7 +132,10 @@ export async function tableApi(request: Request, env: TableEnv, _ctx?: Execution
     if (config.privacy === 'donors' && (!/^[a-f0-9]{64}$/.test(TABLE_REGISTRY_FINGERPRINT) || metadata.privacy_fingerprint !== TABLE_REGISTRY_FINGERPRINT)) return errorResponse(503,'unavailable',{'retry-after':'60'})
     if (!metadata.version || !metadata.privacy_lengths) throw new Error('unavailable')
     if(config.privacy && !metadata.privacy_stripped_lengths)throw new Error('unavailable')
-    const denied=Boolean(config.privacy) && await blocked(db,inputs,JSON.parse(metadata.privacy_lengths),JSON.parse(metadata.privacy_stripped_lengths || '[]'))
+    // Validate the bundled binding even without inputs. Query privacy uses this
+    // complete registry; donor publication separately checks the D1 fingerprint.
+    if(config.privacy)privacyCheck ||= compileBundledIdentityCheck(TABLE_REGISTRY_FINGERPRINT)
+    const denied=Boolean(config.privacy) && inputs.some(value=>privacyCheck!(value))
     if (repeatedTableKeys(url.searchParams,null).size) return errorResponse(400,'invalid_query')
     let query: Query | undefined
     if (denied) query={q:'',filters:{},sort:config.defaultSort,page:1,pageSize:50}

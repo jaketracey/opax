@@ -9,16 +9,18 @@ const decodedIdentity = value => {
 };
 const words = raw => raw.toLowerCase().replace(/[^a-z0-9]+/g,' ').trim().split(' ').filter(Boolean);
 export const identityWords = value => words(decodedIdentity(value).normalize('NFKD').replace(/\p{M}+/gu,''));
-const legacyWords = value => words(decodedIdentity(value).normalize('NFKC'));
-export function* identityWordForms(value) {yield identityWords(value);yield legacyWords(value);}
+export const legacyIdentityWords = value => words(decodedIdentity(value).normalize('NFKC'));
+const legacyWords = legacyIdentityWords;
+export function* identityWordForms(value) {yield identityWords(value);yield legacyIdentityWords(value);}
 export const identityPhrase = value => identityWords(value).join(' ');
 export const STRIPPED_PREFIX = 'stripped:v1:';
 export const STRIPPED_MIN_LENGTH = 4;
 // Short forms require token boundaries; longer forms also match inside words.
 export const STRIPPED_CONTAINS_MIN_LENGTH = 6;
 const folded = value => decodedIdentity(value).normalize('NFKC').toLowerCase().replace(/ß/g,'ss').replace(/ς/g,'σ');
-const strippedWords = value => folded(value).match(/[\p{L}\p{N}]+/gu) || [];
-export const identityTokens = strippedWords;
+export const identityStrippedWords = value => folded(value).match(/[\p{L}\p{N}]+/gu) || [];
+const strippedWords = identityStrippedWords;
+export const identityTokens = identityStrippedWords;
 export const identityStripped = value => strippedWords(value).join('');
 export const strippedLengths = phrases => [...new Set([...phrases].filter(p=>p.startsWith(STRIPPED_PREFIX)).map(p=>p.length-STRIPPED_PREFIX.length))].sort((a,b)=>a-b);
 export function identityVariants(value) {
@@ -37,20 +39,29 @@ export function identityVariants(value) {
   return [...new Set(out.filter(Boolean))];
 }
 export function identityCandidates(value, lengths, compactLengths = []) {
-  const words = identityWords(value), out = new Set();
-  for (const tokens of [words,legacyWords(value)]) for (const size of lengths) for (let i = 0; i + size <= tokens.length; i++) out.add(tokens.slice(i, i + size).join(' '));
+  return new Set(iterateIdentityCandidates(value,lengths,compactLengths));
+}
+// Keep the Set API for existing consumers; matchers can stop at the first hit.
+export function* iterateIdentityCandidates(value, lengths, compactLengths = []) {
+  const words=identityWords(value),legacy=legacyWords(value),compactTokens=strippedWords(value),out=new Set();
+  for (const tokens of [words,legacy]) {
+    if(tokens===legacy && words.length===legacy.length && words.every((word,i)=>word===legacy[i]))continue;
+    for (const size of lengths) for (let i = 0; i + size <= tokens.length; i++) {
+      const candidate=tokens.slice(i,i+size).join(' ');
+      if(!out.has(candidate)){out.add(candidate);yield candidate;}
+    }
+  }
   // ABNs remain identifiers with punctuation/spaces or an ABN prefix.
   for (let i = 0; i < words.length; i++) {
     let digits = '';
     for (let j = i; j < words.length && /^\d+$/.test(words[j]) && digits.length < 11; j++) {
-      digits += words[j]; if (digits.length === 11) out.add(digits);
+      digits += words[j]; if (digits.length === 11 && !out.has(digits)) {out.add(digits);yield digits;}
     }
   }
-  for (const candidate of strippedCandidates(value,compactLengths)) out.add(candidate);
-  return out;
+  for (const candidate of strippedCandidates(compactTokens,compactLengths)) if(!out.has(candidate)){out.add(candidate);yield candidate;}
 }
-function* strippedCandidates(value, lengths) {
-  const tokens=strippedWords(value), compact=tokens.join(''), starts=new Set(), ends=new Set();
+function* strippedCandidates(tokens, lengths) {
+  const compact=tokens.join(''), starts=new Set(), ends=new Set();
   let at=0;for(const token of tokens){starts.add(at);at+=token.length;ends.add(at);}
   for (const size of lengths) {
     if (!Number.isSafeInteger(size) || size < STRIPPED_MIN_LENGTH) continue;

@@ -1,4 +1,4 @@
-import {compileHashedIdentityCheck} from './table-identity-hashes.mjs'
+import {compileHashedIdentityCheck,compileHashedIdentitySubsetCheck} from './table-identity-hashes.mjs'
 import {identityPhrase,publicationIdentityCheck} from './table-identities.mjs'
 import {timedSync} from './server-timing.ts'
 
@@ -44,11 +44,11 @@ async function tablePolicy(assets: Fetcher): Promise<Policy> {
       if(registry.version!==1 || !Array.isArray(registry.strippedLengths) || !registry.strippedLengths.length || registry.strippedLengths.some(n=>!Number.isSafeInteger(n)||n<4))throw new Error('Privacy index unavailable')
       const blocked=compileHashedIdentityCheck(registry.identities,registry.strippedLengths)
       const recipientIdentitiesBlocked=registry.recipientIdentities && registry.recipientStrippedLengths
-        ? compileHashedIdentityCheck(registry.recipientIdentities,registry.recipientStrippedLengths) : () => true
+        ? compileHashedIdentitySubsetCheck(registry.recipientIdentities,registry.recipientStrippedLengths,registry.identities,registry.strippedLengths) : () => true
       const agencyResponse=await assets.fetch(new Request('https://opax.com.au/agencies.json'))
       const agencyDirectory=agencyResponse.ok ? await agencyResponse.json() as {agencies?:{name:string}[]} : null
       const recipientBlocked=publicationIdentityCheck(recipientIdentitiesBlocked,agencyDirectory?.agencies?.map(agency=>agency.name) || [])
-      const donorBlocked=registry.donorIdentities && registry.donorStrippedLengths ? compileHashedIdentityCheck(registry.donorIdentities,registry.donorStrippedLengths) : blocked
+      const donorBlocked=registry.donorIdentities && registry.donorStrippedLengths ? compileHashedIdentitySubsetCheck(registry.donorIdentities,registry.donorStrippedLengths,registry.identities,registry.strippedLengths) : blocked
       return {donors:(text:string)=>!donorBlocked(text),safe:(text:string)=>timedSync('privacy',()=>!blocked(text)),recipients:(text:string)=>!recipientBlocked(text),suppliers:new Set(registry.withheldSuppliers || []),political:Array.isArray(registry.politicalSuppliers) ? new Set(registry.politicalSuppliers) : null}
     })().catch(() => {indices.delete(assets); return {safe:()=>false,recipients:()=>false,donors:()=>false,suppliers:new Set<string>(),political:null}})
     indices.set(assets, pending)

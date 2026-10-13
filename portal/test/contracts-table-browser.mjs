@@ -8,6 +8,7 @@ import {createRequire} from 'node:module';
 import {fileURLToPath} from 'node:url';
 import {resolve} from 'node:path';
 import {registerTablePrivacy,tablePrivacyIndex} from './datatable-privacy.mjs';
+import {csvRecords,CSV_LIMIT,CSV_TRUNCATION} from '../public/server-csv.js';
 import {tableIdentityIndex} from '../../scripts/load_tables.mjs';
 import {isOrganisationDonor,namesWithheldPhrase} from '../public/donor-entity.js';
 import {isOrganisationRecipient} from '../public/recipient-entity.js';
@@ -110,7 +111,9 @@ try {
   for(const run of profileOnly ? [] : privacyRollouts) privacy.push(await run({page,base,index,outputDir,onProgress:progress=>console.log(JSON.stringify(progress))}));
   const csv=await readFile(resolve(outputDir,'contracts-server.csv'),'utf8');
   assert.ok(index.dataSafe(csv),'recipient-safe actual D1 export');
-  assert.ok(csv.includes('Showing rows 1-10,000 of '),'actual server CSV continuation note');
+  const records=csvRecords(csv);
+  assert.equal(records.length,CSV_LIMIT+2,'actual server download combines all five continuation pages');
+  assert.equal(records.at(-1),CSV_TRUNCATION,'the bounded download ends with the shared truncation marker');
   // Fresh arrivals also validate SSR seed consumption and legacy query migration.
   const privateValue=index.values[0];
   const encoded=[...new TextEncoder().encode(privateValue)].map(n=>'%'+n.toString(16).padStart(2,'0')).join('');

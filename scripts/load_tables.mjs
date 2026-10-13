@@ -6,6 +6,7 @@ import {createHash} from 'node:crypto';
 import {TABLE_DATASETS} from '../portal/src/table-datasets.mjs';
 import {isOrganisationRecipient} from '../portal/src/table-recipient.mjs';
 import {identityVariants, compileIdentityCheck, publicationIdentityCheck, strippedLengths, STRIPPED_PREFIX, STRIPPED_CONTAINS_MIN_LENGTH} from '../portal/src/table-identities.mjs';
+import {buildIdentityPrefilter,identityPrefilterModule} from '../portal/src/table-identity-prefilter.mjs';
 import {tableSchema,tableName,quote,arrayColumns} from './table-schema.mjs';
 import {MONEY_GRAPHS, isOrganisationDonor, withheldPhrases} from '../portal/public/donor-entity.js';
 import {moneyFlowType} from '../portal/public/money-records.js';
@@ -42,6 +43,7 @@ export async function tableRows(root = defaultRoot, {moneyOnly = false, graphs: 
   const rows = Object.fromEntries(Object.keys(TABLE_DATASETS).map(name => [name, []]));
   const aggregates = new Map();
   const add = (name, row, identity = '', hidden = false) => {
+    if (TABLE_DATASETS[name].privacy === 'echo') {rows[name].push({row});return;}
     const check=['contracts','suppliers'].includes(name) ? policy.recipientCheck : policy.check;
     if (hidden || check(Object.values(row).flat().join(' '))) {
       // Non-financial records are omitted; financial registers retain neutral totals.
@@ -179,6 +181,9 @@ export function tablePrivacyRegistry(policy) {
 export function tableRegistryFingerprint(policy) {
   return createHash('sha256').update(tableIdentityHashes(policy).map(e=>e.hash).join('\n')).digest('hex');
 }
+export function tableIdentityPrefilter(policy) {
+  return buildIdentityPrefilter(policy.phrases,tableIdentityHashes(policy),tableRegistryFingerprint(policy));
+}
 
 const literal = value => value == null ? 'NULL' : typeof value === 'number' && Number.isFinite(value) ? String(value) : "'" + String(value).replaceAll("'","''") + "'";
 
@@ -211,7 +216,7 @@ export async function buildTableSQL({root=defaultRoot,output=fileURLToPath(new U
     const table=tableName(name);counts[name]=0;
     for (const {row} of datasets[name] || []) {
       // A second barrier protects callers supplying rows directly in tests/tools.
-      if (config.privacy && (['contracts','suppliers'].includes(name) ? policy?.recipientCheck || policy?.check : policy?.check)(Object.values(row).flat().join(' '))) throw new Error('Unsanitised financial row');
+      if (config.privacy === 'donors' && (['contracts','suppliers'].includes(name) ? policy?.recipientCheck || policy?.check : policy?.check)(Object.values(row).flat().join(' '))) throw new Error('Unsanitised financial row');
       const rowid=++counts[name];
       const values=config.columns.map(c=>arrayColumns.has(c.key) && Array.isArray(row[c.key]) ? JSON.stringify(row[c.key]) : row[c.key] ?? null);
       const search=config.columns.filter(c=>!['url','canonical_url'].includes(c.key)).map(c=>Array.isArray(row[c.key]) ? row[c.key].join(' ') : row[c.key] ?? '').join(' ');
@@ -233,8 +238,12 @@ export async function buildTableSQL({root=defaultRoot,output=fileURLToPath(new U
 if (process.argv[1] && resolve(process.argv[1])===fileURLToPath(import.meta.url)) {
   try {
     const loaded=await tableRows();
+    const prefilter=tableIdentityPrefilter(loaded.policy);
+    const privateModule=identityPrefilterModule(prefilter,loaded.policy.phrases,tableIdentityHashes(loaded.policy),tableRegistryFingerprint(loaded.policy));
     const result=await buildTableSQL({datasets:loaded.rows,policy:loaded.policy});
     await writeFile(join(defaultRoot,'table-private-identities.json'),JSON.stringify(tablePrivacyRegistry(loaded.policy))+'\n');
+    // The D1 guard accelerates existing databases without a migration/reload.
+    await writeFile(fileURLToPath(new URL('../portal/src/table-identity-prefilter.generated.mjs',import.meta.url)),privateModule);
     await writeFile(fileURLToPath(new URL('../portal/src/table-registry-fingerprint.json',import.meta.url)),JSON.stringify({fingerprint:result.privacyFingerprint})+'\n');
     console.log(JSON.stringify({sqlFiles:result.files.length,bytes:result.bytes,rows:result.counts,privateIdentityHashes:result.privateIdentities,publicTableAssets:0,publicPrivacyAssets:1}));
   } catch {console.error('Table load preparation failed; no source identities are logged.');process.exitCode=1;}
