@@ -14,6 +14,7 @@ import {sourceLineHTML} from '../public/labels.js';
 import * as divisionMarkdown from '../public/division-markdown.js';
 import {tablePrivacyIndex} from './datatable-privacy.mjs';
 import * as voteTables from '../public/vote-tables.js';
+import * as attribution from '../public/speech-attribution.js';
 const app=readFileSync(new URL('../public/app.js',import.meta.url),'utf8');
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const decode=s=>s.replace(/&amp;/g,'&').replace(/&quot;/g,'"').replace(/&#39;/g,"'").replace(/&lt;/g,'<').replace(/&gt;/g,'>');
@@ -58,6 +59,7 @@ export async function* moduleOutputs(root,withheld,readAsset) {
   document:{createElement:()=>({dataset:{},isConnected:true,remove(){},querySelectorAll:()=>[]})},searchHash:q=>'/ask?view=search&'+new URLSearchParams({q}),STATE_NAMES:{},billQuestion:v=>v,
   machineLabelHTML:({note=''})=>`<span>${esc(note)}</span>`,partyChipHTML:esc,
  };
+ Object.assign(context,runInNewContext(region('function groupAvatarHTML(','/** Swap .meta-portrait')+';({groupAvatarHTML,participantLinksHTML,speechIdentityHTML})',context));
  const interestVM=runInNewContext(region('async function renderPersonInterests(','let interestsTiesPromise')+';({renderPersonInterests})',context);
  const tiesVM=runInNewContext(region('function declaredTieHTML(','function declaredRowHTML(')+';({declaredTieHTML})',context);
  const votesData=await read('votes.json'),bills=await read('bills/index.json');

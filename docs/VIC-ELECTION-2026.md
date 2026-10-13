@@ -1,7 +1,8 @@
 # Victorian election hub: export audit, 10 October 2026
 
-Publication remains disabled pending Jake’s electoral-matter authorisation and
-correction-contact decisions. The hub contains 88 Assembly districts, 8 Council
+The production config enables publication with Jake’s exact 13 October 2026
+authorisation and corrections contact; staging remains disabled. See HUBS.md
+for the surface audit. This isolated lane does not push, deploy or post. The hub contains 88 Assembly districts, 8 Council
 regions, 128 validated roster members and 97 canonical pages. The underlying vote and roster exports are unchanged.
 
 Sources, licence terms, boundary changes and enablement instructions are in

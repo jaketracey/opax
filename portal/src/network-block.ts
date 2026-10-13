@@ -36,7 +36,7 @@
 export const BLOCKED_PATHS = /^\/(?:api\/|og\/|bill-texts\/)/
 
 /** Routes that call a generative model: the paid subset of BLOCKED_PATHS. */
-export const GENERATION_PATHS = /^\/api\/(?:ask|search-summary|followups|journey-story)(?:\/|$)/
+export const GENERATION_PATHS = /^\/api\/(?:ask|ask-agentic|search-summary|followups|journey-story)(?:\/|$)/
 
 export const DEFAULT_BLOCKED_ASNS = '45102,24429,37963' // Alibaba Cloud (intl, CN, Hangzhou)
 export const DEFAULT_GENERATION_BLOCKED_ASNS = '32934' // Meta (Facebook) crawler network

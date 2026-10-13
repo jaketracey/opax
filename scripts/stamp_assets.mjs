@@ -38,7 +38,7 @@ const PUBLIC = join(ROOT, 'portal', 'public')
 const INDEX = join(PUBLIC, 'index.html')
 
 /** Assets referenced from index.html with a ?v= stamp. */
-const STAMPED = ['app.js', 'spa-shell.js', 'spa-entry.js', 'style.css', 'analytics.js', 'gtm.js', 'events.js', 'navigation.js', 'quick-search.js', 'voice.css', 'ui-controls.css', 'ui-source.css', 'ui-source.js', 'labels.js', 'register-tables.css', 'register-tables-entry.js', 'vote-tables.js', 'vote-tables.css']
+const STAMPED = ['app.js', 'spa-shell.js', 'spa-entry.js', 'style.css', 'analytics.js', 'gtm.js', 'events.js', 'navigation.js', 'quick-search.js', 'voice.css', 'ui-controls.css', 'ui-source.css', 'ui-source.js', 'labels.js', 'page-actions.css', 'register-tables.css', 'register-tables-entry.js', 'vote-tables.js', 'vote-tables.css']
 
 const hashOf = (file) =>
   createHash('sha256').update(readFileSync(join(PUBLIC, file))).digest('hex').slice(0, 10)
@@ -137,12 +137,14 @@ export async function refreshFonts({ publicRoot = PUBLIC, fetcher = honestFetch 
  *  agencies.js and suppliers.js import each other: stamp the agencies → suppliers
  *  edge only, then app.js. Keep the reverse edge hand-versioned to avoid a hash cycle. */
 export const MODULE_STAMPS = [
+  // ⋯: app.js draws and runs it; electorates.js draws it.
+  ['app.js', 'page-actions-menu.js'], ['electorates.js', 'page-actions-menu.js'],
+  ['datatable.js', 'server-csv.js'],
   ['datatable-privacy-fields.js', 'datatable-query.js'], ['datatable-privacy-fields.js', 'datatable-csv.js'],
   ['datatable.js', 'datatable-privacy-fields.js'],
   ['datatable.js', 'donor-entity.js'],
   ['datatable-workbench.js', 'datatable.js'],
   ['register-tables.js', 'donor-entity.js'], ['register-tables.js', 'datatable.js'], ['register-tables.js', 'datatable-query.js'], ['register-tables.js', 'datatable-privacy-fields.js'], ['register-tables-entry.js', 'register-tables.js'], ['app.js', 'register-tables.js'],
-  ['datatable.js', 'server-csv.js'],
   ['vote-tables.js', 'labels.js'], ['vote-tables.js', 'division-markdown.js'], ['vote-tables.js', 'datatable.js'],
   ['donor-views.js', 'donor-entity.js'], ['wordsdollars.js','donor-views.js'], ['quiz.js','donor-views.js'], ['ledger.js', 'donor-views.js'], ['home.js', 'donor-views.js'],
   ['ledger.js', 'donor-entity.js'], ['quiz.js', 'donor-entity.js'], ['money-journeys-data.js', 'donor-entity.js'], ['map-research.js','donor-entity.js'], ['map-research.js','donor-views.js'],
@@ -168,7 +170,7 @@ export const MODULE_STAMPS = [
   // The money map's bundle names its chunks by content, so an importer holding
   // an old money-map.js would ask for chunks the build has removed.
   ['map-page.js', 'money-map.js'], ['agencies.js', 'money-map.js'], ['suppliers.js', 'money-map.js'],
-  ['thenvsnow.js', 'wombat.js'], ['thenvsnow.js', 'labels.js'], ['grant-recipient.js', 'grants.js'],
+  ['thenvsnow.js', 'wombat.js'], ['thenvsnow.js', 'labels.js'], ['thenvsnow.js', 'canonical-urls.js'], ['grant-recipient.js', 'grants.js'],
   ['electorates.js', 'labels.js'], ['home-data.js', 'labels.js'],
   ['app.js', 'vote-tables.js'],
   ['app.js','donor-views.js'], ['app.js','map-research.js'],
@@ -183,7 +185,7 @@ export const MODULE_STAMPS = [
   ['money-explain.js', 'labels.js'], ['money-explain.js', 'canonical-urls.js'],
   // The Explore tools and the loaders, restyled on tokens in pass 4G.
   ['app.js', 'ballot.js'], ['app.js', 'grants.js'], ['app.js', 'ledger.js'], ['app.js', 'matrix.js'], ['app.js', 'wordsdollars.js'],
-  ['app.js', 'thenvsnow.js'], ['app.js', 'statemap.js'], ['app.js', 'stages.js'], ['app.js', 'wombat.js'],
+  ['app.js', 'thenvsnow.js'], ['app.js', 'statemap.js'], ['app.js', 'stages.js'], ['app.js', 'wombat.js'], ['app.js', 'ask-steps.js'],
   ['home.js', 'home-data.js'], ['home.js', 'electorates.js'], ['home.js', 'money-map.js'],
 ]
 

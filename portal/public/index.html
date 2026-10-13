@@ -9,7 +9,7 @@
 <!-- Google Tag Manager (container GTM-PNDM87LW). The loader and the site's
      own dataLayer events live in /gtm.js so no inline script is needed. -->
 <script src="/spa-entry.js?v=347a573b03"></script>
-<script src="/events.js?v=08151d5d9b" defer></script>
+<script src="/events.js?v=02bf234aff" defer></script>
 <script src="/gtm.js?v=0764911f84" defer></script>
 <!-- Home page values. On a real path (/subject/person/slug, /reports/gambling)
      the Worker rewrites these per route; app.js keeps canonical and og:url in
@@ -67,9 +67,10 @@
 <script type="module" src="/vote-tables.js?v=5d8e1994a8"></script>
 <link rel="stylesheet" href="/ui-controls.css?v=f8011bf298">
 <link rel="stylesheet" href="/ui-source.css?v=4f396d8cfc">
+<link rel="stylesheet" href="/page-actions.css?v=a416a2254f">
 <link rel="stylesheet" href="/voice.css?v=a10938b91d">
 <!-- labels.js: app.js imports it before its first render. -->
-<link rel="modulepreload" href="/labels.js?v=c6bf994ef7">
+<link rel="modulepreload" href="/labels.js?v=fc03aa14cf">
 </head>
 <body class="research-app">
 <!-- Google Tag Manager (noscript) -->
@@ -356,6 +357,7 @@
       </details>
       <div id="ask-status" class="status" role="status"></div>
       <div id="ask-wombat" hidden></div>
+      <div id="ask-steps-live" hidden></div>
       <!-- The passage behind the part of the answer being read, fading up on
            the right as the reader scrolls. Content duplicates the sources
            list below; the card is mouse-only (keyboard readers use the list). -->
@@ -368,6 +370,7 @@
       </aside>
       <div id="ask-result" hidden>
         <p class="kicker">Answer</p>
+        <div id="ask-steps" hidden></div>
         <div id="ask-overview" class="answer-overview" hidden></div>
         <article id="ask-answer" class="answer" tabindex="-1"></article>
         <p class="answer-stamp" id="ask-stamp"></p>
@@ -695,19 +698,17 @@
               <p id="search-sort-note">Applies across all pages of retrieved matches.</p>
             </div>
           </div>
-          <!-- ⋯: copy the link and the three export formats. A details popover;
-               ui-source.js gives it Escape and light dismiss. -->
-          <details class="ui-pop ui-more" id="search-more">
-            <summary aria-label="Share and export these results" title="Share and export these results"><svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="4.5" cy="10" r="1.5"/><circle cx="10" cy="10" r="1.5"/><circle cx="15.5" cy="10" r="1.5"/></svg></summary>
-            <div class="ui-sheet">
-              <ul class="ui-more-list" role="list">
-                <li><button type="button" class="ui-more-item" id="search-copylink"><span>Copy link</span></button></li>
-                <li><button type="button" class="ui-more-item" data-format="csv"><span>Export CSV</span><small>A spreadsheet of every retrieved match</small></button></li>
-                <li><button type="button" class="ui-more-item" data-format="bibtex"><span>Export BibTeX</span><small>For LaTeX and reference managers</small></button></li>
-                <li><button type="button" class="ui-more-item" data-format="ris"><span>Export RIS</span><small>For Zotero, EndNote and Mendeley</small></button></li>
-              </ul>
-            </div>
-          </details>
+          <!-- ⋯: copy the link and the three export formats. The page-actions
+               menu (page-actions-menu.js; app.js's boot gives it its behaviour). -->
+          <div class="page-menu" id="search-more">
+            <button type="button" class="page-menu-button" aria-haspopup="menu" aria-expanded="false" aria-controls="search-more-menu" aria-label="Share and export these results" title="Share and export these results"><svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="4.5" cy="10" r="1.5"/><circle cx="10" cy="10" r="1.5"/><circle cx="15.5" cy="10" r="1.5"/></svg></button>
+            <ul class="page-menu-list" id="search-more-menu" role="menu" aria-label="Share and export these results" hidden>
+              <li role="none"><button type="button" class="page-menu-item" role="menuitem" tabindex="-1" id="search-copylink"><span>Copy link</span></button></li>
+              <li role="none"><button type="button" class="page-menu-item" role="menuitem" tabindex="-1" data-format="csv"><span>Export CSV</span><small>A spreadsheet of every retrieved match</small></button></li>
+              <li role="none"><button type="button" class="page-menu-item" role="menuitem" tabindex="-1" data-format="bibtex"><span>Export BibTeX</span><small>For LaTeX and reference managers</small></button></li>
+              <li role="none"><button type="button" class="page-menu-item" role="menuitem" tabindex="-1" data-format="ris"><span>Export RIS</span><small>For Zotero, EndNote and Mendeley</small></button></li>
+            </ul>
+          </div>
         </div>
       </div>
       <!-- Summarise these records: a collapsed row with the machine label. It
@@ -755,11 +756,11 @@
         <details id="money-journey-picker" class="journey-menu" name="money-tools"><summary>Journeys</summary><div id="money-journey-controls"></div></details>
         <div id="money-research"></div>
         <!-- ⋯: the full-screen map and the agency maps. Programs & places is a tab already. -->
-        <details class="ui-pop ui-more" id="money-more"><summary aria-label="More money tools" title="More money tools"><svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="4.5" cy="10" r="1.5"/><circle cx="10" cy="10" r="1.5"/><circle cx="15.5" cy="10" r="1.5"/></svg></summary>
-          <div class="ui-sheet"><ul class="ui-more-list" role="list">
-            <li><a class="ui-more-item" href="/map" data-full-map>Full-screen map</a></li>
-            <li><a class="ui-more-item" href="/subject/agency">Agency contract maps</a></li>
-          </ul></div></details>
+        <div class="page-menu" id="money-more"><button type="button" class="page-menu-button" aria-haspopup="menu" aria-expanded="false" aria-controls="money-more-menu" aria-label="More money tools" title="More money tools"><svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="4.5" cy="10" r="1.5"/><circle cx="10" cy="10" r="1.5"/><circle cx="15.5" cy="10" r="1.5"/></svg></button>
+          <ul class="page-menu-list" id="money-more-menu" role="menu" aria-label="More money tools" hidden>
+            <li role="none"><a class="page-menu-item" role="menuitem" tabindex="-1" href="/map" data-full-map>Full-screen map</a></li>
+            <li role="none"><a class="page-menu-item" role="menuitem" tabindex="-1" href="/subject/agency">Agency contract maps</a></li>
+          </ul></div>
       </div>
       <div id="money-stage" class="money-stage">
         <aside id="money-journey-story" class="journey-story" aria-label="Guided journey" hidden></aside>
@@ -1550,6 +1551,40 @@
       © The State of Queensland (Queensland Audit Office) 2026. Copyright exceptions are recorded
       per report and their bodies withheld.</p>
 
+      <h3 id="vic-election">Victorian election 2026</h3>
+      <p>The election pages bring together official election facts and the records OPAX already holds.
+      They show records only: no predictions, polls or rankings.</p>
+      <ul class="about-list">
+        <li><strong>Districts, dates and results.</strong> From the Victorian Electoral Commission (VEC), checked
+        10 and 13 October 2026. The 88 districts and 8 regions are those drawn in the 2021 redivision, which took
+        effect on 1 November 2022; no boundary change has been made since. Eureka was called Buninyong, and
+        North-Eastern Metropolitan Region was called Eastern Metropolitan Region, before then.</li>
+        <li><strong>Winning margins.</strong> The winner's share of the two-candidate vote above 50%, as the VEC's
+        winning-margin maps use it. The share comes from the VEC's final count after preferences, or from its
+        two-candidate count where the winner had a majority before preferences ran out. A district that has held a
+        by-election or supplementary election since 2022 shows that later result as well.</li>
+        <li><strong>Which seat am I in.</strong> Suburbs, postcodes and council areas are matched to districts with
+        Australian Bureau of Statistics (ABS) allocation files (ASGS Edition 3: state electoral divisions 2025,
+        suburbs and localities 2021, postal areas 2021, local government areas 2025), joined by mesh block and
+        weighted by usual residents at the 2021 Census. Postcodes are the ABS's postal areas, which approximate
+        delivery postcodes. Where a place crosses district lines the page gives each district's share of its
+        residents; the VEC's address search gives the exact answer.</li>
+        <li><strong>Members.</strong> The Parliament of Victoria's member list as at 9 September 2026, with each
+        member's party as listed there. Each member links to their existing OPAX profile.</li>
+        <li><strong>Speeches.</strong> Counts of Victorian Hansard speeches held by OPAX, with the years they cover.
+        A count that starts in 2022 includes speeches made before the November 2022 election. Members who have also
+        sat in federal Parliament show no count, because their records can't yet be separated.</li>
+        <li><strong>Votes.</strong> Victorian division records cover 2026 only, and only questions with a recorded
+        title are listed. A missing record doesn't mean a member didn't speak or vote.</li>
+        <li><strong>Not held.</strong> There is no Victorian register of members' interests in OPAX and no Victorian
+        state grants. Federal electorates are different from state districts, so federal grants aren't assigned to
+        them. No donor records appear on the election pages.</li>
+        <li><strong>Licences.</strong> VEC website material and ABS data are licensed CC BY 4.0
+        (© Victorian Electoral Commission; Source: Australian Bureau of Statistics). No VEC maps, images or branding
+        are reproduced. Victorian Hansard and division records are copyright material without an open licence, so
+        these pages show counts and links, not the text of speeches.</li>
+      </ul>
+
       <h3>Known limitations</h3>
       <ul class="about-list" id="methods-defects"><!-- filled from corpus.json --></ul>
       <ul class="about-list">
@@ -2184,7 +2219,7 @@
 <!-- defer: never block the parser (Lighthouse counted this as render-blocking).
      Deferred scripts still run before DOMContentLoaded, so nothing changes for
      app.js's boot. ?v= is content-hash stamped by scripts/stamp_assets.mjs. -->
-<script src="/spa-shell.js?v=d96b555db2" defer></script>
+<script src="/spa-shell.js?v=c1fdf674af" defer></script>
 <script src="/navigation.js?v=de99bace2e" defer></script>
 <script src="/quick-search.js?v=27eac3b2f7" defer></script>
 <script src="/ui-source.js?v=5e7b751ca0" defer></script>

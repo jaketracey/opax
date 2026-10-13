@@ -3354,10 +3354,9 @@ mark.privacy-confirm {
   #panel-doc .doc-toolbar-btns { flex-wrap: wrap; min-width: 0; }
 }
 /* ==== page actions: one secondary pill and ⋯ (person, bill, search) ====
-   Principle 5: one drawn action per view besides ⋯ (ui-source.css draws ⋯). */
+   Principle 5: one drawn action per view besides ⋯ (page-actions.css draws ⋯;
+   its menu floats over the page at every width, so this row never grows). */
 .page-actions { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-tight); }
-/* On a phone ⋯'s sheet opens in place under its row. */
-@media (max-width: 600px) { .page-actions > .ui-more[open] { flex-basis: 100%; } .page-actions > .ui-more[open] > summary { margin-left: auto; display: grid; } }
 
 /* ==== page-person: Person entry pages (/subject/person/<name>) ==== */
 .subject-person #subject-sections { min-width: 0; }
@@ -3775,7 +3774,6 @@ body:has(#search-options-pop[open]) { overflow: hidden; }
   #panel-search #search-readbar .ui-segmented { display: flex; flex: 1 1 auto; }
   #panel-search #search-readbar .ui-segmented > .ui-button { flex: 1 1 0; }
   #panel-search .results-actions select { width: 100%; padding-inline: 8px 24px; }
-  #panel-search #search-more[open] { flex-basis: 100%; order: 2; }
 }
 /* ⋯ rows here carry a second line saying what each export is for. */
 
@@ -6135,3 +6133,13 @@ html:not([data-chat="docked"]) #panel-chat.has-person-context .chat-composer { m
 .ask-person-context nav { display: grid; gap: 8px; border-top: 1px solid var(--divider-subtle); margin-top: 20px; padding-top: 16px; font: var(--type-fine); }
 .ask-person-context nav a { min-height: 28px; }
 .ask-person-context .fineprint { color: var(--ink-soft); margin-top: 20px; }
+
+/* Mixed source spans have participants, never a personal byline. */
+.speech-identity { display: inline-flex; align-items: center; gap: .45rem; vertical-align: middle; }
+.speech-identity .speech-group-avatar { width: 24px; height: 24px; flex-shrink: 0; }
+.topic-arc-face-group { display: flex; align-items: center; justify-content: center; color: var(--ink-soft); background: var(--paper-sunken); }
+.speech-participants { display: block; margin-top: .3rem; line-height: 1.7; font-size: .875rem; overflow-wrap: anywhere; }
+.speech-participant { display: inline-flex; align-items: center; gap: .25rem; vertical-align: middle; flex-wrap: wrap; }
+.speech-participant .meta-portrait { display: inline-block; flex-shrink: 0; width: 24px; height: 24px; }
+.speech-participant .meta-portrait:empty { display: none; }
+.speech-participant-role { color: var(--ink-soft); }

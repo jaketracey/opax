@@ -1,4 +1,4 @@
-import { evidenceExcerpt, guardPositionAnswer } from './ask-evidence'
+import { evidenceExcerpt, guardPositionAnswer, EVIDENCE_GAP_ANSWER } from './ask-evidence'
 
 export const isPositionDurationQuestion = (question:string):boolean => /^(?:and\s+)?how\s+long\b|\b(?:duration|how many (?:days|weeks|months|years))\b/i.test(question.trim())
 export const isPositionEligibilityQuestion = (question:string):boolean => /\b(?:eligible|eligibility|qualify|qualifies)\b/i.test(question)
@@ -77,7 +77,7 @@ export function positionEvidence(text: string, query: string): string {
   // Reuse the same conservative topic check before paying for generation.
   const guarded = guardPositionAnswer({answer:'candidate',retrieval_results:{resources:{source:{fields:{body:{paragraphs:{'source/t/body':{text:turn}}}}}}}},
     {query,prompt:{system:'You explain Australian politicians’ documented positions from primary records.'}})
-  if (guarded.answered === false) return ''
+  if (guarded.answer === EVIDENCE_GAP_ANSWER) return ''
   if (turn.length <= 5600) return turn.length >= 45 ? turn : ''
   // A long introduction can outscore the actual proposal on topic mentions.
   // Start near an explicit proposal, retaining context and its following terms.
@@ -88,7 +88,7 @@ export function positionEvidence(text: string, query: string): string {
     const window = evidenceExcerpt(candidate, '', 5600, true).text
     const relevant = guardPositionAnswer({answer:'candidate',retrieval_results:{resources:{source:{fields:{body:{paragraphs:{'source/t/body':{text:window}}}}}}}},
       {query,prompt:{system:'You explain Australian politicians’ documented positions from primary records.'}})
-    if (relevant.answered !== false) return (start ? '… ' : '') + window
+    if (relevant.answer !== EVIDENCE_GAP_ANSWER) return (start ? '… ' : '') + window
   }
   const excerpt = evidenceExcerpt(turn, query+' proposed propose require obligation definition', 5600, true)
   return excerpt.text.length >= 45 ? excerpt.text : ''

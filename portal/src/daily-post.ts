@@ -5,6 +5,7 @@ import {sanitiseStoredDonors} from './donor-hashes.mjs'
  * social-publication.ts freezes the edition and records each channel delivery.
  * See docs/DAILY-POST.md for connection and preview instructions.
  */
+import { VIC_ELECTION_AUTHORISATION_LINE, vicElectionMaterial } from '../public/vic-election.js'
 import { slugIndex } from './person-slug'
 import { TOPIC_NAMES } from './topic-names.mjs'
 import { shortMoney as compactMoney } from '../public/format.js'
@@ -46,6 +47,8 @@ export interface DailyPost {
    * then post as the single card.
    */
   slides?: StorySlide[]
+  /** Required on Victorian electoral editions and every attached slide. */
+  authorisation?: string
 }
 
 export interface DailyPostSources {
@@ -421,7 +424,7 @@ async function politicianPost(date: string, sources: DailyPostSources, exclude: 
   const source = sourceSlide('Read the speeches', `What do ${speeches} speeches actually say?`,
     ['Every speech in the record is cited back to Hansard', 'Topic labels, votes, declared interests and the money map on one page', 'Hansard: Commonwealth copyright, reproduced under CC BY-NC-ND'],
     url, `Read the speeches at opax.com.au, subject: ${person.name}.`)
-  return told(post, [cover, count, bars, grants, source], photos)
+  return authoriseVicPost(told(post, [cover, count, bars, grants, source], photos), person.representation!.some(r => r.jurisdiction === 'vic'))
 }
 
 function seatLine(rep: NonNullable<Person['representation']>[number]): string {
@@ -1022,14 +1025,28 @@ const COMPOSERS: Record<DailyPostKind, (date: string, sources: DailyPostSources,
 /** Composes the post for a date; falls back through the other kinds if one has nothing to say. */
 export async function composeDailyPost(date: string, sources: DailyPostSources, kind: DailyPostKind = kindFor(date), subject?: string): Promise<DailyPost | null> {
   // A named subject is an operator's choice: only the grant form exists so far.
-  if (subject) { const post = subject.startsWith('grant:') ? await grantPostFor(date, sources, subject) : null; return post ? sanitiseStoredDonors(post) : null }
+  if (subject) { const post = subject.startsWith('grant:') ? await grantPostFor(date, sources, subject) : null; return post ? authoriseVicPost(sanitiseStoredDonors(post)) : null }
   const recent = await sources.recent()
   const order = [kind, ...FALLBACK[kind]]
   for (const k of order) {
     const post = await COMPOSERS[k](date, sources, recent)
-    if (post) return sanitiseStoredDonors(post)
+    if (post) return authoriseVicPost(sanitiseStoredDonors(post))
   }
   return null
+}
+
+/** Apply after composition so fitting optional copy can never drop the approved line. */
+export function authoriseVicPost(post: DailyPost, victorianMember = false): DailyPost {
+  const material = [post.title, post.text, post.caption, post.url, JSON.stringify(post.slides ?? [])].join(' ')
+  if (!victorianMember && !post.authorisation && !vicElectionMaterial(material)) return post
+  const line = VIC_ELECTION_AUTHORISATION_LINE
+  const text = post.text.split('\n\n').filter(p => !/^Authorised by /.test(p) && p !== post.url).join('\n\n')
+  const caption = (post.caption ?? post.text).split('\n\n').filter(p => !/^Authorised by /.test(p)).join('\n\n')
+  return {...post, authorisation: line,
+    text: fit([text], [], [line, post.url].join('\n\n')),
+    caption: [caption, line].join('\n\n'),
+    slides: post.slides?.map(slide => ({...slide, authorisation: line})),
+  }
 }
 
 // ---------------------------------------------------------------- X API

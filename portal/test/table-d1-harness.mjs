@@ -1,11 +1,11 @@
-import {Miniflare,convertV4MiniflareOptions} from 'miniflare';
+import {localMiniflare} from './local-miniflare.mjs';
 import {mkdtemp,readFile,rm} from 'node:fs/promises';
 import {tmpdir} from 'node:os';
 import {join,basename} from 'node:path';
 import {buildTableSQL} from '../../scripts/load_tables.mjs';
 export async function tableDatabase(options={}) {
   const root=await mkdtemp(join(tmpdir(),'opax-table-d1-'));
-  const mf=new Miniflare(convertV4MiniflareOptions({host:process.env.OPAX_TEST_HOST,rootPath:root,resourcePersistencePath:join(root,'state'),resourceTmpPath:join(root,'runtime'),workers:[{name:"tables",modules:true,script:'export default {fetch(){return new Response("local fixture")}}',compatibilityDate:'2026-09-01',d1Databases:{TABLE_DB:'test-tables-'+basename(root)}}]}));
+  const mf=localMiniflare({rootPath:root,resourcePersistencePath:join(root,'state'),resourceTmpPath:join(root,'runtime'),workers:[{name:"tables",modules:true,script:'export default {fetch(){return new Response("local fixture")}}',compatibilityDate:'2026-09-01',d1Databases:{TABLE_DB:'test-tables-'+basename(root)}}]});
   try {
     const db=await mf.getD1Database('TABLE_DB','tables'),manifest=await buildTableSQL({...options,output:root});
     for(const file of manifest.files) {
