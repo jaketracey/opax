@@ -1,10 +1,10 @@
 /* Supplier entries: recorded procurement and source notices.
    No dependencies but the shared formats; the host router owns mounting and calls destroy on departure. */
 import {isOrganisationRecipient} from './recipient-entity.js?v=33f5c5486d';
-import {mountSuppliersTable} from './suppliers-table.js?v=d11f079ab4';
+import {mountSuppliersTable} from './suppliers-table.js?v=519665b4a1';
 import { shortDate, shortMoney } from "./format.js";
-import { contractTitle, placeholderContract, mountContractsTable, remotePrivacyCheck } from "./contracts-table.js?v=40e5d3f3b1";
-export { contractTitle, placeholderContract } from "./contracts-table.js?v=40e5d3f3b1";
+import { contractTitle, placeholderContract, mountContractsTable, remotePrivacyCheck } from "./contracts-table.js?v=23cd8b8e46";
+export { contractTitle, placeholderContract } from "./contracts-table.js?v=23cd8b8e46";
 
 import { mountSupplierGrowth, supplierDonations } from "./supplier-growth.js?v=86e58f592c";
 import { sourceLineHTML } from "./labels.js?v=c6bf994ef7";
@@ -273,7 +273,7 @@ async function mountFunding(root, links, life, register = "") {
   root.hidden = false;
   root.innerHTML = `<h3 class="subject-section-title">Also in the funding record</h3><p role="status">Opening the funding records…</p>${register}`;
   try {
-    const data = await json("/graph/money.json?v=suppliers-1", life.signal);
+    const data = await json("/graph/money.json", life.signal);
     if (!life.alive()) return;
     const ids = new Set(links.map((link) => link.id));
     const nodes = new Map((data.nodes || []).map((node) => [node.id, node]));
@@ -302,10 +302,10 @@ async function mountFunding(root, links, life, register = "") {
       slot.hidden = false;
       slot.innerHTML = '<p role="status">Opening the money map…</p>';
       try {
-        const { mountMoneyMap } = await import("/money-map.js?v=ca923f4f2e");
+        const { mountMoneyMap } = await import("/money-map.js?v=fb33962c2d");
         if (!life.alive()) return;
         slot.textContent = "";
-        const handle = await mountMoneyMap(slot, "/graph/money.json?v=suppliers-1", { focus: links[0].id, chrome: "mini", reveal: true, openCard: false });
+        const handle = await mountMoneyMap(slot, "/graph/money.json", { focus: links[0].id, chrome: "mini", reveal: true, openCard: false });
         if (!life.alive()) { handle.destroy(); return; }
         life.cleanup(() => handle.destroy());
         if (typeof IntersectionObserver !== "undefined") {

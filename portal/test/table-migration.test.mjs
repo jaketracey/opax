@@ -24,6 +24,7 @@ test('an existing 0001 D1 database upgrades without losing procurement records',
     await db.prepare("INSERT INTO table_contracts (id,title,amount,search) VALUES ('CN1','Maintenance',100,'maintenance')").run();
     await db.prepare("INSERT INTO table_suppliers (id,name,total,search) VALUES ('s-fixture','Fixture organisation',100,'fixture organisation')").run();
     await apply(await readFile(new URL('../table-migrations/0002_procurement_recipient.sql', import.meta.url), 'utf8'));
+    await apply(await readFile(new URL('../table-migrations/0002_vote_records.sql', import.meta.url), 'utf8'));
     await apply(tableSchema());
     await apply(tableSchema(), fresh);
     const shape = async (target, table) => {

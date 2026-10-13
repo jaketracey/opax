@@ -22,6 +22,7 @@ from .honest_http import HonestHTTP, Refused, Unavailable
 from . import http as source_http
 from .cache_batch import CacheBatch
 from .speaker_names import normalize_speaker
+from .speaker_roles import chair_role
 from .tvfy_bill_links import official_ref
 from .tvfy_refresh import PARTY_CANONICAL
 from .votes_state import Division, Vote, EXT_DDL, DIVISION_COLUMNS, VOTE_COLUMNS, bill_ref, person_key
@@ -130,6 +131,44 @@ def plain(node):
     return ''.join(t.strip() for t in node.itertext())
 
 
+def _own_fragments(node):
+    if node.text:
+        yield node.text
+    for child in node:
+        if child.tag != 'speech':
+            yield from _own_fragments(child)
+        if child.tail:
+            yield child.tail
+
+
+def parse_speech(node, house, day, people, topic=''):
+    """One XML turn, one identity; retain interjections as separate units.
+
+    Nested speeches cannot enter this unit's words. GIDs, paragraph IDs and
+    the established inline-text extraction remain unchanged.
+    """
+    identity = {'person_id': None, 'speaker': node.get('speakername', ''),
+                'party': '', 'electorate': '', 'oa_office_id': node.get('speakerid')}
+    if node.get('speakerid') and node.get('speakerid') != 'unknown':
+        identity = people.resolve(node.get('speakerid'), node.get('speakername'), house, day)
+    role = chair_role(node.get('chair_role') or node.get('party') or identity['party'])
+    paragraphs = []
+    for element in node:
+        if element.tag == 'speech':
+            continue
+        text = ''.join(t.strip() for t in _own_fragments(element))
+        if text:
+            paragraphs.append({'id': element.get('id'), 'text': text})
+    gid = node.get('id')
+    return identity | {'date': day, 'chamber': house, 'topic': topic,
+                       'text': '\n\n'.join(p['text'] for p in paragraphs), 'gid': gid,
+                       'citation_anchor': gid.rsplit('/', 1)[-1] if gid else None,
+                       'source_url': node.get('url'), 'paragraphs': paragraphs,
+                       'talktype': node.get('talktype', 'speech'),
+                       'speaker_type': 'chair' if role else ('member' if identity['person_id'] else 'unknown'),
+                       'chair_role': role}
+
+
 def parse_day(raw, house, day, people, ids):
     date.fromisoformat(day)
     if not raw:
@@ -150,22 +189,14 @@ def parse_day(raw, house, day, people, ids):
             bills = [{'id': b.get('id'), 'official_id': official_ref(b.get('id')), 'title': plain(b), 'url': b.get('url')}
                      for b in node.findall('bill')]
         elif node.tag == 'speech':
-            paragraphs = [plain(p) for p in list(node)]
-            text = '\n\n'.join(p for p in paragraphs if p)
             for p in node.iter('p'):
                 if p.get('pwmotiontext') or re.search(r'\b(?:The question is|Question put|That this|That the)\b', plain(p)):
                     question = plain(p)
-            identity = {'person_id': None, 'speaker': node.get('speakername', ''), 'party': '', 'electorate': ''}
-            if node.get('speakerid') and node.get('speakerid') != 'unknown':
+            for turn in node.iter('speech'):
                 try:
-                    identity = people.resolve(node.get('speakerid'), node.get('speakername'), house, day)
+                    speeches.append(parse_speech(turn, house, day, people, major or minor))
                 except ValueError as exc:
-                    issues.append({'kind': 'speech-identity', 'gid': node.get('id'), 'reason': str(exc)})
-                    continue
-            speeches.append({k: identity[k] for k in ('person_id', 'speaker', 'party', 'electorate')} |
-                            {'date': day, 'chamber': house, 'topic': major or minor,
-                             'text': text, 'gid': node.get('id'), 'oa_office_id': node.get('speakerid'),
-                             'source_url': node.get('url')})
+                    issues.append({'kind': 'speech-identity', 'gid': turn.get('id'), 'reason': str(exc)})
         elif node.tag == 'division':
             if node.get('divdate') != day:
                 raise ValueError('division date differs from chamber-day')
@@ -333,14 +364,43 @@ def _fetch(args, db, batch):
 def main():
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument('--db', default=os.environ.get('OPAX_DB', '~/.cache/autoresearch/parli.db'))
-    ap.add_argument('--start', default='2006-02-07')
-    ap.add_argument('--end', default=date.today().isoformat())
+    ap.add_argument('--start')
+    ap.add_argument('--end')
     ap.add_argument('--stage', default=str(DEFAULT_STAGE))
     ap.add_argument('--modern-dir')
     ap.add_argument('--offline', action='store_true')
     ap.add_argument('--tvfy-list-cache', default='~/.cache/autoresearch/tvfy/list')
     ap.add_argument('--load-divisions', action='store_true')
+    ap.add_argument('--backfill-missing-days', action='store_true',
+                    help='bounded federal speech sweep (2019–2025); staging copy by default')
+    ap.add_argument('--staging-db', help='new SQLite backup file for the speech dry run')
+    ap.add_argument('--cache-dir', help='reuse an existing XML archive cache without changing it')
+    ap.add_argument('--max-days', type=int, default=1000, help='maximum zero-row chamber-days per sweep')
+    mode = ap.add_mutually_exclusive_group()
+    mode.add_argument('--apply', action='store_true', help='load missing speeches into --db (requires a go)')
+    mode.add_argument('--dry-run', action='store_true', help='explicit staging-only speech rehearsal (the default)')
+    ap.add_argument('--sync-kb', action='store_true', help='checkpointed KB push after --apply (requires a go)')
+    ap.add_argument('--sync-state', help='checkpoint file for this bounded KB push')
+    ap.add_argument('--enrichment-max-usd', type=float, default=40,
+                    help='durable per-run enrichment hard cap, USD (positive, at most 40)')
+    ap.add_argument('--ingest-docs-per-second', type=float, default=5.0,
+                    help='planning assumption; no live write benchmark is run')
     args = ap.parse_args()
+    if args.backfill_missing_days:
+        from .federal_backfill import run
+        args.start = args.start or '2019-01-01'
+        args.end = args.end or '2025-12-31'
+        try:
+            print(json.dumps(run(args), ensure_ascii=False))
+        except Refused as exc:
+            raise source_http.SourceRefused(exc.url or BASE, str(exc)) from None
+        except (Unavailable, ValueError, ET.ParseError) as exc:
+            raise SystemExit(str(exc)) from None
+        return
+    if args.apply or args.dry_run or args.sync_kb or args.staging_db or args.sync_state:
+        ap.error('speech apply/staging/sync options require --backfill-missing-days')
+    args.start = args.start or '2006-02-07'
+    args.end = args.end or date.today().isoformat()
     try:
         with read_only(args.db) as db:
             divisions, votes, report = fetch(args, db)

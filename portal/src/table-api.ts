@@ -8,7 +8,7 @@ export const TABLE_REGISTRY_FINGERPRINT = registryBuild.fingerprint
 
 type TableEnv = {TABLE_DB: D1Database; CACHE_EPOCH?: string; ASSETS?: Fetcher}
 const MAX_CSV = 50_000, CSV_PAGE = 10_000, BATCH = 200, MAX_FACETS = 100
-const arrays = new Set(['portfolios','sectors','entities'])
+const arrays = new Set(['portfolios','sectors','entities','bill','sitting'])
 const quote = (key: string) => `"${key}"`
 const tableName = (name: string) => 'table_' + name.replaceAll('-', '_')
 const errorResponse = (status: number, error: string, headers = {}) => Response.json({error}, {status,headers:{'cache-control':'no-store','x-robots-tag':'noindex',...headers}})
@@ -191,6 +191,7 @@ export async function tableApi(request: Request, env: TableEnv, _ctx?: Execution
           if (!started) {started=true;controller.enqueue(encoder.encode(config.columns.map(c=>csvValue(c.label)).join(',')+'\r\n'));return}
           if (offset>=end) {
             if (truncated) controller.enqueue(encoder.encode([csvValue(note),...config.columns.slice(1).map(()=>'')].join(',')+'\r\n'))
+            if (exportLimited && !next) controller.enqueue(encoder.encode('# Export truncated at 50,000 rows.\r\n'))
             controller.close();return
           }
           const batch=await db.prepare(`SELECT ${columnSQL} FROM ${table} t${selection.sql}${order(query,config.columns)} LIMIT ? OFFSET ?`).bind(...selection.values,Math.min(BATCH,end-offset),offset).all<Row>()

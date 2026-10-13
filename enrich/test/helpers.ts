@@ -69,6 +69,7 @@ export const rows = (raw: DatabaseSync, sql: string, ...params: any[]): any[] =>
 // ---------------------------------------------------------------- in-memory knowledge box
 
 export interface FakeResource {
+  extraMetadata?: Record<string, unknown>
   slug?: string
   title?: string
   created?: string
@@ -108,6 +109,7 @@ export class FakeKb implements KbApi {
     if (!r) return null
     return {
       id: rid,
+      extra:r.extraMetadata ? {metadata:r.extraMetadata} : undefined,
       slug: r.slug ?? `speech-${rid}`,
       title: r.title,
       created: r.created,

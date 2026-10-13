@@ -13,7 +13,7 @@ marked `missing`: the bulk sync will create it with the corrected fields.
 A field patch READ-MERGE-WRITES the classifications (2026-09-29). The box replaces `usermetadata.classifications`
 wholesale, and the enrichment Worker writes `topic` labels there after the push (enrich/src/write.ts), so sending the
 row's own list would drop them. Instead, immediately before the write, the script reads the resource's current
-classifications, replaces only the labelsets a speaker patch owns (OWNED_LABELSETS: `party`, `speaker_type`), keeps every
+classifications, replaces only the labelsets a speaker patch owns (OWNED_LABELSETS: `party`, `speaker_type`, `chair_role`), keeps every
 other label (topic, kind, source, state, chamber, decade, ...) as read, refuses the write when the read has no `kind`
 label or when a label it does not own would be dropped, reads back after the PATCH and re-sends once if a label went
 missing. Text patches ("text:..." reasons) send the body only and read nothing.
@@ -61,7 +61,7 @@ def now_iso():
     return datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
 
 
-OWNED_LABELSETS = frozenset({"party", "speaker_type"})     # what a speaker patch may rewrite; every other label is kept
+OWNED_LABELSETS = frozenset({"party", "speaker_type", "chair_role"})
 
 
 def read_classifications(resource) -> list[dict]:

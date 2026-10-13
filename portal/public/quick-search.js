@@ -1,5 +1,7 @@
 /* Shared keyboard-accessible suggestions and header search disclosure. */
 (() => {
+// Keep the controller on the element so a second script evaluation reuses it.
+const disclosureKey = Symbol.for('opax.quick-search.disclosure');
 function attachQuickSearch(input, panel, { idPrefix, beforeGo, source, enterFallback = "search", clearOnGo = true, navigate, searchHref } = {}) {
   if (!input || !panel) return;
   let items = [];
@@ -79,6 +81,8 @@ function attachQuickSearch(input, panel, { idPrefix, beforeGo, source, enterFall
 }
 
 function disclosure(toggle, panel, input) {
+  if (!toggle || !panel || !input) return;
+  if (toggle[disclosureKey]) return toggle[disclosureKey];
   const close = (restoreFocus = false) => {
     panel.hidden = true;
     toggle.setAttribute('aria-expanded', 'false');
@@ -95,11 +99,20 @@ function disclosure(toggle, panel, input) {
   });
   document.addEventListener('keydown', event => {
     if (event.key === 'Escape' && !panel.hidden) { event.preventDefault(); close(true); }
-  });
+  }, true); // Close even when the suggestion list consumes Escape at the input.
   document.addEventListener('focusin', event => {
     if (!panel.contains(event.target) && !toggle.contains(event.target)) close();
   });
-  return { close };
+  return toggle[disclosureKey] = { close };
 }
-globalThis.OpaxQuickSearch = { attach: attachQuickSearch, disclosure };
+const api = globalThis.OpaxQuickSearch = { attach: attachQuickSearch, disclosure };
+if (typeof document !== 'undefined') {
+  // Server-rendered research pages retain this script but omit app.js. The
+  // shared script owns the disclosure; page scripts only use its controller.
+  const initHeader = () => {
+    api.header = disclosure(document.getElementById('header-search-open'), document.getElementById('header-search-panel'), document.getElementById('mast-q'));
+  };
+  initHeader();
+  if (!api.header && document.readyState === 'loading') document.addEventListener('DOMContentLoaded', initHeader, { once: true });
+}
 })();

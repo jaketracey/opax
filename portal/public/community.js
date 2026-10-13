@@ -285,7 +285,7 @@ try{
  const navDrawer=OpaxNavigation.mountDrawer();OpaxNavigation.mountDesktop();
  for(const a of document.querySelectorAll('.site-header a[href="/community"],#nav-drawer a[href="/community"]'))a.setAttribute('aria-current','page');
  const searchHref=q=>'/ask?'+new URLSearchParams({view:'search',q}),suggest=async q=>[{label:`Search the record for “${q}”`,type:'Search',href:searchHref(q)}],navigate=href=>location.assign(href);
- const headerSearch=OpaxQuickSearch.disclosure(document.getElementById('header-search-open'),document.getElementById('header-search-panel'),document.getElementById('mast-q'));
+ const headerSearch=OpaxQuickSearch.header;
  OpaxQuickSearch.attach(document.getElementById('mast-q'),document.getElementById('mast-sugg'),{idPrefix:'ms',source:suggest,navigate,searchHref,beforeGo:()=>headerSearch.close()});
  OpaxQuickSearch.attach(document.getElementById('drawer-q'),document.getElementById('drawer-sugg'),{idPrefix:'ds',source:suggest,navigate,searchHref,beforeGo:()=>navDrawer.close()});
 }catch{/* The masthead's links still work without its menus; the community does not depend on them. */}

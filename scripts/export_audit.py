@@ -6,13 +6,16 @@ import json
 from pathlib import Path
 import re
 import sys
+import subprocess
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 from parli.ingest.qao_reports import Held, ID, INDEX, LICENCE, COPYRIGHT, SAFE_MARKUP, guard_count, local_path, public_body, source_url
+from parli.ingest.qao_bodies import explicit_recommendations, response_body_name
 
-MAX_FILES, MAX_BYTES, CHUNK_ROWS = 40, 10_000_000, 100
+MAX_FILES, MAX_BYTES, CHUNK_ROWS = 150, 30_000_000, 100
 SOURCE = "Source: Queensland Audit Office, CC BY 4.0"
+PUBLIC_PDF_FIELDS = {'checked', 'status', 'sha256', 'page_count', 'pdf_url', 'licence_url', 'document_licence'}
 
 
 def encoded(value):
@@ -26,7 +29,7 @@ def check_budget(payloads):
     return len(payloads), size
 
 
-def validate_record(row):
+def validate_record(row, *, public=False):
     if not ID.fullmatch(row["id"]) or not row["title"] or row["id"] != f"qao-{row['year']}-{row['number']}":
         raise Held("Invalid report identity")
     if not re.fullmatch(r"\d{4}-\d{2}-\d{2}", row["tabled_date"]): raise Held("Missing tabled date")
@@ -46,6 +49,30 @@ def validate_record(row):
         # Only text and the narrow formatting subset produced by the loader.
         markup = SAFE_MARKUP.sub("", rec.get("html", ""))
         if "<" in markup or ">" in markup: raise Held("Unsafe recommendation markup")
+        provenance = rec.get('provenance', 'html')
+        if provenance != 'html' and (not re.fullmatch(r'pdf p\.[1-9]\d*', provenance) or provenance != f"pdf p.{rec.get('page')}"):
+            raise Held('Invalid recommendation provenance')
+    if row.get('pdf'):
+        pdf = row['pdf']
+        if public and (set(pdf) - PUBLIC_PDF_FIELDS or 'extraction_holds' in row):
+            raise Held('Internal PDF review fields escaped')
+        if not public and not isinstance(pdf.get('reasons'), list): raise Held('Document hold review missing')
+        if pdf.get('checked') is not True: raise Held('Document rights review missing')
+        if pdf['sha256'] is not None and not re.fullmatch(r'[a-f0-9]{64}', pdf['sha256']): raise Held('Missing document hash')
+        if pdf['status'] not in ('held', 'ready') or type(pdf['page_count']) is not int: raise Held('Invalid PDF receipt')
+        if pdf['status'] == 'ready' and (pdf.get('reasons') or not pdf['sha256'] or pdf['page_count'] < 3 or licence['body_skipped']):
+            raise Held('Uncleared PDF marked ready')
+        if pdf['status'] == 'held' and ((not public and not pdf.get('reasons')) or row.get('body_units')): raise Held('Held PDF units escaped')
+        if pdf['status'] == 'held' and (row.get('responses') or any(r.get('provenance','html') != 'html' for r in row['recommendations'])):
+            raise Held('Held PDF body escaped')
+    for response in row.get('responses', []):
+        if not row.get('pdf') or row['pdf']['status'] != 'ready' or licence['body_skipped']: raise Held('Held response escaped')
+        if set(response) != {'id', 'body', 'text', 'page_start', 'page_end', 'recommendation_numbers'}:
+            raise Held('Unexpected entity response fields')
+        if not response_body_name(response['body']) or not response['text'] or not 1 <= response['page_start'] <= response['page_end'] <= row['pdf']['page_count']:
+            raise Held('Unattributed or invalid response')
+        if response['recommendation_numbers'] != explicit_recommendations(response['text']):
+            raise Held('Response recommendation join is not explicit')
 
 
 def plan_export(snapshot, agencies=()):
@@ -64,6 +91,21 @@ def plan_export(snapshot, agencies=()):
     # Exact source strings only. Ambiguous exact names remain plain text.
     records = [{**row, "entity_links": {name: "/subject/agency/" + str(names[name][0])
                 for name in row["entities"] if len(names[name]) == 1}} for row in sorted(rows, key=lambda r: r["id"])]
+    for row in records:
+        responses = row.pop('responses', [])
+        row.pop('body_units', None)
+        if snapshot.get('phase') == 2:
+            # The complete review and extraction holds stay in local snapshots
+            # and rights receipts. Readers get document terms and source facts.
+            row['pdf'] = {k:v for k,v in row['pdf'].items() if k in PUBLIC_PDF_FIELDS}
+            row.pop('extraction_holds', None)
+            row['licence'] = {k:v for k,v in row['licence'].items() if k != 'notices'}
+            row['response_count'] = len(responses)
+            row['has_responses'] = bool(responses)
+            if responses:
+                name = f"responses-{row['id']}.json"
+                row['responses_path'] = '/audit/' + name
+                payloads[name] = encoded({'report_id': row['id'], 'records': responses})
     for offset in range(0, len(records), CHUNK_ROWS):
         batch = records[offset:offset + CHUNK_ROWS]
         filename = f"reports-{1 + offset // CHUNK_ROWS}.json"
@@ -71,14 +113,15 @@ def plan_export(snapshot, agencies=()):
         for row in batch:
             lookup[row["id"]] = chunk
             catalogue.append({k: row[k] for k in ("id", "number", "year", "report_label", "title", "tabled_date", "sectors", "entities", "canonical_url")})
+            if snapshot.get('phase') == 2: catalogue[-1]['has_responses'] = row['has_responses']
         body = encoded({"records": batch}); payloads[filename] = body
         chunks.append({"path": "/audit/" + filename, "count": len(batch), "bytes": len(body)})
     catalogue.sort(key=lambda r: (r["tabled_date"], r["number"], r["id"]), reverse=True)
     payloads["index.json"] = encoded({"records": catalogue})
-    manifest = {"schema": 1, "complete": True, "phase": 1, "count": len(rows), "listed": snapshot["listed"],
+    manifest = {"schema": 1, "complete": True, "phase": snapshot.get('phase', 1), "count": len(rows), "listed": snapshot["listed"],
                 "generated_at": snapshot["generated_at"], "index_url": "/audit/index.json", "lookup": lookup, "chunks": chunks,
                 "recommendations": sum(len(r["recommendations"]) for r in rows),
-                "licence_exceptions": [r["id"] for r in rows if r["licence"]["body_skipped"]],
+                "licence_exceptions": sorted(r["id"] for r in rows if r["licence"]["body_skipped"]),
                 "facets": {"year": sorted({r["year"] for r in rows}, reverse=True),
                            "sector": sorted({s for r in rows for s in r["sectors"]}),
                            "entity": sorted({e for r in rows for e in r["entities"]})},
@@ -90,6 +133,18 @@ def plan_export(snapshot, agencies=()):
                 "limitations": ["Index + HTML recommendations only; PDF bodies and entity responses are phase 2.",
                     "Audited public bodies are included only where the HTML explicitly identifies audit scope; missing names stay unknown.",
                     "Generic recommendation addressees remain source text, not audited entities. No person entities or joins."]}
+    if snapshot.get('phase') == 2:
+        manifest.update(bodies=sum(r['pdf']['status'] == 'ready' for r in rows),
+                        html_recommendations=sum(rec.get('provenance','html') == 'html' for r in rows for rec in r['recommendations']),
+                        pdf_recommendations=sum(rec.get('provenance','html') != 'html' for r in rows for rec in r['recommendations']),
+                        responses=sum(len(r.get('responses', [])) for r in rows),
+                        pdf_holds=[{'id':r['id'], 'document_licence':r['pdf']['document_licence']} for r in rows if r['pdf']['status'] == 'held'],
+                        recommendation_mismatches=snapshot.get('recommendation_mismatches', []),
+                        recommendation_compared_reports=snapshot.get('recommendation_compared_reports', 0))
+        manifest['attribution'].update(changes='Report metadata arranged into a catalogue. HTML recommendations reproduce the report pages under their CC BY 4.0 grant, with formatting simplified and html provenance. PDF-derived text retains its PDF page reference. No model summaries.',
+                                       exceptions='HTML page exceptions and PDF terms are reviewed separately. The two original page exceptions remain held. PDF bodies and responses are held under their document-level terms; the HTML page grant applies separately. Images and logos are excluded.')
+        manifest['limitations'] = ['PDF bodies are staged locally for KB review; no KB publication by this loader.',
+                                  'Signatories remain only inside verbatim response text. No person entities, fields or joins.']
     payloads["manifest.json"] = encoded(manifest)
     payloads["ready.json"] = encoded({"complete": True, "count": manifest["count"], "listed": manifest["listed"], "export_date": manifest["generated_at"][:10]})
     check_budget(payloads)
@@ -101,10 +156,30 @@ def export(snapshot_path, out):
     snapshot = json.loads(snapshot_path.read_text())
     old = json.loads((out / "manifest.json").read_text()) if (out / "manifest.json").exists() else {}
     guard_count(snapshot["count"], snapshot["listed"], old.get("count", 0))
+    if snapshot.get('phase') == 2 and not set(old.get('lookup', {})).issubset({r['id'] for r in snapshot['reports']}):
+        raise Held('Audit export would lose an accepted report')
     agency_index = json.loads((ROOT / "portal/public/agencies.json").read_text())
     jurisdiction = {"Commonwealth": "federal", "Queensland": "qld"}.get(agency_index.get("meta", {}).get("scope"))
     agencies = [{**a, "jurisdiction": a.get("jurisdiction", jurisdiction)} for a in agency_index["agencies"]]
     payloads, manifest = plan_export(snapshot, agencies)
+    # Apply the same boundary as build:privacy before any accepted asset write.
+    # Body source text is held if the boundary would alter it.
+    boundary = subprocess.run(['node', str(ROOT / 'scripts/qao_publication_boundary.mjs')],
+        input=json.dumps({name:json.loads(body) for name,body in payloads.items()}, ensure_ascii=False),
+        cwd=ROOT, capture_output=True, text=True)
+    if boundary.returncode: raise Held('QAO publication privacy gate failed; accepted assets kept')
+    projected = json.loads(boundary.stdout)
+    manifest = projected['manifest.json']
+    for chunk in manifest['chunks']: chunk['bytes'] = len(encoded(projected[Path(chunk['path']).name]))
+    manifest['title_privacy_filtered'] = sum(bool(r.get('title_privacy_filtered')) for r in projected['index.json']['records'])
+    manifest['recommendation_privacy_filtered'] = sum(bool(rec.get('privacy_filtered')) for chunk in manifest['chunks']
+        for row in projected[Path(chunk['path']).name]['records'] for rec in row['recommendations'])
+    if manifest['title_privacy_filtered']:
+        manifest['attribution']['changes'] += ' Titles with names withheld are marked; QAO has the original title.'
+    if manifest['recommendation_privacy_filtered']:
+        manifest['attribution']['changes'] += ' HTML recommendations with names withheld are marked; QAO has the original text.'
+    payloads = {name:encoded(body) for name,body in projected.items()}
+    check_budget(payloads)
     out.mkdir(parents=True, exist_ok=True)
     for name, body in payloads.items():
         path = out / name

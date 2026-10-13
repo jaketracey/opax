@@ -30,6 +30,8 @@ import {isOrganisationRecipient} from '../src/table-recipient.mjs';
 import {moneyFlowType} from '../public/money-records.js';
 import {TABLE_DATASETS} from '../src/table-datasets.mjs';
 import {assertTablePrivacy,tablePrivacyIndex} from './datatable-privacy.mjs';
+import {JSDOM} from 'jsdom';
+import {mountMoneyExplain, parseExplainParams, explainPath} from '../public/money-explain.js';
 
 const sourceRead = root => async path => JSON.parse(readFileSync(join(root,path.replace(/^\//,'')),'utf8'));
 const buildGrowth = buildGrowthOriginal;
@@ -242,6 +244,7 @@ test('neutral D1 aggregates retain source financial totals without identity fiel
     assert.ok(Math.abs(stored-total)<=Math.max(0.00001,Math.abs(total)*1e-12),name+': source total retained');
     const aggregates=(await tablesD1.db.prepare(`SELECT * FROM ${table} WHERE id LIKE 'aggregate:%' LIMIT 100`).all()).results;
     assert.ok(aggregates.length>0,name+': neutral aggregates exist');
+    if(['grants','money-connections','party-money'].includes(name))for(const row of aggregates)assert.ok(Object.values(row).some(value=>typeof value==='string'&&/^Donors not named \([0-9]+\)$/.test(value)),name+': shared neutral aggregate label');
     for(const row of aggregates)for(const key of ['abn','url','canonical_url','aliases','description','to'])if(key in row)assert.equal(row[key],null,name+': aggregate has no identity or link');
   }
 });
@@ -333,6 +336,12 @@ test('a campaigner route never repeats a requested name it cannot show', async (
   }
 });
 
+// The served money files as the browser reads them: withheld donors as donor:withheld-N.
+const JURS = ['federal', 'qld', 'vic', 'tas'];
+const servedGraphs = MONEY_GRAPHS.map(path => JSON.parse(readFileSync(join(pub, path.slice(1)), 'utf8')));
+const servedMoney = servedGraphs.flatMap((graph, g) => graph.nodes.filter(n => n.kind === 'donor' && /^donor:withheld-\d+$/.test(n.id))
+  .map(n => [JURS[g], {id: n.id, to: graph.edges.find(e => e.source === n.id && !e.grant && !e.flow)?.target}]));
+
 // --- 1. server-rendered HTML -----------------------------------------------------
 const locs = name => [...readFileSync(at(`crawl/sitemaps/${name}`), 'utf8').matchAll(/<loc>https:\/\/opax\.com\.au([^<]+)<\/loc>/g)].map(m => decode(m[1]));
 const sitemapFiles = readdirSync(at('crawl/sitemaps'));
@@ -342,7 +351,11 @@ test('every server-rendered person, party, money, hub, campaigner and supplier p
   const people = sitemapFiles.filter(f => f.startsWith('people-')).flatMap(locs);
   assert.ok(people.length > 1000);
   const parties = new Set([...sitemapFiles.filter(f => f.startsWith('parties-')).flatMap(locs), ...graphs.flatMap(g => g.nodes.filter(n => n.kind === 'party').map(n => partyUrl(n.label)))]);
-  const money = ['/', '/money', '/money/receipts', '/money/grants', '/map', '/connections', '/explore', '/subject/party', '/subject/supplier', '/subject/agency'];
+  const money = ['/', '/money', '/money/receipts', '/money/grants', '/money/explain', '/map', '/connections', '/explore', '/subject/party', '/subject/supplier', '/subject/agency'];
+  // The explainer's address names graph IDs; one crafted from a withheld name, or a
+  // real withheld ID from the served files, is never echoed by the server.
+  for (const label of checked.slice(0, 25)) money.push(`/money/explain?${new URLSearchParams({from: `donor:${foldDonorName(label)}`, to: 'party:Liberal'})}`);
+  for (const [jur, probe] of servedMoney.filter((_, i) => i % 20 === 0)) money.push(`/money/explain?${new URLSearchParams({jur, from: probe.id, ...(probe.to ? {to: probe.to} : {})})}`);
   for (const dir of ['donor', 'campaigner']) for (let page = 1, next = true; next; page++) {
     const path = `/subject/${dir}${page > 1 ? `?page=${page}` : ''}`;
     money.push(path);
@@ -363,6 +376,42 @@ test('every server-rendered person, party, money, hub, campaigner and supplier p
   assert.ok(personDonorBlocks > 500, `${personDonorBlocks} person pages still list organisational donors`);
   t.diagnostic(`${personDonorBlocks} person pages list organisational donors; ${interestNotes} leave a declared-interest entry to the official register`);
   t.diagnostic(`scanned for ${checked.length} names: ${withheldLabels.length} withheld labels (${fixtureLabels.size} fixtures), less ${withheldLabels.length - known.length} single-word or other-register organisation names and ${known.length - checked.length} office holders`);
+});
+
+// The explainer draws flows in the browser, so its guard is probed through the
+// module itself: every real withheld ID in the served files, and every withheld
+// donor of the source graphs (fixtures included) by its raw ID, must land on the
+// not-named aggregate address and render no withheld name. Counts only.
+test('the explainer client guard turns every withheld donor ID into the not-named group and renders no withheld name', async t => {
+  const dom = new JSDOM('<!doctype html><html><head></head><body><div id="root"></div></body></html>');
+  const root = dom.window.document.getElementById('root');
+  const realFetch = globalThis.fetch, fetched = [];
+  globalThis.fetch = async url => { fetched.push(String(url)); throw new Error('no network in this probe'); };
+  const sets = [['served', servedGraphs, donorPrivacyIndex(servedGraphs)], ['source', graphs, index]];
+  const probes = {served: 0, source: 0};
+  try {
+    for (const [name, set, privacy] of sets) for (const [g, graph] of set.entries()) {
+      const jur = JURS[g];
+      for (const node of graph.nodes.filter(n => n.kind === 'donor' && donorNameWithheld(privacy, n.label))) {
+        const to = graph.edges.find(e => e.source === node.id && !e.grant && !e.flow)?.target;
+        const params = new URLSearchParams({jur, from: node.id, ...(to ? {to} : {})});
+        const parsed = parseExplainParams(params, graph, privacy);
+        const where = `explain client ${name} ${jur} probe ${probes[name] + 1}`;
+        assert.equal(parsed.ok && parsed.withheld && parsed.state.unnamed, true, where);
+        const addresses = [];
+        const handle = mountMoneyExplain(root, {params, loadMoney: async () => graph, loadPrivacyIndex: async () => privacy, onAddress: path => addresses.push(path)});
+        await handle.ready;
+        assert.deepEqual(addresses, [explainPath({jur, unnamed: true, ...(to ? {to} : {})})], where);
+        // A one-word label can be ordinary page text; the name checks below cover those as the server sweep does.
+        assert.ok(!root.innerHTML.includes(node.id) && !(/\S\s+\S/.test(node.label) && root.innerHTML.includes(node.label)), `${where}: the ID or label is on the page`);
+        assertClean(where, root.innerHTML);
+        probes[name]++;
+      }
+    }
+  } finally { globalThis.fetch = realFetch; }
+  assert.deepEqual(fetched, [], 'the module makes no request of its own');
+  assert.ok(probes.served > 400 && probes.source > 400, JSON.stringify(probes));
+  t.diagnostic(`explainer client guard: ${probes.served} served withheld IDs, ${probes.source} source withheld IDs`);
 });
 
 test('the same derived privacy set covers person, bill and supplier client module output and every Ask seed',async t=>{

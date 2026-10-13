@@ -13,6 +13,7 @@ import type { AiLike } from './env.ts'
 export const MAX_ATTEMPTS = 3
 
 export interface GenerationSpend {
+  billingVerified: boolean
   model: string
   neurons: number
   promptTokens: number
@@ -110,6 +111,8 @@ export interface GenerateOptions {
   onReject?: (info: { task: Task; model: string; attempt: number; reasons: string[]; sample: string }) => Promise<void>
   /** Polled before each attempt: false stops the run (daily budget, tick deadline). */
   mayContinue: () => boolean
+  /** Durable run/daily reservation before every attempt, including retries. */
+  beforeCall?: (model: string, body: Record<string, unknown>) => Promise<boolean>
   priorNamesRejected?: boolean
 }
 
@@ -132,6 +135,7 @@ export async function generate(opts: GenerateOptions): Promise<Generation> {
     const model = namesRetry ? opts.escalationModel : models[attempt]
     const messages = buildMessages(record, outstanding, complaints, namesRetry ? offendingTerms : [])
     const body = requestBody(model, messages, opts.maxTokens, outstanding)
+    if (opts.beforeCall && !await opts.beforeCall(model,body)) return {results,incomplete:true}
 
     let response: unknown
     try {
@@ -144,7 +148,10 @@ export async function generate(opts: GenerateOptions): Promise<Generation> {
     const reply = readModelReply(response, false)
     const promptChars = messages.reduce((n, m) => n + m.content.length, 0)
     const cost = neuronsFor(model, reply.usage, promptChars, reply.text.length)
-    await opts.onSpend({ model, neurons: cost.neurons, promptTokens: reply.usage.promptTokens ?? 0, completionTokens: reply.usage.completionTokens ?? 0 })
+    await opts.onSpend({ model, neurons: cost.neurons, promptTokens: reply.usage.promptTokens ?? 0, completionTokens: reply.usage.completionTokens ?? 0,
+      billingVerified:(reply.usage.neurons!==null && reply.usage.neurons>=0)
+        || (reply.usage.promptTokens!==null && reply.usage.promptTokens>=0
+          && reply.usage.completionTokens!==null && reply.usage.completionTokens>=0) })
 
     // The call is shared by the tasks still outstanding.
     const share = cost.neurons / outstanding.length

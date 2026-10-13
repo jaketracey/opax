@@ -92,7 +92,7 @@ test('decoded identity variants reject before data SQL across all five money dat
   const spaced='  '+phrase.replaceAll(' ','  \t  ')+'  ';
   for(const [name,config]of Object.entries(TABLE_DATASETS).filter(([,c])=>c.privacy)) {
     const category=config.columns.find(c=>c.type==='category').key;
-    const numeric=config.columns.find(c=>c.type==='money').key;
+    const numeric=config.columns.find(c=>['money','count'].includes(c.type)).key;
     const states=[
       new URLSearchParams({['f.'+category]:'['+escaped(phrase)+']'}),
       new URLSearchParams({['f.'+category]:'['+escaped(identifier)+']'}),
@@ -126,8 +126,9 @@ test('CSV pages are bounded, retryable and retain the 50,000-row export ceiling'
     const response=await tableApi(new Request('https://opax.com.au'+path),env);last=response;
     assert.equal(response.headers.get('x-table-total'),'50100');assert.equal(response.headers.get('x-table-exported'),'10000');assert.equal(response.headers.get('x-table-page'),String(page));assert.equal(response.headers.get('x-table-export-truncated'),'true');
     assert.notEqual(response.headers.get('etag'),previousETag);previousETag=response.headers.get('etag');
-    const records=(await response.text()).split('\r\n');assert.equal(records.length,10003);
-    const note=response.headers.get('x-table-export-note');assert.ok(note.includes('export limited to the first 50,000 rows'));assert.ok(records.at(-2).startsWith('"'+note));
+    const records=(await response.text()).split('\r\n');assert.equal(records.length,page===5 ? 10004 : 10003);
+    const note=response.headers.get('x-table-export-note');assert.ok(note.includes('export limited to the first 50,000 rows'));assert.ok(records[10001].startsWith('"'+note));
+    if(page===5)assert.equal(records[10002],'# Export truncated at 50,000 rows.');
     for(const record of records.slice(1,10001))values.push(Number(record.split(',')[TABLE_DATASETS.votes.columns.findIndex(c=>c.key==='ayes')]));
     const next=/<([^>]+)>; rel="next"/.exec(response.headers.get('link')||'');
     assert.equal(Boolean(next),page<5);if(page<5){path=next[1];assert.equal(new URL(path,'https://opax.com.au').searchParams.get('page'),String(page+1));}

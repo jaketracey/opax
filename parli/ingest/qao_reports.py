@@ -77,26 +77,31 @@ def source_url(value, base=INDEX):
 
 
 class Client:
-    def __init__(self, session=None, sleep=time.sleep, clock=time.monotonic, quiet=False, cache=None):
+    def __init__(self, session=None, sleep=time.sleep, clock=time.monotonic, quiet=False, cache=None, request_limit=MAX_REQUESTS):
         self.session = session or source_http.Session()
         self.sleep, self.clock, self.quiet = sleep, clock, quiet
         self.requests, self.last, self.spacing, self.robot = 0, None, 2.0, None
+        self.request_limit = request_limit
         self.cache = local_path(cache) if cache else None
 
-    def get(self, url, policy=False):
+    def get(self, url, policy=False, binary=False):
         source_url(url)
         if self.robot and not self.robot.can_fetch(UA, url):
             raise Held("robots.txt disallows requested source page")
         for attempt in range(4):
             if self.quiet: quiet_guard()
-            if self.requests >= MAX_REQUESTS: raise Held("800-request run ceiling reached; checkpoint retained")
+            if self.requests >= self.request_limit: raise Held(f"{self.request_limit}-request run ceiling reached; checkpoint retained")
             if self.last is not None:
                 self.sleep(max(0, self.spacing - (self.clock() - self.last)))
             if self.quiet: quiet_guard()
             self.last = self.clock()
             self.requests += 1
-            response = self.session.get(url, headers={"User-Agent": source_http.USER_AGENT}, timeout=45, allow_redirects=False)
-            body = response.text
+            kwargs = {"headers": {"User-Agent": source_http.USER_AGENT}, "timeout": 45, "allow_redirects": False}
+            # Keep the shared honest identity, host and response guards, but
+            # own retries here so every wire request is counted and paced.
+            response = (requests.Session.request(self.session, 'GET', url, **kwargs)
+                        if isinstance(self.session, source_http.Session) else self.session.get(url, **kwargs))
+            body = response.content[:131072].decode('utf-8', 'replace') if binary else response.text
             if re.search(r"cf-chl-|cf-mitigated|challenge-platform|<title>\s*(?:just a moment|access denied)|verify you are human|[gh]-recaptcha|hcaptcha", body, re.I) or response.headers.get("cf-mitigated") == "challenge":
                 raise Held("Source challenge detected; stopped without bypass")
             if response.status_code == 429 or 500 <= response.status_code <= 599:
@@ -111,6 +116,10 @@ class Client:
                 self.sleep(delay)
                 continue
             if response.status_code != 200: raise Held(f"Source HTTP {response.status_code}; checkpoint retained")
+            if binary:
+                if not response.content.startswith(b'%PDF-'):
+                    raise Held("Unexpected non-PDF source response")
+                return response.content
             if not policy and "html" not in response.headers.get("Content-Type", "text/html"):
                 raise Held("Unexpected non-HTML source response; no PDF bodies acquired")
             if self.cache:
@@ -545,9 +554,11 @@ def parse_report(html, row):
     if not main or not soup.find("h1"): raise Held("Report detail structure missing")
     if text(soup.find("h1")) != row["title"]: raise Held("Report title changed between index and detail")
     licence = licence_review(soup)
-    pdf = main.select_one('.field--name-field-report-products a[href$=".pdf"]')
+    # Full reports outrank the separately published "Report on a page" product.
+    pdf = next((a for a in main.select('a[href]') if re.fullmatch(r'(?:download (?:full )?)?report pdf', text(a), re.I)), None)
     if not pdf:
-        pdf = next((a for a in main.select('a[href]') if re.fullmatch(r'(?:download full )?report pdf', text(a), re.I)), None)
+        pdf = next((a for a in main.select('.field--name-field-report-products a[href$=".pdf"]')
+                    if not re.search(r'on[-_ ]a[-_ ]page|summary|snapshot', a['href'] + ' ' + text(a), re.I)), None)
     return {**row, "pdf_url": source_url(pdf["href"]) if pdf else None,
             "entities": [] if licence["body_skipped"] else audited_entities(main),
             "recommendations": [] if licence["body_skipped"] else recommendations(main),
