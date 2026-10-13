@@ -44,6 +44,14 @@ class RealWrapperTests(unittest.TestCase):
         for rel in COPIED:
             (box / rel).parent.mkdir(parents=True, exist_ok=True)
             shutil.copyfile(ROOT / rel, box / rel)
+        # This fixture exercises roster ownership/SQL through the real wrapper.
+        # The independent money publication boundary has no donor records here;
+        # isolate it rather than pulling its live graph dependencies into the box.
+        (box/'scripts/withhold_donor_assets.mjs').write_text(
+            "import {readFileSync} from 'node:fs';\n"
+            "const data=JSON.parse(readFileSync(0,'utf8'));\n"
+            "if(!Array.isArray(data.people)||data.nodes||data.donors)throw Error('roster fixture only');\n"
+            "process.stdout.write(JSON.stringify(data)+'\\n');\n")
         (box / "parli").symlink_to(ROOT / "parli")
         if baseline is not None:
             (box / ROSTER).write_bytes(baseline)

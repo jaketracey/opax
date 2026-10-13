@@ -142,7 +142,7 @@ test('0012 test 7: failure halfway through deletion rolls back every scope row a
 });
 
 test('0012 test 8: request and scheduled cleanup clear only orphaned terminal IDs one day after stored closed_at',async t=>{
- const f=fixture(t);await f.login('a');const at=time();
+ const f=fixture(t);await f.login('a');const at=time();t.mock.method(Date,'now',()=>at*1000);
  const cases=[['old','closed',null,at-86400],['young','closed',null,at-86399],['linked','closed','a',at-86401],['open','active',null,at-86401],['cancel','cancelled',null,at-86400],['expired','expired',null,at-86400],['no-close','closed',null,null]];
  for(const [id,state,member,closed] of cases)f.db.prepare('INSERT INTO voice_sessions VALUES (?,?,?,?,?,?,?,?,?,?)').run(id,member,state,600,600,at-90000,at+600,at-90000,closed,'conv_'+id);
  const r=await voiceRoute(new Request('https://example.test/api/voice/status',{headers:{cookie:f.cookies.a}}),f.env,{},()=>{throw Error('No reads')});assert.equal(r.status,200);
@@ -259,7 +259,7 @@ test('deletion removes account/email limiter hashes and a redeemed sign-in proof
 });
 
 test('real Worker/D1 applies 0012 with existing content, rolls back deletion failures, and has one race winner plus scheduled expiry',async()=>{
- const {Miniflare,convertV4MiniflareOptions}=await import('miniflare');
+ const {localMiniflare}=await import('./local-miniflare.mjs');
  const compiled=await build({entryPoints:[new URL('../src/index.ts',import.meta.url).pathname],bundle:true,platform:'browser',format:'esm',write:false,external:['node:*'],plugins:[omitImages]});
  // Inject a service-bound email double into the actual Worker, including scheduled().
  const workerScript=compiled.outputFiles[0].text.replace(/export \{\s*index_default as default\s*\};/,`const actualWorker=index_default;
@@ -267,7 +267,7 @@ test('real Worker/D1 applies 0012 with existing content, rolls back deletion fai
  export {testWorker as default};`);
  assert.match(workerScript,/testWorker as default/);
  const outbox=[];
- const mf=new Miniflare(convertV4MiniflareOptions({port:8941,workers:[{name:'deletion',modules:true,script:workerScript,compatibilityDate:'2026-09-01',compatibilityFlags:['nodejs_compat'],d1Databases:{COMMUNITY_DB:'deletion-runtime'},bindings:{COMMUNITY_ENABLED:'true',COMMUNITY_ORIGIN:'https://example.test',COMMUNITY_EMAIL_FROM:'signin@example.test',COMMUNITY_CODE_MAC_SECRET:KEY,VOICE_ENABLED:'false'},serviceBindings:{EMAIL_STUB:async req=>{outbox.push(await req.json());return Response.json({messageId:'test'})}},outboundService:()=>{throw Error('Outbound network forbidden in deletion tests')}}]}));
+ const mf=localMiniflare({workers:[{name:'deletion',modules:true,script:workerScript,compatibilityDate:'2026-09-01',compatibilityFlags:['nodejs_compat'],d1Databases:{COMMUNITY_DB:'deletion-runtime'},bindings:{COMMUNITY_ENABLED:'true',COMMUNITY_ORIGIN:'https://example.test',COMMUNITY_EMAIL_FROM:'signin@example.test',COMMUNITY_CODE_MAC_SECRET:KEY,VOICE_ENABLED:'false'},serviceBindings:{EMAIL_STUB:async req=>{outbox.push(await req.json());return Response.json({messageId:'test'})}},outboundService:()=>{throw Error('Outbound network forbidden in deletion tests')}}]});
  try{
   const db=await mf.getD1Database('COMMUNITY_DB','deletion');
   const migrate=async file=>db.batch(sqlFile(file).replace(/^\s*--.*$/gm,'').split(';').map(s=>s.trim()).filter(Boolean).map(s=>db.prepare(s)));

@@ -8,7 +8,7 @@ export const TABLE_REGISTRY_FINGERPRINT = registryBuild.fingerprint
 
 type TableEnv = {TABLE_DB: D1Database; CACHE_EPOCH?: string}
 const MAX_CSV = 50_000, CSV_PAGE = 10_000, BATCH = 200, MAX_FACETS = 100
-const arrays = new Set(['portfolios','sectors','entities'])
+const arrays = new Set(['portfolios','sectors','entities','bill','sitting'])
 const quote = (key: string) => `"${key}"`
 const tableName = (name: string) => 'table_' + name.replaceAll('-', '_')
 const errorResponse = (status: number, error: string, headers = {}) => Response.json({error}, {status,headers:{'cache-control':'no-store','x-robots-tag':'noindex',...headers}})
@@ -117,7 +117,8 @@ export async function tableApi(request: Request, env: TableEnv, _ctx?: Execution
     const db=env.TABLE_DB
     const meta=await db.prepare("SELECT key,value FROM table_meta WHERE key IN ('version','privacy_lengths','privacy_stripped_lengths','privacy_fingerprint') LIMIT 4").all<{key:string;value:string}>()
     const metadata=Object.fromEntries(meta.results.map(r=>[r.key,r.value]))
-    if (config.privacy && (!/^[a-f0-9]{64}$/.test(TABLE_REGISTRY_FINGERPRINT) || metadata.privacy_fingerprint !== TABLE_REGISTRY_FINGERPRINT)) return errorResponse(503,'unavailable',{'retry-after':'60'})
+    // Only donor-sanitised rows depend on the registry they were loaded against.
+    if (config.privacy === 'donors' && (!/^[a-f0-9]{64}$/.test(TABLE_REGISTRY_FINGERPRINT) || metadata.privacy_fingerprint !== TABLE_REGISTRY_FINGERPRINT)) return errorResponse(503,'unavailable',{'retry-after':'60'})
     if (!metadata.version || !metadata.privacy_lengths) throw new Error('unavailable')
     if(config.privacy && !metadata.privacy_stripped_lengths)throw new Error('unavailable')
     const denied=Boolean(config.privacy) && await blocked(db,inputs,JSON.parse(metadata.privacy_lengths),JSON.parse(metadata.privacy_stripped_lengths || '[]'))
@@ -162,6 +163,7 @@ export async function tableApi(request: Request, env: TableEnv, _ctx?: Execution
           if (!started) {started=true;controller.enqueue(encoder.encode(config.columns.map(c=>csvValue(c.label)).join(',')+'\r\n'));return}
           if (offset>=end) {
             if (truncated) controller.enqueue(encoder.encode([csvValue(note),...config.columns.slice(1).map(()=>'')].join(',')+'\r\n'))
+            if (exportLimited && !next) controller.enqueue(encoder.encode('# Export truncated at 50,000 rows.\r\n'))
             controller.close();return
           }
           const batch=await db.prepare(`SELECT ${columnSQL} FROM ${table} t${selection.sql}${order(query,config.columns)} LIMIT ? OFFSET ?`).bind(...selection.values,Math.min(BATCH,end-offset),offset).all<Row>()

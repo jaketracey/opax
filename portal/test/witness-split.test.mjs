@@ -1,10 +1,12 @@
+import {speechPresentation, joinMixedSpeakers} from '../src/mixed-speakers.ts';
+const runInNewContext = (code, context = {}, options) => { context.speechPresentation ??= speechPresentation; context.joinMixedSpeakers ??= joinMixedSpeakers; return baseVM(code, context, options); };
 import {personNameKey} from '../public/canonical-urls.js';
 import {personIndex} from '../src/person-slug.ts';
 import * as passageText from '../src/passage-text.ts';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
-import { runInNewContext } from 'node:vm';
+import { runInNewContext as baseVM } from 'node:vm';
 import ts from 'typescript';
 import { personSpeechCount } from '../../scripts/build_search_catalog.mjs';
 import { isWitness, isUnattributed, belongsToScope, scopeFilter, speakerHref, splitSpeakers, splitPerson, personScope, scopedCollaborators } from '../public/speech-attribution.js';
@@ -179,10 +181,11 @@ test('pending counts cannot credit committee parliamentarians in catalog, descri
 
 test('a failed attribution import still starts routing and the Ask builder', async () => {
   const app = readFileSync(new URL('../public/app.js',import.meta.url),'utf8');
-  const boot = app.slice(app.lastIndexOf('Promise.allSettled([attributionReady, uiLabelsReady, growthModulesReady, personUrlsReady, saDisplayReady, donorViewReady])'));
+  const boot = app.slice(app.lastIndexOf('Promise.allSettled([attributionReady, uiLabelsReady, pageMenusReady, growthModulesReady, personUrlsReady, saDisplayReady, donorViewReady, voteTablesReady])'));
+  assert.ok(boot.startsWith('Promise.allSettled('), 'the boot statement is where the test looks for it');
   const called = [];
   const ready = Promise.reject(new Error('simulated missing asset'));
-  await scopedContext(boot,{attributionReady:ready,saDisplayReady:Promise.resolve(),donorViewReady:Promise.resolve(),uiLabelsReady:Promise.resolve(),personUrlsReady:Promise.resolve(),growthModulesReady:Promise.resolve(),Promise,
+  await scopedContext(boot,{attributionReady:ready,saDisplayReady:Promise.resolve(),donorViewReady:Promise.resolve(),voteTablesReady:Promise.resolve(),uiLabelsReady:Promise.resolve(),pageMenusReady:Promise.resolve(),personUrlsReady:Promise.resolve(),growthModulesReady:Promise.resolve(),Promise,
     loadPersonSlugs:()=>called.push('slugs'),initAskBuilder:()=>called.push('ask'),route:()=>called.push('route')});
   assert.deepEqual(called,['slugs','ask','route']);
 });

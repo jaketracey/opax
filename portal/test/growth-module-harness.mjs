@@ -9,6 +9,9 @@ import * as modules from '../public/growth-modules.js';
 import {supplierRecordsHTML,agencyGrantsHTML,publishedSupplierIndex} from '../public/supplier-growth.js';
 import {sourceLineHTML} from '../public/labels.js';
 import * as divisionMarkdown from '../public/division-markdown.js';
+import {tablePrivacyIndex} from './datatable-privacy.mjs';
+import * as voteTables from '../public/vote-tables.js';
+import * as attribution from '../public/speech-attribution.js';
 const app=readFileSync(new URL('../public/app.js',import.meta.url),'utf8');
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const decode=s=>s.replace(/&amp;/g,'&').replace(/&quot;/g,'"').replace(/&#39;/g,"'").replace(/&lt;/g,'<').replace(/&gt;/g,'>');
@@ -18,6 +21,8 @@ const questionsIn=html=>[
 ];
 const region=(start,end)=>app.slice(app.indexOf(start),app.indexOf(end,app.indexOf(start)));
 export async function* moduleOutputs(root,withheld,readAsset) {
+ const tableIndex=await tablePrivacyIndex();
+ const localVoteTables={...voteTables, divisionTableConfig:(params,caption,pageType)=>voteTables.divisionTableConfig(params,caption,pageType,tableIndex.safe), voteTableConfig:(person,caption)=>voteTables.voteTableConfig(person,caption,tableIndex.safe), mountVoteTables(){}};
  const cache=new Map();
  const read=async path=>{
   path=path.replace(/^\//,'');
@@ -32,11 +37,13 @@ export async function* moduleOutputs(root,withheld,readAsset) {
  // belong to the published roster, so use the fixture file as that authority.
  const roster=JSON.parse(readFileSync(join(root,'parliamentarians.json'),'utf8'));
  const localModules={...modules,loadModulePrivacy:async(kind,id)=>modules.approvedModulePrivacy(await read(await modules.growthSummaryPath('privacy/'+kind,id)))};
- const context={growthModules:localModules,esc,safeUrl:v=>v || '',fmtDate:v=>v || '',fmtMoney:String,industryLabel:String,partyDotHTML:()=>'',
+ const context={...attribution,attributionHelpers:attribution,photoUrlFor:()=>null,
+  growthModules:localModules,voteTables:localVoteTables,esc,safeUrl:v=>v || '',fmtDate:v=>v || '',fmtMoney:String,industryLabel:String,partyDotHTML:()=>'',
   sourceLineHTML,entityHrefAttr:href=>`href="${esc(href)}"`,subjectHash:(kind,name)=>`/subject/${kind}/${encodeURIComponent(name)}`,fetch:fetchAsset,currentSubjectKey:'fixture',
   document:{createElement:()=>({dataset:{},isConnected:true,remove(){},querySelectorAll:()=>[]})},searchHash:q=>'/ask?view=search&'+new URLSearchParams({q}),STATE_NAMES:{},billQuestion:v=>v,
   machineLabelHTML:({note=''})=>`<span>${esc(note)}</span>`,partyChipHTML:esc,
  };
+ Object.assign(context,runInNewContext(region('function groupAvatarHTML(','/** Swap .meta-portrait')+';({groupAvatarHTML,participantLinksHTML,speechIdentityHTML})',context));
  const interestVM=runInNewContext(region('async function renderPersonInterests(','let interestsTiesPromise')+';({renderPersonInterests})',context);
  const tiesVM=runInNewContext(region('function declaredTieHTML(','function declaredRowHTML(')+';({declaredTieHTML})',context);
  const votesData=await read('votes.json'),bills=await read('bills/index.json');

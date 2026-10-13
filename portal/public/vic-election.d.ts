@@ -1,6 +1,7 @@
 export const VIC_ELECTION_HUB_ENABLED: boolean;
 export const VIC_ELECTION_PATH: string;
 export const VIC_ELECTION_ASSET: string;
+export const VIC_ELECTION_PLACES: string;
 export const VIC_ELECTION_SITEMAP: string;
 export const VIC_ELECTION_AUTHORISATION_LINE: string;
 export const VIC_ELECTION_CORRECTIONS_EMAIL: string;
@@ -10,3 +11,5 @@ export function vicElectionAssetPath(path: string): boolean;
 export function vicElectionPublicationPath(path: string): boolean;
 export const vicElectionLlms: string;
 export function vicElectionDiscovery(data: {pages:{path:string;lastmod:string}[]}, enabled?: boolean): Record<string,{path:string;lastmod:string}[]>;
+export function vicElectionMaterial(text: string): boolean;
+export function vicElectionFooterHTML(): string;

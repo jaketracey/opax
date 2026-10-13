@@ -1,5 +1,5 @@
 import {DatabaseSync} from 'node:sqlite';
-import {Miniflare,convertV4MiniflareOptions} from 'miniflare';
+import {localMiniflare} from './local-miniflare.mjs';
 import {mkdtemp,readFile,rm} from 'node:fs/promises';
 import {tmpdir} from 'node:os';
 import {join} from 'node:path';
@@ -23,7 +23,7 @@ function memoryD1(){
 }
 export async function tableDatabase(options={},dependencies={}) {
   const {makeDirectory=mkdtemp,removeDirectory=rm,makeMemory=memoryD1,
-    makeMiniflare=opts=>new Miniflare(convertV4MiniflareOptions(opts)),buildSQL=buildTableSQL}=dependencies;
+    makeMiniflare=localMiniflare,buildSQL=buildTableSQL}=dependencies;
   let root,runtime,ready=false,closed=false,preparationError;
   async function close(){
     if(closed)return;closed=true;
@@ -33,7 +33,7 @@ export async function tableDatabase(options={},dependencies={}) {
   try {
     root=await makeDirectory(join(tmpdir(),'opax-table-d1-'));
     // Never share a D1 namespace or storage path between files/fixtures.
-    runtime=options.memorySQL?makeMemory():makeMiniflare({resourcePersistencePath:join(root,'d1'),isolatedResourcePersistencePath:join(root,'isolated'),workers:[{name:"tables",modules:true,script:'export default {fetch(){return new Response("local fixture")}}',compatibilityDate:'2026-09-01',d1Databases:{TABLE_DB:'test-tables-'+randomUUID()}}]});
+    runtime=options.memorySQL?makeMemory():makeMiniflare({rootPath:root,resourcePersistencePath:join(root,'state'),resourceTmpPath:join(root,'runtime'),isolatedResourcePersistencePath:join(root,'isolated'),workers:[{name:"tables",modules:true,script:'export default {fetch(){return new Response("local fixture")}}',compatibilityDate:'2026-09-01',d1Databases:{TABLE_DB:'test-tables-'+randomUUID()}}]});
     const db=options.memorySQL?runtime.db:await runtime.getD1Database('TABLE_DB','tables'),manifest=await buildSQL({...options,output:root});
     for(const file of manifest.files) {
       // D1 exec is line-oriented; every statement here occupies one physical line.

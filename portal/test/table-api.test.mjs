@@ -28,7 +28,7 @@ test('bad dataset is 404; invalid state and methods return fixed JSON errors',as
   for(const q of ['page=0','sort=not-a-column:desc','f.amount.min=4','f.amount=%5B%224%22%5D','format=bad','f.agency=literal','q=a&q=b'])assert.equal((await fetchTable('contracts',q)).status,400,q);
   const response=await fetchTable('contracts','',{method:'POST'});assert.equal(response.status,405);assert.deepEqual(await response.json(),{error:'method_not_allowed'});
 });
-test('privacy datasets stay dark for a missing or stale registry fingerprint; public datasets keep serving',async()=>{
+test('donor datasets stay dark for a missing or stale registry fingerprint; echo and public datasets keep serving',async()=>{
   assert.equal(local.manifest.privacyFingerprint,TABLE_REGISTRY_FINGERPRINT);
   const version=await local.db.prepare("SELECT value FROM table_meta WHERE key='version'").first('value');
   try {
@@ -38,14 +38,15 @@ test('privacy datasets stay dark for a missing or stale registry fingerprint; pu
       else await local.db.prepare("INSERT OR REPLACE INTO table_meta VALUES ('privacy_fingerprint',?)").bind(fingerprint).run();
       let reads=0;
       const db={prepare(sql){if(/FROM\s+table_(?!meta\b|private_identity\b)/i.test(sql))reads++;return local.db.prepare(sql);},batch:local.db.batch.bind(local.db)};
-      for(const [name,c]of Object.entries(TABLE_DATASETS).filter(([,c])=>c.privacy))for(const csv of [false,true]) {
+      assert.deepEqual(Object.entries(TABLE_DATASETS).filter(([,c])=>c.privacy==='donors').map(([name])=>name).sort(),['contracts','grants','money-connections','party-money','suppliers']);
+      for(const [name,c]of Object.entries(TABLE_DATASETS).filter(([,c])=>c.privacy==='donors'))for(const csv of [false,true]) {
         const response=await tableApi(new Request('https://local.invalid/api/table/'+name+(csv?'?format=csv':'')),{TABLE_DB:db});
         assert.equal(response.status,503);assert.equal(response.headers.get('retry-after'),'60');
         assert.equal(response.headers.get('cache-control'),'no-store');assert.equal(response.headers.get('link'),null);
         assert.deepEqual(await response.json(),{error:'unavailable'});
       }
       assert.equal(reads,0,'mismatched publication reached data SQL');
-      for(const name of ['instruments','audit-reports']) {
+      for(const name of ['instruments','audit-reports','votes','divisions']) {
         const response=await tableApi(new Request('https://local.invalid/api/table/'+name),{TABLE_DB:db});
         assert.equal(response.status,200);assert.equal((await response.json()).total,260);
       }
@@ -61,7 +62,7 @@ test('canonical state uses JSON filters, normalises order and supports condition
   const cached=await fetchTable('contracts',new URLSearchParams({q:'needle','f.amount':'{"min":10,"max":100}'}),{headers:{'if-none-match':b.headers.get('etag')}});assert.equal(cached.status,304);assert.equal(cached.headers.get('x-robots-tag'),'noindex');
 });
 test('core serializer and D1 API integrate with category and range state',async()=>{
-  // The core rollout has merged; exercise only the production serializer.
+  // Exercise the production serializer without a copied fixture.
   for(const prefix of [undefined,'t']){
     const query={filters:{jurisdiction:['Group 0'],amount:{min:10,max:20}},sort:{key:'amount',dir:'asc'},pageSize:2,page:2};
     const response=await fetchTable('contracts',serializeQuery(query,prefix));assert.equal(response.status,200);
@@ -92,7 +93,7 @@ test('decoded identity variants reject before data SQL across all five money dat
   const spaced='  '+phrase.replaceAll(' ','  \t  ')+'  ';
   for(const [name,config]of Object.entries(TABLE_DATASETS).filter(([,c])=>c.privacy)) {
     const category=config.columns.find(c=>c.type==='category').key;
-    const numeric=config.columns.find(c=>c.type==='money').key;
+    const numeric=config.columns.find(c=>['money','count'].includes(c.type)).key;
     const states=[
       new URLSearchParams({['f.'+category]:'['+escaped(phrase)+']'}),
       new URLSearchParams({['f.'+category]:'['+escaped(identifier)+']'}),
@@ -126,8 +127,9 @@ test('CSV pages are bounded, retryable and retain the 50,000-row export ceiling'
     const response=await tableApi(new Request('https://opax.com.au'+path),env);last=response;
     assert.equal(response.headers.get('x-table-total'),'50100');assert.equal(response.headers.get('x-table-exported'),'10000');assert.equal(response.headers.get('x-table-page'),String(page));assert.equal(response.headers.get('x-table-export-truncated'),'true');
     assert.notEqual(response.headers.get('etag'),previousETag);previousETag=response.headers.get('etag');
-    const records=(await response.text()).split('\r\n');assert.equal(records.length,10003);
-    const note=response.headers.get('x-table-export-note');assert.ok(note.includes('export limited to the first 50,000 rows'));assert.ok(records.at(-2).startsWith('"'+note));
+    const records=(await response.text()).split('\r\n');assert.equal(records.length,page===5 ? 10004 : 10003);
+    const note=response.headers.get('x-table-export-note');assert.ok(note.includes('export limited to the first 50,000 rows'));assert.ok(records[10001].startsWith('"'+note));
+    if(page===5)assert.equal(records[10002],'# Export truncated at 50,000 rows.');
     for(const record of records.slice(1,10001))values.push(Number(record.split(',')[TABLE_DATASETS.votes.columns.findIndex(c=>c.key==='ayes')]));
     const next=/<([^>]+)>; rel="next"/.exec(response.headers.get('link')||'');
     assert.equal(Boolean(next),page<5);if(page<5){path=next[1];assert.equal(new URL(path,'https://opax.com.au').searchParams.get('page'),String(page+1));}

@@ -13,20 +13,55 @@ redirects, including www, trailing slashes, case and encoded aliases for pages,
 the election sitemap and facts asset. Disabled hubs have no election links,
 sitemap entry or llms.txt entry.
 
-The control hub approved the electoral authorisation and corrections contact on
-10 October 2026. Every published Victorian hub page carries:
+Jake approved the electoral authorisation and corrections contact through the
+control hub on 13 October 2026. Every published Victorian hub page carries exactly:
 
-> Authorised by Jake Tracey, Noice Pty Ltd, Level 6, 343 Little Collins St, Melbourne VIC 3000.
+> Authorised by Jake Tracey, Noice Pty Ltd, Level 6, 608/343 Little Collins Street, Melbourne VIC 3000.
 
-The address was verified against [Noice's contact page](https://noice.net.au/contact/).
 The footer links to `corrections@opax.com.au` and says “We aim to respond within
-2 business days.” These values live in `portal/public/vic-election.js` and are
-required for Victorian pages even when optional federal footer variables are
-empty. The complete authorisation is also on landscape and portrait electoral
-share cards and in the downloadable `/hubs/vic-election-2026.json` projection,
-which includes the corrections contact and response wording. Print styles
-retain the footer and keep its lines together. Enabling publication is a
-separate change to `VIC_ELECTION_HUB_ENABLED`; the text change does not enable it.
+2 business days.” The approved values live in `portal/public/vic-election.js`;
+optional federal footer values cannot remove them. The production vars explicitly
+set `VIC_ELECTION_HUB_ENABLED: "true"`, `AUTHORISATION_LINE` to the exact line above
+and `CORRECTION_CONTACT: "mailto:corrections@opax.com.au"`. The checked-out main
+already enabled the production flag; this lane supplies the revised address and
+explicit footer bindings. Staging explicitly sets the flag to `"false"`, has no
+social cron, and keeps 404/noindex pages with no election discovery. Wrangler
+vars are not inherited into named environments. An isolated local override can
+preview staging with publication enabled; its mandatory Victorian footer still
+uses the same approved constants.
+
+The line appears as small, unabridged text on landscape and portrait electoral
+share cards, every Victorian electorate card, and all nine carousel slide types
+at 1080×1350 and 1080×1920 (inside the story safe area). Card versions are bumped
+so older cached addresses are not replayed. The downloadable
+`/hubs/vic-election-2026.json` includes the line and corrections wording. Print
+styles retain the hub footer and keep its lines together.
+
+Story version 4 retains the address-only closing CTA from version 3 (no separate
+path line or footer wordmark). Victorian electoral CTA slides also show the
+exact authorisation in a small block below the address, outside the clipped body.
+
+The 96 hub seat pages carry the footer alongside their hub links. Ordinary
+Victorian electorate profiles also retain it in both their server summary and
+client-rendered election timeline. There are no standalone promotional hub links
+in the homepage, navigation or growth module catalogue. Hub directory and
+constituency links are on authorised hub pages.
+
+The daily rotation contains politician, bill, grant, topic, program and largest
+award editions; it has no hub kind. It can choose Victorian parliamentarians, so
+those editions carry the line in short post text, full captions and every slide.
+Any kind explicitly mentioning the Victorian election also receives it. Frozen
+editions with election wording are covered when previewed/rendered. All six
+channel copy templates preserve the full line, including after Instagram and
+Facebook caption truncation. Federal grants/programs and federal election timing
+alone are not Victorian election material. No post is sent as part of these tests.
+
+The remaining election-text matches in published JSON are dated speech briefs
+in three federal bills introduced on 22 October 2014 (`au-federal-r5360`,
+`r5361`, `r5365`) and their growth projections. They refer to the 2014 Victorian
+election. Those archival sources fall outside the 2026 hub; the daily bill
+composer’s one-year date window also excludes them. Their dated record text
+keeps its original source context.
 
 For an **isolated local preview only**, run Wrangler with
 `--var VIC_ELECTION_HUB_ENABLED:true` inside the required network namespace.
@@ -43,9 +78,30 @@ uses the VEC source config in `scripts/hubs/vic-election-2026.json`, the exact
 state electorate index, validated roster, existing canonical person-path table,
 `votes.json` and Victorian division shards. It writes the uncommitted,
 deployed `portal/public/hubs/vic-election-2026.json`; run the full search build
-first to refresh canonical person paths. There is no new ingestion, identity
+first to refresh canonical person paths. There is no new identity
 join, cron, candidate list or donor read. The projection uses an explicit field
-allowlist. All 88 Assembly districts have one roster member and all 8 Council
+allowlist.
+
+Two committed source files sit beside the VEC config in `scripts/hubs/`:
+
+- `vic-results-2022.json`, from `python3 -I scripts/fetch_vec_results.py`: each
+  district's 2022 result and any by-election or supplementary election since
+  (Narracan 2023 supplementary; Warrandyte, Mulgrave, Prahran, Werribee and Nepean
+  by-elections), as party shares after preferences and the winning margin (the
+  winner's two-candidate share above 50%). It reads the VEC's final distribution
+  of preferences, or its two-candidate count where the distribution stopped early.
+  Only the elected member's name is kept; other candidates' names are not.
+- `vic-places-2025.json`, from `python3 -I scripts/build_vic_places.py <dir>` over
+  the ABS ASGS Edition 3 allocation files (SED 2025, SAL 2021, POA 2021, LGA 2025)
+  and 2021 Census mesh block counts: every Victorian suburb, postal area and council
+  area split across districts by usual residents. The builder checks that the ABS
+  names and regions match the VEC's 88 districts. ABS data is CC BY 4.0.
+
+The build writes the places into a separate `/hubs/vic-election-2026-places.json`,
+read only by the hub's "Which seat am I in?" finder. The finder is a plain GET form
+(`/vic-election-2026?place=3350`), answered by the Worker without scripts; result
+pages are `noindex` and keep the hub's canonical. Seat and member names match
+without the places file. All 88 Assembly districts have one roster member and all 8 Council
 regions have five, dated to the published roster snapshot.
 
 The VEC's [district list](https://www.vec.vic.gov.au/electoral-boundaries/state-districts)
@@ -79,17 +135,21 @@ the [Victorian caretaker guidelines](https://www.vic.gov.au/guidelines-caretaker
 Speech counts retain their exported years. Counts wholly within 2023–2026 are
 available term records, without a completeness claim. Counts starting in 2022
 cannot isolate the November election cutoff. Mixed federal/Victorian totals are
-withheld, and members without a count show an explicit gap. Historical surname
+withheld; members without a count show none. Historical surname
 aggregates are not merged. Victorian vote totals cover **2026 only**; their
 participation counts can differ from the separately exported detailed division
-pages. No division absence is inferred from a missing row. The five latest
-available detailed divisions carry dates, recorded votes and original sources.
+pages. No division absence is inferred from a missing row. District pages list up to
+three of the latest detailed divisions with a recorded question, skipping
+untitled "Assembly divided on motion" rows.
 Victorian Hansard/divisions have restricted copyright, **no open licence**, as
 recorded in `docs/COVERAGE.md`; only existing counts and links enter the hub.
 
 There is no Victorian interests register or state grants export. Federal
 electorates are different from state districts, so no federal grant allocation
-is made. Every page states these gaps. “An association does not prove influence”
+is made. Since the 13 October usability pass, hub pages drop any section OPAX
+can't fill and end with one "About this data" line; these gaps, the speech and
+division limits and the licence terms are stated once on the Methods page
+(`/methods#vic-election`, in `public/index.html`). “An association does not prove influence”
 belongs alongside an actual money-and-politician pairing; the election hub has
 no such records, so it does not display the line. The tests derive individual
 donor labels with main's `isOrganisationDonor` classifier. A label coinciding
