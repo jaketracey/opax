@@ -239,6 +239,7 @@ export function createResearch(options: ResearchOptions): Research {
         onLanguageModelCallEnd: event => {
           stats.usageUnknown = false
           stats.tokens.input += event.usage.inputTokens ?? reservedInput; stats.tokens.output += event.usage.outputTokens ?? reservedOutput
+          stats.cachedByTurn = [...(stats.cachedByTurn ?? []), event.usage.inputTokenDetails?.cacheReadTokens ?? 0]
           const usage = object(object(event.providerMetadata?.openrouter).usage)
           const receipt = typeof usage.cost === 'number' && Number.isFinite(usage.cost) && usage.cost >= 0 ? usage.cost : undefined
           const input = event.usage.inputTokens ?? reservedInput, output = event.usage.outputTokens ?? reservedOutput

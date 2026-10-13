@@ -2,20 +2,21 @@ import type { ResearchStats } from './research-types'
 
 export interface ResearchEvalState {
   started: number
-  loop: { tokens: { input: number; output: number } | null; cost: number | null }
+  loop: { tokens: { input: number; output: number } | null; cost: number | null; cachedByTurn?: number[] }
   legacy: { calls: number; measured: number; tokens: { input: number; output: number }; cost: number }
 }
 export function researchEvalState(): ResearchEvalState {
   return { started: Date.now(), loop: { tokens: { input: 0, output: 0 }, cost: 0 }, legacy: { calls: 0, measured: 0, tokens: { input: 0, output: 0 }, cost: 0 } }
 }
 export function captureLoopUsage(state: ResearchEvalState, stats: ResearchStats): void {
-  state.loop = { tokens: stats.usageUnknown ? null : { ...stats.tokens }, cost: stats.usageUnknown ? null : stats.costUsd ?? (stats.tokens.input + stats.tokens.output ? null : 0) }
+  state.loop = { tokens: stats.usageUnknown ? null : { ...stats.tokens }, cost: stats.usageUnknown ? null : stats.costUsd ?? (stats.tokens.input + stats.tokens.output ? null : 0), cachedByTurn: stats.cachedByTurn ? [...stats.cachedByTurn] : undefined }
 }
 export function researchEvalUsage(state: ResearchEvalState) {
   const tokens = state.loop.tokens, known = tokens !== null && state.legacy.calls === state.legacy.measured
   return { ms: Math.max(0, Date.now() - state.started),
     tokens: known ? { input: tokens.input + state.legacy.tokens.input, output: tokens.output + state.legacy.tokens.output } : null,
-    cost_usd: known && state.loop.cost !== null ? state.loop.cost + state.legacy.cost : null }
+    cost_usd: known && state.loop.cost !== null ? state.loop.cost + state.legacy.cost : null,
+    ...(state.loop.cachedByTurn ? { cached_input_by_turn: state.loop.cachedByTurn } : {}) }
 }
 export function researchPrices(input?: string, output?: string) {
   const price = (value: string | undefined, fallback: number) => value !== undefined && Number.isFinite(Number(value)) && Number(value) >= 0 ? Number(value) : fallback

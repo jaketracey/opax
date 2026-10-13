@@ -63,7 +63,7 @@
     "RESEARCH_LOOP_TOKENS": "96000",
     "RESEARCH_LOOP_DAILY_USD": "5",
     "RESEARCH_LOOP_MODEL_ID": "@preset/opax-pro",
-    "RESEARCH_LOOP_MODEL_ALLOW": "{\"deepseek/deepseek-v4.1-flash\":{\"provider\":{\"order\":[\"together\",\"digitalocean\",\"coreweave\",\"baseten\"],\"allow_fallbacks\":false,\"require_parameters\":true},\"reasoning\":{\"enabled\":false}},\"anthropic/claude-haiku-5.5\":{\"reasoning\":{\"enabled\":false}},\"deepseek/deepseek-v4-pro-0813:nitro\":{\"reasoning\":{\"enabled\":false}}}",
+    "RESEARCH_LOOP_MODEL_ALLOW": "{\"deepseek/deepseek-v4.1-flash\":{\"provider\":{\"order\":[\"together\"],\"allow_fallbacks\":false,\"require_parameters\":true},\"reasoning\":{\"enabled\":false}},\"anthropic/claude-haiku-5.5\":{\"provider\":{\"order\":[\"anthropic\"],\"allow_fallbacks\":false,\"require_parameters\":true},\"reasoning\":{\"enabled\":false}},\"deepseek/deepseek-v4-pro-0813\":{\"provider\":{\"order\":[\"coreweave\"],\"allow_fallbacks\":false,\"require_parameters\":true},\"reasoning\":{\"enabled\":false}}}",
     "RESEARCH_LOOP_SHADOW_RATE": "0.2",
     "AUTHORISATION_LINE": "Authorised by Jake Tracey, Noice Pty Ltd, Level 6, 608/343 Little Collins Street, Melbourne VIC 3000.",
     "CORRECTION_CONTACT": "mailto:corrections@opax.com.au",
