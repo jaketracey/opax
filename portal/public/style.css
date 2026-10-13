@@ -6133,3 +6133,13 @@ html:not([data-chat="docked"]) #panel-chat.has-person-context .chat-composer { m
 .ask-person-context nav { display: grid; gap: 8px; border-top: 1px solid var(--divider-subtle); margin-top: 20px; padding-top: 16px; font: var(--type-fine); }
 .ask-person-context nav a { min-height: 28px; }
 .ask-person-context .fineprint { color: var(--ink-soft); margin-top: 20px; }
+
+/* Mixed source spans have participants, never a personal byline. */
+.speech-identity { display: inline-flex; align-items: center; gap: .45rem; vertical-align: middle; }
+.speech-identity .speech-group-avatar { width: 24px; height: 24px; flex-shrink: 0; }
+.topic-arc-face-group { display: flex; align-items: center; justify-content: center; color: var(--text-muted, #686861); background: var(--surface-muted, #efeee9); }
+.speech-participants { display: block; margin-top: .3rem; line-height: 1.7; font-size: .875rem; overflow-wrap: anywhere; }
+.speech-participant { display: inline-flex; align-items: center; gap: .25rem; vertical-align: middle; flex-wrap: wrap; }
+.speech-participant .meta-portrait { display: inline-block; flex-shrink: 0; width: 24px; height: 24px; }
+.speech-participant .meta-portrait:empty { display: none; }
+.speech-participant-role { color: var(--text-muted, #686861); }
