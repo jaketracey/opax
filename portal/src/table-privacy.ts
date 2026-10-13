@@ -1,4 +1,5 @@
 import {compileHashedIdentityCheck} from './table-identity-hashes.mjs'
+import {timedSync} from './server-timing.ts'
 
 const indices = new WeakMap<Fetcher, Promise<(text: string) => boolean>>()
 const readers = new WeakMap<Function, Fetcher>()
@@ -39,7 +40,7 @@ export async function tablePrivacyCheck(assets: Fetcher): Promise<(text: string)
       const registry = await response.json() as {version:number;identities:{hash:string;words:number}[];strippedLengths:number[]}
       if(registry.version!==1 || !Array.isArray(registry.strippedLengths) || !registry.strippedLengths.length || registry.strippedLengths.some(n=>!Number.isSafeInteger(n)||n<4))throw new Error('Privacy index unavailable')
       const blocked=compileHashedIdentityCheck(registry.identities,registry.strippedLengths)
-      return (text: string) => !blocked(text)
+      return (text: string) => timedSync('privacy', () => !blocked(text))
     })().catch(() => {indices.delete(assets); return () => false})
     indices.set(assets, pending)
   }

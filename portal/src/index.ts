@@ -5,6 +5,7 @@ import { SA_EXCERPT_LABEL, isSaHansard, saFullText, saOfficialUrl } from '../pub
 import { saPublicResponse, saEventPayload } from './sa-hansard'
 import { saEvidenceText, saEvidenceRecord, saGenerationResponse, saConversationInput } from './sa-evidence'
 import {tablePrivacy, tablePrivacyCheck} from './table-privacy'
+import {ServerTiming, timed, withTiming} from './server-timing'
 import { divisionPlain } from '../public/division-markdown.js'
 import {guardTableURL, divisionTableConfig, voteTableConfig} from '../public/vote-tables.js'
 import { tableApi } from './table-api'
@@ -3738,9 +3739,11 @@ const foldName = (s: string): string =>
   personNameKey(s)
 
 async function assetJson<T>(env: Env, path: string): Promise<T> {
-  const res = await env.ASSETS.fetch(new Request(`${SITE_ORIGIN}${path}`))
-  if (!res.ok) throw new Error(`asset ${path} ${res.status}`)
-  return (await res.json()) as T
+  return timed('assets', async () => {
+    const res = await env.ASSETS.fetch(new Request(`${SITE_ORIGIN}${path}`))
+    if (!res.ok) throw new Error(`asset ${path} ${res.status}`)
+    return (await res.json()) as T
+  })
 }
 
 let peopleMemo: Promise<PeopleData> | null = null
@@ -4257,7 +4260,8 @@ async function buildMeta(route: SeoRoute, url: URL, request: Request, env: Env, 
         const identity={...profiles?.by_name[foldName(p.name)],...profiles?.people[p.pid || '']}
         const check = await tablePrivacyCheck(env.ASSETS)
         const query = guardTableURL(voteTableConfig(p.pid || '',undefined,check),url).query
-        const content = await renderPersonAnswer(p,read,people.slugOf,identity.aphProfileUrl || undefined,await withheldNameCheck(env.ASSETS),query,check)
+        const withheld = await withheldNameCheck(env.ASSETS)
+        const content = await timed('person-render', () => renderPersonAnswer(p,read,people.slugOf,identity.aphProfileUrl || undefined,withheld,query,check))
         meta.prerender = content.html
         if(content.description) meta.description=clip(content.description)
         const photos=await loadPhotos(env).catch(()=>null)
@@ -5156,10 +5160,20 @@ function legacyConnectionsRedirect(url: URL): Response {
   return new Response(null, { status: 301, headers: { location: `/connections${url.search}`, 'cache-control': 'public, max-age=86400' } })
 }
 
-async function serveSeoPage(route: SeoRoute, url: URL, request: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
+function serveSeoPage(route: SeoRoute, url: URL, request: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
+  const timing = new ServerTiming()
+  return withTiming(timing, async () => {
+    const res = await renderSeoPage(route, url, request, env, ctx)
+    const out = new Response(res.body, res)
+    out.headers.set('server-timing', timing.header())
+    return out
+  })
+}
+
+async function renderSeoPage(route: SeoRoute, url: URL, request: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
   const [shell, meta] = await Promise.all([
-    env.ASSETS.fetch(new Request(`${SITE_ORIGIN}/`)),
-    buildMeta(route, url, request, env, ctx),
+    timed('shell', () => env.ASSETS.fetch(new Request(`${SITE_ORIGIN}/`))),
+    timed('meta', () => buildMeta(route, url, request, env, ctx)),
   ])
   if (!shell.ok) return shell
   const tableKey = route.kind === 'bill' || route.kind === 'hub' && route.hub === 'sitting' ? 'dv' : route.kind === 'subject' && route.dir === 'person' ? 'vr' : null
