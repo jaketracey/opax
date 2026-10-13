@@ -77,20 +77,19 @@ for (const stream of [false, true]) {
     assert.equal(result.answer_status, undefined);
     assert.ok(result.citations[id]);
   });
-  test(`${path}: a misquote that survives recovery has no answer and retains sources`, async () => {
-    // The 2026-09-17 loosening: the reader keeps the answer; only the quotation marks go.
+  test(`${path}: a misquote that survives recovery is delivered as a paraphrase on a topic question`, async () => {
+    // The 2026-09-17 loosening, restored 13 Oct: on a general topic question the reader keeps
+    // the answer and only the quotation marks go. Named-person questions stay strict (ask-no-answer tests).
     for (const second of [bad(), new Error('provider unavailable')]) {
       const h = harness([bad(), second]);
       const result = await h.run(stream);
       assert.equal(h.calls.length, 2);
-      assert.equal(result.answer, '');
-      assert.equal(result.answered, false);
-      assert.equal(result.reason, 'grounding_failed');
+      assert.equal(result.answer, 'It says Negative gearing only benefits the richest people in Australia.');
+      assert.equal(result.answered, true);
       assert.equal(result.answer_status, undefined);
       assert.equal(result.evidence_excerpts, undefined);
       // The citation still lands on the answer's last character after the two marks went.
-      assert.deepEqual(result.citations, {});
-      assert.equal(result.sources[0].cited, false);
+      assert.deepEqual(result.citations[id], [[0, Array.from(result.answer).length]]);
     }
   });
   test(`${path}: an answer still uncited after one retry has no supported claim`, async () => {

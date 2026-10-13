@@ -1111,12 +1111,23 @@ function unquoteUnsupported(payload: AskPayload, raw: AskAnswer): AskPayload {
   return { ...payload, answer: text, citations }
 }
 
-/** The decision and existing evidence checks must both accept the answer. */
-function looseAnswer(payload: AskPayload, raw: AskAnswer): AskPayload {
+/** The decision and existing evidence checks must both accept the answer.
+ * strictQuotes: when the answer speaks about a named person (speaker scope or a
+ * position answer), a quotation the passages do not contain withholds the answer:
+ * words must never be put in a politician's mouth. On general topic questions a
+ * non-verbatim quotation loses its marks and stands as paraphrase (the 2026-09-17
+ * loosening). Withholding whole topic answers for it made ordinary questions fail
+ * at random on 13 Oct, since the model's quoting varies run to run. */
+function looseAnswer(payload: AskPayload, raw: AskAnswer, strictQuotes = true): AskPayload {
   const decision = decodeAskAnswer(raw)
   if (decision.answered === false) return noAnswer(payload, decision.reason || 'declined')
   if (!payload.answer.trim() || !Object.keys(payload.citations).length) return noAnswer(payload, 'no_supported_claim')
-  if (hasUnsupportedQuotes(payload, decision)) return noAnswer(payload, 'grounding_failed')
+  if (hasUnsupportedQuotes(payload, decision)) {
+    if (strictQuotes) return noAnswer(payload, 'grounding_failed')
+    const out = unquoteUnsupported(payload, decision)
+    if (!out.answer.trim() || !Object.keys(out.citations).length) return noAnswer(payload, 'grounding_failed')
+    return { ...out, answered: true }
+  }
   return { ...payload, answered: true }
 }
 
@@ -1561,7 +1572,7 @@ async function apiAsk(request: Request, env: Env, ctx: ExecutionContext, prepare
     const fallback = await askOnce(hasUnsupportedQuotes(payload, answer) ? quoteRecoveryAsk(retryBody) : retryBody, firstBudget ? OVERVIEW_VERIFICATION_MS : ASK_SYNC_TIMEOUT_MS)
     if (!(fallback instanceof Response) && !isRefusal(fallback)) { answer = fallback; payload = askPayload(fallback, records, scope, await loadPeople(env), !!overview) }
   }
-  payload = looseAnswer(payload, answer)
+  payload = looseAnswer(payload, answer, isPositionBody(body) || !!input.speaker)
   mark('verify')
   payload = withAskedAs(payload, askedAs)
   payload = await overviewPayload(payload, overview, env, overviewIntent, overviewIntent || recentIntent)
@@ -2363,7 +2374,7 @@ function apiAskStream(
             // The final quotation check below falls back to evidence if recovery fails.
           }
         }
-        payload = looseAnswer(payload, result)
+        payload = looseAnswer(payload, result, isPositionBody(body) || !!opts.speaker)
         payload = withAskedAs(payload, opts.askedAs)
         payload = await overviewPayload(payload, opts.overview, env, opts.overviewIntent, opts.overviewIntent || opts.recentIntent)
         payload = await withNoAnswerLink(payload, env, opts.speaker)
@@ -5664,6 +5675,7 @@ function withSecurityHeaders(res: Response, url: URL): Response {
 // --- request validation ------------------------------------------------------
 
 const MAX_BODY_BYTES = 16 * 1024
+const FOLLOWUPS_MAX_BODY_BYTES = 64 * 1024
 const MAX_QUESTION_CHARS = 2000
 const MAX_SPEAKER_CHARS = 120
 const MAX_PARTY_CHARS = 64
@@ -5760,17 +5772,18 @@ function validateSearchQuery(url: URL): Response | null {
  */
 async function readJsonBody(
   request: Request,
+  maxBytes = MAX_BODY_BYTES,
 ): Promise<{ text: string; value: Record<string, unknown> } | Response> {
   const type = (request.headers.get('content-type') ?? '').split(';')[0].trim().toLowerCase()
   if (type !== 'application/json') {
     return json({ error: 'expected content-type: application/json' }, 415)
   }
   const declared = Number(request.headers.get('content-length'))
-  if (Number.isFinite(declared) && declared > MAX_BODY_BYTES) {
+  if (Number.isFinite(declared) && declared > maxBytes) {
     return json({ error: 'request body too large' }, 413)
   }
   const raw = await request.arrayBuffer()
-  if (raw.byteLength > MAX_BODY_BYTES) return json({ error: 'request body too large' }, 413)
+  if (raw.byteLength > maxBytes) return json({ error: 'request body too large' }, 413)
   const text = new TextDecoder().decode(raw)
   let value: unknown
   try {
@@ -6017,7 +6030,8 @@ async function route(
         return await apiJourneyStory(request,body.value,env,ctx)
       }
       if (url.pathname === '/api/followups' && request.method === 'POST') {
-        const body = await readJsonBody(request)
+        // The answer plus up to eight passages outgrows the 16 KB ask cap (413 on 13 Oct).
+        const body = await readJsonBody(request, FOLLOWUPS_MAX_BODY_BYTES)
         if (body instanceof Response) return body
         return await apiFollowups(replayPost(request, body.text), env, ctx)
       }
