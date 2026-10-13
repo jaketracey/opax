@@ -1,0 +1,163 @@
+{
+  "baseSHA": "3496488eb3e0efc0e61891c67349cffdcfa1f778",
+  "nodeVersion": "v24.21.0",
+  "hardware": "Apple M4 Max",
+  "nice": 10,
+  "ciBaselineRun": 38344913815,
+  "ciBaselineSHA": "f38a55251af278a2fd5cef0f9be811304e5d5784",
+  "profile": [
+    {
+      "step": "build:methods",
+      "oldSeconds": 0.405289042,
+      "newCIWarmSeconds": 0.412404458
+    },
+    {
+      "step": "build:privacy (before derived builds)",
+      "oldSeconds": 90.95029975000001,
+      "newCIWarmSeconds": 57.67749983299999
+    },
+    {
+      "step": "build:tokens",
+      "oldSeconds": 0.004909666,
+      "newCIWarmSeconds": 0.004784958
+    },
+    {
+      "step": "build_passage_names",
+      "oldSeconds": 0.007883583999999999,
+      "newCIWarmSeconds": 0.005514875
+    },
+    {
+      "step": "build_search_catalog",
+      "oldSeconds": 48.8463405,
+      "newCIWarmSeconds": 29.368905332999997
+    },
+    {
+      "step": "build:growth",
+      "oldSeconds": 35.809325292000004,
+      "newCIWarmSeconds": 36.432516833
+    },
+    {
+      "step": "build:hubs",
+      "oldSeconds": 0.712067,
+      "newCIWarmSeconds": 0.720406917
+    },
+    {
+      "step": "build_crawl_catalog",
+      "oldSeconds": 6.5623327080000005,
+      "newCIWarmSeconds": 2.2099178749999995
+    },
+    {
+      "step": "build:vic-election",
+      "oldSeconds": 0.159596916,
+      "newCIWarmSeconds": 0.161114667
+    },
+    {
+      "step": "build:tables / load_tables",
+      "oldSeconds": 21.513799167000002,
+      "newCIWarmSeconds": 2.541009042
+    },
+    {
+      "step": "build:social",
+      "oldSeconds": 1.726459584,
+      "newCIWarmSeconds": 1.8641915
+    },
+    {
+      "step": "build:grants-map",
+      "oldSeconds": 0.026730041000000003,
+      "newCIWarmSeconds": 0.044439334
+    },
+    {
+      "step": "build:analytics",
+      "oldSeconds": 0.034197250000000005,
+      "newCIWarmSeconds": 0.060612375
+    },
+    {
+      "step": "build:voice",
+      "oldSeconds": 0.05960870800000001,
+      "newCIWarmSeconds": 0.10077925
+    },
+    {
+      "step": "stamp_assets",
+      "oldSeconds": 1.6047761249999999,
+      "newCIWarmSeconds": 1.724335
+    },
+    {
+      "step": "photo_identity --deploy",
+      "oldSeconds": 0.115477584,
+      "newCIWarmSeconds": 0.039872042
+    },
+    {
+      "step": "build:privacy (final)",
+      "oldSeconds": 99.47267008300001,
+      "newCIWarmSeconds": 66.83546837499999
+    }
+  ],
+  "localTotals": {
+    "oldSeconds": 309.94876270811073,
+    "newFullSQLColdCacheSeconds": 225.70119312498719,
+    "newCIMetadataWarmCacheSeconds": 201.72196300001815,
+    "estimatedNewCIMetadataColdCacheSeconds": 205.9437587919872
+  },
+  "fullEquivalence": {
+    "compared": 27296,
+    "differences": 0,
+    "oldInventorySha256": "3543859257c3c928fa19dee556c717f87d9a50b9094cb8b1f1832cae4d29f1b8",
+    "newInventorySha256": "3543859257c3c928fa19dee556c717f87d9a50b9094cb8b1f1832cae4d29f1b8"
+  },
+  "ciEquivalence": {
+    "compared": 27206,
+    "differences": 0,
+    "oldInventorySha256": "b33a702a496a51d4b4f8e5d3e02684662fae0877c319d6953dfa7913a0d5f321",
+    "newInventorySha256": "b33a702a496a51d4b4f8e5d3e02684662fae0877c319d6953dfa7913a0d5f321",
+    "sqlProduced": false
+  },
+  "gateOutputEquivalence": {
+    "compared": 27206,
+    "differences": 0,
+    "allGatesLeaveReleaseOutputsUnchanged": true
+  },
+  "gates": {
+    "privacy": {
+      "gate": "privacy",
+      "seconds": 86.05348633299582,
+      "exit": 0
+    },
+    "targeted": {
+      "gate": "targeted",
+      "seconds": 5.700732916826382,
+      "exit": 0
+    },
+    "check": {
+      "gate": "check",
+      "seconds": 5.3620180420111865,
+      "exit": 0
+    },
+    "dry-run": {
+      "gate": "dry-run",
+      "seconds": 7.3357609999366105,
+      "exit": 0
+    }
+  },
+  "testCounts": {
+    "existingTargeted": 123,
+    "newScriptChecksExcludingDeployGuard": 8,
+    "mandatoryPrivacyIncludingDeployGuard": 28,
+    "uniqueTotal": 159
+  },
+  "projection": {
+    "scale": 2.090668129590966,
+    "ciBuildWarmSeconds": 426.73367908266596,
+    "ciBuildColdSeconds": 435.5600529945769,
+    "ciWorkflowWarmSeconds": 718.733679082666,
+    "ciWorkflowColdSeconds": 727.5600529945768,
+    "newCacheActionAllowanceSeconds": 5,
+    "deploySecondsHeldConstant": 252
+  },
+  "workflowBoundariesVerifiedUnchanged": [
+    "triggers",
+    "permissions",
+    "secrets",
+    "skip_tests",
+    "restamp-commit"
+  ]
+}

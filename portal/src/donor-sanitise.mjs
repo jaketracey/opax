@@ -4,7 +4,9 @@ import {createHash} from 'node:crypto';
 import {normaliseLookupKey} from './lookup-casefold.mjs';
 // Bound repeated short-string hashing; large response bodies are never retained.
 const hashMemo=new Map();
-const hash=s=>{if(hashMemo.has(s))return hashMemo.get(s);const value=createHash('sha256').update(s).digest('hex');if(s.length<=256){if(hashMemo.size>=4096)hashMemo.delete(hashMemo.keys().next().value);hashMemo.set(s,value)}return value};
+// Bulk eviction avoids repeatedly walking a Map iterator past deleted slots.
+// Only deterministic hashes are memoised; no privacy decision is cached here.
+const hash=s=>{if(hashMemo.has(s))return hashMemo.get(s);const value=createHash('sha256').update(s).digest('hex');if(s.length<=256){if(hashMemo.size>=4096)hashMemo.clear();hashMemo.set(s,value)}return value};
 const fold=s=>String(s).normalize('NFKC').replace(/[‘’ʼ`]/g,"'").replace(/\s+/g,' ').trim().toLowerCase();
 const compiled=new WeakMap(),organisationSets=new WeakMap();
 function registeredOrganisation(value,registry){

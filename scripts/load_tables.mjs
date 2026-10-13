@@ -214,12 +214,25 @@ export async function buildTableSQL({root=defaultRoot,output=fileURLToPath(new U
   await writeFile(join(output,'manifest.json'),JSON.stringify(manifest,null,2)+'\n');
   return manifest;
 }
+// Normal releases need only the privacy metadata. SQL remains the default for
+// local/reload callers, and --sql explicitly overrides the CI metadata mode.
+export function tableMetadataOnly(argv = process.argv.slice(2), env = process.env) {
+  if (argv.includes('--metadata-only') && argv.includes('--sql')) throw new Error('Conflicting table build modes');
+  return !argv.includes('--sql') && (argv.includes('--metadata-only') || env.OPAX_TABLE_METADATA_ONLY === '1');
+}
+export async function buildTableAssets({root=defaultRoot, output, fingerprintPath=fileURLToPath(new URL('../portal/src/table-registry-fingerprint.json',import.meta.url)), metadataOnly=false, datasets, policy}={}) {
+  if (metadataOnly) policy ||= await tableIdentityIndex(root);
+  else if (!datasets) {const loaded=await tableRows(root);datasets=loaded.rows;policy=loaded.policy;}
+  policy ||= await tableIdentityIndex(root);
+  const result = metadataOnly ? null : await buildTableSQL({root,output,datasets,policy});
+  const fingerprint = tableRegistryFingerprint(policy);
+  await writeFile(join(root,'table-private-identities.json'),JSON.stringify({version:1,identities:tableIdentityHashes(policy),strippedLengths:policy.strippedLengths})+'\n');
+  await writeFile(fingerprintPath,JSON.stringify({fingerprint})+'\n');
+  return result || {privacyFingerprint:fingerprint,privateIdentities:policy.phrases.size};
+}
 if (process.argv[1] && resolve(process.argv[1])===fileURLToPath(import.meta.url)) {
   try {
-    const loaded=await tableRows();
-    const result=await buildTableSQL({datasets:loaded.rows,policy:loaded.policy});
-    await writeFile(join(defaultRoot,'table-private-identities.json'),JSON.stringify({version:1,identities:tableIdentityHashes(loaded.policy),strippedLengths:loaded.policy.strippedLengths})+'\n');
-    await writeFile(fileURLToPath(new URL('../portal/src/table-registry-fingerprint.json',import.meta.url)),JSON.stringify({fingerprint:result.privacyFingerprint})+'\n');
-    console.log(JSON.stringify({sqlFiles:result.files.length,bytes:result.bytes,rows:result.counts,privateIdentityHashes:result.privateIdentities,publicTableAssets:0,publicPrivacyAssets:1}));
+    const result=await buildTableAssets({metadataOnly:tableMetadataOnly()});
+    console.log(JSON.stringify({sqlFiles:result.files?.length || 0,bytes:result.bytes || 0,...(result.counts?{rows:result.counts}:{}),privateIdentityHashes:result.privateIdentities,publicTableAssets:0,publicPrivacyAssets:1}));
   } catch {console.error('Table load preparation failed; no source identities are logged.');process.exitCode=1;}
 }
