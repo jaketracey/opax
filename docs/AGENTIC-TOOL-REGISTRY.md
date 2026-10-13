@@ -39,11 +39,11 @@ The example is interface guidance, not a registered tool.
 
 Every handler returns `{ rows, citations, notes, ...metadata }`. Each citation has `{ text, url, value?, kind? }`; `text` must bind the figure to its entity, indicator and unit, and `url` must open its source page. The Ask adapter creates fact templates directly from citation text. An empty supported scope returns empty rows plus an explicit reason and coverage notes. Keep the confident-match donor rule, omit placeholder nodes, and include a no-causation note in joined money/votes results.
 
-## Electorates and the route merge
+## Electorates and Ask
 
 `portal/src/tools/electorates.ts` exports canonical `electorates_rank`. Its temporary Ask name is `electorates`, retaining the four existing gold plans. The old `agentic-tool-electorates.ts` path only re-exports compatibility helpers; no second implementation remains.
 
-The route lane was not an ancestor of refreshed `origin/main` when this change began. Its merge must retain:
+Agentic Ask is integrated from `origin/main` at `f38a55251`. Both surfaces retain the shared registry:
 
 1. `agentic-tools.ts`: spread `askToolSpecs` into `TOOL_SPECS`, validate registry arguments through `validRegisteredArgs`, and include `TOOL_REGISTRY_VERSION` in the cache version.
 2. `agentic-ask.ts`: use `getAskTool` for registry step labels and turn each registry citation into a bound fact. Retain round 1's electorate classifier/plan and no-speech-fallback behavior.
@@ -52,7 +52,7 @@ The route lane was not an ancestor of refreshed `origin/main` when this change b
 
 Other lanes own their classifier and deterministic plan rules. Registry addition needs no hand-written MCP schema or second handler. Each lane must add a contract test, Ask/MCP gold parity tests and its reference entry under `/methods#mcp`.
 
-Round 3 merges `origin/main` at `608b824b3`, preserving `localMiniflare` with the isolated root, persistence/runtime paths and unique D1 name. The route branch is deliberately still unmerged while its third fix round finishes. The review's integration table (route preview `4f24c1f67`) supersedes the earlier single-conflict note:
+The integration preserves main's named-entity binding, scope checks, scoped cache keys and cancellation. Census requests skip speech-name resolution, use only electorate lookups, and return Census non-answers without ordinary speech fallback. Main's table harness already includes `localMiniflare`, the isolated root, persistence/runtime paths and unique D1 name. The resolved integration follows the review's table:
 
 | Conflicting file | Against | Resolution |
 |---|---|---|

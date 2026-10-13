@@ -53,6 +53,8 @@
   //   npx wrangler secret put ARAG_KB_ID
   "vars": {
     "VIC_ELECTION_HUB_ENABLED": "true",
+    // Agentic Ask (Jake, 13 Oct: "just ship it and turn it on"). off | shadow | route; unset or unknown = off.
+    "AGENTIC_ASK_MODE": "route",
     // SA Hansard is excerpt-only until Parliament grants full-text permission.
     "SA_HANSARD_FULL_TEXT": "false",
     // Raising this floor deliberately requires older native builds to update.

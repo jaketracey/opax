@@ -1,4 +1,5 @@
 import { personUrl, partyUrl } from './canonical-urls.js?v=225d5915ea';
+import {isMultiSpeaker, speakerLabel, isUnattributed, resolvedParticipants, groupAvatarHTML} from './speech-attribution.js?v=1350457c5d';
 /**
  * OPAX Time Machine — an Encarta-style year explorer for the Australian
  * parliamentary record (1998–2026).
@@ -1509,7 +1510,7 @@ export function mountTimeMachine(container, opts = {}) {
       for (const slot of scope.querySelectorAll('.tm-portrait[data-speaker]')) {
         const id = map && map[String(slot.dataset.speaker).trim().toLowerCase()]
         // No portrait on file: an empty ring holds the column so names align.
-        if (!id) { slot.classList.add('tm-portrait-none'); slot.removeAttribute('data-speaker'); continue }
+        if (!id) { if (slot.closest('.speech-participant')) slot.remove(); else { slot.classList.add('tm-portrait-none'); slot.removeAttribute('data-speaker') } continue }
         const size = slot.classList.contains('tm-portrait-sm') ? '24' : '32'
         const img = el('img', null, { src: `/photos/${id}.webp`, alt: '', width: size, height: size, loading: 'lazy' })
         slot.appendChild(img)
@@ -1535,32 +1536,46 @@ export function mountTimeMachine(container, opts = {}) {
     if (r.resource) card.dataset.rid = r.resource
 
     const who = el('div', 'tm-card-who')
-    if (r.speaker) {
+    if (isMultiSpeaker(r)) {
+      const group = el('span', 'tm-portrait'); group.innerHTML = groupAvatarHTML(); who.appendChild(group)
+    } else if (r.speaker) {
       const slot = el('span', 'tm-portrait')
       slot.dataset.speaker = r.speaker
       who.appendChild(slot)
     }
     const text = el('div', 'tm-who-text')
     const line1 = el('div', 'tm-who-line')
-    if (r.speaker) {
+    if (r.speaker && !isMultiSpeaker(r)) {
       const name = el('a', 'tm-name', { href: personUrl(r.speaker) })
       name.textContent = r.speaker
       line1.appendChild(name)
     }
-    if (r.party) {
+    if (r.party && !isUnattributed(r)) {
       if (r.speaker) line1.appendChild(document.createTextNode(' · '))
       const party = el('a', 'tm-meta-link', { href: partyUrl(r.party) })
       party.textContent = r.party
       line1.appendChild(party)
     }
-    if (!line1.childNodes.length) line1.textContent = 'Speaker not recorded'
+    if (!line1.childNodes.length) line1.textContent = speakerLabel(r)
+    if (r.speaker_type === 'witness') line1.append(' · witness')
+    if (isMultiSpeaker(r)) {
+      const participants = el('div', 'speech-participants')
+      for (const p of resolvedParticipants(r.participants)) {
+        const a = el('a', 'speech-participant', {href: personUrl(p.name)})
+        const face = el('span', 'tm-portrait tm-portrait-sm'); face.dataset.speaker = p.name
+        a.append(face, document.createTextNode(p.name + (p.role ? ` (${p.role})` : '')))
+        if (participants.childNodes.length) participants.append(', ')
+        participants.append(a)
+      }
+      line1.append(participants)
+    }
     const line2 = el('div', 'tm-when')
     line2.textContent = [fmtDate(r.date), parliamentName(r.state), subjectOf(r, topicLabel)].filter(Boolean).join(' · ')
     text.append(line1, line2)
     who.appendChild(text)
 
     const debate = el('p', 'tm-debate')
-    debate.textContent = topicLabel
+    debate.textContent = isMultiSpeaker(r) ? r.debate || topicLabel : topicLabel
     card.append(who, debate)
 
     // A real passage only — frontier-year records sometimes index as title
@@ -1675,7 +1690,8 @@ export function mountTimeMachine(container, opts = {}) {
         if (!s.slug) continue
         const li = el('li')
         const a = el('a', 'tm-src-link', { href: `#/doc/${s.slug}` })
-        a.textContent = s.speaker || s.title || s.slug
+        a.textContent = isMultiSpeaker(s) ? `Several speakers · ${s.debate || 'Parliamentary debate'}` : s.speaker || s.title || s.slug
+        if (isMultiSpeaker(s)) { const group=el('span'); group.innerHTML=groupAvatarHTML(); li.append(group) }
         li.appendChild(a)
         const tail = [s.party, fmtDate(s.date), parliamentName(s.state)].filter(Boolean).join(' · ')
         if (tail) {

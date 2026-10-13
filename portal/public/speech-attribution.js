@@ -1,15 +1,48 @@
 /** Witness markers always override a stale MP link or party. */
 export function isWitness(row) {
+  if (row?.speaker_type === 'multi_speaker') return false;
   return row?.speaker_type === 'witness' || Boolean(row?.witness_name) ||
-    (/committee/.test(String(row?.chamber || '')) && row?.person_id == null);
+    (row?.speaker_type !== 'chair' && /committee/.test(String(row?.chamber || '')) && row?.person_id == null);
 }
 
 export function isUnattributed(row) {
-  return isWitness(row) || row?.speaker_attribution === 'unattributed';
+  return isWitness(row) || ['multi_speaker', 'chair', 'unknown', 'unattributed'].includes(row?.speaker_type) || row?.speaker_attribution === 'unattributed';
+}
+
+export const isMultiSpeaker = row => row?.speaker_type === 'multi_speaker' || row?.labels?.speaker_type === 'multi_speaker';
+
+export function groupAvatarHTML() {
+  return '<svg class="speech-group-avatar" viewBox="0 0 40 40" width="40" height="40" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="20" cy="13" r="4"/><path d="M12 30v-3a8 8 0 0 1 16 0v3M9 10a3.5 3.5 0 0 0 0 7M5 29v-3a7 7 0 0 1 5-6M31 10a3.5 3.5 0 0 1 0 7M35 29v-3a7 7 0 0 0-5-6"/></g></svg>';
+}
+
+/** Display identity is separate from the collaborator/person facets. */
+export function speakerLabel(row) {
+  if (isMultiSpeaker(row)) return 'Several speakers';
+  if (isWitness(row)) return row?.speaker || row?.witness_name || 'Committee witness';
+  if (row?.speaker_type === 'chair') return row.chair_role || row.speaker || 'Chair';
+  if (row?.speaker) return row.speaker;
+  if (row?.speaker_type === 'member') return 'Parliamentarian';
+  return row?.speaker_type == null || row.speaker_type === 'unattributed' ? 'Speaker not named' : 'Unknown speaker';
+}
+
+/** Only identities resolved by the parliamentary source may be displayed. */
+export function resolvedParticipants(value) {
+  if (!Array.isArray(value)) return [];
+  const seen = new Set();
+  return value.flatMap(p => {
+    if (!p || typeof p.name !== 'string' || !p.name.trim() || !/^\d+$/.test(String(p.person_id ?? '')) ||
+        (p.speaker_type && !['member', 'chair'].includes(p.speaker_type))) return [];
+    const roles = Array.isArray(p.chair_roles) ? p.chair_roles.filter(role => typeof role === 'string') : [];
+    const role = typeof p.role === 'string' ? p.role : p.speaker_type === 'chair' ? roles.join(', ') || 'Chair' : '';
+    const key = `${p.person_id}:${role}`;
+    if (seen.has(key)) return [];
+    seen.add(key);
+    return [{name: p.name.trim(), person_id: String(p.person_id), ...(role ? {role} : {})}];
+  });
 }
 
 export function belongsToScope(row, scope) {
-  return !isWitness(row) && !['chair', 'unknown'].includes(row?.speaker_type) &&
+  return !isWitness(row) && !['chair', 'unknown', 'multi_speaker', 'unattributed'].includes(row?.speaker_type) &&
     row?.kind === 'speech' && row?.state === scope.state && row?.chamber === scope.chamber &&
     (!scope.speakers || scope.speakers.some(name => nameKey(name) === nameKey(row?.speaker))) &&
     (!scope.service || scope.service.some(t => typeof row?.date === 'string' &&
@@ -24,7 +57,7 @@ export function scopeFilter(scope) {
     ...(scope.speakers ? [{ or: scope.speakers.map(collaborator => ({ prop: 'origin_collaborator', collaborator })) }] : []),
     ...(scope.service ? [{ or: scope.service.map(t => ({ prop: 'created',
       since: `${t.start}T00:00:00Z`, until: `${t.end}T23:59:59Z` })) }] : []),
-    ...['witness', 'chair', 'unknown'].map(label => ({ not: { prop: 'label', labelset: 'speaker_type', label } })),
+    ...['witness', 'chair', 'unknown', 'multi_speaker', 'unattributed'].map(label => ({ not: { prop: 'label', labelset: 'speaker_type', label } })),
   ] };
 }
 

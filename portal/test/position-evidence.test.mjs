@@ -1,9 +1,11 @@
+import {speechPresentation, joinMixedSpeakers} from '../src/mixed-speakers.ts';
+const runInNewContext = (code, context = {}, options) => { context.speechPresentation ??= speechPresentation; context.joinMixedSpeakers ??= joinMixedSpeakers; return baseVM(code, context, options); };
 import {saEvidenceRecord,saEvidenceText} from './sa-evidence-harness.mjs';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFile} from 'node:fs/promises';
 import {build} from 'esbuild';
-import {runInNewContext} from 'node:vm';
+import {runInNewContext as baseVM} from 'node:vm';
 import ts from 'typescript';
 const bundle=await build({entryPoints:[new URL('../src/position-evidence.ts',import.meta.url).pathname],bundle:true,write:false,format:'esm',platform:'node'});
 const helpers=await import('data:text/javascript;base64,'+Buffer.from(bundle.outputFiles[0].text).toString('base64'));

@@ -19,7 +19,7 @@
  */
 import { askToolSpecs, getAskTool, validRegisteredArgs, TOOL_REGISTRY_VERSION } from './tools'
 import type { ToolEnv } from './tools'
-export const AGENTIC_TOOLS_VERSION = 'agentic-tools-3/' + TOOL_REGISTRY_VERSION
+export const AGENTIC_TOOLS_VERSION = 'agentic-tools-4/' + TOOL_REGISTRY_VERSION
 
 export const TOPICS = [
   'gambling', 'financial-services', 'mining-energy', 'climate-environment', 'property-construction', 'housing', 'health',
@@ -234,7 +234,7 @@ export async function countSpeeches(deps: ToolDeps, input: CountInput): Promise<
   }))
   return {
     tool: 'count_speeches', ok: true,
-    data: { total, rows: top, more: Math.max(0, rows.length - top.length), exact, method, filter: f, described: describe(f) },
+    data: { total, rows: top, group_by: group, more: Math.max(0, rows.length - top.length), exact, method, filter: f, described: describe(f) },
     cite, query: { method, filter: f }, notes,
   }
 }

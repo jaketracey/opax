@@ -26,11 +26,13 @@ let uiLabels;
 const uiLabelsReady = import('/labels.js?v=c6bf994ef7').then(module => { uiLabels = module; });
 let attributionHelpers;
 const attributionReady = Promise.allSettled([divisionMarkdownReady,
-  import('./speech-attribution.js?v=20261006-4').then(module => { attributionHelpers = module; })]);
+  import('./speech-attribution.js?v=1350457c5d').then(module => { attributionHelpers = module; })]);
 const isWitness = row => attributionHelpers ? attributionHelpers.isWitness(row) : true;
 const isUnattributed = row => attributionHelpers ? attributionHelpers.isUnattributed(row) : true;
 const belongsToScope = (row, scope) => attributionHelpers ? attributionHelpers.belongsToScope(row, scope) : false;
 const speakerHref = (row, href) => attributionHelpers ? attributionHelpers.speakerHref(row, href) : `${href}?attribution=unattributed`;
+const isMultiSpeaker = row => row?.speaker_type === 'multi_speaker' || row?.labels?.speaker_type === 'multi_speaker';
+const speakerLabel = row => attributionHelpers?.speakerLabel(row) || (isMultiSpeaker(row) ? 'Several speakers' : row?.speaker || 'Speaker not named');
 const splitPerson = (people, name) => attributionHelpers?.splitPerson(people, name) || null;
 const splitSpeakers = person => attributionHelpers?.splitSpeakers(person) || [];
 const personScope = person => attributionHelpers?.personScope(person) || person?.speech_scope || null;
@@ -157,6 +159,7 @@ function titleDateForms(value) {
  * own ("Budget — the reply") comes back exactly as the record wrote it.
  */
 function titleSubject(rec) {
+  if (isMultiSpeaker(rec)) return rec.debate || rec.metadata?.topic || rec.metadata?.debate || 'Parliamentary debate';
   const parts = String(rec?.title ?? "").trim().split(/(\s+—\s+)/);
   if (rec?.speaker && titleKey(parts[0]) === titleKey(rec.speaker)) parts.splice(0, 2);
   else if (rec?.labels?.kind === "press_release" && rec?.metadata?.role &&
@@ -425,14 +428,38 @@ function metaHTML(item, { linkSpeaker = false, linkParty = false, portrait = fal
       ? `<a class="meta-party" ${entityHrefAttr(subjectHash("party", item.party))}>${partyChipHTML(item.party)}</a>`
       : partyChipHTML(item.party));
   }
-  if (item.speaker && !hideSpeaker) {
+  if (item.speaker && !hideSpeaker && !isMultiSpeaker(item)) {
     bits.push(linkSpeaker
       ? `<a class="meta-speaker" ${entityHrefAttr(speakerHref(item, subjectHash("person", item.speaker)))}>${esc(item.speaker)}</a>`
       : esc(item.speaker));
   }
+  if ((item.kind === 'speech' || isMultiSpeaker(item)) && !hideSpeaker && (isMultiSpeaker(item) || !item.speaker || isWitness(item) || item.speaker_type === 'chair')) {
+    bits.splice(item.speaker && !isMultiSpeaker(item) ? bits.length - 1 : bits.length, item.speaker && !isMultiSpeaker(item) ? 1 : 0, speechIdentityHTML(item));
+  }
   if (item.state) bits.push(esc(STATE_NAMES[item.state] || item.state));
   if (item.date) bits.push(esc(fmtDate(item.date)));
   return slot + bits.join(" · ");
+}
+
+function groupAvatarHTML() {
+  return '<svg class="speech-group-avatar" viewBox="0 0 40 40" width="40" height="40" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="20" cy="13" r="4"/><path d="M12 30v-3a8 8 0 0 1 16 0v3M9 10a3.5 3.5 0 0 0 0 7M5 29v-3a7 7 0 0 1 5-6M31 10a3.5 3.5 0 0 1 0 7M35 29v-3a7 7 0 0 0-5-6"/></g></svg>';
+}
+
+function participantLinksHTML(row) {
+  if (!isMultiSpeaker(row)) return '';
+  const participants = attributionHelpers?.resolvedParticipants(row.participants || row.metadata?.speaker_participants) || [];
+  if (!participants.length) return '';
+  return `<span class="speech-participants" aria-label="Participants in the debate">${participants.map(p => {
+    const portrait = photoUrlFor(p.name);
+    return `<a class="speech-participant" ${entityHrefAttr(subjectHash('person', p.name))}><span class="meta-portrait" data-speaker="${esc(p.name)}">${portrait ? `<img src="${esc(portrait)}" alt="" width="24" height="24" loading="lazy">` : ''}</span>${esc(p.name)}${p.role ? ` <span class="speech-participant-role">(${esc(p.role)})</span>` : ''}</a>`;
+  }).join('<span aria-hidden="true">, </span>')}</span>`;
+}
+
+function speechIdentityHTML(row) {
+  const label = speakerLabel(row);
+  if (isMultiSpeaker(row)) return `<span class="speech-identity">${groupAvatarHTML()}<span>Several speakers</span></span>${participantLinksHTML(row)}`;
+  const name = row.speaker ? `<a ${entityHrefAttr(speakerHref(row, subjectHash('person', row.speaker)))}>${esc(label)}</a>` : esc(label);
+  return name + (isWitness(row) ? ' <span class="topic-arc-witness">witness</span>' : '');
 }
 
 /** Swap .meta-portrait slots for the speaker's headshot once the map is in. */
@@ -1162,7 +1189,7 @@ async function mountDiscoveryMap(signal) {
     if (!current()) return;
     const donor = data?.nodes?.find((node) => node.kind === "donor" && node.label.trim().toLocaleLowerCase() === signal.entity.trim().toLocaleLowerCase());
     if (!donor) { root.innerHTML = '<p class="status">This organisation isn’t in the money map’s selected donor set. You can still search its name in the record.</p>'; return; }
-    const { mountMoneyMap } = await import("/money-map.js?v=fb33962c2d");
+    const { mountMoneyMap } = await import("/money-map.js?v=b41a0591dd");
     if (!current()) return;
     root.textContent = "";
     const handle = await mountMoneyMap(root, "/graph/money.json", { focus: donor.id, chrome: "mini", reveal: true, openCard: false,
@@ -1501,7 +1528,7 @@ async function mountMoney(jurParam, industry, params = new URLSearchParams()) {
   root.innerHTML = `<p class="status" style="margin:0;padding:1rem 1.25rem">Loading the map…</p>`;
   const cfg = MONEY_JURISDICTIONS[jur];
   try {
-    const [{ mountMoneyMap }, data, journeysModule, researchModule, recordsModule] = await Promise.all([import("/money-map.js?v=fb33962c2d"), loadMoneyFile(jur), import("/money-journeys.js?v=mobile-picker-20260908"), import("/map-research.js?v=d15f440009"), import("/money-records.js?v=ia-ux-20260908-2")]);
+    const [{ mountMoneyMap }, data, journeysModule, researchModule, recordsModule] = await Promise.all([import("/money-map.js?v=b41a0591dd"), loadMoneyFile(jur), import("/money-journeys.js?v=mobile-picker-20260908"), import("/map-research.js?v=d15f440009"), import("/money-records.js?v=ia-ux-20260908-2")]);
     if (moneyMapLoading !== jur || generation !== moneyMapGeneration) return; // switched again while loading
     const fine = $("money-fineprint");
     if (fine) fine.innerHTML = moneyFineprintHTML(jur, data?.meta);
@@ -1636,7 +1663,7 @@ async function openSupplierPage(name, params, manageFocus) {
   body.classList.remove("subject-person", "subject-party");
   body.innerHTML = '<p role="status">Loading suppliers…</p>';
   try {
-    const module = await import("/suppliers.js?v=c2fae77c87");
+    const module = await import("/suppliers.js?v=e76f8c3c95");
     if (generation !== supplierPageGeneration) return;
     const helpers = {
       params,
@@ -2849,7 +2876,7 @@ function sourceItem(s, num, passage = false) {
   // rather than the name twice and an ISO date in the title.
   const receiptCalculation = /^receipt-(?:ranking|comparison|years)-/.test(s.resource || "");
   const subject = titleSubject(s);
-  const nameOnly = !subject && s.speaker;
+  const nameOnly = !isMultiSpeaker(s) && !subject && s.speaker;
   btn.textContent = subject || String(s.title || s.slug || "");
   if (nameOnly) li.classList.add("source-name-only");
   const target = new URL(searchResultHref(s), location.origin);
@@ -2881,7 +2908,7 @@ function sourceItem(s, num, passage = false) {
     const where = [STATE_NAMES[s.state] || (s.state ? String(s.state) : "Federal"), s.date ? fmtDate(s.date) : ""].filter(Boolean).join(" · ");
     by.innerHTML = `<span class="source-face" aria-hidden="true"></span>
       <span class="source-byline-text">
-        <span class="source-byline-name"><a class="meta-speaker" ${entityHrefAttr(speakerHref(s, subjectHash("person", s.speaker)))}>${esc(s.speaker)}</a>${s.party && !isUnattributed(s) ? ` <a class="meta-party" ${entityHrefAttr(subjectHash("party", s.party))}>${partyChipHTML(s.party)}</a>` : ""}</span>
+        <span class="source-byline-name"><a class="meta-speaker" ${entityHrefAttr(speakerHref(s, subjectHash("person", s.speaker)))}>${esc(s.speaker)}</a>${isWitness(s) ? ` <span class="topic-arc-witness">witness</span>` : ""}${s.party && !isUnattributed(s) ? ` <a class="meta-party" ${entityHrefAttr(subjectHash("party", s.party))}>${partyChipHTML(s.party)}</a>` : ""}</span>
         <span class="source-byline-sub">${esc(where)}</span>
       </span>`;
     li.appendChild(by);
@@ -2922,6 +2949,7 @@ function sourceItem(s, num, passage = false) {
     li.appendChild(read);
   }
   if (passage) li.insertAdjacentHTML("beforeend", excerptNoticeHTML(s));
+  if (isMultiSpeaker(s)) decorateMetaPortraits(li);
   return li;
 }
 
@@ -2931,11 +2959,11 @@ function keySpeechItem(speech) {
 
   const title = document.createElement("h3");
   title.className = "report-speech-title";
-  title.textContent = speech.title || displayTitle(speech);
+  title.textContent = isMultiSpeaker(speech) ? displayTitle(speech) : speech.title || displayTitle(speech);
 
   const byline = document.createElement("div");
   byline.className = "report-speech-byline";
-  if (speech.speaker) {
+  if (speech.speaker && !isUnattributed(speech)) {
     const portrait = document.createElement("span");
     portrait.className = "meta-portrait";
     portrait.dataset.speaker = speech.speaker;
@@ -2945,14 +2973,17 @@ function keySpeechItem(speech) {
   identity.className = "report-speech-identity";
   const nameLine = document.createElement("div");
   nameLine.className = "report-speech-name-line";
-  if (speech.speaker) {
+  if (speech.speaker && !isMultiSpeaker(speech)) {
     const speaker = document.createElement("a");
     speaker.className = "report-speech-speaker";
     if (hasEntityId(speech.speaker)) speaker.href = speakerHref(speech, subjectHash("person", speech.speaker));
     speaker.textContent = speech.speaker;
     nameLine.appendChild(speaker);
   }
-  if (speech.party) {
+  if (isMultiSpeaker(speech)) nameLine.innerHTML = speechIdentityHTML(speech);
+  else if (!speech.speaker) nameLine.innerHTML = speechIdentityHTML(speech);
+  else if (isWitness(speech)) nameLine.insertAdjacentHTML('beforeend', ' <span class="topic-arc-witness">witness</span>');
+  if (speech.party && !isUnattributed(speech)) {
     const party = document.createElement("a");
     party.className = "meta-party";
     if (hasEntityId(speech.party)) party.href = subjectHash("party", speech.party);
@@ -3088,8 +3119,8 @@ const quoteRail = { sources: [], idx: -1, raf: 0 };
 function quoteCardHTML(s, i, n) {
   const full = (s.snippet || "").trim().replace(/\s+/g, " ");
   const meta = [
-    s.speaker ? `<span class="quote-speaker">${esc(s.speaker)}</span>` : "",
-    s.party ? partyChipHTML(s.party) : "",
+    s.kind === "speech" || isMultiSpeaker(s) ? speechIdentityHTML(s) : s.speaker ? `<span class="quote-speaker">${esc(s.speaker)}</span>` : "",
+    s.party && !isUnattributed(s) ? partyChipHTML(s.party) : "",
     s.date ? esc(fmtDate(s.date)) : "",
   ].filter(Boolean).join(" · ");
   // Quote marks only around a real passage; with no snippet the title stands in.
@@ -3098,7 +3129,7 @@ function quoteCardHTML(s, i, n) {
     : esc(displayTitle(s));
   return `<span class="kicker">From the record · ${i + 1} of ${n}</span>` +
     `<blockquote>${body}</blockquote>` +
-    (meta ? `<span class="quote-meta"><span class="quote-portrait"></span><span>${meta}</span></span>` : "") + excerptNoticeHTML(s);
+    (meta ? `<span class="quote-meta">${isMultiSpeaker(s) ? "" : `<span class="quote-portrait"></span>`}<span>${meta}</span></span>` : "") + excerptNoticeHTML(s);
 }
 
 function setQuoteRail(sources) {
@@ -3291,7 +3322,7 @@ function updateQuoteRail() {
     void card.offsetWidth; // restart the fade-up from the bottom
     card.classList.add("shown");
     loadPhotoMap().then(() => {
-      const url = photoUrlFor(s.speaker);
+      const url = !isUnattributed(s) ? photoUrlFor(s.speaker) : null;
       const slot = card.querySelector(".quote-portrait");
       if (url && slot && quoteRail.idx === idx) {
         slot.innerHTML = `<img src="${esc(url)}" alt="" width="28" height="28">`;
@@ -4202,7 +4233,7 @@ async function mountSubjectMap(nodeId, label = "") {
   el.hidden = false;
   $("subject-map-hint").hidden = false;
   try {
-    const { mountMoneyMap } = await import("/money-map.js?v=fb33962c2d");
+    const { mountMoneyMap } = await import("/money-map.js?v=b41a0591dd");
     if (currentSubjectKey !== key) return; // navigated away while loading
     destroySubjectMap();
     const handle = await mountMoneyMap(el, "/graph/money.json", {
@@ -6033,7 +6064,7 @@ async function renderPersonSpeeches(name, fallback, chambers, sections, opts = {
           <time datetime="${esc(String(r.date || "").slice(0, 10))}">${esc(r.date ? fmtDate(r.date) : "Undated")}${esc(where)}</time>
           <span class="person-speech-body"><span class="speech-debate">${esc(safeText(titleSubject(r)) || (opts.evidence ? "Evidence" : "Speech"))}</span>
             ${rowText(brief, r)}
-          </span></a>${excerptNoticeHTML(r)}</li>`;
+          </span></a>${isMultiSpeaker(r) ? speechIdentityHTML(r) : ""}${excerptNoticeHTML(r)}</li>`;
       }).join("")}</ul>
       ${opts.unattributed ? '' : `<p class="person-more"><a href="${esc(opts.scope ? splitSpeechSearch(name) : searchHash("", { speaker: name }, 1, "newest"))}">View all their ${noun}</a></p>`}
       ${sourceLineHTML({
@@ -6284,7 +6315,7 @@ function topicArcItemHTML(item, brief, showYear) {
   // says nothing about the speech, so it rides on the byline instead of standing as a heading.
   const subject = committee ? committeeShortTitle(titleSubject(item) || item.title) : titleSubject(item);
   const generic = !committee && GENERIC_DEBATE_RE.test(subject.trim());
-  const heading = generic ? "" : subject;
+  const heading = generic && !isMultiSpeaker(item) ? "" : subject;
   const passage = cleanPassage(item.snippet);
   const portrait = item.speaker && !isUnattributed(item) ? photoUrlFor(item.speaker) : null;
   const where = PARLIAMENT_NAMES[item.state] || STATE_NAMES[item.state] || item.state || "";
@@ -6293,10 +6324,11 @@ function topicArcItemHTML(item, brief, showYear) {
     <time class="topic-arc-year"${date ? ` datetime="${esc(date)}"` : ""}${showYear ? "" : ' aria-hidden="true"'}>${showYear ? esc(year) : ""}</time>
     <div class="topic-arc-entry">
       <div class="topic-arc-who">
-        ${item.speaker ? `<a class="topic-arc-face" ${entityHrefAttr(speakerHref(item, subjectHash('person', item.speaker)))} aria-hidden="true" tabindex="-1">${portrait ? `<img src="${esc(portrait)}" alt="" width="40" height="40" loading="lazy">` : ""}</a>` : `<span class="topic-arc-face topic-arc-face-none" aria-hidden="true"></span>`}
+        ${isMultiSpeaker(item) ? `<span class="topic-arc-face topic-arc-face-group" aria-hidden="true">${groupAvatarHTML()}</span>` : item.speaker ? `<a class="topic-arc-face" ${entityHrefAttr(speakerHref(item, subjectHash('person', item.speaker)))} aria-hidden="true" tabindex="-1">${portrait ? `<img src="${esc(portrait)}" alt="" width="40" height="40" loading="lazy">` : ""}</a>` : `<span class="topic-arc-face topic-arc-face-none" aria-hidden="true"></span>`}
         <span class="topic-arc-byline">
-          <span class="topic-arc-name">${item.speaker ? `<a ${entityHrefAttr(speakerHref(item, subjectHash('person', item.speaker)))}>${esc(item.speaker)}</a>` : "Speaker not named"}${item.party ? ` ${partyChipHTML(item.party)}` : ""}${witness ? ` <span class="topic-arc-witness">witness</span>` : ""}</span>
-          <span class="topic-arc-when">${role ? `${esc(role)} · ` : ""}${esc(where)}${committee ? " · committee" : ""}${date ? ` · <time datetime="${esc(date)}">${esc(fmtDate(date))}</time>` : ""}${generic ? ` · ${esc(subject.trim())}` : ""}</span>
+          <span class="topic-arc-name">${isMultiSpeaker(item) ? 'Several speakers' : speechIdentityHTML(item)}${item.party && !isUnattributed(item) ? ` ${partyChipHTML(item.party)}` : ""}</span>
+          ${participantLinksHTML(item)}
+          <span class="topic-arc-when">${role ? `${esc(role)} · ` : ""}${esc(where)}${committee ? " · committee" : ""}${date ? ` · <time datetime="${esc(date)}">${esc(fmtDate(date))}</time>` : ""}${generic && !isMultiSpeaker(item) ? ` · ${esc(subject.trim())}` : ""}</span>
         </span>
       </div>
       ${heading ? `<a class="topic-arc-source" ${entityHrefAttr(`/doc/${encodeURIComponent(item.slug)}`)}>${esc(heading)}</a>` : ""}
@@ -8465,9 +8497,10 @@ function billSpeechesHTML(bill) {
   // date is what opens it, rather than nine rows all reading the same absence.
   const rows = speeches.slice(0, 24).map((s) => `<li>
     <a class="source-title" ${entityHrefAttr(`/doc/${encodeURIComponent(s.slug)}`)}>${
-      s.speaker ? esc(s.speaker) : `Speech${s.date ? ` on ${esc(fmtDate(s.date))}` : ", speaker not named"}`}</a>
+      isMultiSpeaker(s) ? `${groupAvatarHTML()} ${esc(speakerLabel(s))} · ${esc(titleSubject(s))}` : s.speaker ? esc(s.speaker) : `Speech${s.date ? ` on ${esc(fmtDate(s.date))}` : ", speaker not named"}`}</a>
+    ${participantLinksHTML(s)}
     <span class="result-meta">${[
-      s.party ? partyChipHTML(s.party) : "",
+      s.party && !isUnattributed(s) ? partyChipHTML(s.party) : "",
       s.state && s.state !== "federal" ? esc(STATE_NAMES[s.state] || s.state) : "",
       s.stage_hint ? esc(billStage(s.stage_hint)) : "",
       s.speaker && s.date ? esc(fmtDate(s.date)) : "",
@@ -8993,14 +9026,14 @@ document.addEventListener("opax:explain", (e) => openExplain(e.detail));
 
 const GAMES = {
   ballot: { name: "Build your ballot", dialog: "dialog-ballot", body: "explore-ballot", module: "/ballot.js?v=49e7bc6382", mount: "mountBallot" },
-  tm: { name: "Time machine", dialog: "dialog-tm", body: "explore-tm", module: "/timemachine.js?v=8e86f26747", mount: "mountTimeMachine" },
+  tm: { name: "Time machine", dialog: "dialog-tm", body: "explore-tm", module: "/timemachine.js?v=cfe3913e9e", mount: "mountTimeMachine" },
   tide: { name: "The tide", dialog: "dialog-tide", body: "explore-tide", module: "/tide.js", mount: "mountTide" },
   quiz: { name: "The record quiz", dialog: "dialog-quiz", body: "explore-quiz", module: "/quiz.js?v=ef6c859b59", mount: "mountQuiz" },
   ledger: { name: "The ledger", dialog: "dialog-ledger", body: "explore-ledger", module: "/ledger.js?v=ed12180193", mount: "mountLedger" },
   grants: { name: "Who gets the grants", dialog: "dialog-grants", body: "explore-grants", module: "/grants.js?v=d21ff9dd03", mount: "mountGrants" },
   matrix: { name: "Who owns which debate", dialog: "dialog-matrix", body: "explore-matrix", module: "/matrix.js?v=25f5793db5", mount: "mountMatrix" },
   wd: { name: "Words per dollar", dialog: "dialog-wd", body: "explore-wd", module: "/wordsdollars.js?v=16a1298a17", mount: "mountWordsDollars" },
-  tvn: { name: "Then vs now", dialog: "dialog-tvn", body: "explore-tvn", module: "/thenvsnow.js?v=54e933f28d", mount: "mountThenVsNow" },
+  tvn: { name: "Then vs now", dialog: "dialog-tvn", body: "explore-tvn", module: "/thenvsnow.js?v=37340eeb91", mount: "mountThenVsNow" },
 };
 
 async function openGame(which, params = null) {
@@ -9595,7 +9628,7 @@ async function mountFrontMap() {
   if (!root || frontMapHandle || frontMapLoading) return;
   frontMapLoading = true;
   try {
-    const [mod, data] = await Promise.all([import("/money-map.js?v=fb33962c2d"), loadMoneyData()]);
+    const [mod, data] = await Promise.all([import("/money-map.js?v=b41a0591dd"), loadMoneyData()]);
     if (!data) throw new Error("money data unavailable");
     root.textContent = "";
     const handle = await mod.mountMoneyMap(root, "/graph/money.json", {
@@ -11888,10 +11921,13 @@ function searchQueryParams(q, f, page, sort) {
     for (let year = RECORD_FIRST_YEAR; year <= RECORD_LAST_YEAR; year++) select.add(new Option(String(year), String(year)));
     select.value = String(id === "f-from" ? RECORD_FIRST_YEAR : RECORD_LAST_YEAR);
   }
-  let draftBefore = null;
+  let draftBefore = null, draftCitationScope = null;
   const close = (apply = false) => {
     if (!pop?.open) return;
-    if (!apply && draftBefore) for (const id of ids) $(id).value = draftBefore[id];
+    if (!apply && draftBefore) {
+      for (const id of ids) $(id).value = draftBefore[id];
+      searchCitationScope = draftCitationScope || {};
+    }
     if (apply && Number($("f-from").value) > Number($("f-to").value)) {
       const from = $("f-from").value;
       $("f-from").value = $("f-to").value;
@@ -11909,6 +11945,7 @@ function searchQueryParams(q, f, page, sort) {
   };
   btn?.addEventListener("click", () => {
     draftBefore = Object.fromEntries(ids.map((id) => [id, $(id).value]));
+    draftCitationScope = { ...searchCitationScope };
     pop.hidden = false;
     pop.showModal();
     btn.setAttribute("aria-expanded", "true");
@@ -12273,7 +12310,8 @@ function renderResults(results) {
         // A row whose text a model wrote (a bill's summary) says so with the
         // machine label above that text, not with a phrase in its meta line.
         li.innerHTML = `<div class="result-meta">${recordTypeLink(r.kind, lastSearch.query, lastSearch.filters)}${r.dateLabel ? ` · ${esc(r.dateLabel)}` : r.date ? ` · ${esc(fmtDate(r.date))}` : ""}${r.source ? ` · ${esc(r.source)}` : ""}</div>
-          <h3 class="search-result-heading"><a class="result-title" href="${esc(searchResultHref(r))}">${esc(r.title)}</a></h3>
+          <h3 class="search-result-heading"><a class="result-title" href="${esc(searchResultHref(r))}">${esc(isMultiSpeaker(r) ? displayTitle(r) : r.title)}</a></h3>
+          ${r.kind === "speech" ? `<div class="result-byline">${speechIdentityHTML(r)}</div>` : ""}
           ${r.machine ? machineLabelHTML({ className: "search-result-machine", note: "The summary sentences in this row were written by a model from the bill's explanatory material. They are not the record: open the bill for its own documents." }) : ""}
           <p id="search-passage-${index}" class="search-result-text snippet" data-full="catalog">${highlightHTML(cleanPassage(r.snippet), lastSearch.query)}</p>
           <button type="button" class="search-passage-more" hidden aria-controls="search-passage-${index}" aria-expanded="false">Read more</button>${excerptNoticeHTML(r)}`;
@@ -12300,8 +12338,8 @@ function renderResults(results) {
         where,
       ].filter(Boolean).join('<span class="search-meta-separator" aria-hidden="true"> · </span>');
       const byline = [
-        r.speaker ? `<a ${entityHrefAttr(speakerHref(r, subjectHash("person", r.speaker)))}>${esc(r.speaker)}</a>` : "",
-        r.party ? partyChipHTML(r.party) : "",
+        r.kind === "speech" ? speechIdentityHTML(r) : "",
+        r.party && !isUnattributed(r) ? partyChipHTML(r.party) : "",
       ].filter(Boolean).join(" ");
       const topics = [...new Set((Array.isArray(r.topics) ? r.topics : []).filter((t) => typeof t === "string" && t.trim()))];
       // Opening a speech row loads the whole speech in place, so its button says so.
@@ -12314,6 +12352,7 @@ function renderResults(results) {
       return li;
     }),
   );
+  decorateMetaPortraits($("search-results"));
   requestAnimationFrame(refreshSearchPassageFolds);
 }
 
@@ -13152,12 +13191,16 @@ async function openDocPage(slug, manageFocus) {
     // Ways into this speaker's wider record. External links are SEARCHES, so
     // a shared name shows candidates rather than asserting the wrong person.
     const speakerLinks = $("doc-speaker-links");
-    const docWitness = doc.labels?.speaker_type === "witness" || (isCommitteeChamber(doc.labels?.chamber) && doc.metadata?.person_id == null);
+    const docWitness = !isMultiSpeaker(doc) && (doc.labels?.speaker_type === "witness" || (isCommitteeChamber(doc.labels?.chamber) && doc.metadata?.person_id == null));
     if (docWitness && (doc.metadata?.witness_position || doc.metadata?.witness_organisation)) {
       $("doc-meta").insertAdjacentHTML("afterbegin",
         `${[doc.metadata.witness_position, doc.metadata.witness_organisation].filter(Boolean).map(esc).join(", ")}&nbsp;· `);
     }
-    if (doc.speaker && (docWitness || doc.speaker_attribution === 'unattributed')) {
+    if (isMultiSpeaker(doc)) {
+      speakerLinks.innerHTML = speechIdentityHTML({...doc, speaker_type: doc.labels.speaker_type});
+      speakerLinks.hidden = false;
+      decorateMetaPortraits(speakerLinks);
+    } else if (doc.speaker && (docWitness || doc.speaker_attribution === 'unattributed')) {
       speakerLinks.innerHTML = `${docWitness ? 'Committee witness' : 'Unattributed speaker'}, named as the transcript names them. <a ${entityHrefAttr(hasEntityId(doc.speaker) ? subjectHash("person", doc.speaker) + "?attribution=unattributed" : null)}>Their evidence on OPAX</a>`;
       speakerLinks.hidden = false;
     } else if (doc.speaker) {
@@ -13992,7 +14035,7 @@ function reportSourceRow(s, num) {
     face.className = "report-source-face";
     face.setAttribute("aria-hidden", "true"); // blank circle until the portrait lands; never initials
     loadPhotoMap().then(() => {
-      const url = photoUrlFor(s.speaker);
+      const url = !isUnattributed(s) ? photoUrlFor(s.speaker) : null;
       if (url) face.innerHTML = `<img src="${esc(url)}" alt="" width="40" height="40" loading="lazy">`;
     });
     li.appendChild(face);
@@ -14522,7 +14565,7 @@ async function mountReportWords(el, cfg, slug) {
 
 async function mountReportMap(el, cfg, slug) {
   try {
-    const { mountMoneyMap } = await import("/money-map.js?v=fb33962c2d");
+    const { mountMoneyMap } = await import("/money-map.js?v=b41a0591dd");
     if (currentReportSlug !== slug || !el.isConnected) return; // moved on while loading
     const handle = await mountMoneyMap(el, "/graph/money.json", {
       chrome: "mini",

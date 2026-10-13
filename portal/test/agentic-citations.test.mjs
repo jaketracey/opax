@@ -27,15 +27,26 @@ test('P2 citation scope survives search hydration, pagination, requests and copi
  const ast=ts.createSourceFile('app.js',source,ts.ScriptTarget.Latest,true,ts.ScriptKind.JS);
  const names=['applySearchParams','currentFilters','searchHash','searchQueryParams'];
  const functions=ast.statements.filter(n=>ts.isFunctionDeclaration(n)&&names.includes(n.name?.text)).map(n=>n.getText(ast)).join('\n');
- const elements=Object.fromEntries(['search-input','f-speaker','f-party','f-state','f-topic','f-from','f-to','search-kind','search-mode'].map(id=>[id,{value:''}]));
- const api=runInNewContext(`let searchApplied=null,searchCitationScope={};const SEARCH_PER_PAGE=20,RECORD_FIRST_YEAR=1993,RECORD_LAST_YEAR=2026;${functions};({applySearchParams,currentFilters,searchHash,searchQueryParams})`,{
-  URLSearchParams,$:id=>elements[id],setQueryValue:(id,v)=>elements[id].value=v,updateSearchYearsLabel(){},searchSortPicker:{set(){}},syncSearchDatasetControls(){},renderFilterChips(){},runSearch(){},
+ const handlers=new Map();
+ const elements=Object.fromEntries(['search-input','f-speaker','f-party','f-state','f-topic','f-from','f-to','search-kind','search-mode','search-options-btn','search-options-pop','search-options-close','search-options-apply','search-options-reset'].map(id=>[id,{
+  value:'',add(){},addEventListener(type,fn){handlers.set(id+':'+type,fn)},setAttribute(){},focus(){},showModal(){this.open=true},close(){this.open=false},
+ }]));
+ const popover=ast.statements.find(n=>ts.isBlock(n)&&n.getText(ast).includes('const btn = $("search-options-btn")')).getText(ast);
+ const resets=ast.statements.find(n=>ts.isVariableStatement(n)&&n.declarationList.declarations.some(d=>d.name.getText(ast)==='SEARCH_FILTER_RESETS')).getText(ast);
+ const api=runInNewContext(`let searchApplied=null,searchCitationScope={};const SEARCH_PER_PAGE=20,RECORD_FIRST_YEAR=1993,RECORD_LAST_YEAR=2026;${functions};${resets};${popover};({applySearchParams,currentFilters,searchHash,searchQueryParams})`,{
+  URLSearchParams,Option:class{},window:{addEventListener(){}},$:id=>elements[id],setQueryValue:(id,v)=>elements[id].value=v,updateSearchYearsLabel(){},searchSortPicker:{set(){}},syncSearchDatasetControls(){},renderFilterChips(){},runSearch(){},
  });
  const original=new URLSearchParams({q:'housing',kind:'speech',speaker:'Taylor Example',chamber:'senate',since:'2025-07-22',until:'2026-03-28',venue:'committee'});
  api.applySearchParams(original);const f=api.currentFilters();
  assert.equal(elements['f-from'].value,'2025');assert.equal(elements['f-to'].value,'2026');
  for(const params of [api.searchQueryParams('housing',f,2,'oldest'),new URL(api.searchHash('housing',f,2,'oldest'),'https://fixture.invalid').searchParams])
   for(const k of ['chamber','since','until','venue','speaker'])assert.equal(params.get(k),original.get(k));
+ // Reset is a draft action. Cancelling must restore hidden exact scope too.
+ handlers.get('search-options-btn:click')();handlers.get('search-options-reset:click')();
+ assert.equal(api.currentFilters().since,undefined);assert.equal(api.currentFilters().chamber,undefined);
+ handlers.get('search-options-close:click')();
+ const restored=api.searchQueryParams('housing',api.currentFilters(),1,'relevance');
+ for(const k of ['chamber','since','until','venue','speaker'])assert.equal(restored.get(k),original.get(k));
  // Deliberately changing the year controls requests whole years again.
  elements['f-from'].value='2024';assert.equal(api.currentFilters().since,undefined);assert.equal(api.currentFilters().until,undefined);
  assert.equal(api.currentFilters().venue,'committee');
