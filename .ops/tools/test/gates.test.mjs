@@ -20,7 +20,7 @@ test('CLI cache refuses matching passes for modified, staged and untracked sourc
  const root=repo(t),cache=join(root,'.ops/gate-cache');mkdirSync(cache,{recursive:true});
  mkdirSync(join(root,'portal/public'));
  mkdirSync(join(root,'scripts'));writeFileSync(join(root,'scripts/validate_votes.mjs'),'export const validateVotes = votes => {if(votes._meta?.schema!==1)throw Error("fixture schema");};');
- writeFileSync(join(root,'portal/public/votes.json'),'{"_meta":{"schema":1}}');git(root,['add','.']);git(root,['commit','-qm','votes fixture']);
+ writeFileSync(join(root,'portal/public/votes.json'),'{"_meta":{"schema":1},"_names":{}}');git(root,['add','.']);git(root,['commit','-qm','votes fixture']);
  const env={...process.env,OX_GATE_CACHE:cache};delete env.NODE_TEST_CONTEXT;
  const run=()=>{
   const id=identity(root);writeFileSync(join(cache,cacheKey(id)+'.json'),JSON.stringify({identity:id,success:true,tier:'merge',host:'fixture'}));
@@ -141,7 +141,7 @@ test('a narrow CLI gate executes every privacy case and supplies the full public
  writeFileSync(join(root,'portal/test/donor-privacy.test.mjs'),'import test from "node:test"; import assert from "node:assert/strict"; import {readFileSync} from "node:fs"; for(let i=0;i<26;i++)test("case "+i,()=>{if(i===0){for(const file of ["crawl/indexnow.json","hubs/vic-election-2026.json"])assert.ok(JSON.parse(readFileSync(new URL("../public/"+file,import.meta.url))).fixture);}});');
  writeFileSync(join(root,'portal/test/donor-publication.test.mjs'),'import test from "node:test"; import assert from "node:assert/strict"; test("full corpus",()=>assert.ok(!process.env.OX_GATE_PUBLICATION_CHANGED));');
  writeFileSync(join(root,'portal/test/unrelated.test.mjs'),'import test from "node:test"; test("unrelated",()=>{});');
- writeFileSync(join(root,'portal/public/votes.json'),'{"_meta":{"schema":1}}');
+ writeFileSync(join(root,'portal/public/votes.json'),'{"_meta":{"schema":1},"_names":{}}');
  writeFileSync(join(root,'scripts/build_spa_shell.mjs'),'throw Error("duplicate shell build");');
  for(const file of ['gate_dependencies.mjs','stamp_assets.mjs'])writeFileSync(join(root,'scripts',file),'');
  writeFileSync(join(root,'scripts/build_search_catalog.mjs'),'import {mkdirSync,writeFileSync} from "node:fs"; const dir=new URL("../portal/public/search-catalog/",import.meta.url); mkdirSync(dir,{recursive:true});writeFileSync(new URL("index.json",dir),"{}");');

@@ -1,3 +1,4 @@
+import {validateVotes} from './votes-validation.mjs';
 import {spawn} from 'node:child_process';
 import {mkdirSync,readFileSync,writeFileSync,existsSync,rmSync,cpSync,renameSync,readdirSync} from 'node:fs';
 import {join,resolve} from 'node:path';
@@ -19,15 +20,8 @@ const cache=resolve(process.env.OX_GATE_CACHE||join(root,'.ops/gate-cache'));mkd
 const passFile=join(cache,`${key}.json`);
 let previous;try{previous=JSON.parse(readFileSync(passFile));}catch{}
 if(clean&&!args.includes('--force')&&tier!=='profile'&&reusable(previous,id,tier,base)){
- git(root,['diff','--exit-code',base,id.tree,'--','portal/public/votes.json'],{stdio:'pipe'});
- const votes=JSON.parse(readFileSync(join(root,'portal/public/votes.json')));
- if(votes._meta?.schema!==1)throw Error('votes.json must stay schema 1');
- // The checks lane is adding this validator independently. Use it whenever
- // present without requiring a not-yet-merged source in older gate snapshots.
- if(existsSync(join(root,'scripts/validate_votes.mjs'))){
-   const {validateVotes}=await import(pathToFileURL(join(root,'scripts/validate_votes.mjs')));
-   validateVotes(votes);
- }
+ validateVotes(JSON.parse(readFileSync(join(root,'portal/public/votes.json'))));
+ if(args.includes('--unchanged-votes'))git(root,['diff','--exit-code',base,id.tree,'--','portal/public/votes.json'],{stdio:'pipe'});
  console.log(`CACHED PASS ${id.tree} ${id.node} ${id.lockfile} (${previous.tier}, ${previous.host})`);process.exit(0);
 }
 if(!clean)console.log('CACHE BYPASS: working tree has tracked changes or untracked files');
@@ -102,9 +96,12 @@ try{
  }
  await run('dry-run','npx',['--no-install','wrangler','deploy','--dry-run']);
  // Validate the captured export itself; main can advance independently.
- git(work,['diff','--exit-code',base,'--','portal/public/votes.json'],{stdio:'pipe'});
- const votes=JSON.parse(readFileSync(join(work,'portal/public/votes.json')));if(votes._meta?.schema!==1)throw Error('votes.json must stay schema 1');
- if(existsSync(join(work,'scripts/validate_votes.mjs')))await run('votes','node',['../scripts/validate_votes.mjs']);
+ await run('votes','node',[join(tools,'votes-validation.mjs'),join(work,'portal/public/votes.json')]);
+ if(args.includes('--unchanged-votes')){
+   git(work,['diff','--exit-code',base,'--','portal/public/votes.json'],{stdio:'pipe'});
+   record.votesBytesUnchanged=true;
+   record.votesSha256=hash(readFileSync(join(work,'portal/public/votes.json')));
+ }
  if(identity(root).tree!==id.tree)throw Error('Source tree changed while gate ran; pass is not reusable');
  record.success=true;
  if(full&&selection.files.length===selection.total)record.tier='merge';

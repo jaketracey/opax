@@ -2,7 +2,7 @@
 
 Jake approved checks-audit items 12–15 at 20:15. This change follows the matcher integration at `ea5a53af95ca9937a7ddbbe0ec896b1cfdd586b1` on `web/deploy-speed`.
 
-The gate generates Worker types once, before release generation. It then runs `check:built`, which retains TypeScript, token, stamp and existing publication checks. Standalone `check` still generates types and runs every check. The separate preliminary SPA-shell build is removed: the release or narrow-lane stamp generates the shell after Methods has been updated.
+The gate generates Worker types once, before release generation. It then runs `check:built`, which derives TypeScript, token, stamp and existing publication checks from the ordinary inline `check` recipe, removing only its initial type-generation command. Standalone `check` is unchanged. Future check additions and policy removals have one definition. An unexpected recipe fails rather than silently skipping checks. The separate preliminary SPA-shell build is removed: the release or narrow-lane stamp generates the shell after Methods has been updated.
 
 Methods no longer runs in `build:search`. Search, hubs and crawl read structured exports rather than the Methods HTML. Stamping continues to generate Methods, then the SPA shell, before calculating asset stamps. Standalone stamp checks still reject stale Methods and shell output.
 
@@ -10,7 +10,7 @@ Each stamp/check invocation computes one module-reference inventory. Handwritten
 
 Disposable gates reuse dependency installations only when the manifest, lockfile, npm configuration and exact toolchain match. The key includes Node/npm versions, ABI, platform, architecture, OS release, libc, runner image, installation settings, native-build environment and installer source. Receipts verify all files, executable modes, directories and symlink targets. Restore copies packages into each gate checkout; tests cannot mutate the persistent cache. Missing or damaged entries run `npm ci`. Credentials are not stored in receipts or printed.
 
-The versioned gate-tool sources are carried from `web/gate-speed` commit `6569871fd6998c3be0d68356fb6eabac5823aa77`, so the runner changes can be merged with this lane. Concurrent checks-lane hooks for `scripts/validate_votes.mjs` are retained when that source is present; the existing schema-1 and byte checks remain mandatory. The not-yet-merged D1 harness is an optional named smoke target and remains mandatory whenever present through the table filename rule. Every existing table and privacy test remains selected.
+The versioned gate-tool sources are carried from `web/gate-speed` commit `6569871fd6998c3be0d68356fb6eabac5823aa77`, so the runner changes can be merged with this lane. Concurrent checks-lane edits supply a bundled schema-1 votes validator with the runner; these edits are incorporated. This lane additionally uses `--unchanged-votes` to enforce its byte-preservation requirement on both fresh and cached gates without restricting data-refresh lanes. The not-yet-merged D1 harness is an optional named smoke target and remains mandatory whenever present through the table filename rule. Every existing table and privacy test remains selected.
 
 Privacy-sweep removal belongs to `web/remove-donor-matcher`. This addendum does not change the sweep scripts or their pipeline positions. `deploy.yml`, its test skipping, triggers, permissions, secrets and restamp-commit step are unchanged: CI already performs one installation and one type-generation run.
 
@@ -49,7 +49,7 @@ All-output inventory SHA-256: `faa65d6e79e97acf94b073692217e071d78fd06164d8e1e23
 
 `votes.json` SHA-256 remains `a77128dc0e1e1b3fdaa4bf84501e2c94af3125dea3cf0b2dffbc688a49d68546`.
 
-Local gates pass: 23 targeted build/cache/Methods/identity/table cases, 23 runner self-tests, standalone `check`, full `build:release` and Wrangler dry-run. No tests were skipped. The desktop full-suite receipt is retained separately in ignored `.ops/gate-cache/` so the captured candidate tree remains unchanged during validation.
+Local gates pass: targeted build/cache/Methods/identity/table and placeholder cases, runner self-tests, standalone `check`, full `build:release` and Wrangler dry-run. No tests were skipped. The first desktop run passed 1,752 of 1,753 tests and caught one inline-check wiring assertion. Restoring the ordinary inline `check` recipe and deriving `check:built` from it fixes that assertion without editing or weakening the retiring privacy test. The revised recipe and shared runner edits are validated before a fresh full desktop run. Its receipt is retained separately in ignored `.ops/gate-cache/` so the captured candidate tree remains unchanged during validation.
 
 Machine-readable timings, gates and digests: [deploy-speed-build-duplicates-2026-10-13.json](deploy-speed-build-duplicates-2026-10-13.json).
 

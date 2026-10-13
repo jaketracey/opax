@@ -164,7 +164,7 @@
     }
   ],
   "targetedTests": {
-    "passed": 23,
+    "passed": 30,
     "failed": 0,
     "skipped": 0
   },
@@ -178,5 +178,25 @@
     "Privacy-sweep removal is owned by web/remove-donor-matcher. This addendum does not change the sweeps.",
     "CI already installs dependencies and generates types once; deploy.yml is unchanged."
   ],
-  "desktopFullGate": "The exact committed candidate is validated separately; receipts are retained in .ops/gate-cache without changing that tree."
+  "desktopFullGate": "A fresh full desktop run validates the revised captured commit; receipts are retained separately in .ops/gate-cache.",
+  "firstDesktopGate": {
+    "candidate": "38583218819c7a3c5b6134192c3a34e000c77d4a",
+    "tree": "03030a514ffa9b69c8abc7acec1929e82db37e37",
+    "files": 186,
+    "passed": 1752,
+    "failed": 1,
+    "skipped": 0,
+    "failure": "Inline check-recipe assertion in privacy-placeholders.test.mjs",
+    "resolution": "Restore the original inline check script; derive check:built from it without its initial type generation. No privacy test edits."
+  },
+  "revisedLocalGates": {
+    "targetedBuildAndPrivacyTests": 30,
+    "runnerSelfTests": 23,
+    "failed": 0,
+    "skipped": 0,
+    "check": true,
+    "checkBuilt": true,
+    "buildWritersUnchangedSinceEquivalenceProof": true
+  },
+  "sharedRunnerChanges": "Bundled votes validator and its transfer manifest/test fixtures were updated by the checks lane during the first run and are incorporated. --unchanged-votes enforces this lane's additional byte guarantee."
 }

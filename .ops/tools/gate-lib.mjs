@@ -3,7 +3,7 @@ import {execFileSync} from 'node:child_process';
 import {existsSync, readFileSync, writeFileSync, renameSync, readdirSync, mkdtempSync, rmSync,statSync} from 'node:fs';
 import {join, dirname, resolve, relative} from 'node:path';
 import {tmpdir} from 'node:os';
-export const runnerFiles=['gate-lib.mjs','gate-map.json','gate-reporter.mjs','heavy-remote.mjs','ox-heavy-remote.sh','ox-heavy.sh','web-gates.mjs','web-gates.sh','test/gates.test.mjs'];
+export const runnerFiles=['gate-lib.mjs','gate-map.json','gate-reporter.mjs','heavy-remote.mjs','ox-heavy-remote.sh','ox-heavy.sh','web-gates.mjs','votes-validation.mjs','web-gates.sh','test/gates.test.mjs'];
 export const runnerHash=()=>hash(runnerFiles.map(f=>f+'\0'+readFileSync(join(import.meta.dirname,f))).join('\0'));
 export const hash = value => createHash('sha256').update(value).digest('hex');
 export const git = (root,args,options={}) => execFileSync('git',args,{cwd:root,encoding:'utf8',...options}).trim();
