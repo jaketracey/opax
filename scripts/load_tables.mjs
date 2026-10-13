@@ -1,6 +1,6 @@
 import {readFile, readdir, mkdir, writeFile, rm} from 'node:fs/promises';
 import {fileURLToPath} from 'node:url';
-import {join, resolve} from 'node:path';
+import {join, resolve, dirname} from 'node:path';
 import {createHash} from 'node:crypto';
 import {privacyValues} from '../portal/public/datatable-privacy-fields.js';
 import {TABLE_DATASETS} from '../portal/src/table-datasets.mjs';
@@ -232,15 +232,30 @@ export async function buildTableSQL({root=defaultRoot,output=fileURLToPath(new U
   await writeFile(join(output,'manifest.json'),JSON.stringify(manifest,null,2)+'\n');
   return manifest;
 }
+// Normal releases need only the privacy metadata. SQL remains the default for
+// local/reload callers, and --sql explicitly overrides the CI metadata mode.
+export function tableMetadataOnly(argv = process.argv.slice(2), env = process.env) {
+  if (argv.includes('--metadata-only') && argv.includes('--sql')) throw new Error('Conflicting table build modes');
+  return !argv.includes('--sql') && (argv.includes('--metadata-only') || env.OPAX_TABLE_METADATA_ONLY === '1');
+}
+export async function buildTableAssets({root=defaultRoot, output, fingerprintPath=fileURLToPath(new URL('../portal/src/table-registry-fingerprint.json',import.meta.url)), prefilterPath=join(dirname(fingerprintPath),'table-identity-prefilter.generated.mjs'), metadataOnly=false, datasets, policy}={}) {
+  if (metadataOnly) policy ||= await tableIdentityIndex(root);
+  else if (!datasets) {const loaded=await tableRows(root);datasets=loaded.rows;policy=loaded.policy;}
+  policy ||= await tableIdentityIndex(root);
+  const fingerprint = tableRegistryFingerprint(policy);
+  // Seal every artifact from the same complete policy, exactly as the matcher
+  // CLI does. Fixtures overriding fingerprintPath keep their bundle beside it;
+  // they must never replace the release bundle while other tests import it.
+  const privateModule = identityPrefilterModule(tableIdentityPrefilter(policy),policy.phrases,tableIdentityHashes(policy),fingerprint);
+  const result = metadataOnly ? null : await buildTableSQL({root,output,datasets,policy});
+  await writeFile(join(root,'table-private-identities.json'),JSON.stringify({version:3,identities:tableIdentityHashes(policy),strippedLengths:policy.strippedLengths})+'\n');
+  await writeFile(prefilterPath,privateModule);
+  await writeFile(fingerprintPath,JSON.stringify({fingerprint})+'\n');
+  return result || {privacyFingerprint:fingerprint,privateIdentities:policy.phrases.size};
+}
 if (process.argv[1] && resolve(process.argv[1])===fileURLToPath(import.meta.url)) {
   try {
-    const loaded=await tableRows();
-    const prefilter=tableIdentityPrefilter(loaded.policy);
-    const privateModule=identityPrefilterModule(prefilter,loaded.policy.phrases,tableIdentityHashes(loaded.policy),tableRegistryFingerprint(loaded.policy));
-    const result=await buildTableSQL({datasets:loaded.rows,policy:loaded.policy});
-    await writeFile(join(defaultRoot,'table-private-identities.json'),JSON.stringify({version:3,identities:tableIdentityHashes(loaded.policy),strippedLengths:loaded.policy.strippedLengths})+'\n');
-    await writeFile(fileURLToPath(new URL('../portal/src/table-identity-prefilter.generated.mjs',import.meta.url)),privateModule);
-    await writeFile(fileURLToPath(new URL('../portal/src/table-registry-fingerprint.json',import.meta.url)),JSON.stringify({fingerprint:result.privacyFingerprint})+'\n');
-    console.log(JSON.stringify({sqlFiles:result.files.length,bytes:result.bytes,rows:result.counts,privateIdentityHashes:result.privateIdentities,publicTableAssets:0,publicPrivacyAssets:1}));
+    const result=await buildTableAssets({metadataOnly:tableMetadataOnly()});
+    console.log(JSON.stringify({sqlFiles:result.files?.length || 0,bytes:result.bytes || 0,...(result.counts?{rows:result.counts}:{}),privateIdentityHashes:result.privateIdentities,publicTableAssets:0,publicPrivacyAssets:1}));
   } catch {console.error('Table load preparation failed; no source identities are logged.');process.exitCode=1;}
 }

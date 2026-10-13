@@ -82,10 +82,29 @@ jobs:
         if: steps.duplicate.outputs.skip != 'true'
         run: npm ci
 
-      # Use the same complete asset pipeline as a local deploy.
+      # Detached, checksummed outputs are restored at their original build
+      # positions, never directly over public/. No fallback to stale keys.
+      - name: Restore passage name build cache
+        uses: actions/cache@v4
+        with:
+          path: .cache/release-build/passage-names
+          key: ${{ runner.os }}-node24-passage-v1-${{ hashFiles('scripts/build_passage_names.mjs', 'scripts/cached_release_build.mjs', 'portal/public/parliamentarians.json', 'portal/package-lock.json') }}
+
+      - name: Restore crawl build cache
+        uses: actions/cache@v4
+        with:
+          path: .cache/release-build/crawl
+          key: ${{ runner.os }}-node24-crawl-v1-${{ hashFiles('scripts/**/*.mjs', 'scripts/**/*.json', 'portal/src/**', 'portal/public/**/*.json', 'portal/public/**/*.js', 'portal/package-lock.json') }}
+
+      # Both privacy barriers and the final deploy gate remain mandatory.
+      # There is no table reload in this workflow. A reload lane must use
+      # `npm run build:tables -- --sql` before consuming private/dt-api/sql.
       - name: Build and sanitise all release assets
         if: steps.duplicate.outputs.skip != 'true'
         run: npm run build:release
+        env:
+          OPAX_TABLE_METADATA_ONLY: '1'
+          OPAX_RELEASE_CACHE_DIR: ../.cache/release-build
 
       - name: Test
         if: ${{ steps.duplicate.outputs.skip != 'true' && !inputs.skip_tests }}
