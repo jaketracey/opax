@@ -1,0 +1,135 @@
+{
+  "branch": "coverage/promote-hubs",
+  "base_sha": "3c3eea172bca5377d5bb93474f233c155b38512e",
+  "assets": {
+    "budget": {
+      "path": "portal/public/budget/data.json",
+      "bytes": 3911789,
+      "sha256": "631606009af885ea278b9f84036cd468b68009711bc2e8a31c14416eb3b962dd",
+      "counts": {
+        "releases": 13,
+        "documents": 851,
+        "aggregates": 805,
+        "measures": 2347,
+        "held_documents_excluded": 1
+      },
+      "snapshot_date": "2026-10-12",
+      "input_sha256": "5e755a7f18c295b9d8c5d84087fad43e47a5a5952fddd598b07e12b47f9af4a8",
+      "inputs": {
+        "inventory.json": "d1a8e05995b44b20d632808185bb7891f57c7cea59e6434a7362ac05ff18e9a7",
+        "receipts.json": "c4959542bc32ff3e1a8c5e7e60754c44dbed6a624c9e595c582c8a265fb722f1",
+        "aggregates.json": "73af7b4f0bbf413a274494fb38d229a6188c6b42df48b4bb58f16da8e6280b8b",
+        "measures.json": "d606d1a1a4c8f6f016dc8c3b7ed1d7adbaf5e832d5092a7b089f3ed4abbd8139",
+        "hub.json": "5e755a7f18c295b9d8c5d84087fad43e47a5a5952fddd598b07e12b47f9af4a8"
+      },
+      "reviewed_commit": "382bff462"
+    },
+    "vic-gifts": {
+      "path": "portal/public/vic-gifts/data.json",
+      "bytes": 380437,
+      "sha256": "59cebf5db77a22fd295eafb9de7b568e737b0525ccd0fbf213215ea556044738",
+      "counts": {
+        "periods": 3,
+        "html_pages": 3,
+        "tables": 6,
+        "rows": 282,
+        "roles": {
+          "Minister": 235,
+          "Parliamentary secretary": 47
+        },
+        "linked_rows": 275,
+        "unlinked_rows": 7,
+        "holds": 0,
+        "source_receipts": 8
+      },
+      "snapshot_date": "2026-10-13",
+      "input_sha256": "ef0b7067f69d949d4604478c77b33f408b2c977f31aafc83bd54ef31eafba404",
+      "inputs": {
+        "inventory.json": "c60b5dbac4911ea009cd5e492d70ecf0dad1b370e58f57abe5710677885c6e54",
+        "receipts.json": "5791af1a4e4d20591b6a016eb8f5a409b12d0aba247cfca1f858d9c525746716",
+        "hub.json": "ef0b7067f69d949d4604478c77b33f408b2c977f31aafc83bd54ef31eafba404",
+        "registers/vic-gifts-2025-02-01_2025-06-30.json": "14af87a6342d394c2b69790f9de74db78e02f2f888a84a1ca9dd393046537f88",
+        "registers/vic-gifts-2025-07-01_2026-01-31.json": "f41b61c7a7404bd058d42d2022bdd62b0a3f3ad4c08de770124e54a6b21755e2",
+        "registers/vic-gifts-2026-02-01_2026-06-30.json": "fe0c4d75a8de7bf0d67f43b3e13c7d4d0edc6023761fe468c55940f354105f03"
+      },
+      "reviewed_commit": "874ed4a21"
+    }
+  },
+  "desktop_portal_suite": {
+    "OPAX_TEST_HOST": "::1",
+    "concurrency": 6,
+    "selected_files": 219,
+    "tests": 2000,
+    "pass": 2000,
+    "fail": 0,
+    "cancelled": 0,
+    "skipped": 0,
+    "todo": 0
+  },
+  "tsc": "passed",
+  "check": "passed",
+  "build_release": "passed",
+  "worker_deployment_dry_run": "passed",
+  "promotion_dry_run": "passed",
+  "public_assets_reconcile": "passed",
+  "python_tests": {
+    "run": 84,
+    "failed": 0,
+    "skipped": 1,
+    "skip_reason": "Existing clean-checkout-only published-data smoke test; new public assets are uncommitted while testing"
+  },
+  "gifts_stage_final_tests": {
+    "passed": 8,
+    "failed": 0
+  },
+  "final_promoted_worker_tests": {
+    "passed": 3,
+    "failed": 0,
+    "victorian_person_pages": 38
+  },
+  "votes": {
+    "schema": 1,
+    "sha256": "a77128dc0e1e1b3fdaa4bf84501e2c94af3125dea3cf0b2dffbc688a49d68546",
+    "byte_identical_to_origin_main": true
+  },
+  "tested_source_sha256": {
+    "scripts/promote_hub_data.py": "6e40b6efc11c03826e071e5dbed2d4698a147e78c9ed95698221074845a6f5b1",
+    "scripts/vm/nightly.sh": "a62a12525f3febfefa5d67a3d785f7b671a3de7b1bee696efec744dfbe0dbd9a",
+    "scripts/vm/data_groups.sh": "24a94d6685661d2c5e05d96b49d9664b9d1ceb8cf6a3525ddaf8380afe306c4e",
+    "scripts/vm/validate_data.py": "067a1ea83e045c513649e7d3b94ccbc085934b1ba8cafb6c71d243cb0ec78b43",
+    "scripts/vm/test_nightly.sh": "1f6b2e73328d3c91f28b66bfd36672bb6d9140d97e36a56d49edb77cafd349ef",
+    "scripts/vic_gifts/stage.py": "bf1a937d8e195c3012a485830dcbb49b9a1de1e84ecdc184519504c4e5a47bb1",
+    "scripts/build_crawl_catalog.mjs": "eadb1cd815d960444b842b21092337434c0fe6c61dadd2af640c1b76a9d22991",
+    "portal/test/promoted-hubs.test.mjs": "7afc14b070358635cc46acdf6c6de2e0507717fcabfe10c60912981512536368",
+    "portal/test/promoted-hubs-browser.mjs": "6568520f27228940d8ae7bbeed39a7a5941ae7d2f82096eb87889e997b9301e7",
+    "tests/test_promote_hub_data.py": "6cd2f51f99675820960325623b2aab52adaf59bf815f4d12830c199d75b1dc24"
+  },
+  "log_sha256": {
+    "desktop-suite.log": "4dc6f5666ecb32f0e433c1914e8c16dff026a95fb7f2a2fc4884fa9e556955d1",
+    "check.log": "be60d468f72ca0cf92cbd4dfdfee9cbdc48e0170ce583f7126f53206d5d6350a",
+    "tsc.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "worker-dry-run.log": "170a7300448d739a8b838d6e376f197bae46bad0e83d1b50d034214bf484a8a7",
+    "promotion-check.log": "263c90bf08cb23a1d86a63df4ecff7df9c96bb8609ffe83220b7756c8bd012bf",
+    "promotion-dry-run.log": "00ceec731536e0c19db442aba368ab5f0be59164149c3d80ac25c999b1550a17",
+    "python-tests-final.log": "3b107263c5d97ae71d4d6d8a72ffca9afc151b8a45c0d2fb4100aa4ce481f2af",
+    "gifts-stage-final.log": "0595a1ec873182151e01f31c2ebc27ed5a8634f1ca4c08f48ea9d6122012f8ec",
+    "targeted-final.log": "e09fd4fa6891da37291857ceb1642998d659ef97b3ae2bda5625f3d4151349ea",
+    "browser.log": "0c6d9ed472cdea951d6c51ee01c76a6c286e8c4c400096747cf41e85ec1654e9",
+    ".promote-build.log": "70a9c05050e50657e4319a6f76001f7b1d6151130fa53664524f036fff4f3a65",
+    "nightly-tests.log": "74e143e40f42111669dbb89e7f03166060e812a0586878786cb115c99b4a162f",
+    "clean-data-smoke.log": "0b75a2400d63525e0bc83ae62b3ec301e84b5acc23ebbc4d2de5df0c7e99dbd6"
+  },
+  "no_push_or_deploy": true,
+  "no_production_writes": true,
+  "nightly_fixture_tests": {
+    "passed": 312,
+    "failed": 0,
+    "external_operations": "Disposable local fixtures only"
+  },
+  "supplemental_clean_data_smoke": {
+    "passed": 2,
+    "failed": 0,
+    "skipped": 0,
+    "resolves": "The clean-checkout-only smoke test skipped while public assets were uncommitted"
+  }
+}

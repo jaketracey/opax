@@ -1,0 +1,12 @@
+{
+  "status": "approved",
+  "reviewed_commit": "382bff462",
+  "review_basis": "Codex lane review; promotion authorised by coverage/promote-hubs",
+  "inputs": {
+    "aggregates.json": "73af7b4f0bbf413a274494fb38d229a6188c6b42df48b4bb58f16da8e6280b8b",
+    "hub.json": "5e755a7f18c295b9d8c5d84087fad43e47a5a5952fddd598b07e12b47f9af4a8",
+    "inventory.json": "d1a8e05995b44b20d632808185bb7891f57c7cea59e6434a7362ac05ff18e9a7",
+    "measures.json": "d606d1a1a4c8f6f016dc8c3b7ed1d7adbaf5e832d5092a7b089f3ed4abbd8139",
+    "receipts.json": "c4959542bc32ff3e1a8c5e7e60754c44dbed6a624c9e595c582c8a265fb722f1"
+  }
+}

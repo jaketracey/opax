@@ -29,8 +29,9 @@ normalisation and removal of the literal `Hon`/`The Hon` prefix. Return annotati
 duplicates, aliases, initials and nicknames never qualify. Givers are plain strings:
 they are never joined to any roster or donor graph, even if their spelling matches.
 
-The Worker expects a separately reviewed `/vic-gifts/data.json` asset. It returns
-503 until that asset is loaded, and rechecks licence and row provenance at serving.
+The Worker expects a separately reviewed `/vic-gifts/data.json` asset, now loaded
+by `scripts/promote_hub_data.py` in the nightly path. It returns 503 if the asset is
+absent or held, and rechecks licence and row provenance at serving.
 Local QA substitutes `data/staged/vic-gifts/hub.json` through an in-memory asset
 binding; it does not copy candidate JSON into `portal/public`.
 
@@ -45,6 +46,20 @@ JavaScript-disabled rendering and the person section. Set
 `OPAX_VIC_GIFTS_BROWSER_TOOLS` to a local Playwright installation and
 `OPAX_VIC_GIFTS_PORT` to select an IPv6 preview port. Native app work is a plan only.
 
-Future production loading belongs to the reviewed nightly path. Before promotion,
-reconcile the three register counts, reject held rows, verify source/hash/licence
-receipts and exact official links, and confirm `votes.json` remains byte-identical.
+After reviewing a new dated acquisition and staged projection, update
+`data/staged/vic-gifts/review.json` with its reviewed commit and the input hashes,
+including every per-period register. Nightly runs the promoter after the existing
+exports. It reconciles every period and role count, reparses retained source and
+copyright snapshots, rejects held periods/rows, rechecks unique exact Victorian
+roster links and requires unchanged mobile `votes.json` bytes. Any failed check
+names the guard and retains the last good public asset independently of budget.
+
+```sh
+python3 scripts/promote_hub_data.py vic-gifts --dry-run --votes-reference HEAD
+python3 scripts/promote_hub_data.py vic-gifts
+python3 scripts/promote_hub_data.py vic-gifts --check-public
+```
+
+The asset includes a `promotion` manifest with counts, UTC snapshot date and input
+hashes. A local Worker check of both promoted public assets and screenshots uses
+`node portal/test/promoted-hubs-browser.mjs`; it disables external requests.

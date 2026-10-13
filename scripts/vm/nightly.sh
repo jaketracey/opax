@@ -388,6 +388,17 @@ fi
 
 divisions_verify
 
+# ---- 3c. promote separately reviewed hub snapshots after the existing exports ------------------
+# New periods arrive via reviewed staged data + review.json, never an unchecked fetch.
+# Each hub fails independently and retains its last good public asset. The promoter
+# also proves that it leaves the refreshed mobile votes.json bytes untouched.
+for hub in budget vic-gifts; do
+  if ! run "$PY" scripts/promote_hub_data.py "$hub"; then
+    revert_group "$hub"
+    fail "hub promotion failed for $hub: previous reviewed asset retained"
+  fi
+done
+
 # ---- 4. validate what will be committed ----------------------------------------------------------
 # bills and votes are checked every night; every periodic group only when `git status` shows its files changed.
 # A group that fails is put back to HEAD and the night goes on with the rest.

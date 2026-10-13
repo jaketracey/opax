@@ -1,6 +1,6 @@
 # Federal Budget staging
 
-This lane writes only within this worktree's `data/staged` directory. It has no KB, production D1 or publication client. `/budget` reads `/budget/data.json` only after a separate reviewed nightly load. Do not copy a candidate into `portal/public` or activate a production loader as part of this lane.
+Acquisition and staging write only within this worktree's `data/staged` directory. They have no KB, production D1 or publication client. `/budget` reads `/budget/data.json`, now promoted by the reviewed nightly path using `scripts/promote_hub_data.py`.
 
 Acquisition dependencies: Python 3.12+, requests, beautifulsoup4, PyMuPDF. The parser tests create offline Word fixtures with the standard library. Existing shared HTTP tests also need aiohttp. Portal QA uses the repository's npm dependencies, Miniflare and a local Chromium/Playwright installation.
 
@@ -32,3 +32,21 @@ python3 -m scripts.budget_registry.refresh_receipts --cache .cache/budget-receip
 ```
 
 This command selects the incomplete ledger entries, performs serial robots-aware GETs, and records each outgoing request's shared identity hash, start time, previous start, measured interval and applicable robots receipt/decision. It requires unchanged document bytes and an open document licence before moving staged provenance; changed rights, source status or index links stop promotion and leave the fresh cache for review. The receipt repair never publishes data. The original source cache remains the retained body store when the fresh hashes match.
+
+After a new snapshot is reviewed, update `data/staged/budget/review.json` with
+the reviewed commit and SHA-256 of every named input. Nightly promotes after the
+other static exports, validates the public asset and rolls back only this hub on
+failure. Inventory-only links retain their licensed-paper receipts; the held
+document and its rows never enter the public projection. Original-file hashes
+join the committed acquisition ledger; the promoter does not require the VM to
+have the desktop acquisition cache or fetch originals again.
+
+```sh
+python3 scripts/promote_hub_data.py budget --dry-run --votes-reference HEAD
+python3 scripts/promote_hub_data.py budget
+python3 scripts/promote_hub_data.py budget --check-public
+```
+
+The asset's `promotion` manifest carries counts, the UTC snapshot date and input
+hashes. The promoter checks that mobile `votes.json` stays byte-identical during
+its run; the optional git reference also enforces a lane's unchanged-votes gate.

@@ -129,6 +129,22 @@ DREOF
   cp "$SRC/tests/fixtures/evidence-nightly/export_stub.py" "$seed/scripts/export_evidence_layers.py"
   cp "$SRC/tests/fixtures/evidence-nightly/audit_stub.py" "$seed/scripts/audit_evidence_export.py"
   python3 "$SRC/tests/fixtures/evidence-nightly/seed.py" "$seed/portal/public/evidence"
+  # Acquisition/review is tested offline by tests.test_promote_hub_data. This
+  # fixture checks nightly ordering, independent failure and group rollback.
+  cat > "$seed/scripts/promote_hub_data.py" <<'HPEOF'
+import os, pathlib, sys
+hub = sys.argv[1]
+assert hub in ('budget', 'vic-gifts')
+with open(pathlib.Path.home() / 'hub.calls', 'a') as out:
+    out.write(hub + '\n')
+if os.environ.get('FAKE_HUB_MODE') == hub:
+    pathlib.Path('portal/public', hub, 'data.json').write_text('{"fixture":"rejected"}\n')
+    print('FAIL ' + hub + ': held-period: fixture')
+    sys.exit(1)
+HPEOF
+  mkdir -p "$seed/portal/public/budget" "$seed/portal/public/vic-gifts"
+  printf '{"fixture":"reviewed"}\n' > "$seed/portal/public/budget/data.json"
+  printf '{"fixture":"reviewed"}\n' > "$seed/portal/public/vic-gifts/data.json"
   mkdir -p "$seed/portal/public/bills"
   python3 - "$seed" <<'PYEOF'
 import importlib.util, json, pathlib, sys
@@ -343,6 +359,15 @@ check "exit 0" test "$NRC" -eq 0
 check "main untouched" test "$(git --git-dir="$ORIGIN" rev-parse main)" = "$before"
 check "says nothing to publish" grep -q 'no data changes tonight' "$SB/nightly.out"
 check "status refreshed, still one commit on the status branch" bash -c "[ \$(git --git-dir='$ORIGIN' rev-list --count nightly-status) -eq 1 ]"
+
+echo "== reviewed hubs: after exports, independent failure retains last good assets"
+new_sandbox hub-promotion
+FAKE_HUB_MODE=budget nightly
+check "held budget fails the night" test "$NRC" -eq 1
+check "both promoter calls ran" bash -c "[ \$(wc -l < '$HOME/hub.calls') -eq 2 ] && grep -qx budget '$HOME/hub.calls' && grep -qx vic-gifts '$HOME/hub.calls'"
+check "held budget public asset rolled back" bash -c "git -C '$REPO' diff --exit-code -- portal/public/budget && grep -q reviewed '$REPO/portal/public/budget/data.json'"
+check "other hub asset retained" grep -q reviewed "$REPO/portal/public/vic-gifts/data.json"
+check "status identifies the hub failure" bash -c "git --git-dir='$ORIGIN' show nightly-status:status.json | grep -q 'hub promotion failed for budget'"
 
 echo "== 3. refresh reports failed steps: still pushes, publishes status 'failed' with the reason, exits 1"
 new_sandbox s3

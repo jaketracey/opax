@@ -1,0 +1,121 @@
+"""Promotion gates against copies of the reviewed snapshot; no source requests."""
+from contextlib import redirect_stdout, redirect_stderr
+from io import StringIO
+import json
+from pathlib import Path
+import shutil
+import tempfile
+import unittest
+
+from scripts.promote_hub_data import ROOT, ASSETS, promote
+
+
+class PromoteHubDataTests(unittest.TestCase):
+    def setUp(self):
+        self.tmp = tempfile.TemporaryDirectory(prefix="opax-promote-")
+        self.addCleanup(self.tmp.cleanup)
+        self.root = Path(self.tmp.name)
+        shutil.copytree(ROOT / "data/staged", self.root / "data/staged", ignore=shutil.ignore_patterns("audit", "instruments"))
+        public = self.root / "portal/public"
+        public.mkdir(parents=True)
+        for name in ("votes.json", "parliamentarians.json", "person-paths.js"):
+            (public / name).symlink_to(ROOT / "portal/public" / name)
+
+    def edit(self, hub, name, mutate):
+        path = self.root / "data/staged" / hub / name
+        data = json.loads(path.read_bytes())
+        mutate(data)
+        path.write_text(json.dumps(data, ensure_ascii=False, indent=2) + "\n")
+
+    def run_promotion(self, hubs, **options):
+        errors = StringIO()
+        with redirect_stdout(StringIO()), redirect_stderr(errors):
+            code = promote(hubs, self.root, **options)
+        return code, errors.getvalue()
+
+    def existing_asset(self, hub):
+        target = self.root / "portal/public" / ASSETS[hub]
+        self.assertEqual(self.run_promotion([hub])[0], 0)
+        before = target.read_bytes()
+        return target, before
+
+    def test_promotes_both_and_keeps_votes_bytes(self):
+        before = (self.root / "portal/public/votes.json").read_bytes()
+        self.assertEqual(self.run_promotion(list(ASSETS))[0], 0)
+        self.assertEqual(self.run_promotion(list(ASSETS), check_public=True)[0], 0)
+        self.assertEqual((self.root / "portal/public/votes.json").read_bytes(), before)
+        for hub in ASSETS:
+            public = json.loads((self.root / "portal/public" / ASSETS[hub]).read_bytes())
+            staged = json.loads((self.root / "data/staged" / hub / "hub.json").read_bytes())
+            manifest = public.pop("promotion")
+            self.assertEqual(public, staged)
+            self.assertEqual(len(manifest["input_sha256"]), 64)
+
+    def test_tampered_hash_refuses_each_hub_and_preserves_last_good_asset(self):
+        for hub in ASSETS:
+            target, before = self.existing_asset(hub)
+            if hub == "budget":
+                self.edit(hub, "aggregates.json", lambda d: d[0].update(sha256="0" * 64))
+            else:
+                self.edit(hub, "receipts.json", lambda d: d["receipts"][0].update(sha256="0" * 64))
+            code, errors = self.run_promotion([hub])
+            self.assertEqual(code, 1)
+            self.assertIn("hash:", errors)
+            self.assertEqual(target.read_bytes(), before)
+
+    def test_held_period_refuses_without_creating_assets(self):
+        self.edit("vic-gifts", "inventory.json", lambda d: d["holds"].append({"reason": "fixture hold"}))
+        code, errors = self.run_promotion(["vic-gifts"])
+        self.assertEqual(code, 1)
+        self.assertIn("held-period:", errors)
+        self.assertFalse((self.root / "portal/public/vic-gifts").exists())
+
+    def test_count_mismatch_refuses_each_hub_without_creating_assets(self):
+        for hub, key in (("budget", "aggregate_rows"), ("vic-gifts", "rows")):
+            self.edit(hub, "inventory.json", lambda d: d["counts"].update({key: 999}))
+            code, errors = self.run_promotion([hub])
+            self.assertEqual(code, 1)
+            self.assertIn("counts:", errors)
+            self.assertFalse((self.root / "portal/public" / hub).exists())
+
+    def test_unreviewed_change_refused_and_other_hub_still_promoted(self):
+        self.edit("budget", "review.json", lambda d: d["inputs"].update({"hub.json": "0" * 64}))
+        code, errors = self.run_promotion(list(ASSETS))
+        self.assertEqual(code, 1)
+        self.assertIn("review-hash:", errors)
+        self.assertFalse((self.root / "portal/public/budget").exists())
+        self.assertTrue((self.root / "portal/public/vic-gifts/data.json").exists())
+
+    def test_held_budget_row_is_rejected(self):
+        held = json.loads((self.root / "data/staged/budget/inventory.json").read_bytes())["held"][0]
+        self.edit("budget", "aggregates.json", lambda d: d[0].update(document_id=held["id"]))
+        code, errors = self.run_promotion(["budget"])
+        self.assertEqual(code, 1)
+        self.assertIn("held-row:", errors)
+
+    def test_held_budget_release_is_rejected(self):
+        self.edit("budget", "inventory.json", lambda d: d["releases"][0].update(status="held"))
+        code, errors = self.run_promotion(["budget"])
+        self.assertEqual(code, 1)
+        self.assertIn("held-period:", errors)
+
+    def test_missing_publication_licence_receipt_is_rejected(self):
+        self.edit("budget", "inventory.json", lambda d: d["documents"][0]["licence"].update(document_url="https://budget.gov.au/fixture-missing.pdf"))
+        code, errors = self.run_promotion(["budget"])
+        self.assertEqual(code, 1)
+        self.assertIn("licence-receipt:", errors)
+
+    def test_official_link_is_rechecked_against_unique_victorian_roster(self):
+        self.edit("vic-gifts", "hub.json", lambda d: d["registers"][0]["rows"][0]["official"].update(href="/subject/person/fixture-other"))
+        # Keep the register copy consistent, to reach the identity gate.
+        hub = json.loads((self.root / "data/staged/vic-gifts/hub.json").read_bytes())
+        register = hub["registers"][0]
+        path = self.root / "data/staged/vic-gifts/registers" / (register["document"]["id"] + ".json")
+        path.write_text(json.dumps(register))
+        code, errors = self.run_promotion(["vic-gifts"])
+        self.assertEqual(code, 1)
+        self.assertIn("official-links:", errors)
+
+
+if __name__ == "__main__":
+    unittest.main()

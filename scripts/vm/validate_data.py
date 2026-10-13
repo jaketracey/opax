@@ -598,7 +598,18 @@ def check_evidence() -> list[str]:
         return [f"evidence export refused: {error}"]
 
 
-CHECKS = {"bills": check_bills, "instruments": check_instruments, "audit": check_audit, "evidence": check_evidence, "votes": check_votes, "divisions": check_divisions, "seovotes": check_seovotes,
+def check_promoted_hub(name):
+    from scripts.promote_hub_data import ASSETS, validated_asset
+    try:
+        expected, _ = validated_asset(name)
+        if (ROOT / PUBLIC / ASSETS[name]).read_bytes() != expected:
+            return ["public asset differs from reviewed staged projection"]
+        return []
+    except (ValueError, KeyError, OSError, TypeError) as error:
+        return [str(error)]
+
+
+CHECKS = {"bills": check_bills, "instruments": check_instruments, "audit": check_audit, "budget": lambda: check_promoted_hub("budget"), "vic-gifts": lambda: check_promoted_hub("vic-gifts"), "evidence": check_evidence, "votes": check_votes, "divisions": check_divisions, "seovotes": check_seovotes,
           "corpus": check_corpus, "wrangler": check_wrangler,
           "money": check_money, "grants": check_grants, "suppliers": check_suppliers, "access": check_access,
           "expenses": check_expenses, "interests": check_interests, "fits": check_fits, "speakers": check_speakers,

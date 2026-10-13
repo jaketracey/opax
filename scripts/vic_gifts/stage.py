@@ -110,11 +110,11 @@ def parse_register(body, document, roster, paths):
     return rows
 
 
-def build(stage, roster_path=None, paths_path=None, dry_run=False):
+def build(stage, roster_path=None, paths_path=None, dry_run=False, snapshot_root=None):
     stage = Path(stage)
     ledger = json.loads((stage / "receipts.json").read_text())
     def body(receipt):
-        b = (ROOT / receipt["snapshot_path"]).read_bytes()
+        b = ((snapshot_root or ROOT) / receipt["snapshot_path"]).read_bytes()
         if hashlib.sha256(b).hexdigest() != receipt["sha256"]:
             raise ValueError("Receipt hash mismatch")
         return b
@@ -157,10 +157,11 @@ def build(stage, roster_path=None, paths_path=None, dry_run=False):
         for a in BeautifulSoup(source, "html.parser").find("main").find_all("a", href=True):
             if "/sites/default/files/" in a["href"]:
                 holds.append({"url": urljoin(url, a["href"]), "reason": "Download robots/licence requires separate review", "source_page": url})
+    period_count = "three" if len(links) == 3 else str(len(links))
     hub = {"schema": 1, "generated_at": max(r["checked_at"] for r in ledger["receipts"]),
         "source_index": INDEX, "attribution": "© Copyright State Government of Victoria",
         "changes": "Source table text normalised for whitespace and arranged by period; no endorsement implied.",
-        "scope": "All three periods linked by the DPC ministerial register index at this snapshot. Agency staff gifts and MPs' ordinary returns are separate series.",
+        "scope": f"All {period_count} periods linked by the DPC ministerial register index at this snapshot. Agency staff gifts and MPs' ordinary returns are separate series.",
         "registers": registers, "holds": holds, "collection_stopped": ledger.get("stopped")}
     rows = [r for register in registers for r in register["rows"]]
     counts = {"periods": len(links), "html_pages": len(documents), "tables": len(registers) * 2,

@@ -13,6 +13,8 @@ import { renderPersonAnswer } from '../portal/src/seo-content.ts';
 
 import { catalogueComplete, unpack } from '../portal/public/instruments.js';
 import { auditComplete } from '../portal/public/audit.js';
+import { clearedAggregates } from '../portal/src/budget.ts';
+import { clearedGiftRegisters } from '../portal/src/vic-gifts.ts';
 
 export const ORIGIN = 'https://opax.com.au';
 export const SITEMAP_LIMIT = 49_999;
@@ -123,6 +125,17 @@ export function addAuditDiscovery(groups, manifest) {
   groups.static.push({path:'/audit', lastmod:exportDate(manifest.generated_at)});
 }
 
+/** The same serving guards gate discovery; absent/dark hubs have no crawl URL. */
+export function addHubDataDiscovery(groups, budget, gifts) {
+  for (const [path, hub, count] of [
+    ['/budget', budget, budget?.schema === 1 && Array.isArray(budget.documents) && Array.isArray(budget.aggregates) ? clearedAggregates(budget).length : 0],
+    ['/register/vic-gifts', gifts, gifts ? clearedGiftRegisters(gifts).reduce((n, r) => n + r.rows.length, 0) : 0],
+  ]) {
+    if (!count || !hub.promotion || hub.promotion.snapshot_date !== exportDate(hub.generated_at)) continue;
+    groups.static.push({path, lastmod:exportDate(hub.generated_at)});
+  }
+}
+
 /** Canonical donor identities in a person's party tables; amounts and row order do not affect discovery. */
 export function namedDonors(html) {
   const block = html.split('<h2>Donors to their party</h2>')[1]?.split('<h2>Bills sponsored</h2>')[0] || '';
@@ -193,6 +206,9 @@ export async function buildCrawl(root, {read: sourceRead} = {}) {
   const audit = await optional('audit/manifest.json');
   addAuditDiscovery(groups, audit);
   if(groups.audit) { fallbacks.audit=groups.audit.length; fallbacks.static++; } // audit pages use the export snapshot until per-report tabled dates are read
+  const beforeHubs = groups.static.length;
+  addHubDataDiscovery(groups, await optional('budget/data.json'), await optional('vic-gifts/data.json'));
+  fallbacks.static += groups.static.length - beforeHubs;
   const slugs = slugIndex(people).slugOf;
   const assets = new Map();
   const cachedRead = p => { if (!assets.has(p)) assets.set(p, read(p)); return assets.get(p); };

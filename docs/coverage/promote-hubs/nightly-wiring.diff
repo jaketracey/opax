@@ -1,0 +1,44 @@
+diff --git a/scripts/vm/data_groups.sh b/scripts/vm/data_groups.sh
+index 5535882e..5f893c97 100644
+--- a/scripts/vm/data_groups.sh
++++ b/scripts/vm/data_groups.sh
+@@ -11 +11 @@
+-DATA_GROUPS=(bills instruments audit evidence votes divisions seovotes corpus wrangler money grants suppliers access expenses interests fits speakers people pay discovery taxcharity)
++DATA_GROUPS=(bills instruments audit budget vic-gifts evidence votes divisions seovotes corpus wrangler money grants suppliers access expenses interests fits speakers people pay discovery taxcharity)
+@@ -16,0 +17,2 @@ declare -A GROUP_PATHS=(
++  [budget]="portal/public/budget" # reviewed staged snapshot, promoted after exports
++  [vic-gifts]="portal/public/vic-gifts" # reviewed periods and exact Victorian roster links
+diff --git a/scripts/vm/nightly.sh b/scripts/vm/nightly.sh
+index 97f4f505..eb9e356b 100755
+--- a/scripts/vm/nightly.sh
++++ b/scripts/vm/nightly.sh
+@@ -390,0 +391,11 @@ divisions_verify
++# ---- 3c. promote separately reviewed hub snapshots after the existing exports ------------------
++# New periods arrive via reviewed staged data + review.json, never an unchecked fetch.
++# Each hub fails independently and retains its last good public asset. The promoter
++# also proves that it leaves the refreshed mobile votes.json bytes untouched.
++for hub in budget vic-gifts; do
++  if ! run "$PY" scripts/promote_hub_data.py "$hub"; then
++    revert_group "$hub"
++    fail "hub promotion failed for $hub: previous reviewed asset retained"
++  fi
++done
++
+diff --git a/scripts/vm/validate_data.py b/scripts/vm/validate_data.py
+index bd16be7f..44d730ab 100755
+--- a/scripts/vm/validate_data.py
++++ b/scripts/vm/validate_data.py
+@@ -601 +601,12 @@ def check_evidence() -> list[str]:
+-CHECKS = {"bills": check_bills, "instruments": check_instruments, "audit": check_audit, "evidence": check_evidence, "votes": check_votes, "divisions": check_divisions, "seovotes": check_seovotes,
++def check_promoted_hub(name):
++    from scripts.promote_hub_data import ASSETS, validated_asset
++    try:
++        expected, _ = validated_asset(name)
++        if (ROOT / PUBLIC / ASSETS[name]).read_bytes() != expected:
++            return ["public asset differs from reviewed staged projection"]
++        return []
++    except (ValueError, KeyError, OSError, TypeError) as error:
++        return [str(error)]
++
++
++CHECKS = {"bills": check_bills, "instruments": check_instruments, "audit": check_audit, "budget": lambda: check_promoted_hub("budget"), "vic-gifts": lambda: check_promoted_hub("vic-gifts"), "evidence": check_evidence, "votes": check_votes, "divisions": check_divisions, "seovotes": check_seovotes,

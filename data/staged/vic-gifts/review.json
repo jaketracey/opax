@@ -1,0 +1,13 @@
+{
+  "status": "approved",
+  "reviewed_commit": "874ed4a21",
+  "review_basis": "Codex lane review; promotion authorised by coverage/promote-hubs",
+  "inputs": {
+    "hub.json": "ef0b7067f69d949d4604478c77b33f408b2c977f31aafc83bd54ef31eafba404",
+    "inventory.json": "c60b5dbac4911ea009cd5e492d70ecf0dad1b370e58f57abe5710677885c6e54",
+    "receipts.json": "5791af1a4e4d20591b6a016eb8f5a409b12d0aba247cfca1f858d9c525746716",
+    "registers/vic-gifts-2025-02-01_2025-06-30.json": "14af87a6342d394c2b69790f9de74db78e02f2f888a84a1ca9dd393046537f88",
+    "registers/vic-gifts-2025-07-01_2026-01-31.json": "f41b61c7a7404bd058d42d2022bdd62b0a3f3ad4c08de770124e54a6b21755e2",
+    "registers/vic-gifts-2026-02-01_2026-06-30.json": "fe0c4d75a8de7bf0d67f43b3e13c7d4d0edc6023761fe468c55940f354105f03"
+  }
+}

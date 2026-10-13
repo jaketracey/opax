@@ -1,0 +1,92 @@
+{
+  "preview": "Local Miniflare Worker; disk-backed promoted public assets; external network disabled",
+  "results": [
+    {
+      "route": "/budget",
+      "width": 390,
+      "status": 200,
+      "horizontalOverflow": false
+    },
+    {
+      "route": "/budget",
+      "width": 1440,
+      "status": 200,
+      "horizontalOverflow": false
+    },
+    {
+      "route": "/register/vic-gifts",
+      "width": 390,
+      "status": 200,
+      "horizontalOverflow": false
+    },
+    {
+      "route": "/register/vic-gifts",
+      "width": 1440,
+      "status": 200,
+      "horizontalOverflow": false
+    }
+  ],
+  "assets": {
+    "budget": {
+      "bytes": 3911789,
+      "sha256": "631606009af885ea278b9f84036cd468b68009711bc2e8a31c14416eb3b962dd",
+      "promotion": {
+        "counts": {
+          "releases": 13,
+          "documents": 851,
+          "aggregates": 805,
+          "measures": 2347,
+          "held_documents_excluded": 1
+        },
+        "snapshot_date": "2026-10-12",
+        "input_sha256": "5e755a7f18c295b9d8c5d84087fad43e47a5a5952fddd598b07e12b47f9af4a8",
+        "inputs": {
+          "inventory.json": "d1a8e05995b44b20d632808185bb7891f57c7cea59e6434a7362ac05ff18e9a7",
+          "receipts.json": "c4959542bc32ff3e1a8c5e7e60754c44dbed6a624c9e595c582c8a265fb722f1",
+          "aggregates.json": "73af7b4f0bbf413a274494fb38d229a6188c6b42df48b4bb58f16da8e6280b8b",
+          "measures.json": "d606d1a1a4c8f6f016dc8c3b7ed1d7adbaf5e832d5092a7b089f3ed4abbd8139",
+          "hub.json": "5e755a7f18c295b9d8c5d84087fad43e47a5a5952fddd598b07e12b47f9af4a8"
+        },
+        "reviewed_commit": "382bff462"
+      }
+    },
+    "vic-gifts": {
+      "bytes": 380437,
+      "sha256": "59cebf5db77a22fd295eafb9de7b568e737b0525ccd0fbf213215ea556044738",
+      "promotion": {
+        "counts": {
+          "periods": 3,
+          "html_pages": 3,
+          "tables": 6,
+          "rows": 282,
+          "roles": {
+            "Minister": 235,
+            "Parliamentary secretary": 47
+          },
+          "linked_rows": 275,
+          "unlinked_rows": 7,
+          "holds": 0,
+          "source_receipts": 8
+        },
+        "snapshot_date": "2026-10-13",
+        "input_sha256": "ef0b7067f69d949d4604478c77b33f408b2c977f31aafc83bd54ef31eafba404",
+        "inputs": {
+          "inventory.json": "c60b5dbac4911ea009cd5e492d70ecf0dad1b370e58f57abe5710677885c6e54",
+          "receipts.json": "5791af1a4e4d20591b6a016eb8f5a409b12d0aba247cfca1f858d9c525746716",
+          "hub.json": "ef0b7067f69d949d4604478c77b33f408b2c977f31aafc83bd54ef31eafba404",
+          "registers/vic-gifts-2025-02-01_2025-06-30.json": "14af87a6342d394c2b69790f9de74db78e02f2f888a84a1ca9dd393046537f88",
+          "registers/vic-gifts-2025-07-01_2026-01-31.json": "f41b61c7a7404bd058d42d2022bdd62b0a3f3ad4c08de770124e54a6b21755e2",
+          "registers/vic-gifts-2026-02-01_2026-06-30.json": "fe0c4d75a8de7bf0d67f43b3e13c7d4d0edc6023761fe468c55940f354105f03"
+        },
+        "reviewed_commit": "874ed4a21"
+      }
+    }
+  },
+  "javaScriptDisabled": true,
+  "victorianPersonSection": true,
+  "pageErrors": [],
+  "sitemap_routes": [
+    "/budget",
+    "/register/vic-gifts"
+  ]
+}
