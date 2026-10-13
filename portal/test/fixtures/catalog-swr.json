@@ -7,7 +7,8 @@
         "/classification.labels/topic": { "/classification.labels/topic/housing": 30 },
         "/classification.labels/party": { "/classification.labels/party/Example Party": 30 },
         "/classification.labels/state": { "/classification.labels/state/federal": 30 },
-        "/classification.labels/kind": { "/classification.labels/kind/speech": 100 }
+        "/classification.labels/kind": { "/classification.labels/kind/speech": 100 },
+        "/classification.labels/chamber": { "/classification.labels/chamber/representatives": 100 }
       }
     }
   }

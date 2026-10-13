@@ -344,8 +344,14 @@ export function mountMatrix (container) {
     statusEl.hidden = false
     statusEl.textContent = 'Counting the labelled record…'
     tableEl.hidden = true
+    // A cold count can take a minute upstream; the view waits twelve seconds.
+    const attempt = new AbortController()
+    let timedOut = false
+    const timer = setTimeout(() => { timedOut = true; attempt.abort() }, 12000)
+    const stop = () => attempt.abort()
+    aborter.signal.addEventListener('abort', stop, { once: true })
     try {
-      const res = await fetch(DATA_URL, { signal: aborter.signal })
+      const res = await fetch(DATA_URL, { signal: attempt.signal })
       if (!res.ok) throw new Error(`${DATA_URL} → ${res.status}`)
       const data = await res.json()
       introEl.textContent = ''
@@ -361,12 +367,15 @@ export function mountMatrix (container) {
     } catch (err) {
       if (aborter.signal.aborted) return
       statusEl.hidden = false
-      statusEl.textContent = 'The matrix could not be loaded.'
+      statusEl.textContent = timedOut ? 'The matrix counts are updating.' : 'The matrix could not be loaded.'
       const retry = el('button', 'ui-button', 'Try again')
       retry.type = 'button'
       retry.dataset.uiSize = 'compact'
       retry.addEventListener('click', load)
       statusEl.appendChild(retry)
+    } finally {
+      clearTimeout(timer)
+      aborter.signal.removeEventListener('abort', stop)
     }
   }
 

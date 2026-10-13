@@ -2805,7 +2805,11 @@ async function apiResource(request: Request, url: URL, slug: string, env: Env, c
  * The live index in numbers: the box's own counters (documents, passages)
  * plus two facet counts read off the catalog, documents by kind and speeches
  * by parliament, so the stats page can show what is indexed right now rather
- * than what the manifest said at the last sync. Cached five minutes.
+ * than what the manifest said at the last sync. Speeches by parliament are
+ * every record's parliament less the parliaments of the records that are not
+ * speeches: a filter on all speeches (948,752 on 14 Oct) no longer answers,
+ * and kind is one label per record, so the difference is exact. Cached five
+ * minutes.
  */
 async function apiStats(env: Env, ctx: ExecutionContext, refresh = false): Promise<Response> {
   const wait = refresh ? AGGREGATE_WARM_TIMEOUT_MS : AGGREGATE_UPSTREAM_TIMEOUT_MS
@@ -2813,22 +2817,32 @@ async function apiStats(env: Env, ctx: ExecutionContext, refresh = false): Promi
     const [countersRes, kindsRes, statesRes] = await aggregateBatch([
       aggregateFetch(env, '/counters', undefined, wait),
       aggregateFetch(env, `/catalog?faceted=${KIND_FACET}&page_size=0`, undefined, wait),
-      aggregateFetch(env, `/catalog?faceted=${STATE_FACET}&filters=${SPEECH_FILTER}&page_size=0`, undefined, wait),
+      aggregateFetch(env, `/catalog?faceted=${STATE_FACET}&page_size=0`, undefined, wait),
     ])
     if (!countersRes.ok) return json({ error: `counters failed (${countersRes.status})` }, 502)
     const counters = (await countersRes.json()) as Record<string, unknown>
     // A facet that fails leaves its key null: the page keeps the manifest figure.
-    const facetOf = async (res: Response, prefix: string): Promise<Record<string, number> | null> => {
-      if (!res.ok) return null
-      const page = (await res.json()) as CatalogPage
-      const facet = page.fulltext?.facets?.[prefix] ?? {}
-      return Object.fromEntries(Object.entries(facet).map(([path, n]) => [path.slice(prefix.length + 1), n]))
+    const kinds = kindsRes.ok ? facetCounts((await kindsRes.json()) as CatalogPage, KIND_FACET) : null
+    let speechesByState: Record<string, number> | null = null
+    if (kinds && statesRes.ok) {
+      const everyRecord = facetCounts((await statesRes.json()) as CatalogPage, STATE_FACET)
+      const others = Object.keys(kinds).filter(kind => kind !== 'speech' && kinds[kind] > 0)
+      const otherRes = others.length ? await aggregateFetch(env, '/catalog', { body: {
+        filter_expression: { resource: anyClause(others.map(kind => labelClause('kind', kind))) },
+        faceted: [STATE_FACET],
+        page_size: 0,
+      } }, wait) : null
+      if (!otherRes || otherRes.ok) {
+        const notSpeeches = otherRes ? facetCounts((await otherRes.json()) as CatalogPage, STATE_FACET) : {}
+        speechesByState = Object.fromEntries(Object.entries(everyRecord)
+          .map(([state, n]): [string, number] => [state, n - (notSpeeches[state] ?? 0)])
+          .filter(([, n]) => n > 0))
+      }
     }
-    const [kinds, speechesByState] = await Promise.all([facetOf(kindsRes, KIND_FACET), facetOf(statesRes, STATE_FACET)])
     const out = json({ ...counters, kinds, speeches_by_state: speechesByState })
     // Preserve the existing partial-counter response on a cold miss, but do
     // not replace complete cached counts when either facet is unavailable.
-    if (!kindsRes.ok || !statesRes.ok) out.headers.set('cache-control', 'no-store')
+    if (!kinds || !speechesByState) out.headers.set('cache-control', 'no-store')
     return out
   }, ctx, STATS_CACHE_TTL, refresh)
 }
@@ -3049,11 +3063,21 @@ async function apiBrief(url: URL, env: Env): Promise<Response> {
 // --- topic pages ------------------------------------------------------------
 // Live label counts from the enrichment pass. The labeller is MULTI-label and
 // still running, so per-topic facet counts must never be summed into "speeches
-// labelled" (a speech carrying three labels would count three times) and no
+// labelled" (a speech carrying three labels would count three times; on 14 Oct
+// the 21 topic facets summed to 1,060,857 against 986,768 resources) and no
 // number here is a corpus total — the client phrases everything as "so far".
 // Verified live 2026-09-01: a faceted catalog call combined with `filters`
 // returns the facet AND the filtered total in one request, and the BARE
 // labelset path filters on "carries any label in this set".
+//
+// Since the 14 Oct nightly (986,768 resources) a catalog read whose filter
+// matches much more than half a million resources never answers. Measured
+// that day: a 495,771-resource filter in 0.6 s, a 600,256 one past 30 s, and
+// the bare topic and party labelsets and all speeches past 60-120 s, while
+// unfiltered faceted reads still take 1.5-5 s. The same 690k bare topic read
+// answered on 13 Oct, so the limit moves with the index. "Labelled" totals
+// are therefore summed over catalog cells (catalogCells below), each well
+// under it.
 
 const TOPIC_FILTER_PREFIX = '/classification.labels/topic'
 const PARTY_FACET = '/classification.labels/party'
@@ -3096,6 +3120,101 @@ async function aggregateBatch(reads: Promise<Response>[]): Promise<Response[]> {
     if (result.status === 'rejected') throw result.reason
     return result.value
   })
+}
+
+/** Catalog reads (GET paths or POST bodies) four at a time, parsed; any non-OK read throws. */
+async function aggregatePages(env: Env, reads: Array<string | Record<string, unknown>>, wait = AGGREGATE_UPSTREAM_TIMEOUT_MS): Promise<CatalogPage[]> {
+  const pages: CatalogPage[] = []
+  for (let i = 0; i < reads.length; i += 4) {
+    const batch = await aggregateBatch(reads.slice(i, i + 4).map(read => typeof read === 'string'
+      ? aggregateFetch(env, read, undefined, wait)
+      : aggregateFetch(env, '/catalog', { body: read }, wait)))
+    for (const res of batch) {
+      if (!res.ok) throw new Error(`catalog ${res.status}`)
+      pages.push((await res.json()) as CatalogPage)
+    }
+  }
+  return pages
+}
+
+/** A facet's counts keyed by bare label ("speech", not "/classification.labels/kind/speech"). */
+function facetCounts(page: CatalogPage, prefix: string): Record<string, number> {
+  return Object.fromEntries(Object.entries(page.fulltext?.facets?.[prefix] ?? {})
+    .map(([path, n]): [string, number] => [path.slice(prefix.length + 1), n]))
+}
+
+const labelClause = (labelset: string, label: string) => ({ prop: 'label', labelset, label })
+const anyClause = (clauses: Record<string, unknown>[]) => clauses.length === 1 ? clauses[0] : { or: clauses }
+
+// A cell packs labels up to this many resources. One label larger than that
+// (the House of Representatives, 362,229 on 14 Oct) is a cell on its own.
+const CATALOG_CELL_CAP = 300_000
+const CHAMBER_FACET = '/classification.labels/chamber'
+// Every speech and division carries exactly one chamber label; no other kind carries one.
+const CHAMBERED_KINDS = ['speech', 'division']
+
+/**
+ * Disjoint slices that cover the whole catalog once, each small enough to
+ * filter on: the chambers plus the kinds that have no chamber, packed into
+ * cells of about CATALOG_CELL_CAP. Kind is one label per resource (the kind
+ * facet sums to the total) and chamber is one per speech or division (the
+ * chamber facet sums to those two kinds), which the plan checks on every
+ * build; it throws rather than return cells that miss or double-count.
+ * Two faceted reads, in parallel.
+ */
+async function catalogCells(env: Env, wait: number): Promise<Record<string, unknown>[]> {
+  const [chamberPage, kindPage] = await aggregatePages(env, [
+    `/catalog?faceted=${CHAMBER_FACET}&page_size=0`,
+    `/catalog?faceted=${KIND_FACET}&page_size=0`,
+  ], wait)
+  const chambers = facetCounts(chamberPage, CHAMBER_FACET)
+  const kinds = facetCounts(kindPage, KIND_FACET)
+  const sum = (counts: Record<string, number>) => Object.values(counts).reduce((a, b) => a + b, 0)
+  const total = kindPage.fulltext?.total ?? 0
+  const chambered = CHAMBERED_KINDS.reduce((n, kind) => n + (kinds[kind] ?? 0), 0)
+  if (sum(kinds) !== total || sum(chambers) !== chambered) {
+    console.error(JSON.stringify({ event: 'catalog_cells_mismatch', total, kinds: sum(kinds), chambered, chambers: sum(chambers) }))
+    throw new Error('catalog cells do not cover the record once')
+  }
+  const slices = [
+    ...Object.entries(chambers).map(([label, n]) => ({ clause: labelClause('chamber', label), n })),
+    ...Object.entries(kinds).filter(([kind]) => !CHAMBERED_KINDS.includes(kind))
+      .map(([label, n]) => ({ clause: labelClause('kind', label), n })),
+  ].filter(slice => slice.n > 0).sort((a, b) => b.n - a.n)
+  const cells: { clauses: Record<string, unknown>[]; n: number }[] = []
+  for (const slice of slices) {
+    const cell = cells.find(c => c.n + slice.n <= CATALOG_CELL_CAP)
+    if (cell) { cell.clauses.push(slice.clause); cell.n += slice.n }
+    else cells.push({ clauses: [slice.clause], n: slice.n })
+  }
+  return cells.map(cell => anyClause(cell.clauses))
+}
+
+interface TopicCensus { labelled: number; by_state: Record<string, number> }
+
+/**
+ * Resources carrying any topic label, overall and by parliament: the bare
+ * topic labelset intersected with each catalog cell, summed. Cells are
+ * disjoint, so each labelled resource counts once. One cached copy serves
+ * /api/topics, every /api/topic/<slug> and /api/matrix; null when it cannot
+ * be counted.
+ */
+async function topicCensus(env: Env, ctx: ExecutionContext, refresh = false): Promise<TopicCensus | null> {
+  const wait = refresh ? AGGREGATE_WARM_TIMEOUT_MS : AGGREGATE_UPSTREAM_TIMEOUT_MS
+  const res = await cachedJson('/api/topic-census', async () => {
+    const cells = await catalogCells(env, wait)
+    const pages = await aggregatePages(env, cells.map(cell => ({
+      filter_expression: { resource: { and: [{ prop: 'label', labelset: 'topic' }, cell] } },
+      faceted: [STATE_FACET],
+      page_size: 0,
+    })), wait)
+    const byState: Record<string, number> = {}
+    for (const page of pages) {
+      for (const [state, n] of Object.entries(facetCounts(page, STATE_FACET))) byState[state] = (byState[state] ?? 0) + n
+    }
+    return json({ labelled: pages.reduce((n, page) => n + (page.fulltext?.total ?? 0), 0), by_state: byState })
+  }, ctx, 3600, refresh)
+  return res.ok ? (await res.json()) as TopicCensus : null
 }
 
 /** GET aggregates: long storage TTL, the existing browser TTL, and background refresh. */
@@ -3155,17 +3274,21 @@ async function warmCatalog(env: Env, ctx: ExecutionContext): Promise<void> {
   // within this isolate as well as each individual key's rebuild.
   if (catalogWarmup) return catalogWarmup
   catalogWarmup = (async () => {
+    // The topic census goes first: topics, matrix and every topic page read it.
     const refreshes = [
+      () => topicCensus(env, ctx, true),
       () => apiStats(env, ctx, true),
       () => apiTopics(env, ctx, true),
       () => apiParties(env, ctx, true),
+      () => apiMatrix(env, ctx, true),
+      ...(['federal', 'all'] as const).map(scope => () => apiTide(new URL(`https://opax.com.au/api/tide?scope=${scope}`), env, ctx, true)),
       ...[...TOPIC_SLUGS].map(slug => () => apiTopic(slug, env, ctx, true)),
     ]
     for (const refresh of refreshes) {
       try {
         const out = await refresh()
         // Consume the small aggregate before the next route opens connections.
-        await out.arrayBuffer()
+        if (out instanceof Response) await out.arrayBuffer()
       } catch {
         console.error(JSON.stringify({ event: 'catalog_warm_failed' }))
       }
@@ -3174,17 +3297,16 @@ async function warmCatalog(env: Env, ctx: ExecutionContext): Promise<void> {
   return catalogWarmup
 }
 
-/** All 21 topics with live counts, plus how many speeches carry any topic label. */
+/** All 21 topics with live counts, plus how many speeches carry any topic label (the census). */
 async function apiTopics(env: Env, ctx: ExecutionContext, refresh = false): Promise<Response> {
   const wait = refresh ? AGGREGATE_WARM_TIMEOUT_MS : AGGREGATE_UPSTREAM_TIMEOUT_MS
   return cachedJson('/api/topics', async () => {
-    const [facetedRes, anyRes] = await aggregateBatch([
-      aggregateFetch(env, `/catalog?faceted=${TOPIC_FILTER_PREFIX}&page_size=0`, undefined, wait),
-      aggregateFetch(env, `/catalog?filters=${TOPIC_FILTER_PREFIX}&page_size=0`, undefined, wait),
-    ])
-    if (!facetedRes.ok || !anyRes.ok) return json({ error: 'catalog failed' }, 502)
+    // The census first, so a cold build never has more than four reads open.
+    const census = await topicCensus(env, ctx, refresh)
+    if (!census) return json({ error: 'catalog failed' }, 502)
+    const facetedRes = await aggregateFetch(env, `/catalog?faceted=${TOPIC_FILTER_PREFIX}&page_size=0`, undefined, wait)
+    if (!facetedRes.ok) return json({ error: 'catalog failed' }, 502)
     const faceted = (await facetedRes.json()) as CatalogPage
-    const any = (await anyRes.json()) as CatalogPage
     const facet = faceted.fulltext?.facets?.[TOPIC_FILTER_PREFIX] ?? {}
     const counts = new Map<string, number>()
     for (const [path, n] of Object.entries(facet)) {
@@ -3192,15 +3314,15 @@ async function apiTopics(env: Env, ctx: ExecutionContext, refresh = false): Prom
     }
     // Every topic renders even before the pass reaches it — zero is honest.
     const topics = [...TOPIC_SLUGS].map((slug) => ({ slug, count: counts.get(slug) ?? 0 }))
-    return json({ labelled: any.fulltext?.total ?? 0, topics })
+    return json({ labelled: census.labelled, topics })
   }, ctx, 3600, refresh)
 }
 
 /**
  * Every party label in the record with its speech count, for the Parties
  * index. A speech carries at most one party label, so the facet counts are
- * whole speeches and `labelled` (the bare labelset filter's total) is their
- * honest denominator. Cached 10 minutes like /api/topics.
+ * whole speeches and their sum is the honest `labelled` denominator. Cached
+ * 10 minutes.
  */
 async function apiParties(env: Env, ctx: ExecutionContext, refresh = false): Promise<Response> {
   const wait = refresh ? AGGREGATE_WARM_TIMEOUT_MS : AGGREGATE_UPSTREAM_TIMEOUT_MS
@@ -3223,7 +3345,7 @@ async function apiParties(env: Env, ctx: ExecutionContext, refresh = false): Pro
  * One topic: total labelled so far (the filtered call's own total), per-party
  * split (facet within the topic filter — one request covers both, cheaper than
  * a faceted call per party), the topic's share of each parliament's labelled
- * record. Speech chronology comes from /find, whose metadata date is the
+ * record (the census's per-parliament counts). Speech chronology comes from /find, whose metadata date is the
  * speech date; catalog `created` is only index time and is never used here.
  */
 async function apiTopic(slug: string, env: Env, ctx: ExecutionContext, refresh = false): Promise<Response> {
@@ -3231,28 +3353,22 @@ async function apiTopic(slug: string, env: Env, ctx: ExecutionContext, refresh =
   const wait = refresh ? AGGREGATE_WARM_TIMEOUT_MS : AGGREGATE_UPSTREAM_TIMEOUT_MS
   return cachedJson(`/api/topic/${slug}`, async () => {
     const filter = `filters=${TOPIC_FILTER_PREFIX}/${slug}`
-    const [partyRes, anyRes, stateRes, stateTotalsRes] = await aggregateBatch([
+    const census = await topicCensus(env, ctx, refresh)
+    if (!census) return json({ error: 'catalog failed' }, 502)
+    const [partyRes, stateRes] = await aggregateBatch([
       aggregateFetch(env, `/catalog?faceted=${PARTY_FACET}&${filter}&page_size=0`, undefined, wait),
-      aggregateFetch(env, `/catalog?filters=${TOPIC_FILTER_PREFIX}&page_size=0`, undefined, wait),
       aggregateFetch(env, `/catalog?faceted=${STATE_FACET}&${filter}&page_size=0`, undefined, wait),
-      aggregateFetch(env, `/catalog?faceted=${STATE_FACET}&filters=${TOPIC_FILTER_PREFIX}&page_size=0`, undefined, wait),
     ])
-    if (!partyRes.ok || !anyRes.ok || !stateRes.ok || !stateTotalsRes.ok) {
-      return json({ error: 'catalog failed' }, 502)
-    }
+    if (!partyRes.ok || !stateRes.ok) return json({ error: 'catalog failed' }, 502)
     const byParty = (await partyRes.json()) as CatalogPage
-    const any = (await anyRes.json()) as CatalogPage
     const byState = (await stateRes.json()) as CatalogPage
-    const stateTotals = (await stateTotalsRes.json()) as CatalogPage
     const partyFacet = byParty.fulltext?.facets?.[PARTY_FACET] ?? {}
     const parties = Object.entries(partyFacet)
       .map(([path, n]): [string, number] => [path.slice(`${PARTY_FACET}/`.length), n])
       .sort((a, b) => b[1] - a[1])
-    const labelledByState = stateTotals.fulltext?.facets?.[STATE_FACET] ?? {}
-    const states = Object.entries(byState.fulltext?.facets?.[STATE_FACET] ?? {})
-      .map(([path, count]): [string, number, number] => {
-        const state = path.slice(`${STATE_FACET}/`.length)
-        const labelled = labelledByState[`${STATE_FACET}/${state}`] ?? 0
+    const states = Object.entries(facetCounts(byState, STATE_FACET))
+      .map(([state, count]): [string, number, number] => {
+        const labelled = census.by_state[state] ?? 0
         return [state, count, labelled > 0 ? count / labelled : 0]
       })
       .filter(([state, count]) => Boolean(state) && count > 0)
@@ -3260,7 +3376,7 @@ async function apiTopic(slug: string, env: Env, ctx: ExecutionContext, refresh =
     return json({
       slug,
       count: byParty.fulltext?.total ?? 0,
-      labelled: any.fulltext?.total ?? 0,
+      labelled: census.labelled,
       parties,
       states,
     })
@@ -3280,10 +3396,14 @@ const TIDE_DECADES = [
  * at ingest. Federal is the default comparable run; `scope=all` includes all
  * five parliaments and keeps its unequal source windows visible in coverage.
  */
-async function apiTide(url: URL, env: Env, ctx: ExecutionContext): Promise<Response> {
+async function apiTide(url: URL, env: Env, ctx: ExecutionContext, refresh = false): Promise<Response> {
   const scope = url.searchParams.get('scope') ?? 'federal'
   if (scope !== 'federal' && scope !== 'all') return json({ error: 'bad scope' }, 400)
+  const wait = refresh ? AGGREGATE_WARM_TIMEOUT_MS : AGGREGATE_UPSTREAM_TIMEOUT_MS
   return cachedJson(`/api/tide?scope=${scope}`, async () => {
+    // Every read here is anchored on one decade, which keeps it under the
+    // catalog's filter limit: the largest, all parliaments' 2020s speeches,
+    // was 438,998 resources and answered in 2.8 s on 14 Oct.
     const state = scope === 'federal' ? `&filters=${STATE_FACET}/federal` : ''
     const paths = TIDE_DECADES.flatMap((decade) => {
       const shared = `filters=${DECADE_FILTER_PREFIX}/${decade.slug}&filters=${SPEECH_FILTER}${state}&page_size=0`
@@ -3292,18 +3412,11 @@ async function apiTide(url: URL, env: Env, ctx: ExecutionContext): Promise<Respo
         `/catalog?filters=${TOPIC_FILTER_PREFIX}&${shared}`,
       ]
     })
-    const parseCatalog = async (path: string): Promise<CatalogPage> => {
-      const response = await aggregateFetch(env, path)
-      if (!response.ok) throw new Error(`catalog ${response.status}`)
-      return (await response.json()) as CatalogPage
-    }
-    const pages: CatalogPage[] = []
+    let pages: CatalogPage[]
     try {
-      // Fetch and consume in fives: an unread response holds one of the
-      // Worker's six upstream connection slots open.
-      for (let i = 0; i < paths.length; i += 5) {
-        pages.push(...(await Promise.all(paths.slice(i, i + 5).map(parseCatalog))))
-      }
+      // Fetched and consumed four at a time: an unread response holds one of
+      // the Worker's six upstream connection slots open.
+      pages = await aggregatePages(env, paths, wait)
     } catch {
       return json({ error: 'catalog failed' }, 502)
     }
@@ -3322,7 +3435,7 @@ async function apiTide(url: URL, env: Env, ctx: ExecutionContext): Promise<Respo
       })
     }
     return json({ scope, decades, topics })
-  }, ctx)
+  }, ctx, 600, refresh)
 }
 
 /** A person's topic mix overall and in the two comparable recent decades. */
@@ -3384,41 +3497,32 @@ async function apiPersonTopics(url: URL, env: Env, ctx: ExecutionContext): Promi
 /**
  * Party × topic matrix ("who owns which debate"): one faceted-party call per
  * topic — the verified faceted+filters shape returns the party split AND the
- * topic's filtered total together — plus the bare labelset total as the
- * honest denominator. 22 parallel requests, cached 15 minutes. Columns are
+ * topic's filtered total together — plus the topic census as the honest
+ * denominator. 21 requests four at a time, cached 15 minutes. Columns are
  * capped at the biggest parties; the long tail folds into "Other" (per-row
  * sums stay honest: a speech carries at most one party label). `totals` are
  * filtered totals, never facet sums, so multi-label speeches count once.
  */
 const MATRIX_PARTY_CAP = 7
 
-async function apiMatrix(env: Env, ctx: ExecutionContext): Promise<Response> {
+async function apiMatrix(env: Env, ctx: ExecutionContext, refresh = false): Promise<Response> {
+  const wait = refresh ? AGGREGATE_WARM_TIMEOUT_MS : AGGREGATE_UPSTREAM_TIMEOUT_MS
   return cachedJson('/api/matrix', async () => {
     const slugs = [...TOPIC_SLUGS]
-    // Workers cap simultaneous open connections at 6, and a response body
-    // left unread counts as open — 22 parallel fetches died in production
-    // with "Response closed due to connection limit" (local dev does not
-    // enforce it). Fetch AND parse in batches of five.
-    const parseCatalog = async (path: string): Promise<CatalogPage> => {
-      const r = await aggregateFetch(env, path)
-      if (!r.ok) throw new Error(`catalog ${r.status}`)
-      return (await r.json()) as CatalogPage
-    }
-    const paths = [
-      `/catalog?filters=${TOPIC_FILTER_PREFIX}&page_size=0`,
-      ...slugs.map(
-        (slug) => `/catalog?faceted=${PARTY_FACET}&filters=${TOPIC_FILTER_PREFIX}/${slug}&page_size=0`,
-      ),
-    ]
-    const pagesAll: CatalogPage[] = []
+    const census = await topicCensus(env, ctx, refresh)
+    if (!census) return json({ error: 'catalog failed' }, 502)
+    let pages: CatalogPage[]
     try {
-      for (let i = 0; i < paths.length; i += 5) {
-        pagesAll.push(...(await Promise.all(paths.slice(i, i + 5).map(parseCatalog))))
-      }
+      // Workers cap simultaneous open connections at 6, and a response body
+      // left unread counts as open — 22 parallel fetches died in production
+      // with "Response closed due to connection limit" (local dev does not
+      // enforce it). aggregatePages fetches AND parses four at a time.
+      pages = await aggregatePages(env, slugs.map(
+        (slug) => `/catalog?faceted=${PARTY_FACET}&filters=${TOPIC_FILTER_PREFIX}/${slug}&page_size=0`,
+      ), wait)
     } catch {
       return json({ error: 'catalog failed' }, 502)
     }
-    const [any, ...pages] = pagesAll
 
     const totals: Record<string, number> = {}
     const raw = new Map<string, Map<string, number>>()
@@ -3451,12 +3555,12 @@ async function apiMatrix(env: Env, ctx: ExecutionContext): Promise<Response> {
       cells[slug] = row
     }
     return json({
-      labelled: any.fulltext?.total ?? 0,
+      labelled: census.labelled,
       parties: folded ? [...major, 'Other'] : major,
       cells,
       totals,
     })
-  }, ctx, 900)
+  }, ctx, 900, refresh)
 }
 
 // ---------------------------------------------------------------------------

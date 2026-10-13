@@ -8,7 +8,8 @@ const source = readFileSync(new URL('../src/index.ts', import.meta.url), 'utf8')
 const fixture = JSON.parse(readFileSync(new URL('./fixtures/catalog-swr.json', import.meta.url), 'utf8'));
 const parsed = ts.createSourceFile('index.ts', source, ts.ScriptTarget.Latest, true, ts.ScriptKind.TS);
 const names = new Set(['cachedJson', 'cachedJsonRefreshes', 'catalogWarmup', 'CACHED_JSON_HARD_TTL',
-  'AGGREGATE_UPSTREAM_TIMEOUT_MS', 'AGGREGATE_WARM_TIMEOUT_MS', 'aggregateFetch', 'aggregateBatch', 'warmCatalog', 'withCacheStatus',
+  'AGGREGATE_UPSTREAM_TIMEOUT_MS', 'AGGREGATE_WARM_TIMEOUT_MS', 'aggregateFetch', 'aggregateBatch', 'aggregatePages', 'warmCatalog', 'withCacheStatus',
+  'facetCounts', 'labelClause', 'anyClause', 'CATALOG_CELL_CAP', 'CHAMBER_FACET', 'CHAMBERED_KINDS', 'catalogCells', 'topicCensus',
   'apiStats', 'apiTopics', 'apiTopic', 'apiParties', 'apiTide', 'apiPersonTopics', 'apiMatrix',
   'TOPIC_SLUGS', 'STATS_CACHE_TTL', 'TOPIC_FILTER_PREFIX', 'PARTY_FACET', 'STATE_FACET',
   'KIND_FACET', 'SPEECH_FILTER', 'DECADE_FILTER_PREFIX', 'TIDE_DECADES', 'MATRIX_PARTY_CAP']);
@@ -20,7 +21,7 @@ const exported = parsed.statements.find(ts.isExportAssignment).expression.expres
 const scheduled = exported.properties.find(p => p.name?.getText(parsed) === 'scheduled');
 const code = ts.transpileModule(selected.map(n => n.getText(parsed)).join('\n')
   + '\nconst worker = {' + scheduled.getText(parsed) + '};'
-  + '\nglobalThis.api = {cachedJson, apiStats, apiTopics, apiTopic, apiParties, apiTide, apiPersonTopics, apiMatrix, warmCatalog, worker, TOPIC_SLUGS};',
+  + '\nglobalThis.api = {cachedJson, catalogCells, topicCensus, apiStats, apiTopics, apiTopic, apiParties, apiTide, apiPersonTopics, apiMatrix, warmCatalog, worker, TOPIC_SLUGS};',
   {compilerOptions: {target: ts.ScriptTarget.ES2022}}).outputText;
 
 const deferred = () => {let resolve; const promise = new Promise(r => {resolve = r;}); return {promise, resolve};};
@@ -118,29 +119,38 @@ test('cold aggregate timeout is set to 60 seconds and an abort becomes 502', asy
   const request = h.api.apiTopic('housing', h.env, h.ctx);
   await started.promise; controller.abort(new DOMException('Timed out', 'TimeoutError'));
   const out = await request;
-  assert.deepEqual(deadlines, [60000, 60000, 60000, 60000]);
+  // The census plan's two faceted reads come first; nothing else opens until they answer.
+  assert.deepEqual(deadlines, [60000, 60000]);
   assert.equal(out.status, 502); assert.deepEqual(await out.json(), {error: 'catalog failed'});
   assert.equal(h.writes.length, 0);
 });
 
-test('concurrent stale requests share one four-call topic rebuild per key, and a different key rebuilds independently', async () => {
+test('concurrent stale requests share one topic rebuild per key, and topic pages share one census rebuild', async () => {
   const gate = deferred(); let active = 0;
-  const h = harness({upstream: async () => {active++; await gate.promise; return Response.json(fixture.catalog);}});
+  const h = harness({upstream: async (path, init) => {
+    active++; await gate.promise; active--;
+    return Response.json(fixture.catalog);
+  }});
   h.seed('/api/topic/housing'); h.seed('/api/topic/health');
   const responses = await Promise.all(Array.from({length: 8}, () => h.api.apiTopic('housing', h.env, h.ctx)));
-  assert.equal(h.calls.length, 4); assert.equal(active, 4); assert.equal(h.waits.length, 8);
+  // One rebuild for the key, which opens the census plan's two faceted reads.
+  assert.equal(h.calls.length, 2); assert.equal(active, 2); assert.equal(h.waits.length, 8);
   for (const out of responses) {assert.equal(out.headers.get('x-opax-cache'), 'STALE'); assert.deepEqual(await out.json(), {count: 10});}
-  await h.api.apiTopic('health', h.env, h.ctx); assert.equal(h.calls.length, 8);
-  gate.resolve(); await h.drain(); assert.equal(h.writes.length, 2);
-  h.advance(3601000); await h.api.apiTopic('housing', h.env, h.ctx); await h.drain();
-  assert.equal(h.calls.length, 12, 'completed work leaves no lock behind');
+  await h.api.apiTopic('health', h.env, h.ctx);
+  assert.equal(h.calls.length, 2, 'the second topic waits on the census already being counted');
+  gate.resolve(); await h.drain();
+  // Census: plan 2 + one cell; then each topic's party and state facets.
+  assert.equal(h.calls.length, 3 + 2 * 2); assert.equal(h.writes.length, 3);
+  h.advance(3601000); await h.api.apiTopic('housing', h.env, h.ctx); await h.drain(); await h.drain();
+  // Housing's own two facets, plus the stale census recounted in the background.
+  assert.equal(h.calls.length, 7 + 2 + 3, 'completed work leaves no lock behind');
 });
 
 test('legacy entries without a timestamp are served stale and migrated in the background', async () => {
   const h = harness(); h.seed('/api/topics', {count: 10}, 0, {'x-opax-cached-at': ''});
   const out = await h.api.apiTopics(h.env, h.ctx);
   assert.equal(out.headers.get('x-opax-cache'), 'STALE'); await h.drain();
-  assert.equal(h.writes.length, 1);
+  assert.deepEqual(h.writes, ['https://opax.com.au/api/topic-census', 'https://opax.com.au/api/topics']);
 });
 
 test('all other cachedJson callers retain their browser TTL and schedule stale rebuilds', async () => {
@@ -158,7 +168,8 @@ test('all other cachedJson callers retain their browser TTL and schedule stale r
     assert.equal(out.headers.get('cache-control'), 'public, max-age=' + ttl);
     assert.deepEqual(await out.json(), {saved: path}); await h.drain();
   }
-  assert.equal(h.writes.length, 4);
+  // The matrix rebuild also counted (and stored) the topic census it reads.
+  assert.equal(h.writes.length, 5); assert.ok(h.writes.includes('https://opax.com.au/api/topic-census'));
 });
 
 test('successful cold stats, topics and topic responses keep the current payload shapes', async () => {
@@ -201,8 +212,13 @@ test('existing five-minute scheduled handler warms every stale or missing aggreg
   tracked.seed('/api/stats', {old: true}, 0); tracked.seed('/api/topics', {old: true}, 0);
   await tracked.api.worker.scheduled({cron: '*/5 * * * *', scheduledTime: Date.now()}, tracked.env, tracked.ctx);
   assert.equal(peak, 4); assert.equal(active, 0);
-  // Stats and topics were seeded fresh (age 0), so only the 21 missing topic pages and /api/parties (one faceted read) are built.
-  assert.equal(tracked.calls.length, 21 * 4 + 1); assert.equal(tracked.writes.length, 22);
+  // Stats and topics were seeded fresh (age 0). Built: the census (plan 2 + one cell), /api/parties (1),
+  // /api/matrix (21), both tide scopes (8 each) and the 21 topic pages (2 each, on the shared census).
+  assert.equal(tracked.calls.length, 3 + 1 + 21 + 16 + 21 * 2); assert.equal(tracked.writes.length, 26);
+  assert.equal(tracked.writes[0], 'https://opax.com.au/api/topic-census', 'the census is counted before its readers');
+  for (const path of ['/api/parties', '/api/matrix', '/api/tide?scope=federal', '/api/tide?scope=all']) {
+    assert.ok(tracked.rows.has('https://opax.com.au' + path), path + ' is warmed');
+  }
   assert.deepEqual(await tracked.rows.get('https://opax.com.au/api/stats').clone().json(), {old: true});
   assert.deepEqual(tracked.jobs, ['indexnow', 'expiry', 'email']);
   assert.equal(tracked.waits.length, 0, 'cron awaits the whole warm-up');
@@ -224,8 +240,9 @@ test('warm-up waits for sibling reads after an early rejection and consumes non-
   }});
   h.seed('/api/stats', {resources: 10}); h.seed('/api/topic/housing');
   await h.api.worker.scheduled({cron: '*/5 * * * *'}, h.env, h.ctx);
-  assert.equal(peak, 4); assert.equal(active, 0); assert.equal(failures, 2);
-  assert.equal(h.calls.length, 90); assert.equal(h.writes.length, 22);
+  // Housing fails twice on its own page and once in the matrix, which stops at that batch of four.
+  assert.equal(peak, 4); assert.equal(active, 0); assert.equal(failures, 3);
+  assert.equal(h.calls.length, 3 + 3 + 1 + 1 + 8 + 16 + 21 * 2); assert.equal(h.writes.length, 25);
   assert.deepEqual(await h.rows.get('https://opax.com.au/api/topic/housing').clone().json(), {count: 10});
 });
 
@@ -233,7 +250,7 @@ test('scheduled warming continues after one endpoint fails and stays out of the 
   const h = harness({upstream: async path => path === '/counters' ? new Response(null, {status: 503}) : Response.json(fixture.catalog)});
   h.seed('/api/stats', {resources: 10}, 3601);
   await h.api.worker.scheduled({cron: '*/5 * * * *'}, h.env, h.ctx);
-  assert.equal(h.writes.length, 23);
+  assert.equal(h.writes.length, 27);
   assert.deepEqual(await h.rows.get('https://opax.com.au/api/stats').clone().json(), {resources: 10});
   const social = harness();
   await social.api.worker.scheduled({cron: '0,5,10 22 * * *'}, social.env, social.ctx);
@@ -246,8 +263,80 @@ test('overlapping warm-up ticks share one run per isolate and release the lock w
   const first = h.api.warmCatalog(h.env, h.ctx);
   const second = h.api.warmCatalog(h.env, h.ctx);
   gate.resolve(); await Promise.all([first, second]);
-  assert.equal(h.calls.length, 90); assert.equal(h.writes.length, 24);
+  assert.equal(h.calls.length, 87); assert.equal(h.writes.length, 28);
   // A later tick finds every entry fresh and makes no upstream calls.
   await h.api.warmCatalog(h.env, h.ctx);
-  assert.equal(h.calls.length, 90); assert.equal(h.writes.length, 24);
+  assert.equal(h.calls.length, 87); assert.equal(h.writes.length, 28);
+});
+
+// A catalog shaped like 14 Oct's: three chambers over speeches and divisions, one unchambered kind.
+const TOPIC = '/classification.labels/topic', STATE = '/classification.labels/state';
+const facet = (prefix, counts) => Object.fromEntries(Object.entries(counts).map(([k, n]) => [`${prefix}/${k}`, n]));
+// Clauses are built inside the test's VM realm; compare them as plain data.
+const plain = value => JSON.parse(JSON.stringify(value));
+const page = (total, facets = {}) => Response.json({fulltext: {total, facets}});
+function shapedCatalog({chambers = {representatives: 250000, senate: 200000, nsw_la: 90000}} = {}) {
+  const cellReads = [];
+  const upstream = async (path, init) => {
+    if (path === '/counters') return Response.json({resources: 545000, paragraphs: 9});
+    // The catalog stopped answering bare labelset and all-speech filters after the 14 Oct nightly.
+    assert.ok(!/filters=\/classification\.labels\/(topic|party)(&|$)/.test(path), 'no bare labelset filter: ' + path);
+    assert.ok(!path.includes('filters=/classification.labels/kind/speech'), 'no all-speech filter: ' + path);
+    if (path.startsWith('/catalog?faceted=/classification.labels/chamber&')) return page(545000, {'/classification.labels/chamber': facet('/classification.labels/chamber', chambers)});
+    if (path.startsWith('/catalog?faceted=/classification.labels/kind&')) return page(545000, {'/classification.labels/kind': facet('/classification.labels/kind', {speech: 530000, division: 10000, bill: 5000})});
+    if (path.startsWith('/catalog?faceted=/classification.labels/state&page_size=0')) return page(545000, {[STATE]: facet(STATE, {federal: 455000, nsw: 90000})});
+    if (path.startsWith(`/catalog?faceted=${TOPIC}&`)) return page(545000, {[TOPIC]: facet(TOPIC, {housing: 40000, health: 90000})});
+    if (path.includes(`filters=${TOPIC}/housing`)) {
+      const facets = path.includes('faceted=' + STATE) ? {[STATE]: facet(STATE, {federal: 30000, nsw: 10000})}
+        : {'/classification.labels/party': facet('/classification.labels/party', {'Example Party': 25000})};
+      return page(40000, facets);
+    }
+    if (path === '/catalog') {
+      const {resource} = init.body.filter_expression;
+      const text = JSON.stringify(resource);
+      if (!text.includes('"topic"')) {
+        // Stats: the parliaments of everything that is not a speech.
+        assert.deepEqual(plain(resource), {or: [{prop: 'label', labelset: 'kind', label: 'division'}, {prop: 'label', labelset: 'kind', label: 'bill'}]});
+        return page(15000, {[STATE]: facet(STATE, {federal: 12000, nsw: 3000})});
+      }
+      cellReads.push(resource.and[1]);
+      if (text.includes('representatives')) return page(180000, {[STATE]: facet(STATE, {federal: 180000})});
+      return page(150000, {[STATE]: facet(STATE, {federal: 100000, nsw: 50000})});
+    }
+    return page(0);
+  };
+  return {upstream, cellReads};
+}
+
+test('the topic census sums disjoint cells of at most 300k, and every topic aggregate shares it', async () => {
+  const shaped = shapedCatalog(), h = harness({upstream: shaped.upstream});
+  const topics = await (await h.api.apiTopics(h.env, h.ctx)).json();
+  assert.equal(topics.labelled, 330000);
+  assert.deepEqual(topics.topics.find(t => t.slug === 'health'), {slug: 'health', count: 90000});
+  // Chambers packed largest first; the unchambered kind fills the first cell.
+  const label = (labelset, l) => ({prop: 'label', labelset, label: l});
+  assert.deepEqual(plain(shaped.cellReads), [
+    {or: [label('chamber', 'representatives'), label('kind', 'bill')]},
+    {or: [label('chamber', 'senate'), label('chamber', 'nsw_la')]},
+  ]);
+  const topic = await (await h.api.apiTopic('housing', h.env, h.ctx)).json();
+  assert.equal(topic.count, 40000); assert.equal(topic.labelled, 330000);
+  assert.deepEqual(topic.states, [['nsw', 10000, 10000 / 50000], ['federal', 30000, 30000 / 280000]]);
+  assert.equal(shaped.cellReads.length, 2, 'the topic page read the stored census');
+});
+
+test('a census whose cells would miss or double-count records fails closed and is not cached', async () => {
+  const shaped = shapedCatalog({chambers: {representatives: 250000, senate: 200000}}), h = harness({upstream: shaped.upstream});
+  const out = await h.api.apiTopics(h.env, h.ctx);
+  assert.equal(out.status, 502); assert.deepEqual(await out.json(), {error: 'catalog failed'});
+  assert.equal(h.writes.length, 0); assert.equal(shaped.cellReads.length, 0);
+  assert.equal((await h.api.apiTopic('housing', h.env, h.ctx)).status, 502);
+});
+
+test('speeches by parliament are every record less the records that are not speeches', async () => {
+  const h = harness({upstream: shapedCatalog().upstream});
+  const stats = await (await h.api.apiStats(h.env, h.ctx)).json();
+  assert.deepEqual(stats.kinds, {speech: 530000, division: 10000, bill: 5000});
+  assert.deepEqual(stats.speeches_by_state, {federal: 443000, nsw: 87000});
+  assert.equal(h.writes.length, 1);
 });

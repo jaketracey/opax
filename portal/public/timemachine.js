@@ -726,6 +726,22 @@ async function fetchJSON(url, signal) {
   return res.json()
 }
 
+/** fetchJSON for a live aggregate: gives up after `ms` so a stalled count
+ *  cannot hold the panels that wait on it. */
+async function fetchJSONWithin(url, signal, ms = 12000) {
+  const attempt = new AbortController()
+  const timer = setTimeout(() => attempt.abort(), ms)
+  const stop = () => attempt.abort()
+  if (signal?.aborted) stop()
+  else signal?.addEventListener('abort', stop, { once: true })
+  try {
+    return await fetchJSON(url, attempt.signal)
+  } finally {
+    clearTimeout(timer)
+    signal?.removeEventListener('abort', stop)
+  }
+}
+
 /**
  * Load the six topic reports (timelines + donations) plus corpus progress.
  * Any individual failure degrades quietly — the panel that needed it hides.
@@ -767,7 +783,7 @@ async function loadStaticData(signal) {
   // live search can see so far.
   try {
     const [stats, corpus] = await Promise.allSettled([
-      fetchJSON('/api/stats', signal),
+      fetchJSONWithin('/api/stats', signal),
       fetchJSON('/corpus.json', signal),
     ])
     const expected = corpus.status === 'fulfilled' ? Number(corpus.value.expected_resources) : NaN

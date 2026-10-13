@@ -112,12 +112,15 @@ export function mountTide (container, options = {}) {
     view.innerHTML = `<ol class="tide-list chart-skeleton" aria-hidden="true">${Array.from({ length: 6 }, () => `
       <li><i class="sk-name"></i><span class="sk-bars"><i style="height:78%"></i><i style="height:52%"></i><i style="height:36%"></i><i style="height:24%"></i></span></li>`).join('')}</ol>`
     controller?.abort()
-    controller = new AbortController()
+    const current = controller = new AbortController()
     const wanted = scope
+    // A cold count can take a minute upstream; the dialog waits twelve seconds.
+    let timedOut = false
+    const timer = setTimeout(() => { timedOut = true; current.abort() }, 12000)
     try {
       let data = cache.get(wanted)
       if (!data) {
-        const response = await fetch(`/api/tide?scope=${wanted}`, { signal: controller.signal })
+        const response = await fetch(`/api/tide?scope=${wanted}`, { signal: current.signal })
         data = await response.json().catch(() => ({}))
         if (!response.ok) throw new Error(data.error || `Request failed (${response.status})`)
         cache.set(wanted, data)
@@ -126,8 +129,13 @@ export function mountTide (container, options = {}) {
       status.textContent = ''
       paint(data)
     } catch (error) {
-      if (error.name === 'AbortError' || destroyed) return
-      status.textContent = 'The decade view could not be loaded. Try again shortly.'
+      if (destroyed || (error.name === 'AbortError' && !timedOut)) return
+      view.replaceChildren()
+      status.textContent = timedOut
+        ? 'The decade counts are updating. Try again shortly.'
+        : 'The decade view could not be loaded. Try again shortly.'
+    } finally {
+      clearTimeout(timer)
     }
   }
 

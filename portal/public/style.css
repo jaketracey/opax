@@ -2728,6 +2728,9 @@ mark.privacy-confirm {
   #panel-subject .topic-index-unit { display: inline; }
   #panel-subject .topic-index-share { grid-area: share; }
   #panel-subject .topic-index-spark { grid-area: spark; height: 26px; }
+  /* Without the counts (they did not arrive in time) a row is the name beside its spark. */
+  #panel-subject .topic-index-list[data-counts="pending"] .topic-index-row { grid-template-areas: "cell spark"; }
+  #panel-subject .topic-index-list[data-counts="pending"] :is(.topic-index-count, .topic-index-share) { display: none; }
   #panel-subject .topic-index-spark i { width: 7px; }
 }
 /* ==== page-ask: Ask and the chat view (/ask, /chat) ==== */

@@ -471,10 +471,16 @@ export function mountWordsDollars (container, opts = {}) {
     statusEl.textContent = 'Adding up the disclosures…'
     panelsEl.hidden = true
     fineEl.hidden = true
+    // A cold count can take a minute upstream; the view waits twelve seconds.
+    const attempt = new AbortController()
+    let timedOut = false
+    const timer = setTimeout(() => { timedOut = true; attempt.abort() }, 12000)
+    const stop = () => attempt.abort()
+    aborter.signal.addEventListener('abort', stop, { once: true })
     try {
       const [matrix, money] = await Promise.all([MATRIX_URL, MONEY_URL].map(
         async (u) => {
-          const res = await fetch(u, { signal: aborter.signal, cache:"no-cache" })
+          const res = await fetch(u, { signal: attempt.signal, cache:"no-cache" })
           if (!res.ok) throw new Error(`${u} → ${res.status}`)
           return res.json()
         }))
@@ -508,12 +514,15 @@ export function mountWordsDollars (container, opts = {}) {
     } catch (err) {
       if (aborter.signal.aborted) return
       statusEl.hidden = false
-      statusEl.textContent = 'The view could not be loaded.'
+      statusEl.textContent = timedOut ? 'The counts are updating.' : 'The view could not be loaded.'
       const retry = el('button', 'ui-button', 'Try again')
       retry.type = 'button'
       retry.dataset.uiSize = 'compact'
       retry.addEventListener('click', load)
       statusEl.appendChild(retry)
+    } finally {
+      clearTimeout(timer)
+      aborter.signal.removeEventListener('abort', stop)
     }
   }
 

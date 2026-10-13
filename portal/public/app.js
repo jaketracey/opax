@@ -505,6 +505,25 @@ async function api(path, options) {
   return data;
 }
 
+/** How long a page waits for an aggregate count (topics, parties, stats, tide)
+ *  before it renders without it. The counts are read off the live index and a
+ *  cold copy can take a minute upstream; the page should not. */
+const AGGREGATE_WAIT_MS = 12000;
+
+/** api() with a bounded wait. A timeout rejects with `timedOut: true`, so the
+ *  page can say the counts are updating rather than that they failed. */
+function aggregateApi(path, { signal, wait = AGGREGATE_WAIT_MS } = {}) {
+  const controller = new AbortController();
+  let timedOut = false;
+  const timer = setTimeout(() => { timedOut = true; controller.abort(); }, wait);
+  const forward = () => controller.abort();
+  if (signal?.aborted) forward();
+  else signal?.addEventListener("abort", forward, { once: true });
+  return api(path, { signal: controller.signal })
+    .catch((err) => { throw timedOut ? Object.assign(new Error("Counts are updating"), { timedOut: true }) : err; })
+    .finally(() => { clearTimeout(timer); signal?.removeEventListener("abort", forward); });
+}
+
 /** Read optional machine briefs without ever asking for whole resources. */
 async function fetchBriefMap(resources) {
   const validRid = /^[0-9a-f]{32}$/;
@@ -5459,7 +5478,7 @@ async function renderPersonTopics(name, sections, onRecord = () => {}) {
     const nameQuery = new URLSearchParams({ name });
     const [data, allTopics] = await Promise.all([
       api(`/api/person-topics?${nameQuery}`, { signal: controller.signal }),
-      api("/api/topics", { signal: controller.signal }),
+      aggregateApi("/api/topics", { signal: controller.signal }),
     ]);
     if (currentSubjectKey !== key || !slot.isConnected) return;
     const baseline = new Map((allTopics.topics || []).map((topic) => [
@@ -6653,15 +6672,17 @@ async function openTopicPage(slug, manageFocus) {
   const box = $("subject-infobox"); // who speaks on it, at the reader's right hand
   const phrase = topicPhrase(slug);
   const searchTopic = searchHash(phrase, { topic: slug });
-  const tidePromise = api("/api/tide").catch(() => null);
+  const tidePromise = aggregateApi("/api/tide").catch(() => null);
   // The money beside the words opens the column, so its data loads alongside the counts.
   const moneyInd = detectMoneyIndustry(`who donates money to ${phrase}`);
   const moneyPromise = moneyInd ? loadMoneyData() : Promise.resolve(null);
 
   let data = null;
+  let countsUpdating = false;
   try {
     const [, , manifest] = await Promise.all([
-      api(`/api/topic/${encodeURIComponent(slug)}`).then((value) => { data = value; }).catch(() => null),
+      aggregateApi(`/api/topic/${encodeURIComponent(slug)}`).then((value) => { data = value; })
+        .catch((err) => { countsUpdating = Boolean(err?.timedOut); }),
       loadReportsIndex().catch(() => null),
       corpusManifest
         ? Promise.resolve(corpusManifest)
@@ -6676,7 +6697,7 @@ async function openTopicPage(slug, manageFocus) {
   const labelled = data?.labelled ?? 0;
   clearPageLoader("subject-loader");
   subjectTag(body).innerHTML = count === null
-    ? `<span>The live counts could not be loaded. The searches below still work.</span>`
+    ? `<span>${countsUpdating ? "Counts are updating." : "The live counts could not be loaded."} The searches below still work.</span>`
     : `<span>${esc(count.toLocaleString())} speeches carry this label so far, of
        ${esc(labelled.toLocaleString())} labelled to date. The labelling pass is still running.</span>`;
 
@@ -6794,23 +6815,27 @@ async function openTopicsIndex(manageFocus) {
     <div id="subject-sections"></div>`;
   if (manageFocus) $("subject-title")?.focus();
   showPageLoader("subject-loader", "Counting the labelled record.");
-  const tidePromise = api("/api/tide").catch(() => null);
+  const tidePromise = aggregateApi("/api/tide").catch(() => null);
   let data = null;
-  try { data = await api("/api/topics"); } catch { /* honest failure below */ }
+  let countsUpdating = false;
+  try { data = await aggregateApi("/api/topics"); } catch (err) { countsUpdating = Boolean(err?.timedOut); }
   if (currentSubjectKey !== key) return;
   const tag = body.querySelector(".subject-tag");
   clearPageLoader("subject-loader");
-  if (!data?.topics?.length) {
-    tag.innerHTML = `<span>The live counts could not be loaded. Try again shortly.</span>`;
-    return;
-  }
-  const labelled = Math.max(0, Math.round(Number(data.labelled) || 0));
-  const known = data.topics.filter((t) => TOPICS[t.slug])
+  // Without the counts the taxonomy still lists every topic and opens its page;
+  // only the numbers stand down.
+  const counted = Boolean(data?.topics?.length);
+  const labelled = counted ? Math.max(0, Math.round(Number(data.labelled) || 0)) : 0;
+  const known = (counted ? data.topics : Object.keys(TOPICS).map((slug) => ({ slug }))).filter((t) => TOPICS[t.slug])
     .sort((a, b) => TOPICS[a.slug].localeCompare(TOPICS[b.slug]));
-  tag.innerHTML = `
+  if (counted) {
+    tag.innerHTML = `
     <span class="topic-index-stat"><span class="visually-hidden">${labelled.toLocaleString()} speeches labelled so far</span><span aria-hidden="true"><b id="topic-labelled-total">${Math.max(0, labelled - 32).toLocaleString()}</b><span>speeches labelled so far</span></span></span>
     <span class="topic-index-stat"><b>${known.length}</b><span>topics</span></span>`;
-  countUp($("topic-labelled-total"), labelled, { duration: 700 });
+    countUp($("topic-labelled-total"), labelled, { duration: 700 });
+  } else {
+    tag.innerHTML = `<span class="topic-index-stat"><b>${known.length}</b><span>topics</span></span>`;
+  }
 
   const maxCount = Math.max(...known.map((t) => Number(t.count) || 0), 1);
   // A share reads to the precision that tells topics apart: 14%, 6.1%, 0.7%.
@@ -6826,28 +6851,30 @@ async function openTopicsIndex(manageFocus) {
       <span class="topic-index-name">${esc(TOPICS[t.slug])}</span>
       ${description ? `<span class="topic-index-description">${esc(description)}</span>` : ""}
     </span>
-    <span class="topic-index-count"><b>${esc(count.toLocaleString())}</b><span class="topic-index-unit"> speeches</span><span class="visually-hidden"> labelled so far, </span></span>
-    <span class="topic-index-share"><i style="--share:${((count / maxCount) * 100).toFixed(2)}%" aria-hidden="true"></i><small>${esc(fmtShare(count))} of the labelled record</small></span>
+    ${counted ? `<span class="topic-index-count"><b>${esc(count.toLocaleString())}</b><span class="topic-index-unit"> speeches</span><span class="visually-hidden"> labelled so far, </span></span>
+    <span class="topic-index-share"><i style="--share:${((count / maxCount) * 100).toFixed(2)}%" aria-hidden="true"></i><small>${esc(fmtShare(count))} of the labelled record</small></span>` : `<span class="topic-index-count"></span><span class="topic-index-share"></span>`}
     <span class="topic-index-spark" data-topic-spark="${esc(t.slug)}" aria-hidden="true"></span>
     <span class="visually-hidden topic-index-trend" data-topic-trend="${esc(t.slug)}"></span>
   </a></li>`;
   };
   $("subject-sections").innerHTML = `
     <div class="topic-index-tools">
-      <div class="ui-segmented topic-index-sort" data-ui-size="compact" role="group" aria-label="Order the topics">
+      ${counted ? `<div class="ui-segmented topic-index-sort" data-ui-size="compact" role="group" aria-label="Order the topics">
         <button type="button" class="ui-button" data-sort="name" aria-pressed="true">A–Z</button>
         <button type="button" class="ui-button" data-sort="count" aria-pressed="false">Most discussed</button>
-      </div>
-      <p class="topic-index-note">Counts are speeches labelled so far. The small bars are each topic’s share of federal speeches by decade, 1993 to 2026, scaled within the topic.</p>
+      </div>` : ""}
+      <p class="topic-index-note">${counted ? "Counts are speeches labelled so far." : countsUpdating
+        ? "Counts are updating. Each topic still opens its page."
+        : "The live counts could not be loaded. Each topic still opens its page."} The small bars are each topic’s share of federal speeches by decade, 1993 to 2026, scaled within the topic.</p>
     </div>
     <div class="topic-index-cols" aria-hidden="true">
-      <span>Topic</span><span>Speeches</span><span>Share of the labelled record</span><span>By decade</span>
+      <span>Topic</span><span>${counted ? "Speeches" : ""}</span><span>${counted ? "Share of the labelled record" : ""}</span><span>By decade</span>
     </div>
-    <ul class="topic-index-list" role="list">${known.map(li).join("")}</ul>
+    <ul class="topic-index-list" role="list"${counted ? "" : ' data-counts="pending"'}>${known.map(li).join("")}</ul>
     <details class="topic-index-coverage"><summary>About these numbers</summary><p>A speech can carry more than one topic label, so the shares do not sum to one hundred. The decade bars use federal speeches only, the longest comparable run; each is that topic’s share of the decade’s labelled speeches, scaled to the topic’s own peak. The labelling pass is still running.</p></details>`;
 
   const list = body.querySelector(".topic-index-list");
-  body.querySelector(".topic-index-sort").addEventListener("click", (event) => {
+  body.querySelector(".topic-index-sort")?.addEventListener("click", (event) => {
     const button = event.target.closest("button[data-sort]");
     if (!button) return;
     for (const b of button.parentElement.querySelectorAll("button")) b.setAttribute("aria-pressed", String(b === button));
@@ -7369,12 +7396,15 @@ async function buildPeopleDirectory() {
   };
 }
 
-/** Parties: money-file party nodes, the record's party facet and the directory's member counts. */
+/** Parties: money-file party nodes, the record's party facet and the directory's member counts.
+ *  Without the live facet (an error, or no answer inside AGGREGATE_WAIT_MS) the list still
+ *  renders from the money files and the members register, with no speech figures at all. */
 async function buildPartiesDirectory() {
   const [fed, qld, vic, tas, live, dir] = await Promise.all([
     loadMoneyFile("federal"), loadMoneyFile("qld"), loadMoneyFile("vic"), loadMoneyFile("tas"),
-    api("/api/parties").catch(() => null), loadParliamentarians(),
+    aggregateApi("/api/parties").catch(() => null), loadParliamentarians(),
   ]);
+  const counted = Boolean(live?.parties?.length);
   const files = [["federal", fed], ["qld", qld], ["vic", vic], ["tas", tas]].filter(([, d]) => d?.nodes);
   if (!files.length && !live?.parties?.length) return null;
   const parties = new Map();
@@ -7417,7 +7447,7 @@ async function buildPartiesDirectory() {
       jurs.length && p._first < 9999 ? esc(yearSpan(p._first, p._last)) : "",
     ].filter(Boolean).join(" · ");
     const figs = [
-      `<span class="dir-fig"><b>${num(p.speeches)}</b>speech${p.speeches === 1 ? "" : "es"}</span>`,
+      counted ? `<span class="dir-fig"><b>${num(p.speeches)}</b>speech${p.speeches === 1 ? "" : "es"}</span>` : "",
       `<span class="dir-fig"><b>${num(p.members)}</b>in the directory</span>`,
       ...jurs.map((j) => `<span class="dir-fig"><b>${esc(fmtMoney(p.money[j].total))}</b>${esc(sourceShort[j] || j)}</span>`),
     ].join("");
@@ -7433,7 +7463,7 @@ async function buildPartiesDirectory() {
   return {
     title: "Parties",
     name: (p) => p.label, href: (p) => subjectHash("party", p.label), hint: () => "",
-    lede: "",
+    lede: counted ? "" : "Speech counts are updating.",
     items,
     text: (p) => p.label,
     filters: [
@@ -7441,11 +7471,11 @@ async function buildPartiesDirectory() {
         options: [["federal", "Federal (AEC)"], ["qld", "Queensland (ECQ)"], ["vic", "Victoria (VEC)"], ["tas", "Tasmania (TEC)"]],
         test: (p, v) => Boolean(p.money[v]) },
       { key: "show", label: "Show",
-        options: [["speeches", "With speeches in the record"], ["members", "With members in the directory"], ["money", "With disclosed receipts"]],
+        options: [...(counted ? [["speeches", "With speeches in the record"]] : []), ["members", "With members in the directory"], ["money", "With disclosed receipts"]],
         test: (p, v) => v === "speeches" ? p.speeches > 0 : v === "members" ? p.members > 0 : Object.keys(p.money).length > 0 },
     ],
     sorts: [
-      ["speeches", "Most speeches", byNumDesc((p) => p.speeches)],
+      ...(counted ? [["speeches", "Most speeches", byNumDesc((p) => p.speeches)]] : []),
       ["donations", "Most disclosed receipts", byNumDesc(moneyFor)],
       ["members", "Most members", byNumDesc((p) => p.members)],
       ["name", "Name A-Z", byName],
@@ -9186,13 +9216,13 @@ document.addEventListener("opax:explain", (e) => openExplain(e.detail));
 
 const GAMES = {
   ballot: { name: "Build your ballot", dialog: "dialog-ballot", body: "explore-ballot", module: "/ballot.js?v=49e7bc6382", mount: "mountBallot" },
-  tm: { name: "Time machine", dialog: "dialog-tm", body: "explore-tm", module: "/timemachine.js?v=e9d79c3c78", mount: "mountTimeMachine" },
+  tm: { name: "Time machine", dialog: "dialog-tm", body: "explore-tm", module: "/timemachine.js?v=b445c6bf79", mount: "mountTimeMachine" },
   tide: { name: "The tide", dialog: "dialog-tide", body: "explore-tide", module: "/tide.js", mount: "mountTide" },
   quiz: { name: "The record quiz", dialog: "dialog-quiz", body: "explore-quiz", module: "/quiz.js?v=8614c47306", mount: "mountQuiz" },
   ledger: { name: "The ledger", dialog: "dialog-ledger", body: "explore-ledger", module: "/ledger.js?v=7cd6da6476", mount: "mountLedger" },
   grants: { name: "Who gets the grants", dialog: "dialog-grants", body: "explore-grants", module: "/grants.js?v=835fad43e7", mount: "mountGrants" },
-  matrix: { name: "Who owns which debate", dialog: "dialog-matrix", body: "explore-matrix", module: "/matrix.js?v=25f5793db5", mount: "mountMatrix" },
-  wd: { name: "Words per dollar", dialog: "dialog-wd", body: "explore-wd", module: "/wordsdollars.js?v=add8cb94c4", mount: "mountWordsDollars" },
+  matrix: { name: "Who owns which debate", dialog: "dialog-matrix", body: "explore-matrix", module: "/matrix.js?v=0d01530c63", mount: "mountMatrix" },
+  wd: { name: "Words per dollar", dialog: "dialog-wd", body: "explore-wd", module: "/wordsdollars.js?v=b512e1e695", mount: "mountWordsDollars" },
   tvn: { name: "Then vs now", dialog: "dialog-tvn", body: "explore-tvn", module: "/thenvsnow.js?v=aac138f24c", mount: "mountThenVsNow" },
 };
 
@@ -14286,7 +14316,7 @@ document.addEventListener("close", (e) => {
 /** Words per dollar for the report's own industry: money beside the debate share, party by party. */
 async function mountReportWords(el, cfg, slug) {
   try {
-    const { mountWordsDollars } = await import("/wordsdollars.js?v=add8cb94c4");
+    const { mountWordsDollars } = await import("/wordsdollars.js?v=b512e1e695");
     if (currentReportSlug !== slug || !el.isConnected) return;
     reportWordsHandle = mountWordsDollars(el, { only: [cfg.topic] });
   } catch {
@@ -14854,7 +14884,7 @@ fetch("/suggestions.json").then((r) => r.json()).then((s) => {
 // browser does not answer from its own copy. The tables say "Counting…" in
 // the meantime rather than "unavailable".
 function loadLiveStats(attempt = 0) {
-  api(attempt ? `/api/stats?retry=${attempt}` : "/api/stats")
+  aggregateApi(attempt ? `/api/stats?retry=${attempt}` : "/api/stats")
     .then((s) => {
       liveStats = s;
       liveStatsUnavailable = false;
@@ -14870,12 +14900,12 @@ function loadLiveStats(attempt = 0) {
       else if (attempt < 6) setTimeout(() => loadLiveStats(attempt + 1), 60000);
       else renderStatsLiveTables();
     })
-    .catch(() => {
-      // A failed counter says nothing rather than "loading" for ever (web chrome).
-      // On /stats the live tiles and tables stand down behind one sentence; a
-      // later retry that answers brings them back.
+    .catch((err) => {
+      // A failed or stalled counter says nothing rather than "loading" for ever
+      // (web chrome). On /stats the live tiles and tables stand down behind one
+      // sentence; a later retry that answers brings them back.
       $("stats").hidden = true;
-      $("stats-live").textContent = "Live index figures are unavailable right now.";
+      $("stats-live").textContent = err?.timedOut ? "Live index figures are updating." : "Live index figures are unavailable right now.";
       liveStatsUnavailable = true;
       if ($("stats-live-index")) $("stats-live-index").hidden = true;
       renderStatsHero();
