@@ -64,6 +64,9 @@ div.hub-coverage { margin-top: var(--space-group); }
 .hub-section { scroll-margin-top: calc(var(--header-h) + var(--space-block)); }
 /* Victorian election: the finder first, then rows a reader can scan for a seat,
    its member and the last winning margin. Hairlines, no fills except the finder. */
+/* The title sits like every hub's page head: no browser margin (0.67em grew
+   to 32px with the larger title), the lede a heading step under it. */
+.vic-hub > h1 { margin: 0; }
 .vic-hub .hub-lead { max-width: 40rem; }
 .vic-hub .hub-lead a { white-space: nowrap; }
 .vic-kind { margin: 0 0 var(--space-block); color: var(--ink-soft); font: var(--type-metadata); }
