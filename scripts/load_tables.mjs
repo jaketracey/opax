@@ -1,10 +1,11 @@
 import {readFile, readdir, mkdir, writeFile, rm} from 'node:fs/promises';
 import {fileURLToPath} from 'node:url';
-import {join, resolve} from 'node:path';
+import {join, resolve, dirname} from 'node:path';
 import {createHash} from 'node:crypto';
 import {TABLE_DATASETS} from '../portal/src/table-datasets.mjs';
 import {isOrganisationRecipient} from '../portal/src/table-recipient.mjs';
 import {identityVariants, compileIdentityCheck, strippedLengths} from '../portal/src/table-identities.mjs';
+import {buildIdentityPrefilter,identityPrefilterModule} from '../portal/src/table-identity-prefilter.mjs';
 import {tableSchema,tableName,quote,arrayColumns} from './table-schema.mjs';
 import {MONEY_GRAPHS, isOrganisationDonor, withheldPhrases} from '../portal/public/donor-entity.js';
 import {moneyFlowType} from '../portal/public/money-records.js';
@@ -163,6 +164,9 @@ export function tableIdentityHashes(policy) {
 export function tableRegistryFingerprint(policy) {
   return createHash('sha256').update(tableIdentityHashes(policy).map(e=>e.hash).join('\n')).digest('hex');
 }
+export function tableIdentityPrefilter(policy) {
+  return buildIdentityPrefilter(policy.phrases,tableIdentityHashes(policy),tableRegistryFingerprint(policy));
+}
 
 const literal = value => value == null ? 'NULL' : typeof value === 'number' && Number.isFinite(value) ? String(value) : "'" + String(value).replaceAll("'","''") + "'";
 
@@ -220,13 +224,18 @@ export function tableMetadataOnly(argv = process.argv.slice(2), env = process.en
   if (argv.includes('--metadata-only') && argv.includes('--sql')) throw new Error('Conflicting table build modes');
   return !argv.includes('--sql') && (argv.includes('--metadata-only') || env.OPAX_TABLE_METADATA_ONLY === '1');
 }
-export async function buildTableAssets({root=defaultRoot, output, fingerprintPath=fileURLToPath(new URL('../portal/src/table-registry-fingerprint.json',import.meta.url)), metadataOnly=false, datasets, policy}={}) {
+export async function buildTableAssets({root=defaultRoot, output, fingerprintPath=fileURLToPath(new URL('../portal/src/table-registry-fingerprint.json',import.meta.url)), prefilterPath=join(dirname(fingerprintPath),'table-identity-prefilter.generated.mjs'), metadataOnly=false, datasets, policy}={}) {
   if (metadataOnly) policy ||= await tableIdentityIndex(root);
   else if (!datasets) {const loaded=await tableRows(root);datasets=loaded.rows;policy=loaded.policy;}
   policy ||= await tableIdentityIndex(root);
-  const result = metadataOnly ? null : await buildTableSQL({root,output,datasets,policy});
   const fingerprint = tableRegistryFingerprint(policy);
+  // Seal every artifact from the same complete policy, exactly as the matcher
+  // CLI does. Fixtures overriding fingerprintPath keep their bundle beside it;
+  // they must never replace the release bundle while other tests import it.
+  const privateModule = identityPrefilterModule(tableIdentityPrefilter(policy),policy.phrases,tableIdentityHashes(policy),fingerprint);
+  const result = metadataOnly ? null : await buildTableSQL({root,output,datasets,policy});
   await writeFile(join(root,'table-private-identities.json'),JSON.stringify({version:1,identities:tableIdentityHashes(policy),strippedLengths:policy.strippedLengths})+'\n');
+  await writeFile(prefilterPath,privateModule);
   await writeFile(fingerprintPath,JSON.stringify({fingerprint})+'\n');
   return result || {privacyFingerprint:fingerprint,privateIdentities:policy.phrases.size};
 }
