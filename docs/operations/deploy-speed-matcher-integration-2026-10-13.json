@@ -99,11 +99,23 @@
     "skipped": 0
   },
   "desktopFullGate": {
-    "runner": "/Users/jake/Projects/opax-ios-wt/gate-speed/.ops/tools/ox-heavy-remote.sh",
+    "runner": "/Users/jake/Projects/opax-ios-wt/deploy-speed/.ops/tools/ox-heavy-remote.sh",
     "tier": "merge",
     "base": "b69257a871c1f46dd6632c586cb17094d5843189",
     "force": true,
     "recordDirectory": ".ops/gate-cache/",
-    "note": "The complete desktop gate record is retained separately in ignored gate cache; final validation refers to the candidate commit containing this evidence."
+    "note": "The complete desktop gate record is retained separately in ignored gate cache; final validation refers to the candidate commit containing this evidence.",
+    "runnerCommit": "e52c6380be1745c8739ce065e7120c6653599234"
+  },
+  "reviewerTimingTest": {
+    "cause": "The full desktop run exposed a 25 ms wall-clock comparison failing under concurrent scheduler load.",
+    "fix": "Controlled performance clock and delayed-email timers; unchanged 95 ms minimum and 25 ms equivalence thresholds, plus an exact 100 ms floor assertion.",
+    "localTestCounts": {
+      "tests": 43,
+      "pass": 43,
+      "fail": 0,
+      "skipped": 0
+    },
+    "applicationAuthLogicChanged": false
   }
 }

@@ -78,3 +78,5 @@ A fresh comparison runs the matcher's original loader and serial release pipelin
 All 154 table/privacy tests pass with zero failures or skips. The integrated `build:release`, `check` and local Wrangler dry-run pass. The complete desktop merge-gate record is retained separately under ignored `.ops/gate-cache/` for the final candidate. No upstream push or production deployment is part of this integration.
 
 [Integration evidence](deploy-speed-matcher-integration-2026-10-13.json).
+
+The first complete desktop run exposed an unrelated reviewer-login test comparing real elapsed request times within 25 ms during scheduler contention. Its timing case now uses a controlled performance clock and delayed-email timers, retaining the original 95 ms minimum and 25 ms equivalence assertions and adding an exact 100 ms floor assertion. All 43 reviewer-login tests pass locally. Authentication implementation and binding logic are unchanged; the final candidate reruns the complete desktop gate. The gate runner is pinned to the coherent committed tools at `e52c6380be`, and selects all 185 application test files.
