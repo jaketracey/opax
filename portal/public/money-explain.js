@@ -20,7 +20,7 @@ import { sourceLineHTML, partyLabelHTML } from './labels.js?v=fc03aa14cf';
 import { subjectUrl } from './canonical-urls.js?v=225d5915ea';
 import { shortMoney, shortDate } from './format.js?v=9fcab43d8d';
 
-const STYLE_HREF = '/money-explain.css?v=39bdb46509';
+const STYLE_HREF = '/money-explain.css?v=7738084ea5';
 
 // --- sources -------------------------------------------------------------------
 // The pages behind the "what the record does and doesn't show" notes. Each was

@@ -1,0 +1,7 @@
+import {mountDataTable} from './datatable.js?v=b43ca5057e';
+import {aggregateConfig} from './budget-table.js?v=0611aafd79';
+const root=document.querySelector('[data-datatable="budget-aggregates"]');
+if(root) {
+  const data=root.parentElement.querySelector('[data-budget-rows]');
+  if(data) mountDataTable(root.parentElement,{...aggregateConfig,rows:JSON.parse(data.textContent)});
+}

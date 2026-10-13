@@ -26,6 +26,7 @@ import { slugIndex, personIndex } from './person-slug'
 import { missingEntitySlug } from './crawl-hygiene'
 import { normalizePassage, passageWindow } from './passage-text'
 import { instrumentPage, instrumentReader } from './instruments'
+import { budgetPage, budgetReader } from './budget'
 import { auditPage, auditReader } from './audit'
 import {parseQuery,serializeQuery,type Page} from '../public/datatable.js'
 import {scrubQuery} from '../public/datatable-query.js'
@@ -102,6 +103,7 @@ import { personRole, personTitle, roleLine, billTitle } from './seo-titles'
 import { navGates, pageTrail, trail } from './nav-model.mjs'
 import { answerBlock, associationCaveat, crumbSteps, printedTrail, headingOf, crumbsHTML, panelPrerender, SERVER_PANELS, type Crumb, renderPersonAnswer, renderBillAnswer, renderDivisionAnswer, renderDirectory, renderSupplierAnswer, renderMoneyAnswer, type Division, type ReadAsset } from './seo-content'
 import { buildSchemaGraph, serializeSchemaGraph, type PersonSchemaIdentity } from './seo-schema'
+import {renderMoneyConnectionsTable} from './money-connections-table'
 import { photoFor, validStory, STORY_VERSION as STORY_SLIDES_VERSION, type PhotoCatalogue, type StoryFormat } from './story'
 
 interface FindParagraph {
@@ -372,7 +374,7 @@ const MONEY_OVERVIEW_TIMEOUT_MS = 20000
 const STATS_CACHE_TTL = 300
 const RECENT_CACHE_TTL = 300
 
-type CacheStatus = 'HIT' | 'MISS' | 'BYPASS'
+type CacheStatus = 'HIT' | 'MISS' | 'BYPASS' | 'STALE'
 
 async function sha256Hex(text: string): Promise<string> {
   const digest = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(text))
@@ -2821,12 +2823,12 @@ async function apiResource(request: Request, url: URL, slug: string, env: Env, c
  * by parliament, so the stats page can show what is indexed right now rather
  * than what the manifest said at the last sync. Cached five minutes.
  */
-async function apiStats(env: Env): Promise<Response> {
+async function apiStats(env: Env, ctx: ExecutionContext, refresh = false): Promise<Response> {
   return cachedJson('/api/stats', async () => {
-    const [countersRes, kindsRes, statesRes] = await Promise.all([
-      kbFetch(env, '/counters'),
-      kbFetch(env, `/catalog?faceted=${KIND_FACET}&page_size=0`),
-      kbFetch(env, `/catalog?faceted=${STATE_FACET}&filters=${SPEECH_FILTER}&page_size=0`),
+    const [countersRes, kindsRes, statesRes] = await aggregateBatch([
+      aggregateFetch(env, '/counters'),
+      aggregateFetch(env, `/catalog?faceted=${KIND_FACET}&page_size=0`),
+      aggregateFetch(env, `/catalog?faceted=${STATE_FACET}&filters=${SPEECH_FILTER}&page_size=0`),
     ])
     if (!countersRes.ok) return json({ error: `counters failed (${countersRes.status})` }, 502)
     const counters = (await countersRes.json()) as Record<string, unknown>
@@ -2838,8 +2840,12 @@ async function apiStats(env: Env): Promise<Response> {
       return Object.fromEntries(Object.entries(facet).map(([path, n]) => [path.slice(prefix.length + 1), n]))
     }
     const [kinds, speechesByState] = await Promise.all([facetOf(kindsRes, KIND_FACET), facetOf(statesRes, STATE_FACET)])
-    return json({ ...counters, kinds, speeches_by_state: speechesByState })
-  }, STATS_CACHE_TTL)
+    const out = json({ ...counters, kinds, speeches_by_state: speechesByState })
+    // Preserve the existing partial-counter response on a cold miss, but do
+    // not replace complete cached counts when either facet is unavailable.
+    if (!kindsRes.ok || !statesRes.ok) out.headers.set('cache-control', 'no-store')
+    return out
+  }, ctx, STATS_CACHE_TTL, refresh)
 }
 
 /**
@@ -3081,30 +3087,111 @@ interface CatalogPage {
   fulltext?: { total?: number; facets?: Record<string, Record<string, number>> }
 }
 
-/** Whole-route cache for the GET aggregates (no per-request input). X-OPAX-Cache says HIT or MISS. */
+const AGGREGATE_UPSTREAM_TIMEOUT_MS = 25_000
+const CACHED_JSON_HARD_TTL = 7 * 24 * 60 * 60
+// Only in-flight aggregate rebuilds are shared within this isolate.
+const cachedJsonRefreshes = new Map<string, Promise<Response>>()
+let catalogWarmup: Promise<void> | undefined
+
+/** Bound aggregate reads without changing kbFetch or any Ask caller. */
+async function aggregateFetch(env: Env, path: string, init?: { body?: unknown }): Promise<Response> {
+  const out = await kbFetch(env, path, { ...init, signal: AbortSignal.timeout(AGGREGATE_UPSTREAM_TIMEOUT_MS) })
+  // These page_size=0/count responses are small. Consume even error bodies so
+  // a warm-up never advances while an unread response holds a connection open.
+  return new Response(await out.arrayBuffer(), out)
+}
+
+async function aggregateBatch(reads: Promise<Response>[]): Promise<Response[]> {
+  // A rejected read must not leave its sibling calls running into the next
+  // warm-up route, which could exceed the four-call concurrency limit.
+  const results = await Promise.allSettled(reads)
+  return results.map(result => {
+    if (result.status === 'rejected') throw result.reason
+    return result.value
+  })
+}
+
+/** GET aggregates: long storage TTL, the existing browser TTL, and background refresh. */
 async function cachedJson(
   cachePath: string,
   build: () => Promise<Response>,
+  ctx: ExecutionContext,
   maxAge = 600,
+  refresh = false,
 ): Promise<Response> {
   const cache = caches.default
   const cacheKey = new Request(`https://opax.com.au${cachePath}`)
   const cached = await cache.match(cacheKey)
-  if (cached) return withCacheStatus(await sanitiseStoredResponse(cached), 'HIT')
-  const out = await build()
-  if (out.ok) {
-    out.headers.set('cache-control', `public, max-age=${maxAge}`)
-    await cache.put(cacheKey, await sanitiseStoredResponse(out.clone()))
+  const rebuild = (): Promise<Response> => {
+    const pending = cachedJsonRefreshes.get(cacheKey.url)
+    if (pending) return pending
+    const task = (async () => {
+      let out: Response
+      try {
+        out = await sanitiseStoredResponse(await build())
+      } catch {
+        return json({ error: 'catalog failed' }, 502)
+      }
+      if (out.ok && out.headers.get('cache-control') !== 'no-store') {
+        out.headers.set('x-opax-cached-at', new Date().toISOString())
+        const stored = out.clone()
+        stored.headers.set('cache-control', `public, max-age=${CACHED_JSON_HARD_TTL}`)
+        await cache.put(cacheKey, stored)
+        out.headers.set('cache-control', `public, max-age=${maxAge}`)
+      }
+      return out
+    })().finally(() => cachedJsonRefreshes.delete(cacheKey.url))
+    cachedJsonRefreshes.set(cacheKey.url, task)
+    return task
   }
-  return withCacheStatus(await sanitiseStoredResponse(out), 'MISS')
+  const builtAt = Date.parse(cached?.headers.get('x-opax-cached-at') ?? '')
+  const stale = !Number.isFinite(builtAt) || Date.now() - builtAt >= maxAge * 1000
+  // The scheduled warm-up rebuilds only entries past their soft TTL, so a fresh
+  // entry costs it no upstream facet queries.
+  if (cached && (!refresh || !stale)) {
+    if (stale) {
+      ctx.waitUntil(rebuild().then(() => {}, () => {
+        console.error(JSON.stringify({ event: 'catalog_refresh_failed', path: cachePath }))
+      }))
+    }
+    const out = withCacheStatus(await sanitiseStoredResponse(cached), stale ? 'STALE' : 'HIT')
+    out.headers.set('cache-control', `public, max-age=${maxAge}`)
+    return out
+  }
+  return withCacheStatus((await rebuild()).clone(), 'MISS')
+}
+
+/** Cache API entries are per-colo. One route at a time keeps upstream reads at four. */
+async function warmCatalog(env: Env, ctx: ExecutionContext): Promise<void> {
+  if (!env.ARAG_KB_ID || !env.ARAG_KB_TOKEN) return
+  // Slow ticks can overlap the next five-minute tick; share the whole warm-up
+  // within this isolate as well as each individual key's rebuild.
+  if (catalogWarmup) return catalogWarmup
+  catalogWarmup = (async () => {
+    const refreshes = [
+      () => apiStats(env, ctx, true),
+      () => apiTopics(env, ctx, true),
+      ...[...TOPIC_SLUGS].map(slug => () => apiTopic(slug, env, ctx, true)),
+    ]
+    for (const refresh of refreshes) {
+      try {
+        const out = await refresh()
+        // Consume the small aggregate before the next route opens connections.
+        await out.arrayBuffer()
+      } catch {
+        console.error(JSON.stringify({ event: 'catalog_warm_failed' }))
+      }
+    }
+  })().finally(() => { catalogWarmup = undefined })
+  return catalogWarmup
 }
 
 /** All 21 topics with live counts, plus how many speeches carry any topic label. */
-async function apiTopics(env: Env): Promise<Response> {
+async function apiTopics(env: Env, ctx: ExecutionContext, refresh = false): Promise<Response> {
   return cachedJson('/api/topics', async () => {
-    const [facetedRes, anyRes] = await Promise.all([
-      kbFetch(env, `/catalog?faceted=${TOPIC_FILTER_PREFIX}&page_size=0`),
-      kbFetch(env, `/catalog?filters=${TOPIC_FILTER_PREFIX}&page_size=0`),
+    const [facetedRes, anyRes] = await aggregateBatch([
+      aggregateFetch(env, `/catalog?faceted=${TOPIC_FILTER_PREFIX}&page_size=0`),
+      aggregateFetch(env, `/catalog?filters=${TOPIC_FILTER_PREFIX}&page_size=0`),
     ])
     if (!facetedRes.ok || !anyRes.ok) return json({ error: 'catalog failed' }, 502)
     const faceted = (await facetedRes.json()) as CatalogPage
@@ -3117,7 +3204,7 @@ async function apiTopics(env: Env): Promise<Response> {
     // Every topic renders even before the pass reaches it — zero is honest.
     const topics = [...TOPIC_SLUGS].map((slug) => ({ slug, count: counts.get(slug) ?? 0 }))
     return json({ labelled: any.fulltext?.total ?? 0, topics })
-  })
+  }, ctx, 600, refresh)
 }
 
 /**
@@ -3126,11 +3213,11 @@ async function apiTopics(env: Env): Promise<Response> {
  * whole speeches and `labelled` (the bare labelset filter's total) is their
  * honest denominator. Cached 10 minutes like /api/topics.
  */
-async function apiParties(env: Env): Promise<Response> {
+async function apiParties(env: Env, ctx: ExecutionContext): Promise<Response> {
   return cachedJson('/api/parties', async () => {
     const [facetedRes, anyRes] = await Promise.all([
-      kbFetch(env, `/catalog?faceted=${PARTY_FACET}&page_size=0`),
-      kbFetch(env, `/catalog?filters=${PARTY_FACET}&page_size=0`),
+      aggregateFetch(env, `/catalog?faceted=${PARTY_FACET}&page_size=0`),
+      aggregateFetch(env, `/catalog?filters=${PARTY_FACET}&page_size=0`),
     ])
     if (!facetedRes.ok || !anyRes.ok) return json({ error: 'catalog failed' }, 502)
     const faceted = (await facetedRes.json()) as CatalogPage
@@ -3141,7 +3228,7 @@ async function apiParties(env: Env): Promise<Response> {
       .filter((p) => p.label && p.count > 0)
       .sort((a, b) => b.count - a.count || a.label.localeCompare(b.label))
     return json({ labelled: any.fulltext?.total ?? 0, parties })
-  })
+  }, ctx)
 }
 
 /**
@@ -3151,15 +3238,15 @@ async function apiParties(env: Env): Promise<Response> {
  * record. Speech chronology comes from /find, whose metadata date is the
  * speech date; catalog `created` is only index time and is never used here.
  */
-async function apiTopic(slug: string, env: Env): Promise<Response> {
+async function apiTopic(slug: string, env: Env, ctx: ExecutionContext, refresh = false): Promise<Response> {
   if (!TOPIC_SLUGS.has(slug)) return json({ error: 'unknown topic' }, 404)
   return cachedJson(`/api/topic/${slug}`, async () => {
     const filter = `filters=${TOPIC_FILTER_PREFIX}/${slug}`
-    const [partyRes, anyRes, stateRes, stateTotalsRes] = await Promise.all([
-      kbFetch(env, `/catalog?faceted=${PARTY_FACET}&${filter}&page_size=0`),
-      kbFetch(env, `/catalog?filters=${TOPIC_FILTER_PREFIX}&page_size=0`),
-      kbFetch(env, `/catalog?faceted=${STATE_FACET}&${filter}&page_size=0`),
-      kbFetch(env, `/catalog?faceted=${STATE_FACET}&filters=${TOPIC_FILTER_PREFIX}&page_size=0`),
+    const [partyRes, anyRes, stateRes, stateTotalsRes] = await aggregateBatch([
+      aggregateFetch(env, `/catalog?faceted=${PARTY_FACET}&${filter}&page_size=0`),
+      aggregateFetch(env, `/catalog?filters=${TOPIC_FILTER_PREFIX}&page_size=0`),
+      aggregateFetch(env, `/catalog?faceted=${STATE_FACET}&${filter}&page_size=0`),
+      aggregateFetch(env, `/catalog?faceted=${STATE_FACET}&filters=${TOPIC_FILTER_PREFIX}&page_size=0`),
     ])
     if (!partyRes.ok || !anyRes.ok || !stateRes.ok || !stateTotalsRes.ok) {
       return json({ error: 'catalog failed' }, 502)
@@ -3188,7 +3275,7 @@ async function apiTopic(slug: string, env: Env): Promise<Response> {
       parties,
       states,
     })
-  })
+  }, ctx, 600, refresh)
 }
 
 const TIDE_DECADES = [
@@ -3204,7 +3291,7 @@ const TIDE_DECADES = [
  * at ingest. Federal is the default comparable run; `scope=all` includes all
  * five parliaments and keeps its unequal source windows visible in coverage.
  */
-async function apiTide(url: URL, env: Env): Promise<Response> {
+async function apiTide(url: URL, env: Env, ctx: ExecutionContext): Promise<Response> {
   const scope = url.searchParams.get('scope') ?? 'federal'
   if (scope !== 'federal' && scope !== 'all') return json({ error: 'bad scope' }, 400)
   return cachedJson(`/api/tide?scope=${scope}`, async () => {
@@ -3217,7 +3304,7 @@ async function apiTide(url: URL, env: Env): Promise<Response> {
       ]
     })
     const parseCatalog = async (path: string): Promise<CatalogPage> => {
-      const response = await kbFetch(env, path)
+      const response = await aggregateFetch(env, path)
       if (!response.ok) throw new Error(`catalog ${response.status}`)
       return (await response.json()) as CatalogPage
     }
@@ -3246,11 +3333,11 @@ async function apiTide(url: URL, env: Env): Promise<Response> {
       })
     }
     return json({ scope, decades, topics })
-  })
+  }, ctx)
 }
 
 /** A person's topic mix overall and in the two comparable recent decades. */
-async function apiPersonTopics(url: URL, env: Env): Promise<Response> {
+async function apiPersonTopics(url: URL, env: Env, ctx: ExecutionContext): Promise<Response> {
   const raw = url.searchParams.get('name')?.trim() ?? ''
   if (!raw || raw.length > MAX_SPEAKER_CHARS || !NAME_RE.test(raw)) {
     return json({ error: 'bad name' }, 400)
@@ -3262,7 +3349,7 @@ async function apiPersonTopics(url: URL, env: Env): Promise<Response> {
     const speakerClauses = [attribution ? scopedCollaborators(collaborator, attribution) as Record<string, unknown> : collaborator,
       ...(attribution ? [scopeFilter(attribution)] : [])]
     const topic = { prop: 'label', labelset: 'topic' }
-    const catalog = (clauses: Record<string, unknown>[], faceted = true) => kbFetch(env, '/catalog', {
+    const catalog = (clauses: Record<string, unknown>[], faceted = true) => aggregateFetch(env, '/catalog', {
       body: {
         filter_expression: { resource: clauses.length === 1 ? clauses[0] : { and: clauses } },
         ...(faceted ? { faceted: [TOPIC_FILTER_PREFIX] } : {}),
@@ -3302,7 +3389,7 @@ async function apiPersonTopics(url: URL, env: Env): Promise<Response> {
         now: profile(now, '2020–26', 2020, 2026),
       },
     })
-  })
+  }, ctx)
 }
 
 /**
@@ -3316,7 +3403,7 @@ async function apiPersonTopics(url: URL, env: Env): Promise<Response> {
  */
 const MATRIX_PARTY_CAP = 7
 
-async function apiMatrix(env: Env): Promise<Response> {
+async function apiMatrix(env: Env, ctx: ExecutionContext): Promise<Response> {
   return cachedJson('/api/matrix', async () => {
     const slugs = [...TOPIC_SLUGS]
     // Workers cap simultaneous open connections at 6, and a response body
@@ -3324,7 +3411,7 @@ async function apiMatrix(env: Env): Promise<Response> {
     // with "Response closed due to connection limit" (local dev does not
     // enforce it). Fetch AND parse in batches of five.
     const parseCatalog = async (path: string): Promise<CatalogPage> => {
-      const r = await kbFetch(env, path)
+      const r = await aggregateFetch(env, path)
       if (!r.ok) throw new Error(`catalog ${r.status}`)
       return (await r.json()) as CatalogPage
     }
@@ -3380,7 +3467,7 @@ async function apiMatrix(env: Env): Promise<Response> {
       cells,
       totals,
     })
-  }, 900)
+  }, ctx, 900)
 }
 
 // ---------------------------------------------------------------------------
@@ -3541,6 +3628,7 @@ const STATIC_PAGES: Record<string, { title: string; description: string; query?:
 type SeoRoute =
   | { kind: 'hub'; hub: 'sitting' | 'estimates' | 'vic-election'; id: string | null }
   | { kind: 'instruments'; id: string | null }
+  | { kind: 'budget' }
   | { kind: 'audit'; id: string | null }
   | { kind: 'static'; page: keyof typeof STATIC_PAGES }
   | { kind: 'report'; slug: string }
@@ -3606,6 +3694,7 @@ function matchSeoRoute(url: URL): SeoRoute | null {
     try { return { kind: 'audit', id: decodeURIComponent(path.slice('/audit/'.length)) } }
     catch { return { kind: 'audit', id: '' } }
   }
+  if (path === '/budget') return { kind: 'budget' }
   if (path === '/instruments') return { kind: 'instruments', id: null }
   if (path === '/instrument' || path.startsWith('/instrument/')) {
     try { return { kind: 'instruments', id: decodeURIComponent(path.slice('/instrument/'.length)) } }
@@ -4127,6 +4216,7 @@ async function buildRouteMeta(route: SeoRoute, url: URL, request: Request, env: 
     }
     case 'audit': return base({ ...await auditPage(route.id, url, auditReader(env.ASSETS), prerenderBlock, route.id===null ? await tablePrivacyCheck(env.ASSETS) : undefined, route.id===null ? await tablePrivacyCheck(env.ASSETS,'row') : undefined),
       ...(route.id && AUDIT_ID.test(route.id) ? { canonical: `${SITE_ORIGIN}/audit/${route.id}` } : {}) })
+    case 'budget': return base(await budgetPage(url, budgetReader(env.ASSETS), prerenderBlock))
     case 'instruments': return base(await instrumentPage(route.id, url, instrumentReader(env.ASSETS), prerenderBlock, route.id===null ? await tablePrivacyCheck(env.ASSETS) : undefined, env.TABLE_DB ? async query=>{
       const endpoint=new URL('/api/table/instruments',url)
       endpoint.search=serializeQuery({...query,sort:query.sort || {key:'title',dir:'asc'}})
@@ -4340,6 +4430,7 @@ async function buildMeta(route: SeoRoute, url: URL, request: Request, env: Env, 
       if(content) meta.prerender=content.html
     } else if(route.kind==='static' && ['money','connections','explore'].includes(route.page)) {
       meta.prerender=(await renderMoneyAnswer(meta.title.replace(/ · OPAX$/,''),read).catch(()=>null))?.html || answerBlock(meta.title.replace(/ · OPAX$/,''),meta.description)
+      if(route.page==='money')meta.prerender+=await renderMoneyConnectionsTable(url,read,await tablePrivacyCheck(env.ASSETS)).catch(()=> '')
     } else if (route.kind === 'static' && route.page === 'money/grants' && !url.searchParams.has('program') && !url.searchParams.has('open') && !url.searchParams.has('largest')) {
       const hadState = Boolean(url.search)
       meta.prerender = answerBlock('Government grants', GRANTS_COVERAGE, await grantsHTML(url, env).catch(() => '<p role="alert">Grant records are temporarily unavailable.</p>'))
@@ -5326,6 +5417,7 @@ async function renderSeoPage(route: SeoRoute, url: URL, request: Request, env: E
   // Rendering may scrub shared URL state; robots retain the original decision.
   const originalQuery = new URLSearchParams(url.searchParams)
   const originalTableState = [...url.searchParams.keys()].some(key=>/^(?:instruments|audit|interests|partyMoney(?:AEC|ECQ|VEC)?)\./.test(key))
+  const moneyTableState=url.pathname.replace(/\/+$/, '') === '/money' && [...url.searchParams.keys()].some(key => key.startsWith('c.'))
   const [shell, meta, originalQueryNoindex] = await Promise.all([
     shellResponse ?? timed('shell', () => env.ASSETS.fetch(new Request(`${SITE_ORIGIN}/`))),
     timed('meta', () => buildMeta(route, url, request, env, ctx)),
@@ -5334,7 +5426,7 @@ async function renderSeoPage(route: SeoRoute, url: URL, request: Request, env: E
   if (!shell.ok) return shell
   const tableKey = route.kind === 'bill' || route.kind === 'hub' && route.hub === 'sitting' ? 'dv' : route.kind === 'subject' && route.dir === 'person' ? 'vr' : null
   const tableState = [...url.searchParams.keys()].some(key=>/^(?:instruments|audit|interests|partyMoney(?:AEC|ECQ|VEC)?)\./.test(key)) || Boolean(tableKey && [...url.searchParams].some(([key,value])=>key.startsWith(tableKey+'.') && value !== ''))
-  const noindex = meta.noindex || meta.status >= 400 || originalQueryNoindex || originalTableState || tableState || (['/ask', '/search'].includes(url.pathname.replace(/\/+$/, '')) && Boolean(url.search))
+  const noindex = meta.noindex || meta.status >= 400 || originalQueryNoindex || originalTableState || tableState || moneyTableState || (['/ask', '/search'].includes(url.pathname.replace(/\/+$/, '')) && Boolean(url.search))
   // Election coverage names unavailable grants, but renders no financial records.
   // Its renderer owns any future caveat alongside an actual political money pairing.
   // The policy pages (privacy, support) name no association between records.
@@ -5374,6 +5466,7 @@ async function renderSeoPage(route: SeoRoute, url: URL, request: Request, env: E
     })
     .on('head', {
       element(el) {
+        if(route.kind==='static' && route.page==='money')el.append('<link rel="stylesheet" href="/datatable.css"><link rel="stylesheet" href="/money-connections.css?v=dt-money-2">', { html: true })
         if (noindex) el.append('<meta name="robots" content="noindex">', { html: true })
         if (route.kind === 'static' && route.page === 'money/grants' && !url.searchParams.has('program') && !url.searchParams.has('open') && !url.searchParams.has('largest')) el.append('<link rel="stylesheet" href="/grants-table.css" data-grants-table-style>', {html: true})
         for(const [rel,href] of [['prev',meta.prev],['next',meta.next]]) if(href) el.append(`<link rel="${rel}" href="${escHtml(href)}">`,{html:true})
@@ -5387,9 +5480,10 @@ async function renderSeoPage(route: SeoRoute, url: URL, request: Request, env: E
   if (route.kind === 'notfound') rewriter.on('script[src]', { element(el) {
     if (/\/(app|spa-entry|spa-shell)\.js(?:\?|$)/.test(el.getAttribute('src') || '')) el.remove()
   } })
-  if (route.kind === 'instruments' || route.kind === 'audit') rewriter.on('script[src]', { element(el) {
+  if (route.kind === 'instruments' || route.kind === 'audit' || route.kind === 'budget') rewriter.on('script[src]', { element(el) {
     if (/\/(app|spa-entry|spa-shell)\.js(?:\?|$)/.test(el.getAttribute('src') || '')) el.remove()
   } }).on('a[href^="/subject/person"]', { element(el) { el.remove() } })
+  if (route.kind === 'budget') rewriter.on('head', { element(el) { el.append('<link rel="stylesheet" href="/datatable.css"><link rel="stylesheet" href="/budget.css"><script type="module" src="/budget.js"></script>', {html:true}) } })
   rewriter.on('main#main', { element(el) { el.setAttribute('data-server-rendered',''); el.setInnerContent(meta.prerender || '', { html: true }) } })
   const out = rewriter.transform(shell)
   const headers = new Headers(out.headers)
@@ -5494,7 +5588,7 @@ async function serveStorySlide(url: URL, request: Request, env: Env, ctx: Execut
   if (!Number.isFinite(Date.parse(date + 'T12:00:00Z')) || new Date(date + 'T12:00:00Z').toISOString().slice(0, 10) !== date) return new Response('Not found', { status: 404 })
   if (!Number.isInteger(n) || n < 1 || n > 10) return new Response('Not found', { status: 404 })
   let post: Awaited<ReturnType<typeof previewPublication>> = null
-  try { post = await previewPublication(env, date, name => personTopicsFor(name, env)) } catch (err) {
+  try { post = await previewPublication(env, date, name => personTopicsFor(name, env, ctx)) } catch (err) {
     console.error(JSON.stringify({ level: 'error', path: url.pathname, message: `story edition failed: ${String(err)}` }))
     return new Response('Slide unavailable', { status: 503 })
   }
@@ -6111,7 +6205,7 @@ async function route(
       }
       if (url.pathname === '/api/person-slugs' && request.method === 'GET') return await apiPersonSlugs(env)
       if (url.pathname === '/api/stats' && request.method === 'GET') {
-        return await apiStats(env)
+        return await apiStats(env, ctx)
       }
       if (url.pathname === '/api/recent' && request.method === 'GET') {
         return await apiRecent(env)
@@ -6152,13 +6246,13 @@ async function route(
         const subject = typeof v.subject === 'string' && v.subject.length <= 120 ? v.subject : undefined
         const channels = Array.isArray(v.channels) ? v.channels.filter((c): c is Channel => (CHANNELS as readonly string[]).includes(String(c))) : undefined
         if (v.dry_run) {
-          const post = await previewPublication(env, date, name => personTopicsFor(name, env), kind, subject)
+          const post = await previewPublication(env, date, name => personTopicsFor(name, env, ctx), kind, subject)
           const response = json(post ? { ...post, publication: { x: publicationCopy(post, 'x'), bluesky: publicationCopy(post, 'bluesky'), facebook: publicationCopy(post, 'facebook'), instagram: publicationCopy(post, 'instagram') } } : { error: 'nothing to post' }, post ? 200 : 404)
           response.headers.set('cache-control', 'no-store')
           return response
         }
         const result = await runSocialPublication(env, {
-          personTopics: name => personTopicsFor(name, env), date, kind, subject, channels,
+          personTopics: name => personTopicsFor(name, env, ctx), date, kind, subject, channels,
           sourceResponse: async (target, method = 'HEAD') => {
             const u = new URL(target)
             const head = new Request(target, { method })
@@ -6180,29 +6274,29 @@ async function route(
         if (!/^\d{4}-\d{2}-\d{2}$/.test(date) || !Number.isFinite(Date.parse(date + 'T12:00:00Z')) || new Date(date + 'T12:00:00Z').toISOString().slice(0, 10) !== date) return json({ error: 'bad date' }, 400)
         const kindParam = url.searchParams.get('kind')
         const kind = (DAILY_POST_KINDS as readonly string[]).includes(kindParam ?? '') ? kindParam as DailyPostKind : undefined
-        const post = await previewPublication(env, date, name => personTopicsFor(name, env), kind)
+        const post = await previewPublication(env, date, name => personTopicsFor(name, env, ctx), kind)
         const response = json(post ? { ...post, publication: { x: publicationCopy(post, 'x'), bluesky: publicationCopy(post, 'bluesky'), facebook: publicationCopy(post, 'facebook'), instagram: publicationCopy(post, 'instagram') } } : { error: 'nothing to post' }, post ? 200 : 404)
         response.headers.set('cache-control', 'no-store')
         return response
       }
       if (url.pathname === '/api/topics' && request.method === 'GET') {
-        return await apiTopics(env)
+        return await apiTopics(env, ctx)
       }
       if (url.pathname === '/api/parties' && request.method === 'GET') {
-        return await apiParties(env)
+        return await apiParties(env, ctx)
       }
       const topicMatch = url.pathname.match(/^\/api\/topic\/([a-z][a-z-]*)$/)
       if (topicMatch && request.method === 'GET') {
-        return await apiTopic(topicMatch[1], env)
+        return await apiTopic(topicMatch[1], env, ctx)
       }
       if (url.pathname === '/api/tide' && request.method === 'GET') {
-        return await apiTide(url, env)
+        return await apiTide(url, env, ctx)
       }
       if (url.pathname === '/api/person-topics' && request.method === 'GET') {
-        return await apiPersonTopics(url, env)
+        return await apiPersonTopics(url, env, ctx)
       }
       if (url.pathname === '/api/matrix' && request.method === 'GET') {
-        return await apiMatrix(env)
+        return await apiMatrix(env, ctx)
       }
       if (url.pathname === '/api/news' && request.method === 'GET') {
         return await apiNews()
@@ -6274,8 +6368,8 @@ function pageAddress(pathname: string): boolean {
   return !/\.[a-z0-9]{1,8}$/i.test(last) || /\.html$/i.test(last)
 }
 
-function personTopicsFor(name: string, env: Env): Promise<Response> {
-  return apiPersonTopics(new URL(`${env.COMMUNITY_ORIGIN}/api/person-topics?name=${encodeURIComponent(name)}`), env)
+function personTopicsFor(name: string, env: Env, ctx: ExecutionContext): Promise<Response> {
+  return apiPersonTopics(new URL(`${env.COMMUNITY_ORIGIN}/api/person-topics?name=${encodeURIComponent(name)}`), env, ctx)
 }
 
 export default {
@@ -6427,10 +6521,11 @@ export default {
       // Expiry and provider-ID cleanup also run while voice/community are paused.
       try {await expireVoiceSessions(env)} catch {console.error(JSON.stringify({event:'voice_housekeeping_failed'}))}
       try {console.log('community-reply-emails', JSON.stringify(await deliverReplyEmails(env)))} catch {console.error(JSON.stringify({event:'community_reply_email_dispatch_failed'}))}
+      await warmCatalog(env, _ctx)
       return
     }
     const result = await runSocialPublication(env, {
-      now: controller.scheduledTime, personTopics: name => personTopicsFor(name, env),
+      now: controller.scheduledTime, personTopics: name => personTopicsFor(name, env, _ctx),
       sourceResponse: async (target, method = 'HEAD') => {
         const url = new URL(target)
         const request = new Request(target, { method })

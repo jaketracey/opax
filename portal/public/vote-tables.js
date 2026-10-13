@@ -1,5 +1,5 @@
 // Division and voting-record rollout using the shared server-mode core.
-import {dataTableHTML, mountDataTable, applyQuery, guardTableURL} from './datatable.js?v=c3ce01602f';
+import {dataTableHTML, mountDataTable, applyQuery, guardTableURL} from './datatable.js?v=b43ca5057e';
 // Guard and render must share the core module's rejection-state registry.
 export {guardTableURL};
 import {shortDate} from './format.js';

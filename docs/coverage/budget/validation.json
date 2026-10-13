@@ -1,0 +1,153 @@
+{
+  "branch": "coverage/budget",
+  "base_sha": "608b824b3bee3f8bb01d7e1872d51db4f12571c9",
+  "full_portal_tests": {
+    "tests": 1589,
+    "failed": 0,
+    "passed": 1589,
+    "cancelled": 0,
+    "skipped": 0,
+    "todo": 0,
+    "topLevel": 1589,
+    "suites": 0,
+    "OPAX_TEST_HOST": "::1"
+  },
+  "tsc": "passed",
+  "check": "passed",
+  "build_release": "passed",
+  "worker_deployment_dry_run": "passed",
+  "projection_dry_run": {
+    "cleared_document_files": 851,
+    "fiscal_rows": 805,
+    "measure_rows": 2347,
+    "held_documents": 1
+  },
+  "required_budget_and_myefo_metric_coverage": "all 13 Budget and 10 MYEFO releases have all four current-budget-year metrics",
+  "actual_metric_coverage": "all four metrics for 2015–16 to 2025–26; no current-year actual fabricated",
+  "votes_sha256": "a77128dc0e1e1b3fdaa4bf84501e2c94af3125dea3cf0b2dffbc688a49d68546",
+  "votes_identical_to_origin_main": true,
+  "no_production_loading": true,
+  "no_push_or_deploy": true,
+  "artifact_sha256": {
+    "data/staged/budget/aggregates.json": "73af7b4f0bbf413a274494fb38d229a6188c6b42df48b4bb58f16da8e6280b8b",
+    "data/staged/budget/hub.json": "5e755a7f18c295b9d8c5d84087fad43e47a5a5952fddd598b07e12b47f9af4a8",
+    "data/staged/budget/inventory.json": "d1a8e05995b44b20d632808185bb7891f57c7cea59e6434a7362ac05ff18e9a7",
+    "data/staged/budget/measures.json": "d606d1a1a4c8f6f016dc8c3b7ed1d7adbaf5e832d5092a7b089f3ed4abbd8139",
+    "data/staged/budget/receipt-repair.json": "ca423fa8c83ee5baf512f16a949d9952ccf8e937140e1dc2d047cfbd1ea70d7e",
+    "data/staged/budget/receipts.json": "c4959542bc32ff3e1a8c5e7e60754c44dbed6a624c9e595c582c8a265fb722f1"
+  },
+  "original_branch_base_sha": "c41740e8e52128b7b761a2499a186277387f93b3",
+  "tested_code_sha": "5045c7c7cd375a13fd6b9b04d2f2c5bb5213b11b",
+  "desktop_gate": {
+    "ref": "gate/coverage-budget-fix-20261013",
+    "tier": "merge",
+    "host": "linux",
+    "concurrency": 6,
+    "identity": {
+      "tree": "7a1a723d0c59e9a3738f31513afa83bef7a66edb",
+      "node": "v24.21.0",
+      "lockfile": "b99c5d730e933ae8b5f1846e4e60c745d44d0727393f322aaf462540e93d4afd",
+      "runner": "ba747cadd4341f33456f3f0124db406cee4035eeec322ed97ae35c367cd6013d"
+    },
+    "wrapper_success": false,
+    "wrapper_failure": "Missing/failed test summaries: three module-only test wrappers omitted by custom reporter",
+    "full_suite_success": true,
+    "steps": [
+      {
+        "name": "scripts-tests",
+        "seconds": 1.1176619790000004,
+        "code": 0
+      },
+      {
+        "name": "install",
+        "seconds": 13.031440478,
+        "code": 0
+      },
+      {
+        "name": "runtime-types",
+        "seconds": 3.8282412049999985,
+        "code": 0
+      },
+      {
+        "name": "shell",
+        "seconds": 1.9168539850000015,
+        "code": 0
+      },
+      {
+        "name": "release",
+        "seconds": 989.348596946,
+        "code": 0
+      },
+      {
+        "name": "check",
+        "seconds": 9.229410585000064,
+        "code": 0
+      },
+      {
+        "name": "tests-6",
+        "seconds": 3161.2783539079996,
+        "code": 0
+      }
+    ],
+    "seconds": 4202.241167897,
+    "selected_test_files": 161,
+    "reported_test_files": 158,
+    "supplemental_module_only_tests": {
+      "passed": 3,
+      "failed": 0,
+      "files": [
+        "portal/test/bills.test.mjs",
+        "portal/test/pictures.test.mjs",
+        "portal/test/quiz.test.mjs"
+      ],
+      "reporter": "Node standard spec reporter"
+    },
+    "supplemental_worker_deployment_dry_run": {
+      "started_at": "2026-10-13T06:26:38.326441+00:00",
+      "seconds": 85.68747204396641,
+      "code": 0
+    },
+    "result_sha256": "4497ae249fd1767acf80fbe6ffa1134624ce5906e37864d491633cd91d72a6c1",
+    "isolated_loopback_namespace": true
+  },
+  "targeted_portal_tests": {
+    "passed": 31,
+    "failed": 0,
+    "scope": "budget, DataTable, tokens and identity-cache"
+  },
+  "full_python_tests": {
+    "passed": 785,
+    "subtests_passed": 294,
+    "failed": 0
+  },
+  "budget_parser_and_licence_tests": {
+    "passed": 24,
+    "failed": 0
+  },
+  "source_access_guard": "passed",
+  "filler_rows": {
+    "2015-16": {
+      "before": 25,
+      "after": 0
+    },
+    "all_years": {
+      "before": 252,
+      "after": 0
+    }
+  },
+  "receipt_repair": {
+    "sources": 25,
+    "requests": 28,
+    "http_200": 24,
+    "http_404": 1,
+    "fresh_robots": 3,
+    "previous_robots_preserved": 3,
+    "missing_identity_before": 25,
+    "missing_identity_after": 0,
+    "successful_body_hashes_unchanged": 24,
+    "unchanged_fiscal_values": 805,
+    "updated_fiscal_snapshots": 52,
+    "minimum_measured_interval_seconds": 1.0000604459783062,
+    "pacing_violations": 0
+  }
+}

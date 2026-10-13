@@ -173,6 +173,9 @@
 /ballot.js
   ! Cache-Control
   Cache-Control: public, max-age=31536000, immutable
+/budget-table.js
+  ! Cache-Control
+  Cache-Control: public, max-age=31536000, immutable
 /canonical-urls.js
   ! Cache-Control
   Cache-Control: public, max-age=31536000, immutable
@@ -186,6 +189,9 @@
   ! Cache-Control
   Cache-Control: public, max-age=31536000, immutable
 /datatable-privacy-fields.js
+  ! Cache-Control
+  Cache-Control: public, max-age=31536000, immutable
+/datatable-privacy.js
   ! Cache-Control
   Cache-Control: public, max-age=31536000, immutable
 /datatable-query.js
@@ -243,6 +249,9 @@
   ! Cache-Control
   Cache-Control: public, max-age=31536000, immutable
 /matrix.js
+  ! Cache-Control
+  Cache-Control: public, max-age=31536000, immutable
+/money-connections.js
   ! Cache-Control
   Cache-Control: public, max-age=31536000, immutable
 /money-explain.css

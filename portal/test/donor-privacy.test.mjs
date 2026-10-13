@@ -22,7 +22,7 @@ import {personIndex} from '../src/person-slug.ts';
 import {buildCrawl as buildCrawlOriginal} from '../../scripts/build_crawl_catalog.mjs';
 import {buildGrowth as buildGrowthOriginal} from '../../scripts/build_growth_modules.mjs';
 import {moduleOutputs} from './growth-module-harness.mjs';
-import {applyQuery,dataTableHTML,mountDataTable,toCSV,serializeQuery} from '../public/datatable.js';
+import {applyQuery, dataTableHTML, mountDataTable, toCSV, guardTableURL, parseQuery, serializeQuery} from '../public/datatable.js';
 import {tableHarness} from './datatable-harness.mjs';
 import {instrumentTableConfig,auditTableConfig,interestTableData,interestTableConfig,partyMoneyData,partyMoneyTableConfig} from '../public/register-tables.js';
 import {queryValues} from '../public/datatable-query.js';
@@ -30,7 +30,7 @@ import {tableRows,tableIdentityHashes,tableIdentityPrefilter,tableRegistryFinger
 import {tableDatabase} from './table-d1-harness.mjs';
 import {identityPrefilterBinding} from '../src/table-identity-prefilter.mjs';
 import {isOrganisationRecipient} from '../src/table-recipient.mjs';
-import {moneyFlowType} from '../public/money-records.js';
+import {moneyFlowType, moneyTotals} from '../public/money-records.js';
 import {TABLE_DATASETS} from '../src/table-datasets.mjs';
 import {assertTablePrivacy,tablePrivacyIndex} from './datatable-privacy.mjs';
 import {csvFields} from '../public/datatable-csv.js';
@@ -40,6 +40,9 @@ import {mountMoneyExplain, parseExplainParams, explainPath} from '../public/mone
 const sourceRead = root => async path => JSON.parse(readFileSync(join(root,path.replace(/^\//,'')),'utf8'));
 const buildGrowth = buildGrowthOriginal;
 const buildCrawl = buildCrawlOriginal;
+import {sourceTableDonorIdentities} from '../../scripts/table_identity_source.mjs';
+import {compileHashedIdentityCheck} from '../src/table-identity-hashes.mjs';
+import {moneyConnectionsConfig} from '../public/money-connections.js';
 
 const pub = new URL('../public/', import.meta.url).pathname;
 const real = path => JSON.parse(path==='graph/campaigners.json' ? execFileSync('git',['show','33594d4ec048c77359af1336032dbaa4161b8665:portal/public/'+path],{maxBuffer:20*1024*1024}).toString() : readFileSync(join(pub, path), 'utf8'));
@@ -325,6 +328,70 @@ test('all five money tables withhold donor, recipient, supplier, alias and ident
 test('the fixture individuals are withheld and the fixture organisation is not', () => {
   for (const label of fixtureLabels) assert.ok(donorNameWithheld(index, label) && known.includes(label) && checked.includes(label), `fixture ${[...fixtureLabels].indexOf(label)}`);
   assert.equal(donorNameWithheld(index, FIXTURE_ORGANISATION), false);
+});
+
+test('money connections reconcile anonymised rows, facets and exact CSV against each record type', async () => {
+  const blocked=compileHashedIdentityCheck(tableIdentityHashes(moneyTables.policy),moneyTables.policy.strippedLengths,fixturePrefilter,identityBundle.binding),privacyCheck=value=>!blocked(value),source=sourceTableDonorIdentities();
+  const cents=value=>BigInt(Math.round((Number(value)||0)*100));
+  for(const [i,original] of graphs.entries()) {
+    const graph=withholdIndividualDonors(original),config=moneyConnectionsConfig(graph,privacyCheck);
+    const page=applyQuery(config.rows,config,{pageSize:2000});
+    assert.equal(page.total,config.rows.length,`money table ${i}: real core retains positive rows`);
+    const aggregate=page.rows.filter(row=>row.aggregate);
+    assert.equal(aggregate.length,1,`money table ${i}: one anonymous aggregate`);
+    assert.match(aggregate[0].to,/^Donors not named \(\d+\)$/);
+    assert.equal(config.primaryLink(aggregate[0]),null);
+    assert.equal(config.actions[0].href(aggregate[0]),null);
+    const totals=moneyTotals(graph);
+    for(const key of ['receipts','contracts','grants']) {
+      const actual=page.rows.reduce((sum,row)=>sum+cents(config.columns.some(c=>c.key===key)?row[key]:key==='receipts'?row.value:0),0n);
+      const source=graph.edges.filter(e=>moneyFlowType(e,new Map(graph.nodes.map(n=>[n.id,n])))===key).reduce((sum,e)=>sum+cents(e.total),0n);
+      assert.equal(actual,source,`money table ${i}: ${key} exact reconciliation`);
+    }
+    assert.equal(page.rows.reduce((sum,row)=>sum+row.records,0),graph.edges.filter(e=>moneyFlowType(e,new Map(graph.nodes.map(n=>[n.id,n])))).reduce((sum,e)=>sum+e.count,0));
+    const html=dataTableHTML(config,page),csv=toCSV(page.rows,config);
+    for(const [surface,value] of Object.entries({rows:JSON.stringify(page.rows),facets:JSON.stringify(page.facets),html,csv}))assertClean(`money table ${i} ${surface}`,value);
+    assert.ok(!JSON.stringify(page.rows).includes('donor:withheld-'),'anonymous endpoints stay out of rows');
+    const query={filters:{contracts:{min:1000000}},sort:{key:'contracts',dir:'desc'},page:2};
+    const params=new URLSearchParams(serializeQuery(query,'c'));params.set('type','contracts');
+    const clean=guardTableURL(config,new URL('https://local.invalid/money?'+params));
+    assert.deepEqual(clean.query,query);
+    assert.equal(clean.url.searchParams.get('type'),'contracts');
+    // Hydrate actual core with all real public rows; private searches are not
+    // certified by pre-emptively replacing input with an empty array.
+    for(const value of [...source.labels.slice(i*4,i*4+4),...source.identifiers.slice(i,i+1)]) {
+      const harness=tableHarness('http://localhost/money?'+new URLSearchParams({'c.q':value,type:'contracts'}));
+      const mounted=mountDataTable(harness.root,config);
+      for(let turn=0;turn<12;turn++)await new Promise(done=>setImmediate(done));
+      assertClean(`money table ${i}: actual hydrated query`,harness.html());
+      assert.equal(new URL(harness.win.location.href).searchParams.has('c.q'),false);
+      assert.ok(harness.html().includes('Showing 0–0 of 0'),'actual hydrated core rejects private query');
+      assert.equal(applyQuery(config.rows,config,{q:value}).total,0);
+      mounted.destroy();
+    }
+  }
+  const config=moneyConnectionsConfig({nodes:[{id:'agency:fixture',kind:'agency',label:'Fixture agency'},{id:'supplier:fixture',kind:'supplier',label:'Fixture supplier'}],edges:[{source:'agency:fixture',target:'supplier:fixture',flow:'contracts',total:12.25,count:2,firstYear:2020,lastYear:2021}]},privacyCheck);
+  assert.deepEqual(config.rows[0].donorEndpoints,[]);
+  assert.equal(applyQuery(config.rows,config).total,1,'connections without donor endpoints are public');
+});
+
+test('money tables render a positive core first page and reject private SSR queries', async () => {
+  for(const query of ['', '?type=contracts&min=1000000', '?type=grants&from=2020&to=2024&cpi=1&c.sort=value:desc']) {
+    const response=await fetchWorker('/money'+query),html=await response.text();
+    assert.match(html,/<table[^>]*id="money-connections"/);
+    assert.match(html,/<caption>Connections matching the map filters<\/caption>/);
+    assert.match(html,/<tbody[^>]*><tr role="row">/);
+    assert.match(html,/Donors not named \(\d+\)/);
+    assert.match(html,/<link rel="canonical" href="https:\/\/opax.com.au\/money"/);
+    assertClean('money first-page HTML',rendered(html));
+    assert.equal(response.headers.get('x-robots-tag'),query.includes('c.')?'noindex':'all');
+  }
+  const withheld=graphs[0].nodes.find(n=>n.kind==='donor' && !isOrganisationDonor(n));
+  const response=await fetchWorker('/money?c.q='+encodeURIComponent(withheld.label));
+  const html=await response.text();
+  assertClean('money withheld table query HTML',rendered(html));
+  assert.match(html,/Showing 0–0 of 0/);
+  assert.equal(response.headers.get('x-robots-tag'),'noindex');
 });
 
 test('anonymising keeps every donor group and its totals: duplicated source ids never merge', () => {

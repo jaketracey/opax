@@ -132,6 +132,9 @@ export type MoneyScene = {
 }
 
 export type MoneyMapOptions = {
+  /** Cancel a setup before it writes to a reused map container. */
+  signal?: AbortSignal
+  isCurrent?: () => boolean
   filters?: MoneyFilters
   onViewChange?: (view: MoneyGraph, filters: MoneyFilters, years: { from: number; to: number; cpi: boolean }) => void
   /** Reader input in the map or controls; scene presentation stays silent. */
@@ -793,17 +796,24 @@ export async function mountMoneyMap(
   dataUrl: string | MoneyGraph,
   opts: MoneyMapOptions = {},
 ): Promise<MoneyMapHandle> {
-  injectStyles()
-  container.classList.add('mm-root')
+  const checkSetup = () => {
+    opts.signal?.throwIfAborted()
+    if (opts.isCurrent?.() === false) throw new DOMException('Map setup superseded', 'AbortError')
+  }
+  checkSetup()
 
   let raw: MoneyGraph
   if (typeof dataUrl === 'string') {
-    const response = await fetch(dataUrl,{cache:"no-cache"})
+    const response = await fetch(dataUrl,{cache:"no-cache",signal:opts.signal})
     if (!response.ok) throw new Error(`money map data: HTTP ${response.status} for ${dataUrl}`)
     raw = await response.json() as MoneyGraph
   } else raw = dataUrl
 
+  checkSetup()
   const privacy = typeof fetch === 'function' ? await loadDonorViewIndex() : donorPrivacyIndex([raw])
+  checkSetup()
+  injectStyles()
+  container.classList.add('mm-root')
   const withheld = (node: MoneyNode) => node.kind === 'donor' && donorNameWithheld(privacy,node.label)
 
   if (!webglAvailable()) return mountConnectionFallback(container, raw, opts, privacy)
@@ -2387,6 +2397,7 @@ export async function mountMoneyMap(
     fit: (animate = true) => engine.fit(animate),
     setPaused: (paused) => engine.setPaused(paused),
     destroy: () => {
+      const ownsContainer = canvas.parentNode === container
       destroyed = true
       if (scrubPending) cancelAnimationFrame(scrubPending)
       for (const type of readerEvents) container.removeEventListener(type, onReaderInput, true)
@@ -2398,8 +2409,10 @@ export async function mountMoneyMap(
       for (const child of [canvas, labels, legend, card, zoom, hint, find, scrub]) {
         child?.remove()
       }
-      container.classList.remove('mm-root')
-      delete container.dataset.mmChrome
+      if (ownsContainer) {
+        container.classList.remove('mm-root')
+        delete container.dataset.mmChrome
+      }
     },
   }
 }

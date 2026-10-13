@@ -1,0 +1,122 @@
+{
+  "approved_round2_sha": "11c2be488743442dd8ce080f33c15211c88c33a5",
+  "merged_main_sha": "1df98365f726d06d22f2c77374c7d76ff516b99a",
+  "tested_code_sha": "3a838f50ac56c45c368b4648c08b7313d33f26bc",
+  "gate_ref": "gate/coverage-budget-batch4-20261013",
+  "gate_identity": {
+    "tree": "1f6e64ee5e1f1e78272f372587c7b38736f69fc2",
+    "node": "v24.21.0",
+    "lockfile": "b99c5d730e933ae8b5f1846e4e60c745d44d0727393f322aaf462540e93d4afd",
+    "runner": "c82d8fe05c0b89f4b0af931266ede1c3713f2e1f02f26912e3e95e22c8d4825b"
+  },
+  "gate_success": true,
+  "host": "linux",
+  "OPAX_TEST_HOST": "::1",
+  "isolated_loopback_namespace": true,
+  "concurrency": 6,
+  "selected_test_files": 187,
+  "reported_test_files": 187,
+  "full_portal_tests": {
+    "tests": 1787,
+    "failed": 0,
+    "passed": 1787,
+    "cancelled": 0,
+    "skipped": 0,
+    "todo": 0,
+    "topLevel": 1787,
+    "suites": 0
+  },
+  "steps": [
+    {
+      "name": "scripts-tests",
+      "seconds": 0.965304633000007,
+      "code": 0
+    },
+    {
+      "name": "install",
+      "seconds": 9.856419775000003,
+      "code": 0
+    },
+    {
+      "name": "runtime-types",
+      "seconds": 2.433104475,
+      "code": 0
+    },
+    {
+      "name": "shell",
+      "seconds": 1.291123581000007,
+      "code": 0
+    },
+    {
+      "name": "release",
+      "seconds": 1015.668769898,
+      "code": 0
+    },
+    {
+      "name": "check",
+      "seconds": 10.930877591999947,
+      "code": 0
+    },
+    {
+      "name": "tests-6",
+      "seconds": 660.781402099,
+      "code": 0
+    },
+    {
+      "name": "dry-run",
+      "seconds": 19.984614025000017,
+      "code": 0
+    }
+  ],
+  "gate_seconds": 1804.935327473,
+  "gate_result_sha256": "ce0dd7e59f1c3600ef6da5d8c79ad6bdd976b6a6006b9ead28d5ebc095cb927e",
+  "targeted_portal_tests": {
+    "passed": 12,
+    "failed": 0
+  },
+  "reporter_preflight": {
+    "module_files": 3,
+    "passed": 3,
+    "failed": 0
+  },
+  "main_harnesses_preserved": [
+    "portal/test/community-deletion.test.mjs",
+    "portal/test/community-signin-code.test.mjs",
+    "portal/test/table-d1-harness.mjs",
+    "portal/test/voice.test.mjs"
+  ],
+  "all_shared_portal_tests_identical_to_main": true,
+  "main_stamp_entries_preserved": true,
+  "added_budget_stamp_entries": [
+    [
+      "budget.js",
+      "budget-table.js"
+    ],
+    [
+      "budget.js",
+      "datatable.js"
+    ]
+  ],
+  "staged_budget_bytes_identical_to_round2": true,
+  "staged_artifact_sha256": {
+    "data/staged/budget/aggregates.json": "73af7b4f0bbf413a274494fb38d229a6188c6b42df48b4bb58f16da8e6280b8b",
+    "data/staged/budget/hub.json": "5e755a7f18c295b9d8c5d84087fad43e47a5a5952fddd598b07e12b47f9af4a8",
+    "data/staged/budget/inventory.json": "d1a8e05995b44b20d632808185bb7891f57c7cea59e6434a7362ac05ff18e9a7",
+    "data/staged/budget/measures.json": "d606d1a1a4c8f6f016dc8c3b7ed1d7adbaf5e832d5092a7b089f3ed4abbd8139",
+    "data/staged/budget/receipt-repair.json": "ca423fa8c83ee5baf512f16a949d9952ccf8e937140e1dc2d047cfbd1ea70d7e",
+    "data/staged/budget/receipts.json": "c4959542bc32ff3e1a8c5e7e60754c44dbed6a624c9e595c582c8a265fb722f1"
+  },
+  "browser": {
+    "passed": true,
+    "snapshot_sha256": "5e755a7f18c295b9d8c5d84087fad43e47a5a5952fddd598b07e12b47f9af4a8",
+    "widths": [
+      390,
+      1440
+    ]
+  },
+  "votes_sha256": "a77128dc0e1e1b3fdaa4bf84501e2c94af3125dea3cf0b2dffbc688a49d68546",
+  "votes_byte_identical": true,
+  "mac_flake_reruns": "not needed; desktop full suite passed without failures",
+  "no_push_or_deploy": true,
+  "no_production_loading": true
+}
