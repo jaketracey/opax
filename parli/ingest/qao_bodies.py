@@ -16,7 +16,10 @@ import subprocess
 import sys
 import time
 import requests
-from bs4 import BeautifulSoup
+try:
+    from bs4 import BeautifulSoup
+except ImportError:  # validators import this module without parsing HTML; parsing needs bs4
+    BeautifulSoup = None
 
 from parli.ingest.qao_reports import (ROOT, INDEX, ID, LICENCE, MAX_REQUESTS, Client, Held, atomic_json,
                                       local_path, parse_index, public_body, source_url, text)
