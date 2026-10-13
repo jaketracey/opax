@@ -62,7 +62,7 @@
 <link rel="stylesheet" href="/datatable.css">
 <link rel="stylesheet" href="/vote-tables.css?v=d727aad769">
 <script type="module" src="/vote-tables.js?v=139d1d6eff"></script>
-<link rel="stylesheet" href="/style.css?v=4c2732a6ee">
+<link rel="stylesheet" href="/style.css?v=822baf7b1b">
 <link rel="stylesheet" href="/ui-controls.css?v=f8011bf298">
 <link rel="stylesheet" href="/ui-source.css?v=4f396d8cfc">
 <link rel="stylesheet" href="/page-actions.css?v=a416a2254f">
@@ -1582,6 +1582,69 @@
         are reproduced. Victorian Hansard and division records are copyright material without an open licence, so
         these pages show counts and links, not the text of speeches.</li>
       </ul>
+      <h2 id="mcp">MCP research tools</h2>
+      <div id="mcp-docs">
+      <p>Connect a research client to <code>https://opax.com.au/mcp</code> using Streamable HTTP
+      and a Bearer key from <a href="/account?tab=tools">your account</a>. Send JSON-RPC requests
+      over HTTP POST with <code>Content-Type: application/json</code> and
+      <code>Accept: application/json, text/event-stream</code>. Use <code>tools/list</code> for
+      the current schemas and <code>tools/call</code> to run a tool. All tools are read-only.</p>
+      <p>The record tools are <code>search_records</code>, <code>read_record</code>,
+      <code>find_connections</code> and <code>corpus_coverage</code>. Grant readers
+      <code>read_grant_recipient</code> and <code>read_grant_program</code> open the IDs returned
+      by grant searches. Source URLs support every result; connections do not establish influence.</p>
+      <h3><code>electorates_rank</code></h3>
+      <p>Rank, filter or look up federal or state electorate demographics from the published
+      <strong>2021 Census (ABS)</strong>. Ask and MCP use the same tool. Current federal House
+      seats, ascending order and one result are the defaults. All ties at the cutoff are returned;
+      missing values are excluded, never treated as zero. Figures use published Census boundaries
+      and are not redistributed to newer electorate boundaries.</p>
+      <ul class="about-list">
+        <li><strong>Required:</strong> <code>indicator</code>. Options are
+        <code>median_income</code>, <code>median_household_income_weekly</code>, <code>median_age</code>,
+        <code>unemployment_rate</code>, <code>rental_pct</code>, <code>university_pct</code>,
+        <code>population</code>, <code>average_household_size</code>, <code>born_overseas_pct</code>,
+        <code>homeownership_pct</code>, <code>indigenous_pct</code>, <code>labour_force_participation</code>,
+        <code>median_mortgage_monthly</code> and <code>median_rent_weekly</code>.</li>
+        <li><strong>Scope:</strong> <code>jurisdiction</code> (federal, a state/territory code,
+        state or all), <code>chamber</code> and <code>status</code> (current, historical or all).
+        <code>jurisdiction: "vic"</code> means Victorian state seats;
+        <code>jurisdiction: "federal", state: "vic"</code> means federal seats in Victoria.</li>
+        <li><strong>Operation:</strong> <code>operation</code> (rank, filter or lookup),
+        <code>order</code> (asc or desc), inclusive <code>min</code>/<code>max</code>,
+        and <code>limit</code> (1–50). <code>electorate</code> is an exact name, slug or ID;
+        it is required for lookup, and implies lookup when operation is omitted.</li>
+        <li><strong>Units:</strong> personal and household income and rent are AUD/week;
+        mortgage is AUD/month; age is years; population is people; household size is
+        people/household; other indicators are percentages.</li>
+      </ul>
+      <p>Example call for the lowest <em>personal</em> median income:</p>
+      <pre tabindex="0" aria-label="Electorates MCP example call"><code>{
+  "jsonrpc": "2.0", "id": 1, "method": "tools/call",
+  "params": {
+    "name": "electorates_rank",
+    "arguments": { "indicator": "median_income", "order": "asc" }
+  }
+}</code></pre>
+      <p>Output excerpt from the published release:</p>
+      <pre tabindex="0" aria-label="Electorates MCP example output"><code>{
+  "rows": [{
+    "name": "Fowler", "jurisdiction": "federal",
+    "chamber": "representatives", "value": 521, "unit": "AUD/week",
+    "url": "https://opax.com.au/subject/electorate/federal-representatives-nsw-fowler",
+    "source": "2021 Census (ABS)"
+  }],
+  "citations": [{
+    "text": "Fowler (Federal, House of Representatives): median personal income $521 per week (2021 Census (ABS))",
+    "url": "https://opax.com.au/subject/electorate/federal-representatives-nsw-fowler"
+  }],
+  "notes": ["Median income means personal weekly income; household weekly income is a separate indicator."]
+}</code></pre>
+      <p>The MCP result includes this JSON in both <code>structuredContent</code> and a text
+      content block. Invalid inputs return JSON-RPC <code>-32602</code>. No available profiles
+      return empty rows with an explicit <code>unanswerable</code> reason and notes. In this release,
+      Victorian state seats have no published Census profiles, so their ranking is unavailable.</p>
+      </div>
 
       <h3>Known limitations</h3>
       <ul class="about-list" id="methods-defects"><!-- filled from corpus.json --></ul>
@@ -1931,7 +1994,7 @@
       <p>Members can create keys that let research tools search the record through OPAX's MCP
       service. Keys are stored as hashes, expire after 90 days, can be revoked at any time and
       record when they were last used. Searches made with a key go through the same search as
-      the website.</p>
+      the website. The <a href="/methods#mcp">MCP tool reference</a> lists inputs and examples.</p>
 
       <h2 id="voice">Talking to OPAX by voice</h2>
       <p>Talk to OPAX is an optional voice assistant for signed-in members. It answers from the
@@ -2217,11 +2280,11 @@
 <!-- defer: never block the parser (Lighthouse counted this as render-blocking).
      Deferred scripts still run before DOMContentLoaded, so nothing changes for
      app.js's boot. ?v= is content-hash stamped by scripts/stamp_assets.mjs. -->
-<script src="/spa-shell.js?v=c1fdf674af" defer></script>
+<script src="/spa-shell.js?v=91f7a951fa" defer></script>
 <script src="/navigation.js?v=de99bace2e" defer></script>
 <script src="/quick-search.js?v=27eac3b2f7" defer></script>
 <script src="/ui-source.js?v=d594622c13" defer></script>
-<script src="/app.js?v=6161785025" defer></script>
+<script src="/app.js?v=02bf24ec06" defer></script>
 <!-- PostHog runs after the app (defer order) so the first route is not queued behind it; it replays the events measured before it (analytics/index.js). -->
 <script src="/analytics.js?v=7a83ce20cf" defer></script>
 </body>

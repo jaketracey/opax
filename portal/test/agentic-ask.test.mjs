@@ -13,9 +13,9 @@ const { classifyAgentic, parsePlan, resolveArgs, verifyComposition, factSheet, a
 const { countSpeeches, partyDonations, runTool } = await load('../src/agentic-tools.ts');
 const gold = JSON.parse(await readFile(new URL('./fixtures/agentic-ask-gold.json', import.meta.url), 'utf8'));
 
-test('the gold set has thirty questions, each with a record-computed answer and its method', () => {
-  assert.equal(gold.questions.length, 30);
-  assert.equal(gold.questions[0].question, 'Who is making the most speeches about gambling reform');
+test('the gold set has thirty existing questions and four electorate questions, each with a record-computed answer and its method', () => {
+  assert.equal(gold.questions.length, 34);
+  assert.equal(gold.questions[0].question, 'What electorate has the lowest median income');
   for (const q of gold.questions) {
     assert.ok(q.expected?.kind, q.id);
     assert.ok(q.expected.query || q.expected.method || q.expected.donors || q.expected.industry, `${q.id} keeps how it was computed`);

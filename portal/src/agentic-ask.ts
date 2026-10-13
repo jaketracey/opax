@@ -12,6 +12,8 @@
  * when no tool result supports an answer (the web-ask-no-answer contract).
  */
 import { TOOL_SPECS, TOPICS, STATES, CHAMBERS, TERMS, runTool, validToolArgs, AGENTIC_TOOLS_VERSION, type ToolDeps, type ToolResult, type Cite } from './agentic-tools'
+import { isElectorateDataQuestion, electoratePlan } from './agentic-tool-electorates'
+import { getAskTool } from './tools'
 
 export const AGENTIC_PROMPT_VERSION = 'agentic-ask-4'
 export const AGENTIC_BUDGET_MS = 40_000
@@ -53,6 +55,7 @@ const TREND_WORDS = /\b(?:more|less|fewer)\b.*\b(?:than|this term|last term|sinc
 const COMPARE_WORDS = /\bcompare\b|\bversus\b|\bvs\.?\b|\bcompared with\b/i
 export function classifyAgentic(question: string): { route: 'agentic' | 'ask'; shape: Shape | null; rule: string } {
   const q = normaliseQuestion(question)
+  if (isElectorateDataQuestion(q)) return { route: 'agentic', shape: 'ranking', rule: 'electorate-data' }
   if (/\b(?:most recently|latest|last speech|knows? most)\b/.test(q)) return { route: 'ask', shape: null, rule: 'ordinary' }
   if (MONEY_WORDS.test(q) && SPEECH_WORDS.test(q) && /\bmost\b|\bhow much\b/.test(q)) return { route: 'agentic', shape: 'money', rule: 'money+speech' }
   if (VOTE_WORDS.test(q) && SPEECH_WORDS.test(q) && (COMPARE_WORDS.test(q) || /\bhow often\b|\bhow many\b/.test(q))) return { route: 'agentic', shape: 'comparison', rule: 'vote+speech' }
@@ -76,6 +79,7 @@ const TOPIC_RULES: [string, RegExp][] = [
 ]
 /** A bounded deterministic plan, including the timeout case from the spike. */
 export function fallbackPlan(question: string): Plan | null {
+  if (isElectorateDataQuestion(question)) return electoratePlan(question)
   const shape = classifyAgentic(question).shape
   if (!shape) return null
   const q = question.toLowerCase()
@@ -118,6 +122,7 @@ export function plannerPrompt(): { system: string; user: string } {
     '',
     `Topics: ${TOPICS.join(', ')}. States: ${STATES.join(', ')} (federal = Commonwealth parliament). Chambers: ${CHAMBERS.join(', ')}. Terms: ${Object.entries(TERMS).map(([k, [a, b]]) => `${k} ${a}..${b ?? 'now'}`).join('; ')}.`,
     'Rules:',
+    '- Electorate demographics -> electorates only, never find_quotes or speech counts. Unqualified "median income" = median_income (personal AUD/week), NOT household income. Highest/oldest/most -> order desc; lowest/youngest -> asc. "In X" for a named seat -> operation lookup and electorate X. State parliament -> jurisdiction (e.g. vic); federal seats in a state -> jurisdiction federal + state (e.g. vic). Missing profiles cannot answer a ranking; never substitute speech figures.',
     '- Map the subject to ONE topic label when it fits ("gambling reform" -> gambling, "climate change" -> climate-environment, "the budget" -> tax-budget).',
     '- "Who speaks most / top speakers" -> count_speeches with group_by speaker. "Which party" -> group_by party. Add state or chamber only when the question names a parliament or chamber; "senators" -> chamber senate; "MPs in federal parliament" -> state federal.',
     '- Dates: "since 2022" -> since 2022-01-01. "this term" -> term 48th, "last term" -> term 47th. A decade ("the 2010s") -> since 2010-01-01, until 2019-12-31.',
@@ -183,7 +188,9 @@ export function factSheet(results: ToolResult[]): { facts: Fact[]; notes: string
     const d = r.data as Record<string, unknown>
     const filter = (d.filter ?? {}) as Record<string, unknown>
     entities = [filter.speaker || d.person ? `person:${filter.speaker || d.person}` : '', filter.party || d.party ? `party:${filter.party || d.party}` : ''].filter(Boolean)
-    if (r.tool === 'count_speeches') {
+    if (getAskTool(r.tool)) {
+      r.cite.forEach(cite => add(cite.label, cite))
+    } else if (r.tool === 'count_speeches') {
       const rows = (d.rows as { name: string; count: number }[] | undefined)
       if (d.committeeSupplement && rows?.length) rows.forEach((row, i) => add(`${row.name}: ${row.count} committee-hearing turns`, r.cite[i]))
       else if (rows?.length) rows.forEach((row, i) => add(`${row.name}: ${row.count} ${d.described}`, r.cite[i], [...entities, `${d.group_by === 'party' ? 'party' : 'person'}:${row.name}`]))
@@ -412,6 +419,8 @@ function periodPlan(plan: Plan, period: Period, filters: Record<string, unknown>
 }
 /** Fixed labels and bounded plain arguments. The client escapes these as text. */
 export function stepEvent(step: PlanStep, id: number, committee = false): StepEvent {
+  const registered = getAskTool(step.tool)
+  if (registered) return { id, ...registered.stepLabel(step.args), state: 'running' }
   const a = step.args
   const label = committee ? 'Checking committee hearings' : step.tool === 'count_speeches' ? a.group_by === 'speaker' ? 'Counting by speaker' : a.group_by === 'party' ? 'Counting by party' : 'Searching speeches' : ({ member_votes: 'Checking votes', party_donations: 'Checking donations', speech_trend: 'Comparing years', find_quotes: 'Searching speeches', find_people: 'Searching speeches' } as Record<string, string>)[step.tool]
   const moneyArgs = new Set(['Labor', 'Liberal', 'Greens', 'Nationals', 'LNP', 'Independent', 'One Nation', 'United Australia Party', 'gambling', 'mining', 'fossil_fuels', 'finance', 'property', 'unions', 'health', 'hospitality', 'media', 'tech'])
@@ -420,6 +429,8 @@ export function stepEvent(step: PlanStep, id: number, committee = false): StepEv
   return { id, label, ...(arg ? { arg } : {}), state: 'running' }
 }
 export async function runAgentic(question: string, deps: AgenticDeps, progress: Progress = async () => {}, budgetMs = AGENTIC_BUDGET_MS, period = inferPeriod(question), filters: Record<string, unknown> = {}, resolvedScope?: NamedScope): Promise<AgenticPayload> {
+  const electorateData = isElectorateDataQuestion(question)
+  if (electorateData) period = { kind: 'all', label: 'Figures use published Census geography.' }
   const t0 = Date.now(), deadline = t0 + budgetMs
   const tokens = { input: 0, output: 0 }
   let cost: number | null = null
@@ -428,34 +439,38 @@ export async function runAgentic(question: string, deps: AgenticDeps, progress: 
   const results: ToolResult[] = [], steps: AgenticPayload['steps'] = [], events: StepEvent[] = []
   const base = (over: Partial<AgenticPayload>): AgenticPayload => ({ answered: false, answer: '', answer_source: 'none', shape: classifyAgentic(question).shape, period, facts: [], notes: [], steps, events, tokens, cost_usd: cost, over_budget: !left(), version: `${AGENTIC_PROMPT_VERSION}/${AGENTIC_TOOLS_VERSION}`, ...over, timings: { ...timings, total_ms: Date.now() - t0 } })
   // The decade candidate proof supports leaders, not the least active member.
-  if (/\b(?:least|fewest)\b/i.test(question)) return base({ reason: 'declined' })
-  let named: NamedScope
-  try { named = resolvedScope ?? await resolveNamedScope(question, deps, Math.min(4_000, left()), filters) }
-  catch { return base({ reason: 'declined' }) }
-  if (named.unresolved || named.ambiguous || named.bills.length) return base({ reason: 'declined' })
+  if (!electorateData && /\b(?:least|fewest)\b/i.test(question)) return base({ reason: 'declined' })
+  let named: NamedScope = { people: [], parties: [], bills: [], ambiguous: false, unresolved: false }
+  if (!electorateData) {
+    try { named = resolvedScope ?? await resolveNamedScope(question, deps, Math.min(4_000, left()), filters) }
+    catch { return base({ reason: 'declined' }) }
+    if (named.unresolved || named.ambiguous || named.bills.length) return base({ reason: 'declined' })
+  }
   const usage = (out: { tokens?: { input: number; output: number }; costUsd?: number }) => {
     if (out.tokens) { tokens.input += out.tokens.input; tokens.output += out.tokens.output }
     if (typeof out.costUsd === 'number') cost = (cost ?? 0) + out.costUsd
   }
-  let plan: Plan | null = null
+  let plan: Plan | null = electorateData ? electoratePlan(question) : null
   let plannerFailed = false
   try {
-    const out = await bounded(signal => deps.generate(question, plannerPrompt(), 700, signal), Math.min(15_000, left()), deps.signal)
-    usage(out); plan = parsePlan(out.text)
+    if (!plan) {
+      const out = await bounded(signal => deps.generate(question, plannerPrompt(), 700, signal), Math.min(15_000, left()), deps.signal)
+      usage(out); plan = parsePlan(out.text)
+    }
   } catch { plannerFailed = true }
   timings.plan_ms = Date.now() - t0
   const rulePlan = fallbackPlan(question)
   // Malformed output is a planner failure, not permission to substitute a
   // numerical answer. Timeout recovery is limited to a complete rule plan.
   if (!plan && !plannerFailed) return base({ reason: 'declined' })
-  if (!rulePlan) return base({ reason: 'declined' })
+  if (!rulePlan && !electorateData) return base({ reason: 'declined' })
   // A valid JSON plan must still answer the classified shape and retain its
   // subject. In particular, never replace topic counts with overall totals.
   const topic = rulePlan?.steps.find(s => s.args.topic)?.args.topic
   if (plan && plan.shape !== 'unanswerable') {
     const has = (tool: string) => plan!.steps.some(s => s.tool === tool)
     const group = /\bpart(?:y|ies)\b/i.test(question) ? 'party' : 'speaker'
-    if (plan.shape === 'ranking' && !plan.steps.some(s => s.tool === 'count_speeches' && s.args.group_by === group) ||
+    if (electorateData && plan.steps.some(s => s.tool !== 'electorates') || plan.shape === 'ranking' && !electorateData && !plan.steps.some(s => s.tool === 'count_speeches' && s.args.group_by === group) ||
         /\bwhich year\b.*\bmost\b/i.test(question) && !plan.steps.some(s => s.tool === 'speech_trend' && (s.args.by ?? 'year') === 'year') ||
         plan.shape === 'trend' && !has('count_speeches') && !has('speech_trend') ||
         plan.shape === 'money' && (!has('party_donations') || !has('count_speeches')) ||
@@ -537,7 +552,7 @@ export async function runAgentic(question: string, deps: AgenticDeps, progress: 
   // No composer call: figures, metric labels, entities and citations are
   // rendered together from the tool rows, so swapping aye/no or party/year
   // values in model text can never affect an answer.
-  const selected = selectAnswerFacts(mainFacts, named, peakYear)
+  const selected = electorateData ? mainFacts : selectAnswerFacts(mainFacts, named, peakYear)
   if (!selected?.length) return base({ reason: 'no_supported_claim' })
   let answer = templateAnswer(selected, [])
   if (committeeFacts.length) {
@@ -562,6 +577,8 @@ async function hashText(text: string): Promise<string> {
 export async function agenticCacheKey(question: string, epoch: string, model: string, period = inferPeriod(question), toolsVersion = AGENTIC_TOOLS_VERSION, filters: Record<string, unknown> = {}, shape = classifyAgentic(question).shape, scope?: NamedScope): Promise<string> {
   if (scope?.unresolved || scope?.ambiguous) throw new Error('unresolved cache scope')
   const entities = { people: [...new Set(scope?.people ?? [])].sort(), parties: [...new Set(scope?.parties ?? [])].sort(), bills: [...new Set(scope?.bills ?? [])].sort() }
-  const hash = await hashText(JSON.stringify({ q: normaliseQuestion(question), shape, period, entities, filters, epoch, model, v: AGENTIC_PROMPT_VERSION, t: toolsVersion }))
+  // Invalid Census selectors must not share a key with validated names.
+  const cacheQuestion = isElectorateDataQuestion(question) ? question.normalize('NFKC').toLowerCase().trim() : normaliseQuestion(question)
+  const hash = await hashText(JSON.stringify({ q: cacheQuestion, shape, period, entities, filters, epoch, model, v: AGENTIC_PROMPT_VERSION, t: toolsVersion }))
   return `https://cache.opax.internal/ask-agentic/${hash}`
 }

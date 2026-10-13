@@ -5807,6 +5807,7 @@ function agenticToolDeps(env: Env, signal?: AbortSignal): ToolDeps {
 function agenticDeps(env: Env, signal?: AbortSignal): AgenticDeps {
   return {
     ...agenticToolDeps(env, signal),
+    toolEnv: { ASSETS: env.ASSETS, TABLE_DB: env.TABLE_DB, COMMUNITY_ORIGIN: env.COMMUNITY_ORIGIN },
     generate: async (query, prompt, maxTokens, signal) => {
       const res = await kbFetch(env, '/ask', {
         body: { query, top_k: 1, reranker: 'noop', generative_model: env.ASK_MODEL || 'openai-compatible', max_tokens: maxTokens, prompt },
@@ -5892,9 +5893,12 @@ async function apiAskRouted(request: Request, url: URL, input: Record<string, un
   try {
     // Reuse the donor guard within the same deadline; no prompt bypass.
     if (await budget.run(() => questionNamesWithheldDonor(env.ASSETS, question))) return await routedFallback()
-    let namedScope: NamedScope
-    try { namedScope = await resolveNamedScope(question, agenticToolDeps(env, budget.signal), Math.min(4_000, budget.remaining), agenticFilters(input)) }
-    catch { namedScope = { people: [], parties: [], bills: [], ambiguous: false, unresolved: true } }
+    const electorateData = classifyAgentic(question).rule === 'electorate-data'
+    let namedScope: NamedScope = { people: [], parties: [], bills: [], ambiguous: false, unresolved: false }
+    if (!electorateData) {
+      try { namedScope = await resolveNamedScope(question, agenticToolDeps(env, budget.signal), Math.min(4_000, budget.remaining), agenticFilters(input)) }
+      catch { namedScope = { people: [], parties: [], bills: [], ambiguous: false, unresolved: true } }
+    }
     // Unresolved scopes still use the normal bounded fallback/stream relay,
     // but can neither read nor fill the agentic cache. executeAgentic records
     // the decline without starting a planner or count tool.
@@ -5923,7 +5927,7 @@ async function apiAskRouted(request: Request, url: URL, input: Record<string, un
         const run = await executeAgentic(input, env, ctx, undefined, budget.signal, budget.remaining, namedScope)
         if (request.signal.aborted) return json(agenticAskPayload(run, question))
         budget.signal.throwIfAborted()
-        return run.answered && !run.over_budget ? withCacheStatus(finish(run), 'MISS', false) : await routedFallback()
+        return electorateData || run.answered && !run.over_budget ? withCacheStatus(finish(run), 'MISS', false) : await routedFallback()
       } catch { return expired() }
       finally { budget.dispose() }
     }
@@ -5942,7 +5946,7 @@ async function apiAskRouted(request: Request, url: URL, input: Record<string, un
             const run = await executeAgentic(input, env, ctx, send, budget.signal, budget.remaining, namedScope)
             if (gone || request.signal.aborted) return
             budget.signal.throwIfAborted()
-            if (run.answered && !run.over_budget) { const response = finish(run); await send('done', await response.json()) }
+            if (electorateData || run.answered && !run.over_budget) { const response = finish(run); await send('done', await response.json()) }
             else {
               const response = await routedFallback()
               if ((response.headers.get('content-type') ?? '').includes('text/event-stream')) {
