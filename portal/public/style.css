@@ -1951,6 +1951,11 @@ a.barrow-name:hover { color: var(--bronze-ink); }
   scrollbar-width: thin; scrollbar-color: var(--bronze-rule) transparent;
 }
 .game-dialog ::-webkit-scrollbar, .game-dialog::-webkit-scrollbar,
+/* The money map's floating card (graph bundle, not on the uplift's scale)
+   keeps the density it has live: the larger block, heading and row steps
+   squeezed its fixed 330px column, wrapping "Commonwealth contracts" and
+   dropping a contract row at 1440. */
+.mm-root .mm-card { --space-block: var(--sp-16); --space-heading: var(--sp-12); --space-row: calc(var(--sp-8) + var(--sp-2)); }
 .mm-card::-webkit-scrollbar { width: 10px; height: 10px; }
 .game-dialog ::-webkit-scrollbar-track, .game-dialog::-webkit-scrollbar-track,
 .mm-card::-webkit-scrollbar-track { background: transparent; }
@@ -2521,7 +2526,8 @@ a.barrow-name:hover { color: var(--bronze-ink); }
 /* ---- a division (/doc/division-…): titled by its stage, its bills as link
    rows, the parties and the members in blocks, the question folded, one
    source line (pass 4G). */
-/* The bills it was on: a quiet list under the title, each row a 44px link. */
+/* The bills it was on: a quiet list under the title, each row a 44px link,
+   a hairline between them so a wrapped title never runs into the next. */
 #panel-doc:has(.division-view) .doc-bill { margin-top: var(--space-heading); padding-top: 0; border-top: 0; }
 .division-bills { margin: 0 0 var(--space-block); }
 .division-bills > li { padding-block: 0; }
@@ -2895,7 +2901,9 @@ mark.privacy-confirm {
 .topic-arc-open:hover { text-decoration-color: currentColor; }
 .topic-arc-note { margin-top: var(--space-block); }
 .topic-arc-footer { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-tight) var(--space-block); margin-top: var(--space-block); }
-.topic-arc-footer .fineprint { flex-basis: 100%; max-width: none; margin: 0; }
+/* The count takes its own line (the topic grid's fine-print measure would
+   leave room beside it for the button). */
+.topic-arc-footer .fineprint, #panel-subject .topic-arc-footer .fineprint { flex-basis: 100%; max-width: none; margin: 0; }
 .topic-arc-footer a { display: inline-flex; align-items: center; min-height: var(--size-target); }
 @media (min-width: 700px) {
   .topic-arc-item { grid-template-columns: var(--sp-64) minmax(0, 1fr); column-gap: var(--space-block); }
@@ -3520,7 +3528,10 @@ body:has(#search-options-pop[open]) { overflow: hidden; }
    rather than leaving it alone on a line; the kind link reaches 44 unseen. */
 #panel-search #search-results .ui-row-meta { display: block; margin: 0; }
 #panel-search #search-results .ui-row-meta a { position: relative; }
-#panel-search #search-results .ui-row-meta a::after { content: ""; position: absolute; inset: calc(-1 * var(--sp-12)) calc(-1 * var(--sp-4)); }
+/* The kind link's hit area reaches up to the row's edge and down only into
+   the gap above the title, never over the title's own 44. */
+#panel-search #search-results .ui-row-meta a::after { content: ""; position: absolute; inset: calc(-1 * var(--sp-12)) calc(-1 * var(--sp-4)) calc(-1 * var(--space-tight)); }
+#panel-search #search-results .search-result-heading { margin-top: var(--space-tight); }
 #panel-search .snippet, #panel-search .search-result-brief {
   display: block; max-width: var(--size-readable); padding: 0; margin: var(--space-tight) 0 0; background: none;
   font: var(--type-record); color: var(--ink); overflow-wrap: anywhere;

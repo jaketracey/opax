@@ -12360,7 +12360,7 @@ function renderDivisionDoc({ d, entry, bills }, slug, manageFocus) {
   const question = billQuestion(d.question || d.name || "");
   const ask = askHash(bills[0]?.title ? `How did parliament vote on the ${bills[0].title}?` : `What was the ${house} division of ${fmtDate(d.date)} about?`);
   $("doc-bill").innerHTML = `
-    ${bills.length ? `<ul class="ui-list division-bills" data-rule="none" role="list" aria-label="${bills.length === 1 ? "The bill" : "The bills"} this division was on">${bills.map((b) =>
+    ${bills.length ? `<ul class="ui-list division-bills" role="list" aria-label="${bills.length === 1 ? "The bill" : "The bills"} this division was on">${bills.map((b) =>
       `<li class="ui-row-name"><a ${entityHrefAttr(billHash(b.key))}>${esc(b.title)}</a></li>`).join("")}</ul>` : ""}
     <div class="page-actions">
       <a class="ui-button" href="${esc(ask)}">Ask the record about this</a>
