@@ -97,6 +97,7 @@ import { personRole, personTitle, roleLine, billTitle } from './seo-titles'
 import { navGates, pageTrail, trail } from './nav-model.mjs'
 import { answerBlock, associationCaveat, crumbSteps, printedTrail, headingOf, crumbsHTML, panelPrerender, SERVER_PANELS, type Crumb, renderPersonAnswer, renderBillAnswer, renderDivisionAnswer, renderDirectory, renderSupplierAnswer, renderMoneyAnswer, type Division, type ReadAsset } from './seo-content'
 import { buildSchemaGraph, serializeSchemaGraph, type PersonSchemaIdentity } from './seo-schema'
+import {renderMoneyConnectionsTable} from './money-connections-table'
 import { photoFor, validStory, STORY_VERSION as STORY_SLIDES_VERSION, type PhotoCatalogue, type StoryFormat } from './story'
 
 interface FindParagraph {
@@ -4332,6 +4333,7 @@ async function buildMeta(route: SeoRoute, url: URL, request: Request, env: Env, 
       if(content) meta.prerender=content.html
     } else if(route.kind==='static' && ['money','connections','explore'].includes(route.page)) {
       meta.prerender=(await renderMoneyAnswer(meta.title.replace(/ · OPAX$/,''),read).catch(()=>null))?.html || answerBlock(meta.title.replace(/ · OPAX$/,''),meta.description)
+      if(route.page==='money')meta.prerender+=await renderMoneyConnectionsTable(url,read,await tablePrivacyCheck(env.ASSETS)).catch(()=> '')
     } else if (route.kind === 'static' && route.page === 'money/grants' && !url.searchParams.has('program') && !url.searchParams.has('open') && !url.searchParams.has('largest')) {
       const hadState = Boolean(url.search)
       meta.prerender = answerBlock('Government grants', GRANTS_COVERAGE, await grantsHTML(url, env).catch(() => '<p role="alert">Grant records are temporarily unavailable.</p>'))
@@ -5301,6 +5303,7 @@ async function serveCachedPage(route: SeoRoute, url: URL, request: Request, env:
 }
 
 async function renderSeoPage(route: SeoRoute, url: URL, request: Request, env: Env, ctx: ExecutionContext, shellResponse?: Response): Promise<Response> {
+  const moneyTableState=url.pathname.replace(/\/+$/, '') === '/money' && [...url.searchParams.keys()].some(key => key.startsWith('c.'))
   const [shell, meta] = await Promise.all([
     shellResponse ?? timed('shell', () => env.ASSETS.fetch(new Request(`${SITE_ORIGIN}/`))),
     timed('meta', () => buildMeta(route, url, request, env, ctx)),
@@ -5308,7 +5311,7 @@ async function renderSeoPage(route: SeoRoute, url: URL, request: Request, env: E
   if (!shell.ok) return shell
   const tableKey = route.kind === 'bill' || route.kind === 'hub' && route.hub === 'sitting' ? 'dv' : route.kind === 'subject' && route.dir === 'person' ? 'vr' : null
   const tableState = tableKey && [...url.searchParams].some(([key,value])=>key.startsWith(tableKey+'.') && value !== '')
-  const noindex = meta.noindex || meta.status >= 400 || tableState || (['/ask', '/search'].includes(url.pathname.replace(/\/+$/, '')) && Boolean(url.search))
+  const noindex = meta.noindex || meta.status >= 400 || tableState || moneyTableState || (['/ask', '/search'].includes(url.pathname.replace(/\/+$/, '')) && Boolean(url.search))
   // Election coverage names unavailable grants, but renders no financial records.
   // Its renderer owns any future caveat alongside an actual political money pairing.
   // The policy pages (privacy, support) name no association between records.
@@ -5348,6 +5351,7 @@ async function renderSeoPage(route: SeoRoute, url: URL, request: Request, env: E
     })
     .on('head', {
       element(el) {
+        if(route.kind==='static' && route.page==='money')el.append('<link rel="stylesheet" href="/datatable.css"><link rel="stylesheet" href="/money-connections.css?v=dt-money-2">', { html: true })
         if (noindex) el.append('<meta name="robots" content="noindex">', { html: true })
         if (route.kind === 'static' && route.page === 'money/grants' && !url.searchParams.has('program') && !url.searchParams.has('open') && !url.searchParams.has('largest')) el.append('<link rel="stylesheet" href="/grants-table.css" data-grants-table-style>', {html: true})
         for(const [rel,href] of [['prev',meta.prev],['next',meta.next]]) if(href) el.append(`<link rel="${rel}" href="${escHtml(href)}">`,{html:true})

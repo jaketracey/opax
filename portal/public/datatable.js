@@ -1,6 +1,7 @@
 // Shared, dependency-free table renderer and query engine. Safe to import in a Worker.
 import {isOrganisationDonor} from './donor-entity.js?v=ebb2c972d5';
-import {unnamedDonorLabel,isUnnamedAggregate,donorsNotNamedDetail} from './donor-views.js?v=4fcbbb78cf';
+import {unnamedDonorLabel,isUnnamedAggregate,donorsNotNamedDetail} from './donor-views.js?v=77470b1d26';
+import {createTablePrivacyValidator} from './datatable-privacy.js?v=de6469a26a';
 import {shortDate} from './format.js';
 import {queryValues,rawQueryValues,scrubQuery} from './datatable-query.js?v=6dd55aab38';
 import {readServerCSV} from './server-csv.js?v=47fc2aba1d';
@@ -56,7 +57,8 @@ function candidateRows(rows, config) {
   return rows.flatMap(row => {
     if (row?.aggregate?.kind === 'individual-donors' && !aggregate(row)) return [];
     if (aggregate(row)) {
-      const safe = {aggregate:{kind:'individual-donors',count:row.aggregate.count, ...(row.aggregate.subject === 'recipients' ? {subject:'recipients'} : {})}};
+      const label=row.aggregate.label === 'Donors not named' ? 'Donors not named' : 'Individual donors';
+      const safe = {aggregate:{kind:'individual-donors',count:row.aggregate.count, ...(row.aggregate.subject === 'recipients' ? {subject:'recipients'} : {}),...(row.aggregate.label === 'Donors not named' ? {label} : {})}};
       for (const c of config.columns) {
         if (['text','category'].includes(c.type) && (c.primary || donorColumn(c))) safe[c.key] = row.aggregate.subject === 'recipients' ? `Recipients not named (${row.aggregate.count})` : unnamedDonorLabel(row.aggregate.count);
         else if (numeric(c) && number(row[c.key]) != null) safe[c.key] = number(row[c.key]);
@@ -64,7 +66,10 @@ function candidateRows(rows, config) {
       return [safe];
     }
     try { if (config.rowPrivacyCheck) return config.rowPrivacyCheck(row) === true ? [row] : []; } catch { return []; }
-    return config.privacy !== 'donors' || isOrganisationDonor(donorNode(row)) ? [row] : [];
+    const permitted=Array.isArray(row.donorEndpoints)
+      ? row.donorEndpoints.every(node=>node && typeof node === 'object' && isOrganisationDonor(node))
+      : isOrganisationDonor(donorNode(row));
+    return config.privacy !== 'donors' || permitted ? [row] : [];
   });
 }
 const donorColumn = column => /^(?:donor(?:_?name)?|label|name)$/i.test(column.key) || column.primary;
@@ -255,7 +260,7 @@ function safePage(page, config) {
     if (!column) continue;
     if (Array.isArray(values)) {
       facets[key]=values.filter(v=>v && typeof v.value === 'string' && Number.isFinite(v.count) && v.count >= 0)
-        .filter(v=>config.privacy !== 'donors' || (donorColumn(column) ? isOrganisationDonor({label:v.value}) || isUnnamedAggregate(v.value) : true)
+        .filter(v=>config.privacy !== 'donors' || (donorColumn(column) ? isOrganisationDonor({label:v.value}) || isUnnamedAggregate(v.value) || rows.some(row=>text(row[key]) === v.value && Array.isArray(row.donorEndpoints)) : true)
           && [...queryValues(v)].every(value=>allowedRowText(config,value)))
         .map(v=>({value:v.value,count:v.count}));
     } else if (values && Number.isFinite(values.min) && Number.isFinite(values.max) && [...queryValues(values)].every(value=>allowedRowText(config,value))) facets[key]={min:values.min,max:values.max};
@@ -303,7 +308,7 @@ function chip(label, key, value, removable = true, title = label) {
 
 function render(config, page, query = {}, view = {}, error = '') {
   const requested = query, rejected=blockedQuery(config,query);
-  if (rejected) { page={rows:[],total:0,page:1,pageSize:config.pageSize || 50,facets:{}}; view={...view,rejected:true}; }
+  if (rejected || view.rejected) { page={rows:[],total:0,page:1,pageSize:config.pageSize || 50,facets:{}}; view={...view,rejected:true}; }
   page = safePage(page, config);
   query = cleanQuery(query, config, page);
   const redactedSearch = Boolean(requested.q && !query.q);
@@ -367,8 +372,8 @@ function render(config, page, query = {}, view = {}, error = '') {
 }
 
 export function dataTableHTML(config, page, requestURL) {
-  if (!requestURL) return render(config,page,{sort:config.defaultSort});
-  const {query,rejected}=guardTableURL(config,requestURL);
+  if (!requestURL) return render(config,page,{sort:config.defaultSort},{rejected:Boolean(config.initialRejected)});
+  const guarded=guardTableURL(config,requestURL),query=guarded.query,rejected=guarded.rejected || Boolean(config.initialRejected);
   if (rejected) page={rows:[],total:0,page:1,pageSize:config.pageSize || 50,facets:{}};
   return render(config,page,query,{rejected});
 }
@@ -397,7 +402,7 @@ export function mountDataTable(el, config) {
   const root = el.matches?.('[data-datatable]') ? el : el.matches?.('table') ? el.closest('[data-datatable]') : el;
   if (!root) throw new Error('Mount the SSR table or its container');
   const doc = root.ownerDocument, win = doc.defaultView;
-  let query = {}, rawURL, rawPage, lastURL, rawRejected = false;
+  let query = {}, rawURL, rawPage, lastURL, rawRejected = Boolean(config.initialRejected), initialRejected = rawRejected;
   const rawConfig = config, approvals = new Map();
   if (checksEcho(config)) config = {...config,privacyCheck:value=>approvals.get(value) === true};
   const view = {density:config.density || 'comfortable', columnsVisible:config.columnsVisible || config.columns.map(c=>c.key), constantsVisible:[]};
@@ -491,26 +496,9 @@ export function mountDataTable(el, config) {
   function analytics(event) {
     win.dispatchEvent(new win.CustomEvent('opax:analytics', {detail:{event, properties:{table_id:config.id, page_type:config.pageType}}}));
   }
-  async function permit(value) {
-    if (!checksEcho(config)) return true;
-    if (approvals.has(value)) return approvals.get(value);
-    let safe=false;
-    try {
-      if (rawConfig.privacyCheck) safe=await rawConfig.privacyCheck(value) === true;
-      else {
-        const response=await win.fetch('/api/table/privacy',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({text:value})});
-        safe=response.ok && (await response.json()).safe === true;
-      }
-    } catch { /* Fail closed, including an unavailable shared index. */ }
-    if (safe) approvals.set(value,true);
-    return safe;
-  }
-  async function permitSet(values) {
-    const pending=[...new Set(values)].filter(v=>!approvals.has(v));
-    if (!pending.length) return;
-    if (await permit(pending.join('\n'))) for (const value of pending) approvals.set(value,true);
-    else await Promise.all(pending.map(permit));
-  }
+  const validator=createTablePrivacyValidator({privacyCheck:rawConfig.privacyCheck,fetch:(...args)=>win.fetch(...args),approvals});
+  const permit=value=>checksEcho(config) ? validator.permit(value) : Promise.resolve(true);
+  const permitSet=values=>checksEcho(config) ? validator.permitSet(values) : Promise.resolve();
   async function refresh() {
     clearTimeout(timer);
     if (win.location.href !== lastURL) captureURL();
@@ -522,7 +510,7 @@ export function mountDataTable(el, config) {
       if (checksEcho(config)) await permitSet([...rawQueryValues(captured.searchParams),...linkInputs()]);
       if (destroyed || version !== revision) return;
       const guarded=guardTableURL(config,captured);
-      rawURL=undefined; rawRejected=guarded.rejected; query=guarded.query;
+      rawURL=undefined; rawRejected=guarded.rejected || initialRejected; initialRejected=false; query=guarded.query;
       replaceURL(guarded.url); scrubHead();
     }
     const pending=structuredClone(query), previousPage=rawPage || page;
