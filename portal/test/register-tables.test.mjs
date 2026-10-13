@@ -126,6 +126,32 @@ test('real D1 instruments project registration dates and accept date sorting, nu
   const reports=await request('audit-reports?'+auditFilter);assert.equal(reports.status,200);
   assert.equal((await reports.json()).total,auditRows.filter(row=>row.year===reportYear).length);
   const health=await (await request('audit-reports?'+new URLSearchParams({'f.sectors':'["Health"]'}))).json();assert.equal(health.total,48);
+  // Register endpoints must also work after the privacy-mode removal lands.
+  const withoutPrivacyMetadata={
+    prepare(sql) {
+      assert.ok(!/FROM\s+table_private_identity\b/i.test(sql),'register query avoids identity SQL');
+      const statement=local.db.prepare(sql);
+      if(!/FROM\s+table_meta\b/i.test(sql))return statement;
+      return {...statement,async all(){
+        const result=await statement.all();
+        return {...result,results:result.results.filter(row=>!['privacy_fingerprint','privacy_stripped_lengths'].includes(row.key))};
+      }};
+    },
+    batch:local.db.batch.bind(local.db),
+  };
+  for(const [name,total]of [['instruments',rows.length],['audit-reports',auditRows.length]]) {
+    const previous=TABLE_DATASETS[name];
+    TABLE_DATASETS[name]={...previous};delete TABLE_DATASETS[name].privacy;
+    try {
+      const response=await tableApi(new Request('https://opax.test/api/table/'+name),{TABLE_DB:withoutPrivacyMetadata});
+      assert.equal(response.status,200,'register endpoint without a privacy mode');
+      assert.equal((await response.json()).total,total,'complete register count without a privacy mode');
+      assert.ok(response.headers.get('content-location'),'ordinary register state has a canonical API URL');
+      const csv=await tableApi(new Request('https://opax.test/api/table/'+name+'?format=csv'),{TABLE_DB:withoutPrivacyMetadata});
+      assert.equal(csv.status,200,'register CSV without a privacy mode');
+      assert.ok((await csv.text()).includes(name==='instruments'?'Registered':'Tabled'));
+    } finally {TABLE_DATASETS[name]=previous;}
+  }
  }finally{await local.close();}
 });
 
