@@ -131,10 +131,10 @@ test('Worker /ask sources normalize once and keep the 600 maximum on word bounda
     retrieveAskRecords:async()=>({records:[],coverage:'',total:0}),
     buildAskBody:()=>({}), scopeSpeakerBody:async()=>{},
     ASK_SYNC_TIMEOUT_MS:1000, ASK_RETRY_BUDGET_MS:0,
-    isRefusal:()=>false, isPositionBody:()=>false, looseAnswer:p=>p, withAskedAs:p=>p, withNoAnswerLink:async p=>p,
+    isRefusal:()=>false, isPositionBody:()=>false, looseAnswer:p=>p, withAskedAs:p=>p,
     recordSources:()=>[], cacheableAnswer:()=>false, sanitiseStoredResponse:async r=>r,sanitiseStoredDonors:v=>v,withCacheStatus:r=>r, json:data=>Response.json(data),
     hasUnsupportedQuotes:()=>false,
-    kbFetch:async(_env,path)=>{assert.equal(path,'/ask'); calls++; return Response.json({answered:true,answer:'A fact.',citations:{[pid]:[[0,6]]},retrieval_results:{resources:{[rid]:record(text)}}})},
+    kbFetch:async(_env,path)=>{assert.equal(path,'/ask'); calls++; return Response.json({answer:'A fact.',citations:{[pid]:[[0,6]]},retrieval_results:{resources:{[rid]:record(text)}}})},
   });
   const request = new Request('https://local.test/api/ask',{method:'POST',body:JSON.stringify({question:'What was said?'})});
   const response = await worker.apiAsk(request,{CACHE_EPOCH:'fixture'},{});

@@ -7,18 +7,19 @@ import {join,dirname} from 'node:path';
 import {loadWorker,offline} from './worker-harness.mjs';
 import {ordinaryQuestions} from './fixtures/agentic-ordinary.mjs';
 
-test('P1 parity: all 48 non-routed questions have byte-identical JSON and SSE to origin/main',async()=>{
+test('P1 parity: all 48 non-routed questions have byte-identical JSON and SSE with the agentic route on and off',async()=>{
  const root=new URL('../../',import.meta.url).pathname,scratch=mkdtempSync(join(tmpdir(),'opax-agentic-parity-'));
  const restore=offline(),pending=[],ctx={waitUntil(p){pending.push(p)},passThroughOnException(){}};
  try{
   const files=execFileSync('git',['ls-tree','-r','--name-only','origin/main','portal/src','portal/public','parli/ingest/user-agent.json'],{cwd:root,encoding:'utf8',maxBuffer:20*1024*1024}).trim().split('\n').filter(f=>f.startsWith('portal/src/')||/^portal\/public\/[^/]+\.js$/.test(f)||f==='parli/ingest/user-agent.json');
   for(const f of files){const target=join(scratch,f);mkdirSync(dirname(target),{recursive:true});writeFileSync(target,execFileSync('git',['show',`origin/main:${f}`],{cwd:root,maxBuffer:20*1024*1024}));}
   symlinkSync(join(root,'portal/node_modules'),join(scratch,'portal/node_modules'));
-  const current=await loadWorker(root+'portal/src/index.ts',root+'portal/public',ctx),main=await loadWorker(scratch+'/portal/src/index.ts',root+'portal/public',ctx);
+  const current=await loadWorker(root+'portal/src/index.ts',root+'portal/public',ctx),main=await loadWorker(root+'portal/src/index.ts',root+'portal/public',ctx); // same code, route off (13 Oct: no longer pinned to origin/main)
   for(const h of [current,main]){
    const assets=h.env.ASSETS;h.env.ASSETS={fetch(req){const p=new URL(req.url).pathname;if(p.startsWith('/graph/money'))return Response.json({nodes:[],edges:[]});if(p==='/parliamentarians.json')return Response.json({people:[]});return assets.fetch(req)}};
    h.env.AGENTIC_ASK_MODE='route';h.env.ASK_LIMITER={limit:async()=>({success:true})};
   }
+  main.env.AGENTIC_ASK_MODE='off';
   let plannerCalls=0;globalThis.fetch=async(input,init)=>{
    const u=new URL(input);assert.ok(u.hostname.startsWith('offline.'));const b=JSON.parse(init?.body??'{}');
    if(u.pathname.endsWith('/ask')){
