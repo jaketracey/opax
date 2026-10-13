@@ -20,6 +20,7 @@ function node() {
     innerHTML: '', textContent: '', value: '', hidden: false, attributes: {}, listeners: {},
     setAttribute(key, value) { this.attributes[key] = value; },
     removeAttribute(key) { delete this.attributes[key]; },
+    getAttribute(key) { return this.attributes[key] ?? null; },
     addEventListener(event, fn) { this.listeners[event] = fn; },
     removeEventListener(event) { delete this.listeners[event]; },
     querySelector(selector) { if (!children.has(selector)) children.set(selector, node()); return children.get(selector); },
@@ -27,7 +28,7 @@ function node() {
   };
 }
 function setup(fetch, mount = async () => ({ destroy() {}, setPaused() {} })) {
-  const context = { document: {querySelector:()=>null}, mountSuppliersTable:async()=>({destroy(){}}), mountContractsTable:async()=>({destroy(){}}), fetch, AbortController, URLSearchParams, history: { replaceState() {} }, shortDate, shortMoney, partyUrl,
+  const context = { document: {querySelector:()=>null}, mountSuppliersTable:async()=>({destroy(){}}), mountContractsTable:async()=>({destroy(){}}), fetch, AbortController, URLSearchParams, setTimeout, clearTimeout, history: { replaceState() {} }, shortDate, shortMoney, partyUrl,
     mountSupplierGrowth: () => {}, supplierDonations: async () => ({html: "", links: []}), sourceLineHTML,
     loadMapModule: async () => ({ mountMoneyMap: mount }) };
   runInNewContext(source, context);
@@ -170,4 +171,17 @@ test('a legacy contract search link reaches the shared supplier table', async ()
   assert.equal(options.count, 1);
   assert.equal(options.params.get('contract'), 'CN1');
   assert.match(root.innerHTML, /data-contracts-table/);
+});
+
+test('supplier entry: h1 title, h2 sections, and no Identity filler when the register has nothing', async () => {
+  const context = setup(async (url) => response(url === '/suppliers.json' ? { suppliers: [entry()] } : url === '/agencies.json' ? { agencies: [] } : { profiles: { [id]: profile({ identity: null, aliases: [] }) } }));
+  const root = node();
+  const handle = context.mountSupplierProfile(root, id, {});
+  await tick(); await tick();
+  const levels = [...root.innerHTML.matchAll(/<h([1-6])\b/g)].map((m) => Number(m[1]));
+  assert.equal(levels[0], 1);
+  assert.equal(levels.filter((l) => l === 1).length, 1);
+  assert.ok(levels.slice(1).every((l) => l === 2), `section headings are h2: ${levels}`);
+  assert.doesNotMatch(root.innerHTML, /id="supplier-identity"|href="#supplier-identity"|No business register details/);
+  handle.destroy();
 });

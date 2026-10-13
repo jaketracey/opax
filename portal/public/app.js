@@ -466,7 +466,7 @@ function participantLinksHTML(row) {
   return `<span class="speech-participants" aria-label="Participants in the debate">${participants.map(p => {
     const portrait = photoUrlFor(p.name);
     return `<a class="speech-participant" ${entityHrefAttr(subjectHash('person', p.name))}><span class="meta-portrait" data-speaker="${esc(p.name)}">${portrait ? `<img src="${esc(portrait)}" alt="" width="24" height="24" loading="lazy">` : ''}</span>${esc(p.name)}${p.role ? ` <span class="speech-participant-role">(${esc(p.role)})</span>` : ''}</a>`;
-  }).join('<span aria-hidden="true">, </span>')}</span>`;
+  }).join('<span class="speech-participant-sep" aria-hidden="true">,</span> ')}</span>`;
 }
 
 function speechIdentityHTML(row) {
@@ -1790,7 +1790,7 @@ async function openSupplierPage(name, params, manageFocus) {
   body.classList.remove("subject-person", "subject-party");
   body.innerHTML = '<p role="status">Loading suppliers…</p>';
   try {
-    const module = await import("/suppliers.js?v=d284bff348");
+    const module = await import("/suppliers.js?v=3c4ac39196");
     if (generation !== supplierPageGeneration) return;
     const helpers = {
       params,
@@ -1857,7 +1857,7 @@ async function openAgencyPage(name, params, manageFocus) {
   body.classList.remove("subject-person", "subject-party");
   body.innerHTML = '<p role="status">Loading agencies…</p>';
   try {
-    const module = await import("/agencies.js?v=p4g-20261010");
+    const module = await import("/agencies.js?v=agency-polish-20261014");
     if (generation !== supplierPageGeneration) return;
     const helpers = {
       params,
@@ -9230,7 +9230,7 @@ document.addEventListener("opax:explain", (e) => openExplain(e.detail));
 
 const GAMES = {
   ballot: { name: "Build your ballot", dialog: "dialog-ballot", body: "explore-ballot", module: "/ballot.js?v=49e7bc6382", mount: "mountBallot" },
-  tm: { name: "Time machine", dialog: "dialog-tm", body: "explore-tm", module: "/timemachine.js?v=b445c6bf79", mount: "mountTimeMachine" },
+  tm: { name: "Time machine", dialog: "dialog-tm", body: "explore-tm", module: "/timemachine.js?v=23b5006f1b", mount: "mountTimeMachine" },
   tide: { name: "The tide", dialog: "dialog-tide", body: "explore-tide", module: "/tide.js", mount: "mountTide" },
   quiz: { name: "The record quiz", dialog: "dialog-quiz", body: "explore-quiz", module: "/quiz.js?v=8614c47306", mount: "mountQuiz" },
   ledger: { name: "The ledger", dialog: "dialog-ledger", body: "explore-ledger", module: "/ledger.js?v=7cd6da6476", mount: "mountLedger" },
