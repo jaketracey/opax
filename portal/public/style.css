@@ -4326,7 +4326,7 @@ html[data-panel="chat"] footer { display: none; }
    the top beside the heading. The pill says "written by a model, not the
    record"; the panel and bronze edge used to say it a second time. */
 
-.bill-sentences, .bill-changes, .bill-affected { max-width: var(--size-readable); }
+.bill-summary :is(.bill-sentences, .bill-changes, .bill-affected) { max-width: var(--size-readable); }
 .bill-section-head { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-tight) var(--space-heading); margin-bottom: var(--space-heading); }
 #bill-body .bill-section-head .subject-section-title { margin: 0; }
 .bill-sentences p {
