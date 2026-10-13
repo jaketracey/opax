@@ -20,7 +20,7 @@ function node() {
 }
 function harness(fetch) {
   const context = { fetch, AbortController, URLSearchParams, history: { replaceState() {} }, procurementGraph, shortDate, shortMoney, sourceLineHTML };
-  runInNewContext(`Object.assign(this, (() => { ${shared}; return { json, lifecycle, coverageHTML, yearChart, contractHTML, mountYearChart, placeholderContract, procurementSourceHTML, procurementRailHTML }; })());`, context);
+  runInNewContext(`Object.assign(this, (() => { ${shared}; return { json, lifecycle, coverageHTML, yearChart, contractHTML, mountYearChart, placeholderContract, procurementSourceHTML, procurementRailHTML, statsHTML }; })());`, context);
   runInNewContext(source, context); return context;
 }
 const id = 'a-0123456789abcdef0123';

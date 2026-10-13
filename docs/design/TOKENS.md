@@ -61,7 +61,7 @@ node scripts/build_tokens.mjs --only app # or web, or docs
 | brand | `--bronze-rule` | none | rgba(160, 118, 27, 0.55) | rgba(217, 168, 74, 0.55) |  | Link underlines on the web: present, not heavy. |
 | brand | `--bronze-bright` | `bronzeBright` | #D9A84A | #5E400B |  | Bronze legible on navy: the mark, the focus ring on navy. |
 | line | `--divider-default` | `dividerDefault` | #B8B4A8 | #4C5047 |  | The top rule of a section; major content boundaries. |
-| line | `--divider-subtle` | `dividerSubtle` | #DFDCD2 | #30342D | #B8B4A8 / #4C5047 | Between rows, under subheadings, card outlines. |
+| line | `--divider-subtle` | `dividerSubtle` | #DFDCD2 (web `#E7E4DD`) | #30342D | #B8B4A8 / #4C5047 | Between rows, under subheadings, card outlines. |
 | line | `--line-control` | `lineControl` | #8D897B | #7E8378 |  | Field and segmented-control boundaries only (3.33:1). |
 | feedback | `--danger` | `danger` | #A4262C | #F08C8E |  | Errors and destructive actions. |
 | feedback | `--danger-pressed` | `dangerPressed` | #86191F | #F6AEB0 |  | A pressed destructive fill (the End call button). |
@@ -83,19 +83,19 @@ node scripts/build_tokens.mjs --only app # or web, or docs
 | `--line` | alias (same value) | `--divider-subtle` | nothing |
 | `--line-strong` | alias (same value) | `--line-control` | nothing |
 | `--heading-page` | alias (same value) | `--type-title` | nothing |
-| `--heading-section` | legacy value `600 1.4rem/1.35 var(--serif)` | `--type-heading` | 22.4px/1.35 to 22px/1.364 |
-| `--heading-subsection` | legacy value `600 1.125rem/1.35 var(--serif)` | `--type-subheading` | line height 1.35 to 1.333 |
-| `--heading-tracking` | legacy value `0.005em` | `no letter-spacing` | 0.005em to 0 |
-| `--space-1` | alias (same value) | `--space-line` | nothing |
-| `--space-2` | legacy value `0.4rem` | `--space-tight or --space-line` | 6.4px to 8px or 4px |
-| `--space-3` | legacy value `0.65rem` | `--space-row` | 10.4px (8px under 701px) to 10px |
-| `--space-4` | alias (same value) | `--space-block` | nothing |
-| `--space-5` | legacy value `1.6rem` | `--space-group` | 25.6px to 24px |
-| `--space-6` | legacy value `2.6rem` | `--space-group or --space-section` | 41.6px (32px under 701px) to 24px or 36px |
-| `--space-7` | legacy value `4.2rem` | `--space-section` | 67.2px (52px under 701px) to 56px (36px under 701px) |
-| `--row-gap` | legacy value `var(--space-3)` | `--space-row` | 10.4px (8px under 701px) to 10px |
-| `--sub-gap` | legacy value `var(--space-6)` | `--space-group` | 41.6px (32px under 701px) to 24px |
-| `--section-gap` | legacy value `var(--space-7)` | `--space-section` | 67.2px (52px under 701px) to 56px (36px under 701px) |
+| `--heading-section` | alias (same value) | `--type-heading` | nothing |
+| `--heading-subsection` | alias (same value) | `--type-subheading` | nothing |
+| `--heading-tracking` | legacy value `0` | `no letter-spacing` | nothing |
+| `--space-1` | alias (same value) | `--sp-4` | nothing |
+| `--space-2` | alias (same value) | `--sp-8` | nothing |
+| `--space-3` | alias (same value) | `--sp-12` | nothing |
+| `--space-4` | alias (same value) | `--sp-16` | nothing |
+| `--space-5` | alias (same value) | `--sp-24` | nothing |
+| `--space-6` | legacy value `var(--sp-48)` | `--sp-48 (--sp-32 under 701px)` | nothing |
+| `--space-7` | alias (same value) | `--space-section` | nothing |
+| `--row-gap` | alias (same value) | `--space-row` | nothing |
+| `--sub-gap` | legacy value `var(--sp-48)` | `--sp-48 (--sp-32 under 701px)` | nothing |
+| `--section-gap` | alias (same value) | `--space-section` | nothing |
 
 ### Deprecated app names
 

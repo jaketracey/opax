@@ -370,7 +370,8 @@ test('server-only pages write the app breadcrumb strip, hidden once the app boot
   const block=answerBlock('Title','Sentence.','',[{label:'Sitting weeks',href:'/sitting'},{label:'Week'}]);
   assert.match(block,/<section id="prerender" class="wrap"><h1>Title<\/h1><p>Sentence.<\/p><\/section>$/,'one title, no kicker');
   assert.ok(block.indexOf('prerender-crumbs')<block.indexOf('id="prerender"'));
-  const css=readFileSync(new URL('style.css',pub),'utf8');
+  // nav.css draws the trail (the old strip rules left style.css with the nav refactor).
+  const css=readFileSync(new URL('nav.css',pub),'utf8');
   assert.match(css,/\.spa-ready \.prerender-crumbs, \.spa-booting \.prerender-crumbs \{ display: none; \}/);
 });
 

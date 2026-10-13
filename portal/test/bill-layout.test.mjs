@@ -28,37 +28,37 @@ function flatSheet() {
 // text slot, then How it moved and the record's sections.
 const page = (sheet) => new JSDOM(`<!doctype html><html><head><style>${sheet}</style></head><body>
   <main id="main" class="compact"><div class="wrap"><section id="panel-bill" class="panel"><div id="bill-body">
-    <div class="subject-head bill-head">
+    <div class="ui-page-head bill-head">
       <p class="bill-status"><span class="ui-status">Passed</span></p>
       <h1 id="bill-title" class="bill-title" tabindex="-1">An Example Amendment Bill 2026</h1>
-      <p class="bill-short">Known as the Example Bill</p>
-      <p class="subject-tag bill-tag">Introduced 2 Jul 2026 in the House of Representatives · Finance</p>
-      <p class="bill-related">Builds on <a href="/bill/x">an earlier bill</a></p>
+      <p class="ui-page-meta bill-short">Known as the Example Bill</p>
+      <p class="ui-page-meta bill-tag">Introduced 2 Jul 2026 in the House of Representatives · Finance</p>
+      <p class="ui-page-meta bill-related">Builds on <a href="/bill/x">an earlier bill</a></p>
       <div class="page-actions bill-actions"></div>
     </div>
     <section class="growth-ask"></section>
-    <section class="bill-section bill-summary" data-accent="bills">
-      <div class="bill-section-head"><h3 class="subject-section-title">In short</h3></div>
+    <section class="ui-section bill-section bill-summary" data-accent="bills">
+      <div class="ui-section-head bill-section-head"><h3 class="ui-section-title">In short</h3></div>
       <div class="bill-sentences"><p>One sentence.</p></div>
       <ul class="bill-changes"><li>One change.</li></ul>
       <p class="bill-affected">Everyone.</p>
     </section>
     <div id="bill-text-slot"></div>
-    <section class="bill-section" data-accent="bills">
-      <h3 class="subject-section-title">How it moved</h3>
+    <section class="ui-section bill-section" data-accent="bills">
+      <h3 class="ui-section-title">How it moved</h3>
       <svg class="bill-ruler" width="100%" height="52"></svg>
       <details class="bill-stages"><summary>All 4 stages</summary>
-        <ol class="bill-dates" role="list"><li class="bill-date"></li></ol></details>
+        <ol class="ui-list bill-dates" role="list"><li class="bill-date"></li></ol></details>
     </section>
-    <section class="bill-section" data-accent="votes"></section>
-    <section class="bill-section"><ul class="subject-list bill-speeches" role="list"><li></li></ul></section>
+    <section class="ui-section bill-section" data-accent="votes"></section>
+    <section class="ui-section bill-section"><ul class="ui-list bill-speeches" role="list"><li></li></ul></section>
   </div></section></div></main></body></html>`).window;
 
 test('the selectors here are the ones openBill() and the section renderers draw', () => {
-  for (const markup of ['<div class="subject-head bill-head">', '<h1 id="bill-title" class="bill-title"',
-    '<section class="bill-section bill-summary" data-accent="bills"', '<div class="bill-sentences">',
-    '<section class="bill-section" data-accent="bills">', '<svg class="bill-ruler"', '<ol class="bill-dates"',
-    '<section class="bill-section" data-accent="votes"', '<ul class="subject-list bill-speeches"']) {
+  for (const markup of ['<div class="ui-page-head bill-head">', '<h1 id="bill-title" class="bill-title"', '<p class="ui-page-meta bill-short">',
+    '<p class="ui-page-meta bill-related">', '<section class="ui-section bill-section bill-summary" data-accent="bills"', '<div class="bill-sentences">',
+    '<section class="ui-section bill-section" data-accent="bills"', '<svg class="bill-ruler"', '<ol class="ui-list bill-dates"',
+    '<section class="ui-section bill-section" data-accent="votes"', '<ul class="ui-list bill-speeches"']) {
     assert.ok(app.includes(markup), `app.js still draws ${markup}`);
   }
 });

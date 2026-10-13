@@ -17,7 +17,7 @@ import { honestFetch, USER_AGENT, pauseSource, runSource } from './lib/http.mjs'
  * WHY IT MUST RUN: `wrangler deploy` on its own ships an unstamped index.html
  * against immutable Cache-Control. Deploy with `npm run deploy`, never by hand.
  *
- * Most modules app.js import()s at runtime (money-map.js, statemap.js, voice.js,
+ * Most modules app.js import()s at runtime (money-map.js, voice.js,
  * ...) are fetched by a path written into app.js, with a hand-bumped ?v= where it
  * matters; _headers gives them max-age=300 + a day of stale-while-revalidate.
  * The modules in MODULE_STAMPS are the exception: they load the who-is-who files
@@ -166,11 +166,11 @@ export const MODULE_STAMPS = [
   ['electorates.js', 'canonical-urls.js'],
   ['evidence.js', 'canonical-urls.js'],
   ['grants.js', 'donor-views.js'], ['grant-recipient.js', 'donor-views.js'],
-  ['grants.js', 'canonical-urls.js'],
+  ['grants.js', 'canonical-urls.js'], ['grants.js', 'labels.js'],
   ['grant-recipient.js', 'canonical-urls.js'],
   ['home-data.js', 'canonical-urls.js'],
   ['home.js', 'canonical-urls.js'],
-  ['ledger.js', 'canonical-urls.js'],
+  ['ledger.js', 'canonical-urls.js'], ['ledger.js', 'labels.js'],
   ['money-journeys.js', 'canonical-urls.js'],
   ['quiz.js', 'canonical-urls.js'],
   ['suppliers.js', 'canonical-urls.js'], ['suppliers.js', 'labels.js'], ['suppliers.js', 'supplier-growth.js'], ['agencies.js', 'suppliers.js'],
@@ -194,7 +194,7 @@ export const MODULE_STAMPS = [
   ['money-explain.js', 'labels.js'], ['money-explain.js', 'canonical-urls.js'],
   // The Explore tools and the loaders, restyled on tokens in pass 4G.
   ['app.js', 'ballot.js'], ['app.js', 'grants.js'], ['app.js', 'ledger.js'], ['app.js', 'matrix.js'], ['app.js', 'wordsdollars.js'],
-  ['app.js', 'thenvsnow.js'], ['app.js', 'statemap.js'], ['app.js', 'stages.js'], ['app.js', 'wombat.js'], ['app.js', 'ask-steps.js'],
+  ['app.js', 'thenvsnow.js'], ['app.js', 'stages.js'], ['app.js', 'wombat.js'], ['app.js', 'ask-steps.js'],
   ['home.js', 'home-data.js'], ['home.js', 'electorates.js'], ['home.js', 'money-map.js'],
 ]
 

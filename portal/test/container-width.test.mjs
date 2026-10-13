@@ -56,17 +56,17 @@ const TEMPLATES = {
     panel: `<section id="panel-subject" class="panel"><div id="subject-body">
       <div class="topic-reader-tools"><form class="topic-ask-form"></form></div>
       <div class="subject-grid topic-page-grid"><div class="subject-main">
-        <section class="topic-money"><figure class="chart"></figure></section>
-        <section class="topic-tide"><figure></figure></section><section class="topic-arc"><ol></ol></section>
+        <section class="topic-money ui-section"><figure class="chart"></figure></section>
+        <section class="topic-tide ui-section"><figure></figure></section><section class="topic-arc ui-section"><ol></ol></section>
       </div><aside class="infobox"></aside></div></div></section>`,
     // The main column's blocks fill their grid track, which runs from the grid's own width.
     blocks: ['#panel-subject', '.topic-reader-tools', '.topic-page-grid', '.topic-money', '.topic-page-grid .chart', '.topic-tide', '.topic-arc'],
   },
   bill: {
     panel: `<section id="panel-bill" class="panel"><div id="bill-body">
-      <div class="subject-head bill-head"><h1 id="bill-title" class="bill-title">A Bill</h1></div>
+      <div class="ui-page-head bill-head"><h1 id="bill-title" class="bill-title">A Bill</h1></div>
       <section class="growth-ask"></section>
-      <section class="bill-section" data-accent="bills"></section></div></section>`,
+      <section class="ui-section bill-section" data-accent="bills"></section></div></section>`,
     blocks: ['#panel-bill', '.bill-head', '.growth-ask', '#bill-body .bill-section'],
   },
   'money explain': {
@@ -83,9 +83,9 @@ const TEMPLATES = {
   },
   'electorate, instrument, party and person blocks': {
     panel: `<section id="panel-subject" class="panel"><div id="subject-body">
-      <dl class="el-demographics"><div><dt>Median age</dt><dd>37</dd></div></dl>
-      <dl class="instrument-facts"><dt>Registered</dt><dd>2010</dd></dl>
-      <details class="instrument-disclosure"><summary>Version</summary></details>
+      <dl class="ui-kv el-demographics" data-variant="ledger"><div><dt>Median age</dt><dd>37</dd></div></dl>
+      <dl class="ui-kv instrument-facts"><div><dt>Registered</dt><dd>2010</dd></div></dl>
+      <div class="instrument-disclosures"><details class="ui-disclosure instrument-disclosure"><summary>Version</summary></details></div>
       <section class="party-receipts"></section><section id="person-pay"></section></div></section>`,
     blocks: ['.el-demographics', '.instrument-facts', '.instrument-disclosure', '.party-receipts', '#person-pay'],
   },
@@ -97,11 +97,11 @@ test('the selectors here are the ones the pages draw', () => {
   const drawn = [
     ['app', 'class="subject-head topic-index-head"'], ['app', 'class="topic-index-tools"'], ['app', 'class="topic-index-cols"'],
     ['app', 'class="topic-index-list"'], ['app', 'class="topic-index-coverage"'], ['app', 'classList.add("topic-page-grid")'],
-    ['app', 'class="topic-reader-tools"'], ['app', 'class="topic-money"'], ['app', '<section class="topic-tide">'],
-    ['app', '<div class="subject-head bill-head">'], ['app', 'class="party-receipts"'], ['app', 'slot.id = "person-pay"'],
-    ['explain', 'class="mx-page"'], ['electorates', 'class="el-demographics"'], ['shell', '<section id="panel-declared" class="panel"'],
-    ['shell', 'id="report-stats"'], ['shell', '<div class="wrap masthead">'], ['instruments', 'class="instrument-facts"'],
-    ['instruments', 'class="instrument-disclosure"'],
+    ['app', 'class="topic-reader-tools"'], ['app', 'class="topic-money ui-section"'], ['app', 'class="topic-tide ui-section"'],
+    ['app', 'class="ui-page-head bill-head"'], ['app', 'class="party-receipts"'], ['app', 'slot.id = "person-pay"'],
+    ['explain', 'class="mx-page"'], ['electorates', 'class="ui-kv el-demographics"'], ['shell', '<section id="panel-declared" class="panel"'],
+    ['shell', 'id="report-stats"'], ['shell', '<div class="wrap masthead">'], ['instruments', 'class="ui-kv instrument-facts"'],
+    ['instruments', 'class="ui-disclosure instrument-disclosure"'],
   ];
   for (const [file, markup] of drawn) assert.ok(sources[file].includes(markup), `${file} still draws ${markup}`);
 });

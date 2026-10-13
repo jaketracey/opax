@@ -228,12 +228,25 @@ function webDeclarations(source) {
     ),
   ])
   const space = own(source.space)
+  const webSpace = (value) => (typeof value === 'number' ? rem(value) : value)
   push(
     'space: one rhythm',
     space.map(([name, token]) =>
-      decl(`--space-${kebab(name)}`, token.web?.value ?? rem(token.$value), firstSentence(token.$description)),
+      decl(`--space-${kebab(name)}`, webSpace(token.web?.value ?? token.$value), firstSentence(token.$description)),
     ),
   )
+  // Web-only primitives: the steps the roles are built from, for component
+  // internals that have no role of their own. Never in the app.
+  const scale = source.webScale
+  if (scale) {
+    push('space scale (web primitives): 4/8 steps, named by their px', scale.space.map((px) => decl(`--sp-${px}`, rem(px))))
+    push('type scale (web primitives): the six role sizes', scale.text.map((px) => decl(`--text-${px}`, rem(px))))
+    push('weight and leading (web primitives)', [
+      ...own(scale.weight).map(([name, value]) => decl(`--weight-${kebab(name)}`, String(value))),
+      ...own(scale.leading).map(([name, value]) => decl(`--leading-${kebab(name)}`, String(value))),
+    ])
+    push('rings: an edge drawn as a shadow, colour supplied beside it', own(scale.ring).map(([name, value]) => decl(`--ring-${kebab(name)}`, value)))
+  }
   push(
     'radius: press = pill, read = sm, hold = md',
     own(source.radius).map(([name, token]) =>
@@ -277,24 +290,31 @@ function webDeclarations(source) {
     deprecated.map(([name, entry]) => decl(name, entry.alias ? `var(${entry.alias})` : entry.value, deprecationNote(entry))),
   )
 
+  // A role's web value may step up at regular width (701px+) and again at wide
+  // width (1101px+); without a web block the app's regular step applies.
+  const regularOf = (token) => (token.web ? token.web.regular : token.regular)
   const regular = space
-    .filter(([, token]) => token.regular !== undefined && !token.web)
-    .map(([name, token]) => decl(`--space-${kebab(name)}`, rem(token.regular)))
+    .filter(([, token]) => regularOf(token) !== undefined)
+    .map(([name, token]) => decl(`--space-${kebab(name)}`, webSpace(regularOf(token))))
+  const wide = space
+    .filter(([, token]) => token.web?.wide !== undefined)
+    .map(([name, token]) => decl(`--space-${kebab(name)}`, webSpace(token.web.wide)))
   const compact = deprecated.filter(([, entry]) => entry.compact).map(([name, entry]) => decl(name, entry.compact))
   const highContrast = source.themes.web.prefersContrast
     ? roles
         .filter((role) => role.token.highContrast !== undefined && !role.token.web?.value)
         .map((role) => decl(role.web, themes.lightHighContrast[role.name]))
     : []
-  return { groups, regular, compact, highContrast }
+  return { groups, regular, wide, compact, highContrast }
 }
 
 export function buildCss(source) {
-  const { groups, regular, compact, highContrast } = webDeclarations(source)
+  const { groups, regular, wide, compact, highContrast } = webDeclarations(source)
   const blocks = [
     [':root {', `  color-scheme: ${source.themes.web.colorScheme};`, ...groups.flatMap(({ title, lines }) => ['', `  /* ${title} */`, ...lines]), '}'].join('\n'),
   ]
   if (regular.length) blocks.push(`@media (min-width: ${source.layout.regular.$value + 1}px) {\n  :root {\n${regular.map((line) => `  ${line}`).join('\n')}\n  }\n}`)
+  if (wide.length) blocks.push(`@media (min-width: ${source.layout.wide.$value + 1}px) {\n  :root {\n${wide.map((line) => `  ${line}`).join('\n')}\n  }\n}`)
   if (compact.length) blocks.push(`@media (max-width: ${source.layout.regular.$value}px) {\n  :root {\n${compact.map((line) => `  ${line}`).join('\n')}\n  }\n}`)
   if (highContrast.length) blocks.push(`@media (prefers-contrast: more) {\n  :root {\n${highContrast.map((line) => `  ${line}`).join('\n')}\n  }\n}`)
   return blocks.join('\n') + '\n'

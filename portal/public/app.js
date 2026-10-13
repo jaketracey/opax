@@ -283,7 +283,7 @@ function donorBalanceHTML(flows) {
     ? `; other parties here ${otherList.length === 1 ? "is" : "are"} ${otherList.map(esc).join(", ")}`
     : "";
 
-  return `<section class="donor-balance" aria-labelledby="donor-balance-heading">
+  return `<section class="donor-balance" id="donor-balance" aria-labelledby="donor-balance-heading">
     <h3 class="subject-section-title" id="donor-balance-heading">The balance, year by year</h3>
     <div class="tiles balance-tiles">
       <div class="tile"><b>${srcFigure(fmtMoney(totals.coalition), `Total to Coalition parties ${fmtMoney(totals.coalition)}, AEC source`)}</b><span>to Coalition parties</span></div>
@@ -1445,8 +1445,11 @@ async function openMoneyRecords(kind, params) {
   const generation = ++moneyRecordsGeneration;
   moneyRecordsHandle?.destroy(); moneyRecordsHandle = null;
   const grants = kind === 'grants';
-  $('money-records-title').hidden = false;
+  $('money-records-head').hidden = false;
   $('money-records-title').textContent = grants ? 'Government grants' : 'Political receipts';
+  $('money-records-meta').textContent = grants
+    ? 'Published grant awards by recipient, program and electorate, checked against the donor registers'
+    : 'Disclosed receipts, payer by payer, from federal and state returns';
   const body = $('money-records-body'); body.innerHTML = '<p class="status">Loading the records…</p>';
   try {
     if (grants && !params.has('program') && !params.has('open') && !params.has('largest')) {
@@ -1456,11 +1459,11 @@ async function openMoneyRecords(kind, params) {
       moneyRecordsHandle = {destroy() {controller.abort();}};
       const handle = await mod.mountGrantsTable(body, params, {signal: controller.signal});
       if (generation !== moneyRecordsGeneration) {handle.destroy(); return;}
-      $('money-records-title').hidden = true;
+      $('money-records-head').hidden = true;
       moneyRecordsHandle = handle;
       return;
     }
-    const mod = await import(grants ? '/grants.js?v=14051595db' : '/ledger.js?v=6add761bc8');
+    const mod = await import(grants ? '/grants.js?v=be28a3a894' : '/ledger.js?v=5f605523ce');
     if (generation !== moneyRecordsGeneration) return;
     body.replaceChildren();
     // Both modules report their shareable state (open file, filters) so the
@@ -1487,7 +1490,7 @@ async function openMoneyRecords(kind, params) {
 async function openMoneyExplain(params, manageFocus) {
   const generation = ++moneyRecordsGeneration;
   moneyRecordsHandle?.destroy(); moneyRecordsHandle = null;
-  $('money-records-title').hidden = true;
+  $('money-records-head').hidden = true;
   const body = $('money-records-body');
   try {
     const mod = await import('/money-explain.js?v=07268f6dea');
@@ -1505,11 +1508,11 @@ async function openMoneyExplain(params, manageFocus) {
 async function openGrantRecipient(jurisdiction, id, manageFocus) {
   const generation = ++moneyRecordsGeneration;
   moneyRecordsHandle?.destroy(); moneyRecordsHandle = null;
-  $('money-records-title').hidden = true;
+  $('money-records-head').hidden = true;
   const body = $('money-records-body');
   body.innerHTML = '<div class="grant-recipient-page" aria-busy="true"><p class="visually-hidden" role="status">Loading recipient records</p><div class="answer-skeleton grant-recipient-skeleton" aria-hidden="true"><i style="width:62%;height:2.75rem"></i><i style="width:38%"></i><i style="width:100%;height:6rem"></i><i style="width:84%"></i><i style="width:96%"></i><i style="width:74%"></i></div></div>';
   try {
-    const mod = await import('/grant-recipient.js?v=13115e72de');
+    const mod = await import('/grant-recipient.js?v=692ca72a19');
     if (generation !== moneyRecordsGeneration) return;
     moneyRecordsHandle = mod.mountGrantRecipient(body, { jurisdiction, id, manageFocus,
       onTitle(name) {
@@ -1526,7 +1529,7 @@ async function openGrantRecipient(jurisdiction, id, manageFocus) {
 async function openLargestGrants(month, manageFocus) {
   const generation = ++moneyRecordsGeneration;
   moneyRecordsHandle?.destroy(); moneyRecordsHandle = null;
-  $('money-records-title').hidden = true;
+  $('money-records-head').hidden = true;
   const body = $('money-records-body');
   try {
     const mod = await import('/grants-largest.js?v=largest-20260929b');
@@ -1604,10 +1607,10 @@ async function mountMoney(jurParam, industry, params = new URLSearchParams()) {
   if (moneyMapHandle) { moneyMapHandle.destroy(); moneyMapHandle = null; moneyMapJur = null; }
   const root = $("money-map-root");
   root.classList.remove("show-key");
-  root.innerHTML = `<p class="status" style="margin:0;padding:1rem 1.25rem">Loading the map…</p>`;
+  root.innerHTML = `<p class="ui-status-line money-map-status" role="status">Loading the map…</p>`;
   const cfg = MONEY_JURISDICTIONS[jur];
   try {
-    const [{ mountMoneyMap }, data, journeysModule, researchModule, recordsModule] = await Promise.all([import("/money-map.js?v=6a5d1961fa"), loadMoneyFile(jur), import("/money-journeys.js?v=mobile-picker-20260908"), import("/map-research.js?v=4607a40a6c"), import("/money-records.js?v=ia-ux-20260908-2")]);
+    const [{ mountMoneyMap }, data, journeysModule, researchModule, recordsModule] = await Promise.all([import("/money-map.js?v=6a5d1961fa"), loadMoneyFile(jur), import("/money-journeys.js?v=wds-money-20261012"), import("/map-research.js?v=726170a1ba"), import("/money-records.js?v=ia-ux-20260908-2")]);
     if (!isCurrent()) return; // switched again while loading
     const fine = $("money-fineprint");
     if (fine) fine.innerHTML = moneyFineprintHTML(jur, data?.meta);
@@ -1640,7 +1643,7 @@ async function mountMoney(jurParam, industry, params = new URLSearchParams()) {
     if (legend) {
       legend.id = 'money-map-key';
       const key = document.createElement('button');
-      key.type = 'button'; key.className = 'mm-key-toggle'; key.textContent = 'Map key';
+      key.type = 'button'; key.className = 'ui-button mm-key-toggle'; key.dataset.uiSize = 'compact'; key.textContent = 'Map key';
       key.setAttribute('aria-expanded', 'false'); key.setAttribute('aria-controls', legend.id);
       legend.inert = true;
       const toggleKey = (open) => {
@@ -1665,8 +1668,8 @@ async function mountMoney(jurParam, industry, params = new URLSearchParams()) {
     if (!isCurrent()) return;
     root.textContent = "";
     const p = document.createElement("p");
-    p.className = "status error";
-    p.style.cssText = "margin:0;padding:1rem 1.25rem";
+    p.className = "ui-empty money-map-status";
+    p.dataset.variant = "error";
     // A plain sentence and a retry, never the raw message (state rules).
     p.textContent = "The map could not load just now. ";
     const a = document.createElement("a");
@@ -1748,7 +1751,7 @@ async function openSupplierPage(name, params, manageFocus) {
   body.classList.remove("subject-person", "subject-party");
   body.innerHTML = '<p role="status">Loading suppliers…</p>';
   try {
-    const module = await import("/suppliers.js?v=127c317594");
+    const module = await import("/suppliers.js?v=7397bd2cdb");
     if (generation !== supplierPageGeneration) return;
     const helpers = {
       params,
@@ -1788,7 +1791,7 @@ async function openConnectionsPage(params, manageFocus) {
   if (status) status.textContent = "Opening the records…";
   if (manageFocus) $("connections-title")?.focus({ preventScroll: true });
   try {
-    const module = await import("/connections.js");
+    const module = await import("/connections.js?v=wds-money-20261012");
     if (generation !== connectionsGeneration) return;
     connectionsPage = module.mountConnections($("connections-body"), {
       params,
@@ -2033,7 +2036,7 @@ async function route() {
       document.title = 'Grant recipient · OPAX';
       setCrumbs(crumbsFor('/money/grants', 'Recipient'));
       if (hasEntityId(id)) openGrantRecipient(jurisdiction, id, manageFocus);
-      else $("money-records-body").textContent = "Recipient not recorded.";
+      else { $("money-records-head").hidden = true; $("money-records-body").textContent = "Recipient not recorded."; }
     } else if (segs[1] === 'grants' && /^\d{4}-\d{2}$/.test(params.get('largest') || '')) {
       // /money/grants?jur=federal&largest=2026-08: the month's largest awards (the daily edition links here).
       document.title = 'Largest grants · OPAX';
@@ -2121,7 +2124,6 @@ async function route() {
       renderAskFilterChips(); // preserve an explicitly shared speech-only scope
       runAsk(q);
     } else if (!q && $("ask-result").hidden) {
-      setFrontPageHidden(true);
       if (!takeEarlyAsk()) focusEntry("ask-input");
     }
   }
@@ -3022,29 +3024,30 @@ function sourceItem(s, num, passage = false) {
   return li;
 }
 
+/**
+ * One speech in a report's reading list: the record's title (serif), the
+ * speaker's byline, the brief (OPAX's own sentence, in the sans) and the way
+ * into the record.
+ */
 function keySpeechItem(speech) {
-  const article = document.createElement("article");
-  article.className = "report-reading-item";
+  const item = document.createElement("li");
+  item.className = "report-reading-item";
 
-  const title = document.createElement("h3");
-  title.className = "report-speech-title";
+  const title = document.createElement("h4");
+  title.className = "ui-row-title";
   title.textContent = isMultiSpeaker(speech) ? displayTitle(speech) : speech.title || displayTitle(speech);
 
   const byline = document.createElement("div");
-  byline.className = "report-speech-byline";
   if (speech.speaker && !isUnattributed(speech)) {
-    const portrait = document.createElement("span");
-    portrait.className = "meta-portrait";
-    portrait.dataset.speaker = speech.speaker;
-    byline.appendChild(portrait);
+    byline.className = "ui-byline";
+    byline.appendChild(bylinePortrait(speech.speaker));
   }
   const identity = document.createElement("div");
-  identity.className = "report-speech-identity";
   const nameLine = document.createElement("div");
-  nameLine.className = "report-speech-name-line";
+  nameLine.className = "ui-byline-who";
   if (speech.speaker && !isMultiSpeaker(speech)) {
     const speaker = document.createElement("a");
-    speaker.className = "report-speech-speaker";
+    speaker.className = "ui-byline-name";
     if (hasEntityId(speech.speaker)) speaker.href = speakerHref(speech, subjectHash("person", speech.speaker));
     speaker.textContent = speech.speaker;
     nameLine.appendChild(speaker);
@@ -3059,8 +3062,8 @@ function keySpeechItem(speech) {
     party.innerHTML = partyChipHTML(speech.party);
     nameLine.appendChild(party);
   }
-  const quiet = document.createElement("p");
-  quiet.className = "report-speech-meta";
+  const quiet = document.createElement("span");
+  quiet.className = "ui-byline-meta";
   const parliament = speech.state
     ? `${STATE_NAMES[speech.state] || speech.state} Parliament`
     : null;
@@ -3069,17 +3072,25 @@ function keySpeechItem(speech) {
   byline.appendChild(identity);
 
   const brief = document.createElement("p");
-  brief.className = "report-speech-brief";
+  brief.className = "ui-row-text";
   brief.textContent = speech.brief;
 
   const link = document.createElement("a");
-  link.className = "report-speech-link";
+  link.className = "ui-source-link";
   link.href = `/doc/${speech.slug}`;
   link.textContent = "Read the speech";
 
-  article.append(title, byline, brief, link);
-  decorateMetaPortraits(article);
-  return article;
+  item.append(title, byline, brief, link);
+  return item;
+}
+
+/** The reading list: one row per speech, a hairline between (each holds several lines). */
+function reportReadingList(moments) {
+  const list = document.createElement("ol");
+  list.className = "ui-list report-reading-list";
+  list.dataset.density = "airy";
+  list.replaceChildren(...moments.map(keySpeechItem));
+  return list;
 }
 
 // One engraved time scale for answers and searches. The geometry stays fixed
@@ -3946,8 +3957,8 @@ async function renderDeclaredPage(params, manageFocus) {
   const buckets = [...new Set(items.map((x) => x.bucket).filter(Boolean))]
     .sort((a, b) => (DECLARED_BUCKET_LABELS[a] || a).localeCompare(DECLARED_BUCKET_LABELS[b] || b));
   const parties = [...new Set(items.map((x) => partyByName.get(String(x.name || "").toLowerCase())).filter(Boolean))].sort();
-  bucketSelect.innerHTML = `<option value="">all categories</option>${buckets.map((b) => `<option value="${esc(b)}">${esc(DECLARED_BUCKET_LABELS[b] || b)}</option>`).join("")}`;
-  partySelect.innerHTML = `<option value="">all parties</option>${parties.map((p) => `<option value="${esc(p)}">${esc(p)}</option>`).join("")}`;
+  bucketSelect.innerHTML = `<option value="">All</option>${buckets.map((b) => `<option value="${esc(b)}">${esc(DECLARED_BUCKET_LABELS[b] || b)}</option>`).join("")}`;
+  partySelect.innerHTML = `<option value="">All</option>${parties.map((p) => `<option value="${esc(p)}">${esc(p)}</option>`).join("")}`;
   bucketSelect.value = buckets.includes(bucket) ? bucket : "";
   partySelect.value = parties.includes(party) ? party : "";
   const result = declaredPage(items, partyByName, {
@@ -4142,6 +4153,7 @@ async function renderDonorInterests(name, sections) {
   const key = currentSubjectKey;
   const slot = document.createElement("section");
   slot.className = "donor-interests";
+  slot.id = "donor-interests";
   sections.appendChild(slot);
   // The photo map too: photoUrlFor() answers null until it is in, which drew
   // every row here as a blank circle.
@@ -4385,6 +4397,7 @@ async function renderDonorStateMoney(name, sections) {
   const key = currentSubjectKey;
   const slot = document.createElement("section");
   slot.className = "state-money";
+  slot.id = "state-money";
   sections.appendChild(slot);
   const jurs = Object.keys(MONEY_JURISDICTIONS).filter((j) => j !== "federal");
   const files = await Promise.all(jurs.map((j) => loadMoneyFile(j)));
@@ -4432,6 +4445,7 @@ async function renderDonorStateMoney(name, sections) {
 async function renderDonorTaxCharity(name, sections) {
   const key = currentSubjectKey;
   const slot = document.createElement("section");
+  slot.id = "donor-tax";
   slot.hidden = true;
   sections.appendChild(slot);
   try {
@@ -4896,26 +4910,29 @@ async function renderExpenseGlossary() {
   if (!body || expenseGlossaryDone) return;
   const d = await loadExpenseDefs();
   if (!d) {
-    body.innerHTML = '<p class="status error">The category definitions could not be loaded.</p>';
+    body.innerHTML = '<p class="ui-empty" data-variant="error">The category definitions could not be loaded. <a href="/expenses">Try again</a></p>';
     return;
   }
   expenseGlossaryDone = true;
   const meta = d.meta || {};
-  body.innerHTML = (d.groups || []).map((g) => {
-    const rows = d.categories.filter((c) => c.group === g.id);
-    if (!rows.length) return "";
-    return `<h3>${esc(g.title)}</h3>
-      ${g.blurb ? `<p>${esc(g.blurb)}</p>` : ""}
-      <dl class="defs">${rows.map((c) => {
+  // Each group is a section; each category a row: its name, what it covers,
+  // and the IPEA page it comes from.
+  const groups = (d.groups || []).map((g) => [g, d.categories.filter((c) => c.group === g.id)]).filter(([, rows]) => rows.length);
+  const count = groups.reduce((n, [, rows]) => n + rows.length, 0);
+  const line = $("expenses-meta");
+  if (line && count) line.textContent = `Parliamentary expenses · ${count} categories in ${groups.length} groups`;
+  body.innerHTML = groups.map(([g, rows]) => `<section class="ui-section">
+      <h2 class="ui-section-title">${esc(g.title)}</h2>
+      ${g.blurb ? `<p class="ui-section-note">${esc(g.blurb)}</p>` : ""}
+      <ul class="ui-list defs">${rows.map((c) => {
         const url = safeUrl(c.url);
-        return `<dt>${esc(c.name)}</dt>
-          <dd><p>${esc(c.text)}${c.note ? ` ${esc(c.note)}` : ""}</p>
-            <p class="defs-src">${esc(c.source || "")}${url ? ` <a href="${esc(url)}" rel="noopener" target="_blank">source ↗︎</a>` : ""}</p>
-          </dd>`;
-      }).join("")}</dl>`;
-  }).join("") +
+        return `<li><h3 class="ui-row-name">${esc(c.name)}</h3>
+          <p class="ui-row-text">${esc(c.text)}${c.note ? ` ${esc(c.note)}` : ""}</p>
+          <p class="ui-row-meta">${esc(c.source || "")}${url ? ` <a href="${esc(url)}" rel="noopener" target="_blank">source ↗︎</a>` : ""}</p>
+        </li>`;
+      }).join("")}</ul></section>`).join("") +
     (meta.licence_note
-      ? `<h3>Sources and licences</h3><p class="fineprint">${licenceNoteHTML(meta)}</p>`
+      ? `<section class="ui-section"><h2 class="ui-section-title">Sources and licences</h2><p class="fineprint">${licenceNoteHTML(meta)}</p></section>`
       : "");
 }
 
@@ -5397,10 +5414,10 @@ async function renderPersonTopics(name, sections, onRecord = () => {}) {
       slot.innerHTML = `
         <div class="person-topics-head">
           <h3 class="subject-section-title">What they talk about</h3>
-          <div class="quiet-toggle" role="group" aria-label="Speech era">
-            <button type="button" data-person-era="all" aria-pressed="${era === "all"}">All</button>
-            <button type="button" data-person-era="then" aria-pressed="${era === "then"}">Then</button>
-            <button type="button" data-person-era="now" aria-pressed="${era === "now"}">Now</button>
+          <div class="ui-segmented" data-ui-size="compact" role="group" aria-label="Speech era">
+            <button type="button" class="ui-button" data-person-era="all" aria-pressed="${era === "all"}">All</button>
+            <button type="button" class="ui-button" data-person-era="then" aria-pressed="${era === "then"}">Then</button>
+            <button type="button" class="ui-button" data-person-era="now" aria-pressed="${era === "now"}">Now</button>
           </div>
         </div>
         ${chart}
@@ -5526,7 +5543,8 @@ async function openSubject(kind, name, manageFocus, params = new URLSearchParams
       const module = await loadElectorateModule();
       if (currentSubjectKey !== key) return;
       await module.renderProfile({ body, slug: name, on: params.get("asof") || "",
-        isActive: () => currentSubjectKey === key, setCrumbs, goRoute, manageFocus });
+        isActive: () => currentSubjectKey === key, setCrumbs, goRoute, manageFocus,
+        loadPhotos: () => loadPhotoMap().then(() => photoUrlFor) });
     } catch {
       if (currentSubjectKey === key) body.innerHTML = `<h1 id="subject-title" tabindex="-1">Electorate</h1><p>The electorate's record could not load just now. <a href="${esc(location.pathname + location.search)}">Try again</a></p>`;
     }
@@ -5637,9 +5655,11 @@ async function openSubject(kind, name, manageFocus, params = new URLSearchParams
     if (!isParty) head.insertAdjacentHTML("beforeend", sourceLineHTML({
       updated: moneyData.meta?.generated || "", source: "AEC annual returns", state: "totals are a floor",
       originals: [{ label: "AEC Transparency Register", href: "https://transparency.aec.gov.au/" },
+        { label: "Funding records", href: `/money/receipts?${new URLSearchParams({ focus: node.id })}` },
         { label: "The money map's data (JSON)", href: "/graph/money.json" }],
       facts: entryFacts,
-      notes: [entryNote],
+      notes: [entryNote, "The parties with the largest disclosed sums."],
+      licence: 'AEC Transparency Register returns, <a href="https://creativecommons.org/licenses/by/4.0/" rel="license noopener" target="_blank">CC BY 4.0 ↗︎</a>.',
     }));
     const askAbout = isParty
       ? { href: askHash(`What has parliament said about ${partyAskName(node.label)}?`), label: "Ask what parliament said about them" }
@@ -5671,7 +5691,7 @@ async function openSubject(kind, name, manageFocus, params = new URLSearchParams
         partyDots: !isParty, // donor page rows are parties; party page rows are donors
       })}
       ${!isParty && node.contracts ? `<p class="entry-more"><a href="/subject/supplier?donor=${encodeURIComponent(node.id)}">Their supplier records</a></p>` : ""}
-      ${sourceLineHTML({
+      ${!isParty ? "" /* a donor's one source line is the head's, which carries these originals and notes */ : sourceLineHTML({
         updated: moneyData.meta?.generated || "", dateLabel: isParty ? "Map updated" : "Updated", source: "AEC annual returns", state: "totals are a floor",
         originals: [{ label: "AEC Transparency Register", href: "https://transparency.aec.gov.au/" },
           { label: "Funding records", href: `/money/receipts?${new URLSearchParams(isParty ? { party: node.id } : { focus: node.id })}` },
@@ -5685,23 +5705,24 @@ async function openSubject(kind, name, manageFocus, params = new URLSearchParams
     if (!isParty) sections.insertAdjacentHTML("beforeend", donorBalanceHTML(flows));
     if (!isParty) {
       const evidenceSlot = document.createElement('section');
+      evidenceSlot.id = 'entry-evidence';
       evidenceSlot.hidden = true;
       sections.appendChild(evidenceSlot);
       import('/evidence.js').then(({mountEvidence}) => {
         if (currentSubjectKey === key && evidenceSlot.isConnected)
           return mountEvidence(evidenceSlot, {name: node.label}, {alive: () => currentSubjectKey === key && evidenceSlot.isConnected});
-      }).catch(() => {});
+      }).catch(() => {}).then(() => refreshEntryRail(sections, rail));
     }
-    if (!isParty) renderDonorInterests(node.label, sections);
-    if (!isParty) renderDonorStateMoney(node.label, sections);
-    if (!isParty) renderDonorTaxCharity(node.label, sections);
     const settle = (p) => Promise.resolve(p).then(() => refreshEntryRail(sections, rail));
+    if (!isParty) settle(renderDonorInterests(node.label, sections));
+    if (!isParty) settle(renderDonorStateMoney(node.label, sections));
+    if (!isParty) settle(renderDonorTaxCharity(node.label, sections));
     if (isParty) {
       settle(renderPartyMembers(node.label, body, key));
       settle(renderPartyDebts(node.label, sections));
       settle(renderPartyBillDivisions(node.label, sections, key));
     }
-    renderDonorAccess(node.label, sections);
+    settle(renderDonorAccess(node.label, sections));
     if (isParty) await settle(renderPartyMentions(node.label, sections, key));
     else {
       const mentions = Object.assign(document.createElement("section"), { id: "entry-mentions" });
@@ -6033,7 +6054,11 @@ const PARTY_RAIL = [
   ["party-entities", "Associated entities"], ["party-bills", "Bills they divided on"], ["entry-mentions", "In parliament"],
   ["entry-news", "In the news"],
 ];
-const DONOR_RAIL = [["entry-flows", "Where the money went"], ["entry-mentions", "In parliament"], ["entry-news", "In the news"]];
+const DONOR_RAIL = [
+  ["entry-flows", "Where the money went"], ["donor-balance", "The balance, year by year"], ["entry-evidence", "Across the record"],
+  ["donor-interests", "Named in members' registers"], ["state-money", "State commissions"], ["donor-tax", "Charity and tax"],
+  ["subject-access", "Meetings and lobbying"], ["entry-mentions", "In parliament"], ["entry-news", "In the news"],
+];
 function entryRailHTML({ facts = [], actions = [], extra = "" } = {}) {
   return `<nav class="entry-rail-nav" aria-labelledby="entry-rail-head" hidden>
       <p class="entry-rail-head" id="entry-rail-head">On this page</p>
@@ -6253,8 +6278,8 @@ function topicMoneyHTML(ind) {
   const total = donors.reduce((a, n) => a + (n.total || 0), 0);
   const rankedDonors = donorRows(donors.map(n => [n.label,n.total || 0]), donorViewIndex, 6);
   return `
-    <h3 class="subject-section-title">The money beside the words</h3>
-    <p style="margin:0.2rem 0 0.6rem">While parliament debated this, ${esc(industryLabel(ind))}
+    <h3 class="subject-section-title ui-section-title">The money beside the words</h3>
+    <p class="ui-section-note">While parliament debated this, ${esc(industryLabel(ind))}
       interests disclosed <b>${esc(fmtMoney(total))}</b> in donations to political parties.</p>
     ${barList(rankedDonors, { fmt: fmtMoney, heading: `Largest ${industryLabel(ind)} donors`,
       linkTo: (nm) => subjectHash("donor", nm) })}
@@ -6324,8 +6349,9 @@ function topicTideHTML(data, slug, phrase) {
       <strong>${pct}</strong><small>${Number(point.count || 0).toLocaleString()}</small>
     </a>`;
   }).join("");
-  return `<section class="topic-tide">
-    <figure><figcaption>The share over time</figcaption><div class="topic-tide-bars">${bars}</div></figure>
+  return `<section class="topic-tide ui-section">
+    <h3 class="ui-section-title">The share over time</h3>
+    <figure aria-label="The share over time"><div class="topic-tide-bars">${bars}</div></figure>
     ${coverageRuleHTML(data.decades, "Topic labels cover this share of each decade’s indexed speeches:")}
     <p class="fineprint">Each bar is this topic's share of federal speeches carrying any topic label in that decade; the small figure is the count. Federal is the longest comparable run. Labels are applied so far, and each decade opens the speeches behind it.</p>
   </section>`;
@@ -6402,7 +6428,7 @@ function topicArcItemHTML(item, brief, showYear) {
       </div>
       ${heading ? `<a class="topic-arc-source" ${entityHrefAttr(`/doc/${encodeURIComponent(item.slug)}`)}>${esc(heading)}</a>` : ""}
       ${brief
-        ? `<p class="topic-arc-brief">${machineLabelHTML({ inline: true, className: "topic-arc-tag" })}${esc(brief)}</p><a class="topic-arc-open ui-button" data-ui-size="compact" ${entityHrefAttr(`/doc/${encodeURIComponent(item.slug)}`)}>Read the speech</a>`
+        ? `<p class="topic-arc-brief">${machineLabelHTML({ inline: true, className: "topic-arc-tag" })}${esc(brief)}</p><a class="topic-arc-open" ${entityHrefAttr(`/doc/${encodeURIComponent(item.slug)}`)}>Read the speech</a>`
         : `<a class="topic-arc-passage" ${entityHrefAttr(`/doc/${encodeURIComponent(item.slug)}`)}>${esc(passage || "Open the speech to read the passage.")}</a>`}${excerptNoticeHTML(item)}
     </div>
   </li>`;
@@ -6431,7 +6457,7 @@ function topicArcVoicesHTML(results, briefCount) {
 }
 
 async function renderTopicArc(slug, phrase, key, mount) {
-  mount.innerHTML = `<h3 class="topic-arc-heading">The arc of this debate</h3><p class="status" role="status">Reading the labelled speeches…</p>`;
+  mount.innerHTML = `<h3 class="topic-arc-heading ui-section-title">The arc of this debate</h3><p class="status" role="status">Reading the labelled speeches…</p>`;
   const active = () => currentSubjectKey === key && mount.isConnected;
   try {
     const params = searchQueryParams(phrase, {
@@ -6443,7 +6469,7 @@ async function renderTopicArc(slug, phrase, key, mount) {
     if (!active()) return;
     const results = (data.results || []).filter((item) => item.slug);
     if (!results.length) {
-      mount.innerHTML = `<h3 class="topic-arc-heading">The arc of this debate</h3><p class="status">No dated, labelled speeches are in the search window yet.</p>`;
+      mount.innerHTML = `<h3 class="topic-arc-heading ui-section-title">The arc of this debate</h3><p class="status">No dated, labelled speeches are in the search window yet.</p>`;
       return;
     }
     const briefs = {};
@@ -6476,8 +6502,7 @@ async function renderTopicArc(slug, phrase, key, mount) {
               p.innerHTML = machineLabelHTML({ inline: true, className: "topic-arc-tag" });
               p.appendChild(document.createTextNode(brief));
               const open = document.createElement("a");
-              open.className = "topic-arc-open ui-button";
-              open.dataset.uiSize = "compact";
+              open.className = "topic-arc-open";
               open.href = passage.getAttribute("href");
               open.textContent = "Read the speech";
               passage.replaceWith(p, open);
@@ -6505,17 +6530,17 @@ async function renderTopicArc(slug, phrase, key, mount) {
     const paint = () => {
       const items = sorted().slice(0, visible);
       const briefCount = results.filter((r) => briefs[r.resource]).length;
-      mount.innerHTML = `<div class="topic-arc-head">
-        <h3 class="topic-arc-heading">The arc of this debate</h3>
-        <div class="quiet-toggle" role="group" aria-label="Debate chronology">
-          <button type="button" data-arc-order="newest" aria-pressed="${order === 'newest'}">Newest</button>
-          <button type="button" data-arc-order="oldest" aria-pressed="${order === 'oldest'}">Oldest</button>
+      mount.innerHTML = `<div class="topic-arc-head ui-section-head">
+        <h3 class="topic-arc-heading ui-section-title">The arc of this debate</h3>
+        <div class="ui-segmented" data-ui-size="compact" role="group" aria-label="Debate chronology">
+          <button type="button" class="ui-button" data-arc-order="newest" aria-pressed="${order === 'newest'}">Newest</button>
+          <button type="button" class="ui-button" data-arc-order="oldest" aria-pressed="${order === 'oldest'}">Oldest</button>
         </div></div>
         ${topicArcVoicesHTML(results, briefCount)}
         <ol class="topic-arc-list">${rowsHTML(items)}</ol>
         <p class="fineprint topic-arc-note">Machine briefs are automated summaries and stand in for the passage where one exists; passages are extracts from the record, opened by the title. The window is the search index's newest labelled matches, not the whole debate.</p>
         <div class="topic-arc-footer"><p class="fineprint" role="status">Showing ${items.length} of ${results.length} matches.</p>
-        ${items.length < results.length ? `<button type="button" data-arc-more>Show ${Math.min(30, results.length - items.length)} more</button>` : ''}
+        ${items.length < results.length ? `<button type="button" class="ui-button" data-ui-size="compact" data-arc-more>Show ${Math.min(30, results.length - items.length)} more</button>` : ''}
         <a href="${esc(searchHash(phrase, { topic: slug }, 1, 'newest'))}">Search the full debate</a></div>`;
       mount.querySelectorAll('[data-arc-order]').forEach((button) => button.addEventListener('click', () => {
         if (order === button.dataset.arcOrder) return;
@@ -6546,7 +6571,7 @@ async function renderTopicArc(slug, phrase, key, mount) {
     paint();
     enrich(sorted().slice(0, visible));
   } catch {
-    if (active()) mount.innerHTML = `<h3 class="topic-arc-heading">The arc of this debate</h3><p class="status">The chronological view could not be loaded. <a href="${esc(searchHash(phrase, { topic: slug }, 1, 'newest'))}">Search the labelled speeches instead</a>.</p>`;
+    if (active()) mount.innerHTML = `<h3 class="topic-arc-heading ui-section-title">The arc of this debate</h3><p class="status">The chronological view could not be loaded. <a href="${esc(searchHash(phrase, { topic: slug }, 1, 'newest'))}">Search the labelled speeches instead</a>.</p>`;
   }
 }
 
@@ -6559,8 +6584,7 @@ async function openTopicPage(slug, manageFocus) {
   body.classList.remove("subject-person", "subject-party");
   const name = TOPICS[slug];
   if (!name) {
-    body.innerHTML = `<p class="kicker">Topic</p>
-      <p class="status">No topic called “${esc(slug)}” in the taxonomy.
+    body.innerHTML = `<p class="status">No topic called “${esc(slug)}” in the taxonomy.
       <a href="/subject/topic">All topics</a></p>`;
     return;
   }
@@ -6603,10 +6627,15 @@ async function openTopicPage(slug, manageFocus) {
     <div class="topic-reader-tools">
       <form class="topic-ask-form">
         <label for="topic-question">Ask the record</label>
-        <div><textarea id="topic-question" name="question" required rows="2" placeholder="${esc(`Ask a question about ${phrase}`)}"></textarea><button type="submit">Ask</button></div>
+        <div class="topic-ask-row"><textarea id="topic-question" class="ui-input grow-field" name="question" required rows="1" autocomplete="off" enterkeyhint="send" placeholder="${esc(`Ask a question about ${phrase}`)}"></textarea><button type="submit" class="ui-button" data-variant="primary">Ask</button></div>
       </form>
       <p class="topic-reader-links"><a href="${esc(searchTopic)}">Search this topic</a>${report ? `<a href="/reports/${esc(report.slug)}">Read the ${esc(report.title)} report</a>` : ''}</p>
     </div>`);
+  const topicQuestion = body.querySelector('#topic-question');
+  topicQuestion.addEventListener('input', () => fitQueryField(topicQuestion));
+  topicQuestion.addEventListener('keydown', (event) => {
+    if (event.key === 'Enter' && !event.shiftKey && !event.isComposing) { event.preventDefault(); topicQuestion.form.requestSubmit(); }
+  });
   body.querySelector('.topic-ask-form').addEventListener('submit', (event) => {
     event.preventDefault();
     const question = body.querySelector('#topic-question').value.trim();
@@ -6617,7 +6646,7 @@ async function openTopicPage(slug, manageFocus) {
   // Who speaks on it sits in the card at the right hand: parties, then parliaments.
   const asideBlocks = [];
   if (data?.parties?.length) {
-    asideBlocks.push(`<section class="topic-aside-block">${barList(data.parties.slice(0, 8), {
+    asideBlocks.push(`<section class="topic-aside-block ui-section">${barList(data.parties.slice(0, 8), {
       heading: "Who speaks on it, by party",
       fmt: (v) => Number(v).toLocaleString(),
       linkTo: (nm) => searchHash(phrase, { topic: slug, party: nm }),
@@ -6633,7 +6662,7 @@ async function openTopicPage(slug, manageFocus) {
     const order = ["federal", "nsw", "vic", "sa", "qld", "act"];
     const years = order.filter((state) => coverage[state])
       .map((state) => `${PARLIAMENT_NAMES[state]} ${coverage[state]}`).join(" · ");
-    asideBlocks.push(`<section class="topic-aside-block">${barList(rows, {
+    asideBlocks.push(`<section class="topic-aside-block ui-section">${barList(rows, {
       heading: "Which parliament argues it",
       fmt: (value) => `${(Number(value) * 100).toFixed(2)}%`,
       detail: (_name, _value, row) => Number(row[2]).toLocaleString(),
@@ -6650,7 +6679,7 @@ async function openTopicPage(slug, manageFocus) {
   await moneyPromise;
   if (currentSubjectKey !== key) return;
   const moneyHTML = moneyInd ? topicMoneyHTML(moneyInd) : "";
-  if (moneyHTML) sections.insertAdjacentHTML("beforeend", `<section class="topic-money">${moneyHTML}</section>`);
+  if (moneyHTML) sections.insertAdjacentHTML("beforeend", `<section class="topic-money ui-section">${moneyHTML}</section>`);
 
   if (data) {
     if (count === 0) {
@@ -6671,12 +6700,12 @@ async function openTopicPage(slug, manageFocus) {
   else tideSkel?.remove();
 
   const arc = document.createElement("section");
-  arc.className = "topic-arc";
+  arc.className = "topic-arc ui-section";
   sections.appendChild(arc);
   const addJump = (label, target) => {
     const button = document.createElement('button');
     button.type = 'button';
-    button.className = 'topic-section-jump';
+    button.className = 'topic-section-jump ui-link';
     button.textContent = label;
     button.addEventListener('click', () => {
       const heading = target.querySelector('h3');
@@ -6748,9 +6777,9 @@ async function openTopicsIndex(manageFocus) {
   };
   $("subject-sections").innerHTML = `
     <div class="topic-index-tools">
-      <div class="quiet-toggle topic-index-sort" role="group" aria-label="Order the topics">
-        <button type="button" data-sort="name" aria-pressed="true">A–Z</button>
-        <button type="button" data-sort="count" aria-pressed="false">Most discussed</button>
+      <div class="ui-segmented topic-index-sort" data-ui-size="compact" role="group" aria-label="Order the topics">
+        <button type="button" class="ui-button" data-sort="name" aria-pressed="true">A–Z</button>
+        <button type="button" class="ui-button" data-sort="count" aria-pressed="false">Most discussed</button>
       </div>
       <p class="topic-index-note">Counts are speeches labelled so far. The small bars are each topic’s share of federal speeches by decade, 1993 to 2026, scaled within the topic.</p>
     </div>
@@ -6833,7 +6862,7 @@ const DIRECTORY_KINDS = {
 };
 let electorateModulePromise;
 function loadElectorateModule() {
-  return electorateModulePromise ??= import("./electorates.js?v=f4fb648c67").catch((e) => { electorateModulePromise = null; throw e; });
+  return electorateModulePromise ??= import("./electorates.js?v=ea7c4e89ed").catch((e) => { electorateModulePromise = null; throw e; });
 }
 const DIR_CHUNK = 60;
 
@@ -7020,10 +7049,10 @@ function renderDirectory(spec) {
   for (const it of spec.items) it._text = foldText(spec.text(it));
 
   const filterHTML = (f) => f.check
-    ? `<label class="dir-check ui-choice"><input type="checkbox" data-filter="${esc(f.key)}"${state[f.key] ? " checked" : ""}>${esc(f.label)}</label>`
-    : `<label class="dir-field ui-field"><span class="visually-hidden">${esc(f.label)}</span>
-        <select data-filter="${esc(f.key)}" class="ui-input">
-          <option value="">${esc(f.any || `${f.label}: all`)}</option>
+    ? `<label class="dir-check ui-filter-toggle"><input type="checkbox" data-filter="${esc(f.key)}"${state[f.key] ? " checked" : ""}>${esc(f.label)}</label>`
+    : `<label class="dir-field ui-filter-field"><span class="ui-filter-key">${esc(f.pill || f.label)}</span>
+        <select data-filter="${esc(f.key)}" class="ui-input"${f.pill ? ` aria-label="${esc(f.label)}"` : ""}>
+          <option value="">All</option>
           ${f.options.map(([v, l]) => `<option value="${esc(v)}"${state[f.key] === v ? " selected" : ""}>${esc(l)}</option>`).join("")}
         </select></label>`;
   body.innerHTML = `
@@ -7031,21 +7060,21 @@ function renderDirectory(spec) {
       <h1 id="subject-title" tabindex="-1">${esc(spec.title)}</h1>
       ${spec.lede ? `<p class="subject-tag"><span>${spec.lede}</span></p>` : ""}
     </div>
-    ${spec.aggregateHTML ? `<div class="dir-individuals">${spec.aggregateHTML}</div>` : ""}
-    <form class="dir-controls ui-toolbar" id="dir-controls" role="search" aria-label="Filter the list">
+    <form class="dir-controls ui-filter-bar" id="dir-controls" role="search" aria-label="Filter the list">
       <label class="visually-hidden" for="dir-q">Search ${esc(spec.title.toLowerCase())} by name</label>
-      <span class="dir-q-wrap">
+      <span class="dir-q-wrap ui-filter-search">
         <input id="dir-q" type="search" autocomplete="off" spellcheck="false"
                placeholder="Search by name…" value="${esc(state.q)}"
                role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="dir-sugg" class="ui-input">
         <div class="dir-sugg" id="dir-sugg" role="listbox" aria-label="Matching names" hidden></div>
       </span>
       ${spec.filters.filter((f) => !f.check).map(filterHTML).join("")}
-      <label class="dir-field ui-field"><span class="visually-hidden">Sort</span>
+      <label class="dir-field ui-filter-field"><span class="visually-hidden">Sort</span>
         <select id="dir-sort" class="ui-input">${spec.sorts.map(([v, l]) => `<option value="${esc(v)}"${state.sort === v ? " selected" : ""}>${esc(l)}</option>`).join("")}</select></label>
-      ${spec.filters.some((f) => f.check) ? `<div class="dir-checks">${spec.filters.filter((f) => f.check).map(filterHTML).join("")}</div>` : ""}
+      ${spec.filters.filter((f) => f.check).map(filterHTML).join("")}
     </form>
-    <p class="dir-count" id="dir-count" role="status" aria-live="polite"></p>
+    <p class="dir-count ui-filter-count" id="dir-count" role="status" aria-live="polite"></p>
+    ${spec.aggregateHTML ? `<div class="dir-individuals">${spec.aggregateHTML}</div>` : ""}
     <ul class="subject-list dir-list" id="dir-list" role="list"></ul>
     <div class="dir-empty" id="dir-empty" hidden>
       <span>Nothing in the ${esc(spec.title.toLowerCase())} directory matches that.</span>
@@ -7351,10 +7380,10 @@ async function buildPartiesDirectory() {
     items,
     text: (p) => p.label,
     filters: [
-      { key: "jur", label: "Disclosures", any: "Any commission",
+      { key: "jur", label: "Disclosures",
         options: [["federal", "Federal (AEC)"], ["qld", "Queensland (ECQ)"], ["vic", "Victoria (VEC)"], ["tas", "Tasmania (TEC)"]],
         test: (p, v) => Boolean(p.money[v]) },
-      { key: "show", label: "Show", any: "Every party",
+      { key: "show", label: "Show",
         options: [["speeches", "With speeches in the record"], ["members", "With members in the directory"], ["money", "With disclosed receipts"]],
         test: (p, v) => v === "speeches" ? p.speeches > 0 : v === "members" ? p.members > 0 : Object.keys(p.money).length > 0 },
     ],
@@ -7449,7 +7478,7 @@ async function buildDonorsDirectory() {
       d._fits ? `<span class="dir-mark" title="${esc(`On the Foreign Influence Transparency Scheme register for ${[...new Set(d._fits.map((r) => r.principal).filter(Boolean))].slice(0, 3).join(", ") || "a foreign principal"}`)}">FITS</span>` : "",
     ].filter(Boolean).join(" ");
     const meta = [
-      `<span class="party party-oth" style="--pc:${esc(colour)}"><i aria-hidden="true"></i>${esc(industryLabel(d.industry || d.group || "other"))}</span>`,
+      `<span class="ui-dot-label" style="--pc:${esc(colour)}"><i aria-hidden="true"></i>${esc(industryLabel(d.industry || d.group || "other"))}</span>`,
       d.first < 9999 ? esc(yearSpan(d.first, d.last)) : "",
       partiesHTML,
       marks,
@@ -7479,10 +7508,10 @@ async function buildDonorsDirectory() {
       { key: "industry", label: "Industry",
         options: [...groupCounts.entries()].sort((a, b) => a[0].localeCompare(b[0])).map(([g, n]) => [g, `${g} (${n.toLocaleString()})`]),
         test: (d, v) => (d.group || "other") === v },
-      { key: "jur", label: "Disclosed to", any: "Any commission",
+      { key: "jur", label: "Disclosed to",
         options: [["federal", "Federal (AEC)"], ["qld", "Queensland (ECQ)"], ["vic", "Victoria (VEC)"]],
         test: (d, v) => Boolean(d.money[v]) },
-      { key: "party", label: "Party given to", any: "Any party",
+      { key: "party", label: "Party given to",
         options: [...partyCounts.entries()].sort((a, b) => b[1] - a[1]).map(([p, n]) => [p, `${p} (${n.toLocaleString()})`]),
         test: (d, v) => d._partyList.includes(v) },
       { key: "access", label: "Lobbyists or meetings", check: true, test: (d) => d._lobbyists > 0 || d._meetings > 0 },
@@ -7550,7 +7579,7 @@ const campaignerKindLabel = (kind) => CAMPAIGNER_KINDS[kind] || "Registered orga
 /** The register chip a campaigner wears wherever it is listed. The four kinds
  *  share one hue on purpose: the words tell them apart, never the colour. */
 const campaignerKindChip = (kind) =>
-  `<span class="party party-oth" style="--pc:var(--bronze)"><i aria-hidden="true"></i>${esc(campaignerKindLabel(kind))}</span>`;
+  `<span class="ui-dot-label" style="--pc:var(--bronze)"><i aria-hidden="true"></i>${esc(campaignerKindLabel(kind))}</span>`;
 
 /** The years an organisation's returns run over, as the AEC writes them. */
 function campaignerSpan(e) {
@@ -7683,7 +7712,7 @@ async function buildCampaignersDirectory() {
     items,
     text: (e) => `${e.name} ${campaignerKindLabel(e.kind)} ${(e.return_types || []).join(" ")} ${e._parties.join(" ")}`,
     filters: [
-      { key: "kind", label: "Register category", any: "Any category",
+      { key: "kind", label: "Register category", pill: "Category",
         options: Object.keys(CAMPAIGNER_KINDS).filter((k) => kindCounts.has(k))
           .map((k) => countOpt(k, CAMPAIGNER_KINDS[k], kindCounts.get(k))),
         test: (e, v) => e.kind === v },
@@ -7691,7 +7720,7 @@ async function buildCampaignersDirectory() {
       // number: one side of politics registers far more associated entities
       // than the other, and a bare "Labor (153)" beside "Liberal (36)" invites
       // a reader to take it for four times the money, which it is not.
-      { key: "party", label: "Party named on the return", any: "Any party",
+      { key: "party", label: "Party named on the return", pill: "Party",
         options: [...partyCounts.entries()].sort((a, b) => b[1] - a[1])
           .map(([p, n]) => [p, `${p} (${orgCount(n)})`])
           .concat([["none", `No party named (${orgCount(items.length - withParty)})`]]),
@@ -8163,13 +8192,13 @@ async function openBillsIndex(params, manageFocus) {
     href: (b) => billHash(b.key),
     hint: (b) => sentenceCase(b.status),
     filters: [
-      { key: "parliament", label: "Parliament", any: "All parliaments",
+      { key: "parliament", label: "Parliament",
         options: parliaments.map((p) => countOpt(String(p), `${ordinal(p)} parliament`, countBy((b) => b.parliament, p))),
         test: (b, v) => String(b.parliament) === v },
-      { key: "status", label: "Status", any: "All statuses",
+      { key: "status", label: "Status",
         options: statuses.map((s) => countOpt(s, sentenceCase(s), countBy((b) => b.status, s))),
         test: (b, v) => b.status === v },
-      { key: "year", label: "Year", any: "All years",
+      { key: "year", label: "Year",
         options: years.map((y) => countOpt(y, y, countBy((b) => b._year, y))),
         test: (b, v) => b._year === v },
       { key: "divided", label: "Divided on", check: true, test: (b) => Number(b.divisions) > 0 },
@@ -8284,8 +8313,8 @@ function billTimelineHTML(bill) {
     licence: billLicence(bill),
   });
   if (!dates.length) {
-    return `<section class="bill-section" data-accent="bills"><h3 class="subject-section-title">How it moved</h3>
-      <p class="status">No dates recorded.</p>${source(null)}</section>`;
+    return `<section class="ui-section bill-section" data-accent="bills"><h3 class="ui-section-title">How it moved</h3>
+      <p class="ui-empty">No dates recorded.</p>${source(null)}</section>`;
   }
   const runs = billStageRuns(dates);
   const folded = dates.length - runs.length;
@@ -8307,13 +8336,13 @@ function billTimelineHTML(bill) {
         days > 1 ? `<span class="bill-date-days">on ${days} recorded days</span>` : ""}</span>
     </li>`;
   }).join("");
-  const list = `<ol class="bill-dates" role="list">${rows}</ol>`;
+  const list = `<ol class="ui-list bill-dates" role="list">${rows}</ol>`;
   // The ruler carries the shape; the stages sit behind one disclosure, links kept inside.
   const stages = runs.length > 3
-    ? `<details class="bill-stages"><summary>All ${runs.length} stages</summary>${list}</details>`
+    ? `<details class="ui-disclosure bill-stages"><summary>All ${runs.length} stages</summary><div class="ui-disclosure-body">${list}</div></details>`
     : list;
-  return `<section class="bill-section" data-accent="bills">
-    <h3 class="subject-section-title">How it moved</h3>
+  return `<section class="ui-section bill-section" data-accent="bills">
+    <h3 class="ui-section-title">How it moved</h3>
     ${billRulerHTML(dates)}
     ${stages}
     ${source(folded ? { runs: runs.length, dates: dates.length } : null)}
@@ -8329,6 +8358,9 @@ function billTimelineHTML(bill) {
    wait behind the division's one disclosure with the question, named in full,
    so nothing disappears; only the bars a reader cannot take in anyway. */
 const BILL_SPLIT_DRAWN = 3;
+/* What the two bars in a party's pair are: one key per block, above the list.
+   The figures beside each party say the same to a screen reader. */
+const BILL_SPLIT_LEGEND = `<p class="ui-legend bill-legend" aria-hidden="true"><span><i class="bill-key-aye"></i>Ayes</span><span><i class="bill-key-no"></i>Noes</span></p>`;
 
 /** The split's pieces: the drawn rows, the rest as one line, and the clauses
  *  that say what the attribution rests on. */
@@ -8337,7 +8369,7 @@ function billSplitParts(division) {
     .map(([party, v]) => ({ party, ayes: Number(v?.ayes) || 0, noes: Number(v?.noes) || 0 }))
     .filter((s) => s.ayes || s.noes)
     .sort((a, b) => (b.ayes + b.noes) - (a.ayes + a.noes) || a.party.localeCompare(b.party));
-  if (!splits.length) return { drawn: `<p class="status bill-split-none">Party split not recorded for this division.</p>`, rest: "", restCount: 0, notes: "" };
+  if (!splits.length) return { drawn: `<p class="ui-row-meta bill-split-none">Party split not recorded for this division.</p>`, rest: "", restCount: 0, notes: "" };
   let drawn = splits.slice(0, BILL_SPLIT_DRAWN);
   let folded = splits.slice(drawn.length);
   if (folded.length === 1) { drawn = splits; folded = []; } // one line saved is no saving
@@ -8351,8 +8383,8 @@ function billSplitParts(division) {
       <span class="bill-split-party">${partyDotHTML(s.party)}${esc(billParty(s.party))}</span>
       <span class="bill-split-n">${s.ayes}<span aria-hidden="true">–</span>${s.noes}<span class="visually-hidden"> ayes to noes</span></span>
       <span class="bill-split-bars" aria-hidden="true">
-        <span class="bill-split-bar-track"><i class="bill-bar-aye" style="width:${((s.ayes / max) * 100).toFixed(1)}%"></i></span>
-        <span class="bill-split-bar-track"><i class="bill-bar-no" style="width:${((s.noes / max) * 100).toFixed(1)}%"></i></span>
+        <span class="ui-bar bill-bar-aye"><i style="width:${((s.ayes / max) * 100).toFixed(1)}%"></i></span>
+        <span class="ui-bar bill-bar-no"><i style="width:${((s.noes / max) * 100).toFixed(1)}%"></i></span>
       </span>
     </li>`;
   // What the attribution rests on, as a clause rather than a paragraph:
@@ -8519,12 +8551,10 @@ function billDivisionHTML(d, bill) {
   return `<li class="bill-division">
     <p class="bill-division-out">${billOutcomeLabelHTML(d.outcome)}
       <span class="bill-division-count">${ayes.toLocaleString()} ayes, ${noes.toLocaleString()} noes</span></p>
-    ${target
-      ? `<a class="source-title bill-division-q" href="${esc(target)}">${esc(title)}</a>`
-      : `<span class="source-title bill-division-q">${esc(title)}</span>`}
-    ${meta ? `<span class="result-meta">${meta}</span>` : ""}
+    <p class="ui-row-title bill-division-q">${target ? `<a href="${esc(target)}">${esc(title)}</a>` : esc(title)}</p>
+    ${meta ? `<p class="ui-row-meta">${meta}</p>` : ""}
     ${split.drawn}
-    ${more ? `<details class="bill-division-more"><summary>${esc(more)}</summary>${inside}</details>`
+    ${more ? `<details class="ui-disclosure bill-division-more"><summary>${esc(more)}</summary><div class="ui-disclosure-body">${inside}</div></details>`
       : split.notes}
   </li>`;
 }
@@ -8536,14 +8566,14 @@ function billDivisionsHTML(bill) {
     const heading = growthModules.noDivisionsHeading(bill);
     const line = heading === "Not yet voted" ? "No formal division recorded. Most questions are decided on the voices."
       : "Most questions are decided on the voices.";
-    return `<section class="bill-section" data-accent="votes" ${growthModules.moduleAttrs("party_votes", "bill", 2)}><h3 class="subject-section-title">${esc(heading)}</h3>
-      <p class="status">${line}</p>${sourceLineHTML({updated: bill.exportedAt || "", source: "Parliamentary division records", notes: [
+    return `<section class="ui-section bill-section" data-accent="votes" ${growthModules.moduleAttrs("party_votes", "bill", 2)}><h3 class="ui-section-title">${esc(heading)}</h3>
+      <p class="ui-empty">${line}</p>${sourceLineHTML({updated: bill.exportedAt || "", source: "Parliamentary division records", notes: [
         "A bill with no division here was not necessarily unopposed. This register does not establish whether a vote on the voices has occurred.",
         "No per-member or per-party vote is available without a formal division."]})}</section>`;
   }
   const config = voteTables.divisionTableConfig({bill:bill.key});
   const rows = voteTables.divisionRows(divs, true);
-  return `<section class="bill-section" data-accent="votes" ${growthModules.moduleAttrs("party_votes", "bill", 2)}>
+  return `<section class="ui-section bill-section" data-accent="votes" ${growthModules.moduleAttrs("party_votes", "bill", 2)}>
     ${voteTables.voteTableHTML(config, voteTables.voteTablePage(rows, config))}
     ${sourceLineHTML({
       updated: bill.exportedAt || "", source: "They Vote For You",
@@ -8571,23 +8601,23 @@ function billSpeechesHTML(bill) {
   // A speech the record leaves unattributed has one fact — its date — so the
   // date is what opens it, rather than nine rows all reading the same absence.
   const rows = speeches.slice(0, 24).map((s) => `<li>
-    <a class="source-title" ${entityHrefAttr(`/doc/${encodeURIComponent(s.slug)}`)}>${
-      isMultiSpeaker(s) ? `${groupAvatarHTML()} ${esc(speakerLabel(s))} · ${esc(titleSubject(s))}` : s.speaker ? esc(s.speaker) : `Speech${s.date ? ` on ${esc(fmtDate(s.date))}` : ", speaker not named"}`}</a>
+    <p class="ui-row-name"><a ${entityHrefAttr(`/doc/${encodeURIComponent(s.slug)}`)}>${
+      isMultiSpeaker(s) ? `${groupAvatarHTML()} ${esc(speakerLabel(s))} · ${esc(titleSubject(s))}` : s.speaker ? esc(s.speaker) : `Speech${s.date ? ` on ${esc(fmtDate(s.date))}` : ", speaker not named"}`}</a></p>
     ${participantLinksHTML(s)}
-    <span class="result-meta">${[
+    <p class="ui-row-meta">${[
       s.party && !isUnattributed(s) ? partyChipHTML(s.party) : "",
       s.state && s.state !== "federal" ? esc(STATE_NAMES[s.state] || s.state) : "",
       s.stage_hint ? esc(billStage(s.stage_hint)) : "",
       s.speaker && s.date ? esc(fmtDate(s.date)) : "",
-    ].filter(Boolean).join(" · ")}</span>
-    ${s.brief ? `<p class="bill-speech-brief"><span class="visually-hidden">Machine-written brief: </span>${esc(s.brief)}</p>` : ""}
+    ].filter(Boolean).join(" · ")}</p>
+    ${s.brief ? `<p class="ui-row-text bill-speech-brief"><span class="visually-hidden">Machine-written brief: </span>${esc(s.brief)}</p>` : ""}
   </li>`).join("");
   const briefs = speeches.filter((s) => s.brief).length;
   // One machine label for the list, at its head (pass 3: one label per list).
-  return `<section class="bill-section">
-    <div class="bill-section-head"><h3 class="subject-section-title">What was said</h3>${
+  return `<section class="ui-section bill-section">
+    <div class="ui-section-head bill-section-head"><h3 class="ui-section-title">What was said</h3>${
       briefs ? machineLabelHTML({ note: BILL_SPEECH_BRIEF_NOTE }) : ""}</div>
-    <ul class="subject-list bill-speeches" role="list">${rows}</ul>
+    <ul class="ui-list bill-speeches" role="list">${rows}</ul>
     ${sourceLineHTML({
       updated: bill.exportedAt || "", source: "Parliamentary Hansard",
       notes: [`Speeches the record attaches to this bill${speeches.length > 24 ? `, the first 24 of ${speeches.length}` : ""}.
@@ -8601,21 +8631,20 @@ function billActsHTML(bill) {
   const passed = /passed|assent/i.test(String(bill.status || ""));
   if (!acts.length) {
     return passed
-      ? `<section class="bill-section"><h3 class="subject-section-title">What became law</h3>
-         <p class="status">No Act matched to this bill yet.</p></section>`
+      ? `<section class="ui-section bill-section"><h3 class="ui-section-title">What became law</h3>
+         <p class="ui-empty">No Act matched to this bill yet.</p></section>`
       : "";
   }
   const rows = acts.map((a) => {
     const url = safeUrl(a.frl_uri);
     return `<li>
-      ${url ? `<a class="source-title" href="${esc(url)}" rel="noopener" target="_blank">${esc(a.title)}</a>`
-        : `<span class="source-title">${esc(a.title)}</span>`}
-      <span class="result-meta">${a.assent_date ? `Assented ${esc(fmtDate(a.assent_date))}` : "Assent date not recorded"}</span>
+      <p class="ui-row-title">${url ? `<a href="${esc(url)}" rel="noopener" target="_blank">${esc(a.title)}</a>` : esc(a.title)}</p>
+      <p class="ui-row-meta">${a.assent_date ? `Assented ${esc(fmtDate(a.assent_date))}` : "Assent date not recorded"}</p>
     </li>`;
   }).join("");
-  return `<section class="bill-section">
-    <h3 class="subject-section-title">What became law</h3>
-    <ul class="subject-list" role="list">${rows}</ul>
+  return `<section class="ui-section bill-section">
+    <h3 class="ui-section-title">What became law</h3>
+    <ul class="ui-list bill-acts" role="list">${rows}</ul>
     ${sourceLineHTML({
       updated: bill.exportedAt || "", source: "Federal Register of Legislation",
       notes: ["The Act as made, linked to its page on the Federal Register of Legislation."],
@@ -8637,9 +8666,9 @@ function billSummaryHTML(bill) {
   const attribution = `${s.attribution || "Written by a model from the explanatory memorandum; not the record"}.`;
   const note = `${attribution}${s.describes_version ? ` Describes the bill ${s.describes_version}.` : ""}`;
   const basis = BILL_SOURCE_NAMES[s.basis] || "Explanatory memorandum";
-  return `<section class="bill-section bill-summary" data-accent="bills" aria-labelledby="bill-summary-head">
-    <div class="bill-section-head">
-      <h3 class="subject-section-title" id="bill-summary-head">In short</h3>
+  return `<section class="ui-section bill-section bill-summary" data-accent="bills" aria-labelledby="bill-summary-head">
+    <div class="ui-section-head bill-section-head">
+      <h3 class="ui-section-title" id="bill-summary-head">In short</h3>
       ${machineLabelHTML({ note, notRecord: true })}
     </div>
     <div class="bill-sentences">${sentences.map((t) => `<p>${esc(t)}</p>`).join("")}</div>
@@ -8670,7 +8699,7 @@ function billRelatedHTML(bill) {
     const when = c.closes ? `Consultation closes ${esc(fmtDate(c.closes))}` : "Open for consultation";
     lines.push(`${when}: <a href="${esc(safeUrl(c.url) || "#")}" rel="noopener" target="_blank">have your say ↗︎</a>`);
   }
-  return lines.length ? `<p class="bill-related">${lines.join("<br>")}</p>` : "";
+  return lines.length ? `<p class="ui-page-meta bill-related">${lines.join("<br>")}</p>` : "";
 }
 
 /** /bill/<key> — one bill, whole. */
@@ -8757,13 +8786,13 @@ async function openBill(key, manageFocus) {
       ], "More for this bill")}
     </div>`;
   body.innerHTML = `
-    <div class="subject-head bill-head">
+    <div class="ui-page-head bill-head">
       <p class="bill-status">${statusLabelHTML(statusWord, billStatusTone(bill.status))}${
         bill.status_as_of ? `<span class="bill-status-as">Status as at ${esc(fmtDate(bill.status_as_of))}</span>` : ""}</p>
       <h1 id="bill-title" class="bill-title" tabindex="-1">${esc(title)}</h1>
       ${bill.short_title && bill.short_title !== title
-        ? `<p class="bill-short">Known as the ${esc(bill.short_title)}</p>` : ""}
-      ${metaBits.length ? `<p class="subject-tag bill-tag">${metaBits.join(" · ")}</p>` : ""}
+        ? `<p class="ui-page-meta bill-short">Known as the ${esc(bill.short_title)}</p>` : ""}
+      ${metaBits.length ? `<p class="ui-page-meta bill-tag">${metaBits.join(" · ")}</p>` : ""}
       ${billRelatedHTML(bill)}
       ${actions}
     </div>
@@ -8788,16 +8817,16 @@ function renderOtherSponsorBills(bill, body, view, generation) {
   const slot = body.querySelector("#bill-sponsor-others");
   if (!slot) return;
   if (!bill.sponsor) { slot.remove(); return; }
-  slot.innerHTML = `<section class="bill-section growth-records" ${growthModules.moduleAttrs("sponsor_bills", "bill", 3)}>
-    <h3 class="subject-section-title">Other bills from this sponsor</h3><p role="status">Opening the sponsor’s records…</p></section>`;
+  slot.innerHTML = `<section class="ui-section bill-section growth-records" ${growthModules.moduleAttrs("sponsor_bills", "bill", 3)}>
+    <h3 class="ui-section-title">Other bills from this sponsor</h3><p class="ui-status-line" role="status">Opening the sponsor’s records…</p></section>`;
   const load = async () => {
     const summary = await loadSponsorSummary(bill);
     if (billView !== view || generation !== billTextGeneration || !slot.isConnected) return;
     const rows = (summary?.bills || []).filter(b=>b.key!==bill.key && b.jurisdiction===bill.jurisdiction).slice(0,5);
     if (!summary?.person || !rows.length) { slot.remove(); return; }
-    slot.innerHTML = `<section class="bill-section growth-records" data-records-ready="true" ${growthModules.moduleAttrs("sponsor_bills", "bill", 3)}>
-      <h3 class="subject-section-title">Other bills from this sponsor</h3>
-      <ul class="subject-list" role="list">${rows.map(b => `<li><a href="${esc(billHash(b.key))}">${esc(billName(b))}</a><span class="result-meta">${esc(fmtDate(b.introduced))} · ${esc(sentenceCase(b.status))}</span></li>`).join("")}</ul>
+    slot.innerHTML = `<section class="ui-section bill-section growth-records" data-records-ready="true" ${growthModules.moduleAttrs("sponsor_bills", "bill", 3)}>
+      <h3 class="ui-section-title">Other bills from this sponsor</h3>
+      <ul class="ui-list bill-sponsor-list" role="list">${rows.map(b => `<li><p class="ui-row-title"><a href="${esc(billHash(b.key))}">${esc(billName(b))}</a></p><p class="ui-row-meta">${esc(fmtDate(b.introduced))} · ${esc(sentenceCase(b.status))}</p></li>`).join("")}</ul>
       ${sourceLineHTML({source: "Parliamentary bill register", updated: summary.generated || "", notes: ["Bills in the same jurisdiction, matched to the same roster person using the sponsor identity rules."]})}
     </section>`;
   };
@@ -9105,9 +9134,9 @@ const GAMES = {
   ballot: { name: "Build your ballot", dialog: "dialog-ballot", body: "explore-ballot", module: "/ballot.js?v=49e7bc6382", mount: "mountBallot" },
   tm: { name: "Time machine", dialog: "dialog-tm", body: "explore-tm", module: "/timemachine.js?v=e9d79c3c78", mount: "mountTimeMachine" },
   tide: { name: "The tide", dialog: "dialog-tide", body: "explore-tide", module: "/tide.js", mount: "mountTide" },
-  quiz: { name: "The record quiz", dialog: "dialog-quiz", body: "explore-quiz", module: "/quiz.js?v=5ec891d6e8", mount: "mountQuiz" },
-  ledger: { name: "The ledger", dialog: "dialog-ledger", body: "explore-ledger", module: "/ledger.js?v=6add761bc8", mount: "mountLedger" },
-  grants: { name: "Who gets the grants", dialog: "dialog-grants", body: "explore-grants", module: "/grants.js?v=14051595db", mount: "mountGrants" },
+  quiz: { name: "The record quiz", dialog: "dialog-quiz", body: "explore-quiz", module: "/quiz.js?v=b12813095a", mount: "mountQuiz" },
+  ledger: { name: "The ledger", dialog: "dialog-ledger", body: "explore-ledger", module: "/ledger.js?v=5f605523ce", mount: "mountLedger" },
+  grants: { name: "Who gets the grants", dialog: "dialog-grants", body: "explore-grants", module: "/grants.js?v=be28a3a894", mount: "mountGrants" },
   matrix: { name: "Who owns which debate", dialog: "dialog-matrix", body: "explore-matrix", module: "/matrix.js?v=25f5793db5", mount: "mountMatrix" },
   wd: { name: "Words per dollar", dialog: "dialog-wd", body: "explore-wd", module: "/wordsdollars.js?v=d167394902", mount: "mountWordsDollars" },
   tvn: { name: "Then vs now", dialog: "dialog-tvn", body: "explore-tvn", module: "/thenvsnow.js?v=aac138f24c", mount: "mountThenVsNow" },
@@ -9240,17 +9269,7 @@ for (const dialog of document.querySelectorAll(".game-dialog")) {
 }
 
 
-// --- the front page ----------------------------------------------------------
-// A broadsheet front page over the live dataset: news that pivots into the
-// record, today's numbers, a daily Money & Words topic, encyclopedia features,
-// and the newest documents to enter the index. Everything renders
-// progressively below the ask box; nothing blocks it.
-
-let frontRendered = false;
-
-function onIdle(fn) {
-  (window.requestIdleCallback || ((f) => setTimeout(f, 1)))(fn);
-}
+// --- relative times ----------------------------------------------------------
 
 function relTime(iso) {
   if (!iso) return "";
@@ -9266,489 +9285,6 @@ function relTime(iso) {
   return fmtDate(iso.slice(0, 10));
 }
 
-// A news headline is not a parliamentary phrase, so passing it to search finds
-// nothing. These keywords map a headline onto the taxonomy the corpus is
-// labelled with; the pivot then asks about a subject parliament debates.
-const NEWS_TOPIC_HINTS = [
-  ["housing", ["housing", "rent", "renter", "mortgage", "homeless", "home buyer", "negative gearing"]],
-  ["health", ["health", "hospital", "medicare", "doctor", "nurse", "ambulance", "aged care", "ndis", "vaccine", "mental health"]],
-  ["education", ["school", "student", "university", "teacher", "childcare", "child care", "hecs", "curriculum"]],
-  ["immigration", ["immigration", "migrant", "migration", "visa", "asylum", "refugee", "border"]],
-  ["climate-environment", ["climate", "emission", "renewable", "solar", "coal", "gas", "environment", "bushfire", "flood", "drought", "water"]],
-  ["mining-energy", ["mining", "mine", "energy", "electricity", "power price", "petrol", "fuel", "nuclear"]],
-  ["tax-budget", ["tax", "budget", "deficit", "surplus", "treasury", "inflation", "interest rate", "cost of living"]],
-  ["welfare-social", ["welfare", "centrelink", "pension", "jobseeker", "disability", "poverty", "payment"]],
-  ["justice-law", ["police", "court", "crime", "prison", "sentencing", "assault", "shooting", "murder", "bail", "domestic violence"]],
-  ["integrity-democracy", ["corruption", "integrity", "icac", "donation", "lobbying", "electoral", "election", "poll", "referendum",
-    "one nation", "labor", "liberal", "greens", "nationals", "coalition", "populist", "voter", "byelection", "preselection", "preference"]],
-  ["defence-security", ["defence", "military", "adf", "army", "navy", "war", "aukus", "submarine", "veteran", "security"]],
-  ["foreign-affairs", ["foreign", "china", "united states", "ukraine", "israel", "gaza", "pacific", "indonesia", "trade deal", "diplomat",
-    "nepal", "tibet", "india", "japan", "korea", "png", "papua new guinea", "new zealand", "britain", "europe", "russia", "iran", "consular", "embassy"]],
-  ["indigenous-affairs", ["indigenous", "first nations", "aboriginal", "closing the gap", "native title", "uluru", "voice to parliament"]],
-  ["unions-workplace", ["union", "worker", "wage", "workplace", "industrial", "strike", "employment", "jobs"]],
-  ["media-communications", ["media", "broadcast", "abc", "news corp", "social media", "privacy", "tech giant", "internet", "telecommunications"]],
-  ["infrastructure-transport", ["transport", "road", "rail", "airport", "airline", "infrastructure", "nbn", "traffic"]],
-  ["agriculture", ["farm", "farmer", "agriculture", "livestock", "fisheries", "biosecurity"]],
-  ["gambling", ["gambling", "poker machine", "pokies", "wagering", "betting", "casino"]],
-  ["hospitality-alcohol", ["alcohol", "pub", "hotel", "hospitality", "tobacco", "vaping"]],
-  ["financial-services", ["bank", "banking", "superannuation", "insurance", "financial"]],
-  ["property-construction", ["construction", "builder", "developer", "property", "planning"]],
-];
-
-/** The topic slug a headline is about, or null when nothing matches cleanly. */
-function newsTopicSlug(headline) {
-  const h = ` ${String(headline || "").toLowerCase().replace(/[^a-z0-9 ]+/g, " ").replace(/\s+/g, " ")} `;
-  let best = null, bestHits = 0;
-  for (const [slug, words] of NEWS_TOPIC_HINTS) {
-    // A place name counts double. "Australians safe in the Nepal flood" is a
-    // story about Australians abroad, not about Australian flood policy, and
-    // one incidental domestic word should not outrank the country it happened in.
-    const weight = slug === "foreign-affairs" ? 2 : 1;
-    const hits = words.reduce((n, w) => n + (h.includes(` ${w}`) ? weight : 0), 0);
-    if (hits > bestHits) { bestHits = hits; best = slug; }
-  }
-  return bestHits > 0 ? best : null;
-}
-
-function renderFrontNumbers() {
-  const holder = $("front-numbers");
-  const aec = (corpusManifest?.sources || []).find((x) => x.name.startsWith("AEC donations"));
-  const tiles = [
-    [liveStats ? (liveStats.resources ?? 0).toLocaleString() : "—", "documents in the live index"],
-    [liveStats ? (liveStats.paragraphs ?? 0).toLocaleString() : "—", "passages searchable"],
-    [corpusManifest ? (corpusManifest.collected_speeches ?? 0).toLocaleString() : "—", "speeches collected"],
-    [aec ? aec.docs.toLocaleString() : "—", "donations classified"],
-  ];
-  holder.innerHTML = tiles.map(([v, l]) => tile(v, l)).join("");
-  if (corpusManifest) {
-    $("front-numbers-note").innerHTML =
-      `Live from the search index and corpus manifest v${esc(corpusVersion())}. <a href="/stats">Full corpus breakdown</a>`;
-  }
-}
-
-// How each report topic reads mid-sentence in a prewired question ("What did
-// X say about …?"). Falls back to the lowercased title for future reports.
-const TOPIC_PHRASE = {
-  climate: "climate and energy",
-  indigenous: "First Nations issues",
-  media: "media ownership",
-};
-
-async function renderFrontTopic() {
-  try {
-    if (!reportsIndex) await loadReportsIndex();
-    if (!reportsIndex?.length) return;
-    const dayIdx = Math.floor(Date.now() / 864e5) % reportsIndex.length;
-    const today = reportsIndex[dayIdx];
-    const report = await api(`/reports/${encodeURIComponent(today.slug)}.json`);
-    const stats = report.stats;
-    if (!stats) return;
-    const don = stats.donations;
-    const phrase = TOPIC_PHRASE[today.slug] || report.title.toLowerCase();
-    // "mining and fossil fuels", not "mining, fossil_fuels".
-    const inds = (don?.industries || []).map(industryLabel);
-    const indPhrase = inds.length > 1
-      ? `${inds.slice(0, -1).join(", ")} and ${inds[inds.length - 1]}`
-      : inds[0] || "";
-    const speechYears = toYearSeries(stats.timeline ?? []);
-    const firstYear = speechYears.size ? Math.min(...speechYears.keys()) : null;
-    const [peakYear] = peakOf(speechYears.entries()) ?? [];
-    // Where the report maps onto an enrichment topic, the module's name opens
-    // the topic's live encyclopedia entry.
-    const mwTopic = REPORT_TOPIC[today.slug];
-    $("h-mw").innerHTML = mwTopic
-      ? `Money &amp; words: <a ${entityHrefAttr(subjectHash("topic", mwTopic))}>${esc(report.title)}</a>`
-      : `Money &amp; words: ${esc(report.title)}`;
-
-    // The module's name, enacted: the words and the money in one sentence.
-    const lede = `<b>${esc((stats.speech_count ?? 0).toLocaleString())}</b> speeches` +
-      (stats.unique_speakers ? ` from <b>${esc(Number(stats.unique_speakers).toLocaleString())}</b> speakers` : "") +
-      (firstYear ? ` since ${esc(String(firstYear))}` : "") +
-      (don?.total
-        ? `, and <b>${esc(fmtMoney(don.total))}</b> in disclosed donations from ${esc(indPhrase)} interests to political parties over the same years.`
-        : `. No donor industry in the AEC disclosures maps onto this debate, so today the words stand alone.`);
-
-    // Prewired questions, each built from this topic's own data.
-    const chips = [];
-    if (don?.industries?.length) {
-      const ind = industryLabel(don.industries[0]);
-      chips.push(ind === phrase
-        ? `Who takes ${ind} money and what do they say about ${ind} reform?`
-        : `Who takes ${ind} money and what do they say about ${phrase}?`);
-    } else if (firstYear) {
-      chips.push(`How has the debate over ${phrase} changed since ${firstYear}?`);
-    }
-    if (peakYear) chips.push(`Why did parliament talk so much about ${phrase} in ${peakYear}?`);
-    const loudest = stats.top_speakers?.[0]?.[0];
-    if (loudest) chips.push(`What did ${loudest} say about ${phrase}?`);
-
-    $("front-mw").innerHTML = `
-      <p class="mw-lede">${lede}</p>
-      ${moneyWordsCharts(stats, { topic: report.title })}
-      <div class="mw-cols">
-        ${stats.top_speakers?.length ? barList(stats.top_speakers.slice(0, 3), {
-          heading: "Most speeches on this topic", fmt: (v) => Number(v).toLocaleString(),
-          linkTo: (nm) => subjectHash("person", nm) }) : ""}
-        ${don?.top_donors?.length ? barList(donorRows(don.top_donors,donorViewIndex,3), {
-          heading: `Largest ${indPhrase} donors`, fmt: fmtMoney,
-          linkTo: (nm) => subjectHash("donor", nm) }) : ""}
-      </div>
-      ${chips.length ? `<nav class="mw-chips" aria-label="Ask about ${esc(report.title)}">
-        <span class="chip-label">Ask the record:</span>
-        ${chips.map((q) => `<a class="chip" href="${esc(askHash(q))}">${esc(q)}</a>`).join("")}
-      </nav>` : ""}
-      <p class="fineprint" style="margin-top:0.9rem">The topic rotates daily.
-      <a href="/reports/${esc(today.slug)}">Read the full ${esc(report.title)} report</a> ·
-      ${mwTopic ? `<a ${entityHrefAttr(subjectHash("topic", mwTopic))}>Topic page: ${esc(TOPICS[mwTopic] || report.title)}</a> · ` : ""}
-      <a href="/reports">All reports</a></p>`;
-    $("mod-mw").hidden = false;
-
-    // Encyclopedia rail: a daily shuffled selection across every report.
-    // Needs the other reports too, so it fills in on its own.
-    renderFrontEncy(dayIdx, report, don).catch(() => { /* module stays hidden */ });
-
-  } catch { /* modules stay hidden */ }
-}
-
-async function renderFrontReports() {
-  try {
-    if (!reportsIndex) await loadReportsIndex();
-    if (!reportsIndex?.length) return;
-    const lines = {
-      climate: "Targets, coal and renewables.",
-      gambling: "Pokies, wagering and reform.",
-      housing: "Affordability, tax and supply.",
-      immigration: "Borders, detention and migration.",
-      indigenous: "The Voice, treaty and native title.",
-      media: "Press, platforms and ownership.",
-    };
-    $("front-reports").innerHTML = reportsIndex.map((report) => `<a class="report-card" href="/reports/${esc(report.slug)}">
-      ${reportGlyph(report.slug, "card-glyph")}<span class="card-title">${esc(report.title)}</span>
-      <span class="card-blurb">${esc(lines[report.slug] || report.blurb)}</span></a>`).join("");
-    $("mod-reports").hidden = false;
-  } catch { /* The other front-page modules remain available. */ }
-}
-
-// Stable daily shuffle, shared by all readers using Melbourne's calendar day.
-function dailyEncyShuffle(items, key, date = new Date()) {
-  const day = new Intl.DateTimeFormat('en-CA', { timeZone: 'Australia/Melbourne', year: 'numeric', month: '2-digit', day: '2-digit' }).format(date);
-  let seed = 2166136261;
-  for (const char of `ency:${day}`) seed = Math.imul(seed ^ char.charCodeAt(0), 16777619) >>> 0;
-  const shuffled = [...items].sort((a, b) => key(a).localeCompare(key(b), 'en'));
-  for (let i = shuffled.length - 1; i > 0; i--) {
-    seed = (Math.imul(seed, 1664525) + 1013904223) >>> 0;
-    const j = Math.floor(seed / 4294967296 * (i + 1));
-    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
-  }
-  return shuffled;
-}
-
-// Sample the full portrait-backed report speaker pool each day, keeping richer
-// voting cards first. The donor card rotates through the available donor pool.
-async function renderFrontEncy(dayIdx, todayReport, don) {
-  const n = reportsIndex.length;
-  const order = reportsIndex.map((_, i) => reportsIndex[(dayIdx + i) % n]);
-  const [reports, , , , roster] = await Promise.all([
-    Promise.all(order.map((r) => r.slug === order[0].slug
-      ? todayReport
-      : api(`/reports/${encodeURIComponent(r.slug)}.json`).catch(() => null))),
-    loadPhotoMap(), loadVotes(), loadMoneyData(), loadParliamentarians().catch(() => null),
-  ]);
-  const rosterByName = new Map((roster?.people || []).map((p) => [p.name.toLowerCase(), p]));
-  const ranked = reports.map((rep) => ({
-    topic: rep?.title || "",
-    speakers: (rep?.stats?.top_speakers || []).filter(([nm]) => photoUrlFor(nm)),
-  }));
-  const seen = new Set();
-  const pool = [];
-  for (let rank = 0; ranked.some((r) => r.speakers[rank]); rank++) {
-    for (const r of ranked) {
-      const row = r.speakers[rank];
-      if (!row || seen.has(row[0])) continue;
-      seen.add(row[0]);
-      pool.push({ name: row[0], count: row[1], topic: r.topic });
-    }
-  }
-  // Cards with a voting record first: they carry the bill lists that give the
-  // rail its shape, and a card with only a sentence would stand mostly empty.
-  const fullCard = (p) => { const v = votesFor(p.name, rosterByName.get(p.name.toLowerCase())?.pid); return Boolean(v?.for?.length || v?.against?.length); };
-  const dailyPool = dailyEncyShuffle(pool, p => p.name);
-  const picks = [...dailyPool.filter(fullCard), ...dailyPool.filter((p) => !fullCard(p))].slice(0, 8);
-
-  const voteList = (label, rows) => rows?.length ? `
-    <div class="ency-votes-col">
-      <span class="ency-votes-label">${label}</span>
-      <ul class="ency-votes-list" role="list">${rows.slice(0, 2).map((d) => `
-        <li><span class="ency-bill">${esc(billQuestion(d.name))}</span><span class="ency-year">${esc(String(d.date || "").slice(0, 4))}</span></li>`).join("")}
-      </ul>
-    </div>` : "";
-  const cards = picks.map((p) => {
-    const r = rosterByName.get(p.name.toLowerCase()); // the roster fills a card that has no votes to show
-    const v = votesFor(p.name, r?.pid);
-    const hasVotes = Boolean(v?.for?.length || v?.against?.length);
-    return `<article class="report-card ency-card">
-      <div class="ency-head">
-        <img class="ency-portrait" src="${esc(photoUrlFor(p.name))}" alt="" width="64" height="64" loading="lazy" decoding="async">
-        <div class="ency-id">
-          <span class="card-kicker">Parliamentarian</span>
-          <a class="card-title ency-name" ${entityHrefAttr(subjectHash("person", p.name))}>${esc(p.name)}</a>
-          ${v?.party || r?.party ? partyChipHTML(v?.party || r.party) : ""}
-        </div>
-      </div>
-      <p class="card-blurb">${esc(Number(p.count).toLocaleString())} speeches on ${esc(p.topic.toLowerCase())} in the indexed record.</p>
-      ${!hasVotes && r ? `<dl class="ency-facts">
-        ${r.states?.length ? `<div><dt>Parliament</dt><dd>${esc(r.states.map((s) => STATE_NAMES[s] || s).join(", "))}</dd></div>` : ""}
-        ${r.first ? `<div><dt>Speaking</dt><dd>${esc(String(r.first))}${r.last && r.last !== r.first ? ` to ${esc(String(r.last))}` : ""}</dd></div>` : ""}
-        ${r.speeches ? `<div><dt>Indexed</dt><dd>${esc(Number(r.speeches).toLocaleString())} speeches</dd></div>` : ""}
-      </dl>` : ""}
-      ${hasVotes ? `<div class="ency-votes">${voteList("Voted for", v.for)}${voteList("Voted against", v.against)}</div>
-      <span class="card-meta">${esc(Number(v.divisions_total || 0).toLocaleString())} recorded votes${v.years ? `, ${esc(String(v.years[0]))} to ${esc(String(v.years[1]))}` : ""}</span>` : ""}
-      ${actionBtn("entry", subjectHash("person", p.name), "Open the entry")}
-    </article>`;
-  });
-
-  const topDonor = dailyEncyShuffle((don?.top_donors || []).filter(row=>!donorNameWithheld(donorViewIndex,row[0])), row => row[0])[0];
-  if (topDonor) {
-    const node = findMoneyNode("donor", topDonor[0]);
-    cards.push(`<article class="report-card ency-card">
-      <div class="ency-id">
-        <span class="card-kicker">Donor${node?.industry ? ` · ${esc(industryLabel(node.industry))}` : ""}</span>
-        <a class="card-title ency-name" ${entityHrefAttr(subjectHash("donor", topDonor[0]))}>${esc(topDonor[0])}</a>
-      </div>
-      <p class="card-blurb">${esc(fmtMoney(topDonor[1]))} disclosed${node ? `, ${node.firstYear} to ${node.lastYear}` : " to parties"}.</p>
-      ${actionBtn("entry", subjectHash("donor", topDonor[0]), "Open the entry")}
-    </article>`);
-  }
-  if (!cards.length) return;
-
-  const holder = $("front-ency");
-  holder.innerHTML = `
-    <div class="ency-slider">
-      <div class="ency-track">${cards.join("")}</div>
-      ${cards.length > 1 ? `<div class="ency-nav" data-ui-size="compact">
-        <button type="button" class="ui-button ui-icon-button ency-prev" aria-label="Previous entry">${iconSvg("prev")}</button>
-        <span class="ency-count" aria-live="polite"></span>
-        <button type="button" class="ui-button ui-icon-button ency-next" aria-label="Next entry">${iconSvg("next")}</button>
-      </div>` : ""}
-    </div>`;
-  // Unhide before measuring: a display:none track reports zero widths.
-  $("mod-ency").hidden = false;
-  if (cards.length > 1) mountEncySlider(holder.querySelector(".ency-slider"));
-}
-
-// Prev/next step one card; the count and the disabled ends follow the track's
-// own scroll position, so swipes and arrow clicks stay in agreement.
-function mountEncySlider(root) {
-  const track = root.querySelector(".ency-track");
-  const prev = root.querySelector(".ency-prev");
-  const next = root.querySelector(".ency-next");
-  const count = root.querySelector(".ency-count");
-  const cards = [...track.children];
-  const step = () => (cards[1].offsetLeft - cards[0].offsetLeft) || track.clientWidth;
-  const sync = () => {
-    const atEnd = track.scrollLeft + track.clientWidth >= track.scrollWidth - 2;
-    const i = atEnd ? cards.length - 1 : Math.min(cards.length - 1, Math.round(track.scrollLeft / step()));
-    count.textContent = `${i + 1} of ${cards.length}`;
-    prev.disabled = track.scrollLeft <= 2;
-    next.disabled = atEnd;
-  };
-  prev.addEventListener("click", () => track.scrollBy({ left: -step() }));
-  next.addEventListener("click", () => track.scrollBy({ left: step() }));
-  track.addEventListener("scroll", sync, { passive: true });
-  window.addEventListener("resize", sync);
-  sync();
-}
-
-async function renderFrontAdded() {
-  try {
-    const data = await api("/api/recent");
-    const items = (data.items || []).slice(0, 6);
-    if (!items.length) return;
-    const half = Math.ceil(items.length / 2);
-    const li = (i) => `<li><a href="/doc/${esc(i.slug)}" class="source-title doc-title">${esc(displayTitle(i))}</a>
-      <span class="result-meta">indexed ${esc(relTime(i.indexed))}</span></li>`;
-    $("front-added").innerHTML =
-      `<ul class="subject-list" role="list">${items.slice(0, half).map(li).join("")}</ul>` +
-      `<ul class="subject-list" role="list">${items.slice(half).map(li).join("")}</ul>`;
-    $("mod-added").hidden = false;
-  } catch { /* stays hidden */ }
-}
-
-async function renderFrontDeclared() {
-  try {
-    const [data, roster] = await Promise.all([loadRecentInterests(), loadParliamentarians(), loadPhotoMap()]);
-    const items = (data?.items || []).slice(0, 6);
-    if (!items.length) return;
-    const partyByName = partyMapForRoster(roster);
-    const days = new Map();
-    for (const item of items) {
-      if (!days.has(item.date)) days.set(item.date, []);
-      days.get(item.date).push(item);
-    }
-    $("front-declared").innerHTML = `${[...days].map(([date, rows]) => `<section class="front-declared-day" aria-labelledby="front-declared-${esc(date)}">
-      <h3 id="front-declared-${esc(date)}"><time datetime="${esc(date)}">${esc(fmtDate(date))}</time></h3>
-      <ul class="subject-list front-declared-list" role="list">${rows.map((item) => declaredRowHTML(item, partyByName, { showDate: false })).join("")}</ul>
-      </section>`).join("")}
-      <p class="fineprint">Latest additions and deletions, dated as recorded by the registers. Entries are declared, not verified by OPAX.</p>
-      <details class="front-declared-notes"><summary>Sources and how to read these entries</summary>
-      <p class="fineprint">Registers of Members' and Senators' Interests, 48th Parliament, and Queensland Register of Members' Interests, 58th Parliament; entries as declared, not verified by OPAX. Additions and deletions carry the date the register records. A gift or trip with no organisation match names one the AEC and lobbyist registers do not list under that spelling. AEC matches use <a href="https://transparency.aec.gov.au/" rel="noopener" target="_blank">Transparency Register returns, CC BY 4.0 ↗︎</a>.</p></details>`;
-    $("mod-declared").hidden = false;
-  } catch { /* stays hidden */ }
-}
-
-/* The newest bills before parliament, each with its machine summary: the
-   sentence that says what it does and the line that says who it touches. The
-   index only knows a bill HAS a summary, so the few files are fetched (they are
-   small and cached for the bill pages). A bill without a summary still earns
-   its place by being new; it says so instead of showing nothing. */
-async function renderFrontBills() {
-  try {
-    const idx = await loadBillsIndex();
-    const all = (idx?.bills || []).filter((b) => b.introduced);
-    if (!all.length) return;
-    all.sort((a, b) => String(b.introduced).localeCompare(String(a.introduced)));
-    const newest = all.slice(0, 8);
-    const picked = [...newest.filter((b) => b.has_summary), ...newest.filter((b) => !b.has_summary)].slice(0, 5)
-      .sort((a, b) => String(b.introduced).localeCompare(String(a.introduced)));
-    const files = await Promise.all(picked.map((b) => (b.has_summary ? loadBill(b.key) : Promise.resolve(null))));
-    const house = (b) => {
-      const h = String(b.originating_house || "").toLowerCase();
-      return h.includes("senate") ? "Senate" : (h.includes("rep") || h.includes("house")) ? "House" : "";
-    };
-    const items = picked.map((b, i) => {
-      const s = files[i]?.summary;
-      const sentences = (s?.sentences || []).filter(Boolean);
-      const lede = sentences.slice(0, 2).join(" ");
-      const figures = [
-        Number(b.divisions) ? `${b.divisions} division record${b.divisions === 1 ? "" : "s"}` : "",
-        Number(b.acts) ? "became law" : "",
-      ].filter(Boolean);
-      return `<li class="front-bill">
-        <a class="source-title bill-row-title" ${entityHrefAttr(billHash(b.key))}>${esc(billName(b))}</a>
-        <span class="result-meta bill-row-meta">${[
-          `Introduced ${esc(fmtDate(b.introduced))}`,
-          house(b) ? esc(house(b)) : "",
-          b.sponsor_party ? partyChipHTML(billParty(b.sponsor_party)) : "",
-          b.status ? `<b class="bill-row-status">${esc(sentenceCase(b.status))}</b>` : "",
-        ].filter(Boolean).join("&nbsp;· ")}</span>
-        ${lede ? `<p class="front-bill-sum">${esc(lede)}</p>` : `<p class="front-bill-sum front-bill-none">No summary yet.</p>`}
-        ${s?.affected ? `<p class="front-bill-who"><b>Who it affects</b> ${esc(s.affected)}</p>` : ""}
-        ${figures.length ? `<p class="bill-row-figures">${figures.join(" · ")}</p>` : ""}
-      </li>`;
-    });
-    $("front-bills").innerHTML = items.join("");
-    $("mod-bills").hidden = false;
-  } catch { /* stays hidden */ }
-}
-
-function renderFrontPage() {
-  setFrontPageHidden(false);
-  renderFrontNumbers();
-  resetFrontMap();
-  if (frontRendered) return;
-  frontRendered = true;
-  onIdle(() => { mountFrontMaps(); renderFrontBills(); renderFrontTopic(); renderFrontReports(); renderFrontAdded(); renderFrontDeclared(); });
-}
-
-// --- the home maps ----------------------------------------------------------
-// Two plates above the modules. Left, the record by state: Australia engraved
-// (statemap.js), each parliament in the corpus labelled with its speech count
-// from the manifest, a click searching that parliament's record. Right, where
-// the money goes: the money map in its mini chrome, framed on the whole graph -
-// the parties at the centre, the top donors ringed by industry, drifting until
-// touched. Clicking a donor or party opens its encyclopedia entry; the industry
-// chips beneath (the keyboard path to the same territory) open the full map
-// with that cluster isolated. Both mount once, lazily; the 3D map is paused
-// whenever it cannot be seen: scrolled past, hidden behind an ask, or behind
-// another panel.
-
-let stateMapHandle = null;
-let frontMapHandle = null;
-let frontMapLoading = false;
-let frontMapObserver = null;
-function mountFrontMaps() {
-  mountStateMap();
-  // The money map is a 167 KB bundle plus its data. The plate reserves its own
-  // height, so deferring the mount until it nears the viewport costs no layout
-  // shift and keeps the bundle off the home page's critical path.
-  const root = $("front-map-root");
-  if (!root || !("IntersectionObserver" in window)) { mountFrontMap(); return; }
-  const io = new IntersectionObserver((entries) => {
-    if (!entries.some((e) => e.isIntersecting)) return;
-    io.disconnect();
-    mountFrontMap();
-  }, { rootMargin: "300px" });
-  io.observe(root);
-}
-
-async function mountStateMap() {
-  const root = $("front-statemap");
-  if (!root || stateMapHandle) return;
-  try {
-    const [mod, manifest] = await Promise.all([
-      import("/statemap.js?v=624f6e8974"),
-      corpusManifest ? Promise.resolve(corpusManifest) : fetch("/corpus.json").then((r) => r.json()),
-    ]);
-    root.textContent = "";
-    stateMapHandle = mod.mountStateMap(root, {
-      manifest,
-      searchHref: (code) => searchHash("", { state: code }),
-      moneyHref: (jur) => moneyHash(jur),
-    });
-  } catch {
-    root.innerHTML = `<p class="status">The map could not load here. <a href="/ask?view=search">Search the record</a>.</p>`;
-  }
-}
-
-async function mountFrontMap() {
-  const root = $("front-map-root");
-  if (!root || frontMapHandle || frontMapLoading) return;
-  frontMapLoading = true;
-  try {
-    const [mod, data] = await Promise.all([import("/money-map.js?v=6a5d1961fa"), loadMoneyData()]);
-    if (!data) throw new Error("money data unavailable");
-    root.textContent = "";
-    const handle = await mod.mountMoneyMap(root, "/graph/money.json", {
-      chrome: "mini",
-      overview: true,
-      pageScroll: true,
-      askUrl: (industry) => askHash(`What has parliament said about ${industryLabel(industry)}?`),
-
-    });
-    frontMapHandle = handle;
-    frontMapObserver = new IntersectionObserver((entries) => handle.setPaused?.(!entries[entries.length - 1].isIntersecting));
-    frontMapObserver.observe(root);
-    renderFrontMapChips(mod, data);
-  } catch {
-    root.innerHTML = `<p class="status">The map could not load here. <a href="/money">Open the money map</a>.</p>`;
-  } finally {
-    frontMapLoading = false;
-  }
-}
-
-/** One chip per industry cluster, in the map's own colours and legend order. */
-function renderFrontMapChips(mod, data) {
-  const nav = $("front-map-chips");
-  if (!nav || !mod.CLUSTER_COLOURS) return;
-  const counts = new Map();
-  for (const n of data.nodes || []) {
-    if (n.kind === "donor" && !donorNameWithheld(donorViewIndex,n.label)) counts.set(n.group, (counts.get(n.group) || 0) + 1);
-  }
-  const groups = [...mod.CLUSTER_COLOURS.keys()].filter((g) => g !== "parties" && counts.has(g));
-  if (!groups.length) return;
-  nav.innerHTML = groups.map((g) => `<a class="ui-filter-chip ui-map-filter" href="${esc(moneyHash("federal", g))}">
-      <span class="ui-map-filter__dot" aria-hidden="true" style="background:${esc(mod.clusterColour(g).colour)}"></span>
-      <span>${esc(g[0].toUpperCase() + g.slice(1))}</span>
-      <span class="ui-map-filter__count">${counts.get(g)}</span></a>`).join("");
-  nav.hidden = false;
-}
-
-/** Back on the home page: whatever was clicked last, the whole territory is in view again. */
-function resetFrontMap() {
-  if (!frontMapHandle) return;
-  frontMapHandle.select(null);
-  frontMapHandle.fit?.(false);
-}
 
 
 // --- the wombat (loading companion) -----------------------------------------
@@ -9966,7 +9502,6 @@ async function runAsk(question) {
   $("ask-date-ruler").replaceChildren();
   $("ask-chips").hidden = true;
   setAskBuilderHidden(true);
-  setFrontPageHidden(true);
   setQuoteRail([]);
   resetPeopleRail();
   const started = Date.now();
@@ -10164,7 +9699,6 @@ async function runAsk(question) {
       if ($("ask-result").hidden) {
         if (suggestions.length) $("ask-chips").hidden = false;
         setAskBuilderHidden(false);
-        setFrontPageHidden(false);
       }
     }
   } finally {
@@ -10526,14 +10060,6 @@ function renderMoneyNextSteps(container, answer) {
     nav.appendChild(a);
   }
   container.appendChild(nav);
-}
-
-function setFrontPageHidden(hidden) {
-  hidden = true; // Homepage content belongs to its own document at /.
-  for (const id of ["front-map", "home-tasks", "front-page"]) {
-    const el = $(id);
-    if (el) el.hidden = hidden;
-  }
 }
 
 // --- chat (keep asking) -----------------------------------------------------
@@ -12389,8 +11915,8 @@ function renderResults(results) {
       if (r.href) {
         // A row whose text a model wrote (a bill's summary) says so with the
         // machine label above that text, not with a phrase in its meta line.
-        li.innerHTML = `<div class="result-meta">${recordTypeLink(r.kind, lastSearch.query, lastSearch.filters)}${r.dateLabel ? ` · ${esc(r.dateLabel)}` : r.date ? ` · ${esc(fmtDate(r.date))}` : ""}${r.source ? ` · ${esc(r.source)}` : ""}</div>
-          <h3 class="search-result-heading"><a class="result-title" href="${esc(searchResultHref(r))}">${esc(isMultiSpeaker(r) ? displayTitle(r) : r.title)}</a></h3>
+        li.innerHTML = `<div class="ui-row-meta">${recordTypeLink(r.kind, lastSearch.query, lastSearch.filters)}${r.dateLabel ? ` · ${esc(r.dateLabel)}` : r.date ? ` · ${esc(fmtDate(r.date))}` : ""}${r.source ? ` · ${esc(r.source)}` : ""}</div>
+          <h3 class="ui-row-title search-result-heading"><a class="result-title" href="${esc(searchResultHref(r))}">${esc(isMultiSpeaker(r) ? displayTitle(r) : r.title)}</a></h3>
           ${r.kind === "speech" ? `<div class="result-byline">${speechIdentityHTML(r)}</div>` : ""}
           ${r.machine ? machineLabelHTML({ className: "search-result-machine", note: "The summary sentences in this row were written by a model from the bill's explanatory material. They are not the record: open the bill for its own documents." }) : ""}
           <p id="search-passage-${index}" class="search-result-text snippet" data-full="catalog">${highlightHTML(cleanPassage(r.snippet), lastSearch.query)}</p>
@@ -12424,8 +11950,8 @@ function renderResults(results) {
       const topics = [...new Set((Array.isArray(r.topics) ? r.topics : []).filter((t) => typeof t === "string" && t.trim()))];
       // Opening a speech row loads the whole speech in place, so its button says so.
       const more = r.excerpt ? "Read excerpt" : r.kind === "speech" ? "Read the full speech here" : "Read more";
-      li.innerHTML = `<div class="result-meta">${meta}</div>
-        <h3 class="search-result-heading"><a class="result-title" ${entityHrefAttr(`/doc/${encodeURIComponent(r.slug)}`)}>${esc(title)}</a></h3>
+      li.innerHTML = `<div class="ui-row-meta">${meta}</div>
+        <h3 class="ui-row-title search-result-heading"><a class="result-title" ${entityHrefAttr(`/doc/${encodeURIComponent(r.slug)}`)}>${esc(title)}</a></h3>
         ${byline ? `<div class="result-byline">${byline}</div>` : ""}${text}
         <button type="button" class="search-passage-more" hidden aria-controls="search-passage-${index}" aria-expanded="false" data-more="${esc(more)}"${r.excerpt ? ' data-excerpt="true"' : ''}>${esc(more)}</button>${excerptNoticeHTML(r)}
         ${topics.length ? `<nav class="search-result-topics" aria-label="Topics for ${esc(title)}">${topics.map((topic) => `<a class="ui-tag" ${entityHrefAttr(subjectHash("topic", topic))}>${esc(TOPICS[topic] || topic)}</a>`).join("")}</nav>` : ""}`;
@@ -12530,7 +12056,8 @@ function renderPagerNumbers(s) {
     }
     const b = document.createElement("button");
     b.type = "button";
-    b.className = "pager-btn pager-num";
+    b.className = "pager-btn pager-num ui-button";
+    b.dataset.variant = "quiet";
     b.dataset.page = String(n);
     // A bare digit is no name to hear, and the total is what tells the reader
     // how far a jump is: the same words Previous and Next use.
@@ -13089,10 +12616,10 @@ async function loadDivisionNames(slug, d) {
  *  carry no person id, so they print as the record prints them, unlinked.
  *  Export names carry their party on the day: a dot and the short name. */
 function divisionMembersHTML(names, { ayes = 0, noes = 0 } = {}) {
-  const open = `<section class="division-block division-members" id="division-members" aria-labelledby="division-members-head">
-      <h3 class="subject-section-title" id="division-members-head">Who voted which way</h3>`;
+  const open = `<section class="ui-section division-block division-members" id="division-members" aria-labelledby="division-members-head">
+      <h3 class="ui-section-title" id="division-members-head">Who voted which way</h3>`;
   if (!names || names.failed) {
-    return `${open}<p class="division-none">The member list could not load just now; the counts and the party split are from the published export.</p></section>`;
+    return `${open}<p class="ui-empty">The member list could not load just now; the counts and the party split are from the published export.</p></section>`;
   }
   if (names.text) return `${open}<div class="division-markdown">${billNoteHTML(names.text)}</div></section>`;
   const who = (list) => list.map((m) => `<li>${m.slug
@@ -13124,8 +12651,8 @@ function renderDivisionDoc({ d, entry, bills }, slug, manageFocus) {
   const question = billQuestion(d.question || d.name || "");
   const ask = askHash(bills[0]?.title ? `How did parliament vote on the ${bills[0].title}?` : `What was the ${house} division of ${fmtDate(d.date)} about?`);
   $("doc-bill").innerHTML = `
-    ${bills.length ? `<ul class="division-bills" role="list">${bills.map((b) =>
-      `<li><a ${entityHrefAttr(billHash(b.key))}>${esc(b.title)}</a></li>`).join("")}</ul>` : ""}
+    ${bills.length ? `<ul class="ui-list division-bills" role="list" aria-label="${bills.length === 1 ? "The bill" : "The bills"} this division was on">${bills.map((b) =>
+      `<li class="ui-row-name"><a ${entityHrefAttr(billHash(b.key))}>${esc(b.title)}</a></li>`).join("")}</ul>` : ""}
     <div class="page-actions">
       <a class="ui-button" href="${esc(ask)}">Ask the record about this</a>
       ${moreMenuHTML([
@@ -13144,15 +12671,15 @@ function renderDivisionDoc({ d, entry, bills }, slug, manageFocus) {
   const meta = d._meta || {};
   const retrieved = meta.member_retrieved_at || "";
   $("doc-text").innerHTML = `<div class="division-view">
-    ${split ? `<section class="division-block" aria-labelledby="division-split-head">
-      <h3 class="subject-section-title" id="division-split-head">How the parties voted</h3>
-      ${split.drawn}${split.restCount ? `<details class="bill-division-more"><summary>${split.restCount} more ${split.restCount === 1 ? "party" : "parties"}</summary>${split.rest}</details>` : ""}${split.notes}
+    ${split ? `<section class="ui-section division-block" aria-labelledby="division-split-head">
+      <h3 class="ui-section-title" id="division-split-head">How the parties voted</h3>
+      ${BILL_SPLIT_LEGEND}${split.drawn}${split.restCount ? `<details class="ui-disclosure bill-division-more"><summary>${split.restCount} more ${split.restCount === 1 ? "party" : "parties"}</summary><div class="ui-disclosure-body">${split.rest}</div></details>` : ""}${split.notes}
     </section>` : ""}
-    <section class="division-block division-members" id="division-members" aria-labelledby="division-members-head" aria-busy="true">
-      <h3 class="subject-section-title" id="division-members-head">Who voted which way</h3>
-      <p class="status">Reading the member list…</p>
+    <section class="ui-section division-block division-members" id="division-members" aria-labelledby="division-members-head" aria-busy="true">
+      <h3 class="ui-section-title" id="division-members-head">Who voted which way</h3>
+      <p class="ui-status-line">Reading the member list…</p>
     </section>
-    ${question ? `<details class="division-question bill-division-more"><summary>The question</summary><div class="division-markdown">${billNoteHTML(question)}</div></details>` : ""}
+    ${question ? `<section class="ui-section division-block division-question-block"><details class="ui-disclosure division-question"><summary>The question</summary><div class="ui-disclosure-body division-markdown">${billNoteHTML(question)}</div></details></section>` : ""}
     ${sourceLineHTML({
       updated: retrieved, dateLabel: retrieved ? "Retrieved" : "Updated", source: "They Vote For You",
       originals: [safeUrl(d.source_url) && { label: "The count on They Vote For You", href: d.source_url }, ...bills.map((b) => ({ label: b.title, href: `/bill/${encodeURIComponent(b.key)}` }))].filter(Boolean),
@@ -13580,11 +13107,11 @@ async function loadReportsList(manageFocus) {
     }
   }
   setStatus($("reports-status"), "");
-  // A report is a unit you pick up: a card, and a link (navigation is never a
-  // button). The set has one dated line; each report carries its own date.
-  list.innerHTML = reportsIndex.map((r) => `<a class="report-card" href="/reports/${encodeURIComponent(r.slug)}">${
-    reportGlyph(r.slug, "card-glyph")}<span class="card-title">${esc(r.title)}</span>
-      <span class="card-blurb">${esc(r.blurb)}</span></a>`).join("");
+  // A report is a unit you pick up: a card whose title is the link and whose
+  // whole face is its target (navigation is never a button). The set has one
+  // dated line; each report carries its own date.
+  list.innerHTML = reportsIndex.map((r) => `<li class="ui-card">${reportGlyph(r.slug, "card-glyph")}<h2 class="ui-card-title"><a href="/reports/${
+    encodeURIComponent(r.slug)}">${esc(r.title)}</a></h2><p class="ui-card-text">${esc(r.blurb)}</p></li>`).join("");
   const newest = reportsIndex.map((r) => String(r.updated || "").slice(0, 10)).filter(Boolean).sort().pop() || "";
   $("reports-source").innerHTML = sourceLineHTML({
     updated: newest, source: "Generated from the record",
@@ -13833,12 +13360,6 @@ function renderReportBrief(report) {
     p.textContent = text;
     return p;
   };
-  const docLink = (slug, title) => {
-    const a = document.createElement("a");
-    a.href = `/doc/${slug}`;
-    a.textContent = title || slug;
-    return a;
-  };
 
   const brief = $("report-brief");
   brief.replaceChildren();
@@ -13851,60 +13372,23 @@ function renderReportBrief(report) {
 
   const figures = $("report-figures");
   figures.replaceChildren();
+  // The same figures and positions a v2 report draws (ui-stats, ui-list).
   if (report.key_stats?.length) {
-    const grid = document.createElement("div");
-    grid.className = "tiles";
-    for (const s of report.key_stats) {
-      const t = document.createElement("div");
-      t.className = "tile";
-      const b = document.createElement("b");
-      b.textContent = s.value;
-      const label = document.createElement("span");
-      label.textContent = s.label;
-      const src = document.createElement("span");
-      src.className = "tile-source";
-      src.append("— ", docLink(s.slug, s.source_title));
-      if (s.detail) t.title = s.detail;
-      t.append(b, label, src);
-      grid.appendChild(t);
-    }
-    figures.append(kicker("Key figures: spoken on the record"), grid);
+    figures.append(kicker("Key figures: spoken on the record"), reportStatTiles(report.key_stats));
   }
 
   const positions = $("report-positions");
   positions.replaceChildren();
   if (report.positions?.length) {
-    const list = document.createElement("ul");
-    list.className = "position-list";
-    for (const p of report.positions) {
-      const li = document.createElement("li");
-      const head = document.createElement("span");
-      head.className = "position-party";
-      head.innerHTML = partyChipHTML(p.party); // fixed map lookup, not model text
-      if (!head.firstChild) head.textContent = p.party;
-      const text = document.createElement("span");
-      text.className = "position-text";
-      text.textContent = ` ${p.position} `;
-      const cite = document.createElement("span");
-      cite.className = "source-meta";
-      const who = [p.speaker, fmtDate(p.date || "")].filter(Boolean).join(", ");
-      cite.append(who ? `${who} · ` : "", docLink(p.slug, "read the speech"));
-      li.append(head, text, cite);
-      list.appendChild(li);
-    }
-    positions.append(kicker("Where the parties stand"), list);
+    positions.append(kicker("Where the parties stand"), reportPositions(report.positions));
   }
 
   const moments = $("report-moments");
   moments.replaceChildren();
   if (report.key_moments?.length) {
-    const note = document.createElement("p");
-    note.className = "report-part-note report-reading-note";
-    note.textContent = "Chosen from the labelled record: substantive speeches on the subject, one per speaker, across the years.";
-    const list = document.createElement("div");
-    list.className = "report-reading-list";
-    list.replaceChildren(...report.key_moments.map(keySpeechItem));
-    moments.append(kicker("Start reading: key speeches"), note, list);
+    moments.append(kicker("Start reading: key speeches"),
+      reportNote("Chosen from the labelled record: substantive speeches on the subject, one per speaker, across the years."),
+      reportReadingList(report.key_moments));
   }
 }
 
@@ -14108,27 +13592,21 @@ function reportSourceRow(s, num) {
   const body = document.createElement("div");
   body.className = "report-source-body";
 
-  // A record with a named speaker leads with the person; one without leads
-  // with the title the record itself wrote, rather than an empty portrait and
-  // a party chip attached to nobody.
+  // A record with a named speaker leads with the person (a byline); one
+  // without leads with the title the record itself wrote, rather than an
+  // empty portrait and a party chip attached to nobody.
   if (s.speaker) {
-    const face = document.createElement("span");
-    face.className = "report-source-face";
-    face.setAttribute("aria-hidden", "true"); // blank circle until the portrait lands; never initials
-    loadPhotoMap().then(() => {
-      const url = !isUnattributed(s) ? photoUrlFor(s.speaker) : null;
-      if (url) face.innerHTML = `<img src="${esc(url)}" alt="" width="40" height="40" loading="lazy">`;
-    });
-    li.appendChild(face);
+    li.classList.add("ui-byline");
+    li.appendChild(bylinePortrait(isUnattributed(s) ? null : s.speaker));
   } else {
     li.classList.add("report-source-unnamed");
   }
 
-  const name = document.createElement("p");
-  name.className = "report-source-name";
+  const name = document.createElement(s.speaker ? "div" : "p");
   if (s.speaker) {
+    name.className = "ui-byline-who";
     const who = document.createElement("a");
-    who.className = "meta-speaker";
+    who.className = "ui-byline-name";
     if (hasEntityId(s.speaker)) who.href = subjectHash("person", s.speaker);
     who.textContent = s.speaker;
     name.appendChild(who);
@@ -14140,11 +13618,12 @@ function reportSourceRow(s, num) {
       name.appendChild(party);
     }
   } else {
+    name.className = "ui-row-title";
     name.textContent = record.title || s.slug || "";
   }
 
-  const where = document.createElement("p");
-  where.className = "report-source-where";
+  const where = document.createElement("span");
+  where.className = "ui-byline-meta";
   const speech = !s.kind || s.kind === "speech";
   const jurisdiction = s.state ? (speech ? PARLIAMENT_NAMES[s.state] : STATE_NAMES[s.state]) || STATE_NAMES[s.state] || s.state : "";
   const parliament = [!speech ? FILTER_KIND_LABELS[s.kind] || s.kind.replaceAll("_", " ") : "", jurisdiction].filter(Boolean).join(" · ");
@@ -14181,7 +13660,7 @@ function reportSourceRow(s, num) {
   }
 
   const read = document.createElement("a");
-  read.className = "report-source-read";
+  read.className = "ui-source-link";
   read.href = `/doc/${s.slug}`;
   read.textContent = speech ? "Read the speech" : "Read the record";
   body.appendChild(read);
@@ -14189,6 +13668,28 @@ function reportSourceRow(s, num) {
 
   li.appendChild(body); // the portrait, when there is one, is already in place
   return li;
+}
+
+/**
+ * A byline's 44 portrait: a blank circle until the photo map answers, then the
+ * photo in its place; a speaker with no photo keeps the circle (never initials).
+ */
+function bylinePortrait(name) {
+  const blank = document.createElement("span");
+  blank.className = "ui-byline-portrait";
+  blank.setAttribute("aria-hidden", "true");
+  if (name) loadPhotoMap().then(() => {
+    const url = photoUrlFor(name);
+    if (!url || !blank.parentNode) return;
+    const img = document.createElement("img");
+    img.className = "ui-byline-portrait";
+    img.src = url;
+    img.alt = "";
+    img.width = img.height = 44;
+    img.loading = "lazy";
+    blank.replaceWith(img);
+  });
+  return blank;
 }
 
 /**
@@ -14238,13 +13739,13 @@ function reportSourcesFold(sources, label) {
   const cited = flagged ? numbered.filter((r) => r.s.cited === true) : numbered;
   const rest = flagged ? numbered.filter((r) => r.s.cited !== true) : [];
   const det = document.createElement("details");
-  det.className = "chat-sources report-sources";
+  det.className = "ui-disclosure report-sources";
   const sum = document.createElement("summary");
   sum.textContent = flagged
     ? `${label || "Sources"}: ${cited.length} cited, ${rest.length} more retrieved`
     : `${label || "Sources"} (${numbered.length})`;
   const ol = document.createElement("ol");
-  ol.className = "report-source-list";
+  ol.className = "ui-list ui-disclosure-body report-source-list";
   det.append(sum, ol);
   reportFillOnOpen(det, ol, () => {
     const rows = cited.map((r) => reportSourceRow(r.s, r.n));
@@ -14271,7 +13772,7 @@ function reportEssay(item, { id, slug, number } = {}) {
   if (id) sec.id = id;
 
   const heading = document.createElement("h3");
-  heading.className = "report-essay-question";
+  heading.className = "ui-row-title report-essay-question";
   heading.textContent = item.question || item.label || "";
 
   const body = document.createElement("div");
@@ -14379,14 +13880,15 @@ function reportStatAsOf(value) {
 /** The figures the report leans on, each traced to the speech that said it. */
 function reportStatTiles(stats) {
   const grid = document.createElement("div");
-  grid.className = "tiles report-stat-tiles";
+  grid.className = "ui-stats report-stats-grid";
   for (const s of stats) {
     const t = document.createElement("div");
-    t.className = "tile report-stat";
+    t.className = "ui-stat";
     const value = document.createElement("b");
+    value.className = "ui-stat-value";
     value.textContent = s.value;
     const label = document.createElement("span");
-    label.className = "report-stat-label";
+    label.className = "ui-stat-label";
     label.textContent = s.label;
     t.append(value, label);
     const ratio = reportStatRatio(s);
@@ -14394,17 +13896,17 @@ function reportStatTiles(stats) {
     const under = [ratio, scope].filter(Boolean).join(" · ");
     if (under) {
       const q = document.createElement("span");
-      q.className = "report-stat-basis";
+      q.className = "ui-stat-label";
       q.textContent = under;
       t.appendChild(q);
     }
     if (s.detail) t.title = s.detail;
     if (s.slug) {
-      // The link stands on its own line: an "—" text node ahead of a 44px
-      // inline-flex link is left orphaned above it.
+      // The link stands on its own line under the figure it sources.
       const src = document.createElement("span");
-      src.className = "tile-source";
+      src.className = "report-stat-source";
       const a = document.createElement("a");
+      a.className = "ui-source-link";
       a.href = `/doc/${s.slug}`;
       a.textContent = reportSourceLabel(s.source_title, { short: true })
         || "Read the source record";
@@ -14426,33 +13928,37 @@ function reportStatTiles(stats) {
  */
 function reportPositions(positions, win) {
   const list = document.createElement("ul");
-  list.className = "position-list report-position-list";
+  list.className = "ui-list report-position-list";
   for (const p of positions) {
     const li = document.createElement("li");
+    // The party leads the line; the position is the model's sentence (sans).
+    const line = document.createElement("p");
+    line.className = "ui-row-text";
     const head = document.createElement("a");
-    head.className = "position-party";
+    head.className = "report-position-party";
     if (hasEntityId(p.party)) head.href = subjectHash("party", p.party); // the chip opens the party's page
     head.innerHTML = partyChipHTML(p.party); // fixed map lookup, not model text
     if (!head.firstChild) head.textContent = p.party;
-    const text = document.createElement("span");
-    text.className = "position-text";
-    text.textContent = ` ${p.position} `;
-    li.append(head, text);
+    line.append(head, ` ${p.position}`);
+    li.appendChild(line);
     if (p.window) {
-      const scope = document.createElement("span");
-      scope.className = "report-position-window";
+      const scope = document.createElement("p");
+      scope.className = "ui-row-meta";
       scope.textContent = `Their position in the debate ${p.window}`;
       li.appendChild(scope);
     }
-    const cite = document.createElement("span");
-    cite.className = "source-meta report-position-cite";
+    // One meta line: who said it and when, the record, and whether it predates the window.
+    const cite = document.createElement("p");
+    cite.className = "ui-row-meta";
+    const said = document.createElement("span");
     const who = [p.speaker, fmtDate(p.date || "")].filter(Boolean).join(", ");
     const read = document.createElement("a");
     read.href = `/doc/${p.slug}`;
     read.textContent = p.kind && p.kind !== "speech" ? "read the record" : "read the speech";
-    cite.append(who ? `${who} · ` : "", read);
+    said.append(who ? `${who} · ` : "", read);
     const earlier = win?.since && p.date && String(p.date) < String(win.since);
-    if (earlier) cite.append(" · cited from earlier in the record");
+    if (earlier) said.append(" · cited from earlier in the record");
+    cite.appendChild(said);
     li.appendChild(cite);
     list.appendChild(li);
   }
@@ -14495,42 +14001,34 @@ function reportTideHTML(tide, topic) {
   </section>`;
 }
 
-/** One ranked speaker: portrait, name, party, bar, count. */
+/** One ranked speaker: a byline (portrait, name, party), a bar, the count. */
 function reportVoiceRow(v, max) {
   const row = document.createElement("li");
   row.className = "report-voice";
-  const face = document.createElement("span");
-  face.className = "report-voice-face";
-  face.setAttribute("aria-hidden", "true"); // a blank circle until the portrait lands; never initials
-  loadPhotoMap().then(() => {
-    const url = photoUrlFor(v.speaker);
-    if (url) face.innerHTML = `<img src="${esc(url)}" alt="" width="32" height="32" loading="lazy">`;
-  });
   const body = document.createElement("div");
-  body.className = "report-voice-body";
-  const line = document.createElement("p");
-  line.className = "report-voice-name";
+  const line = document.createElement("div");
+  line.className = "ui-byline-who";
   const who = document.createElement("a");
+  who.className = "ui-byline-name";
   if (hasEntityId(v.speaker)) who.href = subjectHash("person", v.speaker);
   who.textContent = v.speaker;
   line.appendChild(who);
   if (v.party) {
     const party = document.createElement("span");
-    party.className = "report-voice-party";
     party.innerHTML = partyChipHTML(v.party); // fixed map lookup, not model text
     if (!party.firstChild) party.textContent = v.party;
     line.appendChild(party);
   }
   const count = Number(v.count || 0);
   const track = document.createElement("span");
-  track.className = "barrow-track report-voice-track";
+  track.className = "ui-bar";
   track.setAttribute("aria-hidden", "true");
   track.innerHTML = `<i style="width:${Math.max((count / max) * 100, 1).toFixed(2)}%"></i>`;
   body.append(line, track);
   const tally = document.createElement("span");
-  tally.className = "report-voice-count";
+  tally.className = "ui-row-figure";
   tally.textContent = count.toLocaleString();
-  row.append(face, body, tally);
+  row.append(bylinePortrait(v.speaker), body, tally);
   return row;
 }
 
@@ -14541,13 +14039,13 @@ function reportVoices(voices, win) {
   const column = (rows, heading) => {
     if (!rows?.length) return;
     const col = document.createElement("div");
-    col.className = "report-voice-column";
     const h = document.createElement("h4");
-    h.className = "report-voice-heading";
+    h.className = "ui-row-name";
     h.textContent = heading;
     const max = Math.max(...rows.map((r) => Number(r.count) || 0), 1);
     const list = document.createElement("ol");
-    list.className = "report-voice-list";
+    list.className = "ui-list report-voice-list";
+    list.dataset.rule = "none";
     list.replaceChildren(...rows.map((r) => reportVoiceRow(r, max)));
     col.append(h, list);
     wrap.appendChild(col);
@@ -14578,24 +14076,43 @@ function reportAllSources(report) {
   const rows = [...seen.values()].sort((a, b) => String(a.date || "").localeCompare(String(b.date || "")));
   if (!rows.length) return null;
   const det = document.createElement("details");
-  det.className = "chat-sources report-sources report-all-sources";
+  det.className = "ui-disclosure report-sources";
   const sum = document.createElement("summary");
   sum.textContent = `Every record behind this report (${rows.length})`;
   const ol = document.createElement("ol");
-  ol.className = "report-source-list";
+  ol.className = "ui-list ui-disclosure-body report-source-list";
   det.append(sum, ol);
   reportFillOnOpen(det, ol, () => rows.map((s) => reportSourceRow(s)));
   return det;
 }
 
-/** A serif section heading with a hairline over it, and the anchor to jump to. */
+/** A part's head (its section carries the rule), and the anchor to jump to. */
 function reportSectionHead(id, text) {
-  const h = document.createElement("h3");
+  const head = document.createElement("div");
+  head.className = "ui-section-head";
+  const h = document.createElement("h2");
   h.className = "report-part-title";
   h.id = `${id}-head`;
   h.tabIndex = -1;
   h.textContent = text;
+  head.appendChild(h);
+  return head;
+}
+
+/** A titled group inside a part. */
+function reportSubTitle(text) {
+  const h = document.createElement("h3");
+  h.className = "ui-subsection-title";
+  h.textContent = text;
   return h;
+}
+
+/** A part's note: OPAX saying what the block below is. */
+function reportNote(text) {
+  const p = document.createElement("p");
+  p.className = "ui-section-note report-note";
+  p.textContent = text;
+  return p;
 }
 
 // --- follow the money: the money map, isolated to the report's industry ------
@@ -14686,10 +14203,8 @@ function renderReportMoney(report, slug) {
   part.hidden = !cfg;
   if (!cfg) return;
   part.append(reportSectionHead("report-money", "Follow the money"));
-  const note = document.createElement("p");
-  note.className = "report-part-note";
-  note.textContent = `Disclosed donations from ${cfg.label} donors to the parties, from the AEC returns. ` +
-    "Drag to orbit, click a donor or a party for its card, and drag the years to watch the money move.";
+  const note = reportNote(`Disclosed donations from ${cfg.label} donors to the parties, from the AEC returns. ` +
+    "Drag to orbit, click a donor or a party for its card, and drag the years to watch the money move.");
   const plate = document.createElement("div");
   plate.className = "subject-map report-map is-waiting";
   plate.id = "report-map";
@@ -14699,12 +14214,8 @@ function renderReportMoney(report, slug) {
   links.className = "entry-more report-money-links";
   links.innerHTML = `<a href="${esc(moneyHash("federal", cfg.group))}">Open the full money map with the ${esc(cfg.label)} isolated</a> · ` +
     `<a href="${esc(askHash(`What has parliament said about ${cfg.ask}?`))}">Ask what parliament said about ${esc(cfg.ask)}</a>`;
-  const wordsHead = document.createElement("h4");
-  wordsHead.className = "report-sub-title";
-  wordsHead.textContent = "Words per dollar";
-  const wordsNote = document.createElement("p");
-  wordsNote.className = "report-part-note";
-  wordsNote.textContent = "What the industry disclosed to each party, beside that party's share of the debate in the labelled record. Comparison, never causation; every number opens the disclosures or speeches behind it.";
+  const wordsHead = reportSubTitle("Words per dollar");
+  const wordsNote = reportNote("What the industry disclosed to each party, beside that party's share of the debate in the labelled record. Comparison, never causation; every number opens the disclosures or speeches behind it.");
   const words = document.createElement("div");
   words.className = "report-words";
   part.append(note, plate, links, wordsHead, wordsNote, words);
@@ -14741,13 +14252,10 @@ function renderReportV2(report, slug) {
   const head = $("report-head2");
   head.replaceChildren();
   head.hidden = false;
-  if (win.sinceLabel) {
-    const covers = document.createElement("p");
-    covers.className = "report-window";
-    covers.textContent =
-      `The debate since ${win.sinceLabel}, and how it has moved since ${win.firstYear}.`;
-    head.appendChild(covers);
-  }
+  const covers = $("report-meta");
+  covers.textContent = win.sinceLabel
+    ? `The debate since ${win.sinceLabel}, and how it has moved since ${win.firstYear}.` : "";
+  covers.hidden = !win.sinceLabel;
   // One machine label for the report, at its top: the opening and every
   // section are machine-written, so no section repeats it (§5.2 MachineLabel).
   head.insertAdjacentHTML("beforeend", machineLabelHTML({ note: REPORT_MODEL_NOTE, className: "report-machine" }));
@@ -14807,11 +14315,9 @@ function renderReportV2(report, slug) {
   if (report.now) {
     now.append(reportSectionHead("report-now", "The debate now"));
     if (report.now.discovered?.length) {
-      const intro = document.createElement("p");
-      intro.className = "report-part-note";
-      intro.textContent = win.sinceLabel
+      const intro = reportNote(win.sinceLabel
         ? `What the chamber has actually been arguing about since ${win.sinceLabel}. Each opens its speeches.`
-        : "What the chamber has actually been arguing about. Each opens its speeches.";
+        : "What the chamber has actually been arguing about. Each opens its speeches.");
       now.append(intro, reportDiscovered(report.now.discovered, win));
     }
     for (const section of report.now.sections || []) {
@@ -14819,16 +14325,10 @@ function renderReportV2(report, slug) {
       now.appendChild(reportEssay(section, { id: `report-s-${number}`, slug, number }));
     }
     if (report.key_stats?.length) {
-      const h = document.createElement("h4");
-      h.className = "report-sub-title";
-      h.textContent = "The figures this turns on";
-      now.append(h, reportStatTiles(report.key_stats));
+      now.append(reportSubTitle("The figures this turns on"), reportStatTiles(report.key_stats));
     }
     if (report.positions?.length) {
-      const h = document.createElement("h4");
-      h.className = "report-sub-title";
-      h.textContent = "Where the parties stand";
-      now.append(h, reportPositions(report.positions, win));
+      now.append(reportSubTitle("Where the parties stand"), reportPositions(report.positions, win));
     }
   }
 
@@ -14847,7 +14347,7 @@ function renderReportV2(report, slug) {
         const step = document.createElement("div");
         step.className = "report-era";
         const span = document.createElement("p");
-        span.className = "report-era-span";
+        span.className = "ui-page-meta report-era-span";
         // The label is already the span ("1993–2009"). Restating it as ISO
         // dates beside itself — "1993–2009 · 1993-01-01–2009-12-31" — says the
         // same thing twice, the second time in machine. The years are drawn
@@ -14864,22 +14364,12 @@ function renderReportV2(report, slug) {
     const tide = reportTideHTML(report.over_time.tide, topic);
     if (tide) over.insertAdjacentHTML("beforeend", tide);
     if (report.over_time.key_moments?.length) {
-      const h = document.createElement("h4");
-      h.className = "report-sub-title";
-      h.textContent = "Start reading: the speeches that moved it";
-      const note = document.createElement("p");
-      note.className = "report-part-note report-reading-note";
-      note.textContent = "Chosen from the labelled record: substantive speeches on the subject, one per speaker, across the years.";
-      const list = document.createElement("div");
-      list.className = "report-reading-list";
-      list.replaceChildren(...report.over_time.key_moments.map(keySpeechItem));
-      over.append(h, note, list);
+      over.append(reportSubTitle("Start reading: the speeches that moved it"),
+        reportNote("Chosen from the labelled record: substantive speeches on the subject, one per speaker, across the years."),
+        reportReadingList(report.over_time.key_moments));
     }
     if (report.voices?.now?.length || report.voices?.all?.length) {
-      const h = document.createElement("h4");
-      h.className = "report-sub-title";
-      h.textContent = "Who does the talking";
-      over.append(h, reportVoices(report.voices, win));
+      over.append(reportSubTitle("Who does the talking"), reportVoices(report.voices, win));
     }
   }
 
@@ -14943,14 +14433,14 @@ async function openReport(slug, sectionNum, manageFocus) {
   const provenance =
     `Generated ${fmtDate(report.generated_at || "")} · every claim cited to the record`;
   $("report-meta").textContent = provenance;
-  $("report-meta2").textContent = provenance;
   // The corpus totals under the money: how much record this report read.
+  const stat = (value, label) => `<div class="ui-stat"><b class="ui-stat-value">${esc(value)}</b><span class="ui-stat-label">${esc(label)}</span></div>`;
   const corpusTotalsHTML = (st) => {
     const don = st?.donations;
     if (!st) return "";
-    return `${tile((st.speech_count ?? 0).toLocaleString(), st.speech_scope === "topic-labelled-corpus" ? "labelled speeches on this topic" : "speeches on the record")}
-      ${tile((st.unique_speakers ?? 0).toLocaleString(), "parliamentarians spoke")}
-      ${don ? tile(fmtMoney(don.total ?? 0), `donations: ${fmtIndustries(don.industries || [])}`) : ""}`;
+    return `${stat((st.speech_count ?? 0).toLocaleString(), st.speech_scope === "topic-labelled-corpus" ? "labelled speeches on this topic" : "speeches on the record")}
+      ${stat((st.unique_speakers ?? 0).toLocaleString(), "parliamentarians spoke")}
+      ${don ? stat(fmtMoney(don.total ?? 0), `donations: ${fmtIndustries(don.industries || [])}`) : ""}`;
   };
   const v2 = reportIsV2(report);
   // A v2 report reads in its own order (now, then how it moved), so the v1
@@ -14958,9 +14448,9 @@ async function openReport(slug, sectionNum, manageFocus) {
   $("report-blurb").hidden = v2;
   $("report-lead").hidden = v2;
   // v2 states its provenance at the foot, beside the download of the data the
-  // line describes; v1 keeps it under the title.
+  // line describes, and its meta line says the window it reads over
+  // (renderReportV2); v1 keeps the provenance under the title.
   $("report-meta").hidden = v2;
-  $("report-meta2").hidden = true;
   $("report-head2").hidden = !v2;
   for (const id of ["report-jump", "report-now", "report-overtime", "report-money", "report-allsources"]) $(id).hidden = !v2;
   if (v2) {
@@ -14973,19 +14463,20 @@ async function openReport(slug, sectionNum, manageFocus) {
   }
   renderStats($("report-stats"), report.stats, report.title,
     { speakers: !(v2 && (report.voices?.now?.length || report.voices?.all?.length)) });
+  $("report-stats").classList.toggle("ui-section", Boolean(v2 && report.stats));
   if (report.stats) {
     if (v2) {
       // No figures rail on a v2 page: the money is its own closing part and
       // the corpus totals lead it under a line of their own, because a speech
       // count is not money and the part heading should not claim it is.
       $("report-stats").insertAdjacentHTML("afterbegin",
-        `<h3 class="report-part-title" id="report-money-head" tabindex="-1">The money beside the words</h3>
-         <h4 class="report-sub-title report-corpus-title">The parliamentary record</h4>
-         <div class="tiles report-corpus-tiles">${corpusTotalsHTML(report.stats)}</div>`);
+        `<div class="ui-section-head"><h2 class="report-part-title" id="report-stats-head" tabindex="-1">The money beside the words</h2></div>
+         <h3 class="ui-subsection-title report-corpus-title">The parliamentary record</h3>
+         <div class="ui-stats">${corpusTotalsHTML(report.stats)}</div>`);
     } else {
       const figures = $("report-figures");
-      const grid = figures.querySelector(".tiles") || figures.appendChild(document.createElement("div"));
-      grid.classList.add("tiles");
+      const grid = figures.querySelector(".ui-stats") || figures.appendChild(document.createElement("div"));
+      grid.classList.add("ui-stats");
       grid.insertAdjacentHTML("beforeend", corpusTotalsHTML(report.stats));
     }
   }
@@ -15131,6 +14622,10 @@ const STATS_PARLIAMENTS = [
 ];
 const STATS_KINDS = [["speech", "Speeches"], ["division", "Recorded divisions"], ["bill", "Bills"], ["press_release", "Government transcripts and releases"], ["legal", "Legislation"], ["grant_invitation", "Grant invitations"], ["grant_award", "Grant award records"], ["election_baseline", "Election baselines"], ["parliamentary_profile", "Recorded representation"], ["research_report", "Research source notes"]];
 
+/** Set when /api/stats fails: the live tiles and the live tables stand down and
+ *  one sentence says so, rather than dots and "Counting…" that never resolve. */
+let liveStatsUnavailable = false;
+
 /** One hero tile per key; the figure element is kept so a live update counts on in place. */
 function renderStatsHero() {
   const hero = $("stats-hero");
@@ -15151,17 +14646,22 @@ function renderStatsHero() {
   for (const t of tiles) {
     let tile = hero.querySelector(`[data-stat="${t.key}"]`);
     if (!tile) {
-      tile = document.createElement("span");
+      tile = document.createElement("div");
+      tile.className = "ui-stat";
       tile.dataset.stat = t.key;
-      tile.innerHTML = `<span class="stat-figure"></span><span class="stat-label"></span>`;
+      tile.innerHTML = `<span class="ui-stat-value"></span><span class="ui-stat-label"></span>`;
       hero.appendChild(tile);
     }
-    const figure = tile.querySelector(".stat-figure");
-    const label = tile.querySelector(".stat-label");
+    const figure = tile.querySelector(".ui-stat-value");
+    const label = tile.querySelector(".ui-stat-label");
+    const waiting = t.value == null && !t.text;
+    // A live figure the index cannot give stands down; one still on its way
+    // holds its place with a still skeleton, never dots.
+    tile.hidden = waiting && liveStatsUnavailable;
     label.textContent = t.label;
-    if (t.live) label.insertAdjacentHTML("beforeend", '<i class="stat-live" title="Read from the live index, refreshed every five minutes">Live</i>');
+    if (t.live && !waiting) label.insertAdjacentHTML("beforeend", '<i class="stat-live" title="Read from the live index, refreshed every five minutes">Live</i>');
     if (t.text) figure.textContent = t.text;
-    else if (t.value == null) figure.textContent = "…"; // live figure still on its way
+    else if (waiting) figure.innerHTML = '<span class="ui-skeleton" aria-hidden="true"></span><span class="visually-hidden">Loading</span>';
     else countUpWhenVisible(figure, t.value);
   }
 }
@@ -15186,7 +14686,6 @@ function renderStatsLiveTables() {
 fetch("/corpus.json").then((r) => r.json()).then((m) => {
   corpusManifest = m;
   renderCorpusMeter();
-  if (frontRendered) renderFrontNumbers();
   renderStatsHero();
   const statsBody = $("stats-sources");
   if (statsBody && m.sources) {
@@ -15207,8 +14706,8 @@ fetch("/corpus.json").then((r) => r.json()).then((m) => {
 }).catch(() => {
   // Manifest unavailable: keep the page honest with order-of-magnitude copy.
   $("stats-hero").innerHTML =
-    '<span><span class="stat-figure">Half a million</span><span class="stat-label">speeches collected</span></span>' +
-    '<span><span class="stat-figure">5</span><span class="stat-label">parliaments</span></span>';
+    '<div class="ui-stat"><span class="ui-stat-value">Half a million</span><span class="ui-stat-label">speeches collected</span></div>' +
+    '<div class="ui-stat"><span class="ui-stat-value">5</span><span class="ui-stat-label">parliaments</span></div>';
 });
 
 fetch("/suggestions.json").then((r) => r.json()).then((s) => {
@@ -15227,13 +14726,14 @@ function loadLiveStats(attempt = 0) {
   api(attempt ? `/api/stats?retry=${attempt}` : "/api/stats")
     .then((s) => {
       liveStats = s;
+      liveStatsUnavailable = false;
+      if ($("stats-live-index")) $("stats-live-index").hidden = false;
       const line = `${(s.resources ?? 0).toLocaleString()} documents · ` +
         `${(s.paragraphs ?? 0).toLocaleString()} passages indexed · growing daily`;
       $("stats").textContent = line;
       $("stats").hidden = false;
       $("stats-live").textContent = "Figures marked live are read from the index itself and refresh every five minutes; the rest are from the corpus manifest.";
       renderCorpusMeter();
-      if (frontRendered) renderFrontNumbers();
       renderStatsHero();
       if (s.kinds && s.speeches_by_state) renderStatsLiveTables();
       else if (attempt < 6) setTimeout(() => loadLiveStats(attempt + 1), 60000);
@@ -15241,8 +14741,13 @@ function loadLiveStats(attempt = 0) {
     })
     .catch(() => {
       // A failed counter says nothing rather than "loading" for ever (web chrome).
+      // On /stats the live tiles and tables stand down behind one sentence; a
+      // later retry that answers brings them back.
       $("stats").hidden = true;
       $("stats-live").textContent = "Live index figures are unavailable right now.";
+      liveStatsUnavailable = true;
+      if ($("stats-live-index")) $("stats-live-index").hidden = true;
+      renderStatsHero();
       if (attempt < 3) setTimeout(() => loadLiveStats(attempt + 1), 30000);
       else renderStatsLiveTables();
     });

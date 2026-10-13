@@ -29,7 +29,7 @@
 
   /* colour: line */
   --divider-default: #B8B4A8; /* The top rule of a section; major content boundaries. */
-  --divider-subtle: #DFDCD2; /* Between rows, under subheadings, card outlines. */
+  --divider-subtle: #E7E4DD; /* Between rows, under subheadings, card outlines. */
   --line-control: #8D897B; /* Field and segmented-control boundaries only (3.33:1). */
 
   /* colour: feedback */
@@ -114,27 +114,65 @@
   /* type: eleven roles; serif speaks for the record, sans for OPAX */
   --serif: "Merriweather", Georgia, "Times New Roman", serif;
   --sans: "Public Sans", -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-  --type-title: 400 clamp(1.9rem, 4.5vw, 2.75rem)/1.25 var(--serif); /* The page's one title: a person's name, a bill title, a screen name. */
-  --type-display: 700 2.125rem/1.235 var(--serif); /* The one number a block is about. */
-  --type-heading: 600 1.375rem/1.364 var(--serif); /* Section heading. */
-  --type-subheading: 600 1.125rem/1.333 var(--serif); /* A row title that leads a block: a bill in a list, a division, a report card. */
-  --type-record: 400 1.0625rem/1.75 var(--serif); /* The words of the record and long reading: speeches, report essays, In short. */
+  --type-title: 400 clamp(2rem, 1.25rem + 2.2vw, 3rem)/1.15 var(--serif); /* The page's one title: a person's name, a bill title, a screen name. */
+  --type-display: 600 2rem/1.2 var(--serif); /* The one number a block is about. */
+  --type-heading: 600 1.5rem/1.25 var(--serif); /* Section heading. */
+  --type-subheading: 600 1.0625rem/1.4 var(--serif); /* A row title that leads a block: a bill in a list, a division, a report card. */
+  --type-record: 400 1.0625rem/1.7 var(--serif); /* The words of the record and long reading: speeches, report essays, In short. */
   --type-body: 400 1rem/1.55 var(--sans); /* Interface and OPAX's own sentences. */
   --type-strong: 600 1rem/1.55 var(--sans); /* Names in rows, values in key-value lists, inline figures (with tabular). */
-  --type-metadata: 400 0.9375rem/1.4 var(--sans); /* The one meta line under a title: kind · date · place. */
-  --type-fine: 400 0.8125rem/1.385 var(--sans); /* Source lines, saved-copy notices, one short caveat. */
-  --type-label: 600 0.8125rem/1.385 var(--sans); /* Tags, status labels, party labels, field labels. */
+  --type-metadata: 400 0.9375rem/1.45 var(--sans); /* The one meta line under a title: kind · date · place. */
+  --type-fine: 400 0.8125rem/1.45 var(--sans); /* Source lines, saved-copy notices, one short caveat. */
+  --type-label: 600 0.8125rem/1.45 var(--sans); /* Tags, status labels, party labels, field labels. */
   --type-control: 600 1rem/1.25 var(--sans); /* Button, chip and segment labels. */
 
   /* space: one rhythm */
   --space-line: 0.25rem; /* A line bound to the line above: a date under a title. */
   --space-tight: 0.5rem; /* Inside a row or group: a name to its party line. */
-  --space-row: 0.625rem; /* Either side of a row hairline (content rows). */
-  --space-heading: 0.75rem; /* A section heading to its first block. */
-  --space-block: 1rem; /* Between blocks inside a section. */
-  --space-group: 1.5rem; /* A second list or group inside a section. */
-  --space-section: 2.25rem; /* Between sections; the rule sits at the top of each. */
+  --space-row: 0.75rem; /* Either side of a row hairline (content rows). */
+  --space-heading: 1rem; /* A section heading to its first block. */
+  --space-block: 1.5rem; /* Between blocks inside a section. */
+  --space-group: 2rem; /* A second list or group inside a section. */
+  --space-section: 3rem; /* Between sections; the rule sits at the top of each. */
   --space-screen: clamp(1.25rem, 4vw, 4.5rem); /* Screen edge to content. */
+
+  /* space scale (web primitives): 4/8 steps, named by their px */
+  --sp-2: 0.125rem;
+  --sp-4: 0.25rem;
+  --sp-8: 0.5rem;
+  --sp-12: 0.75rem;
+  --sp-16: 1rem;
+  --sp-20: 1.25rem;
+  --sp-24: 1.5rem;
+  --sp-32: 2rem;
+  --sp-40: 2.5rem;
+  --sp-48: 3rem;
+  --sp-64: 4rem;
+  --sp-80: 5rem;
+
+  /* type scale (web primitives): the six role sizes */
+  --text-13: 0.8125rem;
+  --text-15: 0.9375rem;
+  --text-16: 1rem;
+  --text-17: 1.0625rem;
+  --text-24: 1.5rem;
+  --text-32: 2rem;
+
+  /* weight and leading (web primitives) */
+  --weight-regular: 400;
+  --weight-strong: 600;
+  --weight-bold: 700;
+  --leading-none: 1;
+  --leading-tight: 1.15;
+  --leading-snug: 1.3;
+  --leading-normal: 1.45;
+  --leading-body: 1.55;
+  --leading-loose: 1.7;
+
+  /* rings: an edge drawn as a shadow, colour supplied beside it */
+  --ring-hairline: 0 0 0 var(--border-hairline);
+  --ring-focus: 0 0 0 var(--border-focus);
+  --ring-inset-hairline: inset 0 0 0 var(--border-hairline);
 
   /* radius: press = pill, read = sm, hold = md */
   --radius-sm: 4px;
@@ -180,29 +218,33 @@
   --line: var(--divider-subtle); /* deprecated: use --divider-subtle */
   --line-strong: var(--line-control); /* deprecated: use --line-control */
   --heading-page: var(--type-title); /* deprecated: use --type-title */
-  --heading-section: 600 1.4rem/1.35 var(--serif); /* deprecated: use --type-heading; moving changes 22.4px/1.35 to 22px/1.364 */
-  --heading-subsection: 600 1.125rem/1.35 var(--serif); /* deprecated: use --type-subheading; moving changes line height 1.35 to 1.333 */
-  --heading-tracking: 0.005em; /* deprecated: use no letter-spacing; moving changes 0.005em to 0 */
-  --space-1: var(--space-line); /* deprecated: use --space-line */
-  --space-2: 0.4rem; /* deprecated: use --space-tight or --space-line; moving changes 6.4px to 8px or 4px */
-  --space-3: 0.65rem; /* deprecated: use --space-row; moving changes 10.4px (8px under 701px) to 10px */
-  --space-4: var(--space-block); /* deprecated: use --space-block */
-  --space-5: 1.6rem; /* deprecated: use --space-group; moving changes 25.6px to 24px */
-  --space-6: 2.6rem; /* deprecated: use --space-group or --space-section; moving changes 41.6px (32px under 701px) to 24px or 36px */
-  --space-7: 4.2rem; /* deprecated: use --space-section; moving changes 67.2px (52px under 701px) to 56px (36px under 701px) */
-  --row-gap: var(--space-3); /* deprecated: use --space-row; moving changes 10.4px (8px under 701px) to 10px */
-  --sub-gap: var(--space-6); /* deprecated: use --space-group; moving changes 41.6px (32px under 701px) to 24px */
-  --section-gap: var(--space-7); /* deprecated: use --space-section; moving changes 67.2px (52px under 701px) to 56px (36px under 701px) */
+  --heading-section: var(--type-heading); /* deprecated: use --type-heading */
+  --heading-subsection: var(--type-subheading); /* deprecated: use --type-subheading */
+  --heading-tracking: 0; /* deprecated: use no letter-spacing */
+  --space-1: var(--sp-4); /* deprecated: use --sp-4 */
+  --space-2: var(--sp-8); /* deprecated: use --sp-8 */
+  --space-3: var(--sp-12); /* deprecated: use --sp-12 */
+  --space-4: var(--sp-16); /* deprecated: use --sp-16 */
+  --space-5: var(--sp-24); /* deprecated: use --sp-24 */
+  --space-6: var(--sp-48); /* deprecated: use --sp-48 (--sp-32 under 701px) */
+  --space-7: var(--space-section); /* deprecated: use --space-section */
+  --row-gap: var(--space-row); /* deprecated: use --space-row */
+  --sub-gap: var(--sp-48); /* deprecated: use --sp-48 (--sp-32 under 701px) */
+  --section-gap: var(--space-section); /* deprecated: use --space-section */
 }
 @media (min-width: 701px) {
   :root {
-    --space-section: 3.5rem;
+    --space-section: 4rem;
+  }
+}
+@media (min-width: 1101px) {
+  :root {
+    --space-section: 5rem;
   }
 }
 @media (max-width: 700px) {
   :root {
-    --space-3: 0.5rem;
-    --space-6: 2rem;
-    --space-7: 3.25rem;
+    --space-6: var(--sp-32);
+    --sub-gap: var(--sp-32);
   }
 }

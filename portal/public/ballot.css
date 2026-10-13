@@ -16,8 +16,9 @@
 .ballot-finder{border-top:var(--border-hairline) solid var(--divider-subtle);padding:var(--space-block)}
 .ballot-finder label{display:block;font:var(--type-label);margin-bottom:var(--space-tight)}
 .ballot-small{font:var(--type-fine);color:var(--ink-soft);margin:var(--space-row) 0}
-.ballot-seats{max-height:270px;overflow-y:auto;overscroll-behavior:contain}
-.ballot-seats [data-seat]{display:flex;width:100%;align-items:center;justify-content:space-between;gap:var(--space-heading);min-height:var(--size-control);padding:var(--space-row) var(--space-block);border:0;border-bottom:var(--border-hairline) solid var(--divider-subtle);background:var(--paper-raised);color:var(--navy);font:var(--type-body);text-align:left;transition:background-color var(--duration-quick) var(--ease-standard)}
+/* Six whole rows, then the list scrolls: no row is cut through. */
+.ballot-seats{max-height:calc(6 * (var(--size-control) + var(--border-hairline)));overflow-y:auto;overscroll-behavior:contain}
+.ballot-seats [data-seat]{display:flex;width:100%;align-items:center;justify-content:space-between;gap:var(--space-heading);box-sizing:border-box;height:calc(var(--size-control) + var(--border-hairline));padding:0 var(--space-block);border:0;border-bottom:var(--border-hairline) solid var(--divider-subtle);background:var(--paper-raised);color:var(--navy);font:var(--type-body);text-align:left;transition:background-color var(--duration-quick) var(--ease-standard)}
 .ballot-seats [data-seat]:hover{background:var(--paper-sunken)}.ballot-seats small{font:var(--type-fine);color:var(--ink-soft)}
 .ballot-seats>p{color:var(--ink-soft)}
 .ballot-status{font:var(--type-metadata);color:var(--ink-soft);min-height:1.5em;margin:var(--space-heading) 0}

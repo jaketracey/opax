@@ -27,16 +27,16 @@ export function mountTide (container, options = {}) {
   container.innerHTML = `
     <div class="tide-shell">
       <h1>The tide</h1>
-      <p class="tide-lede">How parliament's labelled debates move across four decades. Shares compare each topic with the labelled speech record held for that decade, never with the whole corpus.</p>
+      <p class="tide-lede ui-lede">How parliament's labelled debates move across four decades. Shares compare each topic with the labelled speech record held for that decade, never with the whole corpus.</p>
       <div class="tide-controls">
-        <div class="tide-control"><span>Parliaments</span><div class="quiet-toggle" role="group" aria-label="Parliaments included">
-          <button type="button" data-tide-scope="federal" aria-pressed="true">Federal</button>
-          <button type="button" data-tide-scope="all" aria-pressed="false">All five</button>
+        <div class="tide-control"><span>Parliaments</span><div class="ui-segmented" data-ui-size="compact" role="group" aria-label="Parliaments included">
+          <button type="button" class="ui-button" data-tide-scope="federal" aria-pressed="true">Federal</button>
+          <button type="button" class="ui-button" data-tide-scope="all" aria-pressed="false">All five</button>
         </div></div>
-        <div class="tide-control"><span>Order</span><div class="quiet-toggle" role="group" aria-label="Sort the topics">
-          <button type="button" data-tide-order="rising" aria-pressed="true">Rising</button>
-          <button type="button" data-tide-order="fading" aria-pressed="false">Fading</button>
-          <button type="button" data-tide-order="now" aria-pressed="false">Biggest now</button>
+        <div class="tide-control"><span>Order</span><div class="ui-segmented" data-ui-size="compact" role="group" aria-label="Sort the topics">
+          <button type="button" class="ui-button" data-tide-order="rising" aria-pressed="true">Rising</button>
+          <button type="button" class="ui-button" data-tide-order="fading" aria-pressed="false">Fading</button>
+          <button type="button" class="ui-button" data-tide-order="now" aria-pressed="false">Biggest now</button>
         </div></div>
       </div>
       <div class="tide-status status" role="status"></div>

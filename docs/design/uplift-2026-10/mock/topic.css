@@ -1,0 +1,89 @@
+/* web-design-system Phase 1 mock, layer 2: the topic page (/subject/topic/<slug>)
+   on the merged components. CSS only, over today's markup; nothing here ships.
+   Phase 2 does this in the renderer (ui-* classes) and deletes the page's own
+   button, toggle, box and type rules (style.css 2992-3153). */
+
+/* ---- Head: title, one meta line, then Ask as one field and one pill. */
+#panel-subject .subject-head:has(.topic-reader-tools) .subject-tag { font: var(--type-metadata); color: var(--ink-soft); margin-top: var(--space-line); }
+#panel-subject .topic-reader-tools { max-width: 760px; margin: var(--space-group) 0 0; }
+#panel-subject .topic-ask-form label { margin-bottom: var(--space-tight); font: var(--type-subheading); }
+#panel-subject .topic-ask-form > div { gap: var(--space-tight); align-items: center; }
+#panel-subject .topic-ask-form textarea {
+  box-sizing: border-box; height: var(--size-control); min-height: var(--size-control); padding: 12px 16px; resize: none; overflow: hidden;
+  border: var(--border-hairline) solid var(--line-control); border-radius: var(--radius-md); background: var(--paper-raised); font: var(--type-body);
+}
+#panel-subject .topic-ask-form button {
+  min-height: var(--size-control); padding: 0 24px; border: 0; border-radius: var(--radius-pill);
+  background: var(--navy); color: var(--on-navy); font: var(--type-control);
+}
+#panel-subject .topic-reader-links { gap: 0 var(--space-block); margin-top: var(--space-tight); }
+#panel-subject .topic-reader-links :is(a, button) { font: var(--type-metadata); }
+
+/* ---- Grid: the side column is a column, not a card. */
+#panel-subject .topic-page-grid { column-gap: 64px; margin-top: var(--space-section); }
+#panel-subject .topic-page-grid .infobox { padding: 0; border: 0; border-radius: 0; background: none; box-shadow: none; }
+#panel-subject .topic-page-grid .infobox::before { content: none; }
+#panel-subject .topic-page-grid .infobox .topic-aside-block { padding-top: var(--space-heading); border-top: var(--border-hairline) solid var(--divider-default); }
+#panel-subject .topic-page-grid .infobox .topic-aside-block + .topic-aside-block { margin-top: var(--space-section); }
+#panel-subject .topic-page-grid .infobox .chart figcaption { margin-bottom: var(--space-heading); font: var(--type-subheading); color: var(--ink); }
+#panel-subject .topic-page-grid .infobox .barrow { padding: var(--space-tight) 0; }
+#panel-subject .topic-page-grid .infobox .barrow + .barrow { border-top: 0; }
+#panel-subject .topic-page-grid .infobox .barrow-name, #panel-subject .topic-page-grid .infobox .barrow-value { min-height: 0; font: var(--type-body); }
+#panel-subject .topic-page-grid .infobox .barrow-value small { font: var(--type-fine); color: var(--ink-soft); }
+#panel-subject .topic-page-grid .infobox .barrow-track { height: 4px; border-radius: var(--radius-pill); margin-top: var(--space-line); }
+#panel-subject .topic-page-grid .infobox .fineprint { margin-top: var(--space-heading); font: var(--type-fine); }
+
+/* ---- Sections: one top rule each, the section step between, the heading role. */
+#panel-subject .topic-page-grid #subject-sections > section { margin-top: var(--space-section); padding-top: var(--space-heading); border-top: var(--border-hairline) solid var(--divider-default); }
+#panel-subject .topic-page-grid #subject-sections > section:first-child { margin-top: 0; }
+#panel-subject .topic-page-grid .subject-section-title, #panel-subject .topic-arc-head h3 { margin: 0 0 var(--space-heading); font: var(--type-heading); }
+#panel-subject .topic-money > p:not(.fineprint):not(.action-row) { font: var(--type-body); color: var(--ink-soft); max-width: var(--size-readable); }
+
+/* The money: a ranked list, not a box around a list. */
+#panel-subject .topic-page-grid .topic-money .chart { margin-top: var(--space-block); padding: 0; border: 0; border-radius: 0; background: none; }
+#panel-subject .topic-page-grid .chart figcaption { margin-bottom: var(--space-tight); font: var(--type-subheading); }
+#panel-subject .topic-page-grid .topic-money .barrow { min-height: 0; padding: var(--space-tight) 0; border: 0; }
+#panel-subject .topic-page-grid .topic-money .barrow-name, #panel-subject .topic-page-grid .topic-money .barrow-value { min-height: 0; font: var(--type-body); }
+#panel-subject .topic-page-grid .topic-money .barrow-track { height: 4px; border-radius: var(--radius-pill); }
+#panel-subject .topic-money .action-row { margin-top: var(--space-block); }
+#panel-subject .topic-money .action-row .ui-button { width: auto; background: var(--navy-wash); color: var(--navy); }
+#panel-subject .topic-page-grid .fineprint { font: var(--type-fine); margin-top: var(--space-heading); }
+
+/* The share over time. */
+#panel-subject .topic-tide-label, #panel-subject .topic-tide-decade small, #panel-subject .topic-tide .coverage-band { font: var(--type-fine); }
+#panel-subject .topic-tide .coverage-rule figcaption { margin: var(--space-heading) 0 var(--space-tight); font: var(--type-fine); }
+
+/* ---- The arc: a segmented control, quieter rows, the record in the record role. */
+#panel-subject .topic-arc-head { margin-bottom: var(--space-tight); }
+#panel-subject .topic-arc .quiet-toggle {
+  display: inline-flex; gap: 4px; padding: 4px; border: 0; border-radius: var(--radius-pill); background: var(--paper-sunken); overflow: visible;
+}
+#panel-subject .topic-arc .quiet-toggle button {
+  min-height: 36px; padding: 0 16px; border: var(--border-hairline) solid transparent; border-radius: var(--radius-pill);
+  background: transparent; color: var(--ink-soft); font: var(--type-label);
+}
+#panel-subject .topic-arc .quiet-toggle button + button { border-left: var(--border-hairline) solid transparent; }
+#panel-subject .topic-arc .quiet-toggle button[aria-pressed="true"] { background: var(--paper-raised); border-color: var(--line-control); color: var(--ink); }
+#panel-subject .topic-arc-voices { padding-bottom: var(--space-block); font: var(--type-fine); }
+#panel-subject .topic-arc-item { padding: var(--space-block) 0; border-top: var(--border-hairline) solid var(--divider-subtle); }
+#panel-subject .topic-arc-year { font: var(--type-subheading); color: var(--ink-soft); }
+#panel-subject .topic-arc-entry .result-meta { gap: var(--space-line) var(--space-tight); font: var(--type-fine); color: var(--ink-soft); }
+#panel-subject .topic-arc-speaker { min-height: 0; font: var(--type-label); color: var(--ink); }
+#panel-subject .topic-arc-source { min-height: 0; margin: var(--space-tight) 0 var(--space-line); font: var(--type-subheading); }
+#panel-subject .topic-arc-passage { font: var(--type-record); color: var(--ink); }
+/* Machine-written briefs speak for OPAX, so they are sans (principle 7). */
+#panel-subject .topic-arc-brief { padding: 0; font: var(--type-body); color: var(--ink-soft); }
+#panel-subject .topic-arc-footer { gap: var(--space-tight) var(--space-block); padding-top: var(--space-block); border-top: var(--border-hairline) solid var(--divider-subtle); }
+#panel-subject .topic-arc-footer button {
+  min-height: var(--size-control-compact); padding: 0 20px; border: var(--border-hairline) solid transparent; border-radius: var(--radius-pill);
+  background: var(--navy-wash); color: var(--navy); font: var(--type-control);
+}
+
+/* Hit areas: rows and segments draw smaller than 44 and reach it with an
+   invisible extension, the pattern ui-source.css already uses. */
+#panel-subject .topic-page-grid a.barrow-name { position: relative; }
+#panel-subject .topic-page-grid a.barrow-name::after { content: ""; position: absolute; inset: -11px 0; }
+#panel-subject .topic-arc .quiet-toggle button { position: relative; }
+#panel-subject .topic-arc .quiet-toggle button::after { content: ""; position: absolute; inset: -4px 0; }
+#panel-subject .topic-arc-source { position: relative; }
+#panel-subject .topic-arc-source::after { content: ""; position: absolute; inset: -11px 0; }

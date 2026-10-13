@@ -302,9 +302,6 @@
 /sponsor-person.js
   ! Cache-Control
   Cache-Control: public, max-age=31536000, immutable
-/statemap.js
-  ! Cache-Control
-  Cache-Control: public, max-age=31536000, immutable
 /supplier-growth.js
   ! Cache-Control
   Cache-Control: public, max-age=31536000, immutable

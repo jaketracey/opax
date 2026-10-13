@@ -1,0 +1,62 @@
+/* web-design-system Phase 1 mock, layer 2: directories and index pages
+   (/subject/donor, /subject/person, /subject/electorate; the same filter bar
+   serves /bills, /declared, /instruments and /audit in Phase 2). CSS only over
+   today's markup; nothing here ships. Phase 2 gives the markup a
+   ui-filter-bar wrapper and deletes the per-page filter overrides
+   (style.css 2291-2357, 4575-4577, 4978, 5077-5087). */
+
+/* ---- The index filter bar: the search field on its own line, then every
+   filter as a compact pill select and every toggle as a choice chip, in one
+   wrapping row. Today each select is a full-width 48px box on a phone. */
+#subject-body:has(> .dir-individuals) { display: flex; flex-direction: column; }
+#subject-body:has(> .dir-individuals) > .dir-head { order: 0; }
+#subject-body:has(> .dir-individuals) > .dir-controls { order: 1; }
+#subject-body:has(> .dir-individuals) > .dir-count { order: 2; }
+#subject-body:has(> .dir-individuals) > .dir-individuals { order: 3; }
+#subject-body:has(> .dir-individuals) > :not(.dir-head, .dir-controls, .dir-count, .dir-individuals) { order: 4; }
+
+.dir-controls.ui-toolbar { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-tight); margin: var(--space-block) 0 0; }
+.dir-controls .dir-q-wrap { flex: 1 1 100%; }
+@media (min-width: 1101px) { .dir-controls .dir-q-wrap { flex: 1 1 200px; max-width: 320px; } }
+.dir-controls .dir-q-wrap .ui-input { border-radius: var(--radius-md); }
+.dir-controls .dir-field { flex: 0 1 auto; width: auto; max-width: 100%; }
+.dir-controls .dir-field select.ui-input {
+  field-sizing: content; /* sized to the chosen option; without support it keeps a row of its own */
+  width: auto; max-width: 100%; min-height: 40px; height: 40px; padding: 0 36px 0 16px;
+  border-color: transparent; border-radius: var(--radius-pill); background-color: var(--navy-wash);
+  color: var(--navy); font: var(--type-label); background-position: right 12px center; background-size: 16px 16px;
+}
+.dir-checks { display: contents; }
+.dir-check.ui-choice {
+  min-height: 40px; padding: 0 16px 0 12px; gap: var(--space-tight);
+  border-radius: var(--radius-pill); background: var(--navy-wash); color: var(--navy); font: var(--type-label);
+}
+.dir-check.ui-choice > input { width: 16px; height: 16px; flex-basis: 16px; }
+@media (pointer: coarse), (max-width: 1000px) { .dir-controls .dir-field select.ui-input, .dir-check.ui-choice { min-height: 44px; height: 44px; } }
+
+/* The count, then the withheld-donor aggregates as compact fine print (still
+   shown, never first). */
+.dir-count { margin: var(--space-block) 0 0; font: var(--type-fine); color: var(--ink-soft); }
+.dir-individuals { display: grid; gap: 0; margin: var(--space-tight) 0 var(--space-block); }
+.dir-individuals .donor-aggregate > summary { padding-block: 6px; font: var(--type-fine); color: var(--ink-soft); }
+
+/* ---- The row: name (subheading), one meta line, figures inline. */
+.dir-list li.dir-row { padding: var(--space-heading) 0; row-gap: var(--space-tight); column-gap: var(--space-block); border-color: var(--divider-subtle); }
+.dir-name { font: var(--type-subheading); }
+.dir-main .result-meta { margin-top: var(--space-line); font: var(--type-fine); line-height: 1.7; }
+.dir-main .dir-mark { margin: 0 var(--space-line) 0 0; }
+/* The industry is not a party: a word, not a party label (Phase 2: plain text in the renderer). */
+.dir-main .result-meta > .party { font: var(--type-fine); color: var(--ink-soft); }
+.dir-figs { gap: var(--space-line) var(--space-block); }
+.dir-fig { font: var(--type-fine); color: var(--ink-soft); }
+.dir-fig b { font: var(--type-strong); color: var(--ink); font-variant-numeric: tabular-nums; }
+@media (max-width: 700px) {
+  .dir-list li.dir-row .dir-figs { gap: var(--space-line) var(--space-block); margin-top: 0; }
+  .dir-fig { display: inline-flex; flex-direction: row; align-items: baseline; gap: var(--space-line); }
+  .dir-fig b { display: inline; }
+  .dir-name { font: var(--type-subheading); }
+}
+
+/* The compact aggregate rows keep a 44px hit area. */
+.dir-individuals .donor-aggregate > summary { position: relative; }
+.dir-individuals .donor-aggregate > summary::after { content: ""; position: absolute; inset: -7px 0; }

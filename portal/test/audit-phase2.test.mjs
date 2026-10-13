@@ -65,8 +65,8 @@ test('an empty response filter survives hydration and Clear all restores the cat
 test('detail SSR shows PDF provenance and collapsed verbatim public body responses with page references',async()=>{
  calls.length=0;const p=await auditPage(id,new URL('https://opax.com.au/audit/'+id),read,block);
  assert.equal(p.status,200);assert.match(p.prerender,/<section id="prerender">/);
- assert.match(p.prerender,/<h2>Recommendations<\/h2>/);assert.match(p.prerender,/Source: pdf p.4/);
- assert.match(p.prerender,/<h2>Entity responses<\/h2><details class="audit-response"><summary>Queensland Health · PDF p.7/);
+ assert.match(p.prerender,/<h2 class="ui-section-title">Recommendations<\/h2>/);assert.match(p.prerender,/Source: pdf p.4/);
+ assert.match(p.prerender,/<h2 class="ui-section-title">Entity responses<\/h2><details class="ui-disclosure audit-response"><summary>Queensland Health · PDF p.7/);
  assert.match(p.prerender,/Queensland Health agrees with recommendation 1/);assert.match(p.prerender,/Names recommendation 1/);
  assert.doesNotMatch(p.prerender,/<details[^>]*open|subject\/person|person_id|signatory_name/);
  assert.equal((p.prerender.match(/class="ui-pop ui-source"/g)||[]).length,1);

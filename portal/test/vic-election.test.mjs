@@ -224,7 +224,7 @@ test('key dates follow the VEC timeline and say when a deadline has passed',()=>
 });
 test('Methods carries the coverage detail the election pages link to',async()=>{
   const shell=await readFile(new URL('index.html',root),'utf8');
-  const section=shell.split('<h3 id="vic-election">')[1]?.split('<h3>')[0];assert.ok(section);
+  const section=shell.split(/<h[23] id="vic-election">/)[1]?.split(/<h[23]>/)[0];assert.ok(section);
   for(const text of ['2026 only','no Victorian register','no Victorian\n        state grants','Federal electorates are different from state districts','CC BY 4.0','Australian Bureau of Statistics','usual residents at the 2021 Census','copyright material without an open licence'])
     assert.ok(section.replace(/\s+/g,' ').includes(text.replace(/\s+/g,' ')),text);
 });
