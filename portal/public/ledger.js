@@ -1,5 +1,5 @@
 import {donorPrivacyIndex,donorNameWithheld} from './donor-entity.js?v=ebb2c972d5';
-import {isUnnamedAggregate,donorAggregateDetail,unnamedDonorLabel,loadDonorViewIndex} from './donor-views.js?v=77470b1d26';
+import {isUnnamedAggregate,donorAggregateDetail,unnamedDonorLabel,loadDonorViewIndex} from './donor-views.js?v=4fcbbb78cf';
 import {subjectUrl} from './canonical-urls.js?v=225d5915ea';
 import { filterMoneyEdges } from "./money-records.js?v=ia-ux-20260908-2";
 /**

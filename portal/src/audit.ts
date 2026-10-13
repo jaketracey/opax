@@ -2,6 +2,7 @@ import { AUDIT_ID, auditComplete, filterAudit, type AuditRow } from '../public/a
 import { sourceLineHTML, tagHTML } from '../public/labels.js'
 import { shortDate } from '../public/format.js'
 import type { Crumb } from './seo-content'
+import { trail } from './nav-model.mjs'
 import { catalogueReader } from './catalogue-reader.mjs'
 
 interface Manifest {
@@ -25,7 +26,6 @@ const esc = (v: unknown) => String(v ?? '').replace(/[&<>"']/g, c => ({ '&': '&a
 export const auditReader = catalogueReader
 const SOURCE = 'Queensland Audit Office'
 const REPORT_PAGE_SOURCE = 'Source: Queensland Audit Office report page, CC BY 4.0'
-const INDEX_CRUMB: Crumb = { label: 'Audit reports', href: '/audit' }
 /** "Report 16: 2025–26" as one meta-line phrase, with the financial year's en dash. */
 const reportYear = (label: string) => label.replace(/:\s*/, ', ').replace(/(\d{4})-(\d{2})\b/, '$1–$2')
 /** The meta line under a report's title: report number and year, then the tabled date. */
@@ -73,7 +73,7 @@ function recommendationText(rec: Report['recommendations'][number]) {
 }
 
 export async function auditPage(id: string | null, url: URL, read: Read, block: Block) {
-  const missing = () => ({ title: 'Audit report not found · OPAX', description: 'No audit report is available for this id.', status: 404, prerender: block('Audit report not found', 'No audit report is available for this id.', '', [INDEX_CRUMB, { label: 'Not found' }]) })
+  const missing = () => ({ title: 'Audit report not found · OPAX', description: 'No audit report is available for this id.', status: 404, prerender: block('Audit report not found', 'No audit report is available for this id.', '', trail('/audit', 'Not found')) })
   if (id !== null && !AUDIT_ID.test(id)) return missing()
   try {
     const m = await read<Manifest>('/audit/manifest.json')
@@ -93,7 +93,7 @@ export async function auditPage(id: string | null, url: URL, read: Read, block: 
       const list = `<p class="audit-count">${counted}</p><ul class="audit-list">${rows.map(r => `<li><h2><a href="/audit/${r.id}">${esc(r.title)}</a></h2><p class="audit-meta">${esc(metaLine(r))}</p>${r.sectors.length ? `<p class="audit-tags">${r.sectors.map(s => tagHTML(s)).join(' ')}</p>` : ''}${r.entities.length ? `<p class="audit-meta">Audited: ${esc(r.entities.join('; '))}</p>` : ''}</li>`).join('')}</ul>`
       const navigation = `<nav aria-label="Audit catalogue pages">${page > 1 ? `<a rel="prev" href="${esc(href(page - 1))}">Previous</a>` : ''}<span>Page ${page} of ${pages}</span>${page < pages ? `<a rel="next" href="${esc(href(page + 1))}">Next</a>` : ''}</nav>`
       return { title: 'Queensland audit reports · OPAX', description, status: 200,
-        prerender: block('Queensland audit reports', description, '', [{ label: 'Audit reports' }]) + `<section class="wrap audit-content">${form}${list}${navigation}${source(m, [{ href: m.attribution.source_url, label: 'Reports to Parliament' }])}</section>` }
+        prerender: block('Queensland audit reports', description, '', trail('/audit')) + `<section class="wrap audit-content">${form}${list}${navigation}${source(m, [{ href: m.attribution.source_url, label: 'Reports to Parliament' }])}</section>` }
     }
     const chunk = m.lookup[id]
     if (!Number.isInteger(chunk) || !m.chunks[chunk]) return missing()
@@ -119,6 +119,6 @@ export async function auditPage(id: string | null, url: URL, read: Read, block: 
     const originals = [{ href: r.canonical_url, label: 'Report on qao.qld.gov.au' }, ...(r.pdf_url ? [{ href: r.pdf_url, label: `Full report (PDF): ${pdfTerms(r)}` }] : [])]
     const pdfLink = r.pdf_url ? `<p class="audit-meta"><a href="${esc(r.pdf_url)}" rel="noopener">Full report (PDF)</a>: ${esc(pdfTerms(r))}</p>` : ''
     return { title: `${r.title} · OPAX`, description, status: 200,
-      prerender: block(r.title, meta, '', [INDEX_CRUMB, { label: r.title }]) + `<section class="wrap audit-content">${r.sectors.length ? `<p class="audit-tags">${r.sectors.map(s => tagHTML(s)).join(' ')}</p>` : ''}<p class="audit-out"><a href="${esc(r.canonical_url)}" rel="noopener">Read the report on qao.qld.gov.au ↗</a></p>${pdfLink}${hold}<h2>Entities audited</h2>${entities(r)}<h2>Recommendations</h2>${recommendations}${responseSection}${source(m, originals, r.licence)}</section>` }
+      prerender: block(r.title, meta, '', trail('/audit', r.title)) + `<section class="wrap audit-content">${r.sectors.length ? `<p class="audit-tags">${r.sectors.map(s => tagHTML(s)).join(' ')}</p>` : ''}<p class="audit-out"><a href="${esc(r.canonical_url)}" rel="noopener">Read the report on qao.qld.gov.au ↗</a></p>${pdfLink}${hold}<h2>Entities audited</h2>${entities(r)}<h2>Recommendations</h2>${recommendations}${responseSection}${source(m, originals, r.licence)}</section>` }
   } catch { return missing() }
 }

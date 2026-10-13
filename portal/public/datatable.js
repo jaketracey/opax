@@ -1,6 +1,6 @@
 // Shared, dependency-free table renderer and query engine. Safe to import in a Worker.
 import {isOrganisationDonor} from './donor-entity.js?v=ebb2c972d5';
-import {unnamedDonorLabel,isUnnamedAggregate,donorsNotNamedDetail} from './donor-views.js?v=77470b1d26';
+import {unnamedDonorLabel,isUnnamedAggregate,donorsNotNamedDetail} from './donor-views.js?v=4fcbbb78cf';
 import {shortDate} from './format.js';
 import {queryValues,rawQueryValues,scrubQuery} from './datatable-query.js?v=6dd55aab38';
 import {readServerCSV} from './server-csv.js?v=47fc2aba1d';
@@ -56,9 +56,9 @@ function candidateRows(rows, config) {
   return rows.flatMap(row => {
     if (row?.aggregate?.kind === 'individual-donors' && !aggregate(row)) return [];
     if (aggregate(row)) {
-      const safe = {aggregate:{kind:'individual-donors',count:row.aggregate.count}};
+      const safe = {aggregate:{kind:'individual-donors',count:row.aggregate.count, ...(row.aggregate.subject === 'recipients' ? {subject:'recipients'} : {})}};
       for (const c of config.columns) {
-        if (['text','category'].includes(c.type) && (c.primary || donorColumn(c))) safe[c.key] = unnamedDonorLabel(row.aggregate.count);
+        if (['text','category'].includes(c.type) && (c.primary || donorColumn(c))) safe[c.key] = row.aggregate.subject === 'recipients' ? `Recipients not named (${row.aggregate.count})` : unnamedDonorLabel(row.aggregate.count);
         else if (numeric(c) && number(row[c.key]) != null) safe[c.key] = number(row[c.key]);
       }
       return [safe];
@@ -175,10 +175,10 @@ function engine(rows, config) {
   let byColumns = engines.get(rows);
   if (!byColumns) engines.set(rows,byColumns = new Map());
   const key = JSON.stringify(config.columns.map(c=>[c.key,c.type,c.facet,c.hideWhenConstant,c.sortable,c.primary])) + config.privacy;
-  if (byColumns.has(key)) return byColumns.get(key);
+  if (!config.rowPrivacyCheck && byColumns.has(key)) return byColumns.get(key);
   const candidates = candidateRows(rows,config);
   const result = {candidates, rowJSON:candidates.map(row=>JSON.stringify(row)), search:candidates.map(row=>config.columns.map(c=>text(row[c.key])).join('\n').normalize('NFKC').toLowerCase()), results:new Map()};
-  byColumns.set(key,result);
+  if (!config.rowPrivacyCheck) byColumns.set(key,result);
   return result;
 }
 function resultFor(rows, config, query) {
@@ -271,8 +271,8 @@ function constants(config, page, query) {
   return config.columns.filter(c => c.hideWhenConstant ?? c.type === 'category').flatMap(column => {
     const selected = query.filters?.[column.key];
     const facet = page.facets?.[column.key];
-    const values = Array.isArray(selected) && selected.length === 1 && page.total > 0 ? selected
-      : Array.isArray(facet) ? facet.map(v => v.value)
+    const values = Array.isArray(facet) ? facet.map(v => v.value)
+      : Array.isArray(selected) && selected.length === 1 && page.total > 0 ? selected
       : facet && facet.min === facet.max ? [text(facet.min)] : [];
     return values.length === 1 && values[0] ? [{column, value:values[0]}] : [];
   });
