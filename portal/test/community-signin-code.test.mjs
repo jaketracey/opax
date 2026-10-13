@@ -478,11 +478,11 @@ test('missing or partial native columns fail before quota or proof creation',asy
 test('real Worker and local D1 enforce the concurrent email cap, MAC comparison and one-winner redemption',async t=>{
  const rounds=Number(process.env.OPAX_SIGNIN_STRESS_ROUNDS||1);
  assert.ok(Number.isSafeInteger(rounds)&&rounds>=1&&rounds<=1000);
- const {Miniflare,convertV4MiniflareOptions}=await import('miniflare');
+ const {localMiniflare}=await import('./local-miniflare.mjs');
  const compiled=await build({entryPoints:[new URL('../src/community.ts',import.meta.url).pathname],bundle:true,platform:'browser',format:'esm',write:false,external:['node:crypto']});
  const script=compiled.outputFiles[0].text+`\nexport default {fetch(req,env){return communityRoute(req,{...env,COMMUNITY_EMAIL:{async send(mail){const result=await env.EMAIL_STUB.fetch(new Request('https://example.test/mail',{method:'POST',body:JSON.stringify(mail)}));return result.json()}}})}};`;
  const outbox=[];
- const mf=new Miniflare(convertV4MiniflareOptions({port:0,workers:[{name:'signin',modules:true,script,compatibilityDate:'2026-09-01',compatibilityFlags:['nodejs_compat'],d1Databases:{COMMUNITY_DB:'signin-runtime'},bindings:{COMMUNITY_ENABLED:'true',COMMUNITY_ORIGIN:'https://opax.test',COMMUNITY_EMAIL_FROM:'signin@example.test',COMMUNITY_CODE_MAC_SECRET:TEST_KEY},serviceBindings:{EMAIL_STUB:async req=>{outbox.push(await req.json());return Response.json({messageId:'test'})}},outboundService:()=>{throw Error('Outbound network is forbidden in sign-in tests')}}]}));
+ const mf=localMiniflare({port:0,workers:[{name:'signin',modules:true,script,compatibilityDate:'2026-09-01',compatibilityFlags:['nodejs_compat'],d1Databases:{COMMUNITY_DB:'signin-runtime'},bindings:{COMMUNITY_ENABLED:'true',COMMUNITY_ORIGIN:'https://opax.test',COMMUNITY_EMAIL_FROM:'signin@example.test',COMMUNITY_CODE_MAC_SECRET:TEST_KEY},serviceBindings:{EMAIL_STUB:async req=>{outbox.push(await req.json());return Response.json({messageId:'test'})}},outboundService:()=>{throw Error('Outbound network is forbidden in sign-in tests')}}]});
  try{
   const db=await mf.getD1Database('COMMUNITY_DB','signin');
   for(const file of readdirSync(new URL('../migrations/',import.meta.url)).filter(name=>name.endsWith('.sql')).sort())await db.batch(readFileSync(new URL('../migrations/'+file,import.meta.url),'utf8').replace(/^\s*--.*$/gm,'').split(';').map(s=>s.trim()).filter(Boolean).map(sql=>db.prepare(sql)));

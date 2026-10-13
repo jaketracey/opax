@@ -38,7 +38,7 @@ const PUBLIC = join(ROOT, 'portal', 'public')
 const INDEX = join(PUBLIC, 'index.html')
 
 /** Assets referenced from index.html with a ?v= stamp. */
-const STAMPED = ['app.js', 'spa-shell.js', 'spa-entry.js', 'style.css', 'analytics.js', 'gtm.js', 'events.js', 'navigation.js', 'quick-search.js', 'voice.css', 'ui-controls.css', 'ui-source.css', 'ui-source.js', 'labels.js', 'vote-tables.js', 'vote-tables.css']
+const STAMPED = ['app.js', 'spa-shell.js', 'spa-entry.js', 'style.css', 'analytics.js', 'gtm.js', 'events.js', 'navigation.js', 'quick-search.js', 'voice.css', 'ui-controls.css', 'ui-source.css', 'ui-source.js', 'labels.js', 'page-actions.css', 'vote-tables.js', 'vote-tables.css']
 
 const hashOf = (file) =>
   createHash('sha256').update(readFileSync(join(PUBLIC, file))).digest('hex').slice(0, 10)
@@ -137,6 +137,8 @@ export async function refreshFonts({ publicRoot = PUBLIC, fetcher = honestFetch 
  *  agencies.js and suppliers.js import each other: stamp the agencies → suppliers
  *  edge only, then app.js. Keep the reverse edge hand-versioned to avoid a hash cycle. */
 export const MODULE_STAMPS = [
+  // ⋯: app.js draws and runs it; electorates.js draws it.
+  ['app.js', 'page-actions-menu.js'], ['electorates.js', 'page-actions-menu.js'],
   ['datatable.js', 'server-csv.js'],
   ['datatable-workbench.js', 'datatable.js'],
   ['vote-tables.js', 'labels.js'], ['vote-tables.js', 'division-markdown.js'], ['vote-tables.js', 'datatable.js'],
@@ -165,7 +167,7 @@ export const MODULE_STAMPS = [
   // The money map's bundle names its chunks by content, so an importer holding
   // an old money-map.js would ask for chunks the build has removed.
   ['map-page.js', 'money-map.js'], ['agencies.js', 'money-map.js'], ['suppliers.js', 'money-map.js'],
-  ['thenvsnow.js', 'wombat.js'], ['thenvsnow.js', 'labels.js'], ['grant-recipient.js', 'grants.js'],
+  ['thenvsnow.js', 'wombat.js'], ['thenvsnow.js', 'labels.js'], ['thenvsnow.js', 'canonical-urls.js'], ['grant-recipient.js', 'grants.js'],
   ['electorates.js', 'labels.js'], ['home-data.js', 'labels.js'],
   ['app.js', 'grants-table.js'],
   ['app.js', 'vote-tables.js'],
@@ -174,13 +176,14 @@ export const MODULE_STAMPS = [
   ['app.js', 'canonical-urls.js'], ['app.js', 'growth-modules.js'], ['app.js', 'ask-person.js'], ['app.js', 'suppliers.js'],
   ['app.js', 'labels.js'], ['app.js', 'electorates.js'], ['app.js', 'division-markdown.js'], ['app.js', 'quiz.js'], ['app.js', 'timemachine.js'],
   ['app.js', 'sa-hansard.js'],
+  ['app.js', 'held-back-transcripts.js'],
   ['app.js', 'money-map.js'], ['app.js', 'grant-recipient.js'],
   // /money/explain: the explainer, its stylesheet and the modules it reads.
   ['app.js', 'money-explain.js'], ['money-explain.js', 'donor-views.js'],
   ['money-explain.js', 'labels.js'], ['money-explain.js', 'canonical-urls.js'],
   // The Explore tools and the loaders, restyled on tokens in pass 4G.
   ['app.js', 'ballot.js'], ['app.js', 'grants.js'], ['app.js', 'ledger.js'], ['app.js', 'matrix.js'], ['app.js', 'wordsdollars.js'],
-  ['app.js', 'thenvsnow.js'], ['app.js', 'statemap.js'], ['app.js', 'stages.js'], ['app.js', 'wombat.js'],
+  ['app.js', 'thenvsnow.js'], ['app.js', 'statemap.js'], ['app.js', 'stages.js'], ['app.js', 'wombat.js'], ['app.js', 'ask-steps.js'],
   ['home.js', 'home-data.js'], ['home.js', 'electorates.js'], ['home.js', 'money-map.js'],
 ]
 

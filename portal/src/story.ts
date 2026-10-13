@@ -10,7 +10,7 @@
  */
 
 /** A slide's kicker is short and uppercase on the card; the alt text is what Instagram reads out. */
-interface SlideBase { kicker: string; title: string; alt: string }
+interface SlideBase { kicker: string; title: string; alt: string; authorisation?: string }
 
 export type StorySlide =
   /** The opening photograph, headline over its lower edge. `photo` is a catalogue id; `inset` a portrait id from /photos/jpg. */
@@ -29,16 +29,20 @@ export type StorySlide =
   | (SlideBase & { type: 'division'; ayes: number; noes: number; ayeParties: [string, number][]; noParties: [string, number][]; line: string })
   /** Numbered sentences, with the attribution that qualifies them. */
   | (SlideBase & { type: 'list'; items: string[]; note?: string | null })
-  /** The closing slide: the sources, and the page the numbers live on, as the largest type. */
-  | (SlideBase & { type: 'source'; rows: string[]; url: string; path: string })
+  /** The closing slide: the sources, and the page the numbers live on (its full address, scheme dropped) as the largest type.
+   *  `path` is only on editions stored before STORY_VERSION 3, which drew it under the address; it is no longer drawn. */
+  | (SlideBase & { type: 'source'; rows: string[]; url: string; path?: string })
 
 export type StorySlideType = StorySlide['type']
 
 /** Instagram allows ten items in a carousel; the story never uses fewer than three. */
 export const STORY_MIN_SLIDES = 3
 export const STORY_MAX_SLIDES = 10
-/** Bump when a slide's drawing changes so cached renders are not reused. */
-export const STORY_VERSION = 2
+/** Bump when a slide's drawing changes so cached renders are not reused. It keys
+ *  the slide cache and the slide URLs only; the landscape and portrait cards keep theirs.
+ *  3: the source slide closes on the page's address alone (no path line, no wordmark).
+ *  4: adds the authorisation line on Victorian electoral slides. */
+export const STORY_VERSION = 4
 
 /** Where a slide is drawn: the feed carousel at 4:5, or a story frame at 9:16. */
 export type StoryFormat = 'feed' | 'story'
