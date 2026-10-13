@@ -60,6 +60,12 @@ interface Env {
   JOURNEY_STORY_MODEL?: string
   FOLLOWUPS_MODEL?: string
   MONEY_OVERVIEW_MODEL?: string
+  /** Default off. Orchestrator sets route after review; shadow remains available. */
+  AGENTIC_ASK_MODE?: 'off' | 'shadow' | 'route'
+  /** Optional operator-configured token prices, USD per million, for monitoring. */
+  AGENTIC_INPUT_USD_PER_MILLION?: string
+  AGENTIC_OUTPUT_USD_PER_MILLION?: string
+
 }
 
 declare namespace Cloudflare {

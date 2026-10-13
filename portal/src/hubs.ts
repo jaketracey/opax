@@ -101,7 +101,8 @@ export function renderSittingWeek(data: HubIndex, week: Week, people: SponsorCan
   }
   {
     const config = divisionTableConfig({jurisdiction:'federal', start:week.start, end:week.end}, 'Divisions held', 'sitting', privacyCheck)
-    const divisions = divisionRows(week.divisions.filter(d=>privacyCheck(JSON.stringify([d.title,d.name,d.stage,d.question]))))
+    // Division rows are public record; privacyCheck guards only the table's URL state.
+    const divisions = divisionRows(week.divisions)
     const page = voteTablePage(divisions,config,tableQuery)
     for (const d of page.rows) if (typeof d.href === 'string') rows.push({href:d.href,name:String(d.title)})
     body += `<section class="ui-section hub-section">${voteTableHTML(config,page)}${sourceLineHTML({updated:data.snapshotDate,dateLabel:'Published snapshot',source:'Exported division records',notes:['Only formal divisions leave a per-member record. Open a division for its question, party tallies, members and original source.']})}</section>`

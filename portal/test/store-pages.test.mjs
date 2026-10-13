@@ -49,7 +49,7 @@ test('support gives help, corrections, answers and the in-app deletion path', ()
 });
 
 test('panelPrerender copies only the policy panels, whole and visible', () => {
-  assert.deepEqual([...SERVER_PANELS], ['privacy', 'support']);
+  assert.deepEqual([...SERVER_PANELS], ['privacy', 'support', 'methods']);
   for (const name of SERVER_PANELS) {
     const copy = panelPrerender(html, name);
     assert.ok(copy.startsWith(`<section id="prerender" class="wrap policy-page" data-panel-copy="${name}">`), name);

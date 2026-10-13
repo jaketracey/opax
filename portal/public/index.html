@@ -61,8 +61,8 @@
      which is what lets _headers serve these two immutable. -->
 <link rel="stylesheet" href="/datatable.css">
 <link rel="stylesheet" href="/vote-tables.css?v=d727aad769">
-<script type="module" src="/vote-tables.js?v=2df85485a3"></script>
-<link rel="stylesheet" href="/style.css?v=4aaa468a61">
+<script type="module" src="/vote-tables.js?v=1484e7c649"></script>
+<link rel="stylesheet" href="/style.css?v=a34336ffc6">
 <link rel="stylesheet" href="/ui-controls.css?v=ce29178242">
 <link rel="stylesheet" href="/ui-source.css?v=78ddb8fc1b">
 <link rel="stylesheet" href="/voice.css?v=19eea6fcdc">
@@ -354,6 +354,7 @@
       </details>
       <div id="ask-status" class="status" role="status"></div>
       <div id="ask-wombat" hidden></div>
+      <div id="ask-steps-live" hidden></div>
       <!-- The passage behind the part of the answer being read, fading up on
            the right as the reader scrolls. Content duplicates the sources
            list below; the card is mouse-only (keyboard readers use the list). -->
@@ -366,6 +367,7 @@
       </aside>
       <div id="ask-result" hidden>
         <p class="kicker">Answer</p>
+        <div id="ask-steps" hidden></div>
         <div id="ask-overview" class="answer-overview" hidden></div>
         <article id="ask-answer" class="answer" tabindex="-1"></article>
         <p class="answer-stamp" id="ask-stamp"></p>
@@ -1456,6 +1458,14 @@
       manifest, including per-source counts and the current corpus version, is at
       <a href="/corpus.json">corpus.json</a>.</p>
 
+      <h2 id="speaker-attribution">Speaker attribution</h2>
+      <p>Some earlier OpenAustralia transcripts combine several speakers' words in one document.
+      These mixed transcripts are not credited to any one member or included in their speech
+      count until each person's words can be attributed reliably. A fuller split into individual
+      speaking turns is planned; person pages show how many earlier transcripts include that
+      member alongside others and are not counted yet. Chair-role transcripts record a member
+      presiding over proceedings and are not counted as that member's own speeches.</p>
+
       <h2>Retrieval and generation</h2>
       <p>Search runs hybrid semantic + keyword retrieval with a reranking pass. Answers are
       generated only from retrieved passages, with citations. Embeddings:
@@ -2119,11 +2129,11 @@
 <!-- defer: never block the parser (Lighthouse counted this as render-blocking).
      Deferred scripts still run before DOMContentLoaded, so nothing changes for
      app.js's boot. ?v= is content-hash stamped by scripts/stamp_assets.mjs. -->
-<script src="/spa-shell.js?v=ea29e118cf" defer></script>
+<script src="/spa-shell.js?v=a9490cbde1" defer></script>
 <script src="/navigation.js?v=de99bace2e" defer></script>
 <script src="/quick-search.js?v=27eac3b2f7" defer></script>
 <script src="/ui-source.js?v=5e7b751ca0" defer></script>
-<script src="/app.js?v=d8356fe720" defer></script>
+<script src="/app.js?v=1dcac7539a" defer></script>
 <!-- PostHog runs after the app (defer order) so the first route is not queued behind it; it replays the events measured before it (analytics/index.js). -->
 <script src="/analytics.js?v=7a83ce20cf" defer></script>
 </body>
