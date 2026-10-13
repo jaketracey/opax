@@ -14,16 +14,16 @@ const donorViewReady = import('/donor-views.js?v=77470b1d26').then(module => {
 
 "use strict";
 let voteTables;
-const voteTablesReady = import("/vote-tables.js?v=5d8e1994a8").then(module => { voteTables = module; });
+const voteTablesReady = import("/vote-tables.js?v=947a7d2aa5").then(module => { voteTables = module; });
 let divisionMarkdown;
 const divisionMarkdownReady = import('/division-markdown.js?v=5991511166').then(module => { divisionMarkdown = module; });
 // The labels and source lines (labels.js); the first render waits for them.
 let growthModules;
-const growthModulesReady = import("/growth-modules.js?v=d8f4fe61c2").then(module => { growthModules = module; });
+const growthModulesReady = import("/growth-modules.js?v=2fe959404b").then(module => { growthModules = module; });
 let registerTables;
 const registerTablesReady = import('/register-tables.js?v=f2e8638ef8').then(module => { registerTables = module; });
 let askPerson;
-const askPersonReady = import('/ask-person.js?v=a0b3602921').then(module => { askPerson = module; });
+const askPersonReady = import('/ask-person.js?v=3b73938cf7').then(module => { askPerson = module; });
 let uiLabels;
 const uiLabelsReady = import('/labels.js?v=fc03aa14cf').then(module => { uiLabels = module; });
 // ⋯, the page-actions menu: its markup for the renderers, and its behaviour

@@ -4,6 +4,7 @@
 import {readFileSync, existsSync} from 'node:fs';
 import {join} from 'node:path';
 import {build} from 'esbuild';
+import {identityBundlePlugin} from './helpers/table-identity-bundle.mjs';
 
 const esc = v => String(v).replace(/[&<>"']/g, c => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'}[c]));
 /** Only the transformations the Worker's SEO and share-card code use. */
@@ -52,7 +53,7 @@ export async function loadWorker(entry, root, ctxOrOptions = {}, optionsOrCtx = 
   const executionContext=isContext(ctxOrOptions)?ctxOrOptions:isContext(optionsOrCtx)?optionsOrCtx:undefined;
   const options=isContext(ctxOrOptions)?optionsOrCtx:ctxOrOptions;
   const compiled = await build({entryPoints: [entry], bundle: true, platform: 'browser', format: 'esm', write: false, external: ['node:*'],
-    plugins: [...(options.plugins || []), {name: 'omit-images', setup(b) { b.onResolve({filter: /^\.\/og-render$/}, () => ({path: 'images', namespace: 'harness'})); b.onLoad({filter: /.*/, namespace: 'harness'}, () => ({contents: 'const spec=card=>new TextEncoder().encode(JSON.stringify(card));export const renderOgPng=spec;export const renderOgJpeg=spec;', loader: 'js'})); }}]});
+    plugins: [...(options.plugins || []), ...(options.identityBundle ? [identityBundlePlugin(options.identityBundle)] : []), {name: 'omit-images', setup(b) { b.onResolve({filter: /^\.\/og-render$/}, () => ({path: 'images', namespace: 'harness'})); b.onLoad({filter: /.*/, namespace: 'harness'}, () => ({contents: 'const spec=card=>new TextEncoder().encode(JSON.stringify(card));export const renderOgPng=spec;export const renderOgJpeg=spec;', loader: 'js'})); }}]});
   const {default: worker} = await import('data:text/javascript;base64,' + Buffer.from(compiled.outputFiles[0].text).toString('base64'));
   const files = new Map(), parsed = new Map();
   const at = path => join(root, path.replace(/^\//, ''));

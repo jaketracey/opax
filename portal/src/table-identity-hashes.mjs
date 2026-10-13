@@ -1,5 +1,7 @@
 import {createHash} from 'node:crypto';
 import {identityCandidates,STRIPPED_PREFIX,identityTokenStreams,ROW_COMPACT_MIN_LENGTH} from './table-identities.mjs';
+import {compileIdentityPrefilter,assertPrefilterLengths,identityRegistryFingerprint} from './table-identity-prefilter.mjs';
+import {prefilter as bundledPrefilter,binding as bundledBinding,identityHashes} from './table-identity-prefilter.generated.mjs';
 export {csvIdentityCheck} from '../public/datatable-csv.js';
 
 // Polynomial screening hashes never decide privacy: every hit is confirmed by
@@ -13,7 +15,7 @@ export function identityHashEntry(value, {row=false} = {}) {
   const compact=value.startsWith(STRIPPED_PREFIX),form=compact?value.slice(STRIPPED_PREFIX.length):value;
   return {hash:createHash('sha256').update(value).digest('hex'),words:value.split(' ').length,compact,length:form.length,rolling:identityRollingHash(form),row};
 }
-export function compileHashedIdentityCheck(entries, strippedLengths = [], {mode='query'} = {}) {
+function compileRollingIdentityCheck(entries, strippedLengths = [], {mode='query'} = {}) {
   if(!Array.isArray(strippedLengths)||strippedLengths.some(n=>!Number.isSafeInteger(n)||n<4))throw Error('Privacy index unavailable');
   if(!Array.isArray(entries)||!entries.length||entries.some(e=>!e||!/^[a-f0-9]{64}$/.test(e.hash)||!Number.isSafeInteger(e.words)||e.words<1))throw Error('Privacy index unavailable');
   // Compatibility for historical hash-only indices, used by regression audits.
@@ -54,4 +56,32 @@ export function compileHashedIdentityCheck(entries, strippedLengths = [], {mode=
     return fieldHit;
   };
   return value=>{for(const [tokens,compact]of identityTokenStreams(value))if(scan(tokens,compact))return true;return false;};
+}
+
+const digest=value=>createHash('sha256').update(value).digest('hex');
+function checkedCandidates(entries,lengths,prefilter,binding) {
+  const fingerprint=identityRegistryFingerprint(entries);
+  const candidates=compileIdentityPrefilter(prefilter,fingerprint,binding);
+  const hashes=new Set(entries.map(e=>e.hash)),wordLengths=[...new Set(entries.map(e=>e.words))];
+  if(entries.length!==prefilter.registryCount || hashes.size!==entries.length || digest([...hashes].sort().join('\n'))!==prefilter.identityFingerprint)throw Error('Privacy index unavailable');
+  assertPrefilterLengths(prefilter,wordLengths,lengths);
+  return value=>{for(const candidate of candidates(value,wordLengths,lengths))if(hashes.has(digest(candidate)))return true;return false;};
+}
+export function compileHashedIdentityCheck(entries, strippedLengths=[], optionsOrPrefilter={}, suppliedBinding) {
+  const explicit=optionsOrPrefilter?.version!==undefined || suppliedBinding!==undefined;
+  const options=explicit?{}:optionsOrPrefilter;
+  const prefilter=explicit?optionsOrPrefilter:bundledPrefilter,binding=explicit?suppliedBinding:bundledBinding;
+  // Synthetic rolling fixtures retain the existing API. Worker readers require
+  // the trusted complete binding; production registries always use it.
+  const bound=explicit || options.requireBinding || identityRegistryFingerprint(entries)===bundledBinding.registryFingerprint;
+  if(!bound)return compileRollingIdentityCheck(entries,strippedLengths,options);
+  const query=checkedCandidates(entries,strippedLengths,prefilter,binding);
+  return options.mode==='row'?compileRollingIdentityCheck(entries,strippedLengths,options):query;
+}
+export function compileBundledIdentityCheck(registryFingerprint) {
+  if(!Array.isArray(identityHashes) || !identityHashes.length || identityHashes.some(hash=>!/^[a-f0-9]{64}$/.test(hash)))throw Error('Privacy index unavailable');
+  const hashes=new Set(identityHashes),fingerprint=digest([...identityHashes].sort().join('\n'));
+  if(registryFingerprint!==bundledBinding.registryFingerprint || fingerprint!==bundledPrefilter.identityFingerprint || hashes.size!==identityHashes.length || hashes.size!==bundledPrefilter.registryCount)throw Error('Privacy index unavailable');
+  const candidates=compileIdentityPrefilter(bundledPrefilter,registryFingerprint,bundledBinding);
+  return value=>{for(const candidate of candidates(value,bundledPrefilter.lengths,bundledPrefilter.strippedLengths))if(hashes.has(digest(candidate)))return true;return false;};
 }

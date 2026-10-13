@@ -14,3 +14,7 @@ export function compileIdentityCheck(phrases: Set<string>, options?: {mode?: 'qu
 export function identityTokenStreams(value: unknown): Generator<[Iterable<string>, boolean]>;
 export function compileIdentityMatch(phrases:Set<string>,options?:{mode?:'query'|'row';fieldPhrases?:Set<string>}):(value:unknown)=>{rule:string;length:number}|null;
 export const ROW_IDENTITY_POLICY:string;
+
+export function legacyIdentityWords(value:unknown):string[];
+export function identityStrippedWords(value:unknown):string[];
+export function iterateIdentityCandidates(value:unknown,lengths:number[],compactLengths?:number[],options?:{mode?:'query'|'row'}):IterableIterator<string>;

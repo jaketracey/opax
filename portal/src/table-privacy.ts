@@ -44,7 +44,7 @@ export async function tablePrivacyCheck(assets: Fetcher, mode: 'query' | 'row' =
       if (!response.ok) throw new Error('Privacy index unavailable')
       const registry = await response.json() as {version:number;identities:{hash:string;words:number;compact:boolean;length:number;rolling:number;row:false|'token'|'field'}[];strippedLengths:number[]}
       if(registry.version!==3 || !Array.isArray(registry.identities) || registry.identities.some(e=>typeof e.compact!=='boolean'||!Number.isSafeInteger(e.length)||!Number.isSafeInteger(e.rolling)||![false,'token','field'].includes(e.row)) || !Array.isArray(registry.strippedLengths) || !registry.strippedLengths.length || registry.strippedLengths.some(n=>!Number.isSafeInteger(n)||n<4))throw new Error('Privacy index unavailable')
-      const blocked=compileHashedIdentityCheck(registry.identities,registry.strippedLengths,{mode})
+      const blocked=compileHashedIdentityCheck(registry.identities,registry.strippedLengths,{mode,requireBinding:true})
       return (text: string) => timedSync('privacy',()=>!blocked(text))
     })().catch(() => {modes!.delete(mode); return () => false})
     modes.set(mode, pending)

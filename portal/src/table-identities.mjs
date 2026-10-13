@@ -6,7 +6,8 @@ const decodedIdentity = value => {
 };
 const words = raw => raw.toLowerCase().replace(/[^a-z0-9]+/g,' ').trim().split(' ').filter(Boolean);
 export const identityWords = value => words(decodedIdentity(value).normalize('NFKD').replace(/\p{M}+/gu,''));
-const legacyWords = value => words(decodedIdentity(value).normalize('NFKC'));
+export const legacyIdentityWords = value => words(decodedIdentity(value).normalize('NFKC'));
+const legacyWords = legacyIdentityWords;
 export const identityPhrase = value => identityWords(value).join(' ');
 export const ROW_IDENTITY_POLICY = 'row-identifying-v2';
 export const ROW_COMPACT_MIN_LENGTH = 8;
@@ -15,7 +16,8 @@ export const STRIPPED_MIN_LENGTH = 4;
 // Visitor queries keep strict substring rejection; row fields require tokens.
 export const STRIPPED_CONTAINS_MIN_LENGTH = 6;
 const folded = value => decodedIdentity(value).normalize('NFKC').toLowerCase().replace(/ß/g,'ss').replace(/ς/g,'σ');
-const strippedWords = value => folded(value).match(/[\p{L}\p{N}]+/gu) || [];
+export const identityStrippedWords = value => folded(value).match(/[\p{L}\p{N}]+/gu) || [];
+const strippedWords = identityStrippedWords;
 export const identityStripped = value => strippedWords(value).join('');
 export const strippedLengths = phrases => [...new Set([...phrases].filter(p=>p.startsWith(STRIPPED_PREFIX)).map(p=>p.length-STRIPPED_PREFIX.length))].sort((a,b)=>a-b);
 export function identityVariants(value) {
@@ -121,3 +123,5 @@ export function* identityTokenStreams(value) {
 export function compileIdentityCheck(phrases, options) {
   const match=compileIdentityMatch(phrases,options);return value=>match(value)!==null;
 }
+
+export function* iterateIdentityCandidates(value, lengths, compactLengths = [], options) { yield* identityCandidates(value,lengths,compactLengths,options); }
