@@ -16,6 +16,14 @@ function unresolvedPersonQuestion(question: string): boolean {
   return !!subject && !collective.test(subject) || /\b(?:speeches|remarks|statements|votes)\s+(?:by|from|of)\s+(?!the\b|all\b)[\p{L}'’-]+/iu.test(question)
 }
 
+/** "unresolved" also marks unknown topic words; only an unresolved person slot (a name the roster could not
+ * resolve, in "what has X said" grammar) blocks an answer about that person. */
+export function unresolvedPersonAsked(question: string, named: NamedScope): boolean {
+  if (!named.unresolved) return false
+  const resolved = [...named.people, ...named.people.map(n => n.split(' ').at(-1)!), ...named.parties]
+  const masked = resolved.reduce((q, name) => q.replace(new RegExp(`(?<![\\p{L}])${name.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}(?![\\p{L}])`, 'giu'), 'members'), question)
+  return unresolvedPersonQuestion(masked)
+}
 /** The same original-context, literal-quote and position gates used by Ask.
  * This boundary rejects a whole invalid draft; it never unquotes a misquote. */
 export function verifyResearchAnswer(draft: AnswerDraft, passages: Map<string, Passage>, question: string, named: NamedScope, positionQuery?: string, roster?: unknown, why?: (reason: string) => void): QualitativeAnswer | null {
@@ -25,10 +33,7 @@ export function verifyResearchAnswer(draft: AnswerDraft, passages: Map<string, P
   // prose as unresolved. Keep explicit person requests strict without using
   // that numerical vocabulary to reject every new qualitative subject.
   if (named.ambiguous) return reject('named_ambiguous')
-  // "unresolved" also marks unknown topic words; only an unresolved person slot blocks the answer.
-  const resolved = [...named.people, ...named.people.map(n => n.split(' ').at(-1)!), ...named.parties]
-  const masked = resolved.reduce((q, name) => q.replace(new RegExp(`(?<![\\p{L}])${name.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}(?![\\p{L}])`, 'giu'), 'members'), question)
-  if (named.unresolved && unresolvedPersonQuestion(masked)) return reject('named_unresolved')
+  if (unresolvedPersonAsked(question, named)) return reject('named_unresolved')
   if (CAUSAL.test(draft.text)) return reject('causal_claim')
   if (!draft.text?.trim() || draft.text.length > 8000 || !Array.isArray(draft.citations) || !draft.citations.length || draft.citations.length > 12) return reject('shape')
   const points = Array.from(draft.text), covered = new Set<number>(), used = new Map<string, Passage>()

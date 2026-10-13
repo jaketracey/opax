@@ -4,5 +4,9 @@
   {"id": "Q3", "kind": "topic-over-time", "question": "How has the number of gambling speeches changed each year since 2015, and who led it?"},
   {"id": "Q4", "kind": "comparison", "question": "How do Labor and the Coalition differ on nuclear power?"},
   {"id": "Q5", "kind": "money", "question": "Who are the biggest donors to the Nationals?"},
-  {"id": "Q6", "kind": "ranking", "question": "Which party has spoken most about housing affordability since 2022?"}
+  {"id": "Q6", "kind": "ranking", "question": "Which party has spoken most about housing affordability since 2022?"},
+  {"id": "Q7", "kind": "pay", "question": "How much do Foreign Affairs and Defence secretaries earn?"},
+  {"id": "Q8", "kind": "contracts", "question": "Which suppliers received the largest Defence contracts?"},
+  {"id": "Q9", "kind": "grants", "question": "Who received the biggest grants in Western Australia?"},
+  {"id": "Q10", "kind": "interests", "question": "What shareholdings have ministers declared?"}
 ]

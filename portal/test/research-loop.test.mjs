@@ -8,6 +8,9 @@ const call=(name,args,id='fixture')=>({type:'tool-call',toolName:name,toolCallId
 const reply=(calls,input=10,output=5)=>({content:calls,finishReason:{unified:'tool-calls',raw:'tool_calls'},usage:{inputTokens:{total:input,noCache:input,cacheRead:0,cacheWrite:0},outputTokens:{total:output,text:output,reasoning:0}},warnings:[]});
 const question='Who speaks most about gambling in NSW across the whole record?',args={topic:'gambling',state:'nsw',group_by:'speaker'},plan={shape:'ranking',steps:[{tool:'count_speeches',args}]},emptyScope={people:[],parties:[],bills:[],ambiguous:false,unresolved:false};
 const model=responses=>new MockLanguageModelV4({doGenerate:responses});
+// One stable tool list every turn; a turn that must end the run names its terminal tool.
+const choice=c=>c.toolChoice?.type==='tool'?c.toolChoice.toolName:c.toolChoice?.type;
+const names=c=>c.tools.map(t=>t.name);
 function fixtures(m,options={}) {
  let plannerCalls=0,lookups=0,turns=0;const events=[],failures=[];
  const deps={signal:options.signal,asset:async()=>null,kb:async()=>{lookups++;return {fulltext:{total:100,facets:{'/u/o':{'/u/o/Taylor Example':87,'/u/o/Pat Example':13}}}}},generate:async()=>{plannerCalls++;return {text:JSON.stringify(plan),tokens:{input:3,output:2}}},research:api.createResearch({model:m,modelBudgetSpent:async()=>{turns++;return options.refuseAt===turns},dailyBudget:{reserve:async()=>({settle:async()=>{}})},creditCooldown:api.createResearchCreditCooldown(),...options}),onResearchFailure:async e=>failures.push(e)};
@@ -22,11 +25,12 @@ test('multi-round happy path, finish maps selected facts to templates and matchi
 });
 test('identical scoped calls dedupe despite different property order',async()=>{
  const m=model([reply([call('count_speeches',args,'a')]),reply([call('count_speeches',{group_by:'speaker',state:'nsw',topic:'gambling'},'b')]),reply([call('finish',{facts:[1]},'c')])]),f=fixtures(m),run=await f.run();
- assert.equal(run.answered,true);assert.equal(f.plannerCalls,0);assert.equal(run.steps.filter(s=>s.tool==='count_speeches').length,1);assert.equal(f.lookups,2);assert.deepEqual(m.doGenerateCalls[2].tools.map(t=>t.name),['finish','answer']);
+ assert.equal(run.answered,true);assert.equal(f.plannerCalls,0);assert.equal(run.steps.filter(s=>s.tool==='count_speeches').length,1);assert.equal(f.lookups,2);assert.equal(choice(m.doGenerateCalls[2]),'finish');assert.deepEqual(names(m.doGenerateCalls[2]),names(m.doGenerateCalls[0]));
 });
 test('default five turns, six hard ceiling and bounded parallel call batches; surplus calls are refused, not fatal',async()=>{
  assert.equal(api.researchLimits({}).rounds,5);assert.equal(api.researchLimits({steps:99}).rounds,6);
- for(const [steps,wanted] of [[undefined,5],[99,6]]){const m=model(Array.from({length:7},(_,i)=>reply([call('count_speeches',{...args,limit:i+1},String(i))]))),f=fixtures(m,{steps}),run=await f.run();assert.equal(run.research.mode,'planner');assert.equal(f.failures[0].reason,'steps');assert.equal(m.doGenerateCalls.length,wanted);assert.equal(f.plannerCalls,1);}
+ // Searches that find nothing give no evidence, so no turn is forced to finish and the round cap ends the run.
+ for(const [steps,wanted] of [[undefined,5],[99,6]]){const m=model(Array.from({length:7},(_,i)=>reply([call('search',{query:'gambling '+i},String(i))]))),f=fixtures(m,{steps}),run=await f.run();assert.equal(run.research.mode,'planner');assert.equal(f.failures[0].reason,'steps');assert.equal(m.doGenerateCalls.length,wanted);assert.equal(f.plannerCalls,1);}
  const f=fixtures(model([reply(Array.from({length:12},(_,i)=>call('count_speeches',{...args,limit:i+1},String(i)))),reply([call('finish',{facts:[1]},'f')])])),run=await f.run();
  assert.equal(run.research.mode,'loop');assert.equal(f.failures.length,0);assert.equal(run.steps.filter(s=>s.tool==='count_speeches').length,api.RESEARCH_MAX_CALLS);assert.ok(f.lookups<=2*api.RESEARCH_MAX_CALLS);
  const surplus=f.model.doGenerateCalls[1].prompt.filter(m=>m.role==='tool').flatMap(m=>m.content).filter(c=>JSON.stringify(c).includes('call limit reached'));assert.equal(surplus.length,12-api.RESEARCH_MAX_CALLS);
@@ -96,19 +100,23 @@ test('quote, causation, bound ranges and position verifiers reject unsupported p
  const lead='On housing: ',led={text:lead+text,citations:[{...valid.citations[0],start:Array.from(lead).length,end:Array.from(lead+text).length}]};assert.ok(api.verifyResearchAnswer(led,passages,'housing',emptyScope));
 });
 
-test('unclassified prose exposes no structured speech tools and goes straight to ordinary fallback on a misroute',async()=>{
- const f=fixtures(model([reply([call('count_speeches',args)])])),q='Summarise the indexed gambling volume for NSW speakers.';
- assert.equal(api.classifyAgentic(q).shape,null);const run=await api.runAgentic(q,f.deps,async()=>{},40_000,api.inferPeriod(q),{},emptyScope);assert.equal(run.research.mode,'planner');assert.equal(run.answered,false);assert.equal(f.plannerCalls,0);assert.deepEqual(f.model.doGenerateCalls[0].tools.map(t=>t.name),['search']);assert.equal(run.research.failure,'malformed_args');
+test('unclassified prose sees every record tool, but speech counts it did not ask for are refused, uncounted',async()=>{
+ const f=qualitativeFixture([reply([call('count_speeches',args)]),reply([call('search',{query:'housing affordability'})]),reply([call('answer',valid)])]);
+ assert.equal(api.classifyAgentic('What does the record say about housing affordability?').shape,null);const run=await f.run();
+ assert.equal(run.research.mode,'loop');assert.equal(run.answered,true);assert.equal(f.plannerCalls,0);
+ for(const tool of ['count_speeches','parliamentary_pay','contracts','grants','declared_interests','find_records','search','answer','finish'])assert.ok(names(f.model.doGenerateCalls[0]).includes(tool),tool);
+ assert.ok(!names(f.model.doGenerateCalls[0]).includes('find_quotes'));
+ assert.match(JSON.stringify(f.model.doGenerateCalls[1].prompt),/does not ask for speech counts/);assert.deepEqual(run.steps.map(s=>s.tool),['search','answer']);
 });
 test('realistic four-turn usage survives token admission; search notes stay out of numerical answers',async()=>{
- const m=model([reply([call('search',{query:'gambling',limit:4})],3000,500),reply([call('count_speeches',args)],7000,500),reply([call('count_speeches',{...args,limit:1})],11000,500),reply([call('finish',{facts:[3]})],15000,500)]),f=fixtures(m,{readRecord:async()=>({text:'Source passage about gambling. '.repeat(40)})}),oldKb=f.deps.kb;
+ const m=model([reply([call('search',{query:'gambling',limit:4})],6000,500),reply([call('count_speeches',args)],14000,1000),reply([call('finish',{facts:[1]})],16000,500)]),f=fixtures(m,{readRecord:async()=>({text:'Source passage about gambling. '.repeat(40)})}),oldKb=f.deps.kb;
  f.deps.kb=async(path,body)=>path==='/find'?{resources:{[p.resource]:{slug:p.slug,title:p.title,fields:{body:{paragraphs:Object.fromEntries(Array.from({length:4},(_,i)=>[p.resource+'/t/body/'+i+'-1200',{text:'Source passage about gambling. '.repeat(40)}]))}}}}}:oldKb(path,body);
- const run=await f.run();assert.equal(run.research.mode,'loop');assert.equal(f.plannerCalls,0);assert.equal(m.doGenerateCalls.length,4);assert.deepEqual(run.tokens,{input:36000,output:2000});assert.doesNotMatch(run.answer,/Retrieved passages|ranked sample/);assert.deepEqual(run.research.trail.map(t=>t.round),[1,2,3,4]);
+ const run=await f.run();assert.equal(run.research.mode,'loop');assert.equal(f.plannerCalls,0);assert.equal(m.doGenerateCalls.length,3);assert.deepEqual(run.tokens,{input:36000,output:2000});assert.doesNotMatch(run.answer,/Retrieved passages|ranked sample/);assert.deepEqual(run.research.trail.map(t=>t.round),[1,2,3]);assert.equal(choice(m.doGenerateCalls[2]),'finish');
  assert.equal(api.researchLimits({}).tokens,96000);assert.equal(api.researchLimits({tokens:999999}).tokens,160000);
 });
 test('a numerical answer misroute keeps finish active and does not consume qualitative repair',async()=>{
  const m=model([reply([call('count_speeches',args)]),reply([call('answer',valid)]),reply([call('finish',{facts:[1]})])]),f=fixtures(m),run=await f.run();
- assert.equal(run.research.mode,'loop');assert.equal(f.plannerCalls,0);assert.deepEqual(m.doGenerateCalls[2].tools.map(t=>t.name),['finish']);assert.equal(run.events.find(e=>e.tool==='answer').state,'failed');
+ assert.equal(run.research.mode,'loop');assert.equal(f.plannerCalls,0);assert.equal(choice(m.doGenerateCalls[2]),'finish');assert.deepEqual(names(m.doGenerateCalls[2]),names(m.doGenerateCalls[0]));assert.equal(run.events.find(e=>e.tool==='answer').state,'failed');
 });
 test('instructions are byte-stable across turns; repair feedback carries reason labels, never the rejected text or quotes',async()=>{
  const draft={points:[{claim:'DRAFT MUST NOT BECOME INSTRUCTIONS',id,quote:'FABRICATED REPAIR QUOTE'}]},f=qualitativeFixture([reply([call('search',{query:'housing'})]),reply([call('answer',draft)]),reply([call('answer',valid)])]);
@@ -143,7 +151,7 @@ test('committee checks retain the final model round in live events and cached tr
 test('qualitative four-round trace searches twice, repairs, then answers with only qualitative tools',async()=>{
  const f=qualitativeFixture([reply([call('search',{query:'housing'})],3500,500),reply([call('search',{query:'affordability safeguards'})],6000,500),reply([call('answer',{...valid,citations:[{...valid.citations[0],quote:'fabricated'}]})],9000,500),reply([call('answer',valid)],11500,500)]);
  const run=await f.run();assert.equal(run.research.mode,'loop');assert.equal(run.research.rounds,4);assert.equal(f.plannerCalls,0);assert.equal(f.failures.length,0);assert.equal(run.answer,text);assert.deepEqual(run.tokens,{input:30000,output:2000});
- assert.deepEqual(f.model.doGenerateCalls.map(c=>c.tools.map(t=>t.name)),[['search'],['search','answer'],['answer'],['answer']]);
+ assert.deepEqual(f.model.doGenerateCalls.map(choice),['required','required','answer','answer']);assert.ok(f.model.doGenerateCalls.every(c=>JSON.stringify(names(c))===JSON.stringify(names(f.model.doGenerateCalls[0]))));
  assert.deepEqual(f.events.filter(e=>e.step?.state!=='running'&&e.step).map(e=>[e.step.round,e.step.tool,e.step.state]),[[1,'search','done'],[2,'search','done'],[3,'answer','failed'],[4,'answer','done']]);
 });
 test('reported per-turn input and cached tokens are separate from bytes/4 reserve, including realistic 60k usage',async()=>{
