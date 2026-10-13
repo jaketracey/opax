@@ -136,7 +136,7 @@ class ArgaSyncDedupe(unittest.TestCase):
         db.row_factory = sqlite3.Row
         db.executescript("""
             CREATE TABLE speeches(speech_id INTEGER PRIMARY KEY, speaker_name TEXT, topic TEXT, text TEXT,
-                                  date TEXT, source TEXT, chamber TEXT);
+                                  date TEXT, source TEXT, chamber TEXT, party TEXT);
         """)
         body = "x" * 300
         rows = [
