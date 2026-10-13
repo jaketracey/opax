@@ -199,6 +199,7 @@ export function createResearch(options: ResearchOptions): Research {
       check()
       if (credits.blocked()) fail('research_credit_exhausted')
       if (!options.model) fail('missing_key')
+    let callStarted = Date.now()
       await Promise.race([generateText({
         model: options.model!, instructions, tools, toolChoice: 'required',
         prompt: JSON.stringify({ question, period: context.period, namedScope: context.named, conversation: options.conversation ?? [] }),
@@ -233,6 +234,7 @@ export function createResearch(options: ResearchOptions): Research {
         },
         onLanguageModelCallStart: async () => {
           check()
+          callStarted = Date.now()
           stats.usageUnknown = true
           await context.progress('status', { phase: 'reading' })
         },
@@ -240,6 +242,11 @@ export function createResearch(options: ResearchOptions): Research {
           stats.usageUnknown = false
           stats.tokens.input += event.usage.inputTokens ?? reservedInput; stats.tokens.output += event.usage.outputTokens ?? reservedOutput
           stats.cachedByTurn = [...(stats.cachedByTurn ?? []), event.usage.inputTokenDetails?.cacheReadTokens ?? 0]
+          const served = object(event.providerMetadata?.openrouter).provider
+          stats.turns = [...(stats.turns ?? []), { ms: Date.now() - callStarted, provider: typeof served === 'string' ? served.slice(0, 40) : '',
+            input: event.usage.inputTokens ?? 0, output: event.usage.outputTokens ?? 0,
+            reasoning: event.usage.outputTokenDetails?.reasoningTokens ?? 0,
+            cached: event.usage.inputTokenDetails?.cacheReadTokens ?? 0 }]
           const usage = object(object(event.providerMetadata?.openrouter).usage)
           const receipt = typeof usage.cost === 'number' && Number.isFinite(usage.cost) && usage.cost >= 0 ? usage.cost : undefined
           const input = event.usage.inputTokens ?? reservedInput, output = event.usage.outputTokens ?? reservedOutput
