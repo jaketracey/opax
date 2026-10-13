@@ -1,6 +1,7 @@
 import { generateText, jsonSchema, tool, isStepCount, ToolChoiceViolationError, type LanguageModel, type ToolSet } from 'ai'
 import { TOOL_SPECS, validToolArgs, toolArgProblem, type ToolDeps, type ToolResult } from './agentic-tools'
 import { getAskTool } from './tools'
+import { searchPartyLabels } from './party-labels'
 import { classifyAgentic, factSheet, resolveArgs, type PlanStep } from './agentic-ask'
 import { firstSpeechTurn } from './position-evidence'
 import type { ResearchContext } from './research-types'
@@ -29,7 +30,7 @@ export interface ResearchOptions {
   model?: LanguageModel
   steps?: unknown; wallMs?: unknown; tokens?: unknown
   modelBudgetSpent: () => Promise<boolean>
-  searchBody?: (query: string, limit: number, context: ResearchContext) => Record<string, unknown>
+  searchBody?: (query: string, limit: number, context: ResearchContext, filters: { party?: string[] }) => Record<string, unknown>
   readRecord?: (slug: string, signal: AbortSignal) => Promise<Record<string, unknown>>
   evidenceText?: (resource: Record<string, unknown>, text: string) => string
   positionQuery?: string
@@ -160,13 +161,15 @@ export function createResearch(options: ResearchOptions): Research {
       // A null or empty optional argument means "not set"; models send them for unused filters.
       execute: args => invoke({ tool: spec.name, args: Object.fromEntries(Object.entries(object(args)).filter(([, v]) => v !== null && v !== '')) }),
     })]))
-    tools.search = tool({ description: 'Search Hansard and other original corpus passages: what was said. A bounded ranked sample, never an exhaustive count. Returns only passages verified in their original speaking turn, with speaker, party on the day and date; cite them by id. For one person, put their name in the query; two complementary queries (different wording or angle) find more distinct speeches.',
-      inputSchema: jsonSchema<{ query: string; limit?: number }>({ type: 'object', properties: { query: { type: 'string', minLength: 2, maxLength: 300 }, limit: { type: 'integer', minimum: 1, maximum: 8 } }, required: ['query'], additionalProperties: false }),
+    tools.search = tool({ description: 'Search Hansard and other original corpus passages: what was said. A bounded ranked sample, never an exhaustive count. Returns only passages verified in their original speaking turn, with speaker, party on the day and date; cite them by id. For one person, put their name in the query; for one party\'s view, pass party (Coalition means Liberal, Nationals, LNP and CLP); two complementary queries (different wording or angle) find more distinct speeches.',
+      inputSchema: jsonSchema<{ query: string; limit?: number; party?: string }>({ type: 'object', properties: { query: { type: 'string', minLength: 2, maxLength: 300 }, limit: { type: 'integer', minimum: 1, maximum: 8 }, party: { type: 'string', minLength: 2, maxLength: 60, description: 'Only speeches by members of this party on the day: Labor, Liberal, Nationals, LNP, Greens, Independent, One Nation, or Coalition.' } }, required: ['query'], additionalProperties: false }),
       execute: args => invoke({ tool: 'search', args }, async deps => {
-        if (typeof args.query !== 'string' || args.query.trim().length < 2 || args.query.length > 300 || args.limit != null && (!Number.isInteger(args.limit) || args.limit < 1 || args.limit > 8)) return errorResult('search', 'invalid tool arguments')
+        if (typeof args.query !== 'string' || args.query.trim().length < 2 || args.query.length > 300 || args.limit != null && (!Number.isInteger(args.limit) || args.limit < 1 || args.limit > 8) || args.party != null && typeof args.party !== 'string') return errorResult('search', 'invalid tool arguments')
+        const party = typeof args.party === 'string' && args.party.trim() ? searchPartyLabels(args.party) : undefined
+        if (party === null) return errorResult('search', 'unknown party; use Labor, Liberal, Nationals, LNP, Greens, Independent, One Nation or Coalition')
         // Six passages per search keep the answer turn's prompt small; models routinely ask for eight.
         const limit = Math.min(args.limit ?? 4, 6)
-        const found = await deps.kb('/find', options.searchBody?.(args.query, limit, context) ?? { query: args.query, top_k: limit, features: ['keyword', 'semantic'], reranker: 'predict', show: ['basic', 'origin', 'extra'], filter_expression: { field: { prop: 'field', type: 'text', name: 'body' } } })
+        const found = await deps.kb('/find', options.searchBody?.(args.query, limit, context, party ? { party } : {}) ?? { query: args.query, top_k: limit, features: ['keyword', 'semantic'], reranker: 'predict', show: ['basic', 'origin', 'extra'], filter_expression: { field: { prop: 'field', type: 'text', name: 'body' } } })
         const picked: Passage[] = []
         for (const [rid, raw] of Object.entries(object(found.resources))) {
           const resource = object(raw), origin = object(resource.origin), meta = object(object(resource.extra).metadata)

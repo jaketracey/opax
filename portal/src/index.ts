@@ -5947,14 +5947,15 @@ function agenticDeps(env: Env, ctx: ExecutionContext, signal?: AbortSignal, inpu
         inputPrice: Number(env.AGENTIC_INPUT_USD_PER_MILLION) || undefined, outputPrice: Number(env.AGENTIC_OUTPUT_USD_PER_MILLION) || undefined,
         conversation: saConversationInput(input, env.SA_HANSARD_FULL_TEXT).context,
         positionQuery: isPositionBody(buildAskBody(input)) ? String(buildAskBody(input).query || input.question || '') : undefined,
-        searchBody: (query, limit, context) => {
+        searchBody: (query, limit, context, filters) => {
+          // A party scope is the model's search argument (one side of a comparison at a time), not an implicit filter.
           const scoped = { ...input,
             ...(context.named.people.length === 1 ? { speaker: context.named.people[0] } : {}),
-            // "Labor and the Coalition" resolves only Labor; a one-party filter would hide the other side.
-            ...(context.named.parties.length === 1 && !/\b(?:coalition|opposition|government|crossbench\w*)\b/i.test(String(input.question ?? '')) ? { party: context.named.parties[0] } : {}),
             ...(context.period.since ? { since: context.period.since } : {}), ...(context.period.until ? { until: context.period.until } : {}),
           }
-          return { query, top_k: limit, features: ['keyword', 'semantic'], reranker: 'predict', show: ['basic', 'origin', 'extra'], filter_expression: filterExpression(scoped) }
+          const expression = filterExpression(scoped) as { field: unknown }
+          const party = filters.party?.length ? filters.party.length === 1 ? { prop: 'label', labelset: 'party', label: filters.party[0] } : { or: filters.party.map(label => ({ prop: 'label', labelset: 'party', label })) } : null
+          return { query, top_k: limit, features: ['keyword', 'semantic'], reranker: 'predict', show: ['basic', 'origin', 'extra'], filter_expression: party ? { field: { and: [expression.field, party] } } : expression }
         },
         evidenceText: (record, text) => saEvidenceText(record, text, env.SA_HANSARD_FULL_TEXT, String(input.question ?? '')),
         readRecord: async (slug, signal) => {

@@ -195,3 +195,10 @@ test('lowercase words never resolve as surname-only people when the question use
  assert.deepEqual(api.extractNamedScope('what has power said about housing?',roster,{bills:[]}).people,['Power']);
  assert.deepEqual(api.extractNamedScope('What has Andrew Wilkie said about poker machine reform?',roster,{bills:[]}).people,['Andrew Wilkie']);
 });
+test('search takes a party argument as KB labels (Coalition is its member parties); an unknown party is refused, not searched',async()=>{
+ const seen=[];const f=fixtures(model([reply([call('search',{query:'nuclear power',party:'the Coalition'},'a'),call('search',{query:'nuclear power',party:'Invented Party'},'b')]),reply([call('answer',valid)])]),{readRecord:async()=>({text,speaker:'Pat Example'}),searchBody:(query,limit,context,filters)=>{seen.push(filters);return {query,top_k:limit}}});
+ f.deps.kb=async()=>({resources:{[p.resource]:{slug:p.slug,title:p.title,fields:{body:{paragraphs:{[id]:{text}}}}}}});
+ await api.runAgentic('How do Labor and the Coalition differ on housing affordability?',f.deps,async()=>{},40_000,api.inferPeriod('housing'),{},emptyScope);
+ assert.deepEqual(seen.map(s=>(s.party??[]).slice().sort()),[['Country Liberal Party','LNP','Liberal','Nationals']]);
+ assert.match(JSON.stringify(f.model.doGenerateCalls[1].prompt),/unknown party/);
+});
