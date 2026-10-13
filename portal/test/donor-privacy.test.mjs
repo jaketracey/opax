@@ -1,5 +1,3 @@
-import {tableApi} from '../src/table-api.ts';
-import {partyMoneyResponse} from '../src/party-money-table.ts';
 import {privacyCSVFields} from '../public/datatable-privacy-fields.js';
 import {instrumentTableRows} from '../public/instruments.js';
 // Donor privacy regression (October 2026 hotfix): no donor failing the
@@ -1016,14 +1014,16 @@ test('all four register tables reject the complete shared donor and recipient in
  // Format variants use the same normalisation as dt-contracts; no identifier is logged.
  const abns=policy.values.filter(value=>/^\d{11}$/.test(value));
  for(const value of abns)for(const candidate of [value,value.replace(/^(\d{2})(\d{3})(\d{3})(\d{3})$/,'$1 $2 $3 $4'),'ABN '+value,encodeURIComponent(encodeURIComponent(value.replace(/^(\d{2})(\d{3})(\d{3})(\d{3})$/,'$1 $2 $3 $4')))])assert.equal(policy.safe(candidate),false,'ABN variant rejected');
- const assets={fetch:async request=>Response.json(await read(new URL(request.url).pathname))};
  for(const value of [policy.values[0],abns[0]]){
   const params=new URLSearchParams({q:value,format:'csv'});
-  const denied=await tableApi(new Request('https://fixture.test/api/table/instruments?'+params),{TABLE_DB:tablesD1.db});
+  const denied=await fetchWorker('/api/table/instruments?'+params);
+  assert.equal(denied.status,200,'rejected real D1 export uses the bound fixture registry');
   assert.equal(denied.headers.get('X-Table-Total'),'0','rejected real D1 export has no data rows');
  }
- const response=await partyMoneyResponse(new Request('https://fixture.test/api/register/party-money?'+new URLSearchParams({partyId:topParty.id})),assets);
- assert.equal(response.status,200);assert.ok(policy.safe(JSON.stringify(await response.json())),'public party client input');
+ const response=await fetchWorker('/api/register/party-money?'+new URLSearchParams({partyId:topParty.id}));
+ assert.equal(response.status,200);
+ const projectedMoney=await response.json();
+ assert.ok(policy.safeRows(JSON.stringify(projectedMoney)) && [...queryValues(projectedMoney)].every(policy.safeRows),'public party client input');
  t.diagnostic(`${policy.values.length} derived values, ${abns.length} ABNs checked across four tables; no identities logged`);
 });
 
