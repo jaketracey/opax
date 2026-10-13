@@ -32,7 +32,8 @@ name: 14 About, coverage, privacy, then Sources and licences with source terms a
     element:
       id: about-coverage-as-at
     timeout: 90000
-- assertVisible: As at .* Source.*OPAX collection.*
+# The coverage block's one source line (pass 5): date, then the source.
+- assertVisible: Updated .*OPAX collection.*
 - takeScreenshot: ${EVIDENCE}/14-coverage-as-at
 - scrollUntilVisible:
     element:
