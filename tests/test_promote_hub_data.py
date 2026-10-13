@@ -6,8 +6,9 @@ from pathlib import Path
 import shutil
 import tempfile
 import unittest
+from unittest import mock
 
-from scripts.promote_hub_data import ROOT, ASSETS, promote
+from scripts.promote_hub_data import ROOT, ASSETS, digest, promote, public_budget_projection
 
 
 class PromoteHubDataTests(unittest.TestCase):
@@ -48,8 +49,47 @@ class PromoteHubDataTests(unittest.TestCase):
             public = json.loads((self.root / "portal/public" / ASSETS[hub]).read_bytes())
             staged = json.loads((self.root / "data/staged" / hub / "hub.json").read_bytes())
             manifest = public.pop("promotion")
+            if hub == "budget":
+                staged["portfolio_indexes"] = [p for p in staged["portfolio_indexes"] if p.get("status") != "held"]
             self.assertEqual(public, staged)
             self.assertEqual(len(manifest["input_sha256"]), 64)
+
+    def test_held_access_and_licence_indexes_in_staged_input_are_dropped(self):
+        indexes = [
+            {"id": "fixture-held-access", "url": "https://treasury.gov.au/fixture-access", "status": "held"},
+            {"id": "fixture-held-licence", "url": "https://treasury.gov.au/fixture-licence", "licence": {"status": "blocked"}},
+        ]
+        self.edit("budget", "inventory.json", lambda d: (d["portfolio_indexes"].extend(indexes), d["counts"].update(portfolio_indexes=307)))
+        self.edit("budget", "hub.json", lambda d: d["portfolio_indexes"].extend(indexes))
+        stage = self.root / "data/staged/budget"
+        # This fixture represents a reviewed staged snapshot containing holds.
+        self.edit("budget", "review.json", lambda d: d["inputs"].update({name: digest((stage / name).read_bytes()) for name in ("inventory.json", "hub.json")}))
+        self.assertEqual(self.run_promotion(["budget"])[0], 0)
+        data = (self.root / "portal/public/budget/data.json").read_text()
+        for index in indexes:
+            self.assertNotIn(index["id"], data)
+            self.assertNotIn(index["url"], data)
+        hub = json.loads(data)
+        self.assertEqual(hub["promotion"]["counts"]["held_portfolio_indexes_excluded"], 40)
+        self.assertEqual(len(hub["portfolio_indexes"]), 267)
+
+    def test_held_identity_leaking_through_other_fields_refuses_and_preserves_asset(self):
+        target, before = self.existing_asset("budget")
+        held = json.loads((self.root / "data/staged/budget/inventory.json").read_bytes())["held"][0]
+        for identity in (held["id"], held["url"]):
+            with self.subTest(identity=identity), mock.patch("scripts.promote_hub_data.public_budget_projection",
+                    side_effect=lambda hub: {**public_budget_projection(hub), "scope": "Fixture reference " + identity}):
+                code, errors = self.run_promotion(["budget"])
+                self.assertEqual(code, 1)
+                self.assertIn("held-output:", errors)
+                self.assertEqual(target.read_bytes(), before)
+
+    def test_unfiltered_held_index_output_refuses_without_creating_asset(self):
+        with mock.patch("scripts.promote_hub_data.public_budget_projection", side_effect=lambda hub: hub):
+            code, errors = self.run_promotion(["budget"])
+        self.assertEqual(code, 1)
+        self.assertIn("held-output:", errors)
+        self.assertFalse((self.root / "portal/public/budget").exists())
 
     def test_tampered_hash_refuses_each_hub_and_preserves_last_good_asset(self):
         for hub in ASSETS:

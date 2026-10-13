@@ -7,13 +7,14 @@ the gifts section for all **38** exactly linked office holders. No push, deploy,
 
 | Hub | Snapshot | Promoted counts | Public asset | Bytes |
 | --- | --- | --- | --- | ---: |
-| Budget | 13 Oct 2026 Sydney / 12 Oct UTC | 13 Budget releases; 851 licensed document links; 805 fiscal observations; 2,347 native measure rows counted | `portal/public/budget/data.json` | 3,911,789 |
+| Budget | 13 Oct 2026 Sydney / 12 Oct UTC | 13 Budget releases; 851 licensed document links; 805 fiscal observations; 2,347 native measure rows counted; 267 portfolio entries, 15 with links | `portal/public/budget/data.json` | 3,807,095 |
 | Victorian gifts | 14 Oct 2026 Sydney / 13 Oct UTC | 3 periods; 6 tables; 282 entries (235 ministers, 47 parliamentary secretaries); 275 exact roster links, 7 unlinked source rows | `portal/public/vic-gifts/data.json` | 380,437 |
 
 Budget measures remain a count in the existing Worker contract, with the full
-rows retained in staged data. The one restricted document is excluded. The 38
-held portfolio discovery indexes remain original links without reproduced content;
-252 unlinked names remain absent from rendered lists.
+rows retained in staged data. The one restricted document and all **38 held PBS
+indexes** are excluded from the public asset. Its 267 portfolio entries comprise
+15 accessible index links and 252 unlinked availability records; the latter remain
+absent from rendered lists. The final output contains **zero held IDs or URLs**.
 
 The promoter reconciles inventory counts, releases, document IDs, formats,
 licences and all required current-year fiscal metrics. Every fiscal and measure
@@ -21,7 +22,11 @@ row must join a cleared document with identical source URL, release, snapshot,
 hash and licence. Document and publication-grant hashes join the committed
 acquisition ledger. Budget originals are retained in the desktop acquisition
 cache rather than the repo; promotion verifies reviewed ledger hashes without
-re-fetching them. The checked hub must equal the existing budget projection.
+re-fetching them. The checked staged hub must equal the existing budget projection;
+publication then removes every access/licence-held index. Before writing, a final
+scan rejects any held item, ID or URL anywhere in the output, including nested
+receipts and incidental references. Reviewed staged bytes and input hashes remain
+unchanged.
 
 For gifts it reconciles every period/register file, table and role count, totals
 and linked/unlinked counts; checks every retained snapshot's actual bytes against
@@ -51,12 +56,18 @@ JavaScript-disabled tables, and Jacinta Allan's 32-entry sourced person section.
 - Budget: [390](budget-390.png), [1440](budget-1440.png).
 - Victorian gifts: [390](vic-gifts-390.png), [1440](vic-gifts-1440.png).
 
-Validation: **2,000 desktop portal tests passed**, zero failures/skips, with
-`OPAX_TEST_HOST=::1`; release build, TypeScript, `check`, Worker dry run and
-promotion dry run passed. The offline nightly regression suite passed **312**
-checks, including independent hub failure and rollback. The promoter refuses tampered hashes, held periods,
-held rows, count mismatches, missing licence receipts, wrong person links and
-unreviewed input changes. Final Worker tests also check all 38 linked person
-pages. Results and unchanged-votes evidence are recorded in
-[validation.json](validation.json). The promoter compares `votes.json` before and
-after running; this lane additionally requires exact bytes against `origin/main`.
+Fix round 1 removes the held PBS indexes reported on `6e1518251`. The output
+scan also rejects a held ID or URL referenced through another field and leaves
+an existing asset byte-identical on failure. Tests cover held access and licence
+indexes in reviewed staged input, leaked references and a missing prior asset.
+
+Fix gates passed: **12 promoter tests**, **312 nightly checks**, **32 targeted
+Worker/crawl tests**, TypeScript and `check`. Public-asset validation and the
+promotion dry run also passed. Gates and new asset counts/hashes are recorded in
+[fix-round1-validation.json](fix-round1-validation.json). Targeted Worker/crawl
+checks exercise the promoted assets and all 38 linked Victorian person pages.
+The initial promotion's full 2,000-test desktop run is retained separately in
+[the original validation receipt](validation.json); it predates this fix.
+
+The promoter compares `votes.json` before and after running; this fix additionally
+requires exact bytes against `6e1518251` and `origin/main`.

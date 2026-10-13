@@ -28,15 +28,18 @@
   ],
   "assets": {
     "budget": {
-      "bytes": 3911789,
-      "sha256": "631606009af885ea278b9f84036cd468b68009711bc2e8a31c14416eb3b962dd",
+      "bytes": 3807095,
+      "sha256": "1980b99beebb43ecda8bec80f4ba021835e057521b9fde6bb3168bec74cc3f26",
       "promotion": {
         "counts": {
           "releases": 13,
           "documents": 851,
           "aggregates": 805,
           "measures": 2347,
-          "held_documents_excluded": 1
+          "held_documents_excluded": 1,
+          "portfolio_indexes": 267,
+          "linked_portfolio_indexes": 15,
+          "held_portfolio_indexes_excluded": 38
         },
         "snapshot_date": "2026-10-12",
         "input_sha256": "5e755a7f18c295b9d8c5d84087fad43e47a5a5952fddd598b07e12b47f9af4a8",
@@ -84,9 +87,5 @@
   },
   "javaScriptDisabled": true,
   "victorianPersonSection": true,
-  "pageErrors": [],
-  "sitemap_routes": [
-    "/budget",
-    "/register/vic-gifts"
-  ]
+  "pageErrors": []
 }

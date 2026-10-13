@@ -1,0 +1,82 @@
+{
+  "base_sha": "6e15182517ed65e1d65a384fde095228953596b1",
+  "budget": {
+    "path": "portal/public/budget/data.json",
+    "bytes": 3807095,
+    "sha256": "1980b99beebb43ecda8bec80f4ba021835e057521b9fde6bb3168bec74cc3f26",
+    "counts": {
+      "releases": 13,
+      "documents": 851,
+      "aggregates": 805,
+      "measures": 2347,
+      "held_documents_excluded": 1,
+      "portfolio_indexes": 267,
+      "linked_portfolio_indexes": 15,
+      "held_portfolio_indexes_excluded": 38
+    },
+    "input_sha256": "5e755a7f18c295b9d8c5d84087fad43e47a5a5952fddd598b07e12b47f9af4a8"
+  },
+  "held_output_check": {
+    "held_indexes_excluded": 38,
+    "unique_held_ids_checked": 1,
+    "unique_held_urls_checked": 35,
+    "held_ids_in_output": 0,
+    "held_urls_in_output": 0
+  },
+  "gates": {
+    "promoter_tests": {
+      "passed": 12,
+      "failed": 0
+    },
+    "promoter_and_validator_tests": {
+      "run": 79,
+      "failed": 0,
+      "skipped": 1,
+      "skip_reason": "Clean-checkout-only smoke test while public assets are uncommitted"
+    },
+    "targeted_worker_and_crawl_tests": {
+      "passed": 32,
+      "failed": 0,
+      "skipped": 0,
+      "OPAX_TEST_HOST": "::1"
+    },
+    "tsc": "passed",
+    "check": "passed",
+    "nightly_data_validation": "passed",
+    "promotion_dry_run": "passed",
+    "browser": "passed",
+    "nightly_fixture_tests": {
+      "passed": 312,
+      "failed": 0
+    },
+    "supplemental_clean_data_smoke": {
+      "passed": 2,
+      "failed": 0,
+      "skipped": 0,
+      "resolves": "Clean-checkout-only smoke test skipped before commit"
+    }
+  },
+  "no_push_or_deploy": true,
+  "votes": {
+    "byte_identical_to_HEAD": true,
+    "byte_identical_to_origin/main": true,
+    "sha256": "a77128dc0e1e1b3fdaa4bf84501e2c94af3125dea3cf0b2dffbc688a49d68546"
+  },
+  "tested_source_sha256": {
+    "scripts/promote_hub_data.py": "d3c6ef287c9a800f60222093f840ea5c7ac2d72d39606d7d5c3e2a570eb8ca2d",
+    "tests/test_promote_hub_data.py": "28a7f9a8f05bb514528768e2059557aca026260a77e23bb6f09300f9c151a691",
+    "portal/test/promoted-hubs.test.mjs": "1bc591796af5439526f1559b6fa4bb4c844efde00d7ce8cbc179e762395f48f3"
+  },
+  "log_sha256": {
+    "promoter-validator-tests.log": "8ea981a8d348c8a0d8e1e65176a0b0cc9a196fab85bd923b28130acb70f29267",
+    "worker-crawl-tests.log": "8bffb92cef2f6a10c0d68986297cf45d1a237199882a6c1a460ab8ab00349205",
+    "check.log": "52a4dc228e90950db9749939a438199058f030d065c09df187b72b9ceea2c873",
+    "tsc.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "nightly-data-check.log": "7397afa292de35c2a8603ad9df1eb101914066a52f5fa3e2b33698f3eb488352",
+    "public-check.log": "15dce48460897152125fa764a44309b74769fb3a10d09d2ebbec2c9af7bbdfc6",
+    "dry-run.log": "bf1fc316a4f90b0032618b8b82d8792dc0308ac3b94abc00a7cd4bf6cdcdb0f3",
+    "browser.log": "0c6d9ed472cdea951d6c51ee01c76a6c286e8c4c400096747cf41e85ec1654e9",
+    "nightly-tests.log": "74e143e40f42111669dbb89e7f03166060e812a0586878786cb115c99b4a162f",
+    "clean-data-smoke.log": "8147dd9a56aab2e19e18b9ed374f86e6711fac847953add2e3c9644c23edc824"
+  }
+}

@@ -37,7 +37,9 @@ After a new snapshot is reviewed, update `data/staged/budget/review.json` with
 the reviewed commit and SHA-256 of every named input. Nightly promotes after the
 other static exports, validates the public asset and rolls back only this hub on
 failure. Inventory-only links retain their licensed-paper receipts; the held
-document and its rows never enter the public projection. Original-file hashes
+document, its rows and all access/licence-held PBS indexes never enter the public
+projection. A final output scan rejects any held item, ID or URL, including nested
+receipts and other references, before the asset is written. Original-file hashes
 join the committed acquisition ledger; the promoter does not require the VM to
 have the desktop acquisition cache or fetch originals again.
 

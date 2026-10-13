@@ -68,6 +68,40 @@ def receipt_join(receipt, ledger, url, snapshot_key="snapshot"):
     equal(receipt.get("snapshot"), source.get(snapshot_key), "source-receipt", f"snapshot {url}")
 
 
+def budget_item_held(item):
+    statuses = ("held", "blocked", "restricted")
+    return bool(item.get("held") or item.get("status") in statuses
+                or any(isinstance(item.get(key), dict) and item[key].get("status") in statuses
+                       for key in ("licence", "receipt", "access")))
+
+
+def public_budget_projection(hub):
+    # A held publisher index is excluded even when only its link was staged.
+    # Documents/rows already pass the separate provenance and licence gates.
+    return {**hub, "portfolio_indexes": [p for p in hub["portfolio_indexes"] if not budget_item_held(p)]}
+
+
+def check_budget_output(output, inventory):
+    held = [*inventory["held"],
+            *(d for d in inventory["documents"] if not permitted(d)),
+            *(p for p in inventory["portfolio_indexes"] if budget_item_held(p))]
+    identities = {item[key] for item in held for key in ("id", "url") if item.get(key)}
+    def no_held_items(value):
+        if isinstance(value, dict):
+            require(not budget_item_held(value), "held-output", "held item remains in public asset")
+            for child in value.values():
+                no_held_items(child)
+        elif isinstance(value, list):
+            for child in value:
+                no_held_items(child)
+    no_held_items(output)
+    # Check every field, including nested receipts, incidental text and manifest
+    # metadata. A held identity must not survive through a different reference.
+    text = json.dumps(output, ensure_ascii=False, allow_nan=False)
+    for identity in sorted(identities):
+        require(identity not in text, "held-output", f"held ID or URL remains: {identity}")
+
+
 def budget_checks(stage):
     inventory, hub = load(stage / "inventory.json"), load(stage / "hub.json")
     receipts = load(stage / "receipts.json")
@@ -131,8 +165,13 @@ def budget_checks(stage):
             equal(metrics, set(METRICS), "counts", f"headline metric coverage {d['id']}")
     expected = projection({**inventory, "aggregates": aggregates, "measures": measures})
     equal(hub, expected, "asset-shape", "budget hub differs from validated projection")
-    return hub, {"releases": len(hub["releases"]), "documents": len(hub["documents"]),
-                 "aggregates": len(aggregates), "measures": len(measures), "held_documents_excluded": len(held)}
+    public = public_budget_projection(hub)
+    held_indexes = sum(budget_item_held(p) for p in inventory["portfolio_indexes"])
+    return public, {"releases": len(public["releases"]), "documents": len(public["documents"]),
+                    "aggregates": len(aggregates), "measures": len(measures), "held_documents_excluded": len(held),
+                    "portfolio_indexes": len(public["portfolio_indexes"]),
+                    "linked_portfolio_indexes": sum(bool(p.get("url")) for p in public["portfolio_indexes"]),
+                    "held_portfolio_indexes_excluded": held_indexes}
 
 
 def gifts_checks(stage, root):
@@ -192,7 +231,10 @@ def validated_asset(hub_name, root=ROOT):
     equal(review.get("inputs"), hashes, "review-hash", f"{hub_name} inputs changed since review")
     manifest = {"counts": counts, "snapshot_date": hub["generated_at"][:10], "input_sha256": hashes["hub.json"],
                 "inputs": hashes, "reviewed_commit": review["reviewed_commit"]}
-    return (json.dumps({**hub, "promotion": manifest}, ensure_ascii=False, indent=2, allow_nan=False) + "\n").encode(), manifest
+    output = {**hub, "promotion": manifest}
+    if hub_name == "budget":
+        check_budget_output(output, load(stage / "inventory.json"))
+    return (json.dumps(output, ensure_ascii=False, indent=2, allow_nan=False) + "\n").encode(), manifest
 
 
 def promote(hubs, root=ROOT, dry_run=False, check_public=False, votes_reference=None):
