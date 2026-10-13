@@ -2,6 +2,12 @@
 
 Checked **13 October 2026 (Australia/Sydney)**. Branch `coverage/budget`, created from `origin/main` at `c41740e8e52128b7b761a2499a186277387f93b3`. The candidate commit SHA is supplied in the handoff. Everything is staged or local code/QA: no KB, production D1, live JSON, push or deploy. The default `/budget` route returns a sourced unavailable message until a reviewed budget asset is loaded; local QA substitutes the staged projection through an in-memory Worker asset binding.
 
+## Batch 4 integration
+
+Merged current main `1df98365f726d06d22f2c77374c7d76ff516b99a` into the approved round 2 branch. The four shared harness files use main verbatim; all other shared portal tests also match main. The stamp generator retains every main entry and both budget module entries. Restamping from the repository root updates the budget module's DataTable import. Staged budget files remain byte-identical to the approved round.
+
+The desktop `gate/coverage-budget-batch4-20261013` full merge gate passed on code `3a838f50ac56c45c368b4648c08b7313d33f26bc`: **1,787 portal tests**, zero failures/skips, all **187 test files** reported, plus `check` (including TypeScript), `build:release` and Worker `--dry-run`. The current reporter correctly includes module-only test files. No Mac flake rerun was needed. Targeted budget/cache tests: **12 passed**; refreshed browser checks passed at 390/1440, including search, CSV and JavaScript-disabled figures. `votes.json` is byte-identical to merged main and the approved round. No push, deploy or production loading. [Batch 4 gate evidence](batch4-validation.json).
+
 ## Review fixes
 
 Merged `origin/main` at `608b824b3` and preserved both isolated fixture storage and the `OPAX_TEST_HOST` setting. Unlinked portfolio entries remain in the discovery inventory but are filtered from the hub; empty portfolio sections are omitted. Rendered filler fell from **25 to 0** for `/budget?year=2015-16`, and **252 to 0** across all 12 years. [Per-year counts](fix-results.json). [2015–16 at 390](budget-2015-16-390.png), [2015–16 at 1440](budget-2015-16-1440.png).
@@ -59,7 +65,7 @@ The 38 linked portfolio index holds are access/discovery holds, separate from th
 
 [App plan](app-plan.md): a signed-out web link first, then a possible native catalogue alongside Bills/Registers after a reviewed static-data contract. No app code, app API changes, simulator or native build.
 
-## Validation and next load
+## Round 2 validation and next load
 
 - Desktop `gate/coverage-budget-fix-20261013`, captured main base `608b824b3bee3f8bb01d7e1872d51db4f12571c9`: **1,589 portal tests passed**, zero failures/skips, `OPAX_TEST_HOST=::1`, all 161 selected test files. Tested code `5045c7c7cd375a13fd6b9b04d2f2c5bb5213b11b`; the handoff commit adds this evidence. [Gate identity, steps and artefact hashes](validation.json).
 - The gate wrapper exited nonzero after the successful full suite because its custom reporter omitted three module-only file summaries (Bills, Pictures and Quiz): 158 reported files and 1,586 reported cases, versus 161 selected files and 1,589 passing cases in Node's global summary. All three missing wrappers passed again under Node's standard reporter on the same gate ref. The pending Worker dry-run was completed separately on that ref. The wrapper result is retained as failed; no reusable green gate cache was fabricated.
