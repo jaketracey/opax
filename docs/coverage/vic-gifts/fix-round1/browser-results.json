@@ -1,0 +1,41 @@
+{
+  "preview": "Local Worker; staged in-memory asset binding; no production bindings",
+  "stagedSha256": "ef0b7067f69d949d4604478c77b33f408b2c977f31aafc83bd54ef31eafba404",
+  "codeHashes": {
+    "portal/src/index.ts": "8a6fba6d1c929394e3b88f95a9bd781829b693f784995cf9e7e784cc75bb4812",
+    "portal/src/vic-gifts.ts": "c9550f7f761a349d4f271e51660a7bef1bb924c943ea43df39b600ad7c54f5fd",
+    "portal/public/register-tables.js": "58ad18bbeea270cf94ea0da5cb53a7560e999d4c9d24c89830a410d1813c3639",
+    "portal/public/register-tables-entry.js": "fc2e993ec1ad9d8000f99ed7e074e5f680bde12aca4dc07254941d7662aeaa8c",
+    "portal/public/app.js": "61b629304a0895cccef47ac86b73a7c5a7baddca270ef94aa662fcacf0edb256",
+    "portal/public/vic-gifts.css": "3a19e204b428bc8da1e51883f7580cea6a4be4d6958c804aa0f31422625d5ca8"
+  },
+  "results": [
+    {
+      "width": 390,
+      "status": 200,
+      "horizontalOverflow": false,
+      "total": 282,
+      "holderTotals": 43
+    },
+    {
+      "width": 1440,
+      "status": 200,
+      "horizontalOverflow": false,
+      "total": 282,
+      "holderTotals": 43
+    }
+  ],
+  "officialSearch": 32,
+  "giverSearchHits": 0,
+  "csvReceipts": true,
+  "absentColumnsOmitted": true,
+  "ssr": true,
+  "personSSR": true,
+  "personJS": true,
+  "personRequests": [
+    "?person=%2Fsubject%2Fperson%2Fjacinta-allan&view=person",
+    "?person=%2Fsubject%2Fperson%2Fjacinta-allan&sort=office_holder%3Aasc&pageSize=25",
+    "?person=%2Fsubject%2Fperson%2Fjacinta-allan&q=Mushroom+Group&sort=office_holder%3Aasc&pageSize=25"
+  ],
+  "pageErrors": []
+}

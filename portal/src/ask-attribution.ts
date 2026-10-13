@@ -6,7 +6,7 @@ const escape = (value: string) => value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
 // The export also has partial bylines ("Liddle", "David", "On"). They
 // are aliases or transcription fragments, not additional roster identities.
 const personRoster = (roster: unknown) => ({ people: ((roster as { people?: { name: string }[] } | null)?.people ?? []).filter(p => typeof p.name === 'string' && p.name.trim().split(/\s+/).length >= 2) })
-function personMentions(text: string, roster: unknown) {
+export function personMentions(text: string, roster: unknown) {
   const people = personRoster(roster).people
   const mentions: { name: string; start: number; end: number }[] = []
   const folded = text.toLowerCase()
@@ -23,6 +23,8 @@ function personMentions(text: string, roster: unknown) {
     if (surname.length < 2) continue
     const short = new RegExp(`(?<![\\p{L}\\p{N}])${escape(surname)}(?![\\p{L}\\p{N}])`, surname.length < 4 ? 'gu' : 'giu')
     for (const match of text.matchAll(short)) {
+      // A surname alone is a name only when capitalised ("Small", "SMALL"); "small modular reactors" names nobody.
+      if (!/^\p{Lu}/u.test(match[0])) continue
       if (!fullNames.some(m => match.index >= m.start && match.index + match[0].length <= m.end)) {
         mentions.push({ name: person.name, start: match.index, end: match.index + match[0].length })
       }

@@ -1,0 +1,162 @@
+{
+  "receipts": [
+    {
+      "url": "https://www.vic.gov.au/robots.txt",
+      "kind": "robots",
+      "requested_at": "2026-10-13T21:33:44.086825+00:00",
+      "checked_at": "2026-10-13T21:33:44.205523+00:00",
+      "status": 200,
+      "sha256": "5fa7fc97e6a032f531224b7b83270d60ed214ef37f67e16e2ea7be0d098caf4d",
+      "bytes": 627,
+      "snapshot_path": "data/staged/vic-gifts/snapshots/5fa7fc97e6a032f531224b7b83270d60ed214ef37f67e16e2ea7be0d098caf4d.txt",
+      "user_agent": "OPAXBot/1.0 (+https://opax.com.au/about; corrections@opax.com.au)",
+      "identity_sha256": "8bba78b64023fe59cb9c6e3332bd3386f8f9ae10e3f634c61b56f8f4ee7e091d",
+      "headers": {
+        "Content-Type": "text/plain"
+      },
+      "followed_redirect": false
+    },
+    {
+      "url": "https://www.vic.gov.au/copyright",
+      "kind": "licence",
+      "requested_at": "2026-10-13T21:33:58.900341+00:00",
+      "checked_at": "2026-10-13T21:33:58.994901+00:00",
+      "status": 200,
+      "sha256": "e035f491dd7362a20c701d05774351fc4e69acb0ba468332d7b63668550d1237",
+      "bytes": 145200,
+      "snapshot_path": "data/staged/vic-gifts/snapshots/e035f491dd7362a20c701d05774351fc4e69acb0ba468332d7b63668550d1237.html",
+      "user_agent": "OPAXBot/1.0 (+https://opax.com.au/about; corrections@opax.com.au)",
+      "identity_sha256": "8bba78b64023fe59cb9c6e3332bd3386f8f9ae10e3f634c61b56f8f4ee7e091d",
+      "robots_receipt_sha256": "5fa7fc97e6a032f531224b7b83270d60ed214ef37f67e16e2ea7be0d098caf4d",
+      "robots_allowed": true,
+      "challenge": false,
+      "headers": {
+        "Content-Type": "text/html;charset=utf-8"
+      },
+      "followed_redirect": false
+    },
+    {
+      "url": "https://www.vic.gov.au/ministerial-register-gifts-benefits-and-hospitality-february-june-2026",
+      "kind": "period",
+      "requested_at": "2026-10-13T21:34:01.095296+00:00",
+      "checked_at": "2026-10-13T21:34:01.901929+00:00",
+      "status": 200,
+      "sha256": "4718a88e1490979dc54292096f003aaa1849edbc110caa8de399b2d4a3b2e8ba",
+      "bytes": 188229,
+      "snapshot_path": "data/staged/vic-gifts/snapshots/4718a88e1490979dc54292096f003aaa1849edbc110caa8de399b2d4a3b2e8ba.html",
+      "user_agent": "OPAXBot/1.0 (+https://opax.com.au/about; corrections@opax.com.au)",
+      "identity_sha256": "8bba78b64023fe59cb9c6e3332bd3386f8f9ae10e3f634c61b56f8f4ee7e091d",
+      "robots_receipt_sha256": "5fa7fc97e6a032f531224b7b83270d60ed214ef37f67e16e2ea7be0d098caf4d",
+      "robots_allowed": true,
+      "challenge": false,
+      "headers": {
+        "Content-Type": "text/html;charset=utf-8"
+      },
+      "followed_redirect": false
+    },
+    {
+      "url": "https://www.vic.gov.au/ministerial-gifts-benefits-and-hospitality-register",
+      "kind": "index",
+      "requested_at": "2026-10-13T21:34:38.105901+00:00",
+      "checked_at": "2026-10-13T21:34:38.195072+00:00",
+      "status": 200,
+      "sha256": "3284e271b7cbac110ff4fec897df2e442d2374ec5d8a76db8cb778805e778fb5",
+      "bytes": 190674,
+      "snapshot_path": "data/staged/vic-gifts/snapshots/3284e271b7cbac110ff4fec897df2e442d2374ec5d8a76db8cb778805e778fb5.html",
+      "user_agent": "OPAXBot/1.0 (+https://opax.com.au/about; corrections@opax.com.au)",
+      "identity_sha256": "8bba78b64023fe59cb9c6e3332bd3386f8f9ae10e3f634c61b56f8f4ee7e091d",
+      "robots_receipt_sha256": "5fa7fc97e6a032f531224b7b83270d60ed214ef37f67e16e2ea7be0d098caf4d",
+      "robots_allowed": true,
+      "challenge": false,
+      "headers": {
+        "Content-Type": "text/html;charset=utf-8"
+      },
+      "followed_redirect": false
+    },
+    {
+      "url": "https://www.vic.gov.au/department-premier-and-cabinet",
+      "kind": "owner",
+      "requested_at": "2026-10-13T21:34:40.295419+00:00",
+      "checked_at": "2026-10-13T21:34:40.400921+00:00",
+      "status": 200,
+      "sha256": "5cb3b6ced4808a911fbdd52621263ba8c3ab54eb45fd01c977eb056b12469c0d",
+      "bytes": 174063,
+      "snapshot_path": "data/staged/vic-gifts/snapshots/5cb3b6ced4808a911fbdd52621263ba8c3ab54eb45fd01c977eb056b12469c0d.html",
+      "user_agent": "OPAXBot/1.0 (+https://opax.com.au/about; corrections@opax.com.au)",
+      "identity_sha256": "8bba78b64023fe59cb9c6e3332bd3386f8f9ae10e3f634c61b56f8f4ee7e091d",
+      "robots_receipt_sha256": "5fa7fc97e6a032f531224b7b83270d60ed214ef37f67e16e2ea7be0d098caf4d",
+      "robots_allowed": true,
+      "challenge": false,
+      "headers": {
+        "Content-Type": "text/html;charset=utf-8"
+      },
+      "followed_redirect": false
+    },
+    {
+      "url": "https://www.vic.gov.au/disclaimer",
+      "kind": "terms",
+      "requested_at": "2026-10-13T21:35:41.164712+00:00",
+      "checked_at": "2026-10-13T21:35:41.290833+00:00",
+      "status": 200,
+      "sha256": "a9e2f65021ea25052a45f0cc72574bcc9549674c89d1dec5b965e63fa09aa7cf",
+      "bytes": 143205,
+      "snapshot_path": "data/staged/vic-gifts/snapshots/a9e2f65021ea25052a45f0cc72574bcc9549674c89d1dec5b965e63fa09aa7cf.html",
+      "user_agent": "OPAXBot/1.0 (+https://opax.com.au/about; corrections@opax.com.au)",
+      "identity_sha256": "8bba78b64023fe59cb9c6e3332bd3386f8f9ae10e3f634c61b56f8f4ee7e091d",
+      "previous_request_at": "2026-10-13T21:34:40.295419+00:00",
+      "request_interval_seconds": 60.869292974472046,
+      "robots_receipt_sha256": "5fa7fc97e6a032f531224b7b83270d60ed214ef37f67e16e2ea7be0d098caf4d",
+      "robots_allowed": true,
+      "challenge": false,
+      "error": null,
+      "followed_redirect": false,
+      "headers": {
+        "Content-Type": "text/html;charset=utf-8"
+      }
+    },
+    {
+      "url": "https://www.vic.gov.au/ministerial-register-gifts-benefits-and-hospitality-july-2025-january-2026",
+      "kind": "period",
+      "requested_at": "2026-10-13T21:35:43.264854+00:00",
+      "checked_at": "2026-10-13T21:35:44.069254+00:00",
+      "status": 200,
+      "sha256": "a45e306fa5dd8db79b8179acb7dce13a43b8966aa43cdb12c72a198466e82257",
+      "bytes": 265585,
+      "snapshot_path": "data/staged/vic-gifts/snapshots/a45e306fa5dd8db79b8179acb7dce13a43b8966aa43cdb12c72a198466e82257.html",
+      "user_agent": "OPAXBot/1.0 (+https://opax.com.au/about; corrections@opax.com.au)",
+      "identity_sha256": "8bba78b64023fe59cb9c6e3332bd3386f8f9ae10e3f634c61b56f8f4ee7e091d",
+      "previous_request_at": "2026-10-13T21:35:41.164712+00:00",
+      "request_interval_seconds": 2.100142002105713,
+      "robots_receipt_sha256": "5fa7fc97e6a032f531224b7b83270d60ed214ef37f67e16e2ea7be0d098caf4d",
+      "robots_allowed": true,
+      "challenge": false,
+      "error": null,
+      "followed_redirect": false,
+      "headers": {
+        "Content-Type": "text/html;charset=utf-8"
+      }
+    },
+    {
+      "url": "https://www.vic.gov.au/2024-25-ministerial-register-gifts-benefits-and-hospitality",
+      "kind": "period",
+      "requested_at": "2026-10-13T21:35:45.365005+00:00",
+      "checked_at": "2026-10-13T21:35:46.128512+00:00",
+      "status": 200,
+      "sha256": "b1fcc52785ca8d10701512dc584c3be1b548d812f0d6e53a31e661c0327fd76c",
+      "bytes": 196574,
+      "snapshot_path": "data/staged/vic-gifts/snapshots/b1fcc52785ca8d10701512dc584c3be1b548d812f0d6e53a31e661c0327fd76c.html",
+      "user_agent": "OPAXBot/1.0 (+https://opax.com.au/about; corrections@opax.com.au)",
+      "identity_sha256": "8bba78b64023fe59cb9c6e3332bd3386f8f9ae10e3f634c61b56f8f4ee7e091d",
+      "previous_request_at": "2026-10-13T21:35:43.264854+00:00",
+      "request_interval_seconds": 2.1001510620117188,
+      "robots_receipt_sha256": "5fa7fc97e6a032f531224b7b83270d60ed214ef37f67e16e2ea7be0d098caf4d",
+      "robots_allowed": true,
+      "challenge": false,
+      "error": null,
+      "followed_redirect": false,
+      "headers": {
+        "Content-Type": "text/html;charset=utf-8"
+      }
+    }
+  ]
+}

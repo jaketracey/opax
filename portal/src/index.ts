@@ -30,6 +30,7 @@ import { normalizePassage, passageWindow } from './passage-text'
 import { instrumentPage, instrumentReader } from './instruments'
 import { budgetPage, budgetReader } from './budget'
 import { auditPage, auditReader } from './audit'
+import { vicGiftsPage, vicGiftsReader, vicGiftsPersonBlock, vicGiftsResponse } from './vic-gifts'
 import {parseQuery,serializeQuery,type Page} from '../public/datatable.js'
 import {partyMoneyData,partyMoneyTableConfig,registerTableHTML} from '../public/register-tables.js'
 import {grantsHTML} from './grants-table'
@@ -90,7 +91,8 @@ import { recordAgenticRun } from './agentic-monitor'
 import { AGENTIC_TOOLS_VERSION } from './agentic-tools'
 import { createOpenRouter } from '@openrouter/ai-sdk-provider'
 import { createResearch, researchLimits } from './research-loop'
-import { recordResearchComparison, recordResearchFailure } from './research-monitor'
+import { recordResearchAnswer, recordResearchComparison, recordResearchFailure } from './research-monitor'
+import { cachedKbLookup } from './kb-cache'
 import { withPlannerResearch, withResearchEval } from './research-response'
 import { researchDailyBudget, researchReservationUsd, unmeteredResearchBudget } from './research-budget'
 import { ResearchError, type ResearchPayload } from './research-types'
@@ -3714,6 +3716,7 @@ type SeoRoute =
   | { kind: 'hub'; hub: 'sitting' | 'estimates' | 'vic-election'; id: string | null }
   | { kind: 'instruments'; id: string | null }
   | { kind: 'budget' }
+  | { kind: 'vic-gifts' }
   | { kind: 'audit'; id: string | null }
   | { kind: 'static'; page: keyof typeof STATIC_PAGES }
   | { kind: 'report'; slug: string }
@@ -3770,6 +3773,7 @@ function matchSeoRoute(url: URL): SeoRoute | null {
     catch { return { kind: 'audit', id: '' } }
   }
   if (path === '/budget') return { kind: 'budget' }
+  if (path === '/register/vic-gifts') return { kind: 'vic-gifts' }
   if (path === '/instruments') return { kind: 'instruments', id: null }
   if (path === '/instrument' || path.startsWith('/instrument/')) {
     try { return { kind: 'instruments', id: decodeURIComponent(path.slice('/instrument/'.length)) } }
@@ -4295,6 +4299,7 @@ async function buildRouteMeta(route: SeoRoute, url: URL, request: Request, env: 
     case 'audit': return base({ ...await auditPage(route.id, url, auditReader(env.ASSETS), prerenderBlock),
       ...(route.id && AUDIT_ID.test(route.id) ? { canonical: `${SITE_ORIGIN}/audit/${route.id}` } : {}) })
     case 'budget': return base(await budgetPage(url, budgetReader(env.ASSETS), prerenderBlock))
+    case 'vic-gifts': return base(await vicGiftsPage(url, vicGiftsReader(env.ASSETS), prerenderBlock))
     case 'instruments': return base(await instrumentPage(route.id, url, instrumentReader(env.ASSETS), prerenderBlock, env.TABLE_DB ? async query=>{
       const endpoint=new URL('/api/table/instruments',url)
       endpoint.search=serializeQuery({...query,sort:query.sort || {key:'title',dir:'asc'}})
@@ -4482,7 +4487,7 @@ async function buildMeta(route: SeoRoute, url: URL, request: Request, env: Env, 
         const identity={...profiles?.by_name[foldName(p.name)],...profiles?.people[p.pid || '']}
           const query = guardTableURL(voteTableConfig(p.pid || ''),url).query
         const content = await timed('person-render', () => renderPersonAnswer(p,read,people.slugOf,identity.aphProfileUrl || undefined,url.searchParams))
-        meta.prerender = content.html
+        meta.prerender = content.html + (p.representation?.some(r=>r.jurisdiction==='vic') ? `<div class="wrap">${await vicGiftsPersonBlock(new URL(meta.canonical).pathname,vicGiftsReader(env.ASSETS),url)}</div>` : '')
         if(content.description) meta.description=clip(content.description)
         const photos=await loadPhotos(env).catch(()=>null)
         personIdentity={...identity,portraitId:photoIdFor(photos,p.name)}
@@ -5541,6 +5546,10 @@ async function renderSeoPage(route: SeoRoute, url: URL, request: Request, env: E
     if (/\/(app|spa-entry|spa-shell)\.js(?:\?|$)/.test(el.getAttribute('src') || '')) el.remove()
   } }).on('a[href^="/subject/person"]', { element(el) { el.remove() } })
   if (route.kind === 'budget') rewriter.on('head', { element(el) { el.append('<link rel="stylesheet" href="/datatable.css"><link rel="stylesheet" href="/budget.css"><script type="module" src="/budget.js"></script>', {html:true}) } })
+  if (route.kind === 'vic-gifts') rewriter.on('script[src]', { element(el) {
+    if (/\/(app|spa-entry|spa-shell)\.js(?:\?|$)/.test(el.getAttribute('src') || '')) el.remove()
+  } })
+  if (route.kind === 'vic-gifts' || route.kind === 'subject' && route.dir === 'person') rewriter.on('head', { element(el) { el.append('<link rel="stylesheet" href="/vic-gifts.css">',{html:true}) } })
   rewriter.on('main#main', { element(el) { el.setAttribute('data-server-rendered',''); el.setInnerContent(meta.prerender || '', { html: true }) } })
   const out = rewriter.transform(shell)
   const headers = new Headers(out.headers)
@@ -6012,15 +6021,18 @@ const replayPost = (request: Request, body: string) =>
 // ---------------------------------------------------------------------------
 
 /** All tool fetches, including response-body reads, carry the request budget signal. */
-function agenticToolDeps(env: Env, signal?: AbortSignal): ToolDeps {
+function agenticToolDeps(env: Env, signal?: AbortSignal, ctx?: ExecutionContext): ToolDeps {
   return {
     origin: SITE_ORIGIN, signal,
-    withSignal: signal => agenticToolDeps(env, signal),
+    withSignal: signal => agenticToolDeps(env, signal, ctx),
     kb: async (path, body) => {
       signal?.throwIfAborted()
-      const res = await kbFetch(env, path, { ...(body === undefined ? {} : { body }), signal })
-      if (!res.ok) throw new Error('record lookup unavailable')
-      const data = await res.json() as Record<string, unknown>
+      // Repeated searches and counts within the hour come from the edge cache; operator evals always read the KB.
+      const data = await cachedKbLookup(path, body, env.RESEARCH_EVAL ? undefined : env.CACHE_EPOCH, async () => {
+        const res = await kbFetch(env, path, { ...(body === undefined ? {} : { body }), signal })
+        if (!res.ok) throw new Error('record lookup unavailable')
+        return await res.json() as Record<string, unknown>
+      }, ctx ? work => ctx.waitUntil(work) : undefined)
       signal?.throwIfAborted(); return data
     },
     asset: async path => {
@@ -6033,7 +6045,7 @@ function agenticToolDeps(env: Env, signal?: AbortSignal): ToolDeps {
 }
 function agenticDeps(env: Env, ctx: ExecutionContext, signal?: AbortSignal, input: Record<string, unknown> = {}): AgenticDeps {
   return {
-    ...agenticToolDeps(env, signal),
+    ...agenticToolDeps(env, signal, ctx),
     ...(env.RESEARCH_SHADOW ? { researchShadow: true } : {}),
     plannerTrail: true,
     ...(env.RESEARCH_LOOP === 'route' ? {
@@ -6047,14 +6059,15 @@ function agenticDeps(env: Env, ctx: ExecutionContext, signal?: AbortSignal, inpu
         inputPrice: Number(env.AGENTIC_INPUT_USD_PER_MILLION) || undefined, outputPrice: Number(env.AGENTIC_OUTPUT_USD_PER_MILLION) || undefined,
         conversation: saConversationInput(input, env.SA_HANSARD_FULL_TEXT).context,
         positionQuery: isPositionBody(buildAskBody(input)) ? String(buildAskBody(input).query || input.question || '') : undefined,
-        searchBody: (query, limit, context) => {
+        searchBody: (query, limit, context, filters) => {
+          // A party scope is the model's search argument (one side of a comparison at a time), not an implicit filter.
           const scoped = { ...input,
-            ...(context.named.people.length === 1 ? { speaker: context.named.people[0] } : {}),
-            // "Labor and the Coalition" resolves only Labor; a one-party filter would hide the other side.
-            ...(context.named.parties.length === 1 && !/\b(?:coalition|opposition|government|crossbench\w*)\b/i.test(String(input.question ?? '')) ? { party: context.named.parties[0] } : {}),
+            ...(filters.speaker ? { speaker: filters.speaker } : context.named.people.length === 1 ? { speaker: context.named.people[0] } : {}),
             ...(context.period.since ? { since: context.period.since } : {}), ...(context.period.until ? { until: context.period.until } : {}),
           }
-          return { query, top_k: limit, features: ['keyword', 'semantic'], reranker: 'predict', show: ['basic', 'origin', 'extra'], filter_expression: filterExpression(scoped) }
+          const expression = filterExpression(scoped) as { field: unknown }
+          const party = filters.party?.length ? filters.party.length === 1 ? { prop: 'label', labelset: 'party', label: filters.party[0] } : { or: filters.party.map(label => ({ prop: 'label', labelset: 'party', label })) } : null
+          return { query, top_k: limit, features: ['keyword', 'semantic'], reranker: 'predict', show: ['basic', 'origin', 'extra'], filter_expression: party ? { field: { and: [expression.field, party] } } : expression }
         },
         evidenceText: (record, text) => saEvidenceText(record, text, env.SA_HANSARD_FULL_TEXT, String(input.question ?? '')),
         readRecord: async (slug, signal) => {
@@ -6065,6 +6078,7 @@ function agenticDeps(env: Env, ctx: ExecutionContext, signal?: AbortSignal, inpu
         },
       }),
       onResearchFailure: error => recordResearchFailure(String(input.question ?? ''), error),
+      onResearchAnswer: tally => recordResearchAnswer(String(input.question ?? ''), tally),
     } : {}),
     toolEnv: { ASSETS: env.ASSETS, TABLE_DB: env.TABLE_DB, COMMUNITY_ORIGIN: env.COMMUNITY_ORIGIN },
     generate: async (query, prompt, maxTokens, signal) => {
@@ -6570,6 +6584,7 @@ export default {
     const url = new URL(request.url)
     if (url.pathname === '/api/register/party-money') return withSecurityHeaders(await partyMoneyResponse(request,env.ASSETS),url)
     if (url.pathname === '/api/register/interests') return withSecurityHeaders(await interestRegisterResponse(request,env.ASSETS),url)
+    if (url.pathname === '/api/register/vic-gifts') return withSecurityHeaders(await vicGiftsResponse(request,vicGiftsReader(env.ASSETS)),url)
     const display = (response: Response, target = url) => {
       if (!/^\/api\/(?:resource\/[^/]+|search|search-all|search-summary|ask)$/.test(target.pathname) && !/^\/reports\/[^/]+\.json$/.test(target.pathname)) return Promise.resolve(response)
       return Promise.resolve(response).then(safe => saPublicResponse(safe, env.SA_HANSARD_FULL_TEXT, async slug => {

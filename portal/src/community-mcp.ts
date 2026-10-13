@@ -3,6 +3,8 @@ import {WebStandardStreamableHTTPServerTransport} from '@modelcontextprotocol/sd
 import {z} from 'zod'
 import {body,CommunityError,digest,json,limit,now,type Member} from './community-core'
 import {tools,getTool,toolSchema,validateToolArgs,callTool,ToolInputError} from './tools'
+import {rosterPerson} from './roster-person'
+import {firstSpeechTurn} from './position-evidence'
 export async function communityMcp(req:Request,env:Env,readPublic:(path:string)=>Promise<Response>):Promise<Response>{
  try{
   if(String(env.COMMUNITY_ENABLED)!=='true')throw new CommunityError(503,'Community access is being prepared.')
@@ -48,6 +50,28 @@ export async function communityMcp(req:Request,env:Env,readPublic:(path:string)=
   }
   server.registerTool('search_records',{description:'Search Australian parliamentary speeches, official releases, bills, divisions and government grants (kind grant). Grant results carry a grant_recipient id to open with read_grant_recipient, or a grant_program id to open with read_grant_program. Returns record links and source excerpts.',inputSchema:{query:z.string().min(2).max(300),kind:z.enum(['all','speech','press_release','bill','bill_text','division','grant']).default('all')},annotations:{readOnlyHint:true,destructiveHint:false,openWorldHint:false}},async({query,kind})=>result('/api/search-all?'+new URLSearchParams({q:query,kind,per:'10',page:'1'})))
   server.registerTool('read_record',{description:'Open an Opax public record using its slug from search results.',inputSchema:{slug:z.string().regex(/^(?:speech-\d+|legal-\d+|news-\d+|bill-text-au-federal-[a-z0-9-]{1,180}|division-[a-z0-9-]+|press-(?:pmt|nsw|qld|vic|tre)-[a-z0-9-]+|grantconnect-award-ga\d+(?:-v\d+)?|grant-site-evidence-(?:ga\d+|mlci-invitation-\d{3})|mlci-invitation-\d{3}|mlci-award-ga[a-z0-9-]+|aec-seat-2025-[a-f0-9]{16}|roster-profile-[a-f0-9]{16}|research-(?:cpi-mlci|mlci-program)-2026)$/)},annotations:{readOnlyHint:true,destructiveHint:false,openWorldHint:false}},async({slug})=>result('/api/resource/'+encodeURIComponent(slug)))
+  server.registerTool('person_quotes',{description:'What one parliamentarian said about a topic: only their own speeches, newest first, one excerpt per speech, each checked against their own speaking turn in the original record. Returns speaker, party, date, a verbatim excerpt and links; open read_record for the full speech.',inputSchema:{person:z.string().min(2).max(120),topic:z.string().min(2).max(200),limit:z.number().int().min(1).max(8).default(5)},annotations:{readOnlyHint:true,destructiveHint:false,openWorldHint:false}},async({person,topic,limit})=>{
+   const rosterResponse=await env.ASSETS.fetch(new Request(env.COMMUNITY_ORIGIN+'/parliamentarians.json'))
+   const name=rosterResponse.ok?rosterPerson(await rosterResponse.json(),person):null
+   if(!name)return {content:[{type:'text' as const,text:JSON.stringify({error:'No parliamentarian with that name is in the roster.'})}],isError:true}
+   const found=await readPublic('/api/search-all?'+new URLSearchParams({q:topic,kind:'speech',speaker:name,per:'20',page:'1'}))
+   if(!found.ok)return {content:[{type:'text' as const,text:JSON.stringify({error:'Speech search is temporarily unavailable.'})}],isError:true}
+   const fold=(v:unknown)=>String(v??'').normalize('NFKC').replace(/\s+/g,' ').trim().toLowerCase()
+   const rows=((await found.json() as {results?:Record<string,unknown>[]}).results??[]).filter(r=>fold(r.speaker)===fold(name)&&r.speaker_attribution!=='unattributed'&&typeof r.slug==='string'&&/^speech-\d+$/.test(r.slug as string))
+   const seen=new Set<string>(),picked=rows.filter(r=>!seen.has(r.slug as string)&&!!seen.add(r.slug as string)).sort((a,b)=>String(b.date??'').localeCompare(String(a.date??''))).slice(0,Math.min(12,limit*2))
+   // An excerpt counts only if its words are in the speaker's own first turn of the original record.
+   const checked=await Promise.all(picked.map(async r=>{
+    try{
+     const record=await readPublic('/api/resource/'+encodeURIComponent(r.slug as string));if(!record.ok)return null
+     const data=await record.json() as {text?:string;speaker?:string},turn=fold(firstSpeechTurn(String(data.text??'')))
+     const excerpt=String(r.snippet??'').replace(/^[\s…]+|[\s…]+$/g,'').split(/\s*…\s*/).sort((a,b)=>b.length-a.length)[0]??''
+     if(fold(data.speaker)!==fold(name)||excerpt.length<20||!turn.includes(fold(excerpt)))return null
+     return {date:r.date??null,title:r.title,speaker:name,party:r.party??null,excerpt,slug:r.slug,opax_url:env.COMMUNITY_ORIGIN+'/doc/'+r.slug}
+    }catch{return null}
+   }))
+   const passages=checked.filter(Boolean).slice(0,limit)
+   return {content:[{type:'text' as const,text:JSON.stringify({person:name,topic,passages,notes:['Newest first, one excerpt per speech: a ranked sample of their speeches, not all of them.',...(passages.length?[]:['No excerpt on this topic could be checked against their own speaking turn; try other topic words.'])]})}],isError:false}
+  })
   server.registerTool('find_connections',{description:'Find organisations, programs, places or electorates in the audited connections dataset. Returns names and links; a matching phrase does not establish influence.',inputSchema:{query:z.string().min(2).max(120)},annotations:{readOnlyHint:true,destructiveHint:false,openWorldHint:false}},async({query})=>{
    const response=await env.ASSETS.fetch(new Request(env.COMMUNITY_ORIGIN+'/evidence/index.json'));if(!response.ok)return {content:[{type:'text' as const,text:'Connection records are unavailable.'}],isError:true}
    const data=await response.json() as {entities:{id:string,name:string,kind:string,records:number}[]};const hits=data.entities.filter(e=>e.name.toLowerCase().includes(query.toLowerCase())).slice(0,20).map(e=>({...e,url:env.COMMUNITY_ORIGIN+'/connections?entity='+e.id}));return {content:[{type:'text' as const,text:JSON.stringify({connections:hits})}]}

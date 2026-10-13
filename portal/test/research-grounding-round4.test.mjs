@@ -57,12 +57,15 @@ test('SA placeholder quotes and their citations disappear at JSON, stream done a
  const limited=saDisplayPayload({answer:'“'+quote+'”',sources:[{...payload.sources[0],url:'https://example.test/not-official'}]},'false');assert.doesNotMatch(limited.answer,/Excerpt omitted|“”/);
 });
 
-test('a named speaker\'s bare surname is written in full; another member\'s name still fails; "X government" is not a speaker',()=>{
+test('a named speaker\'s bare surname is written in full; another member speaking is rewritten to the cited speaker; "X government" is not a speaker',()=>{
  const pat={...passage,speaker:'Pat Lee',text:quote},passages=new Map([[id,pat]]),named={...scope,people:['Pat Lee']};
  const out=verifyResearchPoints([{claim:'Lee said housing safeguards are needed.',id,quote:'Housing safeguards are needed.'}],passages,'What has Pat Lee said about housing?',named,undefined,roster);
  assert.ok(out);assert.match(out.answer,/^- Pat Lee said housing/);
- assert.equal(verifyResearchPoints([{claim:'Lee said housing safeguards are needed.',id,quote:'Housing safeguards are needed.'}],passages,'What has been said about housing?',scope,undefined,roster),null,'unnamed in the question: the ambiguous surname still fails');
- assert.equal(verifyResearchPoints([{claim:'Taylor Lee said housing safeguards are needed.',id,quote:'Housing safeguards are needed.'}],passages,'What has Pat Lee said about housing?',named,undefined,roster),null);
+ // Repair contract (Jake 14 Oct): unquoted words put to another member are rewritten to the cited passage's speaker.
+ assert.match(verifyResearchPoints([{claim:'Lee said housing safeguards are needed.',id,quote:'Housing safeguards are needed.'}],passages,'What has been said about housing?',scope,undefined,roster).answer,/^- Pat Lee said housing safeguards are needed\.$/,'the ambiguous surname becomes the cited speaker');
+ assert.match(verifyResearchPoints([{claim:'Taylor Lee said housing safeguards are needed.',id,quote:'Housing safeguards are needed.'}],passages,'What has Pat Lee said about housing?',named,undefined,roster).answer,/^- Pat Lee said housing safeguards are needed\.$/);
+ // Quoted words put in another member's mouth are dropped, never rewritten.
+ assert.equal(verifyResearchPoints([{claim:'Taylor Lee said “Housing safeguards are needed.”',id,quote:'Housing safeguards are needed.'}],passages,'What has been said about housing?',scope,undefined,roster),null);
  assert.equal(claimMatchesSpeaker('She said the Liddle government failed on housing.','Jacqui Lambie',roster),true);
  assert.equal(claimMatchesSpeaker('She said Kerrynne Liddle failed on housing.','Jacqui Lambie',roster),false);
 });

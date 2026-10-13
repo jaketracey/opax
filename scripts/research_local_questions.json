@@ -8,5 +8,9 @@
   {"id": "Q7", "kind": "pay", "question": "How much do Foreign Affairs and Defence secretaries earn?"},
   {"id": "Q8", "kind": "contracts", "question": "Which suppliers received the largest Defence contracts?"},
   {"id": "Q9", "kind": "grants", "question": "Who received the biggest grants in Western Australia?"},
-  {"id": "Q10", "kind": "interests", "question": "What shareholdings have ministers declared?"}
+  {"id": "Q10", "kind": "interests", "question": "What shareholdings have ministers declared?"},
+  {"id": "Q11", "kind": "person-quote", "question": "What has Bridget McKenzie said about sports grants?"},
+  {"id": "Q12", "kind": "person-quote", "question": "What has Adam Bandt said about new coal mines?"},
+  {"id": "Q13", "kind": "person-quote", "question": "What has Jacqui Lambie said about veterans?"},
+  {"id": "Q14", "kind": "person-compare", "question": "How do Penny Wong and Simon Birmingham differ on China?"}
 ]

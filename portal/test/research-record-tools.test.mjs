@@ -181,3 +181,27 @@ test('finish outside the numerical shapes answers with record facts only', async
   assert.deepEqual(failures, []); assert.equal(out.answered, true);
   assert.match(out.answer, /^- Department of Fixtures: \$9,000,000,000 across 900 published contracts \(2013–2026\)\n- Example Shipyards Pty Ltd/);
 });
+
+test('person_quotes on MCP: one person\'s own speeches, newest first, one excerpt per speech, each checked in their own turn', async () => {
+  const token = 'opax_' + 'C'.repeat(43);
+  const hash = [...new Uint8Array(await crypto.subtle.digest('SHA-256', new TextEncoder().encode(token)))].map(v => v.toString(16).padStart(2, '0')).join('');
+  const turn = 'We must cap poker machine losses at one dollar a spin, and the industry has fought every reform.';
+  const records = { 'speech-1': { text: turn, speaker: 'Robin Example' }, 'speech-2': { text: 'Another member spoke first.\n\nRobin Example: ' + turn, speaker: 'Robin Example' }, 'speech-3': { text: turn, speaker: 'Casey Sample' } };
+  const results = [
+    { slug: 'speech-1', speaker: 'Robin Example', date: '2012-05-10', title: 'Gambling', party: 'Labor', snippet: '… cap poker machine losses at one dollar a spin …' },
+    { slug: 'speech-1', speaker: 'Robin Example', date: '2012-05-10', title: 'Gambling', party: 'Labor', snippet: 'the industry has fought every reform' },
+    { slug: 'speech-4', speaker: 'Robin Example', date: '2020-01-01', title: 'Gambling again', party: 'Labor', snippet: 'words that are not in the record at all here' },
+    { slug: 'speech-3', speaker: 'Casey Sample', date: '2024-01-01', title: 'Other', party: 'Greens', snippet: 'cap poker machine losses at one dollar a spin' }];
+  records['speech-4'] = { text: turn, speaker: 'Robin Example' };
+  const reads = [];
+  const mcpEnv = { COMMUNITY_ENABLED: 'true', COMMUNITY_ORIGIN: 'https://opax.com.au', TABLE_DB: {},
+    COMMUNITY_DB: { prepare(sql) { let args; return { bind(...v) { args = v; return this; }, async first() { if (sql.startsWith('SELECT m.')) return args[0] === hash ? { id: 'm', key_id: 'k' } : null; if (sql.startsWith('INSERT INTO community_limits')) return { hits: 1 }; throw Error('Unexpected SQL'); }, async run() { return { success: true }; } }; } },
+    ASSETS: { async fetch(req) { return new URL(req.url).pathname === '/parliamentarians.json' ? Response.json(assets['/parliamentarians.json']) : new Response('missing', { status: 404 }); } } };
+  const readPublic = async path => { reads.push(path); if (path.startsWith('/api/search-all?')) return Response.json({ results }); const slug = decodeURIComponent(path.split('/').pop()); return records[slug] ? Response.json(records[slug]) : new Response('{}', { status: 404 }); };
+  const rpc = await (await api.communityMcp(new Request('https://opax.com.au/mcp', { method: 'POST', headers: { authorization: 'Bearer ' + token, accept: 'application/json, text/event-stream', 'content-type': 'application/json' }, body: JSON.stringify({ jsonrpc: '2.0', id: 1, method: 'tools/call', params: { name: 'person_quotes', arguments: { person: 'Robin Example', topic: 'poker machines' } } }) }), mcpEnv, readPublic)).json();
+  const out = JSON.parse(rpc.result.content[0].text);
+  assert.equal(out.person, 'Robin Example');
+  assert.deepEqual(out.passages.map(p => [p.slug, p.excerpt]), [['speech-1', 'cap poker machine losses at one dollar a spin']]);
+  assert.match(new URLSearchParams(reads[0].split('?')[1]).get('speaker'), /^Robin Example$/);
+  assert.ok(!JSON.stringify(out).includes('Casey Sample'));
+});
