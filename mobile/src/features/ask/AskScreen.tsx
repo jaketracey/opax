@@ -1,7 +1,6 @@
 import { phoneCopy } from '../../design/phone-copy';
 import { useFocusRequest } from '../../design/keyboard';
 import {
-  Platform,
   AccessibilityInfo,
   Alert,
   Keyboard,
@@ -57,6 +56,7 @@ import { AskSheet } from './AskSheet';
 import { AskConsent } from './AskConsent';
 import { askConsentGiven, giveAskConsent } from './consent';
 import { accountSnapshot, useAccount } from '../account/store';
+import { voiceLinked } from '../../voice/linked';
 import { AnswerView } from './AnswerView';
 import type { MenuAction } from '../../design/menu';
 import { Builder } from './QuestionBuilder';
@@ -301,10 +301,7 @@ export default function AskScreen() {
   async function history() {
     setHistoryOpen(true);
     const status = accountSnapshot().status;
-    if (
-      Platform.OS !== 'android' &&
-      (!status || status.signedIn || status.accountHeld)
-    )
+    if (voiceLinked && (!status || status.signedIn || status.accountHeld))
       await sync();
   }
   async function sync() {
@@ -362,7 +359,7 @@ export default function AskScreen() {
   function removeAll() {
     Alert.alert(
       'Delete all conversations?',
-      Platform.OS === 'android'
+      !voiceLinked
         ? 'This removes your saved conversations on this phone.'
         : phoneCopy(
             'This removes your saved conversations on this iPhone and, when signed in, from your account.',
@@ -756,7 +753,7 @@ export default function AskScreen() {
           <Text wordSafe variant="fine">
             {communityAccount
               ? phoneCopy('Saved on this iPhone.')
-              : Platform.OS === 'android'
+              : !voiceLinked
                 ? 'Saved on this phone.'
                 : phoneCopy(
                     'Saved on this iPhone. Sign in to keep them across devices.',

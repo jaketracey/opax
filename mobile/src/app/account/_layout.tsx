@@ -6,6 +6,7 @@ import {
 import { Platform } from 'react-native';
 import { Stack } from 'expo-router';
 import { AndroidReadingHeader } from '../../navigation/AndroidReadingHeader';
+import { voiceLinked } from '../../voice/linked';
 export default function AccountStack() {
   const chrome = useStackChrome();
   return (
@@ -21,9 +22,16 @@ export default function AccountStack() {
         }}
       />
       {Platform.OS === 'android' ? (
-        <Stack.Protected guard={false}>
-          <Stack.Screen name="sign-in" />
-          <Stack.Screen name="delete" />
+        // Sign-in and deletion need the OpaxVoice module (src/voice/linked.ts).
+        <Stack.Protected guard={voiceLinked}>
+          <Stack.Screen
+            name="sign-in"
+            options={{ header: AndroidReadingHeader }}
+          />
+          <Stack.Screen
+            name="delete"
+            options={{ header: AndroidReadingHeader }}
+          />
         </Stack.Protected>
       ) : null}
       <Stack.Screen name="about" options={{ title: 'About OPAX' }} />

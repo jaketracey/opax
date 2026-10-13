@@ -222,3 +222,99 @@ Jake alone checks echo cancellation on physical hardware, Siri/calls/alarms, Blu
 | Worker-derived deletion responses, disabled members and credential races              | [AccountDeletionTests.swift:13](ios/OpaxVoiceCore/Tests/OpaxVoiceCoreTests/AccountDeletionTests.swift#L13)     |
 | Actual Worker deletion/community-status fixture generation                            | [generate-deletion-fixtures.mjs:10](scripts/generate-deletion-fixtures.mjs#L10)                                |
 | Cached, broadcast close signal and terminal delegate callbacks                        | [HTTPClient.swift:262](ios/OpaxVoiceCore/Sources/OpaxVoiceCore/HTTPClient.swift#L262)                          |
+
+## Android (`android/`, package `au.com.opax.voice`)
+
+The Kotlin module registers as `OpaxVoice` with the same functions, events and
+bridge values as iOS; the Swift core is its specification. Account half (lane 1):
+
+```
+android/src/main/java/au/com/opax/voice/
+  Models.kt            typed status, read models, events, strict JSON (Swift JSONDecoder rules)
+  Credentials.kt       opaque credential, origin-scoped Keystore store, atomic compare-and-clear, cookie parser
+  HttpClient.kt        routes, RoutePolicy, scoped headers, fresh-status classification, OkHttp transport
+  CommunityPolicy.kt   the reviewed community methods and query parameters
+  StoredVoiceConsent.kt consent, denied unless an explicit grant is stored
+  VoiceBridgeValue.kt  explicit projection of every bridge value and event
+  VoiceController.kt   VoiceCore (the bridge's contract) and the bridge controller
+  OpaxVoiceModule.kt   the Expo module
+  CallController.kt    VoiceCallController: the call lifecycle, back-pressure, polling, cap (call half)
+  Relay.kt             the convai socket on OkHttp, client messages, provider events, strict JSON reader
+  AudioPipeline.kt     codecs, 25 ms cadence, bounded queues, level meter, persistent resampler
+  AndroidAudio.kt      AudioRecord/AudioTrack engine, focus/mode/routing session, permission check, lifecycle
+  Evidence.kt          capped transient captions, corrections, validated record paths
+android/src/voiceTest/      debug and e2e: loopback policy, in-memory e2e credentials,
+                            call guard (RuntimeSafety), synthetic audio, call variant
+android/src/voiceProduction/ production release: the opax.com.au origin and the Keystore only,
+                            no-op call guard, hardware call variant, microphone manifest
+```
+
+- **Build switches.** `build.gradle` reads `OPAX_VARIANT`, `OPAX_PRODUCTION_VOICE`
+  and `OPAX_FIXTURE_PORT`, as the iOS pods do. The app's e2e build type uses this
+  library's release variant compiled from `voiceTest`; e2e talks only to
+  `http://10.0.2.2:<port>` (the emulator's host loopback) with in-memory
+  credentials, and only on the emulator: iOS compiles its loopback for the
+  simulator alone, so on a physical phone, where 10.0.2.2 is a local-network
+  address, the e2e module refuses every voice request. Development builds use
+  production, as iOS DEBUG does. The
+  production switch embeds `voice-production-policy.json`'s routes and consent
+  default, and the module refuses to start unless they match `AuthRoute`.
+- **Credential.** AES-256-GCM under a non-exportable Android Keystore key, no user
+  authentication; the origin is authenticated data. The ciphertext lives in the
+  private `au.com.opax.voice.session` preferences file, which
+  `res/xml/opax_voice_*_rules.xml` exclude from cloud backup and device transfer.
+  The manifest merges both rules into the app. An item that cannot be decrypted
+  (lost key, restored copy, other origin) reads as signed out and is removed; a
+  Keystore error is `unavailable`. Sign-out and deletion keep iOS's order, and
+  when the store cannot read or compare its item they still remove it (removal
+  needs no key), clear the local state and then report `unavailable`. iOS's WhenUnlocked restriction has no exact
+  equivalent here (`setUnlockedDeviceRequired` misbehaves on some devices), so the
+  key is usable while the device is locked.
+- **Transport.** OkHttp with no cookie jar, cache or redirects, 15-second
+  timeouts, and a policy check on the `HttpUrl` actually sent. OkHttp's own
+  retry is off, as it can resend a POST. The one retry is URLSession's (Apple
+  QA1941): a GET or HEAD whose reused connection failed before any response
+  headers is sent once more at once, so a connection the server closed while
+  idle never surfaces as "could not be reached". Never a POST, a timeout, a
+  fresh connection's failure or a cancellation, and never twice. No
+  connection is reused after 4 s idle: a server or NAT can drop an idle
+  connection unseen (the emulator's NAT hid the fixture's 5 s close), and a
+  POST such as Start or Send code on it would fail with no retry.
+  `TransportGuard` is the test and e2e host guard (Swift's `VoiceTestSafety`
+  for HTTP).
+- **Call half.** `VoiceCallController` implements `VoiceCore` and is the only
+  core: `VoiceController.create` builds it, and the account tests drive its
+  status, sign-out and deletion paths. One serial dispatcher plays the Swift actor (calls interleave only at
+  suspension points); teardown runs to completion even when it cancels its
+  caller, as iOS's fresh Task does. Formats and chunks match iOS exactly: PCM16
+  little-endian or mu-law at 8, 16, 22.05, 24, 44.1 or 48 kHz from the metadata,
+  25 ms fractional chunks (`ChunkCadence`), 64-bit event IDs (Swift's `Int`),
+  two seconds of send back-pressure,
+  thirty seconds scheduled plus thirty in backlog for playback. The monthly
+  allowance comes only from server status: Start is refused at zero, the relay's
+  deadline close ends the call, fresh status names the reason, and the countdown
+  never ends a call locally.
+- **Audio.** `AudioRecord` on `VOICE_COMMUNICATION` with `AcousticEchoCanceler`,
+  `NoiseSuppressor` and `AutomaticGainControl` when the device has them, at the
+  metadata rate when supported (else 48 or 44.1 kHz through the resampler);
+  `AudioTrack` with voice-communication attributes, written by one thread without
+  blocking so a flush is immediate; drain is polled from the play head (iOS uses
+  buffer callbacks). The session takes transient audio focus,
+  `MODE_IN_COMMUNICATION`, and routes to a headset when connected, else the
+  speaker; losing focus (a phone call) is an interruption and ends the call, as
+  does backgrounding: the last started activity stopping. A pause alone (a
+  dialog, split screen, a share sheet) ends nothing, and the bridge's
+  `background()` acts only when no activity is started. No foreground service.
+- **Microphone.** JS asks for `RECORD_AUDIO` after stored consent and calls
+  `start()` once granted; native only checks the grant, after fresh status and
+  consent, and never shows UI. Only the production voice switch checks it and
+  merges `RECORD_AUDIO` and `MODIFY_AUDIO_SETTINGS`; development always fails the
+  check; e2e uses synthetic input and silent timed playback. The guard in
+  `voiceTest` refuses any audio open and any host but loopback in unit tests and
+  e2e; production compiles a no-op.
+- **Tests.** `./gradlew :opax-voice:testDebugUnitTest` (Robolectric, SDK 34) ports
+  the account and HTTP XCTest cases against real loopback HTTP servers and the
+  copied Worker fixtures, and the call cases (package `call`) against the real
+  client, a loopback MockWebServer convai relay, fake and synthetic audio and
+  Robolectric's audio shadows. No test opens host audio. Robolectric has no AndroidKeyStore, so the store's
+  tests use a software key and check the Keystore key spec separately.

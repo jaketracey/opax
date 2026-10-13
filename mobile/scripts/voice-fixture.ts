@@ -56,7 +56,13 @@ export async function createVoiceFixture(
   port: number,
   record: { title: string; path: string },
 ) {
-  const origin = `http://127.0.0.1:${port}`;
+  // The Android emulator reaches this loopback server through its host alias
+  // (fixture-server.ts admits the same host); the iOS simulator uses 127.0.0.1.
+  const host =
+    process.env.OPAX_TARGET_PLATFORM === 'android'
+      ? `10.0.2.2:${port}`
+      : `127.0.0.1:${port}`;
+  const origin = `http://${host}`;
   const accounts = new Map<string, Account>();
   const credentials = new Map<string, Account>();
   const proofs = new Map<string, Proof>();
@@ -185,7 +191,8 @@ export async function createVoiceFixture(
     request: IncomingMessage,
     response: ServerResponse,
   ): Promise<boolean> {
-    if (await communityFixture(request, response, accountFor(request))) return true;
+    if (await communityFixture(request, response, accountFor(request)))
+      return true;
     if (await chatFixture(request, response, accountFor(request))) return true;
     const path = request.url ?? '';
     const routes: Record<string, string> = {
@@ -409,7 +416,7 @@ export async function createVoiceFixture(
           reply(response, 201, {
             session_id: id,
             transport: 'websocket',
-            signed_url: `ws://127.0.0.1:${port}/api/voice/connect?session_id=${id}`,
+            signed_url: `ws://${host}/api/voice/connect?session_id=${id}`,
             remaining_seconds: seconds,
             expires_at: now() + 60,
           });
@@ -454,7 +461,7 @@ export async function createVoiceFixture(
     let failure = 0;
     if (
       request.socket.remoteAddress !== '127.0.0.1' ||
-      request.headers.host !== `127.0.0.1:${port}` ||
+      request.headers.host !== host ||
       request.headers.origin !== originHeader ||
       request.headers['sec-websocket-protocol'] !== 'convai'
     )

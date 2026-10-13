@@ -11,7 +11,17 @@ type Variant = 'development' | 'e2e' | 'production';
 const variant = (process.env.OPAX_VARIANT ?? 'development') as Variant;
 // Explicit for native Android builds; the iOS invocation keeps its config.
 const androidBuild = process.env.OPAX_TARGET_PLATFORM === 'android';
-const productionVoice = !androidBuild && productionVoiceEnabled(variant);
+// One switch for both platforms: Android 1.0 ships Talk and accounts too.
+const productionVoice = productionVoiceEnabled(variant);
+// Android e2e only: OPAX_E2E_MICROPHONE=1 declares the microphone so Talk's
+// permission prompt (rationale, system dialog, denial, "don't ask again") runs
+// against the local fixture. Native input stays synthetic: no e2e build ever
+// opens the microphone. Production decides with the voice switch alone.
+const e2eMicrophone = process.env.OPAX_E2E_MICROPHONE ?? '0';
+if (!['0', '1'].includes(e2eMicrophone))
+  throw new Error('OPAX_E2E_MICROPHONE must be 0 or 1');
+const microphonePrompt =
+  androidBuild && variant === 'e2e' && e2eMicrophone === '1';
 const buildNumber = process.env.OPAX_BUILD_NUMBER ?? '1';
 if (!/^[1-9][0-9]*$/.test(buildNumber)) {
   throw new Error('OPAX_BUILD_NUMBER must be a positive integer');
@@ -72,9 +82,18 @@ const config: ExpoConfig = {
       backgroundColor: '#142A43',
       monochromeImage: './assets/icon/android-monochrome.png',
     },
-    permissions: ['ACCESS_COARSE_LOCATION', 'ACCESS_FINE_LOCATION'],
+    permissions: [
+      'ACCESS_COARSE_LOCATION',
+      'ACCESS_FINE_LOCATION',
+      ...(microphonePrompt ? ['RECORD_AUDIO'] : []),
+    ],
+    // The OpaxVoice module declares RECORD_AUDIO. As iOS embeds its purpose
+    // string, only a production voice build keeps it: e2e uses the synthetic
+    // input and development never opens the hardware microphone.
     blockedPermissions: [
-      'android.permission.RECORD_AUDIO',
+      ...(productionVoice || microphonePrompt
+        ? []
+        : ['android.permission.RECORD_AUDIO']),
       'android.permission.CAMERA',
       'android.permission.ACCESS_BACKGROUND_LOCATION',
       'android.permission.FOREGROUND_SERVICE',
@@ -208,6 +227,7 @@ const config: ExpoConfig = {
     ...(productionVoice
       ? { productionVoiceEnabled: true, voiceConsentDefault: false }
       : {}),
+    ...(microphonePrompt ? { e2eMicrophonePrompt: true } : {}),
     apiOrigin: origin,
     webOrigin,
     appVersion: '1.0.0',

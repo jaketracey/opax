@@ -21,6 +21,9 @@ const symbols: Record<string, AndroidSymbol> = {
   'building.2': 'domain',
   'building.columns': 'account_balance',
   calendar: 'calendar_month',
+  // Talk's captions control; its selected state is drawn, not the glyph.
+  'captions.bubble': 'closed_caption',
+  'captions.bubble.fill': 'closed_caption',
   'chart.bar.doc.horizontal': 'bar_chart',
   checkmark: 'check',
   'checkmark.seal': 'verified',
@@ -39,9 +42,11 @@ const symbols: Record<string, AndroidSymbol> = {
   envelope: 'mail',
   'exclamationmark.circle': 'error',
   'exclamationmark.triangle': 'warning',
+  flag: 'flag',
   hammer: 'build',
   'hand.raised': 'pan_tool',
   'info.circle': 'info',
+  keyboard: 'keyboard',
   'line.3.horizontal.decrease.circle': 'filter_list',
   link: 'link',
   'list.bullet': 'list',
@@ -51,6 +56,7 @@ const symbols: Record<string, AndroidSymbol> = {
   magnifyingglass: 'search',
   map: 'map',
   'mic.fill': 'mic',
+  'mic.slash.fill': 'mic_off',
   'minus.circle': 'remove_circle',
   newspaper: 'newspaper',
   person: 'person',
@@ -60,6 +66,7 @@ const symbols: Record<string, AndroidSymbol> = {
   'person.3.fill': 'groups',
   'person.crop.circle': 'account_circle',
   'person.fill': 'person',
+  'phone.down.fill': 'call_end',
   plus: 'add',
   'point.3.connected.trianglepath.dotted': 'hub',
   'quote.opening': 'format_quote',
@@ -83,6 +90,7 @@ const symbols: Record<string, AndroidSymbol> = {
   'tray.full': 'inventory_2',
   'wifi.slash': 'wifi_off',
   xmark: 'close',
+  'xmark.circle': 'cancel',
 };
 
 export function androidSymbol(name: string): AndroidSymbol {

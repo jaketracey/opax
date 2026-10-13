@@ -85,9 +85,9 @@ const pressable = (renderer: TestRenderer.ReactTestRenderer, id: string) =>
 
 describe('Material symbols', () => {
   // Files whose symbols never draw on Android: iOS-only routes and chrome
-  // (NativeTabs, bar items, Talk), the iPad tour, and the iOS community.
+  // (NativeTabs, bar items), the iPad tour, and the iOS community. Talk
+  // draws on Android with its OpaxVoice module.
   const iosOnly = [
-    /^src\/features\/talk\//,
     /^src\/onboarding\/pad/,
     /^src\/app\/\(tabs\)\/_layout\.tsx$/,
     /^src\/app\/community\//,

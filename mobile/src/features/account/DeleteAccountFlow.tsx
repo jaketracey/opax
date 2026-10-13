@@ -28,9 +28,12 @@ import { clearAskConversations } from '../ask/store';
 export function DeleteAccountFlow({
   onCancel,
   onDone,
+  onSignIn,
 }: {
   onCancel: () => void;
   onDone: () => void;
+  /** Sign in again, after this device was signed out without a deletion. */
+  onSignIn: () => void;
 }) {
   const [step, setStep] = useState<'confirm' | 'code' | 'deleted'>('confirm');
   const [code, setCode] = useState('');
@@ -39,6 +42,8 @@ export function DeleteAccountFlow({
   );
   const [error, setError] = useState<string | null>(null);
   const [notice, setNotice] = useState<string | null>(null);
+  // Signed out here, account not deleted: deleting needs a new sign-in.
+  const [signedOutHere, setSignedOutHere] = useState(false);
   const inFlight = useRef(false);
   const challenge = useCodeChallenge();
 
@@ -85,6 +90,19 @@ export function DeleteAccountFlow({
     setNotice(null);
     challenge.tried();
     const result = await voice.deleteAccount(challenge.challenge.id, code);
+    if (!result.ok && result.error === 'unavailable') {
+      // A Worker outage leaves the session held. A credential-store fault on
+      // this device signs it out without the Worker ever deleting anything;
+      // a fresh status read tells the two apart.
+      const status = await voice.status();
+      if (status.ok && !status.value.signedIn && !status.value.accountHeld) {
+        inFlight.current = false;
+        setBusy(null);
+        sessionEnded();
+        setSignedOutHere(true);
+        return refuse(refusalCopy.deletionSignedOutHere);
+      }
+    }
     inFlight.current = false;
     setBusy(null);
     if (!result.ok) return refused(result.error);
@@ -164,13 +182,22 @@ export function DeleteAccountFlow({
         {error ? (
           <ErrorState message={error} testID="account-deletion-code-error" />
         ) : null}
-        <Button
-          variant="danger"
-          label={accountCopy.deleteAccount}
-          loading={busy === 'delete'}
-          onPress={() => void remove()}
-          testID="account-delete-final"
-        />
+        {signedOutHere ? (
+          <Button
+            variant="primary"
+            label={accountCopy.signInAgain}
+            onPress={onSignIn}
+            testID="account-deletion-sign-in"
+          />
+        ) : (
+          <Button
+            variant="danger"
+            label={accountCopy.deleteAccount}
+            loading={busy === 'delete'}
+            onPress={() => void remove()}
+            testID="account-delete-final"
+          />
+        )}
         {notice ? (
           <Text wordSafe testID="account-deletion-notice">
             {notice}

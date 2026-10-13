@@ -1,6 +1,6 @@
 import { phoneCopy } from '../design/phone-copy';
 import { useEffect, useState } from 'react';
-import { Platform, RefreshControl } from 'react-native';
+import { RefreshControl } from 'react-native';
 import { router } from 'expo-router';
 import { catalogs } from '../api/runtime';
 import {
@@ -24,6 +24,7 @@ import { CatalogState, isOffline } from './CatalogState';
 
 import { openRecord } from './reports/open';
 import { deceasedPersonsNotice } from '../onboarding/pages';
+import { voiceLinked } from '../voice/linked';
 
 /**
  * About OPAX (IOS-UX 4.9): prose under the sheet's one title, so no heading
@@ -240,7 +241,7 @@ export default function About() {
           are not saved on this phone. Other public catalogs are saved on this
           phone for offline reading.
         </Text>
-        {Platform.OS === 'android' ? null : (
+        {voiceLinked ? (
           <Text wordSafe>
             Voice sends your audio and the conversation’s words to ElevenLabs
             and the language model it runs. OPAX keeps your email address and
@@ -252,7 +253,7 @@ export default function About() {
             after a day when checked on 9 September 2026. Deleted account data
             stays in database recovery history for up to 30 days.
           </Text>
-        )}
+        ) : null}
         <WebRow title="Privacy policy" path="/privacy" testID="about-privacy" />
       </Section>
     </Screen>

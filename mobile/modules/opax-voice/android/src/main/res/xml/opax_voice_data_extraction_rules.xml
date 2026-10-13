@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Android 12+. KeystoreCredentialStore.PREFERENCES; the Keystore key itself
+     never leaves the device, so a copied file could not be decrypted anyway. -->
+<data-extraction-rules>
+  <cloud-backup>
+    <exclude domain="sharedpref" path="au.com.opax.voice.session.xml" />
+  </cloud-backup>
+  <device-transfer>
+    <exclude domain="sharedpref" path="au.com.opax.voice.session.xml" />
+  </device-transfer>
+</data-extraction-rules>

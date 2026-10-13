@@ -60,16 +60,9 @@ test('all Android-readable source copy routes iPhone wording through phoneCopy',
       }
       if (!/\.tsx?$/.test(path)) continue;
       const name = relative(root, path);
-      // Android route/module discovery excludes voice and account UI. Its
-      // independent entry.android.tsx remains part of this copy sweep.
-      if (
-        name.startsWith('voice/') ||
-        name.startsWith('features/talk/') ||
-        (name.startsWith('features/account/') &&
-          !name.endsWith('entry.android.tsx')) ||
-        name === 'design/phone-copy.ts'
-      )
-        continue;
+      // Talk, sign-in and deletion ship on Android with its OpaxVoice
+      // module, so voice and account copy is swept too.
+      if (name === 'design/phone-copy.ts') continue;
       violations.push(
         ...barePhoneStrings(readFileSync(path, 'utf8'), path).map(
           (line) => `${name}:${line}`,

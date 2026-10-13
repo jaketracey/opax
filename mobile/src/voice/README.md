@@ -83,6 +83,66 @@ unmount; call End when the sheet closes. Do not persist transcript/challenges or
 pass them to analytics. The controller owns socket, audio, timers and allowance
 reconciliation; never infer a refund or retry a reservation/connect blindly.
 
+## Android: where Talk and accounts appear
+
+`linked.ts` exports `voiceLinked`: true on iOS, and on Android when
+`requireOptionalNativeModule('OpaxVoice')` resolves. It is the only Android
+switch. With it, the root bar offers Talk, `/talk`, `/account/sign-in` and
+`/account/delete` are routes, Account and about shows the account block, Ask
+syncs saved conversations and About describes voice, exactly as on iOS. Without
+the module, those stay out (null-module fallback) and Account and about is the
+one list of rows. Metro bundles the routes on both platforms, and the
+production voice switch (`OPAX_PRODUCTION_VOICE`) means the same on both: off
+swaps in the placeholders, blocks `RECORD_AUDIO` and excludes `opax-voice` from
+Android autolinking (`plugins/withVoiceAutolinking.js`, settings.gradle).
+
+## Android microphone permission (contract with the native `start()`)
+
+iOS asks inside its native `start()`, with the purpose string as the system
+prompt's text. Android's dialog has no room for a purpose, so the JS side asks,
+after a rationale, and native only checks.
+
+1. **Where it applies:** Android production voice builds only
+   (`extra.productionVoiceEnabled === true`; `microphone.ts`
+   `asksForMicrophone()`). Only that build declares `RECORD_AUDIO`: the module's
+   production manifest adds it and `app.config.ts` blocks it everywhere else,
+   as iOS embeds its purpose string only there. E2e uses the synthetic input
+   with a permission stand-in that always passes (iOS
+   `DebugMicrophonePermission`); development never opens the hardware
+   microphone and its `start()` ends in `microphoneDenied` (iOS
+   `ReleaseGatedMicrophonePermission`).
+2. **JS order, on Start only, never at launch:** stored consent (the Consent
+   panel), then `PermissionsAndroid.check(RECORD_AUDIO)`. Not granted: Talk
+   shows the rationale (the iOS purpose string, `microphoneCopy.purpose`) with
+   Continue and Not now. Continue calls `PermissionsAndroid.request`, the only
+   system dialog. `granted` calls `voice.start()`; `denied` reads "Allow
+   microphone access to talk." and Start asks again; `never_ask_again` reads
+   "Turn on microphone access in Settings to talk." with Open Settings
+   (`Linking.openSettings()`), checked again when the app returns.
+3. **JS calls `start()` only once the permission is granted** (or where the gate
+   is off). It never calls `start()` to provoke a dialog.
+4. **Native `start()` never requests the permission and shows no UI.** It keeps
+   the iOS order: fresh status, refusal, stored consent, then the permission as
+   a check (`ContextCompat.checkSelfPermission(context, RECORD_AUDIO)`). Not
+   granted ends the attempt exactly as an iOS denial does: the
+   `microphoneDenied` error event, no reservation, no audio focus, no
+   `AudioRecord`. The UI's answer to that is Open Settings.
+5. **No microphone before that check passes:** `AudioRecord` is created only
+   inside `start()`, after the check; never at module load or launch, or by
+   `status()`, `snapshot()`, consent or sign-in.
+6. **The dialog pauses the activity.** React Native reports `background`, then
+   `active` on resume, before the request's promise resolves. Talk ignores
+   AppState while its request is pending, so neither `background()` nor a status
+   refresh is sent for that round trip; native must not rely on either.
+7. **On Android, `background` means a pause.** React Native's Android AppState
+   reports `background` on every pause, not only a real background: a dialog,
+   split screen on Android 7 to 9, a translucent activity such as a share
+   sheet. Talk still calls `background()` on it, with no Android branch, and
+   native decides: `background()` acts only when no activity of the app is
+   started, and the module ends the call itself when the last activity stops.
+   So a pause never ends a call; Home, Recents and screen-off do, as a real
+   background does on iOS.
+
 ## Silent bridge workbench
 
 Only the e2e simulator pod selects synthetic input, silent timed playback and the

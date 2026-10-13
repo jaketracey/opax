@@ -1,26 +1,30 @@
 import { formatClock } from '../../design/format';
+import { phoneCopy } from '../../design/phone-copy';
 import type { VoiceFailure } from '../../voice';
 
 // Account copy (docs/IOS-UX.md sections 4.9, 4.11 and 4.12). Shipped in
 // production voice builds; voice-off builds resolve entry.production.ts.
+// Android reads "this phone" (phoneCopy).
 export const accountCopy = {
   checking: 'Checking your account…',
   signedOut:
     'Not signed in. Sign in to talk to OPAX. Public records stay open without an account.',
   signInForVoice: 'Sign in for voice',
   signedInAs: (email: string) => `Signed in as ${email}`,
-  signedInHere: 'Signed in on this iPhone',
+  signedInHere: phoneCopy('Signed in on this iPhone'),
   voiceTime: (seconds: number) =>
     `Voice time: ${formatClock(seconds)} remaining`,
   unlimited: 'Unlimited voice access · up to 10 minutes per call',
   voiceOff: 'Voice is taking a break. You can still search the public records.',
-  unavailableAccount:
+  unavailableAccount: phoneCopy(
     'Voice is not available for this account. You can still sign out of this iPhone or delete the account.',
+  ),
   statusFailed: 'We could not check your account.',
-  signOut: 'Sign out of this iPhone',
-  signedOutNotice: 'Signed out of this iPhone.',
-  signedOutLocally:
+  signOut: phoneCopy('Sign out of this iPhone'),
+  signedOutNotice: phoneCopy('Signed out of this iPhone.'),
+  signedOutLocally: phoneCopy(
     'Signed out of this iPhone. OPAX could not be reached to end the session on its server. It expires within 30 days.',
+  ),
   deleteAccount: 'Delete account',
   sharedAccount: 'Your OPAX community account is also used on opax.com.au.',
 
@@ -77,9 +81,11 @@ export const accountCopy = {
   deletionCode: '8-digit deletion code',
   sendNewDeletionCode: 'Send a new deletion code',
   accountDeleted: 'Account deleted',
-  accountDeletedDetail:
+  accountDeletedDetail: phoneCopy(
     'Your OPAX account, its personal data and your own discussions and replies have been removed from OPAX’s live database. Its recovery history keeps them for up to 30 days, then they are gone. This iPhone is signed out. Everything public in the app keeps working.',
+  ),
   done: 'Done',
+  signInAgain: 'Sign in again',
 } as const;
 
 export const refusalCopy = {
@@ -96,6 +102,11 @@ export const refusalCopy = {
     'Sign-in is not available right now. Please try again shortly.',
   deletionUnavailable:
     'Deletion is not available right now. Please try again shortly.',
+  // The device's credential store failed: the native core signed this device
+  // out, but the Worker was never asked to delete the account.
+  deletionSignedOutHere: phoneCopy(
+    'This iPhone is signed out, but your account was not deleted. Sign in again to finish deleting it.',
+  ),
   signedOut: 'You are signed out. Sign in again to delete your account.',
   generic: 'That did not work. Please try again.',
 } as const;

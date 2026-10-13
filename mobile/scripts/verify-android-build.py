@@ -29,9 +29,31 @@ manifest = run(analyzer, "manifest", "print", args.apk)
 root = ET.fromstring(manifest)
 ns = "{http://schemas.android.com/apk/res/android}"
 permissions = sorted(n.attrib[ns + "name"] for n in root.findall("uses-permission"))
+# The production voice switch (OPAX_PRODUCTION_VOICE, default on) is the only
+# build that may declare the microphone, as only its iOS twin embeds the
+# purpose string. E2e and development never open the hardware microphone.
+# A voice build needs both: RECORD_AUDIO for capture and MODIFY_AUDIO_SETTINGS
+# for the call's communication mode and routing (the module's
+# voiceProduction manifest).
+voice = False
+microphone_prompt = False
+if args.variant != "development":
+    with zipfile.ZipFile(args.apk) as archive:
+        packaged = json.loads(archive.read("assets/app.config"))["extra"]
+    voice = args.variant == "production" and packaged.get("productionVoiceEnabled") is True
+    # The e2e prompt build (OPAX_E2E_MICROPHONE=1) declares RECORD_AUDIO alone,
+    # for Talk's permission journeys; its native input stays synthetic.
+    microphone_prompt = args.variant == "e2e" and packaged.get("e2eMicrophonePrompt") is True
+voice_permissions = {"android.permission.RECORD_AUDIO", "android.permission.MODIFY_AUDIO_SETTINGS"}
 allowed = {"android.permission.ACCESS_COARSE_LOCATION", "android.permission.ACCESS_FINE_LOCATION",
            "android.permission.INTERNET", "android.permission.VIBRATE",
            "au.com.opax.app.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION"}
+if voice:
+    allowed |= voice_permissions
+    assert voice_permissions <= set(permissions), f"Voice build without {voice_permissions - set(permissions)}"
+if microphone_prompt:
+    allowed.add("android.permission.RECORD_AUDIO")
+    assert "android.permission.RECORD_AUDIO" in permissions, "Prompt build without RECORD_AUDIO"
 assert set(permissions) <= allowed, f"Unexpected Android permission: {set(permissions) - allowed}"
 app = root.find("application")
 assert app is not None and app.attrib[ns + "usesCleartextTraffic"] == "false"
@@ -56,9 +78,18 @@ with zipfile.ZipFile(args.apk) as archive:
             "http://10.0.2.2:" + os.environ.get("OPAX_FIXTURE_PORT", "8910"))
         assert extra["apiOrigin"] == expected_origin
         assert extra["variant"] == args.variant
-        assert not extra.get("productionVoiceEnabled")
         bundle = archive.read("assets/index.android.bundle")
-        assert b"./talk.tsx" not in bundle and b"./account/sign-in.tsx" not in bundle
+        routes = [b"./talk.tsx", b"./account/sign-in.tsx", b"./account/delete.tsx"]
+        if args.variant == "e2e" or voice:
+            # Talk, sign-in and deletion ship as on iOS; the app offers them
+            # when the OpaxVoice module is linked (src/voice/linked.ts).
+            assert all(route in bundle for route in routes), "Talk and account routes missing"
+        else:
+            assert not any(route in bundle for route in routes[1:]), "Voice-off sign-in or deletion route"
+        if args.variant == "e2e":
+            assert not extra.get("productionVoiceEnabled")
+        if voice:
+            assert extra.get("voiceConsentDefault") is False
         if args.variant == "production":
             for marker in [b"http://10.0.2.2", b"http://127.0.0.1", b"http://localhost",
                            b"OPAXWelcomeTour", b"source-destination-url", b"OPAX_DESIGN_WORKBENCH"]:
@@ -82,7 +113,8 @@ args.output.with_suffix(".network.xml").write_text(network)
 evidence = {"variant": args.variant, "version": root.attrib[ns + "versionName"],
             "apk_bytes": args.apk.stat().st_size,
             "sha256": hashlib.sha256(args.apk.read_bytes()).hexdigest(),
-            "permissions": permissions, "cleartext_domains": domains,
+            "permissions": permissions, "production_voice": voice,
+            "e2e_microphone_prompt": microphone_prompt, "cleartext_domains": domains,
             "signing": signing_label, "checks": "passed"}
 args.output.write_text(json.dumps(evidence, indent=2) + "\n")
 print(json.dumps(evidence))

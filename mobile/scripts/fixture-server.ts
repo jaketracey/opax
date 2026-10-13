@@ -385,6 +385,10 @@ server.on('upgrade', (request, socket, head) => {
   console.error(`OUTSIDE_ALLOW_LIST UPGRADE ${request.url}`);
   socket.end('HTTP/1.1 404 Not Found\r\n\r\n');
 });
+// Keep idle connections open past OkHttp's 10-second staleness check, as
+// production's edge does; Node's 5-second default let a pooled POST fail.
+server.keepAliveTimeout = 65_000;
+server.headersTimeout = 66_000;
 server.listen(port, '127.0.0.1', async () => {
   port = (server.address() as { port: number }).port;
   try {
@@ -405,4 +409,6 @@ for (const signal of ['SIGTERM', 'SIGINT'] as const)
   process.on(signal, () => {
     voice?.close();
     server.close(() => process.exit(0));
+    // Idle connections now live 65 s; drop them so shutdown stays prompt.
+    server.closeAllConnections();
   });

@@ -41,7 +41,12 @@ jest.mock('../src/voice', () => ({
   subscribe: jest.fn(() => () => {}),
 }));
 jest.mock('expo-router', () => ({
-  router: { push: jest.fn(), back: jest.fn() },
+  router: {
+    push: jest.fn(),
+    back: jest.fn(),
+    replace: jest.fn(),
+    canGoBack: jest.fn(() => true),
+  },
   Stack: { Screen: () => null },
 }));
 jest.mock('../src/navigation/external', () => ({
@@ -440,6 +445,40 @@ describe('Sign in by code', () => {
     expect(mocked.consumeCode).toHaveBeenCalledWith(challengeId, '01234567');
     expect(onSignedIn).toHaveBeenCalledWith('signedIn');
   });
+  // Android, 12 October: a change on the sign-in screen committed with its
+  // pop crashed Fabric ("child already has a parent"). On success the screen
+  // closes with nothing on it changed.
+  test('a signed-in code closes the screen without changing it', async () => {
+    const onSignedIn = jest.fn();
+    const renderer = await toCode(onSignedIn);
+    const signIn = () =>
+      renderer.root.findByProps({ testID: 'account-sign-in-code' });
+    let release!: (value: { ok: true; value: VoiceStatus }) => void;
+    mocked.consumeCode.mockReturnValueOnce(
+      new Promise((resolve) => (release = resolve)),
+    );
+    await type(renderer, 'account-code', '01234567');
+    expect(signIn().props.loading).toBe(true);
+    const before = JSON.stringify(renderer.toJSON());
+    await act(async () => release({ ok: true, value: status() }));
+    expect(onSignedIn).toHaveBeenCalledWith('signedIn');
+    expect(JSON.stringify(renderer.toJSON())).toBe(before);
+    expect(signIn().props.loading).toBe(true);
+  });
+  // Review P3-3: opened cold from opax://account/sign-in, nothing is behind
+  // the screen, so a sign-in lands on Account and about.
+  test('a cold sign-in link lands on Account and about', async () => {
+    const { SignInScreen } = jest.requireActual<
+      typeof import('../src/features/account/SignInScreen')
+    >('../src/features/account/SignInScreen');
+    jest.mocked(router.canGoBack).mockReturnValueOnce(false);
+    const renderer = await render(<SignInScreen />);
+    await type(renderer, 'account-email', 'happy@example.invalid');
+    await press(renderer, 'account-send-code');
+    await type(renderer, 'account-code', '01234567');
+    expect(router.replace).toHaveBeenCalledWith('/account');
+    expect(router.back).not.toHaveBeenCalled();
+  });
   test('a wrong code gets the one answer and keeps the code to check', async () => {
     mocked.consumeCode.mockResolvedValueOnce({
       ok: false,
@@ -572,11 +611,53 @@ describe('Delete account', () => {
   async function toCode() {
     const onDone = jest.fn();
     const onCancel = jest.fn();
+    const onSignIn = jest.fn();
     const renderer = await render(
-      <DeleteAccountFlow onDone={onDone} onCancel={onCancel} />,
+      <DeleteAccountFlow
+        onDone={onDone}
+        onCancel={onCancel}
+        onSignIn={onSignIn}
+      />,
     );
-    return { renderer, onDone, onCancel };
+    return { renderer, onDone, onCancel, onSignIn };
   }
+  // Review P3-2: a credential-store fault signs this device out without the
+  // Worker deleting anything. The page says so and offers sign-in again.
+  test('a fault that signed this device out says the account was not deleted', async () => {
+    mocked.status.mockResolvedValue({ ok: true, value: status() });
+    mocked.deleteAccount.mockResolvedValueOnce({
+      ok: false,
+      error: 'unavailable',
+    });
+    const { renderer, onSignIn } = await toCode();
+    await press(renderer, 'account-delete-confirm');
+    await type(renderer, 'account-deletion-code', '01234567');
+    mocked.status.mockResolvedValue({ ok: true, value: signedOut });
+    await press(renderer, 'account-delete-final');
+    expect(refusal(renderer)).toBe(refusalCopy.deletionSignedOutHere);
+    expect(refusalCopy.deletionSignedOutHere).toBe(
+      'This iPhone is signed out, but your account was not deleted. Sign in again to finish deleting it.',
+    );
+    expect(shows(renderer, accountCopy.accountDeleted)).toBe(false);
+    expect(
+      renderer.root.findAll((n) => n.props.testID === 'account-delete-final'),
+    ).toHaveLength(0);
+    await press(renderer, 'account-deletion-sign-in');
+    expect(onSignIn).toHaveBeenCalled();
+  });
+  test('a Worker outage keeps the session and the usual answer', async () => {
+    mocked.status.mockResolvedValue({ ok: true, value: status() });
+    mocked.deleteAccount.mockResolvedValueOnce({
+      ok: false,
+      error: 'unavailable',
+    });
+    const { renderer } = await toCode();
+    await press(renderer, 'account-delete-confirm');
+    await type(renderer, 'account-deletion-code', '01234567');
+    await press(renderer, 'account-delete-final');
+    expect(refusal(renderer)).toBe(refusalCopy.deletionUnavailable);
+    expect(button(renderer, 'account-delete-final')).toBeTruthy();
+  });
   test('the confirmation says what is deleted and what is not', async () => {
     const { renderer, onCancel } = await toCode();
     for (const line of [

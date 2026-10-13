@@ -1,4 +1,11 @@
-// Production Account and about: the unchanged placeholder. Voice and its
-// sign-in stay out of release builds until consent and the release gates
-// are ready (src/voice/README.md, "Before the voice UI ships").
-export { AccountComingSoon as default } from '../ComingSoon';
+import { Platform } from 'react-native';
+import { AccountComingSoon } from '../ComingSoon';
+import { AccountRowsScreen } from './AccountRows';
+
+// Production Account and about with the voice switch off. iOS keeps its
+// placeholder; Android, which then leaves its OpaxVoice module out, shows the
+// one list of rows, as any Android build without the module does. Voice and
+// its sign-in stay out of these builds (src/voice/README.md).
+const ProductionAccount =
+  Platform.OS === 'android' ? AccountRowsScreen : AccountComingSoon;
+export default ProductionAccount;

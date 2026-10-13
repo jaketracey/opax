@@ -27,6 +27,7 @@ import { WelcomeTour } from '../onboarding/WelcomeTour';
 import { isPad } from '../design/adaptive';
 import { KeyboardShortcuts } from '../navigation/KeyboardShortcuts';
 import { communityHome } from '../features/community/entry';
+import { voiceLinked } from '../voice/linked';
 import {
   presentSourceDestination,
   sourceDestination,
@@ -101,7 +102,8 @@ export default function Layout() {
               sheetGrabberVisible: true,
             }}
           />
-          <Stack.Protected guard={Platform.OS !== 'android'}>
+          {/* Android needs its OpaxVoice module (src/voice/linked.ts). */}
+          <Stack.Protected guard={voiceLinked}>
             <Stack.Screen
               name="talk"
               options={{ ...sheet, title: 'Talk to OPAX' }}

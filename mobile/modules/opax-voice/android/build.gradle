@@ -1,0 +1,79 @@
+plugins {
+  id 'com.android.library'
+  id 'expo-module-gradle-plugin'
+}
+
+group = 'au.com.opax.voice'
+version = '0.1.0'
+
+// The iOS pods' compile switches, read from the same build environment
+// (scripts/build-android.sh). The e2e variant compiles the loopback policy,
+// in-memory credentials and test guard into the library; production compiles
+// none of them. Development builds use the production origin, as iOS DEBUG does.
+def opaxVariant = System.getenv('OPAX_VARIANT') ?: 'development'
+def voiceE2E = opaxVariant == 'e2e'
+def productionVoice = opaxVariant == 'production' &&
+  (System.getenv('OPAX_PRODUCTION_VOICE') ?: '1') == '1'
+// As iOS's OPAXVoiceFixturePort; anything outside 8900-8999 is refused at startup.
+def fixturePort = System.getenv('OPAX_FIXTURE_PORT') ?: '8910'
+if (!(fixturePort ==~ /[0-9]{1,5}/)) fixturePort = '0'
+// As iOS's Info.plist voice keys: the production switch embeds the reviewed
+// route list and consent default, compared with AuthRoute before any I/O.
+def policyFile = file('../../../voice-production-policy.json')
+def voicePolicy = productionVoice && policyFile.exists() ? new groovy.json.JsonSlurper().parse(policyFile) : null
+def allowedRoutes = voicePolicy?.routes instanceof List ? voicePolicy.routes.join(',') : ''
+def consentDefault = voicePolicy?.consentDefault == false ? 'false' : 'true' // missing fails closed
+
+android {
+  namespace 'au.com.opax.voice'
+  defaultConfig {
+    versionCode 1
+    versionName '0.1.0'
+    buildConfigField 'boolean', 'OPAX_VOICE_E2E', voiceE2E.toString()
+    buildConfigField 'boolean', 'OPAX_VOICE_PRODUCTION', productionVoice.toString()
+    buildConfigField 'int', 'OPAX_VOICE_FIXTURE_PORT', voiceE2E ? fixturePort : '0'
+    buildConfigField 'String', 'OPAX_VOICE_ALLOWED_ROUTES', '"' + allowedRoutes + '"'
+    buildConfigField 'boolean', 'OPAX_VOICE_CONSENT_DEFAULT', consentDefault
+  }
+  buildFeatures {
+    buildConfig true
+  }
+  sourceSets {
+    // Debug is iOS DEBUG: unit tests and development builds carry the fixtures.
+    debug.java.srcDirs += 'src/voiceTest/java'
+    // The app's e2e build type consumes this library's release variant.
+    release.java.srcDirs += voiceE2E ? 'src/voiceTest/java' : 'src/voiceProduction/java'
+    // The microphone permission merges only with the production voice switch,
+    // as only that switch embeds the iOS purpose string.
+    if (productionVoice) {
+      release.manifest.srcFile 'src/voiceProduction/AndroidManifest.xml'
+    }
+  }
+  testOptions {
+    unitTests.includeAndroidResources = true
+    unitTests.all {
+      maxHeapSize = '1g'
+      testLogging {
+        events 'failed'
+        exceptionFormat 'full'
+      }
+    }
+  }
+}
+
+androidComponents {
+  // Release compiles the production sources, which have no fixtures to test.
+  beforeVariants(selector().withBuildType('release')) { variant ->
+    variant.enableUnitTest = false
+  }
+}
+
+dependencies {
+  // React Native's own OkHttp; no second copy in the app.
+  implementation 'com.squareup.okhttp3:okhttp:4.9.2'
+  testImplementation 'junit:junit:4.13.2'
+  testImplementation 'androidx.test:core:1.7.0'
+  testImplementation 'org.jetbrains.kotlinx:kotlinx-coroutines-test:1.10.2'
+  testImplementation 'com.squareup.okhttp3:mockwebserver:4.9.2'
+  testImplementation 'org.robolectric:robolectric:4.16.1'
+}

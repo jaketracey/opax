@@ -9,8 +9,10 @@ import {
 import {
   AccessibilityInfo,
   Alert,
+  BackHandler,
   findNodeHandle,
   Linking,
+  Platform,
   ScrollView,
   StyleSheet,
   View,
@@ -41,7 +43,13 @@ import BillDetail from '../bills/BillDetail';
 import DocumentReader from '../records/DocumentReader';
 import BillTextReader from '../records/BillTextReader';
 import type { VoiceSource } from '../../voice';
-import { endCopy, failureCopy, refusal, timeLabel } from './model';
+import {
+  endCopy,
+  failureCopy,
+  microphoneCopy,
+  refusal,
+  timeLabel,
+} from './model';
 import { recordDestination } from './sources';
 import { useTalk } from './useTalk';
 import { AnswerCaption } from './AnswerCaption';
@@ -52,9 +60,10 @@ import { useCaptionsPreference } from './captions-preference';
 import { canReport, minutesLeft, talkMenu, timeLeft } from './menu';
 import { ControlRow } from './CallControls';
 import { openableSources, SourcesSheet } from './SourcesSheet';
-import { Consent, VoiceDisclosure } from './Consent';
+import { Consent, MicrophoneRationale, VoiceDisclosure } from './Consent';
 import { accountCopy } from '../account/copy';
 import { useHeaderBottom } from '../../design/useHeaderBottom';
+import { androidHeaderBar } from '../../navigation/chrome';
 
 type Action = 'start' | 'signIn' | 'search' | 'settings' | 'retry';
 
@@ -63,6 +72,16 @@ type Action = 'start' | 'signIn' | 'search' | 'settings' | 'retry';
  * closing, so a menu action that presents waits for the menu to go.
  */
 const afterMenu = (action: () => void) => setTimeout(action, 600);
+const android = Platform.OS === 'android';
+/** Moves VoiceOver or TalkBack to a view (setAccessibilityFocus is iOS-only). */
+const focusOn = (view: View | null) => {
+  if (!view) return;
+  if (android) AccessibilityInfo.sendAccessibilityEvent(view, 'focus');
+  else {
+    const node = findNodeHandle(view);
+    if (node) AccessibilityInfo.setAccessibilityFocus(node);
+  }
+};
 
 export default function TalkScreen({
   onReportAnswer = reportAnswer,
@@ -97,11 +116,18 @@ export default function TalkScreen({
   const active = call.active && (s.state !== 'checking' || call.busy);
   const blocked = refusal(s.status);
   const failure = call.error === 'signedOut' ? null : call.error;
-  // Newest first: a failure, then this sheet's own notice (it follows any
-  // ending it replaces), then how the last call ended, then a refusal.
+  // Android's answer to the last microphone request (src/voice/microphone.ts).
+  const microphoneRefused =
+    call.microphone === 'denied' || call.microphone === 'blocked'
+      ? microphoneCopy[call.microphone]
+      : null;
+  // Newest first: a failure, then the microphone answer, then this sheet's
+  // own notice (it follows any ending it replaces), then how the last call
+  // ended, then a refusal.
   const message = failure
     ? failureCopy[failure]
-    : (notice ??
+    : (microphoneRefused ??
+      notice ??
       (terminal ? endCopy[terminal] : blocked ? failureCopy[blocked] : null));
   const lastTurn = s.transcript[s.transcript.length - 1];
   const phase: OrbPhase = !active
@@ -117,7 +143,8 @@ export default function TalkScreen({
             : lastTurn?.role === 'user'
               ? 'thinking'
               : 'listening';
-  // Spoken by VoiceOver on every change; drawn as the one status line.
+  // Spoken on every change (VoiceOver's announcement, TalkBack's live
+  // region); drawn as the one status line.
   const stateText =
     s.state === 'ending'
       ? 'Ending the call'
@@ -141,7 +168,7 @@ export default function TalkScreen({
         ? 'retry'
         : blocked
           ? 'search'
-          : failure === 'microphoneDenied'
+          : failure === 'microphoneDenied' || call.microphone === 'blocked'
             ? 'settings'
             : 'start';
   const sources = openableSources(s.sources);
@@ -159,17 +186,13 @@ export default function TalkScreen({
   useEffect(() => {
     if (stateText !== priorAnnouncement.current) {
       priorAnnouncement.current = stateText;
-      AccessibilityInfo.announceForAccessibility(stateText);
+      // TalkBack hears the status element's live region instead.
+      if (!android) AccessibilityInfo.announceForAccessibility(stateText);
     }
     // Captions, sources and countdown never trigger announcements.
   }, [stateText]);
   useEffect(() => {
-    if (terminal && screenReader) {
-      const node = statusNode.current
-        ? findNodeHandle(statusNode.current)
-        : null;
-      if (node) AccessibilityInfo.setAccessibilityFocus(node);
-    }
+    if (terminal && screenReader) focusOn(statusNode.current);
   }, [terminal, screenReader]);
   const resetScroll = useEffectEvent(() => {
     // Read the latest header offset without resetting as the header collapses.
@@ -237,40 +260,55 @@ export default function TalkScreen({
   useLayoutEffect(() => {
     handlers.current = { close, withdraw, report: onReportAnswer };
   });
+  // Android's Back is the sheet's Done: during a call it asks first, as
+  // Done does, and from an open record it returns to the call.
+  useEffect(() => {
+    if (!android || (!active && !record)) return;
+    const subscription = BackHandler.addEventListener(
+      'hardwareBackPress',
+      () => {
+        if (record) setRecord(null);
+        else handlers.current.close();
+        return true;
+      },
+    );
+    return () => subscription.remove();
+  }, [active, record]);
   const menuTitle = timeLeft(live, s.remaining, s.status);
   const reportable = canReport(s.transcript);
   const records = useMemo(() => reportChoices(s.sources), [s.sources]);
-  const screenOptions = useMemo(
-    () => ({
+  const screenOptions = useMemo(() => {
+    const items = () => [
+      talkMenu({
+        title: menuTitle,
+        live,
+        active,
+        typing,
+        report: reportable,
+        records,
+        consent: call.consent,
+        onType: () => afterMenu(() => setTyping(true)),
+        onReport: (path) => afterMenu(() => void handlers.current.report(path)),
+        onPrivacy: () =>
+          afterMenu(() => void openOnWeb('/privacy', 'Voice privacy')),
+        onWithdraw: () => handlers.current.withdraw(),
+      }),
+      {
+        type: 'button' as const,
+        label: 'Done',
+        tintColor: chrome.tint,
+        accessibilityLabel: 'Done',
+        onPress: () => handlers.current.close(),
+      },
+    ];
+    return {
       title: active ? '' : 'Talk to OPAX',
       gestureEnabled: !active,
-      unstable_headerRightItems: () => [
-        talkMenu({
-          title: menuTitle,
-          live,
-          active,
-          typing,
-          report: reportable,
-          records,
-          consent: call.consent,
-          onType: () => afterMenu(() => setTyping(true)),
-          onReport: (path) =>
-            afterMenu(() => void handlers.current.report(path)),
-          onPrivacy: () =>
-            afterMenu(() => void openOnWeb('/privacy', 'Voice privacy')),
-          onWithdraw: () => handlers.current.withdraw(),
-        }),
-        {
-          type: 'button' as const,
-          label: 'Done',
-          tintColor: chrome.tint,
-          accessibilityLabel: 'Done',
-          onPress: () => handlers.current.close(),
-        },
-      ],
-    }),
-    [menuTitle, live, active, typing, reportable, records, call.consent],
-  );
+      unstable_headerRightItems: items,
+      // Android draws the same items in its own bar.
+      ...(android ? { headerRight: () => androidHeaderBar(items()) } : {}),
+    };
+  }, [menuTitle, live, active, typing, reportable, records, call.consent]);
 
   const destination = record ? recordDestination(record.path) : null;
   const onStage = (event: LayoutChangeEvent) => {
@@ -281,9 +319,12 @@ export default function TalkScreen({
         : { width, height },
     );
   };
-  // Consent needs the room: the orb steps back to whatever space is left,
-  // and leaves altogether when that is too small to read as the orb.
-  const consenting = askingConsent && !call.consent && !active;
+  // Consent and the microphone rationale need the room: the orb steps back
+  // to whatever space is left, and leaves altogether when that is too small
+  // to read as the orb.
+  const consenting =
+    !active &&
+    ((askingConsent && !call.consent) || call.microphone === 'rationale');
   const fitted = stage ? Math.min(stage.width, stage.height, 380) : 0;
   const orbSize = consenting && fitted < 64 ? 0 : fitted;
   const captionsButton = (
@@ -340,6 +381,7 @@ export default function TalkScreen({
               accessibilityLanguage="en-AU"
               testID="talk-record-status"
               accessibilityLabel={stateText}
+              accessibilityLiveRegion="polite"
               style={styles.recordStatus}
             >
               <VoiceOrb
@@ -404,19 +446,17 @@ export default function TalkScreen({
                 accessible
                 accessibilityLanguage="en-AU"
                 accessibilityLabel={stateText}
+                accessibilityLiveRegion="polite"
                 accessibilityHint={
                   screenReader && active
-                    ? 'Headphones keep VoiceOver speech out of the microphone.'
+                    ? `Headphones keep ${android ? 'TalkBack' : 'VoiceOver'} speech out of the microphone.`
                     : undefined
                 }
                 testID="talk-status"
                 onLayout={() => {
                   if (!focusedEntry.current && screenReader) {
                     focusedEntry.current = true;
-                    const node = statusNode.current
-                      ? findNodeHandle(statusNode.current)
-                      : null;
-                    if (node) AccessibilityInfo.setAccessibilityFocus(node);
+                    focusOn(statusNode.current);
                   }
                 }}
                 style={{ width: orbSize, height: orbSize }}
@@ -525,6 +565,12 @@ export default function TalkScreen({
                   void call.agreeAndStart().then(() => setAskingConsent(false))
                 }
                 onDecline={() => setAskingConsent(false)}
+              />
+            ) : call.microphone === 'rationale' ? (
+              <MicrophoneRationale
+                busy={call.busy}
+                onContinue={() => void call.allowMicrophone()}
+                onDecline={call.declineMicrophone}
               />
             ) : (
               <>

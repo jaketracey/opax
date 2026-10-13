@@ -15,6 +15,8 @@ import {
   textStyles,
 } from '../design/tokens';
 import { isPad } from '../design/adaptive';
+import { showMenu, type MenuAction } from '../design/menu';
+import { voiceLinked } from '../voice/linked';
 
 /**
  * Header styling shared by every stack: Merriweather titles at the size the
@@ -70,11 +72,12 @@ export function useStackChrome() {
 
 /**
  * Talk and Account and about: on every root screen's navigation bar. Each
- * opens a full-height sheet (src/app/talk.tsx, src/app/account.tsx).
+ * opens a full-height sheet (src/app/talk.tsx, src/app/account.tsx). Talk
+ * needs the native voice module (src/voice/linked.ts).
  */
 export function rootHeaderItems(): NativeStackHeaderItem[] {
   return [
-    ...(Platform.OS === 'android'
+    ...(!voiceLinked
       ? []
       : [
           {
@@ -97,54 +100,80 @@ export function rootHeaderItems(): NativeStackHeaderItem[] {
   ];
 }
 
-/** The item API is iOS-only. Android gets labelled, scalable touch targets. */
+type HeaderMenu = Extract<NativeStackHeaderItem, { type: 'menu' }>;
+
+/** A bar menu's rows as an Android sheet; a submenu opens its own sheet. */
+function menuActions(items: HeaderMenu['menu']['items']): MenuAction[] {
+  return items
+    .filter((item) => !('hidden' in item && item.hidden))
+    .map((item) => ({
+      title: item.label,
+      onPress:
+        item.type === 'action'
+          ? item.onPress
+          : () => showMenu(item.label, menuActions(item.items)),
+    }));
+}
+
+/**
+ * Android's bar for a screen's items: a button's word, and a menu's word
+ * that opens its rows as a bottom sheet. Labelled, scalable touch targets.
+ */
+export function androidHeaderBar(items: NativeStackHeaderItem[]) {
+  return createElement(
+    View,
+    { style: { flexDirection: 'row' } },
+    ...items.map((item, index) =>
+      item.type === 'button' || item.type === 'menu'
+        ? createElement(
+            Pressable,
+            {
+              key: index,
+              testID: `header-${item.label.toLowerCase().replaceAll(' ', '-')}`,
+              accessibilityRole: 'button',
+              accessibilityLabel: item.accessibilityLabel ?? item.label,
+              onPress:
+                item.type === 'menu'
+                  ? () =>
+                      showMenu(
+                        item.menu.title ?? item.label,
+                        menuActions(item.menu.items),
+                      )
+                  : item.onPress,
+              hitSlop: 4,
+              style: {
+                minWidth: 48,
+                minHeight: 48,
+                justifyContent: 'center',
+                paddingHorizontal: 8,
+              },
+            },
+            createElement(
+              Text,
+              {
+                maxFontSizeMultiplier: 1.5,
+                style: {
+                  color: chrome.tint,
+                  fontFamily: fonts.sansSemiBold,
+                  fontSize: androidBar.action,
+                },
+              },
+              item.label,
+            ),
+          )
+        : null,
+    ),
+  );
+}
+
+/** The item API is iOS-only; Android draws the same items (androidHeaderBar). */
 export function headerItems(
   items: (() => NativeStackHeaderItem[]) | undefined,
 ) {
   return {
     unstable_headerRightItems: items,
     ...(Platform.OS === 'android'
-      ? {
-          headerRight: () =>
-            createElement(
-              View,
-              { style: { flexDirection: 'row' } },
-              ...(items?.() ?? []).map((item, index) =>
-                item.type === 'button'
-                  ? createElement(
-                      Pressable,
-                      {
-                        key: index,
-                        testID: `header-${item.label.toLowerCase().replaceAll(' ', '-')}`,
-                        accessibilityRole: 'button',
-                        accessibilityLabel:
-                          item.accessibilityLabel ?? item.label,
-                        onPress: item.onPress,
-                        hitSlop: 4,
-                        style: {
-                          minWidth: 48,
-                          minHeight: 48,
-                          justifyContent: 'center',
-                          paddingHorizontal: 8,
-                        },
-                      },
-                      createElement(
-                        Text,
-                        {
-                          maxFontSizeMultiplier: 1.5,
-                          style: {
-                            color: chrome.tint,
-                            fontFamily: fonts.sansSemiBold,
-                            fontSize: androidBar.action,
-                          },
-                        },
-                        item.label,
-                      ),
-                    )
-                  : null,
-              ),
-            ),
-        }
+      ? { headerRight: () => androidHeaderBar(items?.() ?? []) }
       : {}),
   };
 }
