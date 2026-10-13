@@ -1,9 +1,11 @@
 import { unsupportedQuotes, stripListingBoilerplate } from './ask-evidence'
+import {resolvedParticipants} from '../public/speech-attribution.js'
 
-export const SEARCH_SUMMARY_VERSION = 'search-summary-5'
+export const SEARCH_SUMMARY_VERSION = 'search-summary-6-mixed-speakers'
 export interface SummarySource {
   id: string; title: string; href: string; snippet: string; kind: string
   speaker?: string; party?: string; state?: string; date?: string
+  speaker_type?: string; debate?: string; participants?: {name: string; person_id: string; role?: string}[]
 }
 /** How much a caller lets through: the search overview keeps three short
  * points; a named politician's position answer may run to four longer ones. */
@@ -48,7 +50,9 @@ export function summarySources(rows: Record<string, unknown>[], snippetLimit = 1
     seen.add(href)
     sources.push({ id: `s${sources.length + 1}`, href, snippet,
       title: clean(row.title, 220) || clean(row.speaker, 100) || 'Source record', kind: clean(row.kind, 40),
-      ...Object.fromEntries(['speaker','party','state','date','chamber','source','url','source_url'].flatMap(key => {
+      ...(row.speaker_type === 'multi_speaker' ? {participants: resolvedParticipants(row.participants)} : {}),
+      ...Object.fromEntries(['speaker','party','state','date','chamber','source','url','source_url','speaker_type','debate'].flatMap(key => {
+        if (row.speaker_type === 'multi_speaker' && ['speaker','party'].includes(key)) return []
         const value = clean(row[key], ['url','source_url'].includes(key) ? 2000 : 120)
         return value ? [[key, value]] : []
       })),

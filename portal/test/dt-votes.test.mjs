@@ -4,7 +4,6 @@ import {tablePrivacyIndex} from './datatable-privacy.mjs';
 const index = await tablePrivacyIndex();
 import {readFileSync} from 'node:fs';
 import {divisionColumns, voteColumns, divisionRows, votingRows, divisionTableConfig, voteTableConfig, voteTableHTML, voteTablePage} from '../public/vote-tables.js';
-import {toCSV} from '../public/datatable.js';
 import {guardTableURL} from '../public/vote-tables.js';
 import {build} from 'esbuild';
 const bundled=await build({entryPoints:[new URL('../src/hubs.ts',import.meta.url).pathname],bundle:true,write:false,platform:'node',format:'esm'});
@@ -18,7 +17,7 @@ test('division and voting configs use scoped server sources and the frozen colum
   assert.deepEqual(divisionColumns.map(c=>[c.key,c.type]), [['title','text'],['date','date'],['chamber','category'],['outcome','category'],['ayes','count'],['noes','count']]);
   assert.deepEqual(voteColumns.map(c=>c.key), ['title','date','vote','party_position']);
   for (const config of [divisions,votes]) {
-    assert.equal(config.privacy,'donors');
+    assert.equal(config.privacy,'echo');
     assert.equal(typeof config.privacyCheck,'function');
     assert.equal(typeof config.rowPrivacyCheck,'function');
     assert.equal(config.rows,undefined);
@@ -28,27 +27,32 @@ test('division and voting configs use scoped server sources and the frozen colum
   }
 });
 
-test('both rollouts register the shared index for rows, secondary facets, CSV and query echoes', () => {
+test('both rollouts check the reader\'s query echoes, not the public-record rows', () => {
+  // Vote and division rows come from exports the build's donor sweep already
+  // sanitised; only text a reader supplies (search, filters, URL state) is checked.
   const configs = [divisionTableConfig({},'Divisions','bill',index.safe),voteTableConfig('fixture','Voting record',index.safe)];
   for (const config of configs) {
+    const checked = [];
+    const counting = {...config,privacyCheck:text=>{checked.push(text);return index.safe(text);}};
     const facet = config.urlKey === 'dv' ? 'outcome' : 'party_position';
     const publicRow = {title:'Recorded division',date:'2026-08-19',[facet]:'Recorded',href:'/doc/division-fixture'};
+    const rows = Array.from({length:40},(_,i)=>({...publicRow,title:`Recorded division ${i}`}));
+    const page = voteTablePage(rows,counting);
+    assert.equal(page.total,40);
+    voteTableHTML(counting,page);
+    assert.deepEqual(checked.filter(text=>text.includes('Recorded division') || text.includes('/doc/')),[],'public-record rows are not run through the donor matcher');
+    assert.ok(checked.length<=12,'only the short table state is checked');
     for (const value of index.values) {
-      const rows = [publicRow,{...publicRow,title:value},{...publicRow,[facet]:value},{...publicRow,href:'/doc/'+encodeURIComponent(value)}];
-      // Raw identifying fields, including URLs, use the same shared index.
-      const page = voteTablePage(rows,config);
-      assert.equal(page.total,1,'Withheld rows must not enter the query engine');
-      assert.ok(index.safe(JSON.stringify(page)),'Rows and facets must be public');
-      assert.ok(index.safe(toCSV(rows,config)),'CSV must exclude withheld rows');
       const rejected = voteTablePage(rows,config,{q:value});
       assert.equal(rejected.total,0,'Rejected searches must return no rows');
       const rejectedFacet = voteTablePage(rows,config,{filters:{[facet]:[value]}});
       assert.equal(rejectedFacet.total,0,'Rejected facets must return no rows');
       assert.ok(index.safe(voteTableHTML(config,rejected)),'SSR must not reflect rejected query text');
-      const supplied = {...page,facets:{[facet]:[{value,count:1}]}};
-      assert.ok(index.safe(voteTableHTML(config,supplied)),'Secondary server facets must be checked independently');
-      const contaminated = {...page,total:2,rows:[{...publicRow,[facet]:value},publicRow]};
-      assert.ok(index.safe(voteTableHTML(config,contaminated)),'Status decoration must use the core-filtered row, not the original row position');
+      const url = new URL('https://local.test/record');url.searchParams.set(config.urlKey+'.q',value);
+      const guarded = guardTableURL(config,url);
+      assert.equal(guarded.rejected,true,'a crafted share link is rejected');
+      assert.ok(index.safe(guarded.url.href),'the rejected text leaves the URL');
+      assert.ok(index.safe(voteTableHTML(config,voteTablePage(rows,config,guarded.query))),'SSR never echoes the crafted text');
     }
   }
 });
@@ -91,17 +95,22 @@ test('the shared recipient policy rejects every derived name, alias and registra
   }
 });
 
-test('sitting structured data uses the same filtered and paged division rows as SSR', () => {
+test('sitting structured data uses the same paged division rows as SSR, and never echoes a rejected query', () => {
   const publicDivision={key:'fixture-public',slug:'fixture-public',title:'Recorded division',date:'2026-09-14',house:'senate',ayes:1,noes:0};
   const week={start:'2026-09-14',end:'2026-09-17',houses:['senate'],bills:[],divisions:[],lastmod:'2026-09-17'};
   const data={updated:'2026-09-17',snapshotDate:'2026-09-17',latestFederalDivision:'2026-09-17',sources:[{label:'Register',url:'https://www.aph.gov.au/'}],weeks:[week],pages:[]};
+  const second={...publicDivision,key:'fixture-second',slug:'fixture-second',title:'Second recorded division'};
+  const result=renderSittingWeek(data,{...week,divisions:[publicDivision,second]},[],new Map(),'2026-10-01',{},{},index.safe);
+  const list=result.jsonLd['@graph'][1];
+  assert.equal(list.numberOfItems,2,'structured data and visible rows agree');
+  assert.deepEqual(list.itemListElement.map(i=>i.url).sort(),['https://opax.com.au/doc/division-fixture-public','https://opax.com.au/doc/division-fixture-second']);
+  const config=divisionTableConfig({},'Divisions','sitting',index.safe);
   for (const value of index.values) {
-    const result=renderSittingWeek(data,{...week,divisions:[publicDivision,{...publicDivision,key:'fixture-private',slug:'fixture-private',title:value}]},[],new Map(),'2026-10-01',{}, {},index.safe);
-    assert.ok(index.safe(result.html),'SSR contains no withheld identity');
-    assert.ok(index.safe(JSON.stringify(result.jsonLd)),'structured data contains no withheld identity');
-    const list=result.jsonLd['@graph'][1];
-    assert.equal(list.numberOfItems,1,'structured data and visible rows agree');
-    assert.equal(list.itemListElement[0].url,'https://opax.com.au/doc/division-fixture-public');
+    const url=new URL('https://local.test/sitting');url.searchParams.set('dv.q',value);
+    const {query}=guardTableURL(config,url);
+    const rejected=renderSittingWeek(data,{...week,divisions:[publicDivision,second]},[],new Map(),'2026-10-01',{},query,index.safe);
+    assert.ok(index.safe(rejected.html),'SSR never echoes the crafted query');
+    assert.ok(index.safe(JSON.stringify(rejected.jsonLd)),'structured data never echoes the crafted query');
   }
 });
 

@@ -1,0 +1,1339 @@
+{
+ "source": "Victorian Electoral Commission",
+ "index": "https://www.vec.vic.gov.au/results/state-election-results/2022-state-election-results",
+ "by_elections": "https://www.vec.vic.gov.au/results/state-election-results/state-by-elections-timeline",
+ "licence": "CC BY 4.0 (https://vec.vic.gov.au/legal)",
+ "fetched": "2026-10-13",
+ "districts": {
+  "Albert Park": {
+   "general": {
+    "date": "2022-11-26",
+    "url": "https://www.vec.vic.gov.au/results/state-election-results/2022-state-election-results/results-by-district/albert-park-district-results",
+    "elected": "Nina Taylor",
+    "party": "Labor",
+    "share": 61.15,
+    "against": "Liberal",
+    "against_share": 38.85,
+    "margin": 11.15,
+    "basis": "distribution"
+   }
+  },
+  "Ashwood": {
+   "general": {
+    "date": "2022-11-26",
+    "url": "https://www.vec.vic.gov.au/results/state-election-results/2022-state-election-results/results-by-district/ashwood-district-results",
+    "elected": "Matt Fregon",
+    "party": "Labor",
+    "share": 56.15,
+    "against": "Liberal",
+    "against_share": 43.85,
+    "margin": 6.15,
+    "basis": "distribution"
+   }
+  },
+  "Bass": {
+   "general": {
+    "date": "2022-11-26",
+    "url": "https://www.vec.vic.gov.au/results/state-election-results/2022-state-election-results/results-by-district/bass-district-results",
+    "elected": "Jordan Crugnale",
+    "party": "Labor",
+    "share": 50.24,
+    "against": "Liberal",
+    "against_share": 49.76,
+    "margin": 0.24,
+    "basis": "distribution"
+   }
+  },
+  "Bayswater": {
+   "general": {
+    "date": "2022-11-26",
+    "url": "https://www.vec.vic.gov.au/results/state-election-results/2022-state-election-results/results-by-district/bayswater-district-results",
+    "elected": "Jackson Taylor",
+    "party": "Labor",
+    "share": 54.23,
+    "against": "Liberal",
+    "against_share": 45.77,
+    "margin": 4.23,
+    "basis": "distribution"
+   }
+  },
+  "Bellarine": {
+   "general": {
+    "date": "2022-11-26",
+    "url": "https://www.vec.vic.gov.au/results/state-election-results/2022-state-election-results/results-by-district/bellarine-district-results",
+    "elected": "Alison Marchant",
+    "party": "Labor",
+    "share": 58.46,
+    "against": "Liberal",
+    "against_share": 41.54,
+    "margin": 8.46,
+    "basis": "distribution"
+   }
+  },
+  "Benambra": {
+   "general": {
+    "date": "2022-11-26",
+    "url": "https://www.vec.vic.gov.au/results/state-election-results/2022-state-election-results/results-by-district/benambra-district-results",
+    "elected": "Bill Tilley",
+    "party": "Liberal",
+    "share": 50.94,
+    "against": "Independent",
+    "against_share": 49.06,
+    "margin": 0.94,
+    "basis": "distribution"
+   }
+  },
+  "Bendigo East": {
+   "general": {
+    "date": "2022-11-26",
+    "url": "https://www.vec.vic.gov.au/results/state-election-results/2022-state-election-results/results-by-district/bendigo-east-district-results",
+    "elected": "Jacinta Allan",
+    "party": "Labor",
+    "share": 60.91,
+    "against": "Liberal",
+    "against_share": 39.09,
+    "margin": 10.91,
+    "basis": "two-candidate count",
+    "two_candidate_url": "https://www.vec.vic.gov.au/results/state-election-results/2022-state-election-results/results-by-district/bendigo-east-district-results/bendigo-east-2cp-results-by-voting-centre"
+   }
+  },
+  "Bendigo West": {
+   "general": {
+    "date": "2022-11-26",
+    "url": "https://www.vec.vic.gov.au/results/state-election-results/2022-state-election-results/results-by-district/bendigo-west-district-results",
+    "elected": "Maree Edwards",
+    "party": "Labor",
+    "share": 64.35,
+    "against": "Liberal",
+    "against_share": 35.65,
+    "margin": 14.35,
+    "basis": "two-candidate count",
+    "two_candidate_url": "https://www.vec.vic.gov.au/results/state-election-results/2022-state-election-results/results-by-district/bendigo-west-district-results/bendigo-west-2cp-results-by-voting-centre"
+   }
+  },
+  "Bentleigh": {
+   "general": {
+    "date": "2022-11-26",
+    "url": "https://www.vec.vic.gov.au/results/state-election-results/2022-state-election-results/results-by-district/bentleigh-district-results",
+    "elected": "Nick Staikos",
+    "party": "Labor",
+    "share": 58.04,
+    "against": "Liberal",
+    "against_share": 41.96,
+    "margin": 8.04,
+    "basis": "distribution"
+   }
+  },
+  "Berwick": {
+   "general": {
+    "date": "2022-11-26",
+    "url": "https://www.vec.vic.gov.au/results/state-election-results/2022-state-election-results/results-by-district/berwick-district-results",
+    "elected": "Brad Battin",
+    "party": "Liberal",
+    "share": 54.71,
+    "against": "Labor",
+    "against_share": 45.29,
+    "margin": 4.71,
+    "basis": "two-candidate count",
+    "two_candidate_url": "https://www.vec.vic.gov.au/results/state-election-results/2022-state-election-results/results-by-district/berwick-district-results/berwick-2cp-results-by-voting-centre"
+   }
+  },
+  "Box Hill": {
+   "general": {
+    "date": "2022-11-26",
+    "url": "https://www.vec.vic.gov.au/results/state-election-results/2022-state-election-results/results-by-district/box-hill-district-results",
+    "elected": "Paul Hamer",
+    "party": "Labor",
+    "share": 57.23,
+    "against": "Liberal",
+    "against_share": 42.77,
+    "margin": 7.23,
+    "basis": "distribution"
+   }
+  },
+  "Brighton": {
+   "general": {
+    "date": "2022-11-26",
+    "url": "https://www.vec.vic.gov.au/results/state-election-results/2022-state-election-results/results-by-district/brighton-district-results",
+    "elected": "James Newbury",
+    "party": "Liberal",
+    "share": 54.21,
+    "against": "Labor",
+    "against_share": 45.79,
+    "margin": 4.21,
+    "basis": "two-candidate count",
+    "two_candidate_url": "https://www.vec.vic.gov.au/results/state-election-results/2022-state-election-results/results-by-district/brighton-district-results/brighton-2cp-results-by-voting-centre"
+   }
+  },
+  "Broadmeadows": {
+   "general": {
+    "date": "2022-11-26",
+    "url": "https://www.vec.vic.gov.au/results/state-election-results/2022-state-election-results/results-by-district/broadmeadows-district-results",
+    "elected": "Kathleen Matthews-Ward",
+    "party": "Labor",
+    "share": 65.45,
+    "against": "Liberal",
+    "against_share": 34.55,
+    "margin": 15.45,
+    "basis": "two-candidate count",
+    "two_candidate_url": "https://www.vec.vic.gov.au/results/state-election-results/2022-state-election-results/results-by-district/broadmeadows-district-results/broadmeadows-2cp-results-by-voting-centre"
+   }
+  },
+  "Brunswick": {
+   "general": {
+    "date": "2022-11-26",
+    "url": "https://www.vec.vic.gov.au/results/state-election-results/2022-state-election-results/results-by-district/brunswick-district-results",
+    "elected": "Tim Read",
+    "party": "Greens",
+    "share": 63.46,
+    "against": "Labor",
+    "against_share": 36.54,
+    "margin": 13.46,
+    "basis": "two-candidate count",
+    "two_candidate_url": "https://www.vec.vic.gov.au/results/state-election-results/2022-state-election-results/results-by-district/brunswick-district-results/brunswick-2cp-results-by-voting-centre"
+   }
+  },
+  "Bulleen": {
+   "general": {
+    "date": "2022-11-26",
+    "url": "https://www.vec.vic.gov.au/results/state-election-results/2022-state-election-results/results-by-district/bulleen-district-results",
+    "elected": "Matthew Guy",
+    "party": "Liberal",
+    "share": 55.94,
+    "against": "Labor",
+    "against_share": 44.06,
+    "margin": 5.94,
+    "basis": "two-candidate count",
+    "two_candidate_url": "https://www.vec.vic.gov.au/results/state-election-results/2022-state-election-results/results-by-district/bulleen-district-results/bulleen-2cp-results-by-voting-centre"
+   }
+  },
+  "Bundoora": {
+   "general": {
+    "date": "2022-11-26",
+    "url": "https://www.vec.vic.gov.au/results/state-election-results/2022-state-election-results/results-by-district/bundoora-district-results",
+    "elected": "Colin Brooks",
+    "party": "Labor",
+    "share": 62.74,
+    "against": "Liberal",
+    "against_share": 37.26,
+    "margin": 12.74,
+    "basis": "two-candidate count",
+    "two_candidate_url": "https://www.vec.vic.gov.au/results/state-election-results/2022-state-election-results/results-by-district/bundoora-district-results/bundoora-2cp-results-by-voting-centre"
+   }
+  },
+  "Carrum": {
+   "general": {
+    "date": "2022-11-26",
+    "url": "https://www.vec.vic.gov.au/results/state-election-results/2022-state-election-results/results-by-district/carrum-district-results",
+    "elected": "Sonya Kilkenny",
+    "party": "Labor",
+    "share": 59.94,
+    "against": "Liberal",
+    "against_share": 40.06,
+    "margin": 9.94,
+    "basis": "two-candidate count",
+    "two_candidate_url": "https://www.vec.vic.gov.au/results/state-election-results/2022-state-election-results/results-by-district/carrum-district-results/carrum-2cp-results-by-voting-centre"
+   }
+  },
+  "Caulfield": {
+   "general": {
+    "date": "2022-11-26",
+    "url": "https://www.vec.vic.gov.au/results/state-election-results/2022-state-election-results/results-by-district/caulfield-district-results",
+    "elected": "David Southwick",
+    "party": "Liberal",
+    "share": 52.07,
+    "against": "Labor",
+    "against_share": 47.93,
+    "margin": 2.07,
+    "basis": "distribution"
+   }
+  },
+  "Clarinda": {
+   "general": {
+    "date": "2022-11-26",
+    "url": "https://www.vec.vic.gov.au/results/state-election-results/2022-state-election-results/results-by-district/clarinda-district-results",
+    "elected": "Meng Heang Tak",
+    "party": "Labor",
+    "share": 60.37,
+    "against": "Liberal",
+    "against_share": 39.63,
+    "margin": 10.37,
+    "basis": "two-candidate count",
+    "two_candidate_url": "https://www.vec.vic.gov.au/results/state-election-results/2022-state-election-results/results-by-district/clarinda-district-results/clarinda-2cp-results-by-voting-centre"
+   }
+  },
+  "Cranbourne": {
+   "general": {
+    "date": "2022-11-26",
+    "url": "https://www.vec.vic.gov.au/results/state-election-results/2022-state-election-results/results-by-district/cranbourne-district-results",
+    "elected": "Pauline Richards",
+    "party": "Labor",
+    "share": 59.0,
+    "against": "Liberal",
+    "against_share": 41.0,
+    "margin": 9.0,
+    "basis": "two-candidate count",
+    "two_candidate_url": "https://www.vec.vic.gov.au/results/state-election-results/2022-state-election-results/results-by-district/cranbourne-district-results/cranbourne-2cp-results-by-voting-centre"
+   }
+  },
+  "Croydon": {
+   "general": {
+    "date": "2022-11-26",
+    "url": "https://www.vec.vic.gov.au/results/state-election-results/2022-state-election-results/results-by-district/croydon-district-results",
+    "elected": "David Hodgett",
+    "party": "Liberal",
+    "share": 51.37,
+    "against": "Labor",
+    "against_share": 48.63,
+    "margin": 1.37,
+    "basis": "distribution"
+   }
+  },
+  "Dandenong": {
+   "general": {
+    "date": "2022-11-26",
+    "url": "https://www.vec.vic.gov.au/results/state-election-results/2022-state-election-results/results-by-district/dandenong-district-results",
+    "elected": "Gabrielle Williams",
+    "party": "Labor",
+    "share": 69.11,
+    "against": "Liberal",
+    "against_share": 30.89,
+    "margin": 19.11,
+    "basis": "two-candidate count"
+   }
+  },
+  "Eildon": {
+   "general": {
+    "date": "2022-11-26",
+    "url": "https://www.vec.vic.gov.au/results/state-election-results/2022-state-election-results/results-by-district/eildon-district-results",
+    "elected": "Cindy Mcleish",
+    "party": "Liberal",
+    "share": 57.08,
+    "against": "Labor",
+    "against_share": 42.92,
+    "margin": 7.08,
+    "basis": "two-candidate count",
+    "two_candidate_url": "https://www.vec.vic.gov.au/results/state-election-results/2022-state-election-results/results-by-district/eildon-district-results/eildon-2cp-results-by-voting-centre"
+   }
+  },
+  "Eltham": {
+   "general": {
+    "date": "2022-11-26",
+    "url": "https://www.vec.vic.gov.au/results/state-election-results/2022-state-election-results/results-by-district/eltham-district-results",
+    "elected": "Vicki Ward",
+    "party": "Labor",
+    "share": 59.0,
+    "against": "Liberal",
+    "against_share": 41.0,
+    "margin": 9.0,
+    "basis": "distribution"
+   }
+  },
+  "Essendon": {
+   "general": {
+    "date": "2022-11-26",
+    "url": "https://www.vec.vic.gov.au/results/state-election-results/2022-state-election-results/results-by-district/essendon-district-results",
+    "elected": "Danny Pearson",
+    "party": "Labor",
+    "share": 62.45,
+    "against": "Liberal",
+    "against_share": 37.55,
+    "margin": 12.45,
+    "basis": "distribution"
+   }
+  },
+  "Eureka": {
+   "general": {
+    "date": "2022-11-26",
+    "url": "https://www.vec.vic.gov.au/results/state-election-results/2022-state-election-results/results-by-district/eureka-district-results",
+    "elected": "Michaela Settle",
+    "party": "Labor",
+    "share": 57.17,
+    "against": "Liberal",
+    "against_share": 42.83,
+    "margin": 7.17,
+    "basis": "distribution"
+   }
+  },
+  "Euroa": {
+   "general": {
+    "date": "2022-11-26",
+    "url": "https://www.vec.vic.gov.au/results/state-election-results/2022-state-election-results/results-by-district/euroa-district-results",
+    "elected": "Annabelle Cleeland",
+    "party": "Nationals",
+    "share": 59.93,
+    "against": "Labor",
+    "against_share": 40.07,
+    "margin": 9.93,
+    "basis": "distribution"
+   }
+  },
+  "Evelyn": {
+   "general": {
+    "date": "2022-11-26",
+    "url": "https://www.vec.vic.gov.au/results/state-election-results/2022-state-election-results/results-by-district/evelyn-district-results",
+    "elected": "Bridget Vallence",
+    "party": "Liberal",
+    "share": 55.21,
+    "against": "Labor",
+    "against_share": 44.79,
+    "margin": 5.21,
+    "basis": "two-candidate count",
+    "two_candidate_url": "https://www.vec.vic.gov.au/results/state-election-results/2022-state-election-results/results-by-district/evelyn-district-results/evelyn-2cp-results-by-voting-centre"
+   }
+  },
+  "Footscray": {
+   "general": {
+    "date": "2022-11-26",
+    "url": "https://www.vec.vic.gov.au/results/state-election-results/2022-state-election-results/results-by-district/footscray-district-results",
+    "elected": "Katie Hall",
+    "party": "Labor",
+    "share": 54.24,
+    "against": "Greens",
+    "against_share": 45.76,
+    "margin": 4.24,
+    "basis": "distribution"
+   }
+  },
+  "Frankston": {
+   "general": {
+    "date": "2022-11-26",
+    "url": "https://www.vec.vic.gov.au/results/state-election-results/2022-state-election-results/results-by-district/frankston-district-results",
+    "elected": "Paul Edbrooke",
+    "party": "Labor",
+    "share": 58.66,
+    "against": "Liberal",
+    "against_share": 41.34,
+    "margin": 8.66,
+    "basis": "distribution"
+   }
+  },
+  "Geelong": {
+   "general": {
+    "date": "2022-11-26",
+    "url": "https://www.vec.vic.gov.au/results/state-election-results/2022-state-election-results/results-by-district/geelong-district-results",
+    "elected": "Christine Couzens",
+    "party": "Labor",
+    "share": 64.71,
+    "against": "Liberal",
+    "against_share": 35.29,
+    "margin": 14.71,
+    "basis": "distribution"
+   }
+  },
+  "Gippsland East": {
+   "general": {
+    "date": "2022-11-26",
+    "url": "https://www.vec.vic.gov.au/results/state-election-results/2022-state-election-results/results-by-district/gippsland-east-district-results",
+    "elected": "Tim Bull",
+    "party": "Nationals",
+    "share": 73.92,
+    "against": "Labor",
+    "against_share": 26.08,
+    "margin": 23.92,
+    "basis": "two-candidate count"
+   }
+  },
+  "Gippsland South": {
+   "general": {
+    "date": "2022-11-26",
+    "url": "https://www.vec.vic.gov.au/results/state-election-results/2022-state-election-results/results-by-district/gippsland-south-district-results",
+    "elected": "Danny O'Brien",
+    "party": "Nationals",
+    "share": 65.25,
+    "against": "Labor",
+    "against_share": 34.75,
+    "margin": 15.25,
+    "basis": "two-candidate count"
+   }
+  },
+  "Glen Waverley": {
+   "general": {
+    "date": "2022-11-26",
+    "url": "https://www.vec.vic.gov.au/results/state-election-results/2022-state-election-results/results-by-district/glen-waverley-district-results",
+    "elected": "John Mullahy",
+    "party": "Labor",
+    "share": 53.3,
+    "against": "Liberal",
+    "against_share": 46.7,
+    "margin": 3.3,
+    "basis": "distribution"
+   }
+  },
+  "Greenvale": {
+   "general": {
+    "date": "2022-11-26",
+    "url": "https://www.vec.vic.gov.au/results/state-election-results/2022-state-election-results/results-by-district/greenvale-district-results",
+    "elected": "Iwan Walters",
+    "party": "Labor",
+    "share": 56.92,
+    "against": "Liberal",
+    "against_share": 43.08,
+    "margin": 6.92,
+    "basis": "two-candidate count",
+    "two_candidate_url": "https://www.vec.vic.gov.au/results/state-election-results/2022-state-election-results/results-by-district/greenvale-district-results/greenvale-2cp-results-by-voting-centre"
+   }
+  },
+  "Hastings": {
+   "general": {
+    "date": "2022-11-26",
+    "url": "https://www.vec.vic.gov.au/results/state-election-results/2022-state-election-results/results-by-district/hastings-district-results",
+    "elected": "Paul Mercurio",
+    "party": "Labor",
+    "share": 51.35,
+    "against": "Liberal",
+    "against_share": 48.65,
+    "margin": 1.35,
+    "basis": "distribution"
+   }
+  },
+  "Hawthorn": {
+   "general": {
+    "date": "2022-11-26",
+    "url": "https://www.vec.vic.gov.au/results/state-election-results/2022-state-election-results/results-by-district/hawthorn-district-results",
+    "elected": "John Pesutto",
+    "party": "Liberal",
+    "share": 51.74,
+    "against": "Labor",
+    "against_share": 48.26,
+    "margin": 1.74,
+    "basis": "distribution"
+   }
+  },
+  "Ivanhoe": {
+   "general": {
+    "date": "2022-11-26",
+    "url": "https://www.vec.vic.gov.au/results/state-election-results/2022-state-election-results/results-by-district/ivanhoe-district-results",
+    "elected": "Anthony Carbines",
+    "party": "Labor",
+    "share": 62.75,
+    "against": "Liberal",
+    "against_share": 37.25,
+    "margin": 12.75,
+    "basis": "distribution"
+   }
+  },
+  "Kalkallo": {
+   "general": {
+    "date": "2022-11-26",
+    "url": "https://www.vec.vic.gov.au/results/state-election-results/2022-state-election-results/results-by-district/kalkallo-district-results",
+    "elected": "Ros Spence",
+    "party": "Labor",
+    "share": 66.43,
+    "against": "Liberal",
+    "against_share": 33.57,
+    "margin": 16.43,
+    "basis": "two-candidate count"
+   }
+  },
+  "Kew": {
+   "general": {
+    "date": "2022-11-26",
+    "url": "https://www.vec.vic.gov.au/results/state-election-results/2022-state-election-results/results-by-district/kew-district-results",
+    "elected": "Jess Wilson",
+    "party": "Liberal",
+    "share": 53.98,
+    "against": "Labor",
+    "against_share": 46.02,
+    "margin": 3.98,
+    "basis": "distribution"
+   }
+  },
+  "Kororoit": {
+   "general": {
+    "date": "2022-11-26",
+    "url": "https://www.vec.vic.gov.au/results/state-election-results/2022-state-election-results/results-by-district/kororoit-district-results",
+    "elected": "Luba Grigorovitch",
+    "party": "Labor",
+    "share": 64.25,
+    "against": "Liberal",
+    "against_share": 35.75,
+    "margin": 14.25,
+    "basis": "two-candidate count",
+    "two_candidate_url": "https://www.vec.vic.gov.au/results/state-election-results/2022-state-election-results/results-by-district/kororoit-district-results/kororoit-2cp-results-by-voting-centre"
+   }
+  },
+  "Lara": {
+   "general": {
+    "date": "2022-11-26",
+    "url": "https://www.vec.vic.gov.au/results/state-election-results/2022-state-election-results/results-by-district/lara-district-results",
+    "elected": "Ella George",
+    "party": "Labor",
+    "share": 66.15,
+    "against": "Liberal",
+    "against_share": 33.85,
+    "margin": 16.15,
+    "basis": "two-candidate count",
+    "two_candidate_url": "https://www.vec.vic.gov.au/results/state-election-results/2022-state-election-results/results-by-district/lara-district-results/lara-2cp-results-by-voting-centre"
+   }
+  },
+  "Laverton": {
+   "general": {
+    "date": "2022-11-26",
+    "url": "https://www.vec.vic.gov.au/results/state-election-results/2022-state-election-results/results-by-district/laverton-district-results",
+    "elected": "Sarah Connolly",
+    "party": "Labor",
+    "share": 68.01,
+    "against": "Liberal",
+    "against_share": 31.99,
+    "margin": 18.01,
+    "basis": "two-candidate count",
+    "two_candidate_url": "https://www.vec.vic.gov.au/results/state-election-results/2022-state-election-results/results-by-district/laverton-district-results/laverton-2cp-results-by-voting-centre"
+   }
+  },
+  "Lowan": {
+   "general": {
+    "date": "2022-11-26",
+    "url": "https://www.vec.vic.gov.au/results/state-election-results/2022-state-election-results/results-by-district/lowan-district-results",
+    "elected": "Emma Kealy",
+    "party": "Nationals",
+    "share": 71.61,
+    "against": "Labor",
+    "against_share": 28.39,
+    "margin": 21.61,
+    "basis": "two-candidate count"
+   }
+  },
+  "Macedon": {
+   "general": {
+    "date": "2022-11-26",
+    "url": "https://www.vec.vic.gov.au/results/state-election-results/2022-state-election-results/results-by-district/macedon-district-results",
+    "elected": "Mary-Anne Thomas",
+    "party": "Labor",
+    "share": 59.54,
+    "against": "Liberal",
+    "against_share": 40.46,
+    "margin": 9.54,
+    "basis": "distribution"
+   }
+  },
+  "Malvern": {
+   "general": {
+    "date": "2022-11-26",
+    "url": "https://www.vec.vic.gov.au/results/state-election-results/2022-state-election-results/results-by-district/malvern-district-results",
+    "elected": "Michael O'Brien",
+    "party": "Liberal",
+    "share": 58.28,
+    "against": "Labor",
+    "against_share": 41.72,
+    "margin": 8.28,
+    "basis": "two-candidate count"
+   }
+  },
+  "Melbourne": {
+   "general": {
+    "date": "2022-11-26",
+    "url": "https://www.vec.vic.gov.au/results/state-election-results/2022-state-election-results/results-by-district/melbourne-district-results",
+    "elected": "Ellen Sandell",
+    "party": "Greens",
+    "share": 60.19,
+    "against": "Labor",
+    "against_share": 39.81,
+    "margin": 10.19,
+    "basis": "distribution"
+   }
+  },
+  "Melton": {
+   "general": {
+    "date": "2022-11-26",
+    "url": "https://www.vec.vic.gov.au/results/state-election-results/2022-state-election-results/results-by-district/melton-district-results",
+    "elected": "Steve Mcghie",
+    "party": "Labor",
+    "share": 54.59,
+    "against": "Liberal",
+    "against_share": 45.41,
+    "margin": 4.59,
+    "basis": "distribution"
+   }
+  },
+  "Mildura": {
+   "general": {
+    "date": "2022-11-26",
+    "url": "https://www.vec.vic.gov.au/results/state-election-results/2022-state-election-results/results-by-district/mildura-district-results",
+    "elected": "Jade Benham",
+    "party": "Nationals",
+    "share": 51.18,
+    "against": "Independent",
+    "against_share": 48.82,
+    "margin": 1.18,
+    "basis": "distribution"
+   }
+  },
+  "Mill Park": {
+   "general": {
+    "date": "2022-11-26",
+    "url": "https://www.vec.vic.gov.au/results/state-election-results/2022-state-election-results/results-by-district/mill-park-district-results",
+    "elected": "Lily D'Ambrosio",
+    "party": "Labor",
+    "share": 61.43,
+    "against": "Liberal",
+    "against_share": 38.57,
+    "margin": 11.43,
+    "basis": "two-candidate count",
+    "two_candidate_url": "https://www.vec.vic.gov.au/results/state-election-results/2022-state-election-results/results-by-district/mill-park-district-results/mill-park-2cp-results-by-voting-centre"
+   }
+  },
+  "Monbulk": {
+   "general": {
+    "date": "2022-11-26",
+    "url": "https://www.vec.vic.gov.au/results/state-election-results/2022-state-election-results/results-by-district/monbulk-district-results",
+    "elected": "Daniela De Martino",
+    "party": "Labor",
+    "share": 57.55,
+    "against": "Liberal",
+    "against_share": 42.45,
+    "margin": 7.55,
+    "basis": "distribution"
+   }
+  },
+  "Mordialloc": {
+   "general": {
+    "date": "2022-11-26",
+    "url": "https://www.vec.vic.gov.au/results/state-election-results/2022-state-election-results/results-by-district/mordialloc-district-results",
+    "elected": "Tim Richardson",
+    "party": "Labor",
+    "share": 58.19,
+    "against": "Liberal",
+    "against_share": 41.81,
+    "margin": 8.19,
+    "basis": "distribution"
+   }
+  },
+  "Mornington": {
+   "general": {
+    "date": "2022-11-26",
+    "url": "https://www.vec.vic.gov.au/results/state-election-results/2022-state-election-results/results-by-district/mornington-district-results",
+    "elected": "Chris Crewther",
+    "party": "Liberal",
+    "share": 50.7,
+    "against": "Independent",
+    "against_share": 49.3,
+    "margin": 0.7,
+    "basis": "distribution"
+   }
+  },
+  "Morwell": {
+   "general": {
+    "date": "2022-11-26",
+    "url": "https://www.vec.vic.gov.au/results/state-election-results/2022-state-election-results/results-by-district/morwell-district-results",
+    "elected": "Martin Cameron",
+    "party": "Nationals",
+    "share": 54.42,
+    "against": "Labor",
+    "against_share": 45.58,
+    "margin": 4.42,
+    "basis": "distribution"
+   }
+  },
+  "Mulgrave": {
+   "general": {
+    "date": "2022-11-26",
+    "url": "https://www.vec.vic.gov.au/results/state-election-results/2022-state-election-results/results-by-district/mulgrave-district-results",
+    "elected": "Daniel Andrews",
+    "party": "Labor",
+    "share": 60.2,
+    "against": "Liberal",
+    "against_share": 39.8,
+    "margin": 10.2,
+    "basis": "two-candidate count"
+   },
+   "since": {
+    "date": "2023-11-18",
+    "kind": "by-election",
+    "url": "https://www.vec.vic.gov.au/results/state-election-results/state-by-elections-timeline/mulgrave-district-by-election-results/results-by-district/mulgrave-district-by-election-results",
+    "elected": "Eden Foster",
+    "party": "Labor",
+    "share": 56.49,
+    "against": "Independent",
+    "against_share": 43.51,
+    "margin": 6.49,
+    "basis": "distribution"
+   }
+  },
+  "Murray Plains": {
+   "general": {
+    "date": "2022-11-26",
+    "url": "https://www.vec.vic.gov.au/results/state-election-results/2022-state-election-results/results-by-district/murray-plains-district-results",
+    "elected": "Peter Walsh",
+    "party": "Nationals",
+    "share": 72.89,
+    "against": "Labor",
+    "against_share": 27.11,
+    "margin": 22.89,
+    "basis": "two-candidate count"
+   }
+  },
+  "Narracan": {
+   "general": {
+    "date": "2023-01-28",
+    "kind": "supplementary",
+    "url": "https://www.vec.vic.gov.au/results/state-election-results/state-by-elections-timeline/narracan-district-supplementary-election-results",
+    "elected": "Wayne Farnham",
+    "party": "Liberal",
+    "share": 62.9,
+    "against": "Independent",
+    "against_share": 37.1,
+    "margin": 12.9,
+    "basis": "two-candidate count",
+    "two_candidate_url": "https://www.vec.vic.gov.au/results/state-election-results/state-by-elections-timeline/narracan-district-supplementary-election-results/2cp-results-by-voting-centre"
+   }
+  },
+  "Narre Warren North": {
+   "general": {
+    "date": "2022-11-26",
+    "url": "https://www.vec.vic.gov.au/results/state-election-results/2022-state-election-results/results-by-district/narre-warren-north-district-results",
+    "elected": "Belinda Wilson",
+    "party": "Labor",
+    "share": 59.16,
+    "against": "Liberal",
+    "against_share": 40.84,
+    "margin": 9.16,
+    "basis": "two-candidate count",
+    "two_candidate_url": "https://www.vec.vic.gov.au/results/state-election-results/2022-state-election-results/results-by-district/narre-warren-north-district-results/narre-warren-north-2cp-results-by-voting-centre"
+   }
+  },
+  "Narre Warren South": {
+   "general": {
+    "date": "2022-11-26",
+    "url": "https://www.vec.vic.gov.au/results/state-election-results/2022-state-election-results/results-by-district/narre-warren-south-district-results",
+    "elected": "Gary Maas",
+    "party": "Labor",
+    "share": 58.5,
+    "against": "Liberal",
+    "against_share": 41.5,
+    "margin": 8.5,
+    "basis": "two-candidate count",
+    "two_candidate_url": "https://www.vec.vic.gov.au/results/state-election-results/2022-state-election-results/results-by-district/narre-warren-south-district-results/narre-warren-south-2cp-results-by-voting-centre"
+   }
+  },
+  "Nepean": {
+   "general": {
+    "date": "2022-11-26",
+    "url": "https://www.vec.vic.gov.au/results/state-election-results/2022-state-election-results/results-by-district/nepean-district-results",
+    "elected": "Sam Groth",
+    "party": "Liberal",
+    "share": 56.68,
+    "against": "Labor",
+    "against_share": 43.32,
+    "margin": 6.68,
+    "basis": "two-candidate count",
+    "two_candidate_url": "https://www.vec.vic.gov.au/results/state-election-results/2022-state-election-results/results-by-district/nepean-district-results/nepean-2cp-results-by-voting-centre"
+   },
+   "since": {
+    "date": "2026-05-02",
+    "kind": "by-election",
+    "url": "https://www.vec.vic.gov.au/results/state-election-results/state-by-elections-timeline/nepean-by-election-results/results-by-district/nepean-district-results",
+    "elected": "Anthony Marsh",
+    "party": "Liberal",
+    "share": 63.24,
+    "against": "Independent",
+    "against_share": 36.76,
+    "margin": 13.24,
+    "basis": "distribution"
+   }
+  },
+  "Niddrie": {
+   "general": {
+    "date": "2022-11-26",
+    "url": "https://www.vec.vic.gov.au/results/state-election-results/2022-state-election-results/results-by-district/niddrie-district-results",
+    "elected": "Ben Carroll",
+    "party": "Labor",
+    "share": 56.69,
+    "against": "Liberal",
+    "against_share": 43.31,
+    "margin": 6.69,
+    "basis": "distribution"
+   }
+  },
+  "Northcote": {
+   "general": {
+    "date": "2022-11-26",
+    "url": "https://www.vec.vic.gov.au/results/state-election-results/2022-state-election-results/results-by-district/northcote-district-results",
+    "elected": "Kat Theophanous",
+    "party": "Labor",
+    "share": 50.22,
+    "against": "Greens",
+    "against_share": 49.78,
+    "margin": 0.22,
+    "basis": "distribution"
+   }
+  },
+  "Oakleigh": {
+   "general": {
+    "date": "2022-11-26",
+    "url": "https://www.vec.vic.gov.au/results/state-election-results/2022-state-election-results/results-by-district/oakleigh-district-results",
+    "elected": "Steve Dimopoulos",
+    "party": "Labor",
+    "share": 63.48,
+    "against": "Liberal",
+    "against_share": 36.52,
+    "margin": 13.48,
+    "basis": "distribution"
+   }
+  },
+  "Ovens Valley": {
+   "general": {
+    "date": "2022-11-26",
+    "url": "https://www.vec.vic.gov.au/results/state-election-results/2022-state-election-results/results-by-district/ovens-valley-district-results",
+    "elected": "Tim Mccurdy",
+    "party": "Nationals",
+    "share": 67.97,
+    "against": "Labor",
+    "against_share": 32.03,
+    "margin": 17.97,
+    "basis": "two-candidate count"
+   }
+  },
+  "Pakenham": {
+   "general": {
+    "date": "2022-11-26",
+    "url": "https://www.vec.vic.gov.au/results/state-election-results/2022-state-election-results/results-by-district/pakenham-district-results",
+    "elected": "Emma Vulin",
+    "party": "Labor",
+    "share": 50.39,
+    "against": "Liberal",
+    "against_share": 49.61,
+    "margin": 0.39,
+    "basis": "distribution"
+   }
+  },
+  "Pascoe Vale": {
+   "general": {
+    "date": "2022-11-26",
+    "url": "https://www.vec.vic.gov.au/results/state-election-results/2022-state-election-results/results-by-district/pascoe-vale-district-results",
+    "elected": "Anthony Cianflone",
+    "party": "Labor",
+    "share": 52.02,
+    "against": "Greens",
+    "against_share": 47.98,
+    "margin": 2.02,
+    "basis": "distribution"
+   }
+  },
+  "Point Cook": {
+   "general": {
+    "date": "2022-11-26",
+    "url": "https://www.vec.vic.gov.au/results/state-election-results/2022-state-election-results/results-by-district/point-cook-district-results",
+    "elected": "Mathew Hilakari",
+    "party": "Labor",
+    "share": 58.34,
+    "against": "Liberal",
+    "against_share": 41.66,
+    "margin": 8.34,
+    "basis": "distribution"
+   }
+  },
+  "Polwarth": {
+   "general": {
+    "date": "2022-11-26",
+    "url": "https://www.vec.vic.gov.au/results/state-election-results/2022-state-election-results/results-by-district/polwarth-district-results",
+    "elected": "Richard Riordan",
+    "party": "Liberal",
+    "share": 51.79,
+    "against": "Labor",
+    "against_share": 48.21,
+    "margin": 1.79,
+    "basis": "distribution"
+   }
+  },
+  "Prahran": {
+   "general": {
+    "date": "2022-11-26",
+    "url": "https://www.vec.vic.gov.au/results/state-election-results/2022-state-election-results/results-by-district/prahran-district-results",
+    "elected": "Sam Hibbins",
+    "party": "Greens",
+    "share": 62.01,
+    "against": "Liberal",
+    "against_share": 37.99,
+    "margin": 12.01,
+    "basis": "distribution"
+   },
+   "since": {
+    "date": "2025-02-08",
+    "kind": "by-election",
+    "url": "https://www.vec.vic.gov.au/results/state-election-results/state-by-elections-timeline/prahran-district-results/results-by-district/prahran-district-results",
+    "elected": "Rachel Westaway",
+    "party": "Liberal",
+    "share": 51.35,
+    "against": "Greens",
+    "against_share": 48.65,
+    "margin": 1.35,
+    "basis": "distribution"
+   }
+  },
+  "Preston": {
+   "general": {
+    "date": "2022-11-26",
+    "url": "https://www.vec.vic.gov.au/results/state-election-results/2022-state-election-results/results-by-district/preston-district-results",
+    "elected": "Nathan Lambert",
+    "party": "Labor",
+    "share": 52.09,
+    "against": "Greens",
+    "against_share": 47.91,
+    "margin": 2.09,
+    "basis": "distribution"
+   }
+  },
+  "Richmond": {
+   "general": {
+    "date": "2022-11-26",
+    "url": "https://www.vec.vic.gov.au/results/state-election-results/2022-state-election-results/results-by-district/richmond-district-results",
+    "elected": "Gabrielle De Vietri",
+    "party": "Greens",
+    "share": 57.32,
+    "against": "Labor",
+    "against_share": 42.68,
+    "margin": 7.32,
+    "basis": "distribution"
+   }
+  },
+  "Ringwood": {
+   "general": {
+    "date": "2022-11-26",
+    "url": "https://www.vec.vic.gov.au/results/state-election-results/2022-state-election-results/results-by-district/ringwood-district-results",
+    "elected": "Will Fowles",
+    "party": "Labor",
+    "share": 57.53,
+    "against": "Liberal",
+    "against_share": 42.47,
+    "margin": 7.53,
+    "basis": "distribution"
+   }
+  },
+  "Ripon": {
+   "general": {
+    "date": "2022-11-26",
+    "url": "https://www.vec.vic.gov.au/results/state-election-results/2022-state-election-results/results-by-district/ripon-district-results",
+    "elected": "Martha Haylett",
+    "party": "Labor",
+    "share": 52.99,
+    "against": "Liberal",
+    "against_share": 47.01,
+    "margin": 2.99,
+    "basis": "distribution"
+   }
+  },
+  "Rowville": {
+   "general": {
+    "date": "2022-11-26",
+    "url": "https://www.vec.vic.gov.au/results/state-election-results/2022-state-election-results/results-by-district/rowville-district-results",
+    "elected": "Kim Wells",
+    "party": "Liberal",
+    "share": 53.67,
+    "against": "Labor",
+    "against_share": 46.33,
+    "margin": 3.67,
+    "basis": "distribution"
+   }
+  },
+  "Sandringham": {
+   "general": {
+    "date": "2022-11-26",
+    "url": "https://www.vec.vic.gov.au/results/state-election-results/2022-state-election-results/results-by-district/sandringham-district-results",
+    "elected": "Brad Rowswell",
+    "party": "Liberal",
+    "share": 55.15,
+    "against": "Labor",
+    "against_share": 44.85,
+    "margin": 5.15,
+    "basis": "two-candidate count",
+    "two_candidate_url": "https://www.vec.vic.gov.au/results/state-election-results/2022-state-election-results/results-by-district/sandringham-district-results/sandringham-2cp-results-by-voting-centre"
+   }
+  },
+  "Shepparton": {
+   "general": {
+    "date": "2022-11-26",
+    "url": "https://www.vec.vic.gov.au/results/state-election-results/2022-state-election-results/results-by-district/shepparton-district-results",
+    "elected": "Kim O'Keeffe",
+    "party": "Nationals",
+    "share": 56.79,
+    "against": "Independent",
+    "against_share": 43.21,
+    "margin": 6.79,
+    "basis": "distribution"
+   }
+  },
+  "South Barwon": {
+   "general": {
+    "date": "2022-11-26",
+    "url": "https://www.vec.vic.gov.au/results/state-election-results/2022-state-election-results/results-by-district/south-barwon-district-results",
+    "elected": "Darren Cheeseman",
+    "party": "Labor",
+    "share": 59.8,
+    "against": "Liberal",
+    "against_share": 40.2,
+    "margin": 9.8,
+    "basis": "distribution"
+   }
+  },
+  "South-West Coast": {
+   "general": {
+    "date": "2022-11-26",
+    "url": "https://www.vec.vic.gov.au/results/state-election-results/2022-state-election-results/results-by-district/south-west-coast-district-results",
+    "elected": "Roma Britnell",
+    "party": "Liberal",
+    "share": 58.05,
+    "against": "Labor",
+    "against_share": 41.95,
+    "margin": 8.05,
+    "basis": "distribution"
+   }
+  },
+  "St Albans": {
+   "general": {
+    "date": "2022-11-26",
+    "url": "https://www.vec.vic.gov.au/results/state-election-results/2022-state-election-results/results-by-district/st-albans-district-results",
+    "elected": "Natalie Suleyman",
+    "party": "Labor",
+    "share": 59.56,
+    "against": "Liberal",
+    "against_share": 40.44,
+    "margin": 9.56,
+    "basis": "distribution"
+   }
+  },
+  "Sunbury": {
+   "general": {
+    "date": "2022-11-26",
+    "url": "https://www.vec.vic.gov.au/results/state-election-results/2022-state-election-results/results-by-district/sunbury-district-results",
+    "elected": "Josh Bull",
+    "party": "Labor",
+    "share": 56.41,
+    "against": "Liberal",
+    "against_share": 43.59,
+    "margin": 6.41,
+    "basis": "distribution"
+   }
+  },
+  "Sydenham": {
+   "general": {
+    "date": "2022-11-26",
+    "url": "https://www.vec.vic.gov.au/results/state-election-results/2022-state-election-results/results-by-district/sydenham-district-results",
+    "elected": "Natalie Hutchins",
+    "party": "Labor",
+    "share": 58.73,
+    "against": "Liberal",
+    "against_share": 41.27,
+    "margin": 8.73,
+    "basis": "two-candidate count",
+    "two_candidate_url": "https://www.vec.vic.gov.au/results/state-election-results/2022-state-election-results/results-by-district/sydenham-district-results/sydenham-2cp-results-by-voting-centre"
+   }
+  },
+  "Tarneit": {
+   "general": {
+    "date": "2022-11-26",
+    "url": "https://www.vec.vic.gov.au/results/state-election-results/2022-state-election-results/results-by-district/tarneit-district-results",
+    "elected": "Dylan Wight",
+    "party": "Labor",
+    "share": 62.58,
+    "against": "Liberal",
+    "against_share": 37.42,
+    "margin": 12.58,
+    "basis": "two-candidate count",
+    "two_candidate_url": "https://www.vec.vic.gov.au/results/state-election-results/2022-state-election-results/results-by-district/tarneit-district-results/tarneit-2cp-results-by-voting-centre"
+   }
+  },
+  "Thomastown": {
+   "general": {
+    "date": "2022-11-26",
+    "url": "https://www.vec.vic.gov.au/results/state-election-results/2022-state-election-results/results-by-district/thomastown-district-results",
+    "elected": "Bronwyn Halfpenny",
+    "party": "Labor",
+    "share": 66.0,
+    "against": "Liberal",
+    "against_share": 34.0,
+    "margin": 16.0,
+    "basis": "two-candidate count"
+   }
+  },
+  "Warrandyte": {
+   "general": {
+    "date": "2022-11-26",
+    "url": "https://www.vec.vic.gov.au/results/state-election-results/2022-state-election-results/results-by-district/warrandyte-district-results",
+    "elected": "Ryan Smith",
+    "party": "Liberal",
+    "share": 54.15,
+    "against": "Labor",
+    "against_share": 45.85,
+    "margin": 4.15,
+    "basis": "two-candidate count",
+    "two_candidate_url": "https://www.vec.vic.gov.au/results/state-election-results/2022-state-election-results/results-by-district/warrandyte-district-results/warrandyte-2cp-results-by-voting-centre"
+   },
+   "since": {
+    "date": "2023-08-26",
+    "kind": "by-election",
+    "url": "https://www.vec.vic.gov.au/results/state-election-results/state-by-elections-timeline/warrandyte-district-by-election-results/results-by-district/warrandyte-district-results",
+    "elected": "Nicole Werner",
+    "party": "Liberal",
+    "share": 70.99,
+    "against": "Greens",
+    "against_share": 29.01,
+    "margin": 20.99,
+    "basis": "two-candidate count"
+   }
+  },
+  "Wendouree": {
+   "general": {
+    "date": "2022-11-26",
+    "url": "https://www.vec.vic.gov.au/results/state-election-results/2022-state-election-results/results-by-district/wendouree-district-results",
+    "elected": "Juliana Addison",
+    "party": "Labor",
+    "share": 63.46,
+    "against": "Liberal",
+    "against_share": 36.54,
+    "margin": 13.46,
+    "basis": "two-candidate count",
+    "two_candidate_url": "https://www.vec.vic.gov.au/results/state-election-results/2022-state-election-results/results-by-district/wendouree-district-results/wendouree-2cp-results-by-voting-centre"
+   }
+  },
+  "Werribee": {
+   "general": {
+    "date": "2022-11-26",
+    "url": "https://www.vec.vic.gov.au/results/state-election-results/2022-state-election-results/results-by-district/werribee-district-results",
+    "elected": "Tim Pallas",
+    "party": "Labor",
+    "share": 60.5,
+    "against": "Liberal",
+    "against_share": 39.5,
+    "margin": 10.5,
+    "basis": "two-candidate count",
+    "two_candidate_url": "https://www.vec.vic.gov.au/results/state-election-results/2022-state-election-results/results-by-district/werribee-district-results/werribee-2cp-results-by-voting-centre"
+   },
+   "since": {
+    "date": "2025-02-08",
+    "kind": "by-election",
+    "url": "https://www.vec.vic.gov.au/results/state-election-results/state-by-elections-timeline/werribee-district-results/results-by-district/werribee-district-results",
+    "elected": "John Lister",
+    "party": "Labor",
+    "share": 50.82,
+    "against": "Liberal",
+    "against_share": 49.18,
+    "margin": 0.82,
+    "basis": "distribution"
+   }
+  },
+  "Williamstown": {
+   "general": {
+    "date": "2022-11-26",
+    "url": "https://www.vec.vic.gov.au/results/state-election-results/2022-state-election-results/results-by-district/williamstown-district-results",
+    "elected": "Melissa Horne",
+    "party": "Labor",
+    "share": 63.44,
+    "against": "Liberal",
+    "against_share": 36.56,
+    "margin": 13.44,
+    "basis": "distribution"
+   }
+  },
+  "Yan Yean": {
+   "general": {
+    "date": "2022-11-26",
+    "url": "https://www.vec.vic.gov.au/results/state-election-results/2022-state-election-results/results-by-district/yan-yean-district-results",
+    "elected": "Lauren Kathage",
+    "party": "Labor",
+    "share": 54.45,
+    "against": "Liberal",
+    "against_share": 45.55,
+    "margin": 4.45,
+    "basis": "two-candidate count",
+    "two_candidate_url": "https://www.vec.vic.gov.au/results/state-election-results/2022-state-election-results/results-by-district/yan-yean-district-results/yan-yean-2cp-results-by-voting-centre"
+   }
+  }
+ },
+ "sha256": {
+  "index": "21f39ec80f07177cd56e39ad0cf7b42dd633d2eece0ac2517aa0e4f04c9e5e3a",
+  "Albert Park": "2e813078ed2f1aafed424cd3bf22acb5a1ba243dbfb982f5308bc8eb73ecc8cb",
+  "Ashwood": "940281125087f6e3d861815b50f18baa0170779e2d89eb5f1c0e93e4a821062a",
+  "Bass": "0ab07ab24af8ffc83cd22869a5d2e553fab9cf9ad1a87741d25805b40346790b",
+  "Bayswater": "1c9c8169d690ba1f53dad9586287eaab6d622e61aafba3c8091c4926afa7e8a9",
+  "Bellarine": "d22ecf7d988c8e872458458c422f2cf5c72e09f6ae22d3880f1aa07a919d38f2",
+  "Benambra": "fa99dfdd94164cabe60233514a4b394f6023c0a0f79d289fcf6f65cbd5a11741",
+  "Bendigo East": "95c286c64c059c38fc6a077f124fde505c9de67553b0cd1c49a0e07b59b50f9f",
+  "Bendigo West": "33b0bed8000ba70ea4f03f71fddc5e7e156e923164d3fc37af17525fa97890c2",
+  "Bentleigh": "ed4165abc2c2216dd9c08bb6979174cee9508f8dbd355c1907ed755fec2fdda2",
+  "Berwick": "f0c2789fb2ed8b6eb6fde5aa59858f2021dacca08324ba4461014cd95b7f6e7b",
+  "Box Hill": "38ffafa7997ac6d29457822da42166e73f4f30ff72b509c0232d6475a8536906",
+  "Brighton": "e270f234a898140bcdf3c398774784518c4a8f4e2479e2955c61db3a39e09deb",
+  "Broadmeadows": "f0aa8de1f026f332df33bed6444e44cfc03863574941c580f36eb301b72055af",
+  "Brunswick": "db436791e6032eb4bfd0556ab950aa2ffdf2a15a36958442223c1b9962e95629",
+  "Bulleen": "3fd02a41c819e690f3d2023cb4cf0a9fb161ea375a3049948666861d5f102e8f",
+  "Bundoora": "7f26e5d169365dadd12cf4a02deb9163e6919253f4d861524642beb70a0de883",
+  "Carrum": "00d2aeaebb59476c43d7d2ae0b8e9c3cb7c3244a00a400e3d5ce529ce38650e1",
+  "Caulfield": "5f55eb06e1e930f20505a4358a35e37833413cb23b4d4f46b831daa06ecb3502",
+  "Clarinda": "14f70342be730338fd3661bd867ac687a69ab0a23d0dc69f745b194d79e80a10",
+  "Cranbourne": "934655718dc7e4a0cd882925a02b5476a902359052132720cf1eebd30ffeab3a",
+  "Croydon": "d764ec8236a4cfc66211451427ea8631dace2e91a778bf374b0d29906e7ade5e",
+  "Dandenong": "56a38924715a7fe6a8e32ac7ad1dae4f8f5b0e1f171d4d8c7d12e6cc67c76794",
+  "Eildon": "4ed833d887dff09bdaab4e83f05584b1638efe3cd644d9ad5018d25856129a6b",
+  "Eltham": "73d3ffb84e46a7749d7705e48a03104bc92c0be42829e21ea34fcaf29f586aaa",
+  "Essendon": "7ae9648be9bbf7e8d8ceffe5c3000c09098202362f7c62397169fa6ba5e99fdd",
+  "Eureka": "04fd89014be2824882f27a48d0ba82f24fc37afcaf0574556caee0f000326247",
+  "Euroa": "58091e675d35f9fbb6deeb5cf14a76bd6fb62dfedaa3701bff42359e525e51e3",
+  "Evelyn": "36213c36905e69eb37826fdde3e9fc448bb375f15b35a1bba0c8f024db3725a8",
+  "Footscray": "db9c7ab42066a7078b27dcd60f391776d82b77c3bc48f71e7e0945cb66e66d94",
+  "Frankston": "6cc131db5bbf10c05685fa9463bc7b7dbe68c7a96ebb92a9234819728a9734eb",
+  "Geelong": "4d51858486f4dd8837fef85d10360b539de7cc98bc69c794ad0aa6722967c1a5",
+  "Gippsland East": "118e00e57e3e0246f82d156610a3a8f5532c39cc2f8db8df808fddcabc157263",
+  "Gippsland South": "310c3c44cc347c1ba73807bedd8ab9a84037ebdcc5366896cd2c6ade5099fed6",
+  "Glen Waverley": "793ae209dd67851fba95679e2ea630bf7c761f7653b5ead2597519475294d348",
+  "Greenvale": "10c956ba47511a35aca84978ef0e862db399178e7b37d8e25e5629de26d16db0",
+  "Hastings": "f28ccc474ca5a412c15ae0efc1f6f0731d25188fb358157b3a1b1bc0a83d4975",
+  "Hawthorn": "ccfddbcd9d4de57e66c438edeef3dea405accbc80360d60bb80668df7243e72b",
+  "Ivanhoe": "164590a6913cb44a891743c4ef6963bf52003a18a9de226324a4f7d20b8a161d",
+  "Kalkallo": "b706fdeae7866365e4c087e0cc2f0db87448029391ece0fe6da0fd8602a48d26",
+  "Kew": "f9eeddbf84151aa0c6886dd23567f1da4c7125075f454d136526f4a7efb3b8dd",
+  "Kororoit": "e06a7a62472b5e0116d0ea93b0145cd27ce730b99b185dc9fc6b926f6ecbdd95",
+  "Lara": "3f239caa1b8e659e199d1b0b6316a9b78383f1b3e975ddde8cd1c157065e6208",
+  "Laverton": "67137803a95d5745109e635eb25e8e0565dedb78d90ed9eaed663cc709c3eca4",
+  "Lowan": "0f96485c960cfd2c514f6447422fdf38757acf57b046b57d71bf453561edb453",
+  "Macedon": "8a30060219f65c8cb635712312822ccbe7b7958d97f6076fcba6a5ff0af09fea",
+  "Malvern": "213d22f54cb43ba7ee1d35c533b16a47aacbb3d3a77bc551dbf2a5de8082829e",
+  "Melbourne": "d4069ced8ad16d4c78775c6a3ce5d0839c2a8902dd6ecea556d51191ac484a68",
+  "Melton": "98849e01ad4dbc9edcef41a4913c6a6324a51c9d3697848e1963b76097c85e5e",
+  "Mildura": "59070d21462621fde76987b4df161b5b5920458cb1610c7009abf93f7f8fd4a3",
+  "Mill Park": "264e778865c271f25dc7078c6da58d65b55e65cc7d18e7b83eb3e2fa0d47a64f",
+  "Monbulk": "75da2a99b13848e4a699e0149d8d8e04354757dd5b56feddf99e7e8e6dc18e7b",
+  "Mordialloc": "debd9f3682070186bbc8e0186d66268bb23474c15a880358439ba3744f283b29",
+  "Mornington": "ff38f070af0d0d6ef7366c7a4ca8740cdc2f5f67210286738432766c1814885e",
+  "Morwell": "4f5d61ee599ca8fcae304c41e074a659dfcc46a69d5dfb26808818aa545a45c3",
+  "Mulgrave": "09d682d3b51b77a62662b7ee4f9ee91370d8a47af1fb3753bbebfa021e91ce4b",
+  "Murray Plains": "02cfd08aef0c5d297b77faba3cf103d53e5747e1eb8a68bd2e2b02503bc8eac4",
+  "Narre Warren North": "27cd52eaa3ad289c732e66f51e7954b89b4b7bc67cab7c1f8cda488c1f784d35",
+  "Narre Warren South": "b97c3d909efab3b040d31742fad8aa77cb023198150b09a9f26195eb41581da5",
+  "Nepean": "5d3060b26ef9495d9bbe2acb08190312d3dcd1890df274b8b5532aea8b002e77",
+  "Niddrie": "8b7d211b8f04f332c96ebca5b2f12bdc85fb0819d65d59808d5d2fdcee408387",
+  "Northcote": "0f997b1971c0a06d260e767fba24ae6b2b8a7e685b06052c67a6a0861225fc3f",
+  "Oakleigh": "061a94a4d23bfa545f614f9714a264732a3dd7a29737cbe29bc242d97422fbbf",
+  "Ovens Valley": "1e3aae3128cb4d5c497fbddb2a8dfbc53a46b5e2418c3f78d1992c9c38bf80bc",
+  "Pakenham": "c4ee028cf776f766662aea382e6f3b4049482ef3791dfaf7a908fe17a6182263",
+  "Pascoe Vale": "ed3d361f55abead966e7b430c9600815afc34ba246a1ce47f5e6a25d85fe5efa",
+  "Point Cook": "8c5e1ee38d91e9f0c569d86916eeabade65dfaeba8673f5b6672f79c2e1aeaf4",
+  "Polwarth": "d7ad77c764bb14658fad983eba9f5f25a49ba3c8178213bfefade1420b4c0252",
+  "Prahran": "adfc3faee7149deae6b486c77b2153e4f8a9b58538e38dedeb47e31eca47f876",
+  "Preston": "f67b66e92a66205955b8ba62c004bcdb4f8161387016f4338ba1e6d9bbdf6d26",
+  "Richmond": "4bd9c23a73fa086d8d1683776bfdfc0b8f9b4a630340ded4bf24130045f87557",
+  "Ringwood": "9346c6e935620fc48b412cf0e5a076fe041f994bbf58973da1aa3af57e4c446d",
+  "Ripon": "710a1c1064aba46423700cbf0d1f5260085c328066726100e2d0ed96d7980c9f",
+  "Rowville": "250aa0cf2475afb3c8d36c6f8ee191844ee5c6c677a61356107c6b26a21bcb4d",
+  "Sandringham": "476c65ad8e4a53cc1388978691502be4ca4b63dda26b50cb3891f2315a95fda1",
+  "Shepparton": "bf705fac95a09d98f4072b4d0bb8c1bc0fd66cb07bcda48c291b1071e9b96776",
+  "South Barwon": "fa79366bd7421fbe412fd8c3d9fa2639d64bd62c66c519eed438f947a1572e14",
+  "South-West Coast": "724c89d0fce7584bde9c6fc2760a667b1fe3df68de664d35c34536498f127c02",
+  "St Albans": "156e874ee02a8f12ec281a1c4f2f2e291d8296340e5ea152921150bfeb4dcce1",
+  "Sunbury": "5d49546f9c9c0cda1b26f266dfe7c7c7a3b1ab067a9c272dc837dc5112933731",
+  "Sydenham": "1e79ab67ba7e3446ac37206af8720b8c121248440a8617e38954401443760b9c",
+  "Tarneit": "37c43855c9b3d87cc6d9925b429a0e9f5fd4df2610881639e143e013bd0cc4ef",
+  "Thomastown": "8a401b8a6b2a3177a1500738a0b08e821fb0ae80a42b98bb3ae045b6b3ab18d1",
+  "Warrandyte": "1562a722e746bbc97eb9fdbb8fb761eac99378118a6ac72bcbac4a30e88fe6a7",
+  "Wendouree": "fd605fc93eb5c11231868ad58b1bb55349b44bef7799926d9a7263a064b91a50",
+  "Werribee": "1b2383171ee3cd487c6029e0ad49e70ec76ff41789c74cc7e3105f136b0cacb9",
+  "Williamstown": "b07ab6dd16e986afc9b80bd66e3300e8006c04a94305ea1a759ba86eb84ece61",
+  "Yan Yean": "672c8dd738aeb8d18f94b2383fcbdc9ea589819ab13ff9522d8e3a32b57812a3",
+  "Narracan supplementary": "155e32c78372dbe8da2a74c093369721b70b7e51d3846493a248c2a2e8df8027",
+  "Warrandyte by-election": "ccef049c97b7986ba04887d47a899913d411f7cf9761dde20c900d5e7dd177db",
+  "Mulgrave by-election": "002f70364eb135fcc97afd60d2f99a8e6505548cf3951d62912d09002921c71d",
+  "Prahran by-election": "e39509a485b74b733459e781789f211bbaa2109a4a15d6c4dc92ca33982028da",
+  "Werribee by-election": "cc1877b7c3b83b5cf423f498445c589c7d6bf9c8b68fd095ab2d865582aea211",
+  "Nepean by-election": "15f5fa22318c5cd17cad0e82577c5bf30b4db4d235f9a1d2252965c075c913af"
+ }
+}

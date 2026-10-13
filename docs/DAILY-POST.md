@@ -113,7 +113,10 @@ cover is the edition's one number; the middle slides carry one fact each with it
 caveat on the slide; one slide is the cross-reference only Opax can make (the same
 recipient's other awards, the electorate's grants, the seat's member); the last
 slide is the source, with the page URL as the largest type because Instagram links
-do not click.
+do not click. Since `STORY_VERSION` 3 (13 October 2026) that address is the edition's
+own page in full, scheme dropped, and it closes the slide: no path line under it and no
+wordmark footer below it. It breaks only after a `/` or before a `?` or `&`, sized from
+Public Sans Bold's measured advances to one, two or three lines.
 
 Photographs come only from `public/social/photos.json`, a catalogue a person has
 approved: the file, author, licence, Commons page and the credit line drawn on the

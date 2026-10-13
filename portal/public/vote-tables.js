@@ -1,9 +1,9 @@
 // Division and voting-record rollout using the shared server-mode core.
-import {dataTableHTML, mountDataTable, applyQuery, guardTableURL} from './datatable.js?v=39ece8c488';
+import {dataTableHTML, mountDataTable, applyQuery, guardTableURL} from './datatable.js?v=808270977b';
 // Guard and render must share the core module's rejection-state registry.
 export {guardTableURL};
 import {shortDate} from './format.js';
-import {statusLabelHTML} from './labels.js?v=c6bf994ef7';
+import {statusLabelHTML} from './labels.js?v=fc03aa14cf';
 import {divisionPlain} from './division-markdown.js?v=5991511166';
 
 const sentence = value => { const text = String(value || '').replace(/_/g, ' ').trim(); return text ? text[0].toUpperCase() + text.slice(1).toLowerCase() : ''; };
@@ -33,8 +33,11 @@ export async function votePrivacyCheck(text) {
     return response.ok && (await response.json()).safe === true;
   } catch { return false; }
 }
+// Votes and divisions are parliamentary record from public exports (the build's
+// donor sweep, and votes.json served whole): rows are shape-checked only. The
+// reader's own search, filter and URL text is still checked before it is echoed.
 function privacy(check) {
-  return {privacy:'donors', privacyCheck:check, rowPrivacyCheck:row => tableRow(row) && (check === votePrivacyCheck || check(JSON.stringify(row)) === true)};
+  return {privacy:'echo', privacyCheck:check, rowPrivacyCheck:tableRow};
 }
 
 export function divisionTableConfig(params = {}, caption = 'Divisions', pageType = 'bill', check = votePrivacyCheck) {

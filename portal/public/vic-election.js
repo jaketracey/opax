@@ -3,11 +3,17 @@
 export const VIC_ELECTION_HUB_ENABLED = false;
 export const VIC_ELECTION_PATH = '/vic-election-2026';
 export const VIC_ELECTION_ASSET = '/hubs/vic-election-2026.json';
+// Suburb, postcode and council splits for the seat finder, read only when someone searches.
+export const VIC_ELECTION_PLACES = '/hubs/vic-election-2026-places.json';
 export const VIC_ELECTION_SITEMAP = '/sitemaps/vic-election-1.xml';
-// Control hub decision, 10 October 2026. Address verified against Noice's contact page.
-export const VIC_ELECTION_AUTHORISATION_LINE = 'Authorised by Jake Tracey, Noice Pty Ltd, Level 6, 343 Little Collins St, Melbourne VIC 3000.';
+// Jake's exact control hub decision, 13 October 2026. Never replace with a PO box.
+export const VIC_ELECTION_AUTHORISATION_LINE = 'Authorised by Jake Tracey, Noice Pty Ltd, Level 6, 608/343 Little Collins Street, Melbourne VIC 3000.';
 export const VIC_ELECTION_CORRECTIONS_EMAIL = 'corrections@opax.com.au';
 export const VIC_ELECTION_CORRECTIONS_RESPONSE = 'We aim to respond within 2 business days.';
+// Explicit election references in any daily kind also need the approved line.
+export const vicElectionMaterial = text => /vic-election-2026|\b(?:victorian?|vic)(?:['’]s)?[ -]+(?:(?:state|2026)[ -]+)?elections?\b|\bstate[ -]+elections?[ -]+(?:in|for)[ -]+(?:victoria|vic)\b/i.test(text);
+// Approved constants only: shared by server summaries and client electorate profiles.
+export const vicElectionFooterHTML = () => `<footer class="el-section"><p>${VIC_ELECTION_AUTHORISATION_LINE}</p><p><a href="mailto:${VIC_ELECTION_CORRECTIONS_EMAIL}">Report a correction: ${VIC_ELECTION_CORRECTIONS_EMAIL}</a><br>${VIC_ELECTION_CORRECTIONS_RESPONSE}</p></footer>`;
 export const vicElectionEnabled = value => value === 'true' || (value == null && VIC_ELECTION_HUB_ENABLED);
 export function vicElectionAssetPath(path) {
   try { return decodeURIComponent(path).replace(/\/+/g,'/').toLowerCase().startsWith('/hubs/vic-election'); }
