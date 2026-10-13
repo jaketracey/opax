@@ -15,16 +15,20 @@ const donorViewReady = import('/donor-views.js?v=4fcbbb78cf').then(module => {
 
 "use strict";
 let voteTables;
-const voteTablesReady = import("/vote-tables.js?v=cb915fed8b").then(module => { voteTables = module; });
+const voteTablesReady = import("/vote-tables.js?v=0408fa2aba").then(module => { voteTables = module; });
 let divisionMarkdown;
 const divisionMarkdownReady = import('/division-markdown.js?v=5991511166').then(module => { divisionMarkdown = module; });
-// The labels, source lines and ⋯ (labels.js); the first render waits for them.
+// The labels and source lines (labels.js); the first render waits for them.
 let growthModules;
 let askPerson;
-const askPersonReady = import('/ask-person.js?v=a0b3602921').then(module => { askPerson = module; });
-const growthModulesReady = import("/growth-modules.js?v=d8f4fe61c2").then(module => { growthModules = module; });
+const askPersonReady = import('/ask-person.js?v=3b73938cf7').then(module => { askPerson = module; });
+const growthModulesReady = import("/growth-modules.js?v=2fe959404b").then(module => { growthModules = module; });
 let uiLabels;
-const uiLabelsReady = import('/labels.js?v=c6bf994ef7').then(module => { uiLabels = module; });
+const uiLabelsReady = import('/labels.js?v=fc03aa14cf').then(module => { uiLabels = module; });
+// ⋯, the page-actions menu: its markup for the renderers, and its behaviour
+// for every ⋯ on the page, the toolbars' static ones included.
+let pageMenus;
+const pageMenusReady = import('/page-actions-menu.js?v=8640c3d1ca').then(module => { pageMenus = module; module.initPageMenus(document, window); });
 let attributionHelpers;
 const attributionReady = Promise.allSettled([divisionMarkdownReady,
   import('./speech-attribution.js?v=1350457c5d').then(module => { attributionHelpers = module; })]);
@@ -307,17 +311,18 @@ function samePartyLabel(a, b) {
 // Five kinds of small label, all sentence case: Tag, StatusLabel, PartyLabel,
 // Choice/Filter chip (markup in place, drawn by ui-controls.css) and
 // MachineLabel; one SourceLine at the foot of a block; ⋯ for what a view keeps
-// but does not draw. They live in labels.js, one module for this page, the
-// homepage and the electorate pages, with the party map they read; the boot at
-// the foot of this file waits for it before the first render. These are the
-// names the renderers here call.
+// but does not draw. The labels and the line live in labels.js, one module for
+// this page, the homepage and the electorate pages, with the party map they
+// read; ⋯ is page-actions-menu.js. The boot at the foot of this file waits for
+// both before the first render. These are the names the renderers here call.
 function partyChipHTML(party, opts) { return uiLabels.partyLabelHTML(party, opts); }
 function statusLabelHTML(word, tone) { return uiLabels.statusLabelHTML(word, tone); }
 function tagHTML(label, href) { return uiLabels.tagHTML(label, href); }
 function machineLabelHTML(opts) { return uiLabels.machineLabelHTML(opts); }
 function sourceLineHTML(opts) { return uiLabels.sourceLineHTML(opts); }
 function fineprintSourceHTML(html, opts) { return uiLabels.fineprintSourceHTML(html, opts); }
-function moreMenuHTML(items, label, opts) { return uiLabels.moreMenuHTML(items, label, opts); }
+// A ⋯ whose module failed to load draws nothing; the page still renders.
+function moreMenuHTML(items, label, opts) { return pageMenus?.pageMenuHTML(items, label, opts) ?? ""; }
 
 /* A party's name as a sentence says it: "the Labor Party", "the Greens", "One
    Nation". The money data's short labels ("Labor", "Liberal") take an article
@@ -737,17 +742,64 @@ function download(filename, mime, text) {
   setTimeout(() => URL.revokeObjectURL(a.href), 2000);
 }
 
-async function copyText(text, btn, doneLabel) {
+/** Copy a link and say so: the label (a button's text span, so its icon stays,
+ *  or a text-only button) reads "Copied" and nothing more, then reverts. The
+ *  button holds its resting width and height meanwhile, so the shorter word
+ *  moves nothing, and a polite live region announces "Copied". A second press
+ *  while it shows restarts the moment instead of taking "Copied" for the label. */
+async function copyText(text, label) {
   try {
     await navigator.clipboard.writeText(text);
-    if (btn) {
-      const old = btn.textContent;
-      btn.textContent = doneLabel || "Copied";
-      setTimeout(() => (btn.textContent = old), 1600);
-    }
   } catch {
     window.prompt("Copy this link:", text);
+    return;
   }
+  if (label) showCopied(label);
+}
+
+const COPIED = "Copied";
+const COPIED_MS = 1600;
+function showCopied(label) {
+  const button = label.closest("button, a") || label;
+  if (!copiedState.has(label)) {
+    const box = button.getBoundingClientRect();
+    copiedState.set(label, {
+      text: label.textContent,
+      style: button.getAttribute("style"),
+    });
+    // Its resting border box, pinned in every layout it sits in: a flex row
+    // that sizes by basis and min-content (the document foot at 390) would
+    // otherwise shrink it to the shorter word.
+    if (box.width && box.height) {
+      const w = `${box.width}px`, h = `${box.height}px`;
+      for (const [p, v] of [["box-sizing", "border-box"], ["width", w], ["min-width", w], ["max-width", w], ["flex", `0 0 ${w}`],
+        ["height", h], ["min-height", h], ["max-height", h]]) button.style.setProperty(p, v);
+    }
+  }
+  const state = copiedState.get(label);
+  label.textContent = COPIED;
+  clearTimeout(state.timer);
+  state.timer = setTimeout(() => {
+    label.textContent = state.text;
+    if (state.style === null) button.removeAttribute("style"); else button.setAttribute("style", state.style);
+    copiedState.delete(label);
+    if (copyStatus().textContent === COPIED) copyStatus().textContent = "";
+  }, COPIED_MS);
+  // Emptied first, so a second copy is announced again.
+  const status = copyStatus();
+  status.textContent = "";
+  setTimeout(() => { status.textContent = COPIED; }, 50);
+}
+const copiedState = new WeakMap();
+function copyStatus() {
+  let status = document.getElementById("copy-status");
+  if (!status) {
+    status = Object.assign(document.createElement("p"), { id: "copy-status", className: "visually-hidden" });
+    status.setAttribute("role", "status");
+    status.setAttribute("aria-live", "polite");
+    document.body.appendChild(status);
+  }
+  return status;
 }
 
 function corpusVersion() {
@@ -1401,7 +1453,7 @@ async function openMoneyExplain(params, manageFocus) {
   $('money-records-title').hidden = true;
   const body = $('money-records-body');
   try {
-    const mod = await import('/money-explain.js?v=a9ae201ece');
+    const mod = await import('/money-explain.js?v=cb23fc5298');
     if (generation !== moneyRecordsGeneration) return;
     const current = () => generation === moneyRecordsGeneration && location.pathname === '/money/explain';
     moneyRecordsHandle = mod.mountMoneyExplain(body, {
@@ -1650,7 +1702,7 @@ async function openSupplierPage(name, params, manageFocus) {
   body.classList.remove("subject-person", "subject-party");
   body.innerHTML = '<p role="status">Loading suppliers…</p>';
   try {
-    const module = await import("/suppliers.js?v=e76f8c3c95");
+    const module = await import("/suppliers.js?v=3147782dd9");
     if (generation !== supplierPageGeneration) return;
     const helpers = {
       params,
@@ -6729,7 +6781,7 @@ const DIRECTORY_KINDS = {
 };
 let electorateModulePromise;
 function loadElectorateModule() {
-  return electorateModulePromise ??= import("./electorates.js?v=f60dff0a4b").catch((e) => { electorateModulePromise = null; throw e; });
+  return electorateModulePromise ??= import("./electorates.js?v=f4fb648c67").catch((e) => { electorateModulePromise = null; throw e; });
 }
 const DIR_CHUNK = 60;
 
@@ -8974,7 +9026,7 @@ async function openExplain(detail) {
   if (!detail || !["industry", "donor", "party"].includes(detail.kind)) return;
   const jur = MONEY_JURISDICTIONS[detail.jurisdiction] ? detail.jurisdiction : "federal";
   try {
-    const [mod, graph] = await Promise.all([import("/money-explain.js?v=a9ae201ece"), loadMoneyFile(jur)]);
+    const [mod, graph] = await Promise.all([import("/money-explain.js?v=cb23fc5298"), loadMoneyFile(jur)]);
     const { loadDonorViewIndex } = await import("/donor-views.js?v=4fcbbb78cf");
     goRoute(mod.explainHrefFor({ ...detail, jurisdiction: jur }, graph, await loadDonorViewIndex()) || "/money/explain");
   } catch { goRoute("/money/explain"); }
@@ -8991,14 +9043,14 @@ document.addEventListener("opax:explain", (e) => openExplain(e.detail));
 
 const GAMES = {
   ballot: { name: "Build your ballot", dialog: "dialog-ballot", body: "explore-ballot", module: "/ballot.js?v=49e7bc6382", mount: "mountBallot" },
-  tm: { name: "Time machine", dialog: "dialog-tm", body: "explore-tm", module: "/timemachine.js?v=cfe3913e9e", mount: "mountTimeMachine" },
+  tm: { name: "Time machine", dialog: "dialog-tm", body: "explore-tm", module: "/timemachine.js?v=e9d79c3c78", mount: "mountTimeMachine" },
   tide: { name: "The tide", dialog: "dialog-tide", body: "explore-tide", module: "/tide.js", mount: "mountTide" },
   quiz: { name: "The record quiz", dialog: "dialog-quiz", body: "explore-quiz", module: "/quiz.js?v=5ec891d6e8", mount: "mountQuiz" },
   ledger: { name: "The ledger", dialog: "dialog-ledger", body: "explore-ledger", module: "/ledger.js?v=6add761bc8", mount: "mountLedger" },
   grants: { name: "Who gets the grants", dialog: "dialog-grants", body: "explore-grants", module: "/grants.js?v=14051595db", mount: "mountGrants" },
   matrix: { name: "Who owns which debate", dialog: "dialog-matrix", body: "explore-matrix", module: "/matrix.js?v=25f5793db5", mount: "mountMatrix" },
   wd: { name: "Words per dollar", dialog: "dialog-wd", body: "explore-wd", module: "/wordsdollars.js?v=d167394902", mount: "mountWordsDollars" },
-  tvn: { name: "Then vs now", dialog: "dialog-tvn", body: "explore-tvn", module: "/thenvsnow.js?v=37340eeb91", mount: "mountThenVsNow" },
+  tvn: { name: "Then vs now", dialog: "dialog-tvn", body: "explore-tvn", module: "/thenvsnow.js?v=aac138f24c", mount: "mountThenVsNow" },
 };
 
 async function openGame(which, params = null) {
@@ -10241,8 +10293,7 @@ function initAskBuilder() {
 $("ask-copylink").addEventListener("click", (e) => {
   const q = lastAsk.question || $("ask-input").value.trim();
   if (!q) return;
-  copyText(siteUrl(askHash(q, askKind())), e.currentTarget.querySelector("span") || e.target,
-    "Copied. Opening it re-asks the question; wording may vary");
+  copyText(siteUrl(askHash(q, askKind())), e.currentTarget.querySelector("span") || e.currentTarget);
 });
 
 mountExportMenu($("ask-export-picker"), (format) => {
@@ -12877,7 +12928,7 @@ async function exportSearch(format, btn) {
       ? `# retrieval reaches the ${s.total} strongest matches; the record holds more`
       : `# all matches in the searched public-record snapshot and document retrieval window`,
   ], "opax-search");
-  $("search-more").open = false;
+  window.opaxPageMenus?.close($("search-more"));
 }
 
 // --- document page ----------------------------------------------------------
@@ -15228,7 +15279,7 @@ function syncPathMeta() {
 
 // The first render waits for labels, attribution helpers and the canonical
 // person URL lookup, so links use the roster's aliases from the first render.
-Promise.allSettled([attributionReady, uiLabelsReady, growthModulesReady, personUrlsReady, saDisplayReady, donorViewReady, voteTablesReady]).finally(() => {
+Promise.allSettled([attributionReady, uiLabelsReady, pageMenusReady, growthModulesReady, personUrlsReady, saDisplayReady, donorViewReady, voteTablesReady]).finally(() => {
   loadPersonSlugs();
   initAskBuilder();
   route();

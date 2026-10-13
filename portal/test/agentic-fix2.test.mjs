@@ -86,7 +86,8 @@ test('P1 actual route: a dropped roster speaker falls back to normal Ask in JSON
    const response=await h.fetch('/api/ask'+(stream?'?stream=1':''),{method:'POST',headers:{'content-type':'application/json',...(stream?{accept:'text/event-stream'}:{})},body:JSON.stringify({question:'How many speeches has Taylor Example made about housing?',kind:'speech'})});
    const text=await response.text();assert.equal(response.status,200);assert.doesNotMatch(text,/300|"agentic"/);
    const done=stream?JSON.parse(text.split('\n\n').find(frame=>frame.startsWith('event: done\n')).split('\ndata: ')[1]):JSON.parse(text);
-   assert.equal(done.answered,false);assert.equal(done.reason,'declined');assert.equal(done.answer,'');
+   // Normal Ask answered the fallback (ask-no-answer's decision fields were reverted 13 Oct); it is never an agentic answer.
+   assert.equal(done.agentic,undefined);
   }
   assert.equal(planners,2);assert.equal(normals,2);assert.equal(overallCounts,0);while(pending.length)await Promise.all(pending.splice(0));
  }finally{restore()}

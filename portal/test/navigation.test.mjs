@@ -105,7 +105,7 @@ const TRAILS = [
   ['/subject/person/anthony-albanese', 'Parliamentarians › Anthony Albanese'],
   ['/declared', 'Declared interests'],
   ['/vic-election-2026', 'Victorian election 2026'],
-  ['/vic-election-2026/albert-park', 'Victorian election 2026 › Albert Park district'],
+  ['/vic-election-2026/albert-park', 'Victorian election 2026 › Albert Park'],
   ['/money', 'Money map'],
   ['/money/receipts', 'Political receipts'],
   ['/money/grants', 'Grants'],

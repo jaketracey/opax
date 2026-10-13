@@ -592,3 +592,31 @@ test('a long purpose gives way so an award chosen without an open round says so 
   assert.match(post.text, /\n\nNo open round: closed, non-competitive\.\n\n/);
   assert.ok(xLength(post.text) <= X_LIMIT, xLength(post.text));
 });
+
+test('a Victorian member edition carries the exact line in short copy, caption and every carousel/story slide', async () => {
+  const source = sources();
+  const original = source.asset;
+  source.asset = async path => path === '/parliamentarians.json' ? {people: [{name: 'Example Victorian Member', current: true, speeches: 500, representation: [{jurisdiction: 'vic', chamber: 'vic_la', electorate: 'Example District', state: 'VIC'}]}]} : original(path);
+  const post = await composeDailyPost('2026-10-13', source, 'politician');
+  const line = 'Authorised by Jake Tracey, Noice Pty Ltd, Level 6, 608/343 Little Collins Street, Melbourne VIC 3000.';
+  assert.ok(post.text.includes(line)); assert.ok(xLength(post.text) <= X_LIMIT);
+  assert.ok(post.caption.includes(line)); assert.equal(post.authorisation, line);
+  assert.ok(validStory(post.slides));
+  const cta = post.slides.find(slide => slide.type === 'source');
+  assert.ok(cta, 'the Victorian post includes its closing source slide');
+  assert.equal(cta.url, post.url.replace(/^https?:\/\//, ''), 'the current sourceSlide signature carries the page address');
+  assert.equal(cta.path, undefined, 'no separate path line in new editions');
+  for (const slide of post.slides) assert.equal(slide.authorisation, line);
+  for (const n of storyFrames(post.slides)) assert.equal(post.slides[n - 1].authorisation, line);
+});
+
+test('every daily kind retains mandatory authorisation when its content discusses the Victorian election', () => {
+  const line = 'Authorised by Jake Tracey, Noice Pty Ltd, Level 6, 608/343 Little Collins Street, Melbourne VIC 3000.';
+  for (const kind of ['politician', 'bill', 'grant', 'topic', 'program', 'largest']) {
+    const post = dailyPost.authoriseVicPost({date: '2026-10-13', kind, subject: kind + ':example', title: 'Victorian state election 2026', text: 'A long source-qualified record. '.repeat(15), caption: 'Official Victorian election dates and records.', url: 'https://opax.com.au/vic-election-2026', slides: [{type: 'number', kicker: 'Dates', title: 'Districts', lines: [], value: '88', label: 'districts', alt: '88 districts'}]});
+    assert.ok(post.text.includes(line), kind); assert.ok(xLength(post.text) <= X_LIMIT, kind);
+    assert.ok(post.caption.includes(line), kind); assert.equal(post.slides[0].authorisation, line);
+    assert.deepEqual(dailyPost.authoriseVicPost(post), post, 'applying again is stable');
+  }
+  assert.ok(!WEEK.includes('hub'), 'no hub composer in the daily rotation');
+});
