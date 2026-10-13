@@ -66,3 +66,6 @@ portal/private/
 
 # Reusable web gate passes, profiles, logs and isolated build worktrees.
 .ops/gate-cache/
+
+# Wrangler fixture metadata can also be written from the repository root.
+/.wrangler/
