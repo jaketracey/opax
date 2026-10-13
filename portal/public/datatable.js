@@ -68,13 +68,17 @@ function candidateRows(rows, config) {
   });
 }
 const donorColumn = column => /^(?:donor(?:_?name)?|label|name)$/i.test(column.key) || column.primary;
+// Parliamentary echo checks validate reader state; donor checks also validate data.
+const checksEcho = config => config.privacy === 'donors' || config.privacy === 'echo';
 const allowedText = (config, value, data = false) => {
-  if (config.privacy !== 'donors') return true;
+  if (data && config.privacy !== 'donors' || !checksEcho(config)) return true;
   try { return (data ? config.dataPrivacyCheck || config.privacyCheck : config.privacyCheck)?.(value) === true; } catch { return false; }
 };
+const allowedRowText = (config, value) => allowedText(config,value,true);
 // A row is approved as a whole and by every decoded scalar, before any UI derives
 // options, counts, chips or bars from it. Async browser checks populate approvals.
 function rowPrivacyCheck(row, config) {
+  if (config.privacy !== 'donors') return true;
   return allowedText(config,JSON.stringify(row),true) && [...queryValues(row)].every(value=>allowedText(config,value,true));
 }
 const publicRows = (rows,config) => candidateRows(rows,config).filter(row=>rowPrivacyCheck(row,config));
@@ -103,7 +107,7 @@ function cleanQuery(query = {}, config, page) {
     if (Array.isArray(value)) {
       const options = config.rows ? publicRows(config.rows,config).map(row=>text(row[key]))
         : Array.isArray(page?.facets?.[key]) ? page.facets[key].map(f=>f.value) : [];
-      const safe = value.filter(v=>options.includes(v) && (config.privacy !== 'donors' || allowedText(config,v)));
+      const safe = value.filter(v=>options.includes(v) && allowedText(config,v));
       if (safe.length) out.filters[key] = safe; else delete out.filters[key];
     } else if (column.facet !== 'range') delete out.filters[key];
   }
@@ -250,12 +254,12 @@ function safePage(page, config) {
     if (Array.isArray(values)) {
       facets[key]=values.filter(v=>v && typeof v.value === 'string' && Number.isFinite(v.count) && v.count >= 0)
         .filter(v=>config.privacy !== 'donors' || (donorColumn(column) ? isOrganisationDonor({label:v.value}) || isUnnamedAggregate(v.value) : true)
-          && [...queryValues(v)].every(value=>allowedText(config,value,true)))
+          && [...queryValues(v)].every(value=>allowedRowText(config,value)))
         .map(v=>({value:v.value,count:v.count}));
-    } else if (values && Number.isFinite(values.min) && Number.isFinite(values.max) && [...queryValues(values)].every(value=>allowedText(config,value,true))) facets[key]={min:values.min,max:values.max};
+    } else if (values && Number.isFinite(values.min) && Number.isFinite(values.max) && [...queryValues(values)].every(value=>allowedRowText(config,value))) facets[key]={min:values.min,max:values.max};
   }
   // Unknown endpoint fields must never enter the hydration payload.
-  const result={rows,total:Number.isSafeInteger(page.total) && page.total >= 0 && allowedText(config,String(page.total),true) ? page.total : rows.length,page:allowedText(config,String(page.page),true) ? integer(page.page,1) : 1,pageSize:allowedText(config,String(page.pageSize),true) ? integer(page.pageSize,config.pageSize || 50) : config.pageSize || 50,facets};
+  const result={rows,total:Number.isSafeInteger(page.total) && page.total >= 0 && allowedRowText(config,String(page.total)) ? page.total : rows.length,page:allowedRowText(config,String(page.page)) ? integer(page.page,1) : 1,pageSize:allowedRowText(config,String(page.pageSize)) ? integer(page.pageSize,config.pageSize || 50) : config.pageSize || 50,facets};
   if (rows.length !== page.rows.length) return {...result,total:rows.length,page:1,facets:applyQuery(rows,config).facets};
   return result;
 }
@@ -394,7 +398,7 @@ export function mountDataTable(el, config) {
   let query = {}, rawURL, rawPage, lastURL, rawRejected = false;
   let initialRejected = root.hasAttribute('data-dt-rejected');
   const rawConfig = config, approvals = new Map(), dataApprovals = new Map();
-  if (config.privacy === 'donors') config = {...config,privacyCheck:value=>approvals.get(value) === true,dataPrivacyCheck:value=>dataApprovals.get(value) === true};
+  if (checksEcho(config)) config = {...config,privacyCheck:value=>approvals.get(value) === true,dataPrivacyCheck:value=>dataApprovals.get(value) === true};
   const view = {density:config.density || 'comfortable', columnsVisible:config.columnsVisible || config.columns.map(c=>c.key), constantsVisible:[]};
   let page;
   try { page = JSON.parse(root.querySelector('[data-dt-page]')?.textContent || 'null'); } catch { /* Client rows below. */ }
@@ -494,7 +498,7 @@ export function mountDataTable(el, config) {
   }
   async function permit(value, data = false) {
     const cache = data ? dataApprovals : approvals;
-    if (config.privacy !== 'donors') return true;
+    if (data && config.privacy !== 'donors' || !checksEcho(config)) return true;
     if (cache.has(value)) return cache.get(value);
     let safe=false;
     try {
@@ -523,7 +527,7 @@ export function mountDataTable(el, config) {
     if (rawURL) {
       const captured=rawURL;
       root.setAttribute('aria-busy','true'); paint();
-      if (config.privacy === 'donors') await permitSet([...rawQueryValues(captured.searchParams),...linkInputs()]);
+      if (checksEcho(config)) await permitSet([...rawQueryValues(captured.searchParams),...linkInputs()]);
       if (destroyed || version !== revision) return;
       const guarded=guardTableURL(config,captured);
       rawURL=undefined; rawRejected=guarded.rejected; query=guarded.query;
@@ -531,10 +535,10 @@ export function mountDataTable(el, config) {
     }
     const pending=structuredClone(query), previousPage=rawPage || page;
     rawPage=undefined;
-    if (config.privacy === 'donors') {
+    if (checksEcho(config)) {
       const values=[...queryValues(pending),...rawQueryValues(new URLSearchParams(serializeQuery(pending,config.urlKey)))];
-      const data=config.rows ? engine(config.rows,config) : null;
-      const needsValidation=values.some(value=>!approvals.has(value)) || (data ? data.rowJSON.some(row=>!dataApprovals.has(row)) : page.rows.some(row=>!dataApprovals.has(JSON.stringify(row))));
+      const data=config.rows && config.privacy === 'donors' ? engine(config.rows,config) : null;
+      const needsValidation=values.some(value=>!approvals.has(value)) || config.privacy === 'donors' && (data ? data.rowJSON.some(row=>!dataApprovals.has(row)) : page.rows.some(row=>!dataApprovals.has(JSON.stringify(row))));
       // Pending query values never render against old SSR rows. Already approved state can
       // retain its controls and focus while fetching, avoiding a second redraw.
       if (needsValidation) {
@@ -581,7 +585,7 @@ export function mountDataTable(el, config) {
         await permitSet([...queryValues({...query,page:candidate.page}),...rawQueryValues(new URLSearchParams(serializeQuery({...query,page:candidate.page},config.urlKey)))]);
         // Invalid rows are dropped; safePage recomputes counts and facets from
         // the surviving rows instead of trusting metadata for rejected records.
-      }
+      } else if (config.privacy === 'echo') await permitSet([...queryValues({page:candidate.page,pageSize:candidate.pageSize}),...rawQueryValues(new URLSearchParams(serializeQuery({...query,page:candidate.page},config.urlKey)))]);
       if (destroyed || version !== revision) return;
       page=safePage(candidate,config); query.page=page.page;
       paint(); delete view.searchSelection; urlState();
@@ -617,7 +621,7 @@ export function mountDataTable(el, config) {
         const exported = await readServerCSV(endpoint(true,state),win.fetch.bind(win),exportController.signal);
         csv = exported.csv; truncated = exported.truncated;
       } else csv = toCSV(filteredRows(config.rows || [],config,state),config);
-      if (!await permit(csv,true)) throw new Error('Unsafe table export');
+      if (config.privacy === 'donors' && !await permit(csv,true)) throw new Error('Unsafe table export');
       if (destroyed || revision !== exportRevision || view.rejected) return;
       const url = win.URL.createObjectURL(new win.Blob([csv],{type:'text/csv;charset=utf-8'}));
       const a = doc.createElement('a'); a.href = url; a.download = config.export?.filename || `${config.id}.csv`;

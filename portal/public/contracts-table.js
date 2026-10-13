@@ -1,4 +1,4 @@
-import { applyQuery, dataTableHTML, mountDataTable, guardTableURL, parseQuery, serializeQuery } from './datatable.js?v=dda24c48f6';
+import { applyQuery, dataTableHTML, mountDataTable, guardTableURL, parseQuery, serializeQuery } from './datatable.js?v=a29b28e72e';
 import {isOrganisationRecipient} from './recipient-entity.js?v=33f5c5486d';
 import {rawQueryValues} from './datatable-query.js?v=6dd55aab38';
 

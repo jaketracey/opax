@@ -1,5 +1,5 @@
-import {dataTableHTML,mountDataTable,guardTableURL} from './datatable.js?v=dda24c48f6';
-import {remotePrivacyCheck,publicQueryState} from './contracts-table.js?v=23cd8b8e46';
+import {dataTableHTML,mountDataTable,guardTableURL} from './datatable.js?v=a29b28e72e';
+import {remotePrivacyCheck,publicQueryState} from './contracts-table.js?v=57b3bcb468';
 import {isOrganisationRecipient} from './recipient-entity.js?v=33f5c5486d';
 export function suppliersTableConfig({donor,rows,privacyCheck,dataPrivacyCheck}={}) {
   return {id:'suppliers-table',caption:'Suppliers',pageType:'suppliers',privacy:'donors',

@@ -94,7 +94,7 @@ test('non-SA uses the original Ask body and response, permission skips the prefl
 });
 
 // Exercise the actual Ask SSE emitter. The producer cannot finish until the
-// reader has observed a delta; this checks ordering without timing sleeps.
+// reader has observed a writing status; drafts remain held until validation.
 const source=readFileSync(new URL('../src/index.ts',import.meta.url),'utf8');
 const ast=ts.createSourceFile('index.ts',source,ts.ScriptTarget.Latest,true);
 const emitter=ast.statements.find(n=>ts.isFunctionDeclaration(n)&&n.name?.text==='apiAskStream').getText(ast);
@@ -106,31 +106,25 @@ async function streamFixture(sources, code=emitter) {
     Response,TransformStream,TextEncoder,AbortController,AbortSignal,Date,SSE_HEADERS:headers,ASK_STALL_MS:1000,ASK_RETRY_BUDGET_MS:1000,
     saSendData:(event,data)=>saEventPayload(event,data,'false',async()=>sa),isPositionBody:()=>false,
     streamAskGuarded:async(_env,_body,send)=>{await send('status',{phase:'writing'});await send('delta',{text:'A progressive answer. '});await barrier;await send('delta',{text:'Another sentence.'});return {answer:payload.answer};},
-    overviewPayload:async p=>p,isRefusal:()=>false,guardPositionAnswer:r=>r,askPayload:()=>payload,loadPeople:async()=>null,hasUnsupportedQuotes:()=>false,looseAnswer:p=>p,withAskedAs:p=>p,
+    overviewPayload:async p=>p,isRefusal:()=>false,guardPositionAnswer:r=>r,askPayload:()=>payload,loadPeople:async()=>null,hasUnsupportedQuotes:()=>false,looseAnswer:p=>p,withAskedAs:p=>p,withNoAnswerLink:async p=>p,
   });
   const response=await saPublicResponse(emit({},{SA_HANSARD_FULL_TEXT:'false'},{waitUntil:p=>pending.push(p)},{cacheStatus:'MISS',records:{}}),'false',async()=>sa);
   assert.deepEqual([...response.headers],[...new Headers({...headers,'x-opax-cache':'MISS'})]);
   const started=performance.now(),reader=response.body.getReader(),decoder=new TextDecoder();let text='';
-  while(!text.includes('event: delta')){const part=await reader.read();assert.equal(part.done,false,'stream must produce a delta before closing');text+=decoder.decode(part.value);}
-  const firstDeltaMs=performance.now()-started;
+  while(!text.includes('event: status\ndata: {"phase":"writing"}')){const part=await reader.read();assert.equal(part.done,false,'stream must report writing before closing');text+=decoder.decode(part.value);}
+  const firstStatusMs=performance.now()-started;
   assert.doesNotMatch(text,/event: done/);release();
   for(;;){const r=await reader.read();if(r.done)break;text+=decoder.decode(r.value);}
   const doneMs=performance.now()-started;
-  await Promise.all(pending);return {text,payload,trace:{stubbed:true,firstDeltaMs,doneMs,donePresentAtFirstDelta:false,events:text.split('\n\n').filter(Boolean).map(block=>/^event: (\w+)/.exec(block)[1])}};
+  await Promise.all(pending);return {text,payload,trace:{stubbed:true,firstStatusMs,doneMs,donePresentAtFirstStatus:false,events:text.split('\n\n').filter(Boolean).map(block=>/^event: (\w+)/.exec(block)[1])}};
 }
-test('non-SA Ask streams progressively with main SSE bytes and unchanged cache headers',async()=>{
+test('non-SA Ask reports progress while holding the draft, with unchanged cache headers',async()=>{
   const {text,payload,trace}=await streamFixture([]);
-  // Baseline bytes from the unchanged main emitter, including whitespace.
-  assert.equal(text,'event: status\ndata: {"phase":"searching"}\n\nevent: status\ndata: {"phase":"writing"}\n\nevent: delta\ndata: {"text":"A progressive answer. "}\n\nevent: delta\ndata: {"text":"Another sentence."}\n\nevent: done\ndata: '+JSON.stringify(payload)+'\n\n');
-  if(process.env.SA_MAIN_BASELINE) {
-    const baseline=ts.createSourceFile('main.ts',readFileSync(process.env.SA_MAIN_BASELINE,'utf8'),ts.ScriptTarget.Latest,true);
-    const main=baseline.statements.find(n=>ts.isFunctionDeclaration(n)&&n.name?.text==='apiAskStream').getText(baseline);
-    assert.equal(text,(await streamFixture([],main)).text,'byte for byte against the main emitter');
-    trace.byteIdenticalToMain=true;trace.mainSha=process.env.SA_MAIN_SHA;
-  }
+  // Draft deltas are held; the accepted payload and SSE framing stay intact.
+  assert.equal(text,'event: status\ndata: {"phase":"searching"}\n\nevent: status\ndata: {"phase":"writing"}\n\nevent: done\ndata: '+JSON.stringify(payload)+'\n\n');
   if(process.env.SA_STREAM_TRACE)writeFileSync(process.env.SA_STREAM_TRACE,JSON.stringify(trace,null,2)+'\n');
 });
-test('SA Ask also streams before done; the final citation carries the excerpt notice and official URL',async()=>{
+test('SA Ask reports progress before done; the final citation carries the excerpt notice and official URL',async()=>{
   const {text}=await streamFixture([{...sa,resource:'r1',snippet:sa.text}]);
   const done=JSON.parse(text.split('event: done\ndata: ')[1]);cap(done.sources[0].snippet);cap(done.sources[0].text);assert.equal(done.sources[0].excerpt_label,SA_EXCERPT_LABEL);assert.equal(done.sources[0].source_url,sa.url);
 });
