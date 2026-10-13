@@ -1059,6 +1059,21 @@ function focusEntry(id) {
   el.focus({ preventScroll: true });
 }
 
+/** The keys a reader typed on the Ask hero before the box was drawn
+ *  (spa-entry.js keeps them), put into the box; an Enter among them asks once
+ *  route() has finished drawing the page. False when nothing was typed. */
+function takeEarlyAsk() {
+  const early = window.OpaxEarlyAsk?.();
+  const field = $("ask-input");
+  const text = early?.text.trimStart() || "";
+  if (!text.trim() || field.value.trim()) return false;
+  setQueryValue("ask-input", text);
+  field.focus({ preventScroll: true });
+  field.setSelectionRange(text.length, text.length);
+  if (early.enter) setTimeout(() => $("ask-form").requestSubmit(), 0);
+  return true;
+}
+
 function showPanel(name) {
   if (name !== 'bill') { destroyBillText(); billView = null; }
   if (name !== "money-records") { moneyRecordsGeneration++; moneyRecordsHandle?.destroy(); moneyRecordsHandle = null; }
@@ -2071,7 +2086,7 @@ function route() {
       runAsk(q);
     } else if (!q && $("ask-result").hidden) {
       setFrontPageHidden(true);
-      focusEntry("ask-input");
+      if (!takeEarlyAsk()) focusEntry("ask-input");
     }
   }
   syncPathMeta();

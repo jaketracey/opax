@@ -148,13 +148,13 @@
     <!-- ============================== ASK ============================== -->
     <section id="panel-ask" class="panel" aria-label="Ask the record">
       <nav class="entry-modes" aria-label="Research mode"><a href="/ask" aria-current="page">Ask a question</a><a href="/ask?view=search" data-entry-mode="search">Search records</a></nav>
-      <form id="ask-form" class="ask-row" data-ui-size="large">
+      <form id="ask-form" class="ask-row" data-ui-size="large" action="/ask" method="get">
         <label for="ask-input" class="visually-hidden">Ask a question of the parliamentary record</label>
         <!-- The box and its clear cross share one wrapper so the cross can sit
              inside the field at any width; the wrapper takes the row rules the
              bare textarea used to. -->
         <div class="ask-field ui-input-wrap">
-          <textarea id="ask-input" class="grow-field ui-input" rows="1" autocomplete="off" enterkeyhint="search" spellcheck="false"></textarea>
+          <textarea id="ask-input" name="q" class="grow-field ui-input" rows="1" autocomplete="off" enterkeyhint="search" spellcheck="false"></textarea>
           <button type="button" class="field-clear ui-button ui-icon-button" id="ask-clear" aria-label="Clear the question" data-variant="quiet"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="m5 5 10 10M15 5 5 15"/></svg></button>
         </div>
         <button type="submit" class="ui-button" id="ask-submit" data-variant="primary">Ask the record</button>
