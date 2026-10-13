@@ -112,8 +112,8 @@ test('real answer source cards preserve own-house attribution and clear testimon
 
 test('Ask scope and topic catalog use the same partition; prior citations cannot reintroduce witnesses', async () => {
   const calls = [];
-  const api = scopedContext(ts.transpile(select(['scopeSpeakerBody', 'reasonedPositionAnswer', 'apiPersonTopics', 'speakerAttribution', 'foldName', 'canonicalSpeaker', 'TOPIC_SLUGS'])) + ';({scopeSpeakerBody,reasonedPositionAnswer,apiPersonTopics})', {
-    URL, AbortSignal, scopeFilter, personScope, scopedCollaborators, MAX_SPEAKER_CHARS: 160, NAME_RE: /^[\w ]+$/, TOPIC_FILTER_PREFIX: '/classification.labels/topic', ASK_SYNC_TIMEOUT_MS:1000,
+  const api = scopedContext(ts.transpile(select(['scopeSpeakerBody', 'reasonedPositionAnswer', 'apiPersonTopics', 'aggregateFetch', 'AGGREGATE_UPSTREAM_TIMEOUT_MS', 'speakerAttribution', 'foldName', 'canonicalSpeaker', 'TOPIC_SLUGS'])) + ';({scopeSpeakerBody,reasonedPositionAnswer,apiPersonTopics})', {
+    URL, Response, AbortSignal, scopeFilter, personScope, scopedCollaborators, MAX_SPEAKER_CHARS: 160, NAME_RE: /^[\w ]+$/, TOPIC_FILTER_PREFIX: '/classification.labels/topic', ASK_SYNC_TIMEOUT_MS:1000,
     buildAskBody:()=>({rag_strategies:[{name:'prequeries'}]}),isRefusal:()=>false,hasUnsupportedQuotes:()=>false,
     askPayload:()=>({answer:'Grounded answer.',citations:{p:[[0,1]]},sources:[]}),
     loadPeople: async () => ({ byFold: new Map([['stewart', { speech_scope: scope }]]) }),

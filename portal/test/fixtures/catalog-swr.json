@@ -1,0 +1,14 @@
+{
+  "counters": { "resources": 120, "paragraphs": 480 },
+  "catalog": {
+    "fulltext": {
+      "total": 100,
+      "facets": {
+        "/classification.labels/topic": { "/classification.labels/topic/housing": 30 },
+        "/classification.labels/party": { "/classification.labels/party/Example Party": 30 },
+        "/classification.labels/state": { "/classification.labels/state/federal": 30 },
+        "/classification.labels/kind": { "/classification.labels/kind/speech": 100 }
+      }
+    }
+  }
+}

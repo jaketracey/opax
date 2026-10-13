@@ -366,7 +366,7 @@ const MONEY_OVERVIEW_TIMEOUT_MS = 20000
 const STATS_CACHE_TTL = 300
 const RECENT_CACHE_TTL = 300
 
-type CacheStatus = 'HIT' | 'MISS' | 'BYPASS'
+type CacheStatus = 'HIT' | 'MISS' | 'BYPASS' | 'STALE'
 
 async function sha256Hex(text: string): Promise<string> {
   const digest = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(text))
@@ -2815,12 +2815,12 @@ async function apiResource(request: Request, url: URL, slug: string, env: Env, c
  * by parliament, so the stats page can show what is indexed right now rather
  * than what the manifest said at the last sync. Cached five minutes.
  */
-async function apiStats(env: Env): Promise<Response> {
+async function apiStats(env: Env, ctx: ExecutionContext, refresh = false): Promise<Response> {
   return cachedJson('/api/stats', async () => {
-    const [countersRes, kindsRes, statesRes] = await Promise.all([
-      kbFetch(env, '/counters'),
-      kbFetch(env, `/catalog?faceted=${KIND_FACET}&page_size=0`),
-      kbFetch(env, `/catalog?faceted=${STATE_FACET}&filters=${SPEECH_FILTER}&page_size=0`),
+    const [countersRes, kindsRes, statesRes] = await aggregateBatch([
+      aggregateFetch(env, '/counters'),
+      aggregateFetch(env, `/catalog?faceted=${KIND_FACET}&page_size=0`),
+      aggregateFetch(env, `/catalog?faceted=${STATE_FACET}&filters=${SPEECH_FILTER}&page_size=0`),
     ])
     if (!countersRes.ok) return json({ error: `counters failed (${countersRes.status})` }, 502)
     const counters = (await countersRes.json()) as Record<string, unknown>
@@ -2832,8 +2832,12 @@ async function apiStats(env: Env): Promise<Response> {
       return Object.fromEntries(Object.entries(facet).map(([path, n]) => [path.slice(prefix.length + 1), n]))
     }
     const [kinds, speechesByState] = await Promise.all([facetOf(kindsRes, KIND_FACET), facetOf(statesRes, STATE_FACET)])
-    return json({ ...counters, kinds, speeches_by_state: speechesByState })
-  }, STATS_CACHE_TTL)
+    const out = json({ ...counters, kinds, speeches_by_state: speechesByState })
+    // Preserve the existing partial-counter response on a cold miss, but do
+    // not replace complete cached counts when either facet is unavailable.
+    if (!kindsRes.ok || !statesRes.ok) out.headers.set('cache-control', 'no-store')
+    return out
+  }, ctx, STATS_CACHE_TTL, refresh)
 }
 
 /**
@@ -3075,30 +3079,109 @@ interface CatalogPage {
   fulltext?: { total?: number; facets?: Record<string, Record<string, number>> }
 }
 
-/** Whole-route cache for the GET aggregates (no per-request input). X-OPAX-Cache says HIT or MISS. */
+const AGGREGATE_UPSTREAM_TIMEOUT_MS = 25_000
+const CACHED_JSON_HARD_TTL = 7 * 24 * 60 * 60
+// Only in-flight aggregate rebuilds are shared within this isolate.
+const cachedJsonRefreshes = new Map<string, Promise<Response>>()
+let catalogWarmup: Promise<void> | undefined
+
+/** Bound aggregate reads without changing kbFetch or any Ask caller. */
+async function aggregateFetch(env: Env, path: string, init?: { body?: unknown }): Promise<Response> {
+  const out = await kbFetch(env, path, { ...init, signal: AbortSignal.timeout(AGGREGATE_UPSTREAM_TIMEOUT_MS) })
+  // These page_size=0/count responses are small. Consume even error bodies so
+  // a warm-up never advances while an unread response holds a connection open.
+  return new Response(await out.arrayBuffer(), out)
+}
+
+async function aggregateBatch(reads: Promise<Response>[]): Promise<Response[]> {
+  // A rejected read must not leave its sibling calls running into the next
+  // warm-up route, which could exceed the four-call concurrency limit.
+  const results = await Promise.allSettled(reads)
+  return results.map(result => {
+    if (result.status === 'rejected') throw result.reason
+    return result.value
+  })
+}
+
+/** GET aggregates: long storage TTL, the existing browser TTL, and background refresh. */
 async function cachedJson(
   cachePath: string,
   build: () => Promise<Response>,
+  ctx: ExecutionContext,
   maxAge = 600,
+  refresh = false,
 ): Promise<Response> {
   const cache = caches.default
   const cacheKey = new Request(`https://opax.com.au${cachePath}`)
   const cached = await cache.match(cacheKey)
-  if (cached) return withCacheStatus(await sanitiseStoredResponse(cached), 'HIT')
-  const out = await build()
-  if (out.ok) {
-    out.headers.set('cache-control', `public, max-age=${maxAge}`)
-    await cache.put(cacheKey, await sanitiseStoredResponse(out.clone()))
+  const rebuild = (): Promise<Response> => {
+    const pending = cachedJsonRefreshes.get(cacheKey.url)
+    if (pending) return pending
+    const task = (async () => {
+      let out: Response
+      try {
+        out = await sanitiseStoredResponse(await build())
+      } catch {
+        return json({ error: 'catalog failed' }, 502)
+      }
+      if (out.ok && out.headers.get('cache-control') !== 'no-store') {
+        out.headers.set('x-opax-cached-at', new Date().toISOString())
+        const stored = out.clone()
+        stored.headers.set('cache-control', `public, max-age=${CACHED_JSON_HARD_TTL}`)
+        await cache.put(cacheKey, stored)
+        out.headers.set('cache-control', `public, max-age=${maxAge}`)
+      }
+      return out
+    })().finally(() => cachedJsonRefreshes.delete(cacheKey.url))
+    cachedJsonRefreshes.set(cacheKey.url, task)
+    return task
   }
-  return withCacheStatus(await sanitiseStoredResponse(out), 'MISS')
+  if (cached && !refresh) {
+    const builtAt = Date.parse(cached.headers.get('x-opax-cached-at') ?? '')
+    const stale = !Number.isFinite(builtAt) || Date.now() - builtAt >= maxAge * 1000
+    if (stale) {
+      ctx.waitUntil(rebuild().then(() => {}, () => {
+        console.error(JSON.stringify({ event: 'catalog_refresh_failed', path: cachePath }))
+      }))
+    }
+    const out = withCacheStatus(await sanitiseStoredResponse(cached), stale ? 'STALE' : 'HIT')
+    out.headers.set('cache-control', `public, max-age=${maxAge}`)
+    return out
+  }
+  return withCacheStatus((await rebuild()).clone(), 'MISS')
+}
+
+/** Cache API entries are per-colo. One route at a time keeps upstream reads at four. */
+async function warmCatalog(env: Env, ctx: ExecutionContext): Promise<void> {
+  if (!env.ARAG_KB_ID || !env.ARAG_KB_TOKEN) return
+  // Slow ticks can overlap the next five-minute tick; share the whole warm-up
+  // within this isolate as well as each individual key's rebuild.
+  if (catalogWarmup) return catalogWarmup
+  catalogWarmup = (async () => {
+    const refreshes = [
+      () => apiStats(env, ctx, true),
+      () => apiTopics(env, ctx, true),
+      ...[...TOPIC_SLUGS].map(slug => () => apiTopic(slug, env, ctx, true)),
+    ]
+    for (const refresh of refreshes) {
+      try {
+        const out = await refresh()
+        // Consume the small aggregate before the next route opens connections.
+        await out.arrayBuffer()
+      } catch {
+        console.error(JSON.stringify({ event: 'catalog_warm_failed' }))
+      }
+    }
+  })().finally(() => { catalogWarmup = undefined })
+  return catalogWarmup
 }
 
 /** All 21 topics with live counts, plus how many speeches carry any topic label. */
-async function apiTopics(env: Env): Promise<Response> {
+async function apiTopics(env: Env, ctx: ExecutionContext, refresh = false): Promise<Response> {
   return cachedJson('/api/topics', async () => {
-    const [facetedRes, anyRes] = await Promise.all([
-      kbFetch(env, `/catalog?faceted=${TOPIC_FILTER_PREFIX}&page_size=0`),
-      kbFetch(env, `/catalog?filters=${TOPIC_FILTER_PREFIX}&page_size=0`),
+    const [facetedRes, anyRes] = await aggregateBatch([
+      aggregateFetch(env, `/catalog?faceted=${TOPIC_FILTER_PREFIX}&page_size=0`),
+      aggregateFetch(env, `/catalog?filters=${TOPIC_FILTER_PREFIX}&page_size=0`),
     ])
     if (!facetedRes.ok || !anyRes.ok) return json({ error: 'catalog failed' }, 502)
     const faceted = (await facetedRes.json()) as CatalogPage
@@ -3111,7 +3194,7 @@ async function apiTopics(env: Env): Promise<Response> {
     // Every topic renders even before the pass reaches it — zero is honest.
     const topics = [...TOPIC_SLUGS].map((slug) => ({ slug, count: counts.get(slug) ?? 0 }))
     return json({ labelled: any.fulltext?.total ?? 0, topics })
-  })
+  }, ctx, 600, refresh)
 }
 
 /**
@@ -3120,11 +3203,11 @@ async function apiTopics(env: Env): Promise<Response> {
  * whole speeches and `labelled` (the bare labelset filter's total) is their
  * honest denominator. Cached 10 minutes like /api/topics.
  */
-async function apiParties(env: Env): Promise<Response> {
+async function apiParties(env: Env, ctx: ExecutionContext): Promise<Response> {
   return cachedJson('/api/parties', async () => {
     const [facetedRes, anyRes] = await Promise.all([
-      kbFetch(env, `/catalog?faceted=${PARTY_FACET}&page_size=0`),
-      kbFetch(env, `/catalog?filters=${PARTY_FACET}&page_size=0`),
+      aggregateFetch(env, `/catalog?faceted=${PARTY_FACET}&page_size=0`),
+      aggregateFetch(env, `/catalog?filters=${PARTY_FACET}&page_size=0`),
     ])
     if (!facetedRes.ok || !anyRes.ok) return json({ error: 'catalog failed' }, 502)
     const faceted = (await facetedRes.json()) as CatalogPage
@@ -3135,7 +3218,7 @@ async function apiParties(env: Env): Promise<Response> {
       .filter((p) => p.label && p.count > 0)
       .sort((a, b) => b.count - a.count || a.label.localeCompare(b.label))
     return json({ labelled: any.fulltext?.total ?? 0, parties })
-  })
+  }, ctx)
 }
 
 /**
@@ -3145,15 +3228,15 @@ async function apiParties(env: Env): Promise<Response> {
  * record. Speech chronology comes from /find, whose metadata date is the
  * speech date; catalog `created` is only index time and is never used here.
  */
-async function apiTopic(slug: string, env: Env): Promise<Response> {
+async function apiTopic(slug: string, env: Env, ctx: ExecutionContext, refresh = false): Promise<Response> {
   if (!TOPIC_SLUGS.has(slug)) return json({ error: 'unknown topic' }, 404)
   return cachedJson(`/api/topic/${slug}`, async () => {
     const filter = `filters=${TOPIC_FILTER_PREFIX}/${slug}`
-    const [partyRes, anyRes, stateRes, stateTotalsRes] = await Promise.all([
-      kbFetch(env, `/catalog?faceted=${PARTY_FACET}&${filter}&page_size=0`),
-      kbFetch(env, `/catalog?filters=${TOPIC_FILTER_PREFIX}&page_size=0`),
-      kbFetch(env, `/catalog?faceted=${STATE_FACET}&${filter}&page_size=0`),
-      kbFetch(env, `/catalog?faceted=${STATE_FACET}&filters=${TOPIC_FILTER_PREFIX}&page_size=0`),
+    const [partyRes, anyRes, stateRes, stateTotalsRes] = await aggregateBatch([
+      aggregateFetch(env, `/catalog?faceted=${PARTY_FACET}&${filter}&page_size=0`),
+      aggregateFetch(env, `/catalog?filters=${TOPIC_FILTER_PREFIX}&page_size=0`),
+      aggregateFetch(env, `/catalog?faceted=${STATE_FACET}&${filter}&page_size=0`),
+      aggregateFetch(env, `/catalog?faceted=${STATE_FACET}&filters=${TOPIC_FILTER_PREFIX}&page_size=0`),
     ])
     if (!partyRes.ok || !anyRes.ok || !stateRes.ok || !stateTotalsRes.ok) {
       return json({ error: 'catalog failed' }, 502)
@@ -3182,7 +3265,7 @@ async function apiTopic(slug: string, env: Env): Promise<Response> {
       parties,
       states,
     })
-  })
+  }, ctx, 600, refresh)
 }
 
 const TIDE_DECADES = [
@@ -3198,7 +3281,7 @@ const TIDE_DECADES = [
  * at ingest. Federal is the default comparable run; `scope=all` includes all
  * five parliaments and keeps its unequal source windows visible in coverage.
  */
-async function apiTide(url: URL, env: Env): Promise<Response> {
+async function apiTide(url: URL, env: Env, ctx: ExecutionContext): Promise<Response> {
   const scope = url.searchParams.get('scope') ?? 'federal'
   if (scope !== 'federal' && scope !== 'all') return json({ error: 'bad scope' }, 400)
   return cachedJson(`/api/tide?scope=${scope}`, async () => {
@@ -3211,7 +3294,7 @@ async function apiTide(url: URL, env: Env): Promise<Response> {
       ]
     })
     const parseCatalog = async (path: string): Promise<CatalogPage> => {
-      const response = await kbFetch(env, path)
+      const response = await aggregateFetch(env, path)
       if (!response.ok) throw new Error(`catalog ${response.status}`)
       return (await response.json()) as CatalogPage
     }
@@ -3240,11 +3323,11 @@ async function apiTide(url: URL, env: Env): Promise<Response> {
       })
     }
     return json({ scope, decades, topics })
-  })
+  }, ctx)
 }
 
 /** A person's topic mix overall and in the two comparable recent decades. */
-async function apiPersonTopics(url: URL, env: Env): Promise<Response> {
+async function apiPersonTopics(url: URL, env: Env, ctx: ExecutionContext): Promise<Response> {
   const raw = url.searchParams.get('name')?.trim() ?? ''
   if (!raw || raw.length > MAX_SPEAKER_CHARS || !NAME_RE.test(raw)) {
     return json({ error: 'bad name' }, 400)
@@ -3256,7 +3339,7 @@ async function apiPersonTopics(url: URL, env: Env): Promise<Response> {
     const speakerClauses = [attribution ? scopedCollaborators(collaborator, attribution) as Record<string, unknown> : collaborator,
       ...(attribution ? [scopeFilter(attribution)] : [])]
     const topic = { prop: 'label', labelset: 'topic' }
-    const catalog = (clauses: Record<string, unknown>[], faceted = true) => kbFetch(env, '/catalog', {
+    const catalog = (clauses: Record<string, unknown>[], faceted = true) => aggregateFetch(env, '/catalog', {
       body: {
         filter_expression: { resource: clauses.length === 1 ? clauses[0] : { and: clauses } },
         ...(faceted ? { faceted: [TOPIC_FILTER_PREFIX] } : {}),
@@ -3296,7 +3379,7 @@ async function apiPersonTopics(url: URL, env: Env): Promise<Response> {
         now: profile(now, '2020–26', 2020, 2026),
       },
     })
-  })
+  }, ctx)
 }
 
 /**
@@ -3310,7 +3393,7 @@ async function apiPersonTopics(url: URL, env: Env): Promise<Response> {
  */
 const MATRIX_PARTY_CAP = 7
 
-async function apiMatrix(env: Env): Promise<Response> {
+async function apiMatrix(env: Env, ctx: ExecutionContext): Promise<Response> {
   return cachedJson('/api/matrix', async () => {
     const slugs = [...TOPIC_SLUGS]
     // Workers cap simultaneous open connections at 6, and a response body
@@ -3318,7 +3401,7 @@ async function apiMatrix(env: Env): Promise<Response> {
     // with "Response closed due to connection limit" (local dev does not
     // enforce it). Fetch AND parse in batches of five.
     const parseCatalog = async (path: string): Promise<CatalogPage> => {
-      const r = await kbFetch(env, path)
+      const r = await aggregateFetch(env, path)
       if (!r.ok) throw new Error(`catalog ${r.status}`)
       return (await r.json()) as CatalogPage
     }
@@ -3374,7 +3457,7 @@ async function apiMatrix(env: Env): Promise<Response> {
       cells,
       totals,
     })
-  }, 900)
+  }, ctx, 900)
 }
 
 // ---------------------------------------------------------------------------
@@ -5464,7 +5547,7 @@ async function serveStorySlide(url: URL, request: Request, env: Env, ctx: Execut
   if (!Number.isFinite(Date.parse(date + 'T12:00:00Z')) || new Date(date + 'T12:00:00Z').toISOString().slice(0, 10) !== date) return new Response('Not found', { status: 404 })
   if (!Number.isInteger(n) || n < 1 || n > 10) return new Response('Not found', { status: 404 })
   let post: Awaited<ReturnType<typeof previewPublication>> = null
-  try { post = await previewPublication(env, date, name => personTopicsFor(name, env)) } catch (err) {
+  try { post = await previewPublication(env, date, name => personTopicsFor(name, env, ctx)) } catch (err) {
     console.error(JSON.stringify({ level: 'error', path: url.pathname, message: `story edition failed: ${String(err)}` }))
     return new Response('Slide unavailable', { status: 503 })
   }
@@ -6081,7 +6164,7 @@ async function route(
       }
       if (url.pathname === '/api/person-slugs' && request.method === 'GET') return await apiPersonSlugs(env)
       if (url.pathname === '/api/stats' && request.method === 'GET') {
-        return await apiStats(env)
+        return await apiStats(env, ctx)
       }
       if (url.pathname === '/api/recent' && request.method === 'GET') {
         return await apiRecent(env)
@@ -6122,13 +6205,13 @@ async function route(
         const subject = typeof v.subject === 'string' && v.subject.length <= 120 ? v.subject : undefined
         const channels = Array.isArray(v.channels) ? v.channels.filter((c): c is Channel => (CHANNELS as readonly string[]).includes(String(c))) : undefined
         if (v.dry_run) {
-          const post = await previewPublication(env, date, name => personTopicsFor(name, env), kind, subject)
+          const post = await previewPublication(env, date, name => personTopicsFor(name, env, ctx), kind, subject)
           const response = json(post ? { ...post, publication: { x: publicationCopy(post, 'x'), bluesky: publicationCopy(post, 'bluesky'), facebook: publicationCopy(post, 'facebook'), instagram: publicationCopy(post, 'instagram') } } : { error: 'nothing to post' }, post ? 200 : 404)
           response.headers.set('cache-control', 'no-store')
           return response
         }
         const result = await runSocialPublication(env, {
-          personTopics: name => personTopicsFor(name, env), date, kind, subject, channels,
+          personTopics: name => personTopicsFor(name, env, ctx), date, kind, subject, channels,
           sourceResponse: async (target, method = 'HEAD') => {
             const u = new URL(target)
             const head = new Request(target, { method })
@@ -6150,29 +6233,29 @@ async function route(
         if (!/^\d{4}-\d{2}-\d{2}$/.test(date) || !Number.isFinite(Date.parse(date + 'T12:00:00Z')) || new Date(date + 'T12:00:00Z').toISOString().slice(0, 10) !== date) return json({ error: 'bad date' }, 400)
         const kindParam = url.searchParams.get('kind')
         const kind = (DAILY_POST_KINDS as readonly string[]).includes(kindParam ?? '') ? kindParam as DailyPostKind : undefined
-        const post = await previewPublication(env, date, name => personTopicsFor(name, env), kind)
+        const post = await previewPublication(env, date, name => personTopicsFor(name, env, ctx), kind)
         const response = json(post ? { ...post, publication: { x: publicationCopy(post, 'x'), bluesky: publicationCopy(post, 'bluesky'), facebook: publicationCopy(post, 'facebook'), instagram: publicationCopy(post, 'instagram') } } : { error: 'nothing to post' }, post ? 200 : 404)
         response.headers.set('cache-control', 'no-store')
         return response
       }
       if (url.pathname === '/api/topics' && request.method === 'GET') {
-        return await apiTopics(env)
+        return await apiTopics(env, ctx)
       }
       if (url.pathname === '/api/parties' && request.method === 'GET') {
-        return await apiParties(env)
+        return await apiParties(env, ctx)
       }
       const topicMatch = url.pathname.match(/^\/api\/topic\/([a-z][a-z-]*)$/)
       if (topicMatch && request.method === 'GET') {
-        return await apiTopic(topicMatch[1], env)
+        return await apiTopic(topicMatch[1], env, ctx)
       }
       if (url.pathname === '/api/tide' && request.method === 'GET') {
-        return await apiTide(url, env)
+        return await apiTide(url, env, ctx)
       }
       if (url.pathname === '/api/person-topics' && request.method === 'GET') {
-        return await apiPersonTopics(url, env)
+        return await apiPersonTopics(url, env, ctx)
       }
       if (url.pathname === '/api/matrix' && request.method === 'GET') {
-        return await apiMatrix(env)
+        return await apiMatrix(env, ctx)
       }
       if (url.pathname === '/api/news' && request.method === 'GET') {
         return await apiNews()
@@ -6244,8 +6327,8 @@ function pageAddress(pathname: string): boolean {
   return !/\.[a-z0-9]{1,8}$/i.test(last) || /\.html$/i.test(last)
 }
 
-function personTopicsFor(name: string, env: Env): Promise<Response> {
-  return apiPersonTopics(new URL(`${env.COMMUNITY_ORIGIN}/api/person-topics?name=${encodeURIComponent(name)}`), env)
+function personTopicsFor(name: string, env: Env, ctx: ExecutionContext): Promise<Response> {
+  return apiPersonTopics(new URL(`${env.COMMUNITY_ORIGIN}/api/person-topics?name=${encodeURIComponent(name)}`), env, ctx)
 }
 
 export default {
@@ -6395,10 +6478,11 @@ export default {
       // Expiry and provider-ID cleanup also run while voice/community are paused.
       try {await expireVoiceSessions(env)} catch {console.error(JSON.stringify({event:'voice_housekeeping_failed'}))}
       try {console.log('community-reply-emails', JSON.stringify(await deliverReplyEmails(env)))} catch {console.error(JSON.stringify({event:'community_reply_email_dispatch_failed'}))}
+      await warmCatalog(env, _ctx)
       return
     }
     const result = await runSocialPublication(env, {
-      now: controller.scheduledTime, personTopics: name => personTopicsFor(name, env),
+      now: controller.scheduledTime, personTopics: name => personTopicsFor(name, env, _ctx),
       sourceResponse: async (target, method = 'HEAD') => {
         const url = new URL(target)
         const request = new Request(target, { method })
