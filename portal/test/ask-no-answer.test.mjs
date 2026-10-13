@@ -8,6 +8,14 @@ import {question, stubFetch} from './fixtures/ask-no-answer.mjs';
 
 const restore = offline();
 const harness = await loadWorker(new URL('../src/index.ts', import.meta.url).pathname, new URL('../public/', import.meta.url).pathname);
+// The unnamed-subject case must not depend on generated production exports.
+const assets = harness.env.ASSETS;
+harness.env.ASSETS = {fetch(request) {
+  const path = new URL(request.url).pathname;
+  if (path === '/search-catalog/manifest.json') return Response.json({version:'0000000000000000',count:0,counts:{},coverage:'Fixture',recordShardSize:1000});
+  if (path.startsWith('/search-catalog/')) return Response.json(path.endsWith('/meta.json') ? [] : {});
+  return assets.fetch(request);
+}};
 let mode = 'declined', calls = 0;
 globalThis.fetch = async (input, init) => { if (String(input).endsWith('/ask') && JSON.parse(init.body).generate_answer !== false) calls++; return stubFetch(input, init, mode === 'empty' && calls > 1 ? 'answered' : mode); };
 test.after(restore);

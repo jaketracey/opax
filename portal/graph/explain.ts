@@ -12,6 +12,7 @@
 
 import {donorNameWithheld,loadDonorViewIndex,withheldDonorTotals,donorAggregateDetail,isUnnamedAggregate,unnamedDonorLabel} from '../public/donor-views.js'
 import * as THREE from 'three'
+import {isMultiSpeaker, speakerLabel, resolvedParticipants, groupAvatarHTML} from '../public/speech-attribution.js'
 import { BRONZE_INK, clusterColour, partyDot, SURFACE } from './palette.ts'
 
 const plural = (n: number, one: string, many = `${one}s`) => `${n.toLocaleString()} ${n === 1 ? one : many}`
@@ -61,6 +62,10 @@ type AskSource = {
   party?: string
   date?: string
   cited?: boolean
+  kind?: string
+  speaker_type?: string
+  debate?: string
+  participants?: {name: string; person_id: string; role?: string}[]
 }
 type ExplainHelpers = {
   displayTitle: (record: AskSource) => string
@@ -497,7 +502,9 @@ function sourceList(data: { citations?: Record<string, unknown>; sources?: AskSo
     li.dataset.sceneCitation = String(index)
     // The speaker's portrait, when the site holds one, resolved after the row
     // is on screen so the list never waits on the photo map.
-    if (source.speaker && helpers.portraitFor) {
+    if (isMultiSpeaker(source)) {
+      const face = el('span', 'explain-source-face'); face.innerHTML = groupAvatarHTML(); li.append(face)
+    } else if (source.speaker && helpers.portraitFor) {
       const face = el('span', 'explain-source-face')
       li.append(face)
       helpers.portraitFor(String(source.speaker)).then((url) => {
@@ -512,17 +519,31 @@ function sourceList(data: { citations?: Record<string, unknown>; sources?: AskSo
     link.href = `/doc/${encodeURIComponent(String(source.slug))}`
     link.textContent = helpers.displayTitle(source)
     copy.append(link)
-    if (source.party || source.speaker || source.date) {
+    if (source.party || source.speaker || source.date || source.kind === 'speech') {
       const meta = el('small')
-      if (source.party) {
+      if (source.party && !isMultiSpeaker(source)) {
         const chip = el('a', 'explain-source-party') as HTMLAnchorElement
         chip.href = helpers.subjectHash('party', String(source.party))
         chip.innerHTML = helpers.partyChipHTML(source.party)
         meta.append(chip)
       }
-      const words = [source.speaker, source.date].filter(Boolean).join(' · ')
+      const words = [source.kind === 'speech' || isMultiSpeaker(source) ? speakerLabel(source) : source.speaker, source.speaker_type === 'witness' ? 'witness' : '', source.date].filter(Boolean).join(' · ')
       if (words) meta.append(document.createTextNode(`${source.party ? ' · ' : ''}${words}`))
       copy.append(meta)
+    }
+    if (isMultiSpeaker(source)) {
+      const participants = el('span', 'speech-participants')
+      for (const p of resolvedParticipants(source.participants)) {
+        const a=el('a', 'speech-participant') as HTMLAnchorElement; a.href=helpers.subjectHash('person', p.name)
+        a.textContent=p.name + (p.role ? ` (${p.role})` : '')
+        if (participants.childNodes.length) participants.append(', ')
+        participants.append(a)
+        helpers.portraitFor?.(p.name).then(url=>{
+          if (!url) return
+          const img=el('img') as HTMLImageElement; img.src=url; img.alt=''; img.width=24; img.height=24; img.loading='lazy'; a.prepend(img)
+        }).catch(()=>undefined)
+      }
+      copy.append(participants)
     }
     li.append(copy)
     list.append(li)

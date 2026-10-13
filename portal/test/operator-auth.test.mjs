@@ -19,6 +19,7 @@ const routes=[
  {label:'reviewer status',path:'/api/ops/reviewer-login',method:'GET'},
  {label:'daily-post engagement',path:'/api/daily-post/engagement',method:'GET'},
  {label:'daily-post run',path:'/api/daily-post/run',method:'POST'},
+ {label:'Ask gold',path:'/api/ops/ask-gold',method:'POST',handler:'apiAgenticGold',status:409},
 ];
 const cachedEngagement={at:'test-only',accounts:{},posts:[],errors:{}};
 
@@ -66,7 +67,7 @@ function fixture(t){
 for(const route of routes){
  test(route.label+' accepts the right operator token without provider calls',async t=>{
   const f=fixture(t),response=await f.call(route,f.headers(f.env.DAILY_POST_OPERATOR_SECRET));
-  assert.equal(response.status,200);assert.equal(response.headers.get('cache-control'),'no-store');
+  assert.equal(response.status,route.status||200);assert.equal(response.headers.get('cache-control'),'no-store');
   assert.deepEqual(f.comparisons,[{presented:32,expected:32}]);
   const payload=await response.json();
   if(route.label==='reviewer status')assert.deepEqual(payload,{reviewer_login_enabled:true});
@@ -119,7 +120,7 @@ test('the constant-time comparator result governs authorization without a raw st
  assert.equal(await operatorAuthorized(f.request(routes[0],f.headers('x'+secret.slice(1))),f.env),true);
 });
 
-test('all three operator routes use the shared constant-time guard and contain no inline credential reads',()=>{
+test('all four operator routes use the shared constant-time guard and contain no inline credential reads',()=>{
  const helper=readFileSync(new URL('../src/operator-auth.ts',import.meta.url),'utf8');
  assert.match(helper,/crypto\.subtle\.timingSafeEqual\(/);
  assert.doesNotMatch(helper,/===|!==|==|!=/,'operator guard must not compare raw strings');
@@ -130,9 +131,11 @@ test('all three operator routes use the shared constant-time guard and contain n
   if(ts.isElementAccessExpression(node)&&ts.isStringLiteral(node.argumentExpression)&&node.argumentExpression.text==='DAILY_POST_OPERATOR_SECRET')secretReads.push(node);
   if(ts.isCallExpression(node)&&ts.isIdentifier(node.expression)&&node.expression.text==='operatorAuthorized'){
    let parent=node.parent;
-   while(parent&&(!ts.isIfStatement(parent)||!routes.some(route=>parent.expression.getText(source).includes(route.path))))parent=parent.parent;
+   while(parent&&(!ts.isIfStatement(parent)||!routes.some(route=>parent.expression.getText(source).includes(route.path)))&&(!ts.isFunctionDeclaration(parent)||!routes.some(route=>route.handler===parent.name?.text)))parent=parent.parent;
    assert.ok(parent,'operator guard must belong to a known operator route');
-   guarded.push(routes.find(route=>parent.expression.getText(source).includes(route.path)).path);
+   const route=routes.find(route=>ts.isIfStatement(parent)?parent.expression.getText(source).includes(route.path):route.handler===parent.name?.text);
+   if(route.handler)assert.ok(source.text.includes(`url.pathname === '${route.path}'`)&&source.text.includes(`await ${route.handler}(request, env, ctx)`),'guarded handler must be wired to its operator route');
+   guarded.push(route.path);
   }
   ts.forEachChild(node,visit);
  }

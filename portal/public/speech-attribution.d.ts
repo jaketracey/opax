@@ -7,6 +7,10 @@ export interface AttributedRow {
 }
 export function isWitness(row: AttributedRow): boolean;
 export function isUnattributed(row: AttributedRow): boolean;
+export function isMultiSpeaker(row: AttributedRow & {labels?: {speaker_type?: string}}): boolean;
+export function groupAvatarHTML(): string;
+export function speakerLabel(row: AttributedRow & {chair_role?: string}): string;
+export function resolvedParticipants(value: unknown): {name: string; person_id: string; role?: string}[];
 export function belongsToScope(row: AttributedRow, scope: SpeechScope): boolean;
 export function scopeFilter(scope: SpeechScope): Record<string, unknown>;
 export function speakerHref(row: AttributedRow, href: string): string;

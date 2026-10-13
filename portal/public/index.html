@@ -62,7 +62,7 @@
 <link rel="stylesheet" href="/datatable.css">
 <link rel="stylesheet" href="/vote-tables.css?v=d727aad769">
 <script type="module" src="/vote-tables.js?v=cb915fed8b"></script>
-<link rel="stylesheet" href="/style.css?v=2f41309e9e">
+<link rel="stylesheet" href="/style.css?v=b25f320930">
 <link rel="stylesheet" href="/ui-controls.css?v=f8011bf298">
 <link rel="stylesheet" href="/ui-source.css?v=4f396d8cfc">
 <link rel="stylesheet" href="/voice.css?v=a10938b91d">
@@ -234,6 +234,7 @@
       </details>
       <div id="ask-status" class="status" role="status"></div>
       <div id="ask-wombat" hidden></div>
+      <div id="ask-steps-live" hidden></div>
       <!-- The passage behind the part of the answer being read, fading up on
            the right as the reader scrolls. Content duplicates the sources
            list below; the card is mouse-only (keyboard readers use the list). -->
@@ -246,6 +247,7 @@
       </aside>
       <div id="ask-result" hidden>
         <p class="kicker">Answer</p>
+        <div id="ask-steps" hidden></div>
         <div id="ask-overview" class="answer-overview" hidden></div>
         <article id="ask-answer" class="answer" tabindex="-1"></article>
         <p class="answer-stamp" id="ask-stamp"></p>
@@ -2067,11 +2069,11 @@
 <!-- defer: never block the parser (Lighthouse counted this as render-blocking).
      Deferred scripts still run before DOMContentLoaded, so nothing changes for
      app.js's boot. ?v= is content-hash stamped by scripts/stamp_assets.mjs. -->
-<script src="/spa-shell.js?v=7d71ef2971" defer></script>
+<script src="/spa-shell.js?v=83ab77b089" defer></script>
 <script src="/navigation.js?v=32c5b65527" defer></script>
 <script src="/quick-search.js?v=27eac3b2f7" defer></script>
 <script src="/ui-source.js?v=5e7b751ca0" defer></script>
-<script src="/app.js?v=58a8428fcb" defer></script>
+<script src="/app.js?v=850137bac4" defer></script>
 <!-- PostHog runs after the app (defer order) so the first route is not queued behind it; it replays the events measured before it (analytics/index.js). -->
 <script src="/analytics.js?v=7a83ce20cf" defer></script>
 </body>
