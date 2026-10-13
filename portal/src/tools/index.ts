@@ -6,7 +6,7 @@ export * from './types'
 import { validToolIdentifier } from './identifiers'
 export * from './identifiers'
 
-export const TOOL_REGISTRY_VERSION = 'structured-tools-2'
+export const TOOL_REGISTRY_VERSION = 'structured-tools-3'
 /** Add each new data-tool module here once; Ask and MCP both read this catalog. */
 export const tools: readonly ToolDefinition[] = Object.freeze([electorates])
 const names = new Set<string>()

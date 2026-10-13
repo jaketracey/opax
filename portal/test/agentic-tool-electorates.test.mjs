@@ -157,7 +157,7 @@ test('data questions route to agentic while ordinary speech questions retain the
 
 test('requested ranking counts are honored, including every rendered fact beyond eight', async () => {
   const deps = { ...stub(), generate: async () => { throw Error('Deterministic ranking must not generate'); } };
-  for (const question of ['top 3 federal electorates by unemployment rate', 'top three federal electorates by unemployment rate', 'Which 3 federal electorates have the highest unemployment rate?']) {
+  for (const question of ['top 3 federal electorates by unemployment rate', 'top three federal electorates by unemployment rate', 'Which 3 federal electorates have the highest unemployment rate?', 'Which three federal electorates have the highest unemployment rate?', 'first three federal electorates by unemployment rate']) {
     assert.equal(electoratePlan(question).steps[0].args.limit, 3, question);
     const out = await runAgentic(question, deps);
     assert.equal(out.answered, true, question);
@@ -165,13 +165,49 @@ test('requested ranking counts are honored, including every rendered fact beyond
     for (const name of ['Alpine', 'Coast', 'Sample Bay']) assert.ok(out.answer.includes(name), question);
   }
   const published = { ...deps, asset: async path => JSON.parse(await readFile(new URL('../public' + path, import.meta.url), 'utf8')) };
-  const out = await runAgentic('top 20 federal electorates by unemployment rate', published);
-  assert.equal(out.answered, true);
-  assert.ok(out.facts.length >= 20); // Ties may extend the requested cutoff.
-  assert.ok(out.facts.every(f => out.answer.includes(f.text + ' [' + f.id + ']')));
-  for (const question of ['top 21 federal electorates by unemployment rate', 'top 0 federal electorates by unemployment rate', 'top 3.5 federal electorates by unemployment rate', 'top several federal electorates by unemployment rate', 'top twenty one federal electorates by unemployment rate', 'top one hundred federal electorates by unemployment rate']) {
+  const low = 'first three federal electorates with the lowest unemployment rate';
+  assert.equal(electoratePlan(low).steps[0].args.order, 'asc');
+  assert.deepEqual((await runAgentic(low, deps)).facts.map(f => f.value), [0, 4, 8.2]);
+  for (const question of ['top 20 federal electorates by unemployment rate', 'top twenty federal electorates by unemployment rate']) {
+    assert.equal(electoratePlan(question).steps[0].args.limit, 20);
+    const out = await runAgentic(question, published);
+    assert.equal(out.answered, true);
+    assert.ok(out.facts.length >= 20); // Ties may extend the requested cutoff.
+    assert.ok(out.facts.every(f => out.answer.includes(f.text + ' [' + f.id + ']')));
+  }
+  for (const question of ['top 21 federal electorates by unemployment rate', 'top 0 federal electorates by unemployment rate', 'top 3.5 federal electorates by unemployment rate', 'top several federal electorates by unemployment rate', 'top twenty one federal electorates by unemployment rate', 'top one hundred federal electorates by unemployment rate', 'Which twenty-whatever-five federal electorates have the highest unemployment rate?', 'Which three point five federal electorates have the highest unemployment rate?', 'Which negative three federal electorates have the highest unemployment rate?']) {
     assert.equal(electoratePlan(question).shape, 'unanswerable', question);
     assert.equal((await runAgentic(question, deps)).answered, false, question);
+  }
+});
+
+test('complete compound counts through ninety-nine consistently decline above twenty', async () => {
+  const deps = { ...stub(), asset: async () => { throw Error('Declined counts must not read data'); }, generate: async () => { throw Error('Declined counts must not generate'); } };
+  for (const [phrase, count] of [
+    ['twenty-one', 21], ['twenty one', 21], ['twenty-five', 25], ['twenty five', 25], ['25', 25],
+    ['thirty-two', 32], ['forty three', 43], ['fifty-four', 54], ['sixty five', 65], ['seventy-six', 76], ['eighty seven', 87],
+    ['ninety-nine', 99], ['ninety nine', 99], ['99', 99], ['twenty‑five', 25],
+  ]) for (const question of [`Which ${phrase} federal electorates have the highest unemployment rate?`, `top ${phrase} federal electorates by unemployment rate`]) {
+    const plan = electoratePlan(question);
+    assert.equal(plan.shape, 'unanswerable', question);
+    assert.deepEqual(plan.steps, [], question);
+    assert.ok(plan.reason.includes(`Requested ${count} electorates`), question);
+    assert.match(plan.reason, /limit of 20/, question);
+    const out = await runAgentic(question, deps);
+    assert.equal(out.answered, false, question);
+    assert.deepEqual(out.facts, [], question);
+    assert.equal(out.answer, '', question);
+    assert.ok(out.notes.includes(plan.reason), question);
+  }
+});
+
+test('ordinal positions are parsed completely and declined instead of returning a smaller ranking', () => {
+  for (const [phrase, position] of [['third', 3], ['3rd', 3], ['twentieth', 20], ['20th', 20], ['twenty-fifth', 25], ['twenty fifth', 25], ['25th', 25], ['ninety-ninth', 99], ['ninety ninth', 99], ['99th', 99]]) {
+    const plan = electoratePlan(`Which ${phrase} federal electorate has the highest unemployment rate?`);
+    assert.equal(plan.shape, 'unanswerable', phrase);
+    assert.deepEqual(plan.steps, [], phrase);
+    assert.match(plan.reason, new RegExp(`\\b${position}\\b`), phrase);
+    assert.match(plan.reason, position > 20 ? /limit of 20/ : /ordinal rank lookup/, phrase);
   }
 });
 

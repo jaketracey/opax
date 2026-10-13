@@ -45,6 +45,47 @@ export function electorateStep(args: Record<string, unknown>): { label: string; 
   return { label: 'Checking electorate data', arg: label.slice(0, 40) }
 }
 
+const SMALL_COUNTS = ['zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten', 'eleven', 'twelve', 'thirteen', 'fourteen', 'fifteen', 'sixteen', 'seventeen', 'eighteen', 'nineteen']
+const SMALL_ORDINALS = ['zeroth', 'first', 'second', 'third', 'fourth', 'fifth', 'sixth', 'seventh', 'eighth', 'ninth', 'tenth', 'eleventh', 'twelfth', 'thirteenth', 'fourteenth', 'fifteenth', 'sixteenth', 'seventeenth', 'eighteenth', 'nineteenth']
+const TENS_COUNTS = ['twenty', 'thirty', 'forty', 'fifty', 'sixty', 'seventy', 'eighty', 'ninety']
+const TENS_ORDINALS = ['twentieth', 'thirtieth', 'fortieth', 'fiftieth', 'sixtieth', 'seventieth', 'eightieth', 'ninetieth']
+const cardinalCounts: Record<string, number> = Object.fromEntries([...SMALL_COUNTS.map((word, i) => [word, i]), ...TENS_COUNTS.map((word, i) => [word, (i + 2) * 10])])
+const ordinalCounts: Record<string, number> = Object.fromEntries([...SMALL_ORDINALS.map((word, i) => [word, i]), ...TENS_ORDINALS.map((word, i) => [word, (i + 2) * 10])])
+// Consume unsupported larger expressions too, so "one hundred" never becomes one.
+const countWords = new Set([...Object.keys(cardinalCounts), ...Object.keys(ordinalCounts), 'and', 'point', 'minus', 'negative', 'hundred', 'hundredth', 'thousand', 'thousandth', 'million', 'millionth', 'billion', 'billionth'])
+const numericCount = /^([+-]?\d+(?:\.\d+)?)(st|nd|rd|th)?$/
+const countToken = (word: string) => numericCount.test(word) || numericCount.test(word.split('-')[0]) || countWords.has(word.split('-')[0])
+const countQualifiers = new Set([...JURISDICTIONS, ...CHAMBERS, ...'current historical abolished all australian new south wales victorian victoria queensland western australia tasmania tasmanian capital territory northern house of representatives legislative assembly council lower upper highest lowest oldest youngest most least fewest unemployment rate median personal household income age population'.split(' ')])
+
+function rankingCount(question: string): { value?: number; ordinal?: boolean; direction?: 'asc' | 'desc' } | undefined {
+  const words = question.replace(/[‐‑‒–−]/g, '-').split(/\s+/)
+  const prefix = words.findIndex((word, i) => /^(top|bottom)$/.test(word) || /^(first|last)$/.test(word) && countToken(words[i + 1] ?? ''))
+  let start = -1, end = -1
+  if (prefix >= 0) {
+    start = prefix + (words[prefix + 1] === 'the' ? 2 : 1)
+    end = start + 1
+    while (end < words.length && countToken(words[end])) end++
+  } else {
+    for (let i = 0; i < words.length; i++) if (/^electorates?[?.!,]?$/.test(words[i])) {
+      end = i
+      while (end > 0 && countQualifiers.has(words[end - 1])) end--
+      start = end
+      while (start > 0 && countToken(words[start - 1])) start--
+      if (start < end) break
+      start = end = -1
+    }
+  }
+  if (start < 0) return undefined
+  const direction = prefix < 0 ? undefined : /^(top|first)$/.test(words[prefix]) ? 'desc' : 'asc'
+  const text = words.slice(start, end).join(' '), numeric = text.match(numericCount)
+  if (numeric) return { value: Number(numeric[1]), ordinal: !!numeric[2], direction }
+  const parts = text.split(/[ -]+/)
+  if (parts.length === 1) return { value: cardinalCounts[text] ?? ordinalCounts[text], ordinal: Object.hasOwn(ordinalCounts, text), direction }
+  const tens = cardinalCounts[parts[0]], units = cardinalCounts[parts[1]] ?? ordinalCounts[parts[1]]
+  if (parts.length === 2 && tens >= 20 && tens % 10 === 0 && units >= 1 && units <= 9) return { value: tens + units, ordinal: Object.hasOwn(ordinalCounts, parts[1]), direction }
+  return { direction }
+}
+
 /** The common data questions have a bounded plan even when the planner is unavailable. */
 export function electoratePlan(question: string): { shape: 'ranking' | 'unanswerable'; steps: { tool: string; args: Record<string, unknown> }[]; reason?: string } | null {
   if (!isElectorateDataQuestion(question)) return null
@@ -60,13 +101,11 @@ export function electoratePlan(question: string): { shape: 'ranking' | 'unanswer
   // Median rent is distinct from the renting percentage.
   const indicator = /median rent/.test(q) ? 'median_rent_weekly' : metrics.find(([, re]) => re.test(q))?.[0]
   if (!indicator) return null
-  const ranked = /\b(?:lowest|highest|oldest|youngest|most|least|fewest|rank|top|bottom)\b/.test(q)
-  const countWords = ['one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten', 'eleven', 'twelve', 'thirteen', 'fourteen', 'fifteen', 'sixteen', 'seventeen', 'eighteen', 'nineteen', 'twenty']
-  const topCount = q.match(/\b(?:top|bottom)\s+(?:the\s+)?(\S+)(?:\s+(one|two|three|four|five|six|seven|eight|nine|ten|hundred|thousand|million|billion|and|\d+)\b)?/)
-  const countToken = topCount?.[1] ??
-    (ranked ? q.match(/\b(\d+(?:\.\d+)?|one|two|three|four|five|six|seven|eight|nine|ten|eleven|twelve|thirteen|fourteen|fifteen|sixteen|seventeen|eighteen|nineteen|twenty)\s+(?:\w+\s+){0,4}electorates?\b/)?.[1] : undefined)
-  const limit = countToken === undefined ? undefined : /^\d+$/.test(countToken) ? Number(countToken) : countWords.indexOf(countToken) + 1
-  if (topCount?.[2] || limit !== undefined && (!Number.isInteger(limit) || limit < 1 || limit > 20)) return { shape: 'unanswerable', steps: [], reason: 'Ask supports an explicit ranking count from 1 to 20 electorates, including ties at the cutoff.' }
+  const count = rankingCount(q)
+  const ranked = /\b(?:lowest|highest|oldest|youngest|most|least|fewest|rank|top|bottom)\b/.test(q) || !!count?.direction || !!count?.ordinal
+  const limit = ranked ? count?.value : undefined
+  if (ranked && count && (limit === undefined || !Number.isSafeInteger(limit) || limit < 1 || limit > 20)) return { shape: 'unanswerable', steps: [], reason: limit !== undefined && Number.isSafeInteger(limit) && limit > 20 ? `Requested ${limit} electorates exceeds Ask's limit of 20. Request 1 to 20; all cutoff ties are included.` : 'Ask supports an explicit whole ranking count from 1 to 20 electorates, including ties at the cutoff.' }
+  if (count?.ordinal) return { shape: 'unanswerable', steps: [], reason: `Individual rank ${limit} requires an ordinal rank lookup. Ask supports top/bottom counts from 1 to 20 electorates, including ties at the cutoff.` }
   // Threshold/comparison wording needs the schema-aware planner; never ignore it.
   if (/\b(?:above|below|over|under|between|compare|than)\b/.test(q)) return null
   const states: [string, RegExp][] = [['nsw', /new south wales|\bnsw\b/], ['vic', /victoria\w*|\bvic\b/], ['qld', /queensland|\bqld\b/], ['sa', /south australia\w*|\bsa\b/], ['wa', /western australia\w*|\bwa\b/], ['tas', /tasmania\w*|\btas\b/], ['act', /australian capital territory|\bact\b/], ['nt', /northern territory|\bnt\b/]]
@@ -79,9 +118,10 @@ export function electoratePlan(question: string): { shape: 'ranking' | 'unanswer
   const location = (question.match(/\b(?:in|for)\s+(.+?)\s*[?.!]*$/i) ?? question.match(/\bof\s+(.+?)\s*[?.!]*$/i))?.[1]
     .replace(/\s*[?.!]+$/, '').replace(/^(?:the\s+)?(?:electorate|seat)(?:\s+of)?\s+/i, '').trim()
   if (!ranked && (!location || states.some(([, re]) => re.test(fold(location))))) return null
+  const order = /\b(?:lowest|youngest|least|fewest)\b/.test(q) ? 'asc' : /\b(?:highest|oldest|most)\b/.test(q) ? 'desc' : count?.direction ?? 'asc'
   return { shape: 'ranking', steps: [{ tool: 'electorates', args: {
     indicator, jurisdiction, chamber, ...(state && !stateSeats && ranked ? { state } : {}),
-    ...(ranked ? { order: /highest|oldest|most|top/.test(q) ? 'desc' : 'asc', ...(limit === undefined ? {} : { limit }) } : { operation: 'lookup', electorate: location }),
+    ...(ranked ? { order, ...(limit === undefined ? {} : { limit }) } : { operation: 'lookup', electorate: location }),
     ...(/historical|abolished/.test(q) ? { status: 'historical' } : {}),
   } }] }
 }

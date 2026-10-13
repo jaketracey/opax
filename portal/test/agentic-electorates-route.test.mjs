@@ -100,6 +100,25 @@ test('a cached valid lookup cannot bypass invalid-name rejection in JSON or SSE'
   assert.equal(outbound, 0);
 });
 
+test('complete ranking counts decline above twenty in JSON and SSE without partial answers', async () => {
+  for (const phrase of ['twenty-five', 'twenty five', '25', 'ninety-nine']) for (const streaming of [false, true]) {
+    const question = `Which ${phrase} federal electorates have the highest unemployment rate?`;
+    const payload = await done(await post(question, streaming), streaming);
+    assert.equal(payload.answered, false, JSON.stringify(payload));
+    assert.equal(payload.answer, '');
+    assert.deepEqual(payload.sources, []);
+    assert.equal(payload.reason, 'declined');
+    await flush();
+  }
+  for (const phrase of ['top twenty', 'top three']) for (const streaming of [false, true]) {
+    const payload = await done(await post(`${phrase} federal electorates by unemployment rate`, streaming), streaming);
+    assert.equal(payload.answered, true, JSON.stringify(payload));
+    for (const name of ['Alpine', 'Coast', 'Sample Bay']) assert.ok(payload.answer.includes(name));
+    await flush();
+  }
+  assert.equal(outbound, 0);
+});
+
 test('unavailable published assets yield a failed step and no speech fallback', async () => {
   unavailable = true;
   const payload = await done(await post('What is the median age in Sample Bay?', true), true);
