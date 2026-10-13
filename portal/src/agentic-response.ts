@@ -7,6 +7,8 @@ export function agenticAskPayload(run: AgenticPayload, question: string) {
   const researchFor = (sources: { title: string; url: string; kind: string; date?: string; speaker?: string }[]) => ({ research: {
     ...(run.research ?? { mode: 'planner' as const, rounds: run.steps.length ? 1 : 0, trail: researchTrail(run.events, run.steps), sources }),
     ms: run.timings.total_ms, tokens: run.tokens, cost_usd: run.cost_usd,
+    // Why the loop fell back (timeout, tokens, grounding...): a fixed reason code, never source text.
+    ...(run.research_failure ? { failure: run.research_failure } : {}),
   } })
   if (run.qualitative) return {
     answered: run.answered, ...(run.reason ? { reason: run.reason } : {}),

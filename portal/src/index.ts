@@ -6040,7 +6040,8 @@ async function apiAskRouted(request: Request, url: URL, env: Env, ctx: Execution
     return apiAskRoutedCore(replayPost(request, body.text), url, body.value, selected, ctx)
   }
   const response = await serve()
-  return usage ? withResearchEval(response, () => researchEvalUsage(usage)) : response
+  // Operator evals also see which model and routing the loop used.
+  return usage ? withResearchEval(response, () => ({ ...researchEvalUsage(usage), model: researchModelKey(selected.RESEARCH_LOOP_MODEL_ID, selected.RESEARCH_LOOP_PROVIDER, selected.RESEARCH_LOOP_REASONING) })) : response
 }
 async function apiAskRoutedCore(request: Request, url: URL, input: Record<string, unknown>, env: Env, ctx: ExecutionContext, onRun?: (run: AgenticPayload) => void): Promise<Response> {
   const started = Date.now()
