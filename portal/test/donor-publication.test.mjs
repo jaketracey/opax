@@ -201,7 +201,14 @@ test('client lists contain organisations and one summed aggregate while map tota
 
 test('all donor client surfaces consume the common policy and neutral routes',()=>{
  const app=readFileSync(join(pub,'app.js'),'utf8');assert.ok(app.includes('This donor is not named in OPAX.'));assert.ok(app.includes('donorViewReady'));assert.ok(app.includes('meta[name="twitter:image"]'));
- for(const path of ['app.js','ledger.js','money-map.js','money-journeys-data.js','growth-modules.js','supplier-growth.js','quiz.js','home.js','map-research.js','wordsdollars.js','explain.js','agencies.js','grants.js','grant-recipient.js'])assert.ok(/donorNameWithheld|isOrganisationDonor|donorRows|donor-views|exactOrganisationDonors|donor:withheld|Donor.*withheld|Donors not named/.test(readFileSync(path==='money-map.js'?new URL('../graph/index.ts',import.meta.url):path==='explain.js'?new URL('../graph/explain.ts',import.meta.url):join(pub,path),'utf8')),path);
+ for(const path of ['app.js','ledger.js','money-map.js','money-journeys-data.js','growth-modules.js','supplier-growth.js','quiz.js','home.js','wordsdollars.js','explain.js','agencies.js','grants.js','grant-recipient.js'])assert.ok(/donorNameWithheld|isOrganisationDonor|donorRows|donor-views|exactOrganisationDonors|donor:withheld|Donor.*withheld|Donors not named/.test(readFileSync(path==='money-map.js'?new URL('../graph/index.ts',import.meta.url):path==='explain.js'?new URL('../graph/explain.ts',import.meta.url):join(pub,path),'utf8')),path);
+});
+
+test('money research delegates its privacy and URL decisions to the shared core adapter',()=>{
+ const research=readFileSync(join(pub,'map-research.js'),'utf8'),adapter=readFileSync(join(pub,'money-connections.js'),'utf8');
+ assert.ok(research.includes('prepareMoneyConnectionsConfig') && research.includes('guardTableURL'));
+ assert.ok(adapter.includes('applyQuery([row],policy,{}).total') && adapter.includes('createTablePrivacyValidator'));
+ for(const legacy of ['cleanMoneyConnectionsParams','cleanMoneyConnectionsQuery','donorPrivacyIndex'])assert.ok(!adapter.includes(legacy));
 });
 
 test('the independent served-file guard rejects exported identities and profile URLs',()=>{

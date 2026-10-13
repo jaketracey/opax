@@ -1,0 +1,85 @@
+{
+  "merge_base": "608b824b3bee3f8bb01d7e1872d51db4f12571c9",
+  "filler_rows": {
+    "before": 252,
+    "after": 0,
+    "years": [
+      {
+        "year": "2015-16",
+        "before": 25,
+        "after": 0
+      },
+      {
+        "year": "2016-17",
+        "before": 24,
+        "after": 0
+      },
+      {
+        "year": "2017-18",
+        "before": 25,
+        "after": 0
+      },
+      {
+        "year": "2018-19",
+        "before": 26,
+        "after": 0
+      },
+      {
+        "year": "2019-20",
+        "before": 25,
+        "after": 0
+      },
+      {
+        "year": "2020-21",
+        "before": 21,
+        "after": 0
+      },
+      {
+        "year": "2021-22",
+        "before": 20,
+        "after": 0
+      },
+      {
+        "year": "2022-23",
+        "before": 42,
+        "after": 0
+      },
+      {
+        "year": "2023-24",
+        "before": 22,
+        "after": 0
+      },
+      {
+        "year": "2024-25",
+        "before": 22,
+        "after": 0
+      },
+      {
+        "year": "2025-26",
+        "before": 0,
+        "after": 0
+      },
+      {
+        "year": "2026-27",
+        "before": 0,
+        "after": 0
+      }
+    ]
+  },
+  "receipt_repair": {
+    "sources": 25,
+    "request_count": 28,
+    "missing_identity_before": 25,
+    "missing_identity_after": 0,
+    "unchanged_body_hashes": true,
+    "minimum_measured_interval_seconds": 1.0000604459783062,
+    "pacing_violations": 0,
+    "http_200": 24,
+    "http_404": 1,
+    "successful_body_hashes_unchanged": 24,
+    "unchanged_fiscal_values": 805,
+    "updated_fiscal_snapshots": 52,
+    "fresh_robots": 3,
+    "previous_robots_preserved": 3
+  }
+}

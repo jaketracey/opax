@@ -8,7 +8,7 @@
 <meta name="theme-color" content="#142A43">
 <!-- Google Tag Manager (container GTM-PNDM87LW). The loader and the site's
      own dataLayer events live in /gtm.js so no inline script is needed. -->
-<script src="/spa-entry.js?v=347a573b03"></script>
+<script src="/spa-entry.js?v=6d1168d62e"></script>
 <script src="/events.js?v=02bf234aff" defer></script>
 <script src="/gtm.js?v=0764911f84" defer></script>
 <!-- Home page values. On a real path (/subject/person/slug, /reports/gambling)
@@ -61,8 +61,8 @@
      which is what lets _headers serve these two immutable. -->
 <link rel="stylesheet" href="/datatable.css">
 <link rel="stylesheet" href="/vote-tables.css?v=d727aad769">
-<script type="module" src="/vote-tables.js?v=2f00093b0b"></script>
-<link rel="stylesheet" href="/style.css?v=75e103201e">
+<script type="module" src="/vote-tables.js?v=1e71428034"></script>
+<link rel="stylesheet" href="/style.css?v=cbfd180ea7">
 <link rel="stylesheet" href="/ui-controls.css?v=ce29178242">
 <link rel="stylesheet" href="/ui-source.css?v=78ddb8fc1b">
 <link rel="stylesheet" href="/page-actions.css?v=a416a2254f">
@@ -148,13 +148,13 @@
     <!-- ============================== ASK ============================== -->
     <section id="panel-ask" class="panel" aria-label="Ask the record">
       <nav class="ui-tabs" aria-label="Research mode"><a href="/ask" aria-current="page">Ask a question</a><a href="/ask?view=search" data-entry-mode="search">Search records</a></nav>
-      <form id="ask-form" class="ask-row" data-ui-size="large">
+      <form id="ask-form" class="ask-row" data-ui-size="large" action="/ask" method="get">
         <label for="ask-input" class="visually-hidden">Ask a question of the parliamentary record</label>
         <!-- The box and its clear cross share one wrapper so the cross can sit
              inside the field at any width; the wrapper takes the row rules the
              bare textarea used to. -->
         <div class="ask-field ui-input-wrap">
-          <textarea id="ask-input" class="grow-field ui-input" rows="1" autocomplete="off" enterkeyhint="search" spellcheck="false"></textarea>
+          <textarea id="ask-input" name="q" class="grow-field ui-input" rows="1" autocomplete="off" enterkeyhint="search" spellcheck="false"></textarea>
           <button type="button" class="field-clear ui-button ui-icon-button" id="ask-clear" aria-label="Clear the question" data-variant="quiet"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="m5 5 10 10M15 5 5 15"/></svg></button>
         </div>
         <button type="submit" class="ui-button" id="ask-submit" data-variant="primary">Ask the record</button>
@@ -2110,11 +2110,11 @@
 <!-- defer: never block the parser (Lighthouse counted this as render-blocking).
      Deferred scripts still run before DOMContentLoaded, so nothing changes for
      app.js's boot. ?v= is content-hash stamped by scripts/stamp_assets.mjs. -->
-<script src="/spa-shell.js?v=997e0792eb" defer></script>
+<script src="/spa-shell.js?v=905c4e57b8" defer></script>
 <script src="/navigation.js?v=32c5b65527" defer></script>
 <script src="/quick-search.js?v=27eac3b2f7" defer></script>
 <script src="/ui-source.js?v=d594622c13" defer></script>
-<script src="/app.js?v=35fab2630f" defer></script>
+<script src="/app.js?v=90848b43d7" defer></script>
 <!-- PostHog runs after the app (defer order) so the first route is not queued behind it; it replays the events measured before it (analytics/index.js). -->
 <script src="/analytics.js?v=7a83ce20cf" defer></script>
 </body>

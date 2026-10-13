@@ -96,6 +96,9 @@ The shared derived test, `portal/test/donor-privacy.test.mjs`, covers every tabl
 - Server CSV cap is an endpoint boundary obligation. With 50,001 matching rows, return exactly the first 50,000 data records, then the separate final CSV record `# Export truncated at 50,000 rows.`, and the response header `x-table-export-truncated: true`. The core announces a fixed truncation message after the download. dt-api must register `registerServerCSVContract` from `portal/test/datatable-endpoint-contract.mjs` with its real handler and seeded dataset before server rollouts; the core's reference endpoint test cannot certify dt-api.
 - Every rollout registers `registerTablePrivacy` from `portal/test/datatable-privacy.mjs` in its local Chrome gate. The registration names its actual public input module, table host, secondary facet and server example/endpoint. The hook derives withheld values at run time and asserts public client input, server responses, actual downloaded files, URL state, rendered and accessible text, and analytics in both modes. Core registration lives in `portal/test/datatable-browser.mjs`.
 
+- Connection rows may carry optional `donorEndpoints: {label: string, aliases?: string[] | null}[]`. The privacy adapter checks every donor endpoint with `isOrganisationDonor`; an explicit empty array means the connection has no donor endpoints. Omission keeps the existing donor-row adapter. Only public donor endpoints belong in this metadata.
+- Aggregate metadata may optionally set `label: 'Donors not named'`; the core generates `Donors not named (N)` and applies the same field stripping and link suppression. Money connections use one aggregate row. When multiple record types are in the map view, their amounts occupy separate money columns; they are never added into a combined value.
+
 ## Server CSV continuation (11 Oct 2026, additive clarification)
 
 The 50,000-row limit remains the ceiling for one filtered export. Each CSV
@@ -116,6 +119,8 @@ links. No fields in the shared TypeScript contract change.
 
 - All derived UI uses rows that pass the same whole-row privacy check: chips, facets, counts, bars, SSR, accessible attributes and CSV. Unvalidated `config.rows` never supplies constant chips; rejected views have no derived chips. Browser checks validate every row and scalar before approving it.
 - Identity checks retain the existing word hashes and add NFKC, case-folded letters-and-digits forms in the `stripped:v1:` hash domain. Minimum compact length is 4. Forms of length 4 or 5 require alphanumeric token boundaries; forms of length 6 or more also match substrings of the separator-stripped input.
+
+- Optional `initialRejected: boolean` carries a prior shared raw-URL guard rejection into SSR and hydration. It suppresses rows, derived controls and export until Clear all; the source rows remain available for recovery.
 
 Division and voting rollout compatibility
 

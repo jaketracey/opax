@@ -15,7 +15,7 @@ const donorViewReady = import('/donor-views.js?v=4fcbbb78cf').then(module => {
 
 "use strict";
 let voteTables;
-const voteTablesReady = import("/vote-tables.js?v=2f00093b0b").then(module => { voteTables = module; });
+const voteTablesReady = import("/vote-tables.js?v=1e71428034").then(module => { voteTables = module; });
 let divisionMarkdown;
 const divisionMarkdownReady = import('/division-markdown.js?v=5991511166').then(module => { divisionMarkdown = module; });
 // The labels and source lines (labels.js); the first render waits for them.
@@ -1059,6 +1059,21 @@ function focusEntry(id) {
   el.focus({ preventScroll: true });
 }
 
+/** The keys a reader typed on the Ask hero before the box was drawn
+ *  (spa-entry.js keeps them), put into the box; an Enter among them asks once
+ *  route() has finished drawing the page. False when nothing was typed. */
+function takeEarlyAsk() {
+  const early = window.OpaxEarlyAsk?.();
+  const field = $("ask-input");
+  const text = early?.text.trimStart() || "";
+  if (!text.trim() || field.value.trim()) return false;
+  setQueryValue("ask-input", text);
+  field.focus({ preventScroll: true });
+  field.setSelectionRange(text.length, text.length);
+  if (early.enter) setTimeout(() => $("ask-form").requestSubmit(), 0);
+  return true;
+}
+
 function showPanel(name) {
   if (name !== 'bill') { destroyBillText(); billView = null; }
   if (name !== "money-records") { moneyRecordsGeneration++; moneyRecordsHandle?.destroy(); moneyRecordsHandle = null; }
@@ -1067,6 +1082,7 @@ function showPanel(name) {
   if (name !== "discover") destroyDiscoveryMap();
   if (name !== "money") {
     moneyJourneys?.destroy(); moneyJourneys = null;
+    moneyMapSetup?.abort(); moneyMapSetup = null;
     moneyMapLoading = null; moneyMapGeneration += 1;
     moneyMapHandle?.setPaused(true);
   } else moneyMapHandle?.setPaused(false);
@@ -1227,7 +1243,7 @@ async function mountDiscoveryMap(signal) {
     if (!current()) return;
     const donor = data?.nodes?.find((node) => node.kind === "donor" && node.label.trim().toLocaleLowerCase() === signal.entity.trim().toLocaleLowerCase());
     if (!donor) { root.innerHTML = '<p class="status">This organisation isn’t in the money map’s selected donor set. You can still search its name in the record.</p>'; return; }
-    const { mountMoneyMap } = await import("/money-map.js?v=b41a0591dd");
+    const { mountMoneyMap } = await import("/money-map.js?v=6a5d1961fa");
     if (!current()) return;
     root.textContent = "";
     const handle = await mountMoneyMap(root, "/graph/money.json", { focus: donor.id, chrome: "mini", reveal: true, openCard: false,
@@ -1427,7 +1443,7 @@ async function openMoneyRecords(kind, params) {
   const body = $('money-records-body'); body.innerHTML = '<p class="status">Loading the records…</p>';
   try {
     if (grants && !params.has('program') && !params.has('open') && !params.has('largest')) {
-      const mod = await import('/grants-table.js?v=184ef74ed7');
+      const mod = await import('/grants-table.js?v=edef7c57b0');
       if (generation !== moneyRecordsGeneration) return;
       const controller = new AbortController();
       moneyRecordsHandle = {destroy() {controller.abort();}};
@@ -1467,7 +1483,7 @@ async function openMoneyExplain(params, manageFocus) {
   $('money-records-head').hidden = true;
   const body = $('money-records-body');
   try {
-    const mod = await import('/money-explain.js?v=cb23fc5298');
+    const mod = await import('/money-explain.js?v=07268f6dea');
     if (generation !== moneyRecordsGeneration) return;
     const current = () => generation === moneyRecordsGeneration && location.pathname === '/money/explain';
     moneyRecordsHandle = mod.mountMoneyExplain(body, {
@@ -1521,6 +1537,7 @@ async function openLargestGrants(month, manageFocus) {
   }
 }
 let moneyMapGeneration = 0;
+let moneyMapSetup = null;
 let moneyJourneys = null;
 let moneyJourneyModule = null;
 let moneyJourneyData = null;
@@ -1570,9 +1587,12 @@ async function mountMoney(jurParam, industry, params = new URLSearchParams()) {
   }
   moneyMapIsolate = isolate;
   if (moneyMapLoading === jur) return;
+  moneyMapSetup?.abort();
+  const setup = moneyMapSetup = new AbortController();
   moneyMapLoading = jur;
   moneyResearch?.destroy(); moneyResearch = null;
   const generation = ++moneyMapGeneration;
+  const isCurrent = () => !setup.signal.aborted && generation === moneyMapGeneration;
   moneyJourneys?.destroy(); moneyJourneys = null;
   if (moneyMapHandle) { moneyMapHandle.destroy(); moneyMapHandle = null; moneyMapJur = null; }
   const root = $("money-map-root");
@@ -1580,18 +1600,22 @@ async function mountMoney(jurParam, industry, params = new URLSearchParams()) {
   root.innerHTML = `<p class="ui-status-line money-map-status" role="status">Loading the map…</p>`;
   const cfg = MONEY_JURISDICTIONS[jur];
   try {
-    const [{ mountMoneyMap }, data, journeysModule, researchModule, recordsModule] = await Promise.all([import("/money-map.js?v=b41a0591dd"), loadMoneyFile(jur), import("/money-journeys.js?v=wds-money-20261012"), import("/map-research.js?v=e5597509d1"), import("/money-records.js?v=ia-ux-20260908-2")]);
-    if (moneyMapLoading !== jur || generation !== moneyMapGeneration) return; // switched again while loading
+    const [{ mountMoneyMap }, data, journeysModule, researchModule, recordsModule] = await Promise.all([import("/money-map.js?v=6a5d1961fa"), loadMoneyFile(jur), import("/money-journeys.js?v=wds-money-20261012"), import("/map-research.js?v=d8a0cf330c"), import("/money-records.js?v=ia-ux-20260908-2")]);
+    if (!isCurrent()) return; // switched again while loading
     const fine = $("money-fineprint");
     if (fine) fine.innerHTML = moneyFineprintHTML(jur, data?.meta);
     root.textContent = "";
-    moneyResearch = researchModule.mountMapResearch($('money-research'), data, {
+    const research = await researchModule.mountMapResearch($('money-research'), data, {
+      signal: setup.signal, isCurrent,
       resultsContainer: $('money-research-results'),
       onChange(filters) { moneyJourneys?.setRoute(null, null, null); const u = new URL(location.href); for (const key of ['journey','step','focus']) u.searchParams.delete(key); replaceRoute(u.pathname + u.search); moneyMapHandle?.setFilters(filters); },
       onFocus(id) { moneyJourneys?.pause('map'); moneyMapHandle?.select(id); $('money-stage').scrollIntoView({ block: 'center', behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth' }); },
     });
+    if (!isCurrent()) { research?.destroy(); return; }
+    moneyResearch = research;
     const handle = await mountMoneyMap(root, cfg.file, {
-      filters: recordsModule.readMoneyFilters(params),
+      signal: setup.signal, isCurrent,
+      filters: recordsModule.readMoneyFilters(new URLSearchParams(location.search)),
       focus: params.get('journey') ? undefined : params.get('focus') || undefined,
       onViewChange: (view, filters, years) => {
         moneyResearch?.update(view, filters, years);
@@ -1603,7 +1627,7 @@ async function mountMoney(jurParam, industry, params = new URLSearchParams()) {
       askUrl: (industry) =>
         askHash(`What has parliament said about ${industry.replace(/_/g, " ")}?`),
     });
-    if (moneyMapLoading !== jur || generation !== moneyMapGeneration) { handle.destroy(); return; }
+    if (!isCurrent()) { handle.destroy(); return; }
     moneyMapHandle = handle;
     const legend = root.querySelector('.mm-legend');
     if (legend) {
@@ -1631,7 +1655,7 @@ async function mountMoney(jurParam, industry, params = new URLSearchParams()) {
     attachMoneyJourneys(params);
     if (moneyMapIsolate && !params.get("journey")) handle.isolate?.(moneyMapIsolate);
   } catch (err) {
-    if (moneyMapLoading !== jur || generation !== moneyMapGeneration) return;
+    if (!isCurrent()) return;
     root.textContent = "";
     const p = document.createElement("p");
     p.className = "ui-empty money-map-status";
@@ -1645,6 +1669,7 @@ async function mountMoney(jurParam, industry, params = new URLSearchParams()) {
     root.appendChild(p);
   } finally {
     if (moneyMapLoading === jur && generation === moneyMapGeneration) moneyMapLoading = null;
+    if (moneyMapSetup === setup) moneyMapSetup = null;
   }
 }
 
@@ -1716,7 +1741,7 @@ async function openSupplierPage(name, params, manageFocus) {
   body.classList.remove("subject-person", "subject-party");
   body.innerHTML = '<p role="status">Loading suppliers…</p>';
   try {
-    const module = await import("/suppliers.js?v=992c3154c1");
+    const module = await import("/suppliers.js?v=7397bd2cdb");
     if (generation !== supplierPageGeneration) return;
     const helpers = {
       params,
@@ -2073,7 +2098,7 @@ function route() {
       renderAskFilterChips(); // preserve an explicitly shared speech-only scope
       runAsk(q);
     } else if (!q && $("ask-result").hidden) {
-      focusEntry("ask-input");
+      if (!takeEarlyAsk()) focusEntry("ask-input");
     }
   }
   syncPathMeta();
@@ -3624,7 +3649,7 @@ function actionBtn(icon, href, label, { external = false, primary = false } = {}
  *  Its look in an action column lives in money-explain.css, linked once here. */
 function explainBtn(query, label, { primary = false } = {}) {
   if (!document.querySelector("link[data-money-explain]")) {
-    const sheet = Object.assign(document.createElement("link"), { rel: "stylesheet", href: "/money-explain.css?v=39bdb46509" });
+    const sheet = Object.assign(document.createElement("link"), { rel: "stylesheet", href: "/money-explain.css?v=7738084ea5" });
     sheet.dataset.moneyExplain = "";
     document.head.append(sheet);
   }
@@ -4263,7 +4288,7 @@ async function mountSubjectMap(nodeId, label = "") {
   el.hidden = false;
   $("subject-map-hint").hidden = false;
   try {
-    const { mountMoneyMap } = await import("/money-map.js?v=b41a0591dd");
+    const { mountMoneyMap } = await import("/money-map.js?v=6a5d1961fa");
     if (currentSubjectKey !== key) return; // navigated away while loading
     destroySubjectMap();
     const handle = await mountMoneyMap(el, "/graph/money.json", {
@@ -9068,7 +9093,7 @@ async function openExplain(detail) {
   if (!detail || !["industry", "donor", "party"].includes(detail.kind)) return;
   const jur = MONEY_JURISDICTIONS[detail.jurisdiction] ? detail.jurisdiction : "federal";
   try {
-    const [mod, graph] = await Promise.all([import("/money-explain.js?v=cb23fc5298"), loadMoneyFile(jur)]);
+    const [mod, graph] = await Promise.all([import("/money-explain.js?v=07268f6dea"), loadMoneyFile(jur)]);
     const { loadDonorViewIndex } = await import("/donor-views.js?v=4fcbbb78cf");
     goRoute(mod.explainHrefFor({ ...detail, jurisdiction: jur }, graph, await loadDonorViewIndex()) || "/money/explain");
   } catch { goRoute("/money/explain"); }
@@ -9237,6 +9262,7 @@ function relTime(iso) {
   }
   return fmtDate(iso.slice(0, 10));
 }
+
 
 
 // --- the wombat (loading companion) -----------------------------------------
@@ -14112,7 +14138,7 @@ async function mountReportWords(el, cfg, slug) {
 
 async function mountReportMap(el, cfg, slug) {
   try {
-    const { mountMoneyMap } = await import("/money-map.js?v=b41a0591dd");
+    const { mountMoneyMap } = await import("/money-map.js?v=6a5d1961fa");
     if (currentReportSlug !== slug || !el.isConnected) return; // moved on while loading
     const handle = await mountMoneyMap(el, "/graph/money.json", {
       chrome: "mini",

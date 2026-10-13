@@ -18,8 +18,7 @@
 .hub-jump-list { display: flex; flex-wrap: wrap; gap: 0 var(--space-block); margin: 0; padding: 0; list-style: none; }
 .hub-jump-list a { display: inline-flex; align-items: center; min-height: var(--size-target); font: var(--type-strong); }
 
-/* Sitting weeks: one row a week on the reading measure, its status beside it. */
-.hub-weeks { max-width: var(--size-readable); }
+/* Sitting weeks: one row a week across the column, its status at the row's end. */
 .hub-weeks > li { display: flex; gap: var(--space-block); align-items: flex-start; justify-content: space-between; }
 .hub-weeks .ui-status { flex-shrink: 0; margin-top: var(--space-line); }
 .hub-count { color: var(--ink-soft); font: var(--type-body); margin-left: var(--space-tight); font-variant-numeric: tabular-nums; }

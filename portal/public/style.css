@@ -313,8 +313,9 @@
 .audit-out a, .instrument-out a { display: inline-flex; align-items: center; min-height: var(--size-target); }
 .audit-content > h2:not(.ui-section-title), .instrument-content > h2 { font: var(--type-heading); margin: var(--space-section) 0 var(--space-heading); }
 /* A report or instrument page: its blocks are ui-sections, its lists ui-list
-   rows, and what opens in place a ui-disclosure. */
-.audit-section, .instrument-section, .audit-entities { max-width: 46rem; }
+   rows, and what opens in place a ui-disclosure. The sections and their rules
+   span the column under the title; their text keeps a reading measure. */
+.audit-section > p, .instrument-section > p, .audit-response-text { max-width: var(--size-readable); }
 .audit-content > .audit-meta { margin: 0 0 var(--space-tight); }
 .audit-recommendations { padding-left: var(--space-group); max-width: 46rem; }
 .audit-recommendations > li { padding: var(--space-row) 0; white-space: normal; overflow-wrap: anywhere; }
@@ -327,9 +328,8 @@
 .audit-filter-actions a, .instrument-filter-actions a, .audit-content nav a, .instrument-content nav a { display: inline-flex; align-items: center; min-height: var(--size-target); }
 .audit-content > .ui-source, .instrument-content > .ui-source { margin-top: var(--space-section); }
 /* The Register's facts are a ui-kv; Version and Source metadata open in place. */
-.instrument-facts { max-width: 64rem; }
 .instrument-facts dd { font: var(--type-body); }
-/* The disclosures' rules span the column under the title; the facts keep their 64rem measure. */
+/* The facts and the disclosures' rules span the column under the title. */
 .instrument-disclosures { margin-top: var(--space-group); }
 .instrument-disclosure + .instrument-disclosure { border-top: var(--border-hairline) solid var(--divider-subtle); }
 .instrument-disclosure p { max-width: var(--size-readable); font: var(--type-metadata); color: var(--ink-soft); }
@@ -1596,6 +1596,14 @@ a.barrow-name:hover { color: var(--bronze-ink); }
 /* Evidence-brief layers */
 #report-brief .answer { margin-top: var(--sp-8); }
 #report-stats:not(:empty) { margin-top: var(--space-section); }
+/* Two charts a row once the column holds two at their drawn size (640 wide),
+   so the stack runs to the masthead's right edge; the part's head and the
+   figure tiles run the full row. */
+@media (min-width: 1280px) {
+  #report-stats:not(:empty) { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: var(--space-group); align-items: start; }
+  #report-stats > .chart { max-width: none; }
+  #report-stats > :not(.chart) { grid-column: 1 / -1; }
+}
 .report-lead { display: grid; grid-template-columns: 1fr; gap: var(--sp-24) var(--sp-40); align-items: start; }
 @media (min-width: 1100px) {
   .report-lead { grid-template-columns: minmax(0, 1fr) 340px; }
@@ -2107,12 +2115,11 @@ article.mx-page .mx-section { margin-top: var(--space-section); }
 .declared-kind { margin-top: var(--sp-2); color: var(--ink-faint); font-size: var(--text-13); }
 .declared-description {
   margin: var(--sp-4) 0 0; color: var(--ink-soft); font-size: var(--text-15); line-height: var(--leading-normal);
-  overflow-wrap: anywhere;
+  overflow-wrap: anywhere; max-width: var(--size-readable);
 }
 .declared-source-link { position: relative; margin-left: var(--sp-4); white-space: nowrap; }
 .declared-match { margin: var(--sp-2) 0 0; color: var(--ink-soft); font-size: var(--text-13); line-height: var(--leading-normal); }
 .declared-match .result-meta { margin-left: var(--sp-4); }
-#panel-declared { max-width: 920px; }
 #panel-declared > h1 { margin: 0 0 var(--sp-16); }
 .declared-source { margin-top: var(--sp-24); }
 .declared-week { margin-top: var(--sp-24); }
@@ -2121,7 +2128,7 @@ article.mx-page .mx-section { margin-top: var(--space-section); }
   font: var(--type-heading); color: var(--ink);
 }
 .declared-day > h4 { display: none; }
-.party-receipts { margin-top: var(--space-section); max-width: 920px; }
+.party-receipts { margin-top: var(--space-section); }
 .party-receipts .subject-section-title { margin-top: 0; }
 .receipts-legend {
   display: flex; flex-wrap: wrap; gap: var(--sp-8) var(--sp-16); margin: var(--sp-8) 0 var(--sp-12);
@@ -2194,7 +2201,7 @@ article.mx-page .mx-section { margin-top: var(--space-section); }
 .balance-right > span { display: flex; align-items: center; gap: var(--sp-4); width: 100%; }
 .balance-label { color: var(--ink); font-size: var(--text-13); white-space: nowrap; }
 /* Pay for the posts held (person page): dated rows, newest first. */
-#person-pay { margin-top: var(--sp-24); max-width: 920px; }
+#person-pay { margin-top: var(--sp-24); }
 .pay-lead { margin: var(--sp-4) 0 var(--sp-8); }
 .pay-rows { list-style: none; margin: var(--sp-16) 0 var(--sp-12); padding: 0; border-top: var(--border-hairline) solid var(--divider-subtle); }
 .pay-row {
@@ -2527,10 +2534,10 @@ mark.privacy-confirm {
    ui-segmented, ui-button, ui-input, ui-link); what is left here is layout.
    Two columns: the money, the tide and the debate at left; who speaks on it
    at the reader's right hand (a column, not a card; not sticky, as two charts
-   run taller than a screen). */
-#panel-subject .topic-page-grid { grid-template-columns: minmax(0, 1fr) 20rem; column-gap: var(--sp-64); max-width: 74rem; margin-top: var(--space-section); }
+   run taller than a screen). The main column's blocks fill their grid track,
+   which runs the masthead's width; text inside them keeps its own measure. */
+#panel-subject .topic-page-grid { grid-template-columns: minmax(0, 1fr) 20rem; column-gap: var(--sp-64); margin-top: var(--space-section); }
 #panel-subject .topic-page-grid .infobox { position: static; }
-#panel-subject .topic-page-grid #subject-sections > * { max-width: 47.5rem; }
 #panel-subject .topic-page-grid #subject-sections > :is(.ui-section, .tide-strip-skel):first-child { margin-top: 0; }
 #panel-subject :is(.topic-arc, .topic-money) { scroll-margin-top: calc(var(--header-h) + var(--sp-16)); }
 @media (max-width: 1099px) { #panel-subject .topic-page-grid { grid-template-columns: minmax(0, 1fr) 18rem; column-gap: var(--sp-40); } }
@@ -2540,7 +2547,7 @@ mark.privacy-confirm {
 }
 
 /* Ask: one field and the navy pill; the ways in as quiet links. */
-#panel-subject .topic-reader-tools { max-width: 47.5rem; margin: var(--space-group) 0 0; }
+#panel-subject .topic-reader-tools { margin: var(--space-group) 0 0; }
 #panel-subject .topic-ask-form label { display: block; margin-bottom: var(--space-tight); font: var(--type-subheading); color: var(--ink); }
 #panel-subject .topic-ask-row { display: flex; align-items: flex-start; gap: var(--space-tight); }
 #panel-subject .topic-ask-row > .ui-input { flex: 1; min-width: 0; }
@@ -2654,10 +2661,11 @@ mark.privacy-confirm {
    One line per topic across a page, as a broadsheet would set a table: the
    subject and its scope, the count, a bar for its weight in the record, and
    four decade marks for its tide. The columns share one grid so the header
-   and every row align. */
+   and every row align. The ledger spans the content column, edge to edge with
+   the masthead; only the lede, the note and the descriptions keep a measure. */
 #panel-subject .topic-index-head {
   display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: var(--sp-16) var(--sp-40);
-  align-items: end; margin: 0 0 var(--sp-40); max-width: 1120px;
+  align-items: end; margin: 0 0 var(--sp-40);
 }
 #panel-subject .topic-index-head h1 { margin: 0; }
 #panel-subject .topic-index-lede { margin: var(--sp-12) 0 0; max-width: 60ch; font: var(--type-record); color: var(--ink-soft); }
@@ -2668,14 +2676,13 @@ mark.privacy-confirm {
 
 #panel-subject .topic-index-tools {
   display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: var(--sp-12) var(--sp-24);
-  max-width: 1120px; padding-bottom: var(--sp-16); border-bottom: var(--border-hairline) solid var(--divider-default);
+  padding-bottom: var(--sp-16); border-bottom: var(--border-hairline) solid var(--divider-default);
 }
 #panel-subject .topic-index-note { margin: 0; max-width: 64ch; font: var(--type-fine); color: var(--ink-faint); }
 #panel-subject .topic-index-cols, #panel-subject .topic-index-row {
   display: grid; grid-template-columns: minmax(0, 1fr) 7rem minmax(150px, 15rem) 5.5rem;
   column-gap: var(--sp-40); align-items: center;
 }
-#panel-subject .topic-index-cols, #panel-subject .topic-index-list { max-width: 1120px; }
 #panel-subject .topic-index-cols {
   padding: var(--sp-12) 0; border-bottom: var(--border-hairline) solid var(--divider-subtle);
   font: var(--type-label); color: var(--ink-soft);
@@ -2700,7 +2707,6 @@ mark.privacy-confirm {
 #panel-subject .topic-index-spark i:last-child { opacity: 1; }
 #panel-subject .topic-index-row:hover .topic-index-name { color: var(--bronze-ink); text-decoration: underline; text-underline-offset: 3px; text-decoration-color: var(--bronze-rule); }
 #panel-subject .topic-index-row:hover .topic-index-share i::before { background: var(--bronze-ink); }
-#panel-subject .topic-index-coverage { max-width: 1120px; }
 @media (max-width: 1099px) {
   #panel-subject .topic-index-cols, #panel-subject .topic-index-row { grid-template-columns: minmax(0, 1fr) 6rem minmax(130px, 11rem) 4.5rem; column-gap: var(--sp-24); }
 }
@@ -4675,9 +4681,8 @@ html[data-panel="chat"] footer { display: none; }
 .el-election td { font-variant-numeric: tabular-nums; }
 .el-election small { display: block; font: var(--type-fine); color: var(--ink-soft); }
 .el-service, .el-related { max-width: var(--size-readable); }
-.el-timeline { max-width: 52rem; }
-/* The census: a ledger key/value list (ruled rows, figures right). */
-.el-demographics { max-width: 46rem; }
+/* The census: a ledger key/value list (ruled rows, figures right), as many
+   label-and-figure columns as the content column holds. */
 
 
 /* One page-title role, including older routes that use an h2 for their title. */
