@@ -291,14 +291,15 @@
 .instrument-facts { display: grid; grid-template-columns: minmax(10rem, 1fr) 3fr; gap: var(--space-heading) var(--space-group); max-width: 64rem; margin: 0; }
 .instrument-facts dt { font: var(--type-label); color: var(--ink-soft); }
 .instrument-facts dd { margin: 0; overflow-wrap: anywhere; }
-.instrument-disclosure { border-top: var(--border-hairline) solid var(--divider-subtle); max-width: 64rem; }
+/* The disclosures' rules span the column under the title; the facts keep their 64rem grid. */
+.instrument-disclosure { border-top: var(--border-hairline) solid var(--divider-subtle); }
 .instrument-disclosure:last-of-type { border-bottom: var(--border-hairline) solid var(--divider-subtle); }
 .instrument-disclosure > summary { display: flex; align-items: center; justify-content: space-between; gap: var(--space-block); min-height: var(--size-target); cursor: pointer; list-style: none; font: var(--type-strong); }
 .instrument-disclosure > summary::-webkit-details-marker { display: none; }
 /* Disclosure: the chevron at the right, pointing down when closed. */
 .instrument-disclosure > summary::after { content: ""; flex: none; width: .45em; height: .45em; margin-right: var(--space-line); border-right: calc(var(--border-hairline) * 1.5) solid currentColor; border-bottom: calc(var(--border-hairline) * 1.5) solid currentColor; transform: translateY(-25%) rotate(45deg); }
 .instrument-disclosure[open] > summary::after { transform: translateY(25%) rotate(-135deg); }
-.instrument-disclosure > p { font: var(--type-metadata); color: var(--ink-soft); }
+.instrument-disclosure > p { font: var(--type-metadata); color: var(--ink-soft); max-width: var(--size-readable); }
 .instrument-disclosure > .instrument-facts { margin-bottom: var(--space-block); }
 .instrument-content pre { white-space: pre-wrap; overflow-wrap: anywhere; font: var(--type-fine); }
 .instrument-content > :not(.instrument-disclosure) + .instrument-disclosure { margin-top: var(--space-group); }
@@ -3556,7 +3557,6 @@ mark.privacy-confirm {
 .subject-party #subject-sections .tile { border: 0; padding: 0; }
 .subject-party #subject-sections .tile b { font: var(--type-display); }
 .subject-party #subject-sections .tile span { font: var(--type-fine); }
-.subject-party #subject-sections .subject-list { max-width: var(--size-readable); }
 .entry-section-head { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: var(--space-tight) var(--space-block); margin-bottom: var(--space-heading); }
 #subject-sections .entry-section-head .subject-section-title { margin: 0; }
 .entry-section-head > a { display: inline-flex; align-items: center; min-height: var(--size-target); font: var(--type-metadata); font-weight: 600; }
@@ -4299,11 +4299,15 @@ html[data-panel="chat"] footer { display: none; }
 
 /* ---- one bill: the head ------------------------------------------------- */
 
-.bill-head { max-width: 68ch; }
-.bill-title { font: 700 1.6rem/1.28 var(--serif); margin: 0; overflow-wrap: break-word; }
+/* The head and every section below take the page's content column, as the Ask
+   block and the bill text between them do. The reading measure sits on the
+   words: a 68ch head and 68ch sections drew the page as the left half of a
+   desktop column beside two full-width blocks. */
+.bill-title { font: 700 1.6rem/1.28 var(--serif); margin: 0; overflow-wrap: break-word; max-width: var(--size-readable); }
 .bill-short {
   margin: var(--space-2) 0 0; font: 400 0.9375rem/1.5 var(--sans); color: var(--ink-soft);
 }
+.bill-short, .bill-related { max-width: var(--size-readable); }
 .bill-tag { margin-top: var(--space-2); }
 .bill-tag a { text-decoration: none; border-bottom: 1px solid var(--bronze-rule); }
 .bill-tag a:hover { color: var(--bronze-ink); }
@@ -4322,7 +4326,7 @@ html[data-panel="chat"] footer { display: none; }
    the top beside the heading. The pill says "written by a model, not the
    record"; the panel and bronze edge used to say it a second time. */
 
-.bill-summary { max-width: 68ch; }
+.bill-summary :is(.bill-sentences, .bill-changes, .bill-affected) { max-width: var(--size-readable); }
 .bill-section-head { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-tight) var(--space-heading); margin-bottom: var(--space-heading); }
 #bill-body .bill-section-head .subject-section-title { margin: 0; }
 .bill-sentences p {
@@ -4345,7 +4349,7 @@ html[data-panel="chat"] footer { display: none; }
 /* A section is a top rule and a heading (§5.2); where the page's blocks differ
    by category the rule carries a 28px accent mark in the category's ink. */
 #bill-body .bill-section {
-  position: relative; max-width: 68ch; margin: var(--space-section) 0 0; padding-top: var(--space-block);
+  position: relative; margin: var(--space-section) 0 0; padding-top: var(--space-block);
   border-top: var(--border-hairline) solid var(--divider-default);
 }
 #bill-body .bill-section[data-accent]::before {
@@ -4370,11 +4374,13 @@ html[data-panel="chat"] footer { display: none; }
 }
 .bill-stages[open] > summary::after { transform: translateY(2px) rotate(-135deg); }
 .bill-stages > summary:focus-visible { outline: var(--border-focus) solid var(--bronze-ink); outline-offset: 3px; }
-.bill-ruler { display: block; width: 100%; height: auto; max-width: 680px; margin: var(--space-3) 0 var(--space-4); }
+/* The ruler spans the section; its positions are percentages, so the 11px
+   dates stay 11px at every width (a scaled viewBox drew them at 6px on a phone). */
+.bill-ruler { display: block; width: 100%; height: 52px; margin: var(--space-3) 0 var(--space-4); }
 .bill-ruler-axis { stroke: var(--line-strong); stroke-width: 1; vector-effect: non-scaling-stroke; }
 .bill-ruler-tick { stroke: var(--bronze-ink); stroke-width: 1.5; vector-effect: non-scaling-stroke; }
 .bill-ruler-label { font: 400 11px/1 var(--sans); fill: var(--ink-faint); }
-.bill-dates { list-style: none; margin: 0; padding: 0; max-width: 68ch; }
+.bill-dates { list-style: none; margin: 0; padding: 0; }
 .bill-date {
   display: grid; grid-template-columns: 6.25rem minmax(0, 1fr); column-gap: 0.7rem;
   border-top: 1px solid var(--line); padding: var(--row-gap) 0;
