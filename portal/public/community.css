@@ -3,7 +3,9 @@
    by role (D1), rules between sections rather than boxes, no shadows. */
 
 /* ---- Page frame. Everything below is scoped to the page, never the masthead. */
-.community-main{flex:1;padding-block:var(--space-block) var(--space-section);outline:none}
+/* The top step is main.compact's (style.css), so the title opens where every page's does: 24px, 16px from 860px down. */
+.community-main{flex:1;padding-top:var(--sp-24);padding-bottom:var(--space-section);outline:none}
+@media(max-width:860px){.community-main{padding-top:var(--sp-16)}}
 .community-site #stats{display:none}
 /* Element defaults sit at zero class weight so every named rule below wins. */
 :where(.community-main) h1{font:var(--type-title);color:var(--ink);max-width:none;margin:0 0 var(--space-block);overflow-wrap:anywhere}
@@ -20,8 +22,16 @@
 .community-main .ui-button{flex-shrink:0;max-width:100%;overflow-wrap:normal;word-break:normal}
 
 /* ---- Sub-navigation. The community row, Profile / Reading lists / … and
-   the members views are ui-tabs rows (ui-controls.css); layout only here. */
-.community-nav{align-items:center}
+   the members views are ui-tabs rows (ui-controls.css); layout only here.
+   Every view draws its page head first (title, lede, actions), so its title
+   opens where every page's does, then the community row (community.js tabs()),
+   as Ask's research-mode tabs follow its title. Controls under a head keep the
+   block step, as on every directory; the first section under a tab row takes
+   the row's hairline as its rule. */
+.community-main :has(+#community-navigation){margin-bottom:var(--space-block)}
+.community-main .ui-tabs+.community-section{margin-top:0;padding-top:0;border-top:0}
+/* A row that wraps on a phone stays one block, as the account and member rows do. */
+.community-nav{align-items:center;row-gap:var(--space-line)}
 .community-nav a{display:inline-flex;align-items:center;gap:var(--space-tight);white-space:nowrap}
 .community-nav .community-account-link{margin-left:auto}
 .community-tabs{row-gap:var(--space-line)}
@@ -62,7 +72,6 @@
 .community-page-heading h1,.community-page-heading h2{margin:0 0 var(--space-tight)}
 .community-page-heading p{margin:0;font:var(--type-metadata);color:var(--ink-soft)}
 .community-heading-actions{display:flex;align-items:center;flex-wrap:wrap;gap:var(--space-block)}
-.community-back{display:inline-flex;align-items:center;min-height:var(--size-target);margin:0 0 var(--space-block);font:var(--type-metadata)}
 .community-pagination{display:flex;align-items:center;gap:var(--space-block);flex-wrap:wrap;margin-top:var(--space-group)}
 .community-pagination a{display:inline-flex;align-items:center;min-height:var(--size-target)}
 .community-search{display:flex;align-items:center;gap:var(--space-tight);margin-bottom:var(--space-block);max-width:42rem}
@@ -79,12 +88,8 @@
 
 /* ---- Discussions feed. */
 /* Signed out, the page opens on a ui-page-head: the title, the lede at its
-   reading measure, then the one way in. The feed under it opens as a
-   ui-section does: the section step, one rule, the heading step. */
+   reading measure, then the one way in, a block under the lede. */
 .community-head-actions{display:flex;flex-wrap:wrap;align-items:center;gap:var(--space-heading);margin-top:var(--space-block)}
-.community-welcome+.community-feed-layout{padding-top:var(--space-heading);border-top:var(--border-hairline) solid var(--divider-default)}
-/* A head with a form straight under it keeps the block step, as a filter bar does. */
-.community-main .ui-page-head:has(+.community-form){margin-bottom:var(--space-block)}
 .community-feed-layout{display:grid;grid-template-columns:minmax(0,1fr) 250px;gap:var(--space-section);align-items:start}
 .community-sidebar{padding-left:var(--space-group);border-left:var(--border-hairline) solid var(--divider-subtle)}
 .community-sidebar section+section{margin-top:var(--space-group)}
@@ -106,9 +111,10 @@
 /* ---- One discussion. Members' words are interface sans: they are not the record. */
 /* The discussion keeps a reading column, set on the masthead's left edge like every page. */
 .community-discussion{max-width:50rem}
-.community-discussion-header,.community-profile-header,.community-conversation-header{position:static;top:auto;z-index:auto;background:transparent;border:0;padding:0}
-.community-discussion-header{margin-bottom:var(--space-group)}
-.community-discussion-header h1{max-width:28ch}
+.community-profile-header,.community-conversation-header{position:static;top:auto;z-index:auto;background:transparent;border:0;padding:0}
+/* A discussion's head is its title and who opened it; the opening post follows the tabs. */
+.community-discussion-head h1{max-width:28ch}
+.community-discussion-head .community-byline{margin-top:var(--space-heading)}
 .community-prose{font:var(--type-body);max-width:var(--size-readable);overflow-wrap:anywhere}
 .community-prose p{white-space:pre-line;margin:0 0 var(--space-block)}
 .community-prose p:last-child{margin-bottom:0}
@@ -141,7 +147,7 @@
 .community-profile-header p{margin-bottom:var(--space-heading)}
 .community-profile-stats{display:flex;gap:var(--space-tight) var(--space-group);flex-wrap:wrap;font:var(--type-metadata);color:var(--ink-soft)}
 .community-profile-stats strong{color:var(--ink);font-variant-numeric:tabular-nums}
-.community-profile-actions{display:flex;align-items:center;gap:var(--space-heading);flex-wrap:wrap;margin:var(--space-group) 0;padding-bottom:var(--space-group);border-bottom:var(--border-hairline) solid var(--divider-subtle)}
+.community-profile-actions{display:flex;align-items:center;gap:var(--space-heading);flex-wrap:wrap;margin:var(--space-block) 0 0}
 .community-profile-actions>a:not(.ui-button){display:inline-flex;align-items:center;min-height:var(--size-target)}
 .community-profile-content{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);gap:var(--space-section)}
 
@@ -203,8 +209,6 @@
 
 /* ---- Connected tools follow the actual setup sequence, one task per step. */
 .community-tools{max-width:52rem}
-.setup-intro{margin-bottom:var(--space-group)}
-.setup-intro .community-lede{max-width:54ch}
 .setup-steps{list-style:none;padding:0;margin:0;display:grid;gap:var(--space-group)}
 .setup-steps>li{min-width:0;padding-bottom:var(--space-group);border-bottom:var(--border-hairline) solid var(--divider-subtle)}
 .community-tools .setup-steps h2{display:flex;gap:var(--space-heading);align-items:center;margin:0 0 var(--space-block)}
