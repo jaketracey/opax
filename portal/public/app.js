@@ -2350,6 +2350,7 @@ document.addEventListener("click", (e) => {
 
 let askAbort = null;
 let askTimer = null;
+let askSteps = null; // the live list of a stepped answer's lookups, while it runs
 
 /* --- answer markdown, ported from corpuskit ---------------------------------
    parseDocBlocks + normaliseAnswerBullets come from corpuskit's tested
@@ -9701,6 +9702,64 @@ async function showWombat(label) {
 function hideWombat() {
   $("ask-wombat").hidden = true;
 }
+function endAskSteps() {
+  askSteps?.destroy();
+  askSteps = null;
+  $("ask-steps-live").hidden = true;
+}
+
+/* Some questions are answered by a short run of record lookups (who speaks
+   most about a topic, how it has moved over the years). The Worker reports
+   each lookup as status events with phase "step", and ask-steps.js lists
+   them under the waiting animal as they happen. Ordinary answers send no
+   steps, so nothing here mounts and their waiting state is as it was. */
+const ASK_STEPS_JS = "/ask-steps.js?v=99d5ce363d";
+
+/** The live list: events that land before the module are kept and replayed. */
+function liveAskSteps(container, alive, options) {
+  const seen = new Map();
+  let wrote = false;
+  let run = null;
+  let gone = false;
+  import(ASK_STEPS_JS)
+    .then((mod) => {
+      if (gone || !alive()) return;
+      run = mod.mountSteps(container, options);
+      for (const step of seen.values()) run.step(step);
+      if (wrote) run.writing();
+    })
+    .catch(() => { /* the status line and the animal carry the wait */ });
+  return {
+    step(step) {
+      const id = Number(step?.id);
+      if (!Number.isFinite(id)) return;
+      seen.set(id, { ...seen.get(id), ...step });
+      run?.step(step);
+    },
+    writing() { wrote = true; run?.writing(); },
+    steps() { return [...seen.values()].sort((a, b) => a.id - b.id); },
+    destroy() { gone = true; run?.destroy(); run = null; },
+  };
+}
+
+/** The finished run as one line ("6 steps · 11 s") that opens the list.
+ *  Its height is held before the module lands so the answer never moves. */
+const askStepsRenderOwners = new WeakMap();
+async function renderAskStepsLine(slot, agentic, alive = () => true) {
+  if (!slot) return;
+  const owner = {};
+  askStepsRenderOwners.set(slot, owner);
+  if (!agentic?.steps?.length) { slot.replaceChildren(); slot.hidden = true; return; }
+  slot.hidden = false;
+  slot.style.minHeight = "calc(var(--size-target) + var(--space-tight))";
+  try {
+    const mod = await import(ASK_STEPS_JS);
+    if (askStepsRenderOwners.get(slot) !== owner || !alive()) return;
+    mod.renderStepsLine(slot, agentic);
+  } catch {
+    if (askStepsRenderOwners.get(slot) === owner && alive()) slot.hidden = true;
+  }
+}
 
 // The same menagerie for any other waiting slot (search results, the
 // answer rail). One mount per slot, kept across shows; a hidden slot that
@@ -9823,6 +9882,9 @@ async function runAsk(question) {
   btn.disabled = true;
   btn.setAttribute("aria-busy", "true");
   $("ask-result").hidden = true;
+  endAskSteps();
+  renderAskStepsLine($("ask-steps"), null);
+  import(ASK_STEPS_JS).catch(() => {}); // warmed, so a finished run's line draws at once
   $("ask-date-ruler").hidden = true;
   $("ask-date-ruler").replaceChildren();
   $("ask-chips").hidden = true;
@@ -9861,11 +9923,26 @@ async function runAsk(question) {
     const live = streamRenderer($("ask-answer"), () => askAbort === myAbort);
     let streamed = false;
     const data = await askRecord(askBody, myAbort.signal, {
+      status(payload) {
+        if (askAbort !== myAbort) return;
+        if (payload?.phase === "step" && payload.step) {
+          if (!askSteps) {
+            $("ask-steps-live").hidden = false;
+            askSteps = liveAskSteps($("ask-steps-live"), () => askAbort === myAbort, { centred: true });
+          }
+          askSteps.step(payload.step);
+        } else if (payload?.phase === "writing") askSteps?.writing();
+      },
       delta(text) {
         if (askAbort !== myAbort) return;
         if (!streamed) {
           streamed = true;
           hideWombat();
+          // The run folds into its line above the answer as the words begin.
+          if (askSteps) {
+            renderAskStepsLine($("ask-steps"), { steps: askSteps.steps(), ms: Date.now() - started });
+            endAskSteps();
+          }
           // The result block still holds the previous answer and its
           // trimmings; the first paint is a timer tick away.
           $("ask-answer").replaceChildren();
@@ -9914,13 +9991,18 @@ async function runAsk(question) {
     $("ask-answer").askEvidence = citedList;
     // The speaker this answer was actually filtered to (chosen in Options or
     // read out of the question), so "Continue in a conversation" keeps it.
-    lastAsk = { question, answer: answerText, sources, answered: data.answered, reason: data.reason, next_step: data.next_step, is_overview_intent: data.is_overview_intent, next: data.followups, subject_context: data.subject_context, kind: askKind(), speaker: askFilters().speaker || speakerFilter || data.scope?.speaker || data.subject_context?.name || "", answer_status: data.answer_status, evidence_excerpts: data.evidence_excerpts, money_question: data.money_question, money_ranking: data.money_ranking, money_context: data.money_context, money_overview: data.money_overview, pay_answer: data.pay_answer, pay_next: data.pay_next };
+    lastAsk = { question, answer: answerText, sources, agentic: data.agentic, answered: data.answered, reason: data.reason, next_step: data.next_step, is_overview_intent: data.is_overview_intent, next: data.followups, subject_context: data.subject_context, kind: askKind(), speaker: askFilters().speaker || speakerFilter || data.scope?.speaker || data.subject_context?.name || "", answer_status: data.answer_status, evidence_excerpts: data.evidence_excerpts, money_question: data.money_question, money_ranking: data.money_ranking, money_context: data.money_context, money_overview: data.money_overview, pay_answer: data.pay_answer, pay_next: data.pay_next };
     // A calculated answer carries its own fixed next steps, not generated ones.
     const calculated = !!(data.money_ranking || data.pay_answer);
     if (!calculated && !noAnswer) prefetchAskFollowups(lastAsk);
 
     if (calculated) { $("ask-money").hidden = true; $("ask-register-note").hidden = true; }
     hideWombat();
+    // A stepped answer keeps its run as one line above the answer, drawn from
+    // the payload so a cached answer carries it too.
+    endAskSteps();
+    await renderAskStepsLine($("ask-steps"), data.agentic, () => askAbort === myAbort);
+    if (askAbort !== myAbort) return;
     setStatus($("ask-status"), noAnswer ? "No clear answer found. Retrieved sources are ready." : needsClarification ? "Please clarify the question before I calculate the answer." : data.answer_status === "evidence_only" ? "Source passages ready. A summary could not be verified." : `Answer ready: ${sources.length} sources.`);
     $("ask-status").classList.add("visually-hidden"); // announced, not displayed
     revealAskResult();
@@ -9987,6 +10069,7 @@ async function runAsk(question) {
   } catch (err) {
     if (askAbort !== myAbort) return; // a newer request owns the UI now
     hideWombat();
+    endAskSteps();
     if (err.name === "AbortError") setStatus($("ask-status"), "Cancelled.");
     else {
       setStatus($("ask-status"),
@@ -10762,7 +10845,7 @@ function initChat(manageFocus) {
           store.active = null;
           chatThread = [
             { role: "user", text: seed.question, fundingQuestion: seed.money_question },
-            { role: "answer", text: seed.answer, sources: seed.sources || [], answered: seed.answered, reason: seed.reason, next_step: seed.next_step, is_overview_intent: seed.is_overview_intent, next: seed.next || undefined, subject_context: seed.subject_context, answer_status: seed.answer_status, evidence_excerpts: seed.evidence_excerpts, money_ranking: seed.money_ranking, money_context: seed.money_context, money_overview: seed.money_overview, pay_answer: seed.pay_answer, pay_next: seed.pay_next },
+            { role: "answer", text: seed.answer, sources: seed.sources || [], agentic: seed.agentic, answered: seed.answered, reason: seed.reason, next_step: seed.next_step, is_overview_intent: seed.is_overview_intent, next: seed.next || undefined, subject_context: seed.subject_context, answer_status: seed.answer_status, evidence_excerpts: seed.evidence_excerpts, money_ranking: seed.money_ranking, money_context: seed.money_context, money_overview: seed.money_overview, pay_answer: seed.pay_answer, pay_next: seed.pay_next },
           ];
           chatKind = seed.kind === "speech" ? "speech" : "all";
           // An ask that was filtered to one speaker hands that filter on: the
@@ -11071,6 +11154,11 @@ function syncAskChatViewport() {
 function chatAnswerEl(msg) {
   const wrap = document.createElement("div");
   wrap.className = "chat-turn chat-turn-answer";
+  if (msg.agentic?.steps?.length) {
+    const line = document.createElement("div");
+    wrap.appendChild(line);
+    renderAskStepsLine(line, msg.agentic);
+  }
   if (msg.is_overview_intent && msg.answered !== false) wrap.insertAdjacentHTML('beforeend', machineLabelHTML());
   if (msg.money_overview) {
     const overview = document.createElement("div");
@@ -11309,6 +11397,8 @@ async function sendChat(question, carry) {
   const alive = () => chatAbort === myAbort && slot.isConnected;
   let trundler = null;
   let stages = null;
+  // A stepped answer lists its lookups instead of the three fixed steps.
+  let steps = null;
   // What the events have said so far, replayed onto the run when its module
   // lands: a step the events have already passed mounts done.
   let step = "question";
@@ -11324,7 +11414,7 @@ async function sendChat(question, carry) {
     .catch(() => { /* the run beneath carries the state */ });
   import("/stages.js?v=5a008f79bb")
     .then((mod) => {
-      if (!alive()) return;
+      if (!alive() || steps) return;
       stages = mod.mountStages(slot);
       if (cached) stages.complete(); else stages.set(step);
       if (reading.length) stages.reading(reading);
@@ -11368,6 +11458,19 @@ async function sendChat(question, carry) {
       status(payload) {
         if (!alive()) return;
         const phase = payload?.phase;
+        if (phase === "step" && payload.step) {
+          // The first lookup takes the fixed steps' place; each one after
+          // adds its own row.
+          if (!steps) {
+            stages?.destroy();
+            stages = null;
+            steps = liveAskSteps(slot, alive);
+          }
+          steps.step(payload.step);
+          chatFollower.nudge();
+          return;
+        }
+        if (phase === "writing" && steps) { steps.writing(); chatFollower.nudge(); return; }
         if (phase === "cached") { cached = true; stages?.complete(); }
         else if (phase === "searching") setStep("search");
         else if (phase === "retrieved") {
@@ -11431,6 +11534,7 @@ async function sendChat(question, carry) {
     chatThread.push({
       role: "answer",
       text: (data.answer || "").trim() || "(no answer)",
+      agentic: data.agentic,
       next: data.followups,
       is_overview_intent: data.is_overview_intent,
       subject_context: data.subject_context || (chatSpeaker ? [...chatThread].reverse().find(msg => msg.subject_context?.name === chatSpeaker)?.subject_context : undefined),
@@ -11496,6 +11600,7 @@ async function sendChat(question, carry) {
     live?.stop();
     trundler?.destroy?.();
     stages?.destroy?.();
+    steps?.destroy();
     if (chatAbort === myAbort) {
       chatFollower.stop();
       chatBusy = false;
@@ -11739,19 +11844,28 @@ function syncSearchDatasetControls() {
 }
 $("search-kind").addEventListener("change", syncSearchDatasetControls);
 
+// Exact citation scope travels through the existing search view, pagination
+// and copy-link path. Year controls retain their normal behaviour.
+let searchCitationScope = {};
 function currentFilters() {
   // Year sliders mirror the ask popover: crossed thumbs swap, and the full
   // range means "no year filter".
   let from = $("f-from").value.trim(), to = $("f-to").value.trim();
   if (Number(from) > Number(to)) [from, to] = [to, from];
+  const exactDates = searchCitationScope.since || searchCitationScope.until;
+  const sameYears = from === (searchCitationScope.since?.slice(0, 4) || String(RECORD_FIRST_YEAR)) &&
+    to === (searchCitationScope.until?.slice(0, 4) || String(RECORD_LAST_YEAR));
   if (from === "1993" && to === "2026") { from = ""; to = ""; }
   return {
+    ...Object.fromEntries(Object.entries(searchCitationScope).filter(([key]) =>
+      !["since", "until"].includes(key) || sameYears)),
     speaker: $("f-speaker").value.trim(),
     party: $("f-party").value,
     state: $("f-state").value,
     topic: $("f-topic").value,
-    from,
-    to,
+    // Do not introduce an end-of-year cutoff into an open exact-date citation.
+    from: exactDates && sameYears ? "" : from,
+    to: exactDates && sameYears ? "" : to,
     kind: $("search-kind").value,
     scope: "all",
     mode: $("search-mode").value,
@@ -11775,7 +11889,7 @@ function updateSearchYearsLabel() {
 function searchHash(q, f, page, sort) {
   const p = new URLSearchParams({ view: "search" });
   if (q) p.set("q", q);
-  for (const k of ["speaker", "party", "state", "topic", "from", "to"]) if (f[k]) p.set(k, f[k]);
+  for (const k of ["speaker", "party", "state", "topic", "from", "to", "chamber", "since", "until", "venue"]) if (f[k]) p.set(k, f[k]);
   if (f.kind && f.kind !== "all") p.set("kind", f.kind);
   if (f.mode && f.mode !== "hybrid") p.set("mode", f.mode);
   if (sort && sort !== "relevance") p.set("sort", sort);
@@ -11793,7 +11907,7 @@ function searchQueryParams(q, f, page, sort) {
     q: q || f.speaker, kind: f.kind || "all", mode: f.mode || "hybrid",
     page: String(page || 1), per: String(SEARCH_PER_PAGE), sort: sort || "relevance",
   });
-  for (const k of ["speaker", "party", "state", "topic", "from", "to"]) if (f[k]) p.set(k, f[k]);
+  for (const k of ["speaker", "party", "state", "topic", "from", "to", "chamber", "since", "until", "venue"]) if (f[k]) p.set(k, f[k]);
   return p;
 }
 
@@ -11807,10 +11921,13 @@ function searchQueryParams(q, f, page, sort) {
     for (let year = RECORD_FIRST_YEAR; year <= RECORD_LAST_YEAR; year++) select.add(new Option(String(year), String(year)));
     select.value = String(id === "f-from" ? RECORD_FIRST_YEAR : RECORD_LAST_YEAR);
   }
-  let draftBefore = null;
+  let draftBefore = null, draftCitationScope = null;
   const close = (apply = false) => {
     if (!pop?.open) return;
-    if (!apply && draftBefore) for (const id of ids) $(id).value = draftBefore[id];
+    if (!apply && draftBefore) {
+      for (const id of ids) $(id).value = draftBefore[id];
+      searchCitationScope = draftCitationScope || {};
+    }
     if (apply && Number($("f-from").value) > Number($("f-to").value)) {
       const from = $("f-from").value;
       $("f-from").value = $("f-to").value;
@@ -11828,6 +11945,7 @@ function searchQueryParams(q, f, page, sort) {
   };
   btn?.addEventListener("click", () => {
     draftBefore = Object.fromEntries(ids.map((id) => [id, $(id).value]));
+    draftCitationScope = { ...searchCitationScope };
     pop.hidden = false;
     pop.showModal();
     btn.setAttribute("aria-expanded", "true");
@@ -11879,7 +11997,7 @@ function recordTypeHref(kind, q = "", f = {}) {
   if (roots[kind]) return roots[kind];
   const p = new URLSearchParams();
   if (q) p.set("q", q);
-  for (const k of ["speaker", "party", "state", "topic", "from", "to"]) if (f[k]) p.set(k, f[k]);
+  for (const k of ["speaker", "party", "state", "topic", "from", "to", "chamber", "since", "until", "venue"]) if (f[k]) p.set(k, f[k]);
   if (f.mode && f.mode !== "hybrid") p.set("mode", f.mode);
   p.set("kind", kind);
   return '/ask?view=search&' + p;
@@ -11910,8 +12028,10 @@ function filterChipSpecs(f) {
   if (f.party) out.push({ id: "party", k: "Party", v: f.party });
   if (f.state) out.push({ id: "state", k: "Parliament", v: STATE_NAMES[f.state] || f.state });
   if (f.topic) out.push({ id: "topic", k: "Topic", v: TOPICS[f.topic] || f.topic });
-  if (f.from || f.to) {
-    const a = f.from || "1993", b = f.to || "2026";
+  if (f.chamber) out.push({ id: "chamber", k: "Chamber", v: f.chamber.replace(/_/g, " ") });
+  if (f.venue && f.venue !== "all") out.push({ id: "venue", k: "Speeches", v: f.venue === "committee" ? "Committee hearings" : "Chamber speeches" });
+  if (f.from || f.to || f.since || f.until) {
+    const a = f.since || f.from || "1993", b = f.until || f.to || "2026";
     out.push({ id: "years", k: "Years", v: a === b ? a : `${a} to ${b}` });
   }
   if (f.kind && f.kind !== (f.scope === "all" ? "all" : "speech")) {
@@ -11962,7 +12082,9 @@ const SEARCH_FILTER_RESETS = {
   party: () => { $("f-party").value = ""; },
   state: () => { $("f-state").value = ""; },
   topic: () => { $("f-topic").value = ""; },
-  years: () => { $("f-from").value = "1993"; $("f-to").value = "2026"; updateSearchYearsLabel(); },
+  chamber: () => { delete searchCitationScope.chamber; },
+  venue: () => { delete searchCitationScope.venue; },
+  years: () => { delete searchCitationScope.since; delete searchCitationScope.until; $("f-from").value = "1993"; $("f-to").value = "2026"; updateSearchYearsLabel(); },
   kind: () => { $("search-kind").value = "all"; },
   mode: () => { $("search-mode").value = "hybrid"; },
 };
@@ -12047,9 +12169,11 @@ function applySearchParams(params) {
   if (key === searchApplied) return;
   searchApplied = key;
   setQueryValue("search-input", params.get("q") || "");
+  searchCitationScope = Object.fromEntries(["chamber", "since", "until", "venue"].filter(key => params.get(key)).map(key => [key, params.get(key)]));
   for (const name of ["speaker", "party", "state", "topic"]) $("f-" + name).value = params.get(name) || "";
   for (const [name, fallback] of [["from", RECORD_FIRST_YEAR], ["to", RECORD_LAST_YEAR]]) {
-    const year = Number(params.get(name)) || fallback;
+    const exact = params.get(name === "from" ? "since" : "until");
+    const year = Number(exact?.slice(0, 4) || params.get(name)) || fallback;
     $("f-" + name).value = String(Math.min(RECORD_LAST_YEAR, Math.max(RECORD_FIRST_YEAR, Math.round(year))));
   }
   updateSearchYearsLabel();

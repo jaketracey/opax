@@ -179,7 +179,7 @@ export const MODULE_STAMPS = [
   ['money-explain.js', 'labels.js'], ['money-explain.js', 'canonical-urls.js'],
   // The Explore tools and the loaders, restyled on tokens in pass 4G.
   ['app.js', 'ballot.js'], ['app.js', 'grants.js'], ['app.js', 'ledger.js'], ['app.js', 'matrix.js'], ['app.js', 'wordsdollars.js'],
-  ['app.js', 'thenvsnow.js'], ['app.js', 'statemap.js'], ['app.js', 'stages.js'], ['app.js', 'wombat.js'],
+  ['app.js', 'thenvsnow.js'], ['app.js', 'statemap.js'], ['app.js', 'stages.js'], ['app.js', 'wombat.js'], ['app.js', 'ask-steps.js'],
   ['home.js', 'home-data.js'], ['home.js', 'electorates.js'], ['home.js', 'money-map.js'],
 ]
 

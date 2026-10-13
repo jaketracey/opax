@@ -74,6 +74,11 @@ import { melbourneDate, DAILY_POST_KINDS, type DailyPostKind } from './daily-pos
 import { CATALOG_KINDS, searchCatalog } from './catalog-search'
 import { retrieveAskRecords, recordContext, recordSources, RECORD_GROUNDING, integrityQuestion, type AskRecords } from './ask-records'
 import { SEARCH_SORTS, compareSearchResults } from './search-sort'
+import { runAgentic, classifyAgentic, agenticCacheKey, resolveNamedScope, type NamedScope, inferPeriod, bounded, AGENTIC_BUDGET_MS, type AgenticDeps, type AgenticPayload, type Progress } from './agentic-ask'
+import { agenticAskPayload } from './agentic-response'
+import { recordAgenticRun } from './agentic-monitor'
+import { AGENTIC_TOOLS_VERSION } from './agentic-tools'
+import type { ToolDeps } from './agentic-tools'
 import { tokens as catalogTokens } from './catalog-query.mjs'
 import { journeyStoryContext, parseJourneyStory, journeyStoryPrompt, JOURNEY_STORY_SYSTEM, STORY_VERSION, type StoryGraph } from './journey-story'
 import { shortDate, shortMoney as money } from '../public/format.js'
@@ -159,6 +164,9 @@ function filterExpression(f: {
   topic?: string | null
   from?: string | null
   to?: string | null
+  since?: string | null
+  until?: string | null
+  venue?: string | null
 }): Record<string, unknown> | null {
   const clauses: Record<string, unknown>[] = [{ not: { prop: 'label', labelset: 'kind', label: 'news' } }]
   if (f.kind && f.kind !== 'all') {
@@ -168,6 +176,11 @@ function filterExpression(f: {
   }
   if (f.party) clauses.push({ prop: 'label', labelset: 'party', label: f.party })
   if (f.chamber) clauses.push({ prop: 'label', labelset: 'chamber', label: f.chamber })
+  if (f.venue) {
+    const committee = { or: ['senate_committee', 'joint_committee', 'house_committee'].map(label => ({ prop: 'label', labelset: 'chamber', label })) }
+    if (f.venue !== 'all') clauses.push(f.venue === 'committee' ? committee : { not: committee })
+    clauses.push({ not: { prop: 'label', labelset: 'speaker_type', label: 'witness' } })
+  }
   if (f.state) clauses.push({ prop: 'label', labelset: 'state', label: f.state })
   if (f.topic && TOPIC_SLUGS.has(f.topic)) {
     clauses.push({ prop: 'label', labelset: 'topic', label: f.topic })
@@ -178,11 +191,13 @@ function filterExpression(f: {
   const yr = (s: string | null | undefined) => (s && /^\d{4}$/.test(s) ? s : null)
   const from = yr(f.from)
   const to = yr(f.to)
-  if (from || to) {
+  const since = f.since || (from ? `${from}-01-01` : null)
+  const until = f.until || (to ? `${to}-12-31` : null)
+  if (since || until) {
     clauses.push({
       prop: 'created',
-      ...(from ? { since: `${from}-01-01T00:00:00Z` } : {}),
-      ...(to ? { until: `${to}-12-31T23:59:59Z` } : {}),
+      ...(since ? { since: `${since}T00:00:00Z` } : {}),
+      ...(until ? { until: `${until}T23:59:59Z` } : {}),
     })
   }
   // Title ("generic") fields hold only "Name — date". A paragraph match there
@@ -637,6 +652,9 @@ async function searchWindow(
     topic: url.searchParams.get('topic'),
     from: url.searchParams.get('from'),
     to: url.searchParams.get('to'),
+    since: url.searchParams.get('since'),
+    until: url.searchParams.get('until'),
+    venue: url.searchParams.get('venue'),
   })
   if (filters) body.filter_expression = filters
   const attribution = await speakerAttribution(env, url.searchParams.get('speaker'))
@@ -1334,13 +1352,13 @@ function earlyOverviewStream(work: () => Promise<Response>, budget: AskDeadline,
   return new Response(readable, {headers:SSE_HEADERS})
 }
 
-async function apiAsk(request: Request, env: Env, ctx: ExecutionContext, prepared?: AskInput, firstBudget?: AskDeadline): Promise<Response> {
+async function apiAsk(request: Request, env: Env, ctx: ExecutionContext, prepared?: AskInput, firstBudget?: AskDeadline, quotaTaken = false): Promise<Response> {
   const rawInput = saConversationInput((prepared || ((await request.json().catch(() => ({}))) ?? {})) as Record<string,unknown>, env.SA_HANSARD_FULL_TEXT) as AskInput
   const overviewCandidate = (isPersonOverviewCandidate(rawInput.question || '') || isPersonRecentCandidate(rawInput.question || '')) && !rawInput.topic && !rawInput.from && !rawInput.to && (!rawInput.kind || ['speech','all'].includes(rawInput.kind))
   if (!firstBudget && (overviewCandidate || isPersonRecentIntent(rawInput))) {
     const budget = new AskDeadline(OVERVIEW_FIRST_ANSWER_MS, request.signal)
     const work = () => budget.run(async () => {
-      const response = await apiAsk(request,env,ctx,rawInput,budget)
+      const response = await apiAsk(request,env,ctx,rawInput,budget,quotaTaken)
       if (budget.signal.aborted) await response.body?.cancel().catch(() => {})
       return response
     })
@@ -1400,7 +1418,7 @@ async function apiAsk(request: Request, env: Env, ctx: ExecutionContext, prepare
   const conversation = Array.isArray(rawInput.context) && rawInput.context.length > 0
   let askedAs: string | null = null
   if (conversation) {
-    const limited = await rateLimited(env.ASK_LIMITER, request)
+    const limited = quotaTaken ? null : await rateLimited(env.ASK_LIMITER, request)
     if (limited) return limited
     const rewrite = await standaloneQuestion(rawInput, env, firstBudget)
     firstBudget?.signal.throwIfAborted()
@@ -1449,7 +1467,7 @@ async function apiAsk(request: Request, env: Env, ctx: ExecutionContext, prepare
     }
   }
   const status: CacheStatus = bypass ? 'BYPASS' : 'MISS'
-  const limited = conversation ? null : await rateLimited(env.ASK_LIMITER, request)
+  const limited = conversation || quotaTaken ? null : await rateLimited(env.ASK_LIMITER, request)
   if (limited) return limited
   mark('cache')
 
@@ -1982,7 +2000,7 @@ async function apiSearchSummary(request: Request, url: URL, env: Env, ctx: Execu
   const sources = summarySources((results.results || []).map(row => saEvidenceRecord(row,env.SA_HANSARD_FULL_TEXT,searchUrl.searchParams.get('q') || '')))
   if (!sources.length) return json({status:'empty', points:[], sources:[]})
   const query = (searchUrl.searchParams.get('q') || '').trim()
-  const filters = Object.fromEntries(['kind','mode','speaker','party','state','topic','from','to'].map(k => [k, searchUrl.searchParams.get(k) || '']))
+  const filters = Object.fromEntries(['kind','mode','speaker','party','state','topic','from','to','chamber','since','until','venue'].map(k => [k, searchUrl.searchParams.get(k) || '']))
   const key = cacheRequest('search-summary', await sha256Hex(JSON.stringify({version:SEARCH_SUMMARY_VERSION, epoch:env.CACHE_EPOCH, query, filters, sources, index:results.index_version})))
   const cached = await readGenerationCache(env, ctx, key)
   if (cached) return withCacheStatus(await sanitiseStoredResponse(cached), 'HIT', false)
@@ -5625,7 +5643,7 @@ const NULL_BODY_STATUS = new Set([101, 204, 205, 304])
 // query's result set. Every other /api route is the caching work's to own, so
 // its Cache-Control is left exactly as the handler returned it — and even here
 // a handler that sets its own (the SSE stream does) wins.
-const NO_STORE_PATHS = new Set(['/api/search-summary', '/api/journey-story', '/api/ask', '/api/followups', '/api/search', '/api/search-all'])
+const NO_STORE_PATHS = new Set(['/api/search-summary', '/api/journey-story', '/api/ask', '/api/ask-agentic', '/api/followups', '/api/search', '/api/search-all'])
 
 function withSecurityHeaders(res: Response, url: URL): Response {
   const isApi = url.pathname.startsWith('/api/')
@@ -5663,7 +5681,7 @@ const MODES = new Set(['hybrid', 'semantic', 'keyword'])
 // without breaking the encyclopedia the day a new party is indexed.
 const NAME_RE = /^[\p{L}\p{N} .,'’&()\/-]+$/u
 
-const FILTER_KEYS = ['kind', 'speaker', 'party', 'state', 'topic', 'from', 'to'] as const
+const FILTER_KEYS = ['kind', 'speaker', 'party', 'state', 'topic', 'from', 'to', 'chamber', 'since', 'until', 'venue'] as const
 
 /** Allow-list every filter value. Returns a client-safe message, or null. */
 function validateFilters(get: (key: string) => unknown): string | null {
@@ -5674,6 +5692,17 @@ function validateFilters(get: (key: string) => unknown): string | null {
     const v = raw.trim()
     if (!v) continue
     switch (key) {
+      case 'chamber':
+        if (!['representatives', 'senate', 'nsw_la', 'nsw_lc', 'vic_la', 'vic_lc', 'sa_ha', 'sa_lc', 'qld_la', 'act_la', 'senate_committee', 'joint_committee', 'house_committee'].includes(v)) return 'unknown chamber'
+        break
+      case 'venue':
+        if (!['chamber', 'committee', 'all'].includes(v)) return 'unknown venue'
+        break
+      case 'since':
+      case 'until':
+        if (!/^\d{4}-\d{2}-\d{2}$/.test(v) || !Number.isFinite(Date.parse(v)) || new Date(v).toISOString().slice(0, 10) !== v) return `${key} must be a valid ISO date`
+        if (Number(v.slice(0, 4)) < MIN_YEAR || Number(v.slice(0, 4)) > MAX_YEAR) return `${key} is out of range`
+        break
       case 'kind':
         if (!KINDS.has(v)) return 'unknown kind'
         break
@@ -5757,9 +5786,190 @@ async function readJsonBody(
 
 /** Rebuild a consumed POST so the handler can call request.json() as before. */
 const replayPost = (request: Request, body: string) =>
-  new Request(request.url, { method: 'POST', headers: request.headers, body })
+  new Request(request.url, { method: 'POST', headers: request.headers, body, signal: request.signal })
 
 // ---------------------------------------------------------------------------
+
+/** All tool fetches, including response-body reads, carry the request budget signal. */
+function agenticToolDeps(env: Env, signal?: AbortSignal): ToolDeps {
+  return {
+    origin: SITE_ORIGIN, signal,
+    withSignal: signal => agenticToolDeps(env, signal),
+    kb: async (path, body) => {
+      signal?.throwIfAborted()
+      const res = await kbFetch(env, path, { ...(body === undefined ? {} : { body }), signal })
+      if (!res.ok) throw new Error('record lookup unavailable')
+      const data = await res.json() as Record<string, unknown>
+      signal?.throwIfAborted(); return data
+    },
+    asset: async path => {
+      signal?.throwIfAborted()
+      const res = await env.ASSETS.fetch(new Request(new URL(path, SITE_ORIGIN), { signal }))
+      if (!res.ok || !(res.headers.get('content-type') ?? '').includes('json')) return null
+      const data = await res.json(); signal?.throwIfAborted(); return data
+    },
+  }
+}
+function agenticDeps(env: Env, signal?: AbortSignal): AgenticDeps {
+  return {
+    ...agenticToolDeps(env, signal),
+    generate: async (query, prompt, maxTokens, signal) => {
+      const res = await kbFetch(env, '/ask', {
+        body: { query, top_k: 1, reranker: 'noop', generative_model: env.ASK_MODEL || 'openai-compatible', max_tokens: maxTokens, prompt },
+        headers: { 'x-synchronous': 'true', 'x-show-consumption': 'true' }, signal,
+      })
+      if (!res.ok) throw new Error('generation unavailable')
+      const out = await res.json() as { answer?: string; metadata?: { tokens?: { input?: number; output?: number } } }
+      signal.throwIfAborted()
+      const t = out.metadata?.tokens
+      const tokens = t ? { input: Number(t.input) || 0, output: Number(t.output) || 0 } : undefined
+      const inputPrice = Number(env.AGENTIC_INPUT_USD_PER_MILLION), outputPrice = Number(env.AGENTIC_OUTPUT_USD_PER_MILLION)
+      const costUsd = tokens && Number.isFinite(inputPrice) && inputPrice >= 0 && Number.isFinite(outputPrice) && outputPrice >= 0
+        ? (tokens.input * inputPrice + tokens.output * outputPrice) / 1e6 : undefined
+      return { text: out.answer ?? '', tokens, costUsd }
+    },
+  }
+}
+function agenticPeriod(input: Record<string, unknown>) {
+  const inferred = inferPeriod(String(input.question), input.period)
+  if (!input.from && !input.to) return inferred
+  const since = input.from ? `${input.from}-01-01` : undefined, until = input.to ? `${input.to}-12-31` : undefined
+  return { kind: 'window' as const, since, until, label: `Counting speeches${since ? ` from ${since}` : ''}${until ? ` to ${until}` : ' onwards'}.` }
+}
+function agenticFilters(input: Record<string, unknown>): Record<string, unknown> {
+  return Object.fromEntries(['speaker', 'party', 'state', 'chamber', 'topic'].filter(k => typeof input[k] === 'string' && input[k]).map(k => [k, input[k]]))
+}
+function monitorAgentic(env: Env, ctx: ExecutionContext, question: string, run: AgenticPayload) {
+  ctx.waitUntil(recordAgenticRun(env.COMMUNITY_DB, question, run).catch(() => {
+    // Fixed message only: upstream errors can contain private query strings.
+    console.warn('Ask monitoring write unavailable')
+  }))
+}
+async function executeAgentic(input: Record<string, unknown>, env: Env, ctx: ExecutionContext, progress?: Progress, signal?: AbortSignal, budgetMs = AGENTIC_BUDGET_MS, namedScope?: NamedScope) {
+  const question = String(input.question).trim()
+  const started = Date.now(), period = agenticPeriod(input)
+  let run: AgenticPayload
+  try {
+    // Covers the whole path, including an SSE writer or provider that stalls.
+    run = await bounded(signal => runAgentic(question, agenticDeps(env, signal), progress, budgetMs, period, agenticFilters(input), namedScope), budgetMs, signal)
+  } catch {
+    run = { answered: false, reason: 'declined', answer: '', answer_source: 'none', shape: classifyAgentic(question).shape, period,
+      facts: [], notes: [], steps: [], events: [], tokens: { input: 0, output: 0 }, cost_usd: null,
+      over_budget: Date.now() - started >= budgetMs,
+      timings: { plan_ms: 0, tools_ms: 0, compose_ms: 0, total_ms: Date.now() - started }, version: 'unavailable' }
+  }
+  monitorAgentic(env, ctx, question, run)
+  return run
+}
+/** Same classifier/tool path as readers; bearer-only, mode-gated and always local on staging. */
+async function apiAgenticGold(request: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
+  if (!await operatorAuthorized(request, env)) return json({ error: 'operator secret required' }, 401)
+  if (request.method !== 'POST') return json({ error: 'Use POST.' }, 405)
+  if (!['route', 'shadow'].includes(String(env.AGENTIC_ASK_MODE))) return json({ error: 'Ask routing is off.' }, 409)
+  const body = await readJsonBody(request)
+  if (body instanceof Response) return body
+  const input = body.value, q = input.question
+  if (typeof q !== 'string' || !q.trim() || q.length > MAX_QUESTION_CHARS) return json({ error: 'question is required' }, 400)
+  if (classifyAgentic(q).route !== 'agentic') return json({ error: 'question is outside the route classifier' }, 409)
+  const bad = validateFilters(k => input[k]); if (bad) return json({ error: bad }, 400)
+  const limited = await rateLimited(env.ASK_LIMITER, request); if (limited) return limited
+  const run = await executeAgentic(input, env, ctx, undefined, request.signal)
+  return json(agenticAskPayload(run, q))
+}
+async function apiAskRouted(request: Request, url: URL, input: Record<string, unknown>, env: Env, ctx: ExecutionContext): Promise<Response> {
+  const started = Date.now()
+  const question = String(input.question).trim()
+  let quotaTaken = false
+  const fallback = () => apiAsk(request.clone(), env, ctx, undefined, undefined, quotaTaken)
+  const mode = env.AGENTIC_ASK_MODE
+  if (!['route', 'shadow'].includes(String(mode)) || classifyAgentic(question).route !== 'agentic' || input.kind && !['speech', 'all'].includes(String(input.kind))) return fallback()
+  if (mode === 'shadow') {
+    if (await questionNamesWithheldDonor(env.ASSETS, question)) return fallback()
+    const normal = await fallback()
+    if (normal.ok) ctx.waitUntil(executeAgentic(input, env, ctx).then(() => {}).catch(() => console.warn('Ask background run unavailable')))
+    return normal
+  }
+  // One deadline owns planning, tools, fallback and transport. Only routed
+  // requests receive this budget; ordinary Ask keeps its existing bytes.
+  const budget = new AskDeadline(Math.max(0, AGENTIC_BUDGET_MS - (Date.now() - started)), request.signal)
+  const routedFallback = () => budget.run(() => apiAsk(new Request(request, { signal: budget.signal }), env, ctx, undefined, budget, quotaTaken))
+  const expired = () => json({ error: 'The answer took too long. Please try again.' }, 504)
+  let streamOwnsBudget = false
+  try {
+    // Reuse the donor guard within the same deadline; no prompt bypass.
+    if (await budget.run(() => questionNamesWithheldDonor(env.ASSETS, question))) return await routedFallback()
+    let namedScope: NamedScope
+    try { namedScope = await resolveNamedScope(question, agenticToolDeps(env, budget.signal), Math.min(4_000, budget.remaining), agenticFilters(input)) }
+    catch { namedScope = { people: [], parties: [], bills: [], ambiguous: false, unresolved: true } }
+    // Unresolved scopes still use the normal bounded fallback/stream relay,
+    // but can neither read nor fill the agentic cache. executeAgentic records
+    // the decline without starting a planner or count tool.
+    const privateTurn = Array.isArray(input.context) && input.context.length > 0
+    const key = namedScope.unresolved || namedScope.ambiguous || namedScope.bills.length ? undefined : new Request(await agenticCacheKey(question, env.CACHE_EPOCH, env.ASK_MODEL || 'openai-compatible', agenticPeriod(input), AGENTIC_TOOLS_VERSION, agenticFilters(input), classifyAgentic(question).shape, namedScope))
+    const streaming = url.searchParams.get('stream') === '1' || (request.headers.get('accept') ?? '').includes('text/event-stream')
+    if (key && !privateTurn && !cacheBypass(request, url)) {
+      const hit = await budget.run(() => readGenerationCache(env, ctx, key))
+      if (hit) {
+        ctx.waitUntil(recordAgenticRun(env.COMMUNITY_DB, question, {
+          shape: classifyAgentic(question).shape, cost_usd: 0,
+          timings: { plan_ms: 0, tools_ms: 0, compose_ms: 0, total_ms: Date.now() - started },
+        }).catch(() => console.warn('Ask monitoring write unavailable')))
+        return streaming ? replayCachedAsk(hit, ctx) : withCacheStatus(hit, 'HIT', false)
+      }
+    }
+    const limited = await budget.run(() => rateLimited(env.ASK_LIMITER, request)); if (limited) return limited
+    quotaTaken = true
+    const finish = (run: AgenticPayload) => {
+      const response = json(agenticAskPayload(run, question))
+      if (key && run.answered && !run.over_budget && !privateTurn) storeGenerationCache(env, ctx, key, response.clone(), ASK_CACHE_TTL)
+      return response
+    }
+    if (!streaming) {
+      try {
+        const run = await executeAgentic(input, env, ctx, undefined, budget.signal, budget.remaining, namedScope)
+        if (request.signal.aborted) return json(agenticAskPayload(run, question))
+        budget.signal.throwIfAborted()
+        return run.answered && !run.over_budget ? withCacheStatus(finish(run), 'MISS', false) : await routedFallback()
+      } catch { return expired() }
+      finally { budget.dispose() }
+    }
+    const encoder = new TextEncoder()
+    let gone = false
+    const readable = new ReadableStream<Uint8Array>({
+      start(controller) {
+        const send: Progress = async (event, data) => {
+          budget.signal.throwIfAborted()
+          if (gone) throw new DOMException('Reader disconnected', 'AbortError')
+          controller.enqueue(encoder.encode(`event: ${event}\ndata: ${JSON.stringify(data)}\n\n`))
+        }
+        ctx.waitUntil((async () => {
+          try {
+            await send('status', { phase: 'searching' })
+            const run = await executeAgentic(input, env, ctx, send, budget.signal, budget.remaining, namedScope)
+            if (gone || request.signal.aborted) return
+            budget.signal.throwIfAborted()
+            if (run.answered && !run.over_budget) { const response = finish(run); await send('done', await response.json()) }
+            else {
+              const response = await routedFallback()
+              if ((response.headers.get('content-type') ?? '').includes('text/event-stream')) {
+                const reader = response.body!.getReader()
+                try { while (true) { const { value, done } = await budget.run(() => reader.read()); if (done || gone) break; controller.enqueue(value!) } }
+                finally { await reader.cancel().catch(() => {}); reader.releaseLock() }
+              } else if (response.ok) await send('done', await budget.run(() => response.json()))
+              else await send('error', { error: 'The record is temporarily unavailable. Please try again.', final: true })
+            }
+          } catch {
+            if (!gone && !request.signal.aborted) controller.enqueue(encoder.encode('event: error\ndata: {"error":"The answer took too long. Please try again.","final":true}\n\n'))
+          } finally { budget.cancel(); if (!gone) controller.close() }
+        })())
+      },
+      cancel() { gone = true; budget.cancel() },
+    })
+    streamOwnsBudget = true
+    return new Response(readable, { headers: { ...SSE_HEADERS, 'x-opax-cache': 'MISS' } })
+  } catch { budget.dispose(); return expired() }
+  finally { if (!streamOwnsBudget) budget.dispose() }
+}
 
 async function route(
   request: Request,
@@ -5799,7 +6009,7 @@ async function route(
         }
         const bad = validateFilters((k) => body.value[k])
         if (bad) return json({ error: bad }, 400)
-        return await apiAsk(replayPost(request, body.text), env, ctx)
+        return await apiAskRouted(replayPost(request, body.text), url, body.value, env, ctx)
       }
       if (url.pathname === '/api/journey-story' && request.method === 'POST') {
         const body = await readJsonBody(request)
@@ -5981,6 +6191,11 @@ export default {
     if (url.pathname === '/api/table/privacy') return withSecurityHeaders(await tablePrivacy(request, env.ASSETS), url)
     const isApi = url.pathname.startsWith('/api/')
     const communityResponse = (response: Response) => { const secured = withSecurityHeaders(response, url); if (env.STAGING_API) secured.headers.set('x-robots-tag', 'noindex, nofollow'); return secured }
+    if (url.pathname === '/api/ops/ask-gold') {
+      const response = await apiAgenticGold(request, env, ctx)
+      response.headers.set('cache-control', 'no-store')
+      return communityResponse(response)
+    }
     if (url.pathname === '/api/ops/reviewer-login') {
       // Same bearer guard as daily-post engagement/run; always local, including staging.
       const response = !await operatorAuthorized(request, env)
