@@ -55,7 +55,7 @@ test('P1 actual JSON/SSE: lowercase then capitalised unknown speaker cannot seed
    const u=new URL(input);assert.ok(u.hostname.startsWith('offline.'));const b=JSON.parse(init?.body??'{}');
    if(u.pathname.endsWith('/ask')){
     if(b.prompt?.user?.includes('Plan the record')){models++;return Response.json({answer:plan()})}
-    normal++;const answer='The supplied name is not resolved in this fixture.';
+    normal++;const answer=JSON.stringify({answered:false,answer:''});
     if(init.headers?.['x-synchronous']==='true')return Response.json({answer,retrieval_results:{resources:{}}});
     return new Response([{type:'answer',text:answer},{type:'status',code:'0',status:'success'}].map(item=>JSON.stringify({item})).join('\n')+'\n',{headers:{'content-type':'application/x-ndjson'}});
    }
@@ -67,7 +67,9 @@ test('P1 actual JSON/SSE: lowercase then capitalised unknown speaker cannot seed
    shared.clear();edge.clear();
    for(const q of [lower,upper]){
     const r=await h.fetch('/api/ask'+(stream?'?stream=1':''),{method:'POST',headers:{'content-type':'application/json',...(stream?{accept:'text/event-stream'}:{})},body:JSON.stringify({question:q,kind:'speech'})});
-    const text=await r.text();await flush();assert.equal(r.status,200);assert.match(text,/supplied name is not resolved/);assert.doesNotMatch(text,/300|"agentic"|"phase":"step"/);
+    const text=await r.text();await flush();assert.equal(r.status,200);assert.doesNotMatch(text,/300|"agentic"|"phase":"step"/);
+    const done=stream?JSON.parse(text.split('\n\n').find(frame=>frame.startsWith('event: done\n')).split('\ndata: ')[1]):JSON.parse(text);
+    assert.equal(done.answered,false);assert.equal(done.reason,'declined');assert.equal(done.answer,'');
    }
   }
   assert.equal(models,0);assert.ok(normal>=2);assert.equal(counts,0);assert.equal(cacheReads,0);assert.equal(cacheWrites,0);

@@ -75,7 +75,7 @@ test('P1 actual route: a dropped roster speaker falls back to normal Ask in JSON
    const b=JSON.parse(init?.body??'{}');
    if(new URL(input).pathname.endsWith('/ask')){
     if(b.prompt?.user?.includes('Plan the record')){planners++;return Response.json({answer:plan([count()])})}
-    normals++;const answer='Taylor Example discussed housing assistance.';
+    normals++;const answer=JSON.stringify({answered:false,answer:''});
     if(init.headers?.['x-synchronous']==='true')return Response.json({answer,retrieval_results:{resources:{}}});
     return new Response([{type:'answer',text:answer},{type:'status',code:'0',status:'success'}].map(item=>JSON.stringify({item})).join('\n')+'\n',{headers:{'content-type':'application/x-ndjson'}});
    }
@@ -84,7 +84,9 @@ test('P1 actual route: a dropped roster speaker falls back to normal Ask in JSON
   };
   for(const stream of [false,true]){
    const response=await h.fetch('/api/ask'+(stream?'?stream=1':''),{method:'POST',headers:{'content-type':'application/json',...(stream?{accept:'text/event-stream'}:{})},body:JSON.stringify({question:'How many speeches has Taylor Example made about housing?',kind:'speech'})});
-   const text=await response.text();assert.equal(response.status,200);assert.doesNotMatch(text,/300|"agentic"/);assert.match(text,/housing assistance/);
+   const text=await response.text();assert.equal(response.status,200);assert.doesNotMatch(text,/300|"agentic"/);
+   const done=stream?JSON.parse(text.split('\n\n').find(frame=>frame.startsWith('event: done\n')).split('\ndata: ')[1]):JSON.parse(text);
+   assert.equal(done.answered,false);assert.equal(done.reason,'declined');assert.equal(done.answer,'');
   }
   assert.equal(planners,2);assert.equal(normals,2);assert.equal(overallCounts,0);while(pending.length)await Promise.all(pending.splice(0));
  }finally{restore()}

@@ -111,3 +111,49 @@ test('popstate quarantines unknown private input synchronously and keeps safe un
     mounted.destroy();
   }
 });
+test('vote and division tables (echo privacy) reject a crafted share link without checking public-record rows',async t=>{
+  const {voteTableConfig,divisionTableConfig}=await import('../public/vote-tables.js');
+  const recordPage={rows:[{title:'Second reading, 19 Aug 2026',date:'2026-08-19',vote:'Aye',party_position:'Not recorded',chamber:'Senate',outcome:'Agreed',ayes:1,noes:0,href:'/doc/division-fixture'}],total:1,page:1,pageSize:25,facets:{}};
+  // votePrivacyCheck posts with the page's global fetch, which in a browser is window.fetch.
+  const savedFetch=globalThis.fetch;let current;
+  globalThis.fetch=(...args)=>current.win.fetch(...args);
+  t.after(()=>{globalThis.fetch=savedFetch;});
+  let tested=0;
+  for(const make of [()=>voteTableConfig('fixture-person'),()=>divisionTableConfig({bill:'au-federal-fixture'})]){
+    const base=make(),urlKey=base.urlKey;
+    for(const value of source.identifiers.slice(0,8))for(const field of ['q','f.vote','f.outcome']){
+      const initial=`http://localhost/record?${urlKey}.${field}=${encodeURIComponent(field==='q' ? value : JSON.stringify([value]))}&campaign=fixture`,h=current=tableHarness(initial);
+      const canonical={href:initial};h.root.ownerDocument.head.querySelector=selector=>selector==='link[rel="canonical"]'?canonical:null;
+      let reads=0;
+      h.win.fetch=(input,options)=>{
+        if(new URL(input,'http://localhost').pathname==='/api/table/privacy')return tablePrivacy(new Request('https://local.invalid/api/table/privacy',options),assets);
+        reads++;return Promise.resolve(Response.json(recordPage));
+      };
+      const mounted=mountDataTable(h.root,make());
+      const check=()=>{
+        assert.ok(!policy.check(h.win.location.href),'URL echo');
+        assert.ok(!policy.check(canonical.href),'canonical echo');
+        assert.ok(!policy.check(h.html()),'HTML echo');
+        assert.ok(h.html().includes('data-export disabled'),'rejected table');
+      };
+      check();await new Promise(setImmediate);check();
+      assert.equal(reads,0,'a rejected share link never reaches the dataset');
+      assert.equal(new URL(h.win.location.href).searchParams.get('campaign'),'fixture');
+      mounted.destroy();tested++;
+    }
+    // A clean mount shows the public rows; only the reader's own state is ever posted.
+    const h=current=tableHarness(`http://localhost/record?${urlKey}.q=reading`),posted=[];
+    h.win.fetch=async(input,options)=>{
+      if(new URL(input,'http://localhost').pathname==='/api/table/privacy'){posted.push(JSON.parse(options.body).text);return tablePrivacy(new Request('https://local.invalid/api/table/privacy',options),assets);}
+      return Response.json(recordPage);
+    };
+    const mounted=mountDataTable(h.root,make());
+    for(let i=0;i<5;i++)await new Promise(setImmediate);
+    assert.ok(h.html().includes('Second reading, 19 Aug 2026'),'public rows render');
+    assert.ok(posted.length>0,'the reader\'s search is checked');
+    assert.deepEqual(posted.filter(text=>text.includes('Second reading') || text.includes('/doc/')),[],'rows are never posted to the privacy check');
+    assert.ok(h.win.location.href.includes(`${urlKey}.q=reading`),'a safe search stays in the URL');
+    mounted.destroy();
+  }
+  t.diagnostic(JSON.stringify({echoProbes:tested}));
+});
