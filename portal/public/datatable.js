@@ -1,6 +1,6 @@
 // Shared, dependency-free table renderer and query engine. Safe to import in a Worker.
 import {isOrganisationDonor} from './donor-entity.js?v=ebb2c972d5';
-import {unnamedDonorLabel,isUnnamedAggregate,donorsNotNamedDetail} from './donor-views.js?v=77470b1d26';
+import {unnamedDonorLabel,isUnnamedAggregate,donorsNotNamedDetail} from './donor-views.js?v=4fcbbb78cf';
 import {shortDate} from './format.js';
 import {queryValues,rawQueryValues,scrubQuery} from './datatable-query.js?v=6dd55aab38';
 import {readServerCSV} from './server-csv.js?v=47fc2aba1d';

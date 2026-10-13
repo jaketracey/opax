@@ -30,6 +30,7 @@ import { createHash } from 'node:crypto'
 import { readFileSync, writeFileSync, mkdirSync, readdirSync, unlinkSync, statSync } from 'node:fs'
 import { dirname, join, relative, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
+import { runInNewContext } from 'node:vm'
 import { buildSpaShell } from './build_spa_shell.mjs'
 import { buildMethods } from './build_methods.mjs'
 
@@ -38,7 +39,7 @@ const PUBLIC = join(ROOT, 'portal', 'public')
 const INDEX = join(PUBLIC, 'index.html')
 
 /** Assets referenced from index.html with a ?v= stamp. */
-const STAMPED = ['app.js', 'spa-shell.js', 'spa-entry.js', 'style.css', 'analytics.js', 'gtm.js', 'events.js', 'navigation.js', 'quick-search.js', 'voice.css', 'ui-controls.css', 'ui-source.css', 'ui-source.js', 'labels.js', 'page-actions.css', 'vote-tables.js', 'vote-tables.css']
+const STAMPED = ['app.js', 'spa-shell.js', 'spa-entry.js', 'style.css', 'analytics.js', 'gtm.js', 'events.js', 'navigation.js', 'quick-search.js', 'voice.css', 'nav.css', 'ui-controls.css', 'ui-source.css', 'ui-source.js', 'labels.js', 'page-actions.css', 'vote-tables.js', 'vote-tables.css']
 
 const hashOf = (file) =>
   createHash('sha256').update(readFileSync(join(PUBLIC, file))).digest('hex').slice(0, 10)
@@ -231,11 +232,26 @@ function stampPass({ check }) {
   return stale
 }
 
+// The menu bar and the footer's site index before (or without) scripts, drawn
+// from navigation.js's one list: closed gates are left out, and the script
+// draws the full menus over them when it runs.
+function navFallbacks(html) {
+  const context = { URLSearchParams }
+  runInNewContext(readFileSync(join(PUBLIC, 'navigation.js'), 'utf8'), context)
+  const nav = context.OpaxNavigation
+  for (const [name, content] of [['bar', nav.barHTML()], ['index', nav.footerHTML(() => true, { slot: false })]]) {
+    const pattern = new RegExp(`(<!-- nav:${name}:start -->)[\\s\\S]*?(<!-- nav:${name}:end -->)`)
+    if (!pattern.test(html)) throw new Error(`index.html is missing its nav:${name} markers`)
+    html = html.replace(pattern, (_, start, end) => `${start}${content}${end}`)
+  }
+  return html
+}
+
 // Keep the homepage's first-render chrome identical to the application shell.
 // Both documents then use navigation.js for the same menus and interactions.
 function syncHomeChrome(html, shell) {
   const header = shell.match(/<header class="site-header">[\s\S]*?<\/header>/)?.[0]
-  const drawer = shell.match(/<dialog class="nav-drawer"[\s\S]*?<\/dialog>/)?.[0]
+  const drawer = shell.match(/<dialog class="nav-drawer[^"]*"[\s\S]*?<\/dialog>/)?.[0]
   const footer = shell.match(/<footer>[\s\S]*?<\/footer>/)?.[0]
   if (!header || !drawer || !footer) throw new Error('Shared site chrome is missing from index.html')
   for (const [part, content] of [['header', `${header}\n${drawer}`], ['footer', footer]]) {
@@ -352,7 +368,7 @@ function stamp({ check }) {
   const before = readFileSync(INDEX, 'utf8')
   const hashes = Object.fromEntries(STAMPED.map((f) => [f, hashOf(f)]))
   let hits = 0
-  const after = before.replace(
+  const after = navFallbacks(before).replace(
     new RegExp(`/(${STAMPED.map((f) => f.replace('.', '\\.')).join('|')})\\?v=[A-Za-z0-9._-]*`, 'g'),
     (_, file) => {
       hits += 1
@@ -368,7 +384,7 @@ function stamp({ check }) {
   const communityPath = join(PUBLIC, 'community.html')
   const communityBefore = readFileSync(communityPath, 'utf8')
   // The community page wears the site masthead, drawer and footer, synced from index.html as home.html's are.
-  const communityAfter = syncHomeChrome(communityBefore, after).replace(/\/(style\.css|ui-controls\.css|community\.css|community\.js|navigation\.js|quick-search\.js)(?:\?v=[A-Za-z0-9._-]*)?(?=")/g, (_, file) => `/${file}?v=${hashOf(file)}`)
+  const communityAfter = syncHomeChrome(communityBefore, after).replace(/\/(style\.css|ui-controls\.css|nav\.css|community\.css|community\.js|navigation\.js|quick-search\.js)(?:\?v=[A-Za-z0-9._-]*)?(?=")/g, (_, file) => `/${file}?v=${hashOf(file)}`)
   if (!check && communityAfter !== communityBefore) writeFileSync(communityPath, communityAfter)
   const workbenchPath = join(PUBLIC, 'ui-workbench.html')
   const workbenchBefore = readFileSync(workbenchPath, 'utf8')
@@ -376,7 +392,7 @@ function stamp({ check }) {
   if (!check && workbenchAfter !== workbenchBefore) writeFileSync(workbenchPath, workbenchAfter)
   const homePath = join(PUBLIC, 'home.html')
   const homeBefore = readFileSync(homePath, 'utf8')
-  const homeAfter = syncHomeChrome(homeBefore, after).replace(/\/(style\.css|ui-controls\.css|ui-source\.css|ui-source\.js|home\.css|home\.js|navigation\.js|quick-search\.js|analytics\.js|events\.js|gtm\.js)\?v=[A-Za-z0-9._-]*/g, (_, file) => `/${file}?v=${hashOf(file)}`)
+  const homeAfter = syncHomeChrome(homeBefore, after).replace(/\/(style\.css|ui-controls\.css|ui-source\.css|ui-source\.js|home\.css|nav\.css|home\.js|navigation\.js|quick-search\.js|analytics\.js|events\.js|gtm\.js)\?v=[A-Za-z0-9._-]*/g, (_, file) => `/${file}?v=${hashOf(file)}`)
   if (!check && homeAfter !== homeBefore) writeFileSync(homePath, homeAfter)
   // /map is served from map.html. ui-controls.css is immutable, so a bare link
   // there would keep a returning reader on an old stylesheet for a year.
