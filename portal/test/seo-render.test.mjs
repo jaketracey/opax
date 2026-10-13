@@ -192,6 +192,30 @@ test('division and voting table URL state is noindex with a clean canonical',asy
   }
 });
 
+test('a crafted table query naming a withheld identity is never echoed by SSR, fresh or from the page cache',async()=>{
+  // Vote and division rows skip the per-row matcher; the reader's own table state does not.
+  const values=[tableIndex.values[0],tableIndex.values.at(-1),tableIndex.recipients[0],tableIndex.recipientABNs[0]];
+  const stored=new Map(),saved=globalThis.caches;
+  globalThis.caches={default:{async match(req){return stored.get(req.url)?.clone();},async put(req,res){stored.set(req.url,new Response(await res.arrayBuffer(),res));}}};
+  try {
+    for(const value of values) for(const [path,key] of [['/subject/person/david-pocock','vr'],['/bill/au-federal-r7534','dv'],['/sitting/2026-09-14','dv']]) for(const field of ['q','f.vote','f.outcome']) {
+      const url=new URL(origin+path);url.searchParams.set(key+'.'+field,field==='q' ? value : JSON.stringify([value]));
+      for(const attempt of [1,2]) {
+        const waits=[];
+        const response=await worker.fetch(new Request(url),env,{waitUntil(p){waits.push(p);}});
+        assert.equal(response.status,200,path);
+        const html=await response.text();
+        await Promise.all(waits);
+        // Not a whole-page matcher verdict: public bill titles can trip the substring
+        // matcher (they did, which is why rows no longer go through it).
+        for(const form of new Set([value,escapeHtml(value),encodeURIComponent(value),new URLSearchParams({v:value}).toString().slice(2),JSON.stringify(value).slice(1,-1)]))
+          assert.ok(!html.includes(form),'the page never carries the crafted text, in any encoding');
+        if(path.startsWith('/subject/person/')) assert.equal(response.headers.get('x-opax-cache'),attempt===1 ? 'MISS' : 'HIT');
+      }
+    }
+  } finally {globalThis.caches=saved;}
+});
+
 test('supplier SSR carries agency facts, contract references and related suppliers without individual donor links',async()=>{
   const html=await get('/subject/supplier/s-f93824d9abc756c8f32f');
   for(const fact of ['Department of Foreign Affairs and Trade','CN4248039','2026-02-24','112,216','Other suppliers to these agencies','An association does not prove influence']) assert.ok(html.includes(fact),fact);
