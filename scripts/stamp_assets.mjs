@@ -144,6 +144,7 @@ export const MODULE_STAMPS = [
   ['ledger.js', 'donor-entity.js'], ['quiz.js', 'donor-entity.js'], ['money-journeys-data.js', 'donor-entity.js'], ['map-research.js','donor-entity.js'], ['map-research.js','donor-views.js'],
   ['datatable.js', 'donor-entity.js'], ['datatable.js', 'donor-views.js'],
   ['datatable.js', 'datatable-query.js'],
+  ['budget.js', 'datatable.js'], ['budget.js', 'budget-table.js'],
   ['growth-modules.js', 'donor-entity.js'], ['growth-modules.js', 'labels.js'], ['growth-modules.js', 'sponsor-person.js'],
   ['supplier-growth.js', 'growth-modules.js'], ['supplier-growth.js', 'labels.js'],
 

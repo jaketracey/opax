@@ -4,7 +4,7 @@
     "portal/src/index.ts": "7b7efee78ba08eb997c2af0396f37318600fa323308c11c3c1d07f79a7bdfe85",
     "portal/src/budget.ts": "10ca76e21ec1ffeba651908dfe1748111132ebddc3504b4ba51ca935e2d532a6",
     "portal/public/budget.css": "89208912cb08f370dc61092fdc6d9cfc4cc245cb5b93ae71b61935e4592c3131",
-    "portal/public/budget.js": "996197ce8e9a3847954ecfcb96fa74f318c861975789067f0a0a721065c52a7c",
+    "portal/public/budget.js": "c18e22daa5ea198b3ff884ff36c7424ae403e54c3ae4f99b648912b2d47527f4",
     "portal/public/budget-table.js": "0611aafd79a5b3079888bf7a3cb48762bf44baf060437e1d4b013d97f8b8c16e"
   },
   "preview": "Local Worker, in-memory staged asset binding; no production bindings",
