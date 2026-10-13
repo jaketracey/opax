@@ -72,8 +72,9 @@ function candidateRows(rows, config) {
   });
 }
 const donorColumn = column => /^(?:donor(?:_?name)?|label|name)$/i.test(column.key) || column.primary;
+const checksEcho = config => config.privacy === 'donors' || config.privacy === 'echo';
 const allowedText = (config, value, mode = 'query') => {
-  if (config.privacy !== 'donors') return true;
+  if (!checksEcho(config) || config.privacy === 'echo' && mode !== 'query') return true;
   try { return (mode === 'row' ? config.privacyRowCheck || config.privacyCheck : config.privacyCheck)?.(value) === true; } catch { return false; }
 };
 // Each field (including nested metadata) and decoded scalar is approved before
@@ -109,6 +110,7 @@ function cleanQuery(query = {}, config, page) {
       if (!permitted.length) {delete out.filters[key];continue;}
       const options = config.rows ? publicRows(config.rows,config).flatMap(row=>facetMembers(row,column))
         : Array.isArray(page?.facets?.[key]) ? page.facets[key].map(f=>f.value) : [];
+      options.push(...(column.facetOptions || []).filter(value=>typeof value === 'string'));
       const safe = permitted.filter(v=>options.includes(v));
       if (safe.length) out.filters[key] = safe; else delete out.filters[key];
     } else if (column.facet !== 'range') delete out.filters[key];
@@ -181,7 +183,7 @@ const policyId = fn => {
 function engine(rows, config) {
   let byColumns = engines.get(rows);
   if (!byColumns) engines.set(rows,byColumns = new Map());
-  const key = JSON.stringify(config.columns.map(c=>[c.key,c.type,c.facet,c.hideWhenConstant,c.sortable,c.primary,policyId(c.facetValues)])) + config.privacy + policyId(config.rowPrivacyCheck) + JSON.stringify(config.privacyFields);
+  const key = JSON.stringify(config.columns.map(c=>[c.key,c.type,c.facet,c.facetOptions,c.hideWhenConstant,c.sortable,c.primary,policyId(c.facetValues)])) + config.privacy + policyId(config.rowPrivacyCheck) + JSON.stringify(config.privacyFields);
   if (byColumns.has(key)) return byColumns.get(key);
   const candidates = candidateRows(rows,config);
   const result = {candidates, search:candidates.map(row=>config.columns.map(c=>text(row[c.key])).join('\n').normalize('NFKC').toLowerCase()), results:new Map()};
@@ -192,7 +194,8 @@ function resultFor(rows, config, query) {
   const data = engine(rows,config), rejected = blockedQuery(config,query);
   const approved=data.candidates.map(row=>rowPrivacyCheck(row,config));
   query = cleanQuery(query,{...config,rows:data.candidates});
-  const key = serializeQuery({...query,sort:query.sort || config.defaultSort,page:1,pageSize:undefined}) + rejected + approved.map(Number).join('');
+  const optionApprovals=config.columns.flatMap(c=>(c.facetOptions || []).map(value=>typeof value === 'string' && allowedText(config,value,'row')));
+  const key = serializeQuery({...query,sort:query.sort || config.defaultSort,page:1,pageSize:undefined}) + rejected + approved.map(Number).join('') + optionApprovals.map(Number).join('');
   if (data.results.has(key)) return data.results.get(key);
   const search = text(query.q).normalize('NFKC').toLowerCase();
   const filters = Object.entries(query.filters || {}).map(([key,filter])=>[key,Array.isArray(filter) ? new Set(filter) : filter]);
@@ -228,7 +231,10 @@ function resultFor(rows, config, query) {
   for (const c of facetColumns) {
     const count=counts.get(c.key);
     if (c.facet === 'range') { if (Number.isFinite(count.min)) facets[c.key]=count; }
-    else facets[c.key]=[...count].sort(([a],[b])=>collator.compare(a,b)).map(([value,count])=>({value,count}));
+    else {
+      if (!rejected) for (const value of c.facetOptions || []) if (typeof value === 'string' && allowedText(config,value,'row') && !count.has(value)) count.set(value,0);
+      facets[c.key]=[...count].sort(([a],[b])=>collator.compare(a,b)).map(([value,count])=>({value,count}));
+    }
   }
   const result={rows:selected,facets};
   // Bounded cache; inputs are immutable for a mounted table.
@@ -415,7 +421,7 @@ export function mountDataTable(el, config) {
   const doc = root.ownerDocument, win = doc.defaultView;
   let query = {}, rawURL, rawPage, lastURL, rawRejected = false, firstQuery=config.initialQuery;
   const rawConfig = config, approvals = new Map(), rowApprovals = new Map(), csvApprovals = new Map();
-  if (config.privacy === 'donors') config = {...config,privacyCheck:value=>approvals.get(value) === true,privacyRowCheck:value=>rowApprovals.get(value) === true};
+  if (checksEcho(config)) config = {...config,privacyCheck:value=>approvals.get(value) === true,privacyRowCheck:value=>rowApprovals.get(value) === true};
   const view = {density:config.density || 'comfortable', columnsVisible:config.columnsVisible || config.columns.map(c=>c.key), constantsVisible:[]};
   let page;
   try { page = JSON.parse(root.querySelector('[data-dt-page]')?.textContent || 'null'); } catch { /* Client rows below. */ }
@@ -447,7 +453,7 @@ export function mountDataTable(el, config) {
     const guarded=guardTableURL(config,new URL(rawURL));
     replaceURL(guarded.url);
     scrubHead();
-    view.rejected=config.privacy === 'donors' || guarded.rejected;
+    view.rejected=checksEcho(config) || guarded.rejected;
     if (view.rejected) page={rows:[],total:0,page:1,pageSize:config.pageSize || 50,facets:{}};
   }
 
@@ -510,7 +516,7 @@ export function mountDataTable(el, config) {
   }
   async function permit(value, mode = 'query') {
     const cache = mode === 'csv' ? csvApprovals : mode === 'row' ? rowApprovals : approvals;
-    if (config.privacy !== 'donors') return true;
+    if (!checksEcho(config) || config.privacy === 'echo' && mode !== 'query') return true;
     if (cache.has(value)) return cache.get(value);
     let safe=false;
     try {
@@ -556,7 +562,7 @@ export function mountDataTable(el, config) {
     if (rawURL) {
       const captured=rawURL;
       root.setAttribute('aria-busy','true'); paint();
-      if (config.privacy === 'donors') await permitSet([...rawQueryValues(captured.searchParams),...linkInputs()]);
+      if (checksEcho(config)) await permitSet([...rawQueryValues(captured.searchParams),...linkInputs()]);
       if (destroyed || version !== revision) return;
       const guarded=guardTableURL(config,captured);
       rawURL=undefined; rawRejected=guarded.rejected; query=guarded.query;
@@ -574,10 +580,11 @@ export function mountDataTable(el, config) {
     }
     const pending=structuredClone(query), previousPage=rawPage || page;
     rawPage=undefined;
-    if (config.privacy === 'donors') {
+    if (checksEcho(config)) {
       const values=[...queryValues(pending),...rawQueryValues(new URLSearchParams(serializeQuery(pending,config.urlKey)))];
-      const data=config.rows ? engine(config.rows,config) : null;
-      const needsValidation=values.some(value=>!approvals.has(value)) || (data ? data.candidates.some(row=>[...rowTexts(row,config)].some(value=>!rowApprovals.has(value))) : page.rows.some(row=>[...rowTexts(row,config)].some(value=>!rowApprovals.has(value))));
+      const data=config.rows && config.privacy === 'donors' ? engine(config.rows,config) : null;
+      const optionTexts=config.columns.flatMap(c=>(c.facetOptions || []).filter(value=>typeof value === 'string'));
+      const needsValidation=values.some(value=>!approvals.has(value)) || config.privacy === 'donors' && (optionTexts.some(value=>!rowApprovals.has(value)) || (data ? data.candidates.some(row=>[...rowTexts(row,config)].some(value=>!rowApprovals.has(value))) : page.rows.some(row=>[...rowTexts(row,config)].some(value=>!rowApprovals.has(value)))));
       // Pending query values never render against old SSR rows. Already approved state can
       // retain its controls and focus while fetching, avoiding a second redraw.
       if (needsValidation) {
@@ -588,6 +595,7 @@ export function mountDataTable(el, config) {
       }
       root.setAttribute('aria-busy','true');
       await permitSet(values);
+      await permitSet(optionTexts,'row');
       if (data) await permitSet(data.candidates.flatMap(row=>[...rowTexts(row,config)]),'row');
       if (destroyed || version !== revision) return;
     }
@@ -621,7 +629,7 @@ export function mountDataTable(el, config) {
         await permitSet(texts,'row');
         // Invalid rows are dropped; safePage recomputes counts and facets from
         // the surviving rows instead of trusting metadata for rejected records.
-      }
+      } else if (config.privacy === 'echo') await permitSet([...queryValues({page:candidate.page,pageSize:candidate.pageSize}),...rawQueryValues(new URLSearchParams(serializeQuery({...query,page:candidate.page},config.urlKey)))]);
       if (destroyed || version !== revision) return;
       page=safePage(candidate,config);
       await permitSet([...queryValues({page:page.page})]);

@@ -9,6 +9,20 @@ import {scrubQuery} from '../public/datatable-query.js';
 
 const config={...workbenchConfig,privacyCheck:()=>true};
 const all = query => applyQuery(rows,config,{...query,pageSize:100});
+test('declared facet options retain empty choices through the shared privacy guard',()=>{
+ const columns=[{key:'title',label:'Title',type:'text'},{key:'responses',label:'Responses',type:'category',facet:'multi',facetOptions:['Yes','No','blocked-fixture']}];
+ const table={id:'facet-options-fixture',caption:'Fixture reports',pageType:'audit',columns,privacy:'donors',rowPrivacyCheck:()=>true,privacyCheck:value=>!value.includes('blocked-fixture')};
+ const rows=[{title:'Fixture public report',responses:'No'}];
+ const page=applyQuery(rows,table,{filters:{responses:['Yes']}});
+ assert.equal(page.total,0);assert.deepEqual(page.facets.responses,[{value:'No',count:1},{value:'Yes',count:0}]);
+ assert.ok(!dataTableHTML(table,page).includes('blocked-fixture'));
+ assert.equal(applyQuery(rows,table,{filters:{responses:['blocked-fixture']}}).total,0);
+ const empty=[],approvals=new Set();
+ const pending={...table,privacyCheck:value=>approvals.has(value)};
+ assert.deepEqual(applyQuery(empty,pending,{}).facets.responses,[]);
+ approvals.add('Yes');
+ assert.deepEqual(applyQuery(empty,pending,{}).facets.responses,[{value:'Yes',count:0}]);
+});
 test('the shared raw-query guard retains noindex for rejected, duplicate and filtered state',()=>{
   const safe=value=>value !== 'blocked-fixture';
   for(const key of ['q','f.future','future','receipts.q','receipts.f.future']) {

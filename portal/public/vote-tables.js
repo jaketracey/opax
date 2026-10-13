@@ -1,5 +1,5 @@
 // Division and voting-record rollout using the shared server-mode core.
-import {dataTableHTML, mountDataTable, applyQuery, guardTableURL} from './datatable.js?v=ed019b2532';
+import {dataTableHTML, mountDataTable, applyQuery, guardTableURL} from './datatable.js?v=6a075a1958';
 // Guard and render must share the core module's rejection-state registry.
 export {guardTableURL};
 import {shortDate} from './format.js';
@@ -33,8 +33,11 @@ export async function votePrivacyCheck(text) {
     return response.ok && (await response.json()).safe === true;
   } catch { return false; }
 }
+// Votes and divisions are parliamentary record from public exports (the build's
+// donor sweep, and votes.json served whole): rows are shape-checked only. The
+// reader's own search, filter and URL text is still checked before it is echoed.
 function privacy(check) {
-  return {privacy:'donors', privacyCheck:check, rowPrivacyCheck:row => tableRow(row) && (check === votePrivacyCheck || check(JSON.stringify(row)) === true)};
+  return {privacy:'echo', privacyCheck:check, rowPrivacyCheck:tableRow};
 }
 
 export function divisionTableConfig(params = {}, caption = 'Divisions', pageType = 'bill', check = votePrivacyCheck) {

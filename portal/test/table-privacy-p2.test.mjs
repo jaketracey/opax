@@ -75,7 +75,7 @@ test('browser CSV fallback rejects malformed fields and row-check exceptions bef
   for(const csv of ['Header\r\n"unterminated','Header\r\nFixture failure cell']){
     const h=tableHarness();let downloads=0;
     h.win.URL=class extends URL{static createObjectURL(){downloads++;return 'blob:fixture';}static revokeObjectURL(){}};
-    h.win.fetch=async input=>new URL(input,'http://localhost').searchParams.get('format')==='csv'?new Response(csv):Response.json({rows:[],total:0,page:1,pageSize:50,facets:{}});
+    h.win.fetch=async input=>new URL(input,'http://localhost').searchParams.get('format')==='csv'?new Response(csv):Response.json({rows:[{name:'Fixture organisation Pty Ltd',category:'Fixture public sector',amount:1}],total:1,page:1,pageSize:50,facets:{}});
     const mounted=mountDataTable(h.root,{...c,privacyCheck:()=>true,privacyRowCheck:value=>{if(value==='Fixture failure cell')throw new Error('Fixture unavailable check');return true;},source:{endpoint:'/__fixtures/table'}});
     for(let i=0;i<100&&h.root.getAttribute('aria-busy')==='true';i++)await new Promise(resolve=>setTimeout(resolve,10));
     assert.notEqual(h.root.getAttribute('aria-busy'),'true','hydration did not settle');

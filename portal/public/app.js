@@ -14,14 +14,14 @@ const donorViewReady = import('/donor-views.js?v=77470b1d26').then(module => {
 
 "use strict";
 let voteTables;
-const voteTablesReady = import("/vote-tables.js?v=f4a64921bc").then(module => { voteTables = module; });
+const voteTablesReady = import("/vote-tables.js?v=5d8e1994a8").then(module => { voteTables = module; });
 let divisionMarkdown;
 const divisionMarkdownReady = import('/division-markdown.js?v=5991511166').then(module => { divisionMarkdown = module; });
 // The labels, source lines and ⋯ (labels.js); the first render waits for them.
 let growthModules;
 const growthModulesReady = import("/growth-modules.js?v=d8f4fe61c2").then(module => { growthModules = module; });
 let registerTables;
-const registerTablesReady = import('/register-tables.js?v=b1f9ff8eee').then(module => { registerTables = module; });
+const registerTablesReady = import('/register-tables.js?v=f2e8638ef8').then(module => { registerTables = module; });
 let askPerson;
 const askPersonReady = import('/ask-person.js?v=a0b3602921').then(module => { askPerson = module; });
 let uiLabels;
@@ -37,6 +37,8 @@ const splitPerson = (people, name) => attributionHelpers?.splitPerson(people, na
 const splitSpeakers = person => attributionHelpers?.splitSpeakers(person) || [];
 const personScope = person => attributionHelpers?.personScope(person) || person?.speech_scope || null;
 const datedAffiliationParty = (row, person) => attributionHelpers?.datedAffiliationParty(row, person) || null;
+let heldBackHelpers;
+const heldBackReady = import('/held-back-transcripts.js?v=5c4e280acb').then(module => { heldBackHelpers = module; });
 
 let saDisplayHelpers;
 let saFullTextFlag = 'false';
@@ -1947,6 +1949,10 @@ function route() {
     showPanel("methods");
     document.title = TITLES.methods;
     setCrumbs([{ label: "About", href: "/about" }, { label: "Methods & how to cite" }]);
+    const section = pendingAnchor || (/^#[\w-]+$/.test(location.hash) ? location.hash.slice(1) : "");
+    pendingAnchor = "";
+    const target = section && $(section);
+    if (target && $("panel-methods").contains(target)) requestAnimationFrame(() => target.scrollIntoView({ block: "start" }));
   } else if (view === "stats") {
     showPanel("stats");
     renderEvidenceStats();
@@ -2636,7 +2642,22 @@ const tableFit = new ResizeObserver((entries) => {
   for (const { target } of entries) target.classList.toggle("table-fits", target.scrollWidth - target.clientWidth <= 2);
 });
 
+function renderNoAnswer(container, response) {
+  const line = document.createElement("p");
+  line.textContent = "OPAX couldn't find a clear answer to this in the record.";
+  const link = document.createElement("a");
+  const step = response.next_step;
+  const profile = typeof step?.href === "string" && /^\/subject\/person\/[^?#]+$/.test(step.href);
+  link.href = profile ? step.href : "/ask?view=search";
+  link.textContent = profile ? step.label : "Search records";
+  const browse = document.createElement("p");
+  browse.appendChild(link);
+  container.classList.remove("answer-evidence");
+  container.replaceChildren(line, browse);
+}
+
 function renderAnswer(container, text, response = {}) {
+  if (response.answered === false) { renderNoAnswer(container, response); return; }
   container.classList.toggle("answer-evidence", response.answer_status === "evidence_only");
   if (response.answer_status === "evidence_only" && Array.isArray(response.evidence_excerpts)) {
     renderEvidenceAnswer(container, text, response);
@@ -3016,7 +3037,7 @@ function renderAskDateRuler(sources, isCited) {
         ${ticks}${rulerAxisHTML()}
       </svg>
     </div>
-    <p class="date-ruler-key"><span><i class="is-cited"></i>Cited in the answer</span><span><i></i>Retrieved only</span></p>`;
+    <p class="date-ruler-key">${(sources || []).some(source => isCited(source)) ? '<span><i class="is-cited"></i>Cited in the answer</span>' : ''}<span><i></i>Retrieved only</span></p>`;
   box.hidden = false;
 }
 
@@ -5597,7 +5618,10 @@ async function openSubject(kind, name, manageFocus, params = new URLSearchParams
   const revealGrid = () => grid?.classList.remove("is-settling");
   setTimeout(revealGrid, 4000);
   const unattributed = params.get('attribution') === 'unattributed';
-  const people = (await loadParliamentarians())?.people || [];
+  const [personData, heldBackCounts, chairRoleCounts] = await Promise.all([
+    loadParliamentarians(), loadHeldBackTranscripts(), loadChairRoleTranscripts(), heldBackReady,
+  ]);
+  const people = personData?.people || [];
   const record = splitPerson(people, name) || people.find((p) => p.name.toLowerCase() === String(name).toLowerCase());
   const roster = unattributed ? null : record;
   const speechSpeaker = splitSpeakers(roster)[0] || name;
@@ -5653,6 +5677,8 @@ async function openSubject(kind, name, manageFocus, params = new URLSearchParams
     document.title = `${roster.full || name} · OPAX`;
     head.insertAdjacentHTML('beforeend', `<p class="person-caveat">Only own-house speeches within the reviewed service dates in the ${esc(roster.speech_scope.state.toUpperCase())} parliamentary chamber are attributed here. <a ${entityHrefAttr(hasEntityId(roster.name) ? subjectHash('person', roster.name) + "?attribution=unattributed" : null)}>Witness testimony and other unattributed records printed as ${esc(roster.name)}</a>.</p>`);
   }
+  head.insertAdjacentHTML('beforeend', heldBackHelpers.heldBackTranscriptsHTML(roster?.pid, heldBackCounts)
+    + heldBackHelpers.chairRoleTranscriptsHTML(roster?.pid, chairRoleCounts));
   const witness = !roster && speeches.length > 0 &&
     speeches.every((r) => r.speaker_type === "witness" || (isCommitteeChamber(r.chamber) && r.person_id == null));
   if (witness) {
@@ -6748,6 +6774,24 @@ function anyPartyDotHTML(label, colours) {
   return `<span class="party party-oth party-dot-only"${c ? ` style="--pc:${esc(c)}"` : ""}><i aria-hidden="true"></i></span>`;
 }
 
+let heldBackTranscriptsPromise = null;
+function loadHeldBackTranscripts() {
+  heldBackTranscriptsPromise ??= fetch('/data/held-back-transcripts.json', { cache: 'no-cache' })
+    .then(response => {
+      if (!response.ok) throw new Error('Held-back transcript counts unavailable');
+      return response.json();
+    }).catch(() => { heldBackTranscriptsPromise = null; return null; });
+  return heldBackTranscriptsPromise;
+}
+let chairRoleTranscriptsPromise = null;
+function loadChairRoleTranscripts() {
+  chairRoleTranscriptsPromise ??= fetch('/data/chair-role-transcripts.json', { cache: 'no-cache' })
+    .then(response => {
+      if (!response.ok) throw new Error('Chair-role transcript counts unavailable');
+      return response.json();
+    }).catch(() => { chairRoleTranscriptsPromise = null; return null; });
+  return chairRoleTranscriptsPromise;
+}
 let parliamentariansPromise = null;
 function loadParliamentarians() {
   parliamentariansPromise ??= fetch("/parliamentarians.json", { cache: "no-cache" })
@@ -9803,6 +9847,7 @@ async function runAsk(question) {
     // Trim before every use: a whitespace-only answer is truthy and would
     // otherwise slip past the "(no answer)" fallback and render nothing.
     const answerText = (data.answer || "").trim();
+    const noAnswer = data.answered === false;
     const needsClarification = ["needs_scope", "needs_period"].includes(data.answer_status);
     const sources = (data.sources || []).map((source) => ({
       ...source,
@@ -9825,22 +9870,25 @@ async function runAsk(question) {
     $("ask-answer").askEvidence = citedList;
     // The speaker this answer was actually filtered to (chosen in Options or
     // read out of the question), so "Continue in a conversation" keeps it.
-    lastAsk = { question, answer: answerText, sources, is_overview_intent: data.is_overview_intent, next: data.followups, subject_context: data.subject_context, kind: askKind(), speaker: askFilters().speaker || speakerFilter || data.scope?.speaker || data.subject_context?.name || "", answer_status: data.answer_status, evidence_excerpts: data.evidence_excerpts, money_question: data.money_question, money_ranking: data.money_ranking, money_context: data.money_context, money_overview: data.money_overview, pay_answer: data.pay_answer, pay_next: data.pay_next };
+    lastAsk = { question, answer: answerText, sources, answered: data.answered, reason: data.reason, next_step: data.next_step, is_overview_intent: data.is_overview_intent, next: data.followups, subject_context: data.subject_context, kind: askKind(), speaker: askFilters().speaker || speakerFilter || data.scope?.speaker || data.subject_context?.name || "", answer_status: data.answer_status, evidence_excerpts: data.evidence_excerpts, money_question: data.money_question, money_ranking: data.money_ranking, money_context: data.money_context, money_overview: data.money_overview, pay_answer: data.pay_answer, pay_next: data.pay_next };
     // A calculated answer carries its own fixed next steps, not generated ones.
     const calculated = !!(data.money_ranking || data.pay_answer);
-    if (!calculated) prefetchAskFollowups(lastAsk);
+    if (!calculated && !noAnswer) prefetchAskFollowups(lastAsk);
 
     if (calculated) { $("ask-money").hidden = true; $("ask-register-note").hidden = true; }
     hideWombat();
-    setStatus($("ask-status"), needsClarification ? "Please clarify the question before I calculate the answer." : data.answer_status === "evidence_only" ? "Source passages ready. A summary could not be verified." : `Answer ready: ${sources.length} sources.`);
+    setStatus($("ask-status"), noAnswer ? "No clear answer found. Retrieved sources are ready." : needsClarification ? "Please clarify the question before I calculate the answer." : data.answer_status === "evidence_only" ? "Source passages ready. A summary could not be verified." : `Answer ready: ${sources.length} sources.`);
     $("ask-status").classList.add("visually-hidden"); // announced, not displayed
     revealAskResult();
-    $("ask-result").querySelector(".action-row").hidden = needsClarification;
-    $("ask-stamp").hidden = needsClarification;
-    $("ask-result").querySelector(".kicker").textContent = needsClarification ? "Choose the scope" : data.answer_status === "calculated" ? (data.pay_answer ? "From the pay determinations" : "From disclosed receipts") : data.answer_status === "evidence_only" ? "From the record" : data.answer_status === "uncited" ? "Answer, without citations" : "Answer";
+    $("ask-result").querySelector(".action-row").hidden = needsClarification || noAnswer;
+    $("ask-stamp").hidden = needsClarification || noAnswer;
+    $("ask-result").querySelector(".kicker").textContent = noAnswer ? "Records found" : needsClarification ? "Choose the scope" : data.answer_status === "calculated" ? (data.pay_answer ? "From the pay determinations" : "From disclosed receipts") : data.answer_status === "evidence_only" ? "From the record" : data.answer_status === "uncited" ? "Answer, without citations" : "Answer";
     renderAnswerOverview($("ask-overview"), data.money_overview);
-    if (data.is_overview_intent) { $("ask-overview").innerHTML = machineLabelHTML(); $("ask-overview").hidden = false; }
-    if (answerText) {
+    if (data.is_overview_intent && !noAnswer) { $("ask-overview").innerHTML = machineLabelHTML(); $("ask-overview").hidden = false; }
+    if (noAnswer) {
+      $("ask-overview").hidden = true;
+      renderNoAnswer($("ask-answer"), data);
+    } else if (answerText) {
       // Final rendering uses the complete citation ranges, including cache hits.
       renderAnswer($("ask-answer"), answerText, { ...data, onRetry: () => runAsk(question) });
       // A calculated money answer gets no generated follow-ups, so it carries
@@ -9882,7 +9930,7 @@ async function runAsk(question) {
     $("ask-calculation-note").hidden = !calculated;
     $("ask-calculation-note").textContent = data.pay_answer ? PAY_CALCULATION_NOTE : MONEY_CALCULATION_NOTE;
     $("ask-retrieval-note").hidden = calculated;
-    $("ask-sources").open = false; // each new answer starts folded
+    $("ask-sources").open = noAnswer; // Sources are the reading path when no answer was supported.
     $("ask-sources").hidden = !sources.length;
     // The finished answer replaces the streamed one: let that settle before a
     // shift in the page counts as the reader deciding to move on. People first,
@@ -10306,7 +10354,7 @@ function normaliseFollowups(data) {
     .filter((item) => item && typeof item.question === "string" && item.question.trim());
 }
 function prefetchAskFollowups(ask) {
-  if (!ask?.question || !ask?.answer) return;
+  if (!ask?.question || !ask?.answer || ask.answered === false) return;
   if (ask.next?.length) {
     renderFollowups(ask.next, $("ask-followups"), item => { if (openConversationFrom(ask)) sendChat(item.question, item); });
     return;
@@ -10670,7 +10718,7 @@ function initChat(manageFocus) {
           store.active = null;
           chatThread = [
             { role: "user", text: seed.question, fundingQuestion: seed.money_question },
-            { role: "answer", text: seed.answer, sources: seed.sources || [], is_overview_intent: seed.is_overview_intent, next: seed.next || undefined, subject_context: seed.subject_context, answer_status: seed.answer_status, evidence_excerpts: seed.evidence_excerpts, money_ranking: seed.money_ranking, money_context: seed.money_context, money_overview: seed.money_overview, pay_answer: seed.pay_answer, pay_next: seed.pay_next },
+            { role: "answer", text: seed.answer, sources: seed.sources || [], answered: seed.answered, reason: seed.reason, next_step: seed.next_step, is_overview_intent: seed.is_overview_intent, next: seed.next || undefined, subject_context: seed.subject_context, answer_status: seed.answer_status, evidence_excerpts: seed.evidence_excerpts, money_ranking: seed.money_ranking, money_context: seed.money_context, money_overview: seed.money_overview, pay_answer: seed.pay_answer, pay_next: seed.pay_next },
           ];
           chatKind = seed.kind === "speech" ? "speech" : "all";
           // An ask that was filtered to one speaker hands that filter on: the
@@ -10979,7 +11027,7 @@ function syncAskChatViewport() {
 function chatAnswerEl(msg) {
   const wrap = document.createElement("div");
   wrap.className = "chat-turn chat-turn-answer";
-  if (msg.is_overview_intent) wrap.insertAdjacentHTML('beforeend', machineLabelHTML());
+  if (msg.is_overview_intent && msg.answered !== false) wrap.insertAdjacentHTML('beforeend', machineLabelHTML());
   if (msg.money_overview) {
     const overview = document.createElement("div");
     overview.className = "answer-overview";
@@ -11002,6 +11050,7 @@ function chatAnswerEl(msg) {
     const rest = sources.filter((s) => !shown.includes(s));
     const det = document.createElement("details");
     det.className = "chat-sources";
+    det.open = msg.answered === false;
     const sum = document.createElement("summary");
     sum.textContent = `Sources (${sources.length})`;
     det.appendChild(sum);
@@ -11066,7 +11115,7 @@ async function requestChatFollowups() {
   if (chatFollowAbort) chatFollowAbort.abort();
   const last = chatThread[chatThread.length - 1];
   const asked = chatThread[chatThread.length - 2];
-  if (!last || last.role !== "answer" || asked?.role !== "user") return;
+  if (!last || last.role !== "answer" || asked?.role !== "user" || last.answered === false) return;
   if (last.next?.length) { renderChatNext(last.next); return; } // generated once, kept on the message
   const passages = followupPassages(last.sources);
   if (!passages.length) return; // no passages, no follow-ups — never a spinner
@@ -11341,6 +11390,9 @@ async function sendChat(question, carry) {
       next: data.followups,
       is_overview_intent: data.is_overview_intent,
       subject_context: data.subject_context || (chatSpeaker ? [...chatThread].reverse().find(msg => msg.subject_context?.name === chatSpeaker)?.subject_context : undefined),
+      answered: data.answered,
+      reason: data.reason,
+      next_step: data.next_step,
       answer_status: data.answer_status,
       money_ranking: data.money_ranking,
       money_context: data.money_context,

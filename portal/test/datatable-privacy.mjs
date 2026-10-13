@@ -44,7 +44,7 @@ export async function tablePrivacyIndex(_options = {}) {
   const exempt=withheldPhrases(privacySourceGraphs(),[...roster.people.flatMap(p=>[p.name,p.full||'']),...Object.values(access.ministers||{}).map(m=>m.name)]);
   const officeValues=source.labels.filter(value=>!namesWithheldPhrase(exempt,`donor receipts ${value}`) && !safe(value));
   const probes=[...new Set([...donors,...officeValues,...grantValues])].filter(value=>!safe(value));
-  return {safeRows:rowSafe,phrases:withheldPhrases(privacySourceGraphs(),[]),values:[...policy.phrases],donors:source.labels,recipients:[...recipients],recipientABNs:[...recipientABNs],abns:[...new Set([...source.identifiers,...recipientABNs])],safe,check:blocked,probes,grantProbes:[...grantValues].filter(value=>!safe(value)),officeProbes:officeValues};
+  return {...policy,safeRows:rowSafe,values:[...policy.phrases],donors:source.labels,recipients:[...recipients],recipientABNs:[...recipientABNs],abns:[...new Set([...source.identifiers,...recipientABNs])],safe,check:blocked,probes,grantProbes:[...grantValues].filter(value=>!safe(value)),officeProbes:officeValues};
  })();
  return pendingIndex;
 }

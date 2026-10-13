@@ -1,22 +1,24 @@
 import {compileHashedIdentityCheck,csvIdentityCheck} from './table-identity-hashes.mjs'
+import {timedSync} from './server-timing.ts'
 
 const indices = new WeakMap<Fetcher, Map<string, Promise<(text: string) => boolean>>>()
 const readers = new WeakMap<(path:string)=>Promise<unknown>, Fetcher>()
 const readChecks = new WeakMap<(path:string)=>Promise<unknown>, Promise<(text:string)=>boolean>>()
+export function memoisedCheck(check:(text:string)=>boolean):(text:string)=>boolean {
+  const results=new Map<string,boolean>()
+  return text=>{
+    if(results.has(text))return results.get(text)!
+    const safe=check(text)
+    if(results.size>=256)results.clear()
+    results.set(text,safe)
+    return safe
+  }
+}
 /** Cache repeated reader checks against the same strict shared query guard. */
 export function tablePrivacyCheckFromRead(read:(path:string)=>Promise<unknown>):Promise<(text:string)=>boolean> {
   let pending=readChecks.get(read)
   if (!pending) {
-    pending=tablePrivacyCheckFrom(read).then(check=>{
-      const results=new Map<string,boolean>()
-      return text=>{
-        if (results.has(text)) return results.get(text)!
-        const safe=check(text)
-        if (results.size>=256) results.clear()
-        results.set(text,safe)
-        return safe
-      }
-    })
+    pending=tablePrivacyCheckFrom(read).then(memoisedCheck)
     readChecks.set(read,pending)
   }
   return pending
@@ -43,7 +45,7 @@ export async function tablePrivacyCheck(assets: Fetcher, mode: 'query' | 'row' =
       const registry = await response.json() as {version:number;identities:{hash:string;words:number;compact:boolean;length:number;rolling:number;row:false|'token'|'field'}[];strippedLengths:number[]}
       if(registry.version!==3 || !Array.isArray(registry.identities) || registry.identities.some(e=>typeof e.compact!=='boolean'||!Number.isSafeInteger(e.length)||!Number.isSafeInteger(e.rolling)||![false,'token','field'].includes(e.row)) || !Array.isArray(registry.strippedLengths) || !registry.strippedLengths.length || registry.strippedLengths.some(n=>!Number.isSafeInteger(n)||n<4))throw new Error('Privacy index unavailable')
       const blocked=compileHashedIdentityCheck(registry.identities,registry.strippedLengths,{mode})
-      return (text: string) => !blocked(text)
+      return (text: string) => timedSync('privacy',()=>!blocked(text))
     })().catch(() => {modes!.delete(mode); return () => false})
     modes.set(mode, pending)
   }

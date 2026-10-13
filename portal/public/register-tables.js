@@ -1,4 +1,4 @@
-import {applyQuery, dataTableHTML, guardTableURL, mountDataTable, parseQuery} from './datatable.js?v=ed019b2532';
+import {applyQuery, dataTableHTML, guardTableURL, mountDataTable, parseQuery} from './datatable.js?v=6a075a1958';
 import {isOrganisationDonor} from './donor-entity.js?v=ebb2c972d5';
 import {privacyTexts,privacyCSVFields} from './datatable-privacy-fields.js?v=7a6c85a822';
 import {queryValues} from './datatable-query.js?v=91898b0c1f';
@@ -30,7 +30,7 @@ export function auditTableConfig(records, privacyCheck, privacyRowCheck = privac
     columns:[{key:'title',label:'Title',type:'text',primary:true},{key:'tabled_date',label:'Tabled',type:'date'},
       {key:'sectors',label:'Sector',type:'category',facet:'multi'},{key:'entities',label:'Entities',type:'text',facet:'multi'},
       {key:'year',label:'Report year',type:'year',facet:'range'},
-      {key:'responses',label:'Has entity responses',type:'category',facet:'multi'}],
+      {key:'responses',label:'Has entity responses',type:'category',facet:'multi',facetOptions:['Yes','No']}],
     rows:records.map(row=>({id:row.id,title:row.title,tabled_date:date(row.tabled_date),year:Number(String(row.year).slice(0,4)) || null,sectors:categoryMembers(row.sectors),entities:row.entities,responses:row.has_responses || Number(row.response_count)>0 ? 'Yes':'No'})),
     primaryLink:row=>/^qao-\d{4}(?:-\d{2})?-\d+$/.test(String(row.id)) ? `/audit/${row.id}` : null};
 }

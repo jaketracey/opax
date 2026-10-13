@@ -17,6 +17,7 @@ interface Column {
   type: ColumnType;
   sortable?: boolean;          // default true for money/count/year/date/text
   facet?: 'chips' | 'multi' | 'range' | null;   // category→chips|multi, money/count/year→range
+  facetOptions?: string[];     // optional valid choices retained with zero matches; shared privacy guard applies
   align?: 'start' | 'end';     // default end for money/count/year
   bar?: boolean;               // inline scale bar in numeric cells
   hideWhenConstant?: boolean;  // default true for category: hidden column, value shown as a facet chip

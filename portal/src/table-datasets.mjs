@@ -5,6 +5,10 @@ const number = (key, type = 'count', label = key) => ({key, label, type, facet: 
 const date = (key, label = key) => ({key, label, type: 'date'});
 const jurisdiction = category('jurisdiction');
 const money = [text('id'), text('from'), text('to'), category('type'), jurisdiction, category('industry'), number('amount', 'money', 'Value'), number('count', 'count', 'Records'), number('firstYear', 'year', 'First year'), number('lastYear', 'year', 'Last year')];
+// privacy 'donors': rows were sanitised against the private-identity registry at
+// load, so the API needs D1's registry fingerprint to match this build, and reader
+// input is checked. 'echo': parliamentary record (votes, divisions); reader input
+// is checked before it is echoed, but there is no fingerprint gate.
 export const TABLE_DATASETS = {
   'money-connections': {columns: money, privacy: 'donors', defaultSort: {key: 'amount', dir: 'desc'}},
   contracts: {columns: [text('id'), text('title'), text('supplier'), category('agency'), category('procurement_method', 'Method'), jurisdiction, number('amount', 'money', 'Value'), date('start_date', 'Start'), date('end_date', 'End'), text('description'), text('url', 'Source')], privacy: 'donors', defaultSort: {key: 'amount', dir: 'desc'}},
@@ -13,8 +17,8 @@ export const TABLE_DATASETS = {
   instruments: {columns: [text('id','Register id'), text('title','Title'), category('portfolios','Portfolio'), category('type','Type'), category('status','Status'), date('commenced','Commenced'), number('year', 'year','Registration year'), date('registered','Registered')], privacy:'donors', defaultSort: {key: 'title', dir: 'asc'}},
   'audit-reports': {privacyFields:['entities'], columns: [text('id'), text('title'), text('report_label', 'Report'), category('sectors'), category('entities'), jurisdiction, number('number'), number('year', 'year'), date('tabled_date', 'Tabled'), text('canonical_url', 'Source')], privacy:'donors', defaultSort: {key: 'tabled_date', dir: 'desc'}},
   interests: {columns: [text('id'), text('name'), category('category'), category('holder'), jurisdiction, category('chamber'), text('description'), date('date'), number('year', 'year'), text('url', 'Source')], privacy:'donors', defaultSort: {key: 'name', dir: 'asc'}},
-  divisions: {columns: [text('id'), text('title','Title'), date('date','Date'), category('chamber','Chamber'), category('outcome','Outcome'), number('ayes','count','Ayes'), number('noes','count','Noes'), text('href'), category('bill'), category('sitting'), text('name'), text('question'), jurisdiction, category('house'), category('result'), number('member_count', 'count', 'Members'), text('url', 'Source')], privacy:'donors', defaultSort: {key: 'date', dir: 'desc'}},
-  votes: {columns: [text('id'), text('title','Bill or division'), date('date','Date'), category('vote','Vote'), category('party_position','Party position'), text('href'), category('person'), text('name'), category('party'), jurisdiction, category('house'), number('ayes'), number('noes'), number('divisions_total', 'count', 'Divisions'), number('first_year', 'year', 'First year'), number('last_year', 'year', 'Last year')], privacy:'donors', defaultSort: {key: 'date', dir: 'desc'}},
+  divisions: {columns: [text('id'), text('title','Title'), date('date','Date'), category('chamber','Chamber'), category('outcome','Outcome'), number('ayes','count','Ayes'), number('noes','count','Noes'), text('href'), category('bill'), category('sitting'), text('name'), text('question'), jurisdiction, category('house'), category('result'), number('member_count', 'count', 'Members'), text('url', 'Source')], privacy:'echo', defaultSort: {key: 'date', dir: 'desc'}},
+  votes: {columns: [text('id'), text('title','Bill or division'), date('date','Date'), category('vote','Vote'), category('party_position','Party position'), text('href'), category('person'), text('name'), category('party'), jurisdiction, category('house'), number('ayes'), number('noes'), number('divisions_total', 'count', 'Divisions'), number('first_year', 'year', 'First year'), number('last_year', 'year', 'Last year')], privacy:'echo', defaultSort: {key: 'date', dir: 'desc'}},
   'party-money': {columns: money, privacy: 'donors', defaultSort: {key: 'amount', dir: 'desc'}},
 };
 

@@ -5,7 +5,7 @@ import {spawnSync} from 'node:child_process';
 import {JSDOM} from 'jsdom';
 import {auditPage} from '../src/audit.ts';
 import {auditComplete,filterAudit} from '../public/audit.js';
-import {auditTableConfig,registerTableQuery} from '../public/register-tables.js';
+import {auditTableConfig,registerTableHTML,registerTableQuery,mountRegisterTable} from '../public/register-tables.js';
 import {applyQuery} from '../public/datatable.js';
 const root=new URL('./fixtures/audit-phase2-export/',import.meta.url);
 const files=Object.fromEntries(readdirSync(root).map(n=>[n,readFileSync(new URL(n,root),'utf8')]));
@@ -41,6 +41,26 @@ test('response filter has SSR facts and directory never loads response chunks',a
  assert.equal(applyQuery(catalogue.rows,catalogue,{}).total,2);
  dom.window.close();
  assert.ok(calls.every(p=>!p.includes('responses-')));
+});
+
+test('an empty response filter survives hydration and Clear all restores the catalogue',async()=>{
+ const config=auditTableConfig([{...index.records[0],has_responses:false}],()=>true);
+ for(const search of ['responses=yes','audit.f.responses='+encodeURIComponent('["Yes"]')]){
+  const url=new URL('https://fixture.test/audit?'+search);
+  const html=registerTableHTML(config,registerTableQuery(url.searchParams,config),url);
+  const dom=new JSDOM(html,{url:url.href,pretendToBeVisual:true});
+  const root=dom.window.document.querySelector('[data-register-table]');
+  const mounted=mountRegisterTable(root,config);
+  const settle=async()=>{for(let i=0;i<100 && root.getAttribute('aria-busy')==='true';i++)await new Promise(resolve=>setTimeout(resolve,10));assert.notEqual(root.getAttribute('aria-busy'),'true');};
+  const page=()=>JSON.parse(root.querySelector('[data-dt-page]').textContent);
+  try{
+   await settle();assert.equal(page().total,0);
+   assert.equal(page().facets.responses.find(f=>f.value==='Yes').count,0);
+   assert.equal(root.querySelector('[data-export]').disabled,true);
+   root.querySelector('[data-clear]').click();await settle();assert.equal(page().total,1);
+   assert.equal(new URL(dom.window.location.href).search,'');
+  }finally{mounted.destroy();dom.window.close();}
+ }
 });
 
 test('detail SSR shows PDF provenance and collapsed verbatim public body responses with page references',async()=>{
