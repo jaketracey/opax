@@ -10,7 +10,7 @@ import {performanceRow} from './helpers/table-identity-corpus.mjs';
 
 const registry=JSON.parse(await readFile(new URL('../public/table-private-identities.json',import.meta.url),'utf8'));
 const before=compileReferenceCheck(registry.identities,registry.strippedLengths);
-const after=compileHashedIdentityCheck(registry.identities,registry.strippedLengths,registry.prefilter);
+const after=compileHashedIdentityCheck(registry.identities,registry.strippedLengths);
 function measure(check,iterations) {
   const start=performance.now();let rejected=0;
   for(let i=0;i<iterations;i++)rejected+=check(performanceRow);
@@ -29,7 +29,7 @@ const compiled=await build({stdin:{resolveDir:new URL('./',import.meta.url).path
   export default {fetch(request,env) {
     const r=env.REGISTRY;
     before ||= compileReferenceCheck(r.identities,r.strippedLengths);
-    after ||= compileHashedIdentityCheck(r.identities,r.strippedLengths,r.prefilter);
+    after ||= compileHashedIdentityCheck(r.identities,r.strippedLengths);
     const params=new URL(request.url).searchParams,iterations=Number(params.get('iterations'));
     const check=params.get('phase')==='before'?before:after;
     let rejected=0;for(let i=0;i<iterations;i++)rejected+=check(performanceRow);

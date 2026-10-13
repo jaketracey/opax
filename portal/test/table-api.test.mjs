@@ -56,6 +56,10 @@ test('donor datasets stay dark for a missing or stale registry fingerprint; echo
       for(const name of ['instruments','audit-reports','votes','divisions']) {
         const response=await tableApi(new Request('https://local.invalid/api/table/'+name),{TABLE_DB:db});
         assert.equal(response.status,200);assert.equal((await response.json()).total,260);
+        if(TABLE_DATASETS[name].privacy==='echo') {
+          const guarded=await tableApi(new Request('https://local.invalid/api/table/'+name+'?q=ordinary'),{TABLE_DB:db});
+          assert.equal(guarded.status,200,'echo query privacy uses the complete Worker registry');
+        }
       }
     }
   } finally {
@@ -67,6 +71,20 @@ test('canonical state uses JSON filters, normalises order and supports condition
   const a=await fetchTable('contracts',new URLSearchParams({'f.amount':'{"max":100,"min":10}',q:' NEEDLE '}));
   const b=await fetchTable('contracts',new URLSearchParams({q:'needle','f.amount':'{"min":10,"max":100}'}));assert.equal(a.headers.get('etag'),b.headers.get('etag'));
   const cached=await fetchTable('contracts',new URLSearchParams({q:'needle','f.amount':'{"min":10,"max":100}'}),{headers:{'if-none-match':b.headers.get('etag')}});assert.equal(cached.status,304);assert.equal(cached.headers.get('x-robots-tag'),'noindex');
+});
+test('echo snapshots with older candidate lengths still serve scoped queries using the complete Worker registry',async()=>{
+  const stored=await local.db.prepare("SELECT key,value FROM table_meta WHERE key IN ('privacy_lengths','privacy_stripped_lengths')").all();
+  try {
+    await local.db.prepare("UPDATE table_meta SET value='[]' WHERE key IN ('privacy_lengths','privacy_stripped_lengths')").run();
+    for(const name of ['votes','divisions']) {
+      assert.equal((await fetchTable(name)).status,200,'echo snapshot without input');
+      assert.equal((await fetchTable(name,'q=ordinary')).status,200,'echo query uses the bound Worker registry');
+      const response=await fetchTable(name,'q='+encodeURIComponent(performanceRow));
+      assert.equal(response.status,200);
+    }
+  } finally {
+    await local.db.batch(stored.results.map(({key,value})=>local.db.prepare('UPDATE table_meta SET value=? WHERE key=?').bind(value,key)));
+  }
 });
 test('core serializer and D1 API integrate with category and range state',async()=>{
   // Exercise core query exports without replacing its public module.

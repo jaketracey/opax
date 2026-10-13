@@ -4,6 +4,7 @@
 import {readFileSync, existsSync} from 'node:fs';
 import {join} from 'node:path';
 import {build} from 'esbuild';
+import {identityBundlePlugin} from './helpers/table-identity-bundle.mjs';
 
 const esc = v => String(v).replace(/[&<>"']/g, c => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'}[c]));
 /** Only the transformations the Worker's SEO and share-card code use. */
@@ -45,9 +46,9 @@ export function offline() {
 
 /** Bundle a Worker entry and serve it over `root`. Share cards are not drawn: the
  * card's spec comes back as JSON bytes, so tests can read every word on a card. */
-export async function loadWorker(entry, root) {
+export async function loadWorker(entry, root, {identityBundle}={}) {
   const compiled = await build({entryPoints: [entry], bundle: true, platform: 'browser', format: 'esm', write: false, external: ['node:*'],
-    plugins: [{name: 'omit-images', setup(b) { b.onResolve({filter: /^\.\/og-render$/}, () => ({path: 'images', namespace: 'harness'})); b.onLoad({filter: /.*/, namespace: 'harness'}, () => ({contents: 'const spec=card=>new TextEncoder().encode(JSON.stringify(card));export const renderOgPng=spec;export const renderOgJpeg=spec;', loader: 'js'})); }}]});
+    plugins: [...(identityBundle ? [identityBundlePlugin(identityBundle)] : []),{name: 'omit-images', setup(b) { b.onResolve({filter: /^\.\/og-render$/}, () => ({path: 'images', namespace: 'harness'})); b.onLoad({filter: /.*/, namespace: 'harness'}, () => ({contents: 'const spec=card=>new TextEncoder().encode(JSON.stringify(card));export const renderOgPng=spec;export const renderOgJpeg=spec;', loader: 'js'})); }}]});
   const {default: worker} = await import('data:text/javascript;base64,' + Buffer.from(compiled.outputFiles[0].text).toString('base64'));
   const files = new Map(), parsed = new Map();
   const at = path => join(root, path.replace(/^\//, ''));

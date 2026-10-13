@@ -9,6 +9,7 @@ import {sourceTableDonorIdentities} from '../../scripts/table_identity_source.mj
 import {tableIdentityIndex,tableIdentityHashes,tableRegistryFingerprint} from '../../scripts/load_tables.mjs';
 import {identityStripped,STRIPPED_MIN_LENGTH,STRIPPED_CONTAINS_MIN_LENGTH} from '../src/table-identities.mjs';
 import {compileHashedIdentityCheck} from '../src/table-identity-hashes.mjs';
+import {compileReferenceCheck} from './helpers/table-identity-reference.mjs';
 import {tablePrivacy,tablePrivacyCheck} from '../src/table-privacy.ts';
 import {tableApi,TABLE_REGISTRY_FINGERPRINT} from '../src/table-api.ts';
 import {isOrganisationRecipient} from '../src/table-recipient.mjs';
@@ -20,7 +21,7 @@ const root=new URL('../public/',import.meta.url),source=sourceTableDonorIdentiti
 const read=async file=>JSON.parse(await readFile(new URL(file,root),'utf8'));
 const registry=await read('table-private-identities.json');
 const old=JSON.parse(execFileSync('git',['show','35ba00f5f7f442be61b4902face4c2d43ac6c618:portal/public/table-private-identities.json'],{cwd:new URL('../../',import.meta.url),maxBuffer:2000000}));
-const oldCheck=compileHashedIdentityCheck(old.identities),blocked=compileHashedIdentityCheck(registry.identities,registry.strippedLengths,registry.prefilter);
+const oldCheck=compileReferenceCheck(old.identities),blocked=compileHashedIdentityCheck(registry.identities,registry.strippedLengths);
 const assets={fetch:async()=>Response.json(registry)},safe=await tablePrivacyCheck(assets);
 const recipientSet=new Set();
 for(const jur of ['federal','qld'])for(const file of (await readdir(new URL(`grants/${jur}/`,root))).filter(f=>f.startsWith('shard-')&&f.endsWith('.json')))for(const row of Object.values(await read(`grants/${jur}/${file}`)))if(!isOrganisationRecipient(row))for(const value of [row.n,row.abn,row.abr?.abn,row.identity?.legal_name,row.abr?.name,...row.aliases||[],...row.lookup_names||[]])if((typeof value==='string'||typeof value==='number')&&String(value).trim())recipientSet.add(String(value));
@@ -61,7 +62,7 @@ test('additive compact hashes retain all production word hashes and reject every
   const short=donorVariants.find(v=>v.length<6),long=donorVariants.find(v=>v.length>=6);
   for(const value of [short,long]){
     const hash=createHash('sha256').update('stripped:v1:'+value).digest('hex');
-    const match=compileHashedIdentityCheck([{hash,words:1}],[value.length]);
+    const match=compileReferenceCheck([{hash,words:1}],[value.length]);
     assert.equal(match(value.toUpperCase()),true,'compact case folding');
     assert.equal(match([...value].join('-')),true,'compact punctuation');
     assert.equal(match([...value].join(' ')),true,'compact whitespace');
