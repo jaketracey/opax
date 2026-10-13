@@ -22,12 +22,22 @@ import fs from 'node:fs'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { withholdIndividualDonors } from '../portal/public/donor-entity.js'
+import { computeElectorateGold } from './agentic_ask_electorates_gold.mjs'
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
 const PUBLIC = path.join(ROOT, 'portal/public')
 // --out <file>: a later snapshot of the same questions (the record keeps moving while enrichment labels speeches).
 const outArg = process.argv.indexOf('--out')
 const OUT = outArg > 0 ? path.resolve(process.argv[outArg + 1]) : path.join(ROOT, 'portal/test/fixtures/agentic-ask-gold.json')
+// Offline refresh of only these four cases: preserve the existing speech snapshot.
+// node scripts/agentic_ask_gold.mjs --electorates-only [--out <file>]
+if (process.argv.includes('--electorates-only')) {
+  const snapshot = JSON.parse(fs.readFileSync(path.join(ROOT, 'portal/test/fixtures/agentic-ask-gold.json'), 'utf8'))
+  snapshot.questions = [...computeElectorateGold(), ...snapshot.questions.filter((q) => q.category !== 'electorates')]
+  fs.writeFileSync(OUT, JSON.stringify(snapshot, null, 1).replace(/[\u007f-\uffff]/g, (c) => `\\u${c.charCodeAt(0).toString(16).padStart(4, '0')}`) + '\n')
+  process.stderr.write(`wrote four electorate cases from published JSON; zero KB or model calls\n`)
+  process.exit(0)
+}
 const vars = Object.fromEntries(fs.readFileSync(path.join(ROOT, 'portal/.dev.vars'), 'utf8').split('\n')
   .filter((l) => l.includes('=') && !l.startsWith('#')).map((l) => [l.slice(0, l.indexOf('=')), l.slice(l.indexOf('=') + 1).trim()]))
 const BASE = `https://aws-ap-southeast-2-1.rag.progress.cloud/api/v1/kb/${vars.ARAG_KB_ID}`
@@ -362,7 +372,7 @@ async function coverage() {
 }
 
 const t0 = Date.now()
-const questions = []
+const questions = computeElectorateGold()
 for (const q of Q) {
   const expected = await q.compute()
   questions.push({ id: q.id, category: q.category, question: q.question, note: q.note || undefined, expected })

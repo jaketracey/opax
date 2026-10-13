@@ -63,7 +63,7 @@ test('P1 named entities: dropped parties, partially scoped people, and named bil
  }
 });
 
-test('P1 actual route: a dropped roster speaker falls back to normal Ask in JSON and SSE',async()=>{
+test('P1 actual route: a dropped roster speaker falls back to normal Ask and its no-answer contract in JSON and SSE',async()=>{
  const restore=offline(),pending=[];
  try{
   const h=await loadWorker(new URL('../src/index.ts',import.meta.url).pathname,new URL('../public/',import.meta.url).pathname,{waitUntil(p){pending.push(p)},passThroughOnException(){}});
