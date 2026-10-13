@@ -1151,9 +1151,12 @@ html[data-chat="page"] .chat-head {
   padding: var(--sp-12) var(--sp-16); cursor: pointer; text-align: left;
   font: var(--weight-strong) var(--text-15)/var(--leading-normal) var(--sans); color: var(--ink-soft);
 }
-.chat-next-btn:hover, .chat-next-btn:focus-visible { border-color: var(--line-control); color: var(--ink); }
+.chat-next-btn:focus-visible { border-color: var(--line-control); color: var(--ink); }
 .chat-next-btn .next-arrow { flex: 0 0 auto; color: var(--ink-faint); }
-.chat-next-btn:hover .next-arrow { color: var(--bronze-ink); }
+@media (hover: hover) {
+  .chat-next-btn:hover { border-color: var(--line-control); color: var(--ink); }
+  .chat-next-btn:hover .next-arrow { color: var(--bronze-ink); }
+}
 .chat-error { color: var(--ink-soft); font-size: var(--text-15); margin: var(--sp-8) 0; }
 /* Saved conversations: a quiet list under the head, open on demand. */
 .chat-history { margin: 0 0 var(--sp-16); max-width: 46rem; }
@@ -5118,8 +5121,11 @@ html[data-panel="search"] .research-app main.compact .hero-intro { display: bloc
 .ask-person-context { display: none; }
 html:not([data-chat="docked"]) #panel-chat.has-person-context .chat-thread,
 html:not([data-chat="docked"]) #panel-chat.has-person-context .chat-composer { max-width: none; }
-#panel-chat .chat-next-btn { border: var(--border-hairline) solid var(--divider-subtle); border-radius: var(--radius-md); font: var(--type-body); text-transform: none;  color: var(--bronze-ink); background: var(--paper-raised); }
-#panel-chat .chat-next-btn:hover { background: var(--bronze-wash); border-color: var(--bronze-rule); }
+/* One card for every follow-up: under an answer on /ask and in the thread. */
+:is(#panel-ask, #panel-chat) .chat-next-btn { border: var(--border-hairline) solid var(--divider-subtle); border-radius: var(--radius-md); font: var(--type-body); text-transform: none;  color: var(--bronze-ink); background: var(--paper-raised); }
+@media (hover: hover) {
+  :is(#panel-ask, #panel-chat) .chat-next-btn:hover { background: var(--bronze-wash); border-color: var(--bronze-rule); }
+}
 @media (min-width: 1000px) {
   html:not([data-chat="docked"]) #panel-chat.has-person-context { display: grid; grid-template-columns: minmax(0, 1fr) 280px; column-gap: var(--sp-64); align-items: start; }
   html:not([data-chat="docked"]) #panel-chat.has-person-context[hidden] { display: none; }
