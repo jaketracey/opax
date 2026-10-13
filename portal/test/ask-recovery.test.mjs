@@ -13,12 +13,12 @@ const transpile = s => ts.transpileModule(s, { compilerOptions: { target: ts.Scr
 const helpers = {};
 runInNewContext(transpile(readFileSync(new URL('../src/ask-evidence.ts', import.meta.url), 'utf8')), { exports: helpers, require: () => passageText });
 const parsed = ts.createSourceFile('index.ts', readFileSync(new URL('../src/index.ts', import.meta.url), 'utf8'), ts.ScriptTarget.Latest, true);
-const names = new Set(['apiAsk', 'apiAskStream', 'askPayload', 'hasUnsupportedQuotes', 'unsupportedQuotesIn', 'unquoteUnsupported', 'looseAnswer', 'evidenceOnlyAnswer', 'isRefusal', 'withAskedAs', 'withNoAnswerLink']);
+const names = new Set(['apiAsk', 'apiAskStream', 'askPayload', 'hasUnsupportedQuotes', 'unsupportedQuotesIn', 'unquoteUnsupported', 'looseAnswer', 'evidenceOnlyAnswer', 'isRefusal', 'withAskedAs']);
 const code = parsed.statements.filter(n => ts.isFunctionDeclaration(n) ? names.has(n.name?.text) : ts.isVariableStatement(n) && n.declarationList.declarations.some(d => names.has(d.name.getText(parsed)))).map(n => n.getText(parsed)).join('\n');
 const id = 'original/t/body/0-200';
 const passage = 'Negative gearing lets property investors offset rental losses against other income.';
 function draft(answer, cited = true) {
-  return { answered: true, answer, citations: cited ? { [id]: [[0, Array.from(answer).length]] } : {}, retrieval_results: { resources: {
+  return { answer, citations: cited ? { [id]: [[0, Array.from(answer).length]] } : {}, retrieval_results: { resources: {
     original: { title: 'Housing debate', slug: 'speech-1', fields: { body: { paragraphs: { [id]: { text: passage, score: 0.9, score_type: 'RERANKER' } } } } },
   } } };
 }
@@ -38,7 +38,7 @@ function harness(responses, env = {}) {
   const api = runInNewContext(transpile(code) + ';({apiAsk,apiAskStream})', {saConversationInput,
     saSendData:async (_event,data)=>data,
     isWitness, loadPeople: async () => ({byFold:new Map()}), scopeSpeakerBody: async () => {}, // External scoped retrieval is exercised in witness-split.test.mjs.
-    ...passageText, ...helpers, foldName:s=>s.toLowerCase(), Response, Request, URL, Date, AbortController, AbortSignal, TransformStream, TextEncoder,
+    ...passageText, ...helpers, Response, Request, URL, Date, AbortController, AbortSignal, TransformStream, TextEncoder,
     REFUSAL_PREFIXES: ['not enough data'], ASK_SYNC_TIMEOUT_MS: 1000, ASK_STALL_MS: 1000, ASK_RETRY_BUDGET_MS: 1000,
     SSE_HEADERS: { 'content-type': 'text/event-stream' },
     // The donor privacy check and model budget are exercised in donor-privacy.test.mjs and model-budget.test.mjs.
@@ -77,28 +77,25 @@ for (const stream of [false, true]) {
     assert.equal(result.answer_status, undefined);
     assert.ok(result.citations[id]);
   });
-  test(`${path}: a misquote that survives recovery is delivered as a paraphrase on a topic question`, async () => {
-    // The 2026-09-17 loosening, restored 13 Oct: on a general topic question the reader keeps
-    // the answer and only the quotation marks go. Named-person questions stay strict (ask-no-answer tests).
+  test(`${path}: a misquote that survives recovery is delivered as a paraphrase, not replaced by excerpts`, async () => {
+    // The 2026-09-17 loosening: the reader keeps the answer; only the quotation marks go.
     for (const second of [bad(), new Error('provider unavailable')]) {
       const h = harness([bad(), second]);
       const result = await h.run(stream);
       assert.equal(h.calls.length, 2);
       assert.equal(result.answer, 'It says Negative gearing only benefits the richest people in Australia.');
-      assert.equal(result.answered, true);
       assert.equal(result.answer_status, undefined);
       assert.equal(result.evidence_excerpts, undefined);
       // The citation still lands on the answer's last character after the two marks went.
       assert.deepEqual(result.citations[id], [[0, Array.from(result.answer).length]]);
     }
   });
-  test(`${path}: an answer still uncited after one retry has no supported claim`, async () => {
+  test(`${path}: an answer still uncited after one retry is delivered, and says so`, async () => {
     const h = harness([draft('A summary without citations.', false), draft('Another uncited summary.', false)]);
     const result = await h.run(stream);
     assert.equal(h.calls[1].citations, 'default');
-    assert.equal(result.answer, '');
-    assert.equal(result.answered, false);
-    assert.equal(result.reason, 'no_supported_claim');
+    assert.equal(result.answer, 'Another uncited summary.');
+    assert.equal(result.answer_status, 'uncited');
     assert.equal(result.evidence_excerpts, undefined);
   });
   test(`${path}: a grounded answer does not make a second model call`, async () => {
@@ -110,17 +107,17 @@ for (const stream of [false, true]) {
 }
 
 for (const stream of [false,true]) test(`${stream?'streamed':'synchronous'}: an explicit evidence gap does not force an invented cited answer`,async()=>{
- const h=harness([{...draft('Nearby irrelevant material.',false),answered:false}]);
+ const h=harness([draft(helpers.EVIDENCE_GAP_ANSWER,false)]);
  const result=await h.run(stream);
- assert.equal(h.calls.length,1);assert.equal(result.answer,'');assert.equal(result.reason,'declined');
+ assert.equal(h.calls.length,1);assert.equal(result.answer,helpers.EVIDENCE_GAP_ANSWER);
  assert.equal(Object.keys(result.citations).length,0);assert.equal(result.answer_status,undefined);
 });
 
-test('the decision is contract data regardless of answer wording', () => {
-  const { isRefusal } = runInNewContext(transpile(code) + ';({isRefusal})', { ...helpers });
-  assert.equal(isRefusal({ answered: false, answer: 'Any wording at all.' }), true);
-  assert.equal(isRefusal({ answered: true, answer: 'The record retrieved for this question does not discuss it.' }), false);
-  assert.equal(isRefusal({ answer: 'A plausible prose answer without the decision.' }), true);
+test('a refusal wrapped in the model\'s own preamble still counts as a refusal', () => {
+  const { isRefusal } = runInNewContext(transpile(code) + ';({isRefusal})', { ...helpers, REFUSAL_PREFIXES: ['not enough data', 'the record retrieved for this question does not discuss'] });
+  assert.equal(isRefusal({ answer: 'I can’t answer that question from the retrieved record. The passages cover contract awards. The record retrieved for this question does not discuss it.' }), true);
+  assert.equal(isRefusal({ answer: 'The record retrieved for this question does not discuss it.' }), true);
+  assert.equal(isRefusal({ answer: 'Negative gearing was defended by the Treasurer in 2016 [^1].' }), false);
 });
 
 test('the ask pins its generative model from the Worker vars and keys the cache on it', async () => {

@@ -1,3 +1,4 @@
+import { VIC_ELECTION_AUTHORISATION_LINE, vicElectionMaterial } from '../public/vic-election.js'
 // Open Graph cards: the element tree for one 1200x630 share image.
 //
 // Pure: no I/O, no wasm, no environment. The Worker (src/og-render.ts) and the
@@ -17,9 +18,10 @@ export const OG_HEIGHT = 630
 /** Bump when the drawing changes, or when a card's portrait or name was wrong: it is
  *  folded into every og:image URL and the Worker's card cache key, so the social
  *  crawlers (which cache by URL, some for weeks) and the edge fetch the new card.
+ *  8: Jake's 13 October address on electoral cards.
  *  7: full electoral authorisation on landscape and portrait hub cards.
  *  6: portraits taken off people they did not show (docs/PHOTOS.md, "Identity check"). */
-export const OG_VERSION = '7'
+export const OG_VERSION = '8'
 
 import { STORY_SAFE, STORY_SIZES, type StoryFormat, type StorySlide } from './story'
 
@@ -184,6 +186,7 @@ const PAD = 64
 const PORTRAIT = 300
 
 export function cardTree(card: OgCard): El {
+  if (!card.authorisation && vicElectionMaterial([card.kicker, card.title, ...card.lines].join(' '))) card = {...card, authorisation: VIC_ELECTION_AUTHORISATION_LINE}
   const hasPortrait = Boolean(card.portrait)
   const gutter = hasPortrait ? 56 : 48
   const artWidth = hasPortrait ? PORTRAIT : card.wide ? 140 : 290
@@ -341,6 +344,7 @@ const P_LINE_SIZE = 34
 const P_RULE = 'rgba(217,168,74,0.45)'
 
 export function portraitTree(card: OgCard): El {
+  if (!card.authorisation && vicElectionMaterial([card.kicker, card.title, ...card.lines].join(' '))) card = {...card, authorisation: VIC_ELECTION_AUTHORISATION_LINE}
   const hasPortrait = Boolean(card.portrait)
   const centred = hasPortrait
   const align = centred ? 'center' : 'flex-start'
@@ -557,7 +561,7 @@ function storyMasthead(): El {
 /** A credit as the slide draws it: author and licence; the caption carries the "via Wikimedia Commons". */
 const slideCredit = (credit: string): string => credit.replace(/,?\s*via Wikimedia Commons/gi, '')
 
-function storyFooter(credit?: string | null, swipe = false): El {
+function storyFooter(credit?: string | null, swipe = false, authorisation?: string): El {
   const right = credit || swipe
     ? h(
         'div',
@@ -567,12 +571,16 @@ function storyFooter(credit?: string | null, swipe = false): El {
         swipe ? h('img', { src: ARROW_URI, width: 26, height: 26, style: { marginLeft: 8, opacity: 0.9 } }) : null,
       )
     : null
-  return h(
+  const row = h(
     'div',
     { style: { display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', padding: `32px ${P_PAD}px 64px ${P_PAD}px` } },
     h('div', { style: { fontFamily: SANS, fontSize: 34, fontWeight: 700, letterSpacing: '0.18em', color: BRONZE_BRIGHT } }, 'OPAX.COM.AU'),
     right,
   )
+  // Keep the full approved line inside the story safe area; never clip it.
+  return authorisation ? h('div', {style: {display: 'flex', flexDirection: 'column', paddingBottom: 64}},
+    {...row, props: {...row.props, style: {display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', padding: `32px ${P_PAD}px 0`}}},
+    h('div', {style: {fontFamily: SANS, fontSize: 22, lineHeight: 1.4, color: SOFT, margin: `16px ${P_PAD}px 0`}}, authorisation)) : row
 }
 
 function storyKicker(text: string, centred = false): El | null {
@@ -639,7 +647,7 @@ function coverSlide(slide: Extract<StorySlide, { type: 'cover' }>, images: Story
         ...storyLines([slide.line], false, 3),
         h('div', { style: { display: 'flex', justifyContent: 'flex-end', width: P_TEXT_WIDTH, marginTop: 56 } }, h('img', { src: ENGRAVING_URI, width: 520, height: 474, style: { opacity: 0.9 } })),
       ]),
-      storyFooter(credit, g.padTop === 0), // a carousel is swiped; a story is tapped
+      storyFooter(credit, g.padTop === 0, slide.authorisation), // a carousel is swiped; a story is tapped
     ])
   }
   // The photograph is masked, not framed: it feathers into the navy over its
@@ -662,7 +670,7 @@ function coverSlide(slide: Extract<StorySlide, { type: 'cover' }>, images: Story
       storyHeadline(slide.title, 140, 2),
       ...storyLines([slide.line], false, 3),
     ),
-    storyFooter(credit, g.padTop === 0), // a carousel is swiped; a story is tapped
+    storyFooter(credit, g.padTop === 0, slide.authorisation), // a carousel is swiped; a story is tapped
   ])
 }
 
@@ -684,7 +692,7 @@ function numberSlide(slide: Extract<StorySlide, { type: 'number' }>, images: Sto
         h('div', { style: { fontFamily: SANS, fontSize: 36, color: SOFT, marginTop: 14, lineHeight: 1.35, width: P_TEXT_WIDTH - 330 } }, clipToLines(storyText(slide.label), P_TEXT_WIDTH - 330, 36, SANS_EM, 2)),
       ),
     ]),
-    storyFooter(),
+    storyFooter(null, false, slide.authorisation),
   ])
 }
 
@@ -713,7 +721,7 @@ function pictureSlide(slide: Extract<StorySlide, { type: 'picture' }>, images: S
       quote ? h('div', { style: { fontFamily: SERIF, fontStyle: 'italic', fontSize: 46, lineHeight: 1.3, color: WHITE, marginTop: 26, width: P_TEXT_WIDTH, textAlign: 'center' } }, clipToLines(quote, P_TEXT_WIDTH, 46, SERIF_EM, 3)) : null,
       ...storyLines(slide.lines, true, 2, 26, 36),
     ], { centred: true }),
-    storyFooter(),
+    storyFooter(null, false, slide.authorisation),
   ])
 }
 
@@ -745,7 +753,7 @@ function barsSlide(slide: Extract<StorySlide, { type: 'bars' }>, images: StoryIm
       h('div', { style: { display: 'flex', flexDirection: 'column', width: P_TEXT_WIDTH, marginTop: 16 } }, ...items),
       storyNote(slide.note),
     ]),
-    storyFooter(),
+    storyFooter(null, false, slide.authorisation),
   ])
 }
 
@@ -778,7 +786,7 @@ function ledgerSlide(slide: Extract<StorySlide, { type: 'ledger' }>, images: Sto
       h('div', { style: { display: 'flex', flexDirection: 'column', width: P_TEXT_WIDTH, marginTop: 40 } }, ...rows, total),
       storyNote(slide.note),
     ]),
-    storyFooter(),
+    storyFooter(null, false, slide.authorisation),
   ])
 }
 
@@ -800,7 +808,7 @@ function timelineSlide(slide: Extract<StorySlide, { type: 'timeline' }>, images:
       ...storyLines(slide.lines, false, 3),
       h('div', { style: { display: 'flex', flexDirection: 'column', marginTop: 44, marginLeft: 16, borderLeft: '2px solid rgba(217,168,74,0.5)', paddingLeft: 46 } }, ...events),
     ]),
-    storyFooter(),
+    storyFooter(null, false, slide.authorisation),
   ])
 }
 
@@ -838,7 +846,7 @@ function divisionSlide(slide: Extract<StorySlide, { type: 'division' }>, images:
       ),
       ...storyLines([slide.line], false, 2, 30, 36),
     ]),
-    storyFooter(),
+    storyFooter(null, false, slide.authorisation),
   ])
 }
 
@@ -860,7 +868,7 @@ function listSlide(slide: Extract<StorySlide, { type: 'list' }>, images: StoryIm
       h('div', { style: { display: 'flex', flexDirection: 'column', width: P_TEXT_WIDTH, marginTop: 40 } }, ...items),
       storyNote(slide.note),
     ]),
-    storyFooter(),
+    storyFooter(null, false, slide.authorisation),
   ])
 }
 
@@ -900,18 +908,19 @@ function fitCta(url: string): { size: number; lines: string[] } {
 }
 
 function sourceSlide(slide: Extract<StorySlide, { type: 'source' }>, images: StoryImages, g: StoryGeometry): El {
-  // The page's address closes the run, the last thing on the slide: no path under
-  // it and no wordmark below (the address carries the domain). It never breaks
-  // inside a name or a slug.
+  // The page's address closes the run: no path line or wordmark (the address
+  // carries the domain). Electoral material also keeps its required small
+  // authorisation below, outside the clipped body. Names and slugs never break.
   const url = storyText(slide.url)
   const cta = fitCta(url)
   const rows = slide.rows.slice(0, 4).map((r) =>
     h('div', { style: { display: 'flex', width: P_TEXT_WIDTH, fontFamily: SANS, fontSize: 34, lineHeight: 1.35, color: WHITE, paddingTop: 18, paddingBottom: 18, borderTop: `1px solid ${S_SOFT_RULE}` } }, clipToLines(storyText(r), P_TEXT_WIDTH, 34, SANS_EM, 2)),
   )
-  // With no footer, the engraving drops to the corner the wordmark held and the body keeps the same foot as the masthead's head.
+  // Reserve the bottom for electoral authorisation; otherwise retain the
+  // address-only slide's original body spacing and engraving position.
   return storyFrame(g, [
     storyMasthead(),
-    storyEngraving(240, 0.38, g, 64),
+    storyEngraving(240, 0.38, g, slide.authorisation ? 192 : 64),
     storyBody([
       storyKicker(slide.kicker),
       storyHeadline(slide.title, 92, 3),
@@ -923,7 +932,8 @@ function sourceSlide(slide: Extract<StorySlide, { type: 'source' }>, images: Sto
         h('div', { style: { width: 120, height: 1, background: P_RULE, marginBottom: 30 } }),
         ...cta.lines.map((line) => h('div', { style: { fontFamily: SANS, fontSize: cta.size, fontWeight: 700, lineHeight: 1.15, letterSpacing: '0.01em', color: BRONZE_BRIGHT, width: S_CTA_WIDTH } }, line)),
       ),
-    ], { foot: 112 }),
+    ], { foot: slide.authorisation ? 32 : 112 }),
+    slide.authorisation ? h('div', { style: { fontFamily: SANS, fontSize: 22, lineHeight: 1.4, color: SOFT, padding: `16px ${P_PAD}px 64px` } }, slide.authorisation) : null,
   ])
 }
 

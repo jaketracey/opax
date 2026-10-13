@@ -1,5 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import {readFileSync} from 'node:fs';
 import {loadWorker,offline} from './worker-harness.mjs';
 const restore=offline(),pending=[],logs=[],shared=new Map(),edge=new Map();
 const ctx={waitUntil(p){pending.push(p)},passThroughOnException(){}};
@@ -98,5 +99,43 @@ test('the gold operator route fails closed without bearer or enabled mode, inclu
  crypto.subtle.timingSafeEqual=(a,b)=>a.length===b.length&&a.every((x,i)=>x===b[i]);
  h.env.AGENTIC_ASK_MODE='off';assert.equal((await call({authorization:'Bearer fixture-secret'})).status,409);
  h.env.AGENTIC_ASK_MODE='shadow';const valid=await call({authorization:'Bearer fixture-secret'});assert.equal(valid.status,200);assert.ok((await valid.json()).agentic);await flush();delete h.env.STAGING_API;
+});
+test('electorate ranking reaches the registered Census tool in JSON and SSE without speech resolution',async()=>{
+ const previousAssets=h.env.ASSETS,previousFetch=globalThis.fetch;
+ const assets=JSON.parse(readFileSync(new URL('./fixtures/agentic-electorates.json',import.meta.url))).assets;
+ const read=[];let outbound=0;
+ h.env.AGENTIC_ASK_MODE='route';shared.clear();edge.clear();
+ h.env.ASSETS={async fetch(req){
+  const path=new URL(req.url).pathname;read.push(path);
+  if(path.startsWith('/graph/money'))return Response.json({nodes:[],edges:[]});
+  if(path==='/access.json')return Response.json({ministers:{}});
+  return assets[path]?Response.json(assets[path]):new Response('fixture missing',{status:404});
+ }};
+ globalThis.fetch=async()=>{outbound++;throw Error('Census rankings must not call speech retrieval or generation')};
+ try{
+  for(const stream of [false,true]){
+   shared.clear();edge.clear();
+   const response=await post('Which three federal electorates have the highest unemployment rate?',stream);
+   assert.equal(response.status,200);const text=await response.text();
+   const events=stream?frames(text):[];
+   const done=stream?events.find(f=>f.event==='done').data:JSON.parse(text);
+   assert.equal(done.answered,true,JSON.stringify(done));
+   for(const name of ['Alpine','Coast','Sample Bay'])assert.ok(done.answer.includes(name),name);
+   assert.match(done.answer,/2021 Census \(ABS\)/);
+   assert.equal(done.agentic.steps.length,1);
+   assert.equal(done.agentic.steps[0].label,'Checking electorate data');
+   assert.equal(done.agentic.steps[0].arg,'unemployment rate');
+   assert.equal(done.agentic.steps[0].state,'done');
+   assert.equal(done.sources.filter(s=>s.resource.startsWith('fact-')).length,3);
+   assert.ok(done.sources.filter(s=>s.resource.startsWith('fact-')).every(s=>s.href.includes('/subject/electorate/')));
+   assert.ok(Object.keys(done.citations).length);
+   if(stream)assert.ok(events.some(f=>f.data.phase==='step'&&f.data.step.state==='running'));
+   await flush();
+  }
+  assert.ok(read.includes('/electorates/manifest.json'));
+  assert.ok(!read.includes('/parliamentarians.json'));
+  assert.ok(!read.includes('/bills/index.json'));
+  assert.equal(outbound,0);
+ }finally{h.env.ASSETS=previousAssets;globalThis.fetch=previousFetch}
 });
 test.after(()=>restore());

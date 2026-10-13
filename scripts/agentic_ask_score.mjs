@@ -37,6 +37,16 @@ export function score(q, answer, answered = true) {
   const e = q.expected
   const text = String(answer ?? '')
   const r = { id: q.id, kind: e.kind, pass: false, checks: {} }
+  if (e.kind === 'electorates') {
+    if (e.unanswerable) {
+      r.checks = { declined: !answered || /cannot|no published|unavailable/i.test(text), no_invented_figure: !/\$\s*\d|\b\d+(?:\.\d+)?\s*(?:AUD\/week\b|%|years\b)/.test(text) }
+      r.pass = r.checks.declined && r.checks.no_invented_figure
+    } else {
+      r.checks = { answered, values: e.rows.every((row) => mentions(text, row.name) && hasNumber(text, row.value)), census: /2021 Census \(ABS\)/i.test(text), units: e.unit === 'AUD/week' ? /AUD\/week|\$[\d,]+.*(?:week|weekly)/i.test(text) : text.includes(e.unit) }
+      r.pass = Object.values(r.checks).every(Boolean)
+    }
+    return r
+  }
   if (e.kind === 'decline') {
     const partyCount = /\b(?:Labor|Liberal|Nationals|Greens|One Nation|Independent)\b[^.]{0,40}\b\d{2,}\b/.test(text)
     r.checks = { declined: !answered || LIMIT.test(text), no_party_count: !partyCount }
@@ -96,4 +106,3 @@ export function grounding(answer, evidence) {
   }
   return { figures, traced, figure_sentences: figureSentences, cited }
 }
-

@@ -96,9 +96,9 @@ test('discovery enqueues speeches (both tasks, high priority) and releases, and 
   const q = rows(raw, 'SELECT rid, task, priority FROM queue ORDER BY rid, task')
   assert.deepEqual(q.map((r) => `${r.rid}:${r.task}`), ['p1:release_summary', 's1:speech_summary', 's1:speech_topics', 's2:speech_summary', 's2:speech_topics'])
   assert.ok(q.every((r) => r.priority === 100))
-  assert.equal(await getState(d1, 'cursor:speech'), '2026-09-28T11:48:21.000Z')
-  assert.equal(await getState(d1, 'cursor:press_release'), '2026-09-28T11:00:00.000Z')
-  assert.equal(kb.catalogCalls[0].since, '2026-09-20T00:00:00Z')
+  assert.equal(await getState(d1, 'cursor:speech'), '2026-09-28T12:00:00.000Z')
+  assert.equal(await getState(d1, 'cursor:press_release'), '2026-09-28T12:00:00.000Z')
+  assert.equal(kb.catalogCalls[0].since, '2026-09-28T10:00:00Z')
 })
 
 test('a page-capped walk resumes exactly at the cursor and eventually enqueues everything; a complete walk then re-reads a short overlap', async () => {
@@ -114,14 +114,14 @@ test('a page-capped walk resumes exactly at the cursor and eventually enqueues e
     if (!stats.discoveryPartial.includes('speech') && complete < 0) complete = i
   }
   assert.equal(rows(raw, "SELECT COUNT(DISTINCT rid) AS n FROM queue WHERE task = 'speech_summary'")[0].n, 5)
-  assert.equal(cursors.at(-1), '2026-09-28T11:00:04.000Z')
+  assert.equal(cursors.at(-1), '2026-09-28T12:00:00.000Z')
   assert.ok(complete >= 0, 'the walk finished')
   // Progress is monotonic while capped.
   for (let i = 1; i < cursors.length; i += 1) assert.ok(cursors[i]! >= cursors[i - 1]!)
   // After a complete walk, the following tick's since is the cursor minus the 120 s overlap.
   await runTick(small)
   const lastCall = kb.catalogCalls.filter((c) => c.kind === 'speech').at(-1)!
-  assert.equal(lastCall.since, '2026-09-28T10:58:04Z')
+  assert.equal(lastCall.since, '2026-09-28T11:58:00Z')
 })
 
 /** A view of the fake box whose catalog uses a small page size (discovery normally asks for 200). */
@@ -132,7 +132,7 @@ function kbWithPage(kb: FakeKb, size: number) {
     getSummaryBody: kb.getSummaryBody.bind(kb),
     patchSummary: kb.patchSummary.bind(kb),
     patchClassifications: kb.patchClassifications.bind(kb),
-    catalog: (kind: string, since: string, page: number) => kb.catalog(kind, since, page, size),
+    catalog: (kind: string, since: string, page: number, _size?: number, until?: string) => kb.catalog(kind, since, page, size, until),
   }
 }
 
@@ -143,7 +143,8 @@ test('the cursor does not advance when enqueuing fails', async () => {
   const failing = { ...deps, db: { ...(d1 as any), prepare: (sql: string) => { if (sql.startsWith('INSERT OR IGNORE')) throw new Error('D1 down'); return (d1 as any).prepare(sql) }, batch: (s: any) => (d1 as any).batch(s) } as any }
   const stats = await runTick(failing)
   assert.ok(stats.discoveryErrors.length > 0)
-  assert.equal(await getState(d1, 'cursor:speech'), null)
+  // The empty first window was checkpointed; the failed populated window was not.
+  assert.equal(await getState(d1, 'cursor:speech'), '2026-09-28T11:00:00.000Z')
 })
 
 test('discovery runs after processing, so a slow or hung catalog can never delay or eat the model work (bug seen on the first remote tick)', async () => {
@@ -168,19 +169,20 @@ test('discovery runs after processing, so a slow or hung catalog can never delay
   assert.equal(stats.dry, 2)
   assert.deepEqual([events[0], events.includes('catalog')], ['ai', true])
   assert.ok(events.indexOf('ai') < events.indexOf('catalog'))
-  assert.equal(stats.discovered.speech, 2, 'and discovery still ran')
+  assert.equal(stats.discovered.speech, 0, 'expired discovery starts no metadata work')
+  assert.ok(stats.discoveryPartial.includes('speech'))
 })
 
 test('discovery honours its time box: stops paging, marks the walk partial, resumes next tick', async () => {
   const kb = new FakeKb()
   kb.catalogRows = Array.from({ length: 6 }, (_, i) => ({ kind: 'speech', rid: `s${i}`, created: `2026-09-28T11:00:0${i}.000000` }))
   let clock = 0
-  const slow = { ...kbWithPage(kb, 2), catalog: async (kind: string, since: string, page: number) => { clock += 15_000; return kb.catalog(kind, since, page, 2) } }
+  const slow = { ...kbWithPage(kb, 2), catalog: async (kind: string, since: string, page: number, _size?: number, until?: string) => { clock += 15_000; return kb.catalog(kind, since, page, 2, until) } }
   const { deps } = makeDeps({ kb, ai: new FakeAi(() => both), env: { DAILY_NEURON_BUDGET: '0' } })
   const { discover } = await import('../src/discover.ts')
-  const out = await discover({ db: deps.db, kb: slow as any, now: 1, startIso: '2026-09-20T00:00:00Z', maxPages: 10, overlapS: 120, maxMs: 20_000, clock: () => clock })
-  assert.deepEqual(out.partial, ['speech'])
-  assert.equal(out.seen.speech, 4, 'two pages of two, then out of time')
+  const out = await discover({ db: deps.db, kb: slow as any, now: Date.parse('2026-09-28T12:00:00Z'), startIso: '2026-09-28T11:00:00Z', maxPages: 10, overlapS: 120, maxMs: 20_000, clock: () => clock, slowPageMs: Infinity, minWindowMs: 3600_000 })
+  assert.deepEqual(out.partial, ['speech', 'press_release'])
+  assert.equal(out.seen.speech, 2, 'one page queued; the second answer arrived after the time box')
 })
 
 // ---------------------------------------------------------------- processing: dry mode
