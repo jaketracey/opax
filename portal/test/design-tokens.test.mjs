@@ -158,7 +158,7 @@ const TYPE_BASELINE = {
   'public/quiz.js': 4,
   'public/st-test.html': 1,
   'public/stages.js': 2,
-  'public/style.css': 18,
+  'public/style.css': 9,
   'public/thenvsnow.js': 2,
   'public/timemachine.js': 15,
   'public/ui-controls.css': 2,
@@ -167,11 +167,9 @@ const TYPE_BASELINE = {
   'public/wordsdollars.js': 2,
   'src/community-notifications.ts': 3,
 };
-const DEPRECATED_BASELINE = {
-  // The uplift codemod (12 Oct 2026) retired the rest; these sit in rules the
-  // nav and page-actions lanes own, and go when those rules move.
-  'public/style.css': 5,
-};
+// The uplift codemod (12 Oct 2026) retired all but five, in the old masthead,
+// drawer and footer rules; those went when nav.css took the band over (batch 3).
+const DEPRECATED_BASELINE = {};
 const HEX = /(?<![\w&#-])#(?:[0-9a-fA-F]{8}|[0-9a-fA-F]{6}|[0-9a-fA-F]{3,4})(?![\w-])/g;
 const SCANNED = ['public', 'graph', 'grants-map', 'voice', 'analytics'];
 const SKIP = new Set([
@@ -271,7 +269,7 @@ test('no new uses of deprecated token names', (t) => {
 // measured without its generated token region. Lower a number when a change
 // lowers the share; the rules other lanes own still count until they move.
 const SHARE_BASELINE = {
-  'public/style.css': 4.6,
+  'public/style.css': 2.2,
   'public/ui-controls.css': 3.0,
   'public/ui-source.css': 6.5,
   'public/voice.css': 3.5,

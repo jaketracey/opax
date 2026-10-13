@@ -416,8 +416,6 @@ a.visually-hidden:focus-visible {
 
 /* ---- Page head: the title, one meta line, an optional lede. */
 .ui-page-head { display: grid; gap: var(--space-line); margin: 0 0 var(--space-section); }
-/* Drawn as a <header>, a page head must not pick up the masthead's bare header rule. */
-header.ui-page-head { position: static; z-index: auto; padding: 0; border: 0; background: none; color: inherit; box-shadow: none; }
 .ui-page-head > :where(h1, h2) { margin: 0; font: var(--type-title); color: var(--ink); overflow-wrap: anywhere; }
 /* Controls belong to what they filter: a head with controls straight under it
    keeps the block step (as on every directory), not the section step. */
@@ -596,28 +594,16 @@ button.link {
   font: inherit; text-align: left;
 }
 
-/* ---- masthead ----------------------------------------------------------- */
+/* ---- the mark and quick-search rows ------------------------------------ */
+/* nav.css draws the band, its menus, the sheet, the trail and the footer.
+   Two shared pieces stay here: the mark (ui-workbench.html draws it too) and
+   the quick-search suggestion rows. */
 
-header {
-  /* Pinned to the top of the viewport as the page scrolls (a direct child of
-     the body, so sticky needs no body offset and nothing jumps on load). The
-     megamenus and the quick-search list are positioned inside it, so they
-     ride along and stay over the page. */
-  position: sticky; top: 0; z-index: 50;
-  background: var(--navy);
-  border-bottom: 3px solid var(--bronze);
-  padding: var(--sp-16) 0 0;
-}
-/* Focus rings sit on navy here; ledger bronze vanishes against it.
-   (The drawer is paper, so it keeps the default bronze-ink ring.) */
-header :focus-visible { outline-color: var(--bronze-bright); }
-.masthead { display: flex; align-items: center; gap: clamp(1rem, 2.5vw, 2.75rem); }
-.masthead-id { flex: 0 1 auto; max-width: 300px; }
 .logo { display: inline-flex; align-items: center; gap: 0.6rem; line-height: 0; text-decoration: none; }
 /* The mark: the continent in bronze, ringed by seven stars — federation's
-   number — in the masthead's soft white. */
-/* Explicit box at the mark's own 176:160 ratio — `width: auto` lets some
-   engines fall back to a default that squashes the continent. */
+   number — in the masthead's soft white. Explicit box at the mark's own
+   176:160 ratio — `width: auto` lets some engines fall back to a default that
+   squashes the continent. */
 .logo-mark { height: 78px; width: 86px; }
 .logo-mark .logo-land { fill: var(--bronze-bright); }
 .logo-mark .logo-star { fill: var(--on-navy-soft); }
@@ -627,16 +613,6 @@ header :focus-visible { outline-color: var(--bronze-bright); }
 }
 .logo:hover .logo-star { fill: var(--on-navy); }
 /* Quick search: one input, suggestions across speakers/topics/donors/reports. */
-/* The masthead stretches so the nav can sit on its bottom edge; these two
-   must not stretch with it, or the search icon loses the input's centre. */
-.mast-search { position: relative; flex: 0 1 300px; margin-left: auto; align-self: center; }
-.nav-toggle { align-self: center; }
-.mast-sugg {
-  position: absolute; top: calc(100% + 8px); right: 0; z-index: 40;
-  width: min(380px, 90vw); background: var(--paper); border: var(--border-hairline) solid var(--divider-subtle); border-top: none;
-  box-shadow: 0 18px 40px rgba(21, 27, 20, 0.22);
-  padding: 0.35rem;
-}
 .ms-row {
   display: flex; align-items: baseline; justify-content: space-between; gap: 1rem;
   width: 100%; padding: 0.5rem 0.65rem; border: none; background: none; cursor: pointer;
@@ -644,226 +620,6 @@ header :focus-visible { outline-color: var(--bronze-bright); }
 }
 .ms-row:hover, .ms-row.ms-active { background: var(--paper-sunken); }
 .ms-type { flex: 0 0 auto; font: var(--type-label); color: var(--ink-soft); }
-
-/* ---- primary nav (in the band) ------------------------------------------ */
-
-.masthead { display: flex; align-items: stretch; gap: clamp(1rem, 2.5vw, 2.75rem); }
-/* The header's padding is top only, so the nav can sit on its bottom edge.
-   That leaves the mark hanging low: it centres in the padding box, which is
-   inset at the top and flush with the bronze rule at the bottom. Lifting it by
-   half the difference puts it on the header's true centre without moving the
-   nav or changing the header's height. */
-.masthead-id {
-  display: flex; align-items: center;
-  position: relative; top: calc((3px - 0.9rem) / 2);
-}
-/* The nav column is two rows: the site's full name over the links, with the
-   links sitting on the header's bottom edge. */
-.masthead-nav {
-  flex: 1 1 auto; min-width: 0;
-  display: flex; flex-direction: column; justify-content: flex-end; gap: 0.55rem;
-}
-.masthead-name {
-  margin: 0; padding-left: 0.15rem; white-space: nowrap;
-  font: var(--type-label);
-  color: var(--on-navy-soft);
-}
-@media (prefers-reduced-motion: no-preference) {
-  .masthead-name { animation: nameRise 620ms cubic-bezier(0.22, 0.7, 0.3, 1) both; }
-  @keyframes nameRise { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: none; } }
-}
-/* The full name sits over the nav like a nameplate over a section bar;
-   the acronym's four letters take the bronze. It lives in the nav column,
-   so it compacts away with the nav (the drawer carries the name instead). */
-.nav-list {
-  display: flex; align-items: center; gap: clamp(0.3rem, 1.6vw, 1.5rem);
-  list-style: none; margin: 0; padding: 0;
-}
-.nav-item { display: flex; }
-.nav-link { padding-bottom: 0.55rem; }
-.nav-link {
-  display: inline-flex; align-items: center; gap: 0.4rem;
-  background: none; border: none; cursor: pointer; white-space: nowrap;
-  font: var(--type-control); color: var(--on-navy-soft);
-  text-decoration: none; padding: 0.4rem 0.15rem; min-height: 44px;
-  border-bottom: 3px solid transparent;
-}
-.nav-link:hover, .nav-link[aria-expanded="true"] { color: var(--on-navy); }
-.nav-link.active { color: var(--on-navy); border-bottom-color: var(--bronze-bright); }
-.nav-caret { width: 10px; height: 6px; flex: 0 0 auto; opacity: 0.7; }
-.nav-link[aria-expanded="true"] .nav-caret { transform: rotate(180deg); }
-@media (prefers-reduced-motion: no-preference) {
-  .nav-caret { transition: transform 150ms ease; }
-}
-
-/* Megamenu panels: paper dropped below the band — the infobox idiom
-   (hairline border, 3px bronze top edge, kicker headings). */
-.megamenu {
-  position: absolute; top: calc(100% + 3px); left: 0; z-index: 30;
-  width: 340px; max-width: calc(100vw - 1.5rem);
-  background: var(--paper); border: var(--border-hairline) solid var(--divider-subtle); border-top: none;
-  box-shadow: 0 18px 40px rgba(21, 27, 20, 0.22);
-  padding: 1.1rem 1.25rem 1.15rem;
-}
-.megamenu-wide { width: min(720px, calc(100vw - 1.5rem)); }
-.megamenu .kicker { margin: 0 0 0.5rem; }
-.mm-head { display: flex; align-items: baseline; justify-content: space-between; gap: 1rem; }
-.mm-all { font: var(--type-label); white-space: nowrap; }
-.mm-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.1rem 1.4rem; }
-/* Two kickered columns side by side (Explore: play | encyclopedia). */
-.mm-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 0 1.6rem; }
-.mm-cols > div { min-width: 0; }
-.mm-link {
-  display: block; padding: 0.55rem 0.5rem; margin: 0 -0.5rem;
-  text-decoration: none; border-radius: 4px;
-}
-.mm-link:hover, .mm-link:focus-visible { background: var(--paper-sunken); }
-.mm-title { display: block; font: var(--type-subheading); color: var(--ink); }
-.mm-link:hover .mm-title { color: var(--bronze-ink); }
-.mm-blurb { display: block; margin-top: var(--space-line); font: var(--type-fine); color: var(--ink-soft); }
-/* Report pictograms: bronze hairline glyph in its own column, title and blurb
-   hanging beside it. Links without a glyph (Explore, unknown slugs) keep the
-   plain block layout. */
-.mm-link:has(.mm-glyph) { display: grid; grid-template-columns: auto 1fr; column-gap: 0.7rem; align-items: start; }
-.mm-glyph { grid-row: 1 / span 2; width: 30px; height: 30px; margin-top: 3px; color: var(--bronze-ink); }
-.mm-note { margin: var(--space-row) 0 0; font: var(--type-fine); color: var(--ink-faint); }
-@media (prefers-reduced-motion: no-preference) {
-  .megamenu { animation: menu-in 160ms ease; }
-  @keyframes menu-in {
-    from { opacity: 0; transform: translateY(-6px); }
-  }
-}
-
-/* Compact header controls share the same drawer on phones and tablets. */
-.nav-toggle {
-  display: none; margin-left: auto; align-items: center; justify-content: center;
-  min-width: 44px; min-height: 44px; padding: 0;
-  background: none; border: none; border-radius: 4px; cursor: pointer;
-  color: var(--on-navy-soft);
-}
-.nav-toggle:hover { color: var(--on-navy); }
-.nav-toggle svg { width: 24px; height: 24px; }
-.mast-search-toggle { display: none; align-items: center; gap: .5rem; margin-left: auto; min-height: 44px; padding: .5rem .65rem; background: none; border: 0; border-radius: 4px; color: var(--on-navy-soft); font: 600 .9375rem/1.2 var(--sans); cursor: pointer; }
-.mast-search-toggle:hover { color: var(--on-navy); }
-.mast-search-toggle svg { width: 20px; height: 20px; }
-
-/* ---- mobile nav drawer --------------------------------------------------- */
-
-.nav-drawer {
-  position: fixed; inset: 0 0 0 auto; margin: 0;
-  width: min(380px, calc(100vw - 16px)); max-width: none; height: 100dvh; max-height: none;
-  border: none; border-left: var(--border-hairline) solid var(--line-control);
-  background: var(--paper); color: var(--ink);
-  box-shadow: -18px 0 40px rgba(21, 27, 20, 0.28);
-  padding: max(1rem, env(safe-area-inset-top)) 1.25rem max(1.5rem, env(safe-area-inset-bottom)); overflow-y: auto; overscroll-behavior: contain;
-}
-.nav-drawer::backdrop { background: rgba(20, 42, 67, 0.55); }
-/* The panel slides in from the right while the backdrop fades; closing runs
-   the same in reverse (the script holds the dialog open until it finishes). */
-@media (prefers-reduced-motion: no-preference) {
-  .nav-drawer[open] { animation: drawer-in 280ms cubic-bezier(0.2, 0.7, 0.2, 1); }
-  .nav-drawer[open]::backdrop { animation: backdrop-in 280ms ease; }
-  .nav-drawer.is-closing { animation: drawer-out 220ms cubic-bezier(0.4, 0, 1, 1) forwards; }
-  .nav-drawer.is-closing::backdrop { animation: backdrop-out 220ms ease forwards; }
-  @keyframes drawer-in { from { transform: translateX(100%); } }
-  @keyframes drawer-out { to { transform: translateX(100%); } }
-  @keyframes backdrop-in { from { opacity: 0; } }
-  @keyframes backdrop-out { to { opacity: 0; } }
-}
-.drawer-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem; gap: 1rem; }
-.drawer-head .kicker { margin: 0; }
-.drawer-name { margin: 0; font: 650 1.125rem/1.3 var(--sans); color: var(--navy); }
-/* A search of the record at the top of the drawer: the site's own field, the
-   icon engraved in it, suggestions dropping beneath as in the masthead. */
-.drawer-search { position: relative; margin: 0 0 1rem; }
-.drawer-sugg {
-  position: absolute; left: 0; right: 0; top: calc(100% + 6px); z-index: 5;
-  background: var(--paper-raised); border: 1px solid var(--line-strong); border-radius: 4px;
-  box-shadow: 0 14px 32px rgba(21, 27, 20, 0.18); padding: 0.3rem; max-height: 60vh; overflow-y: auto;
-}
-.drawer-sugg .ms-row { min-height: 44px; font-size: 1rem; }
-/* Ask and the money map as two small engraved cards; the field above is the search. */
-.drawer-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 0.7rem; margin: 0.1rem 0 1rem; }
-.drawer-card {
-  display: flex; flex-direction: column; gap: 0.2rem; min-height: 104px; padding: 0.85rem 0.9rem 0.8rem;
-  background: var(--paper-raised); border: 1px solid var(--line-strong); border-radius: 4px;
-  color: var(--ink); text-decoration: none;
-}
-.drawer-card:hover { border-color: var(--bronze-ink); }
-.drawer-card.active { border-color: var(--bronze); box-shadow: inset 0 0 0 1px var(--bronze-wash); }
-.drawer-card:focus-visible { outline: 2px solid var(--bronze-ink); outline-offset: 2px; }
-.drawer-card-icon { width: 28px; height: 28px; color: var(--bronze-ink); margin-bottom: 0.35rem; }
-.drawer-card-title { font: 600 1.125rem/1.2 var(--serif); color: var(--ink); }
-.drawer-card-sub { font: 400 0.8125rem/1.3 var(--sans); color: var(--ink-faint); }
-/* Top-level links and expandable sections share one row rhythm. */
-.drawer-group { border: 0; border-bottom: 1px solid var(--line); margin: 0; }
-.drawer-group summary.drawer-section {
-  display: flex; align-items: center; justify-content: space-between; gap: .75rem; list-style: none; cursor: pointer;
-  margin: 0; padding: .75rem; min-height: 52px; border-left: 3px solid transparent;
-  font: 600 1.0625rem/1.35 var(--sans); color: var(--ink);
-}
-.drawer-group summary::-webkit-details-marker { display: none; }
-.drawer-group summary::marker { content: ""; }
-.drawer-group summary.drawer-section::after {
-  content: ""; flex: 0 0 auto; width: 10px; height: 10px; margin-right: 0.45rem;
-  border-right: 1.5px solid var(--bronze-ink); border-bottom: 1.5px solid var(--bronze-ink);
-  transform: rotate(45deg) translateY(-3px); transition: transform 160ms ease;
-}
-.drawer-group[open] summary.drawer-section::after { transform: rotate(-135deg) translateY(-1px); }
-.drawer-group summary.drawer-section:hover { color: var(--bronze-ink); }
-.drawer-group summary.drawer-section:focus-visible { outline: 2px solid var(--bronze-ink); outline-offset: 2px; border-radius: 2px; }
-.drawer-group .drawer-list { padding: .25rem 0; margin: 0 0 .75rem .9rem; border-left: 1px solid var(--line); }
-.drawer-group .drawer-list .drawer-link { min-height: 44px; padding: .6rem .75rem; font: 400 .9375rem/1.4 var(--sans); }
-.drawer-group:has(.drawer-link.active) > summary { border-left-color: var(--bronze); background: var(--bronze-wash); color: var(--navy); }
-
-@media (prefers-reduced-motion: reduce) { .drawer-group summary.drawer-section::after { transition: none; } }
-.drawer-close {
-  display: grid; place-items: center; width: 44px; height: 44px; flex: 0 0 44px; margin-right: 0; padding: 0;
-  background: none; border: none; border-radius: 50%; cursor: pointer; color: var(--ink);
-}
-.drawer-close .drawer-x { width: 26px; height: 26px; }
-.drawer-close:hover { background: var(--paper-sunken); }
-.drawer-close:focus { outline: none; }
-.drawer-close:focus-visible { outline: 2px solid var(--bronze-ink); outline-offset: 2px; }
-.drawer-list { list-style: none; margin: 0; padding: 0; }
-.drawer-link, .drawer-sub {
-  display: flex; align-items: center; min-height: 44px; padding: 0.15rem 0 0.15rem 0.75rem;
-  text-decoration: none; border-left: 3px solid transparent;
-}
-.drawer-link { font: 600 1.0625rem/1.3 var(--sans); color: var(--ink); }
-.drawer-sub { font: 400 0.9375rem/1.3 var(--sans); color: var(--ink-soft); min-height: 40px; }
-.drawer-link:hover, .drawer-sub:hover { color: var(--bronze-ink); }
-.drawer-link.active, .drawer-sub.active { border-left-color: var(--bronze); color: var(--navy); background: var(--bronze-wash); }
-.drawer-kicker { margin: var(--space-block) 0 var(--space-line); padding-top: var(--space-heading); border-top: var(--border-hairline) solid var(--divider-subtle); }
-
-/* ---- breadcrumb ----------------------------------------------------------- */
-/* One slim strip of paper hung directly under the band, on every page but the
-   home page: where you are, in the machinery face, with hairline bronze
-   chevrons between the steps. One line always; on a narrow screen the current
-   page shortens to an ellipsis before its ancestors do, and past that the
-   strip scrolls sideways. */
-.crumbs {
-  background: var(--paper); border-bottom: var(--border-hairline) solid var(--divider-subtle);
-  font: var(--type-fine);
-}
-.crumbs-list {
-  display: flex; align-items: center; gap: 0.45rem; min-height: 40px;
-  list-style: none; margin: 0 auto; padding-top: 0; padding-bottom: 0;
-  white-space: nowrap; overflow-x: auto; overscroll-behavior-x: contain;
-  scrollbar-width: none;
-}
-.crumbs-list::-webkit-scrollbar { display: none; }
-.crumbs-list li { display: flex; align-items: center; gap: 0.45rem; flex: 0 0 auto; }
-.crumbs-list li.crumb-here { flex: 0 1 auto; min-width: 0; }
-.crumb-sep { width: 6px; height: 10px; flex: 0 0 auto; color: var(--bronze); }
-.crumb-label { display: block; padding: 0.55rem 0; }
-.crumbs-list a.crumb-label { color: var(--ink-soft); text-decoration: none; }
-.crumbs-list a.crumb-label:hover { color: var(--bronze-ink); text-decoration: underline; text-decoration-color: var(--bronze-ink); text-underline-offset: 3px; text-decoration-thickness: 1.5px; }
-.crumbs-list a.crumb-label:focus-visible { outline-offset: -2px; }
-.crumb-here .crumb-label { color: var(--ink); font: var(--type-label); overflow: hidden; text-overflow: ellipsis; }
-/* Server-only pages (sitting, audit, instruments) write the same strip into
-   <main> (crumbsHTML in seo-content.ts); an app page hides it with #prerender. */
-.spa-ready .prerender-crumbs, .spa-booting .prerender-crumbs { display: none; }
 
 /* ---- hero --------------------------------------------------------------- */
 
@@ -2619,23 +2375,6 @@ article.mx-page .mx-section { margin-top: var(--space-section); }
 .about-table .cell-num { text-align: right; font-variant-numeric: tabular-nums; }
 #mcp-docs pre { max-width: var(--size-readable); margin-block: var(--space-row); white-space: pre-wrap; overflow-wrap: anywhere; }
 
-/* ---- footer ------------------------------------------------------------- */
-
-footer {
-  background: var(--navy);
-  border-top: 3px solid var(--bronze);
-  padding: 0 0 var(--space-group); color: var(--on-navy-soft); font: var(--type-fine);
-}
-.footer-lines { padding-top: 1.1rem; }
-.footer-lines p { margin: 0.35rem 0; max-width: 90ch; }
-footer a { color: var(--on-navy); text-decoration-color: var(--bronze-bright); }
-footer a:hover { color: var(--bronze-bright); }
-/* Same navy-band rule as the header: ledger bronze vanishes against navy. */
-footer :focus-visible { outline-color: var(--bronze-bright); }
-/* The corpus line arrives with the app (or home.js); until then, and on
-   pages without either, it takes no room rather than drawing a bare "…". */
-footer #stats:empty { display: none; }
-
 /* ---- section rhythm on entry and report pages --------------------------- */
 /* An entry page is a stack of sections, each a bronze kicker over a hairline
    list. The kicker's own margin is the boundary, so it has to be plainly
@@ -2681,29 +2420,15 @@ footer #stats:empty { display: none; }
   /* The ayes bar keeps its track as a hairline and its share as ink. */
   .votes-split { border: var(--border-hairline) solid CanvasText; }
   .votes-split i { background: CanvasText; }
-  /* Transparent inactive borders survive forced colors, so the active
-     underline / left rule keep working; only the hover washes vanish. */
-  .megamenu { border-top-width: 3px; }
 }
 
-/* ---- responsive masthead ------------------------------------------------- */
-
-/* Mid widths: the nav needs the room the tagline occupies. */
+/* ---- the mark at narrower widths ----------------------------------------- */
+/* nav.css sizes the band's own mark; these step the shared one down. */
 @media (max-width: 1099px) {
-  .mast-search { flex-basis: 220px; }
   .logo-mark { height: 64px; width: 70px; }
 }
-
-/* Switch before the full navigation can collide with quick search. */
 @media (max-width: 1439px) {
-  header { padding: var(--sp-4) 0; }
-  .masthead-nav, .mast-search.ui-input-wrap { display: none; }
-  .nav-toggle { display: inline-flex; margin-left: 0; }
-  .mast-search-toggle { display: inline-flex; }
   .logo-mark { height: 46px; width: 51px; }
-  .masthead, .masthead-id { display: flex; align-items: center; }
-  /* The compact band pads evenly and hides the nav, so the mark needs no lift. */
-  .masthead-id { margin: 0; max-width: none; top: 0; }
 }
 
 /* ---- mobile ------------------------------------------------------------- */
@@ -4071,11 +3796,6 @@ html[data-panel="chat"] footer { display: none; }
   margin: var(--sp-4) 0 0; font: var(--type-metadata); color: var(--ink-soft);
   max-width: 62ch; overflow-wrap: anywhere;
 }
-/* At 360 three filter labels were cut off inside their boxes ("All parliam").
-   On a phone each control takes the row it needs. */
-@media (max-width: 430px) {
-}
-
 /* ---- loop 2 ------------------------------------------------------------- */
 
 /* A zero-length bar drawn with a minimum width reads as one or two votes, and
@@ -4489,11 +4209,6 @@ html[data-panel="chat"] footer { display: none; }
   overflow-wrap: normal; word-break: normal;
 }
 
-@media (max-width: 700px) {
-
-  footer { line-height: 1.6; }
-  .footer-lines { padding-top: var(--space-4); }
-}
 
 @media (max-width: 540px) {
 
@@ -4518,12 +4233,10 @@ html[data-panel="chat"] footer { display: none; }
 .bill-text-topics a { color: var(--bronze-ink); text-transform: capitalize; }
 .bill-text-evidence summary { color: var(--bronze-ink); cursor: pointer; }
 .bill-text-evidence blockquote { margin: var(--sp-16) 0; padding-left: var(--sp-16); border-left: var(--border-focus) solid var(--divider-subtle); max-width: 75ch; }
-.drawer-primary { min-height: 52px; padding: var(--space-heading); border-bottom: var(--border-hairline) solid var(--divider-subtle); font: var(--type-control); }
 #panel-money .money-map-root { min-height: 560px; }
 /* With a journey open beside it, the map grows with the rail, so a long step
    never hangs below the plate (the engine follows its box). */
 @media (min-width: 701px) { #panel-money .money-stage.has-journey > .money-map-root { height: auto; min-height: max(560px, min(72vh, 720px)); } }
-@media (min-width: 1440px) { .masthead-nav { min-width: max-content; } .mast-search { min-width: 180px; } }
 @media (max-width: 700px) {
   .research-summary .research-period { margin-left: 0; flex-basis: 100%; }
   #panel-money .money-map-root { min-height: 480px; }
@@ -5111,14 +4824,6 @@ h3 {
    page view: every rule is scoped to the docked state or to the chrome the
    page does not draw. */
 
-/* The launcher is a header icon, never a pill floating over the page (design
-   review §4, web chrome). app.js puts it beside search (navigation.js draws it
-   as a link to /ask on pages without the app); it shows where the band
-   carries the menu button (360 to 960px), below. Wider, the masthead's Ask link
-   leads to the question page and page actions open the dock; narrower than
-   360px the band has no room and the menu holds Ask. */
-.chat-launcher { display: none; }
-
 /* The dock's own chrome, drawn only when the conversation is in the corner. */
 .dock-bar { display: none; }
 html[data-chat="docked"] .dock-bar {
@@ -5272,19 +4977,6 @@ html[data-chat="docked"] #panel-chat .chat-composer {
   html[data-chat="docked"] .chat-scroll { padding: var(--sp-12) var(--sp-16) var(--sp-2); }
   html[data-chat="docked"] #panel-chat .chat-composer { padding: var(--sp-12) var(--sp-16) max(var(--sp-12), env(safe-area-inset-bottom)); }
 }
-/* The compact band gives every control its own touch target. */
-@media (min-width: 360px) and (max-width: 960px) {
-  .site-header .chat-launcher:not([hidden]) {
-    display: flex; align-items: center; justify-content: center; flex: 0 0 var(--size-target);
-    width: var(--size-target); height: var(--size-target); margin: 0; padding: var(--space-row);
-    border: 0; border-radius: var(--radius-sm); background: transparent; color: var(--on-navy); cursor: pointer;
-    -webkit-tap-highlight-color: transparent;
-  }
-  .site-header .chat-launcher:hover, .site-header .chat-launcher[aria-expanded="true"] { background: color-mix(in srgb, var(--on-navy) 10%, transparent); }
-  .site-header .chat-launcher:focus-visible { outline: var(--border-focus) solid var(--bronze-bright); outline-offset: var(--space-line); }
-  .site-header .chat-launcher > span { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
-  .site-header .chat-launcher svg { width: var(--size-icon-md); height: var(--size-icon-md); flex: none; color: var(--on-navy); }
-}
 /* A short window (a landscape phone) gives the sheet everything it can. */
 @media (max-height: 620px) and (min-width: 601px) {
   html[data-chat="docked"] #panel-chat { max-height: calc(100dvh - 120px); }
@@ -5316,54 +5008,6 @@ html[data-chat="docked"] .answer-overview p { font-size: var(--text-15); line-he
 
 /* The dedicated research document never renders the old homepage modules. */
 html[data-panel="search"] .research-app main.compact .hero-intro { display: block; }
-
-/* Shared compact masthead for the homepage and research pages. */
-.site-header { padding: 0; border-bottom-width: var(--border-focus); }
-.site-header .masthead { position: relative; align-items: center; justify-content: space-between; gap: var(--space-group); min-height: calc(var(--size-control-large) + var(--space-group)); }
-.site-header .masthead-id { top: 0; flex: 0 0 auto; max-width: none; }
-.site-header .logo { justify-content: center; min-width: var(--size-target); min-height: var(--size-target); color: var(--on-navy); }
-.site-header .logo-mark { width: var(--size-control-large); height: auto; aspect-ratio: 176 / 160; }
-.site-header .masthead-nav { display: flex; flex: 1 1 auto; align-items: flex-end; margin-left: 0; }
-.site-header .nav-list { flex-wrap: nowrap; gap: var(--space-group); }
-.site-header .nav-link { color: var(--on-navy); font: var(--type-metadata); padding: 0; gap: var(--space-tight); border-bottom: 0; }
-.site-header .nav-link.active { text-decoration: underline; text-underline-offset: var(--space-line); }
-.site-header .nav-item { position: static; }
-.site-header .megamenu { left: auto; right: 0; top: 100%; border-top: var(--border-masthead) solid var(--bronze); max-height: calc(100vh - var(--size-control-large) * 3); overflow-y: auto; }
-.site-header .nav-toggle, .site-header .mast-search-toggle { display: none; }
-@media (max-width: 1100px) {
-  .site-header .nav-list { gap: var(--space-block); }
-  .site-header .nav-link { font: var(--type-fine); }
-}
-/* Below 960 the band carries the menu. Keep
-   in step with COMPACT_NAV in navigation.js and the chat launcher's range. */
-@media (max-width: 960px) {
-  .site-header .masthead-nav { display: none; }
-  .site-header .nav-toggle { display: inline-flex; flex: 0 0 var(--size-target); width: var(--size-target); height: var(--size-target); margin-left: 0; color: var(--on-navy); }
-  .site-header .nav-toggle svg { width: var(--size-icon-md); height: var(--size-icon-md); }
-}
-
-/* Search is available on demand without taking space from the navigation. */
-.header-search-toggle { display: inline-flex; align-items: center; justify-content: center; flex: 0 0 var(--size-target); width: var(--size-target); height: var(--size-target); padding: var(--space-row); background: transparent; border: 0; border-radius: var(--radius-sm); color: var(--on-navy); cursor: pointer; }
-.header-search-toggle:hover, .header-search-toggle[aria-expanded="true"] { background: color-mix(in srgb, var(--on-navy) 10%, transparent); }
-.header-search-toggle svg { width: var(--size-icon-md); height: var(--size-icon-md); }
-.header-search-panel { position: absolute; right: var(--space-screen); top: calc(100% + var(--border-focus)); z-index: 60; width: min(26rem, calc(100vw - var(--space-screen) * 2)); background: var(--paper); padding: var(--space-block); border: var(--border-hairline) solid var(--divider-default); border-top: 0; box-shadow: var(--shadow-overlay); }
-.header-search-panel .mast-search.ui-input-wrap { display: flex; margin: 0; width: 100%; }
-.header-search-panel .mast-sugg { width: calc(100% + var(--space-block) * 2); top: calc(100% + var(--space-block)); right: calc(-1 * var(--space-block)); }
-/* Without the nav the band is the mark on the left and its icons together on the right;
-   the menu icon sits on the screen gutter, not 10px inside it. */
-@media (max-width: 960px) {
-  .site-header .masthead { justify-content: flex-start; gap: var(--space-tight); }
-  .site-header .masthead-id { margin-right: auto; }
-  .site-header .nav-toggle { margin-left: 0; margin-right: calc(var(--space-row) * -1); }
-  .site-header .header-search-toggle { margin-left: 0; }
-}
-@media print {
-  .site-header { position: static; }
-  .site-header .masthead-nav, .site-header .header-search-toggle,
-  .site-header .nav-toggle, .site-header .chat-launcher { display: none; }
-  .site-header .logo-mark .logo-land { fill: var(--bronze-ink); }
-  .site-header .logo-mark .logo-star { fill: var(--ink); }
-}
 
 /* TVFY division prose uses the same quiet type and quote rule in SPA and SSR. */
 .division-markdown { overflow-wrap: anywhere; }

@@ -365,21 +365,24 @@ test('the Ask block rule never touches the page actions above it', () => {
   assert.match(style, /\n\.growth-ask \{ margin: var\(--space-group\) 0 var\(--space-section\);/);
 });
 
+// nav.css draws the band (the old masthead rules left style.css with the nav refactor).
+const navCss = read('nav.css');
 test('the compact band keeps the mark left and its icons together on the right', () => {
-  const band = style.slice(style.indexOf('@media (max-width: 960px) {\n  .site-header .masthead { justify-content: flex-start;'));
-  assert.match(band, /^@media \(max-width: 960px\) \{\n  \.site-header \.masthead \{ justify-content: flex-start; gap: var\(--space-tight\); \}/);
-  assert.match(band.slice(0, band.indexOf('}\n}')), /\.site-header \.masthead-id \{ margin-right: auto; \}/);
+  const band = navCss.slice(navCss.indexOf('@media (max-width: 960px) {\n  .site-header .masthead { gap: var(--space-tight); }'));
+  assert.match(band, /^@media \(max-width: 960px\) \{\n  \.site-header \.masthead \{ gap: var\(--space-tight\); \}/);
+  assert.match(band.slice(0, band.indexOf('\n}\n')), /\.site-header \.masthead-id \{ margin-right: auto; \}/);
+  assert.match(navCss, /\.site-header \.masthead \{\n[^}]*justify-content: flex-start;/);
+  assert.doesNotMatch(style, /(^|\n)(header|\.masthead|\.site-header[^{]*) \{/, 'style.css keeps no band rules');
 });
 
 test('the Ask launcher is a header icon, never a pill floating over the page', () => {
-  const launcherRules = [...style.matchAll(/([^{}]*\.chat-launcher[^{}]*)\{([^{}]*)\}/g)];
+  const launcherRules = [...(style + navCss).matchAll(/([^{}]*\.chat-launcher[^{}]*)\{([^{}]*)\}/g)];
   assert.ok(launcherRules.length > 0);
   for (const [, sel, body] of launcherRules) assert.doesNotMatch(body, /position:\s*fixed|box-shadow:\s*0/, sel.trim());
-  assert.match(style, /\n\.chat-launcher \{ display: none; \}/);
-  // It shows exactly where the band carries the menu button: below 961px (navigation.js FULL_NAV).
-  const band = style.slice(style.indexOf('@media (min-width: 360px) and (max-width: 960px) {\n  .site-header .chat-launcher'));
-  assert.match(band, /^@media \(min-width: 360px\) and \(max-width: 960px\) \{\n  \.site-header \.chat-launcher:not\(\[hidden\]\) \{\s*display: flex/);
-  assert.match(style, /@media \(max-width: 960px\) \{\n  \.site-header \.masthead-nav \{ display: none; \}/);
+  assert.doesNotMatch(style, /\.chat-launcher/, 'the launcher is drawn by nav.css alone');
+  // In the band at every width: a pill beside search, the icon alone on a phone.
+  assert.match(navCss, /\n\.site-header \.chat-launcher:not\(\[hidden\]\) \{\n  display: inline-flex;/);
+  assert.match(navCss, /@media \(max-width: 960px\) \{\n[^@]*\.site-header \.masthead-nav \{ display: none; \}/);
   const nav = read('navigation.js');
   assert.match(nav, /const FULL_NAV = '\(min-width: 961px\)';/);
   assert.doesNotMatch(nav, /801px/);
