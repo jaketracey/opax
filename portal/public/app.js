@@ -15,7 +15,7 @@ const donorViewReady = import('/donor-views.js?v=4fcbbb78cf').then(module => {
 
 "use strict";
 let voteTables;
-const voteTablesReady = import("/vote-tables.js?v=2f00093b0b").then(module => { voteTables = module; });
+const voteTablesReady = import("/vote-tables.js?v=1e71428034").then(module => { voteTables = module; });
 let divisionMarkdown;
 const divisionMarkdownReady = import('/division-markdown.js?v=5991511166').then(module => { divisionMarkdown = module; });
 // The labels and source lines (labels.js); the first render waits for them.
@@ -1440,7 +1440,7 @@ async function openMoneyRecords(kind, params) {
   const body = $('money-records-body'); body.innerHTML = '<p class="status">Loading the records…</p>';
   try {
     if (grants && !params.has('program') && !params.has('open') && !params.has('largest')) {
-      const mod = await import('/grants-table.js?v=184ef74ed7');
+      const mod = await import('/grants-table.js?v=edef7c57b0');
       if (generation !== moneyRecordsGeneration) return;
       const controller = new AbortController();
       moneyRecordsHandle = {destroy() {controller.abort();}};
@@ -1480,7 +1480,7 @@ async function openMoneyExplain(params, manageFocus) {
   $('money-records-title').hidden = true;
   const body = $('money-records-body');
   try {
-    const mod = await import('/money-explain.js?v=cb23fc5298');
+    const mod = await import('/money-explain.js?v=07268f6dea');
     if (generation !== moneyRecordsGeneration) return;
     const current = () => generation === moneyRecordsGeneration && location.pathname === '/money/explain';
     moneyRecordsHandle = mod.mountMoneyExplain(body, {
@@ -1597,7 +1597,7 @@ async function mountMoney(jurParam, industry, params = new URLSearchParams()) {
   root.innerHTML = `<p class="status" style="margin:0;padding:1rem 1.25rem">Loading the map…</p>`;
   const cfg = MONEY_JURISDICTIONS[jur];
   try {
-    const [{ mountMoneyMap }, data, journeysModule, researchModule, recordsModule] = await Promise.all([import("/money-map.js?v=6a5d1961fa"), loadMoneyFile(jur), import("/money-journeys.js?v=mobile-picker-20260908"), import("/map-research.js?v=2fd759e218"), import("/money-records.js?v=ia-ux-20260908-2")]);
+    const [{ mountMoneyMap }, data, journeysModule, researchModule, recordsModule] = await Promise.all([import("/money-map.js?v=6a5d1961fa"), loadMoneyFile(jur), import("/money-journeys.js?v=mobile-picker-20260908"), import("/map-research.js?v=64b43e37ad"), import("/money-records.js?v=ia-ux-20260908-2")]);
     if (!isCurrent()) return; // switched again while loading
     const fine = $("money-fineprint");
     if (fine) fine.innerHTML = moneyFineprintHTML(jur, data?.meta);
@@ -9064,7 +9064,7 @@ async function openExplain(detail) {
   if (!detail || !["industry", "donor", "party"].includes(detail.kind)) return;
   const jur = MONEY_JURISDICTIONS[detail.jurisdiction] ? detail.jurisdiction : "federal";
   try {
-    const [mod, graph] = await Promise.all([import("/money-explain.js?v=cb23fc5298"), loadMoneyFile(jur)]);
+    const [mod, graph] = await Promise.all([import("/money-explain.js?v=07268f6dea"), loadMoneyFile(jur)]);
     const { loadDonorViewIndex } = await import("/donor-views.js?v=4fcbbb78cf");
     goRoute(mod.explainHrefFor({ ...detail, jurisdiction: jur }, graph, await loadDonorViewIndex()) || "/money/explain");
   } catch { goRoute("/money/explain"); }

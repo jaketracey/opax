@@ -1,5 +1,5 @@
 import {isOrganisationDonor} from './donor-entity.js?v=ebb2c972d5';
-import {applyQuery} from './datatable.js?v=5d11e1a424';
+import {applyQuery} from './datatable.js?v=9c77511e1c';
 import {subjectUrl} from './canonical-urls.js?v=225d5915ea';
 import {moneyFlowType, filterMoneyEdges, readMoneyFilters} from './money-records.js?v=ia-ux-20260908-2';
 
@@ -14,7 +14,7 @@ export function filterMoneyConnectionView(graph,params) {
 
 /** Build only public rows, before the shared core can derive facets or exports.
  * Years are display ranges, so use the contract's text type (no new formatter).
- * @returns {import('./datatable.js?v=5d11e1a424').DataTableConfig} */
+ * @returns {import('./datatable.js?v=9c77511e1c').DataTableConfig} */
 export function moneyConnectionsConfig(graph, privacyCheck) {
   const nodes=new Map(graph.nodes.map(n=>[n.id,n]));
   const rows=[], hidden=new Set(), totals={receipts:0,contracts:0,grants:0};
