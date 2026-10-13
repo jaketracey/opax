@@ -1,0 +1,231 @@
+{
+  "assets": {
+    "/electorates/manifest.json": {
+      "release_id": "deadbeef",
+      "index_url": "/electorates/releases/deadbeef/index.json"
+    },
+    "/electorates/releases/deadbeef/el_aa.json": {
+      "electorate_id": "el_aa",
+      "demographics": [
+        {
+          "year": 2021,
+          "indicators": {
+            "median_income": 500,
+            "median_age": 35,
+            "unemployment_rate": 0,
+            "rental_pct": 25
+          },
+          "note": "2021 Census geography; values have not been redistributed to current boundaries."
+        }
+      ]
+    },
+    "/electorates/releases/deadbeef/el_bb.json": {
+      "electorate_id": "el_bb",
+      "demographics": [
+        {
+          "year": 2021,
+          "indicators": {
+            "median_income": 500,
+            "median_age": 50,
+            "unemployment_rate": 8.2,
+            "rental_pct": 40
+          },
+          "note": "2021 Census geography; values have not been redistributed to current boundaries."
+        }
+      ]
+    },
+    "/electorates/releases/deadbeef/el_cc.json": {
+      "electorate_id": "el_cc",
+      "demographics": [
+        {
+          "year": 2021,
+          "indicators": {
+            "median_income": 800,
+            "median_age": 30,
+            "unemployment_rate": 4,
+            "rental_pct": 40
+          },
+          "note": "2021 Census geography; values have not been redistributed to current boundaries."
+        }
+      ]
+    },
+    "/electorates/releases/deadbeef/el_dd.json": {
+      "electorate_id": "el_dd",
+      "demographics": [
+        {
+          "year": 2021,
+          "indicators": {
+            "median_income": 100,
+            "median_age": 60
+          },
+          "note": "2021 Census geography; values have not been redistributed to current boundaries."
+        }
+      ]
+    },
+    "/electorates/releases/deadbeef/el_ee.json": {
+      "electorate_id": "el_ee",
+      "demographics": [
+        {
+          "year": 1991,
+          "indicators": {
+            "median_income": 1
+          }
+        },
+        {
+          "year": 2021,
+          "indicators": {
+            "median_income": null,
+            "median_age": 41
+          },
+          "note": "2021 Census geography; values have not been redistributed to current boundaries."
+        }
+      ]
+    },
+    "/electorates/releases/deadbeef/el_ff.json": {
+      "electorate_id": "el_ff",
+      "demographics": [
+        {
+          "year": 2021,
+          "indicators": {
+            "median_income": 300,
+            "median_age": 28
+          },
+          "note": "2021 Census geography; values have not been redistributed to current boundaries."
+        }
+      ]
+    },
+    "/electorates/releases/deadbeef/el_ab.json": {
+      "electorate_id": "el_ab",
+      "demographics": [
+        {
+          "year": 2021,
+          "indicators": {
+            "median_income": 700,
+            "median_age": 44
+          },
+          "note": "2021 Census geography; values have not been redistributed to current boundaries."
+        }
+      ]
+    },
+    "/electorates/releases/deadbeef/el_ac.json": {
+      "electorate_id": "el_ac",
+      "demographics": []
+    },
+    "/electorates/releases/deadbeef/el_ad.json": {
+      "electorate_id": "el_ad",
+      "demographics": [
+        {
+          "year": 2021,
+          "indicators": {
+            "median_income": 900,
+            "median_age": 39
+          },
+          "note": "2021 Census geography; values have not been redistributed to current boundaries."
+        }
+      ]
+    },
+    "/electorates/releases/deadbeef/index.json": {
+      "electorates": [
+        {
+          "electorate_id": "el_aa",
+          "name": "Sample Bay",
+          "slug": "federal-representatives-vic-sample-bay",
+          "jurisdiction": "federal",
+          "chamber": "representatives",
+          "state_code": "vic",
+          "status": "current",
+          "url": "/subject/electorate/federal-representatives-vic-sample-bay",
+          "detail_url": "/electorates/releases/deadbeef/el_aa.json"
+        },
+        {
+          "electorate_id": "el_bb",
+          "name": "Alpine",
+          "slug": "federal-representatives-nsw-alpine",
+          "jurisdiction": "federal",
+          "chamber": "representatives",
+          "state_code": "nsw",
+          "status": "current",
+          "url": "/subject/electorate/federal-representatives-nsw-alpine",
+          "detail_url": "/electorates/releases/deadbeef/el_bb.json"
+        },
+        {
+          "electorate_id": "el_cc",
+          "name": "Coast",
+          "slug": "federal-representatives-qld-coast",
+          "jurisdiction": "federal",
+          "chamber": "representatives",
+          "state_code": "qld",
+          "status": "current",
+          "url": "/subject/electorate/federal-representatives-qld-coast",
+          "detail_url": "/electorates/releases/deadbeef/el_cc.json"
+        },
+        {
+          "electorate_id": "el_dd",
+          "name": "Former",
+          "slug": "federal-representatives-vic-former",
+          "jurisdiction": "federal",
+          "chamber": "representatives",
+          "state_code": "vic",
+          "status": "historical",
+          "url": "/subject/electorate/federal-representatives-vic-former",
+          "detail_url": "/electorates/releases/deadbeef/el_dd.json"
+        },
+        {
+          "electorate_id": "el_ee",
+          "name": "Missing",
+          "slug": "federal-representatives-vic-missing",
+          "jurisdiction": "federal",
+          "chamber": "representatives",
+          "state_code": "vic",
+          "status": "current",
+          "url": "/subject/electorate/federal-representatives-vic-missing",
+          "detail_url": "/electorates/releases/deadbeef/el_ee.json"
+        },
+        {
+          "electorate_id": "el_ff",
+          "name": "Sample Bay",
+          "slug": "vic-vic-la-vic-sample-bay",
+          "jurisdiction": "vic",
+          "chamber": "vic_la",
+          "state_code": "vic",
+          "status": "current",
+          "url": "/subject/electorate/vic-vic-la-vic-sample-bay",
+          "detail_url": "/electorates/releases/deadbeef/el_ff.json"
+        },
+        {
+          "electorate_id": "el_ab",
+          "name": "Sample Bay",
+          "slug": "vic-vic-lc-vic-sample-bay",
+          "jurisdiction": "vic",
+          "chamber": "vic_lc",
+          "state_code": "vic",
+          "status": "current",
+          "url": "/subject/electorate/vic-vic-lc-vic-sample-bay",
+          "detail_url": "/electorates/releases/deadbeef/el_ab.json"
+        },
+        {
+          "electorate_id": "el_ac",
+          "name": "No Profile",
+          "slug": "nsw-nsw-la-nsw-no-profile",
+          "jurisdiction": "nsw",
+          "chamber": "nsw_la",
+          "state_code": "nsw",
+          "status": "current",
+          "url": "/subject/electorate/nsw-nsw-la-nsw-no-profile",
+          "detail_url": "/electorates/releases/deadbeef/el_ac.json"
+        },
+        {
+          "electorate_id": "el_ad",
+          "name": "Senate Region",
+          "slug": "federal-senate-vic-senate-region",
+          "jurisdiction": "federal",
+          "chamber": "senate",
+          "state_code": "vic",
+          "status": "current",
+          "url": "/subject/electorate/federal-senate-vic-senate-region",
+          "detail_url": "/electorates/releases/deadbeef/el_ad.json"
+        }
+      ]
+    }
+  }
+}

@@ -15,9 +15,11 @@
  * exact request) and `notes` (coverage limits the answer has to state).
  *
  * Used by the Worker orchestration (src/agentic-ask.ts). Design (ii) remains
- * parked in the design note; these tools are not registered on MCP. No models.
+ * parked in the design note. Structured-data modules are shared with MCP through the tools registry. No models.
  */
-export const AGENTIC_TOOLS_VERSION = 'agentic-tools-4'
+import { askToolSpecs, getAskTool, validRegisteredArgs, TOOL_REGISTRY_VERSION } from './tools'
+import type { ToolEnv } from './tools'
+export const AGENTIC_TOOLS_VERSION = 'agentic-tools-4/' + TOOL_REGISTRY_VERSION
 
 export const TOPICS = [
   'gambling', 'financial-services', 'mining-energy', 'climate-environment', 'property-construction', 'housing', 'health',
@@ -39,6 +41,8 @@ export const TERMS: Record<string, [string, string | null]> = {
 
 type Json = Record<string, unknown>
 export interface ToolDeps {
+  /** Public bindings for registry handlers, including future D1 data tools. */
+  toolEnv?: ToolEnv
   /** POST (body) or GET a KB path; resolves parsed JSON or throws. */
   kb: (path: string, body?: unknown) => Promise<Json>
   /** Read a public asset (e.g. /graph/money.json); resolves parsed JSON or null. */
@@ -441,6 +445,7 @@ const filterProps: Json = {
   term: { type: 'string', enum: Object.keys(TERMS), description: 'federal parliament term' },
 }
 export const TOOL_SPECS: ToolSpec[] = [
+  ...askToolSpecs,
   { name: 'count_speeches', description: 'Count speeches exactly, optionally ranked by speaker or party. Use for "who speaks most", "which party mentions X most", "how many speeches". Returns counts from the record index, the method, and coverage notes that must be stated.', input: { type: 'object', properties: { ...filterProps, group_by: { type: 'string', enum: ['speaker', 'party', 'none'] }, limit: { type: 'integer', minimum: 1, maximum: 15 } } }, run: (d, a) => countSpeeches(d, a as CountInput) },
   { name: 'speech_trend', description: 'Speech counts over time (by year, decade or federal term) with each period\'s share of topic-labelled speeches. Use for "is X debated more", "how has X changed".', input: { type: 'object', properties: { ...filterProps, by: { type: 'string', enum: ['year', 'decade', 'term'] }, from_year: { type: 'integer' }, to_year: { type: 'integer' } } }, run: (d, a) => speechTrend(d, a as TrendInput) },
   { name: 'find_people', description: 'Resolve a politician name to the name the record indexes speeches under, with party, parliaments and years.', input: { type: 'object', properties: { name: { type: 'string' } }, required: ['name'] }, run: (d, a) => findPeople(d, a as unknown as { name: string }) },
@@ -450,6 +455,8 @@ export const TOOL_SPECS: ToolSpec[] = [
 ]
 /** Schema-check model plans before any lookup. References are validated separately. */
 export function validToolArgs(name: string, args: unknown): args is Json {
+  const registered = getAskTool(name)
+  if (registered) return validRegisteredArgs(registered.name, args)
   const spec = TOOL_SPECS.find(t => t.name === name)
   if (!spec || !args || typeof args !== 'object' || Array.isArray(args)) return false
   const a = args as Json
