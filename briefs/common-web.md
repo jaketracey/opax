@@ -46,10 +46,16 @@ include staged, unstaged and new non-ignored source without changing the lane's
 index. A change during a run invalidates its pass. The captured base SHA is used
 for selection and votes checks; no gate fetches or advances main mid-run.
 The runner-source hash also invalidates passes if shared gate tooling changes.
-Narrow lanes cache generated search fixtures by export JSON blob hashes, the
+Narrow lanes cache generated search fixtures by export/source/script JSON blob hashes, the
 catalogue builder's transitive imports, Node, lockfile and runner source. Cached
 fixture files are checked against their checksum inventory; privacy/publication
 and affected tests still run. Presentation edits can reuse that build output.
+Lane selection defaults to the common ancestor of HEAD and origin/main, so other
+lanes merging while this lane works do not expand its scope. `--base REF` overrides
+that choice; merge/review/profile gates capture origin/main by default. Desktop
+snapshots carry the captured base commit as well as the exact source tree. A forced
+narrow pass retains an existing full pass for the same key. Served Markdown is
+treated as a source input; only root/brief/documentation Markdown is smoke-only.
 
 `ox-heavy.sh` retains the existing `/tmp/opax-heavy.lock` directory/owner-pid
 protocol and nice level 10. If the Mac is occupied and the desktop is free, known
@@ -61,12 +67,15 @@ remote gate builds live in an isolated snapshot. Legacy `npm test` and `check`
 calls routed remotely run the complete gate chain.
 No production credentials, untracked ignored files or local node_modules are
 transferred. The desktop uses Node 24.21.0 from nvm and installs its own packages.
+Gate SSH sessions use independent connections with protocol keepalives, so they
+do not depend on another lane's shared ControlMaster lifetime.
 Linux runtime/type/test steps use an isolated user/network namespace with a clean
 loopback (`unshare -Urn`), leaving host interfaces and other jobs alone. Runtime
 types are checked before the expensive release build so runner failures fail early.
 
 Migration: install the versioned `.ops/tools/` scripts beside the existing shared
 wrapper after its script tests pass, retaining an `ox-heavy.sh.pre-desktop` backup.
+Replace the wrapper by renaming a prepared temporary copy into place atomically.
 Already-running jobs retain their existing owner PID/lock and finish normally.
 Make new desktop heavy jobs use this wrapper; older manually started desktop
 jobs must finish before benchmarking the new runner. Roll back the wrapper from
@@ -85,6 +94,11 @@ node --test .ops/tools/test/*.test.mjs
 Profiling always runs fresh. A successful full profile (or a lane fallback that
 ran the complete build and every test file) also records a full gate
 pass for that exact key, since it runs the complete build/check/dry-run chain.
+Normal gates default to concurrency 4 on Mac and 6 on desktop. Override with
+`--concurrency N` or `OX_TEST_CONCURRENCY=N`. The measured Mac 4/6/8 times differ
+by less than two percent; higher limits gave no improvement. Desktop timings were
+under changing external load, so they establish compatibility rather than an
+idle-host speed recommendation. All gates remain at nice level 10.
 
 Full-suite privacy and MCP coverage is mandatory. Retired donor-policy assertions
 are replaced by the confident-match lane together with its production classifier;

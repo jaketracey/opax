@@ -1,12 +1,13 @@
 import {spawn,execFileSync} from 'node:child_process';
 import {writeFileSync,mkdirSync} from 'node:fs';
 import {join,basename} from 'node:path';
-import {git,snapshot,quote,identity,cacheKey,runnerFiles} from './gate-lib.mjs';
+import {git,gateCommit,gateBase,snapshot,quote,identity,cacheKey,persistPass,runnerFiles} from './gate-lib.mjs';
 const args=process.argv.slice(2),mode=args[0];
 const host=process.env.OX_HEAVY_HOST||'desktop';
 const remoteRepo=process.env.OX_HEAVY_REPO||'opax-work/opax';
 if(!/^[a-zA-Z0-9_.-]+$/.test(host)||!/^[-a-zA-Z0-9_/]+$/.test(remoteRepo)||remoteRepo.startsWith('-'))throw Error('Unsafe desktop host/repo');
-const sshArgs=['-o','BatchMode=yes','-o','ConnectTimeout=10',host];
+// A queued gate must not share another lane's ControlMaster lifetime.
+const sshArgs=['-o','BatchMode=yes','-o','ConnectTimeout=10','-o','ControlMaster=no','-o','ControlPath=none','-o','ServerAliveInterval=30','-o','ServerAliveCountMax=3',host];
 function ssh(command,options={}){return execFileSync('ssh',[...sshArgs,command],{encoding:'utf8',...options});}
 function route(command){
  const [cmd,...rest]=command;
@@ -25,10 +26,10 @@ if(mode==='--route'&&!routed)throw Error('Command is not eligible for desktop ro
 const tierArgs=routed||(mode==='--tier'?args.slice(1):['merge',...args]);
 if(!['lane','merge','review','profile'].includes(tierArgs[0]))throw Error('Unknown gate tier');
 const root=git(process.cwd(),['rev-parse','--show-toplevel']),id=identity(root),tree=id.tree;
-const base=git(root,['rev-parse',tierArgs.includes('--base')?tierArgs[tierArgs.indexOf('--base')+1]:'origin/main']);
+const base=gateBase(root,tierArgs[0],tierArgs.includes('--base')?tierArgs[tierArgs.indexOf('--base')+1]:undefined);
 const label=process.env.OX_GATE_LABEL||`${basename(root)}-${tree.slice(0,12)}-${process.pid}`;
 if(!/^[a-zA-Z0-9][a-zA-Z0-9_.-]*$/.test(label))throw Error('Label must contain only letters, digits, dot, underscore or dash');
-const commit=git(root,['commit-tree',tree,'-p','HEAD','-m',`Desktop gate ${label}`]);
+const commit=gateCommit(root,tree,base,`Desktop gate ${label}`);
 const ref=`refs/heads/gate/${label}`;
 // This is the authorised desktop repository only, never origin/GitHub.
 execFileSync('git',['push','--quiet',`${host}:${remoteRepo}`,`${commit}:${ref}`],{cwd:root,stdio:['ignore','inherit','inherit']});
@@ -55,12 +56,14 @@ done
 echo $$ > "$LOCK/pid"
 REPO="$HOME/${remoteRepo}"
 WORK="$HOME/opax-work/wt/${label}"
+created=0
 cleanup(){
- if [ -d "$WORK" ]; then git -C "$REPO" worktree remove --force "$WORK"; fi
+ if [ "$created" = 1 ]; then git -C "$REPO" worktree remove --force "$WORK"; fi
  rm -f "$LOCK/pid"; rmdir "$LOCK" 2>/dev/null
 }
 trap cleanup EXIT
 git -C "$REPO" worktree add --quiet --detach "$WORK" ${quote(commit)} || exit 2
+created=1
 cd "$WORK" || exit 2
 nice -n 10 node "$HOME/opax-work/gate-tools/${id.runner}/web-gates.mjs" ${forwarded.map(quote).join(' ')} --base ${quote(base)}
 code=$?
@@ -86,5 +89,5 @@ const status=await new Promise((done,reject)=>{
 });
 const output=Buffer.concat(log).toString();writeFileSync(join(cache,`remote-${label}.log`),output);
 const match=/REMOTE_PASS_BEGIN\n([\s\S]*?)\nREMOTE_PASS_END/.exec(output);
-if(status===0&&match){const record=JSON.parse(match[1]);if(record.success&&cacheKey(record.identity)===cacheKey(id)&&snapshot(root)===tree)writeFileSync(join(cache,`${cacheKey(id)}.json`),JSON.stringify(record,null,2)+'\n');}
+if(status===0&&match){const record=JSON.parse(match[1]);if(record.success&&cacheKey(record.identity)===cacheKey(id)&&snapshot(root)===tree)persistPass(join(cache,`${cacheKey(id)}.json`),record);}
 process.exitCode=status??1;

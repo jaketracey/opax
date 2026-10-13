@@ -1,12 +1,19 @@
 import {createHash} from 'node:crypto';
 import {execFileSync} from 'node:child_process';
-import {existsSync, readFileSync, readdirSync, mkdtempSync, rmSync,statSync} from 'node:fs';
+import {existsSync, readFileSync, writeFileSync, renameSync, readdirSync, mkdtempSync, rmSync,statSync} from 'node:fs';
 import {join, dirname, resolve, relative} from 'node:path';
 import {tmpdir} from 'node:os';
 export const runnerFiles=['gate-lib.mjs','gate-map.json','gate-reporter.mjs','gate-publication-files.mjs','heavy-remote.mjs','ox-heavy-remote.sh','ox-heavy.sh','web-gates.mjs','web-gates.sh','test/gates.test.mjs'];
 export const runnerHash=()=>hash(runnerFiles.map(f=>f+'\0'+readFileSync(join(import.meta.dirname,f))).join('\0'));
 export const hash = value => createHash('sha256').update(value).digest('hex');
 export const git = (root,args,options={}) => execFileSync('git',args,{cwd:root,encoding:'utf8',...options}).trim();
+// The captured base may have advanced beyond HEAD. Parenting the disposable
+// snapshot to it transfers that object with the desktop gate ref, without
+// merging or changing any source files or the caller's branch.
+export const gateCommit = (root,tree,base,message) => git(root,['commit-tree',tree,'-p',base,'-m',message]);
+export const gateBase = (root,tier,requested) => requested
+  ? git(root,['rev-parse',requested])
+  : tier==='lane' ? git(root,['merge-base','HEAD','origin/main']) : git(root,['rev-parse','origin/main']);
 export const quote = s => "'"+String(s).replaceAll("'", "'\\''")+"'";
 export function snapshot(root) {
   const scratch=mkdtempSync(join(tmpdir(),'opax-gate-index-'));
@@ -34,16 +41,26 @@ export function catalogKey(root,id) {
     }
   };
   visit('scripts/build_search_catalog.mjs');
-  // Export shards are opened through dynamic paths. Include every tracked JSON
-  // blob as well as the builder's import closure, without hashing 700 MB again.
+  // Export shards and source registries are opened through dynamic paths.
+  // Include every tracked JSON blob in these input directories as well as the
+  // builder's import closure, without hashing 700 MB again.
   const blobs=git(root,['ls-tree','-rz',id.tree,'--','portal/public','portal/src','scripts'],{maxBuffer:16*1024*1024}).split('\0').filter(Boolean).filter(line=>{
-    const file=line.split('\t')[1];return modules.has(file)||file.startsWith('portal/public/')&&file.endsWith('.json');
+    const file=line.split('\t')[1];return modules.has(file)||file.endsWith('.json');
   });
   return hash(JSON.stringify({blobs,node:id.node,lockfile:id.lockfile,runner:id.runner}));
 }
 export function reusable(record,id,tier,base) {
   return record?.success === true && cacheKey(record.identity) === cacheKey(id) &&
     (record.tier === 'merge' || (tier === 'lane' && record.tier === 'lane' && record.base === base));
+}
+export function persistPass(file,record) {
+  if(record.success!==true)return false;
+  let previous;try{previous=JSON.parse(readFileSync(file));}catch{}
+  // A forced partial run adds evidence; it must not discard a full pass.
+  if(record.tier!=='merge'&&reusable(previous,record.identity,'review'))return false;
+  const temp=file+'.'+process.pid;
+  writeFileSync(temp,JSON.stringify(record,null,2)+'\n');renameSync(temp,file);
+  return true;
 }
 const walk = dir => readdirSync(dir,{withFileTypes:true}).flatMap(e=>e.isDirectory()?walk(join(dir,e.name)):[join(dir,e.name)]);
 export function selectTests(root,changed,config) {
@@ -71,7 +88,7 @@ export function selectTests(root,changed,config) {
   for(const file of files){const seen=new Set();visit(file,seen);deps.set(file,seen);}
   const reasons=[];
   for(const path of changed) {
-    if(/\.md$/.test(path))continue;
+    if(/^(?:briefs\/|docs\/|[^/]+\.md$)/.test(path)&&/\.md$/.test(path))continue;
     let matched=false;
     for(const file of files)if(deps.get(file).has(path)||file===path){chosen.add(file);affected.add(file);matched=true;}
     for(const rule of config.map)if(new RegExp(rule.pattern).test(path)) {for(const file of files)if(rule.tests.some(pattern=>new RegExp(pattern).test(file))){chosen.add(file);affected.add(file);}matched=true;}

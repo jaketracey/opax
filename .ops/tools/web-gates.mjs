@@ -2,15 +2,15 @@ import {spawn} from 'node:child_process';
 import {mkdirSync,readFileSync,writeFileSync,existsSync,rmSync,cpSync,renameSync,readdirSync} from 'node:fs';
 import {join,resolve} from 'node:path';
 import {performance} from 'node:perf_hooks';
-import {git,identity,cacheKey,reusable,selectTests,catalogKey,hash} from './gate-lib.mjs';
+import {git,gateBase,identity,cacheKey,reusable,persistPass,selectTests,catalogKey,hash} from './gate-lib.mjs';
 
 const args=process.argv.slice(2), tier=args.shift()||'lane';
 const tools=import.meta.dirname;
 if(!['lane','merge','review','profile'].includes(tier))throw Error('Usage: web-gates.sh lane|merge|review|profile [--force] [--base REF] [--concurrency N]');
 const value=(name,fallback)=>args.includes(name)?args[args.indexOf(name)+1]:fallback;
 const root=git(process.cwd(),['rev-parse','--show-toplevel']);
-const base=git(root,['rev-parse',value('--base','origin/main')]);
-const concurrency=Number(value('--concurrency',process.env.OX_TEST_CONCURRENCY||'6'));
+const base=gateBase(root,tier,value('--base'));
+const concurrency=Number(value('--concurrency',process.env.OX_TEST_CONCURRENCY||(process.platform==='linux'?'6':'4')));
 if(!Number.isInteger(concurrency)||concurrency<1||concurrency>16)throw Error('Concurrency must be 1..16');
 const started=performance.now(), id=identity(root), key=cacheKey(id);
 const cache=resolve(process.env.OX_GATE_CACHE||join(root,'.ops/gate-cache'));mkdirSync(cache,{recursive:true});
@@ -106,7 +106,7 @@ try{
 finally{
  record.seconds=(performance.now()-started)/1000;
  writeFileSync(join(output,'result.json'),JSON.stringify(record,null,2)+'\n');
- if(record.success) {const temp=passFile+'.'+process.pid;writeFileSync(temp,JSON.stringify(record,null,2)+'\n');renameSync(temp,passFile);}
+ if(record.success)persistPass(passFile,record);
  if(existsSync(work))git(root,['worktree','remove','--force',work]);
  console.log(`GATES ${record.success?'OK':'FAILED'} ${record.seconds.toFixed(2)}s tree=${id.tree}; ${output}`);
 }

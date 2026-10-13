@@ -4,7 +4,7 @@ import {mkdtempSync,mkdirSync,writeFileSync,readFileSync,rmSync,existsSync,cpSyn
 import {tmpdir} from 'node:os';
 import {join,resolve} from 'node:path';
 import {spawnSync} from 'node:child_process';
-import {snapshot,git,identity,cacheKey,reusable,selectTests,quote,catalogKey} from '../gate-lib.mjs';
+import {snapshot,git,gateCommit,gateBase,identity,cacheKey,reusable,persistPass,selectTests,quote,catalogKey} from '../gate-lib.mjs';
 import {publicationGateFiles} from '../gate-publication-files.mjs';
 const tools=resolve(import.meta.dirname,'..');
 function fixture(t){const root=mkdtempSync(join(tmpdir(),'opax-gate-test-'));t.after(()=>rmSync(root,{recursive:true,force:true}));return root;}
@@ -17,6 +17,35 @@ test('snapshot includes unstaged, staged and new source without changing real in
 test('cache binds successful full pass to tree, Node and lockfile; lane passes cannot satisfy review',()=>{
  const id={tree:'abc',node:'v24.21.0',lockfile:'123'},full={identity:id,tier:'merge',success:true};assert.ok(reusable(full,id,'review'));assert.ok(reusable(full,id,'lane'));for(const field of Object.keys(id))assert.ok(!reusable(full,{...id,[field]:'changed'},'review'));assert.ok(!reusable({...full,success:false},id,'review'));assert.ok(!reusable({...full,tier:'lane'},id,'review'));assert.ok(!reusable({...full,tier:'lane',base:'a'},id,'lane','b'));
 });
+test('desktop snapshot transfers a captured base beyond HEAD into a local bare fixture, without changing source',t=>{
+ const root=repo(t),head=git(root,['rev-parse','HEAD']),tree=git(root,['write-tree']);
+ const base=git(root,['commit-tree',tree,'-p',head,'-m','another lane advanced main']);
+ const commit=gateCommit(root,tree,base,'gate fixture'),remote=fixture(t);git(remote,['init','--bare','-q']);
+ git(root,['push','--quiet',remote,commit+':refs/heads/gate/fixture']);
+ assert.equal(git(remote,['cat-file','-t',base]),'commit');assert.equal(git(remote,['rev-parse','refs/heads/gate/fixture^{tree}']),tree);
+ assert.equal(git(root,['rev-parse','HEAD']),head);assert.equal(git(root,['write-tree']),tree);
+});
+test('lane scope ignores other lanes advancing main; candidates and explicit bases use the captured ref',t=>{
+ const root=repo(t),head=git(root,['rev-parse','HEAD']),tree=git(root,['write-tree']);
+ const advanced=git(root,['commit-tree',tree,'-p',head,'-m','new main']);git(root,['update-ref','refs/remotes/origin/main',advanced]);
+ assert.equal(gateBase(root,'lane'),head);assert.equal(gateBase(root,'merge'),advanced);assert.equal(gateBase(root,'review'),advanced);
+ assert.equal(gateBase(root,'lane',tree),tree);assert.equal(git(root,['rev-parse','HEAD']),head);
+});
+test('forced narrow results preserve a full pass; changed identities and failures never reuse it',t=>{
+ const file=join(fixture(t),'pass.json'),id={tree:'first',node:'v24.21.0',lockfile:'lock',runner:'tools'};
+ const full={identity:id,tier:'merge',success:true};assert.ok(persistPass(file,full));
+ assert.equal(persistPass(file,{...full,tier:'lane',base:'base'}),false);assert.deepEqual(JSON.parse(readFileSync(file)),full);
+ assert.equal(persistPass(file,{...full,success:false}),false);assert.deepEqual(JSON.parse(readFileSync(file)),full);
+ const changed={...full,identity:{...id,tree:'second'},tier:'lane',base:'base'};assert.ok(persistPass(file,changed));
+ assert.ok(!reusable(JSON.parse(readFileSync(file)),changed.identity,'review'));
+});
+test('served Markdown participates in affected selection while documentation stays smoke-only',t=>{
+ const root=repo(t);mkdirSync(join(root,'portal/public'));writeFileSync(join(root,'portal/public/methods.md'),'served content');
+ writeFileSync(join(root,'portal/test/content.test.mjs'),"new URL('../public/methods.md',import.meta.url)");writeFileSync(join(root,'portal/test/smoke.test.mjs'),'');writeFileSync(join(root,'portal/test/unrelated.test.mjs'),'');
+ const config={smoke:['portal/test/smoke.test.mjs'],map:[]};assert.deepEqual(selectTests(root,['portal/public/methods.md'],config).files,['portal/test/content.test.mjs','portal/test/smoke.test.mjs']);
+ assert.deepEqual(selectTests(root,['briefs/note.md'],config).files,['portal/test/smoke.test.mjs']);
+ assert.equal(selectTests(root,['portal/public/unmapped.md'],config).files.length,3);
+});
 test('affected selection follows transitive imports, URL/fs references, deletions and smoke; unknown falls back to full',t=>{
  const root=repo(t);mkdirSync(join(root,'portal/public'));writeFileSync(join(root,'portal/public/leaf.js'),'export const x=1');writeFileSync(join(root,'portal/public/parent.js'),"import './leaf.js'");for(const [file,content]of [['a',"import '../public/parent.js'"],['b',"new URL('../public/view.html',import.meta.url)"],['smoke','']])writeFileSync(join(root,'portal/test',file+'.test.mjs'),content);
  const config={smoke:['portal/test/smoke.test.mjs'],map:[]};assert.deepEqual(selectTests(root,['portal/public/leaf.js'],config).files,['portal/test/a.test.mjs','portal/test/smoke.test.mjs']);assert.equal(selectTests(root,['portal/public/deleted.js'],config).files.length,3);assert.equal(selectTests(root,['new/unmapped.js'],config).files.length,3);assert.equal(selectTests(root,['briefs/note.md'],config).files.length,1);assert.throws(()=>selectTests(root,[],{...config,smoke:['missing']}));
@@ -25,6 +54,11 @@ test('local lock stores owner PID, preserves status and clears on normal complet
 test('dead owner clears; live owner and ownerless locks remain untouched',t=>{const root=fixture(t);mkdirSync(join(root,'lock'));writeFileSync(join(root,'lock/pid'),'999999999');assert.equal(heavy(root,['true']).status,0);mkdirSync(join(root,'lock'));writeFileSync(join(root,'lock/pid'),String(process.pid));assert.equal(heavy(root,['true']).status,75);assert.equal(readFileSync(join(root,'lock/pid'),'utf8'),String(process.pid));rmSync(join(root,'lock/pid'));assert.equal(heavy(root,['true']).status,75);assert.ok(existsSync(join(root,'lock')));});
 test('shell quoting preserves spaces, quotes and literal substitutions',()=>{const value="a ' b $(false) `false`";assert.equal(spawnSync('bash',['-c',`printf %s ${quote(value)}`],{encoding:'utf8'}).stdout,value);});
 test('desktop availability never routes deploy, local asset builds or arbitrary shell commands',()=>{for(const command of [['npm','run','deploy'],['npm','run','build:release'],['npx','wrangler','deploy'],['bash','-c','npm test']]){const run=spawnSync('node',[join(tools,'heavy-remote.mjs'),'--available',...command],{encoding:'utf8'});assert.equal(run.status,1);}});
+test('desktop probes use an independent SSH connection with protocol keepalives',t=>{
+ const root=fixture(t),log=join(root,'ssh-args');writeFileSync(join(root,'ssh'),'#!/usr/bin/env bash\nprintf "%s\\n" "$@" > "$OX_TEST_SSH_ARGS"\n',{mode:0o755});
+ const run=spawnSync(process.execPath,[join(tools,'heavy-remote.mjs'),'--available','node','web-gates.mjs','merge'],{encoding:'utf8',env:{...process.env,PATH:root+':'+process.env.PATH,OX_TEST_SSH_ARGS:log}});
+ assert.equal(run.status,0,run.stderr);const args=readFileSync(log,'utf8').split('\n');for(const option of ['ControlMaster=no','ControlPath=none','ServerAliveInterval=30','ServerAliveCountMax=3'])assert.ok(args.includes(option));
+});
 test('busy Mac routes recognised gates, keeps owner unchanged and forwards remote exit; LOCAL override bypasses routing',t=>{
  const root=fixture(t),mockTools=join(root,'tools');mkdirSync(mockTools);cpSync(join(tools,'ox-heavy.sh'),join(mockTools,'ox-heavy.sh'));writeFileSync(join(mockTools,'ox-heavy-remote.sh'),'#!/usr/bin/env bash\nif [ "$1" = --available ]; then exit 0; fi\nexit 19\n',{mode:0o755});mkdirSync(join(root,'lock'));writeFileSync(join(root,'lock/pid'),String(process.pid));
  // Simulate the Mac explicitly; the real desktop intentionally stays local.
@@ -49,9 +83,11 @@ test('real reporter includes time awaiting top-level fixture setup',t=>{
  const env={...process.env,OX_GATE_REPORT:report};delete env.NODE_TEST_CONTEXT;
  const run=spawnSync(process.execPath,['--test','--test-reporter='+join(tools,'gate-reporter.mjs'),'setup.test.mjs','module.test.mjs'],{cwd:root,encoding:'utf8',env});assert.equal(run.status,0,run.stderr);const result=JSON.parse(readFileSync(report)),setup=result.files.find(f=>f.file==='setup.test.mjs');assert.ok(setup.duration_ms>=70);assert.ok(setup.duration_ms>setup.test_duration_ms);assert.equal(result.files.length,2);assert.ok(result.files.every(f=>f.success));
 });
-test('catalog cache binds export blobs and transitive builder imports; presentation-only changes can reuse fixtures',t=>{
- const root=repo(t);mkdirSync(join(root,'scripts'));mkdirSync(join(root,'portal/public'));writeFileSync(join(root,'scripts/build_search_catalog.mjs'),"import '../portal/public/catalog-reader.mjs'");writeFileSync(join(root,'portal/public/catalog-reader.mjs'),'export const x=1');writeFileSync(join(root,'portal/public/export.json'),'{}');
- const key=()=>catalogKey(root,identity(root));const initial=key();writeFileSync(join(root,'portal/public/navigation.js'),'presentation');assert.equal(key(),initial);writeFileSync(join(root,'portal/public/export.json'),'{"new":true}');assert.notEqual(key(),initial);writeFileSync(join(root,'portal/public/export.json'),'{}');assert.equal(key(),initial);writeFileSync(join(root,'portal/public/catalog-reader.mjs'),'export const x=2');assert.notEqual(key(),initial);
+test('catalog cache binds exports, source registries and transitive builder imports; presentation-only changes can reuse fixtures',t=>{
+ const root=repo(t);mkdirSync(join(root,'scripts'));mkdirSync(join(root,'portal/public'));mkdirSync(join(root,'portal/src'));writeFileSync(join(root,'scripts/build_search_catalog.mjs'),"import '../portal/public/catalog-reader.mjs'");writeFileSync(join(root,'portal/public/catalog-reader.mjs'),'export const x=1');writeFileSync(join(root,'portal/public/export.json'),'{}');writeFileSync(join(root,'portal/src/donor-withheld.json'),'{}');writeFileSync(join(root,'scripts/catalog-config.json'),'{}');
+ const key=()=>catalogKey(root,identity(root));const initial=key();writeFileSync(join(root,'portal/public/navigation.js'),'presentation');assert.equal(key(),initial);writeFileSync(join(root,'portal/public/export.json'),'{"new":true}');assert.notEqual(key(),initial);writeFileSync(join(root,'portal/public/export.json'),'{}');assert.equal(key(),initial);
+ for(const file of ['portal/src/donor-withheld.json','scripts/catalog-config.json']){writeFileSync(join(root,file),'{"new":true}');assert.notEqual(key(),initial);writeFileSync(join(root,file),'{}');assert.equal(key(),initial);}
+ writeFileSync(join(root,'portal/public/catalog-reader.mjs'),'export const x=2');assert.notEqual(key(),initial);
 });
 test('narrow publication scope covers changed assets and each real jurisdiction; full scope retains every file',()=>{
  const root='/fixture/public',files=['app.js','graph/money.json','graph/money.qld.json','graph/money.vic.json','graph/money.tas.json','changed.js','other.json'].map(f=>join(root,f));
