@@ -103,8 +103,8 @@ export function electoratePlan(question: string): { shape: 'ranking' | 'unanswer
   if (!indicator) return null
   const count = rankingCount(q)
   const ranked = /\b(?:lowest|highest|oldest|youngest|most|least|fewest|rank|top|bottom)\b/.test(q) || !!count?.direction || !!count?.ordinal
-  const limit = ranked ? count?.value : undefined
-  if (ranked && count && (limit === undefined || !Number.isSafeInteger(limit) || limit < 1 || limit > 20)) return { shape: 'unanswerable', steps: [], reason: limit !== undefined && Number.isSafeInteger(limit) && limit > 20 ? `Requested ${limit} electorates exceeds Ask's limit of 20. Request 1 to 20; all cutoff ties are included.` : 'Ask supports an explicit whole ranking count from 1 to 20 electorates, including ties at the cutoff.' }
+  const limit = count?.value
+  if (count && (limit === undefined || !Number.isSafeInteger(limit) || limit < 1 || limit > 20)) return { shape: 'unanswerable', steps: [], reason: limit !== undefined && Number.isSafeInteger(limit) && limit > 20 ? `Requested ${limit} electorates exceeds Ask's limit of 20. Request 1 to 20; all cutoff ties are included.` : 'Ask supports an explicit whole ranking count from 1 to 20 electorates, including ties at the cutoff.' }
   if (count?.ordinal) return { shape: 'unanswerable', steps: [], reason: `Individual rank ${limit} requires an ordinal rank lookup. Ask supports top/bottom counts from 1 to 20 electorates, including ties at the cutoff.` }
   // Threshold/comparison wording needs the schema-aware planner; never ignore it.
   if (/\b(?:above|below|over|under|between|compare|than)\b/.test(q)) return null
