@@ -211,7 +211,7 @@ test('politician publisher keeps a colliding roster row at its distinct canonica
   const post = await composeDailyPost('2026-09-10',src,'politician');
   assert.equal(post.title,'Alex-Example');
   assert.match(post.url,/^https:\/\/opax\.com\.au\/subject\/person\/alex-example-[a-f0-9]+$/);
-  assert.equal(post.slides.find(s=>s.type==='source').path,new URL(post.url).pathname);
+  assert.equal(post.slides.find(s=>s.type==='source').url,post.url.replace(/^https:\/\//,''));
 });
 
 test('bill post uses the summary sentences and a readable sponsor', async () => {
@@ -340,6 +340,8 @@ test('every kind tells a valid story from the same records, and X stays exactly 
     assert.ok(validStory(post.slides), `${kind}: ${JSON.stringify(types(post))}`);
     assert.equal(post.slides[0].type, 'cover');
     assert.equal(post.slides.at(-1).type, 'source');
+    assert.equal(post.slides.at(-1).url, post.url.replace(/^https:\/\//, ''), `${kind}: the closing slide shows the edition's own address`);
+    assert.equal(post.slides.at(-1).path, undefined, `${kind}: no path under the address`);
     assert.ok(post.slides.every(s => s.alt && s.alt.length > 10), 'every slide has alt text');
     // The award's selection process comes from its shard, so a grant edition without one has one line fewer.
     // An award's optional lines (its selection process, its program) depend on the shard; its hook and recipient do not.
@@ -377,7 +379,7 @@ test('the grant story carries the selection, the same recipient and the electora
   assert.equal(electorate.title, 'Kennedy');
   assert.equal(electorate.value, '$1.45bn');
   assert.match(electorate.lines[0], /Held by Bob Katter, Katter's Australian Party\. Safe seat, margin 13\.1 at the 2022 election\./);
-  assert.match(source.path, /ABN 97 694 995 462 → award GA34203/);
+  assert.equal(source.url, 'opax.com.au/money/grants/federal/recipient/abn:97694995462?award=GA34203');
   assert.match(post.caption, /\n\nPhotos: Kgbo, CC BY-SA 4\.0, via Wikimedia Commons\.\n\nhttps:\/\/opax\.com\.au\//, 'the credit sits before the URL');
   const thin = await composeDailyPost('2026-09-14', grantSources({ extras: false }), 'grant');
   assert.deepEqual(types(thin), ['cover', 'number', 'picture', 'source'], 'no shard, no selection, siblings or electorate');
@@ -433,7 +435,6 @@ test('a member gets the electorate slide and the portrait inset; a senator gets 
   assert.deepEqual(member.slides[2].items, [{ label: 'Health', pct: 20 }, { label: 'Tax & budget', pct: 16 }, { label: 'Unions & workplace', pct: 15 }]);
   assert.equal(member.slides[3].title, 'Grayndler');
   assert.equal(member.slides[3].kicker, "The electorate's grants");
-  assert.equal(member.slides[4].path, '/subject/person/anthony-albanese');
   assert.equal(member.url,'https://opax.com.au/subject/person/anthony-albanese');
   assert.equal(member.slides[4].url,'opax.com.au/subject/person/anthony-albanese');
   const senator = await composeDailyPost('2026-09-10', sources(['person:Anthony Albanese']), 'politician');
@@ -524,7 +525,7 @@ test('a program edition names all three groups, in the same order, against their
   assert.equal(ledger.total.label, '23 seats in all');
   assert.equal(when.items.reduce((a, i) => a + i.pct, 0), 100);
   assert.equal(recipients.rows[0].c1, '3 awards');
-  assert.match(source.path, /program GO3202/);
+  assert.equal(source.url, post.url.replace(/^https:\/\//, '')); assert.match(source.url, /program=go3202$/);
   assert.deepEqual(storyFrames(post.slides), [1, 2, 3, 5, 8], 'the story tray shows the cover, the total, the seat split, the seats and the source');
 });
 
@@ -601,6 +602,10 @@ test('a Victorian member edition carries the exact line in short copy, caption a
   assert.ok(post.text.includes(line)); assert.ok(xLength(post.text) <= X_LIMIT);
   assert.ok(post.caption.includes(line)); assert.equal(post.authorisation, line);
   assert.ok(validStory(post.slides));
+  const cta = post.slides.find(slide => slide.type === 'source');
+  assert.ok(cta, 'the Victorian post includes its closing source slide');
+  assert.equal(cta.url, post.url.replace(/^https?:\/\//, ''), 'the current sourceSlide signature carries the page address');
+  assert.equal(cta.path, undefined, 'no separate path line in new editions');
   for (const slide of post.slides) assert.equal(slide.authorisation, line);
   for (const n of storyFrames(post.slides)) assert.equal(post.slides[n - 1].authorisation, line);
 });

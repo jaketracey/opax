@@ -191,9 +191,6 @@
 /events.js
   ! Cache-Control
   Cache-Control: public, max-age=31536000, immutable
-/explain.js
-  ! Cache-Control
-  Cache-Control: public, max-age=31536000, immutable
 /grant-recipient.js
   ! Cache-Control
   Cache-Control: public, max-age=31536000, immutable
@@ -222,6 +219,12 @@
   ! Cache-Control
   Cache-Control: public, max-age=31536000, immutable
 /matrix.js
+  ! Cache-Control
+  Cache-Control: public, max-age=31536000, immutable
+/money-explain.css
+  ! Cache-Control
+  Cache-Control: public, max-age=31536000, immutable
+/money-explain.js
   ! Cache-Control
   Cache-Control: public, max-age=31536000, immutable
 /money-map.js

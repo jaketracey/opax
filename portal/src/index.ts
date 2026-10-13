@@ -3430,6 +3430,12 @@ const STATIC_PAGES: Record<string, { title: string; description: string; query?:
     description: 'Who gives money to Australian political parties: every disclosed receipt by donor, party, industry and year, from AEC and state electoral commission returns.',
     query: true,
   },
+  // One flow explained from the disclosure data; the query names graph IDs and is
+  // never echoed here (a withheld donor's flow is rewritten client-side).
+  'money/explain': {
+    title: 'Explain a money flow · OPAX',
+    description: 'One disclosed flow of political money explained from the returns: how much, when, how it compares, and what the disclosure rules leave out.',
+  },
   'money/grants': {
     title: 'Who gets government grants · OPAX',
     description: 'Every published federal and Queensland grant award by recipient, program and electorate: which seats got the money, who held them, and which recipients also donate.',
@@ -3565,7 +3571,7 @@ function matchSeoRoute(url: URL): SeoRoute | null {
     return null
   }
   if (segs.length === 5 && dec[0] === 'money' && dec[1] === 'grants' && (dec[2] === 'federal' || dec[2] === 'qld') && dec[3] === 'recipient' && GRANT_RECIPIENT_ID_RE.test(dec[4])) return { kind: 'grant-recipient', jurisdiction: dec[2], id: dec[4] }
-  if (segs.length === 2 && dec[0] === 'money' && ['receipts', 'grants'].includes(dec[1])) return { kind: 'static', page: dec.join('/') }
+  if (segs.length === 2 && dec[0] === 'money' && ['receipts', 'grants', 'explain'].includes(dec[1])) return { kind: 'static', page: dec.join('/') }
   if (segs.length === 1 && dec[0] in STATIC_PAGES) return { kind: 'static', page: dec[0] }
   if (dec[0] === 'reports' && /^[a-z][a-z0-9-]*$/.test(dec[1] ?? '')) {
     // /reports/<slug> and its section deep links /reports/<slug>/s/<n>

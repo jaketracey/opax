@@ -25,6 +25,8 @@ class SpeechReconciler:
         db.execute('CREATE INDEX IF NOT EXISTS idx_speeches_date_chamber ON speeches(date,chamber)')
         db.execute('''CREATE TABLE IF NOT EXISTS oa_speech_provenance (
             gid TEXT PRIMARY KEY, speech_id INTEGER NOT NULL REFERENCES speeches(speech_id))''')
+        db.execute('CREATE INDEX IF NOT EXISTS idx_oa_speech_provenance_speech '
+                   'ON oa_speech_provenance(speech_id)')
         self.gid_column = next((r[1] for r in db.execute('PRAGMA table_info(speeches)')
                                 if r[1] in ('gid', 'oa_gid')), None)
 

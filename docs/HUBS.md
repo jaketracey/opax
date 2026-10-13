@@ -37,6 +37,10 @@ so older cached addresses are not replayed. The downloadable
 `/hubs/vic-election-2026.json` includes the line and corrections wording. Print
 styles retain the hub footer and keep its lines together.
 
+Story version 4 retains the address-only closing CTA from version 3 (no separate
+path line or footer wordmark). Victorian electoral CTA slides also show the
+exact authorisation in a small block below the address, outside the clipped body.
+
 The 96 hub seat pages carry the footer alongside their hub links. Ordinary
 Victorian electorate profiles also retain it in both their server summary and
 client-rendered election timeline. There are no standalone promotional hub links
