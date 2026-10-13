@@ -185,6 +185,12 @@
 /community.js
   ! Cache-Control
   Cache-Control: public, max-age=31536000, immutable
+/datatable-csv.js
+  ! Cache-Control
+  Cache-Control: public, max-age=31536000, immutable
+/datatable-privacy-fields.js
+  ! Cache-Control
+  Cache-Control: public, max-age=31536000, immutable
 /datatable-privacy.js
   ! Cache-Control
   Cache-Control: public, max-age=31536000, immutable
@@ -267,6 +273,15 @@
   ! Cache-Control
   Cache-Control: public, max-age=31536000, immutable
 /recipient-privacy.js
+  ! Cache-Control
+  Cache-Control: public, max-age=31536000, immutable
+/register-tables-entry.js
+  ! Cache-Control
+  Cache-Control: public, max-age=31536000, immutable
+/register-tables.css
+  ! Cache-Control
+  Cache-Control: public, max-age=31536000, immutable
+/register-tables.js
   ! Cache-Control
   Cache-Control: public, max-age=31536000, immutable
 /sa-hansard.js

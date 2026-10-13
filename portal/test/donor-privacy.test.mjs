@@ -1,3 +1,5 @@
+import {privacyCSVFields} from '../public/datatable-privacy-fields.js';
+import {instrumentTableRows} from '../public/instruments.js';
 // Donor privacy regression (October 2026 hotfix): no donor failing the
 // organisation test (public/donor-entity.js) may be named by any server output.
 // The real Worker and crawl build run over the export plus fictional fixture
@@ -21,8 +23,9 @@ import {buildCrawl as buildCrawlOriginal} from '../../scripts/build_crawl_catalo
 import {buildGrowth as buildGrowthOriginal} from '../../scripts/build_growth_modules.mjs';
 import {moduleOutputs} from './growth-module-harness.mjs';
 import {applyQuery, dataTableHTML, mountDataTable, toCSV, guardTableURL, parseQuery, serializeQuery} from '../public/datatable.js';
-import {queryValues} from '../public/datatable-query.js';
 import {tableHarness} from './datatable-harness.mjs';
+import {instrumentTableConfig,auditTableConfig,interestTableData,interestTableConfig,partyMoneyData,partyMoneyTableConfig} from '../public/register-tables.js';
+import {queryValues} from '../public/datatable-query.js';
 import {tableRows,tableIdentityHashes,tableIdentityPrefilter,tableRegistryFingerprint} from '../../scripts/load_tables.mjs';
 import {tableDatabase} from './table-d1-harness.mjs';
 import {identityPrefilterBinding} from '../src/table-identity-prefilter.mjs';
@@ -30,6 +33,7 @@ import {isOrganisationRecipient} from '../src/table-recipient.mjs';
 import {moneyFlowType, moneyTotals} from '../public/money-records.js';
 import {TABLE_DATASETS} from '../src/table-datasets.mjs';
 import {assertTablePrivacy,tablePrivacyIndex} from './datatable-privacy.mjs';
+import {csvFields} from '../public/datatable-csv.js';
 import {JSDOM} from 'jsdom';
 import {mountMoneyExplain, parseExplainParams, explainPath} from '../public/money-explain.js';
 
@@ -43,24 +47,34 @@ import {moneyConnectionsConfig} from '../public/money-connections.js';
 const pub = new URL('../public/', import.meta.url).pathname;
 const real = path => JSON.parse(path==='graph/campaigners.json' ? execFileSync('git',['show','33594d4ec048c77359af1336032dbaa4161b8665:portal/public/'+path],{maxBuffer:20*1024*1024}).toString() : readFileSync(join(pub, path), 'utf8'));
 
-// --- fixtures: fictional donors to the party with the most receipts --------------
+// --- runtime fixtures: derived donors to the party with the most receipts -------
 const sourceGraphs=privacySourceGraphs();
 const federal = sourceGraphs[0];
 const inbound = new Map();
 for (const e of federal.edges) if (!e.flow && !e.grant) inbound.set(e.target, (inbound.get(e.target) || 0) + e.total);
 const topParty = federal.nodes.find(n => n.id === [...inbound].sort((a, b) => b[1] - a[1])[0][0]);
-// Sector-tagged, titled, inverted and individual-tagged people; the reviews' ABN-only alias,
-// unions-tagged personal name and acronym aliases ("ABN", initials); an all-capitals name.
-const FIXTURE_INDIVIDUALS = Array.from({length:10},(_,i)=>[`Withheld fixture ${i+1}`, ['media','finance','unions','individual','other'][i%5], i===4?['ABN 12 345 678 901']:i===6?['ACN 123 456 789']:i===7?['ABN']:i===8?['RF']:i===9?['HFX']:[]]);
+// Labels and aliases come from the export. Vary sector tags to catch classification
+// that mistakenly treats an industry tag as organisation evidence.
+const fixtureRoster = new Set([...real('parliamentarians.json').people.flatMap(p=>[p.name,p.full]),...Object.values(real('access.json').ministers || {}).map(m=>m.name)].filter(Boolean).map(foldDonorName));
+const fixturePublicNames = new Set([
+  ...real('graph/campaigners.json').entities.map(e=>e.name),...real('suppliers.json').suppliers.map(s=>s.name),...real('agencies.json').agencies.map(a=>a.name),
+  ...['federal','qld'].flatMap(jur=>real(`graph/grants.${jur}.json`).recipients.filter(r=>!['individual','person','undisclosed'].includes(r.k)).map(r=>r.n)),
+  ...real('evidence/index.json').entities.filter(e=>e.kind === 'organisation').map(e=>e.name),
+].map(foldDonorName));
+const sourcePrivacy = donorPrivacyIndex(sourceGraphs);
+const fixtureSources = federal.nodes.filter(n=>n.kind === 'donor' && n.industry === 'individual' && !isOrganisationDonor(n) && donorNameWithheld(sourcePrivacy,n.label) && /\S\s+\S/.test(n.label.trim()) && !fixtureRoster.has(foldDonorName(n.label)) && !fixturePublicNames.has(foldDonorName(n.label))).slice(0,10);
+assert.equal(fixtureSources.length,10,'derived fixture donor count');
+const fixtureIndustries = ['media','finance','unions','individual','other','unions','unions','other','media','finance'];
+const FIXTURE_INDIVIDUALS = fixtureSources.map((n,i)=>[n.label,fixtureIndustries[i],(n.aliases || []).filter(alias=>!isOrganisationDonor({label:alias}))]);
 const FIXTURE_ORGANISATION = 'Fixtureworks Holdings Pty Ltd';
 const big = Math.max(...federal.edges.map(e => e.total)) * 2;
 const fixtureNodes = [...FIXTURE_INDIVIDUALS, [FIXTURE_ORGANISATION, 'property', []]].map(([label, industry, aliases], i) => ({
-  id: `donor:${label.toLowerCase()}`, label, kind: 'donor', industry, group: industry, total: big + i, count: 1, firstYear: 2020, lastYear: 2020, byYear: {2020: [big + i, 1]}, aliases,
+  id: i < FIXTURE_INDIVIDUALS.length ? `donor:withheld-fixture-${i}` : `donor:${label.toLowerCase()}`, label, kind: 'donor', industry, group: industry, total: big + i, count: 1, firstYear: 2020, lastYear: 2020, byYear: {2020: [big + i, 1]}, aliases,
 }));
 const fixtureGraph = {...federal, nodes: [...federal.nodes, ...fixtureNodes],
   edges: [...federal.edges, ...fixtureNodes.map(n => ({source: n.id, target: topParty.id, total: n.total, count: 1, firstYear: 2020, lastYear: 2020, byYear: {2020: [n.total, 1]}}))]};
 
-// A member's declared interests gain one fictional entry naming a fixture individual,
+// A member's declared interests gain one entry naming a derived withheld donor,
 // first in its bucket so the page would show it.
 const rosterPeople = real('parliamentarians.json').people;
 const interestIndex = real('interests/index.json');
@@ -217,8 +231,7 @@ test.after(offline());
 const {env, fetch: fetchWorker} = await loadWorker(new URL('../src/index.ts', import.meta.url).pathname, root, {identityBundle});
 env.TABLE_DB = tablesD1.db;
 const originalAssets = env.ASSETS.fetch.bind(env.ASSETS);
-const moneyIdentityRegistry={version:1,identities:tableIdentityHashes(moneyTables.policy),strippedLengths:moneyTables.policy.strippedLengths};
-env.ASSETS.fetch = request => new URL(request.url).pathname === '/table-private-identities.json' ? Promise.resolve(Response.json(moneyIdentityRegistry)) : originalAssets(request);
+env.ASSETS.fetch = request => new URL(request.url).pathname === '/table-private-identities.json' ? Promise.resolve(Response.json({version:3,identities:tableIdentityHashes(moneyTables.policy),strippedLengths:moneyTables.policy.strippedLengths})) : originalAssets(request);
 const ownUrl = (html, path) => entities(html).replaceAll(path, '');
 
 function assertCleanCSV(where, csv) {
@@ -257,7 +270,7 @@ test('all five money tables withhold donor, recipient, supplier, alias and ident
   const shared=await tablePrivacyIndex();
   // The shared gate covers HTTP output here; UI rollouts register its Chrome gate.
   // Extend its independently derived donor index with recipient/supplier ABNs.
-  const sharedIndex={...shared,safe:value=>shared.safe(value)&&!policy.check(value)};
+  const sharedIndex={...shared,safe:value=>shared.safe(value)&&!policy.check(value),safeRows:value=>shared.safeRows(value)&&!policy.rowCheck(value)};
   const identifiers=denied.filter(p=>/^\d{11}$/.test(p));
   const donorPhrases=withheldPhrases(graphs,[]);
   const donors=[...new Set(graphs.flatMap(g=>g.nodes.filter(n=>n.kind==='donor'&&!isOrganisationDonor(n)).flatMap(n=>[n.label,...(n.aliases||[])])).filter(v=>namesWithheldPhrase(donorPhrases,'donor '+v)))];
@@ -270,20 +283,22 @@ test('all five money tables withhold donor, recipient, supplier, alias and ident
   const probes=[...new Set([...donors.slice(0,10),...recipients.slice(0,10),...suppliers.slice(0,10),...aliases.slice(0,5),...abns.slice(0,5),...identifiers.slice(0,10),...identifiers.slice(0,3).map(v=>v.split('').join(' '))])];
   const decodedProbes=[donors[0],recipients[0],suppliers[0],aliases[0],identifiers[0]].filter(Boolean);
   assert.ok(recipients.length>=64,'individual recipient coverage');assert.ok(suppliers.length>0,'individual supplier coverage');assert.ok(identifiers.length>0,'withheld identifier coverage');
-  const clean = (where,text) => assert.equal(policy.check(text),false,where+': withheld identity count must be zero');
+  const clean = (where,text) => assert.equal(policy.rowCheck(text),false,where+': withheld identity count must be zero');
   // Schema keys (including the registration column) are labels, not identities.
   const cleanJSON=(where,value)=>{if(Array.isArray(value))for(const v of value)cleanJSON(where,v);else if(value&&typeof value==='object')for(const v of Object.values(value))cleanJSON(where,v);else if(value!=null)clean(where,String(value));};
   for (const [dataset,config] of Object.entries(TABLE_DATASETS).filter(([,c])=>c.privacy)) {
+    const datasetIndex={...sharedIndex,csvConfig:config};
     const base='/api/table/'+dataset;
     const response=await fetchWorker(base+'?pageSize=200');assert.equal(response.status,200,dataset);
-    const page=await response.json();cleanJSON(dataset+' rows and facets',page);
-    const publicValues=[];const values=value=>{if(Array.isArray(value))value.forEach(values);else if(value&&typeof value==='object')Object.values(value).forEach(values);else if(value!=null)publicValues.push(value);};values(page);
+    const page=await response.json();
+    const personFields=config.privacyFields ? {rows:page.rows.map(row=>Object.fromEntries(config.privacyFields.map(key=>[key,row[key]]))),facets:Object.fromEntries(Object.entries(page.facets||{}).filter(([key])=>config.privacyFields.includes(key)))} : page;
+    cleanJSON(dataset+' rows and facets',personFields);
+    const publicValues=[];const values=value=>{if(Array.isArray(value))value.forEach(values);else if(value&&typeof value==='object')Object.values(value).forEach(values);else if(value!=null)publicValues.push(value);};values(personFields);
     const csv=await fetchWorker(base+'?format=csv');assert.equal(csv.status,200,dataset);
     const csvText=await csv.text();
-    // Bounded chunks avoid building quadratic candidate sets for a full CSV.
-    for (const line of csvText.split('\r\n')) clean(dataset+' CSV',line);
+    for (const field of privacyCSVFields(csvText,config)) clean(dataset+' CSV',field);
     const csvPath=join(root,'table-'+dataset+'.csv');writeFileSync(csvPath,csvText);
-    await assertTablePrivacy({clientInput:[],serverResponses:publicValues,csvPath,url:response.headers.get('content-location') || '',renderedText:'',accessibleText:'',analytics:[]},sharedIndex);
+    await assertTablePrivacy({clientInput:[],serverResponses:publicValues,csvPath,url:response.headers.get('content-location') || '',renderedText:'',accessibleText:'',analytics:[]},datasetIndex);
     writeFileSync(csvPath,csvText.slice(0,csvText.indexOf('\r\n')+2));
     for (const [i,label] of probes.entries()) for (const format of ['', '&format=csv']) {
       const state=new URLSearchParams({q:label,pageSize:'200'});
@@ -550,6 +565,86 @@ test('a declared-interest entry naming a withheld donor is left out whole, with 
   assert.match(html, /<p data-register-omitted="">Some register entries are shown only on the <a [^>]*href="https?:[^"]+"[^>]*>official register<\/a>\.<\/p>/);
   const escaped = keptEntry.description.replace(/&/g, '&amp;').replace(/'/g, '&#39;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
   assert.ok(html.includes(escaped), 'the next entry is shown as written');
+});
+
+test('interest tables omit withheld entries before rows, facets, CSV and URL state are constructed', async () => {
+  const policy=await tablePrivacyIndex();
+  const phrases = withheldPhrases(graphs,[]);
+  const projected = interestTableData(interestRegister,(...texts)=>texts.some(text=>!policy.safe(String(text))),policy.safe);
+  assert.ok(projected.omitted > 0,'the derived fixture entry is omitted');
+  assert.ok(projected.rows.some(row=>row.item === keptEntry.description),'the next source entry stays verbatim');
+  const config = interestTableConfig(projected.rows,policy.safe);
+  const page = applyQuery(config.rows,config,{pageSize:2000});
+  assertClean('interest table rows and facets',JSON.stringify(page));
+  assertClean('interest table CSV',toCSV(page.rows,config));
+  for (const [i,label] of checked.entries()) {
+    for (const query of [{q:label},{filters:{category:[label]}}]) {
+      const rejected = applyQuery(config.rows,config,query);
+      assertClean(`interest table state ${i}`,dataTableHTML(config,rejected));
+      assert.equal(rejected.total,0,`interest query ${i} has no rows`);
+    }
+  }
+  assert.deepEqual(interestTableData(interestRegister).rows,[],'missing privacy approval fails closed');
+});
+
+test('rejected raw register queries retain SSR noindex after URL scrubbing',async()=>{
+  const value=checked[0];assert.ok(value,'a runtime-derived withheld probe exists');
+  const routes=[
+    [`/subject/person/${personIndex(rosterPeople).slugOf.get(interestMember.name)}`,'interests'],
+    [partyUrl(topParty.label),'partyMoney'],
+  ];
+  for(const [path,prefix] of routes) {
+    const ordinary=await fetchWorker(path),ordinaryHTML=await ordinary.text();
+    assert.equal(ordinary.headers.get('x-robots-tag'),'all','ordinary register page is indexable');
+    assert.doesNotMatch(ordinaryHTML,/<meta name="robots" content="noindex"/);
+    const cases=['q','f.future','future',prefix+'.q',prefix+'.f.future'].map(key=>new URLSearchParams({[key]:value}));
+    for(const key of ['q',prefix+'.q'])cases.push(new URLSearchParams([[key,'fixture'],[key,value]]));
+    for(const [i,params] of cases.entries()) {
+      const response=await fetchWorker(path+'?'+params),html=await response.text();
+      assert.equal(response.headers.get('x-robots-tag'),'noindex',`${prefix} rejected state ${i}: header`);
+      assert.match(html,/<meta name="robots" content="noindex"/,`${prefix} rejected state ${i}: metadata`);
+      assert.ok(html.includes('Showing 0–0 of 0'),'rejected register has zero rows');
+      assertClean(`${prefix} rejected state ${i}`,html);
+    }
+    for(const key of ['q',prefix+'.q']) {
+      const response=await fetchWorker(path+'?'+new URLSearchParams({[key]:'fixture'}));
+      assert.equal(response.headers.get('x-robots-tag'),'noindex','filtered register is noindex');
+      assert.match(await response.text(),/<meta name="robots" content="noindex"/);
+    }
+  }
+});
+
+test('the public interest projection omits donor entries before client input and retains the omission count',async()=>{
+  const response=await fetchWorker('/api/register/interests?'+new URLSearchParams({pid:interestMember.pid}));
+  assert.equal(response.status,200);assert.equal(response.headers.get('cache-control'),'no-store');
+  const projected=await response.json();
+  assert.ok(projected.omitted>0);assert.ok(projected.rows.some(row=>row.item===keptEntry.description));
+  assertClean('public interest client rows',JSON.stringify(projected));
+  assert.equal((await fetchWorker('/api/register/interests',{method:'POST'})).status,405);
+  assert.equal((await fetchWorker('/api/register/interests')).status,404);
+});
+
+test('party money tables name only organisations in rows, facets, CSV and URL state and retain withheld totals', () => {
+  const phrases = withheldPhrases(graphs,[]);
+  const check = (...texts)=>namesWithheldPhrase(phrases,...texts);
+  for (const [g,graph] of graphs.entries()) for (const party of graph.nodes.filter(n=>n.kind === 'party')) {
+    const projected = partyMoneyData(graph,party.id,check), config = partyMoneyTableConfig(projected.rows,projected.aggregate,undefined,undefined,undefined,text=>!check(`donor receipts ${text}`));
+    assert.ok(projected.rows.every(isOrganisationDonor),`graph ${g}: organisation evidence`);
+    const page = applyQuery(config.rows,config,{pageSize:2000});
+    assertClean(`party table ${g} rows and facets`,JSON.stringify(page));
+    assertClean(`party table ${g} CSV`,toCSV(page.rows,config));
+    const donorIds = new Set(graph.nodes.filter(n=>n.kind === 'donor').map(n=>n.id));
+    const receipts = graph.edges.filter(e=>e.target === party.id && !e.flow && !e.grant && donorIds.has(e.source));
+    assert.ok(Math.abs(projected.rows.reduce((n,row)=>n+row.total,0)+projected.aggregate.total-receipts.reduce((n,e)=>n+e.total,0)) < 0.01,`graph ${g}: every receipt amount retained`);
+    assert.equal(projected.rows.reduce((n,row)=>n+row.count,0)+projected.aggregate.count,receipts.reduce((n,e)=>n+(e.count || 0),0),`graph ${g}: every receipt count retained`);
+    for (const [i,label] of checked.entries()) {
+      for (const query of [{q:label},{filters:{industry:[label]}}]) {
+        const rejected = applyQuery(config.rows,config,query);
+        assertClean(`party table ${g} state ${i}`,dataTableHTML(config,rejected));
+        assert.equal(rejected.total,0,`party query ${i} has no rows`);
+      }
+    }
+  }
 });
 
 test('a subject route never repeats a name it does not hold, and real names still redirect', async t => {
@@ -960,4 +1055,55 @@ test('table privacy boundary validates the shared index without reflecting input
   assert.ok(checked > 400);
   const response=await fetchWorker('/api/table/privacy',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({text:'Infrastructure'})});
   assert.deepEqual(await response.json(),{safe:true});
+});
+
+test('all four register tables reject the complete shared donor and recipient index including ABNs',async t=>{
+ const read=async path=>path==='/graph/money.json'?fixtureGraph:real(path.slice(1)),policy=await tablePrivacyIndex();
+ const projected=interestTableData(interestRegister,(...texts)=>texts.some(text=>!policy.safe(String(text))),policy.safe);
+ const m=await read('/instruments/manifest.json'),instruments=await instrumentTableRows(read,m,(await read(m.index_url)).records);
+ const audits=(await read('/audit/index.json')).records;
+ const money=partyMoneyData(fixtureGraph,topParty.id,(...texts)=>texts.some(text=>!policy.safe(String(text))),policy.safe);
+ const tables=[['interests',interestTableConfig(projected.rows,policy.safe),projected.rows,'category'],['instruments',instrumentTableConfig(policy.safe),instruments.filter(row=>policy.safe(JSON.stringify(row))),'portfolios'],['audit',auditTableConfig(audits,policy.safe,policy.safeRows),null,'sectors'],['party-money',partyMoneyTableConfig(money.rows,money.aggregate,undefined,undefined,undefined,policy.safe),null,'industry']];
+ for(const [id,config,input,facet] of tables){
+  const rows=input||config.rows,page=applyQuery(rows,config,{pageSize:50000});
+  assert.ok((id==='audit'? page.rows.every(row=>row.entities.every(policy.safeRows)):policy.safe(JSON.stringify(page))),`${id}: rows and facets`);
+  assert.ok((id==='audit'? [...privacyCSVFields(toCSV(page.rows,config),config)].every(policy.safeRows):policy.safe(toCSV(page.rows,config))),`${id}: CSV`);
+  // Query rejection is independent of catalogue size; full rows and CSV were checked above.
+  const queryRows=rows.slice(0,2);
+  for(const [i,value] of policy.values.entries())for(const query of [{q:value},{filters:{[facet]:[value]}},...(/^\d{11}$/.test(value) ? [{filters:{[id==='party-money'?'total':'year']:{min:Number(value),max:Number(value)}}}] : [])]) {
+   const rejected=applyQuery(queryRows,config,query);
+   assert.equal(rejected.total,0,`${id}: rejected value ${i}`);
+   const html=dataTableHTML(config,rejected);
+   assert.ok(policy.safe(html),`${id}: safe HTML and live region ${i}`);
+   assert.ok(/data-export disabled/.test(html),`${id}: no rejected CSV ${i}`);
+  }
+ }
+ // Format variants use the same normalisation as dt-contracts; no identifier is logged.
+ const abns=policy.values.filter(value=>/^\d{11}$/.test(value));
+ for(const value of abns)for(const candidate of [value,value.replace(/^(\d{2})(\d{3})(\d{3})(\d{3})$/,'$1 $2 $3 $4'),'ABN '+value,encodeURIComponent(encodeURIComponent(value.replace(/^(\d{2})(\d{3})(\d{3})(\d{3})$/,'$1 $2 $3 $4')))])assert.equal(policy.safe(candidate),false,'ABN variant rejected');
+ for(const value of [policy.values[0],abns[0]]){
+  const params=new URLSearchParams({q:value,format:'csv'});
+  const denied=await fetchWorker('/api/table/instruments?'+params);
+  assert.equal(denied.status,200,'rejected real D1 export uses the bound fixture registry');
+  assert.equal(denied.headers.get('X-Table-Total'),'0','rejected real D1 export has no data rows');
+ }
+ const response=await fetchWorker('/api/register/party-money?'+new URLSearchParams({partyId:topParty.id}));
+ assert.equal(response.status,200);
+ const projectedMoney=await response.json();
+ assert.ok(policy.safeRows(JSON.stringify(projectedMoney)) && [...queryValues(projectedMoney)].every(policy.safeRows),'public party client input');
+ t.diagnostic(`${policy.values.length} derived values, ${abns.length} ABNs checked across four tables; no identities logged`);
+});
+
+test('register projections omit escaped private identifiers before serialising rows',async()=>{
+  const shared=await tablePrivacyIndex(),identifier=shared.values.find(v=>/^\d{11}$/.test(v));
+  assert.equal(typeof identifier,'string','identifier coverage');
+  const formatted=[identifier.slice(0,2),identifier.slice(2,5),identifier.slice(5,8),identifier.slice(8)].join('\n');
+  assert.equal(shared.safe(formatted),false,'formatted identifier is private');
+  assert.equal(shared.safe(JSON.stringify(formatted)),true,'JSON escaping needs scalar validation');
+  const declared=interestTableData({as_at:'2026-01-01',source_url:'https://example.invalid/register.pdf',buckets:{gifts:{items:[{description:formatted,holder:'Self'}]}}},()=>false,shared.safe);
+  assert.equal(declared.rows.length,0);assert.equal(declared.omitted,1);
+  const party='party:fixture',donor='donor:fixture';
+  const source={nodes:[{id:party,kind:'party',label:'Fixture party'},{id:donor,kind:'donor',label:'Fixture organisation Pty Ltd',aliases:['Fixture '+formatted+' Pty Ltd']}],edges:[{source:donor,target:party,total:100,count:1,firstYear:2025,lastYear:2026}]};
+  const money=partyMoneyData(source,party,()=>false,shared.safe);
+  assert.equal(money.rows.length,0);assert.equal(money.aggregate.donors,1);assert.equal(money.aggregate.total,100);assert.equal(money.aggregate.count,1);
 });

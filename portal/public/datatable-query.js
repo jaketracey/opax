@@ -18,13 +18,15 @@ export function* queryEntryValues(key, value) {
 export function* rawQueryValues(params) {
   for (const [key,value] of params) yield* queryEntryValues(key,value);
 }
+function tableQueryKey(key, urlKey) {
+  return /^(?:q|sort|page|pageSize|f\..+)$/.test(key) || (urlKey === null
+    ? /^.+\.(?:q|sort|page|pageSize|f\..+)$/.test(key)
+    : Boolean(urlKey && key.startsWith(urlKey+'.') && /^(?:q|sort|page|pageSize|f\..+)$/.test(key.slice(urlKey.length+1))));
+}
 export function repeatedTableKeys(params, urlKey = '') {
   const repeated = new Set(), seen = new Set();
   for (const key of params.keys()) {
-    const field = /^(?:q|sort|page|pageSize|f\..+)$/.test(key);
-    const scoped = urlKey === null ? /^.+\.(?:q|sort|page|pageSize|f\..+)$/.test(key)
-      : urlKey && key.startsWith(urlKey+'.') && /^(?:q|sort|page|pageSize|f\..+)$/.test(key.slice(urlKey.length+1));
-    if (!field && !scoped) continue;
+    if (!tableQueryKey(key,urlKey)) continue;
     if (seen.has(key)) repeated.add(key);
     seen.add(key);
   }
@@ -39,5 +41,7 @@ export function scrubQuery(params, safe, urlKey = '') {
     if (!passed) rejected = true;
     if (passed && !repeated.has(key)) clean.append(key,value);
   }
-  return {params:clean,rejected};
+  // Capture the raw state: rejection must remain noindex after unsafe pairs vanish.
+  const noindex = rejected || [...params.keys()].some(key=>tableQueryKey(key,urlKey));
+  return {params:clean,rejected,noindex};
 }

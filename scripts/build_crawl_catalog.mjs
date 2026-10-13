@@ -8,7 +8,7 @@ import { personNameKey } from '../portal/public/canonical-urls.js';
 import { splitSpeakers } from '../portal/public/speech-attribution.js';
 import { TOPIC_NAMES } from '../portal/src/topic-names.mjs';
 import { fileKey } from '../portal/public/grants.js';
-import { donorPrivacyIndex, donorNameWithheld, foldDonorName } from '../portal/public/donor-entity.js';
+import { donorPrivacyIndex, donorNameWithheld, foldDonorName, isOrganisationDonor } from '../portal/public/donor-entity.js';
 import { renderPersonAnswer, INTEREST_OMITTED_MARK } from '../portal/src/seo-content.ts';
 
 import { catalogueComplete, unpack } from '../portal/public/instruments.js';
@@ -123,11 +123,17 @@ export function addAuditDiscovery(groups, manifest) {
   groups.static.push({path:'/audit', lastmod:exportDate(manifest.generated_at)});
 }
 
-/** Donor names linked from a person page's "Donors to their party" block, in page order. */
+/** Canonical donor identities in a person's party tables; amounts and row order do not affect discovery. */
 export function namedDonors(html) {
   const block = html.split('<h2>Donors to their party</h2>')[1]?.split('<h2>Bills sponsored</h2>')[0] || '';
   const unescape = s => s.replace(/&#39;/g, "'").replace(/&quot;/g, '"').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&amp;/g, '&');
-  return [...block.matchAll(/href="\/subject\/donor\/([^"]+)"/g)].map(m => decodeURIComponent(unescape(m[1])));
+  // Table payloads hold the complete public view, including rows beyond the SSR
+  // page and rows whose links await the shared core. Ignore amounts and aliases.
+  const tables = [...block.matchAll(/<script[^>]*data-register-config[^>]*>(.*?)<\/script>/gs)].flatMap(match=>{
+    const {config} = JSON.parse(match[1]);
+    return config.privacy === 'donors' ? (config.rows || []).filter(isOrganisationDonor).map(row=>row.label) : [];
+  });
+  return [...new Set([...block.matchAll(/href="\/subject\/donor\/([^"]+)"/g)].map(m => decodeURIComponent(unescape(m[1]))).concat(tables))].sort((a,b)=>foldDonorName(a).localeCompare(foldDonorName(b),'en-AU'));
 }
 
 export async function buildCrawl(root, {read: sourceRead} = {}) {

@@ -15,14 +15,16 @@ const donorViewReady = import('/donor-views.js?v=4fcbbb78cf').then(module => {
 
 "use strict";
 let voteTables;
-const voteTablesReady = import("/vote-tables.js?v=1e71428034").then(module => { voteTables = module; });
+const voteTablesReady = import("/vote-tables.js?v=a87548e32f").then(module => { voteTables = module; });
 let divisionMarkdown;
 const divisionMarkdownReady = import('/division-markdown.js?v=5991511166').then(module => { divisionMarkdown = module; });
 // The labels and source lines (labels.js); the first render waits for them.
 let growthModules;
+const growthModulesReady = import("/growth-modules.js?v=2fe959404b").then(module => { growthModules = module; });
+let registerTables;
+const registerTablesReady = import('/register-tables.js?v=be2cd62ed4').then(module => { registerTables = module; });
 let askPerson;
 const askPersonReady = import('/ask-person.js?v=3b73938cf7').then(module => { askPerson = module; });
-const growthModulesReady = import("/growth-modules.js?v=2fe959404b").then(module => { growthModules = module; });
 let uiLabels;
 const uiLabelsReady = import('/labels.js?v=fc03aa14cf').then(module => { uiLabels = module; });
 // ⋯, the page-actions menu: its markup for the renderers, and its behaviour
@@ -1443,7 +1445,7 @@ async function openMoneyRecords(kind, params) {
   const body = $('money-records-body'); body.innerHTML = '<p class="status">Loading the records…</p>';
   try {
     if (grants && !params.has('program') && !params.has('open') && !params.has('largest')) {
-      const mod = await import('/grants-table.js?v=edef7c57b0');
+      const mod = await import('/grants-table.js?v=1a3b3997a0');
       if (generation !== moneyRecordsGeneration) return;
       const controller = new AbortController();
       moneyRecordsHandle = {destroy() {controller.abort();}};
@@ -1600,7 +1602,7 @@ async function mountMoney(jurParam, industry, params = new URLSearchParams()) {
   root.innerHTML = `<p class="ui-status-line money-map-status" role="status">Loading the map…</p>`;
   const cfg = MONEY_JURISDICTIONS[jur];
   try {
-    const [{ mountMoneyMap }, data, journeysModule, researchModule, recordsModule] = await Promise.all([import("/money-map.js?v=6a5d1961fa"), loadMoneyFile(jur), import("/money-journeys.js?v=wds-money-20261012"), import("/map-research.js?v=d8a0cf330c"), import("/money-records.js?v=ia-ux-20260908-2")]);
+    const [{ mountMoneyMap }, data, journeysModule, researchModule, recordsModule] = await Promise.all([import("/money-map.js?v=6a5d1961fa"), loadMoneyFile(jur), import("/money-journeys.js?v=wds-money-20261012"), import("/map-research.js?v=726170a1ba"), import("/money-records.js?v=ia-ux-20260908-2")]);
     if (!isCurrent()) return; // switched again while loading
     const fine = $("money-fineprint");
     if (fine) fine.innerHTML = moneyFineprintHTML(jur, data?.meta);
@@ -3986,7 +3988,7 @@ async function renderPersonInterests(name, personId, sections, onRecord = () => 
   const lname = String(name || "").trim().toLowerCase();
   const id = personId && index?.people?.[personId] ? personId : index?._by_name?.[lname];
   if (!id || !/^[\w-]+$/.test(id)) { slot.remove(); return; }
-  const [data,privacy] = await Promise.all([getJSON(`/interests/${encodeURIComponent(id)}.json`),growthModules.loadModulePrivacy("person",growthModules.normalisedName(name))]);
+  const [data,privacy,projection] = await Promise.all([getJSON(`/interests/${encodeURIComponent(id)}.json`),growthModules.loadModulePrivacy("person",growthModules.normalisedName(name)),getJSON(`/api/register/interests?pid=${encodeURIComponent(id)}`),registerTablesReady]);
   if (currentSubjectKey !== key) return;
   if (!data?.total || !data.buckets) { slot.remove(); return; }
   onRecord({interests: data});
@@ -4083,29 +4085,9 @@ async function renderPersonInterests(name, personId, sections, onRecord = () => 
       })}
     </section>` : "";
 
-  const itemHTML = (it) => {
-    const src = safeUrl(it.url) || base;
-    const meta = [
-      it.kind === "addition" ? `added ${esc(fmtDate(it.date) || "later")}` : "",
-      it.kind === "deletion" ? `deleted ${esc(fmtDate(it.date) || "later")}` : "",
-      it.ocr ? "machine-read from a scan" : "",
-      src ? `<a href="${esc(it.page ? `${src}#page=${Number(it.page) || 1}` : src)}" rel="noopener" target="_blank">${it.page ? `page ${esc(String(Number(it.page)))}` : "source"} ↗︎</a>` : "",
-    ].filter(Boolean).join(" · ");
-    return `<li class="interests-item${it.kind === "deletion" ? " interests-deleted" : ""}">
-      ${hasHolders ? `<span class="interests-holder">${esc(HOLDER[it.holder] || "")}</span>` : ""}
-      <span class="interests-desc">${esc(it.description || "")}</span>
-      ${meta ? `<span class="result-meta">${meta}</span>` : ""}</li>`;
-  };
-  const rows = buckets.map((b) => {
-    const { count, items: recordedItems = [] } = data.buckets[b];
-    const items = recordedItems.filter(it=>!privacy(it.description));
-    return `<li><details class="chat-sources interests-bucket">
-      <summary>${esc(LABELS[b])}<span class="interests-count">${num(count)}</span></summary>
-      <ol class="source-list interests-items${hasHolders ? " interests-holders" : ""}">${items.map(itemHTML).join("")}</ol>
-      ${count > items.length ? `<p class="fineprint">Showing ${num(items.length)} of ${num(count)} entries; the full list is in the register.</p>` : ""}
-    </details></li>`;
-  }).join("");
-
+  const {rows: registerRows, omitted} = projection?.rows ? projection : {rows:[],omitted:data.total};
+  const registerConfig = registerTables.interestTableConfig(registerRows);
+  const registerHTML = registerTables.registerTableHTML(registerConfig);
   const added = Number(data.alterations?.added) || 0;
   const deleted = Number(data.alterations?.deleted) || 0;
   const since = data.statement_date ? `since the statement of ${esc(fmtDate(data.statement_date))}` : "since the statement";
@@ -4117,7 +4099,9 @@ async function renderPersonInterests(name, personId, sections, onRecord = () => 
     <h3 id="person-register" class="subject-section-title" data-rail-figure="${num(data.total)}">Declared interests</h3>
     <p class="person-register-updates"><a href="${esc(`/declared?person=${encodeURIComponent(data.name || name)}`)}">Just declared</a></p>
     <p class="interests-summary"><b>${num(data.total)}</b> ${data.total === 1 ? "entry" : "entries"} across ${num(buckets.length)} ${buckets.length === 1 ? "category" : "categories"} · ${alterations}</p>
-    <ul class="subject-list interests-list" role="list">${rows}</ul>
+    ${registerHTML}
+    ${omitted ? `<p data-register-omitted="">Some register entries are shown only on the ${base ? `<a href="${esc(base)}" rel="noopener">official register</a>` : "official register"}.</p>` : ""}
+    <p class="fineprint">Date is the notification date where supplied, otherwise the register snapshot date. Check the official entry for holders and alterations.</p>
     ${sourceLineHTML({
       updated: data.as_at || "", source: REGISTER[data.chamber] || "Register of interests",
       // Scanned pages read by machine: the register is complete, OPAX's reading of it may not be.
@@ -4129,6 +4113,7 @@ async function renderPersonInterests(name, personId, sections, onRecord = () => 
         data.unread_pages > 0 ? `${num(data.unread_pages)} ${data.unread_pages === 1 ? "page" : "pages"} of the source could not be read by machine; the register itself is complete.` : "",
       ],
     })}`;
+  registerTables.hydrateRegisterTables(slot);
 }
 
 let interestsTiesPromise = null;
@@ -5589,6 +5574,7 @@ async function openSubject(kind, name, manageFocus, params = new URLSearchParams
     if (node.label && node.label !== name) {
       setCrumbs(crumbsFor(`/subject/${node.kind}`, node.label));
     }
+    await registerTablesReady;
     const donorPrivacy = growthModules.approvedModulePrivacy(await growthModules.loadModuleDonors());
     if (currentSubjectKey !== key) return;
     const flows = moneyData.edges.filter((e) => (isParty ? e.target : e.source) === node.id)
@@ -5603,7 +5589,9 @@ async function openSubject(kind, name, manageFocus, params = new URLSearchParams
     const hiddenPartyNodes = new Set();let hiddenPartyAmount=0;
     if(isParty) for(const e of allPartyFlows){const d=moneyData.nodes.find(n=>n.id===e.source);if(d?.kind==='donor' && donorNameWithheld(donorViewIndex,d.label)){hiddenPartyNodes.add(d.id);hiddenPartyAmount+=e.total || 0}}
     const flowRows = [...counter.entries()].sort((a, b) => b[1] - a[1]).slice(0, 10);
-    if(hiddenPartyNodes.size)flowRows.push([`Donors not named (${moneyData.nodes.filter(n=>n.kind==='donor'&&hiddenPartyNodes.has(n.id)).length})`,hiddenPartyAmount]);
+    const partyDonations = isParty ? await fetch(`/api/register/party-money?${new URLSearchParams({partyId:node.id})}`).then(response=>response.ok ? response.json() : null).catch(()=>null) : null;
+    if (currentSubjectKey !== key) return;
+    const partyTable = partyDonations ? registerTables.registerTableHTML(registerTables.partyMoneyTableConfig(partyDonations.rows,partyDonations.aggregate)) : "";
     // Identity once (principle 3): the title, then one meta line with the
     // party's own dot and full name (or the donor's industry) and its years.
     // Quick facts became the head's source sheet and the "On this page" rail;
@@ -5665,7 +5653,7 @@ async function openSubject(kind, name, manageFocus, params = new URLSearchParams
     box.innerHTML = entryRailHTML();
     const rail = isParty ? PARTY_RAIL : DONOR_RAIL;
     sections.insertAdjacentHTML("beforeend", `<section id="entry-flows" data-accent="money" data-rail-figure="${esc(fmtMoney(node.total || 0))}">
-      ${barList(flowRows, {
+      ${isParty ? `<h3 class="subject-section-title">Where it came from</h3>${partyTable}` : barList(flowRows, {
         fmt: fmtMoney,
         heading: isParty ? "Where it came from" : "Where the money went",
         linkTo: (nm) => subjectHash(isParty ? "donor" : "party", nm),
@@ -5686,6 +5674,7 @@ async function openSubject(kind, name, manageFocus, params = new URLSearchParams
         licence: 'AEC Transparency Register returns, <a href="https://creativecommons.org/licenses/by/4.0/" rel="license noopener" target="_blank">CC BY 4.0 ↗︎</a>.',
       })}
     </section>`);
+    if (isParty) registerTables.hydrateRegisterTables(sections.querySelector("#entry-flows"));
     if (!isParty) sections.insertAdjacentHTML("beforeend", donorBalanceHTML(flows));
     if (!isParty) {
       const evidenceSlot = document.createElement('section');

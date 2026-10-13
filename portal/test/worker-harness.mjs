@@ -18,7 +18,8 @@ class Rewriter {
       for (const [selector, handler] of handlers) {
         const mutate = (outer, open, inner, close) => {
           let attr = open, body = inner, removed = false;
-          handler.element({setAttribute(name, value) { const re = new RegExp(` ${name}="[^"]*"`); const next = ` ${name}="${esc(value)}"`; attr = re.test(attr) ? attr.replace(re, next) : attr.replace(/>$/, next + '>'); },
+          handler.element({getAttribute(name) {return new RegExp(` ${name}="([^"]*)"`).exec(attr)?.[1] ?? null;},
+            setAttribute(name, value) { const re = new RegExp(` ${name}="[^"]*"`); const next = ` ${name}="${esc(value)}"`; attr = re.test(attr) ? attr.replace(re, next) : attr.replace(/>$/, next + '>'); },
             setInnerContent(value, opts) { body = opts?.html ? value : esc(value); }, append(value) { body += value; }, remove() { removed = true; }});
           return removed ? '' : attr + body + close;
         };
@@ -27,6 +28,7 @@ class Rewriter {
         else if (selector === 'title') html = html.replace(/(<title>)([\s\S]*?)(<\/title>)/, mutate);
         else if (selector === 'head') html = html.replace(/(<head>)([\s\S]*?)(<\/head>)/, mutate);
         else if (selector === 'script#ld-page') html = html.replace(/(<script\b[^>]*id="ld-page"[^>]*>)([\s\S]*?)(<\/script>)/, mutate);
+        else if (selector === 'script[src]') html = html.replace(/(<script\b[^>]*\bsrc="[^"]*"[^>]*>)([\s\S]*?)(<\/script>)/g,mutate);
         else { const m = /^(meta|link)\[(name|property|rel)="([^"]+)"\]$/.exec(selector); if (m) html = html.replace(new RegExp(`<${m[1]}\\b[^>]*${m[2]}="${m[3]}"[^>]*>`, 'g'), outer => mutate(outer, outer, '', '')); }
       }
       controller.enqueue(new TextEncoder().encode(html)); controller.close();
@@ -46,12 +48,13 @@ export function offline() {
 
 /** Bundle a Worker entry and serve it over `root`. Share cards are not drawn: the
  * card's spec comes back as JSON bytes, so tests can read every word on a card. */
-// Third/fourth arguments: an ExecutionContext (has waitUntil) and/or {identityBundle}, in either order.
-export async function loadWorker(entry, root, third, fourth) {
-  const executionContext = [third, fourth].find(a => a && typeof a.waitUntil === 'function');
-  const {identityBundle} = [third, fourth].find(a => a && typeof a.waitUntil !== 'function') || {};
+// Third/fourth arguments: an ExecutionContext and/or bundle options, in either order.
+export async function loadWorker(entry, root, ctxOrOptions, optionsOrCtx) {
+  const isContext=value=>typeof value?.waitUntil === "function";
+  const executionContext=[ctxOrOptions,optionsOrCtx].find(isContext);
+  const options=[ctxOrOptions,optionsOrCtx].find(value=>value&&!isContext(value)) || {};
   const compiled = await build({entryPoints: [entry], bundle: true, platform: 'browser', format: 'esm', write: false, external: ['node:*'],
-    plugins: [...(identityBundle ? [identityBundlePlugin(identityBundle)] : []),{name: 'omit-images', setup(b) { b.onResolve({filter: /^\.\/og-render$/}, () => ({path: 'images', namespace: 'harness'})); b.onLoad({filter: /.*/, namespace: 'harness'}, () => ({contents: 'const spec=card=>new TextEncoder().encode(JSON.stringify(card));export const renderOgPng=spec;export const renderOgJpeg=spec;', loader: 'js'})); }}]});
+    plugins: [...(options.plugins || []), ...(options.identityBundle ? [identityBundlePlugin(options.identityBundle)] : []), {name: 'omit-images', setup(b) { b.onResolve({filter: /^\.\/og-render$/}, () => ({path: 'images', namespace: 'harness'})); b.onLoad({filter: /.*/, namespace: 'harness'}, () => ({contents: 'const spec=card=>new TextEncoder().encode(JSON.stringify(card));export const renderOgPng=spec;export const renderOgJpeg=spec;', loader: 'js'})); }}]});
   const {default: worker} = await import('data:text/javascript;base64,' + Buffer.from(compiled.outputFiles[0].text).toString('base64'));
   const files = new Map(), parsed = new Map();
   const at = path => join(root, path.replace(/^\//, ''));

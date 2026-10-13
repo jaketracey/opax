@@ -1,9 +1,9 @@
 import {isOrganisationDonor} from './donor-entity.js?v=ebb2c972d5';
-import {applyQuery} from './datatable.js?v=9c77511e1c';
+import {applyQuery} from './datatable.js?v=b43ca5057e';
 import {subjectUrl} from './canonical-urls.js?v=225d5915ea';
 import {moneyFlowType, filterMoneyEdges, readMoneyFilters} from './money-records.js?v=ia-ux-20260908-2';
 
-import {queryValues} from './datatable-query.js?v=6dd55aab38';
+import {privacyTexts} from './datatable-privacy-fields.js?v=7a6c85a822';
 import {createTablePrivacyValidator} from './datatable-privacy.js?v=de6469a26a';
 
 const labels={receipts:'Political receipts',contracts:'Contract values',grants:'Grant awards'};
@@ -14,7 +14,7 @@ export function filterMoneyConnectionView(graph,params) {
 
 /** Build only public rows, before the shared core can derive facets or exports.
  * Years are display ranges, so use the contract's text type (no new formatter).
- * @returns {import('./datatable.js?v=9c77511e1c').DataTableConfig} */
+ * @returns {import('./datatable.js?v=b43ca5057e').DataTableConfig} */
 export function moneyConnectionsConfig(graph, privacyCheck) {
   const nodes=new Map(graph.nodes.map(n=>[n.id,n]));
   const rows=[], hidden=new Set(), totals={receipts:0,contracts:0,grants:0};
@@ -70,7 +70,7 @@ export function moneyConnectionsConfig(graph, privacyCheck) {
  * The browser never constructs a second registry or identity predicate. */
 export async function prepareMoneyConnectionsConfig(graph, validator=createTablePrivacyValidator({fetch:(...args)=>globalThis.fetch(...args)})) {
   const candidates=moneyConnectionsConfig(graph,()=>true);
-  await validator.permitSet(candidates.rows.flatMap(row=>[JSON.stringify(row),...queryValues(row)]));
+  await validator.permitSet(candidates.rows.flatMap(row=>[JSON.stringify(row),...privacyTexts(row)]));
   const config=moneyConnectionsConfig(graph,validator.approved);
   // The neutral aggregate introduces new totals. Validate them through the same
   // transport during hydration rather than mistaking uncached values for rejects.

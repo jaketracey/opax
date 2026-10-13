@@ -7,6 +7,7 @@ import {tableApi, TABLE_REGISTRY_FINGERPRINT} from '../src/table-api.ts';
 import {tablePrivacyCheck} from '../src/table-privacy.ts';
 import {tableRows} from '../../scripts/load_tables.mjs';
 import {dataTableHTML, mountDataTable, toCSV} from '../public/datatable.js';
+import {queryValues} from '../public/datatable-query.js';
 import {tableHarness} from './datatable-harness.mjs';
 import {tableDatabase} from './table-d1-harness.mjs';
 import {loadWorker, offline} from './worker-harness.mjs';
@@ -62,7 +63,7 @@ test('shared D1 grants supplies real organisation controls in API, HTML and CSV'
   assert.ok(csv.includes(organisation.id), 'real organisation survives CSV');
   assert.ok(csv.includes(organisation.recipient.replaceAll('"', '""')), 'organisation name in D1 CSV');
   for (const line of csv.split('\r\n')) clean(line, 'CSV');
-  clean(JSON.stringify(page), 'rows and facets');
+  assert.equal(loaded.policy.rowCheck(JSON.stringify(page)) || [...queryValues(page)].some(value => loaded.policy.rowCheck(value)), false, 'rows and facets: withheld field count');
 });
 
 test('D1 facets retain alternatives and search uses names only', async () => {

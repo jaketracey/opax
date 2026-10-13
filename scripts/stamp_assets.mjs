@@ -39,7 +39,7 @@ const PUBLIC = join(ROOT, 'portal', 'public')
 const INDEX = join(PUBLIC, 'index.html')
 
 /** Assets referenced from index.html with a ?v= stamp. */
-const STAMPED = ['app.js', 'spa-shell.js', 'spa-entry.js', 'style.css', 'analytics.js', 'gtm.js', 'events.js', 'navigation.js', 'quick-search.js', 'voice.css', 'nav.css', 'ui-controls.css', 'ui-source.css', 'ui-source.js', 'labels.js', 'page-actions.css', 'vote-tables.js', 'vote-tables.css']
+const STAMPED = ['app.js', 'spa-shell.js', 'spa-entry.js', 'style.css', 'analytics.js', 'gtm.js', 'events.js', 'navigation.js', 'quick-search.js', 'voice.css', 'nav.css', 'ui-controls.css', 'ui-source.css', 'ui-source.js', 'labels.js', 'page-actions.css', 'register-tables.css', 'register-tables-entry.js', 'vote-tables.js', 'vote-tables.css']
 
 const hashOf = (file) =>
   createHash('sha256').update(readFileSync(join(PUBLIC, file))).digest('hex').slice(0, 10)
@@ -141,7 +141,11 @@ export const MODULE_STAMPS = [
   // ⋯: app.js draws and runs it; electorates.js draws it.
   ['app.js', 'page-actions-menu.js'], ['electorates.js', 'page-actions-menu.js'],
   ['datatable.js', 'server-csv.js'],
+  ['datatable-privacy-fields.js', 'datatable-query.js'], ['datatable-privacy-fields.js', 'datatable-csv.js'],
+  ['datatable.js', 'datatable-privacy-fields.js'],
+  ['datatable.js', 'donor-entity.js'],
   ['datatable-workbench.js', 'datatable.js'],
+  ['register-tables.js', 'donor-entity.js'], ['register-tables.js', 'datatable.js'], ['register-tables.js', 'datatable-query.js'], ['register-tables.js', 'datatable-privacy-fields.js'], ['register-tables-entry.js', 'register-tables.js'], ['app.js', 'register-tables.js'],
   ['vote-tables.js', 'labels.js'], ['vote-tables.js', 'division-markdown.js'], ['vote-tables.js', 'datatable.js'],
   ['donor-views.js', 'donor-entity.js'], ['wordsdollars.js','donor-views.js'], ['quiz.js','donor-views.js'], ['ledger.js', 'donor-views.js'], ['home.js', 'donor-views.js'],
   ['ledger.js', 'donor-entity.js'], ['quiz.js', 'donor-entity.js'], ['money-journeys-data.js', 'donor-entity.js'], ['map-research.js','datatable-privacy.js'], ['map-research.js','datatable-query.js'],
@@ -154,7 +158,7 @@ export const MODULE_STAMPS = [
   ['supplier-growth.js', 'growth-modules.js'], ['supplier-growth.js', 'labels.js'],
 
   ['canonical-urls.js', 'person-paths.js'],
-  ['money-connections.js', 'datatable.js'], ['money-connections.js', 'datatable-query.js'], ['money-connections.js', 'datatable-privacy.js'],
+  ['money-connections.js', 'datatable.js'], ['money-connections.js', 'datatable-privacy-fields.js'], ['money-connections.js', 'datatable-privacy.js'],
   ['money-connections.js', 'donor-entity.js'], ['money-connections.js', 'canonical-urls.js'],
   ['map-research.js', 'datatable.js'],
   ['map-research.js', 'money-connections.js'],

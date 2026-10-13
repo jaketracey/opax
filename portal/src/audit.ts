@@ -1,9 +1,12 @@
-import { AUDIT_ID, auditComplete, filterAudit, type AuditRow } from '../public/audit.js'
-import { sourceLineHTML, tagHTML } from '../public/labels.js'
+import {tablePrivacyCheckFrom} from './table-privacy.ts'
+import { AUDIT_ID, auditComplete, type AuditRow } from '../public/audit.js'
+import { sourceLineHTML, tagHTML, statusLabelHTML } from '../public/labels.js'
 import { shortDate } from '../public/format.js'
 import type { Crumb } from './seo-content'
 import { trail } from './nav-model.mjs'
 import { catalogueReader } from './catalogue-reader.mjs'
+import {auditTableConfig, registerTableHTML, registerTableQuery} from '../public/register-tables.js'
+import {guardTableURL} from '../public/datatable.js'
 
 interface Manifest {
   count: number; listed: number; generated_at: string; index_url: string; lookup: Record<string, number>
@@ -74,7 +77,7 @@ function recommendationText(rec: Report['recommendations'][number]) {
   return /[<>]/.test(remainder) ? esc(rec.text) : rec.html || esc(rec.text)
 }
 
-export async function auditPage(id: string | null, url: URL, read: Read, block: Block) {
+export async function auditPage(id: string | null, url: URL, read: Read, block: Block, privacyCheck?: (text:string)=>boolean, privacyRowCheck?: (text:string)=>boolean) {
   const missing = () => ({ title: 'Audit report not found · OPAX', description: 'No audit report is available for this id.', status: 404, prerender: block('Audit report not found', 'No audit report is available for this id.', '', trail('/audit', 'Not found')) })
   if (id !== null && !AUDIT_ID.test(id)) return missing()
   try {
@@ -83,19 +86,14 @@ export async function auditPage(id: string | null, url: URL, read: Read, block: 
     if (id === null) {
       const index = await read<{ records: AuditRow[] }>(m.index_url)
       if (index.records.length !== m.count) return missing()
-      const matches = filterAudit(index.records, url.searchParams)
-      const pages = Math.ceil(matches.length / 50) || 1
-      const page = Math.max(1, Math.min(pages, Math.trunc(Number(url.searchParams.get('page')) || 1)))
-      const rows = matches.slice((page - 1) * 50, page * 50)
+      const safe=privacyCheck ?? await tablePrivacyCheckFrom(read)
+      const safeRows=privacyRowCheck ?? privacyCheck ?? await tablePrivacyCheckFrom(read,'row')
+      const config = auditTableConfig(index.records,safe,safeRows)
+      const requestURL=new URL(url)
+      const guarded=guardTableURL(config,url)
       const description = `${m.count} Queensland Audit Office reports tabled in Parliament.${typeof m.html_recommendations === 'number' ? ` ${m.html_recommendations} recommendations from report pages.` : ''}${typeof m.bodies === 'number' ? ` ${m.bodies} cleared PDF bodies, ${m.count - m.bodies} held PDF bodies and ${m.responses || 0} entity responses.` : ' With source recommendations.'}`
-      const href = (n: number) => { const next = new URL(url); next.searchParams.set('page', String(n)); return next.pathname + next.search }
-      const form = `<form class="audit-filters ui-filter-bar" action="/audit" method="get" role="search"><label class="ui-filter-search"><span class="visually-hidden">Title text</span><input class="ui-input" type="search" name="q" placeholder="Search report titles…" value="${esc(url.searchParams.get('q') || '')}"></label>${select('Report year', 'year', m.facets.year, url)}${select('Sector', 'sector', m.facets.sector, url)}${select('Entity audited', 'entity', m.facets.entity, url)}<label class="ui-filter-field"><span class="visually-hidden">Has entity responses</span><select name="responses" class="ui-input"><option value="">Entity responses: all</option><option value="yes"${url.searchParams.get('responses') === 'yes' ? ' selected' : ''}>With entity responses</option></select></label><div class="ui-filter-actions audit-filter-actions"><button type="submit" class="ui-button" data-ui-size="compact">Filter</button><a href="/audit">Reset</a></div></form>`
-      const filtered = ['q', 'year', 'sector', 'entity', 'responses'].some(k => url.searchParams.get(k))
-      const counted = filtered ? `${matches.length} of ${m.count} reports match` : `${m.count} reports`
-      const list = `<p class="audit-count ui-filter-count">${counted}</p><ul class="audit-list">${rows.map(r => `<li><h2><a href="/audit/${r.id}">${esc(r.title)}</a></h2><p class="audit-meta">${esc(metaLine(r))}</p>${r.sectors.length ? `<p class="audit-tags">${r.sectors.map(s => tagHTML(s)).join(' ')}</p>` : ''}${r.entities.length ? `<p class="audit-meta">Audited: ${esc(r.entities.join('; '))}</p>` : ''}</li>`).join('')}</ul>`
-      const navigation = `<nav aria-label="Audit catalogue pages">${page > 1 ? `<a rel="prev" href="${esc(href(page - 1))}">Previous</a>` : ''}<span>Page ${page} of ${pages}</span>${page < pages ? `<a rel="next" href="${esc(href(page + 1))}">Next</a>` : ''}</nav>`
-      return { title: 'Queensland audit reports · OPAX', description, status: 200,
-        prerender: block('Queensland audit reports', description, '', trail('/audit')) + `<section class="wrap audit-content">${form}${list}${navigation}${source(m, [{ href: m.attribution.source_url, label: 'Reports to Parliament' }])}</section>` }
+      return { title: 'Queensland audit reports · OPAX', description, status: 200,noindex:guarded.rejected || Boolean(url.search),
+        prerender: block('Queensland audit reports', description, '', trail('/audit')) + `<section class="wrap audit-content">${registerTableHTML(config,registerTableQuery(url.searchParams,config),requestURL)}${source(m, [{href:m.attribution.source_url,label:'Reports to Parliament'}])}</section>` }
     }
     const chunk = m.lookup[id]
     if (!Number.isInteger(chunk) || !m.chunks[chunk]) return missing()

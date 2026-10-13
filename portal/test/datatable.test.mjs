@@ -5,9 +5,41 @@ import {applyQuery,dataTableHTML,formatCell,mountDataTable,parseQuery,serializeQ
 import {workbenchConfig,workbenchRows as rows} from '../public/datatable-workbench-data.js';
 import {cleanEvent} from '../analytics/privacy.mjs';
 import {tableHarness} from './datatable-harness.mjs';
+import {scrubQuery} from '../public/datatable-query.js';
 
 const config={...workbenchConfig,privacyCheck:()=>true};
 const all = query => applyQuery(rows,config,{...query,pageSize:100});
+test('declared facet options retain empty choices through the shared privacy guard',()=>{
+ const columns=[{key:'title',label:'Title',type:'text'},{key:'responses',label:'Responses',type:'category',facet:'multi',facetOptions:['Yes','No','blocked-fixture']}];
+ const table={id:'facet-options-fixture',caption:'Fixture reports',pageType:'audit',columns,privacy:'donors',rowPrivacyCheck:()=>true,privacyCheck:value=>!value.includes('blocked-fixture')};
+ const rows=[{title:'Fixture public report',responses:'No'}];
+ const page=applyQuery(rows,table,{filters:{responses:['Yes']}});
+ assert.equal(page.total,0);assert.deepEqual(page.facets.responses,[{value:'No',count:1},{value:'Yes',count:0}]);
+ assert.ok(!dataTableHTML(table,page).includes('blocked-fixture'));
+ assert.equal(applyQuery(rows,table,{filters:{responses:['blocked-fixture']}}).total,0);
+ const empty=[],approvals=new Set();
+ const pending={...table,privacyCheck:value=>approvals.has(value)};
+ assert.deepEqual(applyQuery(empty,pending,{}).facets.responses,[]);
+ approvals.add('Yes');
+ assert.deepEqual(applyQuery(empty,pending,{}).facets.responses,[{value:'Yes',count:0}]);
+});
+test('the shared raw-query guard retains noindex for rejected, duplicate and filtered state',()=>{
+  const safe=value=>value !== 'blocked-fixture';
+  for(const key of ['q','f.future','future','receipts.q','receipts.f.future']) {
+    const result=scrubQuery(new URLSearchParams({[key]:'blocked-fixture'}),safe,null);
+    assert.equal(result.rejected,true);assert.equal(result.noindex,true);
+    assert.equal(result.params.toString(),'','rejection survives removal of the raw pair');
+  }
+  for(const key of ['q','receipts.q']) {
+    const params=new URLSearchParams([[key,'first'],[key,'second']]);
+    const result=scrubQuery(params,safe,null);
+    assert.equal(result.rejected,true);assert.equal(result.noindex,true);
+  }
+  for(const key of ['q','f.future','receipts.q','receipts.f.future'])
+    assert.equal(scrubQuery(new URLSearchParams({[key]:'accepted'}),safe,null).noindex,true);
+  assert.equal(scrubQuery(new URLSearchParams(),safe,null).noindex,false);
+  assert.equal(scrubQuery(new URLSearchParams({campaign:'fixture'}),safe,null).noindex,false);
+});
 test('query round trips namespaces, lists, ranges and a colon in the sort key',()=>{
   const query = {q:'Works & services',filters:{region:['Victoria','Queensland'],amount:{min:0,max:500000}},sort:{key:'total:amount',dir:'desc'},page:3,pageSize:25};
   const encoded = serializeQuery(query,'receipts');
@@ -156,6 +188,19 @@ test('query engine uses its row argument for server facet options and isolates c
   assert.equal(applyQuery(reverse,unsorted,{}).rows[0].id,'organisation-9');
 });
 
+test('multi-member facets count records once and callback policies keep distinct caches',()=>{
+ const rows=[{name:'Fixture organisation Pty Ltd',sectors:['Health','Education','Health'],date:'2026-01-01',reportYear:'2025-26'}];
+ const config={id:'category-members',caption:'Reports',pageType:'audit',columns:[{key:'sectors',label:'Sector',type:'category',facet:'multi'}],rows};
+ assert.deepEqual(applyQuery(rows,config,{}).facets.sectors,[{value:'Education',count:1},{value:'Health',count:1}]);
+ assert.equal(applyQuery(rows,config,{filters:{sectors:['Health','Education']}}).total,1);
+ assert.ok(toCSV(rows,config).includes('Health; Education; Health'));
+ const facetValues=value=>()=>[value];
+ const first={...config,columns:[{key:'date',label:'Tabled',type:'date',facet:'multi',facetValues:facetValues('2025-26'),facetLabel:'Report year'}]};
+ const second={...first,columns:[{...first.columns[0],facetValues:facetValues('2024-25')}]};
+ assert.equal(applyQuery(rows,first,{}).facets.date[0].value,'2025-26');
+ assert.equal(applyQuery(rows,second,{}).facets.date[0].value,'2024-25');
+});
+
 test('connection privacy validates every donor endpoint and retains connections without donors',()=>{
   const columns=[{key:'to',label:'To',type:'text',primary:true},{key:'value',label:'Value',type:'money'}];
   const connection={id:'connection',to:'Fixture supplier',value:12.25,donorEndpoints:[]};
@@ -185,4 +230,22 @@ test('server hydration validates pending state while preserving approved facet s
   assert.equal(request.searchParams.get('f.region'),JSON.stringify(['Victoria']));
   assert.equal(new URL(h.win.location.href).searchParams.get('t.f.region'),JSON.stringify(['Victoria']));
   mounted.destroy();
+});
+
+test('legacy query adapters remove keys only after the shared raw URL guard',async()=>{
+  for (const repeated of [false,true]) {
+    const h=tableHarness('http://localhost/table?q=accepted&year=2025&campaign=fixture'+(repeated?'&q=second':''));
+    const mounted=mountDataTable(h.root,{...config,initialQuery:{q:'accepted'},initialQueryKeys:['q','year']});
+    await new Promise(setImmediate);
+    const url=new URL(h.win.location.href);
+    assert.equal(url.searchParams.has('q'),false);
+    assert.equal(url.searchParams.has('year'),false);
+    assert.equal(url.searchParams.get('campaign'),'fixture');
+    if (repeated) {
+      assert.equal(url.searchParams.has('t.q'),false);
+      assert.match(h.html(),/Showing 0–0 of 0/);
+      assert.match(h.html(),/data-export disabled/);
+    } else assert.equal(url.searchParams.get('t.q'),'accepted');
+    mounted.destroy();
+  }
 });

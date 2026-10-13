@@ -2,12 +2,16 @@ import {test} from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync,readdirSync} from 'node:fs';
 import {spawnSync} from 'node:child_process';
+import {JSDOM} from 'jsdom';
 import {auditPage} from '../src/audit.ts';
 import {auditComplete,filterAudit} from '../public/audit.js';
+import {auditTableConfig,registerTableHTML,registerTableQuery,mountRegisterTable} from '../public/register-tables.js';
+import {applyQuery} from '../public/datatable.js';
 const root=new URL('./fixtures/audit-phase2-export/',import.meta.url);
 const files=Object.fromEntries(readdirSync(root).map(n=>[n,readFileSync(new URL(n,root),'utf8')]));
 const calls=[];
-const read=async path=>{calls.push(path);return JSON.parse(files[path.replace('/audit/','')]);};
+const privacyIndex=JSON.parse(readFileSync(new URL('../public/table-private-identities.json',import.meta.url)));
+const read=async path=>{calls.push(path);return path==='/table-private-identities.json'?privacyIndex:JSON.parse(files[path.replace('/audit/','')]);};
 const block=(h,t,links='')=>`<section id="prerender"><h1>${h}</h1><p>${t}</p>${links}</section>`;
 const m=await read('/audit/manifest.json'),index=await read('/audit/index.json'),id=index.records[0].id;
 
@@ -25,8 +29,38 @@ test('response filter has SSR facts and directory never loads response chunks',a
  assert.equal(filterAudit(index.records,new URLSearchParams('responses=yes')).length,1);
  assert.equal(filterAudit([{...index.records[0],has_responses:false}],new URLSearchParams('responses=yes')).length,0);
  const p=await auditPage(null,new URL('https://opax.com.au/audit?responses=yes'),read,block);
- assert.match(p.prerender,/Has entity responses/);assert.match(p.prerender,/1 of 1 reports match/);
+ const dom=new JSDOM(p.prerender),table=dom.window.document;
+ assert.match(table.body.textContent,/Has entity responses/);assert.match(table.querySelector('.dt-count').textContent,/1–1 of 1/);
+ const config=JSON.parse(table.querySelector('[data-register-config]').textContent).config;
+ assert.equal(config.rows[0].responses,'Yes');
+ assert.equal(table.querySelectorAll('tbody tr').length,1);
+ const catalogue=auditTableConfig([index.records[0],{...index.records[0],id:'qao-2000-01-2',has_responses:false}],()=>true);
+ const query=registerTableQuery(new URLSearchParams('responses=yes'),catalogue);
+ assert.deepEqual(query.filters.responses,['Yes']);
+ assert.equal(applyQuery(catalogue.rows,catalogue,query).total,1);
+ assert.equal(applyQuery(catalogue.rows,catalogue,{}).total,2);
+ dom.window.close();
  assert.ok(calls.every(p=>!p.includes('responses-')));
+});
+
+test('an empty response filter survives hydration and Clear all restores the catalogue',async()=>{
+ const config=auditTableConfig([{...index.records[0],has_responses:false}],()=>true);
+ for(const search of ['responses=yes','audit.f.responses='+encodeURIComponent('["Yes"]')]){
+  const url=new URL('https://fixture.test/audit?'+search);
+  const html=registerTableHTML(config,registerTableQuery(url.searchParams,config),url);
+  const dom=new JSDOM(html,{url:url.href,pretendToBeVisual:true});
+  const root=dom.window.document.querySelector('[data-register-table]');
+  const mounted=mountRegisterTable(root,config);
+  const settle=async()=>{for(let i=0;i<100 && root.getAttribute('aria-busy')==='true';i++)await new Promise(resolve=>setTimeout(resolve,10));assert.notEqual(root.getAttribute('aria-busy'),'true');};
+  const page=()=>JSON.parse(root.querySelector('[data-dt-page]').textContent);
+  try{
+   await settle();assert.equal(page().total,0);
+   assert.equal(page().facets.responses.find(f=>f.value==='Yes').count,0);
+   assert.equal(root.querySelector('[data-export]').disabled,true);
+   root.querySelector('[data-clear]').click();await settle();assert.equal(page().total,1);
+   assert.equal(new URL(dom.window.location.href).search,'');
+  }finally{mounted.destroy();dom.window.close();}
+ }
 });
 
 test('detail SSR shows PDF provenance and collapsed verbatim public body responses with page references',async()=>{
@@ -92,7 +126,7 @@ test('every public audit asset and rendered report omits internal review reasons
  const publicRoot=new URL('../public/audit/',import.meta.url),publicFiles=Object.fromEntries(readdirSync(publicRoot).map(name=>[name,JSON.parse(readFileSync(new URL(name,publicRoot)))]));
  const forbidden=/donor|privacy rule|text[ _]layer|published_redaction|extraction_holds/i;
  for(const value of Object.values(publicFiles))assert.ok(!forbidden.test(JSON.stringify(value)),'Public audit JSON contains no internal review wording');
- const manifest=publicFiles['manifest.json'],publicRead=async path=>publicFiles[path.replace('/audit/','')];
+ const manifest=publicFiles['manifest.json'],publicRead=async path=>path==='/table-private-identities.json'?privacyIndex:publicFiles[path.replace('/audit/','')];
  const rows=manifest.chunks.flatMap(chunk=>publicFiles[chunk.path.replace('/audit/','')].records);
  for(const row of rows){
   assert.equal('reasons' in row.pdf,false);assert.equal('no_text_pages' in row.pdf,false);
@@ -101,7 +135,12 @@ test('every public audit asset and rendered report omits internal review reasons
   assert.ok(page.description.endsWith('PDF body held.'));
  }
  const directory=await auditPage(null,new URL('https://opax.com.au/audit'),publicRead,block);
- assert.ok(!forbidden.test(directory.prerender+directory.description));
+ const dom=new JSDOM(directory.prerender),table=dom.window.document;
+ const config=JSON.parse(table.querySelector('[data-register-config]').textContent).config;
+ assert.ok(!forbidden.test(JSON.stringify(config.rows)),'Directory rows contain no internal review wording');
+ table.querySelectorAll('script').forEach(script=>script.remove());
+ assert.ok(!forbidden.test(table.body.textContent+directory.description));
+ dom.window.close();
  const receipt=JSON.parse(readFileSync(new URL('../../docs/coverage/qao-phase2-receipt.json',import.meta.url)));
  assert.ok(forbidden.test(JSON.stringify(receipt)),'Internal rights receipt retains its review reasons');
 });

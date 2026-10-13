@@ -1,4 +1,5 @@
-import {donorsNotNamedDetail,isUnnamedAggregate} from '../public/donor-views.js';
+import {tablePrivacyCheckFrom} from '../src/table-privacy.ts';
+import {donorsNotNamedDetail,isUnnamedAggregate,unnamedDonorLabel} from '../public/donor-views.js';
 import {donorNameWithheld,donorPrivacyIndex} from '../public/donor-entity.js';
 // Render the client modules over the derived test's export. This supplies local
 // assets and a small DOM, not another privacy policy or another name scan.
@@ -6,6 +7,8 @@ import {readFileSync} from 'node:fs';
 import {join} from 'node:path';
 import {runInNewContext} from 'node:vm';
 import * as modules from '../public/growth-modules.js';
+import {withheldPhrases,namesWithheldPhrase,MONEY_GRAPHS,isOrganisationDonor} from '../public/donor-entity.js';
+import * as registerTables from '../public/register-tables.js';
 import {supplierRecordsHTML,agencyGrantsHTML,publishedSupplierIndex} from '../public/supplier-growth.js';
 import {sourceLineHTML} from '../public/labels.js';
 import * as divisionMarkdown from '../public/division-markdown.js';
@@ -20,6 +23,7 @@ const questionsIn=html=>[
  ...[...html.matchAll(/href="(\/ask\?[^"<>]+)"/g)].map(m=>new URL(decode(m[1]),'https://fixture.test').searchParams.get('q')).filter(Boolean),
 ];
 const region=(start,end)=>app.slice(app.indexOf(start),app.indexOf(end,app.indexOf(start)));
+const excerptNoticeHTML=runInNewContext(region('function excerptNoticeHTML(', '// Categories and counts only:')+';excerptNoticeHTML',{esc,safeUrl:v=>v || ''});
 export async function* moduleOutputs(root,withheld,readAsset) {
  const tableIndex=await tablePrivacyIndex();
  const localVoteTables={...voteTables, divisionTableConfig:(params,caption,pageType)=>voteTables.divisionTableConfig(params,caption,pageType,tableIndex.safe), voteTableConfig:(person,caption)=>voteTables.voteTableConfig(person,caption,tableIndex.safe), mountVoteTables(){}};
@@ -29,20 +33,33 @@ export async function* moduleOutputs(root,withheld,readAsset) {
   if(!cache.has(path))cache.set(path,readAsset ? await readAsset('/'+path) : JSON.parse(readFileSync(join(root,path),'utf8')));
   return cache.get(path);
  };
+ let interestPolicy;
  const fetchAsset=async url=>{
   if(typeof url!=='string'||!url.startsWith('/'))throw Error('Only local module assets');
+  if (url.startsWith('/api/register/interests?')) {
+   const pid=new URL(url,'https://fixture.test').searchParams.get('pid');
+   interestPolicy ||= {safe:await tablePrivacyCheckFrom(read)};
+   const check=(...texts)=>texts.some(text=>!interestPolicy.safe(String(text)));
+   return {ok:true,json:async()=>registerTables.interestTableData(await read('/interests/'+pid+'.json'),check,interestPolicy.safe)};
+  }
+  if (url.startsWith('/api/register/party-money?')) {
+   const partyId=new URL(url,'https://fixture.test').searchParams.get('partyId');
+   interestPolicy ||= {safe:await tablePrivacyCheckFrom(read)};
+   return {ok:true,json:async()=>registerTables.partyMoneyData(await read('/graph/money.json'),partyId,text=>!interestPolicy.safe(String(text)),interestPolicy.safe)};
+  }
   try {return {ok:true,json:()=>read(url)}}catch{return {ok:false,json:async()=>null}}
  };
  // SSR enriches its cached roster with historical speakers. Module approvals
  // belong to the published roster, so use the fixture file as that authority.
  const roster=JSON.parse(readFileSync(join(root,'parliamentarians.json'),'utf8'));
  const localModules={...modules,loadModulePrivacy:async(kind,id)=>modules.approvedModulePrivacy(await read(await modules.growthSummaryPath('privacy/'+kind,id)))};
- const context={...attribution,attributionHelpers:attribution,photoUrlFor:()=>null,
-  growthModules:localModules,voteTables:localVoteTables,esc,safeUrl:v=>v || '',fmtDate:v=>v || '',fmtMoney:String,industryLabel:String,partyDotHTML:()=>'',
-  sourceLineHTML,entityHrefAttr:href=>`href="${esc(href)}"`,subjectHash:(kind,name)=>`/subject/${kind}/${encodeURIComponent(name)}`,fetch:fetchAsset,currentSubjectKey:'fixture',
+ const donorViewIndex=donorPrivacyIndex(await Promise.all(MONEY_GRAPHS.map(read)));
+ const context={voteTables:localVoteTables,URLSearchParams,isOrganisationDonor,donorNameWithheld,donorViewIndex,unnamedDonorLabel,isUnnamedAggregate,donorsNotNamedDetail,growthModules:localModules,registerTables:{...registerTables,hydrateRegisterTables(){}},registerTablesReady:Promise.resolve(),esc,safeUrl:v=>v || '',fmtDate:v=>v || '',fmtMoney:String,industryLabel:String,partyDotHTML:()=>'',attributionHelpers:attribution,photoUrlFor:()=>'',
+  sourceLineHTML,excerptNoticeHTML,entityHrefAttr:href=>`href="${esc(href)}"`,subjectHash:(kind,name)=>`/subject/${kind}/${encodeURIComponent(name)}`,fetch:fetchAsset,currentSubjectKey:'fixture',
   document:{createElement:()=>({dataset:{},isConnected:true,remove(){},querySelectorAll:()=>[]})},searchHash:q=>'/ask?view=search&'+new URLSearchParams({q}),STATE_NAMES:{},billQuestion:v=>v,
   machineLabelHTML:({note=''})=>`<span>${esc(note)}</span>`,partyChipHTML:esc,
  };
+ Object.assign(context,runInNewContext(region('const isWitness =','let heldBackHelpers;')+';({isWitness,isUnattributed,belongsToScope,speakerHref,isMultiSpeaker,speakerLabel,splitPerson,splitSpeakers,personScope,datedAffiliationParty})',context));
  Object.assign(context,runInNewContext(region('function groupAvatarHTML(','/** Swap .meta-portrait')+';({groupAvatarHTML,participantLinksHTML,speechIdentityHTML})',context));
  const interestVM=runInNewContext(region('async function renderPersonInterests(','let interestsTiesPromise')+';({renderPersonInterests})',context);
  const tiesVM=runInNewContext(region('function declaredTieHTML(','function declaredRowHTML(')+';({declaredTieHTML})',context);
@@ -111,8 +128,8 @@ export async function* moduleOutputs(root,withheld,readAsset) {
  const moneyData=await read('graph/money.json');
  const {partyFlows}=runInNewContext(region('function barList(','const fmtIndustries')+';async function partyFlows(node){const key="fixture";const isParty=true;'+
   region('const donorPrivacy = growthModules.approvedModulePrivacy(await growthModules.loadModuleDonors());','// Identity once (principle 3)')+
-  ';return barList(flowRows,{heading:"Disclosed gifts",linkTo:name=>subjectHash("donor",name)});} ;({partyFlows})',{
-   ...context,moneyData,donorNameWithheld,isUnnamedAggregate,donorsNotNamedDetail,donorViewIndex:donorPrivacyIndex([moneyData]),growthModules:{...localModules,loadModuleDonors:async()=>donorIndex},
+  ';return partyTable;} ;({partyFlows})',{
+   ...context,moneyData,growthModules:{...localModules,loadModuleDonors:async()=>donorIndex},
   });
  for(const [i,node] of moneyData.nodes.filter(n=>n.kind==='party').entries())yield {where:`party flow module ${i}`,html:await partyFlows(node),questions:[]};
  number=0;

@@ -45,7 +45,7 @@ test('donor datasets stay dark for a missing or stale registry fingerprint; echo
       else await local.db.prepare("INSERT OR REPLACE INTO table_meta VALUES ('privacy_fingerprint',?)").bind(fingerprint).run();
       let reads=0;
       const db={prepare(sql){if(/FROM\s+table_(?!meta\b|private_identity\b)/i.test(sql))reads++;return local.db.prepare(sql);},batch:local.db.batch.bind(local.db)};
-      assert.deepEqual(Object.entries(TABLE_DATASETS).filter(([,c])=>c.privacy==='donors').map(([name])=>name).sort(),['contracts','grants','money-connections','party-money','suppliers']);
+      assert.deepEqual(Object.entries(TABLE_DATASETS).filter(([,c])=>c.privacy==='donors').map(([name])=>name).sort(),['audit-reports','contracts','grants','instruments','interests','money-connections','party-money','suppliers']);
       for(const [name,c]of Object.entries(TABLE_DATASETS).filter(([,c])=>c.privacy==='donors'))for(const csv of [false,true]) {
         const response=await tableApi(new Request('https://local.invalid/api/table/'+name+(csv?'?format=csv':'')),{TABLE_DB:db});
         assert.equal(response.status,503);assert.equal(response.headers.get('retry-after'),'60');
@@ -53,7 +53,7 @@ test('donor datasets stay dark for a missing or stale registry fingerprint; echo
         assert.deepEqual(await response.json(),{error:'unavailable'});
       }
       assert.equal(reads,0,'mismatched publication reached data SQL');
-      for(const name of ['instruments','audit-reports','votes','divisions']) {
+      for(const name of Object.keys(TABLE_DATASETS).filter(name=>TABLE_DATASETS[name].privacy!=='donors')) {
         const response=await tableApi(new Request('https://local.invalid/api/table/'+name),{TABLE_DB:db});
         assert.equal(response.status,200);assert.equal((await response.json()).total,260);
         if(TABLE_DATASETS[name].privacy==='echo') {
@@ -105,7 +105,7 @@ test('core-sized category arrays use bounded SQL bindings',async()=>{
   const response=await fetchTable('contracts',new URLSearchParams({'f.agency':JSON.stringify(values),'f.jurisdiction':JSON.stringify(values)}));
   assert.equal(response.status,200);assert.equal((await response.json()).total,260);
 });
-test('decoded identity variants reject before data SQL across all five money datasets',async()=>{
+test('decoded identity variants reject before data SQL across all protected datasets',async()=>{
   const policy=await tableIdentityIndex();
   const phrase=[...policy.phrases].find(v=>v.includes(' ')&&/[aeiou]/.test(v));
   const identifier=[...policy.phrases].find(v=>/^\d{11}$/.test(v)&&String(Number(v))===v);
@@ -120,7 +120,7 @@ test('decoded identity variants reject before data SQL across all five money dat
   const spaced='  '+phrase.replaceAll(' ','  \t  ')+'  ';
   for(const [name,config]of Object.entries(TABLE_DATASETS).filter(([,c])=>c.privacy)) {
     const category=config.columns.find(c=>c.type==='category').key;
-    const numeric=config.columns.find(c=>['money','count'].includes(c.type)).key;
+    const numeric=config.columns.find(c=>['money','count','year'].includes(c.type)).key;
     const states=[
       new URLSearchParams({['f.'+category]:'['+escaped(phrase)+']'}),
       new URLSearchParams({['f.'+category]:'['+escaped(identifier)+']'}),

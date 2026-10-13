@@ -1,10 +1,13 @@
+import {partyMoneyResponse} from './party-money-table'
+import {interestRegisterResponse} from './interest-register'
+import {tablePrivacy,tablePrivacyCheck} from './table-privacy'
 import {sanitiseStoredResponse} from './donor-stored-response'
 import {sanitiseStoredDonors} from './donor-hashes.mjs'
 import sourceIdentity from '../../parli/ingest/user-agent.json'
 import { SA_EXCERPT_LABEL, isSaHansard, saFullText, saOfficialUrl } from '../public/sa-hansard.js'
 import { saPublicResponse, saEventPayload } from './sa-hansard'
 import { saEvidenceText, saEvidenceRecord, saGenerationResponse, saConversationInput } from './sa-evidence'
-import {memoisedCheck, tablePrivacy, tablePrivacyCheck} from './table-privacy'
+import {memoisedCheck} from './table-privacy'
 import {ServerTiming, timed, withTiming} from './server-timing'
 import { divisionPlain } from '../public/division-markdown.js'
 import {guardTableURL, divisionTableConfig, voteTableConfig} from '../public/vote-tables.js'
@@ -25,6 +28,9 @@ import { normalizePassage, passageWindow } from './passage-text'
 import { instrumentPage, instrumentReader } from './instruments'
 import { budgetPage, budgetReader } from './budget'
 import { auditPage, auditReader } from './audit'
+import {parseQuery,serializeQuery,type Page} from '../public/datatable.js'
+import {scrubQuery} from '../public/datatable-query.js'
+import {partyMoneyData,partyMoneyTableConfig,registerTableHTML} from '../public/register-tables.js'
 import {grantsHTML} from './grants-table'
 import {GRANTS_COVERAGE} from '../public/grants-table.js'
 import { hubPage } from './hubs'
@@ -4208,10 +4214,16 @@ async function buildRouteMeta(route: SeoRoute, url: URL, request: Request, env: 
       const page = await hubPage(route.hub,route.id,<T>(path: string) => assetJson<T>(env,path),people?.people || [],people?.slugOf || new Map(),undefined,env,query,check)
       return base({title:page.title+' · OPAX',description:page.description,prerender:page.html,jsonLd:page.jsonLd,status:page.status})
     }
-    case 'audit': return base({ ...await auditPage(route.id, url, auditReader(env.ASSETS), prerenderBlock),
+    case 'audit': return base({ ...await auditPage(route.id, url, auditReader(env.ASSETS), prerenderBlock, route.id===null ? await tablePrivacyCheck(env.ASSETS) : undefined, route.id===null ? await tablePrivacyCheck(env.ASSETS,'row') : undefined),
       ...(route.id && AUDIT_ID.test(route.id) ? { canonical: `${SITE_ORIGIN}/audit/${route.id}` } : {}) })
     case 'budget': return base(await budgetPage(url, budgetReader(env.ASSETS), prerenderBlock))
-    case 'instruments': return base(await instrumentPage(route.id, url, instrumentReader(env.ASSETS), prerenderBlock))
+    case 'instruments': return base(await instrumentPage(route.id, url, instrumentReader(env.ASSETS), prerenderBlock, route.id===null ? await tablePrivacyCheck(env.ASSETS) : undefined, env.TABLE_DB ? async query=>{
+      const endpoint=new URL('/api/table/instruments',url)
+      endpoint.search=serializeQuery({...query,sort:query.sort || {key:'title',dir:'asc'}})
+      const response=await timed('table-query',()=>tableApi(new Request(endpoint),{TABLE_DB:env.TABLE_DB!,CACHE_EPOCH:env.CACHE_EPOCH}))
+      if(!response.ok)throw new Error('Instrument table unavailable')
+      return await response.json() as Page
+    } : undefined))
     case 'grant-recipient': return grantRecipientMeta(route.jurisdiction, route.id, url, env)
     case 'static': {
       // Existing shared query links retain their behavior and point search engines
@@ -4393,9 +4405,9 @@ async function buildMeta(route: SeoRoute, url: URL, request: Request, env: Env, 
         const profiles=await read<{people:Record<string,PersonSchemaIdentity>;by_name:Record<string,PersonSchemaIdentity>}>('/profile-links.json').catch(()=>null)
         const identity={...profiles?.by_name[foldName(p.name)],...profiles?.people[p.pid || '']}
         const check = memoisedCheck(await tablePrivacyCheck(env.ASSETS))
-        const query = guardTableURL(voteTableConfig(p.pid || '',undefined,check),url).query
         const withheld = await withheldNameCheck(env.ASSETS)
-        const content = await timed('person-render', () => renderPersonAnswer(p,read,people.slugOf,identity.aphProfileUrl || undefined,withheld,query,check))
+        const rowCheck = await tablePrivacyCheck(env.ASSETS,'row')
+        const content = await timed('person-render', () => renderPersonAnswer(p,read,people.slugOf,identity.aphProfileUrl || undefined,withheld,url.searchParams,check,rowCheck))
         meta.prerender = content.html
         if(content.description) meta.description=clip(content.description)
         const photos=await loadPhotos(env).catch(()=>null)
@@ -5060,6 +5072,20 @@ async function moneySubjectMeta(dir: 'party' | 'donor', name: string, url: URL, 
   }
   const sentence = tail ? `${facts} ${tail}` : facts
   const description = withTail(facts, tail)
+  let table = ''
+  if (dir === 'party') {
+    const read = <T>(path:string)=>assetJson<T>(env,path)
+    const graph = await read<Parameters<typeof partyMoneyData>[0]>('/graph/money.json').catch(()=>null)
+    const party = graph?.nodes.find(n=>n.kind === 'party' && foldName(n.label) === foldName(display))
+    if (graph && party) {
+      const privacyCheck = memoisedCheck(await tablePrivacyCheck(env.ASSETS))
+      const privacyRowCheck = memoisedCheck(await tablePrivacyCheck(env.ASSETS,'row'))
+      const {rows,aggregate} = partyMoneyData(graph,party.id,text=>!privacyRowCheck(String(text)),privacyRowCheck)
+      const config = partyMoneyTableConfig(rows,aggregate,undefined,undefined,undefined,privacyCheck,privacyRowCheck)
+      config.id = 'ssr-party-money-table'
+      table = `<section class="wrap"><h2>Where it came from</h2>${registerTableHTML(config,undefined,url)}<p>Party transfers and grants are excluded. Source: <a href="https://transparency.aec.gov.au/">AEC Transparency Register</a>.</p></section>`
+    }
+  }
   return {
     title,
     description,
@@ -5067,7 +5093,7 @@ async function moneySubjectMeta(dir: 'party' | 'donor', name: string, url: URL, 
     ogType: 'profile',
     status: 200,
     jsonLd: { '@context': 'https://schema.org', '@type': ldType, name: display, url: canonical, description },
-    prerender: prerenderBlock(display, sentence),
+    prerender: prerenderBlock(display, sentence) + table,
     card,
   }
 }
@@ -5388,15 +5414,19 @@ async function serveCachedPage(route: SeoRoute, url: URL, request: Request, env:
 }
 
 async function renderSeoPage(route: SeoRoute, url: URL, request: Request, env: Env, ctx: ExecutionContext, shellResponse?: Response): Promise<Response> {
+  // Rendering may scrub shared URL state; robots retain the original decision.
+  const originalQuery = new URLSearchParams(url.searchParams)
+  const originalTableState = [...url.searchParams.keys()].some(key=>/^(?:instruments|audit|interests|partyMoney(?:AEC|ECQ|VEC)?)\./.test(key))
   const moneyTableState=url.pathname.replace(/\/+$/, '') === '/money' && [...url.searchParams.keys()].some(key => key.startsWith('c.'))
-  const [shell, meta] = await Promise.all([
+  const [shell, meta, originalQueryNoindex] = await Promise.all([
     shellResponse ?? timed('shell', () => env.ASSETS.fetch(new Request(`${SITE_ORIGIN}/`))),
     timed('meta', () => buildMeta(route, url, request, env, ctx)),
+    originalQuery.size ? tablePrivacyCheck(env.ASSETS).then(safe=>scrubQuery(originalQuery,safe,null).noindex) : false,
   ])
   if (!shell.ok) return shell
   const tableKey = route.kind === 'bill' || route.kind === 'hub' && route.hub === 'sitting' ? 'dv' : route.kind === 'subject' && route.dir === 'person' ? 'vr' : null
-  const tableState = tableKey && [...url.searchParams].some(([key,value])=>key.startsWith(tableKey+'.') && value !== '')
-  const noindex = meta.noindex || meta.status >= 400 || tableState || moneyTableState || (['/ask', '/search'].includes(url.pathname.replace(/\/+$/, '')) && Boolean(url.search))
+  const tableState = [...url.searchParams.keys()].some(key=>/^(?:instruments|audit|interests|partyMoney(?:AEC|ECQ|VEC)?)\./.test(key)) || Boolean(tableKey && [...url.searchParams].some(([key,value])=>key.startsWith(tableKey+'.') && value !== ''))
+  const noindex = meta.noindex || meta.status >= 400 || originalQueryNoindex || originalTableState || tableState || moneyTableState || (['/ask', '/search'].includes(url.pathname.replace(/\/+$/, '')) && Boolean(url.search))
   // Election coverage names unavailable grants, but renders no financial records.
   // Its renderer owns any future caveat alongside an actual political money pairing.
   // The policy pages (privacy, support) name no association between records.
@@ -6345,6 +6375,7 @@ function personTopicsFor(name: string, env: Env, ctx: ExecutionContext): Promise
 export default {
   async fetch(request, env, ctx): Promise<Response> {
     const url = new URL(request.url)
+    if (url.pathname === '/api/register/interests') return withSecurityHeaders(await interestRegisterResponse(request,env.ASSETS),url)
     const display = (response: Response, target = url) => {
       if (!/^\/api\/(?:resource\/[^/]+|search|search-all|search-summary|ask)$/.test(target.pathname) && !/^\/reports\/[^/]+\.json$/.test(target.pathname)) return Promise.resolve(response)
       return sanitiseStoredResponse(response).then(safe => saPublicResponse(safe, env.SA_HANSARD_FULL_TEXT, async slug => {
@@ -6366,6 +6397,7 @@ export default {
     if (url.pathname === '/.well-known/atproto-did') return /^did:plc:[a-z2-7]{24}$/.test(env.BSKY_DID ?? '')
       ? new Response(env.BSKY_DID, { headers: { 'content-type': 'text/plain; charset=utf-8', 'cache-control': 'public, max-age=300' } })
       : new Response('Not found', { status: 404 })
+    if (url.pathname === '/api/register/party-money') return withSecurityHeaders(await partyMoneyResponse(request,env.ASSETS),url)
     if (url.pathname === '/api/table/privacy') return withSecurityHeaders(await tablePrivacy(request, env.ASSETS), url)
     const isApi = url.pathname.startsWith('/api/')
     const communityResponse = (response: Response) => { const secured = withSecurityHeaders(response, url); if (env.STAGING_API) secured.headers.set('x-robots-tag', 'noindex, nofollow'); return secured }

@@ -1,5 +1,5 @@
 import {createHash} from 'node:crypto';
-import {identityWords,legacyIdentityWords,identityStrippedWords,STRIPPED_PREFIX,STRIPPED_MIN_LENGTH,STRIPPED_CONTAINS_MIN_LENGTH} from './table-identities.mjs';
+import {identityWords,legacyIdentityWords,identityStrippedWords,STRIPPED_PREFIX,STRIPPED_MIN_LENGTH,STRIPPED_CONTAINS_MIN_LENGTH,ROW_IDENTITY_POLICY} from './table-identities.mjs';
 
 // Polynomial hashes over UTF-16 code units, modulo 2^32. Both the rolling
 // calculation and build-time calculation include the stripped domain prefix.
@@ -13,12 +13,18 @@ export function identityQuickHash(text) {
 // Source text stays in build memory. The numeric index stays server-side and is
 // deliberately excluded from the identity-only privacy fingerprint.
 const digest=value=>createHash('sha256').update(value).digest('hex');
+export function identityRegistryFingerprint(entries) {
+  const sorted=[...entries].sort((a,b)=>a.hash.localeCompare(b.hash));
+  return entries.every(e=>Object.hasOwn(e,'row'))
+    ? digest(ROW_IDENTITY_POLICY+'\n'+sorted.map(e=>e.hash+':'+e.row).join('\n'))
+    : digest(sorted.map(e=>e.hash).join('\n'));
+}
 const unavailable=()=>{throw Error('Privacy index unavailable');};
 /** Verify the complete SHA registry while source forms are still in memory.
  * Counts include quick-hash collisions: every SHA has a domain/length entry. */
 export function buildIdentityPrefilter(phrases,entries,registryFingerprint) {
   const registry=new Map(entries.map(entry=>[entry.hash,entry.words]));
-  if(!entries.length || registry.size!==entries.length || digest([...registry.keys()].sort().join('\n'))!==registryFingerprint)unavailable();
+  if(!entries.length || registry.size!==entries.length || identityRegistryFingerprint(entries)!==registryFingerprint)unavailable();
   const forms=new Set(phrases),words={},stripped={},counts={words:{},stripped:{}},seen=new Set();
   for(const phrase of forms) {
     const sha=digest(phrase);
@@ -32,7 +38,7 @@ export function buildIdentityPrefilter(phrases,entries,registryFingerprint) {
   }
   if(seen.size!==registry.size)unavailable();
   const serialise=groups=>Object.fromEntries(Object.entries(groups).map(([size,hashes])=>[size,[...hashes].sort((a,b)=>a-b)]));
-  const data={version:2,registryFingerprint,words:serialise(words),stripped:serialise(stripped),counts,registryCount:registry.size,
+  const data={version:2,registryFingerprint,identityFingerprint:digest([...registry.keys()].sort().join('\n')),words:serialise(words),stripped:serialise(stripped),counts,registryCount:registry.size,
     lengths:[...new Set(entries.map(e=>e.words))].sort((a,b)=>a-b),strippedLengths:Object.keys(stripped).map(Number).sort((a,b)=>a-b)};
   // Recheck each SHA's bucket before sealing; never trust totals alone.
   for(const phrase of forms) {

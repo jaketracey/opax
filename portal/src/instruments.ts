@@ -1,5 +1,8 @@
-import { FRL_ID, catalogueComplete, filterInstruments, unpack, type CatalogueRow } from '../public/instruments.js'
+import {tablePrivacyCheckFrom} from './table-privacy.ts'
+import { FRL_ID, catalogueComplete, unpack, instrumentTableRows, type CatalogueRow } from '../public/instruments.js'
 import { catalogueReader } from './catalogue-reader.mjs'
+import {applyQuery, dataTableHTML, guardTableURL, serializeQuery, type Page, type Query} from '../public/datatable.js'
+import {instrumentTableConfig,registerTableQuery} from '../public/register-tables.js'
 import { sourceLineHTML } from '../public/labels.js'
 import { shortDate } from '../public/format.js'
 import type { Crumb } from './seo-content'
@@ -43,13 +46,10 @@ function sourceLine(m: Manifest, originals: { href: string; label: string }[], n
     notes: [...notes, esc(a.dated), esc(a.changes), `${esc(a.exceptions)} ${esc(a.endorsement)}`],
     licence: `<a href="${esc(a.licence_url)}">CC BY 4.0</a>` })
 }
-function select(label: string, key: string, values: string[], url: URL, unknown = false) {
-  return `<label class="ui-filter-field"><span class="ui-filter-key">${label}</span><select name="${key}" class="ui-input"><option value="">All</option>${[...values, ...(unknown && !values.includes('unknown') ? ['unknown'] : [])].map(v => `<option value="${esc(v)}"${url.searchParams.get(key) === v ? ' selected' : ''}>${v === 'unknown' ? 'Not recorded' : esc(key === 'portfolio' || key === 'year' ? clean(v) : words(v))}</option>`).join('')}</select></label>`
-}
 /** Key-value rows; a value the Register does not supply is left out, not drawn as "Not supplied". */
 const facts = (rows: [string, string][]) => `<dl class="ui-kv instrument-facts" data-stack="phone">${rows.filter(([, v]) => v).map(([k, v]) => `<div><dt>${k}</dt><dd>${v}</dd></div>`).join('')}</dl>`
 
-export async function instrumentPage(id: string | null, url: URL, read: Read, block: Block) {
+export async function instrumentPage(id: string | null, url: URL, read: Read, block: Block, privacyCheck?: (text:string)=>boolean, readPage?: (query:Query)=>Promise<Page>) {
   const missing = () => ({ title: 'Instrument not found · OPAX', description: 'No instrument metadata is available for this FRL id.', status: 404, prerender: block('Instrument not found', 'No instrument metadata is available for this FRL id.', '', trail('/instruments', 'Not found')) })
   if (id === null && url.pathname.replace(/\/+$/, '') !== '/instruments') return missing()
   if (id !== null && !FRL_ID.test(id)) return missing()
@@ -58,27 +58,31 @@ export async function instrumentPage(id: string | null, url: URL, read: Read, bl
     const manifest = await read<Manifest>('/instruments/manifest.json')
     if (!catalogueComplete(manifest)) return unavailable()
     if (id === null) {
-      const index = await read<{ records: CatalogueRow[] }>(manifest.index_url)
-      const total = manifest.exported ?? manifest.count
-      if (!Array.isArray(index.records) || index.records.length !== total) return unavailable()
-      const matches = filterInstruments(index.records, url.searchParams)
-      const page = Math.max(1, Math.min(Math.ceil(matches.length / 50) || 1, Math.trunc(Number(url.searchParams.get('page')) || 1)))
-      const rows = matches.slice((Math.trunc(page) - 1) * 50, Math.trunc(page) * 50)
-      const description = `${total.toLocaleString('en-AU')} in-force federal legislative-instrument titles. Metadata only; authoritative text is on the Federal Register of Legislation.`
-      const filtered = ['q', 'portfolio', 'type', 'year', 'status'].some(k => url.searchParams.get(k))
-      const counted = filtered ? `${matches.length.toLocaleString('en-AU')} of ${total.toLocaleString('en-AU')} titles match`
-        : `${total.toLocaleString('en-AU')} titles in force at ${esc(shortDate(manifest.generated_at))}`
-      const form = `<form class="instrument-filters ui-filter-bar" action="/instruments" method="get" role="search"><label class="ui-filter-search"><span class="visually-hidden">Title text</span><input class="ui-input" name="q" type="search" placeholder="Search instrument titles…" value="${esc(url.searchParams.get('q') || '')}"></label>${select('Portfolio', 'portfolio', manifest.facets.portfolio, url, true)}${select('Type', 'type', manifest.facets.type, url)}${select('Commencement year', 'year', manifest.facets.commencement_year, url)}${select('Status', 'status', manifest.facets.status, url)}<div class="ui-filter-actions instrument-filter-actions"><button type="submit" class="ui-button" data-ui-size="compact">Filter</button><a href="/instruments">Reset</a></div></form>`
-      const href = (n: number) => { const target = new URL(url); target.searchParams.set('page', String(n)); return target.pathname + target.search }
-      const pagination = `<nav aria-label="Catalogue pages">${page > 1 ? `<a href="${esc(href(page - 1))}" rel="prev">Previous</a>` : ''}<span>Page ${Math.trunc(page)} of ${Math.ceil(matches.length / 50) || 1}</span>${page * 50 < matches.length ? `<a href="${esc(href(page + 1))}" rel="next">Next</a>` : ''}</nav>`
-      const meta = (r: CatalogueRow) => [words(r[3]), r[4] ? `Commenced ${date(r[4])}` : '', esc(r[2].map(clean).join('; '))].filter(Boolean).join(' · ')
-      const list = `<p class="instrument-count ui-filter-count">${counted}</p><ul class="instrument-list">${rows.map(r => `<li><h2><a href="/instrument/${r[0]}">${esc(r[1])}</a></h2><p class="instrument-meta">${meta(r)}</p></li>`).join('')}</ul>`
+      const safe=privacyCheck ?? await tablePrivacyCheckFrom(read)
+      const config = instrumentTableConfig(safe,await tablePrivacyCheckFrom(read,'row'))
+      const requestURL=new URL(url)
+      const guarded=guardTableURL(config,url)
+      const query=guarded.rejected ? guarded.query : registerTableQuery(url.searchParams,config)
+      let page:Page
+      if (guarded.rejected) page=applyQuery([],config,query)
+      else if (readPage) page=await readPage(query)
+      else {
+        const index = await read<{ records: CatalogueRow[] }>(manifest.index_url)
+        if (!Array.isArray(index.records) || index.records.length !== (manifest.exported ?? manifest.count)) return unavailable()
+        const rows=(await instrumentTableRows(read,manifest,index.records)).filter(row=>safe(JSON.stringify(row)))
+        page=applyQuery(rows,config,query)
+      }
+      const tableURL=new URL(requestURL)
+      if(!guarded.rejected)for(const [key,value]of new URLSearchParams(serializeQuery(query,config.urlKey)))tableURL.searchParams.set(key,value)
+      const description = `${(manifest.exported ?? manifest.count).toLocaleString('en-AU')} in-force federal legislative-instrument titles. Metadata only; authoritative text is on the Federal Register of Legislation.`
       const notes = [
         ...(manifest.unresolved_gap ? [`The Register listed ${manifest.count.toLocaleString('en-AU')} titles; ${manifest.unresolved_gap} could not be retrieved from its API.`] : []),
-        'The Register’s in-force listing includes instruments made but not yet commenced. A version’s start date is not the same as commencement; a date the Register does not supply is left out.',
+        'Registered is the as-made registration date. The Register’s in-force listing includes instruments made but not yet commenced. Dates the Register does not supply stay unknown.',
       ]
-      return { title: 'Federal legislative instruments · OPAX', description, status: 200,
-        prerender: block('Federal legislative instruments', description, '', trail('/instruments')) + `<section class="wrap instrument-content">${form}${list}${pagination}${sourceLine(manifest, [], notes)}</section>` }
+      const facts = block('Federal legislative instruments', description, '', trail('/instruments'))
+      const table = `<div data-register-table="${config.id}">${dataTableHTML(config,page,tableURL)}<script type="application/json" data-register-config>${JSON.stringify({config}).replace(/</g,'\\u003c')}</script></div>`
+      return { title: 'Federal legislative instruments · OPAX', description, status: 200,noindex:guarded.rejected || Boolean(url.search),
+        prerender: facts + `<section class="wrap instrument-content">${table}${sourceLine(manifest, [],notes)}</section>` }
     }
     const chunk = manifest.lookup[id]
     if (!Number.isInteger(chunk) || !manifest.chunks[chunk]) return missing()

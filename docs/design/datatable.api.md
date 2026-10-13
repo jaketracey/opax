@@ -1,8 +1,8 @@
 # DataTable D1 endpoint
 
-`GET /api/table/<dataset>` reads `TABLE_DB` (`opax-tables`). The frozen
-DataTable declarations are unchanged; the contract has an additive CSV
-continuation clarification. No table data or indexes
+`GET /api/table/<dataset>` reads `TABLE_DB` (`opax-tables`). The shared query
+contract retains its CSV continuation clarification and adds optional row/CSV
+privacy callbacks. No table data or indexes
 are uploaded as static assets. Legacy `/table-index/*` requests return 404 and
 the asset ignore file excludes that directory even if an old build recreates it.
 Existing source exports remain the loader's input; `votes.json` is untouched.
@@ -260,7 +260,7 @@ removes repeated headers and range trailers, and preserves that final record.
 The shared contract registration certifies the combined real endpoint export.
 ## Complete publication registry
 
-The table loader seeds the complete donor registry from raw source identities held in memory, including compact-block numeric identifiers, and adds private recipient and supplier identities. The Worker reads `/table-private-identities.json`, containing only `{hash, words}` entries. Existing SHA-256 inputs and word counts are unchanged: `identityVariants` produces NFKD accent-insensitive and legacy NFKC lowercase ASCII word phrases, inverted-name variants, and eleven-digit identifier variants; `words` remains the phrase word count. A full rebuild and ordered D1 reload is required to install the additional hashes, not a schema migration. The build also emits `src/table-registry-fingerprint.json` for the Worker and records `privacy_fingerprint` in D1's `table_meta`, published in the last SQL file. This fingerprint is SHA-256 of the sorted identity hashes joined by a newline, with no trailing newline. The API requires an exact match before any donor-privacy dataset SQL or cached response. Missing or stale metadata returns 503 with `Retry-After: 60`, no rows and no echo. Additional compact forms use NFKC, case folding and letters/digits only, with the SHA-256 input `stripped:v1:` followed by that form. Their `words` field is 1. Minimum length is 4; lengths 4–5 require token boundaries and lengths 6+ also match substrings after separator removal. `/table-private-identities.json` adds `strippedLengths`; D1 adds the `privacy_stripped_lengths` metadata row. The D1 schema stays unchanged, and the fingerprint includes both hash domains. All previous hashes and word counts remain unchanged. The orchestrator uses the remote manifest loop above after merge deployment; this lane uses local D1 only. The local sweep resolves TABLE_DB’s production database_id from wrangler.jsonc and rejects an empty store.
+The table loader seeds the complete donor registry from raw source identities held in memory, including compact-block numeric identifiers, and adds private recipient and supplier identities. The Worker reads `/table-private-identities.json`, containing hashed entries and the rolling-hash screening metadata described below. Existing SHA-256 inputs and word counts are unchanged: `identityVariants` produces NFKD accent-insensitive and legacy NFKC lowercase ASCII word phrases, inverted-name variants, and eleven-digit identifier variants; `words` remains the phrase word count. A full rebuild and ordered D1 reload is required to install the additional hashes, not a schema migration. The build also emits `src/table-registry-fingerprint.json` for the Worker and records `privacy_fingerprint` in D1's `table_meta`, published in the last SQL file. For the P2 reload, this fingerprint is SHA-256 of `row-identifying-v2\n` followed by the sorted `hash:row` entries joined by a newline, with no trailing newline. The policy prefix forces the ordered row rebuild even when the identity set is unchanged. The API requires an exact match before any privacy dataset SQL or cached response. Missing or stale metadata returns 503 with `Retry-After: 60`, no rows and no echo. Additional compact forms use NFKC, case folding and letters/digits only, with the SHA-256 input `stripped:v1:` followed by that form. Their `words` field is 1. Minimum length is 4. Row compact forms require source labels/aliases with two or more name tokens, at least eight characters, and whole-token boundaries at both ends. Eleven-digit identifiers remain protected separately. Single-token full aliases require whole-field equality and never match a fragment inside an organisation name. Visitor queries retain substring rejection for lengths 6+ and token boundaries for lengths 4–5. `/table-private-identities.json` adds `strippedLengths`; D1 adds the `privacy_stripped_lengths` metadata row. The D1 schema stays unchanged, and the fingerprint includes both hash domains. All previous hashes and word counts remain unchanged. The orchestrator uses the remote manifest loop above after merge deployment; this lane uses local D1 only. The local sweep resolves TABLE_DB’s production database_id from wrangler.jsonc and rejects an empty store.
 
 After the ordered reload, verify the published metadata (hashes only):
 
@@ -274,6 +274,44 @@ page and CSV endpoints and the complete runtime rejection set against the
 release, using counts-only diagnostics. An interrupted reload must finish before
 these datasets can serve; the fingerprint marker is written last.
 
-Round 7 adds compact hashes to the same ordered manifest reload; no command or schema migration changes. The build fingerprint is `f620d6a19ecb395c34e4f2f2e6a8b2a1e07e5524510c3b48ec962d7359b6ffd7`. Deploy, reload every manifest file using the remote loop above, then verify this fingerprint and the privacy endpoints. Privacy tables stay unavailable until the new fingerprint is installed.
+Round 7 added compact hashes to the same ordered manifest reload; its historical fingerprint was `f620d6a19ecb395c34e4f2f2e6a8b2a1e07e5524510c3b48ec962d7359b6ffd7`. Deploy, reload every manifest file using the remote loop above, then verify this fingerprint and the privacy endpoints. Privacy tables stay unavailable until the new fingerprint is installed.
 
 The ordinary-query regression sample contains 53 distinct terms derived from existing tests and fictional workbench fixtures. Compact matching rejects one additional term (1/53, 1.89%); this ambiguous compact identity remains blocked. The 751 reviewer-derived donor and recipient compact variants are all rejected. Every prior 8,766 word hash and word count is retained; the new registry contains 17,518 hashes.
+
+## DataTable privacy P2 reload (11 October 2026)
+
+The loader checks each field independently. Full labels and aliases retain word-boundary matching; compact forms are eligible only when derived from a multi-token name of at least eight characters. Source provenance is retained before hashing; a compact hash alone cannot establish whether its source was a full name or a single-token alias. Eleven-digit identifiers keep full identifier matching, including spacing. The 59 single-token labels/aliases in the 666-input donor set are rejected on whole-field equality, preserving their withholding without matching fragments inside organisation names. Individual entity classification remains fail-closed.
+
+The publication registry is version 3. Each entry retains SHA-256 `hash`, `words`, `compact`, `length` and `rolling`, and adds `row`: `"token"` for full identifying token runs, `"field"` for exact single-token aliases, or `false` for query-only forms. Query hashes and visitor checks are unchanged. Old publication registries fail closed. The fingerprint includes the policy prefix and sorted `hash:row` entries so eligibility changes also require an ordered rebuild and reload. Historical hash-only indices are accepted only for query/audit compatibility, never row validation.
+
+Rolling polynomial hashes screen fixed-size windows; SHA-256 confirms every candidate. Matching storage is bounded by the longest registry form and CSV parsing retains only the current field beside the request text. The Worker and browser share RFC 4180 field parsing, including quoted commas, escaped quotes and multiline cells. Browser row approval batches send a list of fields rather than concatenated text; standalone aliases cannot disappear inside a batch. Query, row and CSV approvals use separate caches. Optional `privacyRowCheck` and `privacyCSVCheck` callbacks follow the same separation; CSV fallback callbacks inspect each field.
+
+The [counts-only precision audit](datatable-privacy-p2-audit.json) compares the previous P2 commit with the pre-donor-withhold loader at `3374b4d7`. It scans all 257,582 raw financial rows, keeping values only in memory. The previous extra-aggregate count was 49,382; it is now 37. The deterministic 100-row sample is stratified by dataset, match rule and compact length below/above eight, with evenly spaced selections within each stratum. It classifies 8 true full-identity matches and 92 false positives. Every one of the 37 retained extra aggregates has an independent complete-label/alias or identifier witness: 37 true hits, zero false positives, zero unexplained rows. The change also restores 794 rows aggregated by the baseline's broader matcher.
+
+| Dataset | Extra aggregated rows before | After | Restored |
+| --- | ---: | ---: | ---: |
+| money-connections | 33 | 0 | 33 |
+| party-money | 23 | 0 | 23 |
+| suppliers | 180 | 6 | 174 |
+| contracts | 2,399 | 31 | 2,368 |
+| grants | 46,747 | 0 | 46,747 |
+| Total | 49,382 | 37 | 49,345 |
+
+When any endpoint row is discarded, SSR and hydration recompute totals, numeric facets and constant chips from surviving rows and reset the page to 1. Generated pagination state remains subject to query policy before rendering.
+
+The [reload manifest](datatable-privacy-p2-manifest.json) lists every ordered SQL filename, byte count, dataset count, identity hash count and release fingerprint. SQL stays outside public assets. The orchestrator rebuilds the merged branch, deploys its Worker and then loads every SQL file in manifest order; the final SQL file publishes the fingerprint. This lane performs local validation only.
+
+The rebuilt artifact contains 103 SQL files, 168,943,171 bytes and 17,518 private identity hashes. Its fingerprint is `0875b6c6954a3df6b605f8fd9ed3faef8e7e69a6691da903a4503597ea818e0e`. All 17,518 query hashes and their word/rolling metadata are byte-equivalent to the previous registry; only row eligibility is added. The manifest matches the actual SQL filenames and aggregate bytes, and the fresh source policy reproduces its fingerprint.
+
+Post-build validation passed: 1,411 tests, `npm run check`, Wrangler dry-run and byte-identical `votes.json` (SHA-256 `a77128dc0e1e1b3fdaa4bf84501e2c94af3125dea3cf0b2dffbc688a49d68546`). The local sweep ran from `portal` as `node ../scripts/sweep_table_privacy.mjs`, using production database ID `fe48f4bd-cce4-4ced-9705-566175ee0c53` in local persistence only: 236,188 financial rows, zero withheld identity hits and a matching fingerprint. The served-file sweep passed with zero hits across 25,095 JSON files and 115 client/crawl files.
+
+The complete 666-label/alias, 81-identifier and 169-recipient-input sets remain rejected, with zero query, row or CSV misses. All 1,670 row/facet/chip injections passed in SSR and hydration; all 162 numeric probes, 1,458 raw endpoint probes, 2,916 raw hydration probes and 607 + 144 separator variants rejected with no echoes or data reads. The ordinary-search sample remains 1 rejection in 53 queries (1.89%). The shared rollout gate checks JSON values and CSV cells independently, including standalone aliases, without applying the old donor-context fragment heuristic to row fields.
+
+The real-data CSV benchmark passed in the final suite:
+
+| Rows | Bytes | Node wall | Node CPU | Local Worker wall |
+| ---: | ---: | ---: | ---: | ---: |
+| 9,003 | 1,847,866 | 2.074 s | 1.944 s | 2.086 s |
+| 50,000 | 10,207,038 | 10.600 s | 9.512 s | 11.072 s |
+
+Both exports returned 200 with approval, within the benchmark's 20-second Node CPU and 30-second Worker wall thresholds. Withheld fields at the start and end of large CSVs still reject. Malformed CSVs and browser row-check exceptions also reject before a Blob or download is created.

@@ -1,8 +1,8 @@
 import { readMoneyFilters } from './money-records.js?v=ia-ux-20260908-2';
-import {mountDataTable, guardTableURL} from './datatable.js?v=9c77511e1c';
-import {prepareMoneyConnectionsConfig} from './money-connections.js?v=31f83c7be6';
+import {mountDataTable, guardTableURL} from './datatable.js?v=b43ca5057e';
+import {prepareMoneyConnectionsConfig} from './money-connections.js?v=daa9745228';
 import {createTablePrivacyValidator} from './datatable-privacy.js?v=de6469a26a';
-import {rawQueryValues} from './datatable-query.js?v=6dd55aab38';
+import {rawQueryValues} from './datatable-query.js?v=91898b0c1f';
 const esc = value => String(value ?? '').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 export async function mountMapResearch(container, data, options = {}) {
   const cancelled=()=>options.signal?.aborted || options.isCurrent?.() === false;

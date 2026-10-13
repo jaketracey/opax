@@ -1,6 +1,7 @@
 export interface IdentityPrefilter {
   version: number;
   registryFingerprint: string;
+  identityFingerprint: string;
   checksum: string;
   words: Record<string, number[]>;
   stripped: Record<string, number[]>;
@@ -17,3 +18,5 @@ export function verifyIdentityPrefilter(prefilter: IdentityPrefilter, phrases: I
 export function identityPrefilterModule(prefilter: IdentityPrefilter, phrases: Iterable<string>, entries: {hash:string;words:number}[], registryFingerprint: string): string;
 export function assertPrefilterLengths(prefilter: IdentityPrefilter, lengths: number[], compactLengths: number[]): void;
 export function compileIdentityPrefilter(prefilter: unknown, registryFingerprint: string, binding: unknown): (value: unknown, lengths: number[], compactLengths?: number[]) => IterableIterator<string>;
+
+export function identityRegistryFingerprint(entries:{hash:string;row?:false|'token'|'field'}[]):string;

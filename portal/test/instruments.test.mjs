@@ -16,7 +16,7 @@ const fixtureFiles = JSON.parse(execFileSync('python3',['-c',"import json,sys; f
 const json = p => JSON.parse(fixtureFiles[p.replace(/^\/?instruments\//,'')]);
 const manifest = json('instruments/manifest.json');
 const index = json('instruments/index.json');
-const read = async p => json(p);
+const read = async p => p.startsWith('/instruments/') ? json(p) : JSON.parse(readFileSync(new URL(p.slice(1),root),'utf8'));
 const block = (title, text, links='') => `<section id="prerender"><h1>${title.replaceAll('&','&amp;').replaceAll('<','&lt;')}</h1><p>${text}</p>${links}</section>`;
 
 test('FRL loader stubbed HTTP paging, count reconciliation, resume, shrink and export guards', () => {
@@ -70,7 +70,7 @@ test('directory filters title, portfolio, type, commencement year and status wit
   assert.equal(filterInstruments(fixtures,new URLSearchParams('status=Repealed')).length,0);
   const result=await instrumentPage(null,new URL('https://opax.com.au/instruments'),read,block);
   assert.equal(result.status,200);assert.match(result.prerender,/id="prerender"/);
-  for(const label of ['Title text','Portfolio','Type','Commencement year','Status']) assert.ok(result.prerender.includes(label));
+  for(const label of ['Title','Portfolio','Type','Registered','Status']) assert.ok(result.prerender.includes(label));
   assert.match(result.prerender,/Federal Register of Legislation/);assert.match(result.prerender,/CC BY 4.0/);
   assert.doesNotMatch(result.prerender,/\/subject\/person\//);
 });
@@ -80,7 +80,7 @@ test('an evidenced bounded plain gap is public only as a small directory note', 
   const staged={...fixture,titles:records,count:2001,odata_count:2001,exported:2000,unresolved_gap:1,
     gap_pages:[{offset:0,unresolved_gap:1}],metadata_coverage:{expanded_titles:2000,missing_expansion_ids:[]}};
   const files=JSON.parse(execFileSync('python3',['-c',"import json,sys; from scripts.export_instruments import plan_export; p,m=plan_export(json.load(sys.stdin)); print(json.dumps({k:v.decode() for k,v in p.items()}))"],{cwd:new URL('../../',import.meta.url).pathname,input:JSON.stringify(staged),encoding:'utf8',maxBuffer:8*1024*1024}));
-  const read=async path=>JSON.parse(files[path.replace('/instruments/','')]);
+  const read=async path=>path.startsWith('/instruments/') ? JSON.parse(files[path.replace('/instruments/','')]) : JSON.parse(readFileSync(new URL(path.slice(1),root),'utf8'));
   const m=await read('/instruments/manifest.json');
   assert.equal(catalogueComplete(m),true); assert.equal(reconciledCounts(m),true);
   const directory=await instrumentPage(null,new URL('https://opax.com.au/instruments'),read,block);
@@ -143,7 +143,7 @@ test('null/unknown ids return noindex 404 through the actual Worker and no paid 
   for(const path of ['/instruments','/instrument/'+index.records[0][0]]){
     const res=await worker.fetch(new Request('https://opax.com.au'+path),env,{});assert.equal(res.status,200);
   }
-  assert.ok(paths.every(p=>p==='/'||p.startsWith('/instruments/')));
+  assert.ok(paths.every(p=>p==='/'||/^\/(?:instruments|graph|suppliers|grants)\//.test(p)||p==='/suppliers.json'||p==='/table-private-identities.json'));
   for(const m of [null,{...manifest,complete:false}]) {
     const missingEnv={...env,ASSETS:{async fetch(req){const p=new URL(req.url).pathname;
       if(p==='/')return new Response(readFileSync(new URL('index.html',root)));
@@ -217,10 +217,11 @@ test('every shipped HTML file has no static instruments href before catalogue av
 
 test('parsed catalogue is reused per isolate and failed reads can recover', async () => {
   const calls=[];
-  const assets={async fetch(req){const p=new URL(req.url).pathname;calls.push(p);return new Response(fixtureFiles[p.slice('/instruments/'.length)])}};
+  const registered=Object.fromEntries(fixture.titles.map(row=>[row.id,row.asMadeRegisteredAt?.slice(0,10) || null]));
+  const assets={async fetch(req){const p=new URL(req.url).pathname;calls.push(p);return p === '/table-private-identities.json' ? new Response(readFileSync(new URL('table-private-identities.json',root))) : p === '/instruments/registered.json' ? Response.json(registered) : new Response(fixtureFiles[p.slice('/instruments/'.length)])}};
   const read=instrumentReader(assets);assert.equal(read,instrumentReader(assets));
-  await Promise.all([instrumentPage(null,new URL('https://opax.com.au/instruments'),read,block),instrumentPage(null,new URL('https://opax.com.au/instruments?q=jane'),read,block)]);
-  assert.deepEqual(calls.sort(),['/instruments/index.json','/instruments/manifest.json']);
+  await Promise.all([instrumentPage(null,new URL('https://opax.com.au/instruments'),read,block,()=>true),instrumentPage(null,new URL('https://opax.com.au/instruments?q=jane'),read,block,()=>true)]);
+  assert.deepEqual(calls.sort(),['/instruments/index.json','/instruments/manifest.json','/instruments/registered.json','/table-private-identities.json']);
   let available=false;
   const recovering=instrumentReader({async fetch(){return available?new Response(fixtureFiles['manifest.json']):new Response('',{status:404})}});
   await assert.rejects(recovering('/instruments/manifest.json'));
@@ -243,4 +244,21 @@ test('source block is verbatim, OPAX fields left out, authoritative link unique 
 
 test('weekly first-catalogue guard and nightly directory staging use offline git fixtures', () => {
   execFileSync('python3',[new URL('../../scripts/vm/test_frl_refresh.py',import.meta.url).pathname],{stdio:['ignore','pipe','pipe']});
+});
+
+test('server catalogue uses the shared page projection and rejects private state before reading D1',async()=>{
+  const {readFile}=await import('node:fs/promises');
+  const {tablePrivacyCheckFrom}=await import('../src/table-privacy.ts');
+  const {tablePrivacyIndex}=await import('./datatable-privacy.mjs');
+  const fromPublic=async path=>JSON.parse(await readFile(new URL('../public'+path,import.meta.url),'utf8'));
+  const manifest=await fromPublic('/instruments/manifest.json'),safe=await tablePrivacyCheckFrom(fromPublic),calls=[];
+  const read=async path=>{assert.ok(['/instruments/manifest.json','/table-private-identities.json'].includes(path),'native SSR reads only metadata and the shared guard');return path==='/table-private-identities.json'?fromPublic(path):manifest};
+  const projected={rows:[{id:'F2026L99999',title:'Fixture airport instrument',type:'Principal',portfolios:['Health'],status:'InForce',registered:'2026-01-01',year:2026}],total:51,page:1,pageSize:50,facets:{year:{min:2026,max:2026}}};
+  const native=async query=>{calls.push(query);return projected};
+  const nativeBlock=(heading,sentence)=>`<h1>${heading}</h1><p>${sentence}</p>`;
+  const result=await instrumentPage(null,new URL('https://local.invalid/instruments?q=airport&year=2026'),read,nativeBlock,safe,native);
+  assert.equal(result.status,200);assert.equal(result.noindex,true);assert.equal(calls.length,1);assert.equal(calls[0].q,'airport');assert.deepEqual(calls[0].filters.year,{min:2026,max:2026});assert.ok(result.prerender.includes('of 51'));
+  const shared=await tablePrivacyIndex(),probe=shared.values.find(value=>/^\d{11}$/.test(value));
+  const rejected=await instrumentPage(null,new URL('https://local.invalid/instruments?'+new URLSearchParams({q:probe})),read,nativeBlock,safe,native);
+  assert.equal(calls.length,1,'private state performs no D1 page read');assert.equal(rejected.status,200);assert.ok(rejected.prerender.includes('Showing 0–0 of 0'));assert.ok(rejected.prerender.includes('data-export disabled'));
 });

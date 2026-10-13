@@ -18,7 +18,7 @@ const fixture = {schema:1,complete:true,count:1,listed:1,generated_at:'2026-10-1
 // Node deploy CI reads these fixtures and needs no Python network packages.
 const fixtureRoot = new URL('./fixtures/audit-export/',import.meta.url);
 const files = Object.fromEntries(readdirSync(fixtureRoot).map(name=>[name,readFileSync(new URL(name,fixtureRoot),'utf8')]));
-const read = async path => JSON.parse(files[path.replace('/audit/','')]);
+const read = async path => path.startsWith('/audit/') ? JSON.parse(files[path.replace('/audit/','')]) : JSON.parse(readFileSync(new URL(path.slice(1),publicRoot),'utf8'));
 const manifest = await read('/audit/manifest.json');
 const index = await read('/audit/index.json');
 const block = (heading,text,links='') => `<section id="prerender"><h1>${heading}</h1><p>${text}</p>${links}</section>`;
@@ -46,7 +46,7 @@ test('audit directory filters title, report year, sector and exact entity, with 
  }
  const page = await auditPage(null,new URL('https://opax.com.au/audit'),read,block);
  assert.equal(page.status,200); assert.match(page.prerender,/<section id="prerender">/);
- for(const word of ['Title text','Report year','Sector','Entity audited','Report 1, 2025–26 · Tabled 2 Jan 2026','/audit/qao-2025-26-1']) assert.ok(page.prerender.includes(word),word);
+ for(const word of ['Title','Tabled','Sector','Entities','2026-01-02','qao-2025-26-1']) assert.ok(page.prerender.includes(word),word);
  assert.equal((page.prerender.match(/class="ui-pop ui-source"/g)||[]).length,1);
  assert.doesNotMatch(page.prerender,/\/subject\/person\//);
 });
@@ -134,7 +134,7 @@ test('audit Worker routes give bad/unknown ids a 404 and noindex without externa
   const response=await worker.fetch(new Request('https://opax.com.au/audit/'+id),env,{});
   assert.equal(response.status,404,id);assert.equal(response.headers.get('x-robots-tag'),'noindex');
  }
- assert.ok(paths.every(p=>p==='/'||p.startsWith('/audit/')));
+ assert.ok(paths.every(p=>p==='/'||/^\/(?:audit|graph|suppliers|grants)\//.test(p)||p==='/suppliers.json'||p==='/table-private-identities.json'));
  assert.equal(CATALOG_KINDS.has('audit report'),true);
 });
 

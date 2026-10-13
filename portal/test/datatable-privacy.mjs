@@ -1,116 +1,187 @@
 // Shared rollout gate. Names are read at run time; failure messages contain counts only.
 import assert from 'node:assert/strict';
 import {readFile,readdir} from 'node:fs/promises';
-import {withheldPhrases,namesWithheldPhrase} from '../public/donor-entity.js';
+import {createHash} from 'node:crypto';
+import {MONEY_GRAPHS,withheldPhrases,namesWithheldPhrase} from '../public/donor-entity.js';
 import {privacySourceGraphs} from '../../scripts/withhold_donor_assets.mjs';
 import {sourceTableDonorIdentities} from '../../scripts/table_identity_source.mjs';
-import {tableIdentityIndex} from '../../scripts/load_tables.mjs';
+import {tableIdentityIndex as registryIdentityIndex} from '../../scripts/load_tables.mjs';
+import {tablePrivacyCheckFrom} from '../src/table-privacy.ts';
+import {csvFields} from '../public/datatable-csv.js';
+import {privacyCSVFields} from '../public/datatable-privacy-fields.js';
 import {isOrganisationRecipient} from '../src/table-recipient.mjs';
-
-export async function tablePrivacyIndex({donorContext=true} = {}) {
-  const graphs=privacySourceGraphs();
-  const officeHolders=[];
-  if (!donorContext) {
-    const roster=JSON.parse(await readFile(new URL('../public/parliamentarians.json',import.meta.url),'utf8'));
-    const access=JSON.parse(await readFile(new URL('../public/access.json',import.meta.url),'utf8'));
-    officeHolders.push(...roster.people.flatMap(p=>[p.name,p.full || '']),...Object.values(access.ministers || {}).map(m=>m.name));
-  }
-  const phrases=withheldPhrases(graphs,officeHolders.filter(Boolean));
-  const policy=await tableIdentityIndex(),source=sourceTableDonorIdentities();
-  const recipients=new Set(),recipientABNs=new Set();
+const read=async path=>JSON.parse(await readFile(new URL(`../public${path}`,import.meta.url),'utf8'));
+let pendingIndex;
+export async function tablePrivacyIndex(_options = {}) {
+ pendingIndex ||= (async()=>{
+  const sharedSafe=await tablePrivacyCheckFrom(read),rowSafe=await tablePrivacyCheckFrom(read,'row'),blocked=value=>!sharedSafe(String(value));
+  const approved=new Map();let approvedBytes=0;
+  const safe=value=>{
+    const text=String(value);
+    if(approved.has(text))return true;
+    if(blocked(text))return false;
+    const bytes=text.length*2;
+    if(bytes<=262144){
+      while(approved.size>=1024 || approvedBytes+bytes>8388608){const first=approved.keys().next().value;approvedBytes-=first.length*2;approved.delete(first);}
+      approved.set(text,true);approvedBytes+=bytes;
+    }
+    return true;
+  };
+  // Raw values are derived only for negative probes, never for the guard.
+  const policy=await registryIdentityIndex(),source=sourceTableDonorIdentities(),donors=[...new Set([...source.labels,...source.identifiers])],grantValues=new Set(),recipients=new Set(),recipientABNs=new Set();
   const add=entity=>{
-    for(const value of [entity.label,entity.name,entity.n,entity.identity?.legal_name,entity.abr?.name,entity.abr?.legal_name,...(entity.aliases || []),...(entity.lookup_names || []),...[entity.id,entity.canonical_id].filter(id=>String(id || '').startsWith('person:')).map(id=>id.slice(7))])if(typeof value==='string'&&value.trim())recipients.add(value);
+    for(const value of [entity.label,entity.name,entity.n,entity.identity?.legal_name,entity.abr?.name,entity.abr?.legal_name,...(entity.aliases || []),...(entity.lookup_names || []),...[entity.id,entity.canonical_id].filter(id=>String(id || '').startsWith('person:')).map(id=>id.slice(7))])if(typeof value==='string'&&value.trim()){recipients.add(value);grantValues.add(value);}
     for(const value of [entity.abn,entity.abr?.abn,...[entity.id,entity.canonical_id].filter(id=>/^(?:abn:)?\d{11}$/.test(String(id || '')))]){
-      const digits=String(value || '').replace(/\D/g,'');if(digits.length===11)recipientABNs.add(digits);
+      const digits=String(value || '').replace(/\D/g,'');if(digits.length===11){recipientABNs.add(digits);grantValues.add(digits);}
     }
   };
-  const root=new URL('../public/',import.meta.url);
-  for(const jur of ['federal','qld']){
-    const graph=JSON.parse(await readFile(new URL('graph/grants.'+jur+'.json',root),'utf8'));
-    for(const recipient of graph.recipients)if(!isOrganisationRecipient(recipient))add(recipient);
-    const directory=new URL('grants/'+jur+'/',root);
-    for(const file of (await readdir(directory)).filter(f=>f.startsWith('shard-')&&f.endsWith('.json')))for(const recipient of Object.values(JSON.parse(await readFile(new URL(file,directory),'utf8'))))if(!isOrganisationRecipient(recipient))add(recipient);
+  for(const jur of ['federal','qld']) {
+   const graph=await read(`/graph/grants.${jur}.json`);
+   for(const recipient of graph.recipients.filter(r=>!isOrganisationRecipient(r)))add(recipient);
+   for(const file of (await readdir(new URL(`../public/grants/${jur}/`,import.meta.url))).filter(f=>f.startsWith('shard-')&&f.endsWith('.json')))for(const recipient of Object.values(await read(`/grants/${jur}/${file}`)))if(!isOrganisationRecipient(recipient))add(recipient);
   }
-  const abns=[...new Set([...source.identifiers,...recipientABNs])],values=[...new Set([...source.labels,...recipients,...abns])];
-  return {...policy,values,donors:source.labels,recipients:[...recipients],recipientABNs:[...recipientABNs],abns,safe:value=>!policy.check(value)&&!namesWithheldPhrase(phrases,`donor receipts ${value}`)};
+  const roster=await read('/parliamentarians.json'),access=await read('/access.json');
+  const exempt=withheldPhrases(privacySourceGraphs(),[...roster.people.flatMap(p=>[p.name,p.full||'']),...Object.values(access.ministers||{}).map(m=>m.name)]);
+  const officeValues=source.labels.filter(value=>!namesWithheldPhrase(exempt,`donor receipts ${value}`) && !safe(value));
+  const probes=[...new Set([...donors,...officeValues,...grantValues])].filter(value=>!safe(value));
+  return {...policy,safeRows:rowSafe,values:[...policy.phrases],donors:source.labels,recipients:[...recipients],recipientABNs:[...recipientABNs],abns:[...new Set([...source.identifiers,...recipientABNs])],safe,check:blocked,probes,grantProbes:[...grantValues].filter(value=>!safe(value)),officeProbes:officeValues};
+ })();
+ return pendingIndex;
 }
 
+const approvedDownloads=new WeakMap();
 /** CSV must be an actual browser download path. All listed surfaces are mandatory. */
 export async function assertTablePrivacy(surfaces,index) {
+  const safeRow=index.surfaceSafe || index.safeRows || index.safe;
+  const safeValue=value=>{
+    if(Array.isArray(value))return value.every(safeValue);
+    if(value&&typeof value==='object')return Object.values(value).every(safeValue);
+    if(typeof value==='string'){let parsed;try{parsed=JSON.parse(value);}catch{}if(parsed&&typeof parsed==='object')return safeValue(parsed);}
+    return value==null || safeRow(String(value));
+  };
   for (const key of ['clientInput','serverResponses','url','renderedText','accessibleText','analytics']) {
     assert.ok(Object.hasOwn(surfaces,key),`privacy surface missing: ${key}`);
-    assert.ok(index.safe(typeof surfaces[key] === 'string' ? surfaces[key] : JSON.stringify(surfaces[key])),`withheld text on privacy surface: ${key}`);
+    assert.ok(key==='url'?index.safe(surfaces[key]):safeValue(surfaces[key]),`withheld text on privacy surface: ${key}`);
   }
   assert.equal(typeof surfaces.csvPath,'string','privacy gate requires an actual downloaded file');
-  assert.ok(index.safe(await readFile(surfaces.csvPath,'utf8')),'withheld text in downloaded CSV');
+  const csv=await readFile(surfaces.csvPath,'utf8'),digest=createHash('sha256').update(csv).digest('hex');
+  let approved=approvedDownloads.get(index);
+  if(!approved)approvedDownloads.set(index,approved=new Set());
+  if(!approved.has(digest)){
+    let safeCSV=true;try{for(const field of index.csvConfig ? privacyCSVFields(csv,index.csvConfig) : csvFields(csv))if(!(index.safeRows || index.safe)(field)){safeCSV=false;break;}}catch{safeCSV=false;}
+    assert.ok(safeCSV,'withheld text in downloaded CSV');
+    if(approved.size>=128)approved.delete(approved.values().next().value);
+    approved.add(digest);
+  }
 }
 
-/** Each donor rollout adds one registration to its browser gate and runs it locally. */
+/** Each protected rollout registers its real page. Optional readInput/modes and
+ * responseType adapters support client tables with factory configs and SSR HTML;
+ * all seven privacy surfaces and withheld query/facet probes remain required. */
+export function institutionalPrivacyIndex(index, rows, fields) {
+  const values=[...new Set(rows.flatMap(row=>fields.flatMap(key=>[row[key]].flat())).filter(v=>typeof v==='string'&&v.length>=6))].sort((a,b)=>b.length-a.length);
+  const forms=[...new Set(values.flatMap(value=>[value,JSON.stringify(value).slice(1,-1),value.replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))]))];
+  const approved=new Set(),originalRowSafe=index.safeRows || index.safe;
+  const surfaceSafe=value=>{const raw=String(value);if(approved.has(raw))return true;let text=raw;for(const form of forms)text=text.replaceAll(form,'Institutional document');const safe=originalRowSafe(text);if(safe&&raw.length<262144){if(approved.size>=64)approved.delete(approved.values().next().value);approved.add(raw);}return safe;};
+  return {...index,surfaceSafe,safeRows:surfaceSafe};
+}
+
 export function registerTablePrivacy(registry, rollout) {
-  for (const key of ['id','path','module','configExport','rowsExport','host','facet','serverExample','endpoint']) assert.ok(rollout[key],`privacy registration missing: ${key}`);
+  for (const key of ['id','path','host','facet','endpoint']) assert.ok(rollout[key],`privacy registration missing: ${key}`);
+  if (!rollout.readInput) for (const key of ['module','configExport','rowsExport','serverExample']) assert.ok(rollout[key],`privacy registration missing: ${key}`);
   registry.push(async ({page,base,index,outputDir})=>{
     await page.goto(base+rollout.path);
-    await page.waitForFunction(host=>document.querySelector(host)?.querySelector('.dt-count') && !document.querySelector(host).hasAttribute('aria-busy'),rollout.host);
-    const {clientInput,donorContext}=await page.evaluate(async r=>{const module=await import(r.module);return {clientInput:module[r.rowsExport],donorContext:module[r.configExport].privacy === 'donors'};},rollout);
-    if (!donorContext) index=await tablePrivacyIndex({donorContext:false});
-    assert.ok(index.safe(JSON.stringify(clientInput)),`${rollout.id}: unsafe public client input`);
-    const responses=[];
-    page.on('response',async response=>{
+    await page.waitForFunction(host=>{const el=document.querySelector(host),table=el?.matches('[data-datatable]')?el:el?.querySelector('[data-datatable]');return table?.querySelector('.dt-count') && !el.hasAttribute('aria-busy') && !table.hasAttribute('aria-busy') && !el.querySelector('[data-register-config]')},rollout.host,{timeout:180000});
+    const {clientInput,donorContext}=rollout.readInput ? await rollout.readInput(page) : await page.evaluate(async r=>{const module=await import(r.module);return {clientInput:module[r.rowsExport],donorContext:module[r.configExport].privacy === 'donors'};},rollout);
+    assert.ok(donorContext,`${rollout.id}: shared privacy registration`);
+    if (rollout.institutionalFields) {
+      // Official institutional fields have no person identity semantics. Keep
+      // query validation strict; only the publication assertion is field-scoped.
+      const rows=clientInput.rows || clientInput.config?.rows || [];
+      index=institutionalPrivacyIndex(index,rows,rollout.institutionalFields);
+    }
+    assert.ok((index.surfaceSafe || index.safeRows || index.safe)(JSON.stringify(clientInput)),`${rollout.id}: unsafe public client input`);
+    const responses=[];let downloads=0;
+    const downloadListener=()=>downloads++;page.on('download',downloadListener);
+    const capture=async response=>{
       if (new URL(response.url()).pathname.startsWith('/api/table/') && new URL(response.url()).pathname !== '/api/table/privacy') {
         const value=await response.text().catch(()=> ''); responses.push(value);
       }
-    });
-    for (const mode of ['client','server']) {
+    };
+    page.on('response',capture);
+    console.log(JSON.stringify({table:rollout.id,stage:'input-approved'}));
+    const modes=rollout.modes || ['client','server'];let probeCases=0;
+    // Browser arguments contain data only; custom input adapters stay in Node.
+    const browserRollout={...rollout,readInput:undefined};
+    for (const mode of modes) {
       await page.goto(base+rollout.path);
-      if (mode === 'server') await page.locator(`[data-example="${rollout.serverExample}"]`).click();
-      await page.waitForFunction(host=>!document.querySelector(host).hasAttribute('aria-busy'),rollout.host);
+      if (mode === 'server' && rollout.serverExample) await page.locator(`[data-example="${rollout.serverExample}"]`).click();
+      await page.waitForFunction(host=>{const el=document.querySelector(host),table=el?.matches('[data-datatable]')?el:el?.querySelector('[data-datatable]');return table?.querySelector('.dt-count') && !el.hasAttribute('aria-busy') && !table.hasAttribute('aria-busy') && !el.querySelector('[data-register-config]')},rollout.host,{timeout:180000});
       await page.evaluate(r=>{
         window.privacyEvents=[]; window.privacyServerResponses=[];
         addEventListener('opax:analytics',event=>window.privacyEvents.push(event.detail));
         const original=window.fetch;
         window.fetch=async (input,options)=>{
           const response=await original(input,options);
-          if (new URL(input,location.href).pathname === r.endpoint) window.privacyServerResponses.push(await response.clone().text());
+          if (new URL(input,location.href).pathname === new URL(r.endpoint,location.href).pathname) window.privacyServerResponses.push(await response.clone().text());
           return response;
         };
-      },rollout);
+      },browserRollout);
       const host=page.locator(rollout.host);
-      const download=page.waitForEvent('download'); await host.locator('[data-export]').click();
-      const downloaded=await download;
+      console.log(JSON.stringify({table:rollout.id,stage:'export-start'}));
+      const download=page.waitForEvent('download',{timeout:60000}); await host.locator('[data-export]').click();
+      const downloaded=await download.catch(async()=>{const status=await host.locator('.dt-count').textContent();throw Error(`${rollout.id}: export timed out; ${index.safe(status)?status:'status suppressed'}`);});
       const csvPath=outputDir ? `${outputDir}/${rollout.id}-${mode}.csv` : await downloaded.path();
+      assert.ok((index.surfaceSafe || index.safeRows || index.safe)(await readFile(await downloaded.path(),'utf8')),`${rollout.id}: downloaded CSV privacy`);
       if (outputDir) await downloaded.saveAs(csvPath);
       const serverResponses=await page.evaluate(async r=>{
-        const config=(await import(r.module))[r.configExport];
         const response=await fetch(r.endpoint);
-        return await response.json();
-      },rollout);
+        if (r.responseType === 'table') {const doc=new DOMParser().parseFromString(await response.text(),'text/html');return [...doc.querySelectorAll('[data-register-table]')].map(el=>el.outerHTML).join('');}
+        return r.responseType === 'text' ? await response.text() : await response.json();
+      },browserRollout);
       await assertTablePrivacy({clientInput,serverResponses:[serverResponses,...responses,...await page.evaluate(()=>window.privacyServerResponses)],csvPath,url:decodeURIComponent(page.url()),renderedText:await host.innerHTML(),accessibleText:await host.ariaSnapshot(),analytics:await page.evaluate(()=>window.privacyEvents)},index);
-      if (!donorContext) continue;
-      for (const value of index.values.filter((_,i)=>i % Math.max(1,Math.floor(index.values.length/8)) === 0).slice(0,8)) {
-        for (const kind of ['q','facet']) {
+      const events=await page.evaluate(()=>window.privacyEvents);
+      assert.ok(events.some(event=>event.event === 'table_export'),`${rollout.id}: export analytics observed`);
+      for (const event of events) assert.deepEqual(Object.keys(event.properties).sort(),['page_type','table_id'],`${rollout.id}: analytics property boundary`);
+      let probes=0,rangeCases=0;
+      const fullValues=rollout.fullPrivacy?index.probes:null;
+      const facetSamples=new Set(fullValues?Array.from({length:15},(_,i)=>fullValues[Math.floor(i*fullValues.length/15)]):[]);
+      for (const value of rollout.fullPrivacy ? index.probes : index.values.filter((_,i)=>i % Math.max(1,Math.floor(index.values.length/8)) === 0).slice(0,8)) {
+        for (const kind of rollout.fullPrivacy?['q',...(facetSamples.has(value)?['facet']:[]),...(/^\d{11}$/.test(value)&&rangeCases++<15?['range']:[])]:/^\d{11}$/.test(value)?['q','facet','range']:['q','facet']) {
+          probeCases++;
           await page.evaluate(({r,value,kind})=>{
             const url=new URL(location.href), key=r.urlKey ? r.urlKey+'.' : '';
             if (kind === 'q') url.searchParams.set(key+'q',value);
+            else if (kind === 'range') url.searchParams.set(key+'f.'+(r.rangeFacet || r.facet),JSON.stringify({min:Number(value),max:Number(value)}));
             else url.searchParams.set(key+'f.'+r.facet,JSON.stringify([value]));
             url.searchParams.set('campaign','fixture');
             history.replaceState(null,'',url); dispatchEvent(new PopStateEvent('popstate'));
-          },{r:rollout,value,kind});
+          },{r:browserRollout,value,kind});
           // This immediate check detects old SSR rows/query echoes during validation.
-          assert.ok(index.safe(await host.innerHTML()),`${rollout.id}: reflected pending state`);
-          await page.waitForFunction(host=>!document.querySelector(host).hasAttribute('aria-busy'),rollout.host);
-          if (kind === 'q') {
+          assert.ok((index.surfaceSafe || index.safeRows || index.safe)(await host.innerHTML()),`${rollout.id}: reflected pending state`);
+          await page.waitForFunction(host=>{const el=document.querySelector(host),table=el?.matches('[data-datatable]')?el:el?.querySelector('[data-datatable]');return table?.querySelector('.dt-count') && !el.hasAttribute('aria-busy') && !table.hasAttribute('aria-busy') && !el.querySelector('[data-register-config]')},rollout.host,{timeout:180000});
+          if (kind === 'q' && (!rollout.fullPrivacy || facetSamples.has(value))) {
             await host.locator('[data-search]').fill(value);
             await host.locator('form').evaluate(el=>el.requestSubmit());
-            await page.waitForFunction(host=>!document.querySelector(host).hasAttribute('aria-busy'),rollout.host);
+            await page.waitForFunction(host=>{const el=document.querySelector(host),table=el?.matches('[data-datatable]')?el:el?.querySelector('[data-datatable]');return table?.querySelector('.dt-count') && !el.hasAttribute('aria-busy') && !table.hasAttribute('aria-busy') && !el.querySelector('[data-register-config]')},rollout.host,{timeout:180000});
           }
           await assertTablePrivacy({clientInput,serverResponses:[serverResponses,...responses,...await page.evaluate(()=>window.privacyServerResponses)],csvPath,url:decodeURIComponent(page.url()),renderedText:await host.innerHTML(),accessibleText:await host.ariaSnapshot(),analytics:await page.evaluate(()=>window.privacyEvents)},index);
+          assert.ok(index.safe(await host.locator('[role=status]').textContent()),`${rollout.id}: live region safe`);
+          assert.equal(await host.locator('[data-export]').isDisabled(),true,`${rollout.id}: rejected CSV is disabled`);
+          const before=downloads;await host.locator('[data-export]').evaluate(el=>el.click());
+          assert.equal(downloads,before,`${rollout.id}: rejected state creates no download`);
+          responses.length=0;await page.evaluate(()=>{window.privacyServerResponses=[];});
           assert.equal(new URL(page.url()).searchParams.get('campaign'),'fixture');
-          if (kind === 'q') assert.equal(await host.locator('.dt-count').textContent(),'Showing 0–0 of 0');
-          await page.evaluate(({r})=>{ const url=new URL(location.href),key=r.urlKey ? r.urlKey+'.' : '';url.searchParams.delete(key+'q');url.searchParams.delete(key+'f.'+r.facet);history.replaceState(null,'',url);dispatchEvent(new PopStateEvent('popstate')); },{r:rollout});
-          await page.waitForFunction(host=>!document.querySelector(host).hasAttribute('aria-busy'),rollout.host);
+          assert.equal(await host.locator('.dt-count').textContent(),'Showing 0–0 of 0');
+          await page.evaluate(({r})=>{ const url=new URL(location.href),key=r.urlKey ? r.urlKey+'.' : '';url.searchParams.delete(key+'q');url.searchParams.delete(key+'f.'+r.facet);url.searchParams.delete(key+'f.'+(r.rangeFacet || r.facet));history.replaceState(null,'',url);dispatchEvent(new PopStateEvent('popstate')); },{r:browserRollout});
+          await page.waitForFunction(host=>{const el=document.querySelector(host),table=el?.matches('[data-datatable]')?el:el?.querySelector('[data-datatable]');return table?.querySelector('.dt-count') && !el.hasAttribute('aria-busy') && !table.hasAttribute('aria-busy') && !el.querySelector('[data-register-config]')},rollout.host,{timeout:180000});
+          assert.equal(await host.locator('[data-export]').isDisabled(),false,`${rollout.id}: clearing each probe restores export`);
         }
+        if(++probes%10===0)console.log(JSON.stringify({table:rollout.id,probes}));
       }
     }
-    return {id:rollout.id,withheldValues:index.values.length,modes:2,surfaces:7};
+    console.log(JSON.stringify({table:rollout.id,stage:'complete'}));
+    page.off('response',capture);page.off('download',downloadListener);
+    return {id:rollout.id,withheldValues:index.values.length,modes:modes.length,surfaces:8,probes:probeCases};
   });
 }

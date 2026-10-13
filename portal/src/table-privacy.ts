@@ -1,49 +1,55 @@
-import {compileHashedIdentityCheck} from './table-identity-hashes.mjs'
+import {compileHashedIdentityCheck,csvIdentityCheck} from './table-identity-hashes.mjs'
 import {timedSync} from './server-timing.ts'
 
-const indices = new WeakMap<Fetcher, Promise<(text: string) => boolean>>()
-const readers = new WeakMap<Function, Fetcher>()
-const readChecks = new WeakMap<Fetcher, Promise<(text: string) => boolean>>()
-/** The shared index is immutable for a render. Bound repeated row, scalar and
- * facet checks of the same text to one hash pass without changing the policy. */
-export function memoisedCheck(check: (text: string) => boolean): (text: string) => boolean {
-  const results = new Map<string, boolean>()
-  return text => {
-    if (results.has(text)) return results.get(text)!
-    const safe = check(text)
-    if (results.size >= 256) results.clear()
-    results.set(text, safe)
+const indices = new WeakMap<Fetcher, Map<string, Promise<(text: string) => boolean>>>()
+const readers = new WeakMap<(path:string)=>Promise<unknown>, Fetcher>()
+const readChecks = new WeakMap<(path:string)=>Promise<unknown>, Promise<(text:string)=>boolean>>()
+export function memoisedCheck(check:(text:string)=>boolean):(text:string)=>boolean {
+  const results=new Map<string,boolean>()
+  return text=>{
+    if(results.has(text))return results.get(text)!
+    const safe=check(text)
+    // A person page scans several registers more than once. Retain their
+    // working set without clearing approvals for every field at the limit.
+    if(results.size>=4096)results.delete(results.keys().next().value!)
+    results.set(text,safe)
     return safe
   }
 }
-/** Adapt SSR's read boundary to the same complete hashed registry. */
-export function tablePrivacyCheckFromRead(read: (path: string) => Promise<unknown>): Promise<(text: string) => boolean> {
-  let assets = readers.get(read)
-  if (!assets) {
-    assets = {fetch: async (request: Request) => Response.json(await read(new URL(request.url).pathname))} as Fetcher
-    readers.set(read, assets)
-  }
-  let pending = readChecks.get(assets)
+/** Cache repeated reader checks against the same strict shared query guard. */
+export function tablePrivacyCheckFromRead(read:(path:string)=>Promise<unknown>):Promise<(text:string)=>boolean> {
+  let pending=readChecks.get(read)
   if (!pending) {
-    pending = tablePrivacyCheck(assets).then(memoisedCheck)
-    readChecks.set(assets, pending)
+    pending=tablePrivacyCheckFrom(read).then(memoisedCheck)
+    readChecks.set(read,pending)
   }
   return pending
 }
+/** Readers use the same complete registry and query/row policy as the worker. */
+export function tablePrivacyCheckFrom(read:(path:string)=>Promise<unknown>, mode: 'query' | 'row' = 'query'):Promise<(text:string)=>boolean> {
+  let assets=readers.get(read)
+  if (!assets) {
+    assets={fetch:async (request:Request)=>Response.json(await read(new URL(request.url).pathname))} as Fetcher
+    readers.set(read,assets)
+  }
+  return tablePrivacyCheck(assets,mode)
+}
 /** Complete build-time registry: donor, recipient and supplier identities.
  * Only hashes are served; anonymised graphs cannot reconstruct this index. */
-export async function tablePrivacyCheck(assets: Fetcher): Promise<(text: string) => boolean> {
-  let pending = indices.get(assets)
+export async function tablePrivacyCheck(assets: Fetcher, mode: 'query' | 'row' = 'query'): Promise<(text: string) => boolean> {
+  let modes = indices.get(assets)
+  if (!modes) indices.set(assets, modes = new Map())
+  let pending = modes.get(mode)
   if (!pending) {
     pending = (async () => {
       const response = await assets.fetch(new Request('https://opax.com.au/table-private-identities.json'))
       if (!response.ok) throw new Error('Privacy index unavailable')
-      const registry = await response.json() as {version:number;identities:{hash:string;words:number}[];strippedLengths:number[]}
-      if(registry.version!==1 || !Array.isArray(registry.strippedLengths) || !registry.strippedLengths.length || registry.strippedLengths.some(n=>!Number.isSafeInteger(n)||n<4))throw new Error('Privacy index unavailable')
-      const blocked=compileHashedIdentityCheck(registry.identities,registry.strippedLengths)
-      return (text: string) => timedSync('privacy', () => !blocked(text))
-    })().catch(() => {indices.delete(assets); return () => false})
-    indices.set(assets, pending)
+      const registry = await response.json() as {version:number;identities:{hash:string;words:number;compact:boolean;length:number;rolling:number;row:false|'token'|'field'}[];strippedLengths:number[]}
+      if(registry.version!==3 || !Array.isArray(registry.identities) || registry.identities.some(e=>typeof e.compact!=='boolean'||!Number.isSafeInteger(e.length)||!Number.isSafeInteger(e.rolling)||![false,'token','field'].includes(e.row)) || !Array.isArray(registry.strippedLengths) || !registry.strippedLengths.length || registry.strippedLengths.some(n=>!Number.isSafeInteger(n)||n<4))throw new Error('Privacy index unavailable')
+      const blocked=compileHashedIdentityCheck(registry.identities,registry.strippedLengths,{mode,requireBinding:true})
+      return (text: string) => timedSync('privacy',()=>!blocked(text))
+    })().catch(() => {modes!.delete(mode); return () => false})
+    modes.set(mode, pending)
   }
   return pending
 }
@@ -54,9 +60,16 @@ export async function tablePrivacy(request: Request, assets: Fetcher): Promise<R
   if (request.method !== 'POST') return Response.json({safe:false}, {status:405, headers})
   try {
     const input = await request.text()
-    const value: unknown = JSON.parse(input).text
+    const parsed = JSON.parse(input)
+    const value: unknown = parsed.text
+    if (parsed.mode != null && !['query','row','csv'].includes(parsed.mode)) return Response.json({safe:false}, {status:400, headers})
+    if(parsed.mode==='row'&&Array.isArray(parsed.texts)){
+      if(!parsed.texts.length||parsed.texts.some((v:unknown)=>typeof v!=='string'))return Response.json({safe:false},{status:400,headers})
+      const check=await tablePrivacyCheck(assets,'row')
+      return Response.json({safe:parsed.texts.every(check)},{headers})
+    }
     if (typeof value !== 'string') return Response.json({safe:false}, {status:400, headers})
-    const check = await tablePrivacyCheck(assets)
-    return Response.json({safe:check(value)}, {headers})
+    const check = await tablePrivacyCheck(assets, parsed.mode === 'csv' ? 'row' : parsed.mode || 'query')
+    return Response.json({safe:parsed.mode === 'csv' ? !csvIdentityCheck(value,field=>!check(field)) : check(value)}, {headers})
   } catch { return Response.json({safe:false}, {status:503, headers}) }
 }
