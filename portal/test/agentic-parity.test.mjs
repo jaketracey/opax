@@ -13,7 +13,7 @@ test('ordinary Ask (96 unscoped and 96 non-SA bodies) and all 34 agentic gold qu
  let goldMode=false;const realNow=Date.now;
  const restore=offline(),pending=[],ctx={waitUntil(p){pending.push(p)},passThroughOnException(){}};
  try{
-  const files=execFileSync('git',['ls-tree','-r','--name-only','origin/main','portal/src','portal/public','parli/ingest/user-agent.json'],{cwd:root,encoding:'utf8',maxBuffer:20*1024*1024}).trim().split('\n').filter(f=>f.startsWith('portal/src/')||/^portal\/public\/[^/]+\.js$/.test(f)||f==='parli/ingest/user-agent.json');
+  const files=execFileSync('git',['ls-tree','-r','--name-only','origin/main','portal/src','portal/graph','portal/public','parli/ingest/user-agent.json'],{cwd:root,encoding:'utf8',maxBuffer:20*1024*1024}).trim().split('\n').filter(f=>f.startsWith('portal/src/')||f.startsWith('portal/graph/')||/^portal\/public\/[^/]+\.js$/.test(f)||f==='parli/ingest/user-agent.json');
   for(const f of files){const target=join(scratch,f);mkdirSync(dirname(target),{recursive:true});writeFileSync(target,execFileSync('git',['show',`origin/main:${f}`],{cwd:root,maxBuffer:20*1024*1024}));}
   symlinkSync(join(root,'portal/node_modules'),join(scratch,'portal/node_modules'));
   const current=await loadWorker(root+'portal/src/index.ts',root+'portal/public',ctx),main=await loadWorker(join(scratch,'portal/src/index.ts'),root+'portal/public',ctx);
