@@ -269,6 +269,9 @@
 /person-paths.js
   ! Cache-Control
   Cache-Control: public, max-age=31536000, immutable
+/procurement.css
+  ! Cache-Control
+  Cache-Control: public, max-age=31536000, immutable
 /register-tables-entry.js
   ! Cache-Control
   Cache-Control: public, max-age=31536000, immutable

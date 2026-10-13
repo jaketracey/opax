@@ -1,0 +1,70 @@
+/* Agency and supplier entries and the agency directory (agencies.js,
+   suppliers.js): .agency-page, .supplier-entry, .agency-directory-page. The
+   /connections page also wears .supplier-page, so nothing here keys on that
+   alone. Built from the shared page head, ui-section, ui-list rows, ui-toolbar
+   and ui-stats; this file sets only what is particular to the procurement
+   record: the rows' figure column, the year chart and the narrow layouts.
+   Loaded after style.css and ui-controls.css. */
+
+/* Long agency and supplier names break between words and balance their lines. */
+:is(.agency-page, .agency-directory-page, .supplier-entry) .ui-page-head > h1 { text-wrap: balance; overflow-wrap: break-word; }
+.agency-rows .ui-row-name, .supplier-bar-head > .ui-row-name { overflow-wrap: break-word; }
+
+/* Rows: the name and its meta on the left, the money and its count on the
+   right, every figure on one tabular column edge. */
+.agency-rows > .ui-row { align-items: start; }
+.agency-rows .ui-row-figure { min-width: 0; }
+.agency-rows .ui-row-figure > .ui-row-meta { justify-content: flex-end; font-weight: var(--weight-regular); }
+.agency-rows > .ui-empty { padding-block: 0; border: 0; }
+.agency-directory-count, .agency-supplier-count, .supplier-contract-count { margin-bottom: var(--space-tight); }
+
+/* Toolbars: the search grows, the sort keeps its own width; both share the control height. */
+/* The directory's tools belong to its head, as a filter bar does elsewhere. */
+.agency-directory-page > .ui-page-head:has(+ .ui-toolbar) { margin-bottom: 0; }
+.agency-directory-controls > .ui-field:first-child { flex: 2 1 280px; }
+.agency-directory-controls > .ui-field:last-child { flex: 1 1 220px; max-width: 320px; }
+.agency-supplier-controls > .ui-field { flex: 1 1 260px; }
+.agency-supplier-controls .search-sort-trigger { min-height: var(--size-control); }
+.agency-contract-controls > .ui-field { flex: 1 1 100%; }
+
+/* The contract record: one figure column, the chevron after it. */
+.supplier-contract.ui-disclosure > summary > .ui-row-figure { margin-left: auto; }
+
+/* Contract value over time: bars stretch to the column at a fixed height; the
+   years are HTML under them, so text never scales with the page width. */
+.supplier-year-chart svg { height: 180px; }
+.supplier-year-chart :is(line, rect) { vector-effect: non-scaling-stroke; }
+.supplier-year-axis { position: relative; height: 1.5em; margin-top: var(--sp-8); font: var(--type-fine); color: var(--ink-soft); }
+.supplier-year-axis > span { position: absolute; top: 0; transform: translateX(-50%); white-space: nowrap; }
+.supplier-chart-data table td { font-variant-numeric: tabular-nums; }
+
+/* Blocks other modules draw on a supplier entry. The register reference reads on
+   in its sentence (its full stop no longer drops to a line of its own), and the
+   evidence and tax disclosures keep a 44px row. */
+.supplier-entry .growth-donor .donor-return-reference { display: inline; }
+.supplier-entry details:not(.ui-disclosure) > summary { min-height: var(--size-target); box-sizing: border-box; padding-block: 10px; }
+.supplier-entry details.evidence-excerpt > summary { padding-block: 0; align-items: center; }
+
+@media (max-width: 600px) {
+  .supplier-year-chart svg { height: 140px; }
+  .supplier-year-axis > [data-minor] { display: none; }
+}
+
+/* Phones: the three head figures stay on one row at the compact size. */
+@media (max-width: 540px) {
+  .supplier-totals.ui-stats { display: grid; grid-template-columns: repeat(3, auto); justify-content: start; gap: var(--space-block); }
+  .supplier-totals .ui-stat-value { font: var(--weight-strong) var(--text-24)/var(--leading-tight) var(--serif); }
+  .agency-directory-controls > .ui-field:last-child { max-width: none; }
+  /* The map fits its height, so a tall narrow box left it clipped at the sides
+     under an empty band; a landscape box frames the whole graph. */
+  .agency-map, .supplier-agency-map { height: 360px; }
+  /* Stacked rows: the name gets the full width, its figure follows on one line. */
+  .agency-rows > .ui-row { grid-template-columns: minmax(0, 1fr); }
+  .agency-rows .ui-row-figure { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0 var(--space-tight); text-align: left; white-space: normal; }
+  .agency-rows .ui-row-figure > .ui-row-meta { margin: 0; }
+  .agency-rows .ui-row-figure > .ui-row-meta::before { content: "·" / ""; margin-right: var(--space-tight); }
+  /* A contract row stacks the same way: what was bought, its meta, then its value; the chevron stays at the edge. */
+  .supplier-contract.ui-disclosure > summary { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 0 var(--space-block); flex-wrap: nowrap; }
+  .supplier-contract.ui-disclosure > summary > .ui-row-figure { grid-column: 1; margin: var(--space-line) 0 0; text-align: left; }
+  .supplier-contract.ui-disclosure > summary::after { grid-column: 2; grid-row: 1 / span 2; align-self: center; }
+}

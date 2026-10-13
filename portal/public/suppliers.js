@@ -27,11 +27,35 @@ function agencyIds(signal) {
 }
 const agencyUrl = (name, ids) => ids?.has(name) ? `/subject/agency/${encodeURIComponent(ids.get(name))}` : `/subject/agency?q=${encodeURIComponent(name)}`;
 
-export async function json(url, signal) {
-  const response = await fetch(url, { signal, cache:"no-cache" });
-  if (!response.ok) throw new Error("The supplier records could not be loaded.");
-  return response.json();
+/** A load that runs long says so at 12 s and gives up at 90 s, so a status line never spins
+ *  for ever (the aggregateApi() pattern). The largest agency export is about 13 MB. */
+const SLOW_MS = 12000, GIVE_UP_MS = 90000;
+export async function json(url, signal, wait = GIVE_UP_MS) {
+  const controller = new AbortController();
+  let timedOut = false;
+  const timer = setTimeout(() => { timedOut = true; controller.abort(); }, wait);
+  const forward = () => controller.abort();
+  if (signal?.aborted) forward(); else signal?.addEventListener("abort", forward, { once: true });
+  try {
+    const response = await fetch(url, { signal: controller.signal, cache:"no-cache" });
+    if (!response.ok) throw new Error("The supplier records could not be loaded.");
+    return await response.json();
+  } catch (error) {
+    throw timedOut ? new Error("The records took too long to load.") : error;
+  } finally { clearTimeout(timer); signal?.removeEventListener("abort", forward); }
 }
+
+/** After SLOW_MS a page still loading swaps its status line for a quieter, honest one. */
+export function slowNotice(root, life, text) {
+  const timer = setTimeout(() => {
+    const status = root.querySelector('[role="status"]');
+    if (life.alive() && status && root.getAttribute("aria-busy") === "true") status.textContent = text;
+  }, SLOW_MS);
+  life.cleanup(() => clearTimeout(timer));
+}
+
+/** "1 contract", "2 contracts": counts read as written. */
+export function plural(count, one, many = `${one}s`) { return `${number(count)} ${Number(count) === 1 ? one : many}`; }
 
 export function lifecycle(root) {
   const controller = new AbortController();
@@ -40,14 +64,15 @@ export function lifecycle(root) {
   return { signal: controller.signal, alive: () => active, cleanup(fn) { cleanups.push(fn); }, destroy() { active = false; controller.abort(); root.removeAttribute("aria-busy"); cleanups.forEach((fn) => fn()); } };
 }
 
-function loading(root) {
-  root.innerHTML = '<div class="supplier-page"><p class="status" role="status">Opening the supplier records…</p></div>';
+function loading(root, life) {
+  root.innerHTML = '<div class="supplier-page"><p class="ui-status-line" role="status">Opening the supplier records…</p></div>';
   root.setAttribute("aria-busy", "true");
+  slowNotice(root, life, "Still opening the supplier records. Large records take longer to load.");
 }
 
 function failure(root, retry, message = "The supplier records could not be loaded.") {
   root.removeAttribute("aria-busy");
-  root.innerHTML = `<div class="supplier-page" role="alert"><div class="ui-page-head"><h2>Supplier records unavailable</h2></div><p class="ui-empty" data-variant="error">${esc(message)}</p><p class="ui-actions"><button type="button" class="ui-button">Try again</button></p></div>`;
+  root.innerHTML = `<div class="supplier-page" role="alert"><div class="ui-page-head"><h1>Supplier records unavailable</h1></div><p class="ui-empty" data-variant="error">${esc(message)}</p><p class="ui-actions"><button type="button" class="ui-button">Try again</button></p></div>`;
   root.querySelector("button").addEventListener("click", retry);
 }
 
@@ -84,9 +109,9 @@ export function procurementRailHTML(rows, links) {
 export function mountSupplierDirectory(root, helpers = {}) {
   const life = lifecycle(root);
   async function load() {
-    loading(root);
+    loading(root, life);
     try {
-      root.innerHTML = '<div class="supplier-page"><div class="ui-page-head"><h2 id="subject-title" tabindex="-1">Government suppliers</h2><p class="ui-lede">Recorded Commonwealth contract awards.</p></div><div data-suppliers-table></div></div>';
+      root.innerHTML = '<div class="supplier-page"><div class="ui-page-head"><h1 id="subject-title" tabindex="-1">Government suppliers</h1><p class="ui-lede">Recorded Commonwealth contract awards.</p></div><div data-suppliers-table></div></div>';
       const table = await mountSuppliersTable(root.querySelector('[data-suppliers-table]'), {params: helpers.params, signal: life.signal});
       if (!life.alive()) {table.destroy(); return;}
       life.cleanup(() => table.destroy());
@@ -106,16 +131,27 @@ function barRowHTML(name, figure, share, meta) {
 function agencyChart(agencies, total, ids, meta) {
   const rows = agencies.slice(0, 8);
   const max = Math.max(1, ...rows.map((row) => Number(row.total) || 0));
-  return `<section class="ui-section supplier-section" id="supplier-agencies"><h3 class="ui-section-title">Who awards the contracts</h3><p class="ui-section-note supplier-section-note">${agencies.length > 8 ? "The eight largest agencies" : "Agencies"} by recorded contract value.</p><ol class="ui-list supplier-bars" data-rule="none" role="list">${rows.map((row) => barRowHTML(`<a href="${agencyUrl(row.name, ids)}">${esc(row.name)}</a>`, currency(row.total), Number(row.total) / max, `${number(row.count)} ${Number(row.count) === 1 ? "contract" : "contracts"}${total > 0 ? ` · ${percent(Number(row.total) / total * 100)} of recorded value` : ""}`)).join("")}</ol>${procurementSourceHTML(meta)}</section>`;
+  return `<section class="ui-section supplier-section" id="supplier-agencies"><h2 class="ui-section-title">Who awards the contracts</h2><p class="ui-section-note supplier-section-note">${agencies.length > 8 ? "The eight largest agencies" : "Agencies"} by recorded contract value.</p><ol class="ui-list supplier-bars" data-rule="none" role="list">${rows.map((row) => barRowHTML(`<a href="${agencyUrl(row.name, ids)}">${esc(row.name)}</a>`, currency(row.total), Number(row.total) / max, `${plural(row.count, "contract")}${total > 0 ? ` · ${percent(Number(row.total) / total * 100)} of recorded value` : ""}`)).join("")}</ol>${procurementSourceHTML(meta)}</section>`;
 }
 
+/** Contract value by start year. The bars stretch to the column (preserveAspectRatio none, so a
+ *  wide page draws no giant text); the years are an HTML axis under them. A short record keeps
+ *  bars a readable width, centred, and a long one labels every few years, more sparsely on phones. */
 export function yearChart(years, undated) {
   const rows = [...years].sort((a, b) => Number(a.year) - Number(b.year));
-  if (!rows.length) return '<section class="ui-section supplier-section" id="procurement-years"><h3 class="ui-section-title">Contract value over time</h3><p class="ui-empty">No dated contracts are available.</p></section>';
+  if (!rows.length) return "";
   const max = Math.max(1, ...rows.map((row) => Number(row.total) || 0));
-  const width = 640, height = 175, step = width / rows.length;
-  const labelEvery = Math.max(1, Math.ceil(rows.length / 10));
-  return `<section class="ui-section supplier-section" id="procurement-years"><h3 class="ui-section-title">Contract value over time</h3><p class="ui-section-note supplier-section-note">Recorded value grouped by contract start year. Each bar is a year with available records.</p><div class="supplier-year-chart"><svg viewBox="0 0 640 210" role="group" aria-label="Contract value by start year. Hover, tap or focus a bar for its value."><line x1="0" y1="175" x2="640" y2="175" class="supplier-chart-baseline"/>${rows.map((row, index) => { const barHeight = Math.max(0, Number(row.total) / max * (height - 20)); return `<g class="supplier-year-bar" tabindex="0" role="img" aria-label="${esc(row.year)}: ${currency(row.total)}, ${number(row.count)} ${Number(row.count) === 1 ? "contract" : "contracts"}" data-year-value="${esc(row.year)} · ${currency(row.total)} · ${number(row.count)} ${Number(row.count) === 1 ? "contract" : "contracts"}"><rect x="${(index * step).toFixed(2)}" y="0" width="${step.toFixed(2)}" height="210" fill="transparent"/><rect x="${(index * step + step * .15).toFixed(2)}" y="${(height - barHeight).toFixed(2)}" width="${(step * .7).toFixed(2)}" height="${barHeight.toFixed(2)}" class="supplier-bar-fill supplier-year-value-bar"/>${index % labelEvery === 0 || index === rows.length - 1 ? `<text x="${(index * step + step / 2).toFixed(2)}" y="198" text-anchor="middle">${esc(row.year)}</text>` : ""}</g>`; }).join("")}</svg><div class="supplier-year-tooltip" role="tooltip" hidden></div></div><details class="ui-disclosure supplier-chart-data"><summary>Read the yearly values</summary><div class="ui-disclosure-body"><table><caption>Recorded contracts by start year</caption><thead><tr><th scope="col">Year</th><th scope="col">Value</th><th scope="col">Contracts</th></tr></thead><tbody>${rows.map((row) => `<tr><th scope="row">${esc(row.year)}</th><td>${currency(row.total)}</td><td>${number(row.count)}</td></tr>`).join("")}</tbody></table></div></details>${Number(undated?.count) > 0 ? `<p class="fineprint">${number(undated.count)} contracts worth ${currency(undated.total)} have no recorded start year and are not shown in this chart.</p>` : ""}</section>`;
+  const slots = Math.max(rows.length, 12), step = 100 / slots, offset = (slots - rows.length) * step / 2;
+  const every = Math.max(1, Math.ceil(rows.length / 10));
+  // Every `every`th year, and the last; a label too close to the last one gives way to it.
+  const labelled = rows.map((_, index) => index).filter((index) => index % every === 0 && rows.length - 1 - index >= every || index === rows.length - 1);
+  const count = (row) => plural(row.count, "contract");
+  const bars = rows.map((row, index) => {
+    const height = Math.max(0, Number(row.total) / max * 100), x = offset + index * step;
+    return `<g class="supplier-year-bar" tabindex="0" role="img" aria-label="${esc(row.year)}: ${currency(row.total)}, ${count(row)}" data-year-value="${esc(row.year)} · ${currency(row.total)} · ${count(row)}"><rect x="${x.toFixed(3)}" y="0" width="${step.toFixed(3)}" height="100" fill="transparent"/><rect x="${(x + step * .15).toFixed(3)}" y="${(100 - height).toFixed(3)}" width="${(step * .7).toFixed(3)}" height="${height.toFixed(3)}" class="supplier-bar-fill supplier-year-value-bar"/></g>`;
+  }).join("");
+  const axis = labelled.map((index, n) => `<span${n % 2 && index !== rows.length - 1 ? " data-minor" : ""} style="left:${(offset + (index + .5) * step).toFixed(3)}%">${esc(rows[index].year)}</span>`).join("");
+  return `<section class="ui-section supplier-section" id="procurement-years"><h2 class="ui-section-title">Contract value over time</h2><p class="ui-section-note supplier-section-note">Recorded value grouped by contract start year. Each bar is a year with available records.</p><div class="supplier-year-chart"><svg viewBox="0 0 100 100" preserveAspectRatio="none" role="group" aria-label="Contract value by start year. Hover, tap or focus a bar for its value."><line x1="0" y1="100" x2="100" y2="100" class="supplier-chart-baseline"/>${bars}</svg><div class="supplier-year-axis" aria-hidden="true">${axis}</div><div class="supplier-year-tooltip" role="tooltip" hidden></div></div><details class="ui-disclosure supplier-chart-data"><summary>Read the yearly values</summary><div class="ui-disclosure-body"><table><caption>Recorded contracts by start year</caption><thead><tr><th scope="col">Year</th><th scope="col">Value</th><th scope="col">Contracts</th></tr></thead><tbody>${rows.map((row) => `<tr><th scope="row">${esc(row.year)}</th><td>${currency(row.total)}</td><td>${number(row.count)}</td></tr>`).join("")}</tbody></table></div></details>${Number(undated?.count) > 0 ? `<p class="fineprint">${plural(undated.count, "contract")} worth ${currency(undated.total)} have no recorded start year and are not shown in this chart.</p>` : ""}</section>`;
 }
 
 
@@ -187,8 +223,8 @@ async function renderProfile(root, profile, meta, helpers, life, suppliers) {
   ].join("");
   const aliases = (profile.aliases || []).length > 1 ? `<details class="ui-disclosure supplier-aliases"><summary>Names in the source records</summary><ul class="ui-list ui-disclosure-body" data-density="compact" role="list">${profile.aliases.map((name) => `<li>${esc(name)}</li>`).join("")}</ul></details>` : "";
   const rail = procurementRailHTML([
-    ["supplier-agencies", "Who awards the contracts"], ["supplier-connections", "Agency connections"], ["procurement-years", "Contract value over time"],
-    ["supplier-contracts", "The contract record"], ["supplier-identity", "Identity"],
+    ["supplier-agencies", "Who awards the contracts"], ["supplier-connections", "Agency connections"], ...(years.length ? [["procurement-years", "Contract value over time"]] : []),
+    ["supplier-contracts", "The contract record"], ...(identity || aliases ? [["supplier-identity", "Identity"]] : []),
   ], [
     [`/ask?view=search&kind=speech&q=${encodeURIComponent(`"${profile.name}"`)}`, "Find mentions in parliament", "Results may include organisations with similar names."],
     ["/subject/supplier", "Browse all suppliers"],
@@ -196,15 +232,15 @@ async function renderProfile(root, profile, meta, helpers, life, suppliers) {
   const seedNode = document.querySelector('#prerender [data-contracts-seed]');
   const seed = seedNode ? JSON.parse(seedNode.textContent) : null;
   // The head: the name, one meta line, the lede and the three figures (ui-stats).
-  root.innerHTML = `<div class="supplier-page"><div class="ui-page-head supplier-head"><h2 id="subject-title" tabindex="-1">${esc(profile.name)}</h2><p class="ui-page-meta">Commonwealth supplier${profile.abn ? ` · ABN ${esc(profile.abn)}` : ""}</p>
+  root.innerHTML = `<div class="supplier-page supplier-entry"><div class="ui-page-head supplier-head"><h1 id="subject-title" tabindex="-1">${esc(profile.name)}</h1><p class="ui-page-meta">Commonwealth supplier${profile.abn ? ` · ABN ${esc(profile.abn)}` : ""}</p>
     <p class="ui-lede supplier-lede">${top ? `${esc(top.name)} accounts for ${percent(share)} of the recorded contract value.` : "No agency breakdown is available in this export."}</p>
     ${statsHTML([[shortMoney(profile.total), "Recorded contract value", currency(profile.total)], [number(profile.count), "Contracts"], [number(agencies.length), "Agencies"]])}</div>
-    <div class="supplier-profile-grid"><div class="supplier-profile-main">${agencyChart(agencies, Number(profile.total), ids, meta)}<section class="ui-section supplier-section" id="supplier-connections"><h3 class="ui-section-title">Agency connections</h3><p class="ui-section-note">Explore the agencies awarding contracts to this supplier.</p><div class="supplier-money-map supplier-agency-map"></div></section>${yearChart(years, profile.undated)}<div class="supplier-growth"></div><section class="ui-section supplier-section supplier-funding" id="supplier-funding" hidden></section><section class="ui-section supplier-section supplier-evidence" hidden></section><section class="ui-section supplier-section supplier-taxcharity" hidden></section><section class="ui-section supplier-section supplier-mentions"></section>
+    <div class="supplier-profile-grid"><div class="supplier-profile-main">${agencyChart(agencies, Number(profile.total), ids, meta)}<section class="ui-section supplier-section" id="supplier-connections"><h2 class="ui-section-title">Agency connections</h2><p class="ui-section-note">Explore the agencies awarding contracts to this supplier.</p><div class="supplier-money-map supplier-agency-map"></div></section>${yearChart(years, profile.undated)}<div class="supplier-growth"></div><section class="ui-section supplier-section supplier-funding" id="supplier-funding" hidden></section><section class="ui-section supplier-section supplier-evidence" hidden></section><section class="ui-section supplier-section supplier-taxcharity" hidden></section><section class="ui-section supplier-section supplier-mentions"></section>
       <section class="ui-section supplier-section" id="supplier-contracts"><div data-contracts-table></div>${procurementSourceHTML(meta, profile.caveats || [])}</section>
-      <section class="ui-section supplier-section" id="supplier-identity"><h3 class="ui-section-title">Identity</h3>${identity ? `<dl class="ui-kv supplier-identity">${identity}</dl>` : '<p class="ui-empty">No business register details are recorded for this supplier.</p>'}${aliases}</section>
+      ${identity || aliases ? `<section class="ui-section supplier-section" id="supplier-identity"><h2 class="ui-section-title">Identity</h2>${identity ? `<dl class="ui-kv supplier-identity">${identity}</dl>` : ""}${aliases}</section>` : ""}
     </div>${rail}</div></div>`;
   mountSupplierGrowth(root.querySelector(".supplier-growth"), profile, meta, life, suppliers);
-  import('/agencies.js?v=p4g-20261010').then(({ mountProcurementPreview }) => {
+  import('/agencies.js?v=agency-polish-20261014').then(({ mountProcurementPreview }) => {
     if (life.alive()) return mountProcurementPreview(root.querySelector('.supplier-agency-map'), profile, 'supplier', life);
   }).catch(() => {
     if (life.alive()) root.querySelector('.supplier-agency-map').innerHTML = '<p>The map could not open. Agency relationships are listed above.</p>';
@@ -228,18 +264,31 @@ async function renderProfile(root, profile, meta, helpers, life, suppliers) {
     if (donorLinks.length) mountFunding(root.querySelector(".supplier-funding"), donorLinks, life, donations.html);
   }).catch(() => {});
   const table = root.querySelector('#supplier-contracts [data-contracts-table]');
+  const seeded = seed?.supplierId === profile.id;
+  // Without the server's seed (an in-app visit) the table reads /api/table/contracts:
+  // a status line meanwhile, a quieter one at SLOW_MS, and no waiting past GIVE_UP_MS.
+  const wait = new AbortController(), forward = () => wait.abort();
+  life.signal.addEventListener("abort", forward, { once: true });
+  const timers = [setTimeout(forward, GIVE_UP_MS)];
+  if (!seeded) {
+    table.innerHTML = '<p class="ui-status-line" role="status">Opening the contract records…</p>';
+    timers.push(setTimeout(() => { const status = table.querySelector('[role="status"]'); if (status) status.textContent = "Still opening the contract records. Large records take longer to load."; }, SLOW_MS));
+  }
+  const settle = () => timers.forEach(clearTimeout);
+  life.cleanup(settle);
   try {
     const handle = await mountContractsTable(table, {supplierId: profile.id, count: profile.contracts.length,
-      seed: seed?.supplierId === profile.id ? seed : undefined, signal: life.signal, params: helpers.params});
+      seed: seeded ? seed : undefined, signal: wait.signal, params: helpers.params});
+    settle();
     if (life.alive()) life.cleanup(() => handle.destroy()); else handle.destroy();
-  } catch {if (life.alive()) table.innerHTML = '<p role="alert">The contract records could not be loaded.</p>';}
+  } catch {settle(); if (life.alive()) table.innerHTML = '<p role="alert">The contract records could not be loaded.</p>';}
 
 }
 
 export function mountSupplierProfile(root, idOrName, helpers = {}) {
   const life = lifecycle(root);
   async function load() {
-    loading(root);
+    loading(root, life);
     try {
       const directory = await json("/suppliers.json", life.signal);
       if (!life.alive()) return;
@@ -247,13 +296,13 @@ export function mountSupplierProfile(root, idOrName, helpers = {}) {
       const matches = exact ? [exact] : (directory.suppliers || []).filter((item) => [item.name, ...(item.aliases || []), ...(item.lookup_names || [])].some((name) => String(name).trim().toLocaleLowerCase() === String(idOrName).trim().toLocaleLowerCase()));
       if (matches.length > 1) {
         root.removeAttribute("aria-busy");
-        root.innerHTML = `<div class="supplier-page"><div class="ui-page-head"><h2 id="subject-title" tabindex="-1">Choose a supplier</h2><p class="ui-lede">More than one supplier uses this name. Check the ABN before opening a profile.</p></div><ul class="ui-list" role="list">${matches.map((item) => `<li><p class="ui-row-name"><a href="${profileUrl(item.id)}">${esc(item.name)}</a></p><p class="ui-row-meta">${item.abn ? `ABN ${esc(item.abn)}` : "No ABN recorded"}</p></li>`).join("")}</ul></div>`;
+        root.innerHTML = `<div class="supplier-page"><div class="ui-page-head"><h1 id="subject-title" tabindex="-1">Choose a supplier</h1><p class="ui-lede">More than one supplier uses this name. Check the ABN before opening a profile.</p></div><ul class="ui-list" role="list">${matches.map((item) => `<li><p class="ui-row-name"><a href="${profileUrl(item.id)}">${esc(item.name)}</a></p><p class="ui-row-meta">${item.abn ? `ABN ${esc(item.abn)}` : "No ABN recorded"}</p></li>`).join("")}</ul></div>`;
         helpers.onTitle?.("Choose a supplier"); return;
       }
       const entry = matches[0];
       if (!entry) {
         root.removeAttribute("aria-busy");
-        root.innerHTML = '<div class="supplier-page"><div class="ui-page-head"><h2 id="subject-title" tabindex="-1">Supplier not found</h2><p class="ui-lede">This supplier is not in the current export. <a href="/subject/supplier">Search the supplier directory</a>.</p></div></div>';
+        root.innerHTML = '<div class="supplier-page"><div class="ui-page-head"><h1 id="subject-title" tabindex="-1">Supplier not found</h1><p class="ui-lede">This supplier is not in the current export. <a href="/subject/supplier">Search the supplier directory</a>.</p></div></div>';
         helpers.onTitle?.("Supplier not found");
         return;
       }
@@ -271,7 +320,7 @@ export function mountSupplierProfile(root, idOrName, helpers = {}) {
 
 async function mountFunding(root, links, life, register = "") {
   root.hidden = false;
-  root.innerHTML = `<h3 class="ui-section-title">Also in the funding record</h3><p class="ui-status-line" role="status">Opening the funding records…</p>${register}`;
+  root.innerHTML = `<h2 class="ui-section-title">Also in the funding record</h2><p class="ui-status-line" role="status">Opening the funding records…</p>${register}`;
   try {
     const data = await json("/graph/money.json", life.signal);
     if (!life.alive()) return;
@@ -294,7 +343,7 @@ async function mountFunding(root, links, life, register = "") {
     }
     const rows = [...grouped.values()].sort((a, b) => b.total - a.total);
     const max = Math.max(1, ...rows.map((row) => row.total));
-    root.innerHTML = `<h3 class="ui-section-title">Also in the funding record</h3><p class="ui-section-note supplier-section-note">Disclosed party receipts recorded under this supplier’s identity, from the money map’s selected donor data${yearSpan ? ` (${yearSpan})` : ""}. These totals cover a different set of records and dates from the contracts above.</p>${rows.length ? `<ol class="ui-list supplier-bars" data-rule="none" role="list">${rows.map((row) => barRowHTML(`<a href="${partyUrl(row.name)}">${esc(row.name)}</a>`, currency(row.total), row.total / max, `${number(row.count)} recorded receipts`)).join("")}</ol>` : matchedNodes.length ? `<p><strong>${currency(nodeTotal)}</strong> across ${number(nodeCount)} recorded receipts${yearSpan ? ` (${yearSpan})` : ""}. The party breakdown is not available in this map export.</p>` : "<p>This recorded identity is not present in the current map export.</p>"}${matchedNodes.length ? '<button type="button" class="ui-button supplier-map-toggle">Explore the money map</button><div class="supplier-money-map" hidden></div>' : ""}${register}`;
+    root.innerHTML = `<h2 class="ui-section-title">Also in the funding record</h2><p class="ui-section-note supplier-section-note">Disclosed party receipts recorded under this supplier’s identity, from the money map’s selected donor data${yearSpan ? ` (${yearSpan})` : ""}. These totals cover a different set of records and dates from the contracts above.</p>${rows.length ? `<ol class="ui-list supplier-bars" data-rule="none" role="list">${rows.map((row) => barRowHTML(`<a href="${partyUrl(row.name)}">${esc(row.name)}</a>`, currency(row.total), row.total / max, plural(row.count, "recorded receipt"))).join("")}</ol>` : matchedNodes.length ? `<p><strong>${currency(nodeTotal)}</strong> across ${plural(nodeCount, "recorded receipt")}${yearSpan ? ` (${yearSpan})` : ""}. The party breakdown is not available in this map export.</p>` : "<p>This recorded identity is not present in the current map export.</p>"}${matchedNodes.length ? '<button type="button" class="ui-button supplier-map-toggle">Explore the money map</button><div class="supplier-money-map" hidden></div>' : ""}${register}`;
     root.querySelector(".supplier-map-toggle")?.addEventListener("click", async (event) => {
       const button = event.currentTarget;
       const slot = root.querySelector(".supplier-money-map");
@@ -321,6 +370,6 @@ async function mountFunding(root, links, life, register = "") {
       }
     });
   } catch {
-    if (life.alive()) root.innerHTML = `<h3 class="ui-section-title">Also in the funding record</h3>${register}`;
+    if (life.alive()) root.innerHTML = `<h2 class="ui-section-title">Also in the funding record</h2>${register}`;
   }
 }
