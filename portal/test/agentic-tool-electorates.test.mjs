@@ -187,7 +187,7 @@ test('complete compound counts through ninety-nine consistently decline above tw
     ['twenty-one', 21], ['twenty one', 21], ['twenty-five', 25], ['twenty five', 25], ['25', 25],
     ['thirty-two', 32], ['forty three', 43], ['fifty-four', 54], ['sixty five', 65], ['seventy-six', 76], ['eighty seven', 87],
     ['ninety-nine', 99], ['ninety nine', 99], ['99', 99], ['twenty‑five', 25],
-  ]) for (const question of [`Which ${phrase} federal electorates have the highest unemployment rate?`, `top ${phrase} federal electorates by unemployment rate`, `List ${phrase} federal electorates by unemployment rate`]) {
+  ]) for (const question of [`Which ${phrase} federal electorates have the highest unemployment rate?`, `Which ${phrase} of the current federal electorates have the highest unemployment rate?`, `top ${phrase} federal electorates by unemployment rate`, `List ${phrase} federal electorates by unemployment rate`]) {
     const plan = electoratePlan(question);
     assert.equal(plan.shape, 'unanswerable', question);
     assert.deepEqual(plan.steps, [], question);

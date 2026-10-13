@@ -63,7 +63,7 @@ test('P1 named entities: dropped parties, partially scoped people, and named bil
  }
 });
 
-test('P1 actual route: a dropped roster speaker falls back to normal Ask in JSON and SSE',async()=>{
+test('P1 actual route: a dropped roster speaker falls back to normal Ask and its no-answer contract in JSON and SSE',async()=>{
  const restore=offline(),pending=[];
  try{
   const h=await loadWorker(new URL('../src/index.ts',import.meta.url).pathname,new URL('../public/',import.meta.url).pathname,{waitUntil(p){pending.push(p)},passThroughOnException(){}});
@@ -84,7 +84,12 @@ test('P1 actual route: a dropped roster speaker falls back to normal Ask in JSON
   };
   for(const stream of [false,true]){
    const response=await h.fetch('/api/ask'+(stream?'?stream=1':''),{method:'POST',headers:{'content-type':'application/json',...(stream?{accept:'text/event-stream'}:{})},body:JSON.stringify({question:'How many speeches has Taylor Example made about housing?',kind:'speech'})});
-   const text=await response.text();assert.equal(response.status,200);assert.doesNotMatch(text,/300|"agentic"/);assert.match(text,/housing assistance/);
+   const text=await response.text();assert.equal(response.status,200);assert.doesNotMatch(text,/300|"agentic"/);
+   const payload=stream?JSON.parse(text.split('\n\n').find(frame=>frame.startsWith('event: done\n')).split('\ndata: ')[1]):JSON.parse(text);
+   // This normal-Ask double supplies no sources or valid grounded decision.
+   assert.equal(payload.answered,false);assert.equal(payload.reason,'grounding_failed');
+   assert.equal(payload.answer,'');assert.deepEqual(payload.sources,[]);assert.deepEqual(payload.citations,{});
+   if(stream)assert.doesNotMatch(text,/event: delta/);
   }
   assert.equal(planners,2);assert.equal(normals,2);assert.equal(overallCounts,0);while(pending.length)await Promise.all(pending.splice(0));
  }finally{restore()}

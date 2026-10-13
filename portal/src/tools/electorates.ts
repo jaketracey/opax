@@ -55,7 +55,7 @@ const ordinalCounts: Record<string, number> = Object.fromEntries([...SMALL_ORDIN
 const countWords = new Set([...Object.keys(cardinalCounts), ...Object.keys(ordinalCounts), 'and', 'point', 'minus', 'negative', 'hundred', 'hundredth', 'thousand', 'thousandth', 'million', 'millionth', 'billion', 'billionth'])
 const numericCount = /^([+-]?\d+(?:\.\d+)?)(st|nd|rd|th)?$/
 const countToken = (word: string) => numericCount.test(word) || numericCount.test(word.split('-')[0]) || countWords.has(word.split('-')[0])
-const countQualifiers = new Set([...JURISDICTIONS, ...CHAMBERS, ...'current historical abolished all australian new south wales victorian victoria queensland western australia tasmania tasmanian capital territory northern house of representatives legislative assembly council lower upper highest lowest oldest youngest most least fewest unemployment rate median personal household income age population'.split(' ')])
+const countQualifiers = new Set([...JURISDICTIONS, ...CHAMBERS, ...'the our these those current existing available historical abolished all australian new south wales victorian victoria queensland western australia tasmania tasmanian capital territory northern house of representatives legislative assembly council lower upper highest lowest oldest youngest most least fewest unemployment rate median personal household income age population'.split(' ')])
 
 function rankingCount(question: string): { value?: number; ordinal?: boolean; direction?: 'asc' | 'desc' } | undefined {
   const words = question.replace(/[‐‑‒–−]/g, '-').split(/\s+/)
