@@ -30,6 +30,8 @@ import { auditPage, auditReader } from './audit'
 import {parseQuery,serializeQuery,type Page} from '../public/datatable.js'
 import {scrubQuery} from '../public/datatable-query.js'
 import {partyMoneyData,partyMoneyTableConfig,registerTableHTML} from '../public/register-tables.js'
+import {grantsHTML} from './grants-table'
+import {GRANTS_COVERAGE} from '../public/grants-table.js'
 import { hubPage } from './hubs'
 import { VIC_ELECTION_AUTHORISATION_LINE, vicElectionFooterHTML } from '../public/vic-election.js'
 import { vicElectionPage, type VicElection } from './vic-election'
@@ -97,8 +99,9 @@ import { renderOgPng, renderOgJpeg, type OgFont } from './og-render'
 // The story renderer is reached through the namespace: tests stub './og-render' with the two card renderers only.
 import * as storyRender from './og-render'
 import { personRole, personTitle, roleLine, billTitle } from './seo-titles'
-import { answerBlock, associationCaveat, crumbsHTML, panelPrerender, SERVER_PANELS, type Crumb, renderPersonAnswer, renderBillAnswer, renderDivisionAnswer, renderDirectory, renderSupplierAnswer, renderMoneyAnswer, type Division, type ReadAsset } from './seo-content'
-import { buildSchemaGraph, type PersonSchemaIdentity } from './seo-schema'
+import { navGates, pageTrail, trail } from './nav-model.mjs'
+import { answerBlock, associationCaveat, crumbSteps, printedTrail, headingOf, crumbsHTML, panelPrerender, SERVER_PANELS, type Crumb, renderPersonAnswer, renderBillAnswer, renderDivisionAnswer, renderDirectory, renderSupplierAnswer, renderMoneyAnswer, type Division, type ReadAsset } from './seo-content'
+import { buildSchemaGraph, serializeSchemaGraph, type PersonSchemaIdentity } from './seo-schema'
 import { photoFor, validStory, STORY_VERSION as STORY_SLIDES_VERSION, type PhotoCatalogue, type StoryFormat } from './story'
 
 interface FindParagraph {
@@ -3484,7 +3487,7 @@ const STATIC_PAGES: Record<string, { title: string; description: string; query?:
     query: true,
   },
   connections: {
-    title: 'Connections in the record · OPAX',
+    title: 'Programs & places · OPAX',
     description: 'Organisations, programs and places named across speeches, official releases and grant records, each opened to its source excerpts.',
     query: true,
   },
@@ -3493,11 +3496,11 @@ const STATIC_PAGES: Record<string, { title: string; description: string; query?:
     description: 'Standing investigations pairing the money with the words: climate, gambling, housing, immigration, First Nations and media ownership, every claim cited.',
   },
   explore: {
-    title: 'Explore · OPAX',
+    title: 'Interactive tools · OPAX',
     description: 'Play with the parliamentary record: the time machine, the record quiz, the donations ledger, who gets the grants and the money map.',
   },
   discover: {
-    title: 'Discover patterns · OPAX',
+    title: 'Government contracts · OPAX',
     description: 'See which companies take the biggest share of government contracts. Compare suppliers with simple charts, explore political funding connections and check the source records.',
   },
   chat: {
@@ -3505,24 +3508,24 @@ const STATIC_PAGES: Record<string, { title: string; description: string; query?:
     description: 'Follow-up questions on an answer from the Australian parliamentary record, each reply cited to the speeches it draws on.',
   },
   about: {
-    title: 'About · OPAX',
+    title: 'About OPAX',
     description: 'What OPAX is for, who makes it, and how answers are produced from the Australian parliamentary record, disclosed money and the public registers around it.',
   },
   methods: {
-    title: 'Methods · OPAX',
+    title: 'Methods & how to cite · OPAX',
     description: 'How the OPAX corpus is built from Hansard and electoral disclosures, its known limits, and how to cite an answer or a speech.',
   },
   stats: {
-    title: 'Corpus stats · OPAX',
+    title: 'Sources & coverage · OPAX',
     description: 'Live counts for every collection in the OPAX index: speeches, divisions, bills and official statements, by parliament and year.',
   },
   declared: {
-    title: 'Just declared · OPAX',
+    title: 'Declared interests · OPAX',
     description: "The newest additions and deletions on parliamentarians' registers of interests, grouped by week, each entry citing its register source.",
     query: true,
   },
   expenses: {
-    title: 'What the expense categories mean · OPAX',
+    title: 'Expense definitions · OPAX',
     description: 'Plain definitions of every parliamentary work expense category the Independent Parliamentary Expenses Authority publishes, from COMCAR and travel allowance to the private-plated vehicle.',
   },
   support: {
@@ -3572,6 +3575,10 @@ interface PageMeta {
   next?: string
   /** Served with a noindex robots tag (an individual donor's page). */
   noindex?: boolean
+  /** The page's trail after Home, when its builder knows better than its
+   *  heading (a division sits under its bill). Settled for every page in
+   *  buildMeta: the strip it prints and its BreadcrumbList both read it. */
+  trail?: Crumb[]
 }
 
 // How long a /subject/<dir>/<name> segment may be. A person, a party or a donor
@@ -4333,6 +4340,11 @@ async function buildMeta(route: SeoRoute, url: URL, request: Request, env: Env, 
       if(content) meta.prerender=content.html
     } else if(route.kind==='static' && ['money','connections','explore'].includes(route.page)) {
       meta.prerender=(await renderMoneyAnswer(meta.title.replace(/ · OPAX$/,''),read).catch(()=>null))?.html || answerBlock(meta.title.replace(/ · OPAX$/,''),meta.description)
+    } else if (route.kind === 'static' && route.page === 'money/grants' && !url.searchParams.has('program') && !url.searchParams.has('open') && !url.searchParams.has('largest')) {
+      const hadState = Boolean(url.search)
+      meta.prerender = answerBlock('Government grants', GRANTS_COVERAGE, await grantsHTML(url, env).catch(() => '<p role="alert">Grant records are temporarily unavailable.</p>'))
+      meta.canonical = `${SITE_ORIGIN}/money/grants`
+      meta.noindex = hadState
     } else {
       const directory=route.kind==='index' ? route.dir : route.kind==='topics' ? 'topic' : route.kind==='static' && route.page==='bills' ? 'bills' : route.kind==='static' && route.page==='money/grants' && !url.searchParams.has('program') && !url.searchParams.has('open') && !url.searchParams.has('largest') ? 'grants' : null
       if(directory){
@@ -4343,7 +4355,15 @@ async function buildMeta(route: SeoRoute, url: URL, request: Request, env: Env, 
   }
   // Every non-home path has a single answer, including unavailable/not-found pages.
   meta.prerender ??= answerBlock(meta.title.replace(/ · OPAX$/, ''),meta.description)
-  meta.jsonLd=meta.status>=400 || meta.noindex ? null : buildSchemaGraph({canonical:meta.canonical,title:meta.title,description:meta.description,jsonLd:meta.jsonLd,person:personIdentity,bill:billIdentity})
+  // The page's one trail, from the menus' own list: what a server-only
+  // renderer printed, what the builder set (a division), or the page's
+  // section and the name its heading gives it. The strip (serveSeoPage) and
+  // the BreadcrumbList below both read this, so they always agree.
+  meta.trail = printedTrail(meta.prerender) ?? meta.trail
+    ?? pageTrail(url.pathname + url.search, meta.status === 404 ? 'Not found' : headingOf(meta.prerender) || meta.card?.title || '',
+      { donorNamed: meta.status === 200 && !meta.noindex })
+  const breadcrumbs = breadcrumbList(meta.trail, meta.canonical)
+  meta.jsonLd=meta.status>=400 || meta.noindex ? null : buildSchemaGraph({canonical:meta.canonical,title:meta.title,description:meta.description,jsonLd:meta.jsonLd,person:personIdentity,bill:billIdentity,breadcrumbs})
   return meta
 }
 
@@ -5042,6 +5062,27 @@ async function campaignerMeta(name: string, url: URL, env: Env): Promise<PageMet
 }
 
 /** /doc/<slug>: the existing /api/resource logic under a hard time cap. */
+/** A trail as a BreadcrumbList's entries: the strip's own steps (crumbSteps),
+ *  each ancestor at its address and the page itself at its canonical. */
+function breadcrumbList(trail: Crumb[], canonical: string): { name: string; url: string }[] {
+  return crumbSteps(trail).map((step, i, all) => ({ name: step.label, url: i === all.length - 1 || !step.href ? canonical : new URL(step.href, SITE_ORIGIN).href }))
+}
+
+/** A document's trail, as the app draws it: Search › its speaker, or the
+ *  record's own title where no one is attributed (the page's h1 is the
+ *  speaker with the date, which the strip leaves to the page). */
+function docTrail(speaker: string | null | undefined, title: string): Crumb[] {
+  return trail('/ask?view=search', speaker || title)
+}
+
+/** A division's trail, as the app draws it: Bills › its bill › Division, or
+ *  Search › Division when the record names no bill. */
+function divisionTrail(bill: { key: string; title: string } | null | undefined): Crumb[] {
+  return bill?.key && bill.title
+    ? trail('/bills', { label: bill.title, href: `/bill/${encodeURIComponent(bill.key)}` }, 'Division')
+    : trail('/ask?view=search', 'Division')
+}
+
 async function docMeta(slug: string, url: URL, request: Request, env: Env, ctx: ExecutionContext): Promise<PageMeta> {
   const canonical = `${SITE_ORIGIN}/doc/${slug}`
   const generic: PageMeta = {
@@ -5062,7 +5103,9 @@ async function docMeta(slug: string, url: URL, request: Request, env: Env, ctx: 
       const content = renderDivisionAnswer(division,people?.people || [],people?.slugOf || new Map())
       return {...generic,title:`${clip(divisionPlain(division.name || division.question || 'Division'),90)} · OPAX`,description:clip(content.description || ''),prerender:content.html,
         jsonLd:{'@context':'https://schema.org','@type':'Article',headline:divisionPlain(division.name || division.question),url:canonical,...(division.date ? {datePublished:division.date} : {}),publisher},
-        card:{kicker:'Division',title:divisionPlain(division.question || division.name || 'Division'),lines:[content.description || '']}}
+        card:{kicker:'Division',title:divisionPlain(division.question || division.name || 'Division'),lines:[content.description || '']},
+        // As the app's division page: under its bill when it has one, else under Search.
+        trail:divisionTrail(division.bills?.[0])}
     }
     return {...generic,title:'Division not found · OPAX',status:404}
   }
@@ -5117,6 +5160,7 @@ async function docMeta(slug: string, url: URL, request: Request, env: Env, ctx: 
         title: motion,
         lines: [`${outcome || 'Division'}${tally}. Who voted which way.`],
       },
+      trail: divisionTrail(null),
     }
   }
   if (r.labels.kind === 'press_release' || PRESS_SLUG_RE.test(slug)) {
@@ -5151,6 +5195,7 @@ async function docMeta(slug: string, url: URL, request: Request, env: Env, ctx: 
         title: headline,
         lines: [[r.speaker, r.metadata.role].filter(Boolean).join(' · '), 'Read the official source text on OPAX.'],
       },
+      trail: docTrail(r.speaker, headline),
     }
   }
   if (RESEARCH_SLUG_RE.test(slug)) {
@@ -5159,13 +5204,13 @@ async function docMeta(slug: string, url: URL, request: Request, env: Env, ctx: 
     const description = clip(`${r.title}. ${kind} with source provenance on OPAX. ${typeof r.metadata.date_meaning === 'string' ? r.metadata.date_meaning : 'Invitations, awards and payments are distinct stages.'}`)
     return { ...generic, title:`${r.title} · OPAX`, description,
       jsonLd:{'@context':'https://schema.org','@type':'CreativeWork',name:r.title,description,url:canonical,publisher},
-      card:{kicker:kind,title:r.title,lines:['Read the record and its source on OPAX.']} }
+      card:{kicker:kind,title:r.title,lines:['Read the record and its source on OPAX.']}, trail: docTrail(r.speaker, r.title) }
   }
   if (r.labels.kind === 'bill_text') {
     const description = clip(`${r.title}. Original federal bill text, with its source version and provenance, readable on OPAX.`)
     return { ...generic, title: `${r.title} · OPAX`, description,
       jsonLd: { '@context': 'https://schema.org', '@type': 'DigitalDocument', name: r.title, description, url: canonical, publisher },
-      card: { kicker: 'Original bill text', title: r.title, lines: ['Read the bill and its source version on OPAX.'] } }
+      card: { kicker: 'Original bill text', title: r.title, lines: ['Read the bill and its source version on OPAX.'] }, trail: docTrail(r.speaker, r.title) }
   }
   const mixed = r.labels.speaker_type === 'multi_speaker'
   const speaker = mixed ? 'Several speakers' : r.speaker ?? 'Unknown speaker'
@@ -5209,6 +5254,7 @@ async function docMeta(slug: string, url: URL, request: Request, env: Env, ctx: 
       portraitId,
       credit: await creditLine(env, portraitId),
     },
+    trail: docTrail(r.speaker, r.title),
   }
 }
 
@@ -5294,13 +5340,20 @@ async function renderSeoPage(route: SeoRoute, url: URL, request: Request, env: E
   // The policy pages (privacy, support) name no association between records.
   if (!(route.kind === 'hub' && route.hub === 'vic-election') && !(route.kind === 'static' && SERVER_PANELS.has(route.page)))
     meta.prerender=associationCaveat(meta.prerender || '',`${meta.description} ${meta.prerender || ''}`)
+  // Every page prints its trail in the server HTML too (readers without
+  // scripts, crawlers), from the menus' own list; the app's strip replaces it
+  // once it runs. Server-only pages write theirs into the prerender themselves.
+  if (meta.prerender && !meta.prerender.includes('prerender-crumbs'))
+    meta.prerender = crumbsHTML(meta.trail || []) + meta.prerender
   // JSON-LD sits in a <script>: keep "</script>" from ever appearing in it.
   const ld = meta.jsonLd ? JSON.stringify(meta.jsonLd).replace(/</g, '\\u003c') : null
   // The share image is drawn per route (see "Share images" below); a page
   // with nothing to draw, or nothing to find, shares the home card.
   const image = meta.card && meta.status < 400 ? ogImageFor(meta.canonical) : OG_IMAGE
   const imageAlt = meta.card && meta.status < 400 ? clip(`${meta.card.title} on OPAX`, 120) : OG_IMAGE_ALT
+  const gates = navGates(env)
   const rewriter = new HTMLRewriter()
+    .on('html', { element(el) { if (gates) el.setAttribute('data-nav-gates', gates) } })
     .on('title', new SetText(meta.title))
     .on('meta[name="description"]', new SetAttr('content', meta.description))
     .on('link[rel="canonical"]', { element(el) { if(meta.status>=400 || !meta.canonical) el.remove(); else el.setAttribute('href',meta.canonical) } })
@@ -5322,6 +5375,7 @@ async function renderSeoPage(route: SeoRoute, url: URL, request: Request, env: E
     .on('head', {
       element(el) {
         if (noindex) el.append('<meta name="robots" content="noindex">', { html: true })
+        if (route.kind === 'static' && route.page === 'money/grants' && !url.searchParams.has('program') && !url.searchParams.has('open') && !url.searchParams.has('largest')) el.append('<link rel="stylesheet" href="/grants-table.css" data-grants-table-style>', {html: true})
         for(const [rel,href] of [['prev',meta.prev],['next',meta.next]]) if(href) el.append(`<link rel="${rel}" href="${escHtml(href)}">`,{html:true})
       },
     })
@@ -6179,8 +6233,39 @@ async function route(
       // with a way on), not an empty 404; a missing file (a script, an image) stays plain.
       if (asset.status === 404 && (request.method === 'GET' || request.method === 'HEAD') && pageAddress(url.pathname))
         return await serveSeoPage({ kind: 'notfound' }, url, request, env, ctx)
+      // The community page wears the site band; its menus read the published sections off the page.
+      // Its trail is written here, after the band, as the server writes every other page's.
+      if (asset.ok && request.method === 'GET' && url.pathname === '/community')
+        return withNavGates(rewritten(communityPage(asset)), env)
       return asset
   }
+}
+
+/** The community page: its trail after the band, and the BreadcrumbList that
+ *  says the same, as every server-written page has. */
+function communityPage(asset: Response): Response {
+  const steps = trail('/community')
+  const schema = serializeSchemaGraph(buildSchemaGraph({ canonical: `${SITE_ORIGIN}/community`, title: 'The OPAX community', breadcrumbs: breadcrumbList(steps, `${SITE_ORIGIN}/community`) }))
+  return new HTMLRewriter()
+    .on('header.site-header', { element(el) { el.after(crumbsHTML(steps), { html: true }) } })
+    .on('head', { element(el) { el.append(`<script type="application/ld+json" id="ld-page">${schema}</script>`, { html: true }) } })
+    .transform(asset)
+}
+
+/** Marks the optional sections this deployment publishes on <html>, where the
+ *  menus (navigation.js) read them: no request when a menu opens. */
+function withNavGates(res: Response, env: Env): Response {
+  const gates = navGates(env)
+  return gates ? rewritten(new HTMLRewriter().on('html', { element(el) { el.setAttribute('data-nav-gates', gates) } }).transform(res)) : res
+}
+
+/** A rewritten body is a new body: the asset's tag and length describe the
+ *  file as stored, so they go (as serveSeoPage drops them). */
+function rewritten(res: Response): Response {
+  const out = new Response(res.body, res)
+  out.headers.delete('etag')
+  out.headers.delete('content-length')
+  return out
 }
 
 /** An address a reader would type or follow: no file extension, or .html. */
@@ -6262,9 +6347,11 @@ export default {
         const schema=JSON.stringify(buildSchemaGraph({canonical:`${SITE_ORIGIN}/`,title:SITE_TITLE,description:SITE_DESCRIPTION})).replace(/</g,'\\u003c')
         const money=await renderMoneyAnswer('Public money',<T>(path:string)=>assetJson<T>(env,path)).catch(()=>null)
         const moneyHtml=money ? money.html.replace('id="prerender"','id="prerender-money"').replace('<h1>','<h2>').replace('</h1>','</h2>') : null
-        const out=new HTMLRewriter().on('div#hp-money-map',{element(el){if(moneyHtml)el.setInnerContent(moneyHtml,{html:true})}}).on('head',{element(el){el.append(`<script type="application/ld+json" id="ld-page">${schema}</script>`,{html:true})}}).transform(entry)
+        // The menus read the published optional sections off the page (navigation.js).
+        const gates=navGates(env)
+        const out=new HTMLRewriter().on('html',{element(el){if(gates)el.setAttribute('data-nav-gates',gates)}}).on('div#hp-money-map',{element(el){if(moneyHtml)el.setInnerContent(moneyHtml,{html:true})}}).on('head',{element(el){el.append(`<script type="application/ld+json" id="ld-page">${schema}</script>`,{html:true})}}).transform(entry)
         const headers=new Headers(out.headers);headers.delete('content-length')
-        const etag=await htmlValidator([env.CF_VERSION_METADATA?.id ?? '',entry.headers.get('etag'),moneyHtml,schema]);headers.set('etag',etag)
+        const etag=await htmlValidator([env.CF_VERSION_METADATA?.id ?? '',entry.headers.get('etag'),moneyHtml,schema,gates]);headers.set('etag',etag)
         const unchanged=notModified(request,etag,headers)
         return communityResponse(unchanged || new Response(request.method==='HEAD' ? null : out.body,{status:out.status,headers}))
       }

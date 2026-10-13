@@ -16,17 +16,17 @@ test('individual type evidence overrides organisation-looking names',()=>{
   assert.equal(isOrganisationRecipient({name:org.label,kind:'company'}),true);
   assert.equal(isOrganisationRecipient({}),false);
 });
-test('the original D1 schema upgrades to the typed record projections',async()=>{
-  const checked=await readFile(new URL('../table-migrations/0001_tables.sql',import.meta.url),'utf8');
-  const upgrade=await readFile(new URL('../table-migrations/0002_vote_records.sql',import.meta.url),'utf8');
-  const registered=await readFile(new URL('../table-migrations/0002_instrument_registered.sql',import.meta.url),'utf8');
+test('the original D1 schema upgrades to grants, voting and register projections',async()=>{
   const local=await tableDatabase({datasets:{}});
   try {
-    for(const name of ['divisions','votes','instruments']) {
+    for(const name of ['grants','divisions','votes','instruments']) {
       await local.db.exec(`DROP TABLE table_${name}_fts;\nDROP TABLE table_${name}_facets;\nDROP TABLE table_${name};`);
     }
-    await local.db.exec(checked); await local.db.exec(upgrade); await local.db.exec(registered);
-    for(const name of ['divisions','votes','instruments']) {
+    for(const file of ['0001_tables.sql','0002_grants_projection.sql','0002_vote_records.sql','0002_instrument_registered.sql']) {
+      const sql=await readFile(new URL('../table-migrations/'+file,import.meta.url),'utf8');
+      for(const statement of sql.replace(/^--.*$/gm,'').split(';').filter(v=>v.trim())) await local.db.prepare(statement).run();
+    }
+    for(const name of ['grants','divisions','votes','instruments']) {
       const columns=await local.db.prepare(`PRAGMA table_info(table_${name})`).all();
       assert.deepEqual(new Set(columns.results.map(c=>c.name)),new Set(['rowid','search',...TABLE_DATASETS[name].columns.map(c=>c.key)]));
     }

@@ -1,4 +1,4 @@
-import {applyQuery, dataTableHTML, guardTableURL, mountDataTable, parseQuery} from './datatable.js?v=6a075a1958';
+import {applyQuery, dataTableHTML, guardTableURL, mountDataTable, parseQuery} from './datatable.js?v=c3ce01602f';
 import {isOrganisationDonor} from './donor-entity.js?v=ebb2c972d5';
 import {privacyTexts,privacyCSVFields} from './datatable-privacy-fields.js?v=7a6c85a822';
 import {queryValues} from './datatable-query.js?v=91898b0c1f';

@@ -81,8 +81,12 @@ export async function tableRows(root = defaultRoot, {moneyOnly = false, graphs: 
     contractIds.add(c.id);
     add('contracts', {id: c.id, title: c.title || c.id, supplier: s.name, agency: c.agency || '', procurement_method: c.procurement_method || '', jurisdiction: 'federal', amount: c.amount, start_date: c.start_date || null, end_date: c.end_date || null, description: c.description || '', url: c.url || ''},s.id,policy.suppliers.has(String(s.id)) || !isOrganisationRecipient({...s,...s.identity}));
   }
-  for (const jur of ['federal', 'qld']) for (const file of (await files('grants/' + jur)).filter(f => f.startsWith('shard-'))) for (const r of Object.values(await read(`grants/${jur}/${file}`))) for (const [i, g] of (r.grants || []).entries()) {
-    add('grants', {id: String(g.id ?? `${r.id}:${i}`), title: g.n || g.pr || g.id || '', recipient: r.n, agency: g.ag || '', program: g.pr || '', category: g.cat || '', jurisdiction: jur, amount: g.v, year: Number(String(g.fy || g.s || '').slice(0, 4)) || null, start_date: g.s || null, description: g.desc || '', url: g.guid ? `https://www.grants.gov.au/Ga/Show/${g.guid}` : ''},r.id,!isOrganisationRecipient(r));
+  for (const jur of ['federal', 'qld']) {
+    const index = await read(`graph/grants.${jur}.json`);
+    const profiles = new Set((index.recipients || []).map(r => String(r.id)));
+    for (const file of (await files('grants/' + jur)).filter(f => f.startsWith('shard-'))) for (const r of Object.values(await read(`grants/${jur}/${file}`))) for (const [i, g] of (r.grants || []).entries()) {
+      add('grants', {id: String(g.id ?? `${r.id}:${i}`), title: g.n || g.pr || g.id || '', recipient: r.n, agency: g.ag || '', program: g.pr || '', category: g.cat || '', jurisdiction: jur, amount: g.v, year: Number(String(g.fy || g.s || '').slice(0, 4)) || null, start_date: g.s || null, description: g.desc || '', url: g.guid ? `https://www.grants.gov.au/Ga/Show/${g.guid}` : '', electorate: g.el || 'Not recorded', recipientId: r.id, recipientKind: r.k || r.identity?.kind || '', recipientABNType: r.abr?.etype || r.abr?.type || r.identity?.type || '', recipientAvailable: profiles.has(String(r.id)) ? 1 : 0},r.id,!isOrganisationRecipient(r));
+    }
   }
   for (const [key,a] of aggregates) {
     const row = Object.fromEntries(TABLE_DATASETS[a.name].columns.map(c=>[c.key,null]));
@@ -90,7 +94,7 @@ export async function tableRows(root = defaultRoot, {moneyOnly = false, graphs: 
     const n = a.identities.size;
     if (a.name==='suppliers') Object.assign(row,{name:`Suppliers not named (${n})`,total:a.amount,count:a.count,first_year:a.first,last_year:a.last});
     else if (a.name==='contracts') Object.assign(row,{title:`Contracts with suppliers not named (${n})`,supplier:`Suppliers not named (${n})`,amount:a.amount});
-    else if (a.name==='grants') Object.assign(row,{title:`Donors not named (${n})`,recipient:`Donors not named (${n})`,amount:a.amount});
+    else if (a.name==='grants') Object.assign(row,{title:`Donors not named (${n})`,recipient:`Recipients not named (${n})`,amount:a.amount,recipientCount:n,recipientKind:'aggregate'});
     else Object.assign(row,{from:`Donors not named (${n})`,type:a.type,amount:a.amount,count:a.count,firstYear:a.first,lastYear:a.last});
     rows[a.name].push({row});
   }
@@ -212,7 +216,7 @@ export async function buildTableSQL({root=defaultRoot,output=fileURLToPath(new U
       if (config.privacy && privacyValues(row,config).some(policy?.rowCheck || policy?.check || (()=>false))) throw new Error('Unsanitised financial row');
       const rowid=++counts[name];
       const values=config.columns.map(c=>arrayColumns.has(c.key) && Array.isArray(row[c.key]) ? JSON.stringify(row[c.key]) : row[c.key] ?? null);
-      const search=config.columns.filter(c=>!['url','canonical_url'].includes(c.key)).map(c=>Array.isArray(row[c.key]) ? row[c.key].join(' ') : row[c.key] ?? '').join(' ');
+      const search=config.columns.filter(c=>config.searchKeys ? config.searchKeys.includes(c.key) : !['url','canonical_url'].includes(c.key)).map(c=>Array.isArray(row[c.key]) ? row[c.key].join(' ') : row[c.key] ?? '').join(' ');
       insert(`INSERT INTO ${table} (rowid,${config.columns.map(c=>quote(c.key)).join(',')},search)`,`(${rowid},${[...values,search].map(literal).join(',')})`);
       const facets=config.columns.filter(c=>c.facet==='multi'||c.facet==='chips').flatMap(c=>[...new Set([row[c.key]].flat().filter(v=>v!=null&&v!==''))].map(value=>`(${literal(c.key)},${literal(value)},${rowid})`));
       for(const facet of facets)insert(`INSERT INTO ${table}_facets (key,value,rowid)`,facet);

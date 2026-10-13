@@ -81,6 +81,11 @@ type Row = Record<string, unknown>;
 ## Privacy regression (blocking)
 The shared derived test, `portal/test/donor-privacy.test.mjs`, covers every table in every mode. That includes the rows, facets, CSV and URL state of each.
 
+## Optional recipient privacy fields
+
+- `DataTableConfig.rowPrivacyCheck?` is a synchronous `(row: Row) => boolean` organisation policy for money rows. True means public; exceptions and non-boolean results fail closed. Without it the donor label policy applies. Grants use the shared recipient classifier with source entity kind and ABN type projected after the shared loader has checked all evidence. Text validation remains separate and must use the withheld index.
+- Neutral rows can carry optional `aggregate.subject: 'recipients'` alongside `aggregate: {kind: 'individual-donors', count: number}`. The core generates fixed `Recipients not named (N)` wording, retains only configured numeric values and removes IDs, aliases, categories and links. Other subject values are discarded. The default donor wording remains unchanged.
+
 ## Additive privacy and endpoint notes (review follow-up)
 
 - `DataTableConfig.privacyCheck?` accepts `(text: string) => boolean | Promise<boolean>`; true means safe against the shared withheld index, independently of table rows. SSR and `applyQuery` require a synchronous predicate; absent or asynchronous validation fails closed for rows and searches. Worker renderers use `await tablePrivacyCheck(env.ASSETS)` from `src/table-privacy.ts`, which reads the complete hash-only `/table-private-identities.json` registry generated before identities are lost to publication, with no donor-context office-holder exemptions. Browser hydration defaults to the read-only, no-store `POST /api/table/privacy` validator and waits before reflecting state. The served registry contains SHA-256 hashes, word counts and compact-form length metadata only; never serve raw identities. Server-only rolling fingerprints select candidates before SHA-256 verifies membership. Entries without a matching server fingerprint use the same streamed SHA-256 checks. A custom validator must use that same shared index; an organisation-only input is insufficient.
