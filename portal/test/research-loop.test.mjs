@@ -157,9 +157,10 @@ test('rebuilt JSON removes content-length and stepped old answers always retain 
  const response=new Response(JSON.stringify({answer:'Fallback.',sources:[],citations:{}}),{headers:{'content-type':'application/json','content-length':'50'}}),adapted=await api.withPlannerResearch(response);assert.equal(adapted.headers.get('content-length'),null);assert.equal((await adapted.json()).research.mode,'planner');
  const f=fixtures(model([]));delete f.deps.research;const run=await f.run(),body=api.agenticAskPayload(run,question);assert.equal(body.research.mode,'planner');assert.equal(body.research.trail.length,run.steps.length);assert.ok(body.research.trail.every(t=>t.round===1));
 });
-test('committee checks retain the final model round in live events and cached trails',async()=>{
+test('committee checks start with their ranking round and keep that round in live events and cached trails',async()=>{
  const federal={...args,state:'federal'},f=fixtures(model([reply([call('count_speeches',federal)]),reply([call('finish',{facts:[1]})])])),q='Who speaks most about gambling in federal parliament across the whole record?';
- const run=await api.runAgentic(q,f.deps,async(e,d)=>f.events.push(d),40000,api.inferPeriod(q),{},emptyScope),body=api.agenticAskPayload(run,q);assert.equal(run.answered,true);assert.deepEqual(body.research.trail.map(t=>t.round),[1,2,2]);assert.equal(run.events.at(-1).tool,'count_speeches');assert.equal(run.events.at(-1).round,2);
+ const run=await api.runAgentic(q,f.deps,async(e,d)=>f.events.push(d),40000,api.inferPeriod(q),{},emptyScope),body=api.agenticAskPayload(run,q);assert.equal(run.answered,true);assert.deepEqual(body.research.trail.map(t=>[t.tool,t.round,t.label]).sort(),[['count_speeches',1,'Checking committee hearings'],['count_speeches',1,'Counting by speaker'],['finish',2,'Selecting record facts']]);
+ const committee=run.events.find(e=>e.label==='Checking committee hearings');assert.equal(committee.tool,'count_speeches');assert.equal(committee.round,1);
 });
 
 test('qualitative trace searches twice, then answers with only the answer tool forced; a failed draft is repaired in code',async()=>{

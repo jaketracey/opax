@@ -84,3 +84,12 @@ test('a date-window ranking counts further candidates until the decade bound pro
   // Expanding to all 80 candidates leaves none unchecked, so the ranking is proven.
   assert.equal(out.data.exact, true); assert.ok(totals > 30);
 });
+test('a loop ranking answers from the facts it selected: an unused count on another topic does not decline it', async () => {
+  const q = 'Who has spoken most about housing affordability since 2022?';
+  const { out, failures } = await run(q, [reply([call('count_speeches', { topic: 'property-construction', group_by: 'speaker', since: '2022-01-01' }, 'a'), call('count_speeches', { topic: 'housing', group_by: 'speaker', since: '2022-01-01' }, 'b')]), reply([call('finish', { facts: [3, 4] }, 'c')])]);
+  assert.deepEqual(failures, []); assert.equal(out.answered, true);
+  assert.match(out.answer, /labelled housing/); assert.doesNotMatch(out.answer, /property-construction/);
+  // Selecting the other topic's rows still declines: the answer would not be about housing.
+  const wrong = await run(q, [reply([call('count_speeches', { topic: 'property-construction', group_by: 'speaker', since: '2022-01-01' }, 'a'), call('count_speeches', { topic: 'housing', group_by: 'speaker', since: '2022-01-01' }, 'b')]), reply([call('finish', { facts: [1] }, 'c')])]);
+  assert.notEqual(wrong.out.research?.mode, 'loop');
+});

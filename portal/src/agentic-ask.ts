@@ -20,6 +20,8 @@ import { ResearchError, researchSources, type Research, type ResearchPayload, ty
 export const AGENTIC_PROMPT_VERSION = 'agentic-ask-7-research'
 export const AGENTIC_BUDGET_MS = 40_000
 export const AGENTIC_MAX_STEPS = 6
+/** A loop answer's time target: optional extras (the committee supplement) are dropped rather than run past it. */
+export const LOOP_ANSWER_TARGET_MS = 13_000
 
 export type Shape = 'ranking' | 'trend' | 'comparison' | 'money'
 export interface Period { kind: 'current' | 'all' | 'window'; since?: string; until?: string; label: string }
@@ -531,6 +533,12 @@ export async function runAgentic(question: string, deps: AgenticDeps, progress: 
   }
 }
 async function runAgenticAttempt(question: string, deps: AgenticDeps, progress: Progress, budgetMs: number, period: Period, filters: Record<string, unknown>, resolvedScope?: NamedScope): Promise<AgenticPayload> {
+  // Speculative extras (the early committee check) end with their attempt: a dropped or failed run leaves no lookup behind.
+  const extras = new AbortController()
+  try { return await attempt(question, deps, progress, budgetMs, period, filters, extras.signal, resolvedScope) }
+  finally { extras.abort() }
+}
+async function attempt(question: string, deps: AgenticDeps, progress: Progress, budgetMs: number, period: Period, filters: Record<string, unknown>, extras: AbortSignal, resolvedScope?: NamedScope): Promise<AgenticPayload> {
   const electorateData = isElectorateDataQuestion(question)
   if (electorateData) period = { kind: 'all', label: 'Figures use published Census geography.' }
   const t0 = Date.now(), deadline = t0 + budgetMs
@@ -583,19 +591,53 @@ async function runAgenticAttempt(question: string, deps: AgenticDeps, progress: 
     events.push(done); await progress('status', { phase: 'step', step: done })
     return r
   }
+  // Committee-hearing supplement for a federal chamber ranking. A loop run starts it as soon as that ranking lands,
+  // so it runs while the model picks its facts instead of after them.
+  const eligibleRank = (s: PlanStep) => s.tool === 'count_speeches' && ['speaker', 'party'].includes(String(s.args.group_by)) && !s.args.speaker && (s.args.venue ?? 'chamber') === 'chamber' && (!s.args.state || s.args.state === 'federal')
+  const committeeChecks = new Map<string, Promise<ToolResult>>()
+  const committeeCheck = (step: PlanStep, ranked: ToolResult, round?: number) => {
+    const key = JSON.stringify(step.args)
+    let pending = committeeChecks.get(key)
+    if (!pending) {
+      const chamber = ranked.data?.rows as { name: string; count: number }[] | undefined
+      const { chamber: _chamber, ...args } = step.args
+      pending = execute({ tool: 'count_speeches', args }, true, async d => {
+        const all = await runTool(d, 'count_speeches', { ...args, venue: 'all' })
+        if (!all.ok || all.data?.exact === false) return { ...all, ok: false }
+        const allRows = all.data?.rows as { name: string; count: number }[]
+        if (allRows.map(r => r.name).join('|') === chamber?.map(r => r.name).join('|')) return { ...all, data: { unchanged: true } }
+        const committee = await runTool(d, 'count_speeches', { ...args, venue: 'committee', limit: 3 })
+        if (committee.ok) committee.data = { ...committee.data, committeeSupplement: true }
+        return committee
+      }, round, executionSignal ? AbortSignal.any([executionSignal, extras]) : extras)
+      committeeChecks.set(key, pending)
+    }
+    return pending
+  }
   let plan: Plan | null = electorateData ? electoratePlan(question) : null
+  const used = new Set<number>()
+  const usedOnly = <T,>(list: T[]) => researched && used.size ? list.filter((_, i) => used.has(i)) : list
   if (deps.research && !electorateData) {
     const rules = fallbackPlan(question)?.steps.find(s => ['count_speeches', 'speech_trend'].includes(s.tool))?.args ?? {}
     const explicit = Object.fromEntries(['state', 'chamber', 'party'].filter(k => rules[k] != null && (k !== 'party' || named.parties.length <= 1)).map(k => [k, rules[k]]))
     researched = await bounded(signal => { executionSignal = signal; return deps.research!(question, {
       deps, period, named, signal, progress,
       scope: step => periodPlan({ shape: classifyAgentic(question).shape ?? 'ranking', steps: [step] }, period, { ...explicit, ...filters }).steps[0],
-      execute: (step, round, custom, signal) => execute(step, false, custom, round, signal),
+      execute: async (step, round, custom, signal) => {
+        const r = await execute(step, false, custom, round, signal)
+        // Only while it can still land inside the answer target; a slow index gets no extra load.
+        if (r.ok && eligibleRank(step) && steps.length < AGENTIC_MAX_STEPS && Date.now() - t0 < LOOP_ANSWER_TARGET_MS - 6_000) void committeeCheck(step, r, round).catch(() => {})
+        return r
+      },
     }) }, Math.max(0, Math.min(30_000, left() - 8_000)), deps.signal)
     executionSignal = deps.signal
     usage(researched)
     results.push(...researched.results)
     plan = { shape: classifyAgentic(question).shape ?? 'ranking', steps: researched.steps }
+    // A loop answer is only the facts it selected: lookups it ran but did not use (another topic, an inexact
+    // ranking) neither decline it nor count against it. Fact ids run across results in order.
+    let id = 0
+    researched.results.forEach((r, i) => { const n = factSheet([r]).facts.length; if (researched!.selected.some(s => s > id && s <= id + n)) used.add(i); id += n })
     if (researched.qualitative) {
       timings.plan_ms = Date.now() - t0
       if (researched.answer) await deps.onResearchAnswer?.(researched.answer).catch(() => {})
@@ -629,7 +671,7 @@ async function runAgenticAttempt(question: string, deps: AgenticDeps, progress: 
         plan.shape === 'money' && (!has('party_donations') || !has('count_speeches')) ||
         plan.shape === 'comparison' && (!has('count_speeches') || VOTE_WORDS.test(question) && !has('member_votes'))) plan = null
   }
-  if (plan && plan.shape !== 'unanswerable' && ((!researched && plan.shape !== classifyAgentic(question).shape) || topic && plan.steps.filter(s => ['count_speeches', 'speech_trend'].includes(s.tool)).some(s => s.args.topic !== topic))) plan = null
+  if (plan && plan.shape !== 'unanswerable' && ((!researched && plan.shape !== classifyAgentic(question).shape) || topic && usedOnly(plan.steps).filter(s => ['count_speeches', 'speech_trend'].includes(s.tool)).some(s => s.args.topic !== topic))) plan = null
   // Schema-valid but semantically incomplete plans also fall back to Ask.
   // Only a failed/timed-out planner may use the full subject-aware rule plan.
   if (!plan && plannerFailed) plan = rulePlan
@@ -649,24 +691,19 @@ async function runAgenticAttempt(question: string, deps: AgenticDeps, progress: 
     results.push(await execute({ ...step, args }))
   }
   // A failed join or partial comparison must never imply missing votes or money.
-  if (results.length !== plan.steps.length || results.some(r => !r.ok || r.data?.exact === false ||
+  if (results.length !== plan.steps.length || usedOnly(results).some(r => !r.ok || r.data?.exact === false ||
     r.tool === 'member_votes' && !(r.data?.summary as { divisions?: number } | undefined)?.divisions ||
     r.tool === 'party_donations' && !(r.data?.rows as unknown[] | undefined)?.length)) return base({ reason: 'no_supported_claim', over_budget: left() < 8_000 })
-  const rankIndex = plan.steps.findIndex(s => s.tool === 'count_speeches' && ['speaker', 'party'].includes(String(s.args.group_by)) && !s.args.speaker && (s.args.venue ?? 'chamber') === 'chamber' && (!s.args.state || s.args.state === 'federal'))
+  const rankIndex = plan.steps.findIndex((s, i) => eligibleRank(s) && (!researched || !used.size || used.has(i)))
   const committeeFacts: Fact[] = []
-  if (rankIndex >= 0 && steps.length < AGENTIC_MAX_STEPS && left() >= 8_000) {
-    const step = plan.steps[rankIndex], chamber = results[rankIndex].data?.rows as { name: string; count: number }[] | undefined
-    const { chamber: _chamber, ...args } = step.args
-    const r = await execute({ tool: 'count_speeches', args }, true, async d => {
-      const all = await runTool(d, 'count_speeches', { ...args, venue: 'all' })
-      if (!all.ok || all.data?.exact === false) return { ...all, ok: false }
-      const allRows = all.data?.rows as { name: string; count: number }[]
-      if (allRows.map(r => r.name).join('|') === chamber?.map(r => r.name).join('|')) return { ...all, data: { unchanged: true } }
-      const committee = await runTool(d, 'count_speeches', { ...args, venue: 'committee', limit: 3 })
-      if (committee.ok) committee.data = { ...committee.data, committeeSupplement: true }
-      return committee
-    })
-    if (r.ok && r.data?.committeeSupplement) {
+  if (rankIndex >= 0 && left() >= 8_000) {
+    const step = plan.steps[rankIndex], early = committeeChecks.get(JSON.stringify(step.args))
+    // A loop answer waits for its early check only until the loop's time target, and never starts a late one;
+    // without the supplement the counts still say chamber speeches, with committee turns noted as excluded.
+    let timer: ReturnType<typeof setTimeout> | undefined
+    const r = researched ? early && await Promise.race([early, new Promise<null>(resolve => { timer = setTimeout(() => resolve(null), Math.max(0, LOOP_ANSWER_TARGET_MS - (Date.now() - t0))) })]).finally(() => { if (timer !== undefined) clearTimeout(timer) })
+      : steps.length < AGENTIC_MAX_STEPS ? await committeeCheck(step, results[rankIndex]) : null
+    if (r && r.ok && r.data?.committeeSupplement) {
       const more = factSheet([r]); results.push(r)
       committeeFacts.push(...more.facts)
     }
