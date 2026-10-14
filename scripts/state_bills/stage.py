@@ -214,6 +214,21 @@ def act_list(body, receipt):
     return result
 
 
+def act_version_events(nodes, receipt):
+    """Only dated, explicit lapse metadata; never infer expiry from a term/year."""
+    pattern = re.compile(r"\[Lapsed on expiry of (?:the )?Assembly (\d{1,2} \w+ \d{4})\]", re.I)
+    events = []
+    seen = set()
+    for node in nodes:
+        for match in pattern.finditer(text(node)):
+            parsed = date(match[1])
+            if parsed and parsed not in seen:
+                events.append({"stage": "Lapsed on expiry of Assembly", "date": parsed,
+                    "date_raw": match[1], "house": "Legislative Assembly", **provenance(receipt)})
+                seen.add(parsed)
+    return events
+
+
 def act_bills(volume, summary, listing, receipts, parliament, licence):
     with zipfile.ZipFile(io.BytesIO(listing)) as archive:
         header_text = " ".join("".join(ET.fromstring(archive.read(n)).itertext()) for n in archive.namelist() if n.startswith("word/header"))
@@ -265,7 +280,11 @@ def act_bills(volume, summary, listing, receipts, parliament, licence):
                 if not bill_url and re.search(r"legislation.act.gov.au/b/", u):
                     bill_url = u
         source_id = bill_url.rsplit("/", 1)[-1] if bill_url else None
-        events = sorted(status["events"], key=lambda e: (e["date"], e["stage"])) if status else []
+        events = list(status["events"]) if status else []
+        existing = {(e["stage"], e["date"], e["house"]) for e in events}
+        events.extend(e for e in act_version_events(nodes, receipts["volume"])
+                      if (e["stage"], e["date"], e["house"]) not in existing)
+        events.sort(key=lambda e: (e["date"], e["stage"]))
         last = events[-1] if events else None
         if last and last["date"] > status_as_of:
             notes.append("The source includes an action date later than its status-list heading date.")

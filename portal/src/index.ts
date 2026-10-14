@@ -5556,7 +5556,7 @@ async function renderSeoPage(route: SeoRoute, url: URL, request: Request, env: E
   if (route.kind === 'vic-gifts' || route.kind === 'subject' && route.dir === 'person') rewriter.on('head', { element(el) { el.append('<link rel="stylesheet" href="/vic-gifts.css">',{html:true}) } })
   if (route.kind === 'state-bills') rewriter.on('script[src]', { element(el) {
     if (/\/(app|spa-entry|spa-shell)\.js(?:\?|$)/.test(el.getAttribute('src') || '')) el.remove()
-  } }).on('head', { element(el) { el.append('<link rel="stylesheet" href="/state-bills.css">',{html:true}) } })
+  } }).on('head', { element(el) { el.append('<link rel="stylesheet" href="/datatable.css"><link rel="stylesheet" href="/state-bills.css">',{html:true}) } })
   rewriter.on('main#main', { element(el) { el.setAttribute('data-server-rendered',''); el.setInnerContent(meta.prerender || '', { html: true }) } })
   const out = rewriter.transform(shell)
   const headers = new Headers(out.headers)

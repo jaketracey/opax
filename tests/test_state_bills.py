@@ -9,7 +9,8 @@ import urllib.error
 import zipfile
 
 from scripts.state_bills.acquire import Collector, robots_allowed
-from scripts.state_bills.stage import tas_bill, act_bills, exact_sponsor, rights
+from scripts.state_bills.stage import tas_bill, act_bills, act_version_events, exact_sponsor, rights
+from bs4 import BeautifulSoup
 
 FIX = Path(__file__).parent / 'fixtures/state-bills'
 RECEIPT = {'url':'https://www.parliament.tas.gov.au/bills/example','snapshot':'2026-10-14T01:00:00Z','sha256':'a'*64}
@@ -74,6 +75,33 @@ class StateBillsTests(unittest.TestCase):
             self.assertIsNone(exact_sponsor(name,'tas',roster,paths))
         self.assertIsNone(exact_sponsor('Example Member','act',roster,paths))
         self.assertIsNone(exact_sponsor('Example Member','tas',roster+roster,paths))
+
+    def test_act_dated_expiry_comes_from_version_index_with_its_own_receipt(self):
+        r={**RECEIPT,'url':'https://www.parliament.act.gov.au/bills/status-list'}
+        version={**r,'url':'https://www.parliament.act.gov.au/bills/version-index','sha256':'b'*64}
+        volume=(FIX/'act-volume.html').read_bytes()+b'<p>[Lapsed on expiry of the Assembly 19 October 2024]</p>'
+        bills,_=act_bills(volume,(FIX/'act-summary.html').read_bytes(),docx(),{'volume':version,'summary':r,'list':r},10,rights('act',r))
+        lapse=next(e for e in bills[0]['events'] if e['stage']=='Lapsed on expiry of Assembly')
+        self.assertEqual(lapse['date'],'2024-10-19')
+        self.assertEqual(lapse['date_raw'],'19 October 2024')
+        self.assertEqual(lapse['source_url'],version['url'])
+        self.assertEqual(lapse['sha256'],version['sha256'])
+        self.assertEqual(bills[0]['status_as_of'],'2026-01-04')
+
+    def test_act_expiry_is_not_inferred_and_duplicate_notices_are_one_event(self):
+        for note in ('[Lapsed on expiry of Assembly]','[Lapsed on expiry of Assembly 31 February 2024]','Assembly 2020-2024'):
+            nodes=BeautifulSoup('<p>'+note+'</p>','html.parser').find_all('p')
+            self.assertEqual(act_version_events(nodes,RECEIPT),[])
+        nodes=BeautifulSoup('<p>[Lapsed on Expiry of Assembly 19 October 2024]</p>'*2,'html.parser').find_all('p')
+        self.assertEqual(len(act_version_events(nodes,RECEIPT)),1)
+
+    def test_retained_act_expiry_dates_recover_all_eight_source_notices(self):
+        from scripts.state_bills.stage import build
+        hub,_=build('act')
+        lapsed=[b for b in hub['bills'] if b['status']=='lapsed']
+        self.assertEqual(len(lapsed),8)
+        self.assertTrue(all(b['last_action']['date']=='2024-10-19' and b['stage']=='Lapsed on expiry of Assembly' for b in lapsed))
+        self.assertEqual(hub['counts']['events'],941)
 
     def test_refusal_or_reset_permanently_stops_collection(self):
         for error in (urllib.error.HTTPError('https://www.parliament.tas.gov.au/bills',403,'Forbidden',{},io.BytesIO(b'Forbidden')),ConnectionResetError()):
