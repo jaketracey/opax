@@ -116,7 +116,13 @@ name: 50 Community public reading, guidelines and discussion actions
     id: community-report-submit
 - assertVisible: Your report has been sent to moderators.
 - takeScreenshot: ${EVIDENCE}/50-report-discussion
-- tapOn: Discussion
+# The bar's Back after Report is a bare chevron with no "Discussion" title.
+# Tap the native back button by its identifier, then wait for the thread.
+- tapOn: { id: BackButton }
+- extendedWaitUntil:
+    visible:
+      id: community-thread
+    timeout: 15000
 - scrollUntilVisible:
     element:
       id: community-report-reply-reply-a

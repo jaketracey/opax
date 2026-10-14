@@ -50,7 +50,13 @@ name: 51 Community members, safety, messages, activity and reading lists
     id: community-report-submit
 - assertVisible: Your report has been sent to moderators.
 - takeScreenshot: ${EVIDENCE}/51-report-profile
-- tapOn: Member
+# The bar's Back after Report is a bare chevron with no "Member" title.
+# Tap the native back button by its identifier, then wait for the member.
+- tapOn: { id: BackButton }
+- extendedWaitUntil:
+    visible:
+      id: community-member
+    timeout: 15000
 - scrollUntilVisible:
     element:
       id: community-block
@@ -101,7 +107,13 @@ name: 51 Community members, safety, messages, activity and reading lists
     id: community-report-submit
 - assertVisible: Your report has been sent to moderators.
 - takeScreenshot: ${EVIDENCE}/51-report-message
-- tapOn: Conversation
+# The bar's Back after Report is a bare chevron with no "Conversation" title.
+# Tap the native back button by its identifier, then wait for the conversation.
+- tapOn: { id: BackButton }
+- extendedWaitUntil:
+    visible:
+      id: community-conversation
+    timeout: 15000
 - scrollUntilVisible:
     element:
       id: community-mark-read

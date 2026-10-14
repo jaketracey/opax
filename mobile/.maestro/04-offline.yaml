@@ -52,7 +52,10 @@ name: 04 Read saved public catalogs with the fixture stopped
       id: person-electorate
     direction: DOWN
     timeout: 20000
-- assertVisible: Grayndler
+# One seat line since pass 3B: "Member for Grayndler · House of Representatives".
+- assertVisible:
+    id: person-electorate
+    text: Member for Grayndler.*
 - takeScreenshot: ${EVIDENCE}/04-offline-profile
 # A submitted search has no disk fallback, even though catalogs remain saved.
 - tapOn: Search

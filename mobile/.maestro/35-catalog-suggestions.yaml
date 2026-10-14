@@ -50,23 +50,22 @@ name: 35 Grants programs and local party, topic and report suggestions, also at 
     visibilityPercentage: 10
     timeout: 90000
 - takeScreenshot: ${EVIDENCE}/35-grant-program
+# Grant programs open the native program page (public-money lane, 8 Oct),
+# not the in-app browser. Its title heads the page.
 - tapOn:
     id: records-result-grant-program-.*
     index: 0
-- scrollUntilVisible:
-    element:
-      id: source-destination-url
-    visibilityPercentage: 10
+- extendedWaitUntil:
+    visible:
+      id: program-title
     timeout: 90000
 - assertVisible:
-    id: source-destination-url
-- takeScreenshot: ${EVIDENCE}/35-grant-browser
-- tapOn:
-    text: OK
-    retryTapIfNoChange: false
+    id: program-list
+- takeScreenshot: ${EVIDENCE}/35-grant-program-page
+- tapOn: { id: BackButton }
 - extendedWaitUntil:
     notVisible:
-      id: source-destination-url
+      id: program-list
     timeout: 10000
 - waitForAnimationToEnd:
     timeout: 5000
@@ -129,22 +128,18 @@ name: 35 Grants programs and local party, topic and report suggestions, also at 
     centerElement: true
     timeout: 90000
 - takeScreenshot: ${EVIDENCE}/35-topic-suggestion
+# Topics open the native topic page (a63cb511f, 7 Oct), not the browser.
 - tapOn:
     id: search-suggestion-topic-housing
-- scrollUntilVisible:
-    element:
-      id: source-destination-url
-    visibilityPercentage: 10
+- extendedWaitUntil:
+    visible:
+      id: topic-screen
     timeout: 90000
-- assertVisible:
-    id: source-destination-url
-- takeScreenshot: ${EVIDENCE}/35-topic-browser
-- tapOn:
-    text: OK
-    retryTapIfNoChange: false
+- takeScreenshot: ${EVIDENCE}/35-topic-page
+- tapOn: { id: BackButton }
 - extendedWaitUntil:
     notVisible:
-      id: source-destination-url
+      id: topic-screen
     timeout: 10000
 - waitForAnimationToEnd:
     timeout: 5000
