@@ -64,6 +64,7 @@ test.each([
 
 test('iOS keeps its simulator loopback', () => {
   expect(
-    load({ os: 'ios', origin: 'http://127.0.0.1:8961', voice: null }),
+    // A template literal: the production build's removeDevelopmentOrigins plugin rewrites plain loopback string literals, including this test's own.
+    load({ os: 'ios', origin: `http://127.0.0.1:${8961}`, voice: null }),
   ).toBeNull();
 });
