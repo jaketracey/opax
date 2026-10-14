@@ -1,12 +1,12 @@
 {
-  "version": "2026-10-14",
-  "expected_resources": 986768,
+  "version": "2026-10-15",
+  "expected_resources": 987597,
   "expected_resources_breakdown": {
-    "live_index_before_refresh": 731388,
-    "new_press_release_resources": 36,
-    "new_speech_resources": 255344
+    "live_index_before_refresh": 986768,
+    "new_press_release_resources": 29,
+    "new_speech_resources": 800
   },
-  "collected_speeches": 948752,
+  "collected_speeches": 949552,
   "sources": [
     {
       "name": "Federal Hansard: House of Representatives (zenodo)",
@@ -15,7 +15,7 @@
     },
     {
       "name": "NSW Parliament",
-      "docs": 112465,
+      "docs": 112935,
       "coverage": "2015–2026"
     },
     {
@@ -35,7 +35,7 @@
     },
     {
       "name": "Federal Hansard: Senate + recent House (openaustralia)",
-      "docs": 108747,
+      "docs": 109077,
       "coverage": "2006–2026"
     },
     {
@@ -65,12 +65,12 @@
     },
     {
       "name": "Prime Minister transcripts and releases (PM&C)",
-      "docs": 667,
+      "docs": 670,
       "coverage": "2025–2026"
     },
     {
       "name": "NSW Government ministerial releases",
-      "docs": 5398,
+      "docs": 5408,
       "coverage": "2024–2026"
     },
     {
@@ -105,17 +105,17 @@
     },
     {
       "name": "Queensland Government ministerial statements",
-      "docs": 155,
-      "coverage": "7–21 Sep 2026 refresh"
-    },
-    {
-      "name": "Victorian Premier releases",
       "docs": 158,
       "coverage": "7–21 Sep 2026 refresh"
     },
     {
+      "name": "Victorian Premier releases",
+      "docs": 162,
+      "coverage": "7–21 Sep 2026 refresh"
+    },
+    {
       "name": "Australian Treasury ministerial releases",
-      "docs": 131,
+      "docs": 140,
       "coverage": "7–21 Sep 2026 refresh"
     },
     {
@@ -153,17 +153,18 @@
     "SA Hansard stops at November 2024: hansardsearch.parliament.sa.gov.au now sits behind a WAF that challenges every non-browser request, so the source cannot be fetched."
   ],
   "refresh": {
-    "checked_at": "2026-10-13T19:27:57+00:00",
+    "checked_at": "2026-10-14T18:23:22+00:00",
     "news_resources": 0,
     "bills_registry": 2988,
     "current_parliament_bills": 295,
     "latest_bill_introduced": "2026-09-17",
-    "latest_nsw_release": "2026-10-13",
+    "latest_nsw_release": "2026-10-14",
     "source_limitations": [
       "SA Hansard refresh blocked by source HTTP 403; stored coverage ends 2024-11-12.",
-      "Federal Hansard is current to 2026-10-12; NSW Parliament to 2026-10-13; Victoria to 2026-09-24; QLD to 2026-09-16; ACT to 2026-09-24. Federal committee hearings (Senate, House and Joint) are current to 2026-10-08.",
+      "Federal Hansard is current to 2026-10-13; NSW Parliament to 2026-10-14; Victoria to 2026-09-24; QLD to 2026-09-16; ACT to 2026-09-24. Federal committee hearings (Senate, House and Joint) are current to 2026-10-08.",
       "New AEC source snapshots are retained for reconciliation. Amended federal donation rows have not replaced reviewed public data.",
       "Ministerial diary and IPEA expense refreshes returned the same published rows as the previous verified snapshots.",
+      "source paused: honest agent refused (awaiting permission); existing disclosures were preserved.",
       "source paused: honest agent refused (awaiting permission); existing disclosures were preserved."
     ],
     "grants_research": {
@@ -198,17 +199,17 @@
       "grant_award": 8354,
       "grant_invitation": 227,
       "parliamentary_profile": 977,
-      "press_release": 6509,
+      "press_release": 6538,
       "research_report": 35,
-      "speech": 948752
+      "speech": 949552
     },
     "raw_source_updates": {
-      "federal_speeches": 283,
-      "nsw_speeches": 468,
+      "federal_speeches": 475,
+      "nsw_speeches": 491,
       "vic_speeches": 0,
       "act_speeches": 0,
-      "nsw_releases": 18,
-      "austender_contracts": 6
+      "nsw_releases": 10,
+      "austender_contracts": 4
     },
     "structured_sources": {
       "grantconnect_awards": 361036,
