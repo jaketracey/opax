@@ -3,7 +3,7 @@ const esc=(v:unknown)=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&l
 type Receipt={source_url:string;snapshot:string;sha256:string}
 type Licence={status:string;name:string;policy_url:string;policy_receipt:Receipt;text_allowed:boolean;hold_reason:string}
 type Event=Receipt & {stage:string;date:string;house:string|null}
-export type StateBill=Receipt & {key:string;jurisdiction:'tas'|'act';source_id:string;title:string;parliament:number|null;sponsor_name:string|null;
+export type StateBill=Receipt & {key:string;jurisdiction:'tas'|'act';source_id:string|null;title:string;parliament:number|null;sponsor_name:string|null;
   introduced_date:string|null;introduction_basis:string;status:string;status_as_of:string;source_updated_date:string|null;stage:string|null;last_action:Event|null;
   events:Event[];sources:{kind:string;label:string;url:string;document_date:string|null;body_status:string}[];licence:Licence;
   official:{name:string;href:string}|null;source_notes?:string[];metadata_receipts?:Receipt[];version_index_missing?:boolean}
@@ -23,12 +23,13 @@ export const stateBillsReader=(assets:Fetcher):StateBillsRead=>async j=>{
 }
 /** Metadata-only serving boundary: document bodies and extra fields never render. */
 export function clearedStateBills(h:StateBillsHub):StateBill[]{
-  if(h.schema!==1 || !['tas','act'].includes(h.jurisdiction) || !Array.isArray(h.bills))return []
+  if(!h || h.schema!==1 || !['tas','act'].includes(h.jurisdiction) || !Array.isArray(h.bills))return []
   const j=h.jurisdiction,policy=j==='tas'?origins[j]+'/':origins[j]+'/functions/footer/reuse-policy'
   return h.bills.filter(b=>b?.jurisdiction===j && new RegExp(`^au-${j}-[a-z0-9-]+$`).test(b.key) && typeof b.title==='string'
-    && source(b,j) && b.licence?.status==='metadata-only' && b.licence.text_allowed===false && b.licence.policy_url===policy && source(b.licence.policy_receipt,j)
+    && source(b,j) && b.licence?.status==='metadata-only' && b.licence.text_allowed===false && b.licence.policy_url===policy && source(b.licence.policy_receipt,j) && b.licence.policy_receipt.source_url===policy
     && Array.isArray(b.events) && Array.isArray(b.sources) && b.events.every(e=>source(e,j) && /^\d{4}-\d{2}-\d{2}$/.test(e.date))
     && b.sources.every(d=>d.body_status==='held' && safeLink(d.url))
+    && (!b.last_action || b.events.some(e=>e.date===b.last_action?.date && e.stage===b.last_action.stage && e.source_url===b.last_action.source_url && e.sha256===b.last_action.sha256))
     && Object.hasOwn(statuses,b.status)).map(b=>({...b,official:b.official && normal(b.sponsor_name||'')===normal(b.official.name) && PERSON_PATHS.exact[b.official.name]===b.official.href?b.official:null}))
 }
 const receipt=(r:Receipt,licence:Licence,label='Original registry')=>`<p class="state-bills-receipt"><a href="${esc(r.source_url)}">${esc(label)}</a> · Snapshot ${esc(r.snapshot)} · <a href="${esc(licence.policy_url)}">${esc(licence.name)}</a><br><span>SHA-256 ${esc(r.sha256)}</span></p>`
@@ -37,7 +38,7 @@ const dateLabel=(d:string|null)=>d||'Not published'
 function billHTML(b:StateBill,detail=false){
   const events=detail?`<h3>Published stages</h3>${b.events.length?`<ol class="state-bills-events">${b.events.map(e=>`<li><time>${esc(e.date)}</time> · ${esc(e.stage)}${e.house?' · '+esc(e.house):''}</li>`).join('')}</ol>`:'<p>No dated stages published in the matched register.</p>'}`:''
   const documents=detail?`<h3>Versions and explanatory material</h3><p>Read these materials at the publisher. ${esc(b.licence.hold_reason)}.</p>${b.sources.length?`<ul>${b.sources.map(d=>`<li><a href="${esc(d.url)}">${esc(d.label)}</a> <span>· ${esc(d.kind)} · ${d.document_date?esc(d.document_date):'Version date not published'}</span></li>`).join('')}</ul>`:'<p>No document links in the matched version index.</p>'}`:''
-  return `<article class="state-bill"><p class="state-bills-kicker">${names[b.jurisdiction]} · ${b.parliament?`${b.jurisdiction==='act'?'Assembly':'Parliament'} ${b.parliament}`:'Parliament not published'} · ${esc(b.source_id)}</p><h2>${detail?esc(b.title):`<a href="/register/state-bills?bill=${esc(b.key)}">${esc(b.title)}</a>`}</h2><p class="state-bills-status">${esc(statuses[b.status])} <span>· ${b.jurisdiction==='act'?'Status list dated':'Observed'} ${esc(b.status_as_of)}</span></p><dl><div><dt>Introduced</dt><dd>${esc(dateLabel(b.introduced_date))}</dd></div><div><dt>Sponsor as published</dt><dd>${sponsor(b)}</dd></div><div><dt>Last dated action</dt><dd>${b.last_action?`${esc(b.last_action.date)} · ${esc(b.last_action.stage)}${b.last_action.house?' · '+esc(b.last_action.house):''}`:'Not published'}</dd></div></dl>${detail?`<p>${esc(b.introduction_basis)}. Source-page update: ${esc(dateLabel(b.source_updated_date))}.</p>`:''}${(b.source_notes||[]).map(note=>`<p class="state-bills-note">${esc(note)}</p>`).join('')}${b.version_index_missing?'<p class="state-bills-note">This bill is in the status list but absent from the matched version index.</p>':''}${events}${documents}${receipt(b,b.licence)}${b.metadata_receipts?.length?`<details><summary>Metadata sources</summary>${b.metadata_receipts.map(r=>receipt(r,b.licence,'Metadata component')).join('')}</details>`:''}</article>`
+  return `<article class="state-bill"><p class="state-bills-kicker">${names[b.jurisdiction]} · ${b.parliament?`${b.jurisdiction==='act'?'Assembly':'Parliament'} ${b.parliament}`:'Parliament not published'} · ${esc(b.source_id||'Publisher bill ID not supplied')}</p><h2>${detail?esc(b.title):`<a href="/register/state-bills?bill=${esc(b.key)}">${esc(b.title)}</a>`}</h2><p class="state-bills-status">${esc(statuses[b.status])} <span>· ${b.jurisdiction==='act'?'Status list dated':'Observed'} ${esc(b.status_as_of)}</span></p><dl><div><dt>Introduced</dt><dd>${esc(dateLabel(b.introduced_date))}</dd></div><div><dt>Sponsor as published</dt><dd>${sponsor(b)}</dd></div><div><dt>Last dated action</dt><dd>${b.last_action?`${esc(b.last_action.date)} · ${esc(b.last_action.stage)}${b.last_action.house?' · '+esc(b.last_action.house):''}`:'Not published'}</dd></div></dl>${detail?`<p>${esc(b.introduction_basis)}. Source-page update: ${esc(dateLabel(b.source_updated_date))}.</p>`:''}${(b.source_notes||[]).map(note=>`<p class="state-bills-note">${esc(note)}</p>`).join('')}${b.version_index_missing?'<p class="state-bills-note">This bill is in the status list but absent from the matched version index.</p>':''}${events}${documents}${receipt(b,b.licence)}${b.metadata_receipts?.length?`<details><summary>Metadata sources</summary>${b.metadata_receipts.map(r=>receipt(r,b.licence,'Metadata component')).join('')}</details>`:''}</article>`
 }
 export async function stateBillsPage(url:URL,read:StateBillsRead,block:(title:string,text:string,links?:string,crumbs?:{label:string;href?:string}[])=>string){
   const error=(status:number,title:string,description:string)=>({status,title:title+' · OPAX',description,noindex:true,prerender:block(title,description,`<p><a href="${origins.tas}/bills">Tasmania originals</a> · <a href="${origins.act}/parliamentary-business/in-the-chamber/bills">ACT originals</a></p>` )})
@@ -55,7 +56,7 @@ export async function stateBillsPage(url:URL,read:StateBillsRead,block:(title:st
     return {status:200,title:b.title+' · OPAX',description:`${names[b.jurisdiction]} bill metadata, published stages and original document links.`,noindex:true,
       prerender:block(b.title,'Published bill metadata and original document links.',`<p><a href="/register/state-bills">All state bills</a></p>`,[{label:'State bills',href:'/register/state-bills'},{label:b.title}])+`<div class="wrap state-bills-content">${billHTML(b,true)}</div>`}
   }
-  const selected=all.filter(b=>(!jur||b.jurisdiction===jur)&&(!parliament||String(b.parliament)===parliament)&&(!q||[b.title,b.source_id,b.sponsor_name||''].join(' ').toLowerCase().includes(q.toLowerCase())))
+  const selected=all.filter(b=>(!jur||b.jurisdiction===jur)&&(!parliament||String(b.parliament)===parliament)&&(!q||[b.title,b.source_id||'',b.sponsor_name||''].join(' ').toLowerCase().includes(q.toLowerCase())))
   const page=Number(pageRaw),pages=Math.max(1,Math.ceil(selected.length/20))
   if(page>pages)return error(404,'Register page not found','Choose an available page in the state bills register.')
   const options=[...new Set(all.filter(b=>!jur||b.jurisdiction===jur).map(b=>b.parliament).filter(Boolean))].sort((a,b)=>Number(b)-Number(a))

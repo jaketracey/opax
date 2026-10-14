@@ -8,7 +8,7 @@ from unittest.mock import Mock
 import urllib.error
 import zipfile
 
-from scripts.state_bills.acquire import Collector
+from scripts.state_bills.acquire import Collector, robots_allowed
 from scripts.state_bills.stage import tas_bill, act_bills, exact_sponsor, rights
 
 FIX = Path(__file__).parent / 'fixtures/state-bills'
@@ -27,6 +27,13 @@ def docx():
 
 
 class StateBillsTests(unittest.TestCase):
+    def test_robots_query_rules_and_longest_allow_are_respected(self):
+        rules=[('disallow','/*?sq_content_src='),('disallow','/search'),('allow','/search/help')]
+        self.assertFalse(robots_allowed('https://www.parliament.tas.gov.au/bills?sq_content_src=1',rules))
+        self.assertFalse(robots_allowed('https://www.parliament.tas.gov.au/search',rules))
+        self.assertTrue(robots_allowed('https://www.parliament.tas.gov.au/search/help',rules))
+        self.assertTrue(robots_allowed('https://www.parliament.tas.gov.au/bills',rules))
+
     def test_tas_stages_identifiers_version_links_and_assent(self):
         bill=tas_bill((FIX/'tas.html').read_bytes(),RECEIPT,rights('tas',RECEIPT),set())
         self.assertEqual(bill['key'],'au-tas-2026-7')

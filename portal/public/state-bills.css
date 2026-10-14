@@ -12,6 +12,6 @@
 .state-bills-status{font-weight:600}.state-bills-status span{font-weight:400;color:var(--ink-soft)}
 .state-bill dl{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,15rem),1fr));gap:var(--space-row);margin-block:var(--space-row)}
 .state-bill dt{font:var(--type-fine);color:var(--ink-soft)}.state-bill dd{margin:var(--space-tight) 0}
-.state-bills-note{padding:var(--space-row);background:var(--surface-muted)}
+.state-bills-note{padding:var(--space-row);background:var(--paper-sunken)}
 .state-bills-events{padding-left:1.25rem}.state-bills-events li{margin-bottom:var(--space-tight)}
 .state-bills-pages{display:flex;justify-content:space-between;margin-block:var(--space-group)}

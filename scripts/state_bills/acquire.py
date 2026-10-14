@@ -10,15 +10,31 @@ import hashlib
 import fcntl
 import json
 from pathlib import Path
+import re
 import time
 import urllib.error
 import urllib.request
 from urllib.parse import urlsplit
 
-from scripts.vic_gifts.acquire import NoRedirect, is_challenge, robots_allowed, robots_rules
+from scripts.vic_gifts.acquire import NoRedirect, is_challenge, robots_rules
 
 ROOT = Path(__file__).resolve().parents[2]
 ORIGINS = {"tas": "https://www.parliament.tas.gov.au", "act": "https://www.parliament.act.gov.au"}
+
+
+def robots_allowed(url, rules):
+    parsed = urlsplit(url)
+    path = parsed.path + ("?" + parsed.query if parsed.query else "")
+    matches = []
+    for key, value in rules:
+        if key not in {"allow", "disallow"} or not value:
+            continue
+        pattern = re.escape(value).replace(r"\*", ".*")
+        if pattern.endswith(r"\$"):
+            pattern = pattern[:-2] + "$"
+        if re.match(pattern, path):
+            matches.append((len(value.replace("*", "")), key == "allow"))
+    return max(matches, default=(0, True))[1]
 
 
 class Collector:
@@ -54,7 +70,9 @@ class Collector:
             raise ValueError("Collection permanently stopped: " + str(self.ledger["stopped"]))
         if urlsplit(url).scheme != "https" or urlsplit(url).netloc != urlsplit(self.origin).netloc:
             raise ValueError("Unreviewed source host")
-        if kind != "registry-document" and urlsplit(url).path.lower().endswith((".pdf", ".doc", ".docx")):
+        document_path = urlsplit(url).path
+        if document_path.lower().endswith((".pdf", ".doc", ".docx")) and not (
+                kind == "registry-document" and document_path.rsplit("/", 1)[-1].startswith("Report-Bills-List")):
             raise ValueError("Document bodies are held; link only")
         existing = next((r for r in self.ledger["receipts"] if r["url"] == url), None)
         if existing:

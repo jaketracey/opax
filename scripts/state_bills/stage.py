@@ -264,7 +264,7 @@ def act_bills(volume, summary, listing, receipts, parliament, licence):
                 links.append(document(text(a), u, receipts["volume"]))
                 if not bill_url and re.search(r"legislation.act.gov.au/b/", u):
                     bill_url = u
-        source_id = bill_url.rsplit("/", 1)[-1] if bill_url else "title-" + hashlib.sha256(title.encode()).hexdigest()[:16]
+        source_id = bill_url.rsplit("/", 1)[-1] if bill_url else None
         events = sorted(status["events"], key=lambda e: (e["date"], e["stage"])) if status else []
         last = events[-1] if events else None
         if last and last["date"] > status_as_of:
@@ -282,7 +282,7 @@ def act_bills(volume, summary, listing, receipts, parliament, licence):
     for k in unmatched:
         s = statuses[k]
         sponsor, introduced, bill_url = summaries.get(k, (None, None, None))
-        source_id = bill_url.rsplit("/", 1)[-1] if bill_url else "title-" + hashlib.sha256(s["title"].encode()).hexdigest()[:16]
+        source_id = bill_url.rsplit("/", 1)[-1] if bill_url else None
         events = sorted(s["events"], key=lambda e: (e["date"], e["stage"]))
         last = events[-1] if events else None
         bills.append({"key": f"au-act-{parliament}-" + hashlib.sha256(k.encode()).hexdigest()[:16], "jurisdiction": "act", "source_id": source_id, "number": None,
@@ -291,9 +291,9 @@ def act_bills(volume, summary, listing, receipts, parliament, licence):
             "status_as_of": status_as_of, "source_updated_date": None, "stage": last["stage"] if last else None, "last_action": last, "act_number": s["act_number"],
             "events": events, "stage_values": [], "sources": [], "licence": licence, "official": None, "bill_url": bill_url, "version_index_missing": True,
             "metadata_receipts": [provenance(receipts["summary"])], **provenance(receipts["list"])})
-    by_id = Counter(b["source_id"] for b in bills)
+    by_id = Counter(b["source_id"] for b in bills if b["source_id"])
     for b in bills:
-        if by_id[b["source_id"]] > 1:
+        if b["source_id"] and by_id[b["source_id"]] > 1:
             b.setdefault("source_notes", []).append("The source links this identifier from more than one bill title; bill records kept separate by title and Assembly.")
     return bills, [{"title": statuses[k]["title"], "reason": "Status-list bill absent from version index"} for k in unmatched]
 
