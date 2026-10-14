@@ -27,10 +27,14 @@ sys.path.insert(0, str(ROOT))
 from scripts.budget_registry.parse import document_licence, permitted, METRICS
 from scripts.budget_registry.stage import projection
 from scripts.vic_gifts.stage import build as gifts_projection, exact_holder, CC
+from scripts.state_bills.stage import build as state_bills_projection
 
-ASSETS = {"budget": "budget/data.json", "vic-gifts": "vic-gifts/data.json"}
+ASSETS = {"budget": "budget/data.json", "vic-gifts": "vic-gifts/data.json",
+          "bills-tas": "bills-tas/data.json", "bills-act": "bills-act/data.json"}
 INPUTS = {"budget": ["inventory.json", "receipts.json", "aggregates.json", "measures.json", "hub.json"],
-          "vic-gifts": ["inventory.json", "receipts.json", "hub.json"]}
+          "vic-gifts": ["inventory.json", "receipts.json", "hub.json"],
+          "bills-tas": ["inventory.json", "receipts.json", "hub.json", "acquisition-notes.json"],
+          "bills-act": ["inventory.json", "receipts.json", "hub.json", "acquisition-notes.json"]}
 SHA = re.compile(r"[a-f0-9]{64}")
 
 
@@ -219,9 +223,40 @@ def gifts_checks(stage, root):
     return hub, counts
 
 
+def state_bills_checks(stage, root):
+    jurisdiction = stage.name.removeprefix("bills-")
+    ledger = load(stage / "receipts.json")
+    require(not ledger.get("stopped"), "source-receipt", "bill collection stopped")
+    unique(ledger["receipts"], "url", "bill receipts")
+    identity = load(root / "parli/ingest/user-agent.json")["user_agent"]
+    for r in ledger["receipts"]:
+        require(r["status"] == 200 and not r.get("challenge") and not r.get("followed_redirect")
+                and r.get("robots_allowed") and r.get("user_agent") == identity, "source-receipt", r["url"])
+        path = (root / r["snapshot_path"]).resolve()
+        require(path.is_relative_to(stage.resolve() / "snapshots"), "source-receipt", "snapshot outside staging")
+        equal(digest(path.read_bytes()), r["sha256"], "hash", r["url"])
+    expected, inventory = state_bills_projection(jurisdiction, root)
+    equal(load(stage / "inventory.json"), inventory, "counts/licence", stage.name)
+    equal(load(stage / "hub.json"), expected, "licence/source-projection", stage.name)
+    unique(expected["bills"], "key", "bill keys")
+    require(expected["bills"], "counts", "empty state bill registry")
+    # The source-derived projection has a fixed metadata shape. Extra fields,
+    # including held bodies slipped into a staged bill or link, fail equality.
+    for bill in expected["bills"]:
+        require(bill["licence"]["status"] == "metadata-only" and bill["licence"]["text_allowed"] is False,
+                "licence", bill["key"])
+        require(all(d["body_status"] == "held" for d in bill["sources"]), "held-output", bill["key"])
+    return expected, expected["counts"]
+
+
 def validated_asset(hub_name, root=ROOT):
     stage = root / "data/staged" / hub_name
-    hub, counts = budget_checks(stage) if hub_name == "budget" else gifts_checks(stage, root)
+    if hub_name == "budget":
+        hub, counts = budget_checks(stage)
+    elif hub_name == "vic-gifts":
+        hub, counts = gifts_checks(stage, root)
+    else:
+        hub, counts = state_bills_checks(stage, root)
     inputs = list(INPUTS[hub_name])
     if hub_name == "vic-gifts":
         inputs += sorted(str(p.relative_to(stage)) for p in (stage / "registers").glob("*.json"))
@@ -277,14 +312,14 @@ def promote(hubs, root=ROOT, dry_run=False, check_public=False, votes_reference=
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("hubs", nargs="*", help="budget and/or vic-gifts (default: both)")
+    parser.add_argument("hubs", nargs="*", help="reviewed hub names (default: all)")
     modes = parser.add_mutually_exclusive_group()
     modes.add_argument("--dry-run", action="store_true")
     modes.add_argument("--check-public", action="store_true")
     parser.add_argument("--votes-reference", help="Also require votes bytes to match this git ref (lane gates)")
     args = parser.parse_args()
     if any(name not in ASSETS for name in args.hubs):
-        parser.error("hubs must be budget or vic-gifts")
+        parser.error("hubs must be one of: " + ", ".join(ASSETS))
     try:
         return promote(args.hubs or list(ASSETS), dry_run=args.dry_run, check_public=args.check_public, votes_reference=args.votes_reference)
     except (ValueError, OSError, subprocess.CalledProcessError) as error:

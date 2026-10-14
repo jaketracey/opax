@@ -1,0 +1,111 @@
+{
+  "snapshot_date": "2026-10-14",
+  "branch": "coverage/bills-tas-act",
+  "base_commit": "738392374d15a3a611796862b105973725427716",
+  "desktop": {
+    "command": "OPAX_TEST_HOST=::1 node --test --test-concurrency=6 test/*.test.mjs",
+    "passed": 2013,
+    "failed": 0
+  },
+  "python": {
+    "command": "uv run --frozen --with pytest python -m pytest -q tests parli/tests scripts/bills_registry scripts/vm",
+    "passed": 1089,
+    "skipped": 1,
+    "subtests_passed": 529,
+    "failed": 0
+  },
+  "nightly": {
+    "command": "bash scripts/vm/test_nightly.sh",
+    "passed": 312,
+    "failed": 0
+  },
+  "post_render_note_tests": {
+    "passed": 5,
+    "failed": 0
+  },
+  "tsc": "passed",
+  "check": "passed",
+  "worker_deploy_dry_run": "passed; no deploy",
+  "source_access_guard": "passed",
+  "promoter_dry_run": "passed",
+  "public_asset_check": "passed",
+  "nightly_state_asset_validation": "passed",
+  "votes": {
+    "byte_identical_to": "origin/main",
+    "sha256": "a77128dc0e1e1b3fdaa4bf84501e2c94af3125dea3cf0b2dffbc688a49d68546",
+    "git_blob": "f82a4cdcf742e2078fb2c5c0ddef62a9a0dd146f",
+    "schema": 1
+  },
+  "assets": {
+    "tas": {
+      "bytes": 1584970,
+      "sha256": "fa33c7454f8867b5ff022e3a354176b3b513dfbb6e0ca0c33ef7418e5b4e99d8",
+      "counts": {
+        "bills": 157,
+        "parliaments": {
+          "52": 77,
+          "51": 80
+        },
+        "statuses": {
+          "before_parliament": 34,
+          "passed": 7,
+          "assented": 82,
+          "negatived": 6,
+          "lapsed": 27,
+          "unknown": 1
+        },
+        "events": 1323,
+        "document_links": 703,
+        "held_bodies": 703,
+        "linked_sponsors": 0,
+        "missing_sponsors": 0,
+        "gaps": 0
+      },
+      "reviewed_source_commit": "b6dc2095cfb973a4693fc631110aabc1ef96cb67"
+    },
+    "act": {
+      "bytes": 2387933,
+      "sha256": "fb9322ad1d1be99654f11ef94c50a92ed32fcee902ababa0f7f897b2be568f25",
+      "counts": {
+        "bills": 262,
+        "parliaments": {
+          "11": 79,
+          "10": 183
+        },
+        "statuses": {
+          "before_parliament": 22,
+          "passed": 222,
+          "withdrawn": 3,
+          "negatived": 6,
+          "lapsed": 8,
+          "unknown": 1
+        },
+        "events": 933,
+        "document_links": 1804,
+        "held_bodies": 1804,
+        "linked_sponsors": 0,
+        "missing_sponsors": 3,
+        "gaps": 12
+      },
+      "reviewed_source_commit": "b6dc2095cfb973a4693fc631110aabc1ef96cb67"
+    }
+  },
+  "tested_files_sha256": {
+    "portal/src/state-bills.ts": "2eba19a6e57b4403328bdc68d3eb5ce41eec60a51677dd1a5c6c6f2eab1ed405",
+    "portal/src/index.ts": "668623cce8598b227a238d155420a62e912d234564f49e0074010491bdb8f400",
+    "portal/public/state-bills.css": "05cf0600211af8aab3646b9e0f3aeeb20be7aca35358bae1d8b2fdc9098c8f0c",
+    "portal/public/navigation.js": "ae6e94b6442c268271eeaf43b61d53663d0aeee55d05266082d20a81ba74f77c",
+    "scripts/state_bills/acquire.py": "bedeace544c8159b6165ed32c5b5efc032fb4bdb5662c017b4de2c32ea11ee49",
+    "scripts/state_bills/stage.py": "241ee1f0c46b1b00365f38b32365522689a1cbfb91d10d16a0df53093c88dc8a",
+    "scripts/promote_hub_data.py": "6cb6e7885c16447dc2d398c80276ed5491a838dd788d95dbda18c3dbb3b2263b",
+    "scripts/source_access_guard.py": "f6d05bc48b7883e59ecf5f9c917e47ab1384db2a46a982d6eb04030bdcfe31be",
+    "scripts/vm/nightly.sh": "6ac08aafac7f527c314f8b38587a124e3201d54579dc77fb850c5d4749ecedf9",
+    "scripts/vm/data_groups.sh": "bee4b8b66b2bd018c225a936641cbe431cd1c189393a1ed3ffa19c597b773165",
+    "scripts/vm/validate_data.py": "98056deb34525651758c11fb047ac49c4074e31bc5fa25a1d3afa723a88a4920"
+  },
+  "browser_receipt": "browser-results.json",
+  "production_writes": false,
+  "push": false,
+  "deploy": false,
+  "acquisition_limitation": "One ACT discovery pacing overlap; incomplete unused overview receipt retained; subsequently serialized with a host lock. No actual refusal/challenge/reset."
+}

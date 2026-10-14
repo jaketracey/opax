@@ -134,7 +134,7 @@ DREOF
   cat > "$seed/scripts/promote_hub_data.py" <<'HPEOF'
 import os, pathlib, sys
 hub = sys.argv[1]
-assert hub in ('budget', 'vic-gifts')
+assert hub in ('budget', 'vic-gifts', 'bills-tas', 'bills-act')
 with open(pathlib.Path.home() / 'hub.calls', 'a') as out:
     out.write(hub + '\n')
 if os.environ.get('FAKE_HUB_MODE') == hub:
@@ -142,7 +142,9 @@ if os.environ.get('FAKE_HUB_MODE') == hub:
     print('FAIL ' + hub + ': held-period: fixture')
     sys.exit(1)
 HPEOF
-  mkdir -p "$seed/portal/public/budget" "$seed/portal/public/vic-gifts"
+  mkdir -p "$seed/portal/public/budget" "$seed/portal/public/vic-gifts" "$seed/portal/public/bills-tas" "$seed/portal/public/bills-act"
+  printf '{"fixture":"reviewed"}\n' > "$seed/portal/public/bills-tas/data.json"
+  printf '{"fixture":"reviewed"}\n' > "$seed/portal/public/bills-act/data.json"
   printf '{"fixture":"reviewed"}\n' > "$seed/portal/public/budget/data.json"
   printf '{"fixture":"reviewed"}\n' > "$seed/portal/public/vic-gifts/data.json"
   mkdir -p "$seed/portal/public/bills"
@@ -364,7 +366,7 @@ echo "== reviewed hubs: after exports, independent failure retains last good ass
 new_sandbox hub-promotion
 FAKE_HUB_MODE=budget nightly
 check "held budget fails the night" test "$NRC" -eq 1
-check "both promoter calls ran" bash -c "[ \$(wc -l < '$HOME/hub.calls') -eq 2 ] && grep -qx budget '$HOME/hub.calls' && grep -qx vic-gifts '$HOME/hub.calls'"
+check "all promoter calls ran" bash -c "[ \$(wc -l < '$HOME/hub.calls') -eq 4 ] && grep -qx budget '$HOME/hub.calls' && grep -qx vic-gifts '$HOME/hub.calls'"
 check "held budget public asset rolled back" bash -c "git -C '$REPO' diff --exit-code -- portal/public/budget && grep -q reviewed '$REPO/portal/public/budget/data.json'"
 check "other hub asset retained" grep -q reviewed "$REPO/portal/public/vic-gifts/data.json"
 check "status identifies the hub failure" bash -c "git --git-dir='$ORIGIN' show nightly-status:status.json | grep -q 'hub promotion failed for budget'"

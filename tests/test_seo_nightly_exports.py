@@ -41,7 +41,7 @@ class NightlySEOTests(unittest.TestCase):
                 INSERT INTO ext_votes VALUES ('federal-senate-1','123','Alex Example','Alex Example','aye','federal','Example Party');
                 ''')
         nightly = (ROOT / 'scripts/vm/nightly.sh').read_text()
-        block = nightly.split('# ---- 3b.')[1].split('# ---- 4.')[0]
+        block = nightly.split('# ---- 3b.')[1].split('# ---- 3c.')[0]
         block = '# ---- 3b.' + block
         setup = '''set -u
         PY=python3

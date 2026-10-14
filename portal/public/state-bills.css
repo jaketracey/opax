@@ -1,0 +1,11 @@
+.state-bills-content{padding-block:var(--space-row);color:var(--ink)}
+.state-bill{padding-block:var(--space-group);border-top:1px solid var(--divider-default);overflow-wrap:anywhere}
+.state-bill h2{font:var(--type-heading);margin-block:var(--space-row)}
+.state-bill h3{margin-block:var(--space-row)}
+.state-bills-kicker,.state-bills-receipt{font:var(--type-fine);color:var(--ink-soft)}
+.state-bills-receipt{overflow-wrap:anywhere;margin-block:var(--space-row)}
+.state-bills-status{font:var(--type-label)}.state-bills-status span{font:var(--type-fine);color:var(--ink-soft)}
+.state-bill dl{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,15rem),1fr));gap:var(--space-row);margin-block:var(--space-row)}
+.state-bill dt{font:var(--type-fine);color:var(--ink-soft)}.state-bill dd{margin:var(--space-tight) 0}
+.state-bills-note{padding:var(--space-row);background:var(--paper-sunken)}
+.state-bills-events{padding-left:1.25rem}.state-bills-events li{margin-bottom:var(--space-tight)}

@@ -1,0 +1,11 @@
+{
+  "status": "approved",
+  "reviewed_commit": "b6dc2095cfb973a4693fc631110aabc1ef96cb67",
+  "review_basis": "Codex lane review of retained source bytes, metadata-only licence scope and projection; local promotion explicitly authorised by coverage/bills-tas-act. ACT discovery pacing exception retained and disclosed; unused incomplete overview receipt excluded from projection. All document bodies and source summaries held.",
+  "inputs": {
+    "inventory.json": "602754cc1be29cdb486d0eeec6eba4b4bceec4c221d557ca9613bb43b20609e2",
+    "receipts.json": "e49bcbaad7efad0e759097737144548f77b51f32f3e56179a7ba4cced37ca7fe",
+    "hub.json": "7914c24269e8f79411ee657e13f3507d9908db0ef3bb1d94c8aba43bea41111f",
+    "acquisition-notes.json": "4bbaa97258b22830a5e110764975ce8aae48b5805fff1049997cc7250d90606a"
+  }
+}

@@ -8,7 +8,7 @@
 # shellcheck shell=bash
 
 # order = the order they are validated in
-DATA_GROUPS=(bills instruments audit budget vic-gifts evidence votes divisions seovotes corpus wrangler money grants suppliers access expenses interests fits speakers people pay discovery taxcharity)
+DATA_GROUPS=(bills instruments audit budget vic-gifts bills-tas bills-act evidence votes divisions seovotes corpus wrangler money grants suppliers access expenses interests fits speakers people pay discovery taxcharity)
 
 declare -A GROUP_PATHS=(
   [bills]="portal/public/bills"
@@ -16,6 +16,8 @@ declare -A GROUP_PATHS=(
   [audit]="portal/public/audit" # weekly QAO index + HTML recommendations; no DB/KB writes
   [budget]="portal/public/budget" # reviewed staged snapshot, promoted after exports
   [vic-gifts]="portal/public/vic-gifts" # reviewed periods and exact Victorian roster links
+  [bills-tas]="portal/public/bills-tas" # reviewed factual bill metadata and original links
+  [bills-act]="portal/public/bills-act" # reviewed factual bill metadata and original links
   [evidence]="portal/public/evidence" # weekly + catch-up; read-only source/sidecars, no KB
   [votes]="portal/public/votes.json" # mobile schema 1; federal legacy tables, state ext_ tables
   [divisions]="portal/public/divisions" # unified ext_ recorded divisions; bill backlinks

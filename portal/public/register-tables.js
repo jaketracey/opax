@@ -79,6 +79,41 @@ export function vicGiftsQuery(rows, config, query = {}) {
   return applyQuery(searched,config,{...query,q:undefined});
 }
 
+/** Factual state bill metadata; bodies remain outside the table/CSV projection. */
+export function stateBillsTableConfig(rows) {
+  return {id:'state-bills-table',caption:'State bill registry entries',pageType:'state-bills',urlKey:'stateBills',pageSize:25,rows,
+    defaultSort:{key:'introduced_date',dir:'desc'},export:{filename:'state-bills.csv'},
+    columnsVisible:['title','jurisdiction','parliament','introduced_date','sponsor_name','status','status_as_of','last_action','publisher','snapshot','licence'],
+    columns:[{key:'title',label:'Bill title',type:'text',primary:true},
+      {key:'jurisdiction',label:'Jurisdiction',type:'category',facet:'multi'},
+      {key:'parliament',label:'Parliament / Assembly',type:'category',facet:'multi',sortable:true},
+      {key:'introduced_date',label:'Introduced',type:'date'},
+      {key:'sponsor_name',label:'Sponsor as published',type:'text'},
+      {key:'status',label:'Status',type:'category',facet:'multi'},
+      {key:'status_as_of',label:'Source status date',type:'date'},
+      {key:'last_action',label:'Last dated action',type:'text'},
+      {key:'publisher',label:'Source / attribution',type:'text',href:row=>href(row.source_url)},
+      {key:'snapshot',label:'Source snapshot',type:'text'},
+      {key:'licence',label:'Licence',type:'text',href:row=>href(row.licence_url)},
+      {key:'source_id',label:'Publisher bill ID',type:'text'},
+      {key:'source_notes',label:'Source notes',type:'text'},
+      {key:'source_url',label:'Source URL',type:'text'},
+      {key:'sha256',label:'SHA-256',type:'text'},
+      {key:'licence_url',label:'Licence URL',type:'text'}],primaryLink:row=>row.href || null};
+}
+
+/** Retain existing bookmarked register URLs while the shared core owns state. */
+export function stateBillsTableQuery(params, config) {
+  const query=parseQuery(params,config.urlKey);
+  if(!query.q && params.get('q'))query.q=params.get('q').trim();
+  if(!query.page && /^[1-9]\d{0,4}$/.test(params.get('page') || ''))query.page=Number(params.get('page'));
+  for(const key of ['jurisdiction','parliament'])if(params.get(key) && !query.filters?.[key]){
+    query.filters ||= {};
+    query.filters[key]=[key==='jurisdiction'?({tas:'Tasmania',act:'ACT'}[params.get(key)] || params.get(key)):params.get(key)];
+  }
+  return query;
+}
+
 /** Keep every disclosed donor; party transfers and grants are excluded. */
 export function partyMoneyData(graph, partyId) {
   const donors = new Map(graph.nodes.filter(node=>node.kind === 'donor').map(node=>[node.id,node]));
@@ -123,6 +158,10 @@ export function registerTableHTML(config, query, requestURL) {
 }
 
 export function mountRegisterTable(el, config) {
+  if(config.urlKey === 'stateBills') {
+    const query=stateBillsTableQuery(new URL(el.ownerDocument.defaultView.location.href).searchParams,config);
+    config={...config,initialQuery:query,initialQueryKeys:['q','jurisdiction','parliament','page']};
+  }
   if (['instruments','audit'].includes(config.urlKey)) {
     const url=new URL(el.ownerDocument.defaultView.location.href),query=registerTableQuery(url.searchParams,config);
     config={...config,initialQuery:query,initialQueryKeys:['q','portfolio','type','status','sector','entity','year','responses']};
@@ -139,6 +178,7 @@ export function hydrateRegisterTables(root = document) {
     else if (config.id === 'audit-table') Object.assign(config,{columns:auditTableConfig([]).columns,primaryLink:row=>`/audit/${row.id}`});
     else if (config.urlKey === 'interests') Object.assign(config,{primaryLink:row=>href(row.source)});
     else if (config.urlKey === 'vicGifts') { const factory=vicGiftsTableConfig(config.source?.params,config.columns.map(column=>column.key)); Object.assign(config,{columns:factory.columns,primaryLink:factory.primaryLink}); }
+    else if (config.urlKey === 'stateBills') Object.assign(config,stateBillsTableConfig(config.rows));
     else Object.assign(config,{primaryLink:row=>row.href || null});
     script.remove();
     const mounted = mountRegisterTable(el,config);

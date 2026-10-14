@@ -1,0 +1,19 @@
+{
+  "notes": [
+    {
+      "kind": "pacing-exception",
+      "detail": "Two early commands overlapped for the Tenth Assembly overview and bills-list discovery. Their starts were approximately simultaneous, after the preceding 20-second wait. A host lock was added before all subsequent acquisitions. The unused overview snapshot is retained below; its request timestamp was not preserved when the concurrent ledger writers raced. No refusal, reset or challenge occurred. This is a collection pacing defect, not evidence of full robots compliance."
+    }
+  ],
+  "unused_snapshots": [
+    {
+      "url": "https://www.parliament.act.gov.au/parliamentary-business/in-the-chamber/previous-assemblies/tenth-assembly",
+      "status": 200,
+      "snapshot_path": "data/staged/bills-act/snapshots/5122b99bee13411a930018d23c53f15b235502da5d67df40f2d8223dd5a5be50.html",
+      "sha256": "5122b99bee13411a930018d23c53f15b235502da5d67df40f2d8223dd5a5be50",
+      "bytes": 81984,
+      "requested_at": null,
+      "used_in_projection": false
+    }
+  ]
+}

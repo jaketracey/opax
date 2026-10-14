@@ -22,6 +22,7 @@
         ] },
         { heading: 'Laws', links: [
           page('/bills', 'Bills', 'Each bill\'s stages, its votes, the debate and a summary.'),
+          page('/register/state-bills', 'State bills', 'Tasmania and ACT registry dates, stages and original versions.'),
           page('/instruments', 'Legislative instruments', 'Regulations and rules made under Acts.', { gate: 'instruments' }),
         ] },
       ] },
@@ -116,6 +117,7 @@
 
   /** The group a path belongs to; null for Home, Ask, Search and records. */
   const active = (path, params = new URLSearchParams()) => {
+    if (path === '/register/state-bills') return 'parliament';
     if (/^\/(money|map|discover|connections)(\/|$)/.test(path)) return 'money';
     if (/^\/subject\/(donor|supplier|agency|campaigner)(\/|$)/.test(path)) return 'money';
     if (path === '/explore') return ['ledger','grants','wd'].includes(params.get('game')) ? 'money' : 'research';

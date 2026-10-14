@@ -1,5 +1,6 @@
 """Repository source-access guard. Reports locations without source/data contents."""
 from pathlib import Path
+import json
 import re
 import subprocess
 
@@ -18,6 +19,7 @@ PROXY = re.compile(r'[\'\"]?\b(?:proxy|proxyMode|proxy_mode|stealth|antiBot|anti
 HEADER = re.compile(r'[\'\"](?:user[-_]agent|userAgent)[\'\"]\s*[:=]\s*[\'\"]([^\'\"]+)[\'\"]', re.I)
 SHELL_UA = re.compile(r'(?<![\w-])(?:-A|--user-agent|-U)(?:=\s*|\s+)([^\s;]+)')
 CURL_HEADER = re.compile(r'(?:-H|--header)(?:=|\s+)[\'\"]?user-agent\s*:\s*([^\'\"\n]+)', re.I)
+SHARED_AGENT = json.loads((Path(__file__).resolve().parents[1] / 'parli/ingest/user-agent.json').read_text())['user_agent']
 
 
 def violations(name, text):
@@ -33,6 +35,11 @@ def violations(name, text):
             issues.append((text.count('\n', 0, hit.start()) + 1, reason))
     if not fixture and name != 'parli/ingest/user-agent.json':
         for hit in HEADER.finditer(text):
+            # Acquisition ledgers are evidence of the actual outgoing identity.
+            # Only the exact shared identity is exempt; browser identities and
+            # arbitrary overrides in receipts still fail the earlier checks.
+            if name.startswith('data/staged/') and Path(name).name == 'receipts.json' and hit[1] == SHARED_AGENT:
+                continue
             issues.append((text.count('\n', 0, hit.start()) + 1, 'literal identity instead of shared agent'))
     # Scan shell commands in workflows and extensionless scripts as well as .sh.
     # A CLI override is allowed only when it reads the shared shell identity.
