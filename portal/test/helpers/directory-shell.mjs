@@ -124,7 +124,7 @@ async function run() {
     }
     for (const url of deferredModules) await evaluateModule(url);
     const selector = workerData.kind==='supplier' ? '[data-datatable] tbody tr:has(a[href])'
-      : workerData.kind==='agency' ? '.supplier-directory-row' : '#dir-list > li';
+      : workerData.kind==='agency' ? '.agency-directory > .ui-row' : '#dir-list > li';
     const deadline = performance.now() + 10000;
     let body;
     do {

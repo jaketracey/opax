@@ -218,7 +218,7 @@ export async function renderPersonAnswer(p: Person, read: ReadAsset, slugs: Map<
     const node = graph?.nodes.find(n=>n.kind==='party' && fold(n.label)===fold(party))
     if (!graph || !node) continue
     const {rows} = partyMoneyData(graph,node.id)
-    const config = partyMoneyTableConfig(rows,`person-party-money-${source.toLowerCase()}`,`partyMoney${source}`,'person')
+    const config = partyMoneyTableConfig(rows,`person-party-money-${source.toLowerCase()}`,`partyMoney${source}`,'person',{party:node.label,jurisdiction:({AEC:'federal',ECQ:'qld',VEC:'vic'} as Record<string,string>)[source]})
     body += `<h3>${escapeHtml(source)} disclosed receipts</h3><p>${escapeHtml(graph.meta.coverage || '')}</p>${registerHTML(config)}`
     body += `<p>Source: ${escapeHtml(graph.meta.sourceShort || graph.meta.source || source)}. Federal and state returns are shown separately and never summed.</p>${original(graph.meta.source_url || (source==='AEC' ? 'https://transparency.aec.gov.au/' : source==='ECQ' ? 'https://disclosures.ecq.qld.gov.au/' : 'https://disclosures.vec.vic.gov.au/'))}`
   }

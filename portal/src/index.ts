@@ -5146,7 +5146,7 @@ async function moneySubjectMeta(dir: 'party' | 'donor', name: string, url: URL, 
     const party = graph?.nodes.find(n=>n.kind === 'party' && foldName(n.label) === foldName(display))
     if (graph && party) {
       const {rows} = partyMoneyData(graph,party.id)
-      const config = partyMoneyTableConfig(rows)
+      const config = partyMoneyTableConfig(rows,undefined,undefined,undefined,{party:party.label,jurisdiction:'federal'})
       config.id = 'ssr-party-money-table'
       table = `<section class="wrap"><h2>Where it came from</h2>${registerTableHTML(config,undefined,url)}<p>Party transfers and grants are excluded. Source: <a href="https://transparency.aec.gov.au/">AEC Transparency Register</a>.</p></section>`
     }

@@ -1,4 +1,4 @@
-import {applyQuery, dataTableHTML, guardTableURL, mountDataTable, parseQuery} from './datatable.js?v=0f070cd345';
+import {applyQuery, dataTableHTML, guardTableURL, mountDataTable, parseQuery} from './datatable.js?v=9e3143ce46';
 import {donorDisclosure} from './donor-disclosure.js?v=abb5e417dd';
 
 const esc = value => String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -99,9 +99,11 @@ export function partyMoneyData(graph, partyId) {
 
 // The table's rows (and so the page's hydration JSON) leave out return_reference;
 // partyMoneyData keeps it for /api/register/party-money and the table API CSV.
-export function partyMoneyTableConfig(rows, id = 'party-money-table', urlKey = 'partyMoney', pageType = 'party') {
+// The page's CSV comes from the table API for this party, so it keeps the return references the rows leave out.
+export function partyMoneyTableConfig(rows, id = 'party-money-table', urlKey = 'partyMoney', pageType = 'party', scope = null) {
+  const exportEndpoint = scope?.party ? '/api/table/party-money?' + new URLSearchParams({'f.to':JSON.stringify([scope.party]),...(scope.jurisdiction ? {'f.jurisdiction':JSON.stringify([scope.jurisdiction])} : {})}) : null;
   return {id,caption:'Disclosed donations',pageType,urlKey,pageSize:50,rows:rows.map(({return_reference,...row})=>row),
-    defaultSort:{key:'total',dir:'desc'},export:{filename:'party-donations.csv'},
+    defaultSort:{key:'total',dir:'desc'},export:{filename:'party-donations.csv',...(exportEndpoint ? {endpoint:exportEndpoint} : {})},
     columns:[{key:'label',label:'Donor',type:'text',primary:true},{key:'industry',label:'Industry',type:'category',facet:'multi'},
       {key:'total',label:'Given',type:'money',bar:true,format:'compact',facet:'range'},
       {key:'count',label:'Receipts',type:'count',facet:'range'},{key:'firstYear',label:'First year',type:'year'},

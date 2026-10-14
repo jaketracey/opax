@@ -90,3 +90,14 @@ test('interest JSON reads only the source register and preserves name-bearing te
  const response=await interestRegisterResponse(new Request('https://opax.test/api/register/interests?pid=fixture'),{fetch:async request=>{assert.equal(new URL(request.url).pathname,'/interests/fixture.json');return Response.json(register);}});
  assert.equal(response.status,200);assert.equal((await response.json()).rows[0].item,register.buckets.gifts.items[0].description);
 });
+
+test('party donations export comes from the table API for that party, so return references stay in the CSV', async () => {
+  const {partyMoneyTableConfig} = await import('../public/register-tables.js');
+  const config = partyMoneyTableConfig([{id:'x',label:'A donor',total:1,count:1,return_reference:'ref'}], undefined, undefined, undefined, {party:'Labor', jurisdiction:'federal'});
+  assert.ok(!('return_reference' in config.rows[0]));
+  const url = new URL(config.export.endpoint, 'https://opax.com.au');
+  assert.equal(url.pathname, '/api/table/party-money');
+  assert.deepEqual(JSON.parse(url.searchParams.get('f.to')), ['Labor']);
+  assert.deepEqual(JSON.parse(url.searchParams.get('f.jurisdiction')), ['federal']);
+  assert.equal(partyMoneyTableConfig([]).export.endpoint, undefined);
+});

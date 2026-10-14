@@ -13,14 +13,14 @@ const donorNameHTML = name => donorLabelHTML(disclosedDonor(name));
 
 "use strict";
 let voteTables;
-const voteTablesReady = import("/vote-tables.js?v=3b2c5c83e3").then(module => { voteTables = module; });
+const voteTablesReady = import("/vote-tables.js?v=05fe471452").then(module => { voteTables = module; });
 let divisionMarkdown;
 const divisionMarkdownReady = import('/division-markdown.js?v=5991511166').then(module => { divisionMarkdown = module; });
 // The labels and source lines (labels.js); the first render waits for them.
 let growthModules;
 const growthModulesReady = import("/growth-modules.js?v=41fca6f135").then(module => { growthModules = module; });
 let registerTables;
-const registerTablesReady = import('/register-tables.js?v=2931d563d1').then(module => { registerTables = module; });
+const registerTablesReady = import('/register-tables.js?v=284f74eb22').then(module => { registerTables = module; });
 let askPerson;
 const askPersonReady = import('/ask-person.js?v=7cb76e395c').then(module => { askPerson = module; });
 let uiLabels;
@@ -1339,7 +1339,7 @@ async function renderDiscoveryPage(params, manageFocus) {
   slot.innerHTML = '<p role="status">Loading contracts…</p>';
   const seedNode = document.querySelector('#prerender [data-contracts-seed]');
   const seed = seedNode ? JSON.parse(seedNode.textContent) : null;
-  import('/contracts-table.js?v=8cf20d9253').then(async ({mountContractsTable}) => {
+  import('/contracts-table.js?v=b9d694539f').then(async ({mountContractsTable}) => {
     if (tableGeneration !== contractsTableGeneration) return;
     const handle = await mountContractsTable(slot, {seed: seed?.supplierId === null ? seed : undefined, signal: tableController.signal});
     if (tableGeneration === contractsTableGeneration) contractsTableHandle = handle; else handle.destroy();
@@ -1492,7 +1492,7 @@ async function openMoneyRecords(kind, params) {
   const body = $('money-records-body'); body.innerHTML = '<p class="status">Loading the records…</p>';
   try {
     if (grants && !params.has('program') && !params.has('open') && !params.has('largest')) {
-      const mod = await import('/grants-table.js?v=07f00f44dc');
+      const mod = await import('/grants-table.js?v=0fa60cd7b5');
       if (generation !== moneyRecordsGeneration) return;
       const controller = new AbortController();
       moneyRecordsHandle = {destroy() {controller.abort();}};
@@ -1649,7 +1649,7 @@ async function mountMoney(jurParam, industry, params = new URLSearchParams()) {
   root.innerHTML = `<p class="ui-status-line money-map-status" role="status">Loading the map…</p>`;
   const cfg = MONEY_JURISDICTIONS[jur];
   try {
-    const [{ mountMoneyMap }, data, journeysModule, researchModule, recordsModule] = await Promise.all([import("/money-map.js?v=60a91b38e8"), loadMoneyFile(jur), import("/money-journeys.js?v=mobile-picker-20260908"), import("/map-research.js?v=89d77470ee"), import("/money-records.js?v=ia-ux-20260908-2")]);
+    const [{ mountMoneyMap }, data, journeysModule, researchModule, recordsModule] = await Promise.all([import("/money-map.js?v=60a91b38e8"), loadMoneyFile(jur), import("/money-journeys.js?v=mobile-picker-20260908"), import("/map-research.js?v=246bddc933"), import("/money-records.js?v=ia-ux-20260908-2")]);
     if (moneyMapLoading !== jur || generation !== moneyMapGeneration) return; // switched again while loading
     const fine = $("money-fineprint");
     if (fine) fine.innerHTML = moneyFineprintHTML(jur, data?.meta);
@@ -1790,7 +1790,7 @@ async function openSupplierPage(name, params, manageFocus) {
   body.classList.remove("subject-person", "subject-party");
   body.innerHTML = '<p role="status">Loading suppliers…</p>';
   try {
-    const module = await import("/suppliers.js?v=ffd471783d");
+    const module = await import("/suppliers.js?v=7e0f952ac2");
     if (generation !== supplierPageGeneration) return;
     const helpers = {
       params,
@@ -5708,7 +5708,7 @@ async function openSubject(kind, name, manageFocus, params = new URLSearchParams
     }
     await registerTablesReady;
     if (currentSubjectKey !== key) return;
-    const partyTable=isParty ? registerTables.registerTableHTML(registerTables.partyMoneyTableConfig(registerTables.partyMoneyData(moneyData,node.id).rows)) : '';
+    const partyTable=isParty ? registerTables.registerTableHTML(registerTables.partyMoneyTableConfig(registerTables.partyMoneyData(moneyData,node.id).rows,undefined,undefined,undefined,{party:node.label,jurisdiction:'federal'})) : '';
     const flowRows = [...counter.entries()].sort((a,b)=>b[1]-a[1]).slice(0,10);
     // Identity once (principle 3): the title, then one meta line with the
     // party's own dot and full name (or the donor's industry) and its years.

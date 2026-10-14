@@ -547,6 +547,11 @@ export function mountDataTable(el, config) {
       if (config.source) {
         const exported = await readServerCSV(endpoint(true,state),win.fetch.bind(win),exportController.signal);
         csv = exported.csv; truncated = exported.truncated;
+      } else if (config.export?.endpoint) {
+        // A server CSV for the whole scope carries columns the page leaves out (e.g. return references).
+        const url = new URL(config.export.endpoint,win.location.href); url.searchParams.set('format','csv');
+        const exported = await readServerCSV(url.href,win.fetch.bind(win),exportController.signal);
+        csv = exported.csv; truncated = exported.truncated;
       } else csv = toCSV(filteredRows(config.rows || [],config,state),config);
       if (destroyed || revision !== exportRevision || view.rejected) return;
       const url = win.URL.createObjectURL(new win.Blob([csv],{type:'text/csv;charset=utf-8'}));
