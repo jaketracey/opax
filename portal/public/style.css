@@ -3995,21 +3995,12 @@ html[data-panel="chat"] footer { display: none; }
 
 /* Supplier dossiers: procurement charts and source records, scoped to the lazy module. */
 .supplier-page { min-width: 0; }
-.supplier-page .subject-head h2 { color: var(--navy); overflow-wrap: anywhere; }
 /* Supplier and agency entries: a ui-page-head with the figures (ui-stats) in
    it, then ui-sections beside an On this page rail (ui-toc). The directories
    keep their own rows below. */
 .supplier-head > .ui-stats { margin: var(--space-block) 0 0; }
 .supplier-page .ui-section:empty { display: none; }
 .supplier-growth > .ui-section:first-child { margin-top: var(--space-section); }
-.supplier-more { margin-top: var(--sp-16); }
-.supplier-result-count { color: var(--ink-faint); font-size: var(--text-13); margin: var(--sp-16) 0; }
-.supplier-directory-row { display: flex; justify-content: space-between; gap: var(--sp-16); padding: var(--sp-16) var(--sp-4); border-bottom: var(--border-hairline) solid var(--divider-subtle); color: var(--ink); text-decoration: none; }
-.supplier-directory-row:hover { background: var(--paper-sunken); }
-.supplier-directory-row > span { min-width: 0; }
-.supplier-directory-row strong { display: block; color: var(--navy); font-size: var(--text-15); overflow-wrap: anywhere; }
-.supplier-directory-row small { display: block; color: var(--ink-soft); font: var(--type-fine); margin-top: var(--space-line); }
-.supplier-directory-value { text-align: right; flex-shrink: 0; font-variant-numeric: tabular-nums; }
 .supplier-profile-grid { display: grid; grid-template-columns: minmax(0, 1fr) 290px; gap: var(--sp-40); align-items: start; }
 .supplier-profile-main { min-width: 0; }
 .supplier-section:not(.ui-section) { margin-bottom: var(--sp-40); }
@@ -4020,7 +4011,6 @@ html[data-panel="chat"] footer { display: none; }
 .supplier-bars .ui-row-meta { margin-top: var(--space-tight); }
 .supplier-bar-fill { fill: var(--bronze); }
 .supplier-year-chart svg { width: 100%; display: block; overflow: visible; }
-.supplier-year-chart text { font: var(--type-fine); fill: var(--ink-soft); }
 .supplier-chart-baseline { stroke: var(--line-control); stroke-width: var(--border-hairline); }
 .supplier-chart-data { margin-top: var(--space-row); }
 .supplier-page summary { cursor: pointer; }
@@ -4054,15 +4044,11 @@ html[data-panel="chat"] footer { display: none; }
 /* The tax block writes its title as a label; on the entry it is a section heading like its neighbours. */
 .supplier-taxcharity > .kicker { margin: 0 0 var(--space-heading); font: var(--type-heading); color: var(--ink); }
 .supplier-aliases { margin-top: var(--space-block); }
-.agency-suppliers .ui-row-figure > .ui-row-meta { justify-content: flex-end; font-weight: var(--weight-regular); }
 .supplier-empty { padding: var(--sp-24); border: var(--border-hairline) solid var(--divider-subtle); }
 .supplier-page :is(a, button, input, select, summary):focus-visible { outline: var(--border-focus) solid var(--bronze-ink); outline-offset: 4px; }
 /* One column: the page reads straight down, and the rail keeps only its ways out. */
 @media (max-width: 850px) { .supplier-profile-grid { grid-template-columns: minmax(0, 1fr); } .supplier-rail { position: static; padding-top: 0; border-top: 0; } .supplier-rail .supplier-rail-nav { display: none; } .supplier-rail-links { margin-top: 0; } }
 @media (max-width: 540px) {
-  .supplier-directory-row { flex-direction: column; gap: var(--sp-8); }
-  .supplier-directory-value { text-align: left; }
-  .supplier-contract.ui-disclosure > summary { flex-wrap: wrap; }
   .evidence-excerpt summary { flex-wrap: wrap; }
   .evidence-excerpt summary b { width: 100%; padding-left: var(--sp-24); }
 }
@@ -4400,7 +4386,6 @@ html[data-panel="chat"] footer { display: none; }
 
 .mm-root .mm-card .mm-ask + .mm-card-fine { margin-top:var(--sp-12); }
 .agency-supplier-controls { align-items:flex-end; }
-.agency-supplier-controls > label { flex:1 1 240px; }
 .agency-supplier-controls .search-sort-picker { flex:0 0 auto; }
 @media(max-width:700px) {
   .agency-supplier-controls .search-sort-picker { flex:1 1 100%; width:100%; }
@@ -4422,7 +4407,6 @@ html[data-panel="chat"] footer { display: none; }
 .declared-pagination { display: flex; align-items: center; justify-content: space-between; gap: var(--sp-12); margin-top: var(--sp-20); }
 .declared-pagination > span { color: var(--ink-soft); font-size: var(--text-15); }
 
-.agency-directory-page .supplier-directory-row strong { font-size: var(--text-17); line-height: var(--leading-normal); }
 
 /* Phones and tablets get a short placeholder instead of the example question
    (app.js swaps it); the box is no longer an empty rectangle there. */
