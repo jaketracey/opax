@@ -1,4 +1,3 @@
-import {donorDisclosure} from '../public/donor-disclosure.js'
 // ---------------------------------------------------------------------------
 // OPAX Money Map - the words layer.
 //
@@ -375,7 +374,6 @@ export function mountWordsLayer(ctx: WordsLayerContext): WordsLayer {
 
   /** "In parliament": the donor's industry debate, party by party. */
   const renderDonorBlock = (host: HTMLElement, donor: MoneyNode, m: Matrix) => {
-    const reference=document.createElement('p');reference.className='donor-return-reference';reference.textContent=donorDisclosure(donor).reference;host.append(reference)
     const slug = INDUSTRY_TOPIC[donor.industry]
     if (!slug) return
     const { total, rows } = topicShares(m, slug)

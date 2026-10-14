@@ -1,4 +1,4 @@
-import {donorDisclosure,donorLookup,donorDisplayText,type DonorDisclosureRecord} from '../public/donor-disclosure.js'
+import {donorDisclosure,donorLookup,returnReference,type DonorDisclosureRecord} from '../public/donor-disclosure.js'
 import {partyUrl} from '../public/canonical-urls.js'
 // ---------------------------------------------------------------------------
 // OPAX Money Map - public entry.
@@ -506,6 +506,10 @@ const CSS = `
 /* The source-record excerpts the Sources disclosure opens under the row. */
 .mm-evidence { margin: var(--space-line) 0 0; padding-top: var(--space-tight); border-top: var(--border-hairline) solid var(--divider-subtle); font: var(--type-fine); }
 .mm-evidence-note { margin: 0; font: var(--type-fine); color: var(--ink-soft); }
+.mm-return-refs { margin: 0 0 var(--space-tight); color: var(--ink-soft); overflow-wrap: anywhere; }
+.mm-return-refs-title { margin: 0 0 var(--space-line); font: var(--type-label); color: var(--ink); }
+.mm-return-refs ul { margin: 0 0 var(--space-line); padding: 0; list-style: none; }
+.mm-return-refs li + li { margin-top: var(--space-line); }
 /* Zoom: the shared icon buttons (.ui-button.ui-icon-button), compact. */
 .mm-zoom { position: absolute; right: var(--space-heading); bottom: var(--space-heading); display: flex;
   flex-direction: column; gap: var(--space-line); }
@@ -1529,8 +1533,7 @@ export async function mountMoneyMap(
       dot.style.background = colour
     }
     const label = el('span', 'mm-row-name', body)
-    const disclosed=raw.nodes.find(n=>n.kind==='donor' && n.label===name)
-    label.textContent = disclosed ? donorDisplayText(disclosed) : name
+    label.textContent = name
     const amt = el('span', 'mm-row-amt', body)
     amt.textContent = formatMoney(amount)
     if (years) {
@@ -1634,6 +1637,7 @@ export async function mountMoneyMap(
    * leaves the button armed so the next press tries again.
    */
   let evidenceSeq = 0
+  const RETURN_REFS_SHOWN = 10
   const sourcesAction = (row: HTMLElement, card: HTMLElement, node: MoneyNode) => {
     const button = action(row, 'Sources', { name: 'Sources: mentions in the source records' }) as HTMLButtonElement
     const chevron = el('span', 'mm-action-chevron', button)
@@ -1646,13 +1650,25 @@ export async function mountMoneyMap(
     slot.setAttribute('aria-live', 'polite')
     button.setAttribute('aria-controls', slot.id)
     button.setAttribute('aria-expanded', 'false')
+    // The returns behind the figures live here, not under the name: the card
+    // keeps the plain name and its sums, Sources keeps the citations.
+    const references = [...new Set(donorDisclosure(node).returns.map(returnReference).filter(Boolean))]
+    if (references.length) {
+      const block = el('div', 'mm-return-refs', slot)
+      el('p', 'mm-return-refs-title', block).textContent = references.length === 1 ? 'Return reference' : 'Return references'
+      const list = el('ul', '', block)
+      for (const reference of references.slice(0, RETURN_REFS_SHOWN)) el('li', '', list).textContent = reference
+      const more = references.length - RETURN_REFS_SHOWN
+      if (more > 0) el('p', 'mm-evidence-note', block).textContent = `${more.toLocaleString()} more return reference${more === 1 ? '' : 's'} in the data export`
+    }
+    const excerpts = references.length ? el('div', 'mm-evidence-excerpts', slot) : slot
     const setOpen = (open: boolean) => {
       slot.hidden = !open
       button.setAttribute('aria-expanded', String(open))
     }
     const note = (text: string) => {
-      slot.replaceChildren()
-      el('p', 'mm-evidence-note', slot).textContent = text
+      excerpts.replaceChildren()
+      el('p', 'mm-evidence-note', excerpts).textContent = text
       setOpen(true)
     }
     const alive = () => !destroyed && selectedId === node.id && slot.isConnected
@@ -1664,7 +1680,7 @@ export async function mountMoneyMap(
       note('Finding source excerpts…')
       try {
         const { mountEvidence } = await import('../public/evidence.js')
-        const found = await mountEvidence(slot, { name: node.label }, { compact: true, alive })
+        const found = await mountEvidence(excerpts, { name: node.label }, { compact: true, alive })
         if (!alive()) return
         loaded = found
         if (found) setOpen(true)
@@ -1785,7 +1801,6 @@ export async function mountMoneyMap(
             ? `Held by donors on this map across ${node.count.toLocaleString()} contracts · ${span}`
             : `Awarded to donors on this map across ${node.count.toLocaleString()} grants · ${span}`)
           : `Given across ${node.count.toLocaleString()} donations · ${span}`
-    if(node.kind==='donor') { const reference=el('p','mm-card-fine donor-return-reference',card); reference.textContent=donorDisclosure(node).reference; }
     inflationFineprint(card)
 
     const listTitle = el('div', 'mm-card-section', card)
@@ -1916,7 +1931,6 @@ export async function mountMoneyMap(
     const donors = edge.count ?? 0
     sub.textContent = `From ${donors === 1 ? '1 donor' : `${donors.toLocaleString()} donors`} shown` +
       `${span ? ` · ${span}` : ''}`
-    if(node.kind==='donor') { const reference=el('p','mm-card-fine donor-return-reference',card); reference.textContent=donorDisclosure(node).reference; }
     inflationFineprint(card)
 
     const listTitle = el('div', 'mm-card-section', card)
@@ -1959,7 +1973,6 @@ export async function mountMoneyMap(
     const sub = el('div', 'mm-card-sub', card)
     const span = yearSpan(edge.firstYear ?? null, edge.lastYear ?? null)
     sub.textContent = `Across ${(edge.count ?? 0).toLocaleString()} grants${span ? ` · ${span}` : ''}`
-    if(node.kind==='donor') { const reference=el('p','mm-card-fine donor-return-reference',card); reference.textContent=donorDisclosure(node).reference; }
     inflationFineprint(card)
     const list = el('ul', 'mm-rows', card)
     row(list, hubColour(grantor), grantor.label, grantor.total, '',
@@ -2018,7 +2031,6 @@ export async function mountMoneyMap(
     const span = yearSpan(edge.firstYear ?? null, edge.lastYear ?? null)
     sub.textContent =
       `Across ${(edge.count ?? 0).toLocaleString()} donations${span ? ` · ${span}` : ''}`
-    if(node.kind==='donor') { const reference=el('p','mm-card-fine donor-return-reference',card); reference.textContent=donorDisclosure(node).reference; }
     inflationFineprint(card)
 
     const list = el('ul', 'mm-rows', card)
