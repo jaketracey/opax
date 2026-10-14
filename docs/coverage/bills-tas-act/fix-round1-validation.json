@@ -1,0 +1,97 @@
+{
+  "review_base": "4a3eb7338b38b46568d33c2106a451364caa2116",
+  "origin_main_merged_first": "738392374d15a3a611796862b105973725427716",
+  "source_fix_commit": "3bd8cef017a684cbbf1dd500c19d6e4a04d21ded",
+  "targeted_tests": {
+    "passed": 101,
+    "failed": 0
+  },
+  "python_checks": {
+    "passed": 1092,
+    "skipped": 1,
+    "subtests_passed": 529,
+    "failed": 0
+  },
+  "nightly_checks": {
+    "passed": 312,
+    "failed": 0
+  },
+  "tsc": "passed",
+  "check": "passed",
+  "worker_deploy_dry_run": "passed; no deploy",
+  "promoter_dry_run": "passed",
+  "promoter_check_public": "passed",
+  "nightly_state_asset_validation": "passed",
+  "source_access_guard": "passed",
+  "votes_byte_identical_to": "origin/main",
+  "votes_sha256": "a77128dc0e1e1b3fdaa4bf84501e2c94af3125dea3cf0b2dffbc688a49d68546",
+  "assets": {
+    "tas": {
+      "bytes": 1584970,
+      "sha256": "fa33c7454f8867b5ff022e3a354176b3b513dfbb6e0ca0c33ef7418e5b4e99d8",
+      "counts": {
+        "bills": 157,
+        "parliaments": {
+          "52": 77,
+          "51": 80
+        },
+        "statuses": {
+          "before_parliament": 34,
+          "passed": 7,
+          "assented": 82,
+          "negatived": 6,
+          "lapsed": 27,
+          "unknown": 1
+        },
+        "events": 1323,
+        "document_links": 703,
+        "held_bodies": 703,
+        "linked_sponsors": 0,
+        "missing_sponsors": 0,
+        "gaps": 0
+      },
+      "reviewed_commit": "b6dc2095cfb973a4693fc631110aabc1ef96cb67"
+    },
+    "act": {
+      "bytes": 2392913,
+      "sha256": "950e8e8793406392f347dd9a4eaf108777f75ec972aa732543ef786c2ab00cf5",
+      "counts": {
+        "bills": 262,
+        "parliaments": {
+          "11": 79,
+          "10": 183
+        },
+        "statuses": {
+          "before_parliament": 22,
+          "passed": 222,
+          "withdrawn": 3,
+          "negatived": 6,
+          "lapsed": 8,
+          "unknown": 1
+        },
+        "events": 941,
+        "document_links": 1804,
+        "held_bodies": 1804,
+        "linked_sponsors": 0,
+        "missing_sponsors": 3,
+        "gaps": 12
+      },
+      "reviewed_commit": "3bd8cef017a684cbbf1dd500c19d6e4a04d21ded"
+    }
+  },
+  "counts": {
+    "bills": 419,
+    "events": 2264,
+    "document_link_rows": 2507,
+    "held_body_link_rows": 2507,
+    "linked_sponsors": 0
+  },
+  "recovered_expiry_events": 8,
+  "formerly_introduction_only_records": 4,
+  "expiry_date": "2024-10-19",
+  "new_source_requests": 0,
+  "production_writes": false,
+  "push": false,
+  "deploy": false,
+  "browser_receipt": "browser-results.json"
+}

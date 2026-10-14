@@ -31,7 +31,7 @@
       "lapsed": 8,
       "unknown": 1
     },
-    "events": 933,
+    "events": 941,
     "document_links": 1804,
     "held_bodies": 1804,
     "linked_sponsors": 0,
@@ -11695,15 +11695,15 @@
       "status": "lapsed",
       "status_as_of": "2024-10-18",
       "source_updated_date": null,
-      "stage": "Introduced",
+      "stage": "Lapsed on expiry of Assembly",
       "last_action": {
-        "stage": "Introduced",
-        "date": "2024-08-28",
-        "date_raw": "28-08-24",
+        "stage": "Lapsed on expiry of Assembly",
+        "date": "2024-10-19",
+        "date_raw": "19 October 2024",
         "house": "Legislative Assembly",
-        "source_url": "https://www.parliament.act.gov.au/__data/assets/word_doc/0013/2406100/Report-Bills-List-34.docx",
-        "snapshot": "2026-10-14T01:37:54.837666+00:00",
-        "sha256": "ad7d36884e169559f94b2704ab1d65698910a07f0afed97152329800571acb9a"
+        "source_url": "https://www.parliament.act.gov.au/parliamentary-business/in-the-chamber/previous-assemblies/tenth-assembly/bills_volume",
+        "snapshot": "2026-10-14T01:37:15.510429+00:00",
+        "sha256": "4529037cf2a42c313892c64b71dd2c9b996e11a9178c31ee330653a3c97757f2"
       },
       "act_number": null,
       "events": [
@@ -11715,6 +11715,15 @@
           "source_url": "https://www.parliament.act.gov.au/__data/assets/word_doc/0013/2406100/Report-Bills-List-34.docx",
           "snapshot": "2026-10-14T01:37:54.837666+00:00",
           "sha256": "ad7d36884e169559f94b2704ab1d65698910a07f0afed97152329800571acb9a"
+        },
+        {
+          "stage": "Lapsed on expiry of Assembly",
+          "date": "2024-10-19",
+          "date_raw": "19 October 2024",
+          "house": "Legislative Assembly",
+          "source_url": "https://www.parliament.act.gov.au/parliamentary-business/in-the-chamber/previous-assemblies/tenth-assembly/bills_volume",
+          "snapshot": "2026-10-14T01:37:15.510429+00:00",
+          "sha256": "4529037cf2a42c313892c64b71dd2c9b996e11a9178c31ee330653a3c97757f2"
         }
       ],
       "stage_values": [],
@@ -11758,7 +11767,8 @@
       "official": null,
       "bill_url": "http://www.legislation.act.gov.au/b/db_70496",
       "source_notes": [
-        "Status-list title: Evidence (Miscellaneous Provisions) Amendment Bill 2024"
+        "Status-list title: Evidence (Miscellaneous Provisions) Amendment Bill 2024",
+        "The source includes an action date later than its status-list heading date."
       ],
       "metadata_receipts": [
         {
@@ -11791,15 +11801,15 @@
       "status": "lapsed",
       "status_as_of": "2024-10-18",
       "source_updated_date": null,
-      "stage": "Introduced",
+      "stage": "Lapsed on expiry of Assembly",
       "last_action": {
-        "stage": "Introduced",
-        "date": "2024-08-27",
-        "date_raw": "27-08-24",
+        "stage": "Lapsed on expiry of Assembly",
+        "date": "2024-10-19",
+        "date_raw": "19 October 2024",
         "house": "Legislative Assembly",
-        "source_url": "https://www.parliament.act.gov.au/__data/assets/word_doc/0013/2406100/Report-Bills-List-34.docx",
-        "snapshot": "2026-10-14T01:37:54.837666+00:00",
-        "sha256": "ad7d36884e169559f94b2704ab1d65698910a07f0afed97152329800571acb9a"
+        "source_url": "https://www.parliament.act.gov.au/parliamentary-business/in-the-chamber/previous-assemblies/tenth-assembly/bills_volume",
+        "snapshot": "2026-10-14T01:37:15.510429+00:00",
+        "sha256": "4529037cf2a42c313892c64b71dd2c9b996e11a9178c31ee330653a3c97757f2"
       },
       "act_number": null,
       "events": [
@@ -11811,6 +11821,15 @@
           "source_url": "https://www.parliament.act.gov.au/__data/assets/word_doc/0013/2406100/Report-Bills-List-34.docx",
           "snapshot": "2026-10-14T01:37:54.837666+00:00",
           "sha256": "ad7d36884e169559f94b2704ab1d65698910a07f0afed97152329800571acb9a"
+        },
+        {
+          "stage": "Lapsed on expiry of Assembly",
+          "date": "2024-10-19",
+          "date_raw": "19 October 2024",
+          "house": "Legislative Assembly",
+          "source_url": "https://www.parliament.act.gov.au/parliamentary-business/in-the-chamber/previous-assemblies/tenth-assembly/bills_volume",
+          "snapshot": "2026-10-14T01:37:15.510429+00:00",
+          "sha256": "4529037cf2a42c313892c64b71dd2c9b996e11a9178c31ee330653a3c97757f2"
         }
       ],
       "stage_values": [],
@@ -11853,7 +11872,9 @@
       },
       "official": null,
       "bill_url": "http://www.legislation.act.gov.au/b/db_70493",
-      "source_notes": [],
+      "source_notes": [
+        "The source includes an action date later than its status-list heading date."
+      ],
       "metadata_receipts": [
         {
           "source_url": "https://www.parliament.act.gov.au/parliamentary-business/in-the-chamber/previous-assemblies/tenth-assembly/summary_of_bills",
@@ -18209,15 +18230,15 @@
       "status": "lapsed",
       "status_as_of": "2024-10-18",
       "source_updated_date": null,
-      "stage": "Committee report presented",
+      "stage": "Lapsed on expiry of Assembly",
       "last_action": {
-        "stage": "Committee report presented",
-        "date": "2024-05-14",
-        "date_raw": "14-05-24",
+        "stage": "Lapsed on expiry of Assembly",
+        "date": "2024-10-19",
+        "date_raw": "19 October 2024",
         "house": "Legislative Assembly",
-        "source_url": "https://www.parliament.act.gov.au/__data/assets/word_doc/0013/2406100/Report-Bills-List-34.docx",
-        "snapshot": "2026-10-14T01:37:54.837666+00:00",
-        "sha256": "ad7d36884e169559f94b2704ab1d65698910a07f0afed97152329800571acb9a"
+        "source_url": "https://www.parliament.act.gov.au/parliamentary-business/in-the-chamber/previous-assemblies/tenth-assembly/bills_volume",
+        "snapshot": "2026-10-14T01:37:15.510429+00:00",
+        "sha256": "4529037cf2a42c313892c64b71dd2c9b996e11a9178c31ee330653a3c97757f2"
       },
       "act_number": null,
       "events": [
@@ -18256,6 +18277,15 @@
           "source_url": "https://www.parliament.act.gov.au/__data/assets/word_doc/0013/2406100/Report-Bills-List-34.docx",
           "snapshot": "2026-10-14T01:37:54.837666+00:00",
           "sha256": "ad7d36884e169559f94b2704ab1d65698910a07f0afed97152329800571acb9a"
+        },
+        {
+          "stage": "Lapsed on expiry of Assembly",
+          "date": "2024-10-19",
+          "date_raw": "19 October 2024",
+          "house": "Legislative Assembly",
+          "source_url": "https://www.parliament.act.gov.au/parliamentary-business/in-the-chamber/previous-assemblies/tenth-assembly/bills_volume",
+          "snapshot": "2026-10-14T01:37:15.510429+00:00",
+          "sha256": "4529037cf2a42c313892c64b71dd2c9b996e11a9178c31ee330653a3c97757f2"
         }
       ],
       "stage_values": [],
@@ -18331,7 +18361,9 @@
       },
       "official": null,
       "bill_url": "https://www.legislation.act.gov.au/b/db_69218",
-      "source_notes": [],
+      "source_notes": [
+        "The source includes an action date later than its status-list heading date."
+      ],
       "metadata_receipts": [
         {
           "source_url": "https://www.parliament.act.gov.au/parliamentary-business/in-the-chamber/previous-assemblies/tenth-assembly/summary_of_bills",
@@ -26093,15 +26125,15 @@
       "status": "lapsed",
       "status_as_of": "2024-10-18",
       "source_updated_date": null,
-      "stage": "Committee report presented",
+      "stage": "Lapsed on expiry of Assembly",
       "last_action": {
-        "stage": "Committee report presented",
-        "date": "2023-06-27",
-        "date_raw": "27-06-23",
+        "stage": "Lapsed on expiry of Assembly",
+        "date": "2024-10-19",
+        "date_raw": "19 October 2024",
         "house": "Legislative Assembly",
-        "source_url": "https://www.parliament.act.gov.au/__data/assets/word_doc/0013/2406100/Report-Bills-List-34.docx",
-        "snapshot": "2026-10-14T01:37:54.837666+00:00",
-        "sha256": "ad7d36884e169559f94b2704ab1d65698910a07f0afed97152329800571acb9a"
+        "source_url": "https://www.parliament.act.gov.au/parliamentary-business/in-the-chamber/previous-assemblies/tenth-assembly/bills_volume",
+        "snapshot": "2026-10-14T01:37:15.510429+00:00",
+        "sha256": "4529037cf2a42c313892c64b71dd2c9b996e11a9178c31ee330653a3c97757f2"
       },
       "act_number": null,
       "events": [
@@ -26140,6 +26172,15 @@
           "source_url": "https://www.parliament.act.gov.au/__data/assets/word_doc/0013/2406100/Report-Bills-List-34.docx",
           "snapshot": "2026-10-14T01:37:54.837666+00:00",
           "sha256": "ad7d36884e169559f94b2704ab1d65698910a07f0afed97152329800571acb9a"
+        },
+        {
+          "stage": "Lapsed on expiry of Assembly",
+          "date": "2024-10-19",
+          "date_raw": "19 October 2024",
+          "house": "Legislative Assembly",
+          "source_url": "https://www.parliament.act.gov.au/parliamentary-business/in-the-chamber/previous-assemblies/tenth-assembly/bills_volume",
+          "snapshot": "2026-10-14T01:37:15.510429+00:00",
+          "sha256": "4529037cf2a42c313892c64b71dd2c9b996e11a9178c31ee330653a3c97757f2"
         }
       ],
       "stage_values": [],
@@ -26226,7 +26267,9 @@
       },
       "official": null,
       "bill_url": "https://www.legislation.act.gov.au/b/db_67413",
-      "source_notes": [],
+      "source_notes": [
+        "The source includes an action date later than its status-list heading date."
+      ],
       "metadata_receipts": [
         {
           "source_url": "https://www.parliament.act.gov.au/parliamentary-business/in-the-chamber/previous-assemblies/tenth-assembly/summary_of_bills",
@@ -29570,15 +29613,15 @@
       "status": "lapsed",
       "status_as_of": "2024-10-18",
       "source_updated_date": null,
-      "stage": "Committee report presented",
+      "stage": "Lapsed on expiry of Assembly",
       "last_action": {
-        "stage": "Committee report presented",
-        "date": "2024-03-21",
-        "date_raw": "21-03-24",
+        "stage": "Lapsed on expiry of Assembly",
+        "date": "2024-10-19",
+        "date_raw": "19 October 2024",
         "house": "Legislative Assembly",
-        "source_url": "https://www.parliament.act.gov.au/__data/assets/word_doc/0013/2406100/Report-Bills-List-34.docx",
-        "snapshot": "2026-10-14T01:37:54.837666+00:00",
-        "sha256": "ad7d36884e169559f94b2704ab1d65698910a07f0afed97152329800571acb9a"
+        "source_url": "https://www.parliament.act.gov.au/parliamentary-business/in-the-chamber/previous-assemblies/tenth-assembly/bills_volume",
+        "snapshot": "2026-10-14T01:37:15.510429+00:00",
+        "sha256": "4529037cf2a42c313892c64b71dd2c9b996e11a9178c31ee330653a3c97757f2"
       },
       "act_number": null,
       "events": [
@@ -29617,6 +29660,15 @@
           "source_url": "https://www.parliament.act.gov.au/__data/assets/word_doc/0013/2406100/Report-Bills-List-34.docx",
           "snapshot": "2026-10-14T01:37:54.837666+00:00",
           "sha256": "ad7d36884e169559f94b2704ab1d65698910a07f0afed97152329800571acb9a"
+        },
+        {
+          "stage": "Lapsed on expiry of Assembly",
+          "date": "2024-10-19",
+          "date_raw": "19 October 2024",
+          "house": "Legislative Assembly",
+          "source_url": "https://www.parliament.act.gov.au/parliamentary-business/in-the-chamber/previous-assemblies/tenth-assembly/bills_volume",
+          "snapshot": "2026-10-14T01:37:15.510429+00:00",
+          "sha256": "4529037cf2a42c313892c64b71dd2c9b996e11a9178c31ee330653a3c97757f2"
         }
       ],
       "stage_values": [],
@@ -29704,7 +29756,8 @@
       "official": null,
       "bill_url": "https://www.legislation.act.gov.au/b/db_66795",
       "source_notes": [
-        "Status-list title: Integrity Commission Amendment Bill 2022 (No 2)"
+        "Status-list title: Integrity Commission Amendment Bill 2022 (No 2)",
+        "The source includes an action date later than its status-list heading date."
       ],
       "metadata_receipts": [
         {
@@ -36883,15 +36936,15 @@
       "status": "lapsed",
       "status_as_of": "2024-10-18",
       "source_updated_date": null,
-      "stage": "Introduced",
+      "stage": "Lapsed on expiry of Assembly",
       "last_action": {
-        "stage": "Introduced",
-        "date": "2021-11-25",
-        "date_raw": "25-11-21",
+        "stage": "Lapsed on expiry of Assembly",
+        "date": "2024-10-19",
+        "date_raw": "19 October 2024",
         "house": "Legislative Assembly",
-        "source_url": "https://www.parliament.act.gov.au/__data/assets/word_doc/0013/2406100/Report-Bills-List-34.docx",
-        "snapshot": "2026-10-14T01:37:54.837666+00:00",
-        "sha256": "ad7d36884e169559f94b2704ab1d65698910a07f0afed97152329800571acb9a"
+        "source_url": "https://www.parliament.act.gov.au/parliamentary-business/in-the-chamber/previous-assemblies/tenth-assembly/bills_volume",
+        "snapshot": "2026-10-14T01:37:15.510429+00:00",
+        "sha256": "4529037cf2a42c313892c64b71dd2c9b996e11a9178c31ee330653a3c97757f2"
       },
       "act_number": null,
       "events": [
@@ -36903,6 +36956,15 @@
           "source_url": "https://www.parliament.act.gov.au/__data/assets/word_doc/0013/2406100/Report-Bills-List-34.docx",
           "snapshot": "2026-10-14T01:37:54.837666+00:00",
           "sha256": "ad7d36884e169559f94b2704ab1d65698910a07f0afed97152329800571acb9a"
+        },
+        {
+          "stage": "Lapsed on expiry of Assembly",
+          "date": "2024-10-19",
+          "date_raw": "19 October 2024",
+          "house": "Legislative Assembly",
+          "source_url": "https://www.parliament.act.gov.au/parliamentary-business/in-the-chamber/previous-assemblies/tenth-assembly/bills_volume",
+          "snapshot": "2026-10-14T01:37:15.510429+00:00",
+          "sha256": "4529037cf2a42c313892c64b71dd2c9b996e11a9178c31ee330653a3c97757f2"
         }
       ],
       "stage_values": [],
@@ -36967,7 +37029,9 @@
       },
       "official": null,
       "bill_url": "https://www.legislation.act.gov.au/b/db_65320",
-      "source_notes": [],
+      "source_notes": [
+        "The source includes an action date later than its status-list heading date."
+      ],
       "metadata_receipts": [
         {
           "source_url": "https://www.parliament.act.gov.au/parliamentary-business/in-the-chamber/previous-assemblies/tenth-assembly/summary_of_bills",
@@ -40110,15 +40174,15 @@
       "status": "lapsed",
       "status_as_of": "2024-10-18",
       "source_updated_date": null,
-      "stage": "Introduced",
+      "stage": "Lapsed on expiry of Assembly",
       "last_action": {
-        "stage": "Introduced",
-        "date": "2021-08-04",
-        "date_raw": "04-08-21",
+        "stage": "Lapsed on expiry of Assembly",
+        "date": "2024-10-19",
+        "date_raw": "19 October 2024",
         "house": "Legislative Assembly",
-        "source_url": "https://www.parliament.act.gov.au/__data/assets/word_doc/0013/2406100/Report-Bills-List-34.docx",
-        "snapshot": "2026-10-14T01:37:54.837666+00:00",
-        "sha256": "ad7d36884e169559f94b2704ab1d65698910a07f0afed97152329800571acb9a"
+        "source_url": "https://www.parliament.act.gov.au/parliamentary-business/in-the-chamber/previous-assemblies/tenth-assembly/bills_volume",
+        "snapshot": "2026-10-14T01:37:15.510429+00:00",
+        "sha256": "4529037cf2a42c313892c64b71dd2c9b996e11a9178c31ee330653a3c97757f2"
       },
       "act_number": null,
       "events": [
@@ -40130,6 +40194,15 @@
           "source_url": "https://www.parliament.act.gov.au/__data/assets/word_doc/0013/2406100/Report-Bills-List-34.docx",
           "snapshot": "2026-10-14T01:37:54.837666+00:00",
           "sha256": "ad7d36884e169559f94b2704ab1d65698910a07f0afed97152329800571acb9a"
+        },
+        {
+          "stage": "Lapsed on expiry of Assembly",
+          "date": "2024-10-19",
+          "date_raw": "19 October 2024",
+          "house": "Legislative Assembly",
+          "source_url": "https://www.parliament.act.gov.au/parliamentary-business/in-the-chamber/previous-assemblies/tenth-assembly/bills_volume",
+          "snapshot": "2026-10-14T01:37:15.510429+00:00",
+          "sha256": "4529037cf2a42c313892c64b71dd2c9b996e11a9178c31ee330653a3c97757f2"
         }
       ],
       "stage_values": [],
@@ -40205,7 +40278,9 @@
       },
       "official": null,
       "bill_url": "https://www.legislation.act.gov.au/b/db_64812",
-      "source_notes": [],
+      "source_notes": [
+        "The source includes an action date later than its status-list heading date."
+      ],
       "metadata_receipts": [
         {
           "source_url": "https://www.parliament.act.gov.au/parliamentary-business/in-the-chamber/previous-assemblies/tenth-assembly/summary_of_bills",
@@ -41132,15 +41207,15 @@
       "status": "lapsed",
       "status_as_of": "2024-10-18",
       "source_updated_date": null,
-      "stage": "Committee report presented",
+      "stage": "Lapsed on expiry of Assembly",
       "last_action": {
-        "stage": "Committee report presented",
-        "date": "2021-11-30",
-        "date_raw": "30-11-21",
+        "stage": "Lapsed on expiry of Assembly",
+        "date": "2024-10-19",
+        "date_raw": "19 October 2024",
         "house": "Legislative Assembly",
-        "source_url": "https://www.parliament.act.gov.au/__data/assets/word_doc/0013/2406100/Report-Bills-List-34.docx",
-        "snapshot": "2026-10-14T01:37:54.837666+00:00",
-        "sha256": "ad7d36884e169559f94b2704ab1d65698910a07f0afed97152329800571acb9a"
+        "source_url": "https://www.parliament.act.gov.au/parliamentary-business/in-the-chamber/previous-assemblies/tenth-assembly/bills_volume",
+        "snapshot": "2026-10-14T01:37:15.510429+00:00",
+        "sha256": "4529037cf2a42c313892c64b71dd2c9b996e11a9178c31ee330653a3c97757f2"
       },
       "act_number": null,
       "events": [
@@ -41179,6 +41254,15 @@
           "source_url": "https://www.parliament.act.gov.au/__data/assets/word_doc/0013/2406100/Report-Bills-List-34.docx",
           "snapshot": "2026-10-14T01:37:54.837666+00:00",
           "sha256": "ad7d36884e169559f94b2704ab1d65698910a07f0afed97152329800571acb9a"
+        },
+        {
+          "stage": "Lapsed on expiry of Assembly",
+          "date": "2024-10-19",
+          "date_raw": "19 October 2024",
+          "house": "Legislative Assembly",
+          "source_url": "https://www.parliament.act.gov.au/parliamentary-business/in-the-chamber/previous-assemblies/tenth-assembly/bills_volume",
+          "snapshot": "2026-10-14T01:37:15.510429+00:00",
+          "sha256": "4529037cf2a42c313892c64b71dd2c9b996e11a9178c31ee330653a3c97757f2"
         }
       ],
       "stage_values": [],
@@ -41265,7 +41349,9 @@
       },
       "official": null,
       "bill_url": "https://legislation.act.gov.au/b/db_64493",
-      "source_notes": [],
+      "source_notes": [
+        "The source includes an action date later than its status-list heading date."
+      ],
       "metadata_receipts": [
         {
           "source_url": "https://www.parliament.act.gov.au/parliamentary-business/in-the-chamber/previous-assemblies/tenth-assembly/summary_of_bills",
@@ -44817,7 +44903,7 @@
         "lapsed": 8,
         "unknown": 1
       },
-      "events": 933,
+      "events": 941,
       "document_links": 1804,
       "held_bodies": 1804,
       "linked_sponsors": 0,
@@ -44825,13 +44911,13 @@
       "gaps": 12
     },
     "snapshot_date": "2026-10-14",
-    "input_sha256": "6ff47bd6dc42140067a01e8c111be8ef03c92802f620dbe84ea3aa0669c4f2de",
+    "input_sha256": "eceeb1e9db1d73fff84923ccd97e65b30b3a8adabeff0df0fbc1a304df3be7f2",
     "inputs": {
-      "inventory.json": "7b1628e1345c917c8c9b917401fe20c965166b4acae6de210bacfdb21c29384f",
+      "inventory.json": "c80cf07c7ac3f500f887e8597f1c03f2b138448012091fb269abbdff1a6d1de4",
       "receipts.json": "72f89db4f48ba09a9cee411e11acadb94ad2f5225ae42b428e19aaa42e519a26",
-      "hub.json": "6ff47bd6dc42140067a01e8c111be8ef03c92802f620dbe84ea3aa0669c4f2de",
+      "hub.json": "eceeb1e9db1d73fff84923ccd97e65b30b3a8adabeff0df0fbc1a304df3be7f2",
       "acquisition-notes.json": "5ca11504fa063d3d62057c71ae5e099fe1736994e6c865c901c43a17267b8601"
     },
-    "reviewed_commit": "b6dc2095cfb973a4693fc631110aabc1ef96cb67"
+    "reviewed_commit": "3bd8cef017a684cbbf1dd500c19d6e4a04d21ded"
   }
 }

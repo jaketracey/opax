@@ -1,11 +1,11 @@
 {
   "status": "approved",
-  "reviewed_commit": "b6dc2095cfb973a4693fc631110aabc1ef96cb67",
-  "review_basis": "Codex lane review of retained source bytes, metadata-only licence scope and projection; local promotion explicitly authorised by coverage/bills-tas-act. ACT discovery pacing exception retained and disclosed; unused incomplete overview receipt excluded from projection. All document bodies and source summaries held.",
+  "reviewed_commit": "3bd8cef017a684cbbf1dd500c19d6e4a04d21ded",
+  "review_basis": "Codex lane review of retained source bytes, metadata-only licence scope and projection; local promotion explicitly authorised by coverage/bills-tas-act. ACT discovery pacing exception retained and disclosed; unused incomplete overview receipt excluded from projection. All document bodies and source summaries held. Fix round 1: source-derived dated expiry events from the retained version index, publisher attribution and shared table surface reviewed; no new acquisition or body publication.",
   "inputs": {
-    "inventory.json": "7b1628e1345c917c8c9b917401fe20c965166b4acae6de210bacfdb21c29384f",
+    "inventory.json": "c80cf07c7ac3f500f887e8597f1c03f2b138448012091fb269abbdff1a6d1de4",
     "receipts.json": "72f89db4f48ba09a9cee411e11acadb94ad2f5225ae42b428e19aaa42e519a26",
-    "hub.json": "6ff47bd6dc42140067a01e8c111be8ef03c92802f620dbe84ea3aa0669c4f2de",
+    "hub.json": "eceeb1e9db1d73fff84923ccd97e65b30b3a8adabeff0df0fbc1a304df3be7f2",
     "acquisition-notes.json": "5ca11504fa063d3d62057c71ae5e099fe1736994e6c865c901c43a17267b8601"
   }
 }
