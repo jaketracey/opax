@@ -177,13 +177,29 @@ export function resolveArgs(args: Record<string, unknown>, results: ToolResult[]
 }
 
 // ---------------------------------------------------------------- bound facts
-export interface Fact { id: number; text: string; cite: Cite; entities?: string[] }
+export interface Fact { id: number; text: string; cite: Cite; entities?: string[]
+  /** Rows of one ranking or trend share a lead line ("Chamber speeches labelled gambling since 2015, by year") and render as short rows. */
+  group?: string; row?: string
+  /** Counting basis of a speech count (chamber, committee or all): one answer shows one basis. */
+  basis?: string }
+const n = (value: number) => value.toLocaleString('en-AU')
+/** The lead line for one count or trend result: what was counted, where, over which period, grouped how. */
+export function countLead(filter: Record<string, unknown>, by: string): string {
+  const venue = filter.venue === 'committee' ? 'Committee-hearing turns' : filter.venue === 'all' ? 'Speeches and committee turns' : 'Chamber speeches'
+  const since = typeof filter.since === 'string' ? filter.since : '', until = typeof filter.until === 'string' ? filter.until : ''
+  const day = (d: string) => /^\d{4}-\d{2}-\d{2}$/.test(d) ? new Date(d + 'T00:00:00Z').toLocaleDateString('en-AU', { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' }) : d
+  const year = (d: string, edge: string) => d.endsWith(edge) ? d.slice(0, 4) : day(d)
+  const period = since && until ? (since.endsWith('-01-01') && until.endsWith('-12-31') ? ` in ${since.slice(0, 4)}${until.slice(0, 4) !== since.slice(0, 4) ? `–${until.slice(0, 4)}` : ''}` : ` from ${day(since)} to ${day(until)}`)
+    : since ? ` since ${year(since, '-01-01')}` : until ? ` up to ${year(until, '-12-31')}` : ' across the whole record'
+  const place = filter.state ? ` in ${filter.state === 'federal' ? 'federal parliament' : String(filter.state).toUpperCase()}` : ''
+  return `${venue}${filter.topic ? ` labelled ${filter.topic}` : ''}${filter.speaker ? ` by ${filter.speaker}` : ''}${filter.party ? ` indexed under ${filter.party}` : ''}${place}${filter.chamber ? ` (${filter.chamber})` : ''}${period}${by ? `, by ${by}` : ''}`
+}
 /** Each template binds tool-row figures to their entity, metric and citation. */
 export function factSheet(results: ToolResult[]): { facts: Fact[]; notes: string[] } {
   const facts: Fact[] = []
   const notes = new Set<string>()
   let entities: string[] = []
-  const add = (text: string, cite: Cite, bound = entities) => facts.push({ id: facts.length + 1, text, cite, entities: bound })
+  const add = (text: string, cite: Cite, bound = entities, layout: Pick<Fact, 'group' | 'row' | 'basis'> = {}) => facts.push({ id: facts.length + 1, text, cite, entities: bound, ...layout })
   for (const r of results) {
     if (!r.ok) continue
     r.notes.forEach((n) => notes.add(n))
@@ -195,12 +211,14 @@ export function factSheet(results: ToolResult[]): { facts: Fact[]; notes: string
     } else if (r.tool === 'count_speeches') {
       const rows = (d.rows as { name: string; count: number }[] | undefined)
       if (d.committeeSupplement && rows?.length) rows.forEach((row, i) => add(`${row.name}: ${row.count} committee-hearing turns`, r.cite[i]))
-      else if (rows?.length) rows.forEach((row, i) => add(`${row.name}: ${row.count} ${d.described}`, r.cite[i], [...entities, `${d.group_by === 'party' ? 'party' : 'person'}:${row.name}`]))
+      else if (rows?.length) rows.forEach((row, i) => add(`${row.name}: ${row.count} ${d.described}`, r.cite[i], [...entities, `${d.group_by === 'party' ? 'party' : 'person'}:${row.name}`],
+        { group: countLead(filter, d.group_by === 'party' ? 'party' : 'speaker'), row: `${row.name}: ${n(row.count)}`, basis: String(filter.venue ?? 'chamber') }))
       else if (d.unanswerable) notes.add('The record cannot rank these speeches by party.')
-      else if (!Array.isArray(rows) && typeof d.total === 'number' && r.cite[0]) add(`${d.total} ${d.described}`, r.cite[0])
+      else if (!Array.isArray(rows) && typeof d.total === 'number' && r.cite[0]) add(`${d.total} ${d.described}`, r.cite[0], entities, { basis: String(filter.venue ?? 'chamber') })
     } else if (r.tool === 'speech_trend') {
       ;(d.rows as { period: string; count: number; share: number; labelled: number }[]).forEach((row, i) =>
-        add(`${row.period}: ${row.count} ${d.described}${row.labelled ? ` (${(row.share * 100).toFixed(1)}% of ${row.labelled} topic-labelled speeches)` : ''}`, r.cite[i]))
+        add(`${row.period}: ${row.count} ${d.described}${row.labelled ? ` (${(row.share * 100).toFixed(1)}% of ${row.labelled} topic-labelled speeches)` : ''}`, r.cite[i], entities,
+          { group: countLead(filter, String(d.by ?? 'year')) + (row.labelled ? ' (share of all topic-labelled speeches)' : ''), row: `${row.period}: ${n(row.count)}${row.labelled ? ` (${(row.share * 100).toFixed(1)}% of ${n(row.labelled)})` : ''}`, basis: String(filter.venue ?? 'chamber') }))
     } else if (r.tool === 'member_votes') {
       const s = d.summary as Record<string, number>
       const who = (d.person ?? d.party) as string
@@ -239,9 +257,26 @@ export function verifyComposition(text: string, _facts: Fact[], _question = ''):
   return { prose: kept.join(' '), cited: [], dropped }
 }
 /** Every answer figure is bound to its entity and metric in factSheet. */
-export function templateAnswer(facts: Fact[], notes: string[]): string {
-  const lines = facts.map((f) => `${f.text} [${f.id}]`)
-  return [lines.join('; ') + '.', ...notes.slice(0, 2)].join(' ')
+export function templateAnswer(facts: Fact[], notes: string[], grouped = false): string {
+  // The planner path keeps its original sentence layout byte for byte.
+  if (!grouped) return [facts.map((f) => `${f.text} [${f.id}]`).join('; ') + '.', ...notes.slice(0, 2)].join(' ')
+  // Consecutive rows of one ranking or trend sit under their lead line, which states the basis and period once.
+  const parts: string[] = []
+  for (let i = 0; i < facts.length;) {
+    const lead = facts[i].group
+    if (!lead) { parts.push(`${facts[i].text} [${facts[i].id}].`); i++; continue }
+    const rows: string[] = []
+    for (; i < facts.length && facts[i].group === lead; i++) rows.push(`${facts[i].row} [${facts[i].id}]`)
+    parts.push(`${lead}:\n${rows.join('; ')}.`)
+  }
+  return [parts.join('\n'), ...notes.slice(0, 2)].join(' ')
+}
+/** One counting basis per answer: chamber speeches by default, never a mix of chamber-only and all-venue rows. */
+export function oneBasis(facts: Fact[]): Fact[] {
+  const bases = new Set(facts.map(f => f.basis).filter(Boolean))
+  if (bases.size < 2) return facts
+  const keep = bases.has('chamber') ? 'chamber' : facts.find(f => f.basis)!.basis
+  return facts.filter(f => !f.basis || f.basis === keep)
 }
 
 /** Bound selection budgets each requested entity separately. A missing entity
@@ -649,17 +684,19 @@ async function runAgenticAttempt(question: string, deps: AgenticDeps, progress: 
   // No composer call: figures, metric labels, entities and citations are
   // rendered together from the tool rows, so swapping aye/no or party/year
   // values in model text can never affect an answer.
-  const chosen = researched ? mainFacts.filter(f => researched!.selected.includes(f.id)) : mainFacts
+  const chosen = oneBasis(researched ? mainFacts.filter(f => researched!.selected.includes(f.id)) : mainFacts)
   // The loop's finish already bounds its own selection (30 ids): a year-by-year trend keeps every year it chose.
   const selected = electorateData ? chosen : selectAnswerFacts(chosen, named, peakYear, researched ? 30 : 8)
   if (!selected?.length) return base({ reason: 'no_supported_claim' })
-  let answer = templateAnswer(selected, [])
+  let answer = templateAnswer(selected, [], !!researched)
   if (committeeFacts.length) {
     const ids = facts.filter(f => committeeFacts.some(c => c.text === f.text))
-    answer += ' Including committee hearings: ' + ids.map(f => `${f.text.replace(' committee-hearing turns', '')} [${f.id}]`).join(', ') + '.'
+    answer += researched ? '\nIncluding committee hearings: ' + ids.map(f => `${f.text.replace(' committee-hearing turns', '')} [${f.id}]`).join('; ') + '.'
+      : ' Including committee hearings: ' + ids.map(f => `${f.text.replace(' committee-hearing turns', '')} [${f.id}]`).join(', ') + '.'
   }
-  // These limits belong to the answer sentences; never a separate UI block.
-  answer += ' ' + period.label + (notes.length ? ' ' + notes.join(' ') : '')
+  // These limits belong to the answer sentences; never a separate UI block. A loop answer's lead lines already state its period.
+  if (researched) answer += notes.length ? '\n' + notes.join(' ') : ''
+  else answer += ' ' + period.label + (notes.length ? ' ' + notes.join(' ') : '')
   timings.compose_ms = Date.now() - tCompose
   if (!left() || deps.signal?.aborted) return base({ reason: 'declined', over_budget: true })
   return base({ answered: true, answer, answer_source: 'template', facts: factOut, notes,

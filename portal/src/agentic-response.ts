@@ -39,7 +39,9 @@ export function agenticAskPayload(run: AgenticPayload, question: string) {
   }
   answer += run.answer.slice(start)
   // Coverage percentages describe the source, not model-generated counts.
-  const coverageStart = answer.indexOf(run.period.label) + run.period.label.length
+  // Coverage notes close the answer: after the period sentence when there is one, else where the notes begin.
+  const labelAt = answer.indexOf(run.period.label), notesAt = run.notes.length ? answer.lastIndexOf(run.notes.join(' ')) : -1
+  const coverageStart = labelAt >= 0 ? labelAt + run.period.label.length : notesAt
   if (run.notes.some(n => /\d/.test(n)) && coverageStart > 0) {
     const resource = 'coverage'
     sources.push({ resource, slug: '', kind: 'record', title: 'Source coverage and methods', href: 'https://opax.com.au/methods', url: 'https://opax.com.au/methods', snippet: run.notes.join(' '), cited: true })
