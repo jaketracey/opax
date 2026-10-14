@@ -2,12 +2,23 @@
 set -euo pipefail
 cd "$(dirname "$0")/.."
 export DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer EXPO_NO_TELEMETRY=1 MAESTRO_CLI_NO_ANALYTICS=true MAESTRO_CLI_ANALYSIS_NOTIFICATION_DISABLED=true
-UDID=${1:?Usage: scripts/e2e.sh udid [01 02 03 04 05 06 07 08 09 10 11 12 13 14 20 25]}; shift
+# With no journeys this runs 01-04. --all-iphone runs the whole iPhone suite on
+# the default fixture; --list-iphone prints that and the separate runs it needs.
+if [ "${1:-}" = --list-iphone ]; then source scripts/qa-flows.sh; qa_iphone_plan; exit 0; fi
+UDID=${1:?Usage: scripts/e2e.sh udid [--all-iphone | 01 02 03 04 ... | .maestro/<flow>.yaml ...]; scripts/e2e.sh --list-iphone}; shift
 source scripts/qa-env.sh
 source scripts/qa-lock.sh
 source scripts/qa-java.sh
 source scripts/qa-flows.sh
 source scripts/qa-maestro.sh
+if [ "${1:-}" = --all-iphone ]; then
+  [ "$#" = 1 ] || { echo '--all-iphone runs the whole suite; name no other journeys' >&2; exit 2; }
+  SUITE=()
+  while IFS= read -r flow; do SUITE+=("$flow"); done < <(qa_iphone_suite)
+  set -- "${SUITE[@]}"
+  echo 'The full iPhone suite also needs these separate runs:'
+  qa_iphone_separate_runs | sed 's/^/  /'
+fi
 qa_check_flow_selectors "$@" || exit 2
 PORT=${OPAX_FIXTURE_PORT:-8910}
 export OPAX_FIXTURE_PORT=$PORT

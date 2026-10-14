@@ -1,4 +1,5 @@
 import { execFileSync, spawnSync } from 'node:child_process';
+import { existsSync, readdirSync } from 'node:fs';
 
 // Exercise the wait parser alone. No locks, build gates or devices are used.
 test.each([
@@ -53,6 +54,65 @@ describe('journey selectors', () => {
     [[]],
   ])('selectors %j are accepted', (selectors) => {
     expect(check(...selectors).status).toBe(0);
+  });
+});
+
+// The suite list alone, expanded by e2e.sh's own rule; nothing is started.
+describe('iPhone suite', () => {
+  const lines = (fn: string) =>
+    execFileSync('/bin/bash', ['-c', `source scripts/qa-flows.sh; ${fn}`], {
+      encoding: 'utf8',
+    })
+      .trim()
+      .split('\n');
+  // A bare number is every NN-*.yaml but the two helpers e2e.sh skips.
+  const expand = (selector: string) =>
+    /^\d\d$/.test(selector)
+      ? readdirSync('.maestro')
+          .filter(
+            (name) =>
+              name.startsWith(`${selector}-`) &&
+              name.endsWith('.yaml') &&
+              !/-(open-profile|scene-lifecycle)\.yaml$/.test(name),
+          )
+          .sort()
+          .map((name) => `.maestro/${name}`)
+      : [selector];
+  const suite = lines('qa_iphone_suite').flatMap(expand);
+  const separate = lines('qa_iphone_separate_runs').map(
+    (run) => /(\.maestro\/\S+\.yaml)$/.exec(run)![1]!,
+  );
+
+  test('every selector names journeys that exist, once each', () => {
+    for (const selector of lines('qa_iphone_suite'))
+      expect([selector, expand(selector).length > 0]).toEqual([selector, true]);
+    for (const path of [...suite, ...separate])
+      expect([path, existsSync(path)]).toEqual([path, true]);
+    expect(new Set(suite).size).toBe(suite.length);
+  });
+
+  test('journey 21 runs as four flows, each in the suite', () => {
+    expect(suite.filter((path) => path.startsWith('.maestro/21-'))).toEqual([
+      '.maestro/21-talk-a-call.yaml',
+      '.maestro/21-talk-b-controls.yaml',
+      '.maestro/21-talk-c-allowance.yaml',
+      '.maestro/21-talk-d-refusals.yaml',
+    ]);
+  });
+
+  test('every numbered iPhone journey is in the suite or a separate run', () => {
+    const covered = new Set([...suite, ...separate]);
+    const missing = readdirSync('.maestro')
+      .filter((name) => /^\d\d[a-z]?-.*\.yaml$/.test(name))
+      .filter((name) => !/-(open-profile|scene-lifecycle)\.yaml$/.test(name))
+      .filter((name) => !name.includes('ipad'))
+      .map((name) => `.maestro/${name}`)
+      .filter((path) => !covered.has(path));
+    expect(missing).toEqual([]);
+  });
+
+  test('fixture-specific journeys stay out of the shared run', () => {
+    for (const path of separate) expect(suite).not.toContain(path);
   });
 });
 

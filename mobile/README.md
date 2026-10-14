@@ -46,7 +46,18 @@ scripts/qa.sh
 scripts/build-e2e.sh
 scripts/e2e.sh <simulator-udid> 01 02 03 04 05 06
 OPAX_CONTENT_SIZE=accessibility-extra-extra-extra-large scripts/e2e.sh <simulator-udid> 03 05 06
+scripts/e2e.sh --list-iphone
+scripts/e2e.sh <simulator-udid> --all-iphone
 ```
+
+With no journeys, `e2e.sh` runs 01-04 only. `--all-iphone` runs every iPhone
+journey that shares the default fixture and text size, in one locked device run
+that stops at the first failure. `--list-iphone` prints that list and the
+separate runs the full suite also needs: 13b, 13c and 26 on their own fixtures,
+30-catalog-robustness on the null-optional roster, and 15 at AX5 and standard
+size. The list lives in `scripts/qa-flows.sh` (`qa_iphone_suite`). Journey 21
+(Talk) is four flows, `21-talk-a` to `-d`, each well under the 900 s per-flow
+limit; a bare `21` runs all four.
 
 The optional `.maestro/07-scene-lifecycle.yaml` smoke is run by its explicit path;
 numeric journey 07 excludes it and runs only the Your MP journeys. It checks cold/warm links and
