@@ -66,13 +66,14 @@ test('D1 register APIs work without matcher tables or privacy metadata',async()=
   assert.equal((await (await api('audit-reports')).json()).total,audit.rows.length);
  }finally{await local.close();}
 });
-for(const confident of [false,true])test((confident?'confident':'uncertain')+': party table, JSON endpoint, SSR and hydration keep original name, return and accurate link',async()=>{
+for(const confident of [false,true])test((confident?'confident':'uncertain')+': party table, JSON endpoint, SSR and hydration keep original name and accurate link; the return stays data',async()=>{
  const donor={id:'donor:fixture',kind:'donor',label:'Canonical fixture',source_name:'EXAMPLE, ALEX',industry:'individual',returnReferences:[{return_type:'AEC annual return',year:'2024-25',return_id:'RETURN-7'}],match:{confidence:confident?1:0.7,method:confident?'curated':'rule',href:'/subject/person/fixture'}};
  const graph={nodes:[donor,{id:'party:fixture',kind:'party',label:'Fixture party'}],edges:[{source:donor.id,target:'party:fixture',total:40,count:2},{source:donor.id,target:'party:fixture',total:60,count:3}]};
  const {rows}=partyMoneyData(graph,'party:fixture');assert.equal(rows.length,1);assert.equal(rows[0].total,100);assert.equal(rows[0].count,5);
  const config=partyMoneyTableConfig(rows);
  const verify=doc=>{
-  assert.ok(doc.body.textContent.includes(donor.source_name));assert.ok(doc.body.textContent.includes('AEC annual return'));assert.ok(doc.body.textContent.includes('2024-25'));assert.ok(doc.body.textContent.includes('RETURN-7'));
+  const shown=doc.body.cloneNode(true);shown.querySelectorAll('script,template').forEach(n=>n.remove());
+  assert.ok(shown.textContent.includes(donor.source_name));assert.doesNotMatch(shown.textContent,/AEC annual return|RETURN-7|Return reference/);assert.equal(doc.querySelectorAll('[data-column="return_reference"]').length,0);
   const links=[...doc.querySelectorAll('a')].filter(a=>a.textContent===donor.source_name);assert.equal(links.length,confident?1:0);if(confident)assert.equal(links[0].getAttribute('href'),donor.match.href);
  };
  const html=registerTableHTML(config),dom=new JSDOM(html,{url:'https://opax.test/subject/party/fixture'});verify(dom.window.document);
@@ -81,7 +82,8 @@ for(const confident of [false,true])test((confident?'confident':'uncertain')+': 
  try{hydrateRegisterTables(dom.window.document);await new Promise(setImmediate);verify(dom.window.document);assert.equal(requests,0);}finally{dom.window.document.body.replaceChildren();await new Promise(setImmediate);globalThis.MutationObserver=previous;dom.window.close();}
  const response=await partyMoneyResponse(new Request('https://opax.test/api/register/party-money?partyId=party%3Afixture'),{fetch:async request=>{assert.equal(new URL(request.url).pathname,'/graph/money.json');return Response.json(graph);}});
  assert.equal(response.status,200);assert.deepEqual((await response.json()).rows,rows);assert.equal(config.primaryLink(rows[0]),confident?donor.match.href:null);
- assert.ok(toCSV(rows,config).includes('RETURN-7'));
+ assert.match(rows[0].return_reference,/RETURN-7/);assert.ok(!config.columns.some(c=>c.key==='return_reference'));assert.ok(!html.includes('RETURN-7'),'hydration JSON leaves the reference to the API');
+ assert.ok(toCSV(rows,config).includes(donor.source_name));
 });
 test('interest JSON reads only the source register and preserves name-bearing text',async()=>{
  const register={buckets:{gifts:{items:[{description:'Gift from EXAMPLE, ALEX'}]}}};

@@ -11,7 +11,6 @@ import {tableRows} from '../../scripts/load_tables.mjs';
 import {parseExplainParams,resolveFlow,pageHTML} from '../public/money-explain.js';
 import {TABLE_DATASETS} from '../src/table-datasets.mjs';
 import {partyMoneyData,partyMoneyTableConfig,registerTableHTML} from '../public/register-tables.js';
-import {toCSV} from '../public/datatable.js';
 import {moneyConnectionsConfig} from '../public/money-connections.js';
 const ref={return_type:'AEC annual return',year:'2024-25',return_id:'RETURN-FIXTURE-7',url:'https://example.test/return/7'};
 const donor=confident=>({id:'donor:fixture-alex',label:'EXAMPLE, ALEX',source_name:'EXAMPLE, ALEX',kind:'donor',industry:'individual',group:'individuals',total:120,count:1,firstYear:2024,lastYear:2024,byYear:{2024:[120,1]},aliases:[],match:{confidence:confident?1:0.9,method:confident?'exact':'rule',href:'/subject/donor/EXAMPLE%2C%20ALEX'},returnReferences:[ref]});
@@ -156,15 +155,19 @@ test('confirmed records for the same entity retain their link across jurisdictio
  const index=donorLookup([first,second]);assert.equal(donorDisclosure(index.get('fixture shared alias')).href,first.match.href);assert.match(donorDisclosure(index.get('qld:fixture shared alias')).reference,/ECQ-FIXTURE-7/);
 });
 
-test('return references are export data, never inline: party table, ledger CSV and map connections',()=>{
+test('return references are export data, never a table column or inline text',()=>{
  const record=donor(true),data=graph({...record,returnReferences:[ref,{...ref,year:'2023-24',return_id:'RETURN-FIXTURE-8'},{...ref,year:'2022-23',return_id:'RETURN-FIXTURE-9'},{...ref,year:'2021-22',return_id:'RETURN-FIXTURE-10'}]});
  assert.match(donorDisclosure(data.nodes[0]).reference,/1 more return references in the data export/,'the reference stays as data');
- const {rows}=partyMoneyData(data,'party:Labor'),config=partyMoneyTableConfig(rows);
- assert.match(rows[0].return_reference,/RETURN-FIXTURE-7/);assert.ok(!config.columnsVisible.includes('return_reference'));
- noInlineReference(registerTableHTML(config,undefined,new URL('https://opax.test/subject/party/labor')));
- assert.match(toCSV(rows,config),/Return reference[\s\S]*RETURN-FIXTURE-7/);
- const connections=moneyConnectionsConfig(data);
- assert.match(connections.rows[0].return_reference,/RETURN-FIXTURE-7/);assert.ok(!connections.columnsVisible.includes('return_reference'));assert.match(toCSV(connections.rows,connections),/RETURN-FIXTURE-7/);
+ const {rows}=partyMoneyData(data,'party:Labor');assert.match(rows[0].return_reference,/RETURN-FIXTURE-7/,'/api/register/party-money keeps it');
+ const config=partyMoneyTableConfig(rows),connections=moneyConnectionsConfig(data);
+ for(const table of [config,connections]){
+  assert.ok(!('return_reference' in table.rows[0]),'table rows, and so hydration JSON, carry no reference');
+  assert.ok(!table.columns.some(c=>c.key==='return_reference' || /reference/i.test(c.label)),'no Return reference column, so none in the picker');
+ }
+ const html=registerTableHTML(config,undefined,new URL('https://opax.test/subject/party/labor'));
+ noInlineReference(html);assert.doesNotMatch(html,/Return reference|data-column="return_reference"|RETURN-FIXTURE/,'not even in the hydration JSON');
+ for(const name of ['party-money','money-connections'])assert.ok(TABLE_DATASETS[name].columns.some(c=>c.key==='return_reference' && c.label==='Return reference'),name+' API JSON and CSV keep return_reference');
+ for(const name of Object.keys(TABLE_DATASETS).filter(n=>!['party-money','money-connections'].includes(n)))assert.ok(!TABLE_DATASETS[name].columns.some(c=>/reference/i.test(c.key+' '+c.label)),name+' has no reference column');
  const flows=buildFlows(data);
  for(const [view,list] of [['flows',flows],['donors',aggregateDonors(flows)]])assert.match(buildCSV(view,list,[]),/,Return reference\r\n[\s\S]*RETURN-FIXTURE-7/);
 });

@@ -97,14 +97,15 @@ export function partyMoneyData(graph, partyId) {
   return {rows:[...rows.values()]};
 }
 
+// The table's rows (and so the page's hydration JSON) leave out return_reference;
+// partyMoneyData keeps it for /api/register/party-money and the table API CSV.
 export function partyMoneyTableConfig(rows, id = 'party-money-table', urlKey = 'partyMoney', pageType = 'party') {
-  return {id,caption:'Disclosed donations',pageType,urlKey,pageSize:50,rows,
+  return {id,caption:'Disclosed donations',pageType,urlKey,pageSize:50,rows:rows.map(({return_reference,...row})=>row),
     defaultSort:{key:'total',dir:'desc'},export:{filename:'party-donations.csv'},
     columns:[{key:'label',label:'Donor',type:'text',primary:true},{key:'industry',label:'Industry',type:'category',facet:'multi'},
       {key:'total',label:'Given',type:'money',bar:true,format:'compact',facet:'range'},
       {key:'count',label:'Receipts',type:'count',facet:'range'},{key:'firstYear',label:'First year',type:'year'},
-      {key:'lastYear',label:'Last year',type:'year'},{key:'return_reference',label:'Return reference',type:'text'}],
-    columnsVisible:['label','industry','total','count','firstYear','lastYear'],primaryLink:row=>row.href || null};
+      {key:'lastYear',label:'Last year',type:'year'}],primaryLink:row=>row.href || null};
 }
 
 /** The shared core owns query validation, pending states, history and CSV checks. */

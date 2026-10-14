@@ -20,7 +20,7 @@ const divisionMarkdownReady = import('/division-markdown.js?v=5991511166').then(
 let growthModules;
 const growthModulesReady = import("/growth-modules.js?v=41fca6f135").then(module => { growthModules = module; });
 let registerTables;
-const registerTablesReady = import('/register-tables.js?v=ef1565e7c4').then(module => { registerTables = module; });
+const registerTablesReady = import('/register-tables.js?v=fd99b44d19').then(module => { registerTables = module; });
 let askPerson;
 const askPersonReady = import('/ask-person.js?v=7cb76e395c').then(module => { askPerson = module; });
 let uiLabels;
@@ -1649,7 +1649,7 @@ async function mountMoney(jurParam, industry, params = new URLSearchParams()) {
   root.innerHTML = `<p class="ui-status-line money-map-status" role="status">Loading the map…</p>`;
   const cfg = MONEY_JURISDICTIONS[jur];
   try {
-    const [{ mountMoneyMap }, data, journeysModule, researchModule, recordsModule] = await Promise.all([import("/money-map.js?v=1789c2b0ac"), loadMoneyFile(jur), import("/money-journeys.js?v=mobile-picker-20260908"), import("/map-research.js?v=4ba99b8044"), import("/money-records.js?v=ia-ux-20260908-2")]);
+    const [{ mountMoneyMap }, data, journeysModule, researchModule, recordsModule] = await Promise.all([import("/money-map.js?v=1789c2b0ac"), loadMoneyFile(jur), import("/money-journeys.js?v=mobile-picker-20260908"), import("/map-research.js?v=87177bc229"), import("/money-records.js?v=ia-ux-20260908-2")]);
     if (moneyMapLoading !== jur || generation !== moneyMapGeneration) return; // switched again while loading
     const fine = $("money-fineprint");
     if (fine) fine.innerHTML = moneyFineprintHTML(jur, data?.meta);
