@@ -69,3 +69,6 @@ portal/private/
 
 # Wrangler fixture metadata can also be written from the repository root.
 /.wrangler/
+
+# Per-host acquisition locks, never source evidence.
+data/staged/bills-*/.acquire.lock

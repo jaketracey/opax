@@ -17,6 +17,8 @@ class PromoteHubDataTests(unittest.TestCase):
         self.addCleanup(self.tmp.cleanup)
         self.root = Path(self.tmp.name)
         shutil.copytree(ROOT / "data/staged", self.root / "data/staged", ignore=shutil.ignore_patterns("audit", "instruments"))
+        (self.root / "parli/ingest").mkdir(parents=True)
+        (self.root / "parli/ingest/user-agent.json").symlink_to(ROOT / "parli/ingest/user-agent.json")
         public = self.root / "portal/public"
         public.mkdir(parents=True)
         for name in ("votes.json", "parliamentarians.json", "person-paths.js"):
@@ -53,6 +55,34 @@ class PromoteHubDataTests(unittest.TestCase):
                 staged["portfolio_indexes"] = [p for p in staged["portfolio_indexes"] if p.get("status") != "held"]
             self.assertEqual(public, staged)
             self.assertEqual(len(manifest["input_sha256"]), 64)
+
+    def test_state_bill_held_text_or_forged_licence_never_replaces_asset(self):
+        for hub in ("bills-tas", "bills-act"):
+            for field, value in (("body", "HELD BILL TEXT"), ("licence", {"status": "open", "text_allowed": True})):
+                with self.subTest(hub=hub, field=field):
+                    target, before = self.existing_asset(hub)
+                    original = (self.root / "data/staged" / hub / "hub.json").read_bytes()
+                    self.edit(hub, "hub.json", lambda d: d["bills"][0].update({field: value}))
+                    # Even an input with renewed review hashes must match the
+                    # metadata projection of the retained authoritative bytes.
+                    stage = self.root / "data/staged" / hub
+                    self.edit(hub, "review.json", lambda d: d["inputs"].update({"hub.json": digest((stage / "hub.json").read_bytes())}))
+                    code, error = self.run_promotion([hub])
+                    self.assertEqual(code, 1)
+                    self.assertIn("source-projection", error)
+                    self.assertEqual(target.read_bytes(), before)
+                    self.assertNotIn(b"HELD BILL TEXT", target.read_bytes())
+                    (stage / "hub.json").write_bytes(original)
+                    self.edit(hub, "review.json", lambda d: d["inputs"].update({"hub.json": digest(original)}))
+
+    def test_state_bill_hash_and_stopped_collection_gates(self):
+        for hub in ("bills-tas", "bills-act"):
+            target, before = self.existing_asset(hub)
+            self.edit(hub, "receipts.json", lambda d: d.update(stopped={"reason": "HTTP 403"}))
+            code, error = self.run_promotion([hub])
+            self.assertEqual(code, 1)
+            self.assertIn("source-receipt", error)
+            self.assertEqual(target.read_bytes(), before)
 
     def test_held_access_and_licence_indexes_in_staged_input_are_dropped(self):
         indexes = [

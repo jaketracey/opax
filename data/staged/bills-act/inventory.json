@@ -1,0 +1,158 @@
+{
+  "schema": 1,
+  "jurisdiction": "act",
+  "scope": "Current Eleventh and previous Tenth Assembly version indexes joined to published summaries and status lists. Source component dates differ; status dates are shown separately from acquisition.",
+  "counts": {
+    "bills": 262,
+    "parliaments": {
+      "11": 79,
+      "10": 183
+    },
+    "statuses": {
+      "before_parliament": 22,
+      "passed": 222,
+      "withdrawn": 3,
+      "negatived": 6,
+      "lapsed": 8,
+      "unknown": 1
+    },
+    "events": 933,
+    "document_links": 1804,
+    "held_bodies": 1804,
+    "linked_sponsors": 0,
+    "missing_sponsors": 3,
+    "gaps": 12
+  },
+  "licence": {
+    "status": "metadata-only",
+    "name": "CC BY-NC-ND 4.0; third-party exceptions",
+    "policy_url": "https://www.parliament.act.gov.au/functions/footer/reuse-policy",
+    "policy_receipt": {
+      "source_url": "https://www.parliament.act.gov.au/functions/footer/reuse-policy",
+      "snapshot": "2026-10-14T01:34:27.668249+00:00",
+      "sha256": "ead09bacd42936c4added7b56b0ac18adeab9de916ed1cb38cbbecc426ab0ea9"
+    },
+    "text_allowed": false,
+    "metadata_basis": "Public registry facts and original document links; no summaries or document bodies reproduced",
+    "hold_reason": "Non-commercial/no-derivatives Assembly grant does not clear third-party bill and explanatory bodies"
+  },
+  "source_pages": [
+    {
+      "source_url": "https://www.parliament.act.gov.au/functions/footer/reuse-policy",
+      "snapshot": "2026-10-14T01:34:27.668249+00:00",
+      "sha256": "ead09bacd42936c4added7b56b0ac18adeab9de916ed1cb38cbbecc426ab0ea9"
+    },
+    {
+      "source_url": "https://www.parliament.act.gov.au/parliamentary-business/in-the-chamber/bills",
+      "snapshot": "2026-10-14T01:34:51.357270+00:00",
+      "sha256": "ba15de19a0f685abc69b300b8572216611f9318ca9798bb32d898c31a7dbff9e"
+    },
+    {
+      "source_url": "https://www.parliament.act.gov.au/parliamentary-business/in-the-chamber/bills/bills_volume",
+      "snapshot": "2026-10-14T01:35:12.214368+00:00",
+      "sha256": "060b83356e1ddd11f90c2cc02beb305cdf7712582cf6c7d2069720378c10ad9d"
+    },
+    {
+      "source_url": "https://www.parliament.act.gov.au/parliamentary-business/in-the-chamber/bills/bills_list",
+      "snapshot": "2026-10-14T01:35:32.127906+00:00",
+      "sha256": "7a27aa65d1f66bda55ea62cce0e8fde2e731e3983bf0a342503f7cbf12b0455d"
+    },
+    {
+      "source_url": "https://www.parliament.act.gov.au/__data/assets/word_doc/0010/2624149/Report-Bills-List-18-1-October-2026.docx",
+      "snapshot": "2026-10-14T01:35:52.202174+00:00",
+      "sha256": "0b87fd04a7702ff080b99d6f4592088933f74e3222118a524e2dd145dc4caa4d"
+    },
+    {
+      "source_url": "https://www.parliament.act.gov.au/parliamentary-business/in-the-chamber/previous-assemblies",
+      "snapshot": "2026-10-14T01:36:11.884024+00:00",
+      "sha256": "56b6189ec7ebe63752da78d4c1b079e2d53392fa6f4183d901dbc774ec5d9c1e"
+    },
+    {
+      "source_url": "https://www.parliament.act.gov.au/parliamentary-business/in-the-chamber/bills/summary_of_bills",
+      "snapshot": "2026-10-14T01:36:32.692408+00:00",
+      "sha256": "73fb03ecaabad3c179b461e8f276a574f104332ef492755d485bb45a97aa0a3f"
+    },
+    {
+      "source_url": "https://www.parliament.act.gov.au/parliamentary-business/in-the-chamber/previous-assemblies/tenth-assembly/bills_list",
+      "snapshot": "2026-10-14T01:36:52.850523+00:00",
+      "sha256": "a86ab04dbe3f715a7c7c2f1177ffbbae34491eeb8625de03516b28eba92575a6"
+    },
+    {
+      "source_url": "https://www.parliament.act.gov.au/parliamentary-business/in-the-chamber/previous-assemblies/tenth-assembly/bills_volume",
+      "snapshot": "2026-10-14T01:37:15.510429+00:00",
+      "sha256": "4529037cf2a42c313892c64b71dd2c9b996e11a9178c31ee330653a3c97757f2"
+    },
+    {
+      "source_url": "https://www.parliament.act.gov.au/parliamentary-business/in-the-chamber/previous-assemblies/tenth-assembly/summary_of_bills",
+      "snapshot": "2026-10-14T01:37:35.530211+00:00",
+      "sha256": "ea67f46e541a255f53058b394ff0e141eeef3494e66d26c9ba82bb9bcdec4a22"
+    },
+    {
+      "source_url": "https://www.parliament.act.gov.au/__data/assets/word_doc/0013/2406100/Report-Bills-List-34.docx",
+      "snapshot": "2026-10-14T01:37:54.837666+00:00",
+      "sha256": "ad7d36884e169559f94b2704ab1d65698910a07f0afed97152329800571acb9a"
+    }
+  ],
+  "gaps": [
+    {
+      "title": "Building and Construction Legislation Amendment Bill 2026",
+      "reason": "Status-list bill absent from version index",
+      "parliament": 11
+    },
+    {
+      "title": "Competition Legislation Amendment Bill 2026",
+      "reason": "Status-list bill absent from version index",
+      "parliament": 11
+    },
+    {
+      "title": "Domestic Violence Agencies Amendment Bill 2026",
+      "reason": "Status-list bill absent from version index",
+      "parliament": 11
+    },
+    {
+      "title": "Gambling and Racing Control (Gambling Exclusion) Amendment Bill 2026",
+      "reason": "Status-list bill absent from version index",
+      "parliament": 11
+    },
+    {
+      "title": "Housing and Consumer Affairs Legislation Amendment Bill 2026",
+      "reason": "Status-list bill absent from version index",
+      "parliament": 11
+    },
+    {
+      "title": "Planning (Missing Middle Housing) Amendment Bill 2026",
+      "reason": "Status-list bill absent from version index",
+      "parliament": 11
+    },
+    {
+      "title": "Property Developers Legislation Amendment Bill 2026",
+      "reason": "Status-list bill absent from version index",
+      "parliament": 11
+    },
+    {
+      "title": "Road Transport (Safety and Traffic Management) (Validation) Amendment Bill 2026",
+      "reason": "Status-list bill absent from version index",
+      "parliament": 11
+    },
+    {
+      "title": "Victims of Crime Legislation Amendment Bill 2026",
+      "reason": "Status-list bill absent from version index",
+      "parliament": 11
+    },
+    {
+      "title": "Building and Construction Legislation Amendment Bill 2023",
+      "reason": "Status-list bill absent from version index",
+      "parliament": 10
+    },
+    {
+      "title": "Building (Swimming Pool Safety) Legislation Amendment Bill 2023",
+      "reason": "Status-list bill absent from version index",
+      "parliament": 10
+    },
+    {
+      "title": "Revenue Legislation Amendment Bill 2023 [No 2]",
+      "reason": "Status-list bill absent from version index",
+      "parliament": 10
+    }
+  ]
+}

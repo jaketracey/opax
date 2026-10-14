@@ -15,6 +15,7 @@ import { catalogueComplete, unpack } from '../portal/public/instruments.js';
 import { auditComplete } from '../portal/public/audit.js';
 import { clearedAggregates } from '../portal/src/budget.ts';
 import { clearedGiftRegisters } from '../portal/src/vic-gifts.ts';
+import { clearedStateBills } from '../portal/src/state-bills.ts';
 
 export const ORIGIN = 'https://opax.com.au';
 export const SITEMAP_LIMIT = 49_999;
@@ -126,7 +127,7 @@ export function addAuditDiscovery(groups, manifest) {
 }
 
 /** The same serving guards gate discovery; absent/dark hubs have no crawl URL. */
-export function addHubDataDiscovery(groups, budget, gifts) {
+export function addHubDataDiscovery(groups, budget, gifts, stateBills = []) {
   for (const [path, hub, count] of [
     ['/budget', budget, budget?.schema === 1 && Array.isArray(budget.documents) && Array.isArray(budget.aggregates) ? clearedAggregates(budget).length : 0],
     ['/register/vic-gifts', gifts, gifts ? clearedGiftRegisters(gifts).reduce((n, r) => n + r.rows.length, 0) : 0],
@@ -134,6 +135,8 @@ export function addHubDataDiscovery(groups, budget, gifts) {
     if (!count || !hub.promotion || hub.promotion.snapshot_date !== exportDate(hub.generated_at)) continue;
     groups.static.push({path, lastmod:exportDate(hub.generated_at)});
   }
+  const ready = stateBills.filter(h => h?.promotion && h.promotion.snapshot_date === exportDate(h.generated_at) && clearedStateBills(h).length);
+  if (ready.length) groups.static.push({path:'/register/state-bills', lastmod:ready.map(h => exportDate(h.generated_at)).sort().at(-1)});
 }
 
 /** Canonical donor identities in a person's party tables; amounts and row order do not affect discovery. */
@@ -207,7 +210,8 @@ export async function buildCrawl(root, {read: sourceRead} = {}) {
   addAuditDiscovery(groups, audit);
   if(groups.audit) { fallbacks.audit=groups.audit.length; fallbacks.static++; } // audit pages use the export snapshot until per-report tabled dates are read
   const beforeHubs = groups.static.length;
-  addHubDataDiscovery(groups, await optional('budget/data.json'), await optional('vic-gifts/data.json'));
+  addHubDataDiscovery(groups, await optional('budget/data.json'), await optional('vic-gifts/data.json'),
+    [await optional('bills-tas/data.json'), await optional('bills-act/data.json')]);
   fallbacks.static += groups.static.length - beforeHubs;
   const slugs = slugIndex(people).slugOf;
   const assets = new Map();

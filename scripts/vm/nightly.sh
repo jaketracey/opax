@@ -392,7 +392,7 @@ divisions_verify
 # New periods arrive via reviewed staged data + review.json, never an unchecked fetch.
 # Each hub fails independently and retains its last good public asset. The promoter
 # also proves that it leaves the refreshed mobile votes.json bytes untouched.
-for hub in budget vic-gifts; do
+for hub in budget vic-gifts bills-tas bills-act; do
   if ! run "$PY" scripts/promote_hub_data.py "$hub"; then
     revert_group "$hub"
     fail "hub promotion failed for $hub: previous reviewed asset retained"

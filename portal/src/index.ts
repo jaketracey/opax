@@ -31,6 +31,7 @@ import { instrumentPage, instrumentReader } from './instruments'
 import { budgetPage, budgetReader } from './budget'
 import { auditPage, auditReader } from './audit'
 import { vicGiftsPage, vicGiftsReader, vicGiftsPersonBlock, vicGiftsResponse } from './vic-gifts'
+import { stateBillsPage, stateBillsReader } from './state-bills'
 import {parseQuery,serializeQuery,type Page} from '../public/datatable.js'
 import {partyMoneyData,partyMoneyTableConfig,registerTableHTML} from '../public/register-tables.js'
 import {grantsHTML} from './grants-table'
@@ -3717,6 +3718,7 @@ type SeoRoute =
   | { kind: 'instruments'; id: string | null }
   | { kind: 'budget' }
   | { kind: 'vic-gifts' }
+  | { kind: 'state-bills' }
   | { kind: 'audit'; id: string | null }
   | { kind: 'static'; page: keyof typeof STATIC_PAGES }
   | { kind: 'report'; slug: string }
@@ -3774,6 +3776,7 @@ function matchSeoRoute(url: URL): SeoRoute | null {
   }
   if (path === '/budget') return { kind: 'budget' }
   if (path === '/register/vic-gifts') return { kind: 'vic-gifts' }
+  if (path === '/register/state-bills') return { kind: 'state-bills' }
   if (path === '/instruments') return { kind: 'instruments', id: null }
   if (path === '/instrument' || path.startsWith('/instrument/')) {
     try { return { kind: 'instruments', id: decodeURIComponent(path.slice('/instrument/'.length)) } }
@@ -4300,6 +4303,7 @@ async function buildRouteMeta(route: SeoRoute, url: URL, request: Request, env: 
       ...(route.id && AUDIT_ID.test(route.id) ? { canonical: `${SITE_ORIGIN}/audit/${route.id}` } : {}) })
     case 'budget': return base(await budgetPage(url, budgetReader(env.ASSETS), prerenderBlock))
     case 'vic-gifts': return base(await vicGiftsPage(url, vicGiftsReader(env.ASSETS), prerenderBlock))
+    case 'state-bills': return base(await stateBillsPage(url, stateBillsReader(env.ASSETS), prerenderBlock))
     case 'instruments': return base(await instrumentPage(route.id, url, instrumentReader(env.ASSETS), prerenderBlock, env.TABLE_DB ? async query=>{
       const endpoint=new URL('/api/table/instruments',url)
       endpoint.search=serializeQuery({...query,sort:query.sort || {key:'title',dir:'asc'}})
@@ -5550,6 +5554,9 @@ async function renderSeoPage(route: SeoRoute, url: URL, request: Request, env: E
     if (/\/(app|spa-entry|spa-shell)\.js(?:\?|$)/.test(el.getAttribute('src') || '')) el.remove()
   } })
   if (route.kind === 'vic-gifts' || route.kind === 'subject' && route.dir === 'person') rewriter.on('head', { element(el) { el.append('<link rel="stylesheet" href="/vic-gifts.css">',{html:true}) } })
+  if (route.kind === 'state-bills') rewriter.on('script[src]', { element(el) {
+    if (/\/(app|spa-entry|spa-shell)\.js(?:\?|$)/.test(el.getAttribute('src') || '')) el.remove()
+  } }).on('head', { element(el) { el.append('<link rel="stylesheet" href="/state-bills.css">',{html:true}) } })
   rewriter.on('main#main', { element(el) { el.setAttribute('data-server-rendered',''); el.setInnerContent(meta.prerender || '', { html: true }) } })
   const out = rewriter.transform(shell)
   const headers = new Headers(out.headers)

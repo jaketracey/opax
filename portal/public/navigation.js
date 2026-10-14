@@ -22,6 +22,7 @@
         ] },
         { heading: 'Laws', links: [
           page('/bills', 'Bills', 'Each bill\'s stages, its votes, the debate and a summary.'),
+          page('/register/state-bills', 'State bills', 'Tasmania and ACT registry dates, stages and original versions.'),
           page('/instruments', 'Legislative instruments', 'Regulations and rules made under Acts.', { gate: 'instruments' }),
         ] },
       ] },
