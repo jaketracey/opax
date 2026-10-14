@@ -1,0 +1,128 @@
+appId: au.com.opax.app
+name: 21b Talk sources, a source record, mute, end, consent withdrawn and declined
+# Part of journey 21 (see 21-talk-a-call.yaml). Signs in to the fixture's
+# happy account itself; clearState removes stored consent, so this call asks.
+# The live-call controls and the record bar cannot scroll to the centre, so
+# their scrolls do not centre (centring cost about 38 s per control).
+---
+- launchApp:
+    clearState: true
+    permissions: {}
+- runFlow:
+    file: support/talk-fixture-account.yaml
+    env:
+      TALK_EMAIL: happy@example.invalid
+- scrollUntilVisible:
+    timeout: 60000
+    element:
+      id: talk-start
+    centerElement: true
+- tapOn:
+    id: talk-start
+- scrollUntilVisible:
+    timeout: 60000
+    element:
+      id: talk-agree
+    centerElement: true
+# At AX5 UIKit can report the button visible while its centre is beneath the
+# sheet header. Reveal it physically before the one consent tap.
+- runFlow:
+    when:
+      true: ${CONTENT_SIZE === 'accessibility-extra-extra-extra-large'}
+    commands:
+      - swipe:
+          start: 90%, 30%
+          end: 90%, 55%
+          duration: 600
+- tapOn:
+    id: talk-agree
+- scrollUntilVisible:
+    timeout: 60000
+    element:
+      id: talk-status
+    direction: UP
+- extendedWaitUntil:
+    visible: Listening|OPAX is speaking
+    timeout: 15000
+# Sources appear as a badge on the call controls and open in a sheet.
+- scrollUntilVisible:
+    timeout: 60000
+    element:
+      id: talk-sources
+- takeScreenshot: ${EVIDENCE}/21-sources-badge
+- tapOn:
+    id: talk-sources
+- extendedWaitUntil:
+    visible:
+      id: talk-source-0
+    timeout: 15000
+- takeScreenshot: ${EVIDENCE}/21-sources
+- tapOn:
+    id: talk-source-0
+- extendedWaitUntil:
+    visible:
+      id: bill-title
+    timeout: 60000
+- takeScreenshot: ${EVIDENCE}/21-source-record
+- scrollUntilVisible:
+    timeout: 60000
+    element:
+      id: talk-record-back
+    direction: UP
+- tapOn:
+    id: talk-record-back
+- scrollUntilVisible:
+    timeout: 60000
+    element:
+      id: talk-mute
+    direction: DOWN
+- tapOn:
+    id: talk-mute
+- scrollUntilVisible:
+    timeout: 60000
+    element:
+      id: talk-status
+    direction: UP
+- assertVisible: Microphone muted
+- takeScreenshot: ${EVIDENCE}/21-muted
+- scrollUntilVisible:
+    timeout: 60000
+    element:
+      id: talk-end
+- tapOn:
+    id: talk-end
+- scrollUntilVisible:
+    timeout: 60000
+    element:
+      id: talk-status
+    direction: UP
+- extendedWaitUntil:
+    visible: Call ended. Microphone off.
+    timeout: 15000
+- takeScreenshot: ${EVIDENCE}/21-ended
+- tapOn: More options
+- extendedWaitUntil:
+    visible: Withdraw voice consent
+    timeout: 15000
+- takeScreenshot: ${EVIDENCE}/21-menu
+- tapOn: Withdraw voice consent
+- extendedWaitUntil:
+    visible: Consent withdrawn. Microphone off.
+    timeout: 15000
+- takeScreenshot: ${EVIDENCE}/21-withdrawn
+- scrollUntilVisible:
+    timeout: 60000
+    element:
+      id: talk-start
+    direction: UP
+    centerElement: true
+- tapOn:
+    id: talk-start
+- scrollUntilVisible:
+    timeout: 60000
+    element:
+      id: talk-not-now
+    centerElement: true
+- tapOn:
+    id: talk-not-now
+- takeScreenshot: ${EVIDENCE}/21-consent-declined

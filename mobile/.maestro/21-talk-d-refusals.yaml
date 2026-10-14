@@ -1,0 +1,73 @@
+appId: au.com.opax.app
+name: 21d Talk refusal states, voice disabled, the monthly budget closed and a dropped connection
+# Part of journey 21 (see 21-talk-a-call.yaml). Each state signs in to its own
+# fixture account through the helper, which signs out first.
+---
+- launchApp:
+    clearState: true
+    permissions: {}
+- runFlow:
+    file: support/talk-fixture-account.yaml
+    env:
+      TALK_EMAIL: disabled@example.invalid
+- scrollUntilVisible:
+    timeout: 60000
+    element:
+      id: talk-status
+    visibilityPercentage: 10
+- assertVisible: Voice is taking a break.
+- takeScreenshot: ${EVIDENCE}/21-disabled
+- assertNotVisible:
+    id: talk-start
+- runFlow:
+    file: support/talk-fixture-account.yaml
+    env:
+      TALK_EMAIL: budget@example.invalid
+- scrollUntilVisible:
+    timeout: 60000
+    element:
+      id: talk-status
+    visibilityPercentage: 10
+- assertVisible: Voice is closed for the rest of this month.
+- takeScreenshot: ${EVIDENCE}/21-budget
+- assertNotVisible:
+    id: talk-start
+- runFlow:
+    file: support/talk-fixture-account.yaml
+    env:
+      TALK_EMAIL: drop@example.invalid
+- scrollUntilVisible:
+    timeout: 60000
+    element:
+      id: talk-start
+    centerElement: true
+# clearState removed stored consent, so this call asks first. The consent
+# sheet covers Start; tap Agree, then wait for the dropped connection.
+- tapOn:
+    id: talk-start
+- scrollUntilVisible:
+    timeout: 60000
+    element:
+      id: talk-agree
+    centerElement: true
+- runFlow:
+    when:
+      true: ${CONTENT_SIZE === 'accessibility-extra-extra-extra-large'}
+    commands:
+      - swipe:
+          start: 90%, 30%
+          end: 90%, 55%
+          duration: 600
+- tapOn:
+    id: talk-agree
+- scrollUntilVisible:
+    timeout: 60000
+    element:
+      id: talk-status
+    direction: UP
+    visibilityPercentage: 10
+- extendedWaitUntil:
+    visible: (The connection dropped|Can.t reach OPAX)[.].*
+    timeout: 30000
+- takeScreenshot: ${EVIDENCE}/21-drop
+- tapOn: Done

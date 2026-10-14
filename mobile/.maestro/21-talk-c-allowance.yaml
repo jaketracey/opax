@@ -1,0 +1,63 @@
+appId: au.com.opax.app
+name: 21c Talk a call that runs out of free minutes, then an exhausted allowance
+# Part of journey 21 (see 21-talk-a-call.yaml). The deadline helper signs out,
+# recreates the fixture's deadline account and signs in to it; clearState
+# removes stored consent, so the call asks for it.
+---
+- launchApp:
+    clearState: true
+    permissions: {}
+- runFlow: support/talk-fixture-deadline.yaml
+- scrollUntilVisible:
+    timeout: 60000
+    element:
+      id: talk-start
+    centerElement: true
+- tapOn:
+    id: talk-start
+- scrollUntilVisible:
+    timeout: 60000
+    element:
+      id: talk-agree
+    centerElement: true
+- runFlow:
+    when:
+      true: ${CONTENT_SIZE === 'accessibility-extra-extra-extra-large'}
+    commands:
+      - swipe:
+          start: 90%, 30%
+          end: 90%, 55%
+          duration: 600
+- tapOn:
+    id: talk-agree
+- scrollUntilVisible:
+    timeout: 60000
+    element:
+      id: talk-status
+    direction: UP
+    visibilityPercentage: 10
+- extendedWaitUntil:
+    visible: Your free minutes are used up. Microphone off.
+    timeout: 20000
+- scrollUntilVisible:
+    timeout: 60000
+    element:
+      id: talk-allowance
+    visibilityPercentage: 10
+- assertVisible:
+    id: talk-allowance
+    text: 0 minutes 0 seconds remaining
+- takeScreenshot: ${EVIDENCE}/21-deadline
+- runFlow:
+    file: support/talk-fixture-account.yaml
+    env:
+      TALK_EMAIL: exhausted@example.invalid
+- scrollUntilVisible:
+    timeout: 60000
+    element:
+      id: talk-status
+    visibilityPercentage: 10
+- assertVisible: You have used your free voice minutes.
+- takeScreenshot: ${EVIDENCE}/21-exhausted
+- assertNotVisible:
+    id: talk-start
