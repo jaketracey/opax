@@ -1,4 +1,4 @@
-import { applyQuery, dataTableHTML, mountDataTable, parseQuery, serializeQuery } from './datatable.js?v=80ef910041';
+import { applyQuery, dataTableHTML, mountDataTable, parseQuery, serializeQuery } from './datatable.js?v=0f070cd345';
 // Pass 5 lane B: references read by what was bought, then by the counterpart.
 const referenceTitle = value => !/\s/.test(value) && (/\d/.test(value) || value === value.toUpperCase());
 export function contractTitle(contract) {

@@ -1,4 +1,4 @@
-import {mountDataTable} from './datatable.js?v=80ef910041';
+import {mountDataTable} from './datatable.js?v=0f070cd345';
 import {aggregateConfig} from './budget-table.js?v=0611aafd79';
 const root=document.querySelector('[data-datatable="budget-aggregates"]');
 if(root) {

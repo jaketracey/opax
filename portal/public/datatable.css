@@ -31,16 +31,25 @@
 .dt-muted { color: var(--ink-soft); font-variant-numeric: tabular-nums; }
 .dt-chips:empty { display: none; }
 .dt-chips { margin-block: var(--space-tight) var(--space-block); }
-.dt-scroll { max-width: 100%; overflow-x: auto; max-height: calc(var(--size-control) * 14); border-block: var(--border-hairline) solid var(--divider-default); }
+.dt-scroll { max-width: 100%; overflow-x: auto; overscroll-behavior-x: contain; border-block: var(--border-hairline) solid var(--divider-default); }
 .dt { width: 100%; border-collapse: separate; border-spacing: 0; font: var(--type-metadata); }
 .dt caption { text-align: start; padding-block: var(--space-block); font: var(--type-heading); color: var(--ink); }
 .dt th { position: sticky; top: 0; z-index: 1; background: var(--paper-sunken); text-align: start; font: var(--type-label); }
 .dt :is(td, th) { padding: var(--space-block); border-bottom: var(--border-hairline) solid var(--divider-subtle); }
-.dt th .dt-button { border: 0; border-radius: 0; padding: 0; background: transparent; font: inherit; color: inherit; white-space: nowrap; }
+.dt th .dt-button { display: inline-flex; align-items: center; gap: var(--space-line); border: 0; border-radius: 0; padding: 0; background: transparent; font: inherit; color: inherit; text-align: start; }
 .dt [data-align="end"] { text-align: end; }
-.dt td { position: relative; vertical-align: middle; background: var(--paper-raised); overflow-wrap: anywhere; }
+.dt td { position: relative; vertical-align: middle; background: var(--paper-raised); overflow-wrap: break-word; word-break: normal; }
 .dt tbody tr:hover td { background: var(--paper); }
 .dt .dt-number { font-variant-numeric: tabular-nums; white-space: nowrap; }
+.dt .dt-date { white-space: nowrap; }
+.dt td.dt-long { overflow-wrap: anywhere; }
+.dt td[data-primary] { min-width: calc(var(--size-control) * 4); }
+/* The table flows with the page (no capped height, so no second vertical
+   scrollbar). When its columns cannot fit, it scrolls sideways inside
+   .dt-scroll and the first column stays put. */
+.dt :is(th, td):first-child:not([colspan]) { position: sticky; left: 0; z-index: 1; }
+.dt thead th:first-child:not([colspan]) { z-index: 2; }
+@media (width < 1024px) { .dt :is(th, td):first-child:not([colspan]) { box-shadow: inset calc(-1 * var(--border-hairline)) 0 0 var(--divider-default); } }
 .dt-value { position: relative; }
 .dt [data-primary] { font: var(--type-strong); }
 .dt a { color: var(--money-ink); text-decoration-thickness: var(--border-hairline); text-underline-offset: var(--space-line); }
@@ -53,6 +62,7 @@
 .dt-actions summary::-webkit-details-marker { display: none; }
 .dt-actions .dt-panel > div { min-width: auto; width: max-content; }
 .dt-actions a { display: block; padding: var(--space-tight); }
+.dt tbody tr:nth-last-child(-n + 2):not(:first-child) .dt-actions .dt-panel > div { top: auto; bottom: 100%; margin: 0 0 var(--space-line); }
 .dt-empty { padding: var(--space-section) var(--space-block); text-align: center; color: var(--ink-soft); font: var(--type-body); white-space: normal; }
 .dt-footer { justify-content: space-between; margin-block: var(--space-block); font: var(--type-fine); font-variant-numeric: tabular-nums; }
 .dt-count { margin: 0; }
@@ -69,21 +79,11 @@
   .dt-bar-track, .dt-scale { display: none; }
   .dt-filters > .dt-tools { min-width: min(calc(var(--size-control) * 6), calc(100vw - var(--space-screen) * 2)); }
   .dt-panel > :is(fieldset, div) { min-width: min(calc(var(--size-control) * 5), calc(100vw - var(--space-screen) * 2)); right: auto; left: 0; }
-  .dt-scroll { overflow: visible; max-height: none; border: 0; }
-  .dt, .dt caption, .dt tbody { display: block; }
-  .dt thead { position: absolute; width: var(--border-hairline); height: var(--border-hairline); overflow: hidden; clip-path: inset(50%); }
-  .dt tr { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); margin-bottom: var(--space-block); padding: var(--space-block); border: var(--border-hairline) solid var(--divider-subtle); border-radius: var(--radius-md); background: var(--paper-raised); }
-  .dt td, .dt td[data-align="end"] { border: 0; padding: var(--space-tight); text-align: start; white-space: normal; }
-  .dt td::before { content: attr(data-label); display: block; font: var(--type-fine); color: var(--ink-soft); margin-bottom: var(--space-line); }
-  .dt [data-primary] { grid-column: 1 / -1; grid-row: 1; font: var(--type-subheading); }
-  .dt [data-primary]::before { display: none; }
-  .dt [data-prominent] { grid-column: 1 / -1; grid-row: 2; font: var(--type-heading); }
-  .dt .dt-actions { grid-column: 1 / -1; width: auto; }
+  .dt td[data-primary] { min-width: min(calc(var(--size-control) * 3), 40vw); }
   .dt .dt-actions .dt-panel > div { left: auto; right: 0; }
-  .dt td[colspan] { grid-column: 1 / -1; }
   .dt-footer { align-items: flex-start; }
   .dt-paging { width: 100%; }
   .dt-page-size { flex-basis: 100%; }
 }
-/* Typography shorthands above must not reset numeric alignment on phone cards. */
+/* Typography shorthands above must not reset numeric figures. */
 .dt .dt-number { font-variant-numeric: tabular-nums; }
