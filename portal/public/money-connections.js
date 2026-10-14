@@ -1,4 +1,4 @@
-import {donorDisclosure} from './donor-disclosure.js?v=e91ef740e5';
+import {donorDisclosure} from './donor-disclosure.js?v=abb5e417dd';
 import {subjectUrl} from './canonical-urls.js?v=225d5915ea';
 import {moneyFlowType, filterMoneyEdges, readMoneyFilters} from './money-records.js';
 
@@ -40,7 +40,7 @@ export function moneyConnectionsConfig(graph) {
       {key:'records',label:'Records',type:'count',facet:'range'},
       {key:'years',label:'Years',type:'text'},
       {key:'return_reference',label:'Return reference',type:'text'},
-    ],primaryLink:row=>row.to_href,
+    ],columnsVisible:['type','from','to',...values.map(c=>c.key),'records','years'],primaryLink:row=>row.to_href,
     actions:[{icon:'⌖',label:'Focus in map',href:row=>`#money-focus=${encodeURIComponent(row.focusId)}`}],
     export:{filename:'opax-map-connections.csv'}};
 }

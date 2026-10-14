@@ -1,5 +1,5 @@
-import {donorDisclosure,donorLookup,donorDisplayText,donorLabelHTML} from './donor-disclosure.js?v=e91ef740e5';
-import {loadDonorViewIndex} from './donor-views.js?v=e93169e00b';
+import {donorDisclosure,donorLookup,donorDisplayText,donorLabelHTML} from './donor-disclosure.js?v=abb5e417dd';
+import {loadDonorViewIndex} from './donor-views.js?v=eb3ec114b2';
 // /money/explain: one disclosed-money flow, explained from the data alone.
 //
 // Every figure here is summed from the year cells of the money graph
@@ -745,7 +745,7 @@ function registersHTML(flow, matches) {
     matches.registrations ? plural(matches.registrations, 'Foreign Influence Transparency Scheme registration') : '',
   ].filter(Boolean);
   const links = [
-    donorDisclosure(flow.donor).href ? `<a href="${esc(donorDisclosure(flow.donor).href)}">${esc(`Listed on ${possessive(flow.donor.label)} donor page`)}</a>` : esc(donorDisclosure(flow.donor).reference),
+    donorDisclosure(flow.donor).href ? `<a href="${esc(donorDisclosure(flow.donor).href)}">${esc(`Listed on ${possessive(flow.donor.label)} donor page`)}</a>` : '',
     matches.registrations && matches.fitsUrl ? `<a href="${esc(matches.fitsUrl)}" rel="noopener" target="_blank">${esc('Foreign Influence Transparency Scheme register ↗︎')}</a>` : '',
   ].filter(Boolean);
   return `<div class="mx-compare"><h3 class="mx-subhead">Other registers</h3>
@@ -811,7 +811,6 @@ export function pageHTML(flow, { index, partyName = (l) => l, access = null, fit
     <div class="mx-head">
       <p class="mx-kicker">Explain this flow</p>
       <h1 class="mx-title" id="mx-title" tabindex="-1">${esc(flowTitle(flow, partyName))}</h1>
-      ${flow.donor ? `<p class="donor-return-reference">${esc(donorDisclosure(flow.donor).reference)}</p>` : ''}
       <p class="mx-meta">${metaParts.join('<span aria-hidden="true"> · </span>')}</p>
     </div>
     <section class="mx-section mx-shows" aria-labelledby="mx-shows-h">

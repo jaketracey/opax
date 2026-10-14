@@ -5131,11 +5131,11 @@ async function moneySubjectMeta(dir: 'party' | 'donor', name: string, url: URL, 
     card = {
       kicker: `Donor · ${industryLabel(node.industry)}`,
       title: display,
-      lines: [`${money(node.total)} across ${num(node.count)} receipts, ${years(node.firstYear,node.lastYear)} (${node.sourceShort})`,donorDisclosure(node).reference],
+      lines: [`${money(node.total)} across ${num(node.count)} receipts, ${years(node.firstYear,node.lastYear)} (${node.sourceShort})`],
     }
   } else {
     facts = disclosureRecord?.kind==='reference' ? `${display}: source reference; no matching electoral donation established.` : `${display}: disclosed electoral returns outside the bounded money-map selection.`
-    card = {kicker:disclosureRecord?.kind==='reference'?'Source reference':'Donor',title:display,lines:[facts,disclosureRecord ? donorDisclosure(disclosureRecord).reference : '']}
+    card = {kicker:disclosureRecord?.kind==='reference'?'Source reference':'Donor',title:display,lines:[facts]}
   }
   const sentence = tail ? `${facts} ${tail}` : facts
   const description = withTail(facts, tail)

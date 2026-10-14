@@ -1,5 +1,5 @@
 import {applyQuery, dataTableHTML, guardTableURL, mountDataTable, parseQuery} from './datatable.js?v=80ef910041';
-import {donorDisclosure} from './donor-disclosure.js?v=e91ef740e5';
+import {donorDisclosure} from './donor-disclosure.js?v=abb5e417dd';
 
 const esc = value => String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const date = value => /^\d{4}-\d{2}-\d{2}/.test(String(value || '')) ? String(value).slice(0, 10) : null;
@@ -103,7 +103,8 @@ export function partyMoneyTableConfig(rows, id = 'party-money-table', urlKey = '
     columns:[{key:'label',label:'Donor',type:'text',primary:true},{key:'industry',label:'Industry',type:'category',facet:'multi'},
       {key:'total',label:'Given',type:'money',bar:true,format:'compact',facet:'range'},
       {key:'count',label:'Receipts',type:'count',facet:'range'},{key:'firstYear',label:'First year',type:'year'},
-      {key:'lastYear',label:'Last year',type:'year'},{key:'return_reference',label:'Return reference',type:'text'}],primaryLink:row=>row.href || null};
+      {key:'lastYear',label:'Last year',type:'year'},{key:'return_reference',label:'Return reference',type:'text'}],
+    columnsVisible:['label','industry','total','count','firstYear','lastYear'],primaryLink:row=>row.href || null};
 }
 
 /** The shared core owns query validation, pending states, history and CSV checks. */

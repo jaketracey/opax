@@ -19,14 +19,14 @@ export function donorDisclosure(record, fallback = {}) {
   const reference = (references.slice(0,3).join('; ') + (references.length>3 ? `; ${references.length-3} more return references in the data export` : '')) || returnReference(fallback);
   return {name, href:confidentDonorMatch(record) ? safeHref(record.match.href) : null, reference, returns};
 }
+// Display is the name alone: a link only for a confident match. Return
+// references stay data (Sources, CSV, table API, tool fields), never inline text.
 export function donorLabelHTML(record, fallback) {
-  const {name,href,reference} = donorDisclosure(record,fallback);
-  return (href ? `<a href="${escape(href)}">${escape(name)}</a>` : escape(name))
-    + (reference ? ` <span class="donor-return-reference">${escape(reference)}</span>` : '');
+  const {name,href} = donorDisclosure(record,fallback);
+  return href ? `<a href="${escape(href)}">${escape(name)}</a>` : escape(name);
 }
 export function donorDisplayText(record, fallback) {
-  const {name,reference} = donorDisclosure(record,fallback);
-  return [name,reference].filter(Boolean).join(' — ');
+  return donorDisclosure(record,fallback).name;
 }
 export function donorLookup(records) {
   const index=new Map();

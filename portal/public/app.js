@@ -2,7 +2,7 @@ let donorRows = (rows,_index,limit=Infinity) => [...(rows || [])].sort((a,b)=>b[
 let donorViewIndex = new Map();
 let donorDisclosure = record => ({name:typeof record==='string'?record:record?.label || '',href:null,reference:''});
 let donorLabelHTML = record => esc(typeof record==='string'?record:record?.label || '');
-const donorViewReady = import('/donor-views.js?v=e93169e00b').then(module => {
+const donorViewReady = import('/donor-views.js?v=eb3ec114b2').then(module => {
   ({donorRows,donorDisclosure,donorLabelHTML}=module);
   return module.loadDonorViewIndex();
 }).then(index => (donorViewIndex=index));
@@ -18,9 +18,9 @@ let divisionMarkdown;
 const divisionMarkdownReady = import('/division-markdown.js?v=5991511166').then(module => { divisionMarkdown = module; });
 // The labels and source lines (labels.js); the first render waits for them.
 let growthModules;
-const growthModulesReady = import("/growth-modules.js?v=ec5f501ce7").then(module => { growthModules = module; });
+const growthModulesReady = import("/growth-modules.js?v=41fca6f135").then(module => { growthModules = module; });
 let registerTables;
-const registerTablesReady = import('/register-tables.js?v=58ad18bbee').then(module => { registerTables = module; });
+const registerTablesReady = import('/register-tables.js?v=ef1565e7c4').then(module => { registerTables = module; });
 let askPerson;
 const askPersonReady = import('/ask-person.js?v=7cb76e395c').then(module => { askPerson = module; });
 let uiLabels;
@@ -1502,7 +1502,7 @@ async function openMoneyRecords(kind, params) {
       moneyRecordsHandle = handle;
       return;
     }
-    const mod = await import(grants ? '/grants.js?v=835fad43e7' : '/ledger.js?v=7cd6da6476');
+    const mod = await import(grants ? '/grants.js?v=4aea6d16c3' : '/ledger.js?v=b36dc2fd72');
     if (generation !== moneyRecordsGeneration) return;
     body.replaceChildren();
     // Both modules report their shareable state (open file, filters) so the
@@ -1532,7 +1532,7 @@ async function openMoneyExplain(params, manageFocus) {
   $('money-records-head').hidden = true;
   const body = $('money-records-body');
   try {
-    const mod = await import('/money-explain.js?v=320b3e2e6a');
+    const mod = await import('/money-explain.js?v=18278ce932');
     if (generation !== moneyRecordsGeneration) return;
     const current = () => generation === moneyRecordsGeneration && location.pathname === '/money/explain';
     moneyRecordsHandle = mod.mountMoneyExplain(body, {
@@ -1551,7 +1551,7 @@ async function openGrantRecipient(jurisdiction, id, manageFocus) {
   const body = $('money-records-body');
   body.innerHTML = '<div class="grant-recipient-page" aria-busy="true"><p class="visually-hidden" role="status">Loading recipient records</p><div class="answer-skeleton grant-recipient-skeleton" aria-hidden="true"><i style="width:62%;height:2.75rem"></i><i style="width:38%"></i><i style="width:100%;height:6rem"></i><i style="width:84%"></i><i style="width:96%"></i><i style="width:74%"></i></div></div>';
   try {
-    const mod = await import('/grant-recipient.js?v=792a1035f0');
+    const mod = await import('/grant-recipient.js?v=e062ae89b7');
     if (generation !== moneyRecordsGeneration) return;
     moneyRecordsHandle = mod.mountGrantRecipient(body, { jurisdiction, id, manageFocus,
       onTitle(name) {
@@ -1649,7 +1649,7 @@ async function mountMoney(jurParam, industry, params = new URLSearchParams()) {
   root.innerHTML = `<p class="ui-status-line money-map-status" role="status">Loading the map…</p>`;
   const cfg = MONEY_JURISDICTIONS[jur];
   try {
-    const [{ mountMoneyMap }, data, journeysModule, researchModule, recordsModule] = await Promise.all([import("/money-map.js?v=1789c2b0ac"), loadMoneyFile(jur), import("/money-journeys.js?v=mobile-picker-20260908"), import("/map-research.js?v=a7600ab69b"), import("/money-records.js?v=ia-ux-20260908-2")]);
+    const [{ mountMoneyMap }, data, journeysModule, researchModule, recordsModule] = await Promise.all([import("/money-map.js?v=1789c2b0ac"), loadMoneyFile(jur), import("/money-journeys.js?v=mobile-picker-20260908"), import("/map-research.js?v=4ba99b8044"), import("/money-records.js?v=ia-ux-20260908-2")]);
     if (moneyMapLoading !== jur || generation !== moneyMapGeneration) return; // switched again while loading
     const fine = $("money-fineprint");
     if (fine) fine.innerHTML = moneyFineprintHTML(jur, data?.meta);
@@ -1790,7 +1790,7 @@ async function openSupplierPage(name, params, manageFocus) {
   body.classList.remove("subject-person", "subject-party");
   body.innerHTML = '<p role="status">Loading suppliers…</p>';
   try {
-    const module = await import("/suppliers.js?v=3c4ac39196");
+    const module = await import("/suppliers.js?v=d99e55ce7c");
     if (generation !== supplierPageGeneration) return;
     const helpers = {
       params,
@@ -3545,7 +3545,7 @@ let moneyData = null;
 let moneyDataPromise = null;
 function loadMoneyData() {
   // The same parse the donor privacy index reads (donor-views.js), not a second download.
-  moneyDataPromise ??= import('/donor-views.js?v=e93169e00b').then((module) => module.loadMoneyGraph("/graph/money.json"))
+  moneyDataPromise ??= import('/donor-views.js?v=eb3ec114b2').then((module) => module.loadMoneyGraph("/graph/money.json"))
     .then((d) => (moneyData = d)).catch(() => null);
   return moneyDataPromise;
 }
@@ -7605,7 +7605,7 @@ async function buildDonorsDirectory() {
   const commissions = files.map(([j, d]) => d.meta?.commission || (j === "federal" ? "Australian Electoral Commission" : j));
   return {
     title: "Donors",
-    name: (d) => d.label, href: (d) => subjectHash("donor", d.label), hint: (d) => [industryLabel?.(d.industry) || d.industry,donorDisclosure(d).reference].filter(Boolean).join(' · '),
+    name: (d) => d.label, href: (d) => subjectHash("donor", d.label), hint: (d) => industryLabel?.(d.industry) || d.industry || '',
     lede: "",
     items,
     text: (d) => `${[...d.labels].join(" ")} ${d.industry || ""} ${d.group || ""} ${d._partyList.join(" ")}`,
@@ -9213,8 +9213,8 @@ async function openExplain(detail) {
   if (!detail || !["industry", "donor", "party"].includes(detail.kind)) return;
   const jur = MONEY_JURISDICTIONS[detail.jurisdiction] ? detail.jurisdiction : "federal";
   try {
-    const [mod, graph] = await Promise.all([import("/money-explain.js?v=320b3e2e6a"), loadMoneyFile(jur)]);
-    const { loadDonorViewIndex } = await import("/donor-views.js?v=e93169e00b");
+    const [mod, graph] = await Promise.all([import("/money-explain.js?v=18278ce932"), loadMoneyFile(jur)]);
+    const { loadDonorViewIndex } = await import("/donor-views.js?v=eb3ec114b2");
     goRoute(mod.explainHrefFor({ ...detail, jurisdiction: jur }, graph, await loadDonorViewIndex()) || "/money/explain");
   } catch { goRoute("/money/explain"); }
 }
@@ -9232,11 +9232,11 @@ const GAMES = {
   ballot: { name: "Build your ballot", dialog: "dialog-ballot", body: "explore-ballot", module: "/ballot.js?v=49e7bc6382", mount: "mountBallot" },
   tm: { name: "Time machine", dialog: "dialog-tm", body: "explore-tm", module: "/timemachine.js?v=23b5006f1b", mount: "mountTimeMachine" },
   tide: { name: "The tide", dialog: "dialog-tide", body: "explore-tide", module: "/tide.js", mount: "mountTide" },
-  quiz: { name: "The record quiz", dialog: "dialog-quiz", body: "explore-quiz", module: "/quiz.js?v=8614c47306", mount: "mountQuiz" },
-  ledger: { name: "The ledger", dialog: "dialog-ledger", body: "explore-ledger", module: "/ledger.js?v=7cd6da6476", mount: "mountLedger" },
-  grants: { name: "Who gets the grants", dialog: "dialog-grants", body: "explore-grants", module: "/grants.js?v=835fad43e7", mount: "mountGrants" },
+  quiz: { name: "The record quiz", dialog: "dialog-quiz", body: "explore-quiz", module: "/quiz.js?v=1af2a51c34", mount: "mountQuiz" },
+  ledger: { name: "The ledger", dialog: "dialog-ledger", body: "explore-ledger", module: "/ledger.js?v=b36dc2fd72", mount: "mountLedger" },
+  grants: { name: "Who gets the grants", dialog: "dialog-grants", body: "explore-grants", module: "/grants.js?v=4aea6d16c3", mount: "mountGrants" },
   matrix: { name: "Who owns which debate", dialog: "dialog-matrix", body: "explore-matrix", module: "/matrix.js?v=0d01530c63", mount: "mountMatrix" },
-  wd: { name: "Words per dollar", dialog: "dialog-wd", body: "explore-wd", module: "/wordsdollars.js?v=b512e1e695", mount: "mountWordsDollars" },
+  wd: { name: "Words per dollar", dialog: "dialog-wd", body: "explore-wd", module: "/wordsdollars.js?v=65a33d444e", mount: "mountWordsDollars" },
   tvn: { name: "Then vs now", dialog: "dialog-tvn", body: "explore-tvn", module: "/thenvsnow.js?v=aac138f24c", mount: "mountThenVsNow" },
 };
 
@@ -13367,8 +13367,7 @@ function barList(rows, {
     const target=linkTo?.(name,v,row);
     const canLink=Boolean(target);
     const key = canLink ? null : term?.(name);
-    const identity=disclosedDonor(name);
-    const label = `${partyDots ? partyDotHTML(name) : ''}${esc(name)}${donorDisclosure(identity).reference ? ' <small>'+esc(donorDisclosure(identity).reference)+'</small>' : ''}`;
+    const label = `${partyDots ? partyDotHTML(name) : ''}${esc(name)}`;
     const sub = detail?.(name, v, row);
     const marked = marker?.(name, v, row);
     const markerValue = Number(typeof marked === "object" ? marked?.value : marked);
@@ -14330,7 +14329,7 @@ document.addEventListener("close", (e) => {
 /** Words per dollar for the report's own industry: money beside the debate share, party by party. */
 async function mountReportWords(el, cfg, slug) {
   try {
-    const { mountWordsDollars } = await import("/wordsdollars.js?v=b512e1e695");
+    const { mountWordsDollars } = await import("/wordsdollars.js?v=65a33d444e");
     if (currentReportSlug !== slug || !el.isConnected) return;
     reportWordsHandle = mountWordsDollars(el, { only: [cfg.topic] });
   } catch {

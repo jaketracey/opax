@@ -75,10 +75,13 @@ export function personSpeechCount(p) {
  return p.speech_count_basis ? 'Count pending exact export; own-house, in-service speeches.' : `${p.speeches.toLocaleString()} indexed speeches.`;
 }
 
+// Return references stay in the record's source url and the data export; the
+// snippet a result shows carries no raw reference text.
+const industrySentence=industry=>{const text=String(industry||'').replaceAll('_',' ').trim();return text ? text[0].toUpperCase()+text.slice(1)+'. ' : ''};
 export function donorSearchRecord(jur, node) {
  const disclosure=donorDisclosure(node);
  return {key:jur+':'+node.id,kind:'donor',title:disclosure.name,href:disclosure.href,
-  snippet:node.kind==='reference' ? `${disclosure.reference} ${node.source_note}` : `${disclosure.reference} ${(node.industry||'').replaceAll('_',' ')}. ${cash(node.total||0)} in disclosed political receipts across ${(node.count||0).toLocaleString()} records.`,
+  snippet:node.kind==='reference' ? node.source_note || '' : `${industrySentence(node.industry)}${cash(node.total||0)} in disclosed political receipts across ${(node.count||0).toLocaleString()} records.`,
   extra:{aliases:[...(node.aliases||[]),...(node.lookup_names||[]),node.abn||''].join(' '),from:node.firstYear,to:node.lastYear,state:jur,source:jur==='federal'?'AEC disclosure records':`${jur.toUpperCase()} disclosure records`,dateLabel:period(node.firstYear,node.lastYear),url:disclosure.returns[0]?.url || null,...(node.source_note?{source_note:node.source_note}:{})}};
 }
 
@@ -101,7 +104,7 @@ async function main() {
     add(`${jur}:${flow}-connection:${i}`,kind,`${b.label} — ${kind} connection`,'/money?'+new URLSearchParams({jur,q:b.label,type:flow}),`${cash(e.total)} across ${e.count||0} ${kind} records from ${a.label}. Aggregated map connection; individual notices may also appear separately in search.`,{aliases:[...(b.aliases||[]),b.abn||''].join(' '),from:e.firstYear,to:e.lastYear,state:jur,source:flow==='contracts'?'Public contract map aggregate':'Public grant map aggregate',dateLabel:period(e.firstYear,e.lastYear)});
     continue;
    }
-   add(`${jur}:receipt:${i}`,'receipt',`${a.label} → ${b.label}`,'/money?'+new URLSearchParams({jur,q:a.label,party:b.id,type:'receipts'}),`${donorDisclosure(a).reference} ${cash(e.total)} in disclosed political receipts; ${e.count||0} records. Aggregated connection, not an individual gift. ${(a.industry||'').replaceAll('_',' ')}.`,{aliases:(a.aliases||[]).join(' '),from:e.firstYear,to:e.lastYear,state:jur,parties:[b.label],source:jur==='federal'?'AEC disclosure records':`${jur.toUpperCase()} disclosure records`,dateLabel:period(e.firstYear,e.lastYear)});
+   add(`${jur}:receipt:${i}`,'receipt',`${a.label} → ${b.label}`,'/money?'+new URLSearchParams({jur,q:a.label,party:b.id,type:'receipts'}),`${cash(e.total)} in disclosed political receipts; ${e.count||0} records. Aggregated connection, not an individual gift. ${industrySentence(a.industry)}`.trim(),{aliases:(a.aliases||[]).join(' '),from:e.firstYear,to:e.lastYear,state:jur,parties:[b.label],source:jur==='federal'?'AEC disclosure records':`${jur.toUpperCase()} disclosure records`,dateLabel:period(e.firstYear,e.lastYear)});
   }
  }
  for(const node of (await read('graph/donor-index.json')).donors || []){const r=donorSearchRecord(node.jurisdiction || 'federal',node);add(r.key,r.kind,r.title,r.href,r.snippet,r.extra);}
