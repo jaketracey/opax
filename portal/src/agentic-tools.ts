@@ -189,6 +189,8 @@ function coverageNotes(f: SpeechFilter, groupBy?: string): string[] {
 }
 
 // ---------------------------------------------------------------- count_speeches
+/** At most this many window candidates are counted to prove a date-window ranking (about 3 s of totals at 4 at a time). */
+const WINDOW_CANDIDATE_CAP = 120
 export interface CountInput extends SpeechFilter { group_by?: 'speaker' | 'party' | 'none'; limit?: number }
 export async function countSpeeches(deps: ToolDeps, input: CountInput): Promise<ToolResult> {
   const origin = deps.origin ?? 'https://opax.com.au'
@@ -215,14 +217,22 @@ export async function countSpeeches(deps: ToolDeps, input: CountInput): Promise<
     method = `catalog facet ${facet === U_O ? 'by speaker' : 'by party'} over every matching speech`
   } else {
     // Candidates from the decade facet, exact window counts per candidate.
-    const k = group === 'speaker' ? 30 : 20
+    // A decade count bounds a window count from above, so the ranking is proven once the last listed row is at least
+    // the next unchecked candidate's decade count. Count further candidates in batches until it is, up to a cap.
+    let k = group === 'speaker' ? 30 : 20
     const c = await catalog(deps, [...base, decadeClause(f)], [facet])
     const cands = facetRows(c.facets[facet], facet)
-    rows = await pool(cands.slice(0, k), 4, async (r) => ({
+    const count = (from: number, to: number) => pool(cands.slice(from, to), 4, async (r) => ({
       name: r.name,
       count: await countOne(deps, { ...f, ...(group === 'speaker' ? { speaker: r.name } : { party: r.name }) }),
     }))
+    rows = await count(0, k)
     rows.sort((a, b) => b.count - a.count || a.name.localeCompare(b.name))
+    while (k < Math.min(cands.length, WINDOW_CANDIDATE_CAP) && (rows[limit - 1]?.count ?? 0) < (cands[k]?.count ?? 0)) {
+      const next = Math.min(cands.length, WINDOW_CANDIDATE_CAP, k + 30)
+      rows.push(...await count(k, next)); k = next
+      rows.sort((a, b) => b.count - a.count || a.name.localeCompare(b.name))
+    }
     exact = (rows[limit - 1]?.count ?? 0) >= (cands[k]?.count ?? 0)
     method = `exact window counts for the top ${k} ${group === 'speaker' ? 'speakers' : 'parties'} by decade`
   }

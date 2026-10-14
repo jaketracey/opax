@@ -6036,7 +6036,9 @@ function agenticToolDeps(env: Env, signal?: AbortSignal, ctx?: ExecutionContext)
       signal?.throwIfAborted()
       // Repeated searches and counts within the hour come from the edge cache; operator evals always read the KB.
       const data = await cachedKbLookup(path, body, env.RESEARCH_EVAL ? undefined : env.CACHE_EPOCH, async () => {
-        const res = await kbFetch(env, path, { ...(body === undefined ? {} : { body }), signal })
+        // A dropped connection ("Network connection lost") on a read-only lookup is retried once; HTTP errors are not.
+        const read = () => kbFetch(env, path, { ...(body === undefined ? {} : { body }), signal })
+        const res = await read().catch(error => { if (signal?.aborted || !['/find', '/catalog', '/search'].includes(path)) throw error; return read() })
         if (!res.ok) throw new Error('record lookup unavailable')
         return await res.json() as Record<string, unknown>
       }, ctx ? work => ctx.waitUntil(work) : undefined)
