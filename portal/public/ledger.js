@@ -1,4 +1,4 @@
-import {donorDisclosure,donorLookup,donorDisplayText} from './donor-disclosure.js?v=e91ef740e5';
+import {donorDisclosure,donorLookup,donorDisplayText} from './donor-disclosure.js?v=abb5e417dd';
 import {subjectUrl} from './canonical-urls.js?v=225d5915ea';
 import { filterMoneyEdges } from "./money-records.js?v=ia-ux-20260908-2";
 import { sourceLineHTML } from './labels.js?v=fc03aa14cf';
@@ -308,28 +308,29 @@ function csvCell (v) {
 /**
  * CSV of the current view. Totals go out as raw integers (analysable),
  * the year range as two columns, and the comment header carries the
- * active filters plus the floor-not-ceiling caveat.
+ * active filters plus the floor-not-ceiling caveat. Return references go
+ * out here (and in Sources), never inline beside a name.
  */
 export function buildCSV (view, rows, commentLines) {
   const lines = commentLines.map((l) => '# ' + l)
   if (view === 'flows') {
     lines.push(['Donor', 'Industry', 'Party', 'Total (AUD)', 'Records',
-      'First year', 'Last year'].join(','))
+      'First year', 'Last year', 'Return reference'].join(','))
     for (const r of rows) {
       lines.push([
         csvCell(r.donor), csvCell(industryLabel(r.industry)), csvCell(r.party),
-        r.total, r.count, r.firstYear, r.lastYear,
+        r.total, r.count, r.firstYear, r.lastYear, csvCell(r.return_reference || ''),
       ].join(','))
     }
   } else {
     lines.push(['Donor', 'Industry', 'Total (AUD)', 'Parties funded',
       'Records', 'First year', 'Last year', 'Top recipient',
-      'Top recipient share (%)'].join(','))
+      'Top recipient share (%)', 'Return reference'].join(','))
     for (const r of rows) {
       lines.push([
         csvCell(r.donor), csvCell(industryLabel(r.industry)),
         r.total, r.parties, r.count, r.firstYear, r.lastYear,
-        csvCell(r.topParty), Math.round(r.topShare * 100),
+        csvCell(r.topParty), Math.round(r.topShare * 100), csvCell(r.return_reference || ''),
       ].join(','))
     }
   }
@@ -468,10 +469,9 @@ function dotLabel (colour, node) {
 
 function subjectLink (kind, label, donor) {
   const record=kind==='donor' ? donor : null
-  const presentation=record ? donorDisclosure(record) : {name:label,href:kind==='donor' ? null : subjectUrl(kind,label),reference:''}
+  const presentation=record ? donorDisclosure(record) : {name:label,href:kind==='donor' ? null : subjectUrl(kind,label)}
   const node=el(presentation.href ? 'a' : 'span',null,label)
   if(presentation.href) node.href=presentation.href
-  if(presentation.reference){const reference=el('small','donor-return-reference',presentation.reference);node.append(reference)}
   return node
 }
 

@@ -38,10 +38,8 @@
 .supplier-year-axis > span { position: absolute; top: 0; transform: translateX(-50%); white-space: nowrap; }
 .supplier-chart-data table td { font-variant-numeric: tabular-nums; }
 
-/* Blocks other modules draw on a supplier entry. The register reference reads on
-   in its sentence (its full stop no longer drops to a line of its own), and the
-   evidence and tax disclosures keep a 44px row. */
-.supplier-entry .growth-donor .donor-return-reference { display: inline; }
+/* Blocks other modules draw on a supplier entry: the evidence and tax
+   disclosures keep a 44px row. */
 .supplier-entry details:not(.ui-disclosure) > summary { min-height: var(--size-target); box-sizing: border-box; padding-block: 10px; }
 .supplier-entry details.evidence-excerpt > summary { padding-block: 0; align-items: center; }
 

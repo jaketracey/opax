@@ -1,5 +1,5 @@
 import {applyQuery, dataTableHTML, guardTableURL, mountDataTable, parseQuery} from './datatable.js?v=80ef910041';
-import {donorDisclosure} from './donor-disclosure.js?v=e91ef740e5';
+import {donorDisclosure} from './donor-disclosure.js?v=abb5e417dd';
 
 const esc = value => String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const date = value => /^\d{4}-\d{2}-\d{2}/.test(String(value || '')) ? String(value).slice(0, 10) : null;
@@ -97,13 +97,15 @@ export function partyMoneyData(graph, partyId) {
   return {rows:[...rows.values()]};
 }
 
+// The table's rows (and so the page's hydration JSON) leave out return_reference;
+// partyMoneyData keeps it for /api/register/party-money and the table API CSV.
 export function partyMoneyTableConfig(rows, id = 'party-money-table', urlKey = 'partyMoney', pageType = 'party') {
-  return {id,caption:'Disclosed donations',pageType,urlKey,pageSize:50,rows,
+  return {id,caption:'Disclosed donations',pageType,urlKey,pageSize:50,rows:rows.map(({return_reference,...row})=>row),
     defaultSort:{key:'total',dir:'desc'},export:{filename:'party-donations.csv'},
     columns:[{key:'label',label:'Donor',type:'text',primary:true},{key:'industry',label:'Industry',type:'category',facet:'multi'},
       {key:'total',label:'Given',type:'money',bar:true,format:'compact',facet:'range'},
       {key:'count',label:'Receipts',type:'count',facet:'range'},{key:'firstYear',label:'First year',type:'year'},
-      {key:'lastYear',label:'Last year',type:'year'},{key:'return_reference',label:'Return reference',type:'text'}],primaryLink:row=>row.href || null};
+      {key:'lastYear',label:'Last year',type:'year'}],primaryLink:row=>row.href || null};
 }
 
 /** The shared core owns query validation, pending states, history and CSV checks. */

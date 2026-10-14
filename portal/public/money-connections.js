@@ -1,4 +1,4 @@
-import {donorDisclosure} from './donor-disclosure.js?v=e91ef740e5';
+import {donorDisclosure} from './donor-disclosure.js?v=abb5e417dd';
 import {subjectUrl} from './canonical-urls.js?v=225d5915ea';
 import {moneyFlowType, filterMoneyEdges, readMoneyFilters} from './money-records.js';
 
@@ -13,8 +13,9 @@ export function filterMoneyConnectionView(graph,params) {
 export function moneyConnectionsConfig(graph) {
   const nodes=new Map(graph.nodes.map(n=>[n.id,n]));
   const rows=[],types=new Set();
-  const endpoint=node=>node.kind==='donor' ? donorDisclosure(node,{return_type:graph.meta?.source || 'Electoral disclosure return',url:graph.meta?.source_url})
-    :{name:node.label,reference:'',href:node.profileUrl?.startsWith('/subject/')?node.profileUrl
+  // Rows carry what the table shows; return references are in the table API and its CSV.
+  const endpoint=node=>node.kind==='donor' ? donorDisclosure(node)
+    :{name:node.label,href:node.profileUrl?.startsWith('/subject/')?node.profileUrl
       :['party','agency','supplier'].includes(node.kind)?subjectUrl(node.kind,node.label):null};
   for(const edge of graph.edges) {
     const from=nodes.get(edge.source),to=nodes.get(edge.target),type=moneyFlowType(edge,nodes);
@@ -22,7 +23,7 @@ export function moneyConnectionsConfig(graph) {
     types.add(type);
     const a=endpoint(from),b=endpoint(to);
     rows.push({type:labels[type],from:a.name,to:b.name,from_href:a.href,to_href:b.href,
-      return_reference:[a.reference,b.reference].filter(Boolean).join(' · '),value:edge.total,records:edge.count,
+      value:edge.total,records:edge.count,
       years:edge.firstYear?edge.firstYear===edge.lastYear?String(edge.firstYear):`${edge.firstYear}–${edge.lastYear || edge.firstYear}`:'Undated',
       receipts:type==='receipts'?edge.total:undefined,contracts:type==='contracts'?edge.total:undefined,grants:type==='grants'?edge.total:undefined,
       focusId:String(graph.nodes.indexOf(to))});
@@ -39,7 +40,6 @@ export function moneyConnectionsConfig(graph) {
       ...values,
       {key:'records',label:'Records',type:'count',facet:'range'},
       {key:'years',label:'Years',type:'text'},
-      {key:'return_reference',label:'Return reference',type:'text'},
     ],primaryLink:row=>row.to_href,
     actions:[{icon:'⌖',label:'Focus in map',href:row=>`#money-focus=${encodeURIComponent(row.focusId)}`}],
     export:{filename:'opax-map-connections.csv'}};

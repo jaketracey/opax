@@ -475,7 +475,6 @@ function partyList(rows: Array<{ node: MoneyNode; total: number }>, flow: Resolv
     const a=el(presentation.href ? 'a' : 'span')
     if(presentation.href) a.setAttribute('href',presentation.href)
     a.textContent=presentation.name
-    if(presentation.reference) a.append(el('small','donor-return-reference',presentation.reference))
     const amount = el('b', '', helpers.fmtMoney(row.total))
     li.append(a, amount)
     list.append(li)

@@ -75,10 +75,13 @@ export function personSpeechCount(p) {
  return p.speech_count_basis ? 'Count pending exact export; own-house, in-service speeches.' : `${p.speeches.toLocaleString()} indexed speeches.`;
 }
 
+// Return references stay in the record's source url and the data export; the
+// snippet a result shows carries no raw reference text.
+const industrySentence=industry=>{const text=String(industry||'').replaceAll('_',' ').trim();return text ? text[0].toUpperCase()+text.slice(1)+'. ' : ''};
 export function donorSearchRecord(jur, node) {
  const disclosure=donorDisclosure(node);
  return {key:jur+':'+node.id,kind:'donor',title:disclosure.name,href:disclosure.href,
-  snippet:node.kind==='reference' ? `${disclosure.reference} ${node.source_note}` : `${disclosure.reference} ${(node.industry||'').replaceAll('_',' ')}. ${cash(node.total||0)} in disclosed political receipts across ${(node.count||0).toLocaleString()} records.`,
+  snippet:node.kind==='reference' ? node.source_note || '' : `${industrySentence(node.industry)}${cash(node.total||0)} in disclosed political receipts across ${(node.count||0).toLocaleString()} records.`,
   extra:{aliases:[...(node.aliases||[]),...(node.lookup_names||[]),node.abn||''].join(' '),from:node.firstYear,to:node.lastYear,state:jur,source:jur==='federal'?'AEC disclosure records':`${jur.toUpperCase()} disclosure records`,dateLabel:period(node.firstYear,node.lastYear),url:disclosure.returns[0]?.url || null,...(node.source_note?{source_note:node.source_note}:{})}};
 }
 
@@ -92,7 +95,7 @@ async function main() {
   donorRecords.push(...graph.nodes.filter(n=>n.kind==='donor').map(n=>({...n,jurisdiction:jur})));
   for(const n of graph.nodes.filter(n=>n.kind==='donor'||n.kind==='party')) {
    if(n.kind==='donor'){const r=donorSearchRecord(jur,n);add(r.key,r.kind,r.title,r.href,r.snippet,r.extra);continue;}
-   add(jur+':'+n.id,n.kind==='donor'?'donor':'party',n.label,n.kind==='party'?'/subject/party/'+personSlug(n.label):donorDisclosure(n).href,`${n.kind==='donor'?donorDisclosure(n).reference:''} ${(n.industry||'').replaceAll('_',' ')}. ${cash(n.total||0)} in disclosed political receipts across ${(n.count||0).toLocaleString()} records.`,{aliases:[...(n.aliases||[]),n.abn||''].join(' '),from:n.firstYear,to:n.lastYear,state:jur,parties:n.kind==='party'?[n.label]:[],source:jur==='federal'?'AEC disclosure records':`${jur.toUpperCase()} disclosure records`,dateLabel:period(n.firstYear,n.lastYear)});
+   add(jur+':'+n.id,n.kind==='donor'?'donor':'party',n.label,n.kind==='party'?'/subject/party/'+personSlug(n.label):donorDisclosure(n).href,`${industrySentence(n.industry)}${cash(n.total||0)} in disclosed political receipts across ${(n.count||0).toLocaleString()} records.`,{aliases:[...(n.aliases||[]),n.abn||''].join(' '),from:n.firstYear,to:n.lastYear,state:jur,parties:n.kind==='party'?[n.label]:[],source:jur==='federal'?'AEC disclosure records':`${jur.toUpperCase()} disclosure records`,dateLabel:period(n.firstYear,n.lastYear)});
   }
   for(const [i,e] of graph.edges.entries()) {
    const a=byId.get(e.source),b=byId.get(e.target), flow=moneyFlowType(e,byId); if(!a||!b||!flow)continue;
@@ -101,7 +104,7 @@ async function main() {
     add(`${jur}:${flow}-connection:${i}`,kind,`${b.label} — ${kind} connection`,'/money?'+new URLSearchParams({jur,q:b.label,type:flow}),`${cash(e.total)} across ${e.count||0} ${kind} records from ${a.label}. Aggregated map connection; individual notices may also appear separately in search.`,{aliases:[...(b.aliases||[]),b.abn||''].join(' '),from:e.firstYear,to:e.lastYear,state:jur,source:flow==='contracts'?'Public contract map aggregate':'Public grant map aggregate',dateLabel:period(e.firstYear,e.lastYear)});
     continue;
    }
-   add(`${jur}:receipt:${i}`,'receipt',`${a.label} → ${b.label}`,'/money?'+new URLSearchParams({jur,q:a.label,party:b.id,type:'receipts'}),`${donorDisclosure(a).reference} ${cash(e.total)} in disclosed political receipts; ${e.count||0} records. Aggregated connection, not an individual gift. ${(a.industry||'').replaceAll('_',' ')}.`,{aliases:(a.aliases||[]).join(' '),from:e.firstYear,to:e.lastYear,state:jur,parties:[b.label],source:jur==='federal'?'AEC disclosure records':`${jur.toUpperCase()} disclosure records`,dateLabel:period(e.firstYear,e.lastYear)});
+   add(`${jur}:receipt:${i}`,'receipt',`${a.label} → ${b.label}`,'/money?'+new URLSearchParams({jur,q:a.label,party:b.id,type:'receipts'}),`${cash(e.total)} in disclosed political receipts; ${e.count||0} records. Aggregated connection, not an individual gift. ${industrySentence(a.industry)}`.trim(),{aliases:(a.aliases||[]).join(' '),from:e.firstYear,to:e.lastYear,state:jur,parties:[b.label],source:jur==='federal'?'AEC disclosure records':`${jur.toUpperCase()} disclosure records`,dateLabel:period(e.firstYear,e.lastYear)});
   }
  }
  for(const node of (await read('graph/donor-index.json')).donors || []){const r=donorSearchRecord(node.jurisdiction || 'federal',node);add(r.key,r.kind,r.title,r.href,r.snippet,r.extra);}
@@ -152,8 +155,8 @@ async function main() {
  const access=await read('access.json'),donorNames=donorLookup(donorRecords);
  const accessDonor=name=>donorDisclosure(donorNames.get(normalize(name)) || {label:name});
  for(const [name,d] of Object.entries(access.donors)) {
-  for(const [i,m] of (d.meetings||[]).entries()) add(`meeting:${name}:${i}`,'access',`${name} — meeting with ${m.minister}`,accessDonor(name).href,[accessDonor(name).reference,m.purpose||'Recorded ministerial meeting'].filter(Boolean).join(' · '),{date:m.date,state:m.jurisdiction,speakers:[m.minister],source:'Ministerial diary'});
-  for(const [i,l] of (d.lobbyists||[]).entries()) add(`lobbyist:${name}:${i}`,'access',`${name} — ${l.firm}`,accessDonor(name).href,`${accessDonor(name).reference} Registered lobbying client. ${l.ceased?'Ceased':'Listed'} registration.`,{state:normalize(l.jurisdiction)==='federal'?'federal':normalize(l.jurisdiction),date:l.registered,source:'Lobbyist register'});
+  for(const [i,m] of (d.meetings||[]).entries()) add(`meeting:${name}:${i}`,'access',`${name} — meeting with ${m.minister}`,accessDonor(name).href,m.purpose||'Recorded ministerial meeting',{date:m.date,state:m.jurisdiction,speakers:[m.minister],source:'Ministerial diary'});
+  for(const [i,l] of (d.lobbyists||[]).entries()) add(`lobbyist:${name}:${i}`,'access',`${name} — ${l.firm}`,accessDonor(name).href,`Registered lobbying client. ${l.ceased?'Ceased':'Listed'} registration.`,{state:normalize(l.jurisdiction)==='federal'?'federal':normalize(l.jurisdiction),date:l.registered,source:'Lobbyist register'});
  }
  for(const [id,m] of Object.entries(access.ministers)) for(const [i,r] of (m.recent||[]).entries()) add(`minister-meeting:${id}:${i}`,'access',`${m.name} — ${r.org}`,personHref(m.page||m.name),r.purpose||'Recorded ministerial meeting',{date:r.date,state:m.jurisdiction,speakers:[m.name],source:'Ministerial diary'});
  const fits=await read('fits.json');

@@ -1,5 +1,5 @@
-import {donorDisclosure,donorLookup,donorDisplayText,donorLabelHTML} from './donor-disclosure.js?v=e91ef740e5';
-import {loadDonorViewIndex} from './donor-views.js?v=e93169e00b';
+import {donorDisclosure,donorLookup,donorDisplayText,donorLabelHTML} from './donor-disclosure.js?v=abb5e417dd';
+import {loadDonorViewIndex} from './donor-views.js?v=eb3ec114b2';
 import {subjectUrl} from './canonical-urls.js?v=225d5915ea';
 /*
  * The record quiz — a MindMaze-spirited quiz over OPAX's real data.
@@ -143,7 +143,7 @@ function moneyLink(industry) {
     ? { href: "/money?industry=" + encodeURIComponent(industry), label: "Open this industry on the money map" }
     : MONEY_LINK;
 }
-function donorProof(record) {const view=donorDisclosure(record);return {href:view.href || '/graph/money.json',label:view.href ? 'Donor disclosure profile' : view.reference || 'Disclosure data export'}}
+function donorProof(record) {const view=donorDisclosure(record);return {href:view.href || '/graph/money.json',label:view.href ? 'Donor disclosure profile' : view.returns.length ? 'Disclosure return' : 'Disclosure data export'}}
 function subjectLink(kind, label) {
   return { href: subjectUrl(kind,label), label: "Open " + label + " in the record" };
 }

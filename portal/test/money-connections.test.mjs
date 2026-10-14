@@ -33,21 +33,22 @@ import {JSDOM} from 'jsdom';
 import {dataTableHTML,toCSV,mountDataTable} from '../public/datatable.js';
 import {renderMoneyConnectionsTable} from '../src/money-connections-table.ts';
 import {tableHarness} from './datatable-harness.mjs';
-for(const confident of [false,true])test((confident?'confident':'uncertain')+': source spelling, return reference and links agree in config, SSR, hydration and CSV',async()=>{
+for(const confident of [false,true])test((confident?'confident':'uncertain')+': source spelling and links agree in config, SSR, hydration and CSV; the return reference stays data, never a column',async()=>{
  const donor={id:'donor:fixture',label:'Canonical fixture',source_name:'EXAMPLE, ALEX',kind:'donor',
   returnReferences:[{return_type:'AEC annual return',year:'2024-25',return_id:'RETURN-7'}],
   match:{confidence:confident?1:0.8,method:confident?'exact':'rule',href:'/subject/person/fixture'}};
  const party={id:'party:fixture',label:'Fixture party',kind:'party'};
  const data={nodes:[donor,party],edges:[{source:donor.id,target:party.id,total:120,count:1,firstYear:2024,lastYear:2024}]};
  function verify(html){
-  const doc=new JSDOM(html).window.document;assert.ok(doc.body.textContent.includes(donor.source_name));
-  assert.ok(doc.body.textContent.includes('AEC annual return'));assert.ok(doc.body.textContent.includes('2024-25'));assert.ok(doc.body.textContent.includes('RETURN-7'));
+  const doc=new JSDOM(html).window.document,shown=doc.body.cloneNode(true);shown.querySelectorAll('script,template').forEach(n=>n.remove());
+  assert.ok(shown.textContent.includes(donor.source_name));assert.doesNotMatch(shown.textContent,/AEC annual return|RETURN-7|Return reference/);
   const links=[...doc.querySelectorAll('a')].filter(a=>a.textContent===donor.source_name);
   assert.equal(links.length,confident?1:0);if(confident)assert.equal(links[0].getAttribute('href'),donor.match.href);
  }
  const config=moneyConnectionsConfig(data),page=applyQuery(config.rows,config,{});
  verify(dataTableHTML(config,page));
- const csv=toCSV(config.rows,config);assert.ok(csv.includes('EXAMPLE, ALEX'));assert.ok(csv.includes('RETURN-7'));
+ const csv=toCSV(config.rows,config);assert.ok(csv.includes('EXAMPLE, ALEX'));
+ assert.ok(!('return_reference' in config.rows[0]));assert.ok(!config.columns.some(c=>c.key==='return_reference'));
  verify(await renderMoneyConnectionsTable(new URL('https://fixture.test/money'),async()=>data));
  const h=tableHarness();let requests=0;h.win.fetch=async()=>{requests++;throw Error('unexpected privacy request');};
  const mounted=mountDataTable(h.root,config);await new Promise(setImmediate);verify(h.html());assert.equal(requests,0);mounted.destroy();
