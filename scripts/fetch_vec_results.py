@@ -14,7 +14,9 @@ from pathlib import Path
 VEC = 'https://www.vec.vic.gov.au'
 INDEX = VEC + '/results/state-election-results/2022-state-election-results'
 BY_ELECTIONS = VEC + '/results/state-election-results/state-by-elections-timeline'
-UA = 'Mozilla/5.0 (OPAX research; corrections@opax.com.au)'
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+from parli.ingest import http as source_http
+UA = source_http.USER_AGENT
 OUT = Path(__file__).parent / 'hubs' / 'vic-results-2022.json'
 # Held since the 26 November 2022 general election. The Narracan supplementary
 # election replaced its 2022 district poll, which failed when a candidate died.
@@ -37,8 +39,8 @@ def fetch(url, cache):
     name = re.sub(r'[^a-z0-9]+', '-', url.lower().split('vec.vic.gov.au', 1)[1]).strip('-') + '.html'
     path = cache / name
     if not path.exists():
-        req = urllib.request.Request(url, headers={'User-Agent': UA})
-        with urllib.request.urlopen(req, timeout=60) as r:
+        req = source_http.Request(url, headers={'User-Agent': UA})
+        with source_http.urlopen(req, timeout=60) as r:
             path.write_bytes(r.read())
         time.sleep(0.5)
     body = path.read_bytes()

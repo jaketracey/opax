@@ -117,6 +117,7 @@
 
   /** The group a path belongs to; null for Home, Ask, Search and records. */
   const active = (path, params = new URLSearchParams()) => {
+    if (path === '/register/state-bills') return 'parliament';
     if (/^\/(money|map|discover|connections)(\/|$)/.test(path)) return 'money';
     if (/^\/subject\/(donor|supplier|agency|campaigner)(\/|$)/.test(path)) return 'money';
     if (path === '/explore') return ['ledger','grants','wd'].includes(params.get('game')) ? 'money' : 'research';

@@ -1,0 +1,142 @@
+{
+  "preview": "Local Miniflare Worker with disk-backed promoted assets; external requests disabled",
+  "results": [
+    {
+      "route": "/register/state-bills",
+      "width": 390,
+      "status": 200,
+      "horizontalOverflow": false
+    },
+    {
+      "route": "/register/state-bills",
+      "width": 1440,
+      "status": 200,
+      "horizontalOverflow": false
+    },
+    {
+      "route": "/register/state-bills?jurisdiction=tas&parliament=52",
+      "width": 390,
+      "status": 200,
+      "horizontalOverflow": false
+    },
+    {
+      "route": "/register/state-bills?jurisdiction=tas&parliament=52",
+      "width": 1440,
+      "status": 200,
+      "horizontalOverflow": false
+    },
+    {
+      "route": "/register/state-bills?jurisdiction=act&parliament=11",
+      "width": 390,
+      "status": 200,
+      "horizontalOverflow": false
+    },
+    {
+      "route": "/register/state-bills?jurisdiction=act&parliament=11",
+      "width": 1440,
+      "status": 200,
+      "horizontalOverflow": false
+    },
+    {
+      "route": "/register/state-bills?bill=au-tas-2026-45",
+      "width": 390,
+      "status": 200,
+      "horizontalOverflow": false
+    },
+    {
+      "route": "/register/state-bills?bill=au-tas-2026-45",
+      "width": 1440,
+      "status": 200,
+      "horizontalOverflow": false
+    },
+    {
+      "route": "/register/state-bills?bill=au-act-11-212d52b5ccc9428a",
+      "width": 390,
+      "status": 200,
+      "horizontalOverflow": false
+    },
+    {
+      "route": "/register/state-bills?bill=au-act-11-212d52b5ccc9428a",
+      "width": 1440,
+      "status": 200,
+      "horizontalOverflow": false
+    }
+  ],
+  "javaScriptDisabled": true,
+  "nativeFilterAndDetail": true,
+  "pageErrors": [],
+  "assets": {
+    "tas": {
+      "bytes": 1584970,
+      "sha256": "fa33c7454f8867b5ff022e3a354176b3b513dfbb6e0ca0c33ef7418e5b4e99d8",
+      "promotion": {
+        "counts": {
+          "bills": 157,
+          "parliaments": {
+            "51": 80,
+            "52": 77
+          },
+          "statuses": {
+            "before_parliament": 34,
+            "passed": 7,
+            "assented": 82,
+            "negatived": 6,
+            "lapsed": 27,
+            "unknown": 1
+          },
+          "events": 1323,
+          "document_links": 703,
+          "held_bodies": 703,
+          "linked_sponsors": 0,
+          "missing_sponsors": 0,
+          "gaps": 0
+        },
+        "snapshot_date": "2026-10-14",
+        "input_sha256": "7914c24269e8f79411ee657e13f3507d9908db0ef3bb1d94c8aba43bea41111f",
+        "inputs": {
+          "inventory.json": "602754cc1be29cdb486d0eeec6eba4b4bceec4c221d557ca9613bb43b20609e2",
+          "receipts.json": "e49bcbaad7efad0e759097737144548f77b51f32f3e56179a7ba4cced37ca7fe",
+          "hub.json": "7914c24269e8f79411ee657e13f3507d9908db0ef3bb1d94c8aba43bea41111f",
+          "acquisition-notes.json": "4bbaa97258b22830a5e110764975ce8aae48b5805fff1049997cc7250d90606a"
+        },
+        "reviewed_commit": "b6dc2095cfb973a4693fc631110aabc1ef96cb67"
+      }
+    },
+    "act": {
+      "bytes": 2387933,
+      "sha256": "fb9322ad1d1be99654f11ef94c50a92ed32fcee902ababa0f7f897b2be568f25",
+      "promotion": {
+        "counts": {
+          "bills": 262,
+          "parliaments": {
+            "10": 183,
+            "11": 79
+          },
+          "statuses": {
+            "before_parliament": 22,
+            "passed": 222,
+            "withdrawn": 3,
+            "negatived": 6,
+            "lapsed": 8,
+            "unknown": 1
+          },
+          "events": 933,
+          "document_links": 1804,
+          "held_bodies": 1804,
+          "linked_sponsors": 0,
+          "missing_sponsors": 3,
+          "gaps": 12
+        },
+        "snapshot_date": "2026-10-14",
+        "input_sha256": "6ff47bd6dc42140067a01e8c111be8ef03c92802f620dbe84ea3aa0669c4f2de",
+        "inputs": {
+          "inventory.json": "7b1628e1345c917c8c9b917401fe20c965166b4acae6de210bacfdb21c29384f",
+          "receipts.json": "72f89db4f48ba09a9cee411e11acadb94ad2f5225ae42b428e19aaa42e519a26",
+          "hub.json": "6ff47bd6dc42140067a01e8c111be8ef03c92802f620dbe84ea3aa0669c4f2de",
+          "acquisition-notes.json": "5ca11504fa063d3d62057c71ae5e099fe1736994e6c865c901c43a17267b8601"
+        },
+        "reviewed_commit": "b6dc2095cfb973a4693fc631110aabc1ef96cb67"
+      }
+    }
+  }
+}

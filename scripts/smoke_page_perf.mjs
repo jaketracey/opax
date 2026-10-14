@@ -4,6 +4,8 @@
 // TTFB (time to response headers), x-opax-cache and the Server-Timing total.
 // Fails if any first GET takes over 3 s, or a second (warm) person GET over 800 ms.
 // Read-only public GETs; no Ask, generation or auth route is touched.
+import {readFileSync} from 'node:fs'
+const userAgent=JSON.parse(readFileSync(new URL('../parli/ingest/user-agent.json',import.meta.url),'utf8')).user_agent
 const COLD_LIMIT_MS = 3000
 const WARM_PERSON_LIMIT_MS = 800
 const PAGES = [
@@ -23,7 +25,7 @@ if (!base || !/^https?:\/\//.test(base)) {
 
 async function get(url) {
   const started = performance.now()
-  const response = await fetch(url, {headers:{'user-agent':'opax-page-perf-smoke/1', accept:'text/html'}, redirect:'manual'})
+  const response = await fetch(url, {headers:{'user-agent':userAgent, accept:'text/html'}, redirect:'manual'})
   const ttfb = performance.now() - started
   await response.arrayBuffer()
   const total = /(?:^|,\s*)total;dur=([\d.]+)/.exec(response.headers.get('server-timing') || '')?.[1]

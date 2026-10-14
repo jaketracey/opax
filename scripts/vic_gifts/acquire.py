@@ -17,6 +17,7 @@ import urllib.request
 from urllib.parse import urljoin, urlsplit
 
 from bs4 import BeautifulSoup
+from parli.ingest import http as source_http
 
 ROOT = Path(__file__).resolve().parents[2]
 ORIGIN = "https://www.vic.gov.au"
@@ -109,7 +110,8 @@ class Collector:
         started = datetime.now(timezone.utc).isoformat()
         headers, status, body, error = {}, None, b"", None
         try:
-            r = self.opener.open(urllib.request.Request(url, headers={"User-Agent": self.ua}), timeout=30)
+            source_http.ensure_allowed(url)
+            r = self.opener.open(source_http.Request(url, headers={"User-Agent": self.ua}), timeout=30)
             status, headers, body = r.status, dict(r.headers), r.read()
         except urllib.error.HTTPError as exc:
             status, headers, body = exc.code, dict(exc.headers), exc.read()

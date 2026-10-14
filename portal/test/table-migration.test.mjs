@@ -1,15 +1,15 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFile} from 'node:fs/promises';
-import {Miniflare, convertV4MiniflareOptions} from 'miniflare';
+import {localMiniflare} from './local-miniflare.mjs';
 import {tableSchema, tableName} from '../../scripts/table-schema.mjs';
 import {TABLE_DATASETS} from '../src/table-datasets.mjs';
 
 test('an existing 0001 D1 database upgrades without losing procurement records', async () => {
-  const mf = new Miniflare(convertV4MiniflareOptions({workers:[{
+  const mf = localMiniflare({workers:[{
     name:'upgrade', modules:true, script:'export default {fetch(){return new Response("local")}}',
     compatibilityDate:'2026-09-01', d1Databases:{TABLE_DB:'upgrade-test', FRESH_DB:'fresh-test'},
-  }]}));
+  }]});
   try {
     const db = await mf.getD1Database('TABLE_DB', 'upgrade');
     const fresh = await mf.getD1Database('FRESH_DB', 'upgrade');

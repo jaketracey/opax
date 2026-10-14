@@ -17,6 +17,7 @@ import urllib.request
 from urllib.parse import urlsplit
 
 from scripts.vic_gifts.acquire import NoRedirect, is_challenge, robots_rules
+from parli.ingest import http as source_http
 
 ROOT = Path(__file__).resolve().parents[2]
 ORIGINS = {"tas": "https://www.parliament.tas.gov.au", "act": "https://www.parliament.act.gov.au"}
@@ -85,7 +86,8 @@ class Collector:
         started = datetime.now(timezone.utc).isoformat()
         status, headers, data, error = None, {}, b"", None
         try:
-            with self.opener.open(urllib.request.Request(url, headers={"User-Agent": self.ua}), timeout=30) as response:
+            source_http.ensure_allowed(url)
+            with self.opener.open(source_http.Request(url, headers={"User-Agent": self.ua}), timeout=30) as response:
                 status, headers, data = response.status, dict(response.headers), response.read()
         except urllib.error.HTTPError as exc:
             status, headers, data = exc.code, dict(exc.headers), exc.read()

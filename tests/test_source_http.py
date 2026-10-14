@@ -351,6 +351,15 @@ def test_repository_cannot_reintroduce_browser_identity_or_bypass_flag():
     assert not (failures := scan(ROOT)), '\n'.join(failures)
 
 
+def test_staged_receipts_retain_only_the_shared_identifying_agent():
+    from scripts.source_access_guard import violations
+    name = 'data/staged/bills-act/receipts.json'
+    assert not violations(name, json.dumps({'user_agent': http.USER_AGENT}))
+    assert violations(name, json.dumps({'user_agent': 'ArbitraryBot/1.0'}))
+    assert violations(name, json.dumps({'user_agent': 'Mozilla' + '/5.0'}))
+    assert violations('scripts/fixture.py', json.dumps({'user_agent': http.USER_AGENT}))
+
+
 def test_python_fetch_paths_cannot_bypass_shared_transport():
     paths = [*(ROOT / 'parli/ingest').glob('*.py'), *(ROOT / 'scripts').rglob('*.py'), ROOT / 'download_hansard.py', ROOT / 'download_hansard_fast.py']
     direct = {'requests.Session', 'requests.get', 'requests.post', 'requests.request', 'urllib.request.Request', 'urllib.request.urlopen'}

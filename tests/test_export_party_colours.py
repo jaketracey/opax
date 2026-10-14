@@ -50,14 +50,15 @@ class PartyColourTests(unittest.TestCase):
                 with sqlite3.connect(path) as db:
                     db.executescript("""
                         CREATE TABLE donations(donor_name, recipient_canonical, amount, financial_year,
-                            industry, donor_type, donation_type);
+                            industry, donor_type, donation_type, source, donation_id);
                         CREATE TABLE ext_donations(donor_name, recipient_party, amount, financial_year,
-                            industry, donor_type, disclosure_type, is_political_donation, election, jurisdiction);
+                            industry, donor_type, disclosure_type, is_political_donation, election, jurisdiction,
+                            source, source_record_id, source_url);
                     """)
                     for n in party_nodes:
                         args = ("Fixture donor", n["label"], n["total"], "2025-26", "finance", "company")
-                        db.execute("INSERT INTO donations VALUES (?,?,?,?,?,?,?)", (*args, "donation"))
-                        db.execute("INSERT INTO ext_donations VALUES (?,?,?,?,?,?,?,?,?,?)",
+                        db.execute("INSERT INTO donations (donor_name,recipient_canonical,amount,financial_year,industry,donor_type,donation_type) VALUES (?,?,?,?,?,?,?)", (*args, "donation"))
+                        db.execute("INSERT INTO ext_donations (donor_name,recipient_party,amount,financial_year,industry,donor_type,disclosure_type,is_political_donation,election,jurisdiction) VALUES (?,?,?,?,?,?,?,?,?,?)",
                                    (*args, "gift", 1, None, jurisdiction))
                 def run():
                     out = io.StringIO()
