@@ -44,6 +44,7 @@ try {
       await load(example);
       assert.equal(await page.locator('.dt-count').textContent(),example === 'filtered' ? 'Showing 1–4 of 4' : example === 'empty' ? 'Showing 0–0 of 0' : 'Showing 1–5 of 9');
       assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth <= innerWidth),`${width}: page overflow`);
+      if(width === 1280) assert.ok(await page.locator('.dt-scroll').evaluate(el=>el.scrollWidth <= el.clientWidth && el.scrollHeight <= el.clientHeight && getComputedStyle(el).maxHeight === 'none'),'1280: no nested scroll box');
       await page.screenshot({path:resolve(outputDir,`${example}-${width}.png`),fullPage:true});
     }
   }
@@ -92,9 +93,12 @@ try {
   });
   const stats=values=>{const sorted=[...values].sort((a,b)=>a-b);return {min:sorted[0],median:(sorted[Math.floor((sorted.length-1)/2)]+sorted[Math.floor(sorted.length/2)])/2,max:sorted.at(-1)};};timings.pureStats=stats(timings.pure);timings.filterStats=stats(timings.filter);await writeFile(resolve(outputDir,'timings.json'),JSON.stringify(timings,null,2)+'\n');assert.ok(timings.filterStats.median < 150,'2,000-row filtering median must stay below 150ms');
   await page.setViewportSize({width:390,height:1000});await load('default');await page.locator('[data-sort-select]').selectOption('amount:asc');await settled();
-  for(const label of ['Amount','Returns','Year']) assert.equal(await page.locator(`td[data-label="${label}"]`).first().evaluate(el=>getComputedStyle(el).textAlign),'start');assert.equal(await page.locator('.dt-bar-track').first().evaluate(el=>getComputedStyle(el).display),'none');assert.equal(await page.locator('.dt-number').first().evaluate(el=>getComputedStyle(el).fontVariantNumeric),'tabular-nums');
+  for(const label of ['Amount','Returns','Year']) assert.equal(await page.locator(`td[data-label="${label}"]`).first().evaluate(el=>getComputedStyle(el).textAlign),'end');assert.equal(await page.locator('.dt-bar-track').first().evaluate(el=>getComputedStyle(el).display),'none');
+  const scroller=await page.locator('.dt-scroll').evaluate(el=>{const cs=getComputedStyle(el),first=el.querySelector('tbody td');el.scrollLeft=el.scrollWidth;return {maxHeight:cs.maxHeight,overflowX:cs.overflowX,scrolls:el.scrollWidth>el.clientWidth,vertical:el.scrollHeight-el.clientHeight,position:getComputedStyle(first).position,pinned:Math.round(first.getBoundingClientRect().left-el.getBoundingClientRect().left)};});
+  assert.deepEqual(scroller,{maxHeight:'none',overflowX:'auto',scrolls:true,vertical:0,position:'sticky',pinned:0},'phone tables scroll sideways inside .dt-scroll with the first column held');
+  assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth <= innerWidth),'390: page overflow');assert.equal(await page.locator('.dt-number').first().evaluate(el=>getComputedStyle(el).fontVariantNumeric),'tabular-nums');
   assert.deepEqual(errors,[]);assert.deepEqual(blocked,[]);
-  const result={server:'wrangler dev --local',screenshots:8,viewports:[390,1280],timings,checks:['served fonts','sort/icons','facet retention/focus','row menu Escape/identity','search','ranges/chips','paging/live region','density/visibility','unprefixed URL/popstate/canonical/noindex','actual client/server CSV','server cap/note','analytics','failure/retry','phone alignment/bars','2000-row performance'],pageErrors:errors,blockedExternalRequests:blocked.length};await writeFile(resolve(outputDir,'browser-results.json'),JSON.stringify(result,null,2)+'\n');console.log(JSON.stringify(result));
+  const result={server:'wrangler dev --local',screenshots:8,viewports:[390,1280],timings,checks:['served fonts','sort/icons','facet retention/focus','row menu Escape/identity','search','ranges/chips','paging/live region','density/visibility','unprefixed URL/popstate/canonical/noindex','actual client/server CSV','server cap/note','analytics','failure/retry','phone alignment/bars/sticky first column','no nested scroll box','2000-row performance'],pageErrors:errors,blockedExternalRequests:blocked.length};await writeFile(resolve(outputDir,'browser-results.json'),JSON.stringify(result,null,2)+'\n');console.log(JSON.stringify(result));
 } finally {
   await browser?.close();dev.kill('SIGTERM');await Promise.race([new Promise(done=>dev.once('exit',done)),new Promise(done=>setTimeout(done,5000))]);if(dev.exitCode == null && dev.signalCode == null) dev.kill('SIGKILL');await writeFile(resolve(outputDir,'wrangler-dev.log'),devLog);
 }

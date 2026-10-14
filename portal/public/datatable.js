@@ -254,6 +254,9 @@ function constants(config, page, query) {
 }
 
 // The same 20px stroke icons used by the design-system search/disclosure controls.
+// Cells wrap between words; only a single unbroken run this long (a URL, a
+// hash) may break anywhere, so it cannot widen the table past its column.
+const longToken = /\S{25}/;
 const icon = kind => `<svg class="dt-icon dt-icon-${kind}" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="${kind === 'chevron' ? 'm5 7 5 5 5-5' : kind === 'asc' ? 'M10 16V4m-4 4 4-4 4 4' : kind === 'desc' ? 'M10 4v12m-4-4 4 4 4-4' : 'm6 7 4-4 4 4M10 3v14m-4-4 4 4 4-4'}"/></svg>`;
 const summary = label => `<summary>${esc(label)}${icon('chevron')}</summary>`;
 function menuIdentity(row, identities) {
@@ -325,7 +328,7 @@ function render(config, page, query = {}, view = {}, error = '') {
     const exact = numeric(column) && n != null ? column.type === 'money' ? money.format(n) : decimal.format(n) : display;
     const link = column.href ? href(column.href(row),config) : column.primary && config.primaryLink ? href(config.primaryLink(row),config) : null;
     const bar = column.bar && n != null && maxima[column.key] ? `<span class="dt-bar-track" aria-hidden="true"><span class="dt-bar" style="--dt-bar:${Math.min(100,Math.round(Math.abs(n) / maxima[column.key] * 100))}%"></span></span>` : '';
-    return `<td role="cell" data-label="${esc(column.label)}" data-align="${esc(column.align || (numeric(column) ? 'end' : 'start'))}"${column.primary ? ' data-primary' : ''}${column === prominence ? ' data-prominent' : ''}${numeric(column) ? ' class="dt-number"' : ''} title="${esc(exact)}"><span class="dt-value">${link ? `<a href="${esc(link)}">${esc(display)}</a>` : esc(display) || '—'}</span>${bar}</td>`;
+    return `<td role="cell" data-label="${esc(column.label)}" data-align="${esc(column.align || (numeric(column) ? 'end' : 'start'))}"${column.primary ? ' data-primary' : ''}${column === prominence ? ' data-prominent' : ''}${numeric(column) ? ' class="dt-number"' : column.type === 'date' ? ' class="dt-date"' : longToken.test(display) ? ' class="dt-long"' : ''} title="${esc(exact)}"><span class="dt-value">${link ? `<a href="${esc(link)}">${esc(display)}</a>` : esc(display) || '—'}</span>${bar}</td>`;
   }).join('')}${config.actions?.length ? `<td role="cell" class="dt-actions"><details class="dt-panel" data-panel="action-${menuIdentity(row,menuIdentities)}"><summary aria-label="Actions" title="Actions"><span aria-hidden="true">⋯</span></summary><div>${config.actions.map(action => {
     const target = href(action.href(row),config);
     return target ? `<a href="${esc(target)}"><span aria-hidden="true">${esc(action.icon)}</span> ${esc(action.label)}</a>` : '';

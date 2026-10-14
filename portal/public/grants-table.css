@@ -3,14 +3,10 @@
 [data-grants-table] { min-width: 0; margin-block: var(--space-group); }
 [data-grants-table] .dt { width: 100%; font: var(--type-metadata); color: var(--ink); }
 [data-grants-table] .dt caption { text-align: start; font: var(--type-heading); padding-block: var(--space-heading); }
-[data-grants-table] .dt :is(th, td) { text-align: start; padding: var(--space-row) var(--space-tight); border-bottom: var(--border-hairline) solid var(--divider-subtle); overflow-wrap: anywhere; }
+[data-grants-table] .dt :is(th, td) { text-align: start; padding: var(--space-row) var(--space-tight); border-bottom: var(--border-hairline) solid var(--divider-subtle); overflow-wrap: break-word; word-break: normal; }
 [data-grants-table] .dt td { font-variant-numeric: tabular-nums; }
 [data-grants-table] .dt a { color: var(--money-ink); text-decoration-color: var(--money-ink); }
 [data-grants-table] .dt [data-align="end"] { text-align: end; }
-
-@media (max-width: 599px) {
-  [data-grants-table] .dt { table-layout: fixed; }
-}
 
 @media (min-width: 600px) {
   [data-grants-table] .dt th { white-space: nowrap; }

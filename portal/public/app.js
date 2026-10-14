@@ -13,14 +13,14 @@ const donorNameHTML = name => donorLabelHTML(disclosedDonor(name));
 
 "use strict";
 let voteTables;
-const voteTablesReady = import("/vote-tables.js?v=e3a3583537").then(module => { voteTables = module; });
+const voteTablesReady = import("/vote-tables.js?v=3b2c5c83e3").then(module => { voteTables = module; });
 let divisionMarkdown;
 const divisionMarkdownReady = import('/division-markdown.js?v=5991511166').then(module => { divisionMarkdown = module; });
 // The labels and source lines (labels.js); the first render waits for them.
 let growthModules;
 const growthModulesReady = import("/growth-modules.js?v=ec5f501ce7").then(module => { growthModules = module; });
 let registerTables;
-const registerTablesReady = import('/register-tables.js?v=58ad18bbee').then(module => { registerTables = module; });
+const registerTablesReady = import('/register-tables.js?v=9e10b45e69').then(module => { registerTables = module; });
 let askPerson;
 const askPersonReady = import('/ask-person.js?v=7cb76e395c').then(module => { askPerson = module; });
 let uiLabels;
@@ -1339,7 +1339,7 @@ async function renderDiscoveryPage(params, manageFocus) {
   slot.innerHTML = '<p role="status">Loading contracts…</p>';
   const seedNode = document.querySelector('#prerender [data-contracts-seed]');
   const seed = seedNode ? JSON.parse(seedNode.textContent) : null;
-  import('/contracts-table.js?v=d387ebc06d').then(async ({mountContractsTable}) => {
+  import('/contracts-table.js?v=8cf20d9253').then(async ({mountContractsTable}) => {
     if (tableGeneration !== contractsTableGeneration) return;
     const handle = await mountContractsTable(slot, {seed: seed?.supplierId === null ? seed : undefined, signal: tableController.signal});
     if (tableGeneration === contractsTableGeneration) contractsTableHandle = handle; else handle.destroy();
@@ -1492,7 +1492,7 @@ async function openMoneyRecords(kind, params) {
   const body = $('money-records-body'); body.innerHTML = '<p class="status">Loading the records…</p>';
   try {
     if (grants && !params.has('program') && !params.has('open') && !params.has('largest')) {
-      const mod = await import('/grants-table.js?v=fc26aa4aa6');
+      const mod = await import('/grants-table.js?v=07f00f44dc');
       if (generation !== moneyRecordsGeneration) return;
       const controller = new AbortController();
       moneyRecordsHandle = {destroy() {controller.abort();}};
@@ -1649,7 +1649,7 @@ async function mountMoney(jurParam, industry, params = new URLSearchParams()) {
   root.innerHTML = `<p class="ui-status-line money-map-status" role="status">Loading the map…</p>`;
   const cfg = MONEY_JURISDICTIONS[jur];
   try {
-    const [{ mountMoneyMap }, data, journeysModule, researchModule, recordsModule] = await Promise.all([import("/money-map.js?v=1789c2b0ac"), loadMoneyFile(jur), import("/money-journeys.js?v=mobile-picker-20260908"), import("/map-research.js?v=a7600ab69b"), import("/money-records.js?v=ia-ux-20260908-2")]);
+    const [{ mountMoneyMap }, data, journeysModule, researchModule, recordsModule] = await Promise.all([import("/money-map.js?v=1789c2b0ac"), loadMoneyFile(jur), import("/money-journeys.js?v=mobile-picker-20260908"), import("/map-research.js?v=d21f3ed19a"), import("/money-records.js?v=ia-ux-20260908-2")]);
     if (moneyMapLoading !== jur || generation !== moneyMapGeneration) return; // switched again while loading
     const fine = $("money-fineprint");
     if (fine) fine.innerHTML = moneyFineprintHTML(jur, data?.meta);
@@ -1790,7 +1790,7 @@ async function openSupplierPage(name, params, manageFocus) {
   body.classList.remove("subject-person", "subject-party");
   body.innerHTML = '<p role="status">Loading suppliers…</p>';
   try {
-    const module = await import("/suppliers.js?v=3c4ac39196");
+    const module = await import("/suppliers.js?v=daf30dc1a4");
     if (generation !== supplierPageGeneration) return;
     const helpers = {
       params,

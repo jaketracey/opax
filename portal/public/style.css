@@ -1730,6 +1730,15 @@ article.mx-page .mx-section { margin-top: var(--space-section); }
    block, heading and row roles, and the uplift's larger steps pushed a bill's
    six columns past its column ("Noes" cut off at 1440). */
 .dt-root { --space-block: var(--sp-16); --space-heading: var(--sp-12); --space-row: calc(var(--sp-8) + var(--sp-2)); }
+/* The receipts ledger (/money/receipts, its CSS injected by ledger.js) flows
+   with the page like the data tables: its capped 65vh box put a second
+   vertical scrollbar beside the page's. Its header sticks under the masthead
+   instead; below 960px it shows cards, whose names wrap between words
+   ("anywhere" let the card's flex row shrink a name to "Corporatio / n").
+   Fold into ledger.js once the return-reference lane there lands. */
+.lg-root .lg-tablewrap { max-height: none; overflow: visible; }
+.lg-root .lg-table thead th { top: var(--header-h); }
+.lg-root :is(.lg-selection, .lg-card-donor, .lg-card-recipient a) { overflow-wrap: break-word; word-break: normal; }
 /* The money map's floating card (graph bundle, not on the uplift's scale)
    keeps the density it has live: the larger block, heading and row steps
    squeezed its fixed 330px column, wrapping "Commonwealth contracts" and
