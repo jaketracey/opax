@@ -628,8 +628,10 @@ const CSS = `
   .rp-map3d-edge-label { background: color-mix(in srgb, var(--paper) 92%, transparent); }
 }
 @media (max-width: 720px) {
-  .mm-legend { flex-direction: row; flex-wrap: nowrap; overflow-x: auto;
-    max-width: calc(100% - 24px); max-height: none; align-items: center;
+  /* Border-box, with the left inset mirrored: a content-box cap let the
+     padding and hairline carry the row 10px past the plate at 390px. */
+  .mm-legend { flex-direction: row; flex-wrap: nowrap; overflow-x: auto; box-sizing: border-box;
+    max-width: calc(100% - 2 * var(--space-heading)); max-height: none; align-items: center;
     padding: var(--space-line) var(--space-tight); }
   .mm-legend-title { display: none; }
   .mm-chip { white-space: nowrap; flex: none; }
