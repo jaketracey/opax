@@ -606,6 +606,7 @@ export class KnowledgeMapEngine {
   private focusOwnedFlag = false
   /** Homepage presentation, independent of camera distance. */
   private overviewMode = false
+  private phoneStep = true
   /** Automatic overview scale. Phones can start closer without claiming the view. */
   private fitScale = 1
   private fitDist = 420
@@ -1658,6 +1659,16 @@ export class KnowledgeMapEngine {
       this.view.theta = 0
       this.view.phi = PHI_MIN
     }
+  }
+
+  /**
+   * Whether an automatic fit on a phone starts one zoom step closer. Only the
+   * full map wants it: it has a fit button to give the whole scene back. An
+   * embed's fit is already tight, so the step pushed its outer clusters off
+   * the plate at 390px with no way back.
+   */
+  setPhoneStep(enabled: boolean) {
+    this.phoneStep = enabled
   }
 
   private get restingOverview(): boolean {
@@ -2821,7 +2832,7 @@ export class KnowledgeMapEngine {
     this.camera.aspect = rect.width / rect.height
     this.camera.updateProjectionMatrix()
     if (!this.viewOwnedFlag && this.nodeVisuals.size > 0) {
-      this.fit(false, !this.overviewMode && rect.width <= 540 ? 1.3 : 1)
+      this.fit(false, this.phoneStep && !this.overviewMode && rect.width <= 540 ? 1.3 : 1)
     }
     this.renderDirty = true
   }
@@ -2978,6 +2989,17 @@ export class KnowledgeMapEngine {
     // stays clearly readable at the fitted view - depth is a cue, not a veil.
     this.fog.near = dist + this.worldRadius * 0.35
     this.fog.far = dist + this.worldRadius * 4.4
+    // The clip planes ride it too. A narrow free box fits the whole map from
+    // much further back (the captions keep their pixel width), and a fixed
+    // far plane culled all but its nearest clusters: the full map on a phone
+    // drew an empty plate. Near follows so depth precision holds out there.
+    const near = Math.max(2, dist * 0.002)
+    const far = Math.max(9000, this.fog.far + this.worldRadius)
+    if (near !== this.camera.near || far !== this.camera.far) {
+      this.camera.near = near
+      this.camera.far = far
+      this.camera.updateProjectionMatrix()
+    }
   }
 
   private nodeLiftDir = new THREE.Vector3()

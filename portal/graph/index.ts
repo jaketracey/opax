@@ -817,6 +817,8 @@ export async function mountMoneyMap(
   const byId = new Map(raw.nodes.map((n) => [n.id, n]))
   const chrome = opts.chrome ?? 'full'
   const full = chrome === 'full'
+  // Only the full map starts a step closer on a phone (see setPhoneStep).
+  const phoneStep = full && opts.overview !== true
   // A focused mini map is a subject page's embed - it is about one entity, so
   // it opens on that entity. The full map and the front page are about the
   // whole scene and open on it, as before.
@@ -1080,6 +1082,7 @@ export async function mountMoneyMap(
     return mountConnectionFallback(container, raw, opts)
   }
   engine.setOverviewMode(opts.overview === true)
+  engine.setPhoneStep(phoneStep)
   engine.onEdgePick = (edge) => setEdgeSelection(edge)
   const words = mountWordsLayer({ engine, raw, legend, routeBase })
 
@@ -1145,7 +1148,7 @@ export async function mountMoneyMap(
   let grantsOn = hasGrants
   let visibleSceneIds = new Set<string>()
   let visibleSceneEdges: MapEdge[] = []
-  const overviewScale = () => !opts.overview && container.getBoundingClientRect().width <= 540 ? 1.3 : 1
+  const overviewScale = () => phoneStep && container.getBoundingClientRect().width <= 540 ? 1.3 : 1
   const pushData = ({ keepFocus = false } = {}) => {
     // A scrub step, a filter or a re-layout is the reader driving: the
     // choreography gives way rather than animating over the top of it.

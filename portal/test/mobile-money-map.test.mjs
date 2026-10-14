@@ -99,3 +99,32 @@ test('fallback responds to journey selection and cleans up on unmount',()=>{
   handle.destroy();assert.equal(host.children[0].removed,true);
   assert.equal(handle.presentScene({focusId:'a'}),false);
 });
+
+const methodBody = (name, next) => {
+  const start = engine.indexOf(`  private ${name}() {`);
+  return engine.slice(engine.indexOf('{', start) + 1, engine.lastIndexOf('}', engine.indexOf(`  private ${next}`, start)));
+};
+test('a phone fit only steps closer on the full map, so embeds keep the whole scene', () => {
+  const resize = new Function(transpile(methodBody('handleResize', 'stepFades')));
+  const fits = [];
+  const run = (state) => resize.call({ canvas: { parentElement: { getBoundingClientRect: () => ({ width: 390, height: 360 }) } },
+    renderer: { setSize() {} }, camera: { updateProjectionMatrix() {} }, viewOwnedFlag: false, nodeVisuals: { size: 3 },
+    overviewMode: false, fit: (_animate, scale) => fits.push(scale), ...state });
+  run({ phoneStep: true }); run({ phoneStep: false }); run({ phoneStep: true, overviewMode: true });
+  assert.deepEqual(fits, [1.3, 1, 1]);
+  assert.match(adapter, /const phoneStep = full && opts\.overview !== true/);
+  assert.match(adapter, /engine\.setPhoneStep\(phoneStep\)/);
+  assert.match(adapter, /const overviewScale = \(\) => phoneStep && /);
+});
+test('the far plane follows a fit distance past the old fixed 9000', () => {
+  const update = new Function(transpile(methodBody('updateCamera', 'nodeLiftDir').replace(/^[^]*?const \{/, 'const {')));
+  let projected = 0;
+  const state = { view: { target: { x: 0, y: 0, z: 0 }, theta: 0, phi: 1, dist: 11627 }, worldRadius: 1800, fog: {},
+    camera: { near: 2, far: 9000, position: { set() {} }, lookAt() {}, updateMatrixWorld() {}, updateProjectionMatrix: () => projected++ } };
+  update.call(state);
+  assert.ok(state.camera.far > state.fog.far, 'the whole fogged depth stays inside the frustum');
+  assert.ok(state.camera.near > 2 && state.camera.near < state.view.dist - state.worldRadius);
+  assert.equal(projected, 1);
+  state.view.dist = 640; state.worldRadius = 320; update.call(state);
+  assert.equal(state.camera.near, 2); assert.equal(state.camera.far, 9000, 'a desktop fit keeps the old planes');
+});
