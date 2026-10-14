@@ -1,0 +1,53 @@
+{
+  "receipts": [
+    {
+      "url": "https://cabinet.qld.gov.au/robots.txt",
+      "kind": "robots",
+      "requested_at": "2026-10-14T21:19:13.174770+00:00",
+      "checked_at": "2026-10-14T21:19:14.411527+00:00",
+      "status": 200,
+      "sha256": "88750636fdc6b9cbce69a97c2f473fb8df80cfe4c410f07939c10dfa431d54aa",
+      "bytes": 17,
+      "snapshot_path": "data/staged/qld-diaries/snapshots/88750636fdc6b9cbce69a97c2f473fb8df80cfe4c410f07939c10dfa431d54aa.txt",
+      "user_agent": "OPAXBot/1.0 (+https://opax.com.au/about; corrections@opax.com.au)",
+      "minimum_interval_seconds": 5.0,
+      "request_interval_seconds": null,
+      "previous_request_at": null,
+      "robots_allowed": true,
+      "challenge": false,
+      "error": null,
+      "followed_redirect": false,
+      "headers": {
+        "Content-Type": "text/plain"
+      }
+    },
+    {
+      "url": "https://cabinet.qld.gov.au/ministers-portfolios.aspx",
+      "kind": "index",
+      "requested_at": "2026-10-14T21:20:06.078087+00:00",
+      "checked_at": "2026-10-14T21:20:07.426936+00:00",
+      "status": 200,
+      "sha256": "4c530b179b93f0848ec05213e78d3ecbb275e69ca7143bd649e1174a56605853",
+      "bytes": 37309,
+      "snapshot_path": "data/staged/qld-diaries/snapshots/4c530b179b93f0848ec05213e78d3ecbb275e69ca7143bd649e1174a56605853.html",
+      "user_agent": "OPAXBot/1.0 (+https://opax.com.au/about; corrections@opax.com.au)",
+      "minimum_interval_seconds": 5.0,
+      "previous_request_at": "2026-10-14T21:19:13.174770+00:00",
+      "request_interval_seconds": 52.90331697463989,
+      "robots_receipt_sha256": "88750636fdc6b9cbce69a97c2f473fb8df80cfe4c410f07939c10dfa431d54aa",
+      "robots_allowed": true,
+      "challenge": true,
+      "error": null,
+      "followed_redirect": false,
+      "headers": {
+        "Content-Type": "text/html; charset=utf-8"
+      }
+    }
+  ],
+  "stopped": {
+    "url": "https://cabinet.qld.gov.au/ministers-portfolios.aspx",
+    "status": 200,
+    "reason": "challenge",
+    "receipt_sha256": "4c530b179b93f0848ec05213e78d3ecbb275e69ca7143bd649e1174a56605853"
+  }
+}

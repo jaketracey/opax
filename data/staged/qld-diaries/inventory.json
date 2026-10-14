@@ -1,0 +1,155 @@
+{
+  "snapshot": "2026-10-14T21:20:07.426936+00:00",
+  "status": "held",
+  "scope": "2013-01-01 through 2024-10-31",
+  "licence": {
+    "status": "held",
+    "name": "CC BY 3.0 AU (repo finding; current page unverified)",
+    "url": null,
+    "policy_url": null,
+    "reason": "Current Cabinet licence not verified"
+  },
+  "files": [],
+  "periods": [
+    {
+      "period": "2020-2024",
+      "source_index": "https://cabinet.qld.gov.au/ministers-portfolios/cabinet-2020-2024.aspx",
+      "status": "held",
+      "licence": {
+        "status": "held",
+        "name": "CC BY 3.0 AU (repo finding; current page unverified)",
+        "url": null,
+        "policy_url": null,
+        "reason": "Current Cabinet licence not verified"
+      },
+      "reason": "challenge",
+      "parse_version": "qld-diaries-3"
+    },
+    {
+      "period": "2017-2020",
+      "source_index": "https://cabinet.qld.gov.au/ministers-portfolios/cabinet-2017-2020.aspx",
+      "status": "held",
+      "licence": {
+        "status": "held",
+        "name": "CC BY 3.0 AU (repo finding; current page unverified)",
+        "url": null,
+        "policy_url": null,
+        "reason": "Current Cabinet licence not verified"
+      },
+      "reason": "challenge",
+      "parse_version": "qld-diaries-3"
+    },
+    {
+      "period": "2015-2017",
+      "source_index": "https://cabinet.qld.gov.au/ministers-portfolios/cabinet-2015-2017.aspx",
+      "status": "held",
+      "licence": {
+        "status": "held",
+        "name": "CC BY 3.0 AU (repo finding; current page unverified)",
+        "url": null,
+        "policy_url": null,
+        "reason": "Current Cabinet licence not verified"
+      },
+      "reason": "challenge",
+      "parse_version": "qld-diaries-3"
+    },
+    {
+      "period": "2013-2015",
+      "source_index": "https://cabinet.qld.gov.au/ministers-portfolios/cabinet-2013-2015.aspx",
+      "status": "held",
+      "licence": {
+        "status": "held",
+        "name": "CC BY 3.0 AU (repo finding; current page unverified)",
+        "url": null,
+        "policy_url": null,
+        "reason": "Current Cabinet licence not verified"
+      },
+      "reason": "challenge",
+      "parse_version": "qld-diaries-3"
+    }
+  ],
+  "counts_by_year": {
+    "2013": {
+      "files": null,
+      "rows_staged": 0,
+      "complete": false
+    },
+    "2014": {
+      "files": null,
+      "rows_staged": 0,
+      "complete": false
+    },
+    "2015": {
+      "files": null,
+      "rows_staged": 0,
+      "complete": false
+    },
+    "2016": {
+      "files": null,
+      "rows_staged": 0,
+      "complete": false
+    },
+    "2017": {
+      "files": null,
+      "rows_staged": 0,
+      "complete": false
+    },
+    "2018": {
+      "files": null,
+      "rows_staged": 0,
+      "complete": false
+    },
+    "2019": {
+      "files": null,
+      "rows_staged": 0,
+      "complete": false
+    },
+    "2020": {
+      "files": null,
+      "rows_staged": 0,
+      "complete": false
+    },
+    "2021": {
+      "files": null,
+      "rows_staged": 0,
+      "complete": false
+    },
+    "2022": {
+      "files": null,
+      "rows_staged": 0,
+      "complete": false
+    },
+    "2023": {
+      "files": null,
+      "rows_staged": 0,
+      "complete": false
+    },
+    "2024": {
+      "files": null,
+      "rows_staged": 0,
+      "complete": false
+    }
+  },
+  "held": [],
+  "stop": {
+    "url": "https://cabinet.qld.gov.au/ministers-portfolios.aspx",
+    "status": 200,
+    "reason": "challenge",
+    "receipt_sha256": "4c530b179b93f0848ec05213e78d3ecbb275e69ca7143bd649e1174a56605853"
+  },
+  "summary": {
+    "status": "held",
+    "files_inventoried": 0,
+    "rows_staged": 0,
+    "held_periods": 4,
+    "reconciliation": {},
+    "reason": "challenge"
+  },
+  "boundary": {
+    "historical_end": "2024-10-31",
+    "current_start": "2024-11-01",
+    "current_export_sha256": "f4675fd0c968cd77ceef7e0c07aa2b9153bdb17a3371530e5126e088b059a42d",
+    "current_full_rows_available": false,
+    "note": "The public access export is a summary, not a file/page/row ledger; full source rows must be supplied at reviewed export."
+  }
+}

@@ -1,0 +1,2 @@
+# Raw publisher receipts must retain their exact HTTP response bytes.
+snapshots/* binary
