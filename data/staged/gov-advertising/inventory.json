@@ -1,0 +1,209 @@
+{
+  "schema": 1,
+  "generated_at": "2026-10-15T21:19:23.500336+00:00",
+  "publisher": "Department of Finance",
+  "source_url": "https://www.finance.gov.au/publications/reports/advertising",
+  "status": "held",
+  "scope": "Discovery leads only, not a complete inventory. Earlier annual reports and machine-readable tables remain unverified.",
+  "documents": [
+    {
+      "id": "finance-campaign-2018-19",
+      "financial_year": "2018-19",
+      "url": "https://www.finance.gov.au/publications/reports/campaign-advertising-australian-government-departments-agencies-report-2018-19",
+      "landing_url": "https://www.finance.gov.au/publications/reports/campaign-advertising-australian-government-departments-agencies-report-2018-19",
+      "index_url": "https://www.finance.gov.au/publications/reports/advertising",
+      "format": "Unverified attachments; HTML report/index lead",
+      "discovery_basis": "Search-index URL discovery only; no publisher page retrieved. 2018-19 URL cited by Elections Canada; 2019-20 title listed in indexed Finance series.",
+      "status": "held",
+      "sha256": null,
+      "licence": {
+        "status": "held",
+        "name": "Unverified; document-level clearance required",
+        "url": null,
+        "policy_url": null,
+        "reviewed": false,
+        "reason": "Finance robots request timed out; no report imprint or linked copyright policy fetched. Other Finance products do not establish this series licence."
+      },
+      "receipt": {
+        "status": "not fetched",
+        "robots_allowed": false,
+        "challenge": false,
+        "sha256": null,
+        "snapshot": null
+      },
+      "hold_reason": "Source-access policy unavailable; document licence and table formats unverified"
+    },
+    {
+      "id": "finance-campaign-2019-20",
+      "financial_year": "2019-20",
+      "url": null,
+      "landing_url": null,
+      "index_url": "https://www.finance.gov.au/publications/reports/advertising",
+      "format": "Unverified attachments; HTML report/index lead",
+      "discovery_basis": "Search-index URL discovery only; no publisher page retrieved. 2018-19 URL cited by Elections Canada; 2019-20 title listed in indexed Finance series.",
+      "status": "held",
+      "sha256": null,
+      "licence": {
+        "status": "held",
+        "name": "Unverified; document-level clearance required",
+        "url": null,
+        "policy_url": null,
+        "reviewed": false,
+        "reason": "Finance robots request timed out; no report imprint or linked copyright policy fetched. Other Finance products do not establish this series licence."
+      },
+      "receipt": {
+        "status": "not fetched",
+        "robots_allowed": false,
+        "challenge": false,
+        "sha256": null,
+        "snapshot": null
+      },
+      "hold_reason": "Source-access policy unavailable; document licence and table formats unverified"
+    },
+    {
+      "id": "finance-campaign-2020-21",
+      "financial_year": "2020-21",
+      "url": "https://www.finance.gov.au/publications/reports/campaign-advertising-australian-government-departments-and-agencies-report-2020-21",
+      "landing_url": "https://www.finance.gov.au/publications/reports/campaign-advertising-australian-government-departments-and-agencies-report-2020-21",
+      "index_url": "https://www.finance.gov.au/publications/reports/advertising",
+      "format": "Unverified attachments; HTML report/index lead",
+      "discovery_basis": "Search-index URL discovery only; no publisher page retrieved. 2018-19 URL cited by Elections Canada; 2019-20 title listed in indexed Finance series.",
+      "status": "held",
+      "sha256": null,
+      "licence": {
+        "status": "held",
+        "name": "Unverified; document-level clearance required",
+        "url": null,
+        "policy_url": null,
+        "reviewed": false,
+        "reason": "Finance robots request timed out; no report imprint or linked copyright policy fetched. Other Finance products do not establish this series licence."
+      },
+      "receipt": {
+        "status": "not fetched",
+        "robots_allowed": false,
+        "challenge": false,
+        "sha256": null,
+        "snapshot": null
+      },
+      "hold_reason": "Source-access policy unavailable; document licence and table formats unverified"
+    },
+    {
+      "id": "finance-campaign-2021-22",
+      "financial_year": "2021-22",
+      "url": "https://www.finance.gov.au/publications/reports/campaign-advertising-australian-government-departments-and-agencies-report-2021-22",
+      "landing_url": "https://www.finance.gov.au/publications/reports/campaign-advertising-australian-government-departments-and-agencies-report-2021-22",
+      "index_url": "https://www.finance.gov.au/publications/reports/advertising",
+      "format": "Unverified attachments; HTML report/index lead",
+      "discovery_basis": "Search-index URL discovery only; no publisher page retrieved. 2018-19 URL cited by Elections Canada; 2019-20 title listed in indexed Finance series.",
+      "status": "held",
+      "sha256": null,
+      "licence": {
+        "status": "held",
+        "name": "Unverified; document-level clearance required",
+        "url": null,
+        "policy_url": null,
+        "reviewed": false,
+        "reason": "Finance robots request timed out; no report imprint or linked copyright policy fetched. Other Finance products do not establish this series licence."
+      },
+      "receipt": {
+        "status": "not fetched",
+        "robots_allowed": false,
+        "challenge": false,
+        "sha256": null,
+        "snapshot": null
+      },
+      "hold_reason": "Source-access policy unavailable; document licence and table formats unverified"
+    },
+    {
+      "id": "finance-campaign-2022-23",
+      "financial_year": "2022-23",
+      "url": "https://www.finance.gov.au/sites/default/files/2023-12/Campaign_Advertising_by_Australian_Government_Departments_and_Entities_2022-23_Report.pdf",
+      "landing_url": "https://www.finance.gov.au/publications/reports/campaign-advertising-australian-government-departments-and-agencies-report-2022-23",
+      "index_url": "https://www.finance.gov.au/publications/reports/advertising",
+      "format": "PDF (search-index URL only)",
+      "discovery_basis": "Search-index URL discovery only; no publisher page retrieved. 2018-19 URL cited by Elections Canada; 2019-20 title listed in indexed Finance series.",
+      "status": "held",
+      "sha256": null,
+      "licence": {
+        "status": "held",
+        "name": "Unverified; document-level clearance required",
+        "url": null,
+        "policy_url": null,
+        "reviewed": false,
+        "reason": "Finance robots request timed out; no report imprint or linked copyright policy fetched. Other Finance products do not establish this series licence."
+      },
+      "receipt": {
+        "status": "not fetched",
+        "robots_allowed": false,
+        "challenge": false,
+        "sha256": null,
+        "snapshot": null
+      },
+      "hold_reason": "Source-access policy unavailable; document licence and table formats unverified"
+    },
+    {
+      "id": "finance-campaign-2023-24",
+      "financial_year": "2023-24",
+      "url": "https://www.finance.gov.au/sites/default/files/2024-12/campaign-advertising-by-australian-government-departments-and-entities-report-2023-24.pdf",
+      "landing_url": "https://www.finance.gov.au/publications/annual-report-reports/campaign-advertising-australian-government-departments-and-agencies-report-2023-24",
+      "index_url": "https://www.finance.gov.au/publications/reports/advertising",
+      "format": "PDF (search-index URL only)",
+      "discovery_basis": "Search-index URL discovery only; no publisher page retrieved. 2018-19 URL cited by Elections Canada; 2019-20 title listed in indexed Finance series.",
+      "status": "held",
+      "sha256": null,
+      "licence": {
+        "status": "held",
+        "name": "Unverified; document-level clearance required",
+        "url": null,
+        "policy_url": null,
+        "reviewed": false,
+        "reason": "Finance robots request timed out; no report imprint or linked copyright policy fetched. Other Finance products do not establish this series licence."
+      },
+      "receipt": {
+        "status": "not fetched",
+        "robots_allowed": false,
+        "challenge": false,
+        "sha256": null,
+        "snapshot": null
+      },
+      "hold_reason": "Source-access policy unavailable; document licence and table formats unverified"
+    },
+    {
+      "id": "finance-campaign-2024-25",
+      "financial_year": "2024-25",
+      "url": "https://www.finance.gov.au/sites/default/files/2025-12/campaign-advertising-by-australian-government-departments-and-entities-2024-25-report.pdf",
+      "landing_url": "https://www.finance.gov.au/publications/reports/campaign-advertising-australian-government-departments-and-agencies-report-2024-25",
+      "index_url": "https://www.finance.gov.au/publications/reports/advertising",
+      "format": "PDF (search-index URL only)",
+      "discovery_basis": "Search-index URL discovery only; no publisher page retrieved. 2018-19 URL cited by Elections Canada; 2019-20 title listed in indexed Finance series.",
+      "status": "held",
+      "sha256": null,
+      "licence": {
+        "status": "held",
+        "name": "Unverified; document-level clearance required",
+        "url": null,
+        "policy_url": null,
+        "reviewed": false,
+        "reason": "Finance robots request timed out; no report imprint or linked copyright policy fetched. Other Finance products do not establish this series licence."
+      },
+      "receipt": {
+        "status": "not fetched",
+        "robots_allowed": false,
+        "challenge": false,
+        "sha256": null,
+        "snapshot": null
+      },
+      "hold_reason": "Source-access policy unavailable; document licence and table formats unverified"
+    }
+  ],
+  "counts": {
+    "report_leads": 7,
+    "direct_pdf_leads": 3,
+    "documents_fetched": 0,
+    "campaign_rows": 0
+  },
+  "reconciliation": {
+    "status": "not performed",
+    "reason": "No source reports acquired or cleared"
+  }
+}

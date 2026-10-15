@@ -1,0 +1,87 @@
+{
+  "checked_date_melbourne": "2026-10-16",
+  "baseline": "7cf0c453f17232b8d0bba6af323db00a0989b267",
+  "branch": "coverage/gov-advertising",
+  "official_campaign_rows": 0,
+  "real_reconciliation": "not performed; source and licence held",
+  "python_tests_passed": 8,
+  "node_tests_passed": 15,
+  "gates": {
+    "typescript": 0,
+    "check": 0,
+    "wrangler_dry_run": 0,
+    "offline_stage": 0,
+    "source_access_guard": 0,
+    "git_diff_check": 0
+  },
+  "votes_byte_identical": true,
+  "votes_sha256": "f9908e4f46f7148a82daee2d0b14c62cd7f2172ff1cd310df9a132a152970aff",
+  "browser": {
+    "preview": "Local Worker only; official source held; synthetic fixture is separate; no external network or production bindings",
+    "results": [
+      {
+        "mode": "page",
+        "width": 390,
+        "status": 200,
+        "horizontalOverflow": false
+      },
+      {
+        "mode": "page",
+        "width": 1440,
+        "status": 200,
+        "horizontalOverflow": false
+      },
+      {
+        "mode": "fixture",
+        "width": 390,
+        "status": 200,
+        "horizontalOverflow": false
+      },
+      {
+        "mode": "fixture",
+        "width": 1440,
+        "status": 200,
+        "horizontalOverflow": false
+      }
+    ],
+    "javaScriptDisabled": true,
+    "search": true,
+    "csv": true,
+    "exactAgencyLink": true,
+    "pageErrors": []
+  },
+  "screenshots": [
+    {
+      "path": "portal/private/gov-advertising/page-390.png",
+      "width": 390,
+      "height": 1000,
+      "sha256": "43882de2a105d677c7dd0e4875ab23ab9f6a369fc738e2cb43361c1a81ae9c3a",
+      "tracked": false
+    },
+    {
+      "path": "portal/private/gov-advertising/page-1440.png",
+      "width": 1440,
+      "height": 1000,
+      "sha256": "0641fa4954a30da4763e98fb177777466e675235f3b5613a844d78c6a2c25b2f",
+      "tracked": false
+    },
+    {
+      "path": "portal/private/gov-advertising/fixture-390.png",
+      "width": 390,
+      "height": 1000,
+      "sha256": "7241340c723bee39e355d04ed10e560ed628ec5a4a5b4f482dc1dea53b8d35ad",
+      "tracked": false
+    },
+    {
+      "path": "portal/private/gov-advertising/fixture-1440.png",
+      "width": 1440,
+      "height": 1000,
+      "sha256": "d66d7d1db0ac7706d396892bb4fcaabd761c96e65f2989d4bbb86e6cf6a13157",
+      "tracked": false
+    }
+  ],
+  "production_writes": 0,
+  "push": false,
+  "deploy": false,
+  "nightly_run": false
+}

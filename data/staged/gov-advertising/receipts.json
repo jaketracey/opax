@@ -1,0 +1,20 @@
+[
+  {
+    "url": "https://www.finance.gov.au/robots.txt",
+    "snapshot": "2026-10-15T21:19:23.500336+00:00",
+    "status": null,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0,
+    "challenge": false,
+    "error": "TimeoutError",
+    "error_detail": "The read operation timed out",
+    "diagnostic_sha256": "693919be92a592d0ab39d3a80a50801930732ee20d6dee5aaf1c0eb0cda7c5ff",
+    "hash_basis": "zero response bytes; diagnostic hash is separate",
+    "stopped": true,
+    "body_retained": false,
+    "requests": 1,
+    "identity_file": "parli/ingest/user-agent.json",
+    "identity_sha256": "8bba78b64023fe59cb9c6e3332bd3386f8f9ae10e3f634c61b56f8f4ee7e091d",
+    "http_status_received": false
+  }
+]
