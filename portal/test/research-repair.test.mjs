@@ -52,12 +52,13 @@ test('speaker: unquoted words put to another member are rewritten to the cited s
   assert.equal(d.lines[0], 'A speaker said the industry has fought every reform.');
 });
 
-test('party: a wrong singular party descriptor becomes the speaker\'s name; a wrong plural one drops the point', () => {
+test('party: a wrong singular party descriptor becomes the speaker\'s name; a wrong plural one leaves the point uncited', () => {
   const a = run([{ claim: 'A Greens senator said the industry has fought every reform of poker machines.', id, quote: 'The industry has fought every reform.' }]);
   assert.equal(a.lines[0], 'Robin Example said the industry has fought every reform of poker machines.'); assert.equal(a.tally.repairs.party_rewritten, 1);
   assert.equal(run([{ claim: 'A Labor member said the industry has fought every reform of poker machines.', id, quote: 'The industry has fought every reform.' }]).tally.repairs.party_rewritten, undefined);
   const b = run([{ claim: 'Greens senators said the industry has fought every reform of poker machines.', id, quote: 'The industry has fought every reform.' }]);
-  assert.equal(b.out, null); assert.equal(b.tally.drops.claim_party_mismatch, 1);
+  // Loosened 16 Oct: a soft check, so the point stays, without a citation.
+  assert.equal(b.out.answer_status, 'uncited'); assert.deepEqual(b.out.citations, {}); assert.equal(b.tally.uncited.claim_party_mismatch, 1); assert.deepEqual(b.tally.drops, {});
 });
 
 test('causal: an unattributed causal claim becomes what the cited speaker said; with no speaker it is dropped', () => {
@@ -67,11 +68,12 @@ test('causal: an unattributed causal claim becomes what the cited speaker said; 
   assert.equal(b.out, null); assert.equal(b.tally.drops.causal_claim, 1);
 });
 
-test('topic and figures: on-topic points survive loose wording; off-topic points and figures not in the passage are dropped', () => {
+test('topic and figures: on-topic points survive loose wording; off-topic points stand uncited; figures not in the passage come out or drop the point', () => {
   const a = run([{ claim: 'Robin Example backed precommitment on poker machines to protect families.', id, quote: 'Mandatory precommitment will protect families' }]);
   assert.equal(a.tally.points_kept, 1);
   const b = run([{ claim: 'Robin Example spoke about wind farm planning approvals in rural districts.', id, quote: 'The industry has fought every reform.' }], 'What has been said about wind farms?');
-  assert.equal(b.out, null); assert.equal(b.tally.drops.point_unsupported, 1);
+  // Loosened 16 Oct: weak support keeps the point, uncited.
+  assert.equal(b.lines[0], 'Robin Example spoke about wind farm planning approvals in rural districts.'); assert.equal(b.out.answer_status, 'uncited'); assert.equal(b.tally.uncited.point_unsupported, 1);
   const c = run([{ claim: 'Robin Example said 40 per cent of poker machine losses come from problem gamblers.', id, quote: 'cap poker machine losses' }]);
   assert.equal(c.out, null); assert.equal(c.tally.drops.figure_unsupported, 1);
   const d = run([{ claim: 'Robin Example said losses should be capped at one dollar a spin on poker machines.', id, quote: 'cap poker machine losses at one dollar a spin' }]);

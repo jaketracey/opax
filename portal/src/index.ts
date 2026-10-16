@@ -9,6 +9,7 @@ import { SA_EXCERPT_LABEL, isSaHansard, saFullText, saOfficialUrl } from '../pub
 import { saPublicResponse, saEventPayload } from './sa-hansard'
 import { saEvidenceText, saEvidenceRecord, saGenerationResponse, saConversationInput } from './sa-evidence'
 import { guardAnswerAttribution } from './ask-attribution'
+import { loosePositionPoints, claimAttributionOk, repairCausal } from './research-evidence'
 import {ServerTiming, timed, withTiming} from './server-timing'
 import { divisionPlain } from '../public/division-markdown.js'
 import {guardTableURL, divisionTableConfig, voteTableConfig} from '../public/vote-tables.js'
@@ -1764,7 +1765,11 @@ async function documentedPositionAnswer(input: AskInput, body: Record<string, un
   // A failed summary is not the end: the ordinary reasoning prompt gets one
   // go at a cited answer before the reader is handed raw excerpts.
   await progress?.('status', { phase: 'writing' })
-  return await recoverPositionAnswer(payload,{...body,position_question:input.question},env,progress) || quotedPositionAnswer(payload,query,input.question)
+  // A verified summary first, then verified proposal quotes, then the model's
+  // own summary uncited (16 Oct); excerpts and the gap only with no draft.
+  const recovered = await recoverPositionAnswer(payload,{...body,position_question:input.question},env,progress)
+  if (recovered && recovered.answer_status !== 'uncited') return recovered
+  return quotedPositionAnswer(payload,query,input.question) || recovered
     || await reasonedPositionAnswer(input, payload, env) || positionExcerptsAnswer(payload,query) || gap
 }
 
@@ -1787,9 +1792,15 @@ async function reasonedPositionAnswer(input: AskInput, verified: AskPayload, env
     if (!res.ok) return null
     const answer = (await res.json()) as AskAnswer
     if (isRefusal(answer)) return null
-    const payload = askPayload(answer, undefined, verified.scope, await loadPeople(env))
-    if (!Object.keys(payload.citations).length || hasUnsupportedQuotes(payload, answer)) return null
-    return { ...payload, answer_status: 'reasoned' }
+    const people = await loadPeople(env), speaker = verified.scope?.speaker || ''
+    // Loosened 16 Oct as looseAnswer: a misquote becomes paraphrase and an
+    // answer without citations stands, marked uncited. The hard lines hold:
+    // no other named person speaking, no unattributed causation.
+    const payload = guardAnswerAttribution(looseAnswer(askPayload(answer, undefined, verified.scope, people), answer), people)
+    if (isEvidenceGap(payload.answer) || !payload.answer.trim()) return null
+    const lines = payload.answer.split('\n').filter(line => /[\p{L}\p{N}]/u.test(line))
+    if (lines.some(line => !claimAttributionOk(line, speaker, people) || repairCausal(line, speaker, () => {}) !== line)) return null
+    return { ...payload, answer_status: Object.keys(payload.citations).length ? 'reasoned' : 'uncited' }
   } catch { return null }
 }
 
@@ -1880,27 +1891,29 @@ async function recoverPositionAnswer(payload: AskPayload, body: Record<string,un
     // Budget ~15k tokens: ten originals at their full 5,600-character evidence
     // windows fit; a 62k template was accepted live.
     const POSITION_PROMPT_CHARS = 60000
-    const attempt = async (repair: string): Promise<{ summary: SearchSummary | null; drafted: string[] }> => {
+    const attempt = async (repair: string): Promise<{ summary: SearchSummary | null; drafted: string[]; points: { text: string; citations: { id: string; quote: string }[] }[] }> => {
       let prompt = makePrompt(repair)
       while (sources.length && prompt.length > POSITION_PROMPT_CHARS) { sources.pop(); prompt = makePrompt(repair) }
-      if (!sources.length) return { summary: null, drafted: [] }
+      if (!sources.length) return { summary: null, drafted: [], points: [] }
       const answer = await summaryModelAnswer(await kbFetch(env, '/ask', {
         body:{query:String(body.position_question || body.query || '').slice(0,2000),top_k:1,reranker:'noop',generative_model:env.POSITION_RECOVERY_MODEL || 'openai-compatible',max_tokens:2600,
           prompt:{system:SEARCH_SUMMARY_SYSTEM + ' ' + POSITION_GROUNDING + ' Return only valid JSON in the requested points-and-citations schema, with no other text.',
             user:prompt.replace(/[{}]/g, brace => brace + brace) + '\nReader question: {question}'}},
         headers:{'x-synchronous':'true'},signal:AbortSignal.timeout(40_000),
       }))
-      if (!answer) return { summary: null, drafted: [] }
+      if (!answer) return { summary: null, drafted: [], points: [] }
       const draft = normalizePositionDraft(answer, sources)
       // What the model offered before verification, so a failed first attempt
-      // can be retried with the reason instead of silently falling back.
-      let drafted: string[] = []
+      // can still answer (uncited) or be retried with the reason.
+      let points: { text: string; citations: { id: string; quote: string }[] }[] = []
       try {
-        const parsed = JSON.parse(draft) as { points?: { text?: unknown }[] }
-        drafted = (Array.isArray(parsed.points) ? parsed.points : []).map(point => typeof point?.text === 'string' ? point.text : '').filter(Boolean)
+        const parsed = JSON.parse(draft) as { points?: { text?: unknown; citations?: { id?: unknown; quote?: unknown }[] }[] }
+        points = (Array.isArray(parsed.points) ? parsed.points : []).flatMap(point => typeof point?.text === 'string' && point.text.trim()
+          ? [{ text: point.text, citations: (Array.isArray(point.citations) ? point.citations : []).flatMap(c => typeof c?.id === 'string' ? [{ id: c.id, quote: typeof c.quote === 'string' ? c.quote : '' }] : []) }] : [])
       } catch { /* not JSON: nothing was drafted */ }
+      const drafted = points.map(point => point.text)
       const summary = parseSearchSummary(draft, sources, true, { maxPoints: 4, wordBudget: 220, maxQuote: 1200 })
-      if (!summary) return { summary: null, drafted }
+      if (!summary) return { summary: null, drafted, points }
       // Keep useful verified points when another point quotes a title or strays
       // onto an unrelated topic mentioned elsewhere in a long speech.
       summary.points = summary.points.filter(point => point.source_ids.length === 1 &&
@@ -1916,11 +1929,26 @@ async function recoverPositionAnswer(payload: AskPayload, body: Record<string,un
             positionPointSupported(point.text, evidence.join(' '), question, source.date, detail ? '' : source.snippet) &&
             evidence.every(quote => quotedInOrder(quote, source.snippet))
         })).slice(0,4)
-      return { summary, drafted }
+      return { summary, drafted, points }
     }
-    let { summary, drafted } = await attempt('')
+    let { summary, drafted, points } = await attempt('')
     // Every drafted point failed a check (usually a figure outside its excerpt,
-    // or an excerpt that is not verbatim): one more try, told what went wrong.
+    // or an excerpt that is not verbatim). Since 16 Oct the draft answers as it
+    // stands, uncited, unless it crosses a hard line; only a draft with nothing
+    // left gets one more try, told what went wrong.
+    const loose = !summary?.points.length && points.length ? loosePositionPoints(points, sources, payload.scope?.speaker || '', question, await loadPeople(env)) : null
+    if (loose) {
+      let text = '**From their speeches**\n\n'
+      for (const point of loose) {
+        const dates = [...new Set(point.ids.flatMap(id => {
+          const source = sources.find(s => s.id === id)
+          const date = source?.date?.slice(0,10) || source?.title.match(/\b\d{4}-\d{2}-\d{2}\b/)?.[0]
+          return date && /^\d{4}-\d{2}-\d{2}$/.test(date) ? [date] : []
+        }))]
+        text += '- ' + point.text + (dates.length ? ' (' + dates.map(shortDate).join('; ') + ')' : '') + '\n'
+      }
+      return {answer:text.trim(),citations:{},scope:payload.scope,answer_status:'uncited',sources:sources.map(source => ({...sourceRows.find(s => s.href === source.href)!,resource:source.id,cited:false}))}
+    }
     if (!summary?.points.length && drafted.length) {
       await progress?.('status', { phase: 'writing', attempt: 2 })
       ;({ summary } = await attempt('\nA previous attempt failed verification and was discarded. Its points were: ' + JSON.stringify(drafted.slice(0, 4)) +
@@ -6324,7 +6352,8 @@ async function apiAskRoutedCore(request: Request, url: URL, input: Record<string
     quotaTaken = true
     const finish = (run: AgenticPayload) => {
       const response = json(agenticAskPayload(run, question))
-      if (key && run.answered && !run.over_budget && !privateTurn) storeGenerationCache(env, ctx, key, response.clone(), ASK_CACHE_TTL)
+      // An answer with no citation at all is not kept for a week: the next ask may cite it (as cacheableAnswer).
+      if (key && run.answered && !run.over_budget && !privateTurn && run.qualitative?.answer_status !== 'uncited') storeGenerationCache(env, ctx, key, response.clone(), ASK_CACHE_TTL)
       return response
     }
     if (!streaming) {

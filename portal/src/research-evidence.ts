@@ -1,5 +1,5 @@
 import { originalContext, unsupportedQuotes } from './ask-evidence'
-import { firstSpeechTurn, positionEvidence, positionPointSupported, isPositionEligibilityQuestion, positionEligibilityQuotes } from './position-evidence'
+import { firstSpeechTurn, positionEvidence, positionPointSupported, isPositionEligibilityQuestion, isPositionDetailQuestion, positionEligibilityQuotes } from './position-evidence'
 import { CAUSAL, normaliseQuestion, type NamedScope } from './agentic-ask'
 import { claimMatchesSpeaker, personMentions } from './ask-attribution'
 import { withoutSaPlaceholder } from '../public/sa-hansard.js'
@@ -162,8 +162,34 @@ export function repairCausal(claim: string, speaker: string | undefined, note: (
   return `${lead}${speaker.trim()} said ${lowerFirst(claim.slice(lead.length).replace(/^\s+/, ''))}`
 }
 
-export interface AnswerTally { points_in: number; points_kept: number; repairs: Record<string, number>; drops: Record<string, number>; mode?: 'points' | 'record_list' | 'facts' }
-export const emptyTally = (): AnswerTally => ({ points_in: 0, points_kept: 0, repairs: {}, drops: {} })
+/** points_kept counts cited points; points_uncited the points kept without a citation, by the soft check each
+ * failed (uncited). salvaged names the loop stop an answer was rescued from. */
+/** Every quotation mark goes: the words stand as paraphrase. */
+export const unquoted = (claim: string) => claim.replace(QUOTED, (_m, dq?: string, sq?: string, lead?: string, aq?: string) => `${lead ?? ''}${dq ?? sq ?? aq ?? ''}`)
+/** Quotation marks outside a matched pair (a truncated claim) go too: no stray mark reads as a quotation. */
+const strayQuotesOut = (claim: string) => {
+  let out = '', last = 0
+  for (const m of claim.matchAll(QUOTED)) { out += claim.slice(last, m.index).replace(/["“”]/g, '') + m[0]; last = m.index! + m[0].length }
+  return (out + claim.slice(last).replace(/["“”]/g, '')).replace(/\s{2,}/g, ' ').trim()
+}
+/** An unsupported figure comes out where that is a clean cut: a parenthetical holding it, or the trailing clauses
+ * (after a comma, semicolon or dash) that carry it, leaving a sentence of five words or more. Null when no such cut
+ * leaves a supported claim: the point is dropped. */
+export function withoutUnsupportedFigures(claim: string, supported: (text: string) => boolean): string | null {
+  if (supported(claim)) return claim
+  const tidy = (text: string) => text.replace(/\s+([,.;:])/g, '$1').replace(/\s{2,}/g, ' ').trim()
+  let out = tidy(claim.replace(/\s*\(([^()\n]*)\)/g, (match, inner: string) => supported(inner) ? match : ''))
+  if (supported(out)) return out
+  const parts = out.split(/(?=,\s|;\s|\s[–—-]\s)/)
+  for (let k = parts.length - 1; k >= 1; k--) {
+    const head = tidy(parts.slice(0, k).join('')).replace(/[,;:\s–—-]+$/, '')
+    if (words(head).length >= 5 && supported(head)) return /[.!?]$/.test(head) ? head : head + '.'
+  }
+  return null
+}
+
+export interface AnswerTally { points_in: number; points_kept: number; points_uncited: number; repairs: Record<string, number>; drops: Record<string, number>; uncited: Record<string, number>; mode?: 'points' | 'record_list' | 'facts' | 'uncited'; salvaged?: string }
+export const emptyTally = (): AnswerTally => ({ points_in: 0, points_kept: 0, points_uncited: 0, repairs: {}, drops: {}, uncited: {} })
 const bump = (bag: Record<string, number>, label: string) => { bag[label] = (bag[label] ?? 0) + 1 }
 
 /** The floor every cited answer meets: citations to retrieved passages in their original speaking turn, quote
@@ -222,8 +248,8 @@ export function verifyResearchAnswer(draft: AnswerDraft, passages: Map<string, P
   if (named.people.length && !named.people.some(name => [...used.values()].some(p => normal(p.speaker ?? '').toLowerCase() === normal(name).toLowerCase()))) return reject('named_person_uncited')
   return { answer: draft.text, citations, sources: sourcesOf([...used.values()]) }
 }
-const sourcesOf = (used: Passage[]): QualitativeAnswer['sources'] => [...new Map(used.map(p => [p.resource, {
-  resource: p.resource, slug: p.slug, title: p.title, href: p.url, url: p.url, snippet: p.text, cited: true,
+const sourcesOf = (used: Passage[], cited = true): QualitativeAnswer['sources'] => [...new Map(used.map(p => [p.resource, {
+  resource: p.resource, slug: p.slug, title: p.title, href: p.url, url: p.url, snippet: p.text, cited,
   kind: p.kind, ...(p.date ? { date: p.date } : {}), ...(p.speaker ? { speaker: p.speaker } : {}),
 }])).values()]
 
@@ -241,69 +267,128 @@ export function pointsDraft(points: AnswerPoint[]): AnswerDraft {
   }
   return { text, citations }
 }
+/** A question about a person the roster cannot pin down (ambiguous, or unresolved in "what has X said" grammar)
+ * is declined outright: an answer about the wrong person is worse than none. */
+export function namedDecline(question: string, named: NamedScope): 'named_ambiguous' | 'named_unresolved' | null {
+  return named.ambiguous ? 'named_ambiguous' : unresolvedPersonAsked(question, named) ? 'named_unresolved' : null
+}
+/** Jake's standing lines: these drop the point whatever else it has going for it. Every other failed check is
+ * soft: the point stays, unquoted where its quotation is not verbatim, and uncited. */
+const HARD = new Set(['sa_placeholder', 'named_ambiguous', 'named_unresolved', 'causal_claim', 'speaker_not_named', 'claim_speaker_mismatch'])
+
 /** Repair, then verify: each point is mended in code where it can be (quote marks, quote span, speaker, party,
- * causal wording) and dropped only when it still fails the floor; the survivors must pass together. */
+ * causal wording, an unsupported figure) and checked against its passage. A point that passes is cited; one that
+ * fails only a soft check (a misquote, weak overlap, the topic, a party descriptor) stays as an uncited line after
+ * the cited ones; one that crosses a hard line is dropped. Null only when no point is left. */
 export function verifyResearchPoints(points: unknown, passages: Map<string, Passage>, question: string, named: NamedScope, positionQuery?: string, roster?: unknown, why?: (reason: string) => void, tally: AnswerTally = emptyTally()): (QualitativeAnswer & { dropped: number }) | null {
   if (!Array.isArray(points) || !points.length || points.length > 12) return null
   tally.points_in += points.length
+  const decline = namedDecline(question, named)
+  if (decline) { why?.(`answer: ${decline}`); bump(tally.drops, decline); return null }
   const valid = points.filter((p): p is AnswerPoint => !!p && typeof p === 'object' && typeof p.claim === 'string' && typeof p.id === 'string' && typeof p.quote === 'string' &&
     !!p.claim.trim() && !/\n/.test(p.claim) && p.claim.length <= 1200 && !!p.quote.trim() && p.quote.length <= 4000)
   if (valid.length < points.length) { why?.(`${points.length - valid.length} malformed point(s)`); for (let i = valid.length; i < points.length; i++) bump(tally.drops, 'malformed') }
   const position = !!positionQuery || named.people.length > 0 || /\b(?:propos\w*|positions?|polic(?:y|ies)|supported|opposed)\b/i.test(question)
+  const isNamed = (list: string[], speaker?: string) => !!speaker && list.some(n => normal(n).toLowerCase() === normal(speaker).toLowerCase())
   // When the question named the speaker, a bare or titled surname in a claim ("Wilkie supported", "Mr Wilkie")
   // is that speaker: write the full name so a reader is never left with an ambiguous surname.
   const fullName = (claim: string, speaker?: string) => {
     const full = speaker?.trim() ?? '', surname = full.split(/\s+/).at(-1) ?? ''
-    if (!full.includes(' ') || !named.people.some(n => normal(n).toLowerCase() === normal(full).toLowerCase())) return claim
+    if (!full.includes(' ') || !isNamed(named.people, full)) return claim
     const at = new RegExp(`(?<![\\p{L}])(\\p{Lu}[\\p{L}'’.-]*\\s+)?${surname.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}(?![\\p{L}])`, 'gu')
     return claim.replace(at, (match, before?: string) => !before ? full : TITLE.test(before.trim()) ? full : match)
   }
-  const kept: AnswerPoint[] = [], seen = new Set<string>()
+  const kept: AnswerPoint[] = [], loose: { claim: string; passage: Passage }[] = [], seen = new Set<string>()
   valid.forEach(raw => {
     const n = points.indexOf(raw) + 1, done: string[] = []
     const note = (label: string) => done.push(label)
     const drop = (label: string) => { why?.(`point ${n}: ${label}`); bump(tally.drops, label); return undefined }
-    const passage = passages.get(raw.id)
-    if (!passage || !originalContext(raw.id)) return drop('unknown_passage')
+    let passage = passages.get(raw.id), id = raw.id
+    if (!passage || !originalContext(raw.id)) {
+      // A garbled id: the one verified passage that holds the quote verbatim.
+      const holders = raw.quote.trim().length >= 20 ? [...passages.values()].filter(p => originalContext(p.id) && normal(p.text).includes(normal(raw.quote))) : []
+      if (holders.length !== 1) return drop('unknown_passage')
+      passage = holders[0]; id = passage.id; note('passage_reselected')
+    }
     const speaker = passage.speaker
     // With several named people a point speaks for one of them; the whole-answer check below still requires one.
-    const people = named.people.length > 1 ? named.people.filter(p => speaker && normal(p).toLowerCase() === normal(speaker).toLowerCase()) : named.people
+    const people = named.people.length > 1 ? named.people.filter(p => isNamed([p], speaker)) : named.people
     if (named.people.length > 1 && !people.length) return drop('speaker_not_named')
     const evidence = position ? firstSpeechTurn(passage.text) : passage.text
-    let claim: string | null = fullName(raw.claim.trim(), speaker), quote = raw.quote
+    let claim: string | null = fullName(raw.claim.trim(), speaker), quote = raw.quote, soft: string | undefined
     // The citation quote: verbatim as given, else the passage's own words for the longest run it shares (five words
-    // or more), else the passage sentence that best matches the claim.
+    // or more), else the passage sentence that best matches the claim. With none, the point can only stand uncited.
     if (!normal(evidence).includes(normal(quote))) {
       const span = passageSpan(evidence, quote), excerpt = span ? null : passageExcerpt(evidence, claim)
       if (span) { quote = span; note('quote_respanned') }
       else if (excerpt && excerpt.score >= 1) { quote = excerpt.text; note('quote_reselected') }
-      else return drop('quote_not_in_passage')
+      else soft = 'quote_not_in_passage'
     }
     claim = repairQuotes(claim, evidence, note)
     claim = repairCausal(claim, speaker, note)
     if (claim === null) return drop('causal_claim')
     claim = repairAttribution(claim, speaker, roster, note)
     if (claim === null) return drop('claim_speaker_mismatch')
-    claim = repairParty(claim, speaker, passage.party, note)
-    if (claim === null) return drop('claim_party_mismatch')
+    const party = repairParty(claim, speaker, passage.party, note)
+    if (party === null) soft ??= 'claim_party_mismatch'
+    else claim = party
     // A point repeating one already kept from the same passage adds nothing.
-    const key = raw.id + '\u0000' + normal(claim).toLowerCase()
+    const key = id + '\u0000' + normal(claim).toLowerCase()
     if (seen.has(key)) return drop('duplicate')
-    const reasons: string[] = []
-    if (!verifyResearchAnswer(pointsDraft([{ claim, id: raw.id, quote }]), passages, question, { ...named, people }, positionQuery, roster, reason => reasons.push(reason))) {
-      const label = reasons[0]?.replace(/ \(.*$/, '') ?? 'unsupported'
-      return drop(label)
+    const strict = (text: string) => {
+      const reasons: string[] = []
+      return verifyResearchAnswer(pointsDraft([{ claim: text, id, quote }]), passages, question, { ...named, people }, positionQuery, roster, reason => reasons.push(reason)) ? undefined : reasons[0]?.replace(/ \(.*$/, '') ?? 'unsupported'
     }
+    const figures = (text: string) => positionPointSupported(text, evidence, '', passage!.date, passage!.text)
+    let failed = soft ? undefined : strict(claim)
+    // A misquote becomes paraphrase; an unsupported figure comes out where that is a clean cut.
+    if (failed === 'claim_quote_unsupported' || failed === 'claim_quote_not_literal') { claim = unquoted(claim); note('unquoted'); failed = strict(claim) }
+    if (failed === 'figure_unsupported') {
+      const cut = withoutUnsupportedFigures(claim, figures)
+      if (!cut) return drop('figure_unsupported')
+      claim = cut; note('figure_removed'); failed = strict(claim)
+    }
+    if (failed && HARD.has(failed)) return drop(failed)
+    soft ??= failed
     seen.add(key)
     for (const label of done) bump(tally.repairs, label)
-    kept.push({ claim, id: raw.id, quote })
+    if (!soft) { kept.push({ claim, id, quote }); return }
+    // An uncited point still meets every hard line on its own, and states no figure its passage lacks.
+    claim = strayQuotesOut(claim)
+    if (!/[\p{L}\p{N}]/u.test(claim)) return drop('shape')
+    if (withoutSaPlaceholder(claim) !== claim) return drop('sa_placeholder')
+    if (named.people.length && !isNamed(people, speaker)) return drop('speaker_not_named')
+    if (causalUnattributed(claim)) return drop('causal_claim')
+    if (!claimAttributionOk(claim, speaker, roster)) return drop('claim_speaker_mismatch')
+    const cut = withoutUnsupportedFigures(claim, figures)
+    if (!cut) return drop('figure_unsupported')
+    if (cut !== claim) bump(tally.repairs, 'figure_removed')
+    why?.(`point ${n}: uncited (${soft})`)
+    bump(tally.uncited, soft)
+    loose.push({ claim: cut, passage })
   })
-  if (!kept.length) return null
-  const answer = verifyResearchAnswer(pointsDraft(kept), passages, question, named, positionQuery, roster, reason => why?.(`answer: ${reason}`))
-  if (!answer) { bump(tally.drops, 'answer_level'); return null }
+  if (!kept.length && !loose.length) return null
+  // The cited points must pass together; if they cannot, they stand uncited with the rest.
+  let answer = kept.length ? verifyResearchAnswer(pointsDraft(kept), passages, question, named, positionQuery, roster, reason => why?.(`answer: ${reason}`)) : null
+  if (kept.length && !answer) {
+    bump(tally.drops, 'answer_level')
+    loose.unshift(...kept.map(k => ({ claim: k.claim, passage: passages.get(k.id)! })))
+    kept.length = 0
+  }
+  if (!loose.length) {
+    tally.points_kept += kept.length
+    tally.mode = 'points'
+    return { ...answer!, dropped: points.length - kept.length }
+  }
+  answer ??= { answer: '', citations: {}, sources: [] }
+  let text = answer.answer
+  for (const { claim } of loose) text += (text ? '\n' : '') + '- ' + claim
+  const cited = new Set(answer.sources.map(s => s.resource))
   tally.points_kept += kept.length
-  tally.mode = 'points'
-  return { ...answer, dropped: points.length - kept.length }
+  tally.points_uncited += loose.length
+  tally.mode = kept.length ? 'points' : 'uncited'
+  return { answer: text, citations: answer.citations, sources: [...answer.sources, ...sourcesOf(loose.map(l => l.passage).filter(p => !cited.has(p.resource)), false)],
+    answer_status: kept.length ? 'partly_cited' : 'uncited', dropped: points.length - kept.length - loose.length }
 }
 
 /** Nothing the model wrote survived, but verified passages were found: answer with the best two or three of them,
@@ -330,4 +415,28 @@ export function recordPassagesAnswer(passages: Map<string, Passage>, question: s
     ;(citations[p.id] ??= []).push([start, Array.from(text).length])
   }
   return { answer: text, citations, sources: sourcesOf(chosen.map(c => c.p)) }
+}
+
+/** The named-politician position path's draft when no point passed its checks (16 Oct): each point the model wrote
+ * stands as an uncited line, unquoted unless verbatim and without figures its passages lack, unless it crosses a
+ * hard line (another named person speaking, unattributed causation, the SA placeholder). Null when none is left. */
+export function loosePositionPoints(drafted: { text: string; citations: { id: string; quote: string }[] }[], sources: { id: string; snippet: string; date?: string }[], speaker: string, question: string, roster: unknown): { text: string; ids: string[] }[] | null {
+  const out: { text: string; ids: string[] }[] = []
+  for (const point of drafted.slice(0, 4)) {
+    const ids = point.citations.map(c => c.id), own = sources.filter(s => ids.includes(s.id)), cited = own.length ? own : sources
+    // A detail follow-up (a cap, a cost, a duration) keeps each figure inside the point's own verbatim excerpt, as
+    // on the verified path: a neighbouring sentence's figure cannot support it. Otherwise any of its passages may.
+    const quotes = point.citations.filter(c => own.some(s => s.id === c.id && normal(s.snippet).includes(normal(c.quote)))).map(c => c.quote)
+    const evidence = isPositionDetailQuestion(question) && quotes.length ? quotes.join('\n') : cited.map(s => s.snippet).join('\n')
+    let text: string | null = strayQuotesOut(repairQuotes(point.text.replace(/\s+/g, ' ').trim(), evidence, () => {}))
+    if (!/[\p{L}\p{N}]/u.test(text) || withoutSaPlaceholder(text) !== text) continue
+    text = repairCausal(text, speaker, () => {})
+    if (text === null) continue
+    text = repairAttribution(text, speaker, roster, () => {})
+    if (text === null) continue
+    text = withoutUnsupportedFigures(text, t => positionPointSupported(t, evidence, question, cited[0]?.date ?? ''))
+    if (text === null) continue
+    if (!out.some(p => normal(p.text).toLowerCase() === normal(text!).toLowerCase())) out.push({ text, ids: own.map(s => s.id) })
+  }
+  return out.length ? out : null
 }

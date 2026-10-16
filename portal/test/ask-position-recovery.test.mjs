@@ -11,13 +11,18 @@ const bundle=await build({entryPoints:[new URL('../src/search-summary.ts',import
 const helpers=await import('data:text/javascript;base64,'+Buffer.from(bundle.outputFiles[0].text).toString('base64'));
 const evidenceBundle=await build({entryPoints:[new URL('../src/position-evidence.ts',import.meta.url).pathname],bundle:true,write:false,format:'esm',platform:'node'});
 const evidenceHelpers=await import('data:text/javascript;base64,'+Buffer.from(evidenceBundle.outputFiles[0].text).toString('base64'));
+const researchBundle=await build({entryPoints:[new URL('../src/research-evidence.ts',import.meta.url).pathname],bundle:true,write:false,format:'esm',platform:'node'});
+const {loosePositionPoints}=await import('data:text/javascript;base64,'+Buffer.from(researchBundle.outputFiles[0].text).toString('base64'));
+// Invented roster: the indexed speaker and one other member.
+const roster={people:[{name:'Example MP'},{name:'Casey Sample'}]};
+const loose={loosePositionPoints,loadPeople:async()=>roster};
 const source=await readFile(new URL('../src/index.ts',import.meta.url),'utf8');
 const start=source.indexOf('async function recoverPositionAnswer(');
 const code=source.slice(start,source.indexOf('/** A short overview grounded',start));
 const quote='I propose a five-year moratorium on GST for essential building materials for homes up to $1 million.';
 const payload={answer:'An uncited draft.',citations:{},scope:{speaker:'Example MP',kind:'speech'},sources:[{resource:'rid',slug:'speech-1',title:'Example MP — 2025-02-11',href:'/doc/speech-1',kind:'speech',speaker:'Example MP',snippet:quote,cited:false}]};
 const draft=(excerpt=quote)=>JSON.stringify({points:[{text:'Example MP proposed a five-year GST moratorium for essential building materials for homes up to $1 million.',citations:[{id:'s1',quote:excerpt}]}]});
-function harness(answer){let calls=0,request;const recover=runInNewContext(ts.transpileModule(code,{compilerOptions:{target:ts.ScriptTarget.ES2022}}).outputText+';recoverPositionAnswer',{saEvidenceRecord,saEvidenceText,...helpers,...evidenceHelpers,shortDate,POSITION_GROUNDING:'Ground positions.',AbortSignal,Intl,Date,kbFetch:async(e,p,r)=>{calls++;request=r;return Response.json({answer})}});return {recover,get calls(){return calls},get request(){return request}};}
+function harness(answer){let calls=0,request;const recover=runInNewContext(ts.transpileModule(code,{compilerOptions:{target:ts.ScriptTarget.ES2022}}).outputText+';recoverPositionAnswer',{saEvidenceRecord,saEvidenceText,...helpers,...evidenceHelpers,...loose,shortDate,POSITION_GROUNDING:'Ground positions.',AbortSignal,Intl,Date,kbFetch:async(e,p,r)=>{calls++;request=r;return Response.json({answer})}});return {recover,get calls(){return calls},get request(){return request}};}
 
 test('position recovery binds every displayed point to a verified original excerpt and dated record',async()=>{
  const h=harness(draft());const out=await h.recover(payload,{query:'housing'},{});
@@ -25,16 +30,27 @@ test('position recovery binds every displayed point to a verified original excer
  assert.equal(out.sources[0].href,'/doc/speech-1');assert.equal(out.sources[0].snippet,quote);assert.equal(out.sources[0].cited,true);
  for(const [id,ranges] of Object.entries(out.citations)){assert.ok(out.sources.some(s=>s.resource===id));for(const [start,end] of ranges)assert.ok(start>=0&&end<=Array.from(out.answer).length);}
 });
-test('unverifiable position recovery does not turn fabricated excerpts into citations',async()=>{
- const h=harness(draft('This fabricated sentence does not exist in the speech.'));
- // A drafted point that fails verification earns one repair attempt, never a citation.
- assert.equal(await h.recover(payload,{query:'housing'},{}),null);assert.equal(h.calls,2);
- assert.match(h.request.body.prompt.user,/previous attempt failed verification/);
+test('unverifiable position recovery does not turn fabricated excerpts into citations: the draft stands uncited, with no repair turn',async()=>{
+ // Loosened 16 Oct: a drafted point that fails only soft checks is returned uncited instead of earning a repair turn.
+ const h=harness(draft('This fabricated sentence does not exist in the speech.'));const out=await h.recover(payload,{query:'housing'},{});
+ assert.equal(h.calls,1);assert.equal(out.answer_status,'uncited');assert.equal(Object.keys(out.citations).length,0);assert.ok(out.sources.every(s=>s.cited===false));
+ assert.equal(out.answer,'**From their speeches**\n\n- Example MP proposed a five-year GST moratorium for essential building materials for homes up to $1 million. (11 Feb 2025)');
  const none=harness(JSON.stringify({points:[]}));assert.equal(await none.recover(payload,{query:'housing'},{}),null);assert.equal(none.calls,1,'an empty draft is not retried');
 });
-test('a first draft that fails verification is written again and the verified retry is used',async()=>{
- const answers=[draft('This fabricated sentence does not exist in the speech.'),draft()];let calls=0;const phases=[];
- const recover=runInNewContext(ts.transpileModule(code,{compilerOptions:{target:ts.ScriptTarget.ES2022}}).outputText+';recoverPositionAnswer',{saEvidenceRecord,saEvidenceText,...helpers,...evidenceHelpers,shortDate,POSITION_GROUNDING:'Ground positions.',AbortSignal,Intl,Date,kbFetch:async()=>{calls++;return Response.json({answer:answers.shift()})}});
+test('a soft-failing position summary is unquoted and loses figures its passage lacks; hard lines still drop the point',async()=>{
+ const text='Example MP said “GST should go on every building material”, at a cost of $9 billion, and proposed a five-year GST moratorium.';
+ const out=await harness(JSON.stringify({points:[{text,citations:[{id:'s1',quote:'not in the speech at all, made up'}]}]})).recover(payload,{query:'housing'},{});
+ assert.equal(out.answer_status,'uncited');assert.doesNotMatch(out.answer,/[“”"]|\$9 billion/);assert.match(out.answer,/^\*\*From their speeches\*\*\n\n- Example MP said GST should go on every building material\./);
+ // Words put in another member's mouth (a verbatim quotation): nothing is left, so the repair turn runs.
+ const h=harness(JSON.stringify({points:[{text:'Casey Sample said “I propose a five-year moratorium on GST for essential building materials”.',citations:[{id:'s1',quote:'not in the speech at all, made up'}]}]}));
+ assert.equal(await h.recover(payload,{query:'housing'},{}),null);assert.equal(h.calls,2);assert.match(h.request.body.prompt.user,/previous attempt failed verification/);
+ // Unattributed influence stands only as what the speaker said.
+ const causal=await harness(JSON.stringify({points:[{text:'Donations influenced the GST moratorium on building materials.',citations:[{id:'s1',quote:'not in the speech at all, made up'}]}]})).recover(payload,{query:'housing'},{});
+ assert.match(causal.answer,/- Example MP said donations influenced the GST moratorium on building materials\./);
+});
+test('a first draft that crosses a hard line is written again and the verified retry is used',async()=>{
+ const answers=[JSON.stringify({points:[{text:'Casey Sample said “I propose a five-year moratorium on GST for essential building materials”.',citations:[{id:'s1',quote:'This fabricated sentence does not exist in the speech.'}]}]}),draft()];let calls=0;const phases=[];
+ const recover=runInNewContext(ts.transpileModule(code,{compilerOptions:{target:ts.ScriptTarget.ES2022}}).outputText+';recoverPositionAnswer',{saEvidenceRecord,saEvidenceText,...helpers,...evidenceHelpers,...loose,shortDate,POSITION_GROUNDING:'Ground positions.',AbortSignal,Intl,Date,kbFetch:async()=>{calls++;return Response.json({answer:answers.shift()})}});
  const out=await recover(payload,{query:'housing'},{},async(event,data)=>{phases.push([event,data])});
  assert.equal(calls,2);assert.match(out.answer,/five-year/);assert.equal(out.sources[0].cited,true);
  assert.equal(JSON.stringify(phases),JSON.stringify([['status',{phase:'writing',attempt:2}]]));
@@ -95,7 +111,7 @@ test('an irrelevant policy point cannot discard or contaminate the verified hous
 
 const fallbackStart=source.indexOf('function quotedPositionAnswer(');
 const fallbackCode=source.slice(fallbackStart,source.indexOf('/** Recover a position',fallbackStart));
-const fallback=runInNewContext(ts.transpileModule(fallbackCode,{compilerOptions:{target:ts.ScriptTarget.ES2022}}).outputText+';quotedPositionAnswer',{saEvidenceRecord,saEvidenceText,...helpers,...evidenceHelpers,shortDate,Intl,Date});
+const fallback=runInNewContext(ts.transpileModule(fallbackCode,{compilerOptions:{target:ts.ScriptTarget.ES2022}}).outputText+';quotedPositionAnswer',{saEvidenceRecord,saEvidenceText,...helpers,...evidenceHelpers,...loose,shortDate,Intl,Date});
 test('failed generation can still show a dated verbatim proposal with valid citations',()=>{
  const out=fallback(payload,'housing affordability');assert.equal(out.answer_status,'evidence_only');assert.equal(out.evidence_kind,'original_position_proposal');assert.match(out.answer,/11 Feb 2025/);assert.ok(out.answer.includes('> '+quote));
  assert.equal(out.sources[0].snippet,quote);assert.equal(out.sources[0].href,'/doc/speech-1');
@@ -109,9 +125,11 @@ test('generation receives the current follow-up separately from its resolved ret
  assert.ok(h.request.body.prompt.user.includes('Latest reader question: "When did she propose it?"'));
  assert.match(h.request.body.prompt.user,/Answer that latest question specifically/);
 });
-test('a summary cannot merge proposal conditions from different dated speeches',async()=>{
+test('a summary cannot merge proposal conditions from different dated speeches into a cited point',async()=>{
  const h=harness(JSON.stringify({points:[{text:'Example MP proposed a five-year GST moratorium for homes up to $1 million.',citations:[{id:'s1',quote},{id:'s2',quote}]}]}));
- assert.equal(await h.recover({...payload,sources:[...payload.sources,{...payload.sources[0],resource:'other',href:'/doc/speech-2',date:'2026-01-01'}]},{query:'housing'},{}),null);
+ // Loosened 16 Oct: it stands uncited, dated with both speeches, rather than leaving the reader with nothing.
+ const out=await h.recover({...payload,sources:[...payload.sources,{...payload.sources[0],resource:'other',href:'/doc/speech-2',date:'2026-01-01'}]},{query:'housing'},{});
+ assert.equal(out.answer_status,'uncited');assert.equal(Object.keys(out.citations).length,0);assert.match(out.answer,/\(11 Feb 2025; 1 Jan 2026\)$/);
 });
 
 test('a missing cost or reason never falls back to a generic policy quote',()=>{
@@ -162,7 +180,9 @@ test('a cap follow-up cannot borrow an unquoted waiting period or substitute ano
   {text:'Example MP proposed prohibiting immigration from nations known to foster extremism.',citations:[{id:'s2',quote:other}]}
  ]}));
  const rows=[{...payload.sources[0],snippet:cap+' A separate eight-year proposal was discussed.'},{...payload.sources[0],href:'/doc/speech-2',snippet:other}];
- assert.equal(await h.recover({...payload,sources:rows},{query:'immigration cap',position_question:'What cap did she propose?'},{}),null);
+ // Loosened 16 Oct: the unquoted waiting period comes out of the uncited point; the other policy still answers nothing about a cap.
+ const out=await h.recover({...payload,sources:rows},{query:'immigration cap',position_question:'What cap did she propose?'},{});
+ assert.equal(out.answer_status,'uncited');assert.equal(out.answer,'**From their speeches**\n\n- Example MP proposed capping immigration at 130,000 per year. (11 Feb 2025)');
 });
 
 test('a supported cap survives while unrelated immigration policies are omitted',async()=>{
@@ -191,7 +211,9 @@ test('two points citing the same speech cannot borrow each others excerpts',asyn
   {text:'Example MP proposed stricter immigration screening.',citations:[{id:'s1',quote:other}]}
  ]}));
  const rows=[{...payload.sources[0],snippet:cap+' '+other+' An eight-year period was mentioned elsewhere.'}];
- assert.equal(await h.recover({...payload,sources:rows},{query:'immigration cap',position_question:'What cap did she propose?'},{}),null);
+ // Loosened 16 Oct: uncited, and the eight-year period outside the point's own excerpt comes out.
+ const out=await h.recover({...payload,sources:rows},{query:'immigration cap',position_question:'What cap did she propose?'},{});
+ assert.equal(out.answer_status,'uncited');assert.equal(out.answer,'**From their speeches**\n\n- Example MP proposed an immigration cap of 130,000 per year. (11 Feb 2025)');
 });
 
 test('discarded points do not leave their excerpts in the surviving source citation',async()=>{
@@ -209,7 +231,9 @@ test('a source month cannot support an unquoted eight-year policy duration',asyn
  const cap="One Nation's policy is to cap immigration at approximately 130,000 per year, numbers we can actually accommodate.";
  const h=harness(JSON.stringify({points:[{text:'Example MP proposed capping immigration at approximately 130,000 per year, with an eight-year waiting period for citizenship.',citations:[{id:'s1',quote:cap}]}]}));
  const rows=[{...payload.sources[0],date:'2025-08-26',snippet:cap}];
- assert.equal(await h.recover({...payload,sources:rows},{query:'immigration cap',position_question:'What cap did she propose?'},{}),null);
+ // Loosened 16 Oct: the point stands uncited without the unquoted duration.
+ const out=await h.recover({...payload,sources:rows},{query:'immigration cap',position_question:'What cap did she propose?'},{});
+ assert.equal(out.answer_status,'uncited');assert.doesNotMatch(out.answer,/eight/);assert.match(out.answer,/approximately 130,000 per year\. \(26 Aug 2025\)$/);
  assert.equal(evidenceHelpers.positionPointSupported('The immigration cap would be 2025 per year.',cap,'What cap did she propose?','2025-08-26'),false);
 });
 

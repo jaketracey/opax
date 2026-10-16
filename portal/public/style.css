@@ -1500,6 +1500,7 @@ button.link.result-title:hover { color: var(--bronze-ink); }
 .search-summary-status { margin: 0 0 var(--space-tight); font: var(--type-fine); color: var(--ink-soft); }
 .search-summary-status:empty { display: none; }
 .search-summary-note { margin: var(--space-tight) 0 0; font: var(--type-fine); color: var(--ink-soft); }
+.answer-uncited-note { margin: var(--sp-12) 0 0; font: var(--type-fine); color: var(--ink-soft); }
 .answer-compact { font-size: var(--text-15); line-height: var(--leading-body); }
 .answer-compact > * { margin-bottom: var(--sp-12); }
 .search-answer .source-list li { padding: var(--sp-8) 0; }

@@ -90,15 +90,17 @@ function qualitativeFixture(responses,passageText=text){const f=fixtures(model(r
 test('qualitative search/answer retains passage ids and ordinary source/citation fields; search verifies its hits',async()=>{
  const f=qualitativeFixture([reply([call('search',{query:'housing affordability'})]),reply([call('answer',valid)])]),run=await f.run(),payload=api.agenticAskPayload(run,'housing');assert.equal(run.answered,true);assert.equal(run.answer_source,'model');assert.deepEqual(payload.citations,{[id]:[[0,text.length]]});assert.equal(payload.sources[0].resource,p.resource);assert.equal(payload.research.sources[0].url,p.url);assert.equal(payload.research.sources[0].speaker,'Pat Example');
 });
-test('a fabricated quote or unbound citation never reaches the reader: the verified passage answers in its own words, no extra turn',async()=>{
- for(const draft of [{text:'"Invented testimony that never occurred in this record."',citations:[{id,quote:text,start:0,end:55}]},{...valid,citations:[{...valid.citations[0],id:'unknown/t/body/0'}]}]){
-  const f=qualitativeFixture([reply([call('search',{query:'housing'})]),reply([call('answer',draft)]),reply([call('answer',valid)])]),run=await f.run();
-  assert.equal(run.research.mode,'loop');assert.equal(run.answered,true);assert.equal(f.model.doGenerateCalls.length,2);assert.equal(run.research.rounds,2);
-  assert.equal(run.answer,'What the record says:\n- Pat Example said: “'+text+'”');assert.doesNotMatch(run.answer,/Invented testimony/);assert.ok(run.qualitative.citations[id]);assert.equal(run.research.answer_stats.mode,'record_list');
- }
+test('a fabricated quote never reaches the reader in quotation marks; an unbound citation finds its passage; no extra turn',async()=>{
+ // Loosened 16 Oct: the draft stands uncited, unquoted, instead of being replaced by the record list.
+ const f=qualitativeFixture([reply([call('search',{query:'housing'})]),reply([call('answer',{text:'"Invented testimony that never occurred in this record."',citations:[{id,quote:text,start:0,end:55}]})]),reply([call('answer',valid)])]),run=await f.run(),body=api.agenticAskPayload(run,'housing');
+ assert.equal(run.research.mode,'loop');assert.equal(run.answered,true);assert.equal(f.model.doGenerateCalls.length,2);assert.equal(run.research.rounds,2);
+ assert.equal(run.answer,'- Invented testimony that never occurred in this record.');assert.doesNotMatch(run.answer,/["“”]/);assert.deepEqual(body.citations,{});assert.equal(body.answer_status,'uncited');assert.equal(run.research.answer_stats.mode,'uncited');
+ // A citation to an unknown id is re-bound to the one verified passage holding its quote, and stays cited.
+ const g=qualitativeFixture([reply([call('search',{query:'housing'})]),reply([call('answer',{...valid,citations:[{...valid.citations[0],id:'unknown/t/body/0'}]})]),reply([call('answer',valid)])]),bound=await g.run();
+ assert.equal(g.model.doGenerateCalls.length,2);assert.equal(bound.answer,'- '+text);assert.ok(bound.qualitative.citations[id]);assert.equal(bound.qualitative.answer_status,undefined);assert.equal(bound.research.answer_stats.repairs.passage_reselected,1);
 });
 test('with nothing usable retrieved, a failed answer gets one repair and then the old path',async()=>{
- for(const draft of [{text:'"Invented testimony that never occurred in this record."',citations:[{id,quote:offTopic,start:0,end:55}]},{...valid,citations:[{...valid.citations[0],id:'unknown/t/body/0'}]}]){const f=qualitativeFixture([reply([call('search',{query:'housing'})]),reply([call('answer',draft)]),reply([call('answer',draft)])],offTopic),run=await f.run();assert.equal(run.research.mode,'planner');assert.equal(f.failures[0].reason,'grounding');assert.equal(f.events.filter(e=>e.step?.tool==='answer'&&e.step.state==='failed').length,2);}
+ const draft={...valid,citations:[{...valid.citations[0],id:'unknown/t/body/0'}]},f=qualitativeFixture([reply([call('search',{query:'housing'})]),reply([call('answer',draft)]),reply([call('answer',draft)])],offTopic),run=await f.run();assert.equal(run.research.mode,'planner');assert.equal(f.failures[0].reason,'grounding');assert.equal(f.events.filter(e=>e.step?.tool==='answer'&&e.step.state==='failed').length,2);
 });
 test('a fabricated quotation is unquoted and kept as cited paraphrase, never kept in quotation marks',async()=>{
  const passages=new Map([[id,{...p,speaker:'Pat Example'}]]),why=[],tally=api.emptyTally();
@@ -133,11 +135,12 @@ test('a numerical answer misroute keeps finish active and does not consume quali
  assert.equal(run.research.mode,'loop');assert.equal(f.plannerCalls,0);assert.equal(choice(m.doGenerateCalls[2]),'finish');assert.deepEqual(names(m.doGenerateCalls[2]),names(m.doGenerateCalls[0]));assert.equal(run.events.find(e=>e.tool==='answer').state,'failed');
 });
 test('instructions are byte-stable across turns; repair feedback carries reason labels, never the rejected text or quotes',async()=>{
- const draft={points:[{claim:'DRAFT MUST NOT BECOME INSTRUCTIONS',id,quote:'FABRICATED REPAIR QUOTE'}]},f=qualitativeFixture([reply([call('search',{query:'housing'})]),reply([call('answer',draft)]),reply([call('answer',valid)])],offTopic);
- const run=await f.run();assert.equal(run.research.mode,'planner');assert.equal(f.model.doGenerateCalls.length,3);
+ const draft={points:[{claim:'DRAFT MUST NOT BECOME INSTRUCTIONS',id:'unknown/t/body/0',quote:'FABRICATED REPAIR QUOTE'}]},f=qualitativeFixture([reply([call('search',{query:'housing'})]),reply([call('answer',draft)]),reply([call('answer',valid)])],offTopic);
+ // The repair restates the passage too loosely to cite (one shared word): since 16 Oct it answers, uncited.
+ const run=await f.run();assert.equal(run.research.mode,'loop');assert.equal(run.qualitative.answer_status,'uncited');assert.equal(f.model.doGenerateCalls.length,3);
  // The conversation retains its own draft; instructions and the tool error never echo it.
  const system=c=>JSON.stringify(c.prompt.filter(p=>['system','developer'].includes(p.role)));assert.equal(new Set(f.model.doGenerateCalls.map(system)).size,1);assert.doesNotMatch(system(f.model.doGenerateCalls[2]),/DRAFT MUST|FABRICATED REPAIR/);
- const feedback=JSON.stringify(f.model.doGenerateCalls[2].prompt.filter(p=>p.role==='tool'));assert.match(feedback,/grounding failed \(point 1: quote_not_in_passage\)/);assert.doesNotMatch(feedback,/DRAFT MUST|FABRICATED REPAIR/);
+ const feedback=JSON.stringify(f.model.doGenerateCalls[2].prompt.filter(p=>p.role==='tool'));assert.match(feedback,/grounding failed \(point 1: unknown_passage\)/);assert.doesNotMatch(feedback,/DRAFT MUST|FABRICATED REPAIR/);
 });
 test('wrong roster-person attribution is rejected even when the other name is in the quote',()=>{
  const roster={people:[{name:'Taylor Example'},{name:'Pat Example'}]},passages=new Map([[id,{...p,speaker:'Pat Example'}]]);
@@ -165,7 +168,8 @@ test('committee checks start with their ranking round and keep that round in liv
 
 test('qualitative trace searches twice, then answers with only the answer tool forced; a failed draft is repaired in code',async()=>{
  const f=qualitativeFixture([reply([call('search',{query:'housing'})],3500,500),reply([call('search',{query:'affordability safeguards'})],6000,500),reply([call('answer',{...valid,citations:[{...valid.citations[0],quote:'fabricated'}]})],9000,500)]);
- const run=await f.run();assert.equal(run.research.mode,'loop');assert.equal(run.research.rounds,3);assert.equal(f.plannerCalls,0);assert.equal(f.failures.length,0);assert.match(run.answer,/^What the record says:/);assert.deepEqual(run.tokens,{input:18500,output:1500});
+ // The fabricated citation quote is re-selected from the passage, so the model's own sentence stands, cited.
+ const run=await f.run();assert.equal(run.research.mode,'loop');assert.equal(run.research.rounds,3);assert.equal(f.plannerCalls,0);assert.equal(f.failures.length,0);assert.equal(run.answer,'- '+text);assert.ok(run.qualitative.citations[id]);assert.equal(run.research.answer_stats.repairs.quote_reselected,1);assert.deepEqual(run.tokens,{input:18500,output:1500});
  assert.deepEqual(f.model.doGenerateCalls.map(choice),['required','required','answer']);assert.ok(f.model.doGenerateCalls.every(c=>JSON.stringify(names(c))===JSON.stringify(names(f.model.doGenerateCalls[0]))));
  assert.deepEqual(f.events.filter(e=>e.step?.state!=='running'&&e.step).map(e=>[e.step.round,e.step.tool,e.step.state]),[[1,'search','done'],[2,'search','done'],[3,'answer','done']]);
 });
@@ -176,10 +180,13 @@ test('reported per-turn input and cached tokens are separate from bytes/4 reserv
  assert.deepEqual(run.research.turns.map(t=>[t.round,t.input,t.output,t.cached_input]),[[1,18000,2000,10000],[2,19000,2000,11000],[3,20000,2000,12000]]);assert.ok(run.research.turns.every(t=>t.input_reserve>0&&t.input_reserve<18000));
  assert.deepEqual(run.research.turns.map(t=>[t.provider,t.reasoning,t.cached]),[['fixture-host',1500,10000],['fixture-host',1500,11000],['fixture-host',1500,12000]]);
 });
-test('point answers drop an unsupported point and answer from the survivors',async()=>{
- const f=qualitativeFixture([reply([call('search',{query:'housing'})]),reply([call('answer',{points:[{claim:'The committee called for stronger safeguards.',id,quote:text},{claim:'It also demanded a royal commission.',id,quote:'a royal commission into housing'}]})])]),run=await f.run();
- assert.equal(run.research.mode,'loop');assert.equal(run.answer,'- The committee called for stronger safeguards.');assert.deepEqual(api.agenticAskPayload(run,'housing').citations,{[id]:[[2,2+Array.from('The committee called for stronger safeguards.').length]]});
- const passages=new Map([[id,p]]),why=[];assert.equal(api.verifyResearchPoints([{claim:'Invented.',id,quote:'not in the passage'}],passages,'housing',emptyScope,undefined,undefined,r=>why.push(r)),null);assert.deepEqual(why,['point 1: quote_not_in_passage']);
+test('point answers keep an unsupported point uncited after the cited survivors',async()=>{
+ // Loosened 16 Oct: the unsupported point used to be dropped; it now stands uncited and the answer is partly cited.
+ const f=qualitativeFixture([reply([call('search',{query:'housing'})]),reply([call('answer',{points:[{claim:'The committee called for stronger safeguards.',id,quote:text},{claim:'It also demanded a royal commission.',id,quote:'a royal commission into housing'}]})])]),run=await f.run(),body=api.agenticAskPayload(run,'housing');
+ assert.equal(run.research.mode,'loop');assert.equal(run.answer,'- The committee called for stronger safeguards.\n- It also demanded a royal commission.');assert.deepEqual(body.citations,{[id]:[[2,2+Array.from('The committee called for stronger safeguards.').length]]});assert.equal(body.answer_status,'partly_cited');
+ assert.equal(run.research.answer_stats.points_kept,1);assert.equal(run.research.answer_stats.points_uncited,1);assert.deepEqual(run.research.answer_stats.uncited,{quote_not_in_passage:1});
+ const passages=new Map([[id,p]]),why=[],alone=api.verifyResearchPoints([{claim:'Invented.',id,quote:'not in the passage'}],passages,'housing',emptyScope,undefined,undefined,r=>why.push(r));
+ assert.equal(alone.answer,'- Invented.');assert.equal(alone.answer_status,'uncited');assert.deepEqual(alone.citations,{});assert.deepEqual(why,['point 1: uncited (quote_not_in_passage)']);
  assert.equal(api.verifyResearchPoints([{claim:'Donations caused the vote.',id,quote:text}],passages,'housing',emptyScope),null);
 });
 test('search verifies each record once and hides passages missing from their original turn',async()=>{

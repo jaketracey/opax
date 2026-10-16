@@ -10,6 +10,8 @@ import ts from 'typescript';
 const bundle=await build({entryPoints:[new URL('../src/position-evidence.ts',import.meta.url).pathname],bundle:true,write:false,format:'esm',platform:'node'});
 const helpers=await import('data:text/javascript;base64,'+Buffer.from(bundle.outputFiles[0].text).toString('base64'));
 const {firstSpeechTurn,positionEvidence,positionProposalQuote,normalizePositionDraft}=helpers;
+const researchBundle=await build({entryPoints:[new URL('../src/research-evidence.ts',import.meta.url).pathname],bundle:true,write:false,format:'esm',platform:'node'});
+const {claimAttributionOk,repairCausal}=await import('data:text/javascript;base64,'+Buffer.from(researchBundle.outputFiles[0].text).toString('base64'));
 const proposal='I proposed a five-year GST moratorium on essential building materials for homes up to $1 million to improve housing affordability.';
 const other='Housing affordability is an investor problem, and my home state is Western Australia.';
 
@@ -76,25 +78,30 @@ function harness({rows,texts={},recover=true,unavailable=false,reasoned}={}){
  const reasoning=reasoned?{AbortSignal,ASK_SYNC_TIMEOUT_MS:1000,isRefusal:a=>/does not discuss it/.test(a.answer||''),hasUnsupportedQuotes:()=>false,
   buildAskBody:(input,records,options)=>{reasonedOptions=options;return {query:input.question,prompt:{system:'ordinary'}};},
   kbFetch:async(env,path,{body})=>{reasonedBody=body;return Response.json(reasoned);},
-  askPayload:(answer,records,scope)=>({answer:answer.answer,citations:answer.citations||{},sources:[],scope})}:{};
+  askPayload:(answer,records,scope)=>({answer:answer.answer,citations:answer.citations||{},sources:[],scope}),
+  looseAnswer:p=>p,guardAnswerAttribution:p=>p,isEvidenceGap:a=>/does not establish/.test(a),claimAttributionOk,repairCausal}:{};
  const fn=runInNewContext(code+';documentedPositionAnswer',{saEvidenceRecord,saEvidenceText,...helpers,...reasoning,scopeSpeakerBody:async()=>{},loadPeople:async()=>({byFold:new Map()}),URL,Request,canonicalSpeaker:s=>s,EVIDENCE_GAP_ANSWER:'This selection does not establish their position on that topic.',
   searchWindow:async(e,args)=>{query=args;return rows===null?null:{results:rows||[{slug:'speech-1',speaker:'Example MP',title:'Example MP — 2025-02-11',date:'2025-02-11',kind:'speech',resource:'rid'}]};},
   apiResource:async(r,u,slug)=>{reads++;return unavailable?Response.json({error:'down'},{status:503}):Response.json(texts[slug]||{speaker:'Example MP',text:proposal+'\n\n1:08 pm\n\n'+other});},
-  quotedPositionAnswer:()=>null, positionExcerptsAnswer:(payload)=>({...payload,answer_status:'evidence_only'}), recoverPositionAnswer:async(payload,body)=>{generated=payload;generationBody=body;return recover?{...payload,answer:'Verified proposal',answer_status:undefined}:null;},
+  quotedPositionAnswer:()=>null, positionExcerptsAnswer:(payload)=>({...payload,answer_status:'evidence_only'}), recoverPositionAnswer:async(payload,body)=>{generated=payload;generationBody=body;return recover==='uncited'?{...payload,answer:'Their own summary, uncited.',citations:{},answer_status:'uncited'}:recover?{...payload,answer:'Verified proposal',answer_status:undefined}:null;},
  });
  return {run:(question='What rent limit did he propose?')=>fn({question,speaker:'Example MP',kind:'speech',from:'2025',to:'2026',chamber:'senate',topic:'housing'},{query:'housing affordability'},{},{}),get query(){return query},get generated(){return generated},get generationBody(){return generationBody},get reads(){return reads},get reasonedOptions(){return reasonedOptions},get reasonedBody(){return reasonedBody}};
 }
-test('a failed summary gets one reasoned answer before excerpts, and only a cited one',async()=>{
+test('a failed summary gets one reasoned answer before excerpts; an uncited one stands, marked uncited',async()=>{
  // The strict path could not verify a summary: the ordinary prompt answers, cited, and that stands.
  const h=harness({recover:false,reasoned:{answer:'Taken together, the record suggests a cap.',citations:{'rid/t/transcript/0-10':[[0,1]]}}});
  const out=await h.run('surely you could cast him as anti-renter?');
  assert.equal(out.answer_status,'reasoned');assert.equal(out.answer,'Taken together, the record suggests a cap.');assert.equal(out.scope.speaker,'Example MP');
  assert.equal(h.reasonedOptions?.reasoned,true);assert.equal(h.reasonedBody.prompt.system,'ordinary');assert.equal(h.reasonedBody.generative_model,'openai-compatible');
- // Uncited, or a refusal: the excerpts, as before.
- assert.equal((await harness({recover:false,reasoned:{answer:'Unsupported claims.',citations:{}}}).run()).answer_status,'evidence_only');
+ // Loosened 16 Oct: an uncited reasoned answer stands, marked uncited. A refusal still gets the excerpts.
+ const uncited=await harness({recover:false,reasoned:{answer:'Unsupported claims.',citations:{}}}).run();assert.equal(uncited.answer_status,'uncited');assert.equal(uncited.answer,'Unsupported claims.');
+ // Another named person speaking, or an unattributed causal claim, is a hard line: the excerpts.
+ assert.equal((await harness({recover:false,reasoned:{answer:'Donations influenced the vote.',citations:{}}}).run()).answer_status,'evidence_only');
  assert.equal((await harness({recover:false,reasoned:{answer:'The record retrieved for this question does not discuss it.',citations:{'rid':[[0,1]]}}}).run()).answer_status,'evidence_only');
  // A verified summary never reaches the fallback.
  const verified=harness({recover:true,reasoned:{answer:'Never used.',citations:{'rid':[[0,1]]}}});assert.equal((await verified.run()).answer,'Verified proposal');assert.equal(verified.reasonedBody,undefined);
+ // The model's own summary, uncited, comes before a second model call, the excerpts and the gap.
+ const own=harness({recover:'uncited',reasoned:{answer:'Never used.',citations:{'rid':[[0,1]]}}}),ownOut=await own.run();assert.equal(ownOut.answer_status,'uncited');assert.equal(ownOut.answer,'Their own summary, uncited.');assert.equal(own.reasonedBody,undefined);
 });
 test('position retrieval honors filters and passes only original first-turn text to generation',async()=>{
  const h=harness();await h.run();assert.equal(h.query.topK,20);assert.equal(h.query.url.searchParams.get('speaker'),'Example MP');assert.equal(h.query.url.searchParams.get('from'),'2025');assert.equal(h.query.url.searchParams.get('chamber'),'senate');assert.equal(h.query.url.searchParams.get('topic'),'housing');
