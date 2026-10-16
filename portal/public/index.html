@@ -2132,11 +2132,11 @@
 <!-- defer: never block the parser (Lighthouse counted this as render-blocking).
      Deferred scripts still run before DOMContentLoaded, so nothing changes for
      app.js's boot. ?v= is content-hash stamped by scripts/stamp_assets.mjs. -->
-<script src="/spa-shell.js?v=c8c5794f1e" defer></script>
-<script src="/navigation.js?v=74fa738dc1" defer></script>
+<script src="/spa-shell.js?v=57fda50640" defer></script>
+<script src="/navigation.js?v=a8530173d7" defer></script>
 <script src="/quick-search.js?v=27eac3b2f7" defer></script>
 <script src="/ui-source.js?v=d594622c13" defer></script>
-<script src="/app.js?v=fda6a50575" defer></script>
+<script src="/app.js?v=dc1f959d2f" defer></script>
 <!-- PostHog runs after the app (defer order) so the first route is not queued behind it; it replays the events measured before it (analytics/index.js). -->
 <script src="/analytics.js?v=7a83ce20cf" defer></script>
 </body>
