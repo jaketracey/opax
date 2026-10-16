@@ -5268,8 +5268,15 @@ function loadPartyMembers() {
     .then((r) => (r.ok ? r.json() : null)).catch(() => null);
   return partyMembersPromise;
 }
+let partySpeechesPromise = null;
+/** The search index's party labels with their speech counts (scripts/build_party_speeches.mjs). */
+function loadPartySpeeches() {
+  partySpeechesPromise ??= fetch("/graph/party-speeches.json")
+    .then((r) => (r.ok ? r.json() : null)).catch(() => null);
+  return partySpeechesPromise;
+}
 let partyPagePromise = null;
-const loadPartyPage = () => (partyPagePromise ??= import('/party-page.js?v=e0ee5a4bf4'));
+const loadPartyPage = () => (partyPagePromise ??= import('/party-page.js?v=2d30b7506f'));
 
 let aecExtrasPromise = null;
 function loadAecExtras() {
@@ -5462,12 +5469,14 @@ async function renderPartyMemberList(label, sections, key, { speechesLink = true
   const slot = document.createElement("section");
   slot.id = "party-members";
   sections.appendChild(slot);
-  const [roster, divisions, partyPage] = await Promise.all([loadParliamentarians(), loadPartyMembers(), loadPartyPage(), loadPhotoMap(), personUrlsReady]);
+  const [roster, divisions, partyPage, indexed] = await Promise.all([loadParliamentarians(), loadPartyMembers(), loadPartyPage(), loadPartySpeeches(), loadPhotoMap(), personUrlsReady]);
   if (currentSubjectKey !== key || !slot.isConnected) return null;
   const members = partyPage.partyMembers(label, { roster, divisions, same: samePartyLabel });
   const directoryParty = roster?.people?.find((p) => p.party && samePartyLabel(p.party, label))?.party;
+  // Only a party the index holds speeches for, under the label the index files them as.
+  const speeches = speechesLink ? partyPage.partySpeechLabel(label, { indexed, roster, same: samePartyLabel }) : null;
   const html = partyPage.partyMembersHTML(label, members, partyPageHelpers(), {
-    speechesHref: speechesLink ? partySpeechSearch(label) : "",
+    speechesHref: speeches ? partySpeechSearch(speeches.label) : "",
     directoryHref: directoryParty ? directoryHash("person", { party: directoryParty }) : "",
     updated: roster?.meta?.generated || "",
   });
@@ -5483,8 +5492,8 @@ async function renderPartyMemberList(label, sections, key, { speechesLink = true
  *  a party, and the page says so rather than titling itself with the address. */
 async function renderRosterParty(segment, key, body) {
   const states = ["qld", "vic", "tas"];
-  const [roster, divisions, partyPage, ...stateFiles] = await Promise.all([
-    loadParliamentarians(), loadPartyMembers(), loadPartyPage(), ...states.map(loadMoneyFile)]);
+  const [roster, divisions, partyPage, indexed, ...stateFiles] = await Promise.all([
+    loadParliamentarians(), loadPartyMembers(), loadPartyPage(), loadPartySpeeches(), ...states.map(loadMoneyFile)]);
   if (currentSubjectKey !== key) return;
   const sources = { money: [moneyData, ...stateFiles], roster, divisions };
   let label = partyPage.resolvePartyLabel(segment, partyPage.partyLabels(sources));
@@ -5508,6 +5517,8 @@ async function renderRosterParty(segment, key, body) {
   currentSubjectKey = key = `party:${label}`;
   setCrumbs(crumbsFor("/subject/party", label));
   const members = partyPage.partyMembers(label, { roster, divisions, same: samePartyLabel });
+  // A party with money or divisions but no speech in the record ("Reason Party") offers no empty search.
+  const speeches = partyPage.partySpeechLabel(label, { indexed, roster, same: samePartyLabel });
   const everyone = [...members.current, ...members.former];
   const first = Math.min(...everyone.map((m) => m.first || 9999));
   const last = Math.max(0, ...everyone.map((m) => m.last || 0));
@@ -5516,7 +5527,7 @@ async function renderRosterParty(segment, key, body) {
     first < 9999 ? `<span class="entry-active">Members in the record ${esc(yearSpan(first, last))}</span>` : "",
   ].filter(Boolean).join(" · ");
   body.querySelector(".subject-head").insertAdjacentHTML("beforeend", `<div class="page-actions entry-actions">
-    ${actionBtn("search", partySpeechSearch(label), "Their speeches", { primary: true })}
+    ${speeches ? actionBtn("search", partySpeechSearch(speeches.label), "Their speeches", { primary: true }) : ""}
     ${moreMenuHTML([
       { href: askHash(`What has parliament said about ${partyAskName(label)}?`), label: "Ask what parliament said about them" },
       { href: searchHash(`"${label}"`, {}), label: "Search mentions in the record" },
@@ -12822,10 +12833,14 @@ function renderSearchRecovery(q, f) {
   const specs = filterChipSpecs(f);
   const first = specs[0];
   const topicHref = f.topic ? subjectHash("topic", f.topic) : "/subject/topic";
-  box.innerHTML = `<h2 class="empty-title">No matches for “${esc(q || f.speaker)}”</h2>
-    <p class="empty-lede">${filters ? `Searched with ${esc(filters)}. ` : ""}Try a broader phrase or a different part of the record.</p>
+  // "*" asks for everything under the filters (a party page's "Their speeches"): the filter found nothing, not the asterisk.
+  const everything = q === "*";
+  const title = everything ? (f.kind === "speech" ? "No speeches in the record for this filter" : "Nothing in the record for this filter")
+    : `No matches for “${esc(q || f.speaker)}”`;
+  box.innerHTML = `<h2 class="empty-title">${title}</h2>
+    <p class="empty-lede">${filters ? `Searched with ${esc(filters)}. ` : ""}${everything ? "Remove a filter to see more of the record." : "Try a broader phrase or a different part of the record."}</p>
     <div class="empty-actions"><button type="button" class="ui-button" id="search-recovery-edit">${first ? `Remove ${esc(first.k.toLowerCase())} filter` : "Try fewer words"}</button>
-    <a class="ui-button" href="${esc(askHash(q || f.speaker, f.kind === "speech" ? "speech" : "all"))}">Try in Ask</a>
+    ${everything ? "" : `<a class="ui-button" href="${esc(askHash(q || f.speaker, f.kind === "speech" ? "speech" : "all"))}">Try in Ask</a>`}
     <a class="ui-button" href="${esc(topicHref)}">${f.topic ? `Browse ${esc(TOPICS[f.topic] || f.topic)}` : "Browse topics"}</a></div>`;
   $("search-recovery-edit").addEventListener("click", () => {
     if (first) clearSearchFilter(first.id);

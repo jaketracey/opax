@@ -35,6 +35,7 @@
     "deploy:built": "wrangler deploy",
     "build:donors": "node ../scripts/build_donor_index.mjs",
     "build:parties": "node ../scripts/build_party_index.mjs",
+    "build:party-speeches": "node ../scripts/build_party_speeches.mjs",
     "build:independent": "node ../scripts/build_parallel.mjs",
     "build:registers": "node scripts/build-register-tables.mjs",
     "check:built": "node ../scripts/check_built.mjs",

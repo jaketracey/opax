@@ -12,7 +12,8 @@ import { guardAnswerAttribution } from './ask-attribution'
 import { loosePositionPoints, claimAttributionOk, repairCausal } from './research-evidence'
 import {ServerTiming, timed, withTiming} from './server-timing'
 import { divisionPlain } from '../public/division-markdown.js'
-import { chamberLabel } from '../public/labels.js'
+import { chamberLabel, PARTY_MAP } from '../public/labels.js'
+import { partySpeechLabel } from '../public/party-page.js'
 import {guardTableURL, divisionTableConfig, voteTableConfig} from '../public/vote-tables.js'
 import { tableApi } from './table-api'
 import { pageCacheKey, pageForStorage, pageFromStorage } from './page-cache'
@@ -5135,6 +5136,13 @@ function unknownSubjectMeta(kind: keyof typeof SUBJECT_UNKNOWN, loaded: boolean)
   return { title: `${title} · OPAX`, description, canonical: `${SITE_ORIGIN}/subject/${kind}`, ogType: 'website', status: loaded ? 404 : 503, jsonLd: null, prerender: null, card: null }
 }
 
+/** Two party labels for one party: the short codes the roster and divisions file under
+ *  ("JLN", "Pauline Hanson's One Nation Party") join their party, as on the app's pages. */
+function samePartyLabel(a: string, b: string): boolean {
+  const code = (label: string) => PARTY_MAP[label.toLowerCase()]?.[1] ?? foldName(label)
+  return code(a) === code(b)
+}
+
 /** The party a /subject/party/<name> segment names: a money-map party, or one the roster, bills or divisions record. */
 async function partyFor(name: string, env: Env): Promise<{ node: MoneyEntry | null; label: string | null; loaded: boolean }> {
   const moneyData = await loadMoney(env).catch(() => null)
@@ -5169,7 +5177,10 @@ async function moneySubjectMeta(dir: 'party' | 'donor', name: string, url: URL, 
   let memberNames: string[] = []
   if (dir === 'party') {
     const members = people?.people.filter((p) => p.party && foldName(p.party) === foldName(display)) ?? []
-    const speeches = members.reduce((s, p) => s + (p.speeches ?? 0), 0)
+    // Speeches as the search index labels them (scripts/build_party_speeches.mjs), so the page promises
+    // what its members said only where the record holds it: "Reason Party" has money, no Hansard.
+    const indexed = await assetJson<{ parties?: Record<string, number> }>(env, '/graph/party-speeches.json').catch(() => null)
+    const speeches = partySpeechLabel(display, { indexed, roster: people, same: samePartyLabel })?.count ?? 0
     // The division records name those who sat for a party the roster files elsewhere
     // (scripts/build_party_index.mjs): one senator's own party has its senator.
     const recorded = await assetJson<{ parties?: Record<string, { name: string }[]> }>(env, '/graph/party-members.json').catch(() => null)
@@ -5183,7 +5194,7 @@ async function moneySubjectMeta(dir: 'party' | 'donor', name: string, url: URL, 
     if (node) parts.push(`${money(node.total)} in disclosed receipts, ${years(node.firstYear, node.lastYear)} (${node.sourceShort})`)
     if (parts.length) {
       facts = `${display}: ${parts.join('; ')}.`
-      tail = 'What its members said, and who paid.'
+      tail = speeches && node ? 'What its members said, and who paid.' : speeches ? 'What its members said.' : node ? 'Who paid.' : ''
     } else {
       facts = `${display} in the OPAX record of Australian parliamentary speeches and disclosed political donations.`
     }
