@@ -3,6 +3,7 @@ export interface DonorDisclosureRecord { kind?: string; total?: number; count?: 
 export function confidentDonorMatch(record: DonorDisclosureRecord): boolean;
 export function returnReference(record: DonorReturn): string;
 export function donorDisclosure(record: DonorDisclosureRecord | string, fallback?: DonorReturn & {returnReferences?: DonorReturn[]}): {name: string; href: string | null; reference: string; returns: DonorReturn[]};
+export function donorPageHref(record: DonorDisclosureRecord | null | undefined, name?: string): string | null;
 export function donorLabelHTML(record: DonorDisclosureRecord | string, fallback?: DonorReturn & {returnReferences?: DonorReturn[]}): string;
 export function donorDisplayText(record: DonorDisclosureRecord | string, fallback?: DonorReturn & {returnReferences?: DonorReturn[]}): string;
 export function donorLookup(records: DonorDisclosureRecord[]): Map<string, DonorDisclosureRecord>;

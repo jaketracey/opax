@@ -6,7 +6,7 @@ import {CACHED_BUILDS} from '../../scripts/cached_release_build.mjs';
 const scripts=JSON.parse(readFileSync(new URL('../package.json',import.meta.url))).scripts;
 const workflow=readFileSync(new URL('../../.github/workflows/deploy.yml',import.meta.url),'utf8');
 test('release preserves cached search stages and parallel independent builds without withholding sweeps',()=>{
- assert.equal(scripts['build:search'],'npm run build:donors && npm run build:tokens && npm run build:registers && node ../scripts/cached_release_build.mjs passage-names && node ../scripts/build_search_catalog.mjs && npm run build:growth && npm run build:hubs && node ../scripts/cached_release_build.mjs crawl && npm run build:vic-election && npm run build:tables');
+ assert.equal(scripts['build:search'],'npm run build:donors && npm run build:parties && npm run build:tokens && npm run build:registers && node ../scripts/cached_release_build.mjs passage-names && node ../scripts/build_search_catalog.mjs && npm run build:growth && npm run build:hubs && node ../scripts/cached_release_build.mjs crawl && npm run build:vic-election && npm run build:tables');
  assert.equal(scripts['build:release'],'npm run build:search && npm run build:independent && node ../scripts/stamp_assets.mjs && node ../scripts/photo_identity.mjs --deploy');
  assert.equal(scripts['build:independent'],'node ../scripts/build_parallel.mjs');
  assert.deepEqual(INDEPENDENT_BUILDS,{social:['../scripts/build_social_catalog.mjs'],'grants-map':['grants-map/build.mjs'],analytics:['analytics/build.mjs'],voice:['voice/build.mjs']});

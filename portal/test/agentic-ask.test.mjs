@@ -95,7 +95,7 @@ test('party rankings for parliaments without party labels say so instead of rank
   assert.ok(factSheet([r]).notes.some((n) => /cannot rank these speeches by party/.test(n)));
 });
 
-test('MCP money rows name uncertain disclosures without entity links and retain confident links',async()=>{
+test('MCP money rows link uncertain disclosures to their own spelling\'s page and retain confident links',async()=>{
  const reference={return_type:'AEC annual return',year:'2024-25',return_id:'FIXTURE-RETURN-1',url:'https://example.test/return/1'};
  const nodes=[{id:'party:Example Party',label:'Example Party',kind:'party'},
   {id:'donor:acme',label:'Acme Holdings Pty Ltd',kind:'donor',match:{confidence:1,method:'exact',href:'/subject/donor/Acme'},returnReferences:[reference]},
@@ -103,7 +103,7 @@ test('MCP money rows name uncertain disclosures without entity links and retain 
  const edges=nodes.slice(1).map((n,i)=>({source:n.id,target:'party:Example Party',total:(i+1)*5000,count:1}));
  const result=await partyDonations({asset:async()=>({nodes,edges}),kb:async()=>({})},{party:'Example Party'});
  assert.deepEqual(result.data.rows.map(row=>row.donor),['EXAMPLE, ALEX','Acme Holdings Pty Ltd']);
- assert.equal(result.data.rows[0].href,null);assert.equal(result.data.rows[1].href,'/subject/donor/Acme');
+ assert.equal(result.data.rows[0].href,'/subject/donor/EXAMPLE%2C%20ALEX');assert.equal(result.data.rows[1].href,'/subject/donor/Acme');
  assert.ok(result.data.rows.every(row=>row.return_reference.includes('FIXTURE-RETURN-1')));
  assert.equal(Object.hasOwn(result.data,'donors_not_named'),false);
 });

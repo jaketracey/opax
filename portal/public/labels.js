@@ -41,6 +41,8 @@ export const PARTY_MAP = {
   'centre alliance': ['oth', 'CA'], "katter's australian party": ['oth', 'KAP'],
   'united australia party': ['oth', 'UAP'], 'australian democrats': ['oth', 'AD'],
   'family first': ['oth', 'FF'], 'dlp': ['oth', 'DLP'], 'jln': ['oth', 'JLN'],
+  // The division records spell two of these out in full.
+  'jacqui lambie network': ['oth', 'JLN'], "pauline hanson's one nation party": ['onp', 'ONP'],
 };
 /** A code to [the name a label shows, the name it says]. The short form is the
  *  name itself where that is short; where it is a code, the full name is what a

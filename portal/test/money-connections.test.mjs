@@ -39,11 +39,13 @@ for(const confident of [false,true])test((confident?'confident':'uncertain')+': 
   match:{confidence:confident?1:0.8,method:confident?'exact':'rule',href:'/subject/person/fixture'}};
  const party={id:'party:fixture',label:'Fixture party',kind:'party'};
  const data={nodes:[donor,party],edges:[{source:donor.id,target:party.id,total:120,count:1,firstYear:2024,lastYear:2024}]};
+ const href=confident?donor.match.href:'/subject/donor/EXAMPLE%2C%20ALEX';
  function verify(html){
   const doc=new JSDOM(html).window.document,shown=doc.body.cloneNode(true);shown.querySelectorAll('script,template').forEach(n=>n.remove());
   assert.ok(shown.textContent.includes(donor.source_name));assert.doesNotMatch(shown.textContent,/AEC annual return|RETURN-7|Return reference/);
   const links=[...doc.querySelectorAll('a')].filter(a=>a.textContent===donor.source_name);
-  assert.equal(links.length,confident?1:0);if(confident)assert.equal(links[0].getAttribute('href'),donor.match.href);
+  // Every donor name links (16 Oct): a confident match to its entity, any other to its own spelling's page.
+  assert.equal(links.length,1);assert.equal(links[0].getAttribute('href'),href);
  }
  const config=moneyConnectionsConfig(data),page=applyQuery(config.rows,config,{});
  verify(dataTableHTML(config,page));
@@ -53,5 +55,5 @@ for(const confident of [false,true])test((confident?'confident':'uncertain')+': 
  const h=tableHarness();let requests=0;h.win.fetch=async()=>{requests++;throw Error('unexpected privacy request');};
  const mounted=mountDataTable(h.root,config);await new Promise(setImmediate);verify(h.html());assert.equal(requests,0);mounted.destroy();
  const reverse=moneyConnectionsConfig({...data,nodes:[donor,{...party,kind:'grantor'}],edges:[{...data.edges[0],source:party.id,target:donor.id,flow:'contracts'}]});
- assert.equal(reverse.primaryLink(reverse.rows[0]),confident?donor.match.href:null);
+ assert.equal(reverse.primaryLink(reverse.rows[0]),href);
 });

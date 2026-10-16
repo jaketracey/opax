@@ -1,5 +1,5 @@
-import {donorDisclosure,donorLookup,donorDisplayText,donorLabelHTML} from './donor-disclosure.js?v=abb5e417dd';
-import {loadDonorViewIndex} from './donor-views.js?v=eb3ec114b2';
+import {donorDisclosure,donorLookup,donorDisplayText,donorLabelHTML} from './donor-disclosure.js?v=800932e746';
+import {loadDonorViewIndex} from './donor-views.js?v=f1a85f7a27';
 import {subjectUrl} from './canonical-urls.js?v=225d5915ea';
 /**
  * OPAX Who gets the grants — every published grant award, resolved to the
@@ -53,7 +53,7 @@ import {subjectUrl} from './canonical-urls.js?v=225d5915ea';
  */
 
 import { shortMoney as fmtMoney } from './format.js'
-import { sourceLineHTML } from './labels.js?v=fc03aa14cf'
+import { sourceLineHTML } from './labels.js?v=36612149e0'
 
 /** Text into the source line's HTML fields (labels.js escapes only its own text fields). */
 const esc = (value) => String(value ?? '').replace(/[&<>"']/g, (c) =>

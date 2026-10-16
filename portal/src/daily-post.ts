@@ -1047,7 +1047,8 @@ export function authoriseVicPost(post: DailyPost, victorianMember = false): Dail
   if(post.donor){
     const donor=donorDisclosure(post.donor)
     const reference=`${post.donor.kind==='reference' ? 'Source reference' : 'Disclosed donor'}: ${donor.name} — ${returnReference(donor.returns[0] || {}) || donor.reference}`
-    const nameLink=donor.href ? new URL(donor.href,ORIGIN).href : null
+    // A source-only reference is no donation: its post points at the source, not at its page.
+    const nameLink=donor.href && post.donor.kind!=='reference' ? new URL(donor.href,ORIGIN).href : null
     const source=post.donor.returnReferences?.[0]?.url || `${ORIGIN}/money/receipts`
     const url=/\/subject\/(?:donor|person|organisation)\//.test(post.url) ? nameLink || source : post.url
     const append=(text:string)=>text.includes(reference) ? text : [reference,text].filter(Boolean).join(' — ')

@@ -5,7 +5,8 @@ import { JSDOM, VirtualConsole } from 'jsdom';
 
 const publicRoot = new URL('../../public/', import.meta.url);
 const origin = 'https://opax.test';
-const path = `/subject/${workerData.kind}`;
+// An entry page (workerData.path, with its own row selector) renders through the same shell.
+const path = workerData.path || `/subject/${workerData.kind}`;
 const errors = [];
 const failure = /The directory could not be loaded\. Try again shortly\.|records could not be loaded|role="alert"/;
 const describe = value => value?.stack || String(value);
@@ -24,6 +25,9 @@ const apiFixtures = {
   '/api/display-policy': { SA_HANSARD_FULL_TEXT: 'false' },
   '/api/stats': { resources: 1, paragraphs: 1, kinds: {}, speeches_by_state: {} },
   '/api/person-slugs': {},
+  // Entry pages ask the index for mentions and the news feed; neither is under test here.
+  '/api/search': { results: [] },
+  '/api/news': { items: [] },
   '/api/parties': { parties: [...partyCounts].map(([label, count]) => ({ label, count })) },
   '/api/table/suppliers': {rows:[{id:'s-00000000000000000001',name:'Fixture supplier Pty Ltd',
     jurisdiction:'federal',total:100,count:2,agency_count:1,abn:null}],total:1,page:1,pageSize:50,
@@ -123,8 +127,8 @@ async function run() {
       }).runInContext(context);
     }
     for (const url of deferredModules) await evaluateModule(url);
-    const selector = workerData.kind==='supplier' ? '[data-datatable] tbody tr:has(a[href])'
-      : workerData.kind==='agency' ? '.agency-directory > .ui-row' : '#dir-list > li';
+    const selector = workerData.selector || (workerData.kind==='supplier' ? '[data-datatable] tbody tr:has(a[href])'
+      : workerData.kind==='agency' ? '.agency-directory > .ui-row' : '#dir-list > li');
     const deadline = performance.now() + 10000;
     let body;
     do {
@@ -134,9 +138,11 @@ async function run() {
       if (body.querySelector(selector) || failure.test(body.innerHTML) || errors.length) break;
     } while (performance.now() < deadline);
     await Promise.allSettled([...pending]);
-    await new Promise(resolve => setTimeout(resolve, 20));
+    // An entry page keeps filling its later blocks after the first row appears.
+    await new Promise(resolve => setTimeout(resolve, workerData.settleMs || 20));
     return {
       rows: body.querySelectorAll(selector).length, failed: failed || failure.test(body.innerHTML),
+      html: workerData.html ? body.innerHTML : undefined, location: window.location.pathname,
       honestFailure: body.textContent.includes('The directory could not be loaded. Try again shortly.'),
       visible: !window.document.getElementById('panel-subject').hidden, errors,
       scripts: scripts.filter(node => node.src).map(node => new URL(node.src).pathname),
