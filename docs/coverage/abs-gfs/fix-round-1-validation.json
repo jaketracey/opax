@@ -1,0 +1,158 @@
+{
+  "checked_at": "2026-10-16T21:58:10.322885+00:00",
+  "reviewed_baseline": "15f86fe11cdd72663621060cb06fe12466253d32",
+  "scope": "Fix round 1: UI and tests only, committed with this evidence; exact code and screenshot hashes below.",
+  "changes": {
+    "mobile_table": "Scoped stacked GFS rows with measure and amount first; both hydrated and no-JavaScript table fit a 350px container at 390px.",
+    "dependent_selectors": "Release to level to sector to jurisdiction options follow published combinations; known stale sector/jurisdiction reset to first valid selection.",
+    "absent_measures": "No card field without an observation. Genuine null source cells still show Not published.",
+    "spacing": "Summary-to-lede gap is 24px at 390 and 1440."
+  },
+  "checks": {
+    "python_gfs": {
+      "passed": 12
+    },
+    "python_promotion": {
+      "passed": 14
+    },
+    "javascript": {
+      "passed": 35,
+      "files": [
+        "government-finance.test.mjs",
+        "register-tables.test.mjs",
+        "vic-gifts.test.mjs",
+        "state-bills.test.mjs"
+      ]
+    },
+    "browser": {
+      "preview": "Local Worker; staged asset binding; external requests blocked",
+      "results": [
+        {
+          "width": 390,
+          "status": 200,
+          "horizontalOverflow": false,
+          "table": {
+            "containerWidth": 350,
+            "containerScrollWidth": 350,
+            "tableWidth": 350,
+            "amountCells": 25,
+            "amountsInsideContainer": true
+          },
+          "ledeGap": 24,
+          "jurisdictions": 9
+        },
+        {
+          "width": 1440,
+          "status": 200,
+          "horizontalOverflow": false,
+          "table": {
+            "containerWidth": 1325,
+            "containerScrollWidth": 1325,
+            "tableWidth": 1324.8125,
+            "amountCells": 25,
+            "amountsInsideContainer": true
+          },
+          "ledeGap": 24,
+          "jurisdictions": 9
+        }
+      ],
+      "search": {
+        "before": 451,
+        "after": 90
+      },
+      "csvReceipts": true,
+      "ssr": true,
+      "staticPhoneTable": {
+        "containerWidth": 350,
+        "containerScrollWidth": 350,
+        "tableWidth": 350,
+        "amountCells": 25,
+        "amountsInsideContainer": true
+      },
+      "selectorTransitions": {
+        "nswToCommonwealth": "Australia",
+        "nationalTotalPublicSector": "General government; one published L2 observation"
+      },
+      "pageErrors": []
+    },
+    "tsc": {
+      "exit": 0
+    },
+    "check": {
+      "exit": 0
+    },
+    "worker_dry_run": {
+      "exit": 0
+    },
+    "promoter_dry_run": {
+      "hub": "abs-gfs",
+      "asset": "portal/public/government-finance/data.json",
+      "bytes": 4904581,
+      "mode": "dry-run",
+      "counts": {
+        "documents": 81,
+        "rows": 3906,
+        "years": [
+          "2015-16",
+          "2016-17",
+          "2017-18",
+          "2018-19",
+          "2019-20",
+          "2020-21",
+          "2021-22",
+          "2022-23",
+          "2023-24",
+          "2024-25"
+        ],
+        "reconciliation": {
+          "pass": 2466
+        }
+      },
+      "snapshot_date": "2026-10-16",
+      "input_sha256": "d96e18fda3934e8ef3c52f97acc60fa721b6f93af48db104b8c75daae8727399",
+      "inputs": {
+        "inventory.json": "a2d6798b8d8f034c781407dd9597f1f0ed6fab4b6dd5d363e7e0cab64f912469",
+        "tables.json": "85799f6e5cdb6df4f1a423155c5c622d26a2918c3b631bdd4277f960af1183f6",
+        "receipts.json": "42e6f28071781ea9bf18694bb01ca3e49534f0e6f20cebda0445a322303b134e",
+        "series.jsonl": "220e8dfab45ae8b399cd835dc3841ed90ce50b70555e204b93477e6c3954e621",
+        "reconciliation.json": "c8dd7436a33a3af61dd3a764527b14a00342f27134757445e5c827733f355199",
+        "hub.json": "d96e18fda3934e8ef3c52f97acc60fa721b6f93af48db104b8c75daae8727399"
+      },
+      "reviewed_commit": "95d649835685f7cd792b1efbea8a2f5ee767f5eb"
+    },
+    "git_diff_check": {
+      "exit": 0
+    }
+  },
+  "staged_files_byte_identical_to_baseline": [
+    "data/staged/abs-gfs/hub.json",
+    "data/staged/abs-gfs/inventory.json",
+    "data/staged/abs-gfs/receipts.json",
+    "data/staged/abs-gfs/reconciliation.json",
+    "data/staged/abs-gfs/review.json",
+    "data/staged/abs-gfs/series.jsonl",
+    "data/staged/abs-gfs/summary.json",
+    "data/staged/abs-gfs/tables.json"
+  ],
+  "new_abs_requests": 0,
+  "production_asset_written": false,
+  "votes": {
+    "byte_identical_to_baseline": true,
+    "schema": 1,
+    "sha256": "f9908e4f46f7148a82daee2d0b14c62cd7f2172ff1cd310df9a132a152970aff"
+  },
+  "code_sha256": {
+    "portal/src/government-finance.ts": "f2cd4080db9225298a20962a54614cade8d5be2bf73f225b2540338ce003c3ad",
+    "portal/public/government-finance.css": "2bac6b96b0eaac07250adae21e2b74708d9911c9a0980ff69bd91857dfbec28a",
+    "portal/test/government-finance.test.mjs": "953161b5ad4c153755ed45255ce1b1eb9f38752bb013f0ae7289617f44dc89cd",
+    "portal/test/government-finance-browser.mjs": "ac4543e49111966ab708c1ccb7c957e794c0c2beb15af95700bfba2ba5478eec"
+  },
+  "screenshot_sha256": {
+    "portal/private/abs-gfs/government-finance-390.png": "afdfa0de60e67c2db9e20ef0947fa244fbafeb9f5745163cb7593c30da0d786f",
+    "portal/private/abs-gfs/government-finance-390-viewport.png": "fa8c05a697f83a10f04f37f544ede3c3789532fc8539f72f0862e2f1f50b1f5e",
+    "portal/private/abs-gfs/government-finance-390-table.png": "97443bc430926b6a0ee787397ca5c11e09fe3957c945a32e07b61c58219ebaca",
+    "portal/private/abs-gfs/government-finance-1440.png": "1bd7aeefec2c78df9651b965a30a72b446d76f18cb1ce7346c9450da1d6650f5",
+    "portal/private/abs-gfs/government-finance-1440-viewport.png": "4d737bf9760de35b1c181add2900da1bbf91e04bd2b5ea781a8aee679a70be00",
+    "portal/private/abs-gfs/government-finance-1440-table.png": "d7ca5f6f774a1adff3c87b9cee10f99ac0fb1d1042e2affd1f99f10f1436d076"
+  }
+}

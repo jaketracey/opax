@@ -1,6 +1,8 @@
-.gfs-content{padding-block:var(--space-group);color:var(--ink)}
+#prerender:has(+ .gfs-content){padding-bottom:var(--space-row)}
+#prerender:has(+ .gfs-content)>p:last-child{margin-bottom:0}
+.gfs-content{padding-block:var(--space-row);color:var(--ink)}
 .gfs-content>p,.gfs-content section>p{max-width:76ch}
-.gfs-lede{font:var(--type-body);line-height:1.65}
+.gfs-lede{font:var(--type-body);line-height:1.65;margin-top:0}
 .gfs-content section{margin-block:var(--space-section)}
 .gfs-content h2{font:var(--type-heading);margin-block:var(--space-group)}
 .gfs-filters{display:flex;flex-wrap:wrap;align-items:end;gap:var(--space-row);padding:var(--space-group);background:var(--money-wash);margin-block:var(--space-group)}
@@ -18,3 +20,18 @@
 .gfs-jurisdiction details p{margin-block:var(--space-row)}
 .gfs-jurisdiction summary{cursor:pointer;min-height:2.75rem;display:flex;align-items:center;text-decoration:underline}
 @media(max-width:600px){.gfs-filters{padding:var(--space-row)}.gfs-filters label,.gfs-filters button{flex-basis:100%}.gfs-jurisdiction dd{font-size:1.3rem}}
+/* Keep the shared table, controls and CSV. On phones each published row puts
+   its measure and amount first, with the jurisdiction/year/source below. */
+@media(width < 600px){
+  [data-register-table="government-finance-table"] .dt-scroll{overflow-x:visible}
+  #government-finance-table{display:block;width:100%;min-width:0}
+  #government-finance-table caption{display:block}
+  #government-finance-table thead{display:none}
+  #government-finance-table tbody{display:block;width:100%}
+  #government-finance-table tbody tr{display:grid;grid-template-columns:minmax(0,1fr) max-content;gap:var(--space-tight) var(--space-row);padding:var(--space-block);border-bottom:var(--border-hairline) solid var(--divider-subtle);background:var(--paper-raised)}
+  #government-finance-table td{display:block;grid-column:1/-1;position:static;min-width:0;max-width:100%;padding:0;border:0;box-shadow:none;white-space:normal;text-align:start;overflow-wrap:anywhere}
+  #government-finance-table td::before{content:attr(data-label);display:block;font:var(--type-fine);color:var(--ink-soft)}
+  #government-finance-table td[data-label="Measure"]{grid-area:1/1;font:var(--type-strong)}
+  #government-finance-table td[data-label="Measure"]::before{display:none}
+  #government-finance-table td[data-label="Amount (AUD)"]{grid-area:1/2;text-align:end;white-space:nowrap;font:var(--type-strong)}
+}

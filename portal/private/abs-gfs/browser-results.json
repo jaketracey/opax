@@ -5,12 +5,28 @@
       "width": 390,
       "status": 200,
       "horizontalOverflow": false,
+      "table": {
+        "containerWidth": 350,
+        "containerScrollWidth": 350,
+        "tableWidth": 350,
+        "amountCells": 25,
+        "amountsInsideContainer": true
+      },
+      "ledeGap": 24,
       "jurisdictions": 9
     },
     {
       "width": 1440,
       "status": 200,
       "horizontalOverflow": false,
+      "table": {
+        "containerWidth": 1325,
+        "containerScrollWidth": 1325,
+        "tableWidth": 1324.8125,
+        "amountCells": 25,
+        "amountsInsideContainer": true
+      },
+      "ledeGap": 24,
       "jurisdictions": 9
     }
   ],
@@ -20,5 +36,16 @@
   },
   "csvReceipts": true,
   "ssr": true,
+  "staticPhoneTable": {
+    "containerWidth": 350,
+    "containerScrollWidth": 350,
+    "tableWidth": 350,
+    "amountCells": 25,
+    "amountsInsideContainer": true
+  },
+  "selectorTransitions": {
+    "nswToCommonwealth": "Australia",
+    "nationalTotalPublicSector": "General government; one published L2 observation"
+  },
   "pageErrors": []
 }

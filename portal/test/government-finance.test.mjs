@@ -23,7 +23,7 @@ test('SSR shows jurisdiction figures, fiscal years, accrual/consolidation explan
  assert.equal(doc.querySelector('h1').textContent,'Government finance');
  assert.equal(doc.querySelectorAll('.gfs-jurisdiction').length,1);
  assert.match(doc.querySelector('.gfs-jurisdiction').textContent,/New South Wales/);
- assert.match(doc.body.textContent,/\$120bn/);assert.match(doc.body.textContent,/Not published/);
+ assert.match(doc.body.textContent,/\$120bn/);assert.doesNotMatch(doc.querySelector('.gfs-jurisdiction dl').textContent,/Not published|Net debt/);
  assert.match(doc.body.textContent,/accrual accounting/);assert.match(doc.body.textContent,/consolidates transfers/);
  for(const section of doc.querySelectorAll('section[aria-labelledby^="gfs-"]'))assert.match(section.textContent,/Snapshot.*CC BY 4\.0/);
  assert.match(result.prerender,/Table_1!B7/);assert.match(result.prerender,/2026-04-21/);
@@ -70,6 +70,45 @@ test('SSR and hydrated register table use the same rows without remote calls',as
 
 test('invalid and repeated selectors fail closed',async()=>{
  for(const query of ['?level=Invented','?level=State&level=Local','?sector=Private','?jurisdiction=Unknown','?gfs.q=a&gfs.q=b'])assert.equal((await page(fixture(),query)).status,400);
+});
+
+test('changing NSW to Commonwealth resets the stale jurisdiction to its first published choice',async()=>{
+ const hub=JSON.parse(readFileSync(new URL('../../data/staged/abs-gfs/hub.json',import.meta.url),'utf8'));
+ const result=await page(hub,'?level=Commonwealth&sector=General%20government&jurisdiction=New%20South%20Wales');
+ assert.equal(result.status,200);
+ const doc=new JSDOM(result.prerender).window.document;
+ assert.equal(doc.querySelector('[name="level"]').value,'Commonwealth');
+ assert.equal(doc.querySelector('[name="jurisdiction"]').value,'Australia');
+ assert.deepEqual([...doc.querySelectorAll('[name="jurisdiction"] option')].map(o=>o.value),['','Australia']);
+ assert.equal(doc.querySelectorAll('.gfs-jurisdiction').length,1);
+ assert.equal(doc.querySelector('.gfs-jurisdiction h3').textContent,'Australia');
+ assert.equal(JSON.parse(doc.querySelector('[data-dt-page]').textContent).total,50);
+});
+
+test('National plus Total public sector resets to a valid sector and never renders an empty combination',async()=>{
+ const hub=JSON.parse(readFileSync(new URL('../../data/staged/abs-gfs/hub.json',import.meta.url),'utf8'));
+ const result=await page(hub,'?level=National&sector=Total%20public%20sector');
+ assert.equal(result.status,200);
+ const doc=new JSDOM(result.prerender).window.document;
+ assert.equal(doc.querySelector('[name="level"]').value,'National');
+ assert.equal(doc.querySelector('[name="sector"]').value,'General government');
+ assert.deepEqual([...doc.querySelectorAll('[name="sector"] option')].map(o=>o.value),['General government']);
+ assert.deepEqual([...doc.querySelectorAll('[name="jurisdiction"] option')].map(o=>o.value),['','Australia']);
+ assert.equal(JSON.parse(doc.querySelector('[data-dt-page]').textContent).total,1);
+ assert.deepEqual([...doc.querySelectorAll('.gfs-jurisdiction dt')].map(n=>n.textContent),['Net debt (L2)']);
+ assert.doesNotMatch(doc.querySelector('.gfs-jurisdiction dl').textContent,/Not published/);
+});
+
+test('headline cards omit absent measures and retain Not published only for an actual null source cell',async()=>{
+ const hub=fixture();hub.rows.find(r=>r.reference_year==='2024-25' && r.measure==='revenue').value=null;
+ hub.rows.find(r=>r.reference_year==='2024-25' && r.measure==='expenses').value=0;
+ const result=await page(hub),doc=new JSDOM(result.prerender).window.document;
+ const values=[...doc.querySelectorAll('.gfs-jurisdiction dl > div')].map(n=>[n.querySelector('dt').textContent,n.querySelector('dd').textContent]);
+ assert.equal(values.length,5);
+ assert.equal(values.find(([label])=>label==='Revenue')[1],'Not published');
+ assert.equal(values.find(([label])=>label==='Expenses')[1],'$0.00');
+ assert.ok(!values.some(([label])=>label==='Net debt (L2)'));
+ assert.equal(values.filter(([,value])=>value==='Not published').length,1);
 });
 
 test('government finance is reachable under Money',async()=>{

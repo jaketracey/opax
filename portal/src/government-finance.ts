@@ -59,15 +59,28 @@ export async function governmentFinancePage(url:URL,read:Read,block:Block){
   try{h=await read()}catch{return error(503,'The reviewed government finance snapshot is unavailable.')}
   const all=clearedGovernmentFinance(h)
   if(!all.length)return error(503,'The reviewed government finance snapshot is unavailable.')
-  const choices=(key:keyof GFSRow)=>[...new Set(all.map(r=>String(r[key])))].sort()
-  const releases=choices('release'),levels=choices('level_of_government'),sectors=choices('sector')
-  const release=url.searchParams.get('release')||releases.at(-1)!,level=url.searchParams.get('level')||'State',sector=url.searchParams.get('sector')||'General government'
-  const jurisdiction=url.searchParams.get('jurisdiction')||''
-  const jurisdictions=[...new Set(all.filter(r=>r.release===release && r.level_of_government===level && r.sector===sector).map(r=>r.jurisdiction))].sort()
+  const choices=(rows:GFSRow[],key:keyof GFSRow)=>[...new Set(rows.map(r=>String(r[key])))].sort()
+  const releases=choices(all,'release')
+  const release=url.searchParams.get('release')||releases.at(-1)!
+  const requestedLevel=url.searchParams.get('level')||'State',requestedSector=url.searchParams.get('sector')||'General government'
+  const requestedJurisdiction=url.searchParams.get('jurisdiction')||''
   const tableKeys=['q','sort','page','pageSize','f.reference_year','f.measure'].map(k=>'gfs.'+k)
   const allowed=new Set(['release','level','sector','jurisdiction',...tableKeys])
-  if([...url.searchParams.keys()].some(k=>!allowed.has(k)||url.searchParams.getAll(k).length!==1) || !releases.includes(release) || !levels.includes(level) || !sectors.includes(sector)
-    || jurisdiction && !jurisdictions.includes(jurisdiction))return error(400,'Choose a published release, government level, jurisdiction and sector.')
+  if([...url.searchParams.keys()].some(k=>!allowed.has(k)||url.searchParams.getAll(k).length!==1) || !releases.includes(release)
+    || url.searchParams.has('level') && !choices(all,'level_of_government').includes(requestedLevel)
+    || url.searchParams.has('sector') && !choices(all,'sector').includes(requestedSector)
+    || requestedJurisdiction && !choices(all,'jurisdiction').includes(requestedJurisdiction))return error(400,'Choose a published release, government level, jurisdiction and sector.')
+  // Higher-level choices take priority. A previously published lower-level
+  // selection can become stale after a release/level change; reset it in order.
+  const released=all.filter(r=>r.release===release),levels=choices(released,'level_of_government')
+  const level=levels.includes(requestedLevel)?requestedLevel:levels[0]
+  const levelRows=released.filter(r=>r.level_of_government===level),sectors=choices(levelRows,'sector')
+  const sector=sectors.includes(requestedSector)?requestedSector:sectors[0]
+  const sectorRows=levelRows.filter(r=>r.sector===sector),jurisdictions=choices(sectorRows,'jurisdiction')
+  const jurisdiction=!requestedJurisdiction?'':jurisdictions.includes(requestedJurisdiction)?requestedJurisdiction:jurisdictions[0]
+  if(level!==requestedLevel)url.searchParams.set('level',level)
+  if(sector!==requestedSector)url.searchParams.set('sector',sector)
+  if(jurisdiction!==requestedJurisdiction)url.searchParams.set('jurisdiction',jurisdiction)
   const selected=all.filter(r=>r.release===release && r.level_of_government===level && r.sector===sector && (!jurisdiction || r.jurisdiction===jurisdiction))
   const latest=[...new Set(selected.map(r=>r.reference_year))].sort().at(-1)
   const latestRows=selected.filter(r=>r.reference_year===latest)
@@ -77,7 +90,7 @@ export async function governmentFinancePage(url:URL,read:Read,block:Block){
   const cards=[...new Set(latestRows.map(r=>r.jurisdiction))].sort().map(j=>{
     const rows=latestRows.filter(r=>r.jurisdiction===j)
     const sources=[...new Map(rows.map(r=>[r.workbook,r])).values()]
-    return `<article class="gfs-jurisdiction"><h3>${esc(j)}</h3><p class="gfs-receipt">${esc((rows.find(r=>r.measure==='revenue')||rows[0]).consolidation)}</p><dl>${Object.entries(names).map(([key,label])=>{const r=rows.find(r=>r.measure===key);return `<div><dt>${label}</dt><dd>${r&&r.value!==null?cellLink(r):'Not published'}</dd></div>`}).join('')}</dl>${receipt(h,releaseDate)}<details><summary>Original cells and source hashes</summary>${rows.map(r=>`<p><a href="${esc(r.source_url)}">${esc(names[r.measure])} · ${esc(r.sheet+'!'+r.cell)}</a></p>`).join('')}${sources.map(r=>`<p>${esc(r.workbook)} · Snapshot ${esc(r.snapshot)}<br>SHA-256 ${esc(r.sha256)}</p>`).join('')}</details></article>`
+    return `<article class="gfs-jurisdiction"><h3>${esc(j)}</h3><p class="gfs-receipt">${esc((rows.find(r=>r.measure==='revenue')||rows[0]).consolidation)}</p><dl>${Object.entries(names).flatMap(([key,label])=>{const r=rows.find(r=>r.measure===key);return r?[`<div><dt>${label}</dt><dd>${r.value!==null?cellLink(r):'Not published'}</dd></div>`]:[]}).join('')}</dl>${receipt(h,releaseDate)}<details><summary>Original cells and source hashes</summary>${rows.map(r=>`<p><a href="${esc(r.source_url)}">${esc(names[r.measure])} · ${esc(r.sheet+'!'+r.cell)}</a></p>`).join('')}${sources.map(r=>`<p>${esc(r.workbook)} · Snapshot ${esc(r.snapshot)}<br>SHA-256 ${esc(r.sha256)}</p>`).join('')}</details></article>`
   }).join('')
   const rows=governmentFinanceRows({...h,rows:selected}),config=governmentFinanceTableConfig(rows),guarded=guardTableURL(config,url)
   if(guarded.rejected)return error(400,'Choose one value for each table filter.')

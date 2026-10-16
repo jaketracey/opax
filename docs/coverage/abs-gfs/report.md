@@ -1,5 +1,7 @@
 # ABS Government Finance Statistics annual lane
 
+UI review fixes at baseline `15f86fe11` are complete: [fix round 1 report](fix-round-1.md) and [current UI validation](fix-round-1-validation.json). Original source/number/licence findings below are unchanged.
+
 17 October 2026 Melbourne. Branch `coverage/abs-gfs`, baseline `71c3615b8`. Staged and locally verified; **no push, deploy, nightly, KB/D1 write or live JSON write**. The orchestrator owns promotion and shipping.
 
 The [2024–25 release](https://www.abs.gov.au/statistics/economy/government/government-finance-statistics-annual/2024-25) was published **21 April 2026**. It links **81 XLSX workbooks / 299 tables**, all acquired. Reference years are **2015–16 through 2024–25**; debt-matrix stock date is **30 June 2025**. There is one release vintage: earlier reference years retain `release: 2024-25`, rather than being represented as earlier release vintages. No full historical-release inventory is claimed.

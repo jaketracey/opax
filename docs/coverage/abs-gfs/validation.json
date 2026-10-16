@@ -130,5 +130,6 @@
     "portal/private/abs-gfs/government-finance-390-viewport.png": "b17864c1ce5cbf5381f3440fc60c766dc980e117201ffe1a15798ed9c90bc0f1",
     "portal/private/abs-gfs/government-finance-1440.png": "3897b46556ea27c0343de6fd54b8d24f35ebb538b730ecf1bf458ed63fd5fe3a",
     "portal/private/abs-gfs/government-finance-1440-viewport.png": "af03b9a1f9f04867704aac7c51d97eb9f68fefa9482d7375ff1882bfd9d1a821"
-  }
+  },
+  "ui_validation_superseded_by": "fix-round-1-validation.json"
 }
