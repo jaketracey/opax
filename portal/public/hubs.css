@@ -23,6 +23,23 @@
 .hub-weeks > li { display: flex; gap: var(--space-block); align-items: flex-start; justify-content: space-between; }
 .hub-weeks .ui-status { flex-shrink: 0; margin-top: var(--space-line); }
 .hub-video-mark { font: var(--type-label); color: var(--bronze-ink); }
+.hub-more { margin: var(--space-row) 0 0; font: var(--type-strong); }
+.hub-more a { display: inline-flex; align-items: center; min-height: var(--size-target); }
+
+/* /video/senate: kind chips (plain links), year jumps, then a year's months of cards.
+   A year off screen skips layout and paint until it scrolls near (content-visibility),
+   so 300-odd cards cost little; the jump links still land on it. */
+.hub-page .ui-page-head:has(+ .video-kinds) { margin-bottom: var(--space-group); }
+.video-kinds { margin: 0; }
+.video-kinds > ul { display: flex; flex-wrap: wrap; gap: var(--sp-8); margin: 0; padding: 0; list-style: none; }
+.video-kind-count { font-weight: var(--weight-regular); font-variant-numeric: tabular-nums; opacity: .8; }
+.video-year { content-visibility: auto; contain-intrinsic-size: auto 1600px; }
+.video-year > .video-cards { margin-bottom: var(--space-block); }
+.video-year > h3.ui-subsection-title:first-of-type { margin-top: var(--space-block); }
+.video-others-note { font: var(--type-fine); color: var(--ink-soft); margin: 0 0 var(--space-row); }
+.video-others { max-width: 46rem; }
+.video-others .ui-row-title { font: var(--type-strong); }
+.video-empty { margin-top: var(--space-group); }
 .hub-count { color: var(--ink-soft); font: var(--type-body); margin-left: var(--space-tight); font-variant-numeric: tabular-nums; }
 .hub-records { max-width: 46rem; }
 .hub-summary { margin: var(--space-row) 0 0; }

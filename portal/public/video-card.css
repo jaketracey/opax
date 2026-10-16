@@ -25,6 +25,9 @@
 .video-meta { font: var(--type-metadata); color: var(--on-navy-soft); }
 .video-caption { margin-top: var(--space-tight); font: var(--type-metadata); }
 .video-caption a { display: inline-flex; align-items: center; min-height: var(--size-target); }
+/* "More Senate video", "All first speeches": the way on to /video/senate under a block of cards. */
+.video-more { margin: var(--space-row) 0 0; font: var(--type-strong); }
+.video-more a { display: inline-flex; align-items: center; min-height: var(--size-target); }
 @media (prefers-reduced-motion: reduce) {
   .video-facade { transition: none; }
 }

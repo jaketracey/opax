@@ -72,7 +72,9 @@ export function renderSittingIndex(data: HubIndex, today: string, footer: HubFoo
     const state = active ? 'Current' : today < w.start ? 'Upcoming' : 'Past'
     return `<li><div><h2 class="ui-row-title">${link(`/sitting/${w.start}`,range(w.start,w.end))}</h2><p class="ui-row-meta">${esc(w.houses.map(houseName).join(' and '))}${videoMark(sittingVideos(videos,w.start,w.end).length)}</p>${w.estimates ? `<p class="ui-row-meta">${link(`/estimates/${w.estimates}`,'Senate Supplementary Budget Estimates')}</p>` : ''}</div>${statusLabelHTML(state,active ? 'active' : 'ended')}</li>`
   }).join('')
-  const html = shell(header(title,description,'lead',sourceLineHTML({updated:data.updated,source:'APH sitting calendar',originals:data.sources.map(s => ({href:s.url,label:s.label}))}))+`<ul class="ui-list hub-weeks" role="list">${rows}</ul>`,footer,trail('/sitting'))
+  // Every Senate upload, including the Question Time of weeks before this calendar starts.
+  const allVideo = videos.length ? `<p class="hub-more">${link('/video/senate','All Senate videos')}</p>` : ''
+  const html = shell(header(title,description,'lead',sourceLineHTML({updated:data.updated,source:'APH sitting calendar',originals:data.sources.map(s => ({href:s.url,label:s.label}))})+allVideo)+`<ul class="ui-list hub-weeks" role="list">${rows}</ul>`,footer,trail('/sitting'))
   return {title,description,html,jsonLd:{'@graph':[itemList('/sitting',weeks.map(w => ({href:`/sitting/${w.start}`,name:range(w.start,w.end)})))]}}
 }
 export function renderSittingWeek(data: HubIndex, week: Week, people: SponsorCandidate[], slugs: Map<string,string>, today = sydneyDay(), footer: HubFooterConfig = {}, tableQuery: Query = {}, videos: Video[] = []) {
@@ -107,7 +109,7 @@ export function renderSittingWeek(data: HubIndex, week: Week, people: SponsorCan
   const days = sittingVideos(videos,week.start,week.end)
   if (days.length) body += videoSectionHTML('Senate Question Time',days,{id:'senate-video',
     note:'Video published by the Senate Public Information Office on YouTube. The player loads from YouTube only when you press play.',
-    after:sourceLineHTML({updated:days.map(d => d.published?.slice(0,10) || '').sort().at(-1) || '',dateLabel:'Published',source:'AuSenate YouTube channel',originals:[{href:'https://www.youtube.com/@AuSenate',label:'AuSenate: The Senate Public Information Office'}]})})
+    after:`<p class="video-more">${link(`/video/senate#m${days[0].date!.slice(0,7)}`,'More Senate video')}</p>`+sourceLineHTML({updated:days.map(d => d.published?.slice(0,10) || '').sort().at(-1) || '',dateLabel:'Published',source:'AuSenate YouTube channel',originals:[{href:'https://www.youtube.com/@AuSenate',label:'AuSenate: The Senate Public Information Office'}]})})
   {
     const config = divisionTableConfig({jurisdiction:'federal', start:week.start, end:week.end}, 'Divisions held', 'sitting')
     const divisions = divisionRows(week.divisions)

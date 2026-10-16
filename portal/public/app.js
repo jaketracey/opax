@@ -4145,7 +4145,8 @@ async function renderPersonFirstSpeech(name, sections, roster) {
   if (currentSubjectKey !== key || !slot.isConnected || !rows.length) { slot.remove(); return; }
   slot.innerHTML = `<h3 class="subject-section-title">First speech</h3>
     <p class="person-caveat">Video published by the Senate Public Information Office on YouTube. The player loads from YouTube only when you press play.</p>
-    <div class="video-cards">${rows.map(cards.videoCardHTML).join("")}</div>
+    <div class="video-cards">${rows.map((v) => cards.videoCardHTML(v)).join("")}</div>
+    <p class="video-more"><a href="/video/senate?kind=first-speech">All first speeches</a></p>
     ${sourceLineHTML({ updated: String(rows[0].published || "").slice(0, 10), dateLabel: "Published", source: "AuSenate YouTube channel",
       originals: [{ label: "AuSenate: The Senate Public Information Office", href: "https://www.youtube.com/@AuSenate" }] })}`;
   cards.wireVideoCards(document);

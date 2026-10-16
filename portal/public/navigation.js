@@ -18,6 +18,7 @@
       intro: 'What the chambers sat on and voted on, and the laws before them.', feature: 'week', columns: [
         { heading: 'In the chamber', links: [
           page('/sitting', 'Sitting weeks', 'Every division and every new bill, week by week.'),
+          page('/video/senate', 'Senate video', 'Question Time and first speeches, back to 2020.'),
           page('/estimates', 'Senate estimates', 'Hearings, the agencies called and their recent awards.', { gate: 'estimates' }),
         ] },
         { heading: 'Laws', links: [
@@ -123,7 +124,7 @@
     if (path === '/explore') return ['ledger','grants','wd'].includes(params.get('game')) ? 'money' : 'research';
     if (/^\/(subject\/topic|reports|audit|explore)(\/|$)/.test(path)) return 'research';
     if (/^\/(subject|declared|vic-election-2026)(\/|$)/.test(path)) return 'people';
-    if (/^\/(sitting|estimates|bills?|instruments?)(\/|$)/.test(path)) return 'parliament';
+    if (/^\/(sitting|estimates|bills?|instruments?|video)(\/|$)/.test(path)) return 'parliament';
     if (/^\/(about|methods|stats|expenses|privacy|support|community)(\/|$)/.test(path)) return 'about';
     return null;
   };

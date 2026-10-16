@@ -77,6 +77,7 @@ OPAX code is AGPL-3.0. Source data retains its own terms: parliamentary material
 - [Electorates](${ORIGIN}/subject/electorate): \`/subject/electorate/{slug}\`; jurisdiction-specific seat records.
 - [Bills](${ORIGIN}/bills): \`/bill/{bill-key}\`; stages, original bill text and linked divisions.
 - [Sitting weeks](${ORIGIN}/sitting): Sitting dates, introduced bills, divisions and sourced Senate cut-off dates.
+- [Senate video](${ORIGIN}/video/senate): Senate Question Time back to February 2020 and senators' first speeches, linked from the Senate's own YouTube channel; click to play, never re-hosted. \`?kind=question-time|first-speech|other\`.
 - [12–15 October sitting week](${ORIGIN}/sitting/2026-10-12): Calendar and published records for this period.
 - [Supplementary Budget Estimates](${ORIGIN}/estimates/2026-10): 26–29 October 2026; committee dates, portfolio agencies and recent contract and grant awards. Portfolio lists are not confirmed appearances while programs remain unpublished. No donor records.
 ${catalogueComplete(instruments) ? '- [Federal legislative instruments](' + ORIGIN + '/instruments): \`/instrument/{frl-id}\`; metadata only, with dates and links to authoritative FRL versions. No model summaries or person entities.\n' : ''}
@@ -137,6 +138,13 @@ export function addHubDataDiscovery(groups, budget, gifts, stateBills = []) {
   }
   const ready = stateBills.filter(h => h?.promotion && h.promotion.snapshot_date === exportDate(h.generated_at) && clearedStateBills(h).length);
   if (ready.length) groups.static.push({path:'/register/state-bills', lastmod:ready.map(h => exportDate(h.generated_at)).sort().at(-1)});
+}
+
+/** /video/senate, once the staged Senate video file holds a playable row; dated by the file. */
+export function addVideoDiscovery(groups, video) {
+  const rows = Array.isArray(video?.videos) ? video.videos.filter(v => v?.chamber === 'senate' && /^[A-Za-z0-9_-]{11}$/.test(v.id || '')) : [];
+  const lastmod = exportDate(video?.meta?.updated) || exportDate(rows.map(v => v.published).filter(Boolean).sort().at(-1));
+  if (rows.length && lastmod) groups.static.push({path:'/video/senate', lastmod});
 }
 
 /** Canonical donor identities in a person's party tables; amounts and row order do not affect discovery. */
@@ -213,6 +221,7 @@ export async function buildCrawl(root, {read: sourceRead} = {}) {
   addHubDataDiscovery(groups, await optional('budget/data.json'), await optional('vic-gifts/data.json'),
     [await optional('bills-tas/data.json'), await optional('bills-act/data.json')]);
   fallbacks.static += groups.static.length - beforeHubs;
+  addVideoDiscovery(groups, await optional('video/senate.json'));
   const slugs = slugIndex(people).slugOf;
   const assets = new Map();
   const cachedRead = p => { if (!assets.has(p)) assets.set(p, read(p)); return assets.get(p); };
