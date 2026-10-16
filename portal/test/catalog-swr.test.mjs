@@ -50,7 +50,7 @@ function harness({upstream, timeout = AbortSignal.timeout.bind(AbortSignal)} = {
     deliverReplyEmails: async () => {jobs.push('email');},
     runSocialPublication: async () => {jobs.push('social');},
     MAX_SPEAKER_CHARS: 160, NAME_RE: /^[\w ]+$/,
-    canonicalSpeaker: name => name, speakerAttribution: async () => null,
+    canonicalSpeaker: name => name, speakerAttribution: async () => null, speakerPrints: async () => null,
   };
   runInNewContext(code, context);
   const ctx = {waitUntil(promise) {waits.push(promise);}};
@@ -158,7 +158,7 @@ test('all other cachedJson callers retain their browser TTL and schedule stale r
   const cases = [
     ['/api/parties', () => h.api.apiParties(h.env, h.ctx), 600],
     ['/api/tide?scope=federal', () => h.api.apiTide(new URL('https://opax.com.au/api/tide'), h.env, h.ctx), 600],
-    ['/api/person-topics?name=Example%20Member&scope=split-speakers-v2', () => h.api.apiPersonTopics(new URL('https://opax.com.au/api/person-topics?name=Example%20Member'), h.env, h.ctx), 600],
+    ['/api/person-topics?name=Example%20Member&scope=split-speakers-v3', () => h.api.apiPersonTopics(new URL('https://opax.com.au/api/person-topics?name=Example%20Member'), h.env, h.ctx), 600],
     ['/api/matrix', () => h.api.apiMatrix(h.env, h.ctx), 900],
   ];
   for (const [path, invoke, ttl] of cases) {

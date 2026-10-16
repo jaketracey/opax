@@ -1,5 +1,5 @@
 /** Shared URL spelling for browser renderers, exports and social publishers. */
-import { PERSON_PATHS } from './person-paths.js?v=9b9d79f092';
+import { PERSON_PATHS } from './person-paths.js?v=44b95e675f';
 export const personNameKey = name => String(name ?? '').normalize('NFKD').replace(/\p{M}/gu, '')
   .replace(/[‘’ʼ`]/g, "'").replace(/\s+/g, ' ').trim().toLowerCase();
 export function entitySlug(name) {

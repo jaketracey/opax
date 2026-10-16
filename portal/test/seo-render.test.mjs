@@ -5,6 +5,7 @@ import assert from 'node:assert/strict';
 import {readFileSync,existsSync,readdirSync} from 'node:fs';
 import {build} from 'esbuild';
 import {isOrganisationDonor} from "../public/donor-entity.js";
+import {divisionPlain} from '../public/division-markdown.js';
 import {renderBillAnswer as rawBillAnswer,renderPersonAnswer,partyLine,escapeHtml,safeHref,internalLinkCount,associationCaveat,crumbsHTML,answerBlock} from '../src/seo-content.ts';
 const renderBillAnswer = (bill, people, slugs, related = [], query = {}) => rawBillAnswer(bill, people, slugs, related, query);
 const pub=new URL('../public/',import.meta.url);
@@ -123,6 +124,17 @@ test('sample HTML stays bounded and boot assets preserve the original app panel 
   const generated=readFileSync(new URL('spa-shell.js',pub),'utf8');assert.ok(generated.includes('panel-subject'));assert.ok(generated.includes('main.prepend(answer)'));assert.ok(readFileSync(new URL('index.html',pub),'utf8').indexOf('/spa-shell.js')<readFileSync(new URL('index.html',pub),'utf8').indexOf('/app.js'));
 });
 
+test('a state division page has one h1, the motion, and its chamber by name: never a raw code',async()=>{
+  const html=await get('/doc/division-vic-la-2026-09-10-3');checkHtml(html);
+  const d=await read('/divisions/division-vic-la-2026-09-10-3.json');
+  const motion=divisionPlain(d.name).split(/(?<=[.!?])\s/)[0];
+  assert.ok(html.includes(`<h1>${escapeHtml(motion)}</h1>`),'the h1 is the motion');
+  const visible=html.slice(html.indexOf('<body')).replace(/<script[\s\S]*?<\/script>/g,'').replace(/<[^>]+>/g,' ');
+  assert.doesNotMatch(visible,/\bvic_la\b/);
+  assert.ok(visible.includes('Legislative Assembly (Victoria)'));
+  assert.doesNotMatch(html.match(/<title>([^<]*)<\/title>/)[1],/vic_la/);
+});
+
 // The nightly exports division JSON; the Worker must format its question as
 // well as the same record embedded in a bill's crawlable answer.
 test('reported TVFY division routes render Markdown blocks from local exports',async()=>{
@@ -171,6 +183,8 @@ test('page aliases, including combined www/path aliases, redirect once to an exp
     ['/subject/person/Bruce%20Baird','/subject/person/bruce-baird'],
     ['/subject/person/Jess%20Pugh','/subject/person/pugh'],['/subject/person/Scott%20Stewart','/subject/person/stewart'],['/subject/person/Zo%C3%AB%20Daniel','/subject/person/zoe-daniel'],
     ['/subject/person/jess-pugh','/subject/person/pugh'],['/subject/person/scott-stewart','/subject/person/stewart'],
+    // A surname print folded into its person (scripts/roster_fold.py) forwards to the person.
+    ['/subject/person/Shoebridge','/subject/person/david-shoebridge'],['/subject/person/shoebridge','/subject/person/david-shoebridge'],
     ['/subject/person/BRUCE-BAIRD/','/subject/person/bruce-baird'],
     ['/person/Bruce%20Baird','/subject/person/bruce-baird'],
     ['/subject/mp/Bruce%20Baird','/subject/person/bruce-baird'],

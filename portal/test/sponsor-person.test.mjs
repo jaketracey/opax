@@ -9,8 +9,12 @@ const {slugIndex}=await bundle('../src/person-slug.ts');
 const app=await readFile(new URL('../public/app.js',import.meta.url),'utf8');
 const roster=JSON.parse(await readFile(new URL('../public/parliamentarians.json',import.meta.url),'utf8')).people;
 // The app's pinned roster (8f1305e3): Mehreen Faruqi's full-name row had no pid and only the surname
-// print "Faruqi" (committee transcripts) held 10912; the curly O'Connor twin had no pid.
-const pinned=roster.map((p)=>p.name==='Mehreen Faruqi'||p.name==='Brendan O’Connor'?(({pid,...rest})=>rest)(p):p);
+// print "Faruqi" (committee transcripts) held 10912; the curly O'Connor twin had no pid. The shipped
+// roster has since folded the print into her row (scripts/roster_fold.py), so the pin restores it.
+const faruqiPrint={name:'Faruqi',speeches:635,party:'Greens',states:['federal'],chambers:['senate_committee'],first:2025,last:2026,
+ pid:'10912',current:true,party_now:'Greens',full:'Mehreen Faruqi',representation:[]};
+const pinned=roster.flatMap((p)=>p.name==='Mehreen Faruqi'?[faruqiPrint,(({pid,prints,...rest})=>rest)(p)]
+ :p.name==='Brendan O’Connor'?[(({pid,...rest})=>rest)(p)]:[p]);
 const at=(name,pid,people=roster)=>sponsorPerson(name,pid,people)?.name??null;
 
 test('the register print is read as a name',()=>{
@@ -88,7 +92,8 @@ test('no sponsor on any bill opens a surname print',async()=>{
 test("the SEO bill page names Faruqi's full-name row, not the committee print",async()=>{
  const b=JSON.parse(await readFile(new URL('../public/bills/au-federal-s1479.json',import.meta.url),'utf8'));
  assert.equal(b.sponsor_person_id,'10912');
- assert.equal(roster.find((p)=>p.pid==='10912').name,'Faruqi','the first row holding 10912 is the print');
+ assert.equal(pinned.find((p)=>p.pid==='10912').name,'Faruqi','on the pin, the first row holding 10912 is the print');
+ assert.equal(roster.find((p)=>p.pid==='10912').name,'Mehreen Faruqi','shipped, the print is folded into her row');
  assert.equal(sponsorFor(b,roster)?.name,'Mehreen Faruqi');
  assert.equal(sponsorFor(b,pinned)?.name,'Mehreen Faruqi');
  assert.equal(sponsorFor({...b,sponsor:null},roster),null);

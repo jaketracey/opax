@@ -18,7 +18,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 COPIED = ["scripts/vm/export_step.sh", "scripts/vm/export_people.sh", "scripts/vm/keep_if_unchanged.py",
-          "scripts/export_parliamentarians.py", "scripts/roster_identity.py", "scripts/enrich_profile_jurisdictions.py",
+          "scripts/export_parliamentarians.py", "scripts/roster_identity.py", "scripts/roster_fold.py", "scripts/enrich_profile_jurisdictions.py",
           "scripts/roster_service.json", "scripts/roster_witness_service.json", "scripts/roster_state_evidence.json", "portal/public/electorates/manifest.json",
           "portal/public/electorates/releases/b56417062ccc33cf/reference.json",
           "scripts/person_identity.json", "portal/public/research/mlci.json", "portal/public/votes.json",
@@ -209,7 +209,11 @@ class ShippedIdentityReplayTests(unittest.TestCase):
                 for p in old:
                     if p.get('witness_rows',0)*2 > p['speeches'] and p['name'] not in scoped:
                         self.assertFalse(any(by[p['name']].get(k) for k in ('full','pid','party','representation')),p['name'])
-                changes=[p['name'] for p in shipped if any(p.get(k)!=by[p['name']].get(k) for k in IDENTITY_FIELDS)]
+                # A print the box export folded (scripts/roster_fold.py) is read under the person holding it.
+                by.update({stub: q for q in actual for stub in q.get('prints') or [] if stub not in by})
+                changes=[p['name'] for p in shipped if p['name'] in by and by[p['name']]['name'] == p['name']
+                         and any(p.get(k)!=by[p['name']].get(k) for k in IDENTITY_FIELDS)]
+                self.assertEqual({p['name'] for p in shipped} - by.keys(), set(), 'every shipped row survives or is folded')
                 self.assertEqual(set(changes),{'Blandthorn',"D'Ambrosio",'McDermott','Robinson','Crawford'})
                 print(f'Reviewer replay {scenario}: SHIPPED {len(actual)} records, {len(scoped)}/16 scoped; 5 identity differences / cap25; zero unscoped split identities; Robinson/Crawford below own-service floor',file=sys.stderr)
 

@@ -30,6 +30,29 @@ function entityHrefAttr(href) {
   return `href="${esc(href)}"`;
 }
 
+// --- chamber --------------------------------------------------------------------
+
+/** The record's chamber codes (parli.db, the index's `chamber` label, a division's
+ *  `house`) as a reader names them. A state house carries its parliament in
+ *  brackets, so the label stands alone in a kicker, a meta line or a share card. */
+export const CHAMBER_LABELS = {
+  representatives: 'House of Representatives', senate: 'Senate',
+  senate_committee: 'Senate committees', house_committee: 'House committees', joint_committee: 'Joint committees',
+  assembly: 'Legislative Assembly', council: 'Legislative Council',
+  nsw_la: 'Legislative Assembly (New South Wales)', nsw_lc: 'Legislative Council (New South Wales)',
+  vic_la: 'Legislative Assembly (Victoria)', vic_lc: 'Legislative Council (Victoria)',
+  qld_la: 'Legislative Assembly (Queensland)', qld: 'Legislative Assembly (Queensland)',
+  sa_ha: 'House of Assembly (South Australia)', sa_lc: 'Legislative Council (South Australia)',
+  wa_la: 'Legislative Assembly (Western Australia)', wa_lc: 'Legislative Council (Western Australia)',
+  tas_ha: 'House of Assembly (Tasmania)', tas_lc: 'Legislative Council (Tasmania)',
+  act_la: 'Legislative Assembly (Australian Capital Territory)', act: 'Legislative Assembly (Australian Capital Territory)',
+  nt_la: 'Legislative Assembly (Northern Territory)', nt: 'Legislative Assembly (Northern Territory)',
+};
+/** A chamber code's name, or '' for a code this list does not know: a reader never sees the code. */
+export function chamberLabel(code) {
+  return CHAMBER_LABELS[String(code || '').trim().toLowerCase()] || '';
+}
+
 // --- party ----------------------------------------------------------------------
 
 /** A party's name, lowercased, to [its colour class, its code]. Party identity

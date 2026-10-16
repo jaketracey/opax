@@ -5,6 +5,7 @@ Whole records are compared, including provenance and representation basis. A
 change without an evidence-backed reason makes the audit fail.
 """
 import argparse
+import copy
 import json
 import subprocess
 import sys
@@ -13,9 +14,10 @@ from pathlib import Path
 
 sys.path.insert(0,str(Path(__file__).resolve().parents[1]))
 from scripts import enrich_profile_jurisdictions as profiles
+from scripts import roster_fold
 from scripts.split_roster_witnesses import restored_scope
 
-CATEGORIES = ('witness split', 'mix-up corrected', 'witness-dominated', 'spans parliaments', 'alias normalisation')
+CATEGORIES = ('witness split', 'mix-up corrected', 'witness-dominated', 'spans parliaments', 'alias normalisation', 'print folded')
 
 
 def party_rows(rows, jurisdiction=None, party=None):
@@ -24,18 +26,44 @@ def party_rows(rows, jurisdiction=None, party=None):
                 [p.get('party'), *(p.get('parties') or [])]) for p in rows)
 
 
+def folds(before, after, reference):
+    """Surname prints the `after` roster folded into a person (scripts/roster_fold.py), each proven on the
+    baseline itself: the fold rule takes that print to that person there too. Returns {print: person} and
+    each person's expected row, the exact merge of their baseline row with their prints'."""
+    folded = {stub: q['name'] for q in after for stub in q.get('prints') or []}
+    old = {p['name']: p for p in before}
+    registry = roster_fold.registry_from_reference(reference)
+    expected = {}
+    for stub in [p['name'] for p in before if p['name'] in folded]:
+        target, why = roster_fold.decide(old[stub], before, registry)
+        if target is None or target['name'] != folded[stub]:
+            raise ValueError(f'Unproven fold: {stub} into {folded[stub]} ({why or "the rule picks " + target["name"]})')
+        expected[target['name']] = roster_fold.merge(expected.get(target['name']) or copy.deepcopy(old[target['name']]), old[stub])
+    return folded, expected
+
+
 def audit(before, after, reference, reviewed):
     old = {p['name']: p for p in before}
     new = {p['name']: p for p in after}
-    if len(old) != len(before) or len(new) != len(after) or old.keys() != new.keys():
+    folded, merged = folds(before, after, reference)
+    if len(old) != len(before) or len(new) != len(after) or old.keys() - folded.keys() != new.keys():
         raise ValueError('Printed names must remain unique and unchanged')
     records = profiles.dated_records(reference, reviewed)
     prints = defaultdict(list)
     for p in before:
         if profiles.usable_alias(p['name']):prints[profiles.parts(p['name'])[-1]].append(p)
     changes = []
+    for stub, person in folded.items():
+        changes.append(dict(name=stub, category='print folded', fields=['name'],
+                            reason=f'Surname print folded into {person}: one person by surname, party, houses, years and the members register'))
     for name, p in old.items():
+        if name in folded:continue
         q = new[name]
+        if name in merged:
+            # A person who took prints: exactly their baseline row plus the prints' speeches, houses and years.
+            if merged[name] != q:
+                raise ValueError('Modified folded person: '+name)
+            continue
         if p == q:continue
         if q.get('speech_scope') and q.get('transcript'):
             expected = restored_scope(p, reference, reviewed, prints[profiles.parts(name)[-1]])
@@ -51,7 +79,7 @@ def audit(before, after, reference, reviewed):
                             reason=reason[1] if reason else 'No evidence permits a repair',
                             fields=sorted(k for k in p.keys() | q.keys() if p.get(k) != q.get(k))))
     counts = {c: sum(p['category'] == c for p in changes) for c in (*CATEGORIES, 'clean record changed')}
-    return dict(counts=counts, changed=len(changes), unchanged=len(before)-len(changes), changes=changes)
+    return dict(counts=counts, changed=len(changes), unchanged=len(before)-len(changes)-len(merged), folded_people=len(merged), changes=changes)
 
 
 def markdown(result, before, after, baseline):
@@ -60,7 +88,7 @@ def markdown(result, before, after, baseline):
     for category, count in result['counts'].items():
         sample = [p['name'] for p in result['changes'] if p['category'] == category][:5]
         lines.append(f'| {category} | {count} | {", ".join(sample) or "—"} |')
-    lines += ['', f'**{result["changed"]} changed; {result["unchanged"]} exactly unchanged; zero clean record changed is required.**', '',
+    lines += ['', f'**{result["changed"]} changed; {result.get("folded_people", 0)} people took folded surname prints (exact merges); {result["unchanged"]} exactly unchanged; zero clean record changed is required.**', '',
               'Categories are exclusive. Witness splits must exactly reproduce the shared scoped resolver, conserve aggregate counts, keep witnesses unattributed and enforce an own-house retrieval scope. This checks consistency with the resolver; correctness depends on the reviewed source evidence. Other changes retain the existing evidence categories.', '',
               '| Party rows / facet | Main | Split | Change |', '|---|---:|---:|---:|']
     for label, jur, party in [('Total rows with party', None, None), ('SA rows with party', 'sa', None),

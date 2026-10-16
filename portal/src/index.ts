@@ -12,6 +12,7 @@ import { guardAnswerAttribution } from './ask-attribution'
 import { loosePositionPoints, claimAttributionOk, repairCausal } from './research-evidence'
 import {ServerTiming, timed, withTiming} from './server-timing'
 import { divisionPlain } from '../public/division-markdown.js'
+import { chamberLabel } from '../public/labels.js'
 import {guardTableURL, divisionTableConfig, voteTableConfig} from '../public/vote-tables.js'
 import { tableApi } from './table-api'
 import { pageCacheKey, pageForStorage, pageFromStorage } from './page-cache'
@@ -46,7 +47,7 @@ import { runIndexNow, INDEXNOW_CRON } from './indexnow'
 import { type MoneyFacts, moneyOverviewPrompt, verifiedOverview } from './ask-money-overview'
 import {readGenerationCache, storeGenerationCache} from './generation-cache'
 import {speechPresentation, joinMixedSpeakers, type Participant} from './mixed-speakers'
-import { isWitness, isUnattributed, belongsToScope, scopeFilter, speakerHref, splitSpeakers, personScope, scopedCollaborators, type SpeechScope } from '../public/speech-attribution.js'
+import { isWitness, isUnattributed, belongsToScope, scopeFilter, speakerHref, splitSpeakers, printSpeakers, personScope, scopedCollaborators, type SpeechScope } from '../public/speech-attribution.js'
 /**
  * OPAX portal Worker — thin proxy over the Progress Agentic RAG knowledge box.
  *
@@ -691,6 +692,9 @@ async function searchWindow(
     body.filter_expression = { field: { and: [url.searchParams.get('attribution') === 'unattributed'
       ? filters?.field ?? {} : scopedCollaborators(filters?.field ?? {}, attribution),
       url.searchParams.get('attribution') === 'unattributed' ? { not: own } : own] } }
+  } else if (filters && url.searchParams.get('attribution') !== 'unattributed') {
+    const speakers = await speakerPrints(env, url.searchParams.get('speaker'))
+    if (speakers) body.filter_expression = scopedCollaborators(filters, { speakers })
   }
 
   const res = await kbFetch(env, '/find', { body, signal: opts.signal })
@@ -1613,6 +1617,7 @@ async function buildOverviewPack(input: AskInput, env: Env, ctx: ExecutionContex
   const person = people.byFold.get(foldName(input.speaker || ''))
   if (!person) throw new Error('Person unavailable')
   const attribution = personScope(person)
+  const prints = printSpeakers(person)
   const corpus = await assetJson<{version: string}>(env, '/corpus.json')
   const asOf = corpus.version.slice(0,10)
   // Catalogue accepts resource predicates only. Field exclusions belong to find.
@@ -1622,7 +1627,7 @@ async function buildOverviewPack(input: AskInput, env: Env, ctx: ExecutionContex
   // Service dates are checked against speech metadata below. Catalogue created
   // means index time; it cannot supply a service-date predicate.
   const scope = attribution ? scopeFilter({...attribution,service:undefined}) : undefined
-  const filter = {resource:{and:[attribution ? scopedCollaborators(base,attribution) : base,...(scope ? [scope] : []),
+  const filter = {resource:{and:[attribution ? scopedCollaborators(base,attribution) : prints.length ? scopedCollaborators(base,{speakers:prints}) : base,...(scope ? [scope] : []),
     ...['witness','chair','unknown'].map(label => ({not:{prop:'label',labelset:'speaker_type',label}}))]}}
   const decode = (rid: string, r: FindResource & {computedmetadata?:{field_classifications?:{classifications?:{labelset:string;label:string}[]}[]}}): OverviewSpeech => ({
     resource:rid,slug:r.slug || '',title:r.title || r.slug || '',speaker:r.origin?.collaborators?.[0] || '',
@@ -1631,7 +1636,7 @@ async function buildOverviewPack(input: AskInput, env: Env, ctx: ExecutionContex
     url:r.origin?.url || undefined,source_url:typeof r.extra?.metadata?.source_url === 'string' ? r.extra.metadata.source_url : undefined,topics:[...new Set([...(r.usermetadata?.classifications || []),...(r.computedmetadata?.field_classifications || []).flatMap(f=>f.classifications || [])].filter(c=>c.labelset==='topic').map(c=>c.label))],
   })
   const belongs = (s: OverviewSpeech) => /^speech-\d+$/.test(s.slug) &&
-    (attribution ? belongsToScope({...s,kind:'speech'},attribution) : foldName(s.speaker) === foldName(person.name))
+    (attribution ? belongsToScope({...s,kind:'speech'},attribution) : (prints.length ? prints : [person.name]).some(n => foldName(s.speaker) === foldName(n)))
   return buildPersonOverview(person,asOf,personPath(people,person.name),{
     belongs,
     catalogue: async (page,signal) => {
@@ -3476,10 +3481,12 @@ async function apiPersonTopics(url: URL, env: Env, ctx: ExecutionContext): Promi
     return json({ error: 'bad name' }, 400)
   }
   const name = canonicalSpeaker(raw)
-  return cachedJson(`/api/person-topics?name=${encodeURIComponent(name)}&scope=split-speakers-v2`, async () => {
+  return cachedJson(`/api/person-topics?name=${encodeURIComponent(name)}&scope=split-speakers-v3`, async () => {
     const collaborator = { prop: 'origin_collaborator', collaborator: name }
     const attribution = await speakerAttribution(env, name)
-    const speakerClauses = [attribution ? scopedCollaborators(collaborator, attribution) as Record<string, unknown> : collaborator,
+    const prints = attribution ? null : await speakerPrints(env, name)
+    const speakerClauses = [attribution ? scopedCollaborators(collaborator, attribution) as Record<string, unknown>
+      : prints ? scopedCollaborators(collaborator, { speakers: prints }) as Record<string, unknown> : collaborator,
       ...(attribution ? [scopeFilter(attribution)] : [])]
     const topic = { prop: 'label', labelset: 'topic' }
     const catalog = (clauses: Record<string, unknown>[], faceted = true) => aggregateFetch(env, '/catalog', {
@@ -3637,11 +3644,6 @@ const STATE_NAMES: Record<string, string> = {
 const CHAMBER_NAMES: Record<string, string> = {
   representatives: 'House of Representatives', senate: 'Senate',
   assembly: 'Legislative Assembly', council: 'Legislative Council',
-}
-// Where a committee-hearing speech was said (the parli.db chamber codes). Kept apart from CHAMBER_NAMES, which names the
-// House a person sits in; a share card for a committee record says "Senate committees", not "senate_committee".
-const COMMITTEE_CHAMBER_NAMES: Record<string, string> = {
-  senate_committee: 'Senate committees', house_committee: 'House committees', joint_committee: 'Joint committees',
 }
 // The /subject/<dir> directories. app.js keeps its own copy for the client-side
 // router and the crumb labels; the two lists have to name the same kinds.
@@ -3861,6 +3863,8 @@ function matchSeoRoute(url: URL): SeoRoute | null {
 interface Person {
   full?: string
   speech_scope?: SpeechScope
+  /** Surname prints folded into this person ("Shoebridge"; scripts/roster_fold.py): their speeches are this person's. */
+  prints?: string[]
   speech_count_basis?: string
   name: string
   speeches: number | null
@@ -3884,9 +3888,22 @@ async function speakerAttribution(env: Env, raw: string | null | undefined): Pro
   return personScope(people.byFold.get(foldName(raw)))
 }
 
+/** The collaborator names a person's speeches sit under when surname prints were folded into them
+ *  ("David Shoebridge" and "Shoebridge"); null for everyone else, whose one name already is the filter. */
+async function speakerPrints(env: Env, raw: string | null | undefined): Promise<string[] | null> {
+  if (!raw) return null
+  const people = await loadPeople(env)
+  const speakers = printSpeakers(people.byFold.get(foldName(raw)))
+  return speakers.length ? speakers : null
+}
+
 async function scopeSpeakerBody(body: Record<string, unknown>, env: Env, raw: string | undefined): Promise<void> {
   const scope = await speakerAttribution(env, raw)
-  if (!scope) return
+  if (!scope) {
+    const speakers = await speakerPrints(env, raw)
+    if (speakers && body.filter_expression) body.filter_expression = scopedCollaborators(body.filter_expression, { speakers })
+    return
+  }
   const existing = body.filter_expression as { field?: unknown } | undefined
   body.filter_expression = { field: { and: [...(existing?.field ? [scopedCollaborators(existing.field, scope)] : []), scopeFilter(scope)] } }
   // Prior citations cannot bypass the newly restricted identity scope.
@@ -4702,7 +4719,8 @@ async function electorateMeta(name: string, url: URL, env: Env): Promise<PageMet
   const representation = e.representatives.length
     ? `${e.representatives.map((m) => `${m.person.name}${m.party ? ` (${m.party})` : ''}`).join(', ')}. Verified ${e.representation_as_of}.`
     : 'Representation is not yet verified in this release.'
-  const facts = `${e.name}, ${e.jurisdiction === 'federal' ? 'Federal' : e.jurisdiction.toUpperCase()} ${CHAMBER_NAMES[e.chamber] || e.chamber}. ${representation} ${e.election_count} indexed election contests.`
+  const house = chamberLabel(e.chamber)
+  const facts = `${e.name}, ${e.jurisdiction === 'federal' ? `Federal ${house || 'Parliament'}` : house || `${STATE_NAMES[e.jurisdiction] ?? 'State parliament'}`}. ${representation} ${e.election_count} indexed election contests.`
   const canonical = `${SITE_ORIGIN}${e.url}`
   return {
     title: `${e.name} · Electorate · OPAX`, description: clip(facts), canonical, ogType: 'website', status: 200,
@@ -5300,7 +5318,7 @@ async function docMeta(slug: string, url: URL, request: Request, env: Env, ctx: 
       const content = renderDivisionAnswer(division,people?.people || [],people?.slugOf || new Map())
       return {...generic,title:`${clip(divisionPlain(division.name || division.question || 'Division'),90)} · OPAX`,description:clip(content.description || ''),prerender:content.html,
         jsonLd:{'@context':'https://schema.org','@type':'Article',headline:divisionPlain(division.name || division.question),url:canonical,...(division.date ? {datePublished:division.date} : {}),publisher},
-        card:{kicker:'Division',title:divisionPlain(division.question || division.name || 'Division'),lines:[content.description || '']},
+        card:{kicker:['Division',chamberLabel(division.house),division.date ? longDate(division.date) : ''].filter(Boolean).join(' · '),title:divisionPlain(division.question || division.name || 'Division'),lines:[content.description || '']},
         // As the app's division page: under its bill when it has one, else under Search.
         trail:divisionTrail(division.bills?.[0])}
     }
@@ -5329,7 +5347,8 @@ async function docMeta(slug: string, url: URL, request: Request, env: Env, ctx: 
     summary: string | null
   }
   const date = typeof r.metadata.date === 'string' ? r.metadata.date : null
-  const chamber = CHAMBER_NAMES[r.labels.chamber] ?? COMMITTEE_CHAMBER_NAMES[r.labels.chamber] ?? r.labels.chamber
+  // Where it was said, by name ("Senate committees", "Legislative Assembly (Victoria)"), never the code.
+  const chamber = chamberLabel(r.labels.chamber) || null
   const when = date ? ` · ${longDate(date)}` : ''
   if (r.labels.kind === 'division' || DIVISION_SLUG_RE.test(slug)) {
     const ayes = r.metadata.ayes_count, noes = r.metadata.noes_count

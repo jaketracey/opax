@@ -8,7 +8,7 @@ import {currentSittingPath, sydneyDay} from '../public/hubs-data.js'
 import {renderDivisionMarkdown, divisionPlain, billNoteRepair, billStripTitle, billStripStage} from '../public/division-markdown.js'
 import {guardTableURL,parseQuery,serializeQuery,type DataTableConfig} from '../public/datatable.js'
 import {interestTableData,interestTableConfig,partyMoneyData,partyMoneyTableConfig,registerTableHTML} from '../public/register-tables.js'
-import {machineLabelHTML} from '../public/labels.js'
+import {chamberLabel, machineLabelHTML} from '../public/labels.js'
 import {heldBackTranscriptsHTML, chairRoleTranscriptsHTML} from '../public/held-back-transcripts.js'
 import {divisionTableConfig, voteTableConfig, personVoteKeys, divisionRows, votingRows, voteTablePage, voteTableHTML} from '../public/vote-tables.js'
 import type {Query} from '../public/datatable.js'
@@ -54,7 +54,8 @@ const fold = (s: string) => s.normalize('NFKC').replace(/[‘’ʼ`]/g, "'").rep
 const human = (s: string | null | undefined) => String(s ?? '').replace(/_/g,' ')
 const count = (n: number) => n.toLocaleString('en-AU')
 const currency = (n: number) => new Intl.NumberFormat('en-AU',{style:'currency',currency:'AUD',maximumFractionDigits:0}).format(n)
-const chamber = (s: string | null | undefined = '') => !s ? 'Chamber not recorded' : ({senate:'Senate',representatives:'House of Representatives',nsw_la:'NSW Legislative Assembly',nsw_lc:'NSW Legislative Council',vic_la:'Victorian Legislative Assembly',vic_lc:'Victorian Legislative Council',qld_la:'Queensland Legislative Assembly'}[s] || human(s))
+// A chamber code by name (labels.js); a written-out stage house ("Assent") as written, never a code.
+const chamber = (s: string | null | undefined = '') => !s ? 'Chamber not recorded' : chamberLabel(s) || (/^[a-z_]+$/.test(s) ? 'Chamber not recorded' : s)
 export function safeHref(value: string): string | null {
   if(value.length>2048) return null
   if (/^\/(?!\/)/.test(value)) return value
@@ -179,7 +180,7 @@ export async function renderPersonAnswer(p: Person, read: ReadAsset, slugs: Map<
   body += `<li>${party ? link(partyUrl(party),partyLine(p)) : 'Party not recorded'}</li>`
   for (const r of p.representation || []) {
     const seat = seats?.electorates.find(e=>fold(e.name)===fold(r.electorate) && e.jurisdiction===r.jurisdiction && e.chamber===r.chamber)
-    body += `<li>${seat ? link(seat.url,r.electorate) : escapeHtml(r.electorate)} — ${escapeHtml(chamber(r.chamber))}, ${escapeHtml(r.jurisdiction)}</li>`
+    body += `<li>${seat ? link(seat.url,r.electorate) : escapeHtml(r.electorate)} — ${escapeHtml(chamber(r.chamber))}</li>`
   }
   body += `</ul>${original(profileUrl)}<p>${link('/parliamentarians.json','Parliamentarian data export')}. Recorded representation can include historical seats; affiliation with no current-roster flag is not verified as current or former.</p>`
   if (!p.speech_scope) {
@@ -291,7 +292,7 @@ export async function renderDirectory(dir: string, url: URL, read: ReadAsset, pe
   if (dir==='electorate') {
     const manifest = await read<{index_url: string}>('/electorates/manifest.json')
     const data = await read<{electorates:Seat[]}>(manifest.index_url)
-    return paginate(url,data.electorates.map(e=>({href:e.url,label:e.name,detail:`${e.jurisdiction}, ${chamber(e.chamber)}`})),'Electorates','Electorates, recorded representation and dated sources.')
+    return paginate(url,data.electorates.map(e=>({href:e.url,label:e.name,detail:chamber(e.chamber)})),'Electorates','Electorates, recorded representation and dated sources.')
   }
   if (dir==='bills') {
     const data = await read<{bills:Bill[]}>('/bills/index.json')
