@@ -1,0 +1,134 @@
+{
+  "checked_at": "2026-10-16T21:36:05.949372+00:00",
+  "implementation_commit": "95d649835685f7cd792b1efbea8a2f5ee767f5eb",
+  "baseline": "71c3615b8",
+  "checks": {
+    "python_lane_tests": {
+      "passed": 12
+    },
+    "register_tests": {
+      "passed": 8
+    },
+    "promotion_regression_tests": {
+      "passed": 14
+    },
+    "original_cell_and_hash_dry_run": {
+      "mode": "dry-run",
+      "writes": 0,
+      "documents": 81,
+      "rows": 3906,
+      "years": [
+        "2015-16",
+        "2016-17",
+        "2017-18",
+        "2018-19",
+        "2019-20",
+        "2020-21",
+        "2021-22",
+        "2022-23",
+        "2023-24",
+        "2024-25"
+      ],
+      "reconciliation": {
+        "pass": 2466
+      }
+    },
+    "tsc": {
+      "exit": 0
+    },
+    "check": {
+      "exit": 0
+    },
+    "worker_dry_run": {
+      "exit": 0
+    },
+    "reviewed_promoter_dry_run": {
+      "exit": 0,
+      "manifest": {
+        "hub": "abs-gfs",
+        "asset": "portal/public/government-finance/data.json",
+        "bytes": 4904581,
+        "mode": "dry-run",
+        "counts": {
+          "documents": 81,
+          "rows": 3906,
+          "years": [
+            "2015-16",
+            "2016-17",
+            "2017-18",
+            "2018-19",
+            "2019-20",
+            "2020-21",
+            "2021-22",
+            "2022-23",
+            "2023-24",
+            "2024-25"
+          ],
+          "reconciliation": {
+            "pass": 2466
+          }
+        },
+        "snapshot_date": "2026-10-16",
+        "input_sha256": "d96e18fda3934e8ef3c52f97acc60fa721b6f93af48db104b8c75daae8727399",
+        "inputs": {
+          "inventory.json": "a2d6798b8d8f034c781407dd9597f1f0ed6fab4b6dd5d363e7e0cab64f912469",
+          "tables.json": "85799f6e5cdb6df4f1a423155c5c622d26a2918c3b631bdd4277f960af1183f6",
+          "receipts.json": "42e6f28071781ea9bf18694bb01ca3e49534f0e6f20cebda0445a322303b134e",
+          "series.jsonl": "220e8dfab45ae8b399cd835dc3841ed90ce50b70555e204b93477e6c3954e621",
+          "reconciliation.json": "c8dd7436a33a3af61dd3a764527b14a00342f27134757445e5c827733f355199",
+          "hub.json": "d96e18fda3934e8ef3c52f97acc60fa721b6f93af48db104b8c75daae8727399"
+        },
+        "reviewed_commit": "95d649835685f7cd792b1efbea8a2f5ee767f5eb"
+      }
+    },
+    "legacy_navigation_attempt": {
+      "exit": 1,
+      "reason": "Missing generated portal/public/hubs/index.json; module load failure. No broad build run."
+    }
+  },
+  "browser": {
+    "preview": "Local Worker; staged asset binding; external requests blocked",
+    "results": [
+      {
+        "width": 390,
+        "status": 200,
+        "horizontalOverflow": false,
+        "jurisdictions": 9
+      },
+      {
+        "width": 1440,
+        "status": 200,
+        "horizontalOverflow": false,
+        "jurisdictions": 9
+      }
+    ],
+    "search": {
+      "before": 451,
+      "after": 90
+    },
+    "csvReceipts": true,
+    "ssr": true,
+    "pageErrors": []
+  },
+  "votes": {
+    "byte_identical_to_baseline": true,
+    "sha256": "f9908e4f46f7148a82daee2d0b14c62cd7f2172ff1cd310df9a132a152970aff",
+    "schema": 1
+  },
+  "production_asset_written": false,
+  "code_sha256": {
+    "portal/src/government-finance.ts": "87b4961f6885b016137fb7642509c575b4e947108605d597b78295cc3f2f87f4",
+    "portal/src/index.ts": "42de818eff00e9c9f8969b92f3501ecc25da5cf3b21e322860cd83af29120f1d",
+    "portal/public/government-finance.css": "5bc67f2ec0ccb4733651d875d8a629908aea8212f5651f7f7ffdf9bd9d1d53c3",
+    "portal/public/register-tables.js": "6204d3b689d2755e433ef4f0c8b039f140278fc01b98e28dbaad45130801159d",
+    "portal/public/register-tables-entry.js": "3bf0eba4df405b14b82b7dadcb505e72a126b2a94fef821a062a4d767a45c336",
+    "portal/public/navigation.js": "358225f77ae47db658e8539db904dfac001249c18427bf3142142c6d644e1c95",
+    "portal/public/index.html": "336b342dff484324c1d1aec2838cf52eba73a7964fc88f2f70aefa8080ddf676"
+  },
+  "screenshot_sha256": {
+    "portal/private/abs-gfs/government-finance-390.png": "348d5f2fa332a1612df999b322979dfcb20112039c354f86aa63444d350ceea1",
+    "portal/private/abs-gfs/government-finance-390-viewport.png": "b17864c1ce5cbf5381f3440fc60c766dc980e117201ffe1a15798ed9c90bc0f1",
+    "portal/private/abs-gfs/government-finance-1440.png": "3897b46556ea27c0343de6fd54b8d24f35ebb538b730ecf1bf458ed63fd5fe3a",
+    "portal/private/abs-gfs/government-finance-1440-viewport.png": "af03b9a1f9f04867704aac7c51d97eb9f68fefa9482d7375ff1882bfd9d1a821"
+  }
+}

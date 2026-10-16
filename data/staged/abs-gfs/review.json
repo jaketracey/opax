@@ -1,0 +1,14 @@
+{
+  "status": "approved",
+  "reviewed_commit": "95d649835685f7cd792b1efbea8a2f5ee767f5eb",
+  "reviewed_at": "2026-10-16T21:35:40.873558+00:00",
+  "review_basis": "Staging-only numerical projection review: all 81 workbook notices, source hashes, 3906 original cells, 2466 reconciliations, licence and no-cross-level gates, SSR/CSV and local 390/1440 browser evidence checked. This records the lane review; the orchestrator owns nightly activation and production promotion. No production write is authorised or performed by this receipt.",
+  "inputs": {
+    "inventory.json": "a2d6798b8d8f034c781407dd9597f1f0ed6fab4b6dd5d363e7e0cab64f912469",
+    "tables.json": "85799f6e5cdb6df4f1a423155c5c622d26a2918c3b631bdd4277f960af1183f6",
+    "receipts.json": "42e6f28071781ea9bf18694bb01ca3e49534f0e6f20cebda0445a322303b134e",
+    "series.jsonl": "220e8dfab45ae8b399cd835dc3841ed90ce50b70555e204b93477e6c3954e621",
+    "reconciliation.json": "c8dd7436a33a3af61dd3a764527b14a00342f27134757445e5c827733f355199",
+    "hub.json": "d96e18fda3934e8ef3c52f97acc60fa721b6f93af48db104b8c75daae8727399"
+  }
+}
