@@ -399,6 +399,18 @@ for hub in budget vic-gifts bills-tas bills-act; do
   fi
 done
 
+# ---- 3d. Senate video: the AuSenate channel's public feed (and the Data API when YOUTUBE_API_KEY is set) ------
+# Titles, ids and dates only; the site embeds the Senate's own player on a press. The file accumulates
+# (the feed shows the latest 15) and re-matches first speeches against tonight's roster. Fails soft.
+# OPAX_SENATE_VIDEO=0 skips it; `node scripts/senate_video/fetch.mjs --dry-run` rehearses it.
+if [ "${OPAX_NIGHTLY_SKIP_REFRESH:-0}" != 1 ] && [ "${OPAX_SENATE_VIDEO:-1}" != 0 ]; then
+  log "refreshing Senate video links (AuSenate feed)"
+  if ! run "${OPAX_NODE:-node}" scripts/senate_video/fetch.mjs; then
+    revert_group video
+    fail "Senate video refresh failed: previous portal/public/video kept"
+  fi
+fi
+
 # ---- 4. validate what will be committed ----------------------------------------------------------
 # bills and votes are checked every night; every periodic group only when `git status` shows its files changed.
 # A group that fails is put back to HEAD and the night goes on with the rest.

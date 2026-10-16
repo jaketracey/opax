@@ -32,6 +32,9 @@ TODAY=$(TZ=Australia/Sydney date +%F)
 # Generic scenarios exercise daily work, independent of the day this runs.
 # Calendar scenarios below supply their own dates, including weekly Sundays.
 export OPAX_TODAY=2026-10-10
+# The Senate video step (nightly 3d) calls $OPAX_NODE, which here is the recording fake the
+# portal-test gate scenarios count; it is covered offline by portal/test/senate-video.test.mjs.
+export OPAX_SENATE_VIDEO=0
 BASE_TOTAL=$(python3 -c "import json; print(json.load(open('$SRC/portal/public/corpus.json'))['expected_resources'])")
 BASE_SPEECH=$(python3 -c "import json; print(json.load(open('$SRC/portal/public/corpus.json'))['collected_speeches'])")
 

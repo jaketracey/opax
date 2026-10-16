@@ -1,0 +1,164 @@
+{
+  "meta": {
+    "schema": 1,
+    "updated": "2026-10-16",
+    "channel": {
+      "id": "UCQptchvNlCzMKsGPU8s_6UQ",
+      "title": "AuSenate: The Senate Public Information Office",
+      "url": "https://www.youtube.com/@AuSenate"
+    },
+    "sources": [
+      {
+        "label": "AuSenate YouTube feed",
+        "url": "https://www.youtube.com/feeds/videos.xml?channel_id=UCQptchvNlCzMKsGPU8s_6UQ"
+      }
+    ],
+    "use": "Linked and embedded with the Senate's own YouTube player (youtube-nocookie.com, click to play). Never downloaded or re-hosted.",
+    "counts": {
+      "question_time": 13,
+      "first_speech": 2,
+      "other": 0
+    }
+  },
+  "videos": [
+    {
+      "id": "geUwNHyIJ2A",
+      "title": "Senate Question Time, 15 October 2026",
+      "published": "2026-10-16T01:26:21+00:00",
+      "kind": "question_time",
+      "date": "2026-10-15",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=geUwNHyIJ2A"
+    },
+    {
+      "id": "N_DVdDfZUhM",
+      "title": "Senate Question Time, 14 October 2026",
+      "published": "2026-10-14T07:45:20+00:00",
+      "kind": "question_time",
+      "date": "2026-10-14",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=N_DVdDfZUhM"
+    },
+    {
+      "id": "5xNaDs_GwbA",
+      "title": "Senate Question Time, 13 October 2026",
+      "published": "2026-10-13T22:55:56+00:00",
+      "kind": "question_time",
+      "date": "2026-10-13",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=5xNaDs_GwbA"
+    },
+    {
+      "id": "Dl5nTmvNlsU",
+      "title": "Senate Question Time, 12 October 2026",
+      "published": "2026-10-13T22:31:22+00:00",
+      "kind": "question_time",
+      "date": "2026-10-12",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=Dl5nTmvNlsU"
+    },
+    {
+      "id": "lYcsWohoypM",
+      "title": "Senate Question Time, 17 September 2026",
+      "published": "2026-09-18T00:28:36+00:00",
+      "kind": "question_time",
+      "date": "2026-09-17",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=lYcsWohoypM"
+    },
+    {
+      "id": "T6tAQMGhS1w",
+      "title": "Senate Question Time, 16 September 2026",
+      "published": "2026-09-16T08:25:12+00:00",
+      "kind": "question_time",
+      "date": "2026-09-16",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=T6tAQMGhS1w"
+    },
+    {
+      "id": "L9IsSWZEO0Y",
+      "title": "First speech: Senator Gatenby - 16 September 2026",
+      "published": "2026-09-16T07:38:51+00:00",
+      "kind": "first_speech",
+      "date": "2026-09-16",
+      "chamber": "senate",
+      "person_slug": "gatenby",
+      "person_pid": "11064",
+      "url": "https://www.youtube.com/watch?v=L9IsSWZEO0Y"
+    },
+    {
+      "id": "Mylywufr66A",
+      "title": "Senate Question Time, 15 September 2026",
+      "published": "2026-09-15T08:10:52+00:00",
+      "kind": "question_time",
+      "date": "2026-09-15",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=Mylywufr66A"
+    },
+    {
+      "id": "hSKcVmZzamw",
+      "title": "Senate Question Time, 14 September 2026",
+      "published": "2026-09-15T04:54:54+00:00",
+      "kind": "question_time",
+      "date": "2026-09-14",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=hSKcVmZzamw"
+    },
+    {
+      "id": "Sn7lnAho8Ho",
+      "title": "First speech: Senator Bleyer - 9 September 2026",
+      "published": "2026-09-09T09:23:42+00:00",
+      "kind": "first_speech",
+      "date": "2026-09-09",
+      "chamber": "senate",
+      "person_slug": null,
+      "person_pid": null,
+      "url": "https://www.youtube.com/watch?v=Sn7lnAho8Ho"
+    },
+    {
+      "id": "pVPVM95Kyyc",
+      "title": "Senate Question Time, 9 September 2026",
+      "published": "2026-09-09T09:18:57+00:00",
+      "kind": "question_time",
+      "date": "2026-09-09",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=pVPVM95Kyyc"
+    },
+    {
+      "id": "TvlmetIgnPM",
+      "title": "Senate Question Time, 8 September 2026",
+      "published": "2026-09-08T08:38:32+00:00",
+      "kind": "question_time",
+      "date": "2026-09-08",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=TvlmetIgnPM"
+    },
+    {
+      "id": "c0q7UmXa4OI",
+      "title": "Senate Question Time, 7 September 2026",
+      "published": "2026-09-07T08:27:13+00:00",
+      "kind": "question_time",
+      "date": "2026-09-07",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=c0q7UmXa4OI"
+    },
+    {
+      "id": "mU4GGKJdvrA",
+      "title": "Senate Question Time, 20 August 2026",
+      "published": "2026-08-21T04:58:54+00:00",
+      "kind": "question_time",
+      "date": "2026-08-20",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=mU4GGKJdvrA"
+    },
+    {
+      "id": "_ub8XeSFeSA",
+      "title": "Senate Question Time, 19 August 2026",
+      "published": "2026-08-19T08:02:13+00:00",
+      "kind": "question_time",
+      "date": "2026-08-19",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=_ub8XeSFeSA"
+    }
+  ]
+}

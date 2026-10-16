@@ -22,6 +22,7 @@
 /* Sitting weeks: one row a week across the column, its status at the row's end. */
 .hub-weeks > li { display: flex; gap: var(--space-block); align-items: flex-start; justify-content: space-between; }
 .hub-weeks .ui-status { flex-shrink: 0; margin-top: var(--space-line); }
+.hub-video-mark { font: var(--type-label); color: var(--bronze-ink); }
 .hub-count { color: var(--ink-soft); font: var(--type-body); margin-left: var(--space-tight); font-variant-numeric: tabular-nums; }
 .hub-records { max-width: 46rem; }
 .hub-summary { margin: var(--space-row) 0 0; }

@@ -6,6 +6,7 @@ import {divisionTableConfig, divisionRows, voteTableHTML, voteTablePage} from '.
 import type {Query} from '../public/datatable.js'
 import { escapeHtml as esc, safeHref, crumbsHTML, type Crumb, type ReadAsset } from './seo-content'
 import { trail } from './nav-model.mjs'
+import { sittingVideos, videoSectionHTML } from '../public/video-card.js'
 
 interface Bill {
   key: string; title: string; introduced: string; originating_house: string; sponsor?: string; sponsor_person_id?: string; portfolio?: string;
@@ -14,6 +15,8 @@ interface Bill {
 interface Division { key: string; slug: string; title?: string; name?: string; stage?:string; question?: string; date: string; house: string; result?: string; ayes?: number; noes?: number; source_url?: string }
 interface Week { start: string; end: string; houses: string[]; senate_cutoff?: string; estimates?: string; bills: Bill[]; divisions: Division[]; lastmod: string }
 export interface HubIndex { updated: string; snapshotDate: string; billUpdated: string; latestFederalDivision: string; sources: { label: string; url: string }[]; weeks: Week[]; pages: {path: string; lastmod: string}[] }
+/** A row of /video/senate.json (scripts/senate_video/): the Senate's own upload, linked and embedded, never hosted. */
+export interface Video { id: string; title: string; published: string | null; kind: 'question_time' | 'first_speech' | 'other'; date: string | null; chamber: 'senate'; person_slug?: string | null; person_pid?: string | null; url: string }
 interface Window { start: string; end: string }
 interface Totals<T> { count: number; total: number; largest: T[] }
 interface Contract { id: string; title: string; supplier: string; amount: number; published: string; start_date?: string; url: string; link_scope?: string }
@@ -58,19 +61,21 @@ const shell = hubShell
  *  What dates the page (its source line, a cut-off) stays in the head. */
 const header = (title: string, line: string, kind: 'lead' | 'meta' = 'lead', after = '') => `<div class="ui-page-head"><h1>${esc(title)}</h1><p class="${kind === 'lead' ? 'ui-lede' : 'ui-page-meta'}">${esc(line)}</p>${after}</div>`
 
-export function renderSittingIndex(data: HubIndex, today: string, footer: HubFooterConfig = {}) {
+// The index row's small marker: the week has the Senate's Question Time on video.
+const videoMark = (n: number) => n ? ` · <span class="hub-video-mark">Video<span class="visually-hidden">: Senate Question Time on ${n} sitting ${n === 1 ? 'day' : 'days'}</span></span>` : ''
+export function renderSittingIndex(data: HubIndex, today: string, footer: HubFooterConfig = {}, videos: Video[] = []) {
   const weeks = orderedWeeks(data.weeks,today)
   const title = 'Federal sitting weeks'
   const description = 'Bills introduced and divisions held during each sitting week, from the published parliamentary record.'
   const rows = weeks.map(w => {
     const active = today >= w.start && today <= w.end
     const state = active ? 'Current' : today < w.start ? 'Upcoming' : 'Past'
-    return `<li><div><h2 class="ui-row-title">${link(`/sitting/${w.start}`,range(w.start,w.end))}</h2><p class="ui-row-meta">${esc(w.houses.map(houseName).join(' and '))}</p>${w.estimates ? `<p class="ui-row-meta">${link(`/estimates/${w.estimates}`,'Senate Supplementary Budget Estimates')}</p>` : ''}</div>${statusLabelHTML(state,active ? 'active' : 'ended')}</li>`
+    return `<li><div><h2 class="ui-row-title">${link(`/sitting/${w.start}`,range(w.start,w.end))}</h2><p class="ui-row-meta">${esc(w.houses.map(houseName).join(' and '))}${videoMark(sittingVideos(videos,w.start,w.end).length)}</p>${w.estimates ? `<p class="ui-row-meta">${link(`/estimates/${w.estimates}`,'Senate Supplementary Budget Estimates')}</p>` : ''}</div>${statusLabelHTML(state,active ? 'active' : 'ended')}</li>`
   }).join('')
   const html = shell(header(title,description,'lead',sourceLineHTML({updated:data.updated,source:'APH sitting calendar',originals:data.sources.map(s => ({href:s.url,label:s.label}))}))+`<ul class="ui-list hub-weeks" role="list">${rows}</ul>`,footer,trail('/sitting'))
   return {title,description,html,jsonLd:{'@graph':[itemList('/sitting',weeks.map(w => ({href:`/sitting/${w.start}`,name:range(w.start,w.end)})))]}}
 }
-export function renderSittingWeek(data: HubIndex, week: Week, people: SponsorCandidate[], slugs: Map<string,string>, today = sydneyDay(), footer: HubFooterConfig = {}, tableQuery: Query = {}) {
+export function renderSittingWeek(data: HubIndex, week: Week, people: SponsorCandidate[], slugs: Map<string,string>, today = sydneyDay(), footer: HubFooterConfig = {}, tableQuery: Query = {}, videos: Video[] = []) {
   const path = `/sitting/${week.start}`
   const title = `Sitting week: ${range(week.start,week.end)}`
   const description = 'Bills introduced and divisions held in the federal parliamentary record during this period.'
@@ -98,6 +103,11 @@ export function renderSittingWeek(data: HubIndex, week: Week, people: SponsorCan
     const originals = week.bills.flatMap(b => (b.sources || []).filter(s => s.kind === 'billhome').slice(0,1).map(s => ({href:s.url,label:b.title})))
     body += sourceLineHTML({updated:data.billUpdated,source:'ParlInfo bill records',originals})+'</section>'
   }
+  // The Senate's own Question Time video for each day it sat: a card that plays only when pressed.
+  const days = sittingVideos(videos,week.start,week.end)
+  if (days.length) body += videoSectionHTML('Senate Question Time',days,{id:'senate-video',
+    note:'Video published by the Senate Public Information Office on YouTube. The player loads from YouTube only when you press play.',
+    after:sourceLineHTML({updated:days.map(d => d.published?.slice(0,10) || '').sort().at(-1) || '',dateLabel:'Published',source:'AuSenate YouTube channel',originals:[{href:'https://www.youtube.com/@AuSenate',label:'AuSenate: The Senate Public Information Office'}]})})
   {
     const config = divisionTableConfig({jurisdiction:'federal', start:week.start, end:week.end}, 'Divisions held', 'sitting')
     const divisions = divisionRows(week.divisions)
@@ -157,8 +167,9 @@ export async function hubPage(kind: 'sitting' | 'estimates', id: string | null, 
     return {...renderEstimates(data,footer),status:200}
   }
   if (id !== null && !/^\d{4}-\d{2}-\d{2}$/.test(id)) return missing
-  const data = await read<HubIndex>('/hubs/index.json')
-  if (id === null) return {...renderSittingIndex(data,today,footer),status:200}
+  const [data, video] = await Promise.all([read<HubIndex>('/hubs/index.json'), read<{videos: Video[]}>('/video/senate.json').catch(() => null)])
+  const videos = Array.isArray(video?.videos) ? video.videos : []
+  if (id === null) return {...renderSittingIndex(data,today,footer,videos),status:200}
   const week = data.weeks.find(w => w.start === id)
-  return week ? {...renderSittingWeek(data,week,people,slugs,today,footer,tableQuery),status:200} : missing
+  return week ? {...renderSittingWeek(data,week,people,slugs,today,footer,tableQuery,videos),status:200} : missing
 }

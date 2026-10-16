@@ -5595,9 +5595,12 @@ async function renderSeoPage(route: SeoRoute, url: URL, request: Request, env: E
         for(const [rel,href] of [['prev',meta.prev],['next',meta.next]]) if(href) el.append(`<link rel="${rel}" href="${escHtml(href)}">`,{html:true})
       },
     })
+  // A Senate video card plays through its own small module; the stylesheet travels with the card.
+  const videoCard = /data-video-card/.test(meta.prerender || '')
   if (route.kind === 'hub') rewriter.on('script[src]', { element(el) {
     if (/\/(app|spa-entry|spa-shell)\.js(?:\?|$)/.test(el.getAttribute('src') || '')) el.remove()
-  } }).on('head', { element(el) { el.append('<link rel="stylesheet" href="/hubs.css">',{html:true}) } })
+  } }).on('head', { element(el) { el.append('<link rel="stylesheet" href="/hubs.css">'+(videoCard ? '<link rel="stylesheet" href="/video-card.css" data-video-card-style><script type="module" src="/video-card.js"></script>' : ''),{html:true}) } })
+  if (route.kind === 'subject' && route.dir === 'person' && videoCard) rewriter.on('head', { element(el) { el.append('<link rel="stylesheet" href="/video-card.css" data-video-card-style>',{html:true}) } })
     .on('p#stats', { element(el) { el.remove() } })
   // An address nothing answers is a server page too: the app would route it as something else.
   if (route.kind === 'notfound') rewriter.on('script[src]', { element(el) {
@@ -5907,6 +5910,9 @@ const BASE_SECURITY_HEADERS: Record<string, string> = {
 // why that trade is the right way round.
 const GTM = 'https://www.googletagmanager.com'
 const GA = 'https://*.google-analytics.com https://*.analytics.google.com'
+// The Senate's own videos play in YouTube's privacy-enhanced player, framed only after a press
+// (public/video-card.js). The one host, not youtube.com or any wildcard.
+const YOUTUBE_EMBED = 'https://www.youtube-nocookie.com'
 const CSP_PAGE = [
   "default-src 'self'",
   `script-src 'self' 'wasm-unsafe-eval' ${GTM}`,
@@ -5916,7 +5922,7 @@ const CSP_PAGE = [
   `connect-src 'self' wss://opax.com.au wss://staging.opax.com.au ${GTM} ${GA}`,
   "worker-src 'self'",
   "manifest-src 'self'",
-  `frame-src ${GTM}`,
+  `frame-src ${GTM} ${YOUTUBE_EMBED}`,
   "object-src 'none'",
   "base-uri 'none'",
   "form-action 'self'",

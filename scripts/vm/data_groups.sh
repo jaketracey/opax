@@ -8,7 +8,7 @@
 # shellcheck shell=bash
 
 # order = the order they are validated in
-DATA_GROUPS=(bills instruments audit budget vic-gifts bills-tas bills-act evidence votes divisions seovotes corpus wrangler money grants suppliers access expenses interests fits speakers people pay discovery taxcharity)
+DATA_GROUPS=(bills instruments audit budget vic-gifts bills-tas bills-act evidence votes divisions seovotes corpus wrangler money grants suppliers access expenses interests fits speakers people pay discovery taxcharity video)
 
 declare -A GROUP_PATHS=(
   [bills]="portal/public/bills"
@@ -36,6 +36,7 @@ declare -A GROUP_PATHS=(
   [pay]="portal/public/pay.json"
   [discovery]="portal/public/discovery.json"
   [taxcharity]="portal/public/entities/tax-charity"
+  [video]="portal/public/video" # the Senate's own YouTube uploads (feed, or API with a key); links only, never video bytes
 )
 
 # every path of every group, in one list

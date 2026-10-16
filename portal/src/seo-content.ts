@@ -12,6 +12,7 @@ import {chamberLabel, machineLabelHTML} from '../public/labels.js'
 import {heldBackTranscriptsHTML, chairRoleTranscriptsHTML} from '../public/held-back-transcripts.js'
 import {divisionTableConfig, voteTableConfig, personVoteKeys, divisionRows, votingRows, voteTablePage, voteTableHTML} from '../public/vote-tables.js'
 import type {Query} from '../public/datatable.js'
+import {personVideos, videoSectionHTML, type VideoRow} from '../public/video-card.js'
 /** Crawlable answers from the same static projections the application reads.
  * All lists are bounded; source strings and URLs cross one escaping boundary. */
 export type ReadAsset = <T>(path: string) => Promise<T>
@@ -163,7 +164,7 @@ export async function renderPersonAnswer(p: Person, read: ReadAsset, slugs: Map<
   const tableParams=tableState instanceof URLSearchParams ? tableState : new URLSearchParams(serializeQuery(tableState,'vr'))
   const tableQuery=parseQuery(tableParams,'vr')
   const registerHTML=(config:DataTableConfig)=>registerTableHTML(config,undefined,new URL('https://local.invalid/?'+tableParams))
-  const [voteData, interests, seats, bills, sponsored, recentData, heldBackCounts, chairRoleCounts] = await Promise.all([
+  const [voteData, interests, seats, bills, sponsored, recentData, heldBackCounts, chairRoleCounts, video] = await Promise.all([
     optional<Record<string, Votes | Record<string,string[]>>>(read,'/votes.json'),
     optional<{people: Record<string,unknown>; _by_name: Record<string,string>}>(read,'/interests/index.json'),
     optional<{index_url: string}>(read,'/electorates/manifest.json').then(m => m ? optional<{electorates: Seat[]}>(read,m.index_url) : null),
@@ -172,6 +173,7 @@ export async function renderPersonAnswer(p: Person, read: ReadAsset, slugs: Map<
     optional<RecentVotes>(read,'/seo/recent-votes.json'),
     optional<Record<string, number>>(read,'/data/held-back-transcripts.json'),
     optional<Record<string, number>>(read,'/data/chair-role-transcripts.json'),
+    optional<{videos: VideoRow[]}>(read,'/video/senate.json'),
   ])
   const display = p.full && p.speech_scope ? p.full : p.name
   const description = `${display}. ${partyLine(p)}. ${(p.representation || []).map(r=>`${r.electorate}, ${chamber(r.chamber)}`).join('; ') || p.chambers.map(chamber).join(', ')}.`
@@ -183,6 +185,8 @@ export async function renderPersonAnswer(p: Person, read: ReadAsset, slugs: Map<
     body += `<li>${seat ? link(seat.url,r.electorate) : escapeHtml(r.electorate)} — ${escapeHtml(chamber(r.chamber))}</li>`
   }
   body += `</ul>${original(profileUrl)}<p>${link('/parliamentarians.json','Parliamentarian data export')}. Recorded representation can include historical seats; affiliation with no current-roster flag is not verified as current or former.</p>`
+  // The Senate's own video of a first speech, matched to this roster row by the fetcher; nothing when there is none.
+  body += videoSectionHTML('First speech',personVideos(video?.videos,slugs.get(p.name),p),{id:'ssr-first-speech',note:'Video published by the Senate Public Information Office on YouTube. The player loads from YouTube only when you press play.'})
   if (!p.speech_scope) {
     const keys = personVoteKeys(p.name,p.pid,voteData)
     const records = keys.map(k=>voteData?.[k] as Votes | undefined).filter((r): r is Votes => !!r?.name)

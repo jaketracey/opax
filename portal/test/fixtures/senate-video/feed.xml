@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Shape of the AuSenate Atom feed (checked 16 Oct 2026). Ids, titles' names and times are invented. -->
+<feed xmlns:yt="http://www.youtube.com/xml/schemas/2015" xmlns:media="http://search.yahoo.com/mrss/" xmlns="http://www.w3.org/2005/Atom">
+ <link rel="self" href="http://www.youtube.com/feeds/videos.xml?channel_id=UCQptchvNlCzMKsGPU8s_6UQ"/>
+ <id>yt:channel:QptchvNlCzMKsGPU8s_6UQ</id>
+ <yt:channelId>QptchvNlCzMKsGPU8s_6UQ</yt:channelId>
+ <title>AuSenate: The Senate Public Information Office</title>
+ <published>2020-07-21T06:20:13+00:00</published>
+ <entry>
+  <id>yt:video:qtFixture14</id>
+  <yt:videoId>qtFixture14</yt:videoId>
+  <yt:channelId>UCQptchvNlCzMKsGPU8s_6UQ</yt:channelId>
+  <title>Senate Question Time - 14 October 2026</title>
+  <link rel="alternate" href="https://www.youtube.com/watch?v=qtFixture14"/>
+  <published>2026-10-14T07:45:20+00:00</published>
+  <media:group><media:title>Senate Question Time - 14 October 2026</media:title><media:thumbnail url="https://i1.ytimg.com/vi/qtFixture14/hqdefault.jpg" width="480" height="360"/></media:group>
+ </entry>
+ <entry>
+  <id>yt:video:qtFixture12</id>
+  <yt:videoId>qtFixture12</yt:videoId>
+  <yt:channelId>UCQptchvNlCzMKsGPU8s_6UQ</yt:channelId>
+  <title>Senate Question Time, 12 October 2026</title>
+  <published>2026-10-13T22:31:22+00:00</published>
+ </entry>
+ <entry>
+  <id>yt:video:fsQuill0916</id>
+  <yt:videoId>fsQuill0916</yt:videoId>
+  <yt:channelId>UCQptchvNlCzMKsGPU8s_6UQ</yt:channelId>
+  <title>First speech: Senator Quill - 16 September 2026</title>
+  <published>2026-09-16T07:38:51+00:00</published>
+ </entry>
+ <entry>
+  <id>yt:video:fsMarlow909</id>
+  <yt:videoId>fsMarlow909</yt:videoId>
+  <yt:channelId>UCQptchvNlCzMKsGPU8s_6UQ</yt:channelId>
+  <title>First speech: Senator Marlow - 9 September 2026</title>
+  <published>2026-09-09T09:23:42+00:00</published>
+ </entry>
+ <entry>
+  <id>yt:video:fsNobody909</id>
+  <yt:videoId>fsNobody909</yt:videoId>
+  <yt:channelId>UCQptchvNlCzMKsGPU8s_6UQ</yt:channelId>
+  <title>First speech: Senator Nobody - 9 September 2026</title>
+  <published>2026-09-09T09:18:57+00:00</published>
+ </entry>
+ <entry>
+  <id>yt:video:qtUndated01</id>
+  <yt:videoId>qtUndated01</yt:videoId>
+  <yt:channelId>UCQptchvNlCzMKsGPU8s_6UQ</yt:channelId>
+  <title>Senate Question Time</title>
+  <published>2026-09-08T08:38:32+00:00</published>
+ </entry>
+ <entry>
+  <id>yt:video:otherFixtur</id>
+  <yt:videoId>otherFixtur</yt:videoId>
+  <yt:channelId>UCQptchvNlCzMKsGPU8s_6UQ</yt:channelId>
+  <title>Welcome to the Senate &amp; its committees</title>
+  <published>2026-09-01T01:00:00+00:00</published>
+ </entry>
+</feed>
