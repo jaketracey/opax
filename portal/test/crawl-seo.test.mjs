@@ -160,10 +160,15 @@ test('a division absent from every bill is discoverable and export fallbacks are
     'electorates/index.json':{electorates:[]},'electorates/people.json':{people:[]},
     'bills/index.json':{generated_at:'2026-10-10',bills:[{key:'au-federal-example'}]},
     'bills/au-federal-example.json':{key:'au-federal-example',introduced:'2026-01-01',divisions:[]},
-    'divisions/index.json':{divisions:[{key:'federal-senate-orphan',slug:'division-federal-senate-orphan'}]},
+    // Bills can be paused while divisions refresh: a division newer than the bill export keeps its
+    // own date (votes.json dates the division export); a date past both exports is still rejected.
+    'divisions/index.json':{divisions:[{key:'federal-senate-orphan',slug:'division-federal-senate-orphan'},
+      {key:'federal-senate-oa-2026-10-15-1',slug:'division-federal-senate-oa-2026-10-15-1'},{key:'federal-senate-future',slug:'division-federal-senate-future'}]},
     'divisions/division-federal-senate-orphan.json':{key:'federal-senate-orphan',date:'2026-09-03',members:[],bills:[]},
+    'divisions/division-federal-senate-oa-2026-10-15-1.json':{key:'federal-senate-oa-2026-10-15-1',date:'2026-10-15',members:[],bills:[]},
+    'divisions/division-federal-senate-future.json':{key:'federal-senate-future',date:'2026-12-01',members:[],bills:[]},
     'suppliers.json':{meta:{generated_at:'2026-10-10'},suppliers:[]},'agencies.json':{meta:{generated_at:'2026-10-10'},agencies:[]},
-    'reports/index.json':{reports:[]},'corpus.json':{version:'2026-10-10',expected_resources:1,sources:[]},'votes.json':{_meta:{schema:1}},
+    'reports/index.json':{reports:[]},'corpus.json':{version:'2026-10-10',expected_resources:1,sources:[]},'votes.json':{_meta:{schema:1,content_changed_at:'2026-10-16T18:46:40Z'}},
     ...Object.fromEntries(['money','money.qld','money.vic'].map(f=>[`graph/${f}.json`,{meta:{generated:'2026-10-10'},nodes:[]}])) ,
     ...Object.fromEntries(['federal','qld'].map(j=>[`graph/grants.${j}.json`,{meta:{generated:'2026-10-10'},recipients:[],programs:[]}])) ,
   };
@@ -171,10 +176,12 @@ test('a division absent from every bill is discoverable and export fallbacks are
     for(const [file,value] of Object.entries(assets)) {await mkdir(dirname(join(fixture,file)),{recursive:true});await writeFile(join(fixture,file),JSON.stringify(value));}
     await buildCrawl(fixture);
     const manifest=JSON.parse(await readFile(join(fixture,'crawl/manifest.json'),'utf8'));
-    assert.equal(manifest.counts.divisions,1);assert.equal(manifest.lastmodFallbacks.people,1);
+    assert.equal(manifest.counts.divisions,3);assert.equal(manifest.lastmodFallbacks.people,1);
     const xml=await readFile(join(fixture,'crawl/sitemaps/divisions-1.xml'),'utf8');
     assert.ok(xml.includes('/doc/division-federal-senate-orphan</loc><lastmod>2026-09-03</lastmod>'));
-    assert.equal(manifest.lastmodFallbacks.divisions,0);
+    assert.ok(xml.includes('/doc/division-federal-senate-oa-2026-10-15-1</loc><lastmod>2026-10-15</lastmod>'));
+    assert.ok(xml.includes('/doc/division-federal-senate-future</loc><lastmod>2026-10-16</lastmod>'));
+    assert.equal(manifest.lastmodFallbacks.divisions,1);
   } finally {await rm(fixture,{recursive:true,force:true});}
 });
 

@@ -233,16 +233,24 @@ def parse_day(raw, house, day, people, ids):
             result = 'affirmative' if ayes > noes else 'negative'
             # Some divisions (e.g. leave) require a special majority. The
             # recorded resolution following the division takes precedence.
+            # "The question now is that ... be agreed to" puts the next
+            # question; it does not resolve this one (17 Oct: 20 lost votes
+            # were recorded as carried).
             for following in children[index + 1:index + 3]:
                 if following.tag != 'speech':
                     break
                 text = plain(following).lower()
                 if not re.match(r'^(?:the )?(?:question|motion|amendment|bill|clause)\b', text):
                     continue
+                if re.match(r'^(?:the )?question (?:now )?is\b', text):
+                    continue
                 if 'negatived' in text or 'resolved in the negative' in text:
                     result = 'negative'; break
                 if 'agreed to' in text or 'resolved in the affirmative' in text:
                     result = 'affirmative'; break
+            # A casting vote can carry a tie; nothing carries a vote the noes won.
+            if noes > ayes:
+                result = 'negative'
             divisions.append(Division(did, 'federal', house, day, number,
                                       ' - '.join(t for t in (major, minor) if t), question or None,
                                       bill_ref(minor, major), ayes, noes, result, 'openaustralia_xml',
@@ -279,6 +287,11 @@ def apply_divisions(db, divisions, votes):
         db.execute('INSERT OR IGNORE INTO ext_divisions (' + ','.join(DIVISION_COLUMNS) + ') VALUES (' +
                    ','.join('?' for _ in DIVISION_COLUMNS) + ')',
                    tuple(getattr(d, k) for k in DIVISION_COLUMNS[:-2]) + (json.dumps(d.extra), now))
+        # A re-read of the same XML corrects an outcome this parser recorded
+        # earlier; a row owned by another source is never rewritten.
+        if d.source == 'openaustralia_xml':
+            db.execute("UPDATE ext_divisions SET result=? WHERE id=? AND source='openaustralia_xml' AND result IS NOT ?",
+                       (d.result, d.id, d.result))
         # Bill IDs remain available even for an existing TVFY division.
         if d.extra.get('oa_gid'):
             db.execute('CREATE TABLE IF NOT EXISTS oa_division_provenance '

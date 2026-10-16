@@ -42,10 +42,32 @@ export function voteTableConfig(person, caption = 'Voting record') {
     export:{filename:'voting-record.csv'}, urlKey:'vr', pageType:'person'};
 }
 
+const nameKey = name => String(name || '').normalize('NFKC').replace(/[‘’ʼ`]/g, "'").replace(/\s+/g, ' ').trim().toLowerCase();
 /** @returns {string[]} */
 export function personVoteKeys(name, personId, votes = {}) {
-  const key = String(name || '').normalize('NFKC').replace(/[‘’ʼ`]/g, "'").replace(/\s+/g, ' ').trim().toLowerCase();
-  return [...new Set([personId, ...(votes?._names?.[key] || [])].filter(Boolean))];
+  return [...new Set([personId, ...(votes?._names?.[nameKey(name)] || [])].filter(Boolean))];
+}
+
+/**
+ * The one rule for a profile's vote rows, shared by SSR, the client and the votes table that
+ * hydration and CSV export read: per key, its recorded votes when the recorded-vote export
+ * publishes them under the same identity as votes.json, otherwise that key's bill votes.
+ * @returns {{rows: object[], recorded: boolean}}
+ */
+export function personVoteRecords(keys = [], votes = {}, recentData = null) {
+  const published = recentData?._meta?.schema === 1 && recentData._meta.source === 'opax-parli-db' && recentData._meta.coverage === 'recorded';
+  let recorded = false;
+  const rows = keys.flatMap(key => {
+    const record = votes?.[key];
+    if (!record || typeof record.name !== 'string') return [];
+    const recent = published ? recentData.people?.[key] : null;
+    if (recent && nameKey(recent.name) === nameKey(record.name) && Array.isArray(recent.recent) && recent.recent.length) {
+      recorded = true;
+      return recent.recent;
+    }
+    return [...(record.for || []).map(row => ({...row, vote:'For the bill'})), ...(record.against || []).map(row => ({...row, vote:'Against the bill'}))];
+  });
+  return {rows, recorded};
 }
 
 const chambers = {senate:'Senate', representatives:'House of Representatives', nsw_la:'New South Wales Legislative Assembly',

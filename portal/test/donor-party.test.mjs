@@ -34,7 +34,9 @@ async function donorsDirectory(files, indexRecords) {
   runInNewContext(fnSource('buildDonorsDirectory') + '\nthis.build=buildDonorsDirectory;', context);
   return context.build();
 }
-const rowLinks = html => [...new JSDOM(html).window.document.querySelectorAll('.dir-name a[href]')].map(a => a.getAttribute('href'));
+// One fragment parse per row and per page: a JSDOM window each (1,940 rows, ~200 pages) took 8 s
+// of this file on the Mac and 44-103 s on the refresh box, past the old 60 s timeout (17 Oct).
+const rowLinks = html => [...JSDOM.fragment(html).querySelectorAll('.dir-name a[href]')].map(a => a.getAttribute('href'));
 
 test('directory: every row links to its donor page, whatever the match evidence', async () => {
   const ref = {return_type: 'AEC annual return', year: '2024-25', url: 'https://example.test/r'};
@@ -62,7 +64,7 @@ test('directory: every row links to its donor page, whatever the match evidence'
   }
 });
 
-test('directory over the published data: every row links, and names with &, commas, apostrophes, slashes and "Pty Limited" open a real donor page', {timeout: 60000}, async () => {
+test('directory over the published data: every row links, and names with &, commas, apostrophes, slashes and "Pty Limited" open a real donor page', {timeout: 180_000}, async () => {
   const files = Object.fromEntries(MONEY_GRAPHS.map(path => [path.endsWith('money.json') ? 'federal' : path.split('.')[1], json(path)]));
   const directory = await donorsDirectory(files, json('/graph/donor-index.json').donors);
   assert.ok(directory.items.length > 1000);
@@ -81,9 +83,10 @@ test('directory over the published data: every row links, and names with &, comm
     for (const [item, [href]] of sample) {
       const response = await worker.fetch(href);
       assert.equal(response.status, 200, `${href} answers`);
-      const doc = new JSDOM(await response.text()).window.document;
+      const doc = JSDOM.fragment(await response.text());
       assert.ok(doc.querySelector('h1')?.textContent.trim(), `${href} has a title`);
-      assert.doesNotMatch(doc.title, /not found|unavailable/i, href);
+      assert.ok(doc.querySelector('title')?.textContent.trim(), `${href} has a document title`);
+      assert.doesNotMatch(doc.querySelector('title').textContent, /not found|unavailable/i, href);
     }
   } finally { restore(); }
 });
@@ -148,7 +151,7 @@ function renderEntry(path, selector) {
   });
 }
 
-test('the real app renders a published one-member party outside the money map: its name, its member, no empty or filler sections', {timeout: 30000}, async () => {
+test('the real app renders a published one-member party outside the money map: its name, its member, no empty or filler sections', {timeout: 120_000}, async () => {
   const money = MONEY_GRAPHS.map(json);
   const onMap = new Set(money.flatMap(g => g.nodes.filter(n => n.kind === 'party').map(n => n.label)));
   const people = json('/parliamentarians.json'), recorded = json('/graph/party-members.json');

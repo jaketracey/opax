@@ -276,7 +276,17 @@ revert() {
     case "$p" in portal/public/votes.json|portal/public/divisions|portal/public/seo/recent-votes.json) DIVISIONS_REFRESH_OK=0 ;; esac
     [ "$p" != portal/public/divisions ] || DIVISIONS_PAGES_ROLLED_BACK=1
   done
-  git checkout -q HEAD -- "$@"; git clean -fdq -- "$@" 2>/dev/null || true
+  # Back to HEAD means exactly HEAD under these paths, so a gate trial really tests HEAD and a rollback leaves
+  # nothing behind: unstage, restore tracked files one path at a time (a path HEAD lacks is only cleaned),
+  # remove every file the run created there (17 Oct: 179 new division pages), then check. Never wider than "$@".
+  git reset -q -- "$@" 2>/dev/null || true
+  for p in "$@"; do
+    git cat-file -e "HEAD:$p" 2>/dev/null || continue
+    git checkout -q HEAD -- "$p" || fail "cannot put $p back to HEAD"
+  done
+  git clean -fdq -- "$@" || fail "cannot remove new files under $*"
+  local left; left=$(git status --porcelain -- "$@")
+  [ -z "$left" ] || fail "put back to HEAD but still changed: $(echo "$left" | head -5 | tr '\n' ' ')"
 }
 revert_group() { local g=$1; local paths; read -ra paths <<<"${GROUP_PATHS[$g]}"; revert "${paths[@]}"; }
 group_changed() { local g=$1; local paths; read -ra paths <<<"${GROUP_PATHS[$g]}"; [ -n "$(git status --porcelain -- "${paths[@]}")" ]; }
@@ -505,12 +515,16 @@ if [ "${OPAX_TEST_GATE:-1}" != 0 ]; then
           if [ "$green" = true ]; then
             fail "portal tests failed against the new data; no single group was to blame, green again with ${reverted[*]} put back to HEAD: not published tonight"
           else
-            fail "portal tests fail even with every changed group (${reverted[*]}) put back to HEAD: the suite is red on main itself; nothing published tonight except corpus.json"
+            # revert checked each group is exactly HEAD again (new files removed), so this is not tonight's data.
+            fail "portal tests fail even with every changed group (${reverted[*]}) put back to HEAD and its new files removed: the suite is red on main itself (or a test too slow for this box); nothing published tonight except corpus.json"
           fi
         fi
         rm -rf "$BK"
       fi
-      git checkout -q HEAD -- portal/public/search-catalog/manifest.json 2>/dev/null || true   # a build output, never ours to commit
+      # build outputs of build:search, never ours to commit: leave the checkout clean outside the data paths
+      for built in portal/public/search-catalog/manifest.json portal/public/graph/party-members.json; do
+        git checkout -q HEAD -- "$built" 2>/dev/null || true
+      done
     else
       log "WARN: node or portal/node_modules missing: not running the portal tests before committing (${gate_groups[*]} changed)"
     fi

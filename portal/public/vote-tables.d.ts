@@ -4,6 +4,7 @@ export const voteColumns: Column[];
 export function divisionTableConfig(params?: Record<string,string>, caption?: string, pageType?: string): DataTableConfig;
 export function voteTableConfig(person: string | string[], caption?: string): DataTableConfig;
 export function personVoteKeys(name: string, personId?: string, votes?: Record<string,unknown> | null): string[];
+export function personVoteRecords(keys?: string[], votes?: Record<string,unknown> | null, recentData?: object | null): {rows: object[]; recorded: boolean};
 export function divisionRows(divisions?: object[], deduplicate?: boolean): Row[];
 export function votingRows(votes?: object[], bills?: object[]): Row[];
 export function voteTablePage(rows: Row[], config: DataTableConfig, query?: Query): Page;
