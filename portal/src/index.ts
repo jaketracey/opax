@@ -39,6 +39,7 @@ import {partyMoneyData,partyMoneyTableConfig,registerTableHTML} from '../public/
 import {grantsHTML} from './grants-table'
 import {GRANTS_COVERAGE} from '../public/grants-table.js'
 import { hubPage } from './hubs'
+import { senateVideoPage } from './video-archive'
 import { VIC_ELECTION_AUTHORISATION_LINE, vicElectionFooterHTML } from '../public/vic-election.js'
 import { vicElectionPage, type VicElection } from './vic-election'
 import { vicElectionEnabled, vicElectionPublicationPath, vicElectionDiscovery, vicElectionLlms, VIC_ELECTION_ASSET, VIC_ELECTION_SITEMAP } from '../public/vic-election.js'
@@ -3744,7 +3745,7 @@ const STATIC_PAGES: Record<string, { title: string; description: string; query?:
 }
 
 type SeoRoute =
-  | { kind: 'hub'; hub: 'sitting' | 'estimates' | 'vic-election'; id: string | null }
+  | { kind: 'hub'; hub: 'sitting' | 'estimates' | 'vic-election' | 'video'; id: string | null }
   | { kind: 'instruments'; id: string | null }
   | { kind: 'budget' }
   | { kind: 'vic-gifts' }
@@ -3799,6 +3800,7 @@ function matchSeoRoute(url: URL): SeoRoute | null {
   if (path === '/sitting' || path.startsWith('/sitting/')) return {kind:'hub',hub:'sitting',id:path === '/sitting' ? null : path.slice('/sitting/'.length)}
   if (path === '/vic-election-2026' || path.startsWith('/vic-election-2026/')) return {kind:'hub',hub:'vic-election',id:path === '/vic-election-2026' ? null : path.slice('/vic-election-2026/'.length)}
   if (path === '/estimates' || path.startsWith('/estimates/')) return {kind:'hub',hub:'estimates',id:path === '/estimates' ? null : path.slice('/estimates/'.length)}
+  if (path === '/video/senate') return {kind:'hub',hub:'video',id:'senate'}
   if (path === '/audit') return { kind: 'audit', id: null }
   if (path.startsWith('/audit/') && !/^\/audit\/(?:manifest|index|ready|reports-\d+)\.json$/.test(path)) {
     try { return { kind: 'audit', id: decodeURIComponent(path.slice('/audit/'.length)) } }
@@ -4338,6 +4340,12 @@ async function buildRouteMeta(route: SeoRoute, url: URL, request: Request, env: 
         // ?place= is the seat finder: a search result, never indexed; its canonical is the hub.
         const page = await vicElectionPage(route.id,<T>(path: string) => assetJson<T>(env,path),env,url.searchParams.get('place'))
         return base({title:page.title+' · OPAX',description:page.description,prerender:page.html,jsonLd:page.jsonLd,status:page.status,card:'card' in page ? page.card : null,...('noindex' in page && page.noindex ? {noindex:true} : {})})
+      }
+      if (route.hub === 'video') {
+        // ?kind= filters the one list; every filtered view's canonical is the bare page.
+        const people = await loadPeople(env).catch(() => null)
+        const page = await senateVideoPage(<T>(path: string) => assetJson<T>(env,path),url.searchParams.get('kind'),people?.bySlug)
+        return base({title:page.title+' · OPAX',description:page.description,prerender:page.html,jsonLd:page.jsonLd,status:page.status})
       }
       const people = route.hub === 'sitting' && route.id ? await loadPeople(env) : null
       const query = guardTableURL(divisionTableConfig({},'Divisions','sitting'),url).query

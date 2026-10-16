@@ -38,9 +38,11 @@ export function personVideos(videos, slug, person = null) {
     (!!pid && !!surname && v.person_pid != null && String(v.person_pid) === pid && words(v.title).includes(surname))));
 }
 
-/** One card: the navy poster button, and "Watch on YouTube" beside it. */
-export function videoCardHTML(v) {
+/** One card: the navy poster button, and "Watch on YouTube" beside it. `person` ({ href, label }),
+ *  for a first speech matched to the roster, adds a link to that senator's page in the caption. */
+export function videoCardHTML(v, { person = null } = {}) {
   if (!v || !VIDEO_ID.test(v.id)) return '';
+  const who = person?.href && /^\/subject\/person\/[^/?#]+$/.test(person.href) ? ` · <a href="${esc(person.href)}">${esc(person.label)}</a>` : '';
   const day = v.date ? shortDate(v.date) : '';
   const meta = [day, 'Australian Senate · YouTube'].filter(Boolean).join(' · ');
   return `<figure class="video-card" data-video-card>`
@@ -48,12 +50,12 @@ export function videoCardHTML(v) {
     + `<svg class="video-play" viewBox="0 0 48 48" aria-hidden="true" focusable="false"><circle cx="24" cy="24" r="23"/><path d="M19 14.5v19L34 24z"/></svg>`
     + `<span class="video-text"><span class="visually-hidden">Play video: </span><span class="video-title">${esc(v.title)}</span>`
     + `<span class="video-meta">${esc(meta)}</span></span></button></div>`
-    + `<figcaption class="video-caption"><a href="${esc(watchUrl(v.id))}" rel="noopener">Watch on YouTube</a></figcaption></figure>`;
+    + `<figcaption class="video-caption"><a href="${esc(watchUrl(v.id))}" rel="noopener">Watch on YouTube</a>${who}</figcaption></figure>`;
 }
 
 /** A titled block of cards, or nothing at all: no empty heading when there is no video. */
 export function videoSectionHTML(title, rows, { id = '', note = '', after = '' } = {}) {
-  const cards = rows.map(videoCardHTML).filter(Boolean);
+  const cards = rows.map((v) => videoCardHTML(v)).filter(Boolean);
   if (!cards.length) return '';
   return `<section class="ui-section video-section"${id ? ` id="${esc(id)}"` : ''}><h2 class="ui-section-title">${esc(title)}</h2>`
     + `${note ? `<p class="video-note">${esc(note)}</p>` : ''}<div class="video-cards">${cards.join('')}</div>${after}</section>`;

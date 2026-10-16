@@ -383,10 +383,11 @@ test('Instruments sits under Parliament with Bills, never on the top level, and 
   const parliament = nav.groups.find(g => g.id === 'parliament');
   const laws = parliament.columns.find(c => c.heading === 'Laws');
   assert.deepEqual(laws.links.map(l => l.href), ['/bills', '/register/state-bills', '/instruments']);
-  assert.deepEqual(parliament.columns.find(c => c.heading === 'In the chamber').links.map(l => l.href), ['/sitting', '/estimates']);
+  assert.deepEqual(parliament.columns.find(c => c.heading === 'In the chamber').links.map(l => l.href), ['/sitting', '/video/senate', '/estimates']);
   // The static bar (no scripts) carries the five groups only.
   assert.doesNotMatch(nav.barHTML(), /instruments/i);
-  for (const path of ['/instruments', '/instrument/F2026L00001', '/bills', '/register/state-bills', '/bill/au-federal-r1', '/sitting', '/estimates/2026-10']) assert.equal(nav.active(path), 'parliament', path);
+  for (const path of ['/instruments', '/instrument/F2026L00001', '/bills', '/register/state-bills', '/bill/au-federal-r1', '/sitting', '/estimates/2026-10', '/video/senate']) assert.equal(nav.active(path), 'parliament', path);
   assert.equal(label(nav.trail('/instruments')), 'Legislative instruments');
+  assert.equal(label(nav.trail('/video/senate')), 'Senate video');
   assert.equal(label(nav.trail('/instrument/F2026L00001', 'An instrument')), 'Legislative instruments › An instrument');
 });

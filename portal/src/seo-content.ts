@@ -186,7 +186,7 @@ export async function renderPersonAnswer(p: Person, read: ReadAsset, slugs: Map<
   }
   body += `</ul>${original(profileUrl)}<p>${link('/parliamentarians.json','Parliamentarian data export')}. Recorded representation can include historical seats; affiliation with no current-roster flag is not verified as current or former.</p>`
   // The Senate's own video of a first speech, matched to this roster row by the fetcher; nothing when there is none.
-  body += videoSectionHTML('First speech',personVideos(video?.videos,slugs.get(p.name),p),{id:'ssr-first-speech',note:'Video published by the Senate Public Information Office on YouTube. The player loads from YouTube only when you press play.'})
+  body += videoSectionHTML('First speech',personVideos(video?.videos,slugs.get(p.name),p),{id:'ssr-first-speech',note:'Video published by the Senate Public Information Office on YouTube. The player loads from YouTube only when you press play.',after:`<p class="video-more">${link('/video/senate?kind=first-speech','All first speeches')}</p>`})
   if (!p.speech_scope) {
     const keys = personVoteKeys(p.name,p.pid,voteData)
     const records = keys.map(k=>voteData?.[k] as Votes | undefined).filter((r): r is Votes => !!r?.name)
