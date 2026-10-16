@@ -1,5 +1,5 @@
-import {donorDisclosure,donorLookup,donorDisplayText,donorLabelHTML} from './donor-disclosure.js?v=abb5e417dd';
-import {loadDonorViewIndex} from './donor-views.js?v=eb3ec114b2';
+import {donorDisclosure,donorLookup,donorDisplayText,donorLabelHTML} from './donor-disclosure.js?v=800932e746';
+import {loadDonorViewIndex} from './donor-views.js?v=f1a85f7a27';
 // /money/explain: one disclosed-money flow, explained from the data alone.
 //
 // Every figure here is summed from the year cells of the money graph
@@ -16,7 +16,7 @@ import {loadDonorViewIndex} from './donor-views.js?v=eb3ec114b2';
 //
 // Styles: money-explain.css, loaded with the module.
 
-import { sourceLineHTML, partyLabelHTML } from './labels.js?v=fc03aa14cf';
+import { sourceLineHTML, partyLabelHTML } from './labels.js?v=36612149e0';
 import { subjectUrl } from './canonical-urls.js?v=225d5915ea';
 import { shortMoney, shortDate } from './format.js?v=9fcab43d8d';
 

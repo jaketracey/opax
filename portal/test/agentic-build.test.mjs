@@ -58,7 +58,7 @@ test('steps are real-time, fixed text and escaped/bounded args; the answer keeps
  assert.equal(stepEvent({tool:'party_donations',args:{party:'Jordan Private Name'}},1).arg,undefined);
  const safe=stepEvent({tool:'member_votes',args:{keyword:'<script>'+('x'.repeat(80))}},1);assert.ok(safe.arg.length<=40);assert.doesNotMatch(safe.arg,/[<>]/);
 });
-test('confident individual donors retain links; uncertain matches retain names and return references',async()=>{
+test('confident individual donors retain links; uncertain matches link their own spelling\'s page and retain return references',async()=>{
  const ref={return_type:'AEC annual return',year:'2024-25',return_id:'FIXTURE-7',url:'https://example.test/return/7'};
  const nodes=[{id:'party:Example',label:'Example',kind:'party'},
   {id:'donor:jordan',label:'JORDAN QUILL',kind:'donor',match:{confidence:1,method:'curated',href:'/subject/donor/JORDAN%20QUILL'},returnReferences:[ref]},
@@ -66,7 +66,7 @@ test('confident individual donors retain links; uncertain matches retain names a
  const edges=nodes.slice(1).map((n,i)=>({source:n.id,target:'party:Example',total:(i+1)*100,count:1}));
  const result=await partyDonations({asset:async()=>({nodes,edges}),kb:async()=>({})},{party:'Example'});
  assert.deepEqual(result.data.rows.map(row=>row.donor),['Quill, Jordan','JORDAN QUILL']);
- assert.equal(result.data.rows[0].href,null);assert.equal(result.data.rows[1].href,'/subject/donor/JORDAN%20QUILL');
+ assert.equal(result.data.rows[0].href,'/subject/donor/Quill%2C%20Jordan');assert.equal(result.data.rows[1].href,'/subject/donor/JORDAN%20QUILL');
  assert.ok(result.data.rows.every(row=>row.return_reference.includes('FIXTURE-7')));
 });
 

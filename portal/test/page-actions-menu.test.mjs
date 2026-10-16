@@ -289,7 +289,7 @@ test('every ⋯ on the site is this menu: the static toolbars, the renderers and
   const app = read('app.js');
   assert.match(app, /window\.opaxPageMenus\?\.close\(\$\("search-more"\)\)/);
   assert.doesNotMatch(app, /\$\("search-more"\)\.open/);
-  assert.equal((app.match(/<div class="page-actions[ "]/g) || []).length, 5, 'the five page-action rows in app.js');
+  assert.equal((app.match(/<div class="page-actions[ "]/g) || []).length, 6, 'the six page-action rows in app.js (the sixth: a party outside the money map)');
   // app.js draws ⋯ with the module's markup and gives every ⋯ its behaviour at boot,
   // before the first render; electorates.js draws it with the same markup.
   assert.match(app, /const pageMenusReady = import\('\/page-actions-menu\.js\?v=[0-9a-f]{10}'\)\.then/);

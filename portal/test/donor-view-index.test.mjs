@@ -16,6 +16,7 @@ test('the published donor index carries source names, return references and matc
   assert.ok(donor.returnReferences.length);
   assert.ok(index.has(foldDonorName(donor.label)));
   const view=donorDisclosure(donor);
-  if(donor.match.confidence!==1 || !['exact','curated'].includes(donor.match.method))assert.equal(view.href,null);
+  // Every published name links: a confident match to its entity's page, any other to its own spelling's page.
+  if(donor.match.confidence!==1 || !['exact','curated'].includes(donor.match.method))assert.equal(view.href,'/subject/donor/'+encodeURIComponent(donor.source_name));
  }
 });

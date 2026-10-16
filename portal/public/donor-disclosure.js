@@ -1,5 +1,8 @@
-// Disclosure spelling and identity resolution are separate facts. An absent or
-// uncertain match never supplies a person or organisation link.
+// Disclosure spelling and identity resolution are separate facts. Every published
+// donor name links to its donor page (Jake, 16 Oct): a confident match opens the
+// matched entity's page; any other record opens the page for its own exact
+// disclosure spelling, which claims no identity beyond that string. A bare name
+// no record holds stays plain text: its page would be a 404.
 import {foldDonorName} from './donor-entity.js?v=3fd3e51b56';
 
 const safeHref = value => typeof value === 'string' && /^(?:\/(?!\/)|https?:\/\/)/i.test(value) ? value : null;
@@ -17,10 +20,17 @@ export function donorDisclosure(record, fallback = {}) {
   const returns = Array.isArray(record?.returnReferences) ? record.returnReferences : Array.isArray(fallback.returnReferences) ? fallback.returnReferences : [];
   const references = [...new Set(returns.map(returnReference).filter(Boolean))];
   const reference = (references.slice(0,3).join('; ') + (references.length>3 ? `; ${references.length-3} more return references in the data export` : '')) || returnReference(fallback);
-  return {name, href:confidentDonorMatch(record) ? safeHref(record.match.href) : null, reference, returns};
+  return {name, href:confidentDonorMatch(record) ? safeHref(record.match.href) : donorPageHref(record, name), reference, returns};
 }
-// Display is the name alone: a link only for a confident match. Return
-// references stay data (Sources, CSV, table API, tool fields), never inline text.
+/** The page for a published record's own spelling: /subject/donor/<name>. A record is published when
+ *  the index or a money graph holds it (an id, a kind, match evidence, or merged return references). */
+export function donorPageHref(record, name = record?.source_name ?? record?.label ?? record?.name ?? record?.n) {
+  const published = record && typeof record === 'object' && (record.id || record.kind || record.match || Array.isArray(record.returnReferences));
+  const spelled = String(name ?? '').trim();
+  return published && spelled ? `/subject/donor/${encodeURIComponent(spelled)}` : null;
+}
+// Display is the name alone, linked to its donor page. Return references stay
+// data (Sources, CSV, table API, tool fields), never inline text.
 export function donorLabelHTML(record, fallback) {
   const {name,href} = donorDisclosure(record,fallback);
   return href ? `<a href="${escape(href)}">${escape(name)}</a>` : escape(name);

@@ -258,7 +258,7 @@ test('donor pages mount the block by name, suppliers and recipients by their own
   assert.equal((app.match(/renderDonorTaxCharity\(/g) || []).length, 3);    // the definition and both donor branches
   // Wrapped in settle() so the donor's "On this page" rail lists the block once it lands.
   assert.match(app, /if \(!isParty\) settle\(renderDonorTaxCharity\(node\.label, sections\)\)/);
-  assert.match(app, /if \(kind === "donor"\) renderDonorTaxCharity\(name, sections\)/);
+  assert.match(app, /\n      renderDonorTaxCharity\(name, sections\);/); // the donor outside the money map
   const suppliers = read('suppliers.js');
   assert.match(suppliers, /if \(profile\.abn\) import\('\/tax-charity\.js\?v=[^']+'\)/);
   assert.match(suppliers, /mountTaxCharity\(taxSlot, \{ abn: profile\.abn, alive: life\.alive \}\)/);

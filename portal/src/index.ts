@@ -5138,11 +5138,20 @@ async function moneySubjectMeta(dir: 'party' | 'donor', name: string, url: URL, 
   let tail = ''
   const ldType = dir==='donor' ? 'Dataset' : 'Organization'
   let card: CardSpec
+  let memberNames: string[] = []
   if (dir === 'party') {
     const members = people?.people.filter((p) => p.party && foldName(p.party) === foldName(display)) ?? []
     const speeches = members.reduce((s, p) => s + (p.speeches ?? 0), 0)
+    // The division records name those who sat for a party the roster files elsewhere
+    // (scripts/build_party_index.mjs): one senator's own party has its senator.
+    const recorded = await assetJson<{ parties?: Record<string, { name: string }[]> }>(env, '/graph/party-members.json').catch(() => null)
+    const known = new Set(members.flatMap((p) => [p.name, p.full ?? ''].filter(Boolean).map(foldName)))
+    const voted = Object.entries(recorded?.parties ?? {}).filter(([label]) => foldName(label) === foldName(display))
+      .flatMap(([, rows]) => rows.map((r) => r.name)).filter((n) => !known.has(foldName(n)))
+    memberNames = [...new Set([...members.filter((p) => p.current).map((p) => p.name), ...members.map((p) => p.name), ...voted])]
     const parts: string[] = []
-    if (members.length) parts.push(`${num(members.length)} parliamentarians and ${num(speeches)} speeches in the record`)
+    const count = members.length + new Set(voted.map(foldName)).size
+    if (count) parts.push(`${num(count)} parliamentarian${count === 1 ? '' : 's'}${speeches ? ` and ${num(speeches)} speeches` : ''} in the record`)
     if (node) parts.push(`${money(node.total)} in disclosed receipts, ${years(node.firstYear, node.lastYear)} (${node.sourceShort})`)
     if (parts.length) {
       facts = `${display}: ${parts.join('; ')}.`
@@ -5190,7 +5199,8 @@ async function moneySubjectMeta(dir: 'party' | 'donor', name: string, url: URL, 
     ogType: 'profile',
     status: 200,
     jsonLd: { '@context': 'https://schema.org', '@type': ldType, name: display, url: canonical, description },
-    prerender: prerenderBlock(display,sentence,dir==='donor' && disclosureRecord ? `<p>${donorLabelHTML(disclosureRecord)}</p>${indexLinks()}` : indexLinks()) + table,
+    prerender: prerenderBlock(display,sentence,dir==='donor' && disclosureRecord ? `<p>${donorLabelHTML(disclosureRecord)}</p>${indexLinks()}`
+      : memberNames.length ? `<h2>Members</h2><ul>${memberNames.slice(0,24).map(n=>{const href=personPath(people,n);return `<li>${href==='/subject/person' ? escHtml(n) : `<a href="${escHtml(href)}">${escHtml(n)}</a>`}</li>`}).join('')}</ul>${indexLinks()}` : indexLinks()) + table,
     card,
   }
 }

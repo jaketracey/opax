@@ -266,6 +266,9 @@
 /page-actions-menu.js
   ! Cache-Control
   Cache-Control: public, max-age=31536000, immutable
+/party-page.js
+  ! Cache-Control
+  Cache-Control: public, max-age=31536000, immutable
 /person-paths.js
   ! Cache-Control
   Cache-Control: public, max-age=31536000, immutable
