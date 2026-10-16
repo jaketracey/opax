@@ -138,17 +138,22 @@
   font: var(--type-metadata); white-space: nowrap;
 }
 .site-header .header-search-toggle:hover, .site-header .header-search-toggle[aria-expanded="true"] { background: rgb(255 255 255 / 0.16); color: var(--on-navy); }
-.site-header .header-search-toggle svg { width: var(--size-icon-sm); height: var(--size-icon-sm); color: var(--on-navy); }
+.site-header .header-search-toggle svg { flex: none; width: var(--size-icon-sm); height: var(--size-icon-sm); color: var(--on-navy); }
+/* The label gives way before the icon and the key do: they never shrink, and the padding stays. */
+.nav-search-text { min-width: 0; overflow: hidden; text-overflow: ellipsis; }
 .nav-search-more { display: none; }
 .nav-kbd {
-  display: none; margin-left: auto; padding: 1px 6px; min-width: 20px; text-align: center;
+  display: none; flex: none; margin-left: auto; padding: 1px 6px; min-width: 20px; text-align: center;
   border: 1px solid rgb(255 255 255 / 0.22); border-radius: var(--radius-sm);
   font: var(--type-fine); line-height: var(--leading-snug); color: var(--on-navy-soft);
 }
 @media (min-width: 1200px) {
   .site-header .header-search-toggle { width: clamp(15rem, 19vw, 19rem); }
-  .nav-search-more { display: inline; }
   .nav-kbd { display: inline-block; }
+}
+/* The full label needs about 17rem with the icon, the key and the padding; below 1440px the pill says "Search". */
+@media (min-width: 1440px) {
+  .nav-search-more { display: inline; }
 }
 /* The box itself: a raised card dropped from the pill, suggestions inside it. */
 .site-header .header-search-panel {
