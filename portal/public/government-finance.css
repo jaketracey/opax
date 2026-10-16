@@ -19,7 +19,7 @@
 .gfs-receipt,.gfs-jurisdiction details{font:var(--type-fine);color:var(--ink-soft);overflow-wrap:anywhere}
 .gfs-jurisdiction details p{margin-block:var(--space-row)}
 .gfs-jurisdiction summary{cursor:pointer;min-height:2.75rem;display:flex;align-items:center;text-decoration:underline}
-@media(max-width:600px){.gfs-filters{padding:var(--space-row)}.gfs-filters label,.gfs-filters button{flex-basis:100%}.gfs-jurisdiction dd{font-size:1.3rem}}
+@media(max-width:600px){.gfs-filters{padding:var(--space-row)}.gfs-filters label,.gfs-filters button{flex-basis:100%}}
 /* Keep the shared table, controls and CSV. On phones each published row puts
    its measure and amount first, with the jurisdiction/year/source below. */
 @media(width < 600px){
