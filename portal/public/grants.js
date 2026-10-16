@@ -1,6 +1,6 @@
 import {donorDisclosure,donorLookup,donorDisplayText,donorLabelHTML} from './donor-disclosure.js?v=abb5e417dd';
 import {loadDonorViewIndex} from './donor-views.js?v=eb3ec114b2';
-import {subjectUrl} from './canonical-urls.js?v=225d5915ea';
+import {subjectUrl} from './canonical-urls.js?v=dce94beab5';
 /**
  * OPAX Who gets the grants — every published grant award, resolved to the
  * organisations that receive them and checked against the donor registers.
@@ -53,7 +53,7 @@ import {subjectUrl} from './canonical-urls.js?v=225d5915ea';
  */
 
 import { shortMoney as fmtMoney } from './format.js'
-import { sourceLineHTML } from './labels.js?v=fc03aa14cf'
+import { sourceLineHTML } from './labels.js?v=d021a46dba'
 
 /** Text into the source line's HTML fields (labels.js escapes only its own text fields). */
 const esc = (value) => String(value ?? '').replace(/[&<>"']/g, (c) =>

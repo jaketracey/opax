@@ -1,5 +1,5 @@
-import { personUrl, partyUrl } from './canonical-urls.js?v=225d5915ea';
-import {isMultiSpeaker, speakerLabel, isUnattributed, resolvedParticipants, groupAvatarHTML} from './speech-attribution.js?v=1350457c5d';
+import { personUrl, partyUrl } from './canonical-urls.js?v=dce94beab5';
+import {isMultiSpeaker, speakerLabel, isUnattributed, resolvedParticipants, groupAvatarHTML} from './speech-attribution.js?v=7280d96f90';
 /**
  * OPAX Time Machine — an Encarta-style year explorer for the Australian
  * parliamentary record (1998–2026).
@@ -38,7 +38,7 @@ import {isMultiSpeaker, speakerLabel, isUnattributed, resolvedParticipants, grou
  */
 
 import { shortMoney as fmtMoney } from './format.js'
-import { machineLabelHTML } from './labels.js?v=fc03aa14cf'
+import { machineLabelHTML } from './labels.js?v=d021a46dba'
 
 const YEAR_MIN = 1998
 const YEAR_MAX = 2026

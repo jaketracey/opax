@@ -26,9 +26,9 @@
  * safety: model text and all live data reach the DOM through textContent,
  * never innerHTML.
  */
-import { machineLabelHTML } from './labels.js?v=fc03aa14cf'
-import {personUrl} from './canonical-urls.js?v=225d5915ea';
-import {isMultiSpeaker, isUnattributed, speakerLabel, resolvedParticipants, groupAvatarHTML} from './speech-attribution.js?v=1350457c5d';
+import { machineLabelHTML } from './labels.js?v=d021a46dba'
+import {personUrl} from './canonical-urls.js?v=dce94beab5';
+import {isMultiSpeaker, isUnattributed, speakerLabel, resolvedParticipants, groupAvatarHTML} from './speech-attribution.js?v=7280d96f90';
 
 const ASK_URL = '/api/ask'
 const SPEAKERS_URL = '/speakers.json'

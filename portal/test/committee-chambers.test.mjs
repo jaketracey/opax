@@ -2,6 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import {runInNewContext} from 'node:vm';
+import {CHAMBER_LABELS} from '../public/labels.js';
 
 const app=readFileSync(new URL('../public/app.js',import.meta.url),'utf8');
 const worker=readFileSync(new URL('../src/index.ts',import.meta.url),'utf8');
@@ -10,10 +11,11 @@ const source=[
   pick(/const isCommitteeChamber = [^\n]*\n/,'isCommitteeChamber'),
   pick(/function committeeHouse\(chamber\) \{[\s\S]*?\n\}\n/,'committeeHouse'),
   pick(/function committeeOf\(r\) \{[\s\S]*?\n\}\n/,'committeeOf'),
-  pick(/const CHAMBER_NAMES = \{[\s\S]*?\n\};\n/,'CHAMBER_NAMES'),
   pick(/const DIR_CHAMBERS = \{[\s\S]*?\n\};\n/,'DIR_CHAMBERS'),
-].join('\n')+'\n({isCommitteeChamber,committeeHouse,committeeOf,CHAMBER_NAMES,DIR_CHAMBERS})';
-const {isCommitteeChamber,committeeHouse,committeeOf,CHAMBER_NAMES,DIR_CHAMBERS}=runInNewContext(source,{});
+].join('\n')+'\n({isCommitteeChamber,committeeHouse,committeeOf,DIR_CHAMBERS})';
+const {isCommitteeChamber,committeeHouse,committeeOf,DIR_CHAMBERS}=runInNewContext(source,{});
+// The byline and share cards read the one chamber list in labels.js.
+const CHAMBER_NAMES=CHAMBER_LABELS;
 
 test('all three committee chambers are committee chambers and name their House',()=>{
  for(const [code,house] of [['senate_committee','Senate'],['house_committee','House'],['joint_committee','Joint']]){
@@ -36,7 +38,7 @@ test('the document byline and the directory filter have a name for each committe
 test('the byline and the bracketed-context line no longer special-case the Senate',()=>{
  assert.doesNotMatch(app,/labels\?\.chamber === "senate_committee"/);
  assert.match(app,/isCommitteeChamber\(doc\.labels\?\.chamber\) && context\[1\] === debate/);
- assert.match(app,/const chamber = CHAMBER_NAMES\[String\(doc\.labels\?\.chamber \|\| ""\)\.toLowerCase\(\)\];/);
+ assert.match(app,/const chamberCode = String\(doc\.labels\?\.chamber \|\| ""\)\.toLowerCase\(\);\n\s*const chamber = chamberLabel\(chamberCode\);/);
 });
 
 test('the committee is what precedes the first " - " of the topic, for Senate, House and Joint titles alike',()=>{
@@ -48,8 +50,8 @@ test('the committee is what precedes the first " - " of the topic, for Senate, H
 });
 
 test('the Worker names committee chambers in share cards instead of printing the database code',()=>{
- assert.match(worker,/const COMMITTEE_CHAMBER_NAMES: Record<string, string> = \{\s*senate_committee: 'Senate committees', house_committee: 'House committees', joint_committee: 'Joint committees',\s*\}/);
- assert.match(worker,/const chamber = CHAMBER_NAMES\[r\.labels\.chamber\] \?\? COMMITTEE_CHAMBER_NAMES\[r\.labels\.chamber\] \?\? r\.labels\.chamber/);
+ assert.match(worker,/const chamber = chamberLabel\(r\.labels\.chamber\) \|\| null/);
+ assert.doesNotMatch(worker,/\?\? r\.labels\.chamber\b/,'an unknown code is never printed');
  // the House-a-person-sits-in map is unchanged, so person pages read as before
  assert.match(worker,/const CHAMBER_NAMES: Record<string, string> = \{\s*representatives: 'House of Representatives', senate: 'Senate',\s*assembly: 'Legislative Assembly', council: 'Legislative Council',\s*\}/);
 });

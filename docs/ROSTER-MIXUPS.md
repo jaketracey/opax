@@ -7,6 +7,10 @@ guard, and existing reviewed official evidence in `roster_service.json` and
 `roster_state_evidence.json`. No production write, deploy or push was performed.
 The approved KB reconciler and nightly safety implementation are unchanged.
 
+**16 October: superseded for Shoebridge.** Jake asked for the print to be David Shoebridge, so it now folds
+into his row with 99 other certain surname prints; see [ROSTER-FOLDS.md](ROSTER-FOLDS.md). The audit counts each
+fold as `print folded` and checks the person's row is the exact merge.
+
 Round 4 restores **only Shoebridge**, exactly as on main: Greens, 4,769 speeches,
 no witnesses, no full-name alias and no representation. The reviewed same-person
 entry links David Shoebridge's NSW Council service (2010–2022) to his Senate

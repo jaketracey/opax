@@ -69,9 +69,16 @@ export function splitSpeakers(person) {
   return [...new Set([person.full === 'Craig Crawford' ? 'Cd Crawford' : person.full, person.full, person.name])];
 }
 
-/** Only reviewed split identities acquire these aliases; ambiguous matches fail closed. */
+/** The names a person's speeches sit under: the roster name and the surname prints
+ *  ("Shoebridge") that scripts/roster_fold.py folded into it. Empty for everyone else. */
+export function printSpeakers(person) {
+  if (person?.speech_scope || !Array.isArray(person?.prints) || !person.prints.length) return [];
+  return [...new Set([person.name, ...person.prints])];
+}
+
+/** Only reviewed split identities and folded prints acquire these aliases; ambiguous matches fail closed. */
 export function splitPerson(people, name) {
-  const matches = people.filter(p => splitSpeakers(p).some(n => nameKey(n) === nameKey(name)));
+  const matches = people.filter(p => [...splitSpeakers(p), ...printSpeakers(p)].some(n => nameKey(n) === nameKey(name)));
   return matches.length === 1 ? matches[0] : null;
 }
 

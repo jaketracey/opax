@@ -1,7 +1,7 @@
 import {donorDisclosure,donorLookup,donorDisplayText} from './donor-disclosure.js?v=abb5e417dd';
-import {subjectUrl} from './canonical-urls.js?v=225d5915ea';
+import {subjectUrl} from './canonical-urls.js?v=dce94beab5';
 import { filterMoneyEdges } from "./money-records.js?v=ia-ux-20260908-2";
-import { sourceLineHTML } from './labels.js?v=fc03aa14cf';
+import { sourceLineHTML } from './labels.js?v=d021a46dba';
 /**
  * OPAX Ledger — an analyst-grade table over the donor→party money flows.
  *

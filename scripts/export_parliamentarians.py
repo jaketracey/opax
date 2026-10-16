@@ -127,16 +127,19 @@ def member_party(pid, name, state, chamber, raw, canonical):
 
 def refusals(previous, new, max_changes=MAX_IDENTITY_CHANGES):
     """Why the `new` roster rows must not replace the `previous` (shipped) ones; empty when they may.
-    Rows are matched by name, the roster's key."""
+    Rows are matched by name, the roster's key. A surname print folded into its person (scripts/roster_fold.py)
+    still counts as a row, and is found under the person that now holds it in `prints`."""
     reasons = attribution_refusals(new)
-    if len(new) < len(previous):
-        reasons.append(f"the row count drops from {len(previous):,} to {len(new):,}")
+    rows = lambda people: len(people) + sum(len(p.get("prints") or []) for p in people)  # noqa: E731
+    if rows(new) < rows(previous):
+        reasons.append(f"the row count drops from {rows(previous):,} to {rows(new):,}")
     now = {p["name"]: p for p in new}
+    held = {name: p for p in new for name in p.get("prints") or []}
     lost = []
     for p in previous:
         if not p.get("current"):
             continue
-        q = now.get(p["name"])
+        q = now.get(p["name"]) or held.get(p["name"])
         if q is None:
             lost.append(f"{p['name']} (row gone)")
         elif q.get("pid") != p.get("pid"):

@@ -13,25 +13,25 @@ const donorNameHTML = name => donorLabelHTML(disclosedDonor(name));
 
 "use strict";
 let voteTables;
-const voteTablesReady = import("/vote-tables.js?v=05fe471452").then(module => { voteTables = module; });
+const voteTablesReady = import("/vote-tables.js?v=c72dc8b9f5").then(module => { voteTables = module; });
 let divisionMarkdown;
 const divisionMarkdownReady = import('/division-markdown.js?v=5991511166').then(module => { divisionMarkdown = module; });
 // The labels and source lines (labels.js); the first render waits for them.
 let growthModules;
-const growthModulesReady = import("/growth-modules.js?v=41fca6f135").then(module => { growthModules = module; });
+const growthModulesReady = import("/growth-modules.js?v=0123520e22").then(module => { growthModules = module; });
 let registerTables;
 const registerTablesReady = import('/register-tables.js?v=fba48f8357').then(module => { registerTables = module; });
 let askPerson;
-const askPersonReady = import('/ask-person.js?v=7cb76e395c').then(module => { askPerson = module; });
+const askPersonReady = import('/ask-person.js?v=3d8a82d35c').then(module => { askPerson = module; });
 let uiLabels;
-const uiLabelsReady = import('/labels.js?v=fc03aa14cf').then(module => { uiLabels = module; });
+const uiLabelsReady = import('/labels.js?v=d021a46dba').then(module => { uiLabels = module; });
 // ⋯, the page-actions menu: its markup for the renderers, and its behaviour
 // for every ⋯ on the page, the toolbars' static ones included.
 let pageMenus;
 const pageMenusReady = import('/page-actions-menu.js?v=8640c3d1ca').then(module => { pageMenus = module; module.initPageMenus(document, window); mountPendingPageMenus(); });
 let attributionHelpers;
 const attributionReady = Promise.allSettled([divisionMarkdownReady,
-  import('./speech-attribution.js?v=1350457c5d').then(module => { attributionHelpers = module; })]);
+  import('./speech-attribution.js?v=7280d96f90').then(module => { attributionHelpers = module; })]);
 const isWitness = row => attributionHelpers ? attributionHelpers.isWitness(row) : true;
 const isUnattributed = row => attributionHelpers ? attributionHelpers.isUnattributed(row) : true;
 const belongsToScope = (row, scope) => attributionHelpers ? attributionHelpers.belongsToScope(row, scope) : false;
@@ -321,6 +321,8 @@ function tagHTML(label, href) { return uiLabels.tagHTML(label, href); }
 function machineLabelHTML(opts) { return uiLabels.machineLabelHTML(opts); }
 function sourceLineHTML(opts) { return uiLabels.sourceLineHTML(opts); }
 function fineprintSourceHTML(html, opts) { return uiLabels.fineprintSourceHTML(html, opts); }
+/** A chamber code's reader name (labels.js); '' for a code it does not know, never the code. */
+function chamberLabel(code) { return uiLabels.chamberLabel(code); }
 // A ⋯ whose module failed to load draws nothing; the page still renders.
 function moreMenuHTML(items, label, opts) {
   return pageMenus?.pageMenuHTML(items, label, opts) ?? `<span data-pending-page-menu="${esc(JSON.stringify([items,label,opts]))}"></span>`;
@@ -424,12 +426,6 @@ const REPORT_TOPIC = {
 };
 const TOPIC_REPORT = Object.fromEntries(
   Object.entries(REPORT_TOPIC).map(([report, topic]) => [topic, report]));
-const CHAMBER_NAMES = {
-  representatives: "House of Representatives", senate: "Senate",
-  assembly: "Legislative Assembly", council: "Legislative Council",
-  // committee hearings (parli.db chamber codes): where a committee speech was said, not a House a member sits in
-  senate_committee: "Senate committees", house_committee: "House committees", joint_committee: "Joint committees",
-};
 
 function metaHTML(item, { linkSpeaker = false, linkParty = false, portrait = false, hideSpeaker = false } = {}) {
   const bits = [];
@@ -1502,7 +1498,7 @@ async function openMoneyRecords(kind, params) {
       moneyRecordsHandle = handle;
       return;
     }
-    const mod = await import(grants ? '/grants.js?v=4aea6d16c3' : '/ledger.js?v=b36dc2fd72');
+    const mod = await import(grants ? '/grants.js?v=adac4bafd2' : '/ledger.js?v=b262a9048e');
     if (generation !== moneyRecordsGeneration) return;
     body.replaceChildren();
     // Both modules report their shareable state (open file, filters) so the
@@ -1532,7 +1528,7 @@ async function openMoneyExplain(params, manageFocus) {
   $('money-records-head').hidden = true;
   const body = $('money-records-body');
   try {
-    const mod = await import('/money-explain.js?v=18278ce932');
+    const mod = await import('/money-explain.js?v=6b09fd6f65');
     if (generation !== moneyRecordsGeneration) return;
     const current = () => generation === moneyRecordsGeneration && location.pathname === '/money/explain';
     moneyRecordsHandle = mod.mountMoneyExplain(body, {
@@ -1551,7 +1547,7 @@ async function openGrantRecipient(jurisdiction, id, manageFocus) {
   const body = $('money-records-body');
   body.innerHTML = '<div class="grant-recipient-page" aria-busy="true"><p class="visually-hidden" role="status">Loading recipient records</p><div class="answer-skeleton grant-recipient-skeleton" aria-hidden="true"><i style="width:62%;height:2.75rem"></i><i style="width:38%"></i><i style="width:100%;height:6rem"></i><i style="width:84%"></i><i style="width:96%"></i><i style="width:74%"></i></div></div>';
   try {
-    const mod = await import('/grant-recipient.js?v=e062ae89b7');
+    const mod = await import('/grant-recipient.js?v=28e7bfb761');
     if (generation !== moneyRecordsGeneration) return;
     moneyRecordsHandle = mod.mountGrantRecipient(body, { jurisdiction, id, manageFocus,
       onTitle(name) {
@@ -1649,7 +1645,7 @@ async function mountMoney(jurParam, industry, params = new URLSearchParams()) {
   root.innerHTML = `<p class="ui-status-line money-map-status" role="status">Loading the map…</p>`;
   const cfg = MONEY_JURISDICTIONS[jur];
   try {
-    const [{ mountMoneyMap }, data, journeysModule, researchModule, recordsModule] = await Promise.all([import("/money-map.js?v=60a91b38e8"), loadMoneyFile(jur), import("/money-journeys.js?v=mobile-picker-20260908"), import("/map-research.js?v=246bddc933"), import("/money-records.js?v=ia-ux-20260908-2")]);
+    const [{ mountMoneyMap }, data, journeysModule, researchModule, recordsModule] = await Promise.all([import("/money-map.js?v=60a91b38e8"), loadMoneyFile(jur), import("/money-journeys.js?v=mobile-picker-20260908"), import("/map-research.js?v=6bd31eba67"), import("/money-records.js?v=ia-ux-20260908-2")]);
     if (moneyMapLoading !== jur || generation !== moneyMapGeneration) return; // switched again while loading
     const fine = $("money-fineprint");
     if (fine) fine.innerHTML = moneyFineprintHTML(jur, data?.meta);
@@ -1790,7 +1786,7 @@ async function openSupplierPage(name, params, manageFocus) {
   body.classList.remove("subject-person", "subject-party");
   body.innerHTML = '<p role="status">Loading suppliers…</p>';
   try {
-    const module = await import("/suppliers.js?v=7e0f952ac2");
+    const module = await import("/suppliers.js?v=5e3bf2da58");
     if (generation !== supplierPageGeneration) return;
     const helpers = {
       params,
@@ -3874,7 +3870,7 @@ function votesFor(name, pid) {
 
 let personUrls = null;
 const personUrl = name => personUrls?.personUrl(name) || '/subject/person';
-const personUrlsReady = import('/canonical-urls.js?v=225d5915ea').then(module => { personUrls = module; });
+const personUrlsReady = import('/canonical-urls.js?v=dce94beab5').then(module => { personUrls = module; });
 
 function subjectHash(kind, label) {
   // Person links use the roster's verified slugs and reviewed name aliases.
@@ -4316,7 +4312,7 @@ async function renderDonorInterests(name, sections) {
           ? `<img src="${esc(photo)}" width="48" height="48" loading="lazy" decoding="async" alt="">`
           : `<span aria-hidden="true"></span>`}</span>
         <div class="declared-entry">
-          <div class="declared-person"><a ${entityHrefAttr(subjectHash("person", row.name))}>${esc(row.name)}</a>${party ? ` ${partyChipHTML(party)}` : ""}<span class="result-meta">${esc(chamberName[row.chamber] || row.chamber || "Register")}</span></div>
+          <div class="declared-person"><a ${entityHrefAttr(subjectHash("person", row.name))}>${esc(row.name)}</a>${party ? ` ${partyChipHTML(party)}` : ""}<span class="result-meta">${esc(chamberName[row.chamber] || chamberLabel(row.chamber) || "Register")}</span></div>
           <div class="declared-kind tie-tags"><span class="tie-tag">${esc(category.charAt(0).toUpperCase() + category.slice(1))}</span>${holder ? `<span class="tie-tag tie-tag-holder">${esc(holder)}</span>` : ""}</div>
           <p class="declared-description">“${esc(row.description || "")}”${source ? ` <a class="declared-source-link" href="${esc(source)}" rel="noopener" target="_blank">register ↗︎</a>` : ""}</p>
         </div>
@@ -5605,6 +5601,13 @@ async function openSubject(kind, name, manageFocus, params = new URLSearchParams
   // full name, so an old link or a typed surname lands on the person.
   const scopedPerson = kind === 'person' && (await loadParliamentarians())?.people?.find(p => p.name === name && p.speech_scope);
   if (kind === "person" && !scopedPerson && params.get('attribution') !== 'unattributed' && !String(name).trim().includes(" ")) {
+    // A surname print the roster folded into its person ("Shoebridge", scripts/roster_fold.py).
+    const foldedInto = (await loadParliamentarians())?.people?.find(p => (p.prints || []).some(n => speakerKey(n) === speakerKey(name)));
+    if (foldedInto) {
+      replaceRoute(subjectHash("person", foldedInto.name));
+      route();
+      return;
+    }
     const holders = ((await loadSpeakersDir())?.bySurname.get(speakerKey(name)) || [])
       .filter(([n]) => speakerKey(n) !== speakerKey(name));
     if (holders.length === 1) {
@@ -5884,7 +5887,7 @@ async function openSubject(kind, name, manageFocus, params = new URLSearchParams
   // party they spoke for, so a defector reads "One Nation · formerly Nationals".
   if (currentSubjectKey !== key) return;
   const partyNow = roster?.party_now || null;
-  const { profileJurisdictions, profileAffiliations } = await import('/profile-jurisdictions.js?v=20261006-1');
+  const { profileJurisdictions, profileAffiliations } = await import('/profile-jurisdictions.js?v=20261016-1');
   if (currentSubjectKey !== key) return;
   const representation = profileJurisdictions(roster);
   const party = partyNow || roster?.party || spokeAs;
@@ -6967,7 +6970,7 @@ const DIRECTORY_KINDS = {
 };
 let electorateModulePromise;
 function loadElectorateModule() {
-  return electorateModulePromise ??= import("./electorates.js?v=ea7c4e89ed").catch((e) => { electorateModulePromise = null; throw e; });
+  return electorateModulePromise ??= import("./electorates.js?v=032c50a647").catch((e) => { electorateModulePromise = null; throw e; });
 }
 const DIR_CHUNK = 60;
 
@@ -7406,7 +7409,8 @@ async function buildPeopleDirectory() {
       ["divisions", "Most divisions", byNumDesc((p) => p._divisions)],
     ],
     row,
-    fineprint: `Names appear as Hansard prints them, so a surname-only print ("Shoebridge") is its own entry, with the
+    fineprint: `Names appear as Hansard prints them. A surname-only print is folded into the member it certainly is (same
+      surname, party, parliament and years, and no one else it could be); any other keeps its own entry, with the
       members register's full name beside it where the record knows it. Speech counts follow the site's corpus rule
       (speeches since the 1993 election, 200+ characters, procedural rows removed) and are counted from the
       corpus itself, so they can run ahead of what the index has loaded so far. Split records show a pending count until an exact export counts only the MP's own-house, in-service speeches. Speakers with fewer than
@@ -8069,7 +8073,8 @@ const billHash = (key) => hasEntityId(key) ? `/bill/${encodeURIComponent(key)}` 
    division's recorded result. These four turn that into English without
    changing what it says, and pass anything unrecognised through untouched
    rather than dropping a fact the register did record. */
-const billHouse = (code) => CHAMBER_NAMES[String(code || "").toLowerCase()] || String(code || "");
+// A stage's house is a chamber code, or a word the record writes out ("Assent").
+const billHouse = (code) => chamberLabel(code) || (/^[a-z_]+$/.test(String(code || "")) ? "" : String(code || ""));
 const sentenceCase = (s) => {
   const t = String(s || "").replace(/_/g, " ").trim();
   return t ? t[0].toUpperCase() + t.slice(1) : "";
@@ -9220,7 +9225,7 @@ async function openExplain(detail) {
   if (!detail || !["industry", "donor", "party"].includes(detail.kind)) return;
   const jur = MONEY_JURISDICTIONS[detail.jurisdiction] ? detail.jurisdiction : "federal";
   try {
-    const [mod, graph] = await Promise.all([import("/money-explain.js?v=18278ce932"), loadMoneyFile(jur)]);
+    const [mod, graph] = await Promise.all([import("/money-explain.js?v=6b09fd6f65"), loadMoneyFile(jur)]);
     const { loadDonorViewIndex } = await import("/donor-views.js?v=eb3ec114b2");
     goRoute(mod.explainHrefFor({ ...detail, jurisdiction: jur }, graph, await loadDonorViewIndex()) || "/money/explain");
   } catch { goRoute("/money/explain"); }
@@ -9236,15 +9241,15 @@ document.addEventListener("click", (e) => {
 document.addEventListener("opax:explain", (e) => openExplain(e.detail));
 
 const GAMES = {
-  ballot: { name: "Build your ballot", dialog: "dialog-ballot", body: "explore-ballot", module: "/ballot.js?v=49e7bc6382", mount: "mountBallot" },
-  tm: { name: "Time machine", dialog: "dialog-tm", body: "explore-tm", module: "/timemachine.js?v=23b5006f1b", mount: "mountTimeMachine" },
+  ballot: { name: "Build your ballot", dialog: "dialog-ballot", body: "explore-ballot", module: "/ballot.js?v=5fe6276a45", mount: "mountBallot" },
+  tm: { name: "Time machine", dialog: "dialog-tm", body: "explore-tm", module: "/timemachine.js?v=b427c562f9", mount: "mountTimeMachine" },
   tide: { name: "The tide", dialog: "dialog-tide", body: "explore-tide", module: "/tide.js", mount: "mountTide" },
-  quiz: { name: "The record quiz", dialog: "dialog-quiz", body: "explore-quiz", module: "/quiz.js?v=1af2a51c34", mount: "mountQuiz" },
-  ledger: { name: "The ledger", dialog: "dialog-ledger", body: "explore-ledger", module: "/ledger.js?v=b36dc2fd72", mount: "mountLedger" },
-  grants: { name: "Who gets the grants", dialog: "dialog-grants", body: "explore-grants", module: "/grants.js?v=4aea6d16c3", mount: "mountGrants" },
+  quiz: { name: "The record quiz", dialog: "dialog-quiz", body: "explore-quiz", module: "/quiz.js?v=0d246355cb", mount: "mountQuiz" },
+  ledger: { name: "The ledger", dialog: "dialog-ledger", body: "explore-ledger", module: "/ledger.js?v=b262a9048e", mount: "mountLedger" },
+  grants: { name: "Who gets the grants", dialog: "dialog-grants", body: "explore-grants", module: "/grants.js?v=adac4bafd2", mount: "mountGrants" },
   matrix: { name: "Who owns which debate", dialog: "dialog-matrix", body: "explore-matrix", module: "/matrix.js?v=0d01530c63", mount: "mountMatrix" },
   wd: { name: "Words per dollar", dialog: "dialog-wd", body: "explore-wd", module: "/wordsdollars.js?v=65a33d444e", mount: "mountWordsDollars" },
-  tvn: { name: "Then vs now", dialog: "dialog-tvn", body: "explore-tvn", module: "/thenvsnow.js?v=aac138f24c", mount: "mountThenVsNow" },
+  tvn: { name: "Then vs now", dialog: "dialog-tvn", body: "explore-tvn", module: "/thenvsnow.js?v=fc53a72671", mount: "mountThenVsNow" },
 };
 
 async function openGame(which, params = null) {
@@ -12814,13 +12819,24 @@ function divisionMembersHTML(names, { ayes = 0, noes = 0 } = {}) {
     </section>`;
 }
 
+/** A division page's one heading and its chamber's name. The heading is the division's
+ *  recorded title or stage, else its motion's first sentence (as the Worker's h1); the
+ *  chamber goes in the meta line under it, by name, never as a code ("vic_la division"). */
+function divisionHeading(d, entry) {
+  const recorded = String(entry?.title || "").trim();
+  const stage = billStage(entry?.stage || "");
+  const motion = billQuestion(d.name || d.question || "").split(/(?<=[.!?])\s/)[0];
+  return { title: recorded || stage || motion || "Division", house: billHouse(d.house) || "Parliament" };
+}
+
 function renderDivisionDoc({ d, entry, bills }, slug, manageFocus) {
   currentDoc = { slug, kind: "division", title: d.name || d.question || "", url: d.source_url, labels: { kind: "division" } };
   setStatus($("doc-status"), "");
-  const house = billHouse(d.house) || "Parliament";
-  const recorded = String(entry?.title || "").trim();
-  const stage = billStage(entry?.stage || "");
-  $("doc-title").textContent = recorded || stage || `${house} division`;
+  const { title, house } = divisionHeading(d, entry);
+  $("doc-title").textContent = title;
+  // They Vote For You counts the federal divisions; a state division is read from its Hansard.
+  const federal = !d.jurisdiction || d.jurisdiction === "federal";
+  const countSource = federal ? "The count on They Vote For You" : "The division in the official Hansard";
   setCrumbs(bills[0]?.key
     ? crumbsFor("/bills", { label: bills[0].title, href: `/bill/${encodeURIComponent(bills[0].key)}` }, "Division")
     : crumbsFor("/ask?view=search", "Division"));
@@ -12839,7 +12855,7 @@ function renderDivisionDoc({ d, entry, bills }, slug, manageFocus) {
       <a class="ui-button" href="${esc(ask)}">Ask the record about this</a>
       ${moreMenuHTML([
         { action: "copy-division", label: "Copy link" },
-        safeUrl(d.source_url) && { href: d.source_url, label: "The count on They Vote For You" },
+        safeUrl(d.source_url) && { href: d.source_url, label: countSource },
       ], "More about this division")}
     </div>`;
   $("doc-bill").hidden = false;
@@ -12863,8 +12879,8 @@ function renderDivisionDoc({ d, entry, bills }, slug, manageFocus) {
     </section>
     ${question ? `<section class="ui-section division-block division-question-block"><details class="ui-disclosure division-question"><summary>The question</summary><div class="ui-disclosure-body division-markdown">${billNoteHTML(question)}</div></details></section>` : ""}
     ${sourceLineHTML({
-      updated: retrieved, dateLabel: retrieved ? "Retrieved" : "Updated", source: "They Vote For You",
-      originals: [safeUrl(d.source_url) && { label: "The count on They Vote For You", href: d.source_url }, ...bills.map((b) => ({ label: b.title, href: `/bill/${encodeURIComponent(b.key)}` }))].filter(Boolean),
+      updated: retrieved, dateLabel: retrieved ? "Retrieved" : "Updated", source: federal ? "They Vote For You" : "Official Hansard",
+      originals: [safeUrl(d.source_url) && { label: countSource, href: d.source_url }, ...bills.map((b) => ({ label: b.title, href: `/bill/${encodeURIComponent(b.key)}` }))].filter(Boolean),
       notes: [
         members.length ? `${members.length} members named; ${absent} absent.` : "The names are read from the division's own record in the OPAX index; the export lists only the counts.",
         "Party is each member's recorded affiliation on the day where it was observed. A division on an amendment is not a vote on the bill itself.",
@@ -12952,13 +12968,15 @@ async function openDocPage(slug, manageFocus) {
     $("doc-topic").hidden = !topic;
     $("doc-topic").classList.toggle("doc-topic-long", String(topic || "").length > 100);
     // One byline, each fact once: party · seat · chamber · date · source.
-    const chamber = CHAMBER_NAMES[String(doc.labels?.chamber || "").toLowerCase()];
+    const chamberCode = String(doc.labels?.chamber || "").toLowerCase();
+    const chamber = chamberLabel(chamberCode);
     const state = doc.labels?.state;
     const stateName = state ? (STATE_NAMES[state] || state) : null;
     const house = isBillText ? 'Bill text' : isResearchRecord ? FILTER_KIND_LABELS[doc.labels.kind] : isGovernmentRelease
       ? (state === "federal" ? "Australian Government" : state ? `${stateName} Government` : "Government release")
       : chamber
-      ? (state && state !== "federal" ? `${chamber}, ${stateName}` : chamber)
+      // A state house's label already names its parliament; only the bare "assembly"/"council" need it.
+      ? (state && state !== "federal" && ["assembly", "council"].includes(chamberCode) ? `${chamber}, ${stateName}` : chamber)
       : (state ? (state === "federal" ? "Federal Parliament" : `Parliament of ${stateName}`) : null);
     const origin = safeUrl(doc.url);
     $("doc-meta").innerHTML = [

@@ -26,9 +26,12 @@ class MainPreservationTests(unittest.TestCase):
         result=audit.audit(self.main,self.shipped,self.reference,self.reviewed)
         self.assertEqual(result['counts']['clean record changed'],0)
         self.assertEqual(result['counts'],{'witness split':16,'mix-up corrected':17,'witness-dominated':115,
-                                         'spans parliaments':108,'alias normalisation':11,'clean record changed':0})
+                                         'spans parliaments':108,'alias normalisation':11,'print folded':100,
+                                         'clean record changed':0})
         changed={r['name'] for r in result['changes']}
-        for name in self.old.keys()-changed:self.assertEqual(self.new[name],self.old[name],name)
+        _,merged=audit.folds(self.main,self.shipped,self.reference)
+        for name in self.old.keys()-changed-merged.keys():self.assertEqual(self.new[name],self.old[name],name)
+        for name,row in merged.items():self.assertEqual(self.new[name],row,name)
 
     def test_clean_sa_and_historical_state_records_keep_every_field(self):
         for name in ['Malinauskas','P.B. Malinauskas','V.A. Chapman','S.S. Marshall','A. Koutsantonis',
@@ -49,10 +52,16 @@ class MainPreservationTests(unittest.TestCase):
         p=copy.deepcopy(self.old['Shoebridge'])
         self.assertEqual(profiles.repair([p],self.reference,self.reviewed),[])
         self.assertEqual(p,self.old['Shoebridge'])
-        self.assertEqual(self.new['Shoebridge'],p)
         self.assertEqual(p['party'],'Greens')
         self.assertNotIn('full',p)
         self.assertEqual(p['representation'],[])
+        # Jake, 16 Oct: the print is David Shoebridge. It folds into his row, with his id, seat and status.
+        self.assertNotIn('Shoebridge',self.new)
+        david=self.new['David Shoebridge']
+        self.assertEqual(david['prints'],['Shoebridge'])
+        self.assertEqual(david['speeches'],self.old['David Shoebridge']['speeches']+p['speeches'])
+        for field in ['pid','current','party_now','representation']:
+            self.assertEqual(david.get(field),self.old['David Shoebridge'].get(field),field)
 
     def test_reviewed_same_person_cannot_override_contradictions_or_witnesses(self):
         records=profiles.dated_records(self.reference,self.reviewed)
@@ -78,15 +87,28 @@ class MainPreservationTests(unittest.TestCase):
         self.assertEqual(names,['Shoebridge'])
 
     def test_shoebridge_party_restoration_does_not_change_kb_resources(self):
-        before=copy.deepcopy(self.shipped)
+        before=copy.deepcopy(self.main)
         row=next(p for p in before if p['name']=='Shoebridge')
         row['recorded_parties']=[row.pop('party')]
         research=json.loads((profiles.PUBLIC/'research/mlci.json').read_text())
         self.assertEqual(list(records(research,{'people':before})),
-                         list(records(research,{'people':self.shipped})))
+                         list(records(research,{'people':self.main})))
+
+    def test_folding_prints_changes_no_kb_resource(self):
+        # Only prints without a recorded seat fold, so no roster-profile record is retired or rewritten.
+        research=json.loads((profiles.PUBLIC/'research/mlci.json').read_text())
+        _,merged=audit.folds(self.main,self.shipped,self.reference)
+        unfolded=[p for p in self.shipped if p['name'] not in merged]+[self.old[n] for n in merged]
+        unfolded+=[self.old[stub] for p in self.shipped for stub in p.get('prints') or []]
+        key=lambda r:r['slug']
+        self.assertEqual(sorted(records(research,{'people':unfolded}),key=key),
+                         sorted(records(research,{'people':self.shipped}),key=key))
 
     def test_transcript_counts_scopes_dates_and_verified_numeric_ids_are_unchanged(self):
+        _,merged=audit.folds(self.main,self.shipped,self.reference)
         for name,p in self.old.items():
+            if name not in self.new:continue  # a folded print: audited by test_every_changed_record...
+            p=merged.get(name,p)
             q=self.new[name]
             for field in ['name','speeches','states','chambers','first','last','witness_rows','pid']:
                 preserved = q.get('transcript', q) if field not in ('name','pid') else q
