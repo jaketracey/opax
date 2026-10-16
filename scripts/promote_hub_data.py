@@ -2,7 +2,8 @@
 """Promote reviewed hub snapshots offline; never acquire, push or deploy data.
 
 After reviewing a new staged snapshot, update its review.json input digests in
-the same reviewed change. Nightly then promotes it without a separate copy step.
+the same reviewed change. Scheduled hubs then promote without a separate copy
+step; annual ABS GFS requires an explicit reviewed re-promotion.
 Budget originals live in the acquisition cache: their reviewed hashes are joined
 to the committed receipt ledger, not re-fetched or silently inferred here.
 """
@@ -33,8 +34,8 @@ from scripts.abs_gfs.check import checked_projection as gfs_projection
 ASSETS = {"budget": "budget/data.json", "vic-gifts": "vic-gifts/data.json",
           "bills-tas": "bills-tas/data.json", "bills-act": "bills-act/data.json",
           "abs-gfs": "government-finance/data.json"}
-# The orchestrator activates the new lane in nightly after review/promotion.
-# Existing default runs remain scoped to the four already-promoted hubs.
+# Annual ABS GFS is explicit opt-in, outside the default nightly hubs.
+# Existing default runs remain scoped to the four scheduled hubs.
 DEFAULT_HUBS = ["budget", "vic-gifts", "bills-tas", "bills-act"]
 INPUTS = {"budget": ["inventory.json", "receipts.json", "aggregates.json", "measures.json", "hub.json"],
           "vic-gifts": ["inventory.json", "receipts.json", "hub.json"],

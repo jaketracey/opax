@@ -1,5 +1,31 @@
 {
-  "preview": "Local Worker; staged asset binding; external requests blocked",
+  "preview": "Local Worker; promoted portal/public asset; external requests blocked",
+  "asset": {
+    "path": "portal/public/government-finance/data.json",
+    "status": 200,
+    "bytes": 4904581,
+    "sha256": "92062f93d0dab5e141cdb2137d47f84e49744c6d7121e9eb65194710acb83340",
+    "reviewedCommit": "d7b0a7052a7ed33649f8cc0fb379335ca44e6ef4",
+    "counts": {
+      "documents": 81,
+      "rows": 3906,
+      "years": [
+        "2015-16",
+        "2016-17",
+        "2017-18",
+        "2018-19",
+        "2019-20",
+        "2020-21",
+        "2021-22",
+        "2022-23",
+        "2023-24",
+        "2024-25"
+      ],
+      "reconciliation": {
+        "pass": 2466
+      }
+    }
+  },
   "results": [
     {
       "width": 390,
@@ -13,7 +39,9 @@
         "amountsInsideContainer": true
       },
       "ledeGap": 24,
-      "jurisdictions": 9
+      "jurisdictions": 9,
+      "headlineFigures": 46,
+      "seriesRows": 451
     },
     {
       "width": 1440,
@@ -27,7 +55,9 @@
         "amountsInsideContainer": true
       },
       "ledeGap": 24,
-      "jurisdictions": 9
+      "jurisdictions": 9,
+      "headlineFigures": 46,
+      "seriesRows": 451
     }
   ],
   "search": {

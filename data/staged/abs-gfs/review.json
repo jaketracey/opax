@@ -1,8 +1,8 @@
 {
   "status": "approved",
-  "reviewed_commit": "95d649835685f7cd792b1efbea8a2f5ee767f5eb",
-  "reviewed_at": "2026-10-16T21:35:40.873558+00:00",
-  "review_basis": "Staging-only numerical projection review: all 81 workbook notices, source hashes, 3906 original cells, 2466 reconciliations, licence and no-cross-level gates, SSR/CSV and local 390/1440 browser evidence checked. This records the lane review; the orchestrator owns nightly activation and production promotion. No production write is authorised or performed by this receipt.",
+  "reviewed_commit": "d7b0a7052a7ed33649f8cc0fb379335ca44e6ef4",
+  "reviewed_at": "2026-10-16T22:04:03.153139+00:00",
+  "review_basis": "User review r2 APPROVED d7b0a7052. The six staged numerical and provenance inputs are unchanged from the reviewed projection: 81 workbooks, 3906 observations, 2466 passing reconciliations, cleared workbook licences and no cross-level sums. Round 1 UI fixes are included in the approved commit. Round 2 authorises local promotion of the single declared government-finance/data.json asset only; no push, deploy, nightly or KB/D1 write. GFS remains an explicit annual re-promotion, outside the default nightly hubs.",
   "inputs": {
     "inventory.json": "a2d6798b8d8f034c781407dd9597f1f0ed6fab4b6dd5d363e7e0cab64f912469",
     "tables.json": "85799f6e5cdb6df4f1a423155c5c622d26a2918c3b631bdd4277f960af1183f6",

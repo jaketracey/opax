@@ -27,6 +27,15 @@ npm run -s check
 npx wrangler deploy --dry-run --outdir private/abs-gfs/worker-dry-run
 ```
 
-The browser harness uses a local Worker with an in-memory staged asset binding, no production bindings, and blocks external browser requests. It saves 390/1440 screenshots under `portal/private/abs-gfs/` and checks shared-table filtering, CSV receipts, no page overflow and JavaScript-disabled rendering. Native app work is [plan only](../../docs/coverage/abs-gfs/app-plan.md).
+The browser harness uses a local Worker serving the actual `portal/public/government-finance/data.json`, with no production bindings, and blocks external browser requests. It verifies the served bytes and approved commit against the promoted asset, then saves 390/1440 screenshots under `portal/private/abs-gfs/`. Checks cover shared-table filtering, CSV receipts, page and phone-table fit, dependent selectors and JavaScript-disabled rendering. Promote the reviewed asset before running this harness; there is no staged fallback. Native app work is [plan only](../../docs/coverage/abs-gfs/app-plan.md).
 
-Promotion is supported by `scripts/promote_hub_data.py abs-gfs` only after an approved `review.json` joins the exact staged input digests to a reviewed commit. The lane runs only its `--dry-run`. The default four-hub promotion list and nightly scripts are unchanged: the orchestrator must activate this lane and promote its reviewed asset before shipping the route. Without that asset the route returns a source-linked 503. No production data, nightly, push or deployment is part of this lane.
+Promotion requires an approved `review.json` joining the exact staged input digests to a reviewed commit. Round 2 promotes that reviewed projection into the single local public asset so it ships with the route. No push, deployment or KB/D1 write occurs. The default four-hub promotion list and nightly scripts remain unchanged: GFS is annual and stays outside nightly.
+
+For a future release, review the new staged inputs and update the receipt before an explicit local re-promotion from the approved checkout (using its `HEAD` as the votes baseline):
+
+```sh
+python3 scripts/promote_hub_data.py abs-gfs --votes-reference HEAD
+python3 scripts/promote_hub_data.py abs-gfs --check-public --votes-reference HEAD
+```
+
+The [Round 2 promotion report](../../docs/coverage/abs-gfs/promotion-round-2.md) records this release's asset digest and validation. Shipping remains the orchestrator's responsibility.

@@ -1,0 +1,257 @@
+{
+  "validated_at": "2026-10-16T22:06:04.059096+00:00",
+  "approved_commit": "d7b0a7052a7ed33649f8cc0fb379335ca44e6ef4",
+  "promotion": {
+    "asset": "portal/public/government-finance/data.json",
+    "bytes": 4904581,
+    "sha256": "92062f93d0dab5e141cdb2137d47f84e49744c6d7121e9eb65194710acb83340",
+    "public_changes": [
+      "government-finance/data.json"
+    ],
+    "counts": {
+      "documents": 81,
+      "rows": 3906,
+      "years": [
+        "2015-16",
+        "2016-17",
+        "2017-18",
+        "2018-19",
+        "2019-20",
+        "2020-21",
+        "2021-22",
+        "2022-23",
+        "2023-24",
+        "2024-25"
+      ],
+      "reconciliation": {
+        "pass": 2466
+      }
+    },
+    "snapshot_date": "2026-10-16",
+    "input_sha256": "d96e18fda3934e8ef3c52f97acc60fa721b6f93af48db104b8c75daae8727399",
+    "inputs": {
+      "inventory.json": "a2d6798b8d8f034c781407dd9597f1f0ed6fab4b6dd5d363e7e0cab64f912469",
+      "tables.json": "85799f6e5cdb6df4f1a423155c5c622d26a2918c3b631bdd4277f960af1183f6",
+      "receipts.json": "42e6f28071781ea9bf18694bb01ca3e49534f0e6f20cebda0445a322303b134e",
+      "series.jsonl": "220e8dfab45ae8b399cd835dc3841ed90ce50b70555e204b93477e6c3954e621",
+      "reconciliation.json": "c8dd7436a33a3af61dd3a764527b14a00342f27134757445e5c827733f355199",
+      "hub.json": "d96e18fda3934e8ef3c52f97acc60fa721b6f93af48db104b8c75daae8727399"
+    },
+    "reviewed_commit": "d7b0a7052a7ed33649f8cc0fb379335ca44e6ef4"
+  },
+  "public_scope": {
+    "before_files": 19438,
+    "after_files": 19439,
+    "changed_files": [
+      "government-finance/data.json"
+    ],
+    "stamps": "already current; no stamping writes"
+  },
+  "checks": [
+    {
+      "command": "python3 -m unittest discover -s tests -p test_abs_gfs.py",
+      "exit_code": 0,
+      "tests": 12
+    },
+    {
+      "command": "python3 -m unittest discover -s tests -p test_promote_hub_data.py",
+      "exit_code": 0,
+      "tests": 14
+    },
+    {
+      "command": "cd portal && node --test test/government-finance.test.mjs test/register-tables.test.mjs test/vic-gifts.test.mjs test/state-bills.test.mjs",
+      "exit_code": 0,
+      "tests": 35
+    },
+    {
+      "command": "cd portal && node test/government-finance-browser.mjs",
+      "exit_code": 0
+    },
+    {
+      "command": "cd portal && npx tsc --noEmit -p .",
+      "exit_code": 0
+    },
+    {
+      "command": "cd portal && npm run -s check",
+      "exit_code": 0
+    },
+    {
+      "command": "cd portal && npx wrangler deploy --dry-run --outdir private/abs-gfs/r2-worker-dry-run",
+      "exit_code": 0
+    },
+    {
+      "command": "python3 scripts/abs_gfs/check.py --dry-run",
+      "exit_code": 0
+    },
+    {
+      "command": "python3 scripts/promote_hub_data.py abs-gfs --votes-reference 71c3615b8",
+      "exit_code": 0
+    },
+    {
+      "command": "python3 scripts/promote_hub_data.py abs-gfs --check-public --votes-reference 71c3615b8",
+      "exit_code": 0
+    },
+    {
+      "command": "python3 scripts/promote_hub_data.py abs-gfs --dry-run --votes-reference 71c3615b8",
+      "exit_code": 0
+    },
+    {
+      "command": "node scripts/stamp_assets.mjs --check",
+      "exit_code": 0
+    },
+    {
+      "command": "git diff --check",
+      "exit_code": 0
+    }
+  ],
+  "browser": {
+    "preview": "Local Worker; promoted portal/public asset; external requests blocked",
+    "asset": {
+      "path": "portal/public/government-finance/data.json",
+      "status": 200,
+      "bytes": 4904581,
+      "sha256": "92062f93d0dab5e141cdb2137d47f84e49744c6d7121e9eb65194710acb83340",
+      "reviewedCommit": "d7b0a7052a7ed33649f8cc0fb379335ca44e6ef4",
+      "counts": {
+        "documents": 81,
+        "rows": 3906,
+        "years": [
+          "2015-16",
+          "2016-17",
+          "2017-18",
+          "2018-19",
+          "2019-20",
+          "2020-21",
+          "2021-22",
+          "2022-23",
+          "2023-24",
+          "2024-25"
+        ],
+        "reconciliation": {
+          "pass": 2466
+        }
+      }
+    },
+    "results": [
+      {
+        "width": 390,
+        "status": 200,
+        "horizontalOverflow": false,
+        "table": {
+          "containerWidth": 350,
+          "containerScrollWidth": 350,
+          "tableWidth": 350,
+          "amountCells": 25,
+          "amountsInsideContainer": true
+        },
+        "ledeGap": 24,
+        "jurisdictions": 9,
+        "headlineFigures": 46,
+        "seriesRows": 451
+      },
+      {
+        "width": 1440,
+        "status": 200,
+        "horizontalOverflow": false,
+        "table": {
+          "containerWidth": 1325,
+          "containerScrollWidth": 1325,
+          "tableWidth": 1324.8125,
+          "amountCells": 25,
+          "amountsInsideContainer": true
+        },
+        "ledeGap": 24,
+        "jurisdictions": 9,
+        "headlineFigures": 46,
+        "seriesRows": 451
+      }
+    ],
+    "search": {
+      "before": 451,
+      "after": 90
+    },
+    "csvReceipts": true,
+    "ssr": true,
+    "staticPhoneTable": {
+      "containerWidth": 350,
+      "containerScrollWidth": 350,
+      "tableWidth": 350,
+      "amountCells": 25,
+      "amountsInsideContainer": true
+    },
+    "selectorTransitions": {
+      "nswToCommonwealth": "Australia",
+      "nationalTotalPublicSector": "General government; one published L2 observation"
+    },
+    "pageErrors": []
+  },
+  "screenshots": {
+    "portal/private/abs-gfs/government-finance-1440-table.png": {
+      "bytes": 178680,
+      "sha256": "d7ca5f6f774a1adff3c87b9cee10f99ac0fb1d1042e2affd1f99f10f1436d076",
+      "captured_at": "2026-10-16T22:04:32.939422+00:00",
+      "identical_to_approved_ui": true
+    },
+    "portal/private/abs-gfs/government-finance-1440-viewport.png": {
+      "bytes": 159305,
+      "sha256": "4d737bf9760de35b1c181add2900da1bbf91e04bd2b5ea781a8aee679a70be00",
+      "captured_at": "2026-10-16T22:04:32.905888+00:00",
+      "identical_to_approved_ui": true
+    },
+    "portal/private/abs-gfs/government-finance-1440.png": {
+      "bytes": 941406,
+      "sha256": "1bd7aeefec2c78df9651b965a30a72b446d76f18cb1ce7346c9450da1d6650f5",
+      "captured_at": "2026-10-16T22:04:32.866011+00:00",
+      "identical_to_approved_ui": true
+    },
+    "portal/private/abs-gfs/government-finance-390-table.png": {
+      "bytes": 70457,
+      "sha256": "97443bc430926b6a0ee787397ca5c11e09fe3957c945a32e07b61c58219ebaca",
+      "captured_at": "2026-10-16T22:04:32.559570+00:00",
+      "identical_to_approved_ui": true
+    },
+    "portal/private/abs-gfs/government-finance-390-viewport.png": {
+      "bytes": 76845,
+      "sha256": "fa8c05a697f83a10f04f37f544ede3c3789532fc8539f72f0862e2f1f50b1f5e",
+      "captured_at": "2026-10-16T22:04:32.542670+00:00",
+      "identical_to_approved_ui": true
+    },
+    "portal/private/abs-gfs/government-finance-390.png": {
+      "bytes": 1120859,
+      "sha256": "afdfa0de60e67c2db9e20ef0947fa244fbafeb9f5745163cb7593c30da0d786f",
+      "captured_at": "2026-10-16T22:04:32.520442+00:00",
+      "identical_to_approved_ui": true
+    }
+  },
+  "votes": {
+    "reference": "71c3615b8",
+    "schema": 1,
+    "byte_identical": true,
+    "sha256": "f9908e4f46f7148a82daee2d0b14c62cd7f2172ff1cd310df9a132a152970aff"
+  },
+  "nightly": {
+    "gfs_enabled": false,
+    "default_hubs": [
+      "budget",
+      "vic-gifts",
+      "bills-tas",
+      "bills-act"
+    ],
+    "wiring_unchanged": true
+  },
+  "future_repromotion": "python3 scripts/promote_hub_data.py abs-gfs --votes-reference HEAD",
+  "boundaries": {
+    "new_abs_requests": 0,
+    "push": false,
+    "deploy": false,
+    "nightly_run": false,
+    "kb_d1_writes": 0
+  },
+  "files": {
+    "data/staged/abs-gfs/review.json": "f89c7293461a508138ced3693ea80840af68264fc39575bff2220048165ab61d",
+    "scripts/abs_gfs/preview.mjs": "626befbf3267397f4773050b75b5f22a6fab85a572f22cc19e934c6c9e82d5d1",
+    "portal/test/government-finance-browser.mjs": "f2913fa92320d210507de2797c074d7bc48f0d25baf29100300c129c353cf18a",
+    "scripts/promote_hub_data.py": "b037a946c24b155013304067c5d18e1ca33e800c3a043a12cb28369226cdb6e7",
+    "portal/private/abs-gfs/browser-results.json": "cdec52b95bbcdfbb03275f16c83243a171791af89fa5244ab2c7603e2687348c"
+  }
+}

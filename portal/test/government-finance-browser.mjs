@@ -2,6 +2,7 @@ import {root,port,close} from '../../scripts/abs_gfs/preview.mjs';
 import {readFile,writeFile} from 'node:fs/promises';
 import {resolve} from 'node:path';
 import {createRequire} from 'node:module';
+import {createHash} from 'node:crypto';
 const toolRoot=process.env.OPAX_GFS_BROWSER_TOOLS||'/Users/jake/.cache/codex-runtimes/codex-primary-runtime/dependencies/node';
 const {chromium}=createRequire(resolve(toolRoot,'package.json'))('playwright-core');
 const browser=await chromium.launch({executablePath:process.env.OPAX_GFS_CHROME||'/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',headless:true});
@@ -20,6 +21,13 @@ const assertPhoneTable=geometry=>{
  if(!geometry.amountCells || !geometry.amountsInsideContainer)throw Error('GFS amounts require sideways scrolling: '+JSON.stringify(geometry));
 };
 try{
+ const assetPath='portal/public/government-finance/data.json',promotedBytes=await readFile(resolve(root,assetPath));
+ const assetResponse=await context.request.get(base+'/government-finance/data.json');
+ if(assetResponse.status()!==200)throw Error('Promoted asset HTTP '+assetResponse.status());
+ if(!(await assetResponse.body()).equals(promotedBytes))throw Error('Preview does not serve the promoted public asset');
+ const promoted=JSON.parse(promotedBytes),review=JSON.parse(await readFile(resolve(root,'data/staged/abs-gfs/review.json'),'utf8'));
+ if(review.status!=='approved' || promoted.promotion?.reviewed_commit!==review.reviewed_commit)throw Error('Public asset does not match the approved review');
+ const asset={path:assetPath,status:assetResponse.status(),bytes:promotedBytes.length,sha256:createHash('sha256').update(promotedBytes).digest('hex'),reviewedCommit:promoted.promotion.reviewed_commit,counts:promoted.promotion.counts};
  for(const width of [390,1440]){
   await page.setViewportSize({width,height:1000});const response=await page.goto(base+'/register/government-finance');
   if(response.status()!==200)throw Error('Page HTTP '+response.status());
@@ -33,7 +41,7 @@ try{
   await page.screenshot({path:resolve(root,`portal/private/abs-gfs/government-finance-${width}-viewport.png`),fullPage:false});
   await page.evaluate(()=>{const heading=document.getElementById('gfs-series');scrollTo(0,scrollY+heading.getBoundingClientRect().top-96);});
   await page.screenshot({path:resolve(root,`portal/private/abs-gfs/government-finance-${width}-table.png`),fullPage:false});
-  results.push({width,status:response.status(),horizontalOverflow:overflow,table,ledeGap,jurisdictions:await page.locator('.gfs-jurisdiction').count()});
+  results.push({width,status:response.status(),horizontalOverflow:overflow,table,ledeGap,jurisdictions:await page.locator('.gfs-jurisdiction').count(),headlineFigures:await page.locator('.gfs-jurisdiction dl > div').count(),seriesRows:JSON.parse(await page.locator('[data-dt-page]').textContent()).total});
  }
  const before=JSON.parse(await page.locator('[data-dt-page]').textContent()).total;
  await page.locator('[data-search]').fill('Net worth');
@@ -62,6 +70,6 @@ try{
  const staticTable=await tableGeometry(staticPage);assertPhoneTable(staticTable);
  await staticContext.close();
  if(errors.length)throw Error(errors.join('; '));
- await writeFile(resolve(root,'portal/private/abs-gfs/browser-results.json'),JSON.stringify({preview:'Local Worker; staged asset binding; external requests blocked',results,search:{before,after},csvReceipts:true,ssr:true,staticPhoneTable:staticTable,selectorTransitions:{nswToCommonwealth:'Australia',nationalTotalPublicSector:'General government; one published L2 observation'},pageErrors:errors},null,2)+'\n');
- console.log(JSON.stringify({results,search:{before,after},csvReceipts:true,ssr:true}));
+ await writeFile(resolve(root,'portal/private/abs-gfs/browser-results.json'),JSON.stringify({preview:'Local Worker; promoted portal/public asset; external requests blocked',asset,results,search:{before,after},csvReceipts:true,ssr:true,staticPhoneTable:staticTable,selectorTransitions:{nswToCommonwealth:'Australia',nationalTotalPublicSector:'General government; one published L2 observation'},pageErrors:errors},null,2)+'\n');
+ console.log(JSON.stringify({asset,results,search:{before,after},csvReceipts:true,ssr:true}));
 }finally{await browser.close();await close();}
