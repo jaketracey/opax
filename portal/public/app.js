@@ -1116,6 +1116,10 @@ function showPanel(name) {
   // The conversation is a panel like any other, but it is also the docked
   // assistant: the loop above just hid it, so the dock puts it back.
   syncAssistant(name);
+  // On a phone the Money tabs scroll sideways: bring the open one fully into view.
+  const tabs = $(`panel-${name}`)?.querySelector(".money-area-nav");
+  const tab = tabs?.querySelector("[aria-current]");
+  if (tab && tabs.scrollWidth > tabs.clientWidth) tabs.scrollLeft += tab.getBoundingClientRect().left - tabs.getBoundingClientRect().left - (tabs.clientWidth - tab.offsetWidth) / 2;
   document.querySelector("main").classList.toggle("compact", name !== "ask");
   const statsLink = document.querySelector(".masthead-link");
   if (statsLink) {
@@ -1211,7 +1215,7 @@ function discoveryUrl() {
   if (q) params.set("q", q);
   if ($("discover-sort").value === "share") params.set("sort", "share");
   if (discoverySelected) params.set("item", discoverySelected);
-  return `/discover${params.size ? `?${params}` : ""}`;
+  return `/money/contracts${params.size ? `?${params}` : ""}`;
 }
 function discoveryEvidenceHTML(signal) {
   return `<details class="discovery-evidence"><summary>See the records</summary>
@@ -1276,7 +1280,7 @@ async function mountDiscoveryMap(signal) {
     if (!current()) return;
     const donor = data?.nodes?.find((node) => node.kind === "donor" && node.label.trim().toLocaleLowerCase() === signal.entity.trim().toLocaleLowerCase());
     if (!donor) { root.innerHTML = '<p class="status">This organisation isn’t in the money map’s selected donor set. You can still search its name in the record.</p>'; return; }
-    const { mountMoneyMap } = await import("/money-map.js?v=60a91b38e8");
+    const { mountMoneyMap } = await import("/money-map.js?v=12b9796e7c");
     if (!current()) return;
     root.textContent = "";
     const handle = await mountMoneyMap(root, "/graph/money.json", { focus: donor.id, chrome: "mini", reveal: true, openCard: false,
@@ -1335,7 +1339,7 @@ async function renderDiscoveryPage(params, manageFocus) {
   slot.innerHTML = '<p role="status">Loading contracts…</p>';
   const seedNode = document.querySelector('#prerender [data-contracts-seed]');
   const seed = seedNode ? JSON.parse(seedNode.textContent) : null;
-  import('/contracts-table.js?v=b9d694539f').then(async ({mountContractsTable}) => {
+  import('/contracts-table.js?v=fc0135d15f').then(async ({mountContractsTable}) => {
     if (tableGeneration !== contractsTableGeneration) return;
     const handle = await mountContractsTable(slot, {seed: seed?.supplierId === null ? seed : undefined, signal: tableController.signal});
     if (tableGeneration === contractsTableGeneration) contractsTableHandle = handle; else handle.destroy();
@@ -1378,7 +1382,7 @@ async function renderDiscoveryPage(params, manageFocus) {
   }
 }
 $("discover-categories").addEventListener("change", () => {
-  goRoute(`/discover?category=${encodeURIComponent(discoveryCategory())}`);
+  goRoute(`/money/contracts?category=${encodeURIComponent(discoveryCategory())}`);
 });
 $("discover-results").addEventListener("click", (event) => {
   const button = event.target.closest("button[data-discovery-id]");
@@ -1482,19 +1486,19 @@ async function openMoneyRecords(kind, params) {
   const grants = kind === 'grants';
   $('money-records-head').hidden = false;
   $('money-records-title').textContent = grants ? 'Government grants' : 'Political receipts';
+  // The note on what the figures mean; grants' is GRANTS_COVERAGE (grants-table.js), word for word.
   $('money-records-meta').textContent = grants
-    ? 'Published grant awards by recipient, program and electorate, checked against the donor registers'
-    : 'Disclosed receipts, payer by payer, from federal and state returns';
+    ? 'Federal award values are commitments, not payments; Queensland rows record expenditure. Names follow the published award records.'
+    : 'Receipts as disclosed in federal and state returns. Amounts under the disclosure threshold are not reported, so totals are a floor, not a ceiling.';
   const body = $('money-records-body'); body.innerHTML = '<p class="status">Loading the records…</p>';
   try {
     if (grants && !params.has('program') && !params.has('open') && !params.has('largest')) {
-      const mod = await import('/grants-table.js?v=0fa60cd7b5');
+      const mod = await import('/grants-table.js?v=7f8ddf3fbf');
       if (generation !== moneyRecordsGeneration) return;
       const controller = new AbortController();
       moneyRecordsHandle = {destroy() {controller.abort();}};
       const handle = await mod.mountGrantsTable(body, params, {signal: controller.signal});
       if (generation !== moneyRecordsGeneration) {handle.destroy(); return;}
-      $('money-records-head').hidden = true;
       moneyRecordsHandle = handle;
       return;
     }
@@ -1645,7 +1649,7 @@ async function mountMoney(jurParam, industry, params = new URLSearchParams()) {
   root.innerHTML = `<p class="ui-status-line money-map-status" role="status">Loading the map…</p>`;
   const cfg = MONEY_JURISDICTIONS[jur];
   try {
-    const [{ mountMoneyMap }, data, journeysModule, researchModule, recordsModule] = await Promise.all([import("/money-map.js?v=60a91b38e8"), loadMoneyFile(jur), import("/money-journeys.js?v=mobile-picker-20260908"), import("/map-research.js?v=725d2d5333"), import("/money-records.js?v=ia-ux-20260908-2")]);
+    const [{ mountMoneyMap }, data, journeysModule, researchModule, recordsModule] = await Promise.all([import("/money-map.js?v=12b9796e7c"), loadMoneyFile(jur), import("/money-journeys.js?v=mobile-picker-20260908"), import("/map-research.js?v=725d2d5333"), import("/money-records.js?v=ia-ux-20260908-2")]);
     if (moneyMapLoading !== jur || generation !== moneyMapGeneration) return; // switched again while loading
     const fine = $("money-fineprint");
     if (fine) fine.innerHTML = moneyFineprintHTML(jur, data?.meta);
@@ -1786,7 +1790,7 @@ async function openSupplierPage(name, params, manageFocus) {
   body.classList.remove("subject-person", "subject-party");
   body.innerHTML = '<p role="status">Loading suppliers…</p>';
   try {
-    const module = await import("/suppliers.js?v=9b36e1c788");
+    const module = await import("/suppliers.js?v=b515a07979");
     if (generation !== supplierPageGeneration) return;
     const helpers = {
       params,
@@ -2038,10 +2042,13 @@ async function route() {
     setCrumbs(crumbsFor("/ask?view=search"));
     applySearchParams(params);
     focusEntry("search-input");
-  } else if (view === "discover") {
+  } else if (view === "discover" || (view === "money" && segs[1] === "contracts")) {
+    // /discover was the contracts page's first address; the Worker forwards it
+    // (301) with its query, and an in-app link to it lands here the same way.
+    if (view === "discover") replaceRoute(`/money/contracts${location.search}`);
     showPanel("discover");
     document.title = TITLES.discover;
-    setCrumbs(crumbsFor("/discover"));
+    setCrumbs(crumbsFor("/money/contracts"));
     renderDiscoveryPage(params, manageFocus);
   } else if (view === "reports") {
     showPanel("reports");
@@ -4451,7 +4458,7 @@ async function mountSubjectMap(nodeId, label = "") {
   el.hidden = false;
   $("subject-map-hint").hidden = false;
   try {
-    const { mountMoneyMap } = await import("/money-map.js?v=60a91b38e8");
+    const { mountMoneyMap } = await import("/money-map.js?v=12b9796e7c");
     if (currentSubjectKey !== key) return; // navigated away while loading
     destroySubjectMap();
     const handle = await mountMoneyMap(el, "/graph/money.json", {
@@ -9788,7 +9795,7 @@ function renderRegisterNote(question) {
   if (!on) return;
   const contracts = /\b(grant|grants|contract|contracts|tender|tenders|supplier|suppliers)\b/i.test(q);
   el.innerHTML = contracts
-    ? `Counts and totals of public money are not in the speeches. The registers on this site hold them: <a href="/explore?game=grants">who gets the grants</a>, the <a href="/discover">contracts</a>, and the <a href="/money">money map</a>.`
+    ? `Counts and totals of public money are not in the speeches. The registers on this site hold them: <a href="/explore?game=grants">who gets the grants</a>, the <a href="/money/contracts">contracts</a>, and the <a href="/money">money map</a>.`
     : `Counts and totals of donors are not in the speeches. The registers on this site hold them: <a href="/subject/donor">the donors directory</a> (searchable by name), <a href="/explore?game=ledger">the ledger</a> of every disclosed flow, and the <a href="/money">money map</a>.`;
 }
 
@@ -11971,7 +11978,7 @@ const FILTER_KIND_LABELS = {
 // with it, so "Speeches" on a row is the same search, speeches only, rather
 // than an empty form. Dataset kinds go to their own hubs.
 function recordTypeHref(kind, q = "", f = {}) {
-  const roots = { person:'/subject/person', party:'/subject/party', donor:'/subject/donor', agency:'/subject/agency', supplier:'/subject/supplier', receipt:'/money/receipts', contract:'/discover', grant:'/money/grants', bill:'/bills', bill_text:'/bills', interest:'/declared', campaigner:'/subject/campaigner', report:'/reports', 'audit report':'/audit' };
+  const roots = { person:'/subject/person', party:'/subject/party', donor:'/subject/donor', agency:'/subject/agency', supplier:'/subject/supplier', receipt:'/money/receipts', contract:'/money/contracts', grant:'/money/grants', bill:'/bills', bill_text:'/bills', interest:'/declared', campaigner:'/subject/campaigner', report:'/reports', 'audit report':'/audit' };
   if (roots[kind]) return roots[kind];
   const p = new URLSearchParams();
   if (q) p.set("q", q);
@@ -14553,7 +14560,7 @@ async function mountReportWords(el, cfg, slug) {
 
 async function mountReportMap(el, cfg, slug) {
   try {
-    const { mountMoneyMap } = await import("/money-map.js?v=60a91b38e8");
+    const { mountMoneyMap } = await import("/money-map.js?v=12b9796e7c");
     if (currentReportSlug !== slug || !el.isConnected) return; // moved on while loading
     const handle = await mountMoneyMap(el, "/graph/money.json", {
       chrome: "mini",
@@ -15222,6 +15229,8 @@ function syncPathMeta() {
     ? BOOT_META.description
     : path.startsWith('/money/grants')
       ? 'Every published federal and Queensland grant award by recipient, program and electorate: which seats got the money, who held them, and which recipients also donate.'
+    : path.startsWith('/money/contracts')
+      ? VIEW_DESCRIPTIONS.discover
     : view && view !== "ask"
       ? (VIEW_DESCRIPTIONS[view] || VIEW_DESCRIPTIONS.subject)
       : "Ask questions of half a million Australian parliamentary speeches and see who funds the people doing the talking. Every answer cited to the official record.";

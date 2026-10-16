@@ -420,8 +420,9 @@ a.visually-hidden:focus-visible {
 /* Controls belong to what they filter: a head with controls straight under it
    keeps the block step (as on every directory), not the section step. */
 .ui-page-head:has(+ :is(.ui-filter-bar, .money-workspace-toolbar)) { margin-bottom: var(--space-block); }
-/* Receipts and grants open their body on the filter bar. */
-.ui-page-head.money-records-head { margin-bottom: var(--space-block); }
+/* The five Money tabs share one head (title, then the note on what the
+   figures mean) and each opens its body on its controls, a block below. */
+.ui-page-head.money-head { margin-bottom: var(--space-block); }
 .ui-page-head + .ui-filter-bar { margin-top: 0; }
 .ui-page-meta { margin: 0; font: var(--type-metadata); color: var(--ink-soft); }
 /* A lede opens the page in the body's own ink: never quieter than the text under it. */

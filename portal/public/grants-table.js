@@ -41,8 +41,8 @@ export async function mountGrantsTable(el, params = new URLSearchParams(), optio
   // Preserve the original URL until core hydration has validated all raw pairs.
   // Its initial request retains type, length and duplicate-key validation.
   const seed = {rows: [], total: 0, page: 1, pageSize: 50, facets: {}};
-  el.innerHTML = '<h1>Government grants</h1><p></p>' + grantsTableHTML(seed, params, new URL(win.location.href));
-  el.querySelector('p').textContent = GRANTS_COVERAGE;
+  // The title and GRANTS_COVERAGE sit in the Money head above (app.js).
+  el.innerHTML = grantsTableHTML(seed, params, new URL(win.location.href));
   const handle = mountDataTable(el.querySelector('[data-grants-table]'), config);
   const destroy = () => handle.destroy();
   options.signal?.addEventListener('abort', destroy, {once: true});

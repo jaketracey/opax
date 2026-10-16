@@ -120,7 +120,7 @@ import { askPageType } from '../public/growth-modules.js';
       return push("opax_outbound", { host: url.hostname, partner: a.dataset.analyticsPartner, placement: a.closest('footer') ? 'footer' : 'content' });
     }
     if (url.pathname.startsWith('/community')) return push('opax_community_open', { placement: a.closest('footer') ? 'footer' : 'navigation' });
-    if (a.closest('[data-money-navigation]')) return push('opax_money_view', { view: url.pathname === '/money' ? 'connections' : url.pathname === '/discover' ? 'contracts' : url.pathname.endsWith('/grants') ? 'grants' : 'receipts' });
+    if (a.closest('[data-money-navigation]')) return push('opax_money_view', { view: url.pathname === '/money' ? 'connections' : url.pathname === '/money/contracts' ? 'contracts' : url.pathname.endsWith('/grants') ? 'grants' : 'receipts' });
     if (/^\/?#?\/doc\//.test(href)) return push("opax_source_open", { from_section: sectionOf(here()) });
   }, true);
 })();

@@ -310,7 +310,7 @@ export async function buildCrawl(root, {read: sourceRead} = {}) {
   for (const c of campaignerNames.values()) add('campaigners',`/subject/campaigner/${encodeURIComponent(c.name)}`,latestDate([c.updated_at,c.filed_at],campaigners.meta.generated),undefined,campaigners.meta.generated);
   for (const r of reports.reports) add('topics-reports',`/reports/${r.slug}`,r.updated,undefined,r.generated_at || corpus.version);
   for (const slug of Object.keys(TOPIC_NAMES)) add('topics-reports',`/subject/topic/${slug}`,null,undefined,corpus.version);
-  for (const path of ['/','/ask','/money','/money/receipts','/money/grants','/bills','/connections','/map','/reports','/explore','/discover','/about','/methods','/stats','/declared','/expenses','/privacy','/support','/subject/topic',...['person','party','donor','campaigner','supplier','agency','electorate'].map(d=>`/subject/${d}`)]) add('static',path,null,undefined,corpus.version);
+  for (const path of ['/','/ask','/money','/money/receipts','/money/grants','/bills','/connections','/map','/reports','/explore','/money/contracts','/about','/methods','/stats','/declared','/expenses','/privacy','/support','/subject/topic',...['person','party','donor','campaigner','supplier','agency','electorate'].map(d=>`/subject/${d}`)]) add('static',path,null,undefined,corpus.version);
   const result = sitemapFiles(groups);
   const out = join(root,'crawl');
   await rm(out,{recursive:true,force:true});

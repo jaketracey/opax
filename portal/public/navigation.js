@@ -48,7 +48,7 @@
           page('/subject/campaigner', 'Campaigners & third parties', 'Organisations spending on politics.'),
         ] },
         { heading: 'Public money', links: [
-          page('/discover', 'Government contracts', 'Which agencies buy from whom.'),
+          page('/money/contracts', 'Government contracts', 'Which agencies buy from whom.'),
           page('/subject/supplier', 'Suppliers', 'The organisations that win government contracts.'),
           page('/subject/agency', 'Agencies', 'Contract awards, by the agency that made them.'),
           page('/money/grants', 'Grants', 'Grant awards, resolved to their recipients.'),
@@ -114,7 +114,7 @@
   const sectionPages = new Map([...menuPages, ...footerOnly].filter(p => !p.record).map(p => [p.href, p]));
   // Compatibility view for callers that read one flat list per group: [href, label, blurb].
   const sections = groups.map(g => ({ id: g.id, label: g.label, children: g.columns.flatMap(c => c.links).map(l => [l.href, l.label, l.blurb]) }));
-  const money = [ ['/money', 'Money map'], ['/money/receipts', 'Political receipts'], ['/discover', 'Government contracts'], ['/money/grants', 'Grants'], ['/connections', 'Programs & places'] ];
+  const money = [ ['/money', 'Money map'], ['/money/receipts', 'Political receipts'], ['/money/contracts', 'Government contracts'], ['/money/grants', 'Grants'], ['/connections', 'Programs & places'] ];
 
   /** The group a path belongs to; null for Home, Ask, Search and records. */
   const active = (path, params = new URLSearchParams()) => {
@@ -180,7 +180,7 @@
   const CARET = '<svg class="nav-caret" viewBox="0 0 10 6" aria-hidden="true"><path d="M1 1l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>';
   const ARROW = '<svg class="nav-arrow" viewBox="0 0 12 12" aria-hidden="true"><path d="M2 6h8M6.5 2.5 10 6l-3.5 3.5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>';
   // Contracts and the connections directory are not split by jurisdiction.
-  const oneJurisdiction = new Set(['/discover', '/connections']);
+  const oneJurisdiction = new Set(['/money/contracts', '/connections']);
   function moneyNav(path, jur) {
     jur = jur || /^\/money\/grants\/(federal|qld)\/recipient\//.exec(path)?.[1];
     return `<nav class="area-nav money-area-nav" aria-label="Money">${money.map(([href,label]) => `<a href="${href}${jur && jur !== 'federal' && !oneJurisdiction.has(href) ? '?jur='+encodeURIComponent(jur) : ''}"${href===path || href==='/money/grants' && path.startsWith('/money/grants/')?' aria-current="page"':''}>${label}</a>`).join('')}</nav>`;

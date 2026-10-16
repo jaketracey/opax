@@ -741,9 +741,9 @@ export function planCardActions(node: MoneyNode, ctx: CardActionContext): CardAc
   if (node.kind === 'grantor') {
     const actions: CardAction[] = []
     if (node.flow === 'contracts') {
-      // The Discover page follows Commonwealth contracts; a state hub has no page of its own yet.
+      // The contracts page follows Commonwealth contracts; a state hub has no page of its own yet.
       if (!ctx.jurisdiction) {
-        actions.push({ id: 'discover', label: 'Follow contracts', name: 'Follow the big contracts', href: `${ctx.routeBase}/discover` })
+        actions.push({ id: 'discover', label: 'Follow contracts', name: 'Follow the big contracts', href: `${ctx.routeBase}/money/contracts` })
         actions.push({ id: 'suppliers', label: 'Browse suppliers', name: 'Browse supplier profiles', href: `${ctx.routeBase}/subject/supplier` })
       }
     } else {

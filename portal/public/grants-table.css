@@ -1,6 +1,7 @@
 @import url('/datatable.css');
 
-[data-grants-table] { min-width: 0; margin-block: var(--space-group); }
+/* Under the Money head: its toolbar keeps the head's block step. */
+[data-grants-table] { min-width: 0; margin-block: 0 var(--space-group); }
 [data-grants-table] .dt { width: 100%; font: var(--type-metadata); color: var(--ink); }
 [data-grants-table] .dt caption { text-align: start; font: var(--type-heading); padding-block: var(--space-heading); }
 [data-grants-table] .dt :is(th, td) { text-align: start; padding: var(--space-row) var(--space-tight); border-bottom: var(--border-hairline) solid var(--divider-subtle); overflow-wrap: break-word; word-break: normal; }

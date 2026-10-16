@@ -1,4 +1,10 @@
 import { applyQuery, dataTableHTML, mountDataTable, parseQuery, serializeQuery } from './datatable.js?v=9e3143ce46';
+/** The contracts page's note under its title (index.html carries it word for
+ *  word; the Worker prints it before scripts). From suppliers.json meta: AusTender
+ *  notices, one per contract at its latest amendment ("Amendments are not added
+ *  together"), awards not expenditure, and a publication window that opens on
+ *  8 July 2025 (older notices are only the earlier loader's sample). */
+export const CONTRACTS_COVERAGE = 'Commonwealth contract notices from AusTender, each at its latest amended value. Values are commitments, not payments; most notices date from July 2025.';
 // Pass 5 lane B: references read by what was bought, then by the counterpart.
 const referenceTitle = value => !/\s/.test(value) && (/\d/.test(value) || value === value.toUpperCase());
 export function contractTitle(contract) {
