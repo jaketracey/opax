@@ -27,6 +27,8 @@ export interface QualitativeAnswer {
   answer: string
   citations: Record<string, [number, number][]>
   sources: { resource: string; slug: string; title: string; href: string; url: string; snippet: string; cited: boolean; date?: string; speaker?: string; kind: string }[]
+  /** Some or all of the answer's points could not be matched to a passage and carry no citation. */
+  answer_status?: 'uncited' | 'partly_cited'
 }
 export interface ResearchContext {
   deps: ToolDeps

@@ -2897,6 +2897,13 @@ function renderAnswer(container, text, response = {}) {
       container.appendChild(p);
     }
   }
+  // An answer kept without some or all of its citations says so, once, beneath it.
+  if (response.answer_status === "uncited" || response.answer_status === "partly_cited") {
+    const note = document.createElement("p");
+    note.className = "answer-uncited-note";
+    note.textContent = "Some of this answer could not be matched to a source passage.";
+    container.appendChild(note);
+  }
   wireAskCitations(container, evidence);
 }
 

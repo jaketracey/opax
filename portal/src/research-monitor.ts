@@ -8,7 +8,7 @@ export async function recordResearchFailure(question: string, failure: ResearchE
     rounds: failure.stats.rounds, tokens: failure.stats.tokens, cost_usd: failure.stats.costUsd ?? null,
     turns: failure.stats.turns ?? [], cached_input_by_turn: failure.stats.turns?.map(turn => turn.cached_input) ?? [], ...answerCounts(failure.stats.answer) }))
 }
-const answerCounts = (tally?: AnswerTally) => tally ? { points_in: tally.points_in, points_kept: tally.points_kept, repairs: tally.repairs, drops: tally.drops, ...(tally.mode ? { answer_mode: tally.mode } : {}) } : {}
+const answerCounts = (tally?: AnswerTally) => tally ? { points_in: tally.points_in, points_kept: tally.points_kept, repairs: tally.repairs, drops: tally.drops, ...(tally.points_uncited ? { points_uncited: tally.points_uncited, uncited: tally.uncited } : {}), ...(tally.salvaged ? { salvaged: tally.salvaged } : {}), ...(tally.mode ? { answer_mode: tally.mode } : {}) } : {}
 /** Every loop qualitative answer: how many points the model wrote, how many were kept, and the repair and drop
  * labels with their counts. Labels and counts only. */
 export async function recordResearchAnswer(question: string, tally: AnswerTally): Promise<void> {

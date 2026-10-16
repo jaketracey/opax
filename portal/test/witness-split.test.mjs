@@ -116,6 +116,8 @@ test('Ask scope and topic catalog use the same partition; prior citations cannot
     URL, Response, AbortSignal, scopeFilter, personScope, scopedCollaborators, MAX_SPEAKER_CHARS: 160, NAME_RE: /^[\w ]+$/, TOPIC_FILTER_PREFIX: '/classification.labels/topic', ASK_SYNC_TIMEOUT_MS:1000,
     buildAskBody:()=>({rag_strategies:[{name:'prequeries'}]}),isRefusal:()=>false,hasUnsupportedQuotes:()=>false,
     askPayload:()=>({answer:'Grounded answer.',citations:{p:[[0,1]]},sources:[]}),
+    // The 16 Oct loosening's guards, as identities: this test is about the speaker partition.
+    looseAnswer:p=>p,guardAnswerAttribution:p=>p,isEvidenceGap:()=>false,claimAttributionOk:()=>true,repairCausal:line=>line,
     loadPeople: async () => ({ byFold: new Map([['stewart', { speech_scope: scope }]]) }),
     cachedJson: async (_key, fn) => fn(), json: x => Response.json(x),
     kbFetch: async (_env, _path, {body}) => { calls.push(body); return Response.json({ fulltext: { total: 0, facets: {} } }); },
