@@ -20,7 +20,7 @@ const divisionMarkdownReady = import('/division-markdown.js?v=5991511166').then(
 let growthModules;
 const growthModulesReady = import("/growth-modules.js?v=078d7bb688").then(module => { growthModules = module; });
 let registerTables;
-const registerTablesReady = import('/register-tables.js?v=6d6808db5e').then(module => { registerTables = module; });
+const registerTablesReady = import('/register-tables.js?v=6204d3b689').then(module => { registerTables = module; });
 let askPerson;
 const askPersonReady = import('/ask-person.js?v=8b1bfd1c99').then(module => { askPerson = module; });
 let uiLabels;

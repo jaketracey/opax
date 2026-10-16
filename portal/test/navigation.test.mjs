@@ -77,7 +77,9 @@ test('every page kind is reachable from the menus or a documented entry', () => 
 test('every menu, footer and shortcut link is a page the Worker serves', async () => {
   const hrefs = new Set([...menuHrefs, ...nav.shortcuts.map(s => s.href)].map(h => h === '/estimates' ? estimatesHref : h));
   for (const href of hrefs) {
-    const response = await workerFetch(href);
+    // New coverage lanes remain staged until orchestrator promotion.
+    const fixtures = href === '/register/government-finance' ? {'/government-finance/data.json': JSON.parse(readFileSync(new URL('../../data/staged/abs-gfs/hub.json',import.meta.url),'utf8'))} : {};
+    const response = await workerFetch(href, {}, {}, {assets:fixtures});
     assert.equal(response.status, 200, href);
     await response.arrayBuffer();
   }

@@ -8,7 +8,7 @@ import tempfile
 import unittest
 from unittest import mock
 
-from scripts.promote_hub_data import ROOT, ASSETS, digest, promote, public_budget_projection
+from scripts.promote_hub_data import ROOT, ASSETS, DEFAULT_HUBS, digest, promote, public_budget_projection
 
 
 class PromoteHubDataTests(unittest.TestCase):
@@ -44,10 +44,10 @@ class PromoteHubDataTests(unittest.TestCase):
 
     def test_promotes_both_and_keeps_votes_bytes(self):
         before = (self.root / "portal/public/votes.json").read_bytes()
-        self.assertEqual(self.run_promotion(list(ASSETS))[0], 0)
-        self.assertEqual(self.run_promotion(list(ASSETS), check_public=True)[0], 0)
+        self.assertEqual(self.run_promotion(DEFAULT_HUBS)[0], 0)
+        self.assertEqual(self.run_promotion(DEFAULT_HUBS, check_public=True)[0], 0)
         self.assertEqual((self.root / "portal/public/votes.json").read_bytes(), before)
-        for hub in ASSETS:
+        for hub in DEFAULT_HUBS:
             public = json.loads((self.root / "portal/public" / ASSETS[hub]).read_bytes())
             staged = json.loads((self.root / "data/staged" / hub / "hub.json").read_bytes())
             manifest = public.pop("promotion")
@@ -122,7 +122,7 @@ class PromoteHubDataTests(unittest.TestCase):
         self.assertFalse((self.root / "portal/public/budget").exists())
 
     def test_tampered_hash_refuses_each_hub_and_preserves_last_good_asset(self):
-        for hub in ASSETS:
+        for hub in DEFAULT_HUBS:
             target, before = self.existing_asset(hub)
             if hub == "budget":
                 self.edit(hub, "aggregates.json", lambda d: d[0].update(sha256="0" * 64))
@@ -150,7 +150,7 @@ class PromoteHubDataTests(unittest.TestCase):
 
     def test_unreviewed_change_refused_and_other_hub_still_promoted(self):
         self.edit("budget", "review.json", lambda d: d["inputs"].update({"hub.json": "0" * 64}))
-        code, errors = self.run_promotion(list(ASSETS))
+        code, errors = self.run_promotion(DEFAULT_HUBS)
         self.assertEqual(code, 1)
         self.assertIn("review-hash:", errors)
         self.assertFalse((self.root / "portal/public/budget").exists())

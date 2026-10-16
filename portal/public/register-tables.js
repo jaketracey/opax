@@ -114,6 +114,30 @@ export function stateBillsTableQuery(params, config) {
   return query;
 }
 
+/** Source cells only: no calculated jurisdiction, level or sector totals. */
+export function governmentFinanceTableConfig(rows) {
+  return {id:'government-finance-table',caption:'ABS published annual figures',pageType:'government-finance',urlKey:'gfs',pageSize:25,rows,
+    defaultSort:{key:'reference_year',dir:'desc'},export:{filename:'government-finance.csv'},
+    columnsVisible:['jurisdiction','reference_year','measure','amount','release','source_locator'],
+    columns:[{key:'jurisdiction',label:'Jurisdiction',type:'text',primary:true},
+      {key:'reference_year',label:'Reference year',type:'category',facet:'multi',sortable:true},
+      {key:'measure',label:'Measure',type:'category',facet:'multi'},
+      {key:'amount',label:'Amount (AUD)',type:'money',format:'compact'},
+      {key:'release',label:'Release',type:'text'},
+      {key:'source_locator',label:'Original cell',type:'text',href:row=>href(row.source_url)},
+      {key:'level',label:'Level of government',type:'text'},{key:'sector',label:'Sector',type:'text'},
+      {key:'consolidation',label:'ABS consolidation group',type:'text'},
+      {key:'value_million',label:'Published value (AUD million)',type:'count'},
+      {key:'source_marker',label:'Source missing-value marker',type:'text'},
+      {key:'unit',label:'Original unit',type:'text'},{key:'prices_basis',label:'Prices basis',type:'text'},
+      {key:'series_basis',label:'Series basis',type:'text'},{key:'release_date',label:'Release date',type:'date'},
+      {key:'publisher',label:'Source / attribution',type:'text'},
+      {key:'source_url',label:'Source URL',type:'text'},
+      {key:'snapshot',label:'Snapshot',type:'text'},{key:'sha256',label:'SHA-256',type:'text'},
+      {key:'licence',label:'Licence',type:'text'},{key:'licence_url',label:'Licence URL',type:'text'}],
+    primaryLink:()=>null};
+}
+
 /** Keep every disclosed donor; party transfers and grants are excluded. */
 export function partyMoneyData(graph, partyId) {
   const donors = new Map(graph.nodes.filter(node=>node.kind === 'donor').map(node=>[node.id,node]));
@@ -179,6 +203,7 @@ export function hydrateRegisterTables(root = document) {
     else if (config.urlKey === 'interests') Object.assign(config,{primaryLink:row=>href(row.source)});
     else if (config.urlKey === 'vicGifts') { const factory=vicGiftsTableConfig(config.source?.params,config.columns.map(column=>column.key)); Object.assign(config,{columns:factory.columns,primaryLink:factory.primaryLink}); }
     else if (config.urlKey === 'stateBills') Object.assign(config,stateBillsTableConfig(config.rows));
+    else if (config.urlKey === 'gfs') Object.assign(config,governmentFinanceTableConfig(config.rows));
     else Object.assign(config,{primaryLink:row=>row.href || null});
     script.remove();
     const mounted = mountRegisterTable(el,config);

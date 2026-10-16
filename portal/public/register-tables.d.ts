@@ -10,6 +10,7 @@ export function interestTableConfig(rows: Row[]): DataTableConfig;
 export function vicGiftsTableConfig(params?:Record<string,string>,populatedFields?:string[]): DataTableConfig;
 export function vicGiftsQuery(rows:Row[],config:DataTableConfig,query?:Query): import('./datatable.js').Page;
 export function stateBillsTableConfig(rows:Row[]): DataTableConfig;
+export function governmentFinanceTableConfig(rows:Row[]): DataTableConfig;
 export function stateBillsTableQuery(params:URLSearchParams,config:DataTableConfig): Query;
 export function partyMoneyData(graph: PartyGraph, partyId: string): {rows:Row[]};
 export function partyMoneyTableConfig(rows:Row[],id?:string,urlKey?:string,pageType?:string,scope?:{party:string;jurisdiction?:string}|null): DataTableConfig;

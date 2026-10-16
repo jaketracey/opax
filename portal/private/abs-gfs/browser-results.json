@@ -1,0 +1,24 @@
+{
+  "preview": "Local Worker; staged asset binding; external requests blocked",
+  "results": [
+    {
+      "width": 390,
+      "status": 200,
+      "horizontalOverflow": false,
+      "jurisdictions": 9
+    },
+    {
+      "width": 1440,
+      "status": 200,
+      "horizontalOverflow": false,
+      "jurisdictions": 9
+    }
+  ],
+  "search": {
+    "before": 451,
+    "after": 90
+  },
+  "csvReceipts": true,
+  "ssr": true,
+  "pageErrors": []
+}

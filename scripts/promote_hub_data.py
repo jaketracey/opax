@@ -28,13 +28,19 @@ from scripts.budget_registry.parse import document_licence, permitted, METRICS
 from scripts.budget_registry.stage import projection
 from scripts.vic_gifts.stage import build as gifts_projection, exact_holder, CC
 from scripts.state_bills.stage import build as state_bills_projection
+from scripts.abs_gfs.check import checked_projection as gfs_projection
 
 ASSETS = {"budget": "budget/data.json", "vic-gifts": "vic-gifts/data.json",
-          "bills-tas": "bills-tas/data.json", "bills-act": "bills-act/data.json"}
+          "bills-tas": "bills-tas/data.json", "bills-act": "bills-act/data.json",
+          "abs-gfs": "government-finance/data.json"}
+# The orchestrator activates the new lane in nightly after review/promotion.
+# Existing default runs remain scoped to the four already-promoted hubs.
+DEFAULT_HUBS = ["budget", "vic-gifts", "bills-tas", "bills-act"]
 INPUTS = {"budget": ["inventory.json", "receipts.json", "aggregates.json", "measures.json", "hub.json"],
           "vic-gifts": ["inventory.json", "receipts.json", "hub.json"],
           "bills-tas": ["inventory.json", "receipts.json", "hub.json", "acquisition-notes.json"],
-          "bills-act": ["inventory.json", "receipts.json", "hub.json", "acquisition-notes.json"]}
+          "bills-act": ["inventory.json", "receipts.json", "hub.json", "acquisition-notes.json"],
+          "abs-gfs": ["inventory.json", "tables.json", "receipts.json", "series.jsonl", "reconciliation.json", "hub.json"]}
 SHA = re.compile(r"[a-f0-9]{64}")
 
 
@@ -255,6 +261,8 @@ def validated_asset(hub_name, root=ROOT):
         hub, counts = budget_checks(stage)
     elif hub_name == "vic-gifts":
         hub, counts = gifts_checks(stage, root)
+    elif hub_name == "abs-gfs":
+        hub, counts = gfs_projection(stage)
     else:
         hub, counts = state_bills_checks(stage, root)
     inputs = list(INPUTS[hub_name])
@@ -312,7 +320,7 @@ def promote(hubs, root=ROOT, dry_run=False, check_public=False, votes_reference=
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("hubs", nargs="*", help="reviewed hub names (default: all)")
+    parser.add_argument("hubs", nargs="*", help="reviewed hub names (default: four active hubs)")
     modes = parser.add_mutually_exclusive_group()
     modes.add_argument("--dry-run", action="store_true")
     modes.add_argument("--check-public", action="store_true")
@@ -321,7 +329,7 @@ def main():
     if any(name not in ASSETS for name in args.hubs):
         parser.error("hubs must be one of: " + ", ".join(ASSETS))
     try:
-        return promote(args.hubs or list(ASSETS), dry_run=args.dry_run, check_public=args.check_public, votes_reference=args.votes_reference)
+        return promote(args.hubs or DEFAULT_HUBS, dry_run=args.dry_run, check_public=args.check_public, votes_reference=args.votes_reference)
     except (ValueError, OSError, subprocess.CalledProcessError) as error:
         print(f"FAIL votes: {error}", file=sys.stderr)
         return 1

@@ -48,6 +48,7 @@
           page('/subject/campaigner', 'Campaigners & third parties', 'Organisations spending on politics.'),
         ] },
         { heading: 'Public money', links: [
+          page('/register/government-finance', 'Government finance', 'ABS annual revenue, expenses, balances and debt.'),
           page('/money/contracts', 'Government contracts', 'Which agencies buy from whom.'),
           page('/subject/supplier', 'Suppliers', 'The organisations that win government contracts.'),
           page('/subject/agency', 'Agencies', 'Contract awards, by the agency that made them.'),
@@ -118,6 +119,7 @@
 
   /** The group a path belongs to; null for Home, Ask, Search and records. */
   const active = (path, params = new URLSearchParams()) => {
+    if (path === '/register/government-finance') return 'money';
     if (path === '/register/state-bills') return 'parliament';
     if (/^\/(money|map|discover|connections)(\/|$)/.test(path)) return 'money';
     if (/^\/subject\/(donor|supplier|agency|campaigner)(\/|$)/.test(path)) return 'money';

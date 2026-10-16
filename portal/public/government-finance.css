@@ -1,0 +1,20 @@
+.gfs-content{padding-block:var(--space-group);color:var(--ink)}
+.gfs-content>p,.gfs-content section>p{max-width:76ch}
+.gfs-lede{font:var(--type-body);line-height:1.65}
+.gfs-content section{margin-block:var(--space-section)}
+.gfs-content h2{font:var(--type-heading);margin-block:var(--space-group)}
+.gfs-filters{display:flex;flex-wrap:wrap;align-items:end;gap:var(--space-row);padding:var(--space-group);background:var(--money-wash);margin-block:var(--space-group)}
+.gfs-filters label{display:grid;gap:var(--space-tight);font:var(--type-label);min-width:0;flex:1 1 12rem}
+.gfs-filters select{min-width:0;width:100%;padding:var(--space-row);background:var(--paper-raised);color:var(--ink);border:1px solid var(--line-control);border-radius:var(--radius-sm);font:var(--type-body)}
+.gfs-filters button{background:var(--navy);color:var(--on-navy);border:0;padding:var(--space-row);font:var(--type-label);cursor:pointer}
+.gfs-filters :focus-visible,.gfs-content summary:focus-visible{outline:2px solid var(--bronze-ink);outline-offset:3px}
+.gfs-jurisdictions{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,22rem),1fr));gap:var(--space-group)}
+.gfs-jurisdiction{border-top:2px solid var(--money-ink);padding-top:var(--space-row);min-width:0}
+.gfs-jurisdiction h3{font:var(--type-heading);margin:var(--space-row) 0}
+.gfs-jurisdiction dl{display:grid;grid-template-columns:1fr 1fr;gap:var(--space-row);margin-block:var(--space-group)}
+.gfs-jurisdiction dt{font:var(--type-fine);color:var(--ink-soft)}
+.gfs-jurisdiction dd{margin:var(--space-tight) 0 0;font:var(--type-heading);font-variant-numeric:tabular-nums}
+.gfs-receipt,.gfs-jurisdiction details{font:var(--type-fine);color:var(--ink-soft);overflow-wrap:anywhere}
+.gfs-jurisdiction details p{margin-block:var(--space-row)}
+.gfs-jurisdiction summary{cursor:pointer;min-height:2.75rem;display:flex;align-items:center;text-decoration:underline}
+@media(max-width:600px){.gfs-filters{padding:var(--space-row)}.gfs-filters label,.gfs-filters button{flex-basis:100%}.gfs-jurisdiction dd{font-size:1.3rem}}
