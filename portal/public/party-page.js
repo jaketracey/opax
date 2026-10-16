@@ -81,6 +81,23 @@ export function partyMembers(label, {roster = null, divisions = null, same = (a,
   };
 }
 
+/** The label the search index files a party's speeches under, with their count, or null when the
+ *  record holds no speech for it ("Reason Party": money and divisions, no Hansard). `indexed` is
+ *  /graph/party-speeches.json, the index's own labels; where that cannot be read, the roster stands
+ *  in (a person's party is the label their speeches carry). Aliases join through `same`
+ *  ("Pauline Hanson's One Nation Party" is "One Nation"); of two indexed spellings the larger wins. */
+export function partySpeechLabel(label, {indexed = null, roster = null, same = (a, b) => fold(a) === fold(b)} = {}) {
+  const counts = new Map();
+  if (indexed?.parties) {
+    for (const [l, n] of Object.entries(indexed.parties)) if (Number(n) > 0 && same(l, label)) counts.set(l, Number(n));
+  } else {
+    for (const p of roster?.people || []) if (p.party && p.speeches > 0 && same(p.party, label)) counts.set(p.party, (counts.get(p.party) || 0) + p.speeches);
+  }
+  let best = null;
+  for (const [l, count] of counts) if (!best || count > best.count) best = {label: l, count};
+  return best;
+}
+
 const SHOWN = 12;
 /** The Members block: portrait rows as the people directory draws them, sitting members first.
  *  `h` carries app.js's esc, photoUrlFor, personUrl, partyChipHTML, yearSpan, stateName, sourceLineHTML. */

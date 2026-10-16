@@ -4,5 +4,6 @@ export function partyLabelHTML(party: string, options?: { full?: boolean }): str
 export function machineLabelHTML(options?: { note?: string; inline?: boolean; pill?: boolean; className?: string; notRecord?: boolean }): string;
 export function sourceLineHTML(options?: { updated?: string; dateLabel?: string; source?: string; state?: string; originals?: { href: string; label?: string }[]; asAt?: string; facts?: string[][]; notes?: string[]; licence?: string }): string;
 export function moreMenuHTML(items: { href?: string; label: string; detail?: string; action?: string }[], label?: string, options?: { id?: string }): string;
+export const PARTY_MAP: Record<string, [string, string]>;
 export const CHAMBER_LABELS: Record<string, string>;
 export function chamberLabel(code: string | null | undefined): string;

@@ -52,6 +52,8 @@ async function run() {
       if (url.origin !== origin) throw Error(`Unexpected request: ${method} ${url.origin}${url.pathname}`);
       if(method !== 'GET')throw Error(`Unexpected request: ${method} ${url.origin}${url.pathname}`);
       if (Object.hasOwn(apiFixtures, url.pathname)) return Response.json(apiFixtures[url.pathname]);
+      // A test's own copy of a published file (workerData.files: pathname → JSON).
+      if (workerData.files && Object.hasOwn(workerData.files, url.pathname)) return Response.json(workerData.files[url.pathname]);
       if (url.pathname.startsWith('/api/')) throw Error(`Missing API fixture: ${url.pathname}`);
       // Malformed local data makes the real electorate builder throw, exercising
       // openDirectory's catch and user message without replacing any app code.
