@@ -296,9 +296,6 @@
 /spa-shell.js
   ! Cache-Control
   Cache-Control: public, max-age=31536000, immutable
-/speech-attribution.js
-  ! Cache-Control
-  Cache-Control: public, max-age=31536000, immutable
 /sponsor-person.js
   ! Cache-Control
   Cache-Control: public, max-age=31536000, immutable

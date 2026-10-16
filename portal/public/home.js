@@ -2,8 +2,8 @@ import {donorDisclosure,donorLookup,donorDisplayText,donorLabelHTML} from './don
 import {loadDonorViewIndex} from './donor-views.js?v=f1a85f7a27';
 let donorIndex=new Map();
 loadDonorViewIndex().then(index=>{donorIndex=index});
-import { personUrl, partyUrl } from './canonical-urls.js?v=225d5915ea';
-import { hydrateCollections, hydrateLatest, industryGroups, mapSourceHTML, mapSpan } from '/home-data.js?v=fbc05f632a';
+import { personUrl, partyUrl } from './canonical-urls.js?v=dce94beab5';
+import { hydrateCollections, hydrateLatest, industryGroups, mapSourceHTML, mapSpan } from '/home-data.js?v=5b063d154a';
 
 // The homepage and research workspace have separate document lifecycles.
 const legacyRoute = location.href.split('#')[1] || '';
@@ -503,7 +503,7 @@ async function headerSuggestions(q) {
   const read = async url => { const response = await fetch(url); if (!response.ok) throw Error('Unavailable'); return response.json(); };
   headerReferences ??= Promise.allSettled([
     read('/speakers.json'), read('/graph/money.json'), read('/reports/index.json'),
-    import('/electorates.js?v=0e52684805').then(async module => ({...await module.loadIndex(), jurisdictions:module.JURISDICTIONS})),
+    import('/electorates.js?v=7c01f8b629').then(async module => ({...await module.loadIndex(), jurisdictions:module.JURISDICTIONS})),
   ]);
   const [speakers, money, reports, electorates] = (await headerReferences).map(result => result.status === 'fulfilled' ? result.value : null);
   for (const e of (electorates?.electorates || []).filter(e => contains(e.name)).slice(0,3)) out.push({label:e.name, type:`${electorates.jurisdictions[e.jurisdiction]} electorate`, href:e.url});

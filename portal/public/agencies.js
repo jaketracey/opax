@@ -1,5 +1,5 @@
 import {donorLabelHTML} from './donor-disclosure.js?v=800932e746';
-import { json, lifecycle, coverageHTML, yearChart, contractHTML, mountYearChart, placeholderContract, plural, procurementSourceHTML, procurementRailHTML, slowNotice, statsHTML } from './suppliers.js?v=09447bdf29';
+import { json, lifecycle, coverageHTML, yearChart, contractHTML, mountYearChart, placeholderContract, plural, procurementSourceHTML, procurementRailHTML, slowNotice, statsHTML } from './suppliers.js?v=9b36e1c788';
 import { procurementGraph } from './procurement-data.js';
 import { shortMoney } from './format.js';
 const esc = value => String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));

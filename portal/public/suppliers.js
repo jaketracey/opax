@@ -3,9 +3,9 @@ import {mountContractsTable} from './contracts-table.js?v=b9d694539f';
 /* Supplier entries: recorded procurement, source notices and funding cross-links.
    No dependencies but the shared formats; the host router owns mounting and calls destroy on departure. */
 import { shortDate, shortMoney } from "./format.js";
-import { mountSupplierGrowth, supplierDonations } from "./supplier-growth.js?v=f8b2e4ded2";
-import { sourceLineHTML } from "./labels.js?v=36612149e0";
-import { partyUrl } from "./canonical-urls.js?v=225d5915ea";
+import { mountSupplierGrowth, supplierDonations } from "./supplier-growth.js?v=0b8bbe0874";
+import { sourceLineHTML } from "./labels.js?v=18b8e313e4";
+import { partyUrl } from "./canonical-urls.js?v=dce94beab5";
 const esc = (value) => String(value ?? "").replace(/[&<>"']/g, (char) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[char]);
 const number = (value) => (Number(value) || 0).toLocaleString("en-AU");
 const currency = (value) => (Number(value) || 0).toLocaleString("en-AU", { style: "currency", currency: "AUD", maximumFractionDigits: 0 });
