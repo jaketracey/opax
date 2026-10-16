@@ -1,0 +1,66 @@
+{
+ "date": "2026-10-17",
+ "status": "failed",
+ "started": "2026-10-16T16:15:39Z",
+ "finished": "2026-10-16T18:45:41Z",
+ "commit": "bc8f9c404",
+ "deploy": "started by the push (deploy.yml, corpus.json changed)",
+ "summary": "988,562 resources (+325: speech +292, press_release +28, division +5); divisions: 0 new; federal latest 2026-08-20; bills: 0 new, 0 changed, 0 titles filled, 0 sponsor IDs filled; evidence: waiting for inputs (missing: /home/ubuntu/.cache/autoresearch/evidence-layers-full.sqlite, /home/ubuntu/.cache/autoresearch/evidence-places.sqlite, /home/ubuntu/.cache/autoresearch/evidence-identity-decisions.sqlite, /home/ubuntu/.cache/autoresearch/evidence-additional-mentions.sqlite); Paused sources: bills, committees, grants_fetch, interests_federal, qld, sa",
+ "failures": [
+  "portal tests fail even with every changed group (divisions seovotes votes) put back to HEAD: the suite is red on main itself; nothing published tonight except corpus.json"
+ ],
+ "warnings": [
+  "evidence: waiting for inputs (missing: /home/ubuntu/.cache/autoresearch/evidence-layers-full.sqlite, /home/ubuntu/.cache/autoresearch/evidence-places.sqlite, /home/ubuntu/.cache/autoresearch/evidence-identity-decisions.sqlite, /home/ubuntu/.cache/autoresearch/evidence-additional-mentions.sqlite); catch-up retained; export skipped",
+  "division export retained 19 pinned records; explicit coverage flags identify degraded source coverage"
+ ],
+ "paused_sources": {
+  "committees": {
+   "status": "paused",
+   "reason": "HTTP 403 verified 2026-10-10; permission requested",
+   "host": "parlinfo.aph.gov.au",
+   "checked_at": "2026-10-16T16:19:07.291690+00:00",
+   "message": "source paused: honest agent refused (awaiting permission)",
+   "permission": "permission requested"
+  },
+  "qld": {
+   "status": "paused",
+   "reason": "HTTP 403 verified 2026-10-10; permission requested",
+   "host": "data.parliament.qld.gov.au",
+   "checked_at": "2026-10-16T16:19:03.243412+00:00",
+   "message": "source paused: honest agent refused (awaiting permission)",
+   "permission": "permission requested"
+  },
+  "bills": {
+   "status": "paused",
+   "reason": "HTTP 403 verified 2026-10-10; permission requested",
+   "host": "parlinfo.aph.gov.au",
+   "checked_at": "2026-10-16T16:37:17.344211+00:00",
+   "message": "source paused: honest agent refused (awaiting permission)",
+   "permission": "permission requested"
+  },
+  "sa": {
+   "status": "paused",
+   "reason": "HTTP 403 verified 2026-10-10; permission requested",
+   "host": "hansardsearch.parliament.sa.gov.au",
+   "checked_at": "2026-10-16T16:19:09.412266+00:00",
+   "message": "source paused: honest agent refused (awaiting permission)",
+   "permission": "permission requested"
+  },
+  "grants_fetch": {
+   "status": "paused",
+   "reason": "HTTP 403",
+   "host": "www.grants.gov.au",
+   "checked_at": "2026-10-16T16:31:55.537687+00:00",
+   "message": "source paused: honest agent refused (awaiting permission)",
+   "permission": "permission requested"
+  },
+  "interests_federal": {
+   "status": "paused",
+   "reason": "HTTP 403 verified 2026-10-10; permission requested",
+   "host": "www.aph.gov.au",
+   "checked_at": "2026-10-16T16:36:37.090153+00:00",
+   "message": "source paused: honest agent refused (awaiting permission)",
+   "permission": "permission requested"
+  }
+ }
+}
