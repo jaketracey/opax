@@ -11,20 +11,24 @@
       {
         "label": "AuSenate YouTube feed",
         "url": "https://www.youtube.com/feeds/videos.xml?channel_id=UCQptchvNlCzMKsGPU8s_6UQ"
+      },
+      {
+        "label": "YouTube Data API v3 playlistItems (uploads)",
+        "url": "https://www.youtube.com/playlist?list=UUQptchvNlCzMKsGPU8s_6UQ"
       }
     ],
     "use": "Linked and embedded with the Senate's own YouTube player (youtube-nocookie.com, click to play). Never downloaded or re-hosted.",
     "counts": {
-      "question_time": 13,
-      "first_speech": 2,
-      "other": 0
+      "question_time": 321,
+      "first_speech": 34,
+      "other": 56
     }
   },
   "videos": [
     {
       "id": "geUwNHyIJ2A",
       "title": "Senate Question Time, 15 October 2026",
-      "published": "2026-10-16T01:26:21+00:00",
+      "published": "2026-10-16T01:26:21Z",
       "kind": "question_time",
       "date": "2026-10-15",
       "chamber": "senate",
@@ -33,7 +37,7 @@
     {
       "id": "N_DVdDfZUhM",
       "title": "Senate Question Time, 14 October 2026",
-      "published": "2026-10-14T07:45:20+00:00",
+      "published": "2026-10-14T07:45:20Z",
       "kind": "question_time",
       "date": "2026-10-14",
       "chamber": "senate",
@@ -42,7 +46,7 @@
     {
       "id": "5xNaDs_GwbA",
       "title": "Senate Question Time, 13 October 2026",
-      "published": "2026-10-13T22:55:56+00:00",
+      "published": "2026-10-13T22:55:56Z",
       "kind": "question_time",
       "date": "2026-10-13",
       "chamber": "senate",
@@ -51,7 +55,7 @@
     {
       "id": "Dl5nTmvNlsU",
       "title": "Senate Question Time, 12 October 2026",
-      "published": "2026-10-13T22:31:22+00:00",
+      "published": "2026-10-13T22:31:22Z",
       "kind": "question_time",
       "date": "2026-10-12",
       "chamber": "senate",
@@ -60,7 +64,7 @@
     {
       "id": "lYcsWohoypM",
       "title": "Senate Question Time, 17 September 2026",
-      "published": "2026-09-18T00:28:36+00:00",
+      "published": "2026-09-18T00:28:36Z",
       "kind": "question_time",
       "date": "2026-09-17",
       "chamber": "senate",
@@ -69,7 +73,7 @@
     {
       "id": "T6tAQMGhS1w",
       "title": "Senate Question Time, 16 September 2026",
-      "published": "2026-09-16T08:25:12+00:00",
+      "published": "2026-09-16T08:25:12Z",
       "kind": "question_time",
       "date": "2026-09-16",
       "chamber": "senate",
@@ -78,7 +82,7 @@
     {
       "id": "L9IsSWZEO0Y",
       "title": "First speech: Senator Gatenby - 16 September 2026",
-      "published": "2026-09-16T07:38:51+00:00",
+      "published": "2026-09-16T07:38:51Z",
       "kind": "first_speech",
       "date": "2026-09-16",
       "chamber": "senate",
@@ -89,7 +93,7 @@
     {
       "id": "Mylywufr66A",
       "title": "Senate Question Time, 15 September 2026",
-      "published": "2026-09-15T08:10:52+00:00",
+      "published": "2026-09-15T08:10:52Z",
       "kind": "question_time",
       "date": "2026-09-15",
       "chamber": "senate",
@@ -98,7 +102,7 @@
     {
       "id": "hSKcVmZzamw",
       "title": "Senate Question Time, 14 September 2026",
-      "published": "2026-09-15T04:54:54+00:00",
+      "published": "2026-09-15T04:54:54Z",
       "kind": "question_time",
       "date": "2026-09-14",
       "chamber": "senate",
@@ -107,7 +111,7 @@
     {
       "id": "Sn7lnAho8Ho",
       "title": "First speech: Senator Bleyer - 9 September 2026",
-      "published": "2026-09-09T09:23:42+00:00",
+      "published": "2026-09-09T09:23:42Z",
       "kind": "first_speech",
       "date": "2026-09-09",
       "chamber": "senate",
@@ -118,7 +122,7 @@
     {
       "id": "pVPVM95Kyyc",
       "title": "Senate Question Time, 9 September 2026",
-      "published": "2026-09-09T09:18:57+00:00",
+      "published": "2026-09-09T09:18:57Z",
       "kind": "question_time",
       "date": "2026-09-09",
       "chamber": "senate",
@@ -127,7 +131,7 @@
     {
       "id": "TvlmetIgnPM",
       "title": "Senate Question Time, 8 September 2026",
-      "published": "2026-09-08T08:38:32+00:00",
+      "published": "2026-09-08T08:38:32Z",
       "kind": "question_time",
       "date": "2026-09-08",
       "chamber": "senate",
@@ -136,7 +140,7 @@
     {
       "id": "c0q7UmXa4OI",
       "title": "Senate Question Time, 7 September 2026",
-      "published": "2026-09-07T08:27:13+00:00",
+      "published": "2026-09-07T08:27:13Z",
       "kind": "question_time",
       "date": "2026-09-07",
       "chamber": "senate",
@@ -145,7 +149,7 @@
     {
       "id": "mU4GGKJdvrA",
       "title": "Senate Question Time, 20 August 2026",
-      "published": "2026-08-21T04:58:54+00:00",
+      "published": "2026-08-21T04:58:54Z",
       "kind": "question_time",
       "date": "2026-08-20",
       "chamber": "senate",
@@ -154,11 +158,3639 @@
     {
       "id": "_ub8XeSFeSA",
       "title": "Senate Question Time, 19 August 2026",
-      "published": "2026-08-19T08:02:13+00:00",
+      "published": "2026-08-19T08:02:13Z",
       "kind": "question_time",
       "date": "2026-08-19",
       "chamber": "senate",
       "url": "https://www.youtube.com/watch?v=_ub8XeSFeSA"
+    },
+    {
+      "id": "wZdf8SM0SAA",
+      "title": "Senate Question Time, 18 August 2026",
+      "published": "2026-08-19T07:53:47Z",
+      "kind": "question_time",
+      "date": "2026-08-18",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=wZdf8SM0SAA"
+    },
+    {
+      "id": "9ZnUlGv2YMs",
+      "title": "Senate Question Time, 17 August 2026",
+      "published": "2026-08-17T07:32:29Z",
+      "kind": "question_time",
+      "date": "2026-08-17",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=9ZnUlGv2YMs"
+    },
+    {
+      "id": "867PU8N5qO8",
+      "title": "Senate Question Time, 13 August 2026",
+      "published": "2026-08-13T23:12:54Z",
+      "kind": "question_time",
+      "date": "2026-08-13",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=867PU8N5qO8"
+    },
+    {
+      "id": "UcOiRjKOg_M",
+      "title": "Senate Question Time, 12 August 2026",
+      "published": "2026-08-13T02:45:36Z",
+      "kind": "question_time",
+      "date": "2026-08-12",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=UcOiRjKOg_M"
+    },
+    {
+      "id": "lxEfJ1XdZUU",
+      "title": "Senate Question Time, 11 August 2026",
+      "published": "2026-08-11T08:26:28Z",
+      "kind": "question_time",
+      "date": "2026-08-11",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=lxEfJ1XdZUU"
+    },
+    {
+      "id": "hVSLkOddJgs",
+      "title": "Senate Question Time, 2 July 2026",
+      "published": "2026-07-03T01:53:07Z",
+      "kind": "question_time",
+      "date": "2026-07-02",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=hVSLkOddJgs"
+    },
+    {
+      "id": "e5WvHbcT3sQ",
+      "title": "Senate Question Time, 1 July 2026",
+      "published": "2026-07-01T22:43:27Z",
+      "kind": "question_time",
+      "date": "2026-07-01",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=e5WvHbcT3sQ"
+    },
+    {
+      "id": "COxh_H7oVlc",
+      "title": "Senate Question Time, 30 June 2026",
+      "published": "2026-07-01T08:46:34Z",
+      "kind": "question_time",
+      "date": "2026-06-30",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=COxh_H7oVlc"
+    },
+    {
+      "id": "nAcO33nbsPE",
+      "title": "Senate Question Time, 29 June 2026",
+      "published": "2026-06-29T23:14:38Z",
+      "kind": "question_time",
+      "date": "2026-06-29",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=nAcO33nbsPE"
+    },
+    {
+      "id": "akW9z2bJEAE",
+      "title": "Senate Question Time, 24 June 2026",
+      "published": "2026-06-24T23:14:58Z",
+      "kind": "question_time",
+      "date": "2026-06-24",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=akW9z2bJEAE"
+    },
+    {
+      "id": "pIXtOztYnVc",
+      "title": "Senate Question Time, 23 June 2026",
+      "published": "2026-06-23T08:25:00Z",
+      "kind": "question_time",
+      "date": "2026-06-23",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=pIXtOztYnVc"
+    },
+    {
+      "id": "UK0DcZBGn-Y",
+      "title": "Senate Question Time, 22 June 2026",
+      "published": "2026-06-22T08:58:04Z",
+      "kind": "question_time",
+      "date": "2026-06-22",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=UK0DcZBGn-Y"
+    },
+    {
+      "id": "vA3uqwKGxr0",
+      "title": "Senate Question Time, 14 May 2026",
+      "published": "2026-05-15T01:21:07Z",
+      "kind": "question_time",
+      "date": "2026-05-14",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=vA3uqwKGxr0"
+    },
+    {
+      "id": "0FBabj9QUjQ",
+      "title": "Senate Question Time, 13 May 2026",
+      "published": "2026-05-13T07:50:07Z",
+      "kind": "question_time",
+      "date": "2026-05-13",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=0FBabj9QUjQ"
+    },
+    {
+      "id": "RXKBwj6bFQM",
+      "title": "Senate Question Time, 12 May 2026",
+      "published": "2026-05-12T23:12:49Z",
+      "kind": "question_time",
+      "date": "2026-05-12",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=RXKBwj6bFQM"
+    },
+    {
+      "id": "UV0G1tSxnjk",
+      "title": "Senate Question Time, 1 April 2026",
+      "published": "2026-04-02T03:42:21Z",
+      "kind": "question_time",
+      "date": "2026-04-01",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=UV0G1tSxnjk"
+    },
+    {
+      "id": "67ZamMxqVR0",
+      "title": "Senate Question Time, 31 March 2026",
+      "published": "2026-03-31T06:50:51Z",
+      "kind": "question_time",
+      "date": "2026-03-31",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=67ZamMxqVR0"
+    },
+    {
+      "id": "4_Wptr9ukqs",
+      "title": "Senate Question Time, 30 March 2026",
+      "published": "2026-03-30T07:28:46Z",
+      "kind": "question_time",
+      "date": "2026-03-30",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=4_Wptr9ukqs"
+    },
+    {
+      "id": "l6tZEBxiDpI",
+      "title": "Senate Question Time, 26 March 2026",
+      "published": "2026-03-26T07:15:22Z",
+      "kind": "question_time",
+      "date": "2026-03-26",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=l6tZEBxiDpI"
+    },
+    {
+      "id": "V_FqveKDT_4",
+      "title": "Senate Question Time, 25 March 2026",
+      "published": "2026-03-25T22:22:08Z",
+      "kind": "question_time",
+      "date": "2026-03-25",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=V_FqveKDT_4"
+    },
+    {
+      "id": "PJAfFNeKl2M",
+      "title": "Senate Question Time, 24 March 2026",
+      "published": "2026-03-24T23:26:33Z",
+      "kind": "question_time",
+      "date": "2026-03-24",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=PJAfFNeKl2M"
+    },
+    {
+      "id": "tWwTzAzYUg4",
+      "title": "Senate Question Time, 23 March 2026",
+      "published": "2026-03-23T21:10:05Z",
+      "kind": "question_time",
+      "date": "2026-03-23",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=tWwTzAzYUg4"
+    },
+    {
+      "id": "E2bCNgq-ocg",
+      "title": "Senate Question Time, 12 March 2026",
+      "published": "2026-03-13T00:03:21Z",
+      "kind": "question_time",
+      "date": "2026-03-12",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=E2bCNgq-ocg"
+    },
+    {
+      "id": "UZnDOogU5wM",
+      "title": "Senate Question Time, 11 March 2026",
+      "published": "2026-03-11T06:53:53Z",
+      "kind": "question_time",
+      "date": "2026-03-11",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=UZnDOogU5wM"
+    },
+    {
+      "id": "1upFK-LSx8I",
+      "title": "Senate Question Time, 10 March 2026",
+      "published": "2026-03-10T06:33:31Z",
+      "kind": "question_time",
+      "date": "2026-03-10",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=1upFK-LSx8I"
+    },
+    {
+      "id": "eiaYbIhckAg",
+      "title": "Senate Question Time, 5 March 2026",
+      "published": "2026-03-05T06:41:05Z",
+      "kind": "question_time",
+      "date": "2026-03-05",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=eiaYbIhckAg"
+    },
+    {
+      "id": "_OxGzAMzKfE",
+      "title": "Senate Question Time, 4 March 2026",
+      "published": "2026-03-04T22:09:14Z",
+      "kind": "question_time",
+      "date": "2026-03-04",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=_OxGzAMzKfE"
+    },
+    {
+      "id": "LVul38XWWVE",
+      "title": "60 seconds in the Senate. Gags and guillotines.",
+      "published": "2026-03-03T22:09:31Z",
+      "kind": "other",
+      "date": null,
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=LVul38XWWVE"
+    },
+    {
+      "id": "WVs4X1eQRdk",
+      "title": "Senate Question Time, 3 March 2026",
+      "published": "2026-03-03T05:58:57Z",
+      "kind": "question_time",
+      "date": "2026-03-03",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=WVs4X1eQRdk"
+    },
+    {
+      "id": "xqHWtT_4k5c",
+      "title": "Senate Question Time, 2 March 2025",
+      "published": "2026-03-02T06:24:21Z",
+      "kind": "question_time",
+      "date": "2025-03-02",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=xqHWtT_4k5c"
+    },
+    {
+      "id": "MX9B8WDWcug",
+      "title": "Senate question time, 5 February 2026",
+      "published": "2026-02-05T06:36:41Z",
+      "kind": "question_time",
+      "date": "2026-02-05",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=MX9B8WDWcug"
+    },
+    {
+      "id": "VuT8cn8n8xI",
+      "title": "Senate Question Time, 4 February 2026",
+      "published": "2026-02-04T07:37:31Z",
+      "kind": "question_time",
+      "date": "2026-02-04",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=VuT8cn8n8xI"
+    },
+    {
+      "id": "Zn4uaqEj-JQ",
+      "title": "Senate Question Time, 3 February 2026",
+      "published": "2026-02-03T07:34:01Z",
+      "kind": "question_time",
+      "date": "2026-02-03",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=Zn4uaqEj-JQ"
+    },
+    {
+      "id": "77mIE2b-y70",
+      "title": "Senate Question Time - 20 January 2026",
+      "published": "2026-01-20T08:43:59Z",
+      "kind": "question_time",
+      "date": "2026-01-20",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=77mIE2b-y70"
+    },
+    {
+      "id": "XZ7j7Ct-68w",
+      "title": "Senate Question Time, 27 November 2025",
+      "published": "2025-11-27T06:36:44Z",
+      "kind": "question_time",
+      "date": "2025-11-27",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=XZ7j7Ct-68w"
+    },
+    {
+      "id": "GzS0IOM9KeE",
+      "title": "Senate Question Time, 26 November 2025",
+      "published": "2025-11-26T06:38:00Z",
+      "kind": "question_time",
+      "date": "2025-11-26",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=GzS0IOM9KeE"
+    },
+    {
+      "id": "LUr2nuiPopk",
+      "title": "Senate Question Time, 25 November 2025",
+      "published": "2025-11-25T07:47:54Z",
+      "kind": "question_time",
+      "date": "2025-11-25",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=LUr2nuiPopk"
+    },
+    {
+      "id": "v_C3KVDi2SE",
+      "title": "Senate Question Time, 24 November 2025",
+      "published": "2025-11-24T08:01:09Z",
+      "kind": "question_time",
+      "date": "2025-11-24",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=v_C3KVDi2SE"
+    },
+    {
+      "id": "5m6msxS2-c0",
+      "title": "Senate Question Time, 6 November 2025",
+      "published": "2025-11-06T21:56:49Z",
+      "kind": "question_time",
+      "date": "2025-11-06",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=5m6msxS2-c0"
+    },
+    {
+      "id": "avWcDCrOuQE",
+      "title": "Senate Question Time, 5 November 2025",
+      "published": "2025-11-05T06:32:23Z",
+      "kind": "question_time",
+      "date": "2025-11-05",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=avWcDCrOuQE"
+    },
+    {
+      "id": "wPh1LZNAnEc",
+      "title": "Senate Question Time, 5 November 2025",
+      "published": "2025-11-04T21:48:00Z",
+      "kind": "question_time",
+      "date": "2025-11-05",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=wPh1LZNAnEc"
+    },
+    {
+      "id": "E9CVaSPWVwU",
+      "title": "Senate Question Time, 3 November 2025",
+      "published": "2025-11-03T22:38:21Z",
+      "kind": "question_time",
+      "date": "2025-11-03",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=E9CVaSPWVwU"
+    },
+    {
+      "id": "neRvrwc1GMQ",
+      "title": "Senate Question Time, 30 October 2025",
+      "published": "2025-10-31T01:16:47Z",
+      "kind": "question_time",
+      "date": "2025-10-30",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=neRvrwc1GMQ"
+    },
+    {
+      "id": "6NRJ6DOtWfQ",
+      "title": "Senate Question Time, 29 October 2025",
+      "published": "2025-10-29T22:44:28Z",
+      "kind": "question_time",
+      "date": "2025-10-29",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=6NRJ6DOtWfQ"
+    },
+    {
+      "id": "cB0beDFTyp4",
+      "title": "Senate Question Time, 28 October 2025",
+      "published": "2025-10-28T22:17:55Z",
+      "kind": "question_time",
+      "date": "2025-10-28",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=cB0beDFTyp4"
+    },
+    {
+      "id": "nr1C2yiIB8Q",
+      "title": "Senate Question Time, 27 October 2025",
+      "published": "2025-10-27T07:42:48Z",
+      "kind": "question_time",
+      "date": "2025-10-27",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=nr1C2yiIB8Q"
+    },
+    {
+      "id": "3WzRJVIrUiA",
+      "title": "What are the Scrutiny Committees?",
+      "published": "2025-09-12T01:30:29Z",
+      "kind": "other",
+      "date": null,
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=3WzRJVIrUiA"
+    },
+    {
+      "id": "S5_uck_vtkw",
+      "title": "Senate Question Time, 4 September 2025",
+      "published": "2025-09-04T23:06:03Z",
+      "kind": "question_time",
+      "date": "2025-09-04",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=S5_uck_vtkw"
+    },
+    {
+      "id": "2QpPw4CBjMo",
+      "title": "Senate Question Time, 2 September 2025",
+      "published": "2025-09-02T09:30:17Z",
+      "kind": "question_time",
+      "date": "2025-09-02",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=2QpPw4CBjMo"
+    },
+    {
+      "id": "bH9fOzUakno",
+      "title": "Senate Question Time, 1 September 2025",
+      "published": "2025-09-02T06:10:56Z",
+      "kind": "question_time",
+      "date": "2025-09-01",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=bH9fOzUakno"
+    },
+    {
+      "id": "ah55zXzfslg",
+      "title": "Senate Question Time, 28 August 2025",
+      "published": "2025-09-01T05:42:25Z",
+      "kind": "question_time",
+      "date": "2025-08-28",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=ah55zXzfslg"
+    },
+    {
+      "id": "V8hVixGXTwQ",
+      "title": "Senate Question Time, 27 August 2025",
+      "published": "2025-08-27T08:33:42Z",
+      "kind": "question_time",
+      "date": "2025-08-27",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=V8hVixGXTwQ"
+    },
+    {
+      "id": "5aWgPdKADEc",
+      "title": "Senate Question Time, 26 August 2025",
+      "published": "2025-08-27T04:38:21Z",
+      "kind": "question_time",
+      "date": "2025-08-26",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=5aWgPdKADEc"
+    },
+    {
+      "id": "lSLBf8Mi6o4",
+      "title": "First speech: Senator Dowling - 26 August 2025",
+      "published": "2025-08-26T09:02:45Z",
+      "kind": "first_speech",
+      "date": "2025-08-26",
+      "chamber": "senate",
+      "person_slug": "richard-dowling",
+      "person_pid": "11056",
+      "url": "https://www.youtube.com/watch?v=lSLBf8Mi6o4"
+    },
+    {
+      "id": "XHwiE5vFJ3s",
+      "title": "First speech: Senator Walker - 25 August 2025",
+      "published": "2025-08-25T08:58:19Z",
+      "kind": "first_speech",
+      "date": "2025-08-25",
+      "chamber": "senate",
+      "person_slug": "charlotte-walker",
+      "person_pid": "11058",
+      "url": "https://www.youtube.com/watch?v=XHwiE5vFJ3s"
+    },
+    {
+      "id": "q6jOLmju7Zw",
+      "title": "Senate Question Time, 25 August 2025",
+      "published": "2025-08-25T08:50:56Z",
+      "kind": "question_time",
+      "date": "2025-08-25",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=q6jOLmju7Zw"
+    },
+    {
+      "id": "csr59yXleFY",
+      "title": "Senate Question Time, 31 July 2025",
+      "published": "2025-07-31T06:29:14Z",
+      "kind": "question_time",
+      "date": "2025-07-31",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=csr59yXleFY"
+    },
+    {
+      "id": "xnfdBrzeKMI",
+      "title": "First speech: Senator Collins - 30 July 2025",
+      "published": "2025-07-31T01:03:24Z",
+      "kind": "first_speech",
+      "date": "2025-07-30",
+      "chamber": "senate",
+      "person_slug": "jessica-collins",
+      "person_pid": "11055",
+      "url": "https://www.youtube.com/watch?v=xnfdBrzeKMI"
+    },
+    {
+      "id": "9O0khCmt_ko",
+      "title": "First speech: Senator Dolega - 30 July 2025",
+      "published": "2025-07-31T01:00:02Z",
+      "kind": "first_speech",
+      "date": "2025-07-30",
+      "chamber": "senate",
+      "person_slug": "josh-dolega",
+      "person_pid": "11054",
+      "url": "https://www.youtube.com/watch?v=9O0khCmt_ko"
+    },
+    {
+      "id": "lK6ljyKqqNI",
+      "title": "Senate Question Time, 30 July 2025",
+      "published": "2025-07-31T00:20:13Z",
+      "kind": "question_time",
+      "date": "2025-07-30",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=lK6ljyKqqNI"
+    },
+    {
+      "id": "HoWTp-7ahgY",
+      "title": "First speech: Senator Whitten - 29 July 2025",
+      "published": "2025-07-29T08:47:36Z",
+      "kind": "first_speech",
+      "date": "2025-07-29",
+      "chamber": "senate",
+      "person_slug": "tyron-whitten",
+      "person_pid": "11060",
+      "url": "https://www.youtube.com/watch?v=HoWTp-7ahgY"
+    },
+    {
+      "id": "XrYSsFyKwak",
+      "title": "Senate Question time, 29 July 2025",
+      "published": "2025-07-29T08:35:51Z",
+      "kind": "question_time",
+      "date": "2025-07-29",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=XrYSsFyKwak"
+    },
+    {
+      "id": "UvRkKQad22A",
+      "title": "First speech: Senator Ananda-Rajah - 28 July 2025",
+      "published": "2025-07-28T10:03:55Z",
+      "kind": "first_speech",
+      "date": "2025-07-28",
+      "chamber": "senate",
+      "person_slug": "michelle-ananda-rajah",
+      "person_pid": "10983",
+      "url": "https://www.youtube.com/watch?v=UvRkKQad22A"
+    },
+    {
+      "id": "I3L6-iY3nNo",
+      "title": "Senate Question Time, 28 July 2025",
+      "published": "2025-07-28T10:00:58Z",
+      "kind": "question_time",
+      "date": "2025-07-28",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=I3L6-iY3nNo"
+    },
+    {
+      "id": "R7hwKhZEzc4",
+      "title": "Senate Question Time, 24 July 2025",
+      "published": "2025-07-25T05:01:32Z",
+      "kind": "question_time",
+      "date": "2025-07-24",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=R7hwKhZEzc4"
+    },
+    {
+      "id": "gLOORU7IzOQ",
+      "title": "First speech: Senator Mulholland - 23 July 2025",
+      "published": "2025-07-24T00:48:21Z",
+      "kind": "first_speech",
+      "date": "2025-07-23",
+      "chamber": "senate",
+      "person_slug": "corinne-mulholland",
+      "person_pid": "11057",
+      "url": "https://www.youtube.com/watch?v=gLOORU7IzOQ"
+    },
+    {
+      "id": "swL2OBOTxic",
+      "title": "First speech: Senator Blyth - 23 July 2025",
+      "published": "2025-07-24T00:45:08Z",
+      "kind": "first_speech",
+      "date": "2025-07-23",
+      "chamber": "senate",
+      "person_slug": "leah-blyth",
+      "person_pid": "11022",
+      "url": "https://www.youtube.com/watch?v=swL2OBOTxic"
+    },
+    {
+      "id": "IisHvnhH8iA",
+      "title": "First speech: Senator Whiteaker - 23 July 2025",
+      "published": "2025-07-23T23:40:49Z",
+      "kind": "first_speech",
+      "date": "2025-07-23",
+      "chamber": "senate",
+      "person_slug": "ellie-whiteaker",
+      "person_pid": "11059",
+      "url": "https://www.youtube.com/watch?v=IisHvnhH8iA"
+    },
+    {
+      "id": "YlzpCHEHW-E",
+      "title": "Senate Question Time, 23 July 2025",
+      "published": "2025-07-23T09:49:14Z",
+      "kind": "question_time",
+      "date": "2025-07-23",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=YlzpCHEHW-E"
+    },
+    {
+      "id": "wECBXXU8eXg",
+      "title": "Senate discovery - half-senate elections.",
+      "published": "2025-05-01T04:42:23Z",
+      "kind": "other",
+      "date": null,
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=wECBXXU8eXg"
+    },
+    {
+      "id": "n2BW63R6jF0",
+      "title": "Valedictory - Senator Reynolds. 26 March 2025",
+      "published": "2025-03-27T01:07:34Z",
+      "kind": "other",
+      "date": "2025-03-26",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=n2BW63R6jF0"
+    },
+    {
+      "id": "_UM0uNxp6os",
+      "title": "Valedictory - Senator Pratt, 26 March 2025",
+      "published": "2025-03-27T00:42:44Z",
+      "kind": "other",
+      "date": "2025-03-26",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=_UM0uNxp6os"
+    },
+    {
+      "id": "X02L6BsQnBo",
+      "title": "Senate Question Time, 26 March 2025",
+      "published": "2025-03-27T00:41:16Z",
+      "kind": "question_time",
+      "date": "2025-03-26",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=X02L6BsQnBo"
+    },
+    {
+      "id": "2nj-wgXvICU",
+      "title": "Senate Question Time, 25 March 2025",
+      "published": "2025-03-25T21:25:02Z",
+      "kind": "question_time",
+      "date": "2025-03-25",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=2nj-wgXvICU"
+    },
+    {
+      "id": "77IXmzqI-RY",
+      "title": "Senate Question Time, 13 February 2025",
+      "published": "2025-02-13T07:05:37Z",
+      "kind": "question_time",
+      "date": "2025-02-13",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=77IXmzqI-RY"
+    },
+    {
+      "id": "GS-dddY3R7g",
+      "title": "Senate Question Time, 12 February 2025",
+      "published": "2025-02-12T20:45:06Z",
+      "kind": "question_time",
+      "date": "2025-02-12",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=GS-dddY3R7g"
+    },
+    {
+      "id": "r3bdz2dkKEk",
+      "title": "Senate Question Time, 11 February 2025",
+      "published": "2025-02-11T05:06:40Z",
+      "kind": "question_time",
+      "date": "2025-02-11",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=r3bdz2dkKEk"
+    },
+    {
+      "id": "AU1Ib8QFmJA",
+      "title": "Senate Question Time, 10 February 2025",
+      "published": "2025-02-11T01:07:29Z",
+      "kind": "question_time",
+      "date": "2025-02-10",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=AU1Ib8QFmJA"
+    },
+    {
+      "id": "hvH-jUM6YME",
+      "title": "Senate Question Time, 6 February 2025",
+      "published": "2025-02-06T05:24:09Z",
+      "kind": "question_time",
+      "date": "2025-02-06",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=hvH-jUM6YME"
+    },
+    {
+      "id": "OCmZFNosrYU",
+      "title": "Senate Question Time, 5 February 2025",
+      "published": "2025-02-05T05:02:51Z",
+      "kind": "question_time",
+      "date": "2025-02-05",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=OCmZFNosrYU"
+    },
+    {
+      "id": "s1x9E9tnZW4",
+      "title": "Senate Question Time, 4 February 2025",
+      "published": "2025-02-04T08:43:15Z",
+      "kind": "question_time",
+      "date": "2025-02-04",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=s1x9E9tnZW4"
+    },
+    {
+      "id": "QHRIFDrUkO0",
+      "title": "60 seconds in the Senate - Wigs and gowns",
+      "published": "2025-01-20T04:15:48Z",
+      "kind": "other",
+      "date": null,
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=QHRIFDrUkO0"
+    },
+    {
+      "id": "e8lyrg8zc7c",
+      "title": "Senate Question Time, 28 November 2024",
+      "published": "2024-11-28T10:30:23Z",
+      "kind": "question_time",
+      "date": "2024-11-28",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=e8lyrg8zc7c"
+    },
+    {
+      "id": "D2BOhxL62KA",
+      "title": "Senate Question Time, 27 November 2024",
+      "published": "2024-11-27T21:27:54Z",
+      "kind": "question_time",
+      "date": "2024-11-27",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=D2BOhxL62KA"
+    },
+    {
+      "id": "IO8Zay1YdWI",
+      "title": "Senate Question Time, 26 November 2024",
+      "published": "2024-11-26T10:41:47Z",
+      "kind": "question_time",
+      "date": "2024-11-26",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=IO8Zay1YdWI"
+    },
+    {
+      "id": "zS9p5XGz3fY",
+      "title": "Senate Question Time, 25 November 2025",
+      "published": "2024-11-25T07:14:41Z",
+      "kind": "question_time",
+      "date": null,
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=zS9p5XGz3fY"
+    },
+    {
+      "id": "t2hZkrw_ddc",
+      "title": "Senate Question Time, 21 November 2024",
+      "published": "2024-11-25T04:42:53Z",
+      "kind": "question_time",
+      "date": "2024-11-21",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=t2hZkrw_ddc"
+    },
+    {
+      "id": "nRqVkDhk99I",
+      "title": "Senate Question Time, 20 November 2024",
+      "published": "2024-11-20T05:51:19Z",
+      "kind": "question_time",
+      "date": "2024-11-20",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=nRqVkDhk99I"
+    },
+    {
+      "id": "PhkPPRQ8NR4",
+      "title": "Senate Question Time, 19 November 2024",
+      "published": "2024-11-19T07:13:36Z",
+      "kind": "question_time",
+      "date": "2024-11-19",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=PhkPPRQ8NR4"
+    },
+    {
+      "id": "gwzIOuynoJc",
+      "title": "Senate Question Time, 18 November 2024",
+      "published": "2024-11-18T04:54:47Z",
+      "kind": "question_time",
+      "date": "2024-11-18",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=gwzIOuynoJc"
+    },
+    {
+      "id": "fkneTx8EcUM",
+      "title": "Senate Question Time, 10 October 2024",
+      "published": "2024-10-10T05:59:01Z",
+      "kind": "question_time",
+      "date": "2024-10-10",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=fkneTx8EcUM"
+    },
+    {
+      "id": "Wsu57Ajk4Ks",
+      "title": "Senate Question Time, 9 October 2024",
+      "published": "2024-10-09T05:27:47Z",
+      "kind": "question_time",
+      "date": "2024-10-09",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=Wsu57Ajk4Ks"
+    },
+    {
+      "id": "YfawFtAHmmU",
+      "title": "Senate Question Time, 8 October 2024",
+      "published": "2024-10-08T04:59:26Z",
+      "kind": "question_time",
+      "date": "2024-10-08",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=YfawFtAHmmU"
+    },
+    {
+      "id": "SXYH3Qfut6o",
+      "title": "Senate Question Time, 19 September 2024",
+      "published": "2024-09-19T06:01:31Z",
+      "kind": "question_time",
+      "date": "2024-09-19",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=SXYH3Qfut6o"
+    },
+    {
+      "id": "8rSlsIZ52ng",
+      "title": "Senate Question Time, 18 September 2024",
+      "published": "2024-09-18T09:32:11Z",
+      "kind": "question_time",
+      "date": "2024-09-18",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=8rSlsIZ52ng"
+    },
+    {
+      "id": "FFUk0DAe_NY",
+      "title": "Senate Question Time, 17 September 2024",
+      "published": "2024-09-17T08:33:55Z",
+      "kind": "question_time",
+      "date": "2024-09-17",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=FFUk0DAe_NY"
+    },
+    {
+      "id": "GCszmWnf84s",
+      "title": "Senate Question Time, 16 September 2024",
+      "published": "2024-09-16T07:20:58Z",
+      "kind": "question_time",
+      "date": "2024-09-16",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=GCszmWnf84s"
+    },
+    {
+      "id": "HvmbszeJhSI",
+      "title": "Senate Question Time, 12 September 2024",
+      "published": "2024-09-12T05:50:56Z",
+      "kind": "question_time",
+      "date": "2024-09-12",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=HvmbszeJhSI"
+    },
+    {
+      "id": "OdV1Pd1sJZI",
+      "title": "Senate Question Time, 11 September 2024",
+      "published": "2024-09-11T06:37:23Z",
+      "kind": "question_time",
+      "date": "2024-09-11",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=OdV1Pd1sJZI"
+    },
+    {
+      "id": "bgGh7Ew_NYU",
+      "title": "Senate Question Time, 10 September 2024",
+      "published": "2024-09-10T07:40:21Z",
+      "kind": "question_time",
+      "date": "2024-09-10",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=bgGh7Ew_NYU"
+    },
+    {
+      "id": "2E2T-bdO1wI",
+      "title": "Senate Question Time, 9 September 2024",
+      "published": "2024-09-09T07:54:39Z",
+      "kind": "question_time",
+      "date": "2024-09-09",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=2E2T-bdO1wI"
+    },
+    {
+      "id": "WarmOS32q-I",
+      "title": "Senate Question Time, 22 August 2024",
+      "published": "2024-08-22T22:58:07Z",
+      "kind": "question_time",
+      "date": "2024-08-22",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=WarmOS32q-I"
+    },
+    {
+      "id": "Bb2YpaPIfZo",
+      "title": "Senate Question Time, 21 August 2024",
+      "published": "2024-08-22T00:23:55Z",
+      "kind": "question_time",
+      "date": "2024-08-21",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=Bb2YpaPIfZo"
+    },
+    {
+      "id": "Jnad_jlPA28",
+      "title": "First speech: Senator Darmanin - 21 August 2024",
+      "published": "2024-08-22T00:23:19Z",
+      "kind": "first_speech",
+      "date": "2024-08-21",
+      "chamber": "senate",
+      "person_slug": null,
+      "person_pid": null,
+      "url": "https://www.youtube.com/watch?v=Jnad_jlPA28"
+    },
+    {
+      "id": "GzOVp0Jr9ys",
+      "title": "Senate Question Time, 20 August 2024",
+      "published": "2024-08-22T00:20:19Z",
+      "kind": "question_time",
+      "date": "2024-08-20",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=GzOVp0Jr9ys"
+    },
+    {
+      "id": "_BIPvfiJolw",
+      "title": "First speech: Senator Hodgins-May - 26 June 2024",
+      "published": "2024-08-22T00:16:51Z",
+      "kind": "first_speech",
+      "date": "2024-06-26",
+      "chamber": "senate",
+      "person_slug": null,
+      "person_pid": null,
+      "url": "https://www.youtube.com/watch?v=_BIPvfiJolw"
+    },
+    {
+      "id": "tW-cUGezjJA",
+      "title": "Senate Question Time, 19 August 2024",
+      "published": "2024-08-19T06:08:45Z",
+      "kind": "question_time",
+      "date": "2024-08-19",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=tW-cUGezjJA"
+    },
+    {
+      "id": "lFQ1rO0BRSk",
+      "title": "Senate Question Time, 15 August 2024",
+      "published": "2024-08-15T07:18:33Z",
+      "kind": "question_time",
+      "date": "2024-08-15",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=lFQ1rO0BRSk"
+    },
+    {
+      "id": "991Iw-wCCe4",
+      "title": "Senate Question Time, 14 August 2024",
+      "published": "2024-08-14T08:37:22Z",
+      "kind": "question_time",
+      "date": "2024-08-14",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=991Iw-wCCe4"
+    },
+    {
+      "id": "J8jF7VLtH98",
+      "title": "Senate Question Time, 13 August 2024",
+      "published": "2024-08-13T05:16:45Z",
+      "kind": "question_time",
+      "date": "2024-08-13",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=J8jF7VLtH98"
+    },
+    {
+      "id": "UxSaDpsr4aU",
+      "title": "Senate Question Time, 12 August 2024",
+      "published": "2024-08-12T06:44:11Z",
+      "kind": "question_time",
+      "date": "2024-08-12",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=UxSaDpsr4aU"
+    },
+    {
+      "id": "FV2WvOC32ic",
+      "title": "President's lecture - Virginia Haussegger AM",
+      "published": "2024-08-02T05:32:44Z",
+      "kind": "other",
+      "date": null,
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=FV2WvOC32ic"
+    },
+    {
+      "id": "8yJq-mXeLS4",
+      "title": "Senate Lecture Series - Professor Anthony Gray & Emeritus Professor Greg Craven AO",
+      "published": "2024-08-02T05:15:45Z",
+      "kind": "other",
+      "date": null,
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=8yJq-mXeLS4"
+    },
+    {
+      "id": "pwfjRKnwLFE",
+      "title": "Senate lecture series - Emeritus Professor Paul Strangio & Associate Professor Matteo Bonotti",
+      "published": "2024-08-02T05:11:28Z",
+      "kind": "other",
+      "date": null,
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=pwfjRKnwLFE"
+    },
+    {
+      "id": "qOCDbwvnsic",
+      "title": "Senate Question Time, 4 July 2024",
+      "published": "2024-07-04T06:56:04Z",
+      "kind": "question_time",
+      "date": "2024-07-04",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=qOCDbwvnsic"
+    },
+    {
+      "id": "lqvv3nEHyD4",
+      "title": "Senate Question Time, 3 July 2024",
+      "published": "2024-07-03T07:17:06Z",
+      "kind": "question_time",
+      "date": "2024-07-03",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=lqvv3nEHyD4"
+    },
+    {
+      "id": "3-UJFunkSsQ",
+      "title": "Senate Question Time, 2 July 2024",
+      "published": "2024-07-02T08:23:40Z",
+      "kind": "question_time",
+      "date": "2024-07-02",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=3-UJFunkSsQ"
+    },
+    {
+      "id": "g4SU6yBTP9U",
+      "title": "Senate Question Time, 1 July 2024",
+      "published": "2024-07-01T05:48:28Z",
+      "kind": "question_time",
+      "date": "2024-07-01",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=g4SU6yBTP9U"
+    },
+    {
+      "id": "l-ZRJp8uhuo",
+      "title": "Senate Question Time, 27 June 2024",
+      "published": "2024-06-27T23:35:50Z",
+      "kind": "question_time",
+      "date": "2024-06-27",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=l-ZRJp8uhuo"
+    },
+    {
+      "id": "xfg-A4Hg_Es",
+      "title": "Senate Question Time, 26 June 2024",
+      "published": "2024-06-26T21:43:06Z",
+      "kind": "question_time",
+      "date": "2024-06-26",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=xfg-A4Hg_Es"
+    },
+    {
+      "id": "dsCc9MIKwD0",
+      "title": "Senate Question Time, 25 June 2024",
+      "published": "2024-06-25T06:34:24Z",
+      "kind": "question_time",
+      "date": "2024-06-25",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=dsCc9MIKwD0"
+    },
+    {
+      "id": "XN02aE0kPEc",
+      "title": "Senate Question Time, 24 June 2024",
+      "published": "2024-06-24T05:32:39Z",
+      "kind": "question_time",
+      "date": "2024-06-24",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=XN02aE0kPEc"
+    },
+    {
+      "id": "R_5_jFoLQQc",
+      "title": "Senate Question Time, 16 May 2024",
+      "published": "2024-05-17T01:18:08Z",
+      "kind": "question_time",
+      "date": "2024-05-16",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=R_5_jFoLQQc"
+    },
+    {
+      "id": "gjQKVUzFPNA",
+      "title": "Senate Question Time, 15 May 2024",
+      "published": "2024-05-16T05:03:38Z",
+      "kind": "question_time",
+      "date": "2024-05-15",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=gjQKVUzFPNA"
+    },
+    {
+      "id": "J6QHXISdp-I",
+      "title": "Senate Question Time, 14 May 2024",
+      "published": "2024-05-14T05:25:09Z",
+      "kind": "question_time",
+      "date": "2024-05-14",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=J6QHXISdp-I"
+    },
+    {
+      "id": "5z9u2jwifME",
+      "title": "Senate Question Time, 27 March 2024",
+      "published": "2024-03-28T05:28:35Z",
+      "kind": "question_time",
+      "date": "2024-03-27",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=5z9u2jwifME"
+    },
+    {
+      "id": "mJ2rqWNKFe8",
+      "title": "Valedictory - Senator Rice, 26 March 2024",
+      "published": "2024-03-26T07:32:34Z",
+      "kind": "other",
+      "date": "2024-03-26",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=mJ2rqWNKFe8"
+    },
+    {
+      "id": "GXZKBduvqNU",
+      "title": "Senate Question Time, 26 March 2024",
+      "published": "2024-03-26T04:22:51Z",
+      "kind": "question_time",
+      "date": "2024-03-26",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=GXZKBduvqNU"
+    },
+    {
+      "id": "vtL_tKDcptM",
+      "title": "First speech: Senator Ghosh, 25 March 2024",
+      "published": "2024-03-25T07:40:44Z",
+      "kind": "first_speech",
+      "date": "2024-03-25",
+      "chamber": "senate",
+      "person_slug": null,
+      "person_pid": null,
+      "url": "https://www.youtube.com/watch?v=vtL_tKDcptM"
+    },
+    {
+      "id": "zOj4ERKb4wY",
+      "title": "Senate Question Time, 25 March 2024",
+      "published": "2024-03-25T07:02:55Z",
+      "kind": "question_time",
+      "date": "2024-03-25",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=zOj4ERKb4wY"
+    },
+    {
+      "id": "yVNX97lkFyI",
+      "title": "Senate Question Time, 21 March 2024",
+      "published": "2024-03-21T23:53:39Z",
+      "kind": "question_time",
+      "date": "2024-03-21",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=yVNX97lkFyI"
+    },
+    {
+      "id": "hrhVCRijTfo",
+      "title": "First speech: Senator Sharma - 20 March 2024",
+      "published": "2024-03-21T23:50:06Z",
+      "kind": "first_speech",
+      "date": "2024-03-20",
+      "chamber": "senate",
+      "person_slug": "dave-sharma",
+      "person_pid": "10942",
+      "url": "https://www.youtube.com/watch?v=hrhVCRijTfo"
+    },
+    {
+      "id": "XOWMdk8bjRY",
+      "title": "Senate Question Time, 20 March 2024",
+      "published": "2024-03-21T23:20:38Z",
+      "kind": "question_time",
+      "date": "2024-03-20",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=XOWMdk8bjRY"
+    },
+    {
+      "id": "HOxKsRKweSg",
+      "title": "Senate Question Time, 18 March 2024",
+      "published": "2024-03-20T01:01:46Z",
+      "kind": "question_time",
+      "date": "2024-03-18",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=HOxKsRKweSg"
+    },
+    {
+      "id": "tR_AUvzarm4",
+      "title": "60 seconds in the Senate - The rolls",
+      "published": "2024-03-13T06:01:44Z",
+      "kind": "other",
+      "date": null,
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=tR_AUvzarm4"
+    },
+    {
+      "id": "QJFtd3UZOl8",
+      "title": "Senate Question Time, 29 February 2024",
+      "published": "2024-02-29T21:50:09Z",
+      "kind": "question_time",
+      "date": "2024-02-29",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=QJFtd3UZOl8"
+    },
+    {
+      "id": "FScyru0eIIE",
+      "title": "Senate Question Time, 28 February 2024",
+      "published": "2024-02-28T07:36:03Z",
+      "kind": "question_time",
+      "date": "2024-02-28",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=FScyru0eIIE"
+    },
+    {
+      "id": "PtRHUGOhAPk",
+      "title": "Senate Question Time, 27 February 2024",
+      "published": "2024-02-27T04:27:41Z",
+      "kind": "question_time",
+      "date": "2024-02-27",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=PtRHUGOhAPk"
+    },
+    {
+      "id": "xLeQJY7syOs",
+      "title": "Senate Question Time, 26 February 2024",
+      "published": "2024-02-26T04:19:50Z",
+      "kind": "question_time",
+      "date": "2024-02-26",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=xLeQJY7syOs"
+    },
+    {
+      "id": "VA6Psx4Rdeg",
+      "title": "Senate Question Time, 8 February 2024",
+      "published": "2024-02-08T06:24:20Z",
+      "kind": "question_time",
+      "date": "2024-02-08",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=VA6Psx4Rdeg"
+    },
+    {
+      "id": "hB-71EMfSoA",
+      "title": "Senate Question Time, 7 February 2024",
+      "published": "2024-02-07T04:29:10Z",
+      "kind": "question_time",
+      "date": "2024-02-07",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=hB-71EMfSoA"
+    },
+    {
+      "id": "JKRsqucaGng",
+      "title": "Senate Question Time, 6 February 2024",
+      "published": "2024-02-06T08:38:26Z",
+      "kind": "question_time",
+      "date": "2024-02-06",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=JKRsqucaGng"
+    },
+    {
+      "id": "6ULCC1Mc_Y8",
+      "title": "60 seconds in the Senate - Sand glasses",
+      "published": "2024-02-01T00:11:38Z",
+      "kind": "other",
+      "date": null,
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=6ULCC1Mc_Y8"
+    },
+    {
+      "id": "XnP2OzK3qZs",
+      "title": "Senate Question Time, 7 December 2023",
+      "published": "2023-12-07T21:54:26Z",
+      "kind": "question_time",
+      "date": "2023-12-07",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=XnP2OzK3qZs"
+    },
+    {
+      "id": "PnOcqtvS-a4",
+      "title": "Senate Question Time, 6 December 2023",
+      "published": "2023-12-06T04:27:18Z",
+      "kind": "question_time",
+      "date": "2023-12-06",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=PnOcqtvS-a4"
+    },
+    {
+      "id": "HV62rMggRvo",
+      "title": "Senate Question Time, 5 December 2023",
+      "published": "2023-12-05T04:47:16Z",
+      "kind": "question_time",
+      "date": "2023-12-05",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=HV62rMggRvo"
+    },
+    {
+      "id": "uoUR2gXiaZ4",
+      "title": "Senate Question Time, 4 December 2023",
+      "published": "2023-12-04T04:56:11Z",
+      "kind": "question_time",
+      "date": "2023-12-04",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=uoUR2gXiaZ4"
+    },
+    {
+      "id": "ReN-mUn2yD8",
+      "title": "Annual Harry Evans lecture - Hon Robert French AC",
+      "published": "2023-12-04T01:08:47Z",
+      "kind": "other",
+      "date": null,
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=ReN-mUn2yD8"
+    },
+    {
+      "id": "RUZ5omeaIeE",
+      "title": "Valedictory - Senator Dodson, 29 November 2023",
+      "published": "2023-12-04T00:33:09Z",
+      "kind": "other",
+      "date": "2023-11-29",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=RUZ5omeaIeE"
+    },
+    {
+      "id": "PZ3-mxs86mY",
+      "title": "Senate Question Time, 30 November 2023",
+      "published": "2023-12-01T01:08:12Z",
+      "kind": "question_time",
+      "date": "2023-11-30",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=PZ3-mxs86mY"
+    },
+    {
+      "id": "aovmjRFuHH8",
+      "title": "Senate Question Time, 29 November 2023",
+      "published": "2023-11-29T23:41:20Z",
+      "kind": "question_time",
+      "date": "2023-11-29",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=aovmjRFuHH8"
+    },
+    {
+      "id": "1u6VTGaQOHw",
+      "title": "Senate Question Time, 28 November 2023",
+      "published": "2023-11-28T06:04:02Z",
+      "kind": "question_time",
+      "date": "2023-11-28",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=1u6VTGaQOHw"
+    },
+    {
+      "id": "Cjaw_pk3HEU",
+      "title": "Senate Question Time, 27 November 2023",
+      "published": "2023-11-27T07:54:14Z",
+      "kind": "question_time",
+      "date": "2023-11-27",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=Cjaw_pk3HEU"
+    },
+    {
+      "id": "ymF_TArcz2s",
+      "title": "Senate Question Time, 17 November 2023",
+      "published": "2023-11-22T04:47:17Z",
+      "kind": "question_time",
+      "date": "2023-11-17",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=ymF_TArcz2s"
+    },
+    {
+      "id": "tOGddVuud1g",
+      "title": "Senate Question Time, 16 November 2023",
+      "published": "2023-11-16T07:30:53Z",
+      "kind": "question_time",
+      "date": "2023-11-16",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=tOGddVuud1g"
+    },
+    {
+      "id": "TbXyVn9qgeU",
+      "title": "Senate Question Time, 15 November 2023",
+      "published": "2023-11-15T08:55:00Z",
+      "kind": "question_time",
+      "date": "2023-11-15",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=TbXyVn9qgeU"
+    },
+    {
+      "id": "7fL_fFEbdqc",
+      "title": "Senate Question Time, 14 November 2023",
+      "published": "2023-11-14T05:44:18Z",
+      "kind": "question_time",
+      "date": "2023-11-14",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=7fL_fFEbdqc"
+    },
+    {
+      "id": "1U7m6DzjFrQ",
+      "title": "Senate Question Time, 13 November 2023",
+      "published": "2023-11-13T08:18:33Z",
+      "kind": "question_time",
+      "date": "2023-11-13",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=1U7m6DzjFrQ"
+    },
+    {
+      "id": "p4CMSDSjYrk",
+      "title": "Senate Question Time, 10 November 2023",
+      "published": "2023-11-13T08:14:56Z",
+      "kind": "question_time",
+      "date": "2023-11-10",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=p4CMSDSjYrk"
+    },
+    {
+      "id": "YdN6-cGRrow",
+      "title": "Senate Question Time, 9 November 2023",
+      "published": "2023-11-09T23:10:31Z",
+      "kind": "question_time",
+      "date": "2023-11-09",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=YdN6-cGRrow"
+    },
+    {
+      "id": "GExN9tOjivA",
+      "title": "Senate Question Time, 8 November 2023",
+      "published": "2023-11-09T01:54:29Z",
+      "kind": "question_time",
+      "date": "2023-11-08",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=GExN9tOjivA"
+    },
+    {
+      "id": "F82wMm7Nvi4",
+      "title": "Senate Question Time, 7 November 2023",
+      "published": "2023-11-07T08:43:14Z",
+      "kind": "question_time",
+      "date": "2023-11-07",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=F82wMm7Nvi4"
+    },
+    {
+      "id": "dQ3PL5oY8d8",
+      "title": "Senate Question Time, 6 November 2023",
+      "published": "2023-11-06T07:35:22Z",
+      "kind": "question_time",
+      "date": "2023-11-06",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=dQ3PL5oY8d8"
+    },
+    {
+      "id": "9f7HkVJb1qY",
+      "title": "Senate Question Time, 19 October 2023",
+      "published": "2023-10-20T00:23:10Z",
+      "kind": "question_time",
+      "date": "2023-10-19",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=9f7HkVJb1qY"
+    },
+    {
+      "id": "EEbMzSDQ0Bs",
+      "title": "Senate Question Time, 18 October 2023",
+      "published": "2023-10-19T03:59:32Z",
+      "kind": "question_time",
+      "date": "2023-10-18",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=EEbMzSDQ0Bs"
+    },
+    {
+      "id": "uAYzBxX78Fg",
+      "title": "Senate Question Time, 17 October 2023",
+      "published": "2023-10-19T01:48:25Z",
+      "kind": "question_time",
+      "date": "2023-10-17",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=uAYzBxX78Fg"
+    },
+    {
+      "id": "kIrQqekjTQc",
+      "title": "Senate Question Time, 16 October 2023",
+      "published": "2023-10-17T02:15:34Z",
+      "kind": "question_time",
+      "date": "2023-10-16",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=kIrQqekjTQc"
+    },
+    {
+      "id": "oWltxt-kvOU",
+      "title": "Senate Question Time, 14 September 2023",
+      "published": "2023-09-14T06:29:39Z",
+      "kind": "question_time",
+      "date": "2023-09-14",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=oWltxt-kvOU"
+    },
+    {
+      "id": "sWl2H8iSBiQ",
+      "title": "Valedictory - Senator Payne, 13 September 2023",
+      "published": "2023-09-13T08:58:26Z",
+      "kind": "other",
+      "date": "2023-09-13",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=sWl2H8iSBiQ"
+    },
+    {
+      "id": "zKx1C_3kKv8",
+      "title": "Senate Question Time, 13 September 2023",
+      "published": "2023-09-13T08:50:28Z",
+      "kind": "question_time",
+      "date": "2023-09-13",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=zKx1C_3kKv8"
+    },
+    {
+      "id": "UUug8Q8zRdk",
+      "title": "Senate Question Time, 12 September 2023",
+      "published": "2023-09-12T08:16:27Z",
+      "kind": "question_time",
+      "date": "2023-09-12",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=UUug8Q8zRdk"
+    },
+    {
+      "id": "sDW3qBsbBt0",
+      "title": "Senate Question Time, 11 September 2023",
+      "published": "2023-09-11T10:25:29Z",
+      "kind": "question_time",
+      "date": "2023-09-11",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=sDW3qBsbBt0"
+    },
+    {
+      "id": "9ewdRFCJBjs",
+      "title": "Senate Question Time, 7 September 2023",
+      "published": "2023-09-07T07:51:35Z",
+      "kind": "question_time",
+      "date": "2023-09-07",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=9ewdRFCJBjs"
+    },
+    {
+      "id": "FVRpTWF46XA",
+      "title": "Senate Question Time, 6 September 2023",
+      "published": "2023-09-06T08:22:32Z",
+      "kind": "question_time",
+      "date": "2023-09-06",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=FVRpTWF46XA"
+    },
+    {
+      "id": "x1t5a2WdZQs",
+      "title": "First Speech: Senator Kovacic - 5 September 2023",
+      "published": "2023-09-05T08:42:55Z",
+      "kind": "first_speech",
+      "date": "2023-09-05",
+      "chamber": "senate",
+      "person_slug": null,
+      "person_pid": null,
+      "url": "https://www.youtube.com/watch?v=x1t5a2WdZQs"
+    },
+    {
+      "id": "TeNk81IPXGM",
+      "title": "Senate Question Time, 5 September 2023",
+      "published": "2023-09-05T08:22:10Z",
+      "kind": "question_time",
+      "date": "2023-09-05",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=TeNk81IPXGM"
+    },
+    {
+      "id": "qmFeLbRf2Oc",
+      "title": "Senate Question Time, 4 September 2023",
+      "published": "2023-09-04T09:38:54Z",
+      "kind": "question_time",
+      "date": "2023-09-04",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=qmFeLbRf2Oc"
+    },
+    {
+      "id": "vc52PMZx1P4",
+      "title": "Senate Question Time, 10 August 2023",
+      "published": "2023-08-14T02:16:53Z",
+      "kind": "question_time",
+      "date": "2023-08-10",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=vc52PMZx1P4"
+    },
+    {
+      "id": "AYdu-L0Mq4s",
+      "title": "Senate Question Time, 9 August 2023",
+      "published": "2023-08-14T01:58:48Z",
+      "kind": "question_time",
+      "date": "2023-08-09",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=AYdu-L0Mq4s"
+    },
+    {
+      "id": "msxYwK0oyqg",
+      "title": "Senate Question Time, 8 August 2023",
+      "published": "2023-08-08T09:30:30Z",
+      "kind": "question_time",
+      "date": "2023-08-08",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=msxYwK0oyqg"
+    },
+    {
+      "id": "748ui4M9mQM",
+      "title": "Senate lecture series - Dr Harry Hobbs and Professor George Williams AO",
+      "published": "2023-08-07T07:26:34Z",
+      "kind": "other",
+      "date": null,
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=748ui4M9mQM"
+    },
+    {
+      "id": "kTo6tE7e0u4",
+      "title": "Senate Question Time, 7 August 2023",
+      "published": "2023-08-07T05:39:45Z",
+      "kind": "question_time",
+      "date": "2023-08-07",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=kTo6tE7e0u4"
+    },
+    {
+      "id": "WEFf4tQf220",
+      "title": "Senate Question Time, 3 August 2023",
+      "published": "2023-08-04T06:36:51Z",
+      "kind": "question_time",
+      "date": "2023-08-03",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=WEFf4tQf220"
+    },
+    {
+      "id": "qxTpIi-de6g",
+      "title": "Senate Question Time, 2 August 2023",
+      "published": "2023-08-02T09:23:22Z",
+      "kind": "question_time",
+      "date": "2023-08-02",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=qxTpIi-de6g"
+    },
+    {
+      "id": "Y3261V9zXtI",
+      "title": "Senate Question Time, 1 August 2023",
+      "published": "2023-08-01T08:14:30Z",
+      "kind": "question_time",
+      "date": "2023-08-01",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=Y3261V9zXtI"
+    },
+    {
+      "id": "tWVHCbv1QsI",
+      "title": "Senate Question Time, 31 July 2023",
+      "published": "2023-08-01T05:40:12Z",
+      "kind": "question_time",
+      "date": "2023-07-31",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=tWVHCbv1QsI"
+    },
+    {
+      "id": "UpVcDW7QPNo",
+      "title": "Senate Discovery: Referendum",
+      "published": "2023-07-04T07:19:15Z",
+      "kind": "other",
+      "date": null,
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=UpVcDW7QPNo"
+    },
+    {
+      "id": "Zs2ge6HkISQ",
+      "title": "Senate Question Time, 22 June 2023",
+      "published": "2023-06-30T04:41:02Z",
+      "kind": "question_time",
+      "date": "2023-06-22",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=Zs2ge6HkISQ"
+    },
+    {
+      "id": "vX2hZPGug9w",
+      "title": "Senate Question Time, 21 June 2023",
+      "published": "2023-06-22T04:11:57Z",
+      "kind": "question_time",
+      "date": "2023-06-21",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=vX2hZPGug9w"
+    },
+    {
+      "id": "Z2eT8LNuCIU",
+      "title": "Senate Question Time, 20 June 2023",
+      "published": "2023-06-20T07:42:00Z",
+      "kind": "question_time",
+      "date": "2023-06-20",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=Z2eT8LNuCIU"
+    },
+    {
+      "id": "kf4MBhH-r8E",
+      "title": "Senate Question Time, 19 June 2023",
+      "published": "2023-06-20T06:24:16Z",
+      "kind": "question_time",
+      "date": "2023-06-19",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=kf4MBhH-r8E"
+    },
+    {
+      "id": "68WMf_ehSCc",
+      "title": "Senate Question Time, 16 June 2023",
+      "published": "2023-06-19T04:55:52Z",
+      "kind": "question_time",
+      "date": "2023-06-16",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=68WMf_ehSCc"
+    },
+    {
+      "id": "7rFUfykXhIQ",
+      "title": "Senate Question Time, 15 June 2023",
+      "published": "2023-06-19T02:26:17Z",
+      "kind": "question_time",
+      "date": "2023-06-15",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=7rFUfykXhIQ"
+    },
+    {
+      "id": "WDtIHwdBZSw",
+      "title": "Senate Question Time, 14 June 2023",
+      "published": "2023-06-15T00:26:22Z",
+      "kind": "question_time",
+      "date": "2023-06-14",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=WDtIHwdBZSw"
+    },
+    {
+      "id": "bHreTLnQggc",
+      "title": "Senate Question Time, 13 June 2023",
+      "published": "2023-06-13T06:23:38Z",
+      "kind": "question_time",
+      "date": "2023-06-13",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=bHreTLnQggc"
+    },
+    {
+      "id": "Tf9XJ5Bz-iE",
+      "title": "Senate Question Time, 11 May 2023",
+      "published": "2023-05-12T06:27:11Z",
+      "kind": "question_time",
+      "date": "2023-05-11",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=Tf9XJ5Bz-iE"
+    },
+    {
+      "id": "-k4HQSmLATI",
+      "title": "Senate Question Time, 10 May 2023",
+      "published": "2023-05-10T07:49:01Z",
+      "kind": "question_time",
+      "date": "2023-05-10",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=-k4HQSmLATI"
+    },
+    {
+      "id": "OuqVsRK0blw",
+      "title": "Senate Question Time, 9 May 2023",
+      "published": "2023-05-10T06:55:09Z",
+      "kind": "question_time",
+      "date": "2023-05-09",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=OuqVsRK0blw"
+    },
+    {
+      "id": "N6wb7p7hrSE",
+      "title": "Senate Question Time, 30 March 2023",
+      "published": "2023-04-04T02:20:47Z",
+      "kind": "question_time",
+      "date": "2023-03-30",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=N6wb7p7hrSE"
+    },
+    {
+      "id": "VAudsvtng3Q",
+      "title": "Senate Question Time, 29 March 2023",
+      "published": "2023-03-29T06:06:30Z",
+      "kind": "question_time",
+      "date": "2023-03-29",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=VAudsvtng3Q"
+    },
+    {
+      "id": "tZzqUhCPjY4",
+      "title": "Senate Question Time, 28 March 2023",
+      "published": "2023-03-28T07:31:17Z",
+      "kind": "question_time",
+      "date": "2023-03-28",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=tZzqUhCPjY4"
+    },
+    {
+      "id": "pG1TE66IY1o",
+      "title": "Senate Question Time, 27 March 2023",
+      "published": "2023-03-28T07:24:24Z",
+      "kind": "question_time",
+      "date": "2023-03-27",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=pG1TE66IY1o"
+    },
+    {
+      "id": "mdJdXY87Zeg",
+      "title": "Senate Question Time, 24 March 2023",
+      "published": "2023-03-28T07:13:12Z",
+      "kind": "question_time",
+      "date": "2023-03-24",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=mdJdXY87Zeg"
+    },
+    {
+      "id": "ZbETk9MQ408",
+      "title": "Senate Question Time, 23 March 2023",
+      "published": "2023-03-23T04:24:38Z",
+      "kind": "question_time",
+      "date": "2023-03-23",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=ZbETk9MQ408"
+    },
+    {
+      "id": "AP0oFcb-1Q4",
+      "title": "Senate Question Time, 22 March 2023",
+      "published": "2023-03-22T04:27:34Z",
+      "kind": "question_time",
+      "date": "2023-03-22",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=AP0oFcb-1Q4"
+    },
+    {
+      "id": "mJTIQI-D3aM",
+      "title": "Senate Question Time, 21 March 2023",
+      "published": "2023-03-22T04:09:04Z",
+      "kind": "question_time",
+      "date": "2023-03-21",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=mJTIQI-D3aM"
+    },
+    {
+      "id": "tjh4orz7_lw",
+      "title": "Senate Question Time, 20 March 2023",
+      "published": "2023-03-22T03:01:17Z",
+      "kind": "question_time",
+      "date": "2023-03-20",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=tjh4orz7_lw"
+    },
+    {
+      "id": "WzqY2Co_bh4",
+      "title": "Senate Question Time, 9 March 2023",
+      "published": "2023-03-09T22:17:03Z",
+      "kind": "question_time",
+      "date": "2023-03-09",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=WzqY2Co_bh4"
+    },
+    {
+      "id": "pNhCP_NW1Mg",
+      "title": "Senate Question Time, 8 March 2023",
+      "published": "2023-03-08T04:33:57Z",
+      "kind": "question_time",
+      "date": "2023-03-08",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=pNhCP_NW1Mg"
+    },
+    {
+      "id": "3kIvV6PtZcs",
+      "title": "Senate Question Time, 7 March 2023",
+      "published": "2023-03-07T04:36:28Z",
+      "kind": "question_time",
+      "date": "2023-03-07",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=3kIvV6PtZcs"
+    },
+    {
+      "id": "JwgiVT4iLkw",
+      "title": "Senate Question Time, 6 March 2023",
+      "published": "2023-03-06T23:08:10Z",
+      "kind": "question_time",
+      "date": "2023-03-06",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=JwgiVT4iLkw"
+    },
+    {
+      "id": "rZNP8LydVnU",
+      "title": "Senate lecture series - Dr Marija Taflaga",
+      "published": "2023-02-15T05:39:07Z",
+      "kind": "other",
+      "date": null,
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=rZNP8LydVnU"
+    },
+    {
+      "id": "Vc6F0qS6INo",
+      "title": "Senate lecture series - Professor Anne Twomey",
+      "published": "2023-02-15T05:31:30Z",
+      "kind": "other",
+      "date": null,
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=Vc6F0qS6INo"
+    },
+    {
+      "id": "ekjkoQ-YOOQ",
+      "title": "Senate Question Time, 9 February 2023",
+      "published": "2023-02-09T04:50:12Z",
+      "kind": "question_time",
+      "date": "2023-02-09",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=ekjkoQ-YOOQ"
+    },
+    {
+      "id": "Sn5pZxy7Dd8",
+      "title": "Senate Question Time, 8 February 2023",
+      "published": "2023-02-08T04:33:50Z",
+      "kind": "question_time",
+      "date": "2023-02-08",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=Sn5pZxy7Dd8"
+    },
+    {
+      "id": "81ZBNYpw9Bk",
+      "title": "Senate Question Time, 7 February 2023",
+      "published": "2023-02-07T04:56:39Z",
+      "kind": "question_time",
+      "date": "2023-02-07",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=81ZBNYpw9Bk"
+    },
+    {
+      "id": "mUMLwDsy2G4",
+      "title": "Senate Question Time, 1 December 2022",
+      "published": "2022-12-01T04:41:38Z",
+      "kind": "question_time",
+      "date": "2022-12-01",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=mUMLwDsy2G4"
+    },
+    {
+      "id": "wwCiy2J5MCc",
+      "title": "Senate Question Time, 30 November 2022",
+      "published": "2022-11-30T04:27:00Z",
+      "kind": "question_time",
+      "date": "2022-11-30",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=wwCiy2J5MCc"
+    },
+    {
+      "id": "rA_LD1nM2NU",
+      "title": "Senate Question Time, 29 November 2022",
+      "published": "2022-11-29T04:30:59Z",
+      "kind": "question_time",
+      "date": "2022-11-29",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=rA_LD1nM2NU"
+    },
+    {
+      "id": "xDNDllLMFsc",
+      "title": "Senate Question Time, 28 November 2022",
+      "published": "2022-11-28T04:39:56Z",
+      "kind": "question_time",
+      "date": "2022-11-28",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=xDNDllLMFsc"
+    },
+    {
+      "id": "HBd3JWsRiNE",
+      "title": "Senate Question Time, 24 November 2022",
+      "published": "2022-11-25T00:48:42Z",
+      "kind": "question_time",
+      "date": "2022-11-24",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=HBd3JWsRiNE"
+    },
+    {
+      "id": "Br4hKivGFhY",
+      "title": "Senate Question Time, 23 November 2022",
+      "published": "2022-11-23T22:01:23Z",
+      "kind": "question_time",
+      "date": "2022-11-23",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=Br4hKivGFhY"
+    },
+    {
+      "id": "n3X7Z8IYb8Y",
+      "title": "Senate Question Time, 22 November 2022",
+      "published": "2022-11-23T21:51:54Z",
+      "kind": "question_time",
+      "date": "2022-11-22",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=n3X7Z8IYb8Y"
+    },
+    {
+      "id": "gBgNAQvP904",
+      "title": "Senate Question Time, 21 November 2022",
+      "published": "2022-11-22T00:32:15Z",
+      "kind": "question_time",
+      "date": "2022-11-21",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=gBgNAQvP904"
+    },
+    {
+      "id": "otRaxwaqLsA",
+      "title": "Senate Discovery: Budget and estimates",
+      "published": "2022-11-08T23:18:08Z",
+      "kind": "other",
+      "date": null,
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=otRaxwaqLsA"
+    },
+    {
+      "id": "tgYIsZZ7zZI",
+      "title": "Senate Question Time, 27 October 2022",
+      "published": "2022-10-27T05:08:07Z",
+      "kind": "question_time",
+      "date": "2022-10-27",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=tgYIsZZ7zZI"
+    },
+    {
+      "id": "di3BAH0xhJA",
+      "title": "Senate Question Time, 26 October 2022",
+      "published": "2022-10-26T05:06:45Z",
+      "kind": "question_time",
+      "date": "2022-10-26",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=di3BAH0xhJA"
+    },
+    {
+      "id": "ih3dO7m5xsg",
+      "title": "Senate Question Time, 25 October 2022",
+      "published": "2022-10-26T04:16:55Z",
+      "kind": "question_time",
+      "date": "2022-10-25",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=ih3dO7m5xsg"
+    },
+    {
+      "id": "X8BtwOh1Jxc",
+      "title": "Senate Question Time, 28 September 2022",
+      "published": "2022-09-28T07:39:55Z",
+      "kind": "question_time",
+      "date": "2022-09-28",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=X8BtwOh1Jxc"
+    },
+    {
+      "id": "TYBQLPoewjU",
+      "title": "Senate Question Time, 27 September 2022",
+      "published": "2022-09-28T07:18:39Z",
+      "kind": "question_time",
+      "date": "2022-09-27",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=TYBQLPoewjU"
+    },
+    {
+      "id": "6pXSXA3Ly_g",
+      "title": "Senate Question Time, 26 September 2022",
+      "published": "2022-09-27T04:14:43Z",
+      "kind": "question_time",
+      "date": "2022-09-26",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=6pXSXA3Ly_g"
+    },
+    {
+      "id": "_rUKfiPCGaA",
+      "title": "Senate Discovery: Opening of Parliament 2022",
+      "published": "2022-09-26T05:40:50Z",
+      "kind": "other",
+      "date": null,
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=_rUKfiPCGaA"
+    },
+    {
+      "id": "4rXrGvC1XVo",
+      "title": "Senate Question Time, 8 September 2022",
+      "published": "2022-09-08T05:56:54Z",
+      "kind": "question_time",
+      "date": "2022-09-08",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=4rXrGvC1XVo"
+    },
+    {
+      "id": "9YA36BmO9Kk",
+      "title": "First speech: Senator Liddle - 7 September 2022",
+      "published": "2022-09-08T01:29:40Z",
+      "kind": "first_speech",
+      "date": "2022-09-07",
+      "chamber": "senate",
+      "person_slug": null,
+      "person_pid": null,
+      "url": "https://www.youtube.com/watch?v=9YA36BmO9Kk"
+    },
+    {
+      "id": "69_whL0Wz9A",
+      "title": "Senate Question Time, 7 September 2022",
+      "published": "2022-09-07T05:45:04Z",
+      "kind": "question_time",
+      "date": "2022-09-07",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=69_whL0Wz9A"
+    },
+    {
+      "id": "fpJR37YX7Ek",
+      "title": "First speech: Senator Payman - 6 September 2022",
+      "published": "2022-09-06T23:47:22Z",
+      "kind": "first_speech",
+      "date": "2022-09-06",
+      "chamber": "senate",
+      "person_slug": null,
+      "person_pid": null,
+      "url": "https://www.youtube.com/watch?v=fpJR37YX7Ek"
+    },
+    {
+      "id": "bPy_67LOBho",
+      "title": "First speech: Senator Tyrrell - 6 September 2022",
+      "published": "2022-09-06T23:44:28Z",
+      "kind": "first_speech",
+      "date": "2022-09-06",
+      "chamber": "senate",
+      "person_slug": null,
+      "person_pid": null,
+      "url": "https://www.youtube.com/watch?v=bPy_67LOBho"
+    },
+    {
+      "id": "yg0C3V4bPMI",
+      "title": "Senate Question Time, 6 September 2022",
+      "published": "2022-09-06T23:38:58Z",
+      "kind": "question_time",
+      "date": "2022-09-06",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=yg0C3V4bPMI"
+    },
+    {
+      "id": "N9o6odcUjWo",
+      "title": "First speech: Senator Cadell - 5 September 2022",
+      "published": "2022-09-06T23:28:12Z",
+      "kind": "first_speech",
+      "date": "2022-09-05",
+      "chamber": "senate",
+      "person_slug": null,
+      "person_pid": null,
+      "url": "https://www.youtube.com/watch?v=N9o6odcUjWo"
+    },
+    {
+      "id": "mdoONsrZp2E",
+      "title": "First speech: Senator Linda White - 5 September 2022",
+      "published": "2022-09-06T23:22:36Z",
+      "kind": "first_speech",
+      "date": "2022-09-05",
+      "chamber": "senate",
+      "person_slug": null,
+      "person_pid": null,
+      "url": "https://www.youtube.com/watch?v=mdoONsrZp2E"
+    },
+    {
+      "id": "mkaxohAF808",
+      "title": "Senate Question Time, 5 September 2022",
+      "published": "2022-09-05T06:11:29Z",
+      "kind": "question_time",
+      "date": "2022-09-05",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=mkaxohAF808"
+    },
+    {
+      "id": "T_UZ3pLKO1s",
+      "title": "Parliamentary Joint Committee on Human Rights 10 Year Anniversary",
+      "published": "2022-08-23T04:30:05Z",
+      "kind": "other",
+      "date": null,
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=T_UZ3pLKO1s"
+    },
+    {
+      "id": "V_BnSp6UFjQ",
+      "title": "Senate lecture series - Mr Harry Jenkins AO, the Hon Ken Wyatt AM, Mr Graham Perrett MP",
+      "published": "2022-08-23T01:41:18Z",
+      "kind": "other",
+      "date": null,
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=V_BnSp6UFjQ"
+    },
+    {
+      "id": "h040yr8DWig",
+      "title": "First speech: Senator Babet - 3 August, 2022",
+      "published": "2022-08-05T05:13:31Z",
+      "kind": "first_speech",
+      "date": null,
+      "chamber": "senate",
+      "person_slug": null,
+      "person_pid": null,
+      "url": "https://www.youtube.com/watch?v=h040yr8DWig"
+    },
+    {
+      "id": "SnbGj3t--Mg",
+      "title": "First speech: Senator Barbara Pocock - 3 August, 2022",
+      "published": "2022-08-05T04:52:10Z",
+      "kind": "first_speech",
+      "date": null,
+      "chamber": "senate",
+      "person_slug": null,
+      "person_pid": null,
+      "url": "https://www.youtube.com/watch?v=SnbGj3t--Mg"
+    },
+    {
+      "id": "yAaoFX3iayc",
+      "title": "First speech: Senator Shoebridge - 2 August, 2022",
+      "published": "2022-08-05T04:49:11Z",
+      "kind": "first_speech",
+      "date": null,
+      "chamber": "senate",
+      "person_slug": null,
+      "person_pid": null,
+      "url": "https://www.youtube.com/watch?v=yAaoFX3iayc"
+    },
+    {
+      "id": "3L33ZSwxGAg",
+      "title": "First speech: Senator David Pocock - 2 August 2022",
+      "published": "2022-08-05T04:13:18Z",
+      "kind": "first_speech",
+      "date": "2022-08-02",
+      "chamber": "senate",
+      "person_slug": null,
+      "person_pid": null,
+      "url": "https://www.youtube.com/watch?v=3L33ZSwxGAg"
+    },
+    {
+      "id": "z-pHmkyM_S8",
+      "title": "First speech: Senator Allman-Payne - 1 August, 2022",
+      "published": "2022-08-05T04:00:42Z",
+      "kind": "first_speech",
+      "date": null,
+      "chamber": "senate",
+      "person_slug": null,
+      "person_pid": null,
+      "url": "https://www.youtube.com/watch?v=z-pHmkyM_S8"
+    },
+    {
+      "id": "Ah5uQg-eUDk",
+      "title": "First speech: Senator Nampijinpa Price - 27 July, 2022",
+      "published": "2022-08-05T03:52:54Z",
+      "kind": "first_speech",
+      "date": null,
+      "chamber": "senate",
+      "person_slug": null,
+      "person_pid": null,
+      "url": "https://www.youtube.com/watch?v=Ah5uQg-eUDk"
+    },
+    {
+      "id": "QXkfamnJga0",
+      "title": "First speech: Senator Stewart - 27 July, 2022",
+      "published": "2022-08-05T02:06:33Z",
+      "kind": "first_speech",
+      "date": null,
+      "chamber": "senate",
+      "person_slug": null,
+      "person_pid": null,
+      "url": "https://www.youtube.com/watch?v=QXkfamnJga0"
+    },
+    {
+      "id": "caczbXk8ft8",
+      "title": "Senate Question Time, 4 August 2022",
+      "published": "2022-08-05T01:41:47Z",
+      "kind": "question_time",
+      "date": "2022-08-04",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=caczbXk8ft8"
+    },
+    {
+      "id": "Oha8jJCh9vw",
+      "title": "Senate Question Time, 3 August 2022",
+      "published": "2022-08-04T06:18:24Z",
+      "kind": "question_time",
+      "date": "2022-08-03",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=Oha8jJCh9vw"
+    },
+    {
+      "id": "y8WMoJGd61s",
+      "title": "Senate Question Time, 2 August 2022",
+      "published": "2022-08-02T05:32:22Z",
+      "kind": "question_time",
+      "date": "2022-08-02",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=y8WMoJGd61s"
+    },
+    {
+      "id": "eVbLahSbwLk",
+      "title": "Senate Question Time, 1 August 2022",
+      "published": "2022-08-01T05:49:58Z",
+      "kind": "question_time",
+      "date": "2022-08-01",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=eVbLahSbwLk"
+    },
+    {
+      "id": "OnNtqFYvN8Y",
+      "title": "Senate Question Time, 28 July 2022",
+      "published": "2022-07-28T06:13:18Z",
+      "kind": "question_time",
+      "date": "2022-07-28",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=OnNtqFYvN8Y"
+    },
+    {
+      "id": "Pto3hdbDG7Y",
+      "title": "Senate Question Time, 27 July 2022",
+      "published": "2022-07-27T08:31:27Z",
+      "kind": "question_time",
+      "date": "2022-07-27",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=Pto3hdbDG7Y"
+    },
+    {
+      "id": "SxQAZMf7ZME",
+      "title": "Senate lecture series - Professor Cheryl Saunders AO",
+      "published": "2022-05-27T00:37:05Z",
+      "kind": "other",
+      "date": null,
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=SxQAZMf7ZME"
+    },
+    {
+      "id": "lXfHPvyOVgI",
+      "title": "Senate Discovery: 28 March to 8 April 2022",
+      "published": "2022-04-14T06:16:45Z",
+      "kind": "other",
+      "date": "2022-04-08",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=lXfHPvyOVgI"
+    },
+    {
+      "id": "7N6YptZGaf4",
+      "title": "Senate Question Time, 30 March 2022",
+      "published": "2022-03-31T05:36:35Z",
+      "kind": "question_time",
+      "date": "2022-03-30",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=7N6YptZGaf4"
+    },
+    {
+      "id": "wMPZfd7tTEs",
+      "title": "Senate Question Time, 29 March 2022",
+      "published": "2022-03-31T05:09:51Z",
+      "kind": "question_time",
+      "date": "2022-03-29",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=wMPZfd7tTEs"
+    },
+    {
+      "id": "vOrLoGVG32w",
+      "title": "Senate Discovery: February 8 - 18, 2022",
+      "published": "2022-02-24T03:51:04Z",
+      "kind": "other",
+      "date": null,
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=vOrLoGVG32w"
+    },
+    {
+      "id": "IdMXDyrmZqg",
+      "title": "Senate Question Time, 10 February 2022",
+      "published": "2022-02-11T04:31:44Z",
+      "kind": "question_time",
+      "date": "2022-02-10",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=IdMXDyrmZqg"
+    },
+    {
+      "id": "TVocLJS0uD8",
+      "title": "First speech: Senator Mirabella - 9 February, 2022",
+      "published": "2022-02-11T04:09:51Z",
+      "kind": "first_speech",
+      "date": null,
+      "chamber": "senate",
+      "person_slug": null,
+      "person_pid": null,
+      "url": "https://www.youtube.com/watch?v=TVocLJS0uD8"
+    },
+    {
+      "id": "77_Mp0pGYm4",
+      "title": "Senate Question Time, 9 February 2022",
+      "published": "2022-02-11T04:07:19Z",
+      "kind": "question_time",
+      "date": "2022-02-09",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=77_Mp0pGYm4"
+    },
+    {
+      "id": "3gTS6GZYzhc",
+      "title": "Senate Question Time, 8 February 2022",
+      "published": "2022-02-11T03:59:02Z",
+      "kind": "question_time",
+      "date": "2022-02-08",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=3gTS6GZYzhc"
+    },
+    {
+      "id": "pj3anThtRQ4",
+      "title": "Senate Discovery: November 22 - December 2, 2021",
+      "published": "2021-12-14T23:56:36Z",
+      "kind": "other",
+      "date": null,
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=pj3anThtRQ4"
+    },
+    {
+      "id": "X-GMlKiomio",
+      "title": "Senate Occasional Lecture - Dr Ben Gauntlett",
+      "published": "2021-12-06T23:25:58Z",
+      "kind": "other",
+      "date": null,
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=X-GMlKiomio"
+    },
+    {
+      "id": "kWXsCROaKg0",
+      "title": "Senate Question Time, 2 December 2021",
+      "published": "2021-12-06T23:07:00Z",
+      "kind": "question_time",
+      "date": "2021-12-02",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=kWXsCROaKg0"
+    },
+    {
+      "id": "ziiCI7ULek0",
+      "title": "Senate Question Time, 1 December 2021",
+      "published": "2021-12-02T06:07:54Z",
+      "kind": "question_time",
+      "date": "2021-12-01",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=ziiCI7ULek0"
+    },
+    {
+      "id": "9bRkJTEJ4L0",
+      "title": "Senate Question Time, 30 November 2021",
+      "published": "2021-12-02T04:22:24Z",
+      "kind": "question_time",
+      "date": "2021-11-30",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=9bRkJTEJ4L0"
+    },
+    {
+      "id": "nQrwXhdT0gs",
+      "title": "Senate Question Time, 29 November 2021",
+      "published": "2021-12-02T04:11:18Z",
+      "kind": "question_time",
+      "date": "2021-11-29",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=nQrwXhdT0gs"
+    },
+    {
+      "id": "-E1eT_gmd-g",
+      "title": "Senate Question Time, 25 November 2021",
+      "published": "2021-12-02T03:43:27Z",
+      "kind": "question_time",
+      "date": "2021-11-25",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=-E1eT_gmd-g"
+    },
+    {
+      "id": "2Dd6S11tnb8",
+      "title": "Senate Question Time, 24 November 2021",
+      "published": "2021-12-02T03:23:08Z",
+      "kind": "question_time",
+      "date": "2021-11-24",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=2Dd6S11tnb8"
+    },
+    {
+      "id": "hqpzGCsR7Ko",
+      "title": "Senate Question Time, 23 November 2021",
+      "published": "2021-12-01T07:02:54Z",
+      "kind": "question_time",
+      "date": "2021-11-23",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=hqpzGCsR7Ko"
+    },
+    {
+      "id": "spkHNwZ3lPE",
+      "title": "Senate Question Time, 22 November 2021",
+      "published": "2021-12-01T06:53:13Z",
+      "kind": "question_time",
+      "date": "2021-11-22",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=spkHNwZ3lPE"
+    },
+    {
+      "id": "Z3Pcy7S_ueM",
+      "title": "First speech: Senator Grogan - 20 October, 2021",
+      "published": "2021-11-04T05:32:48Z",
+      "kind": "first_speech",
+      "date": null,
+      "chamber": "senate",
+      "person_slug": null,
+      "person_pid": null,
+      "url": "https://www.youtube.com/watch?v=Z3Pcy7S_ueM"
+    },
+    {
+      "id": "G5UTPY0EcCY",
+      "title": "First speech: Senator Cox - 19 October, 2021",
+      "published": "2021-11-04T05:30:27Z",
+      "kind": "first_speech",
+      "date": null,
+      "chamber": "senate",
+      "person_slug": null,
+      "person_pid": null,
+      "url": "https://www.youtube.com/watch?v=G5UTPY0EcCY"
+    },
+    {
+      "id": "zg1eAUK5LYc",
+      "title": "Senate Discovery: October 18 - 29, 2021",
+      "published": "2021-11-04T05:05:12Z",
+      "kind": "other",
+      "date": null,
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=zg1eAUK5LYc"
+    },
+    {
+      "id": "8eVjjB1DY8E",
+      "title": "Senate Question Time, 21 October 2021",
+      "published": "2021-10-22T03:53:24Z",
+      "kind": "question_time",
+      "date": "2021-10-21",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=8eVjjB1DY8E"
+    },
+    {
+      "id": "o0O6OCGRRQ4",
+      "title": "Senate Question Time, 20 October 2021",
+      "published": "2021-10-20T23:52:27Z",
+      "kind": "question_time",
+      "date": "2021-10-20",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=o0O6OCGRRQ4"
+    },
+    {
+      "id": "oDQjYREZprI",
+      "title": "Senate Question Time, 19 October 2021",
+      "published": "2021-10-19T07:26:14Z",
+      "kind": "question_time",
+      "date": "2021-10-19",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=oDQjYREZprI"
+    },
+    {
+      "id": "mQ3hnl__Q-s",
+      "title": "Senate Question Time, 18 October 2021",
+      "published": "2021-10-19T06:56:00Z",
+      "kind": "question_time",
+      "date": "2021-10-18",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=mQ3hnl__Q-s"
+    },
+    {
+      "id": "AsLD5IplziI",
+      "title": "Senate Question Time, 2 September 2021",
+      "published": "2021-09-02T11:36:22Z",
+      "kind": "question_time",
+      "date": "2021-09-02",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=AsLD5IplziI"
+    },
+    {
+      "id": "ZGagmoH83c0",
+      "title": "Senate Question Time, 1 September 2021",
+      "published": "2021-09-01T11:29:39Z",
+      "kind": "question_time",
+      "date": "2021-09-01",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=ZGagmoH83c0"
+    },
+    {
+      "id": "KXUfeKL6X9I",
+      "title": "Senate Question Time, 31 August 2021",
+      "published": "2021-08-31T08:47:27Z",
+      "kind": "question_time",
+      "date": "2021-08-31",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=KXUfeKL6X9I"
+    },
+    {
+      "id": "qZXEE0QTXek",
+      "title": "Senate Question Time, 26 August 2021",
+      "published": "2021-08-27T05:22:57Z",
+      "kind": "question_time",
+      "date": "2021-08-26",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=qZXEE0QTXek"
+    },
+    {
+      "id": "UEQcYovEL7Y",
+      "title": "Senate Question Time, 25 August 2021",
+      "published": "2021-08-25T11:19:40Z",
+      "kind": "question_time",
+      "date": "2021-08-25",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=UEQcYovEL7Y"
+    },
+    {
+      "id": "ZDSPUYetGeM",
+      "title": "Senate Question Time, 24 August 2021",
+      "published": "2021-08-24T10:29:51Z",
+      "kind": "question_time",
+      "date": "2021-08-24",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=ZDSPUYetGeM"
+    },
+    {
+      "id": "0Y7BKwiCExQ",
+      "title": "Senate Question Time, 23 August 2021",
+      "published": "2021-08-23T23:48:44Z",
+      "kind": "question_time",
+      "date": "2021-08-23",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=0Y7BKwiCExQ"
+    },
+    {
+      "id": "sfb4IRktDxY",
+      "title": "Senate Question Time, 12 August 2021",
+      "published": "2021-08-12T23:15:35Z",
+      "kind": "question_time",
+      "date": "2021-08-12",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=sfb4IRktDxY"
+    },
+    {
+      "id": "1dCOfWiotLk",
+      "title": "Senate Question Time, 11 August 2021",
+      "published": "2021-08-11T08:53:46Z",
+      "kind": "question_time",
+      "date": "2021-08-11",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=1dCOfWiotLk"
+    },
+    {
+      "id": "n__vQPi2tUE",
+      "title": "Senate Question Time, 10 August 2021",
+      "published": "2021-08-11T05:41:41Z",
+      "kind": "question_time",
+      "date": "2021-08-10",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=n__vQPi2tUE"
+    },
+    {
+      "id": "z_tAKt_gpfE",
+      "title": "Senate Question Time, 9 August 2021",
+      "published": "2021-08-11T05:19:59Z",
+      "kind": "question_time",
+      "date": "2021-08-09",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=z_tAKt_gpfE"
+    },
+    {
+      "id": "ToYJPukr8Jk",
+      "title": "Senate Question Time, 5 August 2021",
+      "published": "2021-08-11T05:08:35Z",
+      "kind": "question_time",
+      "date": "2021-08-05",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=ToYJPukr8Jk"
+    },
+    {
+      "id": "t59fDpFztQs",
+      "title": "Senate Question Time, 4 August 2021",
+      "published": "2021-08-11T05:01:18Z",
+      "kind": "question_time",
+      "date": "2021-08-04",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=t59fDpFztQs"
+    },
+    {
+      "id": "-N6luddaehY",
+      "title": "Senate Question Time, 3 August 2021",
+      "published": "2021-08-11T04:54:09Z",
+      "kind": "question_time",
+      "date": "2021-08-03",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=-N6luddaehY"
+    },
+    {
+      "id": "xivY_ekhjks",
+      "title": "Senate Discovery: June 15 - 24, 2021",
+      "published": "2021-06-29T01:36:47Z",
+      "kind": "other",
+      "date": null,
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=xivY_ekhjks"
+    },
+    {
+      "id": "TL7rVyjv9jY",
+      "title": "Senate Question Time, 24 June 2021",
+      "published": "2021-06-29T01:29:36Z",
+      "kind": "question_time",
+      "date": "2021-06-24",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=TL7rVyjv9jY"
+    },
+    {
+      "id": "jb00l_sV0pg",
+      "title": "Senate Question Time, 23 June 2021",
+      "published": "2021-06-29T01:24:03Z",
+      "kind": "question_time",
+      "date": "2021-06-23",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=jb00l_sV0pg"
+    },
+    {
+      "id": "hzFYZzUQ9C8",
+      "title": "Senate Question Time, 22 June 2021",
+      "published": "2021-06-29T01:17:12Z",
+      "kind": "question_time",
+      "date": "2021-06-22",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=hzFYZzUQ9C8"
+    },
+    {
+      "id": "Dw4eC1LF5Aw",
+      "title": "Senate Occasional Lecture - Dr Sarah Moulds",
+      "published": "2021-06-29T01:06:44Z",
+      "kind": "other",
+      "date": null,
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=Dw4eC1LF5Aw"
+    },
+    {
+      "id": "mHEDTkdghnU",
+      "title": "Senate Question Time, 21 June 2021",
+      "published": "2021-06-29T01:05:04Z",
+      "kind": "question_time",
+      "date": "2021-06-21",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=mHEDTkdghnU"
+    },
+    {
+      "id": "EkDfwy0JMhs",
+      "title": "Senate Occasional Lecture - Professor Megan Davis",
+      "published": "2021-06-29T00:35:45Z",
+      "kind": "other",
+      "date": null,
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=EkDfwy0JMhs"
+    },
+    {
+      "id": "j1AsjPRxYM0",
+      "title": "Senate Question Time, 17 June 2021",
+      "published": "2021-06-28T03:41:07Z",
+      "kind": "question_time",
+      "date": "2021-06-17",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=j1AsjPRxYM0"
+    },
+    {
+      "id": "90HmZiL4maE",
+      "title": "Senate Question Time, 16 June 2021",
+      "published": "2021-06-28T02:45:33Z",
+      "kind": "question_time",
+      "date": "2021-06-16",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=90HmZiL4maE"
+    },
+    {
+      "id": "JrzzjYoK0xQ",
+      "title": "Senate Question Time, 15 June 2021",
+      "published": "2021-06-28T02:43:18Z",
+      "kind": "question_time",
+      "date": "2021-06-15",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=JrzzjYoK0xQ"
+    },
+    {
+      "id": "lvSJzLThbqg",
+      "title": "Senate Discovery: May 11 - 13, 2021",
+      "published": "2021-05-18T00:28:07Z",
+      "kind": "other",
+      "date": null,
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=lvSJzLThbqg"
+    },
+    {
+      "id": "6aM9dPooO0A",
+      "title": "Senate Question Time, 13 May 2021",
+      "published": "2021-05-14T07:14:59Z",
+      "kind": "question_time",
+      "date": "2021-05-13",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=6aM9dPooO0A"
+    },
+    {
+      "id": "VPb4H5Jb5aA",
+      "title": "Senate Question Time, 12 May 2021",
+      "published": "2021-05-14T07:11:34Z",
+      "kind": "question_time",
+      "date": "2021-05-12",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=VPb4H5Jb5aA"
+    },
+    {
+      "id": "sIPx7HyqTeE",
+      "title": "Senate Question Time, 11 May 2021",
+      "published": "2021-05-14T07:07:02Z",
+      "kind": "question_time",
+      "date": "2021-05-11",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=sIPx7HyqTeE"
+    },
+    {
+      "id": "izxJ4h1-8OI",
+      "title": "Death of HRH The Prince Philip, Duke of Edinburgh",
+      "published": "2021-05-14T06:23:19Z",
+      "kind": "other",
+      "date": null,
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=izxJ4h1-8OI"
+    },
+    {
+      "id": "Px0YkgdaQ0c",
+      "title": "Senate Discovery: March 15 - 26, 2021",
+      "published": "2021-03-30T04:35:55Z",
+      "kind": "other",
+      "date": null,
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=Px0YkgdaQ0c"
+    },
+    {
+      "id": "o7fMq_ueGxM",
+      "title": "Senate Question Time, 18 March 2021",
+      "published": "2021-03-18T07:01:31Z",
+      "kind": "question_time",
+      "date": "2021-03-18",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=o7fMq_ueGxM"
+    },
+    {
+      "id": "U6SNfANCcBk",
+      "title": "Senate Question Time, 17 March 2021",
+      "published": "2021-03-18T03:55:40Z",
+      "kind": "question_time",
+      "date": "2021-03-17",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=U6SNfANCcBk"
+    },
+    {
+      "id": "AOVYMPQpeLg",
+      "title": "Senate Question Time, 16 March 2021",
+      "published": "2021-03-16T04:51:55Z",
+      "kind": "question_time",
+      "date": "2021-03-16",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=AOVYMPQpeLg"
+    },
+    {
+      "id": "m8ln5ZN4z6c",
+      "title": "Senate Question Time, 15 March 2021",
+      "published": "2021-03-16T00:30:28Z",
+      "kind": "question_time",
+      "date": "2021-03-15",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=m8ln5ZN4z6c"
+    },
+    {
+      "id": "clsbdziehUM",
+      "title": "Senate Discovery: February 15 - 25, 2021",
+      "published": "2021-03-01T05:25:10Z",
+      "kind": "other",
+      "date": null,
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=clsbdziehUM"
+    },
+    {
+      "id": "yfARcYQKZzY",
+      "title": "Senate Question Time, 25 February 2021",
+      "published": "2021-03-01T05:16:40Z",
+      "kind": "question_time",
+      "date": "2021-02-25",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=yfARcYQKZzY"
+    },
+    {
+      "id": "ZHWMmVEu_sg",
+      "title": "Senate Question Time, 24 February 2021",
+      "published": "2021-03-01T05:11:25Z",
+      "kind": "question_time",
+      "date": "2021-02-24",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=ZHWMmVEu_sg"
+    },
+    {
+      "id": "V9sLFuvnWE8",
+      "title": "Senate Question Time, 23 February 2021",
+      "published": "2021-03-01T05:00:35Z",
+      "kind": "question_time",
+      "date": "2021-02-23",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=V9sLFuvnWE8"
+    },
+    {
+      "id": "2kw8Q3ugYpI",
+      "title": "Senate Question Time, 22 February 2021",
+      "published": "2021-03-01T04:58:13Z",
+      "kind": "question_time",
+      "date": "2021-02-22",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=2kw8Q3ugYpI"
+    },
+    {
+      "id": "96Re7s6v1vc",
+      "title": "Senate Question Time, 18 February 2021",
+      "published": "2021-02-18T05:28:56Z",
+      "kind": "question_time",
+      "date": "2021-02-18",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=96Re7s6v1vc"
+    },
+    {
+      "id": "iGup-7qsL9Y",
+      "title": "Senate Question Time, 17 February 2021",
+      "published": "2021-02-17T23:49:22Z",
+      "kind": "question_time",
+      "date": "2021-02-17",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=iGup-7qsL9Y"
+    },
+    {
+      "id": "SvvYwwpbh8E",
+      "title": "Senate Question Time, 16 February 2021",
+      "published": "2021-02-17T23:43:15Z",
+      "kind": "question_time",
+      "date": "2021-02-16",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=SvvYwwpbh8E"
+    },
+    {
+      "id": "_TiDlKkfXdE",
+      "title": "Senate Question Time, 15 February 2021",
+      "published": "2021-02-17T23:40:04Z",
+      "kind": "question_time",
+      "date": "2021-02-15",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=_TiDlKkfXdE"
+    },
+    {
+      "id": "pKOGDf7lJPg",
+      "title": "Senate Occasional Lecture - Dr Sarah Cameron & Professor Ian McAllister",
+      "published": "2021-02-12T03:29:30Z",
+      "kind": "other",
+      "date": null,
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=pKOGDf7lJPg"
+    },
+    {
+      "id": "W_3ff2m-faI",
+      "title": "Senate Discovery: February 2 - 4, 2021",
+      "published": "2021-02-08T23:57:06Z",
+      "kind": "other",
+      "date": null,
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=W_3ff2m-faI"
+    },
+    {
+      "id": "boQuaT19t7A",
+      "title": "Senate Question Time, 4 February 2021",
+      "published": "2021-02-08T00:58:49Z",
+      "kind": "question_time",
+      "date": "2021-02-04",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=boQuaT19t7A"
+    },
+    {
+      "id": "Nfxi8Msnhk4",
+      "title": "First speech: Senator Small - 3 February, 2021",
+      "published": "2021-02-08T00:54:18Z",
+      "kind": "first_speech",
+      "date": null,
+      "chamber": "senate",
+      "person_slug": null,
+      "person_pid": null,
+      "url": "https://www.youtube.com/watch?v=Nfxi8Msnhk4"
+    },
+    {
+      "id": "R-tc_DSmduc",
+      "title": "Senate Question Time, February 3 2021",
+      "published": "2021-02-08T00:52:27Z",
+      "kind": "question_time",
+      "date": null,
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=R-tc_DSmduc"
+    },
+    {
+      "id": "m5EAQfjin_Q",
+      "title": "Senate Question Time, February 2 2021",
+      "published": "2021-02-08T00:49:06Z",
+      "kind": "question_time",
+      "date": null,
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=m5EAQfjin_Q"
+    },
+    {
+      "id": "nqrO2wzz_jc",
+      "title": "Senate Discovery: November 30 - December 10, 2020",
+      "published": "2020-12-14T23:38:27Z",
+      "kind": "other",
+      "date": null,
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=nqrO2wzz_jc"
+    },
+    {
+      "id": "dr1vuB9UZng",
+      "title": "Senate Question Time, 10 December 2020",
+      "published": "2020-12-14T23:36:11Z",
+      "kind": "question_time",
+      "date": "2020-12-10",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=dr1vuB9UZng"
+    },
+    {
+      "id": "tYriUd7Bd10",
+      "title": "Senate Question Time, 9 December 2020",
+      "published": "2020-12-10T06:28:34Z",
+      "kind": "question_time",
+      "date": "2020-12-09",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=tYriUd7Bd10"
+    },
+    {
+      "id": "r_18fYLKaDQ",
+      "title": "Senate Question Time, 8 December 2020",
+      "published": "2020-12-10T06:26:07Z",
+      "kind": "question_time",
+      "date": "2020-12-08",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=r_18fYLKaDQ"
+    },
+    {
+      "id": "5OtgDy_CuaM",
+      "title": "Senate Question Time, 7 December 2020",
+      "published": "2020-12-10T06:09:58Z",
+      "kind": "question_time",
+      "date": "2020-12-07",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=5OtgDy_CuaM"
+    },
+    {
+      "id": "xhbrq8xPDcU",
+      "title": "Senate Question Time, 3 December 2020",
+      "published": "2020-12-03T05:35:29Z",
+      "kind": "question_time",
+      "date": "2020-12-03",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=xhbrq8xPDcU"
+    },
+    {
+      "id": "GRopg-qWNyU",
+      "title": "First speech: Senator Thorpe - 2 December, 2020",
+      "published": "2020-12-03T05:22:02Z",
+      "kind": "first_speech",
+      "date": null,
+      "chamber": "senate",
+      "person_slug": null,
+      "person_pid": null,
+      "url": "https://www.youtube.com/watch?v=GRopg-qWNyU"
+    },
+    {
+      "id": "fI5xqYrY1Sw",
+      "title": "Senate Question Time, 2 December 2020",
+      "published": "2020-12-03T04:17:46Z",
+      "kind": "question_time",
+      "date": "2020-12-02",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=fI5xqYrY1Sw"
+    },
+    {
+      "id": "yrhEgfWjyXo",
+      "title": "Senate Committees - Celebrating 50 Years",
+      "published": "2020-12-02T04:56:02Z",
+      "kind": "other",
+      "date": null,
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=yrhEgfWjyXo"
+    },
+    {
+      "id": "JvtpU7AX8B8",
+      "title": "Senate Question Time, 1 December 2020",
+      "published": "2020-12-02T04:48:52Z",
+      "kind": "question_time",
+      "date": "2020-12-01",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=JvtpU7AX8B8"
+    },
+    {
+      "id": "lezIz2vkx6I",
+      "title": "Senate Question Time, 30 November 2020",
+      "published": "2020-12-02T04:40:21Z",
+      "kind": "question_time",
+      "date": "2020-11-30",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=lezIz2vkx6I"
+    },
+    {
+      "id": "8RQWW7oahhA",
+      "title": "Senate Discovery: November 9 - 12, 2020",
+      "published": "2020-11-17T04:59:22Z",
+      "kind": "other",
+      "date": null,
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=8RQWW7oahhA"
+    },
+    {
+      "id": "BCgQyk3RMo4",
+      "title": "Senate Question Time, 12 November 2020",
+      "published": "2020-11-16T00:44:37Z",
+      "kind": "question_time",
+      "date": "2020-11-12",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=BCgQyk3RMo4"
+    },
+    {
+      "id": "y8jlVjF_3-I",
+      "title": "Senate Question Time, 11 November 2020",
+      "published": "2020-11-11T04:28:31Z",
+      "kind": "question_time",
+      "date": "2020-11-11",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=y8jlVjF_3-I"
+    },
+    {
+      "id": "a6Zmt9WF6zA",
+      "title": "Senate Question Time, 10 November 2020",
+      "published": "2020-11-11T03:41:24Z",
+      "kind": "question_time",
+      "date": "2020-11-10",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=a6Zmt9WF6zA"
+    },
+    {
+      "id": "kxlTtdZgTKc",
+      "title": "Senate Question Time, 9 November 2020",
+      "published": "2020-11-11T03:33:29Z",
+      "kind": "question_time",
+      "date": "2020-11-09",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=kxlTtdZgTKc"
+    },
+    {
+      "id": "x4edr4ME-ak",
+      "title": "Valedictory speech - Senator Cormann, 9 October 2020",
+      "published": "2020-10-15T06:16:45Z",
+      "kind": "other",
+      "date": "2020-10-09",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=x4edr4ME-ak"
+    },
+    {
+      "id": "MEtAhHHYL84",
+      "title": "Senate Discovery: October 6 - 9, 2020",
+      "published": "2020-10-15T05:48:35Z",
+      "kind": "other",
+      "date": null,
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=MEtAhHHYL84"
+    },
+    {
+      "id": "vzQv2mDMrbY",
+      "title": "Senate Question Time, 8 October 2020",
+      "published": "2020-10-15T05:47:10Z",
+      "kind": "question_time",
+      "date": "2020-10-08",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=vzQv2mDMrbY"
+    },
+    {
+      "id": "CU4EXR3CLCM",
+      "title": "Senate Question Time, 7 October 2020",
+      "published": "2020-10-15T05:42:20Z",
+      "kind": "question_time",
+      "date": "2020-10-07",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=CU4EXR3CLCM"
+    },
+    {
+      "id": "Rq7Edu8n2U8",
+      "title": "Senate Question Time, 6 October 2020",
+      "published": "2020-10-15T05:38:04Z",
+      "kind": "question_time",
+      "date": "2020-10-06",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=Rq7Edu8n2U8"
+    },
+    {
+      "id": "Ss5pvoOOpKQ",
+      "title": "Senate Discovery: August 24 - September 3, 2020",
+      "published": "2020-09-08T06:15:20Z",
+      "kind": "other",
+      "date": null,
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=Ss5pvoOOpKQ"
+    },
+    {
+      "id": "fHvgeAjOuos",
+      "title": "Senate Question Time, 3 September 2020",
+      "published": "2020-09-08T06:11:37Z",
+      "kind": "question_time",
+      "date": "2020-09-03",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=fHvgeAjOuos"
+    },
+    {
+      "id": "F1Sirc5uZws",
+      "title": "Senate Question Time, 2 September 2020",
+      "published": "2020-09-08T06:08:15Z",
+      "kind": "question_time",
+      "date": "2020-09-02",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=F1Sirc5uZws"
+    },
+    {
+      "id": "NVExjHAtO8o",
+      "title": "Senate Question Time, 1 September 2020",
+      "published": "2020-09-01T23:53:54Z",
+      "kind": "question_time",
+      "date": "2020-09-01",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=NVExjHAtO8o"
+    },
+    {
+      "id": "NYRaIhbKUZE",
+      "title": "Senate Question Time, 31 August 2020",
+      "published": "2020-08-31T07:07:41Z",
+      "kind": "question_time",
+      "date": "2020-08-31",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=NYRaIhbKUZE"
+    },
+    {
+      "id": "XLUFIgmRhZg",
+      "title": "Senate Question Time, 27 August 2020",
+      "published": "2020-08-31T06:47:07Z",
+      "kind": "question_time",
+      "date": "2020-08-27",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=XLUFIgmRhZg"
+    },
+    {
+      "id": "kug0qek1XQg",
+      "title": "Senate Question Time, 26 August 2020",
+      "published": "2020-08-26T08:29:09Z",
+      "kind": "question_time",
+      "date": "2020-08-26",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=kug0qek1XQg"
+    },
+    {
+      "id": "kn0SoG26_UE",
+      "title": "Valedictory speech - Senator Di Natale, 25 August 2020",
+      "published": "2020-08-26T07:43:01Z",
+      "kind": "other",
+      "date": "2020-08-25",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=kn0SoG26_UE"
+    },
+    {
+      "id": "PbFBurLjiPE",
+      "title": "Senate Question Time, 25 August 2020",
+      "published": "2020-08-26T05:16:18Z",
+      "kind": "question_time",
+      "date": "2020-08-25",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=PbFBurLjiPE"
+    },
+    {
+      "id": "5_mBFVjdPJk",
+      "title": "Senate Question Time, 24 August 2020",
+      "published": "2020-08-26T05:02:53Z",
+      "kind": "question_time",
+      "date": "2020-08-24",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=5_mBFVjdPJk"
+    },
+    {
+      "id": "-S1uKtznYbM",
+      "title": "President's Statement - COVID-19: Parliamentary Procedure",
+      "published": "2020-08-26T04:48:41Z",
+      "kind": "other",
+      "date": null,
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=-S1uKtznYbM"
+    },
+    {
+      "id": "uXXzPkFVsNs",
+      "title": "First speech: Senator McLachlan - 26 February 2020",
+      "published": "2020-08-07T06:04:20Z",
+      "kind": "first_speech",
+      "date": "2020-02-26",
+      "chamber": "senate",
+      "person_slug": null,
+      "person_pid": null,
+      "url": "https://www.youtube.com/watch?v=uXXzPkFVsNs"
+    },
+    {
+      "id": "vXHZKo2DzqA",
+      "title": "Senate Discovery: June 10 - 18, 2020",
+      "published": "2020-08-07T05:55:48Z",
+      "kind": "other",
+      "date": null,
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=vXHZKo2DzqA"
+    },
+    {
+      "id": "DvyPZY7UIi0",
+      "title": "Senate Question Time, 18 June 2020",
+      "published": "2020-08-07T05:53:18Z",
+      "kind": "question_time",
+      "date": "2020-06-18",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=DvyPZY7UIi0"
+    },
+    {
+      "id": "g9EX6Kx6t7c",
+      "title": "Senate Question Time, 17 June 2020",
+      "published": "2020-08-07T05:45:00Z",
+      "kind": "question_time",
+      "date": "2020-06-17",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=g9EX6Kx6t7c"
+    },
+    {
+      "id": "unU2jwQX4Hs",
+      "title": "Senate Question Time, 16 June 2020",
+      "published": "2020-08-07T05:38:38Z",
+      "kind": "question_time",
+      "date": "2020-06-16",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=unU2jwQX4Hs"
+    },
+    {
+      "id": "dLpqdUtkm8A",
+      "title": "Senate Question Time, 15 June 2020",
+      "published": "2020-08-07T05:28:50Z",
+      "kind": "question_time",
+      "date": "2020-06-15",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=dLpqdUtkm8A"
+    },
+    {
+      "id": "_6DreZLynls",
+      "title": "Senate Question Time, 12 June 2020",
+      "published": "2020-08-07T05:22:43Z",
+      "kind": "question_time",
+      "date": "2020-06-12",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=_6DreZLynls"
+    },
+    {
+      "id": "YqYZZ1z4Fsk",
+      "title": "Senate Question Time, 11 June 2020",
+      "published": "2020-08-07T05:11:59Z",
+      "kind": "question_time",
+      "date": "2020-06-11",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=YqYZZ1z4Fsk"
+    },
+    {
+      "id": "UjyhmIDXzB4",
+      "title": "50th anniversary of Senate committees, 11 June 2020",
+      "published": "2020-08-07T05:06:26Z",
+      "kind": "other",
+      "date": "2020-06-11",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=UjyhmIDXzB4"
+    },
+    {
+      "id": "ayWuqH_ZuME",
+      "title": "Senate Question Time, 10 June 2020",
+      "published": "2020-08-07T05:04:09Z",
+      "kind": "question_time",
+      "date": "2020-06-10",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=ayWuqH_ZuME"
+    },
+    {
+      "id": "bd6IU_vEfEs",
+      "title": "Senate Discovery: May 12 - 14, 2020",
+      "published": "2020-08-07T04:53:22Z",
+      "kind": "other",
+      "date": null,
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=bd6IU_vEfEs"
+    },
+    {
+      "id": "vvtLpP6kVPg",
+      "title": "Senate Question Time - 14 May 2020",
+      "published": "2020-08-07T04:47:44Z",
+      "kind": "question_time",
+      "date": "2020-05-14",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=vvtLpP6kVPg"
+    },
+    {
+      "id": "-CbMtvwg-To",
+      "title": "Senate Question Time - 13 May 2020",
+      "published": "2020-08-07T04:43:39Z",
+      "kind": "question_time",
+      "date": "2020-05-13",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=-CbMtvwg-To"
+    },
+    {
+      "id": "zehrHot4D80",
+      "title": "Senate Question Time - 12 May 2020",
+      "published": "2020-08-07T04:37:19Z",
+      "kind": "question_time",
+      "date": "2020-05-12",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=zehrHot4D80"
+    },
+    {
+      "id": "rCYB0865w98",
+      "title": "Senate Discovery: March 23 & April 8, 2020",
+      "published": "2020-08-07T04:31:13Z",
+      "kind": "other",
+      "date": null,
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=rCYB0865w98"
+    },
+    {
+      "id": "iDDBDC46WEE",
+      "title": "Senate Question Time, 8 April 2020",
+      "published": "2020-08-07T04:29:11Z",
+      "kind": "question_time",
+      "date": "2020-04-08",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=iDDBDC46WEE"
+    },
+    {
+      "id": "lytUXOIVfnA",
+      "title": "Senator's statements on COVID-19, 8 April 2020",
+      "published": "2020-08-07T04:22:43Z",
+      "kind": "other",
+      "date": "2020-04-08",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=lytUXOIVfnA"
+    },
+    {
+      "id": "nsohmRB6iJM",
+      "title": "Senate Question Time, 23 March 2020",
+      "published": "2020-08-07T04:22:00Z",
+      "kind": "question_time",
+      "date": "2020-03-23",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=nsohmRB6iJM"
+    },
+    {
+      "id": "OYuIiGS4J3A",
+      "title": "Senator's statements on COVID-19, 23 March 2020",
+      "published": "2020-08-07T04:16:32Z",
+      "kind": "other",
+      "date": "2020-03-23",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=OYuIiGS4J3A"
+    },
+    {
+      "id": "YYi0oTan5pk",
+      "title": "Senate Occasional Lecture - Nick Mitzevich, \"The Art of Democracy\" (6 Mar 2020)",
+      "published": "2020-08-07T04:14:50Z",
+      "kind": "other",
+      "date": null,
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=YYi0oTan5pk"
+    },
+    {
+      "id": "bi4j6OwHcmA",
+      "title": "Senate Discovery: February 24 - March 6, 2020",
+      "published": "2020-08-07T04:08:48Z",
+      "kind": "other",
+      "date": null,
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=bi4j6OwHcmA"
+    },
+    {
+      "id": "ZgHuB92B7fk",
+      "title": "Senate Question Time, 27 February 2020",
+      "published": "2020-08-07T04:00:14Z",
+      "kind": "question_time",
+      "date": "2020-02-27",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=ZgHuB92B7fk"
+    },
+    {
+      "id": "_D5jwkwU3IA",
+      "title": "Senate Question Time, 26 February 2020",
+      "published": "2020-08-07T03:53:20Z",
+      "kind": "question_time",
+      "date": "2020-02-26",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=_D5jwkwU3IA"
+    },
+    {
+      "id": "VJmyU9e5HnI",
+      "title": "Senate Question Time, 25 February 2020",
+      "published": "2020-08-07T03:51:39Z",
+      "kind": "question_time",
+      "date": "2020-02-25",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=VJmyU9e5HnI"
+    },
+    {
+      "id": "kbRMNQWDpak",
+      "title": "Senate Question Time, 24 February 2020",
+      "published": "2020-08-07T03:48:38Z",
+      "kind": "question_time",
+      "date": "2020-02-24",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=kbRMNQWDpak"
+    },
+    {
+      "id": "J_LxCvBTJVI",
+      "title": "Senate Discovery: February 4 - 13, 2020",
+      "published": "2020-08-07T03:42:13Z",
+      "kind": "other",
+      "date": null,
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=J_LxCvBTJVI"
+    },
+    {
+      "id": "5EJkKJpjxQw",
+      "title": "Senate Question Time, 13 February 2020",
+      "published": "2020-07-31T01:24:19Z",
+      "kind": "question_time",
+      "date": "2020-02-13",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=5EJkKJpjxQw"
+    },
+    {
+      "id": "hcyMy8rRsfc",
+      "title": "Senate Question Time, 12 February 2020",
+      "published": "2020-07-31T01:20:54Z",
+      "kind": "question_time",
+      "date": "2020-02-12",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=hcyMy8rRsfc"
+    },
+    {
+      "id": "N1MeDuKDrkw",
+      "title": "Senate Question Time, 11 February 2020",
+      "published": "2020-07-31T01:15:21Z",
+      "kind": "question_time",
+      "date": "2020-02-11",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=N1MeDuKDrkw"
+    },
+    {
+      "id": "ghDvpLdYObI",
+      "title": "Senate Question Time, 10 February 2020",
+      "published": "2020-07-31T01:07:01Z",
+      "kind": "question_time",
+      "date": "2020-02-10",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=ghDvpLdYObI"
+    },
+    {
+      "id": "REE4Cl7Rx6w",
+      "title": "Senate Question Time, 6 February 2020",
+      "published": "2020-07-29T07:17:49Z",
+      "kind": "question_time",
+      "date": "2020-02-06",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=REE4Cl7Rx6w"
+    },
+    {
+      "id": "XNzpQdevwlM",
+      "title": "Senate Question Time, 5 February 2020",
+      "published": "2020-07-29T07:15:48Z",
+      "kind": "question_time",
+      "date": "2020-02-05",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=XNzpQdevwlM"
+    },
+    {
+      "id": "IALehmPzWNY",
+      "title": "Bushfire condolences, 4 February 2020",
+      "published": "2020-07-29T06:52:19Z",
+      "kind": "other",
+      "date": "2020-02-04",
+      "chamber": "senate",
+      "url": "https://www.youtube.com/watch?v=IALehmPzWNY"
     }
   ]
 }
