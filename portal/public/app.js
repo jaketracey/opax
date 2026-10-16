@@ -13,7 +13,7 @@ const donorNameHTML = name => donorLabelHTML(disclosedDonor(name));
 
 "use strict";
 let voteTables;
-const voteTablesReady = import("/vote-tables.js?v=0bd25687c4").then(module => { voteTables = module; });
+const voteTablesReady = import("/vote-tables.js?v=8473700573").then(module => { voteTables = module; });
 let divisionMarkdown;
 const divisionMarkdownReady = import('/division-markdown.js?v=5991511166').then(module => { divisionMarkdown = module; });
 // The labels and source lines (labels.js); the first render waits for them.
@@ -5607,7 +5607,6 @@ async function renderPersonVotes(name, personId, sections, onRecord = () => {}) 
   if (currentSubjectKey !== key) return;
   const slot = $("subject-votes");
   if (!slot) return;
-  const lname = String(name || "").trim().toLowerCase();
   const keys = voteTables.personVoteKeys(name, personId, votesData);
   const recs = keys.map((k) => votesData?.[k]).filter((r) => r && typeof r === "object");
   if (!recs.length) { slot.remove(); return; }
@@ -5624,10 +5623,9 @@ async function renderPersonVotes(name, personId, sections, onRecord = () => {}) 
   Object.assign(slot.dataset, {module: "latest_bills", pageType: "person", modulePosition: "2"});
   const recentData = await fetch("/seo/recent-votes.json").then(r => r.ok ? r.json() : null).catch(() => null);
   if (currentSubjectKey !== key || !slot.isConnected) return;
-  const recent = recentData?._meta?.schema === 1 && recentData._meta.source === "opax-parli-db" && recentData._meta.coverage === "recorded"
-    ? keys.flatMap(k => { const r = recentData.people?.[k]; return r?.name?.trim().toLowerCase() === lname ? r.recent || [] : []; }) : [];
-  const rows = voteTables.votingRows((recent.length ? recent : all), billIndex?.bills || []);
-  const config = voteTables.voteTableConfig(keys, recent.length ? "Recorded votes" : "Latest exported bill votes");
+  const recent = voteTables.personVoteRecords(keys, votesData, recentData);
+  const rows = voteTables.votingRows(recent.rows, billIndex?.bills || []);
+  const config = voteTables.voteTableConfig(keys, recent.recorded ? "Recorded votes" : "Latest exported bill votes");
   const total = sum("divisions_total");
   const ayes = sum("ayes");
   const noes = sum("noes");
@@ -13043,8 +13041,11 @@ function renderDivisionDoc({ d, entry, bills }, slug, manageFocus) {
   const { title, house } = divisionHeading(d, entry);
   $("doc-title").textContent = title;
   // They Vote For You counts the federal divisions; a state division is read from its Hansard.
+  // A federal day They Vote For You has not published yet is read from OpenAustralia's Hansard XML.
   const federal = !d.jurisdiction || d.jurisdiction === "federal";
-  const countSource = federal ? "The count on They Vote For You" : "The division in the official Hansard";
+  const openAustralia = federal && /^https:\/\/data\.openaustralia\.org\.au\//.test(String(d.source_url || ""));
+  const countSource = openAustralia ? "The division in the Hansard on OpenAustralia" : federal ? "The count on They Vote For You" : "The division in the official Hansard";
+  const countBy = openAustralia ? "OpenAustralia" : federal ? "They Vote For You" : "Official Hansard";
   setCrumbs(bills[0]?.key
     ? crumbsFor("/bills", { label: bills[0].title, href: `/bill/${encodeURIComponent(bills[0].key)}` }, "Division")
     : crumbsFor("/ask?view=search", "Division"));
@@ -13087,7 +13088,7 @@ function renderDivisionDoc({ d, entry, bills }, slug, manageFocus) {
     </section>
     ${question ? `<section class="ui-section division-block division-question-block"><details class="ui-disclosure division-question"><summary>The question</summary><div class="ui-disclosure-body division-markdown">${billNoteHTML(question)}</div></details></section>` : ""}
     ${sourceLineHTML({
-      updated: retrieved, dateLabel: retrieved ? "Retrieved" : "Updated", source: federal ? "They Vote For You" : "Official Hansard",
+      updated: retrieved, dateLabel: retrieved ? "Retrieved" : "Updated", source: countBy,
       originals: [safeUrl(d.source_url) && { label: countSource, href: d.source_url }, ...bills.map((b) => ({ label: b.title, href: `/bill/${encodeURIComponent(b.key)}` }))].filter(Boolean),
       notes: [
         members.length ? `${members.length} members named; ${absent} absent.` : "The names are read from the division's own record in the OPAX index; the export lists only the counts.",

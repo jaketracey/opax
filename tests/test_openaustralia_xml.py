@@ -64,6 +64,29 @@ def test_normal_sitting_resolves_people_bills_counts_and_question():
     assert [(v.person_id,v.vote) for v in votes] == [('tvfy_101','aye'),('tvfy_102','no')]
 
 
+def test_the_next_question_put_is_not_this_divisions_result():
+    db = db_fixture(); raw = (FIXTURES / 'sitting.xml').read_bytes()
+    lost = raw.replace(b'noes="1"', b'noes="2"').replace(
+        b'<p>Question agreed to.</p>', b'<p>The question now is that the bill be read a second time be agreed to.</p>')
+    _, divisions, _, _ = X.parse_day(lost, 'senate', '2026-10-13', people(db), {})
+    assert divisions[0].result == 'negative'
+    # Even a misread resolution cannot carry a vote the noes won; a tie can still be carried.
+    contradicted = raw.replace(b'noes="1"', b'noes="2"')
+    assert X.parse_day(contradicted, 'senate', '2026-10-13', people(db), {})[1][0].result == 'negative'
+    assert normal(db)[1][0].result == 'affirmative'
+
+
+def test_reread_corrects_an_outcome_this_parser_recorded_only():
+    db = db_fixture(); _, divisions, votes, _ = normal(db)
+    X.apply_divisions(db, divisions, votes)
+    db.execute("UPDATE ext_divisions SET result='negative'")
+    X.apply_divisions(db, divisions, votes)
+    assert db.execute('SELECT result FROM ext_divisions').fetchone()[0] == 'affirmative'
+    db.execute("UPDATE ext_divisions SET result='negative', source='theyvoteforyou'")
+    X.apply_divisions(db, divisions, votes)
+    assert db.execute('SELECT result FROM ext_divisions').fetchone()[0] == 'negative'
+
+
 def test_zero_byte_day_never_removes_cached_rows(tmp_path):
     db = db_fixture(); stage = tmp_path
     for name in ('people.xml','senators.xml'):

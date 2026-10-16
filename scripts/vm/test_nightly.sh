@@ -1074,6 +1074,14 @@ FAKE_DIVISIONS_MODE=new_division FAKE_NODE_RED_WHILE_CHANGED=portal/public/divis
 check "later portal rollback also restores dependent SEO bytes" bash -c "[ '$NRC' -eq 1 ] && git --git-dir='$ORIGIN' diff --quiet main~1 main -- portal/public/divisions portal/public/seo/recent-votes.json"
 check "division gate rollback keeps the catch-up marker" test -e "$HOME/.cache/autoresearch/pipeline/divisions-refresh-v1.pending"
 check "rolled-back pages also hold bill relationships" bash -c "! git --git-dir='$ORIGIN' show main:portal/public/bills/au-federal-t1.json | grep -q federal-senate-2"
+# 17 Oct: the catch-up's new pages were untracked files. A test red only while a NEW page exists must be blamed on
+# the divisions group: putting the group back to HEAD removes the page, so the trial really tests HEAD, and the
+# rollback leaves nothing under the group in the checkout.
+new_sandbox s30newpage
+mkdir -p "$REPO/portal/node_modules" "$REPO/portal/test"
+FAKE_DIVISIONS_MODE=new_division FAKE_NODE_RED_WHILE_CHANGED=portal/public/divisions/division-federal-senate-2.json nightly
+check "a test red only while a new division page exists blames divisions, not main" bash -c "[ '$NRC' -eq 1 ] && git --git-dir='$ORIGIN' show nightly-status:status.json | grep -q 'new divisions files (green with only that group put back to HEAD)' && ! git --git-dir='$ORIGIN' show nightly-status:status.json | grep -q 'red on main itself'"
+check "the new page is not published and the rollback leaves no file under the division groups" bash -c "! git --git-dir='$ORIGIN' ls-tree -r --name-only main | grep -q division-federal-senate-2 && [ -z \"\$(git -C '$REPO' status --porcelain -- portal/public/divisions portal/public/seo/recent-votes.json)\" ]"
 new_sandbox s30validation
 python3 - <<PYEOF
 from pathlib import Path

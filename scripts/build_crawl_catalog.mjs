@@ -267,9 +267,12 @@ export async function buildCrawl(root, {read: sourceRead} = {}) {
     const d=await read(`divisions/${row.slug || `division-${row.key}`}.json`);
     divisions.set(d.key,d);
   }
+  // Division pages are exported with votes.json, not with the bills (a paused bills source must
+  // not turn every newer division's date into a fallback, as on 17 Oct).
+  const divisionsAt = latestDate([bills.generated_at,votes._meta?.content_changed_at]);
   for (const [key,d] of divisions) {
     const path = `/doc/${encodeURIComponent(key.startsWith('division-') ? key : `division-${key}`)}`;
-    add('divisions',path,latestDate([d.updated_at,d.date],bills.generated_at),undefined,bills.generated_at);
+    add('divisions',path,latestDate([d.updated_at,d.date],divisionsAt),undefined,divisionsAt);
     if(indexnowDivisions.has(key)) snapshot.set(path,hash(indexnowDivisions.get(key)));
   }
   const grants = {};

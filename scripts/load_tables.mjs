@@ -9,7 +9,7 @@ import {instrumentTableRows} from '../portal/public/instruments.js';
 import {categoryMembers} from '../portal/public/register-tables.js';
 import {donorDisclosure} from '../portal/public/donor-disclosure.js';
 import {contractTitle, placeholderContract, ausTenderURL} from '../portal/public/contracts-table.js';
-import {divisionRows,votingRows} from '../portal/public/vote-tables.js';
+import {divisionRows,votingRows,personVoteRecords} from '../portal/public/vote-tables.js';
 
 const defaultRoot = fileURLToPath(new URL('../portal/public/', import.meta.url));
 export async function interestTableRows(root) {
@@ -80,9 +80,9 @@ export async function tableRows(root = defaultRoot, {moneyOnly = false, graphs: 
   }
   // Preserve the schema-1 votes export byte for byte; this is a separate projection.
   const recent = await read('seo/recent-votes.json');
-  for (const [person, v] of Object.entries(await read('votes.json'))) if (v && typeof v === 'object' && typeof v.name === 'string') {
-    const recorded = recent._meta?.schema===1 && recent._meta.source==='opax-parli-db' && recent._meta.coverage==='recorded' ? recent.people?.[person]?.recent : null;
-    const records = recorded?.length ? recorded : [...(v.for || []).map(row=>({...row,vote:'For the bill'})),...(v.against || []).map(row=>({...row,vote:'Against the bill'}))];
+  const votes = await read('votes.json');
+  for (const [person, v] of Object.entries(votes)) if (v && typeof v === 'object' && typeof v.name === 'string') {
+    const records = personVoteRecords([person],votes,recent).rows;
     for (const [i,record] of votingRows(records,bills).entries()) add('votes', {...record,id:`${person}:${i}`,person,name:v.name,party:v.party,jurisdiction:v.jurisdiction,house:v.house,ayes:v.ayes,noes:v.noes,divisions_total:v.divisions_total,first_year:v.years?.[0] ?? null,last_year:v.years?.at(-1) ?? null});
   }
   const instruments = await read('instruments/index.json');

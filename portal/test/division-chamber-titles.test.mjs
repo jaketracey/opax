@@ -42,10 +42,25 @@ test('every chamber code has a reader name, and an unknown code is never shown',
   assert.equal(chamberLabel('senate'), 'Senate');
   assert.equal(chamberLabel('xx_zz'), '');
   assert.equal(chamberLabel(null), '');
-  // Every house the published divisions carry is named.
-  const houses = new Set(readdirSync(new URL('../public/divisions/', import.meta.url))
-    .filter((f) => f.startsWith('division-')).map((f) => f.replace(/^division-(federal-)?/, '').replace(/-\d.*$/, '').replace('-', '_')));
-  for (const house of houses) assert.ok(CHAMBER_LABELS[house], house);
+});
+
+// The chamber is the record's own house, never read off its key: a federal day They Vote For You
+// has not published yet is keyed from OpenAustralia's XML (division-federal-senate-oa-2026-10-15-3,
+// 17 Oct) and is still the Senate. One division is one page: the XML key is used only where
+// They Vote For You has no division with that house, date and number.
+test('every published division names its chamber, and one federal division has one page', () => {
+  const dir = new URL('../public/divisions/', import.meta.url);
+  const pages = new Map();
+  for (const file of readdirSync(dir).filter((f) => f.startsWith('division-'))) {
+    const d = JSON.parse(readFileSync(new URL(file, dir), 'utf8'));
+    assert.ok(CHAMBER_LABELS[d.house], `${file}: house ${d.house}`);
+    if (d.jurisdiction !== 'federal') continue;
+    const number = /-oa-\d{4}-\d{2}-\d{2}-(\d+)$/.exec(d.key)?.[1] ?? /\/divisions\/[a-z]+\/\d{4}-\d{2}-\d{2}\/(\d+)$/.exec(d.source_url || '')?.[1];
+    if (!number) continue;
+    const id = `${d.house} ${d.date} ${Number(number)}`;
+    assert.ok(!pages.has(id), `${file} and ${pages.get(id)} are one division (${id})`);
+    pages.set(id, file);
+  }
 });
 
 /** app.js's division heading and page renderer, with the page's DOM and helpers stubbed. */
@@ -90,6 +105,18 @@ test('a state division is headed by its motion, with its chamber by name in the 
     const federal = d.jurisdiction === 'federal';
     assert.equal(ctx.$('doc-text').innerHTML.includes('They Vote For You'), federal, `${code}: the count's source`);
   }
+  // A division read from OpenAustralia's XML names its chamber and its source, never the key's "oa".
+  for (const [house, name] of [['senate', 'Senate'], ['representatives', 'House of Representatives']]) {
+    const d = { key: `federal-${house}-oa-2026-10-15-3`, house, jurisdiction: 'federal', date: '2026-10-15', ayes: 25, noes: 32,
+      result: 'negative', name: MOTION, question: MOTION, members: [],
+      source_url: `https://data.openaustralia.org.au/scrapedxml/${house}_debates/2026-10-15.xml` };
+    assert.equal(ctx.divisionHeading(d, null).house, name);
+    ctx.renderDivisionDoc({ d, entry: null, bills: [] }, `division-${d.key}`, false);
+    const text = ['doc-title', 'doc-meta', 'doc-bill', 'doc-text'].map((id) => ctx.$(id).innerHTML + ctx.$(id).textContent).join(' ');
+    assert.ok(ctx.$('doc-meta').innerHTML.includes(name), `${house}: the meta line names the chamber`);
+    assert.doesNotMatch(text, /\b(?:representatives|senate)[_-]oa\b|They Vote For You/, house);
+    assert.match(ctx.$('doc-text').innerHTML, /OpenAustralia/, `${house}: the count's source`);
+  }
   // A recorded title still leads; with neither title nor motion the heading is plain "Division".
   assert.equal(ctx.divisionHeading({ house: 'vic_la', name: MOTION }, { title: 'Second reading' }).title, 'Second reading');
   assert.deepEqual({ ...ctx.divisionHeading({ house: 'xx_zz' }, null) }, { title: 'Division', house: 'Parliament' });
@@ -104,5 +131,11 @@ test("the Worker's division page has one h1, the motion, and names the chamber",
     assert.match(html, /<h1>That the following words be added to the end of the motion: ‘and notes the report’\.<\/h1>/, code);
     assert.ok(description.startsWith(`${chamberLabel(code)}, 2026-09-10.`), code);
     assert.doesNotMatch(html, RAW, code);
+  }
+  for (const [house, name] of [['senate', 'Senate'], ['representatives', 'House of Representatives']]) {
+    const { html, description } = renderDivisionAnswer({ key: `federal-${house}-oa-2026-10-15-3`, house, jurisdiction: 'federal',
+      date: '2026-10-15', result: 'negative', ayes: 25, noes: 32, name: MOTION, question: MOTION, members: [], bills: [] }, [], new Map());
+    assert.ok(description.startsWith(`${name}, 2026-10-15.`), house);
+    assert.doesNotMatch(html, /[_-]oa\b/, house);
   }
 });

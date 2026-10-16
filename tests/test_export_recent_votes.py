@@ -82,8 +82,18 @@ class RecentVotesTests(unittest.TestCase):
 
     def test_committed_separate_asset_has_no_hand_picked_sample(self):
         data = json.loads((ROOT / 'portal/public/seo/recent-votes.json').read_text())
-        self.assertEqual(data['people'], {})
-        self.assertEqual(data['_meta']['coverage'], 'unavailable')
+        meta = data['_meta']
+        if meta['coverage'] == 'unavailable':
+            self.assertEqual(data['people'], {})
+        else:
+            # The nightly's projection (17 Oct on): every person, bounded, and only published divisions.
+            self.assertEqual((meta['schema'], meta['source'], meta['coverage']), (1, 'opax-parli-db', 'recorded'))
+            self.assertEqual(meta['person_count'], len(data['people']))
+            pages = {p.stem for p in (ROOT / 'portal/public/divisions').glob('division-*.json')}
+            for person in data['people'].values():
+                self.assertTrue(0 < len(person['recent']) <= meta['limit'])
+                for row in person['recent']:
+                    self.assertIn(row['division_slug'], pages)
         self.assertEqual(json.loads((ROOT / 'portal/public/votes.json').read_text())['_meta']['schema'], 1)
 
     def test_equal_count_same_day_regression_is_refused_but_new_window_can_advance(self):
