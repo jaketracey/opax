@@ -57,3 +57,27 @@ for (const kind of kinds) {
     assert.ok(result.imports.length > 0, 'The real browser module imports must run');
   });
 }
+
+// Jake, 16 Oct: the Parliamentarians bar keeps search, Party, Parliament, Chamber
+// and the sort; the "Voting record" and "Portrait" checkboxes are gone. An old
+// link that still carries their params lists everyone and drops them from the URL.
+test('the parliamentarians bar has no checkboxes and old votes/photo links load the full list', { timeout: 40000 }, async () => {
+  const count = html => html.match(/id="dir-count"[^>]*>([^<]*)</)[1];
+  const clean = await render('person', { html: true });
+  assert.deepEqual(clean.errors, []);
+  assert.doesNotMatch(clean.html, /type="checkbox"|Voting record<\/label>|Portrait<\/label>/);
+  for (const key of ['party', 'state', 'chamber']) assert.match(clean.html, new RegExp(`<select data-filter="${key}"`));
+  assert.match(clean.html, /id="dir-q"/);
+  assert.match(clean.html, /<option value="speeches" selected(="")?>Most speeches<\/option>/);
+  assert.match(count(clean.html), /^[\d,]+ parliamentarians$/);
+
+  const old = await render('person', { html: true, path: '/subject/person?votes=1&photo=1' });
+  assert.deepEqual(old.errors, []);
+  assert.equal(old.failed, false);
+  assert.equal(count(old.html), count(clean.html), 'old params do not narrow the list');
+  assert.equal(old.location, '/subject/person');
+  assert.equal(old.search, '', 'old params are not written back');
+
+  const mixed = await render('person', { html: true, path: '/subject/person?votes=1&sort=name&photo=1' });
+  assert.equal(mixed.search, '?sort=name', 'live params survive, retired ones drop');
+});

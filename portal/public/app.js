@@ -7559,7 +7559,6 @@ async function buildPeopleDirectory() {
     .map(([party, n]) => countOpt(party, party, n));
   partyOptions.push(countOpt("none", "No party recorded", items.filter((p) => !p.party).length));
   const speeches = items.reduce((a, p) => a + (p.speeches || 0), 0);
-  const withVotes = items.filter((p) => p._divisions > 0).length;
   const meta = data.meta || {};
   const num = (n) => Number(n || 0).toLocaleString();
 
@@ -7602,8 +7601,6 @@ async function buildPeopleDirectory() {
       { key: "chamber", label: "Chamber",
         options: Object.keys(DIR_CHAMBERS).filter((c) => chamberCounts.has(c)).map((c) => countOpt(c, DIR_CHAMBERS[c], chamberCounts.get(c))),
         test: (p, v) => (p.chambers || []).includes(v) },
-      { key: "votes", label: "Voting record", check: true, test: (p) => p._divisions > 0 },
-      { key: "photo", label: "Portrait", check: true, test: (p) => Boolean(p._photo) },
     ],
     sorts: [
       ["speeches", "Most speeches", byNumDesc((p) => p.speeches)],

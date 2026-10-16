@@ -144,7 +144,7 @@ async function run() {
     await new Promise(resolve => setTimeout(resolve, workerData.settleMs || 20));
     return {
       rows: body.querySelectorAll(selector).length, failed: failed || failure.test(body.innerHTML),
-      html: workerData.html ? body.innerHTML : undefined, location: window.location.pathname,
+      html: workerData.html ? body.innerHTML : undefined, location: window.location.pathname, search: window.location.search,
       honestFailure: body.textContent.includes('The directory could not be loaded. Try again shortly.'),
       visible: !window.document.getElementById('panel-subject').hidden, errors,
       scripts: scripts.filter(node => node.src).map(node => new URL(node.src).pathname),
