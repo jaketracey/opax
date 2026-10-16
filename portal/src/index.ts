@@ -1,4 +1,4 @@
-import {contractsHubHTML} from '../public/contracts-table.js'
+import {CONTRACTS_COVERAGE,contractsHubHTML} from '../public/contracts-table.js'
 import {suppliersTableHTML} from '../public/suppliers-table.js'
 import {partyMoneyResponse} from './party-money-table'
 import {interestRegisterResponse} from './interest-register'
@@ -3704,7 +3704,7 @@ const STATIC_PAGES: Record<string, { title: string; description: string; query?:
     title: 'Interactive tools · OPAX',
     description: 'Play with the parliamentary record: the time machine, the record quiz, the donations ledger, who gets the grants and the money map.',
   },
-  discover: {
+  'money/contracts': {
     title: 'Government contracts · OPAX',
     description: 'See which companies take the biggest share of government contracts. Compare suppliers with simple charts, explore political funding connections and check the source records.',
   },
@@ -3821,7 +3821,7 @@ function matchSeoRoute(url: URL): SeoRoute | null {
     return null
   }
   if (segs.length === 5 && dec[0] === 'money' && dec[1] === 'grants' && (dec[2] === 'federal' || dec[2] === 'qld') && dec[3] === 'recipient' && GRANT_RECIPIENT_ID_RE.test(dec[4])) return { kind: 'grant-recipient', jurisdiction: dec[2], id: dec[4] }
-  if (segs.length === 2 && dec[0] === 'money' && ['receipts', 'grants', 'explain'].includes(dec[1])) return { kind: 'static', page: dec.join('/') }
+  if (segs.length === 2 && dec[0] === 'money' && ['receipts', 'grants', 'contracts', 'explain'].includes(dec[1])) return { kind: 'static', page: dec.join('/') }
   if (segs.length === 1 && dec[0] in STATIC_PAGES) return { kind: 'static', page: dec[0] }
   if (dec[0] === 'reports' && /^[a-z][a-z0-9-]*$/.test(dec[1] ?? '')) {
     // /reports/<slug> and its section deep links /reports/<slug>/s/<n>
@@ -4563,13 +4563,13 @@ async function buildMeta(route: SeoRoute, url: URL, request: Request, env: Env, 
       const response=await timed('table-query',()=>tableApi(new Request('https://local.invalid/api/table/suppliers?'+query),env))
       const page=!response.ok ? {rows:[],total:0,page:1,pageSize:50,facets:{}} : await response.json() as Page
       meta.prerender=answerBlock('Government suppliers','Recorded Commonwealth contract awards. Values are commitments, not verified payments.',suppliersTableHTML(page,params))
-    } else if(route.kind==='static' && route.page==='discover') {
-      const facts=await renderMoneyAnswer('Government contracts',read)
-      meta.prerender=facts.html.replace('</section>',await contractsHubHTML(async query=>{
+    } else if(route.kind==='static' && route.page==='money/contracts') {
+      // The page's own head (its title and CONTRACTS_COVERAGE), then the table, as /money/grants.
+      meta.prerender=answerBlock('Government contracts',CONTRACTS_COVERAGE,await contractsHubHTML(async query=>{
         const response=await timed('table-query',()=>tableApi(new Request('https://local.invalid/api/table/contracts?'+serializeQuery(query)),env))
         if(!response.ok) return {rows:[],total:0,page:1,pageSize:50,facets:{}}
         return response.json()
-      },url.searchParams)+'</section>')
+      },url.searchParams))
     } else if(route.kind==='static' && ['money','connections','explore'].includes(route.page)) {
       meta.prerender=(await renderMoneyAnswer(meta.title.replace(/ · OPAX$/,''),read).catch(()=>null))?.html || answerBlock(meta.title.replace(/ · OPAX$/,''),meta.description)
       if(route.page==='money')meta.prerender+=await renderMoneyConnectionsTable(url,read).catch(()=> '')
@@ -4586,7 +4586,7 @@ async function buildMeta(route: SeoRoute, url: URL, request: Request, env: Env, 
       }
     }
   }
-  if ((route.kind==='static' && route.page==='discover' || route.kind==='subject' && route.dir==='supplier' || route.kind==='index' && route.dir==='supplier') && [...url.searchParams.keys()].some(key=>key.startsWith('t.') || key==='contract' || key==='donor')) meta.noindex=true
+  if ((route.kind==='static' && route.page==='money/contracts' || route.kind==='subject' && route.dir==='supplier' || route.kind==='index' && route.dir==='supplier') && [...url.searchParams.keys()].some(key=>key.startsWith('t.') || key==='contract' || key==='donor')) meta.noindex=true
   // Every non-home path has a single answer, including unavailable/not-found pages.
   meta.prerender ??= answerBlock(meta.title.replace(/ · OPAX$/, ''),meta.description)
   // The page's one trail, from the menus' own list: what a server-only
@@ -4762,6 +4762,8 @@ async function canonicalRoutePath(url: URL, env: Env): Promise<string> {
   if(path==='/map.html') return '/map'
   if(path==='/community.html') return '/community'
   if(path==='/connections.html') return '/connections'
+  // The contracts page's first address; its query (the table's state, a chosen comparison) goes with it.
+  if(path==='/discover') return '/money/contracts'
   if(path==='/index.html' || path==='/home' || path==='/home.html') return '/'
   if(['/map','/community','/connections'].includes(path)) return path
   let parts: string[]

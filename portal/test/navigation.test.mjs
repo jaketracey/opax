@@ -46,7 +46,7 @@ const ROUTES = [
   { route: '/money/explain', way: 'context', entry: 'the Explain action on money pages and the money map', from: '/money' },
 ];
 // The app's panels, each by an address it opens on.
-const PANEL_ROUTES = { 'money-records': '/money/receipts', connections: '/connections', discover: '/discover', ask: '/ask', chat: '/chat',
+const PANEL_ROUTES = { 'money-records': '/money/receipts', connections: '/connections', discover: '/money/contracts', ask: '/ask', chat: '/chat',
   search: '/ask?view=search', money: '/money', reports: '/reports', explore: '/explore', doc: '/doc/division-x', subject: '/subject/person',
   declared: '/declared', about: '/about', methods: '/methods', stats: '/stats', expenses: '/expenses', privacy: '/privacy', support: '/support', bill: '/bills' };
 
@@ -109,7 +109,7 @@ const TRAILS = [
   ['/money', 'Money map'],
   ['/money/receipts', 'Political receipts'],
   ['/money/grants', 'Grants'],
-  ['/discover', 'Government contracts'],
+  ['/money/contracts', 'Government contracts'],
   ['/connections', 'Programs & places'],
   ['/subject/topic', 'Topics A–Z'],
   ['/subject/topic/housing', 'Topics A–Z › Housing'],

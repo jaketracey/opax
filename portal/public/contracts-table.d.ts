@@ -1,4 +1,5 @@
 import type {Row, Query, Page, DataTableConfig} from './datatable.js';
+export const CONTRACTS_COVERAGE: string;
 export function contractTitle(contract: Row): string;
 export function placeholderContract(contract: Row): boolean;
 export function ausTenderURL(row: Row): string | null;
