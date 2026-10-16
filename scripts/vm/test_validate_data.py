@@ -633,5 +633,35 @@ class RealTreeTests(unittest.TestCase):
                 self.assertEqual(vd.CHECKS[g](), [])
 
 
+
+class SenateVideoTests(Base):
+    """video/senate.json accumulates links to the Senate's own uploads; it never shrinks or repoints."""
+    REL = f"{P}/video/senate.json"
+
+    def setUp(self):
+        super().setUp()
+        row = lambda vid, kind="question_time", **extra: {"id": vid, "title": "Senate Question Time, 15 October 2026", "published": "2026-10-16T01:00:00+00:00",
+                                                           "kind": kind, "date": "2026-10-15", "chamber": "senate", **extra, "url": f"https://www.youtube.com/watch?v={vid}"}
+        self.files[self.REL] = {"meta": {"schema": 1}, "videos": [row("aaaaaaaaaaa"), row("bbbbbbbbbbb", "first_speech", person_slug="jane-quill")]}
+        self.make()
+
+    def test_good_file_passes(self):
+        self.assertOk("video")
+
+    def test_a_shrunk_file_fails(self):
+        self.edit(self.REL, lambda d: d["videos"].pop())
+        self.assertFails("video", "videos")
+
+    def test_rows_that_repeat_repoint_or_misname_fail(self):
+        self.edit(self.REL, lambda d: d["videos"].append(dict(d["videos"][0])))
+        self.assertFails("video", "repeats")
+        self.make()
+        self.edit(self.REL, lambda d: d["videos"][0].update(url="https://example.invalid/video"))
+        self.assertFails("video", "watch page")
+        self.make()
+        self.edit(self.REL, lambda d: d["videos"][0].update(person_slug="jane-quill"))
+        self.assertFails("video", "not a first speech")
+
+
 if __name__ == "__main__":
     unittest.main()

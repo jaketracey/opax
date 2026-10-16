@@ -598,6 +598,43 @@ def check_evidence() -> list[str]:
         return [f"evidence export refused: {error}"]
 
 
+def check_video() -> list[str]:
+    """portal/public/video/senate.json (scripts/senate_video/): an accumulating list of the Senate's own
+    YouTube uploads, links only. It never shrinks; every row is one well-formed video id with its watch URL."""
+    rel = f"{PUBLIC}/video/senate.json"
+    errs = _check_json(rel, ("meta", "videos"), ("videos",), 1.0)
+    if errs:
+        return errs
+    doc, _ = _load_json(rel)
+    seen = set()
+    for i, row in enumerate(doc["videos"]):
+        vid = row.get("id") if isinstance(row, dict) else None
+        where = f"{rel} videos[{i}]"
+        if not isinstance(vid, str) or not re.fullmatch(r"[A-Za-z0-9_-]{11}", vid):
+            errs.append(f"{where} has no valid video id")
+            continue
+        if vid in seen:
+            errs.append(f"{where} repeats {vid}")
+        seen.add(vid)
+        if row.get("kind") not in ("question_time", "first_speech", "other"):
+            errs.append(f"{where} has an unknown kind")
+        if row.get("chamber") != "senate":
+            errs.append(f"{where} is not a Senate row")
+        if row.get("url") != f"https://www.youtube.com/watch?v={vid}":
+            errs.append(f"{where} links somewhere other than its YouTube watch page")
+        if row.get("date") is not None and not re.fullmatch(r"\d{4}-\d{2}-\d{2}", str(row.get("date"))):
+            errs.append(f"{where} has a malformed date")
+        if ("person_slug" in row or "person_pid" in row) and row.get("kind") != "first_speech":
+            errs.append(f"{where} names a person on a row that is not a first speech")
+        slug = row.get("person_slug")
+        if slug is not None and not re.fullmatch(r"[a-z0-9]+(?:-[a-z0-9]+)*", str(slug)):
+            errs.append(f"{where} has a malformed person_slug")
+        pid = row.get("person_pid")
+        if pid is not None and not re.fullmatch(r"\w+", str(pid)):
+            errs.append(f"{where} has a malformed person_pid")
+    return errs
+
+
 def check_promoted_hub(name):
     from scripts.promote_hub_data import ASSETS, validated_asset
     try:
@@ -613,7 +650,8 @@ CHECKS = {"bills": check_bills, "instruments": check_instruments, "audit": check
           "corpus": check_corpus, "wrangler": check_wrangler,
           "money": check_money, "grants": check_grants, "suppliers": check_suppliers, "access": check_access,
           "expenses": check_expenses, "interests": check_interests, "fits": check_fits, "speakers": check_speakers,
-          "people": check_people, "pay": check_pay, "discovery": check_discovery, "taxcharity": check_taxcharity}
+          "people": check_people, "pay": check_pay, "discovery": check_discovery, "taxcharity": check_taxcharity,
+          "video": check_video}
 
 
 def main() -> int:

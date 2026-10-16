@@ -40,7 +40,7 @@ img-src 'self' https://www.googletagmanager.com https://*.google-analytics.com h
 font-src 'self';
 connect-src 'self' https://www.googletagmanager.com https://*.google-analytics.com https://*.analytics.google.com;
 worker-src 'self'; manifest-src 'self';
-frame-src https://www.googletagmanager.com;
+frame-src https://www.googletagmanager.com https://www.youtube-nocookie.com;
 object-src 'none'; base-uri 'none'; form-action 'self'; frame-ancestors 'none'
 ```
 
@@ -86,6 +86,12 @@ module (`app.js`, `wombat.js`, `statemap.js`, `money-map.js`, `ledger.js`,
   `googletagmanager.com/ns.html`, hence `frame-src`. The
   `*.google-analytics.com` / `*.analytics.google.com` entries in `img-src` and
   `connect-src` are for a GA4 tag's collect endpoints and regional variants.
+- **Senate video.** `video-card.js` frames the Senate's own YouTube player
+  from `https://www.youtube-nocookie.com/embed/<id>` only after a reader
+  presses play; before that the card is plain markup with no thumbnail, so
+  nothing reaches Google. That one host is in `frame-src`: not `youtube.com`,
+  not a wildcard, and nothing in `script-src`, `img-src` or `connect-src`
+  (the player's own requests run inside its frame, under YouTube's policy).
 - **Everything else** is denied: no plugins, no `<base>` rewriting.
 
 ### Tag Manager and a strict CSP are in tension

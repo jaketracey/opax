@@ -4126,6 +4126,31 @@ async function renderPersonVicGifts(name, sections, roster) {
   registerTables.hydrateRegisterTables(slot);
 }
 
+/* The Senate's own video of this senator's first speech (public/video-card.js): a navy
+   card that loads YouTube's player only when pressed. Matched by the slug the fetcher
+   (scripts/senate_video/) wrote from the roster row this page stands on, never by
+   a printed surname: this page's slug, or its roster pid where the title prints its
+   surname (a bare-surname row like "Gatenby" opens under the full-name row the
+   electorate reference adds, with the same pid). No match, no section. */
+async function renderPersonFirstSpeech(name, sections, roster) {
+  const key = currentSubjectKey, slot = document.createElement("section");
+  slot.id = "person-first-speech";
+  sections.appendChild(slot);
+  const [data, cards] = await Promise.all([
+    fetch("/video/senate.json").then((r) => (r.ok ? r.json() : null)).catch(() => null),
+    import("/video-card.js").catch(() => null),
+    loadPersonSlugs(),
+  ]);
+  const rows = cards?.personVideos(data?.videos, personSlugs.byName.get(roster?.name ?? name), roster) || [];
+  if (currentSubjectKey !== key || !slot.isConnected || !rows.length) { slot.remove(); return; }
+  slot.innerHTML = `<h3 class="subject-section-title">First speech</h3>
+    <p class="person-caveat">Video published by the Senate Public Information Office on YouTube. The player loads from YouTube only when you press play.</p>
+    <div class="video-cards">${rows.map(cards.videoCardHTML).join("")}</div>
+    ${sourceLineHTML({ updated: String(rows[0].published || "").slice(0, 10), dateLabel: "Published", source: "AuSenate YouTube channel",
+      originals: [{ label: "AuSenate: The Senate Public Information Office", href: "https://www.youtube.com/@AuSenate" }] })}`;
+  cards.wireVideoCards(document);
+}
+
 async function renderPersonInterests(name, personId, sections, onRecord = () => {}) {
   const key = currentSubjectKey;
   const slot = document.createElement("div");
@@ -6189,6 +6214,7 @@ async function openSubject(kind, name, manageFocus, params = new URLSearchParams
     if (currentSubjectKey === key) body.querySelector(".growth-ask")?.setAttribute("data-questions-ready", "true");
   });
   renderPersonSpeeches(speechSpeaker, speeches, chambers, sections, { scope: speechScope }).then(() => refreshEntryRail(sections));
+  renderPersonFirstSpeech(name, sections, roster).then(() => refreshEntryRail(sections));
   renderPersonDiary(name, sections, chambers).then(() => { polishPersonSections(sections); refreshEntryRail(sections); });
   const news = document.createElement("section");
   sections.appendChild(news);
@@ -6298,7 +6324,7 @@ function wireSubjectAsk(name) {
    Blocks still mark data-rail-figure; the rail no longer draws it. */
 const PERSON_RAIL = [
   ["person-topics", "Topics"], ["subject-votes", "Voting record"], ["person-ties", "Disclosed money records"],
-  ["person-register", "Declared interests"], ["person-speeches", "Speeches"], ["subject-diary", "Ministerial diary"],
+  ["person-register", "Declared interests"], ["person-speeches", "Speeches"], ["person-first-speech", "First speech"], ["subject-diary", "Ministerial diary"],
   ["person-pay", "Pay"], ["person-expenses", "Expenses"],
 ];
 /* The same rail on a party's and a donor's entry (it replaced their Quick facts). */

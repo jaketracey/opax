@@ -1,0 +1,35 @@
+/* The Senate video card (video-card.js): a navy poster with a play glyph, the
+   title, the date and the source, until pressed; then the Senate's player at
+   16:9. No thumbnail: an image would load from Google before play. The poster
+   holds 16:9 as a minimum (aspect-ratio with min-height auto), so a long title
+   or large text grows the card instead of clipping the glyph. */
+.video-section .video-note { font: var(--type-fine); color: var(--ink-soft); margin: 0 0 var(--space-row); max-width: 46rem; }
+.video-cards { display: grid; gap: var(--space-group); grid-template-columns: repeat(auto-fill, minmax(min(100%, 18rem), 1fr)); max-width: 60rem; }
+.video-card { margin: 0; min-width: 0; }
+.video-frame { background: var(--navy); border-radius: var(--radius-md); }
+.video-frame > iframe { display: block; width: 100%; height: auto; aspect-ratio: 16 / 9; border: 0; border-radius: inherit; }
+.video-facade {
+  display: flex; flex-direction: column; justify-content: space-between; align-items: flex-start;
+  gap: var(--space-row); width: 100%; aspect-ratio: 16 / 9; margin: 0; padding: var(--sp-16);
+  border: 0; border-radius: inherit; background: var(--navy); color: var(--on-navy); text-align: left; cursor: pointer;
+  font: inherit; transition: background-color var(--duration-quick) var(--ease-standard);
+}
+.video-facade:hover { background: var(--navy-raised); }
+.video-facade:focus-visible { outline: var(--border-focus) solid var(--bronze-bright); outline-offset: calc(-2 * var(--border-focus)); }
+.video-play { width: var(--size-control); height: var(--size-control); flex-shrink: 0; }
+.video-play circle { fill: none; stroke: var(--bronze-bright); stroke-width: 1.5; }
+.video-play path { fill: var(--on-navy); }
+.video-facade:hover .video-play circle { fill: var(--bronze-bright); fill-opacity: 0.16; }
+.video-text { display: flex; flex-direction: column; gap: var(--sp-4); min-width: 0; }
+.video-title { font: var(--type-strong); color: var(--on-navy); overflow-wrap: anywhere; }
+.video-meta { font: var(--type-metadata); color: var(--on-navy-soft); }
+.video-caption { margin-top: var(--space-tight); font: var(--type-metadata); }
+.video-caption a { display: inline-flex; align-items: center; min-height: var(--size-target); }
+@media (prefers-reduced-motion: reduce) {
+  .video-facade { transition: none; }
+}
+@media (forced-colors: active) {
+  .video-facade { border: var(--border-hairline) solid ButtonText; }
+  .video-play circle { stroke: ButtonText; }
+  .video-play path { fill: ButtonText; }
+}
