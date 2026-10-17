@@ -1,12 +1,11 @@
 {
-  "date": "2026-10-18 Australia/Melbourne",
-  "status": "staged/local only; pending orchestrator review",
-  "baseline_commit": "90088d7133c7da912a99bff466fcc7e25d9b44e9",
-  "acquisition": {
-    "requests": 6,
-    "all_http_200": true,
-    "minimum_spacing_seconds": 5.101035,
-    "refusals": 0
+  "date": "2026-10-17T23:57:20.868687+00:00",
+  "status": "reviewed public asset promoted locally; deployment pending; not live",
+  "reviewed_commit": "88881839f55187437bd17ff722fc9838eb99cfd9",
+  "asset": {
+    "path": "portal/public/tax-expenditures/data.json",
+    "bytes": 3198949,
+    "sha256": "12a5c84c800b66f3984e5438159b9ae107bf80851d5e7d30b106805b1bfe3d79"
   },
   "staged": {
     "statement": "2025-26",
@@ -25,6 +24,8 @@
       "2027-28",
       "2028-29"
     ],
+    "public_rows": 2444,
+    "withheld_rows_excluded": 4,
     "negative_estimates": 133,
     "estimate_status": {
       "quantified": 1055,
@@ -43,9 +44,59 @@
     "held_documents": 0,
     "outlay_equivalent_rows": 0
   },
+  "public_counts": {
+    "documents": 3,
+    "items": 304,
+    "rows": 2444,
+    "internal_rows": 2448,
+    "withheld_rows_excluded": 4,
+    "published_combined_rows": 16,
+    "years": [
+      "2021-22",
+      "2022-23",
+      "2023-24",
+      "2024-25",
+      "2025-26",
+      "2026-27",
+      "2027-28",
+      "2028-29"
+    ],
+    "reconciliation": {
+      "pass": 2457
+    }
+  },
   "browser": {
-    "preview": "Local Worker; staged hub injected in ASSETS memory only; no public asset/promotion; external browser requests blocked",
-    "stagedSha256": "724a0e179610d2fd91344c74423bbb89bbb8f5d82fd6c333a1a1feb0bd620e10",
+    "preview": "Local Worker; actual promoted portal/public asset; external browser requests blocked",
+    "asset": {
+      "path": "portal/public/tax-expenditures/data.json",
+      "status": 200,
+      "bytes": 3198949,
+      "sha256": "12a5c84c800b66f3984e5438159b9ae107bf80851d5e7d30b106805b1bfe3d79",
+      "reviewedCommit": "88881839f55187437bd17ff722fc9838eb99cfd9",
+      "counts": {
+        "documents": 3,
+        "items": 304,
+        "rows": 2444,
+        "internal_rows": 2448,
+        "withheld_rows_excluded": 4,
+        "published_combined_rows": 16,
+        "years": [
+          "2021-22",
+          "2022-23",
+          "2023-24",
+          "2024-25",
+          "2025-26",
+          "2026-27",
+          "2027-28",
+          "2028-29"
+        ],
+        "reconciliation": {
+          "pass": 2457
+        }
+      }
+    },
+    "withheldCellsAbsent": true,
+    "g8PublicRows": 4,
     "results": [
       {
         "width": 390,
@@ -59,7 +110,9 @@
           "amountsInsideContainer": true
         },
         "headlineItems": 6,
-        "rows": 2448
+        "combinedCards": 2,
+        "visibleRows": 25,
+        "rows": 2444
       },
       {
         "width": 1440,
@@ -73,11 +126,13 @@
           "amountsInsideContainer": true
         },
         "headlineItems": 6,
-        "rows": 2448
+        "combinedCards": 2,
+        "visibleRows": 25,
+        "rows": 2444
       }
     ],
     "search": {
-      "before": 2448,
+      "before": 2444,
       "after": 24
     },
     "csvReceipts": true,
@@ -98,29 +153,63 @@
     "pageErrors": []
   },
   "gates": {
-    "npm_ci": "pass; before all Node tests",
-    "targeted_python": "9 pass",
-    "existing_promoter_tests": "14 pass",
-    "existing_gfs_parser_tests": "12 pass",
-    "targeted_node": "48 pass: Treasury, ABS GFS, shared DataTable and register tables",
-    "shared_navigation_register_tables": "9 shared register-table tests pass (included in 48); full navigation suite blocked at import by absent ignored portal/public/hubs/index.json; annual-lane fixture mapping updated; focused navigation and browser gate checks pass",
+    "npm_ci": "pass before Node tests",
+    "targeted_python": "10 pass",
+    "targeted_node": "40 pass (Treasury, ABS GFS and shared DataTable)",
+    "browser_promoted_asset": "pass at 390 and 1440, with and without JavaScript",
     "tsc": "pass",
     "npm_check": "pass",
     "staging_dry_run_verify_originals": "pass; writes 0",
-    "wrangler_deploy_dry_run": "pass; no deployment",
-    "reviewed_promoter_dry_run": "expected refusal: review pending"
+    "reviewed_promoter_dry_run": "pass; tax-expenditures only",
+    "reviewed_promotion": "pass; tax-expenditures only",
+    "check_public": "pass",
+    "wrangler_deploy_dry_run": "pass; no deployment"
   },
   "votes": {
-    "byte_identical_to_lane_start": true,
-    "byte_identical_to_origin_main": true,
     "sha256": "f9908e4f46f7148a82daee2d0b14c62cd7f2172ff1cd310df9a132a152970aff",
+    "byte_identical_to_round_1_start": true,
     "schema": 1
   },
-  "promotion": {
-    "review": "pending",
-    "public_data_asset_written": false,
+  "other_hubs": {
+    "budget": {
+      "unchanged": true,
+      "bytes": 3807095,
+      "sha256": "1980b99beebb43ecda8bec80f4ba021835e057521b9fde6bb3168bec74cc3f26",
+      "public_sha256": "1980b99beebb43ecda8bec80f4ba021835e057521b9fde6bb3168bec74cc3f26"
+    },
+    "vic-gifts": {
+      "unchanged": true,
+      "bytes": 380437,
+      "sha256": "59cebf5db77a22fd295eafb9de7b568e737b0525ccd0fbf213215ea556044738",
+      "public_sha256": "59cebf5db77a22fd295eafb9de7b568e737b0525ccd0fbf213215ea556044738"
+    },
+    "bills-tas": {
+      "unchanged": true,
+      "bytes": 1584970,
+      "sha256": "fa33c7454f8867b5ff022e3a354176b3b513dfbb6e0ca0c33ef7418e5b4e99d8",
+      "public_sha256": "fa33c7454f8867b5ff022e3a354176b3b513dfbb6e0ca0c33ef7418e5b4e99d8"
+    },
+    "bills-act": {
+      "unchanged": true,
+      "bytes": 2392913,
+      "sha256": "950e8e8793406392f347dd9a4eaf108777f75ec972aa732543ef786c2ab00cf5",
+      "public_sha256": "950e8e8793406392f347dd9a4eaf108777f75ec972aa732543ef786c2ab00cf5"
+    },
+    "abs-gfs": {
+      "unchanged": true,
+      "bytes": 4904581,
+      "sha256": "92062f93d0dab5e141cdb2137d47f84e49744c6d7121e9eb65194710acb83340",
+      "public_sha256": "92062f93d0dab5e141cdb2137d47f84e49744c6d7121e9eb65194710acb83340"
+    }
+  },
+  "treasury_requests": {
+    "new_requests": 0,
+    "receipts_sha256_unchanged": true
+  },
+  "boundaries": {
+    "default_nightly_hubs_unchanged": true,
+    "production_database_writes": 0,
     "nightly_run": false,
-    "production_writes": 0,
     "push": false,
     "deploy": false
   },
