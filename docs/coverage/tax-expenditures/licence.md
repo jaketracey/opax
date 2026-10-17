@@ -1,0 +1,13 @@
+# Treasury statement and numerical-table rights
+
+Checked **18 October 2026 Melbourne** (17 October UTC), using the identifying OPAXBot requests in the [receipt ledger](../../../data/staged/tax-expenditures/receipts.json). Treasury's [copyright and disclaimer](https://treasury.gov.au/copyright-disclaimer) returned 200. It applies **CC BY 4.0** to material presented on Treasury's website, excluding the Commonwealth Coat of Arms, Treasury logo and content supplied by third parties. Website attribution is **© Commonwealth of Australia**.
+
+The [2025–26 statement](https://treasury.gov.au/publication/p2025-721342), published 17 December 2025, links one PDF, one Word document and one XLSX workbook. All three were acquired after the website grant check. The Word front matter and PDF page 2 explicitly licence the publication under CC BY 4.0, except the Coat of Arms, third-party content and otherwise stated material. The copyright notice is © Commonwealth of Australia 2025. Numerical ingestion began only after this document review and the workbook rights review.
+
+The publication requests **Source: The Commonwealth of Australia.** for unchanged material and **Based on Commonwealth of Australia data.** for transformed material. OPAX uses the latter because the published cells are selected and reformatted into a tidy table. The page and CSV also credit Treasury and the statement year, link the original files and CC BY 4.0, retain snapshots and SHA-256, disclose the formatting changes and avoid implying endorsement.
+
+All **35 workbook sheets**, including titles and populated footnotes, were inspected for rights notices. No copyright, narrower licence, third-party material or reproduction restriction was found in the workbook. “Statutory licences” in item E28 is an item title, not a rights notice. The statement's front matter and selected Appendix A.1 numerical/metadata tables and Tables 2.2/2.4 have no narrower notice. The statement's reference to the “third party debt test” is tax terminology, not a third-party copyright label.
+
+This clearance covers Treasury-produced item cells, IDs, titles, categories, benchmark references, reliability ratings and the two explicitly published combined tables. It does not reproduce the Coat of Arms, logo, images or marked third-party content. Narrative bodies and 34 distributional/chart worksheets are outside this projection. Earlier statement vintages are not acquired or cleared; historical years in this snapshot are revised estimates from the 2025–26 statement alone.
+
+No document is held for a specific rights exception in the bounded latest-statement scope. A newly introduced file, rights notice or changed source hash requires a new document review before staging and reviewed promotion.

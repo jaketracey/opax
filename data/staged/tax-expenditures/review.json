@@ -1,0 +1,12 @@
+{
+  "status": "pending",
+  "reviewed_commit": null,
+  "review_basis": "Staged lane only. Orchestrator review and explicit annual promotion required; this lane is not authorised to approve or promote.",
+  "inputs": {
+    "inventory.json": "2cc16f85d2ff69635d2fec32812a4134f5147c584b684b1fc2ca3800d2fc4b4d",
+    "receipts.json": "1dbcda98806f8be5433e5a17f99d2cba471b2be99ddcd09a5e6ed52a117fd2c6",
+    "series.jsonl": "5c3c70c50839916b6a3464fbfdaea7aa5a6822da18eb64f9a73b2d43a4964f21",
+    "reconciliation.json": "58f6302d263b42a5f48a39f426d96be9da7264e1fbad5c0227c4aeb1fddc604f",
+    "hub.json": "724a0e179610d2fd91344c74423bbb89bbb8f5d82fd6c333a1a1feb0bd620e10"
+  }
+}

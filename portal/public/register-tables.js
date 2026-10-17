@@ -1,4 +1,4 @@
-import {applyQuery, dataTableHTML, guardTableURL, mountDataTable, parseQuery} from './datatable.js?v=9e3143ce46';
+import {applyQuery, dataTableHTML, guardTableURL, mountDataTable, parseQuery} from './datatable.js?v=ab73c21d90';
 import {donorDisclosure} from './donor-disclosure.js?v=800932e746';
 
 const esc = value => String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -115,6 +115,30 @@ export function stateBillsTableQuery(params, config) {
 }
 
 /** Source cells only: no calculated jurisdiction, level or sector totals. */
+export function taxExpendituresTableConfig(rows) {
+  return {id:'tax-expenditures-table',caption:'Treasury published revenue forgone estimates',pageType:'tax-expenditures',urlKey:'tax',pageSize:25,rows,
+    defaultSort:{key:'measure_year',dir:'desc'},export:{filename:'tax-expenditures.csv'},
+    columnsVisible:['title','item_id','measure_year','estimate_display','estimate_status','source_locator'],
+    columns:[{key:'title',label:'Tax expenditure',type:'text',primary:true},
+      {key:'item_id',label:'ID',type:'text'},
+      {key:'measure_year',label:'Measure year',type:'category',facet:'multi',sortable:true},
+      {key:'estimate_display',label:'Estimate (AUD)',type:'text',align:'end',sortable:false},
+      {key:'estimate_status',label:'Estimate status',type:'category',facet:'multi'},
+      {key:'source_locator',label:'Original cell',type:'text',href:row=>href(row.source_url)},
+      {key:'category',label:'Tax category',type:'category',facet:'multi'},
+      {key:'record_kind',label:'Record kind',type:'category',facet:'multi'},
+      {key:'statement',label:'Statement year',type:'text'},
+      {key:'benchmark',label:'Benchmark',type:'text'},{key:'benchmark_locator',label:'Benchmark reference',type:'text'},
+      {key:'tax_expenditure_type',label:'Tax expenditure type',type:'text'},{key:'reliability',label:'Treasury reliability',type:'text'},
+      {key:'estimate_basis',label:'Estimate basis',type:'text'},
+      {key:'value',label:'Published value (AUD million)',type:'count'},
+      {key:'source_value',label:'Original published value or code',type:'text'},
+      {key:'unit',label:'Original unit',type:'text'},{key:'amount',label:'Estimate in AUD',type:'money'},
+      {key:'publisher',label:'Source / attribution',type:'text'},{key:'source_url',label:'Source URL',type:'text'},
+      {key:'snapshot',label:'Snapshot',type:'text'},{key:'sha256',label:'SHA-256',type:'text'},
+      {key:'licence',label:'Licence',type:'text'},{key:'licence_url',label:'Licence URL',type:'text'}],primaryLink:()=>null};
+}
+
 export function governmentFinanceTableConfig(rows) {
   return {id:'government-finance-table',caption:'ABS published annual figures',pageType:'government-finance',urlKey:'gfs',pageSize:25,rows,
     defaultSort:{key:'reference_year',dir:'desc'},export:{filename:'government-finance.csv'},
@@ -204,6 +228,7 @@ export function hydrateRegisterTables(root = document) {
     else if (config.urlKey === 'vicGifts') { const factory=vicGiftsTableConfig(config.source?.params,config.columns.map(column=>column.key)); Object.assign(config,{columns:factory.columns,primaryLink:factory.primaryLink}); }
     else if (config.urlKey === 'stateBills') Object.assign(config,stateBillsTableConfig(config.rows));
     else if (config.urlKey === 'gfs') Object.assign(config,governmentFinanceTableConfig(config.rows));
+    else if (config.urlKey === 'tax') Object.assign(config,taxExpendituresTableConfig(config.rows));
     else Object.assign(config,{primaryLink:row=>row.href || null});
     script.remove();
     const mounted = mountRegisterTable(el,config);

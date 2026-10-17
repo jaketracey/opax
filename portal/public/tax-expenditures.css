@@ -1,0 +1,28 @@
+#prerender:has(+ .tax-content){padding-bottom:var(--space-row)}
+#prerender:has(+ .tax-content)>p:last-child{margin-bottom:0}
+.tax-content{padding-block:var(--space-row);color:var(--ink)}
+.tax-content>p,.tax-content section>p{max-width:76ch}
+.tax-lede{font:var(--type-body);line-height:1.65;margin-top:0}
+.tax-content section{margin-block:var(--space-section)}
+.tax-content h2{font:var(--type-heading);margin-block:var(--space-group)}
+.tax-items{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,22rem),1fr));gap:var(--space-group)}
+.tax-item{min-width:0;border-top:var(--border-hairline) solid var(--money-ink);padding-top:var(--space-row)}
+.tax-item h3{font:var(--type-strong);margin:var(--space-row) 0;overflow-wrap:anywhere}
+.tax-amount{font:var(--type-heading);font-variant-numeric:tabular-nums;margin-block:var(--space-row)}
+.tax-receipt,.tax-item details{font:var(--type-fine);color:var(--ink-soft);overflow-wrap:anywhere}
+.tax-item summary{cursor:pointer;min-height:2.75rem;display:flex;align-items:center;text-decoration:underline}
+.tax-content :focus-visible{outline:var(--border-hairline) solid var(--bronze-ink);outline-offset:var(--space-tight)}
+@media(width < 600px){
+  [data-register-table="tax-expenditures-table"] .dt-scroll{overflow-x:visible}
+  #tax-expenditures-table{display:block;width:100%;min-width:0}
+  #tax-expenditures-table caption{display:block}
+  #tax-expenditures-table thead{display:none}
+  #tax-expenditures-table tbody{display:block;width:100%}
+  #tax-expenditures-table tbody tr{display:grid;grid-template-columns:minmax(0,1fr) max-content;gap:var(--space-tight) var(--space-row);padding:var(--space-block);border-bottom:var(--border-hairline) solid var(--divider-subtle);background:var(--paper-raised)}
+  #tax-expenditures-table td{display:block;grid-column:1/-1;position:static;min-width:0;max-width:100%;padding:0;border:0;box-shadow:none;white-space:normal;text-align:start;overflow-wrap:anywhere}
+  #tax-expenditures-table td::before{content:attr(data-label);display:block;font:var(--type-fine);color:var(--ink-soft)}
+  #tax-expenditures-table td[data-label="Tax expenditure"]{grid-column:1/-1;font:var(--type-strong)}
+  #tax-expenditures-table td[data-label="Tax expenditure"]::before{display:none}
+  #tax-expenditures-table td[data-label="ID"]{grid-column:1}
+  #tax-expenditures-table td[data-label="Estimate (AUD)"]{grid-column:2;text-align:end;white-space:nowrap;font:var(--type-strong)}
+}

@@ -36,6 +36,7 @@ import { auditPage, auditReader } from './audit'
 import { vicGiftsPage, vicGiftsReader, vicGiftsPersonBlock, vicGiftsResponse } from './vic-gifts'
 import { stateBillsPage, stateBillsReader } from './state-bills'
 import { governmentFinancePage, governmentFinanceReader } from './government-finance'
+import { taxExpendituresPage, taxExpendituresReader, taxExpendituresReady } from './tax-expenditures'
 import {parseQuery,serializeQuery,type Page} from '../public/datatable.js'
 import {partyMoneyData,partyMoneyTableConfig,registerTableHTML} from '../public/register-tables.js'
 import {grantsHTML} from './grants-table'
@@ -3753,6 +3754,7 @@ type SeoRoute =
   | { kind: 'vic-gifts' }
   | { kind: 'state-bills' }
   | { kind: 'government-finance' }
+  | { kind: 'tax-expenditures' }
   | { kind: 'audit'; id: string | null }
   | { kind: 'static'; page: keyof typeof STATIC_PAGES }
   | { kind: 'report'; slug: string }
@@ -3813,6 +3815,7 @@ function matchSeoRoute(url: URL): SeoRoute | null {
   if (path === '/register/vic-gifts') return { kind: 'vic-gifts' }
   if (path === '/register/state-bills') return { kind: 'state-bills' }
   if (path === '/register/government-finance') return { kind: 'government-finance' }
+  if (path === '/register/tax-expenditures') return { kind: 'tax-expenditures' }
   if (path === '/instruments') return { kind: 'instruments', id: null }
   if (path === '/instrument' || path.startsWith('/instrument/')) {
     try { return { kind: 'instruments', id: decodeURIComponent(path.slice('/instrument/'.length)) } }
@@ -4362,6 +4365,7 @@ async function buildRouteMeta(route: SeoRoute, url: URL, request: Request, env: 
     case 'vic-gifts': return base(await vicGiftsPage(url, vicGiftsReader(env.ASSETS), prerenderBlock))
     case 'state-bills': return base(await stateBillsPage(url, stateBillsReader(env.ASSETS), prerenderBlock))
     case 'government-finance': return base(await governmentFinancePage(url, governmentFinanceReader(env.ASSETS), prerenderBlock))
+    case 'tax-expenditures': return base(await taxExpendituresPage(url, taxExpendituresReader(env.ASSETS), prerenderBlock))
     case 'instruments': return base(await instrumentPage(route.id, url, instrumentReader(env.ASSETS), prerenderBlock, env.TABLE_DB ? async query=>{
       const endpoint=new URL('/api/table/instruments',url)
       endpoint.search=serializeQuery({...query,sort:query.sort || {key:'title',dir:'asc'}})
@@ -5645,6 +5649,9 @@ async function renderSeoPage(route: SeoRoute, url: URL, request: Request, env: E
   if (route.kind === 'government-finance') rewriter.on('script[src]', { element(el) {
     if (/\/(app|spa-entry|spa-shell)\.js(?:\?|$)/.test(el.getAttribute('src') || '')) el.remove()
   } }).on('head', { element(el) { el.append('<link rel="stylesheet" href="/datatable.css"><link rel="stylesheet" href="/government-finance.css">',{html:true}) } })
+  if (route.kind === 'tax-expenditures') rewriter.on('script[src]', { element(el) {
+    if (/\/(app|spa-entry|spa-shell)\.js(?:\?|$)/.test(el.getAttribute('src') || '')) el.remove()
+  } }).on('head', { element(el) { el.append('<link rel="stylesheet" href="/datatable.css"><link rel="stylesheet" href="/tax-expenditures.css">',{html:true}) } })
   rewriter.on('main#main', { element(el) { el.setAttribute('data-server-rendered',''); el.setInnerContent(meta.prerender || '', { html: true }) } })
   const out = rewriter.transform(shell)
   const headers = new Headers(out.headers)
@@ -6683,6 +6690,7 @@ function personTopicsFor(name: string, env: Env, ctx: ExecutionContext): Promise
 export default {
   async fetch(request, env, ctx): Promise<Response> {
     const url = new URL(request.url)
+    if (url.pathname === '/tax-expenditures/ready.json') return withSecurityHeaders(await taxExpendituresReady(request,taxExpendituresReader(env.ASSETS)),url)
     if (url.pathname === '/api/register/party-money') return withSecurityHeaders(await partyMoneyResponse(request,env.ASSETS),url)
     if (url.pathname === '/api/register/interests') return withSecurityHeaders(await interestRegisterResponse(request,env.ASSETS),url)
     if (url.pathname === '/api/register/vic-gifts') return withSecurityHeaders(await vicGiftsResponse(request,vicGiftsReader(env.ASSETS)),url)

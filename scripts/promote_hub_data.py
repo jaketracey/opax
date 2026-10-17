@@ -3,7 +3,7 @@
 
 After reviewing a new staged snapshot, update its review.json input digests in
 the same reviewed change. Scheduled hubs then promote without a separate copy
-step; annual ABS GFS requires an explicit reviewed re-promotion.
+step; annual ABS GFS and Treasury tax expenditures require explicit reviewed re-promotion.
 Budget originals live in the acquisition cache: their reviewed hashes are joined
 to the committed receipt ledger, not re-fetched or silently inferred here.
 """
@@ -30,18 +30,20 @@ from scripts.budget_registry.stage import projection
 from scripts.vic_gifts.stage import build as gifts_projection, exact_holder, CC
 from scripts.state_bills.stage import build as state_bills_projection
 from scripts.abs_gfs.check import checked_projection as gfs_projection
+from scripts.tax_expenditures.check import checked_projection as tax_projection
 
 ASSETS = {"budget": "budget/data.json", "vic-gifts": "vic-gifts/data.json",
           "bills-tas": "bills-tas/data.json", "bills-act": "bills-act/data.json",
-          "abs-gfs": "government-finance/data.json"}
-# Annual ABS GFS is explicit opt-in, outside the default nightly hubs.
+          "abs-gfs": "government-finance/data.json", "tax-expenditures": "tax-expenditures/data.json"}
+# Annual ABS GFS and Treasury tax expenditures are opt-in, outside nightly.
 # Existing default runs remain scoped to the four scheduled hubs.
 DEFAULT_HUBS = ["budget", "vic-gifts", "bills-tas", "bills-act"]
 INPUTS = {"budget": ["inventory.json", "receipts.json", "aggregates.json", "measures.json", "hub.json"],
           "vic-gifts": ["inventory.json", "receipts.json", "hub.json"],
           "bills-tas": ["inventory.json", "receipts.json", "hub.json", "acquisition-notes.json"],
           "bills-act": ["inventory.json", "receipts.json", "hub.json", "acquisition-notes.json"],
-          "abs-gfs": ["inventory.json", "tables.json", "receipts.json", "series.jsonl", "reconciliation.json", "hub.json"]}
+          "abs-gfs": ["inventory.json", "tables.json", "receipts.json", "series.jsonl", "reconciliation.json", "hub.json"],
+          "tax-expenditures": ["inventory.json", "receipts.json", "series.jsonl", "reconciliation.json", "hub.json"]}
 SHA = re.compile(r"[a-f0-9]{64}")
 
 
@@ -264,6 +266,8 @@ def validated_asset(hub_name, root=ROOT):
         hub, counts = gifts_checks(stage, root)
     elif hub_name == "abs-gfs":
         hub, counts = gfs_projection(stage)
+    elif hub_name == "tax-expenditures":
+        hub, counts = tax_projection(stage)
     else:
         hub, counts = state_bills_checks(stage, root)
     inputs = list(INPUTS[hub_name])

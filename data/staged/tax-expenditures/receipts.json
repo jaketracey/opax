@@ -1,0 +1,80 @@
+[
+  {
+    "url": "https://treasury.gov.au/robots.txt",
+    "snapshot": "2026-10-17T23:12:03.930768+00:00",
+    "user_agent": "OPAXBot/1.0 (+https://opax.com.au/about; corrections@opax.com.au)",
+    "status": 200,
+    "content_type": "text/plain",
+    "sha256": "3200f655bd0e859a4fb1a7237cc64d4cec38824f6f5ee914c37d0b9de0f9c554",
+    "completed_at": "2026-10-17T23:12:04.026421+00:00",
+    "challenge": false,
+    "redirect": false,
+    "held": false,
+    "local_path": "portal/private/tax-expenditures/robots.txt"
+  },
+  {
+    "url": "https://treasury.gov.au/copyright-disclaimer",
+    "snapshot": "2026-10-17T23:12:09.127456+00:00",
+    "user_agent": "OPAXBot/1.0 (+https://opax.com.au/about; corrections@opax.com.au)",
+    "status": 200,
+    "content_type": "text/html; charset=UTF-8",
+    "sha256": "f8a475654d427b2d03982a7fbe7617b400ee86b8fafc5234e83d0c345b067ac0",
+    "completed_at": "2026-10-17T23:12:09.232611+00:00",
+    "challenge": false,
+    "redirect": false,
+    "held": false,
+    "local_path": "portal/private/tax-expenditures/copyright.html"
+  },
+  {
+    "url": "https://treasury.gov.au/publication/p2025-721342",
+    "snapshot": "2026-10-17T23:12:14.336769+00:00",
+    "user_agent": "OPAXBot/1.0 (+https://opax.com.au/about; corrections@opax.com.au)",
+    "status": 200,
+    "content_type": "text/html; charset=UTF-8",
+    "sha256": "d5cd6bc27a197cdc2aec63d7831a50b145056ed44e1c9887d9349abf17509ed6",
+    "completed_at": "2026-10-17T23:12:14.453031+00:00",
+    "challenge": false,
+    "redirect": false,
+    "held": false,
+    "local_path": "portal/private/tax-expenditures/statement.html"
+  },
+  {
+    "url": "https://treasury.gov.au/sites/default/files/2025-12/p2025-721342.docx",
+    "snapshot": "2026-10-17T23:12:26.184887+00:00",
+    "user_agent": "OPAXBot/1.0 (+https://opax.com.au/about; corrections@opax.com.au)",
+    "status": 200,
+    "content_type": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+    "sha256": "905ea4c5c6a84a106db19096ad1c60fe5c061f4c2dd4c418a2f9e65f8e572a5d",
+    "completed_at": "2026-10-17T23:12:26.400485+00:00",
+    "challenge": false,
+    "redirect": false,
+    "held": false,
+    "local_path": "portal/private/tax-expenditures/p2025-721342.docx"
+  },
+  {
+    "url": "https://treasury.gov.au/sites/default/files/2025-12/p2025-721342-chart-data.xlsx",
+    "snapshot": "2026-10-17T23:12:31.505042+00:00",
+    "user_agent": "OPAXBot/1.0 (+https://opax.com.au/about; corrections@opax.com.au)",
+    "status": 200,
+    "content_type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    "sha256": "72b7573a5d12882cd2f5bb02315bf8e764ddd42aaad489c9a09feb5cb3d34aa7",
+    "completed_at": "2026-10-17T23:12:31.638520+00:00",
+    "challenge": false,
+    "redirect": false,
+    "held": false,
+    "local_path": "portal/private/tax-expenditures/p2025-721342-chart-data.xlsx"
+  },
+  {
+    "url": "https://treasury.gov.au/sites/default/files/2025-12/p2025-721342.pdf",
+    "snapshot": "2026-10-17T23:12:48.757817+00:00",
+    "user_agent": "OPAXBot/1.0 (+https://opax.com.au/about; corrections@opax.com.au)",
+    "status": 200,
+    "content_type": "application/pdf",
+    "sha256": "f1b870f03776566c6303fe07b7588ebc2df925a8c285996a439632d2fc16050d",
+    "completed_at": "2026-10-17T23:12:49.030831+00:00",
+    "challenge": false,
+    "redirect": false,
+    "held": false,
+    "local_path": "portal/private/tax-expenditures/p2025-721342.pdf"
+  }
+]

@@ -1,0 +1,133 @@
+{
+  "date": "2026-10-18 Australia/Melbourne",
+  "status": "staged/local only; pending orchestrator review",
+  "baseline_commit": "90088d7133c7da912a99bff466fcc7e25d9b44e9",
+  "acquisition": {
+    "requests": 6,
+    "all_http_200": true,
+    "minimum_spacing_seconds": 5.101035,
+    "refusals": 0
+  },
+  "staged": {
+    "statement": "2025-26",
+    "items": 304,
+    "published_combined_groups": 2,
+    "item_rows": 2432,
+    "combined_rows": 16,
+    "rows": 2448,
+    "years": [
+      "2021-22",
+      "2022-23",
+      "2023-24",
+      "2024-25",
+      "2025-26",
+      "2026-27",
+      "2027-28",
+      "2028-29"
+    ],
+    "negative_estimates": 133,
+    "estimate_status": {
+      "quantified": 1055,
+      "non-zero rounded to zero": 91,
+      "included in A43; workbook nil": 8,
+      "unquantifiable": 1175,
+      "nil": 75,
+      "included in B92; workbook nil": 8,
+      "included in B72; workbook nil": 24,
+      "included in D9; workbook nil": 8,
+      "not for publication": 4
+    },
+    "reconciliation": {
+      "pass": 2457
+    },
+    "held_documents": 0,
+    "outlay_equivalent_rows": 0
+  },
+  "browser": {
+    "preview": "Local Worker; staged hub injected in ASSETS memory only; no public asset/promotion; external browser requests blocked",
+    "stagedSha256": "724a0e179610d2fd91344c74423bbb89bbb8f5d82fd6c333a1a1feb0bd620e10",
+    "results": [
+      {
+        "width": 390,
+        "status": 200,
+        "horizontalOverflow": false,
+        "table": {
+          "containerWidth": 350,
+          "containerScrollWidth": 350,
+          "tableWidth": 350,
+          "amountCells": 25,
+          "amountsInsideContainer": true
+        },
+        "headlineItems": 6,
+        "rows": 2448
+      },
+      {
+        "width": 1440,
+        "status": 200,
+        "horizontalOverflow": false,
+        "table": {
+          "containerWidth": 1325,
+          "containerScrollWidth": 1325,
+          "tableWidth": 1324.8125,
+          "amountCells": 25,
+          "amountsInsideContainer": true
+        },
+        "headlineItems": 6,
+        "rows": 2448
+      }
+    ],
+    "search": {
+      "before": 2448,
+      "after": 24
+    },
+    "csvReceipts": true,
+    "ssr": true,
+    "staticPhone": {
+      "containerWidth": 350,
+      "containerScrollWidth": 350,
+      "tableWidth": 350,
+      "amountCells": 25,
+      "amountsInsideContainer": true
+    },
+    "unpromoted": {
+      "status": 503,
+      "table": false,
+      "moneyLink": false
+    },
+    "populatedMoneyLink": true,
+    "pageErrors": []
+  },
+  "gates": {
+    "npm_ci": "pass; before all Node tests",
+    "targeted_python": "9 pass",
+    "existing_promoter_tests": "14 pass",
+    "existing_gfs_parser_tests": "12 pass",
+    "targeted_node": "48 pass: Treasury, ABS GFS, shared DataTable and register tables",
+    "shared_navigation_register_tables": "9 shared register-table tests pass (included in 48); full navigation suite blocked at import by absent ignored portal/public/hubs/index.json; annual-lane fixture mapping updated; focused navigation and browser gate checks pass",
+    "tsc": "pass",
+    "npm_check": "pass",
+    "staging_dry_run_verify_originals": "pass; writes 0",
+    "wrangler_deploy_dry_run": "pass; no deployment",
+    "reviewed_promoter_dry_run": "expected refusal: review pending"
+  },
+  "votes": {
+    "byte_identical_to_lane_start": true,
+    "byte_identical_to_origin_main": true,
+    "sha256": "f9908e4f46f7148a82daee2d0b14c62cd7f2172ff1cd310df9a132a152970aff",
+    "schema": 1
+  },
+  "promotion": {
+    "review": "pending",
+    "public_data_asset_written": false,
+    "nightly_run": false,
+    "production_writes": 0,
+    "push": false,
+    "deploy": false
+  },
+  "screenshots": [
+    "portal/private/tax-expenditures/tax-expenditures-390-top.png",
+    "portal/private/tax-expenditures/tax-expenditures-390-table.png",
+    "portal/private/tax-expenditures/tax-expenditures-1440-top.png",
+    "portal/private/tax-expenditures/tax-expenditures-1440-table.png"
+  ]
+}

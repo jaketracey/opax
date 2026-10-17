@@ -225,7 +225,8 @@ export function toCSV(rows, config) {
   const quote = value => {
     let s = text(value);
     // Spreadsheet formulas remain inert; numeric money/count values stay exact.
-    if (typeof value === 'string' && /^[\s]*[=+@-]/.test(s)) s = `'${s}`;
+    // A standalone dash is an inert published nil code, not a formula.
+    if (typeof value === 'string' && s !== '-' && /^[\s]*[=+@-]/.test(s)) s = `'${s}`;
     return /[",\r\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s;
   };
   return [config.columns.map(c => quote(c.label)).join(','), ...publicRows(rows, config).map(row => config.columns.map(c => quote(row[c.key] ?? '')).join(','))].join('\r\n');
