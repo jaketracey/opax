@@ -15,8 +15,9 @@ ROOT = Path(__file__).resolve().parents[2]
 WEEKLY = (ROOT / "scripts/weekly_refresh.sh").read_text()
 GROUPS = (ROOT / "scripts/vm/data_groups.sh").read_text()
 NIGHTLY = (ROOT / "scripts/vm/nightly.sh").read_text()
+# The frl group's body (scripts/weekly_refresh.sh runs it alone on Thursdays since 18 Oct 2026).
 WEEKLY_BLOCK = WEEKLY.split("  # Metadata-only FRL group.", 1)[1].split(
-    "  # Federal Register of Legislation Acts", 1)[0]
+    "\nfi\n\nif [ \"$want_weekly\" = 1 ]", 1)[0] + "\n"
 # Retain the exact production control flow; only its log and runner are stubbed.
 WEEKLY_BLOCK = "  # Metadata-only FRL group." + WEEKLY_BLOCK
 TRACKED_HELPER = re.search(r"^tracked_data_paths\(\) \{\n.*?^\}", GROUPS, re.M | re.S).group()

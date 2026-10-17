@@ -18,7 +18,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 COPIED = ["scripts/vm/export_step.sh", "scripts/vm/export_people.sh", "scripts/vm/keep_if_unchanged.py",
-          "scripts/export_parliamentarians.py", "scripts/roster_identity.py", "scripts/roster_fold.py", "scripts/enrich_profile_jurisdictions.py",
+          "scripts/export_parliamentarians.py", "scripts/roster_identity.py", "scripts/roster_fold.py", "scripts/roster_overlay.py", "scripts/enrich_profile_jurisdictions.py",
           "scripts/roster_service.json", "scripts/roster_witness_service.json", "scripts/roster_state_evidence.json", "portal/public/electorates/manifest.json",
           "portal/public/electorates/releases/b56417062ccc33cf/reference.json",
           "scripts/person_identity.json", "portal/public/research/mlci.json", "portal/public/votes.json",
@@ -72,10 +72,11 @@ class RealWrapperTests(unittest.TestCase):
         db.close()
         return box
 
-    def export(self, box, accept=False):
+    def export(self, box, accept=False, overlay=True):
         env = {**os.environ, "PY": sys.executable, "OPAX_DB": str(box / "parli.db"), "PYTHONDONTWRITEBYTECODE": "1"}
         env.pop("OPAX_ROSTER_PREVIOUS", None)
         env["OPAX_ROSTER_ACCEPT"] = "1" if accept else ""
+        env["OPAX_ROSTER_OVERLAY"] = "1" if overlay else "0"
         r = subprocess.run(["bash", "scripts/vm/export_step.sh", "json", ROSTER, "bash", "scripts/vm/export_people.sh"],
                            cwd=box, env=env, capture_output=True, text=True, timeout=120)
         path = box / ROSTER
@@ -186,7 +187,15 @@ class ShippedIdentityReplayTests(unittest.TestCase):
             with self.subTest(scenario=scenario):
                 box = self.sandbox((ROOT/ROSTER).read_bytes())
                 self.populate_replay(box, scenario)
+                # What the weekly installs: the export laid onto the shipped roster (scripts/roster_overlay.py), so
+                # the replay's five identity differences and two lost scopes never reach the site.
                 code, err, output = self.export(box)
+                self.assertEqual(code, 0, err)
+                self.assertNotIn('ROSTER HELD', err)
+                self.assertIn('ROSTER OVERLAY: kept', err)
+                self.assertEqual(output, (ROOT/ROSTER).read_bytes(), 'the shipped roster is kept byte for byte')
+                # The overlays themselves, before that merge.
+                code, err, output = self.export(box, overlay=False)
                 self.assertEqual(code, 0, err)
                 self.assertNotIn('ROSTER HELD', err)
                 actual = json.loads(output)['people']

@@ -184,6 +184,13 @@ division = {'key': 'federal-senate-1', 'slug': 'division-federal-senate-1', 'nam
  '_meta': {'schema': 1, 'source': 'parli.db-ext-divisions', 'member_coverage': 'recorded'}}
 D.write_projection({division['key']: division}, pathlib.Path(seed) / 'portal/public/divisions')
 open(f"{seed}/portal/public/speakers.json", "w").write(json.dumps([{"id": i, "name": f"Speaker {i}"} for i in range(100)]) + "\n")
+# the roster, the module the build derives from it (person-paths.js) and an importer that carries its content stamp
+roster = [{"name": f"Person {i}", "speeches": 10} for i in range(20)]
+open(f"{seed}/portal/public/parliamentarians.json", "w").write(json.dumps({"meta": {"people": len(roster)}, "people": roster}) + "\n")
+paths = "export const PERSON_PATHS = " + json.dumps(sorted(p["name"] for p in roster)) + ";\n"
+open(f"{seed}/portal/public/person-paths.js", "w").write(paths)
+import hashlib
+open(f"{seed}/portal/public/canonical-urls.js", "w").write("import '/person-paths.js?v=" + hashlib.sha256(paths.encode()).hexdigest()[:10] + "';\n")
 PYEOF
   (cd "$seed" && git init -q && git add -A && git commit -q -m seed && git remote add origin "$ORIGIN" && git push -q origin HEAD:main)
   REPO="$HOME/opax"; git clone -q "$ORIGIN" "$REPO"
@@ -287,8 +294,12 @@ import json, sys
 mode = sys.argv[1]
 p = "portal/public/speakers.json"
 d = json.load(open(p))
-if mode in ("ok", "failsteps", "crash", "stale"):
+if mode in ("ok", "failsteps", "crash", "stale", "roster"):
     d.append({"id": len(d), "name": f"Speaker {len(d)}"})
+if mode == "roster":   # x_people: one new row, so the build derives a different person-paths.js
+    r = json.load(open("portal/public/parliamentarians.json"))
+    r["people"].append({"name": "Person New", "speeches": 5}); r["meta"]["people"] = len(r["people"])
+    open("portal/public/parliamentarians.json", "w").write(json.dumps(r) + "\n")
 elif mode == "shrink":
     d = d[:10]
 if mode not in ("none", "locked"):
@@ -312,19 +323,42 @@ FWEOF
   chmod +x "$SB/fake_weekly.sh"
   # a node that records its arguments and exits FAKE_NODE_RC
   cat > "$SB/bin/node" <<'NDEOF'
-#!/bin/sh
+#!/bin/bash
 echo "node $*" >> "$HOME/node.calls"
+# the gate's content stamp step: the importer's ?v= follows person-paths.js, as scripts/stamp_assets.mjs does
+if [ "$1" = scripts/stamp_assets.mjs ]; then
+  [ -f portal/public/person-paths.js ] || exit 0
+  printf "import '/person-paths.js?v=%s';\n" "$(sha256sum portal/public/person-paths.js | cut -c1-10)" > portal/public/canonical-urls.js
+  exit 0
+fi
+[ "$1" = --test ] || exit 0
+junit=""; prev=""
+for a in "$@"; do [ "$prev" = --test-reporter=junit ] && junit=${a#--test-reporter-destination=}; prev=$a; done
+red() {   # the JUnit report the gate reads to re-run only the failing files
+  [ -z "$junit" ] || printf '<testsuites><testcase name="fixture" file="%s/test/fake-red.test.mjs" failure="red"/></testsuites>\n' "$PWD" > "$junit"
+  exit 1
+}
+sleep "${FAKE_NODE_SLEEP:-0}"
 # FAKE_NODE_RED_WHILE_CHANGED=<repo path>: red for as long as that file differs from HEAD (a test the new data breaks)
-if [ -n "${FAKE_NODE_RED_WHILE_CHANGED:-}" ] && [ -n "$(git status --porcelain -- ":(top)$FAKE_NODE_RED_WHILE_CHANGED" 2>/dev/null)" ]; then exit 1; fi
-# The review reproduction: two unrelated bad groups force every single-group
-# trial (including bills) to stay red, then cumulative rollback becomes green.
+if [ -n "${FAKE_NODE_RED_WHILE_CHANGED:-}" ] && [ -n "$(git status --porcelain -- ":(top)$FAKE_NODE_RED_WHILE_CHANGED" 2>/dev/null)" ]; then red; fi
+# The review reproduction: two unrelated bad groups, red while either one is changed.
 for p in ${FAKE_NODE_RED_WHILE_ANY_CHANGED:-}; do
-  [ -z "$(git status --porcelain -- ":(top)$p" 2>/dev/null)" ] || exit 1
+  [ -z "$(git status --porcelain -- ":(top)$p" 2>/dev/null)" ] || red
 done
-exit ${FAKE_NODE_RC:-0}
+[ "${FAKE_NODE_RC:-0}" = 0 ] || red
+exit 0
 NDEOF
   chmod +x "$SB/bin/node"
-  printf '#!/bin/sh\necho "npm $*" >> "$HOME/npm.calls"\nexit ${FAKE_NPM_RC:-0}\n' > "$SB/bin/npm"; chmod +x "$SB/bin/npm"
+  cat > "$SB/bin/npm" <<'NPEOF'
+#!/bin/sh
+echo "npm $*" >> "$HOME/npm.calls"
+# build:search derives public/person-paths.js from the roster, as build:crawl does (cwd is portal/)
+if [ "$*" = "run build:search" ] && [ -f public/parliamentarians.json ]; then
+  python3 -c "import json; r=json.load(open('public/parliamentarians.json')); open('public/person-paths.js','w').write('export const PERSON_PATHS = '+json.dumps(sorted(p['name'] for p in r['people']))+';\n')"
+fi
+exit ${FAKE_NPM_RC:-0}
+NPEOF
+  chmod +x "$SB/bin/npm"
   export OPAX_DAILY_REFRESH="$SB/fake_refresh.sh" OPAX_WEEKLY_REFRESH="$SB/fake_weekly.sh" OPAX_NODE="$SB/bin/node" OPAX_NPM="$SB/bin/npm" OPAX_REPO="$REPO" ORIGIN
   export PATH="$SB/bin:$PATH"
 }
@@ -722,12 +756,17 @@ check "QLD interests refresh weekly before the export; federal does not run twic
 check "the people directory is enriched with the recorded representation right after it is exported" order scripts/export_parliamentarians.py scripts/enrich_profile_jurisdictions.py
 check "the loaders come before the exports, and the tax/charity export is the last" order parli.ingest.acnc_ato scripts/export_speakers.py scripts/export_money_graph.py scripts/export_access.py scripts/export_fits.py scripts/export_interests.py scripts/export_tax_charity.py
 check "no monthly step ran" bash -c "! grep -qE 'qld_contracts|money_ipea|state_rosters|export_suppliers|export_grants|build_pay|export_discovery' '$RS_CALLS'"
+check "the FRL instrument crawl is not part of the Sunday weekly" bash -c "! grep -q 'frl_instruments' '$RS_CALLS' && ! grep -q 'frl_instruments' $WLOG"
+check "the roster export is laid onto the shipped roster after its safety check" order 'export_parliamentarians.py --check-directory' scripts/roster_overlay.py
 check "the contract_suppliers step is given the ABR index directory" bash -c "grep 'contract_suppliers' '$RS_CALLS' | grep -q -- '--abr-dir .*/abr'"
 new_weekly_sandbox w21b
 weekly monthly
 check "monthly alone: exit 0 and only the monthly loaders/exports (plus the tax/charity block at the end)" bash -c "[ '$WRC' -eq 0 ] && grep -q qld_contracts '$RS_CALLS' && grep -q build_pay.py '$RS_CALLS' && ! grep -q 'parli.ingest.acnc_ato' '$RS_CALLS' && grep -q export_tax_charity '$RS_CALLS'"
 check "suppliers and grants exports come before the tax/charity block that reads them" order scripts/export_suppliers.py scripts/export_grants.py scripts/export_tax_charity.py
 check "no KB patch drain without OPAX_SYNC_KB" bash -c "! grep -q arag_patch_speakers '$RS_CALLS'"
+new_weekly_sandbox w21f
+weekly frl
+check "frl alone: only the FRL instrument steps (skipped here: no tracked catalogue), no weekly loaders or exports" bash -c "[ '$WRC' -eq 0 ] && grep -q 'frl_instruments/x_instruments\] SKIP' $WLOG && ! grep -qE 'acnc_ato|export_speakers|export_tax_charity|export_donor_disclosures' '$RS_CALLS'"
 new_weekly_sandbox w21c
 OPAX_SYNC_KB=1 weekly monthly
 check "with the KB on the roster patches are drained" grep -q 'scripts/arag_patch_speakers.py' "$RS_CALLS"
@@ -791,6 +830,9 @@ check "Sunday 2026-09-06, the first: weekly and monthly" bash -c "[ \"\$(cat '$H
 new_sandbox s24d
 OPAX_FORCE_GROUPS="monthly" OPAX_TODAY=2026-09-23 FAKE_WEEKLY_MODE=ok nightly
 check "OPAX_FORCE_GROUPS overrides the calendar" bash -c "[ \"\$(cat '$HOME/weekly.args')\" = monthly ]"
+new_sandbox s24f
+OPAX_TODAY=2026-10-15 FAKE_WEEKLY_MODE=none nightly
+check "Thursday 2026-10-15: the FRL instrument group alone (its own night, off the Sunday weekly)" bash -c "[ \"\$(cat '$HOME/weekly.args')\" = frl ]"
 new_sandbox s24e
 OPAX_FORCE_GROUPS="weekly" OPAX_NIGHTLY_SKIP_PERIODIC=1 FAKE_WEEKLY_MODE=ok nightly
 check "OPAX_NIGHTLY_SKIP_PERIODIC=1 switches them off" test ! -e "$HOME/weekly.args"
@@ -858,23 +900,24 @@ OPAX_FORCE_GROUPS=weekly FAKE_WEEKLY_MODE=ok FAKE_NODE_RED_WHILE_CHANGED=portal/
 check "portal suite red because of a group's files: exit 1" test "$NRC" -eq 1
 check "that group is not published" bash -c "git --git-dir='$ORIGIN' show main:portal/public/speakers.json | python3 -c 'import json,sys; assert len(json.load(sys.stdin))==100'"
 check "the suite is green again after that one revert, so votes and bills still go out" bash -c "git --git-dir='$ORIGIN' show main:portal/public/votes.json | grep -q 'New Member' && git --git-dir='$ORIGIN' show main:portal/public/bills/au-federal-t1.json | grep -q 2026-09-28"
-check "the suite reruns until green, each time after rebuilding the search catalog" bash -c "n=\$(grep -c 'node --test' '$HOME/node.calls'); [ \$n -ge 2 ] && [ \$(grep -c 'npm run build:search' '$HOME/npm.calls') -eq \$n ]"
-check "status names the group that was put back" bash -c "git --git-dir='$ORIGIN' show nightly-status:status.json | grep -q 'new speakers files (green with only that group put back to HEAD)'"
+check "the suite reruns until green, each time after rebuilding the search catalog and restamping" bash -c "n=\$(grep -c 'node --test' '$HOME/node.calls'); [ \$n -ge 2 ] && [ \$(grep -c 'npm run build:search' '$HOME/npm.calls') -eq \$n ] && [ \$(grep -c 'node scripts/stamp_assets.mjs' '$HOME/node.calls') -eq \$n ]"
+check "the blame runs re-run only the failing test file, the closing run the whole suite" bash -c "grep 'node --test' '$HOME/node.calls' | sed -n '2,\$p' | grep -q 'test/fake-red.test.mjs\$' && grep 'node --test' '$HOME/node.calls' | tail -1 | grep -q 'test/\*.test.mjs\$'"
+check "status names the group that was put back" bash -c "git --git-dir='$ORIGIN' show nightly-status:status.json | grep -q 'portal tests failed against the new speakers files (green without them'"
 new_sandbox s25d3
 mkdir -p "$REPO/portal/node_modules" "$REPO/portal/test"
 OPAX_FORCE_GROUPS=weekly FAKE_WEEKLY_MODE=ok FAKE_NODE_RED_WHILE_CHANGED=portal/public/votes.json nightly
 check "the culprit is found by trying each group alone: votes (not the first group) is the one not published" bash -c "[ '$NRC' -eq 1 ] && ! git --git-dir='$ORIGIN' show main:portal/public/votes.json | grep -q 'New Member'"
 check "the innocent groups tried on the way (speakers) are restored, not lost, and bills go out too" bash -c "git --git-dir='$ORIGIN' show main:portal/public/speakers.json | python3 -c 'import json,sys; assert len(json.load(sys.stdin))==101' && git --git-dir='$ORIGIN' show main:portal/public/bills/au-federal-t1.json | grep -q 2026-09-28"
 # Division/SEO projections may also change and be tried before speakers/votes.
-check "multiple runs: all changed (red), innocent groups put back (still red), votes put back (green)" test "$(grep -c 'node --test' "$HOME/node.calls")" -ge 3
-check "status names votes as the culprit" bash -c "git --git-dir='$ORIGIN' show nightly-status:status.json | grep -q 'new votes files (green with only that group put back to HEAD)'"
+check "multiple runs: all changed (red), baseline (green), halves until votes is alone" test "$(grep -c 'node --test' "$HOME/node.calls")" -ge 3
+check "status names votes as the culprit" bash -c "git --git-dir='$ORIGIN' show nightly-status:status.json | grep -q 'portal tests failed against the new votes files (green without them'"
 new_sandbox s25two
 mkdir -p "$REPO/portal/node_modules" "$REPO/portal/test"
 OPAX_FORCE_GROUPS=weekly FAKE_WEEKLY_MODE=ok FAKE_NODE_RED_WHILE_ANY_CHANGED="portal/public/speakers.json portal/public/votes.json" nightly
 check "two failing groups: unrelated speakers/votes are rolled back and the night reports failure" bash -c "[ '$NRC' -eq 1 ] && git --git-dir='$ORIGIN' show main:portal/public/speakers.json | python3 -c 'import json,sys; assert len(json.load(sys.stdin))==100' && ! git --git-dir='$ORIGIN' show main:portal/public/votes.json | grep -q 'New Member'"
 check "temporary bills rollback is restored and accepted bills reach the commit" bash -c "git --git-dir='$ORIGIN' show main:portal/public/bills/au-federal-t1.json | grep -q 2026-09-28 && git --git-dir='$ORIGIN' log -1 --format=%s main | grep -q 'bills: 0 new, 3 changed'"
 check "catch-up is consumed despite two unrelated failures" test ! -f "$HOME/.cache/autoresearch/pipeline/bills-refresh-v1.pending"
-check "the cumulative rollback scenario reached a green suite" bash -c "git --git-dir='$ORIGIN' show nightly-status:status.json | grep -q 'no single group was to blame, green again'"
+check "both culprits are named, each on its own" bash -c "s=\$(git --git-dir='$ORIGIN' show nightly-status:status.json); echo \"\$s\" | grep -q 'new speakers files' && echo \"\$s\" | grep -q 'new votes files'"
 new_sandbox s25d2
 mkdir -p "$REPO/portal/node_modules" "$REPO/portal/test"
 OPAX_FORCE_GROUPS=weekly FAKE_WEEKLY_MODE=ok FAKE_NODE_RC=1 nightly
@@ -882,6 +925,31 @@ check "a suite that is red whatever the data: everything changed goes back to HE
 check "status says the suite is red on main itself" bash -c "git --git-dir='$ORIGIN' show nightly-status:status.json | grep -q 'red on main itself'"
 check "the manifest still went out (the deploy job will report the red suite)" bash -c "git --git-dir='$ORIGIN' show main:portal/public/corpus.json | grep -q '$TODAY'"
 check "permanently rolled-back bills retain catch-up" test -f "$HOME/.cache/autoresearch/pipeline/bills-refresh-v1.pending"
+# The 18 Oct 2026 shape: the weekly roster export breaks tests (here: while the person-paths.js the build derives from
+# it is not HEAD's) and votes breaks another, while speakers, divisions and bills are fine. The old loop re-ran the
+# whole suite once per group and then cumulatively, never cleared, and hit the unit limit with nothing published.
+# person-paths.js is the roster's derived file: put back with it, rebuilt with it, never left behind in the checkout.
+new_sandbox s25oct18
+mkdir -p "$REPO/portal/node_modules" "$REPO/portal/test"
+OPAX_FORCE_GROUPS=weekly FAKE_WEEKLY_MODE=roster FAKE_NODE_RED_WHILE_ANY_CHANGED="portal/public/person-paths.js portal/public/votes.json" nightly
+check "18 Oct shape: people and votes are both named and held, exit 1" bash -c "s=\$(git --git-dir='$ORIGIN' show nightly-status:status.json); [ '$NRC' -eq 1 ] && echo \"\$s\" | grep -q 'new people files' && echo \"\$s\" | grep -q 'new votes files'"
+check "18 Oct shape: the innocent groups are published (speakers, bills)" bash -c "git --git-dir='$ORIGIN' show main:portal/public/speakers.json | python3 -c 'import json,sys; assert len(json.load(sys.stdin))==101' && git --git-dir='$ORIGIN' show main:portal/public/bills/au-federal-t1.json | grep -q 2026-09-28"
+check "18 Oct shape: neither the roster, its derived person-paths.js nor the stamped importer moved on main" bash -c "git --git-dir='$ORIGIN' diff --quiet main~1 main -- portal/public/parliamentarians.json portal/public/person-paths.js portal/public/canonical-urls.js"
+check "18 Oct shape: the box checkout is left clean (no stray derived or stamped file blocks the next sync)" bash -c "[ -z \"\$(git -C '$REPO' status --porcelain --untracked-files=no)\" ]"
+check "18 Oct shape: bounded runs (old loop: one per group, then cumulative)" bash -c "[ \$(grep -c 'node --test' '$HOME/node.calls') -le 8 ]"
+new_sandbox s25leftover
+echo '// a stamp from a run killed mid-gate' >> "$REPO/portal/public/canonical-urls.js"
+FAKE_MODE=ok nightly
+check "a restamped importer left by a run killed mid-gate is put back at the sync, never committed" bash -c "[ '$NRC' -eq 0 ] && git --git-dir='$ORIGIN' diff --quiet main~1 main -- portal/public/canonical-urls.js && [ -z \"\$(git -C '$REPO' status --porcelain -- portal/public/canonical-urls.js)\" ]"
+new_sandbox s25roster
+mkdir -p "$REPO/portal/node_modules" "$REPO/portal/test"
+OPAX_FORCE_GROUPS=weekly FAKE_WEEKLY_MODE=roster FAKE_NODE_RC=0 nightly
+check "a green roster change publishes its derived person-paths.js with it, and the importer restamped to match" bash -c "[ '$NRC' -eq 0 ] && git --git-dir='$ORIGIN' show main:portal/public/person-paths.js | grep -q 'Person New' && [ \"\$(git --git-dir='$ORIGIN' show main:portal/public/canonical-urls.js)\" = \"import '/person-paths.js?v=\$(git --git-dir='$ORIGIN' show main:portal/public/person-paths.js | sha256sum | cut -c1-10)';\" ]"
+new_sandbox s25budget
+mkdir -p "$REPO/portal/node_modules" "$REPO/portal/test"
+OPAX_GATE_BUDGET=3s FAKE_NODE_SLEEP=2 OPAX_FORCE_GROUPS=weekly FAKE_WEEKLY_MODE=ok FAKE_NODE_RED_WHILE_CHANGED=portal/public/speakers.json nightly
+check "a red gate with no time left in its budget holds the changed groups and still ends the night with a status" bash -c "[ '$NRC' -eq 1 ] && git --git-dir='$ORIGIN' show nightly-status:status.json | grep -q 'no time left in the 3s gate budget' && git --git-dir='$ORIGIN' show main:portal/public/speakers.json | python3 -c 'import json,sys; assert len(json.load(sys.stdin))==100'"
+check "and runs the suite only once" test "$(grep -c 'node --test' "$HOME/node.calls")" -eq 1
 new_sandbox s25e
 mkdir -p "$REPO/portal/node_modules" "$REPO/portal/test"
 OPAX_FORCE_GROUPS=weekly FAKE_WEEKLY_MODE=ok FAKE_NODE_RC=0 nightly
@@ -1080,7 +1148,7 @@ check "rolled-back pages also hold bill relationships" bash -c "! git --git-dir=
 new_sandbox s30newpage
 mkdir -p "$REPO/portal/node_modules" "$REPO/portal/test"
 FAKE_DIVISIONS_MODE=new_division FAKE_NODE_RED_WHILE_CHANGED=portal/public/divisions/division-federal-senate-2.json nightly
-check "a test red only while a new division page exists blames divisions, not main" bash -c "[ '$NRC' -eq 1 ] && git --git-dir='$ORIGIN' show nightly-status:status.json | grep -q 'new divisions files (green with only that group put back to HEAD)' && ! git --git-dir='$ORIGIN' show nightly-status:status.json | grep -q 'red on main itself'"
+check "a test red only while a new division page exists blames divisions, not main" bash -c "[ '$NRC' -eq 1 ] && git --git-dir='$ORIGIN' show nightly-status:status.json | grep -q 'portal tests failed against the new divisions files (green without them' && ! git --git-dir='$ORIGIN' show nightly-status:status.json | grep -q 'red on main itself'"
 check "the new page is not published and the rollback leaves no file under the division groups" bash -c "! git --git-dir='$ORIGIN' ls-tree -r --name-only main | grep -q division-federal-senate-2 && [ -z \"\$(git -C '$REPO' status --porcelain -- portal/public/divisions portal/public/seo/recent-votes.json)\" ]"
 new_sandbox s30validation
 python3 - <<PYEOF

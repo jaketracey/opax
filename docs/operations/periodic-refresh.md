@@ -15,7 +15,8 @@ is what each command is *now*.
 Timings marked **measured** were taken on 2026-09-29, first from the desktop (residential IP) against a scratch
 copy of the tables, then on the EC2 nightly VM (**VM**, rehearsal below). Everything else is from the 21 Sep 2026
 receipts or the `docs/DATA-*.md` files and is marked **est.** The wiring is `scripts/weekly_refresh.sh` (weekly and
-monthly groups, run by `scripts/vm/nightly.sh` on Sundays / the first Sunday) plus the daily additions in
+monthly groups, run by `scripts/vm/nightly.sh` on Sundays / the first Sunday; the `frl` group, the FRL in-force
+instrument crawl and its export alone, on Thursdays since 18 Oct 2026) plus the daily additions in
 `scripts/daily_refresh.sh`; `docs/operations/nightly-refresh.md` says how they fit into the night.
 
 ## 1. Setup every step assumes

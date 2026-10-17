@@ -54,8 +54,8 @@
 #   OPAX_PERIODIC_ALLOW_FAIL  periodic steps allowed to fail without failing the night (default none)
 #   OPAX_NODE / OPAX_NPM  node and npm binaries for the pre-commit portal test gate (default: from PATH)
 #   OPAX_GATE_BUILD       0 = the gate does not run `npm run build:search` before the tests
-#   OPAX_FORCE_GROUPS     "weekly", "monthly" or "weekly monthly": run those groups tonight whatever the day
-#                         (rehearsal; normally weekly = every Sunday Sydney, monthly = the first Sunday too)
+#   OPAX_FORCE_GROUPS     "weekly", "monthly", "frl" or a list: run those groups tonight whatever the day
+#                         (rehearsal; normally weekly = every Sunday Sydney, monthly = the first Sunday too, frl = Thursday)
 #   OPAX_WEEKLY_REFRESH   periodic script (default scripts/weekly_refresh.sh)
 #   OPAX_BILL_PARLIAMENT  current federal parliament (default 48)
 #   OPAX_BILLS_TIMEOUT    combined bill fetch/full-export limit (default 20m, plus 60s kill grace)
@@ -63,6 +63,9 @@
 #   OPAX_EVIDENCE_READINESS_TIMEOUT input probe limit (default 60s, plus 5s kill grace; timeout waits)
 #   OPAX_EVIDENCE_SOURCE / LAYERS / PLACES / DECISIONS / ADDITIONAL  matching read-only SQLite inputs
 #   OPAX_TEST_GATE        0 = do not run the portal test suite against the new data before committing
+#   OPAX_GATE_BUDGET      time limit of the portal gate and its blame search, from its first run (default 45m);
+#                         groups not cleared by then are held, the ones proven green are published
+#   OPAX_FRL_DOW          ISO weekday of the FRL instrument night (default 4, Thursday)
 #   OPAX_BOT_NAME / OPAX_BOT_EMAIL   commit identity
 
 set -uo pipefail
@@ -96,6 +99,7 @@ run() { "$@" 2>&1 | tee -a "$LOGFILE"; return "${PIPESTATUS[0]}"; }
 
 FAILURES=()
 WARNINGS=()
+STAMPED_FILES=()
 COMMIT_SHA=""
 DEPLOY="not pushed"
 RESULT_SUMMARY=""
@@ -227,8 +231,11 @@ if [ "${avail_gb:-0}" -lt "$MIN_FREE_GB" ]; then fail "only ${avail_gb:-0}GB fre
 sync_repo() {
   gitn fetch --quiet origin "$BRANCH" || return 1
   git checkout -q "$BRANCH" 2>/dev/null || git checkout -q -B "$BRANCH" "origin/$BRANCH" || return 1
-  # leftovers of a run that died half way: only the data paths are ever touched by the nightly
-  git checkout -q HEAD -- "${DATA_PATHS[@]}" || return 1
+  # leftovers of a run that died half way: the nightly writes the data paths, and its portal gate rebuilds derived
+  # files and restamps importers under portal/ (18 Oct 2026: killed mid-gate); nothing else edits this checkout
+  local p portal=()
+  for p in portal/public portal/src; do git cat-file -e "HEAD:$p" 2>/dev/null && portal+=("$p"); done
+  git checkout -q HEAD -- "${DATA_PATHS[@]}" "${portal[@]+"${portal[@]}"}" || return 1
   git clean -fdq -- "${DATA_PATHS[@]}"
   if git merge-base --is-ancestor "origin/$BRANCH" HEAD; then
     return 0                                   # up to date, or ahead by an unpushed nightly commit
@@ -316,7 +323,9 @@ else
   [ -z "$partial" ] || warn "cut by its time limit tonight, resumes from its checkpoint next run: $partial (the knowledge box takes only ~12-30k resources an hour)"
 fi
 
-# ---- 2b. the periodic groups: weekly (Sundays, Sydney) and monthly (the first Sunday) ------------------
+# ---- 2b. the periodic groups: weekly (Sundays, Sydney), monthly (the first Sunday), frl (Thursdays) ----------
+# The FRL instrument crawl (~2.6 h of 10-second-spaced requests, 18 Oct 2026) has its own night: with the rest of the
+# weekly it left Sunday no time inside the 6 h unit limit to test and publish (scripts/weekly_refresh.sh).
 select_groups() {
   if [ -n "${OPAX_FORCE_GROUPS:-}" ]; then echo "$OPAX_FORCE_GROUPS"; return; fi
   local today dow dom
@@ -324,6 +333,8 @@ select_groups() {
   dow=$(date -d "$today" +%u); dom=${today##*-}
   if [ "$dow" = 7 ]; then
     if [ "$((10#$dom))" -le 7 ]; then echo "weekly monthly"; else echo "weekly"; fi
+  elif [ "$dow" = "${OPAX_FRL_DOW:-4}" ]; then
+    echo "frl"
   fi
 }
 WEEKLY_LOG="$PIPE/weekly.log"
@@ -350,6 +361,9 @@ if [ "${OPAX_NIGHTLY_SKIP_REFRESH:-0}" != 1 ] && [ "${OPAX_NIGHTLY_SKIP_PERIODIC
     [ -z "$stale" ] || warn "a source refused to change its register tonight (kept the last good rows): $stale"
     held=$(last_run_line "$WEEKLY_LOG" 'Roster held:' | sed 's/.*Roster held: //')
     [ -z "$held" ] || warn "the roster export was held and the shipped parliamentarians.json kept (review, then OPAX_ROSTER_ACCEPT=1): $held"
+    # the shipped roster is kept record for record (scripts/roster_overlay.py); a sitting member it lacks needs review
+    overlay=$(last_run_line "$WEEKLY_LOG" 'Roster overlay:' | sed 's/.*Roster overlay: //')
+    case "$overlay" in *"are sitting members"*) warn "the roster export has sitting members the shipped roster lacks, held for a reviewed refresh (OPAX_ROSTER_ACCEPT=1): $overlay" ;; esac
   fi
 fi
 
@@ -436,11 +450,18 @@ divisions_restore_dependencies
 
 # The portal test suite reads the generated files (grant shards, money graph, suppliers ...), and the deploy job runs
 # it before it ships anything: a red test would leave tonight's data on main but undeployed until someone noticed.
-# So run it here, against the new files, before committing (~1.5 min on the VM: the search catalog is rebuilt first, as
-# the deploy job does). If it goes red, the group to blame is found by putting each changed group back to HEAD on its own
-# and re-running (an innocent group is restored from a backup, not lost); only the culprit is not published tonight.
-# Needs Node 24 and portal/node_modules (scripts/vm/bootstrap.sh installs them); without them the gate is skipped and
-# the deploy job is the only test.
+# So run it here, against the new files, before committing, the way the deploy job does: `npm run build:search`, then
+# the content stamps (scripts/stamp_assets.mjs, part of the deploy's build:release: a rebuilt person-paths.js is a new
+# stamp in every importer), then the suite. Needs Node 24 and portal/node_modules (scripts/vm/bootstrap.sh installs
+# them); without them the gate is skipped and the deploy job is the only test.
+#
+# If it goes red, the groups to blame are found inside a time budget (OPAX_GATE_BUDGET, default 45m, counted from the
+# first run), never by re-running the whole suite group after group (18 Oct 2026: six identical full runs, the 6 h unit
+# limit, nothing published). Every changed group is backed up and put back to HEAD; the test files that failed are
+# re-run on that baseline (they must pass: otherwise main itself is red); then the groups are added back in halves,
+# re-running only those files: a half that stays green is kept, a red half is split until each culprit is alone, and
+# a culprit stays at HEAD. When the budget would run out, the groups not yet tried are held too. The groups kept are
+# green together; a last full run proves it and rebuilds the derived files from exactly what will be committed.
 if [ "${OPAX_TEST_GATE:-1}" != 0 ]; then
   gate_groups=()
   for group in "${DATA_GROUPS[@]}"; do
@@ -461,18 +482,51 @@ if [ "${OPAX_TEST_GATE:-1}" != 0 ]; then
       fi
     fi
     if command -v "$NODE" >/dev/null 2>&1 && [ -d "$REPO/portal/node_modules" ]; then
-      # what the deploy job does before its tests: rebuild the search catalog from the public data (~50 s; the
-      # generated shards are gitignored, only manifest.json is tracked and is put back below)
+      GATE_JUNIT="$PIPE/gate-junit.xml"
+      # tracked files already modified outside the data paths before the gate: never staged by the stamp step below
+      mapfile -t OTHERS_BEFORE < <(git diff --name-only)
+      # build (what the deploy job does before its tests: rebuild the search catalog and the derived modules from the
+      # public data, ~50 s), stamp, test; with arguments only those test files run. Sets SUITE_SECS.
       run_suite() {
+        local t0 rc
+        t0=$(date +%s)
         [ "${OPAX_GATE_BUILD:-1}" = 0 ] || (cd "$REPO/portal" && run "$NPM" run build:search) || return 1
-        (cd "$REPO/portal" && run "$NODE" --test --test-reporter=dot test/*.test.mjs)
+        (cd "$REPO" && run "$NODE" scripts/stamp_assets.mjs) || return 1
+        rm -f "$GATE_JUNIT"
+        if [ "$#" -gt 0 ]; then
+          (cd "$REPO/portal" && run "$NODE" --test --test-reporter=dot --test-reporter-destination=stdout \
+             --test-reporter=junit --test-reporter-destination="$GATE_JUNIT" "$@")
+        else
+          (cd "$REPO/portal" && run "$NODE" --test --test-reporter=dot --test-reporter-destination=stdout \
+             --test-reporter=junit --test-reporter-destination="$GATE_JUNIT" test/*.test.mjs)
+        fi
+        rc=$?; SUITE_SECS=$(($(date +%s) - t0)); return "$rc"
       }
+      # the test files with a failing test in the last run (portal-relative), from its JUnit report
+      failing_files() {
+        "$PY" - "$GATE_JUNIT" <<'PYEOF' 2>/dev/null
+import sys, xml.etree.ElementTree as ET
+try:
+    root = ET.parse(sys.argv[1]).getroot()
+except (OSError, ET.ParseError):
+    sys.exit(0)
+files = set()
+for case in root.iter('testcase'):
+    if case.get('failure') is not None or case.find('failure') is not None or case.find('error') is not None:
+        f = case.get('file') or ''
+        if '/test/' in f:
+            files.add('test/' + f.rsplit('/test/', 1)[1])
+print('\n'.join(sorted(files)))
+PYEOF
+      }
+      duration_secs() { local v=$1; case $v in *h) echo $((${v%h} * 3600)) ;; *m) echo $((${v%m} * 60)) ;; *s) echo "${v%s}" ;; *) echo "$v" ;; esac; }
+      GATE_BUDGET=$(duration_secs "${OPAX_GATE_BUDGET:-45m}")
+      GATE_START=$(date +%s)
       log "portal tests against the new data (${gate_groups[*]})"
       if ! run_suite; then
-        # Red. Find the group(s) to blame without throwing away innocent ones: back every changed group up, then put
-        # each back to HEAD alone and re-run; the first one whose revert turns the suite green is the culprit (it stays
-        # reverted; the others are restored from the backup). If no single group does it, two or more together break
-        # a test: put them back cumulatively, in order, until green (the same as blaming all of them).
+        FULL_SECS=$SUITE_SECS; LAST_SECS=$SUITE_SECS
+        mapfile -t FOCUS < <(failing_files)
+        log "portal tests red in ${FULL_SECS}s; failing files: ${FOCUS[*]:-unknown (every trial runs the whole suite)}; finding the groups to blame (budget ${GATE_BUDGET}s)"
         BK="$PIPE/gate-backup"; rm -rf "$BK"; mkdir -p "$BK"
         backup_group() {
           local g=$1 paths
@@ -497,34 +551,99 @@ if [ "${OPAX_TEST_GATE:-1}" != 0 ]; then
             fail "cannot restore test backup for $g"
           fi
         }
+        # one focused run, if the budget still has room for it and for the closing full run: 0 green, 1 red, 2 no time
+        gate_trial() {
+          local left=$((GATE_BUDGET - ($(date +%s) - GATE_START)))
+          [ "$left" -ge $((LAST_SECS + FULL_SECS)) ] || return 2
+          run_suite "${FOCUS[@]+"${FOCUS[@]}"}"; local rc=$?
+          LAST_SECS=$SUITE_SECS
+          return $((rc == 0 ? 0 : 1))
+        }
         for group in "${gate_groups[@]}"; do backup_group "$group"; done
-        culprit=""
-        for group in "${gate_groups[@]}"; do
-          revert_group "$group"
-          if run_suite; then culprit=$group; break; fi
-          restore_group "$group"
-        done
-        if [ -n "$culprit" ]; then
-          fail "portal tests failed against the new $culprit files (green with only that group put back to HEAD): $culprit not published tonight"
-        else
-          reverted=(); green=false
-          for group in "${gate_groups[@]}"; do
-            revert_group "$group"; reverted+=("$group")
-            if run_suite; then green=true; break; fi
-          done
-          if [ "$green" = true ]; then
-            fail "portal tests failed against the new data; no single group was to blame, green again with ${reverted[*]} put back to HEAD: not published tonight"
+        for group in "${gate_groups[@]}"; do revert_group "$group"; done
+        kept=(); culprits=(); untried=()
+        gate_trial; trc=$?
+        # one group alone, red with it and green without it: no trial needed to name it
+        if [ "$trc" = 0 ] && [ "${#gate_groups[@]}" = 1 ]; then culprits=("${gate_groups[0]}"); gate_groups_left=(); else gate_groups_left=("${gate_groups[@]}"); fi
+        if [ "$trc" -ne 0 ]; then
+          untried=("${gate_groups[@]}")
+          if [ "$trc" = 1 ]; then
+            # reverted checked each group is exactly HEAD again (new files removed), so this is not tonight's data.
+            fail "portal tests fail even with every changed group (${gate_groups[*]}) put back to HEAD and its new files removed: the suite is red on main itself (or a test too slow for this box); nothing published tonight except corpus.json"
           else
-            # revert checked each group is exactly HEAD again (new files removed), so this is not tonight's data.
-            fail "portal tests fail even with every changed group (${reverted[*]}) put back to HEAD and its new files removed: the suite is red on main itself (or a test too slow for this box); nothing published tonight except corpus.json"
+            fail "portal tests red (${FOCUS[*]:-whole suite}) and no time left in the ${OPAX_GATE_BUDGET:-45m} gate budget to find out why: ${gate_groups[*]} held, not published tonight"
           fi
+        else
+          # Sets of groups still to try, each "u:" or "s:" plus a space-separated list. A red set splits into its first
+          # half (u:) and second half (s:), queued together. When the first half proves green, the second is red without a
+          # run (the whole was red on top of the same kept groups): it is split again, or named if it is one group. When
+          # the first half is red too, nothing is known about the second, which becomes u:. Start from the two halves
+          # of the whole, which the first run showed red.
+          n=${#gate_groups_left[@]}; half=$(((n + 1) / 2)); queue=()
+          [ "$n" -eq 0 ] || queue=("u:${gate_groups_left[*]:0:$half}")
+          [ "$n" -le "$half" ] || queue+=("s:${gate_groups_left[*]:$half}")
+          while [ "${#queue[@]}" -gt 0 ]; do
+            entry=${queue[0]}; queue=("${queue[@]:1}")
+            read -ra set <<<"${entry:2}"
+            if [ "${#untried[@]}" -gt 0 ]; then untried+=("${set[@]}"); continue; fi
+            if [ "${entry:0:2}" = s: ]; then
+              trc=1   # known red: its first half was green
+            else
+              for group in "${set[@]}"; do restore_group "$group"; done
+              gate_trial; trc=$?
+              if [ "$trc" = 0 ]; then kept+=("${set[@]}"); continue; fi
+              for group in "${set[@]}"; do revert_group "$group"; done
+              # red first half: its second half (next in the queue) is unknown again
+              if [ "${#queue[@]}" -gt 0 ] && [ "${queue[0]:0:2}" = s: ]; then queue[0]="u:${queue[0]:2}"; fi
+            fi
+            if [ "$trc" = 2 ]; then untried+=("${set[@]}")
+            elif [ "${#set[@]}" = 1 ]; then culprits+=("${set[0]}")
+            else
+              half=$(((${#set[@]} + 1) / 2))
+              queue=("u:${set[*]:0:$half}" "s:${set[*]:$half}" "${queue[@]+"${queue[@]}"}")
+            fi
+          done
+          for group in "${culprits[@]+"${culprits[@]}"}"; do
+            fail "portal tests failed against the new $group files (green without them, with ${kept[*]:-no other new group} kept): $group not published tonight"
+          done
+          [ "${#untried[@]}" -eq 0 ] || fail "the portal-test blame ran out of its ${OPAX_GATE_BUDGET:-45m} budget: ${untried[*]} held untried, not published tonight"
+        fi
+        if [ "${#kept[@]}" -gt 0 ]; then
+          # the kept groups passed the failing files together; prove the whole suite and rebuild the derived files from
+          # exactly what will be committed (the last trial may have built from a half that was then put back)
+          log "portal tests: keeping ${kept[*]}; closing full run"
+          if ! run_suite; then
+            for group in "${kept[@]}"; do revert_group "$group"; done
+            fail "portal tests: the closing full run failed with ${kept[*]} (green on the failing files alone): those held too, not published tonight"
+          fi
+        else
+          # nothing kept: put every gate group back once more, with what the last build derived from a red trial
+          for group in "${gate_groups[@]}"; do revert_group "$group"; done
         fi
         rm -rf "$BK"
       fi
-      # build outputs of build:search, never ours to commit: leave the checkout clean outside the data paths
-      for built in portal/public/search-catalog/manifest.json portal/public/graph/party-members.json; do
+      # build outputs that read every group, never ours to commit: leave the checkout clean outside the data paths
+      for built in "${BUILD_ONLY_PATHS[@]}"; do
         git checkout -q HEAD -- "$built" 2>/dev/null || true
       done
+      # Content stamps follow the generated modules (portal/public/person-paths.js): the last build stamped their
+      # importers. Committed with the data when a published group changed one of them, put back when none did.
+      stamped=()
+      while IFS= read -r f; do
+        ours=false
+        for p in "${DATA_PATHS[@]}" "${OTHERS_BEFORE[@]+"${OTHERS_BEFORE[@]}"}"; do case "$f" in "$p"|"$p"/*) ours=true; break ;; esac; done
+        [ "$ours" = true ] || stamped+=("$f")
+      done < <(git diff --name-only)
+      if [ "${#stamped[@]}" -gt 0 ]; then
+        if [ -n "$(git status --porcelain -- portal/public/person-paths.js)" ]; then
+          STAMPED_FILES=("${stamped[@]}")
+          log "restamped ${#stamped[@]} importer(s) of a changed generated module, committed with the data: ${stamped[*]:0:8}"
+        else
+          # e.g. the last trial built a held group's module: no published group changed one, so HEAD's stamps stand
+          git checkout -q HEAD -- "${stamped[@]}" || fail "cannot put the stamped files back: ${stamped[*]:0:8}"
+          log "put back ${#stamped[@]} stamped file(s) to HEAD: no published group changed a generated module"
+        fi
+      fi
     else
       log "WARN: node or portal/node_modules missing: not running the portal tests before committing (${gate_groups[*]} changed)"
     fi
@@ -594,10 +713,14 @@ mapfile -t DATA_PATHS < <(tracked_data_paths)
 if [ "${#DATA_PATHS[@]}" -gt 0 ]; then
   git add -A -- "${DATA_PATHS[@]}" || { fail "could not stage data changes"; finish; }
 fi
+# the importers the gate restamped for a changed generated module (person-paths.js), so main passes stamp_assets --check
+if [ -n "${STAMPED_FILES[*]:-}" ]; then
+  git add -- "${STAMPED_FILES[@]}" || { fail "could not stage the restamped importers"; finish; }
+fi
 others=""
 while IFS= read -r line; do
   f=${line:3}; ours=false
-  for p in "${DATA_PATHS[@]}"; do case "$f" in "$p"|"$p"/*) ours=true; break ;; esac; done
+  for p in "${DATA_PATHS[@]}" "${STAMPED_FILES[@]+"${STAMPED_FILES[@]}"}"; do case "$f" in "$p"|"$p"/*) ours=true; break ;; esac; done
   [ "$ours" = true ] || others+="$line "
 done < <(git status --porcelain | grep -v '^??' || true)
 [ -z "$others" ] || log "WARN: other tracked files are modified and were NOT committed: $(echo "$others" | cut -c1-300)"
@@ -633,6 +756,7 @@ else
   fi
   body="Unattended run of scripts/vm/nightly.sh on the OPAX VM. Data files only: bills, votes.json, corpus.json, CACHE_EPOCH"
   [ "${#changed_groups[@]}" -gt 0 ] && body="$body, ${changed_groups[*]}"
+  [ -z "${STAMPED_FILES[*]:-}" ] || body="$body; and the content stamps of the generated modules they changed (${STAMPED_FILES[*]:0:6})"
   git commit -q -m "$subject" -m "$body." \
     || { fail "git commit failed"; finish; }
   log "committed: $subject"

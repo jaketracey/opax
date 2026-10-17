@@ -234,6 +234,21 @@ holds and keeps the file byte for byte; the override installs) and `scripts/vm/t
 held export is STALE with a `Roster held:` line; the night stays ok with the reason in its
 warnings).
 
+**Overlay onto the shipped roster (18 Oct 2026).** An export that passes the safety net can still undo main's
+curated records: the overlays `export_people.sh` re-applies (enrichment, folds, witness splits) key on the
+database's rows, and the refresh box's rows are not the ones main was reviewed on. The first Sunday weekly on the
+box passed the net (23 added rows, 1 dropped, under the cap) and still lost an SA member's pinned party, a former
+senator's row, the pending QLD counts and the identity set the sponsor census pins. So the last step,
+`scripts/roster_overlay.py`, lays the export onto the shipped file: every shipped record is kept exactly, new rows
+are held, dropped rows are kept, and the shipped `meta` stays, so a night like that installs nothing. That matches
+`scripts/test_roster_main_preservation.py`, where any clean-record drift (a speech count included) is an error. It
+prints `ROSTER OVERLAY: kept N shipped records (M differ in the export: fields); held K new row(s): names; ...`,
+which `weekly_refresh.sh` logs as `Roster overlay:`; `nightly.sh` turns it into a warning only when a held row is
+a sitting member (a real roster change waiting for review). A reviewed refresh skips it with
+`OPAX_ROSTER_ACCEPT=1`; `OPAX_ROSTER_OVERLAY=0` rehearses the overlays alone. Tests: `scripts/test_roster_overlay.py`,
+and the box-shaped replay in `scripts/test_roster_export_wrappers.py` (installs the shipped bytes; the overlays
+alone still reproduce the scoped identities).
+
 **Left open.** The five `wrong_face` files (and their JPEG twins and entries) should be deleted so
 a refresh can fetch the real portraits; 10725 will come back as Sandy Macdonald's from
 OpenAustralia, so John Alexander needs Commons. Rex Patrick's 10903 and Steve Martin's 10905 are
