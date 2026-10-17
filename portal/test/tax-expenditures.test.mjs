@@ -27,18 +27,40 @@ test('page and CSV never sum non-additive items and show only Treasury published
  h.rows.push({...base,item_id:'A999',published:true,value:88888888});
  h.rows.push({...base,published:false,value:77777777});
  const rows=taxExpendituresRows(h),csv=toCSV(rows,taxExpendituresTableConfig(rows));
- assert.equal(rows.length,2448);assert.doesNotMatch(csv,/Calculated total|99999999|88888888|77777777/);
+ assert.equal(rows.length,2444);assert.doesNotMatch(csv,/Calculated total|99999999|88888888|77777777/);
  assert.deepEqual([...new Set(rows.filter(r=>r.record_kind!=='item').map(r=>r.item_id))],['C2+C3','C1+C4']);
  assert.doesNotMatch((await page(h)).prerender,/Calculated total|99999999|88888888|77777777/);
 });
 
-test('negative, unquantified, nil, non-zero rounding and not-for-publication codes survive CSV exactly',()=>{
+test('negative, unquantified, nil and non-zero rounding codes survive CSV exactly',()=>{
  const rows=taxExpendituresRows(fixture());
- for(const marker of ['-','..','*','nfp']){
+ for(const marker of ['-','..','*']){
   const row=rows.find(r=>r.source_value===marker);assert.ok(row);assert.equal(row.value,null);assert.equal(row.estimate_display,marker);
   const csv=toCSV([row],taxExpendituresTableConfig(rows));assert.ok(csv.includes(','+marker+','));assert.ok(!csv.includes(",'"+marker+','));
  }
  assert.ok(rows.some(r=>r.value<0 && r.amount<0));assert.ok(rows.some(r=>r.included_in && /included in/.test(r.estimate_status)));
+});
+
+
+test('withheld cells stay in internal reconciliation and are absent from hub, serving, hydration and CSV',async()=>{
+ const source=readFileSync(new URL('../../data/staged/tax-expenditures/series.jsonl',import.meta.url),'utf8').trim().split('\n').map(JSON.parse);
+ const checks=JSON.parse(readFileSync(new URL('../../data/staged/tax-expenditures/reconciliation.json',import.meta.url)));
+ const withheld=source.filter(r=>r.source_value==='nfp');assert.equal(withheld.length,4);
+ assert.deepEqual(withheld.map(r=>[r.item_id,r.measure_year,r.cell]),[['G8','2025-26','G280'],['G8','2026-27','H280'],['G8','2027-28','I280'],['G8','2028-29','J280']]);
+ for(const r of withheld)assert.ok(checks.some(c=>c.item_id===r.item_id && c.year===r.measure_year && c.workbook_cell===r.cell && c.workbook_value==='nfp' && c.statement_value==='nfp' && c.status==='pass'));
+ const hubJSON=JSON.stringify(staged);assert.doesNotMatch(hubJSON,/nfp|not for publication|[G-J]280/);
+ // Inject old or malformed rows to exercise the independent serving boundary.
+ const h=fixture();h.rows.push(...withheld);
+ for(const r of withheld)h.items.find(i=>i.item_id===r.item_id).cells[r.measure_year]=r.cell;
+ for(const r of withheld)h.rows.push({...r,source_value:null});
+ const rows=taxExpendituresRows(h);assert.equal(rows.length,2444);
+ assert.ok(!rows.some(r=>r.item_id==='G8' && r.measure_year>='2025-26'));
+ assert.doesNotMatch(toCSV(rows,taxExpendituresTableConfig(rows)),/nfp|not for publication|[G-J]280/);
+ const result=await page(h);assert.equal(result.status,200);assert.doesNotMatch(result.prerender,/nfp|not for publication|[G-J]280/);
+ const dom=new JSDOM(result.prerender,{url:'https://opax.test/register/tax-expenditures'});
+ const original=globalThis.MutationObserver;globalThis.MutationObserver=dom.window.MutationObserver;
+ try{hydrateRegisterTables(dom.window.document);await new Promise(setImmediate);assert.doesNotMatch(dom.serialize(),/nfp|not for publication|[G-J]280/)}
+ finally{dom.window.document.body.replaceChildren();await new Promise(setImmediate);globalThis.MutationObserver=original;dom.window.close()}
 });
 
 test('licence, hash, identity, unknown codes and cell gates exclude rows from HTML, hydration and CSV',async()=>{
@@ -50,7 +72,7 @@ test('licence, hash, identity, unknown codes and cell gates exclude rows from HT
 test('missing asset keeps readiness closed, populated snapshot opens it; no non-read methods',async()=>{
  const req=new Request('https://opax.test/tax-expenditures/ready.json');
  assert.deepEqual(await(await taxExpendituresReady(req,async()=>{throw Error('Not promoted')})).json(),{ready:false,count:0});
- assert.deepEqual(await(await taxExpendituresReady(req,async()=>fixture())).json(),{ready:true,count:2448});
+ assert.deepEqual(await(await taxExpendituresReady(req,async()=>fixture())).json(),{ready:true,count:2444});
  assert.equal((await taxExpendituresReady(new Request(req,{method:'POST'}),async()=>fixture())).status,405);
 });
 

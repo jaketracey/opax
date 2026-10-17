@@ -14,7 +14,7 @@ The [rights finding](licence.md) records the website and publication grants, att
 
 ## Staged observations and reconciliation
 
-**2,448 observations**: **304 item IDs × eight years = 2,432 item rows**, plus **16 cells in two Treasury-published combined groups**. All are **revenue forgone estimates**, in nominal AUD million on an accrual basis. Historical years are not relabelled actuals. No numerical outlay-equivalent series is published in this statement; its explanation of that alternative method is not an outlay-equivalent dataset.
+**2,448 internal source observations**: **304 item IDs × eight years = 2,432 item rows**, plus **16 cells in two Treasury-published combined groups**. The public projection contains **2,444 observations**: four publisher-withheld G8 cells (2025–26 through 2028–29, G280:J280) are retained only in internal source/reconciliation evidence and excluded from the public hub, cell allowlist, HTML, hydration and CSV. All are **revenue forgone estimates**, in nominal AUD million on an accrual basis. Historical years are not relabelled actuals. No numerical outlay-equivalent series is published in this statement; its explanation of that alternative method is not an outlay-equivalent dataset.
 
 **133 estimates are negative.** Original workbook markers are preserved as distinct non-numeric values:
 
@@ -24,7 +24,7 @@ The [rights finding](licence.md) records the website and publication grants, att
 | `..` | Non-zero rounded to zero | 91 |
 | `-` | Nil, without an inclusion reference | 75 |
 | `-` plus native statement reference | Included in another item; workbook nil | 48 |
-| `nfp` | Not for publication due to commercial sensitivities | 4 |
+| `nfp` | Not for publication due to commercial sensitivities; internal evidence only | 4 |
 
 The six included IDs are **A13 → A43; B16 → B92; B71/B73/B74 → B72; D5 → D9**. The Word tables use a single merged “Included in” cell across all eight years while the workbook uses `-`. This source difference is explicit in each affected row's status, rather than being treated as zero or silently asserted as identical numerical data. No withheld estimate is reconstructed.
 
@@ -43,7 +43,7 @@ Six sequential GETs with `OPAXBot/1.0 (+https://opax.com.au/about; corrections@o
 
 ## Web and promotion boundary
 
-`/register/tax-expenditures` uses the existing Worker SSR and shared DataTable/register-table implementation. It explains benchmarks, non-additivity and the difference from cash spending; shows the six largest positive item estimates for **2025–26**; separates Treasury's two combined estimates; and exposes all 2,448 rows with search, filters, sorting and CSV. Numeric estimate sorting is available as “Estimate in AUD” in the sort control; formatted values/codes are not sorted lexically. Lowercase m/bn follows the shared money formatter. Original values/codes and units remain in CSV. No private-person profiles, identities or joins are created. The app is [plan only](app-plan.md).
+`/register/tax-expenditures` uses the existing Worker SSR and shared DataTable/register-table implementation. It explains benchmarks, non-additivity and the difference from cash spending; shows the six largest positive item estimates for **2025–26**; separates Treasury's two combined estimates; and exposes 2,444 public rows with search, filters, sorting and CSV. Four publisher-withheld cells are excluded. Numeric estimate sorting is available as “Estimate in AUD” in the sort control; formatted values/codes are not sorted lexically. Lowercase m/bn follows the shared money formatter. Public source values, permitted codes and units remain in CSV. No private-person profiles, identities or joins are created. The app is [plan only](app-plan.md).
 
 `tax-expenditures` is registered with `scripts/promote_hub_data.py`, **outside default/nightly hubs**. The [review file](../../../data/staged/tax-expenditures/review.json) remains **pending**, with the five exact input digests. The orchestrator must approve a committed snapshot and explicitly run the reviewed promoter. This lane never runs real promotion. The actual unpromoted Worker returns **503** and keeps the gated Money → Public money link hidden. The local preview injects staged bytes into ASSETS in memory, enabling review without producing `portal/public/tax-expenditures/data.json`.
 
@@ -53,7 +53,7 @@ The shared CSV guard has one narrow change: an exact standalone `-` is exported 
 
 `npm ci` completed before Node tests. Targeted parser/access/licence/promotion tests, GFS/promoter regressions, shared register-table tests and focused navigation readiness checks, `npx tsc --noEmit -p .`, `npm run -s check`, the staging dry run with original-file verification, and **Wrangler deploy --dry-run** pass. The reviewed-promoter dry run returns its expected **pending-review refusal** and creates no asset. `votes.json` is byte-identical to both the lane start and `origin/main`; schema remains 1. The existing full navigation suite cannot start in this clean checkout because its ignored `portal/public/hubs/index.json` build prerequisite is absent; no unrelated public hub data was built. Its annual-lane fixture mapping is updated for tax expenditures, while focused unit and actual-Worker browser tests cover both Money-gate states. See [validation receipt](validation.json).
 
-Browser proof runs the actual bundled local Worker with external browser requests blocked. Both 390px and 1440px return 200 with staged fixture data, render six item headlines plus two combined groups, search 2,448 → 24 rows for “Main residence”, and export source/licence/codes. Without JavaScript the 25-row SSR table and all eight cards remain. At 390px the table, its own scroll extent and container are each **350px**, and all 25 displayed estimate cells lie inside the container. Desktop table width is about **1325px** in a 1325px container. No page errors. Removing staged injection proves 503, no table and no Money link; populated injection proves the Money link appears.
+Browser proof runs the actual bundled local Worker with external browser requests blocked. Both 390px and 1440px return 200 with staged fixture data, render six item headlines plus two combined groups, search 2,444 → 24 rows for “Main residence”, and export source/licence/codes. Without JavaScript the 25-row SSR table and all eight cards remain. At 390px the table, its own scroll extent and container are each **350px**, and all 25 displayed estimate cells lie inside the container. Desktop table width is about **1325px** in a 1325px container. No page errors. Removing staged injection proves 503, no table and no Money link; populated injection proves the Money link appears.
 
 Screenshots and raw QA logs are local, under `portal/private/tax-expenditures/`:
 
@@ -61,4 +61,8 @@ Screenshots and raw QA logs are local, under `portal/private/tax-expenditures/`:
 - `tax-expenditures-1440-top.png` and `tax-expenditures-1440-table.png`
 - `browser-results.json`, targeted-test logs, staging/check and Worker dry-run logs
 
-**Held:** real promotion, deployment and public navigation await orchestrator review/shipping. No acquired document has a rights/access hold in this bounded scope. Four `nfp` cells remain publisher-withheld codes. Earlier statement vintages and 34 distributional/chart sheets remain outside the reviewed scope; no claim of complete historical or distributional coverage. No native app work has shipped.
+**Held:** real promotion, deployment and public navigation await orchestrator review/shipping. No acquired document has a rights/access hold in this bounded scope. Four `nfp` cells remain only in internal reconciliation evidence and never enter the public projection. Earlier statement vintages and 34 distributional/chart sheets remain outside the reviewed scope; no claim of complete historical or distributional coverage. No native app work has shipped.
+
+## Review correction and explicit promotion
+
+Round 1 addresses the sole P1 from the review of `e4c9b2f87`: withhold G8 2025–26..2028–29 from every public output. Both the Python projection and TypeScript serving boundary reject the source marker and withheld status. Public item metadata also omits those four cell references. Internal rows and all 2,457 reconciliations remain unchanged. The browser checker now reads the actual promoted public asset, verifies its review manifest and byte identity, checks all public/hydrated/exported outputs, and expects 2,444 observations. Promotion is expressly authorised in the follow-up user instruction and will be recorded against the fixed commit. No new Treasury request is required or made.

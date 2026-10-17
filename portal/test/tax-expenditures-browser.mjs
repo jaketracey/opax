@@ -21,12 +21,17 @@ const assertPhone=g=>{
  if(!g.amountCells || !g.amountsInsideContainer)throw Error('Tax estimates need sideways scrolling: '+JSON.stringify(g));
 };
 try{
- const staged=await readFile(resolve(root,'data/staged/tax-expenditures/hub.json'));
+ const assetPath='portal/public/tax-expenditures/data.json',promotedBytes=await readFile(resolve(root,assetPath));
+ const promoted=JSON.parse(promotedBytes),review=JSON.parse(await readFile(resolve(root,'data/staged/tax-expenditures/review.json')));
+ if(review.status!=='approved'||promoted.promotion?.reviewed_commit!==review.reviewed_commit)throw Error('Public asset does not match approved review');
+ if(promoted.rows.length!==2444||/nfp|not for publication|[G-J]280/.test(promotedBytes.toString()))throw Error('Withheld cells remain in promoted asset');
  const response=await context.request.get(base+'/tax-expenditures/data.json');
- if(!(await response.body()).equals(staged))throw Error('Preview does not serve the staged data fixture');
+ if(response.status()!==200 || !(await response.body()).equals(promotedBytes))throw Error('Preview does not serve the promoted public asset');
+ const asset={path:assetPath,status:response.status(),bytes:promotedBytes.length,sha256:createHash('sha256').update(promotedBytes).digest('hex'),reviewedCommit:review.reviewed_commit,counts:promoted.promotion.counts};
  for(const width of [390,1440]){
   await page.setViewportSize({width,height:1000});const response=await page.goto(base+'/register/tax-expenditures');
   if(response.status()!==200)throw Error('Page HTTP '+response.status());
+  if(/nfp|not for publication|[G-J]280/.test(await response.text()))throw Error('Withheld cells remain in SSR/hydration');
   await page.waitForSelector('[data-datatable]');await page.waitForFunction(()=>!document.querySelector('[data-register-config]'));await page.evaluate(()=>document.fonts.ready);
   const overflow=await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth);
   if(overflow)throw Error('Page overflow at '+width);
@@ -34,8 +39,16 @@ try{
   await page.screenshot({path:resolve(root,`portal/private/tax-expenditures/tax-expenditures-${width}-top.png`),fullPage:false});
   await page.evaluate(()=>scrollTo(0,scrollY+document.querySelector('.dt-scroll').getBoundingClientRect().top-160));
   await page.screenshot({path:resolve(root,`portal/private/tax-expenditures/tax-expenditures-${width}-table.png`),fullPage:false});
-  results.push({width,status:response.status(),horizontalOverflow:overflow,table,headlineItems:await page.locator('#tax-largest + p + .tax-items .tax-item').count(),rows:JSON.parse(await page.locator('[data-dt-page]').textContent()).total});
+  results.push({width,status:response.status(),horizontalOverflow:overflow,table,headlineItems:await page.locator('#tax-largest + p + .tax-items .tax-item').count(),combinedCards:await page.locator('#tax-combined + p + .tax-items .tax-item').count(),visibleRows:await page.locator('[data-datatable] tbody tr').count(),rows:JSON.parse(await page.locator('[data-dt-page]').textContent()).total});
  }
+ const fullDownload=page.waitForEvent('download');await page.locator('[data-export]').click();
+ const fullCSV=await readFile(await(await fullDownload).path(),'utf8');
+ if(/nfp|not for publication|[G-J]280/.test(fullCSV))throw Error('Withheld cells remain in full CSV');
+ await page.locator('[data-search]').fill(promoted.rows.find(r=>r.item_id==='G8').title);
+ await page.waitForFunction(()=>JSON.parse(document.querySelector('[data-dt-page]').textContent).total<2444);
+ const g8Rows=JSON.parse(await page.locator('[data-dt-page]').textContent());
+ if(g8Rows.total!==4 || g8Rows.rows.some(r=>r.item_id!=='G8'||r.measure_year>='2025-26'))throw Error('Withheld G8 years remain in hydrated table');
+ await page.locator('[data-search]').fill('');await page.waitForFunction(()=>JSON.parse(document.querySelector('[data-dt-page]').textContent).total===2444);
  const before=JSON.parse(await page.locator('[data-dt-page]').textContent()).total;
  await page.locator('[data-search]').fill('Main residence');await page.waitForFunction(total=>JSON.parse(document.querySelector('[data-dt-page]').textContent).total<total,before);
  const after=JSON.parse(await page.locator('[data-dt-page]').textContent()).total;
@@ -46,7 +59,7 @@ try{
  const staticPage=await staticContext.newPage();await staticPage.setViewportSize({width:390,height:1000});await staticPage.goto(base+'/register/tax-expenditures');
  if(await staticPage.locator('.tax-item').count()!==8 || await staticPage.locator('[data-datatable] tbody tr').count()!==25)throw Error('Estimates require JavaScript');
  const staticPhone=await geometry(staticPage);assertPhone(staticPhone);await staticContext.close();
- const ready=await(await context.request.get(base+'/tax-expenditures/ready.json')).json();if(!ready.ready||ready.count!==2448)throw Error('Data readiness gate remains closed');
+ const ready=await(await context.request.get(base+'/tax-expenditures/ready.json')).json();if(!ready.ready||ready.count!==2444)throw Error('Data readiness gate remains closed');
  await page.getByRole('button',{name:'Money',exact:true}).click();
  if(!await page.getByRole('link',{name:'Tax expenditures',exact:true}).isVisible())throw Error('Populated data is absent from Money menu');
  holdData();
@@ -60,7 +73,6 @@ try{
  if(await heldPage.getByRole('link',{name:'Tax expenditures',exact:true}).count()!==0)throw Error('Unpromoted data appears in Money menu');
  await heldContext.close();
  if(errors.length)throw Error(errors.join('; '));
- const result={preview:'Local Worker; staged hub injected in ASSETS memory only; no public asset/promotion; external browser requests blocked',
-  stagedSha256:createHash('sha256').update(staged).digest('hex'),results,search:{before,after},csvReceipts:true,ssr:true,staticPhone,unpromoted:{status:503,table:false,moneyLink:false},populatedMoneyLink:true,pageErrors:errors};
+ const result={preview:'Local Worker; actual promoted portal/public asset; external browser requests blocked',asset,withheldCellsAbsent:true,g8PublicRows:g8Rows.total,results,search:{before,after},csvReceipts:true,ssr:true,staticPhone,unpromoted:{status:503,table:false,moneyLink:false},populatedMoneyLink:true,pageErrors:errors};
  await writeFile(resolve(root,'portal/private/tax-expenditures/browser-results.json'),JSON.stringify(result,null,2)+'\n');console.log(JSON.stringify(result));
 }finally{await browser.close();await close()}

@@ -31,7 +31,13 @@ def checked_projection(stage, verify_originals=False):
         if not re.fullmatch(r'https://treasury\.gov\.au/sites/default/files/\d{4}-\d{2}/p\d{4}-\d+(?:-chart-data)?\.(?:xlsx|pdf|docx)',d['url']):raise ValueError('Unapproved original URL')
     grant=next(d['receipt']['sha256'] for d in docs.values() if d['format']=='DOCX')
     if any(d['licence']['document_grant_sha256']!=grant for d in docs.values()):raise ValueError('Statement grant mismatch')
-    if projection(inventory,rows)!=hub or len(hub['rows'])!=len(rows):raise ValueError('Rows differ from cleared projection')
+    withheld=[r for r in rows if r.get('source_value')=='nfp' or r.get('estimate_status')=='not for publication']
+    if projection(inventory,rows)!=hub or len(hub['rows'])!=len(rows)-len(withheld):raise ValueError('Rows differ from cleared projection')
+    if {(r['item_id'],r['measure_year'],r['cell']) for r in withheld}!={('G8',f'{y}-{str(y+1)[2:]}',f'{c}280') for y,c in zip(range(2025,2029),'GHIJ')}:
+        raise ValueError('Bounded withheld-cell evidence changed')
+    if any(not any(c.get('item_id')==r['item_id'] and c.get('year')==r['measure_year'] and c.get('workbook_cell')==r['cell']
+                   and c.get('workbook_value')=='nfp' and c.get('statement_value')=='nfp' for c in checks) for r in withheld):
+        raise ValueError('Withheld reconciliation evidence missing')
     for r in rows:
         raw=r['source_value']
         normalized=int(re.sub(r'[\s,]','',raw)) if r['record_kind']=='published combined estimate' else raw
@@ -55,7 +61,8 @@ def checked_projection(stage, verify_originals=False):
         for r in (r for r in rows if r['record_kind']!='item'):
             item=combined[r['item_id']]
             if item['values'][item['years'].index(r['measure_year'])]!=r['source_value']:raise ValueError('Original combined cell mismatch')
-    return hub,{'documents':len(docs),'items':len({r['item_id'] for r in item_rows}),'rows':len(rows),
+    return hub,{'documents':len(docs),'items':len({r['item_id'] for r in item_rows}),'rows':len(hub['rows']),
+        'internal_rows':len(rows),'withheld_rows_excluded':len(withheld),
         'published_combined_rows':len(rows)-len(item_rows),'years':sorted({r['measure_year'] for r in rows}),
         'reconciliation':dict(Counter(c['status'] for c in checks))}
 

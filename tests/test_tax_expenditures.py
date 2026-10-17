@@ -65,7 +65,7 @@ class TaxExpendituresTest(unittest.TestCase):
 
     def test_staged_counts_and_published_totals_reconcile(self):
         hub,counts=checked_projection(ROOT/'data/staged/tax-expenditures')
-        self.assertEqual(counts['rows'],2448);self.assertEqual(counts['published_combined_rows'],16)
+        self.assertEqual(counts['rows'],2444);self.assertEqual(counts['internal_rows'],2448);self.assertEqual(counts['withheld_rows_excluded'],4);self.assertEqual(counts['published_combined_rows'],16)
         self.assertEqual(counts['reconciliation'],{'pass':2457})
         self.assertEqual({r['item_id'] for r in hub['rows'] if r['record_kind']!='item'},{'C2+C3','C1+C4'})
         self.assertEqual(next(r['value'] for r in hub['rows'] if r['item_id']=='C2+C3' and r['measure_year']=='2025-26'),32200)
@@ -73,7 +73,21 @@ class TaxExpendituresTest(unittest.TestCase):
     def test_annual_lane_is_opt_in_and_promotion_requires_orchestrator_review(self):
         from scripts.promote_hub_data import DEFAULT_HUBS, validated_asset, PromotionError
         self.assertNotIn('tax-expenditures',DEFAULT_HUBS)
-        with self.assertRaisesRegex(PromotionError,'review: tax-expenditures'):validated_asset('tax-expenditures',ROOT)
+        with patch('scripts.promote_hub_data.load',side_effect=lambda path: {'status':'pending'} if path.name=='review.json' else json.loads(path.read_bytes())):
+            with self.assertRaisesRegex(PromotionError,'review: tax-expenditures'):validated_asset('tax-expenditures',ROOT)
+
+    def test_withheld_rows_remain_internal_and_never_enter_projection(self):
+        d,i,g,inventory=fixture();g[1][2]='nfp'
+        rows=parse_sheet(g,d,{'A1':i});self.assertEqual(rows[0]['source_value'],'nfp')
+        hub=projection(inventory,rows)
+        self.assertEqual(len(hub['rows']),1);self.assertEqual(hub['items'][0]['cells'],{'2026-27':'D2'})
+        self.assertNotIn('nfp',json.dumps(hub))
+        source=[json.loads(line) for line in (ROOT/'data/staged/tax-expenditures/series.jsonl').read_text().splitlines()]
+        checks=json.loads((ROOT/'data/staged/tax-expenditures/reconciliation.json').read_text())
+        withheld=[r for r in source if r['source_value']=='nfp'];self.assertEqual(len(withheld),4)
+        self.assertEqual(sum(c.get('workbook_value')=='nfp' and c['status']=='pass' for c in checks),4)
+        public=json.loads((ROOT/'data/staged/tax-expenditures/hub.json').read_text())
+        self.assertFalse(any(r['source_value']=='nfp' for r in public['rows']))
 
     def test_access_refusal_stops_subsequent_acquisition(self):
         from scripts.tax_expenditures.acquire import fetch

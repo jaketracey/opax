@@ -29,7 +29,8 @@ def projection(inventory, rows):
     cleared = []
     for r in rows:
         d, i = docs.get(r.get('source_file')), items.get(r.get('item_id'))
-        if not d or not i or r.get('published') is not True or r.get('estimate_basis') != 'revenue forgone':
+        if (not d or not i or r.get('published') is not True or r.get('estimate_basis') != 'revenue forgone'
+            or r.get('source_value') == 'nfp' or r.get('estimate_status') == 'not for publication'):
             continue
         if (r.get('source_url') != d['url'] or r.get('sha256') != d['receipt']['sha256'] or r.get('snapshot') != d['receipt']['snapshot']
             or r.get('statement') != d['statement'] or r.get('licence_url') != CC or r.get('unit') != 'AUD million'
@@ -45,7 +46,9 @@ def projection(inventory, rows):
         'licence':{'name':'CC BY 4.0','url':CC,'terms_url':TERMS,
             'attribution':'Based on Commonwealth of Australia data. © Commonwealth of Australia 2025. Treasury, 2025–26 Tax Expenditures and Insights Statement.',
             'changes':'Published cells selected and reformatted; displayed in m/bn with original AUD million values retained. No item, category or year estimates added by OPAX.'},
-        'items':list(items.values()),'documents':[d for d in docs.values() if any(r['source_file']==d['id'] for r in cleared)],'rows':cleared}
+        'items':[{**i, 'cells':{r['measure_year']:r['cell'] for r in cleared if r['item_id']==i['item_id']}}
+                 for i in items.values() if any(r['item_id']==i['item_id'] for r in cleared)],
+        'documents':[d for d in docs.values() if any(r['source_file']==d['id'] for r in cleared)],'rows':cleared}
 
 
 def build(root=ROOT):
@@ -143,6 +146,7 @@ def build(root=ROOT):
     hub=projection(inventory,rows);write(stage/'hub.json',hub)
     summary={'statement':inventory['statement'],'items':len(items),'published_combined_groups':len(combined),'item_rows':sum(r['record_kind']=='item' for r in rows),
         'combined_rows':sum(r['record_kind']!='item' for r in rows),'rows':len(rows),'years':sorted({r['measure_year'] for r in rows}),
+        'public_rows':len(hub['rows']),'withheld_rows_excluded':len(rows)-len(hub['rows']),
         'negative_estimates':sum(r['value'] is not None and r['value']<0 for r in rows),'estimate_status':dict(Counter(r['estimate_status'] for r in rows)),
         'reconciliation':dict(Counter(c['status'] for c in checks)),'held_documents':0,'outlay_equivalent_rows':0}
     write(stage/'summary.json',summary);print(json.dumps(summary,indent=2));return hub
