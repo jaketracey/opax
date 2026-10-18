@@ -226,9 +226,12 @@ def person_key(name: Optional[str]) -> Optional[str]:
 # ---------------------------------------------------------------------------
 
 
-def nsw_sitting_days(year: int) -> list[dict]:
+def nsw_sitting_days(year: int, today: Optional[date] = None) -> list[dict]:
+    # The year listing grows as the House sits, so only a finished year may come from the cache:
+    # a cached current-year list never saw a later sitting day (NSW divisions stuck at 17 Sep 2026).
+    current = year >= (today or date.today()).year
     raw = _get(f"{NSW_API}/year/{year}", accept="application/json",
-               cache_key=f"nsw/year_{year}.json")
+               cache_key=None if current else f"nsw/year_{year}.json")
     days = []
     for d in json.loads(raw):
         for ev in d.get("Events", []):

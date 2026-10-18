@@ -196,7 +196,7 @@ fi
 # --- state votes (NSW, VIC): parsed from Hansard into ext_divisions / ext_votes (per chamber-day replace) -------
 VOTES_YEAR=$(TZ=Australia/Sydney date +%Y)
 run_step votes_nsw "SELECT COUNT(*) FROM ext_divisions WHERE jurisdiction='nsw'" \
-  "$PY" -m parli.ingest.votes_state nsw --year "$VOTES_YEAR" --days 6 --out "$PIPE/votes_nsw.json" --load --db "$DB"
+  "$PY" -m parli.ingest.votes_state nsw --year "$VOTES_YEAR" --days 12 --out "$PIPE/votes_nsw.json" --load --db "$DB"
 run_step votes_vic "SELECT COUNT(*) FROM ext_divisions WHERE jurisdiction='vic'" \
   "$PY" -m parli.ingest.votes_state vic --days 8 --out "$PIPE/votes_vic.json" --load --db "$DB"
 
