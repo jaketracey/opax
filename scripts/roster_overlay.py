@@ -19,6 +19,9 @@ be zero, and a changed speech count is such a change), so the rule is per record
 A review lets changes through per record and per field with the accept list (scripts/roster_accept.json, read
 scripts/roster_accept.py): an accepted group of fields, or an accepted new row, is installed only while the export
 still shows exactly the reviewed value; if the export moves again, the shipped value stays and the change is held.
+Each group is checked first and held, with its reason in the ROSTER OVERLAY line, when it fails (bad evidence, a
+corpus group touching identity, a curated record it would change, a shipped value curated since the review); an
+unreadable or malformed list holds everything and keeps the shipped roster, and never stops the people step.
 When nothing accepted is new tonight, the shipped `meta` and rows are kept byte for byte, so the night installs
 nothing (scripts/vm/keep_if_unchanged.py); otherwise the rows are re-sorted and meta's totals recounted.
 OPAX_ROSTER_ACCEPT=1 still skips the whole step (a raw export for a review, never for a nightly install).
@@ -42,11 +45,15 @@ ROOT = Path(__file__).resolve().parents[1]
 SHIPPED = Path(os.environ.get("OPAX_ROSTER_PREVIOUS") or ROOT / "portal" / "public" / "parliamentarians.json")
 
 
-def overlay(shipped, fresh, accept=None):
+def overlay(shipped, fresh, accept=None, accept_error=None):
     """(merged roster document, report) for a fresh export `fresh` laid onto the `shipped` one, with the reviewed
-    `accept` list (scripts/roster_accept.json) applied where the export still shows its values."""
-    accept = accept or {}
+    `accept` list (scripts/roster_accept.json) applied group by group where it is valid and the export still shows
+    its values. `accept_error` (from roster_accept.read) says the list could not be used at all."""
+    if accept is None or accept_error:
+        accept = roster_accept.empty()
     people, accepted = roster_accept.apply(shipped["people"], fresh["people"], accept)
+    if accept_error:
+        accepted["held"].insert(0, ("roster_accept.json", accept_error))
     if people == shipped["people"]:
         meta, people = shipped["meta"], list(shipped["people"])
     else:
@@ -70,7 +77,7 @@ def overlay(shipped, fresh, accept=None):
         "held_sitting": sorted(n for n, q in now.items() if n not in kept and q.get("current")),
         "dropped": sorted(n for n in kept if n not in now and n not in folded),
         "accepted": accepted["applied"],
-        "accept_held": sorted(set(accepted["held"])),
+        "accept_held": accepted["held"],
     }
     return {**fresh, "meta": meta, "people": people}, report
 
@@ -78,8 +85,17 @@ def overlay(shipped, fresh, accept=None):
 def summary(report):
     fields = ", ".join(f"{k} {v}" for k, v in list(report["fields"].items())[:6])
     line = f"installed {report['accepted']} reviewed change(s) from scripts/roster_accept.json; " if report.get("accepted") else ""
-    if report.get("accept_held"):
-        line += f"{len(report['accept_held'])} accepted record(s) moved again in the export and stay as shipped; "
+    held = report.get("accept_held") or []
+    if held and held[0][0] == "roster_accept.json":
+        line += f"scripts/roster_accept.json not used, every reviewed change held ({held[0][1]}); "
+        held = held[1:]
+    if held:
+        reasons = {}
+        for name, why in held:
+            reasons.setdefault(why, []).append(name)
+        line += f"held {len(held)} reviewed change(s), kept as shipped: " + "; ".join(
+            f"{why} ({len(names)}: {', '.join(names[:4])}{' ...' if len(names) > 4 else ''})"
+            for why, names in sorted(reasons.items(), key=lambda kv: -len(kv[1]))) + "; "
     line += (f"kept {report['kept']} shipped records ({report['differ']} differ in the export"
             f"{': ' + fields if fields else ''}); held {len(report['held'])} new row(s)")
     if report["held"]:
@@ -99,7 +115,8 @@ def main(argv=None):
     a = ap.parse_args(argv)
     fresh = json.loads(a.directory.read_text(encoding="utf-8"))
     shipped = json.loads(a.shipped.read_text(encoding="utf-8"))
-    merged, report = overlay(shipped, fresh, roster_accept.load(a.accept))
+    accept, error = roster_accept.read(a.accept)
+    merged, report = overlay(shipped, fresh, accept, error)
     a.directory.write_text(json.dumps(merged, ensure_ascii=False, separators=(",", ":")) + "\n", encoding="utf-8")
     print("ROSTER OVERLAY: " + summary(report), file=sys.stderr)
 

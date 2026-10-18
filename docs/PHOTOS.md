@@ -254,7 +254,11 @@ alone still reproduce the scoped identities).
 value the reviewed export showed, its evidence (corpus rules re-checked by `scripts/roster_accept.py`; identity
 with a source URL and check date) and the accepted new rows. The overlay installs a group only while the export
 still shows exactly that value, so a field that moves again is held again and the shipped value stays; a night
-with nothing newly accepted installs the same bytes. The audit and the main-preservation test revert the list and
+with nothing newly accepted installs the same bytes. Each group is checked at install time and held with its reason
+in the `ROSTER OVERLAY` line when it fails: bad evidence, a corpus group touching identity, a removed identity value,
+a field a curated record pins (witness split, fold, reviewed alias or pinned party, dated party, neutral namesake), or
+a shipped value curated since the review. A new row needs a full name, a pid or Handbook id, a house chamber and the
+evidence's service dates covering its years. An unreadable list holds everything and keeps the shipped roster. The audit and the main-preservation test revert the list and
 judge the rest as before. A review: `OPAX_ROSTER_ACCEPT=1 bash scripts/vm/export_people.sh > raw.json` on the box,
 then on a checkout `python3 scripts/roster_accept.py --propose raw.json` (keeps the reviewed identity groups the
 export still shows, proposes corpus groups, prints what stays held), add identity groups and new rows by hand

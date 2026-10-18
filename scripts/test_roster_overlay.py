@@ -93,15 +93,24 @@ def accept_list():
                              "checked": "2026-10-18", "reason": "x"}},
             "records": {"Kim Sample": [{"evidence": "hansard-growth", "fields": {"speeches": [9, 12], "last": [2026, 2026]}}]},
             "new": {"Robin Newcomer": {"evidence": "handbook", "url": "https://handbookapi.aph.gov.au/api/individuals",
-                                       "checked": "2026-10-18", "row": {"name": "Robin Newcomer", "speeches": 6, "pid": "90003",
-                                       "current": True, "states": ["federal"], "chambers": ["senate"], "first": 2026}}}}
+                                       "checked": "2026-10-18", "phid": "XX1",
+                                       "service": {"chamber": "senate", "jurisdiction": "federal", "start": "2026-08-01", "end": None},
+                                       "row": NEWCOMER}}}
+
+
+NEWCOMER = {"name": "Robin Newcomer", "speeches": 6, "pid": "90003", "current": True, "states": ["federal"],
+            "chambers": ["senate"], "first": 2026, "last": 2026}
+NO_CURATED = {}  # the fixtures' people are in no reviewed evidence file
 
 
 class AcceptListTests(unittest.TestCase):
     def export(self):
         doc = box_export()
-        doc["people"][3].update(states=["federal"], chambers=["senate"], first=2026)
+        doc["people"][3] = dict(NEWCOMER)
         return doc
+
+    def held(self, report):
+        return {name: why for name, why in report["accept_held"]}
 
     def test_only_accepted_values_the_export_still_shows_are_installed(self):
         merged, report = overlay(shipped(), self.export(), accept_list())
@@ -130,7 +139,7 @@ class AcceptListTests(unittest.TestCase):
         # and before it was ever installed, a moved value installs nothing
         merged, report = overlay(shipped(), later, accept_list())
         self.assertEqual(merged["people"], shipped()["people"])
-        self.assertEqual(sorted(report["accept_held"]), ["Kim Sample", "Robin Newcomer"])
+        self.assertEqual(self.held(report), {"Kim Sample": roster_accept.MOVED, "Robin Newcomer": roster_accept.MOVED})
 
     def test_a_night_with_nothing_new_installs_the_same_bytes(self):
         first, _ = overlay(shipped(), self.export(), accept_list())
@@ -156,21 +165,126 @@ class AcceptListTests(unittest.TestCase):
         self.assertIn("presiding", roster_accept.corpus_reason("Kim Sample", {"speeches": [9, 2]},
                       {"kind": "corpus", "rule": "presiding", "people": {}}))
 
+    # Codex review of 61af7387b, P1 repro 1: an invalid corpus group carrying a party change was installed.
+    def test_an_invalid_corpus_group_is_held_and_the_valid_ones_still_apply(self):
+        acc = accept_list()
+        acc["records"]["Alex Example"] = [{"evidence": "hansard-growth", "fields": {"party": ["Labor", "Greens"]}}]
+        export = self.export()
+        export["people"][0]["party"] = "Greens"
+        merged, report = overlay(shipped(), export, acc)
+        by = {p["name"]: p for p in merged["people"]}
+        self.assertEqual(by["Alex Example"]["party"], "Labor")
+        self.assertIn("corpus evidence fails its rule: identity fields", self.held(report)["Alex Example"])
+        self.assertEqual(by["Kim Sample"]["speeches"], 12)          # the valid group beside it still applies
+        self.assertIn("Robin Newcomer", by)
+        self.assertIn("held 1 reviewed change(s), kept as shipped: corpus evidence fails its rule", summary(report))
+
+    # P1 repro 2: a stale group overwrote a value curated after the review, though validate() saw the conflict.
+    def test_a_group_whose_record_was_curated_since_the_review_is_held(self):
+        acc = accept_list()
+        acc["records"]["Alex Example"] = [{"evidence": "handbook", "fields": {"party": ["Liberal", "Greens"]}}]
+        export = self.export()
+        export["people"][0]["party"] = "Greens"
+        self.assertTrue(any("Alex Example: the shipped record has moved" in p
+                            for p in roster_accept.validate(acc, shipped()["people"], NO_CURATED)))
+        merged, report = overlay(shipped(), export, acc)          # shipped says Labor: curated since the review
+        self.assertEqual({p["name"]: p for p in merged["people"]}["Alex Example"]["party"], "Labor")
+        self.assertIn("the shipped record has moved since the review", self.held(report)["Alex Example"])
+        # a group from the list an earlier review installed (`was`) may still be replaced
+        acc["records"]["Alex Example"][0]["was"] = {"party": "Labor"}
+        merged, _ = overlay(shipped(), export, acc)
+        self.assertEqual({p["name"]: p for p in merged["people"]}["Alex Example"]["party"], "Greens")
+
+    def test_curated_records_keep_what_they_pin(self):
+        base = shipped()["people"]
+        rows = {p["name"]: p for p in base}
+        rows["Stub"] = {"name": "Stub", "speeches": 30, "states": ["federal"], "chambers": ["senate_committee"],
+                        "first": 2025, "last": 2026, "witness_rows": 20, "representation": []}
+        handbook = accept_list()["evidence"]
+        cases = [("Fixture", {"evidence": "hansard-growth", "fields": {"chambers": [["qld_la"], ["qld_la", "joint_committee"]]}},
+                  "pinned witness split"),
+                 ("Kim Sample", {"evidence": "handbook", "fields": {"pid": ["90002", "90009"]}}, "folded person"),
+                 ("Stub", {"evidence": "handbook", "fields": {"full": [None, "Alex Stub"]}}, "neutral namesake"),
+                 ("Alex Example", {"evidence": "handbook", "fields": {"party": ["Labor", None]}}, "removes an identity value"),
+                 ("Alex Example", {"evidence": "handbook", "fields": {"party": ["Labor", "Greens"]}}, "pinned in the reviewed"),
+                 ("Alex Example", {"fields": {"party": ["Labor", "Greens"]}}, "malformed group")]
+        for name, group, why in cases:
+            with self.subTest(name=name, why=why):
+                curated = {"Alex Example": roster_accept.PARTY_FIELDS} if why == "pinned in the reviewed" else NO_CURATED
+                self.assertIn(why, roster_accept.group_problem(name, group, handbook, rows[name], curated))
+        # without readable evidence files, an identity group is held (fail closed); a corpus group is judged as usual
+        g = {"evidence": "handbook", "fields": {"party": ["Labor", "Greens"]}}
+        self.assertIn("cannot be read", roster_accept.group_problem("Alex Example", g, handbook, rows["Alex Example"], None))
+
+    # P2: the new-row validator accepted a committee-only row with no pid, and a matching export installed it.
+    def test_a_new_row_must_be_a_complete_parliamentary_identity(self):
+        evidence = accept_list()["evidence"]
+        entry = accept_list()["new"]["Robin Newcomer"]
+        committee = {**entry, "row": {"name": "Casey Witness", "speeches": 9, "states": ["federal"],
+                                      "chambers": ["senate_committee"], "first": 2026, "last": 2026}}
+        committee.pop("phid")
+        self.assertIn("pid", roster_accept.new_row_problem("Casey Witness", committee, evidence))
+        committee["phid"] = "XX2"
+        self.assertIn("committee-only", roster_accept.new_row_problem("Casey Witness", committee, evidence))
+        for change, why in [({"name": "Newcomer"}, "full name"), ({"pid": None}, "pid"), ({"witness_rows": 3}, "witness"),
+                            ({"first": 2019}, "outside the evidence's service"), ({"states": ["nsw"]}, "jurisdiction")]:
+            with self.subTest(change=change):
+                bad = {**entry, "row": {**NEWCOMER, **change}}
+                bad.pop("phid")
+                name = bad["row"]["name"]
+                self.assertIn(why, roster_accept.new_row_problem(name, bad, evidence))
+        self.assertIsNone(roster_accept.new_row_problem("Robin Newcomer", entry, evidence))
+        # and the overlay does not install it, even when the export matches exactly
+        acc = accept_list()
+        acc["new"] = {"Casey Witness": committee}
+        export = self.export()
+        export["people"].append(dict(committee["row"]))
+        merged, report = overlay(shipped(), export, acc)
+        self.assertNotIn("Casey Witness", {p["name"] for p in merged["people"]})
+        self.assertIn("committee-only", self.held(report)["Casey Witness"])
+
+    def test_a_malformed_list_holds_everything_and_one_bad_entry_holds_only_itself(self):
+        for broken in ([], {"records": []}, {"records": {}, "new": {}, "evidence": {"x": 1}}):
+            with self.subTest(broken=broken):
+                merged, report = overlay(shipped(), self.export(), broken)
+                self.assertEqual(merged["people"], shipped()["people"])
+                self.assertEqual(merged["meta"], shipped()["meta"])
+                self.assertEqual(report["accept_held"][0][0], "roster_accept.json")
+                self.assertIn("scripts/roster_accept.json not used", summary(report))
+        acc = accept_list()
+        acc["records"]["Alex Example"] = "not a list"
+        merged, report = overlay(shipped(), self.export(), acc)
+        self.assertEqual(report["accepted"], 2)
+        self.assertEqual(self.held(report)["Alex Example"], "malformed record entry")
+        with tempfile.TemporaryDirectory() as tmp:
+            ship, export, bad = Path(tmp) / "shipped.json", Path(tmp) / "export.json", Path(tmp) / "accept.json"
+            ship.write_text(json.dumps(shipped(), ensure_ascii=False, separators=(",", ":")) + "\n")
+            export.write_text(json.dumps(self.export()))
+            bad.write_text('{"records": {"Kim Sample": [')
+            r = subprocess.run([sys.executable, str(ROOT / "scripts/roster_overlay.py"), "--directory", str(export),
+                                "--shipped", str(ship), "--accept", str(bad)], capture_output=True, text=True)
+            self.assertEqual(r.returncode, 0, r.stderr)
+            self.assertEqual(export.read_bytes(), ship.read_bytes())
+            self.assertIn("scripts/roster_accept.json not used, every reviewed change held (unreadable", r.stderr)
+
     def test_validate_wants_sources_for_identity_and_complete_new_rows(self):
         acc = accept_list()
         acc["records"]["Alex Example"] = [{"evidence": "handbook", "fields": {"party": [None, "Greens"]}}]
         del acc["evidence"]["handbook"]["url"]
         acc["new"]["Newcomer"] = {"evidence": "handbook", "url": "https://x.invalid", "checked": "2026-10-18",
                                   "row": {"name": "Newcomer", "speeches": 6}}
-        problems = roster_accept.validate(acc, shipped()["people"])
+        problems = roster_accept.validate(acc, shipped()["people"], NO_CURATED)
         self.assertTrue(any("Alex Example: identity evidence without a source URL" in p for p in problems), problems)
         self.assertTrue(any("Newcomer: a new row needs a full name" in p for p in problems), problems)
-        self.assertTrue(any("Alex Example: shipped record holds neither" in p for p in problems), problems)
+        acc["evidence"]["handbook"]["url"] = "https://handbookapi.aph.gov.au/api/individuals"
+        problems = roster_accept.validate(acc, shipped()["people"], NO_CURATED)
+        self.assertTrue(any("Alex Example: the shipped record has moved" in p for p in problems), problems)
 
     def test_the_committed_list_is_valid_and_installed(self):
         people = json.loads((ROOT / "portal/public/parliamentarians.json").read_text())["people"]
         acc = roster_accept.load()
         self.assertEqual(roster_accept.validate(acc, people), [])
+        self.assertIsNotNone(roster_accept.curated_names())
         for p in people:
             for g in acc["records"].get(p["name"], []):
                 self.assertEqual(roster_accept.state(p, g), "applied", p["name"])
