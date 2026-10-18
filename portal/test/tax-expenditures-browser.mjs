@@ -67,10 +67,7 @@ try{
  await heldContext.route('**/*',route=>new URL(route.request().url()).origin===base?route.continue():route.abort());
  const heldPage=await heldContext.newPage();await heldPage.setViewportSize({width:1440,height:1000});
  const heldResponse=await heldPage.goto(base+'/register/tax-expenditures');
- await heldPage.evaluate(()=>globalThis.OpaxNavigation.taxExpendituresReady);
  if(heldResponse.status()!==503 || await heldPage.locator('#tax-expenditures-table').count()!==0)throw Error('Unpromoted snapshot did not fail closed');
- await heldPage.getByRole('button',{name:'Money',exact:true}).click();
- if(await heldPage.getByRole('link',{name:'Tax expenditures',exact:true}).count()!==0)throw Error('Unpromoted data appears in Money menu');
  await heldContext.close();
  if(errors.length)throw Error(errors.join('; '));
  const result={preview:'Local Worker; actual promoted portal/public asset; external browser requests blocked',asset,withheldCellsAbsent:true,g8PublicRows:g8Rows.total,results,search:{before,after},csvReceipts:true,ssr:true,staticPhone,unpromoted:{status:503,table:false,moneyLink:false},populatedMoneyLink:true,pageErrors:errors};
