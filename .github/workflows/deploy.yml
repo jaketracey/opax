@@ -15,12 +15,13 @@
 #
 # Secrets (Settings > Secrets and variables > Actions):
 #   CLOUDFLARE_API_TOKEN    Workers Scripts / Routes / KV / R2 / Tail / Observability write,
-#                           Account Settings read
+#                           D1 Edit (the table reload after the deploy), Account Settings read
 #   CLOUDFLARE_ACCOUNT_ID   459714503d7cbe9d0b7875e62526628b
 #
 # Runs the shared cached and parallel `build:release` pipeline before Test,
 # then `deploy:built` uploads those built assets with Wrangler.
-# Stamps that change after the deploy are committed back to main.
+# Stamps that change after the deploy are committed back to main, and D1 opax-tables is
+# reloaded when the table data changed (see the "Reload D1 tables" step).
 name: Deploy
 
 on:
@@ -51,7 +52,8 @@ jobs:
     # belt and braces: the bot's own restamp push must never start another run
     if: ${{ github.event_name != 'push' || github.actor != 'github-actions[bot]' }}
     runs-on: ubuntu-latest
-    timeout-minutes: 60
+    # build + test + deploy ~25 min; a full D1 table reload adds up to ~40 more
+    timeout-minutes: 120
     defaults:
       run:
         working-directory: portal
@@ -97,8 +99,8 @@ jobs:
           key: ${{ runner.os }}-node24-crawl-v1-${{ hashFiles('scripts/**/*.mjs', 'scripts/**/*.json', 'portal/src/**', 'portal/public/**/*.json', 'portal/public/**/*.js', 'portal/package-lock.json') }}
 
       # Prepare all release assets before tests and deployment.
-      # There is no table reload in this workflow. A reload lane must use
-      # `npm run build:tables -- --sql` before consuming private/dt-api/sql.
+      # Metadata only here; the table reload step after the deploy builds the SQL itself
+      # (load_tables.mjs --sql) from the same public/ inputs.
       - name: Build all release assets
         if: steps.duplicate.outputs.skip != 'true'
         run: npm run build:release
@@ -140,19 +142,43 @@ jobs:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
 
+      # /api/table reads D1 opax-tables, which the Worker deploy does not touch. Reload it when the
+      # table SQL built from this checkout differs from the version row in D1 (scripts/reload_tables.mjs:
+      # skip when equal, else preflight, drift check, ordered apply with retries, then smoke all 10
+      # datasets). Never on pull requests. Re-running is safe: a failed reload marks the deployment
+      # receipt failed, so the duplicate guard lets a re-run deploy and reload again.
+      # Kill switch: repository variable OPAX_TABLE_RELOAD=off.
+      - name: Reload D1 tables if the table data changed
+        id: tables
+        if: ${{ steps.duplicate.outputs.skip != 'true' && steps.production.outcome == 'success' && github.event_name != 'pull_request' && vars.OPAX_TABLE_RELOAD != 'off' }}
+        timeout-minutes: 60
+        run: |
+          if ! node ../scripts/load_tables.mjs --sql; then
+            echo "::error::D1 reload failed: the table SQL did not build"
+            printf '### D1 reload failed\n- the table SQL did not build; D1 was not touched\n' >> "$GITHUB_STEP_SUMMARY"
+            exit 1
+          fi
+          node ../scripts/reload_tables.mjs --remote --base https://opax.com.au
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+
       - name: Record production deployment outcome
         if: ${{ always() && steps.receipt.outputs.id != '' }}
         uses: actions/github-script@v7
         with:
           script: |
             try {
+              const deployed = '${{ steps.production.outcome }}' === 'success', tables = '${{ steps.tables.outcome }}';
               await github.rest.repos.createDeploymentStatus({owner: context.repo.owner, repo: context.repo.repo,
                 deployment_id: Number('${{ steps.receipt.outputs.id }}'),
-                state: '${{ steps.production.outcome }}' === 'success' ? 'success' : 'failure'});
+                state: deployed && tables !== 'failure' && tables !== 'cancelled' ? 'success' : 'failure',
+                description: deployed && (tables === 'failure' || tables === 'cancelled') ? 'Worker deployed; D1 table reload failed' : undefined});
             } catch (error) { core.warning(`Could not record deployment outcome: ${error.message}`); }
 
       - name: Commit restamped assets back to main
-        if: steps.duplicate.outputs.skip != 'true'
+        # also after a failed table reload: the Worker carrying these stamps is live
+        if: ${{ !cancelled() && steps.production.outcome == 'success' && steps.duplicate.outputs.skip != 'true' }}
         working-directory: .
         run: |
           set -euo pipefail

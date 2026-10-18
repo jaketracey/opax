@@ -376,6 +376,17 @@ fi
 exit ${FAKE_NPM_RC:-0}
 NPEOF
   chmod +x "$SB/bin/npm"
+  # uv where the box has it (~/.local/bin, which nightly.sh puts first on PATH): records the venv sync, the
+  # directory and checkout it ran in, and whether any step had run before it; exits FAKE_UV_RC
+  mkdir -p "$HOME/.local/bin"
+  cat > "$HOME/.local/bin/uv" <<'UVEOF'
+#!/bin/sh
+{ echo "uv $*"; echo "cwd $PWD"; echo "head $(git rev-parse HEAD)"
+  echo "steps-before $(ls "$HOME"/*.calls 2>/dev/null | grep -vc '/uv.calls$')"
+  [ -f "$HOME/.cache/autoresearch/pipeline/daily.log" ] && echo "daily-log yes" || echo "daily-log no"; } >> "$HOME/uv.calls"
+exit "${FAKE_UV_RC:-0}"
+UVEOF
+  chmod +x "$HOME/.local/bin/uv"
   export OPAX_DAILY_REFRESH="$SB/fake_refresh.sh" OPAX_WEEKLY_REFRESH="$SB/fake_weekly.sh" OPAX_NODE="$SB/bin/node" OPAX_NPM="$SB/bin/npm" OPAX_REPO="$REPO" ORIGIN
   export PATH="$SB/bin:$PATH"
 }
@@ -424,6 +435,25 @@ check "all promoter calls ran" bash -c "[ \$(wc -l < '$HOME/hub.calls') -eq 4 ] 
 check "held budget public asset rolled back" bash -c "git -C '$REPO' diff --exit-code -- portal/public/budget && grep -q reviewed '$REPO/portal/public/budget/data.json'"
 check "other hub asset retained" grep -q reviewed "$REPO/portal/public/vic-gifts/data.json"
 check "status identifies the hub failure" bash -c "git --git-dir='$ORIGIN' show nightly-status:status.json | grep -q 'hub promotion failed for budget'"
+
+echo "== 2b. the venv is synced to uv.lock after the repo sync and before any step; a failed sync stops the night"
+new_sandbox uv-sync
+other=$(mktemp -d); git clone -q "$ORIGIN" "$other"; echo hi > "$other/HUMAN.txt"; (cd "$other" && git add -A && git commit -q -m "a human commit" && git push -q origin HEAD:main)
+human=$(git --git-dir="$ORIGIN" rev-parse main)
+FAKE_MODE=ok nightly
+check "exit 0" test "$NRC" -eq 0
+check "uv sync --frozen ran once" bash -c "[ \$(grep -c '^uv sync --frozen\$' '$HOME/uv.calls') -eq 1 ]"
+check "it ran in the checkout" grep -qx "cwd $REPO" "$HOME/uv.calls"
+check "after the repo sync: it saw origin's new commit" grep -qx "head $human" "$HOME/uv.calls"
+check "before any step: no step call, no refresh log yet" bash -c "grep -qx 'steps-before 0' '$HOME/uv.calls' && grep -qx 'daily-log no' '$HOME/uv.calls'"
+check "the steps ran after it" test -s "$HOME/.cache/autoresearch/pipeline/daily.log"
+new_sandbox uv-fail
+FAKE_UV_RC=1 FAKE_MODE=ok nightly
+check "a failed sync exits 1" test "$NRC" -eq 1
+check "no step ran after a failed sync" bash -c "[ -z \"\$(ls '$HOME'/*.calls 2>/dev/null | grep -v '/uv.calls\$')\" ] && [ ! -f '$HOME/.cache/autoresearch/pipeline/daily.log' ]"
+check "main untouched" test "$(git --git-dir="$ORIGIN" log --format=%s main | head -1)" = seed
+check "status failed, naming the sync" bash -c "git --git-dir='$ORIGIN' show nightly-status:status.json | python3 -c 'import json,sys; s=json.load(sys.stdin); assert s[\"status\"]==\"failed\" and any(\"uv sync --frozen failed\" in f for f in s[\"failures\"]), s'"
+rm -rf "$other"
 
 echo "== 3. refresh reports failed steps: still pushes, publishes status 'failed' with the reason, exits 1"
 new_sandbox s3

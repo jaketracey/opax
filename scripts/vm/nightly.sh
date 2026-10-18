@@ -30,8 +30,8 @@
 # Failure policy: the data steps fail soft. A step that fails is recorded and the run carries
 # on with whatever is still good (a bad bills export is reverted to HEAD while votes and the
 # manifest still publish). At the end the script publishes {status, failures} to the
-# nightly-status branch and exits 1 if anything failed. Only two things stop the run outright:
-# the repo cannot be synced, or the refresh did not actually run.
+# nightly-status branch and exits 1 if anything failed. Only three things stop the run outright:
+# the repo cannot be synced, the venv cannot be synced to uv.lock, or the refresh did not actually run.
 #
 # Tunables (env, or in nightly.env):
 #   OPAX_REPO             checkout (default: the one this script lives in)
@@ -66,6 +66,7 @@
 #   OPAX_GATE_BUDGET      time limit of the portal gate and its blame search, from its first run (default 45m);
 #                         groups not cleared by then are held, the ones proven green are published
 #   OPAX_FRL_DOW          ISO weekday of the FRL instrument night (default 4, Thursday)
+#   OPAX_UV_SYNC_TIMEOUT  time limit of the `uv sync --frozen` that starts the night (default 15m)
 #   OPAX_BOT_NAME / OPAX_BOT_EMAIL   commit identity
 
 set -uo pipefail
@@ -253,6 +254,16 @@ log "syncing $BRANCH"
 if ! sync_repo; then fail "could not sync the checkout with origin/$BRANCH"; finish; fi
 mapfile -t DATA_PATHS < <(tracked_data_paths)
 log "checkout at $(git rev-parse --short HEAD): $(git log -1 --format=%s | cut -c1-90)"
+
+# ---- 1b. sync the venv to uv.lock -------------------------------------------------------------
+# A dependency added to pyproject.toml never reached the box venv on its own (pymupdf, 12 Oct: qao_bodies
+# failed until a hand-run sync). --frozen installs exactly uv.lock and removes anything not in it. A
+# half-synced venv must not run tonight's steps, so a failed sync stops the night here.
+log "syncing the Python environment (uv sync --frozen)"
+if ! command -v uv >/dev/null; then fail "uv not found on PATH (~/.local/bin): cannot sync the Python environment to uv.lock"; finish; fi
+if ! run timeout "${OPAX_UV_SYNC_TIMEOUT:-15m}" uv sync --frozen; then
+  fail "uv sync --frozen failed: the Python environment does not match uv.lock, so no step ran tonight (see the log)"; finish
+fi
 
 # the last line matching $2 inside the LAST run block of a step log ($1 = daily.log or weekly.log): the logs only
 # ever grow, and last night's "Stale ..." line must not be reported again tonight
