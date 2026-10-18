@@ -45,15 +45,16 @@ ROOT = Path(__file__).resolve().parents[1]
 SHIPPED = Path(os.environ.get("OPAX_ROSTER_PREVIOUS") or ROOT / "portal" / "public" / "parliamentarians.json")
 
 
-def overlay(shipped, fresh, accept=None, accept_error=None):
+def overlay(shipped, fresh, accept=None, accept_error=None, root=roster_accept.ROOT):
     """(merged roster document, report) for a fresh export `fresh` laid onto the `shipped` one, with the reviewed
     `accept` list (scripts/roster_accept.json) applied group by group where it is valid and the export still shows
-    its values. `accept_error` (from roster_accept.read) says the list could not be used at all."""
+    its values. `accept_error` (from roster_accept.read) says the list could not be used at all; curated evidence
+    under `root` that cannot be used installs nothing either."""
     if accept is None or accept_error:
         accept = roster_accept.empty()
-    people, accepted = roster_accept.apply(shipped["people"], fresh["people"], accept)
+    people, accepted = roster_accept.apply(shipped["people"], fresh["people"], accept, root)
     if accept_error:
-        accepted["held"].insert(0, ("roster_accept.json", accept_error))
+        accepted["blocked"] = f"scripts/roster_accept.json {accept_error}"
     if people == shipped["people"]:
         meta, people = shipped["meta"], list(shipped["people"])
     else:
@@ -78,6 +79,7 @@ def overlay(shipped, fresh, accept=None, accept_error=None):
         "dropped": sorted(n for n in kept if n not in now and n not in folded),
         "accepted": accepted["applied"],
         "accept_held": accepted["held"],
+        "accept_blocked": accepted["blocked"],
     }
     return {**fresh, "meta": meta, "people": people}, report
 
@@ -86,9 +88,8 @@ def summary(report):
     fields = ", ".join(f"{k} {v}" for k, v in list(report["fields"].items())[:6])
     line = f"installed {report['accepted']} reviewed change(s) from scripts/roster_accept.json; " if report.get("accepted") else ""
     held = report.get("accept_held") or []
-    if held and held[0][0] == "roster_accept.json":
-        line += f"scripts/roster_accept.json not used, every reviewed change held ({held[0][1]}); "
-        held = held[1:]
+    if report.get("accept_blocked"):
+        line += f"no reviewed change installed, every one held ({report['accept_blocked']}); "
     if held:
         reasons = {}
         for name, why in held:

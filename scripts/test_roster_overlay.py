@@ -95,7 +95,7 @@ def accept_list():
             "new": {"Robin Newcomer": {"evidence": "handbook", "url": "https://handbookapi.aph.gov.au/api/individuals",
                                        "checked": "2026-10-18", "phid": "XX1",
                                        "service": {"chamber": "senate", "jurisdiction": "federal", "start": "2026-08-01", "end": None},
-                                       "row": NEWCOMER}}}
+                                       "row": copy.deepcopy(NEWCOMER)}}}
 
 
 NEWCOMER = {"name": "Robin Newcomer", "speeches": 6, "pid": "90003", "current": True, "states": ["federal"],
@@ -190,10 +190,28 @@ class AcceptListTests(unittest.TestCase):
         merged, report = overlay(shipped(), export, acc)          # shipped says Labor: curated since the review
         self.assertEqual({p["name"]: p for p in merged["people"]}["Alex Example"]["party"], "Labor")
         self.assertIn("the shipped record has moved since the review", self.held(report)["Alex Example"])
-        # a group from the list an earlier review installed (`was`) may still be replaced
+        # Re-review of d12b8d135, P1: a group may not claim the curated value as one it may replace (`was`)
         acc["records"]["Alex Example"][0]["was"] = {"party": "Labor"}
-        merged, _ = overlay(shipped(), export, acc)
-        self.assertEqual({p["name"]: p for p in merged["people"]}["Alex Example"]["party"], "Greens")
+        merged, report = overlay(shipped(), export, acc)
+        self.assertEqual({p["name"]: p for p in merged["people"]}["Alex Example"]["party"], "Labor")
+        self.assertEqual(self.held(report)["Alex Example"], "malformed group")
+
+    def test_propose_keeps_installed_groups_and_never_writes_was(self):
+        first, _ = overlay(shipped(), self.export(), accept_list())
+        acc = accept_list()
+        acc["records"]["Alex Example"] = [{"evidence": "handbook", "fields": {"party": ["Labor", "Greens"]}}]
+        current = {p["name"]: p for p in first["people"]}
+        current["Alex Example"] = dict(current["Alex Example"], party="Liberal")    # curated after the review
+        later = self.export()
+        later["people"][0]["party"] = "Greens"
+        later["people"][2]["speeches"] = 14                                        # Kim moved again
+        out, held = roster_accept.propose(roster_accept.revert(list(current.values()), acc), later["people"], acc, current)
+        self.assertEqual(out["records"]["Kim Sample"], acc["records"]["Kim Sample"])   # kept exactly, not replaced
+        self.assertNotIn("Alex Example", out["records"])
+        reasons = {name: why for name, _, why in held}
+        self.assertIn("moved again: edit the group and the roster by hand", reasons["Kim Sample"])
+        self.assertIn("curated since the review", reasons["Alex Example"])
+        self.assertNotIn('"was"', json.dumps(out))
 
     def test_curated_records_keep_what_they_pin(self):
         base = shipped()["people"]
@@ -214,7 +232,7 @@ class AcceptListTests(unittest.TestCase):
                 self.assertIn(why, roster_accept.group_problem(name, group, handbook, rows[name], curated))
         # without readable evidence files, an identity group is held (fail closed); a corpus group is judged as usual
         g = {"evidence": "handbook", "fields": {"party": ["Labor", "Greens"]}}
-        self.assertIn("cannot be read", roster_accept.group_problem("Alex Example", g, handbook, rows["Alex Example"], None))
+        self.assertIn("cannot be used", roster_accept.group_problem("Alex Example", g, handbook, rows["Alex Example"], None))
 
     # P2: the new-row validator accepted a committee-only row with no pid, and a matching export installed it.
     def test_a_new_row_must_be_a_complete_parliamentary_identity(self):
@@ -249,8 +267,8 @@ class AcceptListTests(unittest.TestCase):
                 merged, report = overlay(shipped(), self.export(), broken)
                 self.assertEqual(merged["people"], shipped()["people"])
                 self.assertEqual(merged["meta"], shipped()["meta"])
-                self.assertEqual(report["accept_held"][0][0], "roster_accept.json")
-                self.assertIn("scripts/roster_accept.json not used", summary(report))
+                self.assertTrue(report["accept_blocked"])
+                self.assertIn("no reviewed change installed, every one held", summary(report))
         acc = accept_list()
         acc["records"]["Alex Example"] = "not a list"
         merged, report = overlay(shipped(), self.export(), acc)
@@ -265,7 +283,89 @@ class AcceptListTests(unittest.TestCase):
                                 "--shipped", str(ship), "--accept", str(bad)], capture_output=True, text=True)
             self.assertEqual(r.returncode, 0, r.stderr)
             self.assertEqual(export.read_bytes(), ship.read_bytes())
-            self.assertIn("scripts/roster_accept.json not used, every reviewed change held (unreadable", r.stderr)
+            self.assertIn("no reviewed change installed, every one held (scripts/roster_accept.json unreadable", r.stderr)
+
+    # Re-review of d12b8d135, P1: corrupt curated evidence held only identity groups; it now holds everything.
+    def test_unusable_curated_evidence_installs_nothing(self):
+        def corrupt(text):
+            return lambda path: path.write_text(text)
+        for rel in roster_accept.CURATED_FILES:
+            for label, damage in [("missing", lambda path: path.unlink()), ("truncated", corrupt('{"aliases": {')),
+                                  ("wrong shape", corrupt('{"aliases": [], "services": {}}')),
+                                  ("wrong types", corrupt('{"service": [{"name": 7}], "services": [{"print": 1, "name": null}]}'))]:
+                with self.subTest(file=rel, damage=label), tempfile.TemporaryDirectory() as tmp:
+                    for name in roster_accept.CURATED_FILES:
+                        (Path(tmp) / name).parent.mkdir(parents=True, exist_ok=True)
+                        (Path(tmp) / name).write_bytes((ROOT / name).read_bytes())
+                    damage(Path(tmp) / rel)
+                    before = json.dumps(shipped(), separators=(",", ":"))
+                    merged, report = overlay(shipped(), self.export(), accept_list(), root=Path(tmp))
+                    self.assertEqual(merged["people"], shipped()["people"])
+                    self.assertEqual(json.dumps({"meta": merged["meta"], "people": merged["people"]}, separators=(",", ":")), before)
+                    self.assertEqual(report["accepted"], 0)
+                    self.assertIn(rel, report["accept_blocked"])
+                    self.assertIn("no reviewed change installed, every one held (" + rel, summary(report))
+        self.assertEqual(roster_accept.read_curated(), (roster_accept.curated_names(), None))
+
+    # Re-review of d12b8d135, P2: wrongly typed new-row values raised TypeError and stopped the run.
+    def test_wrongly_typed_entries_are_held_never_raised(self):
+        wrong = [None, 7, 2.5, True, [], ["x"], "text", {}, {"a": 1}]
+        entry_keys = ["evidence", "url", "checked", "phid", "service", "row"]
+        row_keys = ["name", "chambers", "states", "first", "last", "speeches", "pid"]
+        service_keys = ["chamber", "jurisdiction", "start", "end"]
+        group_keys = ["evidence", "fields", "url", "checked"]
+        cases = []
+        for value in wrong:
+            for k in entry_keys:
+                cases.append(("new", lambda e, k=k, v=value: e.__setitem__(k, v)))
+            for k in row_keys:
+                cases.append(("new", lambda e, k=k, v=value: e["row"].__setitem__(k, v)))
+            for k in service_keys:
+                cases.append(("new", lambda e, k=k, v=value: e["service"].__setitem__(k, v)))
+            for k in group_keys:
+                cases.append(("group", lambda g, k=k, v=value: g.__setitem__(k, v)))
+            cases.append(("group", lambda g, v=value: g["fields"].__setitem__("speeches", v)))
+            cases.append(("group", lambda g, v=value: g["fields"].__setitem__("speeches", [9, v])))
+            cases.append(("records", lambda r, v=value: r.__setitem__("Kim Sample", v)))
+            cases.append(("records", lambda r, v=value: r.__setitem__("Kim Sample", [v])))
+            cases.append(("newentry", lambda n, v=value: n.__setitem__("Robin Newcomer", v)))
+        # the reviewer's two examples
+        cases.append(("new", lambda e: e.__setitem__("evidence", [])))
+        cases.append(("new", lambda e: e["row"].__setitem__("chambers", 7)))
+        for i, (where, mutate) in enumerate(cases):
+            acc = accept_list()
+            target = {"new": acc["new"]["Robin Newcomer"], "group": acc["records"]["Kim Sample"][0],
+                      "records": acc["records"], "newentry": acc["new"]}[where]
+            mutate(target)
+            export = self.export()
+            row = acc["new"]["Robin Newcomer"].get("row") if isinstance(acc["new"].get("Robin Newcomer"), dict) else None
+            if where == "new" and isinstance(row, dict) and row.get("name") == "Robin Newcomer":
+                export["people"][3] = row   # the export even matches the bad row
+            with self.subTest(case=i, where=where):
+                merged, report = overlay(shipped(), export, acc)          # never raises
+                summary(report)
+                roster_accept.validate(acc, shipped()["people"], NO_CURATED)
+                names = {p["name"] for p in merged["people"]}
+                broken = "Robin Newcomer" if where in ("new", "newentry") else "Kim Sample"
+                if broken in self.held(report):
+                    self.assertNotEqual(self.held(report)[broken], roster_accept.MOVED if where == "new" and broken in names else None)
+                if where in ("new", "newentry") and broken not in names:
+                    self.assertIn(broken, self.held(report))
+        for mutate in (lambda e: e.__setitem__("evidence", []), lambda e: e["row"].__setitem__("chambers", 7)):
+            acc = accept_list()
+            mutate(acc["new"]["Robin Newcomer"])
+            with tempfile.TemporaryDirectory() as tmp:
+                ship, export, bad = Path(tmp) / "shipped.json", Path(tmp) / "export.json", Path(tmp) / "accept.json"
+                ship.write_text(json.dumps(shipped(), ensure_ascii=False, separators=(",", ":")) + "\n")
+                doc = self.export()
+                doc["people"][3] = acc["new"]["Robin Newcomer"]["row"]
+                export.write_text(json.dumps(doc))
+                bad.write_text(json.dumps(acc))
+                r = subprocess.run([sys.executable, str(ROOT / "scripts/roster_overlay.py"), "--directory", str(export),
+                                    "--shipped", str(ship), "--accept", str(bad)], capture_output=True, text=True)
+                self.assertEqual(r.returncode, 0, r.stderr)
+                self.assertNotIn("Robin Newcomer", {p["name"] for p in json.loads(export.read_text())["people"]})
+                self.assertIn("Robin Newcomer", r.stderr.split("held", 1)[1])
 
     def test_validate_wants_sources_for_identity_and_complete_new_rows(self):
         acc = accept_list()
