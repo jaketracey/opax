@@ -1,7 +1,7 @@
 {
-  "status": "pending",
-  "reviewed_commit": null,
-  "review_basis": "Prepared for orchestrator review only. No approval or promotion inferred. Review the regenerated schema-2 projection, shared default-deny privacy policy, hash-only hold receipts, source/licence receipts, attachment/table holds and reconciliation. Approve these exact eight input digests and name the actual reviewed commit before explicit promotion. Annual opt-in only; no nightly, push or deploy.",
+  "status": "approved",
+  "reviewed_commit": "961e07ac91cf5fc9ba21c5f6588f96170f715886",
+  "review_basis": "Explicit orchestrator approval of the unchanged eight inputs at the reviewed commit. Re-review 2 found no issue in this lane; 324 default-deny probes produced no leaks and 62 reconciliation checks pass. Annual explicit promotion only; deployment remains pending.",
   "inputs": {
     "discovery.json": "e0574876e449c8f3ca6850dffdd6a963f19dcc45f59fae765eaadc41ed7d464a",
     "inventory.json": "495c6b7c01449e30c1b8f7c9ab3f1d6e95d4747690077c7ba50715cb502ab8e5",
@@ -40,5 +40,6 @@
       "media": 64,
       "published total": 42
     }
-  }
+  },
+  "approved_by": "opax-orchestrator, 19 Oct 2026 (Codex review r1 + r2; r2's remaining P1 is pre-existing on main, out of scope)"
 }

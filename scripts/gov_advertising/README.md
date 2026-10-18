@@ -35,11 +35,12 @@ zero writes. Omit `--verify-originals` in a checkout without the private cache.
 
 `vic-advertising` is an explicit opt-in in `promote_hub_data.py`, targeting the
 single `gov-advertising/data.json` asset. It is not a default/nightly hub.
-`data/staged/vic-advertising/review.json` is **pending**, binding eight exact input
-digests. An orchestrator must review the committed inputs, approve that receipt
-with the actual reviewed commit, and then run the promoter's dry run and explicit
-promotion. Until then even a promoter dry run refuses approval, preserves an
-existing asset and cannot make the Money navigation gate ready.
+`data/staged/vic-advertising/review.json` is **approved** against
+`961e07ac91cf5fc9ba21c5f6588f96170f715886`, binding eight exact input digests.
+The orchestrator authorized local promotion on 19 October; deployment is pending.
+The promoter wrote the shared public asset and its Money navigation gate clears
+locally. Any input change requires renewed review; never silently update an
+approved digest. A held or mismatched receipt preserves the last good asset.
 
 The Worker never reads staging. For labelled, local QA only:
 
@@ -109,3 +110,16 @@ npx wrangler deploy --dry-run --env ''
 The browser check uses the local Worker with external network denied and no
 production bindings. It saves the actual held page at 390/1440 and separately
 labelled synthetic fixture previews under `portal/private/gov-advertising/`.
+
+For promoted-asset QA, start isolated local `wrangler dev` on port 8990+ with
+read-only access to the public advertising asset and frontend files, then run:
+
+```sh
+cd portal
+node test/vic-advertising-promoted-browser.mjs
+```
+
+The harness rejects non-local origins, checks exact served asset bytes, opens
+the Public money menu link at 390/1440, verifies phone table geometry and saves
+fresh top/table screenshots without the pre-promotion banner. See
+[local promotion evidence](../../docs/coverage/vic-advertising/promotion.md).

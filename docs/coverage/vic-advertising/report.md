@@ -1,8 +1,11 @@
-# Victorian government advertising — staged, not live
+# Victorian government advertising — promoted, deploy pending
 
 Checked **19 October 2026 Melbourne** on `coverage/vic-advertising`, baseline
 `567e8698b56133f41ec1f9057ed55440e69548c7`. No push, deploy, nightly, production
-Ask/generation/voice/auth, KB/D1 write or public-data promotion occurred.
+Ask/generation/voice/auth or KB/D1 write occurred. Initial review was staged only.
+The orchestrator approved `961e07ac9` after reviews r1 + r2 and its unchanged eight
+inputs were promoted locally on 19 October: [promotion and local verification](promotion.md).
+Deployment remains pending; no production publication is claimed.
 
 ## Inventory and licence finding
 
@@ -134,14 +137,19 @@ private-name entities, supplier profiles or source-to-person joins.
 same shared asset; default/nightly hubs are unchanged. It rebuilds the
 projection, joins source and policy receipts, checks eight input hashes (including the shared privacy policy and hash-only hold ledger), requires
 nonempty data and an approved review receipt, and preserves an existing asset
-on failure. **review.json is pending**: the orchestrator must review the commit
-and approve those exact inputs before promotion. Its dry run intentionally
-refuses pending review. No `portal/public/gov-advertising/data.json` was written.
-The Money → Public money link is gated by cleared promoted data.
+on failure. **review.json is approved** against
+`961e07ac91cf5fc9ba21c5f6588f96170f715886`, recording the orchestrator's exact
+approval and eight unchanged input digests. The reviewed promoter wrote
+`portal/public/gov-advertising/data.json` (3,410,870 bytes, 1,194 rows).
+Its dry run and public-byte check pass. The Money → Public money link opens
+from cleared promoted data in local Wrangler; deployment is pending.
 
-The browser harness explicitly injects staged bytes into a local ASSETS stub,
-with outbound network and production routes blocked. Screenshots are labelled
-local staged previews, not publication proof. The Worker has no staging fallback.
+The original browser harness explicitly injects staged bytes into a local ASSETS
+stub for pre-promotion QA. The promoted harness verifies the actual public asset
+through local Wrangler on port 8990; the four latest screenshots have no staged
+banner. A private asset directory links the promoted bytes and frontend files,
+limiting the macOS asset watcher's file descriptors. The Worker has no staging
+fallback. Local evidence is not production publication proof.
 The app remains [plan only](../gov-advertising/app-plan.md); no native build,
 API allowlist change or app release was performed.
 

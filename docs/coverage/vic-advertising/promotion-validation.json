@@ -1,0 +1,149 @@
+{
+  "checked_at": "2026-10-18T23:23:12.110764+00:00",
+  "status": "promoted, deploy pending",
+  "reviewed_commit": "961e07ac91cf5fc9ba21c5f6588f96170f715886",
+  "approved_by": "opax-orchestrator, 19 Oct 2026 (Codex review r1 + r2; r2's remaining P1 is pre-existing on main, out of scope)",
+  "inputs_unchanged": true,
+  "inputs": {
+    "discovery.json": "e0574876e449c8f3ca6850dffdd6a963f19dcc45f59fae765eaadc41ed7d464a",
+    "inventory.json": "495c6b7c01449e30c1b8f7c9ab3f1d6e95d4747690077c7ba50715cb502ab8e5",
+    "tables.json": "63d94660869aa7043d7479cc64b9e0868d8ea4a6e468bf375b6f0a5adf677c93",
+    "receipts.json": "637b9c1bcc5a2d5bf888456de4feb1d7ac24b7b459b2098650a6f631de8683d1",
+    "reconciliation.json": "78f02d9ffb0feb7ff3b800435e722feff20f21302ec10224f3241c52502d41f4",
+    "privacy-policy.json": "e3a1c701cc5b284f0a278bd6a3e31a482db23b76e5004eedb0cba5ea00c17776",
+    "privacy-holds.json": "1ede361e9863f0a4a2628891f8060aec8a59493cf594d35fc00dd049b1dde382",
+    "hub.json": "9e31055576e57bd90e037f14edb193e08ac11c70f437658462ee9e6853ab633b"
+  },
+  "asset": {
+    "path": "portal/public/gov-advertising/data.json",
+    "bytes": 3410870,
+    "rows": 1194,
+    "sha256": "e7d1138e6c901b2456a74ef3f08698dcfada75a2fbd3318b0d0cf58e77f66a75",
+    "private_name_matches": 0,
+    "reconciliation": {
+      "pass": 62,
+      "total": 62
+    }
+  },
+  "tests": {
+    "python_advertising": 22,
+    "python_promoter": 14,
+    "python_gfs": 12,
+    "python_tax_expenditures": 10,
+    "python_total": 58,
+    "node_advertising_shared_register_gfs_tax_navigation": 100
+  },
+  "gates": {
+    "npm_ci": "pass; before Node tests",
+    "typescript": "pass",
+    "check": "pass",
+    "promoter_dry_run": "pass",
+    "promoter_check_public": "pass",
+    "source_originals_dry_run": "pass",
+    "wrangler_deploy_dry_run": "pass; no deployment",
+    "diff_check": "pass"
+  },
+  "browser": {
+    "preview": "Actual local Wrangler, promoted public asset; deploy pending; no staged injection or preview banner",
+    "base": "http://127.0.0.1:8990",
+    "sha256": "e7d1138e6c901b2456a74ef3f08698dcfada75a2fbd3318b0d0cf58e77f66a75",
+    "bytes": 3410870,
+    "readiness": {
+      "ready": true,
+      "count": 1194
+    },
+    "results": [
+      {
+        "width": 390,
+        "status": 200,
+        "horizontalOverflow": false,
+        "table": {
+          "containerWidth": 350,
+          "containerScrollWidth": 350,
+          "tableWidth": 350,
+          "amountCells": 25,
+          "amountsInsideContainer": true
+        },
+        "rows": 1194,
+        "publicMoneyLink": true,
+        "stagedBanner": false
+      },
+      {
+        "width": 1440,
+        "status": 200,
+        "horizontalOverflow": false,
+        "table": {
+          "containerWidth": 1325,
+          "containerScrollWidth": 1325,
+          "tableWidth": 1324.8125,
+          "amountCells": 25,
+          "amountsInsideContainer": true
+        },
+        "rows": 1194,
+        "publicMoneyLink": true,
+        "stagedBanner": false
+      }
+    ],
+    "csv": true,
+    "search": {
+      "before": 1194,
+      "after": 990
+    },
+    "javaScriptDisabled": true,
+    "staticPhoneTable": {
+      "containerWidth": 350,
+      "containerScrollWidth": 350,
+      "tableWidth": 350,
+      "amountCells": 25,
+      "amountsInsideContainer": true
+    },
+    "pageErrors": []
+  },
+  "federal_held": {
+    "base": "http://127.0.0.1:8991",
+    "status": 200,
+    "configuration": "Separate local Wrangler with absent advertising asset; shared federal held-state fallback only",
+    "source_verification_pending": true,
+    "licence_unverified": true,
+    "unknown_not_zero": true,
+    "noindex": true,
+    "readiness": {
+      "ready": false,
+      "count": 0
+    }
+  },
+  "local_assets": "Read-only links to the real promoted public asset and frontend files; private local Wrangler config has no production bindings, secrets or triggers. Full-repo asset watcher exceeded macOS spawn descriptor limits; bounded local asset directory succeeds.",
+  "votes": {
+    "schema": 1,
+    "byte_identical_to_origin_main": true,
+    "byte_identical_to_reviewed_commit": true,
+    "sha256": "9b7fc46c65185223d70a49b1bd8ee807327473330b02392963aa320b191b7a93"
+  },
+  "screenshots": [
+    {
+      "path": "portal/private/vic-advertising/advertising-390-top.png",
+      "sha256": "34345e8cb5bb99df3e8d8628f808b98b0e3a093c34aca9befb5eb647f570ddf5",
+      "label": "Actual local Wrangler; promoted asset; deploy pending; no staged preview banner"
+    },
+    {
+      "path": "portal/private/vic-advertising/advertising-390-table.png",
+      "sha256": "8b226165aa40ce9f2c64dcefef8f812f0c47488b5f3222c63755637106229cc2",
+      "label": "Actual local Wrangler; promoted asset; deploy pending; no staged preview banner"
+    },
+    {
+      "path": "portal/private/vic-advertising/advertising-1440-top.png",
+      "sha256": "3d51c90d1b874c9d78b213754a158471002c73049299b8027894c8cb69aa2f88",
+      "label": "Actual local Wrangler; promoted asset; deploy pending; no staged preview banner"
+    },
+    {
+      "path": "portal/private/vic-advertising/advertising-1440-table.png",
+      "sha256": "ac5d98f494d2edc6c2c7bc30ce6daa7762cfb73d186d97b9bd04d367e9b4841b",
+      "label": "Actual local Wrangler; promoted asset; deploy pending; no staged preview banner"
+    }
+  ],
+  "push": false,
+  "deploy": false,
+  "nightly": false,
+  "production_writes": 0,
+  "source_requests": 0
+}
