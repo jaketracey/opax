@@ -197,6 +197,9 @@ os.makedirs(f"{seed}/portal/public/growth/sponsors")
 open(f"{seed}/portal/public/growth/sponsors/index.json", "w").write(json.dumps({r["key"]: r["status_as_of"] for r in rows}, sort_keys=True) + "\n")
 # a data file the stamp step writes outside every group
 open(f"{seed}/portal/public/stamp-extra.json", "w").write('{"people": 20}\n')
+# a file the build writes under a group the night does not change (as build:registers writes instruments/registered.json)
+os.makedirs(f"{seed}/portal/public/audit")
+open(f"{seed}/portal/public/audit/derived.json", "w").write('{"complete": true}\n')
 PYEOF
   (cd "$seed" && git init -q && git add -A && git commit -q -m seed && git remote add origin "$ORIGIN" && git push -q origin HEAD:main)
   REPO="$HOME/opax"; git clone -q "$ORIGIN" "$REPO"
@@ -346,6 +349,8 @@ red() {   # the JUnit report the gate reads to re-run only the failing files
   [ -z "$junit" ] || printf '<testsuites><testcase name="fixture" file="%s/test/fake-red.test.mjs" failure="red"/></testsuites>\n' "$PWD" > "$junit"
   exit 1
 }
+# a focused (blame) run whose step ignores TERM, so only the KILL after timeout's grace ends it (exit 137)
+if [ "${FAKE_NODE_HANG_FOCUSED:-0}" = 1 ] && [[ " $* " == *fake-red.test.mjs* ]]; then trap '' TERM; sleep 60; fi
 sleep "${FAKE_NODE_SLEEP:-0}"
 # FAKE_NODE_RED_WHILE_CHANGED=<repo path>: red for as long as that file differs from HEAD (a test the new data breaks)
 if [ -n "${FAKE_NODE_RED_WHILE_CHANGED:-}" ] && [ -n "$(git status --porcelain -- ":(top)$FAKE_NODE_RED_WHILE_CHANGED" 2>/dev/null)" ]; then red; fi
@@ -365,6 +370,8 @@ echo "npm $*" >> "$HOME/npm.calls"
 if [ "$*" = "run build:search" ] && [ -f public/parliamentarians.json ]; then
   python3 -c "import json; r=json.load(open('public/parliamentarians.json')); open('public/person-paths.js','w').write('export const PERSON_PATHS = '+json.dumps(sorted(p['name'] for p in r['people']))+';\n')"
   python3 -c "import json; b=json.load(open('public/bills/index.json'))['bills']; open('public/growth/sponsors/index.json','w').write(json.dumps({r['key']: r['status_as_of'] for r in b}, sort_keys=True)+'\n')"
+  # a build step cut mid-write: half a file under a group nothing changed, a new file beside it, then it hangs
+  if [ "${FAKE_NPM_PARTIAL:-0}" = 1 ]; then printf '{"partial":' > public/audit/derived.json; printf '{}' > public/audit/new-shard.json; sleep 60; fi
 fi
 exit ${FAKE_NPM_RC:-0}
 NPEOF
@@ -975,6 +982,18 @@ new_sandbox s25buildfail
 mkdir -p "$REPO/portal/node_modules" "$REPO/portal/test"
 FAKE_NPM_RC=1 OPAX_FORCE_GROUPS=weekly FAKE_WEEKLY_MODE=ok nightly
 check "a failing build is a red run: the fallback completes with a status (no unbound variable), everything held" bash -c "[ '$NRC' -eq 1 ] && git --git-dir='$ORIGIN' show nightly-status:status.json | grep -q 'red on main itself' && ! grep -q 'unbound variable\|died unexpectedly' '$HOME/.cache/autoresearch/pipeline/nightly-$TODAY.log' && git --git-dir='$ORIGIN' show main:portal/public/speakers.json | python3 -c 'import json,sys; assert len(json.load(sys.stdin))==100'"
+# Review, round 2: a build step cut by the budget mid-write under a group the night never changed (instruments/
+# registered.json on the box) must not be staged half written, nor leave a new file behind.
+new_sandbox s25partial
+mkdir -p "$REPO/portal/node_modules" "$REPO/portal/test"
+OPAX_GATE_BUDGET=3s FAKE_NPM_PARTIAL=1 OPAX_FORCE_GROUPS=weekly FAKE_WEEKLY_MODE=ok nightly
+check "a build cut mid-write under an unchanged group: nothing partial staged, no new file left, checkout clean" bash -c "[ '$NRC' -eq 1 ] && git --git-dir='$ORIGIN' diff --quiet main~1 main -- portal/public/audit && ! git --git-dir='$ORIGIN' ls-tree -r --name-only main | grep -q new-shard && [ -z \"\$(git -C '$REPO' status --porcelain -- portal/public/audit)\" ] && [ -z \"\$(git -C '$REPO' status --porcelain --untracked-files=no)\" ]"
+# ... and a blame run killed after ignoring TERM (exit 137) is a budget cut, not a red trial: nobody is blamed.
+new_sandbox s25termhang
+mkdir -p "$REPO/portal/node_modules" "$REPO/portal/test"
+t0=$(date +%s)
+OPAX_GATE_BUDGET=4s OPAX_GATE_KILL_GRACE=1 FAKE_NODE_HANG_FOCUSED=1 FAKE_NODE_RED_WHILE_CHANGED=portal/public/speakers.json OPAX_FORCE_GROUPS=weekly FAKE_WEEKLY_MODE=ok nightly
+check "a TERM-ignoring blame run killed at the deadline holds the groups untried, blaming neither main nor a group" bash -c "s=\$(git --git-dir='$ORIGIN' show nightly-status:status.json); [ '$NRC' -eq 1 ] && echo \"\$s\" | grep -q 'no time left in the 4s gate budget' && ! echo \"\$s\" | grep -q 'red on main itself\|failed against the new' && [ \$((\$(date +%s) - $t0)) -lt 40 ]"
 new_sandbox s25deadline
 mkdir -p "$REPO/portal/node_modules" "$REPO/portal/test"
 t0=$(date +%s)

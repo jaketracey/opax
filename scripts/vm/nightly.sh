@@ -485,11 +485,22 @@ if [ "${OPAX_TEST_GATE:-1}" != 0 ]; then
       GATE_JUNIT="$PIPE/gate-junit.xml"
       # tracked files already modified outside the data paths before the gate: never staged by the stamp step below
       mapfile -t OTHERS_BEFORE < <(git diff --name-only)
-      # one build/stamp/test command, killed when the gate's budget runs out (exit 124): nothing here may run past it
+      # Everything that differs from HEAD before the gate's first build, tracked or new: whatever differs afterwards and
+      # is not in here, the build or stamp step wrote (18 Oct review: build:registers writes instruments/registered.json,
+      # and a step cut mid-write left '{"partial":' under a group that never changed).
+      declare -A PRE_GATE=()
+      while IFS= read -r -d '' f; do PRE_GATE[$f]=1; done < <(git diff -z --name-only HEAD; git ls-files -z --others --exclude-standard)
+      # one build/stamp/test command, killed when the gate's budget runs out: nothing here may run past it. Any failure
+      # that ends at or after the deadline is a cut (exit 124), whatever the status: timeout's 124, 137 after the KILL
+      # that follows a TERM the step ignored, or any other signal death. A 137 before the deadline (out of memory)
+      # stays a failure.
       gate_step() {
-        local left=$((GATE_DEADLINE - $(date +%s)))
+        local left rc
+        left=$((GATE_DEADLINE - $(date +%s)))
         [ "$left" -gt 0 ] || return 124
-        run timeout -k 30 "$left" "$@"
+        run timeout -k "${OPAX_GATE_KILL_GRACE:-30}" "$left" "$@"; rc=$?
+        if [ "$rc" -ne 0 ] && { [ "$rc" = 124 ] || [ "$(date +%s)" -ge "$GATE_DEADLINE" ]; }; then return 124; fi
+        return "$rc"
       }
       # build (what the deploy job does before its tests: rebuild the search catalog and the derived modules from the
       # public data, ~50 s), stamp, test; with arguments only those test files run. Sets SUITE_SECS and SUITE_RC on
@@ -662,11 +673,27 @@ PYEOF
       fi
       if [ "$GATE_REBUILT" != 1 ]; then
         # Every gate group is at HEAD again, but the last build derived files from a trial's data, some under groups
-        # that never changed (bills rewrite growth/sponsors, owned by people): none of that may be staged.
+        # that never changed (bills rewrite growth/sponsors, owned by people), and a step cut by the budget may have
+        # left one half written: none of that may be staged. The known derived files go back, then every file the
+        # gate changed that did not differ before it (put back if HEAD has it, removed if it is new under a data path).
         for p in "${DERIVED_PATHS[@]}"; do
           git cat-file -e "HEAD:$p" 2>/dev/null || continue
           git checkout -q HEAD -- "$p" && git clean -fdq -- "$p" || fail "cannot put the derived $p back to HEAD"
         done
+        swept=()
+        while IFS= read -r -d '' f; do
+          [ -z "${PRE_GATE[$f]:-}" ] || continue
+          if git cat-file -e "HEAD:$f" 2>/dev/null; then
+            git checkout -q HEAD -- "$f" || fail "cannot put $f back to HEAD"
+          else
+            ours=false
+            for p in "${DATA_PATHS[@]}"; do case "$f" in "$p"/*) ours=true; break ;; esac; done
+            [ "$ours" = true ] || continue
+            rm -f -- "$REPO/$f" || fail "cannot remove $f"
+          fi
+          swept+=("$f")
+        done < <(git diff -z --name-only HEAD; git ls-files -z --others --exclude-standard)
+        [ "${#swept[@]}" -eq 0 ] || log "put back ${#swept[@]} file(s) the gate's builds wrote from held data: ${swept[*]:0:8}"
       fi
       # build outputs that read every group, never ours to commit: leave the checkout clean outside the data paths
       for built in "${BUILD_ONLY_PATHS[@]}"; do

@@ -53,7 +53,8 @@ BUILD_ONLY_PATHS=(portal/public/search-catalog/manifest.json portal/public/graph
 # more than their owner group (growth/sponsors and seo-links.json read the bills as well as the roster), so after a red
 # gate whose last build was not made from exactly the data that stays, they all go back to HEAD before staging.
 DERIVED_PATHS=(portal/src/passage-names.json portal/public/person-paths.js portal/public/growth/sponsors portal/public/seo-links.json
-  portal/public/graph/donor-index.json portal/public/growth/donors.json portal/public/growth/agencies)
+  portal/public/graph/donor-index.json portal/public/growth/donors.json portal/public/growth/agencies
+  portal/public/instruments/registered.json)   # build:registers writes it into the instruments group
 
 # every path of every group, in one list
 all_data_paths() {

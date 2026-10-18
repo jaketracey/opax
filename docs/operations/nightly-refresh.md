@@ -529,8 +529,11 @@ and `growth/sponsors` travel with the roster, the donor index and `growth/donors
 suppliers; `seo-links.json` (written by the stamp step from bills and roster) with people; the search manifest and party-member
 index read every group and are put back to HEAD after the gate. Some derived files read more than their owner
 (`growth/sponsors` and `seo-links.json` read the bills too), so when a red gate ends without a green build of exactly
-the data that stays (budget spent, closing run skipped or red), every derived file goes back to HEAD with the groups.
-Every build, stamp and test command runs under `timeout` with what is left of the budget, and the closing full run only
+the data that stays (budget spent, closing run skipped or red), every derived file goes back to HEAD with the groups, and
+so does every other file the gate's builds changed (compared with what differed before the gate), so a step cut mid-write
+cannot leave half a file under a group the night never changed. Every build, stamp and test command runs under `timeout`
+with what is left of the budget; any failure that ends at or after the deadline (124, or 137 after a TERM the step
+ignored) is a cut, so its trial proves nothing and its groups are held untried, never blamed. The closing full run only
 starts if its last measured duration still fits; otherwise nothing new is published and the status says so. When a kept
 group changed a stamped generated module, the restamped importers are committed with the data, so `main` passes
 `stamp_assets --check`; only files whose whole diff is `?v=` stamps qualify, anything else the build wrote outside the
