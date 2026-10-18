@@ -4,6 +4,8 @@
 """
 import copy
 import json
+import random
+import shutil
 import subprocess
 import sys
 import tempfile
@@ -388,3 +390,249 @@ class AcceptListTests(unittest.TestCase):
         for p in people:
             for g in acc["records"].get(p["name"], []):
                 self.assertEqual(roster_accept.state(p, g), "applied", p["name"])
+
+
+def sandbox(tmp, damage=None):
+    """A copy of the overlay's scripts and curated evidence under `tmp`; `damage(path, rel)` may break one file."""
+    for rel in ("scripts/roster_overlay.py", "scripts/roster_accept.py", *roster_accept.CURATED_FILES):
+        (Path(tmp) / rel).parent.mkdir(parents=True, exist_ok=True)
+        shutil.copyfile(ROOT / rel, Path(tmp) / rel)
+        if damage:
+            damage(Path(tmp) / rel, rel)
+    return Path(tmp)
+
+
+def run_cli(tmp, shipped_doc, export_doc, accept_doc, root=ROOT):
+    ship, export, acc = Path(tmp) / "shipped.json", Path(tmp) / "export.json", Path(tmp) / "accept.json"
+    ship.write_text(json.dumps(shipped_doc, ensure_ascii=False, separators=(",", ":")) + "\n")
+    export.write_text(json.dumps(export_doc))
+    acc.write_text(json.dumps(accept_doc) if not isinstance(accept_doc, str) else accept_doc)
+    r = subprocess.run([sys.executable, str(Path(root) / "scripts/roster_overlay.py"), "--directory", str(export),
+                        "--shipped", str(ship), "--accept", str(acc)], capture_output=True, text=True)
+    return r, export.read_bytes(), ship.read_bytes()
+
+
+class SingleGateTests(unittest.TestCase):
+    """Re-review 3 of 44f0c9170: every group is judged by judge() on the shipped, unmodified record, and apply()
+    installs only what validate() passes; the whole accept step fails closed."""
+
+    def dated(self):
+        doc = shipped()
+        doc["people"][0]["identity_basis"] = "dated party, reviewed"
+        return doc
+
+    def export_with(self, doc, **alex):
+        export = copy.deepcopy(doc)
+        rows = {p["name"]: p for p in export["people"]}
+        rows["Alex Example"].update(alex)
+        rows["Kim Sample"]["speeches"] = 12
+        export["people"].append(copy.deepcopy(NEWCOMER))
+        export["meta"] = {"generated": "2026-10-18"}
+        return export
+
+    # repro 1: clearing identity_basis in one group let a party change in another group install
+    def test_a_group_cannot_clear_the_protection_another_group_needs(self):
+        acc = accept_list()
+        acc["records"]["Alex Example"] = [
+            {"evidence": "handbook", "fields": {"identity_basis": ["dated party, reviewed", ""]}},
+            {"evidence": "handbook", "fields": {"party": ["Labor", "Greens"]}}]
+        doc = self.dated()
+        export = self.export_with(doc, identity_basis="", party="Greens")
+        merged, report = overlay(doc, export, acc)
+        alex = merged["people"][[p["name"] for p in merged["people"]].index("Alex Example")]
+        self.assertEqual((alex["identity_basis"], alex["party"]), ("dated party, reviewed", "Labor"))
+        rejected = {(n, i) for n, i, why in roster_accept.validate(acc, doc["people"], detail=True)}
+        self.assertEqual({(n, i) for n, i in rejected if n == "Alex Example"}, {("Alex Example", 0), ("Alex Example", 1)})
+        self.assertEqual(sum(n == "Alex Example" for n, _ in report["accept_held"]), 2)
+        # the order of the groups makes no difference, and nor does a blank instead of a removal
+        acc["records"]["Alex Example"].reverse()
+        acc["records"]["Alex Example"][1]["fields"]["identity_basis"][1] = None
+        merged, _ = overlay(doc, export, acc)
+        self.assertEqual(merged["people"][[p["name"] for p in merged["people"]].index("Alex Example")]["party"], "Labor")
+
+    def test_two_groups_on_one_field_hold_both(self):
+        acc = accept_list()
+        acc["records"]["Kim Sample"].append({"evidence": "hansard-growth", "fields": {"speeches": [9, 12]}})
+        merged, report = overlay(shipped(), self.export_with(shipped()), acc)
+        self.assertEqual({p["name"]: p for p in merged["people"]}["Kim Sample"]["speeches"], 9)
+        self.assertEqual([w for n, w in report["accept_held"] if n == "Kim Sample"],
+                         ["two groups touch the same field, so every group on the record is held"] * 2)
+
+    # repro 2: an alias entry whose name is a list crashed the overlay (exit 1)
+    def test_a_malformed_alias_entry_holds_everything_and_exits_0(self):
+        def damage(path, rel):
+            if rel == "scripts/roster_service.json":
+                doc = json.loads(path.read_text())
+                next(iter(doc["aliases"].values()))["name"] = []
+                path.write_text(json.dumps(doc))
+        with tempfile.TemporaryDirectory() as tmp:
+            root = sandbox(tmp, damage)
+            self.assertIn("roster_service.json is malformed", roster_accept.read_curated(root)[1])
+            for key in ("aliases", "same_person"):
+                doc = json.loads((ROOT / "scripts/roster_service.json").read_text())
+                next(iter(doc[key].values()))["name"] = []
+                (root / "scripts/roster_service.json").write_text(json.dumps(doc))
+                r, out, ship = run_cli(tmp, shipped(), self.export_with(shipped()), accept_list(), root)
+                self.assertEqual(r.returncode, 0, r.stderr)
+                self.assertEqual(out, ship)
+                self.assertIn("no reviewed change installed, every one held (scripts/roster_service.json is malformed", r.stderr)
+
+    # repro 3: prints: 7 on an accepted new row crashed recount() (exit 1)
+    def test_a_new_row_with_wrongly_typed_or_disallowed_fields_is_held(self):
+        for prints in (7, ["Newcomer"], "Newcomer"):
+            with self.subTest(prints=prints), tempfile.TemporaryDirectory() as tmp:
+                acc = accept_list()
+                acc["new"]["Robin Newcomer"]["row"]["prints"] = prints
+                export = box_export()
+                export["people"][3] = acc["new"]["Robin Newcomer"]["row"]
+                r, out, _ = run_cli(tmp, shipped(), export, acc)
+                self.assertEqual(r.returncode, 0, r.stderr)
+                self.assertNotIn("Robin Newcomer", {p["name"] for p in json.loads(out)["people"]})
+                self.assertIn("a new row may not carry prints", r.stderr)
+
+    def test_any_error_inside_the_accept_step_keeps_the_shipped_roster(self):
+        doc = shipped()
+        doc["meta"] = "not an object"           # recount() cannot read it, so the step raises
+        merged, report = overlay(doc, self.export_with(shipped()), accept_list())
+        self.assertEqual((merged["people"], merged["meta"]), (doc["people"], doc["meta"]))
+        self.assertEqual(report["accepted"], 0)
+        self.assertIn("no reviewed change installed, every one held (the accept step failed (", summary(report))
+        with tempfile.TemporaryDirectory() as tmp:
+            r, out, ship = run_cli(tmp, doc, self.export_with(shipped()), accept_list())
+            self.assertEqual(r.returncode, 0, r.stderr)
+            self.assertEqual(out, ship)
+
+    # property: whatever the list holds, the overlay never raises and installs only what validate() passes
+    POOL = [None, 0, 7, -1, 2.5, True, False, "", "x", "Greens", [], [1], ["a", "b"], [None, None], [5, 6],
+            [[1], [2]], {}, {"a": 1}, {"speeches": "x"}, ["senate"], ["senate_committee"]]
+
+    def mutate(self, acc, rnd):
+        if not isinstance(acc.get("records"), dict):
+            return
+        groups = [(n, gs) for n, gs in acc["records"].items() if isinstance(gs, list)]
+        op = rnd.randrange(7)
+        if op == 0:                              # any value anywhere
+            node, key = acc, None
+            for _ in range(rnd.randrange(1, 6)):
+                kids = list(node.items()) if isinstance(node, dict) else list(enumerate(node)) if isinstance(node, list) else []
+                if not kids:
+                    break
+                key, child = rnd.choice(kids)
+                if rnd.random() < 0.35 or not isinstance(child, (dict, list)):
+                    break
+                node = child
+            if isinstance(node, (dict, list)) and key is not None:
+                try:
+                    node[key] = copy.deepcopy(rnd.choice(self.POOL))
+                except (IndexError, TypeError):
+                    pass
+        elif op == 1 and groups:                 # a duplicate or conflicting group
+            n, gs = rnd.choice(groups)
+            if gs:
+                g = copy.deepcopy(rnd.choice(gs))
+                if isinstance(g, dict) and isinstance(g.get("fields"), dict) and g["fields"] and rnd.random() < 0.5:
+                    f = rnd.choice(list(g["fields"]))
+                    if isinstance(g["fields"][f], list) and len(g["fields"][f]) == 2:
+                        g["fields"][f][1] = rnd.choice(self.POOL)
+                gs.append(g)
+        elif op == 2:                            # a protection field edit, alone or beside a party change
+            n = rnd.choice(["Alex Example", "Kim Sample", "Fixture", "Sam Fixture"])
+            f = rnd.choice(sorted(roster_accept.PROTECTION_FIELDS))
+            gs = acc["records"].setdefault(n, [])
+            if isinstance(gs, list):
+                gs.append({"evidence": "handbook", "fields": {f: [rnd.choice(self.POOL), rnd.choice(self.POOL)]}})
+                if rnd.random() < 0.5:
+                    gs.append({"evidence": "handbook", "fields": {"party": [rnd.choice(["Labor", None]), "Greens"]}})
+        elif op == 3:                            # an identity group on any field
+            n = rnd.choice(["Alex Example", "Kim Sample", "Fixture", "Sam Fixture", "Nobody"])
+            f = rnd.choice(sorted(roster_accept.FIELD_TYPES | {"name", "speaker_type"}))
+            gs = acc["records"].setdefault(n, [])
+            if isinstance(gs, list):
+                gs.append({"evidence": rnd.choice(["handbook", "hansard-growth", "nope"]),
+                           "fields": {f: [rnd.choice(self.POOL), rnd.choice(self.POOL)]}})
+        elif op == 4:                            # a key removed
+            new = acc.get("new") if isinstance(acc.get("new"), dict) else {}
+            target = rnd.choice([acc, new.get("Robin Newcomer"), *(gs[0] for _, gs in groups if gs)])
+            if isinstance(target, dict) and target:
+                target.pop(rnd.choice(list(target)), None)
+        elif op == 5 and groups:                 # a group moved to another record
+            n, gs = rnd.choice(groups)
+            if gs:
+                dest = acc["records"].setdefault(rnd.choice(["Alex Example", "Fixture", "Nobody"]), [])
+                if isinstance(dest, list):
+                    dest.append(gs.pop())
+        elif op == 6:                            # a new row's field
+            e = acc["new"].get("Robin Newcomer") if isinstance(acc.get("new"), dict) else None
+            if isinstance(e, dict) and isinstance(e.get("row"), dict):
+                e["row"][rnd.choice(sorted(roster_accept.NEW_ROW_FIELDS | {"prints", "speech_scope", "witness_rows"}))] = rnd.choice(self.POOL)
+
+    def export_for(self, doc, acc):
+        """The export showing every `to` value it can, so only the gate stands between the list and the roster."""
+        export = copy.deepcopy(doc)
+        export["meta"] = {"generated": "2026-10-18"}
+        rows = {p["name"]: p for p in export["people"]}
+        for n, gs in (acc.get("records") or {}).items() if isinstance(acc.get("records"), dict) else []:
+            for g in gs if isinstance(gs, list) else []:
+                fields = g.get("fields") if isinstance(g, dict) else None
+                for f, v in (fields.items() if isinstance(fields, dict) else []):
+                    if n in rows and isinstance(v, list) and len(v) == 2 and f != "name":
+                        if v[1] is None:
+                            rows[n].pop(f, None)
+                        else:
+                            rows[n][f] = copy.deepcopy(v[1])
+        for n, e in (acc.get("new") or {}).items() if isinstance(acc.get("new"), dict) else []:
+            if isinstance(e, dict) and isinstance(e.get("row"), dict) and e["row"].get("name") == n:
+                export["people"].append(copy.deepcopy(e["row"]))
+        return export
+
+    def installed_only_what_validate_passes(self, doc, acc, merged):
+        problems = roster_accept.validate(acc, doc["people"], detail=True)
+        if problems and problems[0][0] == "roster_accept.json":
+            self.assertEqual(merged["people"], doc["people"])
+            return
+        rejected = {(n, i) for n, i, _ in problems}
+        before = {p["name"]: p for p in doc["people"]}
+        records = acc.get("records", {})
+        for p in merged["people"]:
+            if p["name"] not in before:
+                self.assertIn(p["name"], acc.get("new") or {})
+                self.assertNotIn((p["name"], None), rejected, p["name"])
+                continue
+            old = before[p["name"]]
+            for f in p.keys() | old.keys():
+                if p.get(f) == old.get(f):
+                    continue
+                groups = records.get(p["name"]) if isinstance(records.get(p["name"]), list) else []
+                sources = [i for i, g in enumerate(groups) if isinstance(g, dict) and isinstance(g.get("fields"), dict)
+                           and isinstance(g["fields"].get(f), list) and len(g["fields"][f]) == 2
+                           and g["fields"][f][1] == p.get(f) and (p["name"], i) not in rejected]
+                self.assertTrue(sources, (p["name"], f, p.get(f)))
+
+    def base(self):
+        acc = accept_list()
+        acc["records"]["Alex Example"] = [{"evidence": "handbook", "fields": {"party": ["Labor", "Greens"]}},
+                                          {"evidence": "hansard-growth", "fields": {"speeches": [20, 25]}}]
+        return acc
+
+    def test_random_lists_never_raise_and_install_only_what_validate_passes(self):
+        rnd = random.Random(20261018)
+        for trial in range(600):
+            acc, doc = self.base(), rnd.choice([shipped(), self.dated()])
+            for _ in range(rnd.randrange(1, 5)):
+                self.mutate(acc, rnd)
+            export = self.export_for(doc, acc)
+            with self.subTest(trial=trial):
+                merged, report = overlay(doc, export, acc)
+                summary(report)
+                json.dumps(merged)
+                self.installed_only_what_validate_passes(doc, acc, merged)
+        with tempfile.TemporaryDirectory() as tmp:
+            for trial in range(20):
+                acc, doc = self.base(), shipped()
+                for _ in range(rnd.randrange(1, 5)):
+                    self.mutate(acc, rnd)
+                r, out, ship = run_cli(tmp, doc, self.export_for(doc, acc), acc)
+                with self.subTest(cli=trial):
+                    self.assertEqual(r.returncode, 0, r.stderr)
+                    self.assertTrue(r.stderr.startswith("ROSTER OVERLAY: "), r.stderr)
+                    self.installed_only_what_validate_passes(doc, acc, json.loads(out))

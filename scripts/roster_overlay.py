@@ -45,26 +45,38 @@ ROOT = Path(__file__).resolve().parents[1]
 SHIPPED = Path(os.environ.get("OPAX_ROSTER_PREVIOUS") or ROOT / "portal" / "public" / "parliamentarians.json")
 
 
-def overlay(shipped, fresh, accept=None, accept_error=None, root=roster_accept.ROOT):
-    """(merged roster document, report) for a fresh export `fresh` laid onto the `shipped` one, with the reviewed
-    `accept` list (scripts/roster_accept.json) applied group by group where it is valid and the export still shows
-    its values. `accept_error` (from roster_accept.read) says the list could not be used at all; curated evidence
-    under `root` that cannot be used installs nothing either."""
+def _accept_step(shipped, fresh, accept, accept_error, root):
+    """(people, meta, accept report) with the reviewed changes installed (roster_accept.apply)."""
     if accept is None or accept_error:
         accept = roster_accept.empty()
     people, accepted = roster_accept.apply(shipped["people"], fresh["people"], accept, root)
     if accept_error:
         accepted["blocked"] = f"scripts/roster_accept.json {accept_error}"
     if people == shipped["people"]:
-        meta, people = shipped["meta"], list(shipped["people"])
-    else:
-        people = roster_accept.ordered(people)
-        meta = roster_accept.recount(shipped["meta"], people)
-        meta["generated"] = fresh["meta"].get("generated", meta.get("generated"))  # the export the counts are from
+        return list(shipped["people"]), shipped["meta"], accepted
+    people = roster_accept.ordered(people)
+    meta = roster_accept.recount(shipped["meta"], people)
+    meta["generated"] = fresh["meta"].get("generated", meta.get("generated"))  # the export the counts are from
+    return people, meta, accepted
+
+
+def overlay(shipped, fresh, accept=None, accept_error=None, root=roster_accept.ROOT):
+    """(merged roster document, report) for a fresh export `fresh` laid onto the `shipped` one, with the reviewed
+    `accept` list (scripts/roster_accept.json) applied group by group where it is valid and the export still shows
+    its values. `accept_error` (from roster_accept.read) says the list could not be used at all; curated evidence
+    under `root` that cannot be used installs nothing either. The whole accept step fails closed: any error in it
+    keeps the shipped rows and meta exactly, and the report says why."""
+    try:
+        people, meta, accepted = _accept_step(shipped, fresh, accept, accept_error, root)
+    except Exception as err:  # noqa: BLE001 - the people step must never stop on the accept list
+        people, meta = list(shipped["people"]), shipped["meta"]
+        accepted = {"applied": 0, "unchanged": 0, "held": [],
+                    "blocked": f"the accept step failed ({type(err).__name__}: {str(err)[:80]})"}
     kept = {p["name"]: p for p in people}
-    now = {p["name"]: p for p in fresh["people"]}
+    # the export is only described here, never installed: rows it cannot name are skipped
+    now = {p["name"]: p for p in fresh["people"] if isinstance(p, dict) and isinstance(p.get("name"), str)}
     # a print the export folded into a person is not a new row, and its old row is not "dropped"
-    folded = {stub for p in fresh["people"] for stub in p.get("prints") or []}
+    folded = {stub for p in now.values() if isinstance(p.get("prints"), list) for stub in p["prints"] if isinstance(stub, str)}
     fields = Counter()
     for name, p in kept.items():
         q = now.get(name)
@@ -116,7 +128,10 @@ def main(argv=None):
     a = ap.parse_args(argv)
     fresh = json.loads(a.directory.read_text(encoding="utf-8"))
     shipped = json.loads(a.shipped.read_text(encoding="utf-8"))
-    accept, error = roster_accept.read(a.accept)
+    try:
+        accept, error = roster_accept.read(a.accept)
+    except Exception as err:  # noqa: BLE001 - see overlay(): the accept step fails closed
+        accept, error = None, f"could not be loaded ({type(err).__name__})"
     merged, report = overlay(shipped, fresh, accept, error)
     a.directory.write_text(json.dumps(merged, ensure_ascii=False, separators=(",", ":")) + "\n", encoding="utf-8")
     print("ROSTER OVERLAY: " + summary(report), file=sys.stderr)

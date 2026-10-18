@@ -15,7 +15,11 @@ A field absent from a record is written null (the roster never holds a JSON null
     value before any accept list (what revert() restores). An installed group is never replaced by the overlay:
     --propose keeps it as it is and lists the moved value as held, and a later review that wants the new value edits
     the group's `to` and the roster together, by hand, in one reviewed commit.
-  - Every group is checked before it applies, and one that fails is held, never applied (group_problem): corpus
+  - judge() is the one gate: validate() reports what it holds and apply() installs only what it passes. It reads
+    the shipped, unmodified record for every group (never one an earlier group changed), and across a record's
+    groups, two that touch the same field, or one that touches a protection field (PROTECTION_FIELDS: name, full,
+    prints, speech scope and basis, dated party, identity basis, aliases, identity evidence), hold every group on
+    the record. Each group on its own (group_problem): every value is type-checked (value_problem); corpus
     evidence is re-checked by rule (corpus_reason: a count may only rise, a fall needs a presiding officer named in
     the evidence, a witness partition must conserve the transcript aggregate, only committee chambers may be added,
     no identity field); identity evidence needs a source URL and a check date; no group removes an identity value,
@@ -27,7 +31,8 @@ A field absent from a record is written null (the roster never holds a JSON null
     the export's row is exactly the reviewed row, and the shipped roster lacks the name.
   - A file that cannot be read, or is not shaped like an accept list, holds everything (read()); so do curated
     evidence files that cannot be read or are malformed (read_curated()). Every field the checks read is type-checked:
-    a wrongly typed entry is held with a reason, never raised.
+    a wrongly typed entry is held with a reason, never raised; and scripts/roster_overlay.py runs the whole accept
+    step under a fail-closed handler, so any error in it keeps the shipped roster byte for byte and exits 0.
 
 revert() undoes the applied groups, so scripts/audit_roster_changes.py and scripts/test_roster_main_preservation.py
 keep judging the curated roster against main's fixture with their existing categories.
@@ -59,6 +64,19 @@ FOLD_FIELDS = {"prints", "pid", "full", "party", "parties", "party_now", "curren
 ALIAS_FIELDS = PARTY_FIELDS | {"full", "pid", "representation", "aliases", "identity_basis", "identity_evidence"}
 NEUTRAL_FIELDS = PARTY_FIELDS | {"pid", "full", "current", "representation"}
 EVERY_FIELD = None  # a pinned witness split: nothing on it may change
+# Fields that decide which protections a record has (protected(), curated pins by name and `full`). A group that
+# touches one would clear or move a protection for later nights, so every group on that record is held.
+PROTECTION_FIELDS = {"name", "full", "prints", "speech_scope", "speech_count_basis", "affiliations", "identity_basis",
+                     "aliases", "identity_evidence"}
+# The fields an accepted value may hold, each with its type (value_problem); anything else is held.
+_COUNT = {"speeches", "first", "last", "witness_rows"}
+_TEXT = {"party", "full", "party_now", "pid", "speech_count_basis", "identity_basis"}
+_TEXTS = {"chambers", "states", "parties", "recorded_parties", "prints", "aliases"}
+_RECORDS = {"representation", "affiliations", "identity_evidence"}
+_SUMMARIES = {"transcript", "separated_witnesses", "speech_scope"}
+FIELD_TYPES = _COUNT | _TEXT | _TEXTS | _RECORDS | _SUMMARIES | {"current"}
+NEW_ROW_FIELDS = {"name", "speeches", "party", "parties", "states", "chambers", "first", "last", "pid", "current",
+                  "party_now", "representation", "full", "recorded_parties"}
 
 
 def empty():
@@ -113,7 +131,8 @@ def read_curated(root=ROOT):
     named = lambda rows: isinstance(rows, list) and all(isinstance(r, dict) and isinstance(r.get("name"), str) for r in rows)  # noqa: E731
     texts = lambda rows: isinstance(rows, list) and all(isinstance(r, str) for r in rows)  # noqa: E731
     if not (isinstance(service, dict) and all(isinstance(service.get(k, {}), dict) and
-                                              all(isinstance(v, dict) for v in service.get(k, {}).values())
+                                              all(isinstance(v, dict) and isinstance(v.get("name", ""), str)
+                                                  for v in service.get(k, {}).values())
                                               for k in ("aliases", "same_person"))
             and named(service.get("service", [])) and named(service.get("history", []))
             and texts(service.get("party_from_pinned_roster", [])) and texts(service.get("party_corrections", []))):
@@ -237,6 +256,36 @@ def _text(value):
     return isinstance(value, str) and bool(value.strip())
 
 
+def _strs(value):
+    return isinstance(value, list) and bool(value) and all(_text(v) for v in value)
+
+
+def _int(value):
+    return isinstance(value, int) and not isinstance(value, bool)
+
+
+def _summary_ok(value):
+    """A transcript, separated-witness or speech-scope summary: an object of counts, years, lists of text, text."""
+    return isinstance(value, dict) and all(
+        (_int(v) and v >= 0) if k in _COUNT else _strs(v) or v == [] if k in ("states", "chambers") else
+        isinstance(v, (str, list, dict, int)) and not isinstance(v, bool) for k, v in value.items())
+
+
+def value_problem(field, value):
+    """None when `value` (None = absent) may be written into roster `field`, else why not."""
+    if field not in FIELD_TYPES:
+        return f"{field!r} is not a roster field an accepted change may write"
+    if value is None:
+        return None
+    ok = ((_int(value) and value >= 0) if field in _COUNT else _text(value) if field in _TEXT else
+          (isinstance(value, list) and all(_text(v) for v in value) and (bool(value) or field not in ("chambers", "states")))
+          if field in _TEXTS else
+          isinstance(value, list) and all(isinstance(r, dict) and all(isinstance(v, (str, type(None))) for v in r.values())
+                                          for r in value) if field in _RECORDS else
+          _summary_ok(value) if field in _SUMMARIES else isinstance(value, bool))
+    return None if ok else f"{field} holds a {type(value).__name__} of the wrong shape"
+
+
 def _shaped(group):
     return (isinstance(group, dict) and isinstance(group.get("evidence"), str) and isinstance(group.get("fields"), dict)
             and group["fields"] and all(isinstance(f, str) and isinstance(v, list) and len(v) == 2
@@ -245,14 +294,23 @@ def _shaped(group):
             and all(group.get(k) is None or _text(group[k]) for k in ("url", "checked", "note")))
 
 
-def group_problem(name, group, evidence, row, curated):
-    """None when `group` may apply to the shipped `row` (None: no such record), else why it is held."""
+def _blank(value):
+    return value is None or value in ("", [], {})
+
+
+def group_problem(name, group, evidence, row, curated, roster=True):
+    """None when `group`, on its own, may apply to the shipped, unmodified `row` (None: no such record; roster
+    False: no roster to check against), else why it is held. judge() adds the rules across a record's groups."""
     if not _shaped(group):
         return "malformed group"
     ev = evidence.get(group["evidence"])
     if not isinstance(ev, dict) or ev.get("kind") not in ("corpus", "identity"):
         return f"unknown evidence {group['evidence']!r}"
     fields = group["fields"]
+    for f, (a, b) in fields.items():
+        why = value_problem(f, a) or value_problem(f, b)
+        if why:
+            return "malformed value: " + why
     try:
         if ev["kind"] == "corpus":
             why = corpus_reason(name, fields, ev)
@@ -262,8 +320,10 @@ def group_problem(name, group, evidence, row, curated):
             return "identity evidence without a source URL and check date"
     except (TypeError, KeyError, ValueError, AttributeError):
         return "malformed group values"
-    if any(f in IDENTITY_FIELDS and a is not None and b is None for f, (a, b) in fields.items()):
+    if any(f in IDENTITY_FIELDS and not _blank(a) and _blank(b) for f, (a, b) in fields.items()):
         return "it removes an identity value"
+    if not roster:
+        return None
     if row is None:
         return "not a shipped record"
     if curated is None:
@@ -279,14 +339,6 @@ def group_problem(name, group, evidence, row, curated):
 
 def _year(value):
     return int(str(value)[:4]) if value else None
-
-
-def _strs(value):
-    return isinstance(value, list) and bool(value) and all(_text(v) for v in value)
-
-
-def _int(value):
-    return isinstance(value, int) and not isinstance(value, bool)
 
 
 def new_row_problem(name, entry, evidence, shipped_names=()):
@@ -310,8 +362,15 @@ def _new_row_problem(name, entry, evidence, shipped_names):
     parts = name.split()
     if row.get("name") != name or len(parts) < 2 or not any(c.islower() for c in parts[0]) or len(parts[0].strip(".")) < 2:
         return "a new row needs a full name (not a surname or initials print)"
+    extra = sorted(set(row) - NEW_ROW_FIELDS)
+    if extra:
+        return "a new row may not carry " + ", ".join(extra)
+    for f, v in row.items():
+        why = f != "name" and value_problem(f, v)
+        if why:
+            return "malformed value: " + why
     if not (_strs(row.get("chambers")) and _strs(row.get("states")) and _int(row.get("first")) and _int(row.get("last"))
-            and _int(row.get("speeches")) and (row.get("pid") is None or isinstance(row.get("pid"), str))):
+            and _int(row.get("speeches"))):
         return "a new row needs chambers and states (lists of text), and numeric first, last and speeches"
     if not (isinstance(service, dict) and _text(service.get("chamber")) and _text(service.get("jurisdiction"))
             and _text(service.get("start")) and (service.get("end") is None or _text(service.get("end")))):
@@ -323,8 +382,6 @@ def _new_row_problem(name, entry, evidence, shipped_names):
     houses = [c for c in row["chambers"] if not _committee(c)]
     if not houses:
         return "a committee-only or chamberless row is not a parliamentary identity"
-    if row.get("separated_witnesses") or row.get("witness_rows") or row.get("speaker_type") == "witness":
-        return "the row carries committee-witness testimony"
     try:
         start, end = _year(service["start"]), _year(service.get("end"))
     except ValueError:
@@ -336,37 +393,62 @@ def _new_row_problem(name, entry, evidence, shipped_names):
     return None
 
 
-def validate(accept, shipped_people=None, curated=False):
-    """Every reason something in the list would be held. With shipped_people, also each group against that
-    roster (curated defaults to the repo's evidence files)."""
+def judge(accept, shipped_people=None, root=ROOT, curated=False):
+    """The one gate, for validate() and apply() alike: (blocked, groups, new rows).
+
+    blocked: why nothing may be installed (a malformed list, unusable curated evidence), else None.
+    groups: [(name, index, group, why)] and new rows: [(name, entry, why)], why None for a change that may apply.
+    Every check reads the shipped, unmodified record, never one other groups have changed; and across a record's
+    groups, two that touch the same field, or one that touches a protection field (PROTECTION_FIELDS), hold every
+    group on the record. With shipped_people None, only what can be judged without a roster is."""
     why = shape(accept)
     if why:
-        return [why]
+        return why, [], []
     if curated is False:
-        curated, why = read_curated()
+        curated, why = read_curated(root)
         if why:
-            return [why]
-    problems = []
+            return why, [], []
     evidence = accept.get("evidence", {})
-    have = {p["name"]: p for p in shipped_people or []}
-    for name, groups in accept.get("records", {}).items():
-        if not isinstance(groups, list):
-            problems.append(f"{name}: malformed record entry")
+    have = None if shipped_people is None else {p["name"]: p for p in shipped_people}
+    groups = []
+    for name, entries in accept.get("records", {}).items():
+        if not isinstance(entries, list):
+            groups.append((name, None, entries, "malformed record entry"))
             continue
-        seen = set()
-        for g in groups:
-            if _shaped(g):
-                if seen & set(g["fields"]):
-                    problems.append(f"{name}: a field is accepted twice")
-                seen |= set(g["fields"])
-            why = group_problem(name, g, evidence, have.get(name), curated)
-            if why and (have or why != "not a shipped record"):
-                problems.append(f"{name}: {why}")
+        row = have.get(name) if have is not None else None
+        verdicts = []
+        for i, g in enumerate(entries):
+            try:
+                why = group_problem(name, g, evidence, row, curated, roster=have is not None)
+            except Exception as err:  # noqa: BLE001 - a group that cannot be judged is held
+                why = f"malformed group ({type(err).__name__})"
+            verdicts.append((name, i, g, why))
+        fields = [f for g in entries if _shaped(g) for f in g["fields"]]
+        whole = ("two groups touch the same field, so every group on the record is held" if len(fields) != len(set(fields))
+                 else "a group touches a protection field (" + ", ".join(sorted(set(fields) & PROTECTION_FIELDS)) +
+                 "), so every group on the record is held" if set(fields) & PROTECTION_FIELDS else None)
+        groups += [(n, i, g, why or whole) for n, i, g, why in verdicts]
+    new = []
     for name, entry in accept.get("new", {}).items():
-        why = new_row_problem(name, entry, evidence)
-        if why:
-            problems.append(f"{name}: {why}")
-    return problems
+        try:
+            installed = have is not None and name in have
+            why = (None if installed and isinstance(entry, dict) and have[name] == entry.get("row") and
+                   new_row_problem(name, entry, evidence) is None else
+                   "the name is already a shipped record" if installed else new_row_problem(name, entry, evidence))
+        except Exception as err:  # noqa: BLE001
+            why = f"malformed entry ({type(err).__name__})"
+        new.append((name, entry, why))
+    return None, groups, new
+
+
+def validate(accept, shipped_people=None, curated=False, detail=False, root=ROOT):
+    """Every reason something in the list would be held (judge()): text lines, or with detail
+    [(name, group index or None, why)]."""
+    blocked, groups, new = judge(accept, shipped_people, root, curated)
+    if blocked:
+        return [("roster_accept.json", None, blocked)] if detail else [blocked]
+    out = [(n, i, why) for n, i, g, why in groups if why] + [(n, None, why) for n, e, why in new if why]
+    return out if detail else [f"{n}: {why}" for n, i, why in out]
 
 
 def state(row, group):
@@ -383,44 +465,35 @@ MOVED = "the export moved again"
 
 
 def apply(shipped_people, fresh_people, accept, root=ROOT):
-    """(people, report): the shipped rows with every valid accepted group the export still shows, plus valid
-    accepted new rows. Each group is judged on its own (group_problem) and held with a reason when it fails, so one
-    bad entry never blocks the others; report["held"] is [(name, why)]. When the list is malformed, or the curated
-    evidence under `root` cannot be used, nothing is installed and report["blocked"] says why."""
+    """(people, report): the shipped rows with every change judge() passes that the export still shows, and
+    nothing else; report["held"] is [(name, why)]. When judge() blocks, nothing is installed and report["blocked"]
+    says why. Values are written into copies; judge() read the shipped rows."""
     report = {"applied": 0, "unchanged": 0, "held": [], "blocked": None}
-    curated, why = read_curated(root)
-    why = shape(accept) or why
-    if why:
-        report["blocked"] = why
-        return [copy.deepcopy(p) for p in shipped_people], report
-    evidence = accept.get("evidence", {})
-    fresh = {p["name"]: p for p in fresh_people}
+    blocked, groups, new = judge(accept, shipped_people, root)
     people = [copy.deepcopy(p) for p in shipped_people]
+    if blocked:
+        report["blocked"] = blocked
+        return people, report
+    shipped = {p["name"]: p for p in shipped_people}
     by = {p["name"]: p for p in people}
-    for name, groups in accept.get("records", {}).items():
-        if not isinstance(groups, list):
-            report["held"].append((name, "malformed record entry"))
-            continue
-        row, q = by.get(name), fresh.get(name)
-        for g in groups:
-            why = group_problem(name, g, evidence, row, curated)
-            if why:
-                report["held"].append((name, why))
-            elif state(row, g) == "applied":
-                report["unchanged"] += 1
-            elif q is not None and all(_get(q, f) == b for f, (a, b) in g["fields"].items()):
-                for f, (a, b) in g["fields"].items():
-                    _put(row, f, b)
-                report["applied"] += 1
-            else:
-                report["held"].append((name, MOVED))
-    for name, entry in accept.get("new", {}).items():
-        if name in by:
-            report["unchanged"] += 1
-            continue
-        why = new_row_problem(name, entry, evidence, by)
+    fresh = {p["name"]: p for p in fresh_people if isinstance(p, dict) and isinstance(p.get("name"), str)}
+    for name, i, g, why in groups:
+        q = fresh.get(name)
         if why:
             report["held"].append((name, why))
+        elif state(shipped[name], g) == "applied":
+            report["unchanged"] += 1
+        elif q is not None and all(_get(q, f) == b for f, (a, b) in g["fields"].items()):
+            for f, (a, b) in g["fields"].items():
+                _put(by[name], f, b)
+            report["applied"] += 1
+        else:
+            report["held"].append((name, MOVED))
+    for name, entry, why in new:
+        if why:
+            report["held"].append((name, why))
+        elif name in shipped:
+            report["unchanged"] += 1
         elif fresh.get(name) == entry["row"]:
             people.append(copy.deepcopy(entry["row"]))
             report["applied"] += 1
