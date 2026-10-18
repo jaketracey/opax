@@ -1,10 +1,9 @@
 {
   "version": "2026-10-19",
-  "expected_resources": 988647,
+  "expected_resources": 988649,
   "expected_resources_breakdown": {
-    "live_index_before_refresh": 988597,
-    "new_division_resources": 49,
-    "new_press_release_resources": 1
+    "live_index_before_refresh": 988647,
+    "new_press_release_resources": 2
   },
   "collected_speeches": 950441,
   "sources": [
@@ -65,7 +64,7 @@
     },
     {
       "name": "Prime Minister transcripts and releases (PM&C)",
-      "docs": 673,
+      "docs": 675,
       "coverage": "2025–2026"
     },
     {
@@ -153,7 +152,7 @@
     "SA Hansard stops at November 2024: hansardsearch.parliament.sa.gov.au now sits behind a WAF that challenges every non-browser request, so the source cannot be fetched."
   ],
   "refresh": {
-    "checked_at": "2026-10-18T14:25:17+00:00",
+    "checked_at": "2026-10-18T16:46:52+00:00",
     "news_resources": 0,
     "bills_registry": 2988,
     "current_parliament_bills": 295,
@@ -164,6 +163,7 @@
       "Federal Hansard is current to 2026-10-15; NSW Parliament to 2026-10-15; Victoria to 2026-09-24; QLD to 2026-09-16; ACT to 2026-09-24. Federal committee hearings (Senate, House and Joint) are current to 2026-10-08.",
       "New AEC source snapshots are retained for reconciliation. Amended federal donation rows have not replaced reviewed public data.",
       "Ministerial diary and IPEA expense refreshes returned the same published rows as the previous verified snapshots.",
+      "source paused: honest agent refused (awaiting permission); existing disclosures were preserved.",
       "source paused: honest agent refused (awaiting permission); existing disclosures were preserved.",
       "source paused: honest agent refused (awaiting permission); existing disclosures were preserved.",
       "source paused: honest agent refused (awaiting permission); existing disclosures were preserved.",
@@ -203,7 +203,7 @@
       "grant_award": 8354,
       "grant_invitation": 227,
       "parliamentary_profile": 977,
-      "press_release": 6602,
+      "press_release": 6604,
       "research_report": 35,
       "speech": 950441
     },
@@ -213,7 +213,7 @@
       "vic_speeches": 0,
       "act_speeches": 0,
       "nsw_releases": 0,
-      "austender_contracts": 0
+      "austender_contracts": 3
     },
     "structured_sources": {
       "grantconnect_awards": 361036,
