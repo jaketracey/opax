@@ -191,6 +191,12 @@ paths = "export const PERSON_PATHS = " + json.dumps(sorted(p["name"] for p in ro
 open(f"{seed}/portal/public/person-paths.js", "w").write(paths)
 import hashlib
 open(f"{seed}/portal/public/canonical-urls.js", "w").write("import '/person-paths.js?v=" + hashlib.sha256(paths.encode()).hexdigest()[:10] + "';\n")
+# what the build derives from the bills under a group (people) that the bills do not belong to, like growth/sponsors
+import os
+os.makedirs(f"{seed}/portal/public/growth/sponsors")
+open(f"{seed}/portal/public/growth/sponsors/index.json", "w").write(json.dumps({r["key"]: r["status_as_of"] for r in rows}, sort_keys=True) + "\n")
+# a data file the stamp step writes outside every group
+open(f"{seed}/portal/public/stamp-extra.json", "w").write('{"people": 20}\n')
 PYEOF
   (cd "$seed" && git init -q && git add -A && git commit -q -m seed && git remote add origin "$ORIGIN" && git push -q origin HEAD:main)
   REPO="$HOME/opax"; git clone -q "$ORIGIN" "$REPO"
@@ -329,6 +335,8 @@ echo "node $*" >> "$HOME/node.calls"
 if [ "$1" = scripts/stamp_assets.mjs ]; then
   [ -f portal/public/person-paths.js ] || exit 0
   printf "import '/person-paths.js?v=%s';\n" "$(sha256sum portal/public/person-paths.js | cut -c1-10)" > portal/public/canonical-urls.js
+  # like seo-links.json: data the stamp step rewrites that is not a content stamp
+  [ "${FAKE_STAMP_EXTRA:-0}" = 0 ] || printf '{"people": %s}\n' "$(python3 -c "import json; print(len(json.load(open('portal/public/parliamentarians.json'))['people']))")" > portal/public/stamp-extra.json
   exit 0
 fi
 [ "$1" = --test ] || exit 0
@@ -352,9 +360,11 @@ NDEOF
   cat > "$SB/bin/npm" <<'NPEOF'
 #!/bin/sh
 echo "npm $*" >> "$HOME/npm.calls"
-# build:search derives public/person-paths.js from the roster, as build:crawl does (cwd is portal/)
+# build:search derives public/person-paths.js from the roster, as build:crawl does, and growth/sponsors from the
+# bills, as build:growth does (cwd is portal/)
 if [ "$*" = "run build:search" ] && [ -f public/parliamentarians.json ]; then
   python3 -c "import json; r=json.load(open('public/parliamentarians.json')); open('public/person-paths.js','w').write('export const PERSON_PATHS = '+json.dumps(sorted(p['name'] for p in r['people']))+';\n')"
+  python3 -c "import json; b=json.load(open('public/bills/index.json'))['bills']; open('public/growth/sponsors/index.json','w').write(json.dumps({r['key']: r['status_as_of'] for r in b}, sort_keys=True)+'\n')"
 fi
 exit ${FAKE_NPM_RC:-0}
 NPEOF
@@ -943,13 +953,33 @@ FAKE_MODE=ok nightly
 check "a restamped importer left by a run killed mid-gate is put back at the sync, never committed" bash -c "[ '$NRC' -eq 0 ] && git --git-dir='$ORIGIN' diff --quiet main~1 main -- portal/public/canonical-urls.js && [ -z \"\$(git -C '$REPO' status --porcelain -- portal/public/canonical-urls.js)\" ]"
 new_sandbox s25roster
 mkdir -p "$REPO/portal/node_modules" "$REPO/portal/test"
-OPAX_FORCE_GROUPS=weekly FAKE_WEEKLY_MODE=roster FAKE_NODE_RC=0 nightly
+OPAX_FORCE_GROUPS=weekly FAKE_WEEKLY_MODE=roster FAKE_NODE_RC=0 FAKE_STAMP_EXTRA=1 nightly
+check "only content-stamp diffs outside the data paths are staged: other files the stamp step wrote go back to HEAD" bash -c "git --git-dir='$ORIGIN' diff --quiet main~1 main -- portal/public/stamp-extra.json && [ -z \"\$(git -C '$REPO' status --porcelain --untracked-files=no)\" ]"
 check "a green roster change publishes its derived person-paths.js with it, and the importer restamped to match" bash -c "[ '$NRC' -eq 0 ] && git --git-dir='$ORIGIN' show main:portal/public/person-paths.js | grep -q 'Person New' && [ \"\$(git --git-dir='$ORIGIN' show main:portal/public/canonical-urls.js)\" = \"import '/person-paths.js?v=\$(git --git-dir='$ORIGIN' show main:portal/public/person-paths.js | sha256sum | cut -c1-10)';\" ]"
 new_sandbox s25budget
 mkdir -p "$REPO/portal/node_modules" "$REPO/portal/test"
 OPAX_GATE_BUDGET=3s FAKE_NODE_SLEEP=2 OPAX_FORCE_GROUPS=weekly FAKE_WEEKLY_MODE=ok FAKE_NODE_RED_WHILE_CHANGED=portal/public/speakers.json nightly
 check "a red gate with no time left in its budget holds the changed groups and still ends the night with a status" bash -c "[ '$NRC' -eq 1 ] && git --git-dir='$ORIGIN' show nightly-status:status.json | grep -q 'no time left in the 3s gate budget' && git --git-dir='$ORIGIN' show main:portal/public/speakers.json | python3 -c 'import json,sys; assert len(json.load(sys.stdin))==100'"
 check "and runs the suite only once" test "$(grep -c 'node --test' "$HOME/node.calls")" -eq 1
+# Review, round 1: bills held when the budget expires must not leave new-bill data in growth/sponsors, a file the
+# build derives from them under the people group, which never changed and so was never put back.
+new_sandbox s25billsheld
+mkdir -p "$REPO/portal/node_modules" "$REPO/portal/test"
+OPAX_GATE_BUDGET=3s FAKE_NODE_SLEEP=2 FAKE_NODE_RED_WHILE_CHANGED=portal/public/bills/au-federal-t1.json nightly
+check "bills held at the budget: the derived sponsors file ships no new-bill data, the checkout is clean" bash -c "[ '$NRC' -eq 1 ] && git --git-dir='$ORIGIN' show main:portal/public/bills/au-federal-t1.json | grep -q '\"status_as_of\": \"2026-09-01\"' && ! git --git-dir='$ORIGIN' show main:portal/public/growth/sponsors/index.json | grep -q 2026-09-28 && [ -z \"\$(git -C '$REPO' status --porcelain --untracked-files=no)\" ]"
+new_sandbox s25billsculprit
+mkdir -p "$REPO/portal/node_modules" "$REPO/portal/test"
+FAKE_NODE_RED_WHILE_CHANGED=portal/public/bills/au-federal-t1.json nightly
+check "bills named as the culprit: the closing run rebuilds sponsors from HEAD's bills, votes still go out" bash -c "[ '$NRC' -eq 1 ] && ! git --git-dir='$ORIGIN' show main:portal/public/growth/sponsors/index.json | grep -q 2026-09-28 && git --git-dir='$ORIGIN' show main:portal/public/votes.json | grep -q 'New Member'"
+new_sandbox s25buildfail
+mkdir -p "$REPO/portal/node_modules" "$REPO/portal/test"
+FAKE_NPM_RC=1 OPAX_FORCE_GROUPS=weekly FAKE_WEEKLY_MODE=ok nightly
+check "a failing build is a red run: the fallback completes with a status (no unbound variable), everything held" bash -c "[ '$NRC' -eq 1 ] && git --git-dir='$ORIGIN' show nightly-status:status.json | grep -q 'red on main itself' && ! grep -q 'unbound variable\|died unexpectedly' '$HOME/.cache/autoresearch/pipeline/nightly-$TODAY.log' && git --git-dir='$ORIGIN' show main:portal/public/speakers.json | python3 -c 'import json,sys; assert len(json.load(sys.stdin))==100'"
+new_sandbox s25deadline
+mkdir -p "$REPO/portal/node_modules" "$REPO/portal/test"
+t0=$(date +%s)
+OPAX_GATE_BUDGET=3s FAKE_NODE_SLEEP=60 OPAX_FORCE_GROUPS=weekly FAKE_WEEKLY_MODE=ok nightly
+check "a suite slower than the budget is cut at the deadline, not left to the unit limit; nothing new published" bash -c "[ '$NRC' -eq 1 ] && [ \$((\$(date +%s) - $t0)) -lt 45 ] && grep -q 'cut at the 3s budget' '$HOME/.cache/autoresearch/pipeline/nightly-$TODAY.log' && git --git-dir='$ORIGIN' show main:portal/public/speakers.json | python3 -c 'import json,sys; assert len(json.load(sys.stdin))==100'"
 new_sandbox s25e
 mkdir -p "$REPO/portal/node_modules" "$REPO/portal/test"
 OPAX_FORCE_GROUPS=weekly FAKE_WEEKLY_MODE=ok FAKE_NODE_RC=0 nightly

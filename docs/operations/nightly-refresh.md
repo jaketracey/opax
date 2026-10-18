@@ -526,9 +526,15 @@ alone, then cumulatively, the whole suite every time) re-ran six identical ~15 m
 culprits (the roster export and the instruments test) and the divisions catch-up waiting behind them. Every tracked file a
 night writes belongs to one group (`scripts/vm/data_groups.sh`), including what the build derives from it: `person-paths.js`
 and `growth/sponsors` travel with the roster, the donor index and `growth/donors.json` with money, `growth/agencies` with
-suppliers; the search manifest and party-member index read every group and are put back to HEAD after the gate. When a kept
+suppliers; `seo-links.json` (written by the stamp step from bills and roster) with people; the search manifest and party-member
+index read every group and are put back to HEAD after the gate. Some derived files read more than their owner
+(`growth/sponsors` and `seo-links.json` read the bills too), so when a red gate ends without a green build of exactly
+the data that stays (budget spent, closing run skipped or red), every derived file goes back to HEAD with the groups.
+Every build, stamp and test command runs under `timeout` with what is left of the budget, and the closing full run only
+starts if its last measured duration still fits; otherwise nothing new is published and the status says so. When a kept
 group changed a stamped generated module, the restamped importers are committed with the data, so `main` passes
-`stamp_assets --check`. Needs Node 24 and `portal/node_modules` (bootstrap installs them; `npm ci` is re-run
+`stamp_assets --check`; only files whose whole diff is `?v=` stamps qualify, anything else the build wrote outside the
+data paths goes back to HEAD. Needs Node 24 and `portal/node_modules` (bootstrap installs them; `npm ci` is re-run
 when `package-lock.json` changes); without them the gate is skipped with a warning. `OPAX_TEST_GATE=0` turns it off. It found
 its first real coupling in the VM rehearsal: `export_parliamentarians.py` on its own drops every person's `representation`
 (added by `enrich_profile_jurisdictions.py`), which turned `grants-research.test.mjs` red; the weekly `x_people` step now runs

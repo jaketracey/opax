@@ -39,7 +39,7 @@ declare -A GROUP_PATHS=(
   [interests]="portal/public/interests" # daily federal (cap 100), weekly QLD; export after each
   [fits]="portal/public/fits.json"
   [speakers]="portal/public/speakers.json"
-  [people]="portal/public/parliamentarians.json portal/src/passage-names.json portal/public/person-paths.js portal/public/growth/sponsors" # the roster and what the build derives from it travel together
+  [people]="portal/public/parliamentarians.json portal/src/passage-names.json portal/public/person-paths.js portal/public/growth/sponsors portal/public/seo-links.json" # the roster and what the build derives from it (sponsor links read the bills too) travel together
   [pay]="portal/public/pay.json"
   [discovery]="portal/public/discovery.json"
   [taxcharity]="portal/public/entities/tax-charity"
@@ -48,6 +48,12 @@ declare -A GROUP_PATHS=(
 
 # build:search outputs that read every group: rebuilt for each gate trial, put back to HEAD after the gate
 BUILD_ONLY_PATHS=(portal/public/search-catalog/manifest.json portal/public/graph/party-members.json)
+
+# The files above that the gate's build (build:search + stamp_assets) derives rather than an exporter writes. Some read
+# more than their owner group (growth/sponsors and seo-links.json read the bills as well as the roster), so after a red
+# gate whose last build was not made from exactly the data that stays, they all go back to HEAD before staging.
+DERIVED_PATHS=(portal/src/passage-names.json portal/public/person-paths.js portal/public/growth/sponsors portal/public/seo-links.json
+  portal/public/graph/donor-index.json portal/public/growth/donors.json portal/public/growth/agencies)
 
 # every path of every group, in one list
 all_data_paths() {

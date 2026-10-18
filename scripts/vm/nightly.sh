@@ -485,22 +485,33 @@ if [ "${OPAX_TEST_GATE:-1}" != 0 ]; then
       GATE_JUNIT="$PIPE/gate-junit.xml"
       # tracked files already modified outside the data paths before the gate: never staged by the stamp step below
       mapfile -t OTHERS_BEFORE < <(git diff --name-only)
+      # one build/stamp/test command, killed when the gate's budget runs out (exit 124): nothing here may run past it
+      gate_step() {
+        local left=$((GATE_DEADLINE - $(date +%s)))
+        [ "$left" -gt 0 ] || return 124
+        run timeout -k 30 "$left" "$@"
+      }
       # build (what the deploy job does before its tests: rebuild the search catalog and the derived modules from the
-      # public data, ~50 s), stamp, test; with arguments only those test files run. Sets SUITE_SECS.
+      # public data, ~50 s), stamp, test; with arguments only those test files run. Sets SUITE_SECS and SUITE_RC on
+      # every exit path (a failed build or stamp is a red run, 124 one cut by the budget).
       run_suite() {
-        local t0 rc
+        local t0 rc=0
         t0=$(date +%s)
-        [ "${OPAX_GATE_BUILD:-1}" = 0 ] || (cd "$REPO/portal" && run "$NPM" run build:search) || return 1
-        (cd "$REPO" && run "$NODE" scripts/stamp_assets.mjs) || return 1
         rm -f "$GATE_JUNIT"
-        if [ "$#" -gt 0 ]; then
-          (cd "$REPO/portal" && run "$NODE" --test --test-reporter=dot --test-reporter-destination=stdout \
-             --test-reporter=junit --test-reporter-destination="$GATE_JUNIT" "$@")
-        else
-          (cd "$REPO/portal" && run "$NODE" --test --test-reporter=dot --test-reporter-destination=stdout \
-             --test-reporter=junit --test-reporter-destination="$GATE_JUNIT" test/*.test.mjs)
+        if [ "${OPAX_GATE_BUILD:-1}" != 0 ]; then (cd "$REPO/portal" && gate_step "$NPM" run build:search) || rc=$?; fi
+        [ "$rc" -ne 0 ] || (cd "$REPO" && gate_step "$NODE" scripts/stamp_assets.mjs) || rc=$?
+        if [ "$rc" -eq 0 ]; then
+          if [ "$#" -gt 0 ]; then
+            (cd "$REPO/portal" && gate_step "$NODE" --test --test-reporter=dot --test-reporter-destination=stdout \
+               --test-reporter=junit --test-reporter-destination="$GATE_JUNIT" "$@") || rc=$?
+          else
+            (cd "$REPO/portal" && gate_step "$NODE" --test --test-reporter=dot --test-reporter-destination=stdout \
+               --test-reporter=junit --test-reporter-destination="$GATE_JUNIT" test/*.test.mjs) || rc=$?
+          fi
         fi
-        rc=$?; SUITE_SECS=$(($(date +%s) - t0)); return "$rc"
+        [ "$rc" != 124 ] || log "portal gate: a step was cut at the ${OPAX_GATE_BUDGET:-45m} budget"
+        SUITE_SECS=$(($(date +%s) - t0)); SUITE_RC=$rc
+        return "$rc"
       }
       # the test files with a failing test in the last run (portal-relative), from its JUnit report
       failing_files() {
@@ -519,11 +530,29 @@ for case in root.iter('testcase'):
 print('\n'.join(sorted(files)))
 PYEOF
       }
+      # 0 when the tracked file $1 differs from HEAD in its `?v=<hash>` content stamps and nothing else
+      stamp_only() {
+        "$PY" - "$1" <<'PYEOF' 2>/dev/null
+import re, subprocess, sys
+path = sys.argv[1]
+strip = lambda b: re.sub(rb'\?v=[0-9a-f]{6,}', b'?v=', b)
+try:
+    head = subprocess.run(['git', 'show', 'HEAD:' + path], capture_output=True, check=True).stdout
+    now = open(path, 'rb').read()
+except (OSError, subprocess.CalledProcessError):
+    sys.exit(1)
+sys.exit(0 if head != now and strip(head) == strip(now) else 1)
+PYEOF
+      }
       duration_secs() { local v=$1; case $v in *h) echo $((${v%h} * 3600)) ;; *m) echo $((${v%m} * 60)) ;; *s) echo "${v%s}" ;; *) echo "$v" ;; esac; }
       GATE_BUDGET=$(duration_secs "${OPAX_GATE_BUDGET:-45m}")
-      GATE_START=$(date +%s)
+      GATE_START=$(date +%s); GATE_DEADLINE=$((GATE_START + GATE_BUDGET))
+      # 1 when the last build was made from exactly the data that stays (a green first run, or a green closing run);
+      # otherwise every gate group is back at HEAD and so must be everything the trials' builds derived
+      GATE_REBUILT=1
       log "portal tests against the new data (${gate_groups[*]})"
       if ! run_suite; then
+        GATE_REBUILT=0
         FULL_SECS=$SUITE_SECS; LAST_SECS=$SUITE_SECS
         mapfile -t FOCUS < <(failing_files)
         log "portal tests red in ${FULL_SECS}s; failing files: ${FOCUS[*]:-unknown (every trial runs the whole suite)}; finding the groups to blame (budget ${GATE_BUDGET}s)"
@@ -557,6 +586,7 @@ PYEOF
           [ "$left" -ge $((LAST_SECS + FULL_SECS)) ] || return 2
           run_suite "${FOCUS[@]+"${FOCUS[@]}"}"; local rc=$?
           LAST_SECS=$SUITE_SECS
+          [ "$rc" != 124 ] || return 2   # cut by the budget: proves nothing about the set
           return $((rc == 0 ? 0 : 1))
         }
         for group in "${gate_groups[@]}"; do backup_group "$group"; done
@@ -611,38 +641,62 @@ PYEOF
         if [ "${#kept[@]}" -gt 0 ]; then
           # the kept groups passed the failing files together; prove the whole suite and rebuild the derived files from
           # exactly what will be committed (the last trial may have built from a half that was then put back)
-          log "portal tests: keeping ${kept[*]}; closing full run"
-          if ! run_suite; then
+          left=$((GATE_DEADLINE - $(date +%s)))
+          if [ "$left" -lt "$FULL_SECS" ]; then
             for group in "${kept[@]}"; do revert_group "$group"; done
-            fail "portal tests: the closing full run failed with ${kept[*]} (green on the failing files alone): those held too, not published tonight"
+            fail "portal tests: no time left in the ${OPAX_GATE_BUDGET:-45m} budget for the closing full run (~${FULL_SECS}s, ${left}s left): ${kept[*]} held too, nothing new published tonight"
+          else
+            log "portal tests: keeping ${kept[*]}; closing full run"
+            if run_suite; then
+              GATE_REBUILT=1
+            else
+              for group in "${kept[@]}"; do revert_group "$group"; done
+              fail "portal tests: the closing full run failed with ${kept[*]} (green on the failing files alone; rc=$SUITE_RC): those held too, nothing new published tonight"
+            fi
           fi
         else
-          # nothing kept: put every gate group back once more, with what the last build derived from a red trial
+          # nothing kept: put every gate group back once more
           for group in "${gate_groups[@]}"; do revert_group "$group"; done
         fi
         rm -rf "$BK"
+      fi
+      if [ "$GATE_REBUILT" != 1 ]; then
+        # Every gate group is at HEAD again, but the last build derived files from a trial's data, some under groups
+        # that never changed (bills rewrite growth/sponsors, owned by people): none of that may be staged.
+        for p in "${DERIVED_PATHS[@]}"; do
+          git cat-file -e "HEAD:$p" 2>/dev/null || continue
+          git checkout -q HEAD -- "$p" && git clean -fdq -- "$p" || fail "cannot put the derived $p back to HEAD"
+        done
       fi
       # build outputs that read every group, never ours to commit: leave the checkout clean outside the data paths
       for built in "${BUILD_ONLY_PATHS[@]}"; do
         git checkout -q HEAD -- "$built" 2>/dev/null || true
       done
       # Content stamps follow the generated modules (portal/public/person-paths.js): the last build stamped their
-      # importers. Committed with the data when a published group changed one of them, put back when none did.
-      stamped=()
+      # importers. A file outside the data paths is committed with the data only when a published group changed a
+      # generated module, the last build was made from what stays, and its whole diff is `?v=` stamps; anything else
+      # the build or stamp step wrote there goes back to HEAD.
+      changed=()
       while IFS= read -r f; do
         ours=false
         for p in "${DATA_PATHS[@]}" "${OTHERS_BEFORE[@]+"${OTHERS_BEFORE[@]}"}"; do case "$f" in "$p"|"$p"/*) ours=true; break ;; esac; done
-        [ "$ours" = true ] || stamped+=("$f")
+        [ "$ours" = true ] || changed+=("$f")
       done < <(git diff --name-only)
-      if [ "${#stamped[@]}" -gt 0 ]; then
-        if [ -n "$(git status --porcelain -- portal/public/person-paths.js)" ]; then
-          STAMPED_FILES=("${stamped[@]}")
-          log "restamped ${#stamped[@]} importer(s) of a changed generated module, committed with the data: ${stamped[*]:0:8}"
+      stamped=(); unstamped=()
+      for f in "${changed[@]+"${changed[@]}"}"; do
+        if [ "$GATE_REBUILT" = 1 ] && [ -n "$(git status --porcelain -- portal/public/person-paths.js)" ] && stamp_only "$f"; then
+          stamped+=("$f")
         else
-          # e.g. the last trial built a held group's module: no published group changed one, so HEAD's stamps stand
-          git checkout -q HEAD -- "${stamped[@]}" || fail "cannot put the stamped files back: ${stamped[*]:0:8}"
-          log "put back ${#stamped[@]} stamped file(s) to HEAD: no published group changed a generated module"
+          unstamped+=("$f")
         fi
+      done
+      if [ "${#unstamped[@]}" -gt 0 ]; then
+        git checkout -q HEAD -- "${unstamped[@]}" || fail "cannot put back ${unstamped[*]:0:8}"
+        log "put back ${#unstamped[@]} file(s) the gate's build wrote outside the data paths: ${unstamped[*]:0:8}"
+      fi
+      if [ "${#stamped[@]}" -gt 0 ]; then
+        STAMPED_FILES=("${stamped[@]}")
+        log "restamped ${#stamped[@]} importer(s) of a changed generated module, committed with the data: ${stamped[*]:0:8}"
       fi
     else
       log "WARN: node or portal/node_modules missing: not running the portal tests before committing (${gate_groups[*]} changed)"

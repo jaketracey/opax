@@ -72,11 +72,10 @@ class RealWrapperTests(unittest.TestCase):
         db.close()
         return box
 
-    def export(self, box, accept=False, overlay=True):
+    def export(self, box, accept=False):
         env = {**os.environ, "PY": sys.executable, "OPAX_DB": str(box / "parli.db"), "PYTHONDONTWRITEBYTECODE": "1"}
         env.pop("OPAX_ROSTER_PREVIOUS", None)
         env["OPAX_ROSTER_ACCEPT"] = "1" if accept else ""
-        env["OPAX_ROSTER_OVERLAY"] = "1" if overlay else "0"
         r = subprocess.run(["bash", "scripts/vm/export_step.sh", "json", ROSTER, "bash", "scripts/vm/export_people.sh"],
                            cwd=box, env=env, capture_output=True, text=True, timeout=120)
         path = box / ROSTER
@@ -194,8 +193,8 @@ class ShippedIdentityReplayTests(unittest.TestCase):
                 self.assertNotIn('ROSTER HELD', err)
                 self.assertIn('ROSTER OVERLAY: kept', err)
                 self.assertEqual(output, (ROOT/ROSTER).read_bytes(), 'the shipped roster is kept byte for byte')
-                # The overlays themselves, before that merge.
-                code, err, output = self.export(box, overlay=False)
+                # The overlays themselves, before that merge: the reviewed path (OPAX_ROSTER_ACCEPT=1) skips it.
+                code, err, output = self.export(box, accept=True)
                 self.assertEqual(code, 0, err)
                 self.assertNotIn('ROSTER HELD', err)
                 actual = json.loads(output)['people']

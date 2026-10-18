@@ -245,7 +245,7 @@ are held, dropped rows are kept, and the shipped `meta` stays, so a night like t
 prints `ROSTER OVERLAY: kept N shipped records (M differ in the export: fields); held K new row(s): names; ...`,
 which `weekly_refresh.sh` logs as `Roster overlay:`; `nightly.sh` turns it into a warning only when a held row is
 a sitting member (a real roster change waiting for review). A reviewed refresh skips it with
-`OPAX_ROSTER_ACCEPT=1`; `OPAX_ROSTER_OVERLAY=0` rehearses the overlays alone. Tests: `scripts/test_roster_overlay.py`,
+`OPAX_ROSTER_ACCEPT=1`, and nothing else does (an inherited environment cannot switch it off). Tests: `scripts/test_roster_overlay.py`,
 and the box-shaped replay in `scripts/test_roster_export_wrappers.py` (installs the shipped bytes; the overlays
 alone still reproduce the scoped identities).
 
