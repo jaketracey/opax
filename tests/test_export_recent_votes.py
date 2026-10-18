@@ -80,6 +80,20 @@ class RecentVotesTests(unittest.TestCase):
                 R.write_projection(data, out)
             self.assertEqual(out.read_bytes(), original)
 
+    def test_regression_message_names_the_person_and_division(self):
+        # The nightly copies this message into status.json, the only failure detail readable without the box.
+        with tempfile.TemporaryDirectory() as tmp:
+            out = Path(tmp) / 'recent.json'
+            data = R.projection(self.fixture(), self.identities())
+            R.write_projection(data, out)
+            changed = json.loads(json.dumps(data))
+            changed['people']['123']['recent'][0]['title'] = 'Retitled question'
+            with self.assertRaisesRegex(ValueError, r'regressed for 1 people \(first: 123: \S+ changed title\)'):
+                R.write_projection(changed, out)
+            changed['people']['123']['recent'].pop()
+            with self.assertRaisesRegex(ValueError, r'first: 123: \d+ -> \d+ rows'):
+                R.write_projection(changed, out)
+
     def test_committed_separate_asset_has_no_hand_picked_sample(self):
         data = json.loads((ROOT / 'portal/public/seo/recent-votes.json').read_text())
         meta = data['_meta']

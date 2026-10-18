@@ -75,16 +75,30 @@ def write_projection(data, output):
     # Refuse a truncated DB or lost identities rather than wipe a previous export.
     if output.exists():
         previous = json.loads(output.read_text(encoding="utf-8"))
+        regressions = []
         for key, person in previous.get("people", {}).items():
             current = data["people"].get(key)
             rows = current["recent"] if current else []
             cutoff = min(map(vote_order, rows)) if rows else None
             # Old events may leave only through the bottom of a legitimately
             # newer rolling window; equal-count, same-day loss is still loss.
-            if not rows or len(rows) < len(person["recent"]) \
-                    or max(map(vote_order, rows)) < max(map(vote_order, person["recent"])) \
-                    or any(row not in rows for row in person["recent"] if vote_order(row) >= cutoff):
-                raise ValueError("Recorded-vote coverage regressed; prior SEO export kept")
+            if not rows:
+                regressions.append(f"{key}: person missing")
+            elif len(rows) < len(person["recent"]):
+                regressions.append(f"{key}: {len(person['recent'])} -> {len(rows)} rows")
+            elif max(map(vote_order, rows)) < max(map(vote_order, person["recent"])):
+                regressions.append(f"{key}: newest row is older")
+            else:
+                lost = [row for row in person["recent"] if vote_order(row) >= cutoff and row not in rows]
+                if lost:
+                    now = {r["division_id"]: r for r in rows}.get(lost[0]["division_id"])
+                    changed = sorted(k for k in lost[0] if now and lost[0].get(k) != now.get(k))
+                    regressions.append(f"{key}: {lost[0]['division_id']} "
+                                       + (f"changed {','.join(changed)}" if now else "gone"))
+        if regressions:
+            # The reason travels in the message so the nightly status can carry it.
+            raise ValueError(f"Recorded-vote coverage regressed for {len(regressions)} people "
+                             f"(first: {regressions[0]}); prior SEO export kept")
     output.parent.mkdir(parents=True, exist_ok=True)
     temporary = output.with_suffix(".json.tmp")
     temporary.write_text(json.dumps(data, ensure_ascii=False, separators=(",", ":")) + "\n", encoding="utf-8")

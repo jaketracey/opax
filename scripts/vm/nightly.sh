@@ -417,7 +417,8 @@ if [ "${OPAX_NIGHTLY_SKIP_REFRESH:-0}" != 1 ] && [ "$DIVISIONS_ACQUISITION_FAILE
     log "SEO recent votes skipped: division export failed or was rolled back"
   elif ! run "$PY" scripts/export_recent_votes.py; then
     if [ "${DIVISIONS_REFRESH_OK:-0}" = 1 ]; then divisions_revert; else revert_group seovotes; fi
-    fail "SEO recent-vote export failed; previous separate export kept"
+    reason=$(tail -n 40 "$LOGFILE" | grep -oE '(ValueError|OperationalError|Error): .*' | tail -1 | cut -c1-240)
+    fail "SEO recent-vote export failed${reason:+ ($reason)}; previous separate export kept"
   fi
 fi
 
