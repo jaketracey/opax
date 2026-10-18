@@ -33,7 +33,7 @@ try{
  for(const width of [390,1440]){
   await page.setViewportSize({width,height:1000});const response=await page.goto(base.origin+'/register/gov-advertising');assert.equal(response.status(),200);
   await page.waitForSelector('[data-datatable]');await page.waitForFunction(()=>!document.querySelector('[data-register-config]'));
-  await page.evaluate(()=>document.fonts.ready);await page.evaluate(()=>globalThis.OpaxNavigation.advertisingReady);
+  await page.evaluate(()=>document.fonts.ready);
   assert.ok(!/Local staged preview|pending review; not promoted/.test(await page.locator('main').textContent()));
   assert.equal(JSON.parse(await page.locator('[data-dt-page]').textContent()).total,hub.rows.length);
   const menu=page.locator('#primary-nav a[href="/register/gov-advertising"]');assert.equal(await menu.count(),1);

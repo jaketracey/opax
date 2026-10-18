@@ -1,4 +1,5 @@
 import {applyQuery,guardTableURL,formatCell,type Row} from '../public/datatable.js'
+import {shortDate} from '../public/format.js'
 import {govAdvertisingTableConfig,registerTableHTML} from '../public/register-tables.js'
 import sourceStatus from './gov-advertising-status.json'
 import privacyPolicy from './gov-advertising-privacy.json'
@@ -136,7 +137,7 @@ export function advertisingTableRows(rows:Campaign[],agencies:Agency[]):Row[]{
   })
 }
 
-const sourceDate=(value:string)=>{const date=new Date(value);return Number.isNaN(date.valueOf())?'Date unavailable':new Intl.DateTimeFormat('en-AU',{day:'numeric',month:'short',year:'numeric',timeZone:'UTC'}).format(date)}
+const sourceDate=(value:string)=>/^\d{4}-\d{2}-\d{2}/.test(value||'')?shortDate(value):'Date unavailable'
 const receipt=(d:Document)=>`<p class="gov-advertising-receipt">Source: <a href="${esc(d.url)}">Department of Finance · ${esc(d.financial_year)}</a> · Snapshot ${esc(sourceDate(d.receipt.snapshot))} · <a href="${esc(d.licence.url)}">${esc(d.licence.name)}</a><br>Document SHA-256 ${esc(d.sha256)}</p>`
 const heldReceipt=()=>`<p class="gov-advertising-receipt">Source: <a href="${sourceStatus.source_url}">Department of Finance · campaign advertising reports</a> · Access checked ${esc(sourceDate(sourceStatus.checked_at))} UTC · Licence: ${esc(sourceStatus.licence)}</p>`
 
