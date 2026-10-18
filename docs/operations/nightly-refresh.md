@@ -27,7 +27,9 @@ The nightly only brings new records in and publishes them.
         votes.json. `sa` always fails (source WAF) and is allowed to; so is `act_members` (the Assembly's
         members page may be redesigned without failing the night). ACT proofs are swapped for Finals by the same
         step, and `act_kb_patch` PATCHes the changed text into the KB after the push.
-  2b  scripts/weekly_refresh.sh weekly [monthly]      only on Sundays (Sydney); the first Sunday adds monthly
+  2b  scripts/weekly_refresh.sh weekly [monthly] | frl   Sundays (Sydney); the first Sunday adds monthly; Thursdays frl
+        frl: the FRL in-force instrument crawl and its export alone (~2.6 h of spaced requests; off the Sunday since
+        18 Oct 2026, when it left no time to test and publish inside the 6 h unit limit).
         Registers that change weekly (FRL Acts, state donations, lobbyists, FITS, QLD interests, NSW diaries,
         ACNC/ATO, ABN-linked suppliers), then their static exports; monthly: QLD contracts and diaries, IPEA,
         state rosters, grant recipients, and the big exports (suppliers, grants, discovery, pay, expenses).
@@ -44,9 +46,9 @@ The nightly only brings new records in and publishes them.
       OPAX DB, after bill verification. Division shards retain prior evidence on degraded coverage;
       recent votes use a separate file and never change the mobile votes.json contract.
    4  validate_data.py: bills, votes.json, and every periodic group whose files changed (a failing group is
-      reverted to HEAD, the rest goes on); then the portal test suite (search catalog rebuilt first, as the
-      deploy job does) against the new files: if it is red, the group to blame is found by putting each changed
-      group back to HEAD on its own; only that one is held back, so a data commit cannot block the deploy
+      reverted to HEAD, the rest goes on); then the portal test suite (search catalog rebuilt and content stamps
+      refreshed first, as the deploy job does) against the new files: if it is red, the groups to blame are found
+      by halving inside a 45 min budget; only they are held back, so a data commit cannot block the deploy
    5  update_corpus_manifest.py: corpus.json from the LIVE KB counts + daily.log; checked_at stamped
    6  bump_cache_epoch.py → CACHE_EPOCH "<date>-nightly" in both places, only if the KB changed
    7  git commit (data files only) as "OPAX nightly"; git push to main over SSH (deploy key),
@@ -332,8 +334,8 @@ Individual pieces (all run from `~/opax`, all read-only unless noted):
 ## How each piece behaves
 
 **Periodic groups** (`scripts/weekly_refresh.sh`, contract in `docs/operations/periodic-refresh.md`). `nightly.sh` picks
-the groups from the Sydney date: every Sunday runs `weekly`, and the first Sunday of the month (day 1-7) also runs
-`monthly`; `OPAX_FORCE_GROUPS` overrides the calendar and `OPAX_TODAY` pretends a date. They run right after
+the groups from the Sydney date: every Sunday runs `weekly`, the first Sunday of the month (day 1-7) also runs
+`monthly`, and every Thursday runs `frl` (the instrument crawl alone, `OPAX_FRL_DOW`); `OPAX_FORCE_GROUPS` overrides the calendar and `OPAX_TODAY` pretends a date. They run right after
 `daily_refresh.sh` (KB patches on: `OPAX_PERIODIC_SYNC_KB=0` turns that off for a rehearsal). Loaders that replace a whole
 register write into a scratch file under `$PIPE/stage` and `scripts/ext_apply.py` reconciles them into `parli.db` (refuses an
 empty or shrunken load, keeps row ids and reviewed labels, archives what it replaced under `~/.cache/opax/archive`).
@@ -374,7 +376,8 @@ Agency links require exact names and verified Queensland jurisdiction; a
 same-named Commonwealth agency is not joined.
 
 **FRL instruments, phase 1 (`web/frl-instruments`).** Jake approved the source on
-9 October; the orchestrator owns the merge and catalogue promotion. The weekly group runs
+9 October; the orchestrator owns the merge and catalogue promotion. The `frl` group (Thursdays; it was part of the
+Sunday weekly until 18 Oct 2026, when its 9,208 s crawl left that night no room to test and publish) runs
 `frl_instruments` (`python -m parli.ingest.frl_instruments`), then `x_instruments`
 (`scripts/export_instruments.py`) only after complete count reconciliation. This wiring
 is inert until the orchestrator merges the branch and the first accepted catalogue
@@ -510,12 +513,31 @@ credentials and can run only the public GET preview or an offline captured plan.
 
 **Portal test gate.** The deploy job runs the whole portal suite before it ships, and the suite reads the generated files
 (grant shards, money graph, suppliers, pay, parliamentarians ...). So after validation the nightly rebuilds the search
-catalog (`npm run build:search`, ~50 s) and runs `node --test test/*.test.mjs` (679 tests, ~55 s on the VM; ~4 min in all)
-against the new data. If it is red, every changed group is backed up, then each is put back to HEAD on its own and the
-suite re-run: the first group whose revert turns it green is the culprit and stays out of tonight's commit; the others are
-restored from the backup. If no single group does it (two together), they are put back cumulatively until green; if it is red
-even with everything reverted, it is red on `main` itself: nothing but `corpus.json` is published and the deploy job will
-report it. The status names the group. Needs Node 24 and `portal/node_modules` (bootstrap installs them; `npm ci` is re-run
+catalog (`npm run build:search`, ~50 s), refreshes the content stamps (`scripts/stamp_assets.mjs`, as the deploy's
+`build:release` does: a rebuilt `person-paths.js` is a new `?v=` in `canonical-urls.js` and up the import chain) and runs
+`node --test test/*.test.mjs` against the new data. If it is red, the groups to blame are found inside `OPAX_GATE_BUDGET`
+(default 45 min, counted from the first run): every changed group is backed up and put back to HEAD, the test files that
+failed (read from the run's JUnit report) are re-run on that baseline, and the groups are added back in halves, re-running
+only those files; a green half is kept, a red half is split until each culprit is alone. Culprits stay at HEAD; groups the
+budget did not reach are held too; the kept groups get a closing full run (which also rebuilds their derived files) and are
+published. If the failing files are red even with everything reverted, it is red on `main` itself: nothing but `corpus.json`
+is published and the deploy job will report it. The status names each held group. On 18 Oct 2026 the old loop (each group
+alone, then cumulatively, the whole suite every time) re-ran six identical ~15 min suites until the 6 h unit limit, with two
+culprits (the roster export and the instruments test) and the divisions catch-up waiting behind them. Every tracked file a
+night writes belongs to one group (`scripts/vm/data_groups.sh`), including what the build derives from it: `person-paths.js`
+and `growth/sponsors` travel with the roster, the donor index and `growth/donors.json` with money, `growth/agencies` with
+suppliers; `seo-links.json` (written by the stamp step from bills and roster) with people; the search manifest and party-member
+index read every group and are put back to HEAD after the gate. Some derived files read more than their owner
+(`growth/sponsors` and `seo-links.json` read the bills too), so when a red gate ends without a green build of exactly
+the data that stays (budget spent, closing run skipped or red), every derived file goes back to HEAD with the groups, and
+so does every other file the gate's builds changed (compared with what differed before the gate), so a step cut mid-write
+cannot leave half a file under a group the night never changed. Every build, stamp and test command runs under `timeout`
+with what is left of the budget; any failure that ends at or after the deadline (124, or 137 after a TERM the step
+ignored) is a cut, so its trial proves nothing and its groups are held untried, never blamed. The closing full run only
+starts if its last measured duration still fits; otherwise nothing new is published and the status says so. When a kept
+group changed a stamped generated module, the restamped importers are committed with the data, so `main` passes
+`stamp_assets --check`; only files whose whole diff is `?v=` stamps qualify, anything else the build wrote outside the
+data paths goes back to HEAD. Needs Node 24 and `portal/node_modules` (bootstrap installs them; `npm ci` is re-run
 when `package-lock.json` changes); without them the gate is skipped with a warning. `OPAX_TEST_GATE=0` turns it off. It found
 its first real coupling in the VM rehearsal: `export_parliamentarians.py` on its own drops every person's `representation`
 (added by `enrich_profile_jurisdictions.py`), which turned `grants-research.test.mjs` red; the weekly `x_people` step now runs
@@ -789,7 +811,8 @@ remain with the orchestrator; no production export was run to validate this lane
 | Every night, additional federal interests | fresh indexes, changed HTML/PDFs, cached PDF parsing/OCR, then export | ~5–10 min warm; `STEP_TIMEOUT=45m` for `interests_federal`, plus GNU timeout's 60-second kill grace |
 | Sunday: weekly | loaders 30 min (lobbyists 22 min, `frl_acts` 3 min, ABN-linked `contract_suppliers` 7 min, ACNC/ATO 1 min once loaded) + exports 8 min (`x_speakers` and `x_people` a speeches scan each, ~3 min) | ~40 min |
 | First Sunday: monthly, on top | `qld_contracts` 7 min, `diaries_qld` 10-13 min, IPEA 2 min, `speaker_hygiene` 11 min (a full `speeches` read), `grant_recipients` 4 min, exports 5 min | ~40 min |
-| Pre-commit test gate | search catalog build + 679 tests | ~4 min (each extra attribution run adds ~1.5 min) |
+| Thursday: frl | `frl_instruments` (in-force instrument crawl, ≥10 s between requests) + `x_instruments` 12 s | 9,208 s measured on the box, 18 Oct 2026 (~2.6 h) |
+| Pre-commit test gate | search catalog build + stamps + the suite | ~15 min a full run on the box (18 Oct 2026); a red gate's blame search is capped by `OPAX_GATE_BUDGET` (45 min from the first run) |
 
 A first-Sunday night conservatively budgets about 20 + 40 + 40 + 5 min plus a push of up to 2 h,
 and up to 45 min (plus 60-second kill grace) for interests: budget roughly 5 h, which is why the

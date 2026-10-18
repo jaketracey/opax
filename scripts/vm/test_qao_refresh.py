@@ -7,7 +7,7 @@ import unittest
 
 ROOT = Path(__file__).resolve().parents[2]
 SOURCE = (ROOT/'scripts/weekly_refresh.sh').read_text()
-BLOCK = '  # QAO phase 1.' + SOURCE.split('  # QAO phase 1.',1)[1].split('  # Metadata-only FRL group.',1)[0]
+BLOCK = '  # QAO phase 1.' + SOURCE.split('  # QAO phase 1.',1)[1].split('  # Federal Register of Legislation Acts',1)[0]
 ENV = {k:v for k,v in os.environ.items() if not k.startswith('GIT_')}
 ENV.update(GIT_CONFIG_GLOBAL=os.devnull,GIT_CONFIG_NOSYSTEM='1')
 

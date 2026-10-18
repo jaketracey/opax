@@ -18,7 +18,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 COPIED = ["scripts/vm/export_step.sh", "scripts/vm/export_people.sh", "scripts/vm/keep_if_unchanged.py",
-          "scripts/export_parliamentarians.py", "scripts/roster_identity.py", "scripts/roster_fold.py", "scripts/enrich_profile_jurisdictions.py",
+          "scripts/export_parliamentarians.py", "scripts/roster_identity.py", "scripts/roster_fold.py", "scripts/roster_overlay.py", "scripts/enrich_profile_jurisdictions.py",
           "scripts/roster_service.json", "scripts/roster_witness_service.json", "scripts/roster_state_evidence.json", "portal/public/electorates/manifest.json",
           "portal/public/electorates/releases/b56417062ccc33cf/reference.json",
           "scripts/person_identity.json", "portal/public/research/mlci.json", "portal/public/votes.json",
@@ -186,7 +186,15 @@ class ShippedIdentityReplayTests(unittest.TestCase):
             with self.subTest(scenario=scenario):
                 box = self.sandbox((ROOT/ROSTER).read_bytes())
                 self.populate_replay(box, scenario)
+                # What the weekly installs: the export laid onto the shipped roster (scripts/roster_overlay.py), so
+                # the replay's five identity differences and two lost scopes never reach the site.
                 code, err, output = self.export(box)
+                self.assertEqual(code, 0, err)
+                self.assertNotIn('ROSTER HELD', err)
+                self.assertIn('ROSTER OVERLAY: kept', err)
+                self.assertEqual(output, (ROOT/ROSTER).read_bytes(), 'the shipped roster is kept byte for byte')
+                # The overlays themselves, before that merge: the reviewed path (OPAX_ROSTER_ACCEPT=1) skips it.
+                code, err, output = self.export(box, accept=True)
                 self.assertEqual(code, 0, err)
                 self.assertNotIn('ROSTER HELD', err)
                 actual = json.loads(output)['people']

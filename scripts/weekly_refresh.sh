@@ -4,6 +4,9 @@
 #
 #   weekly    every Sunday (Sydney)           loaders for registers that change weekly, then their exports
 #   monthly   the first Sunday of the month   big shards, slow crawls, the exports that rewrite hundreds of files
+#   frl       every Thursday (Sydney)         the FRL in-force instrument crawl and its export, alone: ~2.6 h of
+#                                             10-second-spaced requests (18 Oct 2026: 9,208 s), which left the
+#                                             Sunday night no room to test and publish inside the 6 h unit limit
 #
 #   scripts/weekly_refresh.sh weekly            # one group
 #   scripts/weekly_refresh.sh weekly monthly    # both, in that order
@@ -53,15 +56,16 @@ cd "$REPO" || { log "FATAL: cannot cd $REPO"; exit 1; }
 [ -x "$PY" ] || { log "FATAL: $PY missing (run: uv sync)"; exit 1; }
 export OPAX_DB="$DB" PYTHONPATH="$REPO${PYTHONPATH:+:$PYTHONPATH}" PY
 
-want_weekly=0; want_monthly=0
+want_weekly=0; want_monthly=0; want_frl=0
 for g in "$@"; do
   case "$g" in
     weekly) want_weekly=1 ;;
     monthly) want_monthly=1 ;;
-    *) echo "usage: $0 weekly|monthly ..." >&2; exit 64 ;;
+    frl) want_frl=1 ;;
+    *) echo "usage: $0 weekly|monthly|frl ..." >&2; exit 64 ;;
   esac
 done
-[ $((want_weekly + want_monthly)) -gt 0 ] || { echo "usage: $0 weekly|monthly ..." >&2; exit 64; }
+[ $((want_weekly + want_monthly + want_frl)) -gt 0 ] || { echo "usage: $0 weekly|monthly|frl ..." >&2; exit 64; }
 
 if [ "${OPAX_SYNC_KB:-0}" = "1" ] && [ -e "$HOME/.cache/autoresearch/MIGRATED_TO_VM" ] \
    && [ "${OPAX_FORCE_KB_SYNC:-0}" != "1" ]; then
@@ -83,6 +87,20 @@ YEAR=$(TZ=Australia/Sydney date +%Y)
 
 log "===== weekly refresh start (groups: $*; timeout/step=$STEP_TIMEOUT, host=$(hostname)) ====="
 
+if [ "$want_frl" = 1 ]; then
+  # Metadata-only FRL group. Its own night (frl). Persistent local checkpoint survives weekly scratch cleanup.
+  # Bootstrap belongs to the manual acquisition lane: an untracked first export
+  # would obstruct a later fast-forward when the catalogue lands on main.
+  if [ -z "$(git ls-tree --name-only HEAD -- portal/public/instruments 2>/dev/null)" ]; then
+    log "[frl_instruments/x_instruments] SKIP: catalogue not yet tracked on main"
+  elif run_step frl_instruments "" "$PY" -m parli.ingest.frl_instruments; then
+    run_step x_instruments "" "$EXPORT" dir portal/public/instruments -- \
+      "$PY" scripts/export_instruments.py
+  else
+    log "[x_instruments] SKIP: FRL acquisition held; last good export kept"
+  fi
+fi
+
 if [ "$want_weekly" = 1 ]; then
   # --- loaders ------------------------------------------------------------------------------------------
   # QAO phase 1. Phase 2 is inert until its loader and phase-2 catalogue are tracked.
@@ -103,17 +121,6 @@ if [ "$want_weekly" = 1 ]; then
     fi
   else
     log "[x_audit] SKIP: QAO acquisition held; last good export kept"
-  fi
-  # Metadata-only FRL group. Persistent local checkpoint survives weekly scratch cleanup.
-  # Bootstrap belongs to the manual acquisition lane: an untracked first export
-  # would obstruct a later fast-forward when the catalogue lands on main.
-  if [ -z "$(git ls-tree --name-only HEAD -- portal/public/instruments 2>/dev/null)" ]; then
-    log "[frl_instruments/x_instruments] SKIP: catalogue not yet tracked on main"
-  elif run_step frl_instruments "" "$PY" -m parli.ingest.frl_instruments; then
-    run_step x_instruments "" "$EXPORT" dir portal/public/instruments -- \
-      "$PY" scripts/export_instruments.py
-  else
-    log "[x_instruments] SKIP: FRL acquisition held; last good export kept"
   fi
   # Federal Register of Legislation Acts (INSERT OR REPLACE on act_id; feeds "became law" on the bill pages)
   run_step frl_acts "SELECT COUNT(*) FROM ext_frl_acts" \
@@ -164,6 +171,9 @@ if [ "$want_weekly" = 1 ]; then
   # shipped roster is kept (STALE_OK); say why, for the nightly status (docs/PHOTOS.md, "Nightly safety net")
   held=$(grep -m1 '^ROSTER HELD:' "$PIPE/x_people.log" 2>/dev/null || true)
   [ -z "$held" ] || log "Roster held: ${held#ROSTER HELD: }"
+  # what the export said that the shipped roster kept or held back (scripts/roster_overlay.py)
+  overlay=$(grep -m1 '^ROSTER OVERLAY:' "$PIPE/x_people.log" 2>/dev/null || true)
+  [ -z "$overlay" ] || log "Roster overlay: ${overlay#ROSTER OVERLAY: }"
   run_step x_money "" "$EXPORT" json portal/public/graph/money.json "$PY" scripts/export_money_graph.py
   for j in qld vic tas; do
     run_step "x_money_$j" "" "$EXPORT" json "portal/public/graph/money.$j.json" "$PY" scripts/export_state_money.py "$j"
@@ -210,10 +220,12 @@ fi
 
 # The tax/charity block reads the current suppliers, grants and money exports (docs/DATA-TAX-CHARITY.md section 6),
 # so it goes last, after whichever of the two groups ran; its output is deterministic, so no change = no diff.
-run_step x_taxcharity "" "$EXPORT" dir portal/public/entities/tax-charity -- \
-  "$PY" scripts/export_tax_charity.py --db "$DB" --portal portal/public
+if [ $((want_weekly + want_monthly)) -gt 0 ]; then
+  run_step x_taxcharity "" "$EXPORT" dir portal/public/entities/tax-charity -- \
+    "$PY" scripts/export_tax_charity.py --db "$DB" --portal portal/public
 
-run_step x_donor_disclosures "" "$EXPORT" json portal/public/graph/donor-disclosures.json "$PY" scripts/export_donor_disclosures.py --db "$DB"
+  run_step x_donor_disclosures "" "$EXPORT" json portal/public/graph/donor-disclosures.json "$PY" scripts/export_donor_disclosures.py --db "$DB"
+fi
 
 log "Paused sources: ${PAUSED_STEPS[*]:-none}"
 log "===== weekly refresh end ====="

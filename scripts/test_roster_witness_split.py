@@ -196,7 +196,9 @@ class SqlSplitTests(unittest.TestCase):
                      f'Fixture {name} {i}. ' + 'Parliamentary statement on public services. '*10, 'test_fixture',
                      name if witness and i%2 else None, 'witness' if witness and not i%2 else 'member'))
         db.commit(); db.close()
-        code, err, output = self.export(box)
+        # The SQL split itself, as a reviewed export installs it (OPAX_ROSTER_ACCEPT=1): the default weekly path
+        # lays any export onto the shipped roster (scripts/roster_overlay.py), which this fixture's roster is not.
+        code, err, output = self.export(box, accept=True)
         self.assertEqual(code, 0, err)
         doc = json.loads(output); actual = {p['name']: p for p in doc['people']}
         self.assertEqual(doc['meta']['representation']['method'],profiles.REPRESENTATION_METHOD)

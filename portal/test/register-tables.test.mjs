@@ -45,7 +45,12 @@ test('audit sectors, response choices and legacy filters retain complete source 
  assert.deepEqual(registerTableQuery(new URLSearchParams('year=2025-26'),config),{filters:{year:{min:2025,max:2025}}});
  const block=(title,text)=>'<h1>'+title+'</h1><p>'+text+'</p>';
  const instruments=await instrumentPage(null,new URL('https://opax.test/instruments?q=airport'),read,block);
- assert.equal(instruments.noindex,true);assert.ok(instruments.prerender.includes('of 51'));
+ // The in-force catalogue shrinks as instruments sunset (18 Oct 2026: 51 airport titles became 50), so the total is
+ // counted from the published index, not pinned: the prerender must report every matching title.
+ const catalogue=await read((await read('/instruments/manifest.json')).index_url),title=catalogue.fields.indexOf('title');
+ const airports=catalogue.records.filter(r=>/airport/i.test(r[title])).length;
+ assert.ok(airports>40,`${airports} airport titles`);
+ assert.equal(instruments.noindex,true);assert.ok(instruments.prerender.includes('of '+airports.toLocaleString('en-AU')),`of ${airports}`);
  const audit=await auditPage(null,new URL('https://opax.test/audit?sector=Health'),read,block);
  assert.equal(audit.noindex,true);assert.ok(audit.prerender.includes('of 48'));
  const source={...config.rows[0],entities:['EXAMPLE, ALEX']};
