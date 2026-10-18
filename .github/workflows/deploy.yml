@@ -147,10 +147,10 @@ jobs:
       # skip when equal, else preflight, drift check, ordered apply with retries, then smoke all 10
       # datasets). Never on pull requests. Re-running is safe: a failed reload marks the deployment
       # receipt failed, so the duplicate guard lets a re-run deploy and reload again.
-      # Kill switch: repository variable OPAX_TABLE_RELOAD=off.
+      # Opt-in: repository variable OPAX_TABLE_RELOAD=on (needs D1 Edit on CLOUDFLARE_API_TOKEN). Unset or anything else = skip.
       - name: Reload D1 tables if the table data changed
         id: tables
-        if: ${{ steps.duplicate.outputs.skip != 'true' && steps.production.outcome == 'success' && github.event_name != 'pull_request' && vars.OPAX_TABLE_RELOAD != 'off' }}
+        if: ${{ steps.duplicate.outputs.skip != 'true' && steps.production.outcome == 'success' && github.event_name != 'pull_request' && vars.OPAX_TABLE_RELOAD == 'on' }}
         timeout-minutes: 60
         run: |
           if ! node ../scripts/load_tables.mjs --sql; then
