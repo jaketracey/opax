@@ -85,9 +85,9 @@ test('hydrated table uses SSR data and source codes without a remote request',as
  finally{dom.window.document.body.replaceChildren();await new Promise(setImmediate);globalThis.MutationObserver=original;dom.window.close()}
 });
 
-test('invalid or repeated query selectors fail closed and Money link is gated',async()=>{
+test('invalid or repeated query selectors fail closed and the Money link is listed',async()=>{
  for(const q of ['?tax.q=a&tax.q=b','?invented=1'])assert.equal((await page(fixture(),q)).status,400);
  await import('../public/navigation.js');const nav=globalThis.OpaxNavigation;
  assert.equal(nav.active('/register/tax-expenditures'),'money');
- assert.equal(nav.groups.find(g=>g.id==='money').columns.flatMap(c=>c.links).find(l=>l.href==='/register/tax-expenditures').gate,'tax-expenditures');
+ assert.equal(nav.groups.find(g=>g.id==='money').columns.flatMap(c=>c.links).find(l=>l.href==='/register/tax-expenditures').gate,undefined);
 });
