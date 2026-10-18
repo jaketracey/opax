@@ -1,11 +1,10 @@
 {
-  "version": "2026-10-17",
-  "expected_resources": 988562,
+  "version": "2026-10-18",
+  "expected_resources": 988597,
   "expected_resources_breakdown": {
-    "live_index_before_refresh": 988237,
-    "new_division_resources": 5,
-    "new_press_release_resources": 28,
-    "new_speech_resources": 292
+    "live_index_before_refresh": 988562,
+    "new_division_resources": 23,
+    "new_press_release_resources": 12
   },
   "collected_speeches": 950441,
   "sources": [
@@ -61,12 +60,12 @@
     },
     {
       "name": "Recorded divisions (TheyVoteForYou + state Hansard)",
-      "docs": 14048,
+      "docs": 14071,
       "coverage": "1998–2026"
     },
     {
       "name": "Prime Minister transcripts and releases (PM&C)",
-      "docs": 671,
+      "docs": 673,
       "coverage": "2025–2026"
     },
     {
@@ -106,12 +105,12 @@
     },
     {
       "name": "Queensland Government ministerial statements",
-      "docs": 169,
+      "docs": 170,
       "coverage": "7–21 Sep 2026 refresh"
     },
     {
       "name": "Victorian Premier releases",
-      "docs": 176,
+      "docs": 185,
       "coverage": "7–21 Sep 2026 refresh"
     },
     {
@@ -154,7 +153,7 @@
     "SA Hansard stops at November 2024: hansardsearch.parliament.sa.gov.au now sits behind a WAF that challenges every non-browser request, so the source cannot be fetched."
   ],
   "refresh": {
-    "checked_at": "2026-10-16T18:45:30+00:00",
+    "checked_at": "2026-10-18T02:37:52+00:00",
     "news_resources": 0,
     "bills_registry": 2988,
     "current_parliament_bills": 295,
@@ -165,6 +164,7 @@
       "Federal Hansard is current to 2026-10-15; NSW Parliament to 2026-10-15; Victoria to 2026-09-24; QLD to 2026-09-16; ACT to 2026-09-24. Federal committee hearings (Senate, House and Joint) are current to 2026-10-08.",
       "New AEC source snapshots are retained for reconciliation. Amended federal donation rows have not replaced reviewed public data.",
       "Ministerial diary and IPEA expense refreshes returned the same published rows as the previous verified snapshots.",
+      "source paused: honest agent refused (awaiting permission); existing disclosures were preserved.",
       "source paused: honest agent refused (awaiting permission); existing disclosures were preserved.",
       "source paused: honest agent refused (awaiting permission); existing disclosures were preserved.",
       "source paused: honest agent refused (awaiting permission); existing disclosures were preserved.",
@@ -197,22 +197,22 @@
     "resource_counts": {
       "bill": 2994,
       "bill_text": 4747,
-      "division": 14048,
+      "division": 14071,
       "election_baseline": 150,
       "grant_award": 8354,
       "grant_invitation": 227,
       "parliamentary_profile": 977,
-      "press_release": 6589,
+      "press_release": 6601,
       "research_report": 35,
       "speech": 950441
     },
     "raw_source_updates": {
-      "federal_speeches": 461,
+      "federal_speeches": 0,
       "nsw_speeches": 0,
       "vic_speeches": 0,
       "act_speeches": 0,
-      "nsw_releases": 9,
-      "austender_contracts": 13
+      "nsw_releases": 0,
+      "austender_contracts": 0
     },
     "structured_sources": {
       "grantconnect_awards": 361036,
