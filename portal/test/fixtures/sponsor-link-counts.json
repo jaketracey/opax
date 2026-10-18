@@ -7,17 +7,17 @@
     "linked": 13,
     "unlinked": 686,
     "reasons": {
-      "missing-summary": 623,
-      "missing-full-name-profile": 62,
+      "missing-summary": 678,
+      "missing-full-name-profile": 7,
       "missing-pid-for-name-variant": 1
     }
   },
   "after": {
-    "linked": 636,
-    "unlinked": 63,
+    "linked": 691,
+    "unlinked": 8,
     "reasons": {
       "missing-summary": 0,
-      "missing-full-name-profile": 62,
+      "missing-full-name-profile": 7,
       "missing-pid-for-name-variant": 1
     }
   },

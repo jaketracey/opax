@@ -249,6 +249,18 @@ a sitting member (a real roster change waiting for review). A reviewed refresh s
 and the box-shaped replay in `scripts/test_roster_export_wrappers.py` (installs the shipped bytes; the overlays
 alone still reproduce the scoped identities).
 
+**Reviewed accept list (18 Oct 2026).** The overlay's way out is per record, not all-or-nothing:
+`scripts/roster_accept.json` names each accepted change as a group of fields with the value main had and the
+value the reviewed export showed, its evidence (corpus rules re-checked by `scripts/roster_accept.py`; identity
+with a source URL and check date) and the accepted new rows. The overlay installs a group only while the export
+still shows exactly that value, so a field that moves again is held again and the shipped value stays; a night
+with nothing newly accepted installs the same bytes. The audit and the main-preservation test revert the list and
+judge the rest as before. A review: `OPAX_ROSTER_ACCEPT=1 bash scripts/vm/export_people.sh > raw.json` on the box,
+then on a checkout `python3 scripts/roster_accept.py --propose raw.json` (keeps the reviewed identity groups the
+export still shows, proposes corpus groups, prints what stays held), add identity groups and new rows by hand
+with their evidence, and `python3 scripts/roster_overlay.py --directory raw.json` to install. The first review
+is [ROSTER-ACCEPT-2026-10-18.md](ROSTER-ACCEPT-2026-10-18.md).
+
 **Left open.** The five `wrong_face` files (and their JPEG twins and entries) should be deleted so
 a refresh can fetch the real portraits; 10725 will come back as Sandy Macdonald's from
 OpenAustralia, so John Alexander needs Commons. Rex Patrick's 10903 and Steve Martin's 10905 are

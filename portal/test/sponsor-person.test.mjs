@@ -47,7 +47,9 @@ test('one case per cause: the person, or plain text',()=>{
   ['twins, no pid (pin)','Brendan O’Connor',null,null,pinned],
   ['upper case','ANDREW WILKIE','10727','Andrew Wilkie'],
   ["another member's pid",'Andrew Wilkie','10001',null],
-  ['former senator with no profile','David Leyonhjelm','10832',null],
+  // David Leyonhjelm was this case until 18 Oct 2026, when the reviewed roster accept list gave him a row.
+  ['former senator with no profile','Ricky Muir','10834',null],
+  ['former senator accepted since','David Leyonhjelm','10832','David Leyonhjelm'],
   ['an office','Minister for Finance',null,null],
  ])assert.equal(at(print,pid,people),expected,`${cause}: ${print}`);
 });

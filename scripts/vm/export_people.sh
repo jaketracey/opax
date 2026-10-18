@@ -9,9 +9,11 @@
 # Witness rows are partitioned before identity resolution; the final check refuses
 # any MP identity or party on the separated testimony, even with OPAX_ROSTER_ACCEPT.
 # Last, the export is laid onto the shipped roster (scripts/roster_overlay.py): every shipped record is kept as
-# main has it, new rows are held for review, dropped rows are kept. The overlays above key on the database's rows,
+# main has it, new rows are held for review, dropped rows are kept, except the changes a review accepted per record
+# in scripts/roster_accept.json while the export still shows them. The overlays above key on the database's rows,
 # and the box's rows are not the ones main was reviewed on (18 Oct 2026: a re-export undid pinned parties, a
-# former senator's row and the pending QLD counts). Only OPAX_ROSTER_ACCEPT=1 (a reviewed refresh) skips that step.
+# former senator's row and the pending QLD counts). OPAX_ROSTER_ACCEPT=1 skips that step: the raw export a review
+# reads (scripts/roster_accept.py --propose), never a nightly install.
 # Needs PY (default .venv/bin/python), OPAX_DB (default ~/.cache/autoresearch/parli.db), sqlite3, run from the repo root.
 set -euo pipefail
 PY="${PY:-.venv/bin/python}"

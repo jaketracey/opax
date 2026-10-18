@@ -2,7 +2,10 @@
 """Account for every changed roster record against a frozen JSON or Git baseline.
 
 Whole records are compared, including provenance and representation basis. A
-change without an evidence-backed reason makes the audit fail.
+change without an evidence-backed reason makes the audit fail. Changes a review
+let in from a re-export (scripts/roster_accept.json) are validated by
+scripts/roster_accept.py, reverted, and counted as 'export accepted'; what is left
+must still be explained by the categories below.
 """
 import argparse
 import copy
@@ -14,6 +17,7 @@ from pathlib import Path
 
 sys.path.insert(0,str(Path(__file__).resolve().parents[1]))
 from scripts import enrich_profile_jurisdictions as profiles
+from scripts import roster_accept
 from scripts import roster_fold
 from scripts.split_roster_witnesses import restored_scope
 
@@ -42,7 +46,17 @@ def folds(before, after, reference):
     return folded, expected
 
 
-def audit(before, after, reference, reviewed):
+def audit(before, after, reference, reviewed, accepted=None):
+    accepted_records = accepted_new = 0
+    if accepted:
+        problems = roster_accept.validate(accepted, after)
+        if problems:
+            raise ValueError('Invalid roster accept list: ' + '; '.join(problems[:5]))
+        shipped = {p['name'] for p in after}
+        accepted_records = sum(any(roster_accept.state(p, g) == 'applied' for g in accepted.get('records', {}).get(p['name'], []))
+                               for p in after)
+        accepted_new = sum(1 for n in accepted.get('new', {}) if n in shipped)
+        after = roster_accept.revert(after, accepted)
     old = {p['name']: p for p in before}
     new = {p['name']: p for p in after}
     folded, merged = folds(before, after, reference)
@@ -79,7 +93,11 @@ def audit(before, after, reference, reviewed):
                             reason=reason[1] if reason else 'No evidence permits a repair',
                             fields=sorted(k for k in p.keys() | q.keys() if p.get(k) != q.get(k))))
     counts = {c: sum(p['category'] == c for p in changes) for c in (*CATEGORIES, 'clean record changed')}
-    return dict(counts=counts, changed=len(changes), unchanged=len(before)-len(changes)-len(merged), folded_people=len(merged), changes=changes)
+    # Reviewed re-export changes sit on top of the categories above (a record may be both), so they are counted apart.
+    if accepted:
+        counts['export accepted'] = accepted_records
+    return dict(counts=counts, changed=len(changes), unchanged=len(before)-len(changes)-len(merged), folded_people=len(merged),
+                accepted_new_rows=accepted_new, changes=changes)
 
 
 def markdown(result, before, after, baseline):
@@ -88,7 +106,8 @@ def markdown(result, before, after, baseline):
     for category, count in result['counts'].items():
         sample = [p['name'] for p in result['changes'] if p['category'] == category][:5]
         lines.append(f'| {category} | {count} | {", ".join(sample) or "—"} |')
-    lines += ['', f'**{result["changed"]} changed; {result.get("folded_people", 0)} people took folded surname prints (exact merges); {result["unchanged"]} exactly unchanged; zero clean record changed is required.**', '',
+    lines += ['', f'**{result["changed"]} changed; {result.get("folded_people", 0)} people took folded surname prints (exact merges); {result["unchanged"]} exactly unchanged; zero clean record changed is required.**',
+              f'Reviewed re-export changes (scripts/roster_accept.json) are reverted before this comparison: {result["counts"].get("export accepted", 0)} records carry them, and {result.get("accepted_new_rows", 0)} accepted new rows are not compared with main.', '',
               'Categories are exclusive. Witness splits must exactly reproduce the shared scoped resolver, conserve aggregate counts, keep witnesses unattributed and enforce an own-house retrieval scope. This checks consistency with the resolver; correctness depends on the reviewed source evidence. Other changes retain the existing evidence categories.', '',
               '| Party rows / facet | Main | Split | Change |', '|---|---:|---:|---:|']
     for label, jur, party in [('Total rows with party', None, None), ('SA rows with party', 'sa', None),
@@ -110,12 +129,13 @@ def main():
     p.add_argument('--directory',type=Path,default=profiles.PUBLIC/'parliamentarians.json')
     p.add_argument('--output',type=Path,required=True)
     p.add_argument('--json-output',type=Path)
+    p.add_argument('--accept',type=Path,default=roster_accept.ACCEPT,help='the reviewed accept list (scripts/roster_accept.json)')
     a=p.parse_args()
     path=Path(a.baseline)
     source=path.read_text() if path.is_file() else subprocess.check_output(
         ['git','show',a.baseline+':portal/public/parliamentarians.json'],cwd=profiles.ROOT,text=True)
     before=json.loads(source)['people'];after=json.loads(a.directory.read_text())['people']
-    result=audit(before,after,profiles.pinned_reference(),json.loads(profiles.REVIEWED.read_text()))
+    result=audit(before,after,profiles.pinned_reference(),json.loads(profiles.REVIEWED.read_text()),roster_accept.load(a.accept))
     label=a.baseline if path.is_file() else a.baseline+' ('+subprocess.check_output(
         ['git','rev-parse','--verify',a.baseline],cwd=profiles.ROOT,text=True).strip()+')'
     a.output.write_text(markdown(result,before,after,label))

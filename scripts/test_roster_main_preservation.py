@@ -1,4 +1,7 @@
-"""No clean record may drift from the immutable main export."""
+"""No clean record may drift from the immutable main export.
+
+The shipped roster also carries the changes a review accepted from a re-export (scripts/roster_accept.json); they are
+validated and reverted (scripts/roster_accept.py) before the record-by-record comparison with main."""
 import copy
 import hashlib
 import json
@@ -7,6 +10,7 @@ from pathlib import Path
 
 from scripts import audit_roster_changes as audit
 from scripts import enrich_profile_jurisdictions as profiles
+from scripts import roster_accept
 from scripts.publish_grants_research import records
 from scripts.reconcile_roster_profiles import plan
 
@@ -17,7 +21,9 @@ class MainPreservationTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         cls.main=json.loads((ROOT/'tests/fixtures/roster-export/main-66e75d74.json').read_text())['people']
-        cls.shipped=json.loads((profiles.PUBLIC/'parliamentarians.json').read_text())['people']
+        cls.installed=json.loads((profiles.PUBLIC/'parliamentarians.json').read_text())['people']
+        cls.accept=roster_accept.load()
+        cls.shipped=roster_accept.revert(cls.installed,cls.accept)
         cls.reference=profiles.pinned_reference()
         cls.reviewed=json.loads(profiles.REVIEWED.read_text())
         cls.old={p['name']:p for p in cls.main};cls.new={p['name']:p for p in cls.shipped}
@@ -32,6 +38,31 @@ class MainPreservationTests(unittest.TestCase):
         _,merged=audit.folds(self.main,self.shipped,self.reference)
         for name in self.old.keys()-changed-merged.keys():self.assertEqual(self.new[name],self.old[name],name)
         for name,row in merged.items():self.assertEqual(self.new[name],row,name)
+
+    def test_the_installed_roster_is_main_plus_only_reviewed_accepted_changes(self):
+        self.assertEqual(roster_accept.validate(self.accept,self.installed),[])
+        result=audit.audit(self.main,self.installed,self.reference,self.reviewed,self.accept)
+        self.assertEqual(result['counts']['clean record changed'],0)
+        self.assertEqual(result['counts']['export accepted'],len(self.accept['records']))
+        self.assertEqual(result['accepted_new_rows'],len(self.accept['new']))
+        # every accepted group is installed, and nothing else differs from the reverted roster
+        for p in self.installed:
+            for g in self.accept['records'].get(p['name'],[]):self.assertEqual(roster_accept.state(p,g),'applied',p['name'])
+        names={p['name'] for p in self.shipped}
+        self.assertEqual({p['name'] for p in self.installed}-names,set(self.accept['new']))
+
+    def test_pending_counts_and_curated_identities_are_never_accepted(self):
+        pending={p['name'] for p in self.shipped if p.get('speech_count_basis')}
+        self.assertEqual(len(pending),16)
+        self.assertFalse(pending&set(self.accept['records']))
+        for p in self.installed:
+            if p['name'] in pending:
+                self.assertNotIn('speeches',p)
+        # an accepted identity group never removes a value main's curation set
+        for name,groups in self.accept['records'].items():
+            for g in groups:
+                for field,(was,now) in g['fields'].items():
+                    if field in roster_accept.IDENTITY_FIELDS:self.assertIsNotNone(now,(name,field))
 
     def test_clean_sa_and_historical_state_records_keep_every_field(self):
         for name in ['Malinauskas','P.B. Malinauskas','V.A. Chapman','S.S. Marshall','A. Koutsantonis',

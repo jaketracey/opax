@@ -18,7 +18,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 COPIED = ["scripts/vm/export_step.sh", "scripts/vm/export_people.sh", "scripts/vm/keep_if_unchanged.py",
-          "scripts/export_parliamentarians.py", "scripts/roster_identity.py", "scripts/roster_fold.py", "scripts/roster_overlay.py", "scripts/enrich_profile_jurisdictions.py",
+          "scripts/export_parliamentarians.py", "scripts/roster_identity.py", "scripts/roster_fold.py", "scripts/roster_overlay.py", "scripts/roster_accept.py", "scripts/roster_accept.json", "scripts/enrich_profile_jurisdictions.py",
           "scripts/roster_service.json", "scripts/roster_witness_service.json", "scripts/roster_state_evidence.json", "portal/public/electorates/manifest.json",
           "portal/public/electorates/releases/b56417062ccc33cf/reference.json",
           "scripts/person_identity.json", "portal/public/research/mlci.json", "portal/public/votes.json",
@@ -124,6 +124,9 @@ class ShippedIdentityReplayTests(unittest.TestCase):
         # origin/main, and retains the original bad joins for regression coverage.
         old=json.loads((ROOT/'tests/fixtures/roster-export/prints-23cad95a.json').read_text())
         rows=old['people'];db=sqlite3.connect(box/'parli.db')
+        # Rows a review accepted later (scripts/roster_accept.json "new") are on the box too.
+        printed={p['name'] for p in rows}|{s for p in rows for s in p.get('prints') or []}
+        rows=rows+[p for p in shipped['people'] if p['name'] not in printed and not p.get('prints')]
         db.execute('PRAGMA foreign_keys=OFF');db.execute('DELETE FROM speeches');db.execute('DELETE FROM members')
         people=pinned_members();member_ids={}
         for pid,m in people.items():

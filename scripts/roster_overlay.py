@@ -16,10 +16,15 @@ be zero, and a changed speech count is such a change), so the rule is per record
     person pages and their fixtures); it is listed so someone can review it;
   - a row the export drops is kept.
 
-The shipped `meta` is kept too, so a night on which the export says nothing new installs nothing
-(scripts/vm/keep_if_unchanged.py). A reviewed refresh bypasses this with OPAX_ROSTER_ACCEPT=1.
+A review lets changes through per record and per field with the accept list (scripts/roster_accept.json, read
+scripts/roster_accept.py): an accepted group of fields, or an accepted new row, is installed only while the export
+still shows exactly the reviewed value; if the export moves again, the shipped value stays and the change is held.
+When nothing accepted is new tonight, the shipped `meta` and rows are kept byte for byte, so the night installs
+nothing (scripts/vm/keep_if_unchanged.py); otherwise the rows are re-sorted and meta's totals recounted.
+OPAX_ROSTER_ACCEPT=1 still skips the whole step (a raw export for a review, never for a nightly install).
 
   python3 scripts/roster_overlay.py --directory export.json [--shipped portal/public/parliamentarians.json]
+                                    [--accept scripts/roster_accept.json]
 
 Rewrites --directory in place; prints one "ROSTER OVERLAY:" line on stderr (weekly_refresh.sh repeats it).
 """
@@ -30,13 +35,25 @@ import sys
 from collections import Counter
 from pathlib import Path
 
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+from scripts import roster_accept  # noqa: E402
+
 ROOT = Path(__file__).resolve().parents[1]
 SHIPPED = Path(os.environ.get("OPAX_ROSTER_PREVIOUS") or ROOT / "portal" / "public" / "parliamentarians.json")
 
 
-def overlay(shipped, fresh):
-    """(merged roster document, report) for a fresh export `fresh` laid onto the `shipped` one."""
-    kept = {p["name"]: p for p in shipped["people"]}
+def overlay(shipped, fresh, accept=None):
+    """(merged roster document, report) for a fresh export `fresh` laid onto the `shipped` one, with the reviewed
+    `accept` list (scripts/roster_accept.json) applied where the export still shows its values."""
+    accept = accept or {}
+    people, accepted = roster_accept.apply(shipped["people"], fresh["people"], accept)
+    if people == shipped["people"]:
+        meta, people = shipped["meta"], list(shipped["people"])
+    else:
+        people = roster_accept.ordered(people)
+        meta = roster_accept.recount(shipped["meta"], people)
+        meta["generated"] = fresh["meta"].get("generated", meta.get("generated"))  # the export the counts are from
+    kept = {p["name"]: p for p in people}
     now = {p["name"]: p for p in fresh["people"]}
     # a print the export folded into a person is not a new row, and its old row is not "dropped"
     folded = {stub for p in fresh["people"] for stub in p.get("prints") or []}
@@ -46,19 +63,24 @@ def overlay(shipped, fresh):
         if q is not None:
             fields.update(k for k in p.keys() | q.keys() if p.get(k) != q.get(k))
     report = {
-        "kept": len(kept),
+        "kept": len(shipped["people"]),
         "differ": sum(1 for n, p in kept.items() if n in now and now[n] != p),
         "fields": dict(fields.most_common()),
         "held": sorted(n for n in now if n not in kept),
         "held_sitting": sorted(n for n, q in now.items() if n not in kept and q.get("current")),
         "dropped": sorted(n for n in kept if n not in now and n not in folded),
+        "accepted": accepted["applied"],
+        "accept_held": sorted(set(accepted["held"])),
     }
-    return {**fresh, "meta": shipped["meta"], "people": list(shipped["people"])}, report
+    return {**fresh, "meta": meta, "people": people}, report
 
 
 def summary(report):
     fields = ", ".join(f"{k} {v}" for k, v in list(report["fields"].items())[:6])
-    line = (f"kept {report['kept']} shipped records ({report['differ']} differ in the export"
+    line = f"installed {report['accepted']} reviewed change(s) from scripts/roster_accept.json; " if report.get("accepted") else ""
+    if report.get("accept_held"):
+        line += f"{len(report['accept_held'])} accepted record(s) moved again in the export and stay as shipped; "
+    line += (f"kept {report['kept']} shipped records ({report['differ']} differ in the export"
             f"{': ' + fields if fields else ''}); held {len(report['held'])} new row(s)")
     if report["held"]:
         line += ": " + ", ".join(report["held"][:12]) + (" ..." if len(report["held"]) > 12 else "")
@@ -73,10 +95,11 @@ def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--directory", type=Path, required=True, help="the fresh export, rewritten in place")
     ap.add_argument("--shipped", type=Path, default=SHIPPED, help="the roster the site ships now")
+    ap.add_argument("--accept", type=Path, default=roster_accept.ACCEPT, help="the reviewed accept list")
     a = ap.parse_args(argv)
     fresh = json.loads(a.directory.read_text(encoding="utf-8"))
     shipped = json.loads(a.shipped.read_text(encoding="utf-8"))
-    merged, report = overlay(shipped, fresh)
+    merged, report = overlay(shipped, fresh, roster_accept.load(a.accept))
     a.directory.write_text(json.dumps(merged, ensure_ascii=False, separators=(",", ":")) + "\n", encoding="utf-8")
     print("ROSTER OVERLAY: " + summary(report), file=sys.stderr)
 

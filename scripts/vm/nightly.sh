@@ -374,7 +374,7 @@ if [ "${OPAX_NIGHTLY_SKIP_REFRESH:-0}" != 1 ] && [ "${OPAX_NIGHTLY_SKIP_PERIODIC
     [ -z "$held" ] || warn "the roster export was held and the shipped parliamentarians.json kept (review, then OPAX_ROSTER_ACCEPT=1): $held"
     # the shipped roster is kept record for record (scripts/roster_overlay.py); a sitting member it lacks needs review
     overlay=$(last_run_line "$WEEKLY_LOG" 'Roster overlay:' | sed 's/.*Roster overlay: //')
-    case "$overlay" in *"are sitting members"*) warn "the roster export has sitting members the shipped roster lacks, held for a reviewed refresh (OPAX_ROSTER_ACCEPT=1): $overlay" ;; esac
+    case "$overlay" in *"are sitting members"*) warn "the roster export has sitting members the shipped roster lacks, held for review into scripts/roster_accept.json (scripts/roster_accept.py --propose): $overlay" ;; esac
   fi
 fi
 
