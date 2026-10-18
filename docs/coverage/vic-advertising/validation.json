@@ -1,0 +1,187 @@
+{
+  "checked_at": "2026-10-18T22:29:12.582578+00:00",
+  "branch": "coverage/vic-advertising",
+  "baseline_commit": "567e8698b56133f41ec1f9057ed55440e69548c7",
+  "publication": "staged only; not promoted or live",
+  "tests": {
+    "python_advertising": {
+      "command": "python3 -m unittest discover -s tests -p 'test_*advertising.py'",
+      "pass": 22
+    },
+    "python_promoter": {
+      "command": "python3 -m unittest discover -s tests -p test_promote_hub_data.py",
+      "pass": 14
+    },
+    "python_gfs": {
+      "command": "python3 -m unittest discover -s tests -p test_abs_gfs.py",
+      "pass": 12
+    },
+    "python_tax_expenditures": {
+      "command": "python3 -m unittest discover -s tests -p test_tax_expenditures.py",
+      "pass": 10
+    },
+    "node": {
+      "command": "node --test test/vic-advertising.test.mjs test/gov-advertising.test.mjs test/register-tables.test.mjs test/government-finance.test.mjs test/tax-expenditures.test.mjs test/navigation.test.mjs",
+      "pass": 100,
+      "navigation_fixture": "Generated offline into ignored private evidence; temporary read-only input links for calendar/election assets, then removed the public fixture link. Initial navigation attempt lacked generated hubs/index.json."
+    }
+  },
+  "gates": {
+    "npm_ci": "pass; before Node tests",
+    "typescript": "npx tsc --noEmit -p .: pass",
+    "check": "npm run -s check: pass",
+    "source_originals": "python3 -m scripts.gov_advertising.victoria --dry-run --verify-originals: pass; zero writes",
+    "wrangler": "npx wrangler deploy --dry-run --env empty: pass; no deployment",
+    "diff_check": "git diff --check: pass",
+    "reviewed_promoter": {
+      "command": "python3 scripts/promote_hub_data.py vic-advertising --dry-run --votes-reference origin/main",
+      "expected_exit": 1,
+      "result": "FAIL vic-advertising: review: vic-advertising",
+      "reason": "Pending orchestrator review. Not a promotion approval."
+    }
+  },
+  "counts": {
+    "rows": 1194,
+    "years": {
+      "2008-09": 1,
+      "2009-10": 1,
+      "2010-11": 1,
+      "2011-12": 1,
+      "2012-13": 1,
+      "2013-14": 6,
+      "2014-15": 8,
+      "2015-16": 8,
+      "2016-17": 8,
+      "2017-18": 512,
+      "2018-19": 532,
+      "2019-20": 16,
+      "2020-21": 16,
+      "2021-22": 16,
+      "2022-23": 16,
+      "2023-24": 26,
+      "2024-25": 25
+    },
+    "kinds": {
+      "advertiser": 40,
+      "campaign cost": 990,
+      "category": 58,
+      "media": 64,
+      "published total": 42
+    }
+  },
+  "reconciliation": {
+    "published_source_cell_matches": 42,
+    "component_exact": 16,
+    "component_within_printed_precision": 4,
+    "total_checks": 62,
+    "source_figures_adjusted": 0
+  },
+  "review": {
+    "status": "pending",
+    "inputs_match": true,
+    "input_count": 8
+  },
+  "browser": {
+    "preview": "Explicit local staged asset through actual Worker; pending orchestrator review; no public asset, external requests or production bindings",
+    "sha256": "9e31055576e57bd90e037f14edb193e08ac11c70f437658462ee9e6853ab633b",
+    "results": [
+      {
+        "width": 390,
+        "status": 200,
+        "horizontalOverflow": false,
+        "table": {
+          "containerWidth": 350,
+          "containerScrollWidth": 350,
+          "tableWidth": 350,
+          "amountCells": 25,
+          "amountsInsideContainer": true
+        },
+        "rows": 1194
+      },
+      {
+        "width": 1440,
+        "status": 200,
+        "horizontalOverflow": false,
+        "table": {
+          "containerWidth": 1325,
+          "containerScrollWidth": 1325,
+          "tableWidth": 1324.8125,
+          "amountCells": 25,
+          "amountsInsideContainer": true
+        },
+        "rows": 1194
+      }
+    ],
+    "search": {
+      "before": 1194,
+      "after": 990
+    },
+    "csv": true,
+    "javaScriptDisabled": true,
+    "staticPhoneTable": {
+      "containerWidth": 350,
+      "containerScrollWidth": 350,
+      "tableWidth": 350,
+      "amountCells": 25,
+      "amountsInsideContainer": true
+    },
+    "closedMenuWithoutAsset": true,
+    "pageErrors": []
+  },
+  "screenshots": [
+    {
+      "path": "portal/private/vic-advertising/advertising-390-top.png",
+      "sha256": "d0ac9ec340fbad657ca7ff40f7bf1a293c0668452e8e5595851e2051ba2a7639",
+      "label": "Explicit local staged preview; not promoted or live"
+    },
+    {
+      "path": "portal/private/vic-advertising/advertising-390-table.png",
+      "sha256": "49d20753a3a65a10ce8e9e63892b1d9ff578db49ae8c299ce0522444ac605805",
+      "label": "Explicit local staged preview; not promoted or live"
+    },
+    {
+      "path": "portal/private/vic-advertising/advertising-1440-top.png",
+      "sha256": "a6545a9b2f9ce1050f68b70083190671a2f7ebe4353c7c016452a7b80f59e832",
+      "label": "Explicit local staged preview; not promoted or live"
+    },
+    {
+      "path": "portal/private/vic-advertising/advertising-1440-table.png",
+      "sha256": "2d472503486b15e34d8b7c0f4a9f25d53c2b2f364b2f913bf2ea2df3e0008604",
+      "label": "Explicit local staged preview; not promoted or live"
+    }
+  ],
+  "votes": {
+    "schema": 1,
+    "byte_identical_to_origin_main": true,
+    "sha256": "9b7fc46c65185223d70a49b1bd8ee807327473330b02392963aa320b191b7a93"
+  },
+  "public_asset_written": false,
+  "production_writes": 0,
+  "push": false,
+  "deploy": false,
+  "nightly": false,
+  "privacy": {
+    "version": 1,
+    "policy_sha256": "e3a1c701cc5b284f0a278bd6a3e31a482db23b76e5004eedb0cba5ea00c17776",
+    "held_fields": {
+      "advertiser_description": 40,
+      "amount_annotation": 15,
+      "campaign_period": 4,
+      "campaign_title": 206,
+      "period_note": 14
+    },
+    "held_field_total": 279,
+    "original_table_holds": 9,
+    "attachments_held": 30,
+    "original_private_narrative_exported": false,
+    "synthetic_person_fixture": "Python table/projection and Node app asset, SSR, hydration, CSV, search, sitemap and local MCP pass"
+  },
+  "history_audit": {
+    "scope": "git log -p origin/main..HEAD",
+    "method": "grep -F against private reviewer-pattern receipt; only match count retained",
+    "matches": 0,
+    "branch_commits": 1,
+    "base": "567e8698b56133f41ec1f9057ed55440e69548c7",
+    "rewritten": true
+  }
+}

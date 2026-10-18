@@ -16,6 +16,34 @@ export function instrumentTableConfig() {
     primaryLink:row=>/^([CF]\d{4}[A-Z]\d{5})$/.test(String(row.id)) ? `/instrument/${row.id}` : null};
 }
 
+/** Only licence-cleared campaign facts reach this shared register adapter. */
+export function govAdvertisingTableConfig(rows) {
+  if(rows.some(row=>row.jurisdiction==='VIC'))return {id:'gov-advertising-table',caption:'Published advertising expenditure cells (overlapping table scopes)',pageType:'gov-advertising',urlKey:'advertising',pageSize:25,rows,defaultSort:{key:'financial_year',dir:'desc'},export:{filename:'government-advertising.csv'},
+    columnsVisible:['campaign','category','financial_year','entity','total','source_display','record_kind','basis','source_locator','licence'],
+    columns:[{key:'campaign',label:'Campaign examples / category',type:'text',primary:true},{key:'financial_year',label:'Financial year',type:'category',sortable:true,facet:'multi',hideWhenConstant:false},
+      {key:'entity',label:'Department / agency',type:'category',facet:'multi',href:row=>/^\/subject\/agency\/a-[a-f0-9]{20}$/.test(row.agency_href||'')?row.agency_href:null},
+      {key:'total',label:'Reported expenditure (AUD)',type:'money'},
+      ...['record_kind','media_type','jurisdiction','report_year'].map(key=>({key,label:{record_kind:'Record type',media_type:'Media channel',jurisdiction:'Jurisdiction',report_year:'Source report year'}[key],type:'category',facet:'multi'})),
+      ...['category','basis','measure','source_display','source_value','unit','table_heading','campaign_period','period_note','source_locator','snapshot','licence','attribution','sha256','table_sha256','source_url','licence_url'].map(key=>({key,label:{table_heading:'Source table heading',source_display:'Published amount / unit',category:'Cost category',campaign_period:'Campaign period as published',period_note:'Reporting period note',basis:'GST basis',measure:'Published scope',source_value:'Published amount',unit:'Source unit',source_locator:'Original source / table',snapshot:'Source snapshot',licence:'Licence',attribution:'Attribution',sha256:'Document SHA-256',table_sha256:'Table SHA-256',source_url:'Source URL',licence_url:'Licence URL'}[key],type:key==='snapshot'?'date':'text',...(['source_locator','licence'].includes(key)?{href:row=>href(row[key==='licence'?'licence_url':'source_url'])}:{})})),
+      ...(rows.some(r=>r.supplier)?[{key:'supplier',label:'Supplier',type:'text'}]:[])],primaryLink:row=>href(row.source_url)};
+  const categoryColumns = ['media','campaign_development','gst','other'].filter(key=>rows.some(row=>row[key]!=null));
+  return {id:'gov-advertising-table',caption:'Reported campaign expenditure',pageType:'gov-advertising',urlKey:'advertising',pageSize:25,rows,
+    defaultSort:{key:'financial_year',dir:'desc'},export:{filename:'government-advertising.csv'},
+    columnsVisible:['campaign','financial_year','entity','total',...categoryColumns,'basis','measure','source_locator','snapshot','licence'],
+    columns:[{key:'campaign',label:'Campaign',type:'text',primary:true},
+      {key:'financial_year',label:'Financial year',type:'category',sortable:true,facet:'multi',hideWhenConstant:false},
+      {key:'entity',label:'Entity as published',type:'category',facet:'multi',hideWhenConstant:false,href:row=>/^\/subject\/agency\/a-[a-f0-9]{20}$/.test(row.agency_href || '')?row.agency_href:null},
+      {key:'total',label:'Reported total (AUD)',type:'money',format:'exact'},
+      ...categoryColumns.map(key=>({key,label:{media:'Media (AUD)',campaign_development:'Campaign development (AUD)',gst:'GST (AUD)',other:'Other (AUD)'}[key],type:'money',format:'exact'})),
+      {key:'basis',label:'GST basis',type:'text'},{key:'measure',label:'Expenditure scope',type:'text'},
+      {key:'source_locator',label:'Original source / table',type:'text',href:row=>href(row.source_url)},
+      {key:'snapshot',label:'Source snapshot',type:'text'},
+      {key:'licence',label:'Licence',type:'text',href:row=>href(row.licence_url)},
+      {key:'source_url',label:'Source URL',type:'text'},{key:'sha256',label:'Document SHA-256',type:'text'},
+      {key:'table_sha256',label:'Table SHA-256',type:'text'},{key:'licence_url',label:'Licence URL',type:'text'}],
+    primaryLink:row=>href(row.source_url)};
+}
+
 export function auditTableConfig(records) {
   return {id:'audit-table',caption:'Tabled reports',pageType:'audit',urlKey:'audit',pageSize:50,
     defaultSort:{key:'tabled_date',dir:'desc'},export:{filename:'audit-reports.csv'},
@@ -228,6 +256,7 @@ export function hydrateRegisterTables(root = document) {
     else if (config.urlKey === 'vicGifts') { const factory=vicGiftsTableConfig(config.source?.params,config.columns.map(column=>column.key)); Object.assign(config,{columns:factory.columns,primaryLink:factory.primaryLink}); }
     else if (config.urlKey === 'stateBills') Object.assign(config,stateBillsTableConfig(config.rows));
     else if (config.urlKey === 'gfs') Object.assign(config,governmentFinanceTableConfig(config.rows));
+    else if (config.urlKey === 'advertising') Object.assign(config,govAdvertisingTableConfig(config.rows));
     else if (config.urlKey === 'tax') Object.assign(config,taxExpendituresTableConfig(config.rows));
     else Object.assign(config,{primaryLink:row=>row.href || null});
     script.remove();

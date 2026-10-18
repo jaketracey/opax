@@ -48,6 +48,7 @@
           page('/subject/campaigner', 'Campaigners & third parties', 'Organisations spending on politics.'),
         ] },
         { heading: 'Public money', links: [
+          page('/register/gov-advertising', 'Government advertising', 'Published campaign and non-campaign media expenditure.', { gate: 'advertising' }),
           page('/register/tax-expenditures', 'Tax expenditures', 'Treasury’s estimates of revenue forgone against tax benchmarks.'),
           page('/register/government-finance', 'Government finance', 'ABS annual revenue, expenses, balances and debt.'),
           page('/money/contracts', 'Government contracts', 'Which agencies buy from whom.'),
@@ -120,6 +121,7 @@
 
   /** The group a path belongs to; null for Home, Ask, Search and records. */
   const active = (path, params = new URLSearchParams()) => {
+    if (path === '/register/gov-advertising') return 'money';
     if (path === '/register/tax-expenditures') return 'money';
     if (path === '/register/government-finance') return 'money';
     if (path === '/register/state-bills') return 'parliament';
@@ -193,7 +195,7 @@
   // --- gates: optional sections published on some deployments only -----------
   // The Worker marks the ones it knows (<html data-nav-gates="vic-election">);
   // the instruments catalogue and the estimates round are read from their data.
-  const gates = { instruments: false, 'vic-election': false, estimates: false };
+  const gates = { advertising: false, instruments: false, 'vic-election': false, estimates: false };
   const gateWaiters = [];
   function openGate(name, href) {
     if (gates[name] && (!href || gates[name] === href)) return;
@@ -548,6 +550,9 @@
     openGate('instruments');
   }).catch(() => {});
   globalThis.OpaxNavigation.instrumentsReady = instrumentsReady;
+  globalThis.OpaxNavigation.advertisingReady = fetch('/gov-advertising/ready.json').then(r => r.ok ? r.json() : null).then(ready => {
+    if (ready?.ready === true && Number.isInteger(ready.count) && ready.count > 0) openGate('advertising');
+  }).catch(() => {});
   // Server-only pages (sitting weeks, estimates, the Victorian election hub,
   // audit, instruments, not found) have no page script of their own, so their
   // menus, sheet and header search are wired here. app.js, home.js and

@@ -1,0 +1,17 @@
+{
+  "source_url": "https://www.finance.gov.au/publications/reports/advertising",
+  "publisher": "Department of Finance",
+  "checked_at": "2026-10-15T21:19:23.500336+00:00",
+  "access_status": "held",
+  "reason": "The source robots request timed out. Campaign reports and their reuse terms could not be checked.",
+  "licence": "Unverified; no report data cleared for reuse",
+  "receipt": {
+    "url": "https://www.finance.gov.au/robots.txt",
+    "snapshot": "2026-10-15T21:19:23.500336+00:00",
+    "status": null,
+    "error": "TimeoutError",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0,
+    "hash_basis": "zero response bytes; diagnostic hash is separate"
+  }
+}

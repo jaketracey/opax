@@ -1,0 +1,44 @@
+{
+  "status": "pending",
+  "reviewed_commit": null,
+  "review_basis": "Prepared for orchestrator review only. No approval or promotion inferred. Review the regenerated schema-2 projection, shared default-deny privacy policy, hash-only hold receipts, source/licence receipts, attachment/table holds and reconciliation. Approve these exact eight input digests and name the actual reviewed commit before explicit promotion. Annual opt-in only; no nightly, push or deploy.",
+  "inputs": {
+    "discovery.json": "e0574876e449c8f3ca6850dffdd6a963f19dcc45f59fae765eaadc41ed7d464a",
+    "inventory.json": "495c6b7c01449e30c1b8f7c9ab3f1d6e95d4747690077c7ba50715cb502ab8e5",
+    "tables.json": "63d94660869aa7043d7479cc64b9e0868d8ea4a6e468bf375b6f0a5adf677c93",
+    "receipts.json": "637b9c1bcc5a2d5bf888456de4feb1d7ac24b7b459b2098650a6f631de8683d1",
+    "reconciliation.json": "78f02d9ffb0feb7ff3b800435e722feff20f21302ec10224f3241c52502d41f4",
+    "privacy-policy.json": "e3a1c701cc5b284f0a278bd6a3e31a482db23b76e5004eedb0cba5ea00c17776",
+    "privacy-holds.json": "1ede361e9863f0a4a2628891f8060aec8a59493cf594d35fc00dd049b1dde382",
+    "hub.json": "9e31055576e57bd90e037f14edb193e08ac11c70f437658462ee9e6853ab633b"
+  },
+  "counts": {
+    "rows": 1194,
+    "years": {
+      "2008-09": 1,
+      "2009-10": 1,
+      "2010-11": 1,
+      "2011-12": 1,
+      "2012-13": 1,
+      "2013-14": 6,
+      "2014-15": 8,
+      "2015-16": 8,
+      "2016-17": 8,
+      "2017-18": 512,
+      "2018-19": 532,
+      "2019-20": 16,
+      "2020-21": 16,
+      "2021-22": 16,
+      "2022-23": 16,
+      "2023-24": 26,
+      "2024-25": 25
+    },
+    "kinds": {
+      "advertiser": 40,
+      "campaign cost": 990,
+      "category": 58,
+      "media": 64,
+      "published total": 42
+    }
+  }
+}

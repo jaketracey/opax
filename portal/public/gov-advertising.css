@@ -1,0 +1,40 @@
+.gov-advertising-content{padding-block:var(--space-group);color:var(--ink)}
+.gov-advertising-content section{padding-block:var(--space-group);border-bottom:1px solid var(--divider-default)}
+.gov-advertising-content h2{font:var(--type-heading);margin-block:var(--space-row)}
+.gov-advertising-content p{margin-block:var(--space-row)}
+.gov-advertising-receipt{font:var(--type-fine);color:var(--ink-soft);overflow-wrap:anywhere}
+.gov-advertising-hold{padding:var(--space-row);background:var(--paper-sunken);border:1px solid var(--divider-default)}
+.gov-advertising-hold summary{cursor:pointer;font:var(--type-label)}
+.gov-advertising-hold details p{overflow-wrap:anywhere}
+.gov-advertising-totals{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,20rem),1fr));gap:var(--space-row)}
+.gov-advertising-totals div{border-top:1px solid var(--divider-default);padding-block:var(--space-row)}
+.gov-advertising-totals dt{font:var(--type-fine);color:var(--ink-soft)}
+.gov-advertising-totals dd{font:var(--type-heading);margin:var(--space-tight) 0}
+
+#prerender:has(+ .gov-advertising-content){padding-bottom:var(--space-row)}
+.gov-advertising-lede{font:var(--type-body);max-width:76ch}
+.gov-advertising-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,24rem),1fr));gap:var(--space-group)}
+.gov-advertising-card{min-width:0;border-top:var(--border-hairline) solid var(--money-ink);padding-top:var(--space-row)}
+.gov-advertising-card h3{font:var(--type-strong);overflow-wrap:anywhere}
+.gov-advertising-amount{font:var(--type-heading);font-variant-numeric:tabular-nums}
+.gov-advertising-content details{font:var(--type-fine);overflow-wrap:anywhere}
+.gov-advertising-content summary{cursor:pointer;min-height:var(--size-target);display:flex;align-items:center;text-decoration:underline}
+.gov-advertising-content :focus-visible{outline:var(--border-hairline) solid var(--bronze-ink);outline-offset:var(--space-tight)}
+@media(width < 600px){
+ [data-register-table="gov-advertising-table"] .dt-scroll{overflow-x:visible}
+ #gov-advertising-table{display:block;width:100%;min-width:0}
+ #gov-advertising-table caption{display:block}
+ #gov-advertising-table thead{display:none}
+ #gov-advertising-table tbody{display:block;width:100%}
+ #gov-advertising-table tbody tr{display:grid;grid-template-columns:minmax(0,1fr);gap:var(--space-tight);padding:var(--space-block);border-bottom:var(--border-hairline) solid var(--divider-subtle);background:var(--paper-raised)}
+ #gov-advertising-table td{display:block;grid-column:1/-1;position:static;min-width:0;max-width:100%;padding:0;border:0;box-shadow:none;white-space:normal;text-align:start;overflow-wrap:anywhere}
+ #gov-advertising-table td::before{content:attr(data-label);display:block;font:var(--type-fine);color:var(--ink-soft)}
+ #gov-advertising-table td[data-label="Campaign examples / category"],#gov-advertising-table td[data-label="Campaign"]{font:var(--type-strong)}
+ #gov-advertising-table td[data-label="Reported expenditure (AUD)"],#gov-advertising-table td[data-label="Reported total (AUD)"]{font:var(--type-strong);white-space:nowrap}
+}
+
+#prerender:has(+ .gov-advertising-content)>p:last-child{margin-bottom:0}
+.gov-advertising-content{padding-block:var(--space-row)}
+.gov-advertising-content>.gov-advertising-lede{margin-top:0}
+
+#gov-advertising-table td[data-label="Financial year"]{white-space:nowrap}

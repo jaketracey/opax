@@ -1,0 +1,128 @@
+{
+  "schema": 1,
+  "generated_at": "2026-10-15T00:00:00Z",
+  "source_url": "https://www.finance.gov.au/publications/reports/advertising",
+  "documents": [
+    {
+      "id": "synthetic-2024-25",
+      "financial_year": "2024-25",
+      "url": "https://www.finance.gov.au/sites/default/files/synthetic-campaigns.csv",
+      "sha256": "1808d00791573d7b890f23f66b712b3ab84c73000be7f37de0c47ce8318dff51",
+      "licence": {
+        "status": "open",
+        "name": "CC BY 4.0",
+        "url": "https://creativecommons.org/licenses/by/4.0/",
+        "policy_url": "https://www.finance.gov.au/sites/default/files/synthetic-campaigns.csv",
+        "reviewed": true,
+        "scope_sha256": "1808d00791573d7b890f23f66b712b3ab84c73000be7f37de0c47ce8318dff51",
+        "exceptions_reviewed": true,
+        "terms": "Synthetic fixture grant; attribution required; branding and third-party material excluded.",
+        "receipt": {
+          "status": 200,
+          "sha256": "1808d00791573d7b890f23f66b712b3ab84c73000be7f37de0c47ce8318dff51",
+          "snapshot": "2026-10-15T00:00:00Z"
+        }
+      },
+      "basis": "GST exclusive",
+      "measure": "Campaign total",
+      "receipt": {
+        "status": 200,
+        "robots_allowed": true,
+        "challenge": false,
+        "sha256": "1808d00791573d7b890f23f66b712b3ab84c73000be7f37de0c47ce8318dff51",
+        "snapshot": "2026-10-15T00:00:00Z"
+      }
+    }
+  ],
+  "rows": [
+    {
+      "id": "synthetic-2024-25:1",
+      "financial_year": "2024-25",
+      "entity": "Department of Example Services",
+      "campaign": "Example public information",
+      "categories_cents": {
+        "media": 10000,
+        "campaign_development": 5000,
+        "gst": null,
+        "other": null
+      },
+      "total_cents": 15000,
+      "basis": "GST exclusive",
+      "measure": "Campaign total",
+      "source_url": "https://www.finance.gov.au/sites/default/files/synthetic-campaigns.csv",
+      "source_locator": "page 10 table 1 row 1",
+      "snapshot": "2026-10-15T00:00:00Z",
+      "sha256": "1808d00791573d7b890f23f66b712b3ab84c73000be7f37de0c47ce8318dff51",
+      "table_sha256": "1808d00791573d7b890f23f66b712b3ab84c73000be7f37de0c47ce8318dff51",
+      "licence": {
+        "status": "open",
+        "name": "CC BY 4.0",
+        "url": "https://creativecommons.org/licenses/by/4.0/",
+        "policy_url": "https://www.finance.gov.au/sites/default/files/synthetic-campaigns.csv",
+        "reviewed": true,
+        "scope_sha256": "1808d00791573d7b890f23f66b712b3ab84c73000be7f37de0c47ce8318dff51",
+        "exceptions_reviewed": true,
+        "terms": "Synthetic fixture grant; attribution required; branding and third-party material excluded.",
+        "receipt": {
+          "status": 200,
+          "sha256": "1808d00791573d7b890f23f66b712b3ab84c73000be7f37de0c47ce8318dff51",
+          "snapshot": "2026-10-15T00:00:00Z"
+        }
+      }
+    },
+    {
+      "id": "synthetic-2024-25:2",
+      "financial_year": "2024-25",
+      "entity": "Example Outreach Agency",
+      "campaign": "Example service awareness",
+      "categories_cents": {
+        "media": 20000,
+        "campaign_development": 5000,
+        "gst": null,
+        "other": null
+      },
+      "total_cents": 25000,
+      "basis": "GST exclusive",
+      "measure": "Campaign total",
+      "source_url": "https://www.finance.gov.au/sites/default/files/synthetic-campaigns.csv",
+      "source_locator": "page 10 table 1 row 2",
+      "snapshot": "2026-10-15T00:00:00Z",
+      "sha256": "1808d00791573d7b890f23f66b712b3ab84c73000be7f37de0c47ce8318dff51",
+      "table_sha256": "1808d00791573d7b890f23f66b712b3ab84c73000be7f37de0c47ce8318dff51",
+      "licence": {
+        "status": "open",
+        "name": "CC BY 4.0",
+        "url": "https://creativecommons.org/licenses/by/4.0/",
+        "policy_url": "https://www.finance.gov.au/sites/default/files/synthetic-campaigns.csv",
+        "reviewed": true,
+        "scope_sha256": "1808d00791573d7b890f23f66b712b3ab84c73000be7f37de0c47ce8318dff51",
+        "exceptions_reviewed": true,
+        "terms": "Synthetic fixture grant; attribution required; branding and third-party material excluded.",
+        "receipt": {
+          "status": 200,
+          "sha256": "1808d00791573d7b890f23f66b712b3ab84c73000be7f37de0c47ce8318dff51",
+          "snapshot": "2026-10-15T00:00:00Z"
+        }
+      }
+    }
+  ],
+  "reconciliation": [
+    {
+      "status": "reconciled",
+      "financial_year": "2024-25",
+      "rows": 2,
+      "sum_cents": 40000,
+      "report_total_cents": 40000,
+      "difference_cents": 0,
+      "tolerance_cents": 0,
+      "rounding_note": null,
+      "source_locator": "page 10 table 1 total"
+    }
+  ],
+  "counts": {
+    "rows": 2,
+    "years": {
+      "2024-25": 2
+    }
+  }
+}

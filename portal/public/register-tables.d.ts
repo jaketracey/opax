@@ -20,3 +20,5 @@ export function mountRegisterTable(el:Element,config:DataTableConfig): {destroy(
 export function hydrateRegisterTables(root?:ParentNode): void;
 export function categoryMembers(values:string[]): string[];
 export function registerTableQuery(params:URLSearchParams,config:DataTableConfig):Query;
+
+export function govAdvertisingTableConfig(rows:Row[]): DataTableConfig;

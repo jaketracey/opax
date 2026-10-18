@@ -1,0 +1,598 @@
+[
+  {
+    "check": "Published table total",
+    "table_id": "vic-3a3b7b7702e19482:t1",
+    "financial_year": "2024-25",
+    "source_locator": "HTML table 1 row 2 column 5",
+    "sum_cents": 9700000000,
+    "report_total_cents": 9700000000,
+    "difference_cents": 0,
+    "tolerance_cents": 20000000,
+    "status": "pass",
+    "comparison": "exact",
+    "note": "OPAX calculates a half-unit bound from each printed cell precision; this is not a publisher rounding statement. No adjustment to published cells."
+  },
+  {
+    "check": "Published table total",
+    "table_id": "vic-3a3b7b7702e19482:t1",
+    "financial_year": "2023-24",
+    "source_locator": "HTML table 1 row 3 column 5",
+    "sum_cents": 10330000000,
+    "report_total_cents": 10330000000,
+    "difference_cents": 0,
+    "tolerance_cents": 20000000,
+    "status": "pass",
+    "comparison": "exact",
+    "note": "OPAX calculates a half-unit bound from each printed cell precision; this is not a publisher rounding statement. No adjustment to published cells."
+  },
+  {
+    "check": "Published table total",
+    "table_id": "vic-3a3b7b7702e19482:t1",
+    "financial_year": "2022-23",
+    "source_locator": "HTML table 1 row 4 column 5",
+    "sum_cents": 14010000000,
+    "report_total_cents": 14010000000,
+    "difference_cents": 0,
+    "tolerance_cents": 20000000,
+    "status": "pass",
+    "comparison": "exact",
+    "note": "OPAX calculates a half-unit bound from each printed cell precision; this is not a publisher rounding statement. No adjustment to published cells."
+  },
+  {
+    "check": "Published table total",
+    "table_id": "vic-3a3b7b7702e19482:t1",
+    "financial_year": "2021-22",
+    "source_locator": "HTML table 1 row 5 column 5",
+    "sum_cents": 15060000000,
+    "report_total_cents": 15060000000,
+    "difference_cents": 0,
+    "tolerance_cents": 20000000,
+    "status": "pass",
+    "comparison": "exact",
+    "note": "OPAX calculates a half-unit bound from each printed cell precision; this is not a publisher rounding statement. No adjustment to published cells."
+  },
+  {
+    "check": "Published table total",
+    "table_id": "vic-3a3b7b7702e19482:t1",
+    "financial_year": "2020-21",
+    "source_locator": "HTML table 1 row 6 column 5",
+    "sum_cents": 14730000000,
+    "report_total_cents": 14730000000,
+    "difference_cents": 0,
+    "tolerance_cents": 20000000,
+    "status": "pass",
+    "comparison": "exact",
+    "note": "OPAX calculates a half-unit bound from each printed cell precision; this is not a publisher rounding statement. No adjustment to published cells."
+  },
+  {
+    "check": "Published table total",
+    "table_id": "vic-3a3b7b7702e19482:t1",
+    "financial_year": "2019-20",
+    "source_locator": "HTML table 1 row 7 column 5",
+    "sum_cents": 8460000000,
+    "report_total_cents": 8460000000,
+    "difference_cents": 0,
+    "tolerance_cents": 20000000,
+    "status": "pass",
+    "comparison": "exact",
+    "note": "OPAX calculates a half-unit bound from each printed cell precision; this is not a publisher rounding statement. No adjustment to published cells."
+  },
+  {
+    "check": "Published table total",
+    "table_id": "vic-3a3b7b7702e19482:t1",
+    "financial_year": "2018-19",
+    "source_locator": "HTML table 1 row 8 column 5",
+    "sum_cents": 10290000000,
+    "report_total_cents": 10280000000,
+    "difference_cents": 10000000,
+    "tolerance_cents": 20000000,
+    "status": "pass",
+    "comparison": "within printed precision",
+    "note": "OPAX calculates a half-unit bound from each printed cell precision; this is not a publisher rounding statement. No adjustment to published cells."
+  },
+  {
+    "check": "Published table total",
+    "table_id": "vic-3a3b7b7702e19482:t1",
+    "financial_year": "2017-18",
+    "source_locator": "HTML table 1 row 9 column 5",
+    "sum_cents": 10570000000,
+    "report_total_cents": 10580000000,
+    "difference_cents": -10000000,
+    "tolerance_cents": 20000000,
+    "status": "pass",
+    "comparison": "within printed precision",
+    "note": "OPAX calculates a half-unit bound from each printed cell precision; this is not a publisher rounding statement. No adjustment to published cells."
+  },
+  {
+    "check": "Published table total",
+    "table_id": "vic-3a3b7b7702e19482:t1",
+    "financial_year": "2016-17",
+    "source_locator": "HTML table 1 row 10 column 5",
+    "sum_cents": 8240000000,
+    "report_total_cents": 8240000000,
+    "difference_cents": 0,
+    "tolerance_cents": 20000000,
+    "status": "pass",
+    "comparison": "exact",
+    "note": "OPAX calculates a half-unit bound from each printed cell precision; this is not a publisher rounding statement. No adjustment to published cells."
+  },
+  {
+    "check": "Published table total",
+    "table_id": "vic-3a3b7b7702e19482:t1",
+    "financial_year": "2015-16",
+    "source_locator": "HTML table 1 row 11 column 5",
+    "sum_cents": 7490000000,
+    "report_total_cents": 7490000000,
+    "difference_cents": 0,
+    "tolerance_cents": 20000000,
+    "status": "pass",
+    "comparison": "exact",
+    "note": "OPAX calculates a half-unit bound from each printed cell precision; this is not a publisher rounding statement. No adjustment to published cells."
+  },
+  {
+    "check": "Published table total",
+    "table_id": "vic-3a3b7b7702e19482:t1",
+    "financial_year": "2014-15",
+    "source_locator": "HTML table 1 row 12 column 5",
+    "sum_cents": 9490000000,
+    "report_total_cents": 9490000000,
+    "difference_cents": 0,
+    "tolerance_cents": 20000000,
+    "status": "pass",
+    "comparison": "exact",
+    "note": "OPAX calculates a half-unit bound from each printed cell precision; this is not a publisher rounding statement. No adjustment to published cells."
+  },
+  {
+    "check": "Published table total",
+    "table_id": "vic-3a3b7b7702e19482:t1",
+    "financial_year": "2013-14",
+    "source_locator": "HTML table 1 row 13 column 5",
+    "sum_cents": 9610000000,
+    "report_total_cents": 9610000000,
+    "difference_cents": 0,
+    "tolerance_cents": 20000000,
+    "status": "pass",
+    "comparison": "exact",
+    "note": "OPAX calculates a half-unit bound from each printed cell precision; this is not a publisher rounding statement. No adjustment to published cells."
+  },
+  {
+    "check": "Published total source cell",
+    "row_id": "vic-3a3b7b7702e19482:t1:r2:c5",
+    "status": "pass",
+    "source_value": "$97.0",
+    "report_total_cents": 9700000000,
+    "source_locator": "HTML table 1 row 2 column 5"
+  },
+  {
+    "check": "Published total source cell",
+    "row_id": "vic-3a3b7b7702e19482:t1:r3:c5",
+    "status": "pass",
+    "source_value": "$103.3",
+    "report_total_cents": 10330000000,
+    "source_locator": "HTML table 1 row 3 column 5"
+  },
+  {
+    "check": "Published total source cell",
+    "row_id": "vic-3a3b7b7702e19482:t1:r4:c5",
+    "status": "pass",
+    "source_value": "$140.1",
+    "report_total_cents": 14010000000,
+    "source_locator": "HTML table 1 row 4 column 5"
+  },
+  {
+    "check": "Published total source cell",
+    "row_id": "vic-3a3b7b7702e19482:t1:r5:c5",
+    "status": "pass",
+    "source_value": "$150.6",
+    "report_total_cents": 15060000000,
+    "source_locator": "HTML table 1 row 5 column 5"
+  },
+  {
+    "check": "Published total source cell",
+    "row_id": "vic-3a3b7b7702e19482:t1:r6:c5",
+    "status": "pass",
+    "source_value": "$147.3",
+    "report_total_cents": 14730000000,
+    "source_locator": "HTML table 1 row 6 column 5"
+  },
+  {
+    "check": "Published total source cell",
+    "row_id": "vic-3a3b7b7702e19482:t1:r7:c5",
+    "status": "pass",
+    "source_value": "$84.6",
+    "report_total_cents": 8460000000,
+    "source_locator": "HTML table 1 row 7 column 5"
+  },
+  {
+    "check": "Published total source cell",
+    "row_id": "vic-3a3b7b7702e19482:t1:r8:c5",
+    "status": "pass",
+    "source_value": "$102.8",
+    "report_total_cents": 10280000000,
+    "source_locator": "HTML table 1 row 8 column 5"
+  },
+  {
+    "check": "Published total source cell",
+    "row_id": "vic-3a3b7b7702e19482:t1:r9:c5",
+    "status": "pass",
+    "source_value": "$105.8",
+    "report_total_cents": 10580000000,
+    "source_locator": "HTML table 1 row 9 column 5"
+  },
+  {
+    "check": "Published total source cell",
+    "row_id": "vic-3a3b7b7702e19482:t1:r10:c5",
+    "status": "pass",
+    "source_value": "$82.4",
+    "report_total_cents": 8240000000,
+    "source_locator": "HTML table 1 row 10 column 5"
+  },
+  {
+    "check": "Published total source cell",
+    "row_id": "vic-3a3b7b7702e19482:t1:r11:c5",
+    "status": "pass",
+    "source_value": "$74.9",
+    "report_total_cents": 7490000000,
+    "source_locator": "HTML table 1 row 11 column 5"
+  },
+  {
+    "check": "Published total source cell",
+    "row_id": "vic-3a3b7b7702e19482:t1:r12:c5",
+    "status": "pass",
+    "source_value": "$94.9",
+    "report_total_cents": 9490000000,
+    "source_locator": "HTML table 1 row 12 column 5"
+  },
+  {
+    "check": "Published total source cell",
+    "row_id": "vic-3a3b7b7702e19482:t1:r13:c5",
+    "status": "pass",
+    "source_value": "$96.1",
+    "report_total_cents": 9610000000,
+    "source_locator": "HTML table 1 row 13 column 5"
+  },
+  {
+    "check": "Published table total",
+    "table_id": "vic-3a3b7b7702e19482:t3",
+    "financial_year": "2024-25",
+    "source_locator": "HTML table 3 row 2 column 10",
+    "sum_cents": 9699845100,
+    "report_total_cents": 9699845100,
+    "difference_cents": 0,
+    "tolerance_cents": 450,
+    "status": "pass",
+    "comparison": "exact",
+    "note": "OPAX calculates a half-unit bound from each printed cell precision; this is not a publisher rounding statement. No adjustment to published cells."
+  },
+  {
+    "check": "Published table total",
+    "table_id": "vic-3a3b7b7702e19482:t3",
+    "financial_year": "2023-24",
+    "source_locator": "HTML table 3 row 3 column 10",
+    "sum_cents": 10323922200,
+    "report_total_cents": 10323922200,
+    "difference_cents": 0,
+    "tolerance_cents": 450,
+    "status": "pass",
+    "comparison": "exact",
+    "note": "OPAX calculates a half-unit bound from each printed cell precision; this is not a publisher rounding statement. No adjustment to published cells."
+  },
+  {
+    "check": "Published table total",
+    "table_id": "vic-3a3b7b7702e19482:t3",
+    "financial_year": "2022-23",
+    "source_locator": "HTML table 3 row 4 column 10",
+    "sum_cents": 14011828000,
+    "report_total_cents": 14011828000,
+    "difference_cents": 0,
+    "tolerance_cents": 450,
+    "status": "pass",
+    "comparison": "exact",
+    "note": "OPAX calculates a half-unit bound from each printed cell precision; this is not a publisher rounding statement. No adjustment to published cells."
+  },
+  {
+    "check": "Published table total",
+    "table_id": "vic-3a3b7b7702e19482:t3",
+    "financial_year": "2021-22",
+    "source_locator": "HTML table 3 row 5 column 10",
+    "sum_cents": 15062368900,
+    "report_total_cents": 15062368800,
+    "difference_cents": 100,
+    "tolerance_cents": 450,
+    "status": "pass",
+    "comparison": "within printed precision",
+    "note": "OPAX calculates a half-unit bound from each printed cell precision; this is not a publisher rounding statement. No adjustment to published cells."
+  },
+  {
+    "check": "Published table total",
+    "table_id": "vic-3a3b7b7702e19482:t3",
+    "financial_year": "2020-21",
+    "source_locator": "HTML table 3 row 6 column 10",
+    "sum_cents": 14733862900,
+    "report_total_cents": 14733862900,
+    "difference_cents": 0,
+    "tolerance_cents": 450,
+    "status": "pass",
+    "comparison": "exact",
+    "note": "OPAX calculates a half-unit bound from each printed cell precision; this is not a publisher rounding statement. No adjustment to published cells."
+  },
+  {
+    "check": "Published table total",
+    "table_id": "vic-3a3b7b7702e19482:t3",
+    "financial_year": "2019-20",
+    "source_locator": "HTML table 3 row 7 column 10",
+    "sum_cents": 8464811300,
+    "report_total_cents": 8464811300,
+    "difference_cents": 0,
+    "tolerance_cents": 450,
+    "status": "pass",
+    "comparison": "exact",
+    "note": "OPAX calculates a half-unit bound from each printed cell precision; this is not a publisher rounding statement. No adjustment to published cells."
+  },
+  {
+    "check": "Published table total",
+    "table_id": "vic-3a3b7b7702e19482:t3",
+    "financial_year": "2018-19",
+    "source_locator": "HTML table 3 row 8 column 10",
+    "sum_cents": 10284558800,
+    "report_total_cents": 10284558800,
+    "difference_cents": 0,
+    "tolerance_cents": 450,
+    "status": "pass",
+    "comparison": "exact",
+    "note": "OPAX calculates a half-unit bound from each printed cell precision; this is not a publisher rounding statement. No adjustment to published cells."
+  },
+  {
+    "check": "Published table total",
+    "table_id": "vic-3a3b7b7702e19482:t3",
+    "financial_year": "2017-18",
+    "source_locator": "HTML table 3 row 9 column 10",
+    "sum_cents": 10565806600,
+    "report_total_cents": 10565806500,
+    "difference_cents": 100,
+    "tolerance_cents": 450,
+    "status": "pass",
+    "comparison": "within printed precision",
+    "note": "OPAX calculates a half-unit bound from each printed cell precision; this is not a publisher rounding statement. No adjustment to published cells."
+  },
+  {
+    "check": "Published total source cell",
+    "row_id": "vic-3a3b7b7702e19482:t3:r2:c10",
+    "status": "pass",
+    "source_value": "$96,998,451",
+    "report_total_cents": 9699845100,
+    "source_locator": "HTML table 3 row 2 column 10"
+  },
+  {
+    "check": "Published total source cell",
+    "row_id": "vic-3a3b7b7702e19482:t3:r3:c10",
+    "status": "pass",
+    "source_value": "$103,239,222",
+    "report_total_cents": 10323922200,
+    "source_locator": "HTML table 3 row 3 column 10"
+  },
+  {
+    "check": "Published total source cell",
+    "row_id": "vic-3a3b7b7702e19482:t3:r4:c10",
+    "status": "pass",
+    "source_value": "$140,118,280",
+    "report_total_cents": 14011828000,
+    "source_locator": "HTML table 3 row 4 column 10"
+  },
+  {
+    "check": "Published total source cell",
+    "row_id": "vic-3a3b7b7702e19482:t3:r5:c10",
+    "status": "pass",
+    "source_value": "$150,623,688",
+    "report_total_cents": 15062368800,
+    "source_locator": "HTML table 3 row 5 column 10"
+  },
+  {
+    "check": "Published total source cell",
+    "row_id": "vic-3a3b7b7702e19482:t3:r6:c10",
+    "status": "pass",
+    "source_value": "$147,338,629",
+    "report_total_cents": 14733862900,
+    "source_locator": "HTML table 3 row 6 column 10"
+  },
+  {
+    "check": "Published total source cell",
+    "row_id": "vic-3a3b7b7702e19482:t3:r7:c10",
+    "status": "pass",
+    "source_value": "$84,648,113",
+    "report_total_cents": 8464811300,
+    "source_locator": "HTML table 3 row 7 column 10"
+  },
+  {
+    "check": "Published total source cell",
+    "row_id": "vic-3a3b7b7702e19482:t3:r8:c10",
+    "status": "pass",
+    "source_value": "$102,845,588",
+    "report_total_cents": 10284558800,
+    "source_locator": "HTML table 3 row 8 column 10"
+  },
+  {
+    "check": "Published total source cell",
+    "row_id": "vic-3a3b7b7702e19482:t3:r9:c10",
+    "status": "pass",
+    "source_value": "$105,658,065",
+    "report_total_cents": 10565806500,
+    "source_locator": "HTML table 3 row 9 column 10"
+  },
+  {
+    "check": "Published total source cell",
+    "row_id": "vic-d32068fa4c2f4594:t1:r2:c2",
+    "status": "pass",
+    "source_value": "$103.2",
+    "report_total_cents": 10320000000,
+    "source_locator": "HTML table 1 row 2 column 2"
+  },
+  {
+    "check": "Published total source cell",
+    "row_id": "vic-d32068fa4c2f4594:t1:r3:c2",
+    "status": "pass",
+    "source_value": "$140.1",
+    "report_total_cents": 14010000000,
+    "source_locator": "HTML table 1 row 3 column 2"
+  },
+  {
+    "check": "Published total source cell",
+    "row_id": "vic-d32068fa4c2f4594:t1:r4:c2",
+    "status": "pass",
+    "source_value": "$150.6",
+    "report_total_cents": 15060000000,
+    "source_locator": "HTML table 1 row 4 column 2"
+  },
+  {
+    "check": "Published total source cell",
+    "row_id": "vic-d32068fa4c2f4594:t1:r5:c2",
+    "status": "pass",
+    "source_value": "$147.3",
+    "report_total_cents": 14730000000,
+    "source_locator": "HTML table 1 row 5 column 2"
+  },
+  {
+    "check": "Published total source cell",
+    "row_id": "vic-d32068fa4c2f4594:t1:r6:c2",
+    "status": "pass",
+    "source_value": "$84.6",
+    "report_total_cents": 8460000000,
+    "source_locator": "HTML table 1 row 6 column 2"
+  },
+  {
+    "check": "Published total source cell",
+    "row_id": "vic-d32068fa4c2f4594:t1:r7:c2",
+    "status": "pass",
+    "source_value": "$102.8",
+    "report_total_cents": 10280000000,
+    "source_locator": "HTML table 1 row 7 column 2"
+  },
+  {
+    "check": "Published total source cell",
+    "row_id": "vic-d32068fa4c2f4594:t1:r8:c2",
+    "status": "pass",
+    "source_value": "$105.7",
+    "report_total_cents": 10570000000,
+    "source_locator": "HTML table 1 row 8 column 2"
+  },
+  {
+    "check": "Published total source cell",
+    "row_id": "vic-d32068fa4c2f4594:t1:r9:c2",
+    "status": "pass",
+    "source_value": "$82.4",
+    "report_total_cents": 8240000000,
+    "source_locator": "HTML table 1 row 9 column 2"
+  },
+  {
+    "check": "Published total source cell",
+    "row_id": "vic-d32068fa4c2f4594:t1:r10:c2",
+    "status": "pass",
+    "source_value": "$74.6",
+    "report_total_cents": 7460000000,
+    "source_locator": "HTML table 1 row 10 column 2"
+  },
+  {
+    "check": "Published total source cell",
+    "row_id": "vic-d32068fa4c2f4594:t1:r11:c2",
+    "status": "pass",
+    "source_value": "$94.9",
+    "report_total_cents": 9490000000,
+    "source_locator": "HTML table 1 row 11 column 2"
+  },
+  {
+    "check": "Published total source cell",
+    "row_id": "vic-d32068fa4c2f4594:t1:r12:c2",
+    "status": "pass",
+    "source_value": "$96.1",
+    "report_total_cents": 9610000000,
+    "source_locator": "HTML table 1 row 12 column 2"
+  },
+  {
+    "check": "Published total source cell",
+    "row_id": "vic-1d1a98bcfe1b1cf5:t1:r2:c2",
+    "status": "pass",
+    "source_value": "$102.8",
+    "report_total_cents": 10280000000,
+    "source_locator": "HTML table 1 row 2 column 2"
+  },
+  {
+    "check": "Published total source cell",
+    "row_id": "vic-1d1a98bcfe1b1cf5:t1:r3:c2",
+    "status": "pass",
+    "source_value": "$105.7",
+    "report_total_cents": 10570000000,
+    "source_locator": "HTML table 1 row 3 column 2"
+  },
+  {
+    "check": "Published total source cell",
+    "row_id": "vic-1d1a98bcfe1b1cf5:t1:r4:c2",
+    "status": "pass",
+    "source_value": "$82.4",
+    "report_total_cents": 8240000000,
+    "source_locator": "HTML table 1 row 4 column 2"
+  },
+  {
+    "check": "Published total source cell",
+    "row_id": "vic-1d1a98bcfe1b1cf5:t1:r5:c2",
+    "status": "pass",
+    "source_value": "$74.6",
+    "report_total_cents": 7460000000,
+    "source_locator": "HTML table 1 row 5 column 2"
+  },
+  {
+    "check": "Published total source cell",
+    "row_id": "vic-1d1a98bcfe1b1cf5:t1:r6:c2",
+    "status": "pass",
+    "source_value": "$94.9",
+    "report_total_cents": 9490000000,
+    "source_locator": "HTML table 1 row 6 column 2"
+  },
+  {
+    "check": "Published total source cell",
+    "row_id": "vic-1d1a98bcfe1b1cf5:t1:r7:c2",
+    "status": "pass",
+    "source_value": "$96.1",
+    "report_total_cents": 9610000000,
+    "source_locator": "HTML table 1 row 7 column 2"
+  },
+  {
+    "check": "Published total source cell",
+    "row_id": "vic-1d1a98bcfe1b1cf5:t1:r8:c2",
+    "status": "pass",
+    "source_value": "$98.4",
+    "report_total_cents": 9840000000,
+    "source_locator": "HTML table 1 row 8 column 2"
+  },
+  {
+    "check": "Published total source cell",
+    "row_id": "vic-1d1a98bcfe1b1cf5:t1:r9:c2",
+    "status": "pass",
+    "source_value": "$103.1",
+    "report_total_cents": 10310000000,
+    "source_locator": "HTML table 1 row 9 column 2"
+  },
+  {
+    "check": "Published total source cell",
+    "row_id": "vic-1d1a98bcfe1b1cf5:t1:r10:c2",
+    "status": "pass",
+    "source_value": "$112.8",
+    "report_total_cents": 11280000000,
+    "source_locator": "HTML table 1 row 10 column 2"
+  },
+  {
+    "check": "Published total source cell",
+    "row_id": "vic-1d1a98bcfe1b1cf5:t1:r11:c2",
+    "status": "pass",
+    "source_value": "$130.3",
+    "report_total_cents": 13030000000,
+    "source_locator": "HTML table 1 row 11 column 2"
+  },
+  {
+    "check": "Published total source cell",
+    "row_id": "vic-1d1a98bcfe1b1cf5:t1:r12:c2",
+    "status": "pass",
+    "source_value": "$114.6",
+    "report_total_cents": 11460000000,
+    "source_locator": "HTML table 1 row 12 column 2"
+  }
+]
