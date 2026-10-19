@@ -10,19 +10,25 @@ import sys
 import time
 import urllib.request
 
+RECEIPT_GRACE_SECONDS = 5 * 60
+
 
 def evaluate(corpus, status, now, max_age=20):
     problems, notes, warnings = [], [], []
 
-    def age(stamp):
+    def timestamp(stamp):
+        if not isinstance(stamp, str):
+            raise ValueError('timestamp must be a string')
         then = datetime.fromisoformat(stamp.replace('Z', '+00:00'))
         if then.tzinfo is None:
             then = then.replace(tzinfo=timezone.utc)
-        return (now - then).total_seconds() / 3600
+        return then
 
+    checked_at = finished_at = None
     try:
         checked = corpus['refresh']['checked_at']
-        hours = age(checked)
+        checked_at = timestamp(checked)
+        hours = (now - checked_at).total_seconds() / 3600
         notes.append(f"corpus.json version {corpus.get('version')}, checked {checked} ({hours:.1f} h ago)")
         if hours < -1 or hours > max_age:
             problems.append(f'live corpus timestamp age {hours:.1f} h is outside the permitted window (limit {max_age:g} h)')
@@ -30,11 +36,18 @@ def evaluate(corpus, status, now, max_age=20):
         problems.append('live corpus has no valid refresh.checked_at')
 
     try:
-        finished_age = age(status['finished'])
+        finished_at = timestamp(status['finished'])
+        finished_age = (now - finished_at).total_seconds() / 3600
         if finished_age < -1 or finished_age > max_age + 10:
             problems.append(f'nightly status timestamp age {finished_age:.1f} h is outside the permitted window')
     except (KeyError, TypeError, ValueError):
         problems.append('nightly status has no valid finished timestamp')
+    # A successful data push can be followed by a failed status push. Yesterday's
+    # OK receipt must not clear today's manifest, even inside its 30-hour window.
+    if checked_at is not None and finished_at is not None:
+        receipt_lag = (checked_at - finished_at).total_seconds()
+        if receipt_lag > RECEIPT_GRACE_SECONDS:
+            problems.append(f'nightly status receipt predates the live corpus refresh by {receipt_lag / 60:.1f} min (limit 5 min)')
     notes.append(f"nightly status: {status.get('status')} for {status.get('date')}; commit {status.get('commit')}")
     if status.get('status') != 'ok':
         problems.extend(f"last nightly run: {item}" for item in status.get('failures') or ['no failure detail'])
