@@ -1,4 +1,4 @@
-import {dataTableHTML,mountDataTable} from './datatable.js?v=ab73c21d90';
+import {dataTableHTML,mountDataTable,pendingPage} from './datatable.js?v=2c49a89556';
 export function suppliersTableConfig({donor,rows}={}) {
   return {id:'suppliers-table',caption:'Suppliers',pageType:'suppliers',    columns:[{key:'name',label:'Name',type:'text',primary:true},{key:'total',label:'Value',type:'money',bar:true,facet:'range'},
       {key:'count',label:'Contracts',type:'count'},{key:'agency_count',label:'Agencies',type:'count'},
@@ -20,6 +20,6 @@ export async function mountSuppliersTable(el, {params, signal} = {}) {
   history.replaceState(history.state, '', location.pathname + (state.size ? '?' + state : '') + location.hash);
   if (signal?.aborted) return {destroy() {}};
   const config = suppliersTableConfig({donor: state.get('donor') ?? undefined});
-  el.innerHTML = dataTableHTML(config, seed?.page || {rows: [], total: 0, page: 1, pageSize: 50});
+  el.innerHTML = dataTableHTML(config, seed?.page || pendingPage(config));
   return mountDataTable(el.querySelector('[data-datatable]'), config);
 }

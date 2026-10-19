@@ -143,7 +143,7 @@ export const MODULE_STAMPS = [
   ['money-journeys-data.js','donor-views.js'],
   // ⋯: app.js draws and runs it; electorates.js draws it.
   ['app.js', 'page-actions-menu.js'], ['electorates.js', 'page-actions-menu.js'], ['app.js', 'party-page.js'],
-  ['datatable.js', 'server-csv.js'],
+  ['datatable.js', 'server-csv.js'], ['datatable.js', 'wombat.js'],
 
   ['datatable-workbench.js', 'datatable.js'],
   ['register-tables.js', 'donor-disclosure.js'], ['register-tables.js', 'datatable.js'], ['register-tables-entry.js', 'register-tables.js'], ['app.js', 'register-tables.js'],

@@ -1,4 +1,4 @@
-import { applyQuery, dataTableHTML, mountDataTable, parseQuery, serializeQuery } from './datatable.js?v=ab73c21d90';
+import { applyQuery, dataTableHTML, mountDataTable, mountTableLoaders, parseQuery, pendingPage, serializeQuery } from './datatable.js?v=2c49a89556';
 /** The contracts page's note under its title (index.html carries it word for
  *  word; the Worker prints it before scripts). From suppliers.json meta: AusTender
  *  notices, one per contract at its latest amendment ("Amendments are not added
@@ -86,6 +86,11 @@ export async function mountContractsTable(el, {supplierId, count, seed, signal, 
   history.replaceState(history.state, '', location.pathname + (state.size ? '?' + state : '') + location.hash);
   if (signal?.aborted) return {destroy() {}};
   if (!seed) {
+    // The table's frame and loader hold the place while the records are fetched (a supplier's run may take several pages).
+    const waiting = contractsTableConfig({supplierId});
+    el.innerHTML = dataTableHTML(waiting, pendingPage(waiting));
+    el.querySelector('[data-datatable]')?.setAttribute('aria-busy', 'true');
+    mountTableLoaders(el);
     const query = new URLSearchParams(supplierId && count <= 2000 ? '' : serializeQuery(parseQuery(state, 't')));
     if (supplierId) query.set('supplier', supplierId);
     query.set('pageSize', '200');
