@@ -52,7 +52,7 @@ new_sandbox() {
   local fixture_exporters=()
   # the files the nightly reads, from the real tree
   # Bills imports roster_identity, which in turn imports parli.ingest.speaker_names.
-  for f in scripts/vm/nightly.sh scripts/vm/run-nightly.sh scripts/vm/poweroff-if-idle.sh scripts/vm/validate_data.py scripts/vm/data_groups.sh scripts/export_bills.py scripts/roster_identity.py \
+  for f in scripts/vm/nightly.sh scripts/vm/run-nightly.sh scripts/vm/poweroff-if-idle.sh scripts/vm/validate_data.py scripts/vm/data_groups.sh scripts/vm/periodic_state.py scripts/export_bills.py scripts/roster_identity.py \
            scripts/vm/bills_refresh.sh scripts/vm/bills_guard.py scripts/vm/keep_if_unchanged.py \
            scripts/vm/divisions_refresh.sh scripts/vm/divisions_guard.py scripts/vm/mobile_votes_contract.py \
            scripts/hubs/sitting-2026.json \
@@ -883,6 +883,31 @@ check "Thursday 2026-10-15: the FRL instrument group alone (its own night, off t
 new_sandbox s24e
 OPAX_FORCE_GROUPS="weekly" OPAX_NIGHTLY_SKIP_PERIODIC=1 FAKE_WEEKLY_MODE=ok nightly
 check "OPAX_NIGHTLY_SKIP_PERIODIC=1 switches them off" test ! -e "$HOME/weekly.args"
+check "a skipped forced group stays pending outside git" python3 -c "import json; s=json.load(open('$HOME/.cache/autoresearch/pipeline/periodic-refresh-v1.json')); assert s['groups']['weekly']['due']=='2026-10-10'"
+OPAX_TODAY=2026-10-12 FAKE_WEEKLY_MODE=ok nightly
+check "the next acquisition retries a skipped periodic group" bash -c "[ '$NRC' -eq 0 ] && [ \"\$(cat '$HOME/weekly.args')\" = weekly ]"
+check "only confirmed publication clears periodic debt and status records the commit" bash -c "git --git-dir='$ORIGIN' show nightly-status:status.json | python3 -c 'import json,sys; r=json.load(sys.stdin)[\"periodic_state\"][\"groups\"][\"weekly\"]; assert \"due\" not in r and r[\"last_success\"]==\"2026-10-12\" and len(r[\"commit\"])==40'"
+new_sandbox periodic-missed
+OPAX_TODAY=2026-10-03 FAKE_WEEKLY_MODE=none nightly
+OPAX_TODAY=2026-10-05 FAKE_WEEKLY_MODE=none nightly
+check "a missed first Sunday retries weekly and monthly on Monday" bash -c "[ '$NRC' -eq 0 ] && [ \"\$(cat '$HOME/weekly.args')\" = 'weekly monthly' ]"
+new_sandbox periodic-failed
+OPAX_TODAY=2026-10-18 FAKE_WEEKLY_MODE=failsteps nightly
+check "a periodic failed step remains pending despite a data push" python3 -c "import json; r=json.load(open('$HOME/.cache/autoresearch/pipeline/periodic-refresh-v1.json'))['groups']['weekly']; assert 'due' in r and 'last_success' not in r"
+OPAX_TODAY=2026-10-19 FAKE_WEEKLY_MODE=ok nightly
+check "a failed Sunday is retried on Monday" bash -c "[ '$NRC' -eq 0 ] && [ \"\$(cat '$HOME/weekly.args')\" = weekly ]"
+new_sandbox periodic-no-push
+OPAX_TODAY=2026-10-22 OPAX_NIGHTLY_NO_PUSH=1 FAKE_WEEKLY_MODE=none nightly
+check "NO_PUSH does not consume periodic debt" python3 -c "import json; assert 'due' in json.load(open('$HOME/.cache/autoresearch/pipeline/periodic-refresh-v1.json'))['groups']['frl']"
+OPAX_TODAY=2026-10-23 FAKE_WEEKLY_MODE=none nightly
+check "a later confirmed no-change or push completes FRL catch-up" bash -c "[ '$NRC' -eq 0 ] && [ \"\$(cat '$HOME/weekly.args')\" = frl ] && python3 -c 'import json; r=json.load(open(\"$HOME/.cache/autoresearch/pipeline/periodic-refresh-v1.json\"))[\"groups\"][\"frl\"]; assert \"due\" not in r'"
+new_sandbox periodic-push-failed
+printf '#!/bin/sh\nexit 1\n' > "$ORIGIN/hooks/pre-receive"; chmod +x "$ORIGIN/hooks/pre-receive"
+OPAX_PUSH_SLEEP_UNIT=0 OPAX_TODAY=2026-10-18 FAKE_WEEKLY_MODE=none nightly
+check "a refused push retains periodic debt" python3 -c "import json; assert 'due' in json.load(open('$HOME/.cache/autoresearch/pipeline/periodic-refresh-v1.json'))['groups']['weekly']"
+rm -f "$ORIGIN/hooks/pre-receive"
+OPAX_TODAY=2026-10-19 FAKE_WEEKLY_MODE=none nightly
+check "retry after a refused push confirms and clears periodic debt" bash -c "[ '$NRC' -eq 0 ] && python3 -c 'import json; assert \"due\" not in json.load(open(\"$HOME/.cache/autoresearch/pipeline/periodic-refresh-v1.json\"))[\"groups\"][\"weekly\"]'"
 
 echo "== 27. a night whose KB push was cut short is ok, with a warning"
 new_sandbox s27

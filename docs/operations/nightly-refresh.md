@@ -27,6 +27,10 @@ The nightly only brings new records in and publishes them.
         votes.json. `sa` always fails (source WAF) and is allowed to; so is `act_members` (the Assembly's
         members page may be redesigned without failing the night). ACT proofs are swapped for Finals by the same
         step, and `act_kb_patch` PATCHes the changed text into the KB after the push.
+        Supplier/agency profiles now follow successful daily AusTender acquisition plus the local
+        supplier registry rebuild. Federal grant profiles follow successful GrantConnect acquisition,
+        guarded apply and recipient registry rebuild. A failed, paused or excluded prerequisite keeps
+        the previous profiles. Monthly catch-up exports remain available for accepted source data.
   2b  scripts/weekly_refresh.sh weekly [monthly] | frl   Sundays (Sydney); the first Sunday adds monthly; Thursdays frl
         frl: the FRL in-force instrument crawl and its export alone (~2.6 h of spaced requests; off the Sunday since
         18 Oct 2026, when it left no time to test and publish inside the 6 h unit limit).
@@ -81,6 +85,13 @@ changes nothing.
 `HEAD`) and, if it needs sanity checks, a `check_<group>` in `validate_data.py`.
 
 There is no cache-warm step (deliberately).
+
+The manifest reports named `refresh.source_access` pauses and retained
+`refresh.latest_source_dates` independently of resource-count changes. Federal interests
+warnings replace their previous warning rather than accumulating duplicate lines.
+The refresh watchdog separates a current delivery chain from incomplete source coverage;
+source pauses, retained-data warnings and pending periodic retries appear in its annotations
+and job summary. It fails for broken delivery or an unreadable periodic state.
 
 The `divisions` and `seovotes` groups have independent validation, rollback and staging.
 Both exporters use a read-only database transaction. `divisions/index.json` has schema 2
@@ -317,6 +328,23 @@ gh workflow run deploy.yml --ref main                     # from anywhere with g
 
 It is safe to run twice: a lock stops overlap, each fetch is incremental, the KB push resumes from
 its checkpoint, and if nothing differs from `origin/main` (and `checked_at` is under 12 hours old) nothing is committed.
+
+Periodic catch-up is stored outside git in `pipeline/periodic-refresh-v1.json`, alongside
+`nightly-last.json`. On its first run it preserves the existing Sunday/first-Sunday/Thursday
+calendar. Thereafter a missed scheduled date, interrupted or failed attempt, skipped acquisition,
+or `NO_PUSH` rehearsal remains pending and is retried on the next ordinary acquisition night.
+`OPAX_FORCE_GROUPS` overrides that night's selection while preserving other pending groups.
+Ordinary catch-up keeps the slow FRL crawl separate from weekly/monthly work, within
+the existing six-hour service limit. `last_attempt` is recorded just before a runner
+starts; the least recently attempted family gets priority when both are pending, and
+a newly due Thursday FRL run keeps its normal slot. A persistent register hold cannot
+starve the other family; skipped acquisition does not count as an attempt.
+The state records the Sydney date and confirmed commit only after all selected periodic exports
+survive the nightly's validation and final publication, including a successful push (or verified
+no changes against origin). Any failed final step or periodic stale/roster hold keeps all selected
+groups pending conservatively. Approved source pauses retain their existing preservation policy.
+The public nightly status includes this state under `periodic_state`; a fresh manifest alone does
+not clear it. A damaged state file fails closed for inspection and is never silently reset.
 
 Individual pieces (all run from `~/opax`, all read-only unless noted):
 

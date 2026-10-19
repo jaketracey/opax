@@ -25,6 +25,47 @@ def vote_order(row):
     return row["date"], re.sub(r"\d+", lambda m: m[0].zfill(20), row["division_id"])
 
 
+def vic_hansard_asset(url):
+    """Recognize the official PDF path after Victoria's rotating asset prefix."""
+    match = re.fullmatch(
+        r"https://www\.parliament\.vic\.gov\.au/[0-9a-f]{6}"
+        r"(/globalassets/hansard-daily-pdfs/(hansard-\d+-\d+)/\2\.pdf)", url or "")
+    return match[1] if match else None
+
+
+def retain_source_urls(data, previous):
+    """Keep published citations for otherwise identical Victorian vote rows.
+
+    The Hansard site's asset prefix can move while the division facts stay the
+    same. Do not assert that the new PDF is equivalent or replace the citation:
+    retain the previously published URL and explicitly report the hold instead.
+    Other URL changes and every non-URL difference still reach the loss guard.
+    """
+    retained = set()
+    for key, person in previous.get("people", {}).items():
+        current = data["people"].get(key)
+        if not current or any(current.get(field) != person.get(field) for field in ("name", "jurisdiction")):
+            continue
+        rows = {row["division_id"]: row for row in current["recent"]}
+        for old in person["recent"]:
+            row = rows.get(old["division_id"])
+            if not row or row.get("jur") != "vic" or row == old:
+                continue
+            old_asset = vic_hansard_asset(old.get("source_url"))
+            if not old_asset or old_asset != vic_hansard_asset(row.get("source_url")):
+                continue
+            if {k: v for k, v in row.items() if k != "source_url"} != \
+                    {k: v for k, v in old.items() if k != "source_url"}:
+                continue
+            row["source_url"] = old["source_url"]
+            retained.add((key, row["division_id"]))
+    data["_meta"].update({
+        "retained_source_url_count": len(retained),
+        "retained_source_division_count": len({did for _, did in retained}),
+        "retained_source_url_reasons": {"vic-hansard-asset-path-changed": len(retained)} if retained else {},
+    })
+
+
 def projection(db, identities):
     division_columns = {r[1] for r in db.execute("PRAGMA table_info(ext_divisions)")}
     vote_columns = {r[1] for r in db.execute("PRAGMA table_info(ext_votes)")}
@@ -73,8 +114,9 @@ def projection(db, identities):
 
 def write_projection(data, output):
     # Refuse a truncated DB or lost identities rather than wipe a previous export.
-    if output.exists():
-        previous = json.loads(output.read_text(encoding="utf-8"))
+    previous = json.loads(output.read_text(encoding="utf-8")) if output.exists() else None
+    retain_source_urls(data, previous or {})
+    if previous is not None:
         regressions = []
         for key, person in previous.get("people", {}).items():
             current = data["people"].get(key)
@@ -118,6 +160,10 @@ def main():
         data = projection(db, identities)
     write_projection(data, args.out)
     print(f"SEO recent votes: {data['_meta']['person_count']} people; coverage={data['_meta']['coverage']}")
+    if data["_meta"].get("retained_source_url_count"):
+        print(f"SEO recent votes retained {data['_meta']['retained_source_url_count']} published source URLs "
+              f"across {data['_meta']['retained_source_division_count']} divisions: "
+              "Victorian Hansard asset paths changed; unchanged recorded votes kept their prior citations")
 
 
 if __name__ == "__main__":
