@@ -89,6 +89,9 @@ test('enabled SSR renders all 88 districts and 8 regions, 128 existing people, r
   for(const id of ['unknown','lowan/extra','../lowan','Lowan'])assert.equal((await vicElectionPage(id,read,{VIC_ELECTION_HUB_ENABLED:'true'})).status,404);
   const unknown=await fetchPage('/vic-election-2026/unknown','true');assert.equal(unknown.status,404);assert.equal(unknown.headers.get('x-robots-tag'),'noindex');
   const missing=await vicElectionPage('unknown',read,{VIC_ELECTION_HUB_ENABLED:'true'});assert.ok(missing.html.includes(VIC_ELECTION_AUTHORISATION_LINE));
+  // Published, every hub page closes on the shared block; unpublished, the 404 names no election.
+  assert.match(missing.html,/<div class="authorisation"><p class="authorisation-line">/);
+  assert.doesNotMatch((await vicElectionPage('unknown',read,{VIC_ELECTION_HUB_ENABLED:'false'})).html,/class="authorisation"|Authorised by/);
 });
 test('enabled crawl discovery has a separate sitemap type; trailing-slash aliases redirect once',async()=>{
   assert.match(await (await fetchPage('/sitemap.xml','true')).text(),/\/sitemaps\/vic-election-1.xml/);
@@ -106,7 +109,7 @@ test('every election page and download carries Jake’s exact 13 October authori
   for(const s of [null,...data.seats]) {
     // Optional federal Worker values cannot remove the election's approved lines.
     const page=renderVicElection(data,s,{AUTHORISATION_LINE:'',CORRECTION_CONTACT:null});
-    const footer=page.html.match(/<div class="hub-footer">[\s\S]*?<\/div>/)?.[0];
+    const footer=page.html.match(/<div class="authorisation">[\s\S]*?<\/div>/)?.[0];
     assert.ok(footer);
     assert.ok(footer.includes(EXACT_AUTHORISATION));
     assert.ok(footer.includes(`href="mailto:${VIC_ELECTION_CORRECTIONS_EMAIL}"`));
@@ -129,12 +132,12 @@ test('federal hub footer values remain optional, escaped and safe',async()=>{
   const cfg={AUTHORISATION_LINE:'Authorised by <Approved Person>, Melbourne',CORRECTION_CONTACT:'/corrections'};
   const weeks=await json('hubs/index.json');const estimates=await json('hubs/estimates-2026-10.json');
   const pages=[renderSittingIndex(weeks,'2026-10-10',cfg),renderEstimates(estimates,cfg),await hubPage('sitting','bad',read,[],new Map(),undefined,cfg),await hubPage('sitting',weeks.weeks[0].start,read,[],new Map(),undefined,cfg)];
-  for(const p of pages){assert.match(p.html,/<div class="hub-footer">[\s\S]*Authorised by &lt;Approved Person&gt;, Melbourne[\s\S]*href="\/corrections">Report a correction[\s\S]*<\/div>/);assert.doesNotMatch(p.html,/48 hours/);}
-  for(const cfg of [{},{AUTHORISATION_LINE:null,CORRECTION_CONTACT:null}])assert.doesNotMatch(renderSittingIndex(weeks,'2026-10-10',cfg).html,/hub-authorisation|Report a correction/);
+  for(const p of pages){assert.match(p.html,/<div class="authorisation">[\s\S]*Authorised by &lt;Approved Person&gt;, Melbourne[\s\S]*href="\/corrections">Report a correction[\s\S]*<\/div>/);assert.doesNotMatch(p.html,/48 hours/);}
+  for(const cfg of [{},{AUTHORISATION_LINE:null,CORRECTION_CONTACT:null}])assert.doesNotMatch(renderSittingIndex(weeks,'2026-10-10',cfg).html,/authorisation-line|Report a correction/);
   assert.doesNotMatch(renderSittingIndex(weeks,'2026-10-10',{CORRECTION_CONTACT:'javascript:alert(1)'}).html,/href="javascript:/);
   assert.doesNotMatch(renderSittingIndex(weeks,'2026-10-10',{CORRECTION_CONTACT:'mailto:corrections@example.com?subject=bad'}).html,/href="mailto:/);
   const auth=renderSittingIndex(weeks,'2026-10-10',{AUTHORISATION_LINE:'Approved line'}).html;assert.match(auth,/Approved line/);assert.doesNotMatch(auth,/Report a correction/);
-  const correction=renderSittingIndex(weeks,'2026-10-10',{CORRECTION_CONTACT:'/corrections'}).html;assert.match(correction,/Report a correction/);assert.doesNotMatch(correction,/hub-authorisation/);
+  const correction=renderSittingIndex(weeks,'2026-10-10',{CORRECTION_CONTACT:'/corrections'}).html;assert.match(correction,/Report a correction/);assert.doesNotMatch(correction,/authorisation-line/);
 });
 test('derived individual donor set is absent from every election page and the projection',async()=>{
   const individuals=new Set();

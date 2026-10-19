@@ -70,19 +70,6 @@ div.hub-coverage { margin-top: var(--space-group); }
 .hub-largest ul { list-style: none; margin: 0; padding: 0; }
 .hub-largest li { padding: var(--space-tight) 0; border-top: var(--border-hairline) solid var(--divider-subtle); }
 .hub-largest p { margin: var(--space-line) 0; }
-.hub-corrections { border-top: var(--border-hairline) solid var(--divider-default); margin-top: var(--space-section); padding-top: var(--space-block); color: var(--ink-soft); font: var(--type-fine); }
-.hub-authorisation { border-top: var(--border-hairline) solid var(--divider-default); margin-top: var(--space-section); padding-top: var(--space-block); font: var(--type-fine); }
-/* Contact follows the hub's fine-text role and shared touch-target token. */
-.hub-footer .hub-corrections a { display: inline-flex; align-items: center; min-height: var(--size-target); }
-/* The footer's rule runs the width of the section rules above it, and the
-   corrections contact closes the authorisation block under that one rule. */
-.hub-page .hub-authorisation { max-width: none; }
-.hub-authorisation + .hub-corrections { margin-top: var(--space-block); padding-top: 0; border-top: 0; }
-.hub-corrections > span { display: block; font: var(--type-fine); margin-top: var(--space-line); }
-@media print {
-  .hub-footer { break-inside: avoid; }
-  .hub-footer .hub-corrections a { min-height: 0; }
-}
 .hub-section { scroll-margin-top: calc(var(--header-h) + var(--space-block)); }
 /* Victorian election: the finder first, then rows a reader can scan for a seat,
    its member and the last winning margin. The head and sections are the shared

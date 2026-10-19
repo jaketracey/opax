@@ -4750,7 +4750,7 @@ async function electorateMeta(name: string, url: URL, env: Env): Promise<PageMet
   return {
     title: `${e.name} · Electorate · OPAX`, description: clip(facts), canonical, ogType: 'website', status: 200,
     jsonLd: { '@context': 'https://schema.org', '@type': 'Place', name: e.name, identifier: e.electorate_id, url: canonical, description: facts },
-    prerender: prerenderBlock(e.name, facts) + (e.jurisdiction === 'vic' ? vicElectionFooterHTML() : ''),
+    prerender: prerenderBlock(e.name, facts, indexLinks() + (e.jurisdiction === 'vic' ? vicElectionFooterHTML() : '')),
     card: { kicker: 'Electorate', title: e.name, lines: [representation, `${e.election_count} indexed election contests · ${e.state_code.toUpperCase()}`], ...(e.jurisdiction === 'vic' ? {authorisation: VIC_ELECTION_AUTHORISATION_LINE} : {}) },
   }
 }

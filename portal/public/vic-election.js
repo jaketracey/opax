@@ -1,3 +1,4 @@
+import { authorisationHTML } from './authorisation.js?v=14e85d758d';
 // One publication gate, shared by SSR, canonical resolution and discovery.
 // Only the exact deployment value "true" enables publication.
 export const VIC_ELECTION_HUB_ENABLED = false;
@@ -12,8 +13,9 @@ export const VIC_ELECTION_CORRECTIONS_EMAIL = 'corrections@opax.com.au';
 export const VIC_ELECTION_CORRECTIONS_RESPONSE = 'We aim to respond within 2 business days.';
 // Explicit election references in any daily kind also need the approved line.
 export const vicElectionMaterial = text => /vic-election-2026|\b(?:victorian?|vic)(?:['’]s)?[ -]+(?:(?:state|2026)[ -]+)?elections?\b|\bstate[ -]+elections?[ -]+(?:in|for)[ -]+(?:victoria|vic)\b/i.test(text);
-// Approved constants only: shared by server summaries and client electorate profiles.
-export const vicElectionFooterHTML = () => `<footer class="el-section"><p>${VIC_ELECTION_AUTHORISATION_LINE}</p><p><a href="mailto:${VIC_ELECTION_CORRECTIONS_EMAIL}">Report a correction: ${VIC_ELECTION_CORRECTIONS_EMAIL}</a><br>${VIC_ELECTION_CORRECTIONS_RESPONSE}</p></footer>`;
+// Approved constants only: shared by server summaries and client electorate
+// profiles, drawn by the one authorisation partial the hubs use.
+export const vicElectionFooterHTML = () => authorisationHTML({line: VIC_ELECTION_AUTHORISATION_LINE, email: VIC_ELECTION_CORRECTIONS_EMAIL, response: VIC_ELECTION_CORRECTIONS_RESPONSE});
 export const vicElectionEnabled = value => value === 'true' || (value == null && VIC_ELECTION_HUB_ENABLED);
 export function vicElectionAssetPath(path) {
   try { return decodeURIComponent(path).replace(/\/+/g,'/').toLowerCase().startsWith('/hubs/vic-election'); }

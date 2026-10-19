@@ -387,9 +387,20 @@ test('ordinary Victorian electorate summaries carry the exact authorisation serv
   const manifest=await read('/electorates/manifest.json');
   const index=await read(manifest.index_url);
   const line='Authorised by Jake Tracey, Noice Pty Ltd, Level 6, 608/343 Little Collins Street, Melbourne VIC 3000.';
+  const block=html=>prerenderBody(html).match(/<section id="prerender"[\s\S]*?<\/section>/)[0].match(/<div class="authorisation">[\s\S]*?<\/div>/)?.[0];
   for(const entry of index.electorates.filter(e=>e.jurisdiction==='vic')) {
     const html=await get(entry.url);
     assert.ok(html.includes(line),entry.url);
     assert.match(html,/href="mailto:corrections@opax.com.au"/);
+    // The shared fine-print block inside the reading column; never a navy <footer> in the page.
+    assert.ok(block(html)?.includes(`<p class="authorisation-line">${line}</p>`),entry.url);
+    assert.doesNotMatch(prerenderBody(html),/<footer\b/,entry.url);
+  }
+  // The electorate pages carry it whether or not the election hub is published.
+  const seat=index.electorates.find(e=>e.jurisdiction==='vic');
+  for(const flag of ['true','false']) {
+    const r=await worker.fetch(new Request(origin+seat.url),{...env,VIC_ELECTION_HUB_ENABLED:flag},{waitUntil(){}});
+    assert.equal(r.status,200);const html=await r.text();
+    assert.ok(block(html)?.includes(line),flag);assert.match(block(html),/href="mailto:corrections@opax.com.au"/);
   }
 });

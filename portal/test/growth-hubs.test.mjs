@@ -93,7 +93,7 @@ test('every hub and hub 404 omits the pending correction contact and response co
   const index=await json('hubs/index.json');const estimates=await json('hubs/estimates-2026-10.json');
   const pages=[renderSittingIndex(index,'2026-10-10'),renderEstimates(estimates),...index.weeks.map(w=>renderSittingWeek(index,w,[],new Map(),'2026-10-10')),
     await hubPage('sitting','bad-week',async()=>index,[],new Map()),await hubPage('estimates','unknown',async()=>estimates,[],new Map())];
-  for (const page of pages) assert.doesNotMatch(page.html,/Report a correction|48 hours|hub-corrections/);
+  for (const page of pages) assert.doesNotMatch(page.html,/Report a correction|48 hours|authorisation-corrections/);
 });
 test('calendar is the bills guard source of truth for the four remaining periods',()=>{
   const result = execFileSync('python3',['-c','import sys,json; sys.path.insert(0,"../scripts/vm"); import bills_guard; print(json.dumps(bills_guard.SITTING_RANGES))'],{encoding:'utf8'});
