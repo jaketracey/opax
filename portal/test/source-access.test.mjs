@@ -49,9 +49,12 @@ test('RSS, KB enrichment and watchdog read the same identity',()=>{
   const source=readFileSync(new URL(name,import.meta.url),'utf8');
   assert.match(source,/sourceIdentity\.user_agent/);
  }
- const watchdog=readFileSync(new URL('../../.github/workflows/refresh-watchdog.yml',import.meta.url),'utf8');
- assert.match(watchdog,/user-agent\.json/);
- assert.match(watchdog, /"User-Agent": user_agent/);
+ // The watchdog workflow runs scripts/refresh_watchdog.py, which reads the identity file and sends it.
+ const workflow=readFileSync(new URL('../../.github/workflows/refresh-watchdog.yml',import.meta.url),'utf8');
+ assert.match(workflow,/python3 scripts\/refresh_watchdog\.py/);
+ const watchdog=readFileSync(new URL('../../scripts/refresh_watchdog.py',import.meta.url),'utf8');
+ assert.match(watchdog,/parli\/ingest\/user-agent\.json/);
+ assert.match(watchdog,/'User-Agent': agent/);
 });
 
 test('Node pauses on challenge headers and JSON content-type mismatch',async()=>{
