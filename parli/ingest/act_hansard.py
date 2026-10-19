@@ -1239,9 +1239,12 @@ def main(argv: list[str] | None = None) -> int:
         load_dotenv()
         cfg = AragConfig.from_env()
         db = open_db(args.db)
-        patch_kb(db, KbClient(cfg) if cfg.kb_configured and not args.dry_run else None,
-                 limit=args.patch_limit, dry_run=args.dry_run)
-        return 0
+        try:
+            result = patch_kb(db, KbClient(cfg) if cfg.kb_configured and not args.dry_run else None,
+                              limit=args.patch_limit, dry_run=args.dry_run)
+        finally:
+            db.close()
+        return 1 if result.get("failed") else 0
     if args.members:
         db = open_db(args.db)
         load_members(db, fetcher)

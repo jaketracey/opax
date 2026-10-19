@@ -84,6 +84,20 @@ jobs:
         if: steps.duplicate.outputs.skip != 'true'
         run: npm ci
 
+      - name: Set up uv
+        if: steps.duplicate.outputs.skip != 'true'
+        uses: astral-sh/setup-uv@bec219d24cd3e171d82865faccec33120bb574f4 # v10.1.0
+        with:
+          enable-cache: true
+
+      - name: Install locked Python dependencies
+        if: steps.duplicate.outputs.skip != 'true'
+        working-directory: .
+        run: |
+          uv sync --frozen --python "$(cat .python-version)"
+          # Node tests spawn bare python3; later steps must use this project venv.
+          echo "$GITHUB_WORKSPACE/.venv/bin" >> "$GITHUB_PATH"
+
       # Detached, checksummed outputs are restored at their original build
       # positions, never directly over public/. No fallback to stale keys.
       - name: Restore passage name build cache
