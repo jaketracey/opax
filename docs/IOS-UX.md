@@ -90,7 +90,7 @@ A cross-check against the production sitemap (25,125 URLs on 3 October 2026) fou
 | Surface | Web route | Purpose | Data it shows (source, cost class) | Key interactions | Mobile verdict |
 | --- | --- | --- | --- | --- | --- |
 | Reports and report | `/reports`, `/reports/<slug>`, `/reports/<slug>/s/<n>` | Standing investigations: Where community funding goes (`grants-allocation`); Climate & Energy (`climate`); Gambling (`gambling`); Housing (`housing`); Immigration (`immigration`); First Nations (`indigenous`); Media Ownership (`media`) | `/reports/index.json`, `/reports/<slug>.json` (static, 1.29 MB in total) | Read, jump to a section | **Later (P1)** reader. The grants-allocation map stays web only. |
-| Explore and its modules | `/explore`, `?game=` | Build your ballot, Time machine, The tide, The record quiz, Who owns which debate, Words per dollar, Then vs now. Ledger and Who gets the grants forward to `/money/receipts` and `/money/grants` | Module JSON; ARAG `/api/tide`, `/api/matrix` | Interactive dialogs | **Web only.** The quiz is a later candidate. |
+| Explore and its modules | `/explore`, `?game=` | Time machine, The tide, The record quiz, Who owns which debate, Words per dollar, Then vs now. Ledger and Who gets the grants forward to `/money/receipts` and `/money/grants`; Build your ballot came off on 19 Oct 2026 and `?game=ballot` 301s to `/explore` | Module JSON; ARAG `/api/tide`, `/api/matrix` | Interactive dialogs | **Web only.** The quiz is a later candidate. |
 
 ### About, community and edges
 

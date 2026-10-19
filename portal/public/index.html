@@ -64,7 +64,7 @@
 <script type="module" src="/register-tables-entry.js?v=0b776a112d"></script>
 <link rel="stylesheet" href="/vote-tables.css?v=d727aad769">
 <script type="module" src="/vote-tables.js?v=db13ec27f3"></script>
-<link rel="stylesheet" href="/style.css?v=c87138128b">
+<link rel="stylesheet" href="/style.css?v=0a5d73416c">
 <link rel="stylesheet" href="/ui-controls.css?v=ce29178242">
 <link rel="stylesheet" href="/ui-source.css?v=78ddb8fc1b">
 <link rel="stylesheet" href="/page-actions.css?v=a416a2254f">
@@ -745,12 +745,6 @@
         <p class="ui-lede">Tools and games built on the public record: speeches, votes, money and grants.</p>
       </div>
       <div class="ui-card-grid game-grid">
-        <button type="button" class="ui-card game-card" id="explore-ballot-btn">
-          <span class="game-icon" aria-hidden="true"><svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><rect x="10" y="5" width="28" height="38" rx="2"/><path d="M17 14h3v4h-3zM17 25h3v4h-3zM26 16h6M26 27h6M17 36h15"/></svg></span>
-          <span class="ui-card-title game-title">Build your ballot</span>
-          <span class="ui-card-text game-blurb">Research the candidates and arrange your own preferences with a practice ballot from the 2025 federal election.</span>
-          <span class="game-cta">Build a practice ballot</span>
-        </button>
         <button type="button" class="ui-card game-card" id="explore-tm-btn">
           <span class="game-icon" aria-hidden="true">
             <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.6"
@@ -874,10 +868,6 @@
         </button>
       </div>
 
-      <dialog class="game-dialog" id="dialog-ballot" aria-label="Build your ballot">
-        <div class="game-dialog-head"><button type="button" class="game-close" data-close="dialog-ballot" aria-label="Close">✕</button></div>
-        <div id="explore-ballot" class="game-dialog-body"></div>
-      </dialog>
       <dialog class="game-dialog" id="dialog-tm" aria-label="Time machine">
         <div class="game-dialog-head">
           <button type="button" class="game-close" data-close="dialog-tm" aria-label="Close">✕</button>
@@ -2132,11 +2122,11 @@
 <!-- defer: never block the parser (Lighthouse counted this as render-blocking).
      Deferred scripts still run before DOMContentLoaded, so nothing changes for
      app.js's boot. ?v= is content-hash stamped by scripts/stamp_assets.mjs. -->
-<script src="/spa-shell.js?v=b278bb5d18" defer></script>
-<script src="/navigation.js?v=e66d2067b0" defer></script>
+<script src="/spa-shell.js?v=f58f440018" defer></script>
+<script src="/navigation.js?v=b6453606fb" defer></script>
 <script src="/quick-search.js?v=27eac3b2f7" defer></script>
 <script src="/ui-source.js?v=d594622c13" defer></script>
-<script src="/app.js?v=d0af3d9175" defer></script>
+<script src="/app.js?v=049e169737" defer></script>
 <!-- PostHog runs after the app (defer order) so the first route is not queued behind it; it replays the events measured before it (analytics/index.js). -->
 <script src="/analytics.js?v=7a83ce20cf" defer></script>
 </body>

@@ -103,7 +103,7 @@
   ];
   // The tools on Interactive tools, by the key /explore?game= opens them with:
   // a tool's page is a record inside that section (app.js GAMES keeps the same names).
-  const tools = { ballot: 'Build your ballot', tm: 'Time machine', tide: 'The tide', quiz: 'The record quiz', ledger: 'The ledger',
+  const tools = { tm: 'Time machine', tide: 'The tide', quiz: 'The record quiz', ledger: 'The ledger',
     grants: 'Who gets the grants', matrix: 'Who owns which debate', wd: 'Words per dollar', tvn: 'Then vs now' };
   // Pages reached in context (an answer, a result, a record), not from the menus.
   const ASK = page('/ask', 'Ask');
