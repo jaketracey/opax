@@ -381,6 +381,10 @@ if [ "${OPAX_NIGHTLY_SKIP_REFRESH:-0}" != 1 ] && [ "${OPAX_NIGHTLY_SKIP_PERIODIC
     elif [ "$prc" -ne 0 ]; then
       failed_steps=$(grep -E 'Incomplete weekly refresh: failed steps' "$WEEKLY_LOG" | tail -1 | sed 's/.*failed steps //')
       fail "weekly_refresh.sh ($groups) reported failed steps: ${failed_steps:-unknown} (rc=$prc); the rest was still published"
+    elif [ -n "${OPAX_ONLY:-}" ]; then
+      # run_step deliberately returns success for excluded debugging steps.
+      # Selected outputs may publish, but they do not complete a whole group.
+      warn "periodic groups $groups were filtered by OPAX_ONLY; full-group catch-up retained"
     else
       PERIODIC_ACCEPTED=1
     fi

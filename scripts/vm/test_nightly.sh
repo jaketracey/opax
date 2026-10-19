@@ -909,6 +909,15 @@ rm -f "$ORIGIN/hooks/pre-receive"
 OPAX_TODAY=2026-10-19 FAKE_WEEKLY_MODE=none nightly
 check "retry after a refused push confirms and clears periodic debt" bash -c "[ '$NRC' -eq 0 ] && python3 -c 'import json; assert \"due\" not in json.load(open(\"$HOME/.cache/autoresearch/pipeline/periodic-refresh-v1.json\"))[\"groups\"][\"weekly\"]'"
 
+echo "== periodic filtered debug: selected data may publish, but whole groups remain due"
+new_sandbox periodic-filtered
+OPAX_TODAY=2026-11-01 OPAX_ONLY=x_speakers FAKE_WEEKLY_MODE=ok nightly
+check "a successful filtered run publishes its accepted subset" bash -c "[ '$NRC' -eq 0 ] && git --git-dir='$ORIGIN' show main:portal/public/speakers.json | python3 -c 'import json,sys; assert len(json.load(sys.stdin))==101'"
+check "a filtered first Sunday retains both weekly and monthly debt" python3 -c "import json; groups=json.load(open('$HOME/.cache/autoresearch/pipeline/periodic-refresh-v1.json'))['groups']; assert all(groups[g]['due']=='2026-11-01' and 'last_success' not in groups[g] for g in ('weekly','monthly'))"
+check "the successful run's public status explains its incomplete group coverage" bash -c "git --git-dir='$ORIGIN' show nightly-status:status.json | python3 -c 'import json,sys; s=json.load(sys.stdin); assert s[\"status\"]==\"ok\" and any(\"OPAX_ONLY\" in w and \"catch-up retained\" in w for w in s[\"warnings\"])'"
+OPAX_TODAY=2026-11-02 FAKE_WEEKLY_MODE=none nightly
+check "the next unfiltered night retries and completes both groups" bash -c "[ '$NRC' -eq 0 ] && [ \"\$(cat '$HOME/weekly.args')\" = 'weekly monthly' ] && python3 -c 'import json; groups=json.load(open(\"$HOME/.cache/autoresearch/pipeline/periodic-refresh-v1.json\"))[\"groups\"]; assert all(\"due\" not in groups[g] and groups[g][\"last_success\"]==\"2026-11-02\" for g in (\"weekly\",\"monthly\"))'"
+
 echo "== 27. a night whose KB push was cut short is ok, with a warning"
 new_sandbox s27
 FAKE_MODE=partial nightly
