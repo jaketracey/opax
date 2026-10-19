@@ -1,0 +1,75 @@
+{
+  "preview": "Local Worker; test-only promoter fixture; external browser requests blocked; real approval/public asset unchanged",
+  "fixture": {
+    "path": "portal/private/abs-gfs-function/preview-data.json",
+    "sha256": "1cc09eea3f8e0195f0dc2d850bae4c3c42f123487eefffeca0fcb1f8f0db229a",
+    "test_only": true
+  },
+  "results": [
+    {
+      "width": 390,
+      "status": 200,
+      "pageOverflow": false,
+      "core": {
+        "containerWidth": 350,
+        "containerScrollWidth": 350,
+        "tableWidth": 350,
+        "tableScrollWidth": 350,
+        "amountCells": 25,
+        "amountsInsideContainer": true
+      },
+      "functions": {
+        "containerWidth": 350,
+        "containerScrollWidth": 350,
+        "tableWidth": 350,
+        "tableScrollWidth": 350,
+        "amountCells": 25,
+        "amountsInsideContainer": true
+      },
+      "headlineGroups": 9,
+      "functionGroups": 9,
+      "coreRows": 451,
+      "functionRows": 2560
+    },
+    {
+      "width": 1440,
+      "status": 200,
+      "pageOverflow": false,
+      "core": {
+        "containerWidth": 1325,
+        "containerScrollWidth": 1325,
+        "tableWidth": 1324.8125,
+        "tableScrollWidth": 1325,
+        "amountCells": 25,
+        "amountsInsideContainer": true
+      },
+      "functions": {
+        "containerWidth": 1325,
+        "containerScrollWidth": 1325,
+        "tableWidth": 1324.8125,
+        "tableScrollWidth": 1325,
+        "amountCells": 25,
+        "amountsInsideContainer": true
+      },
+      "headlineGroups": 9,
+      "functionGroups": 9,
+      "coreRows": 451,
+      "functionRows": 2560
+    }
+  ],
+  "search": {
+    "before": 2560,
+    "after": 90
+  },
+  "csvReceipts": true,
+  "ssr": true,
+  "staticFunctions": {
+    "containerWidth": 350,
+    "containerScrollWidth": 350,
+    "tableWidth": 350,
+    "tableScrollWidth": 350,
+    "amountCells": 25,
+    "amountsInsideContainer": true
+  },
+  "pageErrors": []
+}

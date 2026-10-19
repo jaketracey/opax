@@ -1,14 +1,18 @@
 {
-  "status": "approved",
-  "reviewed_commit": "d7b0a7052a7ed33649f8cc0fb379335ca44e6ef4",
-  "reviewed_at": "2026-10-16T22:04:03.153139+00:00",
-  "review_basis": "User review r2 APPROVED d7b0a7052. The six staged numerical and provenance inputs are unchanged from the reviewed projection: 81 workbooks, 3906 observations, 2466 passing reconciliations, cleared workbook licences and no cross-level sums. Round 1 UI fixes are included in the approved commit. Round 2 authorises local promotion of the single declared government-finance/data.json asset only; no push, deploy, nightly or KB/D1 write. GFS remains an explicit annual re-promotion, outside the default nightly hubs.",
+  "status": "pending",
+  "reviewed_commit": null,
+  "previous_approved_commit": "d7b0a7052a7ed33649f8cc0fb379335ca44e6ef4",
+  "review_basis": "Function extension awaits orchestrator review. The prior headline-only approval does not approve the new function data or changed projection. Ten input digests are supplied for review; no actual public promotion performed. Test-only temporary promoter fixtures never change this receipt. Annual explicit abs-gfs promotion remains outside nightly.",
   "inputs": {
     "inventory.json": "a2d6798b8d8f034c781407dd9597f1f0ed6fab4b6dd5d363e7e0cab64f912469",
     "tables.json": "85799f6e5cdb6df4f1a423155c5c622d26a2918c3b631bdd4277f960af1183f6",
     "receipts.json": "42e6f28071781ea9bf18694bb01ca3e49534f0e6f20cebda0445a322303b134e",
     "series.jsonl": "220e8dfab45ae8b399cd835dc3841ed90ce50b70555e204b93477e6c3954e621",
     "reconciliation.json": "c8dd7436a33a3af61dd3a764527b14a00342f27134757445e5c827733f355199",
-    "hub.json": "d96e18fda3934e8ef3c52f97acc60fa721b6f93af48db104b8c75daae8727399"
+    "hub.json": "deccfe1bb9cf9ac9af722bb12aa2f41f0f70126362e264e07297db4b897de618",
+    "function-series.jsonl": "6fef42288aaed917579313fd4beaace4b0876f373060de0b25864fe75f75fdfd",
+    "function-reconciliation.json": "87a7ddcd837a31bf9aab271180d21e4f7773ca71e7d4f5c0d98ec1951c292add",
+    "function-summary.json": "b32323776d5fd9f21e88a9c8938d38998f9222f9f4a1dbfe8b518d8ebfd225db",
+    "function-receipts.json": "4951103058cba445f09448fe6160d594b458a6763830e40031bc660257e60bbb"
   }
 }

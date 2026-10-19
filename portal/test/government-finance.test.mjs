@@ -82,7 +82,7 @@ test('changing NSW to Commonwealth resets the stale jurisdiction to its first pu
  assert.deepEqual([...doc.querySelectorAll('[name="jurisdiction"] option')].map(o=>o.value),['','Australia']);
  assert.equal(doc.querySelectorAll('.gfs-jurisdiction').length,1);
  assert.equal(doc.querySelector('.gfs-jurisdiction h3').textContent,'Australia');
- assert.equal(JSON.parse(doc.querySelector('[data-dt-page]').textContent).total,50);
+ assert.equal(JSON.parse(doc.querySelector('[data-register-table="government-finance-table"] [data-dt-page]').textContent).total,50);
 });
 
 test('National plus Total public sector resets to a valid sector and never renders an empty combination',async()=>{

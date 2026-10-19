@@ -19,19 +19,28 @@
 .gfs-receipt,.gfs-jurisdiction details{font:var(--type-fine);color:var(--ink-soft);overflow-wrap:anywhere}
 .gfs-jurisdiction details p{margin-block:var(--space-row)}
 .gfs-jurisdiction summary{cursor:pointer;min-height:2.75rem;display:flex;align-items:center;text-decoration:underline}
+.gfs-function-jurisdiction{border-top:var(--border-accent-mark-height) solid var(--money-ink);padding-top:var(--space-row);min-width:0}
+.gfs-function-jurisdiction h3{font:var(--type-heading);margin-block:var(--space-row)}
+.gfs-function-jurisdiction dl{margin-block:var(--space-group)}
+.gfs-function-jurisdiction dl > div{display:grid;grid-template-columns:minmax(0,1fr) max-content;gap:var(--space-row);padding-block:var(--space-tight);font:var(--type-body)}
+.gfs-function-jurisdiction dt{overflow-wrap:anywhere}
+.gfs-function-jurisdiction dd{margin:0;font-variant-numeric:tabular-nums;white-space:nowrap}
+.gfs-function-total{border-top:var(--border-hairline) solid var(--line-control);font:var(--type-strong)}
+.gfs-function-jurisdiction details{font:var(--type-fine);color:var(--ink-soft);overflow-wrap:anywhere}
+.gfs-function-jurisdiction summary{cursor:pointer;min-height:var(--size-target);display:flex;align-items:center;text-decoration:underline}
 @media(max-width:600px){.gfs-filters{padding:var(--space-row)}.gfs-filters label,.gfs-filters button{flex-basis:100%}}
 /* Keep the shared table, controls and CSV. On phones each published row puts
    its measure and amount first, with the jurisdiction/year/source below. */
 @media(width < 600px){
-  [data-register-table="government-finance-table"] .dt-scroll{overflow-x:visible}
-  #government-finance-table{display:block;width:100%;min-width:0}
-  #government-finance-table caption{display:block}
-  #government-finance-table thead{display:none}
-  #government-finance-table tbody{display:block;width:100%}
-  #government-finance-table tbody tr{display:grid;grid-template-columns:minmax(0,1fr) max-content;gap:var(--space-tight) var(--space-row);padding:var(--space-block);border-bottom:var(--border-hairline) solid var(--divider-subtle);background:var(--paper-raised)}
-  #government-finance-table td{display:block;grid-column:1/-1;position:static;min-width:0;max-width:100%;padding:0;border:0;box-shadow:none;white-space:normal;text-align:start;overflow-wrap:anywhere}
-  #government-finance-table td::before{content:attr(data-label);display:block;font:var(--type-fine);color:var(--ink-soft)}
-  #government-finance-table td[data-label="Measure"]{grid-area:1/1;font:var(--type-strong)}
-  #government-finance-table td[data-label="Measure"]::before{display:none}
-  #government-finance-table td[data-label="Amount (AUD)"]{grid-area:1/2;text-align:end;white-space:nowrap;font:var(--type-strong)}
+  :is([data-register-table="government-finance-table"],[data-register-table="government-function-table"]) .dt-scroll{overflow-x:visible}
+  :is(#government-finance-table,#government-function-table){display:block;width:100%;min-width:0}
+  :is(#government-finance-table,#government-function-table) caption{display:block}
+  :is(#government-finance-table,#government-function-table) thead{display:none}
+  :is(#government-finance-table,#government-function-table) tbody{display:block;width:100%}
+  :is(#government-finance-table,#government-function-table) tbody tr{display:grid;grid-template-columns:minmax(0,1fr) max-content;gap:var(--space-tight) var(--space-row);padding:var(--space-block);border-bottom:var(--border-hairline) solid var(--divider-subtle);background:var(--paper-raised)}
+  :is(#government-finance-table,#government-function-table) td{display:block;grid-column:1/-1;position:static;min-width:0;max-width:100%;padding:0;border:0;box-shadow:none;white-space:normal;text-align:start;overflow-wrap:anywhere}
+  :is(#government-finance-table,#government-function-table) td::before{content:attr(data-label);display:block;font:var(--type-fine);color:var(--ink-soft)}
+  :is(#government-finance-table,#government-function-table) td:is([data-label="Measure"],[data-label="Function as published"]){grid-area:1/1;font:var(--type-strong)}
+  :is(#government-finance-table,#government-function-table) td:is([data-label="Measure"],[data-label="Function as published"])::before{display:none}
+  :is(#government-finance-table,#government-function-table) td[data-label="Amount (AUD)"]{grid-area:1/2;text-align:end;white-space:nowrap;font:var(--type-strong)}
 }

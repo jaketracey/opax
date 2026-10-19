@@ -104,7 +104,7 @@ def annotate_auxiliary(document):
         document[field] = sorted({v for s in document["sheets"] for v in s.get("coverage", {}).get(field, [])})
 
 
-def projection(inventory, rows):
+def projection(inventory, rows, function_rows=None):
     documents = {d["id"] + ".xlsx": d for d in inventory["workbooks"] if permitted(d)}
     public = []
     for row in rows:
@@ -116,13 +116,26 @@ def projection(inventory, rows):
                 or not any(all(row.get(k) == v for k, v in x.items()) for x in dimensions)):
             continue
         public.append(row)
-    return {"schema": 1, "generated_at": inventory["snapshot"], "release": inventory["release"],
+    result = {"schema": 1, "generated_at": inventory["snapshot"], "release": inventory["release"],
             "release_date": inventory["release_date"], "release_url": RELEASE,
             "licence": {"name": "CC BY 4.0", "url": CC, "terms_url": TERMS,
                         "attribution": "Australian Bureau of Statistics (2024–25), Government Finance Statistics, Annual, accessed 17 October 2026. © Commonwealth of Australia 2026.",
                         "changes": "Selected published cells reformatted as a tidy series. Displayed amounts use m/bn; source values remain AUD million. No government or sector totals calculated by OPAX."},
             "documents": [{k: d[k] for k in ("id", "title", "url", "release", "release_date", "status", "dimensions", "receipt", "licence", "exceptions", "series_dimensions") if k in d}
                           for d in documents.values() if any(r["workbook"] == d["id"] + ".xlsx" for r in public)], "rows": public}
+    if function_rows is not None:
+        from scripts.abs_gfs.functions import cleared, dimensions
+        result["function_rows"] = cleared(inventory, function_rows)
+        used = {r["workbook"] for r in result["function_rows"]}
+        present = {d["id"] + ".xlsx" for d in result["documents"]}
+        for workbook in sorted(used - present):
+            d = documents[workbook]
+            result["documents"].append({k: d[k] for k in ("id", "title", "url", "release", "release_date", "status", "dimensions", "receipt", "licence", "exceptions")})
+        for d in result["documents"]:
+            original = documents[d["id"] + ".xlsx"]
+            d["function_dimensions"] = {s["sheet"]: dim for s in original.get("sheets", [])
+                                         if (dim := dimensions(original, s["sheet"])) and d["id"] + ".xlsx" in used}
+    return result
 
 
 def build(root=ROOT):
@@ -215,6 +228,10 @@ def build(root=ROOT):
                "years": sorted({r["reference_year"] for r in public_rows})}
     write(stage / "summary.json", summary)
     print(json.dumps(summary, indent=2))
+    if (stage / "function-series.jsonl").exists():
+        from scripts.abs_gfs.functions import build as build_functions
+        build_functions(root)
+        return load(stage / "hub.json")
     return hub
 
 

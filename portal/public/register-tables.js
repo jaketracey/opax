@@ -190,6 +190,24 @@ export function governmentFinanceTableConfig(rows) {
     primaryLink:()=>null};
 }
 
+export function governmentFunctionTableConfig(rows) {
+  const core=governmentFinanceTableConfig(rows);
+  return {...core,id:'government-function-table',caption:'ABS published spending by function',urlKey:'gfsFunction',
+    export:{filename:'government-spending-by-function.csv'},
+    columnsVisible:['jurisdiction','reference_year','function','function_level','amount','source_locator'],
+    columns:[...core.columns.filter(c=>['jurisdiction','reference_year'].includes(c.key)),
+      {key:'function',label:'Function as published',type:'text'},
+      {key:'function_level',label:'Published row level',type:'category',facet:'multi'},
+      ...core.columns.filter(c=>!['jurisdiction','reference_year','measure'].includes(c.key)),
+      {key:'measure',label:'Series',type:'category',facet:'multi'},
+      {key:'division',label:'Division',type:'category',facet:'multi'},
+      {key:'group',label:'Group as published',type:'text'},
+      {key:'classification',label:'Classification',type:'text'},
+      {key:'division_code',label:'Division code as published',type:'text'},
+      {key:'group_code',label:'Group code as published',type:'text'},
+      {key:'code_status',label:'Code availability',type:'text'}],primaryLink:()=>null};
+}
+
 /** Keep every disclosed donor; party transfers and grants are excluded. */
 export function partyMoneyData(graph, partyId) {
   const donors = new Map(graph.nodes.filter(node=>node.kind === 'donor').map(node=>[node.id,node]));
@@ -256,6 +274,7 @@ export function hydrateRegisterTables(root = document) {
     else if (config.urlKey === 'vicGifts') { const factory=vicGiftsTableConfig(config.source?.params,config.columns.map(column=>column.key)); Object.assign(config,{columns:factory.columns,primaryLink:factory.primaryLink}); }
     else if (config.urlKey === 'stateBills') Object.assign(config,stateBillsTableConfig(config.rows));
     else if (config.urlKey === 'gfs') Object.assign(config,governmentFinanceTableConfig(config.rows));
+    else if (config.urlKey === 'gfsFunction') Object.assign(config,governmentFunctionTableConfig(config.rows));
     else if (config.urlKey === 'advertising') Object.assign(config,govAdvertisingTableConfig(config.rows));
     else if (config.urlKey === 'tax') Object.assign(config,taxExpendituresTableConfig(config.rows));
     else Object.assign(config,{primaryLink:row=>row.href || null});

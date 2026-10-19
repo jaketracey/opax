@@ -1,0 +1,60 @@
+{
+  "baseline": "c926a72c34ded1f403884ceea6e421740fbced78",
+  "new_source_requests": 0,
+  "original_hashes_verified": 81,
+  "function_rows": 4340,
+  "function_checks": 1040,
+  "headline_checks": 2466,
+  "python_gfs_tests": 20,
+  "register_tests": 17,
+  "promoter_regression_tests": 14,
+  "full_portal_suite": {
+    "command": "node --test --test-concurrency=4 test/*.test.mjs",
+    "after": "npm run build:search",
+    "passed": 2189,
+    "failed": 0,
+    "skipped": 0
+  },
+  "gates": {
+    "tsc": "pass",
+    "check": "pass",
+    "originals_dry_run": "pass",
+    "worker_dry_run": "pass; no upload",
+    "test_only_promoter_round_trip": "pass",
+    "real_promoter_dry_run": {
+      "exit_code": 1,
+      "expected_hold": "Pending orchestrator review"
+    },
+    "diff_check": "pass"
+  },
+  "votes": {
+    "byte_identical": true,
+    "schema": 1,
+    "sha256": "9b7fc46c65185223d70a49b1bd8ee807327473330b02392963aa320b191b7a93"
+  },
+  "original_headline_staging_unchanged": true,
+  "real_public_gfs_asset_unchanged": true,
+  "generated_build_files_restored": true,
+  "stamp_shell_diff": "?v= only; spa-shell.js unchanged",
+  "screenshots": {
+    "government-finance-1440-function-table.png": "4254f678d7548dd2605203752cab9e256637e6486189aaf5b138fbcca54b6d2d",
+    "government-finance-1440-functions.png": "604cabb6bfbf9a427f955399e75b9dca248d00cb96ed1e7d6cc9b587eb78506f",
+    "government-finance-1440-top.png": "40c7c9ce9c5b1addc14ba73fa6c166070424e2882d504a9ff3d7f893f611a474",
+    "government-finance-390-function-table.png": "d13387e3b9e89e38d672858edb173e8e1667003bdeb53775e660a06e9325f506",
+    "government-finance-390-functions.png": "a21118bcf67e308ee0bb8228e99a16a4abed9e9546f68301c226876f9ef3ac06",
+    "government-finance-390-top.png": "2ddaa6704f936622d538fc9391963c53577b6a11e8a872443559b91e6f867200"
+  },
+  "browser_evidence_sha256": "a4e9918ed187c17236537fd2ddac3f802f98219a52a52ffe434000895ce07a5c",
+  "pending_review_inputs": {
+    "inventory.json": "a2d6798b8d8f034c781407dd9597f1f0ed6fab4b6dd5d363e7e0cab64f912469",
+    "tables.json": "85799f6e5cdb6df4f1a423155c5c622d26a2918c3b631bdd4277f960af1183f6",
+    "receipts.json": "42e6f28071781ea9bf18694bb01ca3e49534f0e6f20cebda0445a322303b134e",
+    "series.jsonl": "220e8dfab45ae8b399cd835dc3841ed90ce50b70555e204b93477e6c3954e621",
+    "reconciliation.json": "c8dd7436a33a3af61dd3a764527b14a00342f27134757445e5c827733f355199",
+    "hub.json": "deccfe1bb9cf9ac9af722bb12aa2f41f0f70126362e264e07297db4b897de618",
+    "function-series.jsonl": "6fef42288aaed917579313fd4beaace4b0876f373060de0b25864fe75f75fdfd",
+    "function-reconciliation.json": "87a7ddcd837a31bf9aab271180d21e4f7773ca71e7d4f5c0d98ec1951c292add",
+    "function-summary.json": "b32323776d5fd9f21e88a9c8938d38998f9222f9f4a1dbfe8b518d8ebfd225db",
+    "function-receipts.json": "4951103058cba445f09448fe6160d594b458a6763830e40031bc660257e60bbb"
+  }
+}

@@ -1,5 +1,7 @@
 # ABS Government Finance Statistics annual lane
 
+20 October 2026 follow-up: the [function extension report](function-report.md) supersedes the original function/education deferral below. It adds 4,340 observations and 1,040 passing checks. The core remains live; the function extension is LIVE-pending, awaiting orchestrator review, explicit promotion and deployment.
+
 UI review fixes at baseline `15f86fe11` are complete: [fix round 1 report](fix-round-1.md) and [Round 1 validation](fix-round-1-validation.json). Review r2 approved `d7b0a7052`. The unchanged staged projection is now promoted into the local public asset: [Round 2 promotion report](promotion-round-2.md) and [current validation](promotion-round-2-validation.json). Original source/number/licence findings below are unchanged.
 
 17 October 2026 Melbourne. Branch `coverage/abs-gfs`, baseline `71c3615b8`. Reviewed public asset promoted locally and verified; **no push, deploy, nightly or KB/D1 write**. The orchestrator owns shipping. GFS remains outside nightly; future releases require explicit reviewed re-promotion.

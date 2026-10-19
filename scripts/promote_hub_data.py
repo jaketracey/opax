@@ -44,7 +44,8 @@ INPUTS = {"budget": ["inventory.json", "receipts.json", "aggregates.json", "meas
           "vic-gifts": ["inventory.json", "receipts.json", "hub.json"],
           "bills-tas": ["inventory.json", "receipts.json", "hub.json", "acquisition-notes.json"],
           "bills-act": ["inventory.json", "receipts.json", "hub.json", "acquisition-notes.json"],
-          "abs-gfs": ["inventory.json", "tables.json", "receipts.json", "series.jsonl", "reconciliation.json", "hub.json"],
+          "abs-gfs": ["inventory.json", "tables.json", "receipts.json", "series.jsonl", "reconciliation.json", "hub.json",
+                      "function-series.jsonl", "function-reconciliation.json", "function-summary.json", "function-receipts.json"],
           "tax-expenditures": ["inventory.json", "receipts.json", "series.jsonl", "reconciliation.json", "hub.json"],
           "vic-advertising": ["discovery.json", "inventory.json", "tables.json", "receipts.json", "reconciliation.json", "privacy-policy.json", "privacy-holds.json", "hub.json"]}
 SHA = re.compile(r"[a-f0-9]{64}")

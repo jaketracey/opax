@@ -15,7 +15,8 @@ const mf=new Miniflare(convertV4MiniflareOptions({host:'::1',modules:true,compat
  const path=new URL(req.url).pathname;
  const file=resolve(root,'portal/public',path==='/'?'index.html':'.'+path);
  if(!file.startsWith(resolve(root,'portal/public')+'/'))return new Response('',{status:404});
- try{return new Response(await readFile(file),{headers:{'content-type':mime(path)}});}catch{return new Response('',{status:404});}
+ const previewAsset=process.env.OPAX_GFS_PREVIEW_ASSET;
+ try{return new Response(await readFile(path==='/government-finance/data.json' && previewAsset?resolve(previewAsset):file),{headers:{'content-type':mime(path)}});}catch{return new Response('',{status:404});}
 }},bindings:{INDEXNOW_ENABLED:'false',INDEXNOW_DRY_RUN:'true'}}));
 const server=createServer(async(req,res)=>{
  try{const result=await mf.dispatchFetch('https://opax.com.au'+req.url);res.writeHead(result.status,Object.fromEntries(result.headers));res.end(Buffer.from(await result.arrayBuffer()));}catch{res.writeHead(500);res.end('Preview unavailable');}

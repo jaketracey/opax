@@ -11,6 +11,7 @@ export function vicGiftsTableConfig(params?:Record<string,string>,populatedField
 export function vicGiftsQuery(rows:Row[],config:DataTableConfig,query?:Query): import('./datatable.js').Page;
 export function stateBillsTableConfig(rows:Row[]): DataTableConfig;
 export function governmentFinanceTableConfig(rows:Row[]): DataTableConfig;
+export function governmentFunctionTableConfig(rows:Row[]): DataTableConfig;
 export function taxExpendituresTableConfig(rows:Row[]): DataTableConfig;
 export function stateBillsTableQuery(params:URLSearchParams,config:DataTableConfig): Query;
 export function partyMoneyData(graph: PartyGraph, partyId: string): {rows:Row[]};

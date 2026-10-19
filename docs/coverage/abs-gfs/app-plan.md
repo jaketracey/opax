@@ -9,3 +9,11 @@ Plan only. This lane changes no app code or native API contract.
 5. Verify VoiceOver, Dynamic Type, small-phone tables, offline/stale snapshots, revisions and no-cross-level totals with fixtures before any native release. No Ask, generation, voice, authentication or production data writes are required for this register.
 
 The reviewed public asset is promoted locally through `scripts/promote_hub_data.py`; GFS is annual and stays outside nightly. Future snapshots require another explicit reviewed re-promotion. Shipping remains with the orchestrator; this app plan does not authorise a deployment or database write.
+
+## Function extension (20 October 2026; plan only)
+
+- Extend the same GFS web-reader entry to the Spending by function section after reviewed promotion and deployment. No native code or contract change in this lane.
+- A later native contract should keep `measure`, `classification`, `function_level`, `division`, `group`, `function_as_published`, `division_code`, `group_code` and `code_status`, alongside existing release, dimensions, unit, basis and original-cell receipts. The current workbooks do not publish numeric codes: keep them null. Preserve combined groups and the education cube's own School education label.
+- Show the latest published division split and published Total Expenses, then year-by-year rows with separate division/group/education-series filters. Never add these overlapping rows or derive an all-level total. Show State and local education-only coverage explicitly; ACT education remains State.
+- Use the already published consolidated education cells: transfers are not additional spending to add across levels. Keep the private-expenditure/GDP table and non-expense education tables out of this view.
+- Verify VoiceOver source disclosures, Dynamic Type, 390px-equivalent table containment, lowercase m/bn, null versus zero, stale snapshots and the explicit reviewed annual promotion boundary before native delivery.
