@@ -770,7 +770,8 @@ emergency escape hatch. It always uses `npm run deploy`, never a bare `wrangler 
 **Watchdog** (`.github/workflows/refresh-watchdog.yml`): daily 11:00 Sydney (01:00 UTC; 12:00 in daylight saving). Fails if the live `corpus.json`'s
 `refresh.checked_at` is older than 20 hours (a healthy night leaves it a few hours old, a missed night about 28), if the
 status branch cannot be read or its last run is older than 30 hours, or if the last run's status is not `ok`. Run it by
-hand from the Actions tab to test.
+hand from the Actions tab to test. The status receipt must also finish no more than five minutes before the live
+manifest's `refresh.checked_at`; this grace permits publication timing but rejects an old `ok` receipt after a failed status push.
 
 **Security updates** are applied by `poweroff-if-idle.sh` once per night (`apt-get update` then `unattended-upgrade`, 25 minute
 limit) because the machine is off when the usual background timers would fire; those timers are switched off. The
