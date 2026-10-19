@@ -117,6 +117,8 @@ Checked 19 October 2026 Melbourne. Bounded to the current official advertising i
 | campaign costs | 207 |
 | annual total time series | 2 |
 
-The machine inventory and tables.json record individual document/table hashes, snapshots, coordinates, licence scopes and holds. Campaign/non-campaign category and media tables overlap. Nine campaign-title tables are held for private-name review; the percentage table is non-monetary. The one fetched uppercase DOCX plan is quarantined; no document-family workaround was attempted.
+The machine inventory and tables.json record individual document/table hashes, snapshots, coordinates, licence scopes and holds. Campaign/non-campaign category and media tables overlap. The 19 Oct decision releases the nine former name-only campaign-table holds; the percentage table is non-monetary. The one fetched uppercase DOCX plan is quarantined; no document-family workaround was attempted.
 
 Round 1 privacy review: 40 advertiser descriptions, 206 campaign titles, 15 amount annotations, 14 notes and four period strings are held before staging. The 279 field receipts contain hashes and coordinates only; original table hashes remain separate from sanitized transcription hashes. The nine earlier table holds and 30 attachment holds remain.
+
+19 Oct 2026 decision follow-up: all 40 advertiser descriptions and nine campaign tables are restored in the new stage, with 1,239 observations and 62/62 reconciliation checks. Authorised source text creates no person entities, person links, name facets or identity joins. All 30 attachment holds remain for robots/file rights. The existing 1,194-cell public asset is unchanged pending orchestrator review of the expanded stage. The round 1 narrative holds above describe the previous snapshot only.

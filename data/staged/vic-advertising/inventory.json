@@ -1251,36 +1251,36 @@
           "number": 60,
           "heading": "Duration",
           "family": "campaign costs",
-          "status": "held",
-          "hold_reason": "Campaign title held for private-name review"
+          "status": "reviewed",
+          "hold_reason": null
         },
         {
           "number": 61,
           "heading": "Duration",
           "family": "campaign costs",
-          "status": "held",
-          "hold_reason": "Campaign title held for private-name review"
+          "status": "reviewed",
+          "hold_reason": null
         },
         {
           "number": 62,
           "heading": "Duration",
           "family": "campaign costs",
-          "status": "held",
-          "hold_reason": "Campaign title held for private-name review"
+          "status": "reviewed",
+          "hold_reason": null
         },
         {
           "number": 63,
           "heading": "Duration",
           "family": "campaign costs",
-          "status": "held",
-          "hold_reason": "Campaign title held for private-name review"
+          "status": "reviewed",
+          "hold_reason": null
         },
         {
           "number": 64,
           "heading": "Duration",
           "family": "campaign costs",
-          "status": "held",
-          "hold_reason": "Campaign title held for private-name review"
+          "status": "reviewed",
+          "hold_reason": null
         },
         {
           "number": 65,
@@ -5253,29 +5253,29 @@
           "number": 5,
           "heading": "Duration",
           "family": "campaign costs",
-          "status": "held",
-          "hold_reason": "Campaign title held for private-name review"
+          "status": "reviewed",
+          "hold_reason": null
         },
         {
           "number": 6,
           "heading": "Duration",
           "family": "campaign costs",
-          "status": "held",
-          "hold_reason": "Campaign title held for private-name review"
+          "status": "reviewed",
+          "hold_reason": null
         },
         {
           "number": 7,
           "heading": "Duration",
           "family": "campaign costs",
-          "status": "held",
-          "hold_reason": "Campaign title held for private-name review"
+          "status": "reviewed",
+          "hold_reason": null
         },
         {
           "number": 8,
           "heading": "Duration",
           "family": "campaign costs",
-          "status": "held",
-          "hold_reason": "Campaign title held for private-name review"
+          "status": "reviewed",
+          "hold_reason": null
         },
         {
           "number": 9,
@@ -5850,12 +5850,6 @@
       "campaign costs": 207,
       "annual total time series": 2
     },
-    "privacy_holds": {
-      "advertiser_description": 40,
-      "amount_annotation": 15,
-      "campaign_period": 4,
-      "campaign_title": 206,
-      "period_note": 14
-    }
+    "privacy_holds": {}
   }
 }

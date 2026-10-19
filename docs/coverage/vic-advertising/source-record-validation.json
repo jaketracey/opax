@@ -1,0 +1,154 @@
+{
+  "checked_at": "2026-10-19T00:25:41.118893+00:00",
+  "base_commit": "4ec9603d33233d1559993810021bc37607a3a234",
+  "status": "expanded source-record text staged only; existing live asset unchanged",
+  "decision": "19 Oct 2026, Jake: grant recipients and private names inside authorised source records stay published as public record (12 Oct decision, c3a0c09b2); no person entities, profiles or identity joins are created for private individuals; privacy reviews do not reopen this.",
+  "counts": {
+    "descriptions_released": 40,
+    "campaign_tables_released": 9,
+    "new_cells": 45,
+    "rows_staged": 1239,
+    "checks_unchanged": 62,
+    "existing_amounts_and_gst_unchanged": true,
+    "attachments_held": 30,
+    "person_entity_fields_created": 0,
+    "public_asset_unchanged": true,
+    "votes_unchanged": true,
+    "source_receipts_unchanged": true
+  },
+  "reconciliation": {
+    "pass": 62,
+    "total": 62,
+    "published_total_identities": 42,
+    "exact_components": 16,
+    "within_printed_precision": 4,
+    "unchanged_from_main": true
+  },
+  "tests": {
+    "python_advertising": 23,
+    "python_promoter": 14,
+    "python_gfs": 12,
+    "python_tax_expenditures": 10,
+    "python_total": 59,
+    "node_advertising_register_gfs_tax_navigation": 101
+  },
+  "gates": {
+    "npm_ci": "pass before Node tests",
+    "typescript": "pass",
+    "check": "pass",
+    "wrangler_deploy_dry_run": "pass; no deployment",
+    "source_originals_dry_run": "pass; zero writes",
+    "promoter_dry_run": {
+      "expected_exit": 1,
+      "result": "FAIL vic-advertising: review: vic-advertising",
+      "reason": "Changed inputs await explicit orchestrator approval; no promotion."
+    },
+    "diff_check": "pass"
+  },
+  "review": {
+    "status": "pending",
+    "reviewed_commit": null,
+    "inputs": {
+      "discovery.json": "e0574876e449c8f3ca6850dffdd6a963f19dcc45f59fae765eaadc41ed7d464a",
+      "inventory.json": "640f8b6e48b677f0da46ace701d8cd61558b7a3cbf8fcaec1afd8b5552515457",
+      "tables.json": "c68a5651bb1cb70439f654c6e6439a8912872d9cee01c9634317bd30b388f43c",
+      "receipts.json": "637b9c1bcc5a2d5bf888456de4feb1d7ac24b7b459b2098650a6f631de8683d1",
+      "reconciliation.json": "78f02d9ffb0feb7ff3b800435e722feff20f21302ec10224f3241c52502d41f4",
+      "privacy-policy.json": "7c8155e275f7d3319e0cdfeeec502744a9b2f5c397ec965c090c8c2b482fc372",
+      "privacy-holds.json": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+      "hub.json": "6b8f8d1acb4dd4d94d2e8df7c3b9effa9ee7ec4104554f12ddcc2100244efb3e"
+    },
+    "inputs_match": true
+  },
+  "browser": {
+    "preview": "Explicit local staged asset through actual Worker; expanded source-record text pending orchestrator review; existing public asset unchanged; no external requests or production bindings",
+    "sha256": "6b8f8d1acb4dd4d94d2e8df7c3b9effa9ee7ec4104554f12ddcc2100244efb3e",
+    "results": [
+      {
+        "width": 390,
+        "status": 200,
+        "horizontalOverflow": false,
+        "table": {
+          "containerWidth": 350,
+          "containerScrollWidth": 350,
+          "tableWidth": 350,
+          "amountCells": 25,
+          "amountsInsideContainer": true
+        },
+        "rows": 1239,
+        "sourceDescriptions": 10,
+        "personLinksInDescriptions": 0
+      },
+      {
+        "width": 1440,
+        "status": 200,
+        "horizontalOverflow": false,
+        "table": {
+          "containerWidth": 1325,
+          "containerScrollWidth": 1325,
+          "tableWidth": 1324.8125,
+          "amountCells": 25,
+          "amountsInsideContainer": true
+        },
+        "rows": 1239,
+        "sourceDescriptions": 10,
+        "personLinksInDescriptions": 0
+      }
+    ],
+    "search": {
+      "before": 1239,
+      "after": 1035
+    },
+    "csv": true,
+    "javaScriptDisabled": true,
+    "staticPhoneTable": {
+      "containerWidth": 350,
+      "containerScrollWidth": 350,
+      "tableWidth": 350,
+      "amountCells": 25,
+      "amountsInsideContainer": true
+    },
+    "emptyReadinessWithoutAsset": true,
+    "pageErrors": []
+  },
+  "before_and_after_unchanged_hashes": {
+    "portal/public/gov-advertising/data.json": "e7d1138e6c901b2456a74ef3f08698dcfada75a2fbd3318b0d0cf58e77f66a75",
+    "portal/public/votes.json": "9b7fc46c65185223d70a49b1bd8ee807327473330b02392963aa320b191b7a93",
+    "data/staged/vic-advertising/reconciliation.json": "78f02d9ffb0feb7ff3b800435e722feff20f21302ec10224f3241c52502d41f4",
+    "data/staged/vic-advertising/receipts.json": "637b9c1bcc5a2d5bf888456de4feb1d7ac24b7b459b2098650a6f631de8683d1"
+  },
+  "votes_byte_identical_to_origin_main": true,
+  "screenshots": [
+    {
+      "path": "portal/private/vic-advertising/advertising-390-top.png",
+      "sha256": "d0ac9ec340fbad657ca7ff40f7bf1a293c0668452e8e5595851e2051ba2a7639",
+      "label": "Expanded source-record text; local staged preview, not promoted"
+    },
+    {
+      "path": "portal/private/vic-advertising/advertising-390-table.png",
+      "sha256": "579f3950af2514cdcdc436a7950de5e1f74b44f7aaf8f3c0e0f80d21e87a7464",
+      "label": "Expanded source-record text; local staged preview, not promoted"
+    },
+    {
+      "path": "portal/private/vic-advertising/advertising-1440-top.png",
+      "sha256": "a6545a9b2f9ce1050f68b70083190671a2f7ebe4353c7c016452a7b80f59e832",
+      "label": "Expanded source-record text; local staged preview, not promoted"
+    },
+    {
+      "path": "portal/private/vic-advertising/advertising-1440-table.png",
+      "sha256": "0bfe3fb875c25d989cbb241f7770ae9ffd1b7104000a745be6cf9c40039f41c1",
+      "label": "Expanded source-record text; local staged preview, not promoted"
+    }
+  ],
+  "public_asset_written": false,
+  "person_entities_created": 0,
+  "person_links_created": 0,
+  "person_facets_created": 0,
+  "person_search_entities_created": 0,
+  "cross_record_identity_joins_created": 0,
+  "source_requests": 0,
+  "push": false,
+  "deploy": false,
+  "nightly": false,
+  "production_writes": 0
+}

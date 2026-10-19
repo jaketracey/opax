@@ -42,18 +42,18 @@ historical series is not one annual report. Keep campaign cost categories,
 advertiser totals, media channels and published totals as separate table grains.
 No selected-row sum or cross-vintage total. Advertiser examples share the
 advertiser's amount; they do not acquire individual campaign costs. Preserve
-reviewed structured campaign periods, including calendar-year and spanning-year
-coverage. Every report-derived free-text field uses the shared default-deny
-privacy policy: unreviewed descriptions, titles, notes and amount annotations
-remain withheld in app data, exports and search. Only reviewed organisation
-names/category labels and structured amounts/dates survive. Reviewed missing
-codes remain literal with a null amount; never infer an amount from a hold.
+published campaign periods, including calendar-year and spanning-year coverage.
+Under Jake's 19 Oct 2026 decision, names in authorised report descriptions,
+campaign titles and notes remain source-record text. Do not turn them into
+person entities, person links, name facets, name-search nodes or cross-record
+identity joins. Organisation fields alone support facets and agency links.
+Missing and included-cost codes stay literal with null amounts where published.
 Keep original table hashes and full provenance timestamps; display plain dates.
 
 Display original source, report/financial year, snapshot, coordinates, document
 and table hashes, CC BY 4.0 and “© Copyright State Government of Victoria” on
 each block and detail. Do not bundle images, branding or campaign creative.
-Attachment and private-title holds never enter the app asset. Any individual,
+Attachment rights/robots holds never enter the app asset. There is no name-only hold on authorised source text. Any individual,
 sole-trader or uncertain supplier is “individual supplier (withheld)” in every
 projection, export and search; no supplier/person identity joins.
 

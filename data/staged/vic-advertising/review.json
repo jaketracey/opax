@@ -1,19 +1,19 @@
 {
-  "status": "approved",
-  "reviewed_commit": "961e07ac91cf5fc9ba21c5f6588f96170f715886",
-  "review_basis": "Explicit orchestrator approval of the unchanged eight inputs at the reviewed commit. Re-review 2 found no issue in this lane; 324 default-deny probes produced no leaks and 62 reconciliation checks pass. Annual explicit promotion only; deployment remains pending.",
+  "status": "pending",
+  "reviewed_commit": null,
+  "review_basis": "19 Oct 2026, Jake: grant recipients and private names inside authorised source records stay published as public record (12 Oct decision, c3a0c09b2); no person entities, profiles or identity joins are created for private individuals; privacy reviews do not reopen this. Control-hub option A: preserve authorised descriptions, campaign titles, notes and source amount annotations as record text; keep organisation/facet review and individual-supplier withholding. Nine name-only table holds are released; 30 robots/file-rights attachment holds remain. Orchestrator must review and approve these changed eight input digests before any promotion. This step is staged/dry-run only; the existing public asset remains unchanged.",
   "inputs": {
     "discovery.json": "e0574876e449c8f3ca6850dffdd6a963f19dcc45f59fae765eaadc41ed7d464a",
-    "inventory.json": "495c6b7c01449e30c1b8f7c9ab3f1d6e95d4747690077c7ba50715cb502ab8e5",
-    "tables.json": "63d94660869aa7043d7479cc64b9e0868d8ea4a6e468bf375b6f0a5adf677c93",
+    "inventory.json": "640f8b6e48b677f0da46ace701d8cd61558b7a3cbf8fcaec1afd8b5552515457",
+    "tables.json": "c68a5651bb1cb70439f654c6e6439a8912872d9cee01c9634317bd30b388f43c",
     "receipts.json": "637b9c1bcc5a2d5bf888456de4feb1d7ac24b7b459b2098650a6f631de8683d1",
     "reconciliation.json": "78f02d9ffb0feb7ff3b800435e722feff20f21302ec10224f3241c52502d41f4",
-    "privacy-policy.json": "e3a1c701cc5b284f0a278bd6a3e31a482db23b76e5004eedb0cba5ea00c17776",
-    "privacy-holds.json": "1ede361e9863f0a4a2628891f8060aec8a59493cf594d35fc00dd049b1dde382",
-    "hub.json": "9e31055576e57bd90e037f14edb193e08ac11c70f437658462ee9e6853ab633b"
+    "privacy-policy.json": "7c8155e275f7d3319e0cdfeeec502744a9b2f5c397ec965c090c8c2b482fc372",
+    "privacy-holds.json": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+    "hub.json": "6b8f8d1acb4dd4d94d2e8df7c3b9effa9ee7ec4104554f12ddcc2100244efb3e"
   },
   "counts": {
-    "rows": 1194,
+    "rows": 1239,
     "years": {
       "2008-09": 1,
       "2009-10": 1,
@@ -24,8 +24,8 @@
       "2014-15": 8,
       "2015-16": 8,
       "2016-17": 8,
-      "2017-18": 512,
-      "2018-19": 532,
+      "2017-18": 537,
+      "2018-19": 552,
       "2019-20": 16,
       "2020-21": 16,
       "2021-22": 16,
@@ -35,11 +35,10 @@
     },
     "kinds": {
       "advertiser": 40,
-      "campaign cost": 990,
+      "campaign cost": 1035,
       "category": 58,
       "media": 64,
       "published total": 42
     }
-  },
-  "approved_by": "opax-orchestrator, 19 Oct 2026 (Codex review r1 + r2; r2's remaining P1 is pre-existing on main, out of scope)"
+  }
 }

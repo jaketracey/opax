@@ -1,6 +1,6 @@
 {
-  "version": 1,
-  "rule": "Unreviewed report narrative is held by default. Only exact reviewed organisation/publication/category labels and structured dates or amounts may leave acquisition. No person-name detection or name-by-name deletion is relied upon.",
+  "version": 2,
+  "rule": "19 Oct 2026, Jake: names inside authorised source records remain published as record text. No person entities, profiles, name-search entities, person facets or cross-record identity joins. Organisation/entity fields remain reviewed; sole-trader suppliers remain withheld. Licence and robots holds are unchanged.",
   "organisations": [
     "Australian Centre for the Moving Image",
     "Australian Grand Prix Corporation",
@@ -202,15 +202,17 @@
     "Year",
     "individual supplier (withheld)"
   ],
-  "held_campaign_heading_sha256": [
-    "2f89b1f931d4f1d69e4b69ef66f7b35f595f9d52a24064760ad29e052a32ddd5",
-    "2f89b1f931d4f1d69e4b69ef66f7b35f595f9d52a24064760ad29e052a32ddd5",
-    "399f3e2bd7cf27752a32edbfb5c57f6ac66e8c00b1208fa7898c1e0206e1dbb6",
-    "5150f825b1017ad2d0c5d7bae29b30c47820cf12a838d8611f909882547abcb6",
-    "5b2ca784055bf88bf0873c9ff22444a3a3ca475c14338f51ea2b1ee9a36aca52",
-    "8d147dc7f4285f3f0324da85c010d0c5f20eeb11c8e90d669fb4e5381fbac798",
-    "9ccb4bd27e169166438865db84ecc0f3dc522559347e072b9822f7c691a62443",
-    "b350a2f47f020f02350c4d2e822d8ef4284adb8f86296e8423cf49e5ee7b10a3",
-    "bae7d68e43dd12942f82f11b38d60d0c5a390c4520a86a5bb760b86c78fb6606"
+  "record_text_roles": [
+    "advertiser_description",
+    "campaign_title",
+    "period_note",
+    "campaign_period",
+    "amount_annotation",
+    "basis",
+    "scope",
+    "table_heading",
+    "category",
+    "summary",
+    "publication_title"
   ]
 }

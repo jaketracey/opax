@@ -21,7 +21,7 @@ test('VIC shared register server renders published totals, latest advertisers an
  assert.equal(doc.querySelectorAll('[data-datatable] tbody tr').length,25);
  assert.ok(JSON.parse(doc.querySelector('[data-dt-page]').textContent).rows.every(r=>r.financial_year==='2024-25'));
  assert.equal(doc.querySelectorAll('#advertising-departments + p + .gov-advertising-cards article').length,10);
- assert.match(result.prerender,/Campaign description withheld pending private-name review/);
+ assert.equal(doc.querySelectorAll('.gov-advertising-description').length,10);
  assert.match(result.prerender,/Tables without a published total are not summed/);
  for(const card of doc.querySelectorAll('.gov-advertising-card')){
   assert.equal(card.querySelectorAll('.gov-advertising-receipt').length,1);
@@ -46,27 +46,40 @@ test('plain receipt dates and a single page source block retain full timestamps 
  assert.ok(toCSV(rows,config).includes(hub.rows[0].snapshot));
 });
 
-test('invented private description is absent from staged/app data, filtered HTML, CSV, hydration, search, sitemap and MCP',async()=>{
+test('authorised description stays page/CSV/search text without creating person entities, links or facets',async()=>{
  const fixture=JSON.parse(execFileSync('python3',['-c',"import sys,json;sys.path.insert(0,'tests');from test_vic_advertising import private_description_fixture;print(json.dumps(private_description_fixture()))"],{cwd:fileURLToPath(new URL('../../',import.meta.url)),encoding:'utf8'}));
  const name='Avery Fenwick',h=fixture.hub;
- assert.ok(!JSON.stringify(fixture).includes(name)); // Includes the shared app asset and hash-only holds.
+ assert.ok(JSON.stringify(fixture.hub).includes(name)); // Record text also survives the shared future app asset.
  assert.equal(clearedAdvertising(h).length,1);
  const rows=advertisingTableRows(clearedAdvertising(h),[]),config=govAdvertisingTableConfig(rows);
- assert.ok(!JSON.stringify(rows).includes(name));assert.ok(!toCSV(rows,config).includes(name));
- assert.equal(applyQuery(rows,config,{q:name}).total,0);
- const page=await render(h,'?advertising.f.financial_year='+encodeURIComponent(JSON.stringify(['2024-25'])));assert.equal(page.status,200);assert.ok(!page.prerender.includes(name));
+ assert.ok(JSON.stringify(rows).includes(name));assert.ok(toCSV(rows,config).includes(name));
+ assert.equal(applyQuery(rows,config,{q:name}).total,1);
+ assert.ok(!JSON.stringify(applyQuery(rows,config,{}).facets).includes(name));
+ assert.equal(config.primaryLink(rows[0]),null);
+ assert.equal(rows[0].entity,'Department of Example Services');
+ assert.ok(!Object.keys(rows[0]).some(k=>/^person|identity|subject/.test(k)));
+ assert.equal(rows[0].agency_href,null);
+ const page=await render(h,'?advertising.f.financial_year='+encodeURIComponent(JSON.stringify(['2024-25'])));assert.equal(page.status,200);assert.ok(page.prerender.includes(name));
+ const shown=new JSDOM(page.prerender).window.document;
+ assert.equal([...shown.querySelectorAll('a')].filter(a=>a.textContent.includes(name)||a.getAttribute('href')?.includes('/subject/person/')).length,0);
  const dom=new JSDOM((await render(h)).prerender,{url:'https://opax.test/register/gov-advertising'});
  const observer=globalThis.MutationObserver;globalThis.MutationObserver=dom.window.MutationObserver;
  try{
   dom.window.fetch=async()=>{throw Error('No external network in hydration test')};
   hydrateRegisterTables(dom.window.document);await new Promise(setImmediate);
-  assert.ok(!dom.serialize().includes(name));assert.equal(dom.window.document.querySelectorAll('[data-datatable] tbody tr').length,1);
+  assert.ok(dom.serialize().includes(name));
+  assert.equal([...dom.window.document.querySelectorAll('a')].filter(a=>a.textContent.includes(name)).length,0);assert.equal(dom.window.document.querySelectorAll('[data-datatable] tbody tr').length,1);
  }finally{dom.window.document.body.replaceChildren();await new Promise(setImmediate);globalThis.MutationObserver=observer;dom.window.close()}
- const changed=structuredClone(h);changed.rows[0].campaign=name;
- assert.deepEqual(clearedAdvertising(changed),[]);
- assert.ok(!JSON.stringify(advertisingTableRows(changed.rows,[])).includes(name));
- for(const key of ['entity','category','media_type','table_heading','basis','measure','period_note','campaign_period','source_value']){
+ // Person-like values cannot become an organisation or a media-channel facet,
+ // even if a caller supplies a plausible directory entry or unknown identity keys.
+ for(const key of ['entity','media_type']){
   const altered=structuredClone(h);altered.rows[0][key]=name;assert.deepEqual(clearedAdvertising(altered),[],key);
+  const projected=advertisingTableRows(altered.rows,[{id:'a-aaaaaaaaaaaaaaaaaaaa',name}]);
+  assert.ok(!JSON.stringify(applyQuery(projected,govAdvertisingTableConfig(projected),{}).facets).includes(name));
+  assert.equal(projected[0].agency_href,null);
+ }
+ for(const key of ['campaign','category','table_heading','basis','measure','period_note','campaign_period']){
+  const altered=structuredClone(h);altered.rows[0][key]=name;assert.equal(clearedAdvertising(altered).length,1,key);
  }
  const originalFetch=globalThis.fetch;globalThis.fetch=async()=>{throw Error('No external network in privacy test')};
  try{
@@ -76,8 +89,14 @@ test('invented private description is absent from staged/app data, filtered HTML
   const {communityMcp}=await import('data:text/javascript;base64,'+Buffer.from(mcpBundle.outputFiles[0].text).toString('base64'));
   const env={COMMUNITY_ENABLED:'true',COMMUNITY_ORIGIN:'https://opax.test',COMMUNITY_DB:{prepare(sql){return {bind(){return this},async first(){return sql.startsWith('SELECT')?{id:'fixture-member',key_id:'fixture-key'}:{hits:1}},async run(){return {success:true}}}}},ASSETS:{fetch:async()=>Response.json(h)}};
   const response=await communityMcp(new Request('https://opax.test/mcp',{method:'POST',headers:{authorization:'Bearer opax_'+'A'.repeat(43),accept:'application/json, text/event-stream','content-type':'application/json'},body:JSON.stringify({jsonrpc:'2.0',id:1,method:'tools/call',params:{name:'search_records',arguments:{query:'Example Services'}}})}),env,async()=>Response.json({results:rows.map(r=>({title:r.campaign,entity:r.entity,href:'/register/gov-advertising'}))}));
-  assert.equal(response.status,200);const text=await response.text();assert.ok(!text.includes(name));assert.ok(text.includes('Example Services'));
+  assert.equal(response.status,200);const text=await response.text();assert.ok(text.includes(name));assert.ok(text.includes('Example Services'));assert.ok(!text.includes('/subject/person/'));
  }finally{globalThis.fetch=originalFetch}
+});
+
+test('the already-promoted v1 snapshot stays readable while the new stage awaits review',async()=>{
+ const live=JSON.parse(readFileSync(new URL('../public/gov-advertising/data.json',import.meta.url)));
+ assert.equal(clearedAdvertising(live).length,live.rows.length);
+ assert.equal((await render(live)).status,200);
 });
 
 test('VIC money, raw units, GST wording, snapshots and table hashes survive CSV and filtering',()=>{
@@ -108,7 +127,7 @@ test('held licence, source amount, provenance and reconciliation corruption clos
  }
 });
 
-test('optional Money menu gate depends on cleared data, not the presence of a route',async()=>{
+test('readiness endpoint reflects cleared data independently of the static Money link',async()=>{
  const request=new Request('https://opax.test/gov-advertising/ready.json');
  assert.deepEqual(await(await govAdvertisingReady(request,async()=>null)).json(),{ready:false,count:0});
  assert.deepEqual(await(await govAdvertisingReady(request,async()=>hub)).json(),{ready:true,count:hub.rows.length});

@@ -1,11 +1,12 @@
-# Victorian government advertising — promoted, deploy pending
+# Victorian government advertising — live core; source-record text update staged
 
-Checked **19 October 2026 Melbourne** on `coverage/vic-advertising`, baseline
-`567e8698b56133f41ec1f9057ed55440e69548c7`. No push, deploy, nightly, production
-Ask/generation/voice/auth or KB/D1 write occurred. Initial review was staged only.
-The orchestrator approved `961e07ac9` after reviews r1 + r2 and its unchanged eight
-inputs were promoted locally on 19 October: [promotion and local verification](promotion.md).
-Deployment remains pending; no production publication is claimed.
+Updated **19 October 2026 Melbourne**, based on current main `4ec9603d3`.
+The previous 1,194-cell register is live via `61a9cb859`; this follow-up restores
+source-record text and nine campaign tables in staging only. The expanded
+1,239-cell projection is pending orchestrator review; no re-promotion, push,
+deployment, source acquisition or production write occurred in this follow-up.
+
+19 Oct 2026, Jake: grant recipients and private names inside authorised source records stay published as public record (12 Oct decision, c3a0c09b2); no person entities, profiles or identity joins are created for private individuals; privacy reviews do not reopen this.
 
 ## Inventory and licence finding
 
@@ -61,46 +62,40 @@ the entire excluded document-extension family, including uppercase variants;
 no URL case was changed and no alternative attachment URL was requested.
 **All 30 attachments remain held**, including that plan and format mirrors.
 
-**Nine exhibition campaign tables** are held as a source group because their
-titles can identify private people. Original titles are absent from staged and
-public projections; only a safe hold label and original heading hash remain.
-Every report-derived narrative field now passes through the same default-deny
-privacy review before staging and again at the public projection boundary.
-Only exact reviewed organisation names and published labels, plus structured
-amounts/dates, survive. **40 advertiser descriptions** are withheld in full,
-alongside **206 campaign titles, 15 amount annotations, 14 notes and four period
-strings**. These **279 field holds** contain only coordinates, a reason and the
-original text's hash; raw text remains in the ignored acquisition cache. The
-nine source-table holds remain in place. The Worker independently rejects
-unreviewed text before SSR, CSV, hydration or search. The invented-person test
-also checks the shared future app asset, sitemap and local MCP output.
+The previous name-only holds are released in staging: **40 advertiser
+descriptions and nine campaign tables**. Authorised report descriptions,
+campaign titles, periods, footnotes and amount annotations stay as published.
+No text is treated as a person identity: no person entities, profiles,
+name-search entity nodes, person-name facets or cross-record joins are created.
+Campaign/description text is plain text; the original-source column links to
+the publisher. Department/agency facets and exact directory links use reviewed
+organisations only. The supplier rule is unchanged: individual, sole-trader or
+uncertain suppliers remain **individual supplier (withheld)** in every output.
 
-One percentage table is inventoried but is not monetary expenditure. There
-are no real supplier fields in this projection. Unknown, individual or
-sole-trader suppliers default to **individual supplier (withheld)**; synthetic
-tests prove the raw name cannot reach the page, CSV or table search.
+**All 30 attachments remain held** for robots/file-rights reasons. This decision
+does not change rights clearance. One percentage table remains non-monetary;
+plans remain inventory-only. There are no remaining name-only table holds or
+narrative-field holds in the expanded projection.
 
 ## Staged observations and reconciliation
 
-**1,194 cells across 17 financial years, 2008–09 to 2024–25**, drawn from 15 HTML
-sources and 207 expenditure tables. These are observations, not unique campaigns:
+**1,239 cells across 17 financial years, 2008–09 to 2024–25**, drawn from 15 HTML
+sources and 216 expenditure tables. These are observations, not unique campaigns:
 
 | Grain | Cells | Scope |
 | --- | ---: | --- |
-| Campaign cost category | 990 | 198 source campaign tables, 2017–18 and 2018–19; five categories per table |
+| Campaign cost category | 1,035 | 207 source campaign tables, 2017–18 and 2018–19; five categories per table |
 | Advertiser campaign summary | 40 | Ten advertisers each in 2017–18, 2018–19, 2023–24 and 2024–25 |
 | Historical expenditure category / department-agency split | 58 | Source year and table retained |
 | Media channel | 64 | Eight media channels per published year, 2017–18 to 2024–25 |
 | Published total | 42 | Source totals only, at each table/report vintage |
 
-Numerical source amounts, AUD/AUD million units, exact published GST wording,
-structured campaign periods, URLs, table/row/column coordinates and original
-document/table SHA-256s are retained. Unreviewed narrative footnotes and amount
-annotations are replaced by safe labels; their hashes remain in the hold ledger.
-Original table hashes are distinct from the sanitized transcription hashes. A missing GST statement
-is explicitly labelled **not stated**. **35 missing/included-cost cells** retain
-null amounts; reviewed missing codes remain literal, and unreviewed included-cost prose is withheld. None is converted to zero. Source
-amounts with spaced thousands separators keep their original text.
+Source amounts, AUD/AUD million units, exact published GST wording, campaign
+periods/notes, URLs, table/row/column coordinates and original document/table
+SHA-256s are retained. Source-record text is not changed to remove names.
+Missing/included-cost codes retain their published text and null amounts;
+no value is inferred or converted to zero. Source amounts with spaced thousands
+separators keep their original text. GST not stated is explicitly labelled.
 
 **62 checks pass:** 42 published totals match the original cells; 20 component
 comparisons comprise **16 exact** and **four within printed precision**. The
@@ -116,13 +111,13 @@ the historical page and every retrospective annual chart.
 
 The parked federal implementation is reused, including its contract, held
 state, source/rights guards, shared register DataTable and synthetic tests.
-There is **one** canonical route and future asset:
+There is **one** canonical route and shared asset:
 `/register/gov-advertising` and `/gov-advertising/data.json`.
 Victorian schema 2 adds jurisdiction, separate source grains and report vintage;
 it does not create another advertising register. The lede separates reported
 media expenditure from procurement commitments and production costs. Latest
 advertiser totals do not acquire separate campaign costs; source descriptions
-are withheld pending private-name review. Wording is non-partisan, with no party/government comparisons.
+stay as published inside the source record. Wording is non-partisan, with no party/government comparisons.
 
 The route server-renders latest published totals, ten latest departments/agencies,
 the full table, licence/source blocks and reconciliation. Each card has one
@@ -137,19 +132,18 @@ private-name entities, supplier profiles or source-to-person joins.
 same shared asset; default/nightly hubs are unchanged. It rebuilds the
 projection, joins source and policy receipts, checks eight input hashes (including the shared privacy policy and hash-only hold ledger), requires
 nonempty data and an approved review receipt, and preserves an existing asset
-on failure. **review.json is approved** against
-`961e07ac91cf5fc9ba21c5f6588f96170f715886`, recording the orchestrator's exact
-approval and eight unchanged input digests. The reviewed promoter wrote
-`portal/public/gov-advertising/data.json` (3,410,870 bytes, 1,194 rows).
-Its dry run and public-byte check pass. The Money → Public money link opens
-from cleared promoted data in local Wrangler; deployment is pending.
+on failure. **review.json is pending**, with the new eight input digests and no
+reviewed commit. The promoter dry run correctly refuses pending review.
+`portal/public/gov-advertising/data.json` remains byte-identical to main's live
+1,194-cell asset; no changed input is promoted. The renderer accepts the prior
+policy version while the expanded stage awaits explicit approval. The static
+Money link from main remains; no shared navigation change is made.
 
 The original browser harness explicitly injects staged bytes into a local ASSETS
-stub for pre-promotion QA. The promoted harness verifies the actual public asset
-through local Wrangler on port 8990; the four latest screenshots have no staged
-banner. A private asset directory links the promoted bytes and frontend files,
-limiting the macOS asset watcher's file descriptors. The Worker has no staging
-fallback. Local evidence is not production publication proof.
+stub for pre-promotion QA. The fresh 390/1440 screenshots are labelled local
+staged previews of the expanded projection, including its restored source text.
+The Worker has no staging fallback. The prior promoted-asset evidence remains
+historical; local screenshots do not claim that this expansion is live.
 The app remains [plan only](../gov-advertising/app-plan.md); no native build,
 API allowlist change or app release was performed.
 
@@ -158,11 +152,11 @@ API allowlist change or app release was performed.
 Targeted Python and Node tests cover official-layout synthetic tables, units,
 source years versus upload dates, total checks, missing markers, GST wording,
 held-file and supplier exclusion, persistent refusal stops, review gating,
-query validation, SSR and shared hydration. **58 Python tests (22 advertising, 14 promoter, 12 GFS, 10 tax expenditures)
-and 100 Node tests pass**, including shared register, GFS, tax and navigation.
+query validation, SSR and shared hydration. **59 Python tests (23 advertising, 14 promoter, 12 GFS, 10 tax expenditures)
+and 101 Node tests pass**, including shared register, GFS, tax and navigation.
 The initial navigation attempt lacked generated calendar assets; its final run
 used offline private fixtures with a temporary local asset link, removed after
-testing. [Validation receipt](validation.json). Existing promoter tests protect the
+testing. [Current validation](source-record-validation.json). Existing promoter tests protect the
 other hubs. TypeScript, `npm run -s check`, staged/original dry run, Wrangler
 deploy **dry run**, and `git diff --check` are the delivery gates.
 

@@ -112,12 +112,12 @@ def build(root=ROOT):
                 t['scope']='Campaign advertising expenditure (source reporting period retained; no category sum)'
             supported = headers and (headers[0] == 'Year' or headers[:3] == ['Rank','Advertiser','Example campaigns'] or campaign_cost)
             percentages = any('%' in v for row in t['rows'][1:] for v in row)
-            if supported and not percentages and d['kind'] != 'annual plan' and not t.get('privacy_hold'):
+            if supported and not percentages and d['kind'] != 'annual plan':
                 t['status'] = 'reviewed'
                 if campaign_cost and (not t.get('entity') or not t.get('campaign')):
                     t.update(status='held',hold_reason='Campaign heading layout requires review')
             else:
-                t['hold_reason'] = t.get('hold') or ('Campaign title held for private-name review' if t.get('privacy_hold') else 'Plan, not expenditure' if d['kind']=='annual plan' else 'Percentage/non-expenditure or unsupported table layout')
+                t['hold_reason'] = t.get('hold') or ('Plan, not expenditure' if d['kind']=='annual plan' else 'Percentage/non-expenditure or unsupported table layout')
             t['sha256'] = sha(json.dumps(t['rows'],ensure_ascii=False,separators=(',',':')).encode())
             if t['status']=='reviewed':
                 try:

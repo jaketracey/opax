@@ -50,10 +50,6 @@ def matrices(body):
                 entity, title = parts if len(parts)==2 else (text,'')
                 sep=title
                 item.update(entity=entity, campaign=title if sep else '', campaign_heading_sha256=sha(text.encode()))
-                # Preserve prior table holds by opaque source-heading hash.
-                # All fields, in every table family, pass the same review below.
-                if item['campaign_heading_sha256'] in POLICY['held_campaign_heading_sha256']:
-                    item['privacy_hold']=True
             duration = table.find_previous(lambda t: t.name in ('h3','h4') and t.get_text(strip=True) == 'Duration')
             if duration:
                 value=duration.find_next('p')
@@ -68,8 +64,8 @@ def observations(table, document):
     """Official HTML table adapter. It never decodes a held document."""
     if not cleared(document):
         return [], []
-    # Reapply the same rule at the projection boundary. A reviewed digest or
-    # a caller-supplied table must never bypass report-text privacy review.
+    # Reapply entity-field review at the projection boundary. Descriptions and
+    # campaign titles remain source records, never person identities.
     table=review_table(deepcopy(table))
     for field in ('basis','scope'):
         table[field]=review_text(table.get(field,''),field)
@@ -82,7 +78,7 @@ def observations(table, document):
     year_column = headers[0] == 'Year'
     ranked = headers[:3] == ['Rank', 'Advertiser', 'Example campaigns']
     campaign_cost = headers == ['Campaign advertising expenditure', '$ (excluding GST)']
-    if campaign_cost and (table.get('privacy_hold') or not table.get('entity') or not table.get('campaign')):
+    if campaign_cost and (not table.get('entity') or not table.get('campaign')):
         return [], []
     if not year_column and not ranked and not campaign_cost:
         return [], []  # Unknown layouts need a separately reviewed adapter.

@@ -49,9 +49,9 @@ class VictorianAdvertisingTests(unittest.TestCase):
         html='<main><h2>Example Services Agency – Example awareness</h2><h3>Duration</h3><p>January – December 2018*</p><table><tr><td>Campaign advertising expenditure</td><td>$ (excluding GST)</td></tr><tr><td>Media advertising buy</td><td>1, 234</td></tr><tr><td>Print and collateral</td><td>N/A</td></tr></table><p>* Source covers the calendar year.</p></main>'
         t=table(html);rows,checks=observations(t,document())
         self.assertEqual(rows[0]['entity'],'Example Services Agency')
-        self.assertEqual(rows[0]['campaign'],'Campaign cost categories (title withheld)')
+        self.assertEqual(rows[0]['campaign'],'Example awareness')
         self.assertEqual(rows[0]['campaign_period'],'January – December 2018*')
-        self.assertEqual(rows[0]['period_note'],'Source note withheld pending review')
+        self.assertEqual(rows[0]['period_note'],'* Source covers the calendar year.')
         self.assertEqual(rows[0]['total_cents'],123400);self.assertEqual(rows[0]['source_value'],'1, 234')
         self.assertIsNone(rows[1]['total_cents']);self.assertEqual(rows[1]['source_value'],'N/A')
         self.assertEqual(checks,[])
@@ -72,31 +72,49 @@ class VictorianAdvertisingTests(unittest.TestCase):
         rows,checks=observations(t,document())
         self.assertEqual(len(rows),1);self.assertEqual(checks,[])
         self.assertEqual(rows[0]['entity'],'Department of Example Services')
-        self.assertEqual(rows[0]['campaign'],'Advertiser description withheld pending review')
+        self.assertEqual(rows[0]['campaign'],'Example information; Example awareness')
         self.assertEqual(rows[0]['total_cents'],123400)
         self.assertEqual(rows[0]['basis'],'Advertising expenditure (ex. GST)')
 
-    def test_invented_person_in_advertiser_description_never_enters_any_projection(self):
+    def test_person_named_inside_authorised_description_stays_record_text(self):
         f=private_description_fixture()
-        for output in (f['tables'],f['hub'],f['hub']['rows'],f['hub']['documents']):
-            self.assertNotIn('Avery Fenwick',json.dumps(output))
-        self.assertEqual(f['hub']['rows'][0]['total_cents'],123400)
-        self.assertEqual(f['hub']['privacy']['held_fields']['advertiser_description'],1)
-        self.assertTrue(any(h['field']=='advertiser_description' and len(h['sha256'])==64 for h in f['tables'][0]['privacy_holds']))
+        for output in (f['tables'],f['hub'],f['hub']['rows']):
+            self.assertIn('Avery Fenwick',json.dumps(output))
+        row=f['hub']['rows'][0]
+        self.assertEqual(row['entity'],'Department of Example Services')
+        self.assertEqual(row['total_cents'],123400)
+        self.assertEqual(f['hub']['privacy']['held_fields'],{})
+        self.assertNotIn('Avery Fenwick',row['id'])
+        self.assertNotIn('person',row)
+        self.assertNotIn('person_id',row)
 
-    def test_every_report_text_role_is_default_denied_not_just_campaign_titles(self):
-        roles=('advertiser_description','campaign_title','period_note','campaign_period','basis','scope','table_heading','organisation','category','summary','publication_title')
+    def test_record_text_roles_preserved_but_person_entity_fields_stay_withheld(self):
+        roles=('advertiser_description','campaign_title','period_note','campaign_period','basis','scope','table_heading','category','summary','publication_title')
         for role in roles:
-            holds=[];value=review_text('Avery Fenwick',role,holds,'synthetic field')
-            self.assertNotIn('Avery Fenwick',value)
+            holds=[]
+            self.assertEqual(review_text('Avery Fenwick',role,holds,'synthetic field'),'Avery Fenwick')
+            self.assertEqual(holds,[])
+        for role in ('organisation','supplier','facet_label'):
+            holds=[]
+            self.assertNotIn('Avery Fenwick',review_text('Avery Fenwick',role,holds,'synthetic field'))
             self.assertEqual(holds[0]['status'],'held')
             self.assertNotIn('Avery Fenwick',json.dumps(holds))
 
-    def test_projection_rechecks_caller_supplied_text_instead_of_trusting_review_flag(self):
-        t=table(RANKED);t['rows'][1][2]='Avery Fenwick'
+    def test_campaign_table_with_a_named_person_is_not_held_for_its_title(self):
+        html='<main><h2>Example Services Agency – Example exhibition featuring Avery Fenwick</h2><h3>Duration</h3><p>January – December 2018</p><table><tr><td>Campaign advertising expenditure</td><td>$ (excluding GST)</td></tr><tr><td>Media advertising buy</td><td>1,234</td></tr></table></main>'
+        t=table(html);rows,checks=observations(t,document())
+        self.assertEqual(len(rows),1)
+        self.assertIn('Avery Fenwick',rows[0]['campaign'])
+        self.assertEqual(rows[0]['entity'],'Example Services Agency')
+        self.assertFalse(t.get('privacy_hold'))
+        self.assertEqual(checks,[])
+
+    def test_projection_rechecks_entity_fields_without_matching_record_names(self):
+        t=table(RANKED);t['rows'][1][1]='Avery Fenwick';t['rows'][1][2]='Avery Fenwick'
         t['sha256']=sha(json.dumps(t['rows'],ensure_ascii=False,separators=(',',':')).encode())
         h=projection({'generated_at':'2026-10-18','documents':[document()]},[t])
-        self.assertNotIn('Avery Fenwick',json.dumps(h))
+        self.assertEqual(h['rows'][0]['entity'],'Organisation withheld pending review')
+        self.assertEqual(h['rows'][0]['campaign'],'Avery Fenwick')
 
     def test_published_discrepancy_is_recorded_without_changing_figures(self):
         rows,checks=observations(table(HISTORICAL.replace('$1.6','$2.6')),document())

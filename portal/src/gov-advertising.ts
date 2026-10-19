@@ -57,16 +57,18 @@ export function clearedAdvertising(hub:AdvertisingHub):Campaign[]{
 }
 
 const victoria=(v:unknown)=>typeof v==='string' && /^https:\/\/www\.vic\.gov\.au\/(?:historical-data-victorian-government-advertising-expenditure|victorian-government-(?:advertising|campaign-activity)[^\s<>"']*)$/.test(v)
-const reviewedLabels=new Set([...privacyPolicy.labels,...privacyPolicy.organisations])
-const dateWords=new Set('january february march april may june july august september october november december jan feb mar apr jun jul aug sep sept oct nov dec ongoing to and'.split(' '))
-const reviewedReportValue=(value:unknown,role='label')=>value==null || value==='' || typeof value==='string' && (reviewedLabels.has(value)
-  || role==='amount' && /^(?:\$?[\d, ]+(?:\.\d+)?|N\/A|-)$/.test(value)
-  || role==='period' && /\d/.test(value) && /^[\w\s\d.,/*()–—-]+$/.test(value) && (value.toLowerCase().match(/[a-z]+/g)||[]).every(word=>dateWords.has(word)))
-const reportValue=(value:unknown,role='label')=>reviewedReportValue(value,role)?value:role==='amount'?'Withheld source annotation':'Reported expenditure table'
+// Source text stays inside its record. Only organisation/facet fields can
+// participate in directory links or filters; no person matcher is consulted.
+const reviewedOrganisations=new Set<string>(privacyPolicy.organisations)
+const reviewedLabels=new Set<string>(privacyPolicy.labels)
+const recordText=(value:unknown)=>value==null || typeof value==='string'
+const reviewedOrganisation=(value:unknown)=>typeof value==='string' && (reviewedOrganisations.has(value) || value==='Organisation withheld pending review')
+const reviewedFacet=(value:unknown)=>value==null || value==='' || typeof value==='string' && reviewedLabels.has(value)
 /** A table is a separate reporting grain. Never sum overlapping source tables. */
 function clearedVictorianAdvertising(hub:AdvertisingHub):Campaign[]{
   if(!Array.isArray(hub.documents)||!Array.isArray(hub.rows)||!Array.isArray(hub.reconciliation))return []
-  if(hub.privacy?.version!==privacyPolicy.version || !hash(hub.privacy.policy_sha256))return []
+  // Keep the existing approved v1 asset readable until the v2 projection is reviewed.
+  if(![1,privacyPolicy.version].includes(hub.privacy?.version||0) || !hash(hub.privacy?.policy_sha256))return []
   if(new Set(hub.documents.map(d=>d.id)).size!==hub.documents.length || new Set(hub.rows.map(r=>r.id)).size!==hub.rows.length)return []
   const docs=new Map(hub.documents.filter(d=>{
     const l=d?.licence,r=d?.receipt
@@ -83,9 +85,9 @@ function clearedVictorianAdvertising(hub:AdvertisingHub):Campaign[]{
       || !hash(r.table_sha256) || !r.table_id?.startsWith(d.id+':t') || !r.id?.startsWith(r.table_id+':') || !/^HTML table \d+ row \d+ column \d+$/.test(r.source_locator)
       || !r.entity?.trim() || !r.campaign?.trim() || !r.basis || !r.measure || !['published total','media','category','advertiser','campaign cost'].includes(r.record_kind||'')
       || !['AUD','AUD million'].includes(r.unit||''))return false
-    if(['entity','campaign','category','media_type','table_heading','basis','measure','period_note'].some(key=>!reviewedReportValue(r[key as keyof Campaign]))
-      || !reviewedReportValue(r.campaign_period,'period') || !reviewedReportValue(r.source_value,'amount'))return false
-    const marker=r.record_kind==='campaign cost' && /^(?:N\/A|-|Withheld source annotation)$/.test(r.source_value||'')
+    if(!reviewedOrganisation(r.entity) || !reviewedFacet(r.media_type)
+      || ['campaign','category','table_heading','basis','measure','period_note','campaign_period','source_value'].some(key=>!recordText(r[key as keyof Campaign])))return false
+    const marker=r.record_kind==='campaign cost' && /^(?:N\/A(?:\s*\(.*\))?|-|Withheld source annotation|Incl(?:uded| in).*|\(Costs included in campaign production spend\))$/.test(r.source_value||'')
     if(marker){if(r.total_cents!==null)return false}
     else{
       const raw=(r.record_kind==='campaign cost'?r.source_value!.replace(/ \(print costs included\)$/,''):r.source_value!).replace(/, /g,',')
@@ -123,8 +125,9 @@ export async function govAdvertisingReady(request:Request,read:AdvertisingRead){
 
 export function advertisingTableRows(rows:Campaign[],agencies:Agency[]):Row[]{
   return rows.map(original=>{
-    const r=original.jurisdiction==='VIC'?{...original,...Object.fromEntries(['entity','campaign','category','media_type','table_heading','basis','measure','period_note'].map(key=>[key,reportValue(original[key as keyof Campaign])])),
-      source_value:reportValue(original.source_value,'amount'),campaign_period:reportValue(original.campaign_period,'period')} as Campaign:original
+    const r=original.jurisdiction==='VIC'?{...original,
+      entity:reviewedOrganisation(original.entity)?original.entity:'Organisation withheld pending review',
+      media_type:reviewedFacet(original.media_type)?original.media_type:null} as Campaign:original
     const matches=agencies.filter(a=>a.name===r.entity && /^a-[a-f0-9]{20}$/.test(a.id))
     return {campaign:r.campaign,financial_year:r.financial_year,entity:r.entity,total:r.total_cents==null?null:r.total_cents/100,
       jurisdiction:r.jurisdiction||'Federal',record_kind:r.record_kind||'campaign',media_type:r.media_type||null,
@@ -158,17 +161,17 @@ function victorianAdvertisingPage(url:URL,hub:AdvertisingHub,campaigns:Campaign[
   const totals=current.filter(r=>r.record_kind==='published total')
   const advertisers=current.filter(r=>r.record_kind==='advertiser')
   const sources=(rows:Campaign[])=>[...new Map(rows.map(r=>[r.source_url,r])).values()].map(vicReceipt).join('')
-  const cards=(rows:Campaign[])=>rows.map(r=>`<article class="gov-advertising-card"><h3>${esc(r.record_kind==='advertiser'?r.entity:[r.table_heading,r.campaign].filter(Boolean).join(' · '))}</h3><p class="gov-advertising-amount">${esc(vicMoney(r.total_cents!))}</p><p>Published ${esc(r.source_value)} · ${esc(r.unit)}</p><p>${esc(r.record_kind==='advertiser'?'Advertiser campaign media expenditure':r.measure)} · ${esc(r.basis)}</p>${r.record_kind==='advertiser'?`<p>Campaign description withheld pending private-name review.</p>`:''}${vicReceipt(r)}<details><summary>Published amount and source hashes</summary><p>${esc(r.source_value)} · ${esc(r.unit)}<br>Document SHA-256 ${esc(r.sha256)}<br>Table SHA-256 ${esc(r.table_sha256)}</p></details></article>`).join('')
+  const cards=(rows:Campaign[])=>rows.map(r=>`<article class="gov-advertising-card"><h3>${esc(r.record_kind==='advertiser'?r.entity:[r.table_heading,r.campaign].filter(Boolean).join(' · '))}</h3><p class="gov-advertising-amount">${esc(vicMoney(r.total_cents!))}</p><p>Published ${esc(r.source_value)} · ${esc(r.unit)}</p><p>${esc(r.record_kind==='advertiser'?'Advertiser campaign media expenditure':r.measure)} · ${esc(r.basis)}</p>${r.record_kind==='advertiser'?`<p class="gov-advertising-description">${esc(r.campaign)}</p>`:''}${vicReceipt(r)}<details><summary>Published amount and source hashes</summary><p>${esc(r.source_value)} · ${esc(r.unit)}<br>Document SHA-256 ${esc(r.sha256)}<br>Table SHA-256 ${esc(r.table_sha256)}</p></details></article>`).join('')
   const checks=hub.reconciliation as unknown as VictorianCheck[]
   const totalsChecks=checks.filter(c=>c.check==='Published table total')
   const discrepancies=totalsChecks.filter(c=>c.status!=='pass')
   return {status:200,title:title+' · OPAX',description,noindex:Boolean(url.search),prerender:block(title,description,undefined,[{label:title}])+`<div class="wrap gov-advertising-content">
     <p class="gov-advertising-lede">These reports describe Victorian Government media advertising, including campaign, functional and recruitment advertising. They report expenditure through the Master Agency Media Services (MAMS) arrangement. Advertiser totals can cover several example campaigns; a separate cost is not published for each example. Procurement commitments, production costs and individual departments’ annual-report disclosures have different scopes.</p>
     <section aria-labelledby="advertising-totals"><h2 id="advertising-totals">Published totals · ${esc(latest)}</h2><p>Each figure is a published total, shown in abbreviated form alongside its original amount and unit. Tables overlap and must not be added together.</p><div class="gov-advertising-cards">${cards(totals)}</div></section>
-    <section aria-labelledby="advertising-departments"><h2 id="advertising-departments">Departments and agencies · ${esc(latest)}</h2><p>The report’s ten campaign advertisers. Each amount belongs to the advertiser. Report descriptions are withheld pending private-name review. This is a reported amount, with the source’s coverage and GST basis.</p><div class="gov-advertising-cards">${cards(advertisers)}</div></section>
-    <section aria-labelledby="advertising-records"><h2 id="advertising-records">Full expenditure table</h2><p>${campaigns.length} published cells across ${new Set(campaigns.map(r=>r.financial_year)).size} financial years. Category totals, media channels and advertiser summaries are separate views of expenditure. Filter by record type before interpreting results; no total is calculated from the selection. Source units and GST wording are retained. Missing and included-cost markers are shown as published, with no amount inferred. Campaign periods can differ from the report year. Only structured dates and reviewed labels are shown; unreviewed descriptions, campaign titles and notes are withheld in every output.</p>${registerTableHTML(config,guarded.query,url)}</section>
+    <section aria-labelledby="advertising-departments"><h2 id="advertising-departments">Departments and agencies · ${esc(latest)}</h2><p>The report’s ten campaign advertisers. Each amount belongs to the advertiser. Example campaigns follow the source record. This is a reported amount, with the source’s coverage and GST basis.</p><div class="gov-advertising-cards">${cards(advertisers)}</div></section>
+    <section aria-labelledby="advertising-records"><h2 id="advertising-records">Full expenditure table</h2><p>${campaigns.length} published cells across ${new Set(campaigns.map(r=>r.financial_year)).size} financial years. Category totals, media channels and advertiser summaries are separate views of expenditure. Filter by record type before interpreting results; no total is calculated from the selection. Source units and GST wording are retained. Missing and included-cost markers are shown as published, with no amount inferred. Campaign periods can differ from the report year. Descriptions, campaign titles and notes follow the authorised source record. They do not create person profiles, name facets or identity links.</p>${registerTableHTML(config,guarded.query,url)}</section>
     <section><h2>Published-total reconciliation</h2><p>${totalsChecks.length} comparisons of table components with the publisher’s own total: ${totalsChecks.filter(c=>c.difference_cents===0).length} exact and ${totalsChecks.filter(c=>c.difference_cents!==0 && c.status==='pass').length} within printed precision; ${discrepancies.length} outside that bound. ${checks.filter(c=>c.check==='Published total source cell').length} published totals also match their source cells. OPAX calculates a half-unit bound from each printed cell’s precision; this is not a publisher rounding statement. No published amount is adjusted. Tables without a published total are not summed.</p><details><summary>Reconciliation by table and year</summary><ul>${totalsChecks.map(c=>`<li>${esc(c.financial_year)} · ${esc(c.table_id)} · ${esc(c.source_locator)} · ${esc(c.comparison||c.status)} · difference ${esc(money(c.difference_cents!))} · printed-precision allowance ${esc(money(c.tolerance_cents!))}</li>`).join('')}</ul></details><p><a href="#advertising-sources">Original sources and licence</a></p></section>
-    <section id="advertising-sources"><h2>Source, coverage and reuse</h2><p>© Copyright State Government of Victoria. Numerical HTML tables and reviewed organisation/category labels are used under <a href="https://www.vic.gov.au/copyright">the website’s CC BY 4.0 grant</a>. Tables are transcribed and formatted; published labels and figures are retained. Images, logos, the Coat of Arms, third-party material and campaign creative are excluded.</p><p>The inventory follows the publisher’s <a href="https://www.vic.gov.au/advertising-plans-and-spend">advertising reports and plans index</a>. Document downloads are held under the current robots policy. Plans describe intended activity and are not reported expenditure. Percentage tables and chart images are not converted into money. No suppliers or private-person records are added to global search.</p>${sources(campaigns)}</section></div>`}
+    <section id="advertising-sources"><h2>Source, coverage and reuse</h2><p>© Copyright State Government of Victoria. Numerical HTML tables and their source-record text are used under <a href="https://www.vic.gov.au/copyright">the website’s CC BY 4.0 grant</a>. Tables are transcribed and formatted; published labels and figures are retained. Images, logos, the Coat of Arms, third-party material and campaign creative are excluded.</p><p>The inventory follows the publisher’s <a href="https://www.vic.gov.au/advertising-plans-and-spend">advertising reports and plans index</a>. Document downloads are held under the current robots policy. Plans describe intended activity and are not reported expenditure. Percentage tables and chart images are not converted into money. Names inside source-record text remain in that record; no private-person entities, name-search nodes or identity joins are created.</p>${sources(campaigns)}</section></div>`}
 }
 
 export async function govAdvertisingPage(url:URL,read:AdvertisingRead,block:(title:string,text:string,links?:string,crumbs?:{label:string;href?:string}[])=>string,agencies:Agency[]=[]){

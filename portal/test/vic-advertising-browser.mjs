@@ -34,12 +34,17 @@ try{
   await page.screenshot({path:resolve(out,`advertising-${width}-top.png`)});
   await page.evaluate(()=>scrollTo(0,scrollY+document.querySelector('.dt-scroll').getBoundingClientRect().top-160));
   await page.screenshot({path:resolve(out,`advertising-${width}-table.png`)});
-  results.push({width,status:response.status(),horizontalOverflow:overflow,table,rows:JSON.parse(await page.locator('[data-dt-page]').textContent()).total});
+  const descriptions=await page.locator('.gov-advertising-description').allTextContents();
+  const latest=hub.rows.map(r=>r.financial_year).sort().at(-1);
+  const published=hub.rows.filter(r=>r.financial_year===latest&&r.record_kind==='advertiser').map(r=>r.campaign);
+  assert.deepEqual(descriptions,published);
+  assert.equal(await page.locator('.gov-advertising-description a').count(),0);
+  results.push({width,status:response.status(),horizontalOverflow:overflow,table,rows:JSON.parse(await page.locator('[data-dt-page]').textContent()).total,sourceDescriptions:descriptions.length,personLinksInDescriptions:0});
  }
  const before=JSON.parse(await page.locator('[data-dt-page]').textContent()).total;
  await page.locator('[data-search]').fill('campaign cost');
  await page.waitForFunction(total=>JSON.parse(document.querySelector('[data-dt-page]').textContent).total<total,before);
- const after=JSON.parse(await page.locator('[data-dt-page]').textContent()).total;assert.ok(after>0);
+ const after=JSON.parse(await page.locator('[data-dt-page]').textContent()).total;assert.equal(after,hub.rows.filter(r=>r.record_kind==='campaign cost').length);
  const download=page.waitForEvent('download');await page.locator('[data-export]').click();const csv=await readFile(await(await download).path(),'utf8');
  for(const label of ['GST basis','Published amount','Source unit','Campaign period as published','Document SHA-256','Table SHA-256','Attribution'])assert.ok(csv.includes(label),label);
  assert.ok(!csv.includes('PRIVATE SUPPLIER SENTINEL'));assert.ok(csv.includes('$ (excluding GST)'));
@@ -52,6 +57,6 @@ try{
  assert.equal((await(await context.request.get(base+'/gov-advertising/ready.json')).json()).count,hub.rows.length);
  holdData();assert.deepEqual(await(await context.request.get(base+'/gov-advertising/ready.json')).json(),{ready:false,count:0});
  assert.deepEqual(errors,[]);
- const receipt={preview:'Explicit local staged asset through actual Worker; pending orchestrator review; no public asset, external requests or production bindings',sha256:createHash('sha256').update(bytes).digest('hex'),results,search:{before,after},csv:true,javaScriptDisabled:true,staticPhoneTable,closedMenuWithoutAsset:true,pageErrors:errors};
+ const receipt={preview:'Explicit local staged asset through actual Worker; expanded source-record text pending orchestrator review; existing public asset unchanged; no external requests or production bindings',sha256:createHash('sha256').update(bytes).digest('hex'),results,search:{before,after},csv:true,javaScriptDisabled:true,staticPhoneTable,emptyReadinessWithoutAsset:true,pageErrors:errors};
  await writeFile(resolve(out,'browser-results.json'),JSON.stringify(receipt,null,2)+'\n');console.log(JSON.stringify(receipt));
 }finally{await browser.close();await close();}

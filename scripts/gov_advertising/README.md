@@ -19,15 +19,16 @@ The one uppercase plan acquired before that family hold is quarantined.
 `python3 -m scripts.gov_advertising.stage_victoria` rebuilds staged inventory,
 table coordinates/hashes, reconciliation and `hub.json` from private originals.
 It checks the linked website grant before extracting numerical tables. Plans,
-percentages, private-title holds and all attachment content are excluded from
-the public projection. All report-derived narrative passes through the shared default-deny policy in
-`portal/src/gov-advertising-privacy.json`, via `privacy.py`. Only exact reviewed
-organisation/category labels and structured amounts/dates survive. Unreviewed
-descriptions, titles, notes and annotations are withheld before staging and
-rechecked at projection/serving boundaries. `privacy-holds.json` contains only
-hashes, coordinates and reasons. Original table hashes remain distinct from
-sanitized transcription hashes; no amount is inferred. Reviewed missing codes
-and structured source periods are retained.
+percentages and all attachment content are excluded from
+the public projection. Jake's 19 Oct 2026 decision keeps names in authorised report descriptions,
+campaign titles, periods, notes and annotations as source-record text.
+`portal/src/gov-advertising-privacy.json` and `privacy.py` now review only
+organisation/entity and facet fields; they create no person entities, links,
+name-search nodes or identity joins. Campaign text is plain text, with a separate
+original-source link. Individual/sole-trader suppliers remain withheld.
+`privacy-holds.json` retains hash-only receipts for entity/facet holds; it is
+empty for the current source. The nine former name-only table holds are released;
+30 attachment holds remain for robots/file rights. Never infer an amount.
 
 `python3 -m scripts.gov_advertising.victoria --dry-run --verify-originals`
 checks every retained original/table/heading hash and the exact projection with
@@ -35,12 +36,13 @@ zero writes. Omit `--verify-originals` in a checkout without the private cache.
 
 `vic-advertising` is an explicit opt-in in `promote_hub_data.py`, targeting the
 single `gov-advertising/data.json` asset. It is not a default/nightly hub.
-`data/staged/vic-advertising/review.json` is **approved** against
-`961e07ac91cf5fc9ba21c5f6588f96170f715886`, binding eight exact input digests.
-The orchestrator authorized local promotion on 19 October; deployment is pending.
-The promoter wrote the shared public asset and its Money navigation gate clears
-locally. Any input change requires renewed review; never silently update an
-approved digest. A held or mismatched receipt preserves the last good asset.
+`data/staged/vic-advertising/review.json` is **pending** for the expanded
+1,239-cell projection, with eight fresh input digests and no reviewed commit.
+The new projection must be explicitly approved by the orchestrator before
+re-promotion. Its dry run intentionally refuses pending review. The 1,194-cell
+public asset already on main remains unchanged and readable under policy v1;
+new staging uses policy v2. No nightly, public-asset write, push or deploy is
+part of this decision follow-up.
 
 The Worker never reads staging. For labelled, local QA only:
 
