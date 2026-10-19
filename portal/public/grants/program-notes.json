@@ -219,7 +219,58 @@
         "name": "Major and Local Community Infrastructure Program",
         "summary": "The Major and Local Community Infrastructure Program is the Albanese government's one-off round for delivering community infrastructure commitments from the 2025 federal election, the 2025-26 Budget and the Pre-Election Fiscal Outlook, funding community and sporting facilities, open space and other local priorities over four years from 2025-26. It opened on 1 September 2025 as an invitation-only program: only organisations identified by the government were invited to apply for their nominated projects, with applications due by 1 December 2025. It is too new to have been audited.",
         "audits": [],
-        "hansard": "Major and Local Community Infrastructure"
+        "hansard": "Major and Local Community Infrastructure",
+        "invitations": {
+          "data": "/research/mlci.json",
+          "source": "Department of Infrastructure, Transport, Regional Development, Communications, Sport and the Arts, answer to a Senate Estimates request, Supplementary Budget Estimates 2025-26",
+          "url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf"
+        },
+        "research": [
+          {
+            "publisher": "Centre for Public Integrity",
+            "title": "Public money, political advantage?",
+            "year": 2026,
+            "url": "https://publicintegrity.org.au/wp-content/uploads/2026/09/Public-money-political-advantage.pdf",
+            "finding": "The Centre for Public Integrity's analysis of the departmental invitation list compares the value of invited projects in each type of seat with a share proportional to the number of seats of that type (Table 3, page 11).",
+            "note": "Figures as published by the Centre for Public Integrity, not reproduced by OPAX. Seat types use the AEC's classification before the 2025 federal election, on notional 2025 boundaries; the Centre's paper notes four by-election results and an exception for Brisbane.",
+            "compare": {
+              "value": "Invited",
+              "baseline": "Proportional to seat numbers",
+              "rows": [
+                {
+                  "label": "Labor safe",
+                  "value": 125125027,
+                  "baseline": 137946289
+                },
+                {
+                  "label": "Labor fairly safe",
+                  "value": 144931587,
+                  "baseline": 82022118
+                },
+                {
+                  "label": "Marginal, Labor competitive",
+                  "value": 223128975,
+                  "baseline": 156587679
+                },
+                {
+                  "label": "Marginal, Labor non-competitive",
+                  "value": 5230000,
+                  "baseline": 37282781
+                },
+                {
+                  "label": "Other parties fairly safe",
+                  "value": 28276123,
+                  "baseline": 55924171
+                },
+                {
+                  "label": "Other parties safe",
+                  "value": 32550000,
+                  "baseline": 89478674
+                }
+              ]
+            }
+          }
+        ]
       }
     },
     "qld": {}

@@ -92,3 +92,34 @@ test("no markdown inside strings", () => {
   });
   assert.deepEqual(bad, [], `strings that look like markdown: ${bad.join(", ")}`);
 });
+
+test("an invitation list and attributed research are well formed, and GO7867's match its data file", () => {
+  for (const [jur, programs] of Object.entries(notes.programs)) {
+    for (const [id, note] of Object.entries(programs)) {
+      const where = `${jur}/${id}`;
+      if (note.invitations) {
+        assert.match(note.invitations.data, /^\/research\/[a-z0-9-]+\.json$/, `${where} invitations.data is a site data file`);
+        assert.ok(note.invitations.source && note.invitations.source.length > 20, `${where} invitations need a named source`);
+        assert.ok(isHttp(note.invitations.url), `${where} invitations need an http(s) source url`);
+      }
+      for (const r of note.research || []) {
+        assert.ok(r.publisher && r.title, `${where} research needs a publisher and title`);
+        assert.ok(isHttp(r.url), `${where} research "${r.title}" needs an http(s) url`);
+        assert.ok(Number.isInteger(r.year), `${where} research needs a year`);
+        assert.ok(r.finding && r.finding.length > 40, `${where} research needs a finding`);
+        // Report the figures; characterising them is the publisher's job, not OPAX's.
+        assert.doesNotMatch(JSON.stringify(r), /rort|pork|bias|scandal|favou?rit|slush|corrupt/i, `${where} research wording`);
+        for (const row of r.compare?.rows || []) assert.ok(row.label && Number.isFinite(row.value) && Number.isFinite(row.baseline), `${where} comparison row`);
+      }
+    }
+  }
+  const mlci = JSON.parse(readFileSync(join(here, "../public/research/mlci.json"), "utf8"));
+  const note = notes.programs.federal.GO7867;
+  assert.equal(note.invitations.data, "/research/mlci.json");
+  assert.equal(note.invitations.url, mlci.sources.department);
+  const [cpi] = note.research;
+  assert.equal(cpi.url, mlci.sources.cpi);
+  assert.equal(cpi.publisher, mlci.comparison_provenance.publisher);
+  assert.match(cpi.note, /AEC's classification before the 2025 federal election/);
+  assert.deepEqual(cpi.compare.rows, mlci.cpi_comparison.map((r) => ({ label: r.name, value: r.actual, baseline: r.expected })), "the six rows exactly as published");
+});

@@ -8,7 +8,6 @@ import { recordPathIndex } from '../portal/public/record-paths.js';
 import { personSlug, personIndex } from '../portal/src/person-slug.ts';
 import {donorDisclosure,donorLookup} from '../portal/public/donor-disclosure.js';
 import { moneyFlowType } from '../portal/public/money-records.js';
-import { recordsWithLocations } from '../portal/public/grants-research.js';
 import { auditComplete } from '../portal/public/audit.js';
 import { payPersonRecord, payPersonOrder, payGeneralRecords } from '../portal/src/pay-records.mjs';
 import { reportsPublished } from './reports_flag.mjs';
@@ -163,7 +162,16 @@ async function main() {
  const fits=await read('fits.json');
  for(const list of [...Object.values(fits.by_entity),...Object.values(fits.people)]) for(const r of list) add(`fits:${r.registrant}:${r.principal}:${r.from}`,'access',`${r.registrant} — ${r.principal}`,r.url,`${r.country}. ${(r.activities||[]).join('; ')}. ${r.status}.`,{date:r.from,state:'federal',source:'Foreign Influence Transparency Scheme',url:r.url});
  const agencies=await read('agencies.json');
- // The reports and the grants-allocation research rows (all of them open /reports/…)
+ const mlci=await read('research/mlci.json');
+ // The Major and Local Community Infrastructure Program's invited projects and the
+ // published seat-type comparison live in its program view on Money -> Grants, whatever
+ // REPORTS_ENABLED says. An invitation to apply is not an award or a payment.
+ const mlciHref='/money/grants?'+new URLSearchParams({jur:'federal',program:'GO7867'});
+ for(const p of mlci.projects.filter(p=>p.status!=='Withdrawn'))
+  add(p.id,'grant',`${p.title} — invited project, not awarded`,mlciHref,`Invited to apply, not awarded: ${cash(p.value)} invitation allocation. ${p.status}. ${p.lga}, ${p.state}. Major and Local Community Infrastructure Program (GO7867). Not a grant award or payment.`,{date:mlci.invitation_snapshot,state:'federal',source:'Departmental list of invited projects',url:p.source_url,record_id:p.id});
+ add('research-cpi-mlci-2026','grant','Public money, political advantage? (Centre for Public Integrity)',mlciHref,'The Centre for Public Integrity\'s published comparison of Major and Local Community Infrastructure Program invitation value by seat type, against a share proportional to seat numbers (Table 3), as published and not reproduced by OPAX. '+mlci.cpi_comparison.map(r=>`${r.name}: ${cash(r.actual)} invited; ${cash(r.expected)} proportional`).join('; ')+'.',{date:'2026-09-08',state:'federal',source:'Centre for Public Integrity',url:mlci.sources.cpi,record_id:'research-cpi-mlci-2026'});
+ add('mlci-program-coverage','grant','Major and Local Community Infrastructure Program: invited projects and awards',mlciHref,`${mlci.projects.filter(p=>p.status!=='Withdrawn').length} active invitations total $559,241,712 at 14 November 2025; separately, ${mlci.awards.length} published awards total ${cash(mlci.awards.reduce((s,p)=>s+p.value,0))} in Opax at ${mlci.as_of}. Invitations are not awards or payments; do not add totals. `+Object.entries({NSW:'New South Wales',VIC:'Victoria',QLD:'Queensland',WA:'Western Australia',SA:'South Australia',TAS:'Tasmania',NT:'Northern Territory',ACT:'Australian Capital Territory'}).map(([state,name])=>`${name}: ${cash(mlci.projects.filter(p=>p.status!=='Withdrawn'&&p.state===state).reduce((sum,p)=>sum+p.value,0))} in active invitations.`).join(' '),{date:mlci.as_of,state:'federal',source:'Departmental invitation list and GrantConnect snapshot',url:mlci.sources.department});
+ // The reports and the seat baselines that only the grants-allocation page showed
  // are searchable only while the reports are published (REPORTS_ENABLED in
  // portal/wrangler.jsonc).
  if(reportsPublished()) {
@@ -171,15 +179,6 @@ async function main() {
    if(file==='index.json')continue;const r=await read('reports/'+file);
    add('report:'+r.slug,'report',r.title,'/reports/'+r.slug,r.blurb,{date:r.generated_at?.slice(0,10),source:'OPAX research report'});
   }
-  const mlci=await read('research/mlci.json');
-  const grantLocations=await read('research/grant-locations.json');
-  for(const p of recordsWithLocations(mlci,grantLocations,'invitations')) {
-   const venueText=p.sites.map(s=>`Verified venue: ${s.site_name}, ${s.address}; ${s.electorate_2025} electorate (2025). Venue point only, not a surveyed work footprint or a seat-level funding allocation.`).join(' ');
-   const target={stage:'invitations',project:p.id,q:p.title,...(p.sites.length?{}:{view:'list'})};
-   add(p.id,'report',`${p.title} — MLCI invitation record`, '/reports/grants-allocation?'+new URLSearchParams(target),`${cash(p.value)} invitation allocation. ${p.status}. ${p.lga}, ${p.state}. Not an awarded grant or payment. ${venueText}`.trim(),{date:mlci.invitation_snapshot,state:'federal',source:'Departmental project list',url:p.source_url,record_id:p.id});
-  }
-  add('research-cpi-mlci-2026','report','Public money, political advantage?','/reports/grants-allocation','Centre for Public Integrity research on pork barrelling, marginal seats and Major and Local Community Infrastructure Program invitations. CPI Table 3 reports $223,128,975 for marginal seats where Labor was competitive, versus $156,587,679 under a seat-count proportional baseline. Attributed CPI analysis, not independently replicated by Opax; no finding about individual project merit. '+mlci.cpi_comparison.map(r=>`${r.name}: ${cash(r.actual)} invitation value; ${cash(r.expected)} proportional baseline.`).join(' '),{date:'2026-09-08',state:'federal',source:'Centre for Public Integrity',url:mlci.sources.cpi_landing});
-  add('mlci-program-coverage','report','MLCI program: invitations and awards','/reports/grants-allocation',`${mlci.projects.filter(p=>p.status!=='Withdrawn').length} active invitations total $559,241,712 at 14 November 2025; separately, ${mlci.awards.length} published awards total ${cash(mlci.awards.reduce((s,p)=>s+p.value,0))} in Opax at ${mlci.as_of}. Invitations are not awards or payments; do not add totals. `+Object.entries({NSW:'New South Wales',VIC:'Victoria',QLD:'Queensland',WA:'Western Australia',SA:'South Australia',TAS:'Tasmania',NT:'Northern Territory',ACT:'Australian Capital Territory'}).map(([state,name])=>`${name}: ${cash(mlci.projects.filter(p=>p.status!=='Withdrawn'&&p.state===state).reduce((sum,p)=>sum+p.value,0))} in active invitations.`).join(' '),{date:mlci.as_of,state:'federal',source:'Departmental invitation list and GrantConnect snapshot',url:mlci.sources.department});
   for(const s of mlci.seats) add('aec-seat:'+s.name,'report',`${s.name} — 2025 seat baseline`,'/reports/grants-allocation?'+new URLSearchParams({seat:s.name}),`${s.state}. ${s.party}. ${s.margin.toFixed(2)} percentage-point margin. ${{M:'Marginal',FS:'Fairly safe',S:'Safe'}[s.status]}. AEC notional baseline before the 2025 election, not the election result or current incumbent.`,{date:'2025-05-03',state:'federal',source:'AEC pre-election seat status',url:mlci.sources.aec+'#page='+s.page});
  }
  for(const a of agencies.agencies) add('agency:'+a.id,'agency',a.name,'/subject/agency/'+encodeURIComponent(a.id),`${cash(a.total)} in recorded awards across ${a.count} contracts and ${a.supplier_count} suppliers.`,{from:a.first_year,to:a.last_year,state:'federal',source:'AusTender agency profile',dateLabel:period(a.first_year,a.last_year)});
