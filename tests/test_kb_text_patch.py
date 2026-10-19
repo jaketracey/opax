@@ -26,6 +26,10 @@ class FakeKb:
 
     def delete_resource_by_slug(self, slug):
         self.calls.append(("delete", slug))
+        if slug in self.boom:
+            raise AragError(500, "u", "server error")
+        if slug in self.missing:
+            raise AragError(404, "u", "not found")
 
     def create_resource(self, body):
         self.calls.append(("create", body["slug"]))
@@ -85,6 +89,40 @@ def test_a_deleted_turn_is_deleted_from_the_box_only_if_it_was_pushed(db):
     assert kb.calls == [("delete", "speech-5")]
 
 
+def test_an_already_absent_deleted_turn_completes_once_and_clears_its_old_error(db):
+    kp.queue(db, "committee_kb_queue", 5, "delete", "turn absent from the Final")
+    db.execute("UPDATE committee_kb_queue SET error='previous 404' WHERE speech_id=5")
+    kb = FakeKb(missing={'speech-5'})
+    assert kp.send_queued(db, kb, "committee_kb_queue", checkpoint=10) == {"deleted": 1}
+    row = db.execute("SELECT done_at,error FROM committee_kb_queue WHERE speech_id=5").fetchone()
+    assert row['done_at'] is not None and row['error'] is None
+    assert pending(db) == []
+    assert kp.send_queued(db, kb, "committee_kb_queue", checkpoint=10) == {}
+    assert kb.calls == [('delete', 'speech-5')]
+
+
+@pytest.mark.parametrize('status', [403, 500, 0])
+def test_delete_errors_other_than_404_remain_pending_and_report_failure(db, status):
+    kp.queue(db, "committee_kb_queue", 5, "delete", "turn absent from the Final")
+    class Refused(FakeKb):
+        def delete_resource_by_slug(self, slug):
+            self.calls.append(('delete', slug))
+            raise AragError(status, 'fixture', 'refused or unavailable')
+    kb = Refused()
+    assert kp.send_queued(db, kb, "committee_kb_queue", checkpoint=10) == {"failed": 1}
+    assert pending(db) == [(5, 'delete')]
+    row = db.execute("SELECT done_at,error FROM committee_kb_queue WHERE speech_id=5").fetchone()
+    assert row['done_at'] is None and f'ARAG {status}' in row['error']
+    assert kb.calls == [('delete', 'speech-5')]
+
+
+def test_dry_run_of_an_absent_deleted_turn_sends_and_marks_nothing(db):
+    kp.queue(db, "committee_kb_queue", 5, "delete", "turn absent from the Final")
+    kb = FakeKb(missing={'speech-5'})
+    assert kp.send_queued(db, kb, "committee_kb_queue", dry_run=True, checkpoint=10) == {"deleted": 1}
+    assert kb.calls == [] and pending(db) == [(5, 'delete')]
+
+
 def test_a_failure_stays_queued_with_its_error_and_is_retried(db):
     sid = speech(db)
     kp.queue(db, "committee_kb_queue", sid, "patch", "proof_to_final")
@@ -117,6 +155,37 @@ def test_re_queueing_a_done_row_makes_it_pending_again(db):
 
 
 # ---- the committee command uses it ------------------------------------------------------------------------------------
+
+@pytest.mark.parametrize('status,expected', [(200, 0), (404, 0), (403, 1), (500, 1), (0, 1)])
+def test_act_patch_command_completes_only_successful_or_absent_deletes(tmp_path, monkeypatch, status, expected):
+    from parli import arag
+    from parli.ingest import arag_sync as sync
+    from parli.ingest import act_hansard as act
+    path = tmp_path / 'act.db'
+    conn = act.open_db(str(path))
+    kp.queue(conn, 'act_hansard_kb_queue', 5, 'delete', 'turn absent from the proof')
+    conn.execute("UPDATE act_hansard_kb_queue SET error='previous error' WHERE speech_id=5")
+    conn.commit()
+    conn.close()
+    class DeleteResult(FakeKb):
+        def delete_resource_by_slug(self, slug):
+            self.calls.append(('delete', slug))
+            if status != 200:
+                raise AragError(status, 'fixture', 'absent or refused')
+    kb = DeleteResult()
+    monkeypatch.setattr(arag, 'load_dotenv', lambda: None)
+    monkeypatch.setattr(arag.AragConfig, 'from_env', lambda: arag.AragConfig(zone='fixture', kb_id='fixture', kb_token='fixture'))
+    monkeypatch.setattr(arag, 'KbClient', lambda cfg: kb)
+    monkeypatch.setattr(sync, 'load_state', lambda: {'tables': {'speeches': {'after': 10}}})
+    monkeypatch.setattr(act, 'Fetcher', lambda **kw: None)
+    monkeypatch.setattr(act, 'run', lambda *a, **kw: (_ for _ in ()).throw(AssertionError('no source acquisition')))
+    assert act.main(['--db', str(path), '--patch-kb', '--patch-limit', '7']) == expected
+    assert kb.calls == [('delete', 'speech-5')]
+    with sqlite3.connect(path) as check:
+        done, error = check.execute('SELECT done_at,error FROM act_hansard_kb_queue WHERE speech_id=5').fetchone()
+    assert (done is None) == bool(expected)
+    assert (error is not None) == bool(expected)
+
 
 def test_patch_kb_flag_sends_the_queue_and_exits_without_discovery(tmp_path, monkeypatch):
     sent = []

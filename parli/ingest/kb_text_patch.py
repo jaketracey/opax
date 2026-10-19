@@ -65,7 +65,11 @@ def send_queued(db: sqlite3.Connection, kb=None, table: str = "", *, label: str 
         try:
             if op == "delete":
                 if not dry_run and sid <= checkpoint:
-                    kb.delete_resource_by_slug(slug)
+                    try:
+                        kb.delete_resource_by_slug(slug)
+                    except sync.AragError as e:
+                        if e.status != 404:
+                            raise
                 status = "deleted" if sid <= checkpoint else "not-pushed"
             else:
                 srow = db.execute("SELECT * FROM speeches WHERE speech_id=?", (sid,)).fetchone()
