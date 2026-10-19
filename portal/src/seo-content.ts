@@ -184,7 +184,7 @@ export async function renderPersonAnswer(p: Person, read: ReadAsset, slugs: Map<
     const seat = seats?.electorates.find(e=>fold(e.name)===fold(r.electorate) && e.jurisdiction===r.jurisdiction && e.chamber===r.chamber)
     body += `<li>${seat ? link(seat.url,r.electorate) : escapeHtml(r.electorate)} — ${escapeHtml(chamber(r.chamber))}</li>`
   }
-  body += `</ul>${original(profileUrl)}<p>${link('/parliamentarians.json','Parliamentarian data export')}. Recorded representation can include historical seats; affiliation with no current-roster flag is not verified as current or former.</p>`
+  body += `</ul>${original(profileUrl)}<p>${link('/parliamentarians.json','Parliamentarian data (JSON)')}. Recorded representation can include historical seats; affiliation with no current-roster flag is not verified as current or former.</p>`
   // The Senate's own video of a first speech, matched to this roster row by the fetcher; nothing when there is none.
   body += videoSectionHTML('First speech',personVideos(video?.videos,slugs.get(p.name),p),{id:'ssr-first-speech',note:'Video published by the Senate Public Information Office on YouTube. The player loads from YouTube only when you press play.',after:`<p class="video-more">${link('/video/senate?kind=first-speech','All first speeches')}</p>`})
   if (!p.speech_scope) {
@@ -192,16 +192,16 @@ export async function renderPersonAnswer(p: Person, read: ReadAsset, slugs: Map<
     const {rows, recorded: hasRecent} = personVoteRecords(keys,voteData,recentData)
     const votes = (rows as Vote[]).sort((a,b)=>String(b.date || '').localeCompare(String(a.date || '')))
     if (votes.length) {
-      const config = voteTableConfig(keys, hasRecent ? 'Recorded votes' : 'Latest exported bill votes')
+      const config = voteTableConfig(keys, hasRecent ? 'Recorded votes' : 'Latest bill votes')
       config.id += '-ssr'
       body += voteTableHTML(config,voteTablePage(votingRows(votes,bills?.bills || []),config,tableQuery))
-      body += '<p>This list covers votes available in the published export. Only formal divisions leave a per-member record. Party position is shown only when the vote source records it.</p>'
-      body += `<p>Source: ${hasRecent ? link('/seo/recent-votes.json','OPAX recorded-vote export') : `${link('/votes.json','OPAX bill-vote export')} (They Vote For You and state Hansard)`}.</p>`
+      body += '<p>This list covers the votes in OPAX’s published data. Only formal divisions leave a per-member record. Party position is shown only when the vote source records it.</p>'
+      body += `<p>Source: ${hasRecent ? link('/seo/recent-votes.json','OPAX recorded-vote data') : `${link('/votes.json','OPAX bill-vote data')} (They Vote For You and state Hansard)`}.</p>`
     }
     const id = p.pid && interests?.people[p.pid] ? p.pid : interests?._by_name[fold(p.name)]
     const register = id && /^[\w-]+$/.test(id) ? await optional<Interest>(read,`/interests/${id}.json`) : null
-    body += '<h2>Declared interests</h2>'
     if (register) {
+      body += '<h2>Declared interests</h2>'
       if (register.as_at) body += `<p>Updated ${escapeHtml(shortDate(register.as_at))}</p>`
       body += `<p>${count(register.total)} recorded entries${register.as_at ? ` in the latest register snapshot, as at ${escapeHtml(register.as_at)}` : ''}.</p>`
       const {rows} = interestTableData(register)
@@ -211,7 +211,7 @@ export async function renderPersonAnswer(p: Person, read: ReadAsset, slugs: Map<
       body += '<p>Date is the notification date where supplied, otherwise the register snapshot date. Check the official entry for holders and alterations.</p>'
       body += original(register.source_url)
       if (register.ocr_rows || register.unread_pages) body += `<p>Some entries use OCR. ${register.unread_pages || 0} unread source pages; check the original register.</p>`
-    } else body += '<p>No register of interests in this export.</p>'
+    }
   }
   body += '<h2>Donors to their party</h2><p>Donations to a party are not personal donations to this member. An association does not prove influence.</p>'
   if (party) for (const [path,source] of [['/graph/money.json','AEC'],['/graph/money.qld.json','ECQ'],['/graph/money.vic.json','VEC']]) {
@@ -224,7 +224,7 @@ export async function renderPersonAnswer(p: Person, read: ReadAsset, slugs: Map<
     body += `<p>Source: ${escapeHtml(graph.meta.sourceShort || graph.meta.source || source)}. Federal and state returns are shown separately and never summed.</p>${original(graph.meta.source_url || (source==='AEC' ? 'https://transparency.aec.gov.au/' : source==='ECQ' ? 'https://disclosures.ecq.qld.gov.au/' : 'https://disclosures.vec.vic.gov.au/'))}`
   }
   const owned = sponsored?.sponsored[p.pid || p.name] || []
-  body += `<h2>Bills sponsored</h2>${owned.length ? `<ul>${owned.slice(0,30).map(key=>`<li>${link(`/bill/${key}`,bills?.bills.find(b=>b.key===key)?.title || key)}</li>`).join('')}</ul>` : '<p>No sponsored bills recorded in this export.</p>'}`
+  if (owned.length) body += `<h2>Bills sponsored</h2><ul>${owned.slice(0,30).map(key=>`<li>${link(`/bill/${key}`,bills?.bills.find(b=>b.key===key)?.title || key)}</li>`).join('')}</ul>`
   return {html:answerBlock(display,description,body),description}
 }
 
@@ -245,11 +245,10 @@ export function renderBillAnswer(b: Bill, people: Person[], slugs: Map<string,st
   body += divisionSlot
 
   if (b.summary) body += `<h2>Plain-language summary</h2><p>${machineLabelHTML({pill:true,notRecord:true})} ${b.summary.as_of ? `As at ${escapeHtml(b.summary.as_of)}` : 'Date not recorded'}.</p>${(b.summary.sentences || []).slice(0,10).map(s=>`<p>${escapeHtml(s)}</p>`).join('')}<ul>${(b.summary.changes || []).slice(0,10).map(s=>`<li>${escapeHtml(s)}</li>`).join('')}</ul>${b.summary.affected ? `<p>${escapeHtml(b.summary.affected)}</p>` : ''}`
-  else body += '<h2>Plain-language summary</h2><p>No machine-written summary in this export.</p>'
   const sameSponsor = related.filter(r=>r.key!==b.key && !!b.sponsor && fold(r.sponsor || '')===fold(b.sponsor)).slice(0,20)
   const samePortfolio = related.filter(r=>r.key!==b.key && !!b.portfolio && fold(r.portfolio || '')===fold(b.portfolio)).slice(0,20)
   for(const [label,rows] of [['Other bills from this sponsor',sameSponsor],['Other bills in this portfolio',samePortfolio]] as const) {
-    body += `<h2>${label}</h2>${rows.length ? `<ul>${rows.map(r=>`<li>${link(`/bill/${r.key}`,r.short_title || r.title)} — introduced ${escapeHtml(r.introduced || 'date not recorded')}, ${escapeHtml(human(r.status || 'status not recorded'))}</li>`).join('')}</ul>` : '<p>No other bills with this recorded field in the export.</p>'}`
+    if (rows.length) body += `<h2>${label}</h2><ul>${rows.map(r=>`<li>${link(`/bill/${r.key}`,r.short_title || r.title)} — introduced ${escapeHtml(r.introduced || 'date not recorded')}, ${escapeHtml(human(r.status || 'status not recorded'))}</li>`).join('')}</ul>`
   }
   body += `<p>Stage dates describe the parliamentary progress recorded by the source. They do not establish when provisions commence. A bill before parliament is a proposal; its text can change before passage. Division totals describe the recorded question on that date. A procedural division does not necessarily establish support for every provision of a bill. Check the official bill text and explanatory memorandum for the wording.</p><p>${link(`/bills/${b.key}.json`,'Bill data export')} · ${link('/bills','Browse bills')} · ${link('/ask','Ask about the parliamentary record')} · ${link('/methods','Sources and methods')}</p>`
   body += `<h2>Sources</h2>${(b.sources || []).map(s=>`<p>${escapeHtml(human(s.kind))}</p>${original(s.url)}`).join('')}`
@@ -265,11 +264,11 @@ function divisionVotes(d: Division, people: Person[], slugs: Map<string,string>,
   const members=d.members || []
   const parties=d.party_tallies || [...new Set(members.filter(m=>m.party).map(m=>m.party!))].map(party=>({party,votes:Object.fromEntries([...new Set(members.filter(m=>m.party===party).map(m=>m.vote))].map(vote=>[vote,members.filter(m=>m.party===party && m.vote===vote).length]))}))
   const ayes=d.recorded_ayes ?? members.filter(m=>m.vote==='aye').length, noes=d.recorded_noes ?? members.filter(m=>m.vote==='no').length
-  if(!members.length && !parties.length) return '<p>Per-member votes and party tallies are not present in this export. Consult the original division record.</p>'
+  if(!members.length && !parties.length) return '<p>No per-member votes or party tallies here. See the original division record.</p>'
   let html=`<h3>How each party voted</h3><p>Party labels are those recorded for this division, rather than current affiliations.${ayes!==d.ayes || noes!==d.noes ? ` The member list is partial: ${ayes} recorded ayes and ${noes} recorded noes; the official tally above remains the source total.` : ''}</p>`
   html+=parties.length ? `<ul>${parties.map(({party,votes})=>`<li>${partyLinks ? link(partyUrl(party),party) : escapeHtml(party)}: ${Object.entries(votes).map(([vote,n])=>`${human(vote)} ${n}`).join(', ')}</li>`).join('')}</ul>` : '<p>Party affiliation on the division date is not recorded in the member export.</p>'
   const missing=d.unknown_party_count ?? members.filter(m=>!m.party).length
-  if(missing) html+=`<p>Party affiliation is not recorded for ${missing} members in this export.</p>`
+  if(missing) html+=`<p>Party affiliation is not recorded for ${missing} members.</p>`
   if(full) for(const side of [...new Set(members.map(m=>m.vote))]) {
     html+=`<h3>${side==='aye' ? 'Ayes' : side==='no' ? 'Noes' : human(side)}</h3><ul>${members.filter(m=>m.vote===side).map(m=>`<li>${link(personUrl(m.name),m.name)}${m.party ? ` (${escapeHtml(m.party)})` : ''} — ${escapeHtml(side)}</li>`).join('')}</ul>`
   }
@@ -287,7 +286,7 @@ export function renderDivisionAnswer(d: Division, people: Person[], slugs: Map<s
 
 
 export async function renderDirectory(dir: string, url: URL, read: ReadAsset, people: Person[], slugs: Map<string,string>, topics: Record<string,string>): Promise<RenderedContent | null> {
-  if (dir==='person') return paginate(url,people.map(p=>({href:personHref(p,slugs),label:p.name,detail:partyLine(p)})),'Parliamentarians','Parliamentarians in the exported parliamentary record, with speeches, votes and declared interests.')
+  if (dir==='person') return paginate(url,people.map(p=>({href:personHref(p,slugs),label:p.name,detail:partyLine(p)})),'Parliamentarians','Parliamentarians in the parliamentary record, with speeches, votes and declared interests.')
   if (dir==='topic') return paginate(url,Object.entries(topics).map(([slug,name])=>({href:`/subject/topic/${slug}`,label:name})),'Topics','Browse topics in the parliamentary record.')
   if (dir==='electorate') {
     const manifest = await read<{index_url: string}>('/electorates/manifest.json')
@@ -319,7 +318,7 @@ export async function renderDirectory(dir: string, url: URL, read: ReadAsset, pe
   const source = sources[dir]
   if (source) {
     const data = await read<Record<string,{id?:string;name:string}[]>>(source[0])
-    return paginate(url,(data[source[1]] || []).map(n=>({href:`/subject/${dir}/${encodeURIComponent(n.id || n.name)}`,label:n.name})),source[2],'Entries from the published data exports, with original sources on each profile.')
+    return paginate(url,(data[source[1]] || []).map(n=>({href:`/subject/${dir}/${encodeURIComponent(n.id || n.name)}`,label:n.name})),source[2],'Entries from published records, with original sources on each profile.')
   }
   return null
 }
@@ -337,7 +336,7 @@ export async function renderSupplierAnswer(id: string, read: ReadAsset, params =
   const profile=(await read<{profiles:Record<string,SupplierProfile>}>(row.profile_path)).profiles[id]
   if(!profile) return null
   const description=`${profile.name}: ${currency(profile.total)} in recorded Commonwealth contract awards across ${count(profile.count)} contracts and ${profile.agencies.length} agencies.`
-  let body=`<p>Exported ${escapeHtml(index.meta.generated_at.slice(0,10))}. Source: ${escapeHtml(index.meta.source)}. Award values are not expenditure. One contract is counted at its latest recorded notice value; amendments are not added together. Coverage is limited to the available notices.</p><h2>Agencies contracted</h2><ul>`
+  let body=`<p>Updated ${escapeHtml(index.meta.generated_at.slice(0,10))}. Source: ${escapeHtml(index.meta.source)}. Award values are not expenditure. One contract is counted at its latest recorded notice value; amendments are not added together. Coverage is limited to the available notices.</p><h2>Agencies contracted</h2><ul>`
   const matches=profile.agencies.map(a=>({a,record:agencies.agencies.find(r=>r.name===a.name)}))
   body+=matches.map(({a,record})=>`<li>${record ? link(`/subject/agency/${record.id}`,a.name) : escapeHtml(a.name)} — ${count(a.count)} contracts, ${currency(a.total)}</li>`).join('')+'</ul>'
   body+=supplierContractsHTML(profile.contracts as unknown as Record<string, unknown>[],id,params)+'<details><summary>Notice details for the largest awards</summary><ol>'
@@ -365,7 +364,7 @@ export async function renderMoneyAnswer(title: string, read: ReadAsset): Promise
     // Count donation edges, excluding public contracts, grants and other flow kinds.
     const ids=new Set(graph.nodes.filter(n=>n.kind==='donor').map(n=>n.id))
     const receipts=graph.edges.filter(e=>ids.has(e.source) && !e.grant && !e.flow)
-    body+=`<h2>${label} disclosed receipts</h2><p>${currency(receipts.reduce((sum,e)=>sum+e.total,0))} across ${count(receipts.length)} donor-to-party aggregates in this map export. ${parties.length} parties. Export date: ${escapeHtml(graph.meta.generated)}. Coverage: ${escapeHtml(graph.meta.coverage || 'See the source export')}. Source: ${escapeHtml(graph.meta.sourceShort || graph.meta.source || label)}.</p><ul>${parties.map(p=>`<li>${link(partyUrl(p.label),p.label)}</li>`).join('')}</ul><p>${link(path,`${label} map data export`)}</p>`
+    body+=`<h2>${label} disclosed receipts</h2><p>${currency(receipts.reduce((sum,e)=>sum+e.total,0))} across ${count(receipts.length)} donor-to-party totals on this map. ${parties.length} parties. Updated ${escapeHtml(graph.meta.generated)}. Coverage: ${escapeHtml(graph.meta.coverage || 'See the source')}. Source: ${escapeHtml(graph.meta.sourceShort || graph.meta.source || label)}.</p><ul>${parties.map(p=>`<li>${link(partyUrl(p.label),p.label)}</li>`).join('')}</ul><p>${link(path,`${label} map data export`)}</p>`
   }
   const suppliers=await read<{meta:{generated_at:string;total:number;contract_count:number;source:string;published_from:string;published_to:string}}>('/suppliers.json')
   const m=suppliers.meta

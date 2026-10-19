@@ -49,7 +49,7 @@ test('serving boundary rejects licence changes, foreign sources, unsafe links an
  assert.equal(clearedStateBills(h)[0].official,null);
  assert.equal((await render('',async()=>{throw Error('unavailable')})).status,503);
  const one=await render('',async j=>{if(j==='act')throw Error('unavailable');return hubs[j]});
- assert.equal(one.status,200);assert.match(one.prerender,/One jurisdiction is unavailable/);
+ assert.equal(one.status,200);assert.match(one.prerender,/Bills from one jurisdiction are not shown yet/);
 });
 test('Worker routes and asset-first exclusions carry the state register without production bindings',async()=>{
  const code=await build({entryPoints:[new URL('../src/index.ts',import.meta.url).pathname],bundle:true,platform:'browser',format:'esm',write:false,external:['node:*'],plugins:[{name:'omit-images',setup(b){b.onResolve({filter:/^\.\/og-render$/},()=>({path:'images',namespace:'state-bills-test'}));b.onLoad({filter:/.*/,namespace:'state-bills-test'},()=>({contents:'export const renderOgPng=async()=>null;export const renderOgJpeg=renderOgPng;export const renderStoryJpeg=renderOgPng;',loader:'js'}));}}]});

@@ -72,14 +72,14 @@ function tableHTML(registers:GiftsRegister[],params:Record<string,string>,url:UR
 }
 
 export async function vicGiftsPage(url:URL,read:GiftsReader,block:(title:string,text:string,links?:string,crumbs?:{label:string;href?:string}[])=>string) {
-  const unavailable=()=>({title:'Victorian gifts register unavailable · OPAX',description:'This register is awaiting a reviewed data load.',status:503,noindex:true,
-    prerender:block('Victorian gifts and hospitality','The register is awaiting a reviewed data load.','',[{label:'Victorian gifts and hospitality'}])+`<section class="wrap vic-gifts-content"><p><a href="${INDEX}">Read the original DPC register</a>.</p><p>Licence: <a href="https://www.vic.gov.au/copyright">publisher copyright notice</a>; no source rows reproduced. Snapshot: unavailable.</p></section>`})
+  const unavailable=()=>({title:'Victorian gifts register unavailable · OPAX',description:'No Victorian gifts and hospitality entries here yet.',status:503,noindex:true,
+    prerender:block('Victorian gifts and hospitality','No Victorian gifts and hospitality entries here yet.','',[{label:'Victorian gifts and hospitality'}])+`<section class="wrap vic-gifts-content"><p><a href="${INDEX}">Read the original DPC register</a>.</p><p>Licence: <a href="https://www.vic.gov.au/copyright">publisher copyright notice</a>; no source rows reproduced. Snapshot: unavailable.</p></section>`})
   try{
     const hub=await read(),all=clearedGiftRegisters(hub)
     if(!all.length)return unavailable()
     const period=url.searchParams.get('period')
     const registers=selected(hub,period,null)
-    if(period && !registers.length)return {title:'Register period not found · OPAX',description:'This period is not in the reviewed snapshot.',status:404,noindex:true,prerender:block('Register period not found','Choose a period from the Victorian gifts register.')}
+    if(period && !registers.length)return {title:'Register period not found · OPAX',description:'This period is not in the register.',status:404,noindex:true,prerender:block('Register period not found','Choose a period from the Victorian gifts register.')}
     const rows=tableRows(registers),totals=new Map<string,{name:string;href:string|null;count:number}>()
     for(const row of rows){const source=row as unknown as GiftsRow,key=source.official?.name || source.office_holder
       const total=totals.get(key)||{name:key,href:source.official?.href || null,count:0};total.count++;totals.set(key,total)}

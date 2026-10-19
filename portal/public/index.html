@@ -61,7 +61,7 @@
      which is what lets _headers serve these two immutable. -->
 <link rel="stylesheet" href="/datatable.css">
 <link rel="stylesheet" href="/register-tables.css?v=b98ab37c03">
-<script type="module" src="/register-tables-entry.js?v=0b776a112d"></script>
+<script type="module" src="/register-tables-entry.js?v=1044e69da2"></script>
 <link rel="stylesheet" href="/vote-tables.css?v=d727aad769">
 <script type="module" src="/vote-tables.js?v=db13ec27f3"></script>
 <link rel="stylesheet" href="/style.css?v=0a5d73416c">
@@ -294,7 +294,7 @@
             <ol id="ask-retrieved-list" class="source-list"></ol>
           </details>
           <p id="ask-retrieval-note" class="fineprint">Answers are written only from the passages retrieved above,
-          and currently draw on the speech corpus. If the record is thin, the answer says so.
+          and currently draw on parliamentary speeches. If the record is thin, the answer says so.
           Answers may be cached. Cite the sources, not this text.
           <a href="/methods">How answers work</a></p>
         </details>
@@ -414,7 +414,7 @@
                 </select>
               </span>
               <span class="filter-item ui-field">
-                <label for="search-kind">Record type</label>
+                <label for="search-kind">Type</label>
                 <select id="search-kind" class="ui-input">
                   <option value="all">All records</option>
                   <option value="person">People</option>
@@ -494,7 +494,7 @@
               <button type="button" role="menuitemradio" aria-checked="false" data-value="oldest" tabindex="-1"><span><strong>Oldest first</strong><small>Earliest dated records</small></span><span class="search-sort-check" aria-hidden="true">✓</span></button>
               <button type="button" role="menuitemradio" aria-checked="false" data-value="title_asc" tabindex="-1"><span><strong>Title A–Z</strong><small>Alphabetical by title or name</small></span><span class="search-sort-check" aria-hidden="true">✓</span></button>
               <button type="button" role="menuitemradio" aria-checked="false" data-value="title_desc" tabindex="-1"><span><strong>Title Z–A</strong><small>Reverse alphabetical order</small></span><span class="search-sort-check" aria-hidden="true">✓</span></button>
-              <button type="button" role="menuitemradio" aria-checked="false" data-value="type" tabindex="-1"><span><strong>Record type</strong><small>Group the different datasets</small></span><span class="search-sort-check" aria-hidden="true">✓</span></button>
+              <button type="button" role="menuitemradio" aria-checked="false" data-value="type" tabindex="-1"><span><strong>Type</strong><small>Group by kind of record</small></span><span class="search-sort-check" aria-hidden="true">✓</span></button>
               <p id="search-sort-note">Applies across all pages of retrieved matches.</p>
             </div>
           </div>
@@ -954,21 +954,21 @@
       <p class="interests-summary" id="declared-summary" hidden></p>
       <div id="declared-pagination"></div>
       <div id="declared-list"><p class="status">Opening the register ledger…</p></div>
-      <p class="fineprint declared-source">Sources: <a href="https://www.aph.gov.au/Senators_and_Members/Parliamentarian_Search_Results/Registers_of_Interests" rel="noopener" target="_blank">Registers of Members' and Senators' Interests, 48th Parliament ↗︎</a>, entries as declared, not verified by OPAX; and the <a href="https://www.parliament.qld.gov.au/Members/Current-Members/Register-of-Interests" rel="noopener" target="_blank">Queensland Register of Members' Interests, 58th Parliament ↗︎</a>, facts and links only. Additions and deletions carry the date the register records. A gift or trip with no organisation match names one the AEC and lobbyist registers do not list under that spelling. Organisation matches to <a href="https://transparency.aec.gov.au/" rel="noopener" target="_blank">AEC Transparency Register returns, CC BY 4.0 ↗︎</a>, the lobbyist registers and FITS use exact normalised names.</p>
+      <p class="fineprint declared-source">Sources: <a href="https://www.aph.gov.au/Senators_and_Members/Parliamentarian_Search_Results/Registers_of_Interests" rel="noopener" target="_blank">Registers of Members' and Senators' Interests, 48th Parliament ↗︎</a>, entries as declared, not verified by OPAX; and the <a href="https://www.parliament.qld.gov.au/Members/Current-Members/Register-of-Interests" rel="noopener" target="_blank">Queensland Register of Members' Interests, 58th Parliament ↗︎</a>, facts and links only. Additions and deletions carry the date the register records. A gift or trip with no organisation match names one the AEC and lobbyist registers do not list under that spelling. Organisation matches to <a href="https://transparency.aec.gov.au/" rel="noopener" target="_blank">AEC Transparency Register returns, CC BY 4.0 ↗︎</a>, the lobbyist registers and FITS match names exactly once case, punctuation and company suffixes such as Pty Ltd are set aside.</p>
     </section>
 
     <!-- ============================= ABOUT ============================= -->
     <!-- ============================== STATS ============================ -->
     <section id="panel-stats" class="panel" hidden aria-labelledby="stats-title">
       <div class="ui-page-head">
-        <h1 id="stats-title">The corpus in numbers</h1>
+        <h1 id="stats-title">The record in numbers</h1>
         <p class="ui-page-meta" id="stats-version"></p>
       </div>
       <div class="ui-stats stats-figures" id="stats-hero"><!-- filled from corpus.json --></div>
       <div class="corpus-meter" id="corpus-meter" hidden>
         <p id="corpus-meter-text"></p>
         <div class="meter-track" role="meter" aria-valuemin="0" aria-valuemax="100"
-             aria-valuenow="0" aria-label="Share of collected speeches indexed" id="corpus-meter-bar">
+             aria-valuenow="0" aria-label="Share of collected documents searchable so far" id="corpus-meter-bar">
           <i></i>
         </div>
       </div>
@@ -978,7 +978,7 @@
       <section id="stats-connections" class="ui-section" hidden></section>
 
       <section class="ui-section" id="stats-live-index" aria-labelledby="stats-live-title">
-        <h2 class="ui-section-title" id="stats-live-title">In the live index</h2>
+        <h2 class="ui-section-title" id="stats-live-title">Searchable now</h2>
         <div class="table-scroll"><table class="about-table stats-live-table">
           <thead><tr><th>Speeches by parliament</th><th>Speeches</th></tr></thead>
           <tbody id="stats-parliaments"><tr><td colspan="2">Counting…</td></tr></tbody>
@@ -988,7 +988,7 @@
       </section>
 
       <section class="ui-section" aria-labelledby="stats-sources-title">
-        <h2 class="ui-section-title" id="stats-sources-title">Sources loaded</h2>
+        <h2 class="ui-section-title" id="stats-sources-title">Sources</h2>
         <div class="table-scroll"><table class="about-table">
           <thead><tr><th>Source</th><th>Documents</th><th>Coverage</th></tr></thead>
           <tbody id="stats-sources"><!-- filled from corpus.json --></tbody>
@@ -997,8 +997,8 @@
         catalogue of report metadata and HTML recommendations, with separate page and PDF rights reviews. Source: Queensland Audit Office,
         <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>, with State of Queensland
         attribution and <a href="https://www.qao.qld.gov.au/copyright">per-report exceptions</a>.
-        Its report count is shown in the directory and is separate from corpus document totals.</p>
-        <p class="fineprint">How the corpus is collected and what is known to be missing:
+        Its report count is shown in the directory and is separate from the document totals above.</p>
+        <p class="fineprint">How the record is collected and what is known to be missing:
           <a href="/methods">Methods</a> · <a href="/about">About OPAX</a> · <a href="https://x.com/OpaxAustralia" target="_blank" rel="noopener noreferrer">OPAX on X</a> · <a href="https://www.facebook.com/OpaxAustralia/" target="_blank" rel="noopener noreferrer">OPAX on Facebook</a> · <a href="https://www.instagram.com/opaxaustralia/" target="_blank" rel="noopener noreferrer">OPAX on Instagram</a></p>
       </section>
     </section>
@@ -1044,7 +1044,7 @@
 
       <h2 id="about-use">What you can do here</h2>
       <ul class="about-list">
-        <li><strong>Ask</strong>: put a question to the speech corpus (widen it to the recorded
+        <li><strong>Ask</strong>: put a question to the speech record (widen it to the recorded
         divisions with one checkbox) and get an answer written only from the passages retrieved
         for it. Every claim is cited; every citation opens the actual speech at a stable, linkable
         page; if the record is thin on a question, the answer says so.</li>
@@ -1075,7 +1075,7 @@
         <tbody id="about-sources"><!-- filled from corpus.json --></tbody>
       </table></div>
       <p>The last two rows above are not speeches: recorded divisions and AEC donation returns
-      share the corpus's citation and search plumbing, so they are counted here even though the
+      are searched and cited the same way as speeches, so they are counted here even though the
       donations themselves are described in full below. The speech rows are filtered to the era of
       currently serving parliamentarians (13 March 1993 onward), deduplicated across overlapping
       sources, and stripped of procedural noise (division roll-calls, chair interjections, day
@@ -1084,11 +1084,11 @@
       and OPAX reproduces and cites speeches for research rather than republishing whole documents
       commercially — check the source link on any document before quoting it commercially.</p>
       <p class="fineprint">Full detail, model identity and known defects:
-      <a href="/methods">methods &amp; how to cite OPAX</a> · machine-readable manifest:
+      <a href="/methods">methods &amp; how to cite OPAX</a> · machine-readable source counts:
       <a href="/corpus.json">corpus.json</a>.</p>
 
       <h2 id="about-money">The money</h2>
-      <p>Every federal donation disclosed to the AEC since 1998 is loaded — 199,233 rows —
+      <p>OPAX holds every federal donation disclosed to the AEC since 1998, 199,233 rows,
       and the <a href="/money">money map</a> plots the 250 largest donors against 11 parties as
       662 flows, built from 127,658 of those rows after excluding public funding, internal party
       transfers and donations from government-linked entities. Queensland, Victoria and Tasmania
@@ -1113,7 +1113,7 @@
       being a party — everything above $100,000 in any year from the AEC's own annual returns —
       and, separately, the parties' own lodged debts and discretionary benefits. Six lobbyist
       registers (federal, New South Wales, Queensland, Victoria, South Australia and Western
-      Australia) are loaded in full: on the money map, 133 of the 250 largest federal donors also
+      Australia) are held in full: on the money map, 133 of the 250 largest federal donors also
       show up as a registered lobbying client or a name in a ministerial diary — 102 as lobbying
       clients, 92 in one of 61,499 disclosed meetings between ministers and everyone they met,
       from the New South Wales Cabinet Office and the Queensland Cabinet Office. Queensland alone
@@ -1134,8 +1134,8 @@
 
       <h2 id="about-votes">Votes and bills</h2>
       <p>Every recorded division OPAX could get in a structured form — 13,867 of them, federal
-      divisions from TheyVoteForYou and state divisions parsed from New South Wales, Victorian and
-      Queensland Hansard, 1998 to today — is a citable document in the search index in its own
+      divisions from TheyVoteForYou and state divisions read from New South Wales, Victorian and
+      Queensland Hansard, 1998 to today, is a citable, searchable document in its own
       right, and 962 sitting and former parliamentarians (622 federal, 133 New South Wales, 122
       Victorian, 85 Queensland) carry a voting record on their own page. Most questions in every
       chamber are decided on the voices and leave no division at all, so "no recorded vote" never
@@ -1149,13 +1149,13 @@
       summary of what their explanatory memorandum or Bills Digest says, each one labelled
       "written by a model from the explanatory memorandum; not the record" (a further 812 were
       generated but held back after failing an automatic check, and are not shown).</p>
-      <p class="fineprint">Two gaps in the underlying speech corpus shape what a bill or a division
-      page can show, and are worth stating plainly. There is no Senate Hansard in the corpus at all
+      <p class="fineprint">Two gaps in the speech record shape what a bill or a division
+      page can show, and are worth stating plainly. There is no Senate Hansard on OPAX at all
       for 2014 to 2022, so a bill whose real fight happened in the Senate in that window looks
       quiet on OPAX no matter how contested it was. And 2024 is thin across the board — federal
       chamber speeches drop to 82 for the whole year — so the 47th Parliament's bills (2022–2025)
       reach a linked speech only 24% of the time, against 74–84% in every other parliament since
-      2013. Neither gap is a fault in the bill registry; both close only as more Hansard is loaded.</p>
+      2013. Neither gap is a fault in the bill registry; both close only as more Hansard is added.</p>
 
       <h2 id="about-instruments">Federal legislative instruments</h2>
       <p>The instruments catalogue carries in-force title metadata
@@ -1186,9 +1186,9 @@
       No endorsement by the State of Queensland or QAO is implied.</p>
 
       <h2 id="about-people">People</h2>
-      <p>1,557 names appear as speakers in the corpus since 1993; 313 of them currently sit in a
+      <p>1,557 names appear as speakers in the record since 1993; 313 of them currently sit in a
       state or federal parliament. 829 portrait photographs cover just over a thousand of those
-      names: 551 official portraits from Parliament House, fetched through OpenAustralia because
+      names: 551 official portraits from Parliament House, obtained through OpenAustralia because
       the official image API blocks every identified research tool, reproduced under aph.gov.au's
       site-wide CC BY-NC-ND 4.0 terms; and 277 from Wikimedia Commons for state parliamentarians
       and pre-2006 federal members, each individually licensed — Creative Commons, public domain
@@ -1196,7 +1196,7 @@
       <p>Declared shareholdings, real estate, directorships, gifts, travel and liabilities are
       shown for 317 sitting members — every House member (151), all but one senator (73) and every
       Queensland MP (93) — 10,052 declared entries in total, each one linking to the exact page of
-      the source PDF it was read from. They are not in OPAX's ask-and-search index: the House and
+      the source PDF it was read from. They are not searchable through Ask or Search: the House and
       Senate registers are licensed CC BY-NC-ND, Queensland's terms could not even be read (they
       sit behind a firewall that blocked every request), and a rewritten version of a declared
       interest would be a derivative work in a way a fact with a link back to the original PDF is
@@ -1210,13 +1210,13 @@
         hospitality &amp; alcohol, defence &amp; security, agriculture, unions &amp; the workplace,
         immigration, First Nations affairs, tax &amp; the budget, education, welfare &amp; social
         services, integrity &amp; democracy, infrastructure &amp; transport, justice &amp; law, and
-        foreign affairs — applied by a mix of the hosting platform's own labeller and separate
-        agents that read back over what it produced. The pass is still running: a speech with no
-        topic chip yet has simply not been reached, not been checked and found to have none.</li>
+        foreign affairs — applied by a mix of the hosting platform's own labelling and separate
+        agents that read back over what it produced. Labelling is not finished: a speech with no
+        topic chip may simply not be labelled yet, rather than checked and found to have none.</li>
         <li><strong>Machine briefs</strong>: many speeches and every topic page carry a short "In
         brief" summary, written by a language model from that one passage alone and labelled as a
         machine summary. It is a reading aid, not a replacement for the speech underneath it.</li>
-        <li data-reports-only><strong>Report essays</strong>: the six standing reports retrieve live from the corpus
+        <li data-reports-only><strong>Report essays</strong>: the six standing reports draw live on the record
         for every section, and every factual claim is built to trace back to a real, quoted
         passage — but the connecting prose (the opening summary, the era-by-era narrative) is a
         model's synthesis of the report's own generated sections, written last. Read it as a guide
@@ -1250,8 +1250,8 @@
         party, is a fact on the public record. What it means is for the reader to weigh, with the
         primary sources OPAX links to at every step.</li>
       </ul>
-      <p class="fineprint">The corpus's own technical limits — what Hansard is and is not, where
-      coverage is thin, which members' records are unreliable — are on the
+      <p class="fineprint">The record's own technical limits, such as what Hansard is and is not, where
+      coverage is thin and which members' records are unreliable, are on the
       <a href="/methods">methods page</a>, not repeated here.</p>
 
       <h2 id="about-who">Who makes it</h2>
@@ -1268,8 +1268,8 @@
         with it.</li>
         <li><strong>Progress Agentic RAG</strong> (<a
         href="https://www.progress.com/agentic-rag?utm_source=opax&amp;utm_medium=referral&amp;utm_campaign=about"
-        rel="noopener">progress.com/agentic-rag</a>) holds the corpus. Every speech, bill,
-        division and statement is indexed in a knowledge box on the platform, which does the
+        rel="noopener">progress.com/agentic-rag</a>) holds the record. Every speech, bill,
+        division and statement is held in a knowledge box on the platform, which does the
         retrieval, the reranking and the citation binding behind every answer on the Ask page.
         OPAX writes the prompts and checks the answers; the platform finds the passages.</li>
         <li><strong>CorpusKit</strong> (<a href="https://corpuskit.org?utm_source=opax&amp;utm_medium=referral&amp;utm_campaign=about"
@@ -1319,7 +1319,7 @@
       information. Data errors are the corrections we most want to hear about. To report one in
       public, ask about the methodology, or point out a source we have missed, you can also open an
       issue on <a href="https://github.com/jaketracey/opax" rel="noopener">the GitHub repository</a>,
-      where the code, the ingestion scripts and the issue tracker all live in one place. The
+      where the code, the collection scripts and the issue tracker all live in one place. The
       <a href="/support">support page</a> has more.</p>
       </div>
     </section>
@@ -1402,7 +1402,7 @@
         sat in federal Parliament show no count, because their records can't yet be separated.</li>
         <li><strong>Votes.</strong> Victorian division records cover 2026 only, and only questions with a recorded
         title are listed. A missing record doesn't mean a member didn't speak or vote.</li>
-        <li><strong>Not held.</strong> There is no Victorian register of members' interests in OPAX and no Victorian
+        <li><strong>Not covered.</strong> There is no Victorian register of members' interests in OPAX and no Victorian
         state grants. Federal electorates are different from state districts, so federal grants aren't assigned to
         them. No donor records appear on the election pages.</li>
         <li><strong>Licences.</strong> VEC website material and ABS data are licensed CC BY 4.0
@@ -1470,8 +1470,8 @@
 }</code></pre>
       <p>The MCP result includes this JSON in both <code>structuredContent</code> and a text
       content block. Invalid inputs return JSON-RPC <code>-32602</code>. No available profiles
-      return empty rows with an explicit <code>unanswerable</code> reason and notes. In this release,
-      Victorian state seats have no published Census profiles, so their ranking is unavailable.</p>
+      return empty rows with an explicit <code>unanswerable</code> reason and notes.
+      Victorian state seats have no published Census profiles yet, so their ranking is unavailable.</p>
       </div>
 
       <h2>Known limitations</h2>
@@ -1671,7 +1671,7 @@
       from the events PostHog receives.</p>
       <p>Your browser sends Google Analytics events straight to Google, so Google receives your
       IP address. PostHog events pass through OPAX's server, which forwards your IP address to
-      PostHog's ingestion service in the United States, so that PostHog places visits by your
+      PostHog's servers in the United States, so that PostHog places visits by your
       location rather than by the server's. PostHog may store the address with the event.</p>
       <p>Both services keep the events they receive for the retention period of OPAX's account
       with them, under their own terms:
@@ -2122,11 +2122,11 @@
 <!-- defer: never block the parser (Lighthouse counted this as render-blocking).
      Deferred scripts still run before DOMContentLoaded, so nothing changes for
      app.js's boot. ?v= is content-hash stamped by scripts/stamp_assets.mjs. -->
-<script src="/spa-shell.js?v=f58f440018" defer></script>
+<script src="/spa-shell.js?v=6fceef6db3" defer></script>
 <script src="/navigation.js?v=b6453606fb" defer></script>
 <script src="/quick-search.js?v=27eac3b2f7" defer></script>
 <script src="/ui-source.js?v=d594622c13" defer></script>
-<script src="/app.js?v=049e169737" defer></script>
+<script src="/app.js?v=137acdb0a1" defer></script>
 <!-- PostHog runs after the app (defer order) so the first route is not queued behind it; it replays the events measured before it (analytics/index.js). -->
 <script src="/analytics.js?v=7a83ce20cf" defer></script>
 </body>

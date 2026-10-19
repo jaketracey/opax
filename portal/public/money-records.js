@@ -29,7 +29,7 @@ export function moneyTotals(graph) {
 export function moneyRecordsCSV(graph) {
   const nodes = new Map(graph.nodes.map(n => [n.id, n]));
   const cell = value => '"' + String(value ?? '').replace(/^[=+@\-\t\r]/, "'$&").replaceAll('"', '""') + '"';
-  const rows = [['Record type', 'From', 'To', 'Value (AUD)', 'Record count', 'First year', 'Last year']];
+  const rows = [['Type', 'From', 'To', 'Value (AUD)', 'Record count', 'First year', 'Last year']];
   for (const edge of graph.edges) {
     const type = moneyFlowType(edge, nodes); if (!type) continue;
     rows.push([type, nodes.get(edge.source).label, nodes.get(edge.target).label, edge.total, edge.count, edge.firstYear, edge.lastYear]);

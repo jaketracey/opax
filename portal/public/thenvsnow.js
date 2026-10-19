@@ -486,9 +486,9 @@ export function mountThenVsNow (container, opts = {}) {
     <p class="tvn-fineprint" hidden>OPAX shows what was said in each era; it
       does not judge consistency. The two answers are generated separately and
       never see each other, so weighing them against each other is the
-      reader's job. The corpus is still loading toward the present and a
-      machine labelling pass is still running, so a quiet era can be a gap in
-      what is loaded so far rather than silence.</p>
+      reader's job. Recent years are not fully covered yet and not every
+      speech carries a topic label, so a quiet era can be a gap in the record
+      rather than silence.</p>
   `
 
   const form = root.querySelector('.tvn-form')
@@ -710,8 +710,8 @@ export function mountThenVsNow (container, opts = {}) {
     panel.bodyEl.replaceChildren()
     if (!sources.length && (!answerText || REFUSAL_RE.test(answerText))) {
       panel.bodyEl.appendChild(el('p', 'tvn-thin',
-        `The loaded record has little from ${ctx.speaker} on ${ctx.phrase} in these years. ` +
-        'The corpus is still loading toward the present, so a quiet era can be a loading gap, not silence.'))
+        `The record has little from ${ctx.speaker} on ${ctx.phrase} in these years. ` +
+        'Recent years are not fully covered yet, so a quiet era can be a gap in the record, not silence.'))
       return
     }
     if (answerText) {
@@ -763,7 +763,7 @@ export function mountThenVsNow (container, opts = {}) {
         errEl.hidden = false
         return
       } else {
-        resolveNoteEl.textContent = `“${rawSpeaker}” is not in the indexed speaker list; the filter will match the name as typed.`
+        resolveNoteEl.textContent = `“${rawSpeaker}” is not in the speaker list; the filter will match the name as typed.`
         resolveNoteEl.hidden = false
       }
 

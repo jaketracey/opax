@@ -73,7 +73,7 @@ export async function buildVicElection(root, configPath = fileURLToPath(new URL(
       const speeches = vicOnly && p.speeches > 0 ? {count:p.speeches,first:p.first,last:p.last,within_term:p.first >= 2023 && p.last <= 2026} : null;
       // Explicit allowlist excludes all funding, donor, candidate and party fields.
       return {name:person.name,party:party || null,href,source_url:person.source_url,speeches,
-        speech_gap:!p || !p.speeches ? 'No speech count is available for this member in the export.' : !vicOnly ? 'The exported speech aggregate cannot isolate Victorian speeches from other parliamentary records.' : null,
+        speech_gap:!p || !p.speeches ? 'No speech count for this member.' : !vicOnly ? 'This speech count cannot be split from speeches in other parliaments.' : null,
         votes:v ? {count:v.divisions_total,ayes:v.ayes,noes:v.noes} : null,
         detailed_count:rows.length,divisions:rows.slice(0,5)};
     });

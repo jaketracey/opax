@@ -1510,11 +1510,11 @@ export function mountTimeMachine(container, opts = {}) {
     const complete = !progress || Number(progress.pct) >= 99.5
     b.textContent = complete
       ? 'The whole archive is searchable.'
-      : 'The archive is still being digitised, oldest first.'
+      : 'Recent years are not fully searchable yet.'
     p.appendChild(b)
     const rest = complete
-      ? ` ${progress ? `All ${fmtInt(progress.expected)} records are in the index.` : ''} The numbers panel uses the complete historical dataset; the live quotes, the year in brief and the voices are built year by year.`
-      : ` About ${progress.pct}% of ${fmtInt(progress.expected)} records are searchable so far, and more arrive every day. The numbers panel uses the complete historical dataset, so it works for every year; the live quotes, the year in brief and the voices catch up year by year.`
+      ? ` ${progress ? `All ${fmtInt(progress.expected)} records are searchable.` : ''} The numbers panel covers every year; the live quotes, the year in brief and the voices come from the searchable speeches.`
+      : ` About ${progress.pct}% of ${fmtInt(progress.expected)} records are searchable so far. The numbers panel covers every year; the live quotes, the year in brief and the voices fill in as more years become searchable.`
     p.appendChild(document.createTextNode(rest))
     footerEl.appendChild(p)
   }
@@ -1654,7 +1654,7 @@ export function mountTimeMachine(container, opts = {}) {
     // The pill says the brief is machine-written, once, at its top.
     const machine = el('div', 'tm-brief-machine')
     machine.innerHTML = machineLabelHTML({ notRecord: true,
-      note: `Written by a language model from the passages the knowledge box retrieved for ${data.year}. A reading aid, not the record: check any claim against the speeches.` })
+      note: `Written by a language model from the passages found for ${data.year}. A reading aid, not the record: check any claim against the speeches.` })
     briefEl.appendChild(machine)
     const body = el('div', 'tm-brief-body')
     const leadEnd = paras[0].length > 460 ? sentenceEnd(paras[0], 160, 400) : -1
@@ -1692,8 +1692,8 @@ export function mountTimeMachine(container, opts = {}) {
     const cited = sources.filter((s) => s.cited).length
     const fine = el('p', 'tm-fineprint')
     fine.textContent = sources.length
-      ? `From the ${sources.length} passages the knowledge box retrieved for ${data.year} so far, ${cited} of them cited.`
-      : `From what the knowledge box had retrieved for ${data.year} so far.`
+      ? `Written from ${sources.length} passages found for ${data.year}; ${cited} of them are cited.`
+      : `Written from the passages found for ${data.year}.`
     briefEl.appendChild(fine)
 
     if (sources.length) {
@@ -1779,7 +1779,7 @@ export function mountTimeMachine(container, opts = {}) {
     const labelled = total - (Number(v.unlabelled_party) || 0)
     const partyNote = total && labelled < total ? ` Party labels exist for ${fmtInt(labelled)} of them.` : ''
     const chairNote = Number(v.presiding_rows_skipped) > 0 ? ' Rows the record attributes to the presiding officers are left out.' : ''
-    fine.textContent = `Speeches per speaker among the ${fmtInt(total)} strongest matches for ${data.year}’s ${debates} debates, so far.${partyNote}${chairNote} Who dominates those debates in the index, not who spoke most in parliament.`
+    fine.textContent = `Speeches per speaker among the ${fmtInt(total)} strongest matches for ${data.year}’s ${debates} debates.${partyNote}${chairNote} Who dominates the matching speeches, not who spoke most in parliament.`
     voicesEl.appendChild(fine)
   }
 
@@ -1823,9 +1823,9 @@ export function mountTimeMachine(container, opts = {}) {
 
     const body = el('p')
     body.textContent =
-      'The topic lens only sees speeches a still-running machine labelling pass has reached, ' +
-      'on top of an archive that is itself still loading. A quiet result here means the ' +
-      'machines have not caught up with this year, not that parliament was silent about it.'
+      'The topic lens only sees speeches that carry a topic label, and not every speech has one yet. ' +
+      'A quiet result here means the labels have not caught up with this year, ' +
+      'not that parliament was silent about it.'
     box.appendChild(body)
 
     const actions = el('div', 'tm-empty-actions')
@@ -1846,15 +1846,15 @@ export function mountTimeMachine(container, opts = {}) {
     const box = el('div', 'tm-empty', { role: 'status' })
 
     const head = el('strong')
-    head.textContent = `The time machine hasn’t reached ${year} yet.`
+    head.textContent = `${year} is not searchable yet.`
     box.appendChild(head)
 
     const tracked = staticData.reports.reduce((s, r) => s + (r.timeline.get(year) ?? 0), 0)
     const body = el('p')
-    const pctNote = staticData.progress ? ` It’s about ${staticData.progress.pct}% of the way through.` : ''
+    const pctNote = staticData.progress ? ` About ${staticData.progress.pct}% of the archive is searchable so far.` : ''
     body.textContent = tracked > 0
-      ? `Parliament definitely wasn’t quiet: it gave ${fmtInt(tracked)} speeches in ${year} on our six tracked topics alone (see the numbers). The record is being shelved oldest-first, and the live quotes for this year are still on the trolley.${pctNote}`
-      : `The record is being shelved oldest-first, and the live quotes for this year are still on the trolley.${pctNote} Parliament wasn’t silent. We just haven’t caught up.`
+      ? `Parliament definitely wasn’t quiet: it gave ${fmtInt(tracked)} speeches in ${year} on our six tracked topics alone (see the numbers). The live quotes for this year are not searchable yet.${pctNote}`
+      : `The live quotes for this year are not searchable yet.${pctNote} Parliament wasn’t silent.`
     box.appendChild(body)
 
     const actions = el('div', 'tm-empty-actions')
@@ -1957,8 +1957,8 @@ export function mountTimeMachine(container, opts = {}) {
     if (picks.length < 3) {
       const note = el('div', 'tm-empty', { role: 'note' })
       note.textContent = filtered
-        ? `That’s every ${TOPICS[topic]}-labelled speech the machine has shelved for ${year} so far. The archive and the topic labeller are both still running, so more may arrive.`
-        : `That’s everything the machine has shelved for ${year} so far. The archive loads oldest-first, and more of ${year} arrives every day.`
+        ? `That’s every ${TOPICS[topic]}-labelled speech for ${year} so far. Not every speech carries a topic label yet, so more may appear.`
+        : `That’s every speech found for ${year} so far. More of ${year} may appear as the record fills in.`
       cardsEl.appendChild(note)
     }
   }

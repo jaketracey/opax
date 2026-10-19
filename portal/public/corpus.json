@@ -105,20 +105,20 @@
     {
       "name": "Queensland Government ministerial statements",
       "docs": 171,
-      "coverage": "7–21 Sep 2026 refresh"
+      "coverage": "7–21 Sep 2026"
     },
     {
       "name": "Victorian Premier releases",
       "docs": 185,
-      "coverage": "7–21 Sep 2026 refresh"
+      "coverage": "7–21 Sep 2026"
     },
     {
       "name": "Australian Treasury ministerial releases",
       "docs": 146,
-      "coverage": "7–21 Sep 2026 refresh"
+      "coverage": "7–21 Sep 2026"
     },
     {
-      "name": "GrantConnect award notices (recent refresh)",
+      "name": "GrantConnect award notices (recent window)",
       "docs": 978,
       "coverage": "7–21 Sep 2026 publication window; awards, not payments"
     },
@@ -130,10 +130,10 @@
     {
       "name": "Original federal bill text versions",
       "docs": 4747,
-      "coverage": "Complete source versions; historical import verified"
+      "coverage": "Complete source versions, checked against the originals"
     }
   ],
-  "inclusion": "Speeches from 1993-03-13 (the election that seated the longest-serving current federal MP), at least 200 characters, deduplicated across overlapping sources, procedural rows removed (division roll-calls, chair interjections, day indexes). External statements require an official source URL, a valid date, an open licence, at least 200 characters and a unique body. News articles are excluded from ingestion and retrieval; headline links are external only. Structured grant, election and roster records retain source provenance and snapshot dates; research notes are attributed summaries, not copies of full reports.",
+  "inclusion": "Speeches from 1993-03-13 (the election that seated the longest-serving current federal MP), at least 200 characters, deduplicated across overlapping sources, procedural rows removed (division roll-calls, chair interjections, day indexes). External statements require an official source URL, a valid date, an open licence, at least 200 characters and a unique body. News articles are not included; headline links go to the original outlet. Structured grant, election and roster records retain source provenance and snapshot dates; research notes are attributed summaries, not copies of full reports.",
   "models": {
     "embeddings": "multilingual-2024-05-06",
     "generation": "openai-compatible",

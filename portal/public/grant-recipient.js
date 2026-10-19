@@ -130,8 +130,8 @@ export function mountGrantRecipient(container, { jurisdiction, id, onTitle = () 
     const records = section(qld ? 'Expenditure records' : 'Grant awards', 'recipient-records');
     const omitted = Math.max(Number(data.more) || 0, Number(data.c) - grants.length);
     records.append(node('p', omitted > 0
-      ? `The ${NUMBER.format(grants.length)} largest of ${NUMBER.format(data.c)} ${recordNoun} are published in this recipient file. ${NUMBER.format(omitted)} further rows are included in the total but are not available individually here.`
-      : `All ${NUMBER.format(grants.length)} ${recordNoun} in this recipient file, largest value first.`, 'grant-recipient-note'));
+      ? `The ${NUMBER.format(grants.length)} largest of ${NUMBER.format(data.c)} ${recordNoun} are listed here. ${NUMBER.format(omitted)} more are included in the total but are not listed individually.`
+      : `All ${NUMBER.format(grants.length)} ${recordNoun} for this recipient, largest value first.`, 'grant-recipient-note'));
     let page = selectedIndex >= 0 ? Math.floor(selectedIndex / 20) : 0;
     const list = node('ol', null, 'grant-recipient-records'), pagination = node('nav', null, 'grant-recipient-pagination');
     pagination.setAttribute('aria-label', 'Recipient record pages');
@@ -163,7 +163,7 @@ export function mountGrantRecipient(container, { jurisdiction, id, onTitle = () 
     }
     renderRecords(); records.append(list, pagination); main.append(records);
     const breakdown = section('Funding breakdown', 'recipient-breakdown');
-    breakdown.append(node('p', 'Agency, program and electorate lists are the largest entries published in this file. They can be partial and should not be added together as a complete total.', 'grant-recipient-note'));
+    breakdown.append(node('p', 'Agency, program and electorate lists show the largest entries only. They can be partial and should not be added together as a complete total.', 'grant-recipient-note'));
     if (Object.keys(data.by || {}).length) breakdown.append(financialYears(data.by, qld ? 'Expenditure by financial year' : 'Award value by financial year'));
     if (data.agencies?.length) breakdown.append(valueTable('By agency', data.agencies));
     if (data.programs?.length) {
@@ -239,7 +239,7 @@ export function mountGrantRecipient(container, { jurisdiction, id, onTitle = () 
       if (!alive() || error.name === 'AbortError') return;
       root.replaceChildren(); root.removeAttribute('aria-busy');
       const heading = node('h1', error.message === 'not-found' ? 'Recipient not found' : 'Recipient records could not load'); heading.tabIndex = -1;
-      const message = node('p', error.message === 'not-found' ? 'This recipient is not listed in the published file for this jurisdiction.' : 'The published records are temporarily unavailable. Try loading them again.'); message.setAttribute('role', 'alert'); root.append(heading, message);
+      const message = node('p', error.message === 'not-found' ? 'No grant records for this recipient in this jurisdiction.' : 'The published records are temporarily unavailable. Try loading them again.'); message.setAttribute('role', 'alert'); root.append(heading, message);
       if (error.message !== 'not-found') { const retry = node('button', 'Try again', 'primary'); retry.type = 'button'; retry.addEventListener('click', () => { root.setAttribute('aria-busy', 'true'); retry.disabled = true; retry.textContent = 'Loading…'; load(); }); root.append(retry); }
       root.append(link('/money/grants', 'Browse government grants')); onTitle(heading.textContent);
       if (manageFocus) heading.focus({ preventScroll: true });

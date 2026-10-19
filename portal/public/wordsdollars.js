@@ -333,9 +333,9 @@ export function mountWordsDollars (container, opts = {}) {
     <p class="wd-fineprint" hidden>Shown together for comparison. OPAX does not
       claim one series causes the other. ${AEC_NOTE} The donor side covers the
       250 largest disclosed donors, aggregated to party recipients, so money to
-      independents is not separated. A machine pass is still labelling the
-      corpus by subject, so speech counts are floors and shares will settle as
-      it runs. Bars scale within their own panel and series: compare the
+      independents is not separated. Not every speech carries a topic label yet,
+      so speech counts are floors and shares may shift as more are
+      labelled. Bars scale within their own panel and series: compare the
       numbers, not bar lengths, across panels. Bars are bronze and ink, never
       party colours. <a href="#/money">Money map</a> ·
       <a href="#/methods">Methodology</a></p>
@@ -368,8 +368,8 @@ export function mountWordsDollars (container, opts = {}) {
       } else {
         cell.appendChild(el('span', 'wd-dash', '–'))
         cell.title = row.party === 'Independent'
-          ? 'The AEC export aggregates party recipients; money to independents is not separated here.'
-          : `Nothing disclosed to ${row.party} from these donors in the export.`
+          ? 'Donations here are grouped by party, so money to independents is not separated.'
+          : `Nothing disclosed to ${row.party} from these donors.`
         cell.appendChild(el('span', 'wd-visually-hidden', 'none disclosed'))
       }
     } else if (row.speeches > 0 && panel.speechTotal > 0) {
@@ -435,7 +435,7 @@ export function mountWordsDollars (container, opts = {}) {
       lead.append(`; none of the ${NUM.format(panel.speechTotal)} labelled ` +
         `${phrase} speeches carry a party label yet.`)
     } else {
-      lead.append(`; the labelling pass has not reached the ${phrase} debate yet.`)
+      lead.append(`; no ${phrase} speeches carry a topic label yet.`)
     }
     section.appendChild(lead)
 
@@ -456,7 +456,7 @@ export function mountWordsDollars (container, opts = {}) {
     if (panel.speechTotal > 0 && panel.speechTotal < FEW_LABELS) {
       section.appendChild(el('p', 'wd-panelnote',
         `Only ${NUM.format(panel.speechTotal)} speeches carry this label so far, ` +
-        'so shares are early and will move as the pass runs.'))
+        'so shares are early and may shift as more are labelled.'))
     }
     if (panel.industries.length > 1) {
       section.appendChild(el('p', 'wd-panelnote',

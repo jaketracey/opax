@@ -288,6 +288,30 @@ class Compute(unittest.TestCase):
         self.assertEqual(ucm.extend_coverage("2015–2026", "2026-09-24"), "2015–2026")
         self.assertEqual(ucm.extend_coverage("Registry records", "2027-01-06"), "Registry records")
 
+    def test_coverage_wording_is_plain(self):
+        self.assertEqual(ucm.plain_coverage("7–21 Sep 2026 refresh"), "7–21 Sep 2026")
+        self.assertEqual(ucm.plain_coverage("9 Sep 2026 refresh"), "9 Sep 2026")
+        self.assertEqual(ucm.plain_coverage("Complete source versions; historical import verified"),
+                         "Complete source versions, checked against the originals")
+        for kept in ("2015–2026", "9 Sep 2026 snapshot", "7–21 Sep 2026 publication window; awards, not payments",
+                     "Registry records; source versions counted separately"):
+            self.assertEqual(ucm.plain_coverage(kept), kept)
+
+    def test_old_wording_is_rewritten_without_a_box_change(self):
+        prev = manifest()
+        prev["sources"] += [{"name": "Victorian Premier releases", "docs": 185, "coverage": "7–21 Sep 2026 refresh"},
+                            {"name": "GrantConnect award notices (recent refresh)", "docs": 978,
+                             "coverage": "7–21 Sep 2026 publication window; awards, not payments"}]
+        new, res = run(prev=prev)
+        rows = {r["name"]: r for r in new["sources"]}
+        self.assertEqual(rows["Victorian Premier releases"]["coverage"], "7–21 Sep 2026")
+        self.assertIn("GrantConnect award notices (recent window)", rows)
+        self.assertNotIn("GrantConnect award notices (recent refresh)", rows)
+        self.assertTrue(res["changed"])
+        self.assertFalse(res["kb_changed"])
+        again, _ = run(prev=new)
+        self.assertEqual(again["sources"], new["sources"])
+
     def test_bill_facts_ignore_exposure_drafts(self):
         index = {"bills": [
             {"status": "passed", "parliament": 48, "introduced": "2026-09-17"},
@@ -390,6 +414,12 @@ class CommittedManifest(unittest.TestCase):
         self.assertEqual(sum(self.corpus["expected_resources_breakdown"].values()),
                          self.corpus["expected_resources"])
         self.assertEqual(sorted(self.corpus["refresh"]["resource_counts"]), sorted(ucm.KINDS))
+
+    def test_visitor_wording_is_already_plain(self):
+        for row in self.corpus["sources"]:
+            self.assertEqual(ucm.plain_coverage(row["coverage"]), row["coverage"], row["name"])
+            self.assertNotIn(row["name"], ucm.PLAIN_SOURCE_NAMES)
+            self.assertNotRegex(f"{row['name']} {row['coverage']}", r"(?i)\b(refresh|import|ingest|backfill|export)")
 
     def test_file_is_in_the_layout_the_script_writes(self):
         raw = CORPUS.read_text(encoding="utf-8")

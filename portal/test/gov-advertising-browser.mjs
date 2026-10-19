@@ -47,7 +47,7 @@ try{
    await page.setViewportSize({width,height:1000});const response=await page.goto(base+'/register/gov-advertising');assert.equal(response.status(),200);
    await page.waitForSelector('[data-datatable]');await page.waitForTimeout(150);
    if(fixtureMode){await page.evaluate(()=>{const label=document.createElement('p');label.textContent='Synthetic fixture preview — no official campaign data';label.style.fontWeight='bold';document.querySelector('main').prepend(label);});assert.match(await page.locator('main').textContent(),/row sum \$400\.00/);}
-   else{assert.match(await page.locator('main').textContent(),/Source verification pending/);assert.ok(await page.locator('meta[name="robots"][content="noindex"]').count()>0);}
+   else{assert.match(await page.locator('main').textContent(),/No federal advertising figures yet/);assert.ok(await page.locator('meta[name="robots"][content="noindex"]').count()>0);}
    const overflow=await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth);assert.equal(overflow,false);
    await page.screenshot({path:resolve(out,`${mode}-${width}.png`)});await page.screenshot({path:resolve(out,`${mode}-${width}-full.png`),fullPage:true});
    results.push({mode,width,status:response.status(),horizontalOverflow:overflow});

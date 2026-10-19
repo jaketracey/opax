@@ -115,11 +115,11 @@ export function renderSittingWeek(data: HubIndex, week: Week, people: SponsorCan
     const divisions = divisionRows(week.divisions)
     const page = voteTablePage(divisions,config,tableQuery)
     for (const d of page.rows) if (typeof d.href === 'string') rows.push({href:d.href,name:String(d.title)})
-    body += `<section class="ui-section hub-section">${voteTableHTML(config,page)}${sourceLineHTML({updated:data.snapshotDate,dateLabel:'Published snapshot',source:'Exported division records',notes:['Only formal divisions leave a per-member record. Open a division for its question, party tallies, members and original source.']})}</section>`
+    body += `<section class="ui-section hub-section">${voteTableHTML(config,page)}${sourceLineHTML({updated:data.snapshotDate,dateLabel:'Published snapshot',source:'Division records',notes:['Only formal divisions leave a per-member record. Open a division for its question, party tallies, members and original source.']})}</section>`
   }
   if (!week.divisions.length && today >= week.start) {
-    const coverage = data.latestFederalDivision ? `Federal divisions in OPAX's published record currently run to ${date(data.latestFederalDivision)}; divisions held after that date will appear here once the record is updated.` : 'Federal divisions are not available in this OPAX export; they will appear here once the record is updated.'
-    body += `<section class="hub-section"><p>${esc(coverage)}</p>${sourceLineHTML({originals:[{href:'https://theyvoteforyou.org.au/divisions',label:'They Vote For You divisions'}],notes:['Absence from this export does not establish that no divisions were held.']})}</section>`
+    const coverage = data.latestFederalDivision ? `Federal divisions on record run to ${date(data.latestFederalDivision)}; later divisions will appear here.` : 'No federal divisions on record yet.'
+    body += `<section class="hub-section"><p>${esc(coverage)}</p>${sourceLineHTML({originals:[{href:'https://theyvoteforyou.org.au/divisions',label:'They Vote For You divisions'}],notes:['A division missing here does not mean none was held.']})}</section>`
   }
   return {title,description,html:shell(body,footer,trail('/sitting',range(week.start,week.end))),jsonLd:{'@graph':[event(path,title,week.start,week.end,data.sources[0].url),itemList(path,rows)]}}
 }
@@ -137,9 +137,9 @@ export function renderEstimates(data: Estimates, footer: HubFooterConfig = {}) {
   const moneyUpdated = [data.contractUpdated,data.grantUpdated].filter(Boolean).sort()[0] || ''
   body += `<div class="hub-coverage"><p>Contract and grant figures are recorded award values, not payments.</p>${sourceLineHTML({updated:moneyUpdated,source:'AusTender and GrantConnect',
     originals:[{href:'https://www.tenders.gov.au/',label:'AusTender register'},{href:'https://www.grants.gov.au/Ga/List',label:'GrantConnect register'}],
-    notes:[`Period covered: contracts published ${esc(range(data.contractWindow.start,data.contractWindow.end))}; grants agreed ${esc(range(data.grantWindow.start,data.grantWindow.end))}. Counts cover the available exports; gaps in those exports remain.`,
+    notes:[`Period covered: contracts published ${esc(range(data.contractWindow.start,data.contractWindow.end))}; grants agreed ${esc(range(data.grantWindow.start,data.grantWindow.end))}. Counts cover the published records; gaps in them remain.`,
       `AusTender, updated ${esc(date(data.contractUpdated))}: one latest notice per contract; amendments are not added together. Dates are publication dates. A register link is labelled when a notice URL is unavailable.`,
-      `GrantConnect, updated ${esc(date(data.grantUpdated))}: dates are agreement dates. Future agreements beyond the export date are excluded. No donor records are used.`]})}</div>`
+      `GrantConnect, updated ${esc(date(data.grantUpdated))}: dates are agreement dates. Agreements dated after that update are excluded. No donor records are used.`]})}</div>`
   const list = new Map<string,{href:string;name:string}>()
   for (const group of data.groups) {
     body += `<section class="ui-section hub-section" id="group-${group.id}"><h2 class="ui-section-title">Group ${group.id}</h2><p class="hub-meta">${range(group.start,group.end)}</p>`

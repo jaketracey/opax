@@ -155,7 +155,7 @@ function datasetFor(options: SchemaGraphOptions, canonical: URL): SchemaNode | n
   ] : [])
   return {
     '@type': 'Dataset', '@id': `${canonical.href}#dataset`, name: info.name || pageName(options.title),
-    description: info.description || options.description || 'Australian parliamentary records and public disclosure data exported by OPAX.',
+    description: info.description || options.description || 'Australian parliamentary records and public disclosure data published by OPAX.',
     url: canonical.href, publisher: { '@id': `${canonical.origin}/#organization` },
     ...(distributions.length ? { distribution: distributions.filter(d => {
       try { return /^https?:$/.test(new URL(d.url, canonical.origin).protocol) } catch { return false }

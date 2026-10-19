@@ -24,13 +24,13 @@ test('SSR totals, table, source, snapshot, hashes, categories and reconciliation
  const config=govAdvertisingTableConfig(advertisingTableRows(clearedAdvertising(fixture),agencies));
  assert.ok(config.columns.some(c=>c.key==='media'));assert.ok(!config.columns.some(c=>c.key==='gst'));
 });
-test('held source displays unknown totals and no invented spending or cleared licence',async()=>{
+test('held source hides the empty totals and table, and invents no spending or cleared licence',async()=>{
  const result=await render('',null);assert.equal(result.status,200);assert.equal(result.noindex,true);
- assert.match(result.prerender,/Source verification pending/);assert.match(result.prerender,/does not mean expenditure was zero/);
+ assert.match(result.prerender,/No federal advertising figures yet/);assert.match(result.prerender,/does not mean expenditure was zero/);
  assert.match(result.prerender,/TimeoutError/);assert.match(result.prerender,/Licence: Unverified/);
  assert.doesNotMatch(result.prerender,/\$0|CC BY|Example public information/);
- const doc=new JSDOM(result.prerender).window.document;assert.ok(doc.querySelector('[data-datatable]'));
- assert.equal(doc.querySelector('[data-export]').disabled,true);
+ const doc=new JSDOM(result.prerender).window.document;assert.equal(doc.querySelector('[data-datatable]'),null);
+ assert.doesNotMatch(result.prerender,/Totals by financial year|Totals by entity and year|Reported campaigns/);
 });
 test('licence, source, row provenance and report total corruption fail closed',async()=>{
  for(const change of [h=>h.documents[0].licence.status='held',h=>h.documents[0].licence.scope_sha256='0'.repeat(64),

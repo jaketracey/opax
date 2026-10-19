@@ -218,7 +218,7 @@ export function parseLedgerParams (params, data) {
   const jur = p.get('jur') || 'federal'
   if (!Object.hasOwn(JURISDICTIONS, jur)) return { ok: false, error: 'Unknown jurisdiction. Clear filters, then choose Federal, Queensland, Victoria or Tasmania.' }
   const type = p.get('type')
-  if (type && type !== 'receipts') return { ok: false, error: 'This link requests an unsupported record type. This list shows political receipts. Clear filters to start again.' }
+  if (type && type !== 'receipts') return { ok: false, error: 'This link asks for an unsupported kind of record. This list shows political receipts. Clear filters to start again.' }
   const view = p.get('view') || 'flows'
   if (!Object.hasOwn(COLUMNS, view)) return { ok: false, error: 'This link uses an unsupported view. Clear filters to start again.' }
   const sort = p.get('sort') || 'total', dir = p.get('dir') || 'desc'
