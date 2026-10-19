@@ -5,6 +5,7 @@
 import copy
 import json
 import sys
+import tempfile
 import unittest
 from datetime import date, datetime, timezone
 from pathlib import Path
@@ -296,6 +297,41 @@ class Compute(unittest.TestCase):
 
 
 class InterestsStatus(unittest.TestCase):
+    def test_paused_warning_is_named_and_idempotent(self):
+        generic = 'source paused: honest agent refused (awaiting permission); existing disclosures were preserved.'
+        prev = manifest()
+        prev['refresh']['source_limitations'].extend([generic, generic])
+        status = {'complete': False, 'limitations': [generic]}
+        first, _ = run(prev=prev, interests_status=status)
+        again, result = run(prev=first, interests_status=status)
+        self.assertEqual(again, first)
+        self.assertFalse(result['changed'])
+        self.assertEqual(first['refresh']['source_limitations'].count('Federal interests ' + generic), 1)
+        self.assertNotIn(generic, first['refresh']['source_limitations'])
+
+    def test_named_source_pauses_and_source_dates_update_without_kb_growth(self):
+        access = {'bills': {'status': 'paused', 'host': 'parlinfo.aph.gov.au'}}
+        new, result = run(source_access=access)
+        self.assertFalse(result['kb_changed'])
+        self.assertEqual(new['refresh']['source_access'], access)
+        self.assertEqual(new['refresh']['latest_source_dates']['nsw_hansard'], '2026-09-24')
+        kept, _ = run(prev=new, source_access=None)
+        self.assertEqual(kept['refresh']['source_access'], access)
+
+    def test_access_receipts_drop_private_fields_and_preserve_on_corruption(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            path = root / 'bills.json'
+            path.write_text(json.dumps({'bills': {'status': 'paused', 'host': 'parlinfo.aph.gov.au',
+                                                'private': 'not public'}}))
+            self.assertEqual(ucm.read_source_access(root),
+                             {'bills': {'status': 'paused', 'host': 'parlinfo.aph.gov.au'}})
+            path.write_text('{')
+            self.assertIsNone(ucm.read_source_access(root))
+            for value in ({}, {'bills': {}}, {'bills': {'status': 'unknown'}}):
+                path.write_text(json.dumps(value))
+                self.assertIsNone(ucm.read_source_access(root))
+
     def test_success_clears_old_warning_even_without_kb_change(self):
         prev = manifest()
         prev['refresh']['source_limitations'] = ['Federal interests pages returned no usable records. Existing disclosures were preserved.', 'Other source']

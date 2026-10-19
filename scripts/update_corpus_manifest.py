@@ -258,7 +258,7 @@ def stamp_is_stale(checked_at: str | None, now: datetime, hours: float) -> bool:
 def compute(prev: dict, kb: dict, log: dict, bills: dict, nsw_release: str | None,
             run_date: date, now: datetime, *, always_stamp: bool = False,
             allow_shrink: bool = False, stamp_after_hours: float | None = None,
-            interests_status: dict | None = None) -> tuple[dict, dict]:
+            interests_status: dict | None = None, source_access: dict | None = None) -> tuple[dict, dict]:
     """Return (new manifest, result). Pure: no I/O."""
     new = copy.deepcopy(prev)
     refresh = new.setdefault("refresh", {})
@@ -343,9 +343,20 @@ def compute(prev: dict, kb: dict, log: dict, bills: dict, nsw_release: str | Non
             and all(isinstance(line, str) for line in interests_status["limitations"])
             and isinstance(interests_status.get("complete"), bool)):
         limits = [line for line in refresh.get("source_limitations", [])
-                  if not line.startswith("Federal interests ")]
-        limits.extend(interests_status["limitations"])
+                  if not line.startswith("Federal interests ")
+                  and not line.startswith("source paused: honest agent refused")]
+        limits.extend(line if line.startswith("Federal interests ") else "Federal interests " + line
+                      for line in interests_status["limitations"])
+        limits = list(dict.fromkeys(limits))
         put(refresh, "source_limitations", limits, "source_limitations")
+
+    # Source checks and retained dates are separate from the index resource count.
+    # A successful no-change night must not conceal an inaccessible source.
+    if source_access is not None:
+        put(refresh, "source_access", source_access, "source_access")
+        if log.get("complete"):
+            put(refresh, "latest_source_dates", dict(sorted(log.get("newest", {}).items())),
+                "latest_source_dates")
 
     # Fields that can move without the box changing.
     for key in ("bills_registry", "current_parliament_bills", "latest_bill_introduced"):
@@ -376,6 +387,28 @@ def dump(manifest: dict) -> str:
     return json.dumps(manifest, ensure_ascii=False, indent=2) + "\n"
 
 
+def read_source_access(directory: Path) -> dict | None:
+    """Read public fields only; an unreadable receipt never clears an old pause."""
+    if not directory.is_dir():
+        return None
+    sources = {}
+    try:
+        for path in sorted(directory.glob("*.json")):
+            receipt = json.loads(path.read_text())
+            if not isinstance(receipt, dict) or not receipt:
+                return None
+            for name, state in receipt.items():
+                if not isinstance(state, dict) or not re.fullmatch(r"[a-zA-Z0-9_-]+", name):
+                    return None
+                if state.get("status") != "paused":
+                    return None
+                sources[name] = {key: state[key] for key in ("status", "host", "checked_at", "reason")
+                                 if isinstance(state.get(key), str)}
+    except (OSError, ValueError):
+        return None
+    return dict(sorted(sources.items()))
+
+
 def main(argv: list[str] | None = None) -> int:
     ap = argparse.ArgumentParser(description=__doc__.split("\n\n")[0])
     ap.add_argument("--corpus", default=str(REPO / "portal" / "public" / "corpus.json"))
@@ -383,6 +416,8 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--daily-log", default=os.path.expanduser("~/.cache/autoresearch/pipeline/daily.log"))
     ap.add_argument("--interests-status", default=os.path.expanduser("~/.cache/autoresearch/pipeline/interests-status.json"),
                     help="last federal interests outcome (preservation/access-pause warnings)")
+    ap.add_argument("--source-access-dir", default=os.path.expanduser("~/.cache/autoresearch/pipeline/source-access"),
+                    help="per-source access receipts; named pauses are independent of index freshness")
     ap.add_argument("--db", default=os.environ.get("OPAX_DB") or os.path.expanduser("~/.cache/autoresearch/parli.db"),
                     help="parli.db, opened read-only, for the newest NSW release date")
     ap.add_argument("--date", help="version date, YYYY-MM-DD (default: today in Australia/Sydney)")
@@ -429,7 +464,8 @@ def main(argv: list[str] | None = None) -> int:
     try:
         new, result = compute(prev, kb, log, bills, latest_nsw_release(args.db), run_date, now,
                               always_stamp=args.always_stamp, allow_shrink=args.allow_shrink,
-                              stamp_after_hours=args.stamp_after_hours, interests_status=interests_status)
+                              stamp_after_hours=args.stamp_after_hours, interests_status=interests_status,
+                              source_access=read_source_access(Path(args.source_access_dir)))
     except Refused as e:
         print(f"REFUSED: {e}", file=sys.stderr)
         if args.result_json:
