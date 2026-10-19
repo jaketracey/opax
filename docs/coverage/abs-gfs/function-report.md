@@ -1,5 +1,7 @@
 # ABS GFS expenses by function
 
+Round 3: [approved function asset promoted locally after merging main](function-promotion-round-3.md). The re-review passed `affa233bc`; all ten inputs remain unchanged. Coverage is still LIVE-pending until the orchestrator deploys. This supersedes the earlier pending-review/promotion statements below.
+
 Review fix 1: [shared consolidation headings and diagnostic-containment proof](function-fix-1.md). Current screenshot receipts are in the fix validation; the original numerical findings below are unchanged.
 
 20 October 2026 Melbourne. Worktree `abs-gfs-function`, branch `coverage/abs-gfs-function`, baseline `c926a72c3`. **LIVE-pending**: implementation and staged data only. The headline core remains live. The orchestrator owns review, explicit promotion and deployment of this extension. No push, deploy, nightly, production data write, production Ask/generation/voice/auth call, native change or source request occurred.

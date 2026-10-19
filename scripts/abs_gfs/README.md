@@ -31,11 +31,11 @@ The browser harness uses a local Worker serving the actual `portal/public/govern
 
 Promotion requires an approved `review.json` joining the exact staged input digests to a reviewed commit. Round 2 promotes that reviewed projection into the single local public asset so it ships with the route. No push, deployment or KB/D1 write occurs. The default four-hub promotion list and nightly scripts remain unchanged: GFS is annual and stays outside nightly.
 
-For a future release, review the new staged inputs and update the receipt before an explicit local re-promotion from the approved checkout (using its `HEAD` as the votes baseline):
+For a future release, review the new staged inputs and update the receipt before an explicit local re-promotion from the approved checkout. Use the current `origin/main` as the votes baseline:
 
 ```sh
-python3 scripts/promote_hub_data.py abs-gfs --votes-reference HEAD
-python3 scripts/promote_hub_data.py abs-gfs --check-public --votes-reference HEAD
+python3 scripts/promote_hub_data.py abs-gfs --votes-reference origin/main
+python3 scripts/promote_hub_data.py abs-gfs --check-public --votes-reference origin/main
 ```
 
 The [Round 2 promotion report](../../docs/coverage/abs-gfs/promotion-round-2.md) records this release's asset digest and validation. Shipping remains the orchestrator's responsibility.
@@ -46,7 +46,7 @@ The [Round 2 promotion report](../../docs/coverage/abs-gfs/promotion-round-2.md)
 
 `function-reconciliation.json` records 1,040 diagnostics: 200 division-to-published-total checks, 200 exact headline-expenses ties, 480 group-to-published-division checks, 120 education purpose-to-total checks and 40 exact education/function-division ties. Arithmetic is confined to diagnostics within one published group/year; display/export values always come from original cells. `function-receipts.json` joins the reused snapshots without claiming new HTTP requests.
 
-The existing original-cell gate also reparses all function metadata, labels and cells. The reviewed promoter now pins ten input digests. The previous six-input headline approval cannot approve this extension: `review.json` is pending for the orchestrator. The real public asset remains unchanged. A real promoter dry run correctly refuses pending review.
+The existing original-cell gate also reparses all function metadata, labels and cells. The reviewed promoter now pins ten input digests. Re-review r2 approved the function extension at `affa233bc`. Round 3 updates the real `review.json` for those ten unchanged inputs and promotes the declared `government-finance/data.json` asset locally after merging `origin/main`. Coverage stays LIVE-pending until the orchestrator deploys. [Round 3 promotion evidence](../../docs/coverage/abs-gfs/function-promotion-round-3.md).
 
 Additional gates:
 
@@ -57,7 +57,7 @@ python3 -m scripts.abs_gfs.function_preview
 
 The preview command exercises dry-run, atomic promotion and public readback in a temporary synthetic-review fixture, removes that temporary directory, and writes only `portal/private/abs-gfs-function/preview-data.json`. It does not approve the real input receipt.
 
-From `portal/`, `node --test test/government-finance-functions.test.mjs` checks the SSR/export boundary and `node test/government-finance-function-browser.mjs` checks the local candidate with external browser requests blocked. The latter captures top, function split and function table at 390/1440, checks each table's own scroll width and amount bounds (also without JS), and saves evidence under `portal/private/abs-gfs-function/`. The optional `OPAX_GFS_PREVIEW_ASSET` override is local preview code only. Full-suite verification follows `build:search` at `--test-concurrency=4`; regenerated manifest, party-members, social and growth JSON are restored afterwards.
+From `portal/`, `node --test test/government-finance-functions.test.mjs` checks the SSR/export boundary and `node test/government-finance-function-browser.mjs` checks the actual approved public asset with external browser requests blocked. It checks served-byte equality, review commit and every input digest; there is no default staged fallback. Add `--fixture` only for a test-only candidate before real approval. The latter captures top, function split and function table at 390/1440, checks each table's own scroll width and amount bounds (also without JS), and saves evidence under `portal/private/abs-gfs-function/`. The optional `OPAX_GFS_PREVIEW_ASSET` override is local preview code only. Full-suite verification follows `build:search` at `--test-concurrency=4`; regenerated manifest, party-members, social and growth JSON are restored afterwards.
 
 Review fix 1 adds a shared level/jurisdiction heading map and public-output containment tests. Build the catalogue with `node scripts/build_search_catalog.mjs` from the repository root, then from `portal/` run:
 
@@ -65,4 +65,4 @@ Review fix 1 adds a shared level/jurisdiction heading map and public-output cont
 OPAX_GFS_VERIFY_ORIGINALS=1 node --test --test-concurrency=4 test/government-finance.test.mjs test/government-finance-functions.test.mjs test/government-finance-public-outputs.test.mjs
 ```
 
-The explicit flag verifies every promoted monetary observation against retained XLSX bytes as well as its source-cell contract. Without the flag, ordinary CI checks the committed source-cell contract and diagnostic probes without requiring untracked original workbooks. The test-only promoter fixture lives entirely in an automatically removed temporary directory; real staging and pending approval never change.
+The explicit flag verifies every promoted monetary observation against retained XLSX bytes as well as its source-cell contract. Without the flag, ordinary CI checks the committed source-cell contract and diagnostic probes without requiring untracked original workbooks. The test-only promoter fixture lives entirely in an automatically removed temporary directory; real staging and its approval receipt never change.

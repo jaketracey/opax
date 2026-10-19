@@ -1,9 +1,33 @@
 {
-  "preview": "Local Worker; test-only promoter fixture; external browser requests blocked; real approval/public asset unchanged",
-  "fixture": {
-    "path": "portal/private/abs-gfs-function/preview-data.json",
-    "sha256": "1cc09eea3f8e0195f0dc2d850bae4c3c42f123487eefffeca0fcb1f8f0db229a",
-    "test_only": true
+  "preview": "Local Worker; actual approved promoted portal/public asset; external browser requests blocked",
+  "asset": {
+    "path": "portal/public/government-finance/data.json",
+    "bytes": 11416422,
+    "sha256": "87d7f07134ad60aa530cce8856d0206a9767c0ebe805dfae7dacbc73f20bb991",
+    "reviewedCommit": "affa233bc194d4c1f40548c2649c06b3aa6bbd53",
+    "counts": {
+      "documents": 81,
+      "rows": 3906,
+      "years": [
+        "2015-16",
+        "2016-17",
+        "2017-18",
+        "2018-19",
+        "2019-20",
+        "2020-21",
+        "2021-22",
+        "2022-23",
+        "2023-24",
+        "2024-25"
+      ],
+      "reconciliation": {
+        "pass": 2466
+      },
+      "function_rows": 4340,
+      "function_reconciliation": {
+        "pass": 1040
+      }
+    }
   },
   "results": [
     {
@@ -79,6 +103,15 @@
       "functionRows": 2560
     }
   ],
+  "groupHeadings": {
+    "Commonwealth": "Commonwealth government",
+    "State": "Total state governments",
+    "Local": "Total local governments",
+    "State and local": "Total state and local governments",
+    "Control n.f.d.": "Control n.f.d.",
+    "All levels of government": "Australia, all levels of government",
+    "National": "National general government"
+  },
   "search": {
     "before": 2560,
     "after": 90

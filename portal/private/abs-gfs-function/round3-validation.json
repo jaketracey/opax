@@ -1,0 +1,237 @@
+{
+  "main": "8f397ad50d4171f521cbd7ec54321b5c769b12bd",
+  "reviewed_commit": "affa233bc194d4c1f40548c2649c06b3aa6bbd53",
+  "merge_commit": "1b671dd99de88a10181b4028bd1d0cd0b6eb52b5",
+  "date": "2026-10-20",
+  "asset": {
+    "path": "portal/public/government-finance/data.json",
+    "bytes": 11416422,
+    "sha256": "87d7f07134ad60aa530cce8856d0206a9767c0ebe805dfae7dacbc73f20bb991",
+    "counts": {
+      "documents": 81,
+      "rows": 3906,
+      "years": [
+        "2015-16",
+        "2016-17",
+        "2017-18",
+        "2018-19",
+        "2019-20",
+        "2020-21",
+        "2021-22",
+        "2022-23",
+        "2023-24",
+        "2024-25"
+      ],
+      "reconciliation": {
+        "pass": 2466
+      },
+      "function_rows": 4340,
+      "function_reconciliation": {
+        "pass": 1040
+      }
+    }
+  },
+  "review": {
+    "status": "approved",
+    "ten_inputs_byte_identical_to_reviewed_commit": true,
+    "inputs": {
+      "inventory.json": "a2d6798b8d8f034c781407dd9597f1f0ed6fab4b6dd5d363e7e0cab64f912469",
+      "tables.json": "85799f6e5cdb6df4f1a423155c5c622d26a2918c3b631bdd4277f960af1183f6",
+      "receipts.json": "42e6f28071781ea9bf18694bb01ca3e49534f0e6f20cebda0445a322303b134e",
+      "series.jsonl": "220e8dfab45ae8b399cd835dc3841ed90ce50b70555e204b93477e6c3954e621",
+      "reconciliation.json": "c8dd7436a33a3af61dd3a764527b14a00342f27134757445e5c827733f355199",
+      "hub.json": "deccfe1bb9cf9ac9af722bb12aa2f41f0f70126362e264e07297db4b897de618",
+      "function-series.jsonl": "6fef42288aaed917579313fd4beaace4b0876f373060de0b25864fe75f75fdfd",
+      "function-reconciliation.json": "87a7ddcd837a31bf9aab271180d21e4f7773ca71e7d4f5c0d98ec1951c292add",
+      "function-summary.json": "b32323776d5fd9f21e88a9c8938d38998f9222f9f4a1dbfe8b518d8ebfd225db",
+      "function-receipts.json": "4951103058cba445f09448fe6160d594b458a6763830e40031bc660257e60bbb"
+    }
+  },
+  "promotion_write_scope": {
+    "changed_tracked_public_files": [
+      "portal/public/government-finance/data.json"
+    ],
+    "other_tracked_public_files_byte_identical_to_pre_promotion": true,
+    "generated_files_restored": true
+  },
+  "stamps": {
+    "html_and_shell_files_checked": 13,
+    "changed_vs_main": [
+      "portal/public/index.html"
+    ],
+    "difference": "?v= values only",
+    "spa_shell_byte_identical_to_main": true,
+    "main_ask_link_fix_retained": true
+  },
+  "votes": {
+    "byte_identical_to_main": true,
+    "schema": 1,
+    "sha256": "9b7fc46c65185223d70a49b1bd8ee807327473330b02392963aa320b191b7a93"
+  },
+  "tests": {
+    "targeted_web_and_page_entry": 25,
+    "python_gfs": 20,
+    "promoter_regression": 14,
+    "full_portal": 2194,
+    "full_portal_concurrency": 4,
+    "built_search_before_full_suite": true,
+    "failed": 0,
+    "skipped": 0,
+    "original_workbook_cells_verified": 8246
+  },
+  "gates": {
+    "tsc": "pass",
+    "check": "pass",
+    "originals_dry_run": "pass",
+    "real_reviewed_promoter_dry_run": "pass",
+    "real_promotion": "pass",
+    "check_public": "pass",
+    "worker_dry_run": "pass; no upload",
+    "diff_check": "pass"
+  },
+  "browser": {
+    "preview": "Local Worker; actual approved promoted portal/public asset; external browser requests blocked",
+    "asset": {
+      "path": "portal/public/government-finance/data.json",
+      "bytes": 11416422,
+      "sha256": "87d7f07134ad60aa530cce8856d0206a9767c0ebe805dfae7dacbc73f20bb991",
+      "reviewedCommit": "affa233bc194d4c1f40548c2649c06b3aa6bbd53",
+      "counts": {
+        "documents": 81,
+        "rows": 3906,
+        "years": [
+          "2015-16",
+          "2016-17",
+          "2017-18",
+          "2018-19",
+          "2019-20",
+          "2020-21",
+          "2021-22",
+          "2022-23",
+          "2023-24",
+          "2024-25"
+        ],
+        "reconciliation": {
+          "pass": 2466
+        },
+        "function_rows": 4340,
+        "function_reconciliation": {
+          "pass": 1040
+        }
+      }
+    },
+    "results": [
+      {
+        "width": 390,
+        "status": 200,
+        "pageOverflow": false,
+        "core": {
+          "containerWidth": 350,
+          "containerScrollWidth": 350,
+          "tableWidth": 350,
+          "tableScrollWidth": 350,
+          "amountCells": 25,
+          "amountsInsideContainer": true
+        },
+        "functions": {
+          "containerWidth": 350,
+          "containerScrollWidth": 350,
+          "tableWidth": 350,
+          "tableScrollWidth": 350,
+          "amountCells": 25,
+          "amountsInsideContainer": true
+        },
+        "headings": [
+          "Total state governments",
+          "Australian Capital Territory",
+          "New South Wales",
+          "Northern Territory",
+          "Queensland",
+          "South Australia",
+          "Tasmania",
+          "Victoria",
+          "Western Australia"
+        ],
+        "headlineGroups": 9,
+        "functionGroups": 9,
+        "coreRows": 451,
+        "functionRows": 2560
+      },
+      {
+        "width": 1440,
+        "status": 200,
+        "pageOverflow": false,
+        "core": {
+          "containerWidth": 1325,
+          "containerScrollWidth": 1325,
+          "tableWidth": 1324.8125,
+          "tableScrollWidth": 1325,
+          "amountCells": 25,
+          "amountsInsideContainer": true
+        },
+        "functions": {
+          "containerWidth": 1325,
+          "containerScrollWidth": 1325,
+          "tableWidth": 1324.8125,
+          "tableScrollWidth": 1325,
+          "amountCells": 25,
+          "amountsInsideContainer": true
+        },
+        "headings": [
+          "Total state governments",
+          "Australian Capital Territory",
+          "New South Wales",
+          "Northern Territory",
+          "Queensland",
+          "South Australia",
+          "Tasmania",
+          "Victoria",
+          "Western Australia"
+        ],
+        "headlineGroups": 9,
+        "functionGroups": 9,
+        "coreRows": 451,
+        "functionRows": 2560
+      }
+    ],
+    "groupHeadings": {
+      "Commonwealth": "Commonwealth government",
+      "State": "Total state governments",
+      "Local": "Total local governments",
+      "State and local": "Total state and local governments",
+      "Control n.f.d.": "Control n.f.d.",
+      "All levels of government": "Australia, all levels of government",
+      "National": "National general government"
+    },
+    "search": {
+      "before": 2560,
+      "after": 90
+    },
+    "csvReceipts": true,
+    "ssr": true,
+    "staticFunctions": {
+      "containerWidth": 350,
+      "containerScrollWidth": 350,
+      "tableWidth": 350,
+      "tableScrollWidth": 350,
+      "amountCells": 25,
+      "amountsInsideContainer": true
+    },
+    "pageErrors": []
+  },
+  "screenshots": {
+    "government-finance-1440-function-table.png": "4254f678d7548dd2605203752cab9e256637e6486189aaf5b138fbcca54b6d2d",
+    "government-finance-1440-functions.png": "5f29b5831359a3d9e2545d1d97516ae720fb9c0d8ac4777d69b1af5db1b85309",
+    "government-finance-1440-top.png": "d1edf0cc5927499aeeaae36506f109affa40c3fb5e0508ca3fb8c1b8b63ccf18",
+    "government-finance-390-function-table.png": "a6310b4c04585021ecdcc79427f500b4e6465f5eec4a812a04b483bdb5732707",
+    "government-finance-390-functions.png": "668e33230686e03a24c5839ebc556922c303216bd2503ec62e7d038c5eeaa600",
+    "government-finance-390-top.png": "fa8c05a697f83a10f04f37f544ede3c3789532fc8539f72f0862e2f1f50b1f5e"
+  },
+  "coverage": "LIVE-pending; orchestrator deploys and flips LIVE",
+  "future_repromotion": "python3 scripts/promote_hub_data.py abs-gfs --votes-reference origin/main",
+  "new_abs_requests": 0,
+  "push": false,
+  "deploy": false,
+  "nightly": false,
+  "kb_or_d1_writes": false
+}

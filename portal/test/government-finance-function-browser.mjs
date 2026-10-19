@@ -1,4 +1,4 @@
-/** Local candidate only. The real staged approval and public asset stay untouched. */
+/** Local Worker, actual reviewed public asset by default; --fixture is test-only. */
 import assert from 'node:assert/strict';
 import {execFileSync} from 'node:child_process';
 import {createRequire} from 'node:module';
@@ -6,10 +6,12 @@ import {readFile,writeFile} from 'node:fs/promises';
 import {resolve,relative} from 'node:path';
 import {homedir} from 'node:os';
 import {fileURLToPath} from 'node:url';
+import {createHash} from 'node:crypto';
 const repository=fileURLToPath(new URL('../../',import.meta.url));
-const fixture=JSON.parse(execFileSync('python3',['-m','scripts.abs_gfs.function_preview'],{cwd:repository,encoding:'utf8'}));
-assert.equal(fixture.test_only,true);
-process.env.OPAX_GFS_PREVIEW_ASSET=fixture.path;
+const fixtureMode=process.argv.includes('--fixture');
+const fixture=fixtureMode?JSON.parse(execFileSync('python3',['-m','scripts.abs_gfs.function_preview'],{cwd:repository,encoding:'utf8'})):null;
+if(fixture){assert.equal(fixture.test_only,true);process.env.OPAX_GFS_PREVIEW_ASSET=fixture.path;}
+else delete process.env.OPAX_GFS_PREVIEW_ASSET;
 process.env.OPAX_GFS_PORT='0';
 const {root,port,close}=await import('../../scripts/abs_gfs/preview.mjs');
 const toolRoot=process.env.OPAX_GFS_BROWSER_TOOLS||resolve(homedir(),'.cache/codex-runtimes/codex-primary-runtime/dependencies/node');
@@ -33,7 +35,16 @@ const total=(page,id)=>page.locator(`[data-register-table="${id}"] [data-dt-page
 try{
  const c=await context(),page=await c.newPage();page.on('pageerror',e=>errors.push(e.message));
  const asset=await c.request.get(base+'/government-finance/data.json');assert.equal(asset.status(),200);
- assert.ok((await asset.body()).equals(await readFile(fixture.path)));
+ const assetPath=fixture?.path||resolve(root,'portal/public/government-finance/data.json'),bytes=await readFile(assetPath),promoted=JSON.parse(bytes);
+ assert.ok((await asset.body()).equals(bytes));
+ if(!fixture){
+  const review=JSON.parse(await readFile(resolve(root,'data/staged/abs-gfs/review.json'),'utf8'));
+  assert.equal(review.status,'approved');assert.equal(promoted.promotion.reviewed_commit,review.reviewed_commit);
+  assert.deepEqual(promoted.promotion.inputs,review.inputs);
+  for(const [name,digest] of Object.entries(review.inputs))assert.equal(createHash('sha256').update(await readFile(resolve(root,'data/staged/abs-gfs',name))).digest('hex'),digest);
+ }
+ assert.equal(promoted.function_rows.length,4340);
+ const assetEvidence={path:relative(root,assetPath),bytes:bytes.length,sha256:createHash('sha256').update(bytes).digest('hex'),reviewedCommit:promoted.promotion.reviewed_commit,counts:promoted.promotion.counts};
  for(const width of [390,1440]){
   await page.setViewportSize({width,height:1000});const response=await page.goto(base+'/register/government-finance');assert.equal(response.status(),200);
   await page.waitForSelector('#government-function-table tbody tr');await page.evaluate(()=>document.fonts.ready);
@@ -61,12 +72,21 @@ try{
  assert.equal(await page.locator('.gfs-function-jurisdiction h3').textContent(),'New South Wales');
  await page.selectOption('[name="level"]','Commonwealth');await page.locator('.gfs-filters button').click();await page.waitForURL(/level=Commonwealth/);
  assert.equal(await page.locator('[name="jurisdiction"]').inputValue(),'Australia');assert.equal(await page.locator('.gfs-function-jurisdiction').count(),1);
+ assert.equal(await page.locator('.gfs-function-jurisdiction h3').textContent(),'Commonwealth government');
+ assert.equal(await page.locator('.gfs-jurisdiction h3').textContent(),'Commonwealth government');
+ const groupHeadings={Commonwealth:'Commonwealth government',State:'Total state governments',Local:'Total local governments',
+  'State and local':'Total state and local governments','Control n.f.d.':'Control n.f.d.','All levels of government':'Australia, all levels of government',National:'National general government'};
+ for(const [level,heading] of Object.entries(groupHeadings)){
+  const response=await page.goto(base+'/register/government-finance?'+new URLSearchParams({level,sector:'General government',jurisdiction:'Australia'}));
+  assert.equal(response.status(),200);assert.equal(await page.locator('.gfs-jurisdiction h3').textContent(),heading);
+  if(level!=='National')assert.equal(await page.locator('.gfs-function-jurisdiction h3').textContent(),heading);
+ }
  const staticContext=await context({javaScriptEnabled:false}),staticPage=await staticContext.newPage();await staticPage.setViewportSize({width:390,height:1000});
  await staticPage.goto(base+'/register/government-finance');
  assert.equal(await staticPage.locator('.gfs-function-jurisdiction').count(),9);assert.equal(await staticPage.locator('#government-function-table tbody tr').count(),25);
  const staticFunctions=await geometry(staticPage,'government-function-table');fits(staticFunctions);
  assert.deepEqual(errors,[]);
- await writeFile(resolve(output,'browser-results.json'),JSON.stringify({preview:'Local Worker; test-only promoter fixture; external browser requests blocked; real approval/public asset unchanged',fixture:{...fixture,path:relative(root,fixture.path)},results,search:{before,after},csvReceipts:true,ssr:true,staticFunctions,pageErrors:errors},null,2)+'\n');
- console.log(JSON.stringify({results,search:{before,after},ssr:true,csvReceipts:true}));
+ await writeFile(resolve(output,'browser-results.json'),JSON.stringify({preview:fixture?'Local Worker; test-only promoter fixture; external browser requests blocked':'Local Worker; actual approved promoted portal/public asset; external browser requests blocked',asset:assetEvidence,...(fixture?{fixture:{...fixture,path:relative(root,fixture.path)}}:{}),results,groupHeadings,search:{before,after},csvReceipts:true,ssr:true,staticFunctions,pageErrors:errors},null,2)+'\n');
+ console.log(JSON.stringify({asset:assetEvidence,results,groupHeadings,search:{before,after},ssr:true,csvReceipts:true}));
  await staticContext.close();await c.close();
 }finally{await browser.close();await close();}

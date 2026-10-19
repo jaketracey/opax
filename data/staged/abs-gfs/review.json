@@ -1,8 +1,8 @@
 {
-  "status": "pending",
-  "reviewed_commit": null,
+  "status": "approved",
+  "reviewed_commit": "affa233bc194d4c1f40548c2649c06b3aa6bbd53",
   "previous_approved_commit": "d7b0a7052a7ed33649f8cc0fb379335ca44e6ef4",
-  "review_basis": "Function extension awaits orchestrator review. The prior headline-only approval does not approve the new function data or changed projection. Ten input digests are supplied for review; no actual public promotion performed. Test-only temporary promoter fixtures never change this receipt. Annual explicit abs-gfs promotion remains outside nightly.",
+  "review_basis": "User round 3 authorisation: re-review r2 passed both fixes at affa233bc. All ten staged inputs are byte-identical to that reviewed commit. Current origin/main 8f397ad50 merged with main HTML and regenerated stamps; Ask-link fix preserved. Approves explicit local abs-gfs promotion carrying the function series only. No push, deploy, nightly, KB/D1 write or ABS request. Annual re-promotion remains outside nightly.",
   "inputs": {
     "inventory.json": "a2d6798b8d8f034c781407dd9597f1f0ed6fab4b6dd5d363e7e0cab64f912469",
     "tables.json": "85799f6e5cdb6df4f1a423155c5c622d26a2918c3b631bdd4277f960af1183f6",
@@ -14,5 +14,6 @@
     "function-reconciliation.json": "87a7ddcd837a31bf9aab271180d21e4f7773ca71e7d4f5c0d98ec1951c292add",
     "function-summary.json": "b32323776d5fd9f21e88a9c8938d38998f9222f9f4a1dbfe8b518d8ebfd225db",
     "function-receipts.json": "4951103058cba445f09448fe6160d594b458a6763830e40031bc660257e60bbb"
-  }
+  },
+  "reviewed_at": "2026-10-19T23:08:59.268191+00:00"
 }

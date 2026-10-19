@@ -1,6 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {execFileSync} from 'node:child_process';
+import {readFileSync} from 'node:fs';
 import {readFile} from 'node:fs/promises';
 import {build} from 'esbuild';
 import {JSDOM} from 'jsdom';
@@ -24,9 +25,12 @@ const originalFetch=globalThis.fetch;
 globalThis.fetch=async()=>{throw Error('Public-output tests must never use the network');};
 test.after(()=>{globalThis.fetch=originalFetch;});
 
-test('promoted asset and both CSVs retain workbook cells, never diagnostic division, education or group sums',()=>{
+test('real and fixture promoted assets and both CSVs retain workbook cells, never diagnostic division, education or group sums',()=>{
  assert.equal(fixture.source_observations_traced,8246);
  assert.equal(fixture.original_cells_verified,verifyOriginals?8246:0);noDiagnostics(JSON.stringify(hub));
+ const publicAsset=JSON.parse(readFileSync(new URL('../public/government-finance/data.json',import.meta.url),'utf8'));
+ noDiagnostics(JSON.stringify(publicAsset));
+ assert.deepEqual(publicAsset.rows,hub.rows);assert.deepEqual(publicAsset.function_rows,hub.function_rows);
  const controls=Object.values(fixture.rounding_controls);assert.equal(controls.length,3);
  for(const {published,computed_sum_million} of controls){
   assert.notEqual(published.value,computed_sum_million);
