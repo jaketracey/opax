@@ -50,6 +50,41 @@ fetchers use `source-access.json`. No refusal deletes a source's last good data.
 The full repository match inventory and dispositions are in
 [SOURCES-ACCESS-AUDIT.md](SOURCES-ACCESS-AUDIT.md).
 
+## Permission review, 19 October 2026
+
+Relevant replies received since the 10 October decision were read in full. Private
+correspondence and message links remain in the maintenance archive outside this
+public repository. Reuse permission, a working identifying request and an
+implemented public projection are separate requirements.
+
+- Victorian Parliament approved Hansard and Register of Members' Interests reuse
+  on 13 October, subject to fair, accurate, non-misleading presentation and free
+  public access. On 19 October the identifying client could read the interests
+  listing and sampled current PDFs. The interests adapter and its election-build
+  coverage review remain unimplemented; see [DATA-INTERESTS.md](DATA-INTERESTS.md).
+  Portrait permission extends only to material whose copyright Parliament owns.
+- ACT Elections approved gift-return use from FY2012–13 onwards on 13 October:
+  preserve figures and disclosure dates, attribute the ACT Electoral Commission,
+  link the originals and keep jurisdictions separate. Organisations may be named;
+  individual donors are counted only. The agreed correction window is two business
+  days, with removal on request. Existing donor-type guesses do not establish an
+  organisation's identity, so the research export remains held pending a suitable
+  public projection. The 19 October official-index probe stopped when the redirect
+  destination's robots policy was unavailable in the client; latest source coverage
+  was not established. This is a client integration gap, not evidence of HTTP 403,
+  a robots denial, a source outage or a new permission refusal.
+- APH's 15 October response referred the request internally; SA Hansard's
+  12 October response was still investigating access. Neither granted access.
+  No new Queensland Parliament or GrantConnect/Finance approval was found in the
+  bounded mailbox searches. Their existing pauses remain in force.
+- ECSA refused republication of its disclosure returns on 15 October. That
+  refusal is separate from the pending SA parliamentary Hansard request. WAEC's
+  response acknowledged consideration, without granting publication permission.
+
+The approved identity and no-workaround policy above continue to apply. These
+email findings do not clear an inaccessible route, enable a research-only export
+or authorise the publication of held source bodies.
+
 ## Review correction and rollback
 
 The review correction removes the remaining contact-log browser path, tightens

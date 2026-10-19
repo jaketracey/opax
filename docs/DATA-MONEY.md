@@ -1,6 +1,9 @@
 # OPAX money data: sources, what was pulled, quality, exposure
 
 Status 2026-09-02: **acquisition complete for everything that is machine-readable.**
+This is the historical acquisition baseline. ACT and ECSA permission decisions,
+and the ACT access check on 19 October 2026, are recorded in section 1.1 below;
+the baseline does not establish current source coverage or permission to publish.
 Every source below is loaded into additive `ext_*` tables in `parli.db` (host `desktop`,
 `/home/jake/.cache/autoresearch/parli.db`); nothing pre-existing (`donations`,
 `mp_expenses`, `ministerial_meetings`, `federal_lobbyists*`, `contracts`) was touched.
@@ -36,10 +39,10 @@ as `OPAX research (opax.com.au; contact jake.tracey@noice.work)` and rate-limits
 | **VIC** VEC Disclosures portal | Power Pages entity list `pit_donation` on `https://disclosures.vec.vic.gov.au/public-donations/` via `/_services/entity-grid-data.json` (page size 5000) | JSON grid | Crown copyright (State of Victoria); no explicit open licence on the portal; published under Electoral Act 2002 s 217 | scheme began 25 Nov 2018; rows in the public grid date from 2020-21 | continuous (21-day disclosure) | **pulled in full: 4,237 donations, $11.4m** |
 | **WA** WAEC Online Disclosure System | Power Pages entity list `waec_disclosure` on `https://disclosures.elections.wa.gov.au/public-dashboard/` | JSON grid; dates render m/d/yyyy | **Full Crown copyright, no open licence** (WAEC copyright notice) | real-time gifts since 1 Jul 2024; earlier years are PDF annual returns | continuous (7-day disclosure) | **pulled in full: 7,875 disclosures, $16.2m** (public exposure is a licence gate) |
 | **TAS** TEC | two registers read together: the monthly + seven-day disclosure report tables on `https://www.tec.tas.gov.au/disclosure-and-funding/registers-and-reports/donations/` (static HTML fragments the page pulls in with its own `includeHTML()`), and the Power Pages entity list `vec_publisheddonation` on `https://disclosures.tec.tas.gov.au/public-donations/` | HTML tables + JSON grid | **CC BY 4.0** (TEC copyright page) | scheme commenced **1 Jul 2025**; nothing earlier exists | monthly, or 7-day in a campaign period | **pulled in full: 264 donations, $1.53m** |
-| **ACT** Elections ACT "Gift returns" | one HTML page per financial year under `https://www.elections.act.gov.au/funding-disclosures-and-registers/gift-returns/`, a table per recipient (`From \| Date reported \| Date gift received \| Amount \| Type \| Description`) | HTML tables | **No open licence** (ACT Electoral Commission copyright) | 2012-13 to 2026-27 | quarterly; 7-day in an election year | **pulled in full: 8,207 gifts, $7.64m** (public exposure is a licence gate) |
+| **ACT** Elections ACT "Gift returns" | one HTML page per financial year under `https://www.elections.act.gov.au/funding-disclosures-and-registers/gift-returns/`, a table per recipient (`From \| Date reported \| Date gift received \| Amount \| Type \| Description`) | HTML tables | **Limited written reuse permission, 13 Oct 2026**: organisations may be named; individuals only counted; accurate dates/amounts, attribution and source links, separate jurisdictions | Historical holdings: 2012-13 to 2026-27; latest official coverage not verified on 19 Oct | quarterly; 7-day in an election year | **2 Sep baseline: 8,207 gifts, $7.64m**; public export remains held for safe identity filtering and source verification, not for an unanswered permission request |
 | **NT** NTEC published returns | annual returns (2014-15 on; separate "annual returns - gifts" pages from 2020-21) and Legislative Assembly election returns under `https://ntec.nt.gov.au/financial-disclosure/`. The site returns HTTP 403 to non-browser clients (Cloudflare managed challenge, confirmed from both OPAX hosts 2026-09-02), so pages are read from Internet Archive raw captures (`web.archive.org/web/<ts>id_/<url>`) | HTML tables | **No open licence** (NT Government copyright) | FY 2014-15 to 2024-25 | annual + per election | **pulled in full: 2,266 rows, $29.1m** (public exposure is a licence gate) |
 | **NSW** Electoral Commission "Funding and disclosure online" | `https://efadisclosures.elections.nsw.gov.au/` (Salesforce Visualforce app `FDCLiteDisclosures`; has a `getDownloadURL` remoting action) | interactive search only; no published bulk file (the "downloadable resources" anchor on the disclosures page is empty; data.nsw.gov.au has only annual-report PDFs) | site terms: **"You are not allowed to use any software (like bots, scraper tools etc.) to access, monitor or copy the portal or its contents"**; robots.txt Content-Signal `ai-train=no` | 2018-19 onwards online | half-yearly + pre-election real time | **not pulled (terms).** Path: the Commission emails copies on request (`fdc@elections.nsw.gov.au`, stated on the View Disclosures page) -- ask for a CSV extract |
-| **SA** ECSA | `https://www.ecsa.sa.gov.au/parties-and-candidates/disclosure-returns-%E2%80%93-state-elections` | ~18 PDF returns per election (party + associated-entity returns, edocman downloads); `disclosures.ecsa.sa.gov.au` no longer resolves | not stated (SA Government default CC BY) | 2022 state election returns; **SA banned political donations from 1 Jul 2025** | per election | **not pulled (PDF only, scheme ended).** Low value; skip |
+| **SA** ECSA | `https://www.ecsa.sa.gov.au/parties-and-candidates/disclosure-returns-%E2%80%93-state-elections` | 2 Sep inventory: ~18 PDF returns per election (party + associated-entity returns, edocman downloads); DNS observation not rechecked | **Reuse refused, 15 Oct 2026**: facts and original links only; do not republish return or portal content on unauthorised pages | 2022 state election returns in the historical inventory; current donation-law rules not assessed here | per election | **Not ingested.** ECSA's refusal is separate from the pending South Australian Hansard source-access request |
 | Federal AEC | already in `donations` (199,233 rows, 1998-99 to 2025-26) | | | | | receipts out of scope here; debts, benefits and return totals are §1.5 |
 
 Unified schema (`ext_donations`): `jurisdiction, source, source_record_id, donor_name,
@@ -52,7 +55,7 @@ industry_source, source_url, ingested_at`. Loads replace per `source`.
 QLD, VIC, WA are `parli.ingest.money_state_donations`; TAS, ACT, NT are
 `parli.ingest.money_small_jurisdictions` (same DDL, same columns, same writer).
 
-#### Licence verdicts, TAS / ACT / NT (checked 2026-09-02)
+#### Licence and permission verdicts (2 Sep baseline; updated 19 Oct 2026)
 
 The rule is the one WA set: data may stay in `parli.db` for internal analysis
 whatever the licence says, but nothing is served from `portal/public/` unless the
@@ -75,7 +78,8 @@ site-wide TEC licence as reaching it. Only 11 of the 264 rows come from that
 subdomain; the other 253 come from `www.tec.tas.gov.au`, squarely inside the
 quoted grant.
 
-**ACT -- RESTRICTED, gated.**
+**ACT -- limited written permission; public export still held.**
+The 2 September copyright baseline was restrictive:
 <https://www.elections.act.gov.au/about-the-commission/copyright> permits use
 only "for your personal use, educational use or for non-commercial use within
 your organisation", "in unaltered form only", and then:
@@ -84,9 +88,45 @@ your organisation", "in unaltered form only", and then:
 > commercialise any material contained on this site without the permission of
 > the ACT Electoral Commission.
 
-Publishing on opax.com.au is exactly the "publish / distribute" case that needs
-written permission. "Creative Commons" does not appear on the page. The 8,207
-rows stay loaded for internal analysis; **no `money.act.json` in the repo.**
+Written permission received **13 October 2026** permits the gift-return series
+from **FY 2012–13 onwards**, subject to these boundaries: organisation donors may
+be named; individuals are only counted; dates and amounts must remain accurate;
+Elections ACT attribution and original source links must accompany the data;
+ACT must remain separate from other jurisdictions. Corrections are due within
+two business days, with removal on request. This is a scoped permission,
+not a general open licence or permission to publish individual donor names.
+
+The current export stays held. `donor_type` is inferred by name heuristics in
+`parli.ingest.donations.classify_donor_type()` and adjusted by
+`money_small_jurisdictions.finish()`; it is not an explicit Elections ACT type
+or verified organisation identity. The read-only VM check on **19 October 2026**
+found the same **8,207** stored rows: **819** labelled `organisation`, **508**
+`individual` and **6,880** `other`. Neither the organisation label nor the
+unclassified remainder is a safe publication allowlist. Organisation naming
+requires a separately reviewed positive identity basis, with unknowns held;
+individual names, aliases, row identifiers and inferred profile links must not
+leak through a public projection. **No `money.act.json` is published.**
+
+Stored gifts span **2 July 2012–14 August 2026**, with reported dates through
+**18 August 2026**; all stored rows have both dates and source URLs. The ACT
+parser maps “Date gift received” to `date_made` and “Date reported” to
+`date_received`, so the public labels must preserve those source meanings.
+These holdings were loaded on 2 September; that alone does not prove that the
+official register has newer entries. On **19 October**, an identifying-User-Agent
+request to the official index stopped at the shared transport's
+`redirect refused: destination robots policy is unavailable` guard. The current
+FY page was not fetched. This is a missing redirect-policy verification in the
+client, **not proof of HTTP 403, a robots denial or a source network outage**.
+Latest official coverage remains unverified; no alternate client, identity or
+redirect bypass was used.
+
+**SA -- ECSA reuse refused, 15 October 2026.** ECSA declined republication of
+its return or portal content on pages it has not authorised. Existing research remains held; the reply grants no republication permission.
+Link readers to the original ECSA returns and do not infer reuse permission from
+the SA Government's general copyright position. This decision concerns electoral
+disclosures; **South Australian Hansard is a separate source with access
+permission still pending**. The old 2 September note about the donation scheme
+is not evidence of the current law.
 
 **NT -- RESTRICTED, gated.** NTEC has no copyright page of its own; its footer
 points at <https://nt.gov.au/page/copyright-disclaimer-and-privacy>:
@@ -420,7 +460,7 @@ Files (`portal/public/graph/`, static, committed):
 | `money.vic.json` | ~82 KB | 3,416 donations to parties (of 4,237) | 250 | 11 | 291 | Jason McClintock $110k; Malik Zaveer $70k; Darren Natale $55k; Lucas Moon $48k; Peter Walsh $48k; Louise Staley $47k; Tim Read $42k; Matt Fregon $40k; Richard Welch $38k; Victorian Automotive Chamber of Commerce $24k |
 | `money.tas.json` | ~55 KB | 220 gifts to parties (of 264) | 168 | 5 | 173 | NEX Building Group $44.7k; Electrical Trades Union Victoria $40k; Plumbing and Pipe Trades Employees Union Federal Office $30k; Pharmacy Guild of Australia Tas Branch $26.2k; SDA Tasmanian Branch $23.2k; Google Australia $22k; Health Services Union Tas Branch $19.9k; Encompass Health Holdings $16.5k; AWU Tasmanian Branch $15.7k; Hospitality Tasmania $14.8k |
 | `money.wa.json` | not generated for the portal | | | | | **WA is excluded from public exposure**: WAEC asserts full Crown copyright with no open licence. `export_state_money.py wa --gated` produces a research copy outside `portal/public`. |
-| `money.act.json` | not generated for the portal | | | | | **ACT is excluded**: no open licence, permission required to publish or distribute (section 1.1). `export_state_money.py act --gated` for a research copy. |
+| `money.act.json` | not generated for the portal | | | | | **ACT public export remains held**: limited permission received 13 Oct 2026, but existing donor types are heuristic and the latest official source has not been verified. A reviewed organisation-only projection with individuals counted is required (section 1.1). `export_state_money.py act --gated` remains a private research copy. |
 | `money.nt.json` | not generated for the portal | | | | | **NT is excluded**: no open licence, all-rights-reserved NT Government statement (section 1.1). `export_state_money.py nt --gated` for a research copy. |
 
 Rules on top of the federal export: gifts to candidates, committees and third parties
@@ -550,7 +590,7 @@ once, then `PYTHONPATH=. .venv/bin/python -m parli.ingest.<module>`. Writers def
 | Refresh | Command | Cadence |
 |---|---|---|
 | State donations | `money_state_donations` (QLD/VIC/WA; `--source qld` etc.) | weekly |
-| Small-jurisdiction donations | `money_small_jurisdictions` (TAS/ACT/NT; `--source tas` etc.) | weekly for TAS (7-day disclosures), annually for ACT/NT |
+| Small-jurisdiction donations | `money_small_jurisdictions` (TAS/ACT/NT; `--source tas` etc.) | weekly for TAS (7-day disclosures); ACT held pending redirect-policy verification and a safe public projection; NT research cadence remains separate |
 | IPEA | `money_ipea --since 2026q03` | quarterly, mid Aug/Nov/Feb/May |
 | NSW diaries | `money_diaries --jurisdiction nsw --years 2026` | quarterly |
 | QLD diaries | `money_diaries --jurisdiction qld` (current govt; `--period 2020-2024` for former) | monthly |
@@ -571,6 +611,13 @@ files are now unique; SQLite serialises with a 600 s busy timeout).
 - NSW donations: request a bulk extract from the NSW Electoral Commission (their terms
   bar scraping; they email copies on request).
 - WA donations: clear the WAEC copyright position before any public exposure.
+- ACT gifts: apply the 13 October permission through a reviewed organisation-only
+  projection, with individuals only counted and unknown identities held. Verify
+  the official source through a permitted redirect-aware policy before claiming
+  current coverage; keep the existing named-donor export gated.
+- ECSA: respect the 15 October refusal; keep republication held and point to the
+  original source. Do not
+  combine this decision with the separate South Australian Hansard request.
 - Optional LLM pass over the 3,032 unclassified state donors (`--report` lists them);
   consider a `firearms` industry bucket.
 - QLD former-government diaries (2013-2024) are one flag away (`--period`), ~4x the current
