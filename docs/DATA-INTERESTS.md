@@ -4,6 +4,60 @@
 > proxy approvals below are superseded; refused sources are paused and the last
 > good data kept. See [SOURCES-ACCESS.md](SOURCES-ACCESS.md).
 
+## Victorian register — permission and source check, 19 October 2026
+
+The Parliament of Victoria's **13 October 2026 email approval** covers reuse of
+**Hansard and the Register of Members' Interests**, provided the material is
+represented **fairly and accurately**, without misleading readers, and made
+available **free of charge**. The
+permission evidence is held in the outreach record outside this repository; see
+[SOURCES-ACCESS.md](SOURCES-ACCESS.md). This supersedes the VIC permission-blocked
+conclusions in the historical survey and next-steps list below. It is not blanket
+approval for portraits, photographs or other Parliament website material.
+
+On **19 October 2026**, a read-only check with the shared identifying OPAXBot
+User-Agent received **HTTP 200** from the official
+[tabled-documents listing](https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/?page=1&pageSize=100&sortType=30&tabled-type=56&term=Register+of+Interests),
+its public
+[search endpoint](https://www.parliament.vic.gov.au/api/search/tabledpapers?page=1&pageSize=100&sortType=30&tabled-type=56&term=Register%20of%20Interests),
+and two sample PDFs. The endpoint returned all **82 matching records** in one
+bounded response. No browser, proxy, impersonation or refused-source retry was
+used. The shared source-access policy still applies: a refusal or challenge pauses
+the source and preserves the last good data.
+
+The latest published ordinary returns in that inventory were:
+
+| Chamber | Official source | Reporting period | Released |
+|---|---|---|---|
+| Legislative Assembly | [Tabled paper 10411](https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10411), two PDF volumes | 1 February–30 June 2026 | 26 August 2026 |
+| Legislative Council | [Tabled paper 10406](https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10406), one PDF | 1 February–30 June 2026 | 26 August 2026 |
+
+Assembly volume 1 (**400 pages**) and the Council volume (**374 pages**) have
+selectable text and Schedule 2 return forms. Assembly volume 2 was listed but not
+fetched in this check. The inventory also includes primary return **10295**, dated
+2 June 2026 and released 28 July 2026. Discovery must distinguish primary and ordinary
+returns, their reporting periods and volumes. Current to the latest published
+ordinary return means **30 June 2026** reporting coverage, not declarations through
+19 October.
+
+**Implementation remains outstanding.** There is no VIC interests adapter or VIC
+parser fixture, and this check did not load or publish any returns. A dedicated
+Schedule 2 parser can reuse `InterestDocument`, `InterestRow`, `ext_interests*` and
+the existing static exporter; a new storage or KB pipeline is unnecessary. It
+still needs fixtures for both chambers, the 15 VIC categories, member identity
+cover sheets, continued tables, nil entries and primary versus ordinary returns,
+with source-page citations and conservative identity matching.
+
+Publication also requires review of `scripts/build_vic_election.mjs`: it explicitly
+rejects any VIC interests source and sets `interests_available: false`.
+`scripts/export_interests.py` has federal-and-QLD-only source attribution text.
+Those dependencies, coverage notes and a guarded refresh step must be updated
+alongside the adapter before VIC disclosures can be published. Permission and
+reachable source files alone do not establish parsed or published coverage.
+
+---
+
+## Historical baseline, 4 September 2026
 
 Historical baseline, 2026-09-04: federal House (48th Parliament), **Senate (73 of 74)** and Queensland
 (58th) registers are parsed and **loaded into new `ext_interests*` tables on `desktop`** and **served on
@@ -202,6 +256,10 @@ drop it whenever convenient. The new tables supersede it.
   source link only until someone reads the terms (§6).
 
 ### States and territories — survey (curl + WebFetch only, one sample document each)
+
+This is the historical survey. Its VIC access/permission conclusion is superseded
+by the 13 October approval and 19 October source check above; the original findings
+are retained below for context.
 
 | Jurisdiction | Where | Format | Access | Licence | Coverage | Difficulty |
 |---|---|---|---|---|---|---|
@@ -462,3 +520,7 @@ deletions inline (it does); (3) **OCR rows** would enter the corpus as fact — 
 7. **47th Parliament** archive for history (same PDF host; parliament number is read from
    the cover).
 8. Drop `mp_interests` once nothing could still read it (nothing does today).
+
+The VIC permission requirement in historical item 6 is superseded by the approval
+above. The remaining VIC work is the adapter, accuracy fixtures and publication
+dependency review, not another permission request for the approved register use.
