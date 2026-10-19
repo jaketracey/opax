@@ -1207,6 +1207,8 @@ export function mountGrants (container, opts = {}) {
   }
 
   function render () {
+    // A filter touched before the index answers waits for it: load() renders once data is in.
+    if (!data) return
     const rows = computeRows()
     currentRows = rows
     const frag = document.createDocumentFragment()

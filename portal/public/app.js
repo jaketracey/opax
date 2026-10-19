@@ -13,14 +13,14 @@ const donorNameHTML = name => donorLabelHTML(disclosedDonor(name));
 
 "use strict";
 let voteTables;
-const voteTablesReady = import("/vote-tables.js?v=c94b70784e").then(module => { voteTables = module; });
+const voteTablesReady = import("/vote-tables.js?v=db13ec27f3").then(module => { voteTables = module; });
 let divisionMarkdown;
 const divisionMarkdownReady = import('/division-markdown.js?v=5991511166').then(module => { divisionMarkdown = module; });
 // The labels and source lines (labels.js); the first render waits for them.
 let growthModules;
 const growthModulesReady = import("/growth-modules.js?v=078d7bb688").then(module => { growthModules = module; });
 let registerTables;
-const registerTablesReady = import('/register-tables.js?v=e13bc045c4').then(module => { registerTables = module; });
+const registerTablesReady = import('/register-tables.js?v=c5d8c63d73').then(module => { registerTables = module; });
 let askPerson;
 const askPersonReady = import('/ask-person.js?v=8b1bfd1c99').then(module => { askPerson = module; });
 let uiLabels;
@@ -1348,7 +1348,7 @@ async function renderDiscoveryPage(params, manageFocus) {
   slot.innerHTML = '<p role="status">Loading contracts…</p>';
   const seedNode = document.querySelector('#prerender [data-contracts-seed]');
   const seed = seedNode ? JSON.parse(seedNode.textContent) : null;
-  import('/contracts-table.js?v=bac9be1f09').then(async ({mountContractsTable}) => {
+  import('/contracts-table.js?v=246764cb2b').then(async ({mountContractsTable}) => {
     if (tableGeneration !== contractsTableGeneration) return;
     const handle = await mountContractsTable(slot, {seed: seed?.supplierId === null ? seed : undefined, signal: tableController.signal});
     if (tableGeneration === contractsTableGeneration) contractsTableHandle = handle; else handle.destroy();
@@ -1425,8 +1425,10 @@ function loadMoneyFile(jur) {
   const cfg = MONEY_JURISDICTIONS[jur];
   if (!cfg) return Promise.resolve(null);
   if (jur === "federal") return loadMoneyData();
+  // A failed load is not kept, so the page's "Try again" fetches again.
   moneyFiles[jur] ??= fetch(cfg.file,{cache:"no-cache"})
-    .then((r) => (r.ok ? r.json() : null)).catch(() => null);
+    .then((r) => (r.ok ? r.json() : null)).catch(() => null)
+    .then((d) => { if (!d) delete moneyFiles[jur]; return d; });
   return moneyFiles[jur];
 }
 
@@ -1502,7 +1504,7 @@ async function openMoneyRecords(kind, params) {
   const body = $('money-records-body'); body.innerHTML = '<p class="status">Loading the records…</p>';
   try {
     if (grants && !params.has('program') && !params.has('open') && !params.has('largest')) {
-      const mod = await import('/grants-table.js?v=88066514ba');
+      const mod = await import('/grants-table.js?v=9ef280f653');
       if (generation !== moneyRecordsGeneration) return;
       const controller = new AbortController();
       moneyRecordsHandle = {destroy() {controller.abort();}};
@@ -1511,7 +1513,7 @@ async function openMoneyRecords(kind, params) {
       moneyRecordsHandle = handle;
       return;
     }
-    const mod = await import(grants ? '/grants.js?v=56dfefe68b' : '/ledger.js?v=fd1ea7e42b');
+    const mod = await import(grants ? '/grants.js?v=bf34e771e1' : '/ledger.js?v=bfde3a46a5');
     if (generation !== moneyRecordsGeneration) return;
     body.replaceChildren();
     // Both modules report their shareable state (open file, filters) so the
@@ -1560,7 +1562,7 @@ async function openGrantRecipient(jurisdiction, id, manageFocus) {
   const body = $('money-records-body');
   body.innerHTML = '<div class="grant-recipient-page" aria-busy="true"><p class="visually-hidden" role="status">Loading recipient records</p><div class="answer-skeleton grant-recipient-skeleton" aria-hidden="true"><i style="width:62%;height:2.75rem"></i><i style="width:38%"></i><i style="width:100%;height:6rem"></i><i style="width:84%"></i><i style="width:96%"></i><i style="width:74%"></i></div></div>';
   try {
-    const mod = await import('/grant-recipient.js?v=c56585cb50');
+    const mod = await import('/grant-recipient.js?v=34a70cde31');
     if (generation !== moneyRecordsGeneration) return;
     moneyRecordsHandle = mod.mountGrantRecipient(body, { jurisdiction, id, manageFocus,
       onTitle(name) {
@@ -1580,7 +1582,7 @@ async function openLargestGrants(month, manageFocus) {
   $('money-records-head').hidden = true;
   const body = $('money-records-body');
   try {
-    const mod = await import('/grants-largest.js?v=largest-20260929b');
+    const mod = await import('/grants-largest.js?v=loading-states-20261019');
     if (generation !== moneyRecordsGeneration) return;
     moneyRecordsHandle = mod.mountLargestGrants(body, { month,
       onTitle(title) {
@@ -1658,7 +1660,7 @@ async function mountMoney(jurParam, industry, params = new URLSearchParams()) {
   root.innerHTML = `<p class="ui-status-line money-map-status" role="status">Loading the map…</p>`;
   const cfg = MONEY_JURISDICTIONS[jur];
   try {
-    const [{ mountMoneyMap }, data, journeysModule, researchModule, recordsModule] = await Promise.all([import("/money-map.js?v=12b9796e7c"), loadMoneyFile(jur), import("/money-journeys.js?v=mobile-picker-20260908"), import("/map-research.js?v=bfb309da98"), import("/money-records.js?v=ia-ux-20260908-2")]);
+    const [{ mountMoneyMap }, data, journeysModule, researchModule, recordsModule] = await Promise.all([import("/money-map.js?v=12b9796e7c"), loadMoneyFile(jur), import("/money-journeys.js?v=mobile-picker-20260908"), import("/map-research.js?v=f4ad8d2662"), import("/money-records.js?v=ia-ux-20260908-2")]);
     if (moneyMapLoading !== jur || generation !== moneyMapGeneration) return; // switched again while loading
     const fine = $("money-fineprint");
     if (fine) fine.innerHTML = moneyFineprintHTML(jur, data?.meta);
@@ -1799,7 +1801,7 @@ async function openSupplierPage(name, params, manageFocus) {
   body.classList.remove("subject-person", "subject-party");
   body.innerHTML = '<p role="status">Loading suppliers…</p>';
   try {
-    const module = await import("/suppliers.js?v=aebce8ef06");
+    const module = await import("/suppliers.js?v=d6b3176bf9");
     if (generation !== supplierPageGeneration) return;
     const helpers = {
       params,
@@ -1840,7 +1842,7 @@ async function openConnectionsPage(params, manageFocus) {
   if (status) status.textContent = "Opening the records…";
   if (manageFocus) $("connections-title")?.focus({ preventScroll: true });
   try {
-    const module = await import("/connections.js?v=wds-money-20261012");
+    const module = await import("/connections.js?v=loading-states-20261019");
     if (generation !== connectionsGeneration) return;
     connectionsPage = module.mountConnections($("connections-body"), {
       params,
@@ -3565,7 +3567,8 @@ let moneyDataPromise = null;
 function loadMoneyData() {
   // The same parse the donor privacy index reads (donor-views.js), not a second download.
   moneyDataPromise ??= import('/donor-views.js?v=f1a85f7a27').then((module) => module.loadMoneyGraph("/graph/money.json"))
-    .then((d) => (moneyData = d)).catch(() => null);
+    .then((d) => (moneyData = d)).catch(() => null)
+    .then((d) => { if (!d) moneyDataPromise = null; return d; });
   return moneyDataPromise;
 }
 
@@ -3743,6 +3746,8 @@ for (const id of ["a-speaker", "f-speaker"]) {
 
 let subjectMapHandle = null;
 let currentSubjectKey = null;
+// The address segment of the person page on screen (a slug or a name), so a route to the same person keeps it.
+let subjectSegment = "";
 
 // The page's map renders only while it can be seen: it pauses when it scrolls
 // off-screen and while any dialog stands over it (the Explain scene is a
@@ -3967,7 +3972,8 @@ const DECLARED_BUCKET_LABELS = {
 let recentInterestsPromise = null;
 function loadRecentInterests() {
   recentInterestsPromise ??= fetch("/interests/recent.json")
-    .then((r) => (r.ok ? r.json() : null)).catch(() => null);
+    .then((r) => (r.ok ? r.json() : null)).catch(() => null)
+    .then((d) => { if (!d) recentInterestsPromise = null; return d; });
   return recentInterestsPromise;
 }
 
@@ -4064,11 +4070,21 @@ function declaredPage(items, partyByName, { category = "", party = "", person = 
 }
 
 async function renderDeclaredPage(params, manageFocus) {
+  // A newer render (a filter change, a route) owns the list once it starts.
+  const run = renderDeclaredPage.run = (renderDeclaredPage.run || 0) + 1;
   const root = $("declared-list");
-  root.innerHTML = `<p class="status">Opening the register ledger…</p>`;
+  root.innerHTML = `<div id="declared-loader" class="subject-loader" role="status"></div>`;
+  showPageLoader("declared-loader", "Opening the register ledger.");
   await growthModulesReady;
   const [data, roster] = await Promise.all([loadRecentInterests(), loadParliamentarians(), loadPhotoMap()]);
+  if (run !== renderDeclaredPage.run) return;
+  clearPageLoader("declared-loader");
   $("declared-updated").innerHTML = sourceLineHTML({updated:data?.meta?.generated || "",source:"Registers of interests"});
+  // No file is an error, not an empty ledger.
+  if (!data) {
+    root.innerHTML = `<p class="status" role="alert">The register ledger could not be loaded. <a href="${esc(location.pathname + location.search)}">Try again</a></p>`;
+    return;
+  }
   const items = Array.isArray(data?.items) ? data.items : [];
   if (!items.length) {
     root.innerHTML = `<p class="status">No dated alterations are available in the current export.</p>`;
@@ -5274,7 +5290,8 @@ async function renderPersonDiary(name, container, chambers) {
 let partyMembersPromise = null;
 function loadPartyMembers() {
   partyMembersPromise ??= fetch("/graph/party-members.json")
-    .then((r) => (r.ok ? r.json() : null)).catch(() => null);
+    .then((r) => (r.ok ? r.json() : null)).catch(() => null)
+    .then((d) => { if (!d) partyMembersPromise = null; return d; });
   return partyMembersPromise;
 }
 let partySpeechesPromise = null;
@@ -5511,6 +5528,14 @@ async function renderRosterParty(segment, key, body) {
   if (currentSubjectKey !== key) return;
   const sections = $("subject-sections");
   const box = $("subject-infobox");
+  // A file that failed to load cannot vouch that the name is unknown: say so rather than "not found".
+  if (!label && (!roster || !divisions || stateFiles.some((file) => !file))) {
+    $("subject-title").textContent = "Party";
+    subjectTag(body).innerHTML = `<span role="alert">This party's record could not load just now. <a href="${esc(location.pathname + location.search)}">Try again</a></span>`;
+    sections.innerHTML = "";
+    box.innerHTML = "";
+    return;
+  }
   if (!label) {
     $("subject-title").textContent = "Party not found";
     subjectTag(body).innerHTML = `<span>This party isn't in OPAX's record. <a href="/subject/party">All parties</a></span>`;
@@ -5762,6 +5787,18 @@ async function openSubject(kind, name, manageFocus, params = new URLSearchParams
     const stillHere = () => {
       try { return decodeURIComponent(hereRoute().split(/[?#]/)[0].split("/")[3] || "") === segment; } catch { return false; }
     };
+    // The waits below can take seconds, and the page under them may be someone else's:
+    // the person skeleton goes up at once (title as a bar until the name is settled).
+    if (!(String(currentSubjectKey).startsWith("person:") && subjectSegment === segment)) {
+      currentSubjectKey = `pending:person:${segment}`;
+      subjectSegment = segment;
+      destroySubjectMap();
+      const body = $("subject-body");
+      body.classList.add("subject-person"); body.classList.remove("subject-party");
+      body.innerHTML = subjectSkeleton("Parliamentarian", "", `<span class="answer-skeleton subject-skel tag-skel" aria-hidden="true"><i></i></span>`, true);
+      $("subject-title").innerHTML = `<span class="visually-hidden">Loading parliamentarian</span><span class="answer-skeleton subject-skel title-skel" aria-hidden="true"><i></i></span>`;
+      $("subject-infobox")?.classList.add("entry-rail");
+    }
     // Never wait long on the map: a name opens without it.
     // Load the portrait lookup alongside the slug map so a known portrait
     // has its 112px slot in the first skeleton, rather than arriving above it.
@@ -6076,12 +6113,12 @@ async function openSubject(kind, name, manageFocus, params = new URLSearchParams
       `<img class="subject-portrait" src="${esc(url)}" alt="${official ? "Official portrait" : "Portrait"} of ${esc(name)}" width="112" height="112">`;
     else portrait?.classList.replace("subject-portrait-pending", "subject-portrait-blank");
   });
-  let speeches = [];
+  let speeches = [], speechesFailed = false;
   try {
     const data = await api(`/api/search?${new URLSearchParams({ q: speechScope ? '*' : speechSpeaker, speaker: speechSpeaker, top_k: "20", ...(speechScope ? { mode: 'keyword' } : {}), ...(unattributed ? { attribution: 'unattributed' } : {}) })}`);
     speeches = data.results || [];
     if (speechScope) speeches = speeches.filter(r => belongsToScope(r, speechScope));
-  } catch { /* fall through to the empty state */ }
+  } catch { speechesFailed = true; /* the empty state below, unless nothing else names the person */ }
   if (currentSubjectKey !== key) return;
   const partyCount = new Map();
   for (const r of speeches) if (r.party) partyCount.set(r.party, (partyCount.get(r.party) || 0) + 1);
@@ -6125,6 +6162,15 @@ async function openSubject(kind, name, manageFocus, params = new URLSearchParams
   }
   // A name the index holds nothing under and no roster names: say so, rather
   // than dress an unknown string as a parliamentarian with profile searches.
+  if (!roster && speeches.length === 0 && speechesFailed) {
+    // A failed search is not proof the name is absent from the record.
+    subjectTag(body).innerHTML = `<span role="alert">This record could not load just now. <a href="${esc(location.pathname + location.search)}">Try again</a></span>`;
+    box.innerHTML = "";
+    sections.innerHTML = "";
+    currentSubjectKey = null;
+    revealGrid();
+    return;
+  }
   if (!roster && speeches.length === 0) {
     // A bare surname the index once carried ("Perrett") now lives under the
     // member's full name: one holder of the surname and the old link goes
@@ -7273,7 +7319,9 @@ function loadParliamentarians() {
         }
       } catch { /* A missing foundation release does not remove the speech directory. */ }
       return data;
-    }).catch(() => null);
+    }).catch(() => null)
+    // A failed load is not kept, so a retry fetches again.
+    .then((data) => { if (!data) parliamentariansPromise = null; return data; });
   return parliamentariansPromise;
 }
 function loadAccess() {
@@ -8240,17 +8288,25 @@ async function openBillText(bill) {
 
 function loadBillsIndex() {
   billsIndexPromise ??= fetch("/bills/index.json", { cache: "no-cache" })
-    .then((r) => (r.ok ? r.json() : null)).catch(() => null);
+    .then((r) => (r.ok ? r.json() : null)).catch(() => null)
+    .then((d) => { if (!d) billsIndexPromise = null; return d; });
   return billsIndexPromise;
 }
 
-/** One bill's full record; null when the projection has no such file. */
-function loadBill(key) {
+/** One bill's full record; null when the projection has no such file (404). Any other
+ *  failure rejects and is not kept, so the bill page can say so and a retry fetches again. */
+function fetchBill(key) {
   if (!billFiles.has(key)) {
-    billFiles.set(key, fetch(`/bills/${encodeURIComponent(key)}.json`, { cache: "no-cache" })
-      .then((r) => (r.ok ? r.json() : null)).catch(() => null));
+    const request = fetch(`/bills/${encodeURIComponent(key)}.json`, { cache: "no-cache" })
+      .then((r) => { if (r.ok) return r.json(); if (r.status === 404) return null; throw new Error(`bill ${r.status}`); });
+    request.catch(() => { if (billFiles.get(key) === request) billFiles.delete(key); });
+    billFiles.set(key, request);
   }
   return billFiles.get(key);
+}
+/** The same record for the lists and blocks that read a missing bill and a failed one alike. */
+function loadBill(key) {
+  return fetchBill(key).catch(() => null);
 }
 
 /** Index entries keyed by exact normalised title (and any alias the projection carries). */
@@ -9048,7 +9104,22 @@ async function openBill(key, manageFocus) {
   // The ask block's privacy file is keyed by the bill, so it is read with it, not after it.
   await Promise.all([growthModulesReady,voteTablesReady]);
   if (generation !== billTextGeneration) return;
-  const [bill, billsIndex] = await Promise.all([loadBill(key),loadBillsIndex().catch(()=>null)]);
+  let bill, billsIndex;
+  try {
+    [bill, billsIndex] = await Promise.all([fetchBill(key),loadBillsIndex().catch(()=>null)]);
+  } catch {
+    if (billView !== view || generation !== billTextGeneration) return;
+    clearPageLoader("bill-loader");
+    // A failed request is not a missing bill: say so, and let the link open it again.
+    billView = null;
+    body.innerHTML = `
+      <div class="subject-head">
+        <h1 id="bill-title" tabindex="-1">Bill</h1>
+        <p class="subject-tag" role="alert"><span>This bill could not load just now. <a href="${esc(location.pathname + location.search)}">Try again</a></span></p>
+      </div>`;
+    if (manageFocus) $("bill-title")?.focus();
+    return;
+  }
   if (billView !== view || generation !== billTextGeneration) return;
   clearPageLoader("bill-loader");
   if (!bill) {
@@ -9448,12 +9519,12 @@ document.addEventListener("click", (e) => {
 document.addEventListener("opax:explain", (e) => openExplain(e.detail));
 
 const GAMES = {
-  ballot: { name: "Build your ballot", dialog: "dialog-ballot", body: "explore-ballot", module: "/ballot.js?v=27fdcbf0dd", mount: "mountBallot" },
+  ballot: { name: "Build your ballot", dialog: "dialog-ballot", body: "explore-ballot", module: "/ballot.js?v=4816bcedab", mount: "mountBallot" },
   tm: { name: "Time machine", dialog: "dialog-tm", body: "explore-tm", module: "/timemachine.js?v=dcaa4b037b", mount: "mountTimeMachine" },
   tide: { name: "The tide", dialog: "dialog-tide", body: "explore-tide", module: "/tide.js", mount: "mountTide" },
   quiz: { name: "The record quiz", dialog: "dialog-quiz", body: "explore-quiz", module: "/quiz.js?v=6547d155f0", mount: "mountQuiz" },
-  ledger: { name: "The ledger", dialog: "dialog-ledger", body: "explore-ledger", module: "/ledger.js?v=fd1ea7e42b", mount: "mountLedger" },
-  grants: { name: "Who gets the grants", dialog: "dialog-grants", body: "explore-grants", module: "/grants.js?v=56dfefe68b", mount: "mountGrants" },
+  ledger: { name: "The ledger", dialog: "dialog-ledger", body: "explore-ledger", module: "/ledger.js?v=bfde3a46a5", mount: "mountLedger" },
+  grants: { name: "Who gets the grants", dialog: "dialog-grants", body: "explore-grants", module: "/grants.js?v=bf34e771e1", mount: "mountGrants" },
   matrix: { name: "Who owns which debate", dialog: "dialog-matrix", body: "explore-matrix", module: "/matrix.js?v=0d01530c63", mount: "mountMatrix" },
   wd: { name: "Words per dollar", dialog: "dialog-wd", body: "explore-wd", module: "/wordsdollars.js?v=dc0004221c", mount: "mountWordsDollars" },
   tvn: { name: "Then vs now", dialog: "dialog-tvn", body: "explore-tvn", module: "/thenvsnow.js?v=61a940c0df", mount: "mountThenVsNow" },

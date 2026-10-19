@@ -286,3 +286,7 @@
  .community-social-actions .community-action-label{display:none}
 }
 @media(prefers-reduced-motion:reduce){.community-main *{scroll-behavior:auto!important}}
+
+/* A view on its way: the one it replaces stays in place, dimmed after a beat, until the new one is drawn. */
+#community-content[aria-busy="true"] > * { opacity: 0.5; transition: opacity var(--duration-standard) var(--ease-standard) var(--duration-quick); }
+@media (prefers-reduced-motion: reduce) { #community-content[aria-busy="true"] > * { transition: none; } }

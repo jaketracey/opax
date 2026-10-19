@@ -1,5 +1,5 @@
-import {mountSuppliersTable} from './suppliers-table.js?v=d119b5a236';
-import {mountContractsTable} from './contracts-table.js?v=bac9be1f09';
+import {mountSuppliersTable} from './suppliers-table.js?v=03585fd3a2';
+import {mountContractsTable} from './contracts-table.js?v=246764cb2b';
 /* Supplier entries: recorded procurement, source notices and funding cross-links.
    No dependencies but the shared formats; the host router owns mounting and calls destroy on departure. */
 import { shortDate, shortMoney } from "./format.js";

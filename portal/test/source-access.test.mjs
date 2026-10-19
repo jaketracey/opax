@@ -35,7 +35,7 @@ test('declared date comes from the retained interests snapshot',async()=>{
  const fn=source.slice(start,source.indexOf('\n}\n',start)+3);
  const elements={'declared-list':{innerHTML:''},'declared-updated':{innerHTML:''}};
  const render=runInNewContext(fn+';renderDeclaredPage',{
-  $:id=>elements[id],sourceLineHTML,growthModulesReady:Promise.resolve(),
+  $:id=>elements[id],sourceLineHTML,growthModulesReady:Promise.resolve(),showPageLoader:()=>{},clearPageLoader:()=>{},
   loadRecentInterests:async()=>({meta:{generated:'2026-10-09'},items:[]}),
   loadParliamentarians:async()=>[],loadPhotoMap:async()=>({}),
  });
