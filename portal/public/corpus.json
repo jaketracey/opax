@@ -1,9 +1,9 @@
 {
   "version": "2026-10-19",
-  "expected_resources": 988671,
+  "expected_resources": 988689,
   "expected_resources_breakdown": {
-    "live_index_before_refresh": 988649,
-    "new_press_release_resources": 22
+    "live_index_before_refresh": 988671,
+    "new_parliamentary_profile_resources": 18
   },
   "collected_speeches": 950441,
   "sources": [
@@ -94,7 +94,7 @@
     },
     {
       "name": "Recorded parliamentary representation",
-      "docs": 977,
+      "docs": 995,
       "coverage": "Historical roster; not current tenure"
     },
     {
@@ -152,7 +152,7 @@
     "SA Hansard stops at November 2024: hansardsearch.parliament.sa.gov.au now sits behind a WAF that challenges every non-browser request, so the source cannot be fetched."
   ],
   "refresh": {
-    "checked_at": "2026-10-19T11:52:02+00:00",
+    "checked_at": "2026-10-19T12:30:21+00:00",
     "news_resources": 0,
     "bills_registry": 2988,
     "current_parliament_bills": 295,
@@ -196,7 +196,7 @@
       "election_baseline": 150,
       "grant_award": 8354,
       "grant_invitation": 227,
-      "parliamentary_profile": 977,
+      "parliamentary_profile": 995,
       "press_release": 6626,
       "research_report": 35,
       "speech": 950441
@@ -242,7 +242,7 @@
       "bills": {
         "status": "paused",
         "host": "parlinfo.aph.gov.au",
-        "checked_at": "2026-10-19T11:22:19.648612+00:00",
+        "checked_at": "2026-10-19T12:19:54.089842+00:00",
         "reason": "HTTP 403 verified 2026-10-10; permission requested"
       },
       "committees": {
