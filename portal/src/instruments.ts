@@ -52,7 +52,7 @@ export async function instrumentPage(id: string | null, url: URL, read: Read, bl
   const missing = () => ({ title: 'Instrument not found · OPAX', description: 'No instrument metadata is available for this FRL id.', status: 404, prerender: block('Instrument not found', 'No instrument metadata is available for this FRL id.', '', trail('/instruments', 'Not found')) })
   if (id === null && url.pathname.replace(/\/+$/, '') !== '/instruments') return missing()
   if (id !== null && !FRL_ID.test(id)) return missing()
-  const unavailable = () => ({ title: 'Instrument catalogue not yet available · OPAX', description: 'Instrument metadata is not yet available.', status: 404, prerender: block('Instrument catalogue not yet available', 'Instrument metadata is not yet available.', '', trail('/instruments')) })
+  const unavailable = () => ({ title: 'Legislative instruments · OPAX', description: 'No legislative instruments here yet.', status: 404, prerender: block('Legislative instruments', 'No legislative instruments here yet.', '', trail('/instruments')) })
   try {
     const manifest = await read<Manifest>('/instruments/manifest.json')
     if (!catalogueComplete(manifest)) return unavailable()
@@ -74,7 +74,7 @@ export async function instrumentPage(id: string | null, url: URL, read: Read, bl
       if(!guarded.rejected)for(const [key,value]of new URLSearchParams(serializeQuery(query,config.urlKey)))tableURL.searchParams.set(key,value)
       const description = `${(manifest.exported ?? manifest.count).toLocaleString('en-AU')} in-force federal legislative-instrument titles. Metadata only; authoritative text is on the Federal Register of Legislation.`
       const notes = [
-        ...(manifest.unresolved_gap ? [`The Register listed ${manifest.count.toLocaleString('en-AU')} titles; ${manifest.unresolved_gap} could not be retrieved from its API.`] : []),
+        ...(manifest.unresolved_gap ? [`The Register listed ${manifest.count.toLocaleString('en-AU')} titles; ${manifest.unresolved_gap} could not be read from the Register.`] : []),
         'Registered is the as-made registration date. The Register’s in-force listing includes instruments made but not yet commenced. Dates the Register does not supply stay unknown.',
       ]
       const facts = block('Federal legislative instruments', description, '', trail('/instruments'))

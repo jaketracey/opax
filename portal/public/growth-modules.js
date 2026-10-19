@@ -135,7 +135,7 @@ export function donationRegisterHTML(supplier, donors) {
   const matches = exactOrganisationDonors(supplier,donors);
   // An ambiguous name cannot identify a single donor record.
   if (matches.length !== 1) return '';
-  return `<div class="growth-donor" ${moduleAttrs('donations_register','supplier',3)}><p>Also in the donations register: ${donorLabelHTML(matches[0])}.</p>${associationHTML()}${sourceLineHTML({source:'AEC annual returns',originals:[{label:'AEC Transparency Register',href:'https://transparency.aec.gov.au/'}],notes:['Exact normalised name, and matching ABN where both registers carry one. Organisation records only.']})}${correctionHTML()}</div>`;
+  return `<div class="growth-donor" ${moduleAttrs('donations_register','supplier',3)}><p>Also in the donations register: ${donorLabelHTML(matches[0])}.</p>${associationHTML()}${sourceLineHTML({source:'AEC annual returns',originals:[{label:'AEC Transparency Register',href:'https://transparency.aec.gov.au/'}],notes:['Exact name match, ignoring case, spacing and punctuation, plus a matching ABN where both registers carry one. Organisation records only.']})}${correctionHTML()}</div>`;
 }
 export function otherSponsorBills(bill, bills, people) {
   const person = sponsorPerson(bill.sponsor,bill.sponsor_person_id,people);

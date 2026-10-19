@@ -26,6 +26,8 @@ type Block = (heading: string, sentence: string, links?: string, crumbs?: Crumb[
 const esc = (v: unknown) => String(v ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]!))
 export const auditReader = catalogueReader
 const SOURCE = 'Queensland Audit Office'
+/** The publisher's short name and website, for the lines that send a reader to the original. */
+const PUBLISHER = { short: 'QAO', site: 'qao.qld.gov.au' }
 const REPORT_PAGE_SOURCE = 'Source: Queensland Audit Office report page, CC BY 4.0'
 /** "Report 16: 2025–26" as one meta-line phrase, with the financial year's en dash. */
 const reportYear = (label: string) => label.replace(/:\s*/, ', ').replace(/(\d{4})-(\d{2})\b/, '$1–$2')
@@ -37,7 +39,7 @@ function source(m: Manifest, originals: { href: string; label: string }[], licen
   const a = m.attribution
   return sourceLineHTML({ updated: m.generated_at, source: licence ? REPORT_PAGE_SOURCE : SOURCE, originals,
     notes: [esc(a.changes), esc(a.exceptions), esc(a.endorsement), esc(a.copyright_notice),
-      ...(licence?.body_skipped ? ['This report page has an uncleared copyright exception.'] : [])],
+      ...(licence?.body_skipped ? [`${PUBLISHER.short}'s copyright terms for this report page don't allow us to reproduce it.`] : [])],
     licence: `<a href="${esc(a.licence_url)}">CC BY 4.0</a> · <a href="${esc(a.copyright_url)}">QAO copyright and exceptions</a>` })
 }
 function pdfTerms(r: Report) {
@@ -45,14 +47,15 @@ function pdfTerms(r: Report) {
     case 'CC BY-NC-ND 4.0': return 'CC BY-NC-ND 4.0'
     case 'Prior written permission required': return "reuse needs QAO's written permission"
     case 'CC BY 4.0': return 'CC BY 4.0'
-    default: return r.pdf ? 'reuse grant unverified' : "see QAO's reuse terms"
+    default: return r.pdf ? 'reuse terms not confirmed' : `see ${PUBLISHER.short}'s reuse terms`
   }
 }
-function pdfHoldNote(r: Report) {
+/** Why the full report is a link, not text on the page: its licence, in a few words. */
+function pdfLinkReason(r: Report) {
   switch (r.pdf?.document_licence) {
-    case 'CC BY-NC-ND 4.0': return "PDF body held: QAO's terms for this PDF (CC BY-NC-ND 4.0) don't allow us to reproduce it here."
-    case 'Prior written permission required': return "PDF body held: QAO's terms for this PDF require QAO's written permission."
-    default: return "PDF body held: we couldn't confirm QAO's terms for this PDF."
+    case 'CC BY-NC-ND 4.0': return 'CC BY-NC-ND 4.0, so we link to it rather than reproduce it'
+    case 'Prior written permission required': return `reuse needs ${PUBLISHER.short}'s written permission, so we link to it rather than reproduce it`
+    default: return `${PUBLISHER.short}'s reuse terms for it aren't confirmed, so we link to it rather than reproduce it`
   }
 }
 function select(label: string, key: string, values: string[], url: URL) {
@@ -62,8 +65,10 @@ function entities(r: Report) {
   return r.entities.length ? `<ul class="ui-list audit-entities" data-density="compact" role="list">${r.entities.map(name => {
     const href = r.entity_links?.[name]
     return `<li class="ui-row-name">${href && /^\/subject\/agency\/[^/?#]+$/.test(href) ? `<a href="${esc(href)}">${esc(name)}</a>` : esc(name)}</li>`
-  }).join('')}</ul>` : '<p class="ui-empty">Not named on the report’s web page.</p>'
+  }).join('')}</ul>` : ''
 }
+/** Where a recommendation's words were taken from, as a reader would say it. */
+const PROVENANCE: Record<string, string> = { html: 'the report’s web page', pdf: 'the full report' }
 /** One block of the report page: a ui-section with its title. */
 const section = (title: string, body: string) => `<section class="ui-section audit-section"><h2 class="ui-section-title">${title}</h2>${body}</section>`
 function recommendationText(rec: Report['recommendations'][number]) {
@@ -87,7 +92,7 @@ export async function auditPage(id: string | null, url: URL, read: Read, block: 
       const config = auditTableConfig(index.records)
       const requestURL=new URL(url)
       const guarded=guardTableURL(config,url)
-      const description = `${m.count} Queensland Audit Office reports tabled in Parliament.${typeof m.html_recommendations === 'number' ? ` ${m.html_recommendations} recommendations from report pages.` : ''}${typeof m.bodies === 'number' ? ` ${m.bodies} cleared PDF bodies, ${m.count - m.bodies} held PDF bodies and ${m.responses || 0} entity responses.` : ' With source recommendations.'}`
+      const description = `${m.count} Queensland Audit Office reports tabled in Parliament.${typeof m.html_recommendations === 'number' ? ` ${m.html_recommendations} recommendations from report pages.` : ''}${typeof m.bodies === 'number' ? ` Full text of ${m.bodies} reports here and ${m.count - m.bodies} on ${PUBLISHER.site}, with ${m.responses || 0} entity responses.` : ' With source recommendations.'}`
       return { title: 'Queensland audit reports · OPAX', description, status: 200,noindex:guarded.rejected || Boolean(url.search),
         prerender: block('Queensland audit reports', description, '', trail('/audit')) + `<section class="wrap audit-content">${registerTableHTML(config,registerTableQuery(url.searchParams,config),requestURL)}${source(m, [{href:m.attribution.source_url,label:'Reports to Parliament'}])}</section>` }
     }
@@ -97,11 +102,11 @@ export async function auditPage(id: string | null, url: URL, read: Read, block: 
     const r = data.records.find(row => row.id === id)
     if (!r || !r.canonical_url.startsWith('https://www.qao.qld.gov.au/reports-resources/')) return missing()
     const meta = metaLine(r)
-    const description = `Queensland Audit Office ${reportYear(r.report_label).replace(/^Report/, 'report')}${r.tabled_date ? `, tabled ${shortDate(r.tabled_date)}` : ''}. ${r.licence.body_skipped ? 'Report page text held after its source review.' : `${r.recommendations.length} source recommendations. ${r.response_count || 0} entity responses.`}${r.pdf?.status === 'held' ? ' PDF body held.' : ''}`
+    const description = `Queensland Audit Office ${reportYear(r.report_label).replace(/^Report/, 'report')}${r.tabled_date ? `, tabled ${shortDate(r.tabled_date)}` : ''}. ${r.licence.body_skipped ? `Recommendations on ${PUBLISHER.site}.` : `${r.recommendations.length} source recommendations. ${r.response_count || 0} entity responses.`}${r.pdf?.status === 'held' ? ` Full report on ${PUBLISHER.site}.` : ''}`
     // The recommendation's own words name who it is addressed to; the parsed
     // addressee is not drawn (the export's addressed_to is not reliable).
-    const recommendations = r.licence.body_skipped ? `<p>This report page has an uncleared copyright exception, so its recommendations are not reproduced here. Read QAO’s report for the original text.</p>`
-      : r.recommendations.length ? `<p class="audit-meta">In the Queensland Audit Office’s words.</p><ol class="audit-recommendations">${r.recommendations.map(rec => `<li${rec.number === null ? ' class="audit-unnumbered"' : ` value="${rec.number}"`}>${recommendationText(rec)}<p class="audit-meta">Source: ${esc(rec.provenance || 'html')}</p></li>`).join('')}</ol>`
+    const recommendations = r.licence.body_skipped ? `<p>The recommendations are on ${PUBLISHER.site}. ${PUBLISHER.short}’s copyright terms for this report page don’t allow us to reproduce them.</p>`
+      : r.recommendations.length ? `<p class="audit-meta">In the Queensland Audit Office’s words.</p><ol class="audit-recommendations">${r.recommendations.map(rec => `<li${rec.number === null ? ' class="audit-unnumbered"' : ` value="${rec.number}"`}>${recommendationText(rec)}<p class="audit-meta">Source: ${esc(PROVENANCE[rec.provenance || 'html'] || rec.provenance)}</p></li>`).join('')}</ol>`
       : '<p>No recommendations are reproduced for this report.</p>'
     let responses: EntityResponse[] = []
     if (!r.licence.body_skipped && r.pdf?.status === 'ready' && r.responses_path === `/audit/responses-${id}.json`) {
@@ -109,11 +114,13 @@ export async function auditPage(id: string | null, url: URL, read: Read, block: 
       if (data.report_id !== id || data.records.length !== r.response_count) return missing()
       responses = data.records
     }
-    const hold = (r.pdf?.status === 'held' ? `<p class="audit-meta">${esc(pdfHoldNote(r))}</p>` : '')
-    const responseSection = section('Entity responses', responses.length ? responses.map(response => `<details class="ui-disclosure audit-response"><summary>${esc(response.body)} · PDF ${response.page_start === response.page_end ? `p.${response.page_start}` : `pp.${response.page_start}–${response.page_end}`}</summary><div class="ui-disclosure-body">${response.recommendation_numbers.length ? `<p class="audit-meta">Names recommendation${response.recommendation_numbers.length > 1 ? 's' : ''} ${response.recommendation_numbers.map(esc).join(', ')}</p>` : ''}<div class="audit-response-text">${esc(response.text)}</div></div></details>`).join('') : `<p class="ui-empty">${r.pdf?.status === 'held' || r.licence.body_skipped ? 'Responses are held with the PDF body.' : 'No separately attributed responses are available.'}</p>`)
+    const responseSection = section('Entity responses', responses.length ? responses.map(response => `<details class="ui-disclosure audit-response"><summary>${esc(response.body)} · PDF ${response.page_start === response.page_end ? `p.${response.page_start}` : `pp.${response.page_start}–${response.page_end}`}</summary><div class="ui-disclosure-body">${response.recommendation_numbers.length ? `<p class="audit-meta">Names recommendation${response.recommendation_numbers.length > 1 ? 's' : ''} ${response.recommendation_numbers.map(esc).join(', ')}</p>` : ''}<div class="audit-response-text">${esc(response.text)}</div></div></details>`).join('') : `<p class="ui-empty">${r.pdf?.status === 'held' || r.licence.body_skipped ? `Any entity responses are in the full report on ${PUBLISHER.site}.` : 'No entity responses are listed separately in this report.'}</p>`)
     const originals = [{ href: r.canonical_url, label: 'Report on qao.qld.gov.au' }, ...(r.pdf_url ? [{ href: r.pdf_url, label: `Full report (PDF): ${pdfTerms(r)}` }] : [])]
-    const pdfLink = r.pdf_url ? `<p class="audit-meta"><a href="${esc(r.pdf_url)}" rel="noopener">Full report (PDF)</a>: ${esc(pdfTerms(r))}</p>` : ''
+    const pdfLink = !r.pdf_url ? ''
+      : r.pdf?.status === 'held' ? `<p class="audit-meta"><a href="${esc(r.pdf_url)}" rel="noopener">Full report (PDF)</a> on ${PUBLISHER.site} (${esc(pdfLinkReason(r))}).</p>`
+      : `<p class="audit-meta"><a href="${esc(r.pdf_url)}" rel="noopener">Full report (PDF)</a>: ${esc(pdfTerms(r))}</p>`
+    const entityList = entities(r)
     return { title: `${r.title} · OPAX`, description, status: 200,
-      prerender: block(r.title, meta, '', trail('/audit', r.title)) + `<section class="wrap audit-content">${r.sectors.length ? `<p class="audit-tags">${r.sectors.map(s => tagHTML(s)).join(' ')}</p>` : ''}<p class="audit-out"><a href="${esc(r.canonical_url)}" rel="noopener">Read the report on qao.qld.gov.au ↗</a></p>${pdfLink}${hold}${section('Entities audited', entities(r))}${section('Recommendations', recommendations)}${responseSection}${source(m, originals, r.licence)}</section>` }
+      prerender: block(r.title, meta, '', trail('/audit', r.title)) + `<section class="wrap audit-content">${r.sectors.length ? `<p class="audit-tags">${r.sectors.map(s => tagHTML(s)).join(' ')}</p>` : ''}<p class="audit-out"><a href="${esc(r.canonical_url)}" rel="noopener">Read the report on qao.qld.gov.au ↗</a></p>${pdfLink}${entityList ? section('Entities audited', entityList) : ''}${section('Recommendations', recommendations)}${responseSection}${source(m, originals, r.licence)}</section>` }
   } catch { return missing() }
 }

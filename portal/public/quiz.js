@@ -143,7 +143,7 @@ function moneyLink(industry) {
     ? { href: "/money?industry=" + encodeURIComponent(industry), label: "Open this industry on the money map" }
     : MONEY_LINK;
 }
-function donorProof(record) {const view=donorDisclosure(record);return {href:view.href || '/graph/money.json',label:view.href ? 'Donor disclosure profile' : view.returns.length ? 'Disclosure return' : 'Disclosure data export'}}
+function donorProof(record) {const view=donorDisclosure(record);return {href:view.href || '/graph/money.json',label:view.href ? 'Donor disclosure profile' : view.returns.length ? 'Disclosure return' : 'Disclosure data download'}}
 function subjectLink(kind, label) {
   return { href: subjectUrl(kind,label), label: "Open " + label + " in the record" };
 }
@@ -648,15 +648,15 @@ const TEMPLATES = [
           statement: "The searchable record includes state parliaments as well as federal Hansard.",
           answer: true,
           fact: "True",
-          explanation: "Several state parliaments appear alongside federal chambers in the corpus manifest.",
+          explanation: "Several state parliaments appear alongside the federal chambers in OPAX's source list.",
         });
       }
       if (ctx.corpus && ctx.corpus.collected_speeches) {
         pool.push({
           statement: "The searchable record contains fewer than 100,000 speeches and documents.",
           answer: false,
-          fact: "False — " + fmtCount(ctx.corpus.collected_speeches) + " are collected",
-          explanation: "The corpus manifest puts the collection comfortably above that mark.",
+          fact: "False: " + fmtCount(ctx.corpus.collected_speeches) + " are collected",
+          explanation: "OPAX's source counts put the collection comfortably above that mark.",
         });
       }
       if (!pool.length) return null;
@@ -668,7 +668,7 @@ const TEMPLATES = [
           { label: "True", correct: q.answer === true },
           { label: "False", correct: q.answer === false },
         ],
-        fact: q.fact, explanation: q.explanation, source: "OPAX corpus manifest", link: METHODS_LINK,
+        fact: q.fact, explanation: q.explanation, source: "OPAX source counts", link: METHODS_LINK,
       };
     },
   },
@@ -695,7 +695,7 @@ const TEMPLATES = [
           explanation:
             "Its " + trio[0].coverage + " collection is larger than " + fmtCount(trio[1].docs) + " from " + short(trio[1]) +
             " and " + fmtCount(trio[2].docs) + " from " + short(trio[2]) + ".",
-          source: "OPAX corpus",
+          source: "OPAX source counts",
           link: METHODS_LINK,
         };
       }

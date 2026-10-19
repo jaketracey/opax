@@ -130,6 +130,7 @@ test('agency suppliers exclude this supplier; grants rank exact agency awards on
  assert.deepEqual(rows.map(r=>r.id),['GA1']);
  assert.match(agencyGrantsHTML('Agency',rows,{}),/published sample/);
  assert.match(agencyGrantsHTML('Agency',rows,{}),/award=GA1/);
+ assert.equal(agencyGrantsHTML('Agency',[],{}),'','an agency with no awards in the sample shows no grants section');
 });
 test('events keep origin type and module categories without question text',()=>{
  assert.deepEqual(cleanEvent('opax_ask_started',{from_section:'ask',page_type:'person',question:'private'}),{from_section:'ask',page_type:'person'});

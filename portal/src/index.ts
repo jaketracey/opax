@@ -601,7 +601,7 @@ async function apiSearch(request: Request, url: URL, env: Env, ctx: ExecutionCon
 /** Unified public search. Existing /api/search callers retain document-only semantics. */
 async function apiUnifiedSearch(request: Request, url: URL, env: Env, ctx: ExecutionContext): Promise<Response> {
   const selected = url.searchParams.get('kind') || 'all'
-  if ((selected === 'all' || CATALOG_KINDS.has(selected)) && catalogTokens(url.searchParams.get('q')).length > 16) return json({ error: 'Use up to 16 search words, or narrow the record type to documents.' }, 400)
+  if ((selected === 'all' || CATALOG_KINDS.has(selected)) && catalogTokens(url.searchParams.get('q')).length > 16) return json({ error: 'Use up to 16 search words, or limit the search to documents.' }, 400)
   const check = new URL(url)
   if (CATALOG_KINDS.has(selected)) check.searchParams.set('kind', 'speech')
   const extendedStates = new Set(['tas', 'wa', 'nt'])
@@ -1468,7 +1468,7 @@ async function apiAsk(request: Request, env: Env, ctx: ExecutionContext, prepare
   let people: { name: string }[] = []
   if (needsAskPeople(rawInput)) {
     try { people = (await loadPeople(env)).people }
-    catch { return json({ error: 'The parliamentarian index is temporarily unavailable. Please try again.' }, 503) }
+    catch { return json({ error: 'The parliamentarian list is temporarily unavailable. Please try again.' }, 503) }
   }
   const { input, scope } = resolveAskScope(rawInput, people)
 
@@ -2746,7 +2746,7 @@ async function apiFollowups(request: Request, env: Env, ctx: ExecutionContext): 
  * (the doc may land in the next sync).
  */
 async function apiResource(request: Request, url: URL, slug: string, env: Env, ctx: ExecutionContext): Promise<Response> {
-  if (/^news-\d+$/.test(slug)) return json({ error: 'News articles are no longer part of the corpus' }, 410)
+  if (/^news-\d+$/.test(slug)) return json({ error: 'News articles are no longer part of the record' }, 410)
   if (!isPublicSlug(slug)) return json({ error: 'bad slug' }, 400)
   // The app and crawler read the same full-member static record where exported.
   if (DIVISION_SLUG_RE.test(slug) && env.ASSETS) {
@@ -3724,11 +3724,11 @@ const STATIC_PAGES: Record<string, { title: string; description: string; query?:
   },
   methods: {
     title: 'Methods & how to cite · OPAX',
-    description: 'How the OPAX corpus is built from Hansard and electoral disclosures, its known limits, and how to cite an answer or a speech.',
+    description: 'The sources behind the OPAX record, from Hansard to electoral disclosures, with its known limits and how to cite an answer or a speech.',
   },
   stats: {
     title: 'Sources & coverage · OPAX',
-    description: 'Live counts for every collection in the OPAX index: speeches, divisions, bills and official statements, by parliament and year.',
+    description: 'Live counts for every collection in the OPAX record: speeches, divisions, bills and official statements, by parliament and year.',
   },
   declared: {
     title: 'Declared interests · OPAX',
@@ -4467,11 +4467,11 @@ async function buildRouteMeta(route: SeoRoute, url: URL, request: Request, env: 
         description = 'Australian political parties in the record: speeches, members and disclosed receipts, party by party, from Hansard and electoral commission returns.'
       } else if (route.dir === 'agency') {
         const data = await loadAgencies(env).catch(() => null)
-        if (!data) return base({ title: 'Government agencies · OPAX', description: 'The agency index is temporarily unavailable. Please try again.', status: 503 })
+        if (!data) return base({ title: 'Government agencies · OPAX', description: 'The agency list is temporarily unavailable. Please try again.', status: 503 })
         description = clip(`Explore ${num(data.agencies.length)} Commonwealth agencies: contracts awarded, supplier relationships and 3D maps. Recorded commitments, not payments.`)
       } else if (route.dir === 'supplier') {
         const suppliers = await loadSuppliers(env).catch(() => null)
-        if (!suppliers) return base({ title: 'Government suppliers · OPAX', description: 'The supplier index is temporarily unavailable. Please try again.', status: 503 })
+        if (!suppliers) return base({ title: 'Government suppliers · OPAX', description: 'The supplier list is temporarily unavailable. Please try again.', status: 503 })
         description = clip(`Explore ${num(suppliers.suppliers.length)} suppliers in the recorded Commonwealth contracts: award values, purchasing agencies and source notices. Values are not expenditure.`)
       } else if (route.dir === 'campaigner') {
         const camp = await loadCampaigners(env).catch(() => null)
@@ -4743,15 +4743,15 @@ async function electorateMeta(name: string, url: URL, env: Env): Promise<PageMet
   }
   const representation = e.representatives.length
     ? `${e.representatives.map((m) => `${m.person.name}${m.party ? ` (${m.party})` : ''}`).join(', ')}. Verified ${e.representation_as_of}.`
-    : 'Representation is not yet verified in this release.'
+    : 'No verified representative for this electorate yet.'
   const house = chamberLabel(e.chamber)
-  const facts = `${e.name}, ${e.jurisdiction === 'federal' ? `Federal ${house || 'Parliament'}` : house || `${STATE_NAMES[e.jurisdiction] ?? 'State parliament'}`}. ${representation} ${e.election_count} indexed election contests.`
+  const facts = `${e.name}, ${e.jurisdiction === 'federal' ? `Federal ${house || 'Parliament'}` : house || `${STATE_NAMES[e.jurisdiction] ?? 'State parliament'}`}. ${representation} ${e.election_count} election ${e.election_count === 1 ? 'contest' : 'contests'} on record.`
   const canonical = `${SITE_ORIGIN}${e.url}`
   return {
     title: `${e.name} · Electorate · OPAX`, description: clip(facts), canonical, ogType: 'website', status: 200,
     jsonLd: { '@context': 'https://schema.org', '@type': 'Place', name: e.name, identifier: e.electorate_id, url: canonical, description: facts },
     prerender: prerenderBlock(e.name, facts, indexLinks() + (e.jurisdiction === 'vic' ? vicElectionFooterHTML() : '')),
-    card: { kicker: 'Electorate', title: e.name, lines: [representation, `${e.election_count} indexed election contests · ${e.state_code.toUpperCase()}`], ...(e.jurisdiction === 'vic' ? {authorisation: VIC_ELECTION_AUTHORISATION_LINE} : {}) },
+    card: { kicker: 'Electorate', title: e.name, lines: [representation, `${e.election_count} election ${e.election_count === 1 ? 'contest' : 'contests'} · ${e.state_code.toUpperCase()}`], ...(e.jurisdiction === 'vic' ? {authorisation: VIC_ELECTION_AUTHORISATION_LINE} : {}) },
   }
 }
 
@@ -4926,7 +4926,7 @@ async function personMeta(name: string, url: URL, env: Env): Promise<PageMeta> {
   const represented = [...new Set((p.representation ?? []).map(r => r.electorate))].join(', ')
   const who = [p.party, where, represented ? `recorded representation: ${represented}` : ''].filter(Boolean).join(', ')
   if (p.rosterOnly) {
-    const description = clip(`${display}, representative for ${p.rosterOnly.seats.join(', ')}${p.party ? ` (${p.party})` : ''}. Verified ${p.rosterOnly.asOf || 'in the parliamentary roster'}. Speech totals are not yet in the directory.`)
+    const description = clip(`${display}, representative for ${p.rosterOnly.seats.join(', ')}${p.party ? ` (${p.party})` : ''}. Verified ${p.rosterOnly.asOf || 'in the parliamentary roster'}. No speech count for them yet.`)
     return { title, description, canonical, ogType: 'profile', status: 200,
       jsonLd: { '@context': 'https://schema.org', '@type': 'Person', name: display, url: canonical, jobTitle: 'Parliamentarian' },
       prerender: prerenderBlock(display, description),
@@ -4938,7 +4938,7 @@ async function personMeta(name: string, url: URL, env: Env): Promise<PageMeta> {
   const role = p.speech_scope ? null : personRole(p, new Date().getUTCFullYear())
   const interests = await hasInterestsRegister(env, display, p.pid)
   title = personTitle(display, role, federal ? (interests ? 'Speeches, votes & interests' : 'Speeches & votes') : 'Speeches')
-  const count = p.speech_count_basis ? `Count pending exact export; only own-house, in-service speeches in the ${where}.` : `${num(p.speeches ?? 0)} speeches in Hansard.`
+  const count = p.speech_count_basis ? `No exact speech count yet; it will count only speeches they gave in the ${where} while in office.` : `${num(p.speeches ?? 0)} speeches in Hansard.`
   const period = p.speech_scope ? '' : p.speech_count_basis ? `Transcript aggregate: ${years(p.first, p.last)}.` : `${years(p.first, p.last)}.`
   const facts = `${display}${role ? `, ${roleLine(role)}` : who ? ` (${who})` : ''}: ${count}${period ? ` ${period}` : ''}`
   const holds = andList([federal ? 'votes' : '', interests ? 'register of interests' : '', p.party ? 'who funds their party' : ''].filter(Boolean))
@@ -5119,7 +5119,7 @@ async function supplierMeta(name: string, url: URL, env: Env): Promise<PageMeta>
   if (!supplier) {
     return {
       title: data ? 'Supplier not found · OPAX' : 'Supplier temporarily unavailable · OPAX',
-      description: data ? 'This supplier is not in the current OPAX contract index. Browse the government supplier directory.' : 'The supplier index could not be loaded. Please try again.',
+      description: data ? 'This supplier is not in the OPAX contract records. Browse the government supplier directory.' : 'Supplier records could not be loaded. Please try again.',
       canonical: canonicalFor(url, false), ogType: 'website', status: data ? 404 : 503,
       jsonLd: null, prerender: null, card: null,
     }
@@ -5427,7 +5427,7 @@ async function docMeta(slug: string, url: URL, request: Request, env: Env, ctx: 
       (parts.length >= 3 ? parts.slice(hasAttributionPrefix ? 1 : 0, -1).join(' — ') : r.title)
     const description = clip(
       r.summary?.trim() ||
-        `${headline}${r.speaker ? `, issued by ${r.speaker}` : ''}${date ? ` on ${longDate(date)}` : ''}. Official source text indexed by OPAX.`,
+        `${headline}${r.speaker ? `, issued by ${r.speaker}` : ''}${date ? ` on ${longDate(date)}` : ''}. Official source text.`,
     )
     return {
       ...generic,
@@ -5915,7 +5915,7 @@ async function sitemapXml(env: Env, path = '/sitemap.xml'): Promise<Response> {
 
 async function llmsTxt(env: Env): Promise<Response> {
   const asset = await env.ASSETS.fetch(new Request(`${SITE_ORIGIN}/crawl/llms.txt`))
-  if (!asset.ok) return new Response('Corpus guide unavailable', { status: 503, headers: { 'cache-control': 'no-store' } })
+  if (!asset.ok) return new Response('Site guide unavailable', { status: 503, headers: { 'cache-control': 'no-store' } })
   const policy = saFullText(env.SA_HANSARD_FULL_TEXT) ? '' : `\nSouth Australian Hansard: ${SA_EXCERPT_LABEL} /api/resource and MCP read_record provide at most 120 words per record, with its official source_url. Machine summaries are OPAX text.\n`
   return new Response((await asset.text()) + policy + (vicElectionEnabled(env.VIC_ELECTION_HUB_ENABLED) ? '\n' + vicElectionLlms : ''), { headers: { 'content-type': 'text/plain; charset=utf-8', 'cache-control': 'public, max-age=3600' } })
 }

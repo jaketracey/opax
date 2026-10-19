@@ -60,7 +60,7 @@ export async function budgetPage(url:URL,read:Read,block:Block) {
   const cards=Object.entries(names).map(([key,name])=>{
     const candidates=selected.filter(r=>r.metric===key && !r.vintage.endsWith('comparison')).sort((a,b)=>b.publication_order-a.publication_order)
     const r=candidates[0]
-    return `<article><h3>${name}</h3>${r?`<p class="budget-amount">${amount(r)}<span> billion</span></p><p>${esc(r.status[0].toUpperCase()+r.status.slice(1))} · ${esc(releaseLabel(r))}</p>${receipt(r)}`:'<p>No cleared figure available</p>'}</article>`
+    return `<article><h3>${name}</h3>${r?`<p class="budget-amount">${amount(r)}<span> billion</span></p><p>${esc(r.status[0].toUpperCase()+r.status.slice(1))} · ${esc(releaseLabel(r))}</p>${receipt(r)}`:'<p>No figure for this year yet.</p>'}</article>`
   }).join('')
   const tableRows:Row[]=selected.map((r,i)=>({id:String(i),metric:names[r.metric],release:`${releaseLabel(r)}${r.vintage.endsWith('comparison')?' · '+r.vintage:''}`,status:r.status,amount:billions(r)*1e9,citation:citation(r),source_url:`${r.source_url}#page=${r.pdf_page}`,licence:r.licence,licence_url:r.licence_url,fiscal_year:r.fiscal_year,snapshot:r.snapshot,sha256:r.sha256,table_id:r.table_id}))
   const config={...aggregateConfig,rows:tableRows}

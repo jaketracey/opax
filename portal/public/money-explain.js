@@ -382,7 +382,7 @@ export function comparableFlows(flow, index, limit = 3) {
       const s = sumEdges(donation.filter((e) => e.target === p.id && byId.get(e.source)?.kind === 'donor'));
       return { label: `${p.label}: all donors on the map`, total: s.total, count: s.count, href: explainPath({ jur: state.jur, to: p.id }) };
     }).filter((r) => r.total > 0).sort((a, b) => b.total - a.total).slice(0, limit);
-    return { rule: 'The other parties in this file, largest first', rows };
+    return { rule: 'The other parties in these records, largest first', rows };
   }
 
   // An industry: the same industry to the other parties, or (all parties) the other industries.
@@ -503,7 +503,7 @@ export function narrative(flow, { partyName = (l) => l } = {}) {
   const to = party ? partyName(party.label) : 'political parties';
   const when = span(flow);
   const yearsWithMoney = flow.dated.length;
-  if (!count && !total) return ['No disclosed money matches this flow in the file.'];
+  if (!count && !total) return ['No disclosed money matches this flow.'];
   if (kind === 'pair' || kind === 'donor') {
     out.push(`${recordedIn(flow)} ${money(total)} from ${donor.label} to ${to} across ${plural(count, 'receipt')}${when ? `, from ${when}` : ''}, with money in ${plural(yearsWithMoney, 'financial year')}.`);
   } else if (kind === 'party') {
@@ -535,9 +535,9 @@ export function narrative(flow, { partyName = (l) => l } = {}) {
 export function receiptTypeNote(flow) {
   if (flow.jur !== 'federal') {
     const line = STATE_LINES[flow.jur];
-    return line ? `Every line in this file is a ${line.noun} as the ${flow.meta.commission || 'commission'} discloses it (${line.register}); the file holds no other kinds of receipt.` : '';
+    return line ? `Every line here is a ${line.noun} as the ${flow.meta.commission || 'commission'} discloses it (${line.register}); no other kinds of receipt are included.` : '';
   }
-  return 'The AEC labels each line on a return with a receipt type: Donation Received, Other Receipt, Subscription, Public Funding or Unspecified. OPAX’s federal export keeps the amount and the year but not that label, so this total can include receipts that are not gifts. The AEC’s detailed receipts list each line with its type.';
+  return 'The AEC labels each line on a return with a receipt type: Donation Received, Other Receipt, Subscription, Public Funding or Unspecified. OPAX’s federal data keeps the amount and the year but not that label, so this total can include receipts that are not gifts. The AEC’s detailed receipts list each line with its type.';
 }
 
 /** The disclosure rules behind each year, newest first, for the timeline. */
@@ -603,11 +603,11 @@ function scaleHTML(flow, comparisons, partyName, matches = null) {
     const years = r.years === 1 ? fyLabel(r.first) : `${fyLabel(r.first)} to ${fyLabel(r.last)}`;
     shares.push(shareHTML(pctText(r.amount, r.whole), r.amount, r.whole, r.basis === 'returns'
       ? `of ${possessive(partyName(flow.party.label))} total receipts on its own AEC returns for ${years} (${money(r.whole)}${r.held < r.years ? `, returns held for ${r.held} of ${r.years} years` : ''}).`
-      : `of all money disclosed to ${partyName(flow.party.label)} in this file for ${years} (${money(r.whole)}).`));
+      : `of all money disclosed to ${partyName(flow.party.label)} in these records for ${years} (${money(r.whole)}).`));
   }
   const d = flow.donorShare;
   if (d) shares.push(shareHTML(pctText(d.amount, d.whole), d.amount, d.whole,
-    `of ${possessive(flow.donor.label)} disclosed money to parties in this file (${money(d.whole)} to ${plural(d.parties, 'party', 'parties')}).`));
+    `of ${possessive(flow.donor.label)} disclosed money to parties in these records (${money(d.whole)} to ${plural(d.parties, 'party', 'parties')}).`));
   if (!r && !d && flow.parties.length > 1 && !flow.party) {
     const top = flow.parties[0];
     shares.push(shareHTML(pctText(top.total, flow.contextTotal), top.total, flow.contextTotal, `went to ${partyName(top.node.label)}, the largest of ${plural(flow.parties.length, 'recipient party', 'recipient parties')}.`));
@@ -645,7 +645,7 @@ function timelineHTML(flow) {
   const register_link = register.href ? `<a href="${esc(register.href)}" rel="noopener" target="_blank">${esc(register.label)} ↗︎</a>` : '';
   return `<p class="mx-lede">${esc(federal
     ? 'Each row is a financial year and the disclosure rules that applied to it. OPAX holds these receipts by year, not by date, and keeps no link to each return; the AEC’s register lists every line.'
-    : `Each row is a financial year. OPAX holds these ${STATE_LINES[flow.jur]?.noun || 'receipt'}s by year in its export; the commission’s register lists each one.`)}</p>
+    : `Each row is a financial year. OPAX holds these ${STATE_LINES[flow.jur]?.noun || 'receipt'}s by year; the commission’s register lists each one.`)}</p>
     <ol class="mx-timeline">${reform}${items}</ol>${more}
     ${register_link ? `<p class="mx-fine">Open the original: ${register_link}</p>` : ''}`;
 }
@@ -683,7 +683,7 @@ function limitsHTML(flow, partyName) {
     const meta = flow.meta;
     if (meta.threshold) item(`Only ${STATE_LINES[flow.jur]?.noun || 'donation'}s above a threshold are listed`, esc(meta.threshold), meta.source_url ? [{ label: meta.commission || 'The register', href: meta.source_url }] : []);
     if (meta.not_summed) item('State and federal figures are separate', esc(meta.not_summed));
-    if (meta.coverage) item('The years this file covers', esc(`The ${meta.sourceShort || 'register'} file covers ${meta.coverage}.`));
+    if (meta.coverage) item('The years covered', esc(`The ${meta.sourceShort || 'register'} records cover ${meta.coverage}.`));
   }
   const top = federal ? 'The map holds the 250 largest donors by lifetime total, plus donors holding $50m or more in Commonwealth contracts and grants' : 'The map holds the 250 largest donors by lifetime total in this jurisdiction';
   item('Smaller donors are not on the map',
@@ -782,7 +782,7 @@ function sourceLine(flow) {
       ? [SOURCES.aecRegister, SOURCES.aecReceipts, { label: 'The money map’s data (JSON)', href: '/graph/money.json?v=suppliers-1' }]
       : [{ label: meta.commission || 'The register', href: meta.source_url }, { label: 'The money map’s data (JSON)', href: `/graph/money.${flow.jur}.json` }],
     facts: [['Coverage', esc(meta.coverage || '')]],
-    notes: [esc('Every figure on this page is summed from the year cells of this file and every sentence is filled from those sums. Nothing here is written by a model.')],
+    notes: [esc('Every figure on this page is summed from the yearly totals in these records and every sentence is filled from those sums. Nothing here is written by a model.')],
     licence: federal ? 'AEC Transparency Register, <a href="https://creativecommons.org/licenses/by/4.0/" rel="license noopener" target="_blank">CC BY 4.0 ↗︎</a>.' : esc(meta.licence || ''),
   });
 }
@@ -852,7 +852,7 @@ export function landingHTML(graph, index, jur) {
   return `<article class="mx-page" aria-labelledby="mx-title">
     <div class="mx-head"><p class="mx-kicker">Explain this flow</p>
       <h1 class="mx-title" id="mx-title" tabindex="-1">Explain a money flow</h1>
-      <p class="mx-lede">Pick a flow on the <a href="/money">money map</a> or a donor or party page and press Explain. Or start with one of the largest named flows in this file.</p></div>
+      <p class="mx-lede">Pick a flow on the <a href="/money">money map</a> or a donor or party page and press Explain. Or start with one of the largest named flows.</p></div>
     <ul class="mx-compare-list mx-landing">${rows.map((r) => `<li><a href="${esc(explainPath({ jur, from: r.d.id, to: r.p.id }))}">${esc(`${r.d.label} → ${r.p.label}`)}</a><span class="mx-compare-figure">${esc(shortMoney(r.e.total))}</span></li>`).join('')}</ul>
   </article>`;
 }

@@ -3,7 +3,7 @@ import {mountContractsTable} from './contracts-table.js?v=246764cb2b';
 /* Supplier entries: recorded procurement, source notices and funding cross-links.
    No dependencies but the shared formats; the host router owns mounting and calls destroy on departure. */
 import { shortDate, shortMoney } from "./format.js";
-import { mountSupplierGrowth, supplierDonations } from "./supplier-growth.js?v=0b8bbe0874";
+import { mountSupplierGrowth, supplierDonations } from "./supplier-growth.js?v=d670cc1e2e";
 import { sourceLineHTML } from "./labels.js?v=18b8e313e4";
 import { partyUrl } from "./canonical-urls.js?v=c82496afb7";
 const esc = (value) => String(value ?? "").replace(/[&<>"']/g, (char) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[char]);
@@ -233,7 +233,7 @@ async function renderProfile(root, profile, meta, helpers, life, suppliers) {
   const seed = seedNode ? JSON.parse(seedNode.textContent) : null;
   // The head: the name, one meta line, the lede and the three figures (ui-stats).
   root.innerHTML = `<div class="supplier-page supplier-entry"><div class="ui-page-head supplier-head"><h1 id="subject-title" tabindex="-1">${esc(profile.name)}</h1><p class="ui-page-meta">Commonwealth supplier${profile.abn ? ` · ABN ${esc(profile.abn)}` : ""}</p>
-    <p class="ui-lede supplier-lede">${top ? `${esc(top.name)} accounts for ${percent(share)} of the recorded contract value.` : "No agency breakdown is available in this export."}</p>
+    <p class="ui-lede supplier-lede">${top ? `${esc(top.name)} accounts for ${percent(share)} of the recorded contract value.` : "No agency breakdown for this supplier."}</p>
     ${statsHTML([[shortMoney(profile.total), "Recorded contract value", currency(profile.total)], [number(profile.count), "Contracts"], [number(agencies.length), "Agencies"]])}</div>
     <div class="supplier-profile-grid"><div class="supplier-profile-main">${agencyChart(agencies, Number(profile.total), ids, meta)}<section class="ui-section supplier-section" id="supplier-connections"><h2 class="ui-section-title">Agency connections</h2><p class="ui-section-note">Explore the agencies awarding contracts to this supplier.</p><div class="supplier-money-map supplier-agency-map"></div></section>${yearChart(years, profile.undated)}<div class="supplier-growth"></div><section class="ui-section supplier-section supplier-funding" id="supplier-funding" hidden></section><section class="ui-section supplier-section supplier-evidence" hidden></section><section class="ui-section supplier-section supplier-taxcharity" hidden></section><section class="ui-section supplier-section supplier-mentions"></section>
       <section class="ui-section supplier-section" id="supplier-contracts"><div data-contracts-table></div>${procurementSourceHTML(meta, profile.caveats || [])}</section>
@@ -302,7 +302,7 @@ export function mountSupplierProfile(root, idOrName, helpers = {}) {
       const entry = matches[0];
       if (!entry) {
         root.removeAttribute("aria-busy");
-        root.innerHTML = '<div class="supplier-page"><div class="ui-page-head"><h1 id="subject-title" tabindex="-1">Supplier not found</h1><p class="ui-lede">This supplier is not in the current export. <a href="/subject/supplier">Search the supplier directory</a>.</p></div></div>';
+        root.innerHTML = '<div class="supplier-page"><div class="ui-page-head"><h1 id="subject-title" tabindex="-1">Supplier not found</h1><p class="ui-lede">No supplier has this address. <a href="/subject/supplier">Search the supplier directory</a>.</p></div></div>';
         helpers.onTitle?.("Supplier not found");
         return;
       }
@@ -310,7 +310,7 @@ export function mountSupplierProfile(root, idOrName, helpers = {}) {
       const shard = await json(entry.profile_path, life.signal);
       if (!life.alive()) return;
       const profile = shard.profiles?.[entry.id];
-      if (!profile || !Array.isArray(profile.contracts)) throw new Error("This supplier profile is not available in the current export.");
+      if (!profile || !Array.isArray(profile.contracts)) throw new Error("No contract records for this supplier.");
       await renderProfile(root, profile, directory.meta, helpers, life, directory.suppliers);
     } catch (error) { if (life.alive()) failure(root, load, error.message); }
   }
@@ -343,7 +343,7 @@ async function mountFunding(root, links, life, register = "") {
     }
     const rows = [...grouped.values()].sort((a, b) => b.total - a.total);
     const max = Math.max(1, ...rows.map((row) => row.total));
-    root.innerHTML = `<h2 class="ui-section-title">Also in the funding record</h2><p class="ui-section-note supplier-section-note">Disclosed party receipts recorded under this supplier’s identity, from the money map’s selected donor data${yearSpan ? ` (${yearSpan})` : ""}. These totals cover a different set of records and dates from the contracts above.</p>${rows.length ? `<ol class="ui-list supplier-bars" data-rule="none" role="list">${rows.map((row) => barRowHTML(`<a href="${partyUrl(row.name)}">${esc(row.name)}</a>`, currency(row.total), row.total / max, plural(row.count, "recorded receipt"))).join("")}</ol>` : matchedNodes.length ? `<p><strong>${currency(nodeTotal)}</strong> across ${plural(nodeCount, "recorded receipt")}${yearSpan ? ` (${yearSpan})` : ""}. The party breakdown is not available in this map export.</p>` : "<p>This recorded identity is not present in the current map export.</p>"}${matchedNodes.length ? '<button type="button" class="ui-button supplier-map-toggle">Explore the money map</button><div class="supplier-money-map" hidden></div>' : ""}${register}`;
+    root.innerHTML = `<h2 class="ui-section-title">Also in the funding record</h2><p class="ui-section-note supplier-section-note">Disclosed party receipts recorded under this supplier’s identity, from the money map’s selected donor data${yearSpan ? ` (${yearSpan})` : ""}. These totals cover a different set of records and dates from the contracts above.</p>${rows.length ? `<ol class="ui-list supplier-bars" data-rule="none" role="list">${rows.map((row) => barRowHTML(`<a href="${partyUrl(row.name)}">${esc(row.name)}</a>`, currency(row.total), row.total / max, plural(row.count, "recorded receipt"))).join("")}</ol>` : matchedNodes.length ? `<p><strong>${currency(nodeTotal)}</strong> across ${plural(nodeCount, "recorded receipt")}${yearSpan ? ` (${yearSpan})` : ""}. No party breakdown for these receipts.</p>` : "<p>This identity is not on the money map.</p>"}${matchedNodes.length ? '<button type="button" class="ui-button supplier-map-toggle">Explore the money map</button><div class="supplier-money-map" hidden></div>' : ""}${register}`;
     root.querySelector(".supplier-map-toggle")?.addEventListener("click", async (event) => {
       const button = event.currentTarget;
       const slot = root.querySelector(".supplier-money-map");
@@ -351,7 +351,7 @@ async function mountFunding(root, links, life, register = "") {
       slot.hidden = false;
       slot.innerHTML = '<p role="status">Opening the money map…</p>';
       try {
-        const { mountMoneyMap } = await import("/money-map.js?v=12b9796e7c");
+        const { mountMoneyMap } = await import("/money-map.js?v=15d31d344c");
         if (!life.alive()) return;
         slot.textContent = "";
         const handle = await mountMoneyMap(slot, "/graph/money.json", { focus: links[0].id, chrome: "mini", reveal: true, openCard: false });

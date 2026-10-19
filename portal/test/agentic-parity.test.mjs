@@ -78,11 +78,27 @@ test('RESEARCH_LOOP=off: legacy fields remain byte-identical; stepped research m
    const legacy = data => { const payload = JSON.parse(data); delete payload.research; return JSON.stringify(payload) };
    return stream ? text.replace(/(event: done\r?\ndata: )([^\r\n]+)/g, (_all, frame, data) => frame + legacy(data)) : legacy(text);
   };
+  // 19 Oct plain-language sweep: count answers say "recorded under <party>", not "indexed under".
+  // origin/main's body gets the same wording (with its citation spans moved to match) before
+  // the byte comparison, so every other byte is still pinned. Drop once main carries the copy.
+  const COPY=[[' indexed under ',' recorded under ']];
+  const recopy=value=>typeof value==='string'?COPY.reduce((text,[from,to])=>text.split(from).join(to),value)
+   :Array.isArray(value)?value.map(recopy):value&&typeof value==='object'?Object.fromEntries(Object.entries(value).map(([k,v])=>[k,recopy(v)])):value;
+  const shift=(answer,at)=>COPY.reduce((n,[from,to])=>n+(answer.slice(0,at).split(from).length-1)*(to.length-from.length),at);
+  const recopyPayload=payload=>{
+   const out=recopy(payload);
+   if(typeof payload.answer==='string'&&payload.citations&&typeof payload.citations==='object')
+    out.citations=Object.fromEntries(Object.entries(payload.citations).map(([k,spans])=>[recopy(k),spans.map(([from,to])=>[shift(payload.answer,from),shift(payload.answer,to)])]));
+   return out;
+  };
+  const mainCopy=(text,stream)=>!COPY.some(([from])=>text.includes(from))?text:stream
+   ?text.replace(/^(data: )(\{.*\})$/gm,(all,frame,data)=>COPY.some(([from])=>data.includes(from))?frame+JSON.stringify(recopyPayload(JSON.parse(data))):all)
+   :JSON.stringify(recopyPayload(JSON.parse(text)));
   for(const q of gold)for(const stream of [false,true]) {
    expected=q.expected;
    const post=h=>h.fetch('/api/ask'+(stream?'?stream=1':''),{method:'POST',headers:{'content-type':'application/json','x-opax-nocache':'1',...(stream?{accept:'text/event-stream'}:{})},body:JSON.stringify({question:q.question,kind:'speech',period:'all'})});
    const a=await post(main),b=await post(current);assert.equal(b.status,a.status,q.id);
-   const [after,before]=[legacyBody(await b.text(),stream),legacyBody(await a.text(),stream)];
+   const [after,before]=[legacyBody(await b.text(),stream),mainCopy(legacyBody(await a.text(),stream),stream)];
    // 14 Oct: origin/main read lowercase words as surname-only people ("speakers on defence" -> "On") and
    // declined these; the capitalised-surname rule now answers them from tool rows. Every other body stays byte-identical.
    if(q.id==='R07'){assert.match(after,/"answered":true/,`gold R07 (${stream?'SSE':'JSON'})`);assert.match(after,/Scott Morrison: 133/);}

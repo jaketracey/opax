@@ -28,6 +28,7 @@ What changes, and when
   second run on the same night changes nothing).
 
 Accepted complete evidence/stats.json updates the matching enrichment coverage.
+Source names and coverage are kept in plain wording (plain_coverage), with no box change.
 Structured source totals follow the read-only DB and accepted supplier export.
 Never touched: models, inclusion, known_defects, grants_research,
 enrichment_queued and the other hand-kept fields.
@@ -275,6 +276,26 @@ def federal_line(log: dict, run_date: date) -> str | None:
             f"{committees}.")
 
 
+# Visitors read sources[].name and .coverage on /stats and /llms.txt, so they describe the record,
+# not the pipeline (no "refresh" or "import"). Hand-kept rows written the old way are rewritten here.
+PLAIN_SOURCE_NAMES = {
+    "GrantConnect award notices (recent refresh)": "GrantConnect award notices (recent window)",
+}
+PLAIN_COVERAGE = [
+    (re.compile(r"^(\d{1,2}(?:–\d{1,2})? \w{3} \d{4}) refresh$"), r"\1"),
+    (re.compile(r"historical import verified"), "checked against the originals"),
+    (re.compile(r"^Complete source versions; checked against the originals$"),
+     "Complete source versions, checked against the originals"),
+]
+
+
+def plain_coverage(coverage: str) -> str:
+    """'7–21 Sep 2026 refresh' -> '7–21 Sep 2026'. Plain text passes through unchanged."""
+    for pattern, plain in PLAIN_COVERAGE:
+        coverage = pattern.sub(plain, coverage)
+    return coverage
+
+
 def extend_coverage(coverage: str, newest: str) -> str:
     """'2015–2026' + newest 2027-01-05 -> '2015–2027'. Never shortens."""
     m = re.fullmatch(r"(\d{4})–(\d{4})", coverage)
@@ -397,6 +418,14 @@ def compute(prev: dict, kb: dict, log: dict, bills: dict, nsw_release: str | Non
         if log.get("complete"):
             put(refresh, "latest_source_dates", dict(sorted(log.get("newest", {}).items())),
                 "latest_source_dates")
+
+    # Wording only: never counts as a box change, so it bumps no CACHE_EPOCH.
+    for row in new.get("sources", []):
+        name = row.get("name")
+        if name in PLAIN_SOURCE_NAMES:
+            put(row, "name", PLAIN_SOURCE_NAMES[name], f"sources[{name}].name")
+        if isinstance(row.get("coverage"), str):
+            put(row, "coverage", plain_coverage(row["coverage"]), f"sources[{row['name']}].coverage")
 
     # These files have already passed the evidence exporter/audit/retention
     # gate. Incomplete or malformed stats never advance the advertised coverage.

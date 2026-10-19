@@ -137,3 +137,15 @@ test('every Victorian electorate profile keeps Jake’s exact authorisation afte
   const federal = index.electorates.find(e => e.jurisdiction === 'federal');
   assert.ok(!profileHTML(JSON.parse(readFileSync(publicFile(federal.detail_url)))).includes(line));
 });
+test('empty census and election sections are left out, heading and all', () => {
+  const entry = index.electorates.find((e) => e.name === 'Farrer');
+  const data = JSON.parse(readFileSync(publicFile(entry.detail_url)));
+  assert.ok(data.demographics.length && data.elections.length, 'fixture seat has both sections');
+  const full = profileHTML(data);
+  assert.match(full, /id="el-context"/);
+  assert.match(full, /id="el-elections"/);
+  const empty = profileHTML({ ...data, demographics: [], elections: [] });
+  for (const gone of ['id="el-context"', 'Census context', 'id="el-elections"', 'Election timeline']) assert.ok(!empty.includes(gone), gone);
+  assert.doesNotMatch(empty, /imported|indexed|in this release|dated release/i);
+  assert.match(empty, /id="el-history"/);
+});

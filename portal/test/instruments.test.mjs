@@ -82,7 +82,7 @@ test('an evidenced bounded plain gap is public only as a small directory note', 
   const m=await read('/instruments/manifest.json');
   assert.equal(catalogueComplete(m),true); assert.equal(reconciledCounts(m),true);
   const directory=await instrumentPage(null,new URL('https://opax.com.au/instruments'),read,block);
-  assert.equal(directory.status,200);assert.match(directory.prerender,/The Register listed 2,001 titles; 1 could not be retrieved from its API/);
+  assert.equal(directory.status,200);assert.match(directory.prerender,/The Register listed 2,001 titles; 1 could not be read from the Register/);
   const detail=await instrumentPage(records[0].id,new URL('https://opax.com.au/instrument/'+records[0].id),read,block);
   assert.equal(detail.status,200); assert.doesNotMatch(detail.prerender,/could not be retrieved|unresolved_gap|gap_pages/);
   const sitemap=instrumentCrawlEntries(m); assert.equal(sitemap.length,2000);
@@ -159,7 +159,7 @@ test('missing or incomplete catalogue gives directory and valid-id detail 404', 
   for (const read of [async () => { throw new Error('asset 404') }, async () => ({...manifest,complete:false})]) {
     for (const [id,path] of [[null,'/instruments'],['F2026L00001','/instrument/F2026L00001']]) {
       const result=await instrumentPage(id,new URL('https://opax.com.au'+path),read,block);
-      assert.equal(result.status,404); assert.match(result.prerender,/not yet available/);
+      assert.equal(result.status,404); assert.match(result.prerender,/No legislative instruments here yet/);
       assert.doesNotMatch(result.prerender,/\/subject\/person\//);
     }
   }

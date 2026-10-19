@@ -82,9 +82,9 @@ test('internal holds never render and still prevent body and response reads',asy
   const row=structuredClone(JSON.parse(files['reports-1.json']).records[0]);row.pdf.status='held';row.pdf.document_licence='CC BY-NC-ND 4.0';row.pdf.reasons=[reason];row.recommendations=[];row.licence.body_skipped=true;row.licence.exceptions=[reason];
   const seen=[];const heldRead=async path=>{seen.push(path);return path.includes('reports-')?{records:[row]}:read(path);};
   const p=await auditPage(id,new URL('https://opax.com.au/audit/'+id),heldRead,block);
-  assert.equal(p.status,200);assert.match(p.prerender,/PDF body held/);assert.match(p.prerender,/don&#39;t allow us to reproduce it here/);
+  assert.equal(p.status,200);assert.ok(p.prerender.includes('Full report (PDF)</a> on qao.qld.gov.au (CC BY-NC-ND 4.0, so we link to it rather than reproduce it).'));assert.doesNotMatch(p.prerender+p.description,/body held|held with|uncleared|Not named on/i);
   assert.doesNotMatch(p.prerender+p.description,/donor|privacy rule|text[ _]layer|redaction|pdf_restrictive_licence/i);
-  assert.ok(p.description.endsWith('PDF body held.'));
+  assert.ok(p.description.endsWith('Full report on qao.qld.gov.au.'));
   assert.ok(!seen.some(p=>p.includes('responses-')));assert.doesNotMatch(p.prerender,/signature as published|agrees with recommendation 1/);
  }
 });
@@ -97,18 +97,18 @@ test('unknown phase 2 id returns 404 without fetching responses',async()=>{
 
 test('HTML recommendations stay live beside each licence-only PDF hold variant',async()=>{
  for(const [licence,term,note] of [
-  ['CC BY-NC-ND 4.0','CC BY-NC-ND 4.0',"PDF body held: QAO&#39;s terms for this PDF (CC BY-NC-ND 4.0) don&#39;t allow us to reproduce it here."],
-  ['Prior written permission required',"reuse needs QAO&#39;s written permission","PDF body held: QAO&#39;s terms for this PDF require QAO&#39;s written permission."],
-  ['Uncleared document notice; no document grant accepted','reuse grant unverified',"PDF body held: we couldn&#39;t confirm QAO&#39;s terms for this PDF."]]){
+  ['CC BY-NC-ND 4.0','CC BY-NC-ND 4.0',"CC BY-NC-ND 4.0, so we link to it rather than reproduce it"],
+  ['Prior written permission required',"reuse needs QAO&#39;s written permission","reuse needs QAO&#39;s written permission, so we link to it rather than reproduce it"],
+  ['Uncleared document notice; no document grant accepted','reuse terms not confirmed',"QAO&#39;s reuse terms for it aren&#39;t confirmed, so we link to it rather than reproduce it"]]){
   const row=structuredClone(JSON.parse(files['reports-1.json']).records[0]);row.pdf.status='held';row.pdf.reasons=['pdf_restrictive_licence'];row.pdf.document_licence=licence;
   row.licence.body_skipped=false;row.responses_path=undefined;row.response_count=0;
   row.recommendations=[{number:1,text:'Fixture HTML advice.',html:'<p>Fixture HTML advice.</p>',source_text:"QAO's text",provenance:'html',addressed_to:null}];
   const seen=[];const page=await auditPage(id,new URL('https://opax.com.au/audit/'+id),async path=>{seen.push(path);return path.includes('reports-')?{records:[row]}:read(path);},block);
-  assert.equal(page.status,200);assert.match(page.prerender,/Fixture HTML advice/);assert.match(page.prerender,/Source: html/);
+  assert.equal(page.status,200);assert.match(page.prerender,/Fixture HTML advice/);assert.match(page.prerender,/Source: the report’s web page/);assert.doesNotMatch(page.prerender,/Source: html/);
   assert.match(page.prerender,/Source: Queensland Audit Office report page, CC BY 4.0/);
-  assert.ok(page.prerender.includes(`Full report (PDF)</a>: ${term}`));assert.ok(page.prerender.includes(`<p class="audit-meta">${note}</p>`));
+  assert.ok(page.prerender.includes(`Full report (PDF): ${term}`));assert.ok(page.prerender.includes(`<p class="audit-meta"><a href="${row.pdf_url}" rel="noopener">Full report (PDF)</a> on qao.qld.gov.au (${note}).</p>`));
   assert.doesNotMatch(page.prerender+page.description,/donor|privacy rule|text[ _]layer|pdf_restrictive_licence/i);
-  assert.ok(page.description.endsWith('PDF body held.'));
+  assert.ok(page.description.endsWith('Full report on qao.qld.gov.au.'));
   assert.ok(!seen.some(path=>path.includes('responses-')));assert.equal((page.prerender.match(/class="ui-pop ui-source"/g)||[]).length,1);
  }
 });
@@ -123,7 +123,7 @@ test('every public audit asset and rendered report omits internal review reasons
   assert.equal('reasons' in row.pdf,false);assert.equal('no_text_pages' in row.pdf,false);
   const page=await auditPage(row.id,new URL('https://opax.com.au/audit/'+row.id),publicRead,block);
   assert.equal(page.status,200);assert.ok(!forbidden.test(page.prerender+page.description),'Rendered audit report contains no internal review wording');
-  if(row.pdf.status==='held') assert.ok(page.description.endsWith('PDF body held.'));
+  if(row.pdf.status==='held') assert.ok(page.description.endsWith('Full report on qao.qld.gov.au.'));
  }
  const directory=await auditPage(null,new URL('https://opax.com.au/audit'),publicRead,block);
  const dom=new JSDOM(directory.prerender),table=dom.window.document;
@@ -159,4 +159,11 @@ test('accepted catalogue reconciles per-document rights, hashes, provenance and 
   'from scripts.vm.validate_data import check_audit; import json; print(json.dumps(check_audit(compare_head=False)))'],
   {cwd:new URL('../../',import.meta.url),encoding:'utf8'});
  assert.equal(checked.status,0,checked.stderr);assert.deepEqual(JSON.parse(checked.stdout),[]);
+});
+
+test('Entities audited shows only when the report page names them',async()=>{
+ const row=structuredClone(JSON.parse(files['reports-1.json']).records[0]);
+ const page=async entities=>{row.entities=entities;return (await auditPage(id,new URL('https://opax.com.au/audit/'+id),async path=>path.includes('reports-')?{records:[row]}:read(path),block)).prerender;};
+ const empty=await page([]);assert.doesNotMatch(empty,/Entities audited|Not named on/);
+ assert.match(await page(['Queensland Health']),/<h2 class="ui-section-title">Entities audited<\/h2>.*Queensland Health/);
 });

@@ -118,7 +118,7 @@ test('when the record cannot be read the block is one plain line, and the counts
   const names = await ctx.loadDivisionNames(slug, { ayes: 65, noes: 70, members: [] });
   assert.deepEqual(plain(names), { failed: true });
   const html = ctx.divisionMembersHTML(names, { ayes: 65, noes: 70 });
-  assert.equal(text(html), 'Who voted which way The member list could not load just now; the counts and the party split are from the published export.');
+  assert.equal(text(html), 'Who voted which way The member list could not load just now; the counts and the party split are unaffected.');
   assert.doesNotMatch(html, /resource fetch failed/);
   // The page draws the counts and the party split before it asks for names.
   const render = fn('renderDivisionDoc');

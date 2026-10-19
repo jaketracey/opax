@@ -243,9 +243,9 @@ export function mountMatrix (container) {
         <tbody></tbody>
       </table>
     </div>
-    <p class="mx-fineprint">A machine pass is still labelling the corpus by
-      subject, so every number here is a floor and shares will settle as it
-      runs. Shares are of each topic's labelled speeches; some speeches carry
+    <p class="mx-fineprint">Not every speech carries a topic label yet, so
+      every number here is a floor and shares may shift as more are
+      labelled. Shares are of each topic's labelled speeches; some speeches carry
       no party label, so rows need not sum to 100%. Raw counts sit behind each
       cell (hover or long-press). Cell shading tracks share, not any party's
       colour. <a href="#/methods">Methodology</a></p>
@@ -297,7 +297,7 @@ export function mountMatrix (container) {
       if (total === 0) {
         tr.className = 'mx-dim'
         tr.appendChild(el('td', 'mx-count', '0'))
-        const td = el('td', 'mx-notyet', 'The labelling pass has not reached this debate yet.')
+        const td = el('td', 'mx-notyet', 'No labelled speeches on this debate yet.')
         td.colSpan = parties.length
         tr.appendChild(td)
         frag.appendChild(tr)

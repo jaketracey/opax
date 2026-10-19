@@ -123,7 +123,7 @@ function describe(f: SpeechFilter): string {
     f.venue === 'committee' ? 'committee-hearing turns' : f.venue === 'all' ? 'speeches and committee turns' : 'chamber speeches',
     f.topic ? `labelled ${f.topic}` : '',
     f.speaker ? `by ${f.speaker}` : '',
-    f.party ? `indexed under ${f.party}` : '',
+    f.party ? `recorded under ${f.party}` : '',
     f.state ? `in ${f.state === 'federal' ? 'federal parliament' : f.state.toUpperCase()}` : '',
     f.chamber ? `(${f.chamber})` : '',
     f.since || f.until ? `${f.since ? `from ${f.since}` : ''}${f.until ? ` to ${f.until}` : ''}` : '',

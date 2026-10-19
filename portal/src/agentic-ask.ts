@@ -194,7 +194,7 @@ export function countLead(filter: Record<string, unknown>, by: string): string {
   const period = since && until ? (since.endsWith('-01-01') && until.endsWith('-12-31') ? ` in ${since.slice(0, 4)}${until.slice(0, 4) !== since.slice(0, 4) ? `–${until.slice(0, 4)}` : ''}` : ` from ${day(since)} to ${day(until)}`)
     : since ? ` since ${year(since, '-01-01')}` : until ? ` up to ${year(until, '-12-31')}` : ' across the whole record'
   const place = filter.state ? ` in ${filter.state === 'federal' ? 'federal parliament' : String(filter.state).toUpperCase()}` : ''
-  return `${venue}${filter.topic ? ` labelled ${filter.topic}` : ''}${filter.speaker ? ` by ${filter.speaker}` : ''}${filter.party ? ` indexed under ${filter.party}` : ''}${place}${filter.chamber ? ` (${filter.chamber})` : ''}${period}${by ? `, by ${by}` : ''}`
+  return `${venue}${filter.topic ? ` labelled ${filter.topic}` : ''}${filter.speaker ? ` by ${filter.speaker}` : ''}${filter.party ? ` recorded under ${filter.party}` : ''}${place}${filter.chamber ? ` (${filter.chamber})` : ''}${period}${by ? `, by ${by}` : ''}`
 }
 /** Each template binds tool-row figures to their entity, metric and citation. */
 export function factSheet(results: ToolResult[]): { facts: Fact[]; notes: string[] } {

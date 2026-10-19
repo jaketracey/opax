@@ -58,18 +58,18 @@ export function llmsText(corpus, grants, instruments = null, audit = null, repor
 
 > OPAX is an independent, non-partisan record of Australian parliament and public money. It connects parliamentary speeches, votes and bills with disclosed political funding, public contracts and grants.
 
-Corpus snapshot: ${corpus.version}. Export dates describe snapshots, not live coverage. Collections have different date ranges and gaps. Machine-written summaries are labelled; check quotations and legal wording against original records. A grant award or contract value does not prove a payment, and an association does not prove influence. Individual grant recipients are excluded from crawl discovery.
+Record snapshot: ${corpus.version}. Dates on data files mark a snapshot, not live coverage. Collections have different date ranges and gaps. Machine-written summaries are labelled; check quotations and legal wording against original records. A grant award or contract value does not prove a payment, and an association does not prove influence. Individual grant recipients are excluded from crawl discovery.
 
 Cite the canonical OPAX URL and the original source URL shown on the record. Include the record date, jurisdiction and access date. For a specific grant award, preserve its \`?award=GA…\` parameter. Do not cite a search or generated answer as the authoritative source.
 
 OPAX code is AGPL-3.0. Source data retains its own terms: parliamentary material and interests can have CC BY-NC-ND restrictions; compiled TheyVoteForYou divisions use ODbL; AEC disclosures use CC BY 4.0; GrantConnect uses CC BY 3.0 AU; Queensland grants use CC BY 4.0; Federal Register of Legislation instrument metadata uses CC BY 4.0 with Coat of Arms and marked third-party exceptions. Portraits have individual licences. Consult each record's source and the methods page before reuse.
 
-## Corpus and coverage
+## Record and coverage
 
-- [Corpus manifest](${ORIGIN}/corpus.json): Snapshot ${corpus.version}; ${corpus.expected_resources} indexed resources. ${corpus.sources.map(s => s.name + ': ' + s.coverage).join('; ')}.
-- [Corpus statistics](${ORIGIN}/stats): Collection counts and coverage.
-- [Federal grants export](${ORIGIN}/graph/grants.federal.json): Export ${grants.federal.meta.generated}; ${grants.federal.meta.coverage}. Future agreement dates can appear in published records.
-- [Queensland grants export](${ORIGIN}/graph/grants.qld.json): Export ${grants.qld.meta.generated}; ${grants.qld.meta.coverage}.
+- [Record summary](${ORIGIN}/corpus.json): Snapshot ${corpus.version}; ${corpus.expected_resources} documents. ${corpus.sources.map(s => s.name + ': ' + s.coverage).join('; ')}.
+- [Record statistics](${ORIGIN}/stats): Collection counts and coverage.
+- [Federal grants data](${ORIGIN}/graph/grants.federal.json): Snapshot ${grants.federal.meta.generated}; ${grants.federal.meta.coverage}. Future agreement dates can appear in published records.
+- [Queensland grants data](${ORIGIN}/graph/grants.qld.json): Snapshot ${grants.qld.meta.generated}; ${grants.qld.meta.coverage}.
 - [Methods, sources and licences](${ORIGIN}/methods): Source-specific restrictions, attribution, coverage and known limitations.
 
 ## Entity URL patterns
@@ -83,7 +83,7 @@ OPAX code is AGPL-3.0. Source data retains its own terms: parliamentary material
 - [12–15 October sitting week](${ORIGIN}/sitting/2026-10-12): Calendar and published records for this period.
 - [Supplementary Budget Estimates](${ORIGIN}/estimates/2026-10): 26–29 October 2026; committee dates, portfolio agencies and recent contract and grant awards. Portfolio lists are not confirmed appearances while programs remain unpublished. No donor records.
 ${catalogueComplete(instruments) ? '- [Federal legislative instruments](' + ORIGIN + '/instruments): \`/instrument/{frl-id}\`; metadata only, with dates and links to authoritative FRL versions. No model summaries or person entities.\n' : ''}
-${auditComplete(audit) ? '- [Queensland audit reports](' + ORIGIN + '/audit): \`/audit/{report-id}\`; index and HTML recommendations under the report pages\' CC BY 4.0 grant, with original page exceptions retained. Full PDF links show each document\'s terms; document-level terms hold PDF bodies and responses. Recommendations retain source provenance. State of Queensland attribution. The app reader remains planned.\n' : ''}
+${auditComplete(audit) ? '- [Queensland audit reports](' + ORIGIN + '/audit): \`/audit/{report-id}\`; index and HTML recommendations under the report pages\' CC BY 4.0 grant, with original page exceptions retained. Full PDF links show each document\'s terms; document-level terms hold PDF bodies and responses. Recommendations retain source provenance. State of Queensland attribution.\n' : ''}
 - [Divisions and source records](${ORIGIN}/ask): \`/doc/division-{division-key}\` for votes; \`/doc/{resource-slug}\` for speeches and other source records.
 - [Grant programs and organisation recipients](${ORIGIN}/money/grants): Programs use \`/money/grants?jur={federal|qld}&program={encoded-program-id}\`; recipients use \`/money/grants/{federal|qld}/recipient/{encoded-recipient-id}\`; a particular award adds \`?award={award-id}\`.
 - [Donors](${ORIGIN}/subject/donor): \`/subject/donor/{encoded-name}\`.
@@ -91,7 +91,7 @@ ${auditComplete(audit) ? '- [Queensland audit reports](' + ORIGIN + '/audit): \`
 - [Agencies](${ORIGIN}/subject/agency): \`/subject/agency/{agency-id}\`.
 - [Campaigners](${ORIGIN}/subject/campaigner): \`/subject/campaigner/{encoded-name}\`.
 - [Topics](${ORIGIN}/subject/topic): \`/subject/topic/{topic-slug}\`.
-${reports ? '- [Reports](' + ORIGIN + '/reports): \`/reports/{report-slug}\`; source-backed investigations.\n' : ''}- [Sitemap index](${ORIGIN}/sitemap.xml): Canonical discovery URLs, grouped by type with record dates and counted export-date fallbacks.
+${reports ? '- [Reports](' + ORIGIN + '/reports): \`/reports/{report-slug}\`; source-backed investigations.\n' : ''}- [Sitemap index](${ORIGIN}/sitemap.xml): Canonical discovery URLs, grouped by type with record dates, or the snapshot date where a record has none.
 `;
 }
 

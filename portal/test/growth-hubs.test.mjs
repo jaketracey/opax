@@ -81,13 +81,13 @@ test('missing divisions state actual federal export coverage rather than an upst
   const week = {...index.weeks.find(w => w.start === '2026-09-14'),divisions:[]};
   for (const coverage of ['2026-08-20','2026-09-11']) {
     const page = await hubPage('sitting',week.start,async()=>({...index,snapshotDate:'2026-10-10',latestFederalDivision:coverage,weeks:[week]}),[],new Map(),'2026-10-10');
-    assert.ok(page.html.includes(`Federal divisions in OPAX&#39;s published record currently run to ${shortDate(coverage)}; divisions held after that date will appear here once the record is updated.`));
+    assert.ok(page.html.includes(`Federal divisions on record run to ${shortDate(coverage)}; later divisions will appear here.`));
     assert.match(page.html,/Published snapshot 10 Oct 2026/);
     assert.doesNotMatch(page.html,/aren't in the published record yet|No divisions|<h2[^>]*>Divisions held|Divisions[^<]*<span class="hub-count">0/);
   }
-  assert.match(renderSittingWeek({...index,latestFederalDivision:''},week,[],new Map(),'2026-10-10').html,/Federal divisions are not available in this OPAX export/);
+  assert.match(renderSittingWeek({...index,latestFederalDivision:''},week,[],new Map(),'2026-10-10').html,/No federal divisions on record yet/);
   const upcoming = deriveWeek(period,[],[],calendar.updated);
-  assert.doesNotMatch(renderSittingWeek(data,upcoming,[],new Map(),'2026-10-10').html,/currently run to|aren't in the published record yet/);
+  assert.doesNotMatch(renderSittingWeek(data,upcoming,[],new Map(),'2026-10-10').html,/on record run to|aren't in the published record yet/);
 });
 test('every hub and hub 404 omits the pending correction contact and response commitment',async()=>{
   const index=await json('hubs/index.json');const estimates=await json('hubs/estimates-2026-10.json');

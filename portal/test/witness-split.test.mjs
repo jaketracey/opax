@@ -157,7 +157,7 @@ test('service date limits reject missing dates, departed MPs and pre-election na
 test('pending counts cannot credit committee parliamentarians in catalog, description or share card', async () => {
   for (const name of ['Stewart','Walker']) {
     const p = roster.people.find(p=>p.name===name);
-    assert.match(personSpeechCount(p),/Count pending exact export/);
+    assert.match(personSpeechCount(p),/No exact speech count yet/);
     assert.doesNotMatch(personSpeechCount(p),/178|120|Up to|≤/);
   }
   const api = scopedContext(ts.transpile(select(['personMeta']))+';personMeta', {
@@ -173,7 +173,7 @@ test('pending counts cannot credit committee parliamentarians in catalog, descri
   });
   for (const name of ['Stewart','Walker']) {
     const meta = await api(name,new URL('https://local.test/subject/person/'+name),{});
-    assert.match(meta.description,/Count pending exact export/);
+    assert.match(meta.description,/No exact speech count yet/);
     assert.equal(meta.card.stat,undefined);
     assert.doesNotMatch(meta.description,/178|120|Up to|≤/);
     assert.doesNotMatch(meta.description,/2024–2026|Transcript aggregate/);

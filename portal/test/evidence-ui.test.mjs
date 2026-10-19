@@ -39,6 +39,6 @@ test('incomplete enrichment is never shown as completed corpus coverage',async()
  assert.equal(evidenceStatsHTML({complete:false,published_record_matches:900}), '');
  const html=evidenceStatsHTML({complete:true,source_records:{speeches:100,ext_press_releases:20,government_grants:30},published_record_matches:200,entities_with_connections:10,identity_decisions:{accepted:3}});
  assert.ok(html.includes('150'));
- assert.ok(html.includes('not yet searchable'));
+ assert.ok(html.includes('not searchable yet'));
  assert.ok(html.includes('One record can connect to several entries'));
 });

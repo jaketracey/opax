@@ -68,9 +68,9 @@ export async function taxExpendituresPage(url:URL,read:Read,block:Block){
   const error=(status:number,message:string)=>({status,title:'Tax expenditures · OPAX',description:message,noindex:true,
     prerender:block('Tax expenditures',message,`<a href="${SOURCE}">Read Treasury’s original 2025–26 statement</a>`)+`<div class="wrap tax-content"><p>Source: Treasury · Statement 2025–26 · Snapshot unavailable · <a href="https://treasury.gov.au/copyright-disclaimer">Publisher licence terms</a>. No cleared data is displayed.</p></div>`})
   let h:TaxHub
-  try{h=await read()}catch{return error(503,'The reviewed tax expenditure snapshot is unavailable.')}
+  try{h=await read()}catch{return error(503,'Tax expenditure figures are temporarily unavailable.')}
   const all=clearedTaxExpenditures(h)
-  if(!all.length)return error(503,'The reviewed tax expenditure snapshot is unavailable.')
+  if(!all.length)return error(503,'Tax expenditure figures are temporarily unavailable.')
   const config=taxExpendituresTableConfig(taxExpendituresRows({...h,rows:all}))
   const allowed=new Set(['q','sort','page','pageSize','f.measure_year','f.category','f.estimate_status','f.record_kind'].map(k=>'tax.'+k))
   if([...url.searchParams.keys()].some(k=>!allowed.has(k) || url.searchParams.getAll(k).length!==1))return error(400,'Choose one value for each table filter.')

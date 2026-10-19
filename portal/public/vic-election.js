@@ -31,7 +31,7 @@ export function vicElectionPublicationPath(path) {
     || /^\/sitemaps\/vic-election-\d+\.xml(?:\/|$)/.test(normalized)
     || normalized.startsWith('/hubs/vic-election');
 }
-export const vicElectionLlms = '- [Victorian election 2026](https://opax.com.au/vic-election-2026): 28 November 2026; 88 state districts and 8 regions, sitting members and exported parliamentary records. Victorian divisions cover 2026 only; no state grants or Victorian interests. Speech aggregates have explicit period limits. No donor records.\n';
+export const vicElectionLlms = '- [Victorian election 2026](https://opax.com.au/vic-election-2026): 28 November 2026; 88 state districts and 8 regions, sitting members and parliamentary records. Victorian divisions cover 2026 only; no state grants or Victorian interests. Speech aggregates have explicit period limits. No donor records.\n';
 export function vicElectionDiscovery(data, enabled = false) {
   return enabled ? { 'vic-election': data.pages.map(p => ({path:p.path,lastmod:p.lastmod})) } : {};
 }

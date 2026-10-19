@@ -78,7 +78,7 @@ test('recent-vote answers only use the separate OPAX export and omit an empty vo
   assert.match((await renderPersonAnswer(p,readFixture,new Map(),undefined,undefined,{})).html,/<caption>Recorded votes<\/caption>/);
   assets['/seo/recent-votes.json']._meta.source='manual-tvfy-sample';
   const empty=(await renderPersonAnswer(p,readFixture,new Map(),undefined,undefined,{})).html;
-  assert.doesNotMatch(empty,/Last 10 recorded votes|Latest exported bill votes|No per-member votes|Recorded question/);
+  assert.doesNotMatch(empty,/Last 10 recorded votes|Latest (?:exported )?bill votes|No per-member votes|Recorded question/);
 });
 test('raw bill labels its summary machine-written, with stages, sponsor/portfolio, divisions and source links',async()=>{
   const html=await get('/bill/au-federal-r7534');const graph=checkHtml(html);
@@ -403,4 +403,14 @@ test('ordinary Victorian electorate summaries carry the exact authorisation serv
     assert.equal(r.status,200);const html=await r.text();
     assert.ok(block(html)?.includes(line),flag);assert.match(block(html),/href="mailto:corrections@opax.com.au"/);
   }
+});
+test('server pages leave out empty sections, heading and all',async()=>{
+  const bill=renderBillAnswer({title:'Example Bill 2026',key:'x',sponsor:'Example Member',portfolio:'Example Portfolio',divisions:[]},[],new Map(),[]).html;
+  for(const gone of ['Plain-language summary','Other bills from this sponsor','Other bills in this portfolio','in this export','in the export'])assert.ok(!bill.includes(gone),gone);
+  const withRows=renderBillAnswer({title:'Example Bill 2026',key:'x',sponsor:'Example Member',portfolio:'Example Portfolio',divisions:[],summary:{sentences:['It does a thing.']}},[],new Map(),[{key:'y',title:'Other Example Bill 2026',sponsor:'Example Member',portfolio:'Other'}]).html;
+  assert.match(withRows,/<h2>Plain-language summary<\/h2>/);assert.match(withRows,/<h2>Other bills from this sponsor<\/h2>/);assert.ok(!withRows.includes('Other bills in this portfolio'));
+  const p={name:'Example Member',pid:'123',party:'Independent',chambers:['senate'],current:true};
+  const readFixture=async path=>{if(path==='/votes.json')return {_names:{}};throw Error('Missing');};
+  const person=(await renderPersonAnswer(p,readFixture,new Map(),undefined,undefined,{})).html;
+  for(const gone of ['Declared interests','Bills sponsored','in this export'])assert.ok(!person.includes(gone),gone);
 });

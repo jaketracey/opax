@@ -89,7 +89,7 @@ export function mountBillText(container, { bill, requestedVersion = null, open =
     notice.textContent = [Number(selected.pages) > 0 ? `${selected.pages} source pages.` : '', selected.coverage_note, !selected.date ? 'The source does not supply a version date.' : '', manifest.coverage_note].filter(Boolean).join(' ');
     const path = billTextPath(bill.key, selected.text_url);
     if (!path || !['complete', 'incomplete'].includes(selected.status)) {
-      notice.textContent = [selected.coverage_note || 'This version is not yet available to read on Opax.', 'Use the original document for the complete source.'].join(' '); return;
+      notice.textContent = [selected.coverage_note || 'No readable text for this version yet.', 'Use the original document for the complete source.'].join(' '); return;
     }
     const read = element('button', selected.status === 'complete' ? 'Read full bill text' : 'Read available text', 'primary bill-text-read'); read.type = 'button'; read.setAttribute('aria-controls', content.id); read.setAttribute('aria-expanded', 'false');
     controls.append(read);
@@ -186,7 +186,7 @@ export function mountBillText(container, { bill, requestedVersion = null, open =
       // the official documents stay in the bill's source sheets.
       root.dataset.state = error.message === 'not-found' ? 'none' : 'failed';
       controls.replaceChildren(originalSources()); controls.removeAttribute('aria-busy');
-      notice.textContent = error.message === 'not-found' ? 'Full text has not been published on Opax for this bill. The original source may have the document.' : 'Published text versions could not be checked. You can still open the original source.';
+      notice.textContent = error.message === 'not-found' ? 'No full text for this bill yet. The original source may have the document.' : 'Published text versions could not be checked. You can still open the original source.';
       if (error.message !== 'not-found') { const retry = element('button', 'Check again', 'secondary'); retry.type = 'button'; retry.addEventListener('click', loadManifest); controls.append(retry); }
       if (location.hash === '#bill-full-text') root.scrollIntoView({ block: 'start' });
     }

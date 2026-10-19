@@ -131,7 +131,7 @@ test('funding node without party edges reports its known total, count and years'
   assert.match(root.innerHTML, /\$45,000/);
   assert.match(root.innerHTML, /17 recorded receipts/);
   assert.match(root.innerHTML, /2019–2024/);
-  assert.match(root.innerHTML, /party breakdown is not available/);
+  assert.match(root.innerHTML, /No party breakdown for these receipts/);
   assert.doesNotMatch(root.innerHTML, /\$0<|across 0 recorded/);
 });
 
@@ -139,7 +139,7 @@ test('missing funding node is unavailable rather than an invented zero', async (
   const context = setup(async () => response({ nodes: [], edges: [] }));
   const root = node();
   await context.mountFunding(root, [{ id: 'missing', name: 'Missing' }], context.lifecycle(root));
-  assert.match(root.innerHTML, /not present in the current map export/);
+  assert.match(root.innerHTML, /This identity is not on the money map/);
   assert.doesNotMatch(root.innerHTML, /\$0|Explore the money map/);
 });
 

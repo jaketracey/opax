@@ -27,7 +27,7 @@ export function mountTide (container, options = {}) {
   container.innerHTML = `
     <div class="tide-shell">
       <h1>The tide</h1>
-      <p class="tide-lede ui-lede">How parliament's labelled debates move across four decades. Shares compare each topic with the labelled speech record held for that decade, never with the whole corpus.</p>
+      <p class="tide-lede ui-lede">How parliament's labelled debates move across four decades. Shares compare each topic with that decade's labelled speeches, never with every speech.</p>
       <div class="tide-controls">
         <div class="tide-control"><span>Parliaments</span><div class="ui-segmented" data-ui-size="compact" role="group" aria-label="Parliaments included">
           <button type="button" class="ui-button" data-tide-scope="federal" aria-pressed="true">Federal</button>
@@ -102,7 +102,7 @@ export function mountTide (container, options = {}) {
       <div class="tide-column-head" aria-hidden="true"><span></span><span>${decadeHead}</span><span>${order === 'now' ? 'Now' : 'Change'}</span></div>
       <ol class="tide-list">${body}</ol>
       ${coverageRuleHTML(data.decades)}
-      <p class="fineprint">Each bar is a topic's share of speeches carrying any topic label in that decade for ${scopeWords}. Each bar opens the speeches behind it. Labels are applied so far; the coverage rule shows how much of the indexed speech record has been reached. Federal is the default because it has the longest comparable run. <a href="/methods">How the record is built</a></p>`
+      <p class="fineprint">Each bar is a topic's share of speeches carrying any topic label in that decade for ${scopeWords}. Each bar opens the speeches behind it. Not every speech is labelled yet; the coverage rule shows how much of each decade's speech record carries a label. Federal is the default because it has the longest comparable run. <a href="/methods">How the record is built</a></p>`
   }
 
   const load = async () => {

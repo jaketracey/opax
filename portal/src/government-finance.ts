@@ -56,9 +56,9 @@ export async function governmentFinancePage(url:URL,read:Read,block:Block){
   const error=(status:number,text:string)=>({status,title:'Government finance · OPAX',description:text,noindex:true,
     prerender:block('Government finance',text,`<a href="${SOURCE}">Read the original ABS release</a>`)+`<div class="wrap gfs-content"><p>Source: Australian Bureau of Statistics. Release: 2024–25. Snapshot: unavailable. Workbook reuse has not been cleared for this view. <a href="https://www.abs.gov.au/website-privacy-copyright-and-disclaimer">Publisher terms</a>.</p></div>`})
   let h:GFSHub
-  try{h=await read()}catch{return error(503,'The reviewed government finance snapshot is unavailable.')}
+  try{h=await read()}catch{return error(503,'Government finance figures are temporarily unavailable.')}
   const all=clearedGovernmentFinance(h)
-  if(!all.length)return error(503,'The reviewed government finance snapshot is unavailable.')
+  if(!all.length)return error(503,'Government finance figures are temporarily unavailable.')
   const choices=(rows:GFSRow[],key:keyof GFSRow)=>[...new Set(rows.map(r=>String(r[key])))].sort()
   const releases=choices(all,'release')
   const release=url.searchParams.get('release')||releases.at(-1)!

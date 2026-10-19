@@ -35,7 +35,7 @@ test('P1 party/year swap: each year and count retains its party and DB row',asyn
   kb:async(_p,b)=>{const text=JSON.stringify(b),year=/"since":"(\d{4})/.exec(text)?.[1],labor=text.includes('"label":"Labor"');return{fulltext:{total:!text.includes('"label":"housing"')?10:(year==='2024')===labor?2:1}}},
  });
  assert.equal(r.answered,true);assert.equal(r.answer_source,'template');assert.equal(models,1);
- for(const [year,party,n] of [[2024,'Labor',2],[2025,'Labor',1],[2024,'Greens',1],[2025,'Greens',2]])assert.match(r.answer,new RegExp(`${year}: ${n} chamber speeches labelled housing indexed under ${party}`));
+ for(const [year,party,n] of [[2024,'Labor',2],[2025,'Labor',1],[2024,'Greens',1],[2025,'Greens',2]])assert.match(r.answer,new RegExp(`${year}: ${n} chamber speeches labelled housing recorded under ${party}`));
 });
 
 test('P1 model digits: even supported counts, calendar years and citation ids are rejected',()=>{
