@@ -94,6 +94,78 @@ class RecentVotesTests(unittest.TestCase):
             with self.assertRaisesRegex(ValueError, r'first: 123: \d+ -> \d+ rows'):
                 R.write_projection(changed, out)
 
+    def vic_fixture(self):
+        data = R.projection(self.fixture(), self.identities())
+        person = data['people'].pop('123')
+        person['name'] = 'Alex Example'
+        person['jurisdiction'] = 'vic'
+        data['people']['vic:alex-example'] = person
+        for row in person['recent']:
+            row['division_id'] = row['division_id'].replace('federal-senate-', 'vic-lc-2026-09-10-')
+            row['division_slug'] = f"division-{row['division_id']}"
+            row['date'] = '2026-09-10'
+            row['jur'] = 'vic'
+            row['source_url'] = ('https://www.parliament.vic.gov.au/4a9883/globalassets/'
+                                 'hansard-daily-pdfs/hansard-974425065-37008/hansard-974425065-37008.pdf')
+        return data
+
+    def test_rotating_vic_asset_paths_keep_prior_citations_and_allow_new_votes(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            out = Path(tmp) / 'recent.json'
+            original = self.vic_fixture()
+            R.write_projection(original, out)
+            changed = json.loads(json.dumps(original))
+            rows = changed['people']['vic:alex-example']['recent']
+            for row in rows:
+                row['source_url'] = row['source_url'].replace('/4a9883/', '/4a9a61/')
+            newest = dict(rows[0], division_id='vic-lc-2026-09-10-13', division_slug='division-vic-lc-2026-09-10-13')
+            rows.insert(0, newest)
+            rows.pop()
+            R.write_projection(changed, out)
+            published = json.loads(out.read_text())
+            rows = published['people']['vic:alex-example']['recent']
+            self.assertIn('/4a9a61/', rows[0]['source_url'])
+            self.assertTrue(all('/4a9883/' in row['source_url'] for row in rows[1:]))
+            self.assertEqual(published['_meta']['retained_source_url_count'], 9)
+            self.assertEqual(published['_meta']['retained_source_division_count'], 9)
+            self.assertEqual(published['_meta']['retained_source_url_reasons'], {'vic-hansard-asset-path-changed': 9})
+
+    def test_vic_asset_retention_does_not_hide_other_changes_or_shrink(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            out = Path(tmp) / 'recent.json'
+            original = self.vic_fixture()
+            R.write_projection(original, out)
+            before = out.read_bytes()
+            for field, value in [('title', 'Different question'), ('vote', 'aye'), ('date', '2026-09-02'),
+                                 ('source_url', 'https://unrelated.example/hansard-974425065-37008.pdf'),
+                                 ('source_url', 'https://www.parliament.vic.gov.au/4a9a61/globalassets/'
+                                                'hansard-daily-pdfs/hansard-974425065-99999/hansard-974425065-99999.pdf')]:
+                with self.subTest(field=field, value=value):
+                    changed = json.loads(json.dumps(original))
+                    row = changed['people']['vic:alex-example']['recent'][0]
+                    row['source_url'] = row['source_url'].replace('/4a9883/', '/4a9a61/')
+                    row[field] = value
+                    with self.assertRaisesRegex(ValueError, 'coverage regressed'):
+                        R.write_projection(changed, out)
+                    self.assertEqual(out.read_bytes(), before)
+            for field, value in [('name', 'Another Member'), ('jurisdiction', 'nsw')]:
+                with self.subTest(person_field=field):
+                    changed = json.loads(json.dumps(original))
+                    person = changed['people']['vic:alex-example']
+                    person[field] = value
+                    person['recent'][0]['source_url'] = person['recent'][0]['source_url'].replace('/4a9883/', '/4a9a61/')
+                    with self.assertRaisesRegex(ValueError, 'coverage regressed'):
+                        R.write_projection(changed, out)
+                    self.assertEqual(out.read_bytes(), before)
+            changed = json.loads(json.dumps(original))
+            rows = changed['people']['vic:alex-example']['recent']
+            for row in rows:
+                row['source_url'] = row['source_url'].replace('/4a9883/', '/4a9a61/')
+            rows.pop()
+            with self.assertRaisesRegex(ValueError, 'coverage regressed'):
+                R.write_projection(changed, out)
+            self.assertEqual(out.read_bytes(), before)
+
     def test_committed_separate_asset_has_no_hand_picked_sample(self):
         data = json.loads((ROOT / 'portal/public/seo/recent-votes.json').read_text())
         meta = data['_meta']
