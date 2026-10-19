@@ -14,6 +14,7 @@ from unittest import mock
 
 from scripts.vm import evidence_guard as guard
 from scripts.vm import evidence_inputs
+from scripts.vm import evidence_bundle_state
 
 ROOT = Path(__file__).resolve().parents[2]
 FIXTURES = ROOT / 'tests/fixtures/evidence-nightly'
@@ -42,12 +43,17 @@ revert_group() { revert portal/public/evidence; }
 group_changed() { [ -n "$(git status --porcelain -- portal/public/evidence)" ]; }
 . scripts/vm/evidence_refresh.sh
 trap evidence_abort EXIT
+if [ "${EVIDENCE_TEST_LOCK_BUSY:-0}" = 1 ]; then
+  exec 5>"$PIPE/daily_refresh.lock"
+  flock -n 5 || exit 1
+fi
 evidence_refresh || true
 if [ "${EVIDENCE_TEST_ROLLBACK:-0}" = 1 ]; then revert_group evidence; fi
 evidence_summary
 if [ "${EVIDENCE_TEST_COMMIT_FAIL:-0}" = 1 ]; then exit 1; fi
 git add -A -- portal/public/evidence
 git -c commit.gpgsign=false commit -q --allow-empty -m accepted || exit 1
+if [ "${EVIDENCE_TEST_NO_COMPLETE:-0}" = 1 ]; then exit 0; fi
 evidence_refresh_complete
 '''
 
@@ -229,6 +235,7 @@ class RefreshTests(unittest.TestCase):
         self.pipe = self.home / '.cache/autoresearch/pipeline'
         self.pipe.mkdir(parents=True)
         for name in ('scripts/vm/evidence_refresh.sh', 'scripts/vm/evidence_guard.py', 'scripts/vm/evidence_inputs.py',
+                     'scripts/vm/evidence_bundle_state.py',
                      'scripts/vm/keep_if_unchanged.py'):
             path = self.repo / name
             path.parent.mkdir(parents=True, exist_ok=True)
@@ -243,6 +250,48 @@ class RefreshTests(unittest.TestCase):
         self.inputs = input_fixture.seed(self.base / 'inputs')
         for name, (key, _) in evidence_inputs.DEFAULTS.items():
             self.env['OPAX_EVIDENCE_' + key] = str(self.inputs[name])
+        self.env['OPAX_DB'] = str(self.inputs['source'])
+        if not shutil.which('flock'):
+            # macOS has no util-linux flock; actual lock exclusion is tested on
+            # Linux. This fixture still exercises all other shell boundaries.
+            bin_dir = self.base / 'bin'
+            bin_dir.mkdir()
+            command = bin_dir / 'flock'
+            command.write_text('#!/bin/sh\nexit 0\n')
+            command.chmod(0o755)
+            self.env['PATH'] = str(bin_dir) + os.pathsep + self.env['PATH']
+        # Frozen bundle construction is exercised as an interface fixture here;
+        # the builder has its own real SQLite/reconciliation tests.
+        (self.repo / 'scripts/vm/build_evidence_bundle.py').write_text('''
+import argparse,hashlib,json,os,pathlib,shutil,sys,time
+parser=argparse.ArgumentParser()
+parser.add_argument('--source',type=pathlib.Path,required=True)
+parser.add_argument('--bundle-root',type=pathlib.Path,required=True)
+args=parser.parse_args()
+assert os.environ['OPAX_SYNC_KB']=='0'
+with (pathlib.Path(os.environ['HOME'])/'evidence-build.calls').open('a') as stream: stream.write('build\\n')
+mode=os.environ.get('EVIDENCE_BUILD_MODE','ok')
+args.bundle_root.mkdir(parents=True,exist_ok=True)
+number=len((pathlib.Path(os.environ['HOME'])/'evidence-build.calls').read_text().splitlines())
+bundle=args.bundle_root/('20261019T000000Z-'+format(number,'012x')+'.incoming')
+bundle.mkdir()
+if mode=='timeout': time.sleep(10)
+if mode=='fail': sys.exit(1)
+report={'verified':mode!='unverified','bundle_dir':str(bundle)}
+for name,key in [('source','SOURCE'),('evidence','LAYERS'),('places','PLACES'),('decisions','DECISIONS'),('additional','ADDITIONAL')]:
+    filenames={'source':'parli.db','evidence':'evidence-layers-full.sqlite','places':'evidence-places.sqlite','decisions':'evidence-identity-decisions.sqlite','additional':'evidence-additional-mentions.sqlite'}
+    path=bundle/filenames[name]
+    shutil.copyfile(args.source if name=='source' else os.environ['OPAX_EVIDENCE_'+key],path)
+    report[name]=str(path)
+receipt=bundle/'receipt.json'
+report['receipt']=str(receipt)
+owner={'schema':1,'managed_by':'opax-evidence-bundle-v1','verified':True,'report':report}
+receipt.write_text(json.dumps(owner))
+(bundle/'READY.json').write_text(json.dumps(dict(owner,receipt_sha256=hashlib.sha256(receipt.read_bytes()).hexdigest())))
+if mode=='outside': report['source']=str(args.source)
+if mode=='malformed': print('{broken')
+else: print(json.dumps(report))
+''')
         self.git('init', '-q')
         self.git('add', '-A')
         self.git('-c', 'commit.gpgsign=false', 'commit', '-q', '-m', 'fixture')
@@ -255,6 +304,10 @@ class RefreshTests(unittest.TestCase):
     @property
     def pending(self):
         return self.pipe / 'evidence-refresh-v1.pending'
+
+    @property
+    def active(self):
+        return self.pipe / 'evidence-bundle-active.json'
 
     def run_refresh(self, mode='stamps', **env):
         result = subprocess.run(['bash', '-c', DRIVER], cwd=self.repo,
@@ -361,6 +414,182 @@ class RefreshTests(unittest.TestCase):
         result = self.run_refresh('at_threshold')
         self.assertNotIn('FAIL:', result)
         self.assertFalse(self.pending.exists())
+
+    def test_build_is_opt_in_and_default_ignores_active_bundle(self):
+        self.active.write_text('{"old":"retained"}')
+        self.run_refresh('ok')
+        self.assertFalse((self.home / 'evidence-build.calls').exists())
+        self.assertEqual(json.loads(self.active.read_text()), {'old': 'retained'})
+
+    def test_built_bundle_activates_only_on_publication_completion(self):
+        self.active.write_text('{"old":"retained"}')
+        self.run_refresh('ok', OPAX_EVIDENCE_BUILD='1', EVIDENCE_TEST_NO_COMPLETE='1')
+        self.assertEqual(json.loads(self.active.read_text()), {'old': 'retained'})
+        self.assertTrue(self.pending.exists())
+        self.assertFalse(list(self.pipe.glob('evidence-candidate.*')))
+        self.run_refresh('ok', OPAX_EVIDENCE_BUILD='1')
+        active = json.loads(self.active.read_text())
+        self.assertTrue(active['verified'])
+        self.assertEqual(active['published_commit'], self.git('rev-parse', 'HEAD').strip())
+        self.assertEqual(Path(active['source']).parent, Path(active['bundle_dir']))
+        self.assertEqual(len(active['receipt_sha256']), 64)
+        self.assertFalse(self.pending.exists())
+        self.assertFalse(list(self.pipe.glob('evidence-candidate.*')))
+
+    def test_build_failures_retain_active_pointer_and_public_evidence(self):
+        self.active.write_text('{"old":"retained"}')
+        before = guard.read_tree(self.repo / guard.EVIDENCE)
+        for mode in ('fail', 'malformed', 'unverified', 'outside', 'timeout'):
+            with self.subTest(mode=mode):
+                result = self.run_refresh('ok', OPAX_EVIDENCE_BUILD='1', EVIDENCE_BUILD_MODE=mode,
+                                          OPAX_EVIDENCE_BUILD_TIMEOUT='0.2s' if mode == 'timeout' else '10s')
+                self.assertIn('bundle build unavailable', result)
+                self.assertIn('catch-up retained', result)
+                self.assertEqual(json.loads(self.active.read_text()), {'old': 'retained'})
+                self.assertEqual(guard.read_tree(self.repo / guard.EVIDENCE), before)
+                self.assertTrue(self.pending.exists())
+                self.assertFalse((self.home / 'evidence.calls').exists())
+                self.assertFalse(list(self.pipe.glob('evidence-candidate.*')))
+
+    def test_bundle_is_not_activated_after_guard_rollback_or_commit_failure(self):
+        self.active.write_text('{"old":"retained"}')
+        before = guard.read_tree(self.repo / guard.EVIDENCE)
+        for mode, switches in [('excerpt_vanish', {}), ('ok', {'EVIDENCE_TEST_ROLLBACK': '1'}),
+                               ('ok', {'EVIDENCE_TEST_COMMIT_FAIL': '1'})]:
+            with self.subTest(mode=mode, switches=switches):
+                self.run_refresh(mode, OPAX_EVIDENCE_BUILD='1', **switches)
+                self.assertEqual(json.loads(self.active.read_text()), {'old': 'retained'})
+                self.assertEqual(guard.read_tree(self.repo / guard.EVIDENCE), before)
+                self.assertTrue(self.pending.exists())
+                self.assertFalse(list(self.pipe.glob('evidence-candidate.*')))
+
+    def test_no_push_never_activates_bundle_or_clears_debt_even_without_changes(self):
+        for mode in ('stamps', 'ok'):
+            with self.subTest(mode=mode):
+                self.active.write_text('{"old":"retained"}')
+                result = self.run_refresh(mode, OPAX_EVIDENCE_BUILD='1', OPAX_NIGHTLY_NO_PUSH='1')
+                self.assertIn('publication not confirmed (NO_PUSH)', result)
+                self.assertEqual(json.loads(self.active.read_text()), {'old': 'retained'})
+                self.assertTrue(self.pending.exists())
+                self.assertFalse(list(self.pipe.glob('evidence-candidate.*')))
+
+    def test_failed_sunday_build_creates_weekday_catchup(self):
+        self.run_refresh('ok')
+        self.assertFalse(self.pending.exists())
+        self.run_refresh('ok', OPAX_TODAY='2026-10-11', OPAX_EVIDENCE_BUILD='1', EVIDENCE_BUILD_MODE='fail')
+        self.assertTrue(self.pending.exists())
+        result = self.run_refresh('ok', OPAX_TODAY='2026-10-12', OPAX_EVIDENCE_BUILD='1')
+        self.assertIn('evidence export (catch-up)', result)
+        self.assertFalse(self.pending.exists())
+
+    def test_bundle_state_rejects_symlink_escape_and_invalid_commit(self):
+        self.run_refresh('ok', OPAX_EVIDENCE_BUILD='1')
+        saved = self.active.read_bytes()
+        active = json.loads(saved)
+        candidate = self.pipe / 'candidate-for-test.json'
+        linked = Path(active['bundle_dir']) / 'linked.sqlite'
+        linked.symlink_to(self.inputs['source'])
+        candidate.write_text(json.dumps(dict(active, source=str(linked))))
+        with self.assertRaises(ValueError):
+            evidence_bundle_state.activate(candidate, self.pipe / 'evidence-bundles', self.active,
+                                           self.git('rev-parse', 'HEAD').strip())
+        candidate.write_text(json.dumps(active))
+        with self.assertRaises(ValueError):
+            evidence_bundle_state.activate(candidate, self.pipe / 'evidence-bundles', self.active, 'not-a-commit')
+        self.assertEqual(self.active.read_bytes(), saved)
+
+    def test_prebuild_prunes_previous_verified_bundle_but_preserves_active_on_failure(self):
+        for _ in range(2):
+            self.run_refresh(OPAX_EVIDENCE_BUILD='1', OPAX_TODAY='2026-10-11')
+        root = self.pipe / 'evidence-bundles'
+        self.assertEqual(len(list(root.glob('*/READY.json'))), 2)
+        active = self.active.read_bytes()
+        active_dir = Path(json.loads(active)['bundle_dir'])
+        self.run_refresh(OPAX_EVIDENCE_BUILD='1', EVIDENCE_BUILD_MODE='fail', OPAX_TODAY='2026-10-11')
+        self.assertEqual(self.active.read_bytes(), active)
+        self.assertTrue(active_dir.is_dir())
+        self.assertEqual(len(list(root.glob('*/READY.json'))), 1)
+        self.assertTrue(list((self.pipe / 'evidence-bundle-history').glob('*.receipt.json')))
+        self.assertTrue(self.pending.exists())
+
+    def test_retention_never_deletes_foreign_unknown_symlink_or_active_data(self):
+        self.run_refresh(OPAX_EVIDENCE_BUILD='1')
+        active = json.loads(self.active.read_text())
+        root = self.pipe / 'evidence-bundles'
+        protected = self.base / 'foreign-live.db'
+        protected.write_text('live source - never delete')
+        foreign = root / '20261019T000000Z-ffffffffffff.incoming'
+        foreign.mkdir()
+        (foreign / 'READY.json').write_text('{"schema":1,"managed_by":"someone-else","verified":true}')
+        (foreign / 'foreign.db').write_text('foreign')
+        linked = root / '20261019T000000Z-eeeeeeeeeeee.incoming'
+        linked.symlink_to(protected)
+        # A correctly owned candidate with an unknown extra file is not prunable.
+        self.run_refresh(OPAX_EVIDENCE_BUILD='1', EVIDENCE_TEST_NO_COMPLETE='1', OPAX_TODAY='2026-10-11')
+        unknown = next(path for path in root.iterdir()
+                       if path.is_dir() and path != foreign and path.resolve() != Path(active['bundle_dir']))
+        (unknown / 'do-not-delete.txt').write_text('unknown')
+        evidence_bundle_state.prepare(root, self.active)
+        self.assertTrue(Path(active['source']).is_file())
+        self.assertTrue((foreign / 'foreign.db').is_file())
+        self.assertTrue((unknown / 'do-not-delete.txt').is_file())
+        self.assertTrue(linked.is_symlink())
+        self.assertEqual(protected.read_text(), 'live source - never delete')
+
+    def test_post_activation_cleanup_failure_is_a_warning_not_false_rollback(self):
+        self.active.write_text('{"old":"retained"}')
+        for _ in range(2):
+            self.run_refresh(OPAX_EVIDENCE_BUILD='1', EVIDENCE_TEST_NO_COMPLETE='1')
+        history = self.pipe / 'evidence-bundle-history'
+        history.write_text('foreign file')
+        result = self.run_refresh(OPAX_EVIDENCE_BUILD='1')
+        self.assertIn('WARN: WARNING evidence bundle retention:', result)
+        self.assertNotIn('cannot activate published evidence', result)
+        self.assertTrue(json.loads(self.active.read_text())['verified'])
+        self.assertFalse(self.pending.exists())
+        self.assertEqual(history.read_text(), 'foreign file')
+
+    def test_idle_committed_wal_is_checkpointed_before_build(self):
+        with closing(sqlite3.connect(self.inputs['source'])) as source:
+            source.execute('PRAGMA journal_mode=WAL')
+            source.execute('CREATE TABLE fixture_wal(value)')
+            source.commit()
+            wal = Path(str(self.inputs['source']) + '-wal')
+            self.assertGreater(wal.stat().st_size, 0)
+            result = self.run_refresh(OPAX_EVIDENCE_BUILD='1')
+            self.assertNotIn('bundle build unavailable', result)
+            self.assertTrue(self.active.exists())
+            self.assertFalse(wal.exists() and wal.stat().st_size)
+
+    def test_busy_wal_reader_defers_build_without_deleting_source_or_active(self):
+        self.active.write_text('{"old":"retained"}')
+        with closing(sqlite3.connect(self.inputs['source'])) as source, \
+                closing(sqlite3.connect(self.inputs['source'])) as reader:
+            source.execute('PRAGMA journal_mode=WAL')
+            source.execute('CREATE TABLE fixture_wal(value)')
+            source.execute('INSERT INTO fixture_wal VALUES(1)')
+            source.commit()
+            reader.execute('BEGIN')
+            reader.execute('SELECT * FROM fixture_wal').fetchall()
+            source.execute('INSERT INTO fixture_wal VALUES(2)')
+            source.commit()
+            result = self.run_refresh(OPAX_EVIDENCE_BUILD='1')
+            self.assertIn('bundle build unavailable', result)
+            self.assertIn('checkpoint busy', (self.pipe / 'evidence-build.log').read_text())
+            self.assertEqual(json.loads(self.active.read_text()), {'old': 'retained'})
+            self.assertEqual(source.execute('SELECT count(*) FROM fixture_wal').fetchone()[0], 2)
+            self.assertFalse((self.home / 'evidence-build.calls').exists())
+            self.assertTrue(self.pending.exists())
+
+    @unittest.skipUnless(shutil.which('flock'), 'util-linux flock required for real lock exclusion')
+    def test_standalone_source_writer_lock_defers_evidence_build(self):
+        self.active.write_text('{"old":"retained"}')
+        result = self.run_refresh(OPAX_EVIDENCE_BUILD='1', EVIDENCE_TEST_LOCK_BUSY='1')
+        self.assertIn('bundle build unavailable', result)
+        self.assertIn('source writer holds its lock', (self.pipe / 'evidence-build.log').read_text())
+        self.assertEqual(json.loads(self.active.read_text()), {'old': 'retained'})
+        self.assertFalse((self.home / 'evidence-build.calls').exists())
+        self.assertTrue(self.pending.exists())
 
 
 if __name__ == '__main__':

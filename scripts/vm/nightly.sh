@@ -845,10 +845,12 @@ if git diff --cached --quiet; then
   else
     log "no data changes tonight (and checked_at is fresh): nothing to commit, push or deploy"
     DEPLOY="not needed (no changes)"
-    bills_refresh_complete
-    divisions_refresh_complete
-    evidence_refresh_complete
-    periodic_refresh_complete
+    if [ "${OPAX_NIGHTLY_NO_PUSH:-0}" != 1 ]; then
+      bills_refresh_complete
+      divisions_refresh_complete
+      evidence_refresh_complete
+      periodic_refresh_complete
+    fi
     finish
   fi
 else
@@ -877,9 +879,6 @@ else
     || { fail "git commit failed"; finish; }
   log "committed: $subject"
 fi
-bills_refresh_complete
-divisions_refresh_complete
-evidence_refresh_complete
 COMMIT_SHA=$(git rev-parse --short HEAD)
 
 # ---- 7. push (the push starts the deploy) --------------------------------------------------------------------
@@ -911,5 +910,10 @@ if git diff --quiet "$BASE_BEFORE" HEAD -- portal/public/corpus.json; then
 else
   DEPLOY="started by the push (deploy.yml, corpus.json changed)"
 fi
+# A local commit is not publication. Preserve catch-up and active input state
+# when NO_PUSH is requested or the push failed.
+bills_refresh_complete
+divisions_refresh_complete
+evidence_refresh_complete
 periodic_refresh_complete
 finish
