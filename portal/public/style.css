@@ -4742,7 +4742,7 @@ html[data-panel="chat"] footer { display: none; }
 /* One page-title role, including older routes that use an h2 for their title. */
 h1, .hero-intro h1, #subject-title, #bill-title,
 #panel-doc #doc-title, #panel-declared > h1, .tide-shell > h1,
-.allocation-intro h1, .connections-page h1, .ballot-tool .ballot-intro h2 {
+.allocation-intro h1, .connections-page h1 {
   font:var(--type-title); color:var(--ink);
    overflow-wrap:break-word;
 }

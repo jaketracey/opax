@@ -177,9 +177,6 @@
 /authorisation.js
   ! Cache-Control
   Cache-Control: public, max-age=31536000, immutable
-/ballot.js
-  ! Cache-Control
-  Cache-Control: public, max-age=31536000, immutable
 /budget-table.js
   ! Cache-Control
   Cache-Control: public, max-age=31536000, immutable

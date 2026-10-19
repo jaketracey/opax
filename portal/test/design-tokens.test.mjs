@@ -153,7 +153,6 @@ const TYPE_BASELINE = {
   'graph/map3d-engine.ts': 2,
   'graph/words.ts': 3,
   'public/app.js': 2,
-  'public/ballot.css': 2,
   'public/matrix.js': 1,
   'public/quiz.js': 4,
   'public/st-test.html': 1,

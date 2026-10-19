@@ -29,4 +29,4 @@ node --test portal/test/grants-map.test.mjs portal/test/grants-research.test.mjs
 
 The data validators reconcile unique records, source evidence, dates, location status and record-based totals. Fresh acquisition validation may also compare archived original notices. New records must have `record_type`, record and site `verification.status = verified`, finite coordinates, original source URLs, checked dates and evidence hashes. Keep pending candidates in the enrichment queue until verified.
 
-Build your ballot is a separate `/explore?game=ballot` module using the AEC-sourced 2025 House candidates already in the electorate exports. It keeps the original candidate order, lets the reader arrange preferences, and downloads an explicitly historical practice plan. Preferences stay in module memory; the feature makes no candidate recommendations or paid model calls.
+Build your ballot (a 2025 House practice ballot at `/explore?game=ballot`) came off the web on 19 Oct 2026; that address now 301s to `/explore`. The electorate exports it read still serve unchanged, because the apps' electorate screens (and their Ballot screen, until the next app build) read them.

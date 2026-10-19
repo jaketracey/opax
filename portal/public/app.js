@@ -9493,7 +9493,7 @@ document.querySelector(".about-index")?.addEventListener("click", (event) => {
 // Both are standalone lazy modules with a mount/destroy contract; the page
 // only owns the toggle. Modules are mounted once and kept alive per session.
 
-const explore = { ballot: null, tm: null, tide: null, quiz: null, ledger: null, grants: null, matrix: null, wd: null, tvn: null };
+const explore = { tm: null, tide: null, quiz: null, ledger: null, grants: null, matrix: null, wd: null, tvn: null };
 
 
 async function openExplain(detail) {
@@ -9516,7 +9516,6 @@ document.addEventListener("click", (e) => {
 document.addEventListener("opax:explain", (e) => openExplain(e.detail));
 
 const GAMES = {
-  ballot: { name: "Build your ballot", dialog: "dialog-ballot", body: "explore-ballot", module: "/ballot.js?v=4816bcedab", mount: "mountBallot" },
   tm: { name: "Time machine", dialog: "dialog-tm", body: "explore-tm", module: "/timemachine.js?v=dcaa4b037b", mount: "mountTimeMachine" },
   tide: { name: "The tide", dialog: "dialog-tide", body: "explore-tide", module: "/tide.js", mount: "mountTide" },
   quiz: { name: "The record quiz", dialog: "dialog-quiz", body: "explore-quiz", module: "/quiz.js?v=6547d155f0", mount: "mountQuiz" },
@@ -9563,7 +9562,6 @@ async function openGame(which, params = null) {
   }
 }
 
-$("explore-ballot-btn").addEventListener("click", () => openGame("ballot"));
 $("explore-tm-btn").addEventListener("click", () => openGame("tm"));
 $("explore-tide-btn").addEventListener("click", () => openGame("tide"));
 $("explore-quiz-btn").addEventListener("click", () => openGame("quiz"));

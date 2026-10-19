@@ -4857,6 +4857,12 @@ async function canonicalRoutePath(url: URL, env: Env): Promise<string> {
   }
   return url.pathname
 }
+/** Explore tools taken off the site: Build your ballot (19 Oct). Bookmarks and the
+ *  apps' share links (/explore?game=ballot) land on Interactive tools. */
+const RETIRED_TOOLS = new Set(['ballot'])
+function retiredToolAddress(url: URL): boolean {
+  return url.pathname.replace(/\/+$/,'')==='/explore' && RETIRED_TOOLS.has(url.searchParams.get('game') ?? '')
+}
 async function pageAliasRedirect(request: Request, url: URL, env: Env): Promise<Response | null> {
   if(missingEntitySlug(url.pathname)) return null
   if(!['GET','HEAD'].includes(request.method) || url.pathname.startsWith('/api/') || url.pathname.startsWith('/ingest/') || url.pathname==='/mcp' || url.pathname.startsWith('/og/')) return null
@@ -4868,6 +4874,7 @@ async function pageAliasRedirect(request: Request, url: URL, env: Env): Promise<
   }
   // Only page paths participate; assets retain their existing cache/serving path.
   if(/\.[a-z0-9]+$/i.test(url.pathname) && !url.pathname.endsWith('.html')) return canonicalPageRedirect(request,env.COMMUNITY_ORIGIN)
+  if(retiredToolAddress(url)) return new Response(null,{status:301,headers:{location:`${SITE_ORIGIN}/explore`,'cache-control':'public, max-age=86400'}})
   const path=await canonicalRoutePath(url,env)
   const host=canonicalPageRedirect(request,env.COMMUNITY_ORIGIN)
   if(!host && path===url.pathname) return null

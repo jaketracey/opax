@@ -162,7 +162,6 @@ export const MODULE_STAMPS = [
   ['money-connections.js', 'donor-disclosure.js'], ['money-connections.js', 'canonical-urls.js'], ['money-connections.js', 'datatable.js'],
   ['map-research.js','datatable.js'],
   ['map-research.js','money-connections.js'],
-  ['ballot.js', 'canonical-urls.js'],
   ['electorates.js', 'canonical-urls.js'],
   // The electoral authorisation: a cached old vic-election.js would draw the old block.
   ['vic-election.js', 'authorisation.js'], ['electorates.js', 'vic-election.js'],
@@ -195,7 +194,7 @@ export const MODULE_STAMPS = [
   ['app.js', 'money-explain.js'], ['money-explain.js', 'donor-views.js'],
   ['money-explain.js', 'labels.js'], ['money-explain.js', 'canonical-urls.js'],
   // The Explore tools and the loaders, restyled on tokens in pass 4G.
-  ['app.js', 'ballot.js'], ['app.js', 'grants.js'], ['app.js', 'ledger.js'], ['app.js', 'matrix.js'], ['app.js', 'wordsdollars.js'],
+  ['app.js', 'grants.js'], ['app.js', 'ledger.js'], ['app.js', 'matrix.js'], ['app.js', 'wordsdollars.js'],
   ['app.js', 'thenvsnow.js'], ['app.js', 'stages.js'], ['app.js', 'wombat.js'], ['app.js', 'ask-steps.js'],
   ['home.js', 'home-data.js'], ['home.js', 'electorates.js'], ['home.js', 'money-map.js'],
 ]
