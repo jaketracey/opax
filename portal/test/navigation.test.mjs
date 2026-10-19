@@ -119,11 +119,10 @@ const TRAILS = [
   ['/subject/topic', 'Topics A–Z'],
   ['/subject/topic/housing', 'Topics A–Z › Housing'],
   ['/explore', 'Interactive tools'],
-  // The six reports are published only with REPORTS_ENABLED; the grants explorer stays either way.
+  // The reports (grants-allocation included) are published only with REPORTS_ENABLED.
   ['/reports', 'Reports', { REPORTS_ENABLED: 'true' }],
   ['/reports/housing', 'Reports › Housing', { REPORTS_ENABLED: 'true' }],
   ['/reports/grants-allocation', 'Reports › Where community funding goes', { REPORTS_ENABLED: 'true' }],
-  ['/reports/grants-allocation', 'Where community funding goes'],
   ['/about', 'About OPAX'],
   ['/methods', 'About OPAX › Methods & how to cite'],
   ['/stats', 'About OPAX › Sources & coverage'],

@@ -152,7 +152,7 @@ const probes = {
       researchOption: Boolean(doc.querySelector('option[value="report"]')),
       published: window.OpaxNavigation.published('reports'),
       trail: window.OpaxNavigation.trail('/reports/climate').map(s => s.label).join(' › '),
-      kept: window.OpaxNavigation.trail('/reports/grants-allocation').map(s => s.label).join(' › '),
+      grants: window.OpaxNavigation.trail('/reports/grants-allocation', 'Where community funding goes').map(s => s.label).join(' › '),
     };
   },
   // The sheet: open, Tab held inside, a group folding, Escape closing it and focus going home.

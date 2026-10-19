@@ -80,8 +80,7 @@ export function mountGrantsResearch(root,{focus=false}={}) {
     ]); [data,locations,historyData]=results;
   } catch { if(!destroyed)root.innerHTML='<p role="alert">The grant records could not be loaded. Please reload to try again.</p>';return instance; }
   if(destroyed || root.closest('[hidden]'))return;
-  // Without the six reports (REPORTS_ENABLED off) this page stands on its own.
-  document.title=globalThis.OpaxNavigation?.published?.('reports')===false?'Where community funding goes · OPAX':'Where community funding goes · Reports · OPAX';
+  document.title='Where community funding goes · Reports · OPAX';
   root.innerHTML=`<div class="allocation-intro"><h1 tabindex="-1">Where community funding goes</h1><p>See what a grant was for, who it was awarded to and where the project is.</p></div>
     <section class="allocation-start" aria-label="Start with a real project"><h2>Start with a real project</h2><div id="allocation-examples"></div></section>
     <section class="allocation-explorer" aria-label="Find community funding">

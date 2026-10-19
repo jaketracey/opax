@@ -64,11 +64,10 @@
           page('/subject/topic', 'Topics A–Z', 'Every debate in the record, by subject.'),
           page('/explore', 'Interactive tools', 'Time machine, the tide, the record quiz and more.'),
         ] },
-        // Each report keeps the title its own page gives it. The six standing
-        // reports are published only where the Worker marks them (REPORTS_ENABLED);
-        // the grants explorer stays either way.
+        // Each report keeps the title its own page gives it. The reports are
+        // published only where the Worker marks them (REPORTS_ENABLED).
         { heading: 'Reports', compact: true, section: page('/reports', 'Reports', '', { gate: 'reports' }), more: 'All reports', links: [
-          page('/reports/grants-allocation', 'Where community funding goes', '', { record: true }),
+          page('/reports/grants-allocation', 'Where community funding goes', '', { record: true, gate: 'reports' }),
           page('/reports/climate', 'Climate & Energy', '', { record: true, gate: 'reports' }),
           page('/reports/gambling', 'Gambling', '', { record: true, gate: 'reports' }),
           page('/reports/housing', 'Housing', '', { record: true, gate: 'reports' }),
@@ -116,8 +115,6 @@
   const UNDER_ABOUT = new Set(['/methods', '/stats', '/expenses', '/privacy', '/support', '/community']);
 
   const menuPages = groups.flatMap(g => g.columns.flatMap(c => [...c.links, ...(c.section ? [c.section] : [])]));
-  // A record page in a column with a section page of its own (a report in Reports).
-  const recordPages = new Map(groups.flatMap(g => g.columns.flatMap(c => c.section ? c.links.filter(l => l.record).map(l => [l.href, { page: l, section: c.section }]) : [])));
   const sectionPages = new Map([...menuPages, ...footerOnly].filter(p => !p.record).map(p => [p.href, p]));
   // Compatibility view for callers that read one flat list per group: [href, label, blurb].
   const sections = groups.map(g => ({ id: g.id, label: g.label, children: g.columns.flatMap(c => c.links).map(l => [l.href, l.label, l.blurb]) }));
@@ -156,10 +153,6 @@
     if (path === '/explore' && params.get('game')) return { section: sectionPages.get('/explore') };
     const exact = sectionPages.get(path);
     if (exact && !withheld(exact)) return { page: exact, parent: UNDER_ABOUT.has(path) ? sectionPages.get('/about') : null };
-    // A record kept while its section page is withheld (the grants explorer
-    // without Reports) stands as a page of its own.
-    const record = recordPages.get(path);
-    if (record && withheld(record.section) && !withheld(record.page)) return { page: record.page };
     // Otherwise the longest section the address sits under: /reports/housing in
     // Reports, /money/grants/federal/recipient/… in Grants.
     let best = null;

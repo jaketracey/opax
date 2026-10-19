@@ -4,6 +4,7 @@ import {readFile} from 'node:fs/promises';
 import {searchCatalog,matchesCatalogFilters} from '../src/catalog-search.ts';
 import {tokens,normalize,bucket} from '../src/catalog-query.mjs';
 import {programRecord,programKey} from '../../scripts/build_search_catalog.mjs';
+import {reportsPublished} from '../../scripts/reports_flag.mjs';
 const assets={fetch:async request=>{
  const path=new URL(request.url).pathname;
  assert.match(path,/^\/search-catalog\/(manifest\.json|[a-f0-9]{16}\/(meta|terms-\d+|records-\d+)\.json)$/);
@@ -20,7 +21,9 @@ test('published index covers financial records alongside people, bills and regis
  const manifest=JSON.parse(await readFile(new URL('../public/search-catalog/manifest.json',import.meta.url)));
  const suppliers=JSON.parse(await readFile(new URL('../public/suppliers.json',import.meta.url)));
  assert.ok(manifest.counts.contract>=suppliers.meta.contract_count);
- for(const kind of ['person','agency','donor','receipt','grant','bill','interest','expense','access','campaigner','report'])assert.ok(manifest.counts[kind]>0,kind);
+ // Report rows (the reports and the grants-allocation research) follow REPORTS_ENABLED.
+ for(const kind of ['person','agency','donor','receipt','grant','bill','interest','expense','access','campaigner',...(reportsPublished()?['report']:[])])assert.ok(manifest.counts[kind]>0,kind);
+ if(!reportsPublished())assert.equal(manifest.counts.report,undefined);
 });
 test('an organisation is found in donors, receipts, contracts and grants',async()=>{
  for(const kind of ['donor','receipt','contract','grant']){
@@ -66,6 +69,8 @@ test('new agency profiles are discoverable with their direct destination',async(
 });
 
 test('verified invitation venues are searchable and open their own funding stage',async()=>{
+ // They open the grants-allocation explorer, so they are searchable only while the reports are published.
+ if(!reportsPublished()){assert.equal((await find('Jabiru Lingiari',{kind:'report'})).total,0);return;}
  const result=await find('Jabiru Lingiari',{kind:'report'});
  const rows=result.results.filter(r=>['mlci-invitation-067','mlci-invitation-070'].includes(r.record_id));
  assert.equal(rows.length,2);
