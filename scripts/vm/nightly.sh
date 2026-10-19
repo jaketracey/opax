@@ -270,6 +270,9 @@ if ! command -v uv >/dev/null; then fail "uv not found on PATH (~/.local/bin): c
 if ! run timeout "${OPAX_UV_SYNC_TIMEOUT:-15m}" uv sync --frozen; then
   fail "uv sync --frozen failed: the Python environment does not match uv.lock, so no step ran tonight (see the log)"; finish
 fi
+# Node/build helpers spawn bare python3 too; inherit the same locked environment
+# as the explicit $PY calls instead of silently selecting /usr/bin/python3.
+export PATH="$REPO/.venv/bin:$PATH"
 
 # the last line matching $2 inside the LAST run block of a step log ($1 = daily.log or weekly.log): the logs only
 # ever grow, and last night's "Stale ..." line must not be reported again tonight

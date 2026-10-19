@@ -7,6 +7,7 @@
 # (scripts/vm/export_people.sh reads the members table with the sqlite3 CLI; without it the weekly
 # scenarios fail.)
 # OPAX_TEST_FOCUS=evidence-alerts runs only the enabled-build alert/deferral scenarios.
+# OPAX_TEST_FOCUS=python-environment requires Node and tests its Python child environment.
 #
 # Nothing here touches the network, the real knowledge box, GitHub or the real repo:
 # a throwaway HOME, a bare git repo as "origin", a fake daily_refresh.sh and a knowledge-box
@@ -38,6 +39,7 @@ export OPAX_TODAY=2026-10-10
 export OPAX_SENATE_VIDEO=0
 BASE_TOTAL=$(python3 -c "import json; print(json.load(open('$SRC/portal/public/corpus.json'))['expected_resources'])")
 BASE_SPEECH=$(python3 -c "import json; print(json.load(open('$SRC/portal/public/corpus.json'))['collected_speeches'])")
+REAL_NODE="${OPAX_TEST_REAL_NODE:-$(command -v node || true)}"
 
 # --- sandbox ---------------------------------------------------------------------------
 new_sandbox() {
@@ -443,6 +445,53 @@ evidence_alert_scenarios() {
   fixture_watchdog
   check "watchdog remains green and reports the busy deferral" bash -c "[ '$WRC' -eq 0 ] && grep -q '::warning::evidence: bundle build deferred (rc=75;' '$SB/watchdog.out' && ! grep -q '::error::' '$SB/watchdog.out'"
 }
+
+python_environment_scenario() {
+  echo "== Node gate children inherit the locked project Python environment"
+  if [ -z "$REAL_NODE" ]; then
+    if [ "${OPAX_TEST_FOCUS:-}" = python-environment ]; then bad "Node is required for the Python environment regression";
+    else echo "  skip Node/Python child regression: Node is not installed"; fi
+    return
+  fi
+  new_sandbox python_environment
+  mkdir -p "$REPO/portal/node_modules" "$REPO/portal/test" "$REPO/.venv/gate-fixture"
+  printf 'value = "project-only dependency"\n' > "$REPO/.venv/gate-fixture/opax_gate_project_only.py"
+  cat > "$REPO/.venv/bin/python3" <<'PYENVEOF'
+#!/bin/sh
+# Only this project interpreter can import the fixture dependency; no global install.
+export PYTHONPATH="$OPAX_REPO/.venv/gate-fixture"
+exec "$OPAX_REPO/.venv/bin/python" "$@"
+PYENVEOF
+  chmod +x "$REPO/.venv/bin/python3"
+  check "fixture dependency is absent from the system interpreter" bash -c "! '$REPO/.venv/bin/python' -c 'import opax_gate_project_only' 2>/dev/null"
+  cp "$SB/bin/node" "$SB/bin/node-base"
+  cat > "$SB/bin/node" <<'NODEPYEOF'
+#!/bin/bash
+if [ "$1" != --test ]; then exec "$OPAX_TEST_NODE_BASE" "$@"; fi
+echo "node $*" >> "$HOME/node.calls"
+# Exercise the actual Node -> execFileSync('python3') boundary that failed on the VM.
+exec "$OPAX_TEST_REAL_NODE" -e '
+const assert=require("node:assert/strict"), {execFileSync}=require("node:child_process"), fs=require("node:fs"), path=require("node:path");
+const proof=JSON.parse(execFileSync("python3",["-c","import json,shutil,opax_gate_project_only; print(json.dumps(dict(python=shutil.which(\"python3\"),dependency=opax_gate_project_only.value)))"],{encoding:"utf8"}));
+assert.equal(proof.python,path.join(process.env.OPAX_REPO,".venv/bin/python3"));
+assert.equal(proof.dependency,"project-only dependency");
+fs.writeFileSync(path.join(process.env.HOME,"gate-python.json"),JSON.stringify(proof));
+'
+NODEPYEOF
+  chmod +x "$SB/bin/node"
+  OPAX_TEST_REAL_NODE="$REAL_NODE" OPAX_TEST_NODE_BASE="$SB/bin/node-base" \
+    OPAX_FORCE_GROUPS=weekly FAKE_WEEKLY_MODE=ok nightly
+  check "real Node child selects project python3 and imports its dependency" bash -c "python3 -c 'import json; p=json.load(open(\"$HOME/gate-python.json\")); assert p=={\"python\":\"$REPO/.venv/bin/python3\",\"dependency\":\"project-only dependency\"}, p'"
+  check "Python environment gate publishes a successful nightly" bash -c "[ '$NRC' -eq 0 ] && git --git-dir='$ORIGIN' show nightly-status:status.json | python3 -c 'import json,sys; s=json.load(sys.stdin); assert s[\"status\"]==\"ok\" and not s[\"failures\"], s'"
+  check "weekly export survives the gate and publication clears its retry debt" bash -c "git --git-dir='$ORIGIN' show main:portal/public/speakers.json | python3 -c 'import json,sys; assert len(json.load(sys.stdin))==101' && python3 -c 'import json; s=json.load(open(\"$HOME/.cache/autoresearch/pipeline/periodic-refresh-v1.json\")); assert \"due\" not in s[\"groups\"][\"weekly\"] and s[\"groups\"][\"weekly\"][\"last_success\"], s'"
+}
+
+if [ "${OPAX_TEST_FOCUS:-}" = python-environment ]; then
+  python_environment_scenario
+  echo "passed $PASS, failed $FAILN"
+  [ "$FAILN" -eq 0 ]
+  exit $?
+fi
 
 if [ "${OPAX_TEST_FOCUS:-}" = evidence-alerts ]; then
   evidence_alert_scenarios
@@ -1366,6 +1415,7 @@ check "nightly pauses exit 0 and status contains both paused sources" bash -c "[
 check "a refused bill source retains the published bill while votes refresh" bash -c "git --git-dir='$ORIGIN' show main:portal/public/bills/au-federal-t1.json | python3 -c 'import json,sys; assert json.load(sys.stdin)[\"status_as_of\"]==\"2026-09-01\"' && git --git-dir='$ORIGIN' show main:portal/public/votes.json | python3 -c 'import json,sys; assert \"9999\" in json.load(sys.stdin)'"
 
 evidence_alert_scenarios
+python_environment_scenario
 
 echo "passed $PASS, failed $FAILN"
 [ "$FAILN" -eq 0 ]
