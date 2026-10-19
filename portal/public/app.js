@@ -72,6 +72,15 @@ let liveStats = null; // /api/stats
 let suggestions = []; // /suggestions.json
 let featuredSuggestions = [];
 let reportsIndex = null;
+// The standing reports are published only where the Worker marks them
+// (<html data-nav-gates="… reports">, REPORTS_ENABLED in wrangler.jsonc).
+// Otherwise the shell's reports-only copy goes, and no view, link or request
+// names them: their addresses are the server's not-found page.
+const reportsPublished = () => globalThis.OpaxNavigation?.published?.("reports") === true;
+if (!reportsPublished()) for (const el of document.querySelectorAll("[data-reports-only]")) el.remove();
+// The grants explorer at /reports/grants-allocation is not one of them: it
+// stays either way, as a page of its own while Reports is withheld.
+const KEPT_REPORT = "grants-allocation";
 // `key` is the search identity (query + filters, no page, no sort): it says
 // whether a run is a new result set or another page of the one on screen.
 let lastSearch = {
@@ -2050,14 +2059,14 @@ async function route() {
     document.title = TITLES.discover;
     setCrumbs(crumbsFor("/money/contracts"));
     renderDiscoveryPage(params, manageFocus);
-  } else if (view === "reports") {
+  } else if (view === "reports" && (reportsPublished() || segs[1] === KEPT_REPORT && segs.length === 2)) {
     showPanel("reports");
     document.title = TITLES.reports;
     if (segs[1]) {
       // The index (when loaded) has the title; the slug stands in until the
       // report itself arrives and openReport sets the real one.
       const known = reportsIndex?.find((r) => r.slug === segs[1]);
-      setCrumbs(crumbsFor("/reports", known?.title || segs[1].replace(/-/g, " ").replace(/^./, (c) => c.toUpperCase())));
+      setCrumbs(reportsPublished() ? crumbsFor("/reports", known?.title || segs[1].replace(/-/g, " ").replace(/^./, (c) => c.toUpperCase())) : crumbsFor(herePath));
       openReport(segs[1], segs[3] ? Number(segs[3]) : null, manageFocus);
     } else {
       setCrumbs(crumbsFor("/reports"));
@@ -13495,6 +13504,7 @@ $("doc-profile").addEventListener("click", () => {
 // their own empty states.
 let reportsIndexPromise = null;
 function loadReportsIndex() {
+  if (!reportsPublished()) return Promise.resolve(reportsIndex = []);
   reportsIndexPromise ??= api("/reports/index.json")
     .then((d) => (reportsIndex = d.reports || []))
     .catch(() => null);
@@ -14803,8 +14813,8 @@ async function openReport(slug, sectionNum, manageFocus) {
     if (!root) { root = document.createElement('div'); root.id = 'report-research'; $('reports-index').after(root); }
     root.hidden = false;
     currentReportSlug = null;
-    setCrumbs(crumbsFor('/reports', 'Where community funding goes'));
-    const { mountGrantsResearch } = await import('/grants-research.js?v=20260911-clear-projects');
+    setCrumbs(reportsPublished() ? crumbsFor('/reports', 'Where community funding goes') : crumbsFor('/reports/grants-allocation'));
+    const { mountGrantsResearch } = await import('/grants-research.js?v=20261019-reports-off');
     if (grantsGeneration !== grantsResearchGeneration || !hereRoute().startsWith('/reports/grants-allocation')) return;
     grantsResearchHandle = mountGrantsResearch(root,{focus:manageFocus});
     await grantsResearchHandle.ready;

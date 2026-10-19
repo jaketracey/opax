@@ -80,7 +80,9 @@ test('every menu, footer and shortcut link is a page the Worker serves', async (
     // New coverage lanes remain staged until orchestrator promotion.
     const fixtures = href === '/register/government-finance' ? {'/government-finance/data.json': JSON.parse(readFileSync(new URL('../../data/staged/abs-gfs/hub.json',import.meta.url),'utf8'))}
       : href === '/register/tax-expenditures' ? {'/tax-expenditures/data.json': JSON.parse(readFileSync(new URL('../../data/staged/tax-expenditures/hub.json',import.meta.url),'utf8'))} : {};
-    const response = await workerFetch(href, {}, {}, {assets:fixtures});
+    // A link behind the reports gate is drawn only where they are published (REPORTS_ENABLED).
+    const env = menuLinks.some(l => l.href === href && l.gate === 'reports') ? { REPORTS_ENABLED: 'true' } : {};
+    const response = await workerFetch(href, env, {}, {assets:fixtures});
     assert.equal(response.status, 200, href);
     await response.arrayBuffer();
   }
@@ -117,8 +119,11 @@ const TRAILS = [
   ['/subject/topic', 'Topics A–Z'],
   ['/subject/topic/housing', 'Topics A–Z › Housing'],
   ['/explore', 'Interactive tools'],
-  ['/reports', 'Reports'],
-  ['/reports/housing', 'Reports › Housing'],
+  // The six reports are published only with REPORTS_ENABLED; the grants explorer stays either way.
+  ['/reports', 'Reports', { REPORTS_ENABLED: 'true' }],
+  ['/reports/housing', 'Reports › Housing', { REPORTS_ENABLED: 'true' }],
+  ['/reports/grants-allocation', 'Reports › Where community funding goes', { REPORTS_ENABLED: 'true' }],
+  ['/reports/grants-allocation', 'Where community funding goes'],
   ['/about', 'About OPAX'],
   ['/methods', 'About OPAX › Methods & how to cite'],
   ['/stats', 'About OPAX › Sources & coverage'],
@@ -150,9 +155,9 @@ function assertSameTrail({ items, breadcrumbs, canonical }, path) {
   assert.equal(breadcrumbs.at(-1).item, canonical, `${path}: the page itself is its canonical`);
 }
 
-for (const [path, expected] of TRAILS) {
-  test(`the server writes the trail for ${path}, and its BreadcrumbList says the same`, async () => {
-    const page = await serverTrail(path);
+for (const [path, expected, env] of TRAILS) {
+  test(`the server writes the trail for ${path}${env ? ' (reports on)' : ''}, and its BreadcrumbList says the same`, async () => {
+    const page = await serverTrail(path, env);
     const { items } = page;
     assert.equal(items.map(i => i.label).join(' › '), `Home › ${expected}`);
     assert.equal(items[0].href, '/');

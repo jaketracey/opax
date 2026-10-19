@@ -3,6 +3,10 @@ interface Env {
   TABLE_DB: D1Database
   /** Publication waits for Jake's election authorisation decision. Exact "true" only. */
   VIC_ELECTION_HUB_ENABLED?: string
+  /** The six standing reports (src/reports-gate.ts). Exact "true" publishes them; anything else keeps them off. */
+  REPORTS_ENABLED?: string
+  /** While the reports are off, the installed apps still read their data files (src/reports-gate.ts). Exact "true". */
+  REPORTS_APP_DATA?: string
   AUTHORISATION_LINE?: string
   CORRECTION_CONTACT?: string
   /** Minimum native app version; absent/invalid defaults to 0.0.0 (never blocks). Raising it is Jake's deliberate update lever. */

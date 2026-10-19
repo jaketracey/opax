@@ -3,6 +3,7 @@ import {readFile, writeFile, readdir, mkdir, rm, copyFile} from 'node:fs/promise
 import {spawn} from 'node:child_process';
 import {join, resolve, dirname} from 'node:path';
 import {fileURLToPath} from 'node:url';
+import {reportsPublished} from './reports_flag.mjs';
 
 const repo = fileURLToPath(new URL('../', import.meta.url));
 export const CACHED_BUILDS = {
@@ -43,6 +44,9 @@ export async function buildCacheKey(name, root = repo) {
   // risk missing a dependency. Its own outputs must never feed its key.
   const paths = (await files(root, spec.inputs)).filter(path => !inside(path, spec.outputs) && /\.(?:json|[cm]?js|ts|mts|css)$/.test(path));
   for (const path of paths) hash.update(path + '\0').update(digest(await readFile(join(root, path))) + '\n');
+  // wrangler.jsonc is not an input file (its epoch moves nightly), but the crawl
+  // files follow its reports switch, so a flipped switch is a different build.
+  if (name === 'crawl') hash.update(`reports:${reportsPublished(root)}\n`);
   return hash.digest('hex');
 }
 

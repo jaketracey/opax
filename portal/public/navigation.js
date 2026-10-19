@@ -58,21 +58,23 @@
           page('/connections', 'Programs & places', 'Where organisations, programs and places meet.'),
         ] },
       ] },
-    { id: 'research', label: 'Topics & reports', href: '/reports', sub: 'Debates by subject and sourced reports',
+    { id: 'research', label: 'Topics & reports', href: '/subject/topic', sub: 'Debates by subject and sourced reports',
       intro: 'The debate by subject, and long reads built on the record.', columns: [
         { heading: 'Topics', links: [
           page('/subject/topic', 'Topics A–Z', 'Every debate in the record, by subject.'),
           page('/explore', 'Interactive tools', 'Time machine, the tide, the record quiz and more.'),
         ] },
-        // Each report keeps the title its own page gives it.
-        { heading: 'Reports', compact: true, section: page('/reports', 'Reports'), more: 'All reports', links: [
+        // Each report keeps the title its own page gives it. The six standing
+        // reports are published only where the Worker marks them (REPORTS_ENABLED);
+        // the grants explorer stays either way.
+        { heading: 'Reports', compact: true, section: page('/reports', 'Reports', '', { gate: 'reports' }), more: 'All reports', links: [
           page('/reports/grants-allocation', 'Where community funding goes', '', { record: true }),
-          page('/reports/climate', 'Climate & Energy', '', { record: true }),
-          page('/reports/gambling', 'Gambling', '', { record: true }),
-          page('/reports/housing', 'Housing', '', { record: true }),
-          page('/reports/immigration', 'Immigration', '', { record: true }),
-          page('/reports/indigenous', 'First Nations', '', { record: true }),
-          page('/reports/media', 'Media Ownership', '', { record: true }),
+          page('/reports/climate', 'Climate & Energy', '', { record: true, gate: 'reports' }),
+          page('/reports/gambling', 'Gambling', '', { record: true, gate: 'reports' }),
+          page('/reports/housing', 'Housing', '', { record: true, gate: 'reports' }),
+          page('/reports/immigration', 'Immigration', '', { record: true, gate: 'reports' }),
+          page('/reports/indigenous', 'First Nations', '', { record: true, gate: 'reports' }),
+          page('/reports/media', 'Media Ownership', '', { record: true, gate: 'reports' }),
           page('/audit', 'Queensland audit reports'),
         ] },
       ] },
@@ -114,6 +116,8 @@
   const UNDER_ABOUT = new Set(['/methods', '/stats', '/expenses', '/privacy', '/support', '/community']);
 
   const menuPages = groups.flatMap(g => g.columns.flatMap(c => [...c.links, ...(c.section ? [c.section] : [])]));
+  // A record page in a column with a section page of its own (a report in Reports).
+  const recordPages = new Map(groups.flatMap(g => g.columns.flatMap(c => c.section ? c.links.filter(l => l.record).map(l => [l.href, { page: l, section: c.section }]) : [])));
   const sectionPages = new Map([...menuPages, ...footerOnly].filter(p => !p.record).map(p => [p.href, p]));
   // Compatibility view for callers that read one flat list per group: [href, label, blurb].
   const sections = groups.map(g => ({ id: g.id, label: g.label, children: g.columns.flatMap(c => c.links).map(l => [l.href, l.label, l.blurb]) }));
@@ -151,11 +155,15 @@
     if (path.startsWith('/bill/')) return { section: sectionPages.get('/bills') };
     if (path === '/explore' && params.get('game')) return { section: sectionPages.get('/explore') };
     const exact = sectionPages.get(path);
-    if (exact) return { page: exact, parent: UNDER_ABOUT.has(path) ? sectionPages.get('/about') : null };
+    if (exact && !withheld(exact)) return { page: exact, parent: UNDER_ABOUT.has(path) ? sectionPages.get('/about') : null };
+    // A record kept while its section page is withheld (the grants explorer
+    // without Reports) stands as a page of its own.
+    const record = recordPages.get(path);
+    if (record && withheld(record.section) && !withheld(record.page)) return { page: record.page };
     // Otherwise the longest section the address sits under: /reports/housing in
     // Reports, /money/grants/federal/recipient/… in Grants.
     let best = null;
-    for (const p of sectionPages.values()) if (path.startsWith(p.href + '/') && (!best || p.href.length > best.href.length)) best = p;
+    for (const p of sectionPages.values()) if (!withheld(p) && path.startsWith(p.href + '/') && (!best || p.href.length > best.href.length)) best = p;
     return best ? { section: best } : null;
   }
   /** The trail after Home for an address ("/path?query"): [{ label, href? }].
@@ -193,9 +201,15 @@
   }
 
   // --- gates: optional sections published on some deployments only -----------
-  // The Worker marks the ones it knows (<html data-nav-gates="vic-election">);
+  // The Worker marks the ones it knows (<html data-nav-gates="vic-election reports">);
   // the instruments catalogue and the estimates round are read from their data.
-  const gates = { instruments: false, 'vic-election': false, estimates: false };
+  const gates = { instruments: false, 'vic-election': false, estimates: false, reports: false };
+  // In a page, a section the Worker withholds names no step of a trail: its
+  // addresses are not-found pages there. (The server's own trails are drawn only
+  // for pages it serves, so it never asks.)
+  const withheld = p => p.gate === 'reports' && typeof document !== 'undefined' && !gates.reports;
+  /** Whether this page's deployment publishes an optional section (a Worker-marked gate). */
+  const published = name => Boolean(gates[name]);
   const gateWaiters = [];
   function openGate(name, href) {
     if (gates[name] && (!href || gates[name] === href)) return;
@@ -256,7 +270,7 @@
     return '';
   }
   function panelHTML(group, links) {
-    const cols = group.columns.map(col => `<div class="nav-col${col.compact ? ' nav-col-compact' : ''}"><p class="nav-col-h">${esc(col.heading)}</p><ul class="nav-links" role="list">${col.links.filter(links).map(l => itemHTML(l, () => `${linkHTML(l, 'nav-item-link')}<span class="nav-item-title">${esc(l.label)}</span>${l.blurb && !col.compact ? `<span class="nav-item-blurb">${esc(l.blurb)}</span>` : ''}</a>`)).join('')}</ul>${col.section ? `<a class="nav-all" href="${col.section.href}">${esc(col.more)}${ARROW}</a>` : ''}</div>`).join('');
+    const cols = group.columns.map(col => `<div class="nav-col${col.compact ? ' nav-col-compact' : ''}"><p class="nav-col-h">${esc(col.heading)}</p><ul class="nav-links" role="list">${col.links.filter(links).map(l => itemHTML(l, () => `${linkHTML(l, 'nav-item-link')}<span class="nav-item-title">${esc(l.label)}</span>${l.blurb && !col.compact ? `<span class="nav-item-blurb">${esc(l.blurb)}</span>` : ''}</a>`)).join('')}</ul>${col.section && visible(col.section) ? `<a class="nav-all" href="${col.section.href}">${esc(col.more)}${ARROW}</a>` : ''}</div>`).join('');
     return `<div class="wrap nav-panel-inner"><div class="nav-intro"><p class="nav-intro-title">${esc(group.label)}</p><p class="nav-intro-text">${esc(group.intro)}</p></div>${cols}<div class="nav-feature-slot" data-feature="${group.feature || ''}">${featureHTML(group)}</div></div>`;
   }
   const desktopHTML = (links) => groups.map(g => `<li class="nav-group" data-group="${g.id}"><button type="button" class="nav-trigger" data-nav-trigger="${g.id}" aria-expanded="false" aria-controls="menu-${g.id}">${esc(g.label)}${CARET}</button><div class="nav-panel" id="menu-${g.id}" data-group="${g.id}" hidden>${panelHTML(g, links)}</div></li>`).join('');
@@ -264,7 +278,7 @@
     + `<section class="sheet-start" aria-labelledby="sheet-start-h"><h2 class="sheet-kicker" id="sheet-start-h">Start here</h2><ul class="sheet-chips" role="list">${shortcuts.filter(links).map(s => s.week
       ? `<li><a class="sheet-chip" data-week href="${esc(week ? week.href : s.href)}">${esc(s.label)}</a></li>`
       : itemHTML(s, () => `<a class="sheet-chip" href="${esc(hrefOf(s))}">${esc(s.label)}</a>`)).join('')}</ul></section>`
-    + `<div class="sheet-groups">${groups.map(g => `<section class="sheet-group" data-group="${g.id}"><h2 class="sheet-group-h"><button type="button" class="sheet-group-toggle" aria-expanded="false" aria-controls="sheet-${g.id}"><span class="sheet-group-text"><span class="sheet-group-label">${esc(g.label)}</span><span class="sheet-group-sub">${esc(g.sub)}</span></span>${CARET}</button></h2><div class="sheet-group-body" id="sheet-${g.id}" hidden>${g.columns.map(col => `<p class="sheet-col-h">${esc(col.heading)}</p><ul class="sheet-links" role="list">${col.links.filter(links).map(l => itemHTML(l, () => `${linkHTML(l, 'sheet-link')}${esc(l.label)}</a>`)).join('')}${col.section ? `<li><a class="sheet-link sheet-link-all" href="${col.section.href}">${esc(col.more)}</a></li>` : ''}</ul>`).join('')}</div></section>`).join('')}</div>`
+    + `<div class="sheet-groups">${groups.map(g => `<section class="sheet-group" data-group="${g.id}"><h2 class="sheet-group-h"><button type="button" class="sheet-group-toggle" aria-expanded="false" aria-controls="sheet-${g.id}"><span class="sheet-group-text"><span class="sheet-group-label">${esc(g.label)}</span><span class="sheet-group-sub">${esc(g.sub)}</span></span>${CARET}</button></h2><div class="sheet-group-body" id="sheet-${g.id}" hidden>${g.columns.map(col => `<p class="sheet-col-h">${esc(col.heading)}</p><ul class="sheet-links" role="list">${col.links.filter(links).map(l => itemHTML(l, () => `${linkHTML(l, 'sheet-link')}${esc(l.label)}</a>`)).join('')}${col.section && visible(col.section) ? `<li><a class="sheet-link sheet-link-all" href="${col.section.href}">${esc(col.more)}</a></li>` : ''}</ul>`).join('')}</div></section>`).join('')}</div>`
     + `<p class="sheet-foot">${footerOnly.map(p => `<a href="${p.href}">${esc(p.label)}</a>`).join('')}</p>`;
   /** The footer's site index. `slot: false` (the build's static copy) leaves
    *  closed gates out entirely instead of drawing a slot for them. */
@@ -493,7 +507,7 @@
   // The page's menus are drawn and wired once, however often this script runs.
   const initialised = Symbol.for('opax.navigation.page');
   if (typeof document !== 'undefined' && document[initialised]) return;
-  globalThis.OpaxNavigation = { groups, footerOnly, shortcuts, sections, tools, money, active, trail, moneyNav, mountDesktop, mountDrawer, markCurrent, footerHTML, barHTML, FULL_NAV };
+  globalThis.OpaxNavigation = { groups, footerOnly, shortcuts, sections, tools, money, active, trail, moneyNav, mountDesktop, mountDrawer, markCurrent, footerHTML, barHTML, published, FULL_NAV };
   if (typeof document === 'undefined') return;
   document[initialised] = true;
   for (const name of (document.documentElement.dataset.navGates || '').split(/\s+/)) if (name in gates && name !== 'estimates') gates[name] = true;

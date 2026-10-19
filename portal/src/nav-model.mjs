@@ -3,6 +3,7 @@
 // it prints and for the menus' gates, so the two can never name a page twice.
 import '../public/navigation.js'
 import { vicElectionEnabled } from '../public/vic-election.js'
+import { reportsEnabled } from './reports-gate.ts'
 
 const nav = globalThis.OpaxNavigation
 
@@ -24,5 +25,5 @@ export function pageTrail(address, record = '', { donorNamed = false } = {}) {
 /** The optional sections this deployment publishes, as the menus read them
  *  from <html data-nav-gates>: no request when a menu opens. */
 export function navGates(env) {
-  return [vicElectionEnabled(env.VIC_ELECTION_HUB_ENABLED) ? 'vic-election' : ''].filter(Boolean).join(' ')
+  return [vicElectionEnabled(env.VIC_ELECTION_HUB_ENABLED) ? 'vic-election' : '', reportsEnabled(env.REPORTS_ENABLED) ? 'reports' : ''].filter(Boolean).join(' ')
 }

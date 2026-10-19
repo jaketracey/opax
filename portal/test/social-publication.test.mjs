@@ -358,6 +358,12 @@ test('the bio link opens the latest edition with bio UTMs, home without one',asy
  r=await todayRedirect(h.env,new URL('https://opax.com.au/today?via=Evil%20Thing'),'2026-08-13');assert.equal(new URL(r.headers.get('location')).searchParams.get('utm_source'),'instagram');
  h.sqlite.prepare('INSERT INTO social_editions(date,subject,post_json,created_at) VALUES(?,?,?,?)').run('2026-08-13',post.subject,JSON.stringify({...post,url:'https://evil.example/x'}),'x');
  r=await todayRedirect(h.env,new URL('https://opax.com.au/today'),'2026-08-13');assert.equal(new URL(r.headers.get('location')).origin,'https://opax.com.au');
+ // A topic edition's report while the reports are withdrawn (REPORTS_ENABLED): home instead; published, the report.
+ h.sqlite.prepare('INSERT INTO social_editions(date,subject,post_json,created_at) VALUES(?,?,?,?)').run('2026-08-15','topic:housing',JSON.stringify({...post,date:'2026-08-15',subject:'topic:housing',url:'https://opax.com.au/reports/housing'}),'x');
+ r=await todayRedirect(h.env,new URL('https://opax.com.au/today'),'2026-08-15');to=new URL(r.headers.get('location'));
+ assert.equal(to.pathname,'/');assert.equal(to.searchParams.get('utm_content'),'home');
+ r=await todayRedirect({...h.env,REPORTS_ENABLED:'true'},new URL('https://opax.com.au/today'),'2026-08-15');
+ assert.equal(new URL(r.headers.get('location')).pathname,'/reports/housing');
 });
 test('a program or a month on the grants page shares its own card, never the page\'s generic one',()=>{
  const program={...post,kind:'program',url:'https://opax.com.au/money/grants?jur=federal&program=go6047'};
