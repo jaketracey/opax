@@ -4060,15 +4060,15 @@ function declaredPage(items, partyByName, { category = "", party = "", person = 
   return { items: matches.slice((current - 1) * 20, current * 20), page: current, pages };
 }
 
-let declaredRun = 0;
 async function renderDeclaredPage(params, manageFocus) {
-  const run = ++declaredRun;
+  // A newer render (a filter change, a route) owns the list once it starts.
+  const run = renderDeclaredPage.run = (renderDeclaredPage.run || 0) + 1;
   const root = $("declared-list");
   root.innerHTML = `<div id="declared-loader" class="subject-loader" role="status"></div>`;
   showPageLoader("declared-loader", "Opening the register ledger.");
   await growthModulesReady;
   const [data, roster] = await Promise.all([loadRecentInterests(), loadParliamentarians(), loadPhotoMap()]);
-  if (run !== declaredRun) return;
+  if (run !== renderDeclaredPage.run) return;
   clearPageLoader("declared-loader");
   $("declared-updated").innerHTML = sourceLineHTML({updated:data?.meta?.generated || "",source:"Registers of interests"});
   // No file is an error, not an empty ledger.
