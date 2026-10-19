@@ -1,6 +1,7 @@
 import {formatCell, guardTableURL, type Row} from '../public/datatable.js'
 import {governmentFinanceTableConfig, registerTableHTML} from '../public/register-tables.js'
 import {clearedGovernmentFunctions, spendingByFunction, type GFSFunctionRow} from './government-finance-functions.ts'
+import {governmentFinanceGroupHeading} from './government-finance-groups.ts'
 
 const CC='https://creativecommons.org/licenses/by/4.0/'
 const SOURCE='https://www.abs.gov.au/statistics/economy/government/government-finance-statistics-annual/2024-25'
@@ -95,7 +96,7 @@ export async function governmentFinancePage(url:URL,read:Read,block:Block){
   const cards=[...new Set(latestRows.map(r=>r.jurisdiction))].sort().map(j=>{
     const rows=latestRows.filter(r=>r.jurisdiction===j)
     const sources=[...new Map(rows.map(r=>[r.workbook,r])).values()]
-    return `<article class="gfs-jurisdiction"><h3>${esc(j)}</h3><p class="gfs-receipt">${esc((rows.find(r=>r.measure==='revenue')||rows[0]).consolidation)}</p><dl>${Object.entries(names).flatMap(([key,label])=>{const r=rows.find(r=>r.measure===key);return r?[`<div><dt>${label}</dt><dd>${r.value!==null?cellLink(r):'Not published'}</dd></div>`]:[]}).join('')}</dl>${receipt(h,releaseDate)}<details><summary>Original cells and source hashes</summary>${rows.map(r=>`<p><a href="${esc(r.source_url)}">${esc(names[r.measure])} · ${esc(r.sheet+'!'+r.cell)}</a></p>`).join('')}${sources.map(r=>`<p>${esc(r.workbook)} · Snapshot ${esc(r.snapshot)}<br>SHA-256 ${esc(r.sha256)}</p>`).join('')}</details></article>`
+    return `<article class="gfs-jurisdiction"><h3>${esc(governmentFinanceGroupHeading(rows[0].level_of_government,j))}</h3><p class="gfs-receipt">${esc((rows.find(r=>r.measure==='revenue')||rows[0]).consolidation)}</p><dl>${Object.entries(names).flatMap(([key,label])=>{const r=rows.find(r=>r.measure===key);return r?[`<div><dt>${label}</dt><dd>${r.value!==null?cellLink(r):'Not published'}</dd></div>`]:[]}).join('')}</dl>${receipt(h,releaseDate)}<details><summary>Original cells and source hashes</summary>${rows.map(r=>`<p><a href="${esc(r.source_url)}">${esc(names[r.measure])} · ${esc(r.sheet+'!'+r.cell)}</a></p>`).join('')}${sources.map(r=>`<p>${esc(r.workbook)} · Snapshot ${esc(r.snapshot)}<br>SHA-256 ${esc(r.sha256)}</p>`).join('')}</details></article>`
   }).join('')
   const rows=governmentFinanceRows({...h,rows:selected}),config=governmentFinanceTableConfig(rows),guarded=guardTableURL(config,url)
   if(guarded.rejected)return error(400,'Choose one value for each table filter.')

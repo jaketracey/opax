@@ -10,6 +10,27 @@ import {toCSV} from '../public/datatable.js';
 const fixture=()=>JSON.parse(readFileSync(new URL('../../data/staged/abs-gfs/hub.json',import.meta.url),'utf8'));
 const page=(h,query='')=>governmentFinancePage(new URL('https://opax.test/register/government-finance'+query),async()=>h,(title,text)=>`<h1>${title}</h1><p>${text}</p>`);
 
+test('every headline and function heading identifies its published level and jurisdiction',async()=>{
+ const h=fixture(),all=[...h.rows,...h.function_rows],expected={Commonwealth:'Commonwealth government',State:'Total state governments',Local:'Total local governments',
+  'State and local':'Total state and local governments','Control n.f.d.':'Control n.f.d.','All levels of government':'Australia, all levels of government',National:'National general government'};
+ const seen=new Set();
+ for(const selection of new Set(all.map(r=>JSON.stringify([r.level_of_government,r.sector])))){
+  const [level,sector]=JSON.parse(selection),result=await page(h,'?'+new URLSearchParams({level,sector}));
+  assert.equal(result.status,200);
+  const doc=new JSDOM(result.prerender).window.document;
+  for(const card of doc.querySelectorAll('.gfs-jurisdiction,.gfs-function-jurisdiction')){
+   const link=card.querySelector('a[title]'),source=all.find(r=>`${r.workbook} · ${r.sheet}!${r.cell}`===link.title && r.source_url===link.href);
+   assert.ok(source,link.title);assert.equal(source.level_of_government,level);
+   const heading=card.querySelector('h3').textContent;
+   assert.equal(heading,source.jurisdiction==='Australia'?expected[level]:source.jurisdiction);
+   assert.notEqual(heading,'Australia');assert.ok(!heading.includes('\u2014'));
+   if(source.jurisdiction==='Australia')seen.add(level);
+  }
+  doc.defaultView.close();
+ }
+ assert.deepEqual([...seen].sort(),Object.keys(expected).sort());
+});
+
 test('function split and year-by-year table render on the server with source receipts',async()=>{
  const result=await page(fixture()),doc=new JSDOM(result.prerender).window.document;
  assert.equal(result.status,200);

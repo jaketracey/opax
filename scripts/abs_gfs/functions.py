@@ -136,6 +136,7 @@ def reconcile(rows, headlines):
 
     def compare(identity, group, components, total, add=False):
         available = total is not None and bool(components) and all(r["value"] is not None for r in [*components, total])
+        # Reconciliation check only: this sum is never published.
         delta = ((sum(r["value"] for r in components) if add else components[0]["value"]) - total["value"]) if available else None
         tolerance = (len(components) + 1) / 2 if add else 0
         results.append({"group": list(group), "identity": identity, "delta_million": delta,

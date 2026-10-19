@@ -1,0 +1,65 @@
+{
+  "baseline": "12a8ab62ceacf608f0d92ebd529b0bc1313e6de3",
+  "date": "2026-10-20",
+  "heading_mapping": "portal/src/government-finance-groups.ts",
+  "headings": {
+    "Commonwealth / Australia": "Commonwealth government",
+    "State / Australia": "Total state governments",
+    "Local / Australia": "Total local governments",
+    "State and local / Australia": "Total state and local governments",
+    "Control n.f.d. / Australia": "Control n.f.d.",
+    "All levels of government / Australia": "Australia, all levels of government",
+    "National / Australia": "National general government"
+  },
+  "heading_test": "Every published level/sector combination; both card sections; headings resolved from original source-cell provenance; individual jurisdictions unchanged",
+  "tests": {
+    "targeted_web": 21,
+    "python_gfs": 20,
+    "promoter_regression": 14,
+    "total_distinct": 55,
+    "failed": 0,
+    "portable_public_contract_rerun": 3
+  },
+  "public_output_proof": {
+    "command": "OPAX_GFS_VERIFY_ORIGINALS=1 node --test --test-concurrency=4 test/government-finance.test.mjs test/government-finance-functions.test.mjs test/government-finance-public-outputs.test.mjs",
+    "workbook_cells_verified": 8246,
+    "rounding_control_families": [
+      "function divisions",
+      "education purposes",
+      "function groups"
+    ],
+    "diagnostic_probes_excluded_from": [
+      "test-promoted asset",
+      "HTML and hydration",
+      "both CSVs",
+      "built search catalogue",
+      "authenticated local /mcp"
+    ],
+    "external_network": "forbidden; local fixtures only"
+  },
+  "gates": {
+    "tsc": "pass",
+    "check": "pass",
+    "originals_dry_run": "pass",
+    "worker_dry_run": "pass; no upload",
+    "real_promoter_dry_run": "Expected pending-review refusal; no writes",
+    "diff_check": "pass"
+  },
+  "votes": {
+    "schema": 1,
+    "byte_identical": true,
+    "sha256": "9b7fc46c65185223d70a49b1bd8ee807327473330b02392963aa320b191b7a93"
+  },
+  "all_staged_inputs_unchanged": true,
+  "real_public_gfs_asset_unchanged": true,
+  "catalogue_manifest_restored": true,
+  "screenshots": {
+    "government-finance-1440-function-table.png": "4254f678d7548dd2605203752cab9e256637e6486189aaf5b138fbcca54b6d2d",
+    "government-finance-1440-functions.png": "5f29b5831359a3d9e2545d1d97516ae720fb9c0d8ac4777d69b1af5db1b85309",
+    "government-finance-1440-top.png": "cec505302fef2ae551aedcb54b0327624fdb6e59ae952e66eb42c2cc7dd6814e",
+    "government-finance-390-function-table.png": "d13387e3b9e89e38d672858edb173e8e1667003bdeb53775e660a06e9325f506",
+    "government-finance-390-functions.png": "668e33230686e03a24c5839ebc556922c303216bd2503ec62e7d038c5eeaa600",
+    "government-finance-390-top.png": "2ddaa6704f936622d538fc9391963c53577b6a11e8a872443559b91e6f867200"
+  },
+  "browser_evidence_sha256": "22f2bc1d265780a426480304977dd8c3bb615bf88c264596a34782b297b0e635"
+}

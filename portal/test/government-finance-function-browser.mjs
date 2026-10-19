@@ -41,12 +41,15 @@ try{
   const core=await geometry(page,'government-finance-table'),functions=await geometry(page,'government-function-table');
   if(width===390){fits(core);fits(functions);}
   assert.equal(await page.locator('.gfs-function-jurisdiction').count(),9);
+  const headings=await page.locator('.gfs-function-jurisdiction h3').allTextContents();
+  assert.equal(headings[0],'Total state governments');
+  assert.deepEqual(headings,await page.locator('.gfs-jurisdiction h3').allTextContents());
   await page.screenshot({path:resolve(output,`government-finance-${width}-top.png`)});
   await page.evaluate(()=>{const h=document.getElementById('gfs-functions');scrollTo(0,scrollY+h.getBoundingClientRect().top-96);});
   await page.screenshot({path:resolve(output,`government-finance-${width}-functions.png`)});
   await page.evaluate(()=>{const h=document.getElementById('gfs-function-series');scrollTo(0,scrollY+h.getBoundingClientRect().top-96);});
   await page.screenshot({path:resolve(output,`government-finance-${width}-function-table.png`)});
-  results.push({width,status:response.status(),pageOverflow:false,core,functions,headlineGroups:await page.locator('.gfs-jurisdiction').count(),functionGroups:await page.locator('.gfs-function-jurisdiction').count(),coreRows:await total(page,'government-finance-table'),functionRows:await total(page,'government-function-table')});
+  results.push({width,status:response.status(),pageOverflow:false,core,functions,headings,headlineGroups:await page.locator('.gfs-jurisdiction').count(),functionGroups:await page.locator('.gfs-function-jurisdiction').count(),coreRows:await total(page,'government-finance-table'),functionRows:await total(page,'government-function-table')});
  }
  const table=page.locator('[data-register-table="government-function-table"]'),before=await total(page,'government-function-table');
  await table.locator('[data-search]').fill('Hospital');

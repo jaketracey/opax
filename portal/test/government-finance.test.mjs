@@ -81,7 +81,7 @@ test('changing NSW to Commonwealth resets the stale jurisdiction to its first pu
  assert.equal(doc.querySelector('[name="jurisdiction"]').value,'Australia');
  assert.deepEqual([...doc.querySelectorAll('[name="jurisdiction"] option')].map(o=>o.value),['','Australia']);
  assert.equal(doc.querySelectorAll('.gfs-jurisdiction').length,1);
- assert.equal(doc.querySelector('.gfs-jurisdiction h3').textContent,'Australia');
+ assert.equal(doc.querySelector('.gfs-jurisdiction h3').textContent,'Commonwealth government');
  assert.equal(JSON.parse(doc.querySelector('[data-register-table="government-finance-table"] [data-dt-page]').textContent).total,50);
 });
 

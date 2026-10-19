@@ -26,6 +26,17 @@
         "amountCells": 25,
         "amountsInsideContainer": true
       },
+      "headings": [
+        "Total state governments",
+        "Australian Capital Territory",
+        "New South Wales",
+        "Northern Territory",
+        "Queensland",
+        "South Australia",
+        "Tasmania",
+        "Victoria",
+        "Western Australia"
+      ],
       "headlineGroups": 9,
       "functionGroups": 9,
       "coreRows": 451,
@@ -51,6 +62,17 @@
         "amountCells": 25,
         "amountsInsideContainer": true
       },
+      "headings": [
+        "Total state governments",
+        "Australian Capital Territory",
+        "New South Wales",
+        "Northern Territory",
+        "Queensland",
+        "South Australia",
+        "Tasmania",
+        "Victoria",
+        "Western Australia"
+      ],
       "headlineGroups": 9,
       "functionGroups": 9,
       "coreRows": 451,

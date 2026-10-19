@@ -58,3 +58,11 @@ python3 -m scripts.abs_gfs.function_preview
 The preview command exercises dry-run, atomic promotion and public readback in a temporary synthetic-review fixture, removes that temporary directory, and writes only `portal/private/abs-gfs-function/preview-data.json`. It does not approve the real input receipt.
 
 From `portal/`, `node --test test/government-finance-functions.test.mjs` checks the SSR/export boundary and `node test/government-finance-function-browser.mjs` checks the local candidate with external browser requests blocked. The latter captures top, function split and function table at 390/1440, checks each table's own scroll width and amount bounds (also without JS), and saves evidence under `portal/private/abs-gfs-function/`. The optional `OPAX_GFS_PREVIEW_ASSET` override is local preview code only. Full-suite verification follows `build:search` at `--test-concurrency=4`; regenerated manifest, party-members, social and growth JSON are restored afterwards.
+
+Review fix 1 adds a shared level/jurisdiction heading map and public-output containment tests. Build the catalogue with `node scripts/build_search_catalog.mjs` from the repository root, then from `portal/` run:
+
+```sh
+OPAX_GFS_VERIFY_ORIGINALS=1 node --test --test-concurrency=4 test/government-finance.test.mjs test/government-finance-functions.test.mjs test/government-finance-public-outputs.test.mjs
+```
+
+The explicit flag verifies every promoted monetary observation against retained XLSX bytes as well as its source-cell contract. Without the flag, ordinary CI checks the committed source-cell contract and diagnostic probes without requiring untracked original workbooks. The test-only promoter fixture lives entirely in an automatically removed temporary directory; real staging and pending approval never change.
