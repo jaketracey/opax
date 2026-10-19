@@ -164,6 +164,8 @@ export const MODULE_STAMPS = [
   ['map-research.js','money-connections.js'],
   ['ballot.js', 'canonical-urls.js'],
   ['electorates.js', 'canonical-urls.js'],
+  // The electoral authorisation: a cached old vic-election.js would draw the old block.
+  ['vic-election.js', 'authorisation.js'], ['electorates.js', 'vic-election.js'],
   ['evidence.js', 'canonical-urls.js'],
   ['grants.js', 'donor-views.js'], ['grant-recipient.js', 'donor-views.js'],
   ['grants.js', 'canonical-urls.js'], ['grants.js', 'labels.js'],

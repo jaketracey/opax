@@ -595,6 +595,25 @@ button.link {
   font: inherit; text-align: left;
 }
 
+/* ---- the electoral authorisation (authorisation.js) ----------------------- */
+/* Fine print on the page ground under one hairline rule, closing the page
+   above the site footer: the hubs and the Victorian electorate pages. No fill
+   and no masthead rule, so it never reads as a second footer. --ink-soft on
+   --paper is 6.6:1, AA for small text. */
+.authorisation {
+  border-top: var(--border-hairline) solid var(--divider-default);
+  margin-top: var(--space-section); padding-top: var(--space-block);
+  color: var(--ink-soft); font: var(--type-fine);
+}
+.authorisation p { margin: 0; }
+.authorisation-corrections { margin-top: var(--space-line); }
+.authorisation-corrections a { display: inline-flex; align-items: center; min-height: var(--size-target); }
+.authorisation-corrections > span { display: block; }
+@media print {
+  .authorisation { break-inside: avoid; }
+  .authorisation-corrections a { min-height: 0; }
+}
+
 /* ---- the mark and quick-search rows ------------------------------------ */
 /* nav.css draws the band, its menus, the sheet, the trail and the footer.
    Two shared pieces stay here: the mark (ui-workbench.html draws it too) and

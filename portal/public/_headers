@@ -170,6 +170,9 @@
 /ask-steps.js
   ! Cache-Control
   Cache-Control: public, max-age=31536000, immutable
+/authorisation.js
+  ! Cache-Control
+  Cache-Control: public, max-age=31536000, immutable
 /ballot.js
   ! Cache-Control
   Cache-Control: public, max-age=31536000, immutable
@@ -309,6 +312,9 @@
   ! Cache-Control
   Cache-Control: public, max-age=31536000, immutable
 /thenvsnow.js
+  ! Cache-Control
+  Cache-Control: public, max-age=31536000, immutable
+/vic-election.js
   ! Cache-Control
   Cache-Control: public, max-age=31536000, immutable
 /vote-tables.css
