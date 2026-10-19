@@ -118,6 +118,7 @@ import { renderOgPng, renderOgJpeg, type OgFont } from './og-render'
 import * as storyRender from './og-render'
 import { personRole, personTitle, roleLine, billTitle } from './seo-titles'
 import { navGates, pageTrail, trail } from './nav-model.mjs'
+import { EMPTY_REPORTS_INDEX, KEPT_REPORT, REPORTS_INDEX, appUserAgent, reportDataPath, reportsAppData, reportsEnabled, reportsPath } from './reports-gate'
 import { answerBlock, associationCaveat, crumbSteps, printedTrail, headingOf, crumbsHTML, panelPrerender, SERVER_PANELS, type Crumb, renderPersonAnswer, renderBillAnswer, renderDivisionAnswer, renderDirectory, renderSupplierAnswer, renderMoneyAnswer, type Division, type ReadAsset } from './seo-content'
 import { buildSchemaGraph, serializeSchemaGraph, type PersonSchemaIdentity } from './seo-schema'
 import {renderMoneyConnectionsTable} from './money-connections-table'
@@ -4343,6 +4344,10 @@ async function buildRouteMeta(route: SeoRoute, url: URL, request: Request, env: 
     prerender: null,
     ...over,
   })
+  // With the reports off, their addresses are the site's not-found page, wherever
+  // the page is asked for (the page itself, a share card, a social preflight).
+  // The grants explorer under /reports stays (src/reports-gate.ts).
+  if ((route.kind === 'report' && route.slug !== KEPT_REPORT || route.kind === 'static' && route.page === 'reports') && !reportsEnabled(env.REPORTS_ENABLED)) route = { kind: 'notfound' }
 
   switch (route.kind) {
     case 'hub': {
@@ -4420,6 +4425,7 @@ async function buildRouteMeta(route: SeoRoute, url: URL, request: Request, env: 
     }
 
     case 'report': {
+      const reportsOn = reportsEnabled(env.REPORTS_ENABLED)
       const reports = await loadReports(env)
       const r = reports.bySlug.get(route.slug)
       const canonical = `${SITE_ORIGIN}/reports/${route.slug}`
@@ -4429,7 +4435,9 @@ async function buildRouteMeta(route: SeoRoute, url: URL, request: Request, env: 
       const speakerCount = report?.stats?.unique_speakers
       const description = withTail(`${r.title}: ${r.blurb}`, 'A standing OPAX investigation, every claim cited.')
       return base({
-        title: `${r.title} · Reports · OPAX`,
+        title: reportsOn ? `${r.title} · Reports · OPAX` : `${r.title} · OPAX`,
+        // Without the Reports page the kept grants explorer stands as its own page.
+        ...(reportsOn ? {} : { trail: [{ label: r.title }] }),
         description,
         canonical,
         ogType: 'article',
@@ -4840,7 +4848,7 @@ async function canonicalRoutePath(url: URL, env: Env): Promise<string> {
   }
   if(route?.kind==='static' || route?.kind==='index' || route?.kind==='topics') return path
   if(route?.kind==='topic' && TOPIC_NAMES[route.slug]) return path
-  if(route?.kind==='report' && (await loadReports(env).catch(()=>null))?.bySlug.has(route.slug)) return path
+  if(route?.kind==='report' && (reportsEnabled(env.REPORTS_ENABLED) || route.slug===KEPT_REPORT) && (await loadReports(env).catch(()=>null))?.bySlug.has(route.slug)) return path
   if(route?.kind==='instruments') {
     const id=route.id?.toUpperCase()
     const manifest=await assetJson<{lookup:Record<string,unknown>}>(env,'/instruments/manifest.json').catch(()=>null)
@@ -5813,6 +5821,8 @@ const NAMED_CARD_ROUTES = new Set<SeoRoute['kind']>(['subject', 'grant-recipient
 async function cardRefused(route: SeoRoute | null, pageUrl: URL, request: Request, env: Env, ctx: ExecutionContext): Promise<boolean> {
   // Check the election gate before replaying a card cached while publication was enabled.
   if (route?.kind === 'hub' && route.hub === 'vic-election' && !vicElectionEnabled(env.VIC_ELECTION_HUB_ENABLED)) return true
+  // Likewise the reports' gate: a card drawn while they were published is never replayed.
+  if ((route?.kind === 'report' && route.slug !== KEPT_REPORT || route?.kind === 'static' && route.page === 'reports') && !reportsEnabled(env.REPORTS_ENABLED)) return true
   if (!route || !NAMED_CARD_ROUTES.has(route.kind)) return false
   const meta = await buildRouteMeta(route, pageUrl, request, env, ctx).catch(() => null)
   return !meta || meta.status !== 200 || !meta.card || meta.noindex === true
@@ -6657,6 +6667,39 @@ async function route(
   }
 }
 
+/** The six reports' addresses while they are off (src/reports-gate.ts), on staging too.
+ *  Installed apps read the index: it answers in its own shape, empty, so their
+ *  Reports screen shows nothing rather than an error. A report's data file is
+ *  gone (never read from the assets); a page address is the site's not-found
+ *  page, noindex, like any address nothing answers. */
+async function reportsWithdrawn(request: Request, url: URL, env: Env, ctx: ExecutionContext): Promise<Response> {
+  const read = request.method === 'GET' || request.method === 'HEAD'
+  // The data files answer the apps differently (REPORTS_APP_DATA): never stored, and varied by client.
+  const data = { 'cache-control': 'no-store', 'vary': 'User-Agent', 'x-robots-tag': 'noindex' }
+  if (read && url.pathname === REPORTS_INDEX)
+    return new Response(request.method === 'HEAD' ? null : JSON.stringify(EMPTY_REPORTS_INDEX), { headers: { 'content-type': 'application/json; charset=utf-8', ...data } })
+  if (reportDataPath(url.pathname))
+    return new Response(request.method === 'HEAD' ? null : 'Not found', { status: 404, headers: { 'content-type': 'text/plain; charset=utf-8', ...data } })
+  if (read && pageAddress(url.pathname) && !missingEntitySlug(url.pathname)) {
+    const page = await serveSeoPage({ kind: 'notfound' }, url, request, env, ctx)
+    page.headers.set('x-robots-tag', 'noindex')
+    page.headers.set('cache-control', 'no-store')
+    return page
+  }
+  return new Response(request.method === 'HEAD' ? null : 'Not found', { status: 404, headers: { 'x-robots-tag': 'noindex', 'cache-control': 'no-store', 'content-type': 'text/plain; charset=utf-8' } })
+}
+
+/** The apps' copy of a report data file while the reports are off: the asset as
+ *  it was served before, never stored by any cache and varied by client, so a
+ *  browser or crawler never receives it. Its ETag stays: only an app holds it. */
+function appReportData(asset: Response, request: Request): Response {
+  const out = new Response(request.method === 'HEAD' ? null : asset.body, asset)
+  out.headers.set('x-robots-tag', 'noindex')
+  out.headers.set('cache-control', 'no-store')
+  out.headers.set('vary', 'User-Agent')
+  return out
+}
+
 /** The community page: its trail after the band, and the BreadcrumbList that
  *  says the same, as every server-written page has. */
 function communityPage(asset: Response): Response {
@@ -6712,6 +6755,12 @@ export default {
     }
     if (!vicElectionEnabled(env.VIC_ELECTION_HUB_ENABLED) && vicElectionPublicationPath(url.pathname))
       return withSecurityHeaders(new Response(request.method === 'HEAD' ? null : 'Not found', {status:404,headers:{'x-robots-tag':'noindex','cache-control':'no-store','content-type':'text/plain; charset=utf-8'}}), url)
+    if (!reportsEnabled(env.REPORTS_ENABLED) && reportsPath(url.pathname)) {
+      // The installed apps still read the report data, as before (REPORTS_APP_DATA).
+      if (reportsAppData(env.REPORTS_APP_DATA) && appUserAgent(request.headers.get('user-agent')) && reportDataPath(url.pathname) && (request.method === 'GET' || request.method === 'HEAD'))
+        return withSecurityHeaders(appReportData(await display(await env.ASSETS.fetch(request)), request), url)
+      return withSecurityHeaders(await reportsWithdrawn(request, url, env, ctx), url)
+    }
     const canonical = await pageAliasRedirect(request, url, env)
     if (canonical) return canonical
     // Scraper fleets (see network-block.ts) are refused before any paid route runs.
@@ -6767,7 +6816,9 @@ export default {
         const moneyHtml=money ? money.html.replace('id="prerender"','id="prerender-money"').replace('<h1>','<h2>').replace('</h1>','</h2>') : null
         // The menus read the published optional sections off the page (navigation.js).
         const gates=navGates(env)
-        const out=new HTMLRewriter().on('html',{element(el){if(gates)el.setAttribute('data-nav-gates',gates)}}).on('div#hp-money-map',{element(el){if(moneyHtml)el.setInnerContent(moneyHtml,{html:true})}}).on('head',{element(el){el.append(`<script type="application/ld+json" id="ld-page">${schema}</script>`,{html:true})}}).transform(entry)
+        // The home page's Reports block goes with the reports (src/reports-gate.ts).
+        const reports=reportsEnabled(env.REPORTS_ENABLED)
+        const out=new HTMLRewriter().on('html',{element(el){if(gates)el.setAttribute('data-nav-gates',gates)}}).on('div#hp-money-map',{element(el){if(moneyHtml)el.setInnerContent(moneyHtml,{html:true})}}).on('[data-reports-only]',{element(el){if(!reports)el.remove()}}).on('head',{element(el){el.append(`<script type="application/ld+json" id="ld-page">${schema}</script>`,{html:true})}}).transform(entry)
         const headers=new Headers(out.headers);headers.delete('content-length')
         const etag=await htmlValidator([env.CF_VERSION_METADATA?.id ?? '',entry.headers.get('etag'),moneyHtml,schema,gates]);headers.set('etag',etag)
         const unchanged=notModified(request,etag,headers)

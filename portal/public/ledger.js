@@ -376,7 +376,6 @@ const CSS = `
 .lg-years-label { font: var(--type-label); color: var(--ink-soft); }
 .lg-root .lg-year { width: calc(var(--size-control) * 2); padding-block: 0; font-variant-numeric: tabular-nums; }
 .lg-years > span[aria-hidden] { color: var(--ink-faint); }
-.lg-year-help { margin: var(--space-tight) 0 0; max-width: var(--size-readable); }
 .lg-root > .lg-filter-bar:first-child { margin-top: 0; }
 .lg-scope { display: flex; flex-wrap: wrap; gap: var(--space-tight); margin: var(--space-heading) 0 0; }
 
@@ -546,16 +545,15 @@ export function mountLedger (container, opts = {}) {
       <div class="ui-filter-field lg-years" role="group" aria-labelledby="lg-years-label">
         <span class="lg-years-label" id="lg-years-label">Return years</span>
         <input class="ui-input lg-year" id="lg-year-from" type="number" inputmode="numeric"
-               min="${YEAR_MIN}" max="${YEAR_MAX}" placeholder="${YEAR_MIN}" aria-label="From return year" aria-describedby="lg-year-help" />
+               min="${YEAR_MIN}" max="${YEAR_MAX}" placeholder="${YEAR_MIN}" aria-label="From return year" />
         <span aria-hidden="true">–</span>
         <input class="ui-input lg-year" id="lg-year-to" type="number" inputmode="numeric"
-               min="${YEAR_MIN}" max="${YEAR_MAX}" placeholder="${YEAR_MAX}" aria-label="To return year" aria-describedby="lg-year-help" />
+               min="${YEAR_MIN}" max="${YEAR_MAX}" placeholder="${YEAR_MAX}" aria-label="To return year" />
       </div>
       <div class="ui-filter-actions">
         <button type="button" class="ui-button" data-variant="quiet" id="lg-clear" hidden>Clear filters</button>
       </div>
     </div>
-    <p class="ui-hint lg-year-help" id="lg-year-help">Return years: use the first year of a financial year (2020 for 2020–21), or the polling year for election returns.</p>
     <div class="lg-scope" id="lg-scope-chip" hidden></div>
     <div class="lg-results-tools" data-ui-size="compact">
       <div class="lg-views ui-segmented" role="group" aria-label="View">
@@ -1082,8 +1080,9 @@ export function mountLedger (container, opts = {}) {
     tableEl.hidden = true
     try {
       const data = await fetchData(state.jur)
-      donors=donorLookup(data.nodes.filter(n=>n.kind==='donor'))
+      // A slower answer for an earlier jurisdiction must not replace the newer file's donor lookup.
       if (token !== loadSeq) return
+      donors=donorLookup(data.nodes.filter(n=>n.kind==='donor'))
       loading = false
       loadedData = data
       meta = data.meta || {}

@@ -14,7 +14,9 @@
 # The knowledge-box push (parli.ingest.arag_sync) and the votes refresh
 # (tvfy_refresh + scripts/export_votes.py) are DISABLED unless OPAX_SYNC_KB=1,
 # because they cost money / touch the public site. Everything else only
-# writes to parli.db and the fetchers' own caches.
+# writes to parli.db, the fetchers' own caches and guarded static projections.
+# Supplier and federal grant profiles follow successful daily acquisition and
+# identity-register rebuilds; they do not wait for the monthly export.
 #
 # Tunables (env):
 #   OPAX_DAYS_BACK      lookback window for date-bounded fetchers (default 30)
@@ -84,7 +86,12 @@ SYNC_GATE="${OPAX_SYNC_GATE:-}"
 cd "$REPO" || { log "FATAL: cannot cd $REPO"; exit 1; }
 [ -x "$PY" ] || { log "FATAL: $PY missing (run: uv sync)"; exit 1; }
 # The ext_* loaders and exporters read OPAX_DB (never the desktop over ssh); scripts/ needs the package importable.
-export OPAX_DB="$DB" PYTHONPATH="$REPO${PYTHONPATH:+:$PYTHONPATH}"
+export OPAX_DB="$DB" PYTHONPATH="$REPO${PYTHONPATH:+:$PYTHONPATH}" PY
+EXPORT="$REPO/scripts/vm/export_step.sh"
+# run_step returns success for OPAX_ONLY exclusions. Exclusions must never count
+# as successful prerequisites for a public export.
+step_selected() { [ -z "$ONLY" ] || [[ ",$ONLY," == *",$1,"* ]]; }
+AUSTENDER_OK=0; AUSTENDER_FULL_OK=0; GRANTS_APPLY_OK=0
 
 # The cutover rule (docs/operations/nightly-refresh.md): once the pipeline has moved to the VM,
 # this machine must never push to the knowledge box again, because the push checkpoint
@@ -127,8 +134,10 @@ else
 fi
 
 # --- quick structured sources ------------------------------------------------
-run_step austender "SELECT COUNT(*) FROM contracts" \
-  "$PY" -m parli.ingest.austender
+if step_selected austender && run_step austender "SELECT COUNT(*) FROM contracts" \
+  "$PY" -m parli.ingest.austender; then
+  AUSTENDER_OK=1
+fi
 run_step ipea "SELECT COUNT(*) FROM mp_expenses WHERE source='ipea'" \
   "$PY" -m parli.ingest.ipea_expenses --since "$IPEA_SINCE" --new-only
 
@@ -176,8 +185,10 @@ run_step releases "SELECT COUNT(*) FROM ext_press_releases WHERE source IN ('pmt
   "$PY" scripts/refresh_releases.py --db "$DB" --since "$SINCE" ${REL_APPLY[@]+"${REL_APPLY[@]}"}
 
 # --- AusTender: the full OCDS feed into ext_contracts (never deletes; the last 3 days are always refetched) ----
-run_step austender_full "SELECT COUNT(*) FROM ext_contracts" \
-  "$PY" -m parli.ingest.austender_full --db "$DB" --since "$(date -d '-10 days' +%F)"
+if step_selected austender_full && run_step austender_full "SELECT COUNT(*) FROM ext_contracts" \
+  "$PY" -m parli.ingest.austender_full --db "$DB" --since "$(date -d '-10 days' +%F)"; then
+  AUSTENDER_FULL_OK=1
+fi
 
 # --- GrantConnect awards: staged, reconciled by ext_apply (refuses an empty or shrunken window), then the KB ---
 # Awards are varied later (a -Vn suffix), so the window is 45 days. The loader deletes its window in whatever
@@ -185,12 +196,43 @@ run_step austender_full "SELECT COUNT(*) FROM ext_contracts" \
 GRANTS_SINCE="${OPAX_GRANTS_SINCE:-$(date -d '-45 days' +%F)}"
 GRANTS_STAGE="$PIPE/stage/grants"
 rm -rf "$GRANTS_STAGE"; mkdir -p "$GRANTS_STAGE"
-if run_step grants_fetch "" \
+if step_selected grants_fetch && run_step grants_fetch "" \
      "$PY" -m parli.ingest.grantconnect --since "$GRANTS_SINCE" --refetch --db "$GRANTS_STAGE/grants.sqlite"; then
-  run_step grants_apply "SELECT COUNT(*) FROM ext_grants WHERE source='grantconnect'" \
-    "$PY" scripts/ext_apply.py grants --stage "$GRANTS_STAGE/grants.sqlite" --db "$DB" --since "$GRANTS_SINCE"
+  if step_selected grants_apply && run_step grants_apply "SELECT COUNT(*) FROM ext_grants WHERE source='grantconnect'" \
+    "$PY" scripts/ext_apply.py grants --stage "$GRANTS_STAGE/grants.sqlite" --db "$DB" --since "$GRANTS_SINCE"; then
+    GRANTS_APPLY_OK=1
+  fi
 else
-  log "[grants_apply] SKIP: the fetch failed, nothing to apply"
+  log "[grants_apply] SKIP: acquisition failed, paused or was not selected; existing awards kept"
+fi
+
+# --- profiles derived from the daily structured sources ----------------------
+# These use the existing local ABR index, never an ABR crawl or a KB client.
+# Every prerequisite must actually run successfully this time. On a failed or
+# paused source, leave the published profiles untouched; export_step also rolls
+# back a partially written directory when its exporter fails.
+if [ "$AUSTENDER_OK" = 1 ] && [ "$AUSTENDER_FULL_OK" = 1 ]; then
+  if step_selected contract_suppliers && run_step contract_suppliers "SELECT COUNT(*) FROM ext_contract_suppliers" \
+    "$PY" -m parli.ingest.contract_suppliers --db "$DB" --abr-dir "$HOME/.cache/autoresearch/abr"; then
+    run_step x_suppliers "" "$EXPORT" dir portal/public/suppliers portal/public/agencies \
+        portal/public/suppliers.json portal/public/agencies.json -- \
+      "$PY" scripts/export_suppliers.py --db "$DB" --published-since 2025-07-08 --output portal/public
+  elif step_selected x_suppliers; then
+    log "[x_suppliers] SKIP: supplier registry failed or was not selected; last good profiles kept"
+  fi
+elif step_selected x_suppliers; then
+  log "[x_suppliers] SKIP: AusTender acquisition failed, paused or was not selected; last good profiles kept"
+fi
+if [ "$GRANTS_APPLY_OK" = 1 ]; then
+  if step_selected grant_recipients && run_step grant_recipients "SELECT COUNT(*) FROM ext_grant_recipients" \
+    "$PY" -m parli.ingest.grant_recipients --db "$DB" --abr-dir "$HOME/.cache/autoresearch/abr"; then
+    run_step x_grants "" "$EXPORT" dir portal/public/grants/federal portal/public/graph/grants.federal.json -- \
+      "$PY" scripts/export_grants.py federal --local
+  elif step_selected x_grants; then
+    log "[x_grants] SKIP: recipient registry failed or was not selected; last good profiles kept"
+  fi
+elif step_selected x_grants; then
+  log "[x_grants] SKIP: GrantConnect acquisition/apply failed, paused or was not selected; last good profiles kept"
 fi
 
 # --- state votes (NSW, VIC): parsed from Hansard into ext_divisions / ext_votes (per chamber-day replace) -------

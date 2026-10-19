@@ -9,7 +9,8 @@ export function mountConnections(root, helpers = {}) {
  const query=root.querySelector('#connection-search'),kind=root.querySelector('#connection-kind'),status=root.querySelector('#connection-status');
  const params=helpers.params || new URLSearchParams();
  const controller=new AbortController();
- let entries=[],selected=0,active=true,currentId='';
+ // loaded: the index has answered. Until then a typed search must not count an empty list as "0 connections".
+ let entries=[],loaded=false,selected=0,active=true,currentId='',loader=null;
  const alive=()=>active && root.isConnected;
  function address(entity){
   const next=new URLSearchParams();
@@ -20,6 +21,7 @@ export function mountConnections(root, helpers = {}) {
   helpers.onAddress?.(qs?`?${qs}`:'');
  }
  function render(){
+  if(!loaded)return;
   const term=nameKey(query.value);
   const found=entries.filter(e=>(!kind.value || e.kind===kind.value) && (!term || nameKey(e.name).includes(term) || e.abn?.includes(term)));
   status.textContent=`${found.length.toLocaleString('en-AU')} connections${found.length>40?' · Showing the first 40. Search to narrow the list.':''}`;
@@ -49,7 +51,8 @@ export function mountConnections(root, helpers = {}) {
   const line=document.createElement('p');line.className='ui-card-text';line.textContent='See the speeches, releases and grant records that name it.';
   const picks=document.createElement('div');picks.className='ui-actions connection-picks';picks.setAttribute('role','group');picks.setAttribute('aria-label','Most recorded connections');
   card.append(art,title,line,picks);detail.replaceChildren(card);detail.hidden=false;
-  helpers.drawAnimal?.(art);
+  // The loaders' wombat in its still pose; style.css hides it while the list's walking one holds the index's place.
+  wombat.then(mod=>{if(mod && alive() && art.isConnected){mod.mountWombat(art,{label:'',animal:'wombat'});art.lastElementChild?.classList.add('wb-still');}});
  }
  // A quick pick opens its connection exactly as its row in the list does.
  function quickPicks(found){
@@ -78,18 +81,24 @@ export function mountConnections(root, helpers = {}) {
  const onKind=()=>{render();address(null);};
  query.addEventListener('input',onInput);kind.addEventListener('change',onKind);
  query.value=params.get('q') || '';kind.value=params.get('kind') || '';
+ // One copy of the shared animal: the list's loader walks, the starting card's stands still.
+ const wombat=import('/wombat.js?v=cb89a88dad').catch(()=>null);
  status.textContent='Opening the records…';list.replaceChildren();emptyDetail();
+ // The shared animal holds the list's place while the index loads; the status line announces it.
+ const slot=document.createElement('li');slot.className='connection-loader';slot.setAttribute('aria-hidden','true');list.append(slot);
+ wombat.then(mod=>{if(mod && alive() && !loaded && slot.isConnected)loader=mod.mountWombat(slot,{label:'',phase:-5.5});});
+ const settle=()=>{loader?.destroy();loader=null;slot.remove();};
  (async()=>{
   try{
    const response=await fetch('/evidence/index.json',{signal:controller.signal});if(!response.ok)throw new Error();
    const data=await response.json();if(!alive())return;
    entries=(data.entities||[]).sort((a,b)=>b.records-a.records || a.name.localeCompare(b.name));
-   render();const initial=entries.find(e=>e.id===params.get('entity'));if(initial)open(initial);
-  }catch{if(alive()){status.textContent='Connection records are unavailable. Please try again later.';detail.hidden=true;}}
+   loaded=true;settle();render();const initial=entries.find(e=>e.id===params.get('entity'));if(initial)open(initial);
+  }catch{if(alive()){settle();status.textContent='Connection records are unavailable. Please try again later.';detail.hidden=true;}}
  })();
  return {
   destroy(){
-   active=false;controller.abort();selected++;
+   active=false;controller.abort();selected++;settle();
    query.removeEventListener('input',onInput);kind.removeEventListener('change',onKind);
    list.replaceChildren();detail.replaceChildren();detail.hidden=true;
   },

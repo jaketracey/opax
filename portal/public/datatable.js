@@ -14,6 +14,10 @@ const money = new Intl.NumberFormat('en-AU', {style:'currency', currency:'AUD', 
 const text = value => Array.isArray(value) ? value.join('; ') : String(value ?? '');
 const members = value => [...new Set((Array.isArray(value) ? value : [value]).filter(v=>v != null && v !== '').map(text))];
 const pageQueries = new WeakMap();
+// The table's own loader: the shared animal (wombat.js) in the table body. Held as
+// a variable so the Worker's bundler leaves the browser-only import alone.
+const LOADER_MODULE = '/wombat.js?v=cb89a88dad';
+let loaderModule;
 const facetMembers = (row,column) => column?.facetValues ? members(column.facetValues(row)) : members(row[column.key]);
 const prefix = key => key ? `${key}.` : '';
 const own = (object, key) => Object.hasOwn(object, key);
@@ -232,6 +236,11 @@ export function toCSV(rows, config) {
   return [config.columns.map(c => quote(c.label)).join(','), ...publicRows(rows, config).map(row => config.columns.map(c => quote(row[c.key] ?? '')).join(','))].join('\r\n');
 }
 
+/** The page a table shows before its first request returns: the loader, never the empty copy. */
+export const pendingPage = config => ({rows:[],total:0,page:1,pageSize:config.pageSize || 50,facets:{},pending:true});
+// "Loading awards": the caption names what the table holds unless the config says it better.
+const loadingText = config => config.loadingLabel || `Loading ${/^[A-Z][a-z]/.test(config.caption || '') ? config.caption[0].toLowerCase()+config.caption.slice(1) : config.caption || 'records'}`;
+
 function safePage(page, config) {
   const rows=publicRows(page.rows),facets={};
   for (const [key,values] of Object.entries(page.facets || {})) {
@@ -239,7 +248,7 @@ function safePage(page, config) {
     if (Array.isArray(values)) facets[key]=values.filter(v=>v && typeof v.value==='string' && Number.isFinite(v.count) && v.count>=0).map(v=>({value:v.value,count:v.count}));
     else if(values && Number.isFinite(values.min) && Number.isFinite(values.max)) facets[key]={min:values.min,max:values.max};
   }
-  return {rows,total:Number.isSafeInteger(page.total) && page.total>=0 ? page.total : rows.length,page:integer(page.page,1),pageSize:Math.min(200,integer(page.pageSize,config.pageSize || 50)),facets};
+  return {rows,total:Number.isSafeInteger(page.total) && page.total>=0 ? page.total : rows.length,page:integer(page.page,1),pageSize:Math.min(200,integer(page.pageSize,config.pageSize || 50)),facets,...(page.pending === true && !rows.length ? {pending:true} : {})};
 }
 
 function constants(config, page, query) {
@@ -284,6 +293,8 @@ function render(config, page, query = {}, view = {}, error = '') {
   const requested = query, rejected=blockedQuery(config,query);
   if (rejected || view.rejected) { page={rows:[],total:0,page:1,pageSize:config.pageSize || 50,facets:{}}; view={...view,rejected:true}; }
   page = safePage(page, config);
+  // Loading: a request is out and there are no rows to show yet. Empty is only ever a finished answer.
+  const loading = !error && !view.rejected && !page.rows.length && Boolean(view.loading || page.pending);
   query = cleanQuery(query, config, page);
   const redactedSearch = Boolean(requested.q && !query.q);
   const redactedFilters = serializeQuery({filters:requested.filters}) !== serializeQuery({filters:query.filters});
@@ -337,12 +348,25 @@ function render(config, page, query = {}, view = {}, error = '') {
   const start = page.total ? (page.page - 1) * page.pageSize + 1 : 0;
   const count = `Showing ${decimal.format(start)}–${decimal.format(page.total ? start + page.rows.length - 1 : 0)} of ${decimal.format(page.total)}`;
   const data = JSON.stringify(page).replace(/</g,'\\u003c').replace(/&/g,'\\u0026');
-  return `<section class="dt-root" data-datatable="${esc(config.id)}" data-density="${esc(view.density || config.density || 'comfortable')}" aria-label="${esc(config.caption)}">
-<div class="dt-toolbar"><form role="search"><label class="dt-sr" for="${esc(config.id)}-search">Search ${esc(config.caption)}</label><input id="${esc(config.id)}-search" type="search" data-search data-focus="search" placeholder="Search" value="${esc(query.q || '')}" autocomplete="off"></form><select class="dt-phone-sort" data-sort-select aria-label="Sort">${config.columns.filter(sortable).map(c => ['asc','desc'].map(dir => `<option value="${esc(c.key)}:${dir}"${sort?.key === c.key && sort.dir === dir ? ' selected' : ''}>${esc(c.label)} ${dir === 'asc' ? 'ascending' : 'descending'}</option>`).join('')).join('')}</select><details class="dt-panel dt-filters" data-panel="filters">${summary('Filters')}<div class="dt-tools">${controls.join('')}<details class="dt-panel" data-panel="columns">${summary('Columns')}<fieldset><legend class="dt-sr">Visible columns</legend>${config.columns.map(c => `<label class="dt-choice"><input type="checkbox" data-column="${esc(c.key)}"${columns.includes(c) ? ' checked' : ''}${columns.length === 1 && columns[0] === c ? ' disabled' : ''}>${esc(c.label)}</label>`).join('')}</fieldset></details>${button('Compact', `data-density-toggle aria-pressed="${(view.density || config.density) === 'compact'}"`)}</div></details>${config.export === false ? '' : button('Export CSV', `data-export${view.rejected || page.total === 0 ? ' disabled' : ''}`)}</div>
+  return `<section class="dt-root" data-datatable="${esc(config.id)}" data-density="${esc(view.density || config.density || 'comfortable')}" aria-label="${esc(config.caption)}"${loading ? ' aria-busy="true"' : ''}>
+<div class="dt-toolbar"><form role="search"><label class="dt-sr" for="${esc(config.id)}-search">Search ${esc(config.caption)}</label><input id="${esc(config.id)}-search" type="search" data-search data-focus="search" placeholder="Search" value="${esc(query.q || '')}" autocomplete="off"></form><select class="dt-phone-sort" data-sort-select aria-label="Sort">${config.columns.filter(sortable).map(c => ['asc','desc'].map(dir => `<option value="${esc(c.key)}:${dir}"${sort?.key === c.key && sort.dir === dir ? ' selected' : ''}>${esc(c.label)} ${dir === 'asc' ? 'ascending' : 'descending'}</option>`).join('')).join('')}</select><details class="dt-panel dt-filters" data-panel="filters">${summary('Filters')}<div class="dt-tools">${controls.join('')}<details class="dt-panel" data-panel="columns">${summary('Columns')}<fieldset><legend class="dt-sr">Visible columns</legend>${config.columns.map(c => `<label class="dt-choice"><input type="checkbox" data-column="${esc(c.key)}"${columns.includes(c) ? ' checked' : ''}${columns.length === 1 && columns[0] === c ? ' disabled' : ''}>${esc(c.label)}</label>`).join('')}</fieldset></details>${button('Compact', `data-density-toggle aria-pressed="${(view.density || config.density) === 'compact'}"`)}</div></details>${config.export === false ? '' : button('Export CSV', `data-export${view.rejected || loading || page.total === 0 ? ' disabled' : ''}`)}</div>
 <div class="dt-chips" aria-label="Applied filters">${active.join('')}${query.q || Object.keys(query.filters || {}).length || redactedSearch || redactedFilters || view.rejected ? button('Clear all', 'data-clear') : ''}</div>
-<div class="dt-scroll"><table class="dt" id="${esc(config.id)}" role="table"><caption>${esc(config.caption)}</caption><thead role="rowgroup"><tr role="row">${columns.map(column => `<th role="columnheader" scope="col" data-align="${esc(column.align || (numeric(column) ? 'end' : 'start'))}"${sortable(column) ? ` aria-sort="${sort?.key === column.key ? sort.dir === 'asc' ? 'ascending' : 'descending' : 'none'}"` : ''}>${sortable(column) ? button(`${esc(column.label)} ${icon(sort?.key === column.key ? sort.dir : 'unsorted')}`, `data-sort="${esc(column.key)}"`) : esc(column.label)}${column.bar && maxima[column.key] ? `<small class="dt-scale">0–${esc(formatCell(maxima[column.key],column))}</small>` : ''}</th>`).join('')}${config.actions?.length ? '<th scope="col"><span class="dt-sr">Actions</span></th>' : ''}</tr></thead><tbody role="rowgroup">${error ? `<tr><td colspan="${columns.length + (config.actions?.length ? 1 : 0)}"><div class="dt-empty" role="alert">${esc(error)} ${button('Try again','data-retry')}</div></td></tr>` : body || `<tr><td colspan="${columns.length + (config.actions?.length ? 1 : 0)}"><div class="dt-empty">No results. Try another search or clear the filters.</div></td></tr>`}</tbody></table></div>
-<div class="dt-footer"><p class="dt-count" role="status" aria-live="polite" aria-atomic="true">${error ? 'Table unavailable' : count}</p><div class="dt-paging">${button('Previous', `data-page="${page.page - 1}"${page.page <= 1 || error ? ' disabled' : ''}`)}<span>Page ${page.page}</span>${button('Next', `data-page="${page.page + 1}"${page.page * page.pageSize >= page.total || error ? ' disabled' : ''}`)}<label class="dt-page-size" for="${esc(config.id)}-size">Rows per page <select id="${esc(config.id)}-size" data-page-size aria-label="Rows per page">${[...new Set([10,25,50,100,page.pageSize])].sort((a,b)=>a-b).map(size => `<option${size === page.pageSize ? ' selected' : ''}>${size}</option>`).join('')}</select></label></div></div>
+<div class="dt-scroll"><table class="dt" id="${esc(config.id)}" role="table"><caption>${esc(config.caption)}</caption><thead role="rowgroup"><tr role="row">${columns.map(column => `<th role="columnheader" scope="col" data-align="${esc(column.align || (numeric(column) ? 'end' : 'start'))}"${sortable(column) ? ` aria-sort="${sort?.key === column.key ? sort.dir === 'asc' ? 'ascending' : 'descending' : 'none'}"` : ''}>${sortable(column) ? button(`${esc(column.label)} ${icon(sort?.key === column.key ? sort.dir : 'unsorted')}`, `data-sort="${esc(column.key)}"`) : esc(column.label)}${column.bar && maxima[column.key] ? `<small class="dt-scale">0–${esc(formatCell(maxima[column.key],column))}</small>` : ''}</th>`).join('')}${config.actions?.length ? '<th scope="col"><span class="dt-sr">Actions</span></th>' : ''}</tr></thead><tbody role="rowgroup">${error ? `<tr><td colspan="${columns.length + (config.actions?.length ? 1 : 0)}"><div class="dt-empty" role="alert">${esc(error)} ${button('Try again','data-retry')}</div></td></tr>` : loading ? `<tr class="dt-loading-row"><td colspan="${columns.length + (config.actions?.length ? 1 : 0)}"><div class="dt-loading" data-dt-loader aria-hidden="true"></div></td></tr>` : body || `<tr><td colspan="${columns.length + (config.actions?.length ? 1 : 0)}"><div class="dt-empty">No results. Try another search or clear the filters.</div></td></tr>`}</tbody></table></div>
+<div class="dt-footer"><p class="dt-count" role="status" aria-live="polite" aria-atomic="true">${error ? 'Table unavailable' : loading ? esc(loadingText(config)) : count}</p><div class="dt-paging">${button('Previous', `data-page="${page.page - 1}"${page.page <= 1 || error || loading ? ' disabled' : ''}`)}<span>Page ${page.page}</span>${button('Next', `data-page="${page.page + 1}"${page.page * page.pageSize >= page.total || error || loading ? ' disabled' : ''}`)}<label class="dt-page-size" for="${esc(config.id)}-size">Rows per page <select id="${esc(config.id)}-size" data-page-size aria-label="Rows per page">${[...new Set([10,25,50,100,page.pageSize])].sort((a,b)=>a-b).map(size => `<option${size === page.pageSize ? ' selected' : ''}>${size}</option>`).join('')}</select></label></div></div>
 <script type="application/json" data-dt-page>${data}</script></section>`;
+}
+
+/** Draw the animal into each table loader under `root` (browser only; a no-op without the module). */
+export function mountTableLoaders(root) {
+  const slots=[...(root?.querySelectorAll?.('[data-dt-loader]') || [])].filter(slot=>!slot.firstChild);
+  if (!slots.length) return;
+  loaderModule ??= import(LOADER_MODULE).catch(()=>null);
+  void loaderModule.then(mod=>{
+    for (const slot of slots) if (mod?.mountWombat && slot.isConnected && !slot.firstChild) {
+      // The table's status line announces the wait; the drawing and its label stay out of the accessibility tree.
+      mod.mountWombat(slot,{label:`${slot.closest('[data-datatable]')?.querySelector('.dt-count')?.textContent || 'Loading'}.`,phase:-5.5});
+    }
+  });
 }
 
 export function dataTableHTML(config, page, requestURL) {
@@ -383,8 +407,11 @@ export function mountDataTable(el, config) {
   const view = {density:config.density || 'comfortable', columnsVisible:config.columnsVisible || config.columns.map(c=>c.key), constantsVisible:[]};
   let page;
   try { page = JSON.parse(root.querySelector('[data-dt-page]')?.textContent || 'null'); } catch { /* Client rows below. */ }
-  page ||= {rows:[], total:0, page:1, pageSize:config.pageSize || 50};
-  let controller, exportController, revision = 0, destroyed = false, timer;
+  // No server page at all means the first request is still to come.
+  page ||= config.source ? pendingPage(config) : {rows:[], total:0, page:1, pageSize:config.pageSize || 50};
+  view.loading = Boolean(page.pending && config.source);
+  // settled: a request has answered, so later requests are refetches of rows the reader has seen.
+  let controller, exportController, revision = 0, destroyed = false, timer, settled = false;
   const canonical=doc.head.querySelector('link[rel="canonical"]'), canonicalURL=canonical?.href;
   const requestLinks=new Map([...doc.querySelectorAll?.('a[href]') || []].map(link=>[link,link.getAttribute('href')]));
 
@@ -435,6 +462,7 @@ export function mountDataTable(el, config) {
     if (status) { const next = section.querySelector('.dt-count'); message = next.textContent; next.remove(); }
     root.append(...section.childNodes);
     if (status) { root.querySelector('.dt-footer').prepend(status); status.textContent = message; }
+    mountTableLoaders(root);
     for (const detail of root.querySelectorAll('details[data-panel]')) if (open.includes(detail.dataset.panel)) detail.open = true;
     if (focused) for (const field of root.querySelectorAll('[data-focus]')) if (field.dataset.focus === focused) {
       field.focus({preventScroll:true});
@@ -488,7 +516,7 @@ export function mountDataTable(el, config) {
     }
     if (rawRejected) {
       page={rows:[],total:0,page:1,pageSize:config.pageSize || 50,facets:{}};
-      view.rejected=true;query={};rawPage=undefined;
+      view.rejected=true;view.loading=false;query={};rawPage=undefined;
       paint();urlState();root.removeAttribute('aria-busy');return;
     }
     const pending=structuredClone(query), previousPage=rawPage || page;
@@ -496,16 +524,21 @@ export function mountDataTable(el, config) {
     const rejected=rawRejected || blockedQuery(config,pending); view.rejected=rejected;
     query=cleanQuery(pending,config,previousPage);
     if (rejected) {
-      page={rows:[],total:0,page:1,pageSize:config.pageSize || 50,facets:{}};
+      page={rows:[],total:0,page:1,pageSize:config.pageSize || 50,facets:{}};view.loading=false;
       paint(); delete view.searchSelection; urlState(); root.removeAttribute('aria-busy'); return;
     }
     if (!config.source) {
-      page=applyQuery(config.rows || [],config,query);
+      page=applyQuery(config.rows || [],config,query);view.loading=false;
       if (destroyed || version !== revision) return;
       query.page=page.page;
       paint(); delete view.searchSelection; urlState(); root.removeAttribute('aria-busy'); return;
     }
     controller=new win.AbortController(); root.setAttribute('aria-busy','true'); urlState();
+    // A refetch keeps the rows it has (dimmed under aria-busy); with none to keep, the loader
+    // replaces the empty copy or the error rather than letting either stand for the new request.
+    const status=root.querySelector('.dt-count');
+    if (!page.rows.length && !view.loading) { view.loading=true; paint(); }
+    else if (page.rows.length && settled) { root.setAttribute('data-dt-stale',''); if (status) status.textContent=loadingText(config); }
     try {
       const response=await win.fetch(endpoint(),{signal:controller.signal});
       if (!response.ok) throw new Error('Table request failed');
@@ -515,12 +548,17 @@ export function mountDataTable(el, config) {
       // Validate all supplied facet text, including options outside this page.
       candidate.facets=result.facets || {};
       if (destroyed || version !== revision) return;
-      page=safePage(candidate,config);
+      page=safePage(candidate,config);view.loading=false;settled=true;
       query.page=page.page;
       paint(); delete view.searchSelection; urlState();
     } catch (error) {
-      if (error?.name !== 'AbortError' && !destroyed && version === revision) paint('Could not load this table.');
-    } finally { if (!destroyed && version === revision) root.removeAttribute('aria-busy'); }
+      if (error?.name !== 'AbortError' && !destroyed && version === revision) {
+        view.loading=false;
+        // Hydration re-checks rows the server already drew for this address: if only that check
+        // fails, the rows stand. Any other failure replaces what is shown with the error.
+        if (settled || !page.rows.length) paint('Could not load this table.');
+      }
+    } finally { if (!destroyed && version === revision) { root.removeAttribute('aria-busy'); root.removeAttribute('data-dt-stale'); } }
   }
 
   function update(event) { analytics(event); void refresh(); }
@@ -582,7 +620,7 @@ export function mountDataTable(el, config) {
     else if (own(data,'densityToggle')) { view.density = view.density === 'compact' ? 'comfortable' : 'compact'; paint(); }
     else if (own(data,'showConstant')) { view.constantsVisible.push(data.showConstant); if (!view.columnsVisible.includes(data.showConstant)) view.columnsVisible.push(data.showConstant); paint(); }
     else if (own(data,'export')) void download();
-    else if (own(data,'retry')) void refresh();
+    else if (own(data,'retry')) { view.loading=!page.rows.length; paint(); void refresh(); }
   }
   function change(event) {
     const target = event.target, data = target.dataset;
@@ -623,7 +661,7 @@ export function mountDataTable(el, config) {
   void refresh();
   return {destroy() {
     destroyed = true; revision++; clearTimeout(timer); controller?.abort(); exportController?.abort();
-    root.removeAttribute('aria-busy');
+    root.removeAttribute('aria-busy'); root.removeAttribute('data-dt-stale');
     for (const [event,listener] of [['click',click],['change',change],['input',input],['submit',submit],['keydown',keydown]]) root.removeEventListener(event,listener);
     win.removeEventListener('popstate',popstate);
     setRobots(doc,root,false);

@@ -4442,13 +4442,20 @@ html[data-panel="chat"] footer { display: none; }
 .connection-choice .ui-row-meta { margin: 0; }
 .connection-choice:hover .ui-row-name, .connection-choice[aria-current="true"] .ui-row-name { color: var(--bronze-ink); text-decoration: underline; text-decoration-color: var(--bronze-rule); text-underline-offset: 3px; }
 #connection-detail { min-width: 0; scroll-margin-top: var(--space-heading); }
+/* The list's loader: the animal alone, the status line above names the wait. */
+#connection-list > .connection-loader { border: 0; }
+.connection-loader .wb-label { display: none; }
 #connection-detail > h2 { margin: 0 0 var(--space-heading); font: var(--type-heading); color: var(--ink); overflow-wrap: anywhere; }
 #connection-detail .subject-section-title { margin: var(--space-block) 0 var(--space-tight); font: var(--type-subheading); }
 /* Before a pick the column is a starting card (ui-card), held in view under
    the masthead while the list scrolls; the animal is the loaders' wombat in
-   its still pose, without a label. */
+   its still pose, without a label, kept out of sight (its space held) while
+   the list's walking one stands in for the index: one animal at a time. */
 #connection-detail:has(> .connection-detail-empty) { position: sticky; top: calc(var(--header-h) + var(--sp-16)); }
+.connections-layout:has(.connection-loader) .connection-detail-art { visibility: hidden; }
 .connection-detail-empty { text-align: center; }
+/* Its heading stays an h2 in the outline but takes the card-title scale, not the page's section heading. */
+.connection-detail-empty > .ui-card-title { font: var(--type-subheading); }
 .connection-detail-art .wb-wrap { margin: 0 auto var(--space-heading); }
 .connection-detail-art .wb-label { display: none; }
 .connection-picks { justify-content: center; }

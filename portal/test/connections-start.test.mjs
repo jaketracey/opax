@@ -19,7 +19,7 @@ const ENTITIES=[
 ];
 const record=entity=>({id:entity.id,records:entity.records,kind:entity.kind,years:{2024:3,2025:5},excerpts:[]});
 
-async function mount({drawn=[]}={}){
+async function mount({index=null}={}){
  const dom=new JSDOM(`<!doctype html><html><body><main>${panel}</main></body></html>`,{url:'https://opax.test/connections'});
  const saved={document:globalThis.document,fetch:globalThis.fetch,matchMedia:globalThis.matchMedia};
  globalThis.document=dom.window.document;
@@ -27,7 +27,7 @@ async function mount({drawn=[]}={}){
  const requests=[];
  globalThis.fetch=async url=>{
   requests.push(url);
-  if(url==='/evidence/index.json')return {ok:true,json:async()=>({entities:ENTITIES.map(e=>({...e}))})};
+  if(url==='/evidence/index.json'){await index;return {ok:true,json:async()=>({entities:ENTITIES.map(e=>({...e}))})};}
   const shard=url.match(/^\/evidence\/([a-f0-9]{2})\.json$/)?.[1];
   const entries=Object.fromEntries(ENTITIES.filter(e=>e.id.startsWith(shard)).map(e=>[e.id,record(e)]));
   return {ok:true,json:async()=>({entries})};
@@ -35,15 +35,14 @@ async function mount({drawn=[]}={}){
  const doc=dom.window.document;
  doc.getElementById('panel-connections').hidden=false;
  const {mountConnections}=await import('../public/connections.js');
- const page=mountConnections(doc.getElementById('connections-body'),{params:new URLSearchParams(),drawAnimal:slot=>drawn.push(slot)});
+ const page=mountConnections(doc.getElementById('connections-body'),{params:new URLSearchParams()});
  const settle=()=>new Promise(resolve=>setTimeout(resolve,10));
  await settle();
  return {dom,doc,page,requests,settle,restore(){page.destroy();Object.assign(globalThis,saved);dom.window.close();}};
 }
 
 test('with nothing selected the detail column is the starting card, its picks the top of the list',async()=>{
- const drawn=[];
- const {doc,restore}=await mount({drawn});
+ const {doc,restore}=await mount();
  try{
   const detail=doc.getElementById('connection-detail');
   assert.equal(detail.hidden,false);
@@ -53,8 +52,7 @@ test('with nothing selected the detail column is the starting card, its picks th
   assert.equal(heading.textContent,'Pick a connection');
   assert.equal(doc.querySelector('#connections-title').tagName,'H1','the card heading sits one level under the page title');
   assert.equal(card.querySelector('.ui-card-text').textContent,'See the speeches, releases and grant records that name it.');
-  assert.equal(drawn.length,1,'the page draws the animal into the card');
-  assert.ok(card.contains(drawn[0]));
+  assert.ok(card.querySelector(':scope > .connection-detail-art'),'the card keeps a place for the animal');
   const picks=[...card.querySelectorAll('.connection-picks > button.ui-chip')];
   assert.deepEqual(picks.map(b=>b.textContent),['Example Harbour Program','Sample Freight Co','Fictional Ridge']);
   for(const pick of picks)assert.equal(pick.type,'button');
@@ -62,6 +60,20 @@ test('with nothing selected the detail column is the starting card, its picks th
   assert.equal(group.getAttribute('role'),'group');
   assert.ok(group.getAttribute('aria-label'));
   assert.equal(card.querySelectorAll('[aria-live],[role="status"],[role="alert"]').length,0,'the list count is the page\'s one live line');
+ }finally{restore();}
+});
+
+test('while the index loads the card stands without picks, the list holds the loader, and no count shows',async()=>{
+ let answer;const index=new Promise(resolve=>{answer=resolve;});
+ const {doc,settle,restore}=await mount({index});
+ try{
+  assert.ok(doc.querySelector('#connection-detail > .connection-detail-empty'),'the starting card is up from the start');
+  assert.equal(doc.querySelectorAll('.connection-picks > *').length,0,'no picks from a list that has not loaded');
+  assert.ok(doc.querySelector('#connection-list > .connection-loader'),'the list column holds the loading animal');
+  assert.equal(doc.getElementById('connection-status').textContent,'Opening the records…');
+  answer();await settle();
+  assert.equal(doc.querySelector('#connection-list > .connection-loader'),null);
+  assert.deepEqual([...doc.querySelectorAll('.connection-picks > button')].map(b=>b.textContent),['Example Harbour Program','Sample Freight Co','Fictional Ridge'],'picks come from the loaded list');
  }finally{restore();}
 });
 

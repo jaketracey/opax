@@ -45,12 +45,15 @@ const evidence=path=>{
 const BEFORE=['connections.js','app.js','style.css'];
 const beforeFiles=Object.fromEntries(BEFORE.map(f=>[f,execFileSync('git',['-C',root,'show',`origin/main:portal/public/${f}`],{maxBuffer:64<<20})]));
 let mode='after',browser;
+// A held index answer: the loading state, with the starting card already up.
+let indexHeld=null;
 process.chdir(scratch);
 const mime=p=>p.endsWith('.css')?'text/css':p.endsWith('.js')?'text/javascript':p.endsWith('.json')?'application/json':p.endsWith('.woff2')?'font/woff2':p.endsWith('.svg')?'image/svg+xml':'text/html';
 const mf=new Miniflare(convertV4MiniflareOptions({host:'127.0.0.1',modules:true,compatibilityDate:'2026-09-01',compatibilityFlags:['nodejs_compat'],script:bundle.outputFiles[0].text,
  outboundService:async()=>{throw Error('External network disabled');},
  serviceBindings:{ASSETS:async req=>{
   const path=new URL(req.url).pathname;
+  if(path==='/evidence/index.json' && indexHeld)await indexHeld;
   if(path.startsWith('/evidence/')){const body=evidence(path);return body?Response.json(body):new Response('',{status:404});}
   const name=path.slice(1);
   if(mode==='before' && beforeFiles[name])return new Response(beforeFiles[name],{headers:{'content-type':mime(path)}});
@@ -94,8 +97,12 @@ try{
     const fit=await page.evaluate(()=>{
      const column=document.getElementById('connection-detail').getBoundingClientRect(),card=document.querySelector('.connection-detail-empty').getBoundingClientRect();
      const inside=[...document.querySelectorAll('.connection-detail-empty *')].every(el=>{const r=el.getBoundingClientRect();return r.width===0 || (r.left>=card.left-0.5 && r.right<=card.right+0.5);});
-     return {fills:Math.abs(card.width-column.width)<1,inside,still:!!document.querySelector('.connection-detail-art .wb-wrap.wb-still'),label:getComputedStyle(document.querySelector('.connection-detail-art .wb-label')).display};
+     // The heading: an h2 at the card-title scale (type-subheading), not the page's section heading.
+     const probe=document.createElement('p');probe.style.font='var(--type-subheading)';document.body.append(probe);
+     const h2=document.querySelector('.connection-detail-empty > h2'),heading={size:getComputedStyle(h2).fontSize,family:getComputedStyle(h2).fontFamily,want:getComputedStyle(probe).fontSize,wantFamily:getComputedStyle(probe).fontFamily};probe.remove();
+     return {heading,fills:Math.abs(card.width-column.width)<1,inside,still:!!document.querySelector('.connection-detail-art .wb-wrap.wb-still'),label:getComputedStyle(document.querySelector('.connection-detail-art .wb-label')).display};
     });
+    assert.equal(fit.heading.size,fit.heading.want,'the card heading takes the card-title size');assert.equal(fit.heading.family,fit.heading.wantFamily);
     assert.ok(fit.fills,'the card fills the detail column');assert.ok(fit.inside,'nothing spills out of the card');
     assert.ok(fit.still,'the animal stands still');assert.equal(fit.label,'none');
     // Sticky: scroll the list well past the card's first place; the card stays under the masthead.
@@ -115,10 +122,12 @@ try{
     await page.locator('.connection-picks > button').nth(1).click();
     await page.waitForSelector('#connection-detail > h2');
     const picked=await page.evaluate(()=>({heading:document.querySelector('#connection-detail > h2').textContent,focused:document.activeElement===document.querySelector('#connection-detail > h2'),card:!!document.querySelector('.connection-detail-empty'),current:document.querySelector('.connection-choice[aria-current="true"]')?.dataset.entity,position:getComputedStyle(document.getElementById('connection-detail')).position,address:location.search}));
+    const openedSize=await page.evaluate(()=>getComputedStyle(document.querySelector('#connection-detail > h2')).fontSize);
+    assert.notEqual(openedSize,fit.heading.size,'the opened connection keeps the section-heading size');
     assert.deepEqual({heading:picked.heading,focused:picked.focused,card:picked.card,current:picked.current,position:picked.position},{heading:ENTITIES[1].name,focused:true,card:false,current:ENTITIES[1].id,position:'static'});
     assert.match(picked.address,new RegExp(`entity=${ENTITIES[1].id}`));
     await page.screenshot({path:resolve(out,'after-1440-picked.png')});
-    Object.assign(result,{fillsColumn:fit.fills,stickyTop:held.top,headerHeight:held.header,pickedFocus:picked.focused});
+    Object.assign(result,{cardHeadingSize:fit.heading.size,openedHeadingSize:openedSize,fillsColumn:fit.fills,stickyTop:held.top,headerHeight:held.header,pickedFocus:picked.focused});
    }
    if(mode==='after' && width===390){
     // The phone keeps the list alone until a pick: no card above or below it.
@@ -133,6 +142,37 @@ try{
    results.push(result);
    await context.close();
   }
+ }
+ // While the index loads (held answer): the list column holds the walking animal, the card stands
+ // with its heading and line but no picks and no animal of its own, and nothing counts "0 connections".
+ {
+  let release;indexHeld=new Promise(done=>{release=done;});
+  const context=await browser.newContext({viewport:{width:1440,height:1000},deviceScaleFactor:2});
+  await context.route('**/*',route=>new URL(route.request().url()).origin===base?route.continue():route.abort());
+  const page=await context.newPage();page.on('pageerror',e=>errors.push(`loading 1440: ${e.message}`));
+  assert.equal((await page.goto(base+'/connections')).status(),200);
+  await page.waitForSelector('#connection-list > .connection-loader .wb-wrap');
+  await page.waitForSelector('.connection-detail-art .wb-wrap',{state:'attached'});
+  await page.evaluate(()=>document.fonts.ready);await page.waitForTimeout(1200);
+  const loading=await page.evaluate(()=>({
+   status:document.getElementById('connection-status').textContent,
+   heading:document.querySelector('.connection-detail-empty h2')?.textContent,
+   picks:document.querySelectorAll('.connection-picks > *').length,
+   cardAnimal:getComputedStyle(document.querySelector('.connection-detail-art')).visibility,
+   listAnimal:getComputedStyle(document.querySelector('.connection-loader .wb-wrap')).visibility,
+   overflow:document.documentElement.scrollWidth>innerWidth,
+  }));
+  assert.deepEqual(loading,{status:'Opening the records…',heading:'Pick a connection',picks:0,cardAnimal:'hidden',listAnimal:'visible',overflow:false});
+  await page.screenshot({path:resolve(out,'after-1440-loading.png')});
+  const before=await page.locator('.connection-detail-empty').boundingBox();
+  release();indexHeld=null;
+  await page.waitForSelector('.connection-picks > button');
+  const loaded=await page.evaluate(()=>({picks:[...document.querySelectorAll('.connection-picks > button')].map(b=>b.textContent),cardAnimal:getComputedStyle(document.querySelector('.connection-detail-art')).visibility,loader:!!document.querySelector('.connection-loader')}));
+  assert.deepEqual(loaded,{picks:ENTITIES.slice(0,3).map(e=>e.name),cardAnimal:'visible',loader:false});
+  const after=await page.locator('.connection-detail-empty').boundingBox();
+  assert.equal(before.y,after.y,'the card does not move when the list arrives');
+  results.push({mode:'loading',width:1440,picksWhileLoading:0,cardAnimalWhileLoading:'hidden',picksOnceLoaded:loaded.picks.length,cardHeightLoading:before.height,cardHeightLoaded:after.height});
+  await context.close();
  }
  assert.deepEqual(errors,[]);
  const receipt={preview:'Local Worker only; fixture evidence with invented names; no external network or production bindings',results,pageErrors:errors};

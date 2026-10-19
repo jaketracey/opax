@@ -11,6 +11,8 @@ import { moneyFlowType } from '../portal/public/money-records.js';
 import { recordsWithLocations } from '../portal/public/grants-research.js';
 import { auditComplete } from '../portal/public/audit.js';
 import { payPersonRecord, payPersonOrder, payGeneralRecords } from '../portal/src/pay-records.mjs';
+import { KEPT_REPORT } from '../portal/src/reports-gate.ts';
+import { reportsPublished } from './reports_flag.mjs';
 const root = fileURLToPath(new URL('../portal/public/', import.meta.url));
 const read = async p => JSON.parse(await readFile(join(root,p),'utf8'));
 const files = async p => (await readdir(join(root,p))).filter(n=>n.endsWith('.json')).sort();
@@ -161,8 +163,11 @@ async function main() {
  for(const [id,m] of Object.entries(access.ministers)) for(const [i,r] of (m.recent||[]).entries()) add(`minister-meeting:${id}:${i}`,'access',`${m.name} — ${r.org}`,personHref(m.page||m.name),r.purpose||'Recorded ministerial meeting',{date:r.date,state:m.jurisdiction,speakers:[m.name],source:'Ministerial diary'});
  const fits=await read('fits.json');
  for(const list of [...Object.values(fits.by_entity),...Object.values(fits.people)]) for(const r of list) add(`fits:${r.registrant}:${r.principal}:${r.from}`,'access',`${r.registrant} — ${r.principal}`,r.url,`${r.country}. ${(r.activities||[]).join('; ')}. ${r.status}.`,{date:r.from,state:'federal',source:'Foreign Influence Transparency Scheme',url:r.url});
+ // The six standing reports are searchable only while they are published
+ // (REPORTS_ENABLED in portal/wrangler.jsonc); the grants explorer stays.
+ const reportsOn=reportsPublished();
  for(const file of await files('reports')) {
-  if(file==='index.json')continue;const r=await read('reports/'+file);
+  if(file==='index.json' || !reportsOn && file!==KEPT_REPORT+'.json')continue;const r=await read('reports/'+file);
   add('report:'+r.slug,'report',r.title,'/reports/'+r.slug,r.blurb,{date:r.generated_at?.slice(0,10),source:'OPAX research report'});
  }
  const agencies=await read('agencies.json');

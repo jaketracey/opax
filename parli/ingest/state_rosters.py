@@ -8,7 +8,7 @@ hansards name a member at the microphone by surname alone: "Mr PERRETT",
 "Perrett" with 39 speeches and no first name. This module gives every such
 stub the member's full name from Wikidata's roster of each chamber.
 
-  fetch    one SPARQL query per chamber (members whose term ended in 2010 or
+  fetch    bounded SPARQL pages per chamber (members whose term ended in 2010 or
            later, or has not ended; the dead excluded): name, given and family
            names, electoral district, party, term dates, gender, birth year.
            Written to `ext_state_roster`.
@@ -48,6 +48,10 @@ from parli.ingest.replace_guard import ExtGuardError, env_allow_shrink, replace_
 SOURCE = "state_rosters"
 UA = source_http.USER_AGENT
 SPARQL = "https://query.wikidata.org/sparql"
+ROSTER_FIELDS = ("p", "pLabel", "givenLabel", "familyLabel", "districtLabel", "partyLabel",
+                 "start", "end", "genderLabel", "born")
+ROSTER_PAGE_SIZE = 100
+ROSTER_MAX_PAGES = 100
 
 # (state, chamber) as parli.db names them -> the Wikidata position item.
 POSITIONS = {
@@ -144,9 +148,12 @@ def sparql(query: str, tries: int = 4) -> list[dict]:
     return []
 
 
-def roster_query(qid: str) -> str:
-    return f"""
-SELECT ?p ?pLabel ?givenLabel ?familyLabel ?districtLabel ?partyLabel ?start ?end ?genderLabel ?born WHERE {{
+def roster_query(qid: str, *, limit: int = ROSTER_PAGE_SIZE, offset: int = 0, count: bool = False) -> str:
+    if not re.fullmatch(r"Q[1-9]\d*", qid) or type(limit) is not int or limit <= 0 or type(offset) is not int or offset < 0:
+        raise ValueError("invalid roster position or page bounds")
+    fields = " ".join("?" + field for field in ROSTER_FIELDS)
+    query = f"""
+SELECT DISTINCT {fields} WHERE {{
   ?p p:P39 ?st . ?st ps:P39 wd:{qid} .
   OPTIONAL {{ ?st pq:P580 ?start }} OPTIONAL {{ ?st pq:P582 ?end }}
   OPTIONAL {{ ?st pq:P768 ?district }} OPTIONAL {{ ?st pq:P4100 ?party }}
@@ -156,6 +163,61 @@ SELECT ?p ?pLabel ?givenLabel ?familyLabel ?districtLabel ?partyLabel ?start ?en
   FILTER(!BOUND(?end) || ?end >= "2010-01-01T00:00:00Z"^^xsd:dateTime)
   SERVICE wikibase:label {{ bd:serviceParam wikibase:language "en" . }}
 }}"""
+    if count:
+        return "SELECT (COUNT(*) AS ?count) WHERE {\n{\n" + query + "\n}\n}"
+    return query + f"\nORDER BY {fields}\nLIMIT {limit}\nOFFSET {offset}"
+
+
+def roster_count(qid: str) -> int:
+    rows = sparql(roster_query(qid, count=True))
+    try:
+        value = rows[0]["count"]["value"]
+    except (IndexError, KeyError, TypeError):
+        raise ExtGuardError(f"incomplete Wikidata roster count for {qid}") from None
+    if not isinstance(rows, list) or len(rows) != 1 or not isinstance(value, str) or not re.fullmatch(r"\d+", value):
+        raise ExtGuardError(f"invalid Wikidata roster count for {qid}")
+    return int(value)
+
+
+def roster_bindings(qid: str, *, page_size: int = ROSTER_PAGE_SIZE,
+                    max_pages: int = ROSTER_MAX_PAGES) -> list[dict]:
+    """Collect a whole chamber before callers can replace any stored rows.
+
+    Small responses avoid WDQS's truncated large JSON result. DISTINCT and a
+    full projected-field order make OFFSET boundaries deterministic. Counts
+    on both sides, unique bindings and a terminal short page fail closed on
+    incomplete results or an upstream roster that moves during acquisition.
+    """
+    if type(page_size) is not int or page_size <= 0 or type(max_pages) is not int or max_pages <= 0:
+        raise ValueError("positive roster page size and page bound are required")
+    expected = roster_count(qid)
+    if expected >= page_size * max_pages:
+        raise ExtGuardError(f"Wikidata roster {qid} exceeds the {max_pages}-page coverage bound")
+    rows, seen = [], set()
+    for page in range(max_pages):
+        got = sparql(roster_query(qid, limit=page_size, offset=page * page_size))
+        if not isinstance(got, list) or len(got) > page_size:
+            raise ExtGuardError(f"invalid Wikidata roster page {page + 1} for {qid}")
+        for row in got:
+            if (not isinstance(row, dict) or not set(row) <= set(ROSTER_FIELDS)
+                    or not isinstance(row.get("p"), dict)
+                    or not isinstance(row["p"].get("value"), str)
+                    or not re.fullmatch(r"https?://www\.wikidata\.org/entity/Q[1-9]\d*", row["p"].get("value", ""))
+                    or any(not isinstance(binding, dict) or not isinstance(binding.get("value"), str)
+                           for binding in row.values())):
+                raise ExtGuardError(f"malformed Wikidata roster binding on page {page + 1} for {qid}")
+            key = json.dumps(row, sort_keys=True, ensure_ascii=False, separators=(",", ":"))
+            if key in seen:
+                raise ExtGuardError(f"overlapping Wikidata roster pages for {qid}; stored rows retained")
+            seen.add(key)
+            rows.append(row)
+        if len(rows) > expected:
+            raise ExtGuardError(f"Wikidata roster {qid} grew during pagination; stored rows retained")
+        if len(got) < page_size:
+            if len(rows) != expected or roster_count(qid) != expected:
+                raise ExtGuardError(f"Wikidata roster {qid} changed or was incomplete during pagination; stored rows retained")
+            return rows
+    raise ExtGuardError(f"Wikidata roster {qid} has no terminal page within the {max_pages}-page bound")
 
 
 def fetch(db: sqlite3.Connection, allow_shrink: bool = False) -> None:
@@ -172,7 +234,7 @@ def fetch(db: sqlite3.Connection, allow_shrink: bool = False) -> None:
     rows = []
     fresh_by_pos: dict = {}
     for (state, chamber), qid in POSITIONS.items():
-        got = sparql(roster_query(qid))
+        got = roster_bindings(qid)
         v = lambda r, k: (r.get(k) or {}).get("value")  # noqa: E731
         n = 0
         for r in got:

@@ -1,6 +1,7 @@
 import {CommunityError, text} from './community-core'
 import {CATALOG_KINDS} from './catalog-search'
 import {isReceiptGraph, moneyQuestion, receiptAnswer, receiptGraphForQuestion} from './voice-money'
+import {reportsEnabled} from './reports-gate'
 
 type Data = Record<string, unknown>
 export type PublicReader = (path: string) => Promise<Response>
@@ -130,7 +131,7 @@ export async function runVoiceTool(name: string, args: Data, env: Env, readPubli
     data = {coverage: index.meta, connections: rows(index, 'entities').filter(e => typeof e.name === 'string' && e.name.toLowerCase().includes(query)).slice(0, 10).map(e => ({...e, opax_url: url + '?entity=' + encodeURIComponent(String(e.id))}))}
   } else if (name === 'corpus_coverage') {
     data = await asset('/corpus.json', 100_000)
-    url = origin + '/reports'
+    url = origin + (reportsEnabled(env.REPORTS_ENABLED) ? '/reports' : '/stats')
   } else if (name === 'lookup_grants') {
     const query = text(args.query, 2, 120, 'Search').toLowerCase(), jurisdiction = args.jurisdiction ?? 'federal'
     if (jurisdiction !== 'federal' && jurisdiction !== 'qld') throw new CommunityError(400, 'Choose federal or qld grant records.')

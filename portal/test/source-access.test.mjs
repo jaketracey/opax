@@ -35,7 +35,7 @@ test('declared date comes from the retained interests snapshot',async()=>{
  const fn=source.slice(start,source.indexOf('\n}\n',start)+3);
  const elements={'declared-list':{innerHTML:''},'declared-updated':{innerHTML:''}};
  const render=runInNewContext(fn+';renderDeclaredPage',{
-  $:id=>elements[id],sourceLineHTML,growthModulesReady:Promise.resolve(),
+  $:id=>elements[id],sourceLineHTML,growthModulesReady:Promise.resolve(),showPageLoader:()=>{},clearPageLoader:()=>{},
   loadRecentInterests:async()=>({meta:{generated:'2026-10-09'},items:[]}),
   loadParliamentarians:async()=>[],loadPhotoMap:async()=>({}),
  });
@@ -49,9 +49,12 @@ test('RSS, KB enrichment and watchdog read the same identity',()=>{
   const source=readFileSync(new URL(name,import.meta.url),'utf8');
   assert.match(source,/sourceIdentity\.user_agent/);
  }
- const watchdog=readFileSync(new URL('../../.github/workflows/refresh-watchdog.yml',import.meta.url),'utf8');
- assert.match(watchdog,/user-agent\.json/);
- assert.match(watchdog, /"User-Agent": user_agent/);
+ // The watchdog workflow runs scripts/refresh_watchdog.py, which reads the identity file and sends it.
+ const workflow=readFileSync(new URL('../../.github/workflows/refresh-watchdog.yml',import.meta.url),'utf8');
+ assert.match(workflow,/python3 scripts\/refresh_watchdog\.py/);
+ const watchdog=readFileSync(new URL('../../scripts/refresh_watchdog.py',import.meta.url),'utf8');
+ assert.match(watchdog,/parli\/ingest\/user-agent\.json/);
+ assert.match(watchdog,/'User-Agent': agent/);
 });
 
 test('Node pauses on challenge headers and JSON content-type mismatch',async()=>{

@@ -79,6 +79,8 @@ if ! flock -n 9; then
   exit 0
 fi
 if [ -f .env ]; then set -a; . ./.env; set +a; fi
+step_selected() { [ -z "$ONLY" ] || [[ ",$ONLY," == *",$1,"* ]]; }
+SUPPLIERS_READY=0
 
 STAGE="$PIPE/stage/weekly"; TMP="$PIPE/tmp"
 rm -rf "$STAGE" "$TMP"; mkdir -p "$STAGE" "$TMP"
@@ -157,8 +159,10 @@ if [ "$want_weekly" = 1 ]; then
   run_step diaries_nsw "SELECT COUNT(*) FROM ext_ministerial_meetings" \
     "$PY" -m parli.ingest.money_diaries --jurisdiction nsw --years "$YEAR" --new-only --db "$DB"
   # needs the ABR index (abr/abr_names.sqlite, transferred once; see docs/operations/nightly-refresh.md)
-  run_step contract_suppliers "SELECT COUNT(*) FROM ext_contract_suppliers" \
-    "$PY" -m parli.ingest.contract_suppliers --db "$DB" --abr-dir "$HOME/.cache/autoresearch/abr"
+  if step_selected contract_suppliers && run_step contract_suppliers "SELECT COUNT(*) FROM ext_contract_suppliers" \
+    "$PY" -m parli.ingest.contract_suppliers --db "$DB" --abr-dir "$HOME/.cache/autoresearch/abr"; then
+    SUPPLIERS_READY=1
+  fi
   # ACNC charity register + AIS + ATO tax transparency: reloads only the datasets CKAN says are newer
   run_step acnc_ato "SELECT COUNT(*) FROM ext_acnc_charities" \
     "$PY" -m parli.ingest.acnc_ato --check-updated
@@ -202,16 +206,35 @@ if [ "$want_monthly" = 1 ]; then
   if [ "${OPAX_SYNC_KB:-0}" = "1" ]; then
     run_step kb_patch_drain "" timeout 45m "$PY" scripts/arag_patch_speakers.py --env .env --db "$DB"
   fi
-  run_step grant_recipients "SELECT COUNT(*) FROM ext_grant_recipients" \
-    "$PY" -m parli.ingest.grant_recipients --db "$DB" --abr-dir "$HOME/.cache/autoresearch/abr"
+  RECIPIENTS_READY=0
+  if step_selected grant_recipients && run_step grant_recipients "SELECT COUNT(*) FROM ext_grant_recipients" \
+    "$PY" -m parli.ingest.grant_recipients --db "$DB" --abr-dir "$HOME/.cache/autoresearch/abr"; then
+    RECIPIENTS_READY=1
+  fi
+  # Retain the monthly catch-up for the already accepted source DB. Normal
+  # profiles now refresh daily; a standalone monthly run still needs a fresh
+  # supplier registry and must not export after a failed identity rebuild.
+  if [ "$want_weekly" != 1 ] && step_selected contract_suppliers && \
+      run_step contract_suppliers "SELECT COUNT(*) FROM ext_contract_suppliers" \
+        "$PY" -m parli.ingest.contract_suppliers --db "$DB" --abr-dir "$HOME/.cache/autoresearch/abr"; then
+    SUPPLIERS_READY=1
+  fi
 
   # --- exports ---------------------------------------------------------------------------------------------------
   run_step x_expenses "" "$EXPORT" json portal/public/expenses.json "$PY" scripts/export_expenses.py
-  run_step x_suppliers "" "$EXPORT" dir portal/public/suppliers portal/public/agencies \
+  if [ "$SUPPLIERS_READY" = 1 ]; then
+    run_step x_suppliers "" "$EXPORT" dir portal/public/suppliers portal/public/agencies \
       portal/public/suppliers.json portal/public/agencies.json -- \
-    "$PY" scripts/export_suppliers.py --db "$DB" --published-since 2025-07-08 --output portal/public
-  run_step x_grants "" "$EXPORT" dir portal/public/grants/federal portal/public/graph/grants.federal.json -- \
-    "$PY" scripts/export_grants.py federal --local
+      "$PY" scripts/export_suppliers.py --db "$DB" --published-since 2025-07-08 --output portal/public
+  elif step_selected x_suppliers; then
+    log "[x_suppliers] SKIP: supplier registry failed or was not selected; last good profiles kept"
+  fi
+  if [ "$RECIPIENTS_READY" = 1 ]; then
+    run_step x_grants "" "$EXPORT" dir portal/public/grants/federal portal/public/graph/grants.federal.json -- \
+      "$PY" scripts/export_grants.py federal --local
+  elif step_selected x_grants; then
+    log "[x_grants] SKIP: recipient registry failed or was not selected; last good profiles kept"
+  fi
   run_step x_discovery "" "$EXPORT" file portal/public/discovery.json "$TMP/discovery.json" \
     "$PY" scripts/export_discovery.py --db "$DB" --output "$TMP/discovery.json"
   run_step x_pay "" "$EXPORT" file portal/public/pay.json "$TMP/pay.json" \

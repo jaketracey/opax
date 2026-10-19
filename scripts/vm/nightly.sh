@@ -158,6 +158,12 @@ import json, sys, datetime
 path, status, day, started, sha, deploy, summary, nwarn, *rest = sys.argv[1:]
 warnings, failures = rest[:int(nwarn)], rest[int(nwarn):]
 from pathlib import Path
+from datetime import date
+from scripts.vm.periodic_state import snapshot
+try:
+    periodic_state = snapshot(Path(path).parent / 'periodic-refresh-v1.json', date.fromisoformat(day))
+except (OSError, ValueError, KeyError, TypeError):
+    periodic_state = {"error": "periodic state unreadable; inspect the VM state file"}
 paused_sources = {}
 for receipt in [Path(path).parent / 'source-access.json', *(Path(path).parent / 'source-access').glob('*.json')]:
     try:
@@ -166,7 +172,7 @@ for receipt in [Path(path).parent / 'source-access.json', *(Path(path).parent / 
 json.dump({"date": day, "status": status, "started": started,
            "finished": datetime.datetime.now(datetime.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
            "commit": sha or None, "deploy": deploy, "summary": summary, "failures": failures, "warnings": warnings,
-           "paused_sources": paused_sources},
+           "paused_sources": paused_sources, "periodic_state": periodic_state},
           open(path, "w"), indent=1)
 PYEOF
 }
@@ -337,23 +343,31 @@ fi
 # ---- 2b. the periodic groups: weekly (Sundays, Sydney), monthly (the first Sunday), frl (Thursdays) ----------
 # The FRL instrument crawl (~2.6 h of 10-second-spaced requests, 18 Oct 2026) has its own night: with the rest of the
 # weekly it left Sunday no time inside the 6 h unit limit to test and publish (scripts/weekly_refresh.sh).
+PERIODIC_STATE="$PIPE/periodic-refresh-v1.json"
+PERIODIC_DATE=${OPAX_TODAY:-$(TZ=Australia/Sydney date +%F)}
+PERIODIC_ACCEPTED=0
 select_groups() {
-  if [ -n "${OPAX_FORCE_GROUPS:-}" ]; then echo "$OPAX_FORCE_GROUPS"; return; fi
-  local today dow dom
-  today=${OPAX_TODAY:-$(TZ=Australia/Sydney date +%F)}   # OPAX_TODAY=YYYY-MM-DD pretends it is that night (rehearsal, tests)
-  dow=$(date -d "$today" +%u); dom=${today##*-}
-  if [ "$dow" = 7 ]; then
-    if [ "$((10#$dom))" -le 7 ]; then echo "weekly monthly"; else echo "weekly"; fi
-  elif [ "$dow" = "${OPAX_FRL_DOW:-4}" ]; then
-    echo "frl"
-  fi
+  "$PY" scripts/vm/periodic_state.py plan --state "$PERIODIC_STATE" --date "$PERIODIC_DATE" \
+    --frl-dow "${OPAX_FRL_DOW:-4}" --force "${OPAX_FORCE_GROUPS:-}"
+}
+periodic_refresh_complete() {
+  # A successful loader is not publication. Any held group or failed final
+  # nightly, NO_PUSH rehearsal or refused push leaves the durable debt intact.
+  [ "$PERIODIC_ACCEPTED" = 1 ] && [ "${#FAILURES[@]}" -eq 0 ] \
+    && [ "${OPAX_NIGHTLY_NO_PUSH:-0}" != 1 ] || return 0
+  "$PY" scripts/vm/periodic_state.py complete --state "$PERIODIC_STATE" --date "$PERIODIC_DATE" \
+    --groups "$groups" --commit "$(git rev-parse HEAD)" \
+    || fail "could not record periodic publication; catch-up remains pending"
 }
 WEEKLY_LOG="$PIPE/weekly.log"
+# Plan even when acquisition is skipped: a scheduled/forced run remains owed.
+groups=$(select_groups) || { fail "cannot plan periodic catch-up; state retained for inspection"; finish; }
 if [ "${OPAX_NIGHTLY_SKIP_REFRESH:-0}" != 1 ] && [ "${OPAX_NIGHTLY_SKIP_PERIODIC:-0}" != 1 ]; then
-  groups=$(select_groups)
   if [ -n "$groups" ]; then
     PERIODIC="${OPAX_WEEKLY_REFRESH:-$REPO/scripts/weekly_refresh.sh}"
     log "periodic groups tonight: $groups"
+    "$PY" scripts/vm/periodic_state.py attempt --state "$PERIODIC_STATE" --date "$PERIODIC_DATE" --groups "$groups" \
+      || { fail "cannot record periodic attempt; pending state retained"; finish; }
     # shellcheck disable=SC2086  # $groups is a word list on purpose
     OPAX_SYNC_KB="${OPAX_PERIODIC_SYNC_KB:-1}" OPAX_ALLOW_FAIL="${OPAX_PERIODIC_ALLOW_FAIL:-}" run "$PERIODIC" $groups
     prc=$?
@@ -367,14 +381,22 @@ if [ "${OPAX_NIGHTLY_SKIP_REFRESH:-0}" != 1 ] && [ "${OPAX_NIGHTLY_SKIP_PERIODIC
     elif [ "$prc" -ne 0 ]; then
       failed_steps=$(grep -E 'Incomplete weekly refresh: failed steps' "$WEEKLY_LOG" | tail -1 | sed 's/.*failed steps //')
       fail "weekly_refresh.sh ($groups) reported failed steps: ${failed_steps:-unknown} (rc=$prc); the rest was still published"
+    elif [ -n "${OPAX_ONLY:-}" ]; then
+      # run_step deliberately returns success for excluded debugging steps.
+      # Selected outputs may publish, but they do not complete a whole group.
+      warn "periodic groups $groups were filtered by OPAX_ONLY; full-group catch-up retained"
+    else
+      PERIODIC_ACCEPTED=1
     fi
     stale=$(last_run_line "$WEEKLY_LOG" 'Stale weekly refresh:' | sed 's/.*register: //')
+    [ -z "$stale" ] || PERIODIC_ACCEPTED=0
     [ -z "$stale" ] || warn "a source refused to change its register tonight (kept the last good rows): $stale"
     held=$(last_run_line "$WEEKLY_LOG" 'Roster held:' | sed 's/.*Roster held: //')
+    [ -z "$held" ] || PERIODIC_ACCEPTED=0
     [ -z "$held" ] || warn "the roster export was held and the shipped parliamentarians.json kept (review, then OPAX_ROSTER_ACCEPT=1): $held"
     # the shipped roster is kept record for record (scripts/roster_overlay.py); a sitting member it lacks needs review
     overlay=$(last_run_line "$WEEKLY_LOG" 'Roster overlay:' | sed 's/.*Roster overlay: //')
-    case "$overlay" in *"are sitting members"*) warn "the roster export has sitting members the shipped roster lacks, held for review into scripts/roster_accept.json (scripts/roster_accept.py --propose): $overlay" ;; esac
+    case "$overlay" in *"are sitting members"*) PERIODIC_ACCEPTED=0; warn "the roster export has sitting members the shipped roster lacks, held for review into scripts/roster_accept.json (scripts/roster_accept.py --propose): $overlay" ;; esac
   fi
 fi
 
@@ -401,6 +423,7 @@ bills_fill_and_verify
 # After bill verification so division backlinks use the retained, publishable bills.
 # Both exporters read one read-only DB snapshot; neither alters mobile votes.json.
 if [ "${OPAX_NIGHTLY_SKIP_REFRESH:-0}" != 1 ] && [ "$DIVISIONS_ACQUISITION_FAILED" != 1 ]; then
+  recent_votes_log_start=$(wc -l < "$LOGFILE")
   log "refreshing static division pages and separate SEO recent votes"
   if ! run "$PY" scripts/export_division_pages.py; then
     if [ "${DIVISIONS_REFRESH_OK:-0}" = 1 ]; then divisions_revert; else revert_group divisions; fi
@@ -419,6 +442,9 @@ if [ "${OPAX_NIGHTLY_SKIP_REFRESH:-0}" != 1 ] && [ "$DIVISIONS_ACQUISITION_FAILE
     if [ "${DIVISIONS_REFRESH_OK:-0}" = 1 ]; then divisions_revert; else revert_group seovotes; fi
     reason=$(tail -n 40 "$LOGFILE" | grep -oE '(ValueError|OperationalError|Error): .*' | tail -1 | cut -c1-240)
     fail "SEO recent-vote export failed${reason:+ ($reason)}; previous separate export kept"
+  else
+    retained=$(tail -n +$((recent_votes_log_start + 1)) "$LOGFILE" | grep -m1 '^SEO recent votes retained ' || true)
+    [ -z "$retained" ] || warn "$retained"
   fi
 fi
 
@@ -823,9 +849,12 @@ if git diff --cached --quiet; then
   else
     log "no data changes tonight (and checked_at is fresh): nothing to commit, push or deploy"
     DEPLOY="not needed (no changes)"
-    bills_refresh_complete
-    divisions_refresh_complete
-    evidence_refresh_complete
+    if [ "${OPAX_NIGHTLY_NO_PUSH:-0}" != 1 ]; then
+      bills_refresh_complete
+      divisions_refresh_complete
+      evidence_refresh_complete
+      periodic_refresh_complete
+    fi
     finish
   fi
 else
@@ -854,9 +883,6 @@ else
     || { fail "git commit failed"; finish; }
   log "committed: $subject"
 fi
-bills_refresh_complete
-divisions_refresh_complete
-evidence_refresh_complete
 COMMIT_SHA=$(git rev-parse --short HEAD)
 
 # ---- 7. push (the push starts the deploy) --------------------------------------------------------------------
@@ -888,4 +914,10 @@ if git diff --quiet "$BASE_BEFORE" HEAD -- portal/public/corpus.json; then
 else
   DEPLOY="started by the push (deploy.yml, corpus.json changed)"
 fi
+# A local commit is not publication. Preserve catch-up and active input state
+# when NO_PUSH is requested or the push failed.
+bills_refresh_complete
+divisions_refresh_complete
+evidence_refresh_complete
+periodic_refresh_complete
 finish

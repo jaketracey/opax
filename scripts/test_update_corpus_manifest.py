@@ -5,6 +5,9 @@
 import copy
 import json
 import sys
+import tempfile
+import sqlite3
+from contextlib import closing
 import unittest
 from datetime import date, datetime, timezone
 from pathlib import Path
@@ -296,6 +299,66 @@ class Compute(unittest.TestCase):
 
 
 class InterestsStatus(unittest.TestCase):
+    def test_structured_counts_use_readonly_source_and_published_profiles_separately(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / 'source.sqlite'
+            with closing(sqlite3.connect(path)) as db:
+                db.executescript("CREATE TABLE ext_contracts_current(id); INSERT INTO ext_contracts_current VALUES (1),(2);")
+            before = path.read_bytes()
+            published = Path(tmp) / 'suppliers.json'
+            published.write_text(json.dumps({'meta': {'contract_count': 1}}))
+            facts = ucm.structured_source_facts(str(path), published)
+            self.assertEqual(facts, {'austender_latest_contracts': 2, 'published_supplier_contracts': 1})
+            self.assertEqual(path.read_bytes(), before)
+            new, _ = run(structured_stats=facts)
+            self.assertEqual(new['refresh']['structured_sources'], facts)
+
+    def test_only_complete_evidence_advances_manifest_coverage(self):
+        stats = json.loads((CORPUS.parent / 'evidence/stats.json').read_text())
+        new, result = run(evidence_stats=stats)
+        self.assertIn('enrichment', result['changed_fields'])
+        self.assertEqual(new['enrichment']['source_records'], stats['source_records'])
+        broken = copy.deepcopy(stats)
+        broken['processed_records']['speeches'] -= 1
+        kept, _ = run(prev=new, evidence_stats=broken)
+        self.assertEqual(kept['enrichment'], new['enrichment'])
+        self.assertFalse(ucm.valid_evidence_stats({'complete': True}))
+
+    def test_paused_warning_is_named_and_idempotent(self):
+        generic = 'source paused: honest agent refused (awaiting permission); existing disclosures were preserved.'
+        prev = manifest()
+        prev['refresh']['source_limitations'].extend([generic, generic])
+        status = {'complete': False, 'limitations': [generic]}
+        first, _ = run(prev=prev, interests_status=status)
+        again, result = run(prev=first, interests_status=status)
+        self.assertEqual(again, first)
+        self.assertFalse(result['changed'])
+        self.assertEqual(first['refresh']['source_limitations'].count('Federal interests ' + generic), 1)
+        self.assertNotIn(generic, first['refresh']['source_limitations'])
+
+    def test_named_source_pauses_and_source_dates_update_without_kb_growth(self):
+        access = {'bills': {'status': 'paused', 'host': 'parlinfo.aph.gov.au'}}
+        new, result = run(source_access=access)
+        self.assertFalse(result['kb_changed'])
+        self.assertEqual(new['refresh']['source_access'], access)
+        self.assertEqual(new['refresh']['latest_source_dates']['nsw_hansard'], '2026-09-24')
+        kept, _ = run(prev=new, source_access=None)
+        self.assertEqual(kept['refresh']['source_access'], access)
+
+    def test_access_receipts_drop_private_fields_and_preserve_on_corruption(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            path = root / 'bills.json'
+            path.write_text(json.dumps({'bills': {'status': 'paused', 'host': 'parlinfo.aph.gov.au',
+                                                'private': 'not public'}}))
+            self.assertEqual(ucm.read_source_access(root),
+                             {'bills': {'status': 'paused', 'host': 'parlinfo.aph.gov.au'}})
+            path.write_text('{')
+            self.assertIsNone(ucm.read_source_access(root))
+            for value in ({}, {'bills': {}}, {'bills': {'status': 'unknown'}}):
+                path.write_text(json.dumps(value))
+                self.assertIsNone(ucm.read_source_access(root))
+
     def test_success_clears_old_warning_even_without_kb_change(self):
         prev = manifest()
         prev['refresh']['source_limitations'] = ['Federal interests pages returned no usable records. Existing disclosures were preserved.', 'Other source']

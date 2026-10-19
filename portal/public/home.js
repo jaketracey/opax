@@ -3,7 +3,7 @@ import {loadDonorViewIndex} from './donor-views.js?v=f1a85f7a27';
 let donorIndex=new Map();
 loadDonorViewIndex().then(index=>{donorIndex=index});
 import { personUrl, partyUrl } from './canonical-urls.js?v=c82496afb7';
-import { hydrateCollections, hydrateLatest, industryGroups, mapSourceHTML, mapSpan } from '/home-data.js?v=c9c42f039b';
+import { hydrateCollections, hydrateLatest, industryGroups, mapSourceHTML, mapSpan } from '/home-data.js?v=ae796dc4f3';
 
 // The homepage and research workspace have separate document lifecycles.
 const legacyRoute = location.href.split('#')[1] || '';
@@ -133,6 +133,10 @@ for (const [, name] of TOPICS)
 await import(document.getElementById('hp-navigation').src);
 const navDrawer = OpaxNavigation.mountDrawer();
 OpaxNavigation.mountDesktop();
+// The standing reports are published only where the Worker marks them
+// (REPORTS_ENABLED); it drops the Reports block itself, and so does this page.
+const reportsPublished = OpaxNavigation.published?.('reports') === true;
+if (!reportsPublished) for (const el of document.querySelectorAll('[data-reports-only]')) el.remove();
 const headerBand = document.querySelector('.site-header');
 const measureHeader = () => document.documentElement.style.setProperty('--header-h', `${headerBand.offsetHeight}px`);
 if (headerBand) {
@@ -502,7 +506,7 @@ async function headerSuggestions(q) {
   const contains = value => String(value || '').toLowerCase().includes(q.toLowerCase());
   const read = async url => { const response = await fetch(url); if (!response.ok) throw Error('Unavailable'); return response.json(); };
   headerReferences ??= Promise.allSettled([
-    read('/speakers.json'), read('/graph/money.json'), read('/reports/index.json'),
+    read('/speakers.json'), read('/graph/money.json'), reportsPublished ? read('/reports/index.json') : {reports:[]},
     import('/electorates.js?v=fb8e2dfb09').then(async module => ({...await module.loadIndex(), jurisdictions:module.JURISDICTIONS})),
   ]);
   const [speakers, money, reports, electorates] = (await headerReferences).map(result => result.status === 'fulfilled' ? result.value : null);

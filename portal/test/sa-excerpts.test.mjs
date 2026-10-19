@@ -168,7 +168,8 @@ test('raw resource retrieval remains complete and the public response alone appl
 const compiled=await build({entryPoints:[new URL('../src/index.ts',import.meta.url).pathname],bundle:true,platform:'browser',format:'esm',write:false,external:['node:*'],plugins:[{name:'stub-renderer',setup(b){b.onResolve({filter:/^\.\/og-render$/},()=>({path:'renderer',namespace:'sa-test'}));b.onLoad({filter:/.*/,namespace:'sa-test'},()=>({contents:'export const renderOgPng=async()=>null;export const renderOgJpeg=renderOgPng;export const renderStoryJpeg=renderOgPng;',loader:'js'}));}}]});
 const {default:worker}=await import('data:text/javascript;base64,'+Buffer.from(compiled.outputFiles[0].text).toString('base64'));
 test('Worker guards static report JSON and publishes flag-aware llms guidance and client policy',async()=>{
-  const env={SA_HANSARD_FULL_TEXT:'false',ASSETS:{fetch:async req=>new URL(req.url).pathname.endsWith('.json')?Response.json({sources:[row]}):new Response('Corpus guide',{headers:{'content-type':'text/plain'}})}};
+  // Report JSON is served only while the reports are published (src/reports-gate.ts).
+  const env={SA_HANSARD_FULL_TEXT:'false',REPORTS_ENABLED:'true',ASSETS:{fetch:async req=>new URL(req.url).pathname.endsWith('.json')?Response.json({sources:[row]}):new Response('Corpus guide',{headers:{'content-type':'text/plain'}})}};
   const get=path=>worker.fetch(new Request('https://opax.test'+path),env,{});
   const report=await (await get('/reports/fixture.json')).json();capped(report.sources[0].snippet);
   assert.match(await (await get('/llms.txt')).text(),/South Australian Hansard: Excerpt/);

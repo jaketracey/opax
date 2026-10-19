@@ -64,6 +64,15 @@
 .dt-actions a { display: block; padding: var(--space-tight); }
 .dt tbody tr:nth-last-child(-n + 2):not(:first-child) .dt-actions .dt-panel > div { top: auto; bottom: 100%; margin: 0 0 var(--space-line); }
 .dt-empty { padding: var(--space-section) var(--space-block); text-align: center; color: var(--ink-soft); font: var(--type-body); white-space: normal; }
+/* Loading: the shared animal holds the body's place until the first rows arrive.
+   A refetch keeps the rows it has, dimmed while the table is busy. */
+/* Held to the visible width of the scroller, so a wide table's loader stays on screen on a phone. */
+.dt-scroll:has(.dt-loading) { container-type: inline-size; }
+.dt-loading { position: sticky; left: 0; width: 100cqi; max-width: 100%; display: grid; place-items: center; min-height: calc(var(--size-control) * 3); }
+.dt-loading-row > td { padding-inline: 0; }
+.dt tbody tr.dt-loading-row:hover td { background: var(--paper-raised); }
+.dt-root[aria-busy="true"][data-dt-stale] .dt tbody tr { opacity: 0.45; transition: opacity var(--duration-standard) var(--ease-standard) var(--duration-quick); }
+@media (prefers-reduced-motion: reduce) { .dt-root[aria-busy="true"][data-dt-stale] .dt tbody tr { transition: none; } }
 .dt-footer { justify-content: space-between; margin-block: var(--space-block); font: var(--type-fine); font-variant-numeric: tabular-nums; }
 .dt-count { margin: 0; }
 .dt-page-size { display: flex; align-items: center; gap: var(--space-tight); }
