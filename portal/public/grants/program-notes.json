@@ -232,7 +232,7 @@
             "year": 2026,
             "url": "https://publicintegrity.org.au/wp-content/uploads/2026/09/Public-money-political-advantage.pdf",
             "finding": "The Centre for Public Integrity's analysis of the departmental invitation list compares the value of invited projects in each type of seat with a share proportional to the number of seats of that type (Table 3, page 11).",
-            "note": "Figures as published by the Centre for Public Integrity, not reproduced by OPAX. Seat types use the AEC's classification before the 2025 federal election, on notional 2025 boundaries; the Centre's paper notes four by-election results and an exception for Brisbane.",
+            "note": "Figures as published by the Centre for Public Integrity, not recalculated by OPAX. Seat types use the AEC's classification before the 2025 federal election, on notional 2025 boundaries; the Centre's paper notes four by-election results and an exception for Brisbane.",
             "compare": {
               "value": "Invited",
               "baseline": "Proportional to seat numbers",

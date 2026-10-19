@@ -141,7 +141,7 @@ test('the 226 active invited projects resolve to the GO7867 program view, invite
  const view='/money/grants?jur=federal&program=GO7867';
  for(const r of invited){
   assert.equal(r.href,view,r.record_id);assert.equal(r.kind,'grant');
-  assert.match(r.title,/ — invited project, not awarded$/);assert.match(r.snippet,/^Invited to apply, not awarded: /);
+  assert.match(r.title,/\(invited project, not awarded\)$/);assert.match(r.snippet,/^Invited to apply, not awarded: /);
   assert.equal(r.url,mlci.projects.find(p=>p.id===r.record_id).source_url);
  }
  assert.equal(records.find(r=>r.record_id==='research-cpi-mlci-2026')?.href,view,'the CPI comparison');
