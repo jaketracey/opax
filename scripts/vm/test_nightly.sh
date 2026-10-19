@@ -6,6 +6,7 @@
 #     'apt-get update -qq && apt-get install -y -qq git python3 python3-requests util-linux sqlite3 >/dev/null && bash /src/scripts/vm/test_nightly.sh'
 # (scripts/vm/export_people.sh reads the members table with the sqlite3 CLI; without it the weekly
 # scenarios fail.)
+# OPAX_TEST_FOCUS=evidence-alerts runs only the enabled-build alert/deferral scenarios.
 #
 # Nothing here touches the network, the real knowledge box, GitHub or the real repo:
 # a throwaway HOME, a bare git repo as "origin", a fake daily_refresh.sh and a knowledge-box
@@ -56,7 +57,7 @@ new_sandbox() {
            scripts/vm/bills_refresh.sh scripts/vm/bills_guard.py scripts/vm/keep_if_unchanged.py \
            scripts/vm/divisions_refresh.sh scripts/vm/divisions_guard.py scripts/vm/mobile_votes_contract.py \
            scripts/hubs/sitting-2026.json \
-           scripts/vm/evidence_refresh.sh scripts/vm/evidence_guard.py scripts/vm/evidence_inputs.py \
+           scripts/vm/evidence_refresh.sh scripts/vm/evidence_guard.py scripts/vm/evidence_inputs.py scripts/vm/evidence_bundle_state.py \
            scripts/bills_registry/bills_stages.py \
            scripts/export_division_pages.py scripts/export_recent_votes.py scripts/export_votes.py \
            scripts/verify_bill_briefs.py scripts/update_corpus_manifest.py scripts/bump_cache_epoch.py \
@@ -398,6 +399,57 @@ origin_log()  { git --git-dir="$ORIGIN" log --format=%s main; }
 # --- scenarios -------------------------------------------------------------------------------
 status_json() { git --git-dir="$ORIGIN" show "nightly-status:status.json"; }
 status_is()   { status_json | python3 -c "import json,sys; s=json.load(sys.stdin); assert s['status']=='$1', s"; }
+
+fixture_watchdog() {
+  # Run the real watchdog entrypoint against the two actually published fixture
+  # documents. Only its HTTP transport is replaced; no external requests occur.
+  origin_show portal/public/corpus.json > "$SB/watchdog-corpus.json"
+  status_json > "$SB/watchdog-status.json"
+  python3 - "$SRC/scripts/refresh_watchdog.py" "$SB" > "$SB/watchdog.out" 2>&1 <<'PYEOF'
+import io, os, pathlib, runpy, sys
+from unittest import mock
+from urllib.parse import urlsplit
+script, fixtures = sys.argv[1], pathlib.Path(sys.argv[2])
+def fixture_response(request, timeout):
+    name = {'/corpus.json': 'watchdog-corpus.json', '/status.json': 'watchdog-status.json'}[urlsplit(request.full_url).path]
+    return io.BytesIO((fixtures / name).read_bytes())
+with mock.patch.dict(os.environ, SITE='https://fixture.invalid', STATUS_URL='https://fixture.invalid/status.json'), \
+     mock.patch('urllib.request.urlopen', side_effect=fixture_response):
+    runpy.run_path(script, run_name='__main__')
+PYEOF
+  WRC=$?
+}
+
+evidence_alert_scenarios() {
+  echo "== enabled evidence build failures alert; busy sources defer"
+  new_sandbox evidence_build_alert
+  printf '{"old":"retained"}\n' > "$HOME/.cache/autoresearch/pipeline/evidence-bundle-active.json"
+  printf 'raise RuntimeError("fixture build failure")\n' > "$REPO/scripts/vm/build_evidence_bundle.py"
+  OPAX_EVIDENCE_BUILD=1 nightly
+  check "unexpected enabled build failure exits 1 and publishes failed status" bash -c "[ '$NRC' -eq 1 ] && git --git-dir='$ORIGIN' show nightly-status:status.json | python3 -c 'import json,sys; s=json.load(sys.stdin); assert s[\"status\"]==\"failed\" and any(\"bundle build failed (rc=1;\" in f for f in s[\"failures\"]), s'"
+  check "build failure retains public evidence, active pointer and catch-up" bash -c "git --git-dir='$ORIGIN' diff --quiet main~1 main -- portal/public/evidence && [ -f '$HOME/.cache/autoresearch/pipeline/evidence-refresh-v1.pending' ] && python3 -c 'import json; assert json.load(open(\"$HOME/.cache/autoresearch/pipeline/evidence-bundle-active.json\"))=={\"old\":\"retained\"}' && [ ! -f '$HOME/evidence.calls' ]"
+  fixture_watchdog
+  check "watchdog exits nonzero for the published build failure" bash -c "[ '$WRC' -eq 1 ] && grep -q '::error::last nightly run: evidence: bundle build failed' '$SB/watchdog.out'"
+
+  new_sandbox evidence_build_busy
+  printf '{"old":"retained"}\n' > "$HOME/.cache/autoresearch/pipeline/evidence-bundle-active.json"
+  exec 9>"$HOME/.cache/autoresearch/pipeline/daily_refresh.lock"
+  flock -n 9 || { bad "cannot acquire fixture source lock"; return; }
+  OPAX_EVIDENCE_BUILD=1 nightly
+  flock -u 9
+  exec 9>&-
+  check "busy source writer keeps nightly green with explicit deferred warning" bash -c "[ '$NRC' -eq 0 ] && git --git-dir='$ORIGIN' show nightly-status:status.json | python3 -c 'import json,sys; s=json.load(sys.stdin); assert s[\"status\"]==\"ok\" and not s[\"failures\"] and any(\"bundle build deferred (rc=75;\" in w for w in s[\"warnings\"]), s'"
+  check "busy deferral retains public evidence, active pointer and catch-up" bash -c "git --git-dir='$ORIGIN' diff --quiet main~1 main -- portal/public/evidence && [ -f '$HOME/.cache/autoresearch/pipeline/evidence-refresh-v1.pending' ] && python3 -c 'import json; assert json.load(open(\"$HOME/.cache/autoresearch/pipeline/evidence-bundle-active.json\"))=={\"old\":\"retained\"}' && [ ! -f '$HOME/evidence.calls' ]"
+  fixture_watchdog
+  check "watchdog remains green and reports the busy deferral" bash -c "[ '$WRC' -eq 0 ] && grep -q '::warning::evidence: bundle build deferred (rc=75;' '$SB/watchdog.out' && ! grep -q '::error::' '$SB/watchdog.out'"
+}
+
+if [ "${OPAX_TEST_FOCUS:-}" = evidence-alerts ]; then
+  evidence_alert_scenarios
+  echo "passed $PASS, failed $FAILN"
+  [ "$FAILN" -eq 0 ]
+  exit $?
+fi
 
 echo "== 1. happy night: refresh ok, box grew, everything pushed (the push starts the deploy) and the status published"
 new_sandbox s1
@@ -1312,6 +1364,8 @@ new_sandbox honest-nightly
 FAKE_MODE=paused FAKE_BILLS_MODE=paused nightly
 check "nightly pauses exit 0 and status contains both paused sources" bash -c "[ '$NRC' -eq 0 ] && python3 -c 'import json; d=json.load(open(\"$HOME/.cache/autoresearch/pipeline/nightly-last.json\")); assert d[\"status\"]==\"ok\" and {\"bills\",\"interests_federal\"} <= set(d[\"paused_sources\"]) and \"Paused sources:\" in d[\"summary\"]'"
 check "a refused bill source retains the published bill while votes refresh" bash -c "git --git-dir='$ORIGIN' show main:portal/public/bills/au-federal-t1.json | python3 -c 'import json,sys; assert json.load(sys.stdin)[\"status_as_of\"]==\"2026-09-01\"' && git --git-dir='$ORIGIN' show main:portal/public/votes.json | python3 -c 'import json,sys; assert \"9999\" in json.load(sys.stdin)'"
+
+evidence_alert_scenarios
 
 echo "passed $PASS, failed $FAILN"
 [ "$FAILN" -eq 0 ]

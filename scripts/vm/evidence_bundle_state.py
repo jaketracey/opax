@@ -27,18 +27,29 @@ TOP_FILES = set(FILENAMES.values()) | {"READY.json", "receipt.json"} | {
 EXPORT_FILE = re.compile(r"(?:[0-9a-f]{2}\.json|lookup/[0-9a-f]{2}\.json|index\.json|stats\.json|identity-links\.json)")
 
 
+class CheckpointBusy(RuntimeError):
+    """A reader or writer temporarily prevents safe source preparation."""
+
+
 def checkpoint(source: Path) -> None:
     """Explicit caller preparation after source writers stop; never delete WALs."""
     if not source.is_file() or source.is_symlink():
         raise ValueError("checkpoint source must be an existing regular SQLite database")
     with closing(sqlite3.connect(source.resolve().as_uri() + "?mode=rw", uri=True, timeout=5)) as db:
         db.execute("PRAGMA busy_timeout=5000")
-        result = db.execute("PRAGMA wal_checkpoint(TRUNCATE)").fetchone()
-        if not result or result[0] != 0:
-            raise ValueError("source WAL checkpoint busy; evidence build deferred")
+        try:
+            result = db.execute("PRAGMA wal_checkpoint(TRUNCATE)").fetchone()
+        except sqlite3.OperationalError as exc:
+            if (getattr(exc, "sqlite_errorcode", 0) & 0xff) in (sqlite3.SQLITE_BUSY, sqlite3.SQLITE_LOCKED):
+                raise CheckpointBusy("source WAL checkpoint busy; evidence build deferred") from exc
+            raise
+        if not result or result[0] not in (0, 1):
+            raise ValueError("source WAL checkpoint returned an invalid result")
+        if result[0] == 1:
+            raise CheckpointBusy("source WAL checkpoint busy; evidence build deferred")
         wal = Path(str(source.resolve()) + "-wal")
         if wal.exists() and wal.stat().st_size:
-            raise ValueError("source WAL remains nonempty; evidence build deferred")
+            raise CheckpointBusy("source WAL remains nonempty; evidence build deferred")
 
 
 def checked_report(path: Path, root: Path) -> dict:
@@ -234,6 +245,9 @@ def main() -> int:
             else:
                 print(f"evidence bundle retention: {len(result['removed'])} older verified bundles removed; active and one previous retained")
         return 0
+    except CheckpointBusy as exc:
+        print(f"DEFERRED evidence bundle: {exc}", file=sys.stderr)
+        return 75
     except (OSError, ValueError, KeyError, TypeError, sqlite3.Error) as exc:
         print(f"REFUSED evidence bundle: {exc}", file=sys.stderr)
         return 1

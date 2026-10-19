@@ -17,12 +17,19 @@ EVIDENCE_INITIALIZED="$PIPE/evidence-refresh-v1.initialized"
 evidence_build_candidate() (
   # A separately invoked daily/weekly writer shares these locks. This subshell
   # releases both automatically before export from the frozen bundle starts.
+  local lock_fd rc
   exec 6>"$PIPE/daily_refresh.lock" || exit 1
   exec 7>"$PIPE/weekly_refresh.lock" || exit 1
-  if ! flock -n 6 || ! flock -n 7; then
-    echo "evidence build deferred: daily or weekly source writer holds its lock" >&2
-    exit 75
-  fi
+  for lock_fd in 6 7; do
+    flock -n -E 75 "$lock_fd"
+    rc=$?
+    if [ "$rc" -ne 0 ]; then
+      if [ "$rc" = 75 ]; then
+        echo "evidence build deferred: daily or weekly source writer holds its lock" >&2
+      fi
+      exit "$rc"
+    fi
+  done
   "$PY" scripts/vm/evidence_bundle_state.py prepare --bundle-root "$EVIDENCE_BUNDLE_ROOT" \
     --pointer "$EVIDENCE_BUNDLE_ACTIVE" >&2 || exit $?
   timeout --kill-after=5s 15s "$PY" scripts/vm/evidence_bundle_state.py checkpoint \
@@ -43,7 +50,7 @@ evidence_refresh() {
       fail "cannot initialize evidence catch-up marker"; return 1;
     }
   fi
-  local day reason started rc readiness readiness_limit bundle_paths path catch_up=() input_args=() paths=()
+  local day reason started rc readiness readiness_limit bundle_paths build_stage path catch_up=() input_args=() paths=()
   day=${OPAX_TODAY:-$(TZ=Australia/Sydney date +%F)}
   [ ! -f "$EVIDENCE_PENDING" ] || catch_up=(--catch-up)
   reason=$("$PY" scripts/vm/evidence_guard.py --date "$day" ${catch_up[@]+"${catch_up[@]}"}) || {
@@ -70,18 +77,25 @@ evidence_refresh() {
     # All nightly source writers have finished under the owner locks. Prepare
     # their committed WAL explicitly; a busy reader or a later writer defers the
     # build. The builder separately freezes/checks its own unchanged source.
+    build_stage=build
     evidence_build_candidate >"$EVIDENCE_BUNDLE_CANDIDATE" 2>"$PIPE/evidence-build.log"
     rc=$?
     if [ "$rc" = 0 ]; then
+      build_stage="receipt validation"
       bundle_paths=$("$PY" scripts/vm/evidence_bundle_state.py arguments \
         --candidate "$EVIDENCE_BUNDLE_CANDIDATE" --bundle-root "$EVIDENCE_BUNDLE_ROOT" 2>>"$PIPE/evidence-build.log")
       rc=$?
     fi
     if [ "$rc" -ne 0 ]; then
-      EVIDENCE_WAITING="evidence: bundle build unavailable (rc=$rc; see evidence-build.log)"
-      warn "$EVIDENCE_WAITING; old public evidence and active bundle retained; catch-up retained"
       rm -f -- "$EVIDENCE_BUNDLE_CANDIDATE"; EVIDENCE_BUNDLE_CANDIDATE=""
-      return 0
+      if [ "$build_stage" = build ] && [ "$rc" = 75 ]; then
+        EVIDENCE_WAITING="evidence: bundle build deferred (rc=75; see evidence-build.log)"
+        warn "$EVIDENCE_WAITING; old public evidence and active bundle retained; catch-up retained"
+        return 0
+      fi
+      EVIDENCE_WAITING="evidence: bundle $build_stage failed (rc=$rc; see evidence-build.log)"
+      fail "$EVIDENCE_WAITING; old public evidence and active bundle retained; catch-up retained"
+      return 1
     fi
     while IFS= read -r path; do paths+=("$path"); done <<<"$bundle_paths"
     if [ "${#paths[@]}" != 5 ]; then
@@ -99,6 +113,11 @@ evidence_refresh() {
   if [ "$rc" -ne 0 ] || [ "$readiness" != ready ]; then
     [ -n "$readiness" ] || readiness="readiness check unavailable"
     EVIDENCE_WAITING="evidence: waiting for inputs ($readiness)"
+    if [ "${OPAX_EVIDENCE_BUILD:-0}" = 1 ]; then
+      EVIDENCE_WAITING="evidence: built bundle readiness failed ($readiness)"
+      fail "$EVIDENCE_WAITING; old public evidence and active bundle retained; catch-up retained; export skipped"
+      return 1
+    fi
     warn "$EVIDENCE_WAITING; catch-up retained; export skipped"
     return 0
   fi
