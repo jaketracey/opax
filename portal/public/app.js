@@ -1913,7 +1913,9 @@ function hereRoute() {
 
 /** The path form of a link target: "#/money", "/#/money" and "/money" all give "/money". */
 function pathFor(target) {
-  const s = String(target ?? "");
+  let s = String(target ?? "");
+  // A full URL on this site routes by its path: joining it onto the root gave /https://opax.com.au/doc/...
+  if (/^https?:\/\//i.test(s) && isSiteUrl(s)) { const u = new URL(s); s = `${u.pathname}${u.search}${u.hash}`; }
   const cut = s.startsWith("/#") ? s.slice(2) : s.startsWith("#") ? s.slice(1) : s;
   const path = cut.startsWith("/") ? cut : `/${cut}`;
   const url = new URL(path, location.origin);
@@ -1924,6 +1926,11 @@ function pathFor(target) {
   return `${url.pathname}${url.search}${url.hash}`;
 }
 
+/** A full URL that points at this site (sources carry https://opax.com.au/doc/... hrefs). */
+function isSiteUrl(s) {
+  try { const u = new URL(s); return u.origin === location.origin || u.hostname === "opax.com.au"; } catch { return false; }
+}
+
 /** Rewrite the address bar to a route without adding a history entry. */
 function replaceRoute(target) {
   history.replaceState(null, "", pathFor(target));
@@ -1931,6 +1938,8 @@ function replaceRoute(target) {
 
 /** Navigate inside the app: a history entry, then a render. */
 function goRoute(target) {
+  // Somewhere else entirely: leave the app rather than push a foreign URL as a route.
+  if (/^https?:\/\//i.test(String(target ?? "")) && !isSiteUrl(String(target))) { location.assign(String(target)); return; }
   const to = pathFor(target);
   if (to.split(/[?#]/)[0] === '/') { location.assign(to); return; }
   if (rawFragment() || to !== `${location.pathname}${location.search}`) history.pushState(null, "", to);

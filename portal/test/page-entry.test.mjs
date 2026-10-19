@@ -38,4 +38,14 @@ test('client search links use the shared route and preserve keyword mode', () =>
   assert.equal(url.pathname,'/ask');
   assert.deepEqual(Object.fromEntries(url.searchParams), {view:'search',q:'housing',state:'vic',mode:'keyword',sort:'newest',page:'2'});
   assert.equal(pathFor('/search?q=housing&mode=keyword'), '/ask?q=housing&mode=keyword&view=search');
+  // A source's full site URL routes by its path, never joined onto the root (Jake, 20 Oct: /https://opax.com.au/doc/...).
+  assert.equal(pathFor('https://opax.com.au/doc/speech-235372'), '/doc/speech-235372');
+  assert.equal(pathFor(`${origin}/subject/person/carina-garland?x=1#y`), '/subject/person/carina-garland?x=1#y');
+});
+test('a hidden quote card never takes the clicks meant for the people list under it', () => {
+  // Jake, 20 Oct: person links in "Whose words this draws on" opened the invisible quote card's passage.
+  const css = readFileSync(new URL('../public/style.css', import.meta.url), 'utf8');
+  assert.match(css, /\.quote-card:not\(\.shown\)\s*\{\s*pointer-events:\s*none;\s*\}/);
+  const app = readFileSync(new URL('../public/app.js', import.meta.url), 'utf8');
+  assert.match(app, /function goRoute\(target\) \{\s*\/\/[^\n]*\n\s*if \(\/\^https\?:/);
 });
