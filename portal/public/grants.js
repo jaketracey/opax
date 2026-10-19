@@ -631,6 +631,7 @@ const CSS = `
 .gr-compare .gr-bar-cell { display: block; max-width: 100%; margin: 0 0 var(--space-line); }
 .gr-compare .gr-bar-cell:last-child { margin-bottom: 0; }
 .gr-compare small { display: block; color: var(--ink-soft); font-variant-numeric: tabular-nums; }
+.gr-compare small span + span::before { content: ' · '; }
 .gr-splitkey .gr-seg-5 { border-color: var(--chart-baseline); }
 .gr-compare .gr-seg-5 { border: var(--border-hairline) solid var(--chart-baseline); }
 .gr-caption { font: var(--type-fine); color: var(--ink-soft); margin: var(--space-line) 0 var(--space-tight); }
@@ -682,7 +683,18 @@ const CSS = `
   .gr-table-programs { min-width: 920px; }
   .gr-cols { grid-template-columns: 1fr; }
   .gr-buckets li { grid-template-columns: minmax(0, 1fr) 4.5rem 4.5rem; }
-  .gr-compare li { grid-template-columns: minmax(0, 1fr) 4.5rem; }
+  /* The research note stacks on a phone: the label, then each figure on its
+     own line, then the bars at full width, with room between seat types. */
+  .gr-research { margin-top: var(--space-block); }
+  .gr-research .gr-audits li { padding: var(--space-row) 0; line-height: var(--leading-body); }
+  .gr-research .gr-splitkey { margin: var(--space-block) 0 var(--space-row); }
+  .gr-compare li { grid-template-columns: 1fr; gap: var(--space-tight) 0; padding: var(--space-row) 0; line-height: var(--leading-normal); }
+  .gr-compare li > span:first-child { font-weight: var(--weight-strong); color: var(--ink); }
+  .gr-compare small { margin-top: var(--sp-4); font-weight: var(--weight-regular); }
+  .gr-compare small span { display: block; }
+  .gr-compare small span + span::before { content: none; }
+  .gr-compare .gr-bars { margin-top: var(--sp-4); }
+  .gr-research .gr-caption { margin-top: var(--space-block); line-height: var(--leading-body); }
   .gr-grantswrap { max-height: none; }
 }
 `
@@ -1696,7 +1708,10 @@ export function mountGrants (container, opts = {}) {
       for (const row of c.rows) {
         const item = el('li')
         const label = el('span', null, row.label)
-        label.appendChild(el('small', null, `${c.value} ${AUD_FULL.format(row.value || 0)} · ${c.baseline.toLowerCase()} ${AUD_FULL.format(row.baseline || 0)}`))
+        // Two figures, one per line on a phone; a dot joins them on a wide screen (CSS).
+        const figures = el('small')
+        figures.append(el('span', null, `${c.value} ${AUD_FULL.format(row.value || 0)}`), el('span', null, `${c.baseline} ${AUD_FULL.format(row.baseline || 0)}`))
+        label.appendChild(figures)
         const bars = el('span', 'gr-bars')
         bars.setAttribute('aria-hidden', 'true')
         for (const [cls, v] of [['', row.value], [' gr-seg-5', row.baseline]]) {

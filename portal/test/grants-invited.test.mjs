@@ -138,7 +138,7 @@ test('What the record says: the Centre for Public Integrity comparison as six pa
     const r = mlci.cpi_comparison[i]
     assert.match(li.textContent, new RegExp(`^${r.name.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}`))
     const money = (n) => new Intl.NumberFormat('en-AU', { style: 'currency', currency: 'AUD', maximumFractionDigits: 0 }).format(n)
-    assert.ok(li.textContent.includes(`Invited ${money(r.actual)}`) && li.textContent.includes(`proportional to seat numbers ${money(r.expected)}`), r.name)
+    assert.ok(li.textContent.includes(`Invited ${money(r.actual)}`) && li.textContent.includes(`Proportional to seat numbers ${money(r.expected)}`), r.name)
     assert.equal(li.querySelectorAll('.gr-bar-cell').length, 2, `${r.name}: a bar for each figure`)
   })
   const widest = Math.max(...mlci.cpi_comparison.flatMap((r) => [r.actual, r.expected]))
