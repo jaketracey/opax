@@ -1,0 +1,146 @@
+{
+  "checked_at": "2026-10-19T01:20:20.441156+00:00",
+  "status": "locally promoted; register LIVE 19 Oct; expanded asset deployment pending",
+  "reviewed_commit": "d4930f08d3cbe29a548ebf7644cf0cc8bf082d75",
+  "approved_by": "opax-orchestrator, 19 Oct 2026 (Codex review r3 APPROVE; Jake's 19 Oct option A decision)",
+  "inputs_unchanged": true,
+  "inputs": {
+    "discovery.json": "e0574876e449c8f3ca6850dffdd6a963f19dcc45f59fae765eaadc41ed7d464a",
+    "inventory.json": "640f8b6e48b677f0da46ace701d8cd61558b7a3cbf8fcaec1afd8b5552515457",
+    "tables.json": "c68a5651bb1cb70439f654c6e6439a8912872d9cee01c9634317bd30b388f43c",
+    "receipts.json": "637b9c1bcc5a2d5bf888456de4feb1d7ac24b7b459b2098650a6f631de8683d1",
+    "reconciliation.json": "78f02d9ffb0feb7ff3b800435e722feff20f21302ec10224f3241c52502d41f4",
+    "privacy-policy.json": "7c8155e275f7d3319e0cdfeeec502744a9b2f5c397ec965c090c8c2b482fc372",
+    "privacy-holds.json": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+    "hub.json": "6b8f8d1acb4dd4d94d2e8df7c3b9effa9ee7ec4104554f12ddcc2100244efb3e"
+  },
+  "asset": {
+    "path": "portal/public/gov-advertising/data.json",
+    "bytes": 3541577,
+    "rows": 1239,
+    "sha256": "439d7a9ac5983bde325087237270e8f2585dd92aa7dcb1b1d4063ac8a2b5ca1b",
+    "reconciliation": {
+      "pass": 62,
+      "total": 62
+    },
+    "attachments_held": 30,
+    "held_attachments_exported": 0
+  },
+  "entity_check": {
+    "promoted_rows": 1239,
+    "person_entities": 0,
+    "person_links": 0,
+    "person_facets": 0,
+    "person_search_entities": 0
+  },
+  "tests": {
+    "python_advertising": 23,
+    "python_promoter": 14,
+    "python_gfs": 12,
+    "python_tax_expenditures": 10,
+    "python_total": 59,
+    "node_advertising_register_gfs_tax_navigation": 101
+  },
+  "gates": {
+    "npm_ci": "pass; before Node tests",
+    "typescript": "pass",
+    "check": "pass",
+    "source_originals_dry_run": "pass",
+    "promoter_dry_run": "pass",
+    "promoter_check_public": "pass",
+    "wrangler_deploy_dry_run": "pass; no deployment",
+    "diff_check": "pass"
+  },
+  "browser": {
+    "preview": "Actual local Wrangler, promoted public asset; deploy pending; no staged injection or preview banner",
+    "base": "http://127.0.0.1:8990",
+    "sha256": "439d7a9ac5983bde325087237270e8f2585dd92aa7dcb1b1d4063ac8a2b5ca1b",
+    "bytes": 3541577,
+    "readiness": {
+      "ready": true,
+      "count": 1239
+    },
+    "results": [
+      {
+        "width": 390,
+        "status": 200,
+        "horizontalOverflow": false,
+        "table": {
+          "containerWidth": 350,
+          "containerScrollWidth": 350,
+          "tableWidth": 350,
+          "amountCells": 25,
+          "amountsInsideContainer": true
+        },
+        "rows": 1239,
+        "publicMoneyLink": true,
+        "stagedBanner": false,
+        "personLinks": 0,
+        "sourceDescriptions": 10
+      },
+      {
+        "width": 1440,
+        "status": 200,
+        "horizontalOverflow": false,
+        "table": {
+          "containerWidth": 1325,
+          "containerScrollWidth": 1325,
+          "tableWidth": 1324.8125,
+          "amountCells": 25,
+          "amountsInsideContainer": true
+        },
+        "rows": 1239,
+        "publicMoneyLink": true,
+        "stagedBanner": false,
+        "personLinks": 0,
+        "sourceDescriptions": 10
+      }
+    ],
+    "csv": true,
+    "search": {
+      "before": 1239,
+      "after": 1035
+    },
+    "javaScriptDisabled": true,
+    "staticPhoneTable": {
+      "containerWidth": 350,
+      "containerScrollWidth": 350,
+      "tableWidth": 350,
+      "amountCells": 25,
+      "amountsInsideContainer": true
+    },
+    "pageErrors": []
+  },
+  "votes": {
+    "schema": 1,
+    "byte_identical_to_reviewed_commit_and_origin_main": true,
+    "sha256": "9b7fc46c65185223d70a49b1bd8ee807327473330b02392963aa320b191b7a93"
+  },
+  "screenshots": [
+    {
+      "path": "portal/private/vic-advertising/advertising-390-top.png",
+      "sha256": "34345e8cb5bb99df3e8d8628f808b98b0e3a093c34aca9befb5eb647f570ddf5",
+      "label": "Actual local Wrangler, promoted r3 asset; deployment pending"
+    },
+    {
+      "path": "portal/private/vic-advertising/advertising-390-table.png",
+      "sha256": "bfe6f595f567d8a857c4be7e7e1d8325e6b942f59a6be542df3e2fafacd7be97",
+      "label": "Actual local Wrangler, promoted r3 asset; deployment pending"
+    },
+    {
+      "path": "portal/private/vic-advertising/advertising-1440-top.png",
+      "sha256": "3d51c90d1b874c9d78b213754a158471002c73049299b8027894c8cb69aa2f88",
+      "label": "Actual local Wrangler, promoted r3 asset; deployment pending"
+    },
+    {
+      "path": "portal/private/vic-advertising/advertising-1440-table.png",
+      "sha256": "1eadee59e9aac92cba1be0fcefc5580ad72188c96542cc38ad8fe2ca9decff11",
+      "label": "Actual local Wrangler, promoted r3 asset; deployment pending"
+    }
+  ],
+  "source_requests": 0,
+  "push": false,
+  "deploy": false,
+  "nightly": false,
+  "production_database_writes": 0
+}

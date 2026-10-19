@@ -1,7 +1,7 @@
 {
-  "status": "pending",
-  "reviewed_commit": null,
-  "review_basis": "19 Oct 2026, Jake: grant recipients and private names inside authorised source records stay published as public record (12 Oct decision, c3a0c09b2); no person entities, profiles or identity joins are created for private individuals; privacy reviews do not reopen this. Control-hub option A: preserve authorised descriptions, campaign titles, notes and source amount annotations as record text; keep organisation/facet review and individual-supplier withholding. Nine name-only table holds are released; 30 robots/file-rights attachment holds remain. Orchestrator must review and approve these changed eight input digests before any promotion. This step is staged/dry-run only; the existing public asset remains unchanged.",
+  "status": "approved",
+  "reviewed_commit": "d4930f08d3cbe29a548ebf7644cf0cc8bf082d75",
+  "review_basis": "Orchestrator approved Codex review r3 at the recorded commit and unchanged eight digests. Jake's 19 Oct option A decision preserves authorised source-record text without person entities, profiles, person-name facets, name-search entity nodes or identity joins. Supplier and 30 attachment rights/robots holds are unchanged. Explicit local promotion authorised; no push or deploy.",
   "inputs": {
     "discovery.json": "e0574876e449c8f3ca6850dffdd6a963f19dcc45f59fae765eaadc41ed7d464a",
     "inventory.json": "640f8b6e48b677f0da46ace701d8cd61558b7a3cbf8fcaec1afd8b5552515457",
@@ -40,5 +40,6 @@
       "media": 64,
       "published total": 42
     }
-  }
+  },
+  "approved_by": "opax-orchestrator, 19 Oct 2026 (Codex review r3 APPROVE; Jake's 19 Oct option A decision)"
 }

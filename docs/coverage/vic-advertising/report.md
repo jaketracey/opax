@@ -1,10 +1,12 @@
-# Victorian government advertising — live core; source-record text update staged
+# Victorian government advertising — live page; expanded asset promoted
 
 Updated **19 October 2026 Melbourne**, based on current main `4ec9603d3`.
 The previous 1,194-cell register is live via `61a9cb859`; this follow-up restores
-source-record text and nine campaign tables in staging only. The expanded
-1,239-cell projection is pending orchestrator review; no re-promotion, push,
-deployment, source acquisition or production write occurred in this follow-up.
+source-record text and nine campaign tables. Codex r3 APPROVE and explicit
+orchestrator approval of `d4930f08d` authorised the unchanged eight inputs. The
+1,239-cell public asset is now promoted locally; deployment is pending. No push,
+deployment, source acquisition or production write occurred.
+[Round 3 promotion evidence](r3-promotion.md).
 
 19 Oct 2026, Jake: grant recipients and private names inside authorised source records stay published as public record (12 Oct decision, c3a0c09b2); no person entities, profiles or identity joins are created for private individuals; privacy reviews do not reopen this.
 
@@ -132,16 +134,16 @@ private-name entities, supplier profiles or source-to-person joins.
 same shared asset; default/nightly hubs are unchanged. It rebuilds the
 projection, joins source and policy receipts, checks eight input hashes (including the shared privacy policy and hash-only hold ledger), requires
 nonempty data and an approved review receipt, and preserves an existing asset
-on failure. **review.json is pending**, with the new eight input digests and no
-reviewed commit. The promoter dry run correctly refuses pending review.
-`portal/public/gov-advertising/data.json` remains byte-identical to main's live
-1,194-cell asset; no changed input is promoted. The renderer accepts the prior
-policy version while the expanded stage awaits explicit approval. The static
-Money link from main remains; no shared navigation change is made.
+on failure. **review.json is approved** against
+`d4930f08d3cbe29a548ebf7644cf0cc8bf082d75`, with the unchanged eight digests
+and exact orchestrator attribution. The promoter wrote the 1,239-cell public
+asset (3,541,577 bytes), with all 62 checks passing. Dry run and public-byte
+verification pass. The static Money link remains; this promotion is local and
+the restored-text expansion awaits deployment.
 
 The original browser harness explicitly injects staged bytes into a local ASSETS
-stub for pre-promotion QA. The fresh 390/1440 screenshots are labelled local
-staged previews of the expanded projection, including its restored source text.
+stub for pre-promotion QA. The latest 390/1440 screenshots verify the promoted r3 asset through local
+Wrangler, without a staged-preview banner.
 The Worker has no staging fallback. The prior promoted-asset evidence remains
 historical; local screenshots do not claim that this expansion is live.
 The app remains [plan only](../gov-advertising/app-plan.md); no native build,
@@ -156,7 +158,7 @@ query validation, SSR and shared hydration. **59 Python tests (23 advertising, 1
 and 101 Node tests pass**, including shared register, GFS, tax and navigation.
 The initial navigation attempt lacked generated calendar assets; its final run
 used offline private fixtures with a temporary local asset link, removed after
-testing. [Current validation](source-record-validation.json). Existing promoter tests protect the
+testing. [Current promotion validation](r3-promotion-validation.json). Existing promoter tests protect the
 other hubs. TypeScript, `npm run -s check`, staged/original dry run, Wrangler
 deploy **dry run**, and `git diff --check` are the delivery gates.
 

@@ -11,7 +11,9 @@ assert.ok(['127.0.0.1','localhost','[::1]'].includes(base.hostname)&&Number(base
 const {chromium}=createRequire(process.env.OPAX_BROWSER_TOOLS||'/Users/jake/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/package.json')('playwright-core');
 const out=resolve(root,'portal/private/vic-advertising');await mkdir(out,{recursive:true});
 const bytes=await readFile(resolve(root,'portal/public/gov-advertising/data.json')),hub=JSON.parse(bytes);
-assert.equal(hub.promotion.reviewed_commit,'961e07ac91cf5fc9ba21c5f6588f96170f715886');
+const review=JSON.parse(await readFile(resolve(root,'data/staged/vic-advertising/review.json')));
+assert.equal(review.status,'approved');assert.equal(hub.promotion.reviewed_commit,review.reviewed_commit);
+const campaignCosts=hub.rows.filter(r=>r.record_kind==='campaign cost').length;
 const browser=await chromium.launch({executablePath:'/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',headless:true});
 const results=[],errors=[];
 const safeRoute=route=>{
@@ -45,14 +47,19 @@ try{
   await page.evaluate(()=>scrollTo(0,0));await page.screenshot({path:resolve(out,`advertising-${width}-top.png`)});
   await page.evaluate(()=>scrollTo(0,scrollY+document.querySelector('.dt-scroll').getBoundingClientRect().top-160));
   await page.screenshot({path:resolve(out,`advertising-${width}-table.png`)});
-  results.push({width,status:response.status(),horizontalOverflow:overflow,table,rows:hub.rows.length,publicMoneyLink:true,stagedBanner:false});
+  const personLinks=await page.locator('.gov-advertising-content a[href*="/subject/person/"]').count();assert.equal(personLinks,0);
+  const descriptions=await page.locator('.gov-advertising-description').allTextContents();
+  const latest=hub.rows.map(r=>r.financial_year).sort().at(-1);
+  assert.deepEqual(descriptions,hub.rows.filter(r=>r.record_kind==='advertiser'&&r.financial_year===latest).map(r=>r.campaign));
+  assert.equal(await page.locator('.gov-advertising-description a').count(),0);
+  results.push({width,status:response.status(),horizontalOverflow:overflow,table,rows:hub.rows.length,publicMoneyLink:true,stagedBanner:false,personLinks,sourceDescriptions:descriptions.length});
  }
- await page.locator('[data-search]').fill('campaign cost');await page.waitForFunction(()=>JSON.parse(document.querySelector('[data-dt-page]').textContent).total===990);
+ await page.locator('[data-search]').fill('campaign cost');await page.waitForFunction(count=>JSON.parse(document.querySelector('[data-dt-page]').textContent).total===count,campaignCosts);
  const download=page.waitForEvent('download');await page.locator('[data-export]').click();const csv=await readFile(await(await download).path(),'utf8');assert.ok(csv.includes('Document SHA-256'));assert.ok(csv.includes('$ (excluding GST)'));
  const staticContext=await browser.newContext({javaScriptEnabled:false});await staticContext.route('**/*',safeRoute);
  const staticPage=await staticContext.newPage();await staticPage.setViewportSize({width:390,height:1000});assert.equal((await staticPage.goto(base.origin+'/register/gov-advertising')).status(),200);
  assert.equal(await staticPage.locator('[data-datatable] tbody tr').count(),25);const staticPhoneTable=await geometry(staticPage);phone(staticPhoneTable);await staticContext.close();
  assert.deepEqual(errors,[]);
- const receipt={preview:'Actual local Wrangler, promoted public asset; deploy pending; no staged injection or preview banner',base:base.origin,sha256:createHash('sha256').update(bytes).digest('hex'),bytes:bytes.length,readiness,results,csv:true,search:{before:hub.rows.length,after:990},javaScriptDisabled:true,staticPhoneTable,pageErrors:errors};
+ const receipt={preview:'Actual local Wrangler, promoted public asset; deploy pending; no staged injection or preview banner',base:base.origin,sha256:createHash('sha256').update(bytes).digest('hex'),bytes:bytes.length,readiness,results,csv:true,search:{before:hub.rows.length,after:campaignCosts},javaScriptDisabled:true,staticPhoneTable,pageErrors:errors};
  await writeFile(resolve(out,'promoted-browser-results.json'),JSON.stringify(receipt,null,2)+'\n');console.log(JSON.stringify(receipt));
 }finally{await browser.close()}

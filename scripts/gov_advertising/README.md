@@ -36,13 +36,12 @@ zero writes. Omit `--verify-originals` in a checkout without the private cache.
 
 `vic-advertising` is an explicit opt-in in `promote_hub_data.py`, targeting the
 single `gov-advertising/data.json` asset. It is not a default/nightly hub.
-`data/staged/vic-advertising/review.json` is **pending** for the expanded
-1,239-cell projection, with eight fresh input digests and no reviewed commit.
-The new projection must be explicitly approved by the orchestrator before
-re-promotion. Its dry run intentionally refuses pending review. The 1,194-cell
-public asset already on main remains unchanged and readable under policy v1;
-new staging uses policy v2. No nightly, public-asset write, push or deploy is
-part of this decision follow-up.
+`data/staged/vic-advertising/review.json` is **approved** against
+`d4930f08d3cbe29a548ebf7644cf0cc8bf082d75` after Codex r3 APPROVE, binding
+the same eight exact input digests. Explicit local promotion wrote the expanded
+1,239-cell asset with 62/62 checks on 19 October; deployment is pending. The
+promoter dry run and public-byte check pass. Future input changes still require
+explicit orchestrator approval. No nightly, push or deployment occurs here.
 
 The Worker never reads staging. For labelled, local QA only:
 

@@ -93,7 +93,7 @@ test('authorised description stays page/CSV/search text without creating person 
  }finally{globalThis.fetch=originalFetch}
 });
 
-test('the already-promoted v1 snapshot stays readable while the new stage awaits review',async()=>{
+test('the approved promoted snapshot remains readable',async()=>{
  const live=JSON.parse(readFileSync(new URL('../public/gov-advertising/data.json',import.meta.url)));
  assert.equal(clearedAdvertising(live).length,live.rows.length);
  assert.equal((await render(live)).status,200);
