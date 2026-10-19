@@ -12,7 +12,6 @@ import json
 from pathlib import Path
 import re
 import shutil
-import subprocess
 import sys
 import time
 import requests
@@ -442,10 +441,9 @@ def review_checkpoint(snapshot, checkpoint):
         if document.get('text_sha256') and document['text_sha256'] != text_hash(document['pages']): raise Held('Saved PDF text hash mismatch')
         document['rights_review'] = rights_review(row, document)
         atomic_json(path, document)
-    audit = subprocess.run(['node', str(ROOT / 'scripts/check_qao_privacy.mjs'), '--hold-local-text',
-                            str(checkpoint.relative_to(ROOT))], cwd=ROOT, capture_output=True, text=True)
-    if audit.returncode: raise Held('Local source-text donor privacy gate failed; accepted body snapshot kept')
-    atomic_json(ROOT / 'scripts/state/qao/privacy-run.json', json.loads(audit.stdout))
+    # The donor-withholding tool was retired with the publication policy in
+    # c3a0c09b2. Document-level rights, source hashes and existing receipt holds
+    # remain authoritative; stage() admits PDF text only for ready documents.
 
 
 def main():

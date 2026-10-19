@@ -55,6 +55,53 @@ class Tests(unittest.TestCase):
         (root/(row['id']+'.json')).write_text(json.dumps(doc))
         return stage(snap,root,root/'bodies.json',root/'kb/qao-bodies.jsonl')
 
+    def test_review_checkpoint_preserves_rights_held_facts_without_retired_tool(self):
+        from parli.ingest.qao_bodies import review_checkpoint
+        root=self.temp();row,doc,snap=fixture()
+        notices=[
+            '© The State of Queensland (Queensland Audit Office) 2000. Creative Commons Attribution-Non-Commercial-No Derivatives (CC BY-NC-ND) 4.0 International licence.',
+            '© The State of Queensland. Reproduction by whatever means is prohibited without prior written permission.',
+            '© The State of Queensland (Queensland Audit Office) 2000. Copyright notice.',
+        ]
+        rows=[]
+        for n,notice in enumerate(notices,1):
+            current=copy.deepcopy(row);current.update(id=f'qao-2000-01-{n}',number=n)
+            current['recommendations']=[{'number':1,'text':'Source HTML advice','html':'','addressed_to':None,'source_text':"QAO's text"}]
+            saved=copy.deepcopy(doc);saved['id']=current['id'];saved['pages'][1]=page(2,[(notice,60,140)])
+            (root/(current['id']+'.json')).write_text(json.dumps(saved));rows.append(current)
+        snap.update(reports=rows,count=3,listed=3)
+        out=root/'bodies.json';kb=root/'kb.jsonl'
+        stage(snap,root,out,kb);before=(out.read_bytes(),kb.read_bytes())
+        with patch('subprocess.run',side_effect=AssertionError('retired tool must not run')):
+            review_checkpoint(snap,root)
+        data,counts=stage(snap,root,out,kb)
+        self.assertEqual(before,(out.read_bytes(),kb.read_bytes()))
+        self.assertEqual(counts['bodies'],0);self.assertEqual(counts['kb_units'],0);self.assertEqual(counts['kb_bytes'],0)
+        self.assertTrue(all(r['pdf']['status']=='held' and not r['body_units'] and not r['responses'] for r in data['reports']))
+        _,manifest=plan_export(data)
+        self.assertEqual((manifest['bodies'],manifest['pdf_recommendations'],manifest['responses']),(0,0,0))
+        self.assertEqual(manifest['html_recommendations'],3)
+
+    def test_review_checkpoint_identity_and_hash_fail_closed_before_receipt_changes(self):
+        from parli.ingest.qao_bodies import review_checkpoint
+        row,doc,snap=fixture();root=self.temp();path=root/(row['id']+'.json')
+        accepted=root/'bodies.json';accepted.write_bytes(b'accepted rights-held snapshot\n')
+        for changes in ({'id':'qao-2000-01-2'},{'pdf_url':'https://www.qao.qld.gov.au/other.pdf'},{'text_sha256':'b'*64}):
+            path.write_text(json.dumps({**doc,**changes}));before=path.read_bytes()
+            with self.assertRaises(Held):review_checkpoint(snap,root)
+            self.assertEqual(path.read_bytes(),before)
+            self.assertEqual(accepted.read_bytes(),b'accepted rights-held snapshot\n')
+
+    def test_review_checkpoint_preserves_existing_withheld_receipt_hold(self):
+        from parli.ingest.qao_bodies import review_checkpoint
+        row,doc,snap=fixture();root=self.temp();path=root/(row['id']+'.json')
+        doc.update(privacy_withheld=True,rights_review=rights_review(row,doc));path.write_text(json.dumps(doc))
+        review_checkpoint(snap,root)
+        reviewed=json.loads(path.read_text())
+        self.assertTrue(reviewed['privacy_withheld'])
+        self.assertEqual(reviewed['rights_review']['status'],'held')
+        self.assertIn('individual_donor_text_hold',reviewed['rights_review']['reasons'])
+
     def test_pdf_rights_hold_keeps_separately_licensed_html_recommendations(self):
         row,doc,snap=fixture();snap['reports'][0]['recommendations']=[{'number':1,'text':'Source HTML advice','html':'','addressed_to':None,'source_text':"QAO's text"}]
         doc['pages'][1]=page(2,[('© The State of Queensland (Queensland Audit Office) 2000.\nCreative Commons Attribution-Non-Commercial-No Derivatives (CC BY-NC-ND) 4.0 International licence.',60,140)])
