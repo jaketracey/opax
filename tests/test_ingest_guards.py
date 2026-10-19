@@ -50,8 +50,12 @@ class StateRosterGuardTests(unittest.TestCase):
 
         def fake(query, tries=4):
             qid = next(q for q in by_qid if f"wd:{q}" in query)
+            if "COUNT(*)" in query:
+                return [{"count": {"value": str(by_qid[qid])}}]
+            offset = int(re.search(r"OFFSET (\d+)", query)[1])
+            limit = int(re.search(r"LIMIT (\d+)", query)[1])
             return [{"p": {"value": f"http://www.wikidata.org/entity/Q{9000 + i}"}, "pLabel": {"value": f"New {qid} {i}"},
-                     "familyLabel": {"value": "New"}} for i in range(by_qid[qid])]
+                     "familyLabel": {"value": "New"}} for i in range(by_qid[qid])][offset:offset + limit]
         return fake
 
     def rows(self, state, chamber):

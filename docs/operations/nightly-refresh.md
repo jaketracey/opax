@@ -44,6 +44,9 @@ The nightly only brings new records in and publishes them.
   2d  evidence: export_evidence_layers.py to fresh staging, then audit_evidence_export.py
         Sunday plus first-run catch-up; matching source DB + four complete sidecars, all read-only; no KB access.
         Retention/count/asset guards, timestamp suppression, then install; capped at 20 min + 60 s kill grace.
+        Optional OPAX_EVIDENCE_BUILD=1 first builds a matching frozen bundle (90 min cap), with
+        source-owner locks and a reserved SQLite write lock, without source data writes. Leave off
+        until a supervised current-corpus candidate passes every existing publication guard.
    3  bills: export_bills.py --fill-briefs, then verify_bill_briefs.py (no brief lost vs HEAD),
         recheck bill retention and keep_if_unchanged; any failure puts the bills group back to HEAD
   3b  export_division_pages.py and export_recent_votes.py: Worker SEO projections from the refreshed
@@ -109,11 +112,40 @@ produces these records. Its exporter rejects lost identities, older snapshots an
 events within the retained rolling window. The MP answer uses existing bill for/against
 samples when no separate recent records exist, without a last-ten placeholder.
 
+## Building missing evidence inputs
+
+`scripts/vm/build_evidence_bundle.py` creates fresh serial sidecars and a reduced
+four-table source snapshot under a unique incoming directory. It retains exact
+source values and rowids, blocks competing source writers, closes/checkpoints only
+new outputs, and verifies hashes, coverage, the full source audit and the existing
+publication guard. Termination stops its child stages before releasing the source.
+The protected disk reserve is 5 GiB plus 1 GiB allocation headroom.
+
+Before a supervised build, stop source writers and perform the explicit idle WAL
+checkpoint through `evidence_bundle_state.py checkpoint --source <live-db>`.
+Run the builder with `--source <live-db> --bundle-root <pipeline>/evidence-bundles`.
+The manual `--keep-audited-candidate` flag can retain a fully source-audited output
+that fails publication guards for review. It exits 3 with `CANDIDATE.json`, no
+`READY.json`, no activation and no public write. Automatic runs never use this flag.
+No publication guard is relaxed to admit a new corpus or a larger asset tree.
+
+The optional nightly wrapper owns the daily/weekly locks while building and selects
+a candidate only after readiness. Its active pointer lives outside git and advances
+after accepted data is confirmed on main. Failed pushes, rejected exports and
+`NO_PUSH` retain the old active pointer and catch-up work, including no-diff runs.
+Before allocation it removes only older verified managed bundles while keeping the
+active one; after publication it retains the new active plus its predecessor. Foreign
+files, symlinks and unknown content never authorize deletion. Small receipts are archived.
+
+Complete accepted evidence statistics now update the manifest's enrichment coverage;
+structured source totals come from the read-only database and accepted supplier export.
+Resource counts, collected rows and published supplier rows remain separate measures.
+
 ## The machine
 
 | | |
 | --- | --- |
-| Instance | `i-0d725823966c827b9`, name `opax-refresh`, ap-southeast-2a, `t4g.large` (2 vCPU, 8 GB, unlimited credits), Ubuntu 24.04 arm64, 58 GB gp3 root |
+| Instance | `i-0d725823966c827b9`, name `opax-refresh`, ap-southeast-2a, `t4g.large` (2 vCPU, 8 GB, unlimited credits), Ubuntu 24.04 arm64, 100 GiB gp3 root verified 19 October |
 | Cost model | on for the refresh (1–2 h) only; the disk (about 40 GB used) is kept while it is stopped |
 | Access | SSH key `~/.ssh/opax-refresh.pem` (on the Mac and the desktop), user `ubuntu`, security group SSH only from the home IP |
 | Public IP | **changes at every stop/start**: `scripts/vm/ec2.sh ip` (or `aws ec2 describe-instances --region ap-southeast-2 --instance-ids i-0d725823966c827b9 --query 'Reservations[0].Instances[0].PublicIpAddress' --output text`) |

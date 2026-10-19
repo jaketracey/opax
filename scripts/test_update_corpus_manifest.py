@@ -6,6 +6,8 @@ import copy
 import json
 import sys
 import tempfile
+import sqlite3
+from contextlib import closing
 import unittest
 from datetime import date, datetime, timezone
 from pathlib import Path
@@ -297,6 +299,31 @@ class Compute(unittest.TestCase):
 
 
 class InterestsStatus(unittest.TestCase):
+    def test_structured_counts_use_readonly_source_and_published_profiles_separately(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / 'source.sqlite'
+            with closing(sqlite3.connect(path)) as db:
+                db.executescript("CREATE TABLE ext_contracts_current(id); INSERT INTO ext_contracts_current VALUES (1),(2);")
+            before = path.read_bytes()
+            published = Path(tmp) / 'suppliers.json'
+            published.write_text(json.dumps({'meta': {'contract_count': 1}}))
+            facts = ucm.structured_source_facts(str(path), published)
+            self.assertEqual(facts, {'austender_latest_contracts': 2, 'published_supplier_contracts': 1})
+            self.assertEqual(path.read_bytes(), before)
+            new, _ = run(structured_stats=facts)
+            self.assertEqual(new['refresh']['structured_sources'], facts)
+
+    def test_only_complete_evidence_advances_manifest_coverage(self):
+        stats = json.loads((CORPUS.parent / 'evidence/stats.json').read_text())
+        new, result = run(evidence_stats=stats)
+        self.assertIn('enrichment', result['changed_fields'])
+        self.assertEqual(new['enrichment']['source_records'], stats['source_records'])
+        broken = copy.deepcopy(stats)
+        broken['processed_records']['speeches'] -= 1
+        kept, _ = run(prev=new, evidence_stats=broken)
+        self.assertEqual(kept['enrichment'], new['enrichment'])
+        self.assertFalse(ucm.valid_evidence_stats({'complete': True}))
+
     def test_paused_warning_is_named_and_idempotent(self):
         generic = 'source paused: honest agent refused (awaiting permission); existing disclosures were preserved.'
         prev = manifest()

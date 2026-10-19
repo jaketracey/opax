@@ -27,8 +27,10 @@ What changes, and when
   uses 12, so every night leaves a fresh stamp that the freshness watchdog can see, while a
   second run on the same night changes nothing).
 
-Never touched: models, inclusion, known_defects, enrichment, grants_research,
-structured_sources, enrichment_queued and the other hand-kept fields.
+Accepted complete evidence/stats.json updates the matching enrichment coverage.
+Structured source totals follow the read-only DB and accepted supplier export.
+Never touched: models, inclusion, known_defects, grants_research,
+enrichment_queued and the other hand-kept fields.
 
 Exit status: 0 done (see --result-json for what changed), 2 refused because the
 box's answer looks wrong (fewer resources than the manifest by more than 1%, a
@@ -212,6 +214,43 @@ def latest_nsw_release(db_path: str | None) -> str | None:
     return value if value and re.fullmatch(r"\d{4}-\d\d-\d\d", value) else None
 
 
+def structured_source_facts(db_path: str | None, suppliers_path: Path) -> dict:
+    """Collected rows and published profile rows remain distinct measures."""
+    result = {}
+    queries = {
+        "grantconnect_awards": "SELECT count(*) FROM ext_grants WHERE source='grantconnect'",
+        "austender_latest_contracts": "SELECT count(*) FROM ext_contracts_current",
+        "lobbyist_firms": "SELECT count(*) FROM ext_lobbyists",
+        "lobbyist_client_links": "SELECT count(*) FROM ext_lobbyist_clients",
+        "lobbyist_people": "SELECT count(*) FROM ext_lobbyist_people",
+        "lobbyist_contact_disclosures": "SELECT count(*) FROM ext_lobbyist_contacts",
+    }
+    if db_path and Path(db_path).is_file():
+        try:
+            db = sqlite3.connect(Path(db_path).resolve().as_uri() + '?mode=ro', uri=True, timeout=30)
+            try:
+                db.execute('PRAGMA query_only=ON')
+                db.execute('BEGIN')
+                for key, sql in queries.items():
+                    try:
+                        count = db.execute(sql).fetchone()[0]
+                        if type(count) is int and count > 0:
+                            result[key] = count
+                    except sqlite3.Error:
+                        pass
+            finally:
+                db.close()
+        except sqlite3.Error:
+            pass
+    try:
+        count = json.loads(suppliers_path.read_text())['meta']['contract_count']
+        if type(count) is int and count > 0:
+            result['published_supplier_contracts'] = count
+    except (OSError, ValueError, KeyError, TypeError):
+        pass
+    return result
+
+
 # --- the update ----------------------------------------------------------------
 
 
@@ -258,7 +297,8 @@ def stamp_is_stale(checked_at: str | None, now: datetime, hours: float) -> bool:
 def compute(prev: dict, kb: dict, log: dict, bills: dict, nsw_release: str | None,
             run_date: date, now: datetime, *, always_stamp: bool = False,
             allow_shrink: bool = False, stamp_after_hours: float | None = None,
-            interests_status: dict | None = None, source_access: dict | None = None) -> tuple[dict, dict]:
+            interests_status: dict | None = None, source_access: dict | None = None,
+            evidence_stats: dict | None = None, structured_stats: dict | None = None) -> tuple[dict, dict]:
     """Return (new manifest, result). Pure: no I/O."""
     new = copy.deepcopy(prev)
     refresh = new.setdefault("refresh", {})
@@ -358,6 +398,23 @@ def compute(prev: dict, kb: dict, log: dict, bills: dict, nsw_release: str | Non
             put(refresh, "latest_source_dates", dict(sorted(log.get("newest", {}).items())),
                 "latest_source_dates")
 
+    # These files have already passed the evidence exporter/audit/retention
+    # gate. Incomplete or malformed stats never advance the advertised coverage.
+    if valid_evidence_stats(evidence_stats):
+        enrichment = dict(new.get("enrichment", {}))
+        allowed = ("generated_at", "complete", "source_records", "processed_records", "relationships",
+                   "programme_links_complete", "identity_review_complete", "additional_mentions_complete",
+                   "additional_processed_records", "entities_with_connections", "rejected_candidate_record_matches",
+                   "published_record_matches", "identity_candidates", "identity_decisions", "quarantined_identities",
+                   "method", "coverage_note")
+        enrichment.update({key: evidence_stats[key] for key in allowed if key in evidence_stats})
+        put(new, "enrichment", enrichment, "enrichment")
+
+    if structured_stats:
+        facts = dict(refresh.get('structured_sources', {}))
+        facts.update(structured_stats)
+        put(refresh, 'structured_sources', facts, 'structured_sources')
+
     # Fields that can move without the box changing.
     for key in ("bills_registry", "current_parliament_bills", "latest_bill_introduced"):
         if bills.get(key) is not None:
@@ -385,6 +442,23 @@ def compute(prev: dict, kb: dict, log: dict, bills: dict, nsw_release: str | Non
 
 def dump(manifest: dict) -> str:
     return json.dumps(manifest, ensure_ascii=False, indent=2) + "\n"
+
+
+def valid_evidence_stats(stats: dict | None) -> bool:
+    if not isinstance(stats, dict) or any(stats.get(key) is not True for key in
+            ("complete", "programme_links_complete", "identity_review_complete", "additional_mentions_complete")):
+        return False
+    source = stats.get("source_records")
+    if (not isinstance(source, dict) or set(source) != {"speeches", "ext_press_releases", "government_grants"}
+            or any(type(value) is not int or value < 0 for value in source.values())
+            or stats.get("processed_records") != source
+            or stats.get("additional_processed_records") != {key: source[key] for key in ("speeches", "ext_press_releases")}):
+        return False
+    try:
+        datetime.fromisoformat(stats["generated_at"].replace("Z", "+00:00"))
+    except (KeyError, TypeError, ValueError, AttributeError):
+        return False
+    return True
 
 
 def read_source_access(directory: Path) -> dict | None:
@@ -418,6 +492,10 @@ def main(argv: list[str] | None = None) -> int:
                     help="last federal interests outcome (preservation/access-pause warnings)")
     ap.add_argument("--source-access-dir", default=os.path.expanduser("~/.cache/autoresearch/pipeline/source-access"),
                     help="per-source access receipts; named pauses are independent of index freshness")
+    ap.add_argument("--evidence-stats", default=str(REPO / "portal/public/evidence/stats.json"),
+                    help="accepted public evidence coverage; incomplete stats leave the prior manifest untouched")
+    ap.add_argument("--suppliers-index", default=str(REPO / "portal/public/suppliers.json"),
+                    help="accepted supplier profile export, for its published contract count")
     ap.add_argument("--db", default=os.environ.get("OPAX_DB") or os.path.expanduser("~/.cache/autoresearch/parli.db"),
                     help="parli.db, opened read-only, for the newest NSW release date")
     ap.add_argument("--date", help="version date, YYYY-MM-DD (default: today in Australia/Sydney)")
@@ -460,12 +538,17 @@ def main(argv: list[str] | None = None) -> int:
         interests_status = json.loads(Path(args.interests_status).read_text())
     except (OSError, ValueError):
         interests_status = None
+    try:
+        evidence_stats = json.loads(Path(args.evidence_stats).read_text())
+    except (OSError, ValueError):
+        evidence_stats = None
 
     try:
         new, result = compute(prev, kb, log, bills, latest_nsw_release(args.db), run_date, now,
                               always_stamp=args.always_stamp, allow_shrink=args.allow_shrink,
                               stamp_after_hours=args.stamp_after_hours, interests_status=interests_status,
-                              source_access=read_source_access(Path(args.source_access_dir)))
+                              source_access=read_source_access(Path(args.source_access_dir)), evidence_stats=evidence_stats,
+                              structured_stats=structured_source_facts(args.db, Path(args.suppliers_index)))
     except Refused as e:
         print(f"REFUSED: {e}", file=sys.stderr)
         if args.result_json:
