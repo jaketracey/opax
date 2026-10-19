@@ -13,10 +13,11 @@ from pathlib import Path
 import re
 import sqlite3
 import time
-from passage_text import evidence_excerpt
+from passage_text import PreparedEvidenceText, evidence_excerpt
 
 VERSION = '2'
 WORD = re.compile(r"[^\W_]+", re.UNICODE)
+SENTENCE_BREAK = re.compile(r'[.!?;\n]')
 GENERIC = {'government', 'department', 'council', 'australia', 'australian government',
            'commonwealth', 'the company', 'the department', 'health', 'education'}
 
@@ -42,6 +43,32 @@ def valid_abn(value):
     return value if sum(a*b for a,b in zip(digits, [10,1,3,5,7,9,11,13,15,17,19])) % 89 == 0 else None
 
 
+class PreparedMatchText:
+    """Immutable token values/coordinates with row-local sentence-gap memo."""
+
+    __slots__ = ('_text', '_words', '_breaks')
+
+    def __init__(self, text):
+        self._text = text
+        self._words = tuple((word.group().casefold(), word.start(), word.end())
+                            for word in WORD.finditer(text))
+        self._breaks = {}
+
+    @property
+    def text(self):
+        return self._text
+
+    @property
+    def words(self):
+        return self._words
+
+    def gap_breaks(self, index):
+        if index not in self._breaks:
+            self._breaks[index] = bool(SENTENCE_BREAK.search(
+                self._text[self._words[index-1][2]:self._words[index][1]]))
+        return self._breaks[index]
+
+
 class Matcher:
     def __init__(self, aliases):
         self.trie = {}
@@ -53,20 +80,28 @@ class Matcher:
                 node = node.setdefault(part, {})
             node[None] = next(iter(targets))
 
-    def matches(self, text):
-        words = list(WORD.finditer(text))
-        for i, word in enumerate(words):
-            node = self.trie
-            best = None
-            for j in range(i, min(i + 30, len(words))):
+    def matches(self, text, prepared=None):
+        if prepared is None:
+            prepared = PreparedMatchText(text)
+        elif prepared.text is not text:
+            raise ValueError('Prepared tokens belong to another source body')
+        words = prepared.words
+        count = len(words)
+        for i, (value, start, end) in enumerate(words):
+            node = self.trie.get(value)
+            if node is None:
+                continue
+            best = (node[None], start, end) if None in node else None
+            for j in range(i + 1, min(i + 30, count)):
                 # Names must not cross sentence/paragraph boundaries.
-                if j > i and re.search(r'[.!?;\n]', text[words[j-1].end():words[j].start()]):
+                if prepared.gap_breaks(j):
                     break
-                node = node.get(words[j].group().casefold())
+                value, _, end = words[j]
+                node = node.get(value)
                 if node is None:
                     break
                 if None in node:
-                    best = (node[None], word.start(), words[j].end())
+                    best = (node[None], start, end)
             if best:
                 yield best
 
@@ -214,16 +249,21 @@ def scan(source,out,matcher,limit=0):
             r=dict(row); sid=str(r[idcol]); text=r.get(textcol) or r.get('text') or ''
             if table == 'ext_press_releases': sid=str(r['source'])+':'+sid
             subject=table+':'+sid
-            for entity,start,end in places.matches(text):
+            match_text=PreparedMatchText(text)
+            passage=PreparedEvidenceText(text)
+            digest=None
+            for entity,start,end in places.matches(text,match_text):
                 add_evidence(out,subject,'mentions_electorate',entity,table,sid,text[start:end],
                     'explicit_electorate_phrase',0.98,url=r.get('url'),start=start,end=end,
-                    details={'excerpt':evidence_excerpt(text,start,end),'date':r.get('date')})
-            for entity,start,end in matcher.matches(text):
+                    details={'excerpt':passage.excerpt(start,end),'date':r.get('date')})
+            for entity,start,end in matcher.matches(text,match_text):
+                if digest is None:
+                    digest=hashlib.sha256(text.encode()).hexdigest()
                 add_evidence(out,subject,'mentions',entity,table,sid,text[start:end],
                     'unique_exact_alias',0.98,url=r.get('url'),start=start,end=end,
-                    details={'excerpt':evidence_excerpt(text,start,end),
+                    details={'excerpt':passage.excerpt(start,end),
                              'date':r.get('date'),'text_field':textcol if r.get(textcol) else 'text',
-                             'text_sha256':hashlib.sha256(text.encode()).hexdigest()})
+                             'text_sha256':digest})
             if table == 'speeches' and r.get('electorate'):
                 electorate=r['electorate'].strip()
                 obj='electorate:'+str(r.get('state') or 'unknown').casefold()+':'+electorate.casefold()

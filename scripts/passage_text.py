@@ -38,12 +38,40 @@ def _roster_names():
 _ROSTER = _roster_names()
 _NAME_TOKENS = set(_ROSTER['name_tokens']) | {name.lower() for name in _ROSTER['surnames']}
 _INTERJECTION = re.compile(r'(?<!\w)([^\W\d_]+?)(interjecting|interjections|interjection)(?!\w)', re.I)
-_alternatives = lambda values: '|'.join(re.escape(v) for v in values)
+def _alternatives(values):
+    """Factor longest-first literal alternatives without changing precedence."""
+    trie = {}
+    for value in values:
+        node = trie
+        for char in value:
+            node = node.setdefault(char, {})
+        node[None] = None
+
+    def pattern(node):
+        branches = [re.escape(char) + pattern(child)
+                    for char, child in node.items() if char is not None]
+        # All callers put longer literals before their prefixes. Divergent
+        # character branches cannot match the same input.
+        if None in node:
+            branches.append('')
+        if not branches:
+            return ''
+        return branches[0] if len(branches) == 1 else '(?:' + '|'.join(branches) + ')'
+
+    return pattern(trie)
+
+
 _FIRST = ''.join(sorted({name[0] for name in _ROSTER['full_names'] + _ROSTER['honorifics']}))
 _NAMES = re.compile(
     '(?=[' + re.escape(_FIRST) + '])' + r'(?P<name>(?P<full>' + _alternatives(_ROSTER['full_names']) + r')|(?:'
     + _alternatives(_ROSTER['honorifics']) + r') (?:' + _alternatives(_ROSTER['surnames'])
     + r'))(?P<function>' + _alternatives(_ROSTER['function_words']) + r')?'
+)
+_INTERJECTION_POSSIBLE = re.compile('interject', re.I)
+_LAST = ''.join(sorted({name[-1] for name in _ROSTER['full_names'] + _ROSTER['surnames']}))
+_NAME_JOIN_POSSIBLE = re.compile(
+    '(?<=[a-z])[' + re.escape(_FIRST) + ']|(?<=[' + re.escape(_LAST) + '])(?:'
+    + _alternatives(_ROSTER['function_words']) + r')(?!\w)'
 )
 
 
@@ -63,7 +91,14 @@ def repair_passage_joins(text: str) -> tuple[str, dict[str, int]]:
         counts['interjection'] += 1
         return match[1] + ' ' + match[2]
 
-    text = _INTERJECTION.sub(marker, text)
+    if _INTERJECTION_POSSIBLE.search(text) is not None:
+        text = _INTERJECTION.sub(marker, text)
+
+    # These are necessary conditions for a callback to change a name, not a
+    # replacement matching rule. \w omits combining marks, making this guard
+    # deliberately looser than _word. Inspect the post-interjection text.
+    if _NAME_JOIN_POSSIBLE.search(text) is None:
+        return text, counts
 
     def name(match):
         before = text[match.start()-1] if match.start() else ''
@@ -160,7 +195,10 @@ def passage_window(text: str, limit: int = 600, start: int = 0, end: int | None 
     """Window normalized text with UTF-16 offsets/cap, including cut markers."""
     if limit <= 0:
         return ''
-    data = text.encode('utf-16-le', 'surrogatepass')
+    return _passage_window(text, text.encode('utf-16-le', 'surrogatepass'), limit, start, end)
+
+
+def _passage_window(text: str, data: bytes, limit: int, start: int, end: int | None) -> str:
     length = len(data) // 2
     char = lambda at: chr(data[2 * at] | data[2 * at + 1] << 8)
     take = lambda a, b=length: data[2*a:2*b].decode('utf-16-le', 'surrogatepass')
@@ -180,9 +218,41 @@ def passage_window(text: str, limit: int = 600, start: int = 0, end: int | None 
     return (prefix + body + suffix).strip(_WHITESPACE) if body else ('…' if text.strip(_WHITESPACE) else '')
 
 
+class PreparedEvidenceText:
+    """Lazy display preparation owned by one immutable source body."""
+
+    __slots__ = ('_body', '_normalized', '_utf16', '_prefix_lengths')
+    _MAX_PREFIXES = 1024
+
+    def __init__(self, body: str):
+        self._body = body
+        self._normalized = None
+        self._utf16 = None
+        self._prefix_lengths = {}
+
+    @property
+    def body(self):
+        return self._body
+
+    def _prefix_length(self, position):
+        if position in self._prefix_lengths:
+            return self._prefix_lengths[position]
+        length = len(normalize_passage(self._body[:position]).encode('utf-16-le', 'surrogatepass')) // 2
+        if len(self._prefix_lengths) < self._MAX_PREFIXES:
+            self._prefix_lengths[position] = length
+        return length
+
+    def excerpt(self, start: int, end: int) -> str:
+        # Prefixes must normalize independently: truncation inside markup,
+        # entities or roster names can differ from the full normalized body.
+        left = self._prefix_length(start)
+        right = self._prefix_length(end)
+        if self._normalized is None:
+            self._normalized = normalize_passage(self._body)
+            self._utf16 = self._normalized.encode('utf-16-le', 'surrogatepass')
+        return _passage_window(self._normalized, self._utf16, 600, max(0, left - 160), right + 160)
+
+
 def evidence_excerpt(body: str, start: int, end: int) -> str:
     """Rebuild an old sidecar window against its unchanged source coordinates."""
-    # Convert the original span to display coordinates before taking context.
-    left = len(normalize_passage(body[:start]).encode('utf-16-le', 'surrogatepass')) // 2
-    right = len(normalize_passage(body[:end]).encode('utf-16-le', 'surrogatepass')) // 2
-    return passage_window(normalize_passage(body), start=max(0, left - 160), end=right + 160)
+    return PreparedEvidenceText(body).excerpt(start, end)
