@@ -152,7 +152,7 @@
     "SA Hansard stops at November 2024: hansardsearch.parliament.sa.gov.au now sits behind a WAF that challenges every non-browser request, so the source cannot be fetched."
   ],
   "refresh": {
-    "checked_at": "2026-10-19T12:30:21+00:00",
+    "checked_at": "2026-10-19T17:10:38+00:00",
     "news_resources": 0,
     "bills_registry": 2988,
     "current_parliament_bills": 295,
@@ -242,13 +242,13 @@
       "bills": {
         "status": "paused",
         "host": "parlinfo.aph.gov.au",
-        "checked_at": "2026-10-19T12:19:54.089842+00:00",
+        "checked_at": "2026-10-19T16:42:28.384880+00:00",
         "reason": "HTTP 403 verified 2026-10-10; permission requested"
       },
       "committees": {
         "status": "paused",
         "host": "parlinfo.aph.gov.au",
-        "checked_at": "2026-10-19T08:36:44.884208+00:00",
+        "checked_at": "2026-10-19T16:19:20.874363+00:00",
         "reason": "HTTP 403 verified 2026-10-10; permission requested"
       },
       "diaries_qld": {
@@ -260,19 +260,19 @@
       "grants_fetch": {
         "status": "paused",
         "host": "www.grants.gov.au",
-        "checked_at": "2026-10-19T08:49:06.682423+00:00",
+        "checked_at": "2026-10-19T16:31:51.523255+00:00",
         "reason": "HTTP 403"
       },
       "interests_federal": {
         "status": "paused",
         "host": "www.aph.gov.au",
-        "checked_at": "2026-10-19T08:53:29.530021+00:00",
+        "checked_at": "2026-10-19T16:42:27.523888+00:00",
         "reason": "HTTP 403 verified 2026-10-10; permission requested"
       },
       "qld": {
         "status": "paused",
         "host": "data.parliament.qld.gov.au",
-        "checked_at": "2026-10-19T08:36:40.799076+00:00",
+        "checked_at": "2026-10-19T16:19:16.868088+00:00",
         "reason": "HTTP 403 verified 2026-10-10; permission requested"
       },
       "qld_contracts": {
@@ -284,7 +284,7 @@
       "sa": {
         "status": "paused",
         "host": "hansardsearch.parliament.sa.gov.au",
-        "checked_at": "2026-10-19T08:36:46.850188+00:00",
+        "checked_at": "2026-10-19T16:19:22.760320+00:00",
         "reason": "HTTP 403 verified 2026-10-10; permission requested"
       }
     },
