@@ -4442,6 +4442,9 @@ html[data-panel="chat"] footer { display: none; }
 .connection-choice .ui-row-meta { margin: 0; }
 .connection-choice:hover .ui-row-name, .connection-choice[aria-current="true"] .ui-row-name { color: var(--bronze-ink); text-decoration: underline; text-decoration-color: var(--bronze-rule); text-underline-offset: 3px; }
 #connection-detail { min-width: 0; scroll-margin-top: var(--space-heading); }
+/* The list's loader: the animal alone, the status line above names the wait. */
+#connection-list > .connection-loader { border: 0; }
+.connection-loader .wb-label { display: none; }
 #connection-detail > h2 { margin: 0 0 var(--space-heading); font: var(--type-heading); color: var(--ink); overflow-wrap: anywhere; }
 #connection-detail .subject-section-title { margin: var(--space-block) 0 var(--space-tight); font: var(--type-subheading); }
 #connection-detail > .ui-empty { margin: 0; padding-top: var(--space-row); }

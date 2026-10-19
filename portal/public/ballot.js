@@ -90,7 +90,10 @@ export function mountBallot(root, opts = {}) {
   </div>`;
   const $ = (s) => root.querySelector(s);
   const status = (message, announceOnly = false) => { $('.ballot-status').textContent = message; $('.ballot-status').classList.toggle('is-announcement', announceOnly); };
+  // Until the electorates answer (or after they fail) typing must not draw "No electorates match".
+  let seatsLoaded = false;
   const renderSeats = () => {
+    if (!seatsLoaded) return;
     const query = $(`#${prefix}-search`).value.trim().toLowerCase();
     const states = { nsw: 'New South Wales', vic: 'Victoria', qld: 'Queensland', sa: 'South Australia', wa: 'Western Australia', tas: 'Tasmania', nt: 'Northern Territory', act: 'Australian Capital Territory' };
     const matches = seats.filter((e) => `${e.name} ${e.state_code} ${states[e.state_code] || ''}`.toLowerCase().includes(query));
@@ -192,12 +195,14 @@ export function mountBallot(root, opts = {}) {
   };
   async function load(retry = false) {
     status('');
+    if (retry) $(`#${prefix}-seats`).innerHTML = '<p>Loading electorates…</p>';
     try {
       const manifest = await fetchJSON('/electorates/manifest.json');
       const index = await fetchJSON(manifest.index_url);
       if (destroyed) return;
       seats = index.electorates.filter((e) => e.jurisdiction === 'federal' && e.chamber === 'representatives' && e.latest_election >= PRACTICE_DATE && e.election_count > 0).sort((a, b) => a.name.localeCompare(b.name));
       if (!seats.length) throw new Error('The 2025 electorates could not be loaded.');
+      seatsLoaded = true;
       renderSeats();
       if (retry && !root.contains(doc.activeElement)) $(`#${prefix}-search`).focus({ preventScroll: true }); // the Try again button is gone
     } catch (error) {

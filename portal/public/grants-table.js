@@ -1,9 +1,9 @@
-import {dataTableHTML, mountDataTable, pendingPage} from './datatable.js?v=2c49a89556';
+import {dataTableHTML, mountDataTable, pendingPage} from './datatable.js?v=5c09aecf9c';
 
 export const GRANTS_COVERAGE = 'Federal award values are commitments, not payments; Queensland rows record expenditure. Names follow the published award records.';
 export const GRANTS_SEARCH_KEYS = ['recipient', 'program', 'agency'];
 
-/** @returns {import('./datatable.js?v=2c49a89556').DataTableConfig} */
+/** @returns {import('./datatable.js?v=5c09aecf9c').DataTableConfig} */
 export function grantsTableConfig(params = new URLSearchParams()) {
   const jur = params.get('jur');
   return {
@@ -40,8 +40,14 @@ export async function mountGrantsTable(el, params = new URLSearchParams(), optio
   options.signal?.throwIfAborted();
   // Preserve the original URL until core hydration has validated all raw pairs.
   // Its initial request retains type, length and duplicate-key validation.
-  // Pending, not empty: the loader stands in the body until the first page answers.
-  const seed = pendingPage(config);
+  // A cold load carries the Worker's first page for this address in #prerender: its rows show at
+  // once (the table re-checks them). Used once, as the suppliers table does. Otherwise the page is
+  // pending, not empty: the loader stands in the body until the first page answers.
+  const prerendered = el.ownerDocument.querySelector('#prerender [data-grants-table]');
+  let served = null;
+  try { served = JSON.parse(prerendered?.querySelector('[data-dt-page]')?.textContent || 'null'); } catch { /* pending below */ }
+  prerendered?.remove();
+  const seed = served?.rows?.length ? served : pendingPage(config);
   // The title and GRANTS_COVERAGE sit in the Money head above (app.js).
   el.innerHTML = grantsTableHTML(seed, params, new URL(win.location.href));
   const handle = mountDataTable(el.querySelector('[data-grants-table]'), config);

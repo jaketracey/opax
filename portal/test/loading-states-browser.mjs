@@ -29,7 +29,7 @@ const supplierRows = n => Array.from({length: n}, (_, i) => ({id: `s-${String(i)
   count: 3, agency_count: 1, jurisdiction: 'federal', abn: null}));
 const page = (rows, total = rows.length) => ({rows, total, page: 1, pageSize: 50, facets: {}});
 
-const mainFiles = ['datatable.js', 'datatable.css', 'grants-table.js', 'contracts-table.js', 'suppliers-table.js'];
+const mainFiles = ['datatable.js', 'datatable.css', 'grants-table.js', 'contracts-table.js', 'suppliers-table.js', 'connections.js'];
 const mainSource = Object.fromEntries(before ? mainFiles.map(file => [file, execFileSync('git', ['show', `origin/main:portal/public/${file}`], {encoding: 'utf8'})]) : []);
 
 const browser = await chromium.launch({channel: 'chrome', headless: true, args: ['--mute-audio']});
@@ -38,7 +38,7 @@ try {
   const context = await browser.newContext({viewport: {width: 1280, height: 900}, reducedMotion: 'no-preference'});
   // Production is never reached: anything off the local origin is refused.
   await context.route('**/*', route => new URL(route.request().url()).origin === base ? route.fallback() : route.abort());
-  if (before) await context.route(/\/(datatable|grants-table|contracts-table|suppliers-table)\.(js|css)(\?|$)/, route => {
+  if (before) await context.route(/\/(datatable|grants-table|contracts-table|suppliers-table|connections)\.(js|css)(\?|$)/, route => {
     const file = new URL(route.request().url()).pathname.slice(1);
     return route.fulfill({contentType: file.endsWith('.css') ? 'text/css' : 'text/javascript', body: mainSource[file]});
   });
@@ -137,6 +137,27 @@ try {
     await shot(pg, `${name}-empty`);
     await check(`${name}: empty copy after an empty answer`, () => assert.match(done.body, EMPTY));
     void root;
+    await pg.close();
+  }
+
+  // A list outside the table core: Programs & places. Typing before its index answers must not read "0 connections".
+  {
+    const pg = await context.newPage(), name = 'connections';
+    const index = await holdTable(pg, /\/evidence\/index\.json/);
+    await pg.goto(base + '/connections');
+    const first = await index.next();
+    await pg.waitForSelector('#connection-search', {state: 'visible'});
+    await pg.locator('#connection-search').fill('fixture');
+    await pg.waitForTimeout(300);
+    const pending = await pg.evaluate(() => ({status: document.querySelector('#connection-status')?.textContent || '',
+      loader: Boolean(document.querySelector('.connection-loader .wb-wrap')), rows: document.querySelectorAll('#connection-list li:not(.connection-loader)').length}));
+    await shot(pg, `${name}-loading`);
+    await check(`${name}: typing while pending keeps the loading status`, () => { assert.equal(pending.status, 'Opening the records…'); assert.equal(pending.rows, 0); });
+    await check(`${name}: animal loader while pending`, () => assert.ok(pending.loader));
+    await first.fulfill({json: {entities: [{id: 'aa00fixture', name: 'Fixture Program Office', kind: 'program', records: 3}]}});
+    await pg.waitForFunction(() => /connections/.test(document.querySelector('#connection-status')?.textContent || ''));
+    const done = await pg.evaluate(() => ({status: document.querySelector('#connection-status').textContent, loader: Boolean(document.querySelector('.connection-loader'))}));
+    await check(`${name}: counted only after the answer`, () => { assert.match(done.status, /^1 connections/); assert.equal(done.loader, false); });
     await pg.close();
   }
 

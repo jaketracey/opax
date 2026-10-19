@@ -156,3 +156,44 @@ test('server rows on first paint are not dimmed while hydration re-checks them',
   assert.equal(t.host.querySelectorAll('tbody tr').length,5);
   t.handle.destroy();
 });
+
+test('a failed hydration check keeps the server rows; a failed refetch after that shows the error',async () => {
+  const t = mount(dataTableHTML(server,pageOf(rows.slice(0,5),9)));
+  await t.settle();
+  t.requests[0].fail();
+  await t.settle();
+  assert.equal(t.host.querySelectorAll('tbody tr').length,5);
+  assert.doesNotMatch(t.body(),/Could not load/);
+  assert.equal(t.busy(),false);
+  t.host.querySelector('[data-sort="name"]').click();
+  await t.settle();
+  t.requests[1].answer(pageOf(rows.slice(0,5),9));
+  await t.settle();
+  t.host.querySelector('[data-sort="amount"]').click();
+  await t.settle();
+  t.requests[2].fail();
+  await t.settle();
+  assert.match(t.body(),/Could not load this table\./);
+  t.handle.destroy();
+});
+
+test('Grants → Awards: the Worker’s first page shows at once on a cold load, otherwise the loader',async () => {
+  const {grantsTableHTML,mountGrantsTable} = await import('../public/grants-table.js');
+  const served = {rows:[{recipient:'Fixture Community Group',program:'Fixture Program',agency:'Department of Fixtures',amount:5000,start_date:'2025-07-01',electorate:'Fixtureton',jurisdiction:'federal',recipientId:'name:fixture',recipientAvailable:0}],total:1,page:1,pageSize:50,facets:{}};
+  for (const cold of [true,false]) {
+    const dom = new JSDOM(`<!doctype html><div id="prerender">${cold ? grantsTableHTML(served) : ''}</div><div id="body"></div>`,{url:'http://localhost/money/grants'});
+    dom.window.fetch = () => new Promise(() => {});
+    const body = dom.window.document.getElementById('body');
+    const handle = await mountGrantsTable(body);
+    await new Promise(setImmediate);
+    assert.doesNotMatch(body.textContent,EMPTY);
+    if (cold) {
+      assert.match(body.querySelector('tbody').textContent,/Fixture Community Group/);
+      assert.equal(dom.window.document.querySelector('#prerender [data-grants-table]'),null,'the served page is used once');
+    } else {
+      assert.ok(body.querySelector('[data-dt-loader]'));
+      assert.equal(body.querySelector('.dt-count').textContent,'Loading grants');
+    }
+    handle.destroy();
+  }
+});

@@ -1,4 +1,4 @@
-import {dataTableHTML,mountDataTable,pendingPage} from './datatable.js?v=2c49a89556';
+import {dataTableHTML,mountDataTable,pendingPage} from './datatable.js?v=5c09aecf9c';
 export function suppliersTableConfig({donor,rows}={}) {
   return {id:'suppliers-table',caption:'Suppliers',pageType:'suppliers',    columns:[{key:'name',label:'Name',type:'text',primary:true},{key:'total',label:'Value',type:'money',bar:true,facet:'range'},
       {key:'count',label:'Contracts',type:'count'},{key:'agency_count',label:'Agencies',type:'count'},

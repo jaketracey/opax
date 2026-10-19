@@ -36,18 +36,31 @@ export function mountLargestGrants(root, { month, onTitle } = {}) {
   let destroyed = false;
   const aborter = new AbortController();
   const page = node('div', null, 'grant-recipient-page');
-  page.setAttribute('aria-busy', 'true');
-  page.append(node('p', 'Loading the month’s largest grants…', 'status'));
   root.replaceChildren(page);
-  (async () => {
-    let data = null;
+  const load = async () => {
+    page.setAttribute('aria-busy', 'true');
+    page.replaceChildren(node('p', 'Loading the month’s largest grants…', 'status'));
+    let data = null, failed = false;
     try {
       const res = await fetch('/social/grants-largest.json', { signal: aborter.signal });
-      data = res.ok ? await res.json() : null;
-    } catch { data = null; }
+      if (!res.ok) throw new Error(String(res.status));
+      data = await res.json();
+    } catch { failed = true; }
     if (destroyed) return;
     page.removeAttribute('aria-busy');
     page.replaceChildren();
+    // A list that could not load is not a month without a list.
+    if (failed) {
+      const status = node('p', 'The largest grants could not be loaded. ', 'status');
+      status.setAttribute('role', 'alert');
+      const retry = node('button', 'Try again', 'ui-button');
+      retry.type = 'button'; retry.dataset.uiSize = 'compact';
+      retry.addEventListener('click', () => { void load(); });
+      status.append(retry);
+      page.append(status);
+      onTitle?.('Largest grants');
+      return;
+    }
     const rows = largestRows(data, month);
     const label = monthLabel(month);
     if (!rows.length || !label) {
@@ -88,6 +101,7 @@ export function mountLargestGrants(root, { month, onTitle } = {}) {
       page.append(nav);
     }
     onTitle?.(`The largest grants of ${label}`);
-  })();
+  };
+  void load();
   return { destroy() { destroyed = true; aborter.abort(); root.replaceChildren(); } };
 }

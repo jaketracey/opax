@@ -552,7 +552,12 @@ export function mountDataTable(el, config) {
       query.page=page.page;
       paint(); delete view.searchSelection; urlState();
     } catch (error) {
-      if (error?.name !== 'AbortError' && !destroyed && version === revision) { view.loading=false; paint('Could not load this table.'); }
+      if (error?.name !== 'AbortError' && !destroyed && version === revision) {
+        view.loading=false;
+        // Hydration re-checks rows the server already drew for this address: if only that check
+        // fails, the rows stand. Any other failure replaces what is shown with the error.
+        if (settled || !page.rows.length) paint('Could not load this table.');
+      }
     } finally { if (!destroyed && version === revision) { root.removeAttribute('aria-busy'); root.removeAttribute('data-dt-stale'); } }
   }
 

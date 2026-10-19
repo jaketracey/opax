@@ -1082,8 +1082,9 @@ export function mountLedger (container, opts = {}) {
     tableEl.hidden = true
     try {
       const data = await fetchData(state.jur)
-      donors=donorLookup(data.nodes.filter(n=>n.kind==='donor'))
+      // A slower answer for an earlier jurisdiction must not replace the newer file's donor lookup.
       if (token !== loadSeq) return
+      donors=donorLookup(data.nodes.filter(n=>n.kind==='donor'))
       loading = false
       loadedData = data
       meta = data.meta || {}
