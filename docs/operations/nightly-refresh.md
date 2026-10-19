@@ -74,6 +74,8 @@ the push (corpus.json changed) ──► .github/workflows/deploy.yml
                nightly-status branch; a red run (GitHub emails the owner) means the chain broke
 ```
 
+With `OPAX_EVIDENCE_BUILD=1`, unexpected bundle build, receipt validation or newly built input readiness failures fail nightly status and the refresh watchdog; timeouts and publication guard refusals need investigation in `evidence-build.log`. The previous public evidence and active bundle remain in place, and the pending marker keeps the next run due. Source writer locks and busy WAL checkpoints explicitly return 75 and defer with a warning. With building disabled, missing or mismatched existing sidecars still warn and wait for matching inputs.
+
 **`corpus.json` is stamped every night.** `refresh.checked_at` is written when it is more than 12 hours
 old, and always when anything else is being pushed. That makes every nightly commit change
 `portal/public/corpus.json`, which is what starts the deploy, and it is what the watchdog reads. A night with

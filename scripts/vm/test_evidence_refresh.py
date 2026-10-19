@@ -263,7 +263,7 @@ class RefreshTests(unittest.TestCase):
         # Frozen bundle construction is exercised as an interface fixture here;
         # the builder has its own real SQLite/reconciliation tests.
         (self.repo / 'scripts/vm/build_evidence_bundle.py').write_text('''
-import argparse,hashlib,json,os,pathlib,shutil,sys,time
+import argparse,hashlib,json,os,pathlib,shutil,sqlite3,sys,time
 parser=argparse.ArgumentParser()
 parser.add_argument('--source',type=pathlib.Path,required=True)
 parser.add_argument('--bundle-root',type=pathlib.Path,required=True)
@@ -283,6 +283,8 @@ for name,key in [('source','SOURCE'),('evidence','LAYERS'),('places','PLACES'),(
     path=bundle/filenames[name]
     shutil.copyfile(args.source if name=='source' else os.environ['OPAX_EVIDENCE_'+key],path)
     report[name]=str(path)
+if mode=='mismatch':
+    with sqlite3.connect(report['source']) as db: db.execute('INSERT INTO speeches VALUES(999)')
 receipt=bundle/'receipt.json'
 report['receipt']=str(receipt)
 owner={'schema':1,'managed_by':'opax-evidence-bundle-v1','verified':True,'report':report}
@@ -443,8 +445,63 @@ else: print(json.dumps(report))
             with self.subTest(mode=mode):
                 result = self.run_refresh('ok', OPAX_EVIDENCE_BUILD='1', EVIDENCE_BUILD_MODE=mode,
                                           OPAX_EVIDENCE_BUILD_TIMEOUT='0.2s' if mode == 'timeout' else '10s')
-                self.assertIn('bundle build unavailable', result)
+                self.assertIn('FAIL: evidence: bundle ', result)
+                self.assertIn('failed (rc=', result)
+                self.assertNotIn('WARN: evidence:', result)
                 self.assertIn('catch-up retained', result)
+                self.assertEqual(json.loads(self.active.read_text()), {'old': 'retained'})
+                self.assertEqual(guard.read_tree(self.repo / guard.EVIDENCE), before)
+                self.assertTrue(self.pending.exists())
+                self.assertFalse((self.home / 'evidence.calls').exists())
+                self.assertFalse(list(self.pipe.glob('evidence-candidate.*')))
+
+    def test_enabled_build_source_errors_fail_instead_of_deferring(self):
+        self.active.write_text('{"old":"retained"}')
+        before = guard.read_tree(self.repo / guard.EVIDENCE)
+        raw = self.inputs['source'].read_bytes()
+        for mode in ('missing', 'corrupt'):
+            with self.subTest(mode=mode):
+                if mode == 'missing':
+                    self.inputs['source'].unlink()
+                else:
+                    self.inputs['source'].write_bytes(b'not a SQLite database')
+                result = self.run_refresh(OPAX_EVIDENCE_BUILD='1')
+                self.assertIn('FAIL: evidence: bundle build failed (rc=1;', result)
+                self.assertNotIn('WARN: evidence:', result)
+                self.assertEqual(json.loads(self.active.read_text()), {'old': 'retained'})
+                self.assertEqual(guard.read_tree(self.repo / guard.EVIDENCE), before)
+                self.assertTrue(self.pending.exists())
+                self.assertFalse((self.home / 'evidence-build.calls').exists())
+                self.assertFalse(list(self.pipe.glob('evidence-candidate.*')))
+                self.inputs['source'].write_bytes(raw)
+
+    def test_lock_utility_error_is_not_misreported_as_busy(self):
+        self.active.write_text('{"old":"retained"}')
+        bin_dir = self.base / 'broken-lock-bin'
+        bin_dir.mkdir()
+        command = bin_dir / 'flock'
+        command.write_text('#!/bin/sh\nexit 64\n')
+        command.chmod(0o755)
+        result = self.run_refresh(OPAX_EVIDENCE_BUILD='1', PATH=str(bin_dir) + os.pathsep + self.env['PATH'])
+        self.assertIn('FAIL: evidence: bundle build failed (rc=64;', result)
+        self.assertNotIn('WARN: evidence:', result)
+        self.assertEqual(json.loads(self.active.read_text()), {'old': 'retained'})
+        self.assertTrue(self.pending.exists())
+        self.assertFalse((self.home / 'evidence-build.calls').exists())
+
+    def test_enabled_verified_bundle_readiness_errors_fail_and_retain_publication(self):
+        self.active.write_text('{"old":"retained"}')
+        before = guard.read_tree(self.repo / guard.EVIDENCE)
+        for mode in ('mismatch', 'timeout'):
+            with self.subTest(mode=mode):
+                if mode == 'timeout':
+                    shutil.copyfile(FIXTURES / 'slow_probe.py', self.repo / 'scripts/vm/evidence_inputs.py')
+                result = self.run_refresh(OPAX_EVIDENCE_BUILD='1',
+                                          EVIDENCE_BUILD_MODE='mismatch' if mode == 'mismatch' else 'ok',
+                                          OPAX_EVIDENCE_READINESS_TIMEOUT='0.2s')
+                self.assertIn('FAIL: evidence: built bundle readiness failed (', result)
+                self.assertIn('mismatch:' if mode == 'mismatch' else 'probe timed out', result)
+                self.assertNotIn('WARN: evidence:', result)
                 self.assertEqual(json.loads(self.active.read_text()), {'old': 'retained'})
                 self.assertEqual(guard.read_tree(self.repo / guard.EVIDENCE), before)
                 self.assertTrue(self.pending.exists())
@@ -557,7 +614,7 @@ else: print(json.dumps(report))
             wal = Path(str(self.inputs['source']) + '-wal')
             self.assertGreater(wal.stat().st_size, 0)
             result = self.run_refresh(OPAX_EVIDENCE_BUILD='1')
-            self.assertNotIn('bundle build unavailable', result)
+            self.assertNotIn('FAIL:', result)
             self.assertTrue(self.active.exists())
             self.assertFalse(wal.exists() and wal.stat().st_size)
 
@@ -574,7 +631,8 @@ else: print(json.dumps(report))
             source.execute('INSERT INTO fixture_wal VALUES(2)')
             source.commit()
             result = self.run_refresh(OPAX_EVIDENCE_BUILD='1')
-            self.assertIn('bundle build unavailable', result)
+            self.assertIn('WARN: evidence: bundle build deferred (rc=75;', result)
+            self.assertNotIn('FAIL:', result)
             self.assertIn('checkpoint busy', (self.pipe / 'evidence-build.log').read_text())
             self.assertEqual(json.loads(self.active.read_text()), {'old': 'retained'})
             self.assertEqual(source.execute('SELECT count(*) FROM fixture_wal').fetchone()[0], 2)
@@ -585,7 +643,8 @@ else: print(json.dumps(report))
     def test_standalone_source_writer_lock_defers_evidence_build(self):
         self.active.write_text('{"old":"retained"}')
         result = self.run_refresh(OPAX_EVIDENCE_BUILD='1', EVIDENCE_TEST_LOCK_BUSY='1')
-        self.assertIn('bundle build unavailable', result)
+        self.assertIn('WARN: evidence: bundle build deferred (rc=75;', result)
+        self.assertNotIn('FAIL:', result)
         self.assertIn('source writer holds its lock', (self.pipe / 'evidence-build.log').read_text())
         self.assertEqual(json.loads(self.active.read_text()), {'old': 'retained'})
         self.assertFalse((self.home / 'evidence-build.calls').exists())
