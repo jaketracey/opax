@@ -1232,7 +1232,7 @@ export function mountGrants (container, opts = {}) {
     if (rows.length === 0) {
       const tr = el('tr')
       const td = el('td', 'gr-empty', state.view === 'electorates' && !data.electorates.length
-        ? 'No electorates yet: the award records that carry a location are still being fetched.'
+        ? 'No grant records by electorate yet.'
         : 'Nothing matches these filters.')
       td.colSpan = cols().length
       tr.appendChild(td)
