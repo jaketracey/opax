@@ -33,26 +33,44 @@ export function mountConnections(root, helpers = {}) {
    const meta=document.createElement('span');meta.className='ui-row-meta';meta.textContent=`${entry.records.toLocaleString('en-AU')} records · ${entry.kind}`;
    button.append(label,meta);button.addEventListener('click',()=>open(entry));item.append(button);list.append(item);
   }
+  quickPicks(found);
  }
  function choose(id){
   currentId=id;
   for(const button of list.querySelectorAll('.connection-choice')){if(button.dataset.entity===id)button.setAttribute('aria-current','true');else button.removeAttribute('aria-current');}
  }
- // Until one is chosen the column beside the list says what it will hold.
+ // Until one is chosen the column beside the list is a starting card (ui-card):
+ // the house animal standing still, what the column will hold, and the top of
+ // the current list as quick picks. A phone shows the list alone (style.css).
  function emptyDetail(){
-  const note=document.createElement('p');note.className='ui-empty connection-detail-empty';
-  note.textContent='Choose a connection to read the source excerpts that name it.';
-  detail.replaceChildren(note);detail.hidden=false;
+  const card=document.createElement('div');card.className='ui-card connection-detail-empty';
+  const art=document.createElement('div');art.className='connection-detail-art';
+  const title=document.createElement('h2');title.className='ui-card-title';title.textContent='Pick a connection';
+  const line=document.createElement('p');line.className='ui-card-text';line.textContent='See the speeches, releases and grant records that name it.';
+  const picks=document.createElement('div');picks.className='ui-actions connection-picks';picks.setAttribute('role','group');picks.setAttribute('aria-label','Most recorded connections');
+  card.append(art,title,line,picks);detail.replaceChildren(card);detail.hidden=false;
+  helpers.drawAnimal?.(art);
+ }
+ // A quick pick opens its connection exactly as its row in the list does.
+ function quickPicks(found){
+  const picks=detail.querySelector('.connection-picks');if(!picks)return;
+  picks.replaceChildren(...found.slice(0,3).map(entry=>{
+   const button=document.createElement('button');button.type='button';button.className='ui-chip';button.dataset.entity=entry.id;button.textContent=entry.name;
+   button.addEventListener('click',()=>open(entry));return button;
+  }));
  }
  async function open(entry){
-  const request=++selected;choose(entry.id);detail.hidden=false;detail.textContent='Opening source excerpts…';
+  const request=++selected;choose(entry.id);detail.hidden=false;
+  // A quick pick leaves with the card it sits on: hold focus on the column until its heading arrives.
+  if(detail.contains(document.activeElement))detail.focus({preventScroll:true});
+  detail.textContent='Opening source excerpts…';
   try{
    const response=await fetch(`/evidence/${entry.id.slice(0,2)}.json`,{signal:controller.signal});if(!response.ok)throw new Error();
    const data=await response.json();if(request!==selected || !alive())return;
    const record=data.entries?.[entry.id];if(!record)throw new Error();
-   detail.replaceChildren();const title=document.createElement('h2');title.textContent=entry.name;detail.append(title);
+   detail.replaceChildren();const title=document.createElement('h2');title.tabIndex=-1;title.textContent=entry.name;detail.append(title);
    const content=document.createElement('div');content.innerHTML=evidenceHTML(record);detail.append(content);
-   address(entry.id);detail.focus({preventScroll:true});
+   address(entry.id);title.focus({preventScroll:true});
    if(matchMedia('(max-width: 700px)').matches)detail.scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'instant':'smooth',block:'start'});
   }catch{if(request===selected && alive())detail.textContent='The source excerpts could not be loaded. Select the connection to try again.';}
  }

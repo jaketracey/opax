@@ -1831,10 +1831,19 @@ async function openConnectionsPage(params, manageFocus) {
   if (status) status.textContent = "Opening the records…";
   if (manageFocus) $("connections-title")?.focus({ preventScroll: true });
   try {
-    const module = await import("/connections.js?v=wds-money-20261012");
+    const module = await import("/connections.js?v=start-card-20261019");
     if (generation !== connectionsGeneration) return;
     connectionsPage = module.mountConnections($("connections-body"), {
       params,
+      // The starting card's animal: the loaders' wombat, standing still.
+      async drawAnimal(slot) {
+        try {
+          const mod = await import("/wombat.js?v=cb89a88dad");
+          if (generation !== connectionsGeneration || !slot.isConnected) return;
+          mod.mountWombat(slot, { label: "", animal: "wombat" });
+          slot.lastElementChild?.classList.add("wb-still");
+        } catch { /* the card reads the same without it */ }
+      },
       // A selection or a filter rewrites the address in place, so the page a
       // reader copies reopens on the same connection: /connections?entity=…
       onAddress(search) {

@@ -4444,7 +4444,14 @@ html[data-panel="chat"] footer { display: none; }
 #connection-detail { min-width: 0; scroll-margin-top: var(--space-heading); }
 #connection-detail > h2 { margin: 0 0 var(--space-heading); font: var(--type-heading); color: var(--ink); overflow-wrap: anywhere; }
 #connection-detail .subject-section-title { margin: var(--space-block) 0 var(--space-tight); font: var(--type-subheading); }
-#connection-detail > .ui-empty { margin: 0; padding-top: var(--space-row); }
+/* Before a pick the column is a starting card (ui-card), held in view under
+   the masthead while the list scrolls; the animal is the loaders' wombat in
+   its still pose, without a label. */
+#connection-detail:has(> .connection-detail-empty) { position: sticky; top: calc(var(--header-h) + var(--sp-16)); }
+.connection-detail-empty { text-align: center; }
+.connection-detail-art .wb-wrap { margin: 0 auto var(--space-heading); }
+.connection-detail-art .wb-label { display: none; }
+.connection-picks { justify-content: center; }
 @media (max-width: 700px) {
   .connections-layout { grid-template-columns: minmax(0, 1fr); }
   #connection-list { max-height: 20rem; overflow: auto; }
