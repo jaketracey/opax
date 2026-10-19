@@ -75,7 +75,7 @@ test('off: every report address is the noindexed not-found page, with no way bac
   assert.equal(await head.text(), '');
 });
 
-test('off: report data files are gone, never read from the assets; installed apps read an empty index', async () => {
+test('off: report data files are gone for the web, never read from the assets; the index is empty', async () => {
   for (const slug of SIX) {
     const res = await workerFetch(`/reports/${slug}.json`);
     assert.equal(res.status, 404, slug);
@@ -96,6 +96,78 @@ test('off: report data files are gone, never read from the assets; installed app
   const head = await workerFetch('/reports/index.json', {}, { method: 'HEAD' });
   assert.equal(head.status, 200);
   assert.equal(await head.text(), '');
+});
+
+// The apps' catalog User-Agent (mobile/src/api/user-agent.ts on ios/app).
+const IOS = { 'user-agent': 'OPAX-iOS/1.0.0 (34)' };
+const ANDROID = { 'user-agent': 'OPAX-Android/1.0.0 (12)' };
+const BROWSER = { 'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.0 Safari/605.1.15' };
+const CRAWLER = { 'user-agent': 'Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)' };
+const APP_DATA = { REPORTS_APP_DATA: 'true' };
+/** Neither variant is stored by any cache, and both vary by client. */
+function assertUnshared(res, label) {
+  assert.equal(res.headers.get('cache-control'), 'no-store', label);
+  assert.match(res.headers.get('vary') || '', /(?:^|,\s*)User-Agent(?:\s*,|$)/i, label);
+  assert.equal(res.headers.get('x-robots-tag'), 'noindex', label);
+}
+
+test('off, REPORTS_APP_DATA on: the installed apps still read the report data exactly as before', async () => {
+  const config = read('../wrangler.jsonc');
+  assert.match(config, /\n {4}"REPORTS_APP_DATA": "true",/, 'production');
+  assert.match(config, /\n {8}"REPORTS_APP_DATA": "true",/, 'staging');
+  for (const headers of [IOS, ANDROID]) {
+    const index = await workerFetch('/reports/index.json', APP_DATA, { headers });
+    assert.equal(index.status, 200);
+    assertUnshared(index, 'index');
+    const body = await index.text();
+    assert.equal(body, await (await workerFetch('/reports/index.json', ON)).text(), 'the full index, as served with the reports on');
+    assert.equal(JSON.parse(body).reports.length, 7);
+    for (const slug of [...SIX, 'grants-allocation']) {
+      const res = await workerFetch(`/reports/${slug}.json`, APP_DATA, { headers });
+      assert.equal(res.status, 200, slug);
+      if (slug !== 'grants-allocation') assertUnshared(res, slug);
+      assert.equal(await res.text(), await (await workerFetch(`/reports/${slug}.json`, ON)).text(), `${slug}: the original bytes`);
+    }
+    const head = await workerFetch('/reports/climate.json', APP_DATA, { method: 'HEAD', headers });
+    assert.equal(head.status, 200);
+    assert.equal(await head.text(), '');
+  }
+  // The apps never load the pages: those stay the not-found page for them too.
+  for (const path of ['/reports', '/reports/climate', '/reports/climate/s/1']) {
+    const res = await workerFetch(path, APP_DATA, { headers: IOS });
+    assert.equal(res.status, 404, path);
+    assert.equal(res.headers.get('x-robots-tag'), 'noindex', path);
+  }
+});
+
+test('off, REPORTS_APP_DATA on: browsers and crawlers still get the empty index and 404s, never stored', async () => {
+  for (const [label, headers] of [['browser', BROWSER], ['crawler', CRAWLER], ['no user agent', {}], ['lookalike', { 'user-agent': 'Mozilla/5.0 OPAX-iOS/1.0.0' }]]) {
+    const index = await workerFetch('/reports/index.json', APP_DATA, { headers });
+    assert.equal(index.status, 200, label);
+    assertUnshared(index, `${label} index`);
+    assert.equal(await index.text(), '{"reports":[]}', label);
+    for (const slug of SIX) {
+      const res = await workerFetch(`/reports/${slug}.json`, APP_DATA, { headers });
+      assert.equal(res.status, 404, `${label} ${slug}`);
+      assertUnshared(res, `${label} ${slug}`);
+      assert.equal(await res.text(), 'Not found');
+    }
+    for (const path of ['/reports', '/reports/climate']) assert.equal((await workerFetch(path, APP_DATA, { headers })).status, 404, `${label} ${path}`);
+  }
+});
+
+test('off, REPORTS_APP_DATA "false" (or unset): the apps get the same withheld responses as everyone', async () => {
+  for (const env of [{ REPORTS_APP_DATA: 'false' }, {}]) {
+    const index = await workerFetch('/reports/index.json', env, { headers: IOS });
+    assertUnshared(index, 'index');
+    assert.equal(await index.text(), '{"reports":[]}');
+    const res = await workerFetch('/reports/housing.json', env, { headers: ANDROID });
+    assert.equal(res.status, 404);
+    assertUnshared(res, 'housing');
+  }
+  // The switch matters only while the reports are off.
+  const on = await workerFetch('/reports/housing.json', { ...ON, REPORTS_APP_DATA: 'false' }, { headers: BROWSER });
+  assert.equal(on.status, 200);
 });
 
 test('off: the grants explorer stays, as a page of its own, with its data file', async () => {

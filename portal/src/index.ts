@@ -118,7 +118,7 @@ import { renderOgPng, renderOgJpeg, type OgFont } from './og-render'
 import * as storyRender from './og-render'
 import { personRole, personTitle, roleLine, billTitle } from './seo-titles'
 import { navGates, pageTrail, trail } from './nav-model.mjs'
-import { EMPTY_REPORTS_INDEX, KEPT_REPORT, REPORTS_INDEX, reportsEnabled, reportsPath } from './reports-gate'
+import { EMPTY_REPORTS_INDEX, KEPT_REPORT, REPORTS_INDEX, appUserAgent, reportDataPath, reportsAppData, reportsEnabled, reportsPath } from './reports-gate'
 import { answerBlock, associationCaveat, crumbSteps, printedTrail, headingOf, crumbsHTML, panelPrerender, SERVER_PANELS, type Crumb, renderPersonAnswer, renderBillAnswer, renderDivisionAnswer, renderDirectory, renderSupplierAnswer, renderMoneyAnswer, type Division, type ReadAsset } from './seo-content'
 import { buildSchemaGraph, serializeSchemaGraph, type PersonSchemaIdentity } from './seo-schema'
 import {renderMoneyConnectionsTable} from './money-connections-table'
@@ -6674,8 +6674,12 @@ async function route(
  *  page, noindex, like any address nothing answers. */
 async function reportsWithdrawn(request: Request, url: URL, env: Env, ctx: ExecutionContext): Promise<Response> {
   const read = request.method === 'GET' || request.method === 'HEAD'
+  // The data files answer the apps differently (REPORTS_APP_DATA): never stored, and varied by client.
+  const data = { 'cache-control': 'no-store', 'vary': 'User-Agent', 'x-robots-tag': 'noindex' }
   if (read && url.pathname === REPORTS_INDEX)
-    return new Response(request.method === 'HEAD' ? null : JSON.stringify(EMPTY_REPORTS_INDEX), { headers: { 'content-type': 'application/json; charset=utf-8', 'cache-control': 'public, max-age=0, must-revalidate', 'x-robots-tag': 'noindex' } })
+    return new Response(request.method === 'HEAD' ? null : JSON.stringify(EMPTY_REPORTS_INDEX), { headers: { 'content-type': 'application/json; charset=utf-8', ...data } })
+  if (reportDataPath(url.pathname))
+    return new Response(request.method === 'HEAD' ? null : 'Not found', { status: 404, headers: { 'content-type': 'text/plain; charset=utf-8', ...data } })
   if (read && pageAddress(url.pathname) && !missingEntitySlug(url.pathname)) {
     const page = await serveSeoPage({ kind: 'notfound' }, url, request, env, ctx)
     page.headers.set('x-robots-tag', 'noindex')
@@ -6683,6 +6687,17 @@ async function reportsWithdrawn(request: Request, url: URL, env: Env, ctx: Execu
     return page
   }
   return new Response(request.method === 'HEAD' ? null : 'Not found', { status: 404, headers: { 'x-robots-tag': 'noindex', 'cache-control': 'no-store', 'content-type': 'text/plain; charset=utf-8' } })
+}
+
+/** The apps' copy of a report data file while the reports are off: the asset as
+ *  it was served before, never stored by any cache and varied by client, so a
+ *  browser or crawler never receives it. Its ETag stays: only an app holds it. */
+function appReportData(asset: Response, request: Request): Response {
+  const out = new Response(request.method === 'HEAD' ? null : asset.body, asset)
+  out.headers.set('x-robots-tag', 'noindex')
+  out.headers.set('cache-control', 'no-store')
+  out.headers.set('vary', 'User-Agent')
+  return out
 }
 
 /** The community page: its trail after the band, and the BreadcrumbList that
@@ -6740,7 +6755,12 @@ export default {
     }
     if (!vicElectionEnabled(env.VIC_ELECTION_HUB_ENABLED) && vicElectionPublicationPath(url.pathname))
       return withSecurityHeaders(new Response(request.method === 'HEAD' ? null : 'Not found', {status:404,headers:{'x-robots-tag':'noindex','cache-control':'no-store','content-type':'text/plain; charset=utf-8'}}), url)
-    if (!reportsEnabled(env.REPORTS_ENABLED) && reportsPath(url.pathname)) return withSecurityHeaders(await reportsWithdrawn(request, url, env, ctx), url)
+    if (!reportsEnabled(env.REPORTS_ENABLED) && reportsPath(url.pathname)) {
+      // The installed apps still read the report data, as before (REPORTS_APP_DATA).
+      if (reportsAppData(env.REPORTS_APP_DATA) && appUserAgent(request.headers.get('user-agent')) && reportDataPath(url.pathname) && (request.method === 'GET' || request.method === 'HEAD'))
+        return withSecurityHeaders(appReportData(await display(await env.ASSETS.fetch(request)), request), url)
+      return withSecurityHeaders(await reportsWithdrawn(request, url, env, ctx), url)
+    }
     const canonical = await pageAliasRedirect(request, url, env)
     if (canonical) return canonical
     // Scraper fleets (see network-block.ts) are refused before any paid route runs.
