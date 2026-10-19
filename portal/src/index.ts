@@ -118,7 +118,7 @@ import { renderOgPng, renderOgJpeg, type OgFont } from './og-render'
 import * as storyRender from './og-render'
 import { personRole, personTitle, roleLine, billTitle } from './seo-titles'
 import { navGates, pageTrail, trail } from './nav-model.mjs'
-import { EMPTY_REPORTS_INDEX, KEPT_REPORT, REPORTS_INDEX, appUserAgent, reportDataPath, reportsAppData, reportsEnabled, reportsPath } from './reports-gate'
+import { EMPTY_REPORTS_INDEX, REPORTS_INDEX, appUserAgent, reportDataPath, reportsAppData, reportsEnabled, reportsPath } from './reports-gate'
 import { answerBlock, associationCaveat, crumbSteps, printedTrail, headingOf, crumbsHTML, panelPrerender, SERVER_PANELS, type Crumb, renderPersonAnswer, renderBillAnswer, renderDivisionAnswer, renderDirectory, renderSupplierAnswer, renderMoneyAnswer, type Division, type ReadAsset } from './seo-content'
 import { buildSchemaGraph, serializeSchemaGraph, type PersonSchemaIdentity } from './seo-schema'
 import {renderMoneyConnectionsTable} from './money-connections-table'
@@ -4346,8 +4346,7 @@ async function buildRouteMeta(route: SeoRoute, url: URL, request: Request, env: 
   })
   // With the reports off, their addresses are the site's not-found page, wherever
   // the page is asked for (the page itself, a share card, a social preflight).
-  // The grants explorer under /reports stays (src/reports-gate.ts).
-  if ((route.kind === 'report' && route.slug !== KEPT_REPORT || route.kind === 'static' && route.page === 'reports') && !reportsEnabled(env.REPORTS_ENABLED)) route = { kind: 'notfound' }
+  if ((route.kind === 'report' || route.kind === 'static' && route.page === 'reports') && !reportsEnabled(env.REPORTS_ENABLED)) route = { kind: 'notfound' }
 
   switch (route.kind) {
     case 'hub': {
@@ -4425,7 +4424,6 @@ async function buildRouteMeta(route: SeoRoute, url: URL, request: Request, env: 
     }
 
     case 'report': {
-      const reportsOn = reportsEnabled(env.REPORTS_ENABLED)
       const reports = await loadReports(env)
       const r = reports.bySlug.get(route.slug)
       const canonical = `${SITE_ORIGIN}/reports/${route.slug}`
@@ -4435,9 +4433,7 @@ async function buildRouteMeta(route: SeoRoute, url: URL, request: Request, env: 
       const speakerCount = report?.stats?.unique_speakers
       const description = withTail(`${r.title}: ${r.blurb}`, 'A standing OPAX investigation, every claim cited.')
       return base({
-        title: reportsOn ? `${r.title} · Reports · OPAX` : `${r.title} · OPAX`,
-        // Without the Reports page the kept grants explorer stands as its own page.
-        ...(reportsOn ? {} : { trail: [{ label: r.title }] }),
+        title: `${r.title} · Reports · OPAX`,
         description,
         canonical,
         ogType: 'article',
@@ -4848,7 +4844,7 @@ async function canonicalRoutePath(url: URL, env: Env): Promise<string> {
   }
   if(route?.kind==='static' || route?.kind==='index' || route?.kind==='topics') return path
   if(route?.kind==='topic' && TOPIC_NAMES[route.slug]) return path
-  if(route?.kind==='report' && (reportsEnabled(env.REPORTS_ENABLED) || route.slug===KEPT_REPORT) && (await loadReports(env).catch(()=>null))?.bySlug.has(route.slug)) return path
+  if(route?.kind==='report' && reportsEnabled(env.REPORTS_ENABLED) && (await loadReports(env).catch(()=>null))?.bySlug.has(route.slug)) return path
   if(route?.kind==='instruments') {
     const id=route.id?.toUpperCase()
     const manifest=await assetJson<{lookup:Record<string,unknown>}>(env,'/instruments/manifest.json').catch(()=>null)
@@ -5822,7 +5818,7 @@ async function cardRefused(route: SeoRoute | null, pageUrl: URL, request: Reques
   // Check the election gate before replaying a card cached while publication was enabled.
   if (route?.kind === 'hub' && route.hub === 'vic-election' && !vicElectionEnabled(env.VIC_ELECTION_HUB_ENABLED)) return true
   // Likewise the reports' gate: a card drawn while they were published is never replayed.
-  if ((route?.kind === 'report' && route.slug !== KEPT_REPORT || route?.kind === 'static' && route.page === 'reports') && !reportsEnabled(env.REPORTS_ENABLED)) return true
+  if ((route?.kind === 'report' || route?.kind === 'static' && route.page === 'reports') && !reportsEnabled(env.REPORTS_ENABLED)) return true
   if (!route || !NAMED_CARD_ROUTES.has(route.kind)) return false
   const meta = await buildRouteMeta(route, pageUrl, request, env, ctx).catch(() => null)
   return !meta || meta.status !== 200 || !meta.card || meta.noindex === true
@@ -6667,11 +6663,11 @@ async function route(
   }
 }
 
-/** The six reports' addresses while they are off (src/reports-gate.ts), on staging too.
- *  Installed apps read the index: it answers in its own shape, empty, so their
- *  Reports screen shows nothing rather than an error. A report's data file is
- *  gone (never read from the assets); a page address is the site's not-found
- *  page, noindex, like any address nothing answers. */
+/** The reports' addresses while they are off (src/reports-gate.ts), on staging
+ *  too, for every client but the apps' data reads (appReportData). The index
+ *  answers in its own shape, empty; a report's data file is gone (never read
+ *  from the assets); a page address is the site's not-found page, noindex, like
+ *  any address nothing answers. */
 async function reportsWithdrawn(request: Request, url: URL, env: Env, ctx: ExecutionContext): Promise<Response> {
   const read = request.method === 'GET' || request.method === 'HEAD'
   // The data files answer the apps differently (REPORTS_APP_DATA): never stored, and varied by client.

@@ -63,6 +63,10 @@
 /bills/*.json
   ! Cache-Control
   Cache-Control: public, max-age=0, must-revalidate
+# The grants research data is read by the apps' money screen and (with the reports
+# published) the grants-allocation explorer; no web page needs it in search results.
+/research/*.json
+  X-Robots-Tag: noindex
 # Donor-bearing report data revalidates on every use after a publication.
 /reports/*.json
   ! Cache-Control

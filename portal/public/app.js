@@ -78,9 +78,6 @@ let reportsIndex = null;
 // names them: their addresses are the server's not-found page.
 const reportsPublished = () => globalThis.OpaxNavigation?.published?.("reports") === true;
 if (!reportsPublished()) for (const el of document.querySelectorAll("[data-reports-only]")) el.remove();
-// The grants explorer at /reports/grants-allocation is not one of them: it
-// stays either way, as a page of its own while Reports is withheld.
-const KEPT_REPORT = "grants-allocation";
 // `key` is the search identity (query + filters, no page, no sort): it says
 // whether a run is a new result set or another page of the one on screen.
 let lastSearch = {
@@ -1513,7 +1510,7 @@ async function openMoneyRecords(kind, params) {
       moneyRecordsHandle = handle;
       return;
     }
-    const mod = await import(grants ? '/grants.js?v=d6c30e3c94' : '/ledger.js?v=bfde3a46a5');
+    const mod = await import(grants ? '/grants.js?v=3efeb85db2' : '/ledger.js?v=bfde3a46a5');
     if (generation !== moneyRecordsGeneration) return;
     body.replaceChildren();
     // Both modules report their shareable state (open file, filters) so the
@@ -1562,7 +1559,7 @@ async function openGrantRecipient(jurisdiction, id, manageFocus) {
   const body = $('money-records-body');
   body.innerHTML = '<div class="grant-recipient-page" aria-busy="true"><p class="visually-hidden" role="status">Loading recipient records</p><div class="answer-skeleton grant-recipient-skeleton" aria-hidden="true"><i style="width:62%;height:2.75rem"></i><i style="width:38%"></i><i style="width:100%;height:6rem"></i><i style="width:84%"></i><i style="width:96%"></i><i style="width:74%"></i></div></div>';
   try {
-    const mod = await import('/grant-recipient.js?v=ce59ec85e1');
+    const mod = await import('/grant-recipient.js?v=77121defe4');
     if (generation !== moneyRecordsGeneration) return;
     moneyRecordsHandle = mod.mountGrantRecipient(body, { jurisdiction, id, manageFocus,
       onTitle(name) {
@@ -2061,14 +2058,14 @@ async function route() {
     document.title = TITLES.discover;
     setCrumbs(crumbsFor("/money/contracts"));
     renderDiscoveryPage(params, manageFocus);
-  } else if (view === "reports" && (reportsPublished() || segs[1] === KEPT_REPORT && segs.length === 2)) {
+  } else if (view === "reports" && reportsPublished()) {
     showPanel("reports");
     document.title = TITLES.reports;
     if (segs[1]) {
       // The index (when loaded) has the title; the slug stands in until the
       // report itself arrives and openReport sets the real one.
       const known = reportsIndex?.find((r) => r.slug === segs[1]);
-      setCrumbs(reportsPublished() ? crumbsFor("/reports", known?.title || segs[1].replace(/-/g, " ").replace(/^./, (c) => c.toUpperCase())) : crumbsFor(herePath));
+      setCrumbs(crumbsFor("/reports", known?.title || segs[1].replace(/-/g, " ").replace(/^./, (c) => c.toUpperCase())));
       openReport(segs[1], segs[3] ? Number(segs[3]) : null, manageFocus);
     } else {
       setCrumbs(crumbsFor("/reports"));
@@ -9524,7 +9521,7 @@ const GAMES = {
   tide: { name: "The tide", dialog: "dialog-tide", body: "explore-tide", module: "/tide.js", mount: "mountTide" },
   quiz: { name: "The record quiz", dialog: "dialog-quiz", body: "explore-quiz", module: "/quiz.js?v=6547d155f0", mount: "mountQuiz" },
   ledger: { name: "The ledger", dialog: "dialog-ledger", body: "explore-ledger", module: "/ledger.js?v=bfde3a46a5", mount: "mountLedger" },
-  grants: { name: "Who gets the grants", dialog: "dialog-grants", body: "explore-grants", module: "/grants.js?v=d6c30e3c94", mount: "mountGrants" },
+  grants: { name: "Who gets the grants", dialog: "dialog-grants", body: "explore-grants", module: "/grants.js?v=3efeb85db2", mount: "mountGrants" },
   matrix: { name: "Who owns which debate", dialog: "dialog-matrix", body: "explore-matrix", module: "/matrix.js?v=0d01530c63", mount: "mountMatrix" },
   wd: { name: "Words per dollar", dialog: "dialog-wd", body: "explore-wd", module: "/wordsdollars.js?v=dc0004221c", mount: "mountWordsDollars" },
   tvn: { name: "Then vs now", dialog: "dialog-tvn", body: "explore-tvn", module: "/thenvsnow.js?v=61a940c0df", mount: "mountThenVsNow" },
@@ -14874,6 +14871,8 @@ function renderReportV2(report, slug) {
 }
 
 async function openReport(slug, sectionNum, manageFocus) {
+  // Withheld reports (grants-allocation's explorer included) open nothing; route() never sends them here.
+  if (!reportsPublished()) return;
   const grantsGeneration = grantsResearchGeneration;
   if ($('report-research')) $('report-research').hidden = true;
   if (slug === 'grants-allocation') {
@@ -14884,8 +14883,8 @@ async function openReport(slug, sectionNum, manageFocus) {
     if (!root) { root = document.createElement('div'); root.id = 'report-research'; $('reports-index').after(root); }
     root.hidden = false;
     currentReportSlug = null;
-    setCrumbs(reportsPublished() ? crumbsFor('/reports', 'Where community funding goes') : crumbsFor('/reports/grants-allocation'));
-    const { mountGrantsResearch } = await import('/grants-research.js?v=20261019-reports-off');
+    setCrumbs(crumbsFor('/reports', 'Where community funding goes'));
+    const { mountGrantsResearch } = await import('/grants-research.js?v=20260911-clear-projects');
     if (grantsGeneration !== grantsResearchGeneration || !hereRoute().startsWith('/reports/grants-allocation')) return;
     grantsResearchHandle = mountGrantsResearch(root,{focus:manageFocus});
     await grantsResearchHandle.ready;

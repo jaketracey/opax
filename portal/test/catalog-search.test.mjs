@@ -4,6 +4,7 @@ import {readFile} from 'node:fs/promises';
 import {searchCatalog,matchesCatalogFilters} from '../src/catalog-search.ts';
 import {tokens,normalize,bucket} from '../src/catalog-query.mjs';
 import {programRecord,programKey} from '../../scripts/build_search_catalog.mjs';
+import {reportsPublished} from '../../scripts/reports_flag.mjs';
 const assets={fetch:async request=>{
  const path=new URL(request.url).pathname;
  assert.match(path,/^\/search-catalog\/(manifest\.json|[a-f0-9]{16}\/(meta|terms-\d+|records-\d+)\.json)$/);
@@ -20,7 +21,9 @@ test('published index covers financial records alongside people, bills and regis
  const manifest=JSON.parse(await readFile(new URL('../public/search-catalog/manifest.json',import.meta.url)));
  const suppliers=JSON.parse(await readFile(new URL('../public/suppliers.json',import.meta.url)));
  assert.ok(manifest.counts.contract>=suppliers.meta.contract_count);
- for(const kind of ['person','agency','donor','receipt','grant','bill','interest','expense','access','campaigner','report'])assert.ok(manifest.counts[kind]>0,kind);
+ // Report rows (the reports and the grants-allocation research) follow REPORTS_ENABLED.
+ for(const kind of ['person','agency','donor','receipt','grant','bill','interest','expense','access','campaigner',...(reportsPublished()?['report']:[])])assert.ok(manifest.counts[kind]>0,kind);
+ if(!reportsPublished())assert.equal(manifest.counts.report,undefined);
 });
 test('an organisation is found in donors, receipts, contracts and grants',async()=>{
  for(const kind of ['donor','receipt','contract','grant']){
@@ -66,6 +69,8 @@ test('new agency profiles are discoverable with their direct destination',async(
 });
 
 test('verified invitation venues are searchable and open their own funding stage',async()=>{
+ // They open the grants-allocation explorer, so they are searchable only while the reports are published.
+ if(!reportsPublished()){assert.equal((await find('Jabiru Lingiari',{kind:'report'})).total,0);return;}
  const result=await find('Jabiru Lingiari',{kind:'report'});
  const rows=result.results.filter(r=>['mlci-invitation-067','mlci-invitation-070'].includes(r.record_id));
  assert.equal(rows.length,2);
@@ -122,4 +127,28 @@ test('grant recipient and award search hits open the standalone recipient profil
  assert.ok(profile);assert.match(profile.title,/Serendipity/i);
  assert.equal(profile.href,'/money/grants/federal/recipient/abn%3A64062160614');
  assert.ok(result.results.filter(row=>row.record_id?.startsWith('GA')).every(row=>row.href===profile.href));
+});
+test('the 226 active invited projects resolve to the GO7867 program view, invited and not awarded, whatever REPORTS_ENABLED says',async()=>{
+ const {readdir}=await import('node:fs/promises');
+ const manifest=JSON.parse(await readFile(new URL('../public/search-catalog/manifest.json',import.meta.url)));
+ const dir=new URL(`../public/search-catalog/${manifest.version}/`,import.meta.url);
+ const records=[];
+ for(const f of (await readdir(dir)).filter(f=>/^records-\d+\.json$/.test(f)))records.push(...JSON.parse(await readFile(new URL(f,dir))));
+ const mlci=JSON.parse(await readFile(new URL('../public/research/mlci.json',import.meta.url)));
+ const invited=records.filter(r=>/^mlci-invitation-\d+$/.test(r.record_id||''));
+ assert.equal(invited.length,226);
+ assert.equal(invited.length,mlci.projects.filter(p=>p.status!=='Withdrawn').length);
+ const view='/money/grants?jur=federal&program=GO7867';
+ for(const r of invited){
+  assert.equal(r.href,view,r.record_id);assert.equal(r.kind,'grant');
+  assert.match(r.title,/ — invited project, not awarded$/);assert.match(r.snippet,/^Invited to apply, not awarded: /);
+  assert.equal(r.url,mlci.projects.find(p=>p.id===r.record_id).source_url);
+ }
+ assert.equal(records.find(r=>r.record_id==='research-cpi-mlci-2026')?.href,view,'the CPI comparison');
+ assert.equal(records.find(r=>r.title==='Major and Local Community Infrastructure Program: invited projects and awards')?.href,view,'the program summary');
+ assert.equal(records.filter(r=>String(r.href).startsWith('/reports')).length,reportsPublished()?records.filter(r=>r.kind==='report').length:0);
+ assert.ok(!records.some(r=>/^\/reports\/grants-allocation/.test(r.href)&&/^mlci-invitation-/.test(r.record_id||'')));
+ assert.doesNotMatch(JSON.stringify(invited),/rort|pork|bias/i);
+ const found=await find('Chisholm Cricket',{kind:'grant'});
+ assert.ok(found.results.some(r=>r.record_id==='mlci-invitation-001'&&r.href===view));
 });

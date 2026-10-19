@@ -1,9 +1,9 @@
-// The six standing reports are off the site behind one switch, REPORTS_ENABLED
+// The reports (the six standing reports and "Where community funding goes",
+// grants-allocation) are off the site behind one switch, REPORTS_ENABLED
 // (src/reports-gate.ts). Off: every report address is a noindexed not-found
-// page, the data files are gone, installed apps read an empty index, and no
-// menu, footer, page, search row, sitemap entry or social post names them.
-// On: today's site. The grants explorer at /reports/grants-allocation stays
-// either way (the apps' money screen reads its data file).
+// page, the data files are gone for the web (the installed apps still read them
+// while REPORTS_APP_DATA is on), and no menu, footer, page, search row, sitemap
+// entry or social post names them. On: today's site.
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { Worker } from 'node:worker_threads';
@@ -18,10 +18,11 @@ import { llmsText, buildCrawl } from '../../scripts/build_crawl_catalog.mjs';
 
 const read = name => readFileSync(new URL('../public/' + name, import.meta.url), 'utf8');
 const SIX = ['climate', 'gambling', 'housing', 'immigration', 'indigenous', 'media'];
+const SEVEN = [...SIX, 'grants-allocation'];
 const ON = { REPORTS_ENABLED: 'true' };
-// Any link to the reports but the kept grants explorer.
-const REPORT_LINK = /href="\/reports(?!\/grants-allocation(?:[?#"]))[^"]*"/;
-const withheldLinks = html => [...html.matchAll(/href="(\/reports[^"]*)"/g)].map(m => m[1]).filter(h => !/^\/reports\/grants-allocation(?:[?#]|$)/.test(h));
+// Any link to the reports, grants-allocation included.
+const REPORT_LINK = /href="\/reports[^"]*"/;
+const withheldLinks = html => [...html.matchAll(/href="(\/reports[^"]*)"/g)].map(m => m[1]);
 
 /** The navigation list as a page draws it, with these gates marked on <html>. */
 function navigationIn(gates) {
@@ -49,14 +50,15 @@ test('the switch: only an exact "true" publishes, and wrangler.jsonc ships it of
   const config = read('../wrangler.jsonc');
   assert.match(config, /\n {4}"REPORTS_ENABLED": "false",/, 'production');
   assert.match(config, /\n {8}"REPORTS_ENABLED": "false",/, 'staging');
-  for (const path of ['/reports', '/reports/', '/reports/climate', '/reports/climate/s/2', '/reports/index.json', '/reports/media.json', '/reports/grants-allocation/s/1'])
+  for (const path of ['/reports', '/reports/', '/reports/climate', '/reports/climate/s/2', '/reports/index.json', '/reports/media.json',
+    '/reports/grants-allocation', '/reports/grants-allocation/', '/reports/grants-allocation.json', '/reports/grants-allocation/s/1'])
     assert.equal(reportsPath(path), true, path);
-  for (const path of ['/reports/grants-allocation', '/reports/grants-allocation/', '/reports/grants-allocation.json', '/reportsx', '/subject/topic/housing'])
+  for (const path of ['/reportsx', '/subject/topic/housing', '/research/mlci.json'])
     assert.equal(reportsPath(path), false, path);
 });
 
 test('off: every report address is the noindexed not-found page, with no way back to the reports', async () => {
-  for (const path of ['/reports', '/reports/', ...SIX.map(s => `/reports/${s}`), '/reports/housing/s/2', '/reports/no-such-report']) {
+  for (const path of ['/reports', '/reports/', ...SEVEN.map(s => `/reports/${s}`), '/reports/grants-allocation/', '/reports/grants-allocation?collection=history', '/reports/housing/s/2', '/reports/no-such-report']) {
     const res = await workerFetch(path);
     assert.equal(res.status, 404, path);
     assert.equal(res.headers.get('x-robots-tag'), 'noindex', path);
@@ -76,7 +78,7 @@ test('off: every report address is the noindexed not-found page, with no way bac
 });
 
 test('off: report data files are gone for the web, never read from the assets; the index is empty', async () => {
-  for (const slug of SIX) {
+  for (const slug of SEVEN) {
     const res = await workerFetch(`/reports/${slug}.json`);
     assert.equal(res.status, 404, slug);
     assert.equal(res.headers.get('x-robots-tag'), 'noindex');
@@ -122,10 +124,11 @@ test('off, REPORTS_APP_DATA on: the installed apps still read the report data ex
     const body = await index.text();
     assert.equal(body, await (await workerFetch('/reports/index.json', ON)).text(), 'the full index, as served with the reports on');
     assert.equal(JSON.parse(body).reports.length, 7);
-    for (const slug of [...SIX, 'grants-allocation']) {
+    assert.ok(JSON.parse(body).reports.some(r => r.slug === 'grants-allocation'), 'the app index keeps listing grants-allocation');
+    for (const slug of SEVEN) {
       const res = await workerFetch(`/reports/${slug}.json`, APP_DATA, { headers });
       assert.equal(res.status, 200, slug);
-      if (slug !== 'grants-allocation') assertUnshared(res, slug);
+      assertUnshared(res, slug);
       assert.equal(await res.text(), await (await workerFetch(`/reports/${slug}.json`, ON)).text(), `${slug}: the original bytes`);
     }
     const head = await workerFetch('/reports/climate.json', APP_DATA, { method: 'HEAD', headers });
@@ -133,7 +136,7 @@ test('off, REPORTS_APP_DATA on: the installed apps still read the report data ex
     assert.equal(await head.text(), '');
   }
   // The apps never load the pages: those stay the not-found page for them too.
-  for (const path of ['/reports', '/reports/climate', '/reports/climate/s/1']) {
+  for (const path of ['/reports', '/reports/climate', '/reports/climate/s/1', '/reports/grants-allocation', '/reports/grants-allocation/']) {
     const res = await workerFetch(path, APP_DATA, { headers: IOS });
     assert.equal(res.status, 404, path);
     assert.equal(res.headers.get('x-robots-tag'), 'noindex', path);
@@ -146,13 +149,18 @@ test('off, REPORTS_APP_DATA on: browsers and crawlers still get the empty index 
     assert.equal(index.status, 200, label);
     assertUnshared(index, `${label} index`);
     assert.equal(await index.text(), '{"reports":[]}', label);
-    for (const slug of SIX) {
+    for (const slug of SEVEN) {
       const res = await workerFetch(`/reports/${slug}.json`, APP_DATA, { headers });
       assert.equal(res.status, 404, `${label} ${slug}`);
       assertUnshared(res, `${label} ${slug}`);
       assert.equal(await res.text(), 'Not found');
     }
-    for (const path of ['/reports', '/reports/climate']) assert.equal((await workerFetch(path, APP_DATA, { headers })).status, 404, `${label} ${path}`);
+    for (const path of ['/reports', '/reports/climate', '/reports/grants-allocation']) {
+      const page = await workerFetch(path, APP_DATA, { headers });
+      assert.equal(page.status, 404, `${label} ${path}`);
+      assert.equal(page.headers.get('x-robots-tag'), 'noindex', `${label} ${path}`);
+      assert.equal(page.headers.get('cache-control'), 'no-store', `${label} ${path}`);
+    }
   }
 });
 
@@ -170,24 +178,20 @@ test('off, REPORTS_APP_DATA "false" (or unset): the apps get the same withheld r
   assert.equal(on.status, 200);
 });
 
-test('off: the grants explorer stays, as a page of its own, with its data file', async () => {
-  const res = await workerFetch('/reports/grants-allocation');
-  assert.equal(res.status, 200);
-  const html = await res.text();
-  const doc = new JSDOM(html).window.document;
-  assert.equal(doc.title, 'Where community funding goes · OPAX');
-  assert.equal(doc.querySelector('meta[name="robots"]'), null);
-  assert.deepEqual(withheldLinks(html), []);
-  assert.deepEqual([...doc.querySelectorAll('.prerender-crumbs a, nav[aria-label="Breadcrumb"] a')].map(a => a.getAttribute('href')).filter(h => h.startsWith('/reports')), []);
-  const ld = JSON.parse(doc.querySelector('script#ld-page').textContent);
-  assert.doesNotMatch(JSON.stringify(ld), /opax\.(?:test|com\.au)\/reports"/, 'no breadcrumb step names the withheld Reports page');
-  const data = await workerFetch('/reports/grants-allocation.json');
-  assert.equal(data.status, 200);
-  assert.equal(await data.text(), read('reports/grants-allocation.json'));
+test('off: the grants research data stays served to everyone (the apps\' money screen reads it), out of search results', async () => {
+  for (const file of ['mlci.json', 'grants-history.json', 'grant-locations.json']) {
+    for (const headers of [IOS, BROWSER, CRAWLER]) {
+      const res = await workerFetch(`/research/${file}`, {}, { headers });
+      assert.equal(res.status, 200, file);
+      assert.equal(await res.text(), read(`research/${file}`), `${file}: unchanged`);
+    }
+  }
+  // Static assets: the noindex comes from _headers, not the Worker.
+  assert.match(read('_headers'), /\n\/research\/\*\.json\n {2}X-Robots-Tag: noindex\n/);
 });
 
 test('off: a withheld report has no share card, drawn or replayed from the cache', async () => {
-  for (const path of ['/og/reports/climate.jpg', '/og/reports.jpg']) {
+  for (const path of ['/og/reports/climate.jpg', '/og/reports/grants-allocation.jpg', '/og/reports.jpg']) {
     const res = await workerFetch(path);
     assert.equal(res.status, 404, path);
     assert.equal(await res.text(), 'No card available', path);
@@ -219,19 +223,18 @@ test('off: the static menu bar and footer index carry no withheld report, and th
       assert.doesNotMatch(block, REPORT_LINK, `${file} nav:${part}`);
     }
   }
-  // The menus a page draws: closed, the six and "All reports" are absent; open, today's menus.
+  // The menus a page draws: closed, the reports and "All reports" are absent; open, today's menus.
   const off = navigationIn('vic-election');
   for (const id of ['primary-nav', 'nav-drawer', 'footer-index']) assert.doesNotMatch(off.document.getElementById(id).innerHTML, REPORT_LINK, id);
-  assert.match(off.document.getElementById('primary-nav').innerHTML, /href="\/reports\/grants-allocation"/);
   assert.equal(off.OpaxNavigation.published('reports'), false);
   // (jsdom's arrays belong to its own realm: compare plain copies.)
   const steps = (win, ...args) => JSON.parse(JSON.stringify(win.OpaxNavigation.trail(...args)));
   assert.deepEqual(steps(off, '/reports/climate'), [{ label: 'Page not found' }]);
   assert.deepEqual(steps(off, '/reports'), [{ label: 'Page not found' }]);
-  assert.deepEqual(steps(off, '/reports/grants-allocation'), [{ label: 'Where community funding goes' }]);
+  assert.deepEqual(steps(off, '/reports/grants-allocation'), [{ label: 'Page not found' }]);
   const on = navigationIn('vic-election reports');
   const menu = on.document.getElementById('primary-nav').innerHTML;
-  for (const slug of SIX) assert.match(menu, new RegExp(`href="/reports/${slug}"`), slug);
+  for (const slug of SEVEN) assert.match(menu, new RegExp(`href="/reports/${slug}"`), slug);
   assert.match(menu, /<a class="nav-all" href="\/reports">All reports/);
   assert.match(on.document.getElementById('nav-drawer').innerHTML, /sheet-link-all" href="\/reports"/);
   assert.equal(on.OpaxNavigation.published('reports'), true);
@@ -242,41 +245,39 @@ test('off: the static menu bar and footer index carry no withheld report, and th
 test('off: the app shell and the home page drop the reports-only copy and draw no report link', async () => {
   const app = await probe('/about');
   assert.equal(app.published, false);
-  assert.deepEqual(app.links, ['/reports/grants-allocation'], 'menus, sheet, footer and the restored panels');
-  assert.equal(app.reportsOnly, 0, 'About copy');
-  assert.equal(app.researchOption, true, 'the grants explorer rows keep the Research reports search filter');
+  assert.deepEqual(app.links, [], 'menus, sheet, footer and the restored panels');
+  assert.equal(app.reportsOnly, 0, 'About copy and the Research reports search filter');
+  assert.equal(app.researchOption, false, 'no catalogue row has the report kind any more');
   assert.equal(app.trail, 'Page not found');
-  assert.equal(app.kept, 'Where community funding goes');
+  assert.equal(app.grants, 'Page not found');
   const home = await probe('/');
-  assert.deepEqual(home.links, ['/reports/grants-allocation']);
+  assert.deepEqual(home.links, []);
   assert.equal(home.reportsOnly, 0);
   // On, the same pages draw today's links.
   const on = await probe('/about', ON);
   assert.equal(on.gates, 'vic-election reports');
-  assert.deepEqual(on.links, ['/reports', ...['grants-allocation', ...SIX].map(s => `/reports/${s}`)].sort());
-  assert.equal(on.reportsOnly, 2);
+  assert.deepEqual(on.links, ['/reports', ...SEVEN.map(s => `/reports/${s}`)].sort());
+  assert.equal(on.reportsOnly, 3);
+  assert.equal(on.researchOption, true);
+  assert.equal(on.grants, 'Reports › Where community funding goes');
   const homeOn = await probe('/', ON);
-  assert.ok(SIX.every(slug => homeOn.links.includes(`/reports/${slug}`)) && homeOn.links.includes('/reports'));
+  assert.ok(SEVEN.every(slug => homeOn.links.includes(`/reports/${slug}`)) && homeOn.links.includes('/reports'));
 });
 
 test('off: search catalogue, sitemap, llms.txt and IndexNow carry no withheld report', async () => {
   const manifest = JSON.parse(read('search-catalog/manifest.json'));
   const dir = new URL(`../public/search-catalog/${manifest.version}/`, import.meta.url);
-  let rows = 0;
-  for (const file of readdirSync(dir)) {
-    const text = readFileSync(new URL(file, dir), 'utf8');
-    for (const [, href] of text.matchAll(/"(\/reports[^"?]*)/g)) { rows++; assert.equal(href, '/reports/grants-allocation', file); }
-  }
-  assert.ok(rows > 0, 'the grants explorer rows stay searchable');
+  for (const file of readdirSync(dir)) assert.doesNotMatch(readFileSync(new URL(file, dir), 'utf8'), /"\/reports/, file);
+  assert.equal(manifest.counts.report, undefined, 'no row of the report kind');
   const crawl = new URL('../public/crawl/', import.meta.url);
   for (const file of ['sitemap.xml', ...readdirSync(new URL('sitemaps/', crawl)).map(f => 'sitemaps/' + f)]) {
     const xml = readFileSync(new URL(file, crawl), 'utf8');
-    for (const [, loc] of xml.matchAll(/<loc>https:\/\/opax\.com\.au(\/reports[^<]*)<\/loc>/g)) assert.equal(loc, '/reports/grants-allocation', file);
+    assert.doesNotMatch(xml, /<loc>[^<]*\/reports/, file);
   }
   assert.doesNotMatch(readFileSync(new URL('llms.txt', crawl), 'utf8'), /\/reports/);
   assert.doesNotMatch(readFileSync(new URL('indexnow.json', crawl), 'utf8'), /\/reports/);
   const sitemap = await (await workerFetch('/sitemaps/topics-reports-1.xml')).text();
-  assert.deepEqual([...sitemap.matchAll(/<loc>[^<]*(\/reports[^<]*)<\/loc>/g)].map(m => m[1]), ['/reports/grants-allocation']);
+  assert.doesNotMatch(sitemap, /<loc>[^<]*\/reports/);
   assert.doesNotMatch(await (await workerFetch('/llms.txt')).text(), /\/reports/);
   // The builder publishes them again when the switch is on.
   const corpus = JSON.parse(read('corpus.json'));
@@ -318,9 +319,11 @@ test('on: today\'s report pages, data, menus and gates', async () => {
   assert.equal((await workerFetch('/reports', ON)).status, 200);
   assert.equal((await workerFetch('/reports/housing/s/2', ON)).status, 200);
   assert.equal(await (await workerFetch('/reports/index.json', ON)).text(), read('reports/index.json'));
-  const kept = new JSDOM(await (await workerFetch('/reports/grants-allocation', ON)).text()).window.document;
-  assert.equal(kept.title, 'Where community funding goes · Reports · OPAX');
+  const grants = await workerFetch('/reports/grants-allocation', ON);
+  assert.equal(grants.status, 200);
+  assert.equal(new JSDOM(await grants.text()).window.document.title, 'Where community funding goes · Reports · OPAX');
+  assert.equal((await workerFetch('/reports/grants-allocation.json', ON, { headers: BROWSER })).status, 200);
   const home = new JSDOM(await (await workerFetch('/', ON)).text()).window.document;
   assert.ok(home.querySelector('.hp-reports'), 'the home page keeps its Reports block');
-  for (const slug of SIX) assert.ok(home.querySelector(`.hp-reports a[href="/reports/${slug}"]`), slug);
+  for (const slug of SEVEN) assert.ok(home.querySelector(`.hp-reports a[href="/reports/${slug}"]`), slug);
 });

@@ -626,6 +626,13 @@ const CSS = `
 .gr-buckets li { display: grid; grid-template-columns: minmax(0, 1fr) 6rem 5.5rem; gap: 0 var(--space-row); align-items: center; padding: var(--space-line) 0; border-bottom: var(--border-hairline) solid var(--divider-subtle); }
 .gr-buckets .gr-bar-cell { margin: 0; }
 .gr-buckets .gr-num { color: var(--ink-soft); }
+.gr-compare li { grid-template-columns: minmax(0, 1fr) 6rem; }
+.gr-compare .gr-bars { display: block; min-width: 0; }
+.gr-compare .gr-bar-cell { display: block; max-width: 100%; margin: 0 0 var(--space-line); }
+.gr-compare .gr-bar-cell:last-child { margin-bottom: 0; }
+.gr-compare small { display: block; color: var(--ink-soft); font-variant-numeric: tabular-nums; }
+.gr-splitkey .gr-seg-5 { border-color: var(--chart-baseline); }
+.gr-compare .gr-seg-5 { border: var(--border-hairline) solid var(--chart-baseline); }
 .gr-caption { font: var(--type-fine); color: var(--ink-soft); margin: var(--space-line) 0 var(--space-tight); }
 .gr-toplist { list-style: none; margin: var(--space-line) 0 var(--space-row); padding: 0; font: var(--type-fine); }
 .gr-toplist li { display: flex; justify-content: space-between; gap: var(--space-row); align-items: baseline; padding: var(--space-line) 0; border-bottom: var(--border-hairline) solid var(--divider-subtle); }
@@ -675,6 +682,7 @@ const CSS = `
   .gr-table-programs { min-width: 920px; }
   .gr-cols { grid-template-columns: 1fr; }
   .gr-buckets li { grid-template-columns: minmax(0, 1fr) 4.5rem 4.5rem; }
+  .gr-compare li { grid-template-columns: minmax(0, 1fr) 4.5rem; }
   .gr-grantswrap { max-height: none; }
 }
 `
@@ -1576,6 +1584,21 @@ export function mountGrants (container, opts = {}) {
     return notesPromise
   }
 
+  // A program note can name a list of projects invited to apply (program-notes.json
+  // `invitations.data`); each file is fetched once, when a program that names it opens.
+  // A failed fetch is not remembered, so Try again asks again.
+  const invitationFiles = new Map()
+  function loadInvitations (src) {
+    if (!invitationFiles.has(src)) {
+      const request = fetch(src, { signal: aborter.signal, cache: 'no-cache' })
+        .then((res) => { if (!res.ok) throw new Error(`${res.status}`); return res.json() })
+        .then((d) => { if (!d || !Array.isArray(d.projects)) throw new Error('no project list'); return d })
+      request.catch(() => invitationFiles.delete(src))
+      invitationFiles.set(src, request)
+    }
+    return invitationFiles.get(src)
+  }
+
   const tile = statTile
   const pct = (share) => `${Math.round(share * 100)}%`
 
@@ -1642,6 +1665,135 @@ export function mountGrants (container, opts = {}) {
       recipientIds.jur = state.jur
     }
     return recipientIds
+  }
+
+  /** An attributed published analysis: its citation, what it compares, and the
+   *  figures as published, each as a pair of bars (the value and its baseline). */
+  function researchNote (r) {
+    const wrap = el('div', 'gr-research')
+    const ul = el('ul', 'gr-audits')
+    const li = el('li')
+    const title = r.url ? link(r.url, r.title) : el('b', null, r.title)
+    if (r.url) { title.target = '_blank'; title.rel = 'noopener' }
+    li.append(el('b', null, r.year ? `${r.year}: ` : ''), title)
+    if (r.publisher) li.append(document.createTextNode(`, ${r.publisher}.`))
+    if (r.finding) li.append(document.createTextNode(` ${r.finding}`))
+    ul.appendChild(li)
+    wrap.appendChild(ul)
+    const c = r.compare
+    if (c && Array.isArray(c.rows) && c.rows.length) {
+      const key = el('ul', 'gr-splitkey')
+      for (const [cls, label] of [['gr-seg-0', c.value], ['gr-seg-5', c.baseline]]) {
+        const k = el('li')
+        const sw = el('i', cls)
+        sw.setAttribute('aria-hidden', 'true')
+        k.append(sw, document.createTextNode(label))
+        key.appendChild(k)
+      }
+      wrap.appendChild(key)
+      const most = Math.max(...c.rows.flatMap((x) => [x.value || 0, x.baseline || 0]), 1)
+      const list = el('ul', 'gr-buckets gr-compare')
+      for (const row of c.rows) {
+        const item = el('li')
+        const label = el('span', null, row.label)
+        label.appendChild(el('small', null, `${c.value} ${AUD_FULL.format(row.value || 0)} · ${c.baseline.toLowerCase()} ${AUD_FULL.format(row.baseline || 0)}`))
+        const bars = el('span', 'gr-bars')
+        bars.setAttribute('aria-hidden', 'true')
+        for (const [cls, v] of [['', row.value], [' gr-seg-5', row.baseline]]) {
+          const bar = el('span', `gr-bar-cell${cls}`)
+          // A share of the bar column, so the longest bar fits the column at every width.
+          bar.style.width = `${Math.max(v > 0 ? 2 : 0, Math.round((v || 0) / most * 100))}%`
+          bars.appendChild(bar)
+        }
+        item.append(label, bars)
+        list.appendChild(item)
+      }
+      wrap.appendChild(list)
+    }
+    if (r.note) wrap.appendChild(el('p', 'gr-caption', r.note))
+    return wrap
+  }
+
+  /** The projects a program invited to apply: a status line while the list
+   *  loads, an error with Try again if it fails, then the table (24 rows, then
+   *  Show all). An invitation is not an award: the lede says so. */
+  function invitedProjects (inv) {
+    const section = el('section', 'gr-invited')
+    const kicker = (n) => el('p', 'gr-kicker', n == null ? 'Invited projects' : `Invited projects (${NUM.format(n)})`)
+    const fill = () => {
+      const wait = el('div', 'gr-status', 'Opening the invited projects…')
+      wait.setAttribute('role', 'status')
+      section.replaceChildren(kicker(), wait)
+      loadInvitations(inv.data).then((d) => {
+        if (!section.isConnected) return
+        section.replaceChildren(...invitedRows(d, inv, kicker))
+      }).catch((err) => {
+        if (err && err.name === 'AbortError') return
+        if (!section.isConnected) return
+        const failed = failedStatus('The invited projects could not be loaded.', fill)
+        failed.setAttribute('role', 'alert')
+        section.replaceChildren(kicker(), failed)
+      })
+    }
+    fill()
+    return section
+  }
+
+  function invitedRows (d, inv, kicker) {
+    const projects = d.projects
+    if (!projects.length) return [kicker(0), el('p', 'gr-caption', 'No invited projects are listed for this program.')]
+    const active = projects.filter((x) => x.status !== 'Withdrawn')
+    const withdrawn = projects.length - active.length
+    const listed = d.invitation_snapshot ? new Date(`${d.invitation_snapshot}T00:00:00Z`).toLocaleDateString('en-AU', { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' }) : null
+    const lede = el('p', 'gr-caption gr-invited-lede')
+    lede.append(document.createTextNode(
+      `These ${NUM.format(projects.length)} projects were invited to apply, not awarded: an invitation is not a grant or a payment, and the published awards are in the table of grants below. ` +
+      `${NUM.format(active.length)} were active${listed ? ` on ${listed}` : ''}, with ${fmtMoney(active.reduce((t, x) => t + (x.value || 0), 0))} in invitation allocations${withdrawn ? `; ${NUM.format(withdrawn)} withdrawn` : ''}. Source: `))
+    if (inv.url) {
+      const a = link(inv.url, inv.source || 'the departmental list')
+      a.target = '_blank'; a.rel = 'noopener'
+      lede.append(a, document.createTextNode('.'))
+    } else lede.append(document.createTextNode(`${inv.source || 'the departmental list'}.`))
+    // Active first, largest first; withdrawn proposals last.
+    const rows = [...projects].sort((a, b) => (a.status === 'Withdrawn') - (b.status === 'Withdrawn') || (b.value || 0) - (a.value || 0))
+    const table = el('table', 'gr-electorates gr-invited-table')
+    table.appendChild(el('caption', 'gr-visually-hidden', 'Projects invited to apply: project, local government area and state, status, invitation allocation, source'))
+    const tb = el('tbody')
+    const show = 24
+    const addRows = (from, to) => {
+      for (const x of rows.slice(from, to)) {
+        const row = el('tr')
+        const what = el('td')
+        what.append(el('span', null, x.title), document.createTextNode(' '), el('span', 'gr-muted', [x.lga, x.state].filter(Boolean).join(', ')))
+        row.appendChild(what)
+        row.appendChild(el('td', x.status === 'Withdrawn' ? 'gr-muted' : null, x.status || '—'))
+        const v = el('td', 'gr-num', fmtMoney(x.value || 0))
+        v.title = AUD_FULL.format(x.value || 0)
+        row.appendChild(v)
+        const src = el('td', 'gr-num')
+        if (x.source_url) {
+          const a = link(x.source_url, x.page ? `p. ${x.page}` : 'Source')
+          a.target = '_blank'; a.rel = 'noopener'
+          a.setAttribute('aria-label', `Source for ${x.title}${x.page ? `, page ${x.page}` : ''}`)
+          src.appendChild(a)
+        }
+        row.appendChild(src)
+        tb.appendChild(row)
+      }
+    }
+    addRows(0, show)
+    table.appendChild(tb)
+    const scroll = el('div', 'gr-scroll')
+    scroll.appendChild(table)
+    const out = [kicker(projects.length), lede, scroll]
+    if (rows.length > show) {
+      const more = el('button', 'ui-button gr-more-rows', `Show all ${NUM.format(rows.length)} invited projects`)
+      more.type = 'button'
+      more.dataset.uiSize = 'compact'
+      more.addEventListener('click', () => { addRows(show, rows.length); more.remove() })
+      out.push(more)
+    }
+    return out
   }
 
   function renderProgramDetail (td, r, p) {
@@ -1796,8 +1948,8 @@ export function mountGrants (container, opts = {}) {
     grid.append(left, right)
     td.appendChild(grid)
 
-    // notes: summary and audits
-    if (progNotes && (progNotes.summary || (progNotes.audits || []).length)) {
+    // notes: summary, audits and attributed research
+    if (progNotes && (progNotes.summary || (progNotes.audits || []).length || (progNotes.research || []).length)) {
       td.appendChild(el('p', 'gr-kicker', 'What the record says'))
       const box = el('div', 'gr-summary-note')
       if (progNotes.summary) box.appendChild(el('p', null, progNotes.summary))
@@ -1813,8 +1965,12 @@ export function mountGrants (container, opts = {}) {
         }
         box.appendChild(ul)
       }
+      for (const r of progNotes.research || []) box.appendChild(researchNote(r))
       td.appendChild(box)
     }
+
+    // projects invited to apply, when the program's note names a list
+    if (progNotes && progNotes.invitations && progNotes.invitations.data) td.appendChild(invitedProjects(progNotes.invitations))
 
     // electorates
     if ((p.electorates || []).length) {
