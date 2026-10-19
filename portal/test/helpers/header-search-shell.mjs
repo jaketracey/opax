@@ -140,6 +140,21 @@ async function run() {
 const wait = ms => new Promise(r => setTimeout(r, ms));
 const key = (window, target, k, more = {}) => target.dispatchEvent(new window.KeyboardEvent('keydown', { key: k, bubbles: true, cancelable: true, ...more }));
 const probes = {
+  // The standing reports' links and copy as the page draws them: menus, sheet,
+  // footer, the app's panels or the home page's blocks, and the trails.
+  async reports(window) {
+    const doc = window.document;
+    await wait(50);
+    return {
+      gates: doc.documentElement.dataset.navGates || '',
+      links: [...new Set([...doc.querySelectorAll('a[href^="/reports"]')].map(a => a.getAttribute('href')))].sort(),
+      reportsOnly: doc.querySelectorAll('[data-reports-only]').length,
+      researchOption: Boolean(doc.querySelector('option[value="report"]')),
+      published: window.OpaxNavigation.published('reports'),
+      trail: window.OpaxNavigation.trail('/reports/climate').map(s => s.label).join(' › '),
+      kept: window.OpaxNavigation.trail('/reports/grants-allocation').map(s => s.label).join(' › '),
+    };
+  },
   // The sheet: open, Tab held inside, a group folding, Escape closing it and focus going home.
   async sheet(window) {
     const doc = window.document;

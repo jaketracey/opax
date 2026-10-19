@@ -53,6 +53,9 @@
   //   npx wrangler secret put ARAG_KB_ID
   "vars": {
     "VIC_ELECTION_HUB_ENABLED": "true",
+    // The six standing reports are off for now (Jake, 19 Oct: "just remove the reports for now").
+    // "true" restores every page, link, data file, search row and sitemap entry (src/reports-gate.ts).
+    "REPORTS_ENABLED": "false",
     // Agentic Ask (Jake, 13 Oct: "just ship it and turn it on"). off | shadow | route; unset or unknown = off.
     "AGENTIC_ASK_MODE": "route",
     // Route since 14 Oct (Jake: "deploy it to prod ... and I will test"); the old engine answers when the loop fails or times out.
@@ -178,6 +181,7 @@
       "services": [{ "binding": "STAGING_API", "service": "opax-portal" }],
       "vars": { "SA_HANSARD_FULL_TEXT":"false", "APP_MINIMUM_VERSION":"0.0.0", "VOICE_ENABLED":"true", "VOICE_AGENT_ID":"agent_1501m22syqc3fhqsjkxnfy7d0xag", "VOICE_MONTHLY_SECONDS":"3000", "COMMUNITY_ORIGIN":"https://staging.opax.com.au", "COMMUNITY_EMAIL_FROM":"hello@login.opax.com.au", "COMMUNITY_ENABLED":"true", "ARAG_ZONE": "aws-ap-southeast-2-1", "CACHE_EPOCH": "2026-10-19-nightly",
         "VIC_ELECTION_HUB_ENABLED": "false",
+        "REPORTS_ENABLED": "false",
         "INDEXNOW_EPOCH_VERSION": "1792342014548",
         "INDEXNOW_ENABLED": "false",
         "INDEXNOW_DRY_RUN": "true", "DAILY_POST_ENABLED": "false", "BLUESKY_POST_ENABLED": "false", "BLOCKED_ASNS": "45102,24429,37963", "GENERATION_BLOCKED_ASNS": "32934", "GENERATION_BLOCKED_CIDRS": "116.179.32.0/21,220.181.108.0/24,119.249.100.0/24,180.97.39.0/24" },

@@ -4,11 +4,12 @@
 import { authoriseVicPost, clip, composeDailyPost, envSources, melbourneDate, oauth1Header, postToX, xCredentials, xLength, type DailyPost, type DailyPostKind } from './daily-post'
 import { OG_VERSION } from './og'
 import { STORY_VERSION, storyFrames, validStory } from './story'
+import { reportsEnabled, reportsPath } from './reports-gate'
 
 /** Stories come last: the tray mirrors the day's feed post. */
 export const CHANNELS = ['x', 'bluesky', 'facebook', 'instagram', 'instagram_story', 'facebook_story'] as const
 export type Channel = typeof CHANNELS[number]
-type SocialEnv = Pick<Env, 'ASSETS' | 'GENERATION_CACHE' | 'COMMUNITY_DB' | 'STAGING_API' | 'DAILY_POST_ENABLED' | 'X_API_KEY' | 'X_API_SECRET' | 'X_ACCESS_TOKEN' | 'X_ACCESS_TOKEN_SECRET' | 'X_ACCOUNT_ID' | 'X_USERNAME' | 'FACEBOOK_POST_ENABLED' | 'FACEBOOK_PAGE_ID' | 'FACEBOOK_PAGE_TOKEN' | 'INSTAGRAM_POST_ENABLED' | 'INSTAGRAM_STORY_ENABLED' | 'FACEBOOK_STORY_ENABLED' | 'INSTAGRAM_ACCOUNT_ID' | 'INSTAGRAM_USERNAME' | 'INSTAGRAM_ACCESS_TOKEN' | 'META_API_VERSION' | 'BLUESKY_POST_ENABLED' | 'BSKY_HANDLE' | 'BSKY_APP_PASSWORD' | 'BSKY_SERVICE'>
+type SocialEnv = Pick<Env, 'ASSETS' | 'REPORTS_ENABLED' | 'GENERATION_CACHE' | 'COMMUNITY_DB' | 'STAGING_API' | 'DAILY_POST_ENABLED' | 'X_API_KEY' | 'X_API_SECRET' | 'X_ACCESS_TOKEN' | 'X_ACCESS_TOKEN_SECRET' | 'X_ACCOUNT_ID' | 'X_USERNAME' | 'FACEBOOK_POST_ENABLED' | 'FACEBOOK_PAGE_ID' | 'FACEBOOK_PAGE_TOKEN' | 'INSTAGRAM_POST_ENABLED' | 'INSTAGRAM_STORY_ENABLED' | 'FACEBOOK_STORY_ENABLED' | 'INSTAGRAM_ACCOUNT_ID' | 'INSTAGRAM_USERNAME' | 'INSTAGRAM_ACCESS_TOKEN' | 'META_API_VERSION' | 'BLUESKY_POST_ENABLED' | 'BSKY_HANDLE' | 'BSKY_APP_PASSWORD' | 'BSKY_SERVICE'>
 interface Receipt { channel: Channel; status: string; post_id: string | null; container_id: string | null; detail: string | null; progress?: string | null; updated_at: string }
 /** A delivery made of several frames: the ids published so far, and the frame in flight with its container or photo. */
 interface Progress { done: string[]; at: number | null; container: string | null }
@@ -108,14 +109,15 @@ export function instagramTags(post: Pick<DailyPost, 'kind'>): string[] {
  * behind the latest edition, so "link in bio" opens the post they just saw.
  * Home when there is no edition yet.
  */
-export async function todayRedirect(env: Pick<Env, 'COMMUNITY_DB'>, url: URL, date = melbourneDate()): Promise<Response> {
+export async function todayRedirect(env: Pick<Env, 'COMMUNITY_DB' | 'REPORTS_ENABLED'>, url: URL, date = melbourneDate()): Promise<Response> {
   let target = new URL('https://opax.com.au/')
   let content = 'home'
   try {
     const row = await env.COMMUNITY_DB.prepare('SELECT date, post_json FROM social_editions WHERE date<=? ORDER BY date DESC LIMIT 1').bind(date).first<{ date: string; post_json: string }>()
     const post = row ? (JSON.parse(row.post_json)) as Partial<DailyPost> : null
     const page = post?.url ? new URL(post.url) : null
-    if (page && page.origin === 'https://opax.com.au') { target = page; content = row!.date }
+    // A topic edition from before the reports were withdrawn opens home, not a missing page.
+    if (page && page.origin === 'https://opax.com.au' && (reportsEnabled(env.REPORTS_ENABLED) || !reportsPath(page.pathname))) { target = page; content = row!.date }
   } catch { /* the journal is optional here: fall back to home */ }
   const via = url.searchParams.get('via') ?? ''
   target.searchParams.set('utm_source', /^[a-z_]{1,20}$/.test(via) ? via : 'instagram')

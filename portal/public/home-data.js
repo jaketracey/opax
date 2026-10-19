@@ -122,8 +122,11 @@ export function coverageLineHTML(corpus) {
 export async function hydrateCollections() {
   await Promise.allSettled([
     (async () => {
+      // The block is published with the reports only (REPORTS_ENABLED).
+      const grid = document.querySelector('#hp-reports');
+      if (!grid) return;
       const rows = (await read('/reports/index.json')).reports.slice().sort((a,b)=>a.title.localeCompare(b.title,'en'));
-      if (rows.length) document.querySelector('#hp-reports').innerHTML = rows.map(reportCardHTML).join('');
+      if (rows.length) grid.innerHTML = rows.map(reportCardHTML).join('');
     })(),
     (async () => {
       const line = document.querySelector('#stats');

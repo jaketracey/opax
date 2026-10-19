@@ -9,6 +9,7 @@ import {donorDisclosure,donorLookup,returnReference,type DonorDisclosureRecord} 
 import { VIC_ELECTION_AUTHORISATION_LINE, vicElectionMaterial } from '../public/vic-election.js'
 import { slugIndex } from './person-slug'
 import { TOPIC_NAMES } from './topic-names.mjs'
+import { reportsEnabled, reportsPath } from './reports-gate'
 import { shortMoney as compactMoney } from '../public/format.js'
 import { photosFor, photoFor, validStory, type PhotoCatalogue, type StorySlide, type StoryPhoto } from './story'
 
@@ -1138,6 +1139,7 @@ interface DailyPostEnv {
   GENERATION_CACHE: KVNamespace
   STAGING_API?: unknown
   DAILY_POST_ENABLED?: string
+  REPORTS_ENABLED?: string
   X_API_KEY?: string
   X_API_SECRET?: string
   X_ACCESS_TOKEN?: string
@@ -1155,6 +1157,9 @@ const RECENT_KEY = 'daily-post:recent'
 export function envSources(env: DailyPostEnv, personTopics: (name: string) => Promise<Response>): DailyPostSources {
   return {
     async asset(path) {
+      // With the reports off there is no report to post: the topic edition finds
+      // none and the day falls through to the next kind (composeDailyPost).
+      if (!reportsEnabled(env.REPORTS_ENABLED) && reportsPath(path)) return null
       try {
         const response = await env.ASSETS.fetch(new Request(ORIGIN + path))
         return response.ok ? await response.json() : null

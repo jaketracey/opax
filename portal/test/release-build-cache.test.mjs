@@ -13,6 +13,7 @@ async function fixture(t) {
   await put('scripts/build_passage_names.mjs', '// fixture builder\n');
   await put('portal/public/parliamentarians.json', '{"people":[]}\n');
   await put('portal/package-lock.json', '{}\n');
+  await put('portal/wrangler.jsonc', '{\n  // fixture\n  "vars": { "REPORTS_ENABLED": "false" }\n}\n');
   return {root, put};
 }
 
@@ -46,6 +47,10 @@ test('cache keys include source exports, builder code, lockfile and crawl transi
     await put(path, 'changed ' + path);
     assert.notEqual(await buildCacheKey('crawl', root), before);
   }
+  // The crawl files follow the reports switch, which lives in wrangler.jsonc.
+  const off = await buildCacheKey('crawl', root);
+  await put('portal/wrangler.jsonc', '{ "vars": { "REPORTS_ENABLED": "true" } }\n');
+  assert.notEqual(await buildCacheKey('crawl', root), off);
   const before = await buildCacheKey('crawl', root);
   await put('portal/public/crawl/indexnow.json', 'own output');
   await put('portal/public/person-paths.js', 'own output');

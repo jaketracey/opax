@@ -16,6 +16,8 @@ import { auditComplete } from '../portal/public/audit.js';
 import { clearedAggregates } from '../portal/src/budget.ts';
 import { clearedGiftRegisters } from '../portal/src/vic-gifts.ts';
 import { clearedStateBills } from '../portal/src/state-bills.ts';
+import { reportsPublished } from './reports_flag.mjs';
+import { KEPT_REPORT } from '../portal/src/reports-gate.ts';
 
 export const ORIGIN = 'https://opax.com.au';
 export const SITEMAP_LIMIT = 49_999;
@@ -51,7 +53,8 @@ export function sitemapFiles(groups, limit = SITEMAP_LIMIT) {
   return {files,index,counts};
 }
 
-export function llmsText(corpus, grants, instruments = null, audit = null) {
+/** `reports`: whether the standing reports are published (REPORTS_ENABLED in portal/wrangler.jsonc). */
+export function llmsText(corpus, grants, instruments = null, audit = null, reports = reportsPublished()) {
   return `# OPAX
 
 > OPAX is an independent, non-partisan record of Australian parliament and public money. It connects parliamentary speeches, votes and bills with disclosed political funding, public contracts and grants.
@@ -89,8 +92,7 @@ ${auditComplete(audit) ? '- [Queensland audit reports](' + ORIGIN + '/audit): \`
 - [Agencies](${ORIGIN}/subject/agency): \`/subject/agency/{agency-id}\`.
 - [Campaigners](${ORIGIN}/subject/campaigner): \`/subject/campaigner/{encoded-name}\`.
 - [Topics](${ORIGIN}/subject/topic): \`/subject/topic/{topic-slug}\`.
-- [Reports](${ORIGIN}/reports): \`/reports/{report-slug}\`; source-backed investigations.
-- [Sitemap index](${ORIGIN}/sitemap.xml): Canonical discovery URLs, grouped by type with record dates and counted export-date fallbacks.
+${reports ? '- [Reports](' + ORIGIN + '/reports): \`/reports/{report-slug}\`; source-backed investigations.\n' : ''}- [Sitemap index](${ORIGIN}/sitemap.xml): Canonical discovery URLs, grouped by type with record dates and counted export-date fallbacks.
 `;
 }
 
@@ -160,7 +162,7 @@ export function namedDonors(html) {
   return [...new Set([...block.matchAll(/href="\/subject\/donor\/([^"]+)"/g)].map(m => decodeURIComponent(unescape(m[1]))).concat(tables))].sort((a,b)=>foldDonorName(a).localeCompare(foldDonorName(b),'en-AU'));
 }
 
-export async function buildCrawl(root, {read: sourceRead} = {}) {
+export async function buildCrawl(root, {read: sourceRead, reports: published = reportsPublished()} = {}) {
   const read = async p => sourceRead ? sourceRead(p) : JSON.parse(await readFile(join(root,p.replace(/^\//,'')), 'utf8'));
   const optional = async p => { try { return await read(p); } catch (e) { if (e.code === 'ENOENT') return null; throw e; } };
   const [roster, seatManifest, bills, suppliers, agencies, reports, corpus, votes, campaigners] = await Promise.all([
@@ -311,16 +313,17 @@ export async function buildCrawl(root, {read: sourceRead} = {}) {
     if (!previous || (c.years?.length || 0) > (previous.years?.length || 0)) campaignerNames.set(fold(c.name),c);
   }
   for (const c of campaignerNames.values()) add('campaigners',`/subject/campaigner/${encodeURIComponent(c.name)}`,latestDate([c.updated_at,c.filed_at],campaigners.meta.generated),undefined,campaigners.meta.generated);
-  for (const r of reports.reports) add('topics-reports',`/reports/${r.slug}`,r.updated,undefined,r.generated_at || corpus.version);
+  // The six standing reports are in the sitemap only while they are published; the grants explorer stays.
+  for (const r of reports.reports.filter(r => published || r.slug === KEPT_REPORT)) add('topics-reports',`/reports/${r.slug}`,r.updated,undefined,r.generated_at || corpus.version);
   for (const slug of Object.keys(TOPIC_NAMES)) add('topics-reports',`/subject/topic/${slug}`,null,undefined,corpus.version);
-  for (const path of ['/','/ask','/money','/money/receipts','/money/grants','/bills','/connections','/map','/reports','/explore','/money/contracts','/about','/methods','/stats','/declared','/expenses','/privacy','/support','/subject/topic',...['person','party','donor','campaigner','supplier','agency','electorate'].map(d=>`/subject/${d}`)]) add('static',path,null,undefined,corpus.version);
+  for (const path of ['/','/ask','/money','/money/receipts','/money/grants','/bills','/connections','/map',...(published ? ['/reports'] : []),'/explore','/money/contracts','/about','/methods','/stats','/declared','/expenses','/privacy','/support','/subject/topic',...['person','party','donor','campaigner','supplier','agency','electorate'].map(d=>`/subject/${d}`)]) add('static',path,null,undefined,corpus.version);
   const result = sitemapFiles(groups);
   const out = join(root,'crawl');
   await rm(out,{recursive:true,force:true});
   await mkdir(join(out,'sitemaps'),{recursive:true});
   await writeFile(join(out,'sitemap.xml'),result.index);
   for (const f of result.files) await writeFile(join(out,f.path.slice(1)),f.body);
-  await writeFile(join(out,'llms.txt'),llmsText(corpus,grants,instruments,audit));
+  await writeFile(join(out,'llms.txt'),llmsText(corpus,grants,instruments,audit,published));
   const entries = [...snapshot].sort(([a],[b])=>a.localeCompare(b,'en'));
   await writeFile(join(out,'indexnow.json'),JSON.stringify({entries}));
   await writeFile(join(out,'manifest.json'),JSON.stringify({counts:result.counts,lastmodFallbacks:fallbacks,files:result.files.map(({body,...f})=>f)},null,2)+'\n');
