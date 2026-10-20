@@ -1,0 +1,13 @@
+{
+  "status": "pending",
+  "reviewed_commit": null,
+  "inputs": {
+    "inventory.json": "dad0f7b79707dcfab1c8f430ea902835c0c366fcc7630bbf36c03a56c8a31fac",
+    "receipts.json": "18a00b722934461c33b8cd252af8670a3db6e26cbf13399ab34044be644e2c46",
+    "series.jsonl": "c62d9890087a88ad5cad4986bfaa4d5f95b00563c1380e5fd1e4a3c6e98fe07f",
+    "reconciliation.json": "424215a541becd441c10a1f10187b318f3f65c14b083790b1f8010c7c04e543d",
+    "acquisition-audit.json": "0744f2a40d333a544035c0a07c1020cb3d48335c8401a73a39d6e6cf7128869b",
+    "hub.json": "633c8cbee565cd7a33eba6b1ac2280779be32cca1e7d88140986eb1a7a82be7b"
+  },
+  "notes": "Independent review required, including the documented acquisition overlap and all function-workbook holds. No promotion authorised in this lane."
+}

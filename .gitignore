@@ -72,3 +72,4 @@ portal/private/
 
 # Per-host acquisition locks, never source evidence.
 data/staged/bills-*/.acquire.lock
+data/staged/sa-budget/.acquire.lock

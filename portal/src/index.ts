@@ -5653,7 +5653,7 @@ async function renderSeoPage(route: SeoRoute, url: URL, request: Request, env: E
   if (route.kind === 'instruments' || route.kind === 'audit' || route.kind === 'budget') rewriter.on('script[src]', { element(el) {
     if (/\/(app|spa-entry|spa-shell)\.js(?:\?|$)/.test(el.getAttribute('src') || '')) el.remove()
   } }).on('a[href^="/subject/person"]', { element(el) { el.remove() } })
-  if (route.kind === 'budget') rewriter.on('head', { element(el) { el.append('<link rel="stylesheet" href="/datatable.css"><link rel="stylesheet" href="/budget.css"><script type="module" src="/budget.js"></script>', {html:true}) } })
+  if (route.kind === 'budget') rewriter.on('head', { element(el) { el.append('<link rel="stylesheet" href="/datatable.css"><link rel="stylesheet" href="/budget.css"><script type="module" src="/budget.js"></script><script type="module" src="/sa-budget.js"></script>', {html:true}) } })
   if (route.kind === 'vic-gifts') rewriter.on('script[src]', { element(el) {
     if (/\/(app|spa-entry|spa-shell)\.js(?:\?|$)/.test(el.getAttribute('src') || '')) el.remove()
   } })

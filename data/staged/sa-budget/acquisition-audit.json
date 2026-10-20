@@ -1,0 +1,93 @@
+{
+  "status": "deviation",
+  "exceptions": [
+    {
+      "url": "https://data.sa.gov.au/data/dataset/general-government-sector-expenses-by-function-and-by-economic-type",
+      "requested_at": "2026-10-20T22:31:19.252260+00:00",
+      "completion_gap_seconds": -0.843443,
+      "passed": false
+    }
+  ],
+  "correction": "Both overlapping dataset responses were HTTP 200. Exact receipts restored after ledger race. Persistent process lock added before any subsequent request.",
+  "post_correction_requests_sequential": true,
+  "intervals": [
+    {
+      "url": "https://data.sa.gov.au/copyright",
+      "requested_at": "2026-10-20T22:31:03.985592+00:00",
+      "completion_gap_seconds": 5.115085,
+      "passed": true
+    },
+    {
+      "url": "https://data.sa.gov.au/data/dataset/budget-2015-16-data",
+      "requested_at": "2026-10-20T22:31:09.234804+00:00",
+      "completion_gap_seconds": 5.112667,
+      "passed": true
+    },
+    {
+      "url": "https://data.sa.gov.au/data/dataset/general-government-sector-expenses-by-function-and-by-economic-type",
+      "requested_at": "2026-10-20T22:31:19.252260+00:00",
+      "completion_gap_seconds": -0.843443,
+      "passed": false
+    },
+    {
+      "url": "https://data.sa.gov.au/data/dataset/budget-2015-16-data/resource/36aa6d87-bb0d-46c8-b9c6-561b64044890",
+      "requested_at": "2026-10-20T22:31:40.633713+00:00",
+      "completion_gap_seconds": 20.53801,
+      "passed": true
+    },
+    {
+      "url": "https://data.sa.gov.au/data/dataset/budget-2015-16-data/resource/17f1a0f9-803f-4ae6-93d6-59ba25e2d2bf",
+      "requested_at": "2026-10-20T22:31:47.222402+00:00",
+      "completion_gap_seconds": 6.307016,
+      "passed": true
+    },
+    {
+      "url": "https://data.sa.gov.au/data/dataset/budget-2015-16-data/resource/380d951d-0c42-4b10-a385-69522813f687",
+      "requested_at": "2026-10-20T22:31:52.588797+00:00",
+      "completion_gap_seconds": 5.110328,
+      "passed": true
+    },
+    {
+      "url": "https://data.sa.gov.au/data/dataset/budget-2015-16-data/resource/2c5cc0b4-ab92-4959-8ce2-a9fec90bfa6f",
+      "requested_at": "2026-10-20T22:31:57.970723+00:00",
+      "completion_gap_seconds": 5.114932,
+      "passed": true
+    },
+    {
+      "url": "https://data.sa.gov.au/data/dataset/general-government-sector-expenses-by-function-and-by-economic-type/resource/3f756590-9e67-4a05-97a0-f594247d2c72",
+      "requested_at": "2026-10-20T22:32:03.383454+00:00",
+      "completion_gap_seconds": 5.111292,
+      "passed": true
+    },
+    {
+      "url": "https://data.sa.gov.au/data/dataset/c0f9edd0-eb72-4e49-9e33-02c1124afa23/resource/36aa6d87-bb0d-46c8-b9c6-561b64044890/download/table1.3summaryofkeygeneralgovernmentsectorbudgetindicators.xlsx",
+      "requested_at": "2026-10-20T22:32:15.808953+00:00",
+      "completion_gap_seconds": 12.218475,
+      "passed": true
+    },
+    {
+      "url": "https://data.sa.gov.au/data/dataset/c0f9edd0-eb72-4e49-9e33-02c1124afa23/resource/17f1a0f9-803f-4ae6-93d6-59ba25e2d2bf/download/tablea.1generalgovernmentsectoroperatingstatement.xlsx",
+      "requested_at": "2026-10-20T22:32:32.566719+00:00",
+      "completion_gap_seconds": 16.545611,
+      "passed": true
+    },
+    {
+      "url": "https://data.sa.gov.au/data/dataset/c0f9edd0-eb72-4e49-9e33-02c1124afa23/resource/380d951d-0c42-4b10-a385-69522813f687/download/tablea.4generalgovernmentsectorbalancesheet.xlsx",
+      "requested_at": "2026-10-20T22:32:37.848506+00:00",
+      "completion_gap_seconds": 5.111018,
+      "passed": true
+    },
+    {
+      "url": "https://data.sa.gov.au/data/dataset/c0f9edd0-eb72-4e49-9e33-02c1124afa23/resource/2c5cc0b4-ab92-4959-8ce2-a9fec90bfa6f/download/tablea.7generalgovernmentsectorcashflowstatement.xlsx",
+      "requested_at": "2026-10-20T22:32:43.152960+00:00",
+      "completion_gap_seconds": 5.114553,
+      "passed": true
+    },
+    {
+      "url": null,
+      "requested_at": "2026-10-20T22:32:48.450306+00:00",
+      "completion_gap_seconds": 5.115084,
+      "passed": true
+    }
+  ]
+}
