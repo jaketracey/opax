@@ -171,9 +171,10 @@ Results, protected-file checks and artifact hashes are in
   deployment dry run pass. `votes.json` is byte-identical to the lane base.
 - Actual local Worker page responses are **200 at 390 and 1440**, with four
   SA tables, all 447 source rows in server HTML, no page-level horizontal
-  overflow, no browser errors and no external browser requests. On phones,
-  the shared tables scroll inside their 350px containers; desktop tables fit
-  their 1325px containers. These are candidate renders, not live proof.
+  overflow, no browser errors and no external browser requests. After review fix 1, phones show Measure, Fiscal year and Value, with
+  estimate/actual beneath the measure. All four tables and captions fit their
+  350px containers without horizontal scrolling. Desktop retains the seven
+  full columns inside its 1325px containers. These are candidate renders, not live proof.
 
 Screenshots: [390 full page](../../../portal/private/sa-budget/budget-390.png),
 [1440 full page](../../../portal/private/sa-budget/budget-1440.png),
@@ -186,3 +187,33 @@ before the final typecheck; Wrangler dev hit a local `spawn EBADF`, so the
 existing Miniflare preview pattern was used; deployment dry run succeeded.
 No production Ask, generation, voice or auth route was driven. No pattern
 kills, volume changes, private names in fixtures, push or deploy.
+
+
+## Review fix 1
+
+All six requested changes are implemented offline from `7d0a75e3d`.
+The SA-only adapter supplies the phone Value column ($m or published percent)
+and secondary estimate/actual line, including after paging/filtering. The
+shared DataTable files and defaults are byte-identical. Captions are shortened,
+fiscal-year cells are scoped `nowrap`, and record-focused copy preserves all
+publisher notes verbatim. Snapshot dates use `shortDate`, with the exact timestamp
+in `<time datetime>`, metadata and CSV. Both COVERAGE statuses now read
+“staged; independent review and promotion pending”, without em dash separators;
+the guard paragraph and 19 Oct line remain byte-identical to the lane base.
+
+**26 targeted portal tests and 14 SA Python tests pass**, including the expanded
+plain-language scope. `tsc`, `check`, staged dry run and Worker deployment dry run
+pass. Promotion still correctly refuses pending review. Votes and every staged
+source input remain byte-identical. No new source or external network requests,
+production writes, nightly, push or deployment. CLI checks use a preload guard
+that rejects any external connection before DNS/connect, with telemetry disabled.
+
+Fresh local Worker browser assertions pass at 390 and 1440: Value visible and
+inside the phone viewport, exactly three phone headers, full desktop columns,
+no caption/table/page overflow, fiscal-year nowrap, paging status line restored,
+and a percentage value after filtering. No browser errors or external requests.
+[Fix validation and current screenshot hashes](fix1-validation.json) supersede
+the original surface evidence. Current screenshots are
+[390 SA section](../../../portal/private/sa-budget/sa-section-390.png),
+[1440 SA section](../../../portal/private/sa-budget/sa-section-1440.png), and
+[390 first-table crop, 900px tall](../../../portal/private/sa-budget/sa-table13-390.png).

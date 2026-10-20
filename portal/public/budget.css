@@ -30,3 +30,20 @@
 .budget-papers p,.budget-note{color:var(--ink-soft);font:var(--type-fine)}
 @media(max-width:760px){.budget-cards{grid-template-columns:repeat(2,minmax(0,1fr))}.budget-cards .budget-amount{font:var(--type-heading)}.budget-chart th,.budget-chart td{padding:var(--space-tight)}.budget-chart th:first-child{width:24%}.budget-chart .budget-receipt{font:var(--type-fine)}}
 @media(max-width:420px){.budget-cards{grid-template-columns:1fr}.budget-chart-track{display:none}}
+/* Only SA's historical tables pivot to three columns; shared defaults stay intact. */
+#sa-budget .sa-budget-status{display:none;font:var(--type-fine);color:var(--ink-soft);margin-top:var(--space-tight)}
+#sa-budget .dt [data-label="Fiscal year"]{white-space:nowrap}
+@media(min-width:761px){
+  #sa-budget .dt :is([data-sa-column="display_value"],[data-label="Value"]){display:none}
+}
+@media(max-width:760px){
+  #sa-budget .dt{table-layout:fixed}
+  #sa-budget .dt caption{font:var(--type-heading);overflow-wrap:normal}
+  #sa-budget .dt th:not([data-sa-column]),
+  #sa-budget .dt td:not([data-label="Measure"]):not([data-label="Fiscal year"]):not([data-label="Value"]):not([colspan]){display:none}
+  #sa-budget .dt :is(th,td){padding:var(--space-tight)}
+  #sa-budget .dt :is([data-sa-column="measure"],[data-label="Measure"]){width:48%;min-width:0;position:static;box-shadow:none}
+  #sa-budget .dt :is([data-sa-column="fiscal_year"],[data-label="Fiscal year"]){width:25%;white-space:nowrap}
+  #sa-budget .dt :is([data-sa-column="display_value"],[data-label="Value"]){width:27%;white-space:nowrap;font-variant-numeric:tabular-nums}
+  #sa-budget .sa-budget-status{display:block}
+}

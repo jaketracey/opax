@@ -203,8 +203,6 @@
     "data/staged/sa-budget/acquisition-audit.json": "0744f2a40d333a544035c0a07c1020cb3d48335c8401a73a39d6e6cf7128869b"
   },
   "artifacts": {
-    "portal/private/sa-budget/sa-section-390.png": "cc020107192074c9a44e36224dfa5a2f434998528983b5a4ff89ed12175d7ad1",
-    "portal/private/sa-budget/sa-section-1440.png": "9044d23a8ce6d8c5287fe376dae0813548e5fda877baa1e1b4315350f38b0f8f",
     "portal/private/sa-budget/budget-1440.png": "4c69e66bdd67cb8690ed16924ee59fbb07719efbba980f0e1bc39e6a4b213537",
     "portal/private/sa-budget/budget-390.png": "2907895b6fbd9f650b78440af2a4bb42a5e5918cd28ac301df068d7b69f4ed5d",
     "portal/private/sa-budget/qld-tests.log": "b54ceb1c6b023d7e280e8d0694e41a236831c64bab4b786f9d0e549e97e734fd",
@@ -221,5 +219,6 @@
   "production_writes": 0,
   "pushes": 0,
   "deployments": 0,
-  "nightly_runs": 0
+  "nightly_runs": 0,
+  "surface_evidence_superseded_by": "fix1-validation.json; the sa-section screenshots were replaced after review fix 1. Initial browser results remain historical evidence."
 }

@@ -6,7 +6,7 @@ import {build} from 'esbuild';
 import {JSDOM} from 'jsdom';
 import {budgetPage} from '../src/budget.ts';
 import {clearedSABudget,saBudgetRows,saBudgetSection} from '../src/sa-budget.ts';
-import {saBudgetConfig} from '../public/sa-budget-table.js';
+import {saBudgetConfig,saBudgetPhoneColumns,saBudgetValue,decorateSABudgetTable} from '../public/sa-budget-table.js';
 import {toCSV} from '../public/datatable.js';
 
 const root=new URL('../../',import.meta.url);
@@ -26,7 +26,8 @@ test('historical SA section server-renders four shared tables, cell citations an
  for(const table of d.querySelectorAll('[data-sa-budget-table]')){
   assert.ok(table.querySelector('tbody tr'));
   const section=table.parentElement;
-  assert.match(section.textContent,/Snapshot 2026-10-20/);
+  assert.match(section.textContent,/Snapshot 20 Oct 2026 UTC/);
+  assert.equal(section.querySelector('time').getAttribute('datetime'),h.documents.find(r=>r.table_number===table.dataset.saBudgetTable).snapshot);
   assert.match(section.textContent,/CC BY 4.0/);
   assert.match(section.textContent,/SHA-256 [a-f0-9]{64}/);
   assert.ok(section.querySelector('a[href*="/resource/"]'));
@@ -37,6 +38,47 @@ test('historical SA section server-renders four shared tables, cell citations an
  assert.equal(texts.filter(r=>r.source_marker==='—').length,29);
  for(const warning of h.holds[0].warnings)assert.ok(d.querySelector('#sa-function-file').parentElement.textContent.includes(warning));
  assert.equal(texts.some(r=>r.resource_id===h.holds[0].id),false);
+});
+
+test('phone render includes Measure, Fiscal year and Value with status under the measure',()=>{
+ const doc=new JSDOM(saBudgetSection(h,new URL('https://opax.com.au/budget'))).window.document;
+ assert.deepEqual(saBudgetPhoneColumns,['measure','fiscal_year','display_value']);
+ for(const root of doc.querySelectorAll('[data-sa-budget-table]')){
+  const config=saBudgetConfig([],root.dataset.saBudgetTable);
+  assert.ok(config.columnsVisible.includes('display_value'));
+  assert.deepEqual([...root.querySelectorAll('thead th[data-sa-column]')].map(n=>n.textContent.trim()),['Measure','Fiscal year','Value']);
+  assert.equal(root.querySelector('caption').textContent,'SA Treasury · Table '+root.dataset.saBudgetTable);
+  assert.ok(root.querySelector('tbody [data-label="Value"]').textContent.includes('$'));
+  assert.ok(root.querySelector('tbody [data-label="Measure"] .sa-budget-status').textContent);
+ }
+ const rows=saBudgetRows(h);
+ assert.equal(rows.find(r=>r.cell==='D6'&&r.table_number==='1.3').display_value,'$43m');
+ assert.equal(rows.find(r=>r.cell==='B10'&&r.table_number==='1.3').display_value,'-2.4%');
+ assert.equal(saBudgetValue({value:-1250,units:'AUD million'}),'−$1,250m');
+ assert.equal(saBudgetValue({value:null,source_marker:'—'}),'—');
+});
+
+test('fiscal year nowrap and responsive column rules are scoped to SA, with canonical years in CSV',()=>{
+ const css=readFileSync(new URL('../public/budget.css',import.meta.url),'utf8');
+ assert.match(css,/#sa-budget \.dt \[data-label="Fiscal year"\]\{white-space:nowrap\}/);
+ assert.match(css,/@media\(max-width:760px\)/);
+ const doc=new JSDOM(saBudgetSection(h,new URL('https://opax.com.au/budget'))).window.document;
+ assert.equal(doc.querySelector('[data-label="Fiscal year"]').textContent,'2013-14');
+ const csv=toCSV(saBudgetRows(h),saBudgetConfig(saBudgetRows(h),'1.3'));
+ assert.match(csv,/2013-14/);
+ assert.ok(csv.includes(h.documents[0].snapshot));
+});
+
+test('SA secondary status can be restored after the shared table repaints',()=>{
+ const doc=new JSDOM(saBudgetSection(h,new URL('https://opax.com.au/budget'))).window.document;
+ const root=doc.querySelector('[data-sa-budget-table]');
+ root.querySelectorAll('.sa-budget-status').forEach(n=>n.remove());
+ root.querySelectorAll('th[data-sa-column]').forEach(n=>n.removeAttribute('data-sa-column'));
+ decorateSABudgetTable(root);
+ assert.equal(root.querySelector('.sa-budget-status').textContent,'Actual');
+ assert.equal(root.querySelectorAll('thead [data-sa-column]').length,3);
+ decorateSABudgetTable(root);
+ assert.equal(root.querySelectorAll('.sa-budget-status').length,10);
 });
 
 test('HTML, hydration and CSV exclude computed totals, held values, unreviewed rights and altered cells',()=>{

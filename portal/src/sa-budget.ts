@@ -1,5 +1,6 @@
-import {applyQuery,dataTableHTML,guardTableURL,type Row} from '../public/datatable.js'
-import {saBudgetConfig} from '../public/sa-budget-table.js'
+import {applyQuery,guardTableURL,type Row} from '../public/datatable.js'
+import {saBudgetConfig,saBudgetValue,saBudgetTableHTML} from '../public/sa-budget-table.js'
+import {shortDate} from '../public/format.js'
 
 const CC='https://creativecommons.org/licenses/by/4.0/'
 const TABLES=['1.3','A.1','A.4','A.7']
@@ -41,11 +42,11 @@ export function saBudgetRows(h:SAHub):Row[]{
   return clearedSABudget(h).map(r=>({...Object.fromEntries(PUBLIC_FIELDS.map(k=>[k,r[k]])),id:r.resource_id+'!'+r.sheet+'!'+r.cell,
     amount:r.units==='AUD million'&&r.value!==null?r.value*1e6:null,
     percentage:r.units==='percent'&&r.value!==null?r.value.toFixed(1)+'%':'',
-    locator:r.sheet+'!'+r.cell}))
+    display_value:saBudgetValue(r),locator:r.sheet+'!'+r.cell}))
 }
 
 function receipt(d:Document|Hold){
-  return `<p class="budget-receipt">Source: SA Department of Treasury and Finance · <a href="${esc(d.dataset_url)}">Dataset</a> · <a href="${esc(d.resource_url)}">${esc(d.title)}</a> · Vintage: ${esc(d.vintage)} · Snapshot ${esc(d.snapshot)} · <a href="${CC}">CC BY 4.0</a></p><details class="budget-receipt"><summary>Attribution and source hash</summary><p>${esc(d.attribution)}</p><p class="budget-hash">SHA-256 ${esc(d.sha256)}</p></details>`
+  return `<p class="budget-receipt">Source: SA Department of Treasury and Finance · <a href="${esc(d.dataset_url)}">Dataset</a> · <a href="${esc(d.resource_url)}">${esc(d.title)}</a> · Vintage: ${esc(d.vintage)} · Snapshot <time datetime="${esc(d.snapshot)}">${esc(shortDate(d.snapshot))} UTC</time> · <a href="${CC}">CC BY 4.0</a></p><details class="budget-receipt"><summary>Attribution and source hash</summary><p>${esc(d.attribution)}</p><p class="budget-hash">SHA-256 ${esc(d.sha256)}</p></details>`
 }
 
 export function saBudgetSection(h:SAHub,url:URL){
@@ -55,9 +56,9 @@ export function saBudgetSection(h:SAHub,url:URL){
     const d=h.documents.find(d=>d.table_number===table),selected=rows.filter(r=>r.table_number===table)
     if(!d||!selected.length)return []
     const config=saBudgetConfig(selected,table),guard=guardTableURL(config,url)
-    const html=dataTableHTML(config,applyQuery(selected,config,guard.query),url)
-    return [`<section aria-labelledby="sa-table-${table.replace('.','-')}"><h3 id="sa-table-${table.replace('.','-')}">${esc(d.title)}</h3><p>${table==='A.7'?'Cash receipts and payments.':'Accrual figures and budget indicators.'} Millions of Australian dollars unless marked percent. An em dash is kept as a published marker; it is not treated as zero. Estimates are the Treasury’s forecasts at this historical date.</p>${d.notes.map(note=>`<p>${esc(note)}</p>`).join('')}<div data-sa-budget-table="${table}">${html}<script type="application/json" data-sa-budget-rows>${JSON.stringify(selected).replace(/</g,'\\u003c')}</script></div>${receipt(d)}</section>`]
+    const html=saBudgetTableHTML(config,applyQuery(selected,config,guard.query),url)
+    return [`<section aria-labelledby="sa-table-${table.replace('.','-')}"><h3 id="sa-table-${table.replace('.','-')}">${esc(d.title)}</h3><p>${table==='A.7'?'Cash receipts and payments.':'Accrual figures and budget indicators.'} Dollar figures are in millions unless shown as percentages. A dash means the Treasury published no figure. Estimates are the Treasury’s forecasts at this historical date.</p>${d.notes.map(note=>`<p>${esc(note)}</p>`).join('')}<div data-sa-budget-table="${table}">${html}<script type="application/json" data-sa-budget-rows>${JSON.stringify(selected).replace(/</g,'\\u003c')}</script></div>${receipt(d)}</section>`]
   }).join('')
   const holds=(Array.isArray(h.holds)?h.holds:[]).filter(d=>d?.id==='3f756590-9e67-4a05-97a0-f594247d2c72'&&source(d.resource_url)&&sha(d.sha256)).map(d=>`<section aria-labelledby="sa-function-file"><h3 id="sa-function-file">Historical expenses by function and economic type</h3><p>The workbook covers 2012–13 to 2015–16. Its sheets do not state a unit scale, and the catalogue’s “$million” label conflicts with the workbook’s scale. Some published components also differ from their published totals. Amounts are unavailable here until those points are resolved.</p><blockquote>${(d.warnings||[]).map(w=>`<p>${esc(w)}</p>`).join('')}</blockquote>${receipt(d)}</section>`).join('')
-  return `<section id="sa-budget" aria-labelledby="sa-budget-title"><h2 id="sa-budget-title">South Australia · historical 2015–16 Budget</h2><p>This is the SA Treasury’s 2015–16 historical budget vintage, not the current budget. These tables show the figures and forecasts published at that time. Later outcomes may differ or be revised. They are separate from the <a href="/register/government-finance?jurisdiction=South%20Australia">ABS government finance figures</a>.</p><p>General government sector as published. The workbooks do not separately describe consolidation adjustments; do not add these figures to ABS series or other sectors. Each row links to its original source cell. Only the publisher’s totals appear. Table 1.3’s stored values are scaled and rounded using its Excel display format; its percent figures retain one decimal place.</p>${tables}${holds}</section>`
+  return `<section id="sa-budget" aria-labelledby="sa-budget-title"><h2 id="sa-budget-title">South Australia · historical 2015–16 Budget</h2><p>This is the SA Treasury’s 2015–16 historical budget vintage, not the current budget. These tables show the figures and forecasts published at that time. Later outcomes may differ or be revised. They are separate from the <a href="/register/government-finance?jurisdiction=South%20Australia">ABS government finance figures</a>.</p><p>General government sector as published. The workbooks do not separately describe consolidation adjustments; do not add these figures to ABS series or other sectors. Each row links to its original source cell. Only the publisher’s totals appear. Table 1.3 shows money rounded to whole millions and percentages to one decimal place.</p>${tables}${holds}</section>`
 }
