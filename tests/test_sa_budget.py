@@ -165,9 +165,15 @@ class SABudgetTests(unittest.TestCase):
 
     def test_sa_stays_outside_nightly_and_review_gate_denies_unapproved_data(self):
         self.assertNotIn('sa-budget',promoter.DEFAULT_HUBS)
-        with self.assertRaisesRegex(promoter.PromotionError,'review'):
-            promoter.validated_asset('sa-budget')
-        self.assertFalse((access.ROOT/'portal/public/sa-budget/data.json').exists())
+        load=promoter.load
+        def pending(path):
+            data=load(path)
+            return {**data,'status':'pending'} if path==access.STAGE/'review.json' else data
+        with patch.object(promoter,'load',side_effect=pending):
+            with self.assertRaisesRegex(promoter.PromotionError,'review'):
+                promoter.validated_asset('sa-budget')
+        expected,_=promoter.validated_asset('sa-budget')
+        self.assertEqual((access.ROOT/'portal/public/sa-budget/data.json').read_bytes(),expected)
 
 
 if __name__=='__main__':unittest.main()

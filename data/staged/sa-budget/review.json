@@ -1,6 +1,16 @@
 {
-  "status": "pending",
-  "reviewed_commit": null,
+  "status": "approved",
+  "reviewed_commit": "afb8837ee9e6553aea25428ff93c569edc7de9e8",
+  "review_basis": "User round 3 authorisation cites independent re-review r2 APPROVE for afb8837ee. All six staged inputs are byte-identical to that approved commit. Approves explicit local sa-budget promotion only; the function workbook remains held for unresolved units and five reconciliation exceptions. The disclosed 0.843443-second acquisition overlap is unchanged. No new source requests, push, deploy, nightly, KB or D1 write.",
+  "reviewer_verdict": "APPROVE",
+  "review_round": "r2",
+  "review_evidence": {
+    "path": ".ops/codex-runs/review-coverage-sa-budget-r2.last.md (main checkout)",
+    "sha256": "1c8883ef61bc39915d3dc49a2877872885f5161073a3d1c9e4bbdb1ea71fda9f",
+    "verdict": "APPROVE",
+    "approved_commit": "afb8837ee9e6553aea25428ff93c569edc7de9e8"
+  },
+  "merged_origin_main": "d20bf14e0f5e333a7b01e950a0f0451c94165e28",
   "inputs": {
     "inventory.json": "dad0f7b79707dcfab1c8f430ea902835c0c366fcc7630bbf36c03a56c8a31fac",
     "receipts.json": "18a00b722934461c33b8cd252af8670a3db6e26cbf13399ab34044be644e2c46",
@@ -9,5 +19,5 @@
     "acquisition-audit.json": "0744f2a40d333a544035c0a07c1020cb3d48335c8401a73a39d6e6cf7128869b",
     "hub.json": "633c8cbee565cd7a33eba6b1ac2280779be32cca1e7d88140986eb1a7a82be7b"
   },
-  "notes": "Independent review required, including the documented acquisition overlap and all function-workbook holds. No promotion authorised in this lane."
+  "reviewed_at": "2026-10-20T23:18:05.371515+00:00"
 }

@@ -82,6 +82,14 @@ test('SA secondary status can be restored after the shared table repaints',()=>{
 });
 
 test('HTML, hydration and CSV exclude computed totals, held values, unreviewed rights and altered cells',()=>{
+ const {promotion,...promoted}=JSON.parse(readFileSync(new URL('../public/sa-budget/data.json',import.meta.url),'utf8'));
+ assert.equal(promotion.reviewed_commit,'afb8837ee9e6553aea25428ff93c569edc7de9e8');
+ assert.deepEqual(promoted,h);
+ assert.equal(clearedSABudget(promoted).length,447);
+ assert.equal(promoted.documents.some(d=>d.id===h.holds[0].id),false);
+ assert.equal(promoted.rows.some(r=>r.resource_id===h.holds[0].id),false);
+ assert.doesNotMatch(JSON.stringify(promoted),/"function_code"|"economic_type_code"|"internal_component_sum"/);
+ assert.equal(promoted.holds.some(d=>Object.hasOwn(d,'rows')||Object.hasOwn(d,'source_cells')||Object.hasOwn(d,'value')),false);
  const bad=structuredClone(h),first=bad.rows[0];
  bad.rows.push({...first,cell:'Z999',measure:'OPAX computed total fixture',value:987654321,computed:true},
   {...first,cell:'Z998',measure:'Unpublished aggregate fixture',value:876543219},
@@ -119,7 +127,7 @@ test('SA filters remain separate and every output value has a unique original ce
  assert.match(source,/mountDataTable/);assert.doesNotMatch(source,/reduce\(|sum\(|aggregate/);
 });
 
-test('search catalogue and MCP have no SA numerical source; production assets remain unpromoted',()=>{
+test('search catalogue and MCP have no SA numerical source after reviewed promotion',()=>{
  const builder=readFileSync(new URL('../../scripts/build_search_catalog.mjs',import.meta.url),'utf8');
  const mcp=readFileSync(new URL('../src/community-mcp.ts',import.meta.url),'utf8');
  for(const source of [builder,mcp])assert.doesNotMatch(source,/sa-budget|scripts\.sa_budget|data\/staged/);

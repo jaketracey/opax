@@ -1,5 +1,11 @@
 # South Australian historical budget: staged core and function hold
 
+**Current status: LIVE pending deploy.** The independent r2 review approved
+`afb8837ee`, and the unchanged inputs have passed the reviewed local promoter.
+See the [round 3 promotion report](promotion-round-3.md) for the public asset,
+hashes, containment tests and browser evidence. The source-acquisition and
+initial-staging account below records the earlier state of this lane.
+
 Checked **21 October 2026 Melbourne (20 October UTC)** on `coverage/sa-budget`,
 from `d20bf14e0f5e333a7b01e950a0f0451c94165e28`. Local staging and code only:
 no public data asset, push, deployment, nightly, KB or D1 write. Independent

@@ -91,4 +91,5 @@ if __name__=='__main__':
     parser.add_argument('--dry-run',action='store_true',required=True)
     parser.parse_args()
     _,counts=checked_projection(ROOT/'data/staged/sa-budget')
-    print(json.dumps(dict(mode='dry-run',writes=0,review='pending',acquisition='one documented sequencing deviation',**counts)))
+    review=json.loads((ROOT/'data/staged/sa-budget/review.json').read_text())
+    print(json.dumps(dict(mode='dry-run',writes=0,review=review['status'],acquisition='one documented sequencing deviation',**counts)))

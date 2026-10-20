@@ -26,12 +26,13 @@ Offline commands from the repository root:
 python3 -m scripts.sa_budget.stage
 python3 -m scripts.sa_budget.check --dry-run
 python3 -m unittest discover -s tests -p test_sa_budget.py
-python3 scripts/promote_hub_data.py sa-budget --dry-run --votes-reference d20bf14e0
+python3 scripts/promote_hub_data.py sa-budget --dry-run --votes-reference origin/main
 ```
 
-The last command must reject the pending independent review. Do not change the
-review status to make it green. The other dry run validates 447 candidate budget
-cells; 4,774 function cells remain held for scale and reconciliation. Five of
+The independent r2 review approved `afb8837ee`; `review.json` records that verdict
+and the six unchanged staged-input hashes. The reviewed local promotion is
+**LIVE pending deploy**. The dry runs validate 447 budget cells; 4,774 function
+cells remain held for scale and reconciliation. Five of
 353 function diagnostics fail; all 120 budget checks pass. No public amount is
 computed from those diagnostic sums. Blank cells are absent, not zero.
 
@@ -43,9 +44,23 @@ the search catalogue or `/mcp`. No public data asset is written by staging.
 `sa-budget` is an explicit annual opt-in to `scripts/promote_hub_data.py`, with
 exact input hashes and independent approved review required. Its default hubs,
 nightly and existing data assets are unchanged. The acquisition deviation also
-requires review. Candidate preview uses `scripts/sa_budget/preview.mjs` with the
-private projected fixture at `portal/private/sa-budget/candidate.json`; this is
-the actual local Worker with local file bindings and no production bindings.
+requires review. `scripts/sa_budget/preview.mjs` serves the promoted public asset
+by default through the actual local Worker with local file bindings and no
+production bindings. Set `OPAX_SA_PREVIEW_DATA=candidate` only for an explicit
+preview of the private projected fixture at
+`portal/private/sa-budget/candidate.json`. External Worker requests are disabled.
+
+Future explicit re-promotion, after confirming the local `origin/main` reference
+and independent approval of the exact input hashes:
+
+```sh
+python3 scripts/promote_hub_data.py sa-budget --votes-reference origin/main
+python3 scripts/promote_hub_data.py sa-budget --check-public --votes-reference origin/main
+```
+
+The promoter may write only `portal/public/sa-budget/data.json`. Any input change
+requires a new independent review receipt before re-promotion. See
+`docs/coverage/sa-budget/promotion-round-3.md` for the approved promotion evidence.
 
 Python requires `openpyxl` (the Mac run used 3.1.5). Parser fixtures are synthetic
 versions of the inspected official split-header, scaled-money and ETF layouts.
