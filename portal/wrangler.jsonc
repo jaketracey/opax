@@ -93,8 +93,8 @@
     // answers built on the old record are never served again. Any string;
     // the convention is the date of the corpus change. See docs/STREAMING.md
     // "Caching" and the MIGRATION-ARAG.md invariants.
-    "CACHE_EPOCH": "2026-10-19-nightly",
-    "INDEXNOW_EPOCH_VERSION": "1792342014548",
+    "CACHE_EPOCH": "2026-10-21-nightly",
+    "INDEXNOW_EPOCH_VERSION": "1792516404432",
     "INDEXNOW_ENABLED": "true",
     "INDEXNOW_DRY_RUN": "false",
     "DAILY_POST_ENABLED": "true",
@@ -183,11 +183,11 @@
       "workers_dev": true,
       "routes": [{ "pattern": "staging.opax.com.au", "custom_domain": true }],
       "services": [{ "binding": "STAGING_API", "service": "opax-portal" }],
-      "vars": { "SA_HANSARD_FULL_TEXT":"false", "APP_MINIMUM_VERSION":"0.0.0", "VOICE_ENABLED":"true", "VOICE_AGENT_ID":"agent_1501m22syqc3fhqsjkxnfy7d0xag", "VOICE_MONTHLY_SECONDS":"3000", "COMMUNITY_ORIGIN":"https://staging.opax.com.au", "COMMUNITY_EMAIL_FROM":"hello@login.opax.com.au", "COMMUNITY_ENABLED":"true", "ARAG_ZONE": "aws-ap-southeast-2-1", "CACHE_EPOCH": "2026-10-19-nightly",
+      "vars": { "SA_HANSARD_FULL_TEXT":"false", "APP_MINIMUM_VERSION":"0.0.0", "VOICE_ENABLED":"true", "VOICE_AGENT_ID":"agent_1501m22syqc3fhqsjkxnfy7d0xag", "VOICE_MONTHLY_SECONDS":"3000", "COMMUNITY_ORIGIN":"https://staging.opax.com.au", "COMMUNITY_EMAIL_FROM":"hello@login.opax.com.au", "COMMUNITY_ENABLED":"true", "ARAG_ZONE": "aws-ap-southeast-2-1", "CACHE_EPOCH": "2026-10-21-nightly",
         "VIC_ELECTION_HUB_ENABLED": "false",
         "REPORTS_ENABLED": "false",
         "REPORTS_APP_DATA": "true",
-        "INDEXNOW_EPOCH_VERSION": "1792342014548",
+        "INDEXNOW_EPOCH_VERSION": "1792516404432",
         "INDEXNOW_ENABLED": "false",
         "INDEXNOW_DRY_RUN": "true", "DAILY_POST_ENABLED": "false", "BLUESKY_POST_ENABLED": "false", "BLOCKED_ASNS": "45102,24429,37963", "GENERATION_BLOCKED_ASNS": "32934", "GENERATION_BLOCKED_CIDRS": "116.179.32.0/21,220.181.108.0/24,119.249.100.0/24,180.97.39.0/24" },
       "ratelimits": [],
