@@ -1,0 +1,225 @@
+{
+  "base_sha": "d20bf14e0f5e333a7b01e950a0f0451c94165e28",
+  "branch": "coverage/sa-budget",
+  "implementation_sha": "48ca4a47bf4001e8c2b31da00a6cb9dd869e6181",
+  "status": "staged core; function amounts held; independent review pending",
+  "commands": [
+    {
+      "command": "python3 -m unittest discover -s tests -p test_sa_budget.py",
+      "exit_code": 0,
+      "log": "portal/private/sa-budget/python-tests.log",
+      "tests": 14
+    },
+    {
+      "command": "python3 -m unittest discover -s tests -p test_qld_budget.py",
+      "exit_code": 0,
+      "log": "portal/private/sa-budget/qld-tests.log",
+      "tests": 7
+    },
+    {
+      "command": "python3 -m unittest discover -s tests -p test_promote_hub_data.py",
+      "exit_code": 0,
+      "log": "portal/private/sa-budget/promoter-tests.log",
+      "tests": 14
+    },
+    {
+      "command": "node --test test/sa-budget.test.mjs test/budget.test.mjs test/plain-language.test.mjs test/identity-cache.test.mjs (portal/)",
+      "exit_code": 0,
+      "log": "portal/private/sa-budget/portal-tests.log",
+      "tests": 23
+    },
+    {
+      "command": "npm run -s check (portal/)",
+      "exit_code": 0,
+      "log": "portal/private/sa-budget/check.log"
+    },
+    {
+      "command": "tsc --noEmit (portal/)",
+      "exit_code": 0,
+      "log": "portal/private/sa-budget/tsc.log"
+    },
+    {
+      "command": "python3 -m scripts.sa_budget.check --dry-run",
+      "exit_code": 0,
+      "log": "portal/private/sa-budget/staged-dry-run.json"
+    },
+    {
+      "command": "ESBUILD_WORKER_THREADS=0 wrangler deploy --dry-run --env '' --outdir private/sa-budget/worker-dry-run (portal/)",
+      "exit_code": 0,
+      "log": "portal/private/sa-budget/worker-dry-run.log"
+    },
+    {
+      "command": "python3 scripts/promote_hub_data.py sa-budget --dry-run --votes-reference d20bf14e0",
+      "exit_code": 1,
+      "log": "portal/private/sa-budget/promotion-dry-run.log",
+      "expected": "Review pending: no promotion allowed"
+    }
+  ],
+  "counts": {
+    "mode": "dry-run",
+    "writes": 0,
+    "review": "pending",
+    "acquisition": "one documented sequencing deviation",
+    "inventory_resources": 119,
+    "budget_resources": 117,
+    "acquired_workbooks": 5,
+    "staged_cells": 5221,
+    "candidate_cells": 447,
+    "held_cells": 4774,
+    "budget_checks": 120,
+    "budget_checks_passed": 120,
+    "function_diagnostics": 353,
+    "function_failed": 5,
+    "public_computed_totals": 0
+  },
+  "browser": {
+    "results": [
+      {
+        "width": 390,
+        "scrollWidth": 390,
+        "tables": [
+          {
+            "id": "sa-budget-1-3",
+            "width": 350,
+            "scrollWidth": 759,
+            "containerWidth": 350,
+            "rows": 10
+          },
+          {
+            "id": "sa-budget-A-1",
+            "width": 350,
+            "scrollWidth": 725,
+            "containerWidth": 350,
+            "rows": 10
+          },
+          {
+            "id": "sa-budget-A-4",
+            "width": 350,
+            "scrollWidth": 725,
+            "containerWidth": 350,
+            "rows": 10
+          },
+          {
+            "id": "sa-budget-A-7",
+            "width": 350,
+            "scrollWidth": 725,
+            "containerWidth": 350,
+            "rows": 10
+          }
+        ],
+        "tableRows": 0,
+        "status": 200,
+        "source_rows_in_response": 447
+      },
+      {
+        "width": 1440,
+        "scrollWidth": 1440,
+        "tables": [
+          {
+            "id": "sa-budget-1-3",
+            "width": 1324.8125,
+            "scrollWidth": 1325,
+            "containerWidth": 1325,
+            "rows": 10
+          },
+          {
+            "id": "sa-budget-A-1",
+            "width": 1324.8125,
+            "scrollWidth": 1325,
+            "containerWidth": 1325,
+            "rows": 10
+          },
+          {
+            "id": "sa-budget-A-4",
+            "width": 1324.8125,
+            "scrollWidth": 1325,
+            "containerWidth": 1325,
+            "rows": 10
+          },
+          {
+            "id": "sa-budget-A-7",
+            "width": 1324.8125,
+            "scrollWidth": 1325,
+            "containerWidth": 1325,
+            "rows": 10
+          }
+        ],
+        "tableRows": 0,
+        "status": 200,
+        "source_rows_in_response": 447
+      }
+    ],
+    "errors": [],
+    "blocked_external_requests": []
+  },
+  "votes": {
+    "schema": 1,
+    "byte_identical_to_base": true,
+    "sha256": "d89f34bd8acb440da2efe8364d147e51d0cb8737d5631bac091cd524fe9bf999"
+  },
+  "coverage_guards_byte_identical": true,
+  "protected_paths_byte_identical_to_base": [
+    "scripts/daily_refresh.sh",
+    "portal/public/budget/data.json",
+    "portal/public/government-finance/data.json",
+    "portal/src/community-mcp.ts",
+    "scripts/build_search_catalog.mjs"
+  ],
+  "source_requests": {
+    "total": 14,
+    "http_200": 14,
+    "redirects": 0,
+    "refusals_challenges_resets_timeouts": 0,
+    "downloaded_budget_files": 4,
+    "downloaded_function_files": 1,
+    "sequencing": "One 0.843443-second overlap between dataset HTML requests, recorded honestly; exclusive lock added before remaining requests",
+    "bodies": "Private successful evidence only; no refusal bodies"
+  },
+  "holds": [
+    {
+      "resource": "3f756590-9e67-4a05-97a0-f594247d2c72",
+      "cells": 4774,
+      "reasons": [
+        "Unlabelled workbook scale conflicts with catalogue $million",
+        "Five diagnostics beyond rounding",
+        "Blank semantics and consolidation adjustments not specified"
+      ]
+    }
+  ],
+  "setup_corrections": [
+    "Context7 MCP unavailable; official docs used for relevant tool/library references",
+    "Standalone tsc before wrangler types lacked generated runtime declarations; final check and tsc pass",
+    "An initial npx tsc from the repository root did not invoke the portal compiler; final runs use installed portal tools",
+    "Wrangler dev local runtime spawn EBADF; existing Miniflare preview pattern succeeded",
+    "Test import extension and initial marker-count expectation corrected before final pass"
+  ],
+  "staged_inputs_sha256": {
+    "data/staged/sa-budget/reconciliation.json": "424215a541becd441c10a1f10187b318f3f65c14b083790b1f8010c7c04e543d",
+    "data/staged/sa-budget/series.jsonl": "c62d9890087a88ad5cad4986bfaa4d5f95b00563c1380e5fd1e4a3c6e98fe07f",
+    "data/staged/sa-budget/receipts.json": "18a00b722934461c33b8cd252af8670a3db6e26cbf13399ab34044be644e2c46",
+    "data/staged/sa-budget/inventory.json": "dad0f7b79707dcfab1c8f430ea902835c0c366fcc7630bbf36c03a56c8a31fac",
+    "data/staged/sa-budget/hub.json": "633c8cbee565cd7a33eba6b1ac2280779be32cca1e7d88140986eb1a7a82be7b",
+    "data/staged/sa-budget/review.json": "a128a01bd214e0b32aa89ffd5b51778a442eda5e0766ff089414a0ec46bc4f6c",
+    "data/staged/sa-budget/acquisition-audit.json": "0744f2a40d333a544035c0a07c1020cb3d48335c8401a73a39d6e6cf7128869b"
+  },
+  "artifacts": {
+    "portal/private/sa-budget/sa-section-390.png": "cc020107192074c9a44e36224dfa5a2f434998528983b5a4ff89ed12175d7ad1",
+    "portal/private/sa-budget/sa-section-1440.png": "9044d23a8ce6d8c5287fe376dae0813548e5fda877baa1e1b4315350f38b0f8f",
+    "portal/private/sa-budget/budget-1440.png": "4c69e66bdd67cb8690ed16924ee59fbb07719efbba980f0e1bc39e6a4b213537",
+    "portal/private/sa-budget/budget-390.png": "2907895b6fbd9f650b78440af2a4bb42a5e5918cd28ac301df068d7b69f4ed5d",
+    "portal/private/sa-budget/qld-tests.log": "b54ceb1c6b023d7e280e8d0694e41a236831c64bab4b786f9d0e549e97e734fd",
+    "portal/private/sa-budget/promoter-tests.log": "fbfc6f11437fb07c5c9a2cb4fe59ca8572a2ddd9bcd7eba55bc3a822cd52e043",
+    "portal/private/sa-budget/python-tests.log": "3924f49d5022fd138100229ef88462c69de5eecf6ff0d64814ad5a9396a7d524",
+    "portal/private/sa-budget/portal-tests.log": "e6ad949c12358120de3a23e92487a4bc9d09bdeb4cc9c2688913761bf0b8b4db",
+    "portal/private/sa-budget/check.log": "c49037c1fc28a3b731655656af7f4f8c108b1fef96a8644824a6d8c679f46601",
+    "portal/private/sa-budget/tsc.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "portal/private/sa-budget/staged-dry-run.json": "3c986e91c15a8761d0ca68164a25f0f5385f267c40cc4aad48c411e5b36edab1",
+    "portal/private/sa-budget/worker-dry-run.log": "ea0a7971ec8f079b9f47263056bef35d0d5034f227e7d5a898cad74e2651bb45",
+    "portal/private/sa-budget/promotion-dry-run.log": "20e286baefd89378f69ad242c6a137ab57d23cd06d3c6bb1570556c908109575",
+    "portal/private/sa-budget/browser-results.json": "e365268386ac8e03ba73966118eb5d48958e06e9214ddc5fd50acbe40933c294"
+  },
+  "production_writes": 0,
+  "pushes": 0,
+  "deployments": 0,
+  "nightly_runs": 0
+}
