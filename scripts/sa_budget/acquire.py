@@ -36,10 +36,14 @@ def acquire(url, kind):
         return _acquire(url, kind)
 
 
-def _acquire(url, kind):
-    STAGE.mkdir(parents=True, exist_ok=True)
-    CACHE.mkdir(parents=True, exist_ok=True)
-    ledger_path = STAGE / 'receipts.json'
+def _acquire(url, kind, *, stage=None, cache=None, datasets=None, download_cap=15, allow_storage=False):
+    # Shared bounded engine; callers own a process lock for their receipt ledger.
+    stage = STAGE if stage is None else stage
+    cache = CACHE if cache is None else cache
+    datasets = DATASETS if datasets is None else datasets
+    stage.mkdir(parents=True, exist_ok=True)
+    cache.mkdir(parents=True, exist_ok=True)
+    ledger_path = stage / 'receipts.json'
     ledger = json.loads(ledger_path.read_text()) if ledger_path.exists() else []
     parts = parse.urlsplit(url)
     if kind not in ('robots','terms','dataset','resource','download','redirect') or (kind == 'robots') != (parts.path == '/robots.txt'):
@@ -52,29 +56,30 @@ def _acquire(url, kind):
     prior = next((r for r in ledger if r['url'] == url or r.get('requested_url_sha256') == url_hash), None)
     if prior:
         return prior
-    original = any(parts.path == '/data/dataset/' + d or parts.path.startswith('/data/dataset/' + d + '/resource/') for d in DATASETS)
+    original = any(parts.path == '/data/dataset/' + d or parts.path.startswith('/data/dataset/' + d + '/resource/') for d in datasets)
     redirect = next((r for r in ledger if r.get('location') and parse.urljoin(r['url'], r['location']) == url), None)
-    linked_download = '/download/' in parts.path and any(
-        url in (CACHE / r['sha256']).read_text() for r in ledger
+    file_path = '/download/' in parts.path or allow_storage and parts.path.startswith('/data/storage/')
+    linked_download = file_path and any(
+        url in (cache / r['sha256']).read_text() for r in ledger
         if r['kind'] == 'resource' and r['body_retained'])
     if not (original or linked_download or parts.path in ('/robots.txt', '/copyright') or redirect):
         raise ValueError('Outside authorised datasets / recorded redirect')
-    if '/download/' in parts.path or redirect:
+    if file_path or redirect:
         from html import unescape
-        pages = [unescape((CACHE / r['sha256']).read_text()) for r in ledger if r['kind'] == 'resource' and r['body_retained']]
+        pages = [unescape((cache / r['sha256']).read_text()) for r in ledger if r['kind'] == 'resource' and r['body_retained']]
         terms = any(r['url'] == BASE + '/copyright' and r['body_retained'] for r in ledger)
         source = redirect['url'] if redirect else url
         if not terms or not any(source in p and 'creativecommons.org/licenses/by/4.0' in p for p in pages):
             raise ValueError('Download requires checked source grant and publisher terms')
         downloads = [r for r in ledger if r['kind'] == 'download']
-        if kind == 'download' and len(downloads) >= 15:
-            raise ValueError('Budget workbook cap reached')
+        if kind == 'download' and len(downloads) >= download_cap:
+            raise ValueError('Authorised download cap reached')
     robots_text = ''
     if kind != 'robots':
         robots = next((r for r in ledger if r['kind'] == 'robots' and r['body_retained']), None)
         if not robots:
             raise ValueError('Robots first')
-        robots_text = (CACHE / robots['sha256']).read_text()
+        robots_text = (cache / robots['sha256']).read_text()
         if not robots_allowed(robots_text, url):
             raise ValueError('Robots disallows exact URL; held without request')
     policy = robotparser.RobotFileParser()
@@ -96,6 +101,8 @@ def _acquire(url, kind):
             failure = 'http-error'
         except (HTTPException, OSError):
             failure = 'connection-error-or-timeout'
+        finally:
+            exc.close()
     except (error.URLError, HTTPException, TimeoutError, OSError):
         failure = 'connection-error-or-timeout'
     challenge = any(x in body.lower() for x in (b'cf-chl-', b'just a moment...', b'verify you are human', b'captcha challenge'))
@@ -117,7 +124,7 @@ def _acquire(url, kind):
     ledger.append(receipt)
     ledger_path.write_text(json.dumps(ledger, indent=2) + '\n')
     if retained:
-        (CACHE / receipt['sha256']).write_bytes(body)
+        (cache / receipt['sha256']).write_bytes(body)
     if host_stopped(receipt):
         raise SystemExit('STOP: host held; compact receipt saved, body discarded')
     return receipt

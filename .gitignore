@@ -73,3 +73,8 @@ portal/private/
 # Per-host acquisition locks, never source evidence.
 data/staged/bills-*/.acquire.lock
 data/staged/sa-budget/.acquire.lock
+
+# Historical SA grants source-record text remains local; no private names in git.
+data/staged/sa-grants/.acquire.lock
+data/staged/sa-grants/series.jsonl
+data/staged/sa-grants/hub.json

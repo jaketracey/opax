@@ -53,7 +53,7 @@ const bundled = (path) => read(path).split('\n', 1)[0].length > 2000;
 const publicJS = readdirSync(new URL('public/', root)).filter((f) => f.endsWith('.js') && f !== 'spa-shell.js').map((f) => `public/${f}`).filter((p) => !bundled(p));
 const publicHTML = readdirSync(new URL('public/', root)).filter((f) => f.endsWith('.html')).map((f) => `public/${f}`);
 const workerPages = ['src/index.ts', 'src/seo-content.ts', 'src/hubs.ts', 'src/og.ts', 'src/crawl-hygiene.ts', 'src/page-entry.ts',
-  'src/audit.ts', 'src/gov-advertising.ts', 'src/instruments.ts', 'src/state-bills.ts', 'src/sa-budget.ts'];
+  'src/audit.ts', 'src/gov-advertising.ts', 'src/instruments.ts', 'src/state-bills.ts', 'src/sa-budget.ts', 'src/sa-grants.ts'];
 
 function offenders(files, extract) {
   const found = [];

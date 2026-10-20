@@ -1,0 +1,27 @@
+{
+  "checks": [
+    {
+      "resource_id": "0760d21e-8344-4462-b305-2f7f92f22f72",
+      "status": "pass",
+      "source_award_rows": 318,
+      "staged_award_rows": 318,
+      "source_row_checks": 318,
+      "source_year": "2016-17",
+      "year_basis": "Publisher resource title; CSV has no year column",
+      "published_total": null,
+      "amount_total_check": "not applicable: publisher supplies no total; no aggregate computed"
+    },
+    {
+      "resource_id": "36f0af29-ef87-4793-a290-7061144e078f",
+      "status": "pass",
+      "source_award_rows": 359,
+      "staged_award_rows": 359,
+      "source_row_checks": 359,
+      "source_year": "2017-18",
+      "year_basis": "Publisher resource title; CSV has no year column",
+      "published_total": null,
+      "amount_total_check": "not applicable: publisher supplies no total; no aggregate computed"
+    }
+  ],
+  "computed_totals": 0
+}

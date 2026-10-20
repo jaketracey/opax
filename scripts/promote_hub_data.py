@@ -33,11 +33,12 @@ from scripts.abs_gfs.check import checked_projection as gfs_projection
 from scripts.tax_expenditures.check import checked_projection as tax_projection
 from scripts.gov_advertising.victoria import checked_projection as advertising_projection
 from scripts.sa_budget.check import checked_projection as sa_projection
+from scripts.sa_grants.check import checked_projection as sa_grants_projection
 
 ASSETS = {"budget": "budget/data.json", "vic-gifts": "vic-gifts/data.json",
           "bills-tas": "bills-tas/data.json", "bills-act": "bills-act/data.json",
           "abs-gfs": "government-finance/data.json", "tax-expenditures": "tax-expenditures/data.json",
-          "vic-advertising": "gov-advertising/data.json", "sa-budget": "sa-budget/data.json"}
+          "vic-advertising": "gov-advertising/data.json", "sa-budget": "sa-budget/data.json", "sa-grants": "sa-grants/data.json"}
 # Annual ABS GFS, tax expenditures and advertising are opt-in, outside nightly.
 # Existing default runs remain scoped to the four scheduled hubs.
 DEFAULT_HUBS = ["budget", "vic-gifts", "bills-tas", "bills-act"]
@@ -49,7 +50,8 @@ INPUTS = {"budget": ["inventory.json", "receipts.json", "aggregates.json", "meas
                       "function-series.jsonl", "function-reconciliation.json", "function-summary.json", "function-receipts.json"],
           "tax-expenditures": ["inventory.json", "receipts.json", "series.jsonl", "reconciliation.json", "hub.json"],
           "vic-advertising": ["discovery.json", "inventory.json", "tables.json", "receipts.json", "reconciliation.json", "privacy-policy.json", "privacy-holds.json", "hub.json"],
-          "sa-budget": ["inventory.json", "receipts.json", "series.jsonl", "reconciliation.json", "acquisition-audit.json", "hub.json"]}
+          "sa-budget": ["inventory.json", "receipts.json", "series.jsonl", "reconciliation.json", "acquisition-audit.json", "hub.json"],
+          "sa-grants": ["inventory.json", "receipts.json", "series.jsonl", "reconciliation.json", "acquisition-audit.json", "hub.json"]}
 SHA = re.compile(r"[a-f0-9]{64}")
 
 
@@ -276,6 +278,8 @@ def validated_asset(hub_name, root=ROOT):
         hub, counts = tax_projection(stage)
     elif hub_name == "vic-advertising":
         hub, counts = advertising_projection(stage)
+    elif hub_name == "sa-grants":
+        hub, counts = sa_grants_projection(stage)
     elif hub_name == "sa-budget":
         hub, counts = sa_projection(stage)
     else:

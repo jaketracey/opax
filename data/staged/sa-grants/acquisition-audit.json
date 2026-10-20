@@ -1,0 +1,14 @@
+{
+  "requests": 18,
+  "responses": {
+    "200": 13,
+    "404": 5
+  },
+  "minimum_completion_gap_seconds": 5.110189,
+  "overlaps": 0,
+  "redirects_followed": 0,
+  "host_stopped": false,
+  "user_agent": "OPAXBot/1.0 (+https://opax.com.au/about; corrections@opax.com.au)",
+  "automatic_redirects": false,
+  "process_lock": true
+}

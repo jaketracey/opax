@@ -1,0 +1,16 @@
+.sa-grants-content{padding-block:var(--space-section);color:var(--ink)}
+.sa-grants-content>section{margin-block:var(--space-section);border-top:var(--border-hairline) solid var(--divider-default);padding-top:var(--space-group)}
+.sa-grants-content h2{font:var(--type-heading);margin-bottom:var(--space-block)}
+.sa-grants-content p{max-width:var(--size-readable)}
+.sa-grants-receipt{font:var(--type-fine);color:var(--ink-soft);overflow-wrap:anywhere;margin-block:var(--space-block)}
+.sa-grants-receipt summary{cursor:pointer}
+.sa-grants-content .dt :is([data-label="Year"],[data-sa-grants-column="year"]){white-space:nowrap;overflow-wrap:normal;word-break:normal}
+@media(max-width:760px){
+ .sa-grants-content .dt{table-layout:fixed}
+ .sa-grants-content .dt th:not([data-sa-grants-column]),
+ .sa-grants-content .dt td:not([data-label="Recipient"]):not([data-label="Year"]):not([data-label="Amount"]):not([colspan]){display:none}
+ .sa-grants-content .dt :is(th,td){padding:var(--space-tight)}
+ .sa-grants-content .dt :is([data-sa-grants-column="recipient"],[data-label="Recipient"]){display:table-cell;width:46%;min-width:0;position:static;box-shadow:none}
+ .sa-grants-content .dt :is([data-sa-grants-column="year"],[data-label="Year"]){display:table-cell;width:23%;white-space:nowrap}
+ .sa-grants-content .dt :is([data-sa-grants-column="amount"],[data-label="Amount"]){display:table-cell;width:31%;white-space:nowrap;font-variant-numeric:tabular-nums}
+}

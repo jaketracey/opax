@@ -41,6 +41,7 @@ import { taxExpendituresPage, taxExpendituresReader, taxExpendituresReady } from
 import {parseQuery,serializeQuery,type Page} from '../public/datatable.js'
 import {partyMoneyData,partyMoneyTableConfig,registerTableHTML} from '../public/register-tables.js'
 import {grantsHTML} from './grants-table'
+import {saGrantsPage,saGrantsReader} from './sa-grants'
 import {GRANTS_COVERAGE} from '../public/grants-table.js'
 import { hubPage } from './hubs'
 import { senateVideoPage } from './video-archive'
@@ -3758,6 +3759,7 @@ type SeoRoute =
   | { kind: 'government-finance' }
   | { kind: 'tax-expenditures' }
   | { kind: 'gov-advertising' }
+  | { kind: 'sa-grants' }
   | { kind: 'audit'; id: string | null }
   | { kind: 'static'; page: keyof typeof STATIC_PAGES }
   | { kind: 'report'; slug: string }
@@ -3818,6 +3820,7 @@ function matchSeoRoute(url: URL): SeoRoute | null {
   if (path === '/register/vic-gifts') return { kind: 'vic-gifts' }
   if (path === '/register/state-bills') return { kind: 'state-bills' }
   if (path === '/register/government-finance') return { kind: 'government-finance' }
+  if (path === '/register/sa-grants') return { kind: 'sa-grants' }
   if (path === '/register/gov-advertising') return { kind: 'gov-advertising' }
   if (path === '/register/tax-expenditures') return { kind: 'tax-expenditures' }
   if (path === '/instruments') return { kind: 'instruments', id: null }
@@ -4372,6 +4375,7 @@ async function buildRouteMeta(route: SeoRoute, url: URL, request: Request, env: 
     case 'vic-gifts': return base(await vicGiftsPage(url, vicGiftsReader(env.ASSETS), prerenderBlock))
     case 'state-bills': return base(await stateBillsPage(url, stateBillsReader(env.ASSETS), prerenderBlock))
     case 'government-finance': return base(await governmentFinancePage(url, governmentFinanceReader(env.ASSETS), prerenderBlock))
+    case 'sa-grants': return base(await saGrantsPage(url,saGrantsReader(env.ASSETS),prerenderBlock))
     case 'gov-advertising': return base(await govAdvertisingPage(url, govAdvertisingReader(env.ASSETS), prerenderBlock, (await loadAgencies(env).catch(()=>null))?.agencies || []))
     case 'tax-expenditures': return base(await taxExpendituresPage(url, taxExpendituresReader(env.ASSETS), prerenderBlock))
     case 'instruments': return base(await instrumentPage(route.id, url, instrumentReader(env.ASSETS), prerenderBlock, env.TABLE_DB ? async query=>{
@@ -5667,6 +5671,9 @@ async function renderSeoPage(route: SeoRoute, url: URL, request: Request, env: E
   if (route.kind === 'tax-expenditures') rewriter.on('script[src]', { element(el) {
     if (/\/(app|spa-entry|spa-shell)\.js(?:\?|$)/.test(el.getAttribute('src') || '')) el.remove()
   } }).on('head', { element(el) { el.append('<link rel="stylesheet" href="/datatable.css"><link rel="stylesheet" href="/tax-expenditures.css">',{html:true}) } })
+  if (route.kind === 'sa-grants') rewriter.on('script[src]', { element(el) {
+    if (/\/(app|spa-entry|spa-shell)\.js(?:\?|$)/.test(el.getAttribute('src') || '')) el.remove()
+  } }).on('head', { element(el) { el.append('<link rel="stylesheet" href="/datatable.css"><link rel="stylesheet" href="/sa-grants.css">',{html:true}) } })
   if (route.kind === 'gov-advertising') rewriter.on('script[src]', { element(el) {
     if (/\/(app|spa-entry|spa-shell)\.js(?:\?|$)/.test(el.getAttribute('src') || '')) el.remove()
   } }).on('head', { element(el) { el.append('<link rel="stylesheet" href="/datatable.css"><link rel="stylesheet" href="/gov-advertising.css">',{html:true}) } })

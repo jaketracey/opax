@@ -1,5 +1,6 @@
 import type {Page} from '../public/datatable.js'
 import {grantsTableHTML} from '../public/grants-table.js'
+import {saGrantsReader,saGrantsRows} from './sa-grants'
 import {tableApi} from './table-api'
 
 /** Grants use the same D1 query contract as the public table API. */
@@ -21,5 +22,7 @@ export async function grantsHTML(url: URL, env: {TABLE_DB: D1Database; ASSETS: F
     throw new Error('Grant table unavailable')
   }
   const page = await response.json() as Page
-  return grantsTableHTML(page, url.searchParams, url)
+  const historical=await saGrantsReader(env.ASSETS)().catch(()=>null)
+  const link=historical&&saGrantsRows(historical).length?'<p><a href="/register/sa-grants">South Australian historical grants, 2016–17 and 2017–18</a></p>':''
+  return grantsTableHTML(page, url.searchParams, url)+link
 }

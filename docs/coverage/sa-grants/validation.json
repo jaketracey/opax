@@ -1,0 +1,149 @@
+{
+  "status": "staged; review and promotion pending",
+  "base_commit": "9c7deab0d0165805d687a90fbec4599a19842d04",
+  "inventory": {
+    "resources": 12,
+    "selected": 7,
+    "excluded": 5,
+    "staged_awards": 677,
+    "held_files": 5
+  },
+  "licence": "Dataset and resource CC BY 4.0; CSV files reviewed; all five XLS originals 404",
+  "reconciliation": {
+    "source_files_passed": 2,
+    "source_row_checks": 677,
+    "published_controls": 0,
+    "amount_totals_computed": 0
+  },
+  "tests": {
+    "sa_grants_python_passed": 12,
+    "sa_budget_python_passed": 14,
+    "targeted_node_passed": 53,
+    "tsc": "pass",
+    "check": "pass"
+  },
+  "dry_runs": {
+    "staging": "pass; zero writes",
+    "promoter": "expected review denial",
+    "promoter_exit": 1
+  },
+  "browser": {
+    "390": {
+      "status": 200,
+      "errors": [],
+      "pageWidth": 390,
+      "viewport": 390,
+      "cells": [
+        {
+          "label": "Recipient",
+          "left": 20,
+          "right": 181,
+          "whiteSpace": "normal"
+        },
+        {
+          "label": "Year",
+          "left": 181,
+          "right": 261.5,
+          "whiteSpace": "nowrap"
+        },
+        {
+          "label": "Amount",
+          "left": 261.5,
+          "right": 370,
+          "whiteSpace": "nowrap"
+        }
+      ]
+    },
+    "1440": {
+      "status": 200,
+      "errors": [],
+      "pageWidth": 1440,
+      "viewport": 1440,
+      "cells": [
+        {
+          "label": "Recipient",
+          "left": 57.59375,
+          "right": 282.953125,
+          "whiteSpace": "normal"
+        },
+        {
+          "label": "Year",
+          "left": 282.953125,
+          "right": 368.15625,
+          "whiteSpace": "nowrap"
+        },
+        {
+          "label": "Amount",
+          "left": 368.15625,
+          "right": 493.15625,
+          "whiteSpace": "nowrap"
+        },
+        {
+          "label": "Project",
+          "left": 493.15625,
+          "right": 663.25,
+          "whiteSpace": "normal"
+        },
+        {
+          "label": "Project description",
+          "left": 663.25,
+          "right": 1042.578125,
+          "whiteSpace": "normal"
+        },
+        {
+          "label": "Region as published",
+          "left": 1042.578125,
+          "right": 1279.5,
+          "whiteSpace": "normal"
+        },
+        {
+          "label": "Source row",
+          "left": 1279.5,
+          "right": 1382.40625,
+          "whiteSpace": "normal"
+        }
+      ]
+    }
+  },
+  "screenshots": {
+    "390-table-crop.png": "b62961d73aabb1113e0a22bfe9a8315edcf3d9d8d4e2370529805db60d78d93f",
+    "390-section.png": "d48d8d97aee9ea87d3abfc6676f22a6410540296b1d7ee6425d98da9ed5bbfb6",
+    "1440-section.png": "2518e66d6708feb624ef070f207177ece45f7fed0d522220fba8bc3b94fa68e8"
+  },
+  "source_inputs": {
+    "inventory.json": "b93f56011c4e0e0133081679513ad5b0e9f2a4fbf17b161d3aed0e269afb188a",
+    "receipts.json": "9f5a475c01bfe944c97fbc506dd5aa0d659964d0cc2b07ba706d0c145c21eb83",
+    "series.jsonl": "994d8f41d51c12609e1f117a600f8f80d9369bd6b4640bce1aa7ab0e00145e0f",
+    "reconciliation.json": "b03bcf9a31809c59ea1a0a7550cf417a42a203569d21d339cc58003a0bef1c47",
+    "acquisition-audit.json": "cc53e7cd295cf4eb325a7d3ad97e83c75ed7dc725bc565afb0fc891ef343dfd6",
+    "hub.json": "ed7bdf62e7a7c321bf5ad90dda45e61058ac155034e7b22ee99793c7e07b471e"
+  },
+  "review": "pending",
+  "votes": {
+    "byte_identical": true,
+    "reference": [
+      "9c7deab0d",
+      "origin/main"
+    ],
+    "sha256": "d89f34bd8acb440da2efe8364d147e51d0cb8737d5631bac091cd524fe9bf999"
+  },
+  "coverage_guards_byte_identical": true,
+  "public_data_asset": false,
+  "nightly": false,
+  "push": false,
+  "deploy": false,
+  "production_writes": false,
+  "source_record_text": "Local ignored staging only; no award text in commits",
+  "csv_exports": [
+    {
+      "resource_id": "0760d21e-8344-4462-b305-2f7f92f22f72",
+      "exported_awards": 318,
+      "source_rows_match": true
+    },
+    {
+      "resource_id": "36f0af29-ef87-4793-a290-7061144e078f",
+      "exported_awards": 359,
+      "source_rows_match": true
+    }
+  ]
+}
