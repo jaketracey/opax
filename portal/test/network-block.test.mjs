@@ -93,3 +93,22 @@ test('the CIDR list parses from the var and drops malformed entries', () => {
   assert.equal(ipv4('116.179.33.212'), ((116 * 256 + 179) * 256 + 33) * 256 + 212);
   for (const bad of ['', '1.2.3', '1.2.3.4.5', '1.2.3.256', '01.2.3.x', null]) assert.equal(ipv4(bad), null, String(bad));
 });
+
+test('the Tencent Cloud Singapore fleet loses the model routes, nothing else', async () => {
+  const { readFileSync } = await import('node:fs');
+  const wrangler = readFileSync(new URL('../wrangler.jsonc', import.meta.url), 'utf8');
+  const env = { GENERATION_BLOCKED_CIDRS: /"GENERATION_BLOCKED_CIDRS":\s*"([^"]*)"/.exec(wrangler)[1] };
+  const from = (ip, path = '/api/ask', asn = 132203) => { const r = new Request(`https://opax.com.au${path}`, { headers: { 'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36', 'cf-connecting-ip': ip } }); Object.defineProperty(r, 'cf', { value: { asn } }); return r; };
+  for (const ip of ['43.172.194.160', '43.172.195.98', '43.172.196.45', '43.172.197.87', '43.172.198.118', '43.173.173.73', '43.173.175.24', '43.173.179.25', '43.173.180.49', '43.173.182.6']) {
+    assert.equal(networkBlock(from(ip), env, '/api/ask')?.status, 403, ip);
+  }
+  assert.equal(networkBlock(from('43.172.196.45', '/api/followups'), env, '/api/followups')?.status, 403);
+  assert.equal(networkBlock(from('43.173.180.49', '/api/search-summary'), env, '/api/search-summary')?.status, 403);
+  assert.equal(networkBlock(from('43.172.196.45', '/api/search'), env, '/api/search'), null, 'retrieval stays open');
+  assert.equal(networkBlock(from('43.172.196.45', '/og/money.png'), env, '/og/money.png'), null, 'share images stay open');
+  assert.equal(networkBlock(from('43.172.196.45', '/'), env, '/'), null, 'pages stay open');
+  for (const ip of ['43.172.193.255', '43.172.199.1', '43.173.172.255', '43.173.183.1']) {
+    assert.equal(networkBlock(from(ip), env, '/api/ask'), null, `neighbour ${ip} stays open`);
+  }
+  assert.equal(networkBlock(from('117.20.68.92', '/api/ask', 4764), env, '/api/ask'), null, 'an Australian reader can still ask');
+});
