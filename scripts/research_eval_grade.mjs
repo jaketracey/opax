@@ -240,8 +240,10 @@ export function runCheck(c, ctx) {
 function styleRows(ev) {
   const rows=[]
   for(const source of (ev.sources??[]).filter(s=>!['speech','bill'].includes(s.kind)))for(const text of [source.title,source.snippet])if(typeof text==='string')for(const raw of text.split(/\n+/)) {const line=raw.replace(/\*\*/g,'')
+    const rates=[...line.matchAll(/(?:^|[.\n])\s*[-*]?\s*([^:$;\n.]+):\s*(\$[\d,]+) a year as [^,]+, \d{4}-\d{2}-\d{2} to \d{4}-\d{2}-\d{2}/g)]
+    if(rates.length){for(const rate of rates)rows.push({entity:rate[1].trim(),value:rate[2],text:rate[0],salary:true});continue}
     const current=/^(.+?) \([^)]+\), [^:]+: base salary \$[\d,]+ plus a loading of [\d.]+%, (\$[\d,]+) a year/.exec(line)
-    if(current){rows.push({entity:current[1],value:current[2],text:line});continue}
+    if(current){rows.push({entity:current[1],value:current[2],text:line,salary:true});continue}
     const row=/^\s*[-*]?\s*([^:|]{2,120}):\s*(\$?[\d,]+(?:\.\d+)?)/.exec(line)
     if(row&&!/coverage|period|financial years/i.test(row[1]))rows.push({entity:row[1].replace(/\s*\([^)]*\).*$/,'').replace(/\s+(?:received|gave|provided|was awarded|led)\b.*$/i,'').trim(),value:row[2],text:line})
     if(/^\|/.test(line)){const cells=line.split('|').map(x=>x.trim()).filter(Boolean),value=cells.find(x=>/^\$[\d,]+/.test(x)),entity=cells.find(x=>/[a-z]/i.test(x));if(value&&entity)rows.push({entity,value,text:line})}
@@ -285,7 +287,7 @@ export function answerStyleChecks(question, answer, evidence = evidenceOf({}), r
   const echo=/Coverage:|\ba year as [^\n]+, \d{4}-\d{2}-\d{2} to \d{4}-\d{2}-\d{2}; base|\|\s*(?:Rank|Parliamentarian|Party|Recipient)\s*\||base \$[\d,]+ plus \d+(?:\.\d+)?%/i.test(answer)
   const first=sentences[0]??'',rows=styleRows(evidence),ranking=/\b(?:highest|lowest|most|least|largest|biggest|top|fewest)\b/i.test(question)
   const limited=/\b(?:cannot|could not|do(?:es)? not|did not) establish\b|\bno (?:reliable|verified|matching)\b|\b(?:records|export).*\b(?:start|does not date)\b|^Please (?:name|give|specify)|^OPAX covers|(?:ranking|total|answer).*cannot be established|no ranking or total can be established|(?:period|records|coverage)[^.]*is not covered|no [^.]*\b(?:ranking|total|answer)\b[^.]*can be established|private information|no evidence|does not (?:hold|cover)/i.test(first)
-  const row=rows[0]
+  const row=ranking&&/paid|salary|pay\b/i.test(question)&&rows.some(r=>r.salary)?rows.filter(r=>r.salary).sort((a,b)=>(/lowest|least/i.test(question)?1:-1)*(Number(a.value.replace(/[$,]/g,''))-Number(b.value.replace(/[$,]/g,''))))[0]:rows[0]
   const speakers=[...new Set((evidence.sources??[]).map(s=>s.speaker).filter(Boolean))]
   const subject=limited||row?limited||styleNormal(first).includes(styleNormal(row.entity)):!speakers.length||speakers.some(n=>styleNormal(first).includes(styleNormal(n)))
   const topic=/\b(mining|gambling|housing|immigration|climate|tax|budget|contracts?|grants?|salary|income)\b/i.exec(question)?.[1]

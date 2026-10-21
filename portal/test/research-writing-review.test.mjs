@@ -186,3 +186,10 @@ test('review direct salary lead: the peak rate leads even when earlier rates wer
  assert.doesNotMatch(api.proseFallback(input).answer.split('\n\n')[0],/Avery Example/)
  assert.match(api.proseFallback(input).answer.split('\n\n')[0],/Blake Sample.*353,704/)
 })
+
+test('review rubric: salary ranking uses the peak selected rate rather than the first chronological row',()=>{
+ const text='Avery Example: $340,704 a year as Prime Minister, 2010-01-01 to 2010-06-23; base $131,040 plus 160%. Blake Sample: $353,704 a year as Prime Minister, 2010-08-01 to 2010-12-31; base $136,040 plus 160%.'
+ const evidence={sources:[source('pay',text,'pay')]}
+ assert.equal(answerStyleChecks('Who was the highest paid politician in 2010?','In 2010 Blake Sample was the highest paid politician, earning $353,704 a year.',evidence).direct_first_sentence,'pass')
+ assert.equal(answerStyleChecks('Who was the highest paid politician in 2010?','Avery Example was the highest paid politician in 2010, earning $340,704 a year.',evidence).direct_first_sentence,'fail')
+})
