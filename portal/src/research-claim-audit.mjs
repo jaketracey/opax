@@ -46,7 +46,7 @@ function periods(text){
  return out
 }
 function figures(text){
- const dates=periods(text),out=[],sentences=sentenceParts(text)
+ const dates=periods(text),out=[]
  for(const m of text.matchAll(/\$\s*\d(?:[\d,]*\d)?(?:\.\d+)?(?:\s*(?:billion|million|thousand|bn|m)\b)?|\b\d(?:[\d,]*\d)?(?:\.\d+)?(?:%|\s+per cent)?|\b(?:zero|one|two|three|four|five|six|seven|eight|nine|ten|eighth|half|quarter)\b/gi)){
   const at=m.index,raw=m[0],tail=text.slice(at+raw.length),head=text.slice(0,at)
   if(dates.some(d=>at>=d.at&&at<d.end)||/^\d+(?:st|nd|rd|th)\b/.test(text.slice(at)))continue
@@ -62,17 +62,6 @@ function figures(text){
   if(amount&&/\bbase\s*$/i.test(head))metric='base_salary'
   if(unit==='count'&&metric==='count'&&/speech|spoke/i.test(text))metric='speeches'
   const cuts=[0,...[...text.matchAll(/;\s*|,?\s+(?:and|while|but|whereas)\s+(?=[A-Z])/g)].map(m=>m.index+m[0].length),text.length],start=cuts.filter(n=>n<=at).at(-1),end=cuts.find(n=>n>at),local=text.slice(start,end)
-  if(amount){
-   const sentence=sentences.find(s=>s.at<=at&&s.at+s.text.length>at)
-   const clauseFrom=Math.max(start,sentence?.at??0),from=Math.max(clauseFrom,out.at(-1)?.end??0),until=Math.min(end,sentence?sentence.at+sentence.text.length:text.length)
-   const prefix=text.slice(from,at),suffix=text.slice(at+raw.length,until)
-   // A predicate governs its next figure; later funding-source language cannot relabel it.
-   const predicate=[...prefix.matchAll(figurePredicate)].at(-1)?.[0]
-   // Budget scope also governs intervening counts and coordinated amounts until another predicate.
-   const earlierPredicate=!predicate?[...text.slice(clauseFrom,from).matchAll(figurePredicate)].at(-1)?.[0]:undefined
-   const budgetLabel=/^\s*(?:[\p{L}-]+\s+){0,4}(?:budgets?|allocations?|appropriations?)\b/iu.test(suffix)
-   if(budgetPredicate.test(predicate??'')||!predicate&&(budgetLabel||budgetPredicate.test(earlierPredicate??'')))metric='budget'
-  }
   if(metric==='speeches'||metric==='share'){const topic=/housing|gambling|immigration|climate|mining(?:-energy)?|tax(?:-budget)?|budget/i.exec(local)?.[0]?.toLowerCase()??/housing|gambling|immigration|climate|mining(?:-energy)?|tax(?:-budget)?|budget/i.exec(text)?.[0]?.toLowerCase();if(topic)metric+='/'+(topic==='tax'||topic==='budget'?'tax-budget':topic)}
   const vote=/(all aye|all no|split) (?:in )?$/i.exec(head)?.[1];if(vote)metric='votes/'+norm(vote)
   const owner=partyName(/^\s+(?:dollars?\s+)?(?:to (?:the )?)?(Labor|Liberal|Coalition|Greens|Nationals|ALP)\b/i.exec(tail)?.[1])
@@ -84,8 +73,6 @@ function figures(text){
 const parties=['Labor','Liberal','Coalition','Greens','Nationals','ALP','LNP','Australian Conservatives','Australian Democrats','One Nation','Centre Alliance','Independent']
 const reportingPredicate=/\b(?:said|says|say|argu(?:ed|es)|called for|described|cited|reported|explained|introduced|presented|proposed|linked|challenged|recalled|not(?:ed|ing|es)|put a motion|disputed|asked|supported|opposed|criticised|criticized|framed|set out|told|words (?:were|are))\b/i
 const financialPredicate=/\b(?:paid|receiv(?:ed|es|ing|e)|secur(?:ed|es|ing|e)|got|won|earn(?:ed|s|ing)?|given|donat(?:ed|es|ing|e)|collected|accepted)\b/i
-const budgetPredicate=/\b(?:budgets?|allocations?|allocated|appropriations?|appropriated)\b/i
-const figurePredicate=new RegExp(financialPredicate.source+'|'+budgetPredicate.source,'gi')
 const partyMentions=text=>mentions(text,parties).map(n=>({...n,name:partyName(n.name)}))
 function amountOwners(text,f,known=[]){
  const exactNames=part=>mentions(part,known.map(n=>typeof n==='string'?n:n.surface)).map(n=>({...n,name:known.find(k=>(typeof k==='string'?k:k.surface)===n.name)?.name??n.name}))
@@ -203,7 +190,6 @@ function dateSupported(claim,row){
 }
 function metricSupported(claim,fact){
  if(claim.unit!==fact.unit&&!(claim.unit==='AUD'&&fact.unit.startsWith('AUD/')))return false
- if(claim.metric==='budget'||fact.metric==='budget')return claim.metric===fact.metric
  if(claim.metric===fact.metric)return true
  return claim.metric==='count'||fact.metric==='count'||claim.metric==='receipts'&&['salary','grants','contracts'].includes(fact.metric)
 }

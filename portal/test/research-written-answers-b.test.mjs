@@ -47,34 +47,13 @@ test('B explicit recipient identity cannot acquire a speaker’s quotation from 
  assert.ok(auditPayload('What did Blake Sample say?',input).findings.some(f=>f.type==='quote'))
 })
 
-for(const kind of ['speech','record'])for(const label of ['office budget','allocation','appropriation']){
- const evidence=source('Avery Example: $100,000 '+label+'.',{kind})
- for(const predicate of ['was paid','received','secured','got','was given'])test(`B ${kind} ${label} cannot support ${predicate}`,async()=>{
-  const input=payload('Avery Example '+predicate+' $100,000.',evidence)
-  assert.ok(auditPayload('What was Avery paid?',input).findings.some(f=>f.type==='figure'))
-  for(const path of paths){
-   const {out,wire}=await boundary(input,'What was Avery paid?',path)
-   assert.doesNotMatch(out.answer,/Avery Example|100,000/);assert.deepEqual(out.citations,{})
-   assert.ok(out.sources.every(s=>!s.cited))
-   if(path.stream)assert.doesNotMatch(wire,/event: delta/)
-  }
- })
- const answer='Avery Example '+(label==='office budget'?'has a $100,000 office budget.':label==='allocation'?'was allocated $100,000.':'has a $100,000 appropriation.')
- test(`B supported ${kind} ${label} retains its citation`,async()=>{
-  const input=payload(answer,evidence)
-  assert.equal(auditPayload('What is Avery’s budget?',input).findings.length,0)
-  for(const path of paths){const {out}=await boundary(input,'What is Avery’s budget?',path);assert.equal(out.answer,answer);assert.deepEqual(out.citations,input.citations);assert.equal(out.sources[0].cited,true)}
- })
-}
-test('B preserves the unlabelled supported office budget that r4 removed',async()=>{
- const answer='Avery Example has a $100,000 office budget.',input=payload(answer,source(answer))
- for(const path of paths){const {out}=await boundary(input,'What is Avery’s budget?',path);assert.equal(out.answer,answer);assert.deepEqual(out.citations,input.citations)}
-})
-
+// Known budget-versus-payment reproductions are deferred to the structured claim-plan lane C.
+// B intentionally restores live r4 financial behaviour; the budget rejection/restoration tests
+// from the three superseded B budget rounds are removed. Salary/payment preservation stays.
 for(const kind of ['speech','record'])for(const snippet of [
  'Avery Example was paid $100,000. The office budget is $200,000.',
  'Avery Example was paid $100,000 from the office budget.',
-])test(`B fix 1 preserves the payment relationship in ${kind}: ${snippet}`,async()=>{
+])test(`B preserves r4 payment evidence in ${kind}: ${snippet}`,async()=>{
  const answer='Avery Example was paid $100,000.',input=payload(answer,source(snippet,{kind}))
  assert.equal(auditPayload('What was Avery paid?',input).findings.length,0)
  for(const path of paths){
@@ -84,15 +63,15 @@ for(const kind of ['speech','record'])for(const snippet of [
 })
 
 for(const kind of ['speech','record'])for(const snippet of [
- 'Avery Example: office budget for 2 staff of $100,000.',
- 'Avery Example: office budgets of $50,000, $100,000 and $200,000.',
-])test(`B fix 2 retains budget scope across figures in ${kind}: ${snippet}`,async()=>{
- const input=payload('Avery Example was paid $100,000.',source(snippet,{kind}))
- assert.ok(auditPayload('What was Avery paid?',input).findings.some(f=>f.type==='figure'))
+ 'Avery Example: office budget $50,000 and salary $100,000.',
+ 'Avery Example: office budget of $50,000 and salary of $100,000.',
+ 'Avery Example has an office budget of $50,000 and an annual salary of $100,000.',
+ 'Avery Example has a $50,000 office budget and a $100,000 salary.',
+])test(`B preserves r4 salary evidence in ${kind}: ${snippet}`,async()=>{
+ const answer='Avery Example earned a salary of $100,000.',input=payload(answer,source(snippet,{kind}))
+ assert.equal(auditPayload('What salary did Avery earn?',input).findings.length,0)
  for(const path of paths){
-  const {out,wire}=await boundary(input,'What was Avery paid?',path)
-  assert.doesNotMatch(out.answer,/Avery Example|100,000/);assert.deepEqual(out.citations,{})
-  assert.ok(out.sources.every(s=>!s.cited))
-  if(path.stream)assert.doesNotMatch(wire,/event: delta/)
+  const {out}=await boundary(input,'What salary did Avery earn?',path)
+  assert.equal(out.answer,answer);assert.deepEqual(out.citations,input.citations);assert.equal(out.sources[0].cited,true)
  }
 })
