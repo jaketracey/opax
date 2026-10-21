@@ -69,7 +69,7 @@ function coverageSentence(input: WritingInput): WrittenSentence | undefined {
     return {text:`OPAX's federal pay records${from ? ' start on '+from+' and' : ''} cover salary entitlements and exclude allowances, expenses, superannuation and outside income.`, facts:all.map(f=>f.id), coverage:true}
   }
   const ids=all.map(f=>f.id)
-  if(/party receipts|donation|AEC|disclosed receipt/i.test(text))return {text:'These are disclosed party receipts rather than personal payments, and the records do not establish that money caused votes or speeches.',facts:ids,coverage:true}
+  if(/party receipts|donation|AEC|disclosed receipt/i.test(text))return {text:'These are disclosed party receipts rather than personal payments, and a donation is not evidence that it influenced a vote or speech.',facts:ids,coverage:true}
   if(/contract/i.test(text))return {text:'These are published contract values, including amendments, rather than payments.',facts:ids,coverage:true}
   if(/topic|Hansard|committee|labelled speeches/i.test(text))return {text:'Topic-labelled speech records are incomplete, with older years and known Hansard gaps undercounted'+(/committee.*exclud|exclud.*committee/i.test(text)?' and committee-hearing turns excluded':'')+'.',facts:ids,coverage:true}
   if(/unknown|unavailable|cannot establish|not.*covered/i.test(text))return {text:'Some selected records lack verified coverage for the requested scope, so they cannot establish a complete historical total.',facts:ids,coverage:true}
@@ -100,7 +100,7 @@ export function proseFallback(input: WritingInput): QualitativeAnswer {
     for(const {f,m} of selected)lines.push({text:`${m[1]} (${m[2]}) has an annual salary entitlement of ${m[4]} as ${m[3]}.`,facts:[f.id]})
   }
   const periodFact=input.facts.find(f=>/^(?:Period|Financial years):/i.test(f.text))
-  const selectedPeriod=periodFact?.text.replace(/^(?:Period|Financial years):\s*/i,'').replace(/\.$/,'')
+  const selectedPeriod=periodFact ? /^(?:Period|Financial years):\s*((?:19|20)\d{2}(?:[–-]\d{2}(?:\d{2})?)?(?:\s+to\s+(?:19|20)\d{2}(?:[–-]\d{2}(?:\d{2})?)?)?)(?=[.\s]|$)/i.exec(periodFact.text)?.[1] : undefined
   const period=selectedPeriod ?? (input.period.since ? input.period.since.slice(0,4)+(input.period.until&&input.period.until.slice(0,4)!==input.period.since.slice(0,4)?'–'+input.period.until.slice(0,4):'') : '')
   if(!rates.length && !currentPay.length) {
     const available=input.facts.filter(f=>!f.coverage), rows:{name:string;amount:string;tail:string;f:WritingFact}[]=[]

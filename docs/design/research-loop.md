@@ -385,3 +385,12 @@ routing cases plus the five reviewer probes, separately against a detached live
 baseline and the working branch, with no production Ask requests. Report strict
 pass and each rubric axis separately; a style improvement is not evidence of
 factual correctness or complete historical coverage.
+
+Pace live local comparisons rather than bypassing the deployed rate limits:
+`--interval 6000` with one mode per local Worker, or `--interval 3000` for a
+sequential `--mode both` run. `--review-probes --set routing --limit 50` combines
+the first 45 cases and all five review probes. Waiting between requests is
+excluded from each request's measured latency. The grader treats an explicit
+OPAX coverage decline as a decline, recognises denial of causation with singular
+or plural subjects, and excludes day-of-month tokens in both prose date orders
+from financial-figure checks.

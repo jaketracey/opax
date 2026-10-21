@@ -9,7 +9,7 @@ import { fileURLToPath } from 'node:url'
 import { execFile } from 'node:child_process'
 import { promisify } from 'node:util'
 import { build } from 'esbuild'
-import { plainNumbers, gradeRow, usageOf, percentile, summarise, renderMarkdown, sentencesOf, quoteCheck } from '../../scripts/research_eval_grade.mjs'
+import { plainNumbers, gradeRow, usageOf, percentile, summarise, renderMarkdown, sentencesOf, quoteCheck, causalCheck } from '../../scripts/research_eval_grade.mjs'
 import { parseArgs, guardBase, requestFor, runOne, runEval, loadQuestions, DEFAULT_LIMIT, MAX_LIMIT } from '../../scripts/research_eval.mjs'
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '../..')
@@ -270,3 +270,13 @@ test('since constraints accept attributed dated evidence after the start without
  assert.equal(gradeRow(question,{...payload,sources:[{...payload.sources[0],date:'2009-07-01'}]}).axes.constraints,'fail')
  assert.equal(gradeRow(question,{...payload,sources:[{...payload.sources[0],date:undefined}]}).axes.constraints,'fail')
 })
+
+test('a plural-subject denial of causation is not an allegation',()=>{
+ assert.deepEqual(causalCheck('The records do not establish that money caused votes or speeches.'),[]);
+ assert.equal(causalCheck('The money caused votes.').length,1);
+});
+
+test('date days in both prose orders are not invented financial figures',()=>{
+ assert.deepEqual(plainNumbers('Paid $277,602 until June 30, 2005 and $288,990 from July 1.'),[277602,2005,288990]);
+ assert.deepEqual(plainNumbers('Paid $277,602 until 30 June 2005 and $288,990 from 1 July.'),[277602,2005,288990]);
+});
