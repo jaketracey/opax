@@ -11,7 +11,9 @@ export function createAnswerWriter(options: ResearchOptions) {
     const fallback=()=>proseFallback(input), credits=options.creditCooldown ?? researchCreditCooldown
     if (!input.facts.length || !options.model || signal?.aborted || remainingMs<250 || credits.blocked()) return fallback()
     const prompt=writingPrompt(input), inputReserve=Math.ceil(prompt.length/3)+1024, outputReserve=Math.min(1400,Math.min(160000,Number(options.tokens ?? 96000))-stats.tokens.input-stats.tokens.output-inputReserve)
-    if (outputReserve<=0 || await options.modelBudgetSpent()) return fallback()
+    if (outputReserve<=0) return fallback()
+    try {if(await options.modelBudgetSpent())return fallback()}catch{return fallback()}
+    if(signal?.aborted)return fallback()
     const inPrice=options.inputPrice ?? 1, outPrice=options.outputPrice ?? 3
     let reservation;try {reservation=await options.dailyBudget.reserve(researchTurnReservationUsd(inputReserve,outputReserve,inPrice,outPrice))}catch{return fallback()}
     if(!reservation)return fallback()

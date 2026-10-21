@@ -22,7 +22,7 @@ export function writingFacts(answer: QualitativeAnswer | undefined, facts: Fact[
     text = clean(text).replace(/^[-*•]\s*/, '')
     if (!/[\p{L}]/u.test(text) || /^\|?\s*[-: ]+(?:\|[-: ]+)*\|?$/.test(text)) return
     const k = key(text)
-    if (seen.has(k)) return
+    if (seen.has(k)) {if(coverage){const prior=out.find(f=>key(f.text)===k);if(prior)prior.coverage=true}return}
     seen.add(k); out.push({ id: out.length+1, text, source, ...(coverage ? { coverage: true } : {}) })
   }
   if (answer) for (const source of answer.sources.filter(s => s.cited)) {
@@ -30,7 +30,7 @@ export function writingFacts(answer: QualitativeAnswer | undefined, facts: Fact[
     const ranges = Object.entries(answer.citations).filter(([id]) => id === source.resource || id.startsWith(source.resource+'/')).flatMap(([,ranges]) => ranges)
     const text = ranges.length && ranges.every(([a,b])=>b-a>3) ? ranges.map(([a,b]) => Array.from(answer.answer).slice(a,b).join('')).join('\n') : source.snippet
     for (const part of text.split(/\n+|(?<=[.!?])\s+(?=(?:Coverage:|This selection|It excludes|Amounts are|Period:|Based on AEC|Opax added))/)) {
-      const before=out.length;add(part, source, isCoverage(part))
+      const before=out.length;add(part, source, isCoverage(part) || source.resource==='coverage' || /coverage/i.test(source.title))
       if(out.length>before)out[out.length-1].evidenceId=Object.keys(answer.citations).find(id=>id===source.resource || id.startsWith(source.resource+'/'))
     }
   }
@@ -68,71 +68,81 @@ function coverageSentence(input: WritingInput): WrittenSentence | undefined {
     const from = /(?:start on|cover) (\d{4}-\d{2}-\d{2}|\d+ \w+ \d{4})/.exec(text)?.[1]
     return {text:`OPAX's federal pay records${from ? ' start on '+from+' and' : ''} cover salary entitlements and exclude allowances, expenses, superannuation and outside income.`, facts:all.map(f=>f.id), coverage:true}
   }
-  // One bounded sentence, with boilerplate labels and subsequent sentences removed.
-  const relevant=all.find(f=>/^It excludes/i.test(f.text))?.text ?? all.find(f=>!/^Opax added|^Period:|^Based on AEC|^This selection/i.test(f.text))?.text ?? text
-  const sentence = clean(relevant.replace(/^Coverage:\s*/i,'').replace(/^It excludes/i,'These disclosure records exclude')).split(/(?<=[.!?])\s+/)[0]
-  return {text:finish(sentence),facts:all.map(f=>f.id),coverage:true}
+  const ids=all.map(f=>f.id)
+  if(/party receipts|donation|AEC|disclosed receipt/i.test(text))return {text:'These are disclosed party receipts rather than personal payments, and the records do not establish that money caused votes or speeches.',facts:ids,coverage:true}
+  if(/contract/i.test(text))return {text:'These are published contract values, including amendments, rather than payments.',facts:ids,coverage:true}
+  if(/topic|Hansard|committee|labelled speeches/i.test(text))return {text:'Topic-labelled speech records are incomplete, with older years and known Hansard gaps undercounted'+(/committee.*exclud|exclud.*committee/i.test(text)?' and committee-hearing turns excluded':'')+'.',facts:ids,coverage:true}
+  if(/unknown|unavailable|cannot establish|not.*covered/i.test(text))return {text:'Some selected records lack verified coverage for the requested scope, so they cannot establish a complete historical total.',facts:ids,coverage:true}
+  const relevant=all.find(f=>/^It excludes/i.test(f.text))?.text
+  return relevant ? {text:finish(clean(relevant.replace(/^It excludes/i,'These records exclude')).split(/(?<=[.!?])\s+/)[0]),facts:ids,coverage:true} : undefined
+
 }
 /** Never return the original block, even when the provider is unavailable or the wall cap is spent. */
 export function proseFallback(input: WritingInput): QualitativeAnswer {
   const lines: WrittenSentence[] = [], rates = input.facts.flatMap(f => {const r=payRate(f.text);return r?[{f,r}]:[]})
+  const year=input.period.since?.slice(0,4)
   if (rates.length) {
-    const year=input.period.since?.slice(0,4), ranking=/highest|most|top/i.test(input.question)
-    const top=ranking ? rates.filter(x=>!rates.some(y=>Number(y.r[2].replace(/[^0-9.]/g,''))>Number(x.r[2].replace(/[^0-9.]/g,'')) && y.r[4]<=x.r[5] && y.r[5]>=x.r[4])) : rates
-    const dated=(iso:string)=>year && iso.startsWith(year) ? day(iso).replace(' '+year,'') : day(iso)
-    const names=[...new Set(top.map(x=>x.r[1]))], posts=[...new Set(top.map(x=>x.r[3]))]
-    const groups=new Map<string,{amount:string;since:string;until:string}>()
-    for(const {r} of top) {
-      const previous=groups.get(r[2])
-      if(previous){previous.since=previous.since<r[4]?previous.since:r[4];previous.until=previous.until>r[5]?previous.until:r[5]}
-      else groups.set(r[2],{amount:r[2],since:r[4],until:r[5]})
+    const ranking=/highest|most|top/i.test(input.question), named=rates.filter(x=>input.question.toLowerCase().includes(x.r[1].toLowerCase()))
+    const selected=ranking ? rates.filter(x=>!rates.some(y=>Number(y.r[2].replace(/[^0-9.]/g,''))>Number(x.r[2].replace(/[^0-9.]/g,'')) && y.r[4]<=x.r[5] && y.r[5]>=x.r[4])) : named.length ? named : rates.filter(x=>x.r[1]===rates[0].r[1])
+    const offices=[...new Set(selected.map(x=>x.r[3]))]
+    for(const office of offices) {
+      const group=selected.filter(x=>x.r[3]===office), names=[...new Set(group.map(x=>x.r[1]))], amounts=new Map<string,{since:string;until:string}>()
+      for(const {r} of group){const previous=amounts.get(r[2]);amounts.set(r[2],{since:previous&&previous.since<r[4]?previous.since:r[4],until:previous&&previous.until>r[5]?previous.until:r[5]})}
+      const text=`${year?'In '+year+', ':''}${names.join(' and ')} ${names.length===1?'was':'were'} ${ranking?'the highest-paid federal parliamentarian'+(names.length>1?'s':'')+', ':''}${office}, with annual salary ${amounts.size>1?'rates':'entitlements'} of `+
+        [...amounts].map(([amount,g])=>`${amount} from ${day(g.since)} to ${day(g.until)}`).join(' and ')+'.'
+      lines.push({text,facts:group.map(x=>x.f.id)})
     }
-    const who=names.join(' and '), office=posts.join(' and ')
-    const text=`${year?'In '+year+', ':''}${who} ${names.length===1?'was':'were'} ${ranking?'the highest-paid federal parliamentarian'+(names.length>1?'s':'')+', ':''}${office}, with annual salary ${groups.size>1?'rates':'entitlements'} of `+
-      [...groups.values()].map(g=>`${g.amount} from ${dated(g.since)} to ${dated(g.until)}`).join(' and ')+'.'
-    lines.push({text,facts:top.map(x=>x.f.id)})
   }
-  const currentPay=input.facts.flatMap(f=>{
-    const m=/^(.+?) \(([^)]+)\), (.+?): base salary \$[\d,]+ plus a loading of [\d.]+%, (\$[\d,]+) a year/.exec(f.text)
-    return m?[{f,m}]:[]
-  })
+  const currentPay=input.facts.flatMap(f=>{const m=/^(.+?) \(([^)]+)\), (.+?): base salary \$[\d,]+ plus a loading of [\d.]+%, (\$[\d,]+) a year/.exec(f.text);return m?[{f,m}]:[]})
   if(!rates.length && currentPay.length) {
     const comparison=/Labor.*Liberal|Liberal.*Labor/i.test(input.question)
     const selected=comparison ? [currentPay.find(x=>x.m[2]==='Labor'),currentPay.find(x=>x.m[2]==='Liberal')].filter((x): x is typeof currentPay[number]=>!!x) : currentPay.slice(0,1)
     for(const {f,m} of selected)lines.push({text:`${m[1]} (${m[2]}) has an annual salary entitlement of ${m[4]} as ${m[3]}.`,facts:[f.id]})
   }
-  for (const f of input.facts.filter(f=>!f.coverage)) {
-    if (currentPay.length || rates.some(x=>x.f.id===f.id) || lines.length>=30) continue
-    const table = /^\|(.+)\|$/.exec(f.text)
-    let text = f.text
-    if (table) {
-      const cells=table[1].split('|').map(clean)
-      if (!cells.some(c=>/\$[\d]/.test(c))) continue
-      const name=cells.find(c=>/[a-z]/i.test(c) && !/^\$/.test(c)), amount=cells.find(c=>/\$[\d]/.test(c))
-      if (!name || !amount) continue
-      text=`${name} received ${amount} in the disclosed records${input.period.since ? ' for '+input.period.since.slice(0,4)+(input.period.until?.slice(0,4)!==input.period.since.slice(0,4) ? '–'+input.period.until?.slice(0,4) : '') : ''}.`
-    } else if (/^\d[\d,]* /.test(text)) {
-      text=`There were ${text}.`
-    } else if (/^.+?:\s/.test(text)) {
-      const [name,...rest]=text.split(': ')
-      text=/^\d{4}$/.test(name) ? `In ${name}, there were ${rest.join(': ')}.` : `${name} recorded ${rest.join(': ')}.`
+  const periodFact=input.facts.find(f=>/^(?:Period|Financial years):/i.test(f.text))
+  const selectedPeriod=periodFact?.text.replace(/^(?:Period|Financial years):\s*/i,'').replace(/\.$/,'')
+  const period=selectedPeriod ?? (input.period.since ? input.period.since.slice(0,4)+(input.period.until&&input.period.until.slice(0,4)!==input.period.since.slice(0,4)?'–'+input.period.until.slice(0,4):'') : '')
+  if(!rates.length && !currentPay.length) {
+    const available=input.facts.filter(f=>!f.coverage), rows:{name:string;amount:string;tail:string;f:WritingFact}[]=[]
+    // Tables and labelled record rows are data, never text to copy into the answer.
+    for(const f of available) {
+      if(/^\|/.test(f.text)) {
+        const cells=f.text.split('|').map(clean).filter(Boolean), amount=cells.find(c=>/^\$\d[\d,]*(?:\.\d+)?$/.test(c))
+        const name=cells.find(c=>/[a-z]/i.test(c))
+        if(amount&&name)rows.push({name,amount,tail:'',f})
+      } else {
+        const row=/^([^:]{2,110}): (\$\d[\d,]*(?:\.\d+)?)(.*)/.exec(f.text)
+        if(row && !/[.!?]|received the most|Financial years|requested period/i.test(row[1].replace(/\b(?:Pty|Ltd|Inc)\./g,'')))rows.push({name:row[1],amount:row[2],tail:row[3],f})
+      }
     }
-    text=clean(text).replace(/^[-*•]\s*/,'')
-    if (rawToolEcho(text)) continue
-    text=text.replace(/\.\.+$/,'.')
-    for (const sentence of text.split(/(?<=[.!?])\s+/)) if (sentence && !isCoverage(sentence) && !lines.some(l=>key(l.text)===key(sentence))) lines.push({text:finish(sentence),facts:[f.id]})
-  }
-  // Put the result ahead of calculation metadata, and never echo a calculator's boilerplate.
-  const headline=lines.findIndex(l=>/\$[\d]|\d+ (?:speeches|divisions)/.test(l.text))
-  if(headline>0)lines.unshift(...lines.splice(headline,1))
-  const selectedPeriod=input.facts.map(f=>/^Period:\s*(.+?)[.]?$/.exec(f.text)?.[1]).find(Boolean)
-  const requested=input.period.since?.slice(0,4)+(input.period.until && input.period.until.slice(0,4)!==input.period.since?.slice(0,4)?'–'+input.period.until.slice(0,4):'')
-  if(lines[0] && !rates.length && !currentPay.length && /\$\d/.test(lines[0].text) && (selectedPeriod || input.period.since) && !lines[0].text.includes(selectedPeriod ?? requested)) {
-    lines[0].text=`In ${selectedPeriod ?? requested}, ${lines[0].text}`
+    if(!rows.length)for(const f of available) {
+      const row=/^(.+?) (gave|received|was awarded) ([^$]*)(\$\d[\d,]*(?:\.\d+)?)/.exec(f.text)
+      if(row)rows.push({name:row[1]+' '+row[2]+' '+row[3],amount:row[4],tail:'',f})
+    }
+    const seen=new Set<string>()
+    for(const row of rows.slice(0,8)) {
+      const signature=key(row.name)+'/'+row.amount
+      if(seen.has(signature))continue
+      seen.add(signature)
+      const tail=clean(row.tail).split(/(?<=[.!?])\s+/)[0].replace(/[.;]+$/,'')
+      const verb=/\b(?:gave|received|awarded)\b/.test(row.name)?'':' recorded'
+      lines.push({text:`${lines.length===0&&period?'In '+period+', ':''}${row.name}${verb} ${row.amount}${tail?' '+tail:''}.`,facts:[row.f.id,...(lines.length===0&&periodFact?[periodFact.id]:[])]})
+    }
+    if(!rows.length)for(const f of available.slice(0,/each year|by year|year-by-year|trend|over time/i.test(input.question)?30:Math.min(30,Number(/top (\d+)/i.exec(input.question)?.[1])||8))) {
+      const count=/^([^:]+): (\d[\d,]*)(.*)/.exec(f.text), total=/^(\d[\d,]*) (.+)/.exec(f.text)
+      if(count){const who=count[1], detail=count[3].replace(/\s*\([^)]*\)/g,'').replace(/[.;]+$/,'');lines.push({text:/^\d{4}$/.test(who)?`In ${who}, there were ${count[2]}${detail}.`:`${who} recorded ${count[2]}${detail}.`,facts:[f.id]})}
+      else if(total)lines.push({text:`There were ${total[1]} ${total[2].replace(/[.;]+$/,'')}.`,facts:[f.id]})
+      else if(/\b(?:divisions|all aye|all no)\b/.test(f.text) && !rawToolEcho(f.text))lines.push({text:finish(f.text.replace(/^(.*?) in (\d+) divisions/,'$1 recorded $2 divisions')),facts:[f.id]})
+    }
   }
   const coverage=coverageSentence(input)
-  if (!lines.length && coverage) {lines.push(coverage)}
-  else if (coverage && !lines.some(l=>key(l.text)===key(coverage.text))) lines.push(coverage)
+  if(!lines.length) {
+    const limit=input.facts.find(f=>/cannot|not fully covered|does not date|not.*available|not.*held|not.*sitting|not.*provide|no matching/i.test(f.text))
+    const requested=input.period.since ? ' for '+input.period.since+(input.period.until?' to '+input.period.until:'') : ''
+    const reason=limit && /does not date|chamber changes|affiliations.*not dated/i.test(limit.text) ? ' because this export does not date historical party or chamber changes' : ' from the selected records'
+    return assemble([{text:`OPAX cannot establish the requested answer${requested}${reason}.`,facts:(limit?[limit]:input.facts.slice(0,1)).map(f=>f.id)}],input)
+  }
+  if(coverage && !lines.some(l=>key(l.text)===key(coverage.text)))lines.push(coverage)
   return assemble(lines,input)
 }
 /** Dates may be reworded, but their day/month/year association must stay in the selected evidence. */

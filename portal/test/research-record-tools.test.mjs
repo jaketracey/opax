@@ -153,7 +153,7 @@ test('a qualitative answer leads with record facts rendered from tool rows and c
   assert.equal(lines[1], 'Sample Systems Ltd recorded $2,000,000,000 across 40 Department of Fixtures contracts.');
   const point=lines.find(line=>line.includes('Robin Example said'));
   assert.equal(point, '- Robin Example said the contracts must be published in full.');
-  assert.match(out.answer, /AusTender contract notices/);
+  assert.match(out.answer, /published contract values/);
   assert.deepEqual(out.qualitative.citations['fact-2/t/body/0'], [[0, lines[0].length]]);
   const pointStart = Array.from(out.answer.slice(0,out.answer.indexOf(point)+2)).length;
   assert.deepEqual(out.qualitative.citations[passageId], [[pointStart, pointStart + Array.from(point.slice(2)).length]]);

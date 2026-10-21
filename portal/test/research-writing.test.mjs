@@ -94,3 +94,12 @@ test('count figures remain attached to the selected speaker and vote metric',()=
  const vote={id:1,text:'Robin Example in 10 divisions: all aye in 9, all no in 1, split in 0',source:source('votes','')}
  assert.equal(api.boundFigures('Robin Example voted all aye in 1 and all no in 9.',[vote]),false)
 })
+test('a full money calculation plus overlapping rows falls back without boilerplate or duplicated amounts',()=>{
+ const raw=['Example Party received the most disclosed funding from mining donors: $165,050.','Financial years: 2005–06.','| Party | Amount |','| Example Party | $165,050 |','| Sample Party | $40,000 |','[Explore these records](https://example.org/money)','This tool covers an unknown start to an unknown end.']
+ const sheet=raw.map((text,i)=>({id:i+1,text,source:source('money-'+i,text),...(i===6?{coverage:true}:{})}))
+ const out=api.proseFallback({...input,question:'Who gets the most from mining in 2005?',facts:sheet})
+ assert.equal(out.answer.split('165,050').length-1,1)
+ assert.match(out.answer.split('\n')[0],/2005.*Example Party.*165,050/)
+ assert.doesNotMatch(out.answer,/Explore these|unknown start|Financial years recorded|\|/)
+ assert.ok(out.answer.split('\n\n').length<=3)
+})

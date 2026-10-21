@@ -17,7 +17,7 @@ import { getAskTool } from './tools'
 import type { AnswerTally } from './research-evidence'
 import { ResearchError, researchSources, type Research, type ResearchPayload, type QualitativeAnswer, type ResearchResult } from './research-types'
 
-import { writingFacts, appendWrittenPoints, ANSWER_WRITING_VERSION } from './research-writing'
+import { writingFacts, appendWrittenPoints, proseFallback, ANSWER_WRITING_VERSION } from './research-writing'
 
 export const AGENTIC_PROMPT_VERSION = `agentic-ask-7-research/${ANSWER_WRITING_VERSION}`
 export const AGENTIC_BUDGET_MS = 40_000
@@ -522,8 +522,9 @@ export async function runAgentic(question: string, deps: AgenticDeps, progress: 
     if (!sheet.length) return run
     await progress('status', {phase:'writing'})
     const stats = { rounds:run.research?.rounds ?? 0,tokens:{...run.tokens},costUsd:run.cost_usd ?? undefined,turns:run.research?.turns ? [...run.research.turns] : [] }
-    const written = await deps.research.write({question,period,facts:sheet}, stats, deps.signal,
-      Math.min(budgetMs, deps.research.writingWallMs ?? budgetMs)-(Date.now()-started))
+    const input={question,period,facts:sheet}
+    const writingMs=Math.max(0,Math.min(8000,Math.min(budgetMs, deps.research.writingWallMs ?? budgetMs)-(Date.now()-started)))
+    const written = await bounded(signal=>deps.research!.write!(input,stats,signal,writingMs),writingMs,deps.signal).catch(()=>proseFallback(input))
     const complete=run.passage_answer ? appendWrittenPoints(written,run.passage_answer) : written
     run.answer=complete.answer;run.qualitative=complete;run.answer_source='model'
     run.tokens=stats.tokens;run.cost_usd=stats.costUsd ?? run.cost_usd
