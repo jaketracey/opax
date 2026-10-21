@@ -35,19 +35,16 @@ export function inferPeriod(question: string, override?: unknown): Period {
   const dated = q.replace(/\b(?:bill|act)\s+(?:19|20)\d{2}\b/g, '')
   const tokens = [...dated.matchAll(/\b((?:19|20)\d{2})(-\d{2}-\d{2}|s)?\b/g)]
   if (tokens.length) {
-    const bounds = tokens.map(m => ({
-      start: m[2]?.startsWith('-') ? m[0] : `${m[1]}-01-01`,
-      end: m[2]?.startsWith('-') ? m[0] : `${Number(m[1]) + (m[2] === 's' ? 9 : 0)}-12-31`,
-    })).sort((a, b) => a.start.localeCompare(b.start))
-    let since: string | undefined = bounds[0].start, until: string | undefined = bounds.at(-1)!.end
-    const prefix = dated.slice(0, tokens[0].index).match(/\b(since|from|after|before|until|through)\s*$/)?.[1]
     const shift = (date: string, days: number) => new Date(Date.parse(date) + days * 86400000).toISOString().slice(0, 10)
-    if (tokens.length === 1) {
-      if (prefix === 'since' || prefix === 'from') until = undefined
-      else if (prefix === 'after') { since = shift(until, 1); until = undefined }
-      else if (prefix === 'before') { until = shift(since, -1); since = undefined }
-      else if (prefix === 'until' || prefix === 'through') since = undefined
-    }
+    const bounds = tokens.map(m => {
+      const start = m[2]?.startsWith('-') ? m[0] : `${m[1]}-01-01`
+      const end = m[2]?.startsWith('-') ? m[0] : `${Number(m[1]) + (m[2] === 's' ? 9 : 0)}-12-31`
+      const operator = dated.slice(0, m.index).match(/\b(since|from|after|before|until|through|to)\s*$/)?.[1]
+      return { start: operator === 'after' ? shift(end, 1) : start, end: operator === 'before' ? shift(start, -1) : end, operator }
+    })
+    const starts = bounds.filter(b => !['before', 'until', 'through', 'to'].includes(b.operator ?? ''))
+    const ends = bounds.filter(b => !['after', 'since', 'from'].includes(b.operator ?? ''))
+    const since = starts.map(b => b.start).sort().at(0), until = ends.map(b => b.end).sort().at(-1)
     return { kind: 'window', ...(since ? { since } : {}), ...(until ? { until } : {}), label: `Records from ${since ?? 'the start of the record'} to ${until ?? 'the present'}.` }
   }
   if (/\b(?:is|are)\s+(?:\S+\s+){0,4}(?:making|speaking|debating|discussing|talking)\b|\b(?:speaks|says|mentions|debates|discusses)\b|\b(?:is|are)\s+(?:\S+\s+){0,3}(?:debated|discussed)\b/.test(q)) return { kind: 'current', since: TERMS['48th'][0], label: 'Counting speeches in the current parliament since July 2025.' }

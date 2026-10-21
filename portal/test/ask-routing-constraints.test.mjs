@@ -106,3 +106,45 @@ test('rounding follows exported remuneration evidence regardless of the role tit
  const ambiguous={...synthetic,base:[{from:'1999-12-07',amount:207100},{from:'2018-08-30',amount:208000}],people:{synthetic:{name:'Taylor Example',spells:[['2018-08-27','2018-09-01','Synthetic role',75,364000]]}}}
  const r=api.datedPay(ambiguous,{person:'Taylor Example',as_of:'2018-08-27'});assert.equal(r.coverage.matched,false);assert.match(r.citations[0].text,/classification/)
 })
+
+test('statute titles do not select ACT, including uppercase and undated title forms',()=>{
+ for(const q of [
+  'How did MPs vote on the Climate Change ACT 2022?',
+  'How did MPs vote on the climate change act 2022?',
+  'How did MPs vote on the Climate Change Act 2022?',
+  'How did MPs vote on the CLIMATE CHANGE ACT 2022?',
+  'What changed under the historical records ACT 1888?',
+  'What did MPs say about the Climate Change ACT?',
+  'What did MPs say about the Climate Change Act?',
+  'What changed under the Australian Capital Territory Act 1988?',
+  'What changed under the Australian Capital Territory (Self-Government) Act 1988?',
+  'What changed under the Privacy ACT?',
+ ]){
+  const c=constraints(q),step=api.constrainStep({tool:'search',args:{}},c,{state:{},jurisdiction:{}})
+  assert.equal(c.jurisdiction,undefined,q);assert.equal(step.args.state,undefined,q)
+ }
+})
+test('territory references survive statute removal and keep ACT search constraints',()=>{
+ for(const q of [
+  'ACT','the ACT','The ACT','A.C.T.','Australian Capital Territory',
+  'What happened in the ACT election?','Describe ACT elections.','Who are the senators for the ACT?',
+  'What did the ACT say about the Climate Change ACT 2022?',
+  'How did senators for the ACT vote on the Climate Change ACT?',
+ ]){
+  const c=constraints(q),step=api.constrainStep({tool:'search',args:{}},c,{state:{},jurisdiction:{}})
+  assert.equal(c.jurisdiction,'act',q);assert.equal(step.args.state,'act',q)
+ }
+})
+for(const [operator,expectedYears,expectedDates] of [
+ ['after and before',['2006-01-01','2009-12-31'],['2005-07-02','2010-02-28']],
+ ['since and until',['2005-01-01','2010-12-31'],['2005-07-01','2010-03-01']],
+ ['from to',['2005-01-01','2010-12-31'],['2005-07-01','2010-03-01']],
+ ['between and',['2005-01-01','2010-12-31'],['2005-07-01','2010-03-01']],
+ ])test(`combined ${operator} bounds apply each operator independently for years and ISO dates`,()=>{
+ const words=operator.split(' '),start=words[0],connector=words.slice(1).join(' ')
+ for(const [a,b,expected] of [['2005','2010',expectedYears],['2005-07-01','2010-03-01',expectedDates]]){
+  const q=`Speeches ${start} ${a} ${connector} ${b}`,c=constraints(q)
+  assert.deepEqual([c.period.since,c.period.until],expected,q)
+  assert.deepEqual(api.constrainStep({tool:'search',args:{}},c,{since:{},until:{}}).args,{since:expected[0],until:expected[1]},q)
+ }
+})

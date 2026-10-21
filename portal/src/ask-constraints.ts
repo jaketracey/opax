@@ -6,7 +6,17 @@ export interface AskConstraints {
 }
 export function extractAskConstraints(question: string, period: Period, named: NamedScope, filters: Record<string, unknown> = {}): AskConstraints {
   const q = question.toLowerCase()
-  const detected = String(filters.state || (/new south wales|\bnsw\b/.test(q) ? 'nsw' : /victoria|\bvic\b/.test(q) ? 'vic' : /queensland|\bqld\b/.test(q) ? 'qld' : /south australia|\bsa\b/.test(q) ? 'sa' : /western australia|\bwa\b/.test(q) ? 'wa' : /tasmania/.test(q) ? 'tas' : (/\bACT\b|\bA\.C\.T\.(?=\W|$)/.test(question) || /australian capital territory|\bcanberra (?:government|jurisdiction|territory)\b/i.test(question)) ? 'act' : /northern territory/.test(q) ? 'nt' : /federal|commonwealth/.test(q) ? 'federal' : '')) || undefined
+  // A statute's Act/ACT token is not the territory, even when the title is
+  // uppercased. Keep independent territory mentions elsewhere in the question.
+  const territoryText = question
+    .replace(/\baustralian capital territory(?:\s+\([^)]*\))?\s+act\b(?:\s+\d{4})?/gi, ' ')
+    .replace(/\bact\s+\d{4}\b/gi, ' ')
+    .replace(/\b(?:\p{Lu}[\p{L}\p{N}'’()-]*\s+)+[Aa][Cc][Tt]\b/gu, title => {
+      const words = title.trim().split(/\s+/).slice(0, -1)
+      return words.some(word => !/^(?:the|a|an|in|for|from|of|to|and|or|what|which|who|how|is|are|does|did|describe|explain|compare|show|tell|discuss)$/i.test(word)) ? ' ' : title
+    })
+  const territory = /\bACT\b|\bA\.C\.T\.(?=\W|$)/.test(territoryText) || /australian capital territory|\bcanberra (?:government|jurisdiction|territory)\b/i.test(territoryText)
+  const detected = String(filters.state || (/new south wales|\bnsw\b/.test(q) ? 'nsw' : /victoria|\bvic\b/.test(q) ? 'vic' : /queensland|\bqld\b/.test(q) ? 'qld' : /south australia|\bsa\b/.test(q) ? 'sa' : /western australia|\bwa\b/.test(q) ? 'wa' : /tasmania/.test(q) ? 'tas' : territory ? 'act' : /northern territory/.test(q) ? 'nt' : /federal|commonwealth/.test(q) ? 'federal' : '')) || undefined
   const jurisdiction = /\bfederal|commonwealth\b/.test(q) ? 'federal' : detected
   const locationState = detected && detected !== 'federal' ? detected : undefined
   const stateGovernment = /\b(?:state|queensland|qld|victorian?|nsw|south australian?) (?:government|grants?)\b/.test(q)
