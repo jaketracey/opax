@@ -64,12 +64,14 @@ function figures(text){
   const cuts=[0,...[...text.matchAll(/;\s*|,?\s+(?:and|while|but|whereas)\s+(?=[A-Z])/g)].map(m=>m.index+m[0].length),text.length],start=cuts.filter(n=>n<=at).at(-1),end=cuts.find(n=>n>at),local=text.slice(start,end)
   if(amount){
    const sentence=sentences.find(s=>s.at<=at&&s.at+s.text.length>at)
-   const from=Math.max(start,sentence?.at??0,out.at(-1)?.end??0),until=Math.min(end,sentence?sentence.at+sentence.text.length:text.length)
+   const clauseFrom=Math.max(start,sentence?.at??0),from=Math.max(clauseFrom,out.at(-1)?.end??0),until=Math.min(end,sentence?sentence.at+sentence.text.length:text.length)
    const prefix=text.slice(from,at),suffix=text.slice(at+raw.length,until)
    // A predicate governs its next figure; later funding-source language cannot relabel it.
    const predicate=[...prefix.matchAll(figurePredicate)].at(-1)?.[0]
+   // Budget scope also governs intervening counts and coordinated amounts until another predicate.
+   const earlierPredicate=!predicate?[...text.slice(clauseFrom,from).matchAll(figurePredicate)].at(-1)?.[0]:undefined
    const budgetLabel=/^\s*(?:[\p{L}-]+\s+){0,4}(?:budgets?|allocations?|appropriations?)\b/iu.test(suffix)
-   if(budgetPredicate.test(predicate??'')||!predicate&&budgetLabel)metric='budget'
+   if(budgetPredicate.test(predicate??'')||!predicate&&(budgetLabel||budgetPredicate.test(earlierPredicate??'')))metric='budget'
   }
   if(metric==='speeches'||metric==='share'){const topic=/housing|gambling|immigration|climate|mining(?:-energy)?|tax(?:-budget)?|budget/i.exec(local)?.[0]?.toLowerCase()??/housing|gambling|immigration|climate|mining(?:-energy)?|tax(?:-budget)?|budget/i.exec(text)?.[0]?.toLowerCase();if(topic)metric+='/'+(topic==='tax'||topic==='budget'?'tax-budget':topic)}
   const vote=/(all aye|all no|split) (?:in )?$/i.exec(head)?.[1];if(vote)metric='votes/'+norm(vote)

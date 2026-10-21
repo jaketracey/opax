@@ -82,3 +82,17 @@ for(const kind of ['speech','record'])for(const snippet of [
   assert.equal(out.answer,answer);assert.deepEqual(out.citations,input.citations);assert.equal(out.sources[0].cited,true)
  }
 })
+
+for(const kind of ['speech','record'])for(const snippet of [
+ 'Avery Example: office budget for 2 staff of $100,000.',
+ 'Avery Example: office budgets of $50,000, $100,000 and $200,000.',
+])test(`B fix 2 retains budget scope across figures in ${kind}: ${snippet}`,async()=>{
+ const input=payload('Avery Example was paid $100,000.',source(snippet,{kind}))
+ assert.ok(auditPayload('What was Avery paid?',input).findings.some(f=>f.type==='figure'))
+ for(const path of paths){
+  const {out,wire}=await boundary(input,'What was Avery paid?',path)
+  assert.doesNotMatch(out.answer,/Avery Example|100,000/);assert.deepEqual(out.citations,{})
+  assert.ok(out.sources.every(s=>!s.cited))
+  if(path.stream)assert.doesNotMatch(wire,/event: delta/)
+ }
+})

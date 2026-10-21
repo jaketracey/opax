@@ -76,3 +76,24 @@ Replayed **50 reviewed r4 payloads from acceptance-r3 and 50 reviewer r2 payload
 Fix-1 gates: `npm run build:search` **passes**, followed by the **full portal suite: 2,579/2,579 pass**, zero failures/skips (`node --test --test-concurrency=4 test/*.test.mjs`). `tsc --noEmit`, `npm run check`, the Worker dry run and `git diff --check` pass. `votes.json` and `pay.json` remain byte-identical to `3379a8c92` and the live-code baseline. Logs, exact commands, exit-code receipts, replay details and byte hashes are retained in `portal/private/ask-written-answers-b/fix1/`.
 
 The search build regenerated the tracked search manifest and party-member index as local test inputs. Restored those two generated files to their original bytes after testing; the commit contains only the audit fix, four regression tests and this report update. To reproduce the complete suite, run `npm run build:search` first. No production requests, model calls, push or deployment.
+
+## B fix 2 — retain budget scope across intervening figures
+
+Reviewed `review-ask-written-answers-b-r2.last.md` against `ce0e1e0dd`. The two requested snippets (`office budget for 2 staff of $100,000` and `office budgets of $50,000, $100,000 and $200,000`) first fail their added tests on that baseline. Budget relationships now carry across earlier figures in the same sentence/clause when no new predicate governs the current amount. Explicit financial predicates retain precedence. This changes only the budget-scope fallback; the previous payment-preservation and name-attribution rules remain enabled.
+
+Four new speech/record tests exercise the two snippets across JSON/SSE × fallback/ordinary metadata × cache/miss: **32 boundary checks**. Both false payments and their citations are removed. The focused audit, r3, acceptance and B suites pass **110/110**.
+
+Re-ran the existing reviewers' r1/r2 controls, both earlier payment reproductions, Bill Shorten/Bill Tilley/Michaelia Cash speaker/possessive/title controls, and only the two new snippets: **74 controls / 592 B boundary checks**, also compared with live r4, original B and fix 1 (**2,368 engine/path checks**). All **70 earlier controls** retain their expected result. The only changes from fix 1 are the two new snippets on speech and record sources.
+
+| Control class | Live r4 | Final B |
+|---|---:|---:|
+| Unsupported controls rejected | 2/40 | 40/40 |
+| Supported controls retain exact answer and citation | 33/34 | 34/34 |
+
+Both existing r4 rejections remain rejected. B additionally rejects 38 unsupported controls and restores the previously documented supported unlabelled office-budget statement. No supported control loses text or a citation. Full inputs, outcomes and comparison results are in private `fix2/review-controls.json`.
+
+Replayed **50 reviewed r4 payloads (`acceptance-r3`) and 50 reviewer r2 payloads**, in memory through live r4 (`6b021dc84`) and final B, with network fetch disabled: **zero changed sentences, zero citation-key differences, zero full-grade-object differences**. Audits remain **0/530** and **0/523**, respectively. Reviewed-r4 correctness remains **40/5/5**, citations **39/0/1 + 10 n/a**, dates **23 pass + 27 n/a**, and declines **49/50**. Saved p95 **19.121 s** and mean cost **US$0.00277353** remain unchanged by construction. Receipts are in private `fix2/replay.json`.
+
+Fix-2 gates: `npm run build:search` **passes**, followed by the **full portal suite: 2,583/2,583 pass**, zero failures/skips. `tsc --noEmit`, `npm run check`, the Worker dry run and `git diff --check` pass. `votes.json` and `pay.json` are byte-identical to `ce0e1e0dd` and live r4. Restored the two generated tracked assets after the complete suite; no generated public-data changes are committed. Reproducing the suite requires `npm run build:search` first.
+
+Logs, per-case control comparisons, replay payloads/grades, byte hashes and exit-code receipts are retained in `portal/private/ask-written-answers-b/fix2/`. Elapsed before committing: **3.5 minutes**, within the 20-minute limit. No production requests, model calls, push or deployment. Further budget wording variants remain in lane C.
